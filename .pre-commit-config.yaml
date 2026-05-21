@@ -1,0 +1,26 @@
+# Workspace-level pre-commit hooks.
+# Install once: `pip install pre-commit && pre-commit install` (or `uv tool install pre-commit`).
+# Project-local ruff configs are respected by passing files to the hook.
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: '\.(ipynb|md)$'
+      - id: end-of-file-fixer
+        exclude: '\.(ipynb|md)$'
+      - id: check-yaml
+        exclude: '^(.*/templates/.*\.ya?ml|.*\.code-workspace)$'
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ['--maxkb=2048']
+      - id: detect-private-key
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.0
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format

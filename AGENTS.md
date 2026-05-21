@@ -25,7 +25,10 @@ Each project has its own `README.md` and (in some cases) its own `CLAUDE.md` /
 
 ## Shared Docs
 
-Use `_docs/capability_index/` first to find relevant files.
+- Workspace overview: root `README.md`
+- Per-project entry point: `<project>/README.md` (and `<project>/CLAUDE.md` /
+  `<project>/AGENTS.md` when present)
+- Recipes / worklogs: `_docs/`
 
 ## Do Not Inspect By Default
 
@@ -34,7 +37,6 @@ Use `_docs/capability_index/` first to find relevant files.
 - `_archive/`
 - `_scratch/`
 - `reports/`
-- `tmp/`
 - `*.duckdb`
 - `*.parquet`
 - `*.geojson`
@@ -42,15 +44,17 @@ Use `_docs/capability_index/` first to find relevant files.
 - `*.ipynb` unless explicitly requested
 - `venv/`
 - `.venv/`
+- `node_modules/`
+- `target/` (Rust build output)
 - `__pycache__/`
 
 ## Workflow
 
-1. Identify the relevant project.
-2. Read the project README and AGENTS.md.
-3. Read the relevant capability index in `_docs/capability_index/`.
-4. Inspect only targeted source files.
-5. Avoid broad search unless necessary.
+1. Identify the relevant project (root `README.md` lists all).
+2. Read that project's `README.md` and, if present, its `CLAUDE.md` / `AGENTS.md`.
+3. Inspect only targeted source files.
+4. Avoid broad search unless necessary.
+5. For workspace-wide checks, use the root `Makefile` (`make lint`, `make test`).
 
 ## Context Policy
 

@@ -52,7 +52,7 @@ Before substantial work:
 - Do not scan the whole repository unless explicitly requested.
 - Do not read large notebooks, logs, generated files, data files, lock files, or vendor directories unless necessary.
 - Prefer targeted file reads over broad grep/find.
-- Prefer `_docs/capability_index/` and project docs before source search.
+- Prefer the project's `README.md` (and `CLAUDE.md` / `AGENTS.md` when present) before source search.
 - When switching to an unrelated task, ask the user to run `/clear`.
 - When continuing a long task, suggest `/compact` with a task-focused summary.
 

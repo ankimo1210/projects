@@ -22,14 +22,30 @@
 ```
 projects/
 ├── <各プロジェクト>/        # 上記の独立プロジェクト
-├── _docs/                   # 横断ドキュメント（capability_index / recipes / ai）
+├── _docs/                   # 横断ドキュメント（recipes / ai 系メモ）
 ├── _scratch/                # 使い捨ての試行（gitignore 一部対象）
-├── _archive/                # 過去成果物・旧プロンプト
+├── _archive/                # 過去成果物・旧プロンプト・旧 capability_index
 ├── _data/                   # 重データ（gitignore 対象、`_data/<project>/` 規約）
 ├── _logs/                   # 実行ログ（gitignore 対象）
 ├── reports/                 # 共有レポート（PDF 等）
+├── Makefile                 # ワークスペース横断の lint / test / install / clean
+├── .pre-commit-config.yaml  # 共通フック (ruff, large file check, ...)
 ├── CLAUDE.md, AGENTS.md     # AI エージェント向けガイド
 └── copilot-instructions.md
+```
+
+## ワークスペース横断コマンド
+
+ルートで実行できる `Makefile` ターゲット:
+
+```bash
+make help      # ターゲット一覧
+make install   # uv 管理プロジェクトを一括 sync
+make lint      # ruff check を全体に
+make fmt       # ruff format --check を全体に
+make test      # pytest -q を全体に
+make clean     # __pycache__ / .pytest_cache などを掃除
+make tree      # ヘビーディレクトリを除外したツリー表示
 ```
 
 ## 環境前提
@@ -40,6 +56,6 @@ projects/
 
 ## このリポジトリで作業するときは
 
-1. まず該当プロジェクトの `README.md` を読む
-2. `_docs/capability_index/` に索引がある場合はそこから入る
+1. まず該当プロジェクトの `README.md` を読む（あれば `CLAUDE.md` / `AGENTS.md` も）
+2. 横断的なチェックは `Makefile` 経由で行う
 3. リポジトリ全体を grep しない（`CLAUDE.md` の Workspace Policy 参照）
