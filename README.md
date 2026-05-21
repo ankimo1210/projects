@@ -23,14 +23,12 @@
 projects/
 ├── <各プロジェクト>/        # 上記の独立プロジェクト
 ├── _docs/                   # 横断ドキュメント（capability_index / recipes / ai）
-├── _workspaces/             # 作業メモ・進行中タスク
 ├── _scratch/                # 使い捨ての試行（gitignore 一部対象）
-├── _archive/                # 過去成果物
+├── _archive/                # 過去成果物・旧プロンプト
 ├── _data/                   # 重データ（gitignore 対象）
 ├── _logs/                   # 実行ログ（gitignore 対象）
 ├── data/                    # プロジェクト横断データ（中身は gitignore 対象多数）
 ├── reports/                 # 共有レポート（PDF 等）
-├── images/, tmp/, test_app/ # その他
 ├── CLAUDE.md, AGENTS.md     # AI エージェント向けガイド
 └── copilot-instructions.md
 ```
