@@ -23,14 +23,18 @@ src/re_engine/
 
 ## 開発
 
-```bash
-# ルートから
-uv sync
-uv run pytest packages/financial-engine/tests/ -v
+このパッケージは `~/projects/` のトップレベル uv workspace のメンバーです。依存はワークスペース全体で一括解決されます。
 
-# このパッケージ単独で
-cd packages/financial-engine
-uv run pytest -v
+```bash
+# 初回のみ：ワークスペースルートで sync
+cd ~/projects && make install     # = uv sync --all-packages
+
+# テスト（ワークスペース .venv が自動検出される）
+uv run --no-sync pytest re_invest_os/packages/financial-engine/tests/ -v
+
+# このパッケージのディレクトリからでも OK
+cd re_invest_os/packages/financial-engine
+uv run --no-sync pytest -v
 ```
 
 ## バージョニング

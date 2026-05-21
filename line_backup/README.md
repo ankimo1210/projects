@@ -12,10 +12,11 @@
 
 ## セットアップ
 
+このプロジェクトはワークスペース（`~/projects/`）の uv メンバーです。Python 依存はワークスペースルートで一括管理されます。
+
 ```bash
-python -m venv .venv
-source .venv/bin/activate          # Windows: .venv\Scripts\Activate.ps1
-pip install -e .
+# ワークスペースルートで一度実行すれば、line_backup を含む全メンバーが editable install
+cd ~/projects && make install     # = uv sync --all-packages
 ```
 
 ---

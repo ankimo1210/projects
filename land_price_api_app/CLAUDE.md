@@ -54,7 +54,7 @@ python run_backfill.py --from 2010 --to 2026                  # bulk historical 
 
 **DB tables**: `land_prices_public_notice` (primary key: `(point_id, year)`), `trade_prices`, `rent_market`. Views: `city_summary`, `pref_summary`, `trade_city_summary`.
 
-**DB path resolution**: `config.py` prefers `../_data/land_price/processed/land_prices.duckdb` (workspace), falling back to `data/processed/land_prices.duckdb` (legacy). Override with `DUCKDB_PATH` env var.
+**DB path resolution**: `config.py` resolves to `../_data/land_price/processed/land_prices.duckdb` (workspace canonical path). `data/processed/` is a symlink into the same location, so legacy relative paths still work. Override with `DUCKDB_PATH` env var.
 
 **DuckDB upsert pattern**: temp key table → delete existing keys → insert aligned rows (DuckDB has no `INSERT OR REPLACE`).
 
@@ -85,4 +85,4 @@ Regression tests in `tests/` use HTML fixtures in `tests/fixtures/`. No network 
 
 - App must bind to `127.0.0.1` (local-only). `run_local.sh` uses `0.0.0.0` for LAN access — keep consistent with existing behavior.
 - Do not delete raw caches, Parquet files, or DuckDB files without explicit user request.
-- `data/raw` and `data/processed` are legacy compatibility paths; canonical storage is `../_data/land_price/`.
+- `data/raw` and `data/processed` are **symlinks** into `../_data/land_price/{raw,processed}/` (the canonical workspace storage). Legacy relative paths still work transparently.

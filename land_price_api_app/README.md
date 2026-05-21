@@ -41,12 +41,11 @@ cp .env.example .env
 
 ## セットアップ
 
-```bash
-# Python 3.11+ を推奨
-python -m venv .venv
-source .venv/bin/activate      # Windows: .venv\Scripts\activate
+このアプリはワークスペース（`~/projects/`）の uv メンバーです。Python 依存はワークスペースルートで一括管理されます。
 
-pip install -r requirements.txt
+```bash
+cd ~/projects && make install     # = uv sync --all-packages
+# (requirements.txt は移行期の互換用に残置。新規セットアップでは pyproject.toml が正)
 ```
 
 物件分析タブで Ollama LLM を使う場合は別途 [Ollama](https://ollama.ai/) をインストールし、`gemma3:12b` モデルを用意してください:

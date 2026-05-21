@@ -49,11 +49,17 @@ traversal, tree reuse across steps) would shift this.
 
 ## Run
 
+This project is a member of the uv workspace at `~/projects/`. Install once
+from the workspace root; the shared `.venv` covers `nbody-gpu` along with
+the other members.
+
 ```bash
-uv sync
-uv run python scripts/check_env.py
-uv run python scripts/run_demo.py
-uv run pytest
+cd ~/projects && make install    # = uv sync --all-packages (only needed once)
+
+# From inside nbody-gpu/ or any subdir (workspace .venv is auto-discovered):
+uv run --no-sync python scripts/check_env.py
+uv run --no-sync python scripts/run_demo.py
+uv run --no-sync pytest
 ```
 
 ## Conventions

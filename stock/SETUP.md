@@ -27,9 +27,10 @@ uv sync --all-packages
 # または Makefile経由
 make install
 
-# stockkit だけ更新したい場合
+# stockkit の依存だけ更新したい場合（uv は単一の workspace .venv を共有するため、
+# どこから実行しても workspace 全体が解決対象になる点に注意）
 cd stock
-uv sync   # workspace内のstockkitだけ対象
+uv sync --package stockkit
 ```
 
 ---
@@ -117,7 +118,7 @@ Dash is running on http://127.0.0.1:8050/
 
 | 症状 | 原因 | 対処 |
 |---|---|---|
-| `ModuleNotFoundError: stockkit` | `uv sync` 未実行 | `uv sync` を実行 |
+| `ModuleNotFoundError: stockkit` | ワークスペース sync 未実行 | ルートで `make install` (= `uv sync --all-packages`) |
 | `/chat` で "credit balance is too low" | Anthropic クレジット未購入 | console.anthropic.com で課金 |
 | `JQuantsError: subscription` | J-Quants 無料プラン期限切れ | `.env` の `JQUANTS_API_KEY` を削除すれば yfinance にフォールバック |
 | `/basket` でデータ取得失敗 | yfinance のレート制限 | 数分待ってリトライ |

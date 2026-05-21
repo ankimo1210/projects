@@ -7,15 +7,19 @@ Local-only CLI tool to analyze iPhone backup data for LINE messages.
 
 ## Running & Testing
 
+This project is a member of the uv workspace at `~/projects/`. Install once
+from the workspace root and the package becomes editable-installed
+automatically.
+
 ```bash
-# Tests (no venv needed)
-PYTHONPATH=src python3 -m unittest discover tests -v
+# Install (from workspace root) — only needed once
+cd ~/projects && make install   # = uv sync --all-packages
 
-# CLI (no install)
-PYTHONPATH=src python3 -m line_backup_exporter.cli <subcommand> --help
+# Tests (workspace .venv)
+uv run --no-sync python -m unittest discover line_backup/tests -v
 
-# Install (use venv)
-python3 -m venv .venv && source .venv/bin/activate && pip install -e .
+# CLI
+uv run --no-sync python -m line_backup_exporter.cli <subcommand> --help
 ```
 
 ## Architecture

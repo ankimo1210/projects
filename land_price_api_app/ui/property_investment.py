@@ -21,9 +21,18 @@ from ui.table import muted, num_str, plain, render_html_table
 
 logger = get_logger(__name__)
 
-_SIM_DIR = Path(__file__).resolve().parent.parent.parent / "notebooks" / "real_estate_app"
-if str(_SIM_DIR) not in sys.path:
-    sys.path.insert(0, str(_SIM_DIR))
+# Investment simulation engine was prototyped under notebooks/real_estate_app/
+# in the old workspace layout. That directory was archived during workspace
+# consolidation and is now at _archive/notebooks/real_estate_app/. Probe both
+# locations so an archived copy still works without code changes.
+_WORKSPACE_ROOT = Path(__file__).resolve().parent.parent.parent
+_SIM_CANDIDATES = [
+    _WORKSPACE_ROOT / "notebooks" / "real_estate_app",
+    _WORKSPACE_ROOT / "_archive" / "notebooks" / "real_estate_app",
+]
+for _candidate in _SIM_CANDIDATES:
+    if _candidate.exists() and str(_candidate) not in sys.path:
+        sys.path.insert(0, str(_candidate))
 
 try:
     from formatters import format_money, format_multiple, format_percent

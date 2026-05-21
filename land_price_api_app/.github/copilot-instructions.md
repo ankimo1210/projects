@@ -5,16 +5,15 @@
 There is no checked-in `pytest`, `unittest`, lint, or type-check configuration in this repository. The narrowest built-in verification commands are `compileall`, the CLI smoke test, and targeted sync commands.
 
 ```bash
-# Setup
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+# Setup (this project is now a member of the uv workspace at ~/projects/)
+cd ~/projects && make install    # = uv sync --all-packages
 
-# Run the local Streamlit app
-streamlit run app.py --server.address 127.0.0.1 --server.port 8501
+# Run the local Streamlit app (workspace .venv is auto-discovered)
+cd ~/projects/land_price_api_app
+uv run --no-sync streamlit run app.py --server.address 127.0.0.1 --server.port 8501
 
 # Narrow local syntax check for touched modules
-python -m compileall app.py config.py db.py ui property_scraper.py geocoder.py geocode_trade_prices.py sync_rent_market.py generate_site_schema.py
+uv run --no-sync python -m compileall app.py config.py db.py ui property_scraper.py geocoder.py geocode_trade_prices.py sync_rent_market.py generate_site_schema.py
 
 # Narrowest built-in smoke test (API key + XIT002 + XPT002 + DuckDB write/read)
 python sync_public_notice.py --year 2026 --smoke-test
@@ -35,12 +34,12 @@ python geocode_trade_prices.py --limit 100 --sleep 0.3
 ## High-level architecture
 
 - This is a **local-only** Streamlit + DuckDB application for ingesting, storing, and analyzing Japanese land-price and real-estate trade datasets. External APIs are called server-side from Python, not from the browser.
-- The core ingestion pipeline is: **external API -> raw file in `data/raw/` -> normalized `pandas.DataFrame` -> Parquet in `data/processed/` -> DuckDB tables/views -> Streamlit UI**.
-- `sync_public_notice.py` handles XPT002 land-price tiles. It scans Web Mercator XYZ tiles, tracks fetched tiles in `data/raw/fetched_tiles_*.json`, deduplicates features across tiles, writes raw GeoJSON, writes Parquet, then upserts DuckDB.
+- The core ingestion pipeline is: **external API -> raw file in `_data/land_price/raw/` -> normalized `pandas.DataFrame` -> Parquet in `_data/land_price/processed/` -> DuckDB tables/views -> Streamlit UI**. (`land_price_api_app/data/raw` and `land_price_api_app/data/processed` are symlinks into the workspace `_data/` location for backwards compatibility.)
+- `sync_public_notice.py` handles XPT002 land-price tiles. It scans Web Mercator XYZ tiles, tracks fetched tiles in `_data/land_price/raw/fetched_tiles_*.json`, deduplicates features across tiles, writes raw GeoJSON, writes Parquet, then upserts DuckDB.
 - `sync_trade_prices.py` handles XIT001 trade-price data by prefecture/year/quarter. `sync_rent_market.py` handles e-Stat rent data. `geocode_trade_prices.py` later fills missing trade `lat/lon` using the GSI geocoder.
 - `normalize.py` is the schema bridge between inconsistent API payload keys and the repo's snake_case analytical schema. `db.py` owns table DDL, views, upserts, and all reusable read/query helpers.
 - `app.py` creates one cached DuckDB connection, loads the current year of land-price data once, and passes shared filters/connection into tab renderers in `ui/`.
-- The property-analysis flow spans multiple modules: `ui/property_tab.py` fetches listing HTML via `property_scraper.py`, uses regex-first extraction with Ollama fallback, geocodes the address with `geocoder.py`, finds nearby comps through `analytics.py`/`db.py`, then imports the investment simulation engine from `notebooks/real_estate_app`.
+- The property-analysis flow spans multiple modules: `ui/property_tab.py` fetches listing HTML via `property_scraper.py`, uses regex-first extraction with Ollama fallback, geocodes the address with `geocoder.py`, finds nearby comps through `analytics.py`/`db.py`, then runs an investment simulation via `ui/property_investment.py`. The simulator imports `sim_engine` / `formatters` from `notebooks/real_estate_app/` (legacy) or `_archive/notebooks/real_estate_app/` (current canonical location after workspace consolidation); the loader probes both.
 
 ## Codebase-specific conventions
 
