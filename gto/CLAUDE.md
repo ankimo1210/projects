@@ -1,0 +1,78 @@
+# gto — Claude Code Guide
+
+## Purpose
+
+GTO (Game Theory Optimal) Texas Hold'em analysis app. Combines a Rust CFR
+solver (CPU + GPU/NVRTC), a FastAPI backend, a Next.js frontend, and a
+Parquet-backed solution library. Personal project, eventually commercial.
+
+Respond to the user in Japanese by default; code and identifiers in English.
+
+## Architecture
+
+| Layer | Path | Role |
+|---|---|---|
+| Solver core | `crates/gto-core/` | CFR/DCFR, multistreet tree (Flop→Turn→River), hand evaluator (Rust, CPU) |
+| GPU solver | `crates/gto-cuda/` | NVRTC JIT kernels, batch CFR on RTX 5080 (sm_120). CUDA Driver API via `ctypes`. |
+| Python bindings | `crates/gto-py/` | pyo3 wrapper exposing `solve_spot`, `solve_spot_multistreet`, `equity` |
+| Backend API | `src/gto/api/` | FastAPI app + routers (`equity`, `trainer`, `solver`, `library`, `simulation`) |
+| Solution store | `src/gto/library/` | Batch precompute, Parquet I/O, range builder, flop canonical-form |
+| Trainer | `src/gto/trainer/` | Preflop GTO frequency tables (hardcoded approximation, not solved) |
+| Web UI | `web/` | Next.js 16 / React 19 / Tailwind v4 (pages: `/neon`, `/library`, `/report`, `/solver`, `/simulation`) |
+
+Data flow: see `ARCHITECTURE.md`. Roadmap and known limitations: `PROGRESS.md`.
+
+## Run & Verify
+
+Python deps live in the workspace `.venv` at `~/projects/`. Rust crates
+build in place to `gto/target/`.
+
+```bash
+# One-time install (from workspace root)
+cd ~/projects && make install                          # = uv sync --all-packages
+
+# Build Rust extensions (after Rust changes only)
+cd ~/projects/gto && source ~/.cargo/env
+uv run --no-sync maturin develop --manifest-path crates/gto-py/Cargo.toml   --release
+uv run --no-sync maturin develop --manifest-path crates/gto-cuda/Cargo.toml --release
+
+# Backend (port 8000)
+uv run --no-sync uvicorn gto.api.main:app --host 0.0.0.0 --port 8000
+
+# Frontend (port 3000)
+cd web && pnpm install && pnpm exec next dev
+
+# Tests
+uv run --no-sync pytest gto/tests
+cargo test --manifest-path gto/Cargo.toml
+```
+
+## Conventions
+
+- **Solution store**: canonical path is `~/projects/_data/gto/solutions/`
+  (resolved as `Path(__file__).parents[4] / "_data" / "gto" / "solutions"`
+  in `src/gto/library/store.py`). Never write Parquet under `gto/`.
+- **Card encoding**: `card = rank * 4 + suit` (rank: 0=2 … 12=A, suit: c d h s).
+  Combo index is `lo*51 - lo*(lo-1)/2 + hi - lo - 1`. 1326 total. See
+  `ARCHITECTURE.md` for the math.
+- **CFR algorithm**: Discounted CFR (DCFR α=1.5, β=0). Bet sizes per street
+  vary (Flop 50% / Turn 75% / River 75% in `gto-core`; 33/75/100 in `gto-cuda`).
+- **Single-letter math variables (N, K, S, V, ...)** are allowed in solver
+  code (ruff N806 suppressed for `gto/src/gto/solver/`).
+- **PyTorch** comes from the workspace's `pytorch-cu126` index (declared at
+  workspace root, not in `gto/pyproject.toml`).
+
+## Gotchas
+
+- **`gto-cuda` is single-street only.** It solves Flop with Call→Showdown,
+  ignoring Turn/River. Use `gto-core::multistreet` (CPU) when correctness
+  matters. River-only solves are still correct on GPU.
+- **Preflop is hardcoded**, not solved by CFR. The frequencies in
+  `src/gto/trainer/preflop_data.py` are an approximation table.
+- **`2c` phantom card bug** on boards with 3-4 community cards; see
+  `PROGRESS.md` §4.
+- **CUDA 12.6 + sm_120**: hardware/driver assumption is RTX 5080 (Blackwell).
+  Older GPUs likely fail at JIT compile.
+- **Do not delete** `_data/gto/solutions/` Parquet without explicit user
+  request — regenerating the full library takes ~24 minutes on GPU.
+- **`gto/web/node_modules/`** is large; never grep into it.
