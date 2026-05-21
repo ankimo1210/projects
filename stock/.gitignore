@@ -1,0 +1,35 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Secrets
+.env
+.env.local
+
+# uv
+uv.lock
+
+# Local data / cache
+_data/
+_logs/
+_scratch/
+*.duckdb
+*.duckdb.wal
+*.parquet
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store

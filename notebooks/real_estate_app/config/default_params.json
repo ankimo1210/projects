@@ -1,0 +1,71 @@
+{
+    "purchase_price": 100000000,
+    "land_value": 35000000,
+    "building_value": 65000000,
+    "acquisition_cost_rate": 0.07,
+    "initial_capex": 2000000,
+    "hold_period_years": 35,
+    "building_structure": "rc",
+    "building_usage": "residential",
+    "building_completion_ym": "2010-06",
+    "steel_thickness_mm": null,
+    "transaction_date": "2026-04-01",
+
+    "initial_gross_rent": 5500000,
+    "vacancy_rate": 0.05,
+    "rent_growth_rate": 0.005,
+    "other_income": 200000,
+    "other_income_growth_rate": 0.0,
+
+    "initial_operating_expenses": 1000000,
+    "opex_growth_rate": 0.01,
+    "property_tax": 900000,
+    "property_tax_growth_rate": 0.005,
+    "repair_cost": 300000,
+    "repair_growth_rate": 0.02,
+    "capex_schedule": {"5": 1500000, "8": 500000},
+
+    "ltv": 0.80,
+    "interest_rate": 0.025,
+    "loan_term_years": 30,
+    "amortization_type": "equal_payment",
+    "io_years": 0,
+
+    "depreciation_method": "straight_line",
+
+    "inflation_rate": 0.02,
+    "land_real_appreciation_spread": 0.005,
+    "building_real_appreciation_spread": -0.01,
+    "exit_cap_rate": 0.05,
+    "closing_cost_on_sale_rate": 0.035,
+    "exit_price_method": "cap_rate",
+
+    "ownership_type": "individual",
+    "income_tax_rate_national": 0.20,
+    "resident_tax_rate": 0.05,
+    "reconstruction_special_tax_rate": 0.021,
+    "corporate_effective_tax_rate": 0.30,
+
+    "use_progressive_tax": true,
+    "optional_business_tax_rate": 0.0,
+
+    "capex_treatment_mode": "mixed_schedule",
+    "capex_expense_schedule": {"5": 500000},
+    "capex_capital_schedule": {"5": 1000000, "8": 500000},
+    "capital_improvement_depr_life_years": 15,
+    "capital_improvement_depr_method": "straight_line",
+
+    "selling_expense_schedule_mode": "rate",
+    "selling_expense_items": {},
+    "use_deemed_acquisition_cost_fallback": false,
+    "deemed_acquisition_cost_rate": 0.05,
+
+    "enable_refinance": false,
+    "refinance_year": 5,
+    "refinance_ltv": 0.70,
+    "refinance_interest_rate": 0.02,
+    "refinance_term_years": 25,
+    "refinance_fee_rate": 0.01,
+    "cash_out_to_equity": true,
+    "prepayment_schedule": {}
+}

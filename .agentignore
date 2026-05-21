@@ -1,0 +1,45 @@
+# Heavy data and outputs
+_data/
+_logs/
+_archive/
+tmp/
+test_app/
+
+# Scratch is intentionally excluded unless explicitly requested
+_scratch/
+
+# Compatibility symlinks into workspace data
+land_price_api_app/data/raw/
+land_price_api_app/data/processed/
+**/data/raw/
+**/data/processed/
+**/data/*.migrated/
+**/*.migrated/
+
+# Binary / large files
+**/*.duckdb
+**/*.duckdb.wal
+**/*.parquet
+**/*.geojson
+**/*.csv
+**/*.xlsx
+**/*.pdf
+**/*.log
+**/*_log.txt
+
+# Python generated
+**/__pycache__/
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+**/.ipynb_checkpoints/
+**/venv/
+**/.venv/
+
+# Node / generated
+**/node_modules/
+**/dist/
+**/build/
+
+# Windows metadata
+**/*:Zone.Identifier

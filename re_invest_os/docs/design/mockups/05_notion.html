@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>05 Notion系 — 物件分析結果</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-subtle: #f7f6f3;
+    --text: #37352f;
+    --text-muted: #787774;
+    --text-subtle: #9b9a97;
+    --border: #ebebea;
+    --border-strong: #d3d3d1;
+    --callout-blue: #ddebf1;
+    --callout-blue-text: #183347;
+    --callout-yellow: #fdecc8;
+    --callout-yellow-text: #4a3a18;
+    --callout-red: #fbe4e4;
+    --callout-red-text: #5a1d1d;
+    --callout-green: #ddedea;
+    --callout-green-text: #1b3a30;
+    --callout-purple: #eae4f2;
+    --callout-purple-text: #34244a;
+    --callout-gray: #f1f1ef;
+    --tag-blue: #cce0f7;
+    --tag-yellow: #fbe4b0;
+    --tag-red: #fcc5c5;
+    --tag-green: #c1e4d6;
+    --tag-purple: #d7c9eb;
+    --tag-gray: #e3e2e0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', 'Noto Sans JP', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .topbar { padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+  .breadcrumb { display: flex; align-items: center; gap: 6px; }
+  .breadcrumb-emoji { font-size: 16px; }
+  .breadcrumb-sep { color: var(--text-subtle); }
+  .container { max-width: 920px; margin: 0 auto; padding: 32px 64px 80px; }
+  .page-icon { font-size: 64px; line-height: 1; margin-bottom: 12px; }
+  .page-title { font-size: 40px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 8px; color: var(--text); }
+  .page-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 28px; }
+
+  .props { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px 24px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+  .prop { display: flex; padding: 6px 0; font-size: 14px; align-items: center; gap: 8px; }
+  .prop-icon { width: 16px; height: 16px; color: var(--text-muted); font-size: 13px; }
+  .prop-label { width: 110px; color: var(--text-muted); font-size: 13px; }
+  .prop-val { color: var(--text); font-weight: 500; }
+
+  h2 { font-size: 24px; font-weight: 700; margin: 36px 0 12px; letter-spacing: -0.01em; line-height: 1.3; }
+  h3 { font-size: 18px; font-weight: 600; margin: 24px 0 8px; }
+
+  .callout { display: flex; gap: 12px; padding: 16px 18px; border-radius: 4px; margin: 16px 0; }
+  .callout-blue { background: var(--callout-blue); color: var(--callout-blue-text); }
+  .callout-yellow { background: var(--callout-yellow); color: var(--callout-yellow-text); }
+  .callout-red { background: var(--callout-red); color: var(--callout-red-text); }
+  .callout-green { background: var(--callout-green); color: var(--callout-green-text); }
+  .callout-purple { background: var(--callout-purple); color: var(--callout-purple-text); }
+  .callout-gray { background: var(--callout-gray); }
+  .callout-emoji { font-size: 20px; line-height: 1.2; flex-shrink: 0; }
+  .callout-body { flex: 1; font-size: 14px; line-height: 1.6; }
+
+  .score-hero { display: grid; grid-template-columns: 200px 1fr; gap: 28px; padding: 28px; background: var(--bg-subtle); border-radius: 8px; margin: 24px 0; align-items: center; }
+  .score-big { text-align: center; }
+  .score-emoji { font-size: 56px; line-height: 1; margin-bottom: 8px; }
+  .score-num { font-size: 56px; font-weight: 700; line-height: 1; letter-spacing: -0.03em; color: var(--text); }
+  .score-num-suffix { font-size: 20px; color: var(--text-muted); font-weight: 500; }
+  .score-conf { margin-top: 12px; font-size: 12px; color: var(--text-muted); }
+  .score-detail h3 { margin-top: 0; margin-bottom: 12px; }
+  .score-3 { list-style: none; padding: 0; margin: 0; }
+  .score-3 li { display: flex; gap: 10px; padding: 8px 0; font-size: 14px; line-height: 1.6; }
+  .score-3 .e { font-size: 18px; flex-shrink: 0; line-height: 1.4; }
+
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px 0; }
+  .kpi { padding: 16px 18px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); }
+  .kpi-emoji { font-size: 22px; margin-bottom: 8px; }
+  .kpi-label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+  .kpi-val { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .kpi-val small { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+  .kpi-note { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; line-height: 1.4; }
+  .tag-blue { background: var(--tag-blue); color: var(--callout-blue-text); }
+  .tag-yellow { background: var(--tag-yellow); color: var(--callout-yellow-text); }
+  .tag-red { background: var(--tag-red); color: var(--callout-red-text); }
+  .tag-green { background: var(--tag-green); color: var(--callout-green-text); }
+  .tag-gray { background: var(--tag-gray); color: var(--text); }
+
+  .offer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin: 20px 0; }
+  .offer-cell { padding: 16px 18px; border-right: 1px solid var(--border); }
+  .offer-cell:last-child { border-right: none; }
+  .offer-cell.hl { background: var(--callout-yellow); }
+  .offer-l { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+  .offer-cell.hl .offer-l { color: var(--callout-yellow-text); opacity: 0.8; }
+  .offer-v { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .offer-v small { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+  .table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  .table th { text-align: left; padding: 10px 12px; font-size: 12px; color: var(--text-muted); font-weight: 500; background: var(--bg-subtle); border-bottom: 1px solid var(--border); }
+  .table td { padding: 12px; font-size: 13px; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; }
+  .table tr:last-child td { border-bottom: none; }
+  .table .num { text-align: right; }
+  .table td:first-child { font-weight: 500; }
+
+  .toggle { margin: 8px 0; }
+  .toggle-h { display: flex; align-items: center; gap: 6px; padding: 6px 0; cursor: pointer; font-size: 15px; font-weight: 500; color: var(--text); }
+  .toggle-arrow { font-size: 11px; color: var(--text-muted); }
+
+  .questions-list { list-style: none; padding: 0; margin: 12px 0; }
+  .questions-list li { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; align-items: flex-start; }
+  .questions-list li:last-child { border-bottom: none; }
+  .q-check { flex-shrink: 0; width: 18px; height: 18px; border: 1.5px solid var(--border-strong); border-radius: 4px; margin-top: 2px; }
+  .q-num { color: var(--text-muted); font-size: 12px; flex-shrink: 0; padding-top: 2px; min-width: 22px; }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  .footer-note { font-size: 12px; color: var(--text-muted); line-height: 1.7; padding: 16px 0; }
+
+  .good { color: #5b8268; }
+  .bad { color: #a8504c; }
+  .warn { color: #a87b3c; }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="breadcrumb">
+      <span class="breadcrumb-emoji">🏠</span>
+      <span>分析履歴</span>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-emoji">📊</span>
+      <span>西新宿レジデンス 504号</span>
+    </div>
+    <div>Share · 保存 · ⋯</div>
+  </div>
+
+  <div class="container">
+    <div class="page-icon">🏢</div>
+    <h1 class="page-title">西新宿レジデンス 504号</h1>
+    <div class="page-sub">分析ID #A-184 · 2026-05-12 09:42 作成</div>
+
+    <div class="props">
+      <div class="prop"><span class="prop-icon">📍</span><span class="prop-label">所在地</span><span class="prop-val">東京都新宿区西新宿7丁目</span></div>
+      <div class="prop"><span class="prop-icon">💰</span><span class="prop-label">価格</span><span class="prop-val">3,980万円</span></div>
+      <div class="prop"><span class="prop-icon">🏗</span><span class="prop-label">構造 / 築年</span><span class="prop-val">RC造 / 2011年 (15年)</span></div>
+      <div class="prop"><span class="prop-icon">📐</span><span class="prop-label">面積 / 間取り</span><span class="prop-val">38.4㎡ / 1LDK</span></div>
+      <div class="prop"><span class="prop-icon">💴</span><span class="prop-label">想定賃料</span><span class="prop-val">145,000円 / 月</span></div>
+      <div class="prop"><span class="prop-icon">📈</span><span class="prop-label">表面利回り</span><span class="prop-val">6.2%</span></div>
+      <div class="prop"><span class="prop-icon">🚉</span><span class="prop-label">最寄駅</span><span class="prop-val">新宿駅 徒歩9分</span></div>
+      <div class="prop"><span class="prop-icon">🏷</span><span class="prop-label">種別</span><span class="prop-val"><span class="tag tag-purple">区分マンション</span></span></div>
+    </div>
+
+    <div class="callout callout-yellow">
+      <div class="callout-emoji">⚠️</div>
+      <div class="callout-body">
+        <strong>確認推奨:</strong> 本分析は AI 抽出の結果を含みます。価格・賃料・面積などの主要項目はユーザー確認をおすすめします。
+        <span class="tag tag-yellow">分析信頼度 74%</span>
+      </div>
+    </div>
+
+    <h2>🎯 総合スコア</h2>
+
+    <div class="score-hero">
+      <div class="score-big">
+        <div class="score-emoji">⚖️</div>
+        <div><span class="score-num">68</span><span class="score-num-suffix"> / 100</span></div>
+        <div class="score-conf">分析信頼度 74%</div>
+      </div>
+      <div class="score-detail">
+        <h3>中立 — やや割高傾向</h3>
+        <ul class="score-3">
+          <li><span class="e">1️⃣</span><span>表面利回り 6.2% だが、管理費・修繕積立金込みの <strong>NOI利回りは 4.8%</strong>。市場Cap 5.2% に対して割高傾向。</span></li>
+          <li><span class="e">2️⃣</span><span>金利 +1.0% 時に <strong>DSCR が 1.05 まで低下</strong>し、税後CFが赤字化する余地があります。</span></li>
+          <li><span class="e">3️⃣</span><span>出口Cap +0.5% で <strong>10年IRR が 2.1pt 低下</strong>。出口前提への依存が高い物件です。</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>📊 主要指標</h2>
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi-emoji">💹</div>
+        <div class="kpi-label">Cap Rate</div>
+        <div class="kpi-val">4.80<small>%</small></div>
+        <div class="kpi-note"><span class="tag tag-yellow">市場 -0.4pt</span></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-emoji">💵</div>
+        <div class="kpi-label">Cash-on-Cash</div>
+        <div class="kpi-val">3.20<small>%</small></div>
+        <div class="kpi-note">初年度BTCF/自己資金</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-emoji">🛡️</div>
+        <div class="kpi-label">DSCR (最小)</div>
+        <div class="kpi-val">1.18</div>
+        <div class="kpi-note"><span class="tag tag-red">基準1.25未達</span></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-emoji">📈</div>
+        <div class="kpi-label">Equity IRR</div>
+        <div class="kpi-val">4.10<small>%</small></div>
+        <div class="kpi-note"><span class="tag tag-yellow">目標8%未達</span></div>
+      </div>
+    </div>
+
+    <h2>💸 最大買付価格</h2>
+    <div class="callout callout-gray">
+      <div class="callout-emoji">🎯</div>
+      <div class="callout-body">投資基準: DSCR ≥ 1.25 · IRR ≥ 6% · ATCF年1 ≥ 0</div>
+    </div>
+    <div class="offer-grid">
+      <div class="offer-cell">
+        <div class="offer-l">現在価格</div>
+        <div class="offer-v">3,980<small> 万円</small></div>
+      </div>
+      <div class="offer-cell hl">
+        <div class="offer-l">最大許容価格</div>
+        <div class="offer-v">3,420<small> 万円</small></div>
+      </div>
+      <div class="offer-cell">
+        <div class="offer-l">安全価格</div>
+        <div class="offer-v">3,200<small> 万円</small></div>
+      </div>
+      <div class="offer-cell">
+        <div class="offer-l">必要指値</div>
+        <div class="offer-v bad">-560<small> 万円</small></div>
+      </div>
+    </div>
+    <div class="callout callout-red">
+      <div class="callout-emoji">🚨</div>
+      <div class="callout-body">
+        <strong>制約要因:</strong> DSCR 1.25 基準が最も厳しい / 金利 +1.0% 時の税後CF赤字化が次点 / 出口Cap +0.5% で目標IRR未達。
+      </div>
+    </div>
+
+    <h2>🌡️ 感応度分析</h2>
+    <table class="table">
+      <thead><tr><th>シナリオ</th><th class="num">ATCF年1</th><th class="num">IRR</th><th class="num">DSCR最小</th><th>判定</th></tr></thead>
+      <tbody>
+        <tr><td>ベース</td><td class="num">¥124,000</td><td class="num">4.1%</td><td class="num">1.18</td><td><span class="tag tag-yellow">warn</span></td></tr>
+        <tr><td>賃料 -5%</td><td class="num">¥48,000</td><td class="num">3.2%</td><td class="num">1.08</td><td><span class="tag tag-yellow">warn</span></td></tr>
+        <tr><td>賃料 -10%</td><td class="num bad">¥-28,000</td><td class="num bad">2.1%</td><td class="num bad">0.98</td><td><span class="tag tag-red">bad</span></td></tr>
+        <tr><td>金利 +0.5pt</td><td class="num">¥81,000</td><td class="num">3.5%</td><td class="num">1.11</td><td><span class="tag tag-yellow">warn</span></td></tr>
+        <tr><td>金利 +1.0pt</td><td class="num bad">¥-12,000</td><td class="num bad">2.7%</td><td class="num bad">1.05</td><td><span class="tag tag-red">bad</span></td></tr>
+        <tr><td>出口Cap +0.5pt</td><td class="num">¥124,000</td><td class="num">2.0%</td><td class="num">1.18</td><td><span class="tag tag-yellow">warn</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2>❓ 仲介会社への確認質問</h2>
+    <div class="callout callout-blue">
+      <div class="callout-emoji">💡</div>
+      <div class="callout-body">下記の質問を仲介に送ると、分析の前提を確定できます。チェックボックスで完了管理できます。</div>
+    </div>
+    <ul class="questions-list">
+      <li><div class="q-check"></div><div class="q-num">Q1</div><div>レントロールの更新日と現在の入居状況を教えてください。</div></li>
+      <li><div class="q-check"></div><div class="q-num">Q2</div><div>滞納中の入居者の有無、過去3年の入退去履歴を教えてください。</div></li>
+      <li><div class="q-check"></div><div class="q-num">Q3</div><div>直近5年の大規模修繕・原状回復履歴はありますか。</div></li>
+      <li><div class="q-check"></div><div class="q-num">Q4</div><div>固定資産税・都市計画税の直近年額を教えてください。</div></li>
+      <li><div class="q-check"></div><div class="q-num">Q5</div><div>長期修繕計画と修繕積立金の今後の値上げ予定を教えてください。</div></li>
+      <li><div class="q-check"></div><div class="q-num">Q6</div><div>売主の売却理由を教えてください。</div></li>
+    </ul>
+
+    <h2>🆚 クロスアセット比較</h2>
+    <div class="callout callout-purple">
+      <div class="callout-emoji">🌐</div>
+      <div class="callout-body">同じ自己資金1,000万円を他資産に投じた場合の参考リターン (10年・名目)。<br>
+        <strong>※ 資産クラスレベルの参考比較であり、特定金融商品の売買を推奨するものではありません。</strong></div>
+    </div>
+    <table class="table">
+      <thead><tr><th>資産</th><th class="num">期待年率</th><th>流動性</th><th>手間</th><th>判定</th></tr></thead>
+      <tbody>
+        <tr><td>🏢 この不動産 (税後)</td><td class="num warn">4.1%</td><td><span class="tag tag-red">低</span></td><td><span class="tag tag-red">高</span></td><td>—</td></tr>
+        <tr><td>🌍 全世界株インデックス</td><td class="num good">5.0%</td><td><span class="tag tag-green">高</span></td><td><span class="tag tag-green">低</span></td><td><span class="tag tag-green">+0.9pt</span></td></tr>
+        <tr><td>🇺🇸 米国株インデックス</td><td class="num good">6.0%</td><td><span class="tag tag-green">高</span></td><td><span class="tag tag-green">低</span></td><td><span class="tag tag-green">+1.9pt</span></td></tr>
+        <tr><td>🏛 J-REIT指数</td><td class="num">4.5%</td><td><span class="tag tag-green">高</span></td><td><span class="tag tag-green">低</span></td><td><span class="tag tag-green">+0.4pt</span></td></tr>
+        <tr><td>💴 円定期預金</td><td class="num bad">0.3%</td><td><span class="tag tag-green">高</span></td><td><span class="tag tag-green">低</span></td><td><span class="tag tag-red">-3.8pt</span></td></tr>
+      </tbody>
+    </table>
+
+    <hr class="divider">
+
+    <div class="callout callout-gray">
+      <div class="callout-emoji">📝</div>
+      <div class="callout-body footer-note">
+        本分析は提供された資料・公開情報に基づく参考試算であり、特定の不動産・金融商品の購入・売却を推奨するものではありません。前提条件 (融資金利・税率・出口Capなど) を変更すると結果は大きく変わります。最終的な投資判断はユーザー本人の責任で行ってください。税務・法務判断は専門家にご相談ください。
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "url": "https://www.kenbiya.com/pp3/f/okinawa/naha-shi/re_4338280jq8/",
+  "expected": {
+    "property_name": "高良2丁目アパート",
+    "address": "沖縄県那覇市2-6-21",
+    "asking_price_yen": 298000000,
+    "gross_rent_annual_yen": 15380000,
+    "gross_yield_pct": 5.16,
+    "build_year_month": "2015-07",
+    "age_years": 10,
+    "structure": "rc",
+    "property_type": "1棟マンション",
+    "building_area_sqm": 848.94,
+    "land_area_sqm": 694.88,
+    "land_rights": "所有権",
+    "legal_far_pct": 200.0,
+    "bcr_pct": 60.0,
+    "num_units": 20,
+    "nearest_station": "沖縄都市モノレール 安里駅",
+    "station_walk_min": 18,
+    "floor_plan": "住戸の専有面積：不明",
+    "num_floors": 6,
+    "city_planning_area": "第一種中高住専",
+    "transaction_type": "仲介"
+  }
+}

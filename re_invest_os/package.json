@@ -1,0 +1,22 @@
+{
+  "name": "re_invest_os",
+  "version": "0.1.0",
+  "private": true,
+  "description": "個人投資家のための不動産投資DD・買付前監査Webアプリ",
+  "packageManager": "pnpm@11.1.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel run dev",
+    "build": "pnpm -r run build",
+    "lint": "pnpm -r run lint",
+    "typecheck": "pnpm -r run typecheck",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,css}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.0"
+  }
+}

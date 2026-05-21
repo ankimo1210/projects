@@ -1,0 +1,29 @@
+{
+  "folders": [
+    { "path": "../johnhull" },
+    { "path": "../_docs" }
+  ],
+  "settings": {
+    "python.analysis.diagnosticMode": "openFilesOnly",
+    "files.watcherExclude": {
+      "**/_data/**": true,
+      "**/_logs/**": true,
+      "**/_archive/**": true,
+      "**/_scratch/**": true,
+      "**/__pycache__/**": true,
+      "**/venv/**": true,
+      "**/.venv/**": true,
+      "**/.ipynb_checkpoints/**": true
+    },
+    "search.exclude": {
+      "**/_data/**": true,
+      "**/_logs/**": true,
+      "**/_archive/**": true,
+      "**/_scratch/**": true,
+      "**/__pycache__/**": true,
+      "**/venv/**": true,
+      "**/.venv/**": true,
+      "**/.ipynb_checkpoints/**": true
+    }
+  }
+}

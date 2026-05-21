@@ -1,0 +1,11 @@
+[package]
+name = "gto-core"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["lib"]
+
+[dependencies]
+rand = "0.8"
+rayon = "1.10"

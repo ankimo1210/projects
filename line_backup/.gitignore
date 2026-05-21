@@ -1,0 +1,17 @@
+output/*
+!output/.gitkeep
+*.sqlite
+*.sqlite3
+*.db
+*.csv
+*.json
+*.html
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+.pytest_cache/

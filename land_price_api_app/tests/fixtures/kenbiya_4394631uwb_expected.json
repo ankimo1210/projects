@@ -1,0 +1,30 @@
+{
+  "url": "https://www.kenbiya.com/pp3/f/okinawa/naha-shi/re_4394631uwb/",
+  "expected": {
+    "property_name": "前田ビル",
+    "address": "沖縄県那覇市牧志2丁目23-2",
+    "asking_price_yen": 120000000,
+    "gross_rent_monthly_yen": 396000,
+    "gross_rent_annual_yen": 4752000,
+    "gross_yield_pct": 3.8,
+    "build_year_month": "1975-02",
+    "age_years": 51,
+    "structure": "rc",
+    "property_type": "1棟マンション",
+    "building_area_sqm": 330.38,
+    "land_area_sqm": 145.81,
+    "land_rights": "所有権",
+    "legal_far_pct": 200.0,
+    "bcr_pct": 60.0,
+    "num_units": 8,
+    "road_frontage": "北側公道7m/西側公道12m",
+    "nearest_station": "沖縄都市モノレール 美栄橋駅",
+    "station_walk_min": 5,
+    "floor_plan": "店舗・事務所×2戸  3LDK×1戸  2DK×2戸  1K×3戸 1階は、飲食店1と簡易作業場兼事務所1",
+    "num_floors": 4,
+    "city_planning_area": "第一種住居",
+    "updated_date": "2026-06-25",
+    "transaction_type": "仲介",
+    "extraction_confidence": "high"
+  }
+}

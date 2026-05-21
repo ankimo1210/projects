@@ -1,0 +1,12 @@
+streamlit>=1.32
+pandas>=2.0
+duckdb>=0.10
+pyarrow>=14.0
+requests>=2.31
+python-dotenv>=1.0
+plotly>=5.18
+shapely>=2.0
+pyshp>=2.3
+tenacity>=8.2
+beautifulsoup4>=4.12
+lxml>=5.0

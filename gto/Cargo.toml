@@ -1,0 +1,10 @@
+[workspace]
+members = [
+    "crates/gto-core",
+    "crates/gto-py",
+    "crates/gto-cuda",
+]
+resolver = "2"
+
+[workspace.dependencies]
+pyo3 = { version = "0.25", features = ["extension-module"] }

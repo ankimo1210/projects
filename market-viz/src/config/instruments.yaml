@@ -1,0 +1,163 @@
+instruments:
+
+  crypto:
+    - ticker: BTC-USD
+      name: Bitcoin
+      asset_class: crypto
+      market: global
+      source: yfinance
+      ccxt_symbol: BTC/USDT
+      ccxt_exchange: binance
+      freq_intraday: "1m"
+
+    - ticker: ETH-USD
+      name: Ethereum
+      asset_class: crypto
+      market: global
+      source: yfinance
+      ccxt_symbol: ETH/USDT
+      ccxt_exchange: binance
+      freq_intraday: "1m"
+
+    - ticker: SOL-USD
+      name: Solana
+      asset_class: crypto
+      market: global
+      source: yfinance
+      ccxt_symbol: SOL/USDT
+      ccxt_exchange: binance
+      freq_intraday: "1m"
+
+    - ticker: XRP-USD
+      name: XRP
+      asset_class: crypto
+      market: global
+      source: yfinance
+      ccxt_symbol: XRP/USDT
+      ccxt_exchange: binance
+      freq_intraday: "1m"
+
+  fx:
+    - ticker: USDJPY=X
+      name: USD/JPY
+      asset_class: fx
+      market: global
+      source: yfinance
+
+    - ticker: EURUSD=X
+      name: EUR/USD
+      asset_class: fx
+      market: global
+      source: yfinance
+
+    - ticker: EURJPY=X
+      name: EUR/JPY
+      asset_class: fx
+      market: global
+      source: yfinance
+
+    - ticker: GBPUSD=X
+      name: GBP/USD
+      asset_class: fx
+      market: global
+      source: yfinance
+
+    - ticker: AUDUSD=X
+      name: AUD/USD
+      asset_class: fx
+      market: global
+      source: yfinance
+
+  us_equity:
+    - ticker: SPY
+      name: S&P 500 ETF
+      asset_class: equity
+      market: us
+      source: yfinance
+
+    - ticker: QQQ
+      name: NASDAQ 100 ETF
+      asset_class: equity
+      market: us
+      source: yfinance
+
+    - ticker: IWM
+      name: Russell 2000 ETF
+      asset_class: equity
+      market: us
+      source: yfinance
+
+    - ticker: TLT
+      name: 20Y Treasury ETF
+      asset_class: equity
+      market: us
+      source: yfinance
+
+    - ticker: GLD
+      name: Gold ETF
+      asset_class: equity
+      market: us
+      source: yfinance
+
+    - ticker: DIA
+      name: Dow Jones ETF
+      asset_class: equity
+      market: us
+      source: yfinance
+
+    - ticker: VIX
+      name: VIX (CBOE)
+      asset_class: equity
+      market: us
+      source: yfinance
+      yf_ticker: "^VIX"
+
+  japan_equity:
+    - ticker: "^N225"
+      name: 日経平均
+      asset_class: equity
+      market: jp
+      source: yfinance
+
+    - ticker: "1306.T"
+      name: TOPIX ETF
+      asset_class: equity
+      market: jp
+      source: yfinance
+
+    - ticker: "1570.T"
+      name: 日経レバレッジETF
+      asset_class: equity
+      market: jp
+      source: yfinance
+
+  rates:
+    - ticker: "^TNX"
+      name: 米国10年債利回り
+      asset_class: rates
+      market: us
+      source: yfinance
+
+    - ticker: "^IRX"
+      name: 米国3ヶ月T-Bill
+      asset_class: rates
+      market: us
+      source: yfinance
+
+    - ticker: "^FVX"
+      name: 米国5年債利回り
+      asset_class: rates
+      market: us
+      source: yfinance
+
+    - ticker: "^TYX"
+      name: 米国30年債利回り
+      asset_class: rates
+      market: us
+      source: yfinance
+
+    - ticker: "^USGG10YR"
+      name: 米国10年債(Bloomberg)
+      asset_class: rates
+      market: us
+      source: yfinance

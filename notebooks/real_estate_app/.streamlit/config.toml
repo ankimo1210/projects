@@ -1,0 +1,16 @@
+[global]
+developmentMode = false
+
+[server]
+headless = true
+address = "0.0.0.0"
+port = 8501
+runOnSave = true
+
+[browser]
+serverAddress = "0.0.0.0"
+serverPort = 8501
+gatherUsageStats = false
+
+[theme]
+primaryColor = "#1f77b4"

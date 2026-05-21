@@ -1,0 +1,44 @@
+{
+  "folders": [
+    { "path": "../land_price_api_app" },
+    { "path": "../_docs" }
+  ],
+  "settings": {
+    "python.analysis.diagnosticMode": "openFilesOnly",
+    "files.watcherExclude": {
+      "**/_data/**": true,
+      "**/_logs/**": true,
+      "**/_archive/**": true,
+      "**/_scratch/**": true,
+      "**/data/raw/**": true,
+      "**/data/processed/**": true,
+      "**/data/*.migrated/**": true,
+      "**/*.migrated/**": true,
+      "**/__pycache__/**": true,
+      "**/venv/**": true,
+      "**/.venv/**": true,
+      "**/*.parquet": true,
+      "**/*.duckdb": true,
+      "**/*.geojson": true
+    },
+    "search.exclude": {
+      "**/_data/**": true,
+      "**/_logs/**": true,
+      "**/_archive/**": true,
+      "**/_scratch/**": true,
+      "**/data/raw/**": true,
+      "**/data/processed/**": true,
+      "**/data/*.migrated/**": true,
+      "**/*.migrated/**": true,
+      "**/__pycache__/**": true,
+      "**/venv/**": true,
+      "**/.venv/**": true,
+      "**/*.parquet": true,
+      "**/*.duckdb": true,
+      "**/*.duckdb.wal": true,
+      "**/*.geojson": true,
+      "**/*.csv": true,
+      "**/*.log": true
+    }
+  }
+}

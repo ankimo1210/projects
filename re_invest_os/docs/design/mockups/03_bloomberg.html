@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>03 Bloomberg系 — 物件分析結果</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #121212;
+    --surface-alt: #1a1a1a;
+    --border: #2a2a2a;
+    --border-strong: #3a3a3a;
+    --text: #e5e5e5;
+    --text-muted: #888888;
+    --text-subtle: #555555;
+    --accent: #ff8800;
+    --accent-alt: #ffaa00;
+    --good: #00d96b;
+    --bad: #ff3b3b;
+    --warn: #ffcc00;
+    --info: #4a9eff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'JetBrains Mono', 'Noto Sans JP', monospace; background: var(--bg); color: var(--text); font-size: 12px; line-height: 1.4; }
+  .nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 6px 16px; display: flex; align-items: center; gap: 24px; height: 36px; }
+  .nav-logo { font-weight: 700; color: var(--accent); letter-spacing: 0.05em; font-size: 12px; }
+  .nav-cmd { display: flex; gap: 4px; }
+  .nav-cmd-key { background: var(--accent); color: var(--bg); padding: 1px 6px; font-weight: 700; font-size: 10px; }
+  .nav-cmd-name { color: var(--text-muted); font-size: 11px; padding: 1px 8px 1px 4px; }
+  .nav-cmd.active .nav-cmd-name { color: var(--text); }
+  .nav-right { margin-left: auto; display: flex; gap: 16px; font-size: 10px; color: var(--text-muted); }
+  .nav-right .blink { color: var(--good); animation: blink 1.5s infinite; }
+  @keyframes blink { 0%,50% { opacity: 1; } 51%,100% { opacity: 0.3; } }
+  .ticker { background: var(--surface-alt); border-bottom: 1px solid var(--border); padding: 4px 16px; font-size: 11px; color: var(--text-muted); display: flex; gap: 24px; }
+  .ticker span strong { color: var(--accent); margin-right: 4px; }
+  .container { padding: 12px 16px; }
+  .grid { display: grid; gap: 8px; }
+  .grid-3 { grid-template-columns: 280px 1fr 320px; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .panel { background: var(--surface); border: 1px solid var(--border); }
+  .panel-h { background: var(--surface-alt); padding: 5px 10px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; font-size: 10px; }
+  .panel-h-title { color: var(--accent); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+  .panel-h-meta { color: var(--text-subtle); font-size: 9px; }
+  .panel-b { padding: 10px; }
+  .row { display: flex; padding: 3px 0; font-size: 11px; }
+  .row-l { width: 110px; color: var(--text-muted); }
+  .row-v { font-variant-numeric: tabular-nums; }
+  .num { font-variant-numeric: tabular-nums; }
+  .good { color: var(--good); }
+  .bad { color: var(--bad); }
+  .warn { color: var(--warn); }
+  .info { color: var(--info); }
+  .accent { color: var(--accent); }
+  .score-block { padding: 12px; text-align: center; }
+  .score-big { font-size: 64px; font-weight: 700; color: var(--accent); line-height: 0.9; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+  .score-meta { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+  .score-eval { font-size: 13px; color: var(--warn); margin-top: 6px; font-weight: 700; }
+  .score-conf { margin-top: 10px; font-size: 10px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; justify-content: center; }
+  .conf-bar { width: 120px; height: 4px; background: var(--border); }
+  .conf-fill { height: 100%; background: var(--accent); width: 74%; }
+  .summary-list { margin: 0; padding: 0; list-style: none; }
+  .summary-list li { padding: 6px 0; font-size: 11px; line-height: 1.6; border-bottom: 1px dashed var(--border); display: flex; gap: 8px; }
+  .summary-list li:last-child { border-bottom: none; }
+  .summary-list .n { color: var(--accent); font-weight: 700; flex-shrink: 0; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .kpi-cell { background: var(--surface); padding: 10px 12px; }
+  .kpi-name { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .kpi-val { font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .kpi-val-u { font-size: 12px; color: var(--text-muted); margin-left: 2px; }
+  .kpi-delta { font-size: 10px; margin-top: 2px; }
+  .table { width: 100%; border-collapse: collapse; font-size: 10px; }
+  .table th { background: var(--surface-alt); padding: 5px 8px; text-align: left; font-weight: 700; color: var(--accent); border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: 0.08em; font-size: 9px; }
+  .table td { padding: 5px 8px; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; }
+  .table td.num { text-align: right; }
+  .table tr:hover td { background: var(--surface-alt); }
+  .table tr:last-child td { border-bottom: none; }
+  .offer-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .offer-cell { background: var(--surface); padding: 10px 12px; }
+  .offer-cell.hl { background: rgba(255, 136, 0, 0.1); border-left: 2px solid var(--accent); }
+  .offer-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .offer-val { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .questions { padding: 4px 0; }
+  .questions li { padding: 6px 0; border-bottom: 1px dashed var(--border); font-size: 10px; list-style: none; display: flex; gap: 6px; }
+  .questions li:last-child { border-bottom: none; }
+  .questions .q { color: var(--accent); font-weight: 700; min-width: 24px; }
+  .footer { margin-top: 12px; padding: 8px 12px; background: var(--surface); border: 1px solid var(--border); font-size: 9px; color: var(--text-subtle); line-height: 1.5; }
+  .sec-gap { margin-top: 8px; }
+  .badge { display: inline-block; padding: 1px 6px; font-size: 9px; font-weight: 700; letter-spacing: 0.08em; }
+  .badge-good { background: var(--good); color: var(--bg); }
+  .badge-warn { background: var(--warn); color: var(--bg); }
+  .badge-bad { background: var(--bad); color: var(--bg); }
+  .ascii-chart { font-family: inherit; font-size: 9px; color: var(--text-muted); line-height: 1.4; white-space: pre; padding: 6px 0; }
+</style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-logo">RE_INVEST_OS</div>
+    <div class="nav-cmd active"><span class="nav-cmd-key">F1</span><span class="nav-cmd-name">ANLY</span></div>
+    <div class="nav-cmd"><span class="nav-cmd-key">F2</span><span class="nav-cmd-name">COMP</span></div>
+    <div class="nav-cmd"><span class="nav-cmd-key">F3</span><span class="nav-cmd-name">HIST</span></div>
+    <div class="nav-cmd"><span class="nav-cmd-key">F4</span><span class="nav-cmd-name">SCREENER</span></div>
+    <div class="nav-cmd"><span class="nav-cmd-key">F5</span><span class="nav-cmd-name">RPT</span></div>
+    <div class="nav-right">
+      <span class="blink">● LIVE</span>
+      <span>2026-05-12 09:42 JST</span>
+      <span>USR: kazumasa</span>
+    </div>
+  </nav>
+
+  <div class="ticker">
+    <span><strong>JGB10Y</strong>1.42% <span class="good">+0.02</span></span>
+    <span><strong>USDJPY</strong>148.32 <span class="bad">-0.45</span></span>
+    <span><strong>TOPIX</strong>2,841 <span class="good">+0.8%</span></span>
+    <span><strong>JREIT</strong>1,832 <span class="bad">-0.3%</span></span>
+    <span><strong>BoJ POLICY</strong>0.25%</span>
+    <span><strong>FLAT35</strong>1.92%</span>
+  </div>
+
+  <div class="container">
+    <div class="grid grid-3">
+
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div class="panel">
+          <div class="panel-h"><span class="panel-h-title">[ ANLY ] PROPERTY</span><span class="panel-h-meta">#A-184</span></div>
+          <div class="panel-b">
+            <div style="font-size: 13px; font-weight: 700; margin-bottom: 6px;">西新宿レジデンス 504号</div>
+            <div style="font-size: 10px; color: var(--text-muted); margin-bottom: 10px;">東京都新宿区西新宿7丁目</div>
+            <div class="row"><div class="row-l">価格</div><div class="row-v">¥39,800,000</div></div>
+            <div class="row"><div class="row-l">構造</div><div class="row-v">RC造</div></div>
+            <div class="row"><div class="row-l">築年</div><div class="row-v">2011 (15Y)</div></div>
+            <div class="row"><div class="row-l">専有面積</div><div class="row-v">38.40 m²</div></div>
+            <div class="row"><div class="row-l">間取り</div><div class="row-v">1LDK</div></div>
+            <div class="row"><div class="row-l">想定賃料</div><div class="row-v">¥145,000/mo</div></div>
+            <div class="row"><div class="row-l">表面利回</div><div class="row-v warn">6.20%</div></div>
+            <div class="row"><div class="row-l">NOI利回</div><div class="row-v bad">4.80%</div></div>
+            <div class="row"><div class="row-l">最寄駅</div><div class="row-v">新宿駅 9min</div></div>
+            <div class="row"><div class="row-l">建蔽率</div><div class="row-v">80%</div></div>
+            <div class="row"><div class="row-l">容積率</div><div class="row-v">600%</div></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-h"><span class="panel-h-title">[ SCORE ]</span><span class="panel-h-meta">v0.1.0</span></div>
+          <div class="score-block">
+            <div class="score-big">68</div>
+            <div class="score-meta">/ 100</div>
+            <div class="score-eval">NEUTRAL — OVERVALUED BIAS</div>
+            <div class="score-conf">
+              CONF
+              <div class="conf-bar"><div class="conf-fill"></div></div>
+              74%
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div class="panel">
+          <div class="panel-h"><span class="panel-h-title">[ KPI ] 10Y · LTV 70% · @2.00%</span></div>
+          <div class="kpi-grid">
+            <div class="kpi-cell">
+              <div class="kpi-name">Cap Rate</div>
+              <div class="kpi-val warn">4.80<span class="kpi-val-u">%</span></div>
+              <div class="kpi-delta bad">MKT 5.20 / -0.40pt</div>
+            </div>
+            <div class="kpi-cell">
+              <div class="kpi-name">Cash-on-Cash</div>
+              <div class="kpi-val">3.20<span class="kpi-val-u">%</span></div>
+              <div class="kpi-delta info">BTCF/EQ Y1</div>
+            </div>
+            <div class="kpi-cell">
+              <div class="kpi-name">DSCR Min</div>
+              <div class="kpi-val warn">1.18</div>
+              <div class="kpi-delta bad">THR 1.25 BREACH</div>
+            </div>
+            <div class="kpi-cell">
+              <div class="kpi-name">Eq IRR</div>
+              <div class="kpi-val warn">4.10<span class="kpi-val-u">%</span></div>
+              <div class="kpi-delta bad">TGT 8.00 MISS</div>
+            </div>
+            <div class="kpi-cell">
+              <div class="kpi-name">Eq Multiple</div>
+              <div class="kpi-val">1.42<span class="kpi-val-u">x</span></div>
+              <div class="kpi-delta info">10Y CUM</div>
+            </div>
+            <div class="kpi-cell">
+              <div class="kpi-name">Payback</div>
+              <div class="kpi-val">8.40<span class="kpi-val-u">Y</span></div>
+              <div class="kpi-delta info">Eq RECOVERY</div>
+            </div>
+            <div class="kpi-cell">
+              <div class="kpi-name">ATCF Y1</div>
+              <div class="kpi-val good">+124<span class="kpi-val-u">k</span></div>
+              <div class="kpi-delta info">post-tax</div>
+            </div>
+            <div class="kpi-cell">
+              <div class="kpi-name">LTV</div>
+              <div class="kpi-val">70.0<span class="kpi-val-u">%</span></div>
+              <div class="kpi-delta info">¥27.86M loan</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-h"><span class="panel-h-title">[ ATCF ] 10Y PROJECTION</span></div>
+          <div class="panel-b">
+            <div class="ascii-chart">Y1   ████████████████████  +124k
+Y2   ███████████████████   +118k
+Y3   ██████████████████    +112k
+Y4   █████████████████     +105k
+Y5   ████████████████      +98k
+Y6   ███████████████       +91k
+Y7   █████████████         +82k
+Y8   ████████████          +74k
+Y9   ██████████            +63k
+Y10  ████████              +51k</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-h"><span class="panel-h-title">[ SENS ] SENSITIVITY MATRIX</span></div>
+          <table class="table">
+            <thead><tr><th>SCENARIO</th><th class="num">ATCF Y1</th><th class="num">IRR</th><th class="num">DSCR Min</th><th>FLAG</th></tr></thead>
+            <tbody>
+              <tr><td>BASE</td><td class="num">¥124,000</td><td class="num">4.10%</td><td class="num">1.18</td><td><span class="badge badge-warn">WARN</span></td></tr>
+              <tr><td>RENT -5%</td><td class="num">¥48,000</td><td class="num warn">3.20%</td><td class="num warn">1.08</td><td><span class="badge badge-warn">WARN</span></td></tr>
+              <tr><td>RENT -10%</td><td class="num bad">¥-28,000</td><td class="num bad">2.10%</td><td class="num bad">0.98</td><td><span class="badge badge-bad">FAIL</span></td></tr>
+              <tr><td>RATE +0.5pt</td><td class="num">¥81,000</td><td class="num warn">3.50%</td><td class="num warn">1.11</td><td><span class="badge badge-warn">WARN</span></td></tr>
+              <tr><td>RATE +1.0pt</td><td class="num bad">¥-12,000</td><td class="num bad">2.70%</td><td class="num bad">1.05</td><td><span class="badge badge-bad">FAIL</span></td></tr>
+              <tr><td>EXIT CAP +50bp</td><td class="num">¥124,000</td><td class="num warn">2.00%</td><td class="num">1.18</td><td><span class="badge badge-warn">WARN</span></td></tr>
+              <tr><td>VAC +5pt</td><td class="num">¥73,000</td><td class="num warn">3.30%</td><td class="num warn">1.12</td><td><span class="badge badge-warn">WARN</span></td></tr>
+              <tr><td>COMBINED STRESS</td><td class="num bad">¥-89,000</td><td class="num bad">1.20%</td><td class="num bad">0.92</td><td><span class="badge badge-bad">FAIL</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div class="panel">
+          <div class="panel-h"><span class="panel-h-title">[ SUM ] 3-LINE</span></div>
+          <div class="panel-b">
+            <ul class="summary-list">
+              <li><span class="n">01</span><span>表面利回り 6.2% だが、管理費・修繕積立金込みの<span class="warn">NOI利回りは 4.8%</span></span></li>
+              <li><span class="n">02</span><span>金利 +1.0% 時に <span class="bad">DSCR 1.05</span>、税後CFが赤字化する余地</span></li>
+              <li><span class="n">03</span><span>出口Cap +0.5% で <span class="bad">10年IRR -2.1pt</span>、出口前提への依存が高い</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-h"><span class="panel-h-title">[ OFFER ] MAX BID</span></div>
+          <div style="padding: 10px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border);">
+              <div style="background: var(--surface); padding: 8px;">
+                <div class="offer-label">CURRENT</div>
+                <div class="offer-val">¥39.80<span class="kpi-val-u">M</span></div>
+              </div>
+              <div style="background: rgba(255,136,0,0.1); padding: 8px; border-left: 2px solid var(--accent);">
+                <div class="offer-label accent">MAX BID</div>
+                <div class="offer-val accent">¥34.20<span class="kpi-val-u">M</span></div>
+              </div>
+              <div style="background: var(--surface); padding: 8px;">
+                <div class="offer-label">SAFE</div>
+                <div class="offer-val">¥32.00<span class="kpi-val-u">M</span></div>
+              </div>
+              <div style="background: var(--surface); padding: 8px;">
+                <div class="offer-label">DELTA</div>
+                <div class="offer-val bad">-¥5.60<span class="kpi-val-u">M</span></div>
+              </div>
+            </div>
+            <div style="font-size: 9px; color: var(--text-muted); margin-top: 8px; line-height: 1.5;">
+              <span class="accent">BINDING:</span> DSCR 1.25 floor / RATE +100bp ATCF&lt;0 / EXIT CAP +50bp IRR miss
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-h"><span class="panel-h-title">[ Q ] BROKER INQUIRY</span><span class="panel-h-meta">6 items</span></div>
+          <div class="panel-b">
+            <ul class="questions">
+              <li><span class="q">Q01</span><span>レントロール更新日と入居状況</span></li>
+              <li><span class="q">Q02</span><span>滞納者の有無、過去3年の入退去履歴</span></li>
+              <li><span class="q">Q03</span><span>直近5年の大規模修繕履歴</span></li>
+              <li><span class="q">Q04</span><span>固定資産税・都市計画税の直近年額</span></li>
+              <li><span class="q">Q05</span><span>長期修繕計画と積立金値上げ予定</span></li>
+              <li><span class="q">Q06</span><span>売主の売却理由</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-h"><span class="panel-h-title">[ CROSS ] ASSET CMP (¥10M EQ, 10Y)</span></div>
+          <table class="table">
+            <thead><tr><th>ASSET</th><th class="num">EXP RTN</th><th class="num">vs RE</th></tr></thead>
+            <tbody>
+              <tr><td>RE (this)</td><td class="num warn">4.10%</td><td class="num">—</td></tr>
+              <tr><td>VT (World Eq)</td><td class="num good">5.00%</td><td class="num good">+0.90</td></tr>
+              <tr><td>VTI (US Eq)</td><td class="num good">6.00%</td><td class="num good">+1.90</td></tr>
+              <tr><td>JREIT idx</td><td class="num">4.50%</td><td class="num good">+0.40</td></tr>
+              <tr><td>JGB 10Y</td><td class="num bad">1.42%</td><td class="num bad">-2.68</td></tr>
+              <tr><td>JPY Deposit</td><td class="num bad">0.30%</td><td class="num bad">-3.80</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      [ DISCLAIMER ] PARAMETRIC SIMULATION FOR REFERENCE. NOT INVESTMENT ADVICE. NOT A SOLICITATION FOR ANY SECURITY OR REAL ESTATE TRANSACTION. PAST PERFORMANCE DOES NOT GUARANTEE FUTURE RESULTS. CONSULT LICENSED PROFESSIONALS FOR TAX/LEGAL DECISIONS. © RE_INVEST_OS v0.1
+    </div>
+  </div>
+</body>
+</html>

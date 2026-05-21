@@ -1,0 +1,12 @@
+[package]
+name = "gto-cuda"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["lib", "cdylib"]
+
+[dependencies]
+gto-core = { path = "../gto-core" }
+pyo3     = { workspace = true }
+rayon    = "1.10"

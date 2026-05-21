@@ -1,0 +1,12 @@
+node_modules
+dist
+build
+.next
+.venv
+venv
+__pycache__
+*.lock
+pnpm-lock.yaml
+uv.lock
+docs/product/blueprint_v0_1.md
+docs/design/mockups/*.html

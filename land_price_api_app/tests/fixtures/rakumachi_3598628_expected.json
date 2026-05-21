@@ -1,0 +1,28 @@
+{
+  "url": "https://www.rakumachi.jp/syuuekibukken/kyushu/okinawa/dim1002/3598628/show.html",
+  "expected": {
+    "property_name": "ラリアンス",
+    "address": "沖縄県那覇市那覇市具志2丁目450番地16",
+    "asking_price_yen": 250000000,
+    "gross_rent_annual_yen": 11928000,
+    "gross_yield_pct": 4.77,
+    "build_year_month": "2013-04",
+    "age_years": 14,
+    "structure": "rc",
+    "property_type": "1棟アパート",
+    "building_area_sqm": 594.38,
+    "land_area_sqm": 473.45,
+    "land_rights": "所有権",
+    "legal_far_pct": 200.0,
+    "bcr_pct": 60.0,
+    "num_units": 14,
+    "road_frontage": "公道 西6.00m",
+    "nearest_station": "沖縄都市モノレール 赤嶺駅",
+    "station_walk_min": 25,
+    "floor_plan": "2DK×14戸",
+    "num_floors": 6,
+    "land_category": "宅地",
+    "city_planning_area": "市街化区域",
+    "transaction_type": "専任媒介"
+  }
+}

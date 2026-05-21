@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>stockkit — Technical Onepager</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
+    font-size: 9pt;
+    line-height: 1.35;
+    color: #1a1a1a;
+    background: #f0f0f0;
+  }
+  .page {
+    width: 210mm;
+    height: 297mm;
+    margin: 10mm auto;
+    padding: 10mm;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 6mm;
+  }
+  @media print {
+    body { background: white; }
+    .page { margin: 0; box-shadow: none; }
+  }
+
+  /* Header */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2.5px solid #1f4e8f;
+    padding-bottom: 4mm;
+  }
+  header h1 {
+    font-size: 22pt;
+    margin: 0;
+    color: #1f4e8f;
+    letter-spacing: -0.5px;
+  }
+  header .tagline {
+    font-size: 9.5pt;
+    color: #666;
+    margin-top: 2mm;
+  }
+  header .meta {
+    text-align: right;
+    font-size: 8pt;
+    color: #888;
+  }
+  header .meta strong { color: #1f4e8f; }
+
+  /* Body grid: 2 columns */
+  main {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 6mm;
+  }
+
+  section {
+    margin-bottom: 4mm;
+  }
+  section h2 {
+    font-size: 10.5pt;
+    color: #1f4e8f;
+    margin: 0 0 2mm 0;
+    padding-bottom: 1mm;
+    border-bottom: 1px solid #e0e0e0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  section h3 {
+    font-size: 9pt;
+    margin: 2.5mm 0 1mm 0;
+    color: #333;
+  }
+
+  /* Table styles */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8.2pt;
+    margin: 1mm 0;
+  }
+  th {
+    background: #f5f7fb;
+    text-align: left;
+    padding: 1.3mm 2mm;
+    font-weight: 600;
+    color: #1f4e8f;
+    border-bottom: 1px solid #d0d8e8;
+  }
+  td {
+    padding: 1.1mm 2mm;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: top;
+  }
+
+  /* Code blocks */
+  code, pre {
+    font-family: "SF Mono", Monaco, Consolas, monospace;
+    font-size: 8pt;
+  }
+  code {
+    background: #f5f5f5;
+    padding: 0.5mm 1.5mm;
+    border-radius: 2px;
+    color: #c7254e;
+  }
+  pre {
+    background: #2d2d2d;
+    color: #e0e0e0;
+    padding: 2.5mm;
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 1mm 0;
+    line-height: 1.4;
+  }
+  pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+  }
+
+  /* ASCII Diagram */
+  .diagram {
+    background: #fafbfc;
+    border: 1px solid #e0e4ea;
+    padding: 2.5mm 3mm;
+    font-family: "SF Mono", Monaco, monospace;
+    font-size: 7.3pt;
+    line-height: 1.35;
+    color: #2d3748;
+    border-radius: 3px;
+    white-space: pre;
+    overflow: hidden;
+  }
+
+  /* Stack pills */
+  .pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2mm;
+    margin: 1.5mm 0;
+  }
+  .pill {
+    display: inline-block;
+    padding: 0.8mm 2mm;
+    background: #eef3fc;
+    color: #1f4e8f;
+    border-radius: 8px;
+    font-size: 7.8pt;
+    font-weight: 500;
+  }
+  .pill.alt { background: #fef6ec; color: #b45309; }
+  .pill.lib { background: #e8f5e9; color: #2e7d32; }
+  .pill.ext { background: #fef0f0; color: #c53030; }
+
+  ul {
+    margin: 1mm 0;
+    padding-left: 4mm;
+  }
+  ul li {
+    margin: 0.5mm 0;
+  }
+
+  /* Decisions card */
+  .decisions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5mm;
+  }
+  .decision {
+    background: #fafbfc;
+    border-left: 2.5px solid #1f4e8f;
+    padding: 1.5mm 2.5mm;
+    font-size: 7.8pt;
+  }
+  .decision strong { color: #1f4e8f; display: block; margin-bottom: 0.5mm; }
+
+  /* Stats */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2mm;
+    margin: 2mm 0;
+  }
+  .stat {
+    text-align: center;
+    background: #f5f7fb;
+    padding: 2mm;
+    border-radius: 3px;
+  }
+  .stat .num {
+    font-size: 14pt;
+    font-weight: 700;
+    color: #1f4e8f;
+    display: block;
+  }
+  .stat .label {
+    font-size: 7pt;
+    color: #666;
+    margin-top: 0.5mm;
+  }
+
+  footer {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 2mm;
+    font-size: 7.5pt;
+    color: #888;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .warning {
+    background: #fef3c7;
+    border-left: 2.5px solid #d97706;
+    padding: 1.5mm 2.5mm;
+    font-size: 7.8pt;
+    color: #78350f;
+    margin: 1.5mm 0;
+    border-radius: 0 3px 3px 0;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div>
+      <h1>stockkit</h1>
+      <div class="tagline">個人投資分析ツールキット — データ取得 / バスケット分析 / AI チャット統合</div>
+    </div>
+    <div class="meta">
+      <strong>v0.4.0</strong> &nbsp; 2026-05-21<br>
+      Python 3.12 / Linux (WSL2)<br>
+      <code>github.com/kazumasa/stock</code>
+    </div>
+  </header>
+
+  <main>
+    <!-- LEFT COLUMN -->
+    <div>
+
+      <section>
+        <h2>What &amp; Why</h2>
+        <p style="margin:1mm 0;">日米株 / マクロ経済 / インデックスのデータを<strong>統一API</strong>で取得し、Jupyter・Dash UI・AI チャットから分析できる個人ツール。yfinance だけでは取れないマクロ指標 (FRED, e-Stat) と構成銘柄 (Wikipedia) を統合し、自然言語での分析依頼にも対応する。</p>
+        <div class="stats">
+          <div class="stat"><span class="num">7</span><div class="label">データソース</div></div>
+          <div class="stat"><span class="num">8</span><div class="label">Dashページ</div></div>
+          <div class="stat"><span class="num">4</span><div class="label">対応インデックス</div></div>
+          <div class="stat"><span class="num">5</span><div class="label">AI ツール</div></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Architecture</h2>
+        <div class="diagram">┌──────────────┐  ┌──────────────────┐
+│ Dash UI 8050 │  │ Flask API 8051   │ ← AI Chat
+│ (pages/*)    │─▶│ (job_store +     │
+└──────┬───────┘  │  claude_agent)   │
+       │          └──────┬───────────┘
+       ▼                 ▼
+┌─────────────────────────────────┐
+│  src/stockkit/                   │
+│   data/  analysis/  viz/         │
+└──────┬──────────────────┬────────┘
+       ▼                  ▼
+┌────────────┐  ┌──────────────────┐
+│ DuckDB     │  │ External APIs    │
+│ _data/     │  │ yfinance / FRED  │
+│ cache.db   │  │ e-Stat / J-Quants│
+└────────────┘  │ Stooq / Anthropic│
+                └──────────────────┘</div>
+      </section>
+
+      <section>
+        <h2>Tech Stack</h2>
+        <h3>Core</h3>
+        <div class="pills">
+          <span class="pill">Python 3.12</span>
+          <span class="pill">uv</span>
+          <span class="pill">pandas 2.2</span>
+          <span class="pill">duckdb 1.1</span>
+        </div>
+        <h3>UI / Visualization</h3>
+        <div class="pills">
+          <span class="pill lib">Dash 2.18</span>
+          <span class="pill lib">dbc 1.6</span>
+          <span class="pill lib">Plotly 5.24</span>
+          <span class="pill lib">Flask</span>
+        </div>
+        <h3>Data Providers</h3>
+        <div class="pills">
+          <span class="pill ext">yfinance</span>
+          <span class="pill ext">fredapi</span>
+          <span class="pill ext">e-Stat v3</span>
+          <span class="pill ext">J-Quants v2</span>
+          <span class="pill ext">Stooq</span>
+          <span class="pill ext">Wikipedia</span>
+        </div>
+        <h3>AI</h3>
+        <div class="pills">
+          <span class="pill alt">anthropic SDK</span>
+          <span class="pill alt">Claude Sonnet 4.6</span>
+          <span class="pill alt">tool_use loop</span>
+        </div>
+      </section>
+
+      <section>
+        <h2>Public API</h2>
+<pre><code>from stockkit.data import (
+    get_prices,    # OHLCV (株価/ETF/先物/FX/crypto)
+    get_macro,     # FRED マクロシリーズ
+    get_jp_cpi,    # e-Stat 日本CPI
+)
+from stockkit.analysis.basket import compare_basket
+from stockkit.data.us_indices import load_constituents
+
+df  = get_prices("NVDA", period="5y")
+cpi = get_macro("CPIAUCSL")
+uni = load_constituents("SP500")
+ret, px, _ = compare_basket(uni, "2024-01-01",
+    weighting="marketcap")</code></pre>
+      </section>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div>
+
+      <section>
+        <h2>Key Modules</h2>
+        <table>
+          <tr><th>パス</th><th>責務</th></tr>
+          <tr><td><code>data/__init__.py</code></td><td>統一API、ソース自動振り分け</td></tr>
+          <tr><td><code>data/cache.py</code></td><td>DuckDB prices / macro_series</td></tr>
+          <tr><td><code>data/providers/*</code></td><td>各データソース実装 (5本)</td></tr>
+          <tr><td><code>data/nikkei225.py</code><br><code>data/us_indices.py</code></td><td>構成銘柄 Wikipedia scrape</td></tr>
+          <tr><td><code>analysis/basket.py</code></td><td>バスケット計算 (価格/時価加重)</td></tr>
+          <tr><td><code>app/pages/*</code></td><td>Dash ページ (8ページ)</td></tr>
+          <tr><td><code>app/api/claude_agent.py</code></td><td>Claude tool_use ループ</td></tr>
+          <tr><td><code>app/api/sandbox.py</code></td><td>Python exec サンドボックス</td></tr>
+        </table>
+      </section>
+
+      <section>
+        <h2>Data Coverage</h2>
+        <table>
+          <tr><th>カテゴリ</th><th>ソース</th><th>頻度</th></tr>
+          <tr><td>米株 / ETF / 先物 / FX / Crypto</td><td>yfinance</td><td>日次</td></tr>
+          <tr><td>日本株</td><td>J-Quants → yfinance</td><td>日次</td></tr>
+          <tr><td>米マクロ (CPI/雇用/金利等)</td><td>FRED</td><td>月次/日次</td></tr>
+          <tr><td>日本 CPI 最新</td><td>e-Stat API</td><td>月次</td></tr>
+          <tr><td>TOPIX 指数</td><td>Stooq</td><td>日次</td></tr>
+          <tr><td>N225 / DJIA / SP500 / NDX100 構成銘柄</td><td>Wikipedia</td><td>都度取得</td></tr>
+        </table>
+      </section>
+
+      <section>
+        <h2>AI Chat Flow</h2>
+        <div class="diagram">User: "アドバンテストの株価を表示"
+   │
+   ▼ POST /api/chat
+[Flask 8051] → 非同期スレッド起動
+   │
+   ▼ tool_use loop (最大10ラウンド)
+[Claude Sonnet 4.6]
+   ├─ get_price_data("6857.T")
+   └─ execute_python(code) → sandbox
+       └─ Plotly fig 自動キャプチャ
+   │
+   ▼ status="done"
+[Dash chat.py] dcc.Interval (1s polling)
+   └─ メッセージ + グラフ表示</div>
+      </section>
+
+      <section>
+        <h2>Key Decisions</h2>
+        <div class="decisions">
+          <div class="decision">
+            <strong>ADR-001</strong>
+            Anthropic API 直接（Max プランは API 不可、$5〜課金）
+          </div>
+          <div class="decision">
+            <strong>ADR-002</strong>
+            Flask 別ポート 8051（Dash ContextVar 干渉回避）
+          </div>
+          <div class="decision">
+            <strong>ADR-003</strong>
+            N225 PAF=1.0 近似（自動取得経路なし、誤差 +1%）
+          </div>
+          <div class="decision">
+            <strong>ADR-004</strong>
+            現在構成で過去シミュ（履歴データ取得困難）
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Known Limitations</h2>
+        <div class="warning">
+          <strong>Survivorship bias</strong>: バスケットは現在構成を全期間に適用 → 2年で +5〜14% 上振れ。正確な指数連動には ETF (SPY/QQQ/DIA/1306.T) を使用すること。
+        </div>
+        <ul>
+          <li>FRED Japan CPI は 2021-06 で更新停止 (e-Stat で代替済み)</li>
+          <li>J-Quants 無料プラン: 株価レンジ約2年</li>
+          <li>TOPIX 実指数の自動取得は Stooq API キー必要</li>
+          <li>NDX capping rules・SP500 浮動株調整は未実装</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Quick Start</h2>
+<pre><code>git clone &lt;repo&gt; stock &amp;&amp; cd stock
+uv sync
+# .env に ANTHROPIC_API_KEY / FRED_API_KEY 等
+./start.sh   # → http://127.0.0.1:8050</code></pre>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div>詳細: <code>README.md</code> / <code>docs/ARCHITECTURE.md</code> / <code>docs/METHODOLOGY.md</code></div>
+    <div>個人投資分析支援用ツール — 投資判断は使用者の責任</div>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{
+  "url": "https://www.kenbiya.com/pp3/f/okinawa/naha-shi/re_44565007vq/",
+  "expected": {
+    "property_name": "(I-6354-01)沖縄県那覇市 一棟RCマンション",
+    "address": "沖縄県那覇市字国場273-1",
+    "asking_price_yen": 710000000,
+    "gross_rent_monthly_yen": 2855000,
+    "gross_rent_annual_yen": 34260000,
+    "gross_yield_pct": 4.82,
+    "build_year_month": "2006-02",
+    "age_years": 20,
+    "structure": "rc",
+    "property_type": "1棟マンション",
+    "building_area_sqm": 1941.28,
+    "land_area_sqm": 1119.07,
+    "land_rights": "所有権",
+    "legal_far_pct": 200.0,
+    "bcr_pct": 60.0,
+    "num_units": 52,
+    "road_frontage": "一方 北14.0m公道 接道接面20.0m",
+    "nearest_station": "沖縄都市モノレール 安里駅 バス17分",
+    "station_walk_min": 1,
+    "floor_plan": "住戸の専有面積：45m²～60m²",
+    "num_floors": 6,
+    "city_planning_area": "準住居",
+    "updated_date": "2026-07-29",
+    "transaction_type": "仲介",
+    "listing_date": "2026-04-29",
+    "extraction_confidence": "high"
+  }
+}

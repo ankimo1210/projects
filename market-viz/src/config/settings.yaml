@@ -1,0 +1,46 @@
+app:
+  title: "Market Viz"
+  page_icon: "📈"
+  layout: "wide"
+
+data:
+  db_path: "data/market.duckdb"
+  parquet_dir: "data/normalized"
+  raw_dir: "data/raw"
+
+  # デフォルト取得期間
+  default_period_days: 365
+  max_period_days: 1825   # 5年
+
+  # ccxt (crypto intraday)
+  ccxt_exchange: "binance"
+  ccxt_intraday_limit: 1000   # 1回リクエストあたり最大本数
+
+  # レート制限
+  yfinance_sleep_sec: 0.5
+  ccxt_sleep_sec: 0.2
+
+analytics:
+  # ボラティリティ計算ウィンドウ
+  vol_windows: [20, 60]
+  # z-score ウィンドウ
+  zscore_windows: [20, 60, 252]
+  # ローリング相関ウィンドウ
+  corr_windows: [20, 60]
+  # リターン計算期間
+  return_periods: [1, 5, 20, 60, 252]
+  # trading days per year
+  ann_factor: 252
+
+signals:
+  zscore_overbought: 2.0
+  zscore_oversold: -2.0
+  zscore_watch: 1.5
+  vol_spike_multiplier: 1.5   # 直近vol / 過去平均vol
+
+alerts:
+  vol_spike_threshold: 1.5
+  return_threshold_pct: 5.0   # 24h変化率
+  volume_spike_multiplier: 3.0
+  zscore_alert_threshold: 2.0
+  corr_deviation_threshold: 0.3

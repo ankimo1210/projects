@@ -1,0 +1,41 @@
+# secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# workspace-level generated data
+_data/
+_logs/
+_archive/tmp/
+_scratch/outputs/
+_scratch/tmp/
+
+# heavy local data
+*.duckdb
+*.duckdb.wal
+*.parquet
+*.geojson
+*.csv
+*.xlsx
+
+# logs
+*.log
+*_log.txt
+backfill_log*.txt
+sync_log*.txt
+streamlit.log
+
+# OS / Windows
+.DS_Store
+Thumbs.db
+*:Zone.Identifier
