@@ -240,7 +240,7 @@
     <div class="meta">
       <strong>v0.4.0</strong> &nbsp; 2026-05-21<br>
       Python 3.12 / Linux (WSL2)<br>
-      <code>github.com/kazumasa/stock</code>
+      <code>github.com/ankimo1210/projects</code> &nbsp;<code>/stock</code>
     </div>
   </header>
 
@@ -417,10 +417,10 @@ ret, px, _ = compare_basket(uni, "2024-01-01",
 
       <section>
         <h2>Quick Start</h2>
-<pre><code>git clone &lt;repo&gt; stock &amp;&amp; cd stock
-uv sync
-# .env に ANTHROPIC_API_KEY / FRED_API_KEY 等
-./start.sh   # → http://127.0.0.1:8050</code></pre>
+<pre><code>git clone .../projects ~/projects &amp;&amp; cd ~/projects
+uv sync --all-packages   # workspace一括
+cd stock                 # .env に ANTHROPIC/FRED/ESTAT key
+./start.sh               # → http://127.0.0.1:8050</code></pre>
       </section>
     </div>
   </main>
