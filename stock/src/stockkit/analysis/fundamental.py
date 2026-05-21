@@ -6,7 +6,7 @@ from typing import Any
 
 import pandas as pd
 
-from stockkit.data.providers.yfinance_provider import get_info, get_financials
+from stockkit.data.providers.yfinance_provider import get_financials, get_info
 
 # Map of "human key" -> yfinance info field(s) to try
 _INFO_FIELDS = {

@@ -1,4 +1,5 @@
 """Symplectic leapfrog (kick-drift-kick) integrator."""
+
 from __future__ import annotations
 
 import cupy as cp

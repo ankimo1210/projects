@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import argparse
 import sys
 from pathlib import Path
@@ -30,7 +31,7 @@ def _cmd_list_backups(args: argparse.Namespace) -> None:
 
 
 def _cmd_scan_line(args: argparse.Namespace) -> None:
-    from .manifest import scan_line_files, check_encrypted
+    from .manifest import check_encrypted, scan_line_files
     from .safety import confirm_output_dir
 
     backup_dir = Path(args.backup_dir).resolve()
@@ -78,8 +79,8 @@ def _cmd_extract_candidates(args: argparse.Namespace) -> None:
 
 
 def _cmd_inspect_db(args: argparse.Namespace) -> None:
-    from .sqlite_inspector import inspect
     from .safety import confirm_output_dir
+    from .sqlite_inspector import inspect
 
     db_path = Path(args.db).resolve()
     out_dir = confirm_output_dir(Path(args.out).resolve())
@@ -93,7 +94,7 @@ def _cmd_inspect_db(args: argparse.Namespace) -> None:
         row_cnt = str(ti.row_count) if ti.row_count is not None else "?"
         cols = ", ".join(c.name for c in ti.columns[:6])
         if len(ti.columns) > 6:
-            cols += f" ... (+{len(ti.columns)-6})"
+            cols += f" ... (+{len(ti.columns) - 6})"
         print(f"{ti.name:<40} {row_cnt:>10}  {cols}")
 
     print(f"\nReport: {out_dir / 'db_schema_report.md'}")
@@ -159,16 +160,20 @@ def build_parser() -> argparse.ArgumentParser:
 
     # scan-line
     p = sub.add_parser("scan-line", help="Scan Manifest.db for LINE-related files")
-    p.add_argument("--backup-dir", required=True, metavar="PATH",
-                   help="Path to iPhone backup directory")
-    p.add_argument("--out", required=True, metavar="DIR",
-                   help="Output directory")
+    p.add_argument(
+        "--backup-dir", required=True, metavar="PATH", help="Path to iPhone backup directory"
+    )
+    p.add_argument("--out", required=True, metavar="DIR", help="Output directory")
 
     # extract-candidates
     p = sub.add_parser("extract-candidates", help="Copy SQLite DB candidates from backup")
     p.add_argument("--backup-dir", required=True, metavar="PATH")
-    p.add_argument("--manifest-csv", required=True, metavar="PATH",
-                   help="manifest_line_files.csv from scan-line")
+    p.add_argument(
+        "--manifest-csv",
+        required=True,
+        metavar="PATH",
+        help="manifest_line_files.csv from scan-line",
+    )
     p.add_argument("--out", required=True, metavar="DIR")
 
     # inspect-db

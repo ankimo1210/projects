@@ -1,27 +1,31 @@
 """
 Generate Jupyter Notebook: Interest Rate Volatility Models (Part 3: Ch7-Final)
 """
+
 import nbformat as nbf
 import numpy as np
-from scipy.stats import norm
-import json
 
 np.random.seed(42)
+
 
 def md_cell(text):
     return nbf.v4.new_markdown_cell(text)
 
+
 def code_cell(code):
     return nbf.v4.new_code_cell(code)
+
 
 # =====================================================================
 # CHAPTER 7: HJM Framework
 # =====================================================================
 
+
 def create_ch7():
     cells = []
-    
-    cells.append(md_cell("""
+
+    cells.append(
+        md_cell("""
 # Chapter 7: HJM Framework (Heath-Jarrow-Morton)
 
 ## 概要
@@ -47,9 +51,11 @@ $$\\alpha(t,T) = \\sigma(t,T) \\int_t^T \\sigma(t,u)du$$
 - ✅ 多くのモデルは HJM framework の special case
 - ✅ Volatility structure = Model の本質
 - ✅ 無裁定 ⟹ Drift と vol の関係が固定
-    """))
-    
-    cells.append(code_cell("""
+    """)
+    )
+
+    cells.append(
+        code_cell("""
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
@@ -126,9 +132,11 @@ t_array = np.linspace(0, 5, 20)
 print("HJM 1-Factor Simulation initialized")
 print(f"Initial forward curve shape: {initial_forward_curve.shape}")
 print(f"Maturity range: {T_array[0]:.2f} to {T_array[-1]:.2f} years")
-    """))
-    
-    cells.append(code_cell("""
+    """)
+    )
+
+    cells.append(
+        code_cell("""
 # ===== HJM Forward Curve Evolution 可視化 =====
 
 def plot_hjm_forward_evolution(vol_type):
@@ -195,9 +203,11 @@ interact(
         value='Parallel'
     )
 )
-    """))
-    
-    cells.append(md_cell("""
+    """)
+    )
+
+    cells.append(
+        md_cell("""
 ## 主な特徴
 
 ### 強み
@@ -215,8 +225,9 @@ interact(
 - 🏦 理論的理解
 - 🏦 ファクター分解（PCA）
 - 🏦 高度なモデル構築
-    """))
-    
+    """)
+    )
+
     return cells
 
 
@@ -224,10 +235,12 @@ interact(
 # CHAPTER 8: LMM / BGM
 # =====================================================================
 
+
 def create_ch8():
     cells = []
-    
-    cells.append(md_cell("""
+
+    cells.append(
+        md_cell("""
 # Chapter 8: LMM / BGM (LIBOR Market Model)
 
 ## 概要
@@ -254,9 +267,11 @@ $$\\frac{dL_i(t)}{L_i(t)} = \\sum_k \\sigma_{i,k}(t) dW_t^{(k)}$$
 - 各テナーが独立のブラウン運動
 - Lognormal distributionを仮定
 - Caplet = Black76 formula で直接価格付け
-    """))
-    
-    cells.append(code_cell("""
+    """)
+    )
+
+    cells.append(
+        code_cell("""
 def lmm_forward_libor_simulation(L_initial, tenors, vols, corr_matrix, T, n_steps, n_paths=500):
     \"\"\"
     LMM simulation: Multiple forward LIBORs
@@ -335,9 +350,11 @@ print(f"Volatilities: {vols * 100}")
 # Simulate
 L_paths = lmm_forward_libor_simulation(L_initial, tenors, vols, corr_matrix, T=1.0, n_steps=20, n_paths=300)
 print(f"\\nSimulation output shape: {L_paths.shape}")
-    """))
-    
-    cells.append(code_cell("""
+    """)
+    )
+
+    cells.append(
+        code_cell("""
 # ===== LMM Forward Rate Paths + Correlation Heatmap =====
 
 def plot_lmm_analysis():
@@ -403,9 +420,11 @@ def plot_lmm_analysis():
     plt.show()
 
 plot_lmm_analysis()
-    """))
-    
-    cells.append(md_cell("""
+    """)
+    )
+
+    cells.append(
+        md_cell("""
 ## 主な特徴
 
 ### 強み
@@ -423,8 +442,9 @@ plot_lmm_analysis()
 - 🏦 **Cap/Floor市場との整合性**
 - 🏦 複数テナーの同時モデリング
 - 🏦 Swaption + Caplet の同時価格付け
-    """))
-    
+    """)
+    )
+
     return cells
 
 
@@ -432,10 +452,12 @@ plot_lmm_analysis()
 # CHAPTER 9: SABR
 # =====================================================================
 
+
 def create_ch9():
     cells = []
-    
-    cells.append(md_cell("""
+
+    cells.append(
+        md_cell("""
 # Chapter 9: SABR Model (Stochastic Alpha-Beta-Rho)
 
 ## 概要
@@ -457,9 +479,11 @@ $$dW_t^{(1)} dW_t^{(2)} = \\rho dt$$
 - $\\beta$ = CEV exponent (0=Normal, 1=Lognormal, 0<β<1=Hybrid)
 - $\\rho$ = Correlation between rate and vol (skew)
 - $\\nu$ = Vol of vol (smile curvature)
-    """))
-    
-    cells.append(code_cell("""
+    """)
+    )
+
+    cells.append(
+        code_cell("""
 def hagan_sabr_formula(F, K, T, alpha, beta, rho, nu):
     \"\"\"
     Hagan SABR approximation for implied volatility
@@ -507,9 +531,11 @@ print(f"Forward: {F_atm*100:.2f}%, T: {T:.1f}y")
 print(f"\\nStrike vs Implied Vol:")
 for K, iv in zip(strikes[::5], impl_vols[::5]):
     print(f"  K={K*100:.2f}%: σ={iv*100:.3f}%")
-    """))
-    
-    cells.append(code_cell("""
+    """)
+    )
+
+    cells.append(
+        code_cell("""
 # ===== SABR Interactive: Smile/Skew 動的可視化 =====
 
 from ipywidgets import FloatSlider, interact
@@ -571,9 +597,11 @@ interact(
 )
 
 print("✓ Adjust parameters to see smile/skew change")
-    """))
-    
-    cells.append(md_cell("""
+    """)
+    )
+
+    cells.append(
+        md_cell("""
 ## SABR キャリブレーション（市場クォートへのフィット）
 
 実際の市場では、各ストライクの **Implied Vol を観測** し、
@@ -583,9 +611,11 @@ SABR パラメータ (α, ρ, ν) を最小二乗でフィットします。
 $$\\min_{\\alpha, \\rho, \\nu} \\sum_j \\left( \\sigma_{SABR}(K_j) - \\sigma^{mkt}_j \\right)^2$$
 
 詳細な Vol Surface キャリブレーションは **Chapter 11** で扱います。
-    """))
+    """)
+    )
 
-    cells.append(code_cell("""
+    cells.append(
+        code_cell("""
 from scipy.optimize import minimize
 
 def calibrate_sabr_ch9(F, T, strikes, market_vols, beta=0.5):
@@ -655,9 +685,11 @@ axes[1].set_title('Calibration Residuals'); axes[1].grid(True, alpha=0.3)
 plt.tight_layout()
 plt.show()
 print("✓ SABR calibration demo complete  →  詳細は Chapter 11 へ")
-    """))
+    """)
+    )
 
-    cells.append(md_cell("""
+    cells.append(
+        md_cell("""
 ## 主な特徴
 
 ### 強み
@@ -675,7 +707,8 @@ print("✓ SABR calibration demo complete  →  詳細は Chapter 11 へ")
 - 🏦 **Swaption smile価格付け**
 - 🏦 Exotics（Bermudan等）
 - 🏦 **Vol surface calibration** → 詳細は Chapter 11
-    """))
+    """)
+    )
 
     return cells
 
@@ -684,10 +717,12 @@ print("✓ SABR calibration demo complete  →  詳細は Chapter 11 へ")
 # CHAPTER 10: RFR Framework
 # =====================================================================
 
+
 def create_ch10():
     cells = []
-    
-    cells.append(md_cell("""
+
+    cells.append(
+        md_cell("""
 # Chapter 10: RFR Framework
 
 ## 概要
@@ -721,9 +756,11 @@ R(T_{start}, T_{end}) = \\prod_{d=1}^{D}(1 + r_d \\delta_d) - 1
 - **毎日の** overnight rate を実績ベースで複利
 - 透明性が高い（取引ベース）
 - **離散複利** → **連続複利**への近似
-    """))
-    
-    cells.append(code_cell("""
+    """)
+    )
+
+    cells.append(
+        code_cell("""
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -779,9 +816,11 @@ for p in periods:
 print(f"\\nRFR by Period:")
 for p, (c, cont) in zip(periods, rfr_rates):
     print(f"  {p}d ({p/252*12:3.1f}M): Discrete={c*100:6.3f}%, Continuous={cont*100:6.3f}%")
-    """))
-    
-    cells.append(code_cell("""
+    """)
+    )
+
+    cells.append(
+        code_cell("""
 # ===== RFR Curve Evolution =====
 
 def plot_rfr_framework(vol_level, curve_slope):
@@ -849,9 +888,11 @@ interact(
     vol_level=FloatSlider(min=0.0005, max=0.01, step=0.0005, value=0.002, description='ON Vol:'),
     curve_slope=FloatSlider(min=0, max=0.05, step=0.005, value=0.02, description='Curve Slope:')
 )
-    """))
-    
-    cells.append(md_cell("""
+    """)
+    )
+
+    cells.append(
+        md_cell("""
 ## RFR vs LIBOR in モデリング
 
 ### Single Curve vs Multi-Curve
@@ -892,8 +933,9 @@ interact(
 - 🏦 金利デリバティブ（IRS, Caps, Swaptions）
 - 🏦 融資・貸出金利ベンチマーク
 - 🏦 Legacy LIBOR商品のヘッジ・管理
-    """))
-    
+    """)
+    )
+
     return cells
 
 
@@ -901,10 +943,12 @@ interact(
 # FINAL: Model Comparison
 # =====================================================================
 
+
 def create_final():
     cells = []
-    
-    cells.append(md_cell("""
+
+    cells.append(
+        md_cell("""
 # Final Chapter: Model Comparison & Selection Guide
 
 これまでの10のモデルを、横断的に比較します。
@@ -914,9 +958,11 @@ def create_final():
 - 使用場面
 - パラメータ数
 - 計算複雑度
-    """))
-    
-    cells.append(code_cell("""
+    """)
+    )
+
+    cells.append(
+        code_cell("""
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -949,9 +995,11 @@ print("  Curve Fit: Auto=Automatic initial curve fit, Manual=Requires manual tun
 print("  Greeks: Analytical/Numerical/Hagan approximation")
 print("  Complexity: 1(Simple) to 5(Complex)")
 print("  Industry Use: 1(Academic) to 10(Standard in practice)")
-    """))
-    
-    cells.append(code_cell("""
+    """)
+    )
+
+    cells.append(
+        code_cell("""
 # ===== Model Classification Scatter =====
 
 fig, axes = plt.subplots(1, 2, figsize=(14, 6))
@@ -1007,9 +1055,11 @@ plt.tight_layout()
 plt.show()
 
 print("✓ Model classification visualization complete")
-    """))
-    
-    cells.append(md_cell("""
+    """)
+    )
+
+    cells.append(
+        md_cell("""
 ## 使用場面別ガイド
 
 ### Caplet / Cap-Floor
@@ -1039,9 +1089,11 @@ print("✓ Model classification visualization complete")
 ### 現代的な金利管理
 - ✅ **Multi-Curve Framework** (必須)
 - ✅ **RFR Models** (SOFR/SONIA対応)
-    """))
-    
-    cells.append(md_cell("""
+    """)
+    )
+
+    cells.append(
+        md_cell("""
 ## まとめ
 
 ### 金利モデル選択の視点
@@ -1081,8 +1133,9 @@ print("✓ Model classification visualization complete")
 - Cross-gamma / Correlation risk
 - XVA (CVA, DVA, KVA)
 - Machine learning for calibration
-    """))
-    
+    """)
+    )
+
     return cells
 
 
@@ -1090,24 +1143,26 @@ print("✓ Model classification visualization complete")
 # Assemble Notebook (Part 3)
 # =====================================================================
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     nb = nbf.v4.new_notebook()
-    
+
     cells = []
-    
+
     # Add chapters
     cells.extend(create_ch7())
     cells.extend(create_ch8())
     cells.extend(create_ch9())
     cells.extend(create_ch10())
     cells.extend(create_final())
-    
+
     nb.cells = cells
-    
+
     # Save
-    output_path = '/home/kazumasa/projects/rates_volatility_model/rates_volatility_models_part3.ipynb'
-    with open(output_path, 'w') as f:
+    output_path = (
+        "/home/kazumasa/projects/rates_volatility_model/rates_volatility_models_part3.ipynb"
+    )
+    with open(output_path, "w") as f:
         nbf.write(nb, f)
-    
+
     print(f"✓ Generated: {output_path}")
     print(f"  Total cells: {len(cells)}")

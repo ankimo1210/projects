@@ -2,37 +2,44 @@
 ui/property_nearby.py
 周辺地価・近隣物件・施設・地図・地形リスクの表示。
 """
-from __future__ import annotations
-from typing import Optional
 
-import pandas as pd
-import plotly.express as px
-import streamlit as st
+from __future__ import annotations
 
 import db
-from analytics import find_nearby_points, find_nearby_listings
+import pandas as pd
+import streamlit as st
+from analytics import find_nearby_listings
 from config import get_logger
 from facility_sources import (
     FACILITY_CATEGORY_LABELS,
     FacilitySearchError,
     find_nearby_facility_groups,
-    summarize_facility_groups,
 )
-from hazard_sources import summarize_hazard_risk
-from property_scraper import PropertyData, STRUCTURE_JP
 from terrain_sources import (
     TerrainSearchError,
     elevation_band,
     fetch_elevation_gsi,
     find_nearby_water,
-    summarize_terrain_features,
 )
-from ui.unit_price import add_tsubo_price_column, format_man, format_yen_per_sqm_and_tsubo_jp, yen_to_man
-from ui.table import render_html_table, plain, muted, truncate, gap_bar, signed_pct_str, num_str, dist_str
-from ui.components import render_population_card
-from analytics import compute_population_trend
+
+from ui.table import (
+    dist_str,
+    muted,
+    num_str,
+    plain,
+    render_html_table,
+    signed_pct_str,
+    truncate,
+)
+from ui.unit_price import (
+    add_tsubo_price_column,
+    format_man,
+    format_yen_per_sqm_and_tsubo_jp,
+    yen_to_man,
+)
 
 logger = get_logger(__name__)
+
 
 def _load_nearby_land(_conn, year: int) -> pd.DataFrame:
     return db.read_land_prices(_conn, filters={"year": year})
@@ -56,7 +63,9 @@ _PROPERTY_FACILITY_CATEGORIES = [
 
 
 @st.cache_data(ttl=86400, show_spinner=False)
-def _load_nearby_facility_groups(categories: tuple[str, ...], lat: float, lon: float, radius_m: int) -> dict[str, list[dict]]:
+def _load_nearby_facility_groups(
+    categories: tuple[str, ...], lat: float, lon: float, radius_m: int
+) -> dict[str, list[dict]]:
     """Overpass API の結果を Streamlit キャッシュしやすい dict にして返す。"""
     grouped = find_nearby_facility_groups(list(categories), lon=lon, lat=lat, radius_m=radius_m)
     return {
@@ -113,7 +122,7 @@ def _render_nearby_prices(
     radius_m: int,
     radius_trade=None,
     conn=None,
-    city_code: Optional[str] = None,
+    city_code: str | None = None,
 ) -> None:
     st.markdown("---")
     label = f"{radius_m // 1000}km"
@@ -127,9 +136,13 @@ def _render_nearby_prices(
         if nearby_land.empty:
             st.info("近傍の公示地価データがありません。")
         else:
-            land_ref, land_use_label, land_ref_note = _select_land_price_reference_points(nearby_land, prop)
+            land_ref, land_use_label, land_ref_note = _select_land_price_reference_points(
+                nearby_land, prop
+            )
             median_price = land_ref["price_yen_per_sqm"].median()
-            avg_yoy = land_ref["yoy_change_pct"].mean() if "yoy_change_pct" in land_ref.columns else None
+            avg_yoy = (
+                land_ref["yoy_change_pct"].mean() if "yoy_change_pct" in land_ref.columns else None
+            )
             land_metrics = [
                 ("地点数", f"{len(land_ref)} 件", f"用途: {land_use_label}"),
                 ("中央値単価", format_yen_per_sqm_and_tsubo_jp(median_price), None),
@@ -142,7 +155,14 @@ def _render_nearby_prices(
             # 全近傍地点を表示し、分析物件の用途と一致する行をハイライト
             target_uses = set(_land_use_candidates_for_property(prop))
             show_all = nearby_land.copy()
-            show_cols = ["year", "distance_m", "location_text", "price_yen_per_sqm", "use_category_name", "yoy_change_pct"]
+            show_cols = [
+                "year",
+                "distance_m",
+                "location_text",
+                "price_yen_per_sqm",
+                "use_category_name",
+                "yoy_change_pct",
+            ]
             show_cols = [c for c in show_cols if c in show_all.columns]
             disp = show_all[show_cols].copy()
             if "distance_m" in disp.columns:
@@ -150,14 +170,22 @@ def _render_nearby_prices(
                 disp["distance_m"] = disp["distance_m"].map(lambda x: f"{x:.0f}")
             if "price_yen_per_sqm" in disp.columns:
                 disp = add_tsubo_price_column(disp, "price_yen_per_sqm", "price_tsubo_man")
-                disp["price_yen_per_sqm"] = disp["price_yen_per_sqm"].map(lambda x: format_man(yen_to_man(x)))
+                disp["price_yen_per_sqm"] = disp["price_yen_per_sqm"].map(
+                    lambda x: format_man(yen_to_man(x))
+                )
                 disp["price_tsubo_man"] = disp["price_tsubo_man"].map(format_man)
             if "yoy_change_pct" in disp.columns:
                 disp["yoy_change_pct"] = disp["yoy_change_pct"].map(lambda x: f"{x:+.1f}%")
-            disp = disp.rename(columns=
-                {"year": "年度", "distance_m": "距離(m)", "location_text": "所在地",
-                 "price_yen_per_sqm": "単価(万円/m²)", "price_tsubo_man": "坪(万円/坪)",
-                 "use_category_name": "用途", "yoy_change_pct": "前年比"}
+            disp = disp.rename(
+                columns={
+                    "year": "年度",
+                    "distance_m": "距離(m)",
+                    "location_text": "所在地",
+                    "price_yen_per_sqm": "単価(万円/m²)",
+                    "price_tsubo_man": "坪(万円/坪)",
+                    "use_category_name": "用途",
+                    "yoy_change_pct": "前年比",
+                }
             )
 
             def _row_style(row: pd.Series) -> str:
@@ -166,17 +194,59 @@ def _render_nearby_prices(
                 return "border-left:3px solid transparent;opacity:0.55;"
 
             from ui.table import use_category_badge as _ucbadge
-            render_html_table(disp.head(20), [
-                {"key": "年度",       "label": "年度",       "width": 50,  "align": "right", "render": plain},
-                {"key": "距離(m)",    "label": "距離(m)",    "width": 70,  "align": "right", "render": dist_str},
-                {"key": "所在地",     "label": "所在地",     "width": 180, "render": lambda v: truncate(v, 170)},
-                {"key": "単価(万円/m²)","label": "単価(万/m²)","width": 85, "align": "right", "render": num_str},
-                {"key": "坪(万円/坪)","label": "坪(万/坪)",  "width": 75,  "align": "right", "render": num_str},
-                {"key": "用途",       "label": "用途",       "width": 75,  "render": _ucbadge},
-                {"key": "前年比",     "label": "前年比",     "width": 80,  "align": "right", "render": signed_pct_str},
-            ], row_style_fn=_row_style)
+
+            render_html_table(
+                disp.head(20),
+                [
+                    {
+                        "key": "年度",
+                        "label": "年度",
+                        "width": 50,
+                        "align": "right",
+                        "render": plain,
+                    },
+                    {
+                        "key": "距離(m)",
+                        "label": "距離(m)",
+                        "width": 70,
+                        "align": "right",
+                        "render": dist_str,
+                    },
+                    {
+                        "key": "所在地",
+                        "label": "所在地",
+                        "width": 180,
+                        "render": lambda v: truncate(v, 170),
+                    },
+                    {
+                        "key": "単価(万円/m²)",
+                        "label": "単価(万/m²)",
+                        "width": 85,
+                        "align": "right",
+                        "render": num_str,
+                    },
+                    {
+                        "key": "坪(万円/坪)",
+                        "label": "坪(万/坪)",
+                        "width": 75,
+                        "align": "right",
+                        "render": num_str,
+                    },
+                    {"key": "用途", "label": "用途", "width": 75, "render": _ucbadge},
+                    {
+                        "key": "前年比",
+                        "label": "前年比",
+                        "width": 80,
+                        "align": "right",
+                        "render": signed_pct_str,
+                    },
+                ],
+                row_style_fn=_row_style,
+            )
             if target_uses:
-                st.caption(f"💡 ハイライト行（青枠）= 分析物件の用途に対応: {' / '.join(sorted(target_uses))}")
+                st.caption(
+                    f"💡 ハイライト行（青枠）= 分析物件の用途に対応: {' / '.join(sorted(target_uses))}"
+                )
 
     with col_trade:
         st.markdown("**取引価格**")
@@ -184,7 +254,9 @@ def _render_nearby_prices(
             st.info("近傍の取引価格データがありません。")
         else:
             med_trade = nearby_trade["trade_price_per_sqm"].median()
-            avg_area = nearby_trade["area_sqm"].mean() if "area_sqm" in nearby_trade.columns else None
+            avg_area = (
+                nearby_trade["area_sqm"].mean() if "area_sqm" in nearby_trade.columns else None
+            )
             trade_metrics = [
                 ("件数", f"{len(nearby_trade)} 件", None),
                 ("中央値単価", format_yen_per_sqm_and_tsubo_jp(med_trade), None),
@@ -193,11 +265,12 @@ def _render_nearby_prices(
                 trade_metrics.append(("平均面積", f"{avg_area:.0f} m²", None))
             _render_summary_panel(None, trade_metrics, columns=3)
 
-            land_unit_median = None
             trade_for_display = nearby_trade.copy()
             estimate_counts = {"land_estimate_count": 0, "building_split_count": 0}
             if not nearby_land.empty and "price_yen_per_sqm" in nearby_land.columns:
-                land_ref, land_use_label, land_ref_note = _select_land_price_reference_points(nearby_land, prop)
+                land_ref, land_use_label, land_ref_note = _select_land_price_reference_points(
+                    nearby_land, prop
+                )
                 land_prices = pd.to_numeric(land_ref["price_yen_per_sqm"], errors="coerce").dropna()
                 if not land_prices.empty:
                     land_unit_p25 = float(land_prices.quantile(0.25))
@@ -222,11 +295,19 @@ def _render_nearby_prices(
                                 f"{format_yen_per_sqm_and_tsubo_jp(land_unit_p25)}〜{format_yen_per_sqm_and_tsubo_jp(land_unit_p75)}",
                                 f"用途: {land_use_label}",
                             ),
-                            ("土地推定件数", f"{estimate_counts['land_estimate_count']} 件", "宅地(土地) / 宅地(土地と建物)"),
+                            (
+                                "土地推定件数",
+                                f"{estimate_counts['land_estimate_count']} 件",
+                                "宅地(土地) / 宅地(土地と建物)",
+                            ),
                         ]
                         if estimate_counts["building_split_count"] > 0:
                             estimate_metrics.append(
-                                ("建物分離件数", f"{estimate_counts['building_split_count']} 件", "宅地(土地と建物) のみ")
+                                (
+                                    "建物分離件数",
+                                    f"{estimate_counts['building_split_count']} 件",
+                                    "宅地(土地と建物) のみ",
+                                )
                             )
                         if not estimated_building_low.empty and not estimated_building_high.empty:
                             estimate_metrics.append(
@@ -245,8 +326,18 @@ def _render_nearby_prices(
 
             _QUARTER_LABEL = {1: "1〜3月期", 2: "4〜6月期", 3: "7〜9月期", 4: "10〜12月期"}
 
-            show_cols = ["year", "quarter", "distance_m", "city_name", "district_name",
-                         "trade_price_per_sqm", "trade_price_total", "trade_type", "area_sqm", "total_floor_area_sqm"]
+            show_cols = [
+                "year",
+                "quarter",
+                "distance_m",
+                "city_name",
+                "district_name",
+                "trade_price_per_sqm",
+                "trade_price_total",
+                "trade_type",
+                "area_sqm",
+                "total_floor_area_sqm",
+            ]
             show_cols = [c for c in show_cols if c in nearby_trade.columns]
             if estimate_counts["land_estimate_count"] > 0:
                 show_cols.extend(
@@ -262,13 +353,17 @@ def _render_nearby_prices(
             show_cols = [c for c in show_cols if c in trade_for_display.columns]
             disp = trade_for_display[show_cols].copy()
             if "quarter" in disp.columns:
-                disp["quarter"] = disp["quarter"].map(lambda q: _QUARTER_LABEL.get(int(q), f"Q{q}") if pd.notna(q) else "")
+                disp["quarter"] = disp["quarter"].map(
+                    lambda q: _QUARTER_LABEL.get(int(q), f"Q{q}") if pd.notna(q) else ""
+                )
             if "distance_m" in disp.columns:
                 disp = disp.sort_values("distance_m")
                 disp["distance_m"] = disp["distance_m"].map(lambda x: f"{x:.0f}")
             if "trade_price_per_sqm" in disp.columns:
                 disp = add_tsubo_price_column(disp, "trade_price_per_sqm", "trade_price_tsubo_man")
-                disp["trade_price_per_sqm"] = disp["trade_price_per_sqm"].map(lambda x: format_man(yen_to_man(x)))
+                disp["trade_price_per_sqm"] = disp["trade_price_per_sqm"].map(
+                    lambda x: format_man(yen_to_man(x))
+                )
                 disp["trade_price_tsubo_man"] = disp["trade_price_tsubo_man"].map(format_man)
             for col in [
                 "trade_price_total",
@@ -284,12 +379,18 @@ def _render_nearby_prices(
             if "area_sqm" in disp.columns:
                 disp["area_sqm"] = disp["area_sqm"].map(lambda x: f"{x:.0f}")
             if "total_floor_area_sqm" in disp.columns:
-                disp["total_floor_area_sqm"] = pd.to_numeric(disp["total_floor_area_sqm"], errors="coerce").map(
-                    lambda x: f"{x:.0f}" if pd.notna(x) else "—"
-                )
+                disp["total_floor_area_sqm"] = pd.to_numeric(
+                    disp["total_floor_area_sqm"], errors="coerce"
+                ).map(lambda x: f"{x:.0f}" if pd.notna(x) else "—")
             for src_col, tsubo_col in [
-                ("estimated_building_price_low_per_sqm", "estimated_building_price_low_per_tsubo_man"),
-                ("estimated_building_price_high_per_sqm", "estimated_building_price_high_per_tsubo_man"),
+                (
+                    "estimated_building_price_low_per_sqm",
+                    "estimated_building_price_low_per_tsubo_man",
+                ),
+                (
+                    "estimated_building_price_high_per_sqm",
+                    "estimated_building_price_high_per_tsubo_man",
+                ),
             ]:
                 if src_col in disp.columns:
                     disp = add_tsubo_price_column(disp, src_col, tsubo_col)
@@ -300,40 +401,124 @@ def _render_nearby_prices(
                     disp[tsubo_col] = disp[tsubo_col].map(
                         lambda x: format_man(x) if pd.notna(x) else "—"
                     )
-            disp = disp.rename(columns=
-                {"year": "年度", "quarter": "時期", "distance_m": "距離(m)",
-                 "city_name": "市区町村", "district_name": "地区",
-                 "trade_price_total": "総額(万円)",
-                 "trade_price_per_sqm": "単価(万円/m²)", "trade_price_tsubo_man": "坪(万円/坪)",
-                 "trade_type": "種別", "area_sqm": "土地面積(m²)", "total_floor_area_sqm": "延床面積(m²)",
-                 "estimated_land_price_low_yen": "推定土地価格下限(万円)",
-                 "estimated_land_price_high_yen": "推定土地価格上限(万円)",
-                 "estimated_building_price_low_yen": "推定建物価格下限(万円)",
-                 "estimated_building_price_high_yen": "推定建物価格上限(万円)",
-                 "estimated_building_price_low_per_sqm": "建物単価下限(万円/m²)",
-                 "estimated_building_price_low_per_tsubo_man": "建物坪下限(万円/坪)",
-                 "estimated_building_price_high_per_sqm": "建物単価上限(万円/m²)",
-                 "estimated_building_price_high_per_tsubo_man": "建物坪上限(万円/坪)"}
+            disp = disp.rename(
+                columns={
+                    "year": "年度",
+                    "quarter": "時期",
+                    "distance_m": "距離(m)",
+                    "city_name": "市区町村",
+                    "district_name": "地区",
+                    "trade_price_total": "総額(万円)",
+                    "trade_price_per_sqm": "単価(万円/m²)",
+                    "trade_price_tsubo_man": "坪(万円/坪)",
+                    "trade_type": "種別",
+                    "area_sqm": "土地面積(m²)",
+                    "total_floor_area_sqm": "延床面積(m²)",
+                    "estimated_land_price_low_yen": "推定土地価格下限(万円)",
+                    "estimated_land_price_high_yen": "推定土地価格上限(万円)",
+                    "estimated_building_price_low_yen": "推定建物価格下限(万円)",
+                    "estimated_building_price_high_yen": "推定建物価格上限(万円)",
+                    "estimated_building_price_low_per_sqm": "建物単価下限(万円/m²)",
+                    "estimated_building_price_low_per_tsubo_man": "建物坪下限(万円/坪)",
+                    "estimated_building_price_high_per_sqm": "建物単価上限(万円/m²)",
+                    "estimated_building_price_high_per_tsubo_man": "建物坪上限(万円/坪)",
+                }
             )
-            render_html_table(disp.head(20), [
-                {"key": "年度",       "label": "年度",    "width": 50,  "align": "right", "render": plain},
-                {"key": "時期",       "label": "時期",    "width": 75,  "render": muted},
-                {"key": "距離(m)",    "label": "距離(m)", "width": 65,  "align": "right", "render": dist_str},
-                {"key": "市区町村",   "label": "市区町村","width": 80,  "render": muted},
-                {"key": "地区",       "label": "地区",    "width": 85,  "render": lambda v: truncate(v, 80)},
-                {"key": "種別",       "label": "種別",    "width": 80,  "render": muted},
-                {"key": "単価(万円/m²)","label": "単価(万/m²)","width": 85,"align": "right","render": num_str},
-                {"key": "坪(万円/坪)","label": "坪(万/坪)","width": 75, "align": "right", "render": num_str},
-                {"key": "総額(万円)", "label": "総額(万円)","width": 85, "align": "right", "render": num_str},
-                {"key": "土地面積(m²)","label": "土地(m²)","width": 65, "align": "right", "render": num_str},
-                {"key": "延床面積(m²)","label": "延床(m²)","width": 65, "align": "right", "render": num_str},
-                {"key": "推定土地価格下限(万円)", "label": "土地下限(万)", "width": 80, "align": "right", "render": num_str},
-                {"key": "推定土地価格上限(万円)", "label": "土地上限(万)", "width": 80, "align": "right", "render": num_str},
-                {"key": "推定建物価格下限(万円)", "label": "建物下限(万)", "width": 80, "align": "right", "render": num_str},
-                {"key": "推定建物価格上限(万円)", "label": "建物上限(万)", "width": 80, "align": "right", "render": num_str},
-            ], min_width=800)
+            render_html_table(
+                disp.head(20),
+                [
+                    {
+                        "key": "年度",
+                        "label": "年度",
+                        "width": 50,
+                        "align": "right",
+                        "render": plain,
+                    },
+                    {"key": "時期", "label": "時期", "width": 75, "render": muted},
+                    {
+                        "key": "距離(m)",
+                        "label": "距離(m)",
+                        "width": 65,
+                        "align": "right",
+                        "render": dist_str,
+                    },
+                    {"key": "市区町村", "label": "市区町村", "width": 80, "render": muted},
+                    {
+                        "key": "地区",
+                        "label": "地区",
+                        "width": 85,
+                        "render": lambda v: truncate(v, 80),
+                    },
+                    {"key": "種別", "label": "種別", "width": 80, "render": muted},
+                    {
+                        "key": "単価(万円/m²)",
+                        "label": "単価(万/m²)",
+                        "width": 85,
+                        "align": "right",
+                        "render": num_str,
+                    },
+                    {
+                        "key": "坪(万円/坪)",
+                        "label": "坪(万/坪)",
+                        "width": 75,
+                        "align": "right",
+                        "render": num_str,
+                    },
+                    {
+                        "key": "総額(万円)",
+                        "label": "総額(万円)",
+                        "width": 85,
+                        "align": "right",
+                        "render": num_str,
+                    },
+                    {
+                        "key": "土地面積(m²)",
+                        "label": "土地(m²)",
+                        "width": 65,
+                        "align": "right",
+                        "render": num_str,
+                    },
+                    {
+                        "key": "延床面積(m²)",
+                        "label": "延床(m²)",
+                        "width": 65,
+                        "align": "right",
+                        "render": num_str,
+                    },
+                    {
+                        "key": "推定土地価格下限(万円)",
+                        "label": "土地下限(万)",
+                        "width": 80,
+                        "align": "right",
+                        "render": num_str,
+                    },
+                    {
+                        "key": "推定土地価格上限(万円)",
+                        "label": "土地上限(万)",
+                        "width": 80,
+                        "align": "right",
+                        "render": num_str,
+                    },
+                    {
+                        "key": "推定建物価格下限(万円)",
+                        "label": "建物下限(万)",
+                        "width": 80,
+                        "align": "right",
+                        "render": num_str,
+                    },
+                    {
+                        "key": "推定建物価格上限(万円)",
+                        "label": "建物上限(万)",
+                        "width": 80,
+                        "align": "right",
+                        "render": num_str,
+                    },
+                ],
+                min_width=800,
+            )
 
-def _render_nearby_listings(conn, geo: tuple[float, float], current_listing_id: Optional[str]) -> None:
+
+def _render_nearby_listings(conn, geo: tuple[float, float], current_listing_id: str | None) -> None:
     """半径内の保存済み掲載物件を表示する。"""
     lat, lon = geo
     _RADII = [1000, 3000, 5000]
@@ -359,11 +544,9 @@ def _render_nearby_listings(conn, geo: tuple[float, float], current_listing_id: 
         st.caption("近隣に保存済み掲載物件がありません。")
         return
 
-    from ui.unit_price import yen_to_man, format_man
-
     disp = nearby.copy()
     disp["price_man"] = disp["asking_price_yen"].apply(
-        lambda v: f"{float(v)/1e4:,.0f}" if v is not None and v == v else "—"
+        lambda v: f"{float(v) / 1e4:,.0f}" if v is not None and v == v else "—"
     )
     disp["yield_str"] = disp["gross_yield_pct"].apply(
         lambda v: f"{float(v):.1f}%" if v is not None and v == v else "—"
@@ -382,13 +565,36 @@ def _render_nearby_listings(conn, geo: tuple[float, float], current_listing_id: 
     render_html_table(
         disp.head(15),
         [
-            {"key": "dist_str",    "label": "距離",     "width": 65,  "align": "right", "render": muted},
-            {"key": "name_label",  "label": "物件名",   "width": 160, "render": lambda v: truncate(v, 150)},
-            {"key": "property_type","label": "種別",    "width": 80,  "render": muted},
-            {"key": "price_man",   "label": "価格(万円)","width": 90,  "align": "right", "render": plain},
-            {"key": "yield_str",   "label": "表面利回り","width": 80,  "align": "right", "render": plain},
-            {"key": "age_str",     "label": "築年数",   "width": 65,  "align": "right", "render": muted},
-            {"key": "area_str",    "label": "延床面積", "width": 70,  "align": "right", "render": muted},
+            {"key": "dist_str", "label": "距離", "width": 65, "align": "right", "render": muted},
+            {
+                "key": "name_label",
+                "label": "物件名",
+                "width": 160,
+                "render": lambda v: truncate(v, 150),
+            },
+            {"key": "property_type", "label": "種別", "width": 80, "render": muted},
+            {
+                "key": "price_man",
+                "label": "価格(万円)",
+                "width": 90,
+                "align": "right",
+                "render": plain,
+            },
+            {
+                "key": "yield_str",
+                "label": "表面利回り",
+                "width": 80,
+                "align": "right",
+                "render": plain,
+            },
+            {"key": "age_str", "label": "築年数", "width": 65, "align": "right", "render": muted},
+            {
+                "key": "area_str",
+                "label": "延床面積",
+                "width": 70,
+                "align": "right",
+                "render": muted,
+            },
         ],
         caption=f"{len(nearby)} 件",
         min_width=620,
@@ -402,7 +608,9 @@ def _render_nearby_facility_summary(geo: tuple[float, float]) -> None:
 
     st.markdown("---")
     st.markdown("#### 🧭 周辺施設")
-    st.caption("OpenStreetMap の POI を使った簡易チェックです。未登録施設は検出できません。半径は 1km 固定です。")
+    st.caption(
+        "OpenStreetMap の POI を使った簡易チェックです。未登録施設は検出できません。半径は 1km 固定です。"
+    )
 
     rounded_lat = round(float(lat), 5)
     rounded_lon = round(float(lon), 5)
@@ -448,18 +656,33 @@ def _render_nearby_facility_summary(geo: tuple[float, float]) -> None:
                 detail["brand"] = detail["brand"].fillna(detail["operator"]).fillna("—")
                 detail_frames.append(
                     detail[["項目", "name", "distance_m", "brand"]].rename(
-                        columns={"name": "施設名", "distance_m": "距離(m)", "brand": "ブランド/運営"}
+                        columns={
+                            "name": "施設名",
+                            "distance_m": "距離(m)",
+                            "brand": "ブランド/運営",
+                        }
                     )
                 )
             else:
-                summary_rows.append({"項目": label, "1km以内": "0 件", "500m以内": "0 件", "最寄り": "—"})
+                summary_rows.append(
+                    {"項目": label, "1km以内": "0 件", "500m以内": "0 件", "最寄り": "—"}
+                )
 
-    render_html_table(pd.DataFrame(summary_rows), [
-        {"key": "項目",    "label": "施設種別", "width": 90,  "render": plain},
-        {"key": "1km以内", "label": "1km以内",  "width": 70,  "align": "right", "render": plain},
-        {"key": "500m以内","label": "500m以内", "width": 70,  "align": "right", "render": plain},
-        {"key": "最寄り",  "label": "最寄り",   "width": 80,  "align": "right", "render": dist_str},
-    ])
+    render_html_table(
+        pd.DataFrame(summary_rows),
+        [
+            {"key": "項目", "label": "施設種別", "width": 90, "render": plain},
+            {"key": "1km以内", "label": "1km以内", "width": 70, "align": "right", "render": plain},
+            {
+                "key": "500m以内",
+                "label": "500m以内",
+                "width": 70,
+                "align": "right",
+                "render": plain,
+            },
+            {"key": "最寄り", "label": "最寄り", "width": 80, "align": "right", "render": dist_str},
+        ],
+    )
 
     if detail_frames:
         with st.expander("近い施設の一覧", expanded=False):
@@ -487,7 +710,11 @@ def _render_nearby_facility_summary(geo: tuple[float, float]) -> None:
                     key="property_facility_detail_limit",
                 )
 
-            filtered = details[details["項目"].isin(selected_labels)].copy() if selected_labels else details.iloc[0:0].copy()
+            filtered = (
+                details[details["項目"].isin(selected_labels)].copy()
+                if selected_labels
+                else details.iloc[0:0].copy()
+            )
             filtered["_distance_num"] = pd.to_numeric(filtered["距離(m)"], errors="coerce")
             filtered = (
                 filtered.sort_values(["項目", "_distance_num"])
@@ -495,12 +722,31 @@ def _render_nearby_facility_summary(geo: tuple[float, float]) -> None:
                 .head(int(per_category))
                 .drop(columns=["_distance_num"])
             )
-            render_html_table(filtered, [
-                {"key": "項目",       "label": "種別",       "width": 80,  "render": muted},
-                {"key": "施設名",     "label": "施設名",     "width": 150, "render": lambda v: truncate(v, 140)},
-                {"key": "距離(m)",    "label": "距離(m)",    "width": 70,  "align": "right", "render": dist_str},
-                {"key": "ブランド/運営","label": "ブランド/運営","width": 120,"render": muted},
-            ])
+            render_html_table(
+                filtered,
+                [
+                    {"key": "項目", "label": "種別", "width": 80, "render": muted},
+                    {
+                        "key": "施設名",
+                        "label": "施設名",
+                        "width": 150,
+                        "render": lambda v: truncate(v, 140),
+                    },
+                    {
+                        "key": "距離(m)",
+                        "label": "距離(m)",
+                        "width": 70,
+                        "align": "right",
+                        "render": dist_str,
+                    },
+                    {
+                        "key": "ブランド/運営",
+                        "label": "ブランド/運営",
+                        "width": 120,
+                        "render": muted,
+                    },
+                ],
+            )
 
 
 def _render_location_map(
@@ -525,14 +771,14 @@ def _render_location_map(
 
     _FACILITY_COLORS: dict[str, str] = {
         "convenience_store": "#FFD700",
-        "supermarket":       "#2ECC71",
-        "station":           "#9B59B6",
-        "bus_stop":          "#8E44AD",
-        "pachinko":          "#C0392B",
-        "restaurant":        "#E67E22",
-        "school":            "#3498DB",
-        "hospital":          "#E74C3C",
-        "park":              "#27AE60",
+        "supermarket": "#2ECC71",
+        "station": "#9B59B6",
+        "bus_stop": "#8E44AD",
+        "pachinko": "#C0392B",
+        "restaurant": "#E67E22",
+        "school": "#3498DB",
+        "hospital": "#E74C3C",
+        "park": "#27AE60",
     }
 
     traces: list = []
@@ -541,27 +787,37 @@ def _render_location_map(
     if not nearby_land.empty:
         lm = nearby_land.dropna(subset=["lat", "lon"])
         if not lm.empty:
-            loc_text = lm["location_text"] if "location_text" in lm.columns else pd.Series(["公示地価"] * len(lm), index=lm.index)
-            traces.append(go.Scattermapbox(
-                lat=lm["lat"], lon=lm["lon"],
-                mode="markers",
-                marker=dict(size=8, color="#4A90D9", opacity=0.75),
-                name="公示地価",
-                text=loc_text.fillna("公示地価"),
-                hovertemplate="%{text}<extra>公示地価</extra>",
-            ))
+            loc_text = (
+                lm["location_text"]
+                if "location_text" in lm.columns
+                else pd.Series(["公示地価"] * len(lm), index=lm.index)
+            )
+            traces.append(
+                go.Scattermapbox(
+                    lat=lm["lat"],
+                    lon=lm["lon"],
+                    mode="markers",
+                    marker=dict(size=8, color="#4A90D9", opacity=0.75),
+                    name="公示地価",
+                    text=loc_text.fillna("公示地価"),
+                    hovertemplate="%{text}<extra>公示地価</extra>",
+                )
+            )
 
     # 近傍取引価格
     if not nearby_trade.empty:
         tm = nearby_trade.dropna(subset=["lat", "lon"])
         if not tm.empty:
-            traces.append(go.Scattermapbox(
-                lat=tm["lat"], lon=tm["lon"],
-                mode="markers",
-                marker=dict(size=6, color="#F5A623", opacity=0.65),
-                name="取引価格",
-                hovertemplate="取引価格<extra></extra>",
-            ))
+            traces.append(
+                go.Scattermapbox(
+                    lat=tm["lat"],
+                    lon=tm["lon"],
+                    mode="markers",
+                    marker=dict(size=6, color="#F5A623", opacity=0.65),
+                    name="取引価格",
+                    hovertemplate="取引価格<extra></extra>",
+                )
+            )
 
     # 周辺施設（DuckDB キャッシュ優先 → Overpass フォールバック）
     try:
@@ -578,15 +834,18 @@ def _render_location_map(
             label = FACILITY_CATEGORY_LABELS.get(category, category)
             color = _FACILITY_COLORS.get(category, "#95A5A6")
             df_f = pd.DataFrame(facilities)
-            traces.append(go.Scattermapbox(
-                lat=df_f["lat"], lon=df_f["lon"],
-                mode="markers",
-                marker=dict(size=7, color=color, opacity=0.85),
-                name=label,
-                text=df_f["name"].fillna(label),
-                customdata=df_f["distance_m"].map(lambda x: f"{x:.0f}"),
-                hovertemplate="%{text} (%{customdata}m)<extra>" + label + "</extra>",
-            ))
+            traces.append(
+                go.Scattermapbox(
+                    lat=df_f["lat"],
+                    lon=df_f["lon"],
+                    mode="markers",
+                    marker=dict(size=7, color=color, opacity=0.85),
+                    name=label,
+                    text=df_f["name"].fillna(label),
+                    customdata=df_f["distance_m"].map(lambda x: f"{x:.0f}"),
+                    hovertemplate="%{text} (%{customdata}m)<extra>" + label + "</extra>",
+                )
+            )
     except Exception:
         pass
 
@@ -599,25 +858,31 @@ def _render_location_map(
             water_features = _load_nearby_water(rounded_lat, rounded_lon, 1000)
         if water_features:
             wdf = pd.DataFrame(water_features)
-            traces.append(go.Scattermapbox(
-                lat=wdf["lat"], lon=wdf["lon"],
-                mode="markers",
-                marker=dict(size=6, color="#1ABC9C", opacity=0.75),
-                name="河川・水辺",
-                text=wdf["name"].fillna("水辺"),
-                hovertemplate="%{text}<extra>河川・水辺</extra>",
-            ))
+            traces.append(
+                go.Scattermapbox(
+                    lat=wdf["lat"],
+                    lon=wdf["lon"],
+                    mode="markers",
+                    marker=dict(size=6, color="#1ABC9C", opacity=0.75),
+                    name="河川・水辺",
+                    text=wdf["name"].fillna("水辺"),
+                    hovertemplate="%{text}<extra>河川・水辺</extra>",
+                )
+            )
     except Exception:
         pass
 
     # 対象物件（最前面）
-    traces.append(go.Scattermapbox(
-        lat=[lat], lon=[lon],
-        mode="markers",
-        marker=dict(size=18, color="#E74C3C", opacity=1.0),
-        name="対象物件",
-        hovertemplate="対象物件<extra></extra>",
-    ))
+    traces.append(
+        go.Scattermapbox(
+            lat=[lat],
+            lon=[lon],
+            mode="markers",
+            marker=dict(size=18, color="#E74C3C", opacity=1.0),
+            name="対象物件",
+            hovertemplate="対象物件<extra></extra>",
+        )
+    )
 
     fig = go.Figure(data=traces)
     fig.update_layout(
@@ -625,7 +890,9 @@ def _render_location_map(
         margin=dict(l=0, r=0, t=0, b=0),
         height=850,
         legend=dict(
-            orientation="v", x=0.01, y=0.99,
+            orientation="v",
+            x=0.01,
+            y=0.99,
             bgcolor="rgba(20,20,20,0.65)",
             font=dict(color="white", size=11),
             bordercolor="rgba(255,255,255,0.2)",
@@ -704,11 +971,24 @@ def _render_terrain_risk_summary(geo: tuple[float, float]) -> None:
             columns={"name": "名称", "type_label": "種別", "distance_m": "距離(m)"}
         )
         with st.expander("近い河川・水辺の一覧", expanded=False):
-            render_html_table(water_df, [
-                {"key": "名称",    "label": "名称",    "width": 140, "render": lambda v: truncate(v, 130)},
-                {"key": "種別",    "label": "種別",    "width": 80,  "render": muted},
-                {"key": "距離(m)", "label": "距離(m)", "width": 70,  "align": "right", "render": dist_str},
-            ])
+            render_html_table(
+                water_df,
+                [
+                    {
+                        "key": "名称",
+                        "label": "名称",
+                        "width": 140,
+                        "render": lambda v: truncate(v, 130),
+                    },
+                    {"key": "種別", "label": "種別", "width": 80, "render": muted},
+                    {
+                        "key": "距離(m)",
+                        "label": "距離(m)",
+                        "width": 70,
+                        "align": "right",
+                        "render": dist_str,
+                    },
+                ],
+            )
     elif not water_error:
         st.info("1km以内に OpenStreetMap 上の河川・水辺は見つかりませんでした。")
-

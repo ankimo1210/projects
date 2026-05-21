@@ -5,7 +5,6 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-
 ANN = 252
 
 
@@ -23,8 +22,10 @@ def vol_percentile(close: pd.Series, window: int = 20, lookback: int = 252) -> p
 
 def build_vol_matrix(
     prices_df: pd.DataFrame,
-    windows: list[int] = [20, 60],
+    windows: list[int] | None = None,
 ) -> pd.DataFrame:
+    if windows is None:
+        windows = [20, 60]
     if prices_df.empty or "timestamp" not in prices_df.columns:
         return pd.DataFrame()
     pivot = prices_df.pivot(index="timestamp", columns="ticker", values="close").sort_index()

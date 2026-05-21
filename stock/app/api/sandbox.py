@@ -28,14 +28,14 @@ def run(code: str) -> dict[str, Any]:
 
     # Inject allowed modules
     try:
-        import pandas as pd
         import numpy as np
-        import plotly.graph_objects as go
+        import pandas as pd
         import plotly.express as px
+        import plotly.graph_objects as go
         import plotly.io as pio
-        from stockkit.data import get_prices as _get_prices
-        from stockkit.data import get_macro as _get_macro
         from stockkit.data import get_jp_cpi as _get_jp_cpi
+        from stockkit.data import get_macro as _get_macro
+        from stockkit.data import get_prices as _get_prices
 
         # Wrap with use_cache=False to avoid DuckDB concurrent-access issues in sandbox threads
         def get_prices(symbol, period="1y", **kw):
@@ -47,18 +47,20 @@ def run(code: str) -> dict[str, Any]:
         def get_jp_cpi(start=None, **kw):
             return _get_jp_cpi(start=start, use_cache=False, **kw)
 
-        sandbox_globals.update({
-            "pd": pd,
-            "pandas": pd,
-            "np": np,
-            "numpy": np,
-            "go": go,
-            "px": px,
-            "plotly": __import__("plotly"),
-            "get_prices": get_prices,
-            "get_macro": get_macro,
-            "get_jp_cpi": get_jp_cpi,
-        })
+        sandbox_globals.update(
+            {
+                "pd": pd,
+                "pandas": pd,
+                "np": np,
+                "numpy": np,
+                "go": go,
+                "px": px,
+                "plotly": __import__("plotly"),
+                "get_prices": get_prices,
+                "get_macro": get_macro,
+                "get_jp_cpi": get_jp_cpi,
+            }
+        )
     except ImportError as e:
         return {"output": "", "figures": [], "error": f"Import error: {e}"}
 
@@ -70,11 +72,12 @@ def run(code: str) -> dict[str, Any]:
         old_show = None
         try:
             import plotly.io as pio
+
             old_show = pio.show
             pio.show = _show_capture
 
             sys.stdout = stdout_buf
-            exec(code, sandbox_globals)  # noqa: S102
+            exec(code, sandbox_globals)
         except Exception:
             error = traceback.format_exc()
         finally:
@@ -82,6 +85,7 @@ def run(code: str) -> dict[str, Any]:
             if old_show is not None:
                 try:
                     import plotly.io as pio
+
                     pio.show = old_show
                 except Exception:
                     pass
@@ -92,7 +96,11 @@ def run(code: str) -> dict[str, Any]:
 
     if t.is_alive():
         timed_out.set()
-        return {"output": stdout_buf.getvalue(), "figures": figures, "error": "Timeout: execution exceeded 60 seconds"}
+        return {
+            "output": stdout_buf.getvalue(),
+            "figures": figures,
+            "error": "Timeout: execution exceeded 60 seconds",
+        }
 
     return {
         "output": stdout_buf.getvalue(),

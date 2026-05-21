@@ -1,13 +1,11 @@
 """db/_connection.py — DuckDB 接続管理と WAL 自動回復。"""
+
 from __future__ import annotations
 
-import json
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 import duckdb
-
 from config import DUCKDB_PATH, get_logger
 
 logger = get_logger(__name__)
@@ -21,7 +19,7 @@ def _is_wal_replay_error(exc: Exception) -> bool:
     return "Failure while replaying WAL file" in str(exc)
 
 
-def _quarantine_corrupt_wal(db_path: Path) -> Optional[Path]:
+def _quarantine_corrupt_wal(db_path: Path) -> Path | None:
     wal_path = _wal_path_for_db(db_path)
     if not wal_path.exists():
         return None
@@ -34,7 +32,7 @@ def _quarantine_corrupt_wal(db_path: Path) -> Optional[Path]:
 
 
 def get_connection(
-    db_path: Optional[Path] = None,
+    db_path: Path | None = None,
     read_only: bool = False,
 ) -> duckdb.DuckDBPyConnection:
     """DuckDB 接続を返す。書き込みロック取得失敗時は read_only にフォールバック。"""

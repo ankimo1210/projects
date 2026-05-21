@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Optional
 
 import duckdb
 import pandas as pd
@@ -75,7 +74,7 @@ class DuckDBClient:
     def __init__(self, db_path: str | Path | None = None):
         self.db_path = Path(db_path) if db_path is not None else _DEFAULT_DB
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
-        self._conn: Optional[duckdb.DuckDBPyConnection] = None
+        self._conn: duckdb.DuckDBPyConnection | None = None
 
     def connect(self) -> duckdb.DuckDBPyConnection:
         if self._conn is None:
@@ -111,8 +110,8 @@ class DuckDBClient:
         self,
         tickers: list[str],
         frequency: str = "1d",
-        start: Optional[str] = None,
-        end: Optional[str] = None,
+        start: str | None = None,
+        end: str | None = None,
     ) -> pd.DataFrame:
         conn = self.connect()
         tickers_sql = ", ".join(f"'{t}'" for t in tickers)
@@ -124,7 +123,7 @@ class DuckDBClient:
         query = f"SELECT * FROM prices WHERE {' AND '.join(where)} ORDER BY timestamp"
         return conn.execute(query).df()
 
-    def get_latest_timestamp(self, ticker: str, frequency: str = "1d") -> Optional[str]:
+    def get_latest_timestamp(self, ticker: str, frequency: str = "1d") -> str | None:
         conn = self.connect()
         result = conn.execute(
             "SELECT MAX(timestamp) FROM prices WHERE ticker = ? AND frequency = ?",
@@ -145,8 +144,8 @@ class DuckDBClient:
     def get_indicators(
         self,
         tickers: list[str],
-        indicator_names: Optional[list[str]] = None,
-        start: Optional[str] = None,
+        indicator_names: list[str] | None = None,
+        start: str | None = None,
     ) -> pd.DataFrame:
         conn = self.connect()
         tickers_sql = ", ".join(f"'{t}'" for t in tickers)
@@ -168,7 +167,7 @@ class DuckDBClient:
         conn.execute("INSERT OR REPLACE INTO signals SELECT * FROM df")
 
     def get_signals(
-        self, tickers: Optional[list[str]] = None, latest_only: bool = True
+        self, tickers: list[str] | None = None, latest_only: bool = True
     ) -> pd.DataFrame:
         conn = self.connect()
         where = []
@@ -205,9 +204,7 @@ class DuckDBClient:
 
     def dismiss_alert(self, alert_id: str) -> None:
         conn = self.connect()
-        conn.execute(
-            "UPDATE alerts SET status = 'dismissed' WHERE alert_id = ?", [alert_id]
-        )
+        conn.execute("UPDATE alerts SET status = 'dismissed' WHERE alert_id = ?", [alert_id])
 
     # ------------------------------------------------------------------
     # Utility

@@ -12,18 +12,20 @@ ui/table.py
         {"key": "yoy_change_pct", "label": "前年比",  "width": 130, "render": gap_bar},
     ])
 """
+
 from __future__ import annotations
 
 import html as _html
-from typing import Any, Callable, Optional
+from collections.abc import Callable
+from typing import Any
 
 import pandas as pd
 import streamlit as st
 
-
 # ---------------------------------------------------------------------------
 # 内部ユーティリティ
 # ---------------------------------------------------------------------------
+
 
 def _safe(v: Any, fallback: str = "—") -> str:
     """NaN / None / 空文字を fallback に変換して str を返す。"""
@@ -32,7 +34,8 @@ def _safe(v: Any, fallback: str = "—") -> str:
     if isinstance(v, float) and pd.isna(v):
         return fallback
     try:
-        import numpy as np  # noqa: PLC0415
+        import numpy as np
+
         if isinstance(v, np.floating) and np.isnan(float(v)):
             return fallback
     except Exception:
@@ -44,6 +47,7 @@ def _safe(v: Any, fallback: str = "—") -> str:
 # ---------------------------------------------------------------------------
 # セルレンダラー  (callable(value) -> html_str)
 # ---------------------------------------------------------------------------
+
 
 def plain(v: Any) -> str:
     """デフォルト: テキスト表示。"""
@@ -127,10 +131,10 @@ _USE_CATEGORY_STYLES: dict[str, tuple[str, str]] = {
     # bg_color, text_color
     "商業地": ("#7c3a00", "#ffb74d"),
     "工業地": ("#2d1b4e", "#ce93d8"),
-    "林地":   ("#1b3a1b", "#81c784"),
-    "農地":   ("#2a3a1b", "#aed581"),
+    "林地": ("#1b3a1b", "#81c784"),
+    "農地": ("#2a3a1b", "#aed581"),
     "準工業地": ("#1a2a4e", "#90caf9"),
-    "その他":  ("#2a2a2a", "#b0bec5"),
+    "その他": ("#2a2a2a", "#b0bec5"),
 }
 _RESIDENTIAL_KEYWORDS = ("住宅地",)
 
@@ -148,7 +152,7 @@ def use_category_badge(v: Any) -> str:
     return (
         f'<span style="background:{bg};color:{fg};border-radius:4px;'
         f'padding:1px 6px;font-size:0.75rem;font-weight:600;white-space:nowrap">'
-        f'{_html.escape(s)}</span>'
+        f"{_html.escape(s)}</span>"
     )
 
 
@@ -187,7 +191,9 @@ def num_str(v: Any) -> str:
     s = _safe(v)
     if s == "—":
         return '<span style="color:#4a6580">—</span>'
-    return f'<span style="color:#e8f4ff;font-weight:600;font-variant-numeric:tabular-nums">{s}</span>'
+    return (
+        f'<span style="color:#e8f4ff;font-weight:600;font-variant-numeric:tabular-nums">{s}</span>'
+    )
 
 
 def dist_str(v: Any) -> str:
@@ -208,7 +214,9 @@ def area_num(v: Any) -> str:
     if v is None or (isinstance(v, float) and pd.isna(v)):
         return '<span style="color:#4a6580">—</span>'
     try:
-        return f'<span style="color:#b8d0e8;font-variant-numeric:tabular-nums">{float(v):,.0f}</span>'
+        return (
+            f'<span style="color:#b8d0e8;font-variant-numeric:tabular-nums">{float(v):,.0f}</span>'
+        )
     except Exception:
         return '<span style="color:#4a6580">—</span>'
 
@@ -227,6 +235,7 @@ def yen_total(v: Any) -> str:
 # ---------------------------------------------------------------------------
 # メインテーブルレンダラー
 # ---------------------------------------------------------------------------
+
 
 def render_html_table(
     df: pd.DataFrame,
@@ -258,6 +267,7 @@ def render_html_table(
         return
 
     import uuid
+
     table_id = f"tbl_{uuid.uuid4().hex[:8]}"
 
     th_base = (
@@ -284,10 +294,14 @@ def render_html_table(
         col_sortable = sortable and spec.get("sortable", sortable)
         sort_style = "cursor:pointer;user-select:none;" if col_sortable else ""
         onclick = f'onclick="sortTable_{table_id}(this, {col_idx})"' if col_sortable else ""
-        sort_icon = ' <span class="sort-icon" style="opacity:0.4;font-size:0.65rem">⇅</span>' if col_sortable else ""
+        sort_icon = (
+            ' <span class="sort-icon" style="opacity:0.4;font-size:0.65rem">⇅</span>'
+            if col_sortable
+            else ""
+        )
         ths += (
             f'<th {onclick} style="{th_base};{w_style}text-align:{align};{sort_style}">'
-            f'{_html.escape(label)}{sort_icon}</th>'
+            f"{_html.escape(label)}{sort_icon}</th>"
         )
 
     # データ行
@@ -310,18 +324,19 @@ def render_html_table(
             cells += (
                 f'<td data-sort="{sort_val}" '
                 f'style="padding:8px 10px;text-align:{align};vertical-align:middle">'
-                f'{cell_html}</td>'
+                f"{cell_html}</td>"
             )
         rows += (
             f'<tr style="background:{zebra};border-bottom:1px solid rgba(36,61,94,0.4);'
             f'transition:background 0.1s;{extra_style}" '
-            f'onmouseover="this.style.background=\'rgba(26,46,71,0.6)\'" '
-            f'onmouseout="this.style.background=\'{zebra}\'">{cells}</tr>'
+            f"onmouseover=\"this.style.background='rgba(26,46,71,0.6)'\" "
+            f"onmouseout=\"this.style.background='{zebra}'\">{cells}</tr>"
         )
 
     caption_html = (
         f'<p style="color:#4a6580;font-size:0.72rem;margin-top:6px">{_html.escape(caption)}</p>'
-        if caption else ""
+        if caption
+        else ""
     )
     scroll_y_style = f"max-height:{max_height}px;overflow-y:auto;" if max_height else ""
 
@@ -357,12 +372,12 @@ def render_html_table(
 </script>"""
 
     st.markdown(
-        f'{sort_js}'
+        f"{sort_js}"
         f'<div style="border-radius:10px;overflow:hidden;border:1px solid #243d5e">'
         f'<div style="overflow-x:auto;{scroll_y_style}">'
         f'<table id="{table_id}" style="width:100%;border-collapse:collapse;background:#0a1c30;min-width:{min_width}px">'
-        f'<thead><tr>{ths}</tr></thead>'
-        f'<tbody>{rows}</tbody>'
-        f'</table></div></div>{caption_html}',
+        f"<thead><tr>{ths}</tr></thead>"
+        f"<tbody>{rows}</tbody>"
+        f"</table></div></div>{caption_html}",
         unsafe_allow_html=True,
     )

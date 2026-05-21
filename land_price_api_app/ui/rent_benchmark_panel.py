@@ -2,16 +2,16 @@
 ui/rent_benchmark_panel.py
 地域賃料ベンチマークの共通表示。
 """
+
 from __future__ import annotations
 
 from typing import Any
 
+import db
 import pandas as pd
 import streamlit as st
-
-import db
-from utils import safe_float as _num, safe_str
-
+from utils import safe_float as _num
+from utils import safe_str
 
 _RENTABLE_EFFICIENCY_BY_STRUCTURE: dict[str, tuple[float, float]] = {
     "wood": (0.90, 0.95),
@@ -70,7 +70,9 @@ def render_rent_benchmark_panel(conn, listing: dict[str, Any], *, title_level: i
     render_suumo_income_property_rent_panel(conn, listing, title_level=title_level)
 
 
-def render_suumo_income_property_rent_panel(conn, listing: dict[str, Any], *, title_level: int = 4) -> None:
+def render_suumo_income_property_rent_panel(
+    conn, listing: dict[str, Any], *, title_level: int = 4
+) -> None:
     """延床×賃貸効率ベースでSUUMO賃料妥当性を表示する。"""
     benchmark = build_suumo_income_property_rent_benchmark(conn, listing)
     if not benchmark["has_signal"]:
@@ -85,7 +87,11 @@ def render_suumo_income_property_rent_panel(conn, listing: dict[str, Any], *, ti
 
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("賃貸効率", benchmark["efficiency_label"], benchmark["structure_label"])
-    c2.metric("推定賃貸可能面積", benchmark["rentable_area_label"], f"延床 {benchmark['building_area_label']}")
+    c2.metric(
+        "推定賃貸可能面積",
+        benchmark["rentable_area_label"],
+        f"延床 {benchmark['building_area_label']}",
+    )
     c3.metric("採用間取り帯", benchmark["floor_plan_bucket"], benchmark["avg_unit_area_label"])
     c4.metric("SUUMO㎡単価", benchmark["suumo_unit_price_label"], benchmark["suumo_source_label"])
 
@@ -98,7 +104,7 @@ def render_suumo_income_property_rent_panel(conn, listing: dict[str, Any], *, ti
     st.markdown(
         f'<div style="padding:10px 12px;border-radius:8px;border:1px solid {benchmark["assessment_border"]};'
         f'background:{benchmark["assessment_bg"]};color:{benchmark["assessment_color"]};font-weight:700">'
-        f'{benchmark["assessment_label"]}</div>',
+        f"{benchmark['assessment_label']}</div>",
         unsafe_allow_html=True,
     )
 
@@ -115,12 +121,18 @@ def build_suumo_income_property_rent_benchmark(conn, listing: dict[str, Any]) ->
         return {"has_signal": False}
 
     structure = _normalize_structure(_text_or_none(listing.get("structure")))
-    eff_low, eff_high = _rentable_efficiency_range(structure, _text_or_none(listing.get("property_type")))
+    eff_low, eff_high = _rentable_efficiency_range(
+        structure, _text_or_none(listing.get("property_type"))
+    )
     rentable_low = building_area * eff_low
     rentable_high = building_area * eff_high
 
     unit_count = _num(listing.get("num_units"))
-    avg_unit_area = ((rentable_low + rentable_high) / 2.0) / unit_count if unit_count and unit_count > 0 else None
+    avg_unit_area = (
+        ((rentable_low + rentable_high) / 2.0) / unit_count
+        if unit_count and unit_count > 0
+        else None
+    )
     floor_plan_bucket = _floor_plan_bucket_from_area(avg_unit_area)
     if floor_plan_bucket is None:
         floor_plan_bucket = _fallback_floor_plan_bucket(_text_or_none(listing.get("property_type")))
@@ -143,12 +155,24 @@ def build_suumo_income_property_rent_benchmark(conn, listing: dict[str, Any]) ->
 
     listed_monthly = _listing_monthly_rent(listing)
     listed_annual = listed_monthly * 12 if listed_monthly is not None else None
-    gap_low = ((listed_annual / market_annual_high) - 1.0) * 100 if listed_annual and market_annual_high > 0 else None
-    gap_high = ((listed_annual / market_annual_low) - 1.0) * 100 if listed_annual and market_annual_low > 0 else None
+    gap_low = (
+        ((listed_annual / market_annual_high) - 1.0) * 100
+        if listed_annual and market_annual_high > 0
+        else None
+    )
+    gap_high = (
+        ((listed_annual / market_annual_low) - 1.0) * 100
+        if listed_annual and market_annual_low > 0
+        else None
+    )
     market_annual_mid = (market_annual_low + market_annual_high) / 2.0
     upside_annual = market_annual_mid - listed_annual if listed_annual is not None else None
     asking_price = _num(listing.get("asking_price_yen"))
-    yield_upside_pct = (upside_annual / asking_price * 100.0) if upside_annual is not None and asking_price and asking_price > 0 else None
+    yield_upside_pct = (
+        (upside_annual / asking_price * 100.0)
+        if upside_annual is not None and asking_price and asking_price > 0
+        else None
+    )
     assessment = _rent_assessment(gap_low, gap_high, upside_annual)
 
     source_date = suumo.get("updated_date")
@@ -158,7 +182,7 @@ def build_suumo_income_property_rent_benchmark(conn, listing: dict[str, Any]) ->
 
     note_parts = [
         f"賃貸効率前提: {eff_low:.0%}〜{eff_high:.0%}",
-        f"SUUMO月額相場: {monthly_rent/1e4:,.1f}万円",
+        f"SUUMO月額相場: {monthly_rent / 1e4:,.1f}万円",
         f"代表面積前提: {area_min}〜{area_max}㎡",
     ]
     if avg_unit_area is None:
@@ -174,12 +198,16 @@ def build_suumo_income_property_rent_benchmark(conn, listing: dict[str, Any]) ->
         "avg_unit_area_label": f"平均 {avg_unit_area:.1f}㎡/戸" if avg_unit_area else "戸数不明",
         "suumo_unit_price_label": f"{unit_price_low:,.0f}〜{unit_price_high:,.0f}円/m²",
         "suumo_source_label": source_label,
-        "market_monthly_label": f"{market_monthly_low/1e4:,.1f}〜{market_monthly_high/1e4:,.1f}万円",
-        "market_annual_label": f"{market_annual_low/1e4:,.0f}〜{market_annual_high/1e4:,.0f}万円",
+        "market_monthly_label": f"{market_monthly_low / 1e4:,.1f}〜{market_monthly_high / 1e4:,.1f}万円",
+        "market_annual_label": f"{market_annual_low / 1e4:,.0f}〜{market_annual_high / 1e4:,.0f}万円",
         "listed_gap_label": _fmt_range_gap(gap_low, gap_high),
-        "listed_annual_label": f"掲載 {listed_annual/1e4:,.0f}万円/年" if listed_annual else "掲載賃料なし",
+        "listed_annual_label": f"掲載 {listed_annual / 1e4:,.0f}万円/年"
+        if listed_annual
+        else "掲載賃料なし",
         "upside_annual_label": _fmt_annual_upside(upside_annual),
-        "yield_upside_label": f"利回り換算 {yield_upside_pct:+.2f}pt" if yield_upside_pct is not None else None,
+        "yield_upside_label": f"利回り換算 {yield_upside_pct:+.2f}pt"
+        if yield_upside_pct is not None
+        else None,
         "assessment_label": assessment["label"],
         "assessment_color": assessment["color"],
         "assessment_bg": assessment["bg"],
@@ -195,7 +223,9 @@ def build_rent_benchmark(conn, listing: dict[str, Any]) -> dict[str, Any]:
     listing_id = _text_or_none(listing.get("listing_id"))
 
     listing_monthly = _listing_monthly_rent(listing)
-    listing_rent_sqm = listing_monthly / area if listing_monthly is not None and area and area > 0 else None
+    listing_rent_sqm = (
+        listing_monthly / area if listing_monthly is not None and area and area > 0 else None
+    )
 
     estat_rent_sqm = None
     estat_monthly = None
@@ -206,18 +236,28 @@ def build_rent_benchmark(conn, listing: dict[str, Any]) -> dict[str, Any]:
             estat_row = _pick_estat_rent_row(rent_df)
             if estat_row is not None:
                 estat_rent_sqm = _num(estat_row.get("rent_per_sqm"))
-                estat_source = f"e-Stat {int(estat_row['survey_year'])}年/{estat_row['ownership_type']}"
+                estat_source = (
+                    f"e-Stat {int(estat_row['survey_year'])}年/{estat_row['ownership_type']}"
+                )
                 if estat_rent_sqm is not None and area and area > 0:
                     estat_monthly = estat_rent_sqm * area
 
-    own = _own_listing_rent_stats(conn, city_code, property_type=property_type, exclude_listing_id=listing_id)
+    own = _own_listing_rent_stats(
+        conn, city_code, property_type=property_type, exclude_listing_id=listing_id
+    )
     own_median = own["median_rent_per_sqm"]
     own_monthly = own_median * area if own_median is not None and area and area > 0 else None
 
     best_base = own_median if own_median is not None else estat_rent_sqm
-    gap = ((listing_rent_sqm / best_base) - 1.0) * 100.0 if listing_rent_sqm and best_base and best_base > 0 else None
+    gap = (
+        ((listing_rent_sqm / best_base) - 1.0) * 100.0
+        if listing_rent_sqm and best_base and best_base > 0
+        else None
+    )
 
-    signal_count = sum(value is not None for value in [estat_rent_sqm, own_median, listing_rent_sqm])
+    signal_count = sum(
+        value is not None for value in [estat_rent_sqm, own_median, listing_rent_sqm]
+    )
     if estat_rent_sqm is not None and own["sample_count"] >= 5 and listing_rent_sqm is not None:
         confidence = "high"
     elif signal_count >= 2 or own["sample_count"] >= 3:
@@ -304,7 +344,7 @@ def _rent_stats_from_df(df: pd.DataFrame) -> dict[str, Any]:
     rent_sqm = rent_sqm[(rent_sqm > 0) & rent_sqm.notna()]
     if rent_sqm.empty:
         return {"median_rent_per_sqm": None, "sample_count": 0}
-    return {"median_rent_per_sqm": float(rent_sqm.median()), "sample_count": int(len(rent_sqm))}
+    return {"median_rent_per_sqm": float(rent_sqm.median()), "sample_count": len(rent_sqm)}
 
 
 def _listing_monthly_rent(listing: dict[str, Any]) -> float | None:
@@ -340,7 +380,9 @@ def _city_name_for_listing(conn, listing: dict[str, Any]) -> str | None:
         return None
     import re
 
-    match = re.match(r"^(?:北海道|東京都|京都府|大阪府|.{2,3}県)(.+?(?:市.+?区|市|区|町|村|郡))", address)
+    match = re.match(
+        r"^(?:北海道|東京都|京都府|大阪府|.{2,3}県)(.+?(?:市.+?区|市|区|町|村|郡))", address
+    )
     return match.group(1) if match else None
 
 
@@ -366,7 +408,9 @@ def _normalize_structure(value: str | None) -> str | None:
     return mapping.get(value)
 
 
-def _rentable_efficiency_range(structure: str | None, property_type: str | None) -> tuple[float, float]:
+def _rentable_efficiency_range(
+    structure: str | None, property_type: str | None
+) -> tuple[float, float]:
     if property_type and "戸建" in property_type:
         return (0.95, 1.00)
     if structure and structure in _RENTABLE_EFFICIENCY_BY_STRUCTURE:
@@ -405,7 +449,9 @@ def _suumo_property_type(listing: dict[str, Any]) -> str:
     return "mansion"
 
 
-def _find_suumo_rent_row(conn, city_name: str, property_type: str, floor_plan_bucket: str) -> dict[str, Any] | None:
+def _find_suumo_rent_row(
+    conn, city_name: str, property_type: str, floor_plan_bucket: str
+) -> dict[str, Any] | None:
     row = conn.execute(
         """
         SELECT *
@@ -421,7 +467,7 @@ def _find_suumo_rent_row(conn, city_name: str, property_type: str, floor_plan_bu
     ).fetchone()
     if row:
         cols = [desc[0] for desc in conn.description]
-        return dict(zip(cols, row))
+        return dict(zip(cols, row, strict=False))
 
     row = conn.execute(
         """
@@ -439,7 +485,7 @@ def _find_suumo_rent_row(conn, city_name: str, property_type: str, floor_plan_bu
     ).fetchone()
     if row:
         cols = [desc[0] for desc in conn.description]
-        return dict(zip(cols, row))
+        return dict(zip(cols, row, strict=False))
     return None
 
 
@@ -455,10 +501,12 @@ def _fmt_annual_upside(value: float | None) -> str:
     if value is None:
         return "—"
     sign = "+" if value >= 0 else ""
-    return f"{sign}{value/1e4:,.0f}万円/年"
+    return f"{sign}{value / 1e4:,.0f}万円/年"
 
 
-def _rent_assessment(gap_low: float | None, gap_high: float | None, upside_annual: float | None) -> dict[str, str]:
+def _rent_assessment(
+    gap_low: float | None, gap_high: float | None, upside_annual: float | None
+) -> dict[str, str]:
     if gap_low is None or gap_high is None or upside_annual is None:
         return {
             "label": "判定: 掲載賃料または価格情報が不足しているため、改善余地は参考値です。",
@@ -502,7 +550,7 @@ def _fmt_yen_sqm(value: float | None) -> str:
 def _fmt_monthly_estimate(value: float | None) -> str | None:
     if value is None:
         return None
-    return f"月額 {value/1e4:,.1f}万円"
+    return f"月額 {value / 1e4:,.1f}万円"
 
 
 def _fmt_gap(value: float | None) -> str:

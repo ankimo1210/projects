@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import csv
 import html
 from collections import defaultdict
@@ -35,11 +36,11 @@ a{color:#07a}
 
 # ZCONTENTTYPE → 表示テキスト
 _CTYPE_LABEL: dict[str, str] = {
-    "1":   "📷 画像",
-    "2":   "🎥 動画",
-    "5":   "🎁 その他",
-    "6":   "📞 通話",
-    "7":   "🎫 スタンプ",
+    "1": "📷 画像",
+    "2": "🎥 動画",
+    "5": "🎁 その他",
+    "6": "📞 通話",
+    "7": "🎫 スタンプ",
     "111": "📎 添付",
     "112": "📷 画像",
 }
@@ -65,8 +66,8 @@ def _render_page(title: str, body: str) -> str:
         f'<!DOCTYPE html>\n<html lang="ja">\n<head>\n'
         f'<meta charset="utf-8">\n'
         f'<meta name="viewport" content="width=device-width, initial-scale=1">\n'
-        f'<title>{html.escape(title)}</title>\n'
-        f'<style>{_CSS}</style>\n</head>\n<body>\n{body}\n</body>\n</html>\n'
+        f"<title>{html.escape(title)}</title>\n"
+        f"<style>{_CSS}</style>\n</head>\n<body>\n{body}\n</body>\n</html>\n"
     )
 
 
@@ -100,7 +101,7 @@ def _bubble(msg: dict, fmt: str) -> str:
         f'<div class="{cls}">'
         f'<div><{sender_html}<div class="balloon">{text}</div></div>'
         f'<div class="ts">{ts}</div>'
-        f'</div>\n'
+        f"</div>\n"
     )
 
 
@@ -145,10 +146,10 @@ def render(
             index_rows.append((chat_id, ctype_label, len(msgs), fname))
 
         rows_html = "\n".join(
-            f'<tr>'
-            f'<td><span class="badge {"dm" if t=="1対1" else "grp"}">{t or "?"}</span>'
+            f"<tr>"
+            f'<td><span class="badge {"dm" if t == "1対1" else "grp"}">{t or "?"}</span>'
             f'<a href="{html.escape(f)}">{html.escape(n)}</a></td>'
-            f'<td>{c:,}</td></tr>'
+            f"<td>{c:,}</td></tr>"
             for n, t, c, f in index_rows
         )
         index_body = (

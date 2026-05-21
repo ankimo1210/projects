@@ -1,4 +1,5 @@
 """VisPy 3D renderer for an N-body simulation."""
+
 from __future__ import annotations
 
 from typing import Callable
@@ -57,9 +58,14 @@ class NBodyCanvas:
         self.stars.set_size_clamp(1.5, 120.0)
 
         self.hud = Text(
-            "", parent=self.canvas.scene,
-            color=(0.85, 0.9, 1.0, 0.9), anchor_x="left", anchor_y="top",
-            pos=(10, 10), font_size=10, bold=False,
+            "",
+            parent=self.canvas.scene,
+            color=(0.85, 0.9, 1.0, 0.9),
+            anchor_x="left",
+            anchor_y="top",
+            pos=(10, 10),
+            font_size=10,
+            bold=False,
         )
 
         # FPS estimation (EMA over frame times).
@@ -92,6 +98,7 @@ class NBodyCanvas:
 
     def _on_timer(self, event) -> None:
         import time
+
         self.step_fn(self.steps_per_frame)
         self._update_particles()
 

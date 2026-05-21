@@ -22,6 +22,7 @@ hazard_sources.py が読み込める形式で保存する。
 国土数値情報 A31a は JGD2011 地理座標（EPSG:6668）。
 WGS84 との差は最大 1cm 程度なので変換なしで使用する。
 """
+
 from __future__ import annotations
 
 import argparse
@@ -82,16 +83,18 @@ def convert_shp_to_geojson(shp_path: Path, pref_code: str, output_path: Path) ->
             skipped += 1
             continue
 
-        props = dict(zip(fields, sr.record))
+        props = dict(zip(fields, sr.record, strict=False))
         # 浸水深ランクを統一キー "depth_rank" で保持
         if depth_field:
             props["depth_rank"] = props.get(depth_field)
 
-        features.append({
-            "type": "Feature",
-            "geometry": geom_dict,
-            "properties": props,
-        })
+        features.append(
+            {
+                "type": "Feature",
+                "geometry": geom_dict,
+                "properties": props,
+            }
+        )
 
     geojson = {
         "type": "FeatureCollection",
@@ -99,7 +102,9 @@ def convert_shp_to_geojson(shp_path: Path, pref_code: str, output_path: Path) ->
         "features": features,
     }
 
-    output_path.write_text(json.dumps(geojson, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    output_path.write_text(
+        json.dumps(geojson, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
+    )
     logger.info("保存: %s (%d フィーチャ, %d スキップ)", output_path, len(features), skipped)
     return len(features)
 
@@ -120,23 +125,29 @@ def inspect_shp(shp_path: Path) -> None:
     print(f"\nフィーチャ数: {len(reader)}")
     print("\n最初の3件:")
     for sr in reader.shapeRecords()[:3]:
-        props = dict(zip(fields, sr.record))
+        props = dict(zip(fields, sr.record, strict=False))
         print(f"  geometry type: {sr.shape.shapeType}")
         print(f"  props: {props}")
         print()
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="国土数値情報 A31a shapefile → hazard GeoJSON 変換")
+    parser = argparse.ArgumentParser(
+        description="国土数値情報 A31a shapefile → hazard GeoJSON 変換"
+    )
     parser.add_argument("--shp", help="変換する .shp ファイルのパス（glob パターン可）")
     parser.add_argument("--pref", required=True, help="都道府県コード (例: 13)")
-    parser.add_argument("--inspect", action="store_true", help="フィールド一覧を確認するだけ（変換しない）")
+    parser.add_argument(
+        "--inspect", action="store_true", help="フィールド一覧を確認するだけ（変換しない）"
+    )
     parser.add_argument("--output", help="出力先 GeoJSON パス（省略時は自動設定）")
     args = parser.parse_args()
 
     if not args.shp:
         print("使い方: python download_flood_hazard.py --shp /path/to/A31a.shp --pref 13")
-        print("データは https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-A31a.html からダウンロードしてください。")
+        print(
+            "データは https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-A31a.html からダウンロードしてください。"
+        )
         return
 
     # glob パターン対応

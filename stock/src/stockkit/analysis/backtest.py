@@ -16,8 +16,8 @@ Returns an `BacktestResult` dataclass with equity curve, trades and metrics.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Callable
 
 import numpy as np
 import pandas as pd
@@ -85,9 +85,7 @@ def run(
     )
 
 
-def _extract_trades(
-    prices: pd.DataFrame, pos: pd.Series, exec_price: pd.Series
-) -> pd.DataFrame:
+def _extract_trades(prices: pd.DataFrame, pos: pd.Series, exec_price: pd.Series) -> pd.DataFrame:
     rows = []
     in_trade = False
     entry_idx = None
@@ -152,6 +150,7 @@ def _metrics(rets: pd.Series, equity: pd.Series) -> dict[str, float]:
 
 
 # -------- preset signal functions --------
+
 
 def signal_sma_cross(fast: int = 50, slow: int = 200) -> SignalFn:
     """Long when fast SMA > slow SMA."""

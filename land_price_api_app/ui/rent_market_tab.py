@@ -2,16 +2,16 @@
 ui/rent_market_tab.py
 e-Stat 市区町村別賃料データの俯瞰タブ。
 """
+
 from __future__ import annotations
 
-import plotly.express as px
+import db
 import pandas as pd
+import plotly.express as px
 import streamlit as st
 
-import db
-from ui.table import muted, num_str, plain, render_html_table
 from ui.constants import PREFECTURE_NAMES as _PREF_NAMES
-
+from ui.table import muted, num_str, plain, render_html_table
 
 _OWNERSHIP_LABELS = {
     "total": "総数",
@@ -40,7 +40,9 @@ def render_rent_market_tab(conn) -> None:
 
     df = db.read_rent_market_overview(conn)
     if df.empty:
-        st.info("賃料相場データがありません。Admin または CLI から `sync_rent_market.py` を実行してください。")
+        st.info(
+            "賃料相場データがありません。Admin または CLI から `sync_rent_market.py` を実行してください。"
+        )
         st.code("python sync_rent_market.py --year 2023", language="bash")
         return
 
@@ -59,10 +61,14 @@ def render_rent_market_tab(conn) -> None:
 
 def _prepare_display_df(df: pd.DataFrame) -> pd.DataFrame:
     result = df.copy()
-    result["prefecture_name"] = result["prefecture_name"].fillna(result["prefecture_code"].map(_PREF_NAMES))
+    result["prefecture_name"] = result["prefecture_name"].fillna(
+        result["prefecture_code"].map(_PREF_NAMES)
+    )
     result["prefecture_name"] = result["prefecture_name"].fillna(result["prefecture_code"])
     result["city_name"] = result["city_name"].fillna(result["city_code"])
-    result["ownership_label"] = result["ownership_type"].map(_OWNERSHIP_LABELS).fillna(result["ownership_type"])
+    result["ownership_label"] = (
+        result["ownership_type"].map(_OWNERSHIP_LABELS).fillna(result["ownership_type"])
+    )
     result["rent_per_sqm"] = pd.to_numeric(result["rent_per_sqm"], errors="coerce")
     result["rent_50sqm"] = result["rent_per_sqm"] * 50
     result["rent_70sqm"] = result["rent_per_sqm"] * 70
@@ -72,17 +78,27 @@ def _prepare_display_df(df: pd.DataFrame) -> pd.DataFrame:
 def _render_filters(df: pd.DataFrame) -> pd.DataFrame:
     c1, c2, c3, c4 = st.columns(4)
     years = sorted(df["survey_year"].dropna().astype(int).unique().tolist(), reverse=True)
-    ownerships = _ordered_labels(df, "ownership_label", ["民営借家", "総数", "公営借家", "UR・公社", "給与住宅"])
+    ownerships = _ordered_labels(
+        df, "ownership_label", ["民営借家", "総数", "公営借家", "UR・公社", "給与住宅"]
+    )
     prefs = _pref_ordered_options(df["prefecture_name"].dropna().unique().tolist())
 
     year = c1.selectbox("調査年", years, index=0, key="rent_market_year")
-    ownership = c2.selectbox("所有区分", ownerships, index=0 if ownerships else None, key="rent_market_ownership")
+    ownership = c2.selectbox(
+        "所有区分", ownerships, index=0 if ownerships else None, key="rent_market_ownership"
+    )
     selected_prefs = c3.multiselect("都道府県", prefs, key="rent_market_pref")
-    min_rent = c4.number_input("最低賃料 円/m²", min_value=0, value=0, step=100, key="rent_market_min_rent")
+    min_rent = c4.number_input(
+        "最低賃料 円/m²", min_value=0, value=0, step=100, key="rent_market_min_rent"
+    )
 
-    keyword = st.text_input("市区町村キーワード", placeholder="例: 新宿区 / 那覇市", key="rent_market_keyword")
+    keyword = st.text_input(
+        "市区町村キーワード", placeholder="例: 新宿区 / 那覇市", key="rent_market_keyword"
+    )
 
-    result = df[(df["survey_year"].astype(int) == int(year)) & (df["ownership_label"] == ownership)].copy()
+    result = df[
+        (df["survey_year"].astype(int) == int(year)) & (df["ownership_label"] == ownership)
+    ].copy()
     if selected_prefs:
         selected_prefs = [pref for pref in selected_prefs if pref != _PREF_SEPARATOR]
     if selected_prefs:
@@ -91,7 +107,12 @@ def _render_filters(df: pd.DataFrame) -> pd.DataFrame:
         result = result[result["rent_per_sqm"] >= float(min_rent)]
     if keyword.strip():
         needle = keyword.strip()
-        result = result[result["city_name"].fillna("").astype(str).str.contains(needle, case=False, na=False, regex=False)]
+        result = result[
+            result["city_name"]
+            .fillna("")
+            .astype(str)
+            .str.contains(needle, case=False, na=False, regex=False)
+        ]
     return result
 
 
@@ -107,7 +128,7 @@ def _pref_ordered_options(values) -> list[str]:
     rest = [name for name in _PREF_NAMES.values() if name in existing and name not in ordered]
     extras = sorted(existing - set(ordered) - set(rest))
     if ordered and (rest or extras):
-        return ordered + [_PREF_SEPARATOR] + rest + extras
+        return [*ordered, _PREF_SEPARATOR, *rest, *extras]
     return ordered + rest + extras
 
 
@@ -142,10 +163,9 @@ def _render_timeseries_section(df: pd.DataFrame) -> None:
             st.caption("市区町村を選択してください。")
             return
 
-        ts = df[
-            (df["city_name"].isin(sel_cities))
-            & (df["ownership_label"] == sel_ownership)
-        ][["survey_year", "city_name", "rent_per_sqm"]].copy()
+        ts = df[(df["city_name"].isin(sel_cities)) & (df["ownership_label"] == sel_ownership)][
+            ["survey_year", "city_name", "rent_per_sqm"]
+        ].copy()
         ts["survey_year"] = ts["survey_year"].astype(int)
         ts = ts.sort_values("survey_year")
 
@@ -176,11 +196,19 @@ def _render_timeseries_section(df: pd.DataFrame) -> None:
         # 変化率サマリー
         if len(years) >= 2:
             base_yr, latest_yr = years[0], years[-1]
-            base = ts[ts["survey_year"] == base_yr][["city_name", "rent_per_sqm"]].set_index("city_name")
-            latest = ts[ts["survey_year"] == latest_yr][["city_name", "rent_per_sqm"]].set_index("city_name")
+            base = ts[ts["survey_year"] == base_yr][["city_name", "rent_per_sqm"]].set_index(
+                "city_name"
+            )
+            latest = ts[ts["survey_year"] == latest_yr][["city_name", "rent_per_sqm"]].set_index(
+                "city_name"
+            )
             merged = base.join(latest, lsuffix="_base", rsuffix="_latest").dropna()
             if not merged.empty:
-                merged["change_pct"] = (merged["rent_per_sqm_latest"] - merged["rent_per_sqm_base"]) / merged["rent_per_sqm_base"] * 100
+                merged["change_pct"] = (
+                    (merged["rent_per_sqm_latest"] - merged["rent_per_sqm_base"])
+                    / merged["rent_per_sqm_base"]
+                    * 100
+                )
                 cols = st.columns(min(len(merged), 4))
                 for i, (city, row) in enumerate(merged.iterrows()):
                     if i >= 4:
@@ -191,7 +219,7 @@ def _render_timeseries_section(df: pd.DataFrame) -> None:
                     cols[i].markdown(
                         f"""<div style="background:#132035;border:1px solid #243d5e;border-radius:8px;padding:10px 12px;">
                         <div style="color:#95b8cf;font-size:0.72rem;">{city}</div>
-                        <div style="color:#e8f4ff;font-size:1rem;font-weight:700;">{row['rent_per_sqm_latest']:,.0f} 円/m²</div>
+                        <div style="color:#e8f4ff;font-size:1rem;font-weight:700;">{row["rent_per_sqm_latest"]:,.0f} 円/m²</div>
                         <div style="color:{delta_color};font-size:0.8rem;">{sign}{chg:.1f}% ({base_yr}→{latest_yr})</div>
                         </div>""",
                         unsafe_allow_html=True,
@@ -238,8 +266,7 @@ def _render_charts(df: pd.DataFrame) -> None:
                 box_df.groupby("prefecture_name")["rent_per_sqm"]
                 .median()
                 .sort_values(ascending=False)
-                .index
-                .tolist()
+                .index.tolist()
             )
             fig = px.box(
                 box_df,
@@ -257,8 +284,8 @@ def _render_table(df: pd.DataFrame) -> None:
     st.markdown("#### 市区町村一覧")
     table = df.copy()
     table["rent_per_sqm_label"] = table["rent_per_sqm"].map(lambda v: f"{v:,.0f}")
-    table["rent_50sqm_label"] = table["rent_50sqm"].map(lambda v: f"{v/1e4:,.1f}")
-    table["rent_70sqm_label"] = table["rent_70sqm"].map(lambda v: f"{v/1e4:,.1f}")
+    table["rent_50sqm_label"] = table["rent_50sqm"].map(lambda v: f"{v / 1e4:,.1f}")
+    table["rent_70sqm_label"] = table["rent_70sqm"].map(lambda v: f"{v / 1e4:,.1f}")
     table = table.sort_values("rent_per_sqm", ascending=False)
     render_html_table(
         table,
@@ -268,9 +295,27 @@ def _render_table(df: pd.DataFrame) -> None:
             {"key": "prefecture_name", "label": "都道府県", "width": 82, "render": muted},
             {"key": "city_name", "label": "市区町村", "width": 140, "render": plain},
             {"key": "city_code", "label": "コード", "width": 70, "render": muted},
-            {"key": "rent_per_sqm_label", "label": "円/m²", "width": 86, "align": "right", "render": num_str},
-            {"key": "rent_50sqm_label", "label": "50m²万円/月", "width": 106, "align": "right", "render": num_str},
-            {"key": "rent_70sqm_label", "label": "70m²万円/月", "width": 106, "align": "right", "render": num_str},
+            {
+                "key": "rent_per_sqm_label",
+                "label": "円/m²",
+                "width": 86,
+                "align": "right",
+                "render": num_str,
+            },
+            {
+                "key": "rent_50sqm_label",
+                "label": "50m²万円/月",
+                "width": 106,
+                "align": "right",
+                "render": num_str,
+            },
+            {
+                "key": "rent_70sqm_label",
+                "label": "70m²万円/月",
+                "width": 106,
+                "align": "right",
+                "render": num_str,
+            },
         ],
         caption=f"{len(table):,} 件",
         min_width=760,
@@ -289,7 +334,9 @@ def _render_suumo_section(conn) -> None:
 
     st.markdown("---")
     st.markdown("#### SUUMO賃貸相場")
-    st.caption("SUUMO登録賃貸物件を元にした目安です。掲載中物件の平均金額とは異なる場合があります。")
+    st.caption(
+        "SUUMO登録賃貸物件を元にした目安です。掲載中物件の平均金額とは異なる場合があります。"
+    )
     st.info(
         "SUUMO家賃相場は月額賃料のみのため、㎡単価は間取り帯ごとの代表面積レンジで割った推定値です。"
         "前提: ワンルーム18〜25㎡、1K/1DK 22〜35㎡、1LDK/2K/2DK 35〜50㎡、"
@@ -304,10 +351,18 @@ def _render_suumo_section(conn) -> None:
     c1, c2, c3 = st.columns(3)
     prefs = _pref_ordered_options(work["prefecture_name"].dropna().unique().tolist())
     default_prefs = ["沖縄県"] if "沖縄県" in prefs else prefs[:1]
-    selected_prefs = c1.multiselect("SUUMO都道府県", prefs, default=default_prefs, key="suumo_rent_pref")
-    property_types = ["建物種別全体平均"] + sorted(work["property_type_label"].dropna().unique().tolist())
+    selected_prefs = c1.multiselect(
+        "SUUMO都道府県", prefs, default=default_prefs, key="suumo_rent_pref"
+    )
+    property_types = [
+        "建物種別全体平均",
+        *sorted(work["property_type_label"].dropna().unique().tolist()),
+    ]
     selected_property = c2.selectbox("建物種別", property_types, key="suumo_rent_property_type")
-    floor_plans = ["間取り全体平均"] + _floor_plan_ordered_options(work["floor_plan_bucket"].dropna().unique().tolist())
+    floor_plans = [
+        "間取り全体平均",
+        *_floor_plan_ordered_options(work["floor_plan_bucket"].dropna().unique().tolist()),
+    ]
     selected_floor = c3.selectbox("間取り帯", floor_plans, key="suumo_rent_floor")
 
     if selected_prefs:
@@ -326,7 +381,11 @@ def _render_suumo_section(conn) -> None:
         st.info("条件に一致するSUUMO相場データがありません。")
         return
 
-    top = work.sort_values("unit_price_mid_yen_per_sqm", ascending=False).head(25).sort_values("unit_price_mid_yen_per_sqm")
+    top = (
+        work.sort_values("unit_price_mid_yen_per_sqm", ascending=False)
+        .head(25)
+        .sort_values("unit_price_mid_yen_per_sqm")
+    )
     fig = px.scatter(
         top,
         x="unit_price_mid_yen_per_sqm",
@@ -355,9 +414,27 @@ def _render_suumo_section(conn) -> None:
             {"key": "city_name", "label": "市区郡", "width": 130, "render": plain},
             {"key": "property_type_label", "label": "建物種別", "width": 110, "render": muted},
             {"key": "floor_plan_bucket", "label": "間取り帯", "width": 120, "render": muted},
-            {"key": "monthly_rent_label", "label": "万円/月", "width": 86, "align": "right", "render": num_str},
-            {"key": "area_range_label", "label": "代表面積", "width": 92, "align": "right", "render": muted},
-            {"key": "unit_price_range_label", "label": "推定円/m²", "width": 132, "align": "right", "render": num_str},
+            {
+                "key": "monthly_rent_label",
+                "label": "万円/月",
+                "width": 86,
+                "align": "right",
+                "render": num_str,
+            },
+            {
+                "key": "area_range_label",
+                "label": "代表面積",
+                "width": 92,
+                "align": "right",
+                "render": muted,
+            },
+            {
+                "key": "unit_price_range_label",
+                "label": "推定円/m²",
+                "width": 132,
+                "align": "right",
+                "render": num_str,
+            },
         ],
         caption=f"{len(table):,} 件",
         min_width=920,
@@ -381,8 +458,12 @@ def _add_suumo_unit_price_assumptions(df: pd.DataFrame) -> pd.DataFrame:
     result["unit_price_mid_yen_per_sqm"] = (
         result["unit_price_low_yen_per_sqm"] + result["unit_price_high_yen_per_sqm"]
     ) / 2
-    result["unit_price_error_minus"] = result["unit_price_mid_yen_per_sqm"] - result["unit_price_low_yen_per_sqm"]
-    result["unit_price_error_plus"] = result["unit_price_high_yen_per_sqm"] - result["unit_price_mid_yen_per_sqm"]
+    result["unit_price_error_minus"] = (
+        result["unit_price_mid_yen_per_sqm"] - result["unit_price_low_yen_per_sqm"]
+    )
+    result["unit_price_error_plus"] = (
+        result["unit_price_high_yen_per_sqm"] - result["unit_price_mid_yen_per_sqm"]
+    )
     return result
 
 
@@ -395,16 +476,15 @@ def _floor_plan_ordered_options(values) -> list[str]:
 def _aggregate_suumo_floor_plan_average(df: pd.DataFrame) -> pd.DataFrame:
     if df.empty:
         return df
-    grouped = (
-        df.groupby(["prefecture_name", "city_name", "property_type_label"], as_index=False)
-        .agg(
-            monthly_rent_yen=("monthly_rent_yen", "mean"),
-            monthly_rent_man=("monthly_rent_man", "mean"),
-            unit_price_low_yen_per_sqm=("unit_price_low_yen_per_sqm", "mean"),
-            unit_price_high_yen_per_sqm=("unit_price_high_yen_per_sqm", "mean"),
-            updated_date=("updated_date", "max"),
-            floor_plan_count=("floor_plan_bucket", "count"),
-        )
+    grouped = df.groupby(
+        ["prefecture_name", "city_name", "property_type_label"], as_index=False
+    ).agg(
+        monthly_rent_yen=("monthly_rent_yen", "mean"),
+        monthly_rent_man=("monthly_rent_man", "mean"),
+        unit_price_low_yen_per_sqm=("unit_price_low_yen_per_sqm", "mean"),
+        unit_price_high_yen_per_sqm=("unit_price_high_yen_per_sqm", "mean"),
+        updated_date=("updated_date", "max"),
+        floor_plan_count=("floor_plan_bucket", "count"),
     )
     grouped["floor_plan_bucket"] = "間取り全体平均"
     grouped["assumed_area_min_sqm"] = pd.NA
@@ -412,8 +492,12 @@ def _aggregate_suumo_floor_plan_average(df: pd.DataFrame) -> pd.DataFrame:
     grouped["unit_price_mid_yen_per_sqm"] = (
         grouped["unit_price_low_yen_per_sqm"] + grouped["unit_price_high_yen_per_sqm"]
     ) / 2
-    grouped["unit_price_error_minus"] = grouped["unit_price_mid_yen_per_sqm"] - grouped["unit_price_low_yen_per_sqm"]
-    grouped["unit_price_error_plus"] = grouped["unit_price_high_yen_per_sqm"] - grouped["unit_price_mid_yen_per_sqm"]
+    grouped["unit_price_error_minus"] = (
+        grouped["unit_price_mid_yen_per_sqm"] - grouped["unit_price_low_yen_per_sqm"]
+    )
+    grouped["unit_price_error_plus"] = (
+        grouped["unit_price_high_yen_per_sqm"] - grouped["unit_price_mid_yen_per_sqm"]
+    )
     return grouped
 
 
@@ -431,18 +515,19 @@ def _aggregate_suumo_property_type_average(df: pd.DataFrame) -> pd.DataFrame:
     }
     if "floor_plan_count" in df.columns:
         aggregations["floor_plan_count"] = ("floor_plan_count", "sum")
-    grouped = (
-        df.groupby(group_cols, as_index=False)
-        .agg(**aggregations)
-    )
+    grouped = df.groupby(group_cols, as_index=False).agg(**aggregations)
     grouped["property_type_label"] = "建物種別全体平均"
     grouped["assumed_area_min_sqm"] = pd.NA
     grouped["assumed_area_max_sqm"] = pd.NA
     grouped["unit_price_mid_yen_per_sqm"] = (
         grouped["unit_price_low_yen_per_sqm"] + grouped["unit_price_high_yen_per_sqm"]
     ) / 2
-    grouped["unit_price_error_minus"] = grouped["unit_price_mid_yen_per_sqm"] - grouped["unit_price_low_yen_per_sqm"]
-    grouped["unit_price_error_plus"] = grouped["unit_price_high_yen_per_sqm"] - grouped["unit_price_mid_yen_per_sqm"]
+    grouped["unit_price_error_minus"] = (
+        grouped["unit_price_mid_yen_per_sqm"] - grouped["unit_price_low_yen_per_sqm"]
+    )
+    grouped["unit_price_error_plus"] = (
+        grouped["unit_price_high_yen_per_sqm"] - grouped["unit_price_mid_yen_per_sqm"]
+    )
     return grouped
 
 

@@ -14,6 +14,7 @@ Algorithm:
 """
 
 from __future__ import annotations
+
 from itertools import combinations
 
 RANKS = "AKQJT98765432"
@@ -27,6 +28,7 @@ def _parse(card: str) -> tuple[int, int]:
 
 
 from itertools import permutations as _perms
+
 
 def canonicalize(cards: list[str]) -> tuple[str, ...]:
     """
@@ -58,7 +60,7 @@ def board_texture(canon: tuple[str, ...]) -> str:
     two_tone = len(set(suits)) == 2
 
     rank_indices = sorted([RANK_ORDER[r] for r in ranks])
-    gaps = [rank_indices[i+1] - rank_indices[i] for i in range(2)]
+    gaps = [rank_indices[i + 1] - rank_indices[i] for i in range(2)]
     connected = all(g <= 2 for g in gaps)
     semi_connected = any(g <= 2 for g in gaps)
 
@@ -94,7 +96,9 @@ def all_canonical_flops() -> list[tuple[str, ...]]:
     return result
 
 
-def canonical_to_actual(canon: tuple[str, ...], suit_perm: tuple[int, int, int, int] | None = None) -> list[str]:
+def canonical_to_actual(
+    canon: tuple[str, ...], suit_perm: tuple[int, int, int, int] | None = None
+) -> list[str]:
     """Convert canonical flop back to actual cards (default: use canonical suits)."""
     return list(canon)
 
@@ -104,6 +108,7 @@ if __name__ == "__main__":
     print(f"Total canonical flops: {len(flops)}")
     # Show texture distribution
     from collections import Counter
+
     textures = Counter(board_texture(f) for f in flops)
     for tex, cnt in sorted(textures.items(), key=lambda x: -x[1]):
         print(f"  {tex:35s} {cnt:4d}")

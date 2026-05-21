@@ -6,12 +6,11 @@ XPT002 の GeoJSON Feature を分析用 DataFrame に変換する。
 各 Feature の properties はAPI仕様に応じた日本語キー・英語キー混在の場合がある。
 ここでは複数の候補キーを試して snake_case カラムにマッピングする。
 """
+
 import json
-import math
-from typing import Any, Optional
+from typing import Any
 
 import pandas as pd
-
 from config import get_logger
 
 logger = get_logger(__name__)
@@ -25,7 +24,8 @@ logger = get_logger(__name__)
 _FIELD_CANDIDATES: dict[str, list[str]] = {
     # 標準地番号（例: "札幌中央-21"）
     "standard_land_number": [
-        "standard_lot_number_ja", "place_name_ja",
+        "standard_lot_number_ja",
+        "place_name_ja",
     ],
     # 都道府県
     "prefecture_code": ["prefecture_code"],
@@ -51,7 +51,7 @@ _FIELD_CANDIDATES: dict[str, list[str]] = {
     # 前面道路
     "front_road_name": ["front_road_name_ja"],
     # 用途区分（住宅地 / 商業地 / 工業地 など）
-    "use_category_code": ["land_price_type"],          # 0=公示, 1=調査
+    "use_category_code": ["land_price_type"],  # 0=公示, 1=調査
     "use_category_name": ["use_category_name_ja"],
     # 都市計画用途地域
     "zoning_name": ["regulations_use_category_name_ja", "area_division_name_ja"],
@@ -79,6 +79,7 @@ _NUMERIC_COLUMNS = [
 # ユーティリティ
 # --------------------------------------------------------------------------
 
+
 def _get_field(props: dict[str, Any], candidates: list[str]) -> Any:
     """候補キーを順に試して最初に見つかった値を返す。なければ None。"""
     for key in candidates:
@@ -89,7 +90,7 @@ def _get_field(props: dict[str, Any], candidates: list[str]) -> Any:
     return None
 
 
-def _extract_lonlat(feature: dict[str, Any]) -> tuple[Optional[float], Optional[float]]:
+def _extract_lonlat(feature: dict[str, Any]) -> tuple[float | None, float | None]:
     """GeoJSON Feature の geometry から (lon, lat) を抽出する。"""
     try:
         geom = feature.get("geometry", {})
@@ -105,6 +106,7 @@ def _extract_lonlat(feature: dict[str, Any]) -> tuple[Optional[float], Optional[
 # --------------------------------------------------------------------------
 # メイン変換
 # --------------------------------------------------------------------------
+
 
 def feature_to_record(
     feature: dict[str, Any],
@@ -170,14 +172,12 @@ def feature_to_record(
             record[col] = _get_field(props, candidates)
 
     # standard_land_number を point_id 候補から取る
-    record["standard_land_number"] = (
-        _get_field(props, _FIELD_CANDIDATES["standard_land_number"])
-    )
+    record["standard_land_number"] = _get_field(props, _FIELD_CANDIDATES["standard_land_number"])
 
     return record
 
 
-def _parse_price_string(s: Any) -> Optional[float]:
+def _parse_price_string(s: Any) -> float | None:
     """
     "331,000(円/㎡)" や 331000 などから数値を抽出する。
     """
@@ -187,6 +187,7 @@ def _parse_price_string(s: Any) -> Optional[float]:
         return float(s)
     # 数字とカンマのみを残して変換
     import re
+
     m = re.search(r"[\d,]+", str(s))
     if m:
         try:
@@ -196,14 +197,14 @@ def _parse_price_string(s: Any) -> Optional[float]:
     return None
 
 
-def _parse_area_string(s: Any) -> Optional[float]:
+def _parse_area_string(s: Any) -> float | None:
     """
     "1,696(㎡)" から数値を抽出する。
     """
     return _parse_price_string(s)
 
 
-def _parse_ratio_string(s: Any) -> Optional[float]:
+def _parse_ratio_string(s: Any) -> float | None:
     """
     "80(%)" から 80.0 を返す。
     """
@@ -283,31 +284,31 @@ def clean_numeric_columns(df: pd.DataFrame) -> pd.DataFrame:
 # --------------------------------------------------------------------------
 
 _XIT001_FIELD_CANDIDATES: dict[str, list[str]] = {
-    "trade_type":           ["Type", "取引の種類"],
-    "prefecture_name":      ["Prefecture", "都道府県名"],
-    "city_code":            ["MunicipalityCode", "市区町村コード"],
-    "city_name":            ["Municipality", "市区町村名"],
-    "district_name":        ["DistrictName", "地区名"],
-    "trade_price_total":    ["TradePrice", "取引価格（総額）"],
-    "trade_price_per_sqm":  ["UnitPrice", "PricePerUnit", "取引価格（㎡単価）"],
-    "area_sqm":             ["Area", "面積（㎡）"],
-    "floor_plan":           ["FloorPlan", "間取り"],
-    "land_shape":           ["LandShape", "土地の形状"],
-    "frontage":             ["Frontage", "間口"],
+    "trade_type": ["Type", "取引の種類"],
+    "prefecture_name": ["Prefecture", "都道府県名"],
+    "city_code": ["MunicipalityCode", "市区町村コード"],
+    "city_name": ["Municipality", "市区町村名"],
+    "district_name": ["DistrictName", "地区名"],
+    "trade_price_total": ["TradePrice", "取引価格（総額）"],
+    "trade_price_per_sqm": ["UnitPrice", "PricePerUnit", "取引価格（㎡単価）"],
+    "area_sqm": ["Area", "面積（㎡）"],
+    "floor_plan": ["FloorPlan", "間取り"],
+    "land_shape": ["LandShape", "土地の形状"],
+    "frontage": ["Frontage", "間口"],
     "total_floor_area_sqm": ["TotalFloorArea", "延床面積（㎡）"],
-    "build_year_str":       ["BuildingYear", "建築年"],
-    "building_structure":   ["Structure", "建物の構造"],
-    "use_name":             ["Use", "用途"],
-    "purpose_name":         ["Purpose", "今後の利用目的"],
+    "build_year_str": ["BuildingYear", "建築年"],
+    "building_structure": ["Structure", "建物の構造"],
+    "use_name": ["Use", "用途"],
+    "purpose_name": ["Purpose", "今後の利用目的"],
     "front_road_direction": ["Direction", "前面道路：方位"],
-    "front_road_type":      ["Classification", "前面道路：種類"],
-    "front_road_breadth":   ["Breadth", "前面道路：幅員（m）"],
-    "city_planning":        ["CityPlanning", "都市計画"],
-    "coverage_ratio":       ["CoverageRatio", "建ぺい率（%）"],
-    "floor_area_ratio":     ["FloorAreaRatio", "容積率（%）"],
-    "period_str":           ["Period", "取引時点"],
-    "renovation":           ["Renovation", "改装"],
-    "remarks":              ["Remarks", "取引の事情等"],
+    "front_road_type": ["Classification", "前面道路：種類"],
+    "front_road_breadth": ["Breadth", "前面道路：幅員（m）"],
+    "city_planning": ["CityPlanning", "都市計画"],
+    "coverage_ratio": ["CoverageRatio", "建ぺい率（%）"],
+    "floor_area_ratio": ["FloorAreaRatio", "容積率（%）"],
+    "period_str": ["Period", "取引時点"],
+    "renovation": ["Renovation", "改装"],
+    "remarks": ["Remarks", "取引の事情等"],
 }
 
 _XIT001_NUMERIC_COLUMNS = [
@@ -381,15 +382,22 @@ def normalize_xit001_features_to_dataframe(
 
     # 単価が空の場合は総額÷面積で補完
     if "trade_price_per_sqm" in df.columns and "trade_price_total" in df.columns:
-        mask = df["trade_price_per_sqm"].isna() & df["trade_price_total"].notna() & df["area_sqm"].notna()
-        df.loc[mask, "trade_price_per_sqm"] = df.loc[mask, "trade_price_total"] / df.loc[mask, "area_sqm"]
+        mask = (
+            df["trade_price_per_sqm"].isna()
+            & df["trade_price_total"].notna()
+            & df["area_sqm"].notna()
+        )
+        df.loc[mask, "trade_price_per_sqm"] = (
+            df.loc[mask, "trade_price_total"] / df.loc[mask, "area_sqm"]
+        )
 
     return df
 
 
-def _parse_japanese_year(s: Any) -> Optional[int]:
+def _parse_japanese_year(s: Any) -> int | None:
     """和暦文字列を西暦に変換する。例: "昭和45年" → 1970"""
     import re
+
     if s is None:
         return None
     s = str(s).strip()
@@ -410,13 +418,19 @@ def _parse_japanese_year(s: Any) -> Optional[int]:
 # (既存) 空 DataFrame
 # --------------------------------------------------------------------------
 
+
 def _empty_dataframe() -> pd.DataFrame:
     """スキーマ定義済みの空 DataFrame を返す。"""
-    cols = (
-        ["point_id", "year", "price_classification", "survey_source"]
-        + list(_FIELD_CANDIDATES.keys())
-        + ["lon", "lat", "raw_properties"]
-    )
+    cols = [
+        "point_id",
+        "year",
+        "price_classification",
+        "survey_source",
+        *list(_FIELD_CANDIDATES.keys()),
+        "lon",
+        "lat",
+        "raw_properties",
+    ]
     # survey_year_from_props は除外し standard_land_number を追加
     cols = [c for c in cols if c != "survey_year_from_props"]
     return pd.DataFrame(columns=cols)

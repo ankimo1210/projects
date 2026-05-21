@@ -1,4 +1,5 @@
 """Plummer-sphere energy conservation under leapfrog."""
+
 from __future__ import annotations
 
 import numpy as np
@@ -11,6 +12,7 @@ from nbody import Simulation, plummer_sphere
 def cupy_available():
     try:
         import cupy
+
         _ = cupy.arange(1)
         return True
     except Exception:

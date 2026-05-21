@@ -2,6 +2,7 @@
 train_valuation_model.py
 公示地価 + 付与済み location_features から簡易線形モデルを学習して保存する。
 """
+
 from __future__ import annotations
 
 import argparse

@@ -1,10 +1,10 @@
 from datetime import date, timedelta
 
 from fastapi import APIRouter, Query
+from market_viz.analytics.signals import build_alert_df
 
 from backend.app.deps import get_db, load_instruments
 from backend.app.models.schemas import AlertRow
-from src.analytics.signals import build_alert_df
 
 router = APIRouter(prefix="/alerts", tags=["alerts"])
 

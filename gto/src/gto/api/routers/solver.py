@@ -1,7 +1,8 @@
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from concurrent.futures import ThreadPoolExecutor
-import asyncio
 
 router = APIRouter()
 _executor = ThreadPoolExecutor(max_workers=2)
@@ -43,6 +44,7 @@ async def solve(req: SolveRequest):
     loop = asyncio.get_event_loop()
     try:
         import gto_cuda
+
         results = await loop.run_in_executor(
             _executor,
             lambda: gto_cuda.batch_solve_rust([spot], req.iterations, req.max_bets),
@@ -51,11 +53,15 @@ async def solve(req: SolveRequest):
         backend = "gpu"
     except Exception:
         import gto_py
+
         result = await loop.run_in_executor(
             _executor,
             lambda: gto_py.solve_spot(
-                req.pot_bb, req.effective_stack_bb,
-                req.board, req.iterations, req.max_bets,
+                req.pot_bb,
+                req.effective_stack_bb,
+                req.board,
+                req.iterations,
+                req.max_bets,
             ),
         )
         backend = "cpu"

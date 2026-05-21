@@ -10,7 +10,6 @@ import time
 import uuid
 from typing import Any
 
-
 _jobs: dict[str, dict[str, Any]] = {}
 _lock = threading.Lock()
 
@@ -29,6 +28,7 @@ def submit(conversation: list[dict], user_message: str) -> str:
     def _run():
         try:
             from api.claude_agent import run as agent_run
+
             result = agent_run(conversation, user_message)
             with _lock:
                 _jobs[job_id]["status"] = "done"
@@ -59,7 +59,8 @@ def get_status(job_id: str) -> dict[str, Any]:
 def _cleanup_old_jobs():
     cutoff = time.time() - 3600
     with _lock:
-        stale = [jid for jid, j in _jobs.items()
-                 if j["created_at"] < cutoff and j["status"] != "running"]
+        stale = [
+            jid for jid, j in _jobs.items() if j["created_at"] < cutoff and j["status"] != "running"
+        ]
         for jid in stale:
             del _jobs[jid]

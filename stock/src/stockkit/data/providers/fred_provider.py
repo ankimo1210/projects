@@ -27,12 +27,12 @@ JP_CPI = "JPNCPIALLMINMEI"  # WARNING: FRED stopped updating this series at 2021
 US_CPI = "CPIAUCSL"
 US_10Y = "DGS10"
 JP_10Y = "IRLTLT01JPM156N"
-JP_EXPORTS = "XTEXVA01JPM667S"   # Japan Exports, USD, SA monthly (latest: 2026-03)
-JP_IMPORTS = "XTIMVA01JPM667S"   # Japan Imports, USD, SA monthly (latest: 2026-03)
+JP_EXPORTS = "XTEXVA01JPM667S"  # Japan Exports, USD, SA monthly (latest: 2026-03)
+JP_IMPORTS = "XTIMVA01JPM667S"  # Japan Imports, USD, SA monthly (latest: 2026-03)
 JP_UNEMPLOYMENT = "LRUNTTTTJPM156S"  # Japan Unemployment Rate %, monthly (latest: 2026-03)
-JP_IP = "JPNPROINDMISMEI"        # Japan Industrial Production index, monthly (stale: 2024-03)
-JP_POLICY_RATE = "IRSTCB01JPM156N"   # Japan Policy Rate %, monthly (stale: 2023-12)
-USDJPY = "DEXJPUS"               # USD/JPY exchange rate, daily (latest: 2026-05)
+JP_IP = "JPNPROINDMISMEI"  # Japan Industrial Production index, monthly (stale: 2024-03)
+JP_POLICY_RATE = "IRSTCB01JPM156N"  # Japan Policy Rate %, monthly (stale: 2023-12)
+USDJPY = "DEXJPUS"  # USD/JPY exchange rate, daily (latest: 2026-05)
 
 _DAILY_SERIES = {US_10Y, USDJPY}
 _STALE_DAYS_DAILY = 1
@@ -73,9 +73,7 @@ def fred_get_series(
 
     if use_cache:
         last = _cache.latest_macro_date(series_id)
-        stale_days = (
-            _STALE_DAYS_DAILY if series_id in _DAILY_SERIES else _STALE_DAYS_MONTHLY
-        )
+        stale_days = _STALE_DAYS_DAILY if series_id in _DAILY_SERIES else _STALE_DAYS_MONTHLY
         if last is not None and last >= pd.Timestamp(end) - pd.Timedelta(days=stale_days):
             return _cache.read_macro(series_id, start=start, end=end)
 

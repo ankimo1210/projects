@@ -1,5 +1,4 @@
 from datetime import date, timedelta
-from typing import Optional
 
 from fastapi import APIRouter, HTTPException, Query
 
@@ -14,7 +13,7 @@ def get_prices(
     ticker: str,
     frequency: str = Query("1d", description="1d | 1h | 1m"),
     days: int = Query(365, ge=1, le=1825),
-    start: Optional[str] = Query(None),
+    start: str | None = Query(None),
 ):
     db = get_db()
     start_str = start or (date.today() - timedelta(days=days)).isoformat()

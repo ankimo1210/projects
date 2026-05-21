@@ -5,6 +5,7 @@ facility_sources.py
 OpenStreetMap Overpass API から物件周辺施設を取得する。
 DB への永続化は行わず、物件分析タブのリアルタイム表示に使う。
 """
+
 from __future__ import annotations
 
 import math
@@ -12,7 +13,6 @@ from dataclasses import dataclass
 from typing import Any
 
 import requests
-
 from config import get_logger
 
 logger = get_logger(__name__)
@@ -94,7 +94,9 @@ def find_nearby_convenience(
     timeout: int = OVERPASS_TIMEOUT_SEC,
 ) -> list[Facility]:
     """指定座標の周辺にあるコンビニを距離順で返す。"""
-    return find_nearby_facilities("convenience", lon=lon, lat=lat, radius_m=radius_m, timeout=timeout)
+    return find_nearby_facilities(
+        "convenience", lon=lon, lat=lat, radius_m=radius_m, timeout=timeout
+    )
 
 
 def find_nearby_facilities(
@@ -229,7 +231,9 @@ out center tags;
 """
 
 
-def _build_multi_category_query(categories: list[str], lat: float, lon: float, radius_m: int) -> str:
+def _build_multi_category_query(
+    categories: list[str], lat: float, lon: float, radius_m: int
+) -> str:
     """複数カテゴリ分の Overpass QL をまとめて組み立てる。"""
     statements: list[str] = []
     emitted: set[tuple[str, str]] = set()
@@ -329,7 +333,8 @@ def summarize_facility_groups(
     summary: dict[str, Any] = {}
     for category in categories:
         distances = sorted(
-            d for d in (_item_distance_m(item) for item in grouped.get(category, []))
+            d
+            for d in (_item_distance_m(item) for item in grouped.get(category, []))
             if d is not None
         )
         for radius_m in radii_m:

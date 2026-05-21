@@ -2,17 +2,17 @@
 collect_listings_batch.py
 URL リストから掲載物件を一括取り込み、listing_raw / listing_master に保存する。
 """
+
 from __future__ import annotations
 
 import argparse
 import hashlib
 import time
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable, Optional
-
-import requests
 
 import db
+import requests
 from config import get_logger
 from geocoder import GeocodingError, geocode_address
 from property_scraper import (
@@ -26,12 +26,16 @@ logger = get_logger(__name__)
 
 # 403 バックオフ設定
 _BLOCK_BACKOFF_SEC = 25.0  # 403 検知後に待機する秒数 (Cloudflare レート制限ウィンドウ対応)
-_BLOCK_WARMUP_SEC = 3.0    # 検索ページ再取得後の追加待機
-_MAX_RETRIES = 1           # 403 時のリトライ回数
+_BLOCK_WARMUP_SEC = 3.0  # 検索ページ再取得後の追加待機
+_MAX_RETRIES = 1  # 403 時のリトライ回数
 
 
-def run_import(url_file: Path, *, region_label: str | None = None, compute_features: bool = False) -> dict[str, object]:
-    urls = [line.strip() for line in url_file.read_text(encoding="utf-8").splitlines() if line.strip()]
+def run_import(
+    url_file: Path, *, region_label: str | None = None, compute_features: bool = False
+) -> dict[str, object]:
+    urls = [
+        line.strip() for line in url_file.read_text(encoding="utf-8").splitlines() if line.strip()
+    ]
     return run_import_urls(urls, region_label=region_label)
 
 
@@ -59,9 +63,9 @@ def import_urls_with_connection(
     *,
     region_label: str | None = None,
     sleep_sec: float = 1.5,
-    session: Optional[requests.Session] = None,
-    referer: Optional[str] = None,
-    progress_cb: Optional[Callable[[dict[str, object]], None]] = None,
+    session: requests.Session | None = None,
+    referer: str | None = None,
+    progress_cb: Callable[[dict[str, object]], None] | None = None,
 ) -> dict[str, object]:
     done = 0
     failed = 0
@@ -73,7 +77,17 @@ def import_urls_with_connection(
     for idx, url in enumerate(urls, start=1):
         batch_elapsed = time.monotonic() - batch_start
         if progress_cb:
-            progress_cb({"stage": "import", "event": "start", "done": done, "failed": failed, "total": total, "url": url, "batch_elapsed_sec": batch_elapsed})
+            progress_cb(
+                {
+                    "stage": "import",
+                    "event": "start",
+                    "done": done,
+                    "failed": failed,
+                    "total": total,
+                    "url": url,
+                    "batch_elapsed_sec": batch_elapsed,
+                }
+            )
         # 連続 403 が 3 件続いたらバッチ全体を一時停止して再ウォーム
         if consecutive_403 >= 3 and session is not None and referer:
             logger.warning("連続 403 × %d: 60秒バッチ停止後に再試行", consecutive_403)
@@ -83,7 +97,8 @@ def import_urls_with_connection(
         url_start = time.monotonic()
         try:
             imported = _import_one_with_retry(
-                conn, url,
+                conn,
+                url,
                 region_label=region_label,
                 session=session,
                 referer=referer,
@@ -119,10 +134,27 @@ def import_urls_with_connection(
                 consecutive_403 = 0
             logger.warning("取込失敗 [%s] %s", url, error_msg)
             if progress_cb:
-                progress_cb({"stage": "import", "event": "failed", "done": done, "failed": failed, "total": total, "url": url, "error": error_msg, "url_elapsed_sec": url_elapsed, "batch_elapsed_sec": time.monotonic() - batch_start})
+                progress_cb(
+                    {
+                        "stage": "import",
+                        "event": "failed",
+                        "done": done,
+                        "failed": failed,
+                        "total": total,
+                        "url": url,
+                        "error": error_msg,
+                        "url_elapsed_sec": url_elapsed,
+                        "batch_elapsed_sec": time.monotonic() - batch_start,
+                    }
+                )
         if idx < total and sleep_sec > 0:
             time.sleep(sleep_sec)
-    return {"done": done, "failed": failed, "listing_ids": listing_ids, "imported_rows": imported_rows}
+    return {
+        "done": done,
+        "failed": failed,
+        "listing_ids": listing_ids,
+        "imported_rows": imported_rows,
+    }
 
 
 def _import_one_with_retry(
@@ -130,16 +162,24 @@ def _import_one_with_retry(
     url: str,
     *,
     region_label: str | None = None,
-    session: Optional[requests.Session] = None,
-    referer: Optional[str] = None,
+    session: requests.Session | None = None,
+    referer: str | None = None,
 ) -> dict[str, object]:
     for attempt in range(_MAX_RETRIES + 1):
         try:
-            return _import_one(conn, url, region_label=region_label, session=session, referer=referer)
+            return _import_one(
+                conn, url, region_label=region_label, session=session, referer=referer
+            )
         except ScrapingError as exc:
             is_blocked = "403" in str(exc)
             if is_blocked and attempt < _MAX_RETRIES and session is not None and referer:
-                logger.warning("403 検知 (attempt %d/%d)。%s秒待機後リトライ: %s", attempt + 1, _MAX_RETRIES + 1, _BLOCK_BACKOFF_SEC, url)
+                logger.warning(
+                    "403 検知 (attempt %d/%d)。%s秒待機後リトライ: %s",
+                    attempt + 1,
+                    _MAX_RETRIES + 1,
+                    _BLOCK_BACKOFF_SEC,
+                    url,
+                )
                 time.sleep(_BLOCK_BACKOFF_SEC)
                 _rewarm_session(session, referer)
             else:
@@ -151,8 +191,8 @@ def _import_one(
     url: str,
     *,
     region_label: str | None = None,
-    session: Optional[requests.Session] = None,
-    referer: Optional[str] = None,
+    session: requests.Session | None = None,
+    referer: str | None = None,
 ) -> dict[str, object]:
     html = fetch_property_html(url, session=session, referer=referer)
     html_hash = hashlib.sha1(html.encode("utf-8")).hexdigest()
@@ -189,7 +229,9 @@ def _import_one(
         except GeocodingError:
             pass
 
-    listing_id = f"{source}:{source_property_id or hashlib.sha1(url.encode('utf-8')).hexdigest()[:16]}"
+    listing_id = (
+        f"{source}:{source_property_id or hashlib.sha1(url.encode('utf-8')).hexdigest()[:16]}"
+    )
     db.upsert_listing_master(
         conn,
         {

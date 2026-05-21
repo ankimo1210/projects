@@ -8,10 +8,18 @@ Card encoding (matches gto-core/src/eval.rs):
 """
 
 from __future__ import annotations
+
 import numpy as np
+
 from gto.trainer.preflop_data import (
-    RFI_BTN, RFI_CO, RFI_SB, RFI_HJ, RFI_UTG,
-    FACING_BB_VS_BTN, FACING_BB_VS_CO, ALL_HANDS,
+    ALL_HANDS,
+    FACING_BB_VS_BTN,
+    FACING_BB_VS_CO,
+    RFI_BTN,
+    RFI_CO,
+    RFI_HJ,
+    RFI_SB,
+    RFI_UTG,
 )
 
 NUM_COMBOS = 1326
@@ -19,12 +27,15 @@ RANK_STR = "23456789TJQKA"
 SUIT_STR = "cdhs"
 
 RFI_TABLE = {
-    "BTN": RFI_BTN, "CO": RFI_CO, "SB": RFI_SB,
-    "HJ": RFI_HJ,  "UTG": RFI_UTG,
+    "BTN": RFI_BTN,
+    "CO": RFI_CO,
+    "SB": RFI_SB,
+    "HJ": RFI_HJ,
+    "UTG": RFI_UTG,
 }
 FACING_TABLE = {
     "BTN": FACING_BB_VS_BTN,
-    "CO":  FACING_BB_VS_CO,
+    "CO": FACING_BB_VS_CO,
 }
 
 
@@ -42,7 +53,7 @@ def hand_to_combo_indices(hand: str) -> list[int]:
     indices = []
     if r1 == r2:  # pair
         for i, s1 in enumerate(SUIT_STR):
-            for s2 in SUIT_STR[i + 1:]:
+            for s2 in SUIT_STR[i + 1 :]:
                 indices.append(combo_index(card_int(r1, s1), card_int(r2, s2)))
     elif len(hand) == 3 and hand[2] == "s":  # suited
         for s in SUIT_STR:
@@ -93,7 +104,7 @@ def compute_preflop_outcome(position: str, dead_cards: list[str] | None = None) 
       oop_call_weights np.ndarray[1326] BB call range
       bb_hands        list of {hand, raise_freq, call_freq, fold_freq, threebet_freq}
     """
-    rfi_table    = RFI_TABLE.get(position, RFI_BTN)
+    rfi_table = RFI_TABLE.get(position, RFI_BTN)
     facing_table = FACING_TABLE.get(position, FACING_BB_VS_BTN)
 
     # Dead card set (board + hero cards)
@@ -104,18 +115,18 @@ def compute_preflop_outcome(position: str, dead_cards: list[str] | None = None) 
                 dead_ints.add(card_int(cs[0], cs[1]))
 
     # Build IP raise weights
-    ip_w  = build_ip_range_weights(position)
+    ip_w = build_ip_range_weights(position)
     oop_w = build_oop_call_range_weights(position)
 
     # Remove dead card blockers
     for idx in range(NUM_COMBOS):
-        a_int = (idx * 2) // 1  # not straightforward — compute via table
+        (idx * 2) // 1  # not straightforward — compute via table
     # More robust: iterate combos
     for a in range(51):
         for b in range(a + 1, 52):
             idx = combo_index(a, b)
             if a in dead_ints or b in dead_ints:
-                ip_w[idx]  = 0.0
+                ip_w[idx] = 0.0
                 oop_w[idx] = 0.0
 
     # Aggregate fold / call / 3bet frequencies (weighted by how often BB holds each hand)
@@ -123,15 +134,15 @@ def compute_preflop_outcome(position: str, dead_cards: list[str] | None = None) 
     bb_hands = []
 
     for hand in ALL_HANDS:
-        rfi_freq    = rfi_table.get(hand, {}).get("R", 0) / 100.0
-        facing      = facing_table.get(hand, {"F": 100, "C": 0, "3B": 0})
-        fold_freq   = facing.get("F", 0) / 100.0
+        rfi_freq = rfi_table.get(hand, {}).get("R", 0) / 100.0
+        facing = facing_table.get(hand, {"F": 100, "C": 0, "3B": 0})
+        fold_freq = facing.get("F", 0) / 100.0
         call_freq_h = facing.get("C", 0) / 100.0
-        tb_freq     = facing.get("3B", 0) / 100.0
+        tb_freq = facing.get("3B", 0) / 100.0
 
         # BB sees this hand with uniform probability (each combo equally)
         combo_idxs = hand_to_combo_indices(hand)
-        n_combos   = len(combo_idxs)
+        len(combo_idxs)
 
         # Weight: how often BB holds this hand (unblocked combos)
         alive = sum(1 for idx in combo_idxs if oop_w[idx] > 0 or fold_freq > 0)
@@ -140,28 +151,30 @@ def compute_preflop_outcome(position: str, dead_cards: list[str] | None = None) 
 
         # Aggregate (each combo counts equally for BB's range)
         weight = alive  # relative weight = number of live combos
-        fold_w    += weight * fold_freq
-        call_w    += weight * call_freq_h
+        fold_w += weight * fold_freq
+        call_w += weight * call_freq_h
         threebet_w += weight * tb_freq
 
         if call_freq_h > 0 or tb_freq > 0 or fold_freq > 0:
-            bb_hands.append({
-                "hand":          hand,
-                "raise_freq":    round(rfi_freq * 100, 1),
-                "call_freq":     round(call_freq_h * 100, 1),
-                "fold_freq":     round(fold_freq * 100, 1),
-                "threebet_freq": round(tb_freq * 100, 1),
-            })
+            bb_hands.append(
+                {
+                    "hand": hand,
+                    "raise_freq": round(rfi_freq * 100, 1),
+                    "call_freq": round(call_freq_h * 100, 1),
+                    "fold_freq": round(fold_freq * 100, 1),
+                    "threebet_freq": round(tb_freq * 100, 1),
+                }
+            )
 
     total = fold_w + call_w + threebet_w
     if total == 0:
         total = 1.0
 
     return {
-        "fold_equity":    round(fold_w    / total, 4),
-        "call_freq":      round(call_w    / total, 4),
-        "threebet_freq":  round(threebet_w / total, 4),
-        "ip_weights":     ip_w,
+        "fold_equity": round(fold_w / total, 4),
+        "call_freq": round(call_w / total, 4),
+        "threebet_freq": round(threebet_w / total, 4),
+        "ip_weights": ip_w,
         "oop_call_weights": oop_w,
-        "bb_hands":       sorted(bb_hands, key=lambda x: -x["call_freq"]),
+        "bb_hands": sorted(bb_hands, key=lambda x: -x["call_freq"]),
     }

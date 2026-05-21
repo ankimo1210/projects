@@ -5,6 +5,7 @@ thread accumulates its own particle's acceleration against that tile.
 This achieves O(N) global memory traffic per particle and is the standard
 "tile/shared-memory" formulation (Nyland, Harris & Prins, GPU Gems 3).
 """
+
 from __future__ import annotations
 
 import cupy as cp
@@ -103,7 +104,8 @@ def compute_acceleration(
     blocks = (n + block_size - 1) // block_size
     shared_bytes = block_size * 16  # sizeof(float4) == 16
     _gravity_kernel(
-        (blocks,), (block_size,),
+        (blocks,),
+        (block_size,),
         (pos_mass, out, cp.int32(n), cp.float32(eps * eps), cp.float32(G)),
         shared_mem=shared_bytes,
     )

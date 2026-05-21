@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import dash
-from dash import html
 import dash_bootstrap_components as dbc
+from dash import html
 
 dash.register_page(__name__, path="/", name="Home")
 
@@ -20,9 +20,7 @@ layout = dbc.Container(
                 html.Li("Portfolio — 複数銘柄のリターン/相関/シャープ"),
             ]
         ),
-        html.P(
-            "ティッカーは AAPL のような海外コード、または 7203 のような4桁日本コード。"
-        ),
+        html.P("ティッカーは AAPL のような海外コード、または 7203 のような4桁日本コード。"),
     ],
     className="py-3",
 )

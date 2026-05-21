@@ -5,11 +5,10 @@ geocoder.py
 API: https://msearch.gsi.go.jp/address-search/AddressSearch?q=<address>
 APIキー不要・無料・商用利用可。
 """
+
 from dataclasses import dataclass
-from typing import Optional
 
 import requests
-
 from config import get_logger
 
 logger = get_logger(__name__)
@@ -27,7 +26,7 @@ class GeocodingResult:
     lon: float
     matched_address: str
     score: float
-    city_code: Optional[str] = None  # 国土地理院 muniCd（5桁市区町村コード）
+    city_code: str | None = None  # 国土地理院 muniCd（5桁市区町村コード）
 
 
 def geocode_address(address: str, timeout: int = 10) -> GeocodingResult:
@@ -79,5 +78,14 @@ def geocode_address(address: str, timeout: int = 10) -> GeocodingResult:
     score = float(props.get("score", 1.0))
     city_code = props.get("muniCd")  # 5桁市区町村コード（例: "13104"）
 
-    logger.debug("ジオコーディング: %r → (%.6f, %.6f) score=%.2f city_code=%s", address, lat, lon, score, city_code)
-    return GeocodingResult(lat=lat, lon=lon, matched_address=matched, score=score, city_code=city_code)
+    logger.debug(
+        "ジオコーディング: %r → (%.6f, %.6f) score=%.2f city_code=%s",
+        address,
+        lat,
+        lon,
+        score,
+        city_code,
+    )
+    return GeocodingResult(
+        lat=lat, lon=lon, matched_address=matched, score=score, city_code=city_code
+    )

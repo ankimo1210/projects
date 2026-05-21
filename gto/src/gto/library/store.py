@@ -12,6 +12,7 @@ DuckDB is used as a query engine only (no DuckDB file storage).
 """
 
 from __future__ import annotations
+
 import json
 from pathlib import Path
 
@@ -23,10 +24,10 @@ SOLUTIONS_DIR = Path(__file__).parents[4] / "_data" / "gto" / "solutions"
 CACHE_DIR = SOLUTIONS_DIR / "cache"
 
 _DIRS = {
-    "spots":                SOLUTIONS_DIR / "spots",
+    "spots": SOLUTIONS_DIR / "spots",
     "aggregate_strategies": SOLUTIONS_DIR / "agg",
-    "combo_strategies":     SOLUTIONS_DIR / "combos",
-    "flop_reports":         SOLUTIONS_DIR / "reports",
+    "combo_strategies": SOLUTIONS_DIR / "combos",
+    "flop_reports": SOLUTIONS_DIR / "reports",
 }
 
 # Empty-table DDL used when no Parquet files exist yet
@@ -37,7 +38,7 @@ _EMPTY_SCHEMAS = {
         street VARCHAR, iterations INTEGER, exploitability DOUBLE
     )""",
     "aggregate_strategies": "(spot_id VARCHAR, action VARCHAR, freq FLOAT)",
-    "combo_strategies":     "(spot_id VARCHAR, card_a TINYINT, card_b TINYINT, action VARCHAR, freq FLOAT)",
+    "combo_strategies": "(spot_id VARCHAR, card_a TINYINT, card_b TINYINT, action VARCHAR, freq FLOAT)",
     "flop_reports": """(
         position VARCHAR, opponent VARCHAR, stack_bb DOUBLE,
         board VARCHAR, texture VARCHAR,
@@ -84,10 +85,10 @@ def write_batch(
     con = duckdb.connect(":memory:")
 
     for table, df in [
-        ("spots",                spots_df),
+        ("spots", spots_df),
         ("aggregate_strategies", agg_df),
-        ("combo_strategies",     combos_df),
-        ("flop_reports",         reports_df),
+        ("combo_strategies", combos_df),
+        ("flop_reports", reports_df),
     ]:
         path = _DIRS[table] / fname
         con.register("_df", df)
@@ -114,7 +115,8 @@ def build_position_cache(position: str | None = None, stack_bb: float = 100.0) -
         return
 
     for pos in targets:
-        rows = con.execute("""
+        rows = con.execute(
+            """
             SELECT s.board, r.texture, s.exploitability, a.action, a.freq
             FROM spots s
             LEFT JOIN flop_reports r
@@ -122,7 +124,9 @@ def build_position_cache(position: str | None = None, stack_bb: float = 100.0) -
             JOIN aggregate_strategies a ON a.spot_id = s.spot_id
             WHERE s.position = ? AND s.stack_bb = ?
             ORDER BY s.board, a.action
-        """, [pos, stack_bb]).fetchall()
+        """,
+            [pos, stack_bb],
+        ).fetchall()
 
         spots: dict = {}
         for board, texture, expl, action, freq in rows:

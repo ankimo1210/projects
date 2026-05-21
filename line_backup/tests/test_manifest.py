@@ -1,9 +1,9 @@
 import plistlib
 import sqlite3
+import sys
 import tempfile
 import unittest
 from pathlib import Path
-import sys
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
@@ -58,7 +58,13 @@ class TestIterLineFiles(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())
         rows = [
-            ("aabbcc", "AppDomainGroup-jp.naver.line", "Library/Application Support/Line.sqlite", 1, 0),
+            (
+                "aabbcc",
+                "AppDomainGroup-jp.naver.line",
+                "Library/Application Support/Line.sqlite",
+                1,
+                0,
+            ),
             ("ddeeff", "AppDomain-com.apple.mobilenotes", "Documents/notes.sqlite", 1, 0),
             ("112233", "AppDomain-com.example.other", "Caches/data.db", 1, 0),
         ]
@@ -97,9 +103,7 @@ class TestPrioritize(unittest.TestCase):
         ranked = prioritize(entries)
         # Line.sqlite or Talk.sqlite should be ranked highly
         top_paths = [e.relative_path for e in ranked[:2]]
-        self.assertTrue(
-            any("Line.sqlite" in p or "Talk.sqlite" in p for p in top_paths)
-        )
+        self.assertTrue(any("Line.sqlite" in p or "Talk.sqlite" in p for p in top_paths))
 
 
 if __name__ == "__main__":

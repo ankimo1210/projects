@@ -20,9 +20,11 @@ def cumulative_return(close: pd.Series) -> pd.Series:
 
 def build_return_matrix(
     prices_df: pd.DataFrame,
-    periods: list[int] = [1, 5, 20, 60, 252],
+    periods: list[int] | None = None,
 ) -> pd.DataFrame:
     """pivot prices_df (timestamp, ticker, close) → return matrix per ticker."""
+    if periods is None:
+        periods = [1, 5, 20, 60, 252]
     if prices_df.empty or "timestamp" not in prices_df.columns:
         return pd.DataFrame()
     pivot = prices_df.pivot(index="timestamp", columns="ticker", values="close").sort_index()

@@ -2,8 +2,9 @@
 
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
+
+from gto.library.flop_canon import board_texture, canonicalize
 from gto.library.schema import get_db, spot_id
-from gto.library.flop_canon import canonicalize, board_texture
 
 router = APIRouter()
 
@@ -45,7 +46,7 @@ def _parse_board(board_str: str) -> list[str]:
     board_str = board_str.strip()
     if " " in board_str:
         return board_str.split()
-    return [board_str[i:i+2] for i in range(0, len(board_str), 2)]
+    return [board_str[i : i + 2] for i in range(0, len(board_str), 2)]
 
 
 @router.get("/library/spots", response_model=list[SpotStrategy])
@@ -62,7 +63,8 @@ def list_spots(
         where += " AND s.position = ?"
         params.append(position.upper())
 
-    rows = db.execute(f"""
+    rows = db.execute(
+        f"""
         SELECT s.spot_id, s.board, s.position, s.opponent,
                s.stack_bb, s.exploitability,
                r.texture
@@ -73,20 +75,29 @@ def list_spots(
         {where}
         ORDER BY s.computed_at DESC
         LIMIT ?
-    """, params + [limit]).fetchall()
+    """,
+        [*params, limit],
+    ).fetchall()
 
     result = []
     for row in rows:
         sid, board, pos, opp, stk, expl, tex = row
         agg = db.execute(
             "SELECT action, freq FROM aggregate_strategies WHERE spot_id = ? ORDER BY freq DESC",
-            [sid]
+            [sid],
         ).fetchall()
-        result.append(SpotStrategy(
-            spot_id=sid, board=board, position=pos, opponent=opp,
-            stack_bb=stk, texture=tex or "", exploitability=expl,
-            strategy=[ActionFreq(action=a, freq=f) for a, f in agg],
-        ))
+        result.append(
+            SpotStrategy(
+                spot_id=sid,
+                board=board,
+                position=pos,
+                opponent=opp,
+                stack_bb=stk,
+                texture=tex or "",
+                exploitability=expl,
+                strategy=[ActionFreq(action=a, freq=f) for a, f in agg],
+            )
+        )
     return result
 
 
@@ -109,22 +120,29 @@ def get_flop_solution(
     db = get_db()
     spot = db.execute(
         "SELECT spot_id, board, position, opponent, stack_bb, exploitability FROM spots WHERE spot_id = ?",
-        [sid]
+        [sid],
     ).fetchone()
 
     if spot is None:
-        raise HTTPException(404, f"Solution not found for {position} vs {opp} {canon_str} {stack_bb}bb. "
-                                  "Run batch computation first.")
+        raise HTTPException(
+            404,
+            f"Solution not found for {position} vs {opp} {canon_str} {stack_bb}bb. "
+            "Run batch computation first.",
+        )
 
     agg = db.execute(
-        "SELECT action, freq FROM aggregate_strategies WHERE spot_id = ? ORDER BY freq DESC",
-        [sid]
+        "SELECT action, freq FROM aggregate_strategies WHERE spot_id = ? ORDER BY freq DESC", [sid]
     ).fetchall()
 
     tex = board_texture(canon)
     return SpotStrategy(
-        spot_id=sid, board=canon_str, position=spot[2], opponent=spot[3],
-        stack_bb=spot[4], texture=tex, exploitability=spot[5],
+        spot_id=sid,
+        board=canon_str,
+        position=spot[2],
+        opponent=spot[3],
+        stack_bb=spot[4],
+        texture=tex,
+        exploitability=spot[5],
         strategy=[ActionFreq(action=a, freq=f) for a, f in agg],
     )
 
@@ -146,8 +164,7 @@ def get_combo_strategies(
 
     db = get_db()
     rows = db.execute(
-        "SELECT card_a, card_b, action, freq FROM combo_strategies WHERE spot_id = ?",
-        [sid]
+        "SELECT card_a, card_b, action, freq FROM combo_strategies WHERE spot_id = ?", [sid]
     ).fetchall()
 
     if not rows:
@@ -171,15 +188,24 @@ def get_flop_report(
         where += " AND texture = ?"
         params.append(texture)
 
-    rows = db.execute(f"""
+    rows = db.execute(
+        f"""
         SELECT board, texture, check_freq, bet33_freq, bet75_freq, bet100_freq
         FROM flop_reports {where}
         ORDER BY bet33_freq DESC
         LIMIT ?
-    """, params + [limit]).fetchall()
+    """,
+        [*params, limit],
+    ).fetchall()
 
-    return [FlopReport(
-        board=r[0], texture=r[1],
-        check_freq=r[2] or 0.0, bet33_freq=r[3] or 0.0,
-        bet75_freq=r[4] or 0.0, bet100_freq=r[5] or 0.0,
-    ) for r in rows]
+    return [
+        FlopReport(
+            board=r[0],
+            texture=r[1],
+            check_freq=r[2] or 0.0,
+            bet33_freq=r[3] or 0.0,
+            bet75_freq=r[4] or 0.0,
+            bet100_freq=r[5] or 0.0,
+        )
+        for r in rows
+    ]

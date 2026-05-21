@@ -4,6 +4,7 @@ Uses additive blending (so overlapping particles brighten the pixel) and
 colours each point via an in-shader polynomial fit of matplotlib's magma
 colormap (Matt Zucker fit). Sizes shrink with depth for a perspective feel.
 """
+
 from __future__ import annotations
 
 import numpy as np
@@ -89,6 +90,7 @@ class StarsVisual(Visual):
 
     def set_data(self, pos: np.ndarray, speed: np.ndarray) -> None:
         from vispy.gloo import VertexBuffer
+
         pos = np.ascontiguousarray(pos, dtype=np.float32)
         speed = np.ascontiguousarray(speed, dtype=np.float32)
         self.shared_program["a_position"] = VertexBuffer(pos)

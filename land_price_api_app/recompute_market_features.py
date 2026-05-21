@@ -2,6 +2,7 @@
 recompute_market_features.py
 公示地価・取引価格地点へ共通の location_features を付与する。
 """
+
 from __future__ import annotations
 
 import argparse
@@ -26,7 +27,9 @@ PROPERTY_FACILITY_CATEGORIES = [
 FEATURE_VERSION = 1
 
 
-def run_market_feature_backfill(dataset: str, *, year: int | None = None, limit: int = 500, sleep_sec: float = 0.0) -> dict[str, int]:
+def run_market_feature_backfill(
+    dataset: str, *, year: int | None = None, limit: int = 500, sleep_sec: float = 0.0
+) -> dict[str, int]:
     conn = db.get_connection()
     db.create_tables_if_needed(conn)
     if dataset == "public_notice":
@@ -40,7 +43,9 @@ def run_market_feature_backfill(dataset: str, *, year: int | None = None, limit:
     failed = 0
     for _, row in targets.iterrows():
         try:
-            location_key = _ensure_location_feature(conn, row["lat"], row["lon"], row.get("city_code"))
+            location_key = _ensure_location_feature(
+                conn, row["lat"], row["lon"], row.get("city_code")
+            )
             if dataset == "public_notice":
                 db.upsert_public_notice_location_feature(
                     conn,
@@ -80,13 +85,17 @@ def _ensure_location_feature(conn, lat: float, lon: float, city_code: str | None
     if not existing.empty:
         return location_key
 
-    grouped = find_nearby_facility_groups(PROPERTY_FACILITY_CATEGORIES, lon=rounded_lon, lat=rounded_lat, radius_m=1000)
+    grouped = find_nearby_facility_groups(
+        PROPERTY_FACILITY_CATEGORIES, lon=rounded_lon, lat=rounded_lat, radius_m=1000
+    )
     facility_summary = summarize_facility_groups(grouped, PROPERTY_FACILITY_CATEGORIES)
     elevation_result = fetch_elevation_gsi(lon=rounded_lon, lat=rounded_lat)
     water_features = find_nearby_water(lon=rounded_lon, lat=rounded_lat, radius_m=1000)
     terrain_summary = summarize_terrain_features(elevation_result, water_features, radius_m=1000)
     hazard_summary = summarize_hazard_risk(lat=rounded_lat, lon=rounded_lon)
-    score_summary = score_location_features({**facility_summary, **terrain_summary, **hazard_summary})
+    score_summary = score_location_features(
+        {**facility_summary, **terrain_summary, **hazard_summary}
+    )
 
     db.upsert_location_features(
         conn,
@@ -114,7 +123,11 @@ def main() -> None:
     parser.add_argument("--limit", type=int, default=500)
     parser.add_argument("--sleep", type=float, default=0.0)
     args = parser.parse_args()
-    print(run_market_feature_backfill(args.dataset, year=args.year, limit=args.limit, sleep_sec=args.sleep))
+    print(
+        run_market_feature_backfill(
+            args.dataset, year=args.year, limit=args.limit, sleep_sec=args.sleep
+        )
+    )
 
 
 if __name__ == "__main__":

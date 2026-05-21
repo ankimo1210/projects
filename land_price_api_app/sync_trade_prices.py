@@ -7,16 +7,15 @@ CLI 使用例:
     python sync_trade_prices.py --pref 13 --year 2024 --quarter 1
     python sync_trade_prices.py --pref 47 --year 2023 --overwrite
 """
+
 import argparse
 import time
 from pathlib import Path
-from typing import Optional
-
-import pandas as pd
 
 import api_client
 import db
 import normalize
+import pandas as pd
 from config import (
     PROCESSED_DIR,
     RAW_DIR,
@@ -32,6 +31,7 @@ logger = get_logger(__name__)
 # ファイル保存
 # --------------------------------------------------------------------------
 
+
 def _raw_path(pref: str, year: int, quarter: int) -> Path:
     return RAW_DIR / f"xit001_pref{pref}_y{year}q{quarter}.geojson"
 
@@ -43,6 +43,7 @@ def _parquet_path(pref: str, year: int, quarter: int) -> Path:
 # --------------------------------------------------------------------------
 # 1四半期同期
 # --------------------------------------------------------------------------
+
 
 def sync_trade_quarter(
     pref: str,
@@ -75,8 +76,11 @@ def sync_trade_quarter(
     raw = _raw_path(pref, year, quarter)
     raw.parent.mkdir(parents=True, exist_ok=True)
     import json
+
     with open(raw, "w", encoding="utf-8") as f:
-        json.dump({"year": year, "quarter": quarter, "pref": pref, "data": records}, f, ensure_ascii=False)
+        json.dump(
+            {"year": year, "quarter": quarter, "pref": pref, "data": records}, f, ensure_ascii=False
+        )
 
     # 正規化
     df = normalize.normalize_xit001_features_to_dataframe(records, year, quarter)
@@ -111,10 +115,11 @@ def sync_trade_quarter(
 # 年全体同期（全四半期ループ）
 # --------------------------------------------------------------------------
 
+
 def sync_trade_year(
     pref: str,
     year: int,
-    quarters: Optional[list[int]] = None,
+    quarters: list[int] | None = None,
     overwrite: bool = False,
     conn=None,
 ) -> pd.DataFrame:
@@ -135,18 +140,22 @@ def sync_trade_year(
 # CLI
 # --------------------------------------------------------------------------
 
+
 def _build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(
-        description="不動産取引価格情報 (XIT001) を取得・保存する"
-    )
+    p = argparse.ArgumentParser(description="不動産取引価格情報 (XIT001) を取得・保存する")
     p.add_argument("--pref", type=str, required=True, help="都道府県コード 2桁 (例: 47)")
     p.add_argument("--year", type=int, required=True, help="取得対象年 (例: 2024)")
     p.add_argument(
-        "--quarter", type=int, default=None, choices=[1, 2, 3, 4],
+        "--quarter",
+        type=int,
+        default=None,
+        choices=[1, 2, 3, 4],
         help="四半期 1-4 (省略時は全四半期)",
     )
     p.add_argument("--overwrite", action="store_true", help="既存 Parquet を再取得して上書き")
-    p.add_argument("--skip-db", action="store_true", help="DB 書き込みをスキップし Parquet のみ保存")
+    p.add_argument(
+        "--skip-db", action="store_true", help="DB 書き込みをスキップし Parquet のみ保存"
+    )
     return p
 
 
@@ -157,13 +166,16 @@ def main() -> None:
 
     if args.quarter:
         df = sync_trade_quarter(
-            args.pref, args.year, args.quarter,
+            args.pref,
+            args.year,
+            args.quarter,
             overwrite=args.overwrite,
             skip_db_write=args.skip_db,
         )
     else:
         df = sync_trade_year(
-            args.pref, args.year,
+            args.pref,
+            args.year,
             overwrite=args.overwrite,
         )
 

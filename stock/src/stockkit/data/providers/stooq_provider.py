@@ -60,9 +60,7 @@ def stooq_get_prices(
     sym = ticker.upper()
 
     if not start:
-        start = (datetime.utcnow() - timedelta(days=365 * _DEFAULT_YEARS)).strftime(
-            "%Y-%m-%d"
-        )
+        start = (datetime.utcnow() - timedelta(days=365 * _DEFAULT_YEARS)).strftime("%Y-%m-%d")
     if not end:
         end = datetime.utcnow().strftime("%Y-%m-%d")
 

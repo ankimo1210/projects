@@ -4,9 +4,10 @@ utils.py
 
 NaN / None の安全な型変換を一元管理する。
 """
+
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
 import pandas as pd
 
@@ -19,6 +20,7 @@ def safe_str(v: Any, fallback: str = "—") -> str:
         return fallback
     try:
         import numpy as np
+
         if isinstance(v, np.floating) and np.isnan(float(v)):
             return fallback
     except Exception:
@@ -27,7 +29,7 @@ def safe_str(v: Any, fallback: str = "—") -> str:
     return s if s and s not in ("nan", "None", "NaT", "nat") else fallback
 
 
-def safe_float(v: Any) -> Optional[float]:
+def safe_float(v: Any) -> float | None:
     """NaN / None → None、それ以外は float に変換する。"""
     if v is None:
         return None
@@ -38,7 +40,7 @@ def safe_float(v: Any) -> Optional[float]:
         return None
 
 
-def safe_int(v: Any) -> Optional[int]:
+def safe_int(v: Any) -> int | None:
     """NaN / None → None、それ以外は int に変換する。"""
     f = safe_float(v)
     return None if f is None else int(f)

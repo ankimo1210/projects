@@ -1,4 +1,5 @@
 """Sanity check for GPU stack: CuPy, Numba CUDA, VisPy import."""
+
 from __future__ import annotations
 
 import sys
@@ -27,6 +28,7 @@ def check_raw_kernel() -> bool:
     """Compile a trivial RawKernel to verify nvcc / nvrtc path works on this GPU."""
     try:
         import cupy as cp
+
         kern = cp.RawKernel(
             r"""
             extern "C" __global__
@@ -55,6 +57,7 @@ def check_raw_kernel() -> bool:
 def check_vispy() -> bool:
     try:
         import vispy
+
         print(f"[ OK ] VisPy {vispy.__version__}")
         return True
     except Exception as e:

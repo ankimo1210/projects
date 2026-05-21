@@ -2,25 +2,26 @@
 ui/listings_tab.py
 保存済み掲載物件の一覧比較タブ。
 """
+
 from __future__ import annotations
 
 import html
 import re
 
-import plotly.express as px
-import pandas as pd
-import streamlit as st
-
-import streamlit.components.v1 as components
-
 import analytics
 import db
+import pandas as pd
+import plotly.express as px
+import streamlit as st
+import streamlit.components.v1 as components
 from property_scraper import LEGAL_LIFE_YEARS, STRUCTURE_JP, remaining_life
+from utils import safe_float as _float_or_none
+from utils import safe_int as _int_or_none
+from utils import safe_str as _safe_str
+from valuation import render_reason_texts
+
 from ui.rent_benchmark_panel import render_rent_benchmark_panel
 from ui.unit_price import SQM_PER_TSUBO, format_man, yen_to_man
-from valuation import render_reason_texts
-from utils import safe_float as _float_or_none, safe_int as _int_or_none, safe_str as _safe_str
-
 
 REPLACEMENT_COST_YEN_PER_SQM: dict[str, int] = {
     "wood": 180_000,
@@ -31,13 +32,53 @@ REPLACEMENT_COST_YEN_PER_SQM: dict[str, int] = {
 }
 
 _PREF_ORDER = [
-    "北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県",
-    "茨城県", "栃木県", "群馬県", "埼玉県", "千葉県", "東京都", "神奈川県",
-    "新潟県", "富山県", "石川県", "福井県", "山梨県", "長野県",
-    "岐阜県", "静岡県", "愛知県", "三重県", "滋賀県", "京都府", "大阪府",
-    "兵庫県", "奈良県", "和歌山県", "鳥取県", "島根県", "岡山県", "広島県",
-    "山口県", "徳島県", "香川県", "愛媛県", "高知県", "福岡県", "佐賀県",
-    "長崎県", "熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県",
+    "北海道",
+    "青森県",
+    "岩手県",
+    "宮城県",
+    "秋田県",
+    "山形県",
+    "福島県",
+    "茨城県",
+    "栃木県",
+    "群馬県",
+    "埼玉県",
+    "千葉県",
+    "東京都",
+    "神奈川県",
+    "新潟県",
+    "富山県",
+    "石川県",
+    "福井県",
+    "山梨県",
+    "長野県",
+    "岐阜県",
+    "静岡県",
+    "愛知県",
+    "三重県",
+    "滋賀県",
+    "京都府",
+    "大阪府",
+    "兵庫県",
+    "奈良県",
+    "和歌山県",
+    "鳥取県",
+    "島根県",
+    "岡山県",
+    "広島県",
+    "山口県",
+    "徳島県",
+    "香川県",
+    "愛媛県",
+    "高知県",
+    "福岡県",
+    "佐賀県",
+    "長崎県",
+    "熊本県",
+    "大分県",
+    "宮崎県",
+    "鹿児島県",
+    "沖縄県",
 ]
 
 
@@ -62,7 +103,7 @@ def render_listings_tab(conn) -> None:
     # 詳細パネル用の物件選択
     st.markdown("---")
     names = ["（物件を選択）"] + [
-        f"{i+1}. {row.get('property_name') or row.get('listing_id') or '—'}"
+        f"{i + 1}. {row.get('property_name') or row.get('listing_id') or '—'}"
         for i, row in listings.iterrows()
     ]
     sel_label = st.selectbox("🔍 詳細を見る物件", names, key="listings_select_detail")
@@ -80,22 +121,48 @@ def _render_filters(df: pd.DataFrame) -> dict:
 
     c1, c2, c3, c4 = st.columns(4)
     keyword = c1.text_input("キーワード", placeholder="住所・物件名・駅", key="listings_keyword")
-    prefectures = c2.multiselect("都道府県", _pref_ordered_options(filter_df["prefecture"]), key="listings_prefecture_filter")
-    municipalities = c3.multiselect("市区町村", _option_list(filter_df["municipality"]), key="listings_municipality_filter")
-    source = c4.multiselect("サイト", _option_list(filter_df["source"]), key="listings_source_filter")
+    prefectures = c2.multiselect(
+        "都道府県", _pref_ordered_options(filter_df["prefecture"]), key="listings_prefecture_filter"
+    )
+    municipalities = c3.multiselect(
+        "市区町村", _option_list(filter_df["municipality"]), key="listings_municipality_filter"
+    )
+    source = c4.multiselect(
+        "サイト", _option_list(filter_df["source"]), key="listings_source_filter"
+    )
 
     f1, f2, f3, f4, f5 = st.columns(5)
-    property_type = f1.multiselect("物件種別", _option_list(filter_df["property_type"]), key="listings_property_type_filter")
-    structure = f2.multiselect("構造", _option_list(filter_df["structure_label"]), key="listings_structure_filter")
-    cheap_label = f3.multiselect("評価", _ordered_options(filter_df["cheap_or_expensive"], list(_EVAL_CFG.keys())), key="listings_eval_filter")
-    confidence = f4.multiselect("信頼度", _option_list(filter_df["confidence"]), key="listings_confidence_filter")
-    region_label = f5.multiselect("地域ラベル", _option_list(filter_df["region_label"]), key="listings_region_filter")
+    property_type = f1.multiselect(
+        "物件種別", _option_list(filter_df["property_type"]), key="listings_property_type_filter"
+    )
+    structure = f2.multiselect(
+        "構造", _option_list(filter_df["structure_label"]), key="listings_structure_filter"
+    )
+    cheap_label = f3.multiselect(
+        "評価",
+        _ordered_options(filter_df["cheap_or_expensive"], list(_EVAL_CFG.keys())),
+        key="listings_eval_filter",
+    )
+    confidence = f4.multiselect(
+        "信頼度", _option_list(filter_df["confidence"]), key="listings_confidence_filter"
+    )
+    region_label = f5.multiselect(
+        "地域ラベル", _option_list(filter_df["region_label"]), key="listings_region_filter"
+    )
 
     p1, p2, p3, p4 = st.columns(4)
-    min_price = p1.number_input("最低価格(万円)", min_value=0, value=0, step=1000, key="listings_min_price")
-    max_price = p2.number_input("最高価格(万円)", min_value=0, value=0, step=1000, key="listings_max_price")
-    min_yield = p3.number_input("最低利回り(%)", min_value=0.0, value=0.0, step=0.5, key="listings_min_yield")
-    max_yield = p4.number_input("最高利回り(%)", min_value=0.0, value=0.0, step=0.5, key="listings_max_yield")
+    min_price = p1.number_input(
+        "最低価格(万円)", min_value=0, value=0, step=1000, key="listings_min_price"
+    )
+    max_price = p2.number_input(
+        "最高価格(万円)", min_value=0, value=0, step=1000, key="listings_max_price"
+    )
+    min_yield = p3.number_input(
+        "最低利回り(%)", min_value=0.0, value=0.0, step=0.5, key="listings_min_yield"
+    )
+    max_yield = p4.number_input(
+        "最高利回り(%)", min_value=0.0, value=0.0, step=0.5, key="listings_max_yield"
+    )
 
     filters: dict = {}
     if keyword:
@@ -167,12 +234,16 @@ def _split_address(address: str) -> tuple[str, str, str]:
 
 def _with_filter_columns(df: pd.DataFrame) -> pd.DataFrame:
     result = df.copy()
-    addresses = result.get("address", pd.Series(index=result.index, dtype=object)).fillna("—").astype(str)
+    addresses = (
+        result.get("address", pd.Series(index=result.index, dtype=object)).fillna("—").astype(str)
+    )
     parts = addresses.map(lambda value: _split_address(value.strip() or "—"))
     result["prefecture"] = parts.map(lambda item: item[0])
     result["municipality"] = parts.map(lambda item: item[1])
     result["address_detail"] = parts.map(lambda item: item[2])
-    structures = result.get("structure", pd.Series(index=result.index, dtype=object)).fillna("").astype(str)
+    structures = (
+        result.get("structure", pd.Series(index=result.index, dtype=object)).fillna("").astype(str)
+    )
     result["structure_label"] = structures.map(lambda value: STRUCTURE_JP.get(value, value) or "—")
     return result
 
@@ -190,7 +261,9 @@ def _apply_table_filters(df: pd.DataFrame, filters: dict) -> pd.DataFrame:
             mask = pd.Series(False, index=result.index)
             for col in search_cols:
                 if col in result.columns:
-                    mask = mask | result[col].fillna("").astype(str).str.contains(needle, case=False, na=False, regex=False)
+                    mask = mask | result[col].fillna("").astype(str).str.contains(
+                        needle, case=False, na=False, regex=False
+                    )
             result = result[mask]
 
     for col in [
@@ -209,27 +282,35 @@ def _apply_table_filters(df: pd.DataFrame, filters: dict) -> pd.DataFrame:
 
     min_price = filters.get("min_price")
     if min_price is not None:
-        result = result[pd.to_numeric(result["asking_price_yen"], errors="coerce") >= float(min_price)]
+        result = result[
+            pd.to_numeric(result["asking_price_yen"], errors="coerce") >= float(min_price)
+        ]
     max_price = filters.get("max_price")
     if max_price is not None:
-        result = result[pd.to_numeric(result["asking_price_yen"], errors="coerce") <= float(max_price)]
+        result = result[
+            pd.to_numeric(result["asking_price_yen"], errors="coerce") <= float(max_price)
+        ]
     min_yield = filters.get("min_yield")
     if min_yield is not None:
-        result = result[pd.to_numeric(result["gross_yield_pct"], errors="coerce") >= float(min_yield)]
+        result = result[
+            pd.to_numeric(result["gross_yield_pct"], errors="coerce") >= float(min_yield)
+        ]
     max_yield = filters.get("max_yield")
     if max_yield is not None:
-        result = result[pd.to_numeric(result["gross_yield_pct"], errors="coerce") <= float(max_yield)]
+        result = result[
+            pd.to_numeric(result["gross_yield_pct"], errors="coerce") <= float(max_yield)
+        ]
     return result
 
 
 _EVAL_CFG: dict[str, tuple[str, str, str]] = {
     # label: (bg, border, text)
-    "割安":    ("rgba(76,175,80,0.18)",   "rgba(76,175,80,0.5)",   "#81c784"),
+    "割安": ("rgba(76,175,80,0.18)", "rgba(76,175,80,0.5)", "#81c784"),
     "やや割安": ("rgba(129,199,132,0.15)", "rgba(129,199,132,0.4)", "#a5d6a7"),
-    "中立":    ("rgba(144,164,174,0.15)", "rgba(144,164,174,0.35)","#90a4ae"),
-    "やや割高": ("rgba(255,167,38,0.15)",  "rgba(255,167,38,0.4)",  "#ffb74d"),
-    "割高":    ("rgba(239,83,80,0.15)",   "rgba(239,83,80,0.45)",  "#ef9a9a"),
-    "良好":    ("rgba(79,195,247,0.12)",  "rgba(79,195,247,0.35)", "#4fc3f7"),
+    "中立": ("rgba(144,164,174,0.15)", "rgba(144,164,174,0.35)", "#90a4ae"),
+    "やや割高": ("rgba(255,167,38,0.15)", "rgba(255,167,38,0.4)", "#ffb74d"),
+    "割高": ("rgba(239,83,80,0.15)", "rgba(239,83,80,0.45)", "#ef9a9a"),
+    "良好": ("rgba(79,195,247,0.12)", "rgba(79,195,247,0.35)", "#4fc3f7"),
 }
 
 
@@ -245,9 +326,9 @@ def _eval_badge_html(value) -> str:
     bg, border, text = cfg
     return (
         f'<span style="display:inline-block;padding:2px 8px;border-radius:4px;'
-        f'background:{bg};border:1px solid {border};color:{text};'
+        f"background:{bg};border:1px solid {border};color:{text};"
         f'font-size:0.72rem;font-weight:700;white-space:nowrap">'
-        f'{html.escape(value)}</span>'
+        f"{html.escape(value)}</span>"
     )
 
 
@@ -289,7 +370,7 @@ def _gap_bar_html(value) -> str:
         f'<div style="width:54px;height:5px;background:#0a1c30;border-radius:3px;overflow:hidden;flex-shrink:0">'
         f'<div style="width:{pct:.0f}px;height:100%;border-radius:3px;background:{color}"></div></div>'
         f'<span style="color:{text_color};font-variant-numeric:tabular-nums;min-width:52px;text-align:right;font-size:0.8rem">'
-        f'{sign}{v:.1f}%</span></div>'
+        f"{sign}{v:.1f}%</span></div>"
     )
 
 
@@ -310,7 +391,11 @@ def _yield_html(value) -> str:
 
 def _render_eval_chips(df: pd.DataFrame) -> None:
     """評価別件数を静的バッジで表示する。"""
-    counts = df["cheap_or_expensive"].value_counts() if "cheap_or_expensive" in df.columns else pd.Series(dtype=int)
+    counts = (
+        df["cheap_or_expensive"].value_counts()
+        if "cheap_or_expensive" in df.columns
+        else pd.Series(dtype=int)
+    )
     chips_html = '<div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px">'
     for label, cfg in _EVAL_CFG.items():
         n = int(counts.get(label, 0))
@@ -320,7 +405,7 @@ def _render_eval_chips(df: pd.DataFrame) -> None:
         chips_html += (
             f'<span style="padding:3px 10px;border-radius:5px;border:1px solid {border};'
             f'background:{bg};color:{text};font-size:0.75rem;font-weight:600">'
-            f'{html.escape(label)} ({n})</span>'
+            f"{html.escape(label)} ({n})</span>"
         )
     chips_html += "</div>"
     st.markdown(chips_html, unsafe_allow_html=True)
@@ -330,13 +415,14 @@ def _render_eval_chips(df: pd.DataFrame) -> None:
 # listings_tab 専用セルレンダラー（モジュールレベル）
 # --------------------------------------------------------------------------
 
+
 def _money_man_html(v, *, muted_value: str = "—") -> str:
     n = _float_or_none(v)
     if n is None:
         return f'<span style="color:#4a6580">{muted_value}</span>'
     return (
         '<span style="color:#e8f4ff;font-variant-numeric:tabular-nums;font-weight:600">'
-        f'{n/1e4:,.0f}</span>'
+        f"{n / 1e4:,.0f}</span>"
     )
 
 
@@ -358,7 +444,7 @@ def _unit_price_man_html(v) -> str:
     n = _float_or_none(v)
     if n is None:
         return '<span style="color:#4a6580">—</span>'
-    return f'<span style="color:#b8d0e8;font-variant-numeric:tabular-nums">{n/1e4:.1f}</span>'
+    return f'<span style="color:#b8d0e8;font-variant-numeric:tabular-nums">{n / 1e4:.1f}</span>'
 
 
 def _unit_price_range_man_html(low, high, *, estimated: bool = False) -> str:
@@ -369,14 +455,14 @@ def _unit_price_range_man_html(low, high, *, estimated: bool = False) -> str:
     if low_n is not None and high_n is not None:
         if low_n > high_n:
             low_n, high_n = high_n, low_n
-        value = f"{low_n/1e4:.1f}〜{high_n/1e4:.1f}"
+        value = f"{low_n / 1e4:.1f}〜{high_n / 1e4:.1f}"
     else:
         value_n = low_n if low_n is not None else high_n
-        value = f"{value_n/1e4:.1f}"
+        value = f"{value_n / 1e4:.1f}"
     label = "推定 " if estimated else ""
     return (
         '<span style="color:#b8d0e8;font-variant-numeric:tabular-nums;white-space:nowrap">'
-        f'{label}{value}</span>'
+        f"{label}{value}</span>"
     )
 
 
@@ -423,9 +509,9 @@ def _source_html(value) -> str:
         return '<span style="color:#4a6580">—</span>'
     return (
         '<span style="display:inline-block;padding:2px 7px;border-radius:4px;'
-        'background:rgba(79,195,247,0.12);border:1px solid rgba(79,195,247,0.35);'
+        "background:rgba(79,195,247,0.12);border:1px solid rgba(79,195,247,0.35);"
         'color:#7fc3ea;font-size:0.72rem;font-weight:600">'
-        f'{html.escape(source)}</span>'
+        f"{html.escape(source)}</span>"
     )
 
 
@@ -438,7 +524,7 @@ def _property_name_html(row: pd.Series, name: str) -> str:
     return (
         f'<a href="{escaped_url}" target="_blank" rel="noopener noreferrer" '
         'style="color:#7fc3ea;font-size:0.85rem;text-decoration:none;font-weight:600">'
-        f'{escaped_name}</a>'
+        f"{escaped_name}</a>"
     )
 
 
@@ -447,7 +533,9 @@ def _confidence_html(value) -> str:
     if conf == "—":
         return '<span style="color:#4a6580">—</span>'
     color = "#81c784" if conf == "high" else "#ffb74d" if conf == "partial" else "#90a4ae"
-    return f'<span style="color:{color};font-size:0.72rem;font-weight:600">{html.escape(conf)}</span>'
+    return (
+        f'<span style="color:{color};font-size:0.72rem;font-weight:600">{html.escape(conf)}</span>'
+    )
 
 
 def _ds(v) -> str:
@@ -473,7 +561,11 @@ def _render_html_table(df: pd.DataFrame) -> None:
             else '<span style="color:#3a5570">—</span>'
         )
 
-        name = _safe(row.get("property_name")) if _safe(row.get("property_name")) != "—" else _safe(row.get("listing_id"))
+        name = (
+            _safe(row.get("property_name"))
+            if _safe(row.get("property_name")) != "—"
+            else _safe(row.get("listing_id"))
+        )
         addr = _safe(row.get("address"))
         pref, city, address_detail = _split_address(addr)
 
@@ -485,12 +577,12 @@ def _render_html_table(df: pd.DataFrame) -> None:
         zebra = "background:rgba(19,32,53,0.4)" if i % 2 == 0 else "background:transparent"
         rows_html += (
             f'<tr style="{zebra};border-bottom:1px solid rgba(36,61,94,0.4);transition:background 0.1s" '
-            f'onmouseover="this.style.background=\'rgba(26,46,71,0.6)\'" '
-            f'onmouseout="this.style.background=\'{("rgba(19,32,53,0.4)" if i % 2 == 0 else "transparent")}\'">'
+            f"onmouseover=\"this.style.background='rgba(26,46,71,0.6)'\" "
+            f"onmouseout=\"this.style.background='{('rgba(19,32,53,0.4)' if i % 2 == 0 else 'transparent')}'\">"
             f'<td data-sort="{html.escape(region)}" style="padding:8px 10px">{region_html}</td>'
             f'<td data-sort="{html.escape(_safe(row.get("source")))}" style="padding:8px 10px">{_source_html(row.get("source"))}</td>'
             f'<td data-sort="{html.escape(name)}" style="padding:8px 10px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="{html.escape(name)}">'
-            f'{_property_name_html(row, name)}</td>'
+            f"{_property_name_html(row, name)}</td>"
             f'<td data-sort="{html.escape(pref)}" style="padding:8px 10px">{_small_html(pref)}</td>'
             f'<td data-sort="{html.escape(city)}" style="padding:8px 10px">{_small_html(city)}</td>'
             f'<td data-sort="{html.escape(address_detail)}" style="padding:8px 10px;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="{html.escape(addr)}">'
@@ -515,7 +607,7 @@ def _render_html_table(df: pd.DataFrame) -> None:
             f'<td data-sort="{html.escape(_safe(row.get("cheap_or_expensive")))}" style="padding:8px 10px">{_eval_badge_html(row.get("cheap_or_expensive"))}</td>'
             f'<td data-sort="{html.escape(_safe(row.get("confidence")))}" style="padding:8px 10px">{_confidence_html(row.get("confidence"))}</td>'
             f'<td data-sort="{html.escape(saved)}" style="padding:8px 10px"><span style="color:#4a6580;font-size:0.72rem">{html.escape(saved)}</span></td>'
-            f'</tr>'
+            f"</tr>"
         )
 
     # クリックソート用 JS
@@ -558,11 +650,17 @@ def _render_html_table(df: pd.DataFrame) -> None:
     th_sort_r = th_sort + ";text-align:right"
     th_nosort = th_base
 
-    def _th(label: str, col: int, *, right: bool = False, width: str = "", sortable: bool = True) -> str:
+    def _th(
+        label: str, col: int, *, right: bool = False, width: str = "", sortable: bool = True
+    ) -> str:
         style = (th_sort_r if right else th_sort) if sortable else th_nosort
         w = f";width:{width}" if width else ""
-        arrow = '<span class="sa" style="margin-left:3px;opacity:0.4;font-size:0.65rem">⇅</span>' if sortable else ""
-        click = f'onclick="window._sortListingsTable(this)"' if sortable else ""
+        arrow = (
+            '<span class="sa" style="margin-left:3px;opacity:0.4;font-size:0.65rem">⇅</span>'
+            if sortable
+            else ""
+        )
+        click = 'onclick="window._sortListingsTable(this)"' if sortable else ""
         return f'<th {click} data-col="{col}" style="{style}{w}">{label}{arrow}</th>'
 
     # テーブル固定高さ: 少数行は縮小、多数行は700px固定でスクロール
@@ -643,20 +741,39 @@ def _render_html_table(df: pd.DataFrame) -> None:
 def _render_summary(df: pd.DataFrame) -> None:
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("掲載物件数", f"{len(df):,}件")
-    c2.metric("中央値価格", f"{df['asking_price_yen'].median()/1e4:,.0f}万円" if df["asking_price_yen"].notna().any() else "—")
-    c3.metric("中央値利回り", f"{df['gross_yield_pct'].median():.1f}%" if df["gross_yield_pct"].notna().any() else "—")
-    c4.metric("割安判定数", f"{int((df['cheap_or_expensive'] == '割安').sum())}件" if "cheap_or_expensive" in df.columns else "—")
+    c2.metric(
+        "中央値価格",
+        f"{df['asking_price_yen'].median() / 1e4:,.0f}万円"
+        if df["asking_price_yen"].notna().any()
+        else "—",
+    )
+    c3.metric(
+        "中央値利回り",
+        f"{df['gross_yield_pct'].median():.1f}%" if df["gross_yield_pct"].notna().any() else "—",
+    )
+    c4.metric(
+        "割安判定数",
+        f"{int((df['cheap_or_expensive'] == '割安').sum())}件"
+        if "cheap_or_expensive" in df.columns
+        else "—",
+    )
 
 
 def _build_display_df(df: pd.DataFrame) -> pd.DataFrame:
     disp = df.copy()
-    disp["価格(万円)"] = disp["asking_price_yen"].map(lambda x: format_man(yen_to_man(x)) if pd.notna(x) else "—")
+    disp["価格(万円)"] = disp["asking_price_yen"].map(
+        lambda x: format_man(yen_to_man(x)) if pd.notna(x) else "—"
+    )
     disp["利回り(%)"] = disp["gross_yield_pct"].map(lambda x: f"{x:.1f}" if pd.notna(x) else "—")
-    disp["㎡単価(万円/m²)"] = disp["unit_price_yen_per_sqm"].map(lambda x: format_man(yen_to_man(x)) if pd.notna(x) else "—")
+    disp["㎡単価(万円/m²)"] = disp["unit_price_yen_per_sqm"].map(
+        lambda x: format_man(yen_to_man(x)) if pd.notna(x) else "—"
+    )
     disp["坪単価(万円/坪)"] = disp["unit_price_yen_per_sqm"].map(
         lambda x: format_man(yen_to_man(float(x) * SQM_PER_TSUBO)) if pd.notna(x) else "—"
     )
-    disp["公示地価比"] = disp["public_notice_gap_pct"].map(lambda x: f"{x:+.1f}%" if pd.notna(x) else "—")
+    disp["公示地価比"] = disp["public_notice_gap_pct"].map(
+        lambda x: f"{x:+.1f}%" if pd.notna(x) else "—"
+    )
     disp["取引価格比"] = disp["trade_gap_pct"].map(lambda x: f"{x:+.1f}%" if pd.notna(x) else "—")
     disp["生活利便"] = disp["life_convenience_score"].map(_score_badge)
     disp["低地注意"] = disp["terrain_caution_score"].map(_risk_badge)
@@ -695,8 +812,13 @@ def _render_listing_detail(conn, row: dict) -> None:
     st.caption(row.get("address") or "住所不明")
 
     c1, c2, c3, c4 = st.columns(4)
-    c1.metric("価格", f"{row['asking_price_yen']/1e4:,.0f}万円" if row.get("asking_price_yen") else "—")
-    c2.metric("利回り", f"{row['gross_yield_pct']:.1f}%" if row.get("gross_yield_pct") is not None else "—")
+    c1.metric(
+        "価格", f"{row['asking_price_yen'] / 1e4:,.0f}万円" if row.get("asking_price_yen") else "—"
+    )
+    c2.metric(
+        "利回り",
+        f"{row['gross_yield_pct']:.1f}%" if row.get("gross_yield_pct") is not None else "—",
+    )
     c3.metric("評価", row.get("cheap_or_expensive") or "—")
     c4.metric("信頼度", row.get("confidence") or "—")
 
@@ -751,11 +873,10 @@ def _render_listing_detail(conn, row: dict) -> None:
         p25 = row.get("land_unit_price_p25_yen_per_sqm")
         p75 = row.get("land_unit_price_p75_yen_per_sqm")
         if pd.notna(p25) or pd.notna(p75):
-            st.caption(
-                "土地単価前提: "
-                f"{_format_existing_unit_price_range(p25, p75)}"
-            )
-        st.caption("参考: 残余法は売出価格に依存します。原価法は構造・面積・築年数の概算で、リフォーム状況や収益力は未反映です。")
+            st.caption(f"土地単価前提: {_format_existing_unit_price_range(p25, p75)}")
+        st.caption(
+            "参考: 残余法は売出価格に依存します。原価法は構造・面積・築年数の概算で、リフォーム状況や収益力は未反映です。"
+        )
 
     render_rent_benchmark_panel(conn, row, title_level=4)
 
@@ -769,7 +890,19 @@ def _load_latest_land_points_for_map() -> pd.DataFrame:
         if latest_year is None:
             return pd.DataFrame()
         df = db.read_land_prices(conn, filters={"year": latest_year})
-        cols = [c for c in ["point_id", "location_text", "city_name", "use_category_name", "price_yen_per_sqm", "lat", "lon"] if c in df.columns]
+        cols = [
+            c
+            for c in [
+                "point_id",
+                "location_text",
+                "city_name",
+                "use_category_name",
+                "price_yen_per_sqm",
+                "lat",
+                "lon",
+            ]
+            if c in df.columns
+        ]
         return df[cols].dropna(subset=["lat", "lon"]).copy()
     finally:
         conn.close()
@@ -783,7 +916,11 @@ def _render_listing_map(row: dict) -> None:
 
     st.markdown("**周辺マップ**")
     land_df = _load_latest_land_points_for_map()
-    nearby = analytics.find_nearby_points(land_df, float(lon), float(lat), radius_m=2000) if not land_df.empty else pd.DataFrame()
+    nearby = (
+        analytics.find_nearby_points(land_df, float(lon), float(lat), radius_m=2000)
+        if not land_df.empty
+        else pd.DataFrame()
+    )
 
     property_df = pd.DataFrame(
         [
@@ -839,7 +976,9 @@ def _render_listing_summary_panels(row: dict) -> None:
     structure_code = row.get("structure")
     structure_jp = STRUCTURE_JP.get(structure_code or "", structure_code or "—")
     legal = LEGAL_LIFE_YEARS.get(structure_code or "")
-    structure_label = f"{structure_jp}（法定{legal}年）" if legal and structure_jp != "—" else structure_jp
+    structure_label = (
+        f"{structure_jp}（法定{legal}年）" if legal and structure_jp != "—" else structure_jp
+    )
     age_years = row.get("age_years")
     rem_years = remaining_life(structure_code, int(age_years)) if pd.notna(age_years) else None
     walk = f"徒歩{int(row['station_walk_min'])}分" if pd.notna(row.get("station_walk_min")) else ""
@@ -917,18 +1056,22 @@ def _render_compact_panel(
     classes = f"property-summary-grid cols-{columns}"
     items_html: list[str] = []
     for label, value, note in metrics:
-        note_html = f'<div class="property-summary-item-note">{html.escape(str(note))}</div>' if note else ""
+        note_html = (
+            f'<div class="property-summary-item-note">{html.escape(str(note))}</div>'
+            if note
+            else ""
+        )
         items_html.append(
-            "<div class=\"property-summary-item\">"
-            f"<div class=\"property-summary-item-label\">{html.escape(str(label))}</div>"
-            f"<div class=\"property-summary-item-value\">{html.escape(str(value))}</div>"
+            '<div class="property-summary-item">'
+            f'<div class="property-summary-item-label">{html.escape(str(label))}</div>'
+            f'<div class="property-summary-item-value">{html.escape(str(value))}</div>'
             f"{note_html}"
             "</div>"
         )
     panel_html = (
-        "<div class=\"property-summary-panel\">"
-        f"<div class=\"property-summary-panel-title\">{html.escape(title)}</div>"
-        f"<div class=\"{classes}\">{''.join(items_html)}</div>"
+        '<div class="property-summary-panel">'
+        f'<div class="property-summary-panel-title">{html.escape(title)}</div>'
+        f'<div class="{classes}">{"".join(items_html)}</div>'
         "</div>"
     )
     st.markdown(panel_html, unsafe_allow_html=True)
@@ -978,7 +1121,7 @@ def _estimate_building_cost_approach(row: dict) -> tuple[float | None, float | N
     high = center * 1.15
     structure_label = STRUCTURE_JP.get(structure, structure)
     note = (
-        f"{structure_label} / 再調達単価 {unit_cost/1e4:.0f}万円/m² / "
+        f"{structure_label} / 再調達単価 {unit_cost / 1e4:.0f}万円/m² / "
         f"面積 {area:.1f}m² / 残存 {rem_life}/{legal_life}年"
     )
     return low, high, note
@@ -998,8 +1141,6 @@ def _normalize_structure_code(value) -> str | None:
     return None
 
 
-
-
 def _format_range_man(low, high, *, allow_negative_note: bool = False) -> str:
     if pd.isna(low) and pd.isna(high):
         return "—"
@@ -1009,11 +1150,11 @@ def _format_range_man(low, high, *, allow_negative_note: bool = False) -> str:
         if allow_negative_note and high_v <= 0:
             return "—"
         low_label = max(0.0, low_v) if allow_negative_note else low_v
-        return f"{low_label/1e4:,.0f}〜{high_v/1e4:,.0f}万円"
+        return f"{low_label / 1e4:,.0f}〜{high_v / 1e4:,.0f}万円"
     value = low if pd.notna(low) else high
     if allow_negative_note and float(value) <= 0:
         return "—"
-    return f"{float(value)/1e4:,.0f}万円"
+    return f"{float(value) / 1e4:,.0f}万円"
 
 
 def _format_range_unit_price(low, high, *, area_sqm=None, allow_negative_note: bool = False) -> str:

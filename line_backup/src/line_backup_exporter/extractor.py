@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import csv
 import shutil
 from pathlib import Path
@@ -72,12 +73,14 @@ def extract_candidates(
         shutil.copy2(src, dst)
         logger.info("Copied %s → %s", src.name, dst.name)
 
-        index.append({
-            "original_relative_path": relative_path,
-            "domain": domain,
-            "file_id": file_id,
-            "copied_to": str(dst),
-        })
+        index.append(
+            {
+                "original_relative_path": relative_path,
+                "domain": domain,
+                "file_id": file_id,
+                "copied_to": str(dst),
+            }
+        )
 
     # Write index CSV
     index_path = out_dir / "extracted_index.csv"

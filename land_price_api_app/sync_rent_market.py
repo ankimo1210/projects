@@ -7,13 +7,12 @@ rent_market テーブルに保存する。
     python sync_rent_market.py           # 2023年（最新）のみ
     python sync_rent_market.py --year 2018
 """
-import argparse
-from pathlib import Path
 
-import pandas as pd
-import requests
+import argparse
 
 import db
+import pandas as pd
+import requests
 from config import ESTAT_APP_ID, get_logger
 
 logger = get_logger(__name__)
@@ -85,20 +84,20 @@ def fetch_rent_market(year: int, app_id: str) -> pd.DataFrame:
         if ownership is None:
             continue
 
-        records.append({
-            "city_code": area,
-            "survey_year": year,
-            "ownership_type": ownership,
-            "rent_per_sqm": rent,
-        })
+        records.append(
+            {
+                "city_code": area,
+                "survey_year": year,
+                "ownership_type": ownership,
+                "rent_per_sqm": rent,
+            }
+        )
 
     df = pd.DataFrame(records)
     if not df.empty:
-        df = (
-            df.groupby(["city_code", "survey_year", "ownership_type"], as_index=False)
-            ["rent_per_sqm"]
-            .mean()
-        )
+        df = df.groupby(["city_code", "survey_year", "ownership_type"], as_index=False)[
+            "rent_per_sqm"
+        ].mean()
     print(f"  → 市区町村データ: {len(df)} 件（{df['city_code'].nunique()} 市区町村）")
     return df
 
@@ -106,7 +105,7 @@ def fetch_rent_market(year: int, app_id: str) -> pd.DataFrame:
 def sync(year: int) -> None:
     app_id = ESTAT_APP_ID
     if not app_id:
-        raise EnvironmentError("ESTAT_APP_ID が未設定です。.env を確認してください。")
+        raise OSError("ESTAT_APP_ID が未設定です。.env を確認してください。")
 
     df = fetch_rent_market(year, app_id)
     if df.empty:

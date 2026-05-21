@@ -1,12 +1,12 @@
 """db/_utils.py — DB 操作共通ユーティリティ。"""
+
 from __future__ import annotations
 
 import json
-from typing import Any, Optional
+from typing import Any
 
 import duckdb
 import pandas as pd
-
 from config import get_logger
 
 logger = get_logger(__name__)
@@ -17,10 +17,13 @@ def _get_table_columns(
     table_name: str = "land_prices_public_notice",
 ) -> list[str]:
     """テーブルのカラム名リストを返す。"""
-    return [row[0] for row in conn.execute(
-        "SELECT column_name FROM information_schema.columns WHERE table_name = ? ORDER BY ordinal_position",
-        [table_name],
-    ).fetchall()]
+    return [
+        row[0]
+        for row in conn.execute(
+            "SELECT column_name FROM information_schema.columns WHERE table_name = ? ORDER BY ordinal_position",
+            [table_name],
+        ).fetchall()
+    ]
 
 
 def _align_df_to_schema(df: pd.DataFrame, cols: list[str]) -> pd.DataFrame:

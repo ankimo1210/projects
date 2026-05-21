@@ -1,15 +1,14 @@
-import unittest
-import tempfile
-from pathlib import Path
 import sys
-import os
+import tempfile
+import unittest
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from line_backup_exporter.safety import (
     ensure_within_directory,
-    safe_filename,
     redact_text,
+    safe_filename,
     unique_path,
 )
 

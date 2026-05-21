@@ -1,23 +1,22 @@
-from datetime import date, timedelta
-from typing import Optional
 import math
+from datetime import date, timedelta
 
 from fastapi import APIRouter, HTTPException
+from market_viz.analytics.backtest import (
+    ma_cross_signal,
+    momentum_signal,
+    run_backtest,
+    volatility_breakout_signal,
+    zscore_reversion_signal,
+)
 
 from backend.app.deps import get_db
-from backend.app.models.schemas import BacktestRequest, BacktestResponse, BacktestMetrics
-from src.analytics.backtest import (
-    run_backtest,
-    ma_cross_signal,
-    zscore_reversion_signal,
-    momentum_signal,
-    volatility_breakout_signal,
-)
+from backend.app.models.schemas import BacktestMetrics, BacktestRequest, BacktestResponse
 
 router = APIRouter(prefix="/backtest", tags=["backtest"])
 
 
-def _safe_float(v) -> Optional[float]:
+def _safe_float(v) -> float | None:
     try:
         f = float(v)
         return None if math.isnan(f) else f
@@ -35,9 +34,13 @@ def run(req: BacktestRequest):
 
     strategy_map = {
         "ma_cross": lambda c: ma_cross_signal(c, fast=req.fast, slow=req.slow),
-        "zscore_reversion": lambda c: zscore_reversion_signal(c, window=req.z_window, entry=req.z_entry, exit_=req.z_exit),
+        "zscore_reversion": lambda c: zscore_reversion_signal(
+            c, window=req.z_window, entry=req.z_entry, exit_=req.z_exit
+        ),
         "momentum": lambda c: momentum_signal(c, window=req.mom_window),
-        "vol_breakout": lambda c: volatility_breakout_signal(c, window=req.vb_window, mult=req.vb_mult),
+        "vol_breakout": lambda c: volatility_breakout_signal(
+            c, window=req.vb_window, mult=req.vb_mult
+        ),
     }
     if req.strategy not in strategy_map:
         raise HTTPException(400, f"Unknown strategy: {req.strategy}")
@@ -45,7 +48,8 @@ def run(req: BacktestRequest):
         raise HTTPException(400, f"ma_cross: fast ({req.fast}) must be less than slow ({req.slow})")
 
     result = run_backtest(
-        prices_df, req.ticker,
+        prices_df,
+        req.ticker,
         signal_fn=strategy_map[req.strategy],
         commission=req.commission,
         slippage=req.slippage,

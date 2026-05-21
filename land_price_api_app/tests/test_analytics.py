@@ -2,7 +2,7 @@
 tests/test_analytics.py
 analytics.py のユニットテスト。DuckDB インメモリ DB を使う（ネットワーク接続なし）。
 """
-import math
+
 import pathlib
 import sys
 import unittest
@@ -11,23 +11,72 @@ _ROOT = pathlib.Path(__file__).resolve().parent.parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
+import analytics
 import duckdb
 import pandas as pd
-
-import analytics
-
 
 # --------------------------------------------------------------------------
 # テスト用フィクスチャ
 # --------------------------------------------------------------------------
 
+
 def _make_land_df() -> pd.DataFrame:
-    return pd.DataFrame([
-        {"point_id": "P1", "year": 2024, "lon": 139.70, "lat": 35.69, "price_yen_per_sqm": 1_000_000, "yoy_change_pct": 5.0, "city_code": "13101", "city_name": "千代田区", "prefecture_code": "13", "prefecture_name": "東京都", "use_category_name": "住宅地"},
-        {"point_id": "P2", "year": 2024, "lon": 139.72, "lat": 35.70, "price_yen_per_sqm": 800_000,   "yoy_change_pct": 3.0, "city_code": "13101", "city_name": "千代田区", "prefecture_code": "13", "prefecture_name": "東京都", "use_category_name": "住宅地"},
-        {"point_id": "P3", "year": 2024, "lon": 135.50, "lat": 34.69, "price_yen_per_sqm": 500_000,   "yoy_change_pct": -1.0,"city_code": "27100", "city_name": "大阪市",  "prefecture_code": "27", "prefecture_name": "大阪府", "use_category_name": "商業地"},
-        {"point_id": "P1", "year": 2023, "lon": 139.70, "lat": 35.69, "price_yen_per_sqm": 950_000,   "yoy_change_pct": 4.0, "city_code": "13101", "city_name": "千代田区", "prefecture_code": "13", "prefecture_name": "東京都", "use_category_name": "住宅地"},
-    ])
+    return pd.DataFrame(
+        [
+            {
+                "point_id": "P1",
+                "year": 2024,
+                "lon": 139.70,
+                "lat": 35.69,
+                "price_yen_per_sqm": 1_000_000,
+                "yoy_change_pct": 5.0,
+                "city_code": "13101",
+                "city_name": "千代田区",
+                "prefecture_code": "13",
+                "prefecture_name": "東京都",
+                "use_category_name": "住宅地",
+            },
+            {
+                "point_id": "P2",
+                "year": 2024,
+                "lon": 139.72,
+                "lat": 35.70,
+                "price_yen_per_sqm": 800_000,
+                "yoy_change_pct": 3.0,
+                "city_code": "13101",
+                "city_name": "千代田区",
+                "prefecture_code": "13",
+                "prefecture_name": "東京都",
+                "use_category_name": "住宅地",
+            },
+            {
+                "point_id": "P3",
+                "year": 2024,
+                "lon": 135.50,
+                "lat": 34.69,
+                "price_yen_per_sqm": 500_000,
+                "yoy_change_pct": -1.0,
+                "city_code": "27100",
+                "city_name": "大阪市",
+                "prefecture_code": "27",
+                "prefecture_name": "大阪府",
+                "use_category_name": "商業地",
+            },
+            {
+                "point_id": "P1",
+                "year": 2023,
+                "lon": 139.70,
+                "lat": 35.69,
+                "price_yen_per_sqm": 950_000,
+                "yoy_change_pct": 4.0,
+                "city_code": "13101",
+                "city_name": "千代田区",
+                "prefecture_code": "13",
+                "prefecture_name": "東京都",
+                "use_category_name": "住宅地",
+            },
+        ]
+    )
 
 
 def _make_conn_with_listings() -> duckdb.DuckDBPyConnection:
@@ -58,6 +107,7 @@ def _make_conn_with_listings() -> duckdb.DuckDBPyConnection:
 # --------------------------------------------------------------------------
 # テストケース
 # --------------------------------------------------------------------------
+
 
 class TestComputeCitySummary(unittest.TestCase):
     def test_basic(self):
@@ -147,20 +197,54 @@ class TestComputeYoyRankings(unittest.TestCase):
 
 class TestComputeIndexedPrices(unittest.TestCase):
     def test_base_year_equals_100(self):
-        city_df = pd.DataFrame([
-            {"year": 2022, "city_code": "13101", "use_category_name": "住宅地", "avg_price": 1_000_000, "point_count": 5},
-            {"year": 2023, "city_code": "13101", "use_category_name": "住宅地", "avg_price": 1_100_000, "point_count": 5},
-            {"year": 2024, "city_code": "13101", "use_category_name": "住宅地", "avg_price": 1_200_000, "point_count": 5},
-        ])
+        city_df = pd.DataFrame(
+            [
+                {
+                    "year": 2022,
+                    "city_code": "13101",
+                    "use_category_name": "住宅地",
+                    "avg_price": 1_000_000,
+                    "point_count": 5,
+                },
+                {
+                    "year": 2023,
+                    "city_code": "13101",
+                    "use_category_name": "住宅地",
+                    "avg_price": 1_100_000,
+                    "point_count": 5,
+                },
+                {
+                    "year": 2024,
+                    "city_code": "13101",
+                    "use_category_name": "住宅地",
+                    "avg_price": 1_200_000,
+                    "point_count": 5,
+                },
+            ]
+        )
         result = analytics.compute_indexed_prices(city_df, base_year=2022)
         base_row = result[result["year"] == 2022]
         self.assertAlmostEqual(base_row["index_100"].iloc[0], 100.0, places=1)
 
     def test_higher_year_above_100(self):
-        city_df = pd.DataFrame([
-            {"year": 2022, "city_code": "13101", "use_category_name": "住宅地", "avg_price": 1_000_000, "point_count": 5},
-            {"year": 2024, "city_code": "13101", "use_category_name": "住宅地", "avg_price": 1_200_000, "point_count": 5},
-        ])
+        city_df = pd.DataFrame(
+            [
+                {
+                    "year": 2022,
+                    "city_code": "13101",
+                    "use_category_name": "住宅地",
+                    "avg_price": 1_000_000,
+                    "point_count": 5,
+                },
+                {
+                    "year": 2024,
+                    "city_code": "13101",
+                    "use_category_name": "住宅地",
+                    "avg_price": 1_200_000,
+                    "point_count": 5,
+                },
+            ]
+        )
         result = analytics.compute_indexed_prices(city_df, base_year=2022)
         later = result[result["year"] == 2024]["index_100"].iloc[0]
         self.assertGreater(later, 100.0)

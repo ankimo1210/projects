@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pandas as pd
-import numpy as np
 
 
 def build_return_pivot(prices_df: pd.DataFrame) -> pd.DataFrame:

@@ -5,6 +5,7 @@ terrain_sources.py
 標高は国土地理院の標高取得プログラム、河川/水辺は OpenStreetMap Overpass API を使う。
 ハザード区域判定ではなく、物件分析タブで使う簡易な地形シグナルとして扱う。
 """
+
 from __future__ import annotations
 
 import math
@@ -12,7 +13,6 @@ from dataclasses import dataclass
 from typing import Any
 
 import requests
-
 from config import get_logger
 from facility_sources import OVERPASS_ENDPOINT, OVERPASS_TIMEOUT_SEC
 
@@ -147,8 +147,7 @@ def summarize_terrain_features(
     """標高・水辺情報を DB 保存向けの dict にまとめる。"""
     elevation_m, elevation_source = _coerce_elevation(elevation)
     water_distances = sorted(
-        d for d in (_item_distance_m(item) for item in water_features)
-        if d is not None
+        d for d in (_item_distance_m(item) for item in water_features) if d is not None
     )
     nearest_water_m = water_distances[0] if water_distances else None
     water_count = sum(1 for d in water_distances if d <= radius_m)
@@ -179,7 +178,9 @@ def _parse_elevation_payload(payload: Any) -> ElevationResult:
     return ElevationResult(elevation_m=elevation_m, source=source)
 
 
-def _coerce_elevation(elevation: ElevationResult | dict[str, Any] | None) -> tuple[float | None, str | None]:
+def _coerce_elevation(
+    elevation: ElevationResult | dict[str, Any] | None,
+) -> tuple[float | None, str | None]:
     if elevation is None:
         return None, None
     if isinstance(elevation, ElevationResult):

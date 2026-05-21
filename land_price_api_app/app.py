@@ -5,6 +5,7 @@ app.py
 起動方法:
     streamlit run app.py --server.address 127.0.0.1
 """
+
 import sys
 from pathlib import Path
 
@@ -13,12 +14,10 @@ _ROOT = Path(__file__).parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-import streamlit as st
-
 import db
+import streamlit as st
 from config import ensure_dirs, get_logger, validate_api_key
 from ui.styles import DARK_THEME_CSS
-
 
 logger = get_logger(__name__)
 
@@ -39,6 +38,7 @@ st.markdown(DARK_THEME_CSS, unsafe_allow_html=True)
 # セッション初期化
 # --------------------------------------------------------------------------
 
+
 @st.cache_resource
 def get_db_connection():
     """DuckDB 接続をキャッシュして返す。"""
@@ -52,7 +52,7 @@ def check_api_key() -> bool:
     try:
         validate_api_key()
         return True
-    except EnvironmentError:
+    except OSError:
         return False
 
 
@@ -67,6 +67,7 @@ def load_filtered_data(conn, filters: dict):
 # --------------------------------------------------------------------------
 # メイン
 # --------------------------------------------------------------------------
+
 
 def main():
     conn = get_db_connection()

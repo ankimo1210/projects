@@ -2,7 +2,7 @@
 ui/search_tab.py
 Search タブ: テーブル検索・ソート・CSV ダウンロード。
 """
-from typing import Optional
+
 import io
 import math
 
@@ -10,15 +10,35 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-from ui.unit_price import add_tsubo_price_column, convert_yen_columns_to_man, format_yen_per_sqm_with_tsubo, yen_to_man
-from ui.table import render_html_table, gap_bar, price_man, truncate, truncate_muted, muted, year_num, area_num, use_category_badge
-
+from ui.table import (
+    area_num,
+    gap_bar,
+    muted,
+    price_man,
+    render_html_table,
+    truncate,
+    use_category_badge,
+    year_num,
+)
+from ui.unit_price import (
+    add_tsubo_price_column,
+    convert_yen_columns_to_man,
+    format_yen_per_sqm_with_tsubo,
+    yen_to_man,
+)
 
 _DISPLAY_COLS = [
-    "point_id", "standard_land_number", "location_text",
-    "city_name", "prefecture_name", "use_category_name",
-    "price_yen_per_sqm", "last_year_price_yen_per_sqm", "yoy_change_pct",
-    "area_sqm", "year",
+    "point_id",
+    "standard_land_number",
+    "location_text",
+    "city_name",
+    "prefecture_name",
+    "use_category_name",
+    "price_yen_per_sqm",
+    "last_year_price_yen_per_sqm",
+    "yoy_change_pct",
+    "area_sqm",
+    "year",
 ]
 
 _COL_LABELS = {
@@ -38,7 +58,7 @@ _COL_LABELS = {
 }
 
 
-def render_search_tab(df: Optional[pd.DataFrame], filters: dict) -> None:
+def render_search_tab(df: pd.DataFrame | None, filters: dict) -> None:
     st.header("🔍 地点検索")
 
     if df is None or df.empty:
@@ -60,21 +80,70 @@ def render_search_tab(df: Optional[pd.DataFrame], filters: dict) -> None:
     show_cols = [c for c in _DISPLAY_COLS if c in filtered.columns]
     display_df = filtered[show_cols].copy()
     display_df = add_tsubo_price_column(display_df, "price_yen_per_sqm", "price_yen_per_tsubo")
-    display_df = add_tsubo_price_column(display_df, "last_year_price_yen_per_sqm", "last_year_price_yen_per_tsubo")
-    display_df = convert_yen_columns_to_man(display_df, ["price_yen_per_sqm", "last_year_price_yen_per_sqm"])
-    render_html_table(display_df, [
-        {"key": "year",                        "label": "年度",        "width": 50,  "align": "right", "render": year_num},
-        {"key": "location_text",               "label": "所在地",      "width": 180, "render": lambda v: truncate(v, 170)},
-        {"key": "city_name",                   "label": "市区町村",    "width": 90,  "render": muted},
-        {"key": "prefecture_name",             "label": "都道府県",    "width": 70,  "render": muted},
-        {"key": "use_category_name",           "label": "用途",        "width": 75,  "render": use_category_badge},
-        {"key": "price_yen_per_sqm",           "label": "価格(万/m²)", "width": 85,  "align": "right", "render": price_man},
-        {"key": "price_yen_per_tsubo",         "label": "坪(万/坪)",   "width": 75,  "align": "right", "render": price_man},
-        {"key": "last_year_price_yen_per_sqm", "label": "前年価格",    "width": 75,  "align": "right", "render": price_man},
-        {"key": "last_year_price_yen_per_tsubo","label": "前年坪",     "width": 65,  "align": "right", "render": price_man},
-        {"key": "yoy_change_pct",              "label": "前年比",      "width": 130, "render": gap_bar},
-        {"key": "area_sqm",                    "label": "面積(m²)",    "width": 75,  "align": "right", "render": area_num},
-    ], caption=f"{len(display_df):,} 件", min_width=900)
+    display_df = add_tsubo_price_column(
+        display_df, "last_year_price_yen_per_sqm", "last_year_price_yen_per_tsubo"
+    )
+    display_df = convert_yen_columns_to_man(
+        display_df, ["price_yen_per_sqm", "last_year_price_yen_per_sqm"]
+    )
+    render_html_table(
+        display_df,
+        [
+            {"key": "year", "label": "年度", "width": 50, "align": "right", "render": year_num},
+            {
+                "key": "location_text",
+                "label": "所在地",
+                "width": 180,
+                "render": lambda v: truncate(v, 170),
+            },
+            {"key": "city_name", "label": "市区町村", "width": 90, "render": muted},
+            {"key": "prefecture_name", "label": "都道府県", "width": 70, "render": muted},
+            {
+                "key": "use_category_name",
+                "label": "用途",
+                "width": 75,
+                "render": use_category_badge,
+            },
+            {
+                "key": "price_yen_per_sqm",
+                "label": "価格(万/m²)",
+                "width": 85,
+                "align": "right",
+                "render": price_man,
+            },
+            {
+                "key": "price_yen_per_tsubo",
+                "label": "坪(万/坪)",
+                "width": 75,
+                "align": "right",
+                "render": price_man,
+            },
+            {
+                "key": "last_year_price_yen_per_sqm",
+                "label": "前年価格",
+                "width": 75,
+                "align": "right",
+                "render": price_man,
+            },
+            {
+                "key": "last_year_price_yen_per_tsubo",
+                "label": "前年坪",
+                "width": 65,
+                "align": "right",
+                "render": price_man,
+            },
+            {"key": "yoy_change_pct", "label": "前年比", "width": 130, "render": gap_bar},
+            {
+                "key": "area_sqm",
+                "label": "面積(m²)",
+                "width": 75,
+                "align": "right",
+                "render": area_num,
+            },
+        ],
+        caption=f"{len(display_df):,} 件",
+        min_width=900,
+    )
 
     # CSV ダウンロード
     csv_buf = io.StringIO()
@@ -98,13 +167,19 @@ def _apply_search_controls(df: pd.DataFrame) -> pd.DataFrame:
     )
     if keyword:
         keyword_cols = [
-            "location_text", "city_name", "prefecture_name",
-            "standard_land_number", "use_category_name", "zoning_name",
+            "location_text",
+            "city_name",
+            "prefecture_name",
+            "standard_land_number",
+            "use_category_name",
+            "zoning_name",
         ]
         mask = pd.Series(False, index=result.index)
         for col in keyword_cols:
             if col in result.columns:
-                mask |= result[col].astype(str).str.contains(keyword, case=False, na=False, regex=False)
+                mask |= (
+                    result[col].astype(str).str.contains(keyword, case=False, na=False, regex=False)
+                )
         result = result[mask].copy()
 
     with st.expander("条件フィルタ", expanded=True):
@@ -149,9 +224,15 @@ def _apply_search_controls(df: pd.DataFrame) -> pd.DataFrame:
                 result = result[result["use_category_name"].isin(selected_uses)].copy()
 
         c4, c5, c6 = st.columns(3)
-        result = _apply_price_range(c4, result, "price_yen_per_sqm", "価格レンジ (万円/m²)", "search_price_range")
-        result = _apply_numeric_range(c5, result, "yoy_change_pct", "前年比レンジ (%)", "search_yoy_range", round_to=0.1)
-        result = _apply_numeric_range(c6, result, "area_sqm", "面積レンジ (m²)", "search_area_range", round_to=1)
+        result = _apply_price_range(
+            c4, result, "price_yen_per_sqm", "価格レンジ (万円/m²)", "search_price_range"
+        )
+        result = _apply_numeric_range(
+            c5, result, "yoy_change_pct", "前年比レンジ (%)", "search_yoy_range", round_to=0.1
+        )
+        result = _apply_numeric_range(
+            c6, result, "area_sqm", "面積レンジ (m²)", "search_area_range", round_to=1
+        )
 
         c7, c8 = st.columns([2, 1])
         sortable = {
@@ -187,7 +268,9 @@ def _render_summary(df: pd.DataFrame) -> None:
 
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("該当地点", f"{len(df):,}件")
-    c2.metric("中央値価格", format_yen_per_sqm_with_tsubo(price.median()) if price.notna().any() else "—")
+    c2.metric(
+        "中央値価格", format_yen_per_sqm_with_tsubo(price.median()) if price.notna().any() else "—"
+    )
     c3.metric("平均前年比", f"{yoy.mean():+.2f}%" if yoy.notna().any() else "—")
     c4.metric("平均面積", f"{area.mean():,.0f}m²" if area.notna().any() else "—")
 
@@ -220,7 +303,11 @@ def _render_insights(df: pd.DataFrame, filters: dict) -> None:
                 color_continuous_scale="RdBu_r",
                 color_continuous_midpoint=0,
                 text="地点数",
-                labels={"use_category_name": "用途区分", "平均価格": "平均価格(万円/m²)", "平均前年比": "平均前年比(%)"},
+                labels={
+                    "use_category_name": "用途区分",
+                    "平均価格": "平均価格(万円/m²)",
+                    "平均前年比": "平均前年比(%)",
+                },
                 title="用途別 平均価格",
             )
             fig.update_traces(texttemplate="%{text:,}件", textposition="outside")
@@ -255,7 +342,12 @@ def _render_insights(df: pd.DataFrame, filters: dict) -> None:
             if city_df.empty:
                 st.info("条件を満たす市区町村がありません。")
             else:
-                city_df["表示名"] = city_df["city_name"].fillna("") + "（" + city_df["prefecture_name"].fillna("") + "）"
+                city_df["表示名"] = (
+                    city_df["city_name"].fillna("")
+                    + "（"
+                    + city_df["prefecture_name"].fillna("")
+                    + "）"
+                )
                 plot_df = city_df.sort_values("平均価格").copy()
                 plot_df["平均価格"] = plot_df["平均価格"].map(yen_to_man)
                 fig = px.bar(
@@ -267,7 +359,11 @@ def _render_insights(df: pd.DataFrame, filters: dict) -> None:
                     color_continuous_scale="RdBu_r",
                     color_continuous_midpoint=0,
                     text="地点数",
-                    labels={"平均価格": "平均価格(万円/m²)", "表示名": "市区町村", "平均前年比": "平均前年比(%)"},
+                    labels={
+                        "平均価格": "平均価格(万円/m²)",
+                        "表示名": "市区町村",
+                        "平均前年比": "平均前年比(%)",
+                    },
                     title=f"市区町村別 平均価格 TOP20 ({filters.get('year', 'all')}年)",
                 )
                 fig.update_traces(texttemplate="%{text:,}件", textposition="outside")
@@ -278,7 +374,11 @@ def _render_insights(df: pd.DataFrame, filters: dict) -> None:
                 st.plotly_chart(fig, use_container_width=True)
 
     with tab_dist:
-        plot = df.dropna(subset=["price_yen_per_sqm"]).copy() if "price_yen_per_sqm" in df.columns else pd.DataFrame()
+        plot = (
+            df.dropna(subset=["price_yen_per_sqm"]).copy()
+            if "price_yen_per_sqm" in df.columns
+            else pd.DataFrame()
+        )
         if plot.empty:
             st.info("価格データがありません。")
         else:
@@ -297,7 +397,9 @@ def _render_insights(df: pd.DataFrame, filters: dict) -> None:
             st.plotly_chart(fig, use_container_width=True)
 
 
-def _apply_numeric_range(container, df: pd.DataFrame, col: str, label: str, key: str, round_to: float) -> pd.DataFrame:
+def _apply_numeric_range(
+    container, df: pd.DataFrame, col: str, label: str, key: str, round_to: float
+) -> pd.DataFrame:
     """数値列のレンジスライダーを適用する。"""
     with container:
         if col not in df.columns or df[col].dropna().empty:

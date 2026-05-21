@@ -1,7 +1,8 @@
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from concurrent.futures import ThreadPoolExecutor
-import asyncio
 
 from gto.library.range_builder import compute_preflop_outcome
 
@@ -10,43 +11,43 @@ _executor = ThreadPoolExecutor(max_workers=2)
 
 POSITIONS = ["BTN", "CO", "SB", "HJ", "UTG"]
 
-FLOP_POT   = {"BTN": 6.5, "CO": 7.0, "SB": 5.0, "HJ": 7.0, "UTG": 7.0}
-EFF_STACK  = 97.0
-MAX_BETS   = 2
+FLOP_POT = {"BTN": 6.5, "CO": 7.0, "SB": 5.0, "HJ": 7.0, "UTG": 7.0}
+EFF_STACK = 97.0
+MAX_BETS = 2
 
 
 class SimRequest(BaseModel):
-    position:   str = "BTN"
-    board:      list[str] = []   # 0 = preflop only, 3-5 = postflop solve
+    position: str = "BTN"
+    board: list[str] = []  # 0 = preflop only, 3-5 = postflop solve
     iterations: int = 300
 
 
 class ActionFreq(BaseModel):
     action: str
-    freq:   float
+    freq: float
 
 
 class BBHand(BaseModel):
-    hand:          str
-    call_freq:     float
-    fold_freq:     float
+    hand: str
+    call_freq: float
+    fold_freq: float
     threebet_freq: float
 
 
 class PostflopResult(BaseModel):
-    strategy:       list[ActionFreq]
+    strategy: list[ActionFreq]
     exploitability: float
-    backend:        str
-    iterations:     int
+    backend: str
+    iterations: int
 
 
 class SimResponse(BaseModel):
-    position:      str
-    fold_equity:   float
-    call_freq:     float
+    position: str
+    fold_equity: float
+    call_freq: float
     threebet_freq: float
-    bb_hands:      list[BBHand]
-    postflop:      PostflopResult | None = None
+    bb_hands: list[BBHand]
+    postflop: PostflopResult | None = None
 
 
 @router.post("/simulation/run", response_model=SimResponse)
@@ -74,27 +75,36 @@ async def run_simulation(req: SimRequest):
     postflop = None
     if req.board:
         loop = asyncio.get_event_loop()
-        ip_w  = outcome["ip_weights"].tolist()
+        ip_w = outcome["ip_weights"].tolist()
         oop_w = outcome["oop_call_weights"].tolist()
         spot = {
-            "board":               req.board,
-            "pot_bb":              FLOP_POT.get(req.position, 6.5),
-            "effective_stack_bb":  EFF_STACK,
+            "board": req.board,
+            "pot_bb": FLOP_POT.get(req.position, 6.5),
+            "effective_stack_bb": EFF_STACK,
         }
 
         def _solve():
             try:
                 import gto_cuda
+
                 results = gto_cuda.batch_solve_rust(
-                    [spot], req.iterations, MAX_BETS, ip_w, oop_w,
+                    [spot],
+                    req.iterations,
+                    MAX_BETS,
+                    ip_w,
+                    oop_w,
                 )
-                result  = results[0]
+                result = results[0]
                 backend = "gpu"
             except Exception:
                 import gto_py
-                result  = gto_py.solve_spot(
-                    spot["pot_bb"], spot["effective_stack_bb"],
-                    spot["board"], req.iterations, MAX_BETS,
+
+                result = gto_py.solve_spot(
+                    spot["pot_bb"],
+                    spot["effective_stack_bb"],
+                    spot["board"],
+                    req.iterations,
+                    MAX_BETS,
                 )
                 backend = "cpu"
             return result, backend

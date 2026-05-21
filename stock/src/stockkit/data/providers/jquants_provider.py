@@ -18,7 +18,6 @@ from __future__ import annotations
 
 import os
 from datetime import datetime, timedelta
-from typing import Any
 
 import pandas as pd
 import requests
@@ -36,15 +35,9 @@ class JQuantsError(RuntimeError):
 
 def _api_key() -> str:
     load_dotenv()
-    key = (
-        os.environ.get("JQUANTS_API_KEY")
-        or os.environ.get("JQUANTS_REFRESH_TOKEN")
-        or ""
-    )
+    key = os.environ.get("JQUANTS_API_KEY") or os.environ.get("JQUANTS_REFRESH_TOKEN") or ""
     if not key:
-        raise JQuantsError(
-            "JQUANTS_API_KEY (or JQUANTS_REFRESH_TOKEN) not set in .env"
-        )
+        raise JQuantsError("JQUANTS_API_KEY (or JQUANTS_REFRESH_TOKEN) not set in .env")
     return key
 
 
@@ -54,9 +47,7 @@ def _headers() -> dict[str, str]:
 
 def is_configured() -> bool:
     load_dotenv()
-    return bool(
-        os.environ.get("JQUANTS_API_KEY") or os.environ.get("JQUANTS_REFRESH_TOKEN")
-    )
+    return bool(os.environ.get("JQUANTS_API_KEY") or os.environ.get("JQUANTS_REFRESH_TOKEN"))
 
 
 def _to_jq_code(symbol: str) -> str:

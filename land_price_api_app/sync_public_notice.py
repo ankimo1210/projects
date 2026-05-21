@@ -7,19 +7,18 @@ CLI 使用例:
     python sync_public_notice.py --year 2026 --z 13 --pref 13
     python sync_public_notice.py --year 2025 --overwrite
 """
+
 import argparse
 import concurrent.futures
 import json
 import threading
 import time
 from pathlib import Path
-from typing import Optional
-
-import pandas as pd
 
 import api_client
 import db
 import normalize
+import pandas as pd
 import tiles
 from config import (
     DEFAULT_PRICE_CLASSIFICATION,
@@ -37,6 +36,7 @@ logger = get_logger(__name__)
 # --------------------------------------------------------------------------
 # 重複排除
 # --------------------------------------------------------------------------
+
 
 def merge_and_deduplicate_features(
     features: list[dict],
@@ -82,7 +82,9 @@ def merge_and_deduplicate_features(
 
     logger.debug(
         "重複排除: %d → %d features (重複 %d 件)",
-        len(features), len(deduped), len(features) - len(deduped),
+        len(features),
+        len(deduped),
+        len(features) - len(deduped),
     )
     return deduped
 
@@ -90,6 +92,7 @@ def merge_and_deduplicate_features(
 # --------------------------------------------------------------------------
 # 取得済みタイルの管理
 # --------------------------------------------------------------------------
+
 
 def _tile_cache_path(year: int, z: int, price_classification: int) -> Path:
     """取得済みタイルを記録するファイルパスを返す。"""
@@ -105,9 +108,7 @@ def _load_fetched_tiles(year: int, z: int, price_classification: int) -> set[str
         return set(json.load(f))
 
 
-def _save_fetched_tiles(
-    year: int, z: int, price_classification: int, fetched: set[str]
-) -> None:
+def _save_fetched_tiles(year: int, z: int, price_classification: int, fetched: set[str]) -> None:
     """取得済みタイルセットを保存する。"""
     path = _tile_cache_path(year, z, price_classification)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -122,6 +123,7 @@ def _tile_key(z: int, x: int, y: int) -> str:
 # --------------------------------------------------------------------------
 # raw GeoJSON 保存
 # --------------------------------------------------------------------------
+
 
 def _raw_geojson_path(year: int, z: int, price_classification: int) -> Path:
     return RAW_DIR / f"xpt002_y{year}_z{z}_pc{price_classification}.geojson"
@@ -156,13 +158,17 @@ def _save_raw_geojson(
 # Parquet 保存
 # --------------------------------------------------------------------------
 
+
 def _parquet_path(
     year: int,
     price_classification: int,
-    prefecture_code: Optional[str] = None,
+    prefecture_code: str | None = None,
 ) -> Path:
     if prefecture_code:
-        return PROCESSED_DIR / f"land_prices_y{year}_pref{prefecture_code}_pc{price_classification}.parquet"
+        return (
+            PROCESSED_DIR
+            / f"land_prices_y{year}_pref{prefecture_code}_pc{price_classification}.parquet"
+        )
     return PROCESSED_DIR / f"land_prices_y{year}_pc{price_classification}.parquet"
 
 
@@ -170,7 +176,7 @@ def _save_parquet(
     df: pd.DataFrame,
     year: int,
     price_classification: int,
-    prefecture_code: Optional[str] = None,
+    prefecture_code: str | None = None,
 ) -> Path:
     path = _parquet_path(year, price_classification, prefecture_code)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -183,13 +189,14 @@ def _save_parquet(
 # メイン同期関数
 # --------------------------------------------------------------------------
 
+
 def sync_public_notice_year(
     year: int,
     z: int = DEFAULT_ZOOM,
     price_classification: int = DEFAULT_PRICE_CLASSIFICATION,
-    use_category_codes: Optional[list[str]] = None,
+    use_category_codes: list[str] | None = None,
     overwrite: bool = False,
-    prefecture_code: Optional[str] = None,
+    prefecture_code: str | None = None,
     max_empty_streak: int = 0,  # 0 = 無制限
     conn=None,  # 既存の DuckDB 接続を渡すと競合を回避できる
     max_workers: int = 1,  # タイル並列取得数。1=逐次、4程度が目安
@@ -227,10 +234,7 @@ def sync_public_notice_year(
     """
     ensure_dirs()
 
-    fetched_tiles = (
-        set() if overwrite
-        else _load_fetched_tiles(year, z, price_classification)
-    )
+    fetched_tiles = set() if overwrite else _load_fetched_tiles(year, z, price_classification)
 
     all_features: list[dict] = []
     tile_count = 0
@@ -239,17 +243,14 @@ def sync_public_notice_year(
     # タイル走査イテレータの選択
     if prefecture_code:
         tile_iter = tiles.iter_prefecture_tiles(prefecture_code, z)
-        logger.info(
-            "都道府県別同期開始: year=%d, z=%d, pref=%s", year, z, prefecture_code
-        )
+        logger.info("都道府県別同期開始: year=%d, z=%d, pref=%s", year, z, prefecture_code)
     else:
         tile_iter = tiles.iter_japan_tiles(z)
         logger.info("全国同期開始: year=%d, z=%d", year, z)
 
     # 取得済みを除外したタイルリストを作成（generatorを消費）
     pending_tiles = [
-        (tz, x, y) for tz, x, y in tile_iter
-        if _tile_key(tz, x, y) not in fetched_tiles
+        (tz, x, y) for tz, x, y in tile_iter if _tile_key(tz, x, y) not in fetched_tiles
     ]
 
     if max_workers > 1 and pending_tiles:
@@ -262,7 +263,10 @@ def sync_public_notice_year(
             key = _tile_key(tz, x, y)
             try:
                 data = api_client.fetch_geojson_tile_xpt002(
-                    z=tz, x=x, y=y, year=year,
+                    z=tz,
+                    x=x,
+                    y=y,
+                    year=year,
                     price_classification=price_classification,
                     use_category_codes=use_category_codes,
                 )
@@ -291,7 +295,10 @@ def sync_public_notice_year(
             key = _tile_key(tile_z, x, y)
             try:
                 data = api_client.fetch_geojson_tile_xpt002(
-                    z=tile_z, x=x, y=y, year=year,
+                    z=tile_z,
+                    x=x,
+                    y=y,
+                    year=year,
                     price_classification=price_classification,
                     use_category_codes=use_category_codes,
                 )
@@ -300,7 +307,9 @@ def sync_public_notice_year(
                 fetched_tiles.add(key)
                 tile_count += 1
                 if tile_count % 500 == 0:
-                    logger.info("進捗: %d タイル処理済み, 累積 %d features", tile_count, len(all_features))
+                    logger.info(
+                        "進捗: %d タイル処理済み, 累積 %d features", tile_count, len(all_features)
+                    )
                     _save_fetched_tiles(year, z, price_classification, fetched_tiles)
             except Exception as exc:
                 error_count += 1
@@ -315,7 +324,9 @@ def sync_public_notice_year(
 
     logger.info(
         "タイル走査完了: %d タイル, %d features (重複排除前), エラー %d 件",
-        tile_count, len(all_features), error_count,
+        tile_count,
+        len(all_features),
+        error_count,
     )
 
     if not all_features:
@@ -323,7 +334,8 @@ def sync_public_notice_year(
             "year=%d のデータが 0 件でした。"
             "年度が未公開の場合や API 仕様変更の可能性があります。"
             "year=%d を試してみてください。",
-            year, year - 1,
+            year,
+            year - 1,
         )
         return pd.DataFrame()
 
@@ -369,26 +381,35 @@ def sync_public_notice_year(
 # CLI
 # --------------------------------------------------------------------------
 
+
 def _build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         description="地価公示データを不動産情報ライブラリ API から取得・保存する"
     )
     p.add_argument("--year", type=int, required=True, help="取得対象年 (例: 2026)")
-    p.add_argument("--z", type=int, default=DEFAULT_ZOOM, help=f"ズームレベル (デフォルト: {DEFAULT_ZOOM})")
     p.add_argument(
-        "--pref", type=str, default=None,
+        "--z", type=int, default=DEFAULT_ZOOM, help=f"ズームレベル (デフォルト: {DEFAULT_ZOOM})"
+    )
+    p.add_argument(
+        "--pref",
+        type=str,
+        default=None,
         help="都道府県コード 2 桁 (省略時は全国)",
     )
     p.add_argument(
-        "--overwrite", action="store_true",
+        "--overwrite",
+        action="store_true",
         help="取得済みタイル記録を無視して再取得する",
     )
     p.add_argument(
-        "--price-class", type=int, default=0,
+        "--price-class",
+        type=int,
+        default=0,
         help="価格区分 (0=地価公示, 1=地価調査; デフォルト: 0)",
     )
     p.add_argument(
-        "--smoke-test", action="store_true",
+        "--smoke-test",
+        action="store_true",
         help="APIとDB の疎通確認のみ行う",
     )
     return p
@@ -419,7 +440,9 @@ def main() -> None:
 
     if df.empty:
         print(f"[警告] year={args.year} でデータが取得できませんでした。")
-        print(f"  → year={args.year - 1} を試す場合: python sync_public_notice.py --year {args.year - 1}")
+        print(
+            f"  → year={args.year - 1} を試す場合: python sync_public_notice.py --year {args.year - 1}"
+        )
     else:
         print(f"同期完了: {len(df)} 件 (year={args.year})")
 

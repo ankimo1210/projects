@@ -3,7 +3,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.app.routers import instruments, prices, analytics, data_update, backtest, alerts
+from backend.app.routers import alerts, analytics, backtest, data_update, instruments, prices
 
 app = FastAPI(title="Market Viz API", version="0.1.0")
 

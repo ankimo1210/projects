@@ -8,6 +8,7 @@ property_scraper の抽出ロジック回帰テスト。
     # または pytest 未インストール時:
     python tests/test_property_scraper.py
 """
+
 import dataclasses
 import json
 import pathlib
@@ -25,21 +26,21 @@ _FIXTURES = pathlib.Path(__file__).parent / "fixtures"
 # ── フィールド別の許容誤差設定 ────────────────────────────────────────────
 # float フィールド: 絶対誤差（単位は各フィールドと同じ）
 _FLOAT_TOL: dict[str, float] = {
-    "gross_yield_pct":       0.01,
-    "building_area_sqm":     0.1,
-    "land_area_sqm":         0.1,
-    "legal_far_pct":         1.0,
-    "bcr_pct":               1.0,
+    "gross_yield_pct": 0.01,
+    "building_area_sqm": 0.1,
+    "land_area_sqm": 0.1,
+    "legal_far_pct": 1.0,
+    "bcr_pct": 1.0,
 }
 # int フィールド: 絶対誤差
 _INT_TOL: dict[str, int] = {
-    "asking_price_yen":      0,
-    "gross_rent_annual_yen": 100,   # 端数丸め差を許容
+    "asking_price_yen": 0,
+    "gross_rent_annual_yen": 100,  # 端数丸め差を許容
     "gross_rent_monthly_yen": 10,
-    "age_years":             1,     # 年度境界で±1
-    "station_walk_min":      0,
-    "num_units":             0,
-    "num_floors":            0,
+    "age_years": 1,  # 年度境界で±1
+    "station_walk_min": 0,
+    "num_units": 0,
+    "num_floors": 0,
 }
 
 # ── テストケース定義 ───────────────────────────────────────────────────────
@@ -83,6 +84,7 @@ TEST_CASES = [
 
 # ── ヘルパー ──────────────────────────────────────────────────────────────
 
+
 def _load_fixture(name: str) -> tuple[str, dict]:
     html_path = _FIXTURES / f"{name}.html"
     json_path = _FIXTURES / f"{name}_expected.json"
@@ -118,6 +120,7 @@ def _assert_field(field: str, actual, expected, errors: list) -> None:
 
 
 # ── テスト本体 ────────────────────────────────────────────────────────────
+
 
 def run_test_case(tc: dict) -> tuple[bool, str]:
     """1テストケースを実行。(passed: bool, message: str) を返す。"""
@@ -160,12 +163,15 @@ def run_all() -> None:
 
     total = passed + failed
     print(f"\n{'─' * 50}")
-    print(f"結果: {passed}/{total} passed" + (f"  ← {failed} FAILED" if failed else "  ✅ ALL PASSED"))
+    print(
+        f"結果: {passed}/{total} passed" + (f"  ← {failed} FAILED" if failed else "  ✅ ALL PASSED")
+    )
     if failed:
         sys.exit(1)
 
 
 # ── pytest インテグレーション ─────────────────────────────────────────────
+
 
 def pytest_cases():
     """pytest の parametrize 用にテストケースを展開する。"""

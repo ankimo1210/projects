@@ -6,15 +6,14 @@ property_scraper.py
 1. fetch_property_html()  - requests でHTMLを取得
 2. extract_property_data() - BeautifulSoup でテキスト化 → Ollama (gemma3) でJSON抽出
 """
+
 import json
 import re
-from pathlib import Path
 from dataclasses import dataclass, field
-from typing import Optional
+from pathlib import Path
 
 import requests
 from bs4 import BeautifulSoup
-
 from config import get_logger
 
 logger = get_logger(__name__)
@@ -49,24 +48,24 @@ _STRUCTURE_MAP = {
 
 # 構造コード → 日本語表示
 STRUCTURE_JP: dict[str, str] = {
-    "wood":        "木造",
+    "wood": "木造",
     "wood_mortar": "木骨モルタル",
-    "rc":          "RC造",
-    "src":         "SRC造",
-    "steel":       "鉄骨造",
+    "rc": "RC造",
+    "src": "SRC造",
+    "steel": "鉄骨造",
 }
 
 # 構造コード → 法定耐用年数（建物、住宅用）
 LEGAL_LIFE_YEARS: dict[str, int] = {
-    "wood":        22,
+    "wood": 22,
     "wood_mortar": 20,
-    "rc":          47,
-    "src":         47,
-    "steel":       34,
+    "rc": 47,
+    "src": 47,
+    "steel": 34,
 }
 
 
-def remaining_life(structure: Optional[str], age_years: Optional[int]) -> Optional[int]:
+def remaining_life(structure: str | None, age_years: int | None) -> int | None:
     """法定残存耐用年数を返す。耐用年数超過の場合は法定耐用年数×20%（最低1年）。"""
     if not structure or age_years is None:
         return None
@@ -86,7 +85,7 @@ _SYSTEM_PROMPT = (
 )
 
 _OLLAMA_BASE_URL = "http://127.0.0.1:11434"
-_OLLAMA_MODEL    = "gemma3:12b"
+_OLLAMA_MODEL = "gemma3:12b"
 
 _SCHEMA_DIR = Path(__file__).parent / "data" / "site_schemas"
 
@@ -97,6 +96,7 @@ def _load_site_schema(platform: str) -> str:
     if path.exists():
         return path.read_text(encoding="utf-8")
     return ""
+
 
 _USER_PROMPT_TEMPLATE = """\
 Extract property data from the following Japanese real estate listing text.
@@ -165,32 +165,32 @@ class ScrapingError(Exception):
 
 @dataclass
 class PropertyData:
-    property_name: Optional[str] = None
-    address: Optional[str] = None
-    asking_price_yen: Optional[int] = None
-    gross_rent_monthly_yen: Optional[int] = None
-    gross_rent_annual_yen: Optional[int] = None
-    gross_yield_pct: Optional[float] = None
-    build_year_month: Optional[str] = None
-    age_years: Optional[int] = None
-    structure: Optional[str] = None
-    property_type: Optional[str] = None
-    building_area_sqm: Optional[float] = None
-    land_area_sqm: Optional[float] = None
-    land_rights: Optional[str] = None
-    legal_far_pct: Optional[float] = None   # 法定容積率 (%)
-    bcr_pct: Optional[float] = None         # 建蔽率 (%)
-    num_units: Optional[int] = None
-    road_frontage: Optional[str] = None
-    nearest_station: Optional[str] = None
-    station_walk_min: Optional[int] = None
-    floor_plan: Optional[str] = None
-    num_floors: Optional[int] = None          # 地上階数
-    land_category: Optional[str] = None       # 地目
-    city_planning_area: Optional[str] = None  # 都市計画区域
-    updated_date: Optional[str] = None        # 更新日
-    transaction_type: Optional[str] = None
-    listing_date: Optional[str] = None
+    property_name: str | None = None
+    address: str | None = None
+    asking_price_yen: int | None = None
+    gross_rent_monthly_yen: int | None = None
+    gross_rent_annual_yen: int | None = None
+    gross_yield_pct: float | None = None
+    build_year_month: str | None = None
+    age_years: int | None = None
+    structure: str | None = None
+    property_type: str | None = None
+    building_area_sqm: float | None = None
+    land_area_sqm: float | None = None
+    land_rights: str | None = None
+    legal_far_pct: float | None = None  # 法定容積率 (%)
+    bcr_pct: float | None = None  # 建蔽率 (%)
+    num_units: int | None = None
+    road_frontage: str | None = None
+    nearest_station: str | None = None
+    station_walk_min: int | None = None
+    floor_plan: str | None = None
+    num_floors: int | None = None  # 地上階数
+    land_category: str | None = None  # 地目
+    city_planning_area: str | None = None  # 都市計画区域
+    updated_date: str | None = None  # 更新日
+    transaction_type: str | None = None
+    listing_date: str | None = None
     platform: str = "unknown"
     extraction_confidence: str = "low"
     raw_extraction: dict = field(default_factory=dict)
@@ -200,8 +200,8 @@ class PropertyData:
 def fetch_property_html(
     url: str,
     timeout: int = 15,
-    session: Optional[requests.Session] = None,
-    referer: Optional[str] = None,
+    session: requests.Session | None = None,
+    referer: str | None = None,
 ) -> str:
     """
     物件ページのHTMLを取得する。
@@ -247,15 +247,28 @@ def fetch_property_html(
 
 # LLM補完が意味のあるフィールド（分類・自由記述系）
 _LLM_FILLABLE = {
-    "property_type", "floor_plan",
-    "address", "property_name",
-    "gross_yield_pct", "gross_rent_annual_yen", "gross_rent_monthly_yen",
-    "build_year_month", "age_years", "structure",
-    "building_area_sqm", "land_area_sqm", "land_rights",
-    "legal_far_pct", "bcr_pct",
-    "num_units", "nearest_station", "station_walk_min",
-    "transaction_type", "listing_date",
-    "land_category", "city_planning_area",
+    "property_type",
+    "floor_plan",
+    "address",
+    "property_name",
+    "gross_yield_pct",
+    "gross_rent_annual_yen",
+    "gross_rent_monthly_yen",
+    "build_year_month",
+    "age_years",
+    "structure",
+    "building_area_sqm",
+    "land_area_sqm",
+    "land_rights",
+    "legal_far_pct",
+    "bcr_pct",
+    "num_units",
+    "nearest_station",
+    "station_walk_min",
+    "transaction_type",
+    "listing_date",
+    "land_category",
+    "city_planning_area",
 }
 
 
@@ -273,10 +286,7 @@ def extract_property_data(html: str, url: str) -> PropertyData:
     prop = _build_property_data({}, platform, source_text=text)
 
     # Pass 2: Noneが残ったフィールドがあればLLMで補完
-    none_fields = [
-        f for f in _LLM_FILLABLE
-        if getattr(prop, f, None) is None
-    ]
+    none_fields = [f for f in _LLM_FILLABLE if getattr(prop, f, None) is None]
     if none_fields:
         try:
             raw = _call_claude_extraction(text, platform=platform)
@@ -293,32 +303,33 @@ def _fill_missing_from_llm(prop: PropertyData, raw: dict, none_fields: list) -> 
     """
     # PropertyData を dict に変換して補完、再構築
     import dataclasses
+
     d = dataclasses.asdict(prop)
     filled: set = set(d.get("llm_filled_fields") or set())
 
     conversions = {
-        "property_type":         lambda v: _opt_str(v),
-        "floor_plan":            lambda v: _opt_str(v),
-        "address":               lambda v: _opt_str(v),
-        "property_name":         lambda v: _opt_str(v),
-        "gross_yield_pct":       lambda v: _opt_float(v),
+        "property_type": lambda v: _opt_str(v),
+        "floor_plan": lambda v: _opt_str(v),
+        "address": lambda v: _opt_str(v),
+        "property_name": lambda v: _opt_str(v),
+        "gross_yield_pct": lambda v: _opt_float(v),
         "gross_rent_annual_yen": lambda v: _opt_int(v),
-        "gross_rent_monthly_yen":lambda v: _opt_int(v),
-        "build_year_month":      lambda v: _opt_str(v),
-        "age_years":             lambda v: _opt_int(v),
-        "structure":             lambda v: _map_structure(v),
-        "building_area_sqm":     lambda v: _opt_float(v),
-        "land_area_sqm":         lambda v: _opt_float(v),
-        "land_rights":           lambda v: _opt_str(v),
-        "legal_far_pct":         lambda v: _opt_float(v),
-        "bcr_pct":               lambda v: _opt_float(v),
-        "num_units":             lambda v: _opt_int(v),
-        "nearest_station":       lambda v: _opt_str(v),
-        "station_walk_min":      lambda v: _opt_int(v),
-        "transaction_type":      lambda v: _opt_str(v),
-        "listing_date":          lambda v: _opt_str(v),
-        "land_category":         lambda v: _opt_str(v),
-        "city_planning_area":    lambda v: _opt_str(v),
+        "gross_rent_monthly_yen": lambda v: _opt_int(v),
+        "build_year_month": lambda v: _opt_str(v),
+        "age_years": lambda v: _opt_int(v),
+        "structure": lambda v: _map_structure(v),
+        "building_area_sqm": lambda v: _opt_float(v),
+        "land_area_sqm": lambda v: _opt_float(v),
+        "land_rights": lambda v: _opt_str(v),
+        "legal_far_pct": lambda v: _opt_float(v),
+        "bcr_pct": lambda v: _opt_float(v),
+        "num_units": lambda v: _opt_int(v),
+        "nearest_station": lambda v: _opt_str(v),
+        "station_walk_min": lambda v: _opt_int(v),
+        "transaction_type": lambda v: _opt_str(v),
+        "listing_date": lambda v: _opt_str(v),
+        "land_category": lambda v: _opt_str(v),
+        "city_planning_area": lambda v: _opt_str(v),
     }
 
     for field in none_fields:
@@ -392,6 +403,7 @@ def _strip_html_to_text(html: str, max_chars: int = 8000, platform: str = "unkno
 
 def _preprocess_kenbiya(text: str) -> str:
     """健美家テキストのプラットフォーム固有正規化。"""
+
     # 価格: 価格\n\n3\n億\n1,800\n万円 → 価格\n3億1800万円
     def _join_price_lines(m: re.Match) -> str:
         body = m.group(1)
@@ -426,7 +438,9 @@ def _preprocess_kenbiya(text: str) -> str:
 def _call_claude_extraction(text_content: str, platform: str = "unknown") -> dict:
     """Ollama (gemma3:12b) で物件データの JSON 抽出を行う。APIキー不要・完全ローカル。"""
     schema = _load_site_schema(platform)
-    schema_section = f"\n\nSITE-SPECIFIC SCHEMA FOR {platform.upper()}:\n{schema}\n" if schema else ""
+    schema_section = (
+        f"\n\nSITE-SPECIFIC SCHEMA FOR {platform.upper()}:\n{schema}\n" if schema else ""
+    )
 
     prompt = f"{_SYSTEM_PROMPT}{schema_section}\n\n{_USER_PROMPT_TEMPLATE.format(text_content=text_content)}"
 
@@ -455,7 +469,7 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
     構造化テキストから取れるフィールドはすべてregex優先。LLMは補助。
     """
 
-    def _regex(pattern: str, flags: int = 0) -> Optional[re.Match]:
+    def _regex(pattern: str, flags: int = 0) -> re.Match | None:
         return re.search(pattern, source_text, flags) if source_text else None
 
     def _rx(pattern, group=1, flags=0):
@@ -487,8 +501,8 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
         address = re.sub(r"\s*地図を見る.*", "", address).strip()
 
     # ── 最寄駅 + 徒歩分 ──────────────────────────────────────────────
-    nearest_station: Optional[str] = None
-    station_walk_min: Optional[int] = None
+    nearest_station: str | None = None
+    station_walk_min: int | None = None
     m = _regex(r"([^\n　]+?(?:駅|停留所|バス停))\s+徒歩(\d+)分")
     if m:
         nearest_station = m.group(1).strip()
@@ -511,8 +525,10 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
         asking_price_yen = _opt_int(raw.get("asking_price_yen"))
 
     # ── 表面利回り ────────────────────────────────────────────────────
-    gross_yield_pct: Optional[float] = None
-    m = _regex(r"(?:表面利回り|満室時利回り)\s*\n+(?:(?:表面利回り|満室時利回り)\s*\n+)?([\d.]+)\s*[%％]")
+    gross_yield_pct: float | None = None
+    m = _regex(
+        r"(?:表面利回り|満室時利回り)\s*\n+(?:(?:表面利回り|満室時利回り)\s*\n+)?([\d.]+)\s*[%％]"
+    )
     if m:
         gross_yield_pct = float(m.group(1))
     if gross_yield_pct is None:
@@ -522,7 +538,7 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
     #   _build_property_data の末尾で後計算する（computed フラグはつけない）
 
     # ── 年間賃料 ──────────────────────────────────────────────────────
-    gross_rent_annual_yen: Optional[int] = None
+    gross_rent_annual_yen: int | None = None
     m = _regex(r"想定年間収入\s*\n+(?:想定年間収入\s*\n+)?([\d,]+)円")
     if m:
         gross_rent_annual_yen = int(m.group(1).replace(",", ""))
@@ -539,7 +555,7 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
         gross_rent_annual_yen = _opt_int(raw.get("gross_rent_annual_yen"))
 
     # ── 月額賃料 ──────────────────────────────────────────────────────
-    gross_rent_monthly_yen: Optional[int] = None
+    gross_rent_monthly_yen: int | None = None
     m = _regex(r"\(([\d,]+)円/月\)")
     if m:
         gross_rent_monthly_yen = int(m.group(1).replace(",", ""))
@@ -554,7 +570,7 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
         gross_rent_monthly_yen = _opt_int(raw.get("gross_rent_monthly_yen"))
 
     # ── 築年月 ────────────────────────────────────────────────────────
-    build_year_month: Optional[str] = None
+    build_year_month: str | None = None
     m = _regex(r"築年月\s*\n+\s*(\d{4})年(\d{1,2})月")
     if m:
         build_year_month = f"{m.group(1)}-{int(m.group(2)):02d}"
@@ -562,7 +578,7 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
         build_year_month = _opt_str(raw.get("build_year_month"))
 
     # ── 築年数 ────────────────────────────────────────────────────────
-    age_years: Optional[int] = None
+    age_years: int | None = None
     m = _regex(r"築(\d+)年")
     if m:
         age_years = int(m.group(1))
@@ -570,15 +586,17 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
         age_years = _opt_int(raw.get("age_years"))
 
     # ── 建物構造 ──────────────────────────────────────────────────────
-    structure: Optional[str] = None
-    m = _regex(r"建物構造\s*\n+\s*(木造|RC造?|鉄骨造?|SRC造?|軽量鉄骨|鉄筋コンクリート|S造|ALC)[^\n]*")
+    structure: str | None = None
+    m = _regex(
+        r"建物構造\s*\n+\s*(木造|RC造?|鉄骨造?|SRC造?|軽量鉄骨|鉄筋コンクリート|S造|ALC)[^\n]*"
+    )
     if m:
         structure = _map_structure(m.group(1))
     if structure is None:
         structure = _map_structure(raw.get("structure"))
 
     # ── 建物面積 ──────────────────────────────────────────────────────
-    building_area_sqm: Optional[float] = None
+    building_area_sqm: float | None = None
     m = _regex(r"建物面積\s*\n+\s*([\d,]+\.?\d*)\s*[m㎡]")
     if m:
         building_area_sqm = float(m.group(1).replace(",", ""))
@@ -586,7 +604,7 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
         building_area_sqm = _opt_float(raw.get("building_area_sqm"))
 
     # ── 土地面積 ──────────────────────────────────────────────────────
-    land_area_sqm: Optional[float] = None
+    land_area_sqm: float | None = None
     m = _regex(r"土地面積\s*\n+\s*([\d,]+\.?\d*)\s*[m㎡]")
     if m:
         land_area_sqm = float(m.group(1).replace(",", ""))
@@ -594,7 +612,7 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
         land_area_sqm = _opt_float(raw.get("land_area_sqm"))
 
     # ── 土地権利 ──────────────────────────────────────────────────────
-    land_rights: Optional[str] = None
+    land_rights: str | None = None
     m = _regex(r"土地権利\s*\n+\s*(\S+)")
     if m:
         land_rights = m.group(1).strip()
@@ -603,8 +621,8 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
 
     # ── 法定容積率・建蔽率 ───────────────────────────────────────────
     # 健美家形式: "建ぺい/容積率\n\n60 ％ /\n150 ％"
-    legal_far_pct: Optional[float] = None
-    bcr_pct: Optional[float] = None
+    legal_far_pct: float | None = None
+    bcr_pct: float | None = None
     m = _regex(r"建ぺい[/／]容積率\s*\n+\s*([\d.]+)\s*[％%][^\d\n]*/\s*\n+\s*([\d.]+)\s*[％%]")
     if m:
         bcr_pct = float(m.group(1))
@@ -631,7 +649,7 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
         bcr_pct = _opt_float(raw.get("bcr_pct"))
 
     # ── 総戸数 ────────────────────────────────────────────────────────
-    num_units: Optional[int] = None
+    num_units: int | None = None
     m = _regex(r"総戸数\s*\n+\s*(\d+)戸")
     if m:
         num_units = int(m.group(1))
@@ -644,7 +662,7 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
         num_units = _opt_int(raw.get("num_units"))
 
     # ── 接道状況 ──────────────────────────────────────────────────────
-    road_frontage: Optional[str] = None
+    road_frontage: str | None = None
     # ラベルが2回出現するパターン（楽待）でも値を正しく捕捉する
     m = _regex(r"接道状況\s*\n+\s*(?!接道状況)(.+)")
     if m:
@@ -655,7 +673,7 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
             road_frontage = v
 
     # ── 取引態様 ──────────────────────────────────────────────────────
-    transaction_type: Optional[str] = None
+    transaction_type: str | None = None
     m = _regex(r"取引態様\s*\n+\s*(\S+)")
     if m:
         v = m.group(1).strip()
@@ -665,7 +683,7 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
         transaction_type = _opt_str(raw.get("transaction_type"))
 
     # ── 情報登録日 ────────────────────────────────────────────────────
-    listing_date: Optional[str] = None
+    listing_date: str | None = None
     m = _regex(r"情報登録日\s*\n+\s*(\d{4})/(\d{2})/(\d{2})")
     if m:
         listing_date = f"{m.group(1)}-{m.group(2)}-{m.group(3)}"
@@ -677,7 +695,7 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
         listing_date = _opt_str(raw.get("listing_date"))
 
     # ── 物件種別 ──────────────────────────────────────────────────────
-    property_type: Optional[str] = None
+    property_type: str | None = None
     m = _regex(r"物件種別\s*\n+\s*(?!物件種別)([^\n]+)")
     if m:
         v = m.group(1).strip()
@@ -688,12 +706,12 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
         # 健美家の「一棟マンション/一棟アパート」→「1棟マンション/1棟アパート」に正規化
         _PROP_TYPES = [
             ("1棟マンション", ["一棟マンション", "一棟売りマンション", "1棟マンション"]),
-            ("1棟アパート",   ["一棟アパート",   "一棟売りアパート",   "1棟アパート"]),
+            ("1棟アパート", ["一棟アパート", "一棟売りアパート", "1棟アパート"]),
             ("区分マンション", ["区分マンション"]),
-            ("区分アパート",   ["区分アパート"]),
-            ("戸建て",        ["戸建て"]),
-            ("事務所・店舗",   ["事務所・店舗"]),
-            ("その他",        ["その他"]),
+            ("区分アパート", ["区分アパート"]),
+            ("戸建て", ["戸建て"]),
+            ("事務所・店舗", ["事務所・店舗"]),
+            ("その他", ["その他"]),
         ]
         early = source_text[:3000] if source_text else ""
         for canonical, aliases in _PROP_TYPES:
@@ -707,7 +725,7 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
         property_type = _opt_str(raw.get("property_type"))
 
     # ── 間取り ────────────────────────────────────────────────────────
-    floor_plan: Optional[str] = None
+    floor_plan: str | None = None
     m = _regex(r"間取り\s*\n+\s*(.+)")
     if m:
         v = m.group(1).strip()
@@ -717,7 +735,7 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
         floor_plan = _opt_str(raw.get("floor_plan"))
 
     # ── 階数 ──────────────────────────────────────────────────────────
-    num_floors: Optional[int] = None
+    num_floors: int | None = None
     m = _regex(r"地上(\d+)階")
     if m:
         num_floors = int(m.group(1))
@@ -740,7 +758,7 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
         num_floors = _opt_int(raw.get("num_floors"))
 
     # ── 地目 ──────────────────────────────────────────────────────────
-    land_category: Optional[str] = None
+    land_category: str | None = None
     m = _regex(r"地目\s*\n+\s*(?!地目)([^\n]+)")
     if m:
         v = m.group(1).strip()
@@ -750,7 +768,7 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
         land_category = _opt_str(raw.get("land_category"))
 
     # ── 都市計画区域 ──────────────────────────────────────────────────
-    city_planning_area: Optional[str] = None
+    city_planning_area: str | None = None
     m = _regex(r"都市計画区域\s*\n+\s*(?!都市計画|用途地域|国土法)([^\n]+)")
     if m:
         v = m.group(1).strip()
@@ -767,9 +785,11 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
         city_planning_area = _opt_str(raw.get("city_planning_area"))
 
     # ── 更新日 ────────────────────────────────────────────────────────
-    updated_date: Optional[str] = None
+    updated_date: str | None = None
     # 楽待: "次回更新予定日\n更新日\n\n2026/07/21\n\n2026/04/22" → 2番目が更新日
-    m = _regex(r"次回更新予定日\s*\n\s*更新日\s*\n+\s*\d{4}/\d{2}/\d{2}\s*\n+\s*(\d{4})/(\d{2})/(\d{2})")
+    m = _regex(
+        r"次回更新予定日\s*\n\s*更新日\s*\n+\s*\d{4}/\d{2}/\d{2}\s*\n+\s*(\d{4})/(\d{2})/(\d{2})"
+    )
     if m:
         updated_date = f"{m.group(1)}-{m.group(2)}-{m.group(3)}"
     if updated_date is None:
@@ -784,19 +804,28 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
 
     # ── 表面利回りフォールバック（ページ非掲載時に賃料・価格から算出）────
     if gross_yield_pct is None and asking_price_yen and asking_price_yen > 0:
-        annual_for_yield = (
-            gross_rent_annual_yen
-            or (gross_rent_monthly_yen * 12 if gross_rent_monthly_yen else None)
+        annual_for_yield = gross_rent_annual_yen or (
+            gross_rent_monthly_yen * 12 if gross_rent_monthly_yen else None
         )
         if annual_for_yield:
             gross_yield_pct = round(annual_for_yield / asking_price_yen * 100, 2)
 
     # regex取得数でconfidenceを上書き
-    found = sum(v is not None for v in [
-        property_name, address, asking_price_yen, gross_yield_pct,
-        gross_rent_annual_yen, build_year_month, structure,
-        building_area_sqm, land_area_sqm, nearest_station,
-    ])
+    found = sum(
+        v is not None
+        for v in [
+            property_name,
+            address,
+            asking_price_yen,
+            gross_yield_pct,
+            gross_rent_annual_yen,
+            build_year_month,
+            structure,
+            building_area_sqm,
+            land_area_sqm,
+            nearest_station,
+        ]
+    )
     if found >= 8:
         confidence = "high"
     elif found >= 4:
@@ -837,7 +866,7 @@ def _build_property_data(raw: dict, platform: str, source_text: str = "") -> Pro
     )
 
 
-def _parse_jp_price(text: str) -> Optional[int]:
+def _parse_jp_price(text: str) -> int | None:
     """楽待・健美家テキストから販売価格を正規表現でパースする。
     対応形式: N万円 / N億円 / N億M万円
     ラベル: 販売価格 / 価格
@@ -856,7 +885,7 @@ def _parse_jp_price(text: str) -> Optional[int]:
     return total if total > 0 else None
 
 
-def _map_structure(raw: Optional[str]) -> Optional[str]:
+def _map_structure(raw: str | None) -> str | None:
     if not raw:
         return None
     for key, val in _STRUCTURE_MAP.items():
@@ -865,11 +894,11 @@ def _map_structure(raw: Optional[str]) -> Optional[str]:
     return "rc"  # 不明時は保守的にRC
 
 
-def _opt_str(v) -> Optional[str]:
+def _opt_str(v) -> str | None:
     return str(v).strip() if v is not None and str(v).strip() else None
 
 
-def _opt_int(v) -> Optional[int]:
+def _opt_int(v) -> int | None:
     if v is None:
         return None
     try:
@@ -878,7 +907,7 @@ def _opt_int(v) -> Optional[int]:
         return None
 
 
-def _opt_float(v) -> Optional[float]:
+def _opt_float(v) -> float | None:
     if v is None:
         return None
     try:

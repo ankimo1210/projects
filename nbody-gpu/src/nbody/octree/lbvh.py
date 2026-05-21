@@ -16,6 +16,7 @@ Node numbering convention used here:
 Internal-node arrays (`left`, `right`, `range_lo`, `range_hi`) are of
 length N-1 and indexed by k.
 """
+
 from __future__ import annotations
 
 import cupy as cp
@@ -128,9 +129,17 @@ class LBVH:
         threads = 256
         blocks = (n - 1 + threads - 1) // threads
         _lbvh_kernel(
-            (blocks,), (threads,),
-            (codes_sorted, self.left, self.right, self.parent,
-             self.range_lo, self.range_hi, cp.int32(n)),
+            (blocks,),
+            (threads,),
+            (
+                codes_sorted,
+                self.left,
+                self.right,
+                self.parent,
+                self.range_lo,
+                self.range_hi,
+                cp.int32(n),
+            ),
         )
 
     @property

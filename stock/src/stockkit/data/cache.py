@@ -11,9 +11,9 @@ Tables:
 from __future__ import annotations
 
 import os
+from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Iterator
 
 import duckdb
 import pandas as pd
@@ -67,14 +67,9 @@ def _ensure_schema(con: duckdb.DuckDBPyConnection) -> None:
     )
 
 
-def read_prices(
-    symbol: str, start: str | None = None, end: str | None = None
-) -> pd.DataFrame:
+def read_prices(symbol: str, start: str | None = None, end: str | None = None) -> pd.DataFrame:
     with connect() as con:
-        q = (
-            "SELECT date, open, high, low, close, adj_close, volume "
-            "FROM prices WHERE symbol = ?"
-        )
+        q = "SELECT date, open, high, low, close, adj_close, volume FROM prices WHERE symbol = ?"
         params: list = [symbol]
         if start:
             q += " AND date >= ?"
@@ -100,9 +95,7 @@ def upsert_prices(symbol: str, df: pd.DataFrame) -> int:
         out = out.rename(columns={"Date": "date"})
     out["date"] = pd.to_datetime(out["date"]).dt.date
     out["symbol"] = symbol
-    out = out[
-        ["symbol", "date", "open", "high", "low", "close", "adj_close", "volume"]
-    ]
+    out = out[["symbol", "date", "open", "high", "low", "close", "adj_close", "volume"]]
     with connect() as con:
         con.register("incoming", out)
         con.execute(
@@ -116,9 +109,7 @@ def upsert_prices(symbol: str, df: pd.DataFrame) -> int:
 
 def latest_cached_date(symbol: str) -> pd.Timestamp | None:
     with connect() as con:
-        row = con.execute(
-            "SELECT max(date) FROM prices WHERE symbol = ?", [symbol]
-        ).fetchone()
+        row = con.execute("SELECT max(date) FROM prices WHERE symbol = ?", [symbol]).fetchone()
     if row and row[0]:
         return pd.Timestamp(row[0])
     return None
@@ -126,9 +117,8 @@ def latest_cached_date(symbol: str) -> pd.Timestamp | None:
 
 # ---------- macro_series ----------
 
-def read_macro(
-    series_id: str, start: str | None = None, end: str | None = None
-) -> pd.Series:
+
+def read_macro(series_id: str, start: str | None = None, end: str | None = None) -> pd.Series:
     with connect() as con:
         q = "SELECT date, value FROM macro_series WHERE series_id = ?"
         params: list = [series_id]
@@ -156,9 +146,7 @@ def upsert_macro(series_id: str, series: pd.Series) -> int:
     df = df[["series_id", "date", "value"]].dropna(subset=["value"])
     with connect() as con:
         con.register("incoming_macro", df)
-        con.execute(
-            "INSERT OR REPLACE INTO macro_series SELECT * FROM incoming_macro"
-        )
+        con.execute("INSERT OR REPLACE INTO macro_series SELECT * FROM incoming_macro")
     return len(df)
 
 

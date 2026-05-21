@@ -7,26 +7,35 @@ db — DuckDB への保存・読込・集計を担うパッケージ。
   _population.py  — population_stats CRUD
   __init__.py     — その他全 DDL・CRUD（順次分割予定）
 """
+
 import json
 from pathlib import Path
 from typing import Any, Optional
 
 import duckdb
 import pandas as pd
-
 from config import DUCKDB_PATH, get_logger
-from db._connection import get_connection, _wal_path_for_db, _is_wal_replay_error, _quarantine_corrupt_wal
-from db._utils import _get_table_columns, _align_df_to_schema, make_location_key, _normalize_json_text
+
+from db._connection import (
+    _is_wal_replay_error,
+    _quarantine_corrupt_wal,
+    _wal_path_for_db,
+    get_connection,
+)
 from db._population import (
     _DDL_POPULATION_STATS,
-    upsert_population_stats,
-    get_population_stats,
     get_population_latest,
+    get_population_stats,
+    upsert_population_stats,
+)
+from db._utils import (
+    _align_df_to_schema,
+    _get_table_columns,
+    _normalize_json_text,
+    make_location_key,
 )
 
 logger = get_logger(__name__)
-
-
 
 
 # --------------------------------------------------------------------------
@@ -449,6 +458,7 @@ CREATE TABLE IF NOT EXISTS water_features (
 # テーブル初期化
 # --------------------------------------------------------------------------
 
+
 def create_tables_if_needed(conn: duckdb.DuckDBPyConnection) -> None:
     """必要なテーブル・ビューを作成する（冪等）。"""
     conn.execute(_DDL_MAIN)
@@ -479,6 +489,7 @@ def create_tables_if_needed(conn: duckdb.DuckDBPyConnection) -> None:
 # Upsert
 # --------------------------------------------------------------------------
 
+
 def upsert_land_prices(
     conn: duckdb.DuckDBPyConnection,
     df: pd.DataFrame,
@@ -497,7 +508,7 @@ def upsert_land_prices(
     df_to_insert = _align_df_to_schema(df, table_cols)
 
     # DELETE + INSERT（upsert 代替）
-    keys_df = df_to_insert[["point_id", "year"]].drop_duplicates()
+    df_to_insert[["point_id", "year"]].drop_duplicates()
     # 一時テーブルに key を登録してから DELETE
     conn.execute("CREATE TEMP TABLE IF NOT EXISTS _upsert_keys (point_id VARCHAR, year INTEGER)")
     conn.execute("DELETE FROM _upsert_keys")
@@ -508,9 +519,7 @@ def upsert_land_prices(
         WHERE (point_id, year) IN (SELECT point_id, year FROM _upsert_keys)
         """
     )
-    conn.execute(
-        "INSERT INTO land_prices_public_notice SELECT * FROM df_to_insert"
-    )
+    conn.execute("INSERT INTO land_prices_public_notice SELECT * FROM df_to_insert")
     inserted = len(df_to_insert)
     logger.debug("upsert: %d 件挿入", inserted)
     return inserted
@@ -542,10 +551,11 @@ def _migrate_feature_tables(conn: duckdb.DuckDBPyConnection) -> None:
 # 読込
 # --------------------------------------------------------------------------
 
+
 def read_land_prices(
     conn: duckdb.DuckDBPyConnection,
-    filters: Optional[dict[str, Any]] = None,
-    limit: Optional[int] = None,
+    filters: dict[str, Any] | None = None,
+    limit: int | None = None,
 ) -> pd.DataFrame:
     """
     land_prices_public_notice からデータを読み込む。
@@ -602,8 +612,7 @@ def get_point_history(
 ) -> pd.DataFrame:
     """point_id の全年度データを年昇順で返す。"""
     df = conn.execute(
-        "SELECT * FROM land_prices_public_notice "
-        "WHERE point_id = ? ORDER BY year",
+        "SELECT * FROM land_prices_public_notice WHERE point_id = ? ORDER BY year",
         [point_id],
     ).df()
     return df
@@ -627,7 +636,7 @@ def get_city_history(
 
 def get_city_summary(
     conn: duckdb.DuckDBPyConnection,
-    year: Optional[int] = None,
+    year: int | None = None,
 ) -> pd.DataFrame:
     """city_summary ビューを返す（year 指定時はフィルタ）。"""
     if year:
@@ -642,6 +651,7 @@ def get_city_summary(
 # 利用可能な年一覧
 # --------------------------------------------------------------------------
 
+
 def get_available_years(conn: duckdb.DuckDBPyConnection) -> list[int]:
     """DB に存在する年度一覧を降順で返す。"""
     rows = conn.execute(
@@ -654,7 +664,7 @@ def get_multiyear_city_summary(
     conn: duckdb.DuckDBPyConnection,
     pref_codes: list[str],
     year_range: tuple[int, int],
-    use_category_name: Optional[str] = None,
+    use_category_name: str | None = None,
 ) -> pd.DataFrame:
     """
     city_summary VIEW から複数都道府県・年範囲のデータを返す。
@@ -675,7 +685,7 @@ def get_multiyear_city_summary(
         return pd.DataFrame()
 
     placeholders = ", ".join(["?"] * len(pref_codes))
-    params: list[Any] = list(pref_codes) + [year_range[0], year_range[1]]
+    params: list[Any] = [*list(pref_codes), year_range[0], year_range[1]]
 
     query = (
         f"SELECT * FROM city_summary "
@@ -689,15 +699,18 @@ def get_multiyear_city_summary(
     query += " ORDER BY year, prefecture_code, city_code, use_category_name"
 
     df = conn.execute(query, params).df()
-    logger.debug("get_multiyear_city_summary: %d 件 (prefs=%s, years=%s-%s)", len(df), pref_codes, *year_range)
+    logger.debug(
+        "get_multiyear_city_summary: %d 件 (prefs=%s, years=%s-%s)",
+        len(df),
+        pref_codes,
+        *year_range,
+    )
     return df
 
 
 def get_stats(conn: duckdb.DuckDBPyConnection) -> dict[str, Any]:
     """DB の基本統計を返す。"""
-    total = conn.execute(
-        "SELECT COUNT(*) FROM land_prices_public_notice"
-    ).fetchone()[0]
+    total = conn.execute("SELECT COUNT(*) FROM land_prices_public_notice").fetchone()[0]
     years = get_available_years(conn)
     return {
         "total_records": total,
@@ -715,6 +728,7 @@ def get_stats(conn: duckdb.DuckDBPyConnection) -> dict[str, Any]:
 # 派生テーブル再構築
 # --------------------------------------------------------------------------
 
+
 def rebuild_derived_tables(conn: duckdb.DuckDBPyConnection) -> None:
     """ビューを再作成する（スキーマ変更後などに実行）。"""
     conn.execute(_DDL_CITY_SUMMARY)
@@ -729,6 +743,7 @@ def rebuild_derived_tables(conn: duckdb.DuckDBPyConnection) -> None:
 # --------------------------------------------------------------------------
 # 取引価格 (trade_prices) 操作
 # --------------------------------------------------------------------------
+
 
 def upsert_trade_prices(
     conn: duckdb.DuckDBPyConnection,
@@ -746,7 +761,7 @@ def upsert_trade_prices(
 
     df_to_insert = _align_df_to_schema(df.copy(), table_cols)
 
-    keys_df = df_to_insert[["trade_id", "year", "quarter"]].drop_duplicates()
+    df_to_insert[["trade_id", "year", "quarter"]].drop_duplicates()
     conn.execute(
         "CREATE TEMP TABLE IF NOT EXISTS _trade_upsert_keys "
         "(trade_id VARCHAR, year INTEGER, quarter INTEGER)"
@@ -765,8 +780,8 @@ def upsert_trade_prices(
 
 def read_trade_prices(
     conn: duckdb.DuckDBPyConnection,
-    filters: Optional[dict[str, Any]] = None,
-    limit: Optional[int] = None,
+    filters: dict[str, Any] | None = None,
+    limit: int | None = None,
 ) -> pd.DataFrame:
     """
     trade_prices からデータを読み込む。
@@ -809,17 +824,15 @@ def read_trade_prices(
 
 def get_trade_available_years(conn: duckdb.DuckDBPyConnection) -> list[int]:
     """trade_prices に存在する年度一覧を降順で返す。"""
-    rows = conn.execute(
-        "SELECT DISTINCT year FROM trade_prices ORDER BY year DESC"
-    ).fetchall()
+    rows = conn.execute("SELECT DISTINCT year FROM trade_prices ORDER BY year DESC").fetchall()
     return [r[0] for r in rows]
 
 
 def read_trade_prices_by_city(
     conn: duckdb.DuckDBPyConnection,
-    city_name: Optional[str] = None,
-    prefecture_name: Optional[str] = None,
-    year: Optional[int] = None,
+    city_name: str | None = None,
+    prefecture_name: str | None = None,
+    year: int | None = None,
     limit: int = 100,
 ) -> pd.DataFrame:
     """
@@ -904,13 +917,16 @@ def get_trade_ungeocoded_locations(
 # 賃貸相場 (rent_market)
 # --------------------------------------------------------------------------
 
+
 def upsert_rent_market(conn: duckdb.DuckDBPyConnection, df: pd.DataFrame) -> int:
     """rent_market テーブルに upsert する。df には city_code, survey_year, ownership_type, rent_per_sqm が必要。"""
     if df.empty:
         return 0
     for year in df["survey_year"].unique():
         conn.execute("DELETE FROM rent_market WHERE survey_year = ?", [int(year)])
-    conn.execute("INSERT INTO rent_market SELECT city_code, survey_year, ownership_type, rent_per_sqm FROM df")
+    conn.execute(
+        "INSERT INTO rent_market SELECT city_code, survey_year, ownership_type, rent_per_sqm FROM df"
+    )
     n = len(df)
     logger.info("rent_market upsert: %d 件", n)
     return n
@@ -960,7 +976,9 @@ def read_rent_market_overview(conn: duckdb.DuckDBPyConnection) -> pd.DataFrame:
     ).df()
 
 
-def upsert_suumo_rent_market(conn: duckdb.DuckDBPyConnection, df: pd.DataFrame, *, prefecture_slug: str) -> int:
+def upsert_suumo_rent_market(
+    conn: duckdb.DuckDBPyConnection, df: pd.DataFrame, *, prefecture_slug: str
+) -> int:
     """SUUMO 家賃相場データを都道府県単位で置き換える。"""
     create_tables_if_needed(conn)
     conn.execute(
@@ -990,8 +1008,8 @@ def read_suumo_rent_market(conn: duckdb.DuckDBPyConnection) -> pd.DataFrame:
 
 def get_trade_city_summary(
     conn: duckdb.DuckDBPyConnection,
-    year: Optional[int] = None,
-    pref_codes: Optional[list[str]] = None,
+    year: int | None = None,
+    pref_codes: list[str] | None = None,
 ) -> pd.DataFrame:
     """trade_city_summary ビューを返す。"""
     where_clauses: list[str] = []
@@ -1014,6 +1032,7 @@ def get_trade_city_summary(
 # --------------------------------------------------------------------------
 # 掲載物件・特徴量
 # --------------------------------------------------------------------------
+
 
 def upsert_listing_master(
     conn: duckdb.DuckDBPyConnection,
@@ -1342,7 +1361,7 @@ def get_cached_location_features(
     conn: duckdb.DuckDBPyConnection,
     location_key: str,
     max_age_days: int = 30,
-) -> Optional[dict[str, Any]]:
+) -> dict[str, Any] | None:
     """location_features からキャッシュ行を返す。max_age_days 以内のみ有効。"""
     row = conn.execute(
         """
@@ -1596,7 +1615,7 @@ def upsert_listing_raw(conn: duckdb.DuckDBPyConnection, row: dict[str, Any]) -> 
     payload = dict(row)
     payload["raw_id"] = raw_id
     payload["extraction_json"] = _normalize_json_text(payload.get("extraction_json"))
-    row_df = _align_df_to_schema(pd.DataFrame([payload]), _get_table_columns(conn, "listing_raw"))
+    _align_df_to_schema(pd.DataFrame([payload]), _get_table_columns(conn, "listing_raw"))
     conn.execute("DELETE FROM listing_raw WHERE raw_id = ?", [raw_id])
     conn.execute("INSERT INTO listing_raw SELECT * FROM row_df")
     return raw_id
@@ -1609,7 +1628,7 @@ def upsert_valuation_result(conn: duckdb.DuckDBPyConnection, row: dict[str, Any]
     valuation_date = row["valuation_date"]
     payload = dict(row)
     payload["reasons_json"] = _normalize_json_text(payload.get("reasons_json"))
-    row_df = _align_df_to_schema(pd.DataFrame([payload]), _get_table_columns(conn, "valuation_results"))
+    _align_df_to_schema(pd.DataFrame([payload]), _get_table_columns(conn, "valuation_results"))
     conn.execute(
         "DELETE FROM valuation_results WHERE listing_id = ? AND valuation_date = ?",
         [listing_id, valuation_date],
@@ -1617,9 +1636,13 @@ def upsert_valuation_result(conn: duckdb.DuckDBPyConnection, row: dict[str, Any]
     conn.execute("INSERT INTO valuation_results SELECT * FROM row_df")
 
 
-def upsert_public_notice_location_feature(conn: duckdb.DuckDBPyConnection, row: dict[str, Any]) -> None:
+def upsert_public_notice_location_feature(
+    conn: duckdb.DuckDBPyConnection, row: dict[str, Any]
+) -> None:
     create_tables_if_needed(conn)
-    payload = _align_df_to_schema(pd.DataFrame([row]), _get_table_columns(conn, "public_notice_location_features"))
+    _align_df_to_schema(
+        pd.DataFrame([row]), _get_table_columns(conn, "public_notice_location_features")
+    )
     conn.execute(
         "DELETE FROM public_notice_location_features WHERE point_id = ? AND year = ?",
         [row["point_id"], row["year"]],
@@ -1629,7 +1652,7 @@ def upsert_public_notice_location_feature(conn: duckdb.DuckDBPyConnection, row: 
 
 def upsert_trade_location_feature(conn: duckdb.DuckDBPyConnection, row: dict[str, Any]) -> None:
     create_tables_if_needed(conn)
-    payload = _align_df_to_schema(pd.DataFrame([row]), _get_table_columns(conn, "trade_location_features"))
+    _align_df_to_schema(pd.DataFrame([row]), _get_table_columns(conn, "trade_location_features"))
     conn.execute(
         "DELETE FROM trade_location_features WHERE trade_id = ? AND year = ? AND quarter = ?",
         [row["trade_id"], row["year"], row["quarter"]],
@@ -1649,7 +1672,7 @@ def upsert_search_job(conn: duckdb.DuckDBPyConnection, row: dict[str, Any]) -> s
     ).fetchone()
     if existing and payload.get("started_at") is None:
         payload["started_at"] = existing[0]
-    row_df = _align_df_to_schema(pd.DataFrame([payload]), _get_table_columns(conn, "search_jobs"))
+    _align_df_to_schema(pd.DataFrame([payload]), _get_table_columns(conn, "search_jobs"))
     conn.execute("DELETE FROM search_jobs WHERE job_id = ?", [job_id])
     conn.execute("INSERT INTO search_jobs SELECT * FROM row_df")
     return job_id
@@ -1665,14 +1688,14 @@ def replace_search_job_urls(
     conn.execute("DELETE FROM search_result_urls WHERE job_id = ?", [job_id])
     if not rows:
         return
-    payload = _align_df_to_schema(pd.DataFrame(rows), _get_table_columns(conn, "search_result_urls"))
+    _align_df_to_schema(pd.DataFrame(rows), _get_table_columns(conn, "search_result_urls"))
     conn.execute("INSERT INTO search_result_urls SELECT * FROM payload")
 
 
 def read_listings(
     conn: duckdb.DuckDBPyConnection,
-    filters: Optional[dict[str, Any]] = None,
-    limit: Optional[int] = None,
+    filters: dict[str, Any] | None = None,
+    limit: int | None = None,
 ) -> pd.DataFrame:
     """掲載物件一覧を最新スナップショット・特徴量・評価結果付きで返す。"""
     create_tables_if_needed(conn)
@@ -1848,7 +1871,7 @@ def get_listings_by_ids(
 
 def get_public_notice_feature_targets(
     conn: duckdb.DuckDBPyConnection,
-    year: Optional[int] = None,
+    year: int | None = None,
     limit: int = 500,
 ) -> pd.DataFrame:
     create_tables_if_needed(conn)
@@ -1857,20 +1880,24 @@ def get_public_notice_feature_targets(
     if year is not None:
         where.append("year = ?")
         params.append(year)
-    query = """
+    query = (
+        """
         SELECT point_id, year, city_code, lon, lat
         FROM land_prices_public_notice
-        WHERE """ + " AND ".join(where) + """
+        WHERE """
+        + " AND ".join(where)
+        + """
         ORDER BY year DESC
         LIMIT ?
     """
+    )
     params.append(limit)
     return conn.execute(query, params).df()
 
 
 def get_trade_feature_targets(
     conn: duckdb.DuckDBPyConnection,
-    year: Optional[int] = None,
+    year: int | None = None,
     limit: int = 500,
 ) -> pd.DataFrame:
     create_tables_if_needed(conn)
@@ -1879,13 +1906,17 @@ def get_trade_feature_targets(
     if year is not None:
         where.append("year = ?")
         params.append(year)
-    query = """
+    query = (
+        """
         SELECT trade_id, year, quarter, city_code, lon, lat
         FROM trade_prices
-        WHERE """ + " AND ".join(where) + """
+        WHERE """
+        + " AND ".join(where)
+        + """
         ORDER BY year DESC, quarter DESC
         LIMIT ?
     """
+    )
     params.append(limit)
     return conn.execute(query, params).df()
 
@@ -1894,7 +1925,8 @@ def get_trade_feature_targets(
 # DB スモークテスト
 # --------------------------------------------------------------------------
 
-def smoke_test_db(db_path: Optional[Path] = None) -> bool:
+
+def smoke_test_db(db_path: Path | None = None) -> bool:
     """DB への書込・読込が動作するか確認する。"""
     try:
         conn = get_connection(db_path)
@@ -1905,9 +1937,7 @@ def smoke_test_db(db_path: Optional[Path] = None) -> bool:
         )
         upsert_land_prices(conn, test_df)
         # 削除
-        conn.execute(
-            "DELETE FROM land_prices_public_notice WHERE point_id = '__smoke_test__'"
-        )
+        conn.execute("DELETE FROM land_prices_public_notice WHERE point_id = '__smoke_test__'")
         conn.close()
         logger.info("DB スモークテスト: OK")
         return True

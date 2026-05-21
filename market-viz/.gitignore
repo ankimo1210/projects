@@ -1,5 +1,6 @@
 .env
-data/
+# project-level data (not src/*/data which is a Python package)
+/data/
 __pycache__/
 *.pyc
 .venv/

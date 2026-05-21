@@ -6,8 +6,9 @@ XYZ スライシングスキームによるタイル座標演算と
 XPT002 は XYZ タイル API なので、全国取得には
 Japan の bounding box をタイルインデックスに変換して走査する。
 """
+
 import math
-from typing import Iterator
+from collections.abc import Iterator
 
 from config import (
     JAPAN_LAT_MAX,
@@ -24,6 +25,7 @@ logger = get_logger(__name__)
 # 座標 <-> タイルインデックス変換
 # --------------------------------------------------------------------------
 
+
 def lonlat_to_tile_indices(lon: float, lat: float, z: int) -> tuple[int, int]:
     """
     経緯度 → XYZ タイルインデックスへ変換する（Web Mercator / Slippy Map）。
@@ -39,7 +41,7 @@ def lonlat_to_tile_indices(lon: float, lat: float, z: int) -> tuple[int, int]:
     (x, y) : tuple[int, int]
     """
     lat_rad = math.radians(lat)
-    n = 2 ** z
+    n = 2**z
     x = int((lon + 180.0) / 360.0 * n)
     y = int((1.0 - math.asinh(math.tan(lat_rad)) / math.pi) / 2.0 * n)
     # クランプ
@@ -56,7 +58,7 @@ def tile_to_lonlat_nw(x: int, y: int, z: int) -> tuple[float, float]:
     -------
     (lon, lat) : tuple[float, float]
     """
-    n = 2 ** z
+    n = 2**z
     lon = x / n * 360.0 - 180.0
     lat_rad = math.atan(math.sinh(math.pi * (1 - 2 * y / n)))
     lat = math.degrees(lat_rad)
@@ -66,6 +68,7 @@ def tile_to_lonlat_nw(x: int, y: int, z: int) -> tuple[float, float]:
 # --------------------------------------------------------------------------
 # 日本全国タイル範囲
 # --------------------------------------------------------------------------
+
 
 def japan_tile_range(z: int) -> tuple[int, int, int, int]:
     """
@@ -79,7 +82,11 @@ def japan_tile_range(z: int) -> tuple[int, int, int, int]:
     x_min, y_max = lonlat_to_tile_indices(JAPAN_LON_MIN, JAPAN_LAT_MIN, z)
     logger.debug(
         "z=%d: x=%d..%d, y=%d..%d (総タイル数=%d)",
-        z, x_min, x_max, y_min, y_max,
+        z,
+        x_min,
+        x_max,
+        y_min,
+        y_max,
         (x_max - x_min + 1) * (y_max - y_min + 1),
     )
     return x_min, x_max, y_min, y_max
@@ -97,7 +104,12 @@ def iter_japan_tiles(z: int) -> Iterator[tuple[int, int, int]]:
     total = (x_max - x_min + 1) * (y_max - y_min + 1)
     logger.info(
         "タイル走査開始: z=%d, 走査対象 %d タイル (x=%d..%d, y=%d..%d)",
-        z, total, x_min, x_max, y_min, y_max,
+        z,
+        total,
+        x_min,
+        x_max,
+        y_min,
+        y_max,
     )
     for x in range(x_min, x_max + 1):
         for y in range(y_min, y_max + 1):
@@ -160,9 +172,7 @@ PREFECTURE_BBOX: dict[str, tuple[float, float, float, float]] = {
 }
 
 
-def prefecture_tile_range(
-    prefecture_code: str, z: int
-) -> tuple[int, int, int, int]:
+def prefecture_tile_range(prefecture_code: str, z: int) -> tuple[int, int, int, int]:
     """
     都道府県コードに対応する XYZ タイル範囲を返す。
     未登録コードの場合は日本全国範囲を返す。

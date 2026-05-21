@@ -1,4 +1,5 @@
 """Direct O(N^2) vs Barnes-Hut benchmark."""
+
 from __future__ import annotations
 
 import argparse
@@ -36,18 +37,23 @@ def bench(n: int, theta: float = 0.5, eps: float = 2e-2, run_direct: bool = True
     dt_bh = _time_call(lambda: compute_acceleration_bh(pos_d, mass_d, theta=theta, eps=eps))
 
     speedup = dt_dir / dt_bh if dt_dir == dt_dir else float("nan")
-    print(f"N={n:>8}  direct={dt_dir*1e3:8.2f} ms  "
-          f"bh(θ={theta})={dt_bh*1e3:8.2f} ms  speedup={speedup:6.1f}x")
+    print(
+        f"N={n:>8}  direct={dt_dir * 1e3:8.2f} ms  "
+        f"bh(θ={theta})={dt_bh * 1e3:8.2f} ms  speedup={speedup:6.1f}x"
+    )
 
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("--sizes", nargs="+", type=int,
-                   default=[4096, 16384, 65536, 262144, 1048576])
+    p.add_argument("--sizes", nargs="+", type=int, default=[4096, 16384, 65536, 262144, 1048576])
     p.add_argument("--theta", type=float, default=0.5)
     p.add_argument("--eps", type=float, default=2e-2)
-    p.add_argument("--direct-cutoff", type=int, default=131072,
-                   help="Skip O(N^2) baseline above this N (it gets very slow).")
+    p.add_argument(
+        "--direct-cutoff",
+        type=int,
+        default=131072,
+        help="Skip O(N^2) baseline above this N (it gets very slow).",
+    )
     args = p.parse_args()
     for n in args.sizes:
         bench(n, theta=args.theta, eps=args.eps, run_direct=(n <= args.direct_cutoff))

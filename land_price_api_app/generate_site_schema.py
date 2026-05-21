@@ -8,6 +8,7 @@ data/site_schemas/{platform}.md に保存する。
     python generate_site_schema.py --platform kenbiya
     python generate_site_schema.py  # 両方
 """
+
 import argparse
 import json
 import re
@@ -15,9 +16,13 @@ import textwrap
 from pathlib import Path
 
 import requests
-
 from config import get_logger
-from property_scraper import fetch_property_html, _strip_html_to_text, _OLLAMA_BASE_URL, _OLLAMA_MODEL
+from property_scraper import (
+    _OLLAMA_BASE_URL,
+    _OLLAMA_MODEL,
+    _strip_html_to_text,
+    fetch_property_html,
+)
 
 logger = get_logger(__name__)
 
@@ -74,7 +79,9 @@ def _schema_json_to_markdown(platform: str, fields: list, notes: str = "") -> st
         pattern = str(f.get("pattern", "")).replace("|", "\\|")
         example = str(f.get("example", "")).replace("|", "\\|")
         conversion = str(f.get("conversion", "")).replace("|", "\\|")
-        lines.append(f"| `{f.get('field','')}` | {labels} | `{pattern}` | {example} | {conversion} |")
+        lines.append(
+            f"| `{f.get('field', '')}` | {labels} | `{pattern}` | {example} | {conversion} |"
+        )
     if notes:
         lines += ["\n## Notes\n", notes]
     return "\n".join(lines)

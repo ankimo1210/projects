@@ -3,9 +3,8 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import math
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable
-
 
 DEFAULT_MODEL = "glove-wiki-gigaword-100"
 DEFAULT_OUTPUT = Path(__file__).with_name("vector_analogy.html")
@@ -123,9 +122,9 @@ class ToyStaticVectors:
     def most_similar(self, positive: list[str], negative: list[str], topn: int = 10):
         query = [0.0] * len(next(iter(self.vectors.values())))
         for word in positive:
-            query = [left + right for left, right in zip(query, self.vectors[word])]
+            query = [left + right for left, right in zip(query, self.vectors[word], strict=False)]
         for word in negative:
-            query = [left - right for left, right in zip(query, self.vectors[word])]
+            query = [left - right for left, right in zip(query, self.vectors[word], strict=False)]
 
         excluded = set(positive) | set(negative)
         scored = [
@@ -146,7 +145,7 @@ def cosine_similarity(left: list[float], right: list[float]) -> float:
 
 
 def dot_product(left: Iterable[float], right: Iterable[float]) -> float:
-    return sum(a * b for a, b in zip(left, right))
+    return sum(a * b for a, b in zip(left, right, strict=False))
 
 
 def vector_norm(vector: Iterable[float]) -> float:
@@ -161,15 +160,12 @@ def ensure_dependencies(require_gensim: bool = True) -> None:
     if require_gensim:
         modules["gensim"] = "gensim"
     missing = [
-        package
-        for package, module in modules.items()
-        if importlib.util.find_spec(module) is None
+        package for package, module in modules.items() if importlib.util.find_spec(module) is None
     ]
     if missing:
         joined = " ".join(missing)
         raise SystemExit(
-            "Missing dependencies. Install them with:\n\n"
-            f"python3 -m pip install {joined}\n"
+            f"Missing dependencies. Install them with:\n\npython3 -m pip install {joined}\n"
         )
 
 
@@ -192,15 +188,17 @@ def analogy(vector_model, positive: Iterable[str], negative: Iterable[str], topn
     return vector_model.most_similar(positive=list(positive), negative=list(negative), topn=topn)
 
 
-def vector_arithmetic(vector_model, positive: Iterable[str], negative: Iterable[str]) -> list[float]:
+def vector_arithmetic(
+    vector_model, positive: Iterable[str], negative: Iterable[str]
+) -> list[float]:
     positive_words = list(positive)
     negative_words = list(negative)
     first_word = (positive_words + negative_words)[0]
     query = [0.0] * len(vector_model[first_word])
     for word in positive_words:
-        query = [left + right for left, right in zip(query, vector_model[word])]
+        query = [left + right for left, right in zip(query, vector_model[word], strict=False)]
     for word in negative_words:
-        query = [left - right for left, right in zip(query, vector_model[word])]
+        query = [left - right for left, right in zip(query, vector_model[word], strict=False)]
     return query
 
 
@@ -240,7 +238,9 @@ def analogy_similarity_scores(
     topn: int = 10,
 ) -> list[dict[str, float | str]]:
     query = vector_arithmetic(vector_model, positive=[a, c], negative=[b])
-    candidates = [word for word in available_words(vector_model, CONTEXT_WORDS) if word not in {a, b, c}]
+    candidates = [
+        word for word in available_words(vector_model, CONTEXT_WORDS) if word not in {a, b, c}
+    ]
     return similarity_scores(vector_model, query, candidates, topn=topn)
 
 
@@ -281,7 +281,7 @@ def build_projection(vector_model, words: list[str]):
     points = centered @ vt[:2].T
     return {
         word: {"x": float(point[0]), "y": float(point[1])}
-        for word, point in zip(words, points)
+        for word, point in zip(words, points, strict=False)
     }
 
 
@@ -475,12 +475,16 @@ def print_similarity_comparison(vector_model, a: str, b: str, c: str, topn: int)
         )
 
 
-def print_pair_similarity_table(vector_model, pairs: Iterable[tuple[str, str, str]], topn: int | None = None) -> None:
+def print_pair_similarity_table(
+    vector_model, pairs: Iterable[tuple[str, str, str]], topn: int | None = None
+) -> None:
     rows = pair_similarity_scores(vector_model, pairs)
     if topn is not None:
         rows = rows[:topn]
     print("\nPairwise similarity examples")
-    print("  rank  word_a        word_b        type                      dot_product  norm_a  norm_b  cosine")
+    print(
+        "  rank  word_a        word_b        type                      dot_product  norm_a  norm_b  cosine"
+    )
     for rank, row in enumerate(rows, start=1):
         print(
             f"  {rank:>4}  {row['left']:<12} {row['right']:<12}"
@@ -494,10 +498,16 @@ def print_pair_similarity_table(vector_model, pairs: Iterable[tuple[str, str, st
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Visualize static word embedding analogies.")
-    parser.add_argument("--model", default=DEFAULT_MODEL, help=f"Gensim model name. Default: {DEFAULT_MODEL}")
+    parser.add_argument(
+        "--model", default=DEFAULT_MODEL, help=f"Gensim model name. Default: {DEFAULT_MODEL}"
+    )
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT, help="HTML output path.")
     parser.add_argument("--topn", type=int, default=10, help="Number of nearest words to print.")
-    parser.add_argument("--toy", action="store_true", help="Use a tiny built-in embedding space; no gensim download.")
+    parser.add_argument(
+        "--toy",
+        action="store_true",
+        help="Use a tiny built-in embedding space; no gensim download.",
+    )
     args = parser.parse_args()
 
     ensure_dependencies(require_gensim=not args.toy)

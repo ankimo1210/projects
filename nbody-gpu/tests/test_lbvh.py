@@ -1,4 +1,5 @@
 """Karras LBVH structural invariants."""
+
 from __future__ import annotations
 
 import cupy as cp
@@ -12,6 +13,7 @@ from nbody.octree import LBVH, sort_by_morton
 def cupy_available():
     try:
         import cupy
+
         _ = cupy.arange(1)
         return True
     except Exception:
@@ -57,12 +59,15 @@ def test_every_non_root_has_one_parent(cupy_available):
 
     children = np.concatenate([left, right])
     # Each leaf and each non-root internal must appear exactly once as a child.
-    expected_children = np.concatenate([
-        np.arange(n),                       # leaves
-        np.arange(n + 1, 2 * n - 1),        # internals except root
-    ])
-    assert np.array_equal(np.sort(children), expected_children), \
+    expected_children = np.concatenate(
+        [
+            np.arange(n),  # leaves
+            np.arange(n + 1, 2 * n - 1),  # internals except root
+        ]
+    )
+    assert np.array_equal(np.sort(children), expected_children), (
         "child ids do not cover every non-root node exactly once"
+    )
 
     # parent[id] for each non-root must be a valid internal-node id.
     non_root_ids = np.delete(np.arange(2 * n - 1), n)
@@ -76,7 +81,7 @@ def test_range_covers_all_leaves(cupy_available):
     tree = _build_tree(n, seed=3)
     lo = int(tree.range_lo[0])
     hi = int(tree.range_hi[0])
-    assert lo == 0 and hi == n - 1, f"root range = [{lo}, {hi}], expected [0, {n-1}]"
+    assert lo == 0 and hi == n - 1, f"root range = [{lo}, {hi}], expected [0, {n - 1}]"
 
 
 def test_child_ranges_partition_parent(cupy_available):
@@ -99,7 +104,7 @@ def test_child_ranges_partition_parent(cupy_available):
         l_lo, l_hi = leaf_range(left[k])
         r_lo, r_hi = leaf_range(right[k])
         # children must be adjacent and together span the parent
-        assert (l_lo, r_hi) == (lo[k], hi[k]), \
+        assert (l_lo, r_hi) == (lo[k], hi[k]), (
             f"node {k}: parent=[{lo[k]},{hi[k]}], left=[{l_lo},{l_hi}], right=[{r_lo},{r_hi}]"
-        assert l_hi + 1 == r_lo, \
-            f"node {k}: gap between children ({l_hi}+1 != {r_lo})"
+        )
+        assert l_hi + 1 == r_lo, f"node {k}: gap between children ({l_hi}+1 != {r_lo})"

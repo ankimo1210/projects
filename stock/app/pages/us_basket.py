@@ -22,51 +22,96 @@ layout = dbc.Container(
             "を選択して、構成銘柄バスケットを指数・ETF・先物と比較。",
             className="text-muted small",
         ),
-
         dbc.Row(
             [
-                dbc.Col([html.Label("指数", className="small"),
-                         dcc.Dropdown(id="us-index",
-                                      options=[
-                                          {"label": "Dow Jones 30 (DJIA)", "value": "DJIA"},
-                                          {"label": "S&P 500", "value": "SP500"},
-                                          {"label": "NASDAQ-100", "value": "NDX100"},
-                                      ],
-                                      value="DJIA", clearable=False)], width=3),
-                dbc.Col([html.Label("開始日", className="small"),
-                         dcc.DatePickerSingle(id="us-start",
-                                              date=(date.today() - timedelta(days=365 * 5)).isoformat(),
-                                              display_format="YYYY-MM-DD")], width=3),
-                dbc.Col([html.Label("終了日", className="small"),
-                         dcc.DatePickerSingle(id="us-end",
-                                              date=date.today().isoformat(),
-                                              display_format="YYYY-MM-DD")], width=2),
-                dbc.Col([html.Label(" ", className="small d-block"),
-                         dbc.Button("分析実行", id="us-run", color="primary", n_clicks=0),
-                         html.Small(" SP500は2-3分かかります", className="text-muted ms-2")], width=4),
+                dbc.Col(
+                    [
+                        html.Label("指数", className="small"),
+                        dcc.Dropdown(
+                            id="us-index",
+                            options=[
+                                {"label": "Dow Jones 30 (DJIA)", "value": "DJIA"},
+                                {"label": "S&P 500", "value": "SP500"},
+                                {"label": "NASDAQ-100", "value": "NDX100"},
+                            ],
+                            value="DJIA",
+                            clearable=False,
+                        ),
+                    ],
+                    width=3,
+                ),
+                dbc.Col(
+                    [
+                        html.Label("開始日", className="small"),
+                        dcc.DatePickerSingle(
+                            id="us-start",
+                            date=(date.today() - timedelta(days=365 * 5)).isoformat(),
+                            display_format="YYYY-MM-DD",
+                        ),
+                    ],
+                    width=3,
+                ),
+                dbc.Col(
+                    [
+                        html.Label("終了日", className="small"),
+                        dcc.DatePickerSingle(
+                            id="us-end", date=date.today().isoformat(), display_format="YYYY-MM-DD"
+                        ),
+                    ],
+                    width=2,
+                ),
+                dbc.Col(
+                    [
+                        html.Label(" ", className="small d-block"),
+                        dbc.Button("分析実行", id="us-run", color="primary", n_clicks=0),
+                        html.Small(" SP500は2-3分かかります", className="text-muted ms-2"),
+                    ],
+                    width=4,
+                ),
             ],
             className="mb-3",
         ),
-
-        dcc.Loading(children=[
-            html.Div(id="us-summary", className="mb-3"),
-            dcc.Tabs(id="us-tabs", value="returns", children=[
-                dcc.Tab(label="リターン比較", value="returns", children=[
-                    html.Div([dcc.Graph(id="us-chart"),
-                              html.Div(id="us-te", className="mt-3")], className="pt-3"),
-                ]),
-                dcc.Tab(label="ウェイト構成", value="weights", children=[
-                    html.Div([
-                        html.H6("現在のウェイト Top 30", className="mt-3"),
-                        dcc.Graph(id="us-weight-bar"),
-                        html.H6("ウェイト推移 Top 10", className="mt-4"),
-                        dcc.Graph(id="us-weight-evolution"),
-                        html.H6("構成銘柄テーブル", className="mt-4"),
-                        html.Div(id="us-weight-table"),
-                    ], className="pt-3"),
-                ]),
-            ]),
-        ]),
+        dcc.Loading(
+            children=[
+                html.Div(id="us-summary", className="mb-3"),
+                dcc.Tabs(
+                    id="us-tabs",
+                    value="returns",
+                    children=[
+                        dcc.Tab(
+                            label="リターン比較",
+                            value="returns",
+                            children=[
+                                html.Div(
+                                    [
+                                        dcc.Graph(id="us-chart"),
+                                        html.Div(id="us-te", className="mt-3"),
+                                    ],
+                                    className="pt-3",
+                                ),
+                            ],
+                        ),
+                        dcc.Tab(
+                            label="ウェイト構成",
+                            value="weights",
+                            children=[
+                                html.Div(
+                                    [
+                                        html.H6("現在のウェイト Top 30", className="mt-3"),
+                                        dcc.Graph(id="us-weight-bar"),
+                                        html.H6("ウェイト推移 Top 10", className="mt-4"),
+                                        dcc.Graph(id="us-weight-evolution"),
+                                        html.H6("構成銘柄テーブル", className="mt-4"),
+                                        html.Div(id="us-weight-table"),
+                                    ],
+                                    className="pt-3",
+                                ),
+                            ],
+                        ),
+                    ],
+                ),
+            ]
+        ),
     ],
     fluid=True,
     className="py-3",
@@ -91,10 +136,12 @@ def run(n_clicks, index_code, start, end):
         raise PreventUpdate
 
     from stockkit.analysis.basket import (
-        compare_basket, compute_historical_weights,
-        tracking_error, weight_summary,
+        compare_basket,
+        compute_historical_weights,
+        tracking_error,
+        weight_summary,
     )
-    from stockkit.data.us_indices import load_constituents, get_index_meta
+    from stockkit.data.us_indices import get_index_meta, load_constituents
 
     universe = load_constituents(index_code)
     meta = get_index_meta(index_code)
@@ -107,7 +154,10 @@ def run(n_clicks, index_code, start, end):
     }
 
     result, px, shares = compare_basket(
-        universe, start=start, end=end, weighting=weighting,
+        universe,
+        start=start,
+        end=end,
+        weighting=weighting,
         benchmarks=benchmarks,
         shares_cache_key=index_code,
     )
@@ -127,34 +177,58 @@ def run(n_clicks, index_code, start, end):
     last = (result.iloc[-1] * 100).round(2)
     cards = [
         dbc.Col(
-            dbc.Card(dbc.CardBody([
-                html.Small(labels.get(c, c), className="text-muted"),
-                html.H4(f"{last[c]:+.2f}%", className=f"text-{'success' if last[c] >= 0 else 'danger'} mb-0"),
-            ]), className="text-center"),
+            dbc.Card(
+                dbc.CardBody(
+                    [
+                        html.Small(labels.get(c, c), className="text-muted"),
+                        html.H4(
+                            f"{last[c]:+.2f}%",
+                            className=f"text-{'success' if last[c] >= 0 else 'danger'} mb-0",
+                        ),
+                    ]
+                ),
+                className="text-center",
+            ),
             width=3,
-        ) for c in result.columns
+        )
+        for c in result.columns
     ]
     summary = dbc.Row(cards, className="g-2")
 
     # Return chart
     fig_ret = go.Figure()
     for c in result.columns:
-        fig_ret.add_trace(go.Scatter(x=result.index, y=result[c] * 100, mode="lines",
-                                      name=labels.get(c, c),
-                                      line=dict(color=_COLORS.get(c, "#888"), width=2)))
-    fig_ret.update_layout(title=f"{meta['name']} 累積リターン比較 ({start} 〜 {end})",
-                          xaxis_title="日付", yaxis_title="累積リターン (%)",
-                          hovermode="x unified", height=500, template="plotly_white")
+        fig_ret.add_trace(
+            go.Scatter(
+                x=result.index,
+                y=result[c] * 100,
+                mode="lines",
+                name=labels.get(c, c),
+                line=dict(color=_COLORS.get(c, "#888"), width=2),
+            )
+        )
+    fig_ret.update_layout(
+        title=f"{meta['name']} 累積リターン比較 ({start} 〜 {end})",
+        xaxis_title="日付",
+        yaxis_title="累積リターン (%)",
+        hovermode="x unified",
+        height=500,
+        template="plotly_white",
+    )
 
     # TE
     te = tracking_error(result, vs="index")
     te_rows = [html.Tr([html.Th("対象"), html.Th(f"年率TE (vs {meta['yf_index']})")])]
     for k, v in te.items():
-        te_rows.append(html.Tr([html.Td(labels.get(k, k)), html.Td(f"{v*100:.2f}%")]))
-    te_table = dbc.Card(dbc.CardBody([
-        html.H6("トラッキングエラー", className="text-muted"),
-        html.Table(te_rows, className="table table-sm mb-0"),
-    ]))
+        te_rows.append(html.Tr([html.Td(labels.get(k, k)), html.Td(f"{v * 100:.2f}%")]))
+    te_table = dbc.Card(
+        dbc.CardBody(
+            [
+                html.H6("トラッキングエラー", className="text-muted"),
+                html.Table(te_rows, className="table table-sm mb-0"),
+            ]
+        )
+    )
 
     # Weights (shares already fetched by compare_basket above)
     weights = compute_historical_weights(px, weighting=weighting, shares=shares)
@@ -163,24 +237,44 @@ def run(n_clicks, index_code, start, end):
 
     bar_df = summary_df.copy()
     bar_df["label"] = bar_df.index + " " + bar_df["name"].astype(str).str[:30]
-    fig_bar = go.Figure(go.Bar(x=(bar_df["current_weight"] * 100).round(3),
-                               y=bar_df["label"], orientation="h",
-                               marker_color="#1f77b4",
-                               text=(bar_df["current_weight"] * 100).round(2).astype(str) + "%",
-                               textposition="outside"))
-    fig_bar.update_layout(height=700, yaxis=dict(autorange="reversed"),
-                          xaxis_title="ウェイト (%)", template="plotly_white",
-                          margin=dict(l=240))
+    fig_bar = go.Figure(
+        go.Bar(
+            x=(bar_df["current_weight"] * 100).round(3),
+            y=bar_df["label"],
+            orientation="h",
+            marker_color="#1f77b4",
+            text=(bar_df["current_weight"] * 100).round(2).astype(str) + "%",
+            textposition="outside",
+        )
+    )
+    fig_bar.update_layout(
+        height=700,
+        yaxis=dict(autorange="reversed"),
+        xaxis_title="ウェイト (%)",
+        template="plotly_white",
+        margin=dict(l=240),
+    )
 
     fig_evo = go.Figure()
     for tk in summary_df.index[:10]:
         nm = name_map.get(tk, "")
-        fig_evo.add_trace(go.Scatter(x=weights.index, y=weights[tk] * 100,
-                                      mode="lines", name=f"{tk} {str(nm)[:20]}",
-                                      line=dict(width=1.5)))
-    fig_evo.update_layout(title="Top 10銘柄のウェイト推移",
-                          xaxis_title="日付", yaxis_title="ウェイト (%)",
-                          hovermode="x unified", height=500, template="plotly_white")
+        fig_evo.add_trace(
+            go.Scatter(
+                x=weights.index,
+                y=weights[tk] * 100,
+                mode="lines",
+                name=f"{tk} {str(nm)[:20]}",
+                line=dict(width=1.5),
+            )
+        )
+    fig_evo.update_layout(
+        title="Top 10銘柄のウェイト推移",
+        xaxis_title="日付",
+        yaxis_title="ウェイト (%)",
+        hovermode="x unified",
+        height=500,
+        template="plotly_white",
+    )
 
     table_df = summary_df.reset_index().rename(columns={"index": "ticker"})
     table_df["current_weight"] = (table_df["current_weight"] * 100).round(3)
@@ -191,7 +285,8 @@ def run(n_clicks, index_code, start, end):
     weight_table = dash_table.DataTable(
         data=table_df.to_dict("records"),
         columns=[{"name": c, "id": c} for c in table_df.columns],
-        sort_action="native", page_size=30,
+        sort_action="native",
+        page_size=30,
         style_cell={"textAlign": "left", "fontSize": "0.9em"},
         style_header={"backgroundColor": "#f1f3f5", "fontWeight": "bold"},
         style_data_conditional=[

@@ -2,6 +2,7 @@
 
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from datetime import date, timedelta
@@ -9,9 +10,8 @@ from datetime import date, timedelta
 import pandas as pd
 import streamlit as st
 import yaml
-
-from src.storage.duckdb_client import DuckDBClient
-from src.analytics.signals import build_alert_df
+from market_viz.analytics.signals import build_alert_df
+from market_viz.storage.duckdb_client import DuckDBClient
 
 with open("src/config/settings.yaml") as f:
     _cfg = yaml.safe_load(f)
@@ -46,11 +46,21 @@ col1, col2, col3, col4 = st.columns(4)
 with col1:
     period_days = st.selectbox("評価期間", [90, 180, 365], index=1)
 with col2:
-    zscore_thresh = st.slider("Z-Score 閾値", 1.0, 3.0, float(ALERT_CFG.get("zscore_alert_threshold", 2.0)), step=0.1)
+    zscore_thresh = st.slider(
+        "Z-Score 閾値", 1.0, 3.0, float(ALERT_CFG.get("zscore_alert_threshold", 2.0)), step=0.1
+    )
 with col3:
-    ret_thresh = st.slider("1日リターン 閾値 (%)", 1.0, 10.0, float(ALERT_CFG.get("return_threshold_pct", 5.0)), step=0.5)
+    ret_thresh = st.slider(
+        "1日リターン 閾値 (%)",
+        1.0,
+        10.0,
+        float(ALERT_CFG.get("return_threshold_pct", 5.0)),
+        step=0.5,
+    )
 with col4:
-    vol_mult = st.slider("ボラ急騰 倍率", 1.0, 3.0, float(ALERT_CFG.get("vol_spike_threshold", 1.5)), step=0.1)
+    vol_mult = st.slider(
+        "ボラ急騰 倍率", 1.0, 3.0, float(ALERT_CFG.get("vol_spike_threshold", 1.5)), step=0.1
+    )
 
 # ----------------------------------------------------------------
 # Generate alerts
@@ -83,13 +93,25 @@ col_s1, col_s2, col_s3, col_s4 = st.columns(4)
 with col_s1:
     st.metric("総アラート数", len(alerts_df))
 with col_s2:
-    n_ret = (alerts_df["condition_type"] == "return_1d").sum() if "condition_type" in alerts_df.columns else 0
+    n_ret = (
+        (alerts_df["condition_type"] == "return_1d").sum()
+        if "condition_type" in alerts_df.columns
+        else 0
+    )
     st.metric("リターン系", n_ret)
 with col_s3:
-    n_z = (alerts_df["condition_type"] == "zscore_20d").sum() if "condition_type" in alerts_df.columns else 0
+    n_z = (
+        (alerts_df["condition_type"] == "zscore_20d").sum()
+        if "condition_type" in alerts_df.columns
+        else 0
+    )
     st.metric("Z-Score系", n_z)
 with col_s4:
-    n_v = (alerts_df["condition_type"] == "vol_spike").sum() if "condition_type" in alerts_df.columns else 0
+    n_v = (
+        (alerts_df["condition_type"] == "vol_spike").sum()
+        if "condition_type" in alerts_df.columns
+        else 0
+    )
     st.metric("ボラ急騰", n_v)
 
 st.markdown("---")
@@ -109,20 +131,25 @@ if "condition_type" in display_df.columns:
 
 cols_show = ["ticker", "条件", "current_value", "threshold", "message", "triggered_at"]
 cols_show = [c for c in cols_show if c in display_df.columns]
-display_df = display_df[cols_show].rename(columns={
-    "ticker": "銘柄",
-    "current_value": "現在値",
-    "threshold": "閾値",
-    "message": "メッセージ",
-    "triggered_at": "発生時刻",
-})
+display_df = display_df[cols_show].rename(
+    columns={
+        "ticker": "銘柄",
+        "current_value": "現在値",
+        "threshold": "閾値",
+        "message": "メッセージ",
+        "triggered_at": "発生時刻",
+    }
+)
 
 
 def _alert_style(val):
     if isinstance(val, str):
-        if "リターン" in val: return "color: #ff9800"
-        if "Z-Score" in val: return "color: #42a5f5"
-        if "ボラ" in val: return "color: #ef5350"
+        if "リターン" in val:
+            return "color: #ff9800"
+        if "Z-Score" in val:
+            return "color: #42a5f5"
+        if "ボラ" in val:
+            return "color: #ef5350"
     return ""
 
 

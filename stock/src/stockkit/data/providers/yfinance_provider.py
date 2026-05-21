@@ -8,7 +8,7 @@ Public API:
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Any
 
 import pandas as pd
@@ -20,7 +20,9 @@ from stockkit.data.symbols import normalize_symbol
 _DEFAULT_PERIOD = "5y"
 
 
-def _yf_download(symbol: str, start: str | None, end: str | None, period: str | None) -> pd.DataFrame:
+def _yf_download(
+    symbol: str, start: str | None, end: str | None, period: str | None
+) -> pd.DataFrame:
     """Pull from yfinance and return canonical column-named DataFrame."""
     kwargs: dict[str, Any] = {"auto_adjust": False, "progress": False}
     if start or end:

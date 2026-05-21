@@ -14,9 +14,7 @@ from pathlib import Path
 import pandas as pd
 import requests
 
-_DATA_DIR = Path(
-    os.environ.get("STOCKKIT_DATA_DIR", Path(__file__).resolve().parents[3] / "_data")
-)
+_DATA_DIR = Path(os.environ.get("STOCKKIT_DATA_DIR", Path(__file__).resolve().parents[3] / "_data"))
 
 _SOURCES = {
     "DJIA": {

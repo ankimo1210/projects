@@ -1,7 +1,8 @@
-from fastapi import APIRouter, BackgroundTasks, Query
+from fastapi import APIRouter, Query
+from market_viz.data.update import update_crypto_intraday, update_daily
+
 from backend.app.deps import get_db
 from backend.app.models.schemas import UpdateResponse
-from src.data.update import update_daily, update_crypto_intraday
 
 router = APIRouter(prefix="/data", tags=["data"])
 

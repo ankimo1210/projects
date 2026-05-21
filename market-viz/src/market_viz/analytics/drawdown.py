@@ -27,9 +27,11 @@ def build_drawdown_matrix(prices_df: pd.DataFrame) -> pd.DataFrame:
         s = pivot[ticker].dropna()
         if s.empty:
             continue
-        rows.append({
-            "ticker": ticker,
-            "current_dd": current_drawdown(s),
-            "max_dd": max_drawdown(s),
-        })
+        rows.append(
+            {
+                "ticker": ticker,
+                "current_dd": current_drawdown(s),
+                "max_dd": max_drawdown(s),
+            }
+        )
     return pd.DataFrame(rows).set_index("ticker") if rows else pd.DataFrame()

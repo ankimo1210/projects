@@ -2,19 +2,19 @@
 collect_search_results.py
 検索結果URLから掲載物件詳細URLを収集し、既存の取込パイプラインへ流す。
 """
+
 from __future__ import annotations
 
 import argparse
 import hashlib
 import time
+from collections.abc import Callable
 from datetime import datetime
-from typing import Callable, Optional
 from urllib.parse import parse_qs, urljoin, urlsplit, urlunsplit
 
+import db
 import requests
 from bs4 import BeautifulSoup
-
-import db
 from collect_listings_batch import import_urls_with_connection
 from config import get_logger
 from recompute_listing_features import run_recompute
@@ -42,7 +42,9 @@ def _make_session() -> requests.Session:
     return session
 
 
-def fetch_search_result_html(url: str, timeout: int = 15, session: requests.Session | None = None) -> str:
+def fetch_search_result_html(
+    url: str, timeout: int = 15, session: requests.Session | None = None
+) -> str:
     if session is None:
         session = _make_session()
     try:
@@ -58,7 +60,7 @@ def fetch_search_result_html(url: str, timeout: int = 15, session: requests.Sess
     return resp.text
 
 
-def normalize_detail_url(base_url: str, href: str) -> Optional[str]:
+def normalize_detail_url(base_url: str, href: str) -> str | None:
     absolute = urljoin(base_url, href)
     parsed = urlsplit(absolute)
     if "rakumachi.jp" not in parsed.netloc:
@@ -81,7 +83,7 @@ def extract_rakumachi_listing_urls(html: str, base_url: str) -> list[str]:
     return urls
 
 
-def _normalized_search_url(base_url: str, href: str) -> Optional[str]:
+def _normalized_search_url(base_url: str, href: str) -> str | None:
     absolute = urljoin(base_url, href)
     parsed = urlsplit(absolute)
     base_parsed = urlsplit(base_url)
@@ -94,7 +96,7 @@ def _normalized_search_url(base_url: str, href: str) -> Optional[str]:
     return urlunsplit((parsed.scheme or "https", parsed.netloc, parsed.path, parsed.query, ""))
 
 
-def extract_rakumachi_next_page_url(html: str, current_url: str) -> Optional[str]:
+def extract_rakumachi_next_page_url(html: str, current_url: str) -> str | None:
     soup = BeautifulSoup(html, "lxml")
     current_page = int(parse_qs(urlsplit(current_url).query).get("page", ["1"])[0] or "1")
 
@@ -129,7 +131,7 @@ def collect_rakumachi_search_result_urls(
     max_pages: int = 3,
     max_listings: int = 60,
     sleep_sec: float = 0.5,
-    progress_cb: Optional[Callable[[dict[str, object]], None]] = None,
+    progress_cb: Callable[[dict[str, object]], None] | None = None,
 ) -> dict[str, object]:
     session = _make_session()
     current_url = search_url
@@ -214,7 +216,7 @@ def run_search_import(
     max_listings: int = 60,
     sleep_sec: float = 0.5,
     compute_features: bool = True,
-    progress_cb: Optional[Callable[[dict[str, object]], None]] = None,
+    progress_cb: Callable[[dict[str, object]], None] | None = None,
 ) -> dict[str, object]:
     if "rakumachi.jp" not in search_url:
         raise SearchResultCollectionError("現時点では楽待の検索結果URLのみ対応しています。")
@@ -247,10 +249,7 @@ def run_search_import(
             progress_cb=progress_cb,
         )
         detail_urls = collected["detail_urls"]
-        detail_rows = [
-            {"job_id": job_id, **row}
-            for row in collected["detail_rows"]
-        ]
+        detail_rows = [{"job_id": job_id, **row} for row in collected["detail_rows"]]
         db.replace_search_job_urls(conn, job_id, detail_rows)
 
         if progress_cb:
@@ -287,15 +286,19 @@ def run_search_import(
                 listing_ids=listing_ids,
                 stale_days=0,
                 sleep_sec=0.0,
-                progress_cb=lambda done, total, listing_id: progress_cb(
-                    {
-                        "stage": "features",
-                        "event": "progress",
-                        "done": done,
-                        "total": total,
-                        "listing_id": listing_id,
-                    }
-                ) if progress_cb else None,
+                progress_cb=lambda done, total, listing_id: (
+                    progress_cb(
+                        {
+                            "stage": "features",
+                            "event": "progress",
+                            "done": done,
+                            "total": total,
+                            "listing_id": listing_id,
+                        }
+                    )
+                    if progress_cb
+                    else None
+                ),
             )
             conn = db.get_connection()
             db.create_tables_if_needed(conn)

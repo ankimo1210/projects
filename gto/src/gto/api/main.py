@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from gto.api.routers import equity, health, trainer, solver, library, simulation
+
+from gto.api.routers import equity, health, library, simulation, solver, trainer
 from gto.library.store import SOLUTIONS_DIR
 
 app = FastAPI(title="GTO Poker Suite API", version="0.1.0")

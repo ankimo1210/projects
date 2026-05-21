@@ -5,6 +5,7 @@ spatially close points have numerically close codes. Sorting particles by
 their Morton code groups them along a space-filling curve, which is the
 prerequisite for the LBVH construction (Karras 2012).
 """
+
 from __future__ import annotations
 
 import cupy as cp
@@ -72,11 +73,19 @@ def compute_morton_codes(pos: cp.ndarray) -> tuple[cp.ndarray, tuple[cp.ndarray,
     threads = 256
     blocks = (n + threads - 1) // threads
     _morton_kernel(
-        (blocks,), (threads,),
-        (pos, codes,
-         cp.float32(bb_min_h[0]), cp.float32(bb_min_h[1]), cp.float32(bb_min_h[2]),
-         cp.float32(inv_extent_h[0]), cp.float32(inv_extent_h[1]), cp.float32(inv_extent_h[2]),
-         cp.int32(n)),
+        (blocks,),
+        (threads,),
+        (
+            pos,
+            codes,
+            cp.float32(bb_min_h[0]),
+            cp.float32(bb_min_h[1]),
+            cp.float32(bb_min_h[2]),
+            cp.float32(inv_extent_h[0]),
+            cp.float32(inv_extent_h[1]),
+            cp.float32(inv_extent_h[2]),
+            cp.int32(n),
+        ),
     )
     return codes, (bb_min_d, bb_max_d)
 

@@ -2,6 +2,7 @@
 
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from datetime import date, timedelta
@@ -9,9 +10,8 @@ from datetime import date, timedelta
 import pandas as pd
 import streamlit as st
 import yaml
-
-from src.storage.duckdb_client import DuckDBClient
-from src.analytics.signals import build_signal_df
+from market_viz.analytics.signals import build_signal_df
+from market_viz.storage.duckdb_client import DuckDBClient
 
 with open("src/config/settings.yaml") as f:
     _cfg = yaml.safe_load(f)
@@ -39,7 +39,8 @@ def load_signals(start: str) -> pd.DataFrame:
     # attach metadata
     meta = {
         i["ticker"]: {"name": i.get("name", ""), "asset_class": i.get("asset_class", "")}
-        for g in cfg["instruments"].values() for i in g
+        for g in cfg["instruments"].values()
+        for i in g
     }
     df["name"] = df["ticker"].map(lambda t: meta.get(t, {}).get("name", t))
     df["asset_class"] = df["ticker"].map(lambda t: meta.get(t, {}).get("asset_class", ""))
@@ -96,47 +97,73 @@ st.markdown(f"**{len(df_filtered)} 件**")
 # Ranking table
 # ----------------------------------------------------------------
 display_cols = [
-    "ticker", "name", "asset_class",
-    "ret_1d", "ret_5d", "ret_20d", "ret_60d",
-    "vol_20d", "vol_60d",
-    "zscore_20d", "zscore_60d",
-    "pct_20d", "pct_60d",
-    "current_dd", "max_dd",
+    "ticker",
+    "name",
+    "asset_class",
+    "ret_1d",
+    "ret_5d",
+    "ret_20d",
+    "ret_60d",
+    "vol_20d",
+    "vol_60d",
+    "zscore_20d",
+    "zscore_60d",
+    "pct_20d",
+    "pct_60d",
+    "current_dd",
+    "max_dd",
     "signal",
 ]
 display_cols = [c for c in display_cols if c in df_filtered.columns]
 show = df_filtered[display_cols].copy()
 
 rename = {
-    "ticker": "Ticker", "name": "銘柄名", "asset_class": "クラス",
-    "ret_1d": "1D%", "ret_5d": "5D%", "ret_20d": "20D%", "ret_60d": "60D%",
-    "vol_20d": "Vol(20)", "vol_60d": "Vol(60)",
-    "zscore_20d": "Z(20)", "zscore_60d": "Z(60)",
-    "pct_20d": "Pct(20)", "pct_60d": "Pct(60)",
-    "current_dd": "現在DD", "max_dd": "最大DD",
+    "ticker": "Ticker",
+    "name": "銘柄名",
+    "asset_class": "クラス",
+    "ret_1d": "1D%",
+    "ret_5d": "5D%",
+    "ret_20d": "20D%",
+    "ret_60d": "60D%",
+    "vol_20d": "Vol(20)",
+    "vol_60d": "Vol(60)",
+    "zscore_20d": "Z(20)",
+    "zscore_60d": "Z(60)",
+    "pct_20d": "Pct(20)",
+    "pct_60d": "Pct(60)",
+    "current_dd": "現在DD",
+    "max_dd": "最大DD",
     "signal": "シグナル",
 }
 show = show.rename(columns=rename)
 
 fmt: dict = {}
 for c in ["1D%", "5D%", "20D%", "60D%", "Vol(20)", "Vol(60)", "現在DD", "最大DD"]:
-    if c in show.columns: fmt[c] = "{:.2%}"
+    if c in show.columns:
+        fmt[c] = "{:.2%}"
 for c in ["Z(20)", "Z(60)"]:
-    if c in show.columns: fmt[c] = "{:.2f}"
+    if c in show.columns:
+        fmt[c] = "{:.2f}"
 for c in ["Pct(20)", "Pct(60)"]:
-    if c in show.columns: fmt[c] = "{:.0f}%"
+    if c in show.columns:
+        fmt[c] = "{:.0f}%"
 
 
 def _cpct(v):
-    if pd.isna(v): return ""
+    if pd.isna(v):
+        return ""
     return "color: #26a69a" if v >= 0 else "color: #ef5350"
 
 
 def _cz(v):
-    if pd.isna(v): return ""
-    if v >= 2.0: return "color: #ff9800; font-weight:bold"
-    if v <= -2.0: return "color: #42a5f5; font-weight:bold"
-    if abs(v) >= 1.5: return "color: #ffee58"
+    if pd.isna(v):
+        return ""
+    if v >= 2.0:
+        return "color: #ff9800; font-weight:bold"
+    if v <= -2.0:
+        return "color: #42a5f5; font-weight:bold"
+    if abs(v) >= 1.5:
+        return "color: #ffee58"
     return ""
 
 
@@ -151,9 +178,11 @@ def _csig(v):
 
 styled = show.style.format(fmt, na_rep="-")
 for col in ["1D%", "5D%", "20D%", "60D%"]:
-    if col in show.columns: styled = styled.applymap(_cpct, subset=[col])
+    if col in show.columns:
+        styled = styled.applymap(_cpct, subset=[col])
 for col in ["Z(20)", "Z(60)"]:
-    if col in show.columns: styled = styled.applymap(_cz, subset=[col])
+    if col in show.columns:
+        styled = styled.applymap(_cz, subset=[col])
 if "シグナル" in show.columns:
     styled = styled.applymap(_csig, subset=["シグナル"])
 
@@ -166,6 +195,7 @@ if "zscore_20d" in df.columns:
     st.markdown("---")
     st.subheader("Z-Score(20d) 分布")
     import plotly.express as px
+
     fig = px.histogram(
         df.dropna(subset=["zscore_20d"]),
         x="zscore_20d",

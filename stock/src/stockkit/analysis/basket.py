@@ -24,13 +24,12 @@ from pathlib import Path
 import pandas as pd
 import yfinance as yf
 
-_DATA_DIR = Path(
-    os.environ.get("STOCKKIT_DATA_DIR", Path(__file__).resolve().parents[3] / "_data")
-)
+_DATA_DIR = Path(os.environ.get("STOCKKIT_DATA_DIR", Path(__file__).resolve().parents[3] / "_data"))
 _SHARES_TTL_HOURS = 24
 
 
 # ---------- Price fetching ----------
+
 
 def fetch_basket_prices(
     tickers: list[str],
@@ -142,6 +141,7 @@ def fetch_shares_outstanding(
 
 # ---------- Weight & basket computation ----------
 
+
 def compute_basket_returns(
     constituent_prices: pd.DataFrame,
     weighting: str = "price",
@@ -204,11 +204,13 @@ def weight_summary(
         return pd.DataFrame()
     start = weights.iloc[0]
     end = weights.iloc[-1]
-    df = pd.DataFrame({
-        "current_weight": end,
-        "start_weight": start,
-        "weight_change_bp": (end - start) * 10000,
-    })
+    df = pd.DataFrame(
+        {
+            "current_weight": end,
+            "start_weight": start,
+            "weight_change_bp": (end - start) * 10000,
+        }
+    )
     if names is not None:
         df.insert(0, "name", df.index.map(names))
     return df.sort_values("current_weight", ascending=False).head(top_n)
@@ -216,7 +218,10 @@ def weight_summary(
 
 # ---------- Currency conversion ----------
 
-def to_usd(series: pd.Series, base_ccy: str = "JPY", start: str | None = None, end: str | None = None) -> pd.Series:
+
+def to_usd(
+    series: pd.Series, base_ccy: str = "JPY", start: str | None = None, end: str | None = None
+) -> pd.Series:
     """Convert a JPY-quoted price series to USD using daily USD/JPY.
 
     series: pd.Series indexed by date, JPY values
@@ -236,6 +241,7 @@ def to_usd(series: pd.Series, base_ccy: str = "JPY", start: str | None = None, e
 
 
 # ---------- Comparison orchestration ----------
+
 
 def compare_basket(
     universe: pd.DataFrame,
@@ -274,16 +280,23 @@ def compare_basket(
     for label, ticker in benchmarks.items():
         s = fetch_single_close(ticker, start, end)
         if s is not None and not s.empty:
-            result[label] = (s / s.iloc[0] - 1.0)
+            result[label] = s / s.iloc[0] - 1.0
     result = result.dropna(how="all")
 
     # 5. Currency conversion (cumulative returns are already normalized,
     # so we convert the underlying basket value first, then re-normalize)
     if to_currency and to_currency.upper() != base_ccy.upper():
         # Re-compute basket as values, convert, then back to returns
-        basket_value_jpy = (px.ffill().fillna(0) * (1.0 / px.iloc[0].dropna() if weighting == "price" else shares.reindex(px.columns).fillna(0))).sum(axis=1)
+        basket_value_jpy = (
+            px.ffill().fillna(0)
+            * (
+                1.0 / px.iloc[0].dropna()
+                if weighting == "price"
+                else shares.reindex(px.columns).fillna(0)
+            )
+        ).sum(axis=1)
         basket_value_usd = to_usd(basket_value_jpy, base_ccy=base_ccy, start=start, end=end)
-        result["basket"] = (basket_value_usd / basket_value_usd.iloc[0] - 1.0)
+        result["basket"] = basket_value_usd / basket_value_usd.iloc[0] - 1.0
 
         # Convert each JPY-quoted benchmark
         for label, ticker in benchmarks.items():
@@ -291,7 +304,7 @@ def compare_basket(
                 s = fetch_single_close(ticker, start, end)
                 if s is not None:
                     s_usd = to_usd(s, base_ccy="JPY", start=start, end=end)
-                    result[label] = (s_usd / s_usd.iloc[0] - 1.0)
+                    result[label] = s_usd / s_usd.iloc[0] - 1.0
 
     return result, px, shares
 
@@ -314,7 +327,7 @@ def tracking_error(returns: pd.DataFrame, vs: str) -> dict[str, float]:
             continue
         diff = (daily[col] - ref).dropna()
         if len(diff) > 1:
-            out[col] = float(diff.std() * (252 ** 0.5))
+            out[col] = float(diff.std() * (252**0.5))
     return out
 
 
@@ -322,9 +335,11 @@ def tracking_error(returns: pd.DataFrame, vs: str) -> dict[str, float]:
 def compare_basket_vs_futures(start, end=None, universe=None):
     """Backwards-compat for the original Nikkei 225 entry point."""
     from stockkit.data.nikkei225 import load_constituents
+
     if universe is None:
         universe = load_constituents()
     benchmarks = {"n225": "^N225", "etf_1321": "1321.T", "futures_nkd": "NKD=F"}
-    result, _, _ = compare_basket(universe, start=start, end=end, weighting="price",
-                                    benchmarks=benchmarks)
+    result, _, _ = compare_basket(
+        universe, start=start, end=end, weighting="price", benchmarks=benchmarks
+    )
     return result

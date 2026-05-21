@@ -2,6 +2,7 @@
 
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from datetime import date, timedelta
@@ -9,16 +10,15 @@ from datetime import date, timedelta
 import pandas as pd
 import streamlit as st
 import yaml
-
-from src.storage.duckdb_client import DuckDBClient
-from src.analytics.backtest import (
-    run_backtest,
+from app.components.charts import candlestick_chart, drawdown_chart, equity_chart
+from market_viz.analytics.backtest import (
     ma_cross_signal,
-    zscore_reversion_signal,
     momentum_signal,
+    run_backtest,
     volatility_breakout_signal,
+    zscore_reversion_signal,
 )
-from app.components.charts import equity_chart, drawdown_chart, candlestick_chart
+from market_viz.storage.duckdb_client import DuckDBClient
 
 with open("src/config/settings.yaml") as f:
     _cfg = yaml.safe_load(f)
@@ -74,7 +74,9 @@ if strategy == "MA Cross":
         fast = st.slider("Fast MA", 5, 100, 20)
     with col_p2:
         slow = st.slider("Slow MA", 20, 300, 60)
-    signal_fn = lambda c: ma_cross_signal(c, fast=fast, slow=slow)
+
+    def signal_fn(c):
+        return ma_cross_signal(c, fast=fast, slow=slow)
 
 elif strategy == "Z-Score Reversion":
     col_p1, col_p2, col_p3 = st.columns(3)
@@ -84,11 +86,15 @@ elif strategy == "Z-Score Reversion":
         z_entry = st.slider("エントリー閾値 (abs)", 1.0, 3.0, 2.0, step=0.1)
     with col_p3:
         z_exit = st.slider("エグジット閾値 (abs)", 0.0, 1.5, 0.5, step=0.1)
-    signal_fn = lambda c: zscore_reversion_signal(c, window=z_window, entry=z_entry, exit_=z_exit)
+
+    def signal_fn(c):
+        return zscore_reversion_signal(c, window=z_window, entry=z_entry, exit_=z_exit)
 
 elif strategy == "Momentum":
     mom_window = st.slider("モメンタム ウィンドウ", 5, 252, 20)
-    signal_fn = lambda c: momentum_signal(c, window=mom_window)
+
+    def signal_fn(c):
+        return momentum_signal(c, window=mom_window)
 
 else:  # Volatility Breakout
     col_p1, col_p2 = st.columns(2)
@@ -96,7 +102,10 @@ else:  # Volatility Breakout
         vb_window = st.slider("ウィンドウ", 5, 100, 20)
     with col_p2:
         vb_mult = st.slider("マルチプライヤー", 0.5, 3.0, 1.0, step=0.1)
-    signal_fn = lambda c: volatility_breakout_signal(c, window=vb_window, mult=vb_mult)
+
+    def signal_fn(c):
+        return volatility_breakout_signal(c, window=vb_window, mult=vb_mult)
+
 
 commission = st.slider("手数料 (%)", 0.0, 0.5, 0.1, step=0.01) / 100
 slippage = st.slider("スリッページ (%)", 0.0, 0.5, 0.05, step=0.01) / 100
@@ -113,7 +122,8 @@ if st.button("▶ バックテスト実行", type="primary"):
 
     with st.spinner("計算中..."):
         result = run_backtest(
-            prices_df, ticker,
+            prices_df,
+            ticker,
             signal_fn=signal_fn,
             commission=commission,
             slippage=slippage,
@@ -132,14 +142,15 @@ if st.button("▶ バックテスト実行", type="primary"):
         ("シャープ比", f"{m.get('sharpe_ratio', 0):.2f}"),
         ("最大DD", f"{m.get('max_drawdown', 0):.1%}"),
         ("勝率", f"{m.get('win_rate', 0):.1%}"),
-        ("取引回数", str(m.get('trade_count', 0))),
+        ("取引回数", str(m.get("trade_count", 0))),
     ]
-    for col, (label, val) in zip(cols, metric_items):
+    for col, (label, val) in zip(cols, metric_items, strict=False):
         col.metric(label, val)
 
     # Charts
-    st.plotly_chart(equity_chart(result.equity, title=f"{ticker} | {strategy}"),
-                    use_container_width=True)
+    st.plotly_chart(
+        equity_chart(result.equity, title=f"{ticker} | {strategy}"), use_container_width=True
+    )
     st.plotly_chart(drawdown_chart(result.equity), use_container_width=True)
 
     # Price with MA if applicable

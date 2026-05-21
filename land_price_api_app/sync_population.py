@@ -8,13 +8,13 @@ population_stats テーブルに保存する。
     python sync_population.py --year 2020
     python sync_population.py --year 2023 --smoke-test
 """
+
 import argparse
 import time
 
+import db
 import pandas as pd
 import requests
-
-import db
 from config import ESTAT_APP_ID, get_logger
 
 logger = get_logger(__name__)
@@ -26,17 +26,24 @@ _STATS_ID = "0000020101"
 
 # 取得する指標コード（住民基本台帳ベース - 毎年更新）
 _CAT01_MAP = {
-    "A2301":  "total_population",   # 住民基本台帳人口（総数）
-    "A7103":  "households",         # 住民基本台帳世帯数
+    "A2301": "total_population",  # 住民基本台帳人口（総数）
+    "A7103": "households",  # 住民基本台帳世帯数
 }
+
 
 # @time フォーマット: YYYY100000（国勢調査は10月基準）
 def _time_code(year: int) -> str:
     return f"{year}100000"
 
 
-def _fetch_page(stats_id: str, app_id: str, cat01_codes: list[str], time_code: str,
-                start: int, limit: int = 10000) -> tuple[list[dict], int]:
+def _fetch_page(
+    stats_id: str,
+    app_id: str,
+    cat01_codes: list[str],
+    time_code: str,
+    start: int,
+    limit: int = 10000,
+) -> tuple[list[dict], int]:
     """1ページ分のデータを取得して (VALUES, total_count) を返す。"""
     url = f"{_ESTAT_BASE}/getStatsData"
     params = {
@@ -168,7 +175,7 @@ def _compute_yoy_changes(conn) -> None:
 def sync(year: int) -> None:
     app_id = ESTAT_APP_ID
     if not app_id:
-        raise EnvironmentError("ESTAT_APP_ID が未設定です。.env を確認してください。")
+        raise OSError("ESTAT_APP_ID が未設定です。.env を確認してください。")
 
     df = fetch_population_stats(year, app_id)
     if df.empty:
@@ -185,14 +192,16 @@ def sync(year: int) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--year", type=int, default=2023, help="調査年（国勢調査年：2015/2020/2023等）")
+    parser.add_argument(
+        "--year", type=int, default=2023, help="調査年（国勢調査年：2015/2020/2023等）"
+    )
     parser.add_argument("--smoke-test", action="store_true", help="API接続確認のみ（DB保存なし）")
     args = parser.parse_args()
 
     if args.smoke_test:
         app_id = ESTAT_APP_ID
         if not app_id:
-            raise EnvironmentError("ESTAT_APP_ID が未設定です。")
+            raise OSError("ESTAT_APP_ID が未設定です。")
         df = fetch_population_stats(args.year, app_id)
         print(f"スモークテスト完了: {len(df):,} 件取得")
     else:

@@ -1,4 +1,5 @@
 """Barnes-Hut vs O(N^2) direct: accuracy under theta."""
+
 from __future__ import annotations
 
 import cupy as cp
@@ -14,6 +15,7 @@ from nbody.initial_conditions import plummer_sphere
 def cupy_available():
     try:
         import cupy
+
         _ = cupy.arange(1)
         return True
     except Exception:

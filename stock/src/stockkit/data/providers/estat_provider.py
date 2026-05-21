@@ -28,7 +28,7 @@ from dotenv import load_dotenv
 from stockkit.data import cache as _cache
 
 JP_CPI_SERIES = "ESTAT:JP_CPI"
-JP_CPI_STATS_ID = "0003427113"   # CPI 2020年基準
+JP_CPI_STATS_ID = "0003427113"  # CPI 2020年基準
 
 _API_BASE = "https://api.e-stat.go.jp/rest/3.0/app/json/getStatsData"
 _MONTHLY_RE = re.compile(r"^(\d{4})00(\d{2})\d{2}$")
@@ -44,8 +44,7 @@ def _api_key() -> str:
     key = os.environ.get("ESTAT_API_KEY", "")
     if not key:
         raise EStatError(
-            "ESTAT_API_KEY not set in .env. "
-            "Register free at https://www.e-stat.go.jp/api/"
+            "ESTAT_API_KEY not set in .env. Register free at https://www.e-stat.go.jp/api/"
         )
     return key
 
@@ -92,7 +91,7 @@ def _fetch_all() -> pd.Series:
             params={
                 "appId": _api_key(),
                 "statsDataId": JP_CPI_STATS_ID,
-                "cdTab": "1",       # 指数
+                "cdTab": "1",  # 指数
                 "cdCat01": "0001",  # 総合
                 "cdArea": "00000",  # 全国
                 "startPosition": start_pos,

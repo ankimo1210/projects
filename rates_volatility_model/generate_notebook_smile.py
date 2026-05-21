@@ -1,9 +1,9 @@
 """
 Generate Jupyter Notebook: Chapter 11 - Volatility Smile/Skew Analysis & Calibration
 """
+
 import nbformat as nbf
 import numpy as np
-import json
 
 np.random.seed(42)
 
@@ -20,13 +20,15 @@ def code_cell(code):
 # CHAPTER 11: Smile / Skew Analysis & Calibration
 # =====================================================================
 
+
 def create_ch11():
     cells = []
 
     # ------------------------------------------------------------------
     # 11.0 Chapter Header
     # ------------------------------------------------------------------
-    cells.append(md_cell("""
+    cells.append(
+        md_cell("""
 # Chapter 11: Volatility Smile / Skew — 分析とキャリブレーション
 
 ## 概要
@@ -55,12 +57,14 @@ BS/Black76 は定数ボラティリティを仮定しているため、市場で
 - **Smile** : ATM から両端に向かって vol が上昇（ジャンプリスク）
 - **Skew** : 片側だけ上昇（OTM プット > OTM コール）— 金利市場ではダウンスキューが一般的
 - **Smirk** : smile + skew の組み合わせ
-    """))
+    """)
+    )
 
     # ------------------------------------------------------------------
     # 11.1 Implied Vol の逆算
     # ------------------------------------------------------------------
-    cells.append(md_cell("""
+    cells.append(
+        md_cell("""
 ## 11.1 Implied Volatility の逆算
 
 オプション価格（市場クォート）から Implied Vol を求める逆問題です。
@@ -78,9 +82,11 @@ $\\sigma$ について数値的に解く（closed form は存在しない）。
 $$C_{Bachelier}(F, K, T, \\sigma_N) = (F-K)\\Phi(d) + \\sigma_N\\sqrt{T}\\phi(d)$$
 
 同様に数値逆算。マイナス金利環境では Bachelier が標準。
-    """))
+    """)
+    )
 
-    cells.append(code_cell("""
+    cells.append(
+        code_cell("""
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import norm
@@ -178,12 +184,14 @@ for K in strikes_test:
 
 print(f"\\nMax B76 error: {max(b76_errors):.4e} bp | Max Bachelier error: {max(bac_errors):.4e} bp")
 print("✓ Round-trip precision verified")
-    """))
+    """)
+    )
 
     # ------------------------------------------------------------------
     # 11.2 サンプル市場 Vol Surface 生成
     # ------------------------------------------------------------------
-    cells.append(md_cell("""
+    cells.append(
+        md_cell("""
 ## 11.2 サンプル市場データ：合成 Swaption Vol Surface
 
 **現実的な Swaption Vol Surface** を SABR で生成し、観測ノイズを加えます。
@@ -200,9 +208,11 @@ print("✓ Round-trip precision verified")
 |--------|-----|------|-----|------|
 | 短期   | 高  | 大負 | 低  | 急峻なスキュー |
 | 長期   | 低  | 小負 | 高  | より対称なスマイル |
-    """))
+    """)
+    )
 
-    cells.append(code_cell("""
+    cells.append(
+        code_cell("""
 # ===== SABR 公式（Ch9 と同じ Hagan 近似） =====
 def hagan_sabr_vol(F, K, T, alpha, beta, rho, nu):
     \"\"\"Hagan SABR approximation for Black implied vol\"\"\"
@@ -281,12 +291,14 @@ for i, label in enumerate(EXPIRY_LABELS):
     row = f"{label:>6}" + "".join(f"  {v*100:5.2f}" for v in observed_surface[i])
     print(row)
 print("\\n✓ Synthetic vol surface generated (SABR true + 2bp noise)")
-    """))
+    """)
+    )
 
     # ------------------------------------------------------------------
     # 11.3 SABR 単一スマイルキャリブレーション
     # ------------------------------------------------------------------
-    cells.append(md_cell("""
+    cells.append(
+        md_cell("""
 ## 11.3 SABR 単一スマイルキャリブレーション
 
 1 つの Expiry の市場クォートに SABR パラメータ (α, ρ, ν) をフィットします。
@@ -299,9 +311,11 @@ $$\\min_{\\alpha, \\rho, \\nu} \\sum_j \\left( \\sigma_{SABR}(K_j; \\alpha, \\rh
 ### 制約条件
 
 $$\\alpha > 0,\\quad -1 < \\rho < 1,\\quad \\nu > 0$$
-    """))
+    """)
+    )
 
-    cells.append(code_cell("""
+    cells.append(
+        code_cell("""
 # ===== SABR キャリブレーション（単一スマイル） =====
 def calibrate_sabr_smile(F, T, strikes, market_vols, beta=0.5,
                           alpha0=None, rho0=-0.3, nu0=0.4):
@@ -388,12 +402,14 @@ axes[1].grid(True, alpha=0.3)
 plt.tight_layout()
 plt.show()
 print("✓ Single smile calibration complete")
-    """))
+    """)
+    )
 
     # ------------------------------------------------------------------
     # 11.4 SABR Vol Surface キャリブレーション（全テナー）
     # ------------------------------------------------------------------
-    cells.append(md_cell("""
+    cells.append(
+        md_cell("""
 ## 11.4 SABR Vol Surface キャリブレーション（全 Expiry）
 
 各 Expiry について独立に SABR キャリブレーションを実行し、
@@ -403,9 +419,11 @@ print("✓ Single smile calibration complete")
 - β を全テナーで共通固定（例：0.5）
 - α, ρ, ν を各テナーで個別にキャリブレーション
 - ρ, ν の Expiry 依存性から**市場構造**を読む
-    """))
+    """)
+    )
 
-    cells.append(code_cell("""
+    cells.append(
+        code_cell("""
 # ===== SABR Surface キャリブレーション =====
 print("=== SABR Surface Calibration (β=0.5 fixed) ===")
 print(f"{'Expiry':>6} {'α_true':>8} {'α_fit':>8} {'ρ_true':>8} {'ρ_fit':>8} "
@@ -460,9 +478,11 @@ axes[2].set_title('ν (smile curvature)'); axes[2].legend(); axes[2].grid(True, 
 
 plt.tight_layout()
 plt.show()
-    """))
+    """)
+    )
 
-    cells.append(code_cell("""
+    cells.append(
+        code_cell("""
 # ===== フィット vs 市場：全テナー比較 =====
 fig, axes = plt.subplots(2, 4, figsize=(16, 8))
 fig.suptitle('SABR Surface Calibration — Market vs. Fitted (all expiries)', fontsize=13, fontweight='bold')
@@ -489,12 +509,14 @@ axes_flat[-1].set_visible(False)
 plt.tight_layout()
 plt.show()
 print("✓ Surface fit visualization complete")
-    """))
+    """)
+    )
 
     # ------------------------------------------------------------------
     # 11.5 SVI パラメタリゼーション
     # ------------------------------------------------------------------
-    cells.append(md_cell("""
+    cells.append(
+        md_cell("""
 ## 11.5 SVI パラメタリゼーション（代替スマイルモデル）
 
 **SVI (Stochastic Volatility Inspired)** は Gatheral (2004) が提案した
@@ -521,9 +543,11 @@ $w = \\sigma^2_{impl} \\cdot T$ から $\\sigma_{impl} = \\sqrt{w/T}$。
 $$b(1 + |\\rho|) < \\frac{4}{T}$$
 
 $$a \\geq 0, \\quad b \\geq 0, \\quad |\\rho| < 1, \\quad \\xi > 0$$
-    """))
+    """)
+    )
 
-    cells.append(code_cell("""
+    cells.append(
+        code_cell("""
 # ===== SVI パラメタリゼーション =====
 def svi_total_variance(k, a, b, rho, m, xi):
     \"\"\"
@@ -628,12 +652,14 @@ axes[1].set_title('SVI Total Variance Curve'); axes[1].legend(); axes[1].grid(Tr
 plt.tight_layout()
 plt.show()
 print("✓ SVI calibration and comparison complete")
-    """))
+    """)
+    )
 
     # ------------------------------------------------------------------
     # 11.6 Smile / Skew メトリクス (RR, BF)
     # ------------------------------------------------------------------
-    cells.append(md_cell("""
+    cells.append(
+        md_cell("""
 ## 11.6 Smile / Skew メトリクス：ATM・Risk Reversal・Butterfly
 
 FX・金利市場では、スマイルを以下の 3 つの **標準メトリクス** で表現します。
@@ -649,9 +675,11 @@ FX・金利市場では、スマイルを以下の 3 つの **標準メトリク
 Black76 で $\\Delta_{call} = N(d_1) = 0.25$ となる $K$ を数値的に求める。
 
 $$K_{25\\Delta C} : N\\left(\\frac{\\ln(F/K) + 0.5\\sigma_{ATM}^2 T}{\\sigma_{ATM}\\sqrt{T}}\\right) = 0.25$$
-    """))
+    """)
+    )
 
-    cells.append(code_cell("""
+    cells.append(
+        code_cell("""
 # ===== 25Δ ストライクの計算 =====
 def find_delta_strike(F, T, sigma_atm, target_delta=0.25, option_type='call'):
     \"\"\"
@@ -737,19 +765,23 @@ axes[2].grid(True, alpha=0.3)
 plt.tight_layout()
 plt.show()
 print("✓ Smile metrics computed for all expiries")
-    """))
+    """)
+    )
 
     # ------------------------------------------------------------------
     # 11.7 3D Vol Surface 可視化 + Interactive
     # ------------------------------------------------------------------
-    cells.append(md_cell("""
+    cells.append(
+        md_cell("""
 ## 11.7 3D Vol Surface 可視化とインタラクティブ探索
 
 キャリブレーション済み SABR パラメータから **全ストライク × 全 Expiry** の
 Implied Vol Surface を再構築し、3D・ヒートマップで可視化します。
-    """))
+    """)
+    )
 
-    cells.append(code_cell("""
+    cells.append(
+        code_cell("""
 # ===== 高解像度 Vol Surface の再構築 =====
 fine_offsets_bp = np.linspace(-120, 120, 60)
 
@@ -797,9 +829,11 @@ plt.colorbar(hm, ax=ax_hm, label='Implied Vol (%)')
 plt.tight_layout()
 plt.show()
 print("✓ 3D vol surface visualization complete")
-    """))
+    """)
+    )
 
-    cells.append(code_cell("""
+    cells.append(
+        code_cell("""
 # ===== Interactive: SABR Surface Explorer =====
 from ipywidgets import FloatSlider, Dropdown, interact, fixed
 
@@ -858,12 +892,14 @@ interact(
     nu_override=FloatSlider(min=0.05, max=1.5, step=0.05, value=0.45, description='ν override:'),
 )
 print("✓ Adjust ρ / ν to see smile/skew change and compare metrics")
-    """))
+    """)
+    )
 
     # ------------------------------------------------------------------
     # 11 Summary
     # ------------------------------------------------------------------
-    cells.append(md_cell("""
+    cells.append(
+        md_cell("""
 ## Chapter 11 まとめ
 
 ### 実装したコンポーネント
@@ -889,7 +925,8 @@ print("✓ Adjust ρ / ν to see smile/skew change and compare metrics")
 - **SSVI** (Surface SVI): カレンダー無裁定も同時保証
 - **Displaced SABR / Free Boundary SABR**: マイナス金利対応
 - **Local Volatility** (Dupire): smile から局所 vol 面を抽出
-    """))
+    """)
+    )
 
     return cells
 
@@ -898,12 +935,15 @@ print("✓ Adjust ρ / ν to see smile/skew change and compare metrics")
 # Notebook 生成
 # =====================================================================
 
+
 def generate():
     nb = nbf.v4.new_notebook()
     nb.cells = create_ch11()
 
-    output_path = '/home/kazumasa/projects/rates_volatility_model/rates_volatility_models_smile.ipynb'
-    with open(output_path, 'w') as f:
+    output_path = (
+        "/home/kazumasa/projects/rates_volatility_model/rates_volatility_models_smile.ipynb"
+    )
+    with open(output_path, "w") as f:
         nbf.write(nb, f)
 
     print(f"✓ Ch11 notebook generated: {output_path}")
@@ -911,5 +951,5 @@ def generate():
     return output_path
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     generate()

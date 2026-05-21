@@ -1,10 +1,12 @@
 """Sample multi-street solve for 3 diverse BTN vs BB flops (verification)."""
+
 from __future__ import annotations
+
 import time
 from pathlib import Path
 
-import pandas as pd
 import duckdb
+import pandas as pd
 
 from gto.library.flop_canon import board_texture
 from gto.library.schema import spot_id
@@ -20,7 +22,7 @@ def card_idx(s: str) -> int:
 
 
 def parse_board(b: str) -> list[str]:
-    return [b[i:i+2] for i in range(0, 6, 2)]
+    return [b[i : i + 2] for i in range(0, 6, 2)]
 
 
 SAMPLES = [
@@ -37,16 +39,32 @@ def write_parquet(tag: str, record: dict) -> None:
     SOLUTIONS_MS_DIR.mkdir(parents=True, exist_ok=True)
     agg_map = {e["action"]: e["freq"] for e in record["strategy"]}
     report = {
-        "position": record["position"], "opponent": record["opponent"],
-        "stack_bb": record["stack_bb"], "board": record["board"],
+        "position": record["position"],
+        "opponent": record["opponent"],
+        "stack_bb": record["stack_bb"],
+        "board": record["board"],
         "texture": record["texture"],
         "check_freq": float(agg_map.get("Check", 0.0)),
         "bet_freq": float(agg_map.get("Bet", agg_map.get("Bet33", 0.0))),
     }
-    spot = {k: record[k] for k in ("spot_id", "position", "opponent",
-            "stack_bb", "pot_bb", "board", "street", "iterations", "exploitability")}
-    agg_rows = [{"spot_id": record["spot_id"], "action": e["action"], "freq": float(e["freq"])}
-                for e in record["strategy"]]
+    spot = {
+        k: record[k]
+        for k in (
+            "spot_id",
+            "position",
+            "opponent",
+            "stack_bb",
+            "pot_bb",
+            "board",
+            "street",
+            "iterations",
+            "exploitability",
+        )
+    }
+    agg_rows = [
+        {"spot_id": record["spot_id"], "action": e["action"], "freq": float(e["freq"])}
+        for e in record["strategy"]
+    ]
 
     con = duckdb.connect(":memory:")
     for sub, rows in [("spots", [spot]), ("agg", agg_rows), ("reports", [report])]:
@@ -70,26 +88,36 @@ def main() -> None:
         print(f"\n[{i}/{len(SAMPLES)}] {board}  ({expected_texture})", flush=True)
         t0 = time.time()
         result = solve_spot_multistreet(
-            pot_bb=POT, eff_bb=EFF, flop_board=board_ints,
-            iters_river=ITERS_RIVER, iters_flop=ITERS_FLOP,
-            batch_size=BATCH, verbose=True,
+            pot_bb=POT,
+            eff_bb=EFF,
+            flop_board=board_ints,
+            iters_river=ITERS_RIVER,
+            iters_flop=ITERS_FLOP,
+            batch_size=BATCH,
+            verbose=True,
         )
         elapsed = time.time() - t0
-        print(f"  elapsed: {elapsed/60:.1f} min", flush=True)
+        print(f"  elapsed: {elapsed / 60:.1f} min", flush=True)
         print(f"  exploitability: {result.get('exploitability', 0.0):.6f}", flush=True)
         for e in result["strategy"]:
-            print(f"    {e['action']:8s} {e['freq']*100:.2f}%", flush=True)
+            print(f"    {e['action']:8s} {e['freq'] * 100:.2f}%", flush=True)
 
         record = {
-            "spot_id": sid, "position": POS, "opponent": OPP,
-            "stack_bb": STACK, "pot_bb": POT, "board": board, "street": "flop",
-            "iterations": ITERS_FLOP, "exploitability": result.get("exploitability", 0.0),
+            "spot_id": sid,
+            "position": POS,
+            "opponent": OPP,
+            "stack_bb": STACK,
+            "pot_bb": POT,
+            "board": board,
+            "street": "flop",
+            "iterations": ITERS_FLOP,
+            "exploitability": result.get("exploitability", 0.0),
             "strategy": result["strategy"],
             "texture": board_texture(tuple(cards)),
         }
         write_parquet(f"sample_{int(t0)}_{POS}_{board}", record)
 
-    print(f"\nTotal: {(time.time()-t_start)/60:.1f} min", flush=True)
+    print(f"\nTotal: {(time.time() - t_start) / 60:.1f} min", flush=True)
     print(f"Output: {SOLUTIONS_MS_DIR}", flush=True)
 
 

@@ -15,27 +15,26 @@ from __future__ import annotations
 
 import pandas as pd
 
-from stockkit.data.symbols import is_japanese, normalize_symbol
-from stockkit.data.providers import yfinance_provider as _yf
+from stockkit.data.providers import estat_provider as _estat
+from stockkit.data.providers import fred_provider as _fred
 from stockkit.data.providers import jquants_provider as _jq
 from stockkit.data.providers import stooq_provider as _stooq
-from stockkit.data.providers import fred_provider as _fred
-from stockkit.data.providers import estat_provider as _estat
+from stockkit.data.providers import yfinance_provider as _yf
+from stockkit.data.symbols import is_japanese, normalize_symbol
 
 __all__ = [
-    "get_prices",
-    "get_info",
     "get_financials",
-    "get_macro",
+    "get_info",
     "get_jp_cpi",
-    "normalize_symbol",
+    "get_macro",
+    "get_prices",
     "is_japanese",
     "list_jp_securities",
+    "normalize_symbol",
 ]
 
 # Tickers that only exist on Stooq (not in yfinance)
 _STOOQ_ONLY = {"^TPX"}
-
 
 
 def get_prices(
@@ -51,9 +50,7 @@ def get_prices(
         return _jq.jq_get_prices(symbol, start=start, end=end, use_cache=use_cache)
     if src == "stooq":
         return _stooq.stooq_get_prices(symbol, start=start, end=end, use_cache=use_cache)
-    return _yf.get_prices(
-        symbol, start=start, end=end, period=period, use_cache=use_cache
-    )
+    return _yf.get_prices(symbol, start=start, end=end, period=period, use_cache=use_cache)
 
 
 def get_info(symbol: str, source: str = "auto") -> dict:

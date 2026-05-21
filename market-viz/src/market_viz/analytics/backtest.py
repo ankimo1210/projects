@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Callable
+from collections.abc import Callable
+from dataclasses import dataclass
 
 import numpy as np
 import pandas as pd
@@ -55,8 +55,8 @@ def run_backtest(
     opens = df.set_index("timestamp")["open"] if "open" in df.columns else close
 
     signal = signal_fn(close).reindex(close.index, fill_value=0)
-    position = signal.shift(1).fillna(0)   # execute next bar
-    exec_price = opens                       # next open
+    position = signal.shift(1).fillna(0)  # execute next bar
+    exec_price = opens  # next open
 
     daily_ret = exec_price.pct_change().fillna(0)
     strategy_ret = position * daily_ret
@@ -70,17 +70,17 @@ def run_backtest(
 
     # trades log
     entries = pos_change[pos_change != 0].index
-    trades = pd.DataFrame({
-        "timestamp": entries,
-        "position": position.loc[entries].values,
-        "price": exec_price.loc[entries].values,
-    })
+    trades = pd.DataFrame(
+        {
+            "timestamp": entries,
+            "position": position.loc[entries].values,
+            "price": exec_price.loc[entries].values,
+        }
+    )
 
     metrics = _calc_metrics(equity)
     metrics["trade_count"] = len(trades)
-    metrics["win_rate"] = (
-        (net_ret[net_ret != 0] > 0).mean() if (net_ret != 0).any() else 0.0
-    )
+    metrics["win_rate"] = (net_ret[net_ret != 0] > 0).mean() if (net_ret != 0).any() else 0.0
 
     return BacktestResult(equity=equity, trades=trades, metrics=metrics)
 
@@ -88,6 +88,7 @@ def run_backtest(
 # ---------------------------------------------------------------------------
 # Built-in signal factories
 # ---------------------------------------------------------------------------
+
 
 def ma_cross_signal(close: pd.Series, fast: int = 20, slow: int = 60) -> pd.Series:
     fast_ma = close.rolling(fast).mean()
@@ -98,7 +99,8 @@ def ma_cross_signal(close: pd.Series, fast: int = 20, slow: int = 60) -> pd.Seri
 def zscore_reversion_signal(
     close: pd.Series, window: int = 60, entry: float = 2.0, exit_: float = 0.5
 ) -> pd.Series:
-    from src.analytics.zscore import rolling_zscore
+    from market_viz.analytics.zscore import rolling_zscore
+
     z = rolling_zscore(close, window=window)
     pos = pd.Series(0, index=close.index)
     for i in range(1, len(z)):
@@ -125,7 +127,7 @@ def momentum_signal(close: pd.Series, window: int = 20) -> pd.Series:
 def volatility_breakout_signal(close: pd.Series, window: int = 20, mult: float = 1.0) -> pd.Series:
     rolling_high = close.rolling(window).max().shift(1)
     rolling_low = close.rolling(window).min().shift(1)
-    atr = (rolling_high - rolling_low)
+    atr = rolling_high - rolling_low
     upper = rolling_high + mult * atr
     pos = (close > upper).astype(int)
     return pos

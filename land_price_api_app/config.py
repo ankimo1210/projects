@@ -2,6 +2,7 @@
 config.py
 アプリ全体の設定を .env から読み込んで提供する。
 """
+
 import logging
 import os
 from pathlib import Path
@@ -29,6 +30,7 @@ REINFOLIB_API_KEY: str = os.getenv("REINFOLIB_API_KEY", "")
 REINFOLIB_BASE_URL: str = "https://www.reinfolib.mlit.go.jp/ex-api/external"
 ANTHROPIC_API_KEY: str = os.getenv("ANTHROPIC_API_KEY", "")
 ESTAT_APP_ID: str = os.getenv("ESTAT_APP_ID", "")
+
 
 # ---- DB / ファイルパス --------------------------------------------------
 def _resolve_path_from_env(var_name: str) -> Path | None:
@@ -84,10 +86,10 @@ STREAMLIT_LOG_PATH: Path = LOG_DIR / "streamlit.log"
 # ---- 同期設定 -----------------------------------------------------------
 DEFAULT_ZOOM: int = 13
 DEFAULT_PRICE_CLASSIFICATION: int = 0  # 0=地価公示, 1=地価調査
-REQUEST_INTERVAL_SEC: float = 0.3      # タイルAPI間の待機秒数
+REQUEST_INTERVAL_SEC: float = 0.3  # タイルAPI間の待機秒数
 REQUEST_TIMEOUT_SEC: int = 30
 MAX_RETRIES: int = 3
-RETRY_BACKOFF_BASE: float = 2.0        # 指数バックオフの底
+RETRY_BACKOFF_BASE: float = 2.0  # 指数バックオフの底
 
 # ---- 日本の大まかなバウンディングボックス --------------------------------
 JAPAN_LON_MIN: float = 122.0
@@ -113,9 +115,7 @@ def validate_anthropic_key() -> str:
     """Anthropic APIキーを返す。未設定なら EnvironmentError を送出する。"""
     key = ANTHROPIC_API_KEY
     if not key:
-        raise EnvironmentError(
-            "ANTHROPIC_API_KEY が設定されていません。.env を確認してください。"
-        )
+        raise OSError("ANTHROPIC_API_KEY が設定されていません。.env を確認してください。")
     return key
 
 
@@ -123,7 +123,7 @@ def validate_api_key() -> str:
     """APIキーを返す。未設定なら EnvironmentError を送出する。"""
     key = REINFOLIB_API_KEY
     if not key:
-        raise EnvironmentError(
+        raise OSError(
             "REINFOLIB_API_KEY が設定されていません。"
             " .env.example を参考に .env ファイルを作成してください。"
         )

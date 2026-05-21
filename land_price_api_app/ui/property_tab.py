@@ -8,50 +8,57 @@ URLを貼り付けると:
 3. 近傍の公示地価・取引価格と比較
 4. 投資シミュレーション（IRR・CF表）を表示
 """
-import re
-import html
-from typing import Optional
-
-import pandas as pd
-import streamlit as st
 
 import db
+import pandas as pd
+import streamlit as st
 from analytics import find_nearby_points
 from config import get_logger
 from facility_sources import (
     FacilitySearchError,
-    find_nearby_facility_groups,
     summarize_facility_groups,
 )
 from geocoder import GeocodingError, GeocodingResult, geocode_address
 from property_persistence import listing_row_to_property, property_to_listing_row
 from property_scraper import PropertyData, ScrapingError, extract_property_data, fetch_property_html
 from property_state import PropertyAnalysisState
-from ui.table import render_html_table, plain, muted, truncate, gap_bar, signed_pct_str, num_str, dist_str
-from ui.rent_benchmark_panel import render_rent_benchmark_panel
 from valuation import build_valuation_result, score_location_features
-# サブモジュール
-from ui.property_summary import (
-    _render_hero_banner, _render_property_summary, _render_summary_panel,
-    _fallback_trade_by_city, _land_use_candidates_for_property,
+
+from ui.property_investment import (
+    _SIM_AVAILABLE,
+    _build_sim_params,
+    _render_investment_metrics,
+    _render_irr_by_period,
+    _render_param_editor,
+    _render_sensitivity_heatmap,
+    _render_simulation,
+    run_full_analysis,
 )
 from ui.property_nearby import (
-    _load_nearby_land, _load_nearby_trade,
-    _render_nearby_prices, _render_nearby_listings,
-    _render_nearby_facility_summary, _render_location_map, _render_terrain_risk_summary,
     _PROPERTY_FACILITY_CATEGORIES,
+    _load_nearby_land,
+    _load_nearby_trade,
+    _render_location_map,
+    _render_nearby_facility_summary,
+    _render_nearby_listings,
+    _render_nearby_prices,
+    _render_terrain_risk_summary,
 )
-from ui.property_investment import (
-    _render_investment_metrics, _render_simulation,
-    _render_sensitivity_heatmap, _render_irr_by_period, _render_param_editor,
-    _build_sim_params, _SIM_AVAILABLE, run_full_analysis,
+
+# サブモジュール
+from ui.property_summary import (
+    _fallback_trade_by_city,
+    _land_use_candidates_for_property,
+    _render_hero_banner,
+    _render_property_summary,
+    _render_summary_panel,
 )
+from ui.rent_benchmark_panel import render_rent_benchmark_panel
 
 logger = get_logger(__name__)
 _FEATURE_VERSION = 1
 
 # property_investment.py から再エクスポートされた定数・関数
-from ui.property_investment import _SIM_DEFAULTS, _DEFAULT_LAND_RATIO
 
 _RESIDENTIAL_PROPERTY_KEYWORDS = ("アパート", "マンション", "戸建", "住宅", "土地")
 _COMMERCIAL_PROPERTY_KEYWORDS = ("店舗", "事務所", "ビル", "商業")
@@ -73,9 +80,12 @@ _PLATFORM_LABELS = {
 # メインエントリポイント
 # --------------------------------------------------------------------------
 
+
 def render_property_tab(conn, filters: dict) -> None:
     st.markdown("### 🏢 物件URL → 即時分析")
-    st.caption("楽待・健美家などの物件ページURLを貼り付けると、周辺地価との比較と投資シミュレーションを表示します。")
+    st.caption(
+        "楽待・健美家などの物件ページURLを貼り付けると、周辺地価との比較と投資シミュレーションを表示します。"
+    )
 
     # ── URL 入力 ──────────────────────────────────────────────
     col_url, col_btn = st.columns([5, 1])
@@ -97,12 +107,14 @@ def render_property_tab(conn, filters: dict) -> None:
 
     # ── 結果表示 ────────────────────────────────────────────────
     state = PropertyAnalysisState.load()
-    prop: Optional[PropertyData] = state.prop
-    geo: Optional[tuple] = state.geo
-    city_code: Optional[str] = state.city_code
+    prop: PropertyData | None = state.prop
+    geo: tuple | None = state.geo
+    city_code: str | None = state.city_code
 
     if prop is None:
-        st.info("URLを入力して「分析開始」を押すと、物件情報・近傍地価・投資シミュレーションを表示します。")
+        st.info(
+            "URLを入力して「分析開始」を押すと、物件情報・近傍地価・投資シミュレーションを表示します。"
+        )
         return
 
     # 近傍地価を先にロード（サマリー内の土地/建物価格試算に使う）
@@ -117,7 +129,11 @@ def render_property_tab(conn, filters: dict) -> None:
         available_years = db.get_available_years(conn)
         latest_year = available_years[0] if available_years else 2025
         trade_years_in_db = db.get_trade_available_years(conn)
-        trade_years = tuple(sorted(set(trade_years_in_db[:2]), reverse=True)) if trade_years_in_db else (latest_year,)
+        trade_years = (
+            tuple(sorted(set(trade_years_in_db[:2]), reverse=True))
+            if trade_years_in_db
+            else (latest_year,)
+        )
 
         land_all = _load_nearby_land(conn, latest_year)
         trade_all = _load_nearby_trade(conn, trade_years)
@@ -142,7 +158,9 @@ def render_property_tab(conn, filters: dict) -> None:
     _render_hero_banner(prop, state.source_url)
 
     # ── DB永続化（副作用のみ、表示は下のタブで行う） ────────────────
-    persisted = _persist_property_analysis(conn, prop, geo, city_code, nearby_land, nearby_trade, state)
+    persisted = _persist_property_analysis(
+        conn, prop, geo, city_code, nearby_land, nearby_trade, state
+    )
     if persisted:
         state.persisted_listing_id = persisted.get("listing_id")
         state.save()
@@ -161,7 +179,9 @@ def render_property_tab(conn, filters: dict) -> None:
         _render_property_rent_benchmark(conn, prop, city_code)
 
         if not _SIM_AVAILABLE:
-            st.warning("フル投資シミュレーションエンジンが見つかりません。簡易計算で感度分析を表示します。")
+            st.warning(
+                "フル投資シミュレーションエンジンが見つかりません。簡易計算で感度分析を表示します。"
+            )
             with st.expander("📊 金利×LTV 感度ヒートマップ（簡易）", expanded=True):
                 _render_sensitivity_heatmap(prop)
             with st.expander("📈 保有年数別IRR（簡易）", expanded=True):
@@ -195,7 +215,9 @@ def render_property_tab(conn, filters: dict) -> None:
                 render_population_card(pop_data)
                 st.markdown("")
 
-            _render_nearby_prices(nearby_land, nearby_trade, prop, radius_used, radius_used_trade, conn, city_code)
+            _render_nearby_prices(
+                nearby_land, nearby_trade, prop, radius_used, radius_used_trade, conn, city_code
+            )
             current_lid = state.persisted_listing_id
             _render_nearby_listings(conn, geo, current_lid)
             _render_location_map(geo, nearby_land, nearby_trade, conn=conn)
@@ -213,6 +235,7 @@ def render_property_tab(conn, filters: dict) -> None:
 # --------------------------------------------------------------------------
 # パイプライン実行
 # --------------------------------------------------------------------------
+
 
 def _run_analysis_pipeline(conn, url: str, filters: dict) -> None:
     """HTML取得 → 抽出 → ジオコーディングを順に実行してセッションに保存する。"""
@@ -244,7 +267,9 @@ def _run_analysis_pipeline(conn, url: str, filters: dict) -> None:
             return
 
         if prop.extraction_confidence == "low":
-            st.warning("一部の項目が抽出できませんでした。デフォルト値で補完します。シミュレーションパラメータをご確認ください。")
+            st.warning(
+                "一部の項目が抽出できませんでした。デフォルト値で補完します。シミュレーションパラメータをご確認ください。"
+            )
 
         state = PropertyAnalysisState(source_url=url)
         state.set_property(prop)
@@ -254,10 +279,14 @@ def _run_analysis_pipeline(conn, url: str, filters: dict) -> None:
             st.write(f"📍 住所を変換中: {prop.address}")
             try:
                 geo_result: GeocodingResult = geocode_address(prop.address)
-                state.set_property(prop, geo=(geo_result.lat, geo_result.lon), city_code=geo_result.city_code)
+                state.set_property(
+                    prop, geo=(geo_result.lat, geo_result.lon), city_code=geo_result.city_code
+                )
                 st.write(f"✅ 座標取得: ({geo_result.lat:.5f}, {geo_result.lon:.5f})")
             except GeocodingError as exc:
-                st.warning(f"住所のジオコーディングに失敗しました: {exc} — 近傍地価比較はスキップします。")
+                st.warning(
+                    f"住所のジオコーディングに失敗しました: {exc} — 近傍地価比較はスキップします。"
+                )
         else:
             st.warning("住所が抽出できませんでした。近傍地価比較はスキップします。")
 
@@ -267,8 +296,8 @@ def _run_analysis_pipeline(conn, url: str, filters: dict) -> None:
 def _persist_property_analysis(
     conn,
     prop: PropertyData,
-    geo: Optional[tuple[float, float]],
-    city_code: Optional[str],
+    geo: tuple[float, float] | None,
+    city_code: str | None,
     nearby_land: pd.DataFrame,
     nearby_trade: pd.DataFrame,
     state: "PropertyAnalysisState | None" = None,
@@ -283,13 +312,17 @@ def _persist_property_analysis(
     location_key = db.make_location_key(rounded_lat, rounded_lon) if geo is not None else None
 
     region_label = state.region_label if state else None
-    listing_row = property_to_listing_row(prop, source_url, city_code, rounded_lat, rounded_lon, region_label)
+    listing_row = property_to_listing_row(
+        prop, source_url, city_code, rounded_lat, rounded_lon, region_label
+    )
     listing_id = db.upsert_listing_master(conn, listing_row)
     if geo is None or location_key is None:
         return {"listing_id": listing_id, "location_key": None, "partial": True}
 
     try:
-        grouped = _load_nearby_facility_groups(tuple(_PROPERTY_FACILITY_CATEGORIES), rounded_lat, rounded_lon, 1000)
+        grouped = _load_nearby_facility_groups(
+            tuple(_PROPERTY_FACILITY_CATEGORIES), rounded_lat, rounded_lon, 1000
+        )
         elevation_result = _load_elevation(rounded_lat, rounded_lon)
         water_features = _load_nearby_water(rounded_lat, rounded_lon, 1000)
 
@@ -305,11 +338,7 @@ def _persist_property_analysis(
         db.upsert_location_features(conn, location_row)
 
         # 個別 POI を保存（地図表示・バッチ特徴量付与に再利用）
-        all_pois = [
-            poi | {"category": cat}
-            for cat, pois in grouped.items()
-            for poi in pois
-        ]
+        all_pois = [poi | {"category": cat} for cat, pois in grouped.items() for poi in pois]
         db.upsert_facility_pois(conn, location_key, all_pois)
         db.upsert_water_features(conn, location_key, water_features)
 
@@ -321,7 +350,9 @@ def _persist_property_analysis(
             nearby_trade=nearby_trade,
         )
         db.upsert_listing_feature_snapshot(conn, snapshot_row)
-        valuation_row = build_valuation_result(listing_row, snapshot_row, location_row, valuation_version=_FEATURE_VERSION)
+        valuation_row = build_valuation_result(
+            listing_row, snapshot_row, location_row, valuation_version=_FEATURE_VERSION
+        )
         db.upsert_valuation_result(conn, valuation_row)
     except (FacilitySearchError, TerrainSearchError) as exc:
         logger.warning("掲載物件特徴量の保存を一部スキップ: %s", exc)
@@ -345,9 +376,8 @@ def _persist_property_analysis(
     }
 
 
-def _render_property_rent_benchmark(conn, prop: PropertyData, city_code: Optional[str]) -> None:
+def _render_property_rent_benchmark(conn, prop: PropertyData, city_code: str | None) -> None:
     state = PropertyAnalysisState.load()
-    source_url = state.source_url or ""
     listing_id = state.persisted_listing_id
 
     render_rent_benchmark_panel(
@@ -373,7 +403,7 @@ def _build_location_feature_row(
     location_key: str,
     lat: float,
     lon: float,
-    city_code: Optional[str],
+    city_code: str | None,
     grouped: dict[str, list[dict]],
     elevation_result: dict,
     water_features: list[dict],
@@ -381,7 +411,9 @@ def _build_location_feature_row(
     facility_summary = summarize_facility_groups(grouped, _PROPERTY_FACILITY_CATEGORIES)
     terrain_summary = summarize_terrain_features(elevation_result, water_features, radius_m=1000)
     hazard_summary = summarize_hazard_risk(lat=lat, lon=lon)
-    score_summary = score_location_features({**facility_summary, **terrain_summary, **hazard_summary})
+    score_summary = score_location_features(
+        {**facility_summary, **terrain_summary, **hazard_summary}
+    )
     return {
         "location_key": location_key,
         "lat": lat,
@@ -410,7 +442,9 @@ def _build_listing_feature_snapshot_row(
     land_p25 = float(land_ref["price_yen_per_sqm"].quantile(0.25)) if not land_ref.empty else None
     land_p50 = float(land_ref["price_yen_per_sqm"].median()) if not land_ref.empty else None
     land_p75 = float(land_ref["price_yen_per_sqm"].quantile(0.75)) if not land_ref.empty else None
-    trade_median = float(nearby_trade["trade_price_per_sqm"].median()) if not nearby_trade.empty else None
+    trade_median = (
+        float(nearby_trade["trade_price_per_sqm"].median()) if not nearby_trade.empty else None
+    )
 
     unit_area_basis = None
     unit_area_sqm = None
@@ -451,8 +485,8 @@ def _build_listing_feature_snapshot_row(
         "unit_area_basis": unit_area_basis,
         "unit_area_sqm": unit_area_sqm,
         "unit_price_yen_per_sqm": unit_price_yen_per_sqm,
-        "nearby_land_count": int(len(land_ref)),
-        "nearby_trade_count": int(len(nearby_trade)),
+        "nearby_land_count": len(land_ref),
+        "nearby_trade_count": len(nearby_trade),
         "land_unit_price_p25_yen_per_sqm": land_p25,
         "land_unit_price_p75_yen_per_sqm": land_p75,
         "trade_unit_price_median_yen_per_sqm": trade_median,
@@ -496,7 +530,11 @@ def _select_land_price_reference_points(
     filtered = nearby_land.loc[mask].copy()
     if len(filtered) >= min_points:
         return filtered, " / ".join(candidates), f"{len(filtered)}地点"
-    return nearby_land, "全用途", f"{' / '.join(candidates)} の地点数不足（{len(filtered)}件）のため全用途へフォールバック"
+    return (
+        nearby_land,
+        "全用途",
+        f"{' / '.join(candidates)} の地点数不足（{len(filtered)}件）のため全用途へフォールバック",
+    )
 
 
 def _render_persistence_status(persisted: dict | None) -> None:
@@ -517,7 +555,8 @@ def _render_persistence_status(persisted: dict | None) -> None:
                 (
                     "相場差",
                     f"{valuation['adjusted_gap_pct']:+.1f}%"
-                    if valuation.get("adjusted_gap_pct") is not None else "—",
+                    if valuation.get("adjusted_gap_pct") is not None
+                    else "—",
                     None,
                 ),
                 ("信頼度", valuation.get("confidence") or "—", None),
@@ -534,7 +573,6 @@ def _render_persistence_status(persisted: dict | None) -> None:
 # --------------------------------------------------------------------------
 
 
-
 @st.cache_data(ttl=60, show_spinner=False)
 def _load_saved_listings(_conn) -> pd.DataFrame:
     return db.list_saved_listings(_conn)
@@ -548,7 +586,7 @@ def _render_saved_property_loader(conn) -> None:
 
     with st.expander(f"📂 保存済み物件をロード（{len(saved)}件）", expanded=False):
         # 表示ラベルの生成
-        def _nonan(v) -> Optional[str]:
+        def _nonan(v) -> str | None:
             """NaN・None を None に変換して返す。"""
             if v is None:
                 return None
@@ -563,12 +601,12 @@ def _render_saved_property_loader(conn) -> None:
         def _label(row) -> str:
             name = _nonan(row.get("property_name")) or _nonan(row.get("address")) or "（名称不明）"
             ask = row.get("asking_price_yen")
-            price = f'{float(ask)/1e4:,.0f}万円' if _nonan(ask) else "—"
+            price = f"{float(ask) / 1e4:,.0f}万円" if _nonan(ask) else "—"
             yld_v = row.get("gross_yield_pct")
-            yld = f'{float(yld_v):.1f}%' if _nonan(yld_v) else "—"
+            yld = f"{float(yld_v):.1f}%" if _nonan(yld_v) else "—"
             ptype = _nonan(row.get("property_type")) or ""
             age_v = row.get("age_years")
-            age = f'築{int(float(age_v))}年' if _nonan(age_v) else ""
+            age = f"築{int(float(age_v))}年" if _nonan(age_v) else ""
             parts = [p for p in [ptype, age] if p]
             detail = " / ".join(parts)
             return f"{name}　{price}　利回り{yld}　{detail}"
@@ -597,8 +635,3 @@ def _render_saved_property_loader(conn) -> None:
             )
             state.set_property(prop, geo=geo, city_code=city_code)
             st.rerun()
-
-
-
-
-

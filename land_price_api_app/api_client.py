@@ -9,13 +9,13 @@ api_client.py
 
 外部公開不要・Python サーバーサイドから呼ぶ構成。
 """
+
 import gzip
 import json
 import time
-from typing import Any, Optional
+from typing import Any
 
 import requests
-
 from config import (
     MAX_RETRIES,
     REINFOLIB_BASE_URL,
@@ -31,6 +31,7 @@ logger = get_logger(__name__)
 # ヘッダー
 # --------------------------------------------------------------------------
 
+
 def get_subscription_headers() -> dict[str, str]:
     """Ocp-Apim-Subscription-Key を含む共通ヘッダーを返す。"""
     api_key = validate_api_key()
@@ -45,9 +46,10 @@ def get_subscription_headers() -> dict[str, str]:
 # 汎用 GET
 # --------------------------------------------------------------------------
 
+
 def fetch_json(
     url: str,
-    params: Optional[dict[str, Any]] = None,
+    params: dict[str, Any] | None = None,
     *,
     timeout: int = REQUEST_TIMEOUT_SEC,
     max_retries: int = MAX_RETRIES,
@@ -79,7 +81,7 @@ def fetch_json(
         JSON パース失敗時。
     """
     headers = get_subscription_headers()
-    last_exc: Optional[Exception] = None
+    last_exc: Exception | None = None
 
     for attempt in range(max_retries + 1):
         try:
@@ -88,10 +90,13 @@ def fetch_json(
 
             # 429 / 503 はバックオフして再試行
             if resp.status_code in (429, 503):
-                wait = RETRY_BACKOFF_BASE ** attempt
+                wait = RETRY_BACKOFF_BASE**attempt
                 logger.warning(
                     "HTTP %d: バックオフ %.1fs (attempt %d/%d)",
-                    resp.status_code, wait, attempt + 1, max_retries,
+                    resp.status_code,
+                    wait,
+                    attempt + 1,
+                    max_retries,
                 )
                 time.sleep(wait)
                 continue
@@ -112,7 +117,7 @@ def fetch_json(
         except requests.exceptions.ConnectionError as exc:
             logger.warning("接続エラー (attempt %d/%d): %s", attempt + 1, max_retries, exc)
             last_exc = exc
-            time.sleep(RETRY_BACKOFF_BASE ** attempt)
+            time.sleep(RETRY_BACKOFF_BASE**attempt)
         except requests.exceptions.HTTPError as exc:
             # 4xx はリトライ不要（429 は上で処理済み）
             logger.error("HTTP エラー: %s", exc)
@@ -130,13 +135,14 @@ def fetch_json(
 # XPT002 タイル取得
 # --------------------------------------------------------------------------
 
+
 def fetch_geojson_tile_xpt002(
     z: int,
     x: int,
     y: int,
     year: int,
     price_classification: int = 0,
-    use_category_codes: Optional[list[str]] = None,
+    use_category_codes: list[str] | None = None,
     response_format: str = "geojson",
 ) -> dict[str, Any]:
     """
@@ -194,6 +200,7 @@ def fetch_geojson_tile_xpt002(
 # XIT001 不動産取引価格情報
 # --------------------------------------------------------------------------
 
+
 def fetch_trade_prices_xit001(
     area: str,
     year: int,
@@ -231,7 +238,9 @@ def fetch_trade_prices_xit001(
     raw = fetch_json(url, params=params)
 
     if not isinstance(raw, dict):
-        logger.debug("XIT001 area=%s year=%d Q%d: 予期しないレスポンス型 %s", area, year, quarter, type(raw))
+        logger.debug(
+            "XIT001 area=%s year=%d Q%d: 予期しないレスポンス型 %s", area, year, quarter, type(raw)
+        )
         return []
 
     records = raw.get("data", [])
@@ -243,6 +252,7 @@ def fetch_trade_prices_xit001(
 # --------------------------------------------------------------------------
 # XIT002 市区町村リスト
 # --------------------------------------------------------------------------
+
 
 def fetch_city_list(prefecture_code: str) -> list[dict[str, Any]]:
     """
@@ -276,13 +286,14 @@ def fetch_city_list(prefecture_code: str) -> list[dict[str, Any]]:
 # スモークテスト
 # --------------------------------------------------------------------------
 
+
 def smoke_test_api_key() -> bool:
     """APIキーが読み込まれているか確認する。"""
     try:
         validate_api_key()
         logger.info("APIキー: OK")
         return True
-    except EnvironmentError as exc:
+    except OSError as exc:
         logger.error("APIキー: NG - %s", exc)
         return False
 
@@ -311,7 +322,11 @@ def smoke_test_xpt002(z: int = 14, x: int = 14552, y: int = 6452, year: int = 20
             features = data.get("features", [])
             logger.info(
                 "XPT002 疎通確認 (year=%d, z=%d/%d/%d): %d features",
-                try_year, z, x, y, len(features),
+                try_year,
+                z,
+                x,
+                y,
+                len(features),
             )
             return True
         except Exception as exc:

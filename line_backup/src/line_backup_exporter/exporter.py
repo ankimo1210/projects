@@ -1,8 +1,8 @@
 from __future__ import annotations
-import csv
+
 import sqlite3
 from contextlib import closing
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -13,7 +13,7 @@ from .utils import get_logger, write_csv
 logger = get_logger(__name__)
 
 # Mac absolute time epoch: 2001-01-01 00:00:00 UTC
-_MAC_EPOCH = datetime(2001, 1, 1, tzinfo=timezone.utc).timestamp()
+_MAC_EPOCH = datetime(2001, 1, 1, tzinfo=UTC).timestamp()
 # Plausible range for "seconds since Mac epoch" (2001-01-01 ~ 2050-01-01)
 _MAC_TS_MIN = 0
 _MAC_TS_MAX = 1_546_300_800  # roughly 2050 from Mac epoch
@@ -59,21 +59,21 @@ def guess_timestamp(raw: Any) -> str:
     # Unix milliseconds
     if _UNIX_MS_MIN <= val <= _UNIX_MS_MAX:
         try:
-            return datetime.fromtimestamp(val / 1000, tz=timezone.utc).isoformat()
+            return datetime.fromtimestamp(val / 1000, tz=UTC).isoformat()
         except (OSError, OverflowError):
             pass
 
     # Unix seconds
     if _UNIX_S_MIN <= val <= _UNIX_S_MAX:
         try:
-            return datetime.fromtimestamp(val, tz=timezone.utc).isoformat()
+            return datetime.fromtimestamp(val, tz=UTC).isoformat()
         except (OSError, OverflowError):
             pass
 
     # Mac absolute time (seconds since 2001-01-01)
     if _MAC_TS_MIN <= val <= _MAC_TS_MAX:
         try:
-            return datetime.fromtimestamp(val + _MAC_EPOCH, tz=timezone.utc).isoformat()
+            return datetime.fromtimestamp(val + _MAC_EPOCH, tz=UTC).isoformat()
         except (OSError, OverflowError):
             pass
 
@@ -101,9 +101,7 @@ def export_raw_table(
     with closing(sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)) as conn:
         allowed = _allowed_tables(conn)
         if table not in allowed:
-            raise ValueError(
-                f"Table {table!r} not found. Available: {sorted(allowed)}"
-            )
+            raise ValueError(f"Table {table!r} not found. Available: {sorted(allowed)}")
 
         sql = f'SELECT * FROM "{table}"'
         if limit is not None:
@@ -136,9 +134,7 @@ def export_normalized(
 
         allowed = _allowed_tables(conn)
         if message_table not in allowed:
-            raise ValueError(
-                f"Table {message_table!r} not found. Available: {sorted(allowed)}"
-            )
+            raise ValueError(f"Table {message_table!r} not found. Available: {sorted(allowed)}")
 
         with closing(conn.cursor()) as cur:
             cur.execute(f'PRAGMA table_info("{message_table}")')
@@ -156,8 +152,14 @@ def export_normalized(
             raw_rows = cur.fetchall()
 
     headers = [
-        "source_db", "message_id", "chat_id", "sender_id",
-        "timestamp_raw", "timestamp_iso_guess", "message_type", "text",
+        "source_db",
+        "message_id",
+        "chat_id",
+        "sender_id",
+        "timestamp_raw",
+        "timestamp_iso_guess",
+        "message_type",
+        "text",
     ]
 
     def _get(row, col_key: str) -> Any:
@@ -169,16 +171,18 @@ def export_normalized(
     out_rows: list[list] = []
     for row in raw_rows:
         ts_raw = _get(row, "timestamp")
-        out_rows.append([
-            source_db,
-            _get(row, "message_id"),
-            _get(row, "chat_id"),
-            _get(row, "sender_id"),
-            ts_raw,
-            guess_timestamp(ts_raw),
-            _get(row, "type"),
-            _get(row, "text"),
-        ])
+        out_rows.append(
+            [
+                source_db,
+                _get(row, "message_id"),
+                _get(row, "chat_id"),
+                _get(row, "sender_id"),
+                ts_raw,
+                guess_timestamp(ts_raw),
+                _get(row, "type"),
+                _get(row, "text"),
+            ]
+        )
 
     write_csv(out_path, out_rows, headers)
     logger.info("Exported %d normalized messages to %s", len(out_rows), out_path)

@@ -1,4 +1,5 @@
 """Bottom-up multipole propagation correctness."""
+
 from __future__ import annotations
 
 import cupy as cp
@@ -12,6 +13,7 @@ from nbody.octree import LBVH, Multipole, sort_by_morton
 def cupy_available():
     try:
         import cupy
+
         _ = cupy.arange(1)
         return True
     except Exception:
@@ -44,8 +46,9 @@ def test_root_com_matches_global_com(cupy_available):
     pos_s, mass_s, tree, mp = _setup(n, seed=1)
     root_com = cp.asnumpy(mp.node_com[tree.root])
     expected = cp.asnumpy((mass_s[:, None] * pos_s).sum(0) / mass_s.sum())
-    assert np.allclose(root_com, expected, rtol=1e-3, atol=1e-4), \
+    assert np.allclose(root_com, expected, rtol=1e-3, atol=1e-4), (
         f"root_com={root_com}  expected={expected}"
+    )
 
 
 def test_root_bbox_covers_all_points(cupy_available):
@@ -73,8 +76,8 @@ def test_every_internal_node_combines_children(cupy_available):
         gid = n + k
         l, r = left[k], right[k]
         m = nm[l] + nm[r]
-        assert abs(nm[gid] - m) <= 1e-3 * max(m, 1e-6), \
-            f"node {k}: mass {nm[gid]} != {m}"
+        assert abs(nm[gid] - m) <= 1e-3 * max(m, 1e-6), f"node {k}: mass {nm[gid]} != {m}"
         expected_com = (nm[l] * nc[l] + nm[r] * nc[r]) / max(m, 1e-30)
-        assert np.allclose(nc[gid], expected_com, atol=1e-4), \
+        assert np.allclose(nc[gid], expected_com, atol=1e-4), (
             f"node {k}: com {nc[gid]} != {expected_com}"
+        )

@@ -1,9 +1,9 @@
 """db/_population.py — population_stats テーブルの CRUD。"""
+
 from __future__ import annotations
 
 import duckdb
 import pandas as pd
-
 from config import get_logger
 
 logger = get_logger(__name__)
@@ -27,10 +27,11 @@ def upsert_population_stats(conn: duckdb.DuckDBPyConnection, df: pd.DataFrame) -
     """population_stats テーブルに upsert する。"""
     if df.empty:
         return 0
-    from db._utils import _get_table_columns, _align_df_to_schema
+    from db._utils import _align_df_to_schema, _get_table_columns
+
     for year in df["survey_year"].unique():
         conn.execute("DELETE FROM population_stats WHERE survey_year = ?", [int(year)])
-    payload = _align_df_to_schema(df, _get_table_columns(conn, "population_stats"))
+    _align_df_to_schema(df, _get_table_columns(conn, "population_stats"))
     conn.execute("INSERT INTO population_stats SELECT * FROM payload")
     n = len(df)
     logger.info("population_stats upsert: %d 件", n)

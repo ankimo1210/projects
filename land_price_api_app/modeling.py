@@ -2,6 +2,7 @@
 modeling.py
 公示地価データに対する簡易線形モデルの学習・推論。
 """
+
 from __future__ import annotations
 
 import json
@@ -10,8 +11,6 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
-
-import db
 from config import PROCESSED_DIR
 
 MODEL_PATH = PROCESSED_DIR / "valuation_model_public_notice.json"
@@ -27,7 +26,9 @@ FEATURE_COLUMNS = [
 ]
 
 
-def prepare_public_notice_training_data(conn, year: int | None = None, limit: int = 20000) -> pd.DataFrame:
+def prepare_public_notice_training_data(
+    conn, year: int | None = None, limit: int = 20000
+) -> pd.DataFrame:
     where = []
     params: list[Any] = []
     if year is not None:
@@ -80,9 +81,11 @@ def fit_linear_public_notice_model(df: pd.DataFrame) -> dict[str, Any]:
         "model_name": "linear_public_notice_v1",
         "feature_columns": FEATURE_COLUMNS,
         "intercept": float(coef[0]),
-        "coefficients": {name: float(value) for name, value in zip(FEATURE_COLUMNS, coef[1:])},
+        "coefficients": {
+            name: float(value) for name, value in zip(FEATURE_COLUMNS, coef[1:], strict=False)
+        },
         "rmse_log": rmse,
-        "row_count": int(len(train)),
+        "row_count": len(train),
     }
     return model
 
@@ -99,7 +102,9 @@ def load_model(path: Path = MODEL_PATH) -> dict[str, Any] | None:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def predict_listing_fair_value(model: dict[str, Any], snapshot_row: dict[str, Any], feature_row: dict[str, Any]) -> float | None:
+def predict_listing_fair_value(
+    model: dict[str, Any], snapshot_row: dict[str, Any], feature_row: dict[str, Any]
+) -> float | None:
     unit_area_sqm = snapshot_row.get("unit_area_sqm")
     if unit_area_sqm is None or float(unit_area_sqm) <= 0:
         return None
@@ -115,6 +120,8 @@ def predict_listing_fair_value(model: dict[str, Any], snapshot_row: dict[str, An
             x.append(0.0)
     intercept = float(model["intercept"])
     coefs = model["coefficients"]
-    log_unit = intercept + sum(xi * float(coefs[name]) for xi, name in zip(x[1:], model["feature_columns"]))
+    log_unit = intercept + sum(
+        xi * float(coefs[name]) for xi, name in zip(x[1:], model["feature_columns"], strict=False)
+    )
     unit_price = float(np.exp(log_unit))
     return unit_price * float(unit_area_sqm)

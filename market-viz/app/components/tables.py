@@ -23,7 +23,7 @@ def _zscore_color(val: float) -> str:
     return ""
 
 
-def style_dashboard_df(df: pd.DataFrame) -> "pd.Styler":
+def style_dashboard_df(df: pd.DataFrame) -> pd.Styler:
     pct_cols = [c for c in df.columns if c.startswith("ret_")]
     z_cols = [c for c in df.columns if c.startswith("zscore_")]
 

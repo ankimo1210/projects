@@ -4,9 +4,7 @@ from __future__ import annotations
 
 import dash
 import dash_bootstrap_components as dbc
-import pandas as pd
 from dash import Input, Output, dcc, html
-
 from stockkit.analysis import fundamental
 from stockkit.data import get_prices, normalize_symbol
 from stockkit.viz import charts

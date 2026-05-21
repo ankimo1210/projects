@@ -16,6 +16,7 @@ api_app = Flask(__name__)
 @api_app.route("/api/chat", methods=["POST"])
 def chat():
     from api import job_store
+
     body = request.get_json(force=True)
     job_id = job_store.submit(
         body.get("conversation", []),
@@ -27,6 +28,7 @@ def chat():
 @api_app.route("/api/status/<job_id>")
 def status(job_id: str):
     from api import job_store
+
     return jsonify(job_store.get_status(job_id))
 
 

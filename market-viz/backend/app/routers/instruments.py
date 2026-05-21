@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+
 from backend.app.deps import load_instruments
 from backend.app.models.schemas import Instrument
 

@@ -1,27 +1,31 @@
 """
 Generate Jupyter Notebook: Interest Rate Volatility Models (Part 2: Ch3-Ch6)
 """
+
 import nbformat as nbf
 import numpy as np
-from scipy.stats import norm
-from scipy.optimize import minimize
 
 np.random.seed(42)
+
 
 def md_cell(text):
     return nbf.v4.new_markdown_cell(text)
 
+
 def code_cell(code):
     return nbf.v4.new_code_cell(code)
+
 
 # =====================================================================
 # CHAPTER 3: Vasicek Model
 # =====================================================================
 
+
 def create_ch3():
     cells = []
-    
-    cells.append(md_cell("""
+
+    cells.append(
+        md_cell("""
 # Chapter 3: Vasicek Model
 
 ## 概要
@@ -51,9 +55,11 @@ $$r_t = b + (r_0 - b)e^{-at} + \\sigma\\int_0^t e^{-a(t-s)} dW_s$$
 分散：$V[r_t] = \\frac{\\sigma^2}{2a}(1 - e^{-2at})$
 
 長期分散：$\\lim_{t\\to\\infty} V[r_t] = \\frac{\\sigma^2}{2a}$
-    """))
-    
-    cells.append(code_cell("""
+    """)
+    )
+
+    cells.append(
+        code_cell("""
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint
@@ -122,9 +128,11 @@ print(f"\\nPath statistics at T={T}:")
 print(f"  Mean: {np.mean(paths[:, -1])*100:.4f}%")
 print(f"  Std: {np.std(paths[:, -1])*100:.4f}%")
 print(f"  Expected: {b_val*100:.4f}% (long-term mean)")
-    """))
-    
-    cells.append(code_cell("""
+    """)
+    )
+
+    cells.append(
+        code_cell("""
 # ===== Vasicek 動的可視化（ipywidgets）=====
 
 from ipywidgets import FloatSlider, interact
@@ -195,17 +203,21 @@ interact(
 )
 
 print("✓ Adjust sliders to see path dynamics change")
-    """))
-    
-    cells.append(md_cell("""
+    """)
+    )
+
+    cells.append(
+        md_cell("""
 ## 簡易キャリブレーション：Zero Curve フィット
 
 Vasicek モデルを initial zero curve にフィットさせます。
 
 市場の zero curve が観測されているとき、 $a, b, \\sigma$ を推定します。
-    """))
-    
-    cells.append(code_cell("""
+    """)
+    )
+
+    cells.append(
+        code_cell("""
 from scipy.optimize import minimize
 
 def vasicek_bond_price_analytical(r, a, b, sigma, tau):
@@ -280,9 +292,11 @@ print(f"\\nFit Quality:")
 print(f"  Market vs Model at selected maturities:")
 for T, Z_mkt, Z_mdl in zip(T_array[::4], market_zero_curve[::4], model_zeros[::4]):
     print(f"    T={T:4.1f}y: Market={Z_mkt*100:.3f}% Model={Z_mdl*100:.3f}% Diff={abs(Z_mkt-Z_mdl)*10000:.1f}bps")
-    """))
-    
-    cells.append(md_cell("""
+    """)
+    )
+
+    cells.append(
+        md_cell("""
 ## 主な特徴
 
 ### 強み
@@ -300,8 +314,9 @@ for T, Z_mkt, Z_mdl in zip(T_array[::4], market_zero_curve[::4], model_zeros[::4
 - 🏦 学術研究・教育
 - 🏦 シンプルな金利動学が必要な場合
 - 🏦 解析的結果が欲しい場合
-    """))
-    
+    """)
+    )
+
     return cells
 
 
@@ -309,10 +324,12 @@ for T, Z_mkt, Z_mdl in zip(T_array[::4], market_zero_curve[::4], model_zeros[::4
 # CHAPTER 4: CIR Model
 # =====================================================================
 
+
 def create_ch4():
     cells = []
-    
-    cells.append(md_cell("""
+
+    cells.append(
+        md_cell("""
 # Chapter 4: CIR Model (Cox-Ingersoll-Ross)
 
 ## 概要
@@ -344,9 +361,11 @@ $$2ab \\geq \\sigma^2$$
 ### 条件を満たさない場合
 - 金利がゼロに達すると、$\\sqrt{r_t}$ の項がゼロになり反射
 - Boundary condition: $r_t$ がゼロに達すると反射
-    """))
-    
-    cells.append(code_cell("""
+    """)
+    )
+
+    cells.append(
+        code_cell("""
 def cir_path_euler(r0, a, b, sigma, T, n_steps, n_paths=1000):
     \"\"\"
     CIR SDE を Euler-Maruyama で simulation
@@ -404,9 +423,11 @@ print(f"  Terminal mean: {np.mean(paths_cir[:, -1])*100:.4f}%")
 print(f"  Terminal min: {np.min(paths_cir[:, -1])*100:.4f}%")
 print(f"  Terminal max: {np.max(paths_cir[:, -1])*100:.4f}%")
 print(f"  % time at r=0: {(np.sum(paths_cir < 0.0001) / paths_cir.size)*100:.2f}%")
-    """))
-    
-    cells.append(code_cell("""
+    """)
+    )
+
+    cells.append(
+        code_cell("""
 # ===== Vasicek vs CIR 比較 + ipywidgets =====
 
 from ipywidgets import FloatSlider, interact
@@ -467,9 +488,11 @@ interact(
     b_param=FloatSlider(min=0.01, max=0.10, step=0.005, value=0.05, description='b (%):'),
     sigma_param=FloatSlider(min=0.001, max=0.05, step=0.005, value=0.02, description='σ (%):')
 )
-    """))
-    
-    cells.append(md_cell("""
+    """)
+    )
+
+    cells.append(
+        md_cell("""
 ## 主な特徴
 
 ### 強み
@@ -486,8 +509,9 @@ interact(
 - 🏦 非負性が重要な場合
 - 🏦 金利が低い環境での risk management
 - 🏦 学術的応用
-    """))
-    
+    """)
+    )
+
     return cells
 
 
@@ -495,10 +519,12 @@ interact(
 # CHAPTER 5: Hull-White 1 Factor
 # =====================================================================
 
+
 def create_ch5():
     cells = []
-    
-    cells.append(md_cell("""
+
+    cells.append(
+        md_cell("""
 # Chapter 5: Hull-White 1-Factor Model
 
 ## 概要
@@ -527,9 +553,11 @@ $$dr_t = (\\theta(t) - a r_t)dt + \\sigma dW_t$$
 $$\\theta(t) = -\\frac{\\partial f^m(0,t)}{\\partial t} - a f^m(0,t) + \\sigma^2(1 - e^{-2at})/(2a)$$
 
 ここで $f^m(0,t)$ は市場の instantaneous forward rate。
-    """))
-    
-    cells.append(code_cell("""
+    """)
+    )
+
+    cells.append(
+        code_cell("""
 def hw1f_theta_calculation(market_zero_curve, T_array, a, sigma):
     \"\"\"
     Hull-White theta(t) を市場ゼロカーブから計算
@@ -586,9 +614,11 @@ print(f"Parameters: a={a_param}, σ={sigma_param*100:.2f}%")
 print(f"\\ntheta(t) samples:")
 for t, theta in zip(T_array[::5], theta_array[::5]):
     print(f"  t={t:4.1f}y: θ(t)={theta*100:7.4f}%")
-    """))
-    
-    cells.append(code_cell("""
+    """)
+    )
+
+    cells.append(
+        code_cell("""
 # ===== Hull-White Path + Initial Curve Fit =====
 
 from scipy.interpolate import interp1d
@@ -659,9 +689,11 @@ interact(
     a_param=FloatSlider(min=0.01, max=1.0, step=0.05, value=0.1, description='a:'),
     sigma_pct=FloatSlider(min=0.1, max=5, step=0.2, value=1, description='σ (%):')
 )
-    """))
-    
-    cells.append(md_cell("""
+    """)
+    )
+
+    cells.append(
+        md_cell("""
 ## 主な特徴
 
 ### 強み
@@ -679,8 +711,9 @@ interact(
 - 🏦 **標準的な金利デリバティブ価格付け**
 - 🏦 構造化商品（Callable bond, Bermudan等）
 - 🏦 金利リスク管理・シナリオ分析
-    """))
-    
+    """)
+    )
+
     return cells
 
 
@@ -688,10 +721,12 @@ interact(
 # CHAPTER 6: G2++ Model
 # =====================================================================
 
+
 def create_ch6():
     cells = []
-    
-    cells.append(md_cell("""
+
+    cells.append(
+        md_cell("""
 # Chapter 6: G2++ (Two-Factor Gaussian) Model
 
 ## 概要
@@ -715,9 +750,11 @@ $$dW_t^{(1)} dW_t^{(2)} = \\rho dt$$
 - $\\sigma, \\eta$ = Volatilities
 - $\\rho$ = Correlation between factors
 - $\\phi(t)$ = Deterministic term (initial curve fit)
-    """))
-    
-    cells.append(code_cell("""
+    """)
+    )
+
+    cells.append(
+        code_cell("""
 def g2pp_path_euler(x0, y0, a, b, sigma, eta, rho, phi_func, T, n_steps, n_paths=1000):
     \"\"\"
     G2++ two-factor model simulation
@@ -779,9 +816,11 @@ print(f"Parameters: a={a}, b={b}, σ={sigma*100:.2f}%, η={eta*100:.2f}%, ρ={rh
 print(f"Terminal r_t distribution:")
 print(f"  Mean: {np.mean(r_paths[:, -1])*100:.4f}%")
 print(f"  Std: {np.std(r_paths[:, -1])*100:.4f}%")
-    """))
-    
-    cells.append(code_cell("""
+    """)
+    )
+
+    cells.append(
+        code_cell("""
 # ===== G2++ Interactive: 相関ρの効果を可視化 =====
 
 from ipywidgets import FloatSlider, interact
@@ -867,9 +906,11 @@ interact(
 )
 
 print("✓ Adjust ρ to see factor correlation effect")
-    """))
-    
-    cells.append(md_cell("""
+    """)
+    )
+
+    cells.append(
+        md_cell("""
 ## 主な特徴
 
 ### 強み
@@ -887,8 +928,9 @@ print("✓ Adjust ρ to see factor correlation effect")
 - 🏦 複雑なswaption / Bermudan option
 - 🏦 Curve変形が重要な商品
 - 🏦 マルチカーブ環境
-    """))
-    
+    """)
+    )
+
     return cells
 
 
@@ -896,23 +938,25 @@ print("✓ Adjust ρ to see factor correlation effect")
 # Assemble Notebook (Part 2)
 # =====================================================================
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     nb = nbf.v4.new_notebook()
-    
+
     cells = []
-    
+
     # Add chapters
     cells.extend(create_ch3())
     cells.extend(create_ch4())
     cells.extend(create_ch5())
     cells.extend(create_ch6())
-    
+
     nb.cells = cells
-    
+
     # Save
-    output_path = '/home/kazumasa/projects/rates_volatility_model/rates_volatility_models_part2.ipynb'
-    with open(output_path, 'w') as f:
+    output_path = (
+        "/home/kazumasa/projects/rates_volatility_model/rates_volatility_models_part2.ipynb"
+    )
+    with open(output_path, "w") as f:
         nbf.write(nb, f)
-    
+
     print(f"✓ Generated: {output_path}")
     print(f"  Total cells: {len(cells)}")

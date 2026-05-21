@@ -6,8 +6,7 @@ from functools import lru_cache
 from pathlib import Path
 
 import yaml
-
-from src.storage.duckdb_client import DuckDBClient
+from market_viz.storage.duckdb_client import DuckDBClient
 
 # project root = 2 levels up from this file (backend/app/deps.py)
 ROOT = Path(__file__).parent.parent.parent

@@ -1,11 +1,22 @@
 from __future__ import annotations
-import re
-from .models import TableInfo, TableCandidates
+
+from .models import TableCandidates, TableInfo
 
 _CATEGORY_KEYWORDS: dict[str, list[str]] = {
-    "messages": ["text", "message", "content", "chat", "talk", "sender", "from",
-                 "created", "timestamp", "date", "type"],
-    "rooms":    ["chat", "room", "group", "mid", "name", "title"],
+    "messages": [
+        "text",
+        "message",
+        "content",
+        "chat",
+        "talk",
+        "sender",
+        "from",
+        "created",
+        "timestamp",
+        "date",
+        "type",
+    ],
+    "rooms": ["chat", "room", "group", "mid", "name", "title"],
     "contacts": ["contact", "member", "user", "mid", "name", "display"],
     "attachments": ["media", "image", "video", "audio", "file", "path", "attachment"],
 }
@@ -15,9 +26,7 @@ _TOP_N = 3
 
 def _score(table: TableInfo, keywords: list[str]) -> int:
     col_names = [c.name.lower() for c in table.columns]
-    score = sum(
-        1 for kw in keywords if any(kw in cn for cn in col_names)
-    )
+    score = sum(1 for kw in keywords if any(kw in cn for cn in col_names))
     if table.row_count is not None and table.row_count > 1000:
         score += 2
     return score
@@ -50,10 +59,10 @@ def guess_message_columns(col_names: list[str]) -> dict[str, str | None]:
         return None
 
     return {
-        "message_id":  find("z_pk", "rowid", "id", "msgid", "message_id"),
-        "chat_id":     find("chatid", "chat_id", "roomid", "room_id", "groupid"),
-        "sender_id":   find("sender", "from", "authorid", "author_id", "user_id"),
-        "timestamp":   find("timestamp", "created", "date", "time", "sent"),
-        "text":        find("text", "message", "content", "body"),
-        "type":        find("type", "msgtype", "message_type"),
+        "message_id": find("z_pk", "rowid", "id", "msgid", "message_id"),
+        "chat_id": find("chatid", "chat_id", "roomid", "room_id", "groupid"),
+        "sender_id": find("sender", "from", "authorid", "author_id", "user_id"),
+        "timestamp": find("timestamp", "created", "date", "time", "sent"),
+        "text": find("text", "message", "content", "body"),
+        "type": find("type", "msgtype", "message_type"),
     }

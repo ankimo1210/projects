@@ -4,8 +4,7 @@ from __future__ import annotations
 
 import dash
 import dash_bootstrap_components as dbc
-from dash import Input, Output, State, dcc, html, dash_table
-
+from dash import Input, Output, State, dash_table, dcc, html
 from stockkit.analysis import portfolio as port
 from stockkit.viz import charts
 
@@ -47,9 +46,7 @@ layout = dbc.Container(
                 dbc.Col(
                     [
                         dbc.Label(" "),
-                        dbc.Button(
-                            "Analyze", id="pf-run", color="primary", className="d-block"
-                        ),
+                        dbc.Button("Analyze", id="pf-run", color="primary", className="d-block"),
                     ],
                     md=2,
                 ),

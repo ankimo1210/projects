@@ -8,16 +8,15 @@ hazard_sources.py
 
 データが存在しない場合は None を返してスキップする。
 """
+
 from __future__ import annotations
 
 import json
 from functools import lru_cache
-from pathlib import Path
 from typing import Any
 
-from shapely.geometry import Point, shape
-
 from config import RAW_DIR, get_logger
+from shapely.geometry import Point, shape
 
 logger = get_logger(__name__)
 

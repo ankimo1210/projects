@@ -49,9 +49,7 @@ def macd(
     return pd.DataFrame({"macd": macd_line, "signal": sig, "hist": macd_line - sig})
 
 
-def bollinger(
-    x: pd.DataFrame | pd.Series, window: int = 20, k: float = 2.0
-) -> pd.DataFrame:
+def bollinger(x: pd.DataFrame | pd.Series, window: int = 20, k: float = 2.0) -> pd.DataFrame:
     s = _close(x)
     mid = s.rolling(window).mean()
     std = s.rolling(window).std()

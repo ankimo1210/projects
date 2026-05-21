@@ -2,22 +2,30 @@
 ui/ranking_tab.py
 Ranking タブ: 価格・変動率・市区町村別ランキング。
 """
-import re
-from typing import Optional
 
+import re
+
+import analytics
 import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-import analytics
+from ui.table import (
+    count_num,
+    gap_bar,
+    muted,
+    price_man,
+    rank_num,
+    render_html_table,
+    truncate,
+    use_category_badge,
+)
 from ui.unit_price import add_tsubo_price_column, convert_yen_columns_to_man, yen_to_man
-from ui.table import render_html_table, gap_bar, price_man, truncate, muted, rank_num, count_num, use_category_badge
-
 
 _USE_CATEGORY_OPTIONS = ["住宅地", "商業地", "工業地", "すべて"]
 
 
-def render_ranking_tab(df: Optional[pd.DataFrame], filters: dict) -> None:
+def render_ranking_tab(df: pd.DataFrame | None, filters: dict) -> None:
     st.header("🏆 ランキング")
 
     if df is None or df.empty:
@@ -29,7 +37,11 @@ def render_ranking_tab(df: Optional[pd.DataFrame], filters: dict) -> None:
     # 用途区分フィルタ（住宅地デフォルト）
     col_use, col_n = st.columns([3, 1])
     with col_use:
-        available_cats = sorted(df["use_category_name"].dropna().unique().tolist()) if "use_category_name" in df.columns else []
+        available_cats = (
+            sorted(df["use_category_name"].dropna().unique().tolist())
+            if "use_category_name" in df.columns
+            else []
+        )
         options = [c for c in _USE_CATEGORY_OPTIONS if c == "すべて" or c in available_cats]
         selected_use = st.radio(
             "用途区分",
@@ -43,9 +55,7 @@ def render_ranking_tab(df: Optional[pd.DataFrame], filters: dict) -> None:
 
     filtered_df = df if selected_use == "すべて" else df[df["use_category_name"] == selected_use]
 
-    tab1, tab2, tab3, tab4 = st.tabs(
-        ["高価格", "変動率", "市区町村別平均", "🏛 都道府県別"]
-    )
+    tab1, tab2, tab3, tab4 = st.tabs(["高価格", "変動率", "市区町村別平均", "🏛 都道府県別"])
 
     with tab1:
         _render_price_ranking(filtered_df, year, top_n, show_category=(selected_use == "すべて"))
@@ -67,23 +77,59 @@ def _render_price_ranking(df: pd.DataFrame, year, top_n: int, show_category: boo
         st.info("データなし")
         return
 
-    show_cols = [c for c in [
-        "rank", "location_text", "city_name", "prefecture_name",
-        "use_category_name", "price_yen_per_sqm", "yoy_change_pct",
-    ] if c in ranked.columns]
-    display_df = add_tsubo_price_column(ranked[show_cols], "price_yen_per_sqm", "price_yen_per_tsubo")
+    show_cols = [
+        c
+        for c in [
+            "rank",
+            "location_text",
+            "city_name",
+            "prefecture_name",
+            "use_category_name",
+            "price_yen_per_sqm",
+            "yoy_change_pct",
+        ]
+        if c in ranked.columns
+    ]
+    display_df = add_tsubo_price_column(
+        ranked[show_cols], "price_yen_per_sqm", "price_yen_per_tsubo"
+    )
     display_df = convert_yen_columns_to_man(display_df, ["price_yen_per_sqm"])
     col_specs = [
-        {"key": "rank",              "label": "順位",       "width": 45,  "align": "right", "render": rank_num},
-        {"key": "location_text",     "label": "所在地",     "width": 180, "render": lambda v: truncate(v, 170)},
-        {"key": "city_name",         "label": "市区町村",   "width": 90,  "render": muted},
-        {"key": "prefecture_name",   "label": "都道府県",   "width": 70,  "render": muted},
-        {"key": "price_yen_per_sqm", "label": "価格(万/m²)","width": 85,  "align": "right", "render": price_man},
-        {"key": "price_yen_per_tsubo","label": "坪(万/坪)", "width": 75,  "align": "right", "render": price_man},
-        {"key": "yoy_change_pct",    "label": "前年比",     "width": 130, "render": gap_bar},
+        {"key": "rank", "label": "順位", "width": 45, "align": "right", "render": rank_num},
+        {
+            "key": "location_text",
+            "label": "所在地",
+            "width": 180,
+            "render": lambda v: truncate(v, 170),
+        },
+        {"key": "city_name", "label": "市区町村", "width": 90, "render": muted},
+        {"key": "prefecture_name", "label": "都道府県", "width": 70, "render": muted},
+        {
+            "key": "price_yen_per_sqm",
+            "label": "価格(万/m²)",
+            "width": 85,
+            "align": "right",
+            "render": price_man,
+        },
+        {
+            "key": "price_yen_per_tsubo",
+            "label": "坪(万/坪)",
+            "width": 75,
+            "align": "right",
+            "render": price_man,
+        },
+        {"key": "yoy_change_pct", "label": "前年比", "width": 130, "render": gap_bar},
     ]
     if show_category:
-        col_specs.insert(4, {"key": "use_category_name", "label": "用途", "width": 75, "render": use_category_badge})
+        col_specs.insert(
+            4,
+            {
+                "key": "use_category_name",
+                "label": "用途",
+                "width": 75,
+                "render": use_category_badge,
+            },
+        )
     render_html_table(display_df, col_specs)
 
     # 棒グラフ（上位 20 件）
@@ -92,7 +138,10 @@ def _render_price_ranking(df: pd.DataFrame, year, top_n: int, show_category: boo
     plot_df["price_man_per_sqm"] = plot_df["price_yen_per_sqm"].map(yen_to_man)
     label = plot_df["location_text"].fillna(plot_df.get("city_name", ""))
     fig = px.bar(
-        plot_df, x="price_man_per_sqm", y=label, orientation="h",
+        plot_df,
+        x="price_man_per_sqm",
+        y=label,
+        orientation="h",
         labels={"price_man_per_sqm": "価格(万円/m²)", "y": "所在地"},
         title=f"価格ランキング TOP20 ({year}年)",
         text="price_man_per_sqm",
@@ -113,7 +162,9 @@ def _render_yoy_combined(df: pd.DataFrame, year, top_n: int, show_category: bool
         _render_yoy_ranking(df, year, top_n, ascending=True, show_category=show_category)
 
 
-def _render_yoy_ranking(df: pd.DataFrame, year, top_n: int, ascending: bool, show_category: bool = True) -> None:
+def _render_yoy_ranking(
+    df: pd.DataFrame, year, top_n: int, ascending: bool, show_category: bool = True
+) -> None:
     title = "下落率ランキング" if ascending else "上昇率ランキング"
     st.subheader(title)
     ranked = analytics.compute_yoy_rankings(df, top_n=top_n, year=year, ascending=ascending)
@@ -121,29 +172,67 @@ def _render_yoy_ranking(df: pd.DataFrame, year, top_n: int, ascending: bool, sho
         st.info("データなし（前年比データが必要です）")
         return
 
-    show_cols = [c for c in [
-        "location_text", "city_name", "prefecture_name",
-        "use_category_name", "price_yen_per_sqm", "yoy_change_pct",
-    ] if c in ranked.columns]
-    display_df = add_tsubo_price_column(ranked[show_cols], "price_yen_per_sqm", "price_yen_per_tsubo")
+    show_cols = [
+        c
+        for c in [
+            "location_text",
+            "city_name",
+            "prefecture_name",
+            "use_category_name",
+            "price_yen_per_sqm",
+            "yoy_change_pct",
+        ]
+        if c in ranked.columns
+    ]
+    display_df = add_tsubo_price_column(
+        ranked[show_cols], "price_yen_per_sqm", "price_yen_per_tsubo"
+    )
     display_df = convert_yen_columns_to_man(display_df, ["price_yen_per_sqm"])
     col_specs = [
-        {"key": "location_text",      "label": "所在地",     "width": 180, "render": lambda v: truncate(v, 170)},
-        {"key": "city_name",          "label": "市区町村",   "width": 90,  "render": muted},
-        {"key": "prefecture_name",    "label": "都道府県",   "width": 70,  "render": muted},
-        {"key": "price_yen_per_sqm",  "label": "価格(万/m²)","width": 85,  "align": "right", "render": price_man},
-        {"key": "price_yen_per_tsubo","label": "坪(万/坪)",  "width": 75,  "align": "right", "render": price_man},
-        {"key": "yoy_change_pct",     "label": "前年比",     "width": 130, "render": gap_bar},
+        {
+            "key": "location_text",
+            "label": "所在地",
+            "width": 180,
+            "render": lambda v: truncate(v, 170),
+        },
+        {"key": "city_name", "label": "市区町村", "width": 90, "render": muted},
+        {"key": "prefecture_name", "label": "都道府県", "width": 70, "render": muted},
+        {
+            "key": "price_yen_per_sqm",
+            "label": "価格(万/m²)",
+            "width": 85,
+            "align": "right",
+            "render": price_man,
+        },
+        {
+            "key": "price_yen_per_tsubo",
+            "label": "坪(万/坪)",
+            "width": 75,
+            "align": "right",
+            "render": price_man,
+        },
+        {"key": "yoy_change_pct", "label": "前年比", "width": 130, "render": gap_bar},
     ]
     if show_category:
-        col_specs.insert(3, {"key": "use_category_name", "label": "用途", "width": 75, "render": use_category_badge})
+        col_specs.insert(
+            3,
+            {
+                "key": "use_category_name",
+                "label": "用途",
+                "width": 75,
+                "render": use_category_badge,
+            },
+        )
     render_html_table(display_df, col_specs)
 
     plot_df = ranked.head(20).sort_values("yoy_change_pct", ascending=not ascending)
     label = plot_df["location_text"].fillna(plot_df.get("city_name", ""))
     color_scale = "Blues" if ascending else "Reds"
     fig = px.bar(
-        plot_df, x="yoy_change_pct", y=label, orientation="h",
+        plot_df,
+        x="yoy_change_pct",
+        y=label,
+        orientation="h",
         labels={"yoy_change_pct": "前年比(%)", "y": "所在地"},
         title=f"{title} TOP20 ({year}年)",
         color="yoy_change_pct",
@@ -161,7 +250,7 @@ def _extract_neighborhood(location_text: str, city_name: str) -> str:
         return "不明"
     s = str(location_text)
     if city_name and city_name in s:
-        s = s[s.index(city_name) + len(city_name):]
+        s = s[s.index(city_name) + len(city_name) :]
     s = s.lstrip("字")
     m = re.match(r"^([^\d０-９丁番号地先]+)", s)
     result = m.group(1).strip() if m and m.group(1).strip() else s[:12]
@@ -183,23 +272,30 @@ def _render_city_avg_ranking(df: pd.DataFrame, year, top_n: int) -> None:
         ["city_code", "city_name", "prefecture_code", "prefecture_name"], dropna=False
     )
     city_agg = grp.apply(
-        lambda g: pd.Series({
-            "avg_price":    (g["avg_price"] * g["point_count"]).sum() / g["point_count"].sum(),
-            "median_price": g["median_price"].median(),
-            "point_count":  g["point_count"].sum(),
-            "avg_yoy_pct":  (g["avg_yoy_pct"] * g["point_count"]).sum() / g["point_count"].sum(),
-        }),
+        lambda g: pd.Series(
+            {
+                "avg_price": (g["avg_price"] * g["point_count"]).sum() / g["point_count"].sum(),
+                "median_price": g["median_price"].median(),
+                "point_count": g["point_count"].sum(),
+                "avg_yoy_pct": (g["avg_yoy_pct"] * g["point_count"]).sum() / g["point_count"].sum(),
+            }
+        ),
         include_groups=False,
     ).reset_index()
 
     # ── 都道府県セレクタ ──────────────────────────────────────
     available_prefs = sorted(city_agg["prefecture_name"].dropna().unique().tolist())
-    pref_options = ["全都道府県"] + available_prefs
+    pref_options = ["全都道府県", *available_prefs]
     selected_pref = st.selectbox("都道府県で絞り込み", pref_options, key="city_rank_pref")
 
     if selected_pref == "全都道府県":
         display_df = city_agg.nlargest(top_n, "avg_price").copy()
-        display_df["label"] = display_df["city_name"].fillna("") + "（" + display_df["prefecture_name"].fillna("") + "）"
+        display_df["label"] = (
+            display_df["city_name"].fillna("")
+            + "（"
+            + display_df["prefecture_name"].fillna("")
+            + "）"
+        )
         title_suffix = f"全都道府県 TOP{top_n}"
     else:
         display_df = city_agg[city_agg["prefecture_name"] == selected_pref].copy()
@@ -222,8 +318,12 @@ def _render_city_avg_ranking(df: pd.DataFrame, year, top_n: int) -> None:
         sorted_p = sorted_p.copy()
         sorted_p["avg_price_man"] = sorted_p["avg_price"].map(yen_to_man)
         fig_p = px.bar(
-            sorted_p, x="avg_price_man", y="label", orientation="h",
-            text="avg_price_man", color="avg_price_man",
+            sorted_p,
+            x="avg_price_man",
+            y="label",
+            orientation="h",
+            text="avg_price_man",
+            color="avg_price_man",
             color_continuous_scale="Blues_r",
             custom_data=["city_name"],
             labels={"avg_price_man": "平均価格(万円/m²)", "label": "市区町村"},
@@ -237,8 +337,11 @@ def _render_city_avg_ranking(df: pd.DataFrame, year, top_n: int) -> None:
             margin=dict(l=110, r=80, t=50, b=40),
         )
         event_p = st.plotly_chart(
-            fig_p, use_container_width=True,
-            on_select="rerun", selection_mode="points", key="city_price_chart",
+            fig_p,
+            use_container_width=True,
+            on_select="rerun",
+            selection_mode="points",
+            key="city_price_chart",
         )
 
     with col_yoy:
@@ -249,8 +352,12 @@ def _render_city_avg_ranking(df: pd.DataFrame, year, top_n: int) -> None:
             sorted_y = yoy_df.sort_values("avg_yoy_pct")
             abs_max = max(sorted_y["avg_yoy_pct"].abs().max(), 1.0)
             fig_y = px.bar(
-                sorted_y, x="avg_yoy_pct", y="label", orientation="h",
-                text="avg_yoy_pct", color="avg_yoy_pct",
+                sorted_y,
+                x="avg_yoy_pct",
+                y="label",
+                orientation="h",
+                text="avg_yoy_pct",
+                color="avg_yoy_pct",
                 color_continuous_scale="RdBu",
                 color_continuous_midpoint=0,
                 range_color=[-abs_max, abs_max],
@@ -266,8 +373,11 @@ def _render_city_avg_ranking(df: pd.DataFrame, year, top_n: int) -> None:
                 margin=dict(l=110, r=80, t=50, b=40),
             )
             event_y = st.plotly_chart(
-                fig_y, use_container_width=True,
-                on_select="rerun", selection_mode="points", key="city_yoy_chart",
+                fig_y,
+                use_container_width=True,
+                on_select="rerun",
+                selection_mode="points",
+                key="city_yoy_chart",
             )
 
     # クリックされた市区町村を取得
@@ -282,25 +392,65 @@ def _render_city_avg_ranking(df: pd.DataFrame, year, top_n: int) -> None:
     # ── テーブル ─────────────────────────────────────────────
     table_df = display_df.sort_values("avg_price", ascending=False).reset_index(drop=True)
     table_df.insert(0, "順位", range(1, len(table_df) + 1))
-    show_cols = ["順位", "city_name", "prefecture_name", "avg_price",
-                 "median_price", "point_count", "avg_yoy_pct"]
+    show_cols = [
+        "順位",
+        "city_name",
+        "prefecture_name",
+        "avg_price",
+        "median_price",
+        "point_count",
+        "avg_yoy_pct",
+    ]
     if selected_pref != "全都道府県":
         show_cols.remove("prefecture_name")
     display_table = table_df[[c for c in show_cols if c in table_df.columns]]
     display_table = add_tsubo_price_column(display_table, "avg_price", "avg_price_tsubo")
     display_table = add_tsubo_price_column(display_table, "median_price", "median_price_tsubo")
     display_table = convert_yen_columns_to_man(display_table, ["avg_price", "median_price"])
-    render_html_table(display_table, [
-        {"key": "順位",            "label": "順位",        "width": 45,  "align": "right", "render": rank_num},
-        {"key": "city_name",       "label": "市区町村",    "width": 110, "render": muted},
-        {"key": "prefecture_name", "label": "都道府県",    "width": 70,  "render": muted},
-        {"key": "avg_price",       "label": "平均価格(万/m²)","width": 95,"align": "right", "render": price_man},
-        {"key": "avg_price_tsubo", "label": "平均坪",      "width": 75,  "align": "right", "render": price_man},
-        {"key": "median_price",    "label": "中央値",      "width": 75,  "align": "right", "render": price_man},
-        {"key": "median_price_tsubo","label": "中央値坪",  "width": 65,  "align": "right", "render": price_man},
-        {"key": "point_count",     "label": "地点数",      "width": 60,  "align": "right", "render": count_num},
-        {"key": "avg_yoy_pct",     "label": "前年比",      "width": 130, "render": gap_bar},
-    ])
+    render_html_table(
+        display_table,
+        [
+            {"key": "順位", "label": "順位", "width": 45, "align": "right", "render": rank_num},
+            {"key": "city_name", "label": "市区町村", "width": 110, "render": muted},
+            {"key": "prefecture_name", "label": "都道府県", "width": 70, "render": muted},
+            {
+                "key": "avg_price",
+                "label": "平均価格(万/m²)",
+                "width": 95,
+                "align": "right",
+                "render": price_man,
+            },
+            {
+                "key": "avg_price_tsubo",
+                "label": "平均坪",
+                "width": 75,
+                "align": "right",
+                "render": price_man,
+            },
+            {
+                "key": "median_price",
+                "label": "中央値",
+                "width": 75,
+                "align": "right",
+                "render": price_man,
+            },
+            {
+                "key": "median_price_tsubo",
+                "label": "中央値坪",
+                "width": 65,
+                "align": "right",
+                "render": price_man,
+            },
+            {
+                "key": "point_count",
+                "label": "地点数",
+                "width": 60,
+                "align": "right",
+                "render": count_num,
+            },
+            {"key": "avg_yoy_pct", "label": "前年比", "width": 130, "render": gap_bar},
+        ],
+    )
 
     # ── 町丁目別ドリルダウン（グラフクリック時のみ） ─────────
     if selected_city:
@@ -324,14 +474,22 @@ def _render_neighborhood_detail(df: pd.DataFrame, city_name: str, year) -> None:
     )
 
     grp = pts.groupby("neighborhood")
-    nbhd = grp.apply(
-        lambda g: pd.Series({
-            "avg_price":   g["price_yen_per_sqm"].mean(),
-            "avg_yoy_pct": g["yoy_change_pct"].mean() if g["yoy_change_pct"].notna().any() else float("nan"),
-            "point_count": len(g),
-        }),
-        include_groups=False,
-    ).reset_index().sort_values("avg_price", ascending=False)
+    nbhd = (
+        grp.apply(
+            lambda g: pd.Series(
+                {
+                    "avg_price": g["price_yen_per_sqm"].mean(),
+                    "avg_yoy_pct": g["yoy_change_pct"].mean()
+                    if g["yoy_change_pct"].notna().any()
+                    else float("nan"),
+                    "point_count": len(g),
+                }
+            ),
+            include_groups=False,
+        )
+        .reset_index()
+        .sort_values("avg_price", ascending=False)
+    )
 
     st.subheader(f"📍 {city_name} — 町丁目別平均 ({year}年)")
 
@@ -343,8 +501,12 @@ def _render_neighborhood_detail(df: pd.DataFrame, city_name: str, year) -> None:
         sorted_p = sorted_p.copy()
         sorted_p["avg_price_man"] = sorted_p["avg_price"].map(yen_to_man)
         fig_p = px.bar(
-            sorted_p, x="avg_price_man", y="neighborhood", orientation="h",
-            text="avg_price_man", color="avg_price_man",
+            sorted_p,
+            x="avg_price_man",
+            y="neighborhood",
+            orientation="h",
+            text="avg_price_man",
+            color="avg_price_man",
             color_continuous_scale="Blues_r",
             labels={"avg_price_man": "平均価格(万円/m²)", "neighborhood": "町丁目"},
             title=f"町丁目別平均価格 — {city_name}",
@@ -366,8 +528,12 @@ def _render_neighborhood_detail(df: pd.DataFrame, city_name: str, year) -> None:
             sorted_y = yoy_n.sort_values("avg_yoy_pct")
             abs_max = max(sorted_y["avg_yoy_pct"].abs().max(), 1.0)
             fig_y = px.bar(
-                sorted_y, x="avg_yoy_pct", y="neighborhood", orientation="h",
-                text="avg_yoy_pct", color="avg_yoy_pct",
+                sorted_y,
+                x="avg_yoy_pct",
+                y="neighborhood",
+                orientation="h",
+                text="avg_yoy_pct",
+                color="avg_yoy_pct",
                 color_continuous_scale="RdBu",
                 color_continuous_midpoint=0,
                 range_color=[-abs_max, abs_max],
@@ -387,14 +553,35 @@ def _render_neighborhood_detail(df: pd.DataFrame, city_name: str, year) -> None:
     nbhd_disp.insert(0, "順位", range(1, len(nbhd_disp) + 1))
     nbhd_disp = add_tsubo_price_column(nbhd_disp, "avg_price", "avg_price_tsubo")
     nbhd_disp = convert_yen_columns_to_man(nbhd_disp, ["avg_price"])
-    render_html_table(nbhd_disp, [
-        {"key": "順位",           "label": "順位",        "width": 45,  "align": "right", "render": rank_num},
-        {"key": "neighborhood",   "label": "町丁目",      "width": 130, "render": muted},
-        {"key": "avg_price",      "label": "平均価格(万/m²)","width": 95,"align": "right", "render": price_man},
-        {"key": "avg_price_tsubo","label": "平均坪",      "width": 75,  "align": "right", "render": price_man},
-        {"key": "avg_yoy_pct",    "label": "前年比",      "width": 130, "render": gap_bar},
-        {"key": "point_count",    "label": "地点数",      "width": 60,  "align": "right", "render": count_num},
-    ])
+    render_html_table(
+        nbhd_disp,
+        [
+            {"key": "順位", "label": "順位", "width": 45, "align": "right", "render": rank_num},
+            {"key": "neighborhood", "label": "町丁目", "width": 130, "render": muted},
+            {
+                "key": "avg_price",
+                "label": "平均価格(万/m²)",
+                "width": 95,
+                "align": "right",
+                "render": price_man,
+            },
+            {
+                "key": "avg_price_tsubo",
+                "label": "平均坪",
+                "width": 75,
+                "align": "right",
+                "render": price_man,
+            },
+            {"key": "avg_yoy_pct", "label": "前年比", "width": 130, "render": gap_bar},
+            {
+                "key": "point_count",
+                "label": "地点数",
+                "width": 60,
+                "align": "right",
+                "render": count_num,
+            },
+        ],
+    )
 
 
 def _render_pref_ranking(df: pd.DataFrame, year) -> None:
@@ -480,22 +667,56 @@ def _render_pref_ranking(df: pd.DataFrame, year) -> None:
 
     # ── 下段: サマリーテーブル ────────────────────────────────
     st.markdown("**サマリーテーブル**")
-    disp = pref_df[["prefecture_name", "avg_price", "median_price",
-                    "point_count", "avg_yoy_pct"]].copy()
+    disp = pref_df[
+        ["prefecture_name", "avg_price", "median_price", "point_count", "avg_yoy_pct"]
+    ].copy()
     disp.insert(0, "順位", range(1, len(disp) + 1))
     disp = add_tsubo_price_column(disp, "avg_price", "avg_price_tsubo")
     disp = add_tsubo_price_column(disp, "median_price", "median_price_tsubo")
     disp = convert_yen_columns_to_man(disp, ["avg_price", "median_price"])
-    render_html_table(disp, [
-        {"key": "順位",             "label": "順位",         "width": 45,  "align": "right", "render": rank_num},
-        {"key": "prefecture_name",  "label": "都道府県",     "width": 80,  "render": muted},
-        {"key": "avg_price",        "label": "平均価格(万/m²)","width": 95,"align": "right", "render": price_man},
-        {"key": "avg_price_tsubo",  "label": "平均坪",       "width": 75,  "align": "right", "render": price_man},
-        {"key": "median_price",     "label": "中央値",       "width": 75,  "align": "right", "render": price_man},
-        {"key": "median_price_tsubo","label": "中央値坪",    "width": 65,  "align": "right", "render": price_man},
-        {"key": "point_count",      "label": "地点数",       "width": 65,  "align": "right", "render": count_num},
-        {"key": "avg_yoy_pct",      "label": "前年比",       "width": 130, "render": gap_bar},
-    ])
+    render_html_table(
+        disp,
+        [
+            {"key": "順位", "label": "順位", "width": 45, "align": "right", "render": rank_num},
+            {"key": "prefecture_name", "label": "都道府県", "width": 80, "render": muted},
+            {
+                "key": "avg_price",
+                "label": "平均価格(万/m²)",
+                "width": 95,
+                "align": "right",
+                "render": price_man,
+            },
+            {
+                "key": "avg_price_tsubo",
+                "label": "平均坪",
+                "width": 75,
+                "align": "right",
+                "render": price_man,
+            },
+            {
+                "key": "median_price",
+                "label": "中央値",
+                "width": 75,
+                "align": "right",
+                "render": price_man,
+            },
+            {
+                "key": "median_price_tsubo",
+                "label": "中央値坪",
+                "width": 65,
+                "align": "right",
+                "render": price_man,
+            },
+            {
+                "key": "point_count",
+                "label": "地点数",
+                "width": 65,
+                "align": "right",
+                "render": count_num,
+            },
+            {"key": "avg_yoy_pct", "label": "前年比", "width": 130, "render": gap_bar},
+        ],
+    )
 
 
 def _base_layout(height: int = 400) -> dict:

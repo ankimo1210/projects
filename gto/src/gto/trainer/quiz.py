@@ -1,13 +1,19 @@
 """Quiz engine: generate random spots and score answers."""
 
 from __future__ import annotations
+
 import random
+
 from .preflop_data import (
-    ALL_HANDS, RFI_BY_POS, FACING_RANGES,
-    get_rfi_spot, get_facing_spot, QuizSpot,
+    ALL_HANDS,
+    FACING_RANGES,
+    RFI_BY_POS,
+    QuizSpot,
+    get_facing_spot,
+    get_rfi_spot,
 )
 
-RFI_POSITIONS  = list(RFI_BY_POS.keys())
+RFI_POSITIONS = list(RFI_BY_POS.keys())
 FACE_SCENARIOS = list(FACING_RANGES.keys())
 
 
@@ -20,11 +26,11 @@ def _interesting(freqs: dict) -> bool:
 def random_spot() -> QuizSpot:
     for _ in range(100):
         if random.random() < 0.6:
-            pos  = random.choice(RFI_POSITIONS)
+            pos = random.choice(RFI_POSITIONS)
             hand = random.choice(ALL_HANDS)
             spot = get_rfi_spot(pos, hand)
         else:
-            sc   = random.choice(FACE_SCENARIOS)
+            sc = random.choice(FACE_SCENARIOS)
             hand = random.choice(ALL_HANDS)
             spot = get_facing_spot(sc, hand)
 
@@ -36,7 +42,7 @@ def random_spot() -> QuizSpot:
 
 
 def score_answer(spot: QuizSpot, chosen: str) -> dict:
-    gto    = spot.gto_action()
+    gto = spot.gto_action()
     ev_loss = spot.ev_loss(chosen)
     correct = (chosen == gto) or (spot.freqs.get(chosen, 0) >= 40)
 
@@ -44,12 +50,12 @@ def score_answer(spot: QuizSpot, chosen: str) -> dict:
     actions = sorted(spot.freqs.items(), key=lambda x: -x[1])
 
     return {
-        "correct":    correct,
-        "chosen":     chosen,
+        "correct": correct,
+        "chosen": chosen,
         "gto_action": gto,
-        "gto_freq":   spot.freqs.get(gto, 0),
+        "gto_freq": spot.freqs.get(gto, 0),
         "all_actions": [{"action": a, "freq": f} for a, f in actions if f > 0],
-        "ev_loss":    ev_loss,
-        "hand":       spot.hand,
+        "ev_loss": ev_loss,
+        "hand": spot.hand,
         "description": spot.description,
     }

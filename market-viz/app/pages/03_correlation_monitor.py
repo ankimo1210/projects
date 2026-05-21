@@ -2,16 +2,16 @@
 
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from datetime import date, timedelta
 
 import streamlit as st
 import yaml
-
-from src.storage.duckdb_client import DuckDBClient
-from src.analytics.correlation import latest_correlations, rolling_correlation
 from app.components.charts import correlation_heatmap, line_chart
+from market_viz.analytics.correlation import latest_correlations, rolling_correlation
+from market_viz.storage.duckdb_client import DuckDBClient
 
 with open("src/config/settings.yaml") as f:
     _cfg = yaml.safe_load(f)
@@ -44,7 +44,7 @@ def get_tickers() -> list[str]:
 
 @st.cache_data(ttl=300)
 def load_prices_multi(tickers: tuple, start: str):
-    import pandas as pd
+
     db = get_db()
     return db.get_prices(list(tickers), frequency="1d", start=start)
 
@@ -77,8 +77,10 @@ if prices_df.empty:
 st.subheader("相関ヒートマップ")
 corr = latest_correlations(prices_df, window=heatmap_window)
 if not corr.empty:
-    st.plotly_chart(correlation_heatmap(corr, f"相関マトリクス (直近{heatmap_window}日)"),
-                    use_container_width=True)
+    st.plotly_chart(
+        correlation_heatmap(corr, f"相関マトリクス (直近{heatmap_window}日)"),
+        use_container_width=True,
+    )
 else:
     st.info("相関計算に十分なデータがありません。")
 
@@ -104,7 +106,7 @@ with tab_default:
                 yformat=".2f",
                 height=250,
             )
-            import plotly.graph_objects as go
+
             fig.add_hline(y=0, line_color="gray", line_dash="dot", opacity=0.5)
             st.plotly_chart(fig, use_container_width=True)
 
@@ -121,10 +123,10 @@ with tab_custom:
             title=f"{ticker_a} vs {ticker_b} (rolling {rolling_window}d)",
             yformat=".2f",
         )
-        import plotly.graph_objects as go
+
         fig_c.add_hline(y=0, line_color="gray", line_dash="dot", opacity=0.5)
         st.plotly_chart(fig_c, use_container_width=True)
         latest_val = rc_custom.dropna().iloc[-1]
-        st.metric(f"最新相関係数", f"{latest_val:.3f}")
+        st.metric("最新相関係数", f"{latest_val:.3f}")
     else:
         st.info("選択銘柄のデータが不足しています。")

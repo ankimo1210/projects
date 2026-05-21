@@ -2,6 +2,7 @@
 
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from datetime import date, timedelta
@@ -9,9 +10,8 @@ from datetime import date, timedelta
 import pandas as pd
 import streamlit as st
 import yaml
-
-from src.storage.duckdb_client import DuckDBClient
-from src.analytics.signals import build_signal_df
+from market_viz.analytics.signals import build_signal_df
+from market_viz.storage.duckdb_client import DuckDBClient
 
 with open("src/config/settings.yaml") as f:
     _cfg = yaml.safe_load(f)
@@ -59,7 +59,8 @@ with open("src/config/instruments.yaml") as f:
     inst_cfg = yaml.safe_load(f)
 ticker_meta = {
     i["ticker"]: {"name": i.get("name", ""), "asset_class": i.get("asset_class", "")}
-    for g in inst_cfg["instruments"].values() for i in g
+    for g in inst_cfg["instruments"].values()
+    for i in g
 }
 df["name"] = df["ticker"].map(lambda t: ticker_meta.get(t, {}).get("name", t))
 df["asset_class"] = df["ticker"].map(lambda t: ticker_meta.get(t, {}).get("asset_class", ""))
@@ -94,13 +95,22 @@ st.markdown("---")
 # Main table
 # ----------------------------------------------------------------
 display_cols_ordered = [
-    "ticker", "name", "asset_class",
+    "ticker",
+    "name",
+    "asset_class",
     "last_close",
-    "ret_1d", "ret_5d", "ret_20d", "ret_60d",
-    "vol_20d", "vol_60d",
-    "zscore_20d", "zscore_60d",
-    "pct_20d", "pct_60d",
-    "current_dd", "max_dd",
+    "ret_1d",
+    "ret_5d",
+    "ret_20d",
+    "ret_60d",
+    "vol_20d",
+    "vol_60d",
+    "zscore_20d",
+    "zscore_60d",
+    "pct_20d",
+    "pct_60d",
+    "current_dd",
+    "max_dd",
     "signal",
 ]
 display_cols = [c for c in display_cols_ordered if c in df.columns]
@@ -108,13 +118,22 @@ show_df = df[display_cols].copy()
 
 # column rename for display
 rename = {
-    "ticker": "Ticker", "name": "銘柄名", "asset_class": "クラス",
+    "ticker": "Ticker",
+    "name": "銘柄名",
+    "asset_class": "クラス",
     "last_close": "終値",
-    "ret_1d": "1D%", "ret_5d": "5D%", "ret_20d": "20D%", "ret_60d": "60D%",
-    "vol_20d": "Vol(20)", "vol_60d": "Vol(60)",
-    "zscore_20d": "Z(20)", "zscore_60d": "Z(60)",
-    "pct_20d": "Pct(20)", "pct_60d": "Pct(60)",
-    "current_dd": "現在DD", "max_dd": "最大DD",
+    "ret_1d": "1D%",
+    "ret_5d": "5D%",
+    "ret_20d": "20D%",
+    "ret_60d": "60D%",
+    "vol_20d": "Vol(20)",
+    "vol_60d": "Vol(60)",
+    "zscore_20d": "Z(20)",
+    "zscore_60d": "Z(60)",
+    "pct_20d": "Pct(20)",
+    "pct_60d": "Pct(60)",
+    "current_dd": "現在DD",
+    "max_dd": "最大DD",
     "signal": "シグナル",
 }
 show_df = show_df.rename(columns=rename)
@@ -133,16 +152,24 @@ for col in ["Pct(20)", "Pct(60)"]:
 if "終値" in show_df.columns:
     fmt["終値"] = "{:.4f}"
 
+
 def color_pct(val):
-    if pd.isna(val): return ""
+    if pd.isna(val):
+        return ""
     return "color: #26a69a" if val >= 0 else "color: #ef5350"
 
+
 def color_z(val):
-    if pd.isna(val): return ""
-    if val >= 2.0: return "color: #ff9800; font-weight:bold"
-    if val <= -2.0: return "color: #42a5f5; font-weight:bold"
-    if abs(val) >= 1.5: return "color: #ffee58"
+    if pd.isna(val):
+        return ""
+    if val >= 2.0:
+        return "color: #ff9800; font-weight:bold"
+    if val <= -2.0:
+        return "color: #42a5f5; font-weight:bold"
+    if abs(val) >= 1.5:
+        return "color: #ffee58"
     return ""
+
 
 def color_signal(val):
     mapping = {
@@ -153,6 +180,7 @@ def color_signal(val):
         "Neutral": "",
     }
     return mapping.get(val, "")
+
 
 styled = show_df.style.format(fmt, na_rep="-")
 for col in ["1D%", "5D%", "20D%", "60D%"]:

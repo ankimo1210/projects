@@ -1,21 +1,33 @@
 #!/usr/bin/env python3
 """Generate BSM Chapter 15 Jupyter Notebook — avoids triple-quote conflicts."""
-import json, textwrap
+
+import json
+import textwrap
 
 cells = []
+
 
 def md(text):
     lines = textwrap.dedent(text).strip().split("\n")
     src = [l + "\n" for l in lines[:-1]] + [lines[-1]]
     return {"cell_type": "markdown", "metadata": {}, "source": src}
 
+
 def code(text):
     lines = textwrap.dedent(text).strip().split("\n")
     src = [l + "\n" for l in lines[:-1]] + [lines[-1]]
-    return {"cell_type": "code", "metadata": {}, "source": src, "outputs": [], "execution_count": None}
+    return {
+        "cell_type": "code",
+        "metadata": {},
+        "source": src,
+        "outputs": [],
+        "execution_count": None,
+    }
+
 
 # ===================== 0. Title =====================
-cells.append(md('''
+cells.append(
+    md("""
 # Chapter 15 — The Black-Scholes-Merton Model
 ## *Options, Futures, and Other Derivatives* (11th ed.) — John C. Hull
 
@@ -44,15 +56,19 @@ BSM 公式という closed-form solution を導きます。
 後続の Ch.19 (Greeks), Ch.20 (Volatility Smile), Ch.21 (数値手法) はすべてこの章の上に構築されます。
 
 > **この Notebook では、理論 → 実装 → 可視化 → 解釈 の順に進みます。**
-'''))
+""")
+)
 
 # ===================== 1. Imports =====================
-cells.append(md('''
+cells.append(
+    md("""
 ---
 ## 1. ライブラリ読み込みと表示設定
-'''))
+""")
+)
 
-cells.append(code('''
+cells.append(
+    code("""
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -75,18 +91,22 @@ SEED = 42
 rng = np.random.default_rng(SEED)
 
 print("Setup complete.")
-'''))
+""")
+)
 
 # ===================== 2. Common functions =====================
-cells.append(md('''
+cells.append(
+    md("""
 ---
 ## 2. 共通関数セル
 
 以降のセクションで繰り返し使う関数をここにまとめて定義します。
 すべての関数に docstring を付けています。
-'''))
+""")
+)
 
-cells.append(code('''
+cells.append(
+    code('''
 # ===== 2-1. GBM シミュレーション =====
 
 def simulate_gbm_paths(S0, mu, sigma, T, n_steps, n_paths, rng):
@@ -298,10 +318,12 @@ def bsm_put_with_dividend_yield(S, K, T, r, sigma, q):
 
 
 print("共通関数の定義が完了しました。")
-'''))
+''')
+)
 
 # ===================== 3. GBM and Lognormality =====================
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ---
 ## 3. §15.1–15.3 株価過程と対数正規性
 
@@ -333,9 +355,11 @@ $$
 * $\ln S$ は実数全体を取れるため正規分布を仮定できる。
 * 対数収益率 $\ln(S_T / S_0)$ は加法的で扱いやすい。
 * **Arithmetic return** $\frac{S_T - S_0}{S_0}$ と **Log return** $\ln \frac{S_T}{S_0}$ は、小さな値ではほぼ一致するが、長期・大変動では乖離する。
-'''))
+""")
+)
 
-cells.append(code('''
+cells.append(
+    code("""
 # --- 3-1. GBM パスのシミュレーション ---
 S0 = 100.0
 mu = 0.10
@@ -355,9 +379,11 @@ ax.set_xlabel("Time (years)")
 ax.set_ylabel("Stock Price $S$")
 plt.tight_layout()
 plt.show()
-'''))
+""")
+)
 
-cells.append(code(r'''
+cells.append(
+    code(r"""
 # --- 3-2. S_T の分布 ---
 ST = S[:, -1]
 
@@ -393,18 +419,22 @@ plt.show()
 print(f"S_T  mean={ST.mean():.2f}  std={ST.std():.2f}")
 print(f"ln(S_T)  mean={logST.mean():.4f}  theory={mu_log:.4f}")
 print(f"ln(S_T)  std ={logST.std():.4f}  theory={sigma_log:.4f}")
-'''))
+""")
+)
 
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ### 確認ポイント (Section 3)
 
 1. $\ln S_T$ のヒストグラムが正規分布の pdf とよく重なることを確認しましたか？
 2. `S_T.mean()` は $S_0 e^{\mu T}$ に近いですか？理論値を計算して比較してみましょう。
 3. $\mu - \sigma^2/2$ の項がなぜ現れるか、伊藤の補題で説明できますか？
-'''))
+""")
+)
 
 # ===================== 4. Volatility =====================
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ---
 ## 4. §15.4 ボラティリティ
 
@@ -428,9 +458,11 @@ $$
 * BSM モデルでは $\sigma$ は定数と仮定しますが、実際の市場では時間とともに変動します。
 * **ローリング・ボラティリティ**（窓長 $w$ 日の区間で推定）を使うと、ボラティリティの時間変化を可視化できます。
 * 窓長が短いほどノイジー、長いほど滑らかだが反応が遅い。
-'''))
+""")
+)
 
-cells.append(code('''
+cells.append(
+    code("""
 # --- 4-1. サンプル価格系列の作成 ---
 n_days = 504  # 2年分
 t_vol, S_vol = simulate_gbm_paths(S0, mu=0.08, sigma=0.25, T=2.0,
@@ -443,9 +475,11 @@ log_ret = compute_log_returns(prices)
 # 年率ボラ
 ann_vol = annualized_volatility(log_ret)
 print(f"全期間の年率ボラティリティ: {ann_vol:.4f}  (真の値: 0.2500)")
-'''))
+""")
+)
 
-cells.append(code('''
+cells.append(
+    code("""
 # --- 4-2. 可視化 ---
 fig, axes = plt.subplots(3, 1, figsize=(10, 9), sharex=False)
 
@@ -472,18 +506,22 @@ axes[2].legend()
 
 plt.tight_layout()
 plt.show()
-'''))
+""")
+)
 
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ### 確認ポイント (Section 4)
 
 1. 窓長を変えるとローリング・ボラティリティの推定値がどう変わるか確認しましたか？
 2. 全期間の推定値は真の $\sigma=0.25$ にどれくらい近いですか？
 3. 短い窓長でのローリング推定値のブレを見て、**モデルの仮定（$\sigma$ 一定）と現実の乖離**を考えてみましょう。
-'''))
+""")
+)
 
 # ===================== 5. Delta hedging & BSM PDE =====================
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ---
 ## 5. §15.5–15.6 デルタヘッジの直感と BSM PDE
 
@@ -512,9 +550,11 @@ $$
 
 * **$\mu$ が消える**: ヘッジにより確率的なリターン成分が打ち消されるため。
 * これは局所的(infinitesimal)ヘッジであり、離散リバランスでは誤差が残ります。
-'''))
+""")
+)
 
-cells.append(code(r'''
+cells.append(
+    code(r"""
 # --- 5-1. デルタヘッジの数値デモ ---
 
 # パラメータ
@@ -554,9 +594,11 @@ plt.show()
 
 print(f"C = {C_now:.4f},  Delta = {delta_now:.4f}")
 print("-> dS=0 付近で hedged P&L ≈ 0 であることを確認")
-'''))
+""")
+)
 
-cells.append(code(r'''
+cells.append(
+    code(r"""
 # --- 5-2. Option payoff 曲線 ---
 S_range = np.linspace(70, 130, 200)
 C_values = bsm_call_price(S_range, K_h, T_h, r_h, sigma_h)
@@ -571,18 +613,22 @@ ax.set_ylabel("Option Value")
 ax.legend()
 plt.tight_layout()
 plt.show()
-'''))
+""")
+)
 
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ### 確認ポイント (Section 5)
 
 1. Delta-hedged portfolio の P&L が $\delta S=0$ 付近で**ほぼゼロ**であることを確認しましたか？
 2. $\delta S$ が大きくなるとヘッジ誤差が生じます。これは何に起因しますか？（ヒント: gamma）
 3. BSM PDE に $\mu$ が現れないことの直感を、デルタヘッジの議論から説明してみましょう。
-'''))
+""")
+)
 
 # ===================== 6. Risk-neutral valuation =====================
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ---
 ## 6. §15.7 リスク中立評価
 
@@ -604,9 +650,11 @@ $$
 
 > **価格付け** ≠ **予測**
 > $\mu$ が高くても低くても、ヘッジ可能な範囲ではオプション価格は変わりません。
-'''))
+""")
+)
 
-cells.append(code('''
+cells.append(
+    code("""
 # --- 6-1. モンテカルロによる European Call 価格 ---
 
 K_mc = 100.0
@@ -628,9 +676,11 @@ bsm_exact = bsm_call_price(S0_mc, K_mc, T_mc, r_mc, sigma_mc)
 print(f"Monte Carlo (drift=r) : {mc_price_rn:.4f}")
 print(f"BSM closed-form       : {bsm_exact:.4f}")
 print(f"差                    : {abs(mc_price_rn - bsm_exact):.4f}")
-'''))
+""")
+)
 
-cells.append(code(r'''
+cells.append(
+    code(r"""
 # --- 6-2. mu を変えたときの比較 ---
 
 mu_values = [0.02, 0.05, 0.10, 0.20, 0.30]
@@ -674,18 +724,22 @@ plt.tight_layout()
 plt.show()
 
 print("-> リスク中立 (drift=r) で作ったパスのみが BSM 価格と一致する")
-'''))
+""")
+)
 
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ### 確認ポイント (Section 6)
 
 1. ドリフトを $r$ として生成し $r$ で割引した MC 価格が BSM 閉形式と近いことを確認しましたか？
 2. $\mu \neq r$ で株価を生成し、$r$ で割引すると**不正確**な値になることを確認しましたか？
 3. 「価格付けと予測は違う」という命題を、数値実験から自分の言葉で説明してみましょう。
-'''))
+""")
+)
 
 # ===================== 7. BSM formula =====================
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ---
 ## 7. §15.8 BSM 公式の実装
 
@@ -719,9 +773,11 @@ $$
 $$
 C - P = S - K\,e^{-rT}
 $$
-'''))
+""")
+)
 
-cells.append(code('''
+cells.append(
+    code("""
 # --- 7-1. サンプルパラメータで価格計算 ---
 
 S_ex = 100.0
@@ -740,9 +796,11 @@ print(f"d2 = {d2:.6f}")
 print(f"Call price = {C_ex:.6f}")
 print(f"Put  price = {P_ex:.6f}")
 print(f"Put-Call Parity residual = {parity_res:.2e}")
-'''))
+""")
+)
 
-cells.append(code(r'''
+cells.append(
+    code(r"""
 # --- 7-2. Option price vs Spot ---
 S_arr = np.linspace(60, 140, 200)
 C_arr = bsm_call_price(S_arr, K_ex, T_ex, r_ex, sigma_ex)
@@ -759,9 +817,11 @@ ax.set_ylabel("Option Price")
 ax.legend()
 plt.tight_layout()
 plt.show()
-'''))
+""")
+)
 
-cells.append(code(r'''
+cells.append(
+    code(r"""
 # --- 7-3. Option price vs Volatility ---
 sigma_arr = np.linspace(0.05, 0.60, 200)
 C_sigma = [bsm_call_price(S_ex, K_ex, T_ex, r_ex, s) for s in sigma_arr]
@@ -776,9 +836,11 @@ ax.set_ylabel("Option Price")
 ax.legend()
 plt.tight_layout()
 plt.show()
-'''))
+""")
+)
 
-cells.append(code(r'''
+cells.append(
+    code(r"""
 # --- 7-4. Option price vs Maturity ---
 T_arr = np.linspace(0.01, 3.0, 200)
 C_T = [bsm_call_price(S_ex, K_ex, t, r_ex, sigma_ex) for t in T_arr]
@@ -793,18 +855,22 @@ ax.set_ylabel("Option Price")
 ax.legend()
 plt.tight_layout()
 plt.show()
-'''))
+""")
+)
 
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ### 確認ポイント (Section 7)
 
 1. Put-Call Parity の残差が数値誤差 ($\approx 10^{-15}$) に収まることを確認しましたか？
 2. Spot が上がると Call は上がり Put は下がることをグラフで確認しましょう。
 3. $\sigma$ が大きくなると Call/Put の両方が高くなる理由を説明できますか？
-'''))
+""")
+)
 
 # ===================== 8. N(x) =====================
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ---
 ## 8. §15.9 累積標準正規分布 $N(x)$
 
@@ -822,9 +888,11 @@ BSM 公式において:
 * $N(d_1)$ — **デルタ（ヘッジ比率）**に等しい。$d_1 = d_2 + \sigma\sqrt{T}$ の関係から、$N(d_1) > N(d_2)$。
 
 $N(d_1)$ は正確には「デジタルアセットオプション(asset-or-nothing)の行使確率」と解釈でき、ヘッジ比率はこの値に一致します。
-'''))
+""")
+)
 
-cells.append(code(r'''
+cells.append(
+    code(r"""
 # --- 8-1. 標準正規 pdf / cdf の描画 ---
 
 x_norm = np.linspace(-4, 4, 500)
@@ -861,18 +929,22 @@ plt.show()
 
 print(f"N(d1) = {norm.cdf(d1_mark):.6f}  (= Call Delta)")
 print(f"N(d2) = {norm.cdf(d2_mark):.6f}  (~ RN prob of S_T > K)")
-'''))
+""")
+)
 
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ### 確認ポイント (Section 8)
 
 1. $N(d_1)$ が Section 7 で計算した `bsm_call_delta` と一致することを確認しましたか？
 2. ATM ($S=K$) の場合、$d_1$ と $d_2$ はゼロに近いですか？なぜですか？
 3. $\sigma$ を大きくすると $d_1 - d_2 = \sigma\sqrt{T}$ が広がることを確認しましょう。
-'''))
+""")
+)
 
 # ===================== 9. Warrants and ESO =====================
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ---
 ## 9. §15.10 ワラントと従業員ストックオプション (ESO)
 
@@ -890,9 +962,11 @@ cells.append(md(r'''
 
 * 通常のコール: 行使しても新株は発行されない → 希薄化なし。
 * ワラント/ESO: 行使 → 新株発行 → 既存株主の持分が薄まる。
-'''))
+""")
+)
 
-cells.append(code('''
+cells.append(
+    code("""
 # --- 9-1. 希薄化デモ ---
 
 N_shares = 1_000_000          # 発行済み株式数
@@ -921,9 +995,11 @@ warrant_adjusted = call_plain * N_shares / (N_shares + M_warrants)
 print(f"\\n通常の BSM Call 価格       : {call_plain:.4f}")
 print(f"希薄化調整後ワラント価格  : {warrant_adjusted:.4f}")
 print(f"調整係数 N/(N+M)          : {N_shares/(N_shares+M_warrants):.4f}")
-'''))
+""")
+)
 
-cells.append(code('''
+cells.append(
+    code("""
 # --- 9-2. 希薄化前後の 1株価値 比較図 ---
 
 fig, ax = plt.subplots(figsize=(6, 4))
@@ -938,18 +1014,22 @@ for bar, val in zip(bars, [S_current, S_after]):
 
 plt.tight_layout()
 plt.show()
-'''))
+""")
+)
 
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ### 確認ポイント (Section 9)
 
 1. ワラント数 $M$ を変えると希薄化の程度がどう変わるか試してみましょう。
 2. $M=0$ の場合、ワラント価格と通常のコール価格が一致することを確認しましょう。
 3. なぜ ESO の費用計上が複雑なのか、希薄化の観点から考えてみましょう。
-'''))
+""")
+)
 
 # ===================== 10. Implied Volatility =====================
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ---
 ## 10. §15.11 インプライド・ボラティリティ
 
@@ -972,9 +1052,11 @@ BSM 公式は $\sigma$ の単調増加関数なので、一意の解が存在し
 * 異なるストライクや満期で比較しやすい（正規化されている）。
 * IV は市場参加者の「不確実性」の見方を直接反映する。
 * **Volatility Smile/Skew** (Ch.20) への入口。
-'''))
+""")
+)
 
-cells.append(code(r'''
+cells.append(
+    code(r"""
 # --- 10-1. Option price vs volatility (root finding の可視化) ---
 
 # ターゲット: BSM Call = 10.45
@@ -993,9 +1075,11 @@ ax.set_ylabel("BSM Call Price")
 ax.legend()
 plt.tight_layout()
 plt.show()
-'''))
+""")
+)
 
-cells.append(code(r'''
+cells.append(
+    code(r"""
 # --- 10-2. Bisection vs Newton 収束比較 ---
 
 iv_bi, hist_bi = implied_vol_bisection(target_price, S_iv, K_iv, T_iv, r_iv)
@@ -1014,9 +1098,11 @@ ax.set_ylabel(r"$\sigma$ estimate")
 ax.legend()
 plt.tight_layout()
 plt.show()
-'''))
+""")
+)
 
-cells.append(code('''
+cells.append(
+    code("""
 # --- 10-3. Strike 別 IV (Volatility Smile の入口) ---
 
 # サンプルの市場オプション価格（人工データ: 軽い smile を仕込む）
@@ -1046,19 +1132,23 @@ plt.tight_layout()
 plt.show()
 
 print("-> BSM では sigma 一定を仮定するが、市場では Strike ごとに IV が異なる (Volatility Smile)")
-'''))
+""")
+)
 
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ### 確認ポイント (Section 10)
 
 1. Newton 法が Bisection 法より大幅に少ない反復で収束することを確認しましたか？
 2. Strike が ATM から離れるほど IV が高くなる（U字型）パターンが見えますか？
    これが **Volatility Smile** の入口です (Ch.20 で詳しく学びます)。
 3. Vega が非常に小さい（deep OTM/ITM）場合、Newton 法が不安定になる理由を考えてみましょう。
-'''))
+""")
+)
 
 # ===================== 11. Dividends =====================
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ---
 ## 11. §15.12 配当
 
@@ -1085,9 +1175,11 @@ $$
 
 * 欧州型のコールは配当がなければ早期行使が最適にならない。
 * 配当がある場合、配当落ち直前の早期行使が有利になり得る → 米国型の方が価値が高い。
-'''))
+""")
+)
 
-cells.append(code(r'''
+cells.append(
+    code(r"""
 # --- 11-1. q を変えたときの Call / Put 価格 ---
 
 q_arr = np.linspace(0, 0.08, 200)
@@ -1108,9 +1200,11 @@ axes[1].set_ylabel("Put Price")
 
 plt.tight_layout()
 plt.show()
-'''))
+""")
+)
 
-cells.append(code(r'''
+cells.append(
+    code(r"""
 # --- 11-2. q=0 vs q>0 の比較 ---
 
 S_arr2 = np.linspace(60, 140, 200)
@@ -1148,18 +1242,22 @@ print(f"  Call q=0: {bsm_call_price(100, 100, 1, 0.05, 0.20):.4f}")
 print(f"  Call q=3%: {bsm_call_with_dividend_yield(100, 100, 1, 0.05, 0.20, 0.03):.4f}")
 print(f"  Put  q=0: {bsm_put_price(100, 100, 1, 0.05, 0.20):.4f}")
 print(f"  Put  q=3%: {bsm_put_with_dividend_yield(100, 100, 1, 0.05, 0.20, 0.03):.4f}")
-'''))
+""")
+)
 
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ### 確認ポイント (Section 11)
 
 1. $q$ が増えると Call が下がり Put が上がることをグラフで確認しましたか？
 2. $q=0$ のとき `bsm_call_with_dividend_yield` と `bsm_call_price` が一致することを検証しましょう。
 3. 米国型コールで配当落ち直前に早期行使が合理的になる理由を考えてみましょう。
-'''))
+""")
+)
 
 # ===================== 12. Appendix 15A =====================
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ---
 ## 12. 付録 15A の数値確認
 
@@ -1172,9 +1270,11 @@ C = e^{-rT}\,\mathbb{E}^{\mathbb{Q}}[\max(S_T - K, 0)]
 $$
 
 ここでは証明を再現するのではなく、**モンテカルロ法で期待値を直接計算し、BSM 閉形式と一致するかを数値的に確認**します。
-'''))
+""")
+)
 
-cells.append(code('''
+cells.append(
+    code("""
 # --- 12-1. Monte Carlo vs BSM ---
 
 S0_a = 100.0; K_a = 100.0; T_a = 1.0; r_a = 0.05; sigma_a = 0.20
@@ -1196,9 +1296,11 @@ print(f"{'N':>10s}  {'MC Price':>10s}  {'Error':>10s}")
 print("-" * 35)
 for n, mc in zip(n_sims_list, mc_estimates):
     print(f"{n:>10,d}  {mc:>10.4f}  {mc - bsm_a:>+10.4f}")
-'''))
+""")
+)
 
-cells.append(code('''
+cells.append(
+    code("""
 # --- 12-2. 収束グラフ ---
 
 fig, ax = plt.subplots()
@@ -1212,34 +1314,42 @@ plt.tight_layout()
 plt.show()
 
 print("-> サンプル数を増やすと Monte Carlo 推定値は BSM 閉形式に収束する")
-'''))
+""")
+)
 
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ### 確認ポイント (Section 12)
 
 1. $N=500{,}000$ で BSM との差が小数第 2 位で一致しましたか？
 2. Monte Carlo の収束レートは $O(1/\sqrt{N})$ です。$N$ を 4 倍にすると誤差は約半分になることを確認しましょう。
 3. 分散削減手法（対称変量法や制御変量法）を適用したらどうなるか考えてみましょう。
-'''))
+""")
+)
 
 # ===================== 13. Exercises =====================
-cells.append(md('''
+cells.append(
+    md("""
 ---
 ## 13. 練習問題
 
 以下の 5 問はこの Notebook 内で完結します。各問題の直後に解答例セルがあります。
-'''))
+""")
+)
 
 # Q1
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ### 問題 1: パラメータ変更時の価格変化
 
 $S=100, K=105, T=0.5, r=0.03, \sigma=0.25$ での European Call 価格を計算し、
 $\sigma$ を $0.15, 0.20, 0.25, 0.30, 0.35$ に変えたときの価格を表にしなさい。
 $\sigma$ と Call 価格の関係を 1 文で説明しなさい。
-'''))
+""")
+)
 
-cells.append(code('''
+cells.append(
+    code("""
 # === 解答例 1 ===
 S_q1, K_q1, T_q1, r_q1 = 100, 105, 0.5, 0.03
 sigmas_q1 = [0.15, 0.20, 0.25, 0.30, 0.35]
@@ -1252,17 +1362,21 @@ for s in sigmas_q1:
 
 print("\\n-> sigma が増加すると Call 価格は単調に増加する。")
 print("  ボラティリティが高いほど大きな上昇の可能性が増え、Call の価値が高まる。")
-'''))
+""")
+)
 
 # Q2
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ### 問題 2: インプライド・ボラティリティの逆算
 
 $S=110, K=100, T=0.25, r=0.04$ で、市場価格が $C=14.50$ のとき、
 Bisection 法と Newton 法で IV を求めなさい。反復回数を比較しなさい。
-'''))
+""")
+)
 
-cells.append(code('''
+cells.append(
+    code("""
 # === 解答例 2 ===
 S_q2, K_q2, T_q2, r_q2 = 110, 100, 0.25, 0.04
 C_market_q2 = 14.50
@@ -1273,17 +1387,21 @@ iv_nw_q2, h_nw = implied_vol_newton(C_market_q2, S_q2, K_q2, T_q2, r_q2)
 print(f"Bisection: IV = {iv_bi_q2:.6f}  ({len(h_bi)} iterations)")
 print(f"Newton:    IV = {iv_nw_q2:.6f}  ({len(h_nw)} iterations)")
 print(f"\\n-> Newton 法の方が圧倒的に少ない反復回数で収束する。")
-'''))
+""")
+)
 
 # Q3
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ### 問題 3: Put-Call Parity の確認
 
 $S=95, K=100, T=1.0, r=0.05, \sigma=0.20$ で Call と Put を BSM で計算し、
 Put-Call Parity $C - P = S - Ke^{-rT}$ が成立することを数値で確認しなさい。
-'''))
+""")
+)
 
-cells.append(code('''
+cells.append(
+    code("""
 # === 解答例 3 ===
 S_q3, K_q3, T_q3, r_q3, sigma_q3 = 95, 100, 1.0, 0.05, 0.20
 C_q3 = bsm_call_price(S_q3, K_q3, T_q3, r_q3, sigma_q3)
@@ -1296,17 +1414,21 @@ print(f"C - P             = {C_q3 - P_q3:.6f}")
 print(f"S - K*exp(-rT)    = {S_q3 - K_q3 * np.exp(-r_q3 * T_q3):.6f}")
 print(f"Parity residual   = {parity_q3:.2e}")
 print("\\n-> 残差は浮動小数点精度 (~1e-15) で、Parity は完全に成立している。")
-'''))
+""")
+)
 
 # Q4
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ### 問題 4: ローリングボラティリティの比較
 
 Section 4 の価格系列に対し、窓長 10, 30, 60 日のローリングボラティリティを計算し、
 1 つのグラフに重ねてプロットしなさい。窓長が推定に与える影響を述べなさい。
-'''))
+""")
+)
 
-cells.append(code('''
+cells.append(
+    code("""
 # === 解答例 4 ===
 log_ret_q4 = compute_log_returns(prices)
 series_q4 = pd.Series(log_ret_q4)
@@ -1325,19 +1447,23 @@ plt.show()
 
 print("-> 窓長が短いほどノイジーだが局所変動を捉えやすい。")
 print("  窓長が長いほど滑らかだが変化への反応が遅い。")
-'''))
+""")
+)
 
 # Q5
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ### 問題 5: デルタヘッジ誤差の確認
 
 $S=100, K=100, T=0.5, r=0.05, \sigma=0.20$ で European Call を 1 単位 short。
 デルタ数の株を long してヘッジし、$S$ が $\pm 10$ 動いたときの P&L を計算しなさい。
 $\delta S = \pm 1, \pm 5, \pm 10$ での hedged P&L を表にまとめ、
 「ヘッジ誤差は $\delta S$ の 2 乗に比例する」ことを確認しなさい。
-'''))
+""")
+)
 
-cells.append(code('''
+cells.append(
+    code("""
 # === 解答例 5 ===
 S_q5, K_q5, T_q5, r_q5, sigma_q5 = 100, 100, 0.5, 0.05, 0.20
 C_q5 = bsm_call_price(S_q5, K_q5, T_q5, r_q5, sigma_q5)
@@ -1354,10 +1480,12 @@ for dS in dS_list:
 
 print("\\n-> Hedged P&L は |dS| が大きくなると急に大きくなる。")
 print("  これは Gamma (2次の効果) に起因し、誤差は概ね dS^2 に比例する。")
-'''))
+""")
+)
 
 # ===================== 14. Summary =====================
-cells.append(md(r'''
+cells.append(
+    md(r"""
 ---
 ## 14. まとめ
 
@@ -1389,24 +1517,18 @@ cells.append(md(r'''
 2. **Local Volatility / Stochastic Volatility**: BSM の $\sigma$ 一定の仮定を緩和し、Dupire の局所ボラティリティモデルや Heston モデルなどを実装して、Volatility Smile/Surface を再現する。
 
 3. **American Option の数値解法**: 二項木法 (Binomial Tree)、有限差分法 (FDM)、Longstaff-Schwartz 法によるアメリカン・オプションの価格付けを実装し、早期行使の最適性を分析する。
-'''))
+""")
+)
 
 # ===================== Build notebook =====================
 nb = {
     "nbformat": 4,
     "nbformat_minor": 5,
     "metadata": {
-        "kernelspec": {
-            "display_name": "Python 3",
-            "language": "python",
-            "name": "python3"
-        },
-        "language_info": {
-            "name": "python",
-            "version": "3.10.0"
-        }
+        "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
+        "language_info": {"name": "python", "version": "3.10.0"},
     },
-    "cells": cells
+    "cells": cells,
 }
 
 output_path = "/home/kazumasa/programming_linux/bsm_chapter15.ipynb"

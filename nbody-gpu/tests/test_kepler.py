@@ -1,4 +1,5 @@
 """Two-body circular orbit: known-analytical reference."""
+
 from __future__ import annotations
 
 import math
@@ -13,6 +14,7 @@ from nbody import Simulation, two_body_circular
 def cupy_available():
     try:
         import cupy
+
         _ = cupy.arange(1)
         return True
     except Exception:

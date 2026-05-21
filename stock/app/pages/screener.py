@@ -4,8 +4,7 @@ from __future__ import annotations
 
 import dash
 import dash_bootstrap_components as dbc
-from dash import Input, Output, State, dcc, html, dash_table
-
+from dash import Input, Output, State, dash_table, dcc, html
 from stockkit.analysis import screener as scr
 
 dash.register_page(__name__, path="/screener", name="Screener")
@@ -25,9 +24,7 @@ layout = dbc.Container(
                 dbc.Col(
                     [
                         dbc.Label("Universe (comma-separated)"),
-                        dbc.Textarea(
-                            id="sc-universe", value=DEFAULT_UNIVERSE, rows=3
-                        ),
+                        dbc.Textarea(id="sc-universe", value=DEFAULT_UNIVERSE, rows=3),
                     ],
                     md=12,
                 ),
@@ -75,9 +72,7 @@ layout = dbc.Container(
                 dbc.Col(
                     [
                         dbc.Label(" "),
-                        dbc.Button(
-                            "Run", id="sc-run", color="primary", className="d-block"
-                        ),
+                        dbc.Button("Run", id="sc-run", color="primary", className="d-block"),
                     ],
                     md=2,
                 ),
@@ -118,8 +113,15 @@ def run_screen(_n, universe, pe, roe, div, sma_w):
 
     show = df.reset_index()
     cols = [
-        "symbol", "name", "sector", "pe", "pb", "roe",
-        "dividend_yield", "market_cap", "price",
+        "symbol",
+        "name",
+        "sector",
+        "pe",
+        "pb",
+        "roe",
+        "dividend_yield",
+        "market_cap",
+        "price",
     ]
     show = show[[c for c in cols if c in show.columns]]
     return dash_table.DataTable(

@@ -8,7 +8,8 @@ from __future__ import annotations
 
 import dash
 import dash_bootstrap_components as dbc
-from dash import Dash, html, dcc
+from dash import Dash, dcc, html
+
 app = Dash(
     __name__,
     use_pages=True,
@@ -37,5 +38,6 @@ app.layout = dbc.Container(
 
 if __name__ == "__main__":
     from api.server import start as start_api
+
     start_api(port=8051)
     app.run(debug=True, host="127.0.0.1", port=8050, use_reloader=False)

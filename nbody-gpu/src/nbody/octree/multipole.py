@@ -8,6 +8,7 @@ the *first* child to arrive bumps the counter from 0 to 1 and returns; the
 responsible for combining them and climbing further. `__threadfence()` is
 used to publish the writes before the parent reads them.
 """
+
 from __future__ import annotations
 
 import cupy as cp
@@ -110,13 +111,19 @@ class Multipole:
         threads = 256
         blocks = (n + threads - 1) // threads
         _propagate_kernel(
-            (blocks,), (threads,),
-            (tree.parent, tree.left, tree.right,
-             self.node_mass,
-             self.node_com.ravel(),
-             self.node_bb_min.ravel(),
-             self.node_bb_max.ravel(),
-             visited, cp.int32(n)),
+            (blocks,),
+            (threads,),
+            (
+                tree.parent,
+                tree.left,
+                tree.right,
+                self.node_mass,
+                self.node_com.ravel(),
+                self.node_bb_min.ravel(),
+                self.node_bb_max.ravel(),
+                visited,
+                cp.int32(n),
+            ),
         )
 
         # Per-node "size" for the BH θ-criterion: half-diagonal length of the

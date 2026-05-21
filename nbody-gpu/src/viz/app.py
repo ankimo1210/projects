@@ -1,4 +1,5 @@
 """Glue between Simulation and NBodyCanvas."""
+
 from __future__ import annotations
 
 from nbody import Simulation

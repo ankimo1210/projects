@@ -5,27 +5,27 @@ PropertyData ↔ listing_master DB行 の双方向変換を担う。
 UI層（property_tab.py）と DB層（db.py）の橋渡し役であり、
 どちらにも依存しない純粋な変換ロジックをここに集める。
 """
+
 from __future__ import annotations
 
 import json
 from hashlib import sha1
-from typing import Optional
 
 from property_scraper import PropertyData, extract_source_property_id
 from utils import safe_float, safe_int, safe_str
-
 
 # --------------------------------------------------------------------------
 # PropertyData → listing_master 行
 # --------------------------------------------------------------------------
 
+
 def property_to_listing_row(
     prop: PropertyData,
     source_url: str,
-    city_code: Optional[str],
-    lat: Optional[float],
-    lon: Optional[float],
-    region_label: Optional[str] = None,
+    city_code: str | None,
+    lat: float | None,
+    lon: float | None,
+    region_label: str | None = None,
 ) -> dict:
     """PropertyData を listing_master upsert 用の dict に変換する。"""
     source = prop.platform or "unknown"
@@ -78,6 +78,7 @@ def property_to_listing_row(
 # listing_master 行 → PropertyData
 # --------------------------------------------------------------------------
 
+
 def listing_row_to_property(row: dict) -> PropertyData:
     """listing_master の行 dict を PropertyData に変換する。"""
     raw: dict = {}
@@ -96,7 +97,7 @@ def listing_row_to_property(row: dict) -> PropertyData:
         except (ValueError, TypeError):
             pass
 
-    def _s(k: str) -> Optional[str]:
+    def _s(k: str) -> str | None:
         v = safe_str(row.get(k), fallback="")
         return v or None
 

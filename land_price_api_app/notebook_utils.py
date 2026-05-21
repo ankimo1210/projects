@@ -8,17 +8,14 @@ Jupyter Notebook から API / DB / 分析関数を簡単に呼べる高レベル
     df = load_year_from_db(conn, 2026)
     plot_points_map(df)
 """
-from pathlib import Path
-from typing import Optional
 
+from pathlib import Path
+
+import analytics
+import db
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-
-import analytics
-import api_client
-import db
-import normalize
 import sync_public_notice as sync
 from config import ensure_dirs, get_logger, validate_api_key
 
@@ -29,7 +26,8 @@ logger = get_logger(__name__)
 # 初期化
 # --------------------------------------------------------------------------
 
-def load_env_and_connect(db_path: Optional[Path] = None, read_only: bool = False):
+
+def load_env_and_connect(db_path: Path | None = None, read_only: bool = False):
     """
     .env を読み込み、DuckDB 接続を確立する。
     DB がロックされている場合は None を返す（Parquet フォールバック用）。
@@ -47,7 +45,7 @@ def load_env_and_connect(db_path: Optional[Path] = None, read_only: bool = False
     try:
         validate_api_key()
         print("✓ APIキーを確認しました")
-    except EnvironmentError as e:
+    except OSError as e:
         print(f"✗ {e}")
         raise
 
@@ -61,11 +59,15 @@ def load_env_and_connect(db_path: Optional[Path] = None, read_only: bool = False
                 pass
         stats = db.get_stats(conn)
         mode_label = " (読み取り専用)" if read_only else ""
-        print(f"✓ DB 接続成功{mode_label}: {stats['total_records']:,} レコード / 年度: {stats['available_years']}")
+        print(
+            f"✓ DB 接続成功{mode_label}: {stats['total_records']:,} レコード / 年度: {stats['available_years']}"
+        )
         return conn
     except Exception as e:
         print(f"⚠ DB に接続できないため Parquet モードで動作します ({e.__class__.__name__})")
-        print("  → Parquet ファイルから直接読み込みます。別カーネルで DB を使用中の場合はそちらを終了してください。")
+        print(
+            "  → Parquet ファイルから直接読み込みます。別カーネルで DB を使用中の場合はそちらを終了してください。"
+        )
         return None
 
 
@@ -73,10 +75,11 @@ def load_env_and_connect(db_path: Optional[Path] = None, read_only: bool = False
 # データロード
 # --------------------------------------------------------------------------
 
+
 def load_year_from_api(
     year: int,
     z: int = 13,
-    prefecture_code: Optional[str] = None,
+    prefecture_code: str | None = None,
     overwrite: bool = False,
     conn=None,
 ) -> pd.DataFrame:
@@ -121,8 +124,8 @@ def load_year_from_api(
 def load_year_from_db(
     conn,
     year: int,
-    prefecture_code: Optional[str] = None,
-    city_code: Optional[str] = None,
+    prefecture_code: str | None = None,
+    city_code: str | None = None,
 ) -> pd.DataFrame:
     """
     DB（または Parquet）からデータを読み込む。
@@ -158,8 +161,8 @@ def load_year_from_db(
 
 def _load_year_from_parquet(
     year: int,
-    prefecture_code: Optional[str] = None,
-    city_code: Optional[str] = None,
+    prefecture_code: str | None = None,
+    city_code: str | None = None,
 ) -> pd.DataFrame:
     """Parquet ファイルから指定年のデータを読む（DB ロック時のフォールバック）。"""
     from config import PROCESSED_DIR
@@ -187,6 +190,7 @@ def _load_year_from_parquet(
 # サマリー表示
 # --------------------------------------------------------------------------
 
+
 def show_basic_summary(df: pd.DataFrame) -> None:
     """DataFrame の基本統計をテキストで表示する。"""
     if df.empty:
@@ -211,6 +215,7 @@ def show_basic_summary(df: pd.DataFrame) -> None:
 # --------------------------------------------------------------------------
 # 地図表示
 # --------------------------------------------------------------------------
+
 
 def plot_points_map(
     df: pd.DataFrame,
@@ -239,10 +244,17 @@ def plot_points_map(
         return go.Figure()
 
     hover_cols = [
-        c for c in [
-            "point_id", "location_text", "city_name", "prefecture_name",
-            "price_yen_per_sqm", "yoy_change_pct", "use_category_name",
-        ] if c in plot_df.columns
+        c
+        for c in [
+            "point_id",
+            "location_text",
+            "city_name",
+            "prefecture_name",
+            "price_yen_per_sqm",
+            "yoy_change_pct",
+            "use_category_name",
+        ]
+        if c in plot_df.columns
     ]
 
     fig = px.scatter_mapbox(
@@ -266,6 +278,7 @@ def plot_points_map(
 # --------------------------------------------------------------------------
 # 時系列プロット
 # --------------------------------------------------------------------------
+
 
 def plot_point_history(
     df: pd.DataFrame,
@@ -307,8 +320,7 @@ def plot_point_history(
                 name="前年比 (%)",
                 yaxis="y2",
                 marker_color=[
-                    "#e53935" if v > 0 else "#1e88e5"
-                    for v in ts["yoy_change_pct"].fillna(0)
+                    "#e53935" if v > 0 else "#1e88e5" for v in ts["yoy_change_pct"].fillna(0)
                 ],
                 opacity=0.6,
             )
@@ -330,9 +342,10 @@ def plot_point_history(
 # ランキングプロット
 # --------------------------------------------------------------------------
 
+
 def plot_city_ranking(
     df: pd.DataFrame,
-    year: Optional[int] = None,
+    year: int | None = None,
     top_n: int = 20,
 ) -> go.Figure:
     """

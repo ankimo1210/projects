@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
+
 from gto.trainer.quiz import random_spot, score_answer
 
 router = APIRouter()
@@ -48,7 +49,8 @@ def get_quiz():
 
 @router.post("/trainer/answer", response_model=AnswerResponse)
 def post_answer(req: AnswerRequest):
-    from gto.trainer.preflop_data import get_rfi_spot, get_facing_spot
+    from gto.trainer.preflop_data import get_facing_spot, get_rfi_spot
+
     if req.spot_type == "RFI":
         spot = get_rfi_spot(req.position, req.hand)
     else:

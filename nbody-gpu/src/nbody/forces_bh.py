@@ -10,6 +10,7 @@ stack. At every node we apply the Barnes-Hut θ-criterion:
 is the distance from the query particle to the node's centre of mass.
 Leaves contribute directly; the query particle skips itself.
 """
+
 from __future__ import annotations
 
 import cupy as cp
@@ -132,12 +133,22 @@ def compute_acceleration_bh(
     threads = block_size
     blocks = (n + threads - 1) // threads
     _bh_kernel(
-        (blocks,), (threads,),
-        (pos_s, tree.left, tree.right,
-         mp.node_mass, mp.node_com.ravel(), mp.node_size,
-         acc_s,
-         cp.int32(n), cp.int32(tree.root),
-         cp.float32(theta * theta), cp.float32(eps * eps), cp.float32(G)),
+        (blocks,),
+        (threads,),
+        (
+            pos_s,
+            tree.left,
+            tree.right,
+            mp.node_mass,
+            mp.node_com.ravel(),
+            mp.node_size,
+            acc_s,
+            cp.int32(n),
+            cp.int32(tree.root),
+            cp.float32(theta * theta),
+            cp.float32(eps * eps),
+            cp.float32(G),
+        ),
     )
 
     # Undo the permutation: acc_s[k] is the force on the k-th sorted particle,

@@ -5,8 +5,7 @@ from __future__ import annotations
 import dash
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
-from dash import Input, Output, State, dcc, html, dash_table
-
+from dash import Input, Output, State, dash_table, dcc, html
 from stockkit.analysis import backtest as bt
 from stockkit.data import get_prices, normalize_symbol
 
@@ -83,9 +82,7 @@ layout = dbc.Container(
                 dbc.Col(
                     [
                         dbc.Label(" "),
-                        dbc.Button(
-                            "Run", id="bt-run", color="primary", className="d-block"
-                        ),
+                        dbc.Button("Run", id="bt-run", color="primary", className="d-block"),
                     ],
                     md=1,
                 ),

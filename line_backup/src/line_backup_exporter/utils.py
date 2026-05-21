@@ -1,9 +1,10 @@
 from __future__ import annotations
+
 import csv
 import logging
 import sys
+from collections.abc import Iterable, Sequence
 from pathlib import Path
-from typing import Iterable, Sequence
 
 
 def get_logger(name: str) -> logging.Logger:

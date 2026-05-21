@@ -2,6 +2,7 @@
 valuation.py
 掲載物件の簡易スコアリングと割安・割高判定。
 """
+
 from __future__ import annotations
 
 import json
@@ -20,15 +21,28 @@ def score_location_features(features: dict[str, Any]) -> dict[str, float]:
 
     life += min(_num(features.get("convenience_count_500m")) * 6.0, 18.0)
     life += min(_num(features.get("supermarket_count_1000m")) * 5.0, 15.0)
-    life += 8.0 if _nearest(features.get("transit_nearest_m")) and _nearest(features.get("transit_nearest_m")) <= 800 else 0.0
-    life -= 5.0 if _nearest(features.get("transit_nearest_m")) and _nearest(features.get("transit_nearest_m")) > 1500 else 0.0
+    life += (
+        8.0
+        if _nearest(features.get("transit_nearest_m"))
+        and _nearest(features.get("transit_nearest_m")) <= 800
+        else 0.0
+    )
+    life -= (
+        5.0
+        if _nearest(features.get("transit_nearest_m"))
+        and _nearest(features.get("transit_nearest_m")) > 1500
+        else 0.0
+    )
 
     family += min(_num(features.get("school_count_1000m")) * 6.0, 18.0)
     family += min(_num(features.get("medical_count_1000m")) * 4.0, 12.0)
     family += min(_num(features.get("park_count_1000m")) * 4.0, 12.0)
 
     negative += min(_num(features.get("pachinko_count_1000m")) * 12.0, 36.0)
-    if _nearest(features.get("pachinko_nearest_m")) and _nearest(features.get("pachinko_nearest_m")) <= 300:
+    if (
+        _nearest(features.get("pachinko_nearest_m"))
+        and _nearest(features.get("pachinko_nearest_m")) <= 300
+    ):
         negative += 12.0
 
     elevation_m = _nearest(features.get("elevation_m"))
@@ -36,9 +50,15 @@ def score_location_features(features: dict[str, Any]) -> dict[str, float]:
         terrain += 35.0
     elif elevation_m is not None and elevation_m < 10:
         terrain += 15.0
-    if _nearest(features.get("nearest_water_m")) and _nearest(features.get("nearest_water_m")) <= 300:
+    if (
+        _nearest(features.get("nearest_water_m"))
+        and _nearest(features.get("nearest_water_m")) <= 300
+    ):
         terrain += 20.0
-    elif _nearest(features.get("nearest_water_m")) and _nearest(features.get("nearest_water_m")) <= 800:
+    elif (
+        _nearest(features.get("nearest_water_m"))
+        and _nearest(features.get("nearest_water_m")) <= 800
+    ):
         terrain += 8.0
     if features.get("flood_risk_flag") is True:
         terrain += 25.0

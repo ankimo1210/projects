@@ -20,9 +20,7 @@ import pandas as pd
 import requests
 
 _WIKI_URL = "https://ja.wikipedia.org/wiki/日経平均株価"
-_DATA_DIR = Path(
-    os.environ.get("STOCKKIT_DATA_DIR", Path(__file__).resolve().parents[3] / "_data")
-)
+_DATA_DIR = Path(os.environ.get("STOCKKIT_DATA_DIR", Path(__file__).resolve().parents[3] / "_data"))
 _CSV_PATH = _DATA_DIR / "nikkei225_constituents.csv"
 
 

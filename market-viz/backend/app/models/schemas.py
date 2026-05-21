@@ -3,27 +3,27 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel
-
 
 # ---------------------------------------------------------------------------
 # Shared
 # ---------------------------------------------------------------------------
 
+
 class OHLCVBar(BaseModel):
     timestamp: datetime
-    open: Optional[float]
-    high: Optional[float]
-    low: Optional[float]
-    close: Optional[float]
-    volume: Optional[float]
+    open: float | None
+    high: float | None
+    low: float | None
+    close: float | None
+    volume: float | None
 
 
 # ---------------------------------------------------------------------------
 # Instruments
 # ---------------------------------------------------------------------------
+
 
 class Instrument(BaseModel):
     ticker: str
@@ -37,6 +37,7 @@ class Instrument(BaseModel):
 # Prices
 # ---------------------------------------------------------------------------
 
+
 class PricesResponse(BaseModel):
     ticker: str
     frequency: str
@@ -47,23 +48,24 @@ class PricesResponse(BaseModel):
 # Dashboard
 # ---------------------------------------------------------------------------
 
+
 class DashboardRow(BaseModel):
     ticker: str
     name: str
     asset_class: str
-    last_close: Optional[float]
-    ret_1d: Optional[float]
-    ret_5d: Optional[float]
-    ret_20d: Optional[float]
-    ret_60d: Optional[float]
-    vol_20d: Optional[float]
-    vol_60d: Optional[float]
-    zscore_20d: Optional[float]
-    zscore_60d: Optional[float]
-    pct_20d: Optional[float]
-    pct_60d: Optional[float]
-    current_dd: Optional[float]
-    max_dd: Optional[float]
+    last_close: float | None
+    ret_1d: float | None
+    ret_5d: float | None
+    ret_20d: float | None
+    ret_60d: float | None
+    vol_20d: float | None
+    vol_60d: float | None
+    zscore_20d: float | None
+    zscore_60d: float | None
+    pct_20d: float | None
+    pct_60d: float | None
+    current_dd: float | None
+    max_dd: float | None
     signal: str
 
 
@@ -76,9 +78,10 @@ class DashboardResponse(BaseModel):
 # Correlation
 # ---------------------------------------------------------------------------
 
+
 class CorrelationResponse(BaseModel):
     tickers: list[str]
-    matrix: list[list[Optional[float]]]
+    matrix: list[list[float | None]]
     window: int
 
 
@@ -87,35 +90,37 @@ class RollingCorrelationResponse(BaseModel):
     ticker_b: str
     window: int
     timestamps: list[datetime]
-    values: list[Optional[float]]
+    values: list[float | None]
 
 
 # ---------------------------------------------------------------------------
 # Signals
 # ---------------------------------------------------------------------------
 
+
 class SignalRow(BaseModel):
     ticker: str
     name: str
     asset_class: str
-    last_close: Optional[float]
-    ret_1d: Optional[float]
-    ret_5d: Optional[float]
-    ret_20d: Optional[float]
-    vol_20d: Optional[float]
-    vol_60d: Optional[float]
-    zscore_20d: Optional[float]
-    zscore_60d: Optional[float]
-    pct_20d: Optional[float]
-    pct_60d: Optional[float]
-    current_dd: Optional[float]
-    max_dd: Optional[float]
+    last_close: float | None
+    ret_1d: float | None
+    ret_5d: float | None
+    ret_20d: float | None
+    vol_20d: float | None
+    vol_60d: float | None
+    zscore_20d: float | None
+    zscore_60d: float | None
+    pct_20d: float | None
+    pct_60d: float | None
+    current_dd: float | None
+    max_dd: float | None
     signal: str
 
 
 # ---------------------------------------------------------------------------
 # Alerts
 # ---------------------------------------------------------------------------
+
 
 class AlertRow(BaseModel):
     alert_id: str
@@ -131,9 +136,10 @@ class AlertRow(BaseModel):
 # Backtest
 # ---------------------------------------------------------------------------
 
+
 class BacktestRequest(BaseModel):
     ticker: str
-    strategy: str                     # "ma_cross" | "zscore_reversion" | "momentum" | "vol_breakout"
+    strategy: str  # "ma_cross" | "zscore_reversion" | "momentum" | "vol_breakout"
     period_days: int = 365
     commission: float = 0.001
     slippage: float = 0.0005
@@ -151,7 +157,7 @@ class BacktestRequest(BaseModel):
 class BacktestMetrics(BaseModel):
     total_return: float
     annual_return: float
-    annual_volatility: Optional[float]
+    annual_volatility: float | None
     sharpe_ratio: float
     max_drawdown: float
     win_rate: float
@@ -170,6 +176,7 @@ class BacktestResponse(BaseModel):
 # ---------------------------------------------------------------------------
 # Data update
 # ---------------------------------------------------------------------------
+
 
 class UpdateResponse(BaseModel):
     results: dict[str, str]

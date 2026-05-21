@@ -1,10 +1,11 @@
 from __future__ import annotations
+
 import json
 import plistlib
 import sqlite3
+from collections.abc import Iterator
 from contextlib import closing
 from pathlib import Path
-from typing import Iterator
 
 from .models import FileEntry
 from .utils import get_logger, write_csv
@@ -16,9 +17,18 @@ _LINE_KEYWORDS = ("LINE", "Line", "line", "jp.naver.line", "naver")
 
 # Priority keywords for scoring (higher = more interesting)
 _PRIORITY_KEYWORDS = (
-    "Line.sqlite", "line.sqlite", "Talk.sqlite",
-    "chat", "message", "sticker", "image", "audio", "video",
-    "Application Support", "Documents", "Library",
+    "Line.sqlite",
+    "line.sqlite",
+    "Talk.sqlite",
+    "chat",
+    "message",
+    "sticker",
+    "image",
+    "audio",
+    "video",
+    "Application Support",
+    "Documents",
+    "Library",
 )
 
 

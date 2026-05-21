@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import os
 import platform
 import plistlib
@@ -21,16 +22,12 @@ def _candidate_dirs() -> list[Path]:
         localappdata = os.environ.get("LOCALAPPDATA", "")
 
         if appdata:
-            candidates.append(
-                Path(appdata) / "Apple Computer" / "MobileSync" / "Backup"
-            )
+            candidates.append(Path(appdata) / "Apple Computer" / "MobileSync" / "Backup")
         if userprofile:
-            candidates.append(
-                Path(userprofile) / "Apple" / "MobileSync" / "Backup"
-            )
+            candidates.append(Path(userprofile) / "Apple" / "MobileSync" / "Backup")
         if localappdata:
             # iTunes Store app (UWP) — wildcard for package name
-            pattern = (
+            (
                 Path(localappdata)
                 / "Packages"
                 / "AppleInc.iTunes_*"
@@ -40,19 +37,21 @@ def _candidate_dirs() -> list[Path]:
                 / "MobileSync"
                 / "Backup"
             )
-            candidates.extend(Path(localappdata).glob(
-                "Packages/AppleInc.iTunes_*/LocalCache/Roaming/Apple Computer/MobileSync/Backup"
-            ))
+            candidates.extend(
+                Path(localappdata).glob(
+                    "Packages/AppleInc.iTunes_*/LocalCache/Roaming/Apple Computer/MobileSync/Backup"
+                )
+            )
     elif system == "Darwin":
-        candidates.append(
-            Path.home() / "Library" / "Application Support" / "MobileSync" / "Backup"
-        )
+        candidates.append(Path.home() / "Library" / "Application Support" / "MobileSync" / "Backup")
     else:
         # Linux / WSL — check Windows paths via /mnt/c as fallback
         win_user = os.environ.get("WIN_USERPROFILE", "")
         if win_user:
             win_path = Path(win_user)
-            candidates.append(win_path / "AppData" / "Roaming" / "Apple Computer" / "MobileSync" / "Backup")
+            candidates.append(
+                win_path / "AppData" / "Roaming" / "Apple Computer" / "MobileSync" / "Backup"
+            )
             candidates.append(win_path / "Apple" / "MobileSync" / "Backup")
 
     return candidates
@@ -106,13 +105,15 @@ def list_backups() -> list[BackupInfo]:
             encrypted = _read_is_encrypted(entry)
             updated = _mtime_str(entry / "Manifest.db") if has_db else _mtime_str(entry)
 
-            results.append(BackupInfo(
-                backup_id=entry.name,
-                path=entry,
-                updated_at=updated,
-                has_manifest_db=has_db,
-                has_manifest_plist=has_plist,
-                likely_encrypted=encrypted,
-            ))
+            results.append(
+                BackupInfo(
+                    backup_id=entry.name,
+                    path=entry,
+                    updated_at=updated,
+                    has_manifest_db=has_db,
+                    has_manifest_plist=has_plist,
+                    likely_encrypted=encrypted,
+                )
+            )
 
     return results

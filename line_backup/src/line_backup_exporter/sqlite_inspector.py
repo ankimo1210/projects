@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import csv
 import sqlite3
 from contextlib import closing
@@ -95,7 +96,7 @@ def _write_report(
     report_path = out_dir / "db_schema_report.md"
 
     lines: list[str] = [
-        f"# DB Schema Report\n",
+        "# DB Schema Report\n",
         f"**Source:** `{db_path}`\n",
         f"**Tables:** {len(tables)}\n",
         "",

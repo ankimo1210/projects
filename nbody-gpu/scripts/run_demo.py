@@ -1,4 +1,5 @@
 """Real-time 3D demo of a Plummer sphere relaxing under self-gravity."""
+
 from __future__ import annotations
 
 import argparse
@@ -14,8 +15,11 @@ def main() -> None:
     p.add_argument("--eps", type=float, default=2e-2)
     p.add_argument("--steps-per-frame", type=int, default=4)
     p.add_argument("--point-size", type=float, default=3.0)
-    p.add_argument("--no-energy", action="store_true",
-                   help="Skip O(N^2) energy diagnostic (faster for large N).")
+    p.add_argument(
+        "--no-energy",
+        action="store_true",
+        help="Skip O(N^2) energy diagnostic (faster for large N).",
+    )
     p.add_argument("--seed", type=int, default=0)
     args = p.parse_args()
 

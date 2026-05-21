@@ -1,6 +1,7 @@
 """
 facility_sources のネットワークなし単体テスト。
 """
+
 import pathlib
 import sys
 
@@ -20,7 +21,9 @@ def test_element_to_facility_uses_node_coords_and_distance():
         "tags": {"name": "テストコンビニ", "brand": "Brand A"},
     }
 
-    facility = fs._element_to_facility(el, origin_lon=139.0, origin_lat=35.0, category="convenience")
+    facility = fs._element_to_facility(
+        el, origin_lon=139.0, origin_lat=35.0, category="convenience"
+    )
 
     assert facility is not None
     assert facility.facility_id == "osm:node:123"
@@ -37,7 +40,9 @@ def test_element_to_facility_uses_way_center():
         "tags": {"operator": "Operator B"},
     }
 
-    facility = fs._element_to_facility(el, origin_lon=139.0, origin_lat=35.0, category="convenience")
+    facility = fs._element_to_facility(
+        el, origin_lon=139.0, origin_lat=35.0, category="convenience"
+    )
 
     assert facility is not None
     assert facility.facility_id == "osm:way:456"
@@ -74,7 +79,9 @@ def test_build_multi_category_query_contains_each_category_filter_once():
 
 
 def test_matching_categories():
-    assert fs._matching_categories({"shop": "supermarket"}, ["convenience", "supermarket"]) == ["supermarket"]
+    assert fs._matching_categories({"shop": "supermarket"}, ["convenience", "supermarket"]) == [
+        "supermarket"
+    ]
     assert fs._matching_categories({"gambling": "pachinko"}, ["pachinko"]) == ["pachinko"]
 
 

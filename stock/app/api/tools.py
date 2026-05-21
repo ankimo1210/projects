@@ -124,6 +124,7 @@ TOOL_DEFINITIONS = [
 
 
 import threading
+
 _thread_local = threading.local()
 
 
@@ -156,8 +157,10 @@ def execute_tool(name: str, inputs: dict[str, Any]) -> str:
 
 # ---------- implementations ----------
 
+
 def _get_price_data(symbol: str, period: str = "1y") -> str:
     from stockkit.data import get_prices
+
     df = get_prices(symbol, period=period, source="yfinance")
     if df.empty:
         return f"データなし: {symbol}"
@@ -170,6 +173,7 @@ def _get_price_data(symbol: str, period: str = "1y") -> str:
 
 def _get_macro(series_id: str, start: str | None = None) -> str:
     from stockkit.data import get_macro
+
     s = get_macro(series_id, start=start)
     s = s.dropna()
     if s.empty:
@@ -183,6 +187,7 @@ def _get_macro(series_id: str, start: str | None = None) -> str:
 
 def _get_jp_cpi(start: str | None = None) -> str:
     from stockkit.data import get_jp_cpi
+
     s = get_jp_cpi(start=start)
     if s.empty:
         return "Japan CPI データなし"
@@ -194,8 +199,9 @@ def _get_jp_cpi(start: str | None = None) -> str:
 
 
 def _search_fred(query: str, limit: int = 5) -> str:
-    from fredapi import Fred
     from dotenv import load_dotenv
+    from fredapi import Fred
+
     load_dotenv()
     api_key = os.environ.get("FRED_API_KEY", "")
     if not api_key:
@@ -212,6 +218,7 @@ def _search_fred(query: str, limit: int = 5) -> str:
 
 def _execute_python(code: str) -> str:
     from api.sandbox import run
+
     result = run(code)
     # Store figures in thread-local so claude_agent can collect them
     _thread_local.figures = result.get("figures", [])

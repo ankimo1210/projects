@@ -2,16 +2,15 @@
 ui/components.py
 アプリ全体で再利用するUIコンポーネント関数。
 """
+
 from __future__ import annotations
 
-from typing import Optional
-
 import streamlit as st
-
 
 # --------------------------------------------------------------------------
 # Hero Card (物件分析タブ上部の物件概要カード)
 # --------------------------------------------------------------------------
+
 
 def render_hero_card(
     title: str,
@@ -21,9 +20,13 @@ def render_hero_card(
     age_label: str,
     structure_label: str,
     area_label: str,
-    source_url: Optional[str] = None,
+    source_url: str | None = None,
 ) -> None:
-    link = f'<a href="{source_url}" target="_blank" style="color:#7fc3ea;font-size:0.8rem;">物件ページ ↗</a>' if source_url else ""
+    link = (
+        f'<a href="{source_url}" target="_blank" style="color:#7fc3ea;font-size:0.8rem;">物件ページ ↗</a>'
+        if source_url
+        else ""
+    )
     st.markdown(
         f"""
         <div style="
@@ -63,6 +66,7 @@ def render_hero_card(
 # --------------------------------------------------------------------------
 # Population Card (人口トレンド表示カード)
 # --------------------------------------------------------------------------
+
 
 def render_population_card(pop: dict) -> None:
     """analytics.compute_population_trend() の返却dictを受け取って表示。"""
@@ -118,5 +122,3 @@ def render_population_card(pop: dict) -> None:
         """,
         unsafe_allow_html=True,
     )
-
-

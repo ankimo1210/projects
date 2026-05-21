@@ -3,17 +3,28 @@ ui/trade_tab.py
 不動産取引価格情報タブ (XIT001)。
 地図表示・フィルタ・公示価格との乖離率を表示する。
 """
-from typing import Optional
-
-import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
-import streamlit as st
 
 import db
-from ui.unit_price import add_tsubo_price_column, convert_yen_columns_to_man, format_yen_per_sqm_with_tsubo, yen_to_man
-from ui.table import render_html_table, price_man, truncate_muted, muted, year_num, area_num, count_num
+import pandas as pd
+import plotly.express as px
+import streamlit as st
+
 from ui.constants import PREFECTURE_NAMES as _PREF_NAMES
+from ui.table import (
+    area_num,
+    count_num,
+    muted,
+    price_man,
+    render_html_table,
+    truncate_muted,
+    year_num,
+)
+from ui.unit_price import (
+    add_tsubo_price_column,
+    convert_yen_columns_to_man,
+    format_yen_per_sqm_with_tsubo,
+    yen_to_man,
+)
 
 # --------------------------------------------------------------------------
 # 定数
@@ -22,18 +33,18 @@ from ui.constants import PREFECTURE_NAMES as _PREF_NAMES
 _TRADE_TYPES = ["土地", "土地と建物", "建物", "マンション等"]
 
 
-
 # --------------------------------------------------------------------------
 # キャッシュ付きデータロード
 # --------------------------------------------------------------------------
+
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def _load_trade_data(
     _conn,
     year: int,
-    quarter: Optional[int],
-    pref_code: Optional[str],
-    trade_type: Optional[str],
+    quarter: int | None,
+    pref_code: str | None,
+    trade_type: str | None,
 ) -> pd.DataFrame:
     filters: dict = {"year": year}
     if quarter:
@@ -62,6 +73,7 @@ def _get_trade_prefs(_conn) -> list[str]:
 # メイン描画
 # --------------------------------------------------------------------------
 
+
 def render_trade_tab(conn, filters: dict) -> None:
     st.header("🏠 不動産取引価格")
 
@@ -74,9 +86,7 @@ def render_trade_tab(conn, filters: dict) -> None:
     c1, c2, c3, c4 = st.columns([2, 2, 2, 2])
 
     with c1:
-        selected_year = st.selectbox(
-            "年", available_years, index=0, key="trade_year"
-        )
+        selected_year = st.selectbox("年", available_years, index=0, key="trade_year")
 
     with c2:
         quarter_opts = ["全四半期", "Q1 (1-3月)", "Q2 (4-6月)", "Q3 (7-9月)", "Q4 (10-12月)"]
@@ -86,10 +96,7 @@ def render_trade_tab(conn, filters: dict) -> None:
     with c3:
         existing_prefs = _get_trade_prefs(conn)
         pref_opts = {"": "全国"}
-        pref_opts.update({
-            code: _PREF_NAMES.get(code, code)
-            for code in sorted(existing_prefs)
-        })
+        pref_opts.update({code: _PREF_NAMES.get(code, code) for code in sorted(existing_prefs)})
         pref_sel = st.selectbox(
             "都道府県",
             options=list(pref_opts.keys()),
@@ -99,7 +106,7 @@ def render_trade_tab(conn, filters: dict) -> None:
         pref_arg = pref_sel if pref_sel else None
 
     with c4:
-        type_opts = ["すべて"] + _TRADE_TYPES
+        type_opts = ["すべて", *_TRADE_TYPES]
         type_sel = st.selectbox("取引種別", type_opts, index=0, key="trade_type")
         type_arg = None if type_sel == "すべて" else type_sel
 
@@ -137,6 +144,7 @@ def render_trade_tab(conn, filters: dict) -> None:
 # KPI カード
 # --------------------------------------------------------------------------
 
+
 def _render_kpi_cards(df: pd.DataFrame) -> None:
     trade_count = len(df)
     avg_per_sqm = df["trade_price_per_sqm"].mean() if "trade_price_per_sqm" in df.columns else None
@@ -149,7 +157,9 @@ def _render_kpi_cards(df: pd.DataFrame) -> None:
     with c2:
         st.metric(
             "平均単価 (万円/m²)",
-            format_yen_per_sqm_with_tsubo(avg_per_sqm) if avg_per_sqm and not pd.isna(avg_per_sqm) else "—",
+            format_yen_per_sqm_with_tsubo(avg_per_sqm)
+            if avg_per_sqm and not pd.isna(avg_per_sqm)
+            else "—",
         )
     with c3:
         st.metric(
@@ -167,12 +177,13 @@ def _render_kpi_cards(df: pd.DataFrame) -> None:
 # 価格推移（四半期別）
 # --------------------------------------------------------------------------
 
+
 @st.cache_data(ttl=3600, show_spinner=False)
-def _load_trade_trend(_conn, pref_code: Optional[str], trade_type: Optional[str]) -> pd.DataFrame:
+def _load_trade_trend(_conn, pref_code: str | None, trade_type: str | None) -> pd.DataFrame:
     return db.get_trade_city_summary(_conn, pref_codes=[pref_code] if pref_code else None)
 
 
-def _render_trend(conn, pref_code: Optional[str], trade_type: Optional[str]) -> None:
+def _render_trend(conn, pref_code: str | None, trade_type: str | None) -> None:
     df = _load_trade_trend(conn, pref_code, trade_type)
     if df.empty:
         st.info("トレンドデータがありません。")
@@ -192,7 +203,8 @@ def _render_trend(conn, pref_code: Optional[str], trade_type: Optional[str]) -> 
 
     fig = px.line(
         summary,
-        x="period", y="avg_price",
+        x="period",
+        y="avg_price",
         markers=True,
         labels={"avg_price": "平均単価 (万円/m²)", "period": "期"},
         title="四半期別 平均取引単価推移",
@@ -206,7 +218,8 @@ def _render_trend(conn, pref_code: Optional[str], trade_type: Optional[str]) -> 
 # 公示価格との乖離
 # --------------------------------------------------------------------------
 
-def _render_deviation(conn, year: int, pref_code: Optional[str]) -> None:
+
+def _render_deviation(conn, year: int, pref_code: str | None) -> None:
     st.caption("同年・同市区町村の地価公示平均価格との比率。取引価格 ÷ 公示価格 × 100。")
 
     trade_df = db.get_trade_city_summary(
@@ -255,6 +268,7 @@ def _render_deviation(conn, year: int, pref_code: Optional[str]) -> None:
 # データテーブル
 # --------------------------------------------------------------------------
 
+
 def _render_distribution(df: pd.DataFrame) -> None:
     """取引単価の分布（ヒストグラム）と取引種別の内訳を表示する。"""
     col_l, col_r = st.columns(2)
@@ -283,7 +297,9 @@ def _render_distribution(df: pd.DataFrame) -> None:
             counts = df["trade_type"].value_counts().reset_index()
             counts.columns = ["取引種別", "件数"]
             fig2 = px.pie(
-                counts, values="件数", names="取引種別",
+                counts,
+                values="件数",
+                names="取引種別",
                 title="取引種別 内訳",
             )
             fig2.update_layout(**_base_layout(height=380))
@@ -291,23 +307,26 @@ def _render_distribution(df: pd.DataFrame) -> None:
 
 
 def _render_table(df: pd.DataFrame) -> None:
-    display_cols = [c for c in [
-        "year", "quarter", "prefecture_name", "city_name", "district_name",
-        "trade_type", "trade_price_per_sqm", "trade_price_total",
-        "area_sqm", "build_year", "building_structure", "floor_plan",
-        "city_planning", "period_str",
-    ] if c in df.columns]
-
-    renamed = {
-        "year": "年", "quarter": "四半期",
-        "prefecture_name": "都道府県", "city_name": "市区町村", "district_name": "地区",
-        "trade_type": "取引種別",
-        "trade_price_per_sqm": "単価 (万円/m²)", "trade_price_total": "総額 (円)",
-        "trade_price_per_tsubo": "坪(万円/坪)",
-        "area_sqm": "面積 (m²)", "build_year": "建築年",
-        "building_structure": "構造", "floor_plan": "間取り",
-        "city_planning": "都市計画", "period_str": "取引時点",
-    }
+    display_cols = [
+        c
+        for c in [
+            "year",
+            "quarter",
+            "prefecture_name",
+            "city_name",
+            "district_name",
+            "trade_type",
+            "trade_price_per_sqm",
+            "trade_price_total",
+            "area_sqm",
+            "build_year",
+            "building_structure",
+            "floor_plan",
+            "city_planning",
+            "period_str",
+        ]
+        if c in df.columns
+    ]
 
     display_df = add_tsubo_price_column(
         df[display_cols],
@@ -316,22 +335,64 @@ def _render_table(df: pd.DataFrame) -> None:
     )
     display_df = convert_yen_columns_to_man(display_df, ["trade_price_per_sqm"])
 
-    render_html_table(display_df, [
-        {"key": "year",               "label": "年",        "width": 48,  "align": "right", "render": year_num},
-        {"key": "quarter",            "label": "Q",         "width": 30,  "align": "right", "render": year_num},
-        {"key": "period_str",         "label": "取引時点",  "width": 90,  "render": muted},
-        {"key": "prefecture_name",    "label": "都道府県",  "width": 70,  "render": muted},
-        {"key": "city_name",          "label": "市区町村",  "width": 90,  "render": muted},
-        {"key": "district_name",      "label": "地区",      "width": 100, "render": lambda v: truncate_muted(v, 95)},
-        {"key": "trade_type",         "label": "種別",      "width": 90,  "render": muted},
-        {"key": "trade_price_per_sqm","label": "単価(万/m²)","width": 85, "align": "right", "render": price_man},
-        {"key": "trade_price_per_tsubo","label": "坪(万/坪)","width": 75, "align": "right", "render": price_man},
-        {"key": "trade_price_total",  "label": "総額(万円)", "width": 85,  "align": "right", "render": lambda v: count_num(round(float(v) / 1e4) if v is not None and v == v else None)},
-        {"key": "area_sqm",           "label": "面積(m²)",  "width": 70,  "align": "right", "render": area_num},
-        {"key": "build_year",         "label": "建築年",    "width": 60,  "align": "right", "render": year_num},
-        {"key": "building_structure", "label": "構造",      "width": 60,  "render": muted},
-        {"key": "floor_plan",         "label": "間取り",    "width": 55,  "render": muted},
-    ], caption=f"{len(display_df):,} 件", min_width=900)
+    render_html_table(
+        display_df,
+        [
+            {"key": "year", "label": "年", "width": 48, "align": "right", "render": year_num},
+            {"key": "quarter", "label": "Q", "width": 30, "align": "right", "render": year_num},
+            {"key": "period_str", "label": "取引時点", "width": 90, "render": muted},
+            {"key": "prefecture_name", "label": "都道府県", "width": 70, "render": muted},
+            {"key": "city_name", "label": "市区町村", "width": 90, "render": muted},
+            {
+                "key": "district_name",
+                "label": "地区",
+                "width": 100,
+                "render": lambda v: truncate_muted(v, 95),
+            },
+            {"key": "trade_type", "label": "種別", "width": 90, "render": muted},
+            {
+                "key": "trade_price_per_sqm",
+                "label": "単価(万/m²)",
+                "width": 85,
+                "align": "right",
+                "render": price_man,
+            },
+            {
+                "key": "trade_price_per_tsubo",
+                "label": "坪(万/坪)",
+                "width": 75,
+                "align": "right",
+                "render": price_man,
+            },
+            {
+                "key": "trade_price_total",
+                "label": "総額(万円)",
+                "width": 85,
+                "align": "right",
+                "render": lambda v: count_num(
+                    round(float(v) / 1e4) if v is not None and v == v else None
+                ),
+            },
+            {
+                "key": "area_sqm",
+                "label": "面積(m²)",
+                "width": 70,
+                "align": "right",
+                "render": area_num,
+            },
+            {
+                "key": "build_year",
+                "label": "建築年",
+                "width": 60,
+                "align": "right",
+                "render": year_num,
+            },
+            {"key": "building_structure", "label": "構造", "width": 60, "render": muted},
+            {"key": "floor_plan", "label": "間取り", "width": 55, "render": muted},
+        ],
+        caption=f"{len(display_df):,} 件",
+        min_width=900,
+    )
     st.download_button(
         "CSVダウンロード",
         data=df[display_cols].to_csv(index=False, encoding="utf-8-sig"),
@@ -343,6 +404,7 @@ def _render_table(df: pd.DataFrame) -> None:
 # --------------------------------------------------------------------------
 # ヘルパー
 # --------------------------------------------------------------------------
+
 
 def _render_no_data_guide() -> None:
     st.info("取引価格データがありません。Admin タブ → 取引価格同期 からデータを取得してください。")

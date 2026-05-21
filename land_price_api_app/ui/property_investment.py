@@ -2,17 +2,17 @@
 ui/property_investment.py
 投資メトリクス・IRR/CF シミュレーション・感度分析。
 """
+
 from __future__ import annotations
+
 import sys
 from pathlib import Path
-from typing import Optional
 
 import pandas as pd
 import streamlit as st
-
 from config import get_logger
 from property_scraper import PropertyData
-from ui.unit_price import yen_to_man
+
 from ui.property_summary import _render_summary_panel
 
 logger = get_logger(__name__)
@@ -22,8 +22,9 @@ if str(_SIM_DIR) not in sys.path:
     sys.path.insert(0, str(_SIM_DIR))
 
 try:
-    from sim_engine import enrich_params, run_full_analysis  # noqa: E402
-    from formatters import format_money, format_multiple, format_percent  # noqa: E402
+    from formatters import format_money, format_multiple, format_percent
+    from sim_engine import enrich_params, run_full_analysis
+
     _SIM_AVAILABLE = True
 except ImportError as _e:
     logger.warning("sim_engine インポート失敗: %s", _e)
@@ -83,8 +84,9 @@ _DEFAULT_LAND_RATIO: dict[str, float] = {
 }
 
 
-def _compute_irr(cashflows: list) -> Optional[float]:
+def _compute_irr(cashflows: list) -> float | None:
     """二分法によるシンプルなIRR計算（scipy不要）。"""
+
     def _npv(r: float) -> float:
         return sum(cf / (1 + r) ** t for t, cf in enumerate(cashflows))
 
@@ -136,7 +138,9 @@ def _simple_equity_cashflows(
     exit_price = noi / exit_cap if exit_cap > 0 else price
     n_paid = hold_years * 12
     if r_mo > 0:
-        remaining = loan * ((1 + r_mo) ** n_months - (1 + r_mo) ** n_paid) / ((1 + r_mo) ** n_months - 1)
+        remaining = (
+            loan * ((1 + r_mo) ** n_months - (1 + r_mo) ** n_paid) / ((1 + r_mo) ** n_months - 1)
+        )
     else:
         remaining = loan * (1 - n_paid / n_months)
     cfs[-1] += exit_price * (1 - 0.035) - remaining
@@ -158,11 +162,11 @@ def _render_investment_metrics(prop: PropertyData) -> None:
     st.markdown("#### 💰 実質利回り & 損益分岐点")
 
     # ── 実質利回り推定 ─────────────────────────────────────────────
-    pm_rate = 0.05          # PM手数料
-    repair_rate = 0.015     # 修繕積立
-    tax_rate = 0.007        # 固定資産税（取得価格の0.7%）
-    insurance_rate = 0.0005 # 保険
-    misc_rate = 0.005       # 雑費
+    pm_rate = 0.05  # PM手数料
+    repair_rate = 0.015  # 修繕積立
+    tax_rate = 0.007  # 固定資産税（取得価格の0.7%）
+    insurance_rate = 0.0005  # 保険
+    misc_rate = 0.005  # 雑費
     opex_rent = annual_rent * (pm_rate + repair_rate + misc_rate)
     opex_price = price * (tax_rate + insurance_rate)
     opex_total = opex_rent + opex_price
@@ -183,7 +187,7 @@ def _render_investment_metrics(prop: PropertyData) -> None:
             (
                 "推定年間Opex",
                 f"{opex_total / 1e4:,.0f} 万円",
-                f"賃料連動 {opex_rent/1e4:,.0f}万円 / 価格連動 {opex_price/1e4:,.0f}万円",
+                f"賃料連動 {opex_rent / 1e4:,.0f}万円 / 価格連動 {opex_price / 1e4:,.0f}万円",
             ),
         ],
         columns=3,
@@ -195,7 +199,7 @@ def _render_investment_metrics(prop: PropertyData) -> None:
     be_noloan = (1 - opex_total / annual_rent) * 100 if annual_rent > 0 else None
 
     # ② 借入あり（LTV 70%, 金利 2.0%, 30年）
-    def _be_with_loan(ltv: float, rate: float) -> Optional[float]:
+    def _be_with_loan(ltv: float, rate: float) -> float | None:
         loan = price * ltv
         r_mo = rate / 12
         n = 30 * 12
@@ -231,7 +235,7 @@ def _render_investment_metrics(prop: PropertyData) -> None:
     )
 
 
-def _render_sensitivity_heatmap(prop: PropertyData, sim_params: Optional[dict] = None) -> None:
+def _render_sensitivity_heatmap(prop: PropertyData, sim_params: dict | None = None) -> None:
     """金利 × LTV 感度ヒートマップ（自己資本IRR）を表示する。"""
     try:
         import plotly.graph_objects as go
@@ -265,22 +269,24 @@ def _render_sensitivity_heatmap(prop: PropertyData, sim_params: Optional[dict] =
             row.append(round(irr * 100, 2) if irr is not None else None)
         z.append(row)
 
-    x_labels = [f"{int(v*100)}%" for v in ltv_vals]
-    y_labels = [f"{v*100:.1f}%" for v in rate_vals]
+    x_labels = [f"{int(v * 100)}%" for v in ltv_vals]
+    y_labels = [f"{v * 100:.1f}%" for v in rate_vals]
 
-    fig = go.Figure(data=go.Heatmap(
-        z=z,
-        x=x_labels,
-        y=y_labels,
-        colorscale="RdYlGn",
-        zmid=0,
-        text=[[f"{v:.1f}%" if v is not None else "N/A" for v in row] for row in z],
-        texttemplate="%{text}",
-        textfont={"size": 10},
-        colorbar={"title": "IRR (%)"},
-    ))
+    fig = go.Figure(
+        data=go.Heatmap(
+            z=z,
+            x=x_labels,
+            y=y_labels,
+            colorscale="RdYlGn",
+            zmid=0,
+            text=[[f"{v:.1f}%" if v is not None else "N/A" for v in row] for row in z],
+            texttemplate="%{text}",
+            textfont={"size": 10},
+            colorbar={"title": "IRR (%)"},
+        )
+    )
     fig.update_layout(
-        title=f"自己資本IRR（保有{hold}年・出口Cap {exit_cap*100:.1f}%）",
+        title=f"自己資本IRR（保有{hold}年・出口Cap {exit_cap * 100:.1f}%）",
         xaxis_title="LTV（借入比率）",
         yaxis_title="金利（年率）",
         height=400,
@@ -290,7 +296,7 @@ def _render_sensitivity_heatmap(prop: PropertyData, sim_params: Optional[dict] =
     st.caption("簡易DCF計算 (Opex 25%・取得費用率 7%・30年返済・元利均等)")
 
 
-def _render_irr_by_period(prop: PropertyData, sim_params: Optional[dict] = None) -> None:
+def _render_irr_by_period(prop: PropertyData, sim_params: dict | None = None) -> None:
     """保有年数別 自己資本IRR グラフを表示する。"""
     try:
         import plotly.graph_objects as go
@@ -319,23 +325,25 @@ def _render_irr_by_period(prop: PropertyData, sim_params: Optional[dict] = None)
         irr = _compute_irr(cfs)
         irr_series.append(round(irr * 100, 2) if irr is not None else None)
 
-    valid = [(h, v) for h, v in zip(hold_periods, irr_series) if v is not None]
+    valid = [(h, v) for h, v in zip(hold_periods, irr_series, strict=False) if v is not None]
     if not valid:
         return
-    xs, ys = zip(*valid)
+    xs, ys = zip(*valid, strict=False)
 
     fig = go.Figure()
-    fig.add_trace(go.Scatter(
-        x=list(xs),
-        y=list(ys),
-        mode="lines+markers",
-        line={"color": "#00c4b4", "width": 2},
-        marker={"size": 6},
-        hovertemplate="保有%{x}年: IRR %{y:.1f}%<extra></extra>",
-    ))
+    fig.add_trace(
+        go.Scatter(
+            x=list(xs),
+            y=list(ys),
+            mode="lines+markers",
+            line={"color": "#00c4b4", "width": 2},
+            marker={"size": 6},
+            hovertemplate="保有%{x}年: IRR %{y:.1f}%<extra></extra>",
+        )
+    )
     fig.add_hline(y=0, line_dash="dash", line_color="gray")
     fig.update_layout(
-        title=f"保有年数別 自己資本IRR（LTV{int(ltv*100)}% / 金利{rate*100:.1f}%）",
+        title=f"保有年数別 自己資本IRR（LTV{int(ltv * 100)}% / 金利{rate * 100:.1f}%）",
         xaxis_title="保有年数",
         yaxis_title="自己資本IRR (%)",
         height=350,
@@ -353,40 +361,61 @@ def _render_param_editor(base_params: dict) -> dict:
         overrides["ltv"] = st.slider(
             "借入比率 (LTV)", 0.5, 0.9, value=float(base_params.get("ltv", 0.70)), step=0.05
         )
-        overrides["interest_rate"] = st.number_input(
-            "金利 (%/年)", 0.5, 5.0,
-            value=float(base_params.get("interest_rate", 0.02)) * 100,
-            step=0.1,
-        ) / 100
+        overrides["interest_rate"] = (
+            st.number_input(
+                "金利 (%/年)",
+                0.5,
+                5.0,
+                value=float(base_params.get("interest_rate", 0.02)) * 100,
+                step=0.1,
+            )
+            / 100
+        )
         overrides["hold_period_years"] = st.slider(
             "保有年数", 5, 30, value=int(base_params.get("hold_period_years", 10)), step=1
         )
-        overrides["exit_cap_rate"] = st.number_input(
-            "出口キャップレート (%)", 3.0, 10.0,
-            value=float(base_params.get("exit_cap_rate", 0.055)) * 100,
-            step=0.1,
-        ) / 100
+        overrides["exit_cap_rate"] = (
+            st.number_input(
+                "出口キャップレート (%)",
+                3.0,
+                10.0,
+                value=float(base_params.get("exit_cap_rate", 0.055)) * 100,
+                step=0.1,
+            )
+            / 100
+        )
     with col2:
         overrides["vacancy_rate"] = st.slider(
             "空室率", 0.0, 0.30, value=float(base_params.get("vacancy_rate", 0.05)), step=0.01
         )
         land_ratio_default = (
             float(base_params.get("land_value", 0)) / float(base_params.get("purchase_price", 1))
-            if base_params.get("purchase_price") else 0.35
+            if base_params.get("purchase_price")
+            else 0.35
         )
         land_ratio = st.slider(
             "土地割合", 0.10, 0.80, value=round(land_ratio_default, 2), step=0.05
         )
-        overrides["acquisition_cost_rate"] = st.number_input(
-            "取得費用率 (%)", 3.0, 12.0,
-            value=float(base_params.get("acquisition_cost_rate", 0.07)) * 100,
-            step=0.5,
-        ) / 100
-        overrides["rent_growth_rate"] = st.number_input(
-            "家賃上昇率 (%/年)", -3.0, 3.0,
-            value=float(base_params.get("rent_growth_rate", -0.005)) * 100,
-            step=0.1,
-        ) / 100
+        overrides["acquisition_cost_rate"] = (
+            st.number_input(
+                "取得費用率 (%)",
+                3.0,
+                12.0,
+                value=float(base_params.get("acquisition_cost_rate", 0.07)) * 100,
+                step=0.5,
+            )
+            / 100
+        )
+        overrides["rent_growth_rate"] = (
+            st.number_input(
+                "家賃上昇率 (%/年)",
+                -3.0,
+                3.0,
+                value=float(base_params.get("rent_growth_rate", -0.005)) * 100,
+                step=0.1,
+            )
+            / 100
+        )
 
     price = base_params.get("purchase_price", 0)
     overrides["land_value"] = price * land_ratio
@@ -408,9 +437,9 @@ def _render_simulation(results: dict, show_heading: bool = True) -> None:
     _render_summary_panel(
         None,
         [
-            ("自己資本IRR", f"{eq_irr*100:.1f} %" if eq_irr is not None else "—", None),
+            ("自己資本IRR", f"{eq_irr * 100:.1f} %" if eq_irr is not None else "—", None),
             ("投資倍率", f"{eq_mult:.2f} x" if eq_mult is not None else "—", None),
-            ("キャップレート", f"{cap*100:.1f} %" if cap is not None else "—", None),
+            ("キャップレート", f"{cap * 100:.1f} %" if cap is not None else "—", None),
             ("最低DSCR", f"{dscr_min:.2f}" if dscr_min is not None else "—", None),
         ],
         columns=4,
@@ -431,8 +460,13 @@ def _render_simulation(results: dict, show_heading: bool = True) -> None:
                 show_cols.append("cum_atcf")
 
             col_labels = {
-                "year": "年", "noi": "NOI", "debt_service": "元利返済",
-                "btcf": "税前CF", "tax": "税金", "atcf": "税後CF", "cum_atcf": "累計税後CF",
+                "year": "年",
+                "noi": "NOI",
+                "debt_service": "元利返済",
+                "btcf": "税前CF",
+                "tax": "税金",
+                "atcf": "税後CF",
+                "cum_atcf": "累計税後CF",
             }
             money_cols = [c for c in show_cols if c != "year"]
 
@@ -447,12 +481,18 @@ def _render_simulation(results: dict, show_heading: bool = True) -> None:
                     disp[c] = disp[c].map(_fmt_money)
 
             disp.columns = [col_labels.get(c, c) for c in show_cols]
-            render_html_table(disp, [
-                {"key": col_labels.get(c, c), "label": col_labels.get(c, c),
-                 "align": "right" if c != "year" else "right",
-                 "render": plain if c == "year" else num_str}
-                for c in show_cols
-            ])
+            render_html_table(
+                disp,
+                [
+                    {
+                        "key": col_labels.get(c, c),
+                        "label": col_labels.get(c, c),
+                        "align": "right" if c != "year" else "right",
+                        "render": plain if c == "year" else num_str,
+                    }
+                    for c in show_cols
+                ],
+            )
 
     with tab_summary:
         summary = results.get("summary", {})
@@ -471,15 +511,25 @@ def _render_simulation(results: dict, show_heading: bool = True) -> None:
                 if val is not None:
                     rows.append({"項目": label, "金額（円）": f"{int(val):,}"})
             if rows:
-                render_html_table(pd.DataFrame(rows), [
-                    {"key": "項目",      "label": "項目",      "width": 140, "render": muted},
-                    {"key": "金額（円）","label": "金額（円）","width": 120, "align": "right", "render": num_str},
-                ])
+                render_html_table(
+                    pd.DataFrame(rows),
+                    [
+                        {"key": "項目", "label": "項目", "width": 140, "render": muted},
+                        {
+                            "key": "金額（円）",
+                            "label": "金額（円）",
+                            "width": 120,
+                            "align": "right",
+                            "render": num_str,
+                        },
+                    ],
+                )
 
 
 # --------------------------------------------------------------------------
 # フォールバック（手動入力フォーム）
 # --------------------------------------------------------------------------
+
 
 def _render_fallback_form() -> None:
     st.markdown("---")
@@ -492,13 +542,22 @@ def _render_fallback_form() -> None:
             address = st.text_input("住所", placeholder="東京都〇〇区...")
         with col2:
             build_ym = st.text_input("築年月（YYYY-MM）", value="2000-01")
-            _struct_opts = {"RC造": "rc", "木造": "wood", "鉄骨造": "steel", "SRC造": "src", "木骨モルタル": "wood_mortar"}
+            _struct_opts = {
+                "RC造": "rc",
+                "木造": "wood",
+                "鉄骨造": "steel",
+                "SRC造": "src",
+                "木骨モルタル": "wood_mortar",
+            }
             structure = _struct_opts[st.selectbox("構造", list(_struct_opts.keys()))]
-            property_type = st.selectbox("種別", ["アパート", "マンション", "戸建て", "土地", "その他"])
+            property_type = st.selectbox(
+                "種別", ["アパート", "マンション", "戸建て", "土地", "その他"]
+            )
 
         submitted = st.form_submit_button("この情報で分析", type="primary")
         if submitted:
             from property_scraper import PropertyData
+
             prop = PropertyData(
                 asking_price_yen=price * 10_000,
                 gross_rent_monthly_yen=int(rent * 10_000),
@@ -509,8 +568,8 @@ def _render_fallback_form() -> None:
                 platform="manual",
                 extraction_confidence="partial",
             )
-            geo: Optional[tuple[float, float]] = None
-            city_code: Optional[str] = None
+            geo: tuple[float, float] | None = None
+            city_code: str | None = None
             if prop.address:
                 try:
                     geo_result = geocode_address(prop.address)
@@ -527,6 +586,7 @@ def _render_fallback_form() -> None:
 # シミュレーションパラメータ構築
 # --------------------------------------------------------------------------
 
+
 def _build_sim_params(
     prop: PropertyData,
     nearby_land_df: pd.DataFrame,
@@ -534,7 +594,9 @@ def _build_sim_params(
 ) -> dict:
     price = prop.asking_price_yen or 0
     annual_rent = _derive_rent(prop)
-    land_value = overrides.pop("land_value", None) or _derive_land_value(prop, nearby_land_df, price)
+    land_value = overrides.pop("land_value", None) or _derive_land_value(
+        prop, nearby_land_df, price
+    )
     building_value = overrides.pop("building_value", None) or (price - land_value)
 
     initial_opex = annual_rent * 0.07

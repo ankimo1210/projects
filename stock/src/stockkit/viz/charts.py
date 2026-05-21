@@ -51,12 +51,8 @@ def price_with_indicators(df: pd.DataFrame, title: str = "") -> go.Figure:
     )
     for s, name in [(sma20, "SMA20"), (sma50, "SMA50"), (sma200, "SMA200")]:
         fig.add_trace(go.Scatter(x=df.index, y=s, name=name, mode="lines"))
-    fig.add_trace(
-        go.Scatter(x=df.index, y=bb["upper"], name="BB upper", line=dict(dash="dot"))
-    )
-    fig.add_trace(
-        go.Scatter(x=df.index, y=bb["lower"], name="BB lower", line=dict(dash="dot"))
-    )
+    fig.add_trace(go.Scatter(x=df.index, y=bb["upper"], name="BB upper", line=dict(dash="dot")))
+    fig.add_trace(go.Scatter(x=df.index, y=bb["lower"], name="BB lower", line=dict(dash="dot")))
     fig.update_layout(
         title=title,
         xaxis_rangeslider_visible=False,

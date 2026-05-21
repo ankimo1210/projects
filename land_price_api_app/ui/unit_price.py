@@ -2,6 +2,7 @@
 ui.unit_price
 平米単価を主表示にしつつ、補助表示として坪単価を添えるための小さなヘルパー。
 """
+
 from __future__ import annotations
 
 import pandas as pd

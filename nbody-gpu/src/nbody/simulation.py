@@ -1,4 +1,5 @@
 """High-level Simulation wrapper holding device state."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -12,10 +13,10 @@ from .integrator import leapfrog_step
 
 @dataclass
 class Simulation:
-    pos: cp.ndarray   # (N, 3) float32 on device
-    vel: cp.ndarray   # (N, 3) float32 on device
+    pos: cp.ndarray  # (N, 3) float32 on device
+    vel: cp.ndarray  # (N, 3) float32 on device
     mass: cp.ndarray  # (N,)   float32 on device
-    acc: cp.ndarray   # (N, 3) float32 on device
+    acc: cp.ndarray  # (N, 3) float32 on device
     dt: float
     eps: float = 1e-2
     G: float = 1.0
@@ -43,8 +44,9 @@ class Simulation:
 
     def step(self, n_steps: int = 1) -> None:
         for _ in range(n_steps):
-            leapfrog_step(self.pos, self.vel, self.mass, self.acc,
-                          dt=self.dt, eps=self.eps, G=self.G)
+            leapfrog_step(
+                self.pos, self.vel, self.mass, self.acc, dt=self.dt, eps=self.eps, G=self.G
+            )
             self.t += self.dt
 
     # --- diagnostics ---

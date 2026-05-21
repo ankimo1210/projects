@@ -18,6 +18,7 @@ Overpass API を1回呼び出し、同一グリッド内の全地点に特徴量
       --stale-days で指定した日数以内のキャッシュをスキップする。
       東京都 全地点（約300〜400グリッド）を処理する場合の目安: 約10〜15分（sleep=1.5s）。
 """
+
 from __future__ import annotations
 
 import argparse
@@ -79,7 +80,9 @@ def _fetch_location_features(lat: float, lon: float) -> dict:
     water_features: list[dict] = []
 
     try:
-        raw_grouped = find_nearby_facility_groups(_FACILITY_CATEGORIES, lon=lon, lat=lat, radius_m=_RADIUS_M)
+        raw_grouped = find_nearby_facility_groups(
+            _FACILITY_CATEGORIES, lon=lon, lat=lat, radius_m=_RADIUS_M
+        )
         grouped = {
             cat: [
                 {
@@ -124,7 +127,9 @@ def _fetch_location_features(lat: float, lon: float) -> dict:
         logger.warning("水辺取得エラー (%.5f,%.5f): %s", lat, lon, exc)
 
     facility_summary = summarize_facility_groups(grouped, _FACILITY_CATEGORIES)
-    terrain_summary = summarize_terrain_features(elevation_result, water_features, radius_m=_RADIUS_M)
+    terrain_summary = summarize_terrain_features(
+        elevation_result, water_features, radius_m=_RADIUS_M
+    )
 
     elevation_m = elevation_result.get("elevation_m")
 
@@ -234,7 +239,10 @@ def run(
             done += len(group)
             logger.info(
                 "grid %s: %d points saved (%.5f,%.5f)",
-                grid_key, len(group), grid_lat, grid_lon,
+                grid_key,
+                len(group),
+                grid_lat,
+                grid_lon,
             )
         except Exception as exc:
             logger.error("DB保存失敗 grid=%s: %s", grid_key, exc)
@@ -266,9 +274,15 @@ def main() -> None:
     parser.add_argument("--pref", help="都道府県コード (例: 13)")
     parser.add_argument("--year", type=int, help="対象年度 (例: 2026)")
     parser.add_argument("--limit", type=int, help="最大処理地点数（テスト用）")
-    parser.add_argument("--stale-days", type=int, default=30, help="キャッシュ有効日数 (default: 30)")
-    parser.add_argument("--sleep", type=float, default=1.0, help="API呼び出し間の待機秒数 (default: 1.0)")
-    parser.add_argument("--dry-run", action="store_true", help="API呼び出しをスキップして件数だけ確認")
+    parser.add_argument(
+        "--stale-days", type=int, default=30, help="キャッシュ有効日数 (default: 30)"
+    )
+    parser.add_argument(
+        "--sleep", type=float, default=1.0, help="API呼び出し間の待機秒数 (default: 1.0)"
+    )
+    parser.add_argument(
+        "--dry-run", action="store_true", help="API呼び出しをスキップして件数だけ確認"
+    )
     args = parser.parse_args()
 
     result = run(

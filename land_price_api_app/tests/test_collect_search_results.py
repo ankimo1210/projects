@@ -42,7 +42,9 @@ def test_extract_rakumachi_next_page_url_prefers_rel_next() -> None:
         html,
         "https://www.rakumachi.jp/syuuekibukken/area/prefecture/dimAll/?pref=47&page=1",
     )
-    assert next_url == "https://www.rakumachi.jp/syuuekibukken/area/prefecture/dimAll/?pref=47&page=2"
+    assert (
+        next_url == "https://www.rakumachi.jp/syuuekibukken/area/prefecture/dimAll/?pref=47&page=2"
+    )
 
 
 def test_extract_rakumachi_next_page_url_uses_page_query() -> None:
@@ -56,4 +58,6 @@ def test_extract_rakumachi_next_page_url_uses_page_query() -> None:
         html,
         "https://www.rakumachi.jp/syuuekibukken/area/prefecture/dimAll/?pref=47&page=1",
     )
-    assert next_url == "https://www.rakumachi.jp/syuuekibukken/area/prefecture/dimAll/?pref=47&page=2"
+    assert (
+        next_url == "https://www.rakumachi.jp/syuuekibukken/area/prefecture/dimAll/?pref=47&page=2"
+    )

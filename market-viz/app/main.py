@@ -21,8 +21,8 @@ st.set_page_config(
 st.sidebar.title("📈 Market Viz")
 st.sidebar.markdown("---")
 
-from src.storage.duckdb_client import DuckDBClient
-from src.data.update import update_daily, update_crypto_intraday
+from market_viz.data.update import update_crypto_intraday, update_daily
+from market_viz.storage.duckdb_client import DuckDBClient
 
 DB_PATH = _settings["data"]["db_path"]
 

@@ -1,4 +1,5 @@
 """Initial condition generators (host-side, then transferred to device)."""
+
 from __future__ import annotations
 
 import numpy as np
@@ -51,7 +52,7 @@ def plummer_sphere(
         f = q_try * q_try * (1.0 - q_try * q_try) ** 3.5
         accept = u < f
         k = int(accept.sum())
-        q[filled:filled + k] = q_try[accept]
+        q[filled : filled + k] = q_try[accept]
         filled += k
 
     v_escape = np.sqrt(2.0 * G * M) * (r * r + a * a) ** (-0.25)

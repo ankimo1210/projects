@@ -2,14 +2,13 @@
 
 from __future__ import annotations
 
-import json
 import os
 from typing import Any
 
 import anthropic
 from dotenv import load_dotenv
 
-from api.tools import TOOL_DEFINITIONS, execute_tool, get_captured_figures, clear_captured_figures
+from api.tools import TOOL_DEFINITIONS, clear_captured_figures, execute_tool, get_captured_figures
 
 _MODEL = "claude-sonnet-4-6"
 _MAX_ROUNDS = 10
@@ -129,11 +128,13 @@ def run(conversation: list[dict], user_message: str) -> dict[str, Any]:
             if tc.name == "execute_python":
                 figures.extend(get_captured_figures())
 
-            tool_results.append({
-                "type": "tool_result",
-                "tool_use_id": tc.id,
-                "content": result_str,
-            })
+            tool_results.append(
+                {
+                    "type": "tool_result",
+                    "tool_use_id": tc.id,
+                    "content": result_str,
+                }
+            )
 
         messages.append({"role": "user", "content": tool_results})
 
@@ -142,5 +143,3 @@ def run(conversation: list[dict], user_message: str) -> dict[str, Any]:
         "figures": figures,
         "code_blocks": code_blocks,
     }
-
-

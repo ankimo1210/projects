@@ -2,12 +2,16 @@
 patch_bsm_nb.py — bsm_chapter15.ipynb を差分修正するスクリプト
 実行: python3 patch_bsm_nb.py
 """
-import json, random
+
+import json
+import random
 
 random.seed(9999)
 
+
 def make_id():
     return format(random.randint(0, 0xFFFFFFFF), "08x")
+
 
 def to_lines(s: str):
     """複数行文字列を Jupyter source 形式（末尾 \\n つきリスト）に変換する。"""
@@ -16,16 +20,24 @@ def to_lines(s: str):
     for i, line in enumerate(raw):
         if i < len(raw) - 1:
             result.append(line + "\n")
-        elif line:            # 最後の行が空でなければ追加
+        elif line:  # 最後の行が空でなければ追加
             result.append(line)
     return result
+
 
 def md_cell(s):
     return {"cell_type": "markdown", "id": make_id(), "metadata": {}, "source": to_lines(s)}
 
+
 def code_cell(s):
-    return {"cell_type": "code", "id": make_id(), "execution_count": None,
-            "metadata": {}, "outputs": [], "source": to_lines(s)}
+    return {
+        "cell_type": "code",
+        "id": make_id(),
+        "execution_count": None,
+        "metadata": {},
+        "outputs": [],
+        "source": to_lines(s),
+    }
 
 
 # ===========================================================================

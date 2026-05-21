@@ -71,9 +71,7 @@ def summary(prices: pd.DataFrame, rf: float = 0.0) -> pd.DataFrame:
     )
 
 
-def weighted_portfolio(
-    prices: pd.DataFrame, weights: dict[str, float] | None = None
-) -> pd.Series:
+def weighted_portfolio(prices: pd.DataFrame, weights: dict[str, float] | None = None) -> pd.Series:
     """Return a synthetic portfolio price series given weights (sum to 1)."""
     if weights is None:
         n = prices.shape[1]

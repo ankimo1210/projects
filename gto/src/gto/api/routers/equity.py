@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Query, HTTPException
-from pydantic import BaseModel
 import gto_py
+from fastapi import APIRouter, HTTPException, Query
+from pydantic import BaseModel
 
 router = APIRouter()
 

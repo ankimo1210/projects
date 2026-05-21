@@ -5,11 +5,11 @@ analytics.py
 依存: pandas のみ（重い地理計算は shapely を使わず Haversine 近似で対応）
 将来: 不動産投資シミュレーターから find_nearby_points() を呼ぶ想定。
 """
+
 import math
-from typing import Any, Optional
+from typing import Any
 
 import pandas as pd
-
 from config import get_logger
 
 logger = get_logger(__name__)
@@ -17,6 +17,7 @@ logger = get_logger(__name__)
 # --------------------------------------------------------------------------
 # 内部ユーティリティ
 # --------------------------------------------------------------------------
+
 
 def _haversine_m(lon1: float, lat1: float, lon2: float, lat2: float) -> float:
     """2 点間の Haversine 距離をメートルで返す。"""
@@ -31,6 +32,7 @@ def _haversine_m(lon1: float, lat1: float, lon2: float, lat2: float) -> float:
 # --------------------------------------------------------------------------
 # 集計
 # --------------------------------------------------------------------------
+
 
 def compute_city_summary(df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -47,8 +49,14 @@ def compute_city_summary(df: pd.DataFrame) -> pd.DataFrame:
         return pd.DataFrame()
 
     grp = df.groupby(
-        ["year", "prefecture_code", "prefecture_name",
-         "city_code", "city_name", "use_category_name"],
+        [
+            "year",
+            "prefecture_code",
+            "prefecture_name",
+            "city_code",
+            "city_name",
+            "use_category_name",
+        ],
         dropna=False,
     )
     return (
@@ -73,9 +81,7 @@ def compute_pref_summary(df: pd.DataFrame) -> pd.DataFrame:
     if df.empty:
         return pd.DataFrame()
 
-    grp = df.groupby(
-        ["year", "prefecture_code", "prefecture_name"], dropna=False
-    )
+    grp = df.groupby(["year", "prefecture_code", "prefecture_name"], dropna=False)
     return (
         grp["price_yen_per_sqm"]
         .agg(
@@ -93,10 +99,11 @@ def compute_pref_summary(df: pd.DataFrame) -> pd.DataFrame:
 # ランキング
 # --------------------------------------------------------------------------
 
+
 def compute_price_rankings(
     df: pd.DataFrame,
     top_n: int = 50,
-    year: Optional[int] = None,
+    year: int | None = None,
 ) -> pd.DataFrame:
     """
     地点別価格ランキング（高い順）。
@@ -116,9 +123,16 @@ def compute_price_rankings(
     subset = subset.dropna(subset=["price_yen_per_sqm"])
     subset["rank"] = subset["price_yen_per_sqm"].rank(ascending=False, method="min").astype(int)
     cols = [
-        "rank", "point_id", "standard_land_number", "location_text",
-        "city_name", "prefecture_name", "use_category_name",
-        "price_yen_per_sqm", "yoy_change_pct", "year",
+        "rank",
+        "point_id",
+        "standard_land_number",
+        "location_text",
+        "city_name",
+        "prefecture_name",
+        "use_category_name",
+        "price_yen_per_sqm",
+        "yoy_change_pct",
+        "year",
     ]
     cols = [c for c in cols if c in subset.columns]
     return subset.nlargest(top_n, "price_yen_per_sqm")[cols].reset_index(drop=True)
@@ -128,7 +142,7 @@ def compute_yoy_rankings(
     df: pd.DataFrame,
     top_n: int = 50,
     ascending: bool = False,
-    year: Optional[int] = None,
+    year: int | None = None,
 ) -> pd.DataFrame:
     """
     前年比変動率ランキング。
@@ -145,19 +159,29 @@ def compute_yoy_rankings(
     subset = subset.dropna(subset=["yoy_change_pct"])
 
     cols = [
-        "point_id", "standard_land_number", "location_text",
-        "city_name", "prefecture_name", "use_category_name",
-        "price_yen_per_sqm", "yoy_change_pct", "year",
+        "point_id",
+        "standard_land_number",
+        "location_text",
+        "city_name",
+        "prefecture_name",
+        "use_category_name",
+        "price_yen_per_sqm",
+        "yoy_change_pct",
+        "year",
     ]
     cols = [c for c in cols if c in subset.columns]
-    ranked = subset.nsmallest(top_n, "yoy_change_pct") if ascending else \
-             subset.nlargest(top_n, "yoy_change_pct")
+    ranked = (
+        subset.nsmallest(top_n, "yoy_change_pct")
+        if ascending
+        else subset.nlargest(top_n, "yoy_change_pct")
+    )
     return ranked[cols].reset_index(drop=True)
 
 
 # --------------------------------------------------------------------------
 # 時系列
 # --------------------------------------------------------------------------
+
 
 def compute_point_timeseries(
     df: pd.DataFrame,
@@ -192,8 +216,9 @@ def compare_years(
         point_id, location_text, city_name, prefecture_name,
         price_{year_a}, price_{year_b}, absolute_change, pct_change
     """
-    a = df[df["year"] == year_a][["point_id", "price_yen_per_sqm", "location_text",
-                                    "city_name", "prefecture_name"]].copy()
+    a = df[df["year"] == year_a][
+        ["point_id", "price_yen_per_sqm", "location_text", "city_name", "prefecture_name"]
+    ].copy()
     b = df[df["year"] == year_b][["point_id", "price_yen_per_sqm"]].copy()
 
     a = a.rename(columns={"price_yen_per_sqm": f"price_{year_a}"})
@@ -201,9 +226,7 @@ def compare_years(
 
     merged = a.merge(b, on="point_id", how="inner")
     merged["absolute_change"] = merged[f"price_{year_b}"] - merged[f"price_{year_a}"]
-    merged["pct_change"] = (
-        merged["absolute_change"] / merged[f"price_{year_a}"] * 100
-    ).round(2)
+    merged["pct_change"] = (merged["absolute_change"] / merged[f"price_{year_a}"] * 100).round(2)
     return merged.sort_values("pct_change", ascending=False).reset_index(drop=True)
 
 
@@ -211,12 +234,13 @@ def compare_years(
 # 近傍検索（不動産投資シミュレーター連携を見越した実装）
 # --------------------------------------------------------------------------
 
+
 def find_nearby_points(
     df: pd.DataFrame,
     lon: float,
     lat: float,
     radius_m: float = 1000.0,
-    year: Optional[int] = None,
+    year: int | None = None,
 ) -> pd.DataFrame:
     """
     指定座標から半径 radius_m 以内の公示地点を返す。
@@ -258,6 +282,7 @@ def find_nearby_points(
 # 多年比較・指数化（都市トレンドタブ用）
 # --------------------------------------------------------------------------
 
+
 def compute_indexed_prices(df: pd.DataFrame, base_year: int) -> pd.DataFrame:
     """
     city_summary 粒度の DataFrame を基準年=100 に指数化する。
@@ -282,7 +307,7 @@ def compute_indexed_prices(df: pd.DataFrame, base_year: int) -> pd.DataFrame:
     result["index_100"] = float("nan")
 
     group_keys = ["city_code", "use_category_name"]
-    for keys, group in result.groupby(group_keys, dropna=False):
+    for _keys, group in result.groupby(group_keys, dropna=False):
         base_rows = group[group["year"] == base_year]
         if base_rows.empty or pd.isna(base_rows["avg_price"].iloc[0]):
             continue
@@ -308,12 +333,17 @@ def compute_pref_multiyear_summary(df: pd.DataFrame) -> pd.DataFrame:
     if df.empty:
         return pd.DataFrame()
 
-    grp = df.groupby(["year", "prefecture_code", "prefecture_name", "use_category_name"], dropna=False)
+    grp = df.groupby(
+        ["year", "prefecture_code", "prefecture_name", "use_category_name"], dropna=False
+    )
 
     weighted_price = (
         grp.apply(
-            lambda g: (g["avg_price"] * g["point_count"]).sum() / g["point_count"].sum()
-            if g["point_count"].sum() > 0 else float("nan"),
+            lambda g: (
+                (g["avg_price"] * g["point_count"]).sum() / g["point_count"].sum()
+                if g["point_count"].sum() > 0
+                else float("nan")
+            ),
             include_groups=False,
         )
         .rename("avg_price")
@@ -322,14 +352,19 @@ def compute_pref_multiyear_summary(df: pd.DataFrame) -> pd.DataFrame:
     point_counts = grp["point_count"].sum().rename("point_count").reset_index()
     avg_yoy = grp["avg_yoy_pct"].mean().rename("avg_yoy_pct").reset_index()
 
-    result = weighted_price.merge(point_counts, on=["year", "prefecture_code", "prefecture_name", "use_category_name"])
-    result = result.merge(avg_yoy, on=["year", "prefecture_code", "prefecture_name", "use_category_name"])
+    result = weighted_price.merge(
+        point_counts, on=["year", "prefecture_code", "prefecture_name", "use_category_name"]
+    )
+    result = result.merge(
+        avg_yoy, on=["year", "prefecture_code", "prefecture_name", "use_category_name"]
+    )
     return result.sort_values(["year", "prefecture_code"]).reset_index(drop=True)
 
 
 # --------------------------------------------------------------------------
 # 価格統計サマリー（ノートブック用）
 # --------------------------------------------------------------------------
+
 
 def compute_basic_stats(df: pd.DataFrame) -> dict[str, Any]:
     """
@@ -377,6 +412,7 @@ def compute_basic_stats(df: pd.DataFrame) -> dict[str, Any]:
 # 人口統計
 # --------------------------------------------------------------------------
 
+
 def compute_population_trend(conn, city_code: str, years: int = 5) -> dict:
     """
     指定市区町村の直近N年の人口トレンドを返す。
@@ -389,6 +425,7 @@ def compute_population_trend(conn, city_code: str, years: int = 5) -> dict:
         aging_rate, net_migration, trend_df (DataFrame)
     """
     import db as _db
+
     df = _db.get_population_stats(conn, city_code)
     if df.empty:
         return {}
@@ -436,12 +473,13 @@ def compute_population_trend(conn, city_code: str, years: int = 5) -> dict:
 # 近隣掲載物件検索
 # --------------------------------------------------------------------------
 
+
 def find_nearby_listings(
     conn,
     lon: float,
     lat: float,
     radius_m: float = 3000.0,
-    exclude_listing_id: Optional[str] = None,
+    exclude_listing_id: str | None = None,
 ) -> pd.DataFrame:
     """
     指定座標から半径 radius_m 以内の掲載物件（listing_master）を返す。

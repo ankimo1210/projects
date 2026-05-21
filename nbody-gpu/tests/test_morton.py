@@ -1,4 +1,5 @@
 """Morton-code / Z-order sort verification."""
+
 from __future__ import annotations
 
 import cupy as cp
@@ -12,6 +13,7 @@ from nbody.octree import compute_morton_codes, sort_by_morton
 def cupy_available():
     try:
         import cupy
+
         _ = cupy.arange(1)
         return True
     except Exception:
@@ -39,15 +41,18 @@ def test_morton_matches_reference_on_grid(cupy_available):
     pos_d = cp.asarray(pos)
     # We need the GPU kernel's BBox to be exactly [0, 1] for the test to mirror
     # the reference encoder, so force the corner points.
-    pos_d_with_corners = cp.concatenate([
-        pos_d, cp.asarray([[0.0, 0.0, 0.0], [1.0 - 1e-7, 1.0 - 1e-7, 1.0 - 1e-7]],
-                          dtype=cp.float32)
-    ])
+    pos_d_with_corners = cp.concatenate(
+        [
+            pos_d,
+            cp.asarray([[0.0, 0.0, 0.0], [1.0 - 1e-7, 1.0 - 1e-7, 1.0 - 1e-7]], dtype=cp.float32),
+        ]
+    )
     codes_d, _ = compute_morton_codes(pos_d_with_corners)
     codes = cp.asnumpy(codes_d)[:n]
     expected = _expected_morton_30bit(xyz_int)
-    assert np.array_equal(codes, expected), \
+    assert np.array_equal(codes, expected), (
         f"first mismatch at index {np.argmax(codes != expected)}"
+    )
 
 
 def test_sort_by_morton_is_monotonic(cupy_available):
@@ -78,5 +83,6 @@ def test_morton_locality(cupy_available):
     # average neighbour distance should be smaller after sorting than unsorted random walk
     dist_sorted = np.linalg.norm(pos_s_h[1:] - pos_s_h[:-1], axis=1).mean()
     dist_random = np.linalg.norm(pos[1:] - pos[:-1], axis=1).mean()
-    assert dist_sorted < 0.5 * dist_random, \
+    assert dist_sorted < 0.5 * dist_random, (
         f"sorted neighbour dist {dist_sorted:.3f} not much smaller than random {dist_random:.3f}"
+    )

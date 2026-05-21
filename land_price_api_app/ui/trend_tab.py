@@ -5,17 +5,21 @@ ui/trend_tab.py
 データソース: city_summary VIEW（集計済み）を使用しパフォーマンスを確保。
 キャッシュ: @st.cache_data(ttl=3600) でクエリ結果を1時間保持。
 """
-from typing import Optional
 
+import analytics
+import db
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 
-import analytics
-import db
-from ui.unit_price import add_tsubo_price_column, convert_yen_columns_to_man, format_yen_per_sqm_with_tsubo, yen_to_man
-from ui.table import render_html_table, gap_bar_small, price_man, muted, year_num, count_num
+from ui.table import count_num, gap_bar_small, muted, price_man, render_html_table, year_num
+from ui.unit_price import (
+    add_tsubo_price_column,
+    convert_yen_columns_to_man,
+    format_yen_per_sqm_with_tsubo,
+    yen_to_man,
+)
 
 # --------------------------------------------------------------------------
 # 定数
@@ -46,7 +50,7 @@ def _load_trend_data(
     pref_codes: tuple[str, ...],
     year_start: int,
     year_end: int,
-    use_category: Optional[str],
+    use_category: str | None,
 ) -> pd.DataFrame:
     return db.get_multiyear_city_summary(
         _conn, list(pref_codes), (year_start, year_end), use_category
@@ -78,7 +82,7 @@ def _get_cities_for_prefs(_conn, pref_codes: tuple[str, ...]) -> list[tuple[str,
 # --------------------------------------------------------------------------
 
 
-def render_trend_tab(conn, filters: dict) -> None:  # noqa: C901
+def render_trend_tab(conn, filters: dict) -> None:
     st.header("🏙 都市トレンド")
 
     available_years = _get_available_years(conn)
@@ -95,26 +99,27 @@ def render_trend_tab(conn, filters: dict) -> None:  # noqa: C901
     with c1:
         # DB に存在する都道府県コードのみ、北→南（コード昇順）で列挙
         existing_prefs = _get_existing_prefs(conn)
-        pref_options = dict(sorted(
-            {k: v for k, v in MAJOR_PREFS.items() if k in existing_prefs}.items()
-        ))
+        pref_options = dict(
+            sorted({k: v for k, v in MAJOR_PREFS.items() if k in existing_prefs}.items())
+        )
         if not pref_options:
             pref_options = dict(sorted(MAJOR_PREFS.items()))  # フォールバック
 
         selected_pref_codes = st.multiselect(
             "都道府県",
             options=list(pref_options.keys()),
-            default=[list(pref_options.keys())[0]],
+            default=[next(iter(pref_options.keys()))],
             format_func=lambda code: pref_options.get(code, code),
             key="trend_prefs",
         )
 
     with c2:
         # 選択都道府県の市区町村
-        city_rows = _get_cities_for_prefs(conn, tuple(selected_pref_codes)) if selected_pref_codes else []
+        city_rows = (
+            _get_cities_for_prefs(conn, tuple(selected_pref_codes)) if selected_pref_codes else []
+        )
         city_options_all = ["（都道府県集計）"] + [
-            f"{pref} / {name}"
-            for code, name, pref in city_rows
+            f"{pref} / {name}" for code, name, pref in city_rows
         ]
         selected_cities_raw = st.multiselect(
             "市区町村（空=都道府県集計）",
@@ -124,11 +129,16 @@ def render_trend_tab(conn, filters: dict) -> None:  # noqa: C901
         )
 
     with c3:
-        use_cat_options = ["すべて"] + _USE_CATEGORIES
+        use_cat_options = ["すべて", *_USE_CATEGORIES]
         selected_use = st.selectbox("用途区分", use_cat_options, index=1, key="trend_use")
         use_cat_arg = None if selected_use == "すべて" else selected_use
         min_point_count = st.number_input(
-            "最小地点数", min_value=1, max_value=50, value=3, step=1, key="trend_min_points",
+            "最小地点数",
+            min_value=1,
+            max_value=50,
+            value=3,
+            step=1,
+            key="trend_min_points",
             help="この件数未満の都市・年度を除外します",
         )
 
@@ -197,7 +207,9 @@ def render_trend_tab(conn, filters: dict) -> None:  # noqa: C901
         unique_cats = plot_df["use_category_name"].dropna().unique()
         if len(unique_cats) > 1:
             plot_df = plot_df.copy()
-            plot_df[label_col] = plot_df[label_col] + " / " + plot_df["use_category_name"].fillna("")
+            plot_df[label_col] = (
+                plot_df[label_col] + " / " + plot_df["use_category_name"].fillna("")
+            )
 
     if plot_df.empty:
         st.warning("選択した市区町村のデータがありません。")
@@ -221,26 +233,69 @@ def render_trend_tab(conn, filters: dict) -> None:  # noqa: C901
 
     # ── データテーブル ──────────────────────────────────────────
     with st.expander("📋 データテーブル", expanded=False):
-        display_cols = [c for c in [
-            "year", "prefecture_name", "city_name", "use_category_name",
-            "avg_price", "median_price", "avg_yoy_pct", "point_count",
-        ] if c in plot_df.columns]
+        display_cols = [
+            c
+            for c in [
+                "year",
+                "prefecture_name",
+                "city_name",
+                "use_category_name",
+                "avg_price",
+                "median_price",
+                "avg_yoy_pct",
+                "point_count",
+            ]
+            if c in plot_df.columns
+        ]
         display_df = plot_df[display_cols].copy()
         display_df = add_tsubo_price_column(display_df, "avg_price", "avg_price_tsubo")
         display_df = add_tsubo_price_column(display_df, "median_price", "median_price_tsubo")
         display_df = convert_yen_columns_to_man(display_df, ["avg_price", "median_price"])
-        render_html_table(display_df, [
-            {"key": "year",             "label": "年度",        "width": 50,  "align": "right", "render": year_num},
-            {"key": "prefecture_name",  "label": "都道府県",    "width": 70,  "render": muted},
-            {"key": "city_name",        "label": "市区町村",    "width": 100, "render": muted},
-            {"key": "use_category_name","label": "用途",        "width": 70,  "render": muted},
-            {"key": "avg_price",        "label": "平均(万/m²)", "width": 80,  "align": "right", "render": price_man},
-            {"key": "avg_price_tsubo",  "label": "平均坪",      "width": 70,  "align": "right", "render": price_man},
-            {"key": "median_price",     "label": "中央値",      "width": 70,  "align": "right", "render": price_man},
-            {"key": "median_price_tsubo","label": "中央値坪",   "width": 65,  "align": "right", "render": price_man},
-            {"key": "avg_yoy_pct",      "label": "前年比",      "width": 130, "render": gap_bar_small},
-            {"key": "point_count",      "label": "地点数",      "width": 60,  "align": "right", "render": count_num},
-        ])
+        render_html_table(
+            display_df,
+            [
+                {"key": "year", "label": "年度", "width": 50, "align": "right", "render": year_num},
+                {"key": "prefecture_name", "label": "都道府県", "width": 70, "render": muted},
+                {"key": "city_name", "label": "市区町村", "width": 100, "render": muted},
+                {"key": "use_category_name", "label": "用途", "width": 70, "render": muted},
+                {
+                    "key": "avg_price",
+                    "label": "平均(万/m²)",
+                    "width": 80,
+                    "align": "right",
+                    "render": price_man,
+                },
+                {
+                    "key": "avg_price_tsubo",
+                    "label": "平均坪",
+                    "width": 70,
+                    "align": "right",
+                    "render": price_man,
+                },
+                {
+                    "key": "median_price",
+                    "label": "中央値",
+                    "width": 70,
+                    "align": "right",
+                    "render": price_man,
+                },
+                {
+                    "key": "median_price_tsubo",
+                    "label": "中央値坪",
+                    "width": 65,
+                    "align": "right",
+                    "render": price_man,
+                },
+                {"key": "avg_yoy_pct", "label": "前年比", "width": 130, "render": gap_bar_small},
+                {
+                    "key": "point_count",
+                    "label": "地点数",
+                    "width": 60,
+                    "align": "right",
+                    "render": count_num,
+                },
+            ],
+        )
         st.download_button(
             "CSVダウンロード",
             data=plot_df[display_cols].to_csv(index=False, encoding="utf-8-sig"),
@@ -254,7 +309,9 @@ def render_trend_tab(conn, filters: dict) -> None:  # noqa: C901
 # --------------------------------------------------------------------------
 
 
-def _chart_absolute(df: pd.DataFrame, color_col: str, label_col: str, yr_start: int, yr_end: int) -> go.Figure:
+def _chart_absolute(
+    df: pd.DataFrame, color_col: str, label_col: str, yr_start: int, yr_end: int
+) -> go.Figure:
     plot_df = df.copy()
     plot_df["avg_price_man"] = plot_df["avg_price"].map(yen_to_man)
     fig = px.line(
@@ -272,7 +329,9 @@ def _chart_absolute(df: pd.DataFrame, color_col: str, label_col: str, yr_start: 
     return fig
 
 
-def _chart_indexed(df: pd.DataFrame, color_col: str, label_col: str, base_year: int, yr_start: int, yr_end: int) -> go.Figure:
+def _chart_indexed(
+    df: pd.DataFrame, color_col: str, label_col: str, base_year: int, yr_start: int, yr_end: int
+) -> go.Figure:
     valid = df.dropna(subset=["index_100"])
     if valid.empty:
         return _empty_fig(f"基準年 {base_year} のデータがないため指数化できません。")
@@ -287,12 +346,16 @@ def _chart_indexed(df: pd.DataFrame, color_col: str, label_col: str, base_year: 
         labels={"index_100": f"価格指数 ({base_year}=100)", "year": "年度"},
         title=f"価格指数（{base_year}年=100）",
     )
-    fig.add_hline(y=100, line_dash="dash", line_color="#607d8b", annotation_text=f"{base_year}年基準")
+    fig.add_hline(
+        y=100, line_dash="dash", line_color="#607d8b", annotation_text=f"{base_year}年基準"
+    )
     fig.update_layout(**_base_layout(height=460))
     return fig
 
 
-def _chart_yoy(df: pd.DataFrame, color_col: str, label_col: str, yr_start: int, yr_end: int) -> go.Figure:
+def _chart_yoy(
+    df: pd.DataFrame, color_col: str, label_col: str, yr_start: int, yr_end: int
+) -> go.Figure:
     if "avg_yoy_pct" not in df.columns:
         return _empty_fig("前年比データがありません。")
 
@@ -318,7 +381,9 @@ def _chart_yoy(df: pd.DataFrame, color_col: str, label_col: str, yr_start: int, 
 
 def _empty_fig(msg: str) -> go.Figure:
     fig = go.Figure()
-    fig.add_annotation(text=msg, xref="paper", yref="paper", x=0.5, y=0.5, showarrow=False, font_size=14)
+    fig.add_annotation(
+        text=msg, xref="paper", yref="paper", x=0.5, y=0.5, showarrow=False, font_size=14
+    )
     fig.update_layout(**_base_layout(height=200))
     return fig
 
