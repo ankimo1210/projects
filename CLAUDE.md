@@ -25,6 +25,25 @@ This root is a multi-project workspace.
 
 Do not scan the whole root by default. First identify the relevant project.
 
+### Active Projects
+
+Applications:
+
+- `land_price_api_app/` — 地価公示・不動産取引ローカルアプリ (FastAPI + DuckDB)
+- `re_invest_os/` — 不動産買付前 DD Web アプリ (Next.js + FastAPI + Supabase)
+- `gto/` — GTO ポーカー分析アプリ (Rust + FastAPI + Next.js)
+- `stock/` — `stockkit` 株式分析ツールキット (Python + Dash)
+- `market-viz/` — マーケット可視化アプリ (Streamlit + Plotly + DuckDB)
+- `nbody-gpu/` — GPU N 体シミュレーション (CuPy + VisPy)
+- `line_backup/` — LINE バックアップ解析 CLI (Python)
+
+Research / notebooks:
+
+- `johnhull/`, `rates_volatility_model/`, `notebooks/`
+
+Each project has its own `README.md` and sometimes its own `CLAUDE.md` /
+`AGENTS.md` — prefer those over the workspace root for project-specific work.
+
 ## Token And Context Budget Policy
 
 Before substantial work:
