@@ -2,6 +2,8 @@
 
 stockkit の構成・データフロー・主要コンポーネント。
 
+> 📦 stockkit は **uv workspace のメンバー**として `/home/kazumasa/projects/` 配下に存在します。`.venv` は workspace ルートで共有。stock 個別の `pyproject.toml` で依存を宣言し、`uv sync --all-packages` で他メンバー（gto/market-viz/nbody-gpu等）と同時に解決されます。
+
 ---
 
 ## 全体構成図

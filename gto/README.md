@@ -53,10 +53,15 @@ GTO (Game Theory Optimal) ポーカー分析アプリ。テキサスホールデ
 
 ### セットアップ
 
+このプロジェクトはワークスペース（`~/projects/`）の uv メンバーです。Python 依存はワークスペースルートで一括管理。
+
 ```bash
-# Rust 拡張ビルド (初回 + Rust 変更時)
+# ワークスペースルートで Python 依存をインストール
+cd ~/projects && make install      # = uv sync --all-packages
+
+# Rust 拡張ビルド (初回 + Rust 変更時。gto/ ディレクトリで実行)
+cd ~/projects/gto
 source ~/.cargo/env
-uv sync
 uv run maturin develop --manifest-path crates/gto-py/Cargo.toml --release
 uv run maturin develop --manifest-path crates/gto-cuda/Cargo.toml --release
 
@@ -132,9 +137,17 @@ gto/
 
 ## 📖 関連ドキュメント
 
+### このプロジェクト
 - [ARCHITECTURE.md](./ARCHITECTURE.md) — システム構成・データフロー・図
 - [PROGRESS.md](./PROGRESS.md) — 進捗・TODO・既知の制限
 - [DEV.md](./DEV.md) — 開発起動の簡易メモ
+
+### ワークスペース全体
+- [`~/projects/README.md`](../README.md) — ワークスペース概要
+- [`~/projects/AGENTS.md`](../AGENTS.md) — マルチプロジェクト構成
+- [`~/projects/CLAUDE.md`](../CLAUDE.md) — Claude Code 共通ルール
+- [`~/projects/Makefile`](../Makefile) — `make install / lint / fmt / test`
+- [`~/projects/_docs/`](../_docs/) — レシピ・ワークログ
 
 ---
 

@@ -21,6 +21,7 @@ from utils import safe_str as _safe_str
 from valuation import render_reason_texts
 
 from ui.rent_benchmark_panel import render_rent_benchmark_panel
+from ui.table import _safe
 from ui.unit_price import SQM_PER_TSUBO, format_man, yen_to_man
 
 REPLACEMENT_COST_YEN_PER_SQM: dict[str, int] = {

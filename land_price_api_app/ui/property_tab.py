@@ -9,20 +9,26 @@ URLを貼り付けると:
 4. 投資シミュレーション（IRR・CF表）を表示
 """
 
+from datetime import date
+
 import db
 import pandas as pd
 import streamlit as st
-from analytics import find_nearby_points
+from analytics import compute_population_trend, find_nearby_points
 from config import get_logger
 from facility_sources import (
     FacilitySearchError,
     summarize_facility_groups,
 )
 from geocoder import GeocodingError, GeocodingResult, geocode_address
+from hazard_sources import summarize_hazard_risk
 from property_persistence import listing_row_to_property, property_to_listing_row
 from property_scraper import PropertyData, ScrapingError, extract_property_data, fetch_property_html
 from property_state import PropertyAnalysisState
-from valuation import build_valuation_result, score_location_features
+from terrain_sources import TerrainSearchError, summarize_terrain_features
+from valuation import build_valuation_result, render_reason_texts, score_location_features
+
+from ui.components import render_population_card
 
 from ui.property_investment import (
     _SIM_AVAILABLE,

@@ -5,6 +5,9 @@ ui/property_summary.py
 
 from __future__ import annotations
 
+import html
+import re
+
 import db
 import pandas as pd
 import streamlit as st

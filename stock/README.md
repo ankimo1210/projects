@@ -6,6 +6,8 @@
 日本株・米株の価格 / 財務 / マクロ経済指標 / インデックスバスケット / AI チャット
 ```
 
+> 📦 **このプロジェクトは [projects monorepo](../README.md) の uv workspace メンバー**です。リポジトリルートは `/home/kazumasa/projects/`、`.venv` も共有されます。
+
 ---
 
 ## 何ができるか
@@ -26,8 +28,11 @@
 ### 1. セットアップ
 
 ```bash
-uv sync                  # 依存関係インストール
-# .env に必要なAPIキーを記入（詳細は SETUP.md）
+# ワークスペースルートから一括インストール（推奨）
+cd /home/kazumasa/projects
+uv sync --all-packages   # または: make install
+
+# stock/ の .env に必要なAPIキーを記入（詳細は SETUP.md）
 ```
 
 詳細は [SETUP.md](./SETUP.md) を参照。
@@ -35,6 +40,7 @@ uv sync                  # 依存関係インストール
 ### 2. Dash ダッシュボード起動
 
 ```bash
+cd /home/kazumasa/projects/stock
 ./start.sh
 # または
 uv run python app/app.py
@@ -88,27 +94,33 @@ uv run jupyter lab notebooks/
 ## プロジェクト構成
 
 ```
-stock/
-├── src/stockkit/
-│   ├── data/                # データ取得層
-│   │   ├── providers/       # 各データソース実装
-│   │   ├── cache.py         # DuckDB キャッシュ
-│   │   ├── nikkei225.py     # N225 構成銘柄
-│   │   └── us_indices.py    # DJIA/SP500/NDX100 構成銘柄
-│   ├── analysis/            # 分析モジュール
-│   │   ├── basket.py        # インデックスバスケット計算
-│   │   ├── backtest.py
-│   │   ├── fundamental.py
-│   │   ├── screener.py
-│   │   ├── technical.py
-│   │   └── portfolio.py
-│   └── viz/                 # 可視化ヘルパー
-├── app/
-│   ├── app.py               # Dash エントリポイント
-│   ├── pages/               # 各ダッシュボードページ
-│   └── api/                 # AI チャット用バックエンド (Flask, port 8051)
-├── _data/                   # DuckDB + CSVキャッシュ (gitignore)
-└── docs/                    # 詳細ドキュメント
+projects/                    # ← uv workspace root (git管理単位)
+├── .venv/                   # 共有 venv (ワークスペース全体)
+├── pyproject.toml           # workspace定義
+├── Makefile                 # make install / lint / test 等
+└── stock/                   # ← stockkit (このプロジェクト)
+    ├── pyproject.toml       # stockkit個別の依存
+    ├── src/stockkit/
+    │   ├── data/            # データ取得層
+    │   │   ├── providers/   # 各データソース実装
+    │   │   ├── cache.py     # DuckDB キャッシュ
+    │   │   ├── nikkei225.py # N225 構成銘柄
+    │   │   └── us_indices.py# DJIA/SP500/NDX100 構成銘柄
+    │   ├── analysis/        # 分析モジュール
+    │   │   ├── basket.py    # インデックスバスケット計算
+    │   │   ├── backtest.py
+    │   │   ├── fundamental.py
+    │   │   ├── screener.py
+    │   │   ├── technical.py
+    │   │   └── portfolio.py
+    │   └── viz/             # 可視化ヘルパー
+    ├── app/
+    │   ├── app.py           # Dash エントリポイント
+    │   ├── pages/           # 各ダッシュボードページ
+    │   └── api/             # AI チャット用バックエンド (Flask, port 8051)
+    ├── _data/               # DuckDB + CSVキャッシュ (gitignore)
+    ├── .env                 # stockkit用APIキー (gitignore)
+    └── docs/                # 詳細ドキュメント
 ```
 
 ---

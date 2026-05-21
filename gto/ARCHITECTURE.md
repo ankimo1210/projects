@@ -108,8 +108,23 @@ sequenceDiagram
 
 ## ディレクトリ詳細
 
+このプロジェクトはワークスペース（`~/projects/`）の uv メンバー。Python 依存はワークスペースルートの `.venv` で一括管理、Rust ターゲットは `gto/target/` に出力、データ・ログ・アーカイブはワークスペース直下の `_data/` `_logs/` `_archive/` に出る（`gto/` 配下に置かない方針）。
+
 ```
-crates/
+~/projects/                       ★ ワークスペースルート
+├── Makefile                      make install / lint / fmt / test
+├── AGENTS.md                     マルチプロジェクト構成説明
+├── CLAUDE.md                     Claude Code 共通ルール
+├── pyproject.toml                uv workspace 定義
+├── .venv/                        ワークスペース共通の Python 環境
+├── _data/gto/solutions/          ★ GTO 専用データ出力先 (gitignored)
+│   ├── spots/  agg/  combos/  reports/   Parquet
+│   └── cache/  {POS}_{stack}.json        フロント直読用
+├── _docs/                        recipes / ai worklog
+└── gto/                          ★ このプロジェクト
+
+gto/
+├── crates/
 ├── gto-core/                     CPU 実装 (Rust)
 │   └── src/
 │       ├── card.rs               カード型・パース

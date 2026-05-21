@@ -6,14 +6,18 @@ ui/property_investment.py
 from __future__ import annotations
 
 import sys
+from datetime import date
 from pathlib import Path
 
 import pandas as pd
 import streamlit as st
 from config import get_logger
+from geocoder import GeocodingError, geocode_address
 from property_scraper import PropertyData
+from property_state import PropertyAnalysisState
 
 from ui.property_summary import _render_summary_panel
+from ui.table import muted, num_str, plain, render_html_table
 
 logger = get_logger(__name__)
 
