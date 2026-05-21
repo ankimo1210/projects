@@ -51,8 +51,19 @@ make tree      # ヘビーディレクトリを除外したツリー表示
 ## 環境前提
 
 - Windows 11 + WSL2 (Ubuntu)
-- Python は各プロジェクトで `uv` / `venv` を個別管理
+- Python は **ルート単一の uv workspace** で管理（`.venv` は repo root に1個）
+  - workspace メンバー: `gto`, `market-viz`, `stock`, `nbody-gpu`, `line_backup`, `re_invest_os/apps/api`, `re_invest_os/packages/financial-engine`
+  - 例外: `land_price_api_app` は `requirements.txt`、`johnhull` / `rates_volatility_model` / `notebooks` は env 管理なし
 - AI コラボ前提（Claude Code / Copilot）。エージェント向け規約は `CLAUDE.md` と `AGENTS.md` を参照
+
+## セットアップ
+
+```bash
+uv sync --all-packages   # ルートに .venv が作られ、全メンバーが editable install
+make help                # 横断ターゲット一覧
+```
+
+ワークスペース内のクロスインポートはそのまま動きます。例: `re_invest_os/apps/api` から `from re_engine import ...` が可能（`re-engine` パッケージは `re_invest_os/packages/financial-engine` 由来、workspace で自動リンク）。
 
 ## このリポジトリで作業するときは
 

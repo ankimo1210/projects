@@ -1,47 +1,47 @@
 # Workspace-wide convenience targets.
-# Each sub-project keeps its own toolchain; these targets fan out across them.
-# A project failing does not abort the rest (we intentionally trail || true).
+#
+# Most Python work runs inside a single uv workspace at the repo root
+# (members: gto, market-viz, stock, nbody-gpu, line_backup,
+#  re_invest_os/apps/api, re_invest_os/packages/financial-engine).
+#
+# `land_price_api_app/` uses requirements.txt — not part of the uv workspace.
+# `johnhull/`, `rates_volatility_model/`, `notebooks/` have no managed env.
 
-UV_PROJECTS := gto re_invest_os market-viz stock nbody-gpu line_backup
-
-.PHONY: help install lint test fmt clean tree
+.PHONY: help install sync lint fmt fmt-fix test clean tree
 
 help:
-	@echo "Workspace targets:"
-	@echo "  make install   - uv sync across uv-managed projects"
-	@echo "  make lint      - ruff check across uv-managed projects"
-	@echo "  make fmt       - ruff format --check across uv-managed projects"
-	@echo "  make test      - pytest -q across uv-managed projects"
-	@echo "  make clean     - remove pyc / __pycache__ / .pytest_cache / .ruff_cache"
-	@echo "  make tree      - print a project tree (depth 2, ignoring heavy dirs)"
-	@echo
-	@echo "UV projects: $(UV_PROJECTS)"
-	@echo "Other projects (johnhull, rates_volatility_model, notebooks, land_price_api_app)"
-	@echo "manage their own envs — run their tooling from inside the project."
+	@echo "Workspace targets (run from repo root):"
+	@echo "  make install  - uv sync --all-packages (creates root .venv)"
+	@echo "  make sync     - alias for install"
+	@echo "  make lint     - uv run ruff check ."
+	@echo "  make fmt      - uv run ruff format --check ."
+	@echo "  make fmt-fix  - uv run ruff format ."
+	@echo "  make test     - uv run pytest"
+	@echo "  make clean    - remove pyc / __pycache__ / .pytest_cache / .ruff_cache"
+	@echo "  make tree     - print a project tree (depth 2, ignoring heavy dirs)"
+	@echo ""
+	@echo "Workspace members:"
+	@echo "  gto market-viz stock nbody-gpu line_backup"
+	@echo "  re_invest_os/apps/api re_invest_os/packages/financial-engine"
+	@echo ""
+	@echo "Outside the workspace:"
+	@echo "  land_price_api_app (requirements.txt)"
+	@echo "  johnhull, rates_volatility_model, notebooks (manual envs)"
 
-install:
-	@for p in $(UV_PROJECTS); do \
-	  echo "--- uv sync: $$p ---"; \
-	  (cd $$p && uv sync) || echo "  (skipped or failed: $$p)"; \
-	done
+install sync:
+	uv sync --all-packages
 
 lint:
-	@for p in $(UV_PROJECTS); do \
-	  echo "--- ruff check: $$p ---"; \
-	  (cd $$p && uv run --no-sync ruff check .) || true; \
-	done
+	uv run --no-sync ruff check .
 
 fmt:
-	@for p in $(UV_PROJECTS); do \
-	  echo "--- ruff format --check: $$p ---"; \
-	  (cd $$p && uv run --no-sync ruff format --check .) || true; \
-	done
+	uv run --no-sync ruff format --check .
+
+fmt-fix:
+	uv run --no-sync ruff format .
 
 test:
-	@for p in $(UV_PROJECTS); do \
-	  echo "--- pytest: $$p ---"; \
-	  (cd $$p && uv run --no-sync pytest -q) || true; \
-	done
+	uv run --no-sync pytest
 
 clean:
 	@find . -type d \( -name __pycache__ -o -name .pytest_cache -o -name .ruff_cache -o -name .mypy_cache \) \

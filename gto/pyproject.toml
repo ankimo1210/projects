@@ -13,13 +13,8 @@ dependencies = [
     "numpy>=2.0",
 ]
 
-[tool.uv.sources]
-torch = { index = "pytorch-cu126" }
-
-[[tool.uv.index]]
-name = "pytorch-cu126"
-url = "https://download.pytorch.org/whl/cu126"
-explicit = true
+# NOTE: torch index ("pytorch-cu126") and [tool.uv.sources] are declared at the
+# workspace root (../pyproject.toml) so all members share the same torch build.
 
 [project.optional-dependencies]
 dev = [
