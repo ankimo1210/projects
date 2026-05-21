@@ -10,7 +10,7 @@ from gto.library.flop_canon import board_texture
 from gto.library.schema import spot_id
 from gto.solver.multistreet_gpu import solve_spot_multistreet
 
-SOLUTIONS_MS_DIR = Path(__file__).parents[4] / "data" / "solutions_ms"
+SOLUTIONS_MS_DIR = Path(__file__).parents[4] / "_data" / "gto" / "solutions_ms"
 _RANKS = "AKQJT98765432"
 _SUITS = "cdhs"
 

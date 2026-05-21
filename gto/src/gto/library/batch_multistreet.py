@@ -10,7 +10,7 @@ Usage:
   uv run python -m gto.library.batch_multistreet \\
       --positions BTN,CO,SB --stacks 100 --iters-river 50 --iters-flop 300
 
-Results stored in: data/solutions_ms/ (separate Parquet from single-street library)
+Results stored in: _data/gto/solutions_ms/ (separate Parquet from single-street library)
 """
 
 from __future__ import annotations
@@ -33,7 +33,7 @@ from gto.solver.multistreet_gpu import (
 # Paths
 # ---------------------------------------------------------------------------
 
-SOLUTIONS_MS_DIR = Path(__file__).parents[4] / "data" / "solutions_ms"
+SOLUTIONS_MS_DIR = Path(__file__).parents[4] / "_data" / "gto" / "solutions_ms"
 
 POSITIONS = ["BTN", "CO", "SB", "HJ", "UTG"]
 OPPONENTS = {"BTN": "BB", "CO": "BB", "SB": "BB", "HJ": "BB", "UTG": "BB"}

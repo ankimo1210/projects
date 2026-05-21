@@ -25,9 +25,8 @@ projects/
 ├── _docs/                   # 横断ドキュメント（capability_index / recipes / ai）
 ├── _scratch/                # 使い捨ての試行（gitignore 一部対象）
 ├── _archive/                # 過去成果物・旧プロンプト
-├── _data/                   # 重データ（gitignore 対象）
+├── _data/                   # 重データ（gitignore 対象、`_data/<project>/` 規約）
 ├── _logs/                   # 実行ログ（gitignore 対象）
-├── data/                    # プロジェクト横断データ（中身は gitignore 対象多数）
 ├── reports/                 # 共有レポート（PDF 等）
 ├── CLAUDE.md, AGENTS.md     # AI エージェント向けガイド
 └── copilot-instructions.md

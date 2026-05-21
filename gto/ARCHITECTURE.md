@@ -14,7 +14,7 @@ flowchart LR
     Static["StaticFiles<br/>/solutions"]
     Solver["gto_cuda<br/>(Rust + NVRTC)"]
     GPU[("RTX 5080<br/>sm_120")]
-    Parquet[("data/solutions/<br/>Parquet")]
+    Parquet[("_data/gto/solutions/<br/>Parquet")]
 
     Browser --> Next
     Next -->|"/api/* rewrite"| API

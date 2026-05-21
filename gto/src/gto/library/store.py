@@ -1,7 +1,7 @@
 """Parquet-backed solution store.
 
 Layout:
-    data/solutions/
+    _data/gto/solutions/
         spots/    -- one .parquet per batch
         agg/      -- aggregate_strategies
         combos/   -- combo_strategies (largest)
@@ -18,7 +18,7 @@ from pathlib import Path
 import duckdb
 import pandas as pd
 
-SOLUTIONS_DIR = Path(__file__).parents[4] / "data" / "solutions"
+SOLUTIONS_DIR = Path(__file__).parents[4] / "_data" / "gto" / "solutions"
 
 CACHE_DIR = SOLUTIONS_DIR / "cache"
 
@@ -98,7 +98,7 @@ def write_batch(
 def build_position_cache(position: str | None = None, stack_bb: float = 100.0) -> None:
     """Pre-compute aggregate JSON cache for frontend direct fetch.
 
-    Output: data/solutions/cache/{POS}_{stack}.json
+    Output: _data/gto/solutions/cache/{POS}_{stack}.json
     Schema: { position, stack_bb, spots: { board: { texture, exploitability, strategy: {action: freq} } } }
     """
     CACHE_DIR.mkdir(parents=True, exist_ok=True)

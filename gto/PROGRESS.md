@@ -132,5 +132,5 @@ gto/
 │   ├── trainer/     プリフロップ出題エンジン（Python）
 │   └── library/     バッチ計算 + Parquet ストア
 ├── web/             Next.js 16 + Tailwind（/neon, /library）
-└── data/solutions/  Parquet（spots/ agg/ combos/ reports/ cache/）
+└── _data/gto/solutions/  Parquet（spots/ agg/ combos/ reports/ cache/、ワークスペース直下）
 ```

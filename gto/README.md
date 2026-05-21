@@ -105,7 +105,7 @@ gto/
 │   ├── app/                 Next.js ページ (neon/library/report/solver/simulation)
 │   ├── components/          共通UI (NeonShell, RangeHeatmap, ...)
 │   └── lib/                 API クライアント・ユーティリティ
-└── data/solutions/          Parquet 出力先 (gitignored)
+└── (../_data/gto/solutions/) Parquet 出力先 (gitignored, ワークスペース直下)
 ```
 
 詳細は [ARCHITECTURE.md](./ARCHITECTURE.md) を参照。
