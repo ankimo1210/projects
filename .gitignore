@@ -28,6 +28,12 @@ _scratch/tmp/
 *.csv
 *.xlsx
 
+# SQLite runtime files (reio.db etc.)
+*.sqlite
+*.sqlite-*
+reio.db
+reio.db-*
+
 # logs
 *.log
 *_log.txt

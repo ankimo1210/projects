@@ -5,7 +5,7 @@
 import Link from "next/link";
 
 interface NavProps {
-  active?: "upload" | "report" | "compare" | "history" | "sample" | "lp" | "manual" | string;
+  active?: "upload" | "report" | "compare" | "history" | "sample" | "lp" | "manual" | "deals" | string;
   apiStatus?: boolean;
 }
 
@@ -32,7 +32,7 @@ export function Nav({ active, apiStatus }: NavProps) {
       {link("F1", "UPLOAD", "/upload", "upload")}
       {link("F2", "COMP", "/compare", "compare")}
       {link("F3", "HIST", "/history", "history")}
-      {link("F4", "SAMPLE", "/", "sample")}
+      {link("F4", "DEALS", "/deals", "deals")}
       {link("F5", "LP", "/lp", "lp")}
       {/* F6 REPORT は動的なので href なし (active 表示のみ) */}
       {active === "report" && (

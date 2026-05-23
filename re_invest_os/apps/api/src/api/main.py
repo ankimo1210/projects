@@ -82,9 +82,16 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[o.strip() for o in _allowed_origins if o.strip()],
     allow_credentials=False,
-    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
+
+# v2: Deal Workspace ルーター
+from api.routers import analysis_features as _af_router
+from api.routers import deals as _deals_router
+
+app.include_router(_deals_router.router)
+app.include_router(_af_router.router)
 
 
 class AnalyzeRequest(BaseModel):

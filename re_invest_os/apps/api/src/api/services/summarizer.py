@@ -12,33 +12,7 @@ from typing import Any
 
 from api.services import prompts
 from api.services.llm_client import chat_json
-
-# NG ワード (法務制約): これらを含む応答は再生成する
-_NG_WORDS = [
-    "買うべき",
-    "売るべき",
-    "買い推奨",
-    "売り推奨",
-    "お得です",
-    "狙い目",
-    "儲かります",
-    "儲かる物件",
-    "絶対に",
-    "確実に",
-    "保証します",
-    "保証できます",
-    "見送りを推奨",
-    "見送るべき",
-    "投資推奨",
-    "購入をおすすめ",
-    "売却をおすすめ",
-]
-_NG_RE = re.compile("|".join(re.escape(w) for w in _NG_WORDS))
-
-
-def _has_ng(text: str) -> bool:
-    return bool(_NG_RE.search(text))
-
+from api.services.ng_filter import has_ng as _has_ng
 
 # ─────────────────────────────────────────────────────────
 # 3行サマリー

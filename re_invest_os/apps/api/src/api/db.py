@@ -134,6 +134,122 @@ class UploadedDocumentRecord(Base):
 
 
 # ──────────────────────────────────────────────
+# v2: Deal Workspace
+# ──────────────────────────────────────────────
+
+
+class DealRecord(Base):
+    __tablename__ = "deals"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id: Mapped[str | None] = mapped_column(String(36), nullable=True, default=None)
+    title: Mapped[str] = mapped_column(Text)
+    source_type: Mapped[str] = mapped_column(String(16))
+    source_url: Mapped[str | None] = mapped_column(Text, nullable=True, default=None)
+    property_type: Mapped[str | None] = mapped_column(String(32), nullable=True, default=None)
+    status: Mapped[str] = mapped_column(String(32), default="analyzing")
+    created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(UTC))
+    updated_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(UTC))
+
+
+class AnalysisRunRecord(Base):
+    __tablename__ = "analysis_runs"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    deal_id: Mapped[str] = mapped_column(String(36))
+    engine_version: Mapped[str] = mapped_column(String(32))
+    prompt_versions: Mapped[str | None] = mapped_column(Text, nullable=True, default=None)
+    input_snapshot_json: Mapped[str] = mapped_column(Text)
+    normalized_property_json: Mapped[str] = mapped_column(Text)
+    metrics_json: Mapped[str] = mapped_column(Text)
+    sensitivity_json: Mapped[str | None] = mapped_column(Text, nullable=True, default=None)
+    max_bid_json: Mapped[str | None] = mapped_column(Text, nullable=True, default=None)
+    created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(UTC))
+
+
+class BidRangeRecord(Base):
+    __tablename__ = "bid_ranges"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    analysis_run_id: Mapped[str] = mapped_column(String(36))
+    aggressive_price: Mapped[int | None] = mapped_column(nullable=True, default=None)
+    base_price: Mapped[int | None] = mapped_column(nullable=True, default=None)
+    conservative_price: Mapped[int | None] = mapped_column(nullable=True, default=None)
+    explanation_json: Mapped[str | None] = mapped_column(Text, nullable=True, default=None)
+    created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(UTC))
+
+
+class AssumptionRiskRecord(Base):
+    __tablename__ = "assumption_risks"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    analysis_run_id: Mapped[str] = mapped_column(String(36))
+    category: Mapped[str] = mapped_column(String(32))
+    value_json: Mapped[str | None] = mapped_column(Text, nullable=True, default=None)
+    confidence: Mapped[str] = mapped_column(String(1))
+    risk_level: Mapped[str] = mapped_column(String(8))
+    reason: Mapped[str] = mapped_column(Text)
+    source: Mapped[str | None] = mapped_column(Text, nullable=True, default=None)
+    created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(UTC))
+
+
+class ChecklistItemRecord(Base):
+    __tablename__ = "checklist_items"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    deal_id: Mapped[str] = mapped_column(String(36))
+    analysis_run_id: Mapped[str | None] = mapped_column(String(36), nullable=True, default=None)
+    category: Mapped[str] = mapped_column(String(32))
+    priority: Mapped[str] = mapped_column(String(8))
+    question: Mapped[str] = mapped_column(Text)
+    reason: Mapped[str] = mapped_column(Text)
+    status: Mapped[str] = mapped_column(String(16), default="open")
+    answer: Mapped[str | None] = mapped_column(Text, nullable=True, default=None)
+    evidence_url: Mapped[str | None] = mapped_column(Text, nullable=True, default=None)
+    created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(UTC))
+    updated_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(UTC))
+
+
+class InvestmentMemoRecord(Base):
+    __tablename__ = "investment_memos"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    deal_id: Mapped[str] = mapped_column(String(36))
+    analysis_run_id: Mapped[str] = mapped_column(String(36))
+    memo_markdown: Mapped[str] = mapped_column(Text)
+    memo_snapshot_json: Mapped[str] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(UTC))
+
+
+class WatchlistItemRecord(Base):
+    __tablename__ = "watchlist_items"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id: Mapped[str | None] = mapped_column(String(36), nullable=True, default=None)
+    deal_id: Mapped[str] = mapped_column(String(36))
+    watch_status: Mapped[str] = mapped_column(String(16), default="active")
+    target_bid_price: Mapped[int | None] = mapped_column(nullable=True, default=None)
+    latest_asking_price: Mapped[int | None] = mapped_column(nullable=True, default=None)
+    last_checked_at: Mapped[datetime | None] = mapped_column(nullable=True, default=None)
+    created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(UTC))
+    updated_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(UTC))
+
+
+class MarketEvidenceCardRecord(Base):
+    __tablename__ = "market_evidence_cards"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    deal_id: Mapped[str] = mapped_column(String(36))
+    analysis_run_id: Mapped[str | None] = mapped_column(String(36), nullable=True, default=None)
+    card_type: Mapped[str] = mapped_column(String(32))
+    title: Mapped[str] = mapped_column(Text)
+    summary: Mapped[str] = mapped_column(Text)
+    payload_json: Mapped[str | None] = mapped_column(Text, nullable=True, default=None)
+    confidence: Mapped[str] = mapped_column(String(8), default="unknown")
+    created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(UTC))
+
+
+# ──────────────────────────────────────────────
 # DB 初期化
 # ──────────────────────────────────────────────
 
