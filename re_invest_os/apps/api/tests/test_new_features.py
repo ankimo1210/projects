@@ -184,6 +184,23 @@ def test_critique_rule_flags():
     assert "exit_cap_unrealistic" in flags
 
 
+def test_build_summary_user_uses_overall_risk():
+    """summarizer の LLM コンテキストが overall_risk を使い、100点表現を含まない。"""
+    from api.services.summarizer import _build_summary_user
+
+    analysis = {
+        "kpi": {
+            "cap_rate": 0.05, "dscr_min": 1.1, "dscr_year1": 1.2,
+            "equity_irr": 0.07, "atcf_first_year_yen": -45000,
+        },
+        "exit": {"net_proceeds_yen": 1_000_000},
+    }
+    assumption_score = {"overall_risk": "high", "summary": "x", "items": []}
+    msg = _build_summary_user(analysis, assumption_score)
+    assert "high" in msg
+    assert "/100" not in msg
+
+
 def test_critique_endpoint(monkeypatch, client):
     """POST /critique が 200 を返す。
     api.main は generate_critique を直接インポートしているため
@@ -213,7 +230,7 @@ def test_critique_endpoint(monkeypatch, client):
         "/critique",
         json={
             "analysis_result": {"kpi": {"cap_rate": 0.03, "dscr_min": 1.1, "ltv": 0.7}},
-            "score_result": {"total": 40.0, "evaluation": "要注意"},
+            "assumption_score": {"overall_risk": "high", "summary": "x", "items": []},
             "assumptions": {
                 "property": {"purchase_price_yen": 30_000_000},
                 "income": {"gpi_monthly_yen": 100_000, "vacancy_rate": 0.05},

@@ -467,7 +467,7 @@ async def get_analysis_by_id(analysis_id: str) -> dict:
 
 class SummarizeRequest(BaseModel):
     analysis_result: dict
-    score_result: dict
+    assumption_score: dict
     needs_confirmation: list[str] = Field(default_factory=list)
     model_config = ConfigDict(extra="forbid")
 
@@ -510,8 +510,8 @@ async def purge_expired_documents() -> dict[str, int]:
 
 @app.post("/summarize", response_model=SummarizeResponse)
 def post_summarize(req: SummarizeRequest) -> SummarizeResponse:
-    summary = generate_summary(req.analysis_result, req.score_result)
-    inquiry = generate_inquiry(req.score_result, req.analysis_result, req.needs_confirmation)
+    summary = generate_summary(req.analysis_result, req.assumption_score)
+    inquiry = generate_inquiry(req.assumption_score, req.analysis_result, req.needs_confirmation)
     return SummarizeResponse(
         summary_lines=summary.lines,
         questions=[
@@ -532,7 +532,7 @@ def post_summarize(req: SummarizeRequest) -> SummarizeResponse:
 
 class CritiqueRequest(BaseModel):
     analysis_result: dict
-    score_result: dict
+    assumption_score: dict
     assumptions: dict
     model_config = ConfigDict(extra="forbid")
 
@@ -554,7 +554,7 @@ class CritiqueResponse(BaseModel):
 
 @app.post("/critique", response_model=CritiqueResponse)
 def post_critique(req: CritiqueRequest) -> CritiqueResponse:
-    result = generate_critique(req.analysis_result, req.score_result, req.assumptions)
+    result = generate_critique(req.analysis_result, req.assumption_score, req.assumptions)
     return CritiqueResponse(
         critiques=[
             CritiqueItem(

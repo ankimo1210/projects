@@ -29,7 +29,7 @@ class SummaryResult:
 
 def _build_summary_user(
     analysis_result: dict[str, Any],
-    score_result: dict[str, Any],
+    assumption_score: dict[str, Any],
 ) -> str:
     kpi = analysis_result.get("kpi", {})
     exit_ = analysis_result.get("exit", {})
@@ -40,11 +40,10 @@ def _build_summary_user(
     irr_str = f"{irr * 100:.1f}%" if irr else "算出不能"
     atcf = kpi.get("atcf_first_year_yen", 0)
     net_proc = exit_.get("net_proceeds_yen", 0)
-    score = score_result.get("total", 0)
-    evaluation = score_result.get("evaluation", "—")
+    overall = assumption_score.get("overall_risk", "unknown")
 
     analysis_json = (
-        f'{{"score": {score}, "evaluation": "{evaluation}", '
+        f'{{"overall_risk": "{overall}", '
         f'"cap_rate_pct": "{cap_pct}", "dscr_min": {dscr_min}, "dscr_y1": {dscr_y1}, '
         f'"equity_irr": "{irr_str}", "atcf_y1_yen": {atcf}, '
         f'"exit_net_proceeds_yen": {net_proc}}}'
@@ -56,7 +55,7 @@ def _build_summary_user(
 
 def generate_summary(
     analysis_result: dict[str, Any],
-    score_result: dict[str, Any],
+    assumption_score: dict[str, Any],
 ) -> SummaryResult:
     prompt = prompts.load("summary_3line")
     ng_filtered = False
@@ -65,7 +64,7 @@ def generate_summary(
     lines: list[str] = []
 
     for _ in range(3):
-        user_msg = _build_summary_user(analysis_result, score_result)
+        user_msg = _build_summary_user(analysis_result, assumption_score)
         r = chat_json(
             prompt.__class__(
                 name=prompt.name,
@@ -131,7 +130,7 @@ class InquiryResult:
 
 
 def generate_inquiry(
-    score_result: dict[str, Any],
+    assumption_score: dict[str, Any],
     analysis_result: dict[str, Any],
     needs_confirmation: list[str] | None = None,
 ) -> InquiryResult:
@@ -139,15 +138,14 @@ def generate_inquiry(
     prompt = prompts.load("inquiry_questions")
 
     # v2: テンプレート埋め込み方式
-    score_total = score_result.get("total", 0)
-    evaluation = score_result.get("evaluation", "—")
+    overall = assumption_score.get("overall_risk", "unknown")
     dscr_min = kpi.get("dscr_min", "—")
     atcf_y1 = kpi.get("atcf_first_year_yen", 0)
     atcf_str = f"¥{atcf_y1:,}" if isinstance(atcf_y1, int) else str(atcf_y1)
     missing = ", ".join(needs_confirmation or []) or "なし"
 
     analysis_summary = (
-        f"スコア: {score_total}/100 ({evaluation})\n"
+        f"総合前提リスク: {overall}\n"
         f"DSCR最小: {dscr_min}\n"
         f"ATCF Y1: {atcf_str}\n"
         f"資料不足: {missing}"
@@ -264,18 +262,19 @@ def _detect_rule_flags(
 
 def generate_critique(
     analysis_result: dict[str, Any],
-    score_result: dict[str, Any],
+    assumption_score: dict[str, Any],
     assumptions: dict[str, Any],
 ) -> CritiqueResult:
     rule_flags = _detect_rule_flags(analysis_result, assumptions)
     prompt = prompts.load("assumption_critique")
 
     kpi = analysis_result.get("kpi", {})
+    overall = assumption_score.get("overall_risk", "unknown")
     summary = (
-        f"スコア: {score_result.get('total', 0)}/100 ({score_result.get('evaluation', '—')})\n"
+        f"総合前提リスク: {overall}\n"
         f"DSCR最小: {kpi.get('dscr_min', '—')}  Cap: {kpi.get('cap_rate', '—'):.3f}"
         if isinstance(kpi.get("cap_rate"), float)
-        else f"スコア: {score_result.get('total', 0)}/100"
+        else f"総合前提リスク: {overall}"
     )
     flags_json = str(rule_flags) if rule_flags else "[]"
 
