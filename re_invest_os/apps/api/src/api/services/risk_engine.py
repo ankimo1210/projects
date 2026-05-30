@@ -21,7 +21,8 @@ from re_engine.models import AnalysisResult, Assumptions
 from re_engine.normalized import Confidence, NormalizedProperty
 
 Category = Literal[
-    "rent", "vacancy", "opex", "repair", "interest_rate", "exit_price", "tax"
+    "rent", "vacancy", "opex", "repair", "interest_rate", "exit_price",
+    "tax", "sale_year", "acquisition_cost",
 ]
 RiskLevel = Literal["low", "medium", "high", "unknown"]
 
@@ -47,6 +48,28 @@ class AssumptionRisk(BaseModel):
     reason: str
     source: str | None = None  # field_sources の note 等
     value_json: dict[str, Any] | None = None  # 評価対象の値・閾値
+    model_config = ConfigDict(extra="forbid")
+
+
+def aggregate_overall_risk(levels: list[RiskLevel]) -> RiskLevel:
+    """high が1つでも→high / 次点 medium / 全 unknown→unknown / それ以外 low。"""
+    if not levels:
+        return "unknown"
+    if "high" in levels:
+        return "high"
+    if "medium" in levels:
+        return "medium"
+    if all(x == "unknown" for x in levels):
+        return "unknown"
+    return "low"
+
+
+class AssumptionScore(BaseModel):
+    """甘さスコア: 物件評価ではなく、分析前提の信頼度と脆弱性の集約。"""
+
+    overall_risk: RiskLevel
+    summary: str
+    items: list[AssumptionRisk]
     model_config = ConfigDict(extra="forbid")
 
 
@@ -246,6 +269,14 @@ def _exit_price_risk(
         if risk != "high":
             risk = "high"
         reasons.append("出口手取りが当初自己資金を下回る試算")
+    # 出口依存度: リターンの過半が売却時手取りに依存していれば high
+    atcf_sum = sum(cf.atcf_yen for cf in result.yearly_cashflows)
+    denom = atcf_sum + result.exit_.net_proceeds_yen
+    if denom != 0:
+        exit_share = result.exit_.net_proceeds_yen / denom
+        if exit_share > 0.60:
+            risk = "high"
+            reasons.append(f"投資リターンの {exit_share * 100:.0f}% が売却時手取りに依存")
     risk = _bump_for_low_confidence(risk, conf)
     return AssumptionRisk(
         category="exit_price",
@@ -282,6 +313,67 @@ def _tax_risk(a: Assumptions, norm: NormalizedProperty) -> AssumptionRisk:
     )
 
 
+def _sale_year_risk(
+    a: Assumptions, result: AnalysisResult, norm: NormalizedProperty
+) -> AssumptionRisk:
+    conf = norm.confidence_for("exit.hold_period_years", default="D")
+    atcf_sum = sum(cf.atcf_yen for cf in result.yearly_cashflows)
+    denom = atcf_sum + result.exit_.net_proceeds_yen
+    exit_share = result.exit_.net_proceeds_yen / denom if denom else 0.0
+    risk: RiskLevel = "low"
+    if conf in ("C", "D") and exit_share > 0.5:
+        risk = "medium"
+    risk = _bump_for_low_confidence(risk, conf)
+    return AssumptionRisk(
+        category="sale_year",
+        confidence=conf,
+        risk_level=risk,
+        reason=(
+            "保有年数の前提が出口依存度に影響する"
+            if risk != "low"
+            else "保有年数は標準的レンジ"
+        ),
+        value_json={"hold_period_years": a.exit_.hold_period_years},
+    )
+
+
+def _acquisition_cost_risk(a: Assumptions, norm: NormalizedProperty) -> AssumptionRisk:
+    conf = norm.confidence_for("acquisition.acquisition_cost_rate", default="D")
+    risk: RiskLevel = "medium" if conf == "D" else "low"
+    return AssumptionRisk(
+        category="acquisition_cost",
+        confidence=conf,
+        risk_level=risk,
+        reason=(
+            "諸費用率がデフォルト仮定。過小評価で初期投下資本を見誤る"
+            if risk != "low"
+            else "諸費用率は資料/入力に基づく"
+        ),
+        value_json={"acquisition_cost_rate": a.acquisition.acquisition_cost_rate},
+    )
+
+
+def _apply_dscr_coupling(
+    result: AnalysisResult, risks: list[AssumptionRisk]
+) -> list[AssumptionRisk]:
+    """DSCR最小が 1.00–1.15 のとき rent/interest_rate/opex を最低 medium に底上げ。"""
+    dscr_min = result.kpi.dscr_min
+    if not (1.00 <= dscr_min <= 1.15):
+        return risks
+    targets = {"rent", "interest_rate", "opex"}
+    out: list[AssumptionRisk] = []
+    for r in risks:
+        if r.category in targets and r.risk_level in ("low", "unknown"):
+            note = (
+                f"; DSCR最小 {dscr_min:.2f} の薄い返済余力下では"
+                "前提悪化が直ちに返済を圧迫"
+            )
+            out.append(r.model_copy(update={"risk_level": "medium", "reason": r.reason + note}))
+        else:
+            out.append(r)
+    return out
+
+
 # ────────────────────────────────────────
 # Public entry
 # ────────────────────────────────────────
@@ -303,7 +395,22 @@ def assess_assumption_risks(
         _interest_rate_risk(assumptions, norm),
         _exit_price_risk(assumptions, result, norm, market),
         _tax_risk(assumptions, norm),
+        _sale_year_risk(assumptions, result, norm),
+        _acquisition_cost_risk(assumptions, norm),
     ]
+
+
+def assess_assumption_score(
+    assumptions: Assumptions,
+    result: AnalysisResult,
+    normalized: NormalizedProperty | None = None,
+    market: MarketBenchmark | None = None,
+) -> AssumptionScore:
+    """甘さスコア集約: 項目別リスク + DSCRカップリング + overall_risk + サマリ。"""
+    items = assess_assumption_risks(assumptions, result, normalized, market)
+    items = _apply_dscr_coupling(result, items)
+    overall = aggregate_overall_risk([i.risk_level for i in items])
+    return AssumptionScore(overall_risk=overall, summary=summarize_risks(items), items=items)
 
 
 def summarize_risks(risks: list[AssumptionRisk]) -> str:
