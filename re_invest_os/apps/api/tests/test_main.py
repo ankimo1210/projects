@@ -20,7 +20,7 @@ def test_version() -> None:
     body = r.json()
     assert "api" in body
     assert "engine" in body
-    assert body["engine"] == "0.1.0"
+    assert body["engine"] == "0.2.0"
 
 
 def test_sample_analysis() -> None:

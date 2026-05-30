@@ -155,7 +155,7 @@ def test_extract_document_end_to_end(client: TestClient, mock_llm: None) -> None
     assert body["extracted"]["structure"] == "rc"
     assert body["assumptions"] is not None
     assert body["assumptions"]["property"]["purchase_price_yen"] == 39_800_000
-    assert body["meta"]["engine_version"] == "0.1.0"
+    assert body["meta"]["engine_version"] == "0.2.0"
     assert body["meta"]["classification"]["document_type"] == "property_brochure"
     assert "classify_document" in body["meta"]["prompt_versions"]
     assert "property_brochure" in body["meta"]["prompt_versions"]
