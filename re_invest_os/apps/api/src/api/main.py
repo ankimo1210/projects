@@ -43,7 +43,7 @@ from re_engine.models import (
     PropertyAssumptions,
     TaxAssumptions,
 )
-from re_engine.score import DataQuality, MarketContext, ScoreResult, total_score
+from re_engine.normalized import NormalizedProperty
 from re_engine.sensitivity import SensitivityResult, sensitivity_grid
 
 from api import __version__
@@ -56,6 +56,7 @@ from api.services.extractors import source_pdf, source_url
 from api.services.extractors.property_brochure import BrochureResult, PropertyBrochureExtraction
 from api.services.extractors.to_assumptions import to_assumptions
 from api.services.llm_client import CallMeta as _LLMCallMeta
+from api.services.risk_engine import AssumptionScore, assess_assumption_score
 from api.services.summarizer import generate_critique, generate_inquiry, generate_summary
 
 
@@ -96,14 +97,13 @@ app.include_router(_af_router.router)
 
 class AnalyzeRequest(BaseModel):
     assumptions: Assumptions
-    market_context: MarketContext | None = None
-    data_quality: DataQuality | None = None
+    normalized_property: dict | None = None
     model_config = ConfigDict(extra="forbid")
 
 
 class AnalyzeResponse(BaseModel):
     analysis: AnalysisResult
-    score: ScoreResult
+    assumption_score: AssumptionScore
     model_config = ConfigDict(extra="forbid")
 
 
@@ -123,12 +123,13 @@ def version() -> dict[str, str]:
 @app.post("/analyze", response_model=AnalyzeResponse)
 def analyze(req: AnalyzeRequest) -> AnalyzeResponse:
     result = run_full_analysis(req.assumptions)
-    score = total_score(
-        result,
-        market_context=req.market_context,
-        data_quality=req.data_quality,
+    norm = (
+        NormalizedProperty.model_validate(req.normalized_property)
+        if req.normalized_property
+        else NormalizedProperty.all_user_input()
     )
-    return AnalyzeResponse(analysis=result, score=score)
+    score = assess_assumption_score(req.assumptions, result, norm)
+    return AnalyzeResponse(analysis=result, assumption_score=score)
 
 
 def _sample_assumptions() -> Assumptions:
@@ -176,8 +177,8 @@ def sample_nishi_shinjuku() -> AnalyzeResponse:
     """デモ物件のサンプル分析 (フロント検証用)。"""
     a = _sample_assumptions()
     result = run_full_analysis(a)
-    score = total_score(result)
-    return AnalyzeResponse(analysis=result, score=score)
+    score = assess_assumption_score(a, result, NormalizedProperty.all_user_input())
+    return AnalyzeResponse(analysis=result, assumption_score=score)
 
 
 class MaxOfferRequest(BaseModel):

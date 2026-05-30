@@ -22,7 +22,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from re_engine import ENGINE_VERSION
 from re_engine.analyze import run_full_analysis
 from re_engine.models import Assumptions
-from re_engine.score import total_score
+from re_engine.normalized import NormalizedProperty
 from sqlalchemy import desc, select
 
 from api.db import (
@@ -30,6 +30,7 @@ from api.db import (
     DealRecord,
     get_session_factory,
 )
+from api.services.risk_engine import assess_assumption_score
 
 router = APIRouter(tags=["deals"])
 
@@ -290,13 +291,13 @@ async def create_analysis_run(deal_id: str, req: CreateAnalysisRunRequest) -> An
         raise HTTPException(status_code=422, detail=f"invalid assumptions: {e}") from e
 
     analysis = run_full_analysis(assumptions)
-    score = total_score(analysis)
+    normalized = req.normalized_property or {"field_sources": {}}
+    norm_obj = NormalizedProperty.model_validate(normalized)
+    score = assess_assumption_score(assumptions, analysis, norm_obj)
     metrics = {
         "analysis": analysis.model_dump(mode="json", by_alias=True),
-        "score": score.model_dump(mode="json"),
+        "assumption_score": score.model_dump(mode="json"),
     }
-
-    normalized = req.normalized_property or {"field_sources": {}}
 
     rec = AnalysisRunRecord(
         deal_id=deal_id,

@@ -198,7 +198,10 @@ def test_generate_assumption_risks(client):
     body = res.json()
     assert body["analysis_run_id"] == run_id
     categories = {item["category"] for item in body["items"]}
-    assert categories == {"rent", "vacancy", "opex", "repair", "interest_rate", "exit_price", "tax"}
+    assert categories == {
+        "rent", "vacancy", "opex", "repair", "interest_rate", "exit_price",
+        "tax", "sale_year", "acquisition_cost",
+    }
     # 全項目に reason と confidence
     for item in body["items"]:
         assert item["confidence"] in ("A", "B", "C", "D")
@@ -212,7 +215,7 @@ def test_get_assumption_risks(client):
     client.post(f"/analysis_runs/{run_id}/assumption_risks", json={})
     res = client.get(f"/analysis_runs/{run_id}/assumption_risks")
     assert res.status_code == 200
-    assert len(res.json()["items"]) == 7
+    assert len(res.json()["items"]) == 9
 
 
 def test_assumption_risks_replaces(client):

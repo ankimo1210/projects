@@ -23,13 +23,28 @@ def test_version() -> None:
     assert body["engine"] == "0.2.0"
 
 
+def test_analyze_returns_assumption_score(base_assumptions) -> None:
+    resp = client.post(
+        "/analyze", json={"assumptions": base_assumptions.model_dump(by_alias=True)}
+    )
+    assert resp.status_code == 200, resp.text
+    body = resp.json()
+    assert "assumption_score" in body
+    assert "score" not in body
+    s = body["assumption_score"]
+    assert s["overall_risk"] in ("low", "medium", "high", "unknown")
+    assert len(s["items"]) == 9
+    dcy = body["analysis"]["kpi"]["dead_cross_year"]
+    assert dcy is None or isinstance(dcy, int)
+
+
 def test_sample_analysis() -> None:
     r = client.get("/sample/nishi-shinjuku")
     assert r.status_code == 200
     body = r.json()
     assert "analysis" in body
-    assert "score" in body
-    assert 0 <= body["score"]["total"] <= 100
+    assert "assumption_score" in body
+    assert body["assumption_score"]["overall_risk"] in ("low", "medium", "high", "unknown")
     assert len(body["analysis"]["yearly_cashflows"]) == 10
 
 

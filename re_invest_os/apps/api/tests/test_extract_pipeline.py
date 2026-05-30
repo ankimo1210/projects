@@ -177,4 +177,4 @@ def test_extract_then_analyze(client: TestClient, mock_llm: None) -> None:
     assert r2.status_code == 200, r2.text
     body = r2.json()
     assert body["analysis"]["kpi"]["cap_rate"] > 0
-    assert "total" in body["score"]
+    assert "overall_risk" in body["assumption_score"]
