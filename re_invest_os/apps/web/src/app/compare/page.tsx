@@ -14,7 +14,8 @@ import { Nav } from "@/components/nav";
 interface CompareEntry {
   id: string;
   label: string;
-  score_total: number;
+  overall_risk: string;
+  high_risk_count: number;
   noi_cap: number;
   dscr_y1: number;
   atcf_y1: number;
@@ -35,7 +36,8 @@ function CompareCell({ value, bad, good }: { value: string; bad?: boolean; good?
 }
 
 const ROWS: { label: string; key: keyof CompareEntry; fmt: (v: CompareEntry) => string; bad?: (v: CompareEntry) => boolean; good?: (v: CompareEntry) => boolean }[] = [
-  { label: "Score", key: "score_total", fmt: (v) => v.score_total.toFixed(1), bad: (v) => v.score_total < 50, good: (v) => v.score_total >= 70 },
+  { label: "総合前提リスク", key: "overall_risk", fmt: (v) => v.overall_risk.toUpperCase(), bad: (v) => v.overall_risk === "high", good: (v) => v.overall_risk === "low" },
+  { label: "高リスク前提数", key: "high_risk_count", fmt: (v) => `${v.high_risk_count}`, bad: (v) => v.high_risk_count >= 3, good: (v) => v.high_risk_count === 0 },
   { label: "価格", key: "purchase_price_yen", fmt: (v) => fmtYen(v.purchase_price_yen) },
   { label: "月額賃料", key: "gpi_monthly_yen", fmt: (v) => fmtYen(v.gpi_monthly_yen) },
   { label: "表面利回り", key: "noi_cap", fmt: (v) => fmtPct((v.gpi_monthly_yen * 12) / v.purchase_price_yen) },

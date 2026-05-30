@@ -4,6 +4,117 @@
  */
 
 export interface paths {
+    "/deals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Deals */
+        get: operations["list_deals_deals_get"];
+        put?: never;
+        /** Create Deal */
+        post: operations["create_deal_deals_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/deals/{deal_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Deal */
+        get: operations["get_deal_deals__deal_id__get"];
+        put?: never;
+        post?: never;
+        /** Delete Deal */
+        delete: operations["delete_deal_deals__deal_id__delete"];
+        options?: never;
+        head?: never;
+        /** Patch Deal */
+        patch: operations["patch_deal_deals__deal_id__patch"];
+        trace?: never;
+    };
+    "/deals/{deal_id}/analysis_runs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Analysis Runs */
+        get: operations["list_analysis_runs_deals__deal_id__analysis_runs_get"];
+        put?: never;
+        /**
+         * Create Analysis Run
+         * @description assumptions を受け取り、サーバで full 分析を実行して保存する。
+         */
+        post: operations["create_analysis_run_deals__deal_id__analysis_runs_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/analysis_runs/{run_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Analysis Run */
+        get: operations["get_analysis_run_analysis_runs__run_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/analysis_runs/{run_id}/bid_ranges": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Bid Ranges */
+        get: operations["get_bid_ranges_analysis_runs__run_id__bid_ranges_get"];
+        put?: never;
+        /** Generate Bid Ranges */
+        post: operations["generate_bid_ranges_analysis_runs__run_id__bid_ranges_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/analysis_runs/{run_id}/assumption_risks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Assumption Risks */
+        get: operations["get_assumption_risks_analysis_runs__run_id__assumption_risks_get"];
+        put?: never;
+        /** Generate Assumption Risks */
+        post: operations["generate_assumption_risks_analysis_runs__run_id__assumption_risks_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -275,16 +386,53 @@ export interface components {
             exit: components["schemas"]["ExitResult"];
             kpi: components["schemas"]["KPI"];
         };
+        /** AnalysisRunOut */
+        AnalysisRunOut: {
+            /** Id */
+            id: string;
+            /** Deal Id */
+            deal_id: string;
+            /** Engine Version */
+            engine_version: string;
+            /** Prompt Versions */
+            prompt_versions: {
+                [key: string]: string;
+            } | null;
+            /** Input Snapshot Json */
+            input_snapshot_json: {
+                [key: string]: unknown;
+            };
+            /** Normalized Property Json */
+            normalized_property_json: {
+                [key: string]: unknown;
+            };
+            /** Metrics Json */
+            metrics_json: {
+                [key: string]: unknown;
+            };
+            /** Sensitivity Json */
+            sensitivity_json: {
+                [key: string]: unknown;
+            } | null;
+            /** Max Bid Json */
+            max_bid_json: {
+                [key: string]: unknown;
+            } | null;
+            /** Created At */
+            created_at: string;
+        };
         /** AnalyzeRequest */
         AnalyzeRequest: {
             assumptions: components["schemas"]["Assumptions"];
-            market_context?: components["schemas"]["MarketContext"] | null;
-            data_quality?: components["schemas"]["DataQuality"] | null;
+            /** Normalized Property */
+            normalized_property?: {
+                [key: string]: unknown;
+            } | null;
         };
         /** AnalyzeResponse */
         AnalyzeResponse: {
             analysis: components["schemas"]["AnalysisResult"];
-            score: components["schemas"]["ScoreResult"];
+            assumption_score: components["schemas"]["AssumptionScore"];
         };
         /** AssetBenchmark */
         AssetBenchmark: {
@@ -322,6 +470,81 @@ export interface components {
              */
             note: string;
         };
+        /** AssumptionRisk */
+        AssumptionRisk: {
+            /**
+             * Category
+             * @enum {string}
+             */
+            category: "rent" | "vacancy" | "opex" | "repair" | "interest_rate" | "exit_price" | "tax" | "sale_year" | "acquisition_cost";
+            /**
+             * Confidence
+             * @enum {string}
+             */
+            confidence: "A" | "B" | "C" | "D";
+            /**
+             * Risk Level
+             * @enum {string}
+             */
+            risk_level: "low" | "medium" | "high" | "unknown";
+            /** Reason */
+            reason: string;
+            /** Source */
+            source?: string | null;
+            /** Value Json */
+            value_json?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /** AssumptionRiskOut */
+        AssumptionRiskOut: {
+            /** Id */
+            id: string;
+            /** Category */
+            category: string;
+            /** Confidence */
+            confidence: string;
+            /** Risk Level */
+            risk_level: string;
+            /** Reason */
+            reason: string;
+            /** Source */
+            source: string | null;
+            /** Value Json */
+            value_json: {
+                [key: string]: unknown;
+            } | null;
+            /** Created At */
+            created_at: string;
+        };
+        /** AssumptionRisksGenerateRequest */
+        AssumptionRisksGenerateRequest: {
+            market?: components["schemas"]["MarketBenchmark"] | null;
+        };
+        /** AssumptionRisksListOut */
+        AssumptionRisksListOut: {
+            /** Analysis Run Id */
+            analysis_run_id: string;
+            /** Items */
+            items: components["schemas"]["AssumptionRiskOut"][];
+            /** Summary */
+            summary: string;
+        };
+        /**
+         * AssumptionScore
+         * @description 甘さスコア: 物件評価ではなく、分析前提の信頼度と脆弱性の集約。
+         */
+        AssumptionScore: {
+            /**
+             * Overall Risk
+             * @enum {string}
+             */
+            overall_risk: "low" | "medium" | "high" | "unknown";
+            /** Summary */
+            summary: string;
+            /** Items */
+            items: components["schemas"]["AssumptionRisk"][];
+        };
         /** Assumptions */
         Assumptions: {
             /**
@@ -336,6 +559,38 @@ export interface components {
             tax?: components["schemas"]["TaxAssumptions"];
             exit?: components["schemas"]["ExitAssumptions"];
             acquisition: components["schemas"]["AcquisitionAssumptions"];
+        };
+        /** BidRangesGenerateRequest */
+        BidRangesGenerateRequest: {
+            /** Market */
+            market?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /** BidRangesOut */
+        BidRangesOut: {
+            /** Id */
+            id: string;
+            /** Analysis Run Id */
+            analysis_run_id: string;
+            /** Asking Price Yen */
+            asking_price_yen: number;
+            /** Aggressive Price */
+            aggressive_price: number | null;
+            /** Base Price */
+            base_price: number | null;
+            /** Conservative Price */
+            conservative_price: number | null;
+            /** Gap To Base Price Yen */
+            gap_to_base_price_yen: number | null;
+            /** Gap To Base Price Pct */
+            gap_to_base_price_pct: number | null;
+            /** Explanation */
+            explanation: {
+                [key: string]: unknown;
+            };
+            /** Created At */
+            created_at: string;
         };
         /** Body_post_extract_document_extract_document_post */
         Body_post_extract_document_extract_document_post: {
@@ -368,6 +623,48 @@ export interface components {
             /** Note */
             note: string;
         };
+        /**
+         * CreateAnalysisRunRequest
+         * @description 新規分析実行。
+         *
+         *     assumptions を渡すとサーバ側で run_full_analysis を呼ぶ。
+         *     metrics_json などを直接渡したい場合は precomputed=True にする (テスト・移行用)。
+         */
+        CreateAnalysisRunRequest: {
+            /** Assumptions */
+            assumptions: {
+                [key: string]: unknown;
+            };
+            /** Normalized Property */
+            normalized_property?: {
+                [key: string]: unknown;
+            } | null;
+            /** Prompt Versions */
+            prompt_versions?: {
+                [key: string]: string;
+            } | null;
+            /** Sensitivity Json */
+            sensitivity_json?: {
+                [key: string]: unknown;
+            } | null;
+            /** Max Bid Json */
+            max_bid_json?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /** CreateDealRequest */
+        CreateDealRequest: {
+            /** Title */
+            title: string;
+            /** Source Type */
+            source_type: string;
+            /** Source Url */
+            source_url?: string | null;
+            /** Property Type */
+            property_type?: string | null;
+            /** Status */
+            status?: string | null;
+        };
         /** CritiqueItem */
         CritiqueItem: {
             /** Flag Type */
@@ -385,8 +682,8 @@ export interface components {
             analysis_result: {
                 [key: string]: unknown;
             };
-            /** Score Result */
-            score_result: {
+            /** Assumption Score */
+            assumption_score: {
                 [key: string]: unknown;
             };
             /** Assumptions */
@@ -427,26 +724,28 @@ export interface components {
              */
             disclaimer: string;
         };
-        /**
-         * DataQuality
-         * @description データ信頼度。0.0〜1.0。
-         */
-        DataQuality: {
-            /**
-             * Document Completeness
-             * @default 1
-             */
-            document_completeness: number;
-            /**
-             * Extraction Confidence
-             * @default 1
-             */
-            extraction_confidence: number;
-            /**
-             * User Confirmed
-             * @default false
-             */
-            user_confirmed: boolean;
+        /** DealOut */
+        DealOut: {
+            /** Id */
+            id: string;
+            /** User Id */
+            user_id: string | null;
+            /** Title */
+            title: string;
+            /** Source Type */
+            source_type: string;
+            /** Source Url */
+            source_url: string | null;
+            /** Property Type */
+            property_type: string | null;
+            /** Status */
+            status: string;
+            /** Created At */
+            created_at: string;
+            /** Updated At */
+            updated_at: string;
+            /** Latest Analysis Run Id */
+            latest_analysis_run_id?: string | null;
         };
         /** ExitAssumptions */
         ExitAssumptions: {
@@ -626,6 +925,8 @@ export interface components {
             btcf_first_year_yen: number;
             /** Atcf First Year Yen */
             atcf_first_year_yen: number;
+            /** Dead Cross Year */
+            dead_cross_year?: number | null;
         };
         /** LoanAssumptions */
         LoanAssumptions: {
@@ -661,18 +962,22 @@ export interface components {
             balance_yen: number;
         };
         /**
-         * MarketContext
-         * @description 市場コンテキスト (近傍取引・公示地価から算出)。MVPでは外部入力。
+         * MarketBenchmark
+         * @description 相場ベンチマーク (任意)。
+         *
+         *     値が None のフィールドはスキップ。
          */
-        MarketContext: {
-            /** Market Cap Rate */
-            market_cap_rate?: number | null;
-            /** Market Rent Per Sqm Yen */
-            market_rent_per_sqm_yen?: number | null;
-            /** Property Rent Per Sqm Yen */
-            property_rent_per_sqm_yen?: number | null;
-            /** Appraisal Price Yen */
-            appraisal_price_yen?: number | null;
+        MarketBenchmark: {
+            /** Rent Per Sqm Monthly P25 */
+            rent_per_sqm_monthly_p25?: number | null;
+            /** Rent Per Sqm Monthly P50 */
+            rent_per_sqm_monthly_p50?: number | null;
+            /** Rent Per Sqm Monthly P75 */
+            rent_per_sqm_monthly_p75?: number | null;
+            /** Area Vacancy Rate P50 */
+            area_vacancy_rate_p50?: number | null;
+            /** Market Cap Rate P50 */
+            market_cap_rate_p50?: number | null;
         };
         /** MaxOfferRequest */
         MaxOfferRequest: {
@@ -733,6 +1038,17 @@ export interface components {
              * @default 0.005
              */
             opex_growth_rate: number;
+        };
+        /** PatchDealRequest */
+        PatchDealRequest: {
+            /** Title */
+            title?: string | null;
+            /** Status */
+            status?: string | null;
+            /** Property Type */
+            property_type?: string | null;
+            /** Source Url */
+            source_url?: string | null;
         };
         /** PropertyAssumptions */
         PropertyAssumptions: {
@@ -846,8 +1162,8 @@ export interface components {
             analysis_result: {
                 [key: string]: unknown;
             };
-            /** Score Result */
-            score_result: {
+            /** Assumption Score */
+            assumption_score: {
                 [key: string]: unknown;
             };
             /** Pii Redactions */
@@ -883,26 +1199,6 @@ export interface components {
              */
             judgment: "good" | "warn" | "bad";
         };
-        /** ScoreComponent */
-        ScoreComponent: {
-            /** Name */
-            name: string;
-            /** Score */
-            score: number;
-            /** Max Score */
-            max_score: number;
-            /** Detail */
-            detail: string;
-        };
-        /** ScoreResult */
-        ScoreResult: {
-            /** Total */
-            total: number;
-            /** Components */
-            components: components["schemas"]["ScoreComponent"][];
-            /** Evaluation */
-            evaluation: string;
-        };
         /** SensitivityRequest */
         SensitivityRequest: {
             assumptions: components["schemas"]["Assumptions"];
@@ -919,8 +1215,8 @@ export interface components {
             analysis_result: {
                 [key: string]: unknown;
             };
-            /** Score Result */
-            score_result: {
+            /** Assumption Score */
+            assumption_score: {
                 [key: string]: unknown;
             };
             /** Needs Confirmation */
@@ -1022,6 +1318,401 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    list_deals_deals_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                status?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_deal_deals_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateDealRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DealOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_deal_deals__deal_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                deal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DealOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_deal_deals__deal_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                deal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    patch_deal_deals__deal_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                deal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PatchDealRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DealOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_analysis_runs_deals__deal_id__analysis_runs_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                deal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_analysis_run_deals__deal_id__analysis_runs_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                deal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateAnalysisRunRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnalysisRunOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_analysis_run_analysis_runs__run_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnalysisRunOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_bid_ranges_analysis_runs__run_id__bid_ranges_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BidRangesOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    generate_bid_ranges_analysis_runs__run_id__bid_ranges_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["BidRangesGenerateRequest"] | null;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BidRangesOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_assumption_risks_analysis_runs__run_id__assumption_risks_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssumptionRisksListOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    generate_assumption_risks_analysis_runs__run_id__assumption_risks_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["AssumptionRisksGenerateRequest"] | null;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssumptionRisksListOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     health_health_get: {
         parameters: {
             query?: never;

@@ -16,9 +16,8 @@ interface RunMetrics {
       payback_years?: number | null;
     };
   };
-  score?: {
-    total?: number;
-    evaluation?: string;
+  assumption_score?: {
+    overall_risk?: string;
   };
 }
 
@@ -41,11 +40,11 @@ function num(n: number | null | undefined, digits = 2): string {
 
 export function DealSummaryCard({ metrics }: { metrics: RunMetrics | null }) {
   const kpi = metrics?.analysis?.kpi ?? {};
-  const score = metrics?.score ?? {};
+  const overallRisk = metrics?.assumption_score?.overall_risk ?? "";
   return (
-    <Panel title="SUMMARY · KPI" meta={score.evaluation ?? ""}>
+    <Panel title="SUMMARY · KPI" meta={overallRisk.toUpperCase()}>
       <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y divide-[var(--border)]">
-        <KpiCell name="SCORE" value={num(score.total, 1)} />
+        <KpiCell name="OVERALL RISK" value={overallRisk ? overallRisk.toUpperCase() : "—"} />
         <KpiCell name="CAP RATE" value={pct(kpi.cap_rate)} />
         <KpiCell name="DSCR Y1" value={num(kpi.dscr_year1)} />
         <KpiCell name="DSCR MIN" value={num(kpi.dscr_min)} />

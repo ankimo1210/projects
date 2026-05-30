@@ -70,7 +70,7 @@ export default function ReportPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           analysis_result: parsed.analysis,
-          score_result: parsed.score,
+          assumption_score: parsed.assumption_score,
           needs_confirmation: extraction?.meta?.needs_confirmation ?? [],
         }),
       })
@@ -85,7 +85,7 @@ export default function ReportPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           analysis_result: parsed.analysis,
-          score_result: parsed.score,
+          assumption_score: parsed.assumption_score,
           assumptions: parsed.analysis.assumptions,
         }),
       })
@@ -146,7 +146,7 @@ export default function ReportPage() {
             extracted: extraction?.extracted ?? null,
             assumptions,
             analysis_result: parsed.analysis,
-            score_result: parsed.score,
+            assumption_score: parsed.assumption_score,
             pii_redactions: extraction?.meta?.pii_redactions ?? {},
             warnings: extraction?.meta?.warnings ?? [],
           }),
@@ -207,7 +207,10 @@ export default function ReportPage() {
               const entry = {
                 id: savedId ?? Date.now().toString(),
                 label: `¥${(prop.purchase_price_yen / 10000).toFixed(0)}万 ${prop.structure.toUpperCase()}`,
-                score_total: data.score.total,
+                overall_risk: data.assumption_score.overall_risk,
+                high_risk_count: data.assumption_score.items.filter(
+                  (i) => i.risk_level === "high",
+                ).length,
                 noi_cap: kpi.cap_rate,
                 dscr_y1: kpi.dscr_year1,
                 atcf_y1: kpi.atcf_first_year_yen,

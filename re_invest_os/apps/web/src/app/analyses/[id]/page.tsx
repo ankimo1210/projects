@@ -24,7 +24,7 @@ const API_BASE = process.env.API_BASE ?? "http://127.0.0.1:8001";
 
 async function fetchAnalysis(id: string): Promise<{
   analysis_result: AnalyzeResponse["analysis"];
-  score_result: AnalyzeResponse["score"];
+  score_result: AnalyzeResponse["assumption_score"];
   source_type: string;
   created_at: string;
 } | null> {
@@ -60,7 +60,7 @@ export default async function SharedReportPage({
 
   const data: AnalyzeResponse = {
     analysis: record.analysis_result,
-    score: record.score_result,
+    assumption_score: record.score_result,
   };
   const createdAt = new Date(record.created_at).toLocaleString("ja-JP", {
     timeZone: "Asia/Tokyo",

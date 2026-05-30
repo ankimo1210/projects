@@ -12,7 +12,7 @@ interface HistoryItem {
   created_at: string;
   source_type: string;
   source_ref: string | null;
-  score_total: number;
+  high_risk_count: number;
   noi_cap: number | null;
   dscr_y1: number | null;
   atcf_y1: number | null;
@@ -30,16 +30,12 @@ async function fetchHistory(): Promise<HistoryItem[]> {
   }
 }
 
-function ScoreBadge({ score }: { score: number }) {
-  const level = score >= 70 ? "good" : score >= 50 ? "warn" : "bad";
+function HighRiskBadge({ count }: { count: number }) {
   const color =
-    level === "good" ? "var(--good)" : level === "warn" ? "var(--warn)" : "var(--bad)";
+    count === 0 ? "var(--good)" : count <= 2 ? "var(--warn)" : "var(--bad)";
   return (
-    <span
-      className="font-mono font-bold tabular-nums"
-      style={{ color }}
-    >
-      {score.toFixed(1)}
+    <span className="font-mono font-bold tabular-nums" style={{ color }}>
+      {count}
     </span>
   );
 }
@@ -73,7 +69,7 @@ export default async function HistoryPage() {
                 <tr className="bg-[var(--surface-alt)] text-[var(--accent)] text-[9px] uppercase tracking-widest">
                   <th className="text-left px-3 py-2">日時</th>
                   <th className="text-left px-3 py-2">物件 / ソース</th>
-                  <th className="text-right px-3 py-2">Score</th>
+                  <th className="text-right px-3 py-2">高リスク前提</th>
                   <th className="text-right px-3 py-2">NOI Cap</th>
                   <th className="text-right px-3 py-2">DSCR Y1</th>
                   <th className="text-right px-3 py-2">ATCF Y1</th>
@@ -103,7 +99,7 @@ export default async function HistoryPage() {
                       )}
                     </td>
                     <td className="px-3 py-2 text-right">
-                      <ScoreBadge score={item.score_total} />
+                      <HighRiskBadge count={item.high_risk_count} />
                     </td>
                     <td className="px-3 py-2 text-right text-[var(--text-muted)]">
                       {item.noi_cap != null ? `${(item.noi_cap * 100).toFixed(2)}%` : "—"}

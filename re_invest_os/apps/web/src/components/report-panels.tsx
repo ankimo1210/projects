@@ -153,24 +153,37 @@ export function KpiPanel({ data }: { data: AnalyzeResponse }) {
   );
 }
 
+const RISK_LABEL_JP: Record<string, string> = {
+  low: "低", medium: "中", high: "高", unknown: "不明",
+};
+const RISK_LEVEL_UI: Record<string, "good" | "warn" | "bad"> = {
+  low: "good", medium: "warn", high: "bad", unknown: "warn",
+};
+function riskColor(level: string): string {
+  return level === "high"
+    ? "var(--bad)"
+    : level === "medium"
+      ? "var(--warn)"
+      : level === "low"
+        ? "var(--good)"
+        : "var(--text-muted)";
+}
+
 export function ScorePanel({ data }: { data: AnalyzeResponse }) {
-  const s = data.score;
-  const color =
-    s.total >= 70 ? "var(--good)" : s.total >= 50 ? "var(--warn)" : "var(--bad)";
-  const level: "good" | "warn" | "bad" =
-    s.total >= 70 ? "good" : s.total >= 50 ? "warn" : "bad";
+  const s = data.assumption_score;
+  const level = RISK_LEVEL_UI[s.overall_risk] ?? "warn";
   return (
-    <Panel className="col-span-3" title="[ SCORE ]">
+    <Panel className="col-span-3" title="[ ASSUMPTION RISK ] 前提リスク">
       <div className="p-6 text-center">
         <div
-          className="text-[56px] font-mono font-bold leading-none tracking-tight tabular-nums"
-          style={{ color }}
+          className="text-[40px] font-mono font-bold leading-none tracking-tight uppercase"
+          style={{ color: riskColor(s.overall_risk) }}
         >
-          {s.total.toFixed(1)}
+          {s.overall_risk}
         </div>
-        <div className="text-[11px] text-[var(--text-muted)] mt-1">/ 100</div>
+        <div className="text-[11px] text-[var(--text-muted)] mt-1">総合前提リスク</div>
         <div className="mt-2">
-          <Badge level={level}>{s.evaluation}</Badge>
+          <Badge level={level}>{RISK_LABEL_JP[s.overall_risk] ?? s.overall_risk}</Badge>
         </div>
         <div className="text-[9px] text-[var(--text-subtle)] mt-3 leading-relaxed">
           前提リスクの検証結果です。投資判断ではありません。前提を変えれば変動します。
@@ -254,41 +267,30 @@ export function ExitPanel({ data }: { data: AnalyzeResponse }) {
 
 export function ScoreComponentPanel({ data }: { data: AnalyzeResponse }) {
   return (
-    <Panel className="col-span-12" title="[ SCORE BREAKDOWN ]">
+    <Panel className="col-span-12" title="[ ASSUMPTION RISK ] BREAKDOWN">
       <table className="w-full text-[11px]">
         <thead>
           <tr className="bg-[var(--surface-alt)] text-[var(--accent)] text-[9px] uppercase tracking-widest font-mono">
-            <th className="text-left px-3 py-2">COMPONENT</th>
-            <th className="text-right px-3 py-2">SCORE</th>
-            <th className="text-right px-3 py-2">MAX</th>
-            <th className="text-left px-3 py-2">DETAIL</th>
+            <th className="text-left px-3 py-2">CATEGORY</th>
+            <th className="text-center px-3 py-2">CONF</th>
+            <th className="text-center px-3 py-2">RISK</th>
+            <th className="text-left px-3 py-2">理由</th>
           </tr>
         </thead>
         <tbody>
-          {data.score.components.map((c) => {
-            const ratio = c.score / c.max_score;
-            const color =
-              ratio >= 0.7
-                ? "var(--good)"
-                : ratio >= 0.4
-                  ? "var(--warn)"
-                  : "var(--bad)";
-            return (
-              <tr key={c.name} className="border-t border-[var(--border)]">
-                <td className="px-3 py-1.5 font-mono uppercase">{c.name}</td>
-                <td
-                  className="text-right px-3 py-1.5 font-mono tabular-nums font-bold"
-                  style={{ color }}
-                >
-                  {c.score.toFixed(1)}
-                </td>
-                <td className="text-right px-3 py-1.5 font-mono tabular-nums text-[var(--text-muted)]">
-                  {c.max_score.toFixed(0)}
-                </td>
-                <td className="px-3 py-1.5 text-[var(--text-muted)]">{c.detail}</td>
-              </tr>
-            );
-          })}
+          {data.assumption_score.items.map((it) => (
+            <tr key={it.category} className="border-t border-[var(--border)]">
+              <td className="px-3 py-1.5 font-mono uppercase">{it.category}</td>
+              <td className="text-center px-3 py-1.5 font-mono">{it.confidence}</td>
+              <td
+                className="text-center px-3 py-1.5 font-mono font-bold uppercase"
+                style={{ color: riskColor(it.risk_level) }}
+              >
+                {it.risk_level}
+              </td>
+              <td className="px-3 py-1.5 text-[var(--text-muted)]">{it.reason}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </Panel>
