@@ -170,6 +170,7 @@ class KPI(BaseModel):
     payback_years: float | None  # 自己資金回収年数
     btcf_first_year_yen: int
     atcf_first_year_yen: int
+    dead_cross_year: int | None  # 減価償却 < 元金返済 となる初年度 (engine 0.2.0+)
 
 class AnalysisResult(BaseModel):
     engine_version: str
@@ -284,9 +285,17 @@ def cap_rate(noi: int, purchase_price: int) -> float
 def cash_on_cash(btcf_year1: int, equity: int) -> float
 ```
 
-### 5.6 100点スコア (score.py)
+### 5.6 100点スコア (score.py) — ❌ 撤去済み (2026-05-30 MVP再定義)
 
-配点 (青写真8.1):
+> **REMOVED:** `score.py`（100点・健全/中立/要警戒）は MVP 再定義で撤去された。
+> 価値判断ラベル（健全/要警戒）は新方針（中立DDエンジン）に反するため。
+> 代わりに **甘さスコア**（`apps/api/src/api/services/risk_engine.py` の
+> `assess_assumption_score` → `AssumptionScore{overall_risk, summary, items}`）を中核に据える。
+> 甘さスコアは物件評価ではなく、項目別の前提 confidence(A–D) と risk_level(low/medium/high/unknown)。
+> 詳細: `docs/design/2026-05-30-mvp-redefinition-design.md` (Spec 1)。
+> 以下の旧配点表は履歴として残す。
+
+配点 (青写真8.1, 旧仕様):
 
 | 項目 | 配点 | 計算ロジック |
 |---|---:|---|

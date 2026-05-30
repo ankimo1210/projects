@@ -4,15 +4,14 @@ from __future__ import annotations
 
 import copy
 
-from re_engine.analyze import run_full_analysis
-from re_engine.models import Assumptions
-from re_engine.normalized import NormalizedProperty
-
 from api.services.risk_engine import (
     AssumptionScore,
     aggregate_overall_risk,
     assess_assumption_score,
 )
+from re_engine.analyze import run_full_analysis
+from re_engine.models import Assumptions
+from re_engine.normalized import NormalizedProperty
 
 
 def _score(assumptions: Assumptions) -> AssumptionScore:
