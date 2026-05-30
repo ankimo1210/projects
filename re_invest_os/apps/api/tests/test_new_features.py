@@ -269,3 +269,48 @@ def test_history_endpoint(monkeypatch):
     assert "count" in body
     assert isinstance(body["items"], list)
     assert body["count"] == 0  # 空 DB
+
+
+def test_save_analysis_with_assumption_score(monkeypatch):
+    """POST /analyses が assumption_score を受け取り、high_risk_count を保存する。"""
+    import asyncio
+
+    import api.db as db_module
+
+    test_engine = db_module._build_engine("sqlite+aiosqlite:///:memory:")
+    monkeypatch.setattr(db_module, "_engine", test_engine)
+    monkeypatch.setattr(db_module, "_Session", None)
+    asyncio.run(db_module.init_db())
+
+    c = TestClient(app)
+    payload = {
+        "assumptions": {"property": {"purchase_price_yen": 39_800_000}},
+        "analysis_result": {
+            "kpi": {
+                "cap_rate": 0.03, "dscr_year1": 0.96,
+                "atcf_first_year_yen": -45_000, "equity_irr": 0.05,
+            }
+        },
+        "assumption_score": {
+            "overall_risk": "high",
+            "summary": "x",
+            "items": [
+                {"category": "rent", "confidence": "C", "risk_level": "high",
+                 "reason": "r", "source": None, "value_json": None},
+                {"category": "opex", "confidence": "D", "risk_level": "medium",
+                 "reason": "r", "source": None, "value_json": None},
+            ],
+        },
+    }
+    r = c.post("/analyses", json=payload)
+    assert r.status_code == 201, r.text
+    analysis_id = r.json()["id"]
+
+    r2 = c.get(f"/analyses/{analysis_id}")
+    assert r2.status_code == 200
+    data = r2.json()
+    assert data["score_result"]["overall_risk"] == "high"
+    assert data["score_total"] == 1.0  # high-risk item は1件
+
+    r3 = c.get("/analyses?limit=5")
+    assert r3.json()["items"][0]["high_risk_count"] == 1.0

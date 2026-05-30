@@ -419,7 +419,7 @@ class SaveAnalysisRequest(BaseModel):
     extracted: dict | None = None
     assumptions: dict
     analysis_result: dict
-    score_result: dict
+    assumption_score: dict
     pii_redactions: dict[str, int] = Field(default_factory=dict)
     warnings: list[str] = Field(default_factory=list)
     model_config = ConfigDict(extra="forbid")
@@ -432,7 +432,10 @@ class SaveAnalysisResponse(BaseModel):
 
 @app.post("/analyses", response_model=SaveAnalysisResponse, status_code=201)
 async def post_save_analysis(req: SaveAnalysisRequest) -> SaveAnalysisResponse:
-    score = req.score_result.get("total", 0.0)
+    # 物件スコアは廃止。score_total カラムは high リスク前提の件数で再利用する
+    # (DB マイグレーションを避けつつ価値判断ラベルを排除)。
+    items = req.assumption_score.get("items", [])
+    high_count = float(sum(1 for i in items if i.get("risk_level") == "high"))
     kpi = req.analysis_result.get("kpi", {})
     analysis_id = await save_analysis(
         source_type=req.source_type,
@@ -442,8 +445,8 @@ async def post_save_analysis(req: SaveAnalysisRequest) -> SaveAnalysisResponse:
         extracted=req.extracted,
         assumptions=req.assumptions,
         analysis_result=req.analysis_result,
-        score_total=float(score),
-        score_result=req.score_result,
+        score_total=high_count,
+        score_result=req.assumption_score,
         noi_cap=kpi.get("cap_rate"),
         dscr_y1=kpi.get("dscr_year1"),
         atcf_y1=kpi.get("atcf_first_year_yen"),
@@ -603,7 +606,7 @@ async def list_analyses(limit: int = 20) -> dict:
                 "created_at": r.created_at.isoformat(),
                 "source_type": r.source_type,
                 "source_ref": r.source_ref,
-                "score_total": r.score_total,
+                "high_risk_count": r.score_total,
                 "noi_cap": r.noi_cap,
                 "dscr_y1": r.dscr_y1,
                 "atcf_y1": r.atcf_y1,
