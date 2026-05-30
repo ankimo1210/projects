@@ -178,7 +178,7 @@ function ScorePanel({ data }: { data: AnalyzeResponse }) {
           <Badge level={level}>{s.evaluation}</Badge>
         </div>
         <div className="text-[9px] text-[var(--text-subtle)] mt-3 leading-relaxed">
-          分析上の健全性スコア。買い推奨ではありません。前提を変えれば変動します。
+          前提リスクの検証結果です。投資判断ではありません。前提を変えれば変動します。
         </div>
       </div>
     </Panel>
