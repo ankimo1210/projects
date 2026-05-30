@@ -4,7 +4,7 @@
 仕様: docs/architecture/calculation_engine_spec.md
 """
 
-ENGINE_VERSION = "0.1.0"
+ENGINE_VERSION = "0.2.0"
 
 from re_engine import constants, models  # noqa: E402
 

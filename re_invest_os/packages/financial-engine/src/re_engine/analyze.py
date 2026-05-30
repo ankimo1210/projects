@@ -18,7 +18,19 @@ from re_engine.irr import (
     payback_years,
 )
 from re_engine.loan import amortized_schedule
-from re_engine.models import KPI, AnalysisResult, Assumptions
+from re_engine.models import KPI, AnalysisResult, Assumptions, YearlyCashflow
+
+
+def first_dead_cross_year(cashflows: list[YearlyCashflow]) -> int | None:
+    """初めて減価償却 < 元金返済 となる年（デッドクロス）。無ければ None。
+
+    減価償却（非現金の損金）が元金返済（現金流出・非損金）を下回る転換点。
+    帳簿黒字でも課税所得が膨らみキャッシュが痩せる「黒字倒産」リスクの起点。
+    """
+    for cf in cashflows:
+        if cf.depreciation_yen < cf.principal_payment_yen:
+            return cf.year
+    return None
 
 
 def _equity_invested(a: Assumptions) -> int:
@@ -66,6 +78,7 @@ def run_full_analysis(a: Assumptions) -> AnalysisResult:
         payback_years=payback,
         btcf_first_year_yen=cfs[0].btcf_yen,
         atcf_first_year_yen=cfs[0].atcf_yen,
+        dead_cross_year=first_dead_cross_year(cfs),
     )
 
     return AnalysisResult(

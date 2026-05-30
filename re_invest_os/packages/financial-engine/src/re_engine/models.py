@@ -141,6 +141,7 @@ class KPI(_Base):
     payback_years: float | None
     btcf_first_year_yen: int
     atcf_first_year_yen: int
+    dead_cross_year: int | None = None
 
 
 class AnalysisResult(_Base):
