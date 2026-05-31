@@ -76,3 +76,19 @@ cargo test --manifest-path gto/Cargo.toml
 - **Do not delete** `_data/gto/solutions/` Parquet without explicit user
   request — regenerating the full library takes ~24 minutes on GPU.
 - **`gto/web/node_modules/`** is large; never grep into it.
+
+## Algorithm Implementation Protocol
+
+For any non-trivial algorithm (CFR, search, ML inference, GPU kernels, etc.):
+
+1. **Reference first** — find a known-correct version (paper, OSS, textbook) and match
+   its structure before introducing optimizations.
+2. **Small known cases** — test against hand-computable inputs (e.g., Kuhn poker for CFR)
+   before scaling to production size.
+3. **Property tests** — verify invariants that must hold (zero-sum, monotonic convergence,
+   probability sums = 1).
+4. **Differential testing** — if multiple implementations exist (CPU, GPU, reference), they
+   must agree on shared inputs. Catch divergence early; don't stack features on an
+   unvalidated base.
+5. **Optimization comes last** — only after correctness is proven. Premature GPU/SIMD/
+   parallelization hides bugs.

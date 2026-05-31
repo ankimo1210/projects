@@ -70,3 +70,19 @@ uv run --no-sync pytest
 - Integrator: leapfrog (symplectic, energy-stable for circular orbits).
 - Default production kernel: `forces.compute_acceleration` (direct). BH path
   (`forces_bh.compute_acceleration_bh`) is correct but not yet competitive.
+
+## Algorithm Implementation Protocol
+
+For any non-trivial algorithm (force kernels, tree builds, integrators, etc.):
+
+1. **Reference first** — find a known-correct version (paper, OSS, textbook) and match
+   its structure before introducing optimizations.
+2. **Small known cases** — test against analytically solvable setups (e.g., two-body
+   circular orbit, Kepler period) before scaling to large N.
+3. **Property tests** — verify invariants that must hold (energy/momentum conservation,
+   leapfrog time-reversibility, Morton-code ordering).
+4. **Differential testing** — if multiple implementations exist (direct O(N²) vs Barnes-Hut,
+   CPU vs GPU), they must agree on shared inputs. Catch divergence early; don't stack
+   features on an unvalidated base.
+5. **Optimization comes last** — only after correctness is proven. Premature GPU/SIMD/
+   parallelization hides bugs.
