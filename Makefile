@@ -2,9 +2,11 @@
 #
 # Most Python work runs inside a single uv workspace at the repo root
 # (members: gto, market-viz, stock, nbody-gpu, line_backup,
-#  re_invest_os/apps/api, re_invest_os/packages/financial-engine).
+#  land_price_api_app, re_invest_os/apps/api,
+#  re_invest_os/packages/financial-engine).
 #
-# `land_price_api_app/` uses requirements.txt — not part of the uv workspace.
+# `land_price_api_app/` keeps requirements.txt for legacy reference, but
+# pyproject.toml is canonical and it is a uv workspace member.
 # `johnhull/`, `rates_volatility_model/`, `notebooks/` have no managed env.
 
 .PHONY: help install sync lint fmt fmt-fix test clean tree
@@ -21,11 +23,10 @@ help:
 	@echo "  make tree     - print a project tree (depth 2, ignoring heavy dirs)"
 	@echo ""
 	@echo "Workspace members:"
-	@echo "  gto market-viz stock nbody-gpu line_backup"
+	@echo "  gto market-viz stock nbody-gpu line_backup land_price_api_app"
 	@echo "  re_invest_os/apps/api re_invest_os/packages/financial-engine"
 	@echo ""
 	@echo "Outside the workspace:"
-	@echo "  land_price_api_app (requirements.txt)"
 	@echo "  johnhull, rates_volatility_model, notebooks (manual envs)"
 
 install sync:

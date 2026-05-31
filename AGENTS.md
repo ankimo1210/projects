@@ -37,10 +37,14 @@ Each project has its own `README.md` and (in some cases) its own `CLAUDE.md` /
 - `_archive/`
 - `_scratch/`
 - `reports/`
+- `tmp/`
 - `*.duckdb`
 - `*.parquet`
 - `*.geojson`
 - `*.csv`
+- `*.xlsx`
+- `*.pdf`
+- `*.log`
 - `*.ipynb` unless explicitly requested
 - `venv/`
 - `.venv/`

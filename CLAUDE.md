@@ -44,6 +44,15 @@ Research / notebooks:
 Each project has its own `README.md` and sometimes its own `CLAUDE.md` /
 `AGENTS.md` — prefer those over the workspace root for project-specific work.
 
+### Shared Tooling
+
+- Python uses a single uv workspace rooted at `~/projects/`. Members are
+  listed in the root `pyproject.toml` (`[tool.uv.workspace]`).
+- Workspace-wide make targets (run from the repo root): `make install`
+  (= `uv sync --all-packages`), `make lint`, `make fmt` / `make fmt-fix`,
+  `make test`, `make clean`, `make tree`. `make help` lists them.
+- Cross-project recipes / worklogs live in `_docs/`.
+
 ## Token And Context Budget Policy
 
 Before substantial work:
@@ -158,6 +167,9 @@ For any non-trivial algorithm (CFR, search, ML inference, etc.):
 - `*.xlsx`
 - `*.pdf`
 - `*.log`
+- `*.ipynb` unless explicitly requested
 - `venv/`
 - `.venv/`
+- `node_modules/`
+- `target/` (Rust build output)
 - `__pycache__/`
