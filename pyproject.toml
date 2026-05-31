@@ -22,15 +22,17 @@ members = [
     "re_invest_os/packages/financial-engine",
 ]
 
-# PyTorch CUDA 12.6 — used by `gto`. Defined here so all workspace members
-# resolve the same `torch` build.
+# PyTorch CUDA 12.8 — used by `gto`. Defined here so all workspace members
+# resolve the same `torch` build. CUDA 12.8 is required for RTX 5080 / Blackwell
+# (sm_120): the cu126 build only ships kernels up to sm_90, and its bundled
+# nvrtc 12.6 cannot JIT sm_120 (CuPy hit CUDA_ERROR_NO_BINARY_FOR_GPU).
 [tool.uv.sources]
-torch = { index = "pytorch-cu126" }
+torch = { index = "pytorch-cu128" }
 re-engine = { workspace = true }
 
 [[tool.uv.index]]
-name = "pytorch-cu126"
-url = "https://download.pytorch.org/whl/cu126"
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
 explicit = true
 
 # Shared dev tooling — installed for every member by default.
