@@ -716,3 +716,82 @@ export function CrossAssetPanel({
     </Panel>
   );
 }
+
+// ===== Market Context（国交省 実取引データ） =====
+export type MarketResponse = {
+  available: boolean;
+  snapshot: {
+    period: string | null;
+    trade: {
+      median_yen_per_sqm: number | null;
+      p25_yen_per_sqm: number | null;
+      p75_yen_per_sqm: number | null;
+      sample_count: number;
+    } | null;
+    source: string;
+    fetched_at: string;
+  } | null;
+  property_yen_per_sqm: number | null;
+  deviation_vs_median_pct: number | null;
+};
+
+export function MarketContextPanel({
+  data,
+  loading,
+}: {
+  data: MarketResponse | null;
+  loading: boolean;
+}) {
+  if (loading) {
+    return (
+      <Panel className="col-span-6" title="[ MARKET ] 市場相場照合（国交省 実取引）">
+        <div className="p-4 text-[11px] text-[var(--text-muted)] font-mono animate-pulse">
+          実取引データ取得中…
+        </div>
+      </Panel>
+    );
+  }
+  if (!data) return null;
+  const t = data.snapshot?.trade;
+  if (!data.available || !t || t.median_yen_per_sqm == null) {
+    return (
+      <Panel className="col-span-6" title="[ MARKET ] 市場相場照合（国交省 実取引）">
+        <div className="p-4 text-[10px] text-[var(--text-muted)] leading-relaxed">
+          該当エリアの公的取引データを取得できませんでした（APIキー未設定 / 対象データ無し）。
+        </div>
+      </Panel>
+    );
+  }
+  const dev = data.deviation_vs_median_pct;
+  return (
+    <Panel className="col-span-6" title="[ MARKET ] 市場相場照合（国交省 実取引）">
+      <div className="p-4 text-[11px] space-y-1">
+        <Row
+          label={`エリア中央値 (実取引 ${t.sample_count}件)`}
+          value={`${fmtYen(t.median_yen_per_sqm)}/㎡`}
+        />
+        <Row
+          label="エリア p25 / p75"
+          value={`${fmtYen(t.p25_yen_per_sqm ?? 0)} / ${fmtYen(t.p75_yen_per_sqm ?? 0)}`}
+        />
+        {data.property_yen_per_sqm != null && (
+          <Row label="本物件 単価" value={`${fmtYen(data.property_yen_per_sqm)}/㎡`} />
+        )}
+        {dev != null && (
+          <Row
+            label="相場乖離"
+            value={`${dev > 0 ? "+" : ""}${dev.toFixed(1)}%`}
+            severity={dev > 10 ? "bad" : dev < -10 ? "good" : undefined}
+          />
+        )}
+        <div className="border-t border-[var(--border)] my-2" />
+        <div className="text-[9px] text-[var(--text-subtle)] leading-relaxed">
+          出所: {data.snapshot?.source}（{data.snapshot?.period}） / 取得{" "}
+          {data.snapshot?.fetched_at
+            ? new Date(data.snapshot.fetched_at).toLocaleDateString("ja-JP")
+            : "—"}
+        </div>
+      </div>
+    </Panel>
+  );
+}

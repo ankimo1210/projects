@@ -18,6 +18,7 @@ import {
   ExitPanel,
   FindingsPanel,
   KpiPanel,
+  MarketContextPanel,
   MaxOfferPanel,
   PropertyPanel,
   QuestionsPanel,
@@ -27,6 +28,7 @@ import {
 } from "@/components/report-panels";
 import type {
   CrossAssetResult,
+  MarketResponse,
   MaxOfferResult,
   SensitivityResult,
 } from "@/components/report-panels";
@@ -49,6 +51,8 @@ export default function ReportPage() {
   const [maxOfferLoading, setMaxOfferLoading] = useState(false);
   const [crossAssetData, setCrossAssetData] = useState<CrossAssetResult | null>(null);
   const [crossAssetLoading, setCrossAssetLoading] = useState(false);
+  const [marketData, setMarketData] = useState<MarketResponse | null>(null);
+  const [marketLoading, setMarketLoading] = useState(false);
   const saveAttempted = useRef(false);
 
   useEffect(() => {
@@ -116,6 +120,26 @@ export default function ReportPage() {
         .then((j) => { if (j.current_price_yen !== undefined) setMaxOfferData(j); })
         .catch(() => {})
         .finally(() => setMaxOfferLoading(false));
+
+      // 市場相場照合: 国交省 実取引 (バックグラウンド)
+      {
+        const prop = parsed.analysis.assumptions.property;
+        setMarketLoading(true);
+        fetch("/api/market", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            pref_code: prop.location_pref,
+            city_name: prop.location_city ?? null,
+            property_price_yen: prop.purchase_price_yen,
+            property_area_sqm: prop.building_area_sqm,
+          }),
+        })
+          .then((r) => r.json())
+          .then((j) => { if (j.available !== undefined) setMarketData(j); })
+          .catch(() => {})
+          .finally(() => setMarketLoading(false));
+      }
 
       // クロスアセット比較 (バックグラウンド)
       setCrossAssetLoading(true);
@@ -311,7 +335,8 @@ export default function ReportPage() {
         {!aiData && !aiLoading && <QuestionsPanel data={data} />}
         {/* ストレス（崩れ方） */}
         <SensitivityPanel data={sensitivityData} loading={sensitivityLoading} />
-        {/* 収支耐性価格帯 + クロスアセット比較 */}
+        {/* 市場相場照合（国交省 実取引）+ 収支耐性価格帯 + クロスアセット比較 */}
+        <MarketContextPanel data={marketData} loading={marketLoading} />
         <MaxOfferPanel data={maxOfferData} loading={maxOfferLoading} />
         <CrossAssetPanel data={crossAssetData} loading={crossAssetLoading} />
       </main>

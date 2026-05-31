@@ -23,7 +23,10 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-load_dotenv(Path(__file__).resolve().parents[3] / ".env", override=False)
+# .env を両所からロード: apps/api/.env (キーの正規置き場) と apps/.env (旧)。
+_main_path = Path(__file__).resolve()
+load_dotenv(_main_path.parents[2] / ".env", override=False)  # apps/api/.env
+load_dotenv(_main_path.parents[3] / ".env", override=False)  # apps/.env (legacy)
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
