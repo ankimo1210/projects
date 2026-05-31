@@ -337,22 +337,29 @@ def max_offer_price(
 - 制約ごとに「どれが効いたか」を返す (`binding_constraints: list[str]`)
 - 安全価格 = 最大価格 - 5% (バッファ)
 
-### 5.8 感応度 (sensitivity.py)
+### 5.8 ストレス（崩れ方） (sensitivity.py) — MVP §8 固定7 (2026-05-31)
 
 ```python
-def sensitivity_grid(base: Assumptions, scenarios: list[Scenario]) -> SensitivityResult
+def sensitivity_grid(a: Assumptions) -> SensitivityResult   # base + STRESS_SCENARIOS
 ```
 
-固定シナリオセット (青写真8.4):
-- rent_drop: -5%, -10%
-- vacancy_up: +5pt, +10pt
-- rate_up: +0.5pt, +1.0pt
-- opex_up: x1.5, x2.0
-- exit_cap_up: +0.25pt, +0.5pt
-- exit_price_drop: -5%, -10%
-- combined: rent-5% + vacancy+5pt + rate+0.5pt
+**固定7シナリオ** (MVP §8。旧11シナリオから整理):
+- `rate_up_100bp`    金利 +1.0pt
+- `rent_down_5`      賃料 -5%
+- `vacancy_up_5pt`   空室率 +5pt
+- `opex_up_10pct`    円建てOPEX ×1.10
+- `repair_up_20pct`  修繕積立 ×1.20 のみ
+- `exit_down_10pct`  売却価格 -10% (exit_cap を cap/0.9 で逆算)
+- `combined_stress`  上記6つ同時
 
-各シナリオで再計算し、ATCF/IRR/DSCR_minを返す。
+各シナリオで再計算し、ATCF/税後IRR/DSCR_min と **標準条件 (base) との Δ** (`dscr_min_delta` /
+`irr_delta`) を返す。判定 (good/warn/bad) は投資助言ではなく感応度の三段表示。
+
+### 5.8b 収支耐性価格帯 (bid_ranges.py) — MVP §9 (2026-05-31)
+
+`bid_ranges()` のポリシーを中立名に改名: `current_case` / `base_stress` / `conservative_stress`
+（旧 aggressive/base/conservative）。「最大買付価格」表記は撤去し、UI/レポートは
+**収支耐性価格帯 (Resilience Price Range)** = 「条件 (DSCR/税後IRR) を満たす価格帯」として提示。
 
 ### 5.9 クロスアセット比較 (cross_asset.py)
 
