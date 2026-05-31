@@ -9,7 +9,9 @@ from api.services.market.official import (
     MarketSnapshot,
     _price_per_sqm,
     get_area_market,
+    get_property_market,
     recent_quarters,
+    resolve_city_code,
     trade_price_stats,
 )
 
@@ -65,6 +67,28 @@ def test_get_area_market_injected() -> None:
 def test_get_area_market_no_data_returns_none() -> None:
     snap = get_area_market("13", "13104", get_fn=lambda path, params: [])
     assert snap is None
+
+
+def test_resolve_city_code() -> None:
+    cities = [{"id": "13101", "name": "千代田区"}, {"id": "13104", "name": "新宿区"}]
+    g = lambda path, params: cities  # noqa: E731
+    assert resolve_city_code("13", "新宿区", get_fn=g) == "13104"
+    assert resolve_city_code("13", "存在しない市", get_fn=g) is None
+    assert resolve_city_code("13", None, get_fn=g) is None
+
+
+def test_get_property_market_resolves_name() -> None:
+    data = json.loads(FIX.read_text(encoding="utf-8"))
+
+    def g(path: str, params: dict) -> list[dict]:
+        if path == "/XIT002":
+            return [{"id": "13104", "name": "新宿区"}]
+        return data["data"]  # /XIT001
+
+    snap = get_property_market("13", city_name="新宿区", get_fn=g)
+    assert snap is not None
+    assert snap.city_code == "13104"
+    assert snap.trade.sample_count > 0
 
 
 def test_recent_quarters_lag() -> None:

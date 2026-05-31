@@ -56,6 +56,7 @@ from api.services.extractors import source_pdf, source_url
 from api.services.extractors.property_brochure import BrochureResult, PropertyBrochureExtraction
 from api.services.extractors.to_assumptions import to_assumptions
 from api.services.llm_client import CallMeta as _LLMCallMeta
+from api.services.market.official import MarketSnapshot, get_property_market
 from api.services.risk_engine import AssumptionScore, assess_assumption_score
 from api.services.summarizer import generate_critique, generate_inquiry, generate_summary
 
@@ -205,6 +206,54 @@ def post_sensitivity(req: SensitivityRequest) -> SensitivityResult:
 @app.post("/cross_asset", response_model=CrossAssetResult)
 def post_cross_asset(req: CrossAssetRequest) -> CrossAssetResult:
     return cross_asset_comparison(req)
+
+
+# ===== /market (Market Grounding: 国交省 実取引データ) =====
+
+
+class MarketRequest(BaseModel):
+    pref_code: str
+    city_name: str | None = None
+    city_code: str | None = None
+    property_price_yen: int | None = None
+    property_area_sqm: float | None = None
+    model_config = ConfigDict(extra="forbid")
+
+
+class MarketResponse(BaseModel):
+    available: bool
+    snapshot: MarketSnapshot | None = None
+    property_yen_per_sqm: float | None = None
+    deviation_vs_median_pct: float | None = None  # (物件 - 中央値)/中央値 ×100
+    model_config = ConfigDict(extra="forbid")
+
+
+@app.post("/market", response_model=MarketResponse)
+def post_market(req: MarketRequest) -> MarketResponse:
+    """エリアの実取引（国交省 XIT001）から市場スナップショットと相場乖離を返す。
+
+    キー未設定・データ無しのときは available=False で degrade（200）。
+    """
+    try:
+        snap = get_property_market(
+            req.pref_code, city_name=req.city_name, city_code=req.city_code
+        )
+    except Exception:
+        snap = None
+    if snap is None or snap.trade is None or not snap.trade.median_yen_per_sqm:
+        return MarketResponse(available=False, snapshot=snap)
+    prop_ppsm: float | None = None
+    dev: float | None = None
+    if req.property_price_yen and req.property_area_sqm and req.property_area_sqm > 0:
+        prop_ppsm = round(req.property_price_yen / req.property_area_sqm, 1)
+        median = snap.trade.median_yen_per_sqm
+        dev = round((prop_ppsm - median) / median * 100, 1)
+    return MarketResponse(
+        available=True,
+        snapshot=snap,
+        property_yen_per_sqm=prop_ppsm,
+        deviation_vs_median_pct=dev,
+    )
 
 
 # ===== /extract =====

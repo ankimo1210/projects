@@ -113,6 +113,40 @@ def recent_quarters(now: _dt.date | None = None, back: int = 8) -> list[tuple[in
     return out
 
 
+def resolve_city_code(
+    pref_code: str, city_name: str | None, *, get_fn: GetFn | None = None
+) -> str | None:
+    """XIT002 の市区町村一覧から名称→コードを解決。見つからなければ None。"""
+    if not city_name:
+        return None
+    get_fn = get_fn or _default_get
+    try:
+        cities = get_fn("/XIT002", {"area": pref_code.zfill(2)})
+    except Exception:
+        return None
+    for c in cities:  # 完全一致
+        if str(c.get("name", "")) == city_name:
+            return str(c.get("id"))
+    for c in cities:  # 部分一致 (「新宿区」⊆「東京都新宿区」等の揺れ吸収)
+        name = str(c.get("name", ""))
+        if name and (name in city_name or city_name in name):
+            return str(c.get("id"))
+    return None
+
+
+def get_property_market(
+    pref_code: str,
+    city_name: str | None = None,
+    city_code: str | None = None,
+    *,
+    get_fn: GetFn | None = None,
+    now: _dt.date | None = None,
+) -> MarketSnapshot | None:
+    """物件の都道府県+市区町村(名 or コード)から市場スナップショットを取得。"""
+    code = city_code or resolve_city_code(pref_code, city_name, get_fn=get_fn)
+    return get_area_market(pref_code, code, get_fn=get_fn, now=now)
+
+
 def _default_get(path: str, params: dict) -> list[dict]:
     key = os.environ.get("REINFOLIB_API_KEY")
     if not key:
