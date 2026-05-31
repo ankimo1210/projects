@@ -160,17 +160,24 @@ def test_generate_and_get_bid_ranges(client):
     assert gen.status_code == 201, gen.text
     body = gen.json()
     assert body["asking_price_yen"] == 39_800_000
-    assert body["aggressive_price"] is not None
-    assert body["base_price"] is not None
-    assert body["conservative_price"] is not None
+    assert body["current_case_price"] is not None
+    assert body["base_stress_price"] is not None
+    assert body["conservative_stress_price"] is not None
     # 単調性
-    assert body["conservative_price"] <= body["base_price"] <= body["aggressive_price"]
+    assert (
+        body["conservative_stress_price"]
+        <= body["base_stress_price"]
+        <= body["current_case_price"]
+    )
     # gap 計算
-    assert body["gap_to_base_price_yen"] == body["base_price"] - body["asking_price_yen"]
+    assert (
+        body["gap_to_base_stress_price_yen"]
+        == body["base_stress_price"] - body["asking_price_yen"]
+    )
 
     got = client.get(f"/analysis_runs/{run_id}/bid_ranges")
     assert got.status_code == 200
-    assert got.json()["aggressive_price"] == body["aggressive_price"]
+    assert got.json()["current_case_price"] == body["current_case_price"]
 
 
 def test_bid_ranges_replaces_previous(client):

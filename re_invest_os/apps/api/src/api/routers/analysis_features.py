@@ -47,14 +47,20 @@ class BidRangesGenerateRequest(BaseModel):
 
 
 class BidRangesOut(BaseModel):
+    """収支耐性価格帯 (Resilience Price Range) のレスポンス。
+
+    DB カラム名 (aggressive_price 等) は互換のため維持し、API では中立な
+    current_case / base_stress / conservative_stress 名で返す。
+    """
+
     id: str
     analysis_run_id: str
     asking_price_yen: int
-    aggressive_price: int | None
-    base_price: int | None
-    conservative_price: int | None
-    gap_to_base_price_yen: int | None
-    gap_to_base_price_pct: float | None
+    current_case_price: int | None
+    base_stress_price: int | None
+    conservative_stress_price: int | None
+    gap_to_base_stress_price_yen: int | None
+    gap_to_base_stress_price_pct: float | None
     explanation: dict[str, Any]
     created_at: str
     model_config = ConfigDict(extra="forbid")
@@ -87,11 +93,11 @@ def _serialize_bid(rec: BidRangeRecord, asking: int) -> BidRangesOut:
         id=rec.id,
         analysis_run_id=rec.analysis_run_id,
         asking_price_yen=asking,
-        aggressive_price=rec.aggressive_price,
-        base_price=rec.base_price,
-        conservative_price=rec.conservative_price,
-        gap_to_base_price_yen=gap,
-        gap_to_base_price_pct=gap_pct,
+        current_case_price=rec.aggressive_price,
+        base_stress_price=rec.base_price,
+        conservative_stress_price=rec.conservative_price,
+        gap_to_base_stress_price_yen=gap,
+        gap_to_base_stress_price_pct=gap_pct,
         explanation=expl,
         created_at=rec.created_at.isoformat(),
     )
@@ -99,17 +105,17 @@ def _serialize_bid(rec: BidRangeRecord, asking: int) -> BidRangesOut:
 
 def _br_explanation_payload(res: BidRangesResult) -> dict[str, Any]:
     return {
-        "aggressive": {
-            "text": res.aggressive.explanation,
-            "binding_constraints": res.aggressive.binding_constraints,
+        "current_case": {
+            "text": res.current_case.explanation,
+            "binding_constraints": res.current_case.binding_constraints,
         },
-        "base": {
-            "text": res.base.explanation,
-            "binding_constraints": res.base.binding_constraints,
+        "base_stress": {
+            "text": res.base_stress.explanation,
+            "binding_constraints": res.base_stress.binding_constraints,
         },
-        "conservative": {
-            "text": res.conservative.explanation,
-            "binding_constraints": res.conservative.binding_constraints,
+        "conservative_stress": {
+            "text": res.conservative_stress.explanation,
+            "binding_constraints": res.conservative_stress.binding_constraints,
         },
         "monotonicity_enforced": res.monotonicity_enforced,
     }
@@ -126,9 +132,9 @@ async def generate_bid_ranges(run_id: str, _req: BidRangesGenerateRequest | None
 
     rec = BidRangeRecord(
         analysis_run_id=run_id,
-        aggressive_price=res.aggressive.price_yen,
-        base_price=res.base.price_yen,
-        conservative_price=res.conservative.price_yen,
+        aggressive_price=res.current_case.price_yen,
+        base_price=res.base_stress.price_yen,
+        conservative_price=res.conservative_stress.price_yen,
         explanation_json=json.dumps(_br_explanation_payload(res), ensure_ascii=False),
     )
     factory = get_session_factory()

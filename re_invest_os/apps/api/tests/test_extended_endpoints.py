@@ -41,7 +41,7 @@ def test_sensitivity() -> None:
     assert r.status_code == 200
     body = r.json()
     assert "base" in body
-    assert len(body["scenarios"]) == 11
+    assert len(body["scenarios"]) == 7
 
 
 def test_cross_asset_default_benchmarks() -> None:

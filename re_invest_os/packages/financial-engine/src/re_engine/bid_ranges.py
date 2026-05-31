@@ -36,7 +36,7 @@ class BidPolicy:
 
 DEFAULT_BID_POLICIES: list[BidPolicy] = [
     BidPolicy(
-        name="aggressive",
+        name="current_case",
         min_dscr=1.20,
         min_after_tax_irr=0.075,
         rent_shock=0.00,
@@ -45,7 +45,7 @@ DEFAULT_BID_POLICIES: list[BidPolicy] = [
         opex_shock=0.00,
     ),
     BidPolicy(
-        name="base",
+        name="base_stress",
         min_dscr=1.25,
         min_after_tax_irr=0.080,
         rent_shock=-0.03,
@@ -54,7 +54,7 @@ DEFAULT_BID_POLICIES: list[BidPolicy] = [
         opex_shock=0.05,
     ),
     BidPolicy(
-        name="conservative",
+        name="conservative_stress",
         min_dscr=1.35,
         min_after_tax_irr=0.090,
         rent_shock=-0.07,
@@ -107,12 +107,19 @@ class BidRangeEntry(BaseModel):
 
 
 class BidRangesResult(BaseModel):
+    """収支耐性価格帯 (Resilience Price Range)。
+
+    各スタンス (current_case / base_stress / conservative_stress) で、制約 (DSCR /
+    税後IRR) を満たす上限価格を示す。買付推奨ではなく「条件を満たす価格帯」の検証。
+    """
+
     asking_price_yen: int
-    aggressive: BidRangeEntry
-    base: BidRangeEntry
-    conservative: BidRangeEntry
-    gap_to_base_price_yen: int | None  # base_price - asking_price (負ならディスカウント必要)
-    gap_to_base_price_pct: float | None
+    current_case: BidRangeEntry
+    base_stress: BidRangeEntry
+    conservative_stress: BidRangeEntry
+    # base_stress_price - asking_price (負なら売出価格より下げる必要)
+    gap_to_base_stress_price_yen: int | None
+    gap_to_base_stress_price_pct: float | None
     monotonicity_enforced: bool  # 単調性違反を後処理で補正したか
     model_config = ConfigDict(extra="forbid")
 
@@ -185,25 +192,25 @@ def bid_ranges(
     by_name: dict[str, BidRangeEntry] = {}
     for p in pols:
         by_name[p.name] = _solve_one(base, p)
-    aggressive = by_name["aggressive"]
-    base_e = by_name["base"]
-    conservative = by_name["conservative"]
-    aggressive, base_e, conservative, enforced = _enforce_monotonicity(
-        aggressive, base_e, conservative
+    current_case = by_name["current_case"]
+    base_stress = by_name["base_stress"]
+    conservative_stress = by_name["conservative_stress"]
+    current_case, base_stress, conservative_stress, enforced = _enforce_monotonicity(
+        current_case, base_stress, conservative_stress
     )
     asking = base.property.purchase_price_yen
-    if base_e.price_yen is not None:
-        gap = base_e.price_yen - asking
+    if base_stress.price_yen is not None:
+        gap = base_stress.price_yen - asking
         gap_pct = gap / asking
     else:
         gap = None
         gap_pct = None
     return BidRangesResult(
         asking_price_yen=asking,
-        aggressive=aggressive,
-        base=base_e,
-        conservative=conservative,
-        gap_to_base_price_yen=gap,
-        gap_to_base_price_pct=gap_pct,
+        current_case=current_case,
+        base_stress=base_stress,
+        conservative_stress=conservative_stress,
+        gap_to_base_stress_price_yen=gap,
+        gap_to_base_stress_price_pct=gap_pct,
         monotonicity_enforced=enforced,
     )

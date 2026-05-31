@@ -14,18 +14,22 @@ from re_engine.bid_ranges import (
 
 def test_bid_ranges_returns_three_levels(base_assumptions):
     res = bid_ranges(base_assumptions)
-    assert res.aggressive.name == "aggressive"
-    assert res.base.name == "base"
-    assert res.conservative.name == "conservative"
+    assert res.current_case.name == "current_case"
+    assert res.base_stress.name == "base_stress"
+    assert res.conservative_stress.name == "conservative_stress"
     # 全て 1 円以上
-    assert res.aggressive.price_yen and res.aggressive.price_yen > 0
-    assert res.base.price_yen and res.base.price_yen > 0
-    assert res.conservative.price_yen and res.conservative.price_yen > 0
+    assert res.current_case.price_yen and res.current_case.price_yen > 0
+    assert res.base_stress.price_yen and res.base_stress.price_yen > 0
+    assert res.conservative_stress.price_yen and res.conservative_stress.price_yen > 0
 
 
 def test_bid_ranges_monotonicity(base_assumptions):
     res = bid_ranges(base_assumptions)
-    assert res.conservative.price_yen <= res.base.price_yen <= res.aggressive.price_yen
+    assert (
+        res.conservative_stress.price_yen
+        <= res.base_stress.price_yen
+        <= res.current_case.price_yen
+    )
 
 
 def test_higher_rate_shock_lowers_price(base_assumptions):
@@ -84,4 +88,4 @@ def test_apply_shocks_clamps_vacancy(base_assumptions):
 
 def test_default_policies_have_three_levels():
     names = [p.name for p in DEFAULT_BID_POLICIES]
-    assert names == ["aggressive", "base", "conservative"]
+    assert names == ["current_case", "base_stress", "conservative_stress"]
