@@ -144,12 +144,12 @@ export default function LandingPage() {
             </div>
             <div className="text-center">
               <div className="text-[10px] text-[var(--text-muted)] font-mono uppercase mb-1">
-                Score
+                前提リスク
               </div>
               <div className="text-xl font-mono font-bold" style={{ color: "var(--bad)" }}>
-                36.5
+                HIGH
               </div>
-              <div className="text-[9px] text-[var(--text-subtle)]">要警戒</div>
+              <div className="text-[9px] text-[var(--text-subtle)]">前提に強く依存</div>
             </div>
           </div>
           <Link
@@ -222,7 +222,7 @@ export default function LandingPage() {
           <FeatureRow
             icon="🤝"
             title="買わない選択肢も提示"
-            desc="スコアが低い物件には「要警戒」と表示します。賞賛一色の商品紹介サイトとは目的が違います。"
+            desc="前提が甘い物件には前提リスク「高」と表示します。賞賛一色の商品紹介サイトとは目的が違います。"
           />
         </div>
       </section>
@@ -248,7 +248,7 @@ export default function LandingPage() {
             <tbody>
               <CompareRow label="目的" them="業者への送客" us="投資家の判断支援" />
               <CompareRow label="収益モデル" them="リード課金・広告" us="直接課金のみ" />
-              <CompareRow label="スコア計算" them="なし / 不透明" us="純粋関数 + テスト" />
+              <CompareRow label="前提リスク検証" them="なし / 不透明" us="純粋関数 + テスト" />
               <CompareRow label="個人情報" them="業者に共有" us="PIIマスク / 非共有" />
               <CompareRow label="前提変更" them="不可" us="確認画面で可" />
             </tbody>
