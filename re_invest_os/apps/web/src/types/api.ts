@@ -567,7 +567,13 @@ export interface components {
                 [key: string]: unknown;
             } | null;
         };
-        /** BidRangesOut */
+        /**
+         * BidRangesOut
+         * @description 収支耐性価格帯 (Resilience Price Range) のレスポンス。
+         *
+         *     DB カラム名 (aggressive_price 等) は互換のため維持し、API では中立な
+         *     current_case / base_stress / conservative_stress 名で返す。
+         */
         BidRangesOut: {
             /** Id */
             id: string;
@@ -575,16 +581,16 @@ export interface components {
             analysis_run_id: string;
             /** Asking Price Yen */
             asking_price_yen: number;
-            /** Aggressive Price */
-            aggressive_price: number | null;
-            /** Base Price */
-            base_price: number | null;
-            /** Conservative Price */
-            conservative_price: number | null;
-            /** Gap To Base Price Yen */
-            gap_to_base_price_yen: number | null;
-            /** Gap To Base Price Pct */
-            gap_to_base_price_pct: number | null;
+            /** Current Case Price */
+            current_case_price: number | null;
+            /** Base Stress Price */
+            base_stress_price: number | null;
+            /** Conservative Stress Price */
+            conservative_stress_price: number | null;
+            /** Gap To Base Stress Price Yen */
+            gap_to_base_stress_price_yen: number | null;
+            /** Gap To Base Stress Price Pct */
+            gap_to_base_stress_price_pct: number | null;
             /** Explanation */
             explanation: {
                 [key: string]: unknown;
@@ -1184,7 +1190,7 @@ export interface components {
              * Scenario
              * @enum {string}
              */
-            scenario: "base" | "rent_down_5" | "rent_down_10" | "vacancy_up_5pt" | "vacancy_up_10pt" | "rate_up_50bp" | "rate_up_100bp" | "opex_15x" | "opex_20x" | "exit_cap_up_25bp" | "exit_cap_up_50bp" | "combined_stress";
+            scenario: "base" | "rate_up_100bp" | "rent_down_5" | "vacancy_up_5pt" | "opex_up_10pct" | "repair_up_20pct" | "exit_down_10pct" | "combined_stress";
             /** Atcf Year1 Yen */
             atcf_year1_yen: number;
             /** Irr */
@@ -1193,6 +1199,13 @@ export interface components {
             dscr_min: number;
             /** Net Proceeds Yen */
             net_proceeds_yen: number;
+            /**
+             * Dscr Min Delta
+             * @default 0
+             */
+            dscr_min_delta: number;
+            /** Irr Delta */
+            irr_delta?: number | null;
             /**
              * Judgment
              * @enum {string}

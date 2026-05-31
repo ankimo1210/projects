@@ -105,7 +105,7 @@ export default function ReportPage() {
         .catch(() => {})
         .finally(() => setSensitivityLoading(false));
 
-      // 最大買付価格 (バックグラウンド)
+      // 収支耐性価格帯 (バックグラウンド)
       setMaxOfferLoading(true);
       fetch("/api/max_offer", {
         method: "POST",
@@ -309,9 +309,9 @@ export default function ReportPage() {
         <ScoreComponentPanel data={data} />
         {/* ルールベース Questions (AI 未完時の fallback) */}
         {!aiData && !aiLoading && <QuestionsPanel data={data} />}
-        {/* 感応度分析 */}
+        {/* ストレス（崩れ方） */}
         <SensitivityPanel data={sensitivityData} loading={sensitivityLoading} />
-        {/* 最大買付価格 + クロスアセット比較 */}
+        {/* 収支耐性価格帯 + クロスアセット比較 */}
         <MaxOfferPanel data={maxOfferData} loading={maxOfferLoading} />
         <CrossAssetPanel data={crossAssetData} loading={crossAssetLoading} />
       </main>

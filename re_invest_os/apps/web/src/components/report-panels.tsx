@@ -5,13 +5,15 @@
 import type { components } from "@/types/api";
 import { Badge, Panel, Row, fmtPct, fmtYen, KpiCell } from "@/components/bloomberg";
 
-// ===== 感応度分析 =====
+// ===== ストレス（崩れ方） =====
 export type ScenarioResult = {
   scenario: string;
   atcf_year1_yen: number;
   irr: number | null;
   dscr_min: number;
   net_proceeds_yen: number;
+  dscr_min_delta?: number;
+  irr_delta?: number | null;
   judgment: "good" | "warn" | "bad";
 };
 
@@ -21,21 +23,17 @@ export type SensitivityResult = {
 };
 
 const SCENARIO_LABEL: Record<string, string> = {
-  base: "BASE",
+  base: "標準条件",
+  rate_up_100bp: "金利 +1.0%",
   rent_down_5: "賃料 -5%",
-  rent_down_10: "賃料 -10%",
   vacancy_up_5pt: "空室 +5pt",
-  vacancy_up_10pt: "空室 +10pt",
-  rate_up_50bp: "金利 +50bp",
-  rate_up_100bp: "金利 +100bp",
-  opex_15x: "OPEX ×1.5",
-  opex_20x: "OPEX ×2.0",
-  exit_cap_up_25bp: "出口Cap +25bp",
-  exit_cap_up_50bp: "出口Cap +50bp",
+  opex_up_10pct: "OPEX +10%",
+  repair_up_20pct: "修繕 +20%",
+  exit_down_10pct: "売却価格 -10%",
   combined_stress: "複合ストレス",
 };
 
-// ===== 最大買付価格 =====
+// ===== 収支耐性価格帯 =====
 export type MaxOfferResult = {
   current_price_yen: number;
   max_price_yen: number;
@@ -457,7 +455,7 @@ export function SensitivityPanel({
 }) {
   if (loading) {
     return (
-      <Panel className="col-span-12" title="[ SENSITIVITY ] ストレステスト">
+      <Panel className="col-span-12" title="[ STRESS ] 崩れ方">
         <div className="p-4 text-[11px] text-[var(--text-muted)] font-mono animate-pulse">
           計算中…
         </div>
@@ -472,15 +470,19 @@ export function SensitivityPanel({
   const allRows = [data.base, ...data.scenarios];
 
   return (
-    <Panel className="col-span-12" title="[ SENSITIVITY ] ストレステスト — 12シナリオ">
+    <Panel className="col-span-12" title="[ STRESS ] 崩れ方 — 固定7ストレス">
+      <div className="px-3 py-1.5 text-[9px] text-[var(--text-subtle)] border-b border-[var(--border)]">
+        以下は投資判断ではなく、入力条件に対する感応度分析です。ΔDSCRは標準条件との差。
+      </div>
       <div className="overflow-x-auto">
         <table className="w-full text-[10px] font-mono tabular-nums">
           <thead>
             <tr className="bg-[var(--surface-alt)] text-[var(--accent)] text-[9px] uppercase tracking-widest">
               <th className="text-left px-3 py-1.5">シナリオ</th>
               <th className="text-right px-3 py-1.5">ATCF Y1</th>
-              <th className="text-right px-3 py-1.5">IRR</th>
+              <th className="text-right px-3 py-1.5">税後IRR</th>
               <th className="text-right px-3 py-1.5">DSCR MIN</th>
+              <th className="text-right px-3 py-1.5">ΔDSCR</th>
               <th className="text-right px-3 py-1.5">売却手残</th>
               <th className="text-center px-3 py-1.5">判定</th>
             </tr>
@@ -516,6 +518,14 @@ export function SensitivityPanel({
                 </td>
                 <td
                   className="text-right px-3 py-1.5"
+                  style={{ color: (row.dscr_min_delta ?? 0) < 0 ? "var(--bad)" : undefined }}
+                >
+                  {row.scenario === "base" || row.dscr_min_delta == null
+                    ? "—"
+                    : row.dscr_min_delta.toFixed(2)}
+                </td>
+                <td
+                  className="text-right px-3 py-1.5"
                   style={{ color: row.net_proceeds_yen < 0 ? "var(--bad)" : undefined }}
                 >
                   {fmtYen(row.net_proceeds_yen)}
@@ -540,7 +550,7 @@ export function SensitivityPanel({
   );
 }
 
-// ===== 最大買付価格パネル =====
+// ===== 収支耐性価格帯パネル =====
 
 export function MaxOfferPanel({
   data,
@@ -551,7 +561,7 @@ export function MaxOfferPanel({
 }) {
   if (loading) {
     return (
-      <Panel className="col-span-6" title="[ MAX OFFER ] 最大買付価格">
+      <Panel className="col-span-6" title="[ RESILIENCE ] 収支耐性価格帯">
         <div className="p-4 text-[11px] text-[var(--text-muted)] font-mono animate-pulse">
           計算中…
         </div>
@@ -560,41 +570,41 @@ export function MaxOfferPanel({
   }
   if (!data) return null;
 
-  const notBuyable = data.max_price_yen === 0;
+  const notViable = data.max_price_yen === 0;
   const needsDiscount = data.required_discount_yen > 0;
 
   return (
-    <Panel className="col-span-6" title="[ MAX OFFER ] 最大買付価格 (制約付き二分探索)">
+    <Panel className="col-span-6" title="[ RESILIENCE ] 収支耐性価格帯">
       <div className="p-4">
-        {notBuyable ? (
+        {notViable ? (
           <div className="text-[var(--bad)] font-mono text-[12px] font-bold py-4 text-center">
-            [ 購入不可 ] 最低価格でも制約を満たせません
+            [ 成立価格なし ] 最低価格でも収支耐性の条件を満たせません
           </div>
         ) : (
           <div className="grid grid-cols-3 gap-px bg-[var(--border)] border border-[var(--border)] mb-3">
             <KpiCell
-              name="最大買付価格"
+              name="現状条件 上限"
               value={fmtYen(data.max_price_yen)}
-              note="制約すべて満たす上限"
+              note="条件を満たす価格帯の上限"
               severity={needsDiscount ? "warn" : "good"}
             />
             <KpiCell
-              name="安全圏 (-5%)"
+              name="保守条件 上限"
               value={fmtYen(data.safe_price_yen)}
-              note="最大価格×95%"
+              note="上限×95%"
               severity="good"
             />
             <KpiCell
-              name={needsDiscount ? "必要指値" : "余裕"}
+              name={needsDiscount ? "売出価格との差" : "余裕"}
               value={`${needsDiscount ? "-" : "+"}${fmtYen(Math.abs(data.required_discount_yen))}`}
-              note={needsDiscount ? "現価格から下げが必要" : "現価格で余裕あり"}
+              note={needsDiscount ? "売出価格から下げが必要な額" : "売出価格で条件成立"}
               severity={needsDiscount ? "bad" : "good"}
             />
           </div>
         )}
         <div className="text-[10px] space-y-1">
           <Row
-            label="現在価格"
+            label="売出価格"
             value={fmtYen(data.current_price_yen)}
           />
           <Row
