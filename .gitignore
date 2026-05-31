@@ -45,3 +45,9 @@ streamlit.log
 .DS_Store
 Thumbs.db
 *:Zone.Identifier
+
+# AI tooling scratch (brainstorm/plan artifacts)
+.superpowers/
+
+# Large reference docs (textbooks, papers) — keep binaries out of git
+*.pdf
