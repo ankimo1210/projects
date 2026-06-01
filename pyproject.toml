@@ -18,8 +18,6 @@ members = [
     "nbody-gpu",
     "line_backup",
     "land_price_api_app",
-    "re_invest_os/apps/api",
-    "re_invest_os/packages/financial-engine",
 ]
 
 # PyTorch CUDA 12.8 — used by `gto`. Defined here so all workspace members
@@ -28,7 +26,6 @@ members = [
 # nvrtc 12.6 cannot JIT sm_120 (CuPy hit CUDA_ERROR_NO_BINARY_FOR_GPU).
 [tool.uv.sources]
 torch = { index = "pytorch-cu128" }
-re-engine = { workspace = true }
 
 [[tool.uv.index]]
 name = "pytorch-cu128"
@@ -87,7 +84,6 @@ ignore = [
 "rates_volatility_model/**/*.py" = ["N803", "N806", "N816", "E741"]
 "johnhull/**/*.py" = ["N803", "N806", "N816", "E741"]
 "notebooks/**/*.py" = ["E402", "F401", "F841", "N803", "N806"]
-"re_invest_os/packages/financial-engine/**/*.py" = ["N803", "N806"]
 # Tests can have unused variables / imports for fixture-driven patterns.
 "**/tests/**/*.py" = ["F841", "F401"]
 # Entry-point scripts often need path / env setup before imports.
@@ -115,8 +111,6 @@ testpaths = [
     "stock/tests",
     "nbody-gpu/tests",
     "line_backup/tests",
-    "re_invest_os/apps/api/tests",
-    "re_invest_os/packages/financial-engine/tests",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
