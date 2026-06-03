@@ -1,0 +1,7 @@
+# raw Wikidata responses are regenerable; processed/ is committed
+data/raw/*
+!data/raw/.gitkeep
+# sqlite runtime
+akinator.db
+akinator.db-*
+__pycache__/

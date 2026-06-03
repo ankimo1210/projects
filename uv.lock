@@ -12,6 +12,7 @@ resolution-markers = [
 
 [manifest]
 members = [
+    "akinator",
     "gto",
     "land-price-api-app",
     "line-backup-exporter",
@@ -139,6 +140,34 @@ sdist = { url = "https://files.pythonhosted.org/packages/61/62/06741b57915636024
 wheels = [
     { url = "https://files.pythonhosted.org/packages/fb/76/641ae371508676492379f16e2fa48f4e2c11741bd63c48be4b12a6b09cba/aiosignal-1.4.0-py3-none-any.whl", hash = "sha256:053243f8b92b990551949e63930a839ff0cf0b0ebbe0597b0f3fb19e1a0fe82e", size = 7490, upload-time = "2025-07-03T22:54:42.156Z" },
 ]
+
+[[package]]
+name = "akinator"
+version = "0.1.0"
+source = { editable = "akinator" }
+dependencies = [
+    { name = "fastapi" },
+    { name = "httpx" },
+    { name = "jinja2" },
+    { name = "python-multipart" },
+    { name = "uvicorn" },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "fastapi", specifier = ">=0.110" },
+    { name = "httpx", specifier = ">=0.27" },
+    { name = "jinja2", specifier = ">=3.1" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0" },
+    { name = "python-multipart", specifier = ">=0.0.9" },
+    { name = "uvicorn", specifier = ">=0.27" },
+]
+provides-extras = ["dev"]
 
 [[package]]
 name = "altair"
