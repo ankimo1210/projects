@@ -117,5 +117,9 @@ testpaths = [
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-addopts = "-ra --strict-markers"
+# importlib import mode: every member project ships a `tests/` package, and the
+# default prepend mode makes those identically-named packages shadow each other
+# in a single root run (ModuleNotFoundError on tests.<name>). importlib gives
+# each test file a path-unique module name, so the full-workspace run collects.
+addopts = "-ra --strict-markers --import-mode=importlib"
 asyncio_mode = "auto"
