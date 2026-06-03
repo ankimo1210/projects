@@ -17,13 +17,14 @@ probability updater**, not a fixed decision tree.
   ~400 entities total. The "is this person real / fictional / appears in anime"
   axis splits candidates well and feels Akinator-like.
 - Local FastAPI + SQLite + Jinja2. No React.
-- 5 screens + a debug screen.
+- 4 gameplay screens + a debug screen.
 
 ## Architecture — 4 separated layers
 
 ```
-Data fetch     scripts/fetch_wikidata_entities.py  -> data/raw/*.json          (gitignored)
-Normalize+Qgen scripts/build_questions.py          -> data/processed/*.json    (committed)
+Data fetch     scripts/fetch_wikidata_entities.py            -> data/raw/*.json        (gitignored)
+Normalize+Qgen app/{normalize,question_gen}.py (pure)        -> data/processed/*.json  (committed)
+               run via scripts/build_questions.py
 Inference      app/inference/{scoring,question_selection}.py  (pure functions, UI-independent)
 Web/API        app/main.py (FastAPI) + Jinja2 templates + SQLite (game history)
 ```
@@ -114,7 +115,7 @@ weighted candidates (an information-gain approximation). Isolated in
 `question_selection.py` with a clear interface so it can later be swapped for
 entropy / information gain. Already-asked questions are excluded.
 
-## Screens (5 + debug, Jinja2)
+## Screens (4 + debug, Jinja2)
 
 1. **Start** — begin a game.
 2. **Question** — show current question + buttons: yes / no / probably_yes /
@@ -129,7 +130,7 @@ entropy / information gain. Already-asked questions are excluded.
 
 - `games` (session: id, created_at, status, guessed_entity_id, was_correct)
 - `game_answers` (game_id, question_id, answer, asked_order)
-- `corrections` (game_id, correct_entity_id_or_name, created_at)
+- `corrections` (game_id, correct_entity, created_at)
 
 Entities/questions are loaded from JSON, NOT stored in DB — keeps regeneration
 cheap. Only game history/corrections are persisted.
@@ -152,6 +153,8 @@ akinator/
   app/
     main.py
     models.py
+    normalize.py
+    question_gen.py
     services/
       game_service.py
       entity_service.py

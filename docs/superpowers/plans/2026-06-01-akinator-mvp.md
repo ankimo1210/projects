@@ -36,6 +36,7 @@ akinator/
       base.html  start.html  question.html  guess.html  wrong.html  debug.html
     main.py                          # FastAPI routes + session wiring
   scripts/
+    __init__.py
     fetch_wikidata_entities.py       # SPARQL fetch -> data/raw/*.json
     build_questions.py               # raw -> processed/{entities,questions}.json
   data/
@@ -50,6 +51,8 @@ akinator/
     test_question_selection.py
     test_game_service.py
     test_data_loader.py
+    test_build_pipeline.py
+    test_db.py
     test_api.py
 ```
 
@@ -1269,7 +1272,7 @@ Expected: 1 passed.
 Wikidata via SPARQL, writing one raw JSON list to data/raw/.
 
 Polite usage: explicit User-Agent, sleep between the two queries, LIMIT caps.
-On failure, leaves any existing cache untouched."""
+On fetch failure, falls back to the existing cached raw (left untouched)."""
 from __future__ import annotations
 
 import argparse
@@ -1411,7 +1414,14 @@ def main() -> None:
     if out_path.exists() and not args.refresh:
         print(f"cache exists at {out_path}; use --refresh to re-fetch")
         return
-    data = fetch()
+    try:
+        data = fetch()
+    except (httpx.HTTPError, KeyError) as exc:
+        # Spec policy: on fetch failure, fall back to cached raw if present.
+        if out_path.exists():
+            print(f"fetch failed ({exc}); keeping cached raw at {out_path}")
+            return
+        raise
     config.RAW_DIR.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"fetched {len(data)} raw entities -> {out_path}")
@@ -2304,7 +2314,7 @@ git commit -m "docs(akinator): CLAUDE.md guide + smoke-tested MVP"
 - 5 answer types yes/no/probably_*/unknown → Answer enum (Task 2) + scoring (Task 4). ✓
 - Missing=neutral+soft penalty → Task 4 `WEAK_MISSING`. ✓
 - Split-based selection, swap-in for entropy → Task 6. ✓
-- 5 screens + debug → Task 14 templates. ✓
+- 4 gameplay screens + debug → Task 14 templates. ✓
 - SQLite games/answers/corrections → Task 13. ✓
 - WDQS politeness (UA, sleep, LIMIT, cache, --refresh) → Task 10. ✓
 - processed committed / raw ignored → Task 1 .gitignore + Task 10 `git add -f`. ✓
