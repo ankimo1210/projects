@@ -15,6 +15,10 @@ from app.models import Entity, Question
 _LIST_FEATURES = {"occupation", "country", "notable_work"}
 _BOOL_FEATURES = {"is_fictional", "is_dead", "in_anime"}
 _SCALAR_FEATURES = {"gender", "birth_century", "species"}
+# Booleans whose negative has no natural phrasing distinct from the positive —
+# only emit the True question (otherwise two questions read identically with
+# inverted semantics).
+_POSITIVE_ONLY_BOOL = {"in_anime"}
 
 # Japanese templates. {v} is the value label.
 _VALUE_LABELS = {
@@ -89,6 +93,8 @@ def generate_questions(
 
     questions: list[Question] = []
     for (key, val), c in sorted(counts.items(), key=lambda kv: str(kv[0])):
+        if key in _POSITIVE_ONLY_BOOL and val is not True:
+            continue
         frac = c / n
         if frac < min_fraction or frac > max_fraction:
             continue

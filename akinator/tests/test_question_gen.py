@@ -46,3 +46,21 @@ def test_question_ids_unique_and_stable():
     qs = generate_questions(_pool(), min_fraction=0.1, max_fraction=0.9)
     ids = [q.id for q in qs]
     assert len(ids) == len(set(ids))
+
+
+def test_in_anime_is_positive_only_no_duplicate_text():
+    # in_anime has no natural negative phrasing, so only the True question is
+    # emitted — otherwise two questions read identically with inverted semantics.
+    pool = [
+        Entity("a", "A", [], "", None, {"is_fictional": True, "in_anime": True}),
+        Entity("b", "B", [], "", None, {"is_fictional": True, "in_anime": True}),
+        Entity("c", "C", [], "", None, {"is_fictional": False, "in_anime": False}),
+        Entity("d", "D", [], "", None, {"is_fictional": False, "in_anime": False}),
+    ]
+    qs = generate_questions(pool, min_fraction=0.1, max_fraction=0.9)
+    anime_qs = [q for q in qs if q.feature_key == "in_anime"]
+    assert len(anime_qs) == 1
+    assert anime_qs[0].expected_value is True
+    # no two questions share the same display text
+    texts = [q.text for q in qs]
+    assert len(texts) == len(set(texts))
