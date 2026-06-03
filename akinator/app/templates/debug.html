@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>デバッグ</h1>
+<div class="card">
+  <h3>上位候補</h3>
+  <table>
+    <tr><th>entity</th><th>posterior</th><th>log_score</th></tr>
+    {% for row in candidates %}
+    <tr><td>{{ row.name }} <code>{{ row.id }}</code></td>
+        <td>{{ '%.4f' % row.posterior }}</td><td>{{ '%.3f' % row.log_score }}</td></tr>
+    {% endfor %}
+  </table>
+  <h3>質問履歴</h3>
+  <ul>{% for h in history %}<li>{{ h.text }} → <b>{{ h.answer }}</b></li>{% endfor %}</ul>
+  <h3>次の質問候補（選定理由: 分割が最も均等）</h3>
+  {% if next_question %}
+    <p>選択: <b>{{ next_question.text }}</b>（split={{ '%.3f' % next_split }}）</p>
+  {% else %}<p>質問は出尽くしました。</p>{% endif %}
+  <h3>上位候補の元データ</h3>
+  {% for row in candidates %}
+    <p><code>{{ row.id }}</code> {{ row.features }}</p>
+  {% endfor %}
+</div>
+<p><a href="/game/{{ game_id }}">ゲームに戻る</a></p>
+{% endblock %}

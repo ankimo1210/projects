@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>質問 {{ asked_count + 1 }}</h1>
+<div class="card">
+  <p style="font-size:1.3rem;">{{ question.text }}</p>
+  <form action="/game/{{ game_id }}/answer" method="post">
+    <button class="btn" name="answer" value="yes">はい</button>
+    <button class="btn" name="answer" value="no">いいえ</button>
+    <button class="btn secondary" name="answer" value="probably_yes">たぶんはい</button>
+    <button class="btn secondary" name="answer" value="probably_no">たぶんいいえ</button>
+    <button class="btn secondary" name="answer" value="unknown">わからない</button>
+  </form>
+</div>
+<p><a href="/debug/{{ game_id }}">デバッグ表示</a></p>
+{% endblock %}

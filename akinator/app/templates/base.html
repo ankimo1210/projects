@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>アキネーター</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto;
+           padding: 0 1rem; color: #1a1a2e; background: #f4f4f8; }
+    h1 { color: #4a2c8f; }
+    .btn { display: inline-block; padding: .6rem 1.2rem; margin: .25rem;
+           border: 0; border-radius: 8px; background: #6b46c1; color: #fff;
+           font-size: 1rem; cursor: pointer; text-decoration: none; }
+    .btn.secondary { background: #9f7aea; }
+    .card { background: #fff; border-radius: 12px; padding: 1.5rem; margin: 1rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    img.portrait { max-width: 200px; border-radius: 8px; }
+    table { border-collapse: collapse; width: 100%; }
+    td, th { border: 1px solid #ddd; padding: .35rem .6rem; text-align: left; font-size: .9rem; }
+    code { background: #eee; padding: .1rem .3rem; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  {% block body %}{% endblock %}
+</body>
+</html>

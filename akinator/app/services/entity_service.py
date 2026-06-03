@@ -15,7 +15,12 @@ class EntityService:
 
     @classmethod
     def from_disk(cls) -> "EntityService":
-        return cls(load_entities(ENTITIES_PATH), load_questions(QUESTIONS_PATH))
+        # Tolerate missing processed data (e.g. before the first Wikidata build)
+        # so importing the app never crashes; the pool is simply empty until
+        # `build_questions.py` has run.
+        entities = load_entities(ENTITIES_PATH) if ENTITIES_PATH.exists() else []
+        questions = load_questions(QUESTIONS_PATH) if QUESTIONS_PATH.exists() else []
+        return cls(entities, questions)
 
     def get_entity(self, entity_id: str) -> Entity | None:
         return self._by_id.get(entity_id)

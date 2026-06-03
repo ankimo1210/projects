@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>アキネーター</h1>
+<div class="card">
+  <p>誰か有名人・キャラクターを思い浮かべてください。質問で当ててみせます。</p>
+  <form action="/game/new" method="post">
+    <button class="btn" type="submit">ゲーム開始</button>
+  </form>
+</div>
+{% endblock %}

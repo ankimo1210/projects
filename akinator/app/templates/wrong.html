@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>残念！正解を教えてください</h1>
+<div class="card">
+  <form action="/game/{{ game_id }}/wrong" method="post">
+    <input type="text" name="correct_entity" placeholder="正解の人物・キャラ名"
+           style="padding:.5rem; width:70%;" required>
+    <button class="btn" type="submit">送信</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>あなたが考えているのは…</h1>
+<div class="card">
+  {% if entity.image_url %}<img class="portrait" src="{{ entity.image_url }}" alt="">{% endif %}
+  <h2>{{ entity.name }}</h2>
+  <p>{{ entity.description }}</p>
+  <p>確信度: {{ '%.0f' % (posterior * 100) }}%</p>
+  <form action="/game/{{ game_id }}/result" method="post" style="display:inline">
+    <button class="btn" name="correct" value="1">正解！</button>
+  </form>
+  <a class="btn secondary" href="/game/{{ game_id }}/wrong">はずれ</a>
+</div>
+<p><a href="/debug/{{ game_id }}">デバッグ表示</a></p>
+{% endblock %}
