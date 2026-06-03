@@ -1,0 +1,692 @@
+[
+  {
+    "id": "seed_einstein",
+    "name": "アルベルト・アインシュタイン",
+    "aliases": [
+      "Albert Einstein"
+    ],
+    "description": "Albert Einstein",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "male",
+      "occupation": [
+        "physicist",
+        "mathematician"
+      ],
+      "country": [
+        "Germany",
+        "United States"
+      ],
+      "birth_century": 19,
+      "is_dead": true,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_newton",
+    "name": "アイザック・ニュートン",
+    "aliases": [
+      "Isaac Newton"
+    ],
+    "description": "Isaac Newton",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "male",
+      "occupation": [
+        "physicist",
+        "mathematician"
+      ],
+      "country": [
+        "United Kingdom"
+      ],
+      "birth_century": 17,
+      "is_dead": true,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_curie",
+    "name": "マリ・キュリー",
+    "aliases": [
+      "Marie Curie"
+    ],
+    "description": "Marie Curie",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "female",
+      "occupation": [
+        "physicist"
+      ],
+      "country": [
+        "France"
+      ],
+      "birth_century": 19,
+      "is_dead": true,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_beethoven",
+    "name": "ベートーヴェン",
+    "aliases": [
+      "Ludwig van Beethoven"
+    ],
+    "description": "Ludwig van Beethoven",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "male",
+      "occupation": [
+        "musician"
+      ],
+      "country": [
+        "Germany"
+      ],
+      "birth_century": 18,
+      "is_dead": true,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_bach",
+    "name": "バッハ",
+    "aliases": [
+      "Johann Sebastian Bach"
+    ],
+    "description": "Johann Sebastian Bach",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "male",
+      "occupation": [
+        "musician"
+      ],
+      "country": [
+        "Germany"
+      ],
+      "birth_century": 17,
+      "is_dead": true,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_monet",
+    "name": "クロード・モネ",
+    "aliases": [
+      "Claude Monet"
+    ],
+    "description": "Claude Monet",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "male",
+      "occupation": [
+        "painter"
+      ],
+      "country": [
+        "France"
+      ],
+      "birth_century": 19,
+      "is_dead": true,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_picasso",
+    "name": "パブロ・ピカソ",
+    "aliases": [
+      "Pablo Picasso"
+    ],
+    "description": "Pablo Picasso",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "male",
+      "occupation": [
+        "painter"
+      ],
+      "country": [
+        "France"
+      ],
+      "birth_century": 19,
+      "is_dead": true,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_shakespeare",
+    "name": "シェイクスピア",
+    "aliases": [
+      "William Shakespeare"
+    ],
+    "description": "William Shakespeare",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "male",
+      "occupation": [
+        "writer"
+      ],
+      "country": [
+        "United Kingdom"
+      ],
+      "birth_century": 16,
+      "is_dead": true,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_dickens",
+    "name": "チャールズ・ディケンズ",
+    "aliases": [
+      "Charles Dickens"
+    ],
+    "description": "Charles Dickens",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "male",
+      "occupation": [
+        "writer"
+      ],
+      "country": [
+        "United Kingdom"
+      ],
+      "birth_century": 19,
+      "is_dead": true,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_tolstoy",
+    "name": "トルストイ",
+    "aliases": [
+      "Leo Tolstoy"
+    ],
+    "description": "Leo Tolstoy",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "male",
+      "occupation": [
+        "writer"
+      ],
+      "country": [
+        "Russia"
+      ],
+      "birth_century": 19,
+      "is_dead": true,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_dostoevsky",
+    "name": "ドストエフスキー",
+    "aliases": [
+      "Fyodor Dostoevsky"
+    ],
+    "description": "Fyodor Dostoevsky",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "male",
+      "occupation": [
+        "writer"
+      ],
+      "country": [
+        "Russia"
+      ],
+      "birth_century": 19,
+      "is_dead": true,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_davinci",
+    "name": "レオナルド・ダ・ヴィンチ",
+    "aliases": [
+      "Leonardo da Vinci"
+    ],
+    "description": "Leonardo da Vinci",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "male",
+      "occupation": [
+        "painter"
+      ],
+      "country": [
+        "Italy"
+      ],
+      "birth_century": 15,
+      "is_dead": true,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_lincoln",
+    "name": "リンカーン",
+    "aliases": [
+      "Abraham Lincoln"
+    ],
+    "description": "Abraham Lincoln",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "male",
+      "occupation": [
+        "politician"
+      ],
+      "country": [
+        "United States"
+      ],
+      "birth_century": 19,
+      "is_dead": true,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_washington",
+    "name": "ジョージ・ワシントン",
+    "aliases": [
+      "George Washington"
+    ],
+    "description": "George Washington",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "male",
+      "occupation": [
+        "politician"
+      ],
+      "country": [
+        "United States"
+      ],
+      "birth_century": 18,
+      "is_dead": true,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_churchill",
+    "name": "チャーチル",
+    "aliases": [
+      "Winston Churchill"
+    ],
+    "description": "Winston Churchill",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "male",
+      "occupation": [
+        "politician",
+        "writer"
+      ],
+      "country": [
+        "United Kingdom"
+      ],
+      "birth_century": 19,
+      "is_dead": true,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_napoleon",
+    "name": "ナポレオン",
+    "aliases": [
+      "Napoleon Bonaparte"
+    ],
+    "description": "Napoleon Bonaparte",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "male",
+      "occupation": [
+        "politician"
+      ],
+      "country": [
+        "France"
+      ],
+      "birth_century": 18,
+      "is_dead": true,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_obama",
+    "name": "バラク・オバマ",
+    "aliases": [
+      "Barack Obama"
+    ],
+    "description": "Barack Obama",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "male",
+      "occupation": [
+        "politician"
+      ],
+      "country": [
+        "United States"
+      ],
+      "birth_century": 20,
+      "is_dead": false,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_merkel",
+    "name": "アンゲラ・メルケル",
+    "aliases": [
+      "Angela Merkel"
+    ],
+    "description": "Angela Merkel",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "female",
+      "occupation": [
+        "politician"
+      ],
+      "country": [
+        "Germany"
+      ],
+      "birth_century": 20,
+      "is_dead": false,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_tomhanks",
+    "name": "トム・ハンクス",
+    "aliases": [
+      "Tom Hanks"
+    ],
+    "description": "Tom Hanks",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "male",
+      "occupation": [
+        "actor"
+      ],
+      "country": [
+        "United States"
+      ],
+      "birth_century": 20,
+      "is_dead": false,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_hepburn",
+    "name": "オードリー・ヘプバーン",
+    "aliases": [
+      "Audrey Hepburn"
+    ],
+    "description": "Audrey Hepburn",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "female",
+      "occupation": [
+        "actor"
+      ],
+      "country": [
+        "United Kingdom"
+      ],
+      "birth_century": 20,
+      "is_dead": true,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_mjackson",
+    "name": "マイケル・ジャクソン",
+    "aliases": [
+      "Michael Jackson"
+    ],
+    "description": "Michael Jackson",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "male",
+      "occupation": [
+        "singer",
+        "musician"
+      ],
+      "country": [
+        "United States"
+      ],
+      "birth_century": 20,
+      "is_dead": true,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_madonna",
+    "name": "マドンナ",
+    "aliases": [
+      "Madonna"
+    ],
+    "description": "Madonna",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "female",
+      "occupation": [
+        "singer"
+      ],
+      "country": [
+        "United States"
+      ],
+      "birth_century": 20,
+      "is_dead": false,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_miyazaki",
+    "name": "宮崎駿",
+    "aliases": [
+      "Hayao Miyazaki"
+    ],
+    "description": "Hayao Miyazaki",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "male",
+      "occupation": [
+        "film_director"
+      ],
+      "country": [
+        "Japan"
+      ],
+      "birth_century": 20,
+      "is_dead": false,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_kurosawa",
+    "name": "黒澤明",
+    "aliases": [
+      "Akira Kurosawa"
+    ],
+    "description": "Akira Kurosawa",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "male",
+      "occupation": [
+        "film_director"
+      ],
+      "country": [
+        "Japan"
+      ],
+      "birth_century": 20,
+      "is_dead": true,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_messi",
+    "name": "リオネル・メッシ",
+    "aliases": [
+      "Lionel Messi"
+    ],
+    "description": "Lionel Messi",
+    "image_url": null,
+    "features": {
+      "is_fictional": false,
+      "gender": "male",
+      "occupation": [
+        "athlete"
+      ],
+      "birth_century": 20,
+      "is_dead": false,
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_goku",
+    "name": "孫悟空",
+    "aliases": [
+      "Son Goku"
+    ],
+    "description": "Son Goku",
+    "image_url": null,
+    "features": {
+      "is_fictional": true,
+      "gender": "male",
+      "in_anime": true
+    }
+  },
+  {
+    "id": "seed_naruto",
+    "name": "うずまきナルト",
+    "aliases": [
+      "Naruto Uzumaki"
+    ],
+    "description": "Naruto Uzumaki",
+    "image_url": null,
+    "features": {
+      "is_fictional": true,
+      "gender": "male",
+      "in_anime": true
+    }
+  },
+  {
+    "id": "seed_luffy",
+    "name": "モンキー・D・ルフィ",
+    "aliases": [
+      "Monkey D. Luffy"
+    ],
+    "description": "Monkey D. Luffy",
+    "image_url": null,
+    "features": {
+      "is_fictional": true,
+      "gender": "male",
+      "in_anime": true
+    }
+  },
+  {
+    "id": "seed_usagi",
+    "name": "セーラームーン",
+    "aliases": [
+      "Sailor Moon"
+    ],
+    "description": "Sailor Moon",
+    "image_url": null,
+    "features": {
+      "is_fictional": true,
+      "gender": "female",
+      "in_anime": true
+    }
+  },
+  {
+    "id": "seed_doraemon",
+    "name": "ドラえもん",
+    "aliases": [
+      "Doraemon"
+    ],
+    "description": "Doraemon",
+    "image_url": null,
+    "features": {
+      "is_fictional": true,
+      "in_anime": true
+    }
+  },
+  {
+    "id": "seed_pikachu",
+    "name": "ピカチュウ",
+    "aliases": [
+      "Pikachu"
+    ],
+    "description": "Pikachu",
+    "image_url": null,
+    "features": {
+      "is_fictional": true,
+      "in_anime": true
+    }
+  },
+  {
+    "id": "seed_mickey",
+    "name": "ミッキーマウス",
+    "aliases": [
+      "Mickey Mouse"
+    ],
+    "description": "Mickey Mouse",
+    "image_url": null,
+    "features": {
+      "is_fictional": true,
+      "gender": "male",
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_harrypotter",
+    "name": "ハリー・ポッター",
+    "aliases": [
+      "Harry Potter"
+    ],
+    "description": "Harry Potter",
+    "image_url": null,
+    "features": {
+      "is_fictional": true,
+      "gender": "male",
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_holmes",
+    "name": "シャーロック・ホームズ",
+    "aliases": [
+      "Sherlock Holmes"
+    ],
+    "description": "Sherlock Holmes",
+    "image_url": null,
+    "features": {
+      "is_fictional": true,
+      "gender": "male",
+      "in_anime": false
+    }
+  },
+  {
+    "id": "seed_superman",
+    "name": "スーパーマン",
+    "aliases": [
+      "Superman"
+    ],
+    "description": "Superman",
+    "image_url": null,
+    "features": {
+      "is_fictional": true,
+      "gender": "male",
+      "in_anime": false
+    }
+  }
+]

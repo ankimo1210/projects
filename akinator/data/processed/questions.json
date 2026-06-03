@@ -1,0 +1,184 @@
+[
+  {
+    "id": "q_birth_century_17",
+    "text": "17世紀生まれですか？",
+    "feature_key": "birth_century",
+    "expected_value": 17,
+    "match_type": "numeric"
+  },
+  {
+    "id": "q_birth_century_18",
+    "text": "18世紀生まれですか？",
+    "feature_key": "birth_century",
+    "expected_value": 18,
+    "match_type": "numeric"
+  },
+  {
+    "id": "q_birth_century_19",
+    "text": "19世紀生まれですか？",
+    "feature_key": "birth_century",
+    "expected_value": 19,
+    "match_type": "numeric"
+  },
+  {
+    "id": "q_birth_century_20",
+    "text": "20世紀生まれですか？",
+    "feature_key": "birth_century",
+    "expected_value": 20,
+    "match_type": "numeric"
+  },
+  {
+    "id": "q_country_France",
+    "text": "フランスと関係がありますか？",
+    "feature_key": "country",
+    "expected_value": "France",
+    "match_type": "list_contains"
+  },
+  {
+    "id": "q_country_Germany",
+    "text": "ドイツと関係がありますか？",
+    "feature_key": "country",
+    "expected_value": "Germany",
+    "match_type": "list_contains"
+  },
+  {
+    "id": "q_country_Japan",
+    "text": "日本と関係がありますか？",
+    "feature_key": "country",
+    "expected_value": "Japan",
+    "match_type": "list_contains"
+  },
+  {
+    "id": "q_country_Russia",
+    "text": "ロシアと関係がありますか？",
+    "feature_key": "country",
+    "expected_value": "Russia",
+    "match_type": "list_contains"
+  },
+  {
+    "id": "q_country_United Kingdom",
+    "text": "イギリスと関係がありますか？",
+    "feature_key": "country",
+    "expected_value": "United Kingdom",
+    "match_type": "list_contains"
+  },
+  {
+    "id": "q_country_United States",
+    "text": "アメリカと関係がありますか？",
+    "feature_key": "country",
+    "expected_value": "United States",
+    "match_type": "list_contains"
+  },
+  {
+    "id": "q_gender_female",
+    "text": "女性ですか？",
+    "feature_key": "gender",
+    "expected_value": "female",
+    "match_type": "equals"
+  },
+  {
+    "id": "q_gender_male",
+    "text": "男性ですか？",
+    "feature_key": "gender",
+    "expected_value": "male",
+    "match_type": "equals"
+  },
+  {
+    "id": "q_in_anime_True",
+    "text": "アニメ作品に登場しますか？",
+    "feature_key": "in_anime",
+    "expected_value": true,
+    "match_type": "equals"
+  },
+  {
+    "id": "q_is_dead_False",
+    "text": "存命ですか？",
+    "feature_key": "is_dead",
+    "expected_value": false,
+    "match_type": "equals"
+  },
+  {
+    "id": "q_is_dead_True",
+    "text": "すでに亡くなっていますか？",
+    "feature_key": "is_dead",
+    "expected_value": true,
+    "match_type": "equals"
+  },
+  {
+    "id": "q_is_fictional_False",
+    "text": "実在する人物ですか？",
+    "feature_key": "is_fictional",
+    "expected_value": false,
+    "match_type": "equals"
+  },
+  {
+    "id": "q_is_fictional_True",
+    "text": "架空のキャラクターですか？",
+    "feature_key": "is_fictional",
+    "expected_value": true,
+    "match_type": "equals"
+  },
+  {
+    "id": "q_occupation_actor",
+    "text": "俳優ですか？",
+    "feature_key": "occupation",
+    "expected_value": "actor",
+    "match_type": "list_contains"
+  },
+  {
+    "id": "q_occupation_film_director",
+    "text": "映画監督ですか？",
+    "feature_key": "occupation",
+    "expected_value": "film_director",
+    "match_type": "list_contains"
+  },
+  {
+    "id": "q_occupation_mathematician",
+    "text": "数学者ですか？",
+    "feature_key": "occupation",
+    "expected_value": "mathematician",
+    "match_type": "list_contains"
+  },
+  {
+    "id": "q_occupation_musician",
+    "text": "音楽家ですか？",
+    "feature_key": "occupation",
+    "expected_value": "musician",
+    "match_type": "list_contains"
+  },
+  {
+    "id": "q_occupation_painter",
+    "text": "画家ですか？",
+    "feature_key": "occupation",
+    "expected_value": "painter",
+    "match_type": "list_contains"
+  },
+  {
+    "id": "q_occupation_physicist",
+    "text": "物理学者ですか？",
+    "feature_key": "occupation",
+    "expected_value": "physicist",
+    "match_type": "list_contains"
+  },
+  {
+    "id": "q_occupation_politician",
+    "text": "政治家ですか？",
+    "feature_key": "occupation",
+    "expected_value": "politician",
+    "match_type": "list_contains"
+  },
+  {
+    "id": "q_occupation_singer",
+    "text": "歌手ですか？",
+    "feature_key": "occupation",
+    "expected_value": "singer",
+    "match_type": "list_contains"
+  },
+  {
+    "id": "q_occupation_writer",
+    "text": "作家ですか？",
+    "feature_key": "occupation",
+    "expected_value": "writer",
+    "match_type": "list_contains"
+  }
+]

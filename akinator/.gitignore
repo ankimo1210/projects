@@ -5,3 +5,4 @@ data/raw/*
 akinator.db
 akinator.db-*
 __pycache__/
+*.egg-info/
