@@ -69,3 +69,20 @@ def test_probably_yes_is_weaker_than_yes():
     strong = update_log_score(0.0, male, q, Answer.YES)
     weak = update_log_score(0.0, male, q, Answer.PROBABLY_YES)
     assert 0.0 < weak < strong
+
+
+from app.inference.scoring import posteriors, top_candidates
+
+
+def test_posteriors_sum_to_one_and_rank():
+    scores = {"a": 2.0, "b": 0.0, "c": -1.0}
+    p = posteriors(scores)
+    assert abs(sum(p.values()) - 1.0) < 1e-9
+    assert p["a"] > p["b"] > p["c"]
+
+
+def test_top_candidates_orders_desc():
+    scores = {"a": 0.0, "b": 5.0, "c": 1.0}
+    top = top_candidates(scores, k=2)
+    assert [eid for eid, _ in top] == ["b", "c"]
+    assert len(top) == 2

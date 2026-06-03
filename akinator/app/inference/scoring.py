@@ -55,3 +55,19 @@ def update_log_score(
     # probably_yes / probably_no — same direction, scaled down
     asked_positive = answer is Answer.PROBABLY_YES
     return log_score + _PROBABLY_SCALE * _signed_delta(result, asked_positive)
+
+
+def posteriors(scores: dict[str, float]) -> dict[str, float]:
+    """Softmax over log-scores -> probability per entity id."""
+    if not scores:
+        return {}
+    m = max(scores.values())
+    exps = {k: math.exp(v - m) for k, v in scores.items()}
+    z = sum(exps.values())
+    return {k: v / z for k, v in exps.items()}
+
+
+def top_candidates(scores: dict[str, float], k: int = 5) -> list[tuple[str, float]]:
+    """Return [(entity_id, posterior), ...] sorted by posterior descending."""
+    post = posteriors(scores)
+    return sorted(post.items(), key=lambda kv: kv[1], reverse=True)[:k]
