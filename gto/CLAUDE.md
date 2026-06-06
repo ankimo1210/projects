@@ -70,8 +70,10 @@ cargo test --manifest-path gto/Cargo.toml
   matters. River-only solves are still correct on GPU.
 - **Preflop is hardcoded**, not solved by CFR. The frequencies in
   `src/gto/trainer/preflop_data.py` are an approximation table.
-- **`2c` phantom card bug** on boards with 3-4 community cards; see
-  `PROGRESS.md` §4.
+- **`2c` phantom card bug** — fixed (Phase 1 evaluator rewrite, see
+  `eval::showdown_strengths`). Legacy Parquet files in `_data/gto/solutions/`
+  were computed with the old evaluator; regenerate before trusting
+  flop/turn numbers from the library.
 - **CUDA 12.6 + sm_120**: hardware/driver assumption is RTX 5080 (Blackwell).
   Older GPUs likely fail at JIT compile.
 - **Do not delete** `_data/gto/solutions/` Parquet without explicit user

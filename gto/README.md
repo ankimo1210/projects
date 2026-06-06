@@ -130,7 +130,7 @@ gto/
 1. **single-street solve**: GPU ソルバーはフロップで Call → 即 Showdown。ターン/リバーを考慮しない（リバー solve は正しい）
 2. **プリフロップは hardcoded table**: 真の preflop CFR ではなく GTO 近似テーブル
 3. **3bet 以降の preflop tree 未実装**: BB 3bet 時の BTN 応答が無い
-4. **2c phantom card バグ**: ボード 3-4 枚時に評価カードに 2c が混入
+4. ~~**2c phantom card バグ**~~: 修正済み（`eval::showdown_strengths`）。ただし既存 Parquet ライブラリは旧評価器で計算されたもの — 再生成までフロップ/ターンの数値は要注意
 
 → 詳細とロードマップは [PROGRESS.md](./PROGRESS.md)
 
