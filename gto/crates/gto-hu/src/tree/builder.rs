@@ -4,6 +4,7 @@ use super::node::{Node, NodeKind, Tree};
 
 /// Build the river action tree. OOP (BB) acts first.
 pub fn build_river_tree(pot: i64, stack: i64, cfg: &StreetConfig) -> Tree {
+    cfg.validate();
     let root_state = BettingState::river_root(pot, stack);
     let mut tree = Tree { nodes: Vec::new() };
     tree.nodes.push(Node {
@@ -38,6 +39,10 @@ fn legal_actions(state: &BettingState, cfg: &StreetConfig) -> Vec<Action> {
                 RaiseRule::JamOnly => out.push(Action::AllIn { to: all_in_to }),
                 RaiseRule::ToFactorOrJam(f) => {
                     let target = (state.street_committed[opp] as f64 * f) as i64;
+                    debug_assert!(
+                        target > state.street_committed[opp],
+                        "raise target must exceed facing total"
+                    );
                     if target >= all_in_to {
                         out.push(Action::AllIn { to: all_in_to });
                     } else {
@@ -51,7 +56,10 @@ fn legal_actions(state: &BettingState, cfg: &StreetConfig) -> Vec<Action> {
         if stack > 0 && state.stacks[opp] > 0 {
             let mut tos: Vec<i64> = Vec::new();
             for &pct in &cfg.bet_pcts {
-                let to = (state.pot() * pct as i64 / 100).max(1);
+                let to = state.pot() * pct as i64 / 100;
+                if to == 0 {
+                    continue; // sub-chip size on a degenerate pot: skip, don't warp
+                }
                 tos.push(to.min(all_in_to));
             }
             if cfg.allow_allin_bet {

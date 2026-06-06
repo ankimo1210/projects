@@ -1,5 +1,5 @@
 use gto_hu::game::{Action, BB};
-use gto_hu::tree::{build_river_tree, NodeKind, StreetConfig};
+use gto_hu::tree::{build_river_tree, NodeKind, RaiseRule, StreetConfig};
 
 #[test]
 fn river_tree_root_actions_match_srp_config() {
@@ -62,4 +62,66 @@ fn short_stack_dedupes_bet_sizes_to_allin() {
     let t = build_river_tree(20 * BB, 10 * BB, &StreetConfig::srp_river());
     let labels: Vec<String> = t.nodes[0].children.iter().map(|(a, _)| a.label()).collect();
     assert_eq!(labels, vec!["check", "allin 10.0bb"]);
+}
+
+#[test]
+#[should_panic(expected = "below 2.0")]
+fn factor_below_two_rejected() {
+    let cfg = StreetConfig {
+        bet_pcts: vec![75],
+        allow_allin_bet: false,
+        raise: RaiseRule::ToFactorOrJam(1.5),
+        max_raises: 1,
+    };
+    let _ = build_river_tree(20 * BB, 90 * BB, &cfg);
+}
+
+#[test]
+#[should_panic(expected = "must be positive")]
+fn zero_bet_pct_rejected() {
+    let cfg = StreetConfig {
+        bet_pcts: vec![0],
+        allow_allin_bet: false,
+        raise: RaiseRule::JamOnly,
+        max_raises: 1,
+    };
+    let _ = build_river_tree(20 * BB, 90 * BB, &cfg);
+}
+
+#[test]
+fn factor_raise_builds_legal_three_x() {
+    // Facing the 15bb root bet, factor 3.0 must offer raise to 45bb.
+    let cfg = StreetConfig {
+        bet_pcts: vec![75],
+        allow_allin_bet: false,
+        raise: RaiseRule::ToFactorOrJam(3.0),
+        max_raises: 1,
+    };
+    let t = build_river_tree(20 * BB, 90 * BB, &cfg);
+    let bet_node = t.nodes[0].children.iter()
+        .find(|(a, _)| matches!(a, Action::Bet { .. }))
+        .map(|&(_, id)| id)
+        .unwrap();
+    let raise = t.nodes[bet_node].children.iter()
+        .find_map(|(a, id)| match a {
+            Action::Raise { to } => Some((*to, *id)),
+            _ => None,
+        });
+    let (to, raise_id) = raise.expect("factor rule must offer a raise");
+    assert_eq!(to, 45 * BB);
+    // The raise child must expand legally (fold/call available, no panic).
+    assert!(t.nodes[raise_id].children.len() >= 2);
+}
+
+#[test]
+fn raise_rule_none_offers_fold_call_only() {
+    let cfg = StreetConfig {
+        bet_pcts: vec![75],
+        allow_allin_bet: false,
+        raise: RaiseRule::None,
+        max_raises: 1,
+    };
+    let t = build_river_tree(20 * BB, 90 * BB, &cfg);
+    let bet_node = t.nodes[0].children[1].1;
+    assert_eq!(t.nodes[bet_node].children.len(), 2, "fold/call only");
 }

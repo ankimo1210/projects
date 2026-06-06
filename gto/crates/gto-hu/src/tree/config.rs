@@ -7,6 +7,8 @@ pub enum RaiseRule {
     JamOnly,
     /// Raise to `factor` × the facing total; becomes a jam when the result
     /// reaches the stack. (Flop/turn "raise_3x_or_jam"; used from Phase 4.)
+    /// The factor must be ≥ 2.0 — anything lower produces raises below the
+    /// NLHE min-raise increment. Validated by `StreetConfig::validate`.
     ToFactorOrJam(f64),
 }
 
@@ -30,6 +32,20 @@ impl StreetConfig {
             allow_allin_bet: true,
             raise: RaiseRule::JamOnly,
             max_raises: 1,
+        }
+    }
+
+    /// Panics on configs that would build illegal or degenerate trees.
+    /// Called by the tree builder before expansion.
+    pub fn validate(&self) {
+        if let RaiseRule::ToFactorOrJam(f) = self.raise {
+            assert!(
+                f >= 2.0,
+                "ToFactorOrJam factor {f} below 2.0 builds sub-min-raise sizes"
+            );
+        }
+        for &pct in &self.bet_pcts {
+            assert!(pct > 0, "bet_pcts must be positive (got 0)");
         }
     }
 }
