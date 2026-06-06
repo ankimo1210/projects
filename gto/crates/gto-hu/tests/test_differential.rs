@@ -16,14 +16,42 @@
 
 use gto_core::eval::parse_card;
 use gto_hu::game::BB;
-use gto_hu::games::TinyRiver;
+use gto_hu::games::{TinyRiver, TinyRiverState};
 use gto_hu::ranges::{combo_index, Range};
-use gto_hu::solver::{CfrVariant, ScalarCfr, VectorRiverSolver};
+use gto_hu::solver::{CfrVariant, Game, ScalarCfr, VectorRiverSolver};
 use gto_hu::tree::{build_river_tree, NodeKind, StreetConfig};
 use gto_hu::validation::exploitability;
 
 fn c(s: &str) -> u8 {
     parse_card(s).unwrap()
+}
+
+/// Game value to player 0 when both players follow the scalar average
+/// strategy.  Pure expected-value recursion (no reach threading needed):
+///   terminal → payoff_p0
+///   chance   → Σ p * recurse(child)
+///   action   → Σ strat[a] * recurse(next(state, a))
+fn scalar_game_value_p0(
+    game: &TinyRiver,
+    solver: &ScalarCfr<TinyRiver>,
+    state: &TinyRiverState,
+) -> f64 {
+    if game.is_terminal(state) {
+        return game.payoff(state, 0);
+    }
+    if game.is_chance(state) {
+        return game
+            .chance_outcomes(state)
+            .iter()
+            .map(|(child, prob)| prob * scalar_game_value_p0(game, solver, child))
+            .sum();
+    }
+    let na = game.num_actions(state);
+    let key = game.infoset_key(state);
+    let strat = solver.average_strategy(&key, na);
+    (0..na)
+        .map(|a| strat[a] * scalar_game_value_p0(game, solver, &game.next(state, a)))
+        .sum()
 }
 
 /// Compute the reach probability of each node under the vector equilibrium,
@@ -149,6 +177,19 @@ fn scalar_and_vector_agree_on_tiny_spot() {
             }
         }
     }
+
+    // --- 3. Game-value invariant -----------------------------------------
+    // Both engines converging to the same equilibrium must agree on the
+    // game value to player 0 (avg-strat vs avg-strat) within the combined
+    // exploitability budget.
+    let v_scalar = scalar_game_value_p0(&game, &scalar, &game.root());
+    let v_vector = vector.game_value_p0();
+    let budget = scalar_expl + vector_expl.exploitability;
+    assert!(
+        (v_scalar - v_vector).abs() <= budget,
+        "game values diverge: scalar {v_scalar:.4} vs vector {v_vector:.4} (budget {budget:.4})"
+    );
+    eprintln!("game values: scalar {v_scalar:.4} vs vector {v_vector:.4} (budget {budget:.4})");
 
     eprintln!(
         "differential OK: scalar expl {scalar_expl:.5} bb, vector expl {:.5} bb",

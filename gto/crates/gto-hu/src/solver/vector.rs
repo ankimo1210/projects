@@ -31,6 +31,8 @@ pub struct VectorRiverSolver {
     /// Combo indices with strength > 0, sorted ascending by strength.
     sorted_idx: Vec<usize>,
     iteration: u32,
+    /// All 1326 (card_a, card_b) pairs in combo-index order, cached once.
+    combos: Vec<(u8, u8)>,
 }
 
 impl VectorRiverSolver {
@@ -49,6 +51,7 @@ impl VectorRiverSolver {
         };
         let regrets = alloc(&tree);
         let strat_sum = alloc(&tree);
+        let combos = all_combos();
         VectorRiverSolver {
             tree,
             board,
@@ -59,6 +62,7 @@ impl VectorRiverSolver {
             strengths,
             sorted_idx,
             iteration: 0,
+            combos,
         }
     }
 
@@ -86,7 +90,7 @@ impl VectorRiverSolver {
             NodeKind::FoldTerminal { winner } => {
                 let state = self.tree.nodes[node_id].state;
                 let pay = fold_payoffs(&state, winner)[traverser as usize] as f64 / 100.0;
-                let compat = weighted_compat(opp_reach);
+                let compat = weighted_compat(&self.combos, opp_reach);
                 compat.iter().map(|w| pay * w).collect()
             }
             NodeKind::Showdown => {
@@ -117,10 +121,10 @@ impl VectorRiverSolver {
                             ev[c] += strat[a * N + c] * av[c];
                         }
                     }
-                    // Each (node, combo) is visited exactly once per
-                    // iteration when actor == traverser, so the per-iteration
-                    // discount and the delta accumulation fuse into one pass
-                    // (equivalent to ScalarCfr's lazy two-phase update).
+                    // No per-combo skip here: regrets must keep updating even
+                    // for own-reach-zero combos (their counterfactual signal
+                    // is independent of own reach), and DCFR's per-iteration
+                    // discounts must hit every combo every iteration.
                     let t = self.iteration;
                     let (sd, sw) = (
                         self.variant.strategy_discount(t),
@@ -131,9 +135,6 @@ impl VectorRiverSolver {
                     let ssum = &mut self.strat_sum[node_id];
                     #[allow(clippy::needless_range_loop)]
                     for c in 0..N {
-                        if reach[c] == 0.0 && opp_reach[c] == 0.0 {
-                            continue;
-                        }
                         for a in 0..na {
                             let i = a * N + c;
                             let discounted = reg[i] * variant.regret_discount(reg[i], t);
@@ -183,7 +184,7 @@ impl VectorRiverSolver {
     /// win_w − lose_w per combo against `opp_reach`, blocker-exact.
     /// O(N) per call using the precomputed strength order.
     fn showdown_diff(&self, opp_reach: &[f64; N]) -> Vec<f64> {
-        let combos = all_combos();
+        let combos = &self.combos;
         let idx = &self.sorted_idx;
         let mut out = vec![0.0; N];
 
@@ -308,7 +309,10 @@ impl VectorRiverSolver {
             NodeKind::FoldTerminal { winner } => {
                 let state = self.tree.nodes[node_id].state;
                 let pay = fold_payoffs(&state, winner)[br_player as usize] as f64 / 100.0;
-                weighted_compat(opp_reach).iter().map(|w| pay * w).collect()
+                weighted_compat(&self.combos, opp_reach)
+                    .iter()
+                    .map(|w| pay * w)
+                    .collect()
             }
             NodeKind::Showdown => {
                 let state = self.tree.nodes[node_id].state;
@@ -353,6 +357,96 @@ impl VectorRiverSolver {
         }
     }
 
+    /// Counterfactual values for `player` when BOTH players follow the
+    /// average strategy.  Mirrors `br_values` but uses the actor's average
+    /// strategy (weighted sum) rather than the best response (max).
+    ///
+    /// Convention (same as `br_values` / `traverse`):
+    ///   `opp_reach[c]` = reach of the opponent of `player`.
+    ///   When `actor == player`: `player` follows avg strat → weight child
+    ///     values by `avg_strat[a]` per combo; `opp_reach` is unchanged.
+    ///   When `actor != player`: opponent follows avg strat → update
+    ///     `opp_reach[c] *= opp_avg_strat(node, c)[a]` before recursing.
+    fn avg_values(&self, node_id: usize, player: u8, opp_reach: &[f64; N]) -> Vec<f64> {
+        let kind = self.tree.nodes[node_id].kind;
+        match kind {
+            NodeKind::FoldTerminal { winner } => {
+                let state = self.tree.nodes[node_id].state;
+                let pay = fold_payoffs(&state, winner)[player as usize] as f64 / 100.0;
+                weighted_compat(&self.combos, opp_reach)
+                    .iter()
+                    .map(|w| pay * w)
+                    .collect()
+            }
+            NodeKind::Showdown => {
+                let state = self.tree.nodes[node_id].state;
+                let win_bb = showdown_payoffs(&state, Some(player))[player as usize] as f64 / 100.0;
+                self.showdown_diff(opp_reach)
+                    .iter()
+                    .map(|d| win_bb * d)
+                    .collect()
+            }
+            NodeKind::Action { actor } => {
+                let na = self.tree.nodes[node_id].children.len();
+                let mut ev = vec![0.0; N];
+                if actor == player {
+                    // Player follows avg strategy: weight child values by
+                    // avg_strat[a] per combo; opp_reach is unchanged.
+                    for a in 0..na {
+                        let child = self.tree.nodes[node_id].children[a].1;
+                        let v = self.avg_values(child, player, opp_reach);
+                        for c in 0..N {
+                            let s = self.average_strategy(node_id, c);
+                            ev[c] += s[a] * v[c];
+                        }
+                    }
+                } else {
+                    // Opponent follows avg strategy: update opp_reach by
+                    // opponent's avg strat probability for each action.
+                    for a in 0..na {
+                        let child = self.tree.nodes[node_id].children[a].1;
+                        let mut no = *opp_reach;
+                        for c in 0..N {
+                            let s = self.average_strategy(node_id, c);
+                            no[c] = opp_reach[c] * s[a];
+                        }
+                        let v = self.avg_values(child, player, &no);
+                        for c in 0..N {
+                            ev[c] += v[c];
+                        }
+                    }
+                }
+                ev
+            }
+        }
+    }
+
+    /// Game value (bb/hand) to player 0 when both players follow the
+    /// converged average strategy.  Intended for test / validation use.
+    ///
+    /// Normalization mirrors `exploitability_bb`:
+    ///   value = Σ_c r0[c]·v0[c]  /  Σ_c r0[c]·compat(r1)[c]
+    /// where v0 are counterfactual avg-vs-avg values for player 0.
+    pub fn game_value_p0(&self) -> f64 {
+        let r0 = self.ranges[0].weights;
+        let r1 = self.ranges[1].weights;
+        let vals = self.avg_values(0, 0, &r1);
+        let compat = weighted_compat(&self.combos, &r1);
+        let mut num = 0.0;
+        let mut z = 0.0;
+        for c in 0..N {
+            if r0[c] > 0.0 {
+                num += r0[c] * vals[c];
+                z += r0[c] * compat[c];
+            }
+        }
+        if z > 0.0 {
+            num / z
+        } else {
+            0.0
+        }
+    }
+
     /// Exploitability in bb/hand: (BR_sb + BR_bb) / 2.
     pub fn exploitability_bb(&self) -> ExplReport {
         let mut br_value = [0.0f64; 2];
@@ -361,7 +455,7 @@ impl VectorRiverSolver {
             let own = self.ranges[p].weights;
             let opp = self.ranges[1 - p].weights;
             let vals = self.br_values(0, p as u8, &opp);
-            let compat = weighted_compat(&opp);
+            let compat = weighted_compat(&self.combos, &opp);
             let mut num = 0.0;
             let mut z = 0.0;
             for c in 0..N {
@@ -381,8 +475,7 @@ impl VectorRiverSolver {
 
 /// For each combo c: Σ over opponent combos compatible with c of their
 /// weight (total − per-card sums + own-combo weight added back).
-fn weighted_compat(opp_reach: &[f64; N]) -> Vec<f64> {
-    let combos = all_combos();
+fn weighted_compat(combos: &[(u8, u8)], opp_reach: &[f64; N]) -> Vec<f64> {
     let total: f64 = opp_reach.iter().sum();
     let mut per_card = [0.0f64; 52];
     for (i, &(a, b)) in combos.iter().enumerate() {
