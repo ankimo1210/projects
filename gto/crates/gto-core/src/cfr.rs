@@ -1,3 +1,12 @@
+//! # ⚠ Single-street approximation — river-only correctness
+//!
+//! `CfrSolver` evaluates `NextStreet` nodes as immediate showdowns
+//! (see the `NodeKind::Showdown | NodeKind::NextStreet` arm below).
+//! Results are only game-theoretically meaningful on **river** (5-card)
+//! boards. For flop/turn boards this is a rough approximation that
+//! ignores future streets — never present its output as GTO.
+//! The preflop-to-river solver lives in the `gto-hu` crate.
+//!
 //! Discounted CFR (DCFR) — corrected per-combo implementation.
 //!
 //! Algorithm (Brown & Sandholm 2019, External Sampling formulation):

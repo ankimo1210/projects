@@ -44,6 +44,8 @@ fn parse_card_fn(s: &str) -> PyResult<u8> {
         .ok_or_else(|| pyo3::exceptions::PyValueError::new_err(format!("invalid card: {s}")))
 }
 
+/// ⚠ Single-street approximation (river-only correctness). Flop/turn
+/// results ignore future streets; do not present them as GTO.
 #[pyfunction]
 fn solve_spot(
     pot_bb: f64,

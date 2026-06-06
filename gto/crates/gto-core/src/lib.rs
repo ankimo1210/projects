@@ -19,6 +19,10 @@ pub use multistreet::{SubgameSolver, MultiStreetResult, solve_multistreet};
 // High-level solve API (mirrors gto-solver's top-level fn)
 // ---------------------------------------------------------------------------
 
+/// ⚠ Single-street approximation: flop/turn boards are solved as if the
+/// hand ends after this street (NextStreet ≈ Showdown). Only river boards
+/// produce correct equilibrium strategies. See `gto-hu` for the real
+/// multistreet solver.
 pub fn solve(
     pot_bb: f64,
     effective_stack_bb: f64,
