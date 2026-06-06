@@ -9,6 +9,8 @@ use crate::solver::{Game, ScalarCfr};
 /// choice at an infoset maximizes Σ over its states of
 /// (opponent × chance reach) × value — the BR player's own reach above is
 /// constant per infoset under perfect recall and does not affect argmax.
+///
+/// Complexity: O(infosets × tree size) — pass 2 re-walks the tree per infoset. Fine for reference games; do not call in a solver's inner loop.
 pub fn best_response_value<G: Game>(game: &G, cfr: &ScalarCfr<G>, br_player: usize) -> f64 {
     // Pass 1: enumerate all BR-player decision states, grouped by infoset,
     // with their opponent+chance reach under the opponent's average strategy.
@@ -146,7 +148,9 @@ fn eval<G: Game>(
     let na = game.num_actions(s);
     let key = game.infoset_key(s);
     if game.player(s) == br_player {
-        let a = *choices.get(&key).unwrap_or(&0);
+        let a = *choices.get(&key).unwrap_or_else(|| {
+            panic!("BR ordering violated: unresolved infoset {key}")
+        });
         eval(game, cfr, &game.next(s, a), br_player, choices)
     } else {
         let strat = cfr.average_strategy(&key, na);
