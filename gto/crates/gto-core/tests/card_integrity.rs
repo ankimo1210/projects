@@ -4,6 +4,7 @@ use gto_core::eval::{evaluate_best, parse_card};
 use gto_core::{all_combos, combo_index, full_deck, NUM_COMBOS};
 
 #[test]
+#[cfg(debug_assertions)]
 #[should_panic(expected = "duplicate card")]
 fn evaluate_best_panics_on_duplicate_cards_in_debug() {
     let c = |s: &str| parse_card(s).unwrap();

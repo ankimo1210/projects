@@ -58,6 +58,8 @@ pub struct CfrSolver {
     strategy_sum: Vec<Vec<Vec<f64>>>,
     pub board:    Vec<Card>,
     pub ranges:   [Range; 2],
+    /// Per-combo showdown strengths (cached once at construction; board never changes).
+    strengths:    Vec<u16>,
 }
 
 impl CfrSolver {
@@ -72,8 +74,9 @@ impl CfrSolver {
             let na = nd.children.len().max(1);
             vec![vec![0.0f64; na]; NUM_COMBOS]
         }).collect();
+        let strengths = crate::eval::showdown_strengths(&board);
 
-        CfrSolver { tree, regrets, strategy_sum, board, ranges }
+        CfrSolver { tree, regrets, strategy_sum, board, ranges, strengths }
     }
 
     /// Per-combo strategy at a node (regret-matching+).
@@ -192,9 +195,8 @@ impl CfrSolver {
     fn showdown_values(&self, traverser: u8, pot: f64, opp_reach: &[f64; NUM_COMBOS]) -> Vec<f64> {
         let combos   = all_combos();
         let half_pot = pot / 2.0;
-        let board    = &self.board;
 
-        let strengths: Vec<u16> = crate::eval::showdown_strengths(board);
+        let strengths = &self.strengths;
 
         let active_hero: Vec<(usize, u16)> = (0..NUM_COMBOS)
             .filter(|&i| self.ranges[traverser as usize].weights[i] > 0.0 && strengths[i] > 0)

@@ -1,13 +1,20 @@
 /// Fast 7-card hand evaluator using rank-indexed lookup tables.
 ///
 /// Approach:
-///   1. Detect flush via suit bit-counts.
-///   2. For flush hands, look up rank pattern in a flush table.
-///   3. For non-flush, use prime-product hash (Cactus Kev style) to find
-///      the best 5-card rank from rank-only table.
+///   1. Build three lookup tables at program start via `build_tables()`:
+///      - `flush[rank_bits]`: value for any 5-card flush (rank_bits = 13-bit rank mask).
+///      - `unique5[prime_product]`: value for 5-card non-flush hands with all distinct
+///        ranks (straight or high card), keyed by product of rank primes.
+///      - `nonuniq[hist_key]`: value for hands with repeated ranks (pairs, trips, etc.),
+///        keyed by a packed frequency-rank histogram.
+///   2. `evaluate_best` enumerates all C(n,5) 5-card subsets for n = 6 or 7 cards,
+///      evaluates each via `eval5_table`, and returns the maximum.
+///   3. `eval5_table` checks for flush (all same suit) and dispatches to
+///      `flush[rank_mask]` or `eval5_nonflush` accordingly.
 ///
+/// Values are assigned in category order (worst→best) during `build_tables()`.
+/// Within each category, hands are ordered by poker kicker rules (highest card first).
 /// Returns u16 strength: higher = better (1 = worst high card, 7462 = royal flush).
-/// We pre-build tables at program start (const-evaluated where possible).
 
 use std::sync::OnceLock;
 
@@ -104,8 +111,13 @@ fn build_tables() -> Tables {
     for c in &combos {
         if is_straight(c) { straights.push(*c); } else { high_cards.push(*c); }
     }
-    // Worst high cards first (sort by rank tuple ascending)
-    high_cards.sort();
+    // Worst high cards first: compare the HIGHEST card first (poker kicker
+    // order), so reverse each ascending rank array for the sort key.
+    high_cards.sort_by_key(|c| {
+        let mut d = *c;
+        d.reverse();
+        d
+    });
     straights.sort_by_key(|c| straight_top(c));
 
     // High card (1..1277)
@@ -400,5 +412,76 @@ mod tests {
         let s = showdown_strengths(&board);
         let blocked = combo_index(parse_card("9h").unwrap(), parse_card("Ah").unwrap());
         assert_eq!(s[blocked], 0, "combos containing a board card must be 0");
+    }
+
+    #[test]
+    fn high_card_kicker_order_compares_top_card_first() {
+        // K-Q-9-8-5 must beat Q-T-9-8-6 (compare highest card first).
+        let kq985 = [
+            parse_card("Ks").unwrap(), parse_card("Qd").unwrap(),
+            parse_card("9h").unwrap(), parse_card("8c").unwrap(),
+            parse_card("5d").unwrap(),
+        ];
+        let qt986 = [
+            parse_card("Qs").unwrap(), parse_card("Td").unwrap(),
+            parse_card("9c").unwrap(), parse_card("8h").unwrap(),
+            parse_card("6d").unwrap(),
+        ];
+        assert!(
+            evaluate_best(&kq985) > evaluate_best(&qt986),
+            "K-high {} must beat Q-high {}",
+            evaluate_best(&kq985), evaluate_best(&qt986)
+        );
+    }
+
+    #[test]
+    fn flush_kicker_order_compares_top_card_first() {
+        let kq985_flush = [
+            parse_card("Ks").unwrap(), parse_card("Qs").unwrap(),
+            parse_card("9s").unwrap(), parse_card("8s").unwrap(),
+            parse_card("5s").unwrap(),
+        ];
+        let qt986_flush = [
+            parse_card("Qh").unwrap(), parse_card("Th").unwrap(),
+            parse_card("9h").unwrap(), parse_card("8h").unwrap(),
+            parse_card("6h").unwrap(),
+        ];
+        assert!(evaluate_best(&kq985_flush) > evaluate_best(&qt986_flush));
+    }
+
+    #[test]
+    fn eval_order_agrees_with_independent_evaluator() {
+        // Differential ordering test vs card::evaluate on pseudo-random
+        // 7-card hand pairs (deterministic LCG, no dependencies).
+        use crate::card;
+        let mut state: u64 = 0x9E3779B97F4A7C15;
+        let mut next = move || {
+            state = state.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+            state
+        };
+        let draw_hand = |next: &mut dyn FnMut() -> u64| -> Vec<u8> {
+            let mut cards: Vec<u8> = Vec::with_capacity(7);
+            while cards.len() < 7 {
+                let c = (next() % 52) as u8;
+                if !cards.contains(&c) {
+                    cards.push(c);
+                }
+            }
+            cards
+        };
+        for _ in 0..2000 {
+            let h1 = draw_hand(&mut next);
+            let h2 = draw_hand(&mut next);
+            let fast1 = evaluate_best(&h1);
+            let fast2 = evaluate_best(&h2);
+            let ref1 = card::evaluate(&h1.iter().map(|&c| card::Card(c)).collect::<Vec<_>>());
+            let ref2 = card::evaluate(&h2.iter().map(|&c| card::Card(c)).collect::<Vec<_>>());
+            let fast_ord = fast1.cmp(&fast2);
+            let ref_ord = ref1.cmp(&ref2);
+            assert_eq!(
+                fast_ord, ref_ord,
+                "ordering mismatch: {h1:?}({fast1}) vs {h2:?}({fast2}), ref {ref1:?} vs {ref2:?}"
+            );
+        }
     }
 }

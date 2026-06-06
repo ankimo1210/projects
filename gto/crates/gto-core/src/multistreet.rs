@@ -12,7 +12,7 @@ use std::collections::HashMap;
 use rayon::prelude::*;
 
 use crate::range::{all_combos, Range, NUM_COMBOS};
-use crate::tree::{Action, GameTree, NodeKind, Street};
+use crate::tree::{GameTree, NodeKind, Street};
 
 const ALPHA: f64 = 1.5;
 const BETA:  f64 = 0.0;
@@ -34,6 +34,8 @@ pub struct SubgameSolver {
     strategy_sum:     Vec<Vec<Vec<f64>>>,
     /// External EV tables at NextStreet nodes: node_id → [NUM_COMBOS] EV for player 0.
     pub next_evs:     HashMap<usize, Vec<f64>>,
+    /// Per-combo showdown strengths (cached once at construction; board never changes).
+    strengths:        Vec<u16>,
 }
 
 impl SubgameSolver {
@@ -47,7 +49,8 @@ impl SubgameSolver {
             .collect();
         let mut ranges = ranges;
         for r in &mut ranges { r.remove_blockers(&board); }
-        SubgameSolver { tree, board, ranges, regrets, strategy_sum, next_evs: HashMap::new() }
+        let strengths = crate::eval::showdown_strengths(&board);
+        SubgameSolver { tree, board, ranges, regrets, strategy_sum, next_evs: HashMap::new(), strengths }
     }
 
     pub fn run(&mut self, iterations: u32) -> f64 {
@@ -172,10 +175,9 @@ impl SubgameSolver {
 
     fn showdown_values(&self, traverser: u8, pot: f64, opp_reach: &[f64; NUM_COMBOS]) -> Vec<f64> {
         let combos = all_combos();
-        let board = &self.board;
         let half_pot = pot / 2.0;
 
-        let strengths: Vec<u16> = crate::eval::showdown_strengths(board);
+        let strengths = &self.strengths;
 
         let active_hero: Vec<(usize, u16)> = (0..NUM_COMBOS)
             .filter(|&i| self.ranges[traverser as usize].weights[i] > 0.0 && strengths[i] > 0)
