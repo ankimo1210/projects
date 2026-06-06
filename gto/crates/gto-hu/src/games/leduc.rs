@@ -1,1 +1,193 @@
-//! Leduc poker (implemented in the next task).
+use crate::solver::Game;
+
+/// Leduc hold'em. Cards 0,1,2 = J,Q,K (two of each). Both ante 1.
+/// Round 0: bet size 2; round 1 (after public card): bet size 4.
+/// Max 2 raises per round. Actions: 0=fold (or check when nothing to call),
+/// 1=call (or check), 2=raise. `num_actions` is the count of legal actions
+/// at each state; legal actions are enumerated per-state to avoid fixed-width
+/// encoding problems when fold is illegal.
+pub struct Leduc;
+
+const RAISE_SIZES: [i64; 2] = [2, 4];
+
+#[derive(Debug, Clone)]
+pub struct LeducState {
+    pub holes: Option<(u8, u8)>,
+    pub public: Option<u8>,
+    pub round: usize,
+    /// Per-round action history, 'c'=check/call, 'r'=raise, 'f'=fold.
+    pub hist: [String; 2],
+    pub contrib: [i64; 2],
+    pub to_act: usize,
+    pub folded: Option<usize>,
+}
+
+impl LeducState {
+    fn raises_this_round(&self) -> usize {
+        self.hist[self.round].matches('r').count()
+    }
+
+    fn facing_raise(&self) -> bool {
+        self.contrib[self.to_act] < self.contrib[1 - self.to_act]
+    }
+
+    fn round_over(&self) -> bool {
+        let h = &self.hist[self.round];
+        // check-check (no raise in the round)
+        if h.ends_with("cc") && !h.contains('r') {
+            return true;
+        }
+        // A call after at least one raise closes the round.
+        h.len() >= 2 && h.ends_with('c') && h.contains('r')
+    }
+
+    fn legal_actions(&self) -> Vec<usize> {
+        let mut v = Vec::new();
+        if self.facing_raise() {
+            v.push(0); // fold
+        }
+        v.push(1); // check/call
+        if self.raises_this_round() < 2 {
+            v.push(2); // raise
+        }
+        v
+    }
+}
+
+impl Game for Leduc {
+    type State = LeducState;
+
+    fn root(&self) -> LeducState {
+        LeducState {
+            holes: None,
+            public: None,
+            round: 0,
+            hist: [String::new(), String::new()],
+            contrib: [1, 1], // antes
+            to_act: 0,
+            folded: None,
+        }
+    }
+
+    fn is_terminal(&self, s: &LeducState) -> bool {
+        if s.holes.is_none() {
+            return false;
+        }
+        if s.folded.is_some() {
+            return true;
+        }
+        s.round == 1 && s.public.is_some() && s.round_over()
+    }
+
+    fn payoff(&self, s: &LeducState, player: usize) -> f64 {
+        let pot = (s.contrib[0] + s.contrib[1]) as f64;
+        if let Some(f) = s.folded {
+            // Folder loses their contribution.
+            return if player == f {
+                -(s.contrib[f] as f64)
+            } else {
+                pot - s.contrib[player] as f64
+            };
+        }
+        let (h0, h1) = s.holes.unwrap();
+        let pubc = s.public.unwrap();
+        let rank0 = if h0 == pubc { 10 + h0 } else { h0 };
+        let rank1 = if h1 == pubc { 10 + h1 } else { h1 };
+        let mine = s.contrib[player] as f64;
+        if rank0 == rank1 {
+            return pot / 2.0 - mine; // chop (equal contribs ⇒ 0)
+        }
+        let winner = if rank0 > rank1 { 0 } else { 1 };
+        if player == winner { pot - mine } else { -mine }
+    }
+
+    fn is_chance(&self, s: &LeducState) -> bool {
+        s.holes.is_none() || (s.round == 1 && s.public.is_none())
+    }
+
+    fn chance_outcomes(&self, s: &LeducState) -> Vec<(LeducState, f64)> {
+        let deck = [0u8, 0, 1, 1, 2, 2];
+        if s.holes.is_none() {
+            // Deal ordered (hole0, hole1) from 6 distinct physical cards.
+            let mut out = Vec::with_capacity(30);
+            for i in 0..6 {
+                for j in 0..6 {
+                    if i != j {
+                        let mut ns = s.clone();
+                        ns.holes = Some((deck[i], deck[j]));
+                        // The public draw later removes one copy of each
+                        // dealt rank from the deck (see the branch below).
+                        out.push((ns, 1.0 / 30.0));
+                    }
+                }
+            }
+            return out;
+        }
+        // Public card: remove one copy of each hole rank from the deck.
+        let (h0, h1) = s.holes.unwrap();
+        let mut counts = [2u8; 3];
+        counts[h0 as usize] -= 1;
+        counts[h1 as usize] -= 1;
+        let total: u8 = counts.iter().sum(); // always 4
+        let mut out = Vec::new();
+        for rank in 0..3u8 {
+            let c = counts[rank as usize];
+            if c > 0 {
+                let mut ns = s.clone();
+                ns.public = Some(rank);
+                out.push((ns, c as f64 / total as f64));
+            }
+        }
+        out
+    }
+
+    fn player(&self, s: &LeducState) -> usize {
+        s.to_act
+    }
+
+    fn num_actions(&self, s: &LeducState) -> usize {
+        s.legal_actions().len()
+    }
+
+    fn next(&self, s: &LeducState, action: usize) -> LeducState {
+        let legal = s.legal_actions();
+        let act = legal[action];
+        let mut ns = s.clone();
+        let me = s.to_act;
+        match act {
+            0 => {
+                ns.folded = Some(me);
+                ns.hist[s.round].push('f');
+            }
+            1 => {
+                // Check or call.
+                let diff = s.contrib[1 - me] - s.contrib[me];
+                ns.contrib[me] += diff;
+                ns.hist[s.round].push('c');
+            }
+            2 => {
+                let diff = s.contrib[1 - me] - s.contrib[me];
+                ns.contrib[me] += diff + RAISE_SIZES[s.round];
+                ns.hist[s.round].push('r');
+            }
+            _ => unreachable!(),
+        }
+        ns.to_act = 1 - me;
+        if ns.folded.is_none() && ns.round == 0 && ns.round_over() {
+            ns.round = 1;
+            ns.to_act = 0;
+            // public card dealt by the next chance node (public: None)
+        }
+        ns
+    }
+
+    fn infoset_key(&self, s: &LeducState) -> String {
+        let me = s.to_act;
+        let hole = match s.holes.unwrap() {
+            (h, _) if me == 0 => h,
+            (_, h) => h,
+        };
+        let pubs = s.public.map(|p| p.to_string()).unwrap_or_else(|| "-".into());
+        format!("{me}|{hole}|{pubs}|{}|{}", s.hist[0], s.hist[1])
+    }
+}
