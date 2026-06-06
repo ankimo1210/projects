@@ -38,3 +38,24 @@ fn showdown_tie_splits_to_zero() {
     let p = terminal::showdown_payoffs(&s, None);
     assert_eq!(p, [0, 0]);
 }
+
+#[test]
+fn fold_after_raise_returns_uncalled_raise() {
+    // BB bets 15, SB raises to 45, BB folds: SB wins exactly BB's 25bb total.
+    let s = BettingState::river_root(20 * BB, 90 * BB)
+        .apply(Action::Bet { to: 15 * BB })
+        .apply(Action::Raise { to: 45 * BB });
+    let p = terminal::fold_payoffs(&s, PLAYER_SB);
+    assert_eq!(p[PLAYER_SB as usize], 25 * BB);
+    assert_eq!(p[PLAYER_BB as usize], -25 * BB);
+}
+
+#[test]
+fn checked_down_showdown_pays_carried_pot_only() {
+    let s = BettingState::river_root(20 * BB, 90 * BB)
+        .apply(Action::Check)
+        .apply(Action::Check);
+    let p = terminal::showdown_payoffs(&s, Some(PLAYER_BB));
+    assert_eq!(p[PLAYER_BB as usize], 10 * BB);
+    assert_eq!(p[PLAYER_SB as usize], -10 * BB);
+}

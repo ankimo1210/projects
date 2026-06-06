@@ -54,6 +54,7 @@ impl BettingState {
     }
 
     /// Chips needed to call (capped by own stack).
+    /// Returns 0 when not facing a bet — callers should gate on `facing_bet()`.
     pub fn call_amount(&self) -> i64 {
         let me = self.to_act as usize;
         (self.street_committed[1 - me] - self.street_committed[me]).min(self.stacks[me])
@@ -70,6 +71,7 @@ impl BettingState {
     /// Apply an action, returning the successor state.
     /// Fold does not change chips — terminal payoff handles the pot.
     pub fn apply(&self, action: Action) -> BettingState {
+        assert!(!self.closed, "street already closed");
         let me = self.to_act as usize;
         let opp = 1 - me;
         let mut s = *self;
@@ -102,6 +104,12 @@ impl BettingState {
                     to > self.street_committed[opp] || add == self.stacks[me],
                     "must exceed facing bet unless all-in"
                 );
+                if matches!(action, Action::AllIn { .. }) {
+                    assert_eq!(
+                        add, self.stacks[me],
+                        "AllIn must commit the entire remaining stack"
+                    );
+                }
                 if self.facing_bet() {
                     s.raises_this_street += 1;
                 }

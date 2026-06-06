@@ -58,3 +58,58 @@ fn call_closes_street() {
     let s2 = s0.apply(Action::Bet { to: 15 * BB }).apply(Action::Call);
     assert!(s2.street_closed());
 }
+
+#[test]
+#[should_panic(expected = "street already closed")]
+fn apply_rejects_action_after_street_closes() {
+    let s = BettingState::river_root(20 * BB, 90 * BB)
+        .apply(Action::Check)
+        .apply(Action::Check);
+    let _ = s.apply(Action::Bet { to: 10 * BB });
+}
+
+#[test]
+#[should_panic(expected = "AllIn must commit the entire remaining stack")]
+fn allin_must_commit_entire_stack() {
+    let s = BettingState::river_root(20 * BB, 90 * BB);
+    let _ = s.apply(Action::AllIn { to: 5 * BB });
+}
+
+#[test]
+fn raise_accounting_is_exact() {
+    let s = BettingState::river_root(20 * BB, 90 * BB)
+        .apply(Action::Bet { to: 15 * BB })      // BB bets 15
+        .apply(Action::Raise { to: 45 * BB });   // SB raises to 45
+    assert_eq!(s.street_committed, [45 * BB, 15 * BB]);
+    assert_eq!(s.contrib, [55 * BB, 25 * BB]);
+    assert_eq!(s.stacks, [45 * BB, 75 * BB]);
+    assert_eq!(s.raises_this_street, 1);
+    let s2 = s.apply(Action::Call);
+    assert!(s2.street_closed());
+    assert_eq!(s2.contrib, [55 * BB, 55 * BB]);
+}
+
+#[test]
+fn open_bet_does_not_count_as_raise() {
+    let s = BettingState::river_root(20 * BB, 90 * BB).apply(Action::Bet { to: 15 * BB });
+    assert_eq!(s.raises_this_street, 0);
+}
+
+#[test]
+#[should_panic(expected = "check illegal when facing a bet")]
+fn check_rejected_when_facing_bet() {
+    let s = BettingState::river_root(20 * BB, 90 * BB).apply(Action::Bet { to: 15 * BB });
+    let _ = s.apply(Action::Check);
+}
+
+#[test]
+#[should_panic(expected = "fold only legal when facing a bet")]
+fn open_fold_rejected() {
+    let _ = BettingState::river_root(20 * BB, 90 * BB).apply(Action::Fold);
+}
+
+#[test]
+#[should_panic(expected = "cannot bet more than stack")]
+fn bet_beyond_stack_rejected() {
+    let _ = BettingState::river_root(20 * BB, 90 * BB).apply(Action::Bet { to: 200 * BB });
+}
