@@ -269,6 +269,29 @@ fn eval5_nonflush(sorted: &[u8;5], t: &Tables) -> u16 {
     *t.nonuniq.get(&key).unwrap_or(&0)
 }
 
+/// Per-combo showdown strength on a 3-5 card board.
+/// Index = `range::combo_index`; 0 marks combos blocked by the board.
+/// Evaluates exactly 2 hole + board cards — no padding, no phantom cards.
+pub fn showdown_strengths(board: &[Card]) -> Vec<u16> {
+    assert!(
+        (3..=5).contains(&board.len()),
+        "board must have 3-5 cards, got {}", board.len()
+    );
+    crate::range::all_combos()
+        .iter()
+        .map(|&(a, b)| {
+            if board.contains(&a) || board.contains(&b) {
+                return 0;
+            }
+            let mut cards = Vec::with_capacity(2 + board.len());
+            cards.push(a);
+            cards.push(b);
+            cards.extend_from_slice(board);
+            evaluate_best(&cards)
+        })
+        .collect()
+}
+
 /// Convenience: parse card string and evaluate
 pub fn parse_card(s: &str) -> Option<Card> {
     crate::card::Card::from_str(s).map(|c| c.0)
@@ -351,5 +374,31 @@ mod tests {
             parse_card("3h").unwrap(),
         ];
         assert!(evaluate7(&wheel_sf) > evaluate7(&flush));
+    }
+
+    #[test]
+    fn showdown_strengths_no_phantom_cards_on_flop_board() {
+        use crate::range::combo_index;
+        let board: Vec<Card> = ["9h", "8d", "7c"]
+            .iter().map(|s| parse_card(s).unwrap()).collect();
+        let s = showdown_strengths(&board);
+        let straight = combo_index(parse_card("6s").unwrap(), parse_card("5s").unwrap());
+        let deuces   = combo_index(parse_card("2s").unwrap(), parse_card("2d").unwrap());
+        // 65s makes the nut straight; 22 is a mere underpair. With the
+        // phantom-2c bug, 22 scored quads and won.
+        assert!(
+            s[straight] > s[deuces],
+            "straight {} must beat pocket deuces {}", s[straight], s[deuces]
+        );
+    }
+
+    #[test]
+    fn showdown_strengths_blocked_combos_are_zero() {
+        use crate::range::combo_index;
+        let board: Vec<Card> = ["9h", "8d", "7c"]
+            .iter().map(|s| parse_card(s).unwrap()).collect();
+        let s = showdown_strengths(&board);
+        let blocked = combo_index(parse_card("9h").unwrap(), parse_card("Ah").unwrap());
+        assert_eq!(s[blocked], 0, "combos containing a board card must be 0");
     }
 }

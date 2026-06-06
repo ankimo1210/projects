@@ -11,7 +11,6 @@
 use std::collections::HashMap;
 use rayon::prelude::*;
 
-use crate::eval::{evaluate7, Card};
 use crate::range::{all_combos, Range, NUM_COMBOS};
 use crate::tree::{Action, GameTree, NodeKind, Street};
 
@@ -176,13 +175,7 @@ impl SubgameSolver {
         let board = &self.board;
         let half_pot = pot / 2.0;
 
-        let strengths: Vec<u16> = combos.iter().map(|&(ca, cb)| {
-            if board.contains(&ca) || board.contains(&cb) { return 0; }
-            let mut c7 = [0u8; 7];
-            c7[0] = ca; c7[1] = cb;
-            for (j, &bc) in board.iter().enumerate().take(5) { c7[2+j] = bc; }
-            evaluate7(&c7)
-        }).collect();
+        let strengths: Vec<u16> = crate::eval::showdown_strengths(board);
 
         let active_hero: Vec<(usize, u16)> = (0..NUM_COMBOS)
             .filter(|&i| self.ranges[traverser as usize].weights[i] > 0.0 && strengths[i] > 0)
