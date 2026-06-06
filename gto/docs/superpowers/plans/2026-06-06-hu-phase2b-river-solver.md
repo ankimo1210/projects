@@ -470,6 +470,10 @@ impl VectorRiverSolver {
                             ev[c] += strat[a * N + c] * av[c];
                         }
                     }
+                    // Each (node, combo) is visited exactly once per
+                    // iteration when actor == traverser, so the per-iteration
+                    // discount and the delta accumulation fuse into one pass
+                    // (equivalent to ScalarCfr's lazy two-phase update).
                     let t = self.iteration;
                     let (sd, sw) =
                         (self.variant.strategy_discount(t), self.variant.strategy_weight(t));
@@ -482,7 +486,9 @@ impl VectorRiverSolver {
                         }
                         for a in 0..na {
                             let i = a * N + c;
-                            reg[i] = variant.update_regret(reg[i], action_vals[a][c] - ev[c], t);
+                            let discounted = reg[i] * variant.regret_discount(reg[i], t);
+                            reg[i] =
+                                variant.accumulate_regret(discounted, action_vals[a][c] - ev[c]);
                             ssum[i] = ssum[i] * sd + sw * reach[c] * strat[i];
                         }
                     }
