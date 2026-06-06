@@ -39,6 +39,7 @@ Findings that drive this design (audited 2026-06-06):
 | 5 | "Exploitability" is a positive-regret proxy, not best response | `gto-core/src/multistreet.rs:252-261` |
 | 6 | Average-strategy accumulation weighted by traverser reach instead of actor reach | `gto-core/src/cfr.rs:170` |
 | 7 | Kuhn CFR test is a self-contained local implementation; it does not exercise production solver code | `gto-core/tests/kuhn_cfr.rs` |
+| 8 | Fold payoff inflated: FoldTerminal awards ±pot/2 of a pot that includes the uncalled bet (winner pockets half their own uncalled chips) | `gto-core/src/tree.rs:128`, `cfr.rs:107-117` |
 
 Reusable assets: card/combo encoding (`rank*4+suit`, 1326 combos), range +
 blocker handling, eval LUT (after fix #3), per-combo vector CFR skeleton,
