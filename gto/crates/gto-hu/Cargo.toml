@@ -1,0 +1,12 @@
+[package]
+name = "gto-hu"
+version = "0.1.0"
+edition = "2021"
+description = "Abstract HU NLHE equilibrium solver (not an unabstracted full GTO solver)"
+
+[dependencies]
+gto-core = { path = "../gto-core" }
+
+[[bin]]
+name = "solve-hu-river"
+path = "src/bin/solve_river.rs"

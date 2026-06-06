@@ -3,6 +3,7 @@ members = [
     "crates/gto-core",
     "crates/gto-py",
     "crates/gto-cuda",
+    "crates/gto-hu",
 ]
 resolver = "2"
 
