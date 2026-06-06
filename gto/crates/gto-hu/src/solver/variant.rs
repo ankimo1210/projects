@@ -1,5 +1,14 @@
 /// CFR family member. References: Zinkevich et al. 2007 (vanilla CFR),
 /// Tammelin 2014 (CFR+), Brown & Sandholm 2019 (DCFR).
+///
+/// # Discount semantics
+///
+/// Discount-then-add per iteration: stored sums are discounted by the factor
+/// for iteration t on the infoset's **first visit** in t, then deltas
+/// accumulate undiscounted for the remainder of the iteration.  This is the
+/// standard lazy-discount DCFR implementation; it differs from
+/// add-then-discount formulations by one delta term, which is asymptotically
+/// irrelevant.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum CfrVariant {
     Vanilla,
@@ -21,17 +30,27 @@ impl CfrVariant {
         CfrVariant::CfrPlus { avg_delay: 0, linear_weighting: true }
     }
 
-    /// New cumulative regret from `old` and this iteration's `delta`.
-    pub fn update_regret(&self, old: f64, delta: f64, t: u32) -> f64 {
+    /// Per-iteration discount factor for a stored cumulative regret
+    /// (applied lazily on the infoset's first visit in iteration t).
+    /// DCFR: t^α/(t^α+1) for positive, t^β/(t^β+1) for negative regrets.
+    /// Vanilla/CFR+: no discounting (1.0).
+    pub fn regret_discount(&self, old: f64, t: u32) -> f64 {
         match *self {
-            CfrVariant::Vanilla => old + delta,
-            CfrVariant::CfrPlus { .. } => (old + delta).max(0.0),
+            CfrVariant::Vanilla | CfrVariant::CfrPlus { .. } => 1.0,
             CfrVariant::Dcfr { alpha, beta, .. } => {
                 let tf = t as f64;
                 let exp = if old >= 0.0 { alpha } else { beta };
                 let p = tf.powf(exp);
-                old * (p / (p + 1.0)) + delta
+                p / (p + 1.0)
             }
+        }
+    }
+
+    /// Accumulate this visit's regret delta (CFR+ clips at zero).
+    pub fn accumulate_regret(&self, old: f64, delta: f64) -> f64 {
+        match *self {
+            CfrVariant::CfrPlus { .. } => (old + delta).max(0.0),
+            _ => old + delta,
         }
     }
 

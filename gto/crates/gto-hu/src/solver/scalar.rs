@@ -27,11 +27,17 @@ pub trait Game {
 pub struct InfoNode {
     pub regrets: Vec<f64>,
     pub strat_sum: Vec<f64>,
+    /// Last iteration in which the per-iteration discounts were applied.
+    last_discount_iter: u32,
 }
 
 impl InfoNode {
     fn new(num_actions: usize) -> Self {
-        InfoNode { regrets: vec![0.0; num_actions], strat_sum: vec![0.0; num_actions] }
+        InfoNode {
+            regrets: vec![0.0; num_actions],
+            strat_sum: vec![0.0; num_actions],
+            last_discount_iter: 0,
+        }
     }
 }
 
@@ -82,6 +88,12 @@ impl<'a, G: Game> ScalarCfr<'a, G> {
         let mut strat = vec![0.0; na];
         {
             let node = self.nodes.entry(key.clone()).or_insert_with(|| InfoNode::new(na));
+            assert_eq!(
+                node.regrets.len(),
+                na,
+                "num_actions mismatch for infoset {key:?}: stored {}, state reports {na}",
+                node.regrets.len()
+            );
             regret_matching(&node.regrets, &mut strat);
         }
 
@@ -93,14 +105,25 @@ impl<'a, G: Game> ScalarCfr<'a, G> {
             }
             let ev: f64 = strat.iter().zip(&action_vals).map(|(p, v)| p * v).sum();
             let t = self.iteration;
-            let (sd, sw) = (self.variant.strategy_discount(t), self.variant.strategy_weight(t));
             let variant = self.variant;
             let node = self.nodes.get_mut(&key).unwrap();
+            // Apply per-iteration discounts exactly once (lazily on first visit).
+            if node.last_discount_iter < t {
+                node.last_discount_iter = t;
+                let sd = variant.strategy_discount(t);
+                for r in node.regrets.iter_mut() {
+                    *r *= variant.regret_discount(*r, t);
+                }
+                for s in node.strat_sum.iter_mut() {
+                    *s *= sd;
+                }
+            }
+            let sw = variant.strategy_weight(t);
             for a in 0..na {
                 let delta = opp_reach * (action_vals[a] - ev);
-                node.regrets[a] = variant.update_regret(node.regrets[a], delta, t);
+                node.regrets[a] = variant.accumulate_regret(node.regrets[a], delta);
                 // Average strategy: weighted by the actor's OWN reach.
-                node.strat_sum[a] = node.strat_sum[a] * sd + sw * my_reach * strat[a];
+                node.strat_sum[a] += sw * my_reach * strat[a];
             }
             ev
         } else {
@@ -117,6 +140,11 @@ impl<'a, G: Game> ScalarCfr<'a, G> {
     pub fn average_strategy(&self, key: &str, num_actions: usize) -> Vec<f64> {
         match self.nodes.get(key) {
             Some(n) => {
+                debug_assert_eq!(
+                    n.strat_sum.len(),
+                    num_actions,
+                    "average_strategy length mismatch for {key:?}"
+                );
                 let total: f64 = n.strat_sum.iter().sum();
                 if total > 0.0 {
                     n.strat_sum.iter().map(|s| s / total).collect()

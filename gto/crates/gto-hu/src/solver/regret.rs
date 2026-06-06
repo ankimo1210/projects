@@ -1,6 +1,7 @@
 /// Regret matching: strategy ∝ positive cumulative regrets, uniform when
 /// no positive regret exists.
 pub fn regret_matching(regrets: &[f64], out: &mut [f64]) {
+    debug_assert!(!regrets.is_empty());
     debug_assert_eq!(regrets.len(), out.len());
     let pos_sum: f64 = regrets.iter().map(|r| r.max(0.0)).sum();
     if pos_sum > 0.0 {

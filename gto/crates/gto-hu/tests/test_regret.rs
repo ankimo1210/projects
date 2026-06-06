@@ -21,20 +21,24 @@ fn regret_matching_uniform_when_no_positive_regret() {
 #[test]
 fn cfr_plus_clips_regret_at_zero() {
     let v = CfrVariant::CfrPlus { avg_delay: 0, linear_weighting: true };
-    assert_eq!(v.update_regret(1.0, -5.0, 10), 0.0);
-    assert_eq!(v.update_regret(1.0, 2.0, 10), 3.0);
+    assert_eq!(v.accumulate_regret(1.0, -5.0), 0.0);
+    assert_eq!(v.accumulate_regret(1.0, 2.0), 3.0);
 }
 
 #[test]
 fn dcfr_discounts_positive_and_negative_differently() {
     let v = CfrVariant::Dcfr { alpha: 1.5, beta: 0.0, gamma: 2.0 };
     let t = 4u32;
-    // positive: old × t^1.5/(t^1.5+1) + delta = 1.0 × 8/9 + 1.0
-    let pos = v.update_regret(1.0, 1.0, t);
-    assert!((pos - (8.0 / 9.0 + 1.0)).abs() < 1e-12);
-    // negative: old × t^0/(t^0+1) + delta = -1.0 × 0.5 + 1.0
-    let neg = v.update_regret(-1.0, 1.0, t);
-    assert!((neg - 0.5).abs() < 1e-12);
+    // positive: factor t^1.5/(t^1.5+1) = 8/9
+    assert!((v.regret_discount(1.0, t) - 8.0 / 9.0).abs() < 1e-12);
+    // negative: factor t^0/(t^0+1) = 0.5
+    assert!((v.regret_discount(-1.0, t) - 0.5).abs() < 1e-12);
+    // vanilla/CFR+ never discount
+    assert_eq!(CfrVariant::Vanilla.regret_discount(-3.0, t), 1.0);
+    let plus = CfrVariant::cfr_plus_default();
+    assert_eq!(plus.regret_discount(5.0, t), 1.0);
+    // accumulation is plain addition for DCFR
+    assert!((v.accumulate_regret(8.0 / 9.0, 1.0) - (8.0 / 9.0 + 1.0)).abs() < 1e-12);
 }
 
 #[test]
