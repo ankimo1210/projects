@@ -29,7 +29,8 @@ GTO (Game Theory Optimal) ポーカー分析アプリ。テキサスホールデ
 [Solver]    Rust workspace
             ├─ gto-core   CFR/DCFR コア・ハンド評価器・マルチストリート (CPU)
             ├─ gto-cuda   GPU加速ソルバー (NVRTC JIT, RTX 5080 sm_120)
-            └─ gto-py     pyo3 バインディング
+            ├─ gto-py     pyo3 バインディング
+            └─ gto-hu    HU NLHE abstract equilibrium solver (CPU, exact BR)
 
 [Data]      Parquet（spots / agg / combos / reports / cache）
 ```
