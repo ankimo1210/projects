@@ -183,55 +183,79 @@ fn build_tables() -> Tables {
     Tables { flush, unique5, nonuniq }
 }
 
-/// Evaluate the best 5-card hand from exactly 7 cards. Returns strength u16 (higher = better).
-pub fn evaluate7(cards: &[Card; 7]) -> u16 {
-    let t = get_tables();
-
-    // Count suits
-    let mut suit_counts = [0u8; 4];
-    let mut suit_ranks  = [0u16; 4];
-    for &c in cards {
-        let s = suit(c) as usize;
-        let r = rank(c);
-        suit_counts[s] += 1;
-        suit_ranks[s] |= 1 << r;
+/// Evaluate one exact 5-card hand via the lookup tables.
+fn eval5_table(cards: &[Card; 5], t: &Tables) -> u16 {
+    let s0 = suit(cards[0]);
+    if cards.iter().all(|&c| suit(c) == s0) {
+        let mask: u16 = cards.iter().fold(0u16, |acc, &c| acc | (1 << rank(c)));
+        return t.flush[mask as usize];
     }
+    let mut ranks = [0u8; 5];
+    for (i, &c) in cards.iter().enumerate() {
+        ranks[i] = rank(c);
+    }
+    ranks.sort_unstable();
+    eval5_nonflush(&ranks, t)
+}
 
-    // Flush check
-    for s in 0..4 {
-        if suit_counts[s] >= 5 {
-            // Find best 5 from flush suit: we already have the rank mask
-            // pick highest 5 bits
-            let mask = best5_from_flush_mask(suit_ranks[s]);
-            return t.flush[mask as usize];
+/// Evaluate the best 5-card hand from 5..=7 **distinct** cards.
+/// Returns strength u16 (higher = better, 0 is reserved for "invalid").
+/// Debug builds panic on duplicate or out-of-range cards.
+pub fn evaluate_best(cards: &[Card]) -> u16 {
+    let n = cards.len();
+    assert!((5..=7).contains(&n), "evaluate_best needs 5..=7 cards, got {n}");
+    #[cfg(debug_assertions)]
+    {
+        let mut seen = [false; 52];
+        for &c in cards {
+            assert!((c as usize) < 52, "card index out of range: {c}");
+            assert!(!seen[c as usize], "duplicate card: {c}");
+            seen[c as usize] = true;
         }
     }
-
-    // Non-flush: try all C(7,5)=21 combos
+    let t = get_tables();
+    if n == 5 {
+        let five: [Card; 5] = cards.try_into().unwrap();
+        return eval5_table(&five, t);
+    }
+    // Enumerate all 5-card subsets (6 for n=6, 21 for n=7) and take the max.
+    // Subset enumeration also fixes the historic flush-path bug: straight
+    // flushes formed by low cards of a 6-7 card flush suit are found.
     let mut best = 0u16;
-    for i in 0..7 {
-        for j in (i+1)..7 {
-            let five: [u8;5] = {
-                let mut v = [0u8;5]; let mut idx=0;
-                for k in 0..7 { if k!=i && k!=j { v[idx]=rank(cards[k]); idx+=1; } }
-                v
-            };
-            let mut sorted = five; sorted.sort_unstable();
-            let v = eval5_nonflush(&sorted, t);
-            if v > best { best = v; }
+    if n == 6 {
+        for skip in 0..6 {
+            let mut five = [0u8; 5];
+            let mut k = 0;
+            for (idx, &c) in cards.iter().enumerate() {
+                if idx != skip {
+                    five[k] = c;
+                    k += 1;
+                }
+            }
+            best = best.max(eval5_table(&five, t));
+        }
+    } else {
+        for i in 0..7 {
+            for j in (i + 1)..7 {
+                let mut five = [0u8; 5];
+                let mut k = 0;
+                for (idx, &c) in cards.iter().enumerate() {
+                    if idx != i && idx != j {
+                        five[k] = c;
+                        k += 1;
+                    }
+                }
+                best = best.max(eval5_table(&five, t));
+            }
         }
     }
     best
 }
 
-fn best5_from_flush_mask(mut mask: u16) -> u16 {
-    // Keep only top 5 bits set in mask
-    let mut count = mask.count_ones();
-    while count > 5 {
-        mask &= mask - 1; // clear lowest set bit
-        count -= 1;
-    }
-    mask
+/// Evaluate the best 5-card hand from exactly 7 cards.
+/// Returns strength u16 (higher = better).
+pub fn evaluate7(cards: &[Card; 7]) -> u16 {
+    evaluate_best(cards)
 }
 
 fn eval5_nonflush(sorted: &[u8;5], t: &Tables) -> u16 {
@@ -286,5 +310,46 @@ mod tests {
             parse_card("3c").unwrap(),
         ];
         assert!(evaluate7(&quads) > evaluate7(&fh));
+    }
+
+    #[test]
+    fn low_straight_flush_in_six_card_flush_beats_ace_high_flush() {
+        // Spade ranks {2,3,4,5,6,K}: best hand is the 6-high straight flush,
+        // not a K-high flush. Must beat a plain A-high flush.
+        let sf: [Card; 7] = [
+            parse_card("2s").unwrap(), parse_card("3s").unwrap(),
+            parse_card("4s").unwrap(), parse_card("5s").unwrap(),
+            parse_card("6s").unwrap(), parse_card("Ks").unwrap(),
+            parse_card("2d").unwrap(),
+        ];
+        let flush: [Card; 7] = [
+            parse_card("As").unwrap(), parse_card("Ks").unwrap(),
+            parse_card("Qs").unwrap(), parse_card("Js").unwrap(),
+            parse_card("9s").unwrap(), parse_card("2d").unwrap(),
+            parse_card("3h").unwrap(),
+        ];
+        assert!(
+            evaluate7(&sf) > evaluate7(&flush),
+            "6-high straight flush must beat A-high flush: {} vs {}",
+            evaluate7(&sf), evaluate7(&flush)
+        );
+    }
+
+    #[test]
+    fn wheel_straight_flush_detected_in_six_card_flush() {
+        // Spade ranks {A,2,3,4,5,K}: wheel straight flush (5-high SF).
+        let wheel_sf: [Card; 7] = [
+            parse_card("As").unwrap(), parse_card("2s").unwrap(),
+            parse_card("3s").unwrap(), parse_card("4s").unwrap(),
+            parse_card("5s").unwrap(), parse_card("Ks").unwrap(),
+            parse_card("Qh").unwrap(),
+        ];
+        let flush: [Card; 7] = [
+            parse_card("As").unwrap(), parse_card("Ks").unwrap(),
+            parse_card("Qs").unwrap(), parse_card("Js").unwrap(),
+            parse_card("9s").unwrap(), parse_card("2d").unwrap(),
+            parse_card("3h").unwrap(),
+        ];
+        assert!(evaluate7(&wheel_sf) > evaluate7(&flush));
     }
 }
