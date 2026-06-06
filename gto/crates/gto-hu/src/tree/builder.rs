@@ -1,6 +1,6 @@
-use crate::game::{Action, BettingState};
 use super::config::{RaiseRule, StreetConfig};
 use super::node::{Node, NodeKind, Tree};
+use crate::game::{Action, BettingState};
 
 /// Build the river action tree. OOP (BB) acts first.
 pub fn build_river_tree(pot: i64, stack: i64, cfg: &StreetConfig) -> Tree {
@@ -8,7 +8,9 @@ pub fn build_river_tree(pot: i64, stack: i64, cfg: &StreetConfig) -> Tree {
     let root_state = BettingState::river_root(pot, stack);
     let mut tree = Tree { nodes: Vec::new() };
     tree.nodes.push(Node {
-        kind: NodeKind::Action { actor: root_state.to_act },
+        kind: NodeKind::Action {
+            actor: root_state.to_act,
+        },
         state: root_state,
         children: Vec::new(),
     });
@@ -91,10 +93,16 @@ fn expand(tree: &mut Tree, node_id: usize, cfg: &StreetConfig) {
                 winner: 1 - state.to_act,
             },
             _ if child_state.street_closed() => NodeKind::Showdown,
-            _ => NodeKind::Action { actor: child_state.to_act },
+            _ => NodeKind::Action {
+                actor: child_state.to_act,
+            },
         };
         let child_id = tree.nodes.len();
-        tree.nodes.push(Node { kind, state: child_state, children: Vec::new() });
+        tree.nodes.push(Node {
+            kind,
+            state: child_state,
+            children: Vec::new(),
+        });
         if matches!(kind, NodeKind::Action { .. }) {
             expand(tree, child_id, cfg);
         }

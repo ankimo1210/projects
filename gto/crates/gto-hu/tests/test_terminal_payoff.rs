@@ -4,8 +4,7 @@ use gto_hu::game::{terminal, Action, BettingState, BB, PLAYER_BB, PLAYER_SB};
 fn fold_returns_uncalled_bet() {
     // Pot 20bb, BB bets 15bb, SB folds. BB must win exactly 10bb
     // (SB's half of the carried pot), NOT half of the 35bb pot.
-    let s = BettingState::river_root(20 * BB, 90 * BB)
-        .apply(Action::Bet { to: 15 * BB });
+    let s = BettingState::river_root(20 * BB, 90 * BB).apply(Action::Bet { to: 15 * BB });
     let p = terminal::fold_payoffs(&s, PLAYER_BB);
     assert_eq!(p[PLAYER_BB as usize], 10 * BB);
     assert_eq!(p[PLAYER_SB as usize], -10 * BB);
@@ -13,8 +12,7 @@ fn fold_returns_uncalled_bet() {
 
 #[test]
 fn fold_payoffs_are_zero_sum() {
-    let s = BettingState::river_root(20 * BB, 90 * BB)
-        .apply(Action::Bet { to: 30 * BB });
+    let s = BettingState::river_root(20 * BB, 90 * BB).apply(Action::Bet { to: 30 * BB });
     let p = terminal::fold_payoffs(&s, PLAYER_BB);
     assert_eq!(p[0] + p[1], 0);
 }

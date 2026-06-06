@@ -7,7 +7,10 @@ fn river_tree_root_actions_match_srp_config() {
     let root = &t.nodes[0];
     let labels: Vec<String> = root.children.iter().map(|(a, _)| a.label()).collect();
     // check, bet 75%, bet 150%, allin
-    assert_eq!(labels, vec!["check", "bet 15.0bb", "bet 30.0bb", "allin 90.0bb"]);
+    assert_eq!(
+        labels,
+        vec!["check", "bet 15.0bb", "bet 30.0bb", "allin 90.0bb"]
+    );
 }
 
 #[test]
@@ -15,7 +18,11 @@ fn facing_bet_offers_fold_call_jam() {
     let t = build_river_tree(20 * BB, 90 * BB, &StreetConfig::srp_river());
     // Child 1 of root = bet 15bb → SB node.
     let bet_node_id = t.nodes[0].children[1].1;
-    let acts: Vec<Action> = t.nodes[bet_node_id].children.iter().map(|(a, _)| *a).collect();
+    let acts: Vec<Action> = t.nodes[bet_node_id]
+        .children
+        .iter()
+        .map(|(a, _)| *a)
+        .collect();
     assert!(matches!(acts[0], Action::Fold));
     assert!(matches!(acts[1], Action::Call));
     assert!(matches!(acts[2], Action::AllIn { to } if to == 90 * BB));
@@ -98,11 +105,15 @@ fn factor_raise_builds_legal_three_x() {
         max_raises: 1,
     };
     let t = build_river_tree(20 * BB, 90 * BB, &cfg);
-    let bet_node = t.nodes[0].children.iter()
+    let bet_node = t.nodes[0]
+        .children
+        .iter()
         .find(|(a, _)| matches!(a, Action::Bet { .. }))
         .map(|&(_, id)| id)
         .unwrap();
-    let raise = t.nodes[bet_node].children.iter()
+    let raise = t.nodes[bet_node]
+        .children
+        .iter()
         .find_map(|(a, id)| match a {
             Action::Raise { to } => Some((*to, *id)),
             _ => None,

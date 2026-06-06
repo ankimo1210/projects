@@ -6,11 +6,17 @@ pub enum Action {
     Check,
     Call,
     /// Open bet to a total of `to` centi-bb on this street.
-    Bet { to: i64 },
+    Bet {
+        to: i64,
+    },
     /// Raise to a total of `to` centi-bb on this street.
-    Raise { to: i64 },
+    Raise {
+        to: i64,
+    },
     /// Commit the entire remaining stack (total = `to`).
-    AllIn { to: i64 },
+    AllIn {
+        to: i64,
+    },
 }
 
 impl Action {

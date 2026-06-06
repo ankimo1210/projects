@@ -23,7 +23,11 @@ struct S {
 impl Game for DupMatrix {
     type State = S;
     fn root(&self) -> S {
-        S { chance_done: false, p0: None, p1: None }
+        S {
+            chance_done: false,
+            p0: None,
+            p1: None,
+        }
     }
     fn is_terminal(&self, s: &S) -> bool {
         s.p0.is_some() && s.p1.is_some()
@@ -31,7 +35,11 @@ impl Game for DupMatrix {
     fn payoff(&self, s: &S, player: usize) -> f64 {
         const A: [[f64; 2]; 2] = [[3.0, -1.0], [-2.0, 1.0]];
         let v = A[s.p0.unwrap()][s.p1.unwrap()];
-        if player == 0 { v } else { -v }
+        if player == 0 {
+            v
+        } else {
+            -v
+        }
     }
     fn is_chance(&self, s: &S) -> bool {
         !s.chance_done
@@ -39,23 +47,43 @@ impl Game for DupMatrix {
     fn chance_outcomes(&self, s: &S) -> Vec<(S, f64)> {
         let p = 1.0 / self.dup as f64;
         (0..self.dup)
-            .map(|_| (S { chance_done: true, ..s.clone() }, p))
+            .map(|_| {
+                (
+                    S {
+                        chance_done: true,
+                        ..s.clone()
+                    },
+                    p,
+                )
+            })
             .collect()
     }
     fn player(&self, s: &S) -> usize {
-        if s.p0.is_none() { 0 } else { 1 }
+        if s.p0.is_none() {
+            0
+        } else {
+            1
+        }
     }
     fn num_actions(&self, _s: &S) -> usize {
         2
     }
     fn next(&self, s: &S, a: usize) -> S {
         let mut ns = s.clone();
-        if ns.p0.is_none() { ns.p0 = Some(a) } else { ns.p1 = Some(a) }
+        if ns.p0.is_none() {
+            ns.p0 = Some(a)
+        } else {
+            ns.p1 = Some(a)
+        }
         ns
     }
     fn infoset_key(&self, s: &S) -> String {
         // Neither player sees the chance outcome or the other's move.
-        if s.p0.is_none() { "P0".into() } else { "P1".into() }
+        if s.p0.is_none() {
+            "P0".into()
+        } else {
+            "P1".into()
+        }
     }
 }
 

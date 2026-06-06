@@ -5,9 +5,9 @@
 //! levels, exploitability is always reported alongside strategies.
 
 pub mod game;
-pub mod ranges;
-pub mod tree;
-pub mod solver;
 pub mod games;
-pub mod validation;
+pub mod ranges;
 pub mod reports;
+pub mod solver;
+pub mod tree;
+pub mod validation;

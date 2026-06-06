@@ -78,8 +78,8 @@ fn allin_must_commit_entire_stack() {
 #[test]
 fn raise_accounting_is_exact() {
     let s = BettingState::river_root(20 * BB, 90 * BB)
-        .apply(Action::Bet { to: 15 * BB })      // BB bets 15
-        .apply(Action::Raise { to: 45 * BB });   // SB raises to 45
+        .apply(Action::Bet { to: 15 * BB }) // BB bets 15
+        .apply(Action::Raise { to: 45 * BB }); // SB raises to 45
     assert_eq!(s.street_committed, [45 * BB, 15 * BB]);
     assert_eq!(s.contrib, [55 * BB, 25 * BB]);
     assert_eq!(s.stacks, [45 * BB, 75 * BB]);

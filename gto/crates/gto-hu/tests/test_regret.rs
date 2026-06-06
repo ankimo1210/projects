@@ -20,14 +20,21 @@ fn regret_matching_uniform_when_no_positive_regret() {
 
 #[test]
 fn cfr_plus_clips_regret_at_zero() {
-    let v = CfrVariant::CfrPlus { avg_delay: 0, linear_weighting: true };
+    let v = CfrVariant::CfrPlus {
+        avg_delay: 0,
+        linear_weighting: true,
+    };
     assert_eq!(v.accumulate_regret(1.0, -5.0), 0.0);
     assert_eq!(v.accumulate_regret(1.0, 2.0), 3.0);
 }
 
 #[test]
 fn dcfr_discounts_positive_and_negative_differently() {
-    let v = CfrVariant::Dcfr { alpha: 1.5, beta: 0.0, gamma: 2.0 };
+    let v = CfrVariant::Dcfr {
+        alpha: 1.5,
+        beta: 0.0,
+        gamma: 2.0,
+    };
     let t = 4u32;
     // positive: factor t^1.5/(t^1.5+1) = 8/9
     assert!((v.regret_discount(1.0, t) - 8.0 / 9.0).abs() < 1e-12);
@@ -43,7 +50,10 @@ fn dcfr_discounts_positive_and_negative_differently() {
 
 #[test]
 fn cfr_plus_linear_weighting_and_delay() {
-    let v = CfrVariant::CfrPlus { avg_delay: 5, linear_weighting: true };
+    let v = CfrVariant::CfrPlus {
+        avg_delay: 5,
+        linear_weighting: true,
+    };
     assert_eq!(v.strategy_weight(3), 0.0);
     assert_eq!(v.strategy_weight(6), 1.0);
     assert_eq!(v.strategy_weight(15), 10.0);

@@ -17,7 +17,10 @@ fn kuhn_cfr_plus_reaches_nash() {
 
     // Game value to P0 ≈ −1/18 (measured via best responses bracketing it).
     let br1 = best_response_value(&game, &cfr, 1);
-    eprintln!("kuhn_cfr_plus BR1 value: {br1:.6} (expected ≈ +1/18 = {:.6})", 1.0 / 18.0);
+    eprintln!(
+        "kuhn_cfr_plus BR1 value: {br1:.6} (expected ≈ +1/18 = {:.6})",
+        1.0 / 18.0
+    );
     assert!(
         (br1 - 1.0 / 18.0).abs() < 0.01,
         "BR1 value {br1:.6} should be ≈ +1/18"
@@ -35,7 +38,10 @@ fn kuhn_cfr_plus_reaches_nash() {
 
     // P1 with J (card 0) bluff-bets ~1/3 after a check.
     let s = cfr.average_strategy("1|0|p", 2);
-    eprintln!("P1 J after check: pass={:.4} bet={:.4} (expected bet≈1/3)", s[0], s[1]);
+    eprintln!(
+        "P1 J after check: pass={:.4} bet={:.4} (expected bet≈1/3)",
+        s[0], s[1]
+    );
     assert!((s[1] - 1.0 / 3.0).abs() < 0.05, "P1 J bluff {} ≈ 1/3", s[1]);
 }
 
@@ -46,7 +52,10 @@ fn kuhn_dcfr_also_converges() {
     cfr.run(20_000);
     let expl = exploitability(&game, &cfr);
     eprintln!("kuhn_dcfr exploitability: {expl:.6}");
-    assert!(expl < 0.01, "DCFR exploitability {expl:.6} should be < 0.01");
+    assert!(
+        expl < 0.01,
+        "DCFR exploitability {expl:.6} should be < 0.01"
+    );
 }
 
 #[test]

@@ -17,8 +17,10 @@ pub fn best_response_value<G: Game>(game: &G, cfr: &ScalarCfr<G>, br_player: usi
     let mut infosets: HashMap<String, (usize, usize)> = HashMap::new(); // key → (depth, na)
     collect(game, &game.root(), br_player, 0, &mut infosets);
 
-    let mut ordered: Vec<(String, usize, usize)> =
-        infosets.into_iter().map(|(k, (d, na))| (k, d, na)).collect();
+    let mut ordered: Vec<(String, usize, usize)> = infosets
+        .into_iter()
+        .map(|(k, (d, na))| (k, d, na))
+        .collect();
     ordered.sort_by_key(|b| std::cmp::Reverse(b.1)); // deepest first
 
     // Pass 2: greedily fix the best action per infoset, deepest first.
@@ -26,7 +28,14 @@ pub fn best_response_value<G: Game>(game: &G, cfr: &ScalarCfr<G>, br_player: usi
     for (key, _depth, na) in ordered {
         let mut action_vals = vec![0.0; na];
         accumulate_action_values(
-            game, cfr, &game.root(), br_player, 1.0, &key, &choices, &mut action_vals,
+            game,
+            cfr,
+            &game.root(),
+            br_player,
+            1.0,
+            &key,
+            &choices,
+            &mut action_vals,
         );
         let best = action_vals
             .iter()
@@ -90,7 +99,14 @@ fn accumulate_action_values<G: Game>(
     if game.is_chance(s) {
         for (c, p) in game.chance_outcomes(s) {
             accumulate_action_values(
-                game, cfr, &c, br_player, reach_opp_chance * p, target_key, choices, action_vals,
+                game,
+                cfr,
+                &c,
+                br_player,
+                reach_opp_chance * p,
+                target_key,
+                choices,
+                action_vals,
             );
         }
         return;
@@ -110,7 +126,13 @@ fn accumulate_action_values<G: Game>(
         // reachability of target states — see function doc).
         for a in 0..na {
             accumulate_action_values(
-                game, cfr, &game.next(s, a), br_player, reach_opp_chance, target_key, choices,
+                game,
+                cfr,
+                &game.next(s, a),
+                br_player,
+                reach_opp_chance,
+                target_key,
+                choices,
                 action_vals,
             );
         }
@@ -119,8 +141,14 @@ fn accumulate_action_values<G: Game>(
         let strat = cfr.average_strategy(&key, na);
         for (a, &p) in strat.iter().enumerate() {
             accumulate_action_values(
-                game, cfr, &game.next(s, a), br_player, reach_opp_chance * p, target_key,
-                choices, action_vals,
+                game,
+                cfr,
+                &game.next(s, a),
+                br_player,
+                reach_opp_chance * p,
+                target_key,
+                choices,
+                action_vals,
             );
         }
     }
@@ -148,9 +176,9 @@ fn eval<G: Game>(
     let na = game.num_actions(s);
     let key = game.infoset_key(s);
     if game.player(s) == br_player {
-        let a = *choices.get(&key).unwrap_or_else(|| {
-            panic!("BR ordering violated: unresolved infoset {key}")
-        });
+        let a = *choices
+            .get(&key)
+            .unwrap_or_else(|| panic!("BR ordering violated: unresolved infoset {key}"));
         eval(game, cfr, &game.next(s, a), br_player, choices)
     } else {
         let strat = cfr.average_strategy(&key, na);

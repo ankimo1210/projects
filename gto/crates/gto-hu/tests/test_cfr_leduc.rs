@@ -14,9 +14,17 @@ fn leduc_exploitability_decreases_and_gets_small() {
     let e200 = exploitability(&game, &cfr);
     cfr.run(1_800);
     let e2000 = exploitability(&game, &cfr);
+    assert_eq!(
+        cfr.nodes.len(),
+        288,
+        "Leduc infoset count: encoding regression"
+    );
     eprintln!("Leduc infosets after 2000 iters: {}", cfr.nodes.len());
     eprintln!("Leduc exploitability: e200={e200:.4}, e2000={e2000:.4}");
-    assert!(e2000 < e200, "exploitability must decrease: {e200:.4} → {e2000:.4}");
+    assert!(
+        e2000 < e200,
+        "exploitability must decrease: {e200:.4} → {e2000:.4}"
+    );
     assert!(e2000 < 0.1, "exploitability after 2000 iters: {e2000:.4}");
 }
 
@@ -32,6 +40,12 @@ fn leduc_game_value_in_known_band() {
     assert!(
         (0.02..0.16).contains(&br1),
         "BR1 {br1:.4} should be near +0.0856"
+    );
+    let br0 = best_response_value(&game, &cfr, 0);
+    eprintln!("Leduc BR0 at 5000 iters: {br0:.4}");
+    assert!(
+        (-0.16..-0.02).contains(&br0),
+        "BR0 {br0:.4} should be near -0.0856"
     );
 }
 

@@ -15,11 +15,11 @@ impl Kuhn {
     fn terminal_payoff_p0(cards: (u8, u8), history: &str) -> Option<f64> {
         let win = |a: u8, b: u8| if a > b { 1.0 } else { -1.0 };
         match history {
-            "pp" => Some(win(cards.0, cards.1)),           // showdown, pot 2
-            "pbp" => Some(-1.0),                            // P0 folds after check-bet
-            "pbb" => Some(2.0 * win(cards.0, cards.1)),     // call, pot 4
-            "bp" => Some(1.0),                              // P1 folds
-            "bb" => Some(2.0 * win(cards.0, cards.1)),      // call, pot 4
+            "pp" => Some(win(cards.0, cards.1)),        // showdown, pot 2
+            "pbp" => Some(-1.0),                        // P0 folds after check-bet
+            "pbb" => Some(2.0 * win(cards.0, cards.1)), // call, pot 4
+            "bp" => Some(1.0),                          // P1 folds
+            "bb" => Some(2.0 * win(cards.0, cards.1)),  // call, pot 4
             _ => None,
         }
     }
@@ -29,7 +29,10 @@ impl Game for Kuhn {
     type State = KuhnState;
 
     fn root(&self) -> KuhnState {
-        KuhnState { cards: None, history: String::new() }
+        KuhnState {
+            cards: None,
+            history: String::new(),
+        }
     }
 
     fn is_terminal(&self, s: &KuhnState) -> bool {
@@ -38,7 +41,11 @@ impl Game for Kuhn {
 
     fn payoff(&self, s: &KuhnState, player: usize) -> f64 {
         let p0 = Self::terminal_payoff_p0(s.cards.unwrap(), &s.history).unwrap();
-        if player == 0 { p0 } else { -p0 }
+        if player == 0 {
+            p0
+        } else {
+            -p0
+        }
     }
 
     fn is_chance(&self, s: &KuhnState) -> bool {
@@ -51,7 +58,10 @@ impl Game for Kuhn {
             for c1 in 0..3u8 {
                 if c0 != c1 {
                     out.push((
-                        KuhnState { cards: Some((c0, c1)), history: String::new() },
+                        KuhnState {
+                            cards: Some((c0, c1)),
+                            history: String::new(),
+                        },
                         1.0 / 6.0,
                     ));
                 }
@@ -71,7 +81,10 @@ impl Game for Kuhn {
     fn next(&self, s: &KuhnState, action: usize) -> KuhnState {
         let mut h = s.history.clone();
         h.push(if action == 0 { 'p' } else { 'b' });
-        KuhnState { cards: s.cards, history: h }
+        KuhnState {
+            cards: s.cards,
+            history: h,
+        }
     }
 
     fn infoset_key(&self, s: &KuhnState) -> String {

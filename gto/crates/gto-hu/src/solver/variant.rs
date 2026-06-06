@@ -15,19 +15,33 @@ pub enum CfrVariant {
     /// Regrets clipped at zero after each update. Average-strategy
     /// accumulation starts after `avg_delay` iterations; with
     /// `linear_weighting` iteration t contributes weight (t − avg_delay).
-    CfrPlus { avg_delay: u32, linear_weighting: bool },
+    CfrPlus {
+        avg_delay: u32,
+        linear_weighting: bool,
+    },
     /// Discounted CFR: positive regrets × t^α/(t^α+1), negative regrets ×
     /// t^β/(t^β+1), strategy contributions × (t/(t+1))^γ.
-    Dcfr { alpha: f64, beta: f64, gamma: f64 },
+    Dcfr {
+        alpha: f64,
+        beta: f64,
+        gamma: f64,
+    },
 }
 
 impl CfrVariant {
     pub fn dcfr_default() -> Self {
-        CfrVariant::Dcfr { alpha: 1.5, beta: 0.0, gamma: 2.0 }
+        CfrVariant::Dcfr {
+            alpha: 1.5,
+            beta: 0.0,
+            gamma: 2.0,
+        }
     }
 
     pub fn cfr_plus_default() -> Self {
-        CfrVariant::CfrPlus { avg_delay: 0, linear_weighting: true }
+        CfrVariant::CfrPlus {
+            avg_delay: 0,
+            linear_weighting: true,
+        }
     }
 
     /// Per-iteration discount factor for a stored cumulative regret
@@ -70,7 +84,10 @@ impl CfrVariant {
     pub fn strategy_weight(&self, t: u32) -> f64 {
         match *self {
             CfrVariant::Vanilla | CfrVariant::Dcfr { .. } => 1.0,
-            CfrVariant::CfrPlus { avg_delay, linear_weighting } => {
+            CfrVariant::CfrPlus {
+                avg_delay,
+                linear_weighting,
+            } => {
                 if t <= avg_delay {
                     0.0
                 } else if linear_weighting {

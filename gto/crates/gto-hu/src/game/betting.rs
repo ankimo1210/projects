@@ -30,7 +30,10 @@ pub struct BettingState {
 impl BettingState {
     /// River subgame root: symmetric pot carried in, OOP (BB) to act.
     pub fn river_root(pot: i64, stack: i64) -> Self {
-        assert!(pot > 0 && pot % 2 == 0, "carried pot must be positive and even");
+        assert!(
+            pot > 0 && pot % 2 == 0,
+            "carried pot must be positive and even"
+        );
         assert!(stack > 0, "stack must be positive");
         BettingState {
             street: Street::River,

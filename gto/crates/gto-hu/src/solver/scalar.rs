@@ -52,7 +52,12 @@ pub struct ScalarCfr<'a, G: Game> {
 
 impl<'a, G: Game> ScalarCfr<'a, G> {
     pub fn new(game: &'a G, variant: CfrVariant) -> Self {
-        ScalarCfr { game, variant, nodes: HashMap::new(), iteration: 0 }
+        ScalarCfr {
+            game,
+            variant,
+            nodes: HashMap::new(),
+            iteration: 0,
+        }
     }
 
     /// Run `iterations` full CFR iterations (both players each iteration).
@@ -87,7 +92,10 @@ impl<'a, G: Game> ScalarCfr<'a, G> {
         let key = self.game.infoset_key(s);
         let mut strat = vec![0.0; na];
         {
-            let node = self.nodes.entry(key.clone()).or_insert_with(|| InfoNode::new(na));
+            let node = self
+                .nodes
+                .entry(key.clone())
+                .or_insert_with(|| InfoNode::new(na));
             assert_eq!(
                 node.regrets.len(),
                 na,

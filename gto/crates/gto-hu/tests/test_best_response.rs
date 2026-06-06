@@ -11,7 +11,10 @@ fn best_response_exploits_uniform_strategy() {
     let br0 = best_response_value(&game, &cfr, 0);
     let br1 = best_response_value(&game, &cfr, 1);
     eprintln!("BR vs uniform: BR0={br0:.4} BR1={br1:.4}");
-    assert!(br0 > -1.0 / 18.0 + 0.05, "BR0 {br0:.4} must exploit uniform");
+    assert!(
+        br0 > -1.0 / 18.0 + 0.05,
+        "BR0 {br0:.4} must exploit uniform"
+    );
     assert!(br1 > 1.0 / 18.0 + 0.05, "BR1 {br1:.4} must exploit uniform");
 }
 
@@ -25,7 +28,10 @@ fn exploitability_is_nonnegative_and_decreases() {
     let e5000 = exploitability(&game, &cfr);
     eprintln!("exploitability: 100 iters={e100:.5} → 5000 iters={e5000:.5}");
     assert!(e100 >= -1e-9 && e5000 >= -1e-9);
-    assert!(e5000 < e100, "exploitability must decrease: {e100:.5} → {e5000:.5}");
+    assert!(
+        e5000 < e100,
+        "exploitability must decrease: {e100:.5} → {e5000:.5}"
+    );
 }
 
 /// Encode a pure strategy for player 1 ("full nit": always fold to a bet,
@@ -45,7 +51,10 @@ fn best_response_exact_against_full_nit() {
         }
     }
     let br0 = best_response_value(&game, &cfr, 0);
-    assert!((br0 - 1.0).abs() < 1e-9, "BR0 vs full nit = {br0}, want exactly 1.0");
+    assert!(
+        (br0 - 1.0).abs() < 1e-9,
+        "BR0 vs full nit = {br0}, want exactly 1.0"
+    );
 }
 
 /// Against the uniform strategy the hand-computed values are
@@ -57,5 +66,8 @@ fn best_response_exact_against_uniform() {
     let br0 = best_response_value(&game, &cfr, 0);
     let br1 = best_response_value(&game, &cfr, 1);
     assert!((br0 - 0.5).abs() < 1e-9, "BR0 vs uniform = {br0}, want 0.5");
-    assert!((br1 - 1.25 / 3.0).abs() < 1e-9, "BR1 vs uniform = {br1}, want 1.25/3");
+    assert!(
+        (br1 - 1.25 / 3.0).abs() < 1e-9,
+        "BR1 vs uniform = {br1}, want 1.25/3"
+    );
 }
