@@ -11,8 +11,9 @@ pub fn combo_index(a: Card, b: Card) -> usize {
     let (lo, hi) = if a < b { (a, b) } else { (b, a) };
     let lo = lo as usize;
     let hi = hi as usize;
-    // sum of (51 + 50 + ... + (52-lo)) + (hi - lo - 1)
-    lo * 51 - lo * (lo - 1) / 2 + hi - lo - 1
+    // Number of combos in rows 0..lo: sum_{i=0}^{lo-1} (51-i) = lo*51 - lo*(lo-1)/2
+    // Rewritten as lo*(103-lo)/2 to avoid underflow when lo=0.
+    lo * (103 - lo) / 2 + hi - lo - 1
 }
 
 /// All combos as (a, b) pairs, in index order.
