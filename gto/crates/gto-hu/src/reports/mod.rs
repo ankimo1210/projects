@@ -12,9 +12,12 @@ use crate::tree::{NodeKind, Tree};
 pub struct TreeStats {
     pub total_nodes: usize,
     pub action_nodes: usize,
+    pub chance_nodes: usize,
     pub fold_terminals: usize,
     pub showdown_terminals: usize,
-    /// regrets + strategy sums, 8 bytes each, per (node, action, combo).
+    /// Structural estimate: regrets + strategy sums, 8 bytes each, per
+    /// (node, action, combo). For chance trees this ignores the per-river-
+    /// card multiplicity — use the turn solver's table accounting instead.
     pub memory_estimate_bytes: usize,
 }
 
@@ -22,6 +25,7 @@ pub fn tree_stats(tree: &Tree) -> TreeStats {
     let mut s = TreeStats {
         total_nodes: tree.nodes.len(),
         action_nodes: 0,
+        chance_nodes: 0,
         fold_terminals: 0,
         showdown_terminals: 0,
         memory_estimate_bytes: 0,
@@ -34,6 +38,7 @@ pub fn tree_stats(tree: &Tree) -> TreeStats {
             }
             NodeKind::FoldTerminal { .. } => s.fold_terminals += 1,
             NodeKind::Showdown => s.showdown_terminals += 1,
+            NodeKind::Chance { .. } => s.chance_nodes += 1,
         }
     }
     s

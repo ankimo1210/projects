@@ -57,6 +57,7 @@ fn all_terminals_are_fold_or_showdown_and_pots_conserve() {
                 );
             }
             NodeKind::Action { .. } => assert!(!n.children.is_empty()),
+            NodeKind::Chance { .. } => unreachable!("river tree has no chance nodes"),
         }
     }
     assert!(terminals >= 6);

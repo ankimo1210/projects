@@ -101,6 +101,7 @@ impl VectorRiverSolver {
                 let diff = self.showdown_diff(opp_reach);
                 diff.iter().map(|d| win_bb * d).collect()
             }
+            NodeKind::Chance { .. } => unreachable!("river-only tree has no chance nodes"),
             NodeKind::Action { actor } => {
                 let na = self.tree.nodes[node_id].children.len();
                 let strat = self.node_strategy(node_id, na);
@@ -323,6 +324,7 @@ impl VectorRiverSolver {
                     .map(|d| win_bb * d)
                     .collect()
             }
+            NodeKind::Chance { .. } => unreachable!("river-only tree has no chance nodes"),
             NodeKind::Action { actor } => {
                 let na = self.tree.nodes[node_id].children.len();
                 if actor == br_player {
@@ -386,6 +388,7 @@ impl VectorRiverSolver {
                     .map(|d| win_bb * d)
                     .collect()
             }
+            NodeKind::Chance { .. } => unreachable!("river-only tree has no chance nodes"),
             NodeKind::Action { actor } => {
                 let na = self.tree.nodes[node_id].children.len();
                 let mut ev = vec![0.0; N];

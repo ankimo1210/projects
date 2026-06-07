@@ -102,7 +102,7 @@ impl Game for TinyRiver {
                 };
                 showdown_payoffs(&node.state, winner)[player]
             }
-            NodeKind::Action { .. } => unreachable!("payoff at non-terminal"),
+            _ => unreachable!("payoff at non-terminal"),
         };
         cbb as f64 / 100.0 // bb
     }
