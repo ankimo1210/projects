@@ -12,6 +12,7 @@ use super::regret::regret_matching;
 use super::rng::SplitMix64;
 use super::showdown::{weighted_compat, ShowdownTable};
 use super::variant::CfrVariant;
+use super::vector::ExplReport;
 use crate::game::terminal::{fold_payoffs, showdown_payoffs};
 use crate::game::Street;
 use crate::ranges::{all_combos, Range, NUM_COMBOS};
@@ -415,5 +416,211 @@ impl TurnRiverSolver {
             .zip(freq)
             .map(|((act, _), f)| (act.label(), f))
             .collect()
+    }
+
+    // ----- Exact best response ------------------------------------------
+    // The chance node is ALWAYS enumerated here, regardless of training
+    // mode: exploitability and game value are exact.
+
+    /// Counterfactual BR values for `br_player` (opponent plays the
+    /// average strategy).
+    fn br_values(
+        &self,
+        node_id: usize,
+        br_player: u8,
+        opp_reach: &[f64; N],
+        ctx: Option<usize>,
+    ) -> Vec<f64> {
+        match self.tree.nodes[node_id].kind {
+            NodeKind::FoldTerminal { winner } => {
+                let state = self.tree.nodes[node_id].state;
+                let pay = fold_payoffs(&state, winner)[br_player as usize] as f64 / 100.0;
+                weighted_compat(&self.combos, opp_reach)
+                    .iter()
+                    .map(|w| pay * w)
+                    .collect()
+            }
+            NodeKind::Showdown => {
+                let state = self.tree.nodes[node_id].state;
+                let win_bb =
+                    showdown_payoffs(&state, Some(br_player))[br_player as usize] as f64 / 100.0;
+                let table = &self.tables[ctx.expect("showdown requires a river card")];
+                table
+                    .diff(&self.combos, opp_reach)
+                    .iter()
+                    .map(|d| win_bb * d)
+                    .collect()
+            }
+            NodeKind::Chance { child } => {
+                let w = 1.0 / self.legal_rivers_per_deal();
+                let mut ev = vec![0.0; N];
+                for i in 0..self.rivers.len() {
+                    let card = self.rivers[i];
+                    let mut o = *opp_reach;
+                    zero_card(&self.combos, card, &mut o);
+                    let v = self.br_values(child, br_player, &o, Some(i));
+                    for c in 0..N {
+                        if !combo_blocks(self.combos[c], card) {
+                            ev[c] += w * v[c];
+                        }
+                    }
+                }
+                ev
+            }
+            NodeKind::Action { actor } => {
+                let na = self.tree.nodes[node_id].children.len();
+                if actor == br_player {
+                    let mut best = vec![f64::NEG_INFINITY; N];
+                    for a in 0..na {
+                        let child = self.tree.nodes[node_id].children[a].1;
+                        let v = self.br_values(child, br_player, opp_reach, ctx);
+                        for c in 0..N {
+                            if v[c] > best[c] {
+                                best[c] = v[c];
+                            }
+                        }
+                    }
+                    best
+                } else {
+                    let mut ev = vec![0.0; N];
+                    for a in 0..na {
+                        let child = self.tree.nodes[node_id].children[a].1;
+                        let mut no = *opp_reach;
+                        for c in 0..N {
+                            let s = self.average_strategy(node_id, ctx, c);
+                            no[c] = opp_reach[c] * s[a];
+                        }
+                        let v = self.br_values(child, br_player, &no, ctx);
+                        for c in 0..N {
+                            ev[c] += v[c];
+                        }
+                    }
+                    ev
+                }
+            }
+        }
+    }
+
+    /// Counterfactual values for `player` when BOTH players follow the
+    /// average strategy (chance enumerated exactly).
+    fn avg_values(
+        &self,
+        node_id: usize,
+        player: u8,
+        opp_reach: &[f64; N],
+        ctx: Option<usize>,
+    ) -> Vec<f64> {
+        match self.tree.nodes[node_id].kind {
+            NodeKind::FoldTerminal { winner } => {
+                let state = self.tree.nodes[node_id].state;
+                let pay = fold_payoffs(&state, winner)[player as usize] as f64 / 100.0;
+                weighted_compat(&self.combos, opp_reach)
+                    .iter()
+                    .map(|w| pay * w)
+                    .collect()
+            }
+            NodeKind::Showdown => {
+                let state = self.tree.nodes[node_id].state;
+                let win_bb =
+                    showdown_payoffs(&state, Some(player))[player as usize] as f64 / 100.0;
+                let table = &self.tables[ctx.expect("showdown requires a river card")];
+                table
+                    .diff(&self.combos, opp_reach)
+                    .iter()
+                    .map(|d| win_bb * d)
+                    .collect()
+            }
+            NodeKind::Chance { child } => {
+                let w = 1.0 / self.legal_rivers_per_deal();
+                let mut ev = vec![0.0; N];
+                for i in 0..self.rivers.len() {
+                    let card = self.rivers[i];
+                    let mut o = *opp_reach;
+                    zero_card(&self.combos, card, &mut o);
+                    let v = self.avg_values(child, player, &o, Some(i));
+                    for c in 0..N {
+                        if !combo_blocks(self.combos[c], card) {
+                            ev[c] += w * v[c];
+                        }
+                    }
+                }
+                ev
+            }
+            NodeKind::Action { actor } => {
+                let na = self.tree.nodes[node_id].children.len();
+                let mut ev = vec![0.0; N];
+                if actor == player {
+                    for a in 0..na {
+                        let child = self.tree.nodes[node_id].children[a].1;
+                        let v = self.avg_values(child, player, opp_reach, ctx);
+                        for c in 0..N {
+                            let s = self.average_strategy(node_id, ctx, c);
+                            ev[c] += s[a] * v[c];
+                        }
+                    }
+                } else {
+                    for a in 0..na {
+                        let child = self.tree.nodes[node_id].children[a].1;
+                        let mut no = *opp_reach;
+                        for c in 0..N {
+                            let s = self.average_strategy(node_id, ctx, c);
+                            no[c] = opp_reach[c] * s[a];
+                        }
+                        let v = self.avg_values(child, player, &no, ctx);
+                        for c in 0..N {
+                            ev[c] += v[c];
+                        }
+                    }
+                }
+                ev
+            }
+        }
+    }
+
+    /// Game value (bb/hand) to player 0 (SB/IP) under avg-vs-avg play.
+    pub fn game_value_p0(&self) -> f64 {
+        let r0 = self.ranges[0].weights;
+        let r1 = self.ranges[1].weights;
+        let vals = self.avg_values(0, 0, &r1, None);
+        let compat = weighted_compat(&self.combos, &r1);
+        let mut num = 0.0;
+        let mut z = 0.0;
+        for c in 0..N {
+            if r0[c] > 0.0 {
+                num += r0[c] * vals[c];
+                z += r0[c] * compat[c];
+            }
+        }
+        if z > 0.0 {
+            num / z
+        } else {
+            0.0
+        }
+    }
+
+    /// Exploitability in bb/hand: (BR_sb + BR_bb) / 2. Always exact
+    /// (chance enumerated), even when training used sampling.
+    pub fn exploitability_bb(&self) -> ExplReport {
+        let mut br_value = [0.0f64; 2];
+        #[allow(clippy::needless_range_loop)]
+        for p in 0..2usize {
+            let own = self.ranges[p].weights;
+            let opp = self.ranges[1 - p].weights;
+            let vals = self.br_values(0, p as u8, &opp, None);
+            let compat = weighted_compat(&self.combos, &opp);
+            let mut num = 0.0;
+            let mut z = 0.0;
+            for c in 0..N {
+                if own[c] > 0.0 {
+                    num += own[c] * vals[c];
+                    z += own[c] * compat[c];
+                }
+            }
+            br_value[p] = if z > 0.0 { num / z } else { 0.0 };
+        }
+        ExplReport {
+            br_value,
+            exploitability: (br_value[0] + br_value[1]) / 2.0,
+        }
     }
 }
