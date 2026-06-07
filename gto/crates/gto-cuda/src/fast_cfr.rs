@@ -123,6 +123,15 @@ pub struct FastCfrSolver {
 
     // Scratch
     g_uniform: CUdeviceptr,   // [flat] f32, all 1.0
+    // Shared [max_na × flat] f32 scratch for PASS-1 spread output and
+    // PASS-2 child-EV assembly. Allocated once: cuMemAlloc/cuMemFree in
+    // the hot loop force device synchronization and starve the GPU.
+    g_scratch_na: CUdeviceptr,
+    // Per-terminal half-pot vectors [n] f32, precomputed once (the pot is
+    // a node constant — re-uploading it per iteration was a hot-path HtoD).
+    g_hpot_nodes: HashMap<usize, CUdeviceptr>,
+    // [flat] f32 zeros for un-injected NextStreet terminals.
+    g_zeros: CUdeviceptr,
 
     // For result extraction
     pub ranges: Vec<f32>,   // [N × NC] starting weights
@@ -192,11 +201,14 @@ impl FastCfrSolver {
         let mut g_strat      = HashMap::new();
         let mut g_reach      = HashMap::new();
         let mut g_ev         = HashMap::new();
+        let mut g_hpot_nodes = HashMap::new();
+        let mut max_na       = 1usize;
 
         for (nid, desc) in descs.iter().enumerate() {
             match desc {
                 NodeDesc::Action { children, .. } => {
                     let na = children.len();
+                    max_na = max_na.max(na);
                     let sz_f64 = na * flat * 8;
                     let sz_f32 = na * flat * 4;
                     let g_r = mem_alloc(sz_f64);
@@ -209,13 +221,28 @@ impl FastCfrSolver {
 
                     g_strat.insert(nid, mem_alloc(sz_f32));
                 }
-                NodeDesc::Terminal(_, _) => {}
+                NodeDesc::Terminal(_, pot) => {
+                    // Half-pot vector is a node constant: upload once.
+                    let half_pot = (pot / 2.0) as f32;
+                    let v: Vec<f32> = vec![half_pot; n];
+                    let p = mem_alloc(n * 4);
+                    memcpy_htod(p, &v);
+                    g_hpot_nodes.insert(nid, p);
+                }
             }
             g_ev.insert(nid, mem_alloc(flat * 4));
             for player in 0u8..2 {
                 g_reach.insert((nid, player), mem_alloc(flat * 4));
             }
         }
+
+        let g_scratch_na = mem_alloc(max_na * flat * 4);
+        let g_zeros = {
+            let z = vec![0u8; flat * 4];
+            let p = mem_alloc(flat * 4);
+            memcpy_htod(p, &z);
+            p
+        };
 
         FastCfrSolver {
             n, flat, descs, topo, k,
@@ -224,6 +251,9 @@ impl FastCfrSolver {
             g_reach, g_ev,
             ext_ev: HashMap::new(),
             g_uniform,
+            g_scratch_na,
+            g_hpot_nodes,
+            g_zeros,
             ranges,
             action_names,
         }
@@ -299,8 +329,10 @@ impl FastCfrSolver {
             for player in [traverser, opp] {
                 let g_par_reach = self.g_reach[&(nid, player)];
                 if actor == player {
-                    // Multiply by σ via spread_reach kernel
-                    let tmp = mem_alloc(children.len() * flat * 4);
+                    // Multiply by σ via spread_reach kernel into the
+                    // persistent scratch (consumed by the copies below
+                    // before the next launch on the same stream).
+                    let tmp = self.g_scratch_na;
                     unsafe {
                         launch_kernel(self.k.spread, grid, (blk, 1, 1), &[
                             &g_par_reach as *const _ as *mut c_void,
@@ -315,7 +347,6 @@ impl FastCfrSolver {
                         let g_child_reach = self.g_reach[&(cid, player)];
                         gpu_copy_offset(g_child_reach, tmp, ai * flat * 4, flat * 4);
                     }
-                    mem_free(tmp);
                 } else {
                     // Not actor's decision — reach is unchanged for all children
                     for &cid in &children {
@@ -332,30 +363,23 @@ impl FastCfrSolver {
             let g_ev = self.g_ev[&nid];
 
             match desc {
-                NodeDesc::Terminal(TermKind::FoldWinner(winner), pot) => {
+                NodeDesc::Terminal(TermKind::FoldWinner(winner), _pot) => {
                     let sign: i32 = if winner == traverser { 1 } else { -1 };
-                    // EV = sign × half_pot per spot (from g_hpot)
-                    // We store pot in node but use global g_hpot for per-spot pots
-                    // For fold: EV = sign × actual pot/2 from this node
-                    // (pot may differ from initial g_hpot after bets — use a temporary hpot)
-                    let half_pot = (pot / 2.0) as f32;
-                    let hpot_tmp = {
-                        let v: Vec<f32> = (0..self.n).map(|_| half_pot).collect();
-                        let p = mem_alloc(self.n * 4); memcpy_htod(p, &v); p
-                    };
+                    // EV = sign × this node's half-pot (precomputed once;
+                    // pot differs from root g_hpot after bets).
+                    let hpot_node = self.g_hpot_nodes[&nid];
                     unsafe {
                         launch_kernel(self.k.fold_ev, grid, (blk, 1, 1), &[
-                            &g_ev     as *const _ as *mut c_void,
-                            &hpot_tmp as *const _ as *mut c_void,
+                            &g_ev      as *const _ as *mut c_void,
+                            &hpot_node as *const _ as *mut c_void,
                             &sign as *const _ as *mut c_void,
                             &ns as *const _ as *mut c_void,
                             &nc as *const _ as *mut c_void,
                         ]);
                     }
-                    mem_free(hpot_tmp);
                 }
 
-                NodeDesc::Terminal(TermKind::Showdown, pot) => {
+                NodeDesc::Terminal(TermKind::Showdown, _pot) => {
                     let g_opp_reach = self.g_reach[&(nid, opp)];
                     let (g_hs, g_os) = if traverser == 0 {
                         (self.g_hero, self.g_opp)
@@ -364,12 +388,8 @@ impl FastCfrSolver {
                     };
                     let blk_sd  = 256u32;
                     let grid_sd = ((NUM_COMBOS as u32 + blk_sd - 1) / blk_sd, self.n as u32, 1u32);
-                    // Use this node's pot (NOT root g_hpot which is wrong after bets)
-                    let half_pot = (pot / 2.0) as f32;
-                    let hpot_node = {
-                        let v: Vec<f32> = (0..self.n).map(|_| half_pot).collect();
-                        let p = mem_alloc(self.n * 4); memcpy_htod(p, &v); p
-                    };
+                    // This node's pot, precomputed once in new().
+                    let hpot_node = self.g_hpot_nodes[&nid];
                     unsafe {
                         launch_kernel(self.k.showdown, grid_sd, (blk_sd, 1, 1), &[
                             &g_hs as *const _ as *mut c_void,
@@ -383,7 +403,6 @@ impl FastCfrSolver {
                             &nc as *const _ as *mut c_void,
                         ]);
                     }
-                    mem_free(hpot_node);
                 }
 
                 NodeDesc::Terminal(TermKind::NextStreet, _) => {
@@ -400,9 +419,8 @@ impl FastCfrSolver {
                             memcpy_htod(g_ev, &neg);
                         }
                     } else {
-                        // No external EV provided: use zero
-                        let zeros = vec![0u8; flat * 4];
-                        memcpy_htod(g_ev, &zeros);
+                        // No external EV provided: zero (persistent buffer).
+                        gpu_copy(g_ev, self.g_zeros, flat * 4);
                     }
                 }
 
@@ -414,8 +432,10 @@ impl FastCfrSolver {
                     let g_reg    = self.g_regrets[&nid];
                     let g_ss     = self.g_strat_sums[&nid];
 
-                    // Assemble child EVs: [na × flat] f32
-                    let g_child_evs = mem_alloc(na * flat * 4);
+                    // Assemble child EVs into the persistent scratch:
+                    // [na × flat] f32 (consumed by reduce_ev/reg_upd below
+                    // before the next node reuses it on the same stream).
+                    let g_child_evs = self.g_scratch_na;
                     for (ai, &cid) in children.iter().enumerate() {
                         let g_cev = self.g_ev[&cid];
                         gpu_copy_into(g_child_evs, g_cev, ai * flat * 4, flat * 4);
@@ -467,7 +487,6 @@ impl FastCfrSolver {
                         }
                     }
 
-                    mem_free(g_child_evs);
                 }
             }
         }
@@ -512,7 +531,10 @@ impl FastCfrSolver {
 
 impl Drop for FastCfrSolver {
     fn drop(&mut self) {
-        for p in [self.g_hero, self.g_opp, self.g_ca, self.g_cb, self.g_hpot, self.g_uniform] {
+        for p in [
+            self.g_hero, self.g_opp, self.g_ca, self.g_cb, self.g_hpot,
+            self.g_uniform, self.g_scratch_na, self.g_zeros,
+        ] {
             mem_free(p);
         }
         for (_, p) in &self.g_regrets    { mem_free(*p); }
@@ -520,6 +542,7 @@ impl Drop for FastCfrSolver {
         for (_, p) in &self.g_strat      { mem_free(*p); }
         for (_, p) in &self.g_ev         { mem_free(*p); }
         for (_, p) in &self.g_reach      { mem_free(*p); }
+        for (_, p) in &self.g_hpot_nodes { mem_free(*p); }
         for (_, p) in &self.ext_ev       { mem_free(*p); }
     }
 }

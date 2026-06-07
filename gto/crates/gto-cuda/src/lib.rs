@@ -31,6 +31,7 @@ fn precompute_strengths(board_ints: &[u8]) -> Vec<u16> {
 // ---------------------------------------------------------------------------
 
 #[pyfunction]
+#[pyo3(signature = (spots, iterations=None, max_bets=None, ip_weights=None, oop_weights=None))]
 fn batch_solve_rust(
     py: Python<'_>,
     spots: Vec<pyo3::Bound<'_, pyo3::types::PyDict>>,
