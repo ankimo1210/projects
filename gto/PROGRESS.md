@@ -155,22 +155,45 @@ gto-core/gto-cuda は single-street 近似のまま（river-only は正しい）
     --board AhKd7s --pot-type 3bp --pot 18 --stack 41 \
     --iterations 5000 --max-table-gb 12
   ```
-- テスト: 22ファイル・約100テスト（betting / payoff / tree / regret / Kuhn /
+- [x] **プリフロップ木（Phase 5, 2026-06-08）** — spec §6 の固定アクション台帳
+      （limp ライン含む: SB fold/limp/r2.5 → BB check/r4/r6 …、vs jam は
+      fold/call）を `build_preflop_tree` で実装
+  - `NodeKind::NextStreet { pot_type }` 追加 — 非フォールドのクローズは
+    pot type（limped/srp/3bp/4bp/allin_preflop）タグ付き葉。
+    リンプ特例（レイズ前の SB コールはストリートを閉じない）を
+    `BettingState` に実装。ショートスタックではサイズが all-in にキャップ
+  - **簡易ポストフロップ価値モデル**（spec §13 の "simplified postflop
+    value model for debugging"）: 葉のペイオフ = `eq(c,o)×pot − contrib`。
+    eq はシード付き MC 全コンボペア表（`EquityTable::monte_carlo`）で、
+    モデル内では厳密な BR / exploitability を計算。
+    **フルゲーム均衡ではない**（Phase 6 で実ポストフロップ部分木に置換）
+  - TinyPreflop スカラー参照との差分テスト（共有トイ equity 表、
+    scalar expl 0.0648 / vector 0.00035、ゲーム値予算内一致）
+  - アンカーテスト: AA はオープンフォールドしない（<2%）、
+    AA は 4bet-jam にほぼ純粋コール（>95%）。
+    MC 表検証: AA vs KK 0.79–0.84、AKs vs QQ 0.42–0.50、ゼロサム鏡像
+  - `solve-hu-preflop` CLI — 実測（100bb, 800 iters, samples 200）:
+    expl **0.0008 bb/hand（モデル内）**、学習 25 秒。
+    SB ルート fold 19.1% / limp 42.8% / open 38.1%（ポジション優位の
+    無いモデルでは limp 過多が整合的。AA はトラップ limp ≈100%、72o フォールド）。
+    MC エクイティ表構築は単線程 644 秒 — rayon 並列化が改善候補。
+    strategy_preflop.csv / strategy_root_classes.csv（169 クラス集約）/
+    summary.json（モデル明記）を `_data/gto/hu/` へ出力
+- テスト: 25ファイル・約115テスト（betting / payoff / tree / regret / Kuhn /
   Leduc / TinyRiver / differential / BR / reports /
-  turn tree / turn chance / turn solver / turn differential / turn reports /
-  flop tree / flop chance / flop solver / flop differential / flop reports）
+  turn・flop・preflop の tree / chance / solver / differential / reports）
 
 ---
 
 ## TODO（優先順）
 
 ### Phase HU 続き（gto-hu ロードマップ）
-- [ ] **カード・バケッティング（spec §8 Level 2 / Phase 6 前倒し候補）** —
+- [ ] **カード・バケッティング（spec §8 Level 2 / Phase 6 前提）** —
       フル SRP 100bb フロップ木は exact-combo 密テーブルで 105 GB のため
       現状 CLI が拒否する。スート同型化（~3-5×）+ f32 化（2×）でも数十 GB
       残るので、フルツリーにはバケッティングが必須
-- [ ] プリフロップ（limp 含む）
-- [ ] フルブループリント
+- [ ] フルブループリント（Phase 6）— プリフロップ木の NextStreet 葉を
+      実ポストフロップ部分木（バケット化）に接続、DCFR、全体 exploitability
 
 ### Phase C 続き（任意）
 - [ ] GPU util 67% → 80%+（カーネル融合 / CUDA Graphs / バッチ拡大）
@@ -218,6 +241,8 @@ cargo run --release -p gto-hu --bin solve-hu-turn-river -- \
 cargo run --release -p gto-hu --bin solve-hu-flop -- \
   --board AhKd7s --pot-type 3bp --pot 18 --stack 41 \
   --iterations 5000 --max-table-gb 12
+cargo run --release -p gto-hu --bin solve-hu-preflop -- \
+  --stack 100 --iterations 800 --samples 200   # 簡易価値モデル（均衡ではない）
 
 # バッチ計算（追加スタック・ポジション例）
 uv run --no-sync python -m gto.library.batch --positions HJ,UTG --stacks 100 --iters 300 --batch-size 32
