@@ -15,7 +15,7 @@
 | Quantity | Setup | Exact | Hull prints |
 |---|---|---|---|
 | Parity-implied put | S=31, K=30, r=10%, T=0.25, c=3 | 1.2593 | 1.26 |
-| Arbitrage profit (mispriced put 2.25) | same | 1.0226 (FV 31.0226 − K 30) | ≈1.02 |
+| Arbitrage profit (mispriced put 2.25) | same | 1.0158 (FV 31.0158 − K 30) | ≈1.02 |
 | Call lower bound | S=51, K=50, r=12%, T=0.5 | 3.9118 | 3.91 |
 | Put lower bound | S=38, K=40, r=10%, T=0.25 | 1.0124 | 1.01 |
 | Index call (Ex 17.1) | S=930, K=900, r=8%, q=3%, σ=20%, T=2/12 | ≈51.83 | 51.83 |
