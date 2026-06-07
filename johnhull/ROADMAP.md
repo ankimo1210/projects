@@ -8,7 +8,7 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 | — | `interest_rate_models/ir_models.ipynb` | 31, 32, 33 | done |
 | 1 | `volumes/01_foundations` | 13, 14 | done |
 | 2 | `volumes/02_options_basics` | 10, 11, 12, 17, 18 | done |
-| 3 | `volumes/03_greeks` | 19 | planned |
+| 3 | `volumes/03_greeks` | 19 | done |
 | 4 | `volumes/04_futures_forwards_rates` | 2, 3, 4, 5, 6 | planned |
 | 5 | `volumes/05_vol_smile_estimation` | 20, 23 | planned |
 | 6 | `volumes/06_numerical_methods` | 21, 27 | planned |
