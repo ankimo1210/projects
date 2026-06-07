@@ -85,6 +85,7 @@ $$f = e^{-rT}\bigl[p f_u + (1-p) f_d\bigr], \qquad p = \frac{e^{rT} - d}{u - d} 
 # Cell 04: one-step numeric check (Hull §13.1 example)
 cells.append(
     code(r"""# Hull §13.1 の例: S0=20, u=1.1, d=0.9, K=21, r=12%, T=3ヶ月
+# ※ 11e Global Edition は r=4%（f=0.545）。本ノートは US 版の古典例 r=12% を採用
 S0, K, r, T = 20.0, 21.0, 0.12, 0.25
 u, d = 1.1, 0.9
 fu, fd = max(S0 * u - K, 0), max(S0 * d - K, 0)
@@ -166,17 +167,17 @@ $$u = e^{\sigma\sqrt{\Delta t}}, \qquad d = \frac{1}{u} \quad \text{(13.15), (13
 
 # Cell 08: two-step & American examples
 cells.append(
-    code(r"""# Hull Fig 13.3: 2ステップ ヨーロピアンコール（S0=20, K=21, u=1.1, d=0.9, r=12%, Δt=0.25）
+    code(r"""# Hull Fig 13.4: 2ステップ ヨーロピアンコール（S0=20, K=21, u=1.1, d=0.9, r=12%, Δt=0.25）
 _, opt = trees.binomial_tree(20.0, 21.0, 0.12, 0.5, 2, u=1.1, d=0.9)
-print(f"2ステップ コール = {opt[0][0]:.4f}（Hull Fig 13.3: 1.2823）")
+print(f"2ステップ コール = {opt[0][0]:.4f}（Hull Fig 13.4: 1.2823）")
 
-# Hull Fig 13.5: 2ステップ プット（S0=50, K=52, u=1.2, d=0.8, r=5%, Δt=1年）
+# Hull Fig 13.7/13.8: 2ステップ プット（S0=50, K=52, u=1.2, d=0.8, r=5%, Δt=1年）
 _, opt_eu = trees.binomial_tree(50.0, 52.0, 0.05, 2.0, 2, u=1.2, d=0.8, kind="put")
 _, opt_am = trees.binomial_tree(50.0, 52.0, 0.05, 2.0, 2, u=1.2, d=0.8, kind="put", american=True)
 print(f"ヨーロピアンプット = {opt_eu[0][0]:.4f}（Hull: 4.1923）")
-print(f"アメリカンプット   = {opt_am[0][0]:.4f}（Hull Fig 13.5: 5.0894）")
+print(f"アメリカンプット   = {opt_am[0][0]:.4f}（Hull Fig 13.8: 5.0894）")
 print(f"早期行使プレミアム = {opt_am[0][0] - opt_eu[0][0]:.4f}")
-print("※ 本文の値は p を4桁に丸めた計算。丸めなしでは 4.1927 / 5.0896")""")
+print("※ 本文の値は p を4桁に丸めた計算。丸めなしでは 1.2822 / 4.1927 / 5.0896")""")
 )
 
 # Cell 09: §13.5 American early exercise
@@ -261,7 +262,7 @@ cells.append(
 
 $$\Delta_{i,j} = \frac{V_{i+1,j} - V_{i+1,j+1}}{S_{i+1,j} - S_{i+1,j+1}}$$
 
-静的なヘッジは不可能で、**動的リバランス**が必要です。下表は Hull Fig 13.5 の
+静的なヘッジは不可能で、**動的リバランス**が必要です。下表は Hull Fig 13.8 の
 アメリカンプット例の各ノードのデルタ。下方ノード（行使域）では $\Delta = -1$ に張り付きます。""")
 )
 
@@ -588,7 +589,7 @@ cells.append(
 # Cell 26: E/Var sim vs theory
 cells.append(
     code(r"""S0_e, mu_e, sig_e, T_e = 100.0, 0.10, 0.20, 1.0
-paths = mc.simulate_gbm_paths(S0_e, mu_e, sig_e, T_e, 252, 100_000)
+paths = mc.simulate_gbm_paths(S0_e, mu_e, sig_e, T_e, 50, 100_000)
 st = paths[:, -1]
 e_th, v_th = mc.gbm_theory(S0_e, mu_e, sig_e, T_e)
 ln_m_th = np.log(S0_e) + (mu_e - 0.5 * sig_e**2) * T_e
@@ -622,11 +623,11 @@ stock1, opt1 = trees.binomial_tree(20.0, 21.0, 0.12, 0.25, 1, u=1.1, d=0.9)
 checks.append(("1ステップ コール 0.633", float(opt1[0][0]), 0.633, 5e-4))
 checks.append(("1ステップ Δ = 0.25", trees.tree_delta(stock1, opt1), 0.25, 1e-9))
 
-# Hull Fig 13.3 2ステップ コール
+# Hull Fig 13.4 2ステップ コール
 _, opt2 = trees.binomial_tree(20.0, 21.0, 0.12, 0.5, 2, u=1.1, d=0.9)
 checks.append(("2ステップ コール 1.2823", float(opt2[0][0]), 1.2823, 5e-4))
 
-# Hull Fig 13.5 アメリカンプット（丸めなし厳密値 5.0896）
+# Hull Fig 13.8 アメリカンプット（丸めなし厳密値 5.0896）
 _, opt3 = trees.binomial_tree(
     50.0, 52.0, 0.05, 2.0, 2, u=1.2, d=0.8, kind="put", american=True
 )
@@ -673,7 +674,7 @@ f = e^{−0.02} × 0.6382 × 3 = 1.877。Δ = 3 / (53 − 47.5) = 0.5455。
 <details><summary>解答</summary>
 
 行使すると本質的価値 S−K しか得られないが、保有すれば時間価値＋K の支払い繰延べ
-（金利分）＋下方プロテクションが残る。配当がなければ継続価値 > 本質的価値が常に成立（§11 参照）。
+（金利分）＋下方プロテクションが残る。配当がなければ継続価値 > 本質的価値が常に成立（Ch.11 参照）。
 </details>
 
 **Q3.** μ=20%, σ=30% の株式の、1年後の対数収益率の期待値は？

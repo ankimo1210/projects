@@ -14,12 +14,12 @@ def test_one_step_call_hull_13_1():
     assert trees.tree_delta(stock, option) == pytest.approx(0.25, abs=1e-12)
 
 
-def test_two_step_call_hull_fig_13_3():
+def test_two_step_call_hull_fig_13_4():
     _, option = trees.binomial_tree(20.0, 21.0, 0.12, 0.5, 2, u=1.1, d=0.9)
     assert option[0][0] == pytest.approx(1.2823, abs=5e-4)
 
 
-def test_american_put_hull_fig_13_5():
+def test_american_put_hull_fig_13_8():
     # European 4.1927 / American 5.0896 (Hull prints 4.1923 / 5.0894 from rounded p)
     _, eu = trees.binomial_tree(50.0, 52.0, 0.05, 2.0, 2, u=1.2, d=0.8, kind="put")
     _, am = trees.binomial_tree(50.0, 52.0, 0.05, 2.0, 2, u=1.2, d=0.8, kind="put", american=True)
