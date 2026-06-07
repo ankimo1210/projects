@@ -34,6 +34,8 @@ def binomial_tree(S0, K, r, T, N, u, d, q=0.0, kind="call", american=False):
     Returns (stock, option): two lists of length N+1; element i is an
     ndarray of the i+1 node values at step i.
     """
+    if kind not in ("call", "put"):
+        raise ValueError(f"kind must be 'call' or 'put', got {kind!r}")
     dt = T / N
     p = risk_neutral_p(u, d, r, dt, q)
     disc = math.exp(-r * dt)
