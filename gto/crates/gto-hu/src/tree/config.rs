@@ -24,6 +24,18 @@ pub struct StreetConfig {
 }
 
 impl StreetConfig {
+    /// SRP turn per spec §6: check, b50, b100 / vs bet: fold, call,
+    /// raise 3x-or-jam / vs raise: fold, call, jam (the second 3x raise
+    /// reaches the stack at normal SPRs and becomes a jam).
+    pub fn srp_turn() -> Self {
+        StreetConfig {
+            bet_pcts: vec![50, 100],
+            allow_allin_bet: false,
+            raise: RaiseRule::ToFactorOrJam(3.0),
+            max_raises: 2,
+        }
+    }
+
     /// SRP river per spec: check, bet75, bet150, allin / vs bet: fold,
     /// call, raise-jam / vs raise: fold, call.
     pub fn srp_river() -> Self {

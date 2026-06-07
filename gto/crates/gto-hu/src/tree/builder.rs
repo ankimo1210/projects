@@ -20,7 +20,7 @@ pub fn build_river_tree(pot: i64, stack: i64, cfg: &StreetConfig) -> Tree {
 
 /// Legal abstract actions at an action node, per config.
 /// Sizes are committed totals, capped at all-in, deduplicated.
-fn legal_actions(state: &BettingState, cfg: &StreetConfig) -> Vec<Action> {
+pub(super) fn legal_actions(state: &BettingState, cfg: &StreetConfig) -> Vec<Action> {
     let me = state.to_act as usize;
     let opp = 1 - me;
     let stack = state.stacks[me];
@@ -81,7 +81,7 @@ fn legal_actions(state: &BettingState, cfg: &StreetConfig) -> Vec<Action> {
     out
 }
 
-fn expand(tree: &mut Tree, node_id: usize, cfg: &StreetConfig) {
+pub(super) fn expand(tree: &mut Tree, node_id: usize, cfg: &StreetConfig) {
     let state = tree.nodes[node_id].state;
     let actions = legal_actions(&state, cfg);
     let mut children = Vec::with_capacity(actions.len());
