@@ -52,6 +52,31 @@ impl ShowdownTable {
         buckets
     }
 
+    /// Strength percentile per combo in (0, 1): tier-grouped MID-rank
+    /// over the combos with `strength > 0` (same tie discipline as
+    /// `strength_buckets`; +0.5 keeps the weakest tier strictly positive
+    /// so 0.0 unambiguously marks board-blocked combos). The per-river
+    /// feature of the turn bucketing score.
+    pub fn strength_percentiles(&self) -> Vec<f32> {
+        let idx = &self.sorted_idx;
+        let n_ranked = idx.len().max(1) as f32;
+        let mut pct = vec![0.0f32; N];
+        let mut g = 0;
+        while g < idx.len() {
+            let s = self.strengths[idx[g]];
+            let mut h = g;
+            while h < idx.len() && self.strengths[idx[h]] == s {
+                h += 1;
+            }
+            let p = (g as f32 + 0.5) / n_ranked;
+            for &i in &idx[g..h] {
+                pct[i] = p;
+            }
+            g = h;
+        }
+        pct
+    }
+
     /// win_w − lose_w per combo against `opp_reach`, blocker-exact. O(N).
     pub fn diff(&self, combos: &[(u8, u8)], opp_reach: &[f64; N]) -> Vec<f64> {
         let idx = &self.sorted_idx;

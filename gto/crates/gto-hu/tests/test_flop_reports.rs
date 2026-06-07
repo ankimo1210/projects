@@ -81,6 +81,7 @@ fn writers_produce_wellformed_files() {
     let stats = FlopSolverStats {
         iterations: 50,
         buckets_river: 0,
+        buckets_turn: 0,
         elapsed_secs: 0.1,
         mode: "enumerate".into(),
         expl: solver.exploitability_bb(),

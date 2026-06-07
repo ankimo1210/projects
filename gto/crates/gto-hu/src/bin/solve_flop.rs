@@ -28,7 +28,7 @@ use gto_hu::reports::{
     tree_stats, write_flop_strategy_csv, write_flop_summary_json, write_turn_aggregate_csv,
     FlopSolverStats,
 };
-use gto_hu::solver::{dense_table_bytes_bucketed, CfrVariant, ChanceMode, FlopSolver};
+use gto_hu::solver::{dense_table_bytes_abstracted, Abstraction, CfrVariant, ChanceMode, FlopSolver};
 use gto_hu::tree::{build_flop_tree, FlopTreeConfig};
 
 fn usage() -> ! {
@@ -36,7 +36,7 @@ fn usage() -> ! {
         "usage: solve-hu-flop --board AhKd7s --pot <bb> --stack <bb> \
          [--iterations N=10000] [--variant cfr+|dcfr] [--pot-type srp|3bp] \
          [--mode sample|enumerate] [--seed N=42] [--out DIR] [--max-table-gb G=8] \
-         [--buckets-river K=0 (0=exact)]"
+         [--buckets-river K=0 (0=exact)] [--buckets-turn K=0 (0=exact)]"
     );
     exit(2);
 }
@@ -73,6 +73,7 @@ fn main() {
     let mut out_dir: Option<PathBuf> = None;
     let mut max_table_gb: f64 = 8.0;
     let mut buckets_river: usize = 0;
+    let mut buckets_turn: usize = 0;
     let mut board_raw = String::new();
 
     let mut i = 0;
@@ -145,6 +146,10 @@ fn main() {
                 buckets_river = need(i).parse().unwrap_or_else(|_| usage());
                 i += 2;
             }
+            "--buckets-turn" => {
+                buckets_turn = need(i).parse().unwrap_or_else(|_| usage());
+                i += 2;
+            }
             _ => usage(),
         }
     }
@@ -176,7 +181,8 @@ fn main() {
 
     let tree = build_flop_tree(pot, stack, &cfg);
     let ts = tree_stats(&tree);
-    let dense = dense_table_bytes_bucketed(&tree, buckets_river);
+    let abs = Abstraction { buckets_river, buckets_turn };
+    let dense = dense_table_bytes_abstracted(&tree, abs);
     eprintln!(
         "tree: {} nodes ({} action, {} chance, {} fold, {} showdown), dense tables {:.2} GB (river rows: {})",
         ts.total_nodes,
@@ -205,7 +211,7 @@ fn main() {
 
     let ranges = [uniform_excluding(&board), uniform_excluding(&board)];
     let setup_start = Instant::now();
-    let mut solver = FlopSolver::new_with_buckets(tree, board, ranges, variant, mode, buckets_river);
+    let mut solver = FlopSolver::new_abstracted(tree, board, ranges, variant, mode, abs);
     eprintln!(
         "showdown tables ready ({:.1}s setup)",
         setup_start.elapsed().as_secs_f64()
@@ -233,7 +239,7 @@ fn main() {
     println!("\n== solve-hu-flop (abstract HU NLHE equilibrium solver) ==");
     println!(
         "board {board_raw}  pot {pot_bb}bb  stack {stack_bb}bb  pot-type {pot_type}  \
-         iters {iterations}  mode {mode_label}  buckets-river {buckets_river}"
+         iters {iterations}  mode {mode_label}  buckets r/t {buckets_river}/{buckets_turn}"
     );
     println!(
         "exploitability: {:.4} bb/hand (BR sb {:.4}, BR bb {:.4})",
@@ -254,6 +260,7 @@ fn main() {
     let stats = FlopSolverStats {
         iterations,
         buckets_river,
+        buckets_turn,
         elapsed_secs: elapsed,
         mode: mode_label,
         expl,

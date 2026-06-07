@@ -117,8 +117,13 @@ pub struct FlopSolver {
     /// (strength-percentile buckets — bucketing design spec §3).
     river_dim: usize,
     /// combo → bucket per shared (turn, river) pair, parallel to
-    /// `tables`. None when river_dim == N (exact).
+    /// `tables`. None when river is exact.
     bucket_maps: Option<Vec<Vec<u16>>>,
+    /// Strategy-table width at turn nodes: 1326 (exact) or K_t
+    /// (mean-river-percentile buckets).
+    turn_dim: usize,
+    /// combo → bucket per turn card. None when the turn is exact.
+    turn_bucket_maps: Option<Vec<Vec<u16>>>,
     regrets: Vec<NodeTable>,
     strat_sum: Vec<NodeTable>,
     rng: SplitMix64,
@@ -149,30 +154,78 @@ fn ctx_count(street: Street) -> usize {
     }
 }
 
+/// Strategy-space abstraction per street (0 = exact combos).
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct Abstraction {
+    /// River strength-percentile buckets.
+    pub buckets_river: usize,
+    /// Turn mean-river-percentile buckets.
+    pub buckets_turn: usize,
+}
+
 /// Fully-dense table size (regrets + strategy sums) for a flop tree
 /// with exact-combo storage on every street.
 pub fn dense_table_bytes(tree: &Tree) -> usize {
-    dense_table_bytes_bucketed(tree, 0)
+    dense_table_bytes_abstracted(tree, Abstraction::default())
 }
 
 /// Dense table size with river strategy rows bucketed to `buckets_river`
-/// (0 = exact). The `--max-table-gb` gate uses this.
+/// (0 = exact).
 pub fn dense_table_bytes_bucketed(tree: &Tree, buckets_river: usize) -> usize {
-    let river_dim = if buckets_river == 0 { N } else { buckets_river };
+    dense_table_bytes_abstracted(
+        tree,
+        Abstraction {
+            buckets_river,
+            buckets_turn: 0,
+        },
+    )
+}
+
+/// Dense table size under a street abstraction. The `--max-table-gb`
+/// gate uses this.
+pub fn dense_table_bytes_abstracted(tree: &Tree, abs: Abstraction) -> usize {
+    let river_dim = if abs.buckets_river == 0 { N } else { abs.buckets_river };
+    let turn_dim = if abs.buckets_turn == 0 { N } else { abs.buckets_turn };
     tree.nodes
         .iter()
         .map(|n| match n.kind {
             NodeKind::Action { .. } => {
-                let dim = if n.state.street == Street::River {
-                    river_dim
-                } else {
-                    N
+                let dim = match n.state.street {
+                    Street::River => river_dim,
+                    Street::Turn => turn_dim,
+                    _ => N,
                 };
                 2 * 8 * ctx_count(n.state.street) * n.children.len() * dim
             }
             _ => 0,
         })
         .sum()
+}
+
+/// Tier-grouped percentile binning of `scores` over the combos where
+/// `live` holds: rank ascending, equal scores share a bucket, bucket =
+/// tier_start_rank × k / n_ranked (same discipline as the river
+/// `strength_buckets`). Non-live combos get bucket 0.
+fn percentile_buckets(scores: &[f32], live: &[bool], k: usize) -> Vec<u16> {
+    assert!(k > 0 && k <= u16::MAX as usize + 1);
+    let mut ranked: Vec<usize> = (0..scores.len()).filter(|&i| live[i]).collect();
+    ranked.sort_by(|&a, &b| scores[a].partial_cmp(&scores[b]).unwrap());
+    let n_ranked = ranked.len().max(1);
+    let mut out = vec![0u16; scores.len()];
+    let mut g = 0;
+    while g < ranked.len() {
+        let s = scores[ranked[g]];
+        let mut h = g;
+        while h < ranked.len() && scores[ranked[h]] == s {
+            h += 1;
+        }
+        let b = (g * k / n_ranked) as u16;
+        for &i in &ranked[g..h] {
+            out[i] = b;
+        }
+        g = h;
+    }
+    out
 }
 
 impl FlopSolver {
@@ -188,18 +241,41 @@ impl FlopSolver {
     }
 
     /// Solver with river strategy rows bucketed to `buckets_river`
-    /// strength-percentile buckets (0 = exact). Traversal, blockers and
+    /// strength-percentile buckets (0 = exact).
+    pub fn new_with_buckets(
+        tree: Tree,
+        flop_board: [u8; 3],
+        ranges: [Range; 2],
+        variant: CfrVariant,
+        mode: ChanceMode,
+        buckets_river: usize,
+    ) -> Self {
+        Self::new_abstracted(
+            tree,
+            flop_board,
+            ranges,
+            variant,
+            mode,
+            Abstraction {
+                buckets_river,
+                buckets_turn: 0,
+            },
+        )
+    }
+
+    /// Solver under a street abstraction. Traversal, blockers and
     /// payoffs stay per-combo; only regret/strategy STORAGE is shared
     /// (bucketing design spec §2–§5), and the exact best response keeps
     /// exploitability honest about the abstraction loss.
-    pub fn new_with_buckets(
+    pub fn new_abstracted(
         tree: Tree,
         flop_board: [u8; 3],
         mut ranges: [Range; 2],
         variant: CfrVariant,
         mode: ChanceMode,
-        buckets_river: usize,
+        abs: Abstraction,
     ) -> Self {
+        let buckets_river = abs.buckets_river;
         assert_eq!(
             tree.nodes[0].state.street,
             Street::Flop,
@@ -255,15 +331,47 @@ impl FlopSolver {
         let bucket_maps = (buckets_river > 0)
             .then(|| tables.iter().map(|t| t.strength_buckets(river_dim)).collect());
 
+        let turn_dim = if abs.buckets_turn == 0 { N } else { abs.buckets_turn };
+        assert!(turn_dim <= N, "more buckets than combos is meaningless");
+        // Turn buckets: score = mean strength percentile over the legal
+        // rivers of each turn card (bucketing design spec §3, "later"
+        // part — now implemented). Same tier-grouped percentile binning
+        // as the river.
+        let turn_bucket_maps = (abs.buckets_turn > 0).then(|| {
+            let pcts: Vec<Vec<f32>> = tables.iter().map(|t| t.strength_percentiles()).collect();
+            (0..N_TURNS)
+                .map(|ti| {
+                    let mut score = vec![0.0f32; N];
+                    let mut cnt = vec![0u32; N];
+                    for ri in 0..N_RIVERS {
+                        let p = &pcts[table_of[ti][ri]];
+                        for c in 0..N {
+                            if p[c] > 0.0 {
+                                score[c] += p[c];
+                                cnt[c] += 1;
+                            }
+                        }
+                    }
+                    let live: Vec<bool> = cnt.iter().map(|&n| n > 0).collect();
+                    for c in 0..N {
+                        if cnt[c] > 0 {
+                            score[c] /= cnt[c] as f32;
+                        }
+                    }
+                    percentile_buckets(&score, &live, turn_dim)
+                })
+                .collect()
+        });
+
         let alloc = |tree: &Tree| -> Vec<NodeTable> {
             tree.nodes
                 .iter()
                 .map(|n| match n.kind {
                     NodeKind::Action { .. } => {
-                        let dim = if n.state.street == Street::River {
-                            river_dim
-                        } else {
-                            N
+                        let dim = match n.state.street {
+                            Street::River => river_dim,
+                            Street::Turn => turn_dim,
+                            _ => N,
                         };
                         NodeTable::new(ctx_count(n.state.street), n.children.len() * dim)
                     }
@@ -289,6 +397,8 @@ impl FlopSolver {
             table_of,
             river_dim,
             bucket_maps,
+            turn_dim,
+            turn_bucket_maps,
             regrets,
             strat_sum,
             rng: SplitMix64::new(seed),
@@ -297,15 +407,24 @@ impl FlopSolver {
         }
     }
 
-    /// Strategy-row width and combo→row map at a node/context. Non-river
-    /// nodes (and exact mode) use the identity over 1326 combos.
+    /// Strategy-row width and combo→row map at a node/context. Streets
+    /// without abstraction use the identity over 1326 combos.
     fn row_map(&self, node_id: usize, ctx: Ctx) -> (usize, Option<&[u16]>) {
-        if self.tree.nodes[node_id].state.street == Street::River {
-            if let Some(maps) = &self.bucket_maps {
-                let t = ctx.turn.expect("river node requires a turn card");
-                let r = ctx.river.expect("river node requires a river card");
-                return (self.river_dim, Some(&maps[self.table_of[t][r]]));
+        match self.tree.nodes[node_id].state.street {
+            Street::River => {
+                if let Some(maps) = &self.bucket_maps {
+                    let t = ctx.turn.expect("river node requires a turn card");
+                    let r = ctx.river.expect("river node requires a river card");
+                    return (self.river_dim, Some(&maps[self.table_of[t][r]]));
+                }
             }
+            Street::Turn => {
+                if let Some(maps) = &self.turn_bucket_maps {
+                    let t = ctx.turn.expect("turn node requires a turn card");
+                    return (self.turn_dim, Some(&maps[t]));
+                }
+            }
+            _ => {}
         }
         (N, None)
     }

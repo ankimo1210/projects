@@ -6,8 +6,8 @@ use gto_core::eval::parse_card;
 use gto_hu::game::BB;
 use gto_hu::ranges::{combo_index, Range, NUM_COMBOS};
 use gto_hu::solver::{
-    dense_table_bytes, dense_table_bytes_bucketed, CfrVariant, ChanceMode, FlopSolver,
-    ShowdownTable,
+    dense_table_bytes, dense_table_bytes_abstracted, dense_table_bytes_bucketed, Abstraction,
+    CfrVariant, ChanceMode, FlopSolver, ShowdownTable,
 };
 use gto_hu::tree::{build_flop_tree, FlopTreeConfig, RaiseRule, StreetConfig};
 
@@ -171,6 +171,117 @@ fn coarser_buckets_cost_more_exploitability() {
     assert!(
         fine_expl < coarse_expl,
         "finer buckets must be less exploitable here: K=2 {coarse_expl:.4} vs K=256 {fine_expl:.4}"
+    );
+}
+
+fn build_abs(abs: Abstraction) -> FlopSolver {
+    let board = [c("2c"), c("7d"), c("9h")];
+    // Turn decisions matter here: that is the street under test.
+    let simple = |pcts: Vec<u32>| StreetConfig {
+        bet_pcts: pcts,
+        allow_allin_bet: false,
+        raise: RaiseRule::None,
+        max_raises: 0,
+    };
+    let cfg = FlopTreeConfig {
+        flop: simple(vec![]),
+        turn: simple(vec![100]),
+        river: simple(vec![]),
+    };
+    let tree = build_flop_tree(20 * BB, 90 * BB, &cfg);
+    FlopSolver::new_abstracted(
+        tree,
+        board,
+        tiny_ranges(),
+        CfrVariant::cfr_plus_default(),
+        ChanceMode::Enumerate,
+        abs,
+    )
+}
+
+#[test]
+fn turn_bucketing_matches_exact_at_tier_injective_k() {
+    let mut exact = build_abs(Abstraction::default());
+    exact.run(60);
+    let e_expl = exact.exploitability_bb();
+    let e_val = exact.game_value_p0();
+
+    let mut bucketed = build_abs(Abstraction {
+        buckets_river: 0,
+        buckets_turn: 1326,
+    });
+    bucketed.run(60);
+    let b_expl = bucketed.exploitability_bb();
+    let b_val = bucketed.game_value_p0();
+
+    assert!(e_expl.exploitability < 0.05, "exact {:.4}", e_expl.exploitability);
+    assert!(
+        b_expl.exploitability < 0.05,
+        "tier-injective turn bucketing must converge like exact: {:.4}",
+        b_expl.exploitability
+    );
+    assert!(
+        (e_val - b_val).abs() < 0.05,
+        "game values diverge: exact {e_val:.4} vs turn-bucketed {b_val:.4}"
+    );
+    eprintln!(
+        "turn bucketing differential OK: exact expl {:.5} val {e_val:.4} | K_t=1326 expl {:.5} val {b_val:.4}",
+        e_expl.exploitability, b_expl.exploitability
+    );
+}
+
+#[test]
+fn coarser_turn_buckets_cost_more_exploitability() {
+    let mut coarse = build_abs(Abstraction {
+        buckets_river: 0,
+        buckets_turn: 2,
+    });
+    coarse.run(80);
+    let coarse_expl = coarse.exploitability_bb().exploitability;
+
+    let mut fine = build_abs(Abstraction {
+        buckets_river: 0,
+        buckets_turn: 256,
+    });
+    fine.run(80);
+    let fine_expl = fine.exploitability_bb().exploitability;
+
+    eprintln!("turn expl: K_t=2 {coarse_expl:.4} vs K_t=256 {fine_expl:.4}");
+    assert!(
+        fine_expl < coarse_expl,
+        "finer turn buckets must be less exploitable here: {coarse_expl:.4} vs {fine_expl:.4}"
+    );
+}
+
+#[test]
+fn combined_abstraction_dense_size_scales_both_streets() {
+    let tree = build_flop_tree(20 * BB, 90 * BB, &FlopTreeConfig::srp());
+    let exact = dense_table_bytes(&tree);
+    let abs = Abstraction {
+        buckets_river: 128,
+        buckets_turn: 64,
+    };
+    let combined = dense_table_bytes_abstracted(&tree, abs);
+    use gto_hu::game::Street;
+    use gto_hu::tree::NodeKind;
+    let mut flop_part = 0usize;
+    let mut turn_exact = 0usize;
+    let mut river_exact = 0usize;
+    for n in &tree.nodes {
+        if let NodeKind::Action { .. } = n.kind {
+            let cells = 2 * 8 * n.children.len();
+            match n.state.street {
+                Street::River => river_exact += cells * 49 * 48 * NUM_COMBOS,
+                Street::Turn => turn_exact += cells * 49 * NUM_COMBOS,
+                _ => flop_part += cells * NUM_COMBOS,
+            }
+        }
+    }
+    assert_eq!(exact, flop_part + turn_exact + river_exact);
+    assert_eq!(
+        combined,
+        flop_part + turn_exact / NUM_COMBOS * 64 + river_exact / NUM_COMBOS * 128,
+        "each street must scale by its own K/N"
     );
 }
 

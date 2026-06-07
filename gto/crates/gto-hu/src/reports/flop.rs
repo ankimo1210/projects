@@ -20,6 +20,8 @@ pub struct FlopSolverStats {
     pub iterations: u32,
     /// River strategy-row buckets (0 = exact combos).
     pub buckets_river: usize,
+    /// Turn strategy-row buckets (0 = exact combos).
+    pub buckets_turn: usize,
     pub elapsed_secs: f64,
     /// "enumerate" or "sample(seed=N)".
     pub mode: String,
@@ -97,7 +99,7 @@ pub fn write_flop_summary_json(
     let json = format!(
         concat!(
             "{{\"solver\":\"gto-hu vector flop (abstract HU NLHE equilibrium solver)\",",
-            "\"board\":\"{}\",\"mode\":\"{}\",\"buckets_river\":{},",
+            "\"board\":\"{}\",\"mode\":\"{}\",\"buckets_river\":{},\"buckets_turn\":{},",
             "\"iterations\":{},\"elapsed_secs\":{:.2},",
             "\"exploitability_bb\":{:.6},\"br_sb_bb\":{:.6},\"br_bb_bb\":{:.6},",
             "\"game_value_sb_bb\":{:.6},",
@@ -109,6 +111,7 @@ pub fn write_flop_summary_json(
         board_s,
         stats.mode,
         stats.buckets_river,
+        stats.buckets_turn,
         stats.iterations,
         stats.elapsed_secs,
         stats.expl.exploitability,
