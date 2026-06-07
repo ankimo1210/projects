@@ -1,6 +1,6 @@
 # GTO Poker Suite — 進捗 & TODO
 
-最終更新: 2026-06-07
+最終更新: 2026-06-07（夜: 再生成・Phase B/C/D・HU フロップ木を完了）
 
 ---
 
@@ -47,7 +47,14 @@
 - [x] フロップ集計レポート画面（/report — 1755フロップのヒートマップ）
 - [x] ソルバー画面（/solver — カスタムスポット → ライブ GPU 計算、約1.6s/100iter）
 - [x] シミュレーション画面（/simulation — preflop fold equity + ポストフロップ solve）
-- [ ] ハンド履歴レビュー（PokerStars等パーサ）← Phase B 唯一の未着手項目
+- [x] **ハンド履歴レビュー（2026-06-07 完了）** — PokerStars 形式パーサ
+      （`src/gto/review/`: cash 2-9 handed・Zoom・ante・all-in・side pot・
+      uncalled bet 対応、per-hand try/except で不正入力に頑健）、
+      `POST /api/review/parse`、`/review` ページ（Neon、ナビ追加済み）。
+      プリフロップ GTO 逸脱フラグ（trainer 頻度表と照合、ok/loose/tight）。
+      敵対的レビューで発見した 6 件（dead SB のポジション誤判定、EUR 通貨、
+      pot 進行の uncalled bet 未控除、API サイズ無制限等）を修正済み。
+      テスト: pytest 34 本（プロジェクト初の Python テスト）+ pot.ts node テスト
 
 ### 評価器バグ修正（2026-06-06, gto-core）
 - [x] **2c phantom card バグ修正** — ボード3〜4枚時に評価へ 2c が混入していた問題。
@@ -55,8 +62,29 @@
 - [x] 6〜7枚フラッシュスーツでストレートフラッシュを見逃すバグ修正
 - [x] high-card / flush のキッカー順バグ修正
 - [x] カード重複・combo index 整合性の strict テスト追加
-- ⚠️ **旧評価器で計算した legacy Parquet が `_data/gto/solutions/` に残存**。
-  フロップ/ターンの数値を信頼する前に再生成が必要（GPU 約24〜40分）
+- [x] **legacy Parquet 再生成完了（2026-06-07）** — 旧シャードを
+      `_data/gto/solutions_legacy_backup_20260607/` に退避し、新評価器で
+      5,265 スポットを再計算（GPU 15.8 分）。distinct spot_id で検証済み
+
+### Phase D: 追加スタック・ポジション（2026-06-07 完了）
+- [x] 50bb / 200bb バッチ（BTN+CO+SB vs BB、各 5,265 スポット）
+- [x] HJ vs BB / UTG vs BB（100bb、3,510 スポット）
+- 合計 **19,305 distinct スポット**（11 グループ × 1,755 フロップ）、
+  cache JSON 11 ファイル生成済み。`/api/library/flop?position=HJ` 等で配信確認済み
+
+### Phase C: GPU 最適化（2026-06-07 完了）
+- [x] `FastCfrSolver`（gto-cuda）のホットパス浄化 — 毎 iteration の
+      `cuMemAlloc`/`cuMemFree`（暗黙同期）と、ターミナル毎の half-pot
+      HtoD 転送を排除（永続スクラッチ + ノード定数の事前アップロード）
+- 実測（32 spots × 300 iters、`batch_solve_fast`）:
+  4.18s → **2.55s**（0.131 → 0.080 s/spot、1.64×）、
+  GPU util active-mean 39% → **67%**（max 47% → 77%）
+- 最適化前後で戦略・EV は**完全一致**（決定的カーネル）
+- 注: ライブラリのバッチ（`batch_solve_rust`、CPU 走査+GPU showdown の
+  ハイブリッド）は据え置き — 19,305 スポットの数値互換性を維持するため。
+  fast 系と hybrid 系は混合戦略が異なる（同一スポットで根戦略差 max ~0.11、
+  CFR の混合均衡は一意でないため想定内。どちらも exploitability 未添付の近似）
+- 80%+ には未到達。残りはカーネル融合 / CUDA Graphs / バッチ拡大が候補
 
 ### Phase HU: gto-hu — 抽象 HU NLHE 均衡ソルバー（2026-06-06〜06-07）
 
@@ -98,45 +126,68 @@ gto-core/gto-cuda は single-street 近似のまま（river-only は正しい）
 - ゲーム範囲: HU NLHE cash、SRP ターン+リバー
   （ターン: check / b50 / b100、vs bet: fold / call / raise 3x-or-jam。
   リバー: check / bet 75% / bet 150% / all-in、vs bet: fold / call / raise-jam）
-- テスト: 17ファイル・80テスト（betting / payoff / tree / regret / Kuhn /
+- [x] **フロップ木（Phase 4, 2026-06-07）** — `FlopSolver`: フロップ固定ボード、
+      ターン+リバーを入れ子 public chance node として解く
+  - チャンス重み 1/45（ターン）・1/44（リバー）厳密列挙 +
+    シード付きサンプリング（49/45 補正で不偏）。
+    **サンプリングはターンのみ・リバーは常に列挙** — 二段同時サンプリング
+    だとリバー文脈（49×48=2,352）あたりの更新が乏しく停滞する
+    （実測: 10k iter で expl 5.9bb のまま）
+  - オールイン・フロップは Chance→Chance→Showdown（ベッティングなし）。
+    全 Showdown は River ストリート（ショートカット禁止をテストで保証）
+  - exploitability / ゲーム値は常に両段厳密列挙（avg 戦略は行列化で高速化）
+  - **lazy slab 格納** — 密テーブルは河ノードあたり 2,352 文脈で爆発するため
+    訪問時確保。CLI は密サイズを事前見積もりして `--max-table-gb`（既定 8）
+    超過なら fail-loud（**フル SRP 100bb は 105.35 GB → 拒否**。
+    Phase 6 のバケッティング待ち）
+  - `RaiseRule::ToFactorThenJam` 追加（spec §6 SRP フロップ
+    「vs raise: fold/call/jam」を深い SPR でも保証）、
+    `FlopTreeConfig::srp()` / `threebet()` プリセット
+  - TinyFlopTurnRiver スカラー参照ゲームとの差分テストで検証
+    （ゲーム値 2.9860 vs 2.9988、予算 0.2756 内で一致）
+  - `solve-hu-flop` CLI — 実測（3BP AhKd7s, pot 18bb / stack 41bb,
+    sampled 5k iters）: 433 ノード・テーブル 10.62 GB、学習 18.1 分、
+    expl **0.616 bb/hand**（ターン文脈あたり ~100 更新。要追加 iteration）。
+    strategy_flop.csv / strategy_turn_agg.csv / summary.json を
+    `_data/gto/hu/` へ出力
+  ```bash
+  cargo run --release -p gto-hu --bin solve-hu-flop -- \
+    --board AhKd7s --pot-type 3bp --pot 18 --stack 41 \
+    --iterations 5000 --max-table-gb 12
+  ```
+- テスト: 22ファイル・約100テスト（betting / payoff / tree / regret / Kuhn /
   Leduc / TinyRiver / differential / BR / reports /
-  turn tree / turn chance / turn solver / turn differential / turn reports）
+  turn tree / turn chance / turn solver / turn differential / turn reports /
+  flop tree / flop chance / flop solver / flop differential / flop reports）
 
 ---
 
 ## TODO（優先順）
 
-### 🔥 すぐやる
-1. **legacy Parquet 再生成** — 評価器修正前に計算した 5,265 スポットを
-   新評価器で再計算（GPU 約24〜40分）。完了までライブラリのフロップ/ターン数値は参考値
-   ```bash
-   nohup uv run --no-sync python -m gto.library.batch \
-     --positions BTN,CO,SB --stacks 100 --iters 300 --batch-size 32 \
-     > /tmp/batch.log 2>&1 &
-   ```
-
 ### Phase HU 続き（gto-hu ロードマップ）
-- [ ] フロップ木（Flop→Turn→River のフル SRP）
+- [ ] **カード・バケッティング（spec §8 Level 2 / Phase 6 前倒し候補）** —
+      フル SRP 100bb フロップ木は exact-combo 密テーブルで 105 GB のため
+      現状 CLI が拒否する。スート同型化（~3-5×）+ f32 化（2×）でも数十 GB
+      残るので、フルツリーにはバケッティングが必須
 - [ ] プリフロップ（limp 含む）
 - [ ] フルブループリント
 
-### Phase B 残り
-- [ ] ハンド履歴レビュー（PokerStars等パーサ）
-
-### Phase C: GPU完全最適化
-- [ ] D2Dコピー（ホスト経由を廃止）
-- [ ] CUDAストリームによる GPU/CPU 非同期オーバーラップ
-- [ ] GPU使用率 47% → 80%+ 目標
-
-### Phase D: 追加スタック・ポジション
-- [ ] 50bb, 200bb のバッチ計算
-- [ ] HJ vs BB, UTG vs BB
+### Phase C 続き（任意）
+- [ ] GPU util 67% → 80%+（カーネル融合 / CUDA Graphs / バッチ拡大）
+- [ ] ライブラリバッチの `batch_solve_fast` 移行判断
+      （2.3× 高速だが数値が変わるため再計算 75 分とセット。
+      combo_strategies 出力の追加実装も必要）
 
 ### Phase E: 商用化
 - [ ] Supabase 認証（ユーザ管理）
 - [ ] Stripe サブスクリプション
 - [ ] Cloud Run / Fly.io デプロイ
 - [ ] カスタムドメイン
+
+### 留意事項
+- ワークスペース `uv sync`（`--no-sync` なしの `uv run` を含む）は
+  maturin 製の `gto_py` / `gto_cuda` を venv から消す。消えたら
+  `maturin develop --uv` で再ビルド（本日 2 回発生）
 
 ---
 
@@ -159,11 +210,17 @@ cd web && pnpm exec next dev
 uv run --no-sync pytest gto/tests
 cargo test --manifest-path gto/Cargo.toml
 
-# HU リバーソルバー / ターン+リバーソルバー
+# HU リバー / ターン+リバー / フロップ ソルバー
 cargo run --release -p gto-hu --bin solve-hu-river -- \
   --board AhKd7s2c9h --pot 20 --stack 90 --iterations 10000
 cargo run --release -p gto-hu --bin solve-hu-turn-river -- \
   --board AhKd7s2c --pot 20 --stack 90 --iterations 10000
+cargo run --release -p gto-hu --bin solve-hu-flop -- \
+  --board AhKd7s --pot-type 3bp --pot 18 --stack 41 \
+  --iterations 5000 --max-table-gb 12
+
+# バッチ計算（追加スタック・ポジション例）
+uv run --no-sync python -m gto.library.batch --positions HJ,UTG --stacks 100 --iters 300 --batch-size 32
 
 # 外部公開
 ssh -i ~/.ssh/id_ed25519 -o ServerAliveInterval=20 -R 80:localhost:3000 ssh.localhost.run
@@ -173,12 +230,15 @@ ssh -i ~/.ssh/id_ed25519 -o ServerAliveInterval=20 -R 80:localhost:3000 ssh.loca
 
 ## パフォーマンス実績
 
-| 処理 | CPU Rust | Python GPU（廃止） | Rust GPU（現行） |
-|---|---|---|---|
-| 1スポット 300iter | 53s | 18.2s | **14.4s** |
-| showdown kernel | ~200ms | 1.7ms (118x) | 1.7ms |
-| GPU使用率 | — | 28% | 47%（ピーク97%）|
-| 5265スポット全計算 | ~4.7h | ~2.3h | **~40分** |
+| 処理 | CPU Rust | Python GPU（廃止） | Rust GPU hybrid | Rust GPU fast（Phase C 後） |
+|---|---|---|---|---|
+| 1スポット 300iter（バッチ N=32） | 53s | 18.2s | 0.18s/spot | **0.080s/spot** |
+| showdown kernel | ~200ms | 1.7ms (118x) | 1.7ms | 1.7ms |
+| GPU使用率（active-mean） | — | 28% | ~40% | **67%（max 77%）** |
+| 5,265スポット全計算 | ~4.7h | ~2.3h | **15.8分** | （未移行・将来 ~7分） |
+
+- hybrid = `batch_solve_rust`（CPU 走査 + GPU showdown）— ライブラリ採用中
+- fast = `batch_solve_fast`（全 GPU 反復、Phase C でホットパス浄化済み）
 
 ## アーキテクチャ（現在）
 
@@ -187,13 +247,16 @@ gto/
 ├── crates/
 │   ├── gto-core/    Rust CPU: 評価器・エクイティ・CFR・multistreet
 │   ├── gto-cuda/    Rust GPU: CUDA Driver API + NVRTC JIT バッチ CFR
-│   ├── gto-hu/      Rust: 抽象 HU NLHE 均衡ソルバー（CFR+/DCFR、厳密 BR）
+│   ├── gto-hu/      Rust: 抽象 HU NLHE 均衡ソルバー（CFR+/DCFR、厳密 BR、
+│   │                river / turn+river / flop の 3 CLI）
 │   └── gto-py/      pyo3バインディング
 ├── src/gto/
-│   ├── api/         FastAPI（equity/trainer/solver/library/simulation）
+│   ├── api/         FastAPI（equity/trainer/solver/library/simulation/review）
 │   ├── trainer/     プリフロップ出題エンジン（Python）
+│   ├── review/      PokerStars ハンド履歴パーサ + GTO 逸脱フラグ
 │   └── library/     バッチ計算 + Parquet ストア
-├── web/             Next.js 16（/neon /library /report /solver /simulation）
+├── tests/           pytest（review パーサ / API、fixtures 付き）
+├── web/             Next.js 16（/neon /library /report /solver /simulation /review）
 ├── docs/superpowers/  設計スペック・実装プラン（HU ソルバー）
 └── _data/gto/       solutions/（Parquet+cache）, hu/（CSV/JSON）※ワークスペース直下
 ```

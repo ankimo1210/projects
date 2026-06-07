@@ -15,11 +15,12 @@ Respond to the user in Japanese by default; code and identifiers in English.
 | Solver core | `crates/gto-core/` | CFR/DCFR, multistreet tree (Flop→Turn→River), hand evaluator (Rust, CPU) |
 | GPU solver | `crates/gto-cuda/` | NVRTC JIT kernels, batch CFR on RTX 5080 (sm_120). CUDA Driver API via `ctypes`. |
 | Python bindings | `crates/gto-py/` | pyo3 wrapper exposing `solve_spot`, `solve_spot_multistreet`, `equity` |
-| HU solver | `crates/gto-hu/` | Abstract HU NLHE equilibrium solver: river vector CFR+, Kuhn/Leduc validation, exact best response. CLIs: `solve-hu-river`, `solve-hu-turn-river` |
-| Backend API | `src/gto/api/` | FastAPI app + routers (`equity`, `trainer`, `solver`, `library`, `simulation`) |
+| HU solver | `crates/gto-hu/` | Abstract HU NLHE equilibrium solver: vector CFR+, Kuhn/Leduc validation, exact best response. CLIs: `solve-hu-river`, `solve-hu-turn-river`, `solve-hu-flop` |
+| Backend API | `src/gto/api/` | FastAPI app + routers (`equity`, `trainer`, `solver`, `library`, `simulation`, `review`) |
 | Solution store | `src/gto/library/` | Batch precompute, Parquet I/O, range builder, flop canonical-form |
 | Trainer | `src/gto/trainer/` | Preflop GTO frequency tables (hardcoded approximation, not solved) |
-| Web UI | `web/` | Next.js 16 / React 19 / Tailwind v4 (pages: `/neon`, `/library`, `/report`, `/solver`, `/simulation`) |
+| Hand review | `src/gto/review/` | PokerStars hand-history parser + preflop GTO deviation flags |
+| Web UI | `web/` | Next.js 16 / React 19 / Tailwind v4 (pages: `/neon`, `/library`, `/report`, `/solver`, `/simulation`, `/review`) |
 
 Data flow: see `ARCHITECTURE.md`. Roadmap and known limitations: `PROGRESS.md`.
 
@@ -32,10 +33,10 @@ build in place to `gto/target/`.
 # One-time install (from workspace root)
 cd ~/projects && make install                          # = uv sync --all-packages
 
-# Build Rust extensions (after Rust changes only)
+# Build Rust extensions (after Rust changes, or whenever a uv sync wiped them)
 cd ~/projects/gto && source ~/.cargo/env
-uv run --no-sync maturin develop --manifest-path crates/gto-py/Cargo.toml   --release
-uv run --no-sync maturin develop --manifest-path crates/gto-cuda/Cargo.toml --release
+uv run --no-sync maturin develop --uv --manifest-path crates/gto-py/Cargo.toml   --release
+uv run --no-sync maturin develop --uv --manifest-path crates/gto-cuda/Cargo.toml --release
 
 # Backend (port 8000)
 uv run --no-sync uvicorn gto.api.main:app --host 0.0.0.0 --port 8000
@@ -71,9 +72,13 @@ cargo test --manifest-path gto/Cargo.toml
 - **Preflop is hardcoded**, not solved by CFR. The frequencies in
   `src/gto/trainer/preflop_data.py` are an approximation table.
 - **`2c` phantom card bug** — fixed (Phase 1 evaluator rewrite, see
-  `eval::showdown_strengths`). Legacy Parquet files in `_data/gto/solutions/`
-  were computed with the old evaluator; regenerate before trusting
-  flop/turn numbers from the library.
+  `eval::showdown_strengths`). The library was fully regenerated with the
+  fixed evaluator on 2026-06-07 (19,305 spots); the old-evaluator Parquet
+  lives in `_data/gto/solutions_legacy_backup_20260607/`.
+- **`uv sync` (or `uv run` without `--no-sync`) removes the maturin-built
+  `gto_py` / `gto_cuda` modules** from the workspace venv — they are not in
+  the lockfile. Rebuild with `maturin develop --uv` (plain `maturin develop`
+  fails: no pip in a uv venv).
 - **CUDA 12.6 + sm_120**: hardware/driver assumption is RTX 5080 (Blackwell).
   Older GPUs likely fail at JIT compile.
 - **Do not delete** `_data/gto/solutions/` Parquet without explicit user
