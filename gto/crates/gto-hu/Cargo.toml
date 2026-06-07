@@ -10,3 +10,7 @@ gto-core = { path = "../gto-core" }
 [[bin]]
 name = "solve-hu-river"
 path = "src/bin/solve_river.rs"
+
+[[bin]]
+name = "solve-hu-turn-river"
+path = "src/bin/solve_turn_river.rs"
