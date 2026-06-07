@@ -1,7 +1,11 @@
 //! Tree/solver statistics and strategy export (CSV + minimal JSON).
 
+pub mod flop;
 pub mod turn;
 
+pub use flop::{
+    write_flop_strategy_csv, write_flop_summary_json, write_turn_aggregate_csv, FlopSolverStats,
+};
 pub use turn::{
     write_river_aggregate_csv, write_turn_strategy_csv, write_turn_summary_json, TurnSolverStats,
 };

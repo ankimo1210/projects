@@ -10,6 +10,11 @@ pub enum RaiseRule {
     /// The factor must be ≥ 2.0 — anything lower produces raises below the
     /// NLHE min-raise increment. Validated by `StreetConfig::validate`.
     ToFactorOrJam(f64),
+    /// First raise = `factor` × facing total (or jam when it reaches the
+    /// stack); every re-raise is jam-only. Matches the spec §6 SRP flop
+    /// row "vs bet: raise 3x-or-jam / vs raise: fold, call, jam" at deep
+    /// SPR, where plain `ToFactorOrJam` would still produce a 3x re-raise.
+    ToFactorThenJam(f64),
 }
 
 /// Action abstraction for one street of one pot type.
@@ -36,6 +41,49 @@ impl StreetConfig {
         }
     }
 
+    /// SRP flop per spec §6: check, b33, b75 / vs bet: fold, call,
+    /// raise 3x-or-jam / vs raise: fold, call, jam.
+    pub fn srp_flop() -> Self {
+        StreetConfig {
+            bet_pcts: vec![33, 75],
+            allow_allin_bet: false,
+            raise: RaiseRule::ToFactorThenJam(3.0),
+            max_raises: 2,
+        }
+    }
+
+    /// 3BP flop per spec §6: check, b25, b50 / vs bet: fold, call,
+    /// raise-jam.
+    pub fn threebet_flop() -> Self {
+        StreetConfig {
+            bet_pcts: vec![25, 50],
+            allow_allin_bet: false,
+            raise: RaiseRule::JamOnly,
+            max_raises: 1,
+        }
+    }
+
+    /// 3BP turn per spec §6: check, b50, b100, allin / vs bet: fold,
+    /// call, jam.
+    pub fn threebet_turn() -> Self {
+        StreetConfig {
+            bet_pcts: vec![50, 100],
+            allow_allin_bet: true,
+            raise: RaiseRule::JamOnly,
+            max_raises: 1,
+        }
+    }
+
+    /// 3BP river per spec §6: check, b75, allin / vs bet: fold, call.
+    pub fn threebet_river() -> Self {
+        StreetConfig {
+            bet_pcts: vec![75],
+            allow_allin_bet: true,
+            raise: RaiseRule::None,
+            max_raises: 0,
+        }
+    }
+
     /// SRP river per spec: check, bet75, bet150, allin / vs bet: fold,
     /// call, raise-jam / vs raise: fold, call.
     pub fn srp_river() -> Self {
@@ -50,10 +98,10 @@ impl StreetConfig {
     /// Panics on configs that would build illegal or degenerate trees.
     /// Called by the tree builder before expansion.
     pub fn validate(&self) {
-        if let RaiseRule::ToFactorOrJam(f) = self.raise {
+        if let RaiseRule::ToFactorOrJam(f) | RaiseRule::ToFactorThenJam(f) = self.raise {
             assert!(
                 f >= 2.0,
-                "ToFactorOrJam factor {f} below 2.0 builds sub-min-raise sizes"
+                "raise factor {f} below 2.0 builds sub-min-raise sizes"
             );
         }
         for &pct in &self.bet_pcts {

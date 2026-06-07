@@ -39,7 +39,10 @@ pub(super) fn legal_actions(state: &BettingState, cfg: &StreetConfig) -> Vec<Act
             match cfg.raise {
                 RaiseRule::None => {}
                 RaiseRule::JamOnly => out.push(Action::AllIn { to: all_in_to }),
-                RaiseRule::ToFactorOrJam(f) => {
+                RaiseRule::ToFactorThenJam(_) if state.raises_this_street >= 1 => {
+                    out.push(Action::AllIn { to: all_in_to })
+                }
+                RaiseRule::ToFactorOrJam(f) | RaiseRule::ToFactorThenJam(f) => {
                     let target = (state.street_committed[opp] as f64 * f) as i64;
                     debug_assert!(
                         target > state.street_committed[opp],

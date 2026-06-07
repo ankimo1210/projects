@@ -98,6 +98,35 @@ impl BettingState {
         }
     }
 
+    /// Advance an all-in runout street where no betting occurred (both
+    /// contributions matched, at least one player all-in). Used by the
+    /// flop builder to chain DealTurn → DealRiver → Showdown (spec §6).
+    pub fn advance_runout(&self) -> BettingState {
+        assert!(
+            self.stacks.contains(&0),
+            "runout advance requires an all-in player"
+        );
+        assert_eq!(
+            self.contrib[0], self.contrib[1],
+            "runout requires matched contributions"
+        );
+        assert_eq!(
+            self.actions_this_street, 0,
+            "runout streets must have no betting actions"
+        );
+        let next = self.street.next().expect("no street after river");
+        BettingState {
+            street: next,
+            to_act: PLAYER_BB,
+            stacks: self.stacks,
+            street_committed: [0; 2],
+            contrib: self.contrib,
+            raises_this_street: 0,
+            actions_this_street: 0,
+            closed: false,
+        }
+    }
+
     /// Apply an action, returning the successor state.
     /// Fold does not change chips — terminal payoff handles the pot.
     pub fn apply(&self, action: Action) -> BettingState {
