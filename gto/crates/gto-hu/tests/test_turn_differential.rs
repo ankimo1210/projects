@@ -1,8 +1,10 @@
 //! Differential test: the scalar reference engine (explicit deals, explicit
-//! 44-card river chance) and the vector turn+river engine (range masks,
-//! 48-card public enumeration weighted 1/44) must converge to the same
-//! equilibrium on identical tiny spots. This pins the chance weighting,
-//! the river-card masking, and the all-streets value computation at once.
+//! 44-card river chance) and the vector turn+river engine (range masks;
+//! all 48 public river cards enumerated, weight 1/44 per surviving
+//! non-blocked combo — the same per-deal distribution) must converge to
+//! the same equilibrium on identical tiny spots. This pins the chance
+//! weighting, the river-card masking, and the all-streets value
+//! computation at once.
 
 use gto_core::eval::parse_card;
 use gto_hu::game::BB;
@@ -64,6 +66,10 @@ fn scalar_and_vector_agree_on_tiny_turn_river_spot() {
     // Player 0 = SB/IP; player 1 = BB/OOP. No card clashes between lists.
     let hands0 = vec![(c("Qc"), c("Tc")), (c("Ah"), c("Ad"))];
     let hands1 = vec![(c("Kh"), c("Qh")), (c("8s"), c("8d"))];
+    // The scalar engine converges much slower per iteration (off-path
+    // infosets learn at a rate proportional to their reach — cf. the river
+    // differential): measured expl 0.128 @ 2k, 0.101 @ 3.5k, 0.082 @ 5k.
+    // The vector engine updates every combo per iteration: expl 0.008 @ 600.
     let scalar_iters = 5_000;
     let vector_iters = 600;
     let variant = CfrVariant::cfr_plus_default();
