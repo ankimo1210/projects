@@ -142,3 +142,44 @@ fn quads_never_fold_to_turn_jam() {
     eprintln!("quads fold freq vs turn jam = {}", strat[0]);
     assert!(strat[0] < 0.02, "quads folded to jam: {}", strat[0]);
 }
+
+#[test]
+fn sampled_mode_is_deterministic_per_seed() {
+    let run = |seed: u64| {
+        let mut s = solver(&reduced_cfg(), ChanceMode::Sample { seed });
+        s.run(200);
+        let e = s.exploitability_bb().exploitability;
+        let root: Vec<f64> = s
+            .aggregate_strategy(0, None)
+            .into_iter()
+            .map(|(_, f)| f)
+            .collect();
+        (e, root)
+    };
+    let (e1, r1) = run(7);
+    let (e2, r2) = run(7);
+    let (e3, r3) = run(8);
+    // Same seed ⇒ bit-identical training run.
+    assert_eq!(e1, e2, "same seed must reproduce exploitability exactly");
+    assert_eq!(r1, r2, "same seed must reproduce the root strategy exactly");
+    // Different seed ⇒ different sampled card sequence ⇒ different tables.
+    assert!(
+        e1 != e3 || r1 != r3,
+        "seed appears to be ignored (identical run for different seeds)"
+    );
+}
+
+#[test]
+fn sampled_mode_converges_toward_equilibrium() {
+    let mut s = solver(&reduced_cfg(), ChanceMode::Sample { seed: 42 });
+    s.run(50_000);
+    let e = s.exploitability_bb();
+    eprintln!("sampled 50000 iters: expl {:.4} bb", e.exploitability);
+    assert!(e.exploitability.is_finite());
+    assert!(e.exploitability >= -1e-9);
+    assert!(
+        e.exploitability < 0.15,
+        "sampled training failed to converge: {:.4} bb",
+        e.exploitability
+    );
+}
