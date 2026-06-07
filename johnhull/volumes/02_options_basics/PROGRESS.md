@@ -24,5 +24,5 @@ Last updated: 2026-06-08
   05-11 Ch.11 / 12-21 Ch.12 / 22-25 Ch.17 / 26-29 Ch.18 / 30-31 verification /
   32 exercises / 33 summary
 - Calendar/diagonal spreads are markdown-only (need pricing at intermediate
-  dates — revisit in volume 03 with time-value charts)
+  dates — revisit in a later volume (e.g. 06 numerical methods) with time-value charts)
 - nbformat cell ids still missing (inherited builder pattern; see volume 01 note)

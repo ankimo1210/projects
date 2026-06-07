@@ -1,4 +1,4 @@
-"""Delta-hedging simulations (Hull 11e, Ch.19 §19.3-19.4, Tables 19.1-19.4).
+"""Delta-hedging simulations (Hull 11e, Ch.19 §19.2/§19.4, Tables 19.1-19.4).
 
 Scope: European call on a non-dividend stock (q=0). The writer hedges at
 n_rebalance equally spaced times; cash carried at r; settlement at expiry
@@ -49,7 +49,7 @@ def simulate_delta_hedge(S0, K, r, sigma, T, n_rebalance, n_paths, mu=None, rng=
 
 
 def simulate_stop_loss_hedge(S0, K, r, sigma, T, n_rebalance, n_paths, mu=None, rng=None):
-    """Naive stop-loss 'hedge' (Hull §19.3): hold 1 share iff S > K, traded at grid prices."""
+    """Naive stop-loss 'hedge' (Hull §19.2): hold 1 share iff S > K, traded at grid prices."""
     if mu is None:
         mu = r
     dt = T / n_rebalance
