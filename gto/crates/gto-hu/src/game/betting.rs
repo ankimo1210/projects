@@ -28,15 +28,16 @@ pub struct BettingState {
 }
 
 impl BettingState {
-    /// River subgame root: symmetric pot carried in, OOP (BB) to act.
-    pub fn river_root(pot: i64, stack: i64) -> Self {
+    /// Symmetric street subgame root: pot carried in, OOP (BB) to act.
+    /// Generalizes `river_root` to any postflop street.
+    pub fn street_root(street: Street, pot: i64, stack: i64) -> Self {
         assert!(
             pot > 0 && pot % 2 == 0,
             "carried pot must be positive and even"
         );
         assert!(stack > 0, "stack must be positive");
         BettingState {
-            street: Street::River,
+            street,
             to_act: PLAYER_BB,
             stacks: [stack; 2],
             street_committed: [0; 2],
@@ -45,6 +46,11 @@ impl BettingState {
             actions_this_street: 0,
             closed: false,
         }
+    }
+
+    /// River subgame root: symmetric pot carried in, OOP (BB) to act.
+    pub fn river_root(pot: i64, stack: i64) -> Self {
+        Self::street_root(Street::River, pot, stack)
     }
 
     pub fn pot(&self) -> i64 {
@@ -69,6 +75,27 @@ impl BettingState {
 
     pub fn is_all_in(&self, p: u8) -> bool {
         self.stacks[p as usize] == 0
+    }
+
+    /// Move a closed (non-fold) street to the next one: betting counters
+    /// reset, OOP to act, chips carried over.
+    pub fn advance_street(&self) -> BettingState {
+        assert!(self.closed, "cannot advance an open street");
+        assert_eq!(
+            self.contrib[0], self.contrib[1],
+            "advance_street requires matched contributions (no fold)"
+        );
+        let next = self.street.next().expect("no street after river");
+        BettingState {
+            street: next,
+            to_act: PLAYER_BB,
+            stacks: self.stacks,
+            street_committed: [0; 2],
+            contrib: self.contrib,
+            raises_this_street: 0,
+            actions_this_street: 0,
+            closed: false,
+        }
     }
 
     /// Apply an action, returning the successor state.

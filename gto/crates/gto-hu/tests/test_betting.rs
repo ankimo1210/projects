@@ -1,4 +1,4 @@
-use gto_hu::game::{Action, BettingState, BB, PLAYER_BB, PLAYER_SB};
+use gto_hu::game::{Action, BettingState, Street, BB, PLAYER_BB, PLAYER_SB};
 
 #[test]
 fn river_root_state_is_exact() {
@@ -112,4 +112,44 @@ fn open_fold_rejected() {
 #[should_panic(expected = "cannot bet more than stack")]
 fn bet_beyond_stack_rejected() {
     let _ = BettingState::river_root(20 * BB, 90 * BB).apply(Action::Bet { to: 200 * BB });
+}
+
+// --- Phase 3: street_root / advance_street ---------------------------------
+
+#[test]
+fn turn_root_matches_river_root_shape() {
+    let s = BettingState::street_root(Street::Turn, 20 * BB, 90 * BB);
+    assert_eq!(s.street, Street::Turn);
+    assert_eq!(s.to_act, PLAYER_BB);
+    assert_eq!(s.stacks, [90 * BB; 2]);
+    assert_eq!(s.contrib, [10 * BB; 2]);
+    assert_eq!(s.pot(), 20 * BB);
+    assert!(!s.street_closed());
+}
+
+#[test]
+fn advance_street_resets_betting_and_keeps_chips() {
+    // Turn: OOP bets 10bb, IP calls → street closes.
+    let s = BettingState::street_root(Street::Turn, 20 * BB, 90 * BB)
+        .apply(Action::Bet { to: 10 * BB })
+        .apply(Action::Call);
+    assert!(s.street_closed());
+    let r = s.advance_street();
+    assert_eq!(r.street, Street::River);
+    assert_eq!(r.to_act, PLAYER_BB);
+    assert_eq!(r.stacks, [80 * BB; 2]);
+    assert_eq!(r.street_committed, [0; 2]);
+    assert_eq!(r.contrib, [20 * BB; 2]);
+    assert_eq!(r.pot(), 40 * BB);
+    assert!(!r.street_closed());
+}
+
+#[test]
+#[should_panic(expected = "matched contributions")]
+fn advance_street_rejects_fold_close() {
+    // Fold closes the street with unmatched contributions.
+    let s = BettingState::street_root(Street::Turn, 20 * BB, 90 * BB)
+        .apply(Action::Bet { to: 10 * BB })
+        .apply(Action::Fold);
+    let _ = s.advance_street();
 }
