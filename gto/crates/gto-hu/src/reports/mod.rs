@@ -1,5 +1,11 @@
 //! Tree/solver statistics and strategy export (CSV + minimal JSON).
 
+pub mod turn;
+
+pub use turn::{
+    write_river_aggregate_csv, write_turn_strategy_csv, write_turn_summary_json, TurnSolverStats,
+};
+
 use std::fmt::Write as _;
 use std::fs;
 use std::path::Path;
@@ -52,7 +58,7 @@ pub struct SolverStats {
     pub root_strategy: Vec<(String, f64)>,
 }
 
-fn card_str(c: u8) -> String {
+pub(crate) fn card_str(c: u8) -> String {
     let ranks = [
         '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A',
     ];
