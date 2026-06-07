@@ -47,4 +47,12 @@ mod tests {
             assert!(r.next_index(48) < 48);
         }
     }
+
+    #[test]
+    fn matches_reference_test_vector() {
+        // Known-answer test pinning the canonical SplitMix64 constants
+        // (Steele/Lea/Flood; first output for seed 0).
+        let mut r = SplitMix64::new(0);
+        assert_eq!(r.next_u64(), 0xE220_A839_7B1D_CDAF);
+    }
 }
