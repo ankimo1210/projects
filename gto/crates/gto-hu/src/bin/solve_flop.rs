@@ -28,14 +28,15 @@ use gto_hu::reports::{
     tree_stats, write_flop_strategy_csv, write_flop_summary_json, write_turn_aggregate_csv,
     FlopSolverStats,
 };
-use gto_hu::solver::{dense_table_bytes, CfrVariant, ChanceMode, FlopSolver};
+use gto_hu::solver::{dense_table_bytes_bucketed, CfrVariant, ChanceMode, FlopSolver};
 use gto_hu::tree::{build_flop_tree, FlopTreeConfig};
 
 fn usage() -> ! {
     eprintln!(
         "usage: solve-hu-flop --board AhKd7s --pot <bb> --stack <bb> \
          [--iterations N=10000] [--variant cfr+|dcfr] [--pot-type srp|3bp] \
-         [--mode sample|enumerate] [--seed N=42] [--out DIR] [--max-table-gb G=8]"
+         [--mode sample|enumerate] [--seed N=42] [--out DIR] [--max-table-gb G=8] \
+         [--buckets-river K=0 (0=exact)]"
     );
     exit(2);
 }
@@ -71,6 +72,7 @@ fn main() {
     let mut seed: u64 = 42;
     let mut out_dir: Option<PathBuf> = None;
     let mut max_table_gb: f64 = 8.0;
+    let mut buckets_river: usize = 0;
     let mut board_raw = String::new();
 
     let mut i = 0;
@@ -139,6 +141,10 @@ fn main() {
                 max_table_gb = need(i).parse().unwrap_or_else(|_| usage());
                 i += 2;
             }
+            "--buckets-river" => {
+                buckets_river = need(i).parse().unwrap_or_else(|_| usage());
+                i += 2;
+            }
             _ => usage(),
         }
     }
@@ -170,23 +176,28 @@ fn main() {
 
     let tree = build_flop_tree(pot, stack, &cfg);
     let ts = tree_stats(&tree);
-    let dense = dense_table_bytes(&tree);
+    let dense = dense_table_bytes_bucketed(&tree, buckets_river);
     eprintln!(
-        "tree: {} nodes ({} action, {} chance, {} fold, {} showdown), dense tables {:.2} GB",
+        "tree: {} nodes ({} action, {} chance, {} fold, {} showdown), dense tables {:.2} GB (river rows: {})",
         ts.total_nodes,
         ts.action_nodes,
         ts.chance_nodes,
         ts.fold_terminals,
         ts.showdown_terminals,
         dense as f64 / 1e9,
+        if buckets_river == 0 {
+            "exact 1326".to_string()
+        } else {
+            format!("{buckets_river} strength buckets")
+        },
     );
     if dense as f64 > max_table_gb * 1e9 {
         eprintln!(
             "error: dense tables {:.2} GB exceed --max-table-gb {max_table_gb}.\n\
-             Exact-combo flop solving at this size needs card bucketing \
-             (design spec §8, Phase 6). Reduce the tree (--pot-type 3bp, \
-             smaller stack) or raise --max-table-gb if you actually have \
-             the RAM (sampled mode allocates lazily but converges dense).",
+             Use river bucketing (--buckets-river 128 → strength-\
+             percentile strategy rows, exploitability stays exact), reduce \
+             the tree (--pot-type 3bp, smaller stack), or raise \
+             --max-table-gb if you actually have the RAM.",
             dense as f64 / 1e9
         );
         exit(1);
@@ -194,7 +205,7 @@ fn main() {
 
     let ranges = [uniform_excluding(&board), uniform_excluding(&board)];
     let setup_start = Instant::now();
-    let mut solver = FlopSolver::new(tree, board, ranges, variant, mode);
+    let mut solver = FlopSolver::new_with_buckets(tree, board, ranges, variant, mode, buckets_river);
     eprintln!(
         "showdown tables ready ({:.1}s setup)",
         setup_start.elapsed().as_secs_f64()
@@ -222,7 +233,7 @@ fn main() {
     println!("\n== solve-hu-flop (abstract HU NLHE equilibrium solver) ==");
     println!(
         "board {board_raw}  pot {pot_bb}bb  stack {stack_bb}bb  pot-type {pot_type}  \
-         iters {iterations}  mode {mode_label}"
+         iters {iterations}  mode {mode_label}  buckets-river {buckets_river}"
     );
     println!(
         "exploitability: {:.4} bb/hand (BR sb {:.4}, BR bb {:.4})",
@@ -242,6 +253,7 @@ fn main() {
     std::fs::create_dir_all(&out).expect("create out dir");
     let stats = FlopSolverStats {
         iterations,
+        buckets_river,
         elapsed_secs: elapsed,
         mode: mode_label,
         expl,

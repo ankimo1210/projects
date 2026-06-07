@@ -42,20 +42,34 @@ impl EquityTable {
     }
 
     /// Seeded Monte-Carlo table over all non-clashing combo pairs.
-    /// Each pair gets its own deterministic stream (independent of
-    /// iteration order). ~30–60 s single-threaded at 200 samples.
+    /// Each pair gets its own deterministic stream, so the table is
+    /// identical regardless of thread count or iteration order
+    /// (rayon-parallel over rows; ~40 s at 200 samples on 20 cores,
+    /// was 644 s single-threaded).
     pub fn monte_carlo(seed: u64, samples: u32) -> Self {
+        use rayon::prelude::*;
         assert!(samples > 0, "samples must be positive");
         let combos = all_combos();
+        // Compute each row's upper triangle independently, then mirror.
+        let rows: Vec<Vec<f32>> = (0..N)
+            .into_par_iter()
+            .map(|a| {
+                let mut row = vec![0.5f32; N];
+                let (a0, a1) = combos[a];
+                for (b, item) in row.iter_mut().enumerate().skip(a + 1) {
+                    let (b0, b1) = combos[b];
+                    if a0 == b0 || a0 == b1 || a1 == b0 || a1 == b1 {
+                        continue; // clash: never dealt against each other
+                    }
+                    *item = pair_equity_mc(combos[a], combos[b], pair_seed(seed, a, b), samples);
+                }
+                row
+            })
+            .collect();
         let mut eq = vec![0.5f32; N * N];
         for a in 0..N {
             for b in (a + 1)..N {
-                let (a0, a1) = combos[a];
-                let (b0, b1) = combos[b];
-                if a0 == b0 || a0 == b1 || a1 == b0 || a1 == b1 {
-                    continue; // clash: never dealt against each other
-                }
-                let e = pair_equity_mc(combos[a], combos[b], pair_seed(seed, a, b), samples);
+                let e = rows[a][b];
                 eq[a * N + b] = e;
                 eq[b * N + a] = 1.0 - e;
             }

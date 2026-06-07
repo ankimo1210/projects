@@ -10,7 +10,7 @@ pub mod variant;
 pub mod vector;
 
 pub use equity_model::{pair_equity_mc, EquityTable};
-pub use flop::{dense_table_bytes, FlopSolver};
+pub use flop::{dense_table_bytes, dense_table_bytes_bucketed, FlopSolver};
 pub use preflop::PreflopSolver;
 pub use regret::regret_matching;
 pub use scalar::{Game, InfoNode, ScalarCfr};

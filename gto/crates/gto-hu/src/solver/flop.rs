@@ -113,6 +113,12 @@ pub struct FlopSolver {
     tables: Vec<ShowdownTable>,
     /// [t][r] → index into `tables`.
     table_of: Vec<Vec<usize>>,
+    /// Strategy-table width at river nodes: 1326 (exact) or K_r
+    /// (strength-percentile buckets — bucketing design spec §3).
+    river_dim: usize,
+    /// combo → bucket per shared (turn, river) pair, parallel to
+    /// `tables`. None when river_dim == N (exact).
+    bucket_maps: Option<Vec<Vec<u16>>>,
     regrets: Vec<NodeTable>,
     strat_sum: Vec<NodeTable>,
     rng: SplitMix64,
@@ -143,14 +149,26 @@ fn ctx_count(street: Street) -> usize {
     }
 }
 
-/// Fully-dense table size (regrets + strategy sums) for a flop tree.
-/// Use this to refuse infeasible configs before allocating anything.
+/// Fully-dense table size (regrets + strategy sums) for a flop tree
+/// with exact-combo storage on every street.
 pub fn dense_table_bytes(tree: &Tree) -> usize {
+    dense_table_bytes_bucketed(tree, 0)
+}
+
+/// Dense table size with river strategy rows bucketed to `buckets_river`
+/// (0 = exact). The `--max-table-gb` gate uses this.
+pub fn dense_table_bytes_bucketed(tree: &Tree, buckets_river: usize) -> usize {
+    let river_dim = if buckets_river == 0 { N } else { buckets_river };
     tree.nodes
         .iter()
         .map(|n| match n.kind {
             NodeKind::Action { .. } => {
-                2 * 8 * ctx_count(n.state.street) * n.children.len() * N
+                let dim = if n.state.street == Street::River {
+                    river_dim
+                } else {
+                    N
+                };
+                2 * 8 * ctx_count(n.state.street) * n.children.len() * dim
             }
             _ => 0,
         })
@@ -158,12 +176,29 @@ pub fn dense_table_bytes(tree: &Tree) -> usize {
 }
 
 impl FlopSolver {
+    /// Exact-combo solver (no abstraction).
     pub fn new(
+        tree: Tree,
+        flop_board: [u8; 3],
+        ranges: [Range; 2],
+        variant: CfrVariant,
+        mode: ChanceMode,
+    ) -> Self {
+        Self::new_with_buckets(tree, flop_board, ranges, variant, mode, 0)
+    }
+
+    /// Solver with river strategy rows bucketed to `buckets_river`
+    /// strength-percentile buckets (0 = exact). Traversal, blockers and
+    /// payoffs stay per-combo; only regret/strategy STORAGE is shared
+    /// (bucketing design spec §2–§5), and the exact best response keeps
+    /// exploitability honest about the abstraction loss.
+    pub fn new_with_buckets(
         tree: Tree,
         flop_board: [u8; 3],
         mut ranges: [Range; 2],
         variant: CfrVariant,
         mode: ChanceMode,
+        buckets_river: usize,
     ) -> Self {
         assert_eq!(
             tree.nodes[0].state.street,
@@ -210,14 +245,28 @@ impl FlopSolver {
             table_of.push(row);
         }
 
+        let river_dim = if buckets_river == 0 { N } else { buckets_river };
+        assert!(river_dim <= N, "more buckets than combos is meaningless");
+        // combo → bucket per shared (turn, river) pair (≈3 MB at u16).
+        // Any K > 0 builds real maps — K = N is tier-injective bucketing
+        // (equal-strength combos share rows), NOT a silent exact
+        // fallback (review finding: that no-op made the differential
+        // test vacuous).
+        let bucket_maps = (buckets_river > 0)
+            .then(|| tables.iter().map(|t| t.strength_buckets(river_dim)).collect());
+
         let alloc = |tree: &Tree| -> Vec<NodeTable> {
             tree.nodes
                 .iter()
                 .map(|n| match n.kind {
-                    NodeKind::Action { .. } => NodeTable::new(
-                        ctx_count(n.state.street),
-                        n.children.len() * N,
-                    ),
+                    NodeKind::Action { .. } => {
+                        let dim = if n.state.street == Street::River {
+                            river_dim
+                        } else {
+                            N
+                        };
+                        NodeTable::new(ctx_count(n.state.street), n.children.len() * dim)
+                    }
                     _ => NodeTable::empty(),
                 })
                 .collect()
@@ -238,12 +287,27 @@ impl FlopSolver {
             rivers,
             tables,
             table_of,
+            river_dim,
+            bucket_maps,
             regrets,
             strat_sum,
             rng: SplitMix64::new(seed),
             iteration: 0,
             combos: all_combos(),
         }
+    }
+
+    /// Strategy-row width and combo→row map at a node/context. Non-river
+    /// nodes (and exact mode) use the identity over 1326 combos.
+    fn row_map(&self, node_id: usize, ctx: Ctx) -> (usize, Option<&[u16]>) {
+        if self.tree.nodes[node_id].state.street == Street::River {
+            if let Some(maps) = &self.bucket_maps {
+                let t = ctx.turn.expect("river node requires a turn card");
+                let r = ctx.river.expect("river node requires a river card");
+                return (self.river_dim, Some(&maps[self.table_of[t][r]]));
+            }
+        }
+        (N, None)
     }
 
     pub fn turns(&self) -> &[u8] {
@@ -342,7 +406,7 @@ impl FlopSolver {
             NodeKind::Action { actor } => {
                 let na = self.tree.nodes[node_id].children.len();
                 let cx = self.ctx_index(node_id, ctx);
-                let strat = self.node_strategy(node_id, cx, na);
+                let strat = self.node_strategy(node_id, ctx, na);
 
                 if actor == traverser {
                     let mut action_vals: Vec<Vec<f64>> = Vec::with_capacity(na);
@@ -364,29 +428,50 @@ impl FlopSolver {
                     // turn+river solver: in sampled mode unvisited
                     // (node, ctx) slabs keep their stored sums (lazy-
                     // discount chance-sampled MCCFR).
+                    //
+                    // Bucketed rows (river): per-combo deltas are summed
+                    // into the shared row, WEIGHTED by the traverser's
+                    // own deal probability w_c (range weight × board
+                    // mask) — the chance part of the counterfactual
+                    // reach. Without w_c, board-blocked combos (showdown
+                    // value 0, fold value < 0) and out-of-range combos
+                    // pollute shared rows with phantom "calling is free"
+                    // regret (adversarial review: 70× exploitability
+                    // inflation on a near-lossless map). Discount +
+                    // CFR+/DCFR clipping then apply once per row entry.
+                    // Exact mode: w_c = 1 for in-range combos (uniform
+                    // ranges) so single-combo rows are untouched; w_c=0
+                    // rows simply stay unvisited (unreachable anyway).
+                    let (dim, bmap) = self.row_map(node_id, ctx);
+                    let row = |c: usize| bmap.map_or(c, |m| m[c] as usize);
                     let t = self.iteration;
                     let (sd, sw) = (
                         self.variant.strategy_discount(t),
                         self.variant.strategy_weight(t),
                     );
                     let variant = self.variant;
-                    let reg = self.regrets[node_id].get_mut(cx);
-                    #[allow(clippy::needless_range_loop)]
+
+                    let mut delta = vec![0.0f64; na * dim];
+                    let mut sacc = vec![0.0f64; na * dim];
                     for c in 0..N {
-                        for a in 0..na {
-                            let i = a * N + c;
-                            let discounted = reg[i] * variant.regret_discount(reg[i], t);
-                            reg[i] =
-                                variant.accumulate_regret(discounted, action_vals[a][c] - ev[c]);
+                        let w = self.export_weight(traverser as usize, ctx.turn, ctx.river, c);
+                        if w == 0.0 {
+                            continue; // blocked / out-of-range: must not touch shared rows
+                        }
+                        let b = row(c);
+                        for (a, av) in action_vals.iter().enumerate() {
+                            delta[a * dim + b] += w * (av[c] - ev[c]);
+                            sacc[a * dim + b] += reach[c] * strat[a * N + c];
                         }
                     }
+                    let reg = self.regrets[node_id].get_mut(cx);
+                    for (i, d) in delta.iter().enumerate() {
+                        let discounted = reg[i] * variant.regret_discount(reg[i], t);
+                        reg[i] = variant.accumulate_regret(discounted, *d);
+                    }
                     let ssum = self.strat_sum[node_id].get_mut(cx);
-                    #[allow(clippy::needless_range_loop)]
-                    for c in 0..N {
-                        for a in 0..na {
-                            let i = a * N + c;
-                            ssum[i] = ssum[i] * sd + sw * reach[c] * strat[a * N + c];
-                        }
+                    for (i, s) in sacc.iter().enumerate() {
+                        ssum[i] = ssum[i] * sd + sw * s;
                     }
                     ev
                 } else {
@@ -498,20 +583,31 @@ impl FlopSolver {
     }
 
     /// Current per-combo strategy at a (node, ctx): [action * N + combo].
-    /// Unallocated slabs are uniform (zero regrets).
-    fn node_strategy(&self, node_id: usize, cx: usize, na: usize) -> Vec<f64> {
+    /// Unallocated slabs are uniform (zero regrets). Bucketed rows are
+    /// regret-matched once per row and expanded to combos.
+    fn node_strategy(&self, node_id: usize, ctx: Ctx, na: usize) -> Vec<f64> {
+        let cx = self.ctx_index(node_id, ctx);
+        let (dim, bmap) = self.row_map(node_id, ctx);
         let mut strat = vec![0.0; na * N];
         match self.regrets[node_id].get(cx) {
             Some(reg) => {
                 let mut r = vec![0.0; na];
                 let mut s = vec![0.0; na];
-                for c in 0..N {
+                let mut rows = vec![0.0; na * dim];
+                for b in 0..dim {
                     for a in 0..na {
-                        r[a] = reg[a * N + c];
+                        r[a] = reg[a * dim + b];
                     }
                     regret_matching(&r, &mut s);
                     for a in 0..na {
-                        strat[a * N + c] = s[a];
+                        rows[a * dim + b] = s[a];
+                    }
+                }
+                let row = |c: usize| bmap.map_or(c, |m| m[c] as usize);
+                for c in 0..N {
+                    let b = row(c);
+                    for a in 0..na {
+                        strat[a * N + c] = rows[a * dim + b];
                     }
                 }
             }
@@ -561,6 +657,7 @@ impl FlopSolver {
     }
 
     /// Normalized average strategy for one combo at one (node, ctx).
+    /// Bucketed river rows resolve through the combo→bucket map.
     pub fn average_strategy(
         &self,
         node_id: usize,
@@ -569,18 +666,18 @@ impl FlopSolver {
         combo: usize,
     ) -> Vec<f64> {
         let na = self.tree.nodes[node_id].children.len();
-        let cx = self.ctx_index(
-            node_id,
-            Ctx {
-                turn: turn_ctx,
-                river: river_ctx,
-            },
-        );
+        let ctx = Ctx {
+            turn: turn_ctx,
+            river: river_ctx,
+        };
+        let cx = self.ctx_index(node_id, ctx);
+        let (dim, bmap) = self.row_map(node_id, ctx);
+        let b = bmap.map_or(combo, |m| m[combo] as usize);
         match self.strat_sum[node_id].get(cx) {
             Some(ssum) => {
-                let total: f64 = (0..na).map(|a| ssum[a * N + combo]).sum();
+                let total: f64 = (0..na).map(|a| ssum[a * dim + b]).sum();
                 if total > 0.0 {
-                    (0..na).map(|a| ssum[a * N + combo] / total).collect()
+                    (0..na).map(|a| ssum[a * dim + b] / total).collect()
                 } else {
                     vec![1.0 / na as f64; na]
                 }
@@ -631,17 +728,27 @@ impl FlopSolver {
     /// Normalized average strategy for ALL combos at a (node, ctx):
     /// [action * N + combo]. One slab pass — the per-combo
     /// `average_strategy` would allocate a Vec per combo and dominates
-    /// best-response time on flop trees (49×48 contexts).
+    /// best-response time on flop trees (49×48 contexts). Bucketed rows
+    /// normalize once per row and expand to combos.
     fn avg_matrix(&self, node_id: usize, ctx: Ctx, na: usize) -> Vec<f64> {
         let cx = self.ctx_index(node_id, ctx);
+        let (dim, bmap) = self.row_map(node_id, ctx);
         let mut strat = vec![1.0 / na as f64; na * N];
         if let Some(ssum) = self.strat_sum[node_id].get(cx) {
-            for c in 0..N {
-                let total: f64 = (0..na).map(|a| ssum[a * N + c]).sum();
+            let mut rows = vec![1.0 / na as f64; na * dim];
+            for b in 0..dim {
+                let total: f64 = (0..na).map(|a| ssum[a * dim + b]).sum();
                 if total > 0.0 {
                     for a in 0..na {
-                        strat[a * N + c] = ssum[a * N + c] / total;
+                        rows[a * dim + b] = ssum[a * dim + b] / total;
                     }
+                }
+            }
+            let row = |c: usize| bmap.map_or(c, |m| m[c] as usize);
+            for c in 0..N {
+                let b = row(c);
+                for a in 0..na {
+                    strat[a * N + c] = rows[a * dim + b];
                 }
             }
         }

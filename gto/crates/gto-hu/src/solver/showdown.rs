@@ -24,6 +24,34 @@ impl ShowdownTable {
         }
     }
 
+    /// Strength-percentile buckets for strategy-space abstraction
+    /// (bucketing design spec §3): combos with `strength > 0` are walked
+    /// in ascending-strength tier groups; every member of a tier gets
+    /// `tier_start_rank * k / n_ranked`, so buckets are monotone in
+    /// strength, equal strengths share a bucket, ties never straddle a
+    /// boundary, and all buckets are < k. Board-blocked combos
+    /// (strength 0) get bucket 0 — their reach is zero everywhere.
+    pub fn strength_buckets(&self, k: usize) -> Vec<u16> {
+        assert!(k > 0 && k <= u16::MAX as usize + 1, "bucket count {k} out of range");
+        let idx = &self.sorted_idx;
+        let n_ranked = idx.len().max(1);
+        let mut buckets = vec![0u16; N];
+        let mut g = 0;
+        while g < idx.len() {
+            let s = self.strengths[idx[g]];
+            let mut h = g;
+            while h < idx.len() && self.strengths[idx[h]] == s {
+                h += 1;
+            }
+            let b = (g * k / n_ranked) as u16;
+            for &i in &idx[g..h] {
+                buckets[i] = b;
+            }
+            g = h;
+        }
+        buckets
+    }
+
     /// win_w − lose_w per combo against `opp_reach`, blocker-exact. O(N).
     pub fn diff(&self, combos: &[(u8, u8)], opp_reach: &[f64; N]) -> Vec<f64> {
         let idx = &self.sorted_idx;

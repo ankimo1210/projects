@@ -6,6 +6,7 @@ description = "Abstract HU NLHE equilibrium solver (not an unabstracted full GTO
 
 [dependencies]
 gto-core = { path = "../gto-core" }
+rayon = "1.10"
 
 [[bin]]
 name = "solve-hu-river"

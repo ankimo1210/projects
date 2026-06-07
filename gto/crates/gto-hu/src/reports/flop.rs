@@ -18,6 +18,8 @@ use crate::solver::{ExplReport, FlopSolver};
 #[derive(Debug, Clone)]
 pub struct FlopSolverStats {
     pub iterations: u32,
+    /// River strategy-row buckets (0 = exact combos).
+    pub buckets_river: usize,
     pub elapsed_secs: f64,
     /// "enumerate" or "sample(seed=N)".
     pub mode: String,
@@ -95,7 +97,8 @@ pub fn write_flop_summary_json(
     let json = format!(
         concat!(
             "{{\"solver\":\"gto-hu vector flop (abstract HU NLHE equilibrium solver)\",",
-            "\"board\":\"{}\",\"mode\":\"{}\",\"iterations\":{},\"elapsed_secs\":{:.2},",
+            "\"board\":\"{}\",\"mode\":\"{}\",\"buckets_river\":{},",
+            "\"iterations\":{},\"elapsed_secs\":{:.2},",
             "\"exploitability_bb\":{:.6},\"br_sb_bb\":{:.6},\"br_bb_bb\":{:.6},",
             "\"game_value_sb_bb\":{:.6},",
             "\"tree\":{{\"nodes\":{},\"action_nodes\":{},\"chance_nodes\":{},",
@@ -105,6 +108,7 @@ pub fn write_flop_summary_json(
         ),
         board_s,
         stats.mode,
+        stats.buckets_river,
         stats.iterations,
         stats.elapsed_secs,
         stats.expl.exploitability,
