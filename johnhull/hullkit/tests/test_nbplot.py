@@ -9,6 +9,9 @@ from hullkit import nbplot
 
 
 def test_setup_disables_interactive():
+    import matplotlib.pyplot as plt_direct
+
+    plt_direct.ion()  # force interactive so the test fails without setup()'s ioff()
     plt = nbplot.setup()
     assert plt.isinteractive() is False
     assert hasattr(plt, "subplots")
