@@ -1,6 +1,5 @@
-use gto_core::eval::showdown_strengths;
-
 use super::regret::regret_matching;
+use super::showdown::{weighted_compat, ShowdownTable};
 use super::variant::CfrVariant;
 use crate::game::terminal::{fold_payoffs, showdown_payoffs};
 use crate::ranges::{all_combos, Range, NUM_COMBOS};
@@ -27,9 +26,7 @@ pub struct VectorRiverSolver {
     /// [node][action * N + combo]
     regrets: Vec<Vec<f64>>,
     strat_sum: Vec<Vec<f64>>,
-    strengths: Vec<u16>,
-    /// Combo indices with strength > 0, sorted ascending by strength.
-    sorted_idx: Vec<usize>,
+    showdown: ShowdownTable,
     iteration: u32,
     /// All 1326 (card_a, card_b) pairs in combo-index order, cached once.
     combos: Vec<(u8, u8)>,
@@ -40,9 +37,7 @@ impl VectorRiverSolver {
         for r in &mut ranges {
             r.remove_blockers(&board);
         }
-        let strengths = showdown_strengths(&board);
-        let mut sorted_idx: Vec<usize> = (0..N).filter(|&i| strengths[i] > 0).collect();
-        sorted_idx.sort_unstable_by_key(|&i| strengths[i]);
+        let showdown = ShowdownTable::new(&board);
         let alloc = |tree: &Tree| -> Vec<Vec<f64>> {
             tree.nodes
                 .iter()
@@ -59,8 +54,7 @@ impl VectorRiverSolver {
             variant,
             regrets,
             strat_sum,
-            strengths,
-            sorted_idx,
+            showdown,
             iteration: 0,
             combos,
         }
@@ -185,62 +179,7 @@ impl VectorRiverSolver {
     /// win_w − lose_w per combo against `opp_reach`, blocker-exact.
     /// O(N) per call using the precomputed strength order.
     fn showdown_diff(&self, opp_reach: &[f64; N]) -> Vec<f64> {
-        let combos = &self.combos;
-        let idx = &self.sorted_idx;
-        let mut out = vec![0.0; N];
-
-        // Ascending sweep: cum sums over strictly weaker tiers → win_w.
-        let mut cum = 0.0f64;
-        let mut cum_card = [0.0f64; 52];
-        let mut g = 0;
-        while g < idx.len() {
-            let s = self.strengths[idx[g]];
-            let mut h = g;
-            while h < idx.len() && self.strengths[idx[h]] == s {
-                h += 1;
-            }
-            for &i in &idx[g..h] {
-                let (a, b) = combos[i];
-                out[i] += cum - cum_card[a as usize] - cum_card[b as usize];
-            }
-            for &i in &idx[g..h] {
-                let w = opp_reach[i];
-                if w != 0.0 {
-                    let (a, b) = combos[i];
-                    cum += w;
-                    cum_card[a as usize] += w;
-                    cum_card[b as usize] += w;
-                }
-            }
-            g = h;
-        }
-
-        // Descending sweep: cum sums over strictly stronger tiers → −lose_w.
-        let mut cum = 0.0f64;
-        let mut cum_card = [0.0f64; 52];
-        let mut g = idx.len();
-        while g > 0 {
-            let s = self.strengths[idx[g - 1]];
-            let mut start = g;
-            while start > 0 && self.strengths[idx[start - 1]] == s {
-                start -= 1;
-            }
-            for &i in &idx[start..g] {
-                let (a, b) = combos[i];
-                out[i] -= cum - cum_card[a as usize] - cum_card[b as usize];
-            }
-            for &i in &idx[start..g] {
-                let w = opp_reach[i];
-                if w != 0.0 {
-                    let (a, b) = combos[i];
-                    cum += w;
-                    cum_card[a as usize] += w;
-                    cum_card[b as usize] += w;
-                }
-            }
-            g = start;
-        }
-        out
+        self.showdown.diff(&self.combos, opp_reach)
     }
 
     // ----- Introspection / outputs -------------------------------------
@@ -476,21 +415,3 @@ impl VectorRiverSolver {
     }
 }
 
-/// For each combo c: Σ over opponent combos compatible with c of their
-/// weight (total − per-card sums + own-combo weight added back).
-fn weighted_compat(combos: &[(u8, u8)], opp_reach: &[f64; N]) -> Vec<f64> {
-    let total: f64 = opp_reach.iter().sum();
-    let mut per_card = [0.0f64; 52];
-    for (i, &(a, b)) in combos.iter().enumerate() {
-        let w = opp_reach[i];
-        if w != 0.0 {
-            per_card[a as usize] += w;
-            per_card[b as usize] += w;
-        }
-    }
-    combos
-        .iter()
-        .enumerate()
-        .map(|(i, &(a, b))| total - per_card[a as usize] - per_card[b as usize] + opp_reach[i])
-        .collect()
-}
