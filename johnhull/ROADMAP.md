@@ -19,6 +19,6 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 | 11 | `volumes/11_ir_derivatives_market` | 29, 30 | planned |
 | 12 | `volumes/12_qualitative_summary` | 1, 8, 16, 35, 36, 37 | planned |
 
-Shared module: `johnhull/hullkit` (uv workspace member) — bsm, trees, mc, nbplot.
+Shared module: `johnhull/hullkit` (uv workspace member) — bsm, trees, mc, nbplot, payoffs.
 `rates.py` is planned alongside volume 04/07 (curve utilities generalized from
 `interest_rate_models/market_data.py`).

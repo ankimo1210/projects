@@ -54,7 +54,7 @@ Assertion-cell reference values (recomputed exactly at plan time, Hull-printed
 approximations in parentheses): parity put 1.2592; call lower bound 3.91
 (S=51,K=50,r=12%,T=0.5); put lower bound 1.01 (S=38,K=40,r=10%,T=0.25);
 index call ≈51.83 (S=930,K=900,r=8%,q=3%,σ=20%,T=2/12); GK currency call
-≈0.0285 (S=K=1.60,r=8%,r_f=11%,σ≈14%,T=4/12); Black-76 put ≈1.12
+≈0.0431 (spec correction: an earlier draft said 0.0285 from a wrong skill-ref value; Hull prints 0.043) (S=K=1.60,r=8%,r_f=11%,σ≈14%,T=4/12); Black-76 put ≈1.12
 (F=K=20,r=9%,σ=25%,T=4/12); Black-76 ATM c=p identity; box spread value.
 
 ## Verification (DoD — same as volume 01)

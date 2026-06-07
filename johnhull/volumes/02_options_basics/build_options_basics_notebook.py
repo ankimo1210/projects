@@ -353,7 +353,8 @@ cells.append(
 - **bull call spread**: $K_1$ コール買い + $K_2$ コール売り（$K_1<K_2$）。上昇益を $K_2-K_1$ に限定する代わりにコスト減
 - **bear put spread**: $K_2$ プット買い + $K_1$ プット売り。下落で利益
 - **butterfly**: $K_1, K_3$ 買い + $K_2$ 2枚売り（$K_2$ 中点）。±小動きで利益の「スパイク」
-- **box spread**: bull call + bear put。ペイオフは常に $K_2-K_1$ → 価値は $(K_2-K_1)e^{-rT}$（**ヨーロピアン限定**の裁定関係。アメリカンで組むと早期行使リスクで崩れる — Business Snapshot 12.1）""")
+- **box spread**: bull call + bear put。ペイオフは常に $K_2-K_1$ → 価値は $(K_2-K_1)e^{-rT}$（**ヨーロピアン限定**の裁定関係。アメリカンで組むと早期行使リスクで崩れる — Business Snapshot 12.1）
+- **calendar / diagonal spread**: 同一 $K$・異限月（calendar）／行使価格も限月も異なる（diagonal）2枚構成。損益は短期満期時点の**長期側の残存時間価値**に依存するため、本冊の「満期ペイオフ」枠組みでは正確に描けない — 時間価値チャートを扱う第3冊（Greeks）で再訪""")
 )
 
 # Cell 15: spreads panel (static)
