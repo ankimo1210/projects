@@ -1,4 +1,4 @@
-use crate::game::{Action, BettingState};
+use crate::game::{Action, BettingState, PotType};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NodeKind {
@@ -14,6 +14,13 @@ pub enum NodeKind {
     /// traversal time (design spec §7).
     Chance {
         child: usize,
+    },
+    /// Preflop betting closed without a fold: play continues on the flop
+    /// in a pot of the tagged type (spec §6). A leaf in the standalone
+    /// preflop tree (Phase 5); the full blueprint (Phase 6) replaces it
+    /// with the postflop subtree.
+    NextStreet {
+        pot_type: PotType,
     },
 }
 

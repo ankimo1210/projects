@@ -149,6 +149,7 @@ fn chips_conserve_at_every_terminal_and_chance() {
                 );
             }
             NodeKind::Action { .. } => assert!(!n.children.is_empty()),
+            NodeKind::NextStreet { .. } => panic!("no street-end leaves here"),
         }
     }
 }

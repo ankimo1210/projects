@@ -208,6 +208,7 @@ impl TurnRiverSolver {
                 ChanceMode::Enumerate => self.chance_enumerate(child, traverser, reach, opp_reach),
                 ChanceMode::Sample { .. } => self.chance_sample(child, traverser, reach, opp_reach),
             },
+            NodeKind::NextStreet { .. } => unreachable!("turn+river trees have no NextStreet nodes"),
             NodeKind::Action { actor } => {
                 let na = self.tree.nodes[node_id].children.len();
                 let base = self.table_base(node_id, ctx, na);
@@ -460,6 +461,7 @@ impl TurnRiverSolver {
                 }
                 ev
             }
+            NodeKind::NextStreet { .. } => unreachable!("turn+river trees have no NextStreet nodes"),
             NodeKind::Action { actor } => {
                 let na = self.tree.nodes[node_id].children.len();
                 if actor == br_player {
@@ -538,6 +540,7 @@ impl TurnRiverSolver {
                 }
                 ev
             }
+            NodeKind::NextStreet { .. } => unreachable!("turn+river trees have no NextStreet nodes"),
             NodeKind::Action { actor } => {
                 let na = self.tree.nodes[node_id].children.len();
                 let mut ev = vec![0.0; N];

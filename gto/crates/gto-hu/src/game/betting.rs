@@ -53,6 +53,21 @@ impl BettingState {
         Self::street_root(Street::River, pot, stack)
     }
 
+    /// Preflop root: blinds posted (SB 0.5bb, BB 1bb), SB to act first.
+    pub fn preflop_root(stack: i64) -> Self {
+        assert!(stack > BB, "stack must cover the big blind");
+        BettingState {
+            street: Street::Preflop,
+            to_act: PLAYER_SB,
+            stacks: [stack - BB / 2, stack - BB],
+            street_committed: [BB / 2, BB],
+            contrib: [BB / 2, BB],
+            raises_this_street: 0,
+            actions_this_street: 0,
+            closed: false,
+        }
+    }
+
     pub fn pot(&self) -> i64 {
         self.contrib[0] + self.contrib[1]
     }
@@ -153,7 +168,13 @@ impl BettingState {
                 s.stacks[me] -= amt;
                 s.street_committed[me] += amt;
                 s.contrib[me] += amt;
-                s.closed = true;
+                // A call closes the street — except the preflop SB limp
+                // (matching the posted blind before any raise), which
+                // leaves the BB its option (spec §6).
+                let is_limp = self.street == Street::Preflop
+                    && self.raises_this_street == 0
+                    && s.actions_this_street == 1;
+                s.closed = !is_limp;
             }
             Action::Bet { to } | Action::Raise { to } | Action::AllIn { to } => {
                 let add = to - self.street_committed[me];

@@ -338,6 +338,7 @@ impl FlopSolver {
                     }
                 }
             }
+            NodeKind::NextStreet { .. } => unreachable!("flop trees have no NextStreet nodes"),
             NodeKind::Action { actor } => {
                 let na = self.tree.nodes[node_id].children.len();
                 let cx = self.ctx_index(node_id, ctx);
@@ -694,6 +695,7 @@ impl FlopSolver {
                 }
                 ev
             }
+            NodeKind::NextStreet { .. } => unreachable!("flop trees have no NextStreet nodes"),
             NodeKind::Action { actor } => {
                 let na = self.tree.nodes[node_id].children.len();
                 if actor == br_player {
@@ -774,6 +776,7 @@ impl FlopSolver {
                 }
                 ev
             }
+            NodeKind::NextStreet { .. } => unreachable!("flop trees have no NextStreet nodes"),
             NodeKind::Action { actor } => {
                 let na = self.tree.nodes[node_id].children.len();
                 let strat = self.avg_matrix(node_id, ctx, na);

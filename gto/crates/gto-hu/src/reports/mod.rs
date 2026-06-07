@@ -1,10 +1,15 @@
 //! Tree/solver statistics and strategy export (CSV + minimal JSON).
 
 pub mod flop;
+pub mod preflop;
 pub mod turn;
 
 pub use flop::{
     write_flop_strategy_csv, write_flop_summary_json, write_turn_aggregate_csv, FlopSolverStats,
+};
+pub use preflop::{
+    class_label, write_preflop_class_csv, write_preflop_strategy_csv,
+    write_preflop_summary_json, PreflopSolverStats,
 };
 pub use turn::{
     write_river_aggregate_csv, write_turn_strategy_csv, write_turn_summary_json, TurnSolverStats,
@@ -49,6 +54,8 @@ pub fn tree_stats(tree: &Tree) -> TreeStats {
             NodeKind::FoldTerminal { .. } => s.fold_terminals += 1,
             NodeKind::Showdown => s.showdown_terminals += 1,
             NodeKind::Chance { .. } => s.chance_nodes += 1,
+            // Preflop street-end leaves: terminal, no tables.
+            NodeKind::NextStreet { .. } => {}
         }
     }
     s

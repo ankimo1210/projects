@@ -1,62 +1,60 @@
+//! Exact-combo vector CFR for the standalone HU preflop tree (Phase 5).
+//! No chance nodes: `NextStreet` leaves pay all-in equity from the
+//! injected `EquityTable` (the simplified postflop value model, spec
+//! §13). Best response and exploitability are exact RELATIVE TO THAT
+//! MODEL — strategies must not be quoted as full-game equilibria.
+
+use super::equity_model::EquityTable;
 use super::regret::regret_matching;
-use super::showdown::{weighted_compat, ShowdownTable};
+use super::showdown::weighted_compat;
 use super::variant::CfrVariant;
-use crate::game::terminal::{fold_payoffs, showdown_payoffs};
+use super::vector::ExplReport;
+use crate::game::terminal::fold_payoffs;
+use crate::game::{BettingState, Street};
 use crate::ranges::{all_combos, Range, NUM_COMBOS};
 use crate::tree::{NodeKind, Tree};
 
 const N: usize = NUM_COMBOS;
 
-/// Best-response report in bb/hand.
-#[derive(Debug, Clone, Copy)]
-pub struct ExplReport {
-    pub br_value: [f64; 2],
-    /// (br0 + br1) / 2 — NashConv/2, 0 at equilibrium.
-    pub exploitability: f64,
-}
-
-/// Exact-combo vector CFR for a fixed river board.
-/// Values are counterfactual: each per-combo value already sums the
-/// opponent's reach-weighted outcomes (blockers handled exactly).
-pub struct VectorRiverSolver {
+pub struct PreflopSolver {
     pub tree: Tree,
-    pub board: [u8; 5],
     pub ranges: [Range; 2],
     pub variant: CfrVariant,
-    /// [node][action * N + combo]
+    eq: EquityTable,
+    /// [node] → flat na*N tables (dense — the preflop tree is tiny).
     regrets: Vec<Vec<f64>>,
     strat_sum: Vec<Vec<f64>>,
-    showdown: ShowdownTable,
     iteration: u32,
-    /// All 1326 (card_a, card_b) pairs in combo-index order, cached once.
     combos: Vec<(u8, u8)>,
 }
 
-impl VectorRiverSolver {
-    pub fn new(tree: Tree, board: [u8; 5], mut ranges: [Range; 2], variant: CfrVariant) -> Self {
-        for r in &mut ranges {
-            r.remove_blockers(&board);
-        }
-        let showdown = ShowdownTable::new(&board);
+impl PreflopSolver {
+    pub fn new(tree: Tree, ranges: [Range; 2], variant: CfrVariant, eq: EquityTable) -> Self {
+        assert_eq!(
+            tree.nodes[0].state.street,
+            Street::Preflop,
+            "root must be a preflop node (build with build_preflop_tree)"
+        );
         let alloc = |tree: &Tree| -> Vec<Vec<f64>> {
             tree.nodes
                 .iter()
-                .map(|n| vec![0.0; n.children.len().max(1) * N])
+                .map(|n| match n.kind {
+                    NodeKind::Action { .. } => vec![0.0; n.children.len() * N],
+                    _ => Vec::new(),
+                })
                 .collect()
         };
         let regrets = alloc(&tree);
         let strat_sum = alloc(&tree);
-        let combos = all_combos();
-        VectorRiverSolver {
+        PreflopSolver {
             tree,
-            board,
             ranges,
             variant,
+            eq,
             regrets,
             strat_sum,
-            showdown,
             iteration: 0,
-            combos,
+            combos: all_combos(),
         }
     }
 
@@ -69,6 +67,38 @@ impl VectorRiverSolver {
                 self.traverse(0, traverser, &reach, &opp);
             }
         }
+    }
+
+    /// Equity-model payoff at a street-end leaf: per traverser combo c,
+    /// Σ over compatible villain combos o of
+    /// opp_reach[o] × (eq(c,o)·pot − contrib) in bb. O(N²) with blocker
+    /// skips — the preflop tree only has a dozen such leaves.
+    fn equity_values(
+        &self,
+        state: &BettingState,
+        traverser: u8,
+        opp_reach: &[f64; N],
+    ) -> Vec<f64> {
+        let pot = state.pot() as f64;
+        let contrib = state.contrib[traverser as usize] as f64;
+        let mut out = vec![0.0; N];
+        for (c, ev) in out.iter_mut().enumerate() {
+            let (c0, c1) = self.combos[c];
+            let mut v = 0.0;
+            for o in 0..N {
+                let w = opp_reach[o];
+                if w == 0.0 {
+                    continue;
+                }
+                let (o0, o1) = self.combos[o];
+                if o0 == c0 || o0 == c1 || o1 == c0 || o1 == c1 {
+                    continue;
+                }
+                v += w * (self.eq.eq(c, o) as f64 * pot - contrib);
+            }
+            *ev = v / 100.0; // centi-bb → bb
+        }
+        out
     }
 
     /// Counterfactual values (bb) for `traverser`'s combos.
@@ -84,19 +114,18 @@ impl VectorRiverSolver {
             NodeKind::FoldTerminal { winner } => {
                 let state = self.tree.nodes[node_id].state;
                 let pay = fold_payoffs(&state, winner)[traverser as usize] as f64 / 100.0;
-                let compat = weighted_compat(&self.combos, opp_reach);
-                compat.iter().map(|w| pay * w).collect()
+                weighted_compat(&self.combos, opp_reach)
+                    .iter()
+                    .map(|w| pay * w)
+                    .collect()
             }
-            NodeKind::Showdown => {
+            NodeKind::NextStreet { .. } => {
                 let state = self.tree.nodes[node_id].state;
-                // Winner nets the opponent's (equal) contribution.
-                let win_bb =
-                    showdown_payoffs(&state, Some(traverser))[traverser as usize] as f64 / 100.0;
-                let diff = self.showdown_diff(opp_reach);
-                diff.iter().map(|d| win_bb * d).collect()
+                self.equity_values(&state, traverser, opp_reach)
             }
-            NodeKind::Chance { .. } => unreachable!("river-only tree has no chance nodes"),
-            NodeKind::NextStreet { .. } => unreachable!("river-only trees have no NextStreet nodes"),
+            NodeKind::Showdown | NodeKind::Chance { .. } => {
+                unreachable!("preflop trees have no showdown/chance nodes")
+            }
             NodeKind::Action { actor } => {
                 let na = self.tree.nodes[node_id].children.len();
                 let strat = self.node_strategy(node_id, na);
@@ -117,10 +146,6 @@ impl VectorRiverSolver {
                             ev[c] += strat[a * N + c] * av[c];
                         }
                     }
-                    // No per-combo skip here: regrets must keep updating even
-                    // for own-reach-zero combos (their counterfactual signal
-                    // is independent of own reach), and DCFR's per-iteration
-                    // discounts must hit every combo every iteration.
                     let t = self.iteration;
                     let (sd, sw) = (
                         self.variant.strategy_discount(t),
@@ -136,7 +161,7 @@ impl VectorRiverSolver {
                             let discounted = reg[i] * variant.regret_discount(reg[i], t);
                             reg[i] =
                                 variant.accumulate_regret(discounted, action_vals[a][c] - ev[c]);
-                            ssum[i] = ssum[i] * sd + sw * reach[c] * strat[i];
+                            ssum[i] = ssum[i] * sd + sw * reach[c] * strat[a * N + c];
                         }
                     }
                     ev
@@ -177,12 +202,6 @@ impl VectorRiverSolver {
         strat
     }
 
-    /// win_w − lose_w per combo against `opp_reach`, blocker-exact.
-    /// O(N) per call using the precomputed strength order.
-    fn showdown_diff(&self, opp_reach: &[f64; N]) -> Vec<f64> {
-        self.showdown.diff(&self.combos, opp_reach)
-    }
-
     // ----- Introspection / outputs -------------------------------------
 
     pub fn action_node_ids(&self) -> Vec<usize> {
@@ -210,7 +229,22 @@ impl VectorRiverSolver {
         }
     }
 
-    /// Range-weighted aggregate strategy at a node (for display).
+    /// Normalized average strategy for ALL combos: [action * N + combo].
+    fn avg_matrix(&self, node_id: usize, na: usize) -> Vec<f64> {
+        let ssum = &self.strat_sum[node_id];
+        let mut strat = vec![1.0 / na as f64; na * N];
+        for c in 0..N {
+            let total: f64 = (0..na).map(|a| ssum[a * N + c]).sum();
+            if total > 0.0 {
+                for a in 0..na {
+                    strat[a * N + c] = ssum[a * N + c] / total;
+                }
+            }
+        }
+        strat
+    }
+
+    /// Range-weighted aggregate strategy at a node for display.
     pub fn aggregate_strategy(&self, node_id: usize) -> Vec<(String, f64)> {
         let node = &self.tree.nodes[node_id];
         let actor = self.actor_at(node_id) as usize;
@@ -240,13 +274,10 @@ impl VectorRiverSolver {
             .collect()
     }
 
-    // ----- Exact best response ------------------------------------------
+    // ----- Exact best response (within the equity model) ----------------
 
-    /// Counterfactual BR values for `br_player` (opponent plays the
-    /// average strategy).
     fn br_values(&self, node_id: usize, br_player: u8, opp_reach: &[f64; N]) -> Vec<f64> {
-        let kind = self.tree.nodes[node_id].kind;
-        match kind {
+        match self.tree.nodes[node_id].kind {
             NodeKind::FoldTerminal { winner } => {
                 let state = self.tree.nodes[node_id].state;
                 let pay = fold_payoffs(&state, winner)[br_player as usize] as f64 / 100.0;
@@ -255,17 +286,13 @@ impl VectorRiverSolver {
                     .map(|w| pay * w)
                     .collect()
             }
-            NodeKind::Showdown => {
+            NodeKind::NextStreet { .. } => {
                 let state = self.tree.nodes[node_id].state;
-                let win_bb =
-                    showdown_payoffs(&state, Some(br_player))[br_player as usize] as f64 / 100.0;
-                self.showdown_diff(opp_reach)
-                    .iter()
-                    .map(|d| win_bb * d)
-                    .collect()
+                self.equity_values(&state, br_player, opp_reach)
             }
-            NodeKind::Chance { .. } => unreachable!("river-only tree has no chance nodes"),
-            NodeKind::NextStreet { .. } => unreachable!("river-only trees have no NextStreet nodes"),
+            NodeKind::Showdown | NodeKind::Chance { .. } => {
+                unreachable!("preflop trees have no showdown/chance nodes")
+            }
             NodeKind::Action { actor } => {
                 let na = self.tree.nodes[node_id].children.len();
                 if actor == br_player {
@@ -281,13 +308,13 @@ impl VectorRiverSolver {
                     }
                     best
                 } else {
+                    let strat = self.avg_matrix(node_id, na);
                     let mut ev = vec![0.0; N];
                     for a in 0..na {
                         let child = self.tree.nodes[node_id].children[a].1;
                         let mut no = *opp_reach;
                         for c in 0..N {
-                            let s = self.average_strategy(node_id, c);
-                            no[c] = opp_reach[c] * s[a];
+                            no[c] = opp_reach[c] * strat[a * N + c];
                         }
                         let v = self.br_values(child, br_player, &no);
                         for c in 0..N {
@@ -300,19 +327,9 @@ impl VectorRiverSolver {
         }
     }
 
-    /// Counterfactual values for `player` when BOTH players follow the
-    /// average strategy.  Mirrors `br_values` but uses the actor's average
-    /// strategy (weighted sum) rather than the best response (max).
-    ///
-    /// Convention (same as `br_values` / `traverse`):
-    ///   `opp_reach[c]` = reach of the opponent of `player`.
-    ///   When `actor == player`: `player` follows avg strat → weight child
-    ///     values by `avg_strat[a]` per combo; `opp_reach` is unchanged.
-    ///   When `actor != player`: opponent follows avg strat → update
-    ///     `opp_reach[c] *= opp_avg_strat(node, c)[a]` before recursing.
+    /// Counterfactual values when BOTH players follow the average strategy.
     fn avg_values(&self, node_id: usize, player: u8, opp_reach: &[f64; N]) -> Vec<f64> {
-        let kind = self.tree.nodes[node_id].kind;
-        match kind {
+        match self.tree.nodes[node_id].kind {
             NodeKind::FoldTerminal { winner } => {
                 let state = self.tree.nodes[node_id].state;
                 let pay = fold_payoffs(&state, winner)[player as usize] as f64 / 100.0;
@@ -321,39 +338,31 @@ impl VectorRiverSolver {
                     .map(|w| pay * w)
                     .collect()
             }
-            NodeKind::Showdown => {
+            NodeKind::NextStreet { .. } => {
                 let state = self.tree.nodes[node_id].state;
-                let win_bb = showdown_payoffs(&state, Some(player))[player as usize] as f64 / 100.0;
-                self.showdown_diff(opp_reach)
-                    .iter()
-                    .map(|d| win_bb * d)
-                    .collect()
+                self.equity_values(&state, player, opp_reach)
             }
-            NodeKind::Chance { .. } => unreachable!("river-only tree has no chance nodes"),
-            NodeKind::NextStreet { .. } => unreachable!("river-only trees have no NextStreet nodes"),
+            NodeKind::Showdown | NodeKind::Chance { .. } => {
+                unreachable!("preflop trees have no showdown/chance nodes")
+            }
             NodeKind::Action { actor } => {
                 let na = self.tree.nodes[node_id].children.len();
+                let strat = self.avg_matrix(node_id, na);
                 let mut ev = vec![0.0; N];
                 if actor == player {
-                    // Player follows avg strategy: weight child values by
-                    // avg_strat[a] per combo; opp_reach is unchanged.
                     for a in 0..na {
                         let child = self.tree.nodes[node_id].children[a].1;
                         let v = self.avg_values(child, player, opp_reach);
                         for c in 0..N {
-                            let s = self.average_strategy(node_id, c);
-                            ev[c] += s[a] * v[c];
+                            ev[c] += strat[a * N + c] * v[c];
                         }
                     }
                 } else {
-                    // Opponent follows avg strategy: update opp_reach by
-                    // opponent's avg strat probability for each action.
                     for a in 0..na {
                         let child = self.tree.nodes[node_id].children[a].1;
                         let mut no = *opp_reach;
                         for c in 0..N {
-                            let s = self.average_strategy(node_id, c);
-                            no[c] = opp_reach[c] * s[a];
+                            no[c] = opp_reach[c] * strat[a * N + c];
                         }
                         let v = self.avg_values(child, player, &no);
                         for c in 0..N {
@@ -366,12 +375,8 @@ impl VectorRiverSolver {
         }
     }
 
-    /// Game value (bb/hand) to player 0 when both players follow the
-    /// converged average strategy.  Intended for test / validation use.
-    ///
-    /// Normalization mirrors `exploitability_bb`:
-    ///   value = Σ_c r0[c]·v0[c]  /  Σ_c r0[c]·compat(r1)[c]
-    /// where v0 are counterfactual avg-vs-avg values for player 0.
+    /// Game value (bb/hand) to player 0 (SB) under avg-vs-avg play,
+    /// exact within the equity model.
     pub fn game_value_p0(&self) -> f64 {
         let r0 = self.ranges[0].weights;
         let r1 = self.ranges[1].weights;
@@ -392,7 +397,8 @@ impl VectorRiverSolver {
         }
     }
 
-    /// Exploitability in bb/hand: (BR_sb + BR_bb) / 2.
+    /// Exploitability in bb/hand within the equity model:
+    /// (BR_sb + BR_bb) / 2.
     pub fn exploitability_bb(&self) -> ExplReport {
         let mut br_value = [0.0f64; 2];
         #[allow(clippy::needless_range_loop)]
