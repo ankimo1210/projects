@@ -31,16 +31,24 @@ Prefer targeted file reads and the project's `README.md` / `CLAUDE.md` before br
 Applications:
 
 - `land_price_api_app/` — 地価公示・不動産取引ローカルアプリ (FastAPI + DuckDB)
-- `re_invest_os/` — 不動産買付前 DD Web アプリ (Next.js + FastAPI + Supabase)
 - `gto/` — GTO ポーカー分析アプリ (Rust + FastAPI + Next.js)
 - `stock/` — `stockkit` 株式分析ツールキット (Python + Dash)
 - `market-viz/` — マーケット可視化アプリ (Streamlit + Plotly + DuckDB)
 - `nbody-gpu/` — GPU N 体シミュレーション (CuPy + VisPy)
 - `line_backup/` — LINE バックアップ解析 CLI (Python)
+- `akinator/` — Wikidata ベースのアキネーター風推測ゲーム (FastAPI)
 
 Research / notebooks:
 
-- `johnhull/`, `rates_volatility_model/`, `notebooks/`
+- `johnhull/` (Hull 11e 学習ボリューム + `hullkit`), `rates_volatility_model/`,
+  `aisan_lbo_case/` (LBO ケーススタディ), `notebooks/`
+
+Samples:
+
+- `csharp_calc/` — WinForms 電卓サンプル (C# / .NET 9)
+
+Note: `re_invest_os` was moved out to its own repo (`~/re_invest_os`,
+GitHub `ankimo1210/re_invest_os`) — it is no longer in this workspace.
 
 Each project has its own `README.md` and sometimes its own `CLAUDE.md` /
 `AGENTS.md` — prefer those over the workspace root for project-specific work.

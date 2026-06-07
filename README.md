@@ -7,15 +7,20 @@
 | ディレクトリ | 概要 | スタック |
 |---|---|---|
 | [`land_price_api_app/`](land_price_api_app/) | 国土交通省「不動産情報ライブラリ」API を使った地価公示・取引価格データのローカル取得・分析・可視化アプリ | Python / FastAPI / DuckDB |
-| [`re_invest_os/`](re_invest_os/) | 不動産買付前のDD・監査を支援する AI 駆動 Web アプリ（個人投資家向け） | Next.js / FastAPI / Supabase |
 | [`gto/`](gto/) | テキサスホールデムの GTO 分析・ソリューション参照・GPU 計算を統合した Web アプリ | Rust / FastAPI / Next.js |
 | [`stock/`](stock/) | 日本株・米株の価格・財務・マクロを取得し Jupyter / Dash で分析する `stockkit` ツールキット | Python / DuckDB / Dash |
 | [`market-viz/`](market-viz/) | 個人用マーケット可視化・分析アプリ | Streamlit / Plotly / DuckDB |
 | [`nbody-gpu/`](nbody-gpu/) | GPU 加速 N 体シミュレーション + リアルタイム 3D 可視化 | CuPy / VisPy |
 | [`line_backup/`](line_backup/) | iPhone ローカルバックアップから LINE データを完全オフラインで解析する CLI | Python |
-| [`johnhull/`](johnhull/) | John Hull 教材ベースの金利モデル研究ノート | Python / Jupyter |
+| [`akinator/`](akinator/) | Wikidata をエンティティ源とするローカル・アキネーター風推測ゲーム（確率的候補更新エンジン） | Python / FastAPI |
+| [`johnhull/`](johnhull/) | Hull『Options, Futures, and Other Derivatives』11e の章別学習ボリューム + `hullkit` 共有パッケージ | Python / Jupyter |
 | [`rates_volatility_model/`](rates_volatility_model/) | 金利ボラティリティ・モデリングのリサーチノート | Python / Jupyter |
+| [`aisan_lbo_case/`](aisan_lbo_case/) | アイサンテクノロジー (4667.T) 非公開化 LBO ケーススタディ（公開情報ベース、HTML レポート出力） | Python / Jupyter |
 | [`notebooks/`](notebooks/) | 単発の分析ノートブック置き場（債券、ETF、不動産シミュ等） | Jupyter |
+| [`csharp_calc/`](csharp_calc/) | WinForms 四則演算電卓サンプル（エンジンは UI 非依存・ユニットテスト付き） | C# / .NET 9 |
+
+> `re_invest_os`（不動産買付前 DD Web アプリ）は独立リポジトリへ移管済み:
+> ローカル `~/re_invest_os` / GitHub `ankimo1210/re_invest_os`
 
 ## ディレクトリ構成
 
@@ -52,8 +57,8 @@ make tree      # ヘビーディレクトリを除外したツリー表示
 
 - Windows 11 + WSL2 (Ubuntu)
 - Python は **ルート単一の uv workspace** で管理（`.venv` は repo root に1個）
-  - workspace メンバー: `gto`, `market-viz`, `stock`, `nbody-gpu`, `line_backup`, `re_invest_os/apps/api`, `re_invest_os/packages/financial-engine`
-  - 例外: `land_price_api_app` は `requirements.txt`、`johnhull` / `rates_volatility_model` / `notebooks` は env 管理なし
+  - workspace メンバー: `gto`, `market-viz`, `stock`, `nbody-gpu`, `line_backup`, `land_price_api_app`, `akinator`, `johnhull/hullkit`
+  - 例外: `aisan_lbo_case` は `requirements.txt`、`csharp_calc` は .NET、`rates_volatility_model` / `notebooks` は env 管理なし
 - AI コラボ前提（Claude Code / Copilot）。エージェント向け規約は `CLAUDE.md` と `AGENTS.md` を参照
 
 ## セットアップ
@@ -63,7 +68,7 @@ uv sync --all-packages   # ルートに .venv が作られ、全メンバーが 
 make help                # 横断ターゲット一覧
 ```
 
-ワークスペース内のクロスインポートはそのまま動きます。例: `re_invest_os/apps/api` から `from re_engine import ...` が可能（`re-engine` パッケージは `re_invest_os/packages/financial-engine` 由来、workspace で自動リンク）。
+ワークスペース内のクロスインポートはそのまま動きます。例: `johnhull` のノートブックから `from hullkit import ...` が可能（`hullkit` パッケージは `johnhull/hullkit` 由来、workspace で自動リンク）。
 
 ## このリポジトリで作業するときは
 
