@@ -95,6 +95,9 @@ fn river_card_blocked_combos_are_masked() {
     let avg = s.average_strategy(river_node, Some(0), blocked);
     let na = avg.len();
     for v in &avg {
-        assert!((v - 1.0 / na as f64).abs() < 1e-12, "expected untouched uniform");
+        assert!(
+            (v - 1.0 / na as f64).abs() < 1e-12,
+            "expected untouched uniform"
+        );
     }
 }

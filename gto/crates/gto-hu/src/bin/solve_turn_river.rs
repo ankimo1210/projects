@@ -205,7 +205,13 @@ fn main() {
     write_turn_strategy_csv(&out.join("strategy_turn.csv"), &solver).expect("write turn csv");
     write_river_aggregate_csv(&out.join("strategy_river_agg.csv"), &solver)
         .expect("write river csv");
-    write_turn_summary_json(&out.join("summary.json"), &board, &stats, &ts, solver.table_bytes())
-        .expect("write json");
+    write_turn_summary_json(
+        &out.join("summary.json"),
+        &board,
+        &stats,
+        &ts,
+        solver.table_bytes(),
+    )
+    .expect("write json");
     eprintln!("wrote {}", out.display());
 }

@@ -68,24 +68,38 @@ fn vs_raise_offers_jam_at_this_depth() {
     // b50 = 10bb → raise 3x = 30bb → second raise 3x = 90bb ≥ stack ⇒ AllIn.
     let t = srp_tree();
     let bet = child_by(&t, 0, |a| matches!(a, Action::Bet { to } if *to == 10 * BB));
-    let raise = child_by(&t, bet, |a| matches!(a, Action::Raise { to } if *to == 30 * BB));
+    let raise = child_by(
+        &t,
+        bet,
+        |a| matches!(a, Action::Raise { to } if *to == 30 * BB),
+    );
     let jam = t.nodes[raise]
         .children
         .iter()
         .find(|(a, _)| matches!(a, Action::AllIn { to } if *to == 90 * BB));
-    assert!(jam.is_some(), "second raise must become a jam at 90bb stacks");
+    assert!(
+        jam.is_some(),
+        "second raise must become a jam at 90bb stacks"
+    );
 }
 
 #[test]
 fn allin_turn_runout_goes_to_showdown_with_no_betting() {
     let t = srp_tree();
     let bet = child_by(&t, 0, |a| matches!(a, Action::Bet { to } if *to == 10 * BB));
-    let raise = child_by(&t, bet, |a| matches!(a, Action::Raise { to } if *to == 30 * BB));
+    let raise = child_by(
+        &t,
+        bet,
+        |a| matches!(a, Action::Raise { to } if *to == 30 * BB),
+    );
     let jam = child_by(&t, raise, |a| matches!(a, Action::AllIn { .. }));
     let call = child_by(&t, jam, |a| matches!(a, Action::Call));
     let sd = chance_child(&t, call);
     let n = &t.nodes[sd];
-    assert!(matches!(n.kind, NodeKind::Showdown), "all-in runout must be showdown");
+    assert!(
+        matches!(n.kind, NodeKind::Showdown),
+        "all-in runout must be showdown"
+    );
     assert!(n.children.is_empty(), "no betting after all-in");
     assert_eq!(n.state.street, Street::River);
     assert_eq!(n.state.stacks, [0; 2]);

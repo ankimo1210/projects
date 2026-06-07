@@ -53,8 +53,14 @@ fn turn_reports_written_with_finite_exploitability() {
         root_strategy: s.aggregate_strategy(0, None),
     };
     let ts = tree_stats(&s.tree);
-    write_turn_summary_json(&dir.join("summary.json"), &board, &stats, &ts, s.table_bytes())
-        .unwrap();
+    write_turn_summary_json(
+        &dir.join("summary.json"),
+        &board,
+        &stats,
+        &ts,
+        s.table_bytes(),
+    )
+    .unwrap();
     write_turn_strategy_csv(&dir.join("strategy_turn.csv"), &s).unwrap();
     write_river_aggregate_csv(&dir.join("strategy_river_agg.csv"), &s).unwrap();
 

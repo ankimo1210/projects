@@ -91,8 +91,7 @@ fn scalar_and_vector_agree_on_tiny_turn_river_spot() {
     for &(a, b) in &hands1 {
         r1.weights[combo_index(a, b)] = 1.0;
     }
-    let mut vector =
-        TurnRiverSolver::new(tree_v, board, [r0, r1], variant, ChanceMode::Enumerate);
+    let mut vector = TurnRiverSolver::new(tree_v, board, [r0, r1], variant, ChanceMode::Enumerate);
     vector.run(vector_iters);
     let vector_expl = vector.exploitability_bb();
 
@@ -112,9 +111,7 @@ fn scalar_and_vector_agree_on_tiny_turn_river_spot() {
     let v_scalar = scalar_game_value_p0(&game, &scalar, &game.root());
     let v_vector = vector.game_value_p0();
     let budget = scalar_expl + vector_expl.exploitability;
-    eprintln!(
-        "game values: scalar {v_scalar:.4} vs vector {v_vector:.4} (budget {budget:.4})"
-    );
+    eprintln!("game values: scalar {v_scalar:.4} vs vector {v_vector:.4} (budget {budget:.4})");
     assert!(
         (v_scalar - v_vector).abs() <= budget,
         "game values diverge: scalar {v_scalar:.4} vs vector {v_vector:.4} (budget {budget:.4})"

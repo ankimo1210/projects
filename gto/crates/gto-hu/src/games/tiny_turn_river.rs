@@ -63,8 +63,7 @@ impl Game for TinyTurnRiver {
     }
 
     fn is_chance(&self, s: &TinyTurnRiverState) -> bool {
-        s.deal.0 == usize::MAX
-            || matches!(self.tree.nodes[s.node].kind, NodeKind::Chance { .. })
+        s.deal.0 == usize::MAX || matches!(self.tree.nodes[s.node].kind, NodeKind::Chance { .. })
     }
 
     fn chance_outcomes(&self, s: &TinyTurnRiverState) -> Vec<(TinyTurnRiverState, f64)> {
@@ -101,11 +100,7 @@ impl Game for TinyTurnRiver {
             let (a1, b1) = self.hands[1][s.deal.1];
             let cards: Vec<u8> = (0..52u8)
                 .filter(|c| {
-                    !self.turn_board.contains(c)
-                        && *c != a0
-                        && *c != b0
-                        && *c != a1
-                        && *c != b1
+                    !self.turn_board.contains(c) && *c != a0 && *c != b0 && *c != a1 && *c != b1
                 })
                 .collect();
             let p = 1.0 / cards.len() as f64;

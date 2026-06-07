@@ -15,7 +15,7 @@ Respond to the user in Japanese by default; code and identifiers in English.
 | Solver core | `crates/gto-core/` | CFR/DCFR, multistreet tree (Flop→Turn→River), hand evaluator (Rust, CPU) |
 | GPU solver | `crates/gto-cuda/` | NVRTC JIT kernels, batch CFR on RTX 5080 (sm_120). CUDA Driver API via `ctypes`. |
 | Python bindings | `crates/gto-py/` | pyo3 wrapper exposing `solve_spot`, `solve_spot_multistreet`, `equity` |
-| HU solver | `crates/gto-hu/` | Abstract HU NLHE equilibrium solver: river vector CFR+, Kuhn/Leduc validation, exact best response. CLI: `solve-hu-river` |
+| HU solver | `crates/gto-hu/` | Abstract HU NLHE equilibrium solver: river vector CFR+, Kuhn/Leduc validation, exact best response. CLIs: `solve-hu-river`, `solve-hu-turn-river` |
 | Backend API | `src/gto/api/` | FastAPI app + routers (`equity`, `trainer`, `solver`, `library`, `simulation`) |
 | Solution store | `src/gto/library/` | Batch precompute, Parquet I/O, range builder, flop canonical-form |
 | Trainer | `src/gto/trainer/` | Preflop GTO frequency tables (hardcoded approximation, not solved) |

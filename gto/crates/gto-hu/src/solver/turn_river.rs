@@ -205,12 +205,8 @@ impl TurnRiverSolver {
                     .collect()
             }
             NodeKind::Chance { child } => match self.mode {
-                ChanceMode::Enumerate => {
-                    self.chance_enumerate(child, traverser, reach, opp_reach)
-                }
-                ChanceMode::Sample { .. } => {
-                    self.chance_sample(child, traverser, reach, opp_reach)
-                }
+                ChanceMode::Enumerate => self.chance_enumerate(child, traverser, reach, opp_reach),
+                ChanceMode::Sample { .. } => self.chance_sample(child, traverser, reach, opp_reach),
             },
             NodeKind::Action { actor } => {
                 let na = self.tree.nodes[node_id].children.len();
@@ -371,12 +367,7 @@ impl TurnRiverSolver {
     }
 
     /// Normalized average strategy for one combo at one (node, ctx).
-    pub fn average_strategy(
-        &self,
-        node_id: usize,
-        ctx: Option<usize>,
-        combo: usize,
-    ) -> Vec<f64> {
+    pub fn average_strategy(&self, node_id: usize, ctx: Option<usize>, combo: usize) -> Vec<f64> {
         let na = self.tree.nodes[node_id].children.len();
         let base = self.table_base(node_id, ctx, na);
         let ssum = &self.strat_sum[node_id];
@@ -523,8 +514,7 @@ impl TurnRiverSolver {
             }
             NodeKind::Showdown => {
                 let state = self.tree.nodes[node_id].state;
-                let win_bb =
-                    showdown_payoffs(&state, Some(player))[player as usize] as f64 / 100.0;
+                let win_bb = showdown_payoffs(&state, Some(player))[player as usize] as f64 / 100.0;
                 let table = &self.tables[ctx.expect("showdown requires a river card")];
                 table
                     .diff(&self.combos, opp_reach)

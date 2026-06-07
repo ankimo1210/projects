@@ -66,7 +66,7 @@ fn expand_turn(tree: &mut Tree, node_id: usize, cfg: &TurnTreeConfig) {
             });
             let river_state = child_state.advance_street();
             let grandchild_id = tree.nodes.len();
-            if river_state.stacks.iter().any(|&s| s == 0) {
+            if river_state.stacks.contains(&0) {
                 // All-in on the turn: river is dealt as chance, then straight
                 // to showdown — no further betting (spec §6).
                 tree.nodes.push(Node {

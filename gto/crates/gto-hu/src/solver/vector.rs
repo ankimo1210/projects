@@ -414,4 +414,3 @@ impl VectorRiverSolver {
         }
     }
 }
-
