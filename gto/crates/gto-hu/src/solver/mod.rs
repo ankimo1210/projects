@@ -1,4 +1,5 @@
 pub mod regret;
+pub mod rng;
 pub mod scalar;
 pub mod showdown;
 pub mod variant;
