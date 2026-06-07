@@ -19,6 +19,7 @@ members = [
     "line_backup",
     "land_price_api_app",
     "akinator",
+    "johnhull/hullkit",
 ]
 
 # PyTorch CUDA 12.8 — used by `gto`. Defined here so all workspace members
@@ -113,6 +114,7 @@ testpaths = [
     "nbody-gpu/tests",
     "line_backup/tests",
     "akinator/tests",
+    "johnhull/hullkit/tests",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]

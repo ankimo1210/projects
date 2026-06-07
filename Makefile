@@ -7,7 +7,8 @@
 #
 # `land_price_api_app/` keeps requirements.txt for legacy reference, but
 # pyproject.toml is canonical and it is a uv workspace member.
-# `johnhull/`, `rates_volatility_model/`, `notebooks/` have no managed env.
+# `johnhull/hullkit` is a workspace member (used by johnhull notebooks).
+# `rates_volatility_model/`, `notebooks/` have no managed env.
 
 .PHONY: help install sync lint fmt fmt-fix test clean tree
 
@@ -25,9 +26,10 @@ help:
 	@echo "Workspace members:"
 	@echo "  gto market-viz stock nbody-gpu line_backup land_price_api_app"
 	@echo "  re_invest_os/apps/api re_invest_os/packages/financial-engine"
+	@echo "  akinator johnhull/hullkit"
 	@echo ""
 	@echo "Outside the workspace:"
-	@echo "  johnhull, rates_volatility_model, notebooks (manual envs)"
+	@echo "  rates_volatility_model, notebooks (manual envs)"
 
 install sync:
 	uv sync --all-packages
