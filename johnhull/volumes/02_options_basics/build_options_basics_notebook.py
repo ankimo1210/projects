@@ -116,7 +116,7 @@ print(f"コール {prem_c:.4f} / プット {prem_p:.4f}（時間価値のみ＝A
 
 # Cell 05: bounds
 cells.append(
-    md(r"""## 2. オプション価格の上下限（§11.3–11.4）
+    md(r"""## 2. オプション価格の上下限（§11.3）
 
 裁定なしから導かれるモデルフリーの不等式（無配当・ヨーロピアン）：
 
@@ -172,7 +172,7 @@ display(widgets.HBox([sig_b_sl, r_b_sl, t_b_sl]), fig1.canvas)""")
 
 # Cell 07: put-call parity
 cells.append(
-    md(r"""## 3. プット・コール・パリティ（§11.5）
+    md(r"""## 3. プット・コール・パリティ（§11.4）
 
 $$c + Ke^{-rT} = p + S_0 \quad \text{(11.6)}$$
 
@@ -182,7 +182,7 @@ $$c + Ke^{-rT} = p + S_0 \quad \text{(11.6)}$$
 
 # Cell 08: parity arbitrage demo
 cells.append(
-    code(r"""# Hull §11.5 の例: S=31, K=30, r=10%, T=3ヶ月, コール=3
+    code(r"""# Hull §11.4 の例: S=31, K=30, r=10%, T=3ヶ月, コール=3
 S_p, K_p, R_p, T_p, c_p = 31.0, 30.0, 0.10, 0.25, 3.0
 p_fair = c_p + K_p * np.exp(-R_p * T_p) - S_p
 print(f"パリティ含意プット価格 = {p_fair:.4f}（Hull: 1.26）")
@@ -199,7 +199,7 @@ for s_T in (25.0, 35.0):
 
 # Cell 09: early exercise
 cells.append(
-    md(r"""## 4. 早期行使（§11.6–11.7）
+    md(r"""## 4. 早期行使（§11.5–11.6）
 
 - **無配当株のアメリカンコール**: 早期行使は最適でない → $C = c$。
   行使すると本質的価値 $S-K$ のみ。待てば $K$ 支払いの繰延べ金利＋下方プロテクションが残る
@@ -381,7 +381,7 @@ fig4.tight_layout()
 display(fig4.canvas)
 box_cost = sum(_leg_cost(*leg) for leg in panels[3][1])
 print(f"box: コスト {box_cost:.4f} ≒ 理論値 (K3−K1)e^(-rT) = "
-      f"{payoffs.box_spread_value(K1_S, K3_S, R_B, T_B):.4f} → 損益は常にほぼ0（裁定なし）")""")
+      f"{payoffs.box_spread_value(K1_S, K3_S, R_B, T_B):.4f} → 満期損益は S_T によらず一定（コストの金利分、割引後利益ゼロ＝裁定なし）")""")
 )
 
 # Cell 16: combinations
@@ -519,7 +519,7 @@ pv_pi, beta_pi, idx_pi = 500_000.0, 2.0, 1_000.0
 n_puts = beta_pi * pv_pi / (idx_pi * 100.0)
 print(f"\nポートフォリオ保険: V=${pv_pi:,.0f}, β={beta_pi}, 指数={idx_pi:,.0f}")
 print(f"必要プット枚数 N* = {beta_pi} × {pv_pi:,.0f} / ({idx_pi:,.0f}×100) = {n_puts:.0f} 枚")
-print("β>1 では枚数が増えるうえ行使価格も上げる必要があり、保険コストはβに対して逓増")""")
+print("β>1 では枚数が増えるうえ行使価格も上げる必要があり、保険コストはβとともに増加")""")
 )
 
 # Cell 24: currency options
@@ -539,7 +539,7 @@ $r_f > r$（高金利通貨）ではフォワードがディスカウント → 
 cells.append(
     code(r"""# Garman-Kohlhagen: GBP コール（S=K=1.60, r=8%, r_f=11%, σ=14.14%, T=4ヶ月）
 c_fx = bsm.call_price(1.60, 1.60, 0.08, 0.1414, 4.0 / 12.0, q=0.11)
-print(f"通貨コール = {c_fx:.4f} USD（Hull: 0.043）\n")
+print(f"通貨コール = {c_fx:.4f} USD（Hull Example 17.2: 価格0.043からIV 14.1%を逆算する例）\n")
 
 rows = []
 for rf in (0.05, 0.08, 0.11):
@@ -559,7 +559,7 @@ print("r_f が高いほどフォワードが下がり、コール安・プット
 
 # Cell 26: futures options + Black-76
 cells.append(
-    md(r"""## 9. 先物オプションと Black-76（§18.1–18.6）
+    md(r"""## 9. 先物オプションと Black-76（§18.1–18.7）
 
 先物オプションは行使で「先物ポジション＋キャッシュ」を得ます。
 リスク中立世界で先物価格はドリフト0（$dF = \sigma F\,dz$）—
@@ -590,7 +590,7 @@ print(f"\nATM（F=K）: コール {c_atm:.4f} = プット {p_atm:.4f} — パリ
 
 # Cell 28: futures parity + American
 cells.append(
-    md(r"""### 先物オプションのパリティと早期行使（§18.4, §18.7）
+    md(r"""### 先物オプションのパリティと早期行使（§18.4, §18.9）
 
 $$c + Ke^{-rT} = p + F_0 e^{-rT} \quad \text{(18.1)}$$
 
