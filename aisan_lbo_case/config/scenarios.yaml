@@ -1,0 +1,53 @@
+scenarios:
+  Downside:
+    label: "Mobility disappointment / governance drag"
+    public_growth: [-0.02, 0.00, 0.01, 0.01, 0.01]
+    mobility_dx_growth: [0.05, 0.02, 0.02, 0.02, 0.02]
+    other_growth: [0.00, 0.00, 0.00, 0.00, 0.00]
+    ebitda_margin: [0.085, 0.086, 0.088, 0.090, 0.090]
+    public_company_cost_savings: [0, 10, 20, 20, 20]
+    debt_to_ebitda: 0.50
+    exit_multiple: 7.0
+    investigation_cost_at_close: 200
+    excess_cash_availability_pct: 0.35
+    cash_sweep_pct: 0.70
+    source_type: estimated
+  Base:
+    label: "Balanced growth-oriented take-private"
+    public_growth: [0.03, 0.03, 0.03, 0.025, 0.025]
+    mobility_dx_growth: [0.25, 0.10, 0.09, 0.08, 0.07]
+    other_growth: [0.00, 0.00, 0.00, 0.00, 0.00]
+    ebitda_margin: [0.105, 0.110, 0.115, 0.118, 0.120]
+    public_company_cost_savings: [20, 40, 60, 70, 80]
+    debt_to_ebitda: 0.90
+    exit_multiple: 8.0
+    investigation_cost_at_close: 75
+    excess_cash_availability_pct: 0.60
+    cash_sweep_pct: 0.80
+    source_type: estimated
+  Upside:
+    label: "Mobility scales; software mix improves"
+    public_growth: [0.04, 0.04, 0.035, 0.035, 0.03]
+    mobility_dx_growth: [0.30, 0.16, 0.14, 0.12, 0.10]
+    other_growth: [0.00, 0.00, 0.00, 0.00, 0.00]
+    ebitda_margin: [0.112, 0.123, 0.133, 0.140, 0.145]
+    public_company_cost_savings: [30, 60, 85, 100, 110]
+    debt_to_ebitda: 1.15
+    exit_multiple: 9.0
+    investigation_cost_at_close: 50
+    excess_cash_availability_pct: 0.70
+    cash_sweep_pct: 0.85
+    source_type: estimated
+  Sponsor:
+    label: "Sponsor case: pricing, mix, cost discipline"
+    public_growth: [0.04, 0.035, 0.035, 0.03, 0.03]
+    mobility_dx_growth: [0.28, 0.15, 0.13, 0.11, 0.09]
+    other_growth: [0.00, 0.00, 0.00, 0.00, 0.00]
+    ebitda_margin: [0.110, 0.120, 0.130, 0.138, 0.145]
+    public_company_cost_savings: [40, 70, 90, 100, 110]
+    debt_to_ebitda: 1.00
+    exit_multiple: 8.5
+    investigation_cost_at_close: 75
+    excess_cash_availability_pct: 0.65
+    cash_sweep_pct: 0.80
+    source_type: estimated

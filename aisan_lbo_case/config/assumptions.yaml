@@ -1,0 +1,165 @@
+currency: JPY
+units: millions
+retrieval_timezone: Asia/Tokyo
+
+company:
+  name: "AISAN TECHNOLOGY CO., LTD."
+  ticker: "4667.T"
+  securities_code: "4667"
+  exchange: "Tokyo Stock Exchange Standard / Nagoya Stock Exchange Main"
+  fiscal_year_end: "March"
+  source_id: official_stock_status
+
+share_data:
+  as_of: "2026-03-31"
+  shares_outstanding: 5548979
+  treasury_shares: 268816
+  source_id: official_stock_status
+  source_type: sourced
+  note: "Model uses gross shares outstanding for consistency with quoted market capitalization; treasury share treatment is a confirmatory DD item."
+
+market_snapshot_manual_fallback:
+  as_of: "2026-06-05"
+  close_price_jpy: 1680
+  volume_shares: 12500
+  market_cap_jpy_mn: 9322.28
+  pbr: 1.42
+  per_forecast: 23.22
+  dividend_yield_forecast: 0.0208
+  source_id: irbank_quote
+  source_type: sourced
+  note: "Fallback if live price fetch fails. 2026-06-07 is a Sunday; latest trading date observed was 2026-06-05."
+
+historical_financials:
+  source_type: sourced
+  source_ids:
+    - irbank_results
+    - irbank_balance_sheet
+    - irbank_cash_flow
+  rows:
+    - fiscal_year: "FY2021A"
+      year_end: "2021-03-31"
+      revenue: 3589
+      ebit: 245
+      net_income: 182
+      cash: 4214
+      debt: 0
+      operating_cf: 409
+      capex: 162
+      free_cf: 282
+    - fiscal_year: "FY2022A"
+      year_end: "2022-03-31"
+      revenue: 4191
+      ebit: 258
+      net_income: 203
+      cash: 4277
+      debt: 30
+      operating_cf: 586
+      capex: 26
+      free_cf: 384
+    - fiscal_year: "FY2023A"
+      year_end: "2023-03-31"
+      revenue: 4463
+      ebit: 331
+      net_income: 241
+      cash: 4337
+      debt: 0
+      operating_cf: 392
+      capex: 148
+      free_cf: 182
+    - fiscal_year: "FY2024A"
+      year_end: "2024-03-31"
+      revenue: 5479
+      ebit: 450
+      net_income: 340
+      cash: 3844
+      debt: 0
+      operating_cf: -240
+      capex: 317
+      free_cf: -366
+    - fiscal_year: "FY2025A"
+      year_end: "2025-03-31"
+      revenue: 6221
+      ebit: 449
+      net_income: 286
+      cash: 4176
+      debt: 51
+      operating_cf: 934
+      capex: 162
+      free_cf: 760
+
+management_forecast:
+  fiscal_year: "FY2026E"
+  revenue: 7200
+  ebit: 600
+  ordinary_profit: 580
+  net_income: 382
+  eps_jpy: 68.84
+  source_id: irbank_results
+  source_type: sourced
+  note: "Preliminary/forecast row observed before the FY2026 results delay; model treats this as directional, not final audited FY2026 actuals."
+
+latest_balance_sheet_reference:
+  as_of: "2025-12-31"
+  cash: 3923
+  debt: 143
+  source_id: irbank_balance_sheet
+  source_type: sourced
+  note: "Latest quarterly balance sheet row available in IRBANK summary before FY2026 full-year release."
+
+segments:
+  source_type: sourced
+  source_id: irbank_segments
+  rows:
+    - fiscal_year: "FY2024A"
+      public_revenue: 2640
+      mobility_dx_revenue: 2830
+      other_revenue: 11
+      public_ebit: 415
+      mobility_dx_ebit: 279
+      other_ebit: 5.1
+    - fiscal_year: "FY2025A"
+      public_revenue: 2560
+      mobility_dx_revenue: 3650
+      other_revenue: 11
+      public_ebit: 353
+      mobility_dx_ebit: 441
+      other_ebit: 6.9
+
+akisoku_subsidiary:
+  as_of: "FY2025A"
+  revenue: 363.527
+  ebit: 30.696
+  net_income: 19.495
+  source_id: tdnet_investigation_20260403
+  source_type: sourced
+  note: "100% subsidiary Akisoku; subject of special investigation disclosure."
+
+projection_defaults:
+  source_type: estimated
+  d_and_a_pct_revenue: 0.03
+  capex_pct_revenue: 0.035
+  nwc_pct_of_revenue_change: 0.10
+  cash_tax_rate: 0.30
+  interest_rate: 0.025
+  cash_sweep_pct: 0.80
+  min_cash: 1200
+  public_company_cost_savings_run_rate: 80
+  note: "Operating assumptions are model estimates, not company guidance."
+
+transaction_assumptions:
+  source_type: estimated
+  entry_date: "2026-06-05"
+  hold_years: 5
+  tob_premiums: [0.20, 0.30, 0.40, 0.50]
+  default_premium: 0.30
+  transaction_fee_pct_equity_value: 0.025
+  financing_fee_pct_new_debt: 0.02
+  excess_cash_availability_pct: 0.60
+  default_entry_debt_to_ebitda: 1.0
+  investigation_cost_at_close: 75
+  note: "Debt capacity and excess cash availability are sponsor estimates; lender feedback and legal cash extraction mechanics are DD items."
+
+return_thresholds:
+  irr: [0.15, 0.18, 0.20]
+  moic: [2.0, 2.5]

@@ -1,0 +1,947 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AISAN TECHNOLOGY Take-Private LBO Case Study</title>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <style>:root {
+  --ink: #1c1b18;
+  --muted: #6d6861;
+  --line: #d8d3c9;
+  --paper: #fbfaf7;
+  --band: #f1eee7;
+  --panel: #ffffff;
+  --teal: #006b64;
+  --teal-soft: #dcefed;
+  --red: #9d2b2b;
+  --red-soft: #f3dedb;
+  --amber: #a36b00;
+  --amber-soft: #f5ead4;
+  --green: #2f6b3f;
+  --green-soft: #e3efe4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.45;
+}
+
+a {
+  color: var(--teal);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  padding: 24px 18px;
+  border-right: 1px solid var(--line);
+  background: #f7f4ed;
+  overflow-y: auto;
+}
+
+.nav-title {
+  font-weight: 800;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.nav-subtitle {
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 18px;
+}
+
+nav a {
+  display: block;
+  padding: 7px 0;
+  color: var(--ink);
+  font-size: 13px;
+  border-bottom: 1px solid rgba(216, 211, 201, 0.55);
+}
+
+main {
+  min-width: 0;
+}
+
+.section {
+  padding: 44px clamp(24px, 5vw, 72px);
+  border-bottom: 1px solid var(--line);
+}
+
+.cover {
+  min-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: linear-gradient(120deg, #fbfaf7 0%, #ebe6da 52%, #dcefed 100%);
+}
+
+.eyebrow {
+  color: var(--teal);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+h1 {
+  max-width: 920px;
+  margin: 18px 0 12px;
+  font-size: clamp(42px, 6vw, 82px);
+  line-height: 0.98;
+  letter-spacing: 0;
+}
+
+h2 {
+  margin: 0 0 18px;
+  font-size: clamp(26px, 3.5vw, 42px);
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+h3 {
+  margin: 24px 0 10px;
+  font-size: 19px;
+  letter-spacing: 0;
+}
+
+p {
+  max-width: 980px;
+}
+
+.lead {
+  color: #393632;
+  max-width: 900px;
+  font-size: 19px;
+}
+
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.72);
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 12px;
+  color: #3f3b35;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin: 18px 0;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 16px;
+}
+
+.metric-label {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 750;
+}
+
+.metric-value {
+  margin-top: 8px;
+  font-size: 24px;
+  font-weight: 850;
+}
+
+.metric-note {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.callout {
+  border-left: 5px solid var(--teal);
+  background: var(--teal-soft);
+  padding: 18px 20px;
+  margin: 18px 0;
+}
+
+.callout.red {
+  border-left-color: var(--red);
+  background: var(--red-soft);
+}
+
+.callout.amber {
+  border-left-color: var(--amber);
+  background: var(--amber-soft);
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.8fr);
+  gap: 24px;
+  align-items: start;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0 22px;
+  font-size: 13px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+
+th,
+td {
+  padding: 10px 9px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  color: #4a453e;
+  background: #ece7dc;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+tr:last-child td {
+  border-bottom: 0;
+}
+
+.num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.tag {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.tag.red {
+  color: var(--red);
+  background: var(--red-soft);
+}
+
+.tag.amber {
+  color: var(--amber);
+  background: var(--amber-soft);
+}
+
+.tag.green {
+  color: var(--green);
+  background: var(--green-soft);
+}
+
+.chart {
+  width: 100%;
+  min-height: 390px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 6px;
+}
+
+.control-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin: 12px 0 16px;
+}
+
+select {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  padding: 8px 10px;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.source-note {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.download-link {
+  display: inline-block;
+  padding: 9px 12px;
+  border-radius: 6px;
+  background: var(--ink);
+  color: white;
+  font-weight: 750;
+}
+
+.download-link:hover {
+  text-decoration: none;
+  background: var(--teal);
+}
+
+.small {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+ul.clean {
+  padding-left: 18px;
+}
+
+ul.clean li {
+  margin: 8px 0;
+}
+
+@media (max-width: 960px) {
+  .layout {
+    display: block;
+  }
+
+  nav {
+    position: static;
+    height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  nav a {
+    display: inline-block;
+    margin-right: 12px;
+    border-bottom: 0;
+  }
+
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="layout">
+    <nav>
+      <div class="nav-title">AISAN LBO Case</div>
+      <div class="nav-subtitle">HTML investment committee memo<br>Generated 2026-06-07T20:33:45+09:00</div>
+      <a href="#cover">Cover</a>
+      <a href="#summary">Executive Summary</a>
+      <a href="#recommendation">Recommendation</a>
+      <a href="#transaction">Transaction Snapshot</a>
+      <a href="#company">Company Overview</a>
+      <a href="#segments">Business & Segments</a>
+      <a href="#industry">Industry Backdrop</a>
+      <a href="#historical">Historical Financials</a>
+      <a href="#valuation">Market Valuation</a>
+      <a href="#rationale">Take-Private Rationale</a>
+      <a href="#projection">Projection Assumptions</a>
+      <a href="#lbo">LBO Model Summary</a>
+      <a href="#returns">Returns Analysis</a>
+      <a href="#sensitivity">Sensitivity Analysis</a>
+      <a href="#valueup">Value-Up Plan</a>
+      <a href="#risks">Risks</a>
+      <a href="#dd">Critical DD</a>
+      <a href="#final">Final View</a>
+      <a href="#appendix">Appendix</a>
+    </nav>
+
+    <main>
+      <section id="cover" class="section cover">
+        <div>
+          <div class="eyebrow">Private Equity Investment Case Study</div>
+          <h1>AISAN TECHNOLOGY CO., LTD. (TSE: 4667)</h1>
+          <p class="lead">Evaluation of whether AISAN is a credible take-private target, with an HTML-native LBO model, return sensitivities, public-source bibliography and DD gating checklist.</p>
+          <div class="meta-row">
+            <span class="pill">Ticker 4667.T</span>
+            <span class="pill">TSE Standard / NSE Main</span>
+            <span class="pill">Currency: JPY millions</span>
+            <span class="pill">Public information only</span>
+          </div>
+        </div>
+        <div class="source-note">Primary sources include AISAN official IR pages, IRBANK financial summaries, TDnet PDFs and market quote sources. See Appendix for full bibliography.</div>
+      </section>
+
+      <section id="summary" class="section">
+        <div class="eyebrow">Investment Committee One-Page Summary</div>
+        <h2>Executive Summary</h2>
+        <div class="grid">
+          
+          <div class="card">
+            <div class="metric-label">Latest close</div>
+            <div class="metric-value">JPY 1,680</div>
+            <div class="metric-note">as of 2026-06-05</div>
+          </div>
+          
+          <div class="card">
+            <div class="metric-label">Market cap</div>
+            <div class="metric-value">JPY 9.3bn</div>
+            <div class="metric-note">gross shares basis</div>
+          </div>
+          
+          <div class="card">
+            <div class="metric-label">FY2025A revenue</div>
+            <div class="metric-value">JPY 6.2bn</div>
+            <div class="metric-note">sourced from IRBANK summary</div>
+          </div>
+          
+          <div class="card">
+            <div class="metric-label">FY2025A est. EBITDA</div>
+            <div class="metric-value">JPY 636m</div>
+            <div class="metric-note">EBIT + estimated D&A</div>
+          </div>
+          
+          <div class="card">
+            <div class="metric-label">Latest cash / debt</div>
+            <div class="metric-value">JPY 3,923m / JPY 143m</div>
+            <div class="metric-note">2025-12-31</div>
+          </div>
+          
+          <div class="card">
+            <div class="metric-label">Sponsor case IRR</div>
+            <div class="metric-value">11.9%</div>
+            <div class="metric-note">30% premium, 5-year hold</div>
+          </div>
+          
+        </div>
+        <div class="callout amber">
+          <strong>Too early; proceed to confirmatory DD only.</strong>
+          Not a classic leverage-driven LBO. AISAN screens as a possible small-cap growth-oriented take-private only if accounting / governance DD clears, excess cash is legally usable, and the entry premium is disciplined.
+          The default Sponsor case at a 30% TOB premium produces 11.9% IRR and 1.8x MOIC, which is below a clean 15% IRR / 2.0x MOIC buyout threshold.
+        </div>
+        <div class="two-col">
+          <div>
+            <h3>Investment Highlights to Test</h3>
+            <ul class="clean">
+              <li>Niche domain position in surveying, spatial information software, 3D point-cloud tools and local-government workflows.</li>
+              <li>Two reported core segments: Public and Mobility / DX, with official disclosure describing surveying / real estate markets and automotive / MaaS-related markets.</li>
+              <li>Net-cash balance sheet creates optionality, but cash usability is a legal, lender and operational DD item.</li>
+              <li>Small-cap listing, low liquidity and limited research coverage may create a take-private angle if governance issues are remediated.</li>
+              <li>Returns must come from EBITDA growth, margin improvement, cash optimization and exit value, not from financial leverage.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Gating Issues</h3>
+            <ul class="clean">
+              <li>Special investigation committee established after suspected inappropriate transactions and fraud at 100% subsidiary Akisoku.</li>
+              <li>FY2026 results disclosure was expected to exceed 50 days after fiscal year-end because investigation and audit work required more time.</li>
+              <li>Debt capacity appears constrained by estimated FY2025 EBITDA of JPY 636m.</li>
+              <li>TOB premium required for squeeze-out can quickly dilute returns.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="recommendation" class="section">
+        <div class="eyebrow">Recommendation and Investment View</div>
+        <h2>Too early; proceed to confirmatory DD only</h2>
+        <p>AISAN is not a classic leverage-driven LBO. The more credible framing is a growth-oriented take-private of a niche geospatial / surveying software and Mobility / DX platform, where value creation depends on cleaner governance, a higher-quality revenue mix, productization of point-cloud and local-government DX workflows, disciplined Mobility / DX project selection and careful use of excess cash.</p>
+        <p>The model does not support paying an unconstrained premium. At the default 30% premium, the Sponsor case falls short of a 2.0x MOIC target. A bid should proceed only to confirmatory DD, with a final offer conditioned on investigation resolution, audited FY2026 numbers, segment-level revenue quality, cash availability and shareholder path.</p>
+      </section>
+
+      <section id="transaction" class="section">
+        <div class="eyebrow">Entry Economics</div>
+        <h2>Transaction Snapshot</h2>
+        <table>
+          <thead><tr><th>Scenario</th><th>Premium</th><th>Offer Price</th><th>Entry EV</th><th>Entry EV / EBITDA</th><th>Debt</th><th>Debt / EBITDA</th><th>Sponsor IRR</th><th>MOIC</th></tr></thead>
+          <tbody>
+            
+            <tr>
+              <td>Downside</td><td>30%</td><td class="num">JPY 2,184</td><td class="num">JPY 8,339m</td><td class="num">13.1x</td><td class="num">JPY 318m</td><td class="num">0.5x</td><td class="num">-6.6%</td><td class="num">0.7x</td>
+            </tr>
+            
+            <tr>
+              <td>Base</td><td>30%</td><td class="num">JPY 2,184</td><td class="num">JPY 8,339m</td><td class="num">13.1x</td><td class="num">JPY 572m</td><td class="num">0.9x</td><td class="num">5.0%</td><td class="num">1.3x</td>
+            </tr>
+            
+            <tr>
+              <td>Upside</td><td>30%</td><td class="num">JPY 2,184</td><td class="num">JPY 8,339m</td><td class="num">13.1x</td><td class="num">JPY 731m</td><td class="num">1.1x</td><td class="num">13.9%</td><td class="num">1.9x</td>
+            </tr>
+            
+            <tr>
+              <td>Sponsor</td><td>30%</td><td class="num">JPY 2,184</td><td class="num">JPY 8,339m</td><td class="num">13.1x</td><td class="num">JPY 636m</td><td class="num">1.0x</td><td class="num">11.9%</td><td class="num">1.8x</td>
+            </tr>
+            
+          </tbody>
+        </table>
+        <p class="source-note">Entry EBITDA is estimated from FY2025A EBIT plus D&A estimated at 3.0% of revenue. This is intentionally conservative because FY2026 annual results remain delayed in public disclosures.</p>
+      </section>
+
+      <section id="company" class="section">
+        <div class="eyebrow">Company Overview</div>
+        <h2>Company, Governance and Shareholder Context</h2>
+        <p>AISAN describes itself as a company built around surveying technology and specialized software, serving social infrastructure from national land development through smart cities and autonomous driving. Its official business overview identifies two core businesses: Public and Mobility / DX.</p>
+        <div class="grid">
+          <div class="card"><div class="metric-label">Shares outstanding</div><div class="metric-value">5,548,979</div><div class="metric-note">Treasury shares: 268,816</div></div>
+          <div class="card"><div class="metric-label">Latest balance sheet reference</div><div class="metric-value">2025-12-31</div><div class="metric-note">Cash JPY 3,923m / debt JPY 143m</div></div>
+          <div class="card"><div class="metric-label">Akisoku subsidiary FY2025A</div><div class="metric-value">JPY 364m</div><div class="metric-note">Revenue; EBIT JPY 31m</div></div>
+        </div>
+        <h3>Top Shareholders</h3>
+        <table>
+          <thead><tr><th>Shareholder</th><th class="num">Shares</th><th class="num">Ownership</th></tr></thead>
+          <tbody>
+            
+            <tr><td>Kiyohisa Kato</td><td class="num">554,400</td><td class="num">10.0%</td></tr>
+            
+            <tr><td>Mitsubishi Electric Corporation</td><td class="num">350,000</td><td class="num">6.3%</td></tr>
+            
+            <tr><td>KDDI Corporation</td><td class="num">280,000</td><td class="num">5.0%</td></tr>
+            
+            <tr><td>Treasury shares</td><td class="num">268,816</td><td class="num">4.8%</td></tr>
+            
+            <tr><td>AT Co., Ltd.</td><td class="num">254,000</td><td class="num">4.6%</td></tr>
+            
+            <tr><td>Kaoru Sasaki</td><td class="num">200,000</td><td class="num">3.6%</td></tr>
+            
+            <tr><td>Kazuhisa Ando</td><td class="num">120,000</td><td class="num">2.2%</td></tr>
+            
+            <tr><td>Masato Kagami</td><td class="num">103,000</td><td class="num">1.8%</td></tr>
+            
+            <tr><td>TimeTicket Inc.</td><td class="num">101,000</td><td class="num">1.8%</td></tr>
+            
+            <tr><td>Jun Kato</td><td class="num">84,316</td><td class="num">1.5%</td></tr>
+            
+          </tbody>
+        </table>
+      </section>
+
+      <section id="segments" class="section">
+        <div class="eyebrow">Business and Segment Analysis</div>
+        <h2>Public Segment Plus Mobility / DX Optionality</h2>
+        <p>The Public segment includes surveying and real estate market software, point-cloud tools, measuring equipment and services. The Mobility / DX segment includes three-dimensional measurement, high-precision map databases, autonomous vehicle / system construction and social implementation projects. This mix is strategically interesting but requires revenue-quality diligence because hardware, project work, public-sector contracts and recurring software should not be valued the same way.</p>
+        <table>
+          <thead><tr><th>FY</th><th class="num">Public Revenue</th><th class="num">Mobility / DX Revenue</th><th class="num">Other Revenue</th><th class="num">Public EBIT Margin</th><th class="num">Mobility / DX EBIT Margin</th></tr></thead>
+          <tbody>
+            
+            <tr><td>FY2024A</td><td class="num">JPY 2,640m</td><td class="num">JPY 2,830m</td><td class="num">JPY 11m</td><td class="num">15.7%</td><td class="num">9.9%</td></tr>
+            
+            <tr><td>FY2025A</td><td class="num">JPY 2,560m</td><td class="num">JPY 3,650m</td><td class="num">JPY 11m</td><td class="num">13.8%</td><td class="num">12.1%</td></tr>
+            
+          </tbody>
+        </table>
+      </section>
+
+      <section id="industry" class="section">
+        <div class="eyebrow">Industry Backdrop</div>
+        <h2>Geospatial, Construction DX and Local Mobility</h2>
+        <p>The strategic thesis is tied to public infrastructure renewal, construction productivity, 3D point-cloud adoption, high-precision maps and local-government mobility projects. The issue for PE underwriting is not whether these themes are attractive; it is whether AISAN captures them through durable, high-margin, repeatable revenue rather than lumpy projects or low-margin hardware pass-through.</p>
+        <h3>Peer Set</h3>
+        <table>
+          <thead><tr><th>Peer</th><th>Ticker</th><th>Category</th><th>Relevance</th><th>Limitations</th></tr></thead>
+          <tbody>
+            
+            <tr><td>Fukui Computer Holdings</td><td>9790.T</td><td>Construction / civil engineering software</td><td>Japanese listed software company serving construction and surveying workflows.</td><td>Larger and more construction-software focused than AISAN; different public-sector exposure.</td></tr>
+            
+            <tr><td>Zenrin</td><td>9474.T</td><td>Mapping data / GIS</td><td>Japanese mapping and location data company with high relevance to geospatial data.</td><td>Consumer/navigation and enterprise mapping economics differ from AISAN's surveying software and local government project mix.</td></tr>
+            
+            <tr><td>Topcon</td><td>7732.T</td><td>Positioning / surveying equipment</td><td>Precision positioning and surveying equipment exposure; relevant to industry demand and take-private precedent.</td><td>Much larger, hardware-heavy, global business with healthcare exposure.</td></tr>
+            
+            <tr><td>PASCO</td><td>9232.T</td><td>Geospatial / surveying / mapping</td><td>Closest Japanese geospatial and mapping precedent; take-private completed in 2024.</td><td>Was majority-controlled by SECOM and materially larger; minority tender mechanics differ.</td></tr>
+            
+            <tr><td>Trimble</td><td>TRMB</td><td>Geospatial / construction technology</td><td>Global benchmark for positioning, geospatial and construction workflow technology.</td><td>Scale, software mix, global exposure and margin profile are not directly comparable.</td></tr>
+            
+            <tr><td>Hexagon</td><td>HEXA-B.ST</td><td>Geospatial / industrial software</td><td>Global geospatial, measurement and industrial software benchmark.</td><td>Multi-vertical global platform with much broader portfolio.</td></tr>
+            
+            <tr><td>Autodesk</td><td>ADSK</td><td>Design and construction software</td><td>Benchmark for software monetization, construction design workflow and recurring revenue.</td><td>SaaS scale and margin structure are far above AISAN.</td></tr>
+            
+            <tr><td>Bentley Systems</td><td>BSY</td><td>Infrastructure engineering software</td><td>Infrastructure software benchmark relevant to public infrastructure and civil engineering workflows.</td><td>Recurring revenue and global enterprise profile limit valuation comparability.</td></tr>
+            
+            <tr><td>TomTom</td><td>TOM2.AS</td><td>Mapping / automotive location data</td><td>Benchmark for automotive and mapping data exposure.</td><td>Automotive OEM mix and global consumer/enterprise map data model differ from AISAN.</td></tr>
+            
+          </tbody>
+        </table>
+      </section>
+
+      <section id="historical" class="section">
+        <div class="eyebrow">Historical Financials</div>
+        <h2>Growth Has Improved, But Cash Flow Has Been Uneven</h2>
+        <div id="historicalChart" class="chart"></div>
+        <table>
+          <thead><tr><th>FY</th><th class="num">Revenue</th><th class="num">EBIT</th><th class="num">Est. EBITDA</th><th class="num">EBIT Margin</th><th class="num">Operating CF</th><th class="num">FCF</th><th class="num">Cash</th><th class="num">Debt</th></tr></thead>
+          <tbody>
+            
+            <tr><td>FY2021A</td><td class="num">JPY 3,589m</td><td class="num">JPY 245m</td><td class="num">JPY 353m</td><td class="num">6.8%</td><td class="num">JPY 409m</td><td class="num">JPY 282m</td><td class="num">JPY 4,214m</td><td class="num">JPY 0m</td></tr>
+            
+            <tr><td>FY2022A</td><td class="num">JPY 4,191m</td><td class="num">JPY 258m</td><td class="num">JPY 384m</td><td class="num">6.2%</td><td class="num">JPY 586m</td><td class="num">JPY 384m</td><td class="num">JPY 4,277m</td><td class="num">JPY 30m</td></tr>
+            
+            <tr><td>FY2023A</td><td class="num">JPY 4,463m</td><td class="num">JPY 331m</td><td class="num">JPY 465m</td><td class="num">7.4%</td><td class="num">JPY 392m</td><td class="num">JPY 182m</td><td class="num">JPY 4,337m</td><td class="num">JPY 0m</td></tr>
+            
+            <tr><td>FY2024A</td><td class="num">JPY 5,479m</td><td class="num">JPY 450m</td><td class="num">JPY 614m</td><td class="num">8.2%</td><td class="num">JPY -240m</td><td class="num">JPY -366m</td><td class="num">JPY 3,844m</td><td class="num">JPY 0m</td></tr>
+            
+            <tr><td>FY2025A</td><td class="num">JPY 6,221m</td><td class="num">JPY 449m</td><td class="num">JPY 636m</td><td class="num">7.2%</td><td class="num">JPY 934m</td><td class="num">JPY 760m</td><td class="num">JPY 4,176m</td><td class="num">JPY 51m</td></tr>
+            
+          </tbody>
+        </table>
+      </section>
+
+      <section id="valuation" class="section">
+        <div class="eyebrow">Market Valuation and Trading Performance</div>
+        <h2>Current Valuation Is Not an Obvious Bargain After a Take-Private Premium</h2>
+        <p>At the latest sourced close of JPY 1,680, gross market capitalization is approximately JPY 9.3bn. A 30% premium implies an offer price of JPY 2,184 and headline entry EV / estimated FY2025 EBITDA of 13.1x. That is not too expensive if Mobility / DX scales and margins improve, but it is too demanding if the investigation creates restatement risk or if Mobility revenue proves project-based and volatile.</p>
+      </section>
+
+      <section id="rationale" class="section">
+        <div class="eyebrow">Take-Private Rationale</div>
+        <h2>Why Private Ownership Could Matter</h2>
+        <ul class="clean">
+          <li>Reduce public-company friction and allow management to remediate governance without quarterly-market pressure.</li>
+          <li>Shift capital allocation from cash accumulation to product investment, selective M&A and shareholder value creation.</li>
+          <li>Professionalize segment reporting, backlog analytics, pricing and recurring-revenue KPIs.</li>
+          <li>Support Mobility / DX through partnerships where public-company volatility or small-cap liquidity may constrain strategic moves.</li>
+        </ul>
+      </section>
+
+      <section id="projection" class="section">
+        <div class="eyebrow">Projection and Scenario Model</div>
+        <h2>Projection Assumptions</h2>
+        <div class="control-row">
+          <label for="scenarioSelect"><strong>Scenario</strong></label>
+          <select id="scenarioSelect">
+            
+            <option value="Downside">Downside</option>
+            
+            <option value="Base">Base</option>
+            
+            <option value="Upside">Upside</option>
+            
+            <option value="Sponsor">Sponsor</option>
+            
+          </select>
+        </div>
+        <div id="projectionChart" class="chart"></div>
+        <p class="source-note">Scenario assumptions are estimates. Management FY2026 forecast is included in the source registry but not treated as final audited FY2026 actuals due to the disclosed results delay.</p>
+      </section>
+
+      <section id="lbo" class="section">
+        <div class="eyebrow">Sponsor Model</div>
+        <h2>LBO Model Summary</h2>
+        <p>Debt capacity appears constrained. The model uses 1.0x entry debt / estimated FY2025 EBITDA in the Sponsor case, equal to JPY 636m of new debt. Sources and uses reconcile, debt is swept from FCF and cash is not allowed to fall below the minimum cash assumption.</p>
+        <div class="grid">
+          <div class="card"><div class="metric-label">Equity purchase price</div><div class="metric-value">JPY 12.1bn</div><div class="metric-note">30% premium case</div></div>
+          <div class="card"><div class="metric-label">Sponsor equity</div><div class="metric-value">JPY 10.2bn</div><div class="metric-note">after debt and excess cash source</div></div>
+          <div class="card"><div class="metric-label">Excess cash source</div><div class="metric-value">JPY 1,770m</div><div class="metric-note">subject to legal and operational DD</div></div>
+          <div class="card"><div class="metric-label">Exit EBITDA</div><div class="metric-value">JPY 1,615m</div><div class="metric-note">Sponsor case FY2030E</div></div>
+        </div>
+      </section>
+
+      <section id="returns" class="section">
+        <div class="eyebrow">Returns Analysis</div>
+        <h2>Returns Are Growth- and Multiple-Driven</h2>
+        <div id="returnsChart" class="chart"></div>
+        <p>The Sponsor case does not clear a clean 2.0x MOIC at the default 30% premium. A 20% premium improves returns but still depends heavily on EBITDA growth, cost savings and exit multiple. This supports a disciplined "confirmatory DD only" recommendation rather than a fully underwritten final bid.</p>
+        <a class="download-link" href="model_outputs.csv" download>Download model outputs CSV</a>
+      </section>
+
+      <section id="sensitivity" class="section">
+        <div class="eyebrow">Sensitivity Analysis</div>
+        <h2>Premium vs Exit Multiple Heatmap</h2>
+        <div id="heatmapChart" class="chart"></div>
+        <p class="source-note">Heatmap shows Sponsor-case IRR. Other sensitivities are in <code>output/sensitivity_outputs.csv</code>.</p>
+      </section>
+
+      <section id="valueup" class="section">
+        <div class="eyebrow">Value-Up Plan</div>
+        <h2>Potential Value Creation Theses</h2>
+        <ul class="clean">
+          
+          <li>Convert more of the public surveying software base into recurring maintenance, cloud modules and data services.</li>
+          
+          <li>Separate Mobility / DX project revenue from durable platform revenue; keep low-margin one-off projects disciplined.</li>
+          
+          <li>Use private ownership to remove listing cost, simplify governance and reinvest behind product management and sales coverage.</li>
+          
+          <li>Rationalize cash: retain operating liquidity, but evaluate buyback-equivalent recapitalization or post-close dividend only after legal and lender review.</li>
+          
+          <li>Pursue targeted partnerships or bolt-ons in point-cloud processing, local government DX and high-precision map data.</li>
+          
+        </ul>
+      </section>
+
+      <section id="risks" class="section">
+        <div class="eyebrow">Key Risks</div>
+        <h2>Red / Amber / Green Risk Matrix</h2>
+        <table>
+          <thead><tr><th>Risk</th><th>Rating</th><th>Mitigant / Workplan</th></tr></thead>
+          <tbody>
+            
+            <tr><td>Subsidiary investigation / accounting restatement</td><td><span class="tag red">Red</span></td><td>No final bid until report, audit sign-off and remediation plan are reviewed.</td></tr>
+            
+            <tr><td>Debt capacity</td><td><span class="tag amber">Amber</span></td><td>Model uses only 0.5x-1.15x EBITDA; returns cannot rely on leverage.</td></tr>
+            
+            <tr><td>Mobility / DX revenue quality</td><td><span class="tag amber">Amber</span></td><td>Confirm backlog, subsidies, recurring revenue and true segment margin.</td></tr>
+            
+            <tr><td>Public-sector lumpiness</td><td><span class="tag amber">Amber</span></td><td>Underwrite normalized revenue and working-capital seasonality.</td></tr>
+            
+            <tr><td>Core public surveying software niche</td><td><span class="tag green">Green</span></td><td>Long operating history and domain-specific installed base support strategic relevance.</td></tr>
+            
+            <tr><td>Net-cash balance sheet</td><td><span class="tag green">Green</span></td><td>Useful only if excess cash can be accessed without damaging operations or stakeholder support.</td></tr>
+            
+          </tbody>
+        </table>
+      </section>
+
+      <section id="dd" class="section">
+        <div class="eyebrow">Critical DD Items</div>
+        <h2>Top Confirmatory DD Checklist</h2>
+        <table>
+          <thead><tr><th class="num">#</th><th>Item</th><th>Severity</th><th>Why It Matters</th></tr></thead>
+          <tbody>
+            
+            <tr><td class="num">1</td><td>Accounting and investigation issue</td><td>Critical</td><td>Gating item for financial reliability, audit timing and bid certainty.</td></tr>
+            
+            <tr><td class="num">2</td><td>Revenue quality and recurring revenue ratio</td><td>Critical</td><td>Determines whether software-like valuation and financing assumptions are defensible.</td></tr>
+            
+            <tr><td class="num">3</td><td>Segment-level margins and true profitability</td><td>High</td><td>Public and Mobility / DX economics appear materially different and require normalized cost allocation.</td></tr>
+            
+            <tr><td class="num">4</td><td>Customer concentration and public-sector dependency</td><td>High</td><td>Public-sector and local-government projects may be lumpy and budget-dependent.</td></tr>
+            
+            <tr><td class="num">5</td><td>Mobility / DX backlog and pipeline quality</td><td>High</td><td>Downside case is driven mainly by Mobility / DX underperformance.</td></tr>
+            
+            <tr><td class="num">6</td><td>R&D capitalization / expense treatment</td><td>High</td><td>Could affect EBITDA quality and comparability.</td></tr>
+            
+            <tr><td class="num">7</td><td>Working-capital seasonality</td><td>Medium</td><td>Historical FCF includes a negative FY2024 and rebound in FY2025.</td></tr>
+            
+            <tr><td class="num">8</td><td>Cash and excess cash availability</td><td>High</td><td>Returns are sensitive to whether surplus cash can be used in the transaction.</td></tr>
+            
+            <tr><td class="num">9</td><td>Debt capacity and lender appetite</td><td>High</td><td>Small EBITDA base constrains acquisition financing.</td></tr>
+            
+            <tr><td class="num">10</td><td>Management willingness and shareholder approval path</td><td>High</td><td>Founder, strategic holders and treasury share mechanics affect TOB feasibility.</td></tr>
+            
+            <tr><td class="num">11</td><td>Major shareholder intentions</td><td>High</td><td>Top holders include founder/individual and strategic corporate holders.</td></tr>
+            
+            <tr><td class="num">12</td><td>TOB mechanics and squeeze-out feasibility</td><td>High</td><td>Low liquidity and required premium can dilute sponsor returns.</td></tr>
+            
+            <tr><td class="num">13</td><td>Key person dependency</td><td>Medium</td><td>Domain software and public-sector relationships may rely on specific engineers and sales leaders.</td></tr>
+            
+            <tr><td class="num">14</td><td>IP ownership and software licensing</td><td>Medium</td><td>Confirm ownership of Wingneo, WingEarth, ANIST and related modules.</td></tr>
+            
+            <tr><td class="num">15</td><td>Competitive position</td><td>Medium</td><td>Assess larger GIS, CAD, mapping and autonomous mobility platforms.</td></tr>
+            
+          </tbody>
+        </table>
+      </section>
+
+      <section id="final" class="section">
+        <div class="eyebrow">Final Recommendation</div>
+        <h2>Proceed to Confirmatory DD Only</h2>
+        <div class="callout red">
+          Governance and accounting-related matters are a gating item. No binding final bid should be submitted until the special investigation report, audit conclusions, any restatements, subsidiary controls remediation and FY2026 audited financials are reviewed.
+        </div>
+        <p>Subject to that gating item, AISAN could be interesting as a small-cap growth buyout at a disciplined premium, particularly if DD confirms recurring software revenue, defensible segment margins, usable excess cash and a credible Mobility / DX backlog. If the seller requires a 40-50% premium, or if Mobility / DX revenue quality is weak, the economics do not appear compelling for a financial sponsor.</p>
+      </section>
+
+      <section id="appendix" class="section">
+        <div class="eyebrow">Appendix</div>
+        <h2>Sources, Assumptions, Peer Set and Methodology</h2>
+        <h3>Precedent Transactions</h3>
+        <table>
+          <thead><tr><th>Date</th><th>Buyer</th><th>Target</th><th>Deal Value</th><th>Premium</th><th>EV / Rev.</th><th>EV / EBITDA</th><th>Relevance</th></tr></thead>
+          <tbody>
+            
+            <tr><td>2024-10-22</td><td>SECOM / ITOCHU-related tender offerors</td><td>PASCO Corporation</td><td>8730 minority tender consideration / approx. 30845 whole-equity implied at tender price</td><td>Not populated in automated model; update from tender offer registration statement.</td><td>n/a</td><td>n/a</td><td>Closest Japanese geospatial take-private precedent.</td></tr>
+            
+            <tr><td>2025-02-04</td><td>Ant Capital Partners affiliate</td><td>Tecnos Japan</td><td>22336</td><td>38.99% to prior business-day close</td><td>n/a</td><td>n/a</td><td>Japanese Standard-market IT / software public-to-private precedent.</td></tr>
+            
+            <tr><td>2025-02-13</td><td>Carlyle affiliate</td><td>Kaonavi</td><td>41000</td><td>120.21% to prior-day close per M&A Online summary</td><td>n/a</td><td>n/a</td><td>Shows Japan growth buyout premium can be high where SaaS quality and growth are strong.</td></tr>
+            
+            <tr><td>2025-03-31</td><td>KKR-led buyer group</td><td>Topcon</td><td>n/a</td><td>16.71% to prior-day close; 58.05% to 6-month average in final proposal disclosure</td><td>n/a</td><td>n/a</td><td>Relevant industry exposure, but far larger and hardware/global profile.</td></tr>
+            
+            <tr><td>2025-02</td><td>KKR</td><td>Fuji Soft</td><td>approx. USD 4bn media-reported transaction context</td><td>n/a</td><td>n/a</td><td>n/a</td><td>Useful for Japan take-private market context; not a direct operating comp.</td></tr>
+            
+          </tbody>
+        </table>
+        <h3>Model Methodology</h3>
+        <ul class="clean">
+          <li>Projection begins with FY2025A segment revenue and applies five-year scenario growth paths.</li>
+          <li>EBITDA is calculated from revenue margin assumptions plus public-company cost savings.</li>
+          <li>D&A is estimated at 3.0% of revenue; capex at 3.5% of revenue; working capital at 10.0% of revenue growth.</li>
+          <li>Entry debt is constrained to scenario debt / estimated FY2025 EBITDA, not to the underwritten exit case.</li>
+          <li>Exit equity value equals exit enterprise value less net debt; cash above debt increases exit equity value.</li>
+        </ul>
+        <h3>Bibliography</h3>
+        <table>
+          <thead><tr><th>Source ID</th><th>Title</th><th>Publisher</th><th>Type</th><th>Retrieved</th><th>Local Copy</th><th>URL</th></tr></thead>
+          <tbody>
+            
+            <tr><td>official_ir_top</td><td>AISAN TECHNOLOGY official IR page</td><td>AISAN TECHNOLOGY CO., LTD.</td><td>official_company_page</td><td>2026-06-07T20:33:45+09:00</td><td>n/a</td><td><a href="https://www.aisantec.co.jp/ir/">https://www.aisantec.co.jp/ir/</a></td></tr>
+            
+            <tr><td>official_business_overview</td><td>Business Overview</td><td>AISAN TECHNOLOGY CO., LTD.</td><td>official_company_page</td><td>2026-06-07T20:33:45+09:00</td><td>n/a</td><td><a href="https://www.aisantec.co.jp/ir/management/business/">https://www.aisantec.co.jp/ir/management/business/</a></td></tr>
+            
+            <tr><td>official_business_model</td><td>Business Revenue Model</td><td>AISAN TECHNOLOGY CO., LTD.</td><td>official_company_page</td><td>2026-06-07T20:33:45+09:00</td><td>n/a</td><td><a href="https://www.aisantec.co.jp/ir/management/business-model/">https://www.aisantec.co.jp/ir/management/business-model/</a></td></tr>
+            
+            <tr><td>official_stock_status</td><td>Share Status</td><td>AISAN TECHNOLOGY CO., LTD.</td><td>official_company_page</td><td>2026-06-07T20:33:45+09:00</td><td>n/a</td><td><a href="https://www.aisantec.co.jp/ir/stock/status/">https://www.aisantec.co.jp/ir/stock/status/</a></td></tr>
+            
+            <tr><td>irbank_quote</td><td>AISAN stock and valuation snapshot</td><td>IRBANK</td><td>market_data_aggregator</td><td>2026-06-07T20:33:45+09:00</td><td>n/a</td><td><a href="https://irbank.net/4667">https://irbank.net/4667</a></td></tr>
+            
+            <tr><td>yahoo_finance_quote</td><td>AISAN Yahoo Finance quote</td><td>Yahoo! Finance Japan</td><td>market_data_aggregator</td><td>2026-06-07T20:33:45+09:00</td><td>n/a</td><td><a href="https://finance.yahoo.co.jp/quote/4667.T">https://finance.yahoo.co.jp/quote/4667.T</a></td></tr>
+            
+            <tr><td>irbank_results</td><td>AISAN historical income statement summary</td><td>IRBANK</td><td>financial_data_aggregator</td><td>2026-06-07T20:33:45+09:00</td><td>n/a</td><td><a href="https://irbank.net/E04980/results">https://irbank.net/E04980/results</a></td></tr>
+            
+            <tr><td>irbank_balance_sheet</td><td>AISAN balance sheet summary</td><td>IRBANK</td><td>financial_data_aggregator</td><td>2026-06-07T20:33:45+09:00</td><td>n/a</td><td><a href="https://irbank.net/E04980/bs">https://irbank.net/E04980/bs</a></td></tr>
+            
+            <tr><td>irbank_cash_flow</td><td>AISAN cash flow summary</td><td>IRBANK</td><td>financial_data_aggregator</td><td>2026-06-07T20:33:45+09:00</td><td>n/a</td><td><a href="https://irbank.net/E04980/cf">https://irbank.net/E04980/cf</a></td></tr>
+            
+            <tr><td>irbank_segments</td><td>AISAN segment sales and profit</td><td>IRBANK</td><td>financial_data_aggregator</td><td>2026-06-07T20:33:45+09:00</td><td>n/a</td><td><a href="https://irbank.net/E04980/segment">https://irbank.net/E04980/segment</a></td></tr>
+            
+            <tr><td>tdnet_investigation_20260403</td><td>Notice on special investigation committee for suspected inappropriate transactions and fraud at subsidiary</td><td>AISAN TECHNOLOGY CO., LTD. / TDnet via IRBANK</td><td>tdnet_pdf</td><td>2026-06-07T20:33:45+09:00</td><td>n/a</td><td><a href="https://f.irbank.net/pdf/20260403/140120260403598061.pdf">https://f.irbank.net/pdf/20260403/140120260403598061.pdf</a></td></tr>
+            
+            <tr><td>tdnet_results_delay_20260430</td><td>Notice that FY2026 financial results disclosure is expected to exceed 50 days after fiscal year-end</td><td>AISAN TECHNOLOGY CO., LTD. / TDnet via IRBANK</td><td>tdnet_pdf</td><td>2026-06-07T20:33:45+09:00</td><td>n/a</td><td><a href="https://f.irbank.net/pdf/20260430/140120260430514374.pdf">https://f.irbank.net/pdf/20260430/140120260430514374.pdf</a></td></tr>
+            
+            <tr><td>tdnet_q3_20260212</td><td>FY2026 third-quarter financial results</td><td>AISAN TECHNOLOGY CO., LTD. / TDnet via IRBANK</td><td>tdnet_pdf</td><td>2026-06-07T20:33:45+09:00</td><td>n/a</td><td><a href="https://f.irbank.net/pdf/20260212/140120260127539521.pdf">https://f.irbank.net/pdf/20260212/140120260127539521.pdf</a></td></tr>
+            
+            <tr><td>maonline_tecnos</td><td>Tecnos Japan take-private by Ant Capital affiliate</td><td>M&A Online</td><td>news_database</td><td>2026-06-07T20:33:45+09:00</td><td>n/a</td><td><a href="https://maonline.jp/news/20250204c">https://maonline.jp/news/20250204c</a></td></tr>
+            
+            <tr><td>carlyle_kaonavi</td><td>Result of tender offer for Kaonavi shares</td><td>Carlyle</td><td>buyer_release</td><td>2026-06-07T20:33:45+09:00</td><td>n/a</td><td><a href="https://www.carlyle.com/node/38276">https://www.carlyle.com/node/38276</a></td></tr>
+            
+            <tr><td>maonline_kaonavi</td><td>Kaonavi take-private by Carlyle summary</td><td>M&A Online</td><td>news_database</td><td>2026-06-07T20:33:45+09:00</td><td>n/a</td><td><a href="https://maonline.jp/articles/pdf/20250213j.pdf">https://maonline.jp/articles/pdf/20250213j.pdf</a></td></tr>
+            
+            <tr><td>itochu_pasco_results</td><td>Results of tender offer for PASCO Corporation</td><td>ITOCHU Corporation</td><td>buyer_release</td><td>2026-06-07T20:33:45+09:00</td><td>n/a</td><td><a href="https://www.itochu.co.jp/en/ir/news/2024/__icsFiles/afieldfile/2024/10/23/ITC20241023_e.pdf">https://www.itochu.co.jp/en/ir/news/2024/__icsFiles/afieldfile/2024/10/23/ITC20241023_e.pdf</a></td></tr>
+            
+            <tr><td>topcon_take_private</td><td>Topcon take-private transaction disclosure</td><td>Topcon Corporation</td><td>target_release</td><td>2026-06-07T20:33:45+09:00</td><td>n/a</td><td><a href="https://global.topcon.com/invest/wp-content/uploads/ir-news/2025/release_20250331_2_en.pdf">https://global.topcon.com/invest/wp-content/uploads/ir-news/2025/release_20250331_2_en.pdf</a></td></tr>
+            
+            <tr><td>japan_times_fuji_soft</td><td>Bain ends tussle with KKR for Fuji Soft</td><td>The Japan Times</td><td>news</td><td>2026-06-07T20:33:45+09:00</td><td>n/a</td><td><a href="https://www.japantimes.co.jp/business/2025/02/17/companies/bain-end-fuji-soft-bid/">https://www.japantimes.co.jp/business/2025/02/17/companies/bain-end-fuji-soft-bid/</a></td></tr>
+            
+            <tr><td>edinet_api</td><td>EDINET API</td><td>Financial Services Agency, Japan</td><td>regulatory_portal</td><td>2026-06-07T20:33:45+09:00</td><td>n/a</td><td><a href="https://disclosure2.edinet-fsa.go.jp/">https://disclosure2.edinet-fsa.go.jp/</a></td></tr>
+            
+            <tr><td>raw_official_ir_top</td><td>Raw fetched copy: official_ir_top</td><td>n/a</td><td>raw_fetch</td><td>2026-06-07T20:30:12+09:00</td><td>data/raw/company_ir/official_ir_top.html</td><td><a href="https://www.aisantec.co.jp/ir/">https://www.aisantec.co.jp/ir/</a></td></tr>
+            
+            <tr><td>raw_official_business_overview</td><td>Raw fetched copy: official_business_overview</td><td>n/a</td><td>raw_fetch</td><td>2026-06-07T20:30:12+09:00</td><td>data/raw/company_ir/official_business_overview.html</td><td><a href="https://www.aisantec.co.jp/ir/management/business/">https://www.aisantec.co.jp/ir/management/business/</a></td></tr>
+            
+            <tr><td>raw_official_business_model</td><td>Raw fetched copy: official_business_model</td><td>n/a</td><td>raw_fetch</td><td>2026-06-07T20:30:12+09:00</td><td>data/raw/company_ir/official_business_model.html</td><td><a href="https://www.aisantec.co.jp/ir/management/business-model/">https://www.aisantec.co.jp/ir/management/business-model/</a></td></tr>
+            
+            <tr><td>raw_official_stock_status</td><td>Raw fetched copy: official_stock_status</td><td>n/a</td><td>raw_fetch</td><td>2026-06-07T20:30:12+09:00</td><td>data/raw/company_ir/official_stock_status.html</td><td><a href="https://www.aisantec.co.jp/ir/stock/status/">https://www.aisantec.co.jp/ir/stock/status/</a></td></tr>
+            
+            <tr><td>raw_irbank_quote</td><td>Raw fetched copy: irbank_quote</td><td>n/a</td><td>raw_fetch</td><td>2026-06-07T20:30:12+09:00</td><td>data/raw/company_ir/irbank_quote.html</td><td><a href="https://irbank.net/4667">https://irbank.net/4667</a></td></tr>
+            
+            <tr><td>raw_irbank_results</td><td>Raw fetched copy: irbank_results</td><td>n/a</td><td>raw_fetch</td><td>2026-06-07T20:30:12+09:00</td><td>data/raw/company_ir/irbank_results.html</td><td><a href="https://irbank.net/E04980/results">https://irbank.net/E04980/results</a></td></tr>
+            
+            <tr><td>raw_irbank_balance_sheet</td><td>Raw fetched copy: irbank_balance_sheet</td><td>n/a</td><td>raw_fetch</td><td>2026-06-07T20:30:12+09:00</td><td>data/raw/company_ir/irbank_balance_sheet.html</td><td><a href="https://irbank.net/E04980/bs">https://irbank.net/E04980/bs</a></td></tr>
+            
+            <tr><td>raw_irbank_cash_flow</td><td>Raw fetched copy: irbank_cash_flow</td><td>n/a</td><td>raw_fetch</td><td>2026-06-07T20:30:12+09:00</td><td>data/raw/company_ir/irbank_cash_flow.html</td><td><a href="https://irbank.net/E04980/cf">https://irbank.net/E04980/cf</a></td></tr>
+            
+            <tr><td>raw_irbank_segments</td><td>Raw fetched copy: irbank_segments</td><td>n/a</td><td>raw_fetch</td><td>2026-06-07T20:30:12+09:00</td><td>data/raw/company_ir/irbank_segments.html</td><td><a href="https://irbank.net/E04980/segment">https://irbank.net/E04980/segment</a></td></tr>
+            
+            <tr><td>raw_tdnet_investigation_20260403</td><td>Raw fetched copy: tdnet_investigation_20260403</td><td>n/a</td><td>raw_fetch</td><td>2026-06-07T20:30:13+09:00</td><td>data/raw/company_ir/tdnet_investigation_20260403.pdf</td><td><a href="https://f.irbank.net/pdf/20260403/140120260403598061.pdf">https://f.irbank.net/pdf/20260403/140120260403598061.pdf</a></td></tr>
+            
+            <tr><td>raw_tdnet_results_delay_20260430</td><td>Raw fetched copy: tdnet_results_delay_20260430</td><td>n/a</td><td>raw_fetch</td><td>2026-06-07T20:30:13+09:00</td><td>data/raw/company_ir/tdnet_results_delay_20260430.pdf</td><td><a href="https://f.irbank.net/pdf/20260430/140120260430514374.pdf">https://f.irbank.net/pdf/20260430/140120260430514374.pdf</a></td></tr>
+            
+            <tr><td>raw_tdnet_q3_20260212</td><td>Raw fetched copy: tdnet_q3_20260212</td><td>n/a</td><td>raw_fetch</td><td>2026-06-07T20:30:14+09:00</td><td>data/raw/company_ir/tdnet_q3_20260212.pdf</td><td><a href="https://f.irbank.net/pdf/20260212/140120260127539521.pdf">https://f.irbank.net/pdf/20260212/140120260127539521.pdf</a></td></tr>
+            
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const chartData = {"heatmap": {"x": ["10.0x", "7.0x", "8.0x", "8.5x", "9.0x"], "y": ["20%", "30%", "40%", "50%"], "z": [[0.1705419812467803, 0.1087970377194829, 0.1309029677537103, 0.141337838428879, 0.1514044907091574], [0.1478484728477964, 0.0873005896711571, 0.1089779480548704, 0.1192105160112104, 0.129082004289059], [0.127562718717028, 0.0680848892106371, 0.0893791468865665, 0.0994308762020941, 0.1091279071462039], [0.1092542320867073, 0.0507421573256998, 0.0716906554039671, 0.0815791725551244, 0.0911187506512045]]}, "historical": [{"ebit_margin": 0.0682641404290888, "ebitda_estimated": 352.7, "fiscal_year": "FY2021A", "revenue": 3589}, {"ebit_margin": 0.0615604867573371, "ebitda_estimated": 383.7, "fiscal_year": "FY2022A", "revenue": 4191}, {"ebit_margin": 0.0741653596235715, "ebitda_estimated": 464.9, "fiscal_year": "FY2023A", "revenue": 4463}, {"ebit_margin": 0.0821317758715094, "ebitda_estimated": 614.4, "fiscal_year": "FY2024A", "revenue": 5479}, {"ebit_margin": 0.0721748914965439, "ebitda_estimated": 635.6, "fiscal_year": "FY2025A", "revenue": 6221}], "returns_by_premium": [{"entry_ev_ebitda": 11.652599254283151, "irr": -0.0493188923558126, "moic": 0.7765587499462101, "premium": 0.2, "scenario": "Downside", "sponsor_equity": 10544.9015056}, {"entry_ev_ebitda": 13.119220515079528, "irr": -0.0656695339579649, "moic": 0.7120369830024993, "premium": 0.3, "scenario": "Downside", "sponsor_equity": 11500.4356894}, {"entry_ev_ebitda": 14.585841775875904, "irr": -0.0804658577786788, "moic": 0.6574145261151725, "premium": 0.4, "scenario": "Downside", "sponsor_equity": 12455.9698732}, {"entry_ev_ebitda": 16.05246303667228, "irr": -0.0939589557266126, "moic": 0.6105754803258338, "premium": 0.5, "scenario": "Downside", "sponsor_equity": 13411.504057}, {"entry_ev_ebitda": 11.652599254283151, "irr": 0.0706006802984895, "moic": 1.406493000036039, "premium": 0.2, "scenario": "Base", "sponsor_equity": 9489.9845456}, {"entry_ev_ebitda": 13.119220515079528, "irr": 0.0502546513877542, "moic": 1.2778299651379104, "premium": 0.3, "scenario": "Base", "sponsor_equity": 10445.5187294}, {"entry_ev_ebitda": 14.585841775875904, "irr": 0.0320283409576738, "moic": 1.1707336976204104, "premium": 0.4, "scenario": "Base", "sponsor_equity": 11401.0529132}, {"entry_ev_ebitda": 16.05246303667228, "irr": 0.0155490614000206, "moic": 1.0802009267653845, "premium": 0.5, "scenario": "Base", "sponsor_equity": 12356.587097}, {"entry_ev_ebitda": 11.652599254283151, "irr": 0.1625485769116306, "moic": 2.1235160329394374, "premium": 0.2, "scenario": "Upside", "sponsor_equity": 9036.955195599998}, {"entry_ev_ebitda": 13.119220515079528, "irr": 0.1394120173019093, "moic": 1.92045430504768, "premium": 0.3, "scenario": "Upside", "sponsor_equity": 9992.489379399998}, {"entry_ev_ebitda": 14.585841775875904, "irr": 0.1187895211042915, "moic": 1.7528386869129886, "premium": 0.4, "scenario": "Upside", "sponsor_equity": 10948.0235632}, {"entry_ev_ebitda": 16.05246303667228, "irr": 0.1002216281512913, "moic": 1.612133082787652, "premium": 0.5, "scenario": "Upside", "sponsor_equity": 11903.557747}, {"entry_ev_ebitda": 11.652599254283151, "irr": 0.141337838428879, "moic": 1.936738909418665, "premium": 0.2, "scenario": "Sponsor", "sponsor_equity": 9291.5428056}, {"entry_ev_ebitda": 13.119220515079528, "irr": 0.1192105160112104, "moic": 1.7561390920307969, "premium": 0.3, "scenario": "Sponsor", "sponsor_equity": 10247.0769894}, {"entry_ev_ebitda": 14.585841775875904, "irr": 0.0994308762020941, "moic": 1.6063480381417423, "premium": 0.4, "scenario": "Sponsor", "sponsor_equity": 11202.6111732}, {"entry_ev_ebitda": 16.05246303667228, "irr": 0.0815791725551244, "moic": 1.4801017714246911, "premium": 0.5, "scenario": "Sponsor", "sponsor_equity": 12158.145357}], "scenario_projection": {"Base": [{"ebitda": 777.0815, "ebitda_margin": 0.1077738096889172, "fiscal_year": "FY2026E", "mobility_dx_revenue": 4562.5, "public_revenue": 2636.8, "revenue": 7210.3}, {"ebitda": 892.0219400000001, "ebitda_margin": 0.1151641862649687, "fiscal_year": "FY2027E", "mobility_dx_revenue": 5018.75, "public_revenue": 2715.9040000000005, "revenue": 7745.654}, {"ebitda": 1012.0641413, "ebitda_margin": 0.1222474108630731, "fiscal_year": "FY2028E", "mobility_dx_revenue": 5470.4375, "public_revenue": 2797.3811200000005, "revenue": 8278.81862}, {"ebitda": 1106.793801464, "ebitda_margin": 0.1259668686177873, "fiscal_year": "FY2029E", "mobility_dx_revenue": 5908.0725, "public_revenue": 2867.315648, "revenue": 8786.388148}, {"ebitda": 1192.596333704, "ebitda_margin": 0.1286284663261833, "fiscal_year": "FY2030E", "mobility_dx_revenue": 6321.637575000001, "public_revenue": 2938.9985392, "revenue": 9271.6361142}], "Downside": [{"ebitda": 539.9455, "ebitda_margin": 0.085, "fiscal_year": "FY2026E", "mobility_dx_revenue": 3832.5, "public_revenue": 2508.8, "revenue": 6352.3}, {"ebitda": 562.8897000000001, "ebitda_margin": 0.0875554639560114, "fiscal_year": "FY2027E", "mobility_dx_revenue": 3909.15, "public_revenue": 2508.8, "revenue": 6428.950000000001}, {"ebitda": 594.835448, "ebitda_margin": 0.091061745767634, "fiscal_year": "FY2028E", "mobility_dx_revenue": 3987.333, "public_revenue": 2533.8880000000004, "revenue": 6532.2210000000005}, {"ebitda": 617.3575886000001, "ebitda_margin": 0.0930132705005365, "fiscal_year": "FY2029E", "mobility_dx_revenue": 4067.07966, "public_revenue": 2559.2268800000006, "revenue": 6637.306540000001}, {"ebitda": 626.9816361800001, "ebitda_margin": 0.0929654933406687, "fiscal_year": "FY2030E", "mobility_dx_revenue": 4148.4212532, "public_revenue": 2584.8191488000007, "revenue": 6744.240402000001}], "Sponsor": [{"ebitda": 847.9939999999999, "ebitda_margin": 0.1154455849919677, "fiscal_year": "FY2026E", "mobility_dx_revenue": 4672.0, "public_revenue": 2662.4, "revenue": 7345.4}, {"ebitda": 1046.72608, "ebitda_margin": 0.1286001594223838, "fiscal_year": "FY2027E", "mobility_dx_revenue": 5372.799999999999, "public_revenue": 2755.584, "revenue": 8139.383999999999}, {"ebitda": 1251.4581471999998, "ebitda_margin": 0.1400735442152659, "fiscal_year": "FY2028E", "mobility_dx_revenue": 6071.263999999998, "public_revenue": 2852.02944, "revenue": 8934.293439999998}, {"ebitda": 1436.9016841216, "ebitda_margin": 0.1483223746098182, "fiscal_year": "FY2029E", "mobility_dx_revenue": 6739.103039999999, "public_revenue": 2937.5903232, "revenue": 9687.6933632}, {"ebitda": 1615.4393502419198, "ebitda_margin": 0.1555949137023931, "fiscal_year": "FY2030E", "mobility_dx_revenue": 7345.6223136, "public_revenue": 3025.7180328960003, "revenue": 10382.340346496}], "Upside": [{"ebitda": 860.8607999999999, "ebitda_margin": 0.1160439987059204, "fiscal_year": "FY2026E", "mobility_dx_revenue": 4745.0, "public_revenue": 2662.4, "revenue": 7418.4}, {"ebitda": 1078.943808, "ebitda_margin": 0.1302427939029195, "fiscal_year": "FY2027E", "mobility_dx_revenue": 5504.2, "public_revenue": 2768.896, "revenue": 8284.096}, {"ebitda": 1302.16218288, "ebitda_margin": 0.1422879980655089, "fiscal_year": "FY2028E", "mobility_dx_revenue": 6274.7880000000005, "public_revenue": 2865.80736, "revenue": 9151.59536}, {"ebitda": 1500.6822448640005, "ebitda_margin": 0.1499951291960293, "fiscal_year": "FY2029E", "mobility_dx_revenue": 7027.762560000001, "public_revenue": 2966.1106175999994, "revenue": 10004.8731776}, {"ebitda": 1675.51174905856, "ebitda_margin": 0.155188361735127, "fiscal_year": "FY2030E", "mobility_dx_revenue": 7730.538816000002, "public_revenue": 3055.0939361279998, "revenue": 10796.632752128002}]}};
+    const layoutBase = {
+      margin: {t: 35, r: 20, b: 50, l: 60},
+      paper_bgcolor: "#ffffff",
+      plot_bgcolor: "#ffffff",
+      font: {family: "Inter, system-ui, sans-serif", color: "#1c1b18"},
+      xaxis: {gridcolor: "#eee8dc"},
+      yaxis: {gridcolor: "#eee8dc"}
+    };
+
+    function renderHistorical() {
+      const rows = chartData.historical;
+      Plotly.newPlot("historicalChart", [
+        {type: "bar", name: "Revenue", x: rows.map(r => r.fiscal_year), y: rows.map(r => r.revenue), marker: {color: "#006b64"}},
+        {type: "scatter", mode: "lines+markers", name: "Estimated EBITDA", x: rows.map(r => r.fiscal_year), y: rows.map(r => r.ebitda_estimated), yaxis: "y2", line: {color: "#9d2b2b", width: 3}}
+      ], {
+        ...layoutBase,
+        title: "Historical Revenue and Estimated EBITDA",
+        yaxis: {title: "Revenue (JPYm)", gridcolor: "#eee8dc"},
+        yaxis2: {title: "EBITDA (JPYm)", overlaying: "y", side: "right", showgrid: false}
+      }, {displayModeBar: false, responsive: true});
+    }
+
+    function renderProjection(scenario) {
+      const rows = chartData.scenario_projection[scenario];
+      Plotly.newPlot("projectionChart", [
+        {type: "bar", name: "Public", x: rows.map(r => r.fiscal_year), y: rows.map(r => r.public_revenue), marker: {color: "#006b64"}},
+        {type: "bar", name: "Mobility / DX", x: rows.map(r => r.fiscal_year), y: rows.map(r => r.mobility_dx_revenue), marker: {color: "#a36b00"}},
+        {type: "scatter", mode: "lines+markers", name: "EBITDA margin", x: rows.map(r => r.fiscal_year), y: rows.map(r => r.ebitda_margin), yaxis: "y2", line: {color: "#9d2b2b", width: 3}}
+      ], {
+        ...layoutBase,
+        barmode: "stack",
+        title: `${scenario} Projection`,
+        yaxis: {title: "Revenue (JPYm)", gridcolor: "#eee8dc"},
+        yaxis2: {title: "EBITDA margin", overlaying: "y", side: "right", tickformat: ".0%", showgrid: false}
+      }, {displayModeBar: false, responsive: true});
+    }
+
+    function renderReturns() {
+      const rows = chartData.returns_by_premium;
+      const scenarios = [...new Set(rows.map(r => r.scenario))];
+      const traces = scenarios.map(s => {
+        const sub = rows.filter(r => r.scenario === s);
+        return {type: "scatter", mode: "lines+markers", name: s, x: sub.map(r => `${Math.round(r.premium * 100)}%`), y: sub.map(r => r.irr)};
+      });
+      Plotly.newPlot("returnsChart", traces, {
+        ...layoutBase,
+        title: "IRR by TOB Premium",
+        yaxis: {title: "Sponsor IRR", tickformat: ".0%", gridcolor: "#eee8dc"},
+        xaxis: {title: "TOB premium", gridcolor: "#eee8dc"}
+      }, {displayModeBar: false, responsive: true});
+    }
+
+    function renderHeatmap() {
+      Plotly.newPlot("heatmapChart", [{
+        type: "heatmap",
+        x: chartData.heatmap.x,
+        y: chartData.heatmap.y,
+        z: chartData.heatmap.z,
+        colorscale: [[0, "#f3dedb"], [0.45, "#f5ead4"], [1, "#dcefed"]],
+        colorbar: {tickformat: ".0%", title: "IRR"},
+        hovertemplate: "Premium %{y}<br>Exit %{x}<br>IRR %{z:.1%}<extra></extra>"
+      }], {
+        ...layoutBase,
+        title: "Sponsor Case IRR Sensitivity",
+        xaxis: {title: "Exit EV / EBITDA"},
+        yaxis: {title: "Entry premium"}
+      }, {displayModeBar: false, responsive: true});
+    }
+
+    renderHistorical();
+    renderProjection("Sponsor");
+    renderReturns();
+    renderHeatmap();
+    document.getElementById("scenarioSelect").addEventListener("change", (event) => renderProjection(event.target.value));
+  </script>
+</body>
+</html>

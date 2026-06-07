@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AISAN TECHNOLOGY Take-Private LBO Case Study</title>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <style>{{ styles }}</style>
+</head>
+<body>
+  <div class="layout">
+    <nav>
+      <div class="nav-title">AISAN LBO Case</div>
+      <div class="nav-subtitle">HTML investment committee memo<br>Generated {{ generated_at }}</div>
+      <a href="#cover">Cover</a>
+      <a href="#summary">Executive Summary</a>
+      <a href="#recommendation">Recommendation</a>
+      <a href="#transaction">Transaction Snapshot</a>
+      <a href="#company">Company Overview</a>
+      <a href="#segments">Business & Segments</a>
+      <a href="#industry">Industry Backdrop</a>
+      <a href="#historical">Historical Financials</a>
+      <a href="#valuation">Market Valuation</a>
+      <a href="#rationale">Take-Private Rationale</a>
+      <a href="#projection">Projection Assumptions</a>
+      <a href="#lbo">LBO Model Summary</a>
+      <a href="#returns">Returns Analysis</a>
+      <a href="#sensitivity">Sensitivity Analysis</a>
+      <a href="#valueup">Value-Up Plan</a>
+      <a href="#risks">Risks</a>
+      <a href="#dd">Critical DD</a>
+      <a href="#final">Final View</a>
+      <a href="#appendix">Appendix</a>
+    </nav>
+
+    <main>
+      <section id="cover" class="section cover">
+        <div>
+          <div class="eyebrow">Private Equity Investment Case Study</div>
+          <h1>AISAN TECHNOLOGY CO., LTD. (TSE: 4667)</h1>
+          <p class="lead">Evaluation of whether AISAN is a credible take-private target, with an HTML-native LBO model, return sensitivities, public-source bibliography and DD gating checklist.</p>
+          <div class="meta-row">
+            <span class="pill">Ticker 4667.T</span>
+            <span class="pill">TSE Standard / NSE Main</span>
+            <span class="pill">Currency: JPY millions</span>
+            <span class="pill">Public information only</span>
+          </div>
+        </div>
+        <div class="source-note">Primary sources include AISAN official IR pages, IRBANK financial summaries, TDnet PDFs and market quote sources. See Appendix for full bibliography.</div>
+      </section>
+
+      <section id="summary" class="section">
+        <div class="eyebrow">Investment Committee One-Page Summary</div>
+        <h2>Executive Summary</h2>
+        <div class="grid">
+          {% for card in company_fact_cards %}
+          <div class="card">
+            <div class="metric-label">{{ card.label }}</div>
+            <div class="metric-value">{{ card.value }}</div>
+            <div class="metric-note">{{ card.note }}</div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="callout amber">
+          <strong>{{ recommendation.recommendation }}.</strong>
+          {{ recommendation.investment_view }}
+          The default Sponsor case at a 30% TOB premium produces {{ fmt_pct(recommendation.primary_case_irr) }} IRR and {{ fmt_multiple(recommendation.primary_case_moic) }} MOIC, which is below a clean 15% IRR / 2.0x MOIC buyout threshold.
+        </div>
+        <div class="two-col">
+          <div>
+            <h3>Investment Highlights to Test</h3>
+            <ul class="clean">
+              <li>Niche domain position in surveying, spatial information software, 3D point-cloud tools and local-government workflows.</li>
+              <li>Two reported core segments: Public and Mobility / DX, with official disclosure describing surveying / real estate markets and automotive / MaaS-related markets.</li>
+              <li>Net-cash balance sheet creates optionality, but cash usability is a legal, lender and operational DD item.</li>
+              <li>Small-cap listing, low liquidity and limited research coverage may create a take-private angle if governance issues are remediated.</li>
+              <li>Returns must come from EBITDA growth, margin improvement, cash optimization and exit value, not from financial leverage.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Gating Issues</h3>
+            <ul class="clean">
+              <li>Special investigation committee established after suspected inappropriate transactions and fraud at 100% subsidiary Akisoku.</li>
+              <li>FY2026 results disclosure was expected to exceed 50 days after fiscal year-end because investigation and audit work required more time.</li>
+              <li>Debt capacity appears constrained by estimated FY2025 EBITDA of {{ fmt_jpy_mn(sponsor_default.entry_ebitda) }}.</li>
+              <li>TOB premium required for squeeze-out can quickly dilute returns.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="recommendation" class="section">
+        <div class="eyebrow">Recommendation and Investment View</div>
+        <h2>{{ recommendation.recommendation }}</h2>
+        <p>AISAN is not a classic leverage-driven LBO. The more credible framing is a growth-oriented take-private of a niche geospatial / surveying software and Mobility / DX platform, where value creation depends on cleaner governance, a higher-quality revenue mix, productization of point-cloud and local-government DX workflows, disciplined Mobility / DX project selection and careful use of excess cash.</p>
+        <p>The model does not support paying an unconstrained premium. At the default 30% premium, the Sponsor case falls short of a 2.0x MOIC target. A bid should proceed only to confirmatory DD, with a final offer conditioned on investigation resolution, audited FY2026 numbers, segment-level revenue quality, cash availability and shareholder path.</p>
+      </section>
+
+      <section id="transaction" class="section">
+        <div class="eyebrow">Entry Economics</div>
+        <h2>Transaction Snapshot</h2>
+        <table>
+          <thead><tr><th>Scenario</th><th>Premium</th><th>Offer Price</th><th>Entry EV</th><th>Entry EV / EBITDA</th><th>Debt</th><th>Debt / EBITDA</th><th>Sponsor IRR</th><th>MOIC</th></tr></thead>
+          <tbody>
+            {% for row in case_summary_rows %}
+            <tr>
+              <td>{{ row.scenario }}</td><td>{{ row.premium }}</td><td class="num">{{ row.offer_price }}</td><td class="num">{{ row.entry_ev }}</td><td class="num">{{ row.entry_ev_ebitda }}</td><td class="num">{{ row.new_debt }}</td><td class="num">{{ row.debt_to_ebitda }}</td><td class="num">{{ row.irr }}</td><td class="num">{{ row.moic }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <p class="source-note">Entry EBITDA is estimated from FY2025A EBIT plus D&A estimated at 3.0% of revenue. This is intentionally conservative because FY2026 annual results remain delayed in public disclosures.</p>
+      </section>
+
+      <section id="company" class="section">
+        <div class="eyebrow">Company Overview</div>
+        <h2>Company, Governance and Shareholder Context</h2>
+        <p>AISAN describes itself as a company built around surveying technology and specialized software, serving social infrastructure from national land development through smart cities and autonomous driving. Its official business overview identifies two core businesses: Public and Mobility / DX.</p>
+        <div class="grid">
+          <div class="card"><div class="metric-label">Shares outstanding</div><div class="metric-value">{{ "{:,.0f}".format(share_data.shares_outstanding) }}</div><div class="metric-note">Treasury shares: {{ "{:,.0f}".format(share_data.treasury_shares) }}</div></div>
+          <div class="card"><div class="metric-label">Latest balance sheet reference</div><div class="metric-value">{{ latest_bs.as_of }}</div><div class="metric-note">Cash {{ fmt_jpy_mn(latest_bs.cash) }} / debt {{ fmt_jpy_mn(latest_bs.debt) }}</div></div>
+          <div class="card"><div class="metric-label">Akisoku subsidiary FY2025A</div><div class="metric-value">{{ fmt_jpy_mn(akisoku.revenue) }}</div><div class="metric-note">Revenue; EBIT {{ fmt_jpy_mn(akisoku.ebit) }}</div></div>
+        </div>
+        <h3>Top Shareholders</h3>
+        <table>
+          <thead><tr><th>Shareholder</th><th class="num">Shares</th><th class="num">Ownership</th></tr></thead>
+          <tbody>
+            {% for row in shareholder_rows %}
+            <tr><td>{{ row.shareholder }}</td><td class="num">{{ "{:,.0f}".format(row.shares) }}</td><td class="num">{{ fmt_pct(row.ownership_pct) }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+
+      <section id="segments" class="section">
+        <div class="eyebrow">Business and Segment Analysis</div>
+        <h2>Public Segment Plus Mobility / DX Optionality</h2>
+        <p>The Public segment includes surveying and real estate market software, point-cloud tools, measuring equipment and services. The Mobility / DX segment includes three-dimensional measurement, high-precision map databases, autonomous vehicle / system construction and social implementation projects. This mix is strategically interesting but requires revenue-quality diligence because hardware, project work, public-sector contracts and recurring software should not be valued the same way.</p>
+        <table>
+          <thead><tr><th>FY</th><th class="num">Public Revenue</th><th class="num">Mobility / DX Revenue</th><th class="num">Other Revenue</th><th class="num">Public EBIT Margin</th><th class="num">Mobility / DX EBIT Margin</th></tr></thead>
+          <tbody>
+            {% for row in segment_rows %}
+            <tr><td>{{ row.fiscal_year }}</td><td class="num">{{ fmt_jpy_mn(row.public_revenue) }}</td><td class="num">{{ fmt_jpy_mn(row.mobility_dx_revenue) }}</td><td class="num">{{ fmt_jpy_mn(row.other_revenue) }}</td><td class="num">{{ fmt_pct(row.public_ebit_margin) }}</td><td class="num">{{ fmt_pct(row.mobility_dx_ebit_margin) }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+
+      <section id="industry" class="section">
+        <div class="eyebrow">Industry Backdrop</div>
+        <h2>Geospatial, Construction DX and Local Mobility</h2>
+        <p>The strategic thesis is tied to public infrastructure renewal, construction productivity, 3D point-cloud adoption, high-precision maps and local-government mobility projects. The issue for PE underwriting is not whether these themes are attractive; it is whether AISAN captures them through durable, high-margin, repeatable revenue rather than lumpy projects or low-margin hardware pass-through.</p>
+        <h3>Peer Set</h3>
+        <table>
+          <thead><tr><th>Peer</th><th>Ticker</th><th>Category</th><th>Relevance</th><th>Limitations</th></tr></thead>
+          <tbody>
+            {% for row in peer_rows %}
+            <tr><td>{{ row.company }}</td><td>{{ row.ticker }}</td><td>{{ row.category }}</td><td>{{ row.relevance }}</td><td>{{ row.limitations }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+
+      <section id="historical" class="section">
+        <div class="eyebrow">Historical Financials</div>
+        <h2>Growth Has Improved, But Cash Flow Has Been Uneven</h2>
+        <div id="historicalChart" class="chart"></div>
+        <table>
+          <thead><tr><th>FY</th><th class="num">Revenue</th><th class="num">EBIT</th><th class="num">Est. EBITDA</th><th class="num">EBIT Margin</th><th class="num">Operating CF</th><th class="num">FCF</th><th class="num">Cash</th><th class="num">Debt</th></tr></thead>
+          <tbody>
+            {% for row in historical_rows %}
+            <tr><td>{{ row.fiscal_year }}</td><td class="num">{{ fmt_jpy_mn(row.revenue) }}</td><td class="num">{{ fmt_jpy_mn(row.ebit) }}</td><td class="num">{{ fmt_jpy_mn(row.ebitda_estimated) }}</td><td class="num">{{ fmt_pct(row.ebit_margin) }}</td><td class="num">{{ fmt_jpy_mn(row.operating_cf) }}</td><td class="num">{{ fmt_jpy_mn(row.free_cf) }}</td><td class="num">{{ fmt_jpy_mn(row.cash) }}</td><td class="num">{{ fmt_jpy_mn(row.debt) }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+
+      <section id="valuation" class="section">
+        <div class="eyebrow">Market Valuation and Trading Performance</div>
+        <h2>Current Valuation Is Not an Obvious Bargain After a Take-Private Premium</h2>
+        <p>At the latest sourced close of JPY {{ "{:,.0f}".format(market.close_price_jpy) }}, gross market capitalization is approximately {{ fmt_jpy_bn(market.market_cap_jpy_mn) }}. A 30% premium implies an offer price of JPY {{ "{:,.0f}".format(sponsor_default.offer_price) }} and headline entry EV / estimated FY2025 EBITDA of {{ fmt_multiple(sponsor_default.entry_ev_ebitda) }}. That is not too expensive if Mobility / DX scales and margins improve, but it is too demanding if the investigation creates restatement risk or if Mobility revenue proves project-based and volatile.</p>
+      </section>
+
+      <section id="rationale" class="section">
+        <div class="eyebrow">Take-Private Rationale</div>
+        <h2>Why Private Ownership Could Matter</h2>
+        <ul class="clean">
+          <li>Reduce public-company friction and allow management to remediate governance without quarterly-market pressure.</li>
+          <li>Shift capital allocation from cash accumulation to product investment, selective M&A and shareholder value creation.</li>
+          <li>Professionalize segment reporting, backlog analytics, pricing and recurring-revenue KPIs.</li>
+          <li>Support Mobility / DX through partnerships where public-company volatility or small-cap liquidity may constrain strategic moves.</li>
+        </ul>
+      </section>
+
+      <section id="projection" class="section">
+        <div class="eyebrow">Projection and Scenario Model</div>
+        <h2>Projection Assumptions</h2>
+        <div class="control-row">
+          <label for="scenarioSelect"><strong>Scenario</strong></label>
+          <select id="scenarioSelect">
+            {% for scenario in scenarios.keys() %}
+            <option value="{{ scenario }}">{{ scenario }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div id="projectionChart" class="chart"></div>
+        <p class="source-note">Scenario assumptions are estimates. Management FY2026 forecast is included in the source registry but not treated as final audited FY2026 actuals due to the disclosed results delay.</p>
+      </section>
+
+      <section id="lbo" class="section">
+        <div class="eyebrow">Sponsor Model</div>
+        <h2>LBO Model Summary</h2>
+        <p>Debt capacity appears constrained. The model uses {{ fmt_multiple(sponsor_default.entry_debt_to_ebitda) }} entry debt / estimated FY2025 EBITDA in the Sponsor case, equal to {{ fmt_jpy_mn(sponsor_default.new_debt) }} of new debt. Sources and uses reconcile, debt is swept from FCF and cash is not allowed to fall below the minimum cash assumption.</p>
+        <div class="grid">
+          <div class="card"><div class="metric-label">Equity purchase price</div><div class="metric-value">{{ fmt_jpy_bn(sponsor_default.equity_purchase_price) }}</div><div class="metric-note">30% premium case</div></div>
+          <div class="card"><div class="metric-label">Sponsor equity</div><div class="metric-value">{{ fmt_jpy_bn(sponsor_default.sponsor_equity) }}</div><div class="metric-note">after debt and excess cash source</div></div>
+          <div class="card"><div class="metric-label">Excess cash source</div><div class="metric-value">{{ fmt_jpy_mn(sponsor_default.excess_cash_available) }}</div><div class="metric-note">subject to legal and operational DD</div></div>
+          <div class="card"><div class="metric-label">Exit EBITDA</div><div class="metric-value">{{ fmt_jpy_mn(sponsor_default.exit_ebitda) }}</div><div class="metric-note">Sponsor case FY2030E</div></div>
+        </div>
+      </section>
+
+      <section id="returns" class="section">
+        <div class="eyebrow">Returns Analysis</div>
+        <h2>Returns Are Growth- and Multiple-Driven</h2>
+        <div id="returnsChart" class="chart"></div>
+        <p>The Sponsor case does not clear a clean 2.0x MOIC at the default 30% premium. A 20% premium improves returns but still depends heavily on EBITDA growth, cost savings and exit multiple. This supports a disciplined "confirmatory DD only" recommendation rather than a fully underwritten final bid.</p>
+        <a class="download-link" href="model_outputs.csv" download>Download model outputs CSV</a>
+      </section>
+
+      <section id="sensitivity" class="section">
+        <div class="eyebrow">Sensitivity Analysis</div>
+        <h2>Premium vs Exit Multiple Heatmap</h2>
+        <div id="heatmapChart" class="chart"></div>
+        <p class="source-note">Heatmap shows Sponsor-case IRR. Other sensitivities are in <code>output/sensitivity_outputs.csv</code>.</p>
+      </section>
+
+      <section id="valueup" class="section">
+        <div class="eyebrow">Value-Up Plan</div>
+        <h2>Potential Value Creation Theses</h2>
+        <ul class="clean">
+          {% for item in value_up_plan %}
+          <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </section>
+
+      <section id="risks" class="section">
+        <div class="eyebrow">Key Risks</div>
+        <h2>Red / Amber / Green Risk Matrix</h2>
+        <table>
+          <thead><tr><th>Risk</th><th>Rating</th><th>Mitigant / Workplan</th></tr></thead>
+          <tbody>
+            {% for row in risk_matrix %}
+            <tr><td>{{ row.risk }}</td><td><span class="tag {{ row.rating|lower }}">{{ row.rating }}</span></td><td>{{ row.mitigant }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+
+      <section id="dd" class="section">
+        <div class="eyebrow">Critical DD Items</div>
+        <h2>Top Confirmatory DD Checklist</h2>
+        <table>
+          <thead><tr><th class="num">#</th><th>Item</th><th>Severity</th><th>Why It Matters</th></tr></thead>
+          <tbody>
+            {% for row in dd_items %}
+            <tr><td class="num">{{ row.rank }}</td><td>{{ row.item }}</td><td>{{ row.severity }}</td><td>{{ row.why }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+
+      <section id="final" class="section">
+        <div class="eyebrow">Final Recommendation</div>
+        <h2>Proceed to Confirmatory DD Only</h2>
+        <div class="callout red">
+          Governance and accounting-related matters are a gating item. No binding final bid should be submitted until the special investigation report, audit conclusions, any restatements, subsidiary controls remediation and FY2026 audited financials are reviewed.
+        </div>
+        <p>Subject to that gating item, AISAN could be interesting as a small-cap growth buyout at a disciplined premium, particularly if DD confirms recurring software revenue, defensible segment margins, usable excess cash and a credible Mobility / DX backlog. If the seller requires a 40-50% premium, or if Mobility / DX revenue quality is weak, the economics do not appear compelling for a financial sponsor.</p>
+      </section>
+
+      <section id="appendix" class="section">
+        <div class="eyebrow">Appendix</div>
+        <h2>Sources, Assumptions, Peer Set and Methodology</h2>
+        <h3>Precedent Transactions</h3>
+        <table>
+          <thead><tr><th>Date</th><th>Buyer</th><th>Target</th><th>Deal Value</th><th>Premium</th><th>EV / Rev.</th><th>EV / EBITDA</th><th>Relevance</th></tr></thead>
+          <tbody>
+            {% for row in precedent_rows %}
+            <tr><td>{{ row.date }}</td><td>{{ row.buyer }}</td><td>{{ row.target }}</td><td>{{ row.deal_value_jpy_mn }}</td><td>{{ row.premium }}</td><td>{{ row.ev_revenue }}</td><td>{{ row.ev_ebitda }}</td><td>{{ row.relevance }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <h3>Model Methodology</h3>
+        <ul class="clean">
+          <li>Projection begins with FY2025A segment revenue and applies five-year scenario growth paths.</li>
+          <li>EBITDA is calculated from revenue margin assumptions plus public-company cost savings.</li>
+          <li>D&A is estimated at 3.0% of revenue; capex at 3.5% of revenue; working capital at 10.0% of revenue growth.</li>
+          <li>Entry debt is constrained to scenario debt / estimated FY2025 EBITDA, not to the underwritten exit case.</li>
+          <li>Exit equity value equals exit enterprise value less net debt; cash above debt increases exit equity value.</li>
+        </ul>
+        <h3>Bibliography</h3>
+        <table>
+          <thead><tr><th>Source ID</th><th>Title</th><th>Publisher</th><th>Type</th><th>Retrieved</th><th>Local Copy</th><th>URL</th></tr></thead>
+          <tbody>
+            {% for row in source_rows %}
+            <tr><td>{{ row.source_id }}</td><td>{{ row.title }}</td><td>{{ row.publisher }}</td><td>{{ row.source_type }}</td><td>{{ row.retrieved_at }}</td><td>{{ row.local_path }}</td><td><a href="{{ row.url }}">{{ row.url }}</a></td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const chartData = {{ chart_data | tojson }};
+    const layoutBase = {
+      margin: {t: 35, r: 20, b: 50, l: 60},
+      paper_bgcolor: "#ffffff",
+      plot_bgcolor: "#ffffff",
+      font: {family: "Inter, system-ui, sans-serif", color: "#1c1b18"},
+      xaxis: {gridcolor: "#eee8dc"},
+      yaxis: {gridcolor: "#eee8dc"}
+    };
+
+    function renderHistorical() {
+      const rows = chartData.historical;
+      Plotly.newPlot("historicalChart", [
+        {type: "bar", name: "Revenue", x: rows.map(r => r.fiscal_year), y: rows.map(r => r.revenue), marker: {color: "#006b64"}},
+        {type: "scatter", mode: "lines+markers", name: "Estimated EBITDA", x: rows.map(r => r.fiscal_year), y: rows.map(r => r.ebitda_estimated), yaxis: "y2", line: {color: "#9d2b2b", width: 3}}
+      ], {
+        ...layoutBase,
+        title: "Historical Revenue and Estimated EBITDA",
+        yaxis: {title: "Revenue (JPYm)", gridcolor: "#eee8dc"},
+        yaxis2: {title: "EBITDA (JPYm)", overlaying: "y", side: "right", showgrid: false}
+      }, {displayModeBar: false, responsive: true});
+    }
+
+    function renderProjection(scenario) {
+      const rows = chartData.scenario_projection[scenario];
+      Plotly.newPlot("projectionChart", [
+        {type: "bar", name: "Public", x: rows.map(r => r.fiscal_year), y: rows.map(r => r.public_revenue), marker: {color: "#006b64"}},
+        {type: "bar", name: "Mobility / DX", x: rows.map(r => r.fiscal_year), y: rows.map(r => r.mobility_dx_revenue), marker: {color: "#a36b00"}},
+        {type: "scatter", mode: "lines+markers", name: "EBITDA margin", x: rows.map(r => r.fiscal_year), y: rows.map(r => r.ebitda_margin), yaxis: "y2", line: {color: "#9d2b2b", width: 3}}
+      ], {
+        ...layoutBase,
+        barmode: "stack",
+        title: `${scenario} Projection`,
+        yaxis: {title: "Revenue (JPYm)", gridcolor: "#eee8dc"},
+        yaxis2: {title: "EBITDA margin", overlaying: "y", side: "right", tickformat: ".0%", showgrid: false}
+      }, {displayModeBar: false, responsive: true});
+    }
+
+    function renderReturns() {
+      const rows = chartData.returns_by_premium;
+      const scenarios = [...new Set(rows.map(r => r.scenario))];
+      const traces = scenarios.map(s => {
+        const sub = rows.filter(r => r.scenario === s);
+        return {type: "scatter", mode: "lines+markers", name: s, x: sub.map(r => `${Math.round(r.premium * 100)}%`), y: sub.map(r => r.irr)};
+      });
+      Plotly.newPlot("returnsChart", traces, {
+        ...layoutBase,
+        title: "IRR by TOB Premium",
+        yaxis: {title: "Sponsor IRR", tickformat: ".0%", gridcolor: "#eee8dc"},
+        xaxis: {title: "TOB premium", gridcolor: "#eee8dc"}
+      }, {displayModeBar: false, responsive: true});
+    }
+
+    function renderHeatmap() {
+      Plotly.newPlot("heatmapChart", [{
+        type: "heatmap",
+        x: chartData.heatmap.x,
+        y: chartData.heatmap.y,
+        z: chartData.heatmap.z,
+        colorscale: [[0, "#f3dedb"], [0.45, "#f5ead4"], [1, "#dcefed"]],
+        colorbar: {tickformat: ".0%", title: "IRR"},
+        hovertemplate: "Premium %{y}<br>Exit %{x}<br>IRR %{z:.1%}<extra></extra>"
+      }], {
+        ...layoutBase,
+        title: "Sponsor Case IRR Sensitivity",
+        xaxis: {title: "Exit EV / EBITDA"},
+        yaxis: {title: "Entry premium"}
+      }, {displayModeBar: false, responsive: true});
+    }
+
+    renderHistorical();
+    renderProjection("Sponsor");
+    renderReturns();
+    renderHeatmap();
+    document.getElementById("scenarioSelect").addEventListener("change", (event) => renderProjection(event.target.value));
+  </script>
+</body>
+</html>
