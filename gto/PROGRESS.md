@@ -95,8 +95,9 @@ gto-core/gto-cuda は single-street 近似のまま（river-only は正しい）
   cargo run --release -p gto-hu --bin solve-hu-turn-river -- \
     --board AhKd7s2c --pot 20 --stack 90 --iterations 10000
   ```
-- ゲーム範囲: HU NLHE cash、SRP リバー
-  （check / bet 75% / bet 150% / all-in、vs bet: fold / call / raise-jam）
+- ゲーム範囲: HU NLHE cash、SRP ターン+リバー
+  （ターン: check / b50 / b100、vs bet: fold / call / raise 3x-or-jam。
+  リバー: check / bet 75% / bet 150% / all-in、vs bet: fold / call / raise-jam）
 - テスト: 17ファイル・80テスト（betting / payoff / tree / regret / Kuhn /
   Leduc / TinyRiver / differential / BR / reports /
   turn tree / turn chance / turn solver / turn differential / turn reports）
@@ -158,9 +159,11 @@ cd web && pnpm exec next dev
 uv run --no-sync pytest gto/tests
 cargo test --manifest-path gto/Cargo.toml
 
-# HU リバーソルバー
+# HU リバーソルバー / ターン+リバーソルバー
 cargo run --release -p gto-hu --bin solve-hu-river -- \
   --board AhKd7s2c9h --pot 20 --stack 90 --iterations 10000
+cargo run --release -p gto-hu --bin solve-hu-turn-river -- \
+  --board AhKd7s2c --pot 20 --stack 90 --iterations 10000
 
 # 外部公開
 ssh -i ~/.ssh/id_ed25519 -o ServerAliveInterval=20 -R 80:localhost:3000 ssh.localhost.run
