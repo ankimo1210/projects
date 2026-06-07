@@ -22,3 +22,5 @@ Last updated: 2026-06-07
 - Cell index: 00 intro / 01 %matplotlib widget / 02 imports /
   03-16 Ch.13 / 17-26 Ch.14 / 27-28 verification / 29 exercises / 30 summary
 - Possible extensions: trinomial tree preview (Ch.21), fractional BM demo (§14)
+- nbformat: cells have no `id` (MissingIDFieldWarning; future nbformat hard error).
+  Fix in the builder (deterministic uuid per cell) when touching it next
