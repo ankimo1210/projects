@@ -201,6 +201,10 @@ gto-core/gto-cuda は single-street 近似のまま（river-only は正しい）
     K=128, sampled 3000 iters, uniform レンジ）: 学習 48.7 分 +厳密 BR、
     expl **1.174 bb/hand**（ターン文脈 ~61 訪問の浅い収束 + 抽象化損失込み。
     要追加 iteration）。BB ルート: check 77.2% / b33 15.8% / b75 7.0%
+  - **ターンバケッティング追加（同日）** — mean-river-percentile スコアの
+    tier-grouped ビン（`Abstraction{buckets_river, buckets_turn}`、
+    CLI `--buckets-turn`）。K_t=1326 で exact と全桁一致、
+    ダイヤル K_t=2: 0.337 → K_t=256: 0.027。フルスイート 157 本
   ```bash
   cargo run --release -p gto-hu --bin solve-hu-flop -- \
     --board AhKd7s --pot 5 --stack 97.5 --buckets-river 128 \
@@ -216,11 +220,14 @@ gto-core/gto-cuda は single-street 近似のまま（river-only は正しい）
 ## TODO（優先順）
 
 ### Phase HU 続き（gto-hu ロードマップ）
-- [ ] フルブループリント（Phase 6）— プリフロップ木の NextStreet 葉を
-      実ポストフロップ部分木（リバーバケット使用）に接続、DCFR、
-      全体 exploitability
-- [ ] ターンバケッティング（任意）— リバーで実装済みの戦略空間バケットを
-      ターンにも拡張（mean-river-percentile。バケッティングスペック §3）
+- [ ] **フルブループリント実装（Phase 6）** — 設計スペック完成・レビュー済み:
+      `docs/superpowers/specs/2026-06-08-blueprint-design.md`。
+      M 個（3〜5）の重み付き canonical flop 上の抽象ゲームとして
+      プリフロップ + 7 種のポストフロップ部分木を単一 CFR で解く。
+      expl は「M-flop 抽象ゲーム内で厳密」と明記する設計。
+      初回ランは数時間規模 →(m, leaf) 並列化（rayon）を先に入れる
+- [ ] 将来: f32 テーブル（×2）、ボードバケッティング、ディスクバック
+      （M を実用規模に上げる前提技術）
 
 ### Phase C 続き（任意）
 - [ ] GPU util 67% → 80%+（カーネル融合 / CUDA Graphs / バッチ拡大）
