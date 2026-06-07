@@ -74,7 +74,7 @@ RTX 5080（Blackwell / sm_120）が当時の PyTorch 非対応だったため、
 |---|---|
 | `game/` | 厳密チップ会計（i64 centi-bb）、`BettingState`、ペイオフ |
 | `tree/` | config 駆動アクション木（river / turn+river / flop+turn+river） |
-| `solver/` | スカラー参照 CFR + exact-combo ベクトル CFR（CFR+/DCFR）、public chance sampling、`FlopSolver`（lazy slab、密 105GB のフル SRP 100bb は fail-loud 拒否） |
+| `solver/` | スカラー参照 CFR + exact-combo ベクトル CFR（CFR+/DCFR）、public chance sampling、`FlopSolver`（lazy slab + リバー戦略空間バケッティング `--buckets-river`: 105GB→10.5GB@K=128、expl に抽象化損失が含まれる）、`PreflopSolver`（簡易価値モデル）、MC エクイティ表（rayon） |
 | `games/` | Kuhn / Leduc / TinyRiver / TinyTurnRiver / TinyFlopTurnRiver / TinyPreflop（差分テスト用参照ゲーム） |
 | `validation/` | 厳密 Best Response・exploitability（bb/hand、常に列挙） |
 | `bin/` | `solve-hu-river` / `solve-hu-turn-river` / `solve-hu-flop` / `solve-hu-preflop` CLI |
@@ -175,7 +175,7 @@ fast と hybrid は混合戦略が異なる（CFR 均衡の非一意性。根戦
 1. **GPU ソルバーは single-street**: フロップで Call → 即 Showdown 扱い。Turn/River を考慮しない（River solve は正しい）。正確な均衡は `gto-hu`（exploitability 付き）、多ストリート近似は `gto-core::multistreet`（CPU）
 2. **プリフロップはハードコード表**: 真の preflop CFR 未実装
 3. **3bet 以降の preflop tree 未実装**: BB 3bet 時の BTN 応答が無い
-4. **gto-hu フロップ木はフル SRP 100bb 非対応**: exact-combo 密テーブル 105 GB のため CLI が拒否（要バケッティング、spec §8 Phase 6）。3BP 等の小ツリー（~10 GB）は可
+4. **gto-hu フル SRP 100bb は要バケッティング**: exact-combo 密 105 GB は CLI が拒否、`--buckets-river 128`（10.49 GB）で可。リバー戦略がバケット共有になる分の損失は exploitability に含まれて報告される
 5. **review の逸脱フラグは preflop のみ**: 対応スポットも trainer 表の範囲（RFI / BB_vs_BTN / BB_vs_CO）。それ以外は `missing_data`
 
 ---

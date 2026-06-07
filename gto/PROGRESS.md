@@ -179,21 +179,48 @@ gto-core/gto-cuda は single-street 近似のまま（river-only は正しい）
     MC エクイティ表構築は単線程 644 秒 — rayon 並列化が改善候補。
     strategy_preflop.csv / strategy_root_classes.csv（169 クラス集約）/
     summary.json（モデル明記）を `_data/gto/hu/` へ出力
-- テスト: 25ファイル・約115テスト（betting / payoff / tree / regret / Kuhn /
+- [x] **リバー・バケッティング（Phase 6 前提, 2026-06-08）** —
+      戦略空間のみの strength-percentile バケット共有
+      （設計: `docs/superpowers/specs/2026-06-08-river-bucketing-design.md`）
+  - 走査・ブロッカー・チャンス重み・ショーダウンは 1326 コンボ厳密のまま、
+    リバーノードの regret/strategy 行のみ K_r バケットで共有。
+    per-combo 厳密 BR がそのまま使えるため **exploitability に抽象化損失が
+    測定値として含まれる**（主張は弱まらない）
+  - 密テーブル: フル SRP 100bb で 105.35 GB → **K=128 で 10.49 GB**
+    （K=64 で 5.42 GB）。`solve-hu-flop --buckets-river K`
+  - **敵対的スペックレビュー（3 レンズ）がブロッカーを出荷前に検出**:
+    重みなしリグレット集約はボードブロック・コンボ（SD 値 0、fold 値負）が
+    共有行を汚染し expl 70× 悪化。修正: トラバーサーのディール確率
+    （レンジ × ボードマスク）で重み付け。実測 K=2: 2.59→0.42、
+    K=256: 0.267→**0.0119**（exact 0.0172 同等）。
+    あわせて K=N の無言 exact フォールバック（差分テストを無意味化）も排除
+  - スート同型化の旧見積もり（3-5×）は誤りと判明（レインボーフロップでは
+    フロップ固定の自己同型が自明のみ）— スペック §1 に記録
+  - MC エクイティ表を rayon 並列化（644 秒 → 数十秒、ペア毎シードで決定的）
+  - **フル SRP 100bb 初ソルブ実測**（AhKd7s, pot 5bb / stack 97.5bb,
+    K=128, sampled 3000 iters, uniform レンジ）: 学習 48.7 分 +厳密 BR、
+    expl **1.174 bb/hand**（ターン文脈 ~61 訪問の浅い収束 + 抽象化損失込み。
+    要追加 iteration）。BB ルート: check 77.2% / b33 15.8% / b75 7.0%
+  ```bash
+  cargo run --release -p gto-hu --bin solve-hu-flop -- \
+    --board AhKd7s --pot 5 --stack 97.5 --buckets-river 128 \
+    --max-table-gb 12 --iterations 3000
+  ```
+- テスト: 26ファイル・約120テスト（betting / payoff / tree / regret / Kuhn /
   Leduc / TinyRiver / differential / BR / reports /
-  turn・flop・preflop の tree / chance / solver / differential / reports）
+  turn・flop・preflop の tree / chance / solver / differential / reports /
+  flop bucketing）
 
 ---
 
 ## TODO（優先順）
 
 ### Phase HU 続き（gto-hu ロードマップ）
-- [ ] **カード・バケッティング（spec §8 Level 2 / Phase 6 前提）** —
-      フル SRP 100bb フロップ木は exact-combo 密テーブルで 105 GB のため
-      現状 CLI が拒否する。スート同型化（~3-5×）+ f32 化（2×）でも数十 GB
-      残るので、フルツリーにはバケッティングが必須
 - [ ] フルブループリント（Phase 6）— プリフロップ木の NextStreet 葉を
-      実ポストフロップ部分木（バケット化）に接続、DCFR、全体 exploitability
+      実ポストフロップ部分木（リバーバケット使用）に接続、DCFR、
+      全体 exploitability
+- [ ] ターンバケッティング（任意）— リバーで実装済みの戦略空間バケットを
+      ターンにも拡張（mean-river-percentile。バケッティングスペック §3）
 
 ### Phase C 続き（任意）
 - [ ] GPU util 67% → 80%+（カーネル融合 / CUDA Graphs / バッチ拡大）
