@@ -42,3 +42,5 @@ def test_deltas():
     assert 0.0 < dc < 1.0
     assert -1.0 < dp < 0.0
     assert dc - dp == pytest.approx(math.exp(-q * T), abs=1e-12)
+    # Hull Ex 19.1: S=49, K=50, r=5%, sigma=20%, T=0.3846 -> delta = 0.522
+    assert bsm.call_delta(49.0, 50.0, 0.05, 0.20, 0.3846) == pytest.approx(0.522, abs=1e-3)
