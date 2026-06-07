@@ -148,7 +148,9 @@ impl TurnRiverSolver {
 
     /// Legal river cards per (hero, villain) deal: 52−4−2−2 = 44.
     fn legal_rivers_per_deal(&self) -> f64 {
-        (self.rivers.len() - 4) as f64
+        // Hole cards dead per deal: hero (2) + villain (2).
+        const HOLE_CARDS_PER_DEAL: usize = 4;
+        (self.rivers.len() - HOLE_CARDS_PER_DEAL) as f64
     }
 
     pub fn run(&mut self, iterations: u32) {
@@ -578,6 +580,7 @@ impl TurnRiverSolver {
     }
 
     /// Game value (bb/hand) to player 0 (SB/IP) under avg-vs-avg play.
+    /// Always exact (chance enumerated), even when training used sampling.
     pub fn game_value_p0(&self) -> f64 {
         let r0 = self.ranges[0].weights;
         let r1 = self.ranges[1].weights;

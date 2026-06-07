@@ -136,6 +136,8 @@ fn quads_never_fold_to_turn_jam() {
         .unwrap();
     s.run(150);
     let quads = combo_index(c("7h"), c("7s"));
+    // strat layout follows children order; facing a bet, legal_actions
+    // pushes Fold first → strat[0] is the fold frequency.
     let strat = s.average_strategy(jam, None, quads);
     eprintln!("quads fold freq vs turn jam = {}", strat[0]);
     assert!(strat[0] < 0.02, "quads folded to jam: {}", strat[0]);
