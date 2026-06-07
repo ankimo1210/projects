@@ -493,6 +493,232 @@ print(f"格子点上の最大誤差 = {err:.2e}（格子点では厳密に一致
 )
 
 # ===========================================================================
+# Section 4: Ch.17 index & currency options
+# ===========================================================================
+
+# Cell 22: index options + portfolio insurance
+cells.append(
+    md(r"""## 7. 株価指数オプションとポートフォリオ保険（§17.1–17.4）
+
+連続配当利回り $q$ の Merton 拡張（第1冊で実装済みの `bsm` の `q` 引数）：
+
+$$c = S_0 e^{-qT} N(d_1) - K e^{-rT} N(d_2) \quad \text{(17.4)}$$
+
+**ポートフォリオ保険**: ベータ $\beta$ のポートフォリオ $P$ を守る指数プット枚数は
+
+$$N^* = \beta \cdot \frac{P}{S_0 \times 100} \quad \text{(§17.1)}$$""")
+)
+
+# Cell 23: index pricing + insurance calc
+cells.append(
+    code(r"""# Hull Ex 17.1: S&P500 コール（S=930, K=900, r=8%, q=3%, σ=20%, T=2ヶ月）
+c_idx = bsm.call_price(930.0, 900.0, 0.08, 0.20, 2.0 / 12.0, q=0.03)
+print(f"指数コール = {c_idx:.2f}（Hull: 51.83）× 乗数100 = 1枚 {c_idx * 100:.0f} ドル")
+
+pv_pi, beta_pi, idx_pi = 500_000.0, 2.0, 1_000.0
+n_puts = beta_pi * pv_pi / (idx_pi * 100.0)
+print(f"\nポートフォリオ保険: V=${pv_pi:,.0f}, β={beta_pi}, 指数={idx_pi:,.0f}")
+print(f"必要プット枚数 N* = {beta_pi} × {pv_pi:,.0f} / ({idx_pi:,.0f}×100) = {n_puts:.0f} 枚")
+print("β>1 では枚数が増えるうえ行使価格も上げる必要があり、保険コストはβに対して逓増")""")
+)
+
+# Cell 24: currency options
+cells.append(
+    md(r"""## 8. 通貨オプション — Garman-Kohlhagen（§17.5）
+
+外貨は外国金利 $r_f$ を生む資産なので $q = r_f$ と置くだけ：
+
+$$c = S_0 e^{-r_f T} N(d_1) - K e^{-rT} N(d_2) \quad \text{(17.11)}$$
+
+$r_f > r$（高金利通貨）ではフォワードがディスカウント → コール安・プット高になります。
+**レンジ・フォワード**: プット買い＋コール売り（プレミアム相殺でゼロコスト）により
+為替レートを $[K_1, K_2]$ のレンジに固定するヘッジ。""")
+)
+
+# Cell 25: GK pricing table
+cells.append(
+    code(r"""# Garman-Kohlhagen: GBP コール（S=K=1.60, r=8%, r_f=11%, σ=14.14%, T=4ヶ月）
+c_fx = bsm.call_price(1.60, 1.60, 0.08, 0.1414, 4.0 / 12.0, q=0.11)
+print(f"通貨コール = {c_fx:.4f} USD（Hull: 0.043）\n")
+
+rows = []
+for rf in (0.05, 0.08, 0.11):
+    rows.append({
+        "r_f": f"{rf:.0%}",
+        "フォワード": round(1.60 * np.exp((0.08 - rf) / 3.0), 4),
+        "コール": round(bsm.call_price(1.60, 1.60, 0.08, 0.1414, 1.0 / 3.0, q=rf), 4),
+        "プット": round(bsm.put_price(1.60, 1.60, 0.08, 0.1414, 1.0 / 3.0, q=rf), 4),
+    })
+display(pd.DataFrame(rows))
+print("r_f が高いほどフォワードが下がり、コール安・プット高（金利平価）")""")
+)
+
+# ===========================================================================
+# Section 5: Ch.18 futures options & Black-76
+# ===========================================================================
+
+# Cell 26: futures options + Black-76
+cells.append(
+    md(r"""## 9. 先物オプションと Black-76（§18.1–18.6）
+
+先物オプションは行使で「先物ポジション＋キャッシュ」を得ます。
+リスク中立世界で先物価格はドリフト0（$dF = \sigma F\,dz$）—
+**つまり $q = r$ の資産と同じ**。これが Black (1976) の核心：
+
+$$c = e^{-rT}[F_0 N(d_1) - K N(d_2)], \qquad d_1 = \frac{\ln(F_0/K) + \sigma^2 T/2}{\sigma\sqrt{T}} \quad \text{(18.7)}$$
+
+`hullkit.bsm` では `call_price(F, K, r, σ, T, q=r)` で同じ値が得られます。""")
+)
+
+# Cell 27: Black-76 pricing
+cells.append(
+    code(r"""# Hull の例: 先物プット（F=20, K=20, r=9%, σ=25%, T=4ヶ月）
+F0, K_f, R_f, SIG_f, T_f = 20.0, 20.0, 0.09, 0.25, 4.0 / 12.0
+p_black = bsm.put_price(F0, K_f, R_f, SIG_f, T_f, q=R_f)
+
+# Black-76 明示式と突合
+d1 = (np.log(F0 / K_f) + 0.5 * SIG_f**2 * T_f) / (SIG_f * np.sqrt(T_f))
+d2 = d1 - SIG_f * np.sqrt(T_f)
+p_explicit = np.exp(-R_f * T_f) * (K_f * norm.cdf(-d2) - F0 * norm.cdf(-d1))
+print(f"bsm(q=r) = {p_black:.4f} ／ Black-76 明示式 = {p_explicit:.4f}（Hull: 1.12）")
+print(f"差 = {abs(p_black - p_explicit):.2e}（恒等）")
+
+c_atm = bsm.call_price(100.0, 100.0, 0.05, 0.20, 0.5, q=0.05)
+p_atm = bsm.put_price(100.0, 100.0, 0.05, 0.20, 0.5, q=0.05)
+print(f"\nATM（F=K）: コール {c_atm:.4f} = プット {p_atm:.4f} — パリティから恒等")""")
+)
+
+# Cell 28: futures parity + American
+cells.append(
+    md(r"""### 先物オプションのパリティと早期行使（§18.4, §18.7）
+
+$$c + Ke^{-rT} = p + F_0 e^{-rT} \quad \text{(18.1)}$$
+
+（株式の $S_0$ が $F_0 e^{-rT}$ に置き換わった形。$F_0=K$ なら $c=p$）
+
+アメリカン先物オプションは **コールもプットも** 早期行使され得ます
+（$r>0$ でディープ ITM の先物オプションは即時行使で $e^{-rT}$ の割引を回避できるため）。
+二項ツリーでは成長因子 $a=1$、つまり `q=r` で評価します。""")
+)
+
+# Cell 29: parity check + American premiums
+cells.append(
+    code(r"""# パリティ数値検証
+c_f = bsm.call_price(F0, K_f, R_f, SIG_f, T_f, q=R_f)
+lhs = c_f + K_f * np.exp(-R_f * T_f)
+rhs = p_black + F0 * np.exp(-R_f * T_f)
+print(f"パリティ: c+Ke^(-rT) = {lhs:.6f} ／ p+F0e^(-rT) = {rhs:.6f} ／ 差 {abs(lhs - rhs):.2e}\n")
+
+# アメリカン先物オプション（CRR, q=r → a=1）: コールにもプレミアムが付く
+rows = []
+for kind in ("call", "put"):
+    eu = trees.crr_price(F0, K_f, R_f, SIG_f, T_f, 200, q=R_f, kind=kind)
+    am = trees.crr_price(F0, K_f, R_f, SIG_f, T_f, 200, q=R_f, kind=kind, american=True)
+    rows.append({"種別": kind, "European": round(eu, 4), "American": round(am, 4),
+                 "早期行使プレミアム": round(am - eu, 4)})
+display(pd.DataFrame(rows))
+print("無配当株（q=0）と違い、先物オプションはコールも American > European")""")
+)
+
+# ===========================================================================
+# Section 6: verification / exercises / summary
+# ===========================================================================
+
+# Cell 30: verification intro
+cells.append(
+    md(r"""## 10. 教科書例題との突合せ
+
+本ノートブックと `hullkit` の数値を Hull 11e の例題・恒等式と突き合わせます。
+（`hullkit/tests/test_payoffs.py` にも同じ検証があります）""")
+)
+
+# Cell 31: assertion cell
+cells.append(
+    code(r"""checks = []
+s_grid_v = np.linspace(50.0, 150.0, 201)
+
+# Ch.12 ペイオフ恒等式
+strad_v = payoffs.strategy_payoff(s_grid_v, payoffs.STRATEGIES["straddle"](100.0))
+assert np.allclose(strad_v, np.abs(s_grid_v - 100.0)), "straddle = |S-K|"
+bf_v = payoffs.strategy_payoff(s_grid_v, payoffs.STRATEGIES["butterfly"](90.0, 100.0, 110.0))
+assert abs(float(bf_v[np.argmin(np.abs(s_grid_v - 100.0))]) - 10.0) < 1e-9, "butterfly spike"
+checks.append(("box (K2−K1)e^(-rT)", payoffs.box_spread_value(90.0, 110.0, 0.05, 1.0),
+               20.0 * np.exp(-0.05), 1e-12))
+
+# Ch.11
+checks.append(("パリティ含意プット 1.2593", 3.0 + 30.0 * np.exp(-0.025) - 31.0, 1.2593, 5e-4))
+checks.append(("コール下限 3.9118", 51.0 - 50.0 * np.exp(-0.06), 3.9118, 5e-4))
+checks.append(("プット下限 1.0124", 40.0 * np.exp(-0.025) - 38.0, 1.0124, 5e-4))
+am_c_v = trees.crr_price(100.0, 100.0, 0.05, 0.25, 1.0, 200, american=True)
+eu_c_v = trees.crr_price(100.0, 100.0, 0.05, 0.25, 1.0, 200)
+checks.append(("無配当コール C=c", am_c_v, eu_c_v, 1e-9))
+
+# Ch.17
+checks.append(("指数コール 51.83",
+               bsm.call_price(930.0, 900.0, 0.08, 0.20, 2.0 / 12.0, q=0.03), 51.83, 0.05))
+checks.append(("GK通貨コール 0.0431",
+               bsm.call_price(1.60, 1.60, 0.08, 0.1414, 4.0 / 12.0, q=0.11), 0.0431, 1e-3))
+checks.append(("保険プット枚数 10", 2.0 * 500_000.0 / (1_000.0 * 100.0), 10.0, 1e-12))
+
+# Ch.18
+checks.append(("Black-76 プット 1.1166",
+               bsm.put_price(20.0, 20.0, 0.09, 0.25, 4.0 / 12.0, q=0.09), 1.1166, 1e-3))
+checks.append(("Black ATM c=p", bsm.call_price(100.0, 100.0, 0.05, 0.2, 0.5, q=0.05),
+               bsm.put_price(100.0, 100.0, 0.05, 0.2, 0.5, q=0.05), 1e-10))
+
+for name, got, want, tol in checks:
+    ok = abs(got - want) <= tol
+    print(f"[{'OK' if ok else 'FAIL'}] {name}: got={got:.4f} want={want:.4f} (tol={tol})")
+    assert ok, name
+print("\n全チェック合格")""")
+)
+
+# Cell 32: exercises
+cells.append(
+    md(r"""## 11. 練習問題
+
+**Q1.** S=20, K=18, r=10%, T=1年, コール=4 のとき、パリティが含意するプット価格は？
+
+<details><summary>解答</summary>
+
+p = c + Ke^{−rT} − S = 4 + 18e^{−0.10} − 20 = 4 + 16.287 − 20 = 0.287。
+</details>
+
+**Q2.** straddle が「大きく動くと分かっているイベント前」でも儲かりにくいのはなぜ？
+
+<details><summary>解答</summary>
+
+同じ予想は市場も織り込んでおり、IV 上昇でプレミアムが既に割高。
+実現変動が織り込み済み変動を上回って初めて利益になる。
+</details>
+
+**Q3.** Black-76 で F₀ = K のときコールとプットの価格が一致するのはなぜ？
+
+<details><summary>解答</summary>
+
+先物パリティ c + Ke^{−rT} = p + F₀e^{−rT} で F₀ = K とおくと両辺の債券項が等しく c = p。
+（d₂ = −d₁ になることからも直接示せる）
+</details>""")
+)
+
+# Cell 33: summary
+cells.append(
+    md(r"""## まとめ
+
+| 概念 | 要点 |
+|---|---|
+| 4つの基本ポジション | 買いはプレミアム上限の損失、売りは無限大/K までの損失 |
+| 上下限 | モデルフリーの裁定不等式。BSM は常にバンド内 |
+| パリティ | c + Ke^{−rT} = p + S₀。破れ＝裁定。米国は不等式のみ |
+| 早期行使 | 無配当コール C=c ／ プットは深い ITM で P>p |
+| 戦略 | 相場観×ボラ観で選択。butterfly は任意ペイオフの建築ブロック |
+| q の統一性 | 指数 q=配当利回り ／ 通貨 q=r_f ／ 先物 q=r（Black-76） |
+
+**次へ**: `volumes/03_greeks`（Ch.19 — デルタヘッジと感応度）
+**シリーズ**: `johnhull/ROADMAP.md` 参照""")
+)
+
+# ===========================================================================
 # Notebook assembly
 # ===========================================================================
 
