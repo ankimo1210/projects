@@ -367,6 +367,341 @@ display(pd.DataFrame(rows))""")
 )
 
 # ===========================================================================
+# Section 2: Ch.14 Wiener processes & Ito's lemma
+# ===========================================================================
+
+# Cell 17: §14.1-14.2 Markov & Wiener processes
+cells.append(
+    md(r"""## 7. マルコフ性とウィーナー過程（§14.1–14.2）
+
+株価過程の標準モデルは **マルコフ過程**：将来の分布は現在値のみで決まります。
+最も基本的な連続時間マルコフ過程が **ウィーナー過程** $z$（ブラウン運動）：
+
+$$\Delta z = \epsilon \sqrt{\Delta t}, \quad \epsilon \sim \phi(0,1) \quad \text{(14.1)}$$
+
+$$z(T) - z(0) \sim \phi(0, T) \quad \text{(14.2)}$$
+
+不確実性（標準偏差）は **時間の平方根** に比例して増えます。
+分散は加法的（2年の分散=2）ですが標準偏差は非加法的（2年の標準偏差=$\sqrt{2}$）。""")
+)
+
+# Cell 18: interactive Wiener paths
+cells.append(
+    code(r"""# --- ウィーナー過程のパスと ±σ√t バンド ---
+fig5, ax5 = plt.subplots(figsize=(8, 4.5))
+fig5.canvas.header_visible = False
+dt_sl = widgets.SelectionSlider(
+    options=[("1.0", 1.0), ("0.25", 0.25), ("0.05", 0.05), ("0.01", 0.01)],
+    value=0.05, description="Δt",
+)
+T_W = 5.0
+
+
+def _upd_wiener(change=None):
+    ax5.clear()
+    dt = dt_sl.value
+    n = int(T_W / dt)
+    t = np.linspace(0.0, T_W, n + 1)
+    rng = np.random.default_rng(0)
+    dz = rng.standard_normal((30, n)) * np.sqrt(dt)
+    z = np.column_stack([np.zeros(30), np.cumsum(dz, axis=1)])
+    ax5.plot(t, z.T, lw=0.6, alpha=0.6)
+    tt = np.linspace(0.0, T_W, 200)
+    for k_sd, ls in [(1, "--"), (2, ":")]:
+        ax5.plot(tt, k_sd * np.sqrt(tt), "k" + ls, lw=1.2)
+        ax5.plot(tt, -k_sd * np.sqrt(tt), "k" + ls, lw=1.2)
+    ax5.set_title(f"ウィーナー過程 30本（Δt={dt}）と ±√t / ±2√t バンド")
+    ax5.set_xlabel("t（年）")
+    ax5.set_ylabel("z(t)")
+    fig5.canvas.draw_idle()
+
+
+dt_sl.observe(_upd_wiener, "value")
+_upd_wiener()
+display(dt_sl, fig5.canvas)""")
+)
+
+# Cell 19: §14.3 generalized Wiener process
+cells.append(
+    md(r"""## 8. 一般化ウィーナー過程（§14.3）
+
+ドリフト $a$・拡散係数 $b$ を加えた過程：
+
+$$dx = a\,dt + b\,dz, \qquad x(T) - x(0) \sim \phi(aT,\; b^2 T) \quad \text{(14.3)}$$
+
+期待値は $a$ に沿って直線的に進み、その周りに $b\sqrt{t}$ の不確実性が広がります。""")
+)
+
+# Cell 20: interactive generalized Wiener + KDE
+cells.append(
+    code(r"""# --- 一般化ウィーナー過程: パス＋終端分布 ---
+fig6, (ax6a, ax6b) = plt.subplots(
+    1, 2, figsize=(10, 4), gridspec_kw={"width_ratios": [3, 1]}, sharey=True
+)
+fig6.canvas.header_visible = False
+a_sl = widgets.FloatSlider(value=0.3, min=-1.0, max=1.0, step=0.1, description="a（ドリフト）")
+b_sl = widgets.FloatSlider(value=0.5, min=0.1, max=2.0, step=0.1, description="b（拡散）")
+T_G, N_G, M_G = 5.0, 250, 400
+
+
+def _upd_gw(change=None):
+    ax6a.clear()
+    ax6b.clear()
+    a, b = a_sl.value, b_sl.value
+    dt = T_G / N_G
+    t = np.linspace(0.0, T_G, N_G + 1)
+    rng = np.random.default_rng(1)
+    dx = a * dt + b * np.sqrt(dt) * rng.standard_normal((M_G, N_G))
+    x = np.column_stack([np.zeros(M_G), np.cumsum(dx, axis=1)])
+    ax6a.plot(t, x[:40].T, lw=0.5, alpha=0.5)
+    ax6a.plot(t, a * t, "k--", lw=1.5, label="期待値 a·t")
+    kx, ky = nbplot.kde_xy(x[:, -1])
+    ax6b.plot(ky, kx, label="シミュ KDE")
+    grid = np.linspace(x[:, -1].min(), x[:, -1].max(), 200)
+    ax6b.plot(norm.pdf(grid, a * T_G, b * np.sqrt(T_G)), grid, "--", label="理論 φ(aT, b²T)")
+    ax6a.set_title("dx = a·dt + b·dz")
+    ax6a.set_xlabel("t（年）")
+    ax6a.legend()
+    ax6b.set_title("x(T) の分布")
+    ax6b.legend(fontsize=8)
+    fig6.canvas.draw_idle()
+
+
+a_sl.observe(_upd_gw, "value")
+b_sl.observe(_upd_gw, "value")
+_upd_gw()
+display(widgets.HBox([a_sl, b_sl]), fig6.canvas)""")
+)
+
+# Cell 21: §14.4-14.5 Ito process & GBM
+cells.append(
+    md(r"""## 9. 伊藤過程と幾何ブラウン運動（§14.4–14.5）
+
+係数を状態依存にしたものが **伊藤過程** $dx = a(x,t)dt + b(x,t)dz$。
+株価の標準モデルは **幾何ブラウン運動（GBM）**：
+
+$$dS = \mu S\,dt + \sigma S\,dz \quad \text{(14.6)}$$
+
+「期待収益率 $\mu$ と変動率 $\sigma$ が株価水準によらず一定」という仮定です。
+シミュレーションには exact log-Euler 法（`hullkit.mc`）を使います —
+naive Euler（$\Delta S = \mu S \Delta t + \sigma S \epsilon \sqrt{\Delta t}$）は離散化誤差が蓄積します。""")
+)
+
+# Cell 22: interactive GBM + lognormal KDE
+cells.append(
+    code(r"""# --- GBM: パス＋終端分布（対数正規） ---
+fig7, (ax7a, ax7b) = plt.subplots(
+    1, 2, figsize=(10, 4), gridspec_kw={"width_ratios": [3, 1]}, sharey=True
+)
+fig7.canvas.header_visible = False
+mu_sl = widgets.FloatSlider(value=0.10, min=-0.1, max=0.3, step=0.01, description="μ")
+sig7_sl = widgets.FloatSlider(value=0.20, min=0.05, max=0.6, step=0.05, description="σ")
+S0_7, T_7 = 100.0, 1.0
+
+
+def _upd_gbm(change=None):
+    ax7a.clear()
+    ax7b.clear()
+    mu, sig = mu_sl.value, sig7_sl.value
+    paths = mc.simulate_gbm_paths(
+        S0_7, mu, sig, T_7, n_steps=252, n_paths=2000, rng=np.random.default_rng(7)
+    )
+    t = np.linspace(0.0, T_7, 253)
+    ax7a.plot(t, paths[:40].T, lw=0.5, alpha=0.5)
+    ax7a.plot(t, S0_7 * np.exp(mu * t), "k--", lw=1.5, label="E[S_t] = S0·e^{μt}")
+    st = paths[:, -1]
+    kx, ky = nbplot.kde_xy(st)
+    ax7b.plot(ky, kx, label="シミュ KDE")
+    shape, scale = sig * np.sqrt(T_7), S0_7 * np.exp((mu - 0.5 * sig**2) * T_7)
+    grid = np.linspace(st.min(), st.max(), 200)
+    ax7b.plot(lognorm.pdf(grid, s=shape, scale=scale), grid, "--", label="理論 対数正規")
+    ax7a.set_title("GBM: dS = μS·dt + σS·dz")
+    ax7a.set_xlabel("t（年）")
+    ax7a.legend()
+    ax7b.set_title("S_T の分布")
+    ax7b.legend(fontsize=8)
+    fig7.canvas.draw_idle()
+
+
+mu_sl.observe(_upd_gbm, "value")
+sig7_sl.observe(_upd_gbm, "value")
+_upd_gbm()
+display(widgets.HBox([mu_sl, sig7_sl]), fig7.canvas)""")
+)
+
+# Cell 23: §14.6 Ito's lemma & ln S
+cells.append(
+    md(r"""## 10. 伊藤の補題と対数正規性（§14.6–14.7）
+
+$x$ が伊藤過程に従うとき、$G(x,t)$ は：
+
+$$dG = \left(\frac{\partial G}{\partial x}a + \frac{\partial G}{\partial t}
++ \frac{1}{2}\frac{\partial^2 G}{\partial x^2}b^2\right)dt
++ \frac{\partial G}{\partial x}\,b\,dz \quad \text{(14.12)}$$
+
+核心は $(\Delta x)^2 \to b^2 \Delta t$（消えない！）。$G = \ln S$ に適用すると：
+
+$$d(\ln S) = \left(\mu - \frac{\sigma^2}{2}\right)dt + \sigma\,dz \quad \text{(14.17)}$$
+
+$$\ln S_T \sim \phi\!\left[\ln S_0 + \left(\mu - \tfrac{\sigma^2}{2}\right)T,\; \sigma^2 T\right] \quad \text{(14.19)}$$
+
+通常の微分の感覚で $d(\ln S) = dS/S$ とすると $-\sigma^2/2$ の項が欠落します。
+下のセルでこの差を数値で確認します。""")
+)
+
+# Cell 24: Ito verification table
+cells.append(
+    code(r"""# d(lnS) のドリフトは μ−σ²/2、ΔS/S のドリフトは μ — 差が伊藤の ½σ² 項
+mu_i, sig_i, S0_i, T_i = 0.15, 0.30, 100.0, 1.0
+print(f"μ = {mu_i}, σ = {sig_i}  →  μ−σ²/2 = {mu_i - 0.5 * sig_i**2:.4f}（分散ドラッグ {0.5 * sig_i**2:.4f}）\n")
+rows = []
+for n_steps in [12, 52, 252]:
+    dt = T_i / n_steps
+    paths = mc.simulate_gbm_paths(
+        S0_i, mu_i, sig_i, T_i, n_steps, 50_000, rng=np.random.default_rng(3)
+    )
+    dln = np.diff(np.log(paths), axis=1).ravel()
+    ds_s = (np.diff(paths, axis=1) / paths[:, :-1]).ravel()
+    rows.append(
+        {"Δt": round(dt, 4),
+         "mean d(lnS)/Δt": round(float(dln.mean() / dt), 4),
+         "理論 μ−σ²/2": round(mu_i - 0.5 * sig_i**2, 4),
+         "var d(lnS)/Δt": round(float(dln.var() / dt), 4),
+         "理論 σ²": round(sig_i**2, 4),
+         "mean (ΔS/S)/Δt": round(float(ds_s.mean() / dt), 4),
+         "↑理論 μ": mu_i}
+    )
+display(pd.DataFrame(rows))""")
+)
+
+# Cell 25: mu vs mu - sigma^2/2
+cells.append(
+    md(r"""### $\mu$ と $\mu - \sigma^2/2$ の違い
+
+- $\mu$: 短期間の期待収益率（算術平均的）。$E(S_T) = S_0 e^{\mu T}$
+- $\mu - \sigma^2/2$: 対数収益率の期待値（連続複利・幾何平均的）
+
+ボラティリティが高いほど両者の差（**分散ドラッグ**）が拡大します。
+例：$\mu = 15\%,\ \sigma = 20\%$ → 対数収益率の期待値は $13\%$。""")
+)
+
+# Cell 26: E/Var sim vs theory
+cells.append(
+    code(r"""S0_e, mu_e, sig_e, T_e = 100.0, 0.10, 0.20, 1.0
+paths = mc.simulate_gbm_paths(S0_e, mu_e, sig_e, T_e, 252, 100_000)
+st = paths[:, -1]
+e_th, v_th = mc.gbm_theory(S0_e, mu_e, sig_e, T_e)
+ln_m_th = np.log(S0_e) + (mu_e - 0.5 * sig_e**2) * T_e
+ln_v_th = sig_e**2 * T_e
+display(pd.DataFrame([
+    {"量": "E[S_T]", "シミュ": round(float(st.mean()), 3), "理論": round(e_th, 3)},
+    {"量": "Var[S_T]", "シミュ": round(float(st.var()), 1), "理論": round(v_th, 1)},
+    {"量": "E[ln S_T]", "シミュ": round(float(np.log(st).mean()), 4), "理論": round(ln_m_th, 4)},
+    {"量": "Var[ln S_T]", "シミュ": round(float(np.log(st).var()), 4), "理論": round(ln_v_th, 4)},
+]))""")
+)
+
+# ===========================================================================
+# Section 3: verification / exercises / summary
+# ===========================================================================
+
+# Cell 27: verification intro
+cells.append(
+    md(r"""## 11. 教科書例題との突合せ
+
+本ノートブックと `hullkit` の数値を Hull 11e の例題と突き合わせます。
+（hullkit の pytest にも同じ検証があります: `johnhull/hullkit/tests/`）""")
+)
+
+# Cell 28: assertion cell
+cells.append(
+    code(r"""checks = []
+
+# Hull §13.1 1ステップ: S0=20, u=1.1, d=0.9, K=21, r=12%, T=0.25
+stock1, opt1 = trees.binomial_tree(20.0, 21.0, 0.12, 0.25, 1, u=1.1, d=0.9)
+checks.append(("1ステップ コール 0.633", float(opt1[0][0]), 0.633, 5e-4))
+checks.append(("1ステップ Δ = 0.25", trees.tree_delta(stock1, opt1), 0.25, 1e-9))
+
+# Hull Fig 13.3 2ステップ コール
+_, opt2 = trees.binomial_tree(20.0, 21.0, 0.12, 0.5, 2, u=1.1, d=0.9)
+checks.append(("2ステップ コール 1.2823", float(opt2[0][0]), 1.2823, 5e-4))
+
+# Hull Fig 13.5 アメリカンプット（丸めなし厳密値 5.0896）
+_, opt3 = trees.binomial_tree(
+    50.0, 52.0, 0.05, 2.0, 2, u=1.2, d=0.8, kind="put", american=True
+)
+checks.append(("アメリカンプット 5.0896", float(opt3[0][0]), 5.0896, 1e-3))
+
+# Hull Example 15.6
+checks.append(("BSM コール 4.76", bsm.call_price(42, 40, 0.10, 0.20, 0.5), 4.76, 1e-2))
+checks.append(("BSM プット 0.81", bsm.put_price(42, 40, 0.10, 0.20, 0.5), 0.81, 1e-2))
+
+# 収束: CRR(500) ≈ BSM (10.4506)
+checks.append((
+    "CRR(500) → BSM 10.4506",
+    trees.crr_price(100.0, 100.0, 0.05, 0.2, 1.0, 500),
+    bsm.call_price(100.0, 100.0, 0.05, 0.2, 1.0),
+    1e-2,
+))
+
+# GBM モーメント（シード固定）
+paths_v = mc.simulate_gbm_paths(100.0, 0.10, 0.20, 1.0, 50, 100_000)
+e_v, _ = mc.gbm_theory(100.0, 0.10, 0.20, 1.0)
+checks.append(("GBM E[S_T] ≈ 110.52", float(paths_v[:, -1].mean()), e_v, 0.5))
+
+for name, got, want, tol in checks:
+    ok = abs(got - want) <= tol
+    print(f"[{'OK' if ok else 'FAIL'}] {name}: got={got:.4f} want={want:.4f} (tol={tol})")
+    assert ok, name
+print("\n全チェック合格")""")
+)
+
+# Cell 29: exercises
+cells.append(
+    md(r"""## 12. 練習問題
+
+**Q1.** S0=50, u=1.06, d=0.95, r=4%, T=0.5（1ステップ）の K=50 コールの価格とデルタは？
+
+<details><summary>解答</summary>
+
+p = (e^{0.02} − 0.95) / (1.06 − 0.95) = 0.6382。
+f = e^{−0.02} × 0.6382 × 3 = 1.877。Δ = 3 / (53 − 47.5) = 0.5455。
+</details>
+
+**Q2.** アメリカンコール（配当なし株）は早期行使が最適にならない。なぜか？
+
+<details><summary>解答</summary>
+
+行使すると本質的価値 S−K しか得られないが、保有すれば時間価値＋K の支払い繰延べ
+（金利分）＋下方プロテクションが残る。配当がなければ継続価値 > 本質的価値が常に成立（§11 参照）。
+</details>
+
+**Q3.** μ=20%, σ=30% の株式の、1年後の対数収益率の期待値は？
+
+<details><summary>解答</summary>
+
+μ − σ²/2 = 0.20 − 0.045 = 15.5%。期待値 E[S_T]=S0·e^{0.20} と混同しないこと。
+</details>""")
+)
+
+# Cell 30: summary
+cells.append(
+    md(r"""## まとめ
+
+| 概念 | 要点 |
+|---|---|
+| リスク中立評価 | 実確率は不要。p=(a−d)/(u−d) で期待値→無リスク割引 |
+| CRR ツリー | u=e^{σ√Δt}, d=1/u。N→∞ で BSM に収束（誤差 O(1/N), 奇偶振動） |
+| アメリカン | 各ノードで max(継続価値, 本質的価値)。プットは行使域あり |
+| ウィーナー過程 | Δz=ε√Δt。不確実性は √t で成長 |
+| GBM | dS=μS dt+σS dz。S_T は対数正規 |
+| 伊藤の補題 | (Δx)²→b²Δt。d(lnS) のドリフトは μ−σ²/2 |
+
+**次へ**: `notebooks/bsm_chapter15.ipynb`（Ch.15 — GBM＋伊藤の補題から BSM 公式へ）
+**シリーズ**: `johnhull/ROADMAP.md` 参照""")
+)
+
+# ===========================================================================
 # Notebook assembly
 # ===========================================================================
 
