@@ -1,0 +1,42 @@
+PokerStars Zoom Hand #244112233445:  Hold'em No Limit ($0.25/$0.50 USD) - 2024/02/03 14:02:55 ET
+Table 'Donati' 6-max Seat #1 is the button
+Seat 1: villain_btn ($50.00 in chips)
+Seat 2: smallb ($62.10 in chips)
+Seat 3: Hero ($50.00 in chips)
+Seat 4: utg_guy ($48.75 in chips)
+Seat 5: hj_man ($50.00 in chips)
+Seat 6: co_lady ($55.25 in chips)
+smallb: posts small blind $0.25
+Hero: posts big blind $0.50
+*** HOLE CARDS ***
+Dealt to Hero [Ah Kd]
+utg_guy: folds
+hj_man: folds
+co_lady: folds
+villain_btn: raises $0.75 to $1.25
+smallb: folds
+Hero: calls $0.75
+*** FLOP *** [Kc 7d 2c]
+Hero: checks
+villain_btn: bets $1.50
+Hero: calls $1.50
+*** TURN *** [Kc 7d 2c] [5h]
+Hero: checks
+villain_btn: bets $3.75
+Hero: calls $3.75
+*** RIVER *** [Kc 7d 2c 5h] [9s]
+Hero: checks
+villain_btn: checks
+*** SHOW DOWN ***
+Hero: shows [Ah Kd] (a pair of Kings)
+villain_btn: mucks hand
+Hero collected $12.65 from pot
+*** SUMMARY ***
+Total pot $13.25 | Rake $0.60
+Board [Kc 7d 2c 5h 9s]
+Seat 1: villain_btn (button) mucked [Qd Jd]
+Seat 2: smallb (small blind) folded before Flop
+Seat 3: Hero (big blind) showed [Ah Kd] and won ($12.65) with a pair of Kings
+Seat 4: utg_guy folded before Flop (didn't bet)
+Seat 5: hj_man folded before Flop (didn't bet)
+Seat 6: co_lady folded before Flop (didn't bet)

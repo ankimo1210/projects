@@ -1,0 +1,31 @@
+PokerStars Hand #245000111222:  Hold'em No Limit ($1/$2 USD) - 2024/03/10 02:15:40 ET
+Table 'Hyakutake II' 9-max Seat #7 is the button
+Seat 2: shark_ali ($80.00 in chips)
+Seat 5: rocky_5 ($210.00 in chips)
+Seat 7: Hero ($250.00 in chips)
+Seat 8: tired_tom ($95.00 in chips) is sitting out
+shark_ali: posts the ante $0.50
+rocky_5: posts the ante $0.50
+Hero: posts the ante $0.50
+shark_ali: posts small blind $1
+rocky_5: posts big blind $2
+*** HOLE CARDS ***
+Dealt to Hero [As Ad]
+Hero: raises $247.50 to $249.50 and is all-in
+shark_ali: calls $78.50 and is all-in
+rocky_5: folds
+Uncalled bet ($170) returned to Hero
+*** FLOP *** [9c 6h 3d]
+*** TURN *** [9c 6h 3d] [Qs]
+*** RIVER *** [9c 6h 3d Qs] [2h]
+*** SHOW DOWN ***
+shark_ali: shows [Kh Ks] (a pair of Kings)
+Hero: shows [As Ad] (a pair of Aces)
+Hero collected $160 from pot
+rocky_5 said, "nh"
+*** SUMMARY ***
+Total pot $162.50 | Rake $2.50
+Board [9c 6h 3d Qs 2h]
+Seat 2: shark_ali (small blind) showed [Kh Ks] and lost with a pair of Kings
+Seat 5: rocky_5 (big blind) folded before Flop
+Seat 7: Hero (button) showed [As Ad] and won ($160) with a pair of Aces

@@ -1,0 +1,29 @@
+PokerStars Hand #243598731121:  Hold'em No Limit ($0.50/$1.00 USD) - 2024/01/15 20:31:07 ET
+Table 'Aenna III' 6-max Seat #3 is the button
+Seat 1: Hero ($100.00 in chips)
+Seat 2: bob_the_fish ($85.50 in chips)
+Seat 3: carol99 ($120.25 in chips)
+Seat 4: dave42 ($100.00 in chips)
+Seat 5: emma_v ($210.00 in chips)
+Seat 6: frank_tank ($98.00 in chips)
+dave42: posts small blind $0.50
+emma_v: posts big blind $1
+*** HOLE CARDS ***
+Dealt to Hero [7h 2s]
+frank_tank: folds
+Hero: folds
+bob_the_fish: folds
+carol99: raises $1.50 to $2.50
+dave42: folds
+emma_v: folds
+Uncalled bet ($1.50) returned to carol99
+carol99 collected $2.50 from pot
+carol99: doesn't show hand
+*** SUMMARY ***
+Total pot $2.50 | Rake $0
+Seat 1: Hero folded before Flop (didn't bet)
+Seat 2: bob_the_fish folded before Flop (didn't bet)
+Seat 3: carol99 (button) collected ($2.50)
+Seat 4: dave42 (small blind) folded before Flop
+Seat 5: emma_v (big blind) folded before Flop
+Seat 6: frank_tank folded before Flop (didn't bet)
