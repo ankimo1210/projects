@@ -16,12 +16,22 @@ Scope: Excel/PPTX deliverables only. HTML work intentionally out of scope.
 - [x] Excel leftovers via cache-preserving zip edit: `B7` label, `C29`=C5 link, Cover contents row for Lev_Sensitivity.
 - [x] FACT_CHECK "Shusoku" → "Akisoku" (kanji 有限会社秋測; romanization unverified).
 - [x] pytest re-run: `4 passed in 0.97s`. markitdown + python-pptx stale grep: 0 hits.
-- [x] LibreOffice installed → `recalc.py` → `{"status": "success", "total_errors": 0, "total_formulas": 260}`; 11 key values re-verified unchanged post-recalc.
+- [x] LibreOffice installed → `recalc.py` → `{"status": "success", "total_errors": 0, "total_formulas": 428}` (after Lev_Sensitivity formula-isation); 11 key values re-verified unchanged post-recalc.
 - [x] **Visual QA completed (all 19 slides rendered & inspected, 4 fix-and-verify cycles)**:
   - Slide 8: STRUCTURE stat-card value was a full sentence at 16pt overflowing the card → "Sponsor-led / MBO" + short caption.
   - Slide 9 / 14 (new slides): PASCO table cells and note lines had no explicit font size (rendered ~18pt, overflowing slide edges) → 7.5/7.0pt with word-wrap; headers restyled to deck standard (gold section number, Georgia navy left-aligned title, italic subtitle; `wrap="none"+spAutoFit` removed — it made LibreOffice center the titles).
   - Slide 19: footer note / page number / "A" chip normalized to deck styles.
   - Final pass: zip duplicates 0, section/page numbering ALL OK, stale-value grep 0 hits.
+
+## 2026-06-08 round 4 — analytical review (GPT) response
+
+- [x] **#1 Excess cash treatment (key)**: added cash-availability sensitivity to Excel `Returns` (Full extraction 2.07x/15.6% → Cash retained 1.76x/12.0% → Trapped 1.47x/8.1%, formula-driven) + **new Slide 15 "Excess Cash Is Central to Returns"**; Exec Summary caveat added. Headline 15.6% retained; cash framed as DD item, not underwritten.
+- [x] **#3 MIP dilution**: added MIP block to `Returns` (0/5/10% → 2.07x/1.96x/1.86x · 15.6/14.4/13.2%); shown on new Slide 15.
+- [x] **#2 Segment economics (illustrative)**: added a labelled "reported/estimated, non-bottom-up" segment table to `Model`. Full bottom-up segment rebuild deliberately not done (data not verifiable).
+- [x] **#4 wording hedges** (Sticky/semi-recurring, Founder/related (reported), potential recurring data need).
+- [x] **#7 conclusion language**: next-steps → watchlist + "excess-cash availability verified" gate.
+- [ ] #5/#6 medium-priority extras (SOTP, WC seasonality, buyer universe) — out of scope this round (deadline + existing coverage).
+- [x] Post-change verify: PPTX 20 slides, structure ALL CLEAN, stale 0; Excel 446 formulas, errors 0, cash/MIP values match review; pytest 4 passed.
 
 ## Current Status
 
@@ -32,7 +42,9 @@ Scope: Excel/PPTX deliverables only. HTML work intentionally out of scope.
 | PPTX addendum slides | Done | Added Slide 17 `Valuation Context` and Slide 18 `Walk-to-Price & Leverage`; Source Appendix moved to Slide 19. |
 | Fact-check log | Done | `docs/FACT_CHECK_2026-06.md` created with source URLs and retrieval dates. |
 | Static QA | Done | Excel invariants, PPTX stale-value search and pytest completed. |
-| Visual render QA | Blocked | LibreOffice is not available in WSL; sudo install requires password / TTY input. |
+| Visual render QA | **Done (2026-06-08)** | LibreOffice installed; all 19 slides + all 8 Excel tabs rendered & inspected (incl. print/PDF layout: 8 tabs → 8 clean pages, Lev headers wrapped, no touching), fix-and-verify cycles completed. |
+| Package structure QA | Done (2026-06-08) | All slide rels resolve, Content-Types complete, 19 unique sldIds, notes use auto slidenum fields, zip duplicates 0. |
+| Metadata cleanup | Done (2026-06-08) | PPTX subject (was "PptxGenJS Presentation") and XLSX creator (was "openpyxl") replaced. |
 | Peer multiples refresh | Done with caveats | `peer_multiples.csv` created from yfinance; Topcon/PASCO missing and Hexagon requires currency validation. |
 | Precedent source tightening | Done with caveats | `precedent_premium_check.csv` created; PASCO and Topcon now tied to official documents, Tecnos/Kaonavi to M&A Online. |
 
@@ -51,7 +63,7 @@ Scope: Excel/PPTX deliverables only. HTML work intentionally out of scope.
 - [x] Tighten precedent premium source notes.
 - [x] Update `FACT_CHECK_2026-06.md` with peer / precedent progress.
 - [x] Update handoff with remaining open items after peer / precedent work.
-- [ ] Complete visual render QA after LibreOffice is available.
+- [x] Complete visual render QA after LibreOffice is available. *(Done 2026-06-08 — see the 2026-06-08 session section above.)*
 
 ## Latest QA Outputs
 
@@ -62,18 +74,18 @@ Scope: Excel/PPTX deliverables only. HTML work intentionally out of scope.
 | Base return | `2.067x MOIC / 15.63% IRR` |
 | Walk-to-price | `JPY2,031/share` for 20% gross IRR hurdle |
 | Leverage tie-out | `Lev_Sensitivity` 1.0x row ties to base return |
-| PPTX slide count | 19 slides |
+| PPTX slide count | 20 slides (incl. new "Excess Cash Is Central to Returns") |
 | PPTX stale-value search | No hits for old price / returns / P-E / wording terms |
 | Python tests | `4 passed, 1 warning` |
 | Peer multiples | Created `data/processed/peer_multiples.csv`; 6 peers sourced, 2 limited/missing, 1 needs currency check |
 | Precedent premium check | Created `data/processed/precedent_premium_check.csv`; PASCO and Topcon tied to official documents |
-| Final PPTX stale-value QA | 19 slides; text/XML/chart hits empty |
+| Final PPTX stale-value QA | 20 slides; text/XML/chart hits empty |
 | Final Excel invariant QA | Sources = Uses, bridge and leverage tie-out all true |
 
 ## Blockers
 
 | Blocker | Impact | Workaround |
 |---|---|---|
-| No LibreOffice in WSL | Cannot render PPTX to PDF/PNG for visual QA | Static text/XML/shape-bounds QA completed; run final PowerPoint visual check on Windows or install LibreOffice. |
+| ~~No LibreOffice in WSL~~ **Resolved 2026-06-08** | LibreOffice installed; recalc + full visual QA completed | Remaining manual step: open both files once in Windows PowerPoint / Excel before submission (font-rendering differences). |
 | Live peer-data reliability | yfinance may not return complete EV/EBITDA for Japanese names or delisted/take-private peers | Label missing values clearly; do not force multiples into the deck unless sourced. |
 | Tender-doc verification | Tecnos/Kaonavi still rely on secondary sources; PASCO/Topcon are now tied to official documents | Use secondary-source precedents only as context unless primary tender documents are reviewed. |

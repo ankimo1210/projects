@@ -6,7 +6,7 @@
 | **Status** | Preliminary case study for internal IC discussion — **not actionable** |
 | **Recommendation** | **Too early; proceed to confirmatory DD only** |
 | **Date / as of** | 2026-06-08 (sources retrieved 7 Jun 2026) |
-| **Deliverables** | `AISAN_4667_Take_Private_Case_Study.pptx`（19 slides, EN）/ `AISAN_4667_LBO_Model.xlsx`（8 tabs, EN, live formulas + cached values）/ `FACT_CHECK_2026-06.md` / `PROGRESS_TODO_2026-06-07.md` |
+| **Deliverables** | `AISAN_4667_Take_Private_Case_Study.pptx`（20 slides, EN）/ `AISAN_4667_LBO_Model.xlsx`（8 tabs, EN, live formulas + cached values）/ `FACT_CHECK_2026-06.md` / `PROGRESS_TODO_2026-06-07.md` |
 | **Language** | 成果物は英語（IC/英語監査向け）。本ノートは日本語ベース＋数値・固有表現は英語 |
 | **Confidentiality** | Strictly Private & Confidential。投資助言・バリュエーション意見・オファーではない |
 | **Data policy** | 会社・株主・経営陣への接触なし。公開情報のみ。接触は "subject to explicit authorization" の場合に限る |
@@ -17,7 +17,7 @@
 
 > **Too early; proceed to confirmatory DD only. No bid pending the investigation report, audited / restated FY2026 financials, QoE, cash-availability analysis and clean re-underwriting.**
 
-ファンダ的には魅力（recurring・高マージンのソフト中核＋過剰現金）だが、**子会社の特別調査（係争中）と修正後リターンのハードル未達**により、現時点での入札は時期尚早。判断は調査結果と財務再表示のクリアを前提とする。
+ファンダ的には魅力（recurring・高マージンのソフト中核＋過剰現金）だが、**子会社の特別調査（係争中）とベースケース・リターンのハードル未達**により、現時点での入札は時期尚早。判断は調査結果と財務再表示のクリアを前提とする。
 
 ---
 
@@ -40,7 +40,7 @@
 - **資本構成**: ほぼ無借金。ただし買収レバレッジは QoE・調査・季節性・レンダー次第で**抑制すべき**（classic leverage-driven LBO ではない）。
 - **株主**: 創業家／関係保有 ~18.5%（reported）。MBO を facilitate し得るが、**意思確認とロールオーバー経済性は confirmatory DD 項目**。
 
-**リターン（全ケースで ~20% ハードル未達）**
+**リターン（Base / Downside は ~20% ハードル未達；Upside 21.3% は DD クリア時のみ超過）**
 
 | Scenario | Drivers | MOIC | Gross IRR |
 |---|---|---|---|
@@ -122,6 +122,34 @@
 - Slide 19 item 3 を1行に収まるよう短縮（URL行との窮屈さ解消）。
 - 確認済み（問題なし）: スピーカーノートは頁番号のみ・外部リンク/定義名なし・activeTab=Cover・全スライドの算術スポットチェック（44% net cash/mkt cap、+29% pre-news、EPS/P-E、CAGR、bridge合計、S&U %構成）一致。
 
+**外部レビュー（GPT）反映ラウンド（2026-06-08、4周目後）**
+- **`Lev_Sensitivity` をライブ数式化（最重要）**: 同タブが数式0件・値239件の静的スナップショットだった（前セッションの値貼りを当方も見落とし）→ 4ブロック×42セル＝168数式を実装（UFCF は `Debt_FCF` 参照、interest/sweep/cash は MIN/MAX ロジック、summary は mini-schedule 参照）。recalc 後に**旧値172セルとの完全一致**（誤差<0.01）と Returns との 1.0x tie-out を確認。ブック全体 260→428 数式・エラー0。
+- **Handoff §3 の矛盾修正**: 「全ケースで ~20% ハードル未達」→「Base/Downside 未達；Upside 21.3% は DD クリア時のみ超過」（表の Upside 21.3% と整合）。
+- **`docProps/app.xml` 更新**: `<Slides>17→19`、`<Company>PptxGenJS→Investment Team`、HeadingPairs/TitlesOfParts を19枚分に整合（Notes=17 は実数どおり）。
+- **Slide 19 の出典直リンク強化**: item 3 に FY26 延期通知の直接URL（irbank.net/4667/140120260430514374）、フッターに SECOM/ITOCHU・Topcon 開示の直接URLと M&A Online 記事日付を追加。
+- **古いステータス掃除**: PROGRESS のチェックリスト/Blockers 表、FACT_CHECK の「Visual QA blocked」を解消済みに更新。
+- **`src/report/update_pptx_addendum.py` を DEPRECATED 明記**（17枚前提の一回用スクリプト。`!=17` ガードで再実行は失敗するため実害はないが、docstring で経緯と参照先を明示）。
+
+**外部レビュー（GPT）反映ラウンド2（2026-06-08）**
+- **Excel 印刷レイアウト修正（最重要）**: 全8タブが `fitToPage=False`・print-area 未設定で、PDF化すると17ページに断片化（右端列のみのページ・Scenarios説明の頁またぎ切れ）していた → 全タブに landscape + fit-to-page(1×1) + print-area(=used range) + 中央寄せを設定。**PDF 17→8ページ（=タブ数）に縮小**、各タブ1ページに収まることを再レンダリングで確認。Scenarios の logic列は G:J結合+wrapで全文を印刷幅内に収納。
+- **QAログの数式数を 260→428 に更新**（HANDOFF §8 / PROGRESS。Lev_Sensitivity 数式化後の実数）。
+- **`update_pptx_addendum.py` を `_archive/…deprecated` へ退避**（パッケージ外へ移動し再実行入口・古いプレースホルダ文字列をパッケージから物理除去。`__pycache__` の残骸も削除）。
+- Source Appendix（Slide 19）の2枚分割は見送り（GPT も「提出用としては許容範囲」と評価。この段階での再レイアウトは新規崩れリスクが上回るため、現行1枚の密度で確定）。
+
+**外部レビュー（GPT）反映ラウンド3（2026-06-08）**
+- **Lev_Sensitivity 印刷ヘッダー接触の解消**: fit-to-page(1×1) で46行を1枚化した際、ヘッダーが横方向にも縮小され「Sponsor equity／Exit equity」「FCF after interest／Debt paydown」等が接触していた → ヘッダー行（4/14/23/32/41）を `wrap_text` + 行高30 + 列幅12.5に統一。全ヘッダーが列内で2行折り返しとなり接触解消（8ページ維持）。
+- **不要ADSファイル掃除**: `docs/*:Zone.Identifier`（Windows由来、削除済み「(1)」元ファイル分のADS残骸を含む計5件）を削除。提出フォルダのzip混入リスクを除去。
+
+**外部レビュー（GPT・analytical）反映ラウンド4（2026-06-08）**
+初版以来で最も内容に踏み込んだレビュー。6論点を検証のうえ優先度づけして対応。
+- **#1 Excess cash treatment（最重要・実装）**: take-private では対象会社の余剰現金をクローズ時に当然には買収原資化できない点を、第一級の感応度として明示。**Excel `Returns` に Cash availability sensitivity ブロック**（Full extraction 2.07x/15.6% → Cash retained 1.76x/12.0% → Trapped 1.47x/8.1%、数式駆動）を追加し、**専用スライド「Excess Cash Is Central to Returns」（新 Slide 15）** を新設。headline 15.6% は維持（5年保有中の段階的回収は妥当）しつつ、Exec Summary（Slide 2）にも注記「base case assumes deployment; returns fall to ~12%/~8% if retained/trapped」を追加。レビューの3ケース数値はライブモデルで完全一致を確認。
+- **#3 MIP dilution（実装）**: `Returns` に MIP 希薄化ブロック（0/5/10% → 2.07x/1.96x/1.86x・15.6/14.4/13.2%）を追加し、新 Slide 15 に併載。「clean 20% hurdle にさらに遠い」を補強。
+- **#4 Wording（実装）**: "Recurring core"→"Sticky/semi-recurring（recurring mix TBC）"、"Founder family"→"Founder/related (reported)"、"recurring data need"→"potential recurring data need" 等、未検証の含意を緩和。
+- **#7 結論文言（実装）**: 結論 Slide の next-steps を watchlist 化＋"excess-cash availability is verified" をゲート条件に追加。
+- **#2 Segment model（illustrative で実装）**: 連結モデルはトップダウンのため、`Model` に **Illustrative segment economics テーブル**（Public ~55-60%/~26%/+3-5%、Mobility ~40-45%/赤字→breakeven/+8-15%、Corporate cost drag）を「reported/estimated・非ボトムアップ」と明記して追加。フルなセグメント別ボトムアップ再構築は検証不能データに依拠し誤った精度を生むため見送り（判断を明記）。
+- **#5/#6 中優先（SOTP・WC季節性・buyer universe 等）は見送り**: 締切と既存カバレッジ（precedent premium は Slide 9、restatement downside は Downside シナリオ、walk-to-price は Slide 14 に既出）を踏まえ、限界効用が低いため今回は対象外。
+- 結果: PPTX **19→20 slides**（app.xml も 20 に整合）、Excel 数式 **446**・エラー0、新ブロックの数値はレビュー値と一致、構造検証 ALL CLEAN・stale 0・pytest 4 passed。
+
 ---
 
 ## 6. 出典 / Source traceability（PPT Slide 19、retrieved 7 Jun 2026）
@@ -173,7 +201,7 @@
 - `uv run ... pytest tests` → **4 passed in 0.97s**（2026-06-08 再実行） ✓
 - `PYTHONPATH=/tmp/aisan_testdeps:. python3 -m src.fetch.fetch_peer_multiples` → `peer_multiples.csv` 更新（6 sourced / 2 limited_or_missing / 1 needs_currency_check） ✓
 - `precedent_premium_check.csv` 追加、PASCO +31.37% prior-day / +17.45% 6m、Topcon +16.71% prior-day / +58.05% 6m を公式資料に紐付け ✓
-- **LibreOffice recalc 完了（2026-06-08）**: `recalc.py` → `{"status": "success", "total_errors": 0, "total_formulas": 260}`。再計算後に主要11値（S=U、bridge、MOIC/IRR、walk-to-price、Lev tie-out、Scenarios）を照合し全一致。
+- **LibreOffice recalc 完了（2026-06-08）**: `recalc.py` → `{"status": "success", "total_errors": 0, "total_formulas": 428}`（Lev_Sensitivity ライブ数式化後）。再計算後に主要11値（S=U、bridge、MOIC/IRR、walk-to-price、Lev tie-out、Scenarios）を照合し全一致。
 - **Visual render QA 完了（2026-06-08）**: 全19スライドをレンダリング目視、4回の fix-and-verify サイクルで以下を修正:
   - Slide 8: STRUCTUREカードの値が長文16ptでカード外にあふれ → 「Sponsor-led / MBO」+短キャプションに修正。
   - Slide 9 / 14（新規スライド）: PASCO行セル・注記行がフォントサイズ未指定（~18ptでスライド外にあふれ）→ 7.5/7.0pt+word-wrap。ヘッダーをデッキ標準（金色セクション番号・Georgia紺タイトル左寄せ・斜体サブタイトル）に統一（`wrap="none"+spAutoFit` が中央寄せレンダリングの原因だったため除去）。
@@ -190,8 +218,8 @@
 
 ## 9. ファイル再生成 / Regeneration（参考）
 
-- Excel: 現ファイルはxlsx内部XMLの数式キャッシュで検証。LibreOfficeが導入できる環境では再計算後に同じ invariants を再確認する。
-- PPT: 追加2枚は `PYTHONPATH=/tmp/aisan_pydeps python3 -m src.report.update_pptx_addendum` で作成。ただしこのスクリプトは17枚状態から19枚へ増やす一回用の補助スクリプト。
+- Excel: 現ファイルは LibreOffice `recalc.py` で再計算済み（428数式・エラー0）。再編集後は同じ invariants を再確認する。印刷レイアウトは全8タブ landscape + fit-to-page(1×1) + print-area 設定済みで、PDF化すると8ページ（=タブ数）にクリーンに収まる。
+- PPT: 追加2枚の生成に使った `update_pptx_addendum.py` は **`_archive/update_pptx_addendum.py.deprecated` に退避**（17枚前提・旧peer/PASCOプレースホルダを含む一回用スクリプト。パッケージ外へ移動し再実行入口を除去）。現行19枚デッキは最終成果物を直接編集済み。
 - 注: Excel/PPTX は最終成果物を直接編集済み。将来の大幅再生成は、モデル/デッキ生成スクリプトを別途整備する方が安全。
 - **注意（再発防止）**: python-pptx でスライドを追加する際、既存スライドとパート名（`slideN.xml`）が衝突すると保存毎にzipへ二重書込みされ、内容消失リスクがある。追加時は必ず未使用のパート名を割り当て、保存後に `zipfile` で重複エントリゼロを確認すること。
 

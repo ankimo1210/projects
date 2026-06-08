@@ -1,10 +1,12 @@
-"""Add valuation addendum slides to the AISAN PPTX deliverable.
+"""DEPRECATED — one-shot helper that added the two addendum slides (2026-06-07).
 
-Run from repo root:
-    PYTHONPATH=/tmp/aisan_pydeps python3 -m src.report.update_pptx_addendum
+The deliverable PPTX is already at 19 slides and has since been edited in place
+(slides moved into the main body, renumbered, restyled and fact-updated on
+2026-06-08). Re-running this script is neither needed nor safe: it expects the
+old 17-slide deck (guarded by a RuntimeError below) and would regenerate stale
+content (old peer/PASCO placeholders, appendix-numbered sections).
 
-The script uses python-pptx for shape creation and a small internal slide-order
-adjustment so the source appendix remains the final slide.
+Kept for history only. See docs/HANDOFF_Project_Measure_AISAN_4667.md §5.
 """
 
 from __future__ import annotations
