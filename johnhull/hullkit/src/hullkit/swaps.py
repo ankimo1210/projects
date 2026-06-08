@@ -21,7 +21,9 @@ def swap_rate(pay_times, curve):
     """Par swap rate s = (1 - P(0,t_n)) / sum(tau_i * P(0,t_i)) (Hull Ch.7)."""
     pay_times = np.asarray(pay_times, dtype=float)
     taus = np.diff(np.concatenate([[0.0], pay_times]))
-    annuity = float(sum(tau * discount(float(t), curve) for tau, t in zip(taus, pay_times, strict=True)))
+    annuity = float(
+        sum(tau * discount(float(t), curve) for tau, t in zip(taus, pay_times, strict=True))
+    )
     return (1.0 - discount(float(pay_times[-1]), curve)) / annuity
 
 

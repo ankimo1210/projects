@@ -54,10 +54,9 @@ def barrier_call(S, K, H, r, sigma, T, q=0.0, barrier="down-and-in"):
 
     if barrier in ("down-and-in", "down-and-out"):
         if H <= K:
-            cdi = (
-                S * math.exp(-q * T) * _pow(2 * lam) * norm.cdf(y)
-                - K * math.exp(-r * T) * _pow(2 * lam - 2) * norm.cdf(y - sqt)
-            )
+            cdi = S * math.exp(-q * T) * _pow(2 * lam) * norm.cdf(y) - K * math.exp(-r * T) * _pow(
+                2 * lam - 2
+            ) * norm.cdf(y - sqt)
         else:
             cdo = (
                 S * math.exp(-q * T) * norm.cdf(x1)
@@ -100,12 +99,9 @@ def asian_call_turnbull_wakeman(S, K, r, sigma, T, q=0.0):
     Black-76 (Hull eq. 26.3/26.4, continuous arithmetic average)."""
     b = r - q
     m1 = (math.exp(b * T) - 1.0) / (b * T) * S
-    m2 = (
-        2.0 * math.exp((2.0 * b + sigma**2) * T) * S**2
-        / ((b + sigma**2) * (2.0 * b + sigma**2) * T**2)
-        + 2.0 * S**2 / (b * T**2)
-        * (1.0 / (2.0 * b + sigma**2) - math.exp(b * T) / (b + sigma**2))
-    )
+    m2 = 2.0 * math.exp((2.0 * b + sigma**2) * T) * S**2 / (
+        (b + sigma**2) * (2.0 * b + sigma**2) * T**2
+    ) + 2.0 * S**2 / (b * T**2) * (1.0 / (2.0 * b + sigma**2) - math.exp(b * T) / (b + sigma**2))
     f0 = m1
     sigma_a = math.sqrt(math.log(m2 / m1**2) / T)
     d1 = (math.log(f0 / K) + 0.5 * sigma_a**2 * T) / (sigma_a * math.sqrt(T))

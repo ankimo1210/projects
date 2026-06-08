@@ -47,7 +47,5 @@ def test_vasicek_credit_var():
     assert credit.vasicek_credit_var(q, rho, 0.99) < v999
     assert credit.vasicek_credit_var(q, 0.3, 0.999) > v999
     # sanity vs closed form
-    expected = norm.cdf(
-        (norm.ppf(q) + math.sqrt(rho) * norm.ppf(0.999)) / math.sqrt(1.0 - rho)
-    )
+    expected = norm.cdf((norm.ppf(q) + math.sqrt(rho) * norm.ppf(0.999)) / math.sqrt(1.0 - rho))
     assert v999 == pytest.approx(expected, abs=1e-12)

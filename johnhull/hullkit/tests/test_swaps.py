@@ -52,8 +52,12 @@ def test_currency_swap_hull_example_7_3():
     # USD curve 2.5% cc flat, JPY 1.5% cc flat, S0 = 1/110 USD/JPY.
     # currency_swap_value is receive-domestic; the receive-yen side is the negative.
     v_receive_dollar = swaps.currency_swap_value(
-        [1.0, 2.0, 3.0], [0.4, 0.4, 10.4], ([1.0, 2.0, 3.0], [0.025, 0.025, 0.025]),
-        [1.0, 2.0, 3.0], [36.0, 36.0, 1236.0], ([1.0, 2.0, 3.0], [0.015, 0.015, 0.015]),
+        [1.0, 2.0, 3.0],
+        [0.4, 0.4, 10.4],
+        ([1.0, 2.0, 3.0], [0.025, 0.025, 0.025]),
+        [1.0, 2.0, 3.0],
+        [36.0, 36.0, 1236.0],
+        ([1.0, 2.0, 3.0], [0.015, 0.015, 0.015]),
         1.0 / 110.0,
     )
     assert -v_receive_dollar == pytest.approx(0.9628, abs=1.5e-3)  # Hull 0.9629

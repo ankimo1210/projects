@@ -72,6 +72,4 @@ def gaussian_copula_conditional(q, a, factor):
 
 def vasicek_credit_var(q, rho, conf):
     """Vasicek single-factor credit-VaR loss rate (Hull eq. 24.10)."""
-    return float(
-        norm.cdf((norm.ppf(q) + math.sqrt(rho) * norm.ppf(conf)) / math.sqrt(1.0 - rho))
-    )
+    return float(norm.cdf((norm.ppf(q) + math.sqrt(rho) * norm.ppf(conf)) / math.sqrt(1.0 - rho)))
