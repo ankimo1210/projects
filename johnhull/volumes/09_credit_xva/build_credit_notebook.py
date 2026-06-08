@@ -187,6 +187,304 @@ Q_i(T\mid F) = N\!\left(\frac{N^{-1}[Q_i(T)] - a_i F}{\sqrt{1-a_i^2}}\right) \qu
 これがテールの厚さ（システミックリスク）の源です。""")
 )
 
+# Cell 11: conditional PD chart + credit VaR
+cells.append(
+    code(r"""# --- 条件付きデフォルト確率と Vasicek 信用VaR ---
+fig3, (ax3a, ax3b) = plt.subplots(1, 2, figsize=(10.5, 4))
+fig3.canvas.header_visible = False
+f_grid = np.linspace(-3.0, 3.0, 100)
+for q0 in (0.01, 0.05):
+    for a in (0.3, 0.6):
+        ax3a.plot(f_grid, [credit.gaussian_copula_conditional(q0, a, f) for f in f_grid],
+                  lw=1.5, label=f"Q={q0:.0%}, a={a}")
+ax3a.set_xlabel("共通因子 F（悪い ← → 良い）")
+ax3a.set_ylabel("条件付きデフォルト確率")
+ax3a.set_title("F が悪いと全社の PD が上昇")
+ax3a.legend(fontsize=8)
+
+confs = np.linspace(0.9, 0.9999, 100)
+for rho in (0.1, 0.2, 0.4):
+    ax3b.plot(confs * 100, [credit.vasicek_credit_var(0.02, rho, c) * 100 for c in confs],
+              lw=1.5, label=f"ρ={rho}")
+ax3b.axhline(2.0, color="0.6", ls=":", label="平均PD 2%")
+ax3b.set_xlabel("信頼水準 (%)")
+ax3b.set_ylabel("損失率 (%)")
+ax3b.set_title("Vasicek 信用VaR（相関で裾が厚くなる）")
+ax3b.legend(fontsize=8)
+display(fig3.canvas)
+print(f"ρ=0.2, 99.9% の信用VaR = {credit.vasicek_credit_var(0.02, 0.2, 0.999):.2%}（平均PD 2%の何倍にも）")""")
+)
+
+# ===========================================================================
+# Section 2: Ch.25 credit derivatives
+# ===========================================================================
+
+# Cell 12: CDS md
+cells.append(
+    md(r"""## 5. クレジット・デフォルト・スワップ（Ch.25）
+
+CDS = デフォルト保険。保護買い手がスプレッド $s$ を払い、デフォルト時に $(1-R)$ を受取る。
+公正スプレッドは2レッグの現在価値を等置：
+
+$$s = \frac{\text{PV(プロテクション・レッグ)}}{\text{PV(リスキー・アニュイティ)}}, \qquad
+s \approx \lambda(1-R) \;(\text{1次近似})$$
+
+リスキー・アニュイティは「生存確率で重み付けした割引アニュイティ」。""")
+)
+
+# Cell 13: CDS spread demo
+cells.append(
+    code(r"""# CDS スプレッド vs ハザード（R=40%, r=5%, 5年, 四半期払い）
+rows = []
+for lam in (0.005, 0.01, 0.02, 0.04):
+    s = credit.cds_spread(lam, 0.4, 0.05, 5.0, freq=4)
+    rows.append({"ハザードλ": f"{lam:.1%}", "CDSスプレッド": f"{s * 1e4:.1f}bp",
+                 "近似 λ(1−R)": f"{lam * 0.6 * 1e4:.1f}bp"})
+display(pd.DataFrame(rows))
+print(f"厳密例: λ=2% → {credit.cds_spread(0.02, 0.4, 0.05, 5.0):.4%}（近似 1.20% の少し下、割引効果）")""")
+)
+
+# Cell 14: bootstrap md + demo
+cells.append(
+    code(r"""# --- CDS タームストラクチャーからハザードをブートストラップ（区分定数） ---
+# 市場 CDS スプレッド（bp）: 各テナーに整合する区分定数ハザードを逐次に解く
+from scipy.optimize import brentq
+
+market_cds = {1.0: 60.0, 3.0: 100.0, 5.0: 140.0}  # bp
+
+
+def piecewise_cds_spread(hazards, knots, R, r, maturity, freq=4):
+    n = int(round(maturity * freq))
+    dt = 1.0 / freq
+    prot = ann = 0.0
+    s_prev = 1.0
+    cum = 0.0
+    t_prev = 0.0
+    for i in range(1, n + 1):
+        t = i * dt
+        lam = next(h for k, h in zip(knots, hazards) if t <= k + 1e-9)
+        cum += lam * (t - t_prev)
+        s = math.exp(-cum)
+        d_pd = s_prev - s
+        df_mid = math.exp(-r * (t - 0.5 * dt))
+        prot += (1 - R) * df_mid * d_pd
+        ann += math.exp(-r * t) * s * dt + df_mid * d_pd * 0.5 * dt
+        s_prev, t_prev = s, t
+    return prot / ann
+
+
+knots = sorted(market_cds)
+hazards = []
+for k in knots:
+    target = market_cds[k] / 1e4
+    sol = brentq(lambda h: piecewise_cds_spread(hazards + [h], knots, 0.4, 0.05, k) - target,
+                 1e-5, 1.0)
+    hazards.append(sol)
+display(pd.DataFrame({"テナー": knots, "CDS(bp)": [market_cds[k] for k in knots],
+                     "区分ハザードλ": [f"{h:.4f}" for h in hazards]}))
+print("上向きCDSカーブ → 後ろのテナーほどハザードが高い（フォワード・デフォルト強度）")""")
+)
+
+# Cell 15: index md
+cells.append(
+    md(r"""## 6. 信用インデックスと CDO（Ch.25）
+
+- **CDX NA IG / iTraxx Europe**: 125社の均等加重バスケット。
+  インデックススプレッド $\approx$ 各社 CDS の平均（高スプレッド名のウェイトが軽く厳密には少し下）
+- **CDO**: 債券/CDS ポートフォリオの損失を**トランシェ**（エクイティ→メザニン→シニア）に分割。
+  各トランシェは attachment〜detachment の損失帯を吸収
+- トランシェ価格は**ガウスコピュラ**でデフォルト相関を入れて評価""")
+)
+
+# Cell 16: CDO tranche demo
+cells.append(
+    code(r"""# --- CDO トランシェの期待損失（1因子コピュラ MC） ---
+def tranche_expected_loss(n_names, q, rho, attach, detach, n_sim, rng):
+    a = math.sqrt(rho)
+    f = rng.standard_normal(n_sim)
+    thr = norm.ppf(q)
+    # 各シナリオの条件付き PD → デフォルト数を二項近似
+    cond_pd = norm.cdf((thr - a * f[:, None]) / math.sqrt(1 - rho))
+    u = rng.random((n_sim, n_names))
+    defaults = (u < cond_pd).sum(axis=1)
+    loss = defaults / n_names * (1 - 0.4)  # 回収率40%
+    tranche_loss = np.clip(loss, attach, detach) - attach
+    return float(tranche_loss.mean() / (detach - attach))
+
+
+rng_cdo = np.random.default_rng(25)
+tranches = [("エクイティ 0–3%", 0.0, 0.03), ("メザニン 3–7%", 0.03, 0.07),
+            ("シニア 7–15%", 0.07, 0.15)]
+rows = []
+for name, lo, hi in tranches:
+    el_lo = tranche_expected_loss(125, 0.03, 0.1, lo, hi, 40_000, np.random.default_rng(25))
+    el_hi = tranche_expected_loss(125, 0.03, 0.4, lo, hi, 40_000, np.random.default_rng(25))
+    rows.append({"トランシェ": name, "期待損失率(ρ=0.1)": f"{el_lo:.2%}",
+                 "期待損失率(ρ=0.4)": f"{el_hi:.2%}"})
+display(pd.DataFrame(rows))
+print("相関↑でエクイティの期待損失は下がり、シニアは上がる（相関がテールに損失を移す）")""")
+)
+
+# Cell 17: correlation smile md
+cells.append(
+    md(r"""### 相関スマイル（Ch.25）
+
+各トランシェの市場価格から「インプライド相関」を逆算すると、トランシェごとに
+値が異なる（**相関スマイル/スキュー**）。これはガウスコピュラがテール依存を
+過小評価している証拠で、ボラティリティ・スマイル（第5冊）と同じ「モデルの綻び」です。
+実務では**ベース相関**で整理します。""")
+)
+
+# ===========================================================================
+# Section 3: Ch.9 XVA
+# ===========================================================================
+
+# Cell 18: XVA family md
+cells.append(
+    md(r"""## 7. XVA ファミリー（Ch.9）
+
+OTC デリバティブの価格に乗る各種評価調整：
+
+| 略称 | 名称 | 意味 |
+|---|---|---|
+| **CVA** | Credit Valuation Adj. | 相手方デフォルトの期待損失（自分の損） |
+| **DVA** | Debit Valuation Adj. | 自分のデフォルトの期待利得（自分の得） |
+| **FVA** | Funding Valuation Adj. | 無担保ポジションの資金調達コスト |
+| **MVA** | Margin Valuation Adj. | 初期証拠金の調達コスト |
+| **KVA** | Capital Valuation Adj. | 規制資本の保有コスト |
+
+取引価格 = 無リスク価格 − CVA + DVA − FVA − MVA − KVA（符号は立場による）。""")
+)
+
+# Cell 19: CVA worked example
+cells.append(
+    code(r"""# --- CVA = Σ q_i v_i（スワップ的エクスポージャー・プロファイル上） ---
+# 期待エクスポージャー（EE）が山形のプロファイル（スワップに典型）
+times_cva = np.arange(0.5, 5.01, 0.5)
+ee = 1_000_000 * np.sin(np.pi * times_cva / 5.0)  # 山形 EE（ドル）
+lam_cp = 0.03  # 相手方ハザード
+R_cp, r_cva = 0.4, 0.05
+rows = []
+cva = 0.0
+s_prev = 1.0
+for t, e in zip(times_cva, ee):
+    s = credit.survival_prob(float(t), lam_cp)
+    q_i = s_prev - s  # 区間デフォルト確率
+    v_i = (1 - R_cp) * e * math.exp(-r_cva * t)  # 損失の現在価値
+    cva += q_i * v_i
+    rows.append({"t": t, "EE($)": round(e), "区間PD q_i": round(q_i, 4),
+                 "寄与($)": round(q_i * v_i)})
+    s_prev = s
+display(pd.DataFrame(rows))
+print(f"CVA = Σ q_i v_i = {cva:,.0f} ドル（この価格分だけ相手から見て割り引く）")""")
+)
+
+# Cell 20: netting chart
+cells.append(
+    code(r"""# --- ネッティングと担保の効果（EEを縮小） ---
+fig4, ax4 = plt.subplots(figsize=(8, 4))
+fig4.canvas.header_visible = False
+ax4.plot(times_cva, ee / 1e6, "o-", lw=2, label="ネッティングなし EE")
+ax4.plot(times_cva, ee / 1e6 * 0.5, "s-", lw=2, label="ネッティング後（相殺で半減）")
+ax4.plot(times_cva, ee / 1e6 * 0.15, "^-", lw=2, label="担保（マージン）付き")
+ax4.set_xlabel("時間（年）")
+ax4.set_ylabel("期待エクスポージャー（百万$）")
+ax4.set_title("ネッティング・担保は EE を下げ CVA を縮小する")
+ax4.legend()
+display(fig4.canvas)
+print("CVA は EE に比例 → ネッティング・担保が信用リスク削減の主要手段")""")
+)
+
+# Cell 21: wrong-way / DVA md
+cells.append(
+    md(r"""### Wrong-way risk と DVA のパラドックス（Ch.9）
+
+- **Wrong-way risk**: デフォルト確率とエクスポージャーが**正相関**（例: 産油国にFXを売る）→
+  通常の CVA は過小評価。逆相関は **right-way**
+- **DVA のパラドックス**: 自社の信用が**悪化**すると DVA が増え会計上の**利益**が出る —
+  実現は自社デフォルト時のみで直感に反する。FVA との二重計上論争もある（Ch.9）""")
+)
+
+# ===========================================================================
+# Section 4: verification / exercises / summary
+# ===========================================================================
+
+# Cell 22: assertion cell
+cells.append(
+    code(r"""# --- 検証（hullkit/tests/test_credit.py にも同等の検証あり） ---
+checks = []
+checks.append(("S(2) = e^{-0.04}", credit.survival_prob(2.0, 0.02), math.exp(-0.04), 1e-12))
+checks.append(("hazard from spread", credit.hazard_from_spread(0.012, 0.4), 0.02, 1e-12))
+checks.append(("CDS spread ≈ 0.012075", credit.cds_spread(0.02, 0.4, 0.05, 5.0), 0.012075, 5e-5))
+checks.append(("Merton V0 ≈ 12.3954", v0, 12.3954, 2e-3))
+checks.append(("Merton σ_V ≈ 0.2123", sig_v, 0.21230, 5e-4))
+checks.append(("Merton Q ≈ 0.127", q, 0.12697, 5e-4))
+checks.append(("copula 単調（F悪い→PD↑）",
+               float(credit.gaussian_copula_conditional(0.05, 0.5, -2.0)
+                     > credit.gaussian_copula_conditional(0.05, 0.5, 2.0)), 1.0, 0.0))
+checks.append(("信用VaR > 平均PD（99.9%）",
+               float(credit.vasicek_credit_var(0.02, 0.2, 0.999) > 0.02), 1.0, 0.0))
+assert cva > 0
+print(f"[OK] CVA = {cva:,.0f} > 0")
+
+for name, got, want, tol in checks:
+    ok = abs(got - want) <= tol
+    print(f"[{'OK' if ok else 'FAIL'}] {name}: got={got:.6g} want={want:.6g}")
+    assert ok, name
+print("\n全チェック合格")""")
+)
+
+# Cell 23: exercises
+cells.append(
+    md(r"""## 8. 練習問題
+
+**Q1.** 5年 CDS スプレッドが 150bp、回収率 40%。平均ハザードレートの概算は？
+
+<details><summary>解答</summary>
+
+λ ≈ s/(1−R) = 0.015/0.6 = 2.5%/年。5年累積デフォルト確率 ≈ 1−e^{−0.125} ≈ 11.8%。
+</details>
+
+**Q2.** Merton モデルでレバレッジ（D/V）が上がると Q はどうなる？
+
+<details><summary>解答</summary>
+
+上がる。d2 = [ln(V/D)+(r−σ²/2)T]/(σ√T) が小さくなり Q=N(−d2) が増加。
+資産ボラ σ_V の上昇も同様に Q を上げる。
+</details>
+
+**Q3.** CDO で相関 ρ を 0 → 1 に上げると、エクイティとシニアの期待損失はどう動く？
+
+<details><summary>解答</summary>
+
+ρ↑ で損失が「全社デフォルト or 全社生存」の両極に寄る。エクイティの期待損失は減り、
+シニアは増える（相関がテールへ損失を移す）。
+</details>""")
+)
+
+# Cell 24: summary
+cells.append(
+    md(r"""## まとめ
+
+| 概念 | 要点 |
+|---|---|
+| ハザード | S(t)=e^{−∫λ}。リスク中立PDは実世界の5〜10倍 |
+| スプレッド | λ ≈ s/(1−R)。CDS は protection/annuity |
+| Merton | 株式=資産コール。Q=N(−d2)、d2=distance to default |
+| コピュラ | 1因子で同時デフォルト。相関がテールを厚く |
+| CDO | 相関はエクイティ→シニアへ損失を移す。相関スマイル |
+| XVA | CVA=Σq_i v_i。ネッティング・担保で削減。DVAパラドックス |
+
+**次へ**: `volumes/10_exotics_martingales`（Ch.26, 28）
+**シリーズ**: `johnhull/ROADMAP.md` 参照""")
+)
+
+# Cell 25: closing md
+cells.append(
+    md(r"""---
+*第9冊おわり。構造モデル・コピュラ・XVA まで信用の主要トピックを一巡しました。*""")
+)
+
 # ===========================================================================
 # Notebook assembly
 # ===========================================================================
