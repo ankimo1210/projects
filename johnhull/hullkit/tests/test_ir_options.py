@@ -36,9 +36,7 @@ def test_cap_minus_floor_equals_swap():
     R_K = 0.055
     cap = ir_options.cap_black(L, forwards, R_K, 0.2, accruals, pay_disc, fix_times, kind="cap")
     floor = ir_options.cap_black(L, forwards, R_K, 0.2, accruals, pay_disc, fix_times, kind="floor")
-    swap = sum(
-        L * d * p * (f - R_K) for f, d, p in zip(forwards, accruals, pay_disc, strict=True)
-    )
+    swap = sum(L * d * p * (f - R_K) for f, d, p in zip(forwards, accruals, pay_disc, strict=True))
     assert cap - floor == pytest.approx(swap, abs=1e-6)
 
 
