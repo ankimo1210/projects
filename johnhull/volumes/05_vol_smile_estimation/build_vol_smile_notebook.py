@@ -266,6 +266,301 @@ display(widgets.HBox([atm_sl, slope_sl, curv_sl]), fig4.canvas)
 )
 
 # ===========================================================================
+# Section 2: Ch.23 estimating volatilities
+# ===========================================================================
+
+# Cell 13: EWMA md
+cells.append(
+    md(r"""## 6. ヒストリカル・ボラティリティと EWMA（Ch.23、eq 23.3, 23.7）
+
+日次リターン $u_i = \ln(S_i/S_{i-1})$ から：
+
+$$\sigma_n^2 = \frac{1}{m}\sum_{i=1}^{m} u_{n-i}^2 \;(\text{等加重}), \qquad
+\sigma_n^2 = \lambda\sigma_{n-1}^2 + (1-\lambda)u_{n-1}^2 \;(\text{EWMA, 23.7})$$
+
+EWMA（RiskMetrics は $\lambda=0.94$）は直近を重視し、保持するのは前日の分散と
+直近リターンだけ。等加重の移動窓は「古い大変動が窓から抜ける日」に
+不自然なジャンプを起こします。""")
+)
+
+# Cell 14: EWMA tracking
+cells.append(
+    code(r"""# --- ボラティリティ・レジームシフトの追跡: EWMA vs 移動窓 ---
+rng5 = np.random.default_rng(50)
+N_DAYS = 500
+true_sig = np.where(np.arange(N_DAYS) < 250, 0.01, 0.02)  # 1%/日 → 2%/日
+u_series = true_sig * rng5.standard_normal(N_DAYS)
+ewma_v = volatility.ewma_variance(u_series, lam=0.94)
+roll_v = pd.Series(u_series**2).rolling(50).mean().to_numpy()
+
+fig5, ax5 = plt.subplots(figsize=(8.5, 4.5))
+fig5.canvas.header_visible = False
+ax5.plot(np.sqrt(ewma_v) * 100, lw=1.5, label="EWMA（λ=0.94）")
+ax5.plot(np.sqrt(roll_v) * 100, lw=1.5, label="移動窓 50日（等加重）")
+ax5.plot(true_sig * 100, "k--", lw=1, label="真のσ")
+ax5.set_xlabel("日")
+ax5.set_ylabel("日次ボラティリティ (%)")
+ax5.set_title("レジームシフトへの追従")
+ax5.legend()
+display(fig5.canvas)
+
+var_upd = volatility.ewma_variance([0.02, 0.0], lam=0.94, init=0.0001)
+print(f"Hull の更新例: σ=1%/日, u=2% → 分散 {var_upd[1]:.6f}"
+      f" → σ = {np.sqrt(var_upd[1]):.4%}/日（Hull: 1.086%）")""")
+)
+
+# Cell 15: GARCH md
+cells.append(
+    md(r"""## 7. GARCH(1,1)（Ch.23、eq 23.8–23.9）
+
+$$\sigma_n^2 = \omega + \alpha u_{n-1}^2 + \beta\sigma_{n-1}^2, \qquad
+V_L = \frac{\omega}{1-\alpha-\beta}$$
+
+EWMA に**長期平均分散 $V_L$ への平均回帰**を加えた形（EWMA は $\gamma=0$ の特殊ケース）。
+定常条件は $\alpha + \beta < 1$。回帰速度は $1-\alpha-\beta$。""")
+)
+
+# Cell 16: GARCH filter
+cells.append(
+    code(r"""# Hull の例: ω=0.000002, α=0.13, β=0.86
+OMEGA_H, ALPHA_H, BETA_H = 2e-6, 0.13, 0.86
+v_l = volatility.garch11_long_run(OMEGA_H, ALPHA_H, BETA_H)
+print(f"V_L = {v_l:.6f} → σ_L = {np.sqrt(v_l):.4%}/日（Hull: 1.4%）")
+var_g = volatility.garch11_variance([0.01, 0.0], OMEGA_H, ALPHA_H, BETA_H, init=0.016**2)
+print(f"更新例: σ=1.6%/日, u=1% → 分散 {var_g[1]:.8f} → σ = {np.sqrt(var_g[1]):.4%}/日（Hull: 1.53%）")
+
+garch_v = volatility.garch11_variance(u_series, OMEGA_H, ALPHA_H, BETA_H)
+fig6, ax6 = plt.subplots(figsize=(8.5, 4))
+fig6.canvas.header_visible = False
+ax6.plot(np.sqrt(garch_v) * 100, lw=1.5, label="GARCH(1,1) 条件付きσ")
+ax6.plot(true_sig * 100, "k--", lw=1, label="真のσ")
+ax6.axhline(np.sqrt(v_l) * 100, color="crimson", ls=":", lw=1.5, label="σ_L（長期水準）")
+ax6.set_xlabel("日")
+ax6.set_ylabel("日次ボラティリティ (%)")
+ax6.legend()
+display(fig6.canvas)""")
+)
+
+# Cell 17: MLE md
+cells.append(
+    md(r"""## 8. 最尤法によるパラメータ推定（Ch.23、eq 23.12）
+
+$$\max_{\omega,\alpha,\beta} \sum_i \left[-\ln \sigma_i^2 - \frac{u_i^2}{\sigma_i^2}\right]$$
+
+GARCH 漸化式で $\sigma_i^2$ を逐次計算しながら対数尤度を最大化します
+（`hullkit.volatility.garch11_fit`、Nelder-Mead）。
+実務では $V_L$ をサンプル分散に固定する**バリアンス・ターゲティング**も使われます。""")
+)
+
+# Cell 18: fit demo
+cells.append(
+    code(r"""# --- 合成 GARCH 系列でパラメータ復元 ---
+rng6 = np.random.default_rng(0)
+OMEGA_T, ALPHA_T, BETA_T = 2e-6, 0.10, 0.85
+n_fit = 4000
+u_fit = np.empty(n_fit)
+var_t = OMEGA_T / (1.0 - ALPHA_T - BETA_T)
+for i in range(n_fit):
+    u_fit[i] = np.sqrt(var_t) * rng6.standard_normal()
+    var_t = OMEGA_T + ALPHA_T * u_fit[i] ** 2 + BETA_T * var_t
+
+omega_e, alpha_e, beta_e = volatility.garch11_fit(u_fit)
+display(pd.DataFrame([
+    {"パラメータ": "ω", "真値": OMEGA_T, "推定値": round(omega_e, 8)},
+    {"パラメータ": "α", "真値": ALPHA_T, "推定値": round(alpha_e, 4)},
+    {"パラメータ": "β", "真値": BETA_T, "推定値": round(beta_e, 4)},
+    {"パラメータ": "α+β（持続性）", "真値": ALPHA_T + BETA_T, "推定値": round(alpha_e + beta_e, 4)},
+]))
+print(f"推定 V_L = {volatility.garch11_long_run(omega_e, alpha_e, beta_e):.6f}"
+      f"（真値 {OMEGA_T / (1 - ALPHA_T - BETA_T):.6f}）")""")
+)
+
+# Cell 19: forecast md
+cells.append(
+    md(r"""## 9. ボラティリティ予測とタームストラクチャー（Ch.23、eq 23.13–23.14）
+
+$$E[\sigma_{n+t}^2] = V_L + (\alpha+\beta)^t(\sigma_n^2 - V_L) \quad \text{(23.13)}$$
+
+現在の分散は $(\alpha+\beta)^t$ の速度で $V_L$ へ回帰。年率換算のタームストラクチャーは
+
+$$\sigma(T)^2 = 252\left(V_L + \frac{1-e^{-aT}}{aT}\left[V(0) - V_L\right]\right), \quad a = \ln\frac{1}{\alpha+\beta} \quad \text{(23.14)}$$""")
+)
+
+# Cell 20: forecast chart
+cells.append(
+    code(r"""# 現在 σ=1.6%/日（> σ_L=1.41%）からの予測パス
+sigma2_now = 0.016**2
+days_fwd = np.arange(0, 252)
+fcst = [volatility.garch11_forecast(sigma2_now, int(k), OMEGA_H, ALPHA_H, BETA_H)
+        for k in days_fwd]
+
+a_ts = np.log(1.0 / (ALPHA_H + BETA_H))
+t_years = np.linspace(0.05, 2.0, 60)
+term = np.sqrt(252.0 * (v_l + (1 - np.exp(-a_ts * 252.0 * t_years))
+                        / (a_ts * 252.0 * t_years) * (sigma2_now - v_l)))
+
+fig7, (ax7a, ax7b) = plt.subplots(1, 2, figsize=(10.5, 4))
+fig7.canvas.header_visible = False
+ax7a.plot(days_fwd, np.sqrt(fcst) * 100, lw=2)
+ax7a.axhline(np.sqrt(v_l) * 100, color="crimson", ls=":", label="σ_L")
+ax7a.set_xlabel("先日数 t")
+ax7a.set_ylabel("E[σ] (%/日)")
+ax7a.set_title("日次ボラの平均回帰（eq 23.13）")
+ax7a.legend()
+ax7b.plot(t_years, term * 100, lw=2)
+ax7b.set_xlabel("満期 T（年）")
+ax7b.set_ylabel("年率ボラ (%)")
+ax7b.set_title("ボラのタームストラクチャー（eq 23.14）")
+display(fig7.canvas)
+print(f"10日先: E[σ²] = {volatility.garch11_forecast(sigma2_now, 10, OMEGA_H, ALPHA_H, BETA_H):.6e}")""")
+)
+
+# Cell 21: correlation md
+cells.append(
+    md(r"""## 10. 相関の推定（Ch.23）
+
+共分散も同じ EWMA 更新で追跡できます：
+$\mathrm{cov}_n = \lambda\,\mathrm{cov}_{n-1} + (1-\lambda)x_{n-1}y_{n-1}$、
+$\rho_n = \mathrm{cov}_n/(\sigma_{x,n}\sigma_{y,n})$。
+
+分散共分散行列は**正半定値**が必要（分散と共分散は同じ重みで計算）。
+相関付き乱数の生成には **Cholesky 分解** $\Sigma = LL^\top$、$X = LZ$ を使います。""")
+)
+
+# Cell 22: EWMA correlation demo
+cells.append(
+    code(r"""# --- ρ=0.6 の相関付きリターンを Cholesky 生成 → EWMA 相関で追跡 ---
+rng7 = np.random.default_rng(70)
+RHO_T = 0.6
+chol = np.linalg.cholesky(np.array([[1.0, RHO_T], [RHO_T, 1.0]]))
+z_pair = rng7.standard_normal((2, N_DAYS))
+x_r, y_r = 0.01 * (chol @ z_pair)
+
+lam_c = 0.94
+var_x = volatility.ewma_variance(x_r, lam=lam_c)
+var_y = volatility.ewma_variance(y_r, lam=lam_c)
+cov_xy = np.empty(N_DAYS)
+cov_xy[0] = x_r[0] * y_r[0]
+for i in range(1, N_DAYS):
+    cov_xy[i] = lam_c * cov_xy[i - 1] + (1 - lam_c) * x_r[i - 1] * y_r[i - 1]
+rho_t = cov_xy / np.sqrt(var_x * var_y)
+
+fig8, ax8 = plt.subplots(figsize=(8.5, 4))
+fig8.canvas.header_visible = False
+ax8.plot(rho_t, lw=1.5, label="EWMA 相関")
+ax8.axhline(RHO_T, color="crimson", ls="--", lw=1.5, label=f"真の ρ = {RHO_T}")
+ax8.set_xlabel("日")
+ax8.set_ylabel("ρ")
+ax8.set_ylim(-0.2, 1.0)
+ax8.legend()
+display(fig8.canvas)
+print(f"後半250日の平均推定 ρ = {rho_t[250:].mean():.3f}")""")
+)
+
+# Cell 23: interactive lambda
+cells.append(
+    code(r"""# --- λ の感度（インタラクティブ）: 反応速度 vs 平滑性 ---
+fig9, ax9 = plt.subplots(figsize=(8.5, 4))
+fig9.canvas.header_visible = False
+lam_sl = widgets.FloatSlider(value=0.94, min=0.86, max=0.99, step=0.01, description="λ")
+
+
+def _upd_lambda(change=None):
+    ax9.clear()
+    ev = volatility.ewma_variance(u_series, lam=lam_sl.value)
+    ax9.plot(np.sqrt(ev) * 100, lw=1.5, label=f"EWMA（λ={lam_sl.value:.2f}）")
+    ax9.plot(true_sig * 100, "k--", lw=1, label="真のσ")
+    ax9.set_xlabel("日")
+    ax9.set_ylabel("日次ボラ (%)")
+    ax9.set_title("λ 小 → 機敏でノイジー ／ λ 大 → 滑らかで遅い")
+    ax9.legend()
+    fig9.canvas.draw_idle()
+
+
+lam_sl.observe(_upd_lambda, "value")
+_upd_lambda()
+display(lam_sl, fig9.canvas)""")
+)
+
+# ===========================================================================
+# Section 3: verification / exercises / summary
+# ===========================================================================
+
+# Cell 24: assertion cell
+cells.append(
+    code(r"""# --- 教科書例題との突合せ（hullkit/tests/test_volatility.py にも同等の検証あり） ---
+checks = []
+sigma_rt = 0.27
+c_rt = bsm.call_price(100.0, 105.0, 0.04, sigma_rt, 0.75, q=0.01)
+iv_rt = volatility.implied_vol(c_rt, 100.0, 105.0, 0.04, 0.75, q=0.01, kind="call")
+checks.append(("IV ラウンドトリップ", iv_rt, sigma_rt, 1e-6))
+p_rt = bsm.put_price(100.0, 105.0, 0.04, sigma_rt, 0.75, q=0.01)
+iv_rt_p = volatility.implied_vol(p_rt, 100.0, 105.0, 0.04, 0.75, q=0.01, kind="put")
+checks.append(("コール/プット IV 一致", iv_rt_p, iv_rt, 1e-6))
+
+ew = volatility.ewma_variance([0.02, 0.0], lam=0.94, init=0.0001)
+checks.append(("EWMA 更新例 0.000118", float(ew[1]), 0.000118, 1e-12))
+gv = volatility.garch11_variance([0.01, 0.0], 2e-6, 0.13, 0.86, init=0.016**2)
+checks.append(("GARCH 更新例 0.00023516", float(gv[1]), 0.00023516, 1e-10))
+checks.append(("V_L = 0.0002", volatility.garch11_long_run(2e-6, 0.13, 0.86), 0.0002, 1e-12))
+checks.append(("10日予測 2.50645e-4",
+               volatility.garch11_forecast(0.016**2, 10, 2e-6, 0.13, 0.86), 2.50645e-4, 2e-8))
+checks.append(("BL フラットσ ≈ 対数正規（相対誤差<1%）", bl_err, 0.0, 0.01))
+checks.append(("GARCH fit 持続性", alpha_e + beta_e, ALPHA_T + BETA_T, 0.05))
+
+for name, got, want, tol in checks:
+    ok = abs(got - want) <= tol
+    print(f"[{'OK' if ok else 'FAIL'}] {name}: got={got:.6g} want={want:.6g}")
+    assert ok, name
+print("\n全チェック合格")""")
+)
+
+# Cell 25: exercises
+cells.append(
+    md(r"""## 11. 練習問題
+
+**Q1.** 同一 (K, T) のコール IV が 25%、プット IV が 27% と観測された。何が起きている？
+
+<details><summary>解答</summary>
+
+パリティ違反＝裁定機会（または価格の同時性・流動性の問題）。
+理論上は eq (20.2) により両者の IV は一致しなければならない。
+</details>
+
+**Q2.** λ=0.94 の EWMA で、σ=1.5%/日 のとき u=−3% が観測された。新しい σ は？
+
+<details><summary>解答</summary>
+
+σ² = 0.94×0.000225 + 0.06×0.0009 = 0.0002655 → σ = 1.629%/日。
+</details>
+
+**Q3.** GARCH で α+β=0.99、現在 σ が σ_L の2倍。約何日で乖離が半減する？
+
+<details><summary>解答</summary>
+
+分散の乖離は (0.99)^t 倍。0.99^t = 0.5 → t = ln0.5/ln0.99 ≈ 69日。
+（ボラ自体なら分散ベースで考える点に注意）
+</details>""")
+)
+
+# Cell 26: summary
+cells.append(
+    md(r"""## まとめ
+
+| 概念 | 要点 |
+|---|---|
+| IV | パリティにより同一 (K,T) のコール/プットで一致。スマイルは1本 |
+| スキュー/スマイル | 株式=左裾の恐怖（スマーク）、FX=両裾（U字） |
+| BL 密度 | g(K)=e^{rT}∂²c/∂K²。スマイル ⇔ 非対数正規分布 |
+| EWMA | λ=0.94。前日分散＋直近リターンだけで更新 |
+| GARCH(1,1) | EWMA＋V_L への平均回帰。α+β が持続性 |
+| 予測 | (α+β)^t で V_L へ回帰 → タームストラクチャー |
+
+**次へ**: `volumes/06_numerical_methods`（Ch.21, 27 — スマイルを生むモデルの数値解法）
+**シリーズ**: `johnhull/ROADMAP.md` 参照""")
+)
+
+# ===========================================================================
 # Notebook assembly
 # ===========================================================================
 
