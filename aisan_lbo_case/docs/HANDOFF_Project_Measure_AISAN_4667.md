@@ -27,7 +27,7 @@
 - 発端は **2026-03-11** の取引先からの未払債務（マーケティングセンター・長野県上田市）に関する問い合わせ。
 - **FY2026.3 連結業績への影響は未確定**（業績修正・財務再表示の可能性、決算発表の遅延可能性）。
 - 株価はこの開示で急落し、開示直後に **~¥1,643 intraday**、5月には終値ベースで **~¥1,490s** まで低下。→ モデルの参照株価 **¥1,680（2026-06-05 close）は不正報道後の水準**であり、プレミアム／バリュエーションは**クリーンな株価で再設定が必要**。
-- 出所: AISAN IR（特別調査委員会設置のお知らせ, 3 Apr 2026）, IRBANK / TDnet, Yahoo Finance（PPT Slide 19 / `FACT_CHECK_2026-06.md` 参照）。
+- 出所: AISAN IR（特別調査委員会設置のお知らせ, 3 Apr 2026）, IRBANK / TDnet, Yahoo Finance（PPT Slide 20 Source Appendix / `FACT_CHECK_2026-06.md` 参照）。
 
 ---
 
@@ -92,7 +92,7 @@
 
 **リターンへの影響**: 過大評価 **2.55x / 20.6%** → 税金・手数料・レバレッジ修正後 **1.93x / 14.1%** → 自己株補正後 **2.07x / 15.6%**。
 
-**PPT（19 slides, direct PPTX update + `python-pptx` addendum）**
+**PPT（初版ビルド時 19 slides; 現行デッキは 20 slides — 後続ラウンド参照）**
 - 推奨を「Proceed」→ **「Too early; proceed to confirmatory DD only」**に反転・**全箇所統一**（Slide 2 / Slide 16）。
 - **子会社調査**を Slide 2（WHY NOT NOW 筆頭）・専用 Slide 15・Slide 14（リスク/DD 筆頭）・結論に反映。
 - トーン緩和: "clean MBO realistic" / "ample capacity" / "textbook self-help" / "certain lever" / "Lazy balance sheet" を全廃 → "DD-gated" / "constrained" / "over-capitalised" / "not a classic leverage-driven LBO" 等へ。
@@ -150,9 +150,15 @@
 - **#5/#6 中優先（SOTP・WC季節性・buyer universe 等）は見送り**: 締切と既存カバレッジ（precedent premium は Slide 9、restatement downside は Downside シナリオ、walk-to-price は Slide 14 に既出）を踏まえ、限界効用が低いため今回は対象外。
 - 結果: PPTX **19→20 slides**（app.xml も 20 に整合）、Excel 数式 **446**・エラー0、新ブロックの数値はレビュー値と一致、構造検証 ALL CLEAN・stale 0・pytest 4 passed。
 
+**外部レビュー（GPT）反映ラウンド5（2026-06-08）**
+- **#1 Excel 印刷崩れ（round-4 追加分）の修正**: round-4 で足した Model セグメント表（"Segment ma…"/"Growth p.a."/"Value-up an…" がヘッダー見切れ、データも切れ）と Returns cash 表（"Sponsor equity"↔"Exit equity" 接触、case 名見切れ）が fit-to-page 下で崩れていた → セグメント表は margin を D:E、value-up を G:J にセル結合＋ヘッダー短縮（"Margin"/"Growth"/"Value-up lever"）、cash 表はヘッダー折り返し＋case 名短縮（説明は直下に注記）。Assumptions 左ブロックの source 注記が右ブロックに当たって切れていた件も要点を残して簡潔化。**全8タブが各1ページにクリーン**（再レンダリング確認）。
+- **#4 表現の中立化**: PPT の "fraud investigation/probe/-depressed" を "investigation / Special probe / investigation-depressed" に統一（FACT_CHECK の "suspected improper transactions / misconduct" と整合）。"suspected forgery & concealment"（IR 開示準拠）は維持。
+- **#3 Slide 2 見切れ**: cash caveat bullet を2行に短縮し、最下段 bullet の窮屈さを解消。
+- **#2 ログの旧記述更新**: HANDOFF §6 見出し・§8 QC・本文の "Slide 19/428/19 slides" を現行値（Slide 20 / 446 / 20 slides）へ。日付・ラウンド付きの履歴記述はそのまま保持（その時点で正確）。
+
 ---
 
-## 6. 出典 / Source traceability（PPT Slide 19、retrieved 7 Jun 2026）
+## 6. 出典 / Source traceability（PPT Slide 20 Source Appendix、retrieved 7 Jun 2026）
 
 1. AISAN IR — Special Investigation Committee notice (3 Apr 2026) — 調査の scope/trigger/委員会構成 — https://www.aisantec.co.jp/information/4167/
 2. AISAN IR — share status / major shareholders — issued shares 5,548,979, treasury shares 268,816 — https://www.aisantec.co.jp/ir/stock/status/
@@ -193,7 +199,7 @@
 - `Returns!C9 = J9 = ¥17.47bn`（bridge 整合） ✓
 - XML/cached-value QA エラー **0**、Base **2.07x / 15.6%** ✓
 - `Lev_Sensitivity!E5/F5` が `Returns!C15/C16` と一致（1.0x tie-out） ✓
-- PPTX slide count **19**、Slide 9 `Valuation Context`（section 08）/ Slide 14 `Walk-to-Price & Leverage`（section 13）/ Slide 19 `Source Appendix` ✓
+- PPTX slide count **20**（現行）、Slide 9 `Valuation Context`（sec 08）/ Slide 14 `Walk-to-Price & Leverage`（sec 13）/ **Slide 15 `Excess Cash Is Central to Returns`（sec 14, round 4 追加）** / Slide 20 `Source Appendix` ✓
 - 全スライドの section チップ／page 番号を座標ベースで照合 → **ALL OK**、zip 重複エントリ **0** ✓
 - 旧文言／旧数値（¥1,675・¥2,295・¥12,733m・¥9,033m・9.03・1.93・14.1%・33.4x・68.8・~14%・year-low・unaffected・corrected・Remainder is dispersed・内部ファイル名）**残存ゼロ**（markitdown + python-pptx 全テキスト走査） ✓
 - チャートXML確認: chart4（S&U）= 0.8 / 3.4 / 8.45 / 12.15 に更新済、stale値ゼロ ✓
@@ -201,7 +207,7 @@
 - `uv run ... pytest tests` → **4 passed in 0.97s**（2026-06-08 再実行） ✓
 - `PYTHONPATH=/tmp/aisan_testdeps:. python3 -m src.fetch.fetch_peer_multiples` → `peer_multiples.csv` 更新（6 sourced / 2 limited_or_missing / 1 needs_currency_check） ✓
 - `precedent_premium_check.csv` 追加、PASCO +31.37% prior-day / +17.45% 6m、Topcon +16.71% prior-day / +58.05% 6m を公式資料に紐付け ✓
-- **LibreOffice recalc 完了（2026-06-08）**: `recalc.py` → `{"status": "success", "total_errors": 0, "total_formulas": 428}`（Lev_Sensitivity ライブ数式化後）。再計算後に主要11値（S=U、bridge、MOIC/IRR、walk-to-price、Lev tie-out、Scenarios）を照合し全一致。
+- **LibreOffice recalc 完了（2026-06-08, 現行）**: `recalc.py` → `{"status": "success", "total_errors": 0, "total_formulas": 446}`（round-4 の cash/MIP ブロック追加後。Lev_Sensitivity 数式化時点では 428）。再計算後に主要11値（S=U、bridge、MOIC/IRR、walk-to-price、Lev tie-out、Scenarios）を照合し全一致。
 - **Visual render QA 完了（2026-06-08）**: 全19スライドをレンダリング目視、4回の fix-and-verify サイクルで以下を修正:
   - Slide 8: STRUCTUREカードの値が長文16ptでカード外にあふれ → 「Sponsor-led / MBO」+短キャプションに修正。
   - Slide 9 / 14（新規スライド）: PASCO行セル・注記行がフォントサイズ未指定（~18ptでスライド外にあふれ）→ 7.5/7.0pt+word-wrap。ヘッダーをデッキ標準（金色セクション番号・Georgia紺タイトル左寄せ・斜体サブタイトル）に統一（`wrap="none"+spAutoFit` が中央寄せレンダリングの原因だったため除去）。
@@ -218,7 +224,7 @@
 
 ## 9. ファイル再生成 / Regeneration（参考）
 
-- Excel: 現ファイルは LibreOffice `recalc.py` で再計算済み（428数式・エラー0）。再編集後は同じ invariants を再確認する。印刷レイアウトは全8タブ landscape + fit-to-page(1×1) + print-area 設定済みで、PDF化すると8ページ（=タブ数）にクリーンに収まる。
+- Excel: 現ファイルは LibreOffice `recalc.py` で再計算済み（**446数式**・エラー0）。再編集後は同じ invariants を再確認する。印刷レイアウトは全8タブ landscape + fit-to-page(1×1) + print-area 設定済みで、PDF化すると8ページ（=タブ数）にクリーンに収まる（segment/cash/Lev のヘッダー折り返し・Assumptions 注記簡潔化を round 5 で実施済み）。
 - PPT: 追加2枚の生成に使った `update_pptx_addendum.py` は **`_archive/update_pptx_addendum.py.deprecated` に退避**（17枚前提・旧peer/PASCOプレースホルダを含む一回用スクリプト。パッケージ外へ移動し再実行入口を除去）。現行19枚デッキは最終成果物を直接編集済み。
 - 注: Excel/PPTX は最終成果物を直接編集済み。将来の大幅再生成は、モデル/デッキ生成スクリプトを別途整備する方が安全。
 - **注意（再発防止）**: python-pptx でスライドを追加する際、既存スライドとパート名（`slideN.xml`）が衝突すると保存毎にzipへ二重書込みされ、内容消失リスクがある。追加時は必ず未使用のパート名を割り当て、保存後に `zipfile` で重複エントリゼロを確認すること。

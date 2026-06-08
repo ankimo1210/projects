@@ -33,17 +33,25 @@ Scope: Excel/PPTX deliverables only. HTML work intentionally out of scope.
 - [ ] #5/#6 medium-priority extras (SOTP, WC seasonality, buyer universe) — out of scope this round (deadline + existing coverage).
 - [x] Post-change verify: PPTX 20 slides, structure ALL CLEAN, stale 0; Excel 446 formulas, errors 0, cash/MIP values match review; pytest 4 passed.
 
+## 2026-06-08 round 5 — second analytical review (GPT) response
+
+- [x] **#1 Excel print/PDF layout**: fixed round-4 additions — Model segment table (merge margin D:E & value-up G:J, shortened headers) and Returns cash table (wrapped headers, shortened case labels) no longer crowd/clip; Assumptions left-block notes tightened so they stop colliding with the right block. All 8 tabs render to 8 clean single pages.
+- [x] **#4 wording**: softened "fraud" → "investigation / special probe" across PPT (matches FACT_CHECK's "suspected misconduct"); kept "suspected forgery & concealment" per IR disclosure.
+- [x] **#3 Slide 2**: shortened cash caveat bullet to 2 lines → bottom bullet no longer tight/cut.
+- [x] **#2 stale logs**: current-state refs updated to 20 slides / 446 formulas / Source Appendix Slide 20; dated round logs kept as historical record.
+- [x] Re-verify: 8-page clean Excel, 20-slide PPTX structure ALL CLEAN, stale 0, invariants hold, pytest 4 passed.
+
 ## Current Status
 
 | Area | Status | Notes |
 |---|---|---|
 | Excel model mechanics | Done | Treasury-share correction, reference price update, walk-to-price, leverage sensitivity and formula-cache QA completed. |
 | PPTX core corrections | Done | Existing slides updated for corrected price, share count, returns, recommendation and source appendix. |
-| PPTX addendum slides | Done | Added Slide 17 `Valuation Context` and Slide 18 `Walk-to-Price & Leverage`; Source Appendix moved to Slide 19. |
+| PPTX addendum slides | Done | Added `Valuation Context` + `Walk-to-Price & Leverage` (initially appendix; later moved into body — now Slide 9 / 14). Round 4 added `Excess Cash Is Central to Returns` (Slide 15). Source Appendix is now Slide 20. |
 | Fact-check log | Done | `docs/FACT_CHECK_2026-06.md` created with source URLs and retrieval dates. |
 | Static QA | Done | Excel invariants, PPTX stale-value search and pytest completed. |
-| Visual render QA | **Done (2026-06-08)** | LibreOffice installed; all 19 slides + all 8 Excel tabs rendered & inspected (incl. print/PDF layout: 8 tabs → 8 clean pages, Lev headers wrapped, no touching), fix-and-verify cycles completed. |
-| Package structure QA | Done (2026-06-08) | All slide rels resolve, Content-Types complete, 19 unique sldIds, notes use auto slidenum fields, zip duplicates 0. |
+| Visual render QA | **Done (2026-06-08)** | LibreOffice installed; all 20 slides + all 8 Excel tabs rendered & inspected. Print/PDF layout: 8 tabs → 8 clean pages; Lev / segment / cash tables header-wrapped, Assumptions notes tightened — no touching/clipping after round-5 fixes. |
+| Package structure QA | Done (2026-06-08) | All slide rels resolve, Content-Types complete, 20 unique sldIds, notes use auto slidenum fields, zip duplicates 0. |
 | Metadata cleanup | Done (2026-06-08) | PPTX subject (was "PptxGenJS Presentation") and XLSX creator (was "openpyxl") replaced. |
 | Peer multiples refresh | Done with caveats | `peer_multiples.csv` created from yfinance; Topcon/PASCO missing and Hexagon requires currency validation. |
 | Precedent source tightening | Done with caveats | `precedent_premium_check.csv` created; PASCO and Topcon now tied to official documents, Tecnos/Kaonavi to M&A Online. |
