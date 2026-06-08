@@ -293,7 +293,7 @@ b_f = sum(cf * swaps.discount(t, for_curve) for t, cf in zip(for_times, for_cfs)
 v_ccy = -swaps.currency_swap_value(dom_times, dom_cfs, dom_curve,
                                    for_times, for_cfs, for_curve, SPOT_FX)  # 円受け側
 print(f"B_D = {b_d:.4f} 百万ドル ／ B_F = {b_f:.2f} 百万円 ／ S0·B_F = {SPOT_FX * b_f:.4f} 百万ドル")
-print(f"円受け・ドル払いスワップの価値 = S0·B_F − B_D = {v_ccy:.4f} 百万ドル（Hull: 0.9629）""")
+print(f'円受け・ドル払いスワップの価値 = S0·B_F - B_D = {v_ccy:.4f} 百万ドル (Hull: 0.9629)')""")
 )
 
 # Cell 15: forwards view md
