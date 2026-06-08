@@ -59,5 +59,13 @@ def test_historical_small_sample_k_floor():
     assert es == pytest.approx(3.0)
 
 
+def test_historical_fractional_k_uses_ceiling():
+    # n=250, alpha=0.99 -> (1-alpha)*n = 2.5 -> k = 3 (ceiling convention)
+    pnl = -np.arange(1.0, 251.0)
+    var, es = risk.historical_var_es(pnl, alpha=0.99)
+    assert var == pytest.approx(248.0)
+    assert es == pytest.approx((248.0 + 249.0 + 250.0) / 3.0)
+
+
 def test_portfolio_sigma_single_asset_reduces():
     assert risk.portfolio_sigma([10e6], [0.02], [[1.0]]) == pytest.approx(200_000.0)

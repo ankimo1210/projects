@@ -9,14 +9,14 @@ from scipy.stats import norm
 def historical_var_es(pnl, alpha=0.99):
     """Historical-simulation VaR and ES from a P&L array (gains positive).
 
-    Hull's convention with n scenarios: k = max(1, ceil((1-alpha)*n));
+    Hull's convention with n scenarios: k = max(1, ceil((1-alpha)*n - 1e-9))  # epsilon guards float artifacts;
     VaR = k-th worst loss; ES = mean of the k worst losses
     (99% with 500 scenarios -> 5th worst / mean of worst five).
     Returns (var, es) as positive loss amounts.
     """
     losses = -np.asarray(pnl, dtype=float)
     n = len(losses)
-    k = max(1, round((1.0 - alpha) * n))
+    k = max(1, math.ceil((1.0 - alpha) * n - 1e-9))
     worst = np.sort(losses)[::-1][:k]
     return float(worst[-1]), float(worst.mean())
 
