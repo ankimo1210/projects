@@ -281,6 +281,213 @@ display(widgets.HBox([h_sl, sig_b_sl]), fig5.canvas)""")
 )
 
 # ===========================================================================
+# Section 2: Ch.28 martingales and measures
+# ===========================================================================
+
+# Cell 14: numeraire md
+cells.append(
+    md(r"""## 5. マルチンゲールと測度（Ch.28）
+
+**マルチンゲール** = ドリフトゼロの過程（$E[\theta_T] = \theta_0$）。
+**同値マルチンゲール測度の定理**: トレーダブル証券 $g$（ニュメレール）を選ぶと、
+任意の証券価格 $f$ について $f/g$ がマルチンゲールになる測度が存在し：
+
+$$f_0 = g_0\,E_g\!\left[\frac{f_T}{g_T}\right] \quad \text{(28.15)}$$
+
+ニュメレールの選び方で「便利な測度」が得られます：
+マネーマーケット口座 → リスク中立測度、ゼロクーポン債 → フォワード測度。""")
+)
+
+# Cell 15: market price of risk md
+cells.append(
+    md(r"""## 6. 市場リスクの価格 λ（§28.1）
+
+ある確率変数 $\theta$ に依存する**すべての**デリバティブで、無裁定なら
+
+$$\frac{\mu - r}{\sigma} = \lambda \quad \text{(28.8)}$$
+
+が共通に成立（$\lambda$ は $\theta, t$ のみに依存、商品によらない）。
+$\lambda$ はシャープ比に相当。リスク中立測度は $\lambda$ を 0 に「移す」測度です。""")
+)
+
+# Cell 16: market price of risk demo
+cells.append(
+    code(r"""# --- λ が2つのデリバティブで一致することの数値確認 ---
+# 原資産 θ: dθ/θ = m dt + s dz。θに依存する2つのデリバティブ f1, f2 の (μ-r)/σ を比較
+# BSM 世界では任意のオプションについて (μ_opt - r)/σ_opt = (μ_S - r)/σ_S = λ
+S0_m, mu_S, sig_S, r_m = 100.0, 0.12, 0.20, 0.05
+lam_underlying = (mu_S - r_m) / sig_S
+# コールのリターン・ボラはデルタ弾性 Ω = (S/c)·Δ でスケール
+for K_m, T_m in [(100.0, 0.5), (110.0, 1.0)]:
+    c = bsm.call_price(S0_m, K_m, r_m, sig_S, T_m)
+    delta = bsm.call_delta(S0_m, K_m, r_m, sig_S, T_m)
+    omega = S0_m / c * delta  # 弾性
+    sig_opt = omega * sig_S
+    mu_opt = r_m + omega * (mu_S - r_m)  # CAPM 風
+    lam_opt = (mu_opt - r_m) / sig_opt
+    print(f"K={K_m}, T={T_m}: σ_opt={sig_opt:.3f}, (μ−r)/σ = {lam_opt:.4f}")
+print(f"原資産の λ = (μ−r)/σ = {lam_underlying:.4f} ← すべて一致（無裁定）")""")
+)
+
+# Cell 17: risk-neutral & forward measure md
+cells.append(
+    md(r"""## 7. ニュメレールの選択（§28.4–28.5）
+
+| ニュメレール $g$ | 測度 | 公式 |
+|---|---|---|
+| マネーマーケット口座 $e^{rt}$ | リスク中立 $\mathbb{Q}$ | $f_0 = \hat E[e^{-rT}f_T]$ |
+| ゼロクーポン債 $P(t,T)$ | $T$-フォワード $\mathbb{Q}^T$ | $f_0 = P(0,T)E^T[f_T]$ |
+| アニュイティ $A(t)$ | スワップ測度 | スワプション評価（→第11冊） |
+
+**フォワード測度の効用**: $F(t,T) = E^T[S_T]$ — フォワード価格はフォワード測度下の
+期待スポット。これが**確率的金利下でも Black-76 が成り立つ**理由です（第2冊の $q=r$ の正当化）。""")
+)
+
+# Cell 18: numeraire invariance demo
+cells.append(
+    code(r"""# --- ニュメレール不変性: 同じオプションを2つの測度で評価 → 同値 ---
+# ヨーロピアンコールを (a) リスク中立測度 (b) 株価ニュメレール で MC 評価
+S0_n, K_n, r_n, sig_n, T_n = 100.0, 100.0, 0.05, 0.25, 1.0
+rng_n = np.random.default_rng(28)
+n_paths = 200_000
+z = rng_n.standard_normal(n_paths)
+# (a) リスク中立測度: ドリフト r、ペイオフを e^{-rT} で割引
+ST_q = S0_n * np.exp((r_n - 0.5 * sig_n**2) * T_n + sig_n * math.sqrt(T_n) * z)
+price_q = math.exp(-r_n * T_n) * np.maximum(ST_q - K_n, 0.0).mean()
+# (b) 株価ニュメレール（測度 S）: ドリフト r+σ²、c = S0·E^S[(S_T-K)^+/S_T]
+ST_s = S0_n * np.exp((r_n + 0.5 * sig_n**2) * T_n + sig_n * math.sqrt(T_n) * z)
+price_s = S0_n * (np.maximum(ST_s - K_n, 0.0) / ST_s).mean()
+print(f"(a) リスク中立測度の MC 価格   = {price_q:.4f}")
+print(f"(b) 株価ニュメレールの MC 価格 = {price_s:.4f}")
+print(f"BSM 解析値                     = {bsm.call_price(S0_n, K_n, r_n, sig_n, T_n):.4f}")
+print("→ ニュメレールを変えても同じ価格（測度変換の不変性）")""")
+)
+
+# Cell 19: Girsanov md + demo
+cells.append(
+    md(r"""## 8. ギルサノフの定理（§28.2）
+
+測度変換は**ドリフトを変えるがボラティリティは保存**する：
+
+$$dz^{\mathbb{Q}} = dz^{\mathbb{P}} + \lambda\,dt$$
+
+実世界 $\mathbb{P}$（ドリフト $\mu$）からリスク中立 $\mathbb{Q}$（ドリフト $r$）へ移っても、
+$\sigma$ は不変。これは第1冊で見た「二項ツリーで測度を変えても σ が変わらない」の
+連続版です。下で同じ σ・異なるドリフトのパスを比較します。""")
+)
+
+# Cell 20: Girsanov path demo
+cells.append(
+    code(r"""rng_g = np.random.default_rng(280)
+z_common = rng_g.standard_normal((30, 252))
+t_g = np.linspace(0.0, 1.0, 253)
+dt_g = 1.0 / 252
+fig6, (ax6a, ax6b) = plt.subplots(1, 2, figsize=(10.5, 4), sharey=True)
+fig6.canvas.header_visible = False
+for ax, mu_g, title in ((ax6a, 0.12, "実世界 P（μ=12%）"),
+                        (ax6b, 0.05, "リスク中立 Q（μ=r=5%）")):
+    lp = np.cumsum((mu_g - 0.5 * 0.2**2) * dt_g + 0.2 * math.sqrt(dt_g) * z_common, axis=1)
+    paths_g = 100.0 * np.exp(np.column_stack([np.zeros(30), lp]))
+    ax.plot(t_g, paths_g.T, lw=0.6, alpha=0.6)
+    ax.plot(t_g, 100.0 * np.exp(mu_g * t_g), "k--", lw=2)
+    ax.set_title(title)
+    ax.set_xlabel("t")
+ax6a.set_ylabel("S")
+fig6.suptitle("同じ乱数・同じ σ=20%、ドリフトだけ違う（ギルサノフ）", fontsize=10)
+display(fig6.canvas)
+print("拡散の広がり（σ）は両測度で同一。期待成長率（点線）だけが異なる")""")
+)
+
+# Cell 21: swap measure pointer md
+cells.append(
+    md(r"""### スワップ測度へのポインタ（§28.6）
+
+アニュイティ $A(t) = \sum (T_{i+1}-T_i)P(t,T_{i+1})$ をニュメレールにすると、
+フォワード・スワップレート $s(t)$ がマルチンゲールになる「スワップ測度」が得られ、
+**スワプションの Black 公式**が正当化されます。これは第11冊（Ch.29）で本格的に使います。""")
+)
+
+# ===========================================================================
+# Section 3: verification / exercises / summary
+# ===========================================================================
+
+# Cell 22: assertion cell
+cells.append(
+    code(r"""# --- 検証（hullkit/tests/test_exotics.py にも同等の検証あり） ---
+checks = []
+checks.append(("バイナリ分解 = バニラ", aon - K_B * con, van, 1e-12))
+checks.append(("バリア in+out = バニラ", cdi + cdo, van, 1e-12))
+checks.append(("Margrabe 7.9656",
+               exotics.exchange_option(100.0, 100.0, 0.2, 0.2, 0.5, 1.0), 7.965567, 1e-5))
+checks.append(("gap call 13.1122",
+               exotics.gap_call(100.0, 95.0, 100.0, 0.05, 0.20, 1.0), 13.112208, 1e-5))
+checks.append(("アジアン < バニラ", float(a_tw < van), 1.0, 0.0))
+checks.append(("ルックバック > ATM", float(lb > van), 1.0, 0.0))
+checks.append(("ニュメレール不変（a≈b）", price_q, price_s, 5e-3))
+checks.append(("λ 一致（原資産 vs オプション）", lam_opt, lam_underlying, 1e-9))
+
+for name, got, want, tol in checks:
+    ok = abs(got - want) <= tol
+    print(f"[{'OK' if ok else 'FAIL'}] {name}: got={got:.6g} want={want:.6g}")
+    assert ok, name
+print("\n全チェック合格")""")
+)
+
+# Cell 23: exercises
+cells.append(
+    md(r"""## 9. 練習問題
+
+**Q1.** ダウン・アンド・アウト・コール（H=80）の価格が 9、対応するバニラが 10。
+ダウン・アンド・イン・コールの価格は？
+
+<details><summary>解答</summary>
+
+in + out = vanilla より、di = 10 − 9 = 1。
+</details>
+
+**Q2.** 平均価格アジアン・コールがバニラ・コールより安いのはなぜ？
+
+<details><summary>解答</summary>
+
+平均は経路を均すので実効ボラティリティが下がる（σ_avg < σ）。
+オプション価値はボラに単調増加なので安くなる。
+</details>
+
+**Q3.** 交換オプション（Margrabe）が金利 r に依存しないのはなぜ？
+
+<details><summary>解答</summary>
+
+一方の資産をニュメレールに取ると、両資産の成長率上昇と割引率上昇が相殺する。
+価格は相対ボラ σ̂=√(σ_U²+σ_V²−2ρσ_Uσ_V) だけで決まる。
+</details>""")
+)
+
+# Cell 24: summary
+cells.append(
+    md(r"""## まとめ
+
+| 概念 | 要点 |
+|---|---|
+| バイナリ | aon − K·con = バニラ。不連続ペイオフ |
+| バリア | in + out = バニラ。ノックアウトは安い |
+| ルックバック | 経路最小で買える「後知恵」プレミアム |
+| アジアン | 平均でボラ低下 → 安い。TW近似 or MC |
+| Margrabe | 交換オプション。r 非依存、σ̂ だけで決まる |
+| 測度 | f/g がマルチンゲール。ニュメレールで測度を選ぶ |
+| λ | (μ−r)/σ は全商品共通。Q は λ=0 の測度 |
+| ギルサノフ | 測度変換でドリフト変、σ 不変 |
+
+**次へ**: `volumes/11_ir_derivatives_market`（Ch.29, 30 — Black モデルとスワプション）
+**シリーズ**: `johnhull/ROADMAP.md` 参照""")
+)
+
+# Cell 25: closing md
+cells.append(
+    md(r"""---
+*第10冊おわり。エキゾチックの閉形式と、その正当性を支える測度論を一巡しました。*""")
+)
+
+# ===========================================================================
 # Notebook assembly
 # ===========================================================================
 
