@@ -290,6 +290,112 @@ fn solve_hu_river(
     })
 }
 
+/// Exact HU turn+river equilibrium (gto-hu). The river is a public chance
+/// node; the turn is sampled during training but exploitability and game
+/// value are always computed by exact enumeration. ~30-40 s for 10k iters.
+///
+/// Same response shape as `solve_hu_river` (turn-root OOP strategy +
+/// exact exploitability + per-combo turn strategies for a heatmap).
+#[pyfunction]
+#[pyo3(signature = (board, pot_bb, effective_stack_bb, iterations=None, seed=None))]
+fn solve_hu_turn_river(
+    board: Vec<String>,
+    pot_bb: f64,
+    effective_stack_bb: f64,
+    iterations: Option<u32>,
+    seed: Option<u64>,
+) -> PyResult<PyObject> {
+    use gto_hu::game::BB;
+    use gto_hu::ranges::all_combos;
+    use gto_hu::solver::{CfrVariant, ChanceMode, TurnRiverSolver};
+    use gto_hu::tree::{build_turn_river_tree, TurnTreeConfig};
+    use std::time::Instant;
+
+    let iters = iterations.unwrap_or(10_000);
+    let board_u8: Vec<u8> = board.iter().filter_map(|s| parse_card_u8(s)).collect();
+    if board_u8.len() != 4 {
+        return Err(pyo3::exceptions::PyValueError::new_err(
+            "turn board must have exactly 4 cards",
+        ));
+    }
+    let mut seen = [false; 52];
+    for &c in &board_u8 {
+        if seen[c as usize] {
+            return Err(pyo3::exceptions::PyValueError::new_err(
+                "duplicate card in board",
+            ));
+        }
+        seen[c as usize] = true;
+    }
+    let board4: [u8; 4] = board_u8.try_into().unwrap();
+    let pot = (pot_bb * BB as f64).round() as i64;
+    let stack = (effective_stack_bb * BB as f64).round() as i64;
+    if pot <= 0 || pot % 2 != 0 || stack <= 0 {
+        return Err(pyo3::exceptions::PyValueError::new_err(
+            "pot must be positive and even (centi-bb); stack must be positive",
+        ));
+    }
+
+    let tree = build_turn_river_tree(pot, stack, &TurnTreeConfig::srp());
+    let ranges = [
+        gto_hu::ranges::uniform_excluding(&board4),
+        gto_hu::ranges::uniform_excluding(&board4),
+    ];
+    let mode = ChanceMode::Sample {
+        seed: seed.unwrap_or(42),
+    };
+    let mut solver =
+        TurnRiverSolver::new(tree, board4, ranges, CfrVariant::cfr_plus_default(), mode);
+    let start = Instant::now();
+    solver.run(iters);
+    let elapsed = start.elapsed().as_secs_f64();
+    let expl = solver.exploitability_bb();
+    let game_value = solver.game_value_p0();
+    let root = solver.aggregate_strategy(0, None);
+    let combos = all_combos();
+    let na = root.len();
+
+    Python::with_gil(|py| {
+        let dict = pyo3::types::PyDict::new(py);
+        let agg = pyo3::types::PyList::empty(py);
+        let actions = pyo3::types::PyList::empty(py);
+        for (name, freq) in &root {
+            let e = pyo3::types::PyDict::new(py);
+            e.set_item("action", name)?;
+            e.set_item("freq", freq)?;
+            agg.append(e)?;
+            actions.append(name)?;
+        }
+        dict.set_item("strategy", agg)?;
+        dict.set_item("actions", actions)?;
+        dict.set_item("exploitability", expl.exploitability)?;
+        dict.set_item("br_sb", expl.br_value[0])?;
+        dict.set_item("br_bb", expl.br_value[1])?;
+        dict.set_item("game_value_sb", game_value)?;
+        dict.set_item("iterations", iters)?;
+        dict.set_item("elapsed_secs", elapsed)?;
+
+        let combo_list = pyo3::types::PyList::empty(py);
+        for (c, &(ca, cb)) in combos.iter().enumerate() {
+            if solver.export_weight(1, None, c) == 0.0 {
+                continue;
+            }
+            let s = solver.average_strategy(0, None, c);
+            let e = pyo3::types::PyDict::new(py);
+            e.set_item("card_a", card_string(ca))?;
+            e.set_item("card_b", card_string(cb))?;
+            let freqs = pyo3::types::PyList::empty(py);
+            for &f in s.iter().take(na) {
+                freqs.append(f)?;
+            }
+            e.set_item("freqs", freqs)?;
+            combo_list.append(e)?;
+        }
+        dict.set_item("combos", combo_list)?;
+        Ok(dict.into())
+    })
+}
+
 /// "Ah" style label for a `rank*4+suit` card index.
 fn card_string(c: u8) -> String {
     const RANKS: [char; 13] = [
@@ -307,6 +413,7 @@ fn gto_py(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(solve_spot_multistreet, m)?)?;
     m.add_function(wrap_pyfunction!(solve_flop_with_ev, m)?)?;
     m.add_function(wrap_pyfunction!(solve_hu_river, m)?)?;
+    m.add_function(wrap_pyfunction!(solve_hu_turn_river, m)?)?;
     m.add_function(wrap_pyfunction!(eval7, m)?)?;
     Ok(())
 }

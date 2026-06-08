@@ -3,7 +3,9 @@
 import { useState } from "react";
 import NeonShell from "@/components/layout/NeonShell";
 import {
-  solveHuRiver,
+  solveHu,
+  HuStreet,
+  STREET_CARDS,
   HuRiverResponse,
   aggressiveGrid,
   RANK_LABELS,
@@ -163,14 +165,28 @@ function RangeGrid({ resp }: { resp: HuRiverResponse }) {
 // Page
 // ---------------------------------------------------------------------------
 
+const RIVER_BOARD = ["Ah", "Kd", "7s", "2c", "9h"];
+const TURN_BOARD = ["Ah", "Kd", "7s", "2c"];
+
 export default function HuPage() {
-  const [board, setBoard] = useState<string[]>(["A", "K", "7", "2", "9"].map((r, i) => r + "hdscs"[i]));
+  const [street, setStreet] = useState<HuStreet>("river");
+  const [board, setBoard] = useState<string[]>(RIVER_BOARD);
   const [pot, setPot] = useState(20);
   const [stack, setStack] = useState(90);
   const [iters, setIters] = useState(5000);
   const [solving, setSolving] = useState(false);
   const [result, setResult] = useState<HuRiverResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const need = STREET_CARDS[street];
+
+  function changeStreet(s: HuStreet) {
+    setStreet(s);
+    setBoard(s === "river" ? RIVER_BOARD : TURN_BOARD);
+    setIters(s === "river" ? 5000 : 10000);
+    setResult(null);
+    setError(null);
+  }
 
   function toggleCard(c: string) {
     setBoard((prev) => (prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c]));
@@ -179,12 +195,12 @@ export default function HuPage() {
   }
 
   async function solve() {
-    if (board.length !== 5 || solving) return;
+    if (board.length !== need || solving) return;
     setSolving(true);
     setResult(null);
     setError(null);
     try {
-      const res = await solveHuRiver({
+      const res = await solveHu(street, {
         board,
         pot_bb: pot,
         effective_stack_bb: stack,
@@ -198,7 +214,7 @@ export default function HuPage() {
     }
   }
 
-  const canSolve = board.length === 5 && !solving;
+  const canSolve = board.length === need && !solving;
 
   return (
     <NeonShell>
@@ -206,18 +222,38 @@ export default function HuPage() {
         {/* Left: board + params */}
         <aside className="w-72 border-r border-cyan-500/10 p-4 flex flex-col gap-4 overflow-y-auto">
           <div>
-            <p className="text-[9px] tracking-widest text-cyan-500/40">EXACT HU RIVER GTO</p>
+            <p className="text-[9px] tracking-widest text-cyan-500/40">EXACT HU GTO SOLVER</p>
             <p className="text-[9px] text-zinc-600 mt-1">
               Correct equilibrium with an exact exploitability number — not the
               single-street GPU approximation.
             </p>
           </div>
 
+          {/* Street selector */}
+          <div className="flex gap-1">
+            {(["river", "turn-river"] as HuStreet[]).map((s) => (
+              <button
+                key={s}
+                onClick={() => changeStreet(s)}
+                className={`flex-1 py-1 text-[10px] tracking-widest border transition-all
+                  ${street === s ? "border-cyan-400 text-cyan-300 bg-cyan-400/10" : "border-zinc-700 text-zinc-600 hover:border-zinc-500"}`}
+              >
+                {s === "river" ? "RIVER" : "TURN+RIVER"}
+              </button>
+            ))}
+          </div>
+          {street === "turn-river" && (
+            <p className="text-[9px] text-amber-500/70 leading-relaxed">
+              ⚠ Turn+river enumerates the river as a public chance node — a solve
+              takes ~30-40 s at 10k iterations. Exploitability is always exact.
+            </p>
+          )}
+
           <div className="flex items-center gap-1.5 flex-wrap min-h-[3rem]">
             {board.map((c) => (
               <BoardCard key={c} card={c} onClick={() => toggleCard(c)} />
             ))}
-            {Array(5 - board.length)
+            {Array(need - board.length)
               .fill(0)
               .map((_, i) => (
                 <div
@@ -226,9 +262,11 @@ export default function HuPage() {
                 />
               ))}
           </div>
-          <p className="text-[9px] text-zinc-600">RIVER BOARD ({board.length}/5)</p>
+          <p className="text-[9px] text-zinc-600">
+            {street === "river" ? "RIVER" : "TURN"} BOARD ({board.length}/{need})
+          </p>
 
-          <CardPicker selected={board} onToggle={toggleCard} maxCards={5} />
+          <CardPicker selected={board} onToggle={toggleCard} maxCards={need} />
 
           <div className="space-y-3 pt-2">
             <SliderRow label="POT" value={pot} min={2} max={60} step={2} unit="bb" onChange={(v) => { setPot(v); setResult(null); }} />
@@ -251,7 +289,7 @@ export default function HuPage() {
         <main className="flex-1 p-6 overflow-auto">
           {!result && !solving && (
             <div className="h-full flex items-center justify-center text-zinc-700 text-xs tracking-widest">
-              PICK A 5-CARD RIVER BOARD → SOLVE
+              PICK A {need}-CARD {street === "river" ? "RIVER" : "TURN"} BOARD → SOLVE
             </div>
           )}
           {solving && (

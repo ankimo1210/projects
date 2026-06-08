@@ -32,8 +32,16 @@ export interface HuRiverResponse {
   combos: ComboStrategy[];
 }
 
-export async function solveHuRiver(req: HuRiverRequest): Promise<HuRiverResponse> {
-  const res = await fetch("/api/hu/river", {
+export type HuStreet = "river" | "turn-river";
+
+/** Number of board cards each street expects. */
+export const STREET_CARDS: Record<HuStreet, number> = { river: 5, "turn-river": 4 };
+
+export async function solveHu(
+  street: HuStreet,
+  req: HuRiverRequest,
+): Promise<HuRiverResponse> {
+  const res = await fetch(`/api/hu/${street}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(req),

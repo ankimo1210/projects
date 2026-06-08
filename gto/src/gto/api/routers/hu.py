@@ -22,6 +22,13 @@ class RiverRequest(BaseModel):
     iterations: int = 5000
 
 
+class TurnRiverRequest(BaseModel):
+    board: list[str]  # exactly 4 cards (turn)
+    pot_bb: float = 20.0
+    effective_stack_bb: float = 90.0
+    iterations: int = 10000
+
+
 class ActionFreq(BaseModel):
     action: str
     freq: float
@@ -70,6 +77,41 @@ async def solve_river(req: RiverRequest):
     except ValueError as e:
         raise HTTPException(422, str(e)) from e
 
+    return _to_response(result)
+
+
+@router.post("/hu/turn-river", response_model=RiverResponse)
+async def solve_turn_river(req: TurnRiverRequest):
+    """Exact turn+river equilibrium (river enumerated, turn sampled). The
+    turn root strategy is OOP (BB). Slow: ~30-40 s at 10k iterations —
+    the frontend must call this asynchronously."""
+    if len(req.board) != 4:
+        raise HTTPException(422, "turn board must have exactly 4 cards")
+    if req.iterations < 100 or req.iterations > 30_000:
+        raise HTTPException(422, "iterations must be 100-30000")
+    if req.pot_bb <= 0 or req.effective_stack_bb <= 0:
+        raise HTTPException(422, "pot and stack must be positive")
+
+    loop = asyncio.get_event_loop()
+    try:
+        import gto_py
+
+        result = await loop.run_in_executor(
+            _executor,
+            lambda: gto_py.solve_hu_turn_river(
+                req.board,
+                req.pot_bb,
+                req.effective_stack_bb,
+                req.iterations,
+            ),
+        )
+    except ValueError as e:
+        raise HTTPException(422, str(e)) from e
+
+    return _to_response(result)
+
+
+def _to_response(result: dict) -> "RiverResponse":
     return RiverResponse(
         strategy=[ActionFreq(**a) for a in result["strategy"]],
         actions=result["actions"],
