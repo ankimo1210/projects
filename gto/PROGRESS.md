@@ -228,11 +228,18 @@ gto-core/gto-cuda は single-street 近似のまま（river-only は正しい）
     フル台帳 M=3 スモーク（expl 0.348→0.079）
   - 出力規律: 「M-flop 抽象ゲーム上の厳密 exploitability 付き CFR
     プロファイル」— equilibrium とは呼ばない。フル NLHE の expl ではない
-  - **初回実ラン実行中**（2026-06-08 夜開始, M=3 AhKd7s/QsJh2c/8d8h3s,
-    K_r=16/K_t=32, 1500 iters）: ゲート合計 16.24 GB・実測 11.9 s/iter
-    （レビュー済み予測と一致）。ETA ~5h+BR。
-    ログ: /tmp/solve_blueprint_m3.log →
-    出力: `_data/gto/hu/blueprint_100bb_m3/summary.json`
+  - **(leaf, m) サブゲーム並列化（rayon, 3 フェーズ走査）** —
+    逐次版とビット同一（assert_eq テストで固定）。実測 11.9 → **1.54 s/iter
+    （7.7×）**、1500 iters が 5h → 40 分に
+  - **初回フルラン完了（2026-06-09）** — M=3 AhKd7s/QsJh2c/8d8h3s 均等重み,
+    K_r=16/K_t=32, 1500 sampled iters, 学習 40.5 分 + 厳密 BR:
+    **expl 1.5059 bb/hand（3-flop 抽象ゲーム内・厳密）**, ゲーム値 SB
+    +0.2241 bb。SB ルート: fold 35.9% / limp 55.6% / open 8.5% —
+    実 GTO から遠い（浅い収束 ~30 visits/turn-ctx + 粗い盤面抽象 +
+    デモ用均等重み）。パイプライン実証が目的の初値であり、品質は
+    iteration 増（並列化で 15k≈7h が可能に）と M/バケット拡大が前提
+  - `gto.library.sample_flops` — canonical 頻度から --flops/--weights を
+    生成（diverse/frequency/random、pytest 37 本）
 - テスト: 27ファイル・156 本（betting / payoff / tree / regret / Kuhn /
   Leduc / TinyRiver / differential / BR / reports /
   turn・flop・preflop の tree / chance / solver / differential / reports /
@@ -243,12 +250,10 @@ gto-core/gto-cuda は single-street 近似のまま（river-only は正しい）
 ## TODO（優先順）
 
 ### Phase HU 続き（gto-hu ロードマップ）
-- [ ] **ブループリント初回フルラン結果の記録** — 実行中（下記）。完了後
-      summary.json の expl を PROGRESS に転記
-- [ ] (m, leaf) サブゲーム走査の rayon 並列化（×8〜24、長期ラン前提技術）
+- [ ] ブループリント品質ラン — sample_flops の頻度重み + 15k iters（~7h）で
+      expl がどこまで下がるか計測。K_r/K_t の感度も
 - [ ] 将来: f32 テーブル（×2）、ボードバケッティング、ディスクバック
-      （M を実用規模に上げる前提技術）、canonical flop 頻度による重み生成
-      （現状 CLI の重みは手動指定。Python flop_canon と接続）
+      （M を実用規模に上げる前提技術）
 
 ### Phase C 続き（任意）
 - [ ] GPU util 67% → 80%+（カーネル融合 / CUDA Graphs / バッチ拡大）
