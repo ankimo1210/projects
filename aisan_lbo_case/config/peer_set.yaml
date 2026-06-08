@@ -59,11 +59,11 @@ precedent_transactions:
     buyer: "SECOM / ITOCHU-related tender offerors"
     target: "PASCO Corporation"
     deal_value_jpy_mn: "8730 minority tender consideration / approx. 30845 whole-equity implied at tender price"
-    premium: "Not populated in automated model; update from tender offer registration statement."
+    premium: "31.37% to prior-day close; 17.45% to six-month average per official tender commencement notice"
     ev_revenue: "n/a"
     ev_ebitda: "n/a"
     rationale: "Geospatial information and mapping platform consolidation."
-    relevance: "Closest Japanese geospatial take-private precedent."
+    relevance: "Closest Japanese geospatial take-private precedent; controlled-company minority tender mechanics differ from AISAN."
     source_id: itochu_pasco_results
   - date: "2025-02-04"
     buyer: "Ant Capital Partners affiliate"

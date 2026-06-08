@@ -2,13 +2,22 @@
 
 Reproducible public-information research and modeling repository for an HTML-based investment case study on AISAN TECHNOLOGY CO., LTD. (`4667.T`).
 
-The output is an investment-committee style HTML report, not Excel or PowerPoint:
+The primary analytical output is an investment-committee style HTML report:
 
 - `output/aisan_lbo_investment_report.html`
 - `output/model_summary.json`
 - `output/model_outputs.csv`
 - `output/sources_bibliography.csv`
 - `output/assumptions_log.md`
+
+Presentation deliverables live in `docs/`:
+
+- `docs/AISAN_4667_Take_Private_Case_Study.pptx` — case-study deck;
+  `python -m src.report.update_pptx_addendum` appends the valuation addendum slides
+- `docs/AISAN_4667_LBO_Model.xlsx` — Excel model (not tracked in git)
+- Research logs: `docs/HANDOFF_Project_Measure_AISAN_4667.md` (handoff),
+  `docs/FACT_CHECK_2026-06.md` (June 2026 fact check),
+  `docs/PROGRESS_TODO_2026-06-07.md` (deliverable QA progress)
 
 ## Setup
 
@@ -35,6 +44,7 @@ python -m src.fetch.fetch_company_ir
 python -m src.fetch.fetch_market_data
 python -m src.fetch.fetch_filings
 python -m src.fetch.fetch_peer_data
+python -m src.fetch.fetch_peer_multiples   # peer EV/EBITDA -> data/processed/peer_multiples.csv
 ```
 
 If a source cannot be fetched automatically, the fetcher writes a clear placeholder or manifest under `data/raw/`.
