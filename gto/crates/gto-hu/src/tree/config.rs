@@ -84,6 +84,26 @@ impl StreetConfig {
         }
     }
 
+    /// 4BP flop per spec §6: check, b25, allin / vs bet: fold, call, jam.
+    pub fn fourbet_flop() -> Self {
+        StreetConfig {
+            bet_pcts: vec![25],
+            allow_allin_bet: true,
+            raise: RaiseRule::JamOnly,
+            max_raises: 1,
+        }
+    }
+
+    /// 4BP turn/river per spec §6: check, allin / vs allin: fold, call.
+    pub fn fourbet_street() -> Self {
+        StreetConfig {
+            bet_pcts: vec![],
+            allow_allin_bet: true,
+            raise: RaiseRule::None,
+            max_raises: 0,
+        }
+    }
+
     /// SRP river per spec: check, bet75, bet150, allin / vs bet: fold,
     /// call, raise-jam / vs raise: fold, call.
     pub fn srp_river() -> Self {

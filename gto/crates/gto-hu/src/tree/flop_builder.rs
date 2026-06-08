@@ -29,6 +29,15 @@ impl FlopTreeConfig {
             river: StreetConfig::threebet_river(),
         }
     }
+
+    /// 4-bet pot per spec §6 (blueprint design §2).
+    pub fn fourbet() -> Self {
+        FlopTreeConfig {
+            flop: StreetConfig::fourbet_flop(),
+            turn: StreetConfig::fourbet_street(),
+            river: StreetConfig::fourbet_street(),
+        }
+    }
 }
 
 /// Build the flop+turn+river tree. Flop betting starts from a symmetric

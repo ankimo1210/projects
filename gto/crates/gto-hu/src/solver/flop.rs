@@ -477,6 +477,35 @@ impl FlopSolver {
         }
     }
 
+    // ----- Blueprint composition hooks (blueprint design §3) -----------
+    // The blueprint's preflop layer owns the iteration counter and the
+    // reach vectors entering this subgame. The regret-aggregation weight
+    // stays this solver's STATIC export_weight (base range × board
+    // mask): the traverser's own preflop strategy is π_i and never
+    // enters the counterfactual weighting.
+
+    /// One CFR traversal from the subgame root with external reaches.
+    pub fn subgame_traverse(
+        &mut self,
+        traverser: u8,
+        reach: &[f64; N],
+        opp_reach: &[f64; N],
+        iteration: u32,
+    ) -> Vec<f64> {
+        self.iteration = iteration;
+        self.traverse(0, traverser, reach, opp_reach, Ctx::PRE)
+    }
+
+    /// Exact per-combo best-response values at the subgame root.
+    pub fn subgame_br_values(&self, br_player: u8, opp_reach: &[f64; N]) -> Vec<f64> {
+        self.br_values(0, br_player, opp_reach, Ctx::PRE)
+    }
+
+    /// Per-combo avg-vs-avg values at the subgame root.
+    pub fn subgame_avg_values(&self, player: u8, opp_reach: &[f64; N]) -> Vec<f64> {
+        self.avg_values(0, player, opp_reach, Ctx::PRE)
+    }
+
     /// Counterfactual values (bb) for `traverser`'s combos.
     fn traverse(
         &mut self,
