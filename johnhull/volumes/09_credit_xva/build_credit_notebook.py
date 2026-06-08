@@ -99,7 +99,7 @@ display(fig1.canvas)""")
 cells.append(
     md(r"""## 2. 実世界確率 vs リスク中立確率（Ch.24）
 
-- **リスク中立確率**（CDS・債券スプレッドから逆算）は**実世界確率の 5〜10 倍**高い
+- **リスク中立確率**（CDS・債券スプレッドから逆算）は**実世界確率の数倍〜十数倍**高い（格付けにより 1.3〜17 倍、目安「約9倍」）
 - 理由: 信用リスクプレミアム、流動性、デフォルトの系統性（皆同時に困る）
 - **使い分け**: デリバティブ価格付け → リスク中立 ／ 信用 VaR・資本 → 実世界
 
@@ -143,7 +143,7 @@ d2 = (math.log(v0 / 10.0) + (0.05 - 0.5 * sig_v**2) * 1.0) / (sig_v * 1.0)
 print(f"資産価値 V0 = {v0:.4f}（百万）  資産ボラ σ_V = {sig_v:.4%}")
 print(f"distance to default d2 = {d2:.4f}")
 print(f"リスク中立デフォルト確率 Q = N(−d2) = {q:.4%}（Hull: 12.7%）")
-print(f"参考: 信用スプレッド ≈ −ln(1−(1−0.4)·Q)/1 ≈ {-math.log(1 - 0.6 * q):.4%}")""")
+print("（Merton では回収率は内生的に高く、この例の負債の期待損失は約1.2%。R=40%固定の単純換算とは別物）")""")
 )
 
 # Cell 09: interactive Merton
@@ -208,11 +208,11 @@ for rho in (0.1, 0.2, 0.4):
               lw=1.5, label=f"ρ={rho}")
 ax3b.axhline(2.0, color="0.6", ls=":", label="平均PD 2%")
 ax3b.set_xlabel("信頼水準 (%)")
-ax3b.set_ylabel("損失率 (%)")
+ax3b.set_ylabel("最悪デフォルト率 WCDR (%)")
 ax3b.set_title("Vasicek 信用VaR（相関で裾が厚くなる）")
 ax3b.legend(fontsize=8)
 display(fig3.canvas)
-print(f"ρ=0.2, 99.9% の信用VaR = {credit.vasicek_credit_var(0.02, 0.2, 0.999):.2%}（平均PD 2%の何倍にも）")""")
+print(f"ρ=0.2, 99.9% の WCDR = {credit.vasicek_credit_var(0.02, 0.2, 0.999):.2%}（平均PD 2%の約{credit.vasicek_credit_var(0.02, 0.2, 0.999) / 0.02:.0f}倍。損失率は (1−R)·WCDR）")""")
 )
 
 # ===========================================================================
@@ -241,7 +241,7 @@ for lam in (0.005, 0.01, 0.02, 0.04):
     rows.append({"ハザードλ": f"{lam:.1%}", "CDSスプレッド": f"{s * 1e4:.1f}bp",
                  "近似 λ(1−R)": f"{lam * 0.6 * 1e4:.1f}bp"})
 display(pd.DataFrame(rows))
-print(f"厳密例: λ=2% → {credit.cds_spread(0.02, 0.4, 0.05, 5.0):.4%}（近似 1.20% の少し下、割引効果）")""")
+print(f"厳密例: λ=2% → {credit.cds_spread(0.02, 0.4, 0.05, 5.0):.4%}（近似 λ(1−R)=1.20% の少し上。デフォルト時アクルアル分）")""")
 )
 
 # Cell 14: bootstrap md + demo
