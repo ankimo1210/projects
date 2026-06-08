@@ -345,6 +345,275 @@ display(fig3.canvas)""")
 )
 
 # ===========================================================================
+# Section 4: Ch.5 forward and futures prices
+# ===========================================================================
+
+# Cell 19: cost of carry md
+cells.append(
+    md(r"""## 8. フォワード価格＝コストオブキャリー（§5.4–5.7, §5.10）
+
+| 資産 | フォワード価格 | キャリー c |
+|---|---|---|
+| 無収入 | $F_0 = S_0 e^{rT}$ (5.1) | $r$ |
+| 既知収入 $I$（PV） | $F_0 = (S_0 - I)e^{rT}$ (5.2) | — |
+| 連続利回り $q$ | $F_0 = S_0 e^{(r-q)T}$ (5.3) | $r-q$ |
+| 外貨（金利平価） | $F_0 = S_0 e^{(r-r_f)T}$ (5.9) | $r-r_f$ |
+| 保管コスト $u$ | $F_0 = S_0 e^{(r+u)T}$ (5.12) | $r+u$ |
+
+裁定論法: $F_0$ が高すぎれば「借りて買って先渡し売り」、低すぎれば逆。""")
+)
+
+# Cell 20: forward price examples
+cells.append(
+    code(r"""print(f"無収入株: S=40, r=5%, T=3ヶ月 → F = 40e^(0.05×0.25) = "
+      f"{40.0 * np.exp(0.05 * 0.25):.4f}（Hull: 40.50）")
+s_i, pv_i, r_5, t_5 = 900.0, 40.0, 0.04, 0.75
+print(f"既知収入（クーポン債）: S={s_i:.0f}, I(PV)={pv_i:.0f}, r=4%, T=9ヶ月 → "
+      f"F = (900−40)e^(0.03) = {(s_i - pv_i) * np.exp(r_5 * t_5):.2f}")
+print(f"株価指数: S=1300, q=1%, r=5%, T=0.25 → F = {1300.0 * np.exp((0.05 - 0.01) * 0.25):.2f}")
+print(f"外貨: S=0.80, r=6%, r_f=2%, T=2 → F = {0.80 * np.exp((0.06 - 0.02) * 2.0):.4f}（金利平価）")""")
+)
+
+# Cell 21: forward value md
+cells.append(
+    md(r"""### フォワード契約の価値（§5.7）
+
+締結時のデリバリー価格 $K = F_0$ で価値ゼロ。その後 $F_0$ が動くと：
+
+$$f = (F_0 - K)e^{-rT} \quad \text{(5.4)}$$
+
+無収入資産なら展開形 $f = S_0 - Ke^{-rT}$ (5.5) と恒等的に一致します。""")
+)
+
+# Cell 22: forward valuation demo
+cells.append(
+    code(r"""# 締結: S=25, r=10%, 6ヶ月 → K = F0
+s_v, r_v = 25.0, 0.10
+k_v = s_v * np.exp(r_v * 0.5)
+print(f"締結時: K = F0 = {k_v:.4f}, f = 0")
+
+# 3ヶ月後: S=24, 残存 0.25年
+s_now, tau_v = 24.0, 0.25
+f_now = s_now * np.exp(r_v * tau_v)
+val_general = (f_now - k_v) * np.exp(-r_v * tau_v)  # eq (5.4)
+val_direct = s_now - k_v * np.exp(-r_v * tau_v)     # eq (5.5)
+print(f"3ヶ月後: F = {f_now:.4f}, f(5.4式) = {val_general:+.4f}, "
+      f"f(5.5式) = {val_direct:+.4f}, 差 = {abs(val_general - val_direct):.2e}（恒等）")""")
+)
+
+# Cell 23: consumption assets md
+cells.append(
+    md(r"""### 消費資産・コンビニエンスイールド・先物と期待スポット（§5.11, §5.14）
+
+- 消費資産は売り裁定が効かず $F_0 \le (S_0+U)e^{rT}$ — 等号回復のための
+  **コンビニエンスイールド** $y$: $F_0 = S_0 e^{(r+u-y)T}$
+- $y > r+u$ なら先物カーブは右下がり（**バックワーデーション**）、逆なら**コンタンゴ**
+- 期待将来スポットとの関係: $F_0 = E(S_T)e^{(r-k)T}$ (5.20) —
+  正の系統的リスク（$k>r$）なら $F_0 < E(S_T)$（normal backwardation）""")
+)
+
+# Cell 24: interactive carry curve
+cells.append(
+    code(r"""# --- 先物タームストラクチャー F0(T) = S e^{(r+u−q−y)T}（インタラクティブ） ---
+fig4, ax4 = plt.subplots(figsize=(8, 4.5))
+fig4.canvas.header_visible = False
+S_TS = 100.0
+T_TS = np.linspace(0.0, 2.0, 100)
+r_ts_sl = widgets.FloatSlider(value=0.05, min=0.0, max=0.10, step=0.005, description="r")
+u_ts_sl = widgets.FloatSlider(value=0.00, min=0.0, max=0.05, step=0.005, description="u 保管")
+qy_ts_sl = widgets.FloatSlider(value=0.00, min=0.0, max=0.15, step=0.005, description="q+y 利回り")
+
+
+def _upd_carry(change=None):
+    ax4.clear()
+    c_net = r_ts_sl.value + u_ts_sl.value - qy_ts_sl.value
+    f_curve = S_TS * np.exp(c_net * T_TS)
+    ax4.plot(T_TS, f_curve, lw=2)
+    ax4.axhline(S_TS, color="0.7", ls=":", lw=1, label="スポット S")
+    state = "コンタンゴ（右上がり）" if c_net > 0 else ("バックワーデーション（右下がり）" if c_net < 0 else "フラット")
+    ax4.set_title(f"純キャリー c−y = {c_net:+.3f} → {state}")
+    ax4.set_xlabel("満期 T（年）")
+    ax4.set_ylabel("先物価格 F0(T)")
+    ax4.legend()
+    fig4.canvas.draw_idle()
+
+
+for w in (r_ts_sl, u_ts_sl, qy_ts_sl):
+    w.observe(_upd_carry, "value")
+_upd_carry()
+display(widgets.HBox([r_ts_sl, u_ts_sl, qy_ts_sl]), fig4.canvas)""")
+)
+
+# ===========================================================================
+# Section 5: Ch.6 interest rate futures
+# ===========================================================================
+
+# Cell 25: day count md
+cells.append(
+    md(r"""## 9. デイカウントとクリーン/ダーティ価格（§6.1）
+
+$$\text{現金価格（ダーティ）} = \text{クォート価格（クリーン）} + \text{経過利息}$$
+
+| 慣行 | 用途 |
+|---|---|
+| actual/actual | 米国債 |
+| 30/360 | 米国社債・地方債 |
+| actual/360 | マネーマーケット |
+
+同じ債券・同じ日付でも、慣行によって経過利息が変わります。""")
+)
+
+# Cell 26: accrued interest demo
+cells.append(
+    code(r"""# 半年クーポン 5.5（年11%）、クーポン期間181日（実日数）のうち54日経過のケース
+coupon_semi = 5.5
+ai_actual = 54.0 / 181.0 * coupon_semi          # actual/actual（国債方式）
+ai_30_360 = 52.0 / 180.0 * coupon_semi          # 30/360 では同じ期間が 52/180 日と数えられる例
+print(f"actual/actual: 54/181 × {coupon_semi} = {ai_actual:.4f}")
+print(f"30/360       : 52/180 × {coupon_semi} = {ai_30_360:.4f}")
+print(f"差 = {abs(ai_actual - ai_30_360):.4f} — 慣行の取り違えはそのまま価格誤差になる")""")
+)
+
+# Cell 27: T-bond futures md
+cells.append(
+    md(r"""## 10. T-bond 先物: コンバージョンファクターと CTD（§6.2）
+
+ショート側は複数の**デリバラブル銘柄**から選んで受け渡せます：
+
+$$\text{受取額} = \text{決済価格} \times \text{CF} + \text{経過利息}$$
+
+CF は「6%利回りで評価した額面あたり価格」。ショートは
+
+$$\text{クォート価格} - \text{決済価格} \times \text{CF}$$
+
+を最小にする**最安受渡銘柄（CTD）**を選びます。""")
+)
+
+# Cell 28: CTD selection
+cells.append(
+    code(r"""# CTD 選択（決済価格 93.25、3銘柄の例）
+df_ctd = pd.DataFrame({
+    "債券": ["A", "B", "C"],
+    "クォート価格": [99.50, 143.50, 119.75],
+    "CF": [1.0382, 1.5188, 1.2615],
+})
+settle_px = 93.25
+df_ctd["受渡しコスト"] = (df_ctd["クォート価格"] - settle_px * df_ctd["CF"]).round(3)
+display(df_ctd)
+ctd = df_ctd.loc[df_ctd["受渡しコスト"].idxmin(), "債券"]
+print(f"CTD = 債券{ctd}（コスト最小）。利回り>6% では低クーポン・長期債が CTD になりやすい")""")
+)
+
+# Cell 29: eurodollar + duration hedge md
+cells.append(
+    md(r"""## 11. 金利先物によるデュレーションヘッジ（§6.3–6.4）
+
+- **ユーロドル/SOFR 先物**: クォート 0.01 変化 = 1枚 $25。先物レート→フォワードレートには
+  **コンベクシティ調整** $\text{forward} = \text{futures} - \tfrac{1}{2}\sigma^2 t_1 t_2$ が必要
+- **デュレーションベースのヘッジ枚数**:
+
+$$N^* = \frac{P\,D_P}{V_F\,D_F}$$
+
+イールドカーブの**平行シフト**を仮定した近似です。""")
+)
+
+# Cell 30: convexity adj chart + duration hedge
+cells.append(
+    code(r"""fig5, ax5 = plt.subplots(figsize=(7.5, 4))
+fig5.canvas.header_visible = False
+sig_r = 0.012
+t1_grid = np.arange(1.0, 10.01, 0.5)
+adj_bp = 0.5 * sig_r**2 * t1_grid * (t1_grid + 0.25) * 1e4
+ax5.plot(t1_grid, adj_bp, lw=2)
+ax5.set_xlabel("先物満期 t1（年）")
+ax5.set_ylabel("コンベクシティ調整（bp）")
+ax5.set_title(f"σ={sig_r:.1%}: 調整は満期の2乗オーダーで拡大（先物レート > フォワードレート）")
+display(fig5.canvas)
+
+p_dur, d_p, v_f, d_f = 10_000_000.0, 6.8, 93_062.50, 9.2
+n_dur = p_dur * d_p / (v_f * d_f)
+print(f"ポートフォリオ $10M（D_P=6.8年）を T-bond 先物（V_F=$93,062.50, D_F=9.2年）でヘッジ:")
+print(f"N* = P·D_P/(V_F·D_F) = {n_dur:.2f} ≈ {round(n_dur)} 枚ショート")""")
+)
+
+# ===========================================================================
+# Section 6: verification / exercises / summary
+# ===========================================================================
+
+# Cell 31: assertion cell
+cells.append(
+    code(r"""# --- 教科書例題との突合せ（hullkit/tests/test_rates.py にも同等の検証あり） ---
+checks = []
+checks.append(("半年複利10%→連続 9.758%", rates.to_continuous(0.10, 2), 0.097580, 1e-5))
+checks.append(("Table 4.2 価格 98.39", rates.bond_price(times_b, cfs_b, zeros_b), 98.385, 5e-3))
+checks.append(("Table 4.2 YTM 6.76%", rates.bond_yield(times_b, cfs_b, price_b), 0.0676, 2e-4))
+for (t_chk, z_chk), want in zip(zip(bt_times, bt_zeros),
+                                [0.016032, 0.020101, 0.022245, 0.022845, 0.024162]):
+    checks.append((f"bootstrap {t_chk}年", z_chk, want, 5e-5))
+checks.append(("フォワード 5%", rates.forward_rate(0.03, 1.0, 0.04, 2.0), 0.05, 1e-12))
+checks.append(("FRA 369,247", rates.fra_value(100e6, 0.058, 0.050, 1.5, 2.0, 0.040), 369_246.5, 1.0))
+checks.append(("Table 4.6 B=94.213", b_d, 94.213, 5e-3))
+checks.append(("Table 4.6 D=2.653", dur_d, 2.653, 2e-3))
+checks.append(("F=40.50（S=40, 3ヶ月）", 40.0 * np.exp(0.05 * 0.25), 40.5031, 1e-3))
+checks.append(("フォワード価値の恒等 (5.4)≡(5.5)", val_general, val_direct, 1e-12))
+checks.append(("h* = 0.7798", h_star, 0.77976, 1e-4))
+checks.append(("ベータヘッジ N*=30", n_beta, 30.0, 1e-9))
+checks.append(("デュレーションヘッジ 79.42", n_dur, 79.42, 0.01))
+checks.append(("値洗い不変量", float(df_margin["日次損益"].sum()),
+               float((futures_path[-1] - F0_M) * N_OZ), 1e-6))
+
+for name, got, want, tol in checks:
+    ok = abs(got - want) <= tol
+    print(f"[{'OK' if ok else 'FAIL'}] {name}: got={got:.6g} want={want:.6g}")
+    assert ok, name
+print("\n全チェック合格")""")
+)
+
+# Cell 32: exercises
+cells.append(
+    md(r"""## 12. 練習問題
+
+**Q1.** 年2回複利で8%の金利。連続複利では？　月次複利では？
+
+<details><summary>解答</summary>
+
+連続: 2ln(1.04) = 7.844%。月次: 12(e^{0.07844/12}−1) = 7.870%。
+</details>
+
+**Q2.** ゼロレートが全満期 6%（連続）のとき、2年後に1.5年債を受け渡すフォワード価格はどう求める？
+
+<details><summary>解答</summary>
+
+債券のスポット価格を計算し、受渡しまでのクーポン PV を引いて $F_0=(S_0−I)e^{rT}$（eq 5.2）。
+</details>
+
+**Q3.** D=5.2年・$20M のポートフォリオを D_F=8.0年・1枚 $95,000 の先物でヘッジするには？
+
+<details><summary>解答</summary>
+
+N* = 20,000,000×5.2/(95,000×8.0) = 136.8 ≈ 137枚ショート。
+</details>""")
+)
+
+# Cell 33: summary
+cells.append(
+    md(r"""## まとめ
+
+| 概念 | 要点 |
+|---|---|
+| 値洗い | 日次損益の合計 = (F_T−F_0)×数量。マージンコールで信用リスクを抑える |
+| ヘッジ比率 | h* = ρσ_S/σ_F（回帰の傾き）。効果は ρ²。指数先物は β·V_A/V_F |
+| 複利変換 | 連続複利が解析の標準。R_c = m·ln(1+R_m/m) |
+| bootstrap | 短期から逐次、既知 CF を割引いて残りを解く |
+| デュレーション | ΔB ≈ −BDΔy（平行シフト前提）。大変化はコンベクシティ補正 |
+| キャリー | F_0 = S e^{(r+u−q−y)T}。符号がコンタンゴ/バックワーデーションを決める |
+| CTD | ショートはクォート − 決済×CF を最小化する銘柄を選ぶ |
+
+**次へ**: `volumes/05_vol_smile_estimation`（Ch.20, 23）または `volumes/07_swaps`（Ch.7, 34 — `rates.py` を活用）
+**シリーズ**: `johnhull/ROADMAP.md` 参照""")
+)
+
+# ===========================================================================
 # Notebook assembly
 # ===========================================================================
 
