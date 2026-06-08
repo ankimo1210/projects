@@ -258,6 +258,214 @@ cells.append(
 )
 
 # ===========================================================================
+# Section 3: Ch.7 currency swaps
+# ===========================================================================
+
+# Cell 13: currency swap md
+cells.append(
+    md(r"""## 4. 通貨スワップ（Ch.7）
+
+固定-固定の通貨スワップ: **元本と利息を異なる通貨で交換**
+（金利スワップと違い、開始・終了時に元本も交換）。
+
+評価は債券分解で：ドル受取・外貨払いなら
+
+$$V_{\text{swap}} = B_D - S_0 B_F$$
+
+（$B_D$: ドル CF をドルカーブで割引、$B_F$: 外貨 CF を外貨カーブで割引、$S_0$: スポット）
+フォワード為替の列として評価する方法も等価です。""")
+)
+
+# Cell 14: currency swap demo
+cells.append(
+    code(r"""# --- 例: ドル建て3%債 vs 円建て1.5%債（想定元本 $100 ↔ ¥12,000、spot 0.009 $/¥相当） ---
+dom_times = [1.0, 2.0, 3.0]
+dom_cfs = [3.0, 3.0, 103.0]
+dom_curve = ([1.0, 2.0, 3.0], [0.04, 0.04, 0.04])
+for_times = [1.0, 2.0, 3.0]
+for_cfs = [60.0, 60.0, 1260.0]  # 円のクーポン60＋償還1200
+for_curve = ([1.0, 2.0, 3.0], [0.015, 0.015, 0.015])
+SPOT_FX = 0.009
+
+v_ccy = swaps.currency_swap_value(dom_times, dom_cfs, dom_curve,
+                                  for_times, for_cfs, for_curve, SPOT_FX)
+b_d = sum(cf * swaps.discount(t, dom_curve) for t, cf in zip(dom_times, dom_cfs))
+b_f = sum(cf * swaps.discount(t, for_curve) for t, cf in zip(for_times, for_cfs))
+print(f"B_D = {b_d:.4f}（ドル） ／ B_F = {b_f:.4f}（円） ／ S0 = {SPOT_FX}")
+print(f"V = B_D − S0·B_F = {v_ccy:.4f}（ドル受取側）")""")
+)
+
+# Cell 15: forwards view md
+cells.append(
+    md(r"""### フォワード分解の見方
+
+各交換日を「その日の為替フォワードで決済する FX フォワード」とみなしても
+同じ価値になります（金利平価 $F_t = S_0 e^{(r-r_f)t}$ がカーブ整合だから）。
+信用リスクの観点では、通貨スワップは**満期に元本交換がある**ぶん
+金利スワップよりエクスポージャーが大きい点に注意。""")
+)
+
+# Cell 16: zoo intro md
+cells.append(
+    md(r"""## 5. 非標準スワップの動物園（Ch.34）
+
+| 型 | 仕掛け | 評価 |
+|---|---|---|
+| step-up / amortizing | 元本が時間変化 | フォワード実現仮定でOK |
+| コンパウンディング | クーポンを複利積算し満期一括 | 同上（下で実演） |
+| ベーシス | 変動 vs 変動 | 同上 |
+| **LIBOR-in-arrears** | 観測=支払が同時点 | **凸性調整が必要** |
+| **CMS** | スワップレート参照 | **凸性調整が必要**（→第11冊） |
+| **diff (quanto)** | 外貨金利×自国元本 | **クアント調整**（→第11冊） |
+| アクルアル | レンジ内の日数でクーポン | バイナリオプション分解 |
+| キャンセラブル | 解約権付き | スワップ＋スワプション（→第11冊） |""")
+)
+
+# Cell 17: compounding swap demo
+cells.append(
+    code(r"""# --- コンパウンディングスワップ: フォワード実現仮定で評価 ---
+# 固定側 3% を年1回複利で2年間積算、満期一括 vs 変動側も同様に複利積算
+pay_T = 2.0
+fix_compounded = L_SW * ((1.0 + 0.03) ** 2 - 1.0)
+f1 = (math.exp(rates.zero_interp(1.0, *CURVE) * 1.0) - 1.0)  # 0→1年の単利フォワード
+z1 = rates.zero_interp(1.0, *CURVE)
+z2 = rates.zero_interp(2.0, *CURVE)
+f2 = math.exp(z2 * 2.0 - z1 * 1.0) - 1.0  # 1→2年の単利フォワード
+fl_compounded = L_SW * ((1.0 + f1) * (1.0 + f2) - 1.0)
+v_comp = (fix_compounded - fl_compounded) * swaps.discount(2.0, CURVE)
+print(f"固定積算 = {fix_compounded:,.0f} ／ 変動積算（フォワード実現） = {fl_compounded:,.0f}")
+print(f"受取固定コンパウンディングスワップの価値 = {v_comp:,.0f}")""")
+)
+
+# Cell 18: in-arrears md
+cells.append(
+    md(r"""## 6. LIBOR-in-arrears と凸性調整（Ch.34 → Ch.30）
+
+標準スワップは「期首に観測・期末に支払」。in-arrears は「期末に観測・即支払」。
+このタイミングのずれは**フォワードレートでは正しく評価できず**、調整が要ります：
+
+$$\hat F = F + \frac{F^2 \sigma^2 \tau T}{1 + F\tau}$$
+
+（$F$: フォワードレート、$\sigma$: そのボラ、$T$: 観測時点、$\tau$: 期間）
+調整は常に正 — in-arrears の受け手はフォワードより高いレートを期待できます。""")
+)
+
+# Cell 19: in-arrears chart
+cells.append(
+    code(r"""F_IA, SIG_IA, TAU_IA = 0.05, 0.20, 0.5
+ts_ia = np.linspace(0.5, 10.0, 60)
+adj_ia = F_IA**2 * SIG_IA**2 * TAU_IA * ts_ia / (1.0 + F_IA * TAU_IA)
+
+fig3, ax3 = plt.subplots(figsize=(7.5, 4))
+fig3.canvas.header_visible = False
+ax3.plot(ts_ia, adj_ia * 1e4, lw=2)
+ax3.set_xlabel("観測時点 T（年）")
+ax3.set_ylabel("調整幅（bp）")
+ax3.set_title(f"in-arrears 凸性調整（F={F_IA:.0%}, σ={SIG_IA:.0%}, τ={TAU_IA}）: T に比例して拡大")
+display(fig3.canvas)
+print(f"T=5年: 調整 = {F_IA**2 * SIG_IA**2 * TAU_IA * 5.0 / (1.0 + F_IA * TAU_IA) * 1e4:.2f} bp")""")
+)
+
+# Cell 20: equity / cancellable md
+cells.append(
+    md(r"""## 7. エクイティスワップとキャンセラブル（Ch.34）
+
+- **エクイティスワップ**: 指数トータルリターン vs 固定/変動。
+  支払直後の価値はゼロ（指数1単位と変動債1単位の交換に等価）
+- **キャンセラブルスワップ** = 普通のスワップ ＋ スワプション。
+  複数解約日ならバミューダン・スワプション（評価は第11冊 Ch.29 の Black、
+  またはツリー/LSM — 第6冊の技法がここで効く）
+- **アクルアルスワップ** = 日次バイナリ・キャップレットの束""")
+)
+
+# ===========================================================================
+# Section 4: verification / exercises / summary
+# ===========================================================================
+
+# Cell 21: assertion cell
+cells.append(
+    code(r"""# --- 検証（hullkit/tests/test_swaps.py にも同等の検証あり） ---
+checks = []
+vb_par = swaps.irs_value_bonds(L_SW, s_par, PAY_T, CURVE, next_float_rate=r_next)
+vf_par = swaps.irs_value_fras(L_SW, s_par, PAY_T, CURVE, next_float_rate=r_next)
+checks.append(("パーで債券分解 ≈ 0", vb_par / L_SW, 0.0, 1e-9))
+checks.append(("パーで FRA 分解 ≈ 0", vf_par / L_SW, 0.0, 1e-9))
+vb_off = swaps.irs_value_bonds(L_SW, 0.03, PAY_T, CURVE, next_float_rate=r_next)
+vf_off = swaps.irs_value_fras(L_SW, 0.03, PAY_T, CURVE, next_float_rate=r_next)
+checks.append(("分解の恒等一致（s=3%）", vb_off / L_SW, vf_off / L_SW, 1e-12))
+checks.append(("通貨スワップ・ピン 85.1075", v_ccy, 85.1075, 5e-4))
+
+ia_5 = F_IA**2 * SIG_IA**2 * TAU_IA * 5.0 / (1.0 + F_IA * TAU_IA)
+assert ia_5 > 0.0
+print(f"[OK] in-arrears 調整 > 0（T=5: {ia_5 * 1e4:.2f}bp）")
+
+crv_up = (CURVE[0], [z + 0.01 for z in CURVE[1]])
+rn_up = (math.exp(rates.zero_interp(0.5, *crv_up) * 0.5) - 1.0) / 0.5
+v_up = swaps.irs_value_bonds(L_SW, s_par, PAY_T, crv_up, next_float_rate=rn_up)
+assert v_up < vb_par - 1.0
+print(f"[OK] +100bp で受取固定の価値低下: {vb_par:,.0f} → {v_up:,.0f}")
+
+for name, got, want, tol in checks:
+    ok = abs(got - want) <= tol
+    print(f"[{'OK' if ok else 'FAIL'}] {name}: got={got:.6g} want={want:.6g}")
+    assert ok, name
+print("\n全チェック合格")""")
+)
+
+# Cell 22: exercises
+cells.append(
+    md(r"""## 8. 練習問題
+
+**Q1.** 受取固定スワップの残存1.5年、固定4%・半年払い、フラット連続3%カーブ、
+直前リセットの6ヶ月レート（単利）3.05%。債券分解の B_fl は？
+
+<details><summary>解答</summary>
+
+B_fl = (1 + 0.0305×0.5)·e^{−0.03×0.5} ≈ 1.0001（額面1あたり）。
+リセット直後なのでほぼ額面どおり。
+</details>
+
+**Q2.** スワップレートが「パー債券のクーポン」と同じものなのはなぜ？
+
+<details><summary>解答</summary>
+
+s·Σ τP + P(t_n) = 1 ⇔ 固定債の価格が額面 ⇔ V = B_fix − B_fl = 0
+（変動債はパー）。同じ等式。
+</details>
+
+**Q3.** LIBOR-in-arrears で調整が「正」になる直感は？
+
+<details><summary>解答</summary>
+
+レートが高い状態では割引が強く効き、支払いの現在価値の非対称性が生じる。
+F の凸関数の期待値 > 期待値の関数（Jensen）で、in-arrears 観測は
+高レート側に厚く払う構造 → フォワードより高い実効レート。
+</details>""")
+)
+
+# Cell 23: summary
+cells.append(
+    md(r"""## まとめ
+
+| 概念 | 要点 |
+|---|---|
+| IRS | 固定 vs 変動。スワップレート＝パー債券クーポン |
+| 評価 | 債券分解 ≡ FRA 分解（変動債はリセット直後パー） |
+| 通貨スワップ | B_D − S₀B_F。元本交換ありで信用エクスポージャー大 |
+| 非標準 | 大半は「フォワード実現」でOK。観測/支払タイミングが歪むと凸性調整 |
+| 接続 | 凸性・CMS・クアント・スワプション → 第11冊（Ch.29–30） |
+
+**次へ**: `volumes/08_risk_var`（Ch.22 — VaR/ES）
+**シリーズ**: `johnhull/ROADMAP.md` 参照""")
+)
+
+# Cell 24: closing pointer md
+cells.append(
+    md(r"""---
+*第7冊おわり。`hullkit.swaps` は第11冊（キャップ・スワプション）の土台になります。*""")
+)
+
+# ===========================================================================
 # Notebook assembly
 # ===========================================================================
 
