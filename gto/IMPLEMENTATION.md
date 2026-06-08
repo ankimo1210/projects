@@ -20,6 +20,7 @@
 | SOLVER | `/solver` | カスタムスポットのライブ GPU CFR 計算（約 1.6s / 100iter） |
 | SIMULATE | `/simulation` | プリフロップ fold equity + BB ディフェンスレンジ + ポストフロップ solve |
 | REVIEW | `/review` | PokerStars ハンド履歴の貼り付け → パース → ストリート別リプレイ + プリフロップ GTO 逸脱フラグ |
+| HU·GTO | `/hu` | gto-hu リバー厳密均衡をライブ計算（exact exploitability 表示）。単一ストリート近似の /solver とは別系統 |
 
 ---
 
@@ -81,7 +82,7 @@ RTX 5080（Blackwell / sm_120）が当時の PyTorch 非対応だったため、
 
 ### 3.3 Python バインディング — `crates/gto-py/`
 
-pyo3 で `solve_spot` / `solve_spot_multistreet` / `equity` を公開。
+pyo3 で `solve_spot` / `solve_spot_multistreet` / `equity` / `solve_hu_river`（gto-hu 厳密リバー、exact exploitability 付き）を公開。
 ビルドは `maturin develop --release`（gto-py / gto-cuda それぞれ）。
 
 ### 3.4 バックエンド API — `src/gto/api/`
@@ -97,6 +98,7 @@ FastAPI。`main.py` で CORS + `/solutions` の StaticFiles マウント。
 | `library.py` | `/api/library/flop`, `/api/library/flop/combos`, `/api/library/report` |
 | `simulation.py` | `/api/simulation/run`（preflop + postflop 連結） |
 | `review.py` | `/api/review/parse`（PokerStars ハンド履歴 → 構造化 JSON + 逸脱フラグ） |
+| `hu.py` | `/api/hu/river`（gto-hu 厳密リバー均衡 + exact exploitability + per-combo 戦略） |
 
 ### 3.5 ソリューションライブラリ — `src/gto/library/`
 

@@ -86,6 +86,7 @@ name = "gto-py"
 version = "0.1.0"
 dependencies = [
  "gto-core",
+ "gto-hu",
  "pyo3",
 ]
 

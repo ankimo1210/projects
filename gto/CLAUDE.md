@@ -16,11 +16,11 @@ Respond to the user in Japanese by default; code and identifiers in English.
 | GPU solver | `crates/gto-cuda/` | NVRTC JIT kernels, batch CFR on RTX 5080 (sm_120). CUDA Driver API via `ctypes`. |
 | Python bindings | `crates/gto-py/` | pyo3 wrapper exposing `solve_spot`, `solve_spot_multistreet`, `equity` |
 | HU solver | `crates/gto-hu/` | Abstract HU NLHE equilibrium solver: vector CFR+, Kuhn/Leduc validation, exact best response. CLIs: `solve-hu-river`, `solve-hu-turn-river`, `solve-hu-flop`, `solve-hu-preflop`, `solve-hu-blueprint` |
-| Backend API | `src/gto/api/` | FastAPI app + routers (`equity`, `trainer`, `solver`, `library`, `simulation`, `review`) |
+| Backend API | `src/gto/api/` | FastAPI app + routers (`equity`, `trainer`, `solver`, `library`, `simulation`, `review`, `hu`) |
 | Solution store | `src/gto/library/` | Batch precompute, Parquet I/O, range builder, flop canonical-form |
 | Trainer | `src/gto/trainer/` | Preflop GTO frequency tables (hardcoded approximation, not solved) |
 | Hand review | `src/gto/review/` | PokerStars hand-history parser + preflop GTO deviation flags |
-| Web UI | `web/` | Next.js 16 / React 19 / Tailwind v4 (pages: `/neon`, `/library`, `/report`, `/solver`, `/simulation`, `/review`) |
+| Web UI | `web/` | Next.js 16 / React 19 / Tailwind v4 (pages: `/neon`, `/library`, `/report`, `/solver`, `/simulation`, `/review`, `/hu`) |
 
 Data flow: see `ARCHITECTURE.md`. Roadmap and known limitations: `PROGRESS.md`.
 
