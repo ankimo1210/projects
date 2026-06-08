@@ -47,11 +47,16 @@ def test_swap_rate_flat_curve_hand_value():
     assert 0.030 < s < 0.0305
 
 
-def test_currency_swap_hand_pin():
-    dom = ([1.0, 2.0, 3.0], [3.0, 3.0, 103.0], ([1.0, 2.0, 3.0], [0.04, 0.04, 0.04]))
-    forn = ([1.0, 2.0, 3.0], [60.0, 60.0, 1260.0], ([1.0, 2.0, 3.0], [0.015, 0.015, 0.015]))
-    v = swaps.currency_swap_value(dom[0], dom[1], dom[2], forn[0], forn[1], forn[2], 0.009)
-    assert v == pytest.approx(85.1075, abs=5e-4)
+def test_currency_swap_hull_example_7_3():
+    # Hull 11e Example 7.2/7.3: pay $4% on $10M, receive yen 3% on 1,200M yen,
+    # USD curve 2.5% cc flat, JPY 1.5% cc flat, S0 = 1/110 USD/JPY.
+    # currency_swap_value is receive-domestic; the receive-yen side is the negative.
+    v_receive_dollar = swaps.currency_swap_value(
+        [1.0, 2.0, 3.0], [0.4, 0.4, 10.4], ([1.0, 2.0, 3.0], [0.025, 0.025, 0.025]),
+        [1.0, 2.0, 3.0], [36.0, 36.0, 1236.0], ([1.0, 2.0, 3.0], [0.015, 0.015, 0.015]),
+        1.0 / 110.0,
+    )
+    assert -v_receive_dollar == pytest.approx(0.9628, abs=1.5e-3)  # Hull 0.9629
 
 
 def test_receive_fixed_loses_value_when_rates_rise():

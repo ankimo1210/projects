@@ -200,7 +200,8 @@ ax1.axhline(0.0, color="black", lw=0.8)
 ax1.set_xlabel("平行シフト（bp）")
 ax1.set_ylabel("スワップ価値（百万）")
 ax1.set_title(f"受取固定はデュレーション・ロング（DV01 ≈ {dv01:,.0f}/bp）")
-display(fig1.canvas)""")
+display(fig1.canvas)
+print("※ ここではシフト後カーブで次回変動レートも再計算（開始直後のアニュイティDV01）。設定済みレートを固定すると感応度はやや小さくなる")""")
 )
 
 # Cell 11: interactive shift
@@ -251,7 +252,7 @@ display(widgets.HBox([shift_sl, fix_sl]), fig2.canvas)""")
 cells.append(
     md(r"""### OIS / SOFR 移行メモ（Ch.7）
 
-- 2010年代以降、割引も参照も **OIS（SOFR/SONIA/TONAR）** が標準に
+- 割引は2010年代に OIS へ、参照レートは2021–23年の LIBOR 廃止で SOFR/SONIA/TONAR へ移行
 - LIBOR 時代の「LIBOR で割引・LIBOR を参照」から、
   クレジット・スプレッドをほぼ含まないレートへ移行
 - 本シリーズでは単一カーブで簡略化（Hull 11e の扱いと同じ）""")
@@ -278,21 +279,21 @@ $$V_{\text{swap}} = B_D - S_0 B_F$$
 
 # Cell 14: currency swap demo
 cells.append(
-    code(r"""# --- 例: ドル建て3%債 vs 円建て1.5%債（想定元本 $100 ↔ ¥12,000、spot 0.009 $/¥相当） ---
+    code(r"""# --- Hull Example 7.2/7.3: ドル4%払い・円3%受け（$10M ↔ ¥1,200M, S0=1/110） ---
 dom_times = [1.0, 2.0, 3.0]
-dom_cfs = [3.0, 3.0, 103.0]
-dom_curve = ([1.0, 2.0, 3.0], [0.04, 0.04, 0.04])
+dom_cfs = [0.4, 0.4, 10.4]            # ドル: 4% クーポン + 償還（百万ドル）
+dom_curve = ([1.0, 2.0, 3.0], [0.025, 0.025, 0.025])
 for_times = [1.0, 2.0, 3.0]
-for_cfs = [60.0, 60.0, 1260.0]  # 円のクーポン60＋償還1200
+for_cfs = [36.0, 36.0, 1236.0]        # 円: 3% クーポン + 償還（百万円）
 for_curve = ([1.0, 2.0, 3.0], [0.015, 0.015, 0.015])
-SPOT_FX = 0.009
+SPOT_FX = 1.0 / 110.0                  # ドル/円
 
-v_ccy = swaps.currency_swap_value(dom_times, dom_cfs, dom_curve,
-                                  for_times, for_cfs, for_curve, SPOT_FX)
 b_d = sum(cf * swaps.discount(t, dom_curve) for t, cf in zip(dom_times, dom_cfs))
 b_f = sum(cf * swaps.discount(t, for_curve) for t, cf in zip(for_times, for_cfs))
-print(f"B_D = {b_d:.4f}（ドル） ／ B_F = {b_f:.4f}（円） ／ S0 = {SPOT_FX}")
-print(f"V = B_D − S0·B_F = {v_ccy:.4f}（ドル受取側）")""")
+v_ccy = -swaps.currency_swap_value(dom_times, dom_cfs, dom_curve,
+                                   for_times, for_cfs, for_curve, SPOT_FX)  # 円受け側
+print(f"B_D = {b_d:.4f} 百万ドル ／ B_F = {b_f:.2f} 百万円 ／ S0·B_F = {SPOT_FX * b_f:.4f} 百万ドル")
+print(f"円受け・ドル払いスワップの価値 = S0·B_F − B_D = {v_ccy:.4f} 百万ドル（Hull: 0.9629）""")
 )
 
 # Cell 15: forwards view md
@@ -325,7 +326,6 @@ cells.append(
 cells.append(
     code(r"""# --- コンパウンディングスワップ: フォワード実現仮定で評価 ---
 # 固定側 3% を年1回複利で2年間積算、満期一括 vs 変動側も同様に複利積算
-pay_T = 2.0
 fix_compounded = L_SW * ((1.0 + 0.03) ** 2 - 1.0)
 f1 = (math.exp(rates.zero_interp(1.0, *CURVE) * 1.0) - 1.0)  # 0→1年の単利フォワード
 z1 = rates.zero_interp(1.0, *CURVE)
@@ -339,7 +339,7 @@ print(f"受取固定コンパウンディングスワップの価値 = {v_comp:,
 
 # Cell 18: in-arrears md
 cells.append(
-    md(r"""## 6. LIBOR-in-arrears と凸性調整（Ch.34 → Ch.30）
+    md(r"""## 6. LIBOR-in-arrears と凸性調整（Ch.30 の適用）
 
 標準スワップは「期首に観測・期末に支払」。in-arrears は「期末に観測・即支払」。
 このタイミングのずれは**フォワードレートでは正しく評価できず**、調整が要ります：
@@ -347,7 +347,8 @@ cells.append(
 $$\hat F = F + \frac{F^2 \sigma^2 \tau T}{1 + F\tau}$$
 
 （$F$: フォワードレート、$\sigma$: そのボラ、$T$: 観測時点、$\tau$: 期間）
-調整は常に正 — in-arrears の受け手はフォワードより高いレートを期待できます。""")
+調整は常に正 — in-arrears の受け手はフォワードより高いレートを期待できます。
+（この閉形式は eq (30.1) を1期間債 G(y)=1/(1+yτ) に適用したもの。旧版 §34 の古典式で、11e 本文は Ch.30 に委譲）""")
 )
 
 # Cell 19: in-arrears chart
@@ -370,11 +371,11 @@ print(f"T=5年: 調整 = {F_IA**2 * SIG_IA**2 * TAU_IA * 5.0 / (1.0 + F_IA * TAU
 cells.append(
     md(r"""## 7. エクイティスワップとキャンセラブル（Ch.34）
 
-- **エクイティスワップ**: 指数トータルリターン vs 固定/変動。
-  支払直後の価値はゼロ（指数1単位と変動債1単位の交換に等価）
+- **エクイティスワップ**: 指数トータルリターン vs 変動。
+  支払直後の価値はゼロ（指数1単位と変動債1単位の交換に等価。固定との交換では一般にゼロでない）
 - **キャンセラブルスワップ** = 普通のスワップ ＋ スワプション。
-  複数解約日ならバミューダン・スワプション（評価は第11冊 Ch.29 の Black、
-  またはツリー/LSM — 第6冊の技法がここで効く）
+  複数解約日ならバミューダン・スワプション（欧州型解約は第11冊 Ch.29 の Black で、
+  バミューダン型はツリー/LSM — 第6冊の技法がここで効く）
 - **アクルアルスワップ** = 日次バイナリ・キャップレットの束""")
 )
 
@@ -393,7 +394,7 @@ checks.append(("パーで FRA 分解 ≈ 0", vf_par / L_SW, 0.0, 1e-9))
 vb_off = swaps.irs_value_bonds(L_SW, 0.03, PAY_T, CURVE, next_float_rate=r_next)
 vf_off = swaps.irs_value_fras(L_SW, 0.03, PAY_T, CURVE, next_float_rate=r_next)
 checks.append(("分解の恒等一致（s=3%）", vb_off / L_SW, vf_off / L_SW, 1e-12))
-checks.append(("通貨スワップ・ピン 85.1075", v_ccy, 85.1075, 5e-4))
+checks.append(("通貨スワップ Hull Ex 7.3 ≈ 0.9629", v_ccy, 0.9628, 1.5e-3))
 
 ia_5 = F_IA**2 * SIG_IA**2 * TAU_IA * 5.0 / (1.0 + F_IA * TAU_IA)
 assert ia_5 > 0.0

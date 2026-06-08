@@ -29,8 +29,7 @@ Curve = `(times, zero_rates)` tuple, continuous compounding, interpolated via
 pytest: par identity (s = swap_rate ⇒ BOTH valuation approaches ≈ 0 when the
 preset first floating rate is curve-consistent); bonds ≡ FRA equality for
 off-market fixed rates (1e-10); swap_rate hand value on a flat curve;
-currency-swap literal pin (hand-computed: domestic [3,3,103]@4% flat vs
-foreign [60,60,1260]@1.5% flat, spot 0.009 → V = 85.1075); receive-fixed
+currency-swap pin = Hull 11e Example 7.2/7.3 (pay $4%/$10M vs receive ¥3%/¥1,200M, 2.5%/1.5% flat cc, S0=1/110 → receive-yen V ≈ 0.9628; Hull prints 0.9629); receive-fixed
 value decreases as curve shifts up.
 
 ## Notebook: `volumes/07_swaps/` (build_swaps_notebook.py → swaps.ipynb)
@@ -47,7 +46,7 @@ value decreases as curve shifts up.
 | 5 | — | 3 | assertion cell / exercises / summary |
 
 Assertion cell: par identity both approaches; bonds≡FRA off-market; currency
-pin 85.1075; in-arrears adjustment > 0 and matches the formula; receive-fixed
+currency pin 0.9628; in-arrears adjustment > 0 and matches the formula; receive-fixed
 loses value when rates shift +100bp.
 
 ## Verification (DoD — as previous volumes)
