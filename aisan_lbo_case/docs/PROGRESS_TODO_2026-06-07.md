@@ -41,6 +41,12 @@ Scope: Excel/PPTX deliverables only. HTML work intentionally out of scope.
 - [x] **#2 stale logs**: current-state refs updated to 20 slides / 446 formulas / Source Appendix Slide 20; dated round logs kept as historical record.
 - [x] Re-verify: 8-page clean Excel, 20-slide PPTX structure ALL CLEAN, stale 0, invariants hold, pytest 4 passed.
 
+## 2026-06-08 round 6 — logic re-check + HTML build
+
+- [x] **Independent logic check (PASS)**: re-implemented the LBO logic in Python from Assumptions and cross-checked vs Excel cache — 60+ checks (entry, S&U, operating chain, debt/FCF sweep, returns, bridge reconciliation, cash availability, MIP, walk-to-price, leverage tie-out, scenarios) all match (<0.5 tol). Methodology sound.
+- [x] **Label fix**: `Debt_FCF!B13` "pre-financing" → "after interest & tax" (it is post-interest levered FCF). Values/IRR unchanged; recalc 446 formulas, 0 errors.
+- [x] **HTML deliverable**: `docs/AISAN_4667_Case_Study.html` (self-contained, 37 KB) via `src/report/build_case_html.py` — numbers read live from the Excel model + peer/precedent CSVs (no hand-typing). 14 sections, inline SVG charts (rev/EBITDA bars, value-creation waterfall) + IRR heatmap. Visually QA'd in headless Chromium; tag balance OK, all key figures present, no leaked None.
+
 ## Current Status
 
 | Area | Status | Notes |

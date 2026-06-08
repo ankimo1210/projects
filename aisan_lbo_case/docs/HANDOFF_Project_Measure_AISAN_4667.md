@@ -6,7 +6,7 @@
 | **Status** | Preliminary case study for internal IC discussion — **not actionable** |
 | **Recommendation** | **Too early; proceed to confirmatory DD only** |
 | **Date / as of** | 2026-06-08 (sources retrieved 7 Jun 2026) |
-| **Deliverables** | `AISAN_4667_Take_Private_Case_Study.pptx`（20 slides, EN）/ `AISAN_4667_LBO_Model.xlsx`（8 tabs, EN, live formulas + cached values）/ `FACT_CHECK_2026-06.md` / `PROGRESS_TODO_2026-06-07.md` |
+| **Deliverables** | `AISAN_4667_Take_Private_Case_Study.pptx`（20 slides, EN）/ `AISAN_4667_LBO_Model.xlsx`（8 tabs, EN, live formulas + cached values）/ `AISAN_4667_Case_Study.html`（self-contained web版, model-sourced; supplementary）/ `FACT_CHECK_2026-06.md` / `PROGRESS_TODO_2026-06-07.md` |
 | **Language** | 成果物は英語（IC/英語監査向け）。本ノートは日本語ベース＋数値・固有表現は英語 |
 | **Confidentiality** | Strictly Private & Confidential。投資助言・バリュエーション意見・オファーではない |
 | **Data policy** | 会社・株主・経営陣への接触なし。公開情報のみ。接触は "subject to explicit authorization" の場合に限る |
@@ -155,6 +155,11 @@
 - **#4 表現の中立化**: PPT の "fraud investigation/probe/-depressed" を "investigation / Special probe / investigation-depressed" に統一（FACT_CHECK の "suspected improper transactions / misconduct" と整合）。"suspected forgery & concealment"（IR 開示準拠）は維持。
 - **#3 Slide 2 見切れ**: cash caveat bullet を2行に短縮し、最下段 bullet の窮屈さを解消。
 - **#2 ログの旧記述更新**: HANDOFF §6 見出し・§8 QC・本文の "Slide 19/428/19 slides" を現行値（Slide 20 / 446 / 20 slides）へ。日付・ラウンド付きの履歴記述はそのまま保持（その時点で正確）。
+
+**ラウンド6（2026-06-08）— ロジック再検証 + HTML 実装**
+- **独立ロジックチェック（PASS）**: Python で LBO ロジックを Assumptions から再実装し、Excel キャッシュと突合（60項目超）。entry 評価 / S&U / オペレーティング連鎖 / 債務・FCF スイープ / リターン / バリュエーションブリッジ整合 / cash availability / MIP / walk-to-price / leverage tie-out / シナリオ算術がすべて誤差<0.5 で一致。方法論も健全。
+- **ラベル修正**: `Debt_FCF!B13` 「Free cash flow (pre-financing)」→「Free cash flow (after interest & tax)」（同行は利息控除後＝レバード FCF のため正確化。数値・IRR 不変、recalc 446 数式・エラー0）。
+- **HTML 版実装**: `docs/AISAN_4667_Case_Study.html`（自己完結・依存なし・37KB）。生成器 `src/report/build_case_html.py` が **Excel（data_only）と peer/precedent CSV から数値をライブ取得**して描画（手打ち転記ゼロ＝モデルと乖離しない）。20スライドの叙述＋モデル表＋インライン SVG（revenue/EBITDA バー、value-creation ウォーターフォール）＋ IRR ヒートマップ。Chromium ヘッドレスで全14セクション視覚 QA 済み（タグ均衡・数値一致・None 漏れなし、n.a. は欠損ピア2件のみ）。提出必須物（pptx+xlsx）の補助物。
 
 ---
 
