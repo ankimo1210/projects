@@ -9,4 +9,5 @@ crate-type = ["cdylib"]
 
 [dependencies]
 gto-core = { path = "../gto-core" }
+gto-hu = { path = "../gto-hu" }
 pyo3 = { workspace = true }

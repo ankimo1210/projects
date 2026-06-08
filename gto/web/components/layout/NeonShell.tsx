@@ -11,6 +11,7 @@ const NAV = [
   { href: "/solver",     label: "SOLVER"   },
   { href: "/simulation", label: "SIMULATE" },
   { href: "/review",     label: "REVIEW"   },
+  { href: "/hu",         label: "HU·GTO"   },
 ];
 
 interface NeonShellProps {
