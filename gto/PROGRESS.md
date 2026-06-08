@@ -231,13 +231,15 @@ gto-core/gto-cuda は single-street 近似のまま（river-only は正しい）
   - **(leaf, m) サブゲーム並列化（rayon, 3 フェーズ走査）** —
     逐次版とビット同一（assert_eq テストで固定）。実測 11.9 → **1.54 s/iter
     （7.7×）**、1500 iters が 5h → 40 分に
-  - **初回フルラン完了（2026-06-09）** — M=3 AhKd7s/QsJh2c/8d8h3s 均等重み,
-    K_r=16/K_t=32, 1500 sampled iters, 学習 40.5 分 + 厳密 BR:
-    **expl 1.5059 bb/hand（3-flop 抽象ゲーム内・厳密）**, ゲーム値 SB
-    +0.2241 bb。SB ルート: fold 35.9% / limp 55.6% / open 8.5% —
-    実 GTO から遠い（浅い収束 ~30 visits/turn-ctx + 粗い盤面抽象 +
-    デモ用均等重み）。パイプライン実証が目的の初値であり、品質は
-    iteration 増（並列化で 15k≈7h が可能に）と M/バケット拡大が前提
+  - **フルラン実測（2026-06-09, M=3 AhKd7s/QsJh2c/8d8h3s 均等重み,
+    K_r=16/K_t=32）** — expl は iteration で素直に下がる（浅い収束が主因と確認）:
+    | iters | expl (bb) | SB fold/limp/open | 学習 |
+    |---|---|---|---|
+    | 1500 | 1.506 | 35.9 / 55.6 / 8.5% | 40.5 分 |
+    | 8000 | **0.283** | 18.6 / 61.9 / 19.5% | 3.5 時間 |
+    5.3× iters で expl 5.3× 減（CFR+ の O(1/T) と整合）。SB 戦略も実ポーカーに
+    接近（open 8.5→19.5%）。残差 0.283 bb は抽象化損失（K_r=16・M=3 均等重み）+
+    残収束。3-flop 抽象ゲーム内で厳密な数値であり、フル NLHE の expl ではない
   - `gto.library.sample_flops` — canonical 頻度から --flops/--weights を
     生成（diverse/frequency/random、pytest 37 本）
 - テスト: 27ファイル・156 本（betting / payoff / tree / regret / Kuhn /
