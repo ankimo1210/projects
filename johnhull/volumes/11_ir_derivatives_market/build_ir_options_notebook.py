@@ -289,6 +289,215 @@ cells.append(
 )
 
 # ===========================================================================
+# Section 2: Ch.30 convexity / timing / quanto
+# ===========================================================================
+
+# Cell 15: 2-step md
+cells.append(
+    md(r"""## 6. 標準2ステップ評価と、その綻び（Ch.30）
+
+通常の評価は「①フォワード値で期待値を計算 → ②リスクフリーで割引」。
+これが正しいのは変数が**その支払いの自然な測度のマルチンゲール**のとき。
+非標準デリバティブでは3つの補正が要ります：
+
+| 調整 | 原因 |
+|---|---|
+| **コンベクシティ** | 債券価格-利回りの非線形性 |
+| **タイミング** | 観測時点 ≠ 支払時点 |
+| **クォント** | 外貨建て変数を自国通貨で決済 |
+
+いずれも**ニュメレール変更に伴うドリフト補正**（第10冊 Ch.28 の枠組み）です。""")
+)
+
+# Cell 16: convexity md
+cells.append(
+    md(r"""## 7. コンベクシティ調整（§30.1、eq 30.1）
+
+フォワード利回り $y_F$ を**そのまま期待利回りとして使うと過小**になります
+（債券価格が利回りに対して凸 → Jensen）：
+
+$$E_T(y_T) = y_F - \tfrac{1}{2}y_F^2\sigma_y^2 T\,\frac{G''(y_F)}{G'(y_F)}$$
+
+$G'<0, G''>0$ なので $G''/G'<0$、調整は**正**（期待利回り > フォワード利回り）。
+第4冊で見た先物-フォワードのコンベクシティ調整 $\tfrac12\sigma^2 t_1 t_2$ も同型です。""")
+)
+
+# Cell 17: convexity demo
+cells.append(
+    code(r"""# --- コンベクシティ調整の大きさ（満期・ボラ依存） ---
+y_F, sig_y = 0.05, 0.20
+# 標準クーポン債の G''/G'（残存n年・年1回クーポン）の絶対値を近似
+def g2_over_g1(y, n):
+    # G(y) = Σ c e^{-y t} の D と C から G''/G' ≈ C/(-D) の絶対値
+    times = np.arange(1.0, n + 1.0)
+    cfs = np.array([y] * (int(n) - 1) + [1.0 + y]) if n >= 1 else np.array([1.0 + y])
+    pv = cfs * np.exp(-y * times)
+    g1 = -np.sum(times * pv)
+    g2 = np.sum(times**2 * pv)
+    return abs(g2 / g1)
+
+
+ratio = g2_over_g1(y_F, 5)
+ts = np.linspace(0.25, 10.0, 60)
+adj = [ir_options.convexity_adjustment(y_F, sig_y, t, ratio) for t in ts]
+fig3, ax3 = plt.subplots(figsize=(7.5, 4))
+fig3.canvas.header_visible = False
+ax3.plot(ts, np.array(adj) * 1e4, lw=2)
+ax3.set_xlabel("満期 T（年）")
+ax3.set_ylabel("コンベクシティ調整（bp）")
+ax3.set_title(f"E_T(y) − y_F（y_F={y_F:.0%}, σ_y={sig_y:.0%}, |G''/G'|={ratio:.2f}）")
+display(fig3.canvas)
+print(f"T=5年: 調整 = {ir_options.convexity_adjustment(y_F, sig_y, 5.0, ratio) * 1e4:.2f} bp")
+print("→ CMS スワップ（スワップレート参照）等でこの調整が効く")""")
+)
+
+# Cell 18: futures convexity recap md
+cells.append(
+    md(r"""### 先物コンベクシティの再訪（§30, 第4冊リンク）
+
+ユーロドル/SOFR 先物の「先物レート > フォワードレート」も同じ話：
+
+$$\text{forward rate} = \text{futures rate} - \tfrac{1}{2}\sigma^2 t_1 t_2$$
+
+先物の日次値洗いが金利と相関するため、長い限月ほど $t_1 t_2$ で調整が拡大します
+（第4冊 Ch.6 で実装したものの理論的位置づけ）。""")
+)
+
+# Cell 19: timing md
+cells.append(
+    md(r"""## 8. タイミング調整（§30.2、eq 30.2/30.3）
+
+変数の**観測時点** $T$ と**支払時点** $T^* > T$ がずれると、ニュメレールを
+$P(t,T)$ から $P(t,T^*)$ に変える必要があり、期待値に補正が入ります：
+
+$$E_{T^*}(V_T) = E_T(V_T)\exp\!\left[-\frac{\rho_{VR}\sigma_V\sigma_R R_F(T^*-T)}{1+R_F/m}\,T\right]$$
+
+LIBOR-in-arrears（第7冊）の凸性調整はこの特殊ケースです
+（観測と支払いが同時 = タイミングのずれ）。""")
+)
+
+# Cell 20: quanto md
+cells.append(
+    md(r"""## 9. クォント調整（§30.3、eq 30.5）
+
+外貨建ての変数 $V$ を**自国通貨で決済**する（クォント）と、為替との相関ぶん
+ドリフトが変わります：
+
+$$E_X(V_T) = E_Y(V_T)\,e^{\rho_{VW}\sigma_V\sigma_W T}
+\;\approx\; E_Y(V_T)(1 + \rho_{VW}\sigma_V\sigma_W T)$$
+
+$\sigma_W \approx$ 為替ボラ、$\rho_{VW}\approx$ 変数と為替の相関。
+**ジーゲルのパラドックス**（$S$ と $1/S$ の非対称）もこの調整で解消します。
+diff スワップ（外貨金利×自国元本）が典型例です。""")
+)
+
+# Cell 21: quanto demo
+cells.append(
+    code(r"""# --- クォント調整の大きさ（相関依存） ---
+V_fwd, sig_V, sig_S, T_q = 0.04, 0.15, 0.10, 2.0
+rows = []
+for rho in (-0.5, -0.2, 0.0, 0.3, 0.6):
+    adj_factor = math.exp(rho * sig_V * sig_S * T_q)
+    rows.append({"相関ρ": rho, "調整係数": round(adj_factor, 5),
+                 "調整後の期待値": f"{V_fwd * adj_factor:.4%}",
+                 "調整(bp)": round((V_fwd * adj_factor - V_fwd) * 1e4, 2)})
+display(pd.DataFrame(rows))
+print("ρ>0（外貨金利と為替が正相関）なら自国測度での期待金利は上がる")
+print("3つの調整はすべて「ニュメレール変更 → ドリフト補正」（Ch.28）の応用")""")
+)
+
+# ===========================================================================
+# Section 3: verification / exercises / summary
+# ===========================================================================
+
+# Cell 22: assertion cell
+cells.append(
+    code(r"""# --- 検証（hullkit/tests/test_ir_options.py にも同等の検証あり） ---
+checks = []
+p_chk = math.exp(-0.065 * 1.25)
+caplet_chk = ir_options.caplet_black(1e6, 0.25, 0.07, 0.08, 0.20, 1.0, p_chk, kind="caplet")
+floorlet_chk = ir_options.caplet_black(1e6, 0.25, 0.07, 0.08, 0.20, 1.0, p_chk, kind="floorlet")
+checks.append(("caplet 519.0046", caplet_chk, 519.0046, 1e-3))
+checks.append(("floorlet 2823.9125", floorlet_chk, 2823.9125, 1e-3))
+checks.append(("caplet−floorlet パリティ", caplet_chk - floorlet_chk,
+               1e6 * 0.25 * p_chk * (0.07 - 0.08), 1e-6))
+checks.append(("キャップ−フロア = スワップ", cap_v - floor_v, swap_v, 1e-6))
+
+pay_atm = ir_options.swaption_black(L_SW, annuity, s_F, s_F, SIG_SW, T_OPT, kind="payer")
+rec_atm = ir_options.swaption_black(L_SW, annuity, s_F, s_F, SIG_SW, T_OPT, kind="receiver")
+checks.append(("ATM スワプション payer=receiver", pay_atm, rec_atm, 1e-9))
+pay_off = ir_options.swaption_black(L_SW, annuity, s_F, 0.03, SIG_SW, T_OPT, kind="payer")
+rec_off = ir_options.swaption_black(L_SW, annuity, s_F, 0.03, SIG_SW, T_OPT, kind="receiver")
+checks.append(("payer−receiver = L·A·(s_F−s_K)", pay_off - rec_off,
+               L_SW * annuity * (s_F - 0.03), 1e-6))
+
+checks.append(("コンベクシティ調整 > 0",
+               float(ir_options.convexity_adjustment(0.05, 0.2, 5.0, ratio) > 0), 1.0, 0.0))
+checks.append(("コンベクシティ調整 ∝ T",
+               ir_options.convexity_adjustment(0.05, 0.2, 2.0, ratio),
+               2.0 * ir_options.convexity_adjustment(0.05, 0.2, 1.0, ratio), 1e-12))
+
+for name, got, want, tol in checks:
+    ok = abs(got - want) <= tol
+    print(f"[{'OK' if ok else 'FAIL'}] {name}: got={got:.6g} want={want:.6g}")
+    assert ok, name
+print("\n全チェック合格")""")
+)
+
+# Cell 23: exercises
+cells.append(
+    md(r"""## 10. 練習問題
+
+**Q1.** ATM キャップとフロア（同一ストライク・満期）の価格が等しいのはなぜ？
+
+<details><summary>解答</summary>
+
+キャップ − フロア = R_K 払いスワップの価値。ATM では R_K = フォワードスワップレート
+なのでスワップ価値 = 0 → キャップ = フロア。
+</details>
+
+**Q2.** フォワード利回りをそのまま期待利回りに使うと、CMS の価値はどちらにずれる？
+
+<details><summary>解答</summary>
+
+過小評価。コンベクシティ調整は正（E[y] > y_F）なので、スワップレート参照の
+ペイオフは調整を加えないと低く出る。
+</details>
+
+**Q3.** 債券オプションで利回りボラ σ_y しか分からないとき、価格ボラ σ_B は？
+
+<details><summary>解答</summary>
+
+σ_B ≈ D·y₀·σ_y（D=修正デュレーション、y₀=フォワード利回り）。
+デュレーションが価格と利回りの感応度を橋渡しする。
+</details>""")
+)
+
+# Cell 24: summary
+cells.append(
+    md(r"""## まとめ
+
+| 概念 | 要点 |
+|---|---|
+| Black 標準モデル | 商品ごとに対数正規を仮定（債券価格/金利/スワップレート） |
+| キャップ | キャップレットの和。Black で価格付け |
+| パリティ | キャップ − フロア = R_K 払いスワップ。ATM で cap=floor |
+| ストリッピング | フラット vol → スポット vol を逐次逆算 |
+| スワプション | payer/receiver。ATM で payer=receiver。vol キューブ |
+| コンベクシティ | E[y] > y_F（凸性）。CMS・先物レートで効く |
+| タイミング/クォント | 観測≠支払 / 外貨決済。ニュメレール変更の補正 |
+
+**次へ**: `volumes/12_qualitative_summary`（Ch.1, 8, 16, 35, 36, 37 — 最終巻）
+**シリーズ**: `johnhull/ROADMAP.md` 参照""")
+)
+
+# Cell 25: closing md
+cells.append(
+    md(r"""---
+*第11冊おわり。Black の標準市場モデルと3つの測度変更調整で、金利デリバの実務評価を一巡しました。*""")
+)
+
+# ===========================================================================
 # Notebook assembly
 # ===========================================================================
 
