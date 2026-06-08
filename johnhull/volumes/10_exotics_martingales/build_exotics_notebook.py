@@ -214,11 +214,9 @@ display(fig4.canvas)""")
 # Cell 11: exchange md + demo
 cells.append(
     code(r"""# --- 交換オプション（Margrabe）: 資産Uを資産Vと交換 ---
-print("Margrabe は r に依存しない（成長率↑と割引率↑が相殺）:")
-for r_try in (0.0, 0.05, 0.15):
-    v = exotics.exchange_option(100.0, 100.0, 0.2, 0.2, 0.5, 1.0)  # r は引数にすらない
-    # 確認のため BSM 風に r を変えても価格は同一であることを示す（関数が r 非依存）
-    print(f"  （参考 r={r_try:.0%}）交換オプション価値 = {v:.6f}")
+print("Margrabe は r に依存しない（exchange_option の引数に r がない）:")
+print(f"  交換オプション価値 = {exotics.exchange_option(100.0, 100.0, 0.2, 0.2, 0.5, 1.0):.6f}")
+print("  （一方の資産をニュメレールに取ると成長率↑と割引率↑が相殺するため）")
 print("σ̂ = √(σ_U²+σ_V²−2ρσ_Uσ_V)。ρ が高いほど2資産が連動し交換の価値は下がる")
 rows = []
 for rho in (-0.5, 0.0, 0.5, 0.9):
@@ -259,7 +257,8 @@ def _upd_barrier(change=None):
     ax5.clear()
     ss = np.linspace(70.0, 140.0, 60)
     do = [exotics.barrier_call(s, K_B, h_sl.value, R_B, sig_b_sl.value, T_B,
-                               barrier="down-and-out") for s in ss]
+                               barrier="down-and-out") if s > h_sl.value else 0.0
+          for s in ss]
     van_curve = [bsm.call_price(s, K_B, R_B, sig_b_sl.value, T_B) for s in ss]
     ax5.plot(ss, van_curve, lw=1.5, ls=":", label="バニラ")
     ax5.plot(ss, do, lw=2, label="down-and-out")
@@ -331,7 +330,7 @@ print(f"原資産の λ = (μ−r)/σ = {lam_underlying:.4f} ← すべて一致
 
 # Cell 17: risk-neutral & forward measure md
 cells.append(
-    md(r"""## 7. ニュメレールの選択（§28.4–28.5）
+    md(r"""## 7. ニュメレールの選択（§28.4）
 
 | ニュメレール $g$ | 測度 | 公式 |
 |---|---|---|
@@ -345,27 +344,29 @@ cells.append(
 
 # Cell 18: numeraire invariance demo
 cells.append(
-    code(r"""# --- ニュメレール不変性: 同じオプションを2つの測度で評価 → 同値 ---
-# ヨーロピアンコールを (a) リスク中立測度 (b) 株価ニュメレール で MC 評価
+    code(r"""# --- ニュメレール不変性: 同じ S_T を2つの測度で評価 → 同値（測度変換は重みだけ変える） ---
 S0_n, K_n, r_n, sig_n, T_n = 100.0, 100.0, 0.05, 0.25, 1.0
 rng_n = np.random.default_rng(28)
 n_paths = 200_000
 z = rng_n.standard_normal(n_paths)
-# (a) リスク中立測度: ドリフト r、ペイオフを e^{-rT} で割引
-ST_q = S0_n * np.exp((r_n - 0.5 * sig_n**2) * T_n + sig_n * math.sqrt(T_n) * z)
-price_q = math.exp(-r_n * T_n) * np.maximum(ST_q - K_n, 0.0).mean()
-# (b) 株価ニュメレール（測度 S）: ドリフト r+σ²、c = S0·E^S[(S_T-K)^+/S_T]
-ST_s = S0_n * np.exp((r_n + 0.5 * sig_n**2) * T_n + sig_n * math.sqrt(T_n) * z)
-price_s = S0_n * (np.maximum(ST_s - K_n, 0.0) / ST_s).mean()
-print(f"(a) リスク中立測度の MC 価格   = {price_q:.4f}")
-print(f"(b) 株価ニュメレールの MC 価格 = {price_s:.4f}")
-print(f"BSM 解析値                     = {bsm.call_price(S0_n, K_n, r_n, sig_n, T_n):.4f}")
-print("→ ニュメレールを変えても同じ価格（測度変換の不変性）")""")
+# リスク中立測度 Q でサンプルした終端株価
+ST = S0_n * np.exp((r_n - 0.5 * sig_n**2) * T_n + sig_n * math.sqrt(T_n) * z)
+payoff = np.maximum(ST - K_n, 0.0)
+# (a) リスク中立測度 Q: ニュメレール = マネーマーケット口座 → e^{-rT} で割引
+price_q = math.exp(-r_n * T_n) * payoff.mean()
+# (b) 株価ニュメレール（測度 S）: Radon-Nikodym 重み dS/dQ = S_T/(S0 e^{rT})
+#     c = S0 · E^S[(S_T-K)^+ / S_T] = S0 · E^Q[ w · (S_T-K)^+/S_T ], w = S_T/(S0 e^{rT})
+weight = ST / (S0_n * math.exp(r_n * T_n))
+price_s = S0_n * (weight * payoff / ST).mean()
+print(f"(a) リスク中立測度 Q の MC 価格   = {price_q:.4f}")
+print(f"(b) 株価ニュメレールの MC 価格   = {price_s:.4f}")
+print(f"BSM 解析値                       = {bsm.call_price(S0_n, K_n, r_n, sig_n, T_n):.4f}")
+print("→ 同じ S_T を別の測度の重みで評価しても同じ価格（測度変換は確率の重み付けを変えるだけ）")""")
 )
 
 # Cell 19: Girsanov md + demo
 cells.append(
-    md(r"""## 8. ギルサノフの定理（§28.2）
+    md(r"""## 8. ギルサノフの定理（§28.1）
 
 測度変換は**ドリフトを変えるがボラティリティは保存**する：
 
@@ -423,7 +424,7 @@ checks.append(("gap call 13.1122",
                exotics.gap_call(100.0, 95.0, 100.0, 0.05, 0.20, 1.0), 13.112208, 1e-5))
 checks.append(("アジアン < バニラ", float(a_tw < van), 1.0, 0.0))
 checks.append(("ルックバック > ATM", float(lb > van), 1.0, 0.0))
-checks.append(("ニュメレール不変（a≈b）", price_q, price_s, 5e-3))
+checks.append(("ニュメレール不変（a≈b）", price_q, price_s, 1e-9))
 checks.append(("λ 一致（原資産 vs オプション）", lam_opt, lam_underlying, 1e-9))
 
 for name, got, want, tol in checks:
