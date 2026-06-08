@@ -355,3 +355,49 @@ fn smoke_full_preflop_tree_m3_converges() {
     let total: f64 = agg.iter().map(|(_, f)| f).sum();
     assert!((total - 1.0).abs() < 1e-9);
 }
+
+#[test]
+fn parallel_run_is_bit_identical_to_sequential() {
+    // The 3-phase parallel run reorders independent work only; results
+    // must equal the sequential DFS EXACTLY (==, not approximately).
+    let flops = vec![[c("2c"), c("7d"), c("9h")], [c("Jh"), c("8c"), c("3d")]];
+    let weights = vec![0.6, 0.4];
+    let build = || {
+        BlueprintSolver::new_with_configs(
+            build_preflop_tree(100 * BB),
+            tiny_ranges(),
+            CfrVariant::cfr_plus_default(),
+            flops.clone(),
+            weights.clone(),
+            Abstraction::default(),
+            false,
+            0,
+            tiny_cfg,
+        )
+    };
+    let mut seq = build();
+    seq.run_sequential(12);
+    let mut par = build();
+    par.run(12);
+
+    let (es, ep) = (seq.exploitability_bb(), par.exploitability_bb());
+    assert_eq!(es.exploitability, ep.exploitability, "expl must be bit-identical");
+    assert_eq!(es.br_value, ep.br_value);
+    assert_eq!(seq.game_value_p0(), par.game_value_p0());
+    for node_id in 0..seq.preflop_tree.nodes.len() {
+        if !matches!(seq.preflop_tree.nodes[node_id].kind, NodeKind::Action { .. }) {
+            continue;
+        }
+        for combo in [0usize, 700, 1325] {
+            assert_eq!(
+                seq.average_strategy(node_id, combo),
+                par.average_strategy(node_id, combo),
+                "preflop strategy diverged at node {node_id}"
+            );
+        }
+    }
+    eprintln!(
+        "parallel == sequential OK (expl {:.6})",
+        ep.exploitability
+    );
+}

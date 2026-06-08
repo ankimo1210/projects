@@ -298,14 +298,126 @@ impl BlueprintSolver {
         out
     }
 
-    pub fn run(&mut self, iterations: u32) {
+    /// Sequential reference run (subgames visited in preflop DFS order).
+    /// Kept as the bit-exactness baseline for the parallel path.
+    pub fn run_sequential(&mut self, iterations: u32) {
         for _ in 0..iterations {
             self.iteration += 1;
             for traverser in 0..2u8 {
                 let reach = self.ranges[traverser as usize].weights;
                 let opp = self.ranges[1 - traverser as usize].weights;
-                self.traverse(0, traverser, &reach, &opp);
+                self.traverse(0, traverser, &reach, &opp, None);
             }
+        }
+    }
+
+    /// Parallel run: per traversal, (1) walk the preflop tree top-down
+    /// collecting the reach pair at every betting leaf (strategies come
+    /// from regrets, which this pass does not touch), (2) traverse all
+    /// (leaf, m) subgames in parallel — their tables are disjoint —
+    /// aggregating each leaf's M values in fixed order, (3) replay the
+    /// preflop DFS with the precomputed leaf values, applying the same
+    /// updates as the sequential path. Phases 1–3 are equivalent to the
+    /// DFS reordering of independent work, so results are BIT-IDENTICAL
+    /// to `run_sequential` (pinned by test).
+    pub fn run(&mut self, iterations: u32) {
+        use rayon::prelude::*;
+        for _ in 0..iterations {
+            self.iteration += 1;
+            for traverser in 0..2u8 {
+                let reach = self.ranges[traverser as usize].weights;
+                let opp = self.ranges[1 - traverser as usize].weights;
+
+                // Phase 1: reach pairs at betting leaves.
+                let mut at_leaf: Vec<Option<([f64; N], [f64; N])>> =
+                    vec![None; self.leaves.len()];
+                self.collect_leaf_reaches(0, traverser, &reach, &opp, &mut at_leaf);
+
+                // Phase 2: all (leaf, m) subgames in parallel.
+                let iter = self.iteration;
+                let weights = self.weights.clone();
+                let block_mask = &self.block_mask;
+                let m_count = self.flops.len();
+                let leaf_values: Vec<Option<Vec<f64>>> = self
+                    .leaves
+                    .par_iter_mut()
+                    .zip(at_leaf.par_iter())
+                    .map(|(leaf, reaches)| {
+                        let (r, o) = reaches.as_ref()?;
+                        let per_m: Vec<Vec<f64>> = leaf
+                            .subgames
+                            .par_iter_mut()
+                            .enumerate()
+                            .map(|(m, sub)| {
+                                let mut rm = *r;
+                                let mut om = *o;
+                                for c in 0..N {
+                                    if block_mask[c] & (1 << m) != 0 {
+                                        rm[c] = 0.0;
+                                        om[c] = 0.0;
+                                    }
+                                }
+                                sub.subgame_traverse(traverser, &rm, &om, iter)
+                            })
+                            .collect();
+                        // Fixed-order aggregation keeps f64 sums identical
+                        // to the sequential path.
+                        let mut out = vec![0.0f64; N];
+                        for (m, v) in per_m.iter().enumerate().take(m_count) {
+                            let w = weights[m];
+                            for c in 0..N {
+                                if block_mask[c] & (1 << m) == 0 {
+                                    out[c] += w * v[c];
+                                }
+                            }
+                        }
+                        Some(out)
+                    })
+                    .collect();
+
+                // Phase 3: preflop DFS with injected leaf values.
+                self.traverse(0, traverser, &reach, &opp, Some(&leaf_values));
+            }
+        }
+    }
+
+    /// Phase-1 walk: descend every action branch propagating both reach
+    /// vectors; record them at betting leaves. Reads regrets only.
+    fn collect_leaf_reaches(
+        &self,
+        node_id: usize,
+        traverser: u8,
+        reach: &[f64; N],
+        opp_reach: &[f64; N],
+        out: &mut Vec<Option<([f64; N], [f64; N])>>,
+    ) {
+        match self.preflop_tree.nodes[node_id].kind {
+            NodeKind::NextStreet { pot_type } => {
+                if pot_type != PotType::AllInPreflop {
+                    out[self.leaf_of[node_id]] = Some((*reach, *opp_reach));
+                }
+            }
+            NodeKind::Action { actor } => {
+                let na = self.preflop_tree.nodes[node_id].children.len();
+                let strat = self.node_strategy(node_id, na);
+                for a in 0..na {
+                    let child = self.preflop_tree.nodes[node_id].children[a].1;
+                    if actor == traverser {
+                        let mut nr = *reach;
+                        for c in 0..N {
+                            nr[c] *= strat[a * N + c];
+                        }
+                        self.collect_leaf_reaches(child, traverser, &nr, opp_reach, out);
+                    } else {
+                        let mut no = *opp_reach;
+                        for c in 0..N {
+                            no[c] *= strat[a * N + c];
+                        }
+                        self.collect_leaf_reaches(child, traverser, reach, &no, out);
+                    }
+                }
+            }
+            _ => {}
         }
     }
 
@@ -321,12 +433,15 @@ impl BlueprintSolver {
     }
 
     /// Counterfactual values (bb) for `traverser` at a preflop node.
+    /// `leaf_values`: phase-2 results (parallel path); None = compute
+    /// subgames inline in DFS order (sequential path).
     fn traverse(
         &mut self,
         node_id: usize,
         traverser: u8,
         reach: &[f64; N],
         opp_reach: &[f64; N],
+        leaf_values: Option<&Vec<Option<Vec<f64>>>>,
     ) -> Vec<f64> {
         let kind = self.preflop_tree.nodes[node_id].kind;
         match kind {
@@ -344,6 +459,11 @@ impl BlueprintSolver {
                     return self.allin_values(&state, traverser, opp_reach);
                 }
                 let leaf = self.leaf_of[node_id];
+                if let Some(values) = leaf_values {
+                    return values[leaf]
+                        .clone()
+                        .expect("phase 1 must have reached every visited leaf");
+                }
                 let iter = self.iteration;
                 let m_count = self.flops.len();
                 let mut out = vec![0.0f64; N];
@@ -375,7 +495,7 @@ impl BlueprintSolver {
                         for c in 0..N {
                             nr[c] *= strat[a * N + c];
                         }
-                        action_vals.push(self.traverse(child, traverser, &nr, opp_reach));
+                        action_vals.push(self.traverse(child, traverser, &nr, opp_reach, leaf_values));
                     }
                     let mut ev = vec![0.0; N];
                     for c in 0..N {
@@ -410,7 +530,7 @@ impl BlueprintSolver {
                         for c in 0..N {
                             no[c] *= strat[a * N + c];
                         }
-                        let av = self.traverse(child, traverser, reach, &no);
+                        let av = self.traverse(child, traverser, reach, &no, leaf_values);
                         for c in 0..N {
                             ev[c] += av[c];
                         }
