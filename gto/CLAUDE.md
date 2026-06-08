@@ -61,7 +61,7 @@ cargo test --manifest-path gto/Cargo.toml
   vary (Flop 50% / Turn 75% / River 75% in `gto-core`; 33/75/100 in `gto-cuda`).
 - **Single-letter math variables (N, K, S, V, ...)** are allowed in solver
   code (ruff N806 suppressed for `gto/src/gto/solver/`).
-- **PyTorch** comes from the workspace's `pytorch-cu126` index (declared at
+- **PyTorch** comes from the workspace's `pytorch-cu128` index (declared at
   workspace root, not in `gto/pyproject.toml`).
 
 ## Gotchas
@@ -79,7 +79,7 @@ cargo test --manifest-path gto/Cargo.toml
   `gto_py` / `gto_cuda` modules** from the workspace venv — they are not in
   the lockfile. Rebuild with `maturin develop --uv` (plain `maturin develop`
   fails: no pip in a uv venv).
-- **CUDA 12.6 + sm_120**: hardware/driver assumption is RTX 5080 (Blackwell).
+- **CUDA 12.8 + sm_120**: hardware/driver assumption is RTX 5080 (Blackwell).
   Older GPUs likely fail at JIT compile.
 - **Do not delete** `_data/gto/solutions/` Parquet without explicit user
   request — regenerating the full library takes ~24 minutes on GPU.

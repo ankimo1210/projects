@@ -107,6 +107,7 @@ FastAPI。`main.py` で CORS + `/solutions` の StaticFiles マウント。
 | `store.py` | Parquet 読み書き + フロント直読用 cache JSON 生成 |
 | `batch.py` | バッチ事前計算 CLI（Rust GPU 単一パス、batch-size 32） |
 | `range_builder.py` | preflop 頻度表 → combo weights[1326] 変換 |
+| `sample_flops.py` | blueprint 用 M-flop 選定（canonical 頻度重み付きサンプリング） |
 
 ### 3.6 トレーナー — `src/gto/trainer/`
 
