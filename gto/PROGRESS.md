@@ -204,30 +204,51 @@ gto-core/gto-cuda は single-street 近似のまま（river-only は正しい）
   - **ターンバケッティング追加（同日）** — mean-river-percentile スコアの
     tier-grouped ビン（`Abstraction{buckets_river, buckets_turn}`、
     CLI `--buckets-turn`）。K_t=1326 で exact と全桁一致、
-    ダイヤル K_t=2: 0.337 → K_t=256: 0.027。フルスイート 157 本
+    ダイヤル K_t=2: 0.337 → K_t=256: 0.027
   ```bash
   cargo run --release -p gto-hu --bin solve-hu-flop -- \
     --board AhKd7s --pot 5 --stack 97.5 --buckets-river 128 \
     --max-table-gb 12 --iterations 3000
   ```
-- テスト: 26ファイル・約120テスト（betting / payoff / tree / regret / Kuhn /
+- [x] **フルブループリント（Phase 6, 2026-06-08）** — プリフロップ木の
+      NextStreet 葉を実ポストフロップ部分木に接続した合成ゲームを
+      単一 CFR で解く `BlueprintSolver` + `solve-hu-blueprint` CLI
+      （設計 v2: `docs/superpowers/specs/2026-06-08-blueprint-design.md`。
+      敵対的レビューがフロップディール測度のブロッカーを設計段階で検出）
+  - **M-flop 抽象ゲーム**: joint measure μ ∝ w0·w1·w_m·legal。
+    Z(c,o) 補正はプリフロップ層に集約（fold 端末・正規化子）、
+    ポストフロップ走査は O(N) 不変。8 部分木家族（葉ノード id キー、
+    (24,88) limp-3bet 2 ラインは別管理）、`FlopTreeConfig::fourbet()` 新設
+  - オールイン葉は厳密 M-flop ランアウト・エクイティ
+    （showdown_strengths ベース、~1 秒/flop。evaluate 毎ペア方式は
+    実測 ~60× 遅く差し替え）
+  - テスト 4/4: 退化合成 M=1 が standalone FlopSolver と**厳密一致**
+    （value/expl/戦略 < 1e-9）、敵対的オールイン・フィクスチャ
+    （naive 実装は必ず落ちる設計）、K=N handoff 全桁一致、
+    フル台帳 M=3 スモーク（expl 0.348→0.079）
+  - 出力規律: 「M-flop 抽象ゲーム上の厳密 exploitability 付き CFR
+    プロファイル」— equilibrium とは呼ばない。フル NLHE の expl ではない
+  - **初回実ラン実行中**（2026-06-08 夜開始, M=3 AhKd7s/QsJh2c/8d8h3s,
+    K_r=16/K_t=32, 1500 iters）: ゲート合計 16.24 GB・実測 11.9 s/iter
+    （レビュー済み予測と一致）。ETA ~5h+BR。
+    ログ: /tmp/solve_blueprint_m3.log →
+    出力: `_data/gto/hu/blueprint_100bb_m3/summary.json`
+- テスト: 27ファイル・156 本（betting / payoff / tree / regret / Kuhn /
   Leduc / TinyRiver / differential / BR / reports /
   turn・flop・preflop の tree / chance / solver / differential / reports /
-  flop bucketing）
+  flop bucketing / blueprint）
 
 ---
 
 ## TODO（優先順）
 
 ### Phase HU 続き（gto-hu ロードマップ）
-- [ ] **フルブループリント実装（Phase 6）** — 設計スペック完成・レビュー済み:
-      `docs/superpowers/specs/2026-06-08-blueprint-design.md`。
-      M 個（3〜5）の重み付き canonical flop 上の抽象ゲームとして
-      プリフロップ + 7 種のポストフロップ部分木を単一 CFR で解く。
-      expl は「M-flop 抽象ゲーム内で厳密」と明記する設計。
-      初回ランは数時間規模 →(m, leaf) 並列化（rayon）を先に入れる
+- [ ] **ブループリント初回フルラン結果の記録** — 実行中（下記）。完了後
+      summary.json の expl を PROGRESS に転記
+- [ ] (m, leaf) サブゲーム走査の rayon 並列化（×8〜24、長期ラン前提技術）
 - [ ] 将来: f32 テーブル（×2）、ボードバケッティング、ディスクバック
-      （M を実用規模に上げる前提技術）
+      （M を実用規模に上げる前提技術）、canonical flop 頻度による重み生成
+      （現状 CLI の重みは手動指定。Python flop_canon と接続）
 
 ### Phase C 続き（任意）
 - [ ] GPU util 67% → 80%+（カーネル融合 / CUDA Graphs / バッチ拡大）

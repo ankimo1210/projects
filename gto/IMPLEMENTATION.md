@@ -77,7 +77,7 @@ RTX 5080（Blackwell / sm_120）が当時の PyTorch 非対応だったため、
 | `solver/` | スカラー参照 CFR + exact-combo ベクトル CFR（CFR+/DCFR）、public chance sampling、`FlopSolver`（lazy slab + リバー戦略空間バケッティング `--buckets-river`: 105GB→10.5GB@K=128、expl に抽象化損失が含まれる）、`PreflopSolver`（簡易価値モデル）、MC エクイティ表（rayon） |
 | `games/` | Kuhn / Leduc / TinyRiver / TinyTurnRiver / TinyFlopTurnRiver / TinyPreflop（差分テスト用参照ゲーム） |
 | `validation/` | 厳密 Best Response・exploitability（bb/hand、常に列挙） |
-| `bin/` | `solve-hu-river` / `solve-hu-turn-river` / `solve-hu-flop` / `solve-hu-preflop` CLI |
+| `bin/` | `solve-hu-river` / `solve-hu-turn-river` / `solve-hu-flop` / `solve-hu-preflop` / `solve-hu-blueprint` CLI |
 
 ### 3.3 Python バインディング — `crates/gto-py/`
 
@@ -192,7 +192,7 @@ fast と hybrid は混合戦略が異なる（CFR 均衡の非一意性。根戦
 | B | Neon UI 全機能統合（/report /solver /review 含む） | ✅ 完了（2026-06-07 ハンド履歴レビュー実装） |
 | C | GPU 最適化（ホットパス alloc/HtoD 排除、util 39→67%） | ✅ 完了（80%+ は今後） |
 | D | スタック/ポジション拡張（50/200bb・HJ/UTG → 19,305 スポット） | ✅ 完了 |
-| HU | 抽象均衡ソルバー（river → turn+river → flop → preflop。blueprint 残） | 🟨 Phase 5 まで完了 |
+| HU | 抽象均衡ソルバー（river → turn+river → flop → preflop → M-flop blueprint） | ✅ Phase 6 v0 完了（M 拡大は将来） |
 | E | 商用化（Supabase 認証・Stripe・Cloud Run・独自ドメイン） | ⬜ 未着手 |
 
 ---
