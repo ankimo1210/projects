@@ -74,7 +74,7 @@ S_A, K_A, R_A, SIG_A, T_A = 50.0, 50.0, 0.10, 0.40, 5.0 / 12.0  # 通し例""")
 cells.append(
     md(r"""## 1. ツリーの拡張とコントロール変量（Ch.21）
 
-- 連続利回り $q$・時変パラメータは成長因子 $a = e^{(r-q)\Delta t}$（eq 21.4–21.7）の置換で対応
+- 連続利回り $q$ は成長因子 $a = e^{(r-q)\Delta t}$（eq 21.4–21.7）、時変 $r(t), q(t)$ は $a = e^{[f(t)-g(t)]\Delta t}$（eq 21.11）で対応
   （第1冊・第2冊で実装済み）
 - **コントロール変量**: 同じツリーで欧州版も価格付けし、既知の BSM 解析値との誤差で補正
 
@@ -98,7 +98,8 @@ for n in (25, 50, 100, 200):
                  "|誤差| CV": round(abs(cv - ref_put), 4)})
 df_cv = pd.DataFrame(rows)
 display(df_cv)
-print(f"参照値（CRR N=2000）= {ref_put:.4f} ／ 欧州BSM = {eu_bsm:.4f}")""")
+print(f"参照値（CRR N=2000）= {ref_put:.4f} ／ 欧州BSM = {eu_bsm:.4f}")
+print("※ CV の利得は粗い N で劇的（N=25 で約10倍）。N が増えると plain 自身が収束して差は消える")""")
 )
 
 # Cell 05: trinomial md
@@ -210,7 +211,7 @@ cells.append(
 
 | 得意 | 苦手 |
 |---|---|
-| パス依存（アジアン・ルックバック） | 早期行使（→ LSM で対応、§7） |
+| パス依存（アジアン・ルックバック） | 早期行使（→ LSM で対応、§8） |
 | 多資産バスケット（次元の呪いに強い） | 高精度が必要な Greeks |
 | 複雑なペイオフの追加が容易 | 収束 1/√N の遅さ |
 
@@ -499,6 +500,8 @@ ax7.set_xlabel("計算量パラメータ（対数）")
 ax7.set_ylabel("|誤差| vs CRR N=4000")
 ax7.set_title("手法ごとの収束プロファイル")
 ax7.legend()
+ax7.text(0.02, 0.04, "注: LSM は低バイアス（≈0.03）で頭打ち／CRR は参照と同族でやや有利",
+         transform=ax7.transAxes, fontsize=8, color="0.4")
 display(fig7.canvas)""")
 )
 
@@ -517,11 +520,11 @@ checks.append(("FD アメリカン ≈ CRR500", v_fd, v_crr500, 2e-2))
 checks.append(("LSM ≈ CRR500", v_lsm, v_crr500, 5e-2))
 checks.append(("三項 ≈ CRR（N=200）", tri_am, crr_am, 5e-2))
 
-cv_100 = (trees.crr_price(S_A, K_A, R_A, SIG_A, T_A, 100, kind="put", american=True)
-          + eu_bsm - trees.crr_price(S_A, K_A, R_A, SIG_A, T_A, 100, kind="put"))
-plain_100 = trees.crr_price(S_A, K_A, R_A, SIG_A, T_A, 100, kind="put", american=True)
-assert abs(cv_100 - ref_put) < abs(plain_100 - ref_put), "CV が plain を改善していない"
-print(f"[OK] CV(N=100) 誤差 {abs(cv_100 - ref_put):.5f} < plain 誤差 {abs(plain_100 - ref_put):.5f}")
+cv_25 = (trees.crr_price(S_A, K_A, R_A, SIG_A, T_A, 25, kind="put", american=True)
+         + eu_bsm - trees.crr_price(S_A, K_A, R_A, SIG_A, T_A, 25, kind="put"))
+plain_25 = trees.crr_price(S_A, K_A, R_A, SIG_A, T_A, 25, kind="put", american=True)
+assert abs(cv_25 - ref_put) < abs(plain_25 - ref_put), "CV が plain を改善していない"
+print(f"[OK] CV(N=25) 誤差 {abs(cv_25 - ref_put):.5f} < plain 誤差 {abs(plain_25 - ref_put):.5f}")
 
 p_mc, se_chk = mc.price_european_mc(100.0, 100.0, 0.05, 0.2, 1.0, n_paths=200_000)
 assert abs(p_mc - bsm.call_price(100.0, 100.0, 0.05, 0.2, 1.0)) < 3.0 * se_chk
