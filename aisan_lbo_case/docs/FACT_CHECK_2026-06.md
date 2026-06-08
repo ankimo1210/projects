@@ -35,4 +35,4 @@ Scope: public information only. No company, shareholder, management, lender or a
 | Founder/related holder grouping | Partly verified | Confirm beneficial ownership and whether AT Co., Ltd. is a founder-related vehicle from official securities filings / TOB counsel review. |
 | Live peer multiples | Refreshed with caveats | yfinance data are public snapshots; Topcon/PASCO missing due take-private/inactive status and Hexagon requires currency validation. Verify in a live market-data terminal before bid. |
 | Topcon and PASCO exact premium bases | Improved | Source bases now tied to official Topcon and SECOM/ITOCHU documents; final IC pack should still footnote exact reference dates. |
-| Visual render QA | Completed 2026-06-08 | LibreOffice installed; all 19 slides and all 8 Excel tabs rendered and inspected; fixes applied and re-verified (see PROGRESS_TODO). |
+| Visual render QA | Completed 2026-06-08 | LibreOffice installed; all 20 slides and all 8 Excel tabs rendered and inspected; fixes applied and re-verified (see PROGRESS_TODO). |

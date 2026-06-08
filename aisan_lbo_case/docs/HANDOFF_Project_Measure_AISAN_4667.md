@@ -230,7 +230,7 @@
 ## 9. ファイル再生成 / Regeneration（参考）
 
 - Excel: 現ファイルは LibreOffice `recalc.py` で再計算済み（**446数式**・エラー0）。再編集後は同じ invariants を再確認する。印刷レイアウトは全8タブ landscape + fit-to-page(1×1) + print-area 設定済みで、PDF化すると8ページ（=タブ数）にクリーンに収まる（segment/cash/Lev のヘッダー折り返し・Assumptions 注記簡潔化を round 5 で実施済み）。
-- PPT: 追加2枚の生成に使った `update_pptx_addendum.py` は **`_archive/update_pptx_addendum.py.deprecated` に退避**（17枚前提・旧peer/PASCOプレースホルダを含む一回用スクリプト。パッケージ外へ移動し再実行入口を除去）。現行19枚デッキは最終成果物を直接編集済み。
+- PPT: 追加2枚の生成に使った `update_pptx_addendum.py` は **`_archive/update_pptx_addendum.py.deprecated` に退避**（17枚前提・旧peer/PASCOプレースホルダを含む一回用スクリプト。パッケージ外へ移動し再実行入口を除去）。現行20枚デッキは最終成果物を直接編集済み。
 - 注: Excel/PPTX は最終成果物を直接編集済み。将来の大幅再生成は、モデル/デッキ生成スクリプトを別途整備する方が安全。
 - **注意（再発防止）**: python-pptx でスライドを追加する際、既存スライドとパート名（`slideN.xml`）が衝突すると保存毎にzipへ二重書込みされ、内容消失リスクがある。追加時は必ず未使用のパート名を割り当て、保存後に `zipfile` で重複エントリゼロを確認すること。
 
