@@ -17,6 +17,8 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 | 9 | `volumes/09_credit_xva` | 9, 24, 25 | done |
 | 10 | `volumes/10_exotics_martingales` | 26, 28 | done |
 | 11 | `volumes/11_ir_derivatives_market` | 29, 30 | done |
-| 12 | `volumes/12_qualitative_summary` | 1, 8, 16, 35, 36, 37 | planned |
+| 12 | `volumes/12_qualitative_summary` | 1, 8, 16, 35, 36, 37 | done |
 
 Shared module: `johnhull/hullkit` (uv workspace member) — bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options.
+
+**Status (2026-06-08): all 14 rows done → Hull 11e all 37 chapters covered.**
