@@ -24,10 +24,11 @@ def test_implied_vol_bounds_and_kind_errors():
 
 
 def test_ewma_update_hull_example():
-    # sigma_{n-1}=1%/day, u_{n-1}=2% -> 0.94*0.0001 + 0.06*0.0004 = 0.000118
-    var = volatility.ewma_variance([0.02, 0.0], lam=0.94, init=0.0001)
-    assert var[1] == pytest.approx(0.000118, abs=1e-12)
-    assert np.sqrt(var[1]) == pytest.approx(0.010863, abs=1e-6)  # Hull 1.086%
+    # Hull GE Example 23.1 (lambda=0.90): sigma_{n-1}=1%/day, u_{n-1}=2%
+    # -> 0.90*0.0001 + 0.10*0.0004 = 0.00013
+    var = volatility.ewma_variance([0.02, 0.0], lam=0.90, init=0.0001)
+    assert var[1] == pytest.approx(0.00013, abs=1e-12)
+    assert np.sqrt(var[1]) == pytest.approx(0.011402, abs=1e-6)  # Hull 1.14%
 
 
 def test_garch_update_and_long_run_hull_example():

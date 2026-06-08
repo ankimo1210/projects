@@ -28,8 +28,7 @@ estimation). One hullkit addition: `volatility.py`.
 
 pytest pins (hand-verified; Hull prints in parens):
 IV round-trip (price at σ=0.27 → 0.27 within 1e-8) + call/put IV equality +
-bounds ValueError; EWMA update with σ_{n−1}=1%/day, u=2% → var 0.000118,
-σ=1.0863%/day (1.086%); GARCH(ω=2e-6, α=0.13, β=0.86) update with
+bounds ValueError; EWMA update (Hull Ex 23.1, λ=0.90) with σ_{n−1}=1%/day, u=2% → var 0.00013, σ=1.1402%/day (1.14%); GARCH(ω=2e-6, α=0.13, β=0.86) update with
 σ_{n−1}=1.6%/day, u=1% → var 0.00023516, σ=1.5335% (1.53%); V_L=0.0002,
 σ_L=1.4142%/day (1.4%); 10-day forecast from σ_n=1.6%/day → 2.5065e-4;
 forecast → V_L as k→∞; fit on seeded synthetic GARCH series (n=4000)
