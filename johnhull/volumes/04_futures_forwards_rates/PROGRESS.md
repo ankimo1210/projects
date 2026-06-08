@@ -22,6 +22,6 @@ Last updated: 2026-06-08
 
 - Cell index: 00-02 intro / 03-04 Ch.2 / 05-08 Ch.3 / 09-18 Ch.4 /
   19-24 Ch.5 / 25-30 Ch.6 / 31 verification / 32 exercises / 33 summary
-- Eurodollar-futures bootstrap (eq 6.2) and stack-and-roll: markdown only
+- Eurodollar-futures bootstrap (eq 6.2) and stack-and-roll: omitted (out of scope)
 - Day counts use fractional-period approximation (no calendar arithmetic)
 - nbformat cell ids still missing (inherited builder pattern)

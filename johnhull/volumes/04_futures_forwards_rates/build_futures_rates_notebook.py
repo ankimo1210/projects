@@ -45,7 +45,7 @@ cells.append(
 - **Ch.5 フォワード・先物価格の決定** — コストオブキャリー
 - **Ch.6 金利先物** — デイカウント、CTD、デュレーションヘッジ
 
-> 共通関数は `hullkit`（rates / mc / nbplot）から import""")
+> 共通関数は `hullkit`（rates / nbplot）から import""")
 )
 
 cells.append(code(r"""%matplotlib widget"""))
