@@ -172,7 +172,7 @@
 5. Yahoo Finance JP / local market snapshot（5 Jun 2026 close ¥1,680; 3m VWAP ~¥1,740; 6m VWAP ~¥1,929）— https://finance.yahoo.co.jp/quote/4667.T
 6. IRBANK — 4667 / E04980（P&L / B/S / CF / segment / multiples）— https://irbank.net/E04980/pl
 7. M&A Online — 秋測買収（Oct 2023; 実行 Jan 2024）— https://maonline.jp/news/20231013b
-8. `docs/FACT_CHECK_2026-06.md` — treasury-share correction, reference price, gating fact check, precedent caveats.
+8. `docs/FACT_CHECK_2026-06.md` — treasury-share-adjusted share count, reference price, gating fact check, precedent caveats.
 9. `data/processed/peer_multiples.csv` — yfinance public peer multiple snapshot; Topcon/PASCO missing and Hexagon requires currency validation.
 10. `data/processed/precedent_premium_check.csv` — Tecnos, Kaonavi, PASCO and Topcon premium bases with source-quality labels.
 

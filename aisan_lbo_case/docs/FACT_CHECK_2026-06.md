@@ -7,7 +7,7 @@ Scope: public information only. No company, shareholder, management, lender or a
 |---|---:|---|---:|---|
 | Issued shares | 5,548,979 shares | https://www.aisantec.co.jp/ir/stock/status/ | 2026-06-07 | Use official issued shares as the gross share count. |
 | Treasury shares | 268,816 shares | https://www.aisantec.co.jp/ir/stock/status/ | 2026-06-07 | Correct purchase shares to 5,280,163 shares, excluding treasury. |
-| Share-status as-of date | 2026-03-31 | https://www.aisantec.co.jp/ir/stock/status/ | 2026-06-07 | Footnote treasury-share correction as official stock-status data. |
+| Share-status as-of date | 2026-03-31 | https://www.aisantec.co.jp/ir/stock/status/ | 2026-06-07 | Footnote the treasury-share-adjusted share count as official stock-status data. |
 | Major shareholder: Kiyohisa Kato | 554,400 shares / 9.99% | https://www.aisantec.co.jp/ir/stock/status/ | 2026-06-07 | Keep founder/related alignment as a DD item, not an assumed rollover. |
 | Major shareholder: Mitsubishi Electric | 350,000 shares / 6.30% | https://www.aisantec.co.jp/ir/stock/status/ | 2026-06-07 | Replace "remainder dispersed" with strategic-holder DD caveat. |
 | Major shareholder: KDDI | 280,000 shares / 5.04% | https://www.aisantec.co.jp/ir/stock/status/ | 2026-06-07 | Replace "remainder dispersed" with strategic-holder DD caveat. |
