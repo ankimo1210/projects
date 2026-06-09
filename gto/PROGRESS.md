@@ -231,15 +231,17 @@ gto-core/gto-cuda は single-street 近似のまま（river-only は正しい）
   - **(leaf, m) サブゲーム並列化（rayon, 3 フェーズ走査）** —
     逐次版とビット同一（assert_eq テストで固定）。実測 11.9 → **1.54 s/iter
     （7.7×）**、1500 iters が 5h → 40 分に
-  - **フルラン実測（2026-06-09, M=3 AhKd7s/QsJh2c/8d8h3s 均等重み,
-    K_r=16/K_t=32）** — expl は iteration で素直に下がる（浅い収束が主因と確認）:
-    | iters | expl (bb) | SB fold/limp/open | 学習 |
-    |---|---|---|---|
-    | 1500 | 1.506 | 35.9 / 55.6 / 8.5% | 40.5 分 |
-    | 8000 | **0.283** | 18.6 / 61.9 / 19.5% | 3.5 時間 |
-    5.3× iters で expl 5.3× 減（CFR+ の O(1/T) と整合）。SB 戦略も実ポーカーに
-    接近（open 8.5→19.5%）。残差 0.283 bb は抽象化損失（K_r=16・M=3 均等重み）+
-    残収束。3-flop 抽象ゲーム内で厳密な数値であり、フル NLHE の expl ではない
+  - **フルラン実測（2026-06-09, M=3 AhKd7s/QsJh2c/8d8h3s）** — expl は
+    iteration / バケット細分 / 適切な重みで素直に下がる:
+    | iters | K_r | weights | expl (bb) | SB fold/limp/open | 学習 |
+    |---|---|---|---|---|---|
+    | 1500 | 16 | uniform | 1.506 | 35.9 / 55.6 / 8.5% | 40.5 分 |
+    | 8000 | 16 | uniform | 0.283 | 18.6 / 61.9 / 19.5% | 3.5 時間 |
+    | 15000 | 32 | 0.4/0.4/0.2 | **0.147** | 18.0 / 57.2 / 24.8% | 6.8 時間 |
+    初回比 **10× 改善**。BR は SB 0.266 / BB 0.028（BB 側はほぼ不可剥離、
+    残差は SB の多分岐に集中）。SB open も実ポーカーに接近（8.5→24.8%）。
+    残 0.147 bb は抽象化損失（K_r=32・M=3）+ 残収束で、3-flop 抽象ゲーム内の
+    厳密値（フル NLHE の expl ではない）。テーブル 32.3 GB
   - `gto.library.sample_flops` — canonical 頻度から --flops/--weights を
     生成（diverse/frequency/random、pytest 37 本）
 - テスト: 27ファイル・156 本（betting / payoff / tree / regret / Kuhn /
