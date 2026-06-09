@@ -69,3 +69,18 @@ def _rolling_sharpe(ret, window=ROLL_WINDOW):
     rmean = ret.rolling(window).mean()
     rstd = ret.rolling(window).std()
     return (rmean - RF) / rstd * math.sqrt(ANNUALIZATION)
+
+
+# ---------------------------------------------------------------------------
+# Position constraints (enforced by the engine — the agent cannot bypass these)
+# ---------------------------------------------------------------------------
+
+
+def enforce_constraints(weights, tradeable):
+    """Zero non-tradeable assets, cap per-name to +/-MAX_NAME, then scale the
+    row down (never up) so gross sum(|w|) <= MAX_GROSS."""
+    w = weights.where(tradeable, 0.0).fillna(0.0)
+    w = w.clip(lower=-MAX_NAME, upper=MAX_NAME)
+    gross = w.abs().sum(axis=1)
+    scale = (MAX_GROSS / gross.replace(0.0, np.nan)).clip(upper=1.0).fillna(0.0)
+    return w.mul(scale, axis=0)
