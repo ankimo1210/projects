@@ -84,3 +84,30 @@ def enforce_constraints(weights, tradeable):
     gross = w.abs().sum(axis=1)
     scale = (MAX_GROSS / gross.replace(0.0, np.nan)).clip(upper=1.0).fillna(0.0)
     return w.mul(scale, axis=0)
+
+
+# ---------------------------------------------------------------------------
+# Returns + backtest engine (the FIXED metric — do not modify)
+# ---------------------------------------------------------------------------
+
+
+def compute_returns(prices):
+    """Simple daily returns from adjusted close."""
+    return prices.pct_change(fill_method=None)
+
+
+def _net_returns(weights, prices):
+    """Portfolio daily net-return series and per-day turnover.
+
+    Enforces constraints, then applies a 1-day execution lag (weights decided
+    at close of day t are held starting day t+1 — no same-day lookahead), and
+    charges COST_BPS on turnover. Returns (net_return_series, turnover_series).
+    """
+    returns = compute_returns(prices)
+    tradeable = prices.notna()
+    wc = enforce_constraints(weights.reindex_like(prices), tradeable)
+    w_held = wc.shift(1).fillna(0.0)                          # 1-day lag
+    turnover = (w_held - w_held.shift(1).fillna(0.0)).abs().sum(axis=1)
+    gross = (w_held * returns).sum(axis=1)
+    net = gross - (COST_BPS / 1e4) * turnover
+    return net, turnover
