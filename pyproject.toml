@@ -19,6 +19,7 @@ members = [
     "line_backup",
     "land_price_api_app",
     "akinator",
+    "autostock",
     "johnhull/hullkit",
 ]
 
@@ -85,6 +86,7 @@ ignore = [
 # (S0, K, T, r, sigma, ...). Allow PEP-8 naming exceptions there.
 "rates_volatility_model/**/*.py" = ["N803", "N806", "N816", "E741"]
 "johnhull/**/*.py" = ["N803", "N806", "N816", "E741"]
+"autostock/**/*.py" = ["N803", "N806", "N816", "E741"]
 "notebooks/**/*.py" = ["E402", "F401", "F841", "N803", "N806"]
 # Tests can have unused variables / imports for fixture-driven patterns.
 "**/tests/**/*.py" = ["F841", "F401"]
@@ -114,6 +116,7 @@ testpaths = [
     "nbody-gpu/tests",
     "line_backup/tests",
     "akinator/tests",
+    "autostock/tests",
     "johnhull/hullkit/tests",
 ]
 python_files = ["test_*.py"]
