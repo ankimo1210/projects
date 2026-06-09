@@ -111,3 +111,42 @@ def _net_returns(weights, prices):
     gross = (w_held * returns).sum(axis=1)
     net = gross - (COST_BPS / 1e4) * turnover
     return net, turnover
+
+
+def _slice(series, start, end=None):
+    return series.loc[start:] if end is None else series.loc[start:end]
+
+
+def evaluate(weights, prices, reveal_lockbox=False):
+    """Compute the fixed metric set. Headline = OOS test Sharpe (higher better).
+
+    The lockbox segment is withheld unless reveal_lockbox=True, to bound
+    multiple-testing overfit accumulated across many experiments.
+    """
+    net, turnover = _net_returns(weights, prices)
+
+    train = _slice(net, START_DATE, TRAIN_END)
+    test = _slice(net, TEST_START, TEST_END)
+
+    roll = _rolling_sharpe(net)
+    roll_test = _slice(roll, TEST_START, TEST_END).dropna()
+
+    visible = net.loc[:TEST_END]
+    annual = {int(y): _sharpe(g) for y, g in visible.groupby(visible.index.year)}
+
+    metrics = {
+        "sharpe": _sharpe(test),
+        "train_sharpe": _sharpe(train),
+        "ann_return": float(test.dropna().mean() * ANNUALIZATION),
+        "ann_vol": float(test.dropna().std() * math.sqrt(ANNUALIZATION)),
+        "max_drawdown": _max_drawdown(test),
+        "turnover": float(_slice(turnover, TEST_START, TEST_END).dropna().mean()),
+        "roll_sharpe_mean": float(roll_test.mean()) if len(roll_test) else 0.0,
+        "roll_sharpe_std": float(roll_test.std()) if len(roll_test) > 1 else 0.0,
+        "roll_sharpe_min": float(roll_test.min()) if len(roll_test) else 0.0,
+        "roll_sharpe_pos_frac": float((roll_test > 0).mean()) if len(roll_test) else 0.0,
+        "annual_sharpe": annual,
+    }
+    if reveal_lockbox:
+        metrics["lockbox_sharpe"] = _sharpe(_slice(net, LOCKBOX_START))
+    return metrics
