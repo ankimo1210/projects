@@ -2,6 +2,7 @@
 
 import math
 
+import numpy as np
 from scipy.stats import norm
 
 
@@ -41,7 +42,7 @@ def cap_black(L, forwards, R_K, sigma, accruals, pay_discounts, fixing_times, ki
     if kind not in ("cap", "floor"):
         raise ValueError(f"kind must be 'cap' or 'floor', got {kind!r}")
     leg = "caplet" if kind == "cap" else "floorlet"
-    sig = sigma if isinstance(sigma, (list, tuple)) else [sigma] * len(forwards)
+    sig = [sigma] * len(forwards) if np.ndim(sigma) == 0 else sigma
     return sum(
         caplet_black(L, d, f, R_K, s, t, p, kind=leg)
         for f, d, p, t, s in zip(forwards, accruals, pay_discounts, fixing_times, sig, strict=True)

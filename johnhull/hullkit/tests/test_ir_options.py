@@ -63,3 +63,40 @@ def test_validation_errors():
         ir_options.caplet_black(1e6, 0.25, 0.07, 0.08, 0.2, 1.0, 0.9, kind="cap")
     with pytest.raises(ValueError):
         ir_options.swaption_black(1e6, 3.5, 0.06, 0.06, 0.2, 2.0, kind="straddle")
+
+
+def test_cap_black_accepts_numpy_spot_vols():
+    import numpy as np
+
+    forwards = [0.05, 0.055, 0.06]
+    accruals = [0.5, 0.5, 0.5]
+    pay_disc = [math.exp(-0.05 * t) for t in (1.0, 1.5, 2.0)]
+    fix_times = [0.5, 1.0, 1.5]
+    spot = [0.18, 0.20, 0.19]
+    cap_list = ir_options.cap_black(1e6, forwards, 0.055, spot, accruals, pay_disc, fix_times)
+    cap_np = ir_options.cap_black(
+        1e6, forwards, 0.055, np.array(spot), accruals, pay_disc, fix_times
+    )
+    assert cap_np == pytest.approx(cap_list, abs=1e-9)
+
+
+def test_wrapper_reference_values():
+    # magnitude pins so a sigma/T regression is caught (not just parity)
+    assert ir_options.bond_option_black(0.9, 102.0, 100.0, 0.08, 2.0, kind="call") == pytest.approx(
+        5.063184, abs=1e-5
+    )
+    assert ir_options.swaption_black(
+        1e6, 3.5, 0.06, 0.062, 0.20, 2.0, kind="payer"
+    ) == pytest.approx(20670.9113, abs=1e-2)
+    fw = [0.05, 0.055, 0.06]
+    ac = [0.5, 0.5, 0.5]
+    pd = [math.exp(-0.05 * t) for t in (1.0, 1.5, 2.0)]
+    ft = [0.5, 1.0, 1.5]
+    assert ir_options.cap_black(1e6, fw, 0.055, 0.2, ac, pd, ft) == pytest.approx(
+        6382.326, abs=1e-2
+    )
+
+
+def test_convexity_adjustment_coefficient_pin():
+    # pin the 0.5 y^2 sigma^2 T coefficient (was only checked for sign + T-linearity)
+    assert ir_options.convexity_adjustment(0.05, 0.20, 1.0, 30.0) == pytest.approx(0.0015, abs=1e-9)
