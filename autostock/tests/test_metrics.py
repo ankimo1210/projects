@@ -26,3 +26,12 @@ def test_max_drawdown():
     # equity: 1.1, 0.55, 0.55 -> trough 0.55 vs peak 1.1 -> -0.5
     ret = pd.Series([0.1, -0.5, 0.0])
     assert prepare._max_drawdown(ret) == pytest.approx(-0.5)
+
+
+def test_load_prices_missing_raises(monkeypatch, tmp_path):
+    monkeypatch.setattr(prepare, "PRICES_PATH", str(tmp_path / "nope.parquet"))
+    try:
+        prepare.load_prices()
+        assert False, "expected FileNotFoundError"
+    except FileNotFoundError as e:
+        assert "prepare.py" in str(e)

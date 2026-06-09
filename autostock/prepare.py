@@ -150,3 +150,47 @@ def evaluate(weights, prices, reveal_lockbox=False):
     if reveal_lockbox:
         metrics["lockbox_sharpe"] = _sharpe(_slice(net, LOCKBOX_START))
     return metrics
+
+
+# ---------------------------------------------------------------------------
+# Data download / load
+# ---------------------------------------------------------------------------
+
+
+def download_prices():
+    """Download Mag-7 adjusted close via yfinance and cache to parquet."""
+    import yfinance as yf
+
+    os.makedirs(CACHE_DIR, exist_ok=True)
+    raw = yf.download(UNIVERSE, start=START_DATE, auto_adjust=True, progress=False)
+    prices = raw["Close"].reindex(columns=UNIVERSE).dropna(how="all").sort_index()
+    prices.to_parquet(PRICES_PATH)
+    return prices
+
+
+def load_prices():
+    if not os.path.exists(PRICES_PATH):
+        raise FileNotFoundError(
+            f"No cached prices at {PRICES_PATH}. Run `uv run prepare.py` first."
+        )
+    return pd.read_parquet(PRICES_PATH)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Prepare Mag-7 price data")
+    parser.add_argument("--force", action="store_true", help="re-download even if cached")
+    args = parser.parse_args()
+
+    if args.force or not os.path.exists(PRICES_PATH):
+        print(f"Downloading {len(UNIVERSE)} tickers to {PRICES_PATH} ...")
+        prices = download_prices()
+    else:
+        prices = load_prices()
+        print(f"Using cached prices at {PRICES_PATH}")
+
+    print(f"Rows: {len(prices)}  Range: {prices.index.min().date()} -> {prices.index.max().date()}")
+    print("Per-ticker first valid date:")
+    for t in UNIVERSE:
+        fv = prices[t].first_valid_index()
+        print(f"  {t:6s}: {fv.date() if fv is not None else 'NA'}")
+    print("Done. Ready to run strategy.py")
