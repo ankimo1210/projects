@@ -49,5 +49,9 @@ Thumbs.db
 # AI tooling scratch (brainstorm/plan artifacts)
 .superpowers/
 
+# Claude Code local settings / state (machine-specific)
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
+
 # Large reference docs (textbooks, papers) — keep binaries out of git
 *.pdf
