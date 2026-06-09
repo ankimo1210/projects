@@ -89,4 +89,4 @@ def price_american_lsm(
             exercise = ex[itm] > cont
             idx = np.nonzero(itm)[0][exercise]
             cf[idx] = ex[itm][exercise]
-    return float(np.mean(cf * disc))
+    return float(max(intrinsic(S0), np.mean(cf * disc)))

@@ -42,3 +42,11 @@ def test_lsm_deterministic_default_seed():
     a = mc.price_american_lsm(**AM, n_steps=20, n_paths=20_000)
     b = mc.price_american_lsm(**AM, n_steps=20, n_paths=20_000)
     assert a == b
+
+
+def test_lsm_respects_intrinsic_lower_bound():
+    # Deep-ITM American put must be worth at least its immediate-exercise value
+    price = mc.price_american_lsm(
+        40.0, 100.0, 0.05, 0.30, 0.5, kind="put", n_steps=50, n_paths=50_000
+    )
+    assert price >= 100.0 - 40.0  # intrinsic = 60, no-arbitrage lower bound
