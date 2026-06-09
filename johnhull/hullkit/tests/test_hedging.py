@@ -65,3 +65,16 @@ def test_stop_loss_does_not_converge():
     perf_dh = float(dh.std()) / BSM_PRICE
     perf_sl = float(sl.std()) / BSM_PRICE
     assert perf_sl > 2.0 * perf_dh
+
+
+# --- input-guard tests ---
+
+
+def test_delta_hedge_n_rebalance_zero_raises():
+    with pytest.raises(ValueError, match="n_rebalance must be >= 1"):
+        hedging.simulate_delta_hedge(**P, n_rebalance=0, n_paths=100)
+
+
+def test_stop_loss_hedge_n_rebalance_zero_raises():
+    with pytest.raises(ValueError, match="n_rebalance must be >= 1"):
+        hedging.simulate_stop_loss_hedge(**P, n_rebalance=0, n_paths=100)

@@ -50,3 +50,22 @@ def test_lsm_respects_intrinsic_lower_bound():
         40.0, 100.0, 0.05, 0.30, 0.5, kind="put", n_steps=50, n_paths=50_000
     )
     assert price >= 100.0 - 40.0  # intrinsic = 60, no-arbitrage lower bound
+
+
+# --- input-guard tests ---
+
+
+def test_antithetic_odd_n_paths_raises():
+    with pytest.raises(ValueError, match="antithetic"):
+        mc.price_european_mc(100.0, 100.0, 0.05, 0.2, 1.0, antithetic=True, n_paths=5)
+
+
+def test_antithetic_small_even_n_paths_raises():
+    with pytest.raises(ValueError, match="antithetic"):
+        mc.price_european_mc(100.0, 100.0, 0.05, 0.2, 1.0, antithetic=True, n_paths=2)
+
+
+def test_antithetic_valid_even_n_paths_works():
+    price, se = mc.price_european_mc(100.0, 100.0, 0.05, 0.2, 1.0, antithetic=True, n_paths=1_000)
+    assert se > 0.0
+    assert 5.0 < price < 20.0

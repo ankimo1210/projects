@@ -5,6 +5,7 @@ import matplotlib
 matplotlib.use("Agg")  # headless; must run before any pyplot import
 
 import numpy as np
+import pytest
 from hullkit import nbplot
 
 
@@ -25,3 +26,16 @@ def test_kde_xy_normal_samples():
     assert np.all(y >= 0.0)
     assert np.trapezoid(y, x) > 0.95  # density integrates to ~1
     assert abs(x[np.argmax(y)] - 5.0) < 0.3  # peak near the mean
+
+
+# --- input-guard tests ---
+
+
+def test_kde_xy_constant_raises():
+    with pytest.raises(ValueError, match="kde_xy requires"):
+        nbplot.kde_xy(np.full(100, 5.0))
+
+
+def test_kde_xy_single_sample_raises():
+    with pytest.raises(ValueError, match="kde_xy requires"):
+        nbplot.kde_xy([1.0])

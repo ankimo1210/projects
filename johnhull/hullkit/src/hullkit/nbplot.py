@@ -25,6 +25,8 @@ def kde_xy(samples, n_pts=200):
     from scipy.stats import gaussian_kde
 
     samples = np.asarray(samples, dtype=float)
+    if samples.size < 2 or np.ptp(samples) == 0.0:
+        raise ValueError("kde_xy requires >= 2 samples with nonzero spread")
     kde = gaussian_kde(samples)
     x = np.linspace(samples.min(), samples.max(), n_pts)
     return x, kde(x)

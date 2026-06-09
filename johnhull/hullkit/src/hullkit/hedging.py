@@ -33,6 +33,8 @@ def _settle(debt, holdings, s_T, K, growth, r, T):
 
 def simulate_delta_hedge(S0, K, r, sigma, T, n_rebalance, n_paths, mu=None, rng=None):
     """Discounted per-share cost of writing + delta-hedging one European call."""
+    if n_rebalance < 1:
+        raise ValueError("n_rebalance must be >= 1")
     if mu is None:
         mu = r
     dt = T / n_rebalance
@@ -50,6 +52,8 @@ def simulate_delta_hedge(S0, K, r, sigma, T, n_rebalance, n_paths, mu=None, rng=
 
 def simulate_stop_loss_hedge(S0, K, r, sigma, T, n_rebalance, n_paths, mu=None, rng=None):
     """Naive stop-loss 'hedge' (Hull §19.2): hold 1 share iff S > K, traded at grid prices."""
+    if n_rebalance < 1:
+        raise ValueError("n_rebalance must be >= 1")
     if mu is None:
         mu = r
     dt = T / n_rebalance

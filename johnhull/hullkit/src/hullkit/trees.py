@@ -36,6 +36,10 @@ def binomial_tree(S0, K, r, T, N, u, d, q=0.0, kind="call", american=False):
     """
     if kind not in ("call", "put"):
         raise ValueError(f"kind must be 'call' or 'put', got {kind!r}")
+    if u == d:
+        raise ValueError("u and d must differ")
+    if N < 1:
+        raise ValueError("N must be >= 1")
     dt = T / N
     p = risk_neutral_p(u, d, r, dt, q)
     disc = math.exp(-r * dt)

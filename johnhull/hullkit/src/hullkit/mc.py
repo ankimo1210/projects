@@ -39,6 +39,8 @@ def price_european_mc(
     """
     if kind not in ("call", "put"):
         raise ValueError(f"kind must be 'call' or 'put', got {kind!r}")
+    if antithetic and (n_paths % 2 != 0 or n_paths < 4):
+        raise ValueError("antithetic requires an even n_paths >= 4")
     if rng is None:
         rng = np.random.default_rng(42)
     drift = (r - q - 0.5 * sigma**2) * T

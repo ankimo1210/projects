@@ -62,3 +62,16 @@ def test_crr_params():
 def test_invalid_kind_raises():
     with pytest.raises(ValueError):
         trees.binomial_tree(100.0, 100.0, 0.05, 1.0, 2, u=1.1, d=0.9, kind="cal")
+
+
+# --- input-guard tests ---
+
+
+def test_binomial_tree_n_zero_raises():
+    with pytest.raises(ValueError, match="N must be >= 1"):
+        trees.binomial_tree(100.0, 100.0, 0.05, 1.0, 0, u=1.1, d=0.9)
+
+
+def test_binomial_tree_u_equals_d_raises():
+    with pytest.raises(ValueError, match="u and d must differ"):
+        trees.binomial_tree(100.0, 100.0, 0.05, 1.0, 2, u=1.0, d=1.0)
