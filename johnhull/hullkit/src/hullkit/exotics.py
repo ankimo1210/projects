@@ -43,6 +43,9 @@ def barrier_call(S, K, H, r, sigma, T, q=0.0, barrier="down-and-in"):
     if barrier not in valid:
         raise ValueError(f"barrier must be one of {valid}, got {barrier!r}")
     vanilla = bsm.call_price(S, K, r, sigma, T, q)
+    breached = (barrier.startswith("down") and H >= S) or (barrier.startswith("up") and H <= S)
+    if breached:
+        return vanilla if barrier.endswith("in") else 0.0
     sqt = sigma * math.sqrt(T)
     lam = (r - q + 0.5 * sigma**2) / sigma**2
     x1 = math.log(S / H) / sqt + lam * sqt
@@ -81,6 +84,11 @@ def barrier_call(S, K, H, r, sigma, T, q=0.0, barrier="down-and-in"):
 
 def lookback_floating_call(S, S_min, r, sigma, T, q=0.0):
     """Floating-strike lookback call (Hull §26.11). Pays S_T - min S."""
+    if abs(r - q) < 1e-8:
+        raise ValueError(
+            "lookback_floating_call: the b=r-q=0 limit is not implemented; "
+            "use r != q (the closed form has a removable singularity at b=0)"
+        )
     sqt = sigma * math.sqrt(T)
     a1 = (math.log(S / S_min) + (r - q + 0.5 * sigma**2) * T) / sqt
     a2 = a1 - sqt
@@ -98,10 +106,16 @@ def asian_call_turnbull_wakeman(S, K, r, sigma, T, q=0.0):
     """Average-price Asian call via Turnbull-Wakeman moment matching into
     Black-76 (Hull eq. 26.3/26.4, continuous arithmetic average)."""
     b = r - q
-    m1 = (math.exp(b * T) - 1.0) / (b * T) * S
-    m2 = 2.0 * math.exp((2.0 * b + sigma**2) * T) * S**2 / (
-        (b + sigma**2) * (2.0 * b + sigma**2) * T**2
-    ) + 2.0 * S**2 / (b * T**2) * (1.0 / (2.0 * b + sigma**2) - math.exp(b * T) / (b + sigma**2))
+    if abs(b) < 1e-12:
+        m1 = S
+        m2 = 2.0 * S**2 * (math.exp(sigma**2 * T) - sigma**2 * T - 1.0) / (sigma**4 * T**2)
+    else:
+        m1 = (math.exp(b * T) - 1.0) / (b * T) * S
+        m2 = 2.0 * math.exp((2.0 * b + sigma**2) * T) * S**2 / (
+            (b + sigma**2) * (2.0 * b + sigma**2) * T**2
+        ) + 2.0 * S**2 / (b * T**2) * (
+            1.0 / (2.0 * b + sigma**2) - math.exp(b * T) / (b + sigma**2)
+        )
     f0 = m1
     sigma_a = math.sqrt(math.log(m2 / m1**2) / T)
     d1 = (math.log(f0 / K) + 0.5 * sigma_a**2 * T) / (sigma_a * math.sqrt(T))

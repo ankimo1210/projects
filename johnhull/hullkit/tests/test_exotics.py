@@ -76,3 +76,39 @@ def test_validation_errors():
         exotics.cash_or_nothing(100.0, 100.0, 0.05, 0.2, 1.0, kind="cal")
     with pytest.raises(ValueError):
         exotics.barrier_call(100.0, 100.0, 90.0, 0.05, 0.2, 1.0, barrier="sideways")
+
+
+def test_barrier_already_breached_domain():
+    # down barrier above spot, or up barrier below spot = already breached at t=0
+    van = bsm.call_price(100.0, 100.0, 0.05, 0.2, 1.0)
+    assert exotics.barrier_call(100.0, 100.0, 105.0, 0.05, 0.2, 1.0, barrier="down-and-out") == 0.0
+    assert exotics.barrier_call(
+        100.0, 100.0, 105.0, 0.05, 0.2, 1.0, barrier="down-and-in"
+    ) == pytest.approx(van, abs=1e-12)
+    assert exotics.barrier_call(100.0, 100.0, 95.0, 0.05, 0.2, 1.0, barrier="up-and-out") == 0.0
+    assert exotics.barrier_call(
+        100.0, 100.0, 95.0, 0.05, 0.2, 1.0, barrier="up-and-in"
+    ) == pytest.approx(van, abs=1e-12)
+
+
+def test_barrier_per_branch_values():
+    # valid up barrier H=120 >= K=100, S=100 < H — pin both branches
+    assert exotics.barrier_call(
+        100.0, 100.0, 120.0, 0.05, 0.20, 1.0, barrier="up-and-out"
+    ) == pytest.approx(1.17607, abs=1e-4)
+    assert exotics.barrier_call(
+        100.0, 100.0, 120.0, 0.05, 0.20, 1.0, barrier="up-and-in"
+    ) == pytest.approx(9.27452, abs=1e-4)
+
+
+def test_asian_b_zero_limit():
+    # r == q (b=0): no crash, matches the b=0 analytic limit
+    import math
+
+    a = exotics.asian_call_turnbull_wakeman(100.0, 100.0, 0.05, 0.20, 1.0, q=0.05)
+    assert a > 0.0 and math.isfinite(a)
+
+
+def test_lookback_b_zero_raises():
+    with pytest.raises(ValueError):
+        exotics.lookback_floating_call(100.0, 100.0, 0.05, 0.20, 1.0, q=0.05)
