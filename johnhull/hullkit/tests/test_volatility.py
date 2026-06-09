@@ -51,6 +51,24 @@ def test_garch_forecast_hull_eq_23_13():
     assert f_inf == pytest.approx(0.0002, abs=1e-9)
 
 
+def test_ewma_variance_empty_raises():
+    with pytest.raises(ValueError, match="non-empty"):
+        volatility.ewma_variance([])
+
+
+def test_garch11_variance_empty_raises():
+    with pytest.raises(ValueError, match="non-empty"):
+        volatility.garch11_variance([], 2e-6, 0.1, 0.85)
+
+
+def test_garch11_fit_returns_python_floats():
+    rng = np.random.default_rng(42)
+    u = rng.standard_normal(500) * 0.01
+    result = volatility.garch11_fit(u)
+    assert len(result) == 3
+    assert all(isinstance(x, float) for x in result), f"not all float: {[type(x) for x in result]}"
+
+
 def test_garch_fit_recovers_persistence():
     rng = np.random.default_rng(0)
     omega_t, alpha_t, beta_t = 2e-6, 0.10, 0.85

@@ -24,6 +24,8 @@ def implied_vol(price, S, K, r, T, q=0.0, kind="call"):
 def ewma_variance(returns, lam=0.94, init=None):
     """EWMA variance series (Hull eq. 23.7); var[0] = init or returns[0]**2."""
     u = np.asarray(returns, dtype=float)
+    if u.size == 0:
+        raise ValueError("returns must be non-empty")
     var = np.empty_like(u)
     var[0] = init if init is not None else u[0] ** 2
     for i in range(1, len(u)):
@@ -34,6 +36,8 @@ def ewma_variance(returns, lam=0.94, init=None):
 def garch11_variance(returns, omega, alpha, beta, init=None):
     """GARCH(1,1) conditional variance series (Hull eq. 23.9)."""
     u = np.asarray(returns, dtype=float)
+    if u.size == 0:
+        raise ValueError("returns must be non-empty")
     var = np.empty_like(u)
     var[0] = init if init is not None else float(np.var(u))
     for i in range(1, len(u)):
@@ -75,4 +79,6 @@ def garch11_fit(returns, x0=(2e-6, 0.10, 0.85)):
         method="Nelder-Mead",
         options={"xatol": 1e-10, "fatol": 1e-8, "maxiter": 5000},
     )
-    return tuple(res.x)
+    if not res.success:
+        raise ValueError(f"garch11_fit did not converge: {res.message}")
+    return tuple(float(x) for x in res.x)

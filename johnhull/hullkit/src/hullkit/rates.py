@@ -76,6 +76,11 @@ def bootstrap_zero_curve(instruments):
     for maturity, annual_coupon, price in sorted(instruments):
         coupon = annual_coupon / 2.0
         cf_times = np.arange(maturity, 0.0, -0.5)[::-1]  # ..., maturity
+        if coupon != 0.0 and cf_times[:-1].size and times and cf_times[-2] > times[-1] + 1e-9:
+            raise ValueError(
+                f"bootstrap_zero_curve: coupon date {cf_times[-2]:.4f} of the "
+                f"{maturity}y bond is not covered by an earlier maturity"
+            )
         pv_known = sum(coupon * math.exp(-zero_interp(t, times, zeros) * t) for t in cf_times[:-1])
         final_cf = 100.0 + coupon
         rate = -math.log((price - pv_known) / final_cf) / maturity

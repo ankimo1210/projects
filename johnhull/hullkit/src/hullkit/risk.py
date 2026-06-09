@@ -15,6 +15,8 @@ def historical_var_es(pnl, alpha=0.99):
     Returns (var, es) as positive loss amounts.
     """
     losses = -np.asarray(pnl, dtype=float)
+    if losses.size == 0:
+        raise ValueError("historical_var_es requires a non-empty P&L array")
     n = len(losses)
     k = max(1, math.ceil((1.0 - alpha) * n - 1e-9))
     worst = np.sort(losses)[::-1][:k]

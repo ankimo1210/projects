@@ -29,6 +29,8 @@ def cds_spread(hazard, recovery, r, maturity, freq=4):
     plus accrual on default. Returns the par spread (protection / annuity).
     """
     n = round(maturity * freq)
+    if n <= 0:
+        raise ValueError("cds_spread: maturity * freq must round to >= 1 period")
     dt = 1.0 / freq
     protection = 0.0
     annuity = 0.0

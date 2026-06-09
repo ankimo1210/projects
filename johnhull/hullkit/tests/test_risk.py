@@ -69,3 +69,8 @@ def test_historical_fractional_k_uses_ceiling():
 
 def test_portfolio_sigma_single_asset_reduces():
     assert risk.portfolio_sigma([10e6], [0.02], [[1.0]]) == pytest.approx(200_000.0)
+
+
+def test_historical_var_es_empty_raises():
+    with pytest.raises(ValueError, match="non-empty"):
+        risk.historical_var_es([])

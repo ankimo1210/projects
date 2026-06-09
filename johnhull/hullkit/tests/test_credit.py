@@ -39,6 +39,12 @@ def test_gaussian_copula_conditional_monotonic():
     assert credit.gaussian_copula_conditional(q, 0.0, 5.0) == pytest.approx(q, abs=1e-12)
 
 
+def test_cds_spread_zero_periods_raises():
+    # maturity=0.02, freq=4 -> round(0.02*4)=round(0.08)=0 -> should raise
+    with pytest.raises(ValueError, match=r"maturity.*freq.*1 period"):
+        credit.cds_spread(0.02, 0.4, 0.05, 0.1, freq=4)
+
+
 def test_vasicek_credit_var():
     q, rho = 0.02, 0.1
     v999 = credit.vasicek_credit_var(q, rho, 0.999)

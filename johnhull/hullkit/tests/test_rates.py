@@ -65,6 +65,17 @@ def test_duration_convexity_table_4_6():
     assert abs(actual - approx_conv) < abs(actual - approx_lin)
 
 
+def test_bootstrap_coverage_gap_raises():
+    # 2.0y coupon bond (semiannual) follows only a 0.25y zero:
+    # coupon dates 0.5, 1.0, 1.5 are not covered by the 0.25y node -> ValueError
+    instruments = [
+        (0.25, 0.0, 99.6),  # zero-coupon at 0.25y
+        (2.00, 5.0, 105.0),  # coupon bond whose intermediate dates are uncovered
+    ]
+    with pytest.raises(ValueError, match="not covered"):
+        rates.bootstrap_zero_curve(instruments)
+
+
 def test_zero_interp_flat_extrapolation():
     assert rates.zero_interp(0.10, [0.25, 1.0], [0.02, 0.03]) == pytest.approx(0.02)
     assert rates.zero_interp(5.00, [0.25, 1.0], [0.02, 0.03]) == pytest.approx(0.03)
