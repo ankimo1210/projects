@@ -18,19 +18,13 @@ from prepare import UNIVERSE, evaluate, load_prices
 # ---------------------------------------------------------------------------
 # Hyperparameters (edit these directly, no CLI flags)
 # ---------------------------------------------------------------------------
-# (baseline has none; momentum/mean-reversion variants add lookbacks here)
+LOOKBACK = 126
 
 
 def generate_weights(prices: pd.DataFrame) -> pd.DataFrame:
-    """Return a date x asset weight panel using PAST data only.
-
-    The engine applies a 1-day execution lag and turnover costs, so do NOT
-    index future bars (e.g. prices.shift(-1)) — that is cheating and forbidden.
-
-    Baseline: equal-weight long-only across the 7 names.
-    """
-    n = len(UNIVERSE)
-    return pd.DataFrame(1.0 / n, index=prices.index, columns=prices.columns)
+    mom = prices.pct_change(LOOKBACK, fill_method=None)
+    rank = mom.rank(axis=1)
+    return rank.div(rank.sum(axis=1), axis=0)
 
 
 def main():
