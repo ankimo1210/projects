@@ -139,7 +139,7 @@ $$E_0 = V_0 N(d_1) - D e^{-rT} N(d_2) \quad \text{(24.3)}, \qquad
 cells.append(
     code(r"""# Hull Example 24.3: 株式$3M, σ_E=80%, 負債$10M（1年）, r=5%
 v0, sig_v, q = credit.merton_default_prob(3.0, 0.80, 10.0, 0.05, 1.0)
-d2 = (math.log(v0 / 10.0) + (0.05 - 0.5 * sig_v**2) * 1.0) / (sig_v * 1.0)
+d2 = (math.log(v0 / 10.0) + (0.05 - 0.5 * sig_v**2) * 1.0) / (sig_v * math.sqrt(1.0))
 print(f"資産価値 V0 = {v0:.4f}（百万）  資産ボラ σ_V = {sig_v:.4%}")
 print(f"distance to default d2 = {d2:.4f}")
 print(f"リスク中立デフォルト確率 Q = N(−d2) = {q:.4%}（Hull: 12.7%）")
@@ -241,7 +241,7 @@ for lam in (0.005, 0.01, 0.02, 0.04):
     rows.append({"ハザードλ": f"{lam:.1%}", "CDSスプレッド": f"{s * 1e4:.1f}bp",
                  "近似 λ(1−R)": f"{lam * 0.6 * 1e4:.1f}bp"})
 display(pd.DataFrame(rows))
-print(f"厳密例: λ=2% → {credit.cds_spread(0.02, 0.4, 0.05, 5.0):.4%}（近似 λ(1−R)=1.20% の少し上。デフォルト時アクルアル分）")""")
+print(f"厳密例: λ=2% → {credit.cds_spread(0.02, 0.4, 0.05, 5.0):.4%}（近似 λ(1−R)=1.20% の少し上。プロテクションレッグを mid-period の割引因子で評価するため（アクルアル項は分母を増やし逆に効く））")""")
 )
 
 # Cell 14: bootstrap md + demo
@@ -312,7 +312,6 @@ def tranche_expected_loss(n_names, q, rho, attach, detach, n_sim, rng):
     return float(tranche_loss.mean() / (detach - attach))
 
 
-rng_cdo = np.random.default_rng(25)
 tranches = [("エクイティ 0–3%", 0.0, 0.03), ("メザニン 3–7%", 0.03, 0.07),
             ("シニア 7–15%", 0.07, 0.15)]
 rows = []

@@ -263,12 +263,16 @@ def _upd_barrier(change=None):
     ax5.plot(ss, van_curve, lw=1.5, ls=":", label="バニラ")
     ax5.plot(ss, do, lw=2, label="down-and-out")
     ax5.axvline(h_sl.value, color="crimson", ls="--", lw=1, label=f"H={h_sl.value:.0f}")
-    # ノックアウト確率（GBM、反射原理の近似）
-    prob_ko = norm.cdf((math.log(h_sl.value / 100.0)) / (sig_b_sl.value * math.sqrt(T_B)))
+    # ノックアウト確率（GBM 初通過確率）
+    bdrift = R_B - 0.5 * sig_b_sl.value**2
+    lam_ko = math.log(h_sl.value / 100.0)
+    sqT = sig_b_sl.value * math.sqrt(T_B)
+    prob_ko = (norm.cdf((lam_ko - bdrift * T_B) / sqT)
+               + math.exp(2 * bdrift * lam_ko / sig_b_sl.value**2) * norm.cdf((lam_ko + bdrift * T_B) / sqT))
     ax5.set_xlabel("現在株価 S")
     ax5.set_ylabel("価格")
     ax5.set_title(f"down-and-out（H={h_sl.value:.0f}, σ={sig_b_sl.value:.0%}）: "
-                  f"S=100 でのノックアウト確率 ≈ {2 * prob_ko:.1%}")
+                  f"S=100 でのノックアウト確率 ≈ {prob_ko:.1%}")
     ax5.legend()
     fig5.canvas.draw_idle()
 
@@ -344,24 +348,22 @@ cells.append(
 
 # Cell 18: numeraire invariance demo
 cells.append(
-    code(r"""# --- ニュメレール不変性: 同じ S_T を2つの測度で評価 → 同値（測度変換は重みだけ変える） ---
+    code(r"""# --- ニュメレール不変性: 同じコールを2つの測度で独立評価 → MC 誤差内で一致 ---
 S0_n, K_n, r_n, sig_n, T_n = 100.0, 100.0, 0.05, 0.25, 1.0
 rng_n = np.random.default_rng(28)
-n_paths = 200_000
-z = rng_n.standard_normal(n_paths)
-# リスク中立測度 Q でサンプルした終端株価
-ST = S0_n * np.exp((r_n - 0.5 * sig_n**2) * T_n + sig_n * math.sqrt(T_n) * z)
-payoff = np.maximum(ST - K_n, 0.0)
-# (a) リスク中立測度 Q: ニュメレール = マネーマーケット口座 → e^{-rT} で割引
-price_q = math.exp(-r_n * T_n) * payoff.mean()
-# (b) 株価ニュメレール（測度 S）: Radon-Nikodym 重み dS/dQ = S_T/(S0 e^{rT})
-#     c = S0 · E^S[(S_T-K)^+ / S_T] = S0 · E^Q[ w · (S_T-K)^+/S_T ], w = S_T/(S0 e^{rT})
-weight = ST / (S0_n * math.exp(r_n * T_n))
-price_s = S0_n * (weight * payoff / ST).mean()
-print(f"(a) リスク中立測度 Q の MC 価格   = {price_q:.4f}")
-print(f"(b) 株価ニュメレールの MC 価格   = {price_s:.4f}")
-print(f"BSM 解析値                       = {bsm.call_price(S0_n, K_n, r_n, sig_n, T_n):.4f}")
-print("→ 同じ S_T を別の測度の重みで評価しても同じ価格（測度変換は確率の重み付けを変えるだけ）")""")
+n_paths = 400_000
+# (a) リスク中立測度 Q（ニュメレール=マネーマーケット口座、ドリフト r）
+z_q = rng_n.standard_normal(n_paths)
+ST_q = S0_n * np.exp((r_n - 0.5 * sig_n**2) * T_n + sig_n * math.sqrt(T_n) * z_q)
+price_q = math.exp(-r_n * T_n) * np.maximum(ST_q - K_n, 0.0).mean()
+# (b) 株価ニュメレール（測度 S、ドリフト r+σ²）: c = S0 E^S[(S_T-K)^+ / S_T]
+z_s = rng_n.standard_normal(n_paths)
+ST_s = S0_n * np.exp((r_n + 0.5 * sig_n**2) * T_n + sig_n * math.sqrt(T_n) * z_s)
+price_s = S0_n * (np.maximum(ST_s - K_n, 0.0) / ST_s).mean()
+print(f"(a) リスク中立測度 Q の MC 価格 = {price_q:.4f}")
+print(f"(b) 株価ニュメレールの MC 価格 = {price_s:.4f}（別測度・別サンプリング）")
+print(f"BSM 解析値                     = {bsm.call_price(S0_n, K_n, r_n, sig_n, T_n):.4f}")
+print("→ 異なる測度・異なるドリフトで独立にサンプリングしても同じ価格（測度変換の不変性）")""")
 )
 
 # Cell 19: Girsanov md + demo
@@ -424,7 +426,7 @@ checks.append(("gap call 13.1122",
                exotics.gap_call(100.0, 95.0, 100.0, 0.05, 0.20, 1.0), 13.112208, 1e-5))
 checks.append(("アジアン < バニラ", float(a_tw < van), 1.0, 0.0))
 checks.append(("ルックバック > ATM", float(lb > van), 1.0, 0.0))
-checks.append(("ニュメレール不変（a≈b）", price_q, price_s, 1e-9))
+checks.append(("ニュメレール不変（a≈b）", price_q, price_s, 3e-2))
 checks.append(("λ 一致（原資産 vs オプション）", lam_opt, lam_underlying, 1e-9))
 
 for name, got, want, tol in checks:

@@ -207,9 +207,9 @@ for idx, (a, b) in enumerate(periods):
 
 fig1, ax1 = plt.subplots(figsize=(7.5, 4))
 fig1.canvas.header_visible = False
-ax1.plot(fix_times, [market_flat[b] * 100 for a, b in periods], "o--", label="フラット vol")
+ax1.plot([b for a, b in periods], [market_flat[b] * 100 for a, b in periods], "o--", label="フラット vol")
 ax1.plot(fix_times, np.array(spot_vols) * 100, "s-", label="スポット vol（ストリップ）")
-ax1.set_xlabel("キャップレット観測時点 t_k")
+ax1.set_xlabel("満期 / 観測時点（年）")
 ax1.set_ylabel("ボラティリティ (%)")
 ax1.set_title("フラット vol は平均、スポット vol が各レットの真の vol")
 ax1.legend()
@@ -252,7 +252,7 @@ cells.append(
 fig2, ax2 = plt.subplots(figsize=(7.5, 4))
 fig2.canvas.header_visible = False
 sig_sl = widgets.FloatSlider(value=0.20, min=0.05, max=0.50, step=0.02, description="σ_swap")
-t_sl = widgets.FloatSlider(value=1.0, min=0.25, max=3.0, step=0.25, description="オプション満期T")
+t_sl = widgets.FloatSlider(value=1.0, min=0.25, max=1.0, step=0.25, description="オプション満期T")
 
 
 def _upd_swaption(change=None):

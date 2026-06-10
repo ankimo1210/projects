@@ -293,7 +293,7 @@ fig5, ax5 = plt.subplots(figsize=(8, 4))
 fig5.canvas.header_visible = False
 ax5.plot(t_s, paths_s[:20].T, lw=0.6, alpha=0.5)
 ax5.axhline(100.0, color="crimson", ls="--", lw=1.5, label="長期均衡 e^θ=100")
-ax5.plot(t_s, np.exp(ln_s.mean(axis=0)), "k-", lw=2, label="平均パス")
+ax5.plot(t_s, paths_s.mean(axis=0), "k-", lw=2, label="平均パス E[S]")
 ax5.set_xlabel("t（年）")
 ax5.set_ylabel("スポット価格")
 ax5.set_title("Schwartz 平均回帰: 60 から均衡 100 へ引き戻される")
