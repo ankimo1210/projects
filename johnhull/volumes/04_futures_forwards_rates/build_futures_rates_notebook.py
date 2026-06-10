@@ -136,10 +136,10 @@ RHO_H, SIG_S, SIG_F = 0.928, 0.0263, 0.0313
 h_star = RHO_H * SIG_S / SIG_F  # eq (3.1)
 
 rng_h = np.random.default_rng(31)
-z1 = rng_h.standard_normal(5000)
-z2 = rng_h.standard_normal(5000)
-d_f = SIG_F * z1
-d_s = SIG_S * (RHO_H * z1 + np.sqrt(1.0 - RHO_H**2) * z2)
+zf = rng_h.standard_normal(5000)
+zs = rng_h.standard_normal(5000)
+d_f = SIG_F * zf
+d_s = SIG_S * (RHO_H * zf + np.sqrt(1.0 - RHO_H**2) * zs)
 h_grid = np.linspace(0.0, 1.6, 81)
 var_h = [float(np.var(d_s - h * d_f)) for h in h_grid]
 h_hat = float(np.polyfit(d_f, d_s, 1)[0])  # ΔS を ΔF に回帰 → 傾き ≈ h*
@@ -301,7 +301,7 @@ rf_simple = rates.forward_rate(0.03, 1.0, 0.04, 2.0)
 print(f"例: 1年3% / 2年4% → 1→2年フォワード = {rf_simple:.2%}（eq 4.5）")
 fra = rates.fra_value(100e6, 0.058, 0.050, 1.5, 2.0, 0.040)
 print(f"FRA（元本1億、固定5.8%受取、フォワード5.0%、1.5→2.0年、R2=4%）= {fra:,.0f}（Hull: ≈369,200）")
-print("※ Hull Example 4.3 の 5.8%/5.0% は半年複利表記。差額計算は同一基準同士なので結果は不変")""")
+print("※ 5.8%/5.0%/4.0% は連続複利表記。半年複利等の表記なら rates.to_continuous() で変換してから渡す（fra_value は連続複利前提）")""")
 )
 
 # Cell 17: duration md

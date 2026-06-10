@@ -135,6 +135,10 @@ def _upd_onestep(change=None):
     Su, Sd = S0_1 * u, S0_1 * d
     fu, fd = max(Su - K, 0.0), max(Sd - K, 0.0)
     p = (np.exp(r * T_1) - d) / (u - d)
+    if not 0.0 < p < 1.0:
+        ax1.set_title(f"p={p:.3f} は (0,1) 外 — 裁定機会（d < e^(rT) < u を満たさない）")
+        fig1.canvas.draw_idle()
+        return
     f = np.exp(-r * T_1) * (p * fu + (1 - p) * fd)
     delta = (fu - fd) / (Su - Sd)
     txt_root.set_text(f"S0={S0_1:.0f}\nf={f:.3f}")
@@ -237,9 +241,10 @@ def _upd_tree(change=None):
                 bbox=dict(boxstyle="round,pad=0.25", fc="white", ec=ec),
             )
     label = "アメリカン" if am_dd.value else "ヨーロピアン"
+    early_note = "、赤枠=早期行使" if am_dd.value else ""
     ax2.set_title(
         f"CRR {N}ステップ {label}・{kind_dd.value}"
-        f"（S0={S0_2:.0f}, r={R_2:.0%}, T={T_2}年, 赤枠=早期行使）"
+        f"（S0={S0_2:.0f}, r={R_2:.0%}, T={T_2}年{early_note}）"
     )
     ax2.set_xlim(-0.6, N + 0.6)
     fig2.canvas.draw_idle()

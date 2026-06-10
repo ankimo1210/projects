@@ -310,6 +310,7 @@ def _leg_cost(qty, kind, K):
 def _upd_builder(change=None):
     ax3.clear()
     name = strat_dd.value
+    k2_sl.disabled = (name == "butterfly")
     n_k = _N_STRIKES[name]
     ks = sorted([k1_sl.value, k2_sl.value, k3_sl.value][:n_k])
     if name == "butterfly":
@@ -507,7 +508,7 @@ $$c = S_0 e^{-qT} N(d_1) - K e^{-rT} N(d_2) \quad \text{(17.4)}$$
 
 **ポートフォリオ保険**: ベータ $\beta$ のポートフォリオ $P$ を守る指数プット枚数は
 
-$$N^* = \beta \cdot \frac{P}{S_0 \times 100} \quad \text{(§17.1)}$$""")
+$$N^* = \beta \cdot \frac{P}{S_0 \times 100} \quad \text{(§17.4)}$$""")
 )
 
 # Cell 23: index pricing + insurance calc

@@ -111,8 +111,8 @@ def _upd_greeks(change=None):
         ("Δ デルタ", [delta_f(s, K_G, R_G, SIG_G, T) for s in S_AXIS]),
         ("Γ ガンマ", [bsm.gamma(s, K_G, R_G, SIG_G, T) for s in S_AXIS]),
         ("Θ シータ（/年）", [theta_f(s, K_G, R_G, SIG_G, T) for s in S_AXIS]),
-        ("V ベガ", [bsm.vega(s, K_G, R_G, SIG_G, T) for s in S_AXIS]),
-        ("ρ ロー", [rho_f(s, K_G, R_G, SIG_G, T) for s in S_AXIS]),
+        ("V ベガ（/σ=1.0）", [bsm.vega(s, K_G, R_G, SIG_G, T) for s in S_AXIS]),
+        ("ρ ロー（/r=1.0）", [rho_f(s, K_G, R_G, SIG_G, T) for s in S_AXIS]),
     ]
     for ax, (title, ys) in zip(axes1.ravel(), panels):
         ax.clear()
@@ -265,7 +265,7 @@ display(fig2.canvas)""")
 cells.append(
     md(r"""## 6. ヘッジコストの分布（§19.4 の含意）
 
-- **平均はドリフト $\mu$ に依存しない**（リスク中立評価の体感）— 下で $\mu$ を動かして確認
+- **平均はドリフト $\mu$ に依存しない**（リスク中立評価の体感）— 下で $\mu$ を動かして確認（n が小さいと離散化誤差 O((μ−r)Δt) で BSM からずれる）
 - 分散は離散リバランスの結果で、リバランス頻度 $n$ に対して $\propto 1/n$（性能指標は $1/\sqrt{n}$）
 - この分散は「ガンマに対して $(\Delta S)^2$ が暴れる」ことから生じる（次節）""")
 )
@@ -299,7 +299,8 @@ n_dd.observe(_upd_hist, "value")
 mu_sl.observe(_upd_hist, "value")
 _upd_hist()
 display(widgets.HBox([n_dd, mu_sl]), fig3.canvas)
-# μ を動かしても平均は BSM 価格に張り付く（リスク中立評価の実演）""")
+# μ を動かしても平均は BSM 価格に張り付く（リスク中立評価の実演）
+# （n が小さいと離散化誤差 O((μ−r)Δt) で BSM からずれる）""")
 )
 
 # ===========================================================================
@@ -374,6 +375,7 @@ ax5b.plot(taus, [bsm.call_theta(K_C, K_C, R_C, SIG_C, t) for t in taus], lw=2)
 ax5b.set_xlabel("残存期間 T（年）")
 ax5b.set_ylabel("ATM の Θ（/年）")
 ax5b.set_title("満期接近で時間減価が加速")
+ax5b.invert_xaxis()
 display(fig5.canvas)
 
 lhs = (bsm.call_theta(S_H, K_H, R_H, SIG_H, T_H)
