@@ -16,6 +16,7 @@ use crate::tree::{GameTree, NodeKind, Street};
 
 const ALPHA: f64 = 1.5;
 const BETA:  f64 = 0.0;
+const GAMMA: f64 = 2.0; // DCFR average-strategy discount exponent (Brown & Sandholm 2019)
 
 // ---------------------------------------------------------------------------
 // Single-street subgame CFR
@@ -36,6 +37,8 @@ pub struct SubgameSolver {
     pub next_evs:     HashMap<usize, Vec<f64>>,
     /// Per-combo showdown strengths (cached once at construction; board never changes).
     strengths:        Vec<u16>,
+    /// All (card_a, card_b) combos, cached to avoid reallocating per showdown leaf.
+    combos:           Vec<(u8, u8)>,
 }
 
 impl SubgameSolver {
@@ -50,17 +53,21 @@ impl SubgameSolver {
         let mut ranges = ranges;
         for r in &mut ranges { r.remove_blockers(&board); }
         let strengths = crate::eval::showdown_strengths(&board);
-        SubgameSolver { tree, board, ranges, regrets, strategy_sum, next_evs: HashMap::new(), strengths }
+        let combos = all_combos();
+        SubgameSolver { tree, board, ranges, regrets, strategy_sum, next_evs: HashMap::new(), strengths, combos }
     }
 
     pub fn run(&mut self, iterations: u32) -> f64 {
         for t in 1..=iterations {
             let aw = discount(t, ALPHA);
             let bw = discount(t, BETA);
+            let sd = strategy_discount(t);
             for player in 0..2u8 {
-                let r0 = self.ranges[0].weights;
-                let r1 = self.ranges[1].weights;
-                self.traverse(0, player, &r0, &r1, aw, bw);
+                // reach = traverser's range, opp_reach = opponent's. Bind by
+                // player so asymmetric ranges work (was ranges[0]/ranges[1] for both).
+                let r_self = self.ranges[player as usize].weights;
+                let r_opp  = self.ranges[1 - player as usize].weights;
+                self.traverse(0, player, &r_self, &r_opp, aw, bw, sd);
             }
         }
         self.exploitability()
@@ -72,7 +79,7 @@ impl SubgameSolver {
         traverser: u8,
         reach: &[f64; NUM_COMBOS],
         opp_reach: &[f64; NUM_COMBOS],
-        aw: f64, bw: f64,
+        aw: f64, bw: f64, sd: f64,
     ) -> Vec<f64> {
         let node = self.tree.nodes[node_id].clone();
 
@@ -121,7 +128,7 @@ impl SubgameSolver {
                         let child_id = self.tree.nodes[node_id].children[ai].1;
                         let mut nr = *reach;
                         for c in 0..NUM_COMBOS { nr[c] *= strat[c][ai]; }
-                        action_vals.push(self.traverse(child_id, traverser, &nr, opp_reach, aw, bw));
+                        action_vals.push(self.traverse(child_id, traverser, &nr, opp_reach, aw, bw, sd));
                     }
 
                     // EV[c] = Σ_a σ(c, a) × action_vals[a][c]
@@ -149,10 +156,13 @@ impl SubgameSolver {
                         let child_id = self.tree.nodes[node_id].children[ai].1;
                         let mut nor = *opp_reach;
                         for c in 0..NUM_COMBOS {
-                            self.strategy_sum[node_id][c][ai] += strat[c][ai] * reach[c] * bw.max(1.0);
+                            // DCFR γ-discount on the average strategy (discount-then-add;
+                            // each (node,c,ai) cell is touched once per iteration).
+                            let s = &mut self.strategy_sum[node_id][c][ai];
+                            *s = *s * sd + strat[c][ai] * reach[c];
                             nor[c] *= strat[c][ai];
                         }
-                        let cv = self.traverse(child_id, traverser, reach, &nor, aw, bw);
+                        let cv = self.traverse(child_id, traverser, reach, &nor, aw, bw, sd);
                         for c in 0..NUM_COMBOS { ev[c] += strat[c][ai] * cv[c]; }
                     }
                     ev
@@ -174,7 +184,7 @@ impl SubgameSolver {
     }
 
     fn showdown_values(&self, traverser: u8, pot: f64, opp_reach: &[f64; NUM_COMBOS]) -> Vec<f64> {
-        let combos = all_combos();
+        let combos = &self.combos;
         let half_pot = pot / 2.0;
 
         let strengths = &self.strengths;
@@ -233,7 +243,9 @@ impl SubgameSolver {
     pub fn root_ev(&mut self) -> Vec<f64> {
         let r0 = self.ranges[0].weights;
         let r1 = self.ranges[1].weights;
-        self.traverse(0, 0, &r0, &r1, 1.0, 1.0)
+        // sd = 1.0: this is a read-only EV pass (strategy_sum is not consumed
+        // afterwards for solvers on which root_ev is called).
+        self.traverse(0, 0, &r0, &r1, 1.0, 1.0, 1.0)
     }
 
     /// Indices of all NextStreet nodes in the tree.
@@ -301,8 +313,9 @@ pub fn solve_multistreet(
 
     for &(fns_id, t_pot, t_stacks) in &flop_ns_params {
         let t_stack = t_stacks[0].min(t_stacks[1]);
-        let mut combined_ev = vec![0.0f64; NUM_COMBOS];
-        let n_turns = valid_turns.len() as f64;
+        // Average turn EVs over consistent turn cards (per-combo denominator; a
+        // flop-live combo is consistent with exactly n_turns - 2 of them).
+        let mut turn_avg = ChanceAverager::new();
 
         for &tc in &valid_turns {
             let mut board4 = flop_board.to_vec();
@@ -327,12 +340,17 @@ pub fn solve_multistreet(
 
             for &(tns_id, r_pot, r_stacks) in &turn_ns_params {
                 let r_stack = r_stacks[0].min(r_stacks[1]);
-                let mut tns_ev = vec![0.0f64; NUM_COMBOS];
-                let n_rivers = valid_rivers.len() as f64;
+                // Average river EVs over consistent river cards. A river rc that
+                // hits a hole card of combo i masks i out of river_ranges, so
+                // river_ev[i] == 0 there; the mask excludes those so we divide by
+                // the live count (n_rivers - 2 for a turn-live combo), not the full
+                // candidate count which would scale live EVs by ~46/48.
+                let mut river_avg = ChanceAverager::new();
 
                 for &rc in &valid_rivers {
                     let mut board5 = board4.clone();
                     board5.push(rc);
+                    let rc_mask = mask_card_arr(rc);
                     let mut river_ranges = ranges.clone();
                     for r in &mut river_ranges { r.remove_blockers(&board5); }
 
@@ -341,22 +359,22 @@ pub fn solve_multistreet(
                     );
                     river_solver.run(iterations);
                     let river_ev = river_solver.root_ev();
-                    for i in 0..NUM_COMBOS { tns_ev[i] += river_ev[i] / n_rivers; }
+                    river_avg.add(&river_ev, &rc_mask);
                 }
-                turn_solver.next_evs.insert(tns_id, tns_ev);
+                turn_solver.next_evs.insert(tns_id, river_avg.finish());
             }
 
             // Step 2b: Solve turn with river EVs
             turn_solver.run(iterations);
             let turn_ev = turn_solver.root_ev();
 
-            // Accumulate (average over turn cards)
+            // Accumulate (average over turn cards). Only turns consistent with
+            // the combo contribute (mask), and the per-combo denominator divides
+            // by that live count, not the full turn-candidate count.
             let tc_mask = mask_card_arr(tc);
-            for i in 0..NUM_COMBOS {
-                if tc_mask[i] { combined_ev[i] += turn_ev[i] / n_turns; }
-            }
+            turn_avg.add(&turn_ev, &tc_mask);
         }
-        flop_ns_evs.insert(fns_id, combined_ev);
+        flop_ns_evs.insert(fns_id, turn_avg.finish());
     }
 
     // -----------------------------------------------------------------------
@@ -385,10 +403,55 @@ fn mask_card_arr(card: u8) -> [bool; NUM_COMBOS] {
     m
 }
 
+/// Per-combo chance averaging over dealt cards.
+///
+/// Each contribution is masked: a combo is only consistent with the cards that
+/// do not collide with its hole cards. Averaging must divide by the *per-combo*
+/// number of consistent cards, not the full candidate count — otherwise live
+/// continuation EVs are systematically scaled down (e.g. ~46/48 on the river,
+/// ~47/49 on the turn) because 2 of the candidates always block any given combo.
+struct ChanceAverager {
+    sum:   Vec<f64>,
+    count: Vec<u32>,
+}
+
+impl ChanceAverager {
+    fn new() -> Self {
+        ChanceAverager { sum: vec![0.0; NUM_COMBOS], count: vec![0; NUM_COMBOS] }
+    }
+
+    /// Add one card's per-combo EVs; `mask[i]` is true when combo i is consistent
+    /// with that card (i.e. the card is not one of combo i's hole cards).
+    fn add(&mut self, vals: &[f64], mask: &[bool; NUM_COMBOS]) {
+        for i in 0..NUM_COMBOS {
+            if mask[i] {
+                self.sum[i] += vals[i];
+                self.count[i] += 1;
+            }
+        }
+    }
+
+    /// Finalize to the per-combo mean (0 where no consistent card contributed).
+    fn finish(self) -> Vec<f64> {
+        let mut out = self.sum;
+        for i in 0..NUM_COMBOS {
+            if self.count[i] > 0 { out[i] /= self.count[i] as f64; }
+        }
+        out
+    }
+}
+
 fn discount(t: u32, exp: f64) -> f64 {
     if exp == 0.0 { return 1.0; }
     let tf = t as f64;
     tf.powf(exp) / (tf.powf(exp) + 1.0)
+}
+
+/// DCFR γ-discount applied to the accumulated strategy sum each iteration:
+/// (t/(t+1))^γ (mirrors gto-hu's `CfrVariant::strategy_discount`).
+fn strategy_discount(t: u32) -> f64 {
+    let tf = t as f64;
+    (tf / (tf + 1.0)).powf(GAMMA)
 }
 
 // ---------------------------------------------------------------------------
@@ -414,6 +477,52 @@ mod tests {
         println!("River 50 iters: expl={expl:.4}, strategy={strat:?}");
         assert!(!strat.is_empty());
         assert!(expl.is_finite());
+    }
+
+    // B5: chance averaging must divide by the per-combo live count, not the full
+    // candidate count. If every child EV equals a constant v for all live combos,
+    // the parent (averaged) EV must equal v — not (live/total)·v.
+    #[test]
+    fn chance_average_constant_child_is_constant_parent() {
+        // Use a 3-card "board" so each card masks out the combos containing it,
+        // exactly as turn/river cards do in the real pipeline.
+        let board_cards: [u8; 3] = [0, 1, 2];
+        let candidates: Vec<u8> = (0u8..52).filter(|c| !board_cards.contains(c)).collect();
+        let n = candidates.len(); // 49 (mirrors n_turns)
+        assert_eq!(n, 49);
+
+        const V: f64 = 7.0;
+        let mut avg = ChanceAverager::new();
+        for &card in &candidates {
+            // Child EVs: constant V for combos consistent with `card`; the combos
+            // that contain `card` are masked out, exactly what the real pipeline
+            // does (those combos are removed from the per-card range).
+            let mask = mask_card_arr(card);
+            let vals = vec![V; NUM_COMBOS];
+            avg.add(&vals, &mask);
+        }
+        let parent = avg.finish();
+
+        // For a combo whose hole cards are both off the board, exactly 2 of the 49
+        // candidates collide (one per hole card), so live count == 47 and the mean
+        // must be exactly V. The buggy "divide by 49" would give 47/49·V instead.
+        let combos = all_combos();
+        let live_idx = combos.iter().position(|&(a, b)| a >= 3 && b >= 3).unwrap();
+        assert!(
+            (parent[live_idx] - V).abs() < 1e-12,
+            "expected constant parent EV {V}, got {} (buggy 47/49·V = {})",
+            parent[live_idx],
+            47.0 / 49.0 * V,
+        );
+
+        // Spot-check the per-combo denominator equals the live count, not n.
+        // Reconstruct the count for `live_idx`: it is masked only by the 2
+        // candidates equal to its own hole cards.
+        let (la, lb) = combos[live_idx];
+        let live_count = candidates.iter()
+            .filter(|&&card| card != la && card != lb)
+            .count();
+        assert_eq!(live_count, 47, "off-board combo must be consistent with 47 of 49 candidates");
     }
 
     #[test]
