@@ -119,9 +119,6 @@ def compute_preflop_outcome(position: str, dead_cards: list[str] | None = None) 
     oop_w = build_oop_call_range_weights(position)
 
     # Remove dead card blockers
-    for idx in range(NUM_COMBOS):
-        (idx * 2) // 1  # not straightforward — compute via table
-    # More robust: iterate combos
     for a in range(51):
         for b in range(a + 1, 52):
             idx = combo_index(a, b)

@@ -34,6 +34,23 @@ def _strs(indices: list[int]) -> list[str]:
     return [IDX_TO_STR[c] for c in indices]
 
 
+def _combo_index(a: int, b: int) -> int:
+    """Combo index for cards a, b (0..51). Matches gto-core range::combo_index."""
+    lo, hi = (a, b) if a < b else (b, a)
+    return lo * (103 - lo) // 2 + hi - lo - 1
+
+
+def _blocked_combo_mask(cards: list[int]) -> np.ndarray:
+    """Boolean[NUM_COMBOS] marking combos that use any of `cards` (0..51)."""
+    mask = np.zeros(NUM_COMBOS, dtype=bool)
+    for blocked in cards:
+        for other in range(52):
+            if other == blocked:
+                continue
+            mask[_combo_index(blocked, other)] = True
+    return mask
+
+
 # ---------------------------------------------------------------------------
 # Flop tree NextStreet node parameters (computed from bet sizes)
 #
@@ -191,12 +208,11 @@ def solve_spot_multistreet(
                 for rc in valid_rivers:
                     ev = river_ev.get((fns_id, tc, tns_id, rc))
                     if ev is not None:
-                        # Zero out combos blocked by tc or rc
+                        # Zero out combos blocked by the turn/river card: a combo
+                        # that uses tc or rc is impossible at this leaf and must
+                        # not contribute a phantom EV to the aggregate.
                         ev_masked = ev.copy()
-                        for _blocked_card in [tc, rc]:
-                            # combo_idx where ca==blocked or cb==blocked
-                            # For efficiency, just add and let card-removed weights handle it
-                            pass
+                        ev_masked[_blocked_combo_mask([tc, rc])] = 0.0
                         agg += ev_masked
                         count += 1
 

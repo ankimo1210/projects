@@ -243,7 +243,8 @@ def run_batch(
 
     if done_count > 0:
         print("Rebuilding aggregate cache...", flush=True)
-        store.build_position_cache(stack_bb=stacks[0] if len(stacks) == 1 else 100.0)
+        for stack in stacks:
+            store.build_position_cache(stack_bb=stack)
 
 
 # ---------------------------------------------------------------------------
