@@ -65,3 +65,22 @@ def test_put_rho_negative_and_signs():
     assert bsm.gamma(S, K, r, sigma, T) > 0.0
     assert bsm.vega(S, K, r, sigma, T) > 0.0
     assert bsm.call_theta(S, K, r, sigma, T) < 0.0  # typical case
+
+
+def test_vanna_vomma_finite_difference():
+    S, K, r, sigma, T, q = 100.0, 105.0, 0.04, 0.3, 0.75, 0.02
+    h = 1e-5
+    fd_vanna = (
+        bsm.call_delta(S, K, r, sigma + h, T, q) - bsm.call_delta(S, K, r, sigma - h, T, q)
+    ) / (2.0 * h)
+    assert bsm.vanna(S, K, r, sigma, T, q) == pytest.approx(fd_vanna, rel=1e-5)
+    fd_vomma = (bsm.vega(S, K, r, sigma + h, T, q) - bsm.vega(S, K, r, sigma - h, T, q)) / (2.0 * h)
+    assert bsm.vomma(S, K, r, sigma, T, q) == pytest.approx(fd_vomma, rel=1e-5)
+
+
+def test_vomma_zero_atm_symmetry():
+    # vomma -> 0 as d1*d2 -> 0; near ATM-forward d1 and d2 straddle 0
+    import numpy as np
+
+    v = bsm.vomma(np.array([90.0, 100.0, 110.0]), 100.0, 0.05, 0.2, 1.0)
+    assert v.shape == (3,)

@@ -82,3 +82,17 @@ def call_rho(S, K, r, sigma, T, q=0.0):
 def put_rho(S, K, r, sigma, T, q=0.0):
     """Put rho dV/dr (negative), Hull Table 19.6."""
     return -K * T * np.exp(-r * T) * norm.cdf(-d2(S, K, r, sigma, T, q))
+
+
+def vanna(S, K, r, sigma, T, q=0.0):
+    """Vanna = d^2V/(dS dsigma) = dDelta/dsigma (Hull Ch.19, higher-order)."""
+    d_1 = d1(S, K, r, sigma, T, q)
+    d_2 = d_1 - sigma * np.sqrt(T)
+    return -np.exp(-q * T) * norm.pdf(d_1) * d_2 / sigma
+
+
+def vomma(S, K, r, sigma, T, q=0.0):
+    """Vomma (volga) = d^2V/dsigma^2 = vega * d1 d2 / sigma (Hull Ch.19)."""
+    d_1 = d1(S, K, r, sigma, T, q)
+    d_2 = d_1 - sigma * np.sqrt(T)
+    return vega(S, K, r, sigma, T, q) * d_1 * d_2 / sigma

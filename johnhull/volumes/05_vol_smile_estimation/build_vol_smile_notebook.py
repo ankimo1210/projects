@@ -226,6 +226,23 @@ cells.append(
 - スマイルの**モデル化**（局所ボラ・確率ボラ）は第6冊（Ch.27）で扱います""")
 )
 
+# Cell 11b: vanna across strikes demo
+cells.append(
+    code(r"""# --- vanna = ∂Δ/∂σ: スマイル下で株価とσが連動するとデルタが動く量 ---
+ks_v = np.linspace(80.0, 120.0, 41)
+vanna_v = [bsm.vanna(S0_S, k, R_S, 0.22, T_S) for k in ks_v]
+fig_va, ax_va = plt.subplots(figsize=(7.5, 4))
+fig_va.canvas.header_visible = False
+ax_va.plot(ks_v / S0_S, vanna_v, lw=2)
+ax_va.axhline(0.0, color="black", lw=0.8)
+ax_va.axvline(1.0, color="0.7", ls=":", lw=1)
+ax_va.set_xlabel("K / S0")
+ax_va.set_ylabel("vanna = ∂Δ/∂σ")
+ax_va.set_title("vanna: 株価上昇でσが下がる（株式スキュー）と Δ_MV < Δ_BSM になる源")
+display(fig_va.canvas)
+print(f"ATM vanna = {bsm.vanna(S0_S, S0_S, R_S, 0.22, T_S):.4f}（符号がΔ補正の向きを決める）")""")
+)
+
 # Cell 12: interactive smile explorer
 cells.append(
     code(r"""# --- スマイル・エクスプローラ（インタラクティブ） ---
