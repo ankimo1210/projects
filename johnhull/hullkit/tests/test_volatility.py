@@ -81,3 +81,28 @@ def test_garch_fit_recovers_persistence():
     _omega_h, alpha_h, beta_h = volatility.garch11_fit(u)
     assert alpha_h + beta_h == pytest.approx(alpha_t + beta_t, abs=0.05)
     assert alpha_h == pytest.approx(alpha_t, abs=0.05)
+
+
+def test_ewma_covariance_matches_manual_loop():
+    rng = np.random.default_rng(70)
+    x = 0.01 * rng.standard_normal(300)
+    y = 0.01 * rng.standard_normal(300)
+    cov = volatility.ewma_covariance(x, y, lam=0.94)
+    # manual reference
+    ref = np.empty_like(x)
+    ref[0] = x[0] * y[0]
+    for i in range(1, x.size):
+        ref[i] = 0.94 * ref[i - 1] + 0.06 * x[i - 1] * y[i - 1]
+    assert np.allclose(cov, ref)
+    # correlation in [-1, 1]
+    vx = volatility.ewma_variance(x, lam=0.94)
+    vy = volatility.ewma_variance(y, lam=0.94)
+    rho = cov[10:] / np.sqrt(vx[10:] * vy[10:])
+    assert np.all(np.abs(rho) <= 1.0 + 1e-9)
+
+
+def test_ewma_covariance_validation():
+    with pytest.raises(ValueError):
+        volatility.ewma_covariance([1.0, 2.0], [1.0])
+    with pytest.raises(ValueError):
+        volatility.ewma_covariance([], [])

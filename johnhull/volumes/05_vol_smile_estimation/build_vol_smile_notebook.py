@@ -440,10 +440,7 @@ x_r, y_r = 0.01 * (chol @ z_pair)
 lam_c = 0.94
 var_x = volatility.ewma_variance(x_r, lam=lam_c)
 var_y = volatility.ewma_variance(y_r, lam=lam_c)
-cov_xy = np.empty(N_DAYS)
-cov_xy[0] = x_r[0] * y_r[0]
-for i in range(1, N_DAYS):
-    cov_xy[i] = lam_c * cov_xy[i - 1] + (1 - lam_c) * x_r[i - 1] * y_r[i - 1]
+cov_xy = volatility.ewma_covariance(x_r, y_r, lam=lam_c)
 rho_t = cov_xy / np.sqrt(var_x * var_y)
 
 fig8, ax8 = plt.subplots(figsize=(8.5, 4))

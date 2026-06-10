@@ -33,6 +33,24 @@ def ewma_variance(returns, lam=0.94, init=None):
     return var
 
 
+def ewma_covariance(x, y, lam=0.94, init=None):
+    """EWMA covariance series of two aligned return series (Hull §23.7).
+
+    cov[i] = lam*cov[i-1] + (1-lam)*x[i-1]*y[i-1]; cov[0]=init or x[0]*y[0].
+    """
+    x = np.asarray(x, dtype=float)
+    y = np.asarray(y, dtype=float)
+    if x.size != y.size:
+        raise ValueError("x and y must have equal length")
+    if x.size == 0:
+        raise ValueError("inputs must be non-empty")
+    cov = np.empty_like(x)
+    cov[0] = init if init is not None else x[0] * y[0]
+    for i in range(1, x.size):
+        cov[i] = lam * cov[i - 1] + (1.0 - lam) * x[i - 1] * y[i - 1]
+    return cov
+
+
 def garch11_variance(returns, omega, alpha, beta, init=None):
     """GARCH(1,1) conditional variance series (Hull eq. 23.9)."""
     u = np.asarray(returns, dtype=float)
