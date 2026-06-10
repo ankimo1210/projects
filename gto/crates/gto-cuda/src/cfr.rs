@@ -11,7 +11,7 @@ use std::ffi::c_void;
 use crate::cuda_ffi::{
     CUdeviceptr, CUfunction, CUmodule,
     mem_alloc, mem_free, memcpy_htod, memcpy_dtoh, ctx_sync, launch_kernel,
-    compile_and_load, get_function,
+    compile_and_load, get_function, set_current,
 };
 use crate::kernels::{BATCH_SHOWDOWN, REGRET_MATCH, REGRET_UPDATE, STRATEGY_SUM_UPDATE};
 
@@ -219,7 +219,11 @@ pub struct BatchCfrSolver {
     g_opp:   CUdeviceptr, // [N × NC] u16
     g_ca:    CUdeviceptr, // [NC] u8
     g_cb:    CUdeviceptr, // [NC] u8
-    g_hpot:  CUdeviceptr, // [N] f32
+
+    // Per-Showdown-node half-pot vectors [N] f32, precomputed once at setup.
+    // The pot is a node constant; after a bet/call the showdown is valued at
+    // the node pot, not the root pot. Keyed by node id.
+    g_hpot_nodes: HashMap<usize, CUdeviceptr>, // node_id -> [N] f32
 
     // Persistent scratch GPU buffers — allocated once, reused every showdown call
     g_scratch_ow:     CUdeviceptr, // [N × NC] f32  opp_reach upload
@@ -246,6 +250,10 @@ impl BatchCfrSolver {
         ranges:    Vec<f32>,  // [N×NC]
         half_pots: Vec<f32>,  // [N]
     ) -> Self {
+        // Bind the CUDA context to the calling thread before any module load /
+        // allocation — `new` may run on a worker thread that did not create the
+        // context (B9). Idempotent and cheap.
+        set_current();
         let n   = half_pots.len();
         let nc  = NUM_COMBOS;
         let k   = Kernels::init();
@@ -255,7 +263,24 @@ impl BatchCfrSolver {
         let g_opp  = mem_alloc(n * nc * 2); memcpy_htod(g_opp,  &opp_str);
         let g_ca   = mem_alloc(nc);          memcpy_htod(g_ca,   &ca);
         let g_cb   = mem_alloc(nc);          memcpy_htod(g_cb,   &cb);
-        let g_hpot = mem_alloc(n * 4);       memcpy_htod(g_hpot, &half_pots);
+
+        // Precompute per-Showdown-node half-pot vectors. The root half-pots
+        // are per spot; a showdown reached after a bet/call is valued at that
+        // node's pot. Since all spots in this solver share one tree, the pot
+        // ratio (node.pot / root.pot) is identical across spots, so we scale
+        // the per-spot root half-pots by that ratio. Uploaded once (no
+        // per-iteration HtoD on the hot path).
+        let root_pot = tree.nodes[0].pot;
+        let mut g_hpot_nodes: HashMap<usize, CUdeviceptr> = HashMap::new();
+        for (nid, nd) in tree.nodes.iter().enumerate() {
+            if let NodeKind::Showdown = nd.kind {
+                let scale = (nd.pot / root_pot) as f32;
+                let v: Vec<f32> = half_pots.iter().map(|&hp| hp * scale).collect();
+                let p = mem_alloc(n * 4);
+                memcpy_htod(p, &v);
+                g_hpot_nodes.insert(nid, p);
+            }
+        }
 
         let flat = n * nc;
         // Pre-allocate persistent scratch GPU buffers (no alloc/free per call)
@@ -264,7 +289,8 @@ impl BatchCfrSolver {
 
         BatchCfrSolver {
             n, tree, k,
-            g_hero, g_opp, g_ca, g_cb, g_hpot,
+            g_hero, g_opp, g_ca, g_cb,
+            g_hpot_nodes,
             g_scratch_ow, g_scratch_result,
             regrets:    HashMap::new(),
             strat_sums: HashMap::new(),
@@ -302,14 +328,18 @@ impl BatchCfrSolver {
 
     /// Run DCFR for `iters` iterations. Returns elapsed seconds.
     pub fn run(&mut self, iters: u32) {
-        let flat    = self.flat();
-        let uniform = vec![1.0f32; flat];
+        set_current();
+        // Seed the root reach from the per-spot ranges (which zero board-blocked
+        // combos) instead of uniform 1.0 — otherwise a blocked opponent combo
+        // (strength 0) enters showdown with reach 1.0 and scores as a guaranteed
+        // hero win (B2). `ranges` already zeroes the blocked combos.
+        let reach = self.ranges.clone();
 
         for t in 1..=iters {
             let aw = discount(t, ALPHA) as f32;
             let bw = discount(t, BETA)  as f32;
             for player in 0u8..2 {
-                self.traverse_player(player, &uniform, &uniform, aw, bw);
+                self.traverse_player(player, &reach, &reach, aw, bw);
             }
         }
         ctx_sync();
@@ -318,6 +348,7 @@ impl BatchCfrSolver {
     /// Run DCFR with explicit initial reach weights per player.
     /// ip_reach / oop_reach: per-combo weights [N×NC], range [0, 1].
     pub fn run_with_reach(&mut self, iters: u32, ip_reach: Vec<f32>, oop_reach: Vec<f32>) {
+        set_current();
         for t in 1..=iters {
             let aw = discount(t, ALPHA) as f32;
             let bw = discount(t, BETA)  as f32;
@@ -349,7 +380,7 @@ impl BatchCfrSolver {
             }
 
             NodeKind::Showdown => {
-                self.gpu_showdown(traverser, opp_reach, node.pot as f32 / 2.0)
+                self.gpu_showdown(node_id, traverser, opp_reach)
             }
 
             NodeKind::Action { actor } => {
@@ -407,7 +438,18 @@ impl BatchCfrSolver {
         }
     }
 
-    fn gpu_showdown(&mut self, traverser: u8, opp_reach: &[f32], _half_pot: f32) -> Vec<f32> {
+    /// Test/diagnostic hook: evaluate the showdown kernel at `node_id` with an
+    /// explicit opponent reach vector and return per-(spot,combo) values. Exposes
+    /// the same path the solver uses internally so the GPU showdown can be diffed
+    /// against the CPU reference.
+    pub fn showdown_values_at(&mut self, node_id: usize, traverser: u8, opp_reach: &[f32]) -> Vec<f32> {
+        set_current();
+        let v = self.gpu_showdown(node_id, traverser, opp_reach);
+        ctx_sync();
+        v
+    }
+
+    fn gpu_showdown(&mut self, node_id: usize, traverser: u8, opp_reach: &[f32]) -> Vec<f32> {
         let flat   = self.flat();
         let nc     = NUM_COMBOS as i32;
         let ns     = self.n as i32;
@@ -424,6 +466,11 @@ impl BatchCfrSolver {
             (self.g_opp, self.g_hero)
         };
 
+        // Value the showdown at THIS node's pot (precomputed once at setup),
+        // not the root pot — otherwise every post-bet/post-call showdown is
+        // valued at the root half-pot (B3).
+        let g_hpot = self.g_hpot_nodes[&node_id];
+
         unsafe {
             launch_kernel(
                 self.k.showdown,
@@ -436,7 +483,7 @@ impl BatchCfrSolver {
                     &self.g_cb as *const _ as *mut c_void,
                     &self.g_scratch_ow     as *const _ as *mut c_void,
                     &self.g_scratch_result as *const _ as *mut c_void,
-                    &self.g_hpot as *const _ as *mut c_void,
+                    &g_hpot as *const _ as *mut c_void,
                     &ns as *const _ as *mut c_void,
                     &nc as *const _ as *mut c_void,
                 ],
@@ -499,19 +546,21 @@ impl BatchCfrSolver {
     /// Returns flat Vec<f32> of length N × NUM_COMBOS (player-0 perspective).
     /// Call after `run()` has converged.
     pub fn root_ev_per_spot(&mut self) -> Vec<f32> {
-        let flat    = self.flat();
-        let uniform = vec![1.0f32; flat];
-        self.traverse(0, 0, &uniform, &uniform, 1.0, 1.0)
+        // Seed reach from ranges so blocked opponent combos (strength 0, reach 0)
+        // do not enter the showdown normalizer as phantom wins (B2).
+        let reach = self.ranges.clone();
+        self.traverse(0, 0, &reach, &reach, 1.0, 1.0)
     }
 }
 
 impl Drop for BatchCfrSolver {
     fn drop(&mut self) {
         for p in [
-            self.g_hero, self.g_opp, self.g_ca, self.g_cb, self.g_hpot,
+            self.g_hero, self.g_opp, self.g_ca, self.g_cb,
             self.g_scratch_ow, self.g_scratch_result,
         ] {
             mem_free(p);
         }
+        for (_, p) in &self.g_hpot_nodes { mem_free(*p); }
     }
 }

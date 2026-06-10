@@ -34,6 +34,12 @@ extern "C" __global__ void batch_showdown(
         float ow = opp_weight[base + j];
         if (ow == 0.0f) continue;
         unsigned short os = opp_str[base + j];
+        // Board-blocked opponent combos have strength 0 (not a real hand).
+        // Skip them — otherwise a live hero combo (hs > 0) scores a guaranteed
+        // win against every phantom blocked combo (B2). Defense in depth: the
+        // reach seed already zeroes these, but a stale/uniform weight must not
+        // resurrect them.
+        if (os == 0) continue;
         float outcome = (hs > os) ? hp : (hs < os) ? -hp : 0.0f;
         ev    += outcome * ow;
         total += ow;

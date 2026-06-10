@@ -29,6 +29,7 @@ struct CudaLib {
     cu_init:             unsafe extern "C" fn(u32) -> CUresult,
     cu_device_get:       unsafe extern "C" fn(*mut CUdevice, i32) -> CUresult,
     cu_ctx_create:       unsafe extern "C" fn(*mut CUcontext, u32, CUdevice) -> CUresult,
+    cu_ctx_set_current:  unsafe extern "C" fn(CUcontext) -> CUresult,
     cu_mem_alloc:        unsafe extern "C" fn(*mut CUdeviceptr, usize) -> CUresult,
     cu_mem_free:         unsafe extern "C" fn(CUdeviceptr) -> CUresult,
     cu_memcpy_htod:      unsafe extern "C" fn(CUdeviceptr, *const c_void, usize) -> CUresult,
@@ -103,6 +104,7 @@ fn cuda_lib() -> &'static CudaLib {
             cu_init:             load_sym(cuda, "cuInit"),
             cu_device_get:       load_sym(cuda, "cuDeviceGet"),
             cu_ctx_create:       load_sym(cuda, "cuCtxCreate_v2"),
+            cu_ctx_set_current:  load_sym(cuda, "cuCtxSetCurrent"),
             cu_mem_alloc:        load_sym(cuda, "cuMemAlloc_v2"),
             cu_mem_free:         load_sym(cuda, "cuMemFree_v2"),
             cu_memcpy_htod:      load_sym(cuda, "cuMemcpyHtoD_v2"),
@@ -147,6 +149,18 @@ pub fn init_context() -> CUcontext {
             CtxWrapper(ctx)
         }
     }).0
+}
+
+/// Bind the (already-created) global CUDA context to the calling thread.
+///
+/// `cuCtxCreate` only makes the context current on the creating thread; calls
+/// from other threads (e.g. ThreadPoolExecutor workers once the GIL is
+/// released) would otherwise see no current context. This is a cheap TLS write
+/// and is idempotent, so it is safe to call at every public solve entry point.
+pub fn set_current() {
+    let ctx = init_context();
+    let lib = cuda_lib();
+    unsafe { check((lib.cu_ctx_set_current)(ctx), "cuCtxSetCurrent"); }
 }
 
 pub fn mem_alloc(size: usize) -> CUdeviceptr {

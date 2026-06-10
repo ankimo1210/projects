@@ -17,7 +17,7 @@ use std::ffi::c_void;
 use crate::cuda_ffi::{
     CUdeviceptr, CUfunction, CUmodule,
     mem_alloc, mem_free, memcpy_htod, memcpy_dtoh, ctx_sync, launch_kernel,
-    compile_and_load, get_function,
+    compile_and_load, get_function, set_current,
     memcpy_dtod, memcpy_dtod_offset, memcpy_dtod_into,
 };
 use crate::cfr::{GameTree, NodeKind, NUM_COMBOS, combo_tables};
@@ -101,7 +101,6 @@ pub struct FastCfrSolver {
     g_opp:   CUdeviceptr,   // [N × NC] u16
     g_ca:    CUdeviceptr,   // [NC] u8
     g_cb:    CUdeviceptr,   // [NC] u8
-    g_hpot:  CUdeviceptr,   // [N] f32
 
     // Per-node persistent GPU buffers
     // regrets[nid]:    [na × flat] f64
@@ -123,6 +122,10 @@ pub struct FastCfrSolver {
 
     // Scratch
     g_uniform: CUdeviceptr,   // [flat] f32, all 1.0
+    // Root reach seed = per-spot ranges (zeroes board-blocked combos). Seeding
+    // PASS-1 from this instead of g_uniform keeps blocked combos (strength 0,
+    // reach 0) out of the showdown normalizer (B2).
+    g_root_reach: CUdeviceptr, // [flat] f32
     // Shared [max_na × flat] f32 scratch for PASS-1 spread output and
     // PASS-2 child-EV assembly. Allocated once: cuMemAlloc/cuMemFree in
     // the hot loop force device synchronization and starve the GPU.
@@ -146,6 +149,9 @@ impl FastCfrSolver {
         ranges:    Vec<f32>,
         half_pots: Vec<f32>,
     ) -> Self {
+        // Bind the CUDA context to the calling thread before any module load /
+        // allocation (B9): `new` may run off the context-creating thread.
+        set_current();
         let n    = half_pots.len();
         let flat = n * NUM_COMBOS;
         let k    = Kernels::init();
@@ -155,10 +161,12 @@ impl FastCfrSolver {
         let g_opp  = mem_alloc(flat * 2); memcpy_htod(g_opp,  &opp_str);
         let g_ca   = mem_alloc(NUM_COMBOS);  memcpy_htod(g_ca, &ca);
         let g_cb   = mem_alloc(NUM_COMBOS);  memcpy_htod(g_cb, &cb);
-        let g_hpot = mem_alloc(n * 4);    memcpy_htod(g_hpot, &half_pots);
 
         let uniform = vec![1.0f32; flat];
         let g_uniform = mem_alloc(flat * 4); memcpy_htod(g_uniform, &uniform);
+
+        // Root reach seed = the per-spot ranges (board-blocked combos already 0).
+        let g_root_reach = mem_alloc(flat * 4); memcpy_htod(g_root_reach, &ranges);
 
         // Build node descriptors
         let descs: Vec<NodeDesc> = tree.nodes.iter().map(|nd| {
@@ -246,11 +254,12 @@ impl FastCfrSolver {
 
         FastCfrSolver {
             n, flat, descs, topo, k,
-            g_hero, g_opp, g_ca, g_cb, g_hpot,
+            g_hero, g_opp, g_ca, g_cb,
             g_regrets, g_strat_sums, g_strat,
             g_reach, g_ev,
             ext_ev: HashMap::new(),
             g_uniform,
+            g_root_reach,
             g_scratch_na,
             g_hpot_nodes,
             g_zeros,
@@ -264,6 +273,7 @@ impl FastCfrSolver {
     // -----------------------------------------------------------------------
 
     pub fn run(&mut self, iters: u32) {
+        set_current();
         for t in 1..=iters {
             let aw = discount(t, ALPHA) as f32;
             let bw = discount(t, BETA)  as f32;
@@ -294,12 +304,20 @@ impl FastCfrSolver {
         let grid = ((flat as u32 + blk - 1) / blk, 1u32, 1u32);
         let opp  = 1 - traverser;
 
+        // Clone the topo order once per iteration (it never changes after
+        // construction) so we can iterate it while taking &mut self in the body,
+        // instead of cloning it twice — once per pass (I10).
+        let topo = self.topo.clone();
+
         // --- PASS 1: top-down, compute strategy and propagate reach for both players ---
         // Per-player reach: only multiplied by σ at nodes where actor == that player.
-        gpu_copy(self.g_reach[&(0, traverser)], self.g_uniform, flat * 4);
-        gpu_copy(self.g_reach[&(0, opp)],       self.g_uniform, flat * 4);
+        // Seed from the per-spot ranges (zeroes board-blocked combos) — not
+        // uniform 1.0 — so blocked combos never enter the showdown as phantom
+        // hands (B2).
+        gpu_copy(self.g_reach[&(0, traverser)], self.g_root_reach, flat * 4);
+        gpu_copy(self.g_reach[&(0, opp)],       self.g_root_reach, flat * 4);
 
-        for &nid in &self.topo.clone() {
+        for &nid in &topo {
             let actor = match &self.descs[nid] {
                 NodeDesc::Action { actor, .. } => *actor,
                 _ => continue,
@@ -358,7 +376,7 @@ impl FastCfrSolver {
         }
 
         // --- PASS 2: bottom-up, compute EVs and update regrets ---
-        for &nid in self.topo.clone().iter().rev() {
+        for &nid in topo.iter().rev() {
             let desc = self.descs[nid].clone();
             let g_ev = self.g_ev[&nid];
 
@@ -366,7 +384,7 @@ impl FastCfrSolver {
                 NodeDesc::Terminal(TermKind::FoldWinner(winner), _pot) => {
                     let sign: i32 = if winner == traverser { 1 } else { -1 };
                     // EV = sign × this node's half-pot (precomputed once;
-                    // pot differs from root g_hpot after bets).
+                    // pot differs from the root pot after bets).
                     let hpot_node = self.g_hpot_nodes[&nid];
                     unsafe {
                         launch_kernel(self.k.fold_ev, grid, (blk, 1, 1), &[
@@ -532,8 +550,8 @@ impl FastCfrSolver {
 impl Drop for FastCfrSolver {
     fn drop(&mut self) {
         for p in [
-            self.g_hero, self.g_opp, self.g_ca, self.g_cb, self.g_hpot,
-            self.g_uniform, self.g_scratch_na, self.g_zeros,
+            self.g_hero, self.g_opp, self.g_ca, self.g_cb,
+            self.g_uniform, self.g_root_reach, self.g_scratch_na, self.g_zeros,
         ] {
             mem_free(p);
         }
