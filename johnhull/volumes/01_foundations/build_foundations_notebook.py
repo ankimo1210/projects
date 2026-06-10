@@ -726,7 +726,8 @@ nb = {
 }
 
 # Normalize cell sources: all lines except the last should end with \n
-for cell in nb["cells"]:
+for i, cell in enumerate(nb["cells"]):
+    cell["id"] = f"cell-{i:03d}"
     src = cell["source"]
     if isinstance(src, list) and len(src) > 1:
         for i in range(len(src) - 1):

@@ -1535,6 +1535,9 @@ nb = {
     "cells": cells,
 }
 
+for i, cell in enumerate(nb["cells"]):
+    cell["id"] = f"cell-{i:03d}"
+
 output_path = "/home/kazumasa/programming_linux/bsm_chapter15.ipynb"
 with open(output_path, "w", encoding="utf-8") as f:
     json.dump(nb, f, ensure_ascii=False, indent=1)
