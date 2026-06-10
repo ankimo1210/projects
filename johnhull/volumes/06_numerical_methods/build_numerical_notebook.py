@@ -89,7 +89,7 @@ cells.append(
 ref_put = trees.crr_price(S_A, K_A, R_A, SIG_A, T_A, 2000, kind="put", american=True)
 eu_bsm = bsm.put_price(S_A, K_A, R_A, SIG_A, T_A)
 rows = []
-for n in (25, 50, 100, 200):
+for n in (25, 51, 101, 201):
     am = trees.crr_price(S_A, K_A, R_A, SIG_A, T_A, n, kind="put", american=True)
     eu_tree = trees.crr_price(S_A, K_A, R_A, SIG_A, T_A, n, kind="put")
     cv = am + (eu_bsm - eu_tree)
@@ -500,7 +500,7 @@ ax7.set_xlabel("計算量パラメータ（対数）")
 ax7.set_ylabel("|誤差| vs CRR N=4000")
 ax7.set_title("手法ごとの収束プロファイル")
 ax7.legend()
-ax7.text(0.02, 0.04, "注: LSM は低バイアス（≈0.03）で頭打ち／CRR は参照と同族でやや有利",
+ax7.text(0.02, 0.04, "注: LSM はパス数で誤差が減るが分散が大きい／CRR は参照と同族でやや有利",
          transform=ax7.transAxes, fontsize=8, color="0.4")
 display(fig7.canvas)""")
 )

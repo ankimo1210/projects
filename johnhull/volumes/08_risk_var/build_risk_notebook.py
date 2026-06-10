@@ -125,7 +125,9 @@ print(f"劣加法性: VaR(A+B) = {var_combined} > VaR(A)+VaR(B) = {2 * var_singl
 
 # ES は破れない: 単独 ES99 = E[L·1{L>VaR}]/0.01 = 10×0.008/0.01 = 8（離散分布ではテール平均型で計算）→ 2つで16 ≥ 合算ES
 es_single = loss_bad * p_bad / 0.01
-print(f"参考: 単独 ES99 = {es_single}（テールを最初から見ている）")""")
+print(f"参考: 単独 ES99 = {es_single}（テールを最初から見ている）")
+es_combined = loss_bad * p_any / 0.01
+print(f"2つ合算の ES99 ≈ {es_combined:.2f}（個別 ES の和 {2 * es_single:.0f} 以下 → ES は劣加法的）")""")
 )
 
 # ===========================================================================
@@ -285,7 +287,7 @@ cells.append(
 
 # Cell 17: backtest demo
 cells.append(
-    code(r"""# --- バックテスト: ローリング正規VaR vs 実現損益（GARCH的なボラ変動を含む系列） ---
+    code(r"""# --- バックテスト: ローリング正規VaR vs 実現損益（ゆっくり変動する決定論的ボラ（正弦波）を含む系列） ---
 rng9 = np.random.default_rng(90)
 n_bt = 1000
 vol_path = 0.01 * np.exp(0.4 * np.sin(np.linspace(0.0, 6.0 * np.pi, n_bt)))  # ゆっくり変動するボラ
