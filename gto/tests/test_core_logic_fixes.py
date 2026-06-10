@@ -22,11 +22,22 @@ from gto.solver import multistreet_gpu as msg
 # ---------------------------------------------------------------------------
 
 
+def test_to_core_round_trips_card_strings():
+    """_to_core(display int) must yield the gto-core int for the SAME card."""
+    for c in range(52):
+        s = msg.IDX_TO_STR[c]  # display int -> "Ac" etc.
+        assert msg._to_core(c) == range_builder.card_int(s[0], s[1])
+
+
 def test_blocked_combo_mask_matches_combo_index():
-    """A card blocks exactly the 51 combos that contain it."""
-    card = 5
+    """A card blocks exactly the 51 combos that contain it, indexed in gto-core
+    (root_ev) order — NOT this module's A-first display order."""
+    card = 5  # display int (Kd)
+    core = msg._to_core(card)
     mask = msg._blocked_combo_mask([card])
-    expected = {msg._combo_index(card, other) for other in range(52) if other != card}
+    expected = {
+        range_builder.combo_index(core, other) for other in range(52) if other != core
+    }
     assert mask.sum() == 51
     assert {int(i) for i in np.flatnonzero(mask)} == expected
 
@@ -38,21 +49,42 @@ def test_combo_index_agrees_with_range_builder():
             assert msg._combo_index(a, b) == range_builder.combo_index(a, b)
 
 
-def test_aggregation_zeros_blocked_combos(monkeypatch):
-    """Drive the REAL solve_spot_multistreet aggregation and assert blocked
-    combos are zeroed in the flop terminal EVs.
+def test_aggregation_averages_live_combos_and_masks_blocked(monkeypatch):
+    """Drive the REAL solve_spot_multistreet aggregation end to end.
 
-    Every river subgame is stubbed to return a uniform phantom EV on all 1326
-    combos. After aggregation, any combo that uses a turn or river card is
-    impossible at that leaf and must be masked to 0. Pre-fix (no-op loop) the
-    phantom survives -> the captured terminal EV for a board-blocked combo is
-    nonzero and this assertion fails.
+    Each river subgame is stubbed to return a CLEAN value (7.5) on every combo
+    that does NOT use that leaf's turn/river card, and a poison value (1000.0)
+    on combos that DO. The poisoned combos are exactly the ones the masking
+    must drop, so after a correct mask + per-combo denominator:
+
+    every combo averages to exactly 7.5 — the poison appears only where the
+    combo is masked out and dropped from its own denominator. (Combos that use
+    a flop card are never poisoned here; the masking targets turn/river cards
+    only, and the downstream flop solver zeroes flop-card combos by range.)
+
+    This fails three distinct ways pre-fix:
+      * no-op mask (original B10): poison 1000.0 survives -> agg >> 7.5;
+      * scalar divisor (B5 dilution in the Python path): live combos divided by
+        the full leaf count -> agg < 7.5;
+      * A-first vs gto-core encoding: the mask hits the wrong combos -> poison
+        leaks into some entries and 7.5 is zeroed in others.
     """
-    flop_board = [0, 1, 2]  # three distinct flop cards (ints 0..51)
-    phantom = 7.5
+    flop_board = [0, 1, 2]  # display ints (Ac, Ad, Ah)
+    clean = 7.5
+    poison = 1000.0
 
     def fake_gpu_batch(jobs, iters, batch_size, bet_pct):
-        return [{"root_ev": [phantom] * msg.NUM_COMBOS} for _ in jobs]
+        out = []
+        for job in jobs:
+            board = job["board"]  # 5 card strings: flop3 + turn + river
+            ev = np.full(msg.NUM_COMBOS, clean, dtype=np.float64)
+            for cs in (board[3], board[4]):  # turn, river
+                core = range_builder.card_int(cs[0], cs[1])
+                for other in range(52):
+                    if other != core:
+                        ev[range_builder.combo_index(core, other)] = poison
+            out.append({"root_ev": ev.tolist()})
+        return out
 
     captured: dict = {}
 
@@ -76,30 +108,20 @@ def test_aggregation_zeros_blocked_combos(monkeypatch):
 
     terminal_evs = captured["terminal_evs"]
     assert len(terminal_evs) == 5  # one per flop NextStreet node
-    agg0 = np.asarray(terminal_evs[0])
-
-    # A combo that uses a card NOT on the flop is blocked at every turn/river
-    # leaf that draws it; over the aggregate it must be strictly below phantom.
-    # Pick a combo using card 3 (not on flop). It is alive on leaves where the
-    # turn/river do not draw card 3, but masked where they do -> mean < phantom.
-    partly_blocked = msg._combo_index(3, 4)
-    assert agg0[partly_blocked] < phantom, "drawn-card combos must be masked sometimes"
-
-    # A combo entirely on the flop (cards 0 and 1) is impossible at EVERY leaf
-    # only if those cards reappear — they cannot (flop fixed), so flop-card
-    # combos stay live. Instead verify the masking is non-trivial: the aggregate
-    # is not the unmasked uniform phantom everywhere.
-    assert not np.allclose(agg0, phantom), "masking must change the aggregate"
+    # Every combo, at every node, must come out at exactly the clean value:
+    # poison removed, divisor counting only the live leaves.
+    for node_id, node_ev in enumerate(terminal_evs):
+        agg = np.asarray(node_ev, dtype=np.float64)
+        np.testing.assert_allclose(agg, clean, err_msg=f"node {node_id}")
 
 
 def test_aggregation_block_is_real_not_noop():
-    """Sanity: without the mask the blocked combo would carry the phantom EV.
-
-    This pins the bug: the pre-fix no-op loop left ev_masked == ev, so the
-    blocked combo's aggregate equalled `phantom`, not 0.
+    """The mask actually zeros a combo using the blocked card, in gto-core
+    (root_ev) order. Pins that the masking is neither a no-op nor mis-indexed.
     """
-    tc, rc = 10, 20
-    blocked_combo = msg._combo_index(tc, 30)
+    tc, rc = 10, 20  # display ints
+    # A combo using the physical turn card tc, indexed in gto-core order.
+    blocked_combo = range_builder.combo_index(msg._to_core(tc), msg._to_core(30))
     ev = np.full(msg.NUM_COMBOS, 7.5, dtype=np.float32)
 
     # Pre-fix behavior (no-op): nothing is zeroed.

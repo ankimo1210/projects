@@ -35,20 +35,48 @@ def _strs(indices: list[int]) -> list[str]:
 
 
 def _combo_index(a: int, b: int) -> int:
-    """Combo index for cards a, b (0..51). Matches gto-core range::combo_index."""
+    """Combo index for two cards in gto-core convention (0..51).
+
+    Matches gto-core ``range::combo_index`` / ``range_builder.combo_index``.
+    The inputs MUST be gto-core (2-first) card ints, not this module's display
+    ints — convert with ``_to_core`` first.
+    """
     lo, hi = (a, b) if a < b else (b, a)
     return lo * (103 - lo) // 2 + hi - lo - 1
 
 
+def _to_core(card: int) -> int:
+    """Map this module's display card int (A-first: 0=Ac, 4=Kc, …) to the
+    gto-core card int (2-first: rank 0=2 … 12=A, so 0=2c, 48=Ac).
+
+    ``IDX_TO_STR`` / ``_strs`` render board strings from the A-first ordering
+    (``RANKS = "AKQJT98765432"``), but the ``root_ev`` arrays returned by
+    gto_cuda are indexed by gto-core's combo order, which is built from 2-first
+    card ints. Combo masking must convert before computing combo indices, or it
+    zeroes the wrong combos.
+    """
+    return (12 - card // 4) * 4 + (card % 4)
+
+
 def _blocked_combo_mask(cards: list[int]) -> np.ndarray:
-    """Boolean[NUM_COMBOS] marking combos that use any of `cards` (0..51)."""
+    """Boolean[NUM_COMBOS] marking combos — in gto-core / ``root_ev`` order —
+    that use any of `cards`, given as this module's display ints (0..51)."""
     mask = np.zeros(NUM_COMBOS, dtype=bool)
     for blocked in cards:
+        cc = _to_core(blocked)
         for other in range(52):
-            if other == blocked:
+            if other == cc:
                 continue
-            mask[_combo_index(blocked, other)] = True
+            mask[_combo_index(cc, other)] = True
     return mask
+
+
+# Precomputed per-card blocked masks: display-card int -> bool[NUM_COMBOS].
+# Built once at import; the river aggregation OR-combines turn/river masks per
+# leaf instead of rebuilding the 52×52 loop for every subgame.
+_CARD_MASK: np.ndarray = np.array(
+    [_blocked_combo_mask([c]) for c in range(52)], dtype=bool
+)
 
 
 # ---------------------------------------------------------------------------
@@ -198,7 +226,7 @@ def solve_spot_multistreet(
     for fns_id, fns in enumerate(flop_ns):
         turn_ns = _turn_ns_params(fns["pot_bb"], fns["eff_bb"])
         agg = np.zeros(NUM_COMBOS, dtype=np.float64)
-        count = 0
+        live = np.zeros(NUM_COMBOS, dtype=np.float64)
 
         for tc in valid_turns:
             board4 = [*flop_board, tc]
@@ -207,17 +235,22 @@ def solve_spot_multistreet(
             for tns_id in range(len(turn_ns)):
                 for rc in valid_rivers:
                     ev = river_ev.get((fns_id, tc, tns_id, rc))
-                    if ev is not None:
-                        # Zero out combos blocked by the turn/river card: a combo
-                        # that uses tc or rc is impossible at this leaf and must
-                        # not contribute a phantom EV to the aggregate.
-                        ev_masked = ev.copy()
-                        ev_masked[_blocked_combo_mask([tc, rc])] = 0.0
-                        agg += ev_masked
-                        count += 1
+                    if ev is None:
+                        continue
+                    # A combo that uses the turn or river card is impossible at
+                    # this leaf: zero it out AND drop it from its own (per-combo)
+                    # denominator, so each combo is averaged only over the leaves
+                    # where it can actually occur. Dividing every combo by the
+                    # full leaf count instead would systematically dilute the
+                    # live combos (the B5 dilution, in the Python path).
+                    blocked = _CARD_MASK[tc] | _CARD_MASK[rc]
+                    ev_masked = ev.copy()
+                    ev_masked[blocked] = 0.0
+                    agg += ev_masked
+                    live += ~blocked
 
-        if count > 0:
-            agg /= count
+        # Per-combo mean. Flop-blocked combos never go live and stay 0.
+        np.divide(agg, live, out=agg, where=live > 0.0)
         flop_terminal_evs.append(agg.tolist())
 
     # ------------------------------------------------------------------
