@@ -49,13 +49,30 @@ impl CfrVariant {
     /// DCFR: t^α/(t^α+1) for positive, t^β/(t^β+1) for negative regrets.
     /// Vanilla/CFR+: no discounting (1.0).
     pub fn regret_discount(&self, old: f64, t: u32) -> f64 {
+        let (d_pos, d_neg) = self.regret_discounts(t);
+        if old >= 0.0 {
+            d_pos
+        } else {
+            d_neg
+        }
+    }
+
+    /// The two iteration-t regret discount factors `(d_pos, d_neg)` selected
+    /// by `regret_discount` via the sign of the stored regret. For a fixed
+    /// `t` only these two values exist, so the caller can compute them once
+    /// per (node, iteration) and index by sign inside the update loop instead
+    /// of calling `powf` per (combo, action). The math is identical to
+    /// `regret_discount` (same `powf`, computed once).
+    pub fn regret_discounts(&self, t: u32) -> (f64, f64) {
         match *self {
-            CfrVariant::Vanilla | CfrVariant::CfrPlus { .. } => 1.0,
+            CfrVariant::Vanilla | CfrVariant::CfrPlus { .. } => (1.0, 1.0),
             CfrVariant::Dcfr { alpha, beta, .. } => {
                 let tf = t as f64;
-                let exp = if old >= 0.0 { alpha } else { beta };
-                let p = tf.powf(exp);
-                p / (p + 1.0)
+                let disc = |exp: f64| {
+                    let p = tf.powf(exp);
+                    p / (p + 1.0)
+                };
+                (disc(alpha), disc(beta))
             }
         }
     }
@@ -65,6 +82,26 @@ impl CfrVariant {
         match *self {
             CfrVariant::CfrPlus { .. } => (old + delta).max(0.0),
             _ => old + delta,
+        }
+    }
+
+    /// Cumulative strategy-sum discount for iterations skipped between a
+    /// slice's last visit `last` (exclusive) and the current iteration `t`
+    /// (exclusive of t — the current iteration's own discount is applied
+    /// separately). Used by sampled-mode solvers to catch up the lazy
+    /// γ-discount over iterations on which the slice was not visited.
+    ///
+    /// DCFR γ telescopes: ∏_{u=last+1..t-1} (u/(u+1))^γ = ((last+1)/t)^γ.
+    /// For `last == t-1` (no gap — every-iteration visits, enumerate mode)
+    /// this is the empty product 1.0 exactly, so visited-every-iteration
+    /// slices are numerically untouched. Non-DCFR variants never discount,
+    /// so this is always exactly 1.0 (preserves CFR+ bit-identity).
+    pub fn strategy_catchup(&self, last: u32, t: u32) -> f64 {
+        match *self {
+            CfrVariant::Dcfr { gamma, .. } if t > last + 1 => {
+                ((last + 1) as f64 / t as f64).powf(gamma)
+            }
+            _ => 1.0,
         }
     }
 

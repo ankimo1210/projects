@@ -126,6 +126,17 @@ pub struct FlopSolver {
     turn_bucket_maps: Option<Vec<Vec<u16>>>,
     regrets: Vec<NodeTable>,
     strat_sum: Vec<NodeTable>,
+    /// Last iteration in which a (node, slab-ctx) was discounted. `[node]`
+    /// is empty for non-action nodes, else `ctx_count(street)` scalars.
+    /// Under sampled chance (turn sampled, river enumerated) a slab is
+    /// visited only when its turn card is drawn (~1/49 of iterations), so
+    /// on each visit it catches up the discounts of the skipped iterations
+    /// (B7 — mirrors the turn+river solver). Unused under enumeration.
+    last_discount_iter: Vec<Vec<u32>>,
+    /// DCFR regret-discount prefix products (pos/neg). See the same fields
+    /// on `TurnRiverSolver`. Empty for non-DCFR (catch-up is always 1.0).
+    regret_disc_prefix_pos: Vec<f64>,
+    regret_disc_prefix_neg: Vec<f64>,
     rng: SplitMix64,
     iteration: u32,
     combos: Vec<(u8, u8)>,
@@ -381,6 +392,14 @@ impl FlopSolver {
         };
         let regrets = alloc(&tree);
         let strat_sum = alloc(&tree);
+        let last_discount_iter: Vec<Vec<u32>> = tree
+            .nodes
+            .iter()
+            .map(|n| match n.kind {
+                NodeKind::Action { .. } => vec![0u32; ctx_count(n.state.street)],
+                _ => Vec::new(),
+            })
+            .collect();
         let seed = match mode {
             ChanceMode::Sample { seed } => seed,
             ChanceMode::Enumerate => 0,
@@ -401,6 +420,9 @@ impl FlopSolver {
             turn_bucket_maps,
             regrets,
             strat_sum,
+            last_discount_iter,
+            regret_disc_prefix_pos: vec![1.0],
+            regret_disc_prefix_neg: vec![1.0],
             rng: SplitMix64::new(seed),
             iteration: 0,
             combos: all_combos(),
@@ -469,12 +491,46 @@ impl FlopSolver {
     pub fn run(&mut self, iterations: u32) {
         for _ in 0..iterations {
             self.iteration += 1;
+            self.extend_regret_prefix(self.iteration);
             for traverser in 0..2u8 {
                 let reach = self.ranges[traverser as usize].weights;
                 let opp = self.ranges[1 - traverser as usize].weights;
                 self.traverse(0, traverser, &reach, &opp, Ctx::PRE);
             }
         }
+    }
+
+    /// Grow the DCFR regret-discount prefix products to cover iteration `t`
+    /// (no-op for non-DCFR variants — the catch-up factor is always 1.0).
+    fn extend_regret_prefix(&mut self, t: u32) {
+        if !matches!(self.variant, CfrVariant::Dcfr { .. }) {
+            return;
+        }
+        let want = t as usize + 1;
+        while self.regret_disc_prefix_pos.len() < want {
+            let u = self.regret_disc_prefix_pos.len() as u32; // next iteration index
+            let (d_pos, d_neg) = self.variant.regret_discounts(u);
+            let last_pos = *self.regret_disc_prefix_pos.last().unwrap();
+            let last_neg = *self.regret_disc_prefix_neg.last().unwrap();
+            self.regret_disc_prefix_pos.push(last_pos * d_pos);
+            self.regret_disc_prefix_neg.push(last_neg * d_neg);
+        }
+    }
+
+    /// Cumulative regret discount over the skipped gap L+1..t-1 for a stored
+    /// regret of the given sign (constant across the gap). `prefix[t-1] /
+    /// prefix[L]`; 1.0 when there is no gap (L >= t-1) or for non-DCFR.
+    #[inline]
+    fn regret_catchup(&self, last: u32, t: u32, nonneg: bool) -> f64 {
+        if t <= last + 1 || self.regret_disc_prefix_pos.len() <= 1 {
+            return 1.0;
+        }
+        let prefix = if nonneg {
+            &self.regret_disc_prefix_pos
+        } else {
+            &self.regret_disc_prefix_neg
+        };
+        prefix[(t - 1) as usize] / prefix[last as usize]
     }
 
     // ----- Blueprint composition hooks (blueprint design §3) -----------
@@ -493,6 +549,7 @@ impl FlopSolver {
         iteration: u32,
     ) -> Vec<f64> {
         self.iteration = iteration;
+        self.extend_regret_prefix(iteration);
         self.traverse(0, traverser, reach, opp_reach, Ctx::PRE)
     }
 
@@ -590,14 +647,28 @@ impl FlopSolver {
                     // Exact mode: w_c = 1 for in-range combos (uniform
                     // ranges) so single-combo rows are untouched; w_c=0
                     // rows simply stay unvisited (unreachable anyway).
-                    let (dim, bmap) = self.row_map(node_id, ctx);
-                    let row = |c: usize| bmap.map_or(c, |m| m[c] as usize);
                     let t = self.iteration;
                     let (sd, sw) = (
                         self.variant.strategy_discount(t),
                         self.variant.strategy_weight(t),
                     );
+                    // Lazy cumulative discount (B7): under sampled chance a
+                    // (node, slab) is visited only on iterations whose turn
+                    // card is sampled, so it catches up the discounts of the
+                    // iterations L+1..t-1 skipped since its last visit L. The
+                    // current iteration t's own discount stays the per-entry
+                    // `d` / `sd` below. Under enumeration L = t-1 always, so
+                    // both catch-ups are 1.0 (bit-identical to the plain
+                    // update). Mirrors the turn+river solver. Read/update the
+                    // last-visit slot before the `row` closure borrows `self`.
+                    let last = self.last_discount_iter[node_id][cx];
+                    self.last_discount_iter[node_id][cx] = t;
+                    let s_catchup = self.variant.strategy_catchup(last, t);
+                    let r_catchup_pos = self.regret_catchup(last, t, true);
+                    let r_catchup_neg = self.regret_catchup(last, t, false);
                     let variant = self.variant;
+                    let (dim, bmap) = self.row_map(node_id, ctx);
+                    let row = |c: usize| bmap.map_or(c, |m| m[c] as usize);
 
                     let mut delta = vec![0.0f64; na * dim];
                     let mut sacc = vec![0.0f64; na * dim];
@@ -612,14 +683,23 @@ impl FlopSolver {
                             sacc[a * dim + b] += reach[c] * strat[a * N + c];
                         }
                     }
+                    // Only two regret-discount factors exist for a fixed t
+                    // (selected by the sign of the stored regret); hoist the
+                    // two `powf`s out of the row-entry loop (I1).
+                    let (d_pos, d_neg) = variant.regret_discounts(t);
                     let reg = self.regrets[node_id].get_mut(cx);
                     for (i, d) in delta.iter().enumerate() {
-                        let discounted = reg[i] * variant.regret_discount(reg[i], t);
+                        let (disc, rc) = if reg[i] >= 0.0 {
+                            (d_pos, r_catchup_pos)
+                        } else {
+                            (d_neg, r_catchup_neg)
+                        };
+                        let discounted = reg[i] * rc * disc;
                         reg[i] = variant.accumulate_regret(discounted, *d);
                     }
                     let ssum = self.strat_sum[node_id].get_mut(cx);
                     for (i, s) in sacc.iter().enumerate() {
-                        ssum[i] = ssum[i] * sd + sw * s;
+                        ssum[i] = ssum[i] * s_catchup * sd + sw * s;
                     }
                     ev
                 } else {
@@ -710,10 +790,24 @@ impl FlopSolver {
         opp_reach: &[f64; N],
         ctx: Ctx,
     ) -> Vec<f64> {
-        let (cards, legal) = self.stage_cards(deal_street, ctx);
-        let n_pub = cards.len();
-        let pick = self.rng.next_index(n_pub);
-        let (idx, card) = cards[pick];
+        // Sample one card by direct indexing — `stage_cards` would
+        // materialize a 49/48-element Vec of which we use exactly one
+        // element (I5). Index-identical to `stage_cards` (which has no
+        // filtering), so the RNG stream and results are unchanged.
+        let (n_pub, legal) = match deal_street {
+            Street::Flop => (self.turns.len(), LEGAL_TURNS),
+            Street::Turn => {
+                let t = ctx.turn.expect("river deal requires a turn ctx");
+                (self.rivers[t].len(), LEGAL_RIVERS)
+            }
+            s => unreachable!("chance deal on {s:?}"),
+        };
+        let idx = self.rng.next_index(n_pub);
+        let card = match deal_street {
+            Street::Flop => self.turns[idx],
+            Street::Turn => self.rivers[ctx.turn.expect("river deal requires a turn ctx")][idx],
+            s => unreachable!("chance deal on {s:?}"),
+        };
         let scale = n_pub as f64 / legal; // 49/45 (turn) or 48/44 (river)
         let mut r = *reach;
         let mut o = *opp_reach;

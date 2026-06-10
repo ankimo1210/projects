@@ -45,6 +45,22 @@ pub struct TurnRiverSolver {
     /// n_rivers*na*N (ctx-major). Other nodes: empty vecs.
     regrets: Vec<Vec<f64>>,
     strat_sum: Vec<Vec<f64>>,
+    /// Last iteration in which a (node, ctx) slice's per-iteration discounts
+    /// were applied. `[node]` is empty for non-action nodes, length 1 for
+    /// turn action nodes, length `n_rivers` for river action nodes (ctx-
+    /// major). Drives lazy cumulative discounting under sampled chance: a
+    /// slice skipped on iterations L+1..t-1 catches up their discounts on
+    /// its next visit at t (B7). Unused under enumeration (every slice is
+    /// visited every iteration, so L = t-1 and the catch-up is a no-op).
+    last_discount_iter: Vec<Vec<u32>>,
+    /// Prefix products of the DCFR regret discount for positive / negative
+    /// regrets: `regret_disc_prefix_pos[k] = ∏_{u=1..k} u^α/(u^α+1)` (neg
+    /// uses β). Index 0 = 1.0. Built lazily up to `iteration`. The cumulative
+    /// regret discount over a skipped gap L+1..t-1 (sign constant there) is
+    /// `prefix[t-1] / prefix[L]`. Empty for non-DCFR variants (catch-up is
+    /// always 1.0, so CFR+ stays bit-identical).
+    regret_disc_prefix_pos: Vec<f64>,
+    regret_disc_prefix_neg: Vec<f64>,
     rng: SplitMix64,
     iteration: u32,
     combos: Vec<(u8, u8)>,
@@ -113,6 +129,22 @@ impl TurnRiverSolver {
         };
         let regrets = alloc(&tree);
         let strat_sum = alloc(&tree);
+        // One last-visit scalar per (node, ctx) for lazy cumulative discount.
+        let last_discount_iter: Vec<Vec<u32>> = tree
+            .nodes
+            .iter()
+            .map(|n| match n.kind {
+                NodeKind::Action { .. } => {
+                    let ctx = if n.state.street == Street::River {
+                        n_rivers
+                    } else {
+                        1
+                    };
+                    vec![0u32; ctx]
+                }
+                _ => Vec::new(),
+            })
+            .collect();
         let seed = match mode {
             ChanceMode::Sample { seed } => seed,
             ChanceMode::Enumerate => 0,
@@ -127,6 +159,9 @@ impl TurnRiverSolver {
             tables,
             regrets,
             strat_sum,
+            last_discount_iter,
+            regret_disc_prefix_pos: vec![1.0],
+            regret_disc_prefix_neg: vec![1.0],
             rng: SplitMix64::new(seed),
             iteration: 0,
             combos: all_combos(),
@@ -156,12 +191,46 @@ impl TurnRiverSolver {
     pub fn run(&mut self, iterations: u32) {
         for _ in 0..iterations {
             self.iteration += 1;
+            self.extend_regret_prefix(self.iteration);
             for traverser in 0..2u8 {
                 let reach = self.ranges[traverser as usize].weights;
                 let opp = self.ranges[1 - traverser as usize].weights;
                 self.traverse(0, traverser, &reach, &opp, None);
             }
         }
+    }
+
+    /// Grow the DCFR regret-discount prefix products to cover iteration `t`
+    /// (no-op for non-DCFR variants — the catch-up factor is always 1.0).
+    fn extend_regret_prefix(&mut self, t: u32) {
+        if !matches!(self.variant, CfrVariant::Dcfr { .. }) {
+            return;
+        }
+        let want = t as usize + 1;
+        while self.regret_disc_prefix_pos.len() < want {
+            let u = self.regret_disc_prefix_pos.len() as u32; // next iteration index
+            let (d_pos, d_neg) = self.variant.regret_discounts(u);
+            let last_pos = *self.regret_disc_prefix_pos.last().unwrap();
+            let last_neg = *self.regret_disc_prefix_neg.last().unwrap();
+            self.regret_disc_prefix_pos.push(last_pos * d_pos);
+            self.regret_disc_prefix_neg.push(last_neg * d_neg);
+        }
+    }
+
+    /// Cumulative regret discount over the skipped gap L+1..t-1 for a stored
+    /// regret of the given sign (constant across the gap). `prefix[t-1] /
+    /// prefix[L]`; 1.0 when there is no gap (L >= t-1) or for non-DCFR.
+    #[inline]
+    fn regret_catchup(&self, last: u32, t: u32, nonneg: bool) -> f64 {
+        if t <= last + 1 || self.regret_disc_prefix_pos.len() <= 1 {
+            return 1.0;
+        }
+        let prefix = if nonneg {
+            &self.regret_disc_prefix_pos
+        } else {
+            &self.regret_disc_prefix_neg
+        };
+        prefix[(t - 1) as usize] / prefix[last as usize]
     }
 
     /// Table offset for a node: river nodes are ctx-major per card.
@@ -230,15 +299,32 @@ impl TurnRiverSolver {
                             ev[c] += strat[a * N + c] * av[c];
                         }
                     }
-                    // Same per-iteration discount/update discipline as the
-                    // river solver. In sampled mode unvisited (node, ctx)
-                    // slices keep their stored sums — standard lazy-discount
-                    // chance-sampled MCCFR.
+                    // Per-iteration discount/update discipline. Under sampled
+                    // chance a river (node, ctx) slice is visited on only a
+                    // fraction of iterations; on each visit it must catch up
+                    // the discounts of the iterations skipped since its last
+                    // visit, else early iterations are over-weighted vs
+                    // enumerate (B7). `slot` is this slice's last-visit
+                    // iteration L; the catch-up covers L+1..t-1 (the current
+                    // iteration t's own discount is the per-element `d` /
+                    // `sd` below). Under enumeration L = t-1 every time, so
+                    // both catch-ups are 1.0 and this is identical to the
+                    // plain lazy-discount update.
                     let t = self.iteration;
+                    let slot = ctx.unwrap_or(0);
+                    let last = self.last_discount_iter[node_id][slot];
+                    self.last_discount_iter[node_id][slot] = t;
                     let (sd, sw) = (
                         self.variant.strategy_discount(t),
                         self.variant.strategy_weight(t),
                     );
+                    let s_catchup = self.variant.strategy_catchup(last, t);
+                    let r_catchup_pos = self.regret_catchup(last, t, true);
+                    let r_catchup_neg = self.regret_catchup(last, t, false);
+                    // Only two regret-discount factors exist for a fixed t
+                    // (selected by the sign of the stored regret); hoist the
+                    // two `powf`s out of the (combo, action) loop (I1).
+                    let (d_pos, d_neg) = self.variant.regret_discounts(t);
                     let variant = self.variant;
                     let reg = &mut self.regrets[node_id];
                     let ssum = &mut self.strat_sum[node_id];
@@ -246,10 +332,15 @@ impl TurnRiverSolver {
                     for c in 0..N {
                         for a in 0..na {
                             let i = base + a * N + c;
-                            let discounted = reg[i] * variant.regret_discount(reg[i], t);
+                            let (d, rc) = if reg[i] >= 0.0 {
+                                (d_pos, r_catchup_pos)
+                            } else {
+                                (d_neg, r_catchup_neg)
+                            };
+                            let discounted = reg[i] * rc * d;
                             reg[i] =
                                 variant.accumulate_regret(discounted, action_vals[a][c] - ev[c]);
-                            ssum[i] = ssum[i] * sd + sw * reach[c] * strat[a * N + c];
+                            ssum[i] = ssum[i] * s_catchup * sd + sw * reach[c] * strat[a * N + c];
                         }
                     }
                     ev
@@ -382,6 +473,32 @@ impl TurnRiverSolver {
         }
     }
 
+    /// Normalized average strategy for ALL combos at a (node, ctx):
+    /// [action * N + combo]. One slab pass — the per-combo
+    /// `average_strategy` allocates a Vec per combo and dominates
+    /// best-response / avg-value time on turn+river trees (48 river
+    /// contexts per node), so the BR/eval paths use this instead (I2).
+    /// Per-combo normalization is identical to `average_strategy`.
+    fn avg_matrix(&self, node_id: usize, ctx: Option<usize>, na: usize) -> Vec<f64> {
+        let base = self.table_base(node_id, ctx, na);
+        let ssum = &self.strat_sum[node_id];
+        let mut strat = vec![0.0; na * N];
+        for c in 0..N {
+            let total: f64 = (0..na).map(|a| ssum[base + a * N + c]).sum();
+            if total > 0.0 {
+                for a in 0..na {
+                    strat[a * N + c] = ssum[base + a * N + c] / total;
+                }
+            } else {
+                let u = 1.0 / na as f64;
+                for a in 0..na {
+                    strat[a * N + c] = u;
+                }
+            }
+        }
+        strat
+    }
+
     /// Range-weighted aggregate strategy at a (node, ctx) for display.
     pub fn aggregate_strategy(&self, node_id: usize, ctx: Option<usize>) -> Vec<(String, f64)> {
         let node = &self.tree.nodes[node_id];
@@ -477,13 +594,13 @@ impl TurnRiverSolver {
                     }
                     best
                 } else {
+                    let strat = self.avg_matrix(node_id, ctx, na);
                     let mut ev = vec![0.0; N];
                     for a in 0..na {
                         let child = self.tree.nodes[node_id].children[a].1;
                         let mut no = *opp_reach;
                         for c in 0..N {
-                            let s = self.average_strategy(node_id, ctx, c);
-                            no[c] = opp_reach[c] * s[a];
+                            no[c] = opp_reach[c] * strat[a * N + c];
                         }
                         let v = self.br_values(child, br_player, &no, ctx);
                         for c in 0..N {
@@ -543,14 +660,14 @@ impl TurnRiverSolver {
             NodeKind::NextStreet { .. } => unreachable!("turn+river trees have no NextStreet nodes"),
             NodeKind::Action { actor } => {
                 let na = self.tree.nodes[node_id].children.len();
+                let strat = self.avg_matrix(node_id, ctx, na);
                 let mut ev = vec![0.0; N];
                 if actor == player {
                     for a in 0..na {
                         let child = self.tree.nodes[node_id].children[a].1;
                         let v = self.avg_values(child, player, opp_reach, ctx);
                         for c in 0..N {
-                            let s = self.average_strategy(node_id, ctx, c);
-                            ev[c] += s[a] * v[c];
+                            ev[c] += strat[a * N + c] * v[c];
                         }
                     }
                 } else {
@@ -558,8 +675,7 @@ impl TurnRiverSolver {
                         let child = self.tree.nodes[node_id].children[a].1;
                         let mut no = *opp_reach;
                         for c in 0..N {
-                            let s = self.average_strategy(node_id, ctx, c);
-                            no[c] = opp_reach[c] * s[a];
+                            no[c] = opp_reach[c] * strat[a * N + c];
                         }
                         let v = self.avg_values(child, player, &no, ctx);
                         for c in 0..N {

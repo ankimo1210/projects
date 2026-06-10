@@ -126,6 +126,10 @@ impl VectorRiverSolver {
                         self.variant.strategy_discount(t),
                         self.variant.strategy_weight(t),
                     );
+                    // Only two regret-discount factors exist for a fixed t
+                    // (selected by the sign of the stored regret); hoist the
+                    // two `powf`s out of the (combo, action) loop (I1).
+                    let (d_pos, d_neg) = self.variant.regret_discounts(t);
                     let variant = self.variant;
                     let reg = &mut self.regrets[node_id];
                     let ssum = &mut self.strat_sum[node_id];
@@ -133,7 +137,8 @@ impl VectorRiverSolver {
                     for c in 0..N {
                         for a in 0..na {
                             let i = a * N + c;
-                            let discounted = reg[i] * variant.regret_discount(reg[i], t);
+                            let d = if reg[i] >= 0.0 { d_pos } else { d_neg };
+                            let discounted = reg[i] * d;
                             reg[i] =
                                 variant.accumulate_regret(discounted, action_vals[a][c] - ev[c]);
                             ssum[i] = ssum[i] * sd + sw * reach[c] * strat[i];
