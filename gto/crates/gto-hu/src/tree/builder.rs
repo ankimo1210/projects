@@ -1,6 +1,6 @@
 use super::config::{RaiseRule, StreetConfig};
 use super::node::{Node, NodeKind, Tree};
-use crate::game::{Action, BettingState};
+use crate::game::{Action, BettingState, BB};
 
 /// Build the river action tree. OOP (BB) acts first.
 pub fn build_river_tree(pot: i64, stack: i64, cfg: &StreetConfig) -> Tree {
@@ -61,11 +61,13 @@ pub(super) fn legal_actions(state: &BettingState, cfg: &StreetConfig) -> Vec<Act
         if stack > 0 && state.stacks[opp] > 0 {
             let mut tos: Vec<i64> = Vec::new();
             for &pct in &cfg.bet_pcts {
-                let to = state.pot() * pct as i64 / 100;
-                if to == 0 {
-                    continue; // sub-chip size on a degenerate pot: skip, don't warp
-                }
-                tos.push(to.min(all_in_to));
+                // NLHE open-bet floor: an open bet is at least 1bb. On tiny
+                // pots (e.g. the limped 2bb pot) a % size rounds below 1bb;
+                // clamp up to the 1bb min before capping at the jam so we
+                // never emit a sub-min (sub-1bb) open. The cap at all_in_to
+                // keeps the floor from exceeding the effective stack.
+                let to = (state.pot() * pct as i64 / 100).max(BB).min(all_in_to);
+                tos.push(to);
             }
             if cfg.allow_allin_bet {
                 tos.push(all_in_to);

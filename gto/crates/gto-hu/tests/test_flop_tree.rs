@@ -179,6 +179,33 @@ fn chips_conserve_at_every_terminal_and_chance() {
 }
 
 #[test]
+fn limped_2bb_pot_open_bets_respect_1bb_floor() {
+    // B13: the limped pot carried into the flop is exactly 2bb. SRP b33
+    // rounds to 0.66bb (200 * 33 / 100 = 66 centi-bb) — below the NLHE 1bb
+    // minimum. The floor must lift it to 1bb; b75 = 1.5bb is unaffected.
+    // Every open bet must be >= 1bb and <= the effective stack (the jam).
+    let stack = 99 * BB; // deep stack behind the limped 2bb pot
+    let t = build_flop_tree(2 * BB, stack, &FlopTreeConfig::srp());
+    let all_in_to = t.nodes[0].state.stacks[PLAYER_BB as usize];
+    let mut open_bets = Vec::new();
+    for (a, _) in &t.nodes[0].children {
+        match a {
+            Action::Bet { to } | Action::AllIn { to } => open_bets.push(*to),
+            Action::Check => {}
+            other => panic!("unexpected open action {other:?}"),
+        }
+    }
+    assert!(!open_bets.is_empty(), "no open bets emitted");
+    for &to in &open_bets {
+        assert!(to >= BB, "open bet {to} below the 1bb floor");
+        assert!(to <= all_in_to, "open bet {to} exceeds the effective stack");
+    }
+    // b33 floored to exactly 1bb; b75 = 1.5bb untouched.
+    assert!(open_bets.contains(&BB), "floored b33 (1bb) missing: {open_bets:?}");
+    assert!(open_bets.contains(&(3 * BB / 2)), "b75 (1.5bb) missing: {open_bets:?}");
+}
+
+#[test]
 fn threebet_preset_builds_with_allin_turn_and_no_river_raise() {
     // 3BP per spec §6: flop check/b25/b50 + raise-jam; turn adds open
     // all-in; river check/b75/allin with fold/call only vs bet.

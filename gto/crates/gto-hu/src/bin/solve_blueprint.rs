@@ -223,11 +223,14 @@ fn main() {
     let game_value = solver.game_value_p0();
 
     let root = solver.aggregate_strategy(0);
+    // The solver normalizes weights to sum 1; report what was actually
+    // solved (raw input echoed too so the mapping is clear).
+    let norm_weights = solver.weights().to_vec();
     println!("\n== solve-hu-blueprint ==");
     println!(
         "CFR profile with EXACT exploitability on the {m}-flop abstract game \
-         (flops: {flops_raw}; weights {:?}) — NOT full-NLHE exploitability",
-        weights
+         (flops: {flops_raw}; weights {norm_weights:?} normalized, raw {weights:?}) \
+         — NOT full-NLHE exploitability"
     );
     println!(
         "stack {stack_bb}bb  iters {iterations}  K_r={} K_t={}  mode {}",
@@ -283,16 +286,21 @@ fn main() {
         .map(|(a, f)| format!("{{\"action\":\"{a}\",\"freq\":{f:.5}}}"))
         .collect::<Vec<_>>()
         .join(",");
-    let weights_json: String = weights
-        .iter()
-        .map(|w| format!("{w:.6}"))
-        .collect::<Vec<_>>()
-        .join(",");
+    // "weights" is the normalized vector the solver actually used; raw
+    // input is preserved under "weights_raw" so the metadata is faithful.
+    let join_weights = |ws: &[f64]| -> String {
+        ws.iter()
+            .map(|w| format!("{w:.6}"))
+            .collect::<Vec<_>>()
+            .join(",")
+    };
+    let weights_json = join_weights(&norm_weights);
+    let weights_raw_json = join_weights(&weights);
     let json = format!(
         concat!(
             "{{\"solver\":\"gto-hu blueprint — CFR profile with exact exploitability ",
             "on the M-flop abstract game (NOT full-NLHE)\",",
-            "\"flops\":\"{}\",\"weights\":[{}],\"stack_bb\":{},",
+            "\"flops\":\"{}\",\"weights\":[{}],\"weights_raw\":[{}],\"stack_bb\":{},",
             "\"buckets_river\":{},\"buckets_turn\":{},\"iterations\":{},",
             "\"elapsed_secs\":{:.2},\"exploitability_mflop_bb\":{:.6},",
             "\"br_sb_bb\":{:.6},\"br_bb_bb\":{:.6},\"game_value_sb_bb\":{:.6},",
@@ -300,6 +308,7 @@ fn main() {
         ),
         flops_raw,
         weights_json,
+        weights_raw_json,
         stack_bb,
         abs.buckets_river,
         abs.buckets_turn,
