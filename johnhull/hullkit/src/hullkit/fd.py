@@ -23,11 +23,19 @@ def fd_vanilla(
     n_t=200,
     s_max_mult=4.0,
     return_boundary=False,
+    return_greeks=False,
 ):
     """Theta-scheme FD price of a vanilla option; ln S0 is a grid node.
 
     With return_boundary=True (American puts), also returns (taus, boundary)
     — the early-exercise boundary S*(tau) read off the grid at each step.
+
+    With return_greeks=True (and return_boundary=False), returns
+    (price, delta, gamma) read from the solved grid.  Delta and gamma are
+    computed via the chain rule on the uniform ln-S grid:
+      delta = dV/dS = (1/S) * dV/dx
+      gamma = d2V/dS2 = (1/S^2) * (d2V/dx2 - dV/dx)
+    where x = ln S.  return_greeks is ignored when return_boundary=True.
     """
     if kind not in ("call", "put"):
         raise ValueError(f"kind must be 'call' or 'put', got {kind!r}")
@@ -84,4 +92,13 @@ def fd_vanilla(
     price = float(np.interp(np.log(S0), x, f))
     if return_boundary:
         return price, taus, boundary
+    if return_greeks:
+        j = int(np.argmin(np.abs(x - np.log(S0))))
+        j = max(1, min(j, len(x) - 2))
+        dfdx = (f[j + 1] - f[j - 1]) / (2.0 * dx)
+        d2fdx2 = (f[j + 1] - 2.0 * f[j] + f[j - 1]) / dx**2
+        s_j = s_grid[j]
+        delta = dfdx / s_j
+        gamma = (d2fdx2 - dfdx) / s_j**2
+        return price, float(delta), float(gamma)
     return price

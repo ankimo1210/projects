@@ -51,3 +51,34 @@ def test_validation_errors():
         fd.fd_vanilla(100.0, 100.0, 0.05, 0.2, 1.0, kind="cal")
     with pytest.raises(ValueError):
         fd.fd_vanilla(100.0, 100.0, 0.05, 0.2, 1.0, method="explicit")
+
+
+def test_fd_greeks_european_match_bsm():
+    price, delta, gamma = fd.fd_vanilla(
+        100.0, 100.0, 0.05, 0.25, 1.0, method="cn", return_greeks=True
+    )
+    assert price == pytest.approx(bsm.call_price(100.0, 100.0, 0.05, 0.25, 1.0), abs=2e-2)
+    assert delta == pytest.approx(bsm.call_delta(100.0, 100.0, 0.05, 0.25, 1.0), abs=5e-3)
+    assert gamma == pytest.approx(bsm.gamma(100.0, 100.0, 0.05, 0.25, 1.0), abs=2e-3)
+
+
+def test_fd_greeks_american_put_match_crr_bumped():
+    # Hull Ch.21 American put params; compare FD grid Greeks to a CRR bumped estimate
+    P = dict(S0=50.0, K=50.0, r=0.10, sigma=0.40, T=5.0 / 12.0)
+    _, delta, gamma = fd.fd_vanilla(
+        **P, kind="put", american=True, method="cn", n_s=400, n_t=400, return_greeks=True
+    )
+    h = 0.5
+    pu = trees.crr_price(
+        P["S0"] + h, P["K"], P["r"], P["sigma"], P["T"], 400, kind="put", american=True
+    )
+    pd_ = trees.crr_price(
+        P["S0"] - h, P["K"], P["r"], P["sigma"], P["T"], 400, kind="put", american=True
+    )
+    p0 = trees.crr_price(
+        P["S0"], P["K"], P["r"], P["sigma"], P["T"], 400, kind="put", american=True
+    )
+    crr_delta = (pu - pd_) / (2 * h)
+    crr_gamma = (pu - 2 * p0 + pd_) / h**2
+    assert delta == pytest.approx(crr_delta, abs=1e-2)
+    assert gamma == pytest.approx(crr_gamma, abs=5e-3)

@@ -290,7 +290,19 @@ ax3.legend()
 display(fig3.canvas)""")
 )
 
-# Cell 16: interactive boundary explorer
+# Cell 16: FD Greeks demo
+cells.append(
+    code(
+        "# --- FD はグリッドから Greeks も同時に得られる（バンプ不要） ---\n"
+        "price_g, delta_g, gamma_g = fd.fd_vanilla(S_A, K_A, R_A, SIG_A, T_A, kind='put',\n"
+        "                                          american=True, method='cn', n_s=300, n_t=300,\n"
+        "                                          return_greeks=True)\n"
+        'print(f"アメリカンプット: 価格 {price_g:.4f}, Δ {delta_g:.4f}, Γ {gamma_g:.5f}")\n'
+        'print("（FD は満期から後退で解いた格子に Δ・Γ がそのまま埋まっている — 再評価バンプ不要）")'
+    )
+)
+
+# Cell 17: interactive boundary explorer
 cells.append(
     code(r"""# --- 早期行使境界の感応度（インタラクティブ） ---
 fig4, ax4 = plt.subplots(figsize=(7.5, 4))
