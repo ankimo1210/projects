@@ -368,6 +368,7 @@ T = 1.0
 n_steps = 252
 n_paths = 10000
 
+rng = np.random.default_rng(42)  # cell-local rng: reproducible regardless of execution order
 t, S = simulate_gbm_paths(S0, mu, sigma, T, n_steps, n_paths, rng)
 
 # パス可視化 (先頭 30 本)
@@ -465,6 +466,7 @@ cells.append(
     code("""
 # --- 4-1. サンプル価格系列の作成 ---
 n_days = 504  # 2年分
+rng = np.random.default_rng(43)  # cell-local rng: reproducible regardless of execution order
 t_vol, S_vol = simulate_gbm_paths(S0, mu=0.08, sigma=0.25, T=2.0,
                                    n_steps=n_days, n_paths=1, rng=rng)
 prices = S_vol[0]
@@ -664,6 +666,7 @@ sigma_mc = 0.20
 S0_mc = 100.0
 n_mc = 100000
 
+rng = np.random.default_rng(44)  # cell-local rng: reproducible regardless of execution order
 # リスク中立ドリフト r で生成
 Z_mc = rng.standard_normal(n_mc)
 ST_rn = S0_mc * np.exp((r_mc - 0.5 * sigma_mc**2) * T_mc + sigma_mc * np.sqrt(T_mc) * Z_mc)
@@ -689,6 +692,7 @@ fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
 colors_cycle = plt.rcParams['axes.prop_cycle'].by_key()['color']
 mc_prices = []
 
+rng = np.random.default_rng(45)  # cell-local rng: reproducible regardless of execution order
 for i, mu_i in enumerate(mu_values):
     Z_i = rng.standard_normal(n_mc)
     # 実世界ドリフト mu_i で株価を生成

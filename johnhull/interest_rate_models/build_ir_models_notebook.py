@@ -626,7 +626,8 @@ for (mean, std, color, label) in [(mv0, sv0, "#1f77b4", "Vasicek"),
                                    (mc0, sc0, "#ff7f0e", "CIR"),
                                    (mr0, sr0, "#2ca02c", "Rendleman-Bartter")]:
     ln, = ax_eq_p.plot(T_eq, mean*100, color=color, lw=2.5, label=label)
-    fill = ax_eq_p.fill_between(T_eq, (mean-std)*100, (mean+std)*100,
+    lo = np.maximum((mean-std)*100, 0.0) if label == "Rendleman-Bartter" else (mean-std)*100
+    fill = ax_eq_p.fill_between(T_eq, lo, (mean+std)*100,
                                  color=color, alpha=0.12)
     _eq_band_lines.append(ln)
     _eq_fill_polys.append(fill)
@@ -676,7 +677,8 @@ def update_eq_cmp(change):
     for i, (ln, mean, std, color) in enumerate(
             zip(_eq_band_lines, [mv, mc, mr], [sv_, sc_, sr_], _EQ_COLORS)):
         ln.set_ydata(mean*100)
-        fill = ax_eq_p.fill_between(T_eq, (mean-std)*100, (mean+std)*100,
+        lo = np.maximum((mean-std)*100, 0.0) if i == 2 else (mean-std)*100
+        fill = ax_eq_p.fill_between(T_eq, lo, (mean+std)*100,
                                      color=color, alpha=0.12)
         _eq_fill_polys.append(fill)
     theta_ref_eq.set_ydata([th*100, th*100])
@@ -1506,7 +1508,7 @@ def hjm_implied_vol(a, sigma, T):
 
 a_hjm_c_sl = widgets.FloatSlider(value=0.10, min=0.01, max=0.50, step=0.01,
                                  description="a（HJM回帰速度）:", style={"description_width": "initial"})
-sigma_hjm_c_sl = widgets.FloatSlider(value=0.01, min=0.001, max=0.05, step=0.001,
+sigma_hjm_c_sl = widgets.FloatSlider(value=0.20, min=0.001, max=0.60, step=0.001,
                                      description="σ（HJMボラティリティ）:", style={"description_width": "initial"},
                                      readout_format=".3f")
 sigma_bgm_c_sl = widgets.FloatSlider(value=0.25, min=0.05, max=0.60, step=0.01,
@@ -1567,15 +1569,7 @@ cells.append(
 # 4.1 Equilibrium models: least-squares calibration
 # ---------------------------------------------------------------
 
-def vasicek_zero_curve(kappa, theta, sigma, r0, tenors):
-    B = (1 - np.exp(-kappa * tenors)) / kappa
-    A_log = (
-        (B - tenors) * (kappa**2 * theta - 0.5 * sigma**2) / kappa**2
-        - sigma**2 * B**2 / (4 * kappa)
-    )
-    log_P = A_log - B * r0
-    return -log_P / tenors
-
+# vasicek_zero_curve is defined once above (Section 1 analytical helper).
 
 def cir_zero_curve(kappa, theta, sigma, r0, tenors):
     '''CIR closed-form zero curve.'''
