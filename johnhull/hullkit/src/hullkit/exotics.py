@@ -8,8 +8,8 @@ from . import bsm
 
 
 def _d1d2(S, K, r, sigma, T, q):
-    d1 = (math.log(S / K) + (r - q + 0.5 * sigma**2) * T) / (sigma * math.sqrt(T))
-    return d1, d1 - sigma * math.sqrt(T)
+    # Delegates to bsm.d1/d2 (now vectorized) to avoid formula duplication.
+    return bsm.d1(S, K, r, sigma, T, q), bsm.d2(S, K, r, sigma, T, q)
 
 
 def gap_call(S, K1, K2, r, sigma, T, q=0.0):

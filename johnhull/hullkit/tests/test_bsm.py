@@ -44,3 +44,17 @@ def test_deltas():
     assert dc - dp == pytest.approx(math.exp(-q * T), abs=1e-12)
     # Hull Ex 19.1: S=49, K=50, r=5%, sigma=20%, T=0.3846 -> delta = 0.522
     assert bsm.call_delta(49.0, 50.0, 0.05, 0.20, 0.3846) == pytest.approx(0.522, abs=1e-3)
+
+
+def test_vectorized_over_spot_array():
+    import numpy as np
+
+    S = np.array([80.0, 100.0, 120.0])
+    K, r, sigma, T = 100.0, 0.05, 0.2, 1.0
+    vec = bsm.call_price(S, K, r, sigma, T)
+    assert vec.shape == (3,)
+    scal = np.array([bsm.call_price(float(s), K, r, sigma, T) for s in S])
+    assert np.allclose(vec, scal, atol=1e-12)
+    # a Greek too
+    g = bsm.gamma(S, K, r, sigma, T)
+    assert g.shape == (3,) and np.all(g > 0.0)
