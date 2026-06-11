@@ -8,6 +8,8 @@ Respond in Japanese by default. Write code, filenames, commit messages, and tech
 
 ## Commands
 
+Member of the uv workspace at `~/projects/` (deps declared in `land_price_api_app/pyproject.toml`; `requirements.txt` is legacy reference only). One-time setup: `cd ~/projects && make install`.
+
 ```bash
 # Start / stop
 ./run_local.sh          # starts Streamlit at http://localhost:8501 (daemonized, PID in .streamlit.pid)
@@ -86,3 +88,4 @@ Regression tests in `tests/` use HTML fixtures in `tests/fixtures/`. No network 
 - App must bind to `127.0.0.1` (local-only). `run_local.sh` uses `0.0.0.0` for LAN access — keep consistent with existing behavior.
 - Do not delete raw caches, Parquet files, or DuckDB files without explicit user request.
 - `data/raw` and `data/processed` are **symlinks** into `../_data/land_price/{raw,processed}/` (the canonical workspace storage). Legacy relative paths still work transparently.
+- `ui/property_investment.py` adds `../notebooks/real_estate_app/` (legacy) or `../_archive/notebooks/real_estate_app/` (current) to `sys.path` before importing `sim_engine` / `formatters` — the investment simulator runs against the archived copy.

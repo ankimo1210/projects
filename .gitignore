@@ -45,6 +45,7 @@ streamlit.log
 .DS_Store
 Thumbs.db
 *:Zone.Identifier
+~$*
 
 # AI tooling scratch (brainstorm/plan artifacts)
 .superpowers/
@@ -52,6 +53,7 @@ Thumbs.db
 # Claude Code local settings / state (machine-specific)
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
+.claude/worktrees/
 
 # Large reference docs (textbooks, papers) — keep binaries out of git
 *.pdf

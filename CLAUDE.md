@@ -2,6 +2,12 @@
 
 This root is a multi-project workspace.
 
+## Skills
+
+Do **not** auto-invoke skills based on session start, message analysis, or the "1% chance" heuristic.
+Only invoke a skill when the user explicitly types `/skill-name` or directly requests a named skill.
+This overrides the superpowers default trigger behavior.
+
 ## Language
 
 - Respond to the user in Japanese by default.
@@ -37,11 +43,13 @@ Applications:
 - `nbody-gpu/` — GPU N 体シミュレーション (CuPy + VisPy)
 - `line_backup/` — LINE バックアップ解析 CLI (Python)
 - `akinator/` — Wikidata ベースのアキネーター風推測ゲーム (FastAPI)
+- `pokemon/` — Quokka Wilds: オリジナル3Dモンスター収集ゲーム (Vite + React Three Fiber)
 
 Research / notebooks:
 
 - `johnhull/` (Hull 11e 学習ボリューム + `hullkit`), `rates_volatility_model/`,
   `aisan_lbo_case/` (LBO ケーススタディ), `notebooks/`
+- `autostock/` — Mag7 株ストラテジー自律探索デモ (read-only バックテストエンジン + OOS 評価)
 
 Samples:
 
