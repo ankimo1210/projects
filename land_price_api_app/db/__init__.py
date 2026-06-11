@@ -517,7 +517,10 @@ def upsert_land_prices(
     df_to_insert = _align_df_to_schema(df, table_cols)
 
     # DELETE + INSERT（upsert 代替）
-    df_to_insert[["point_id", "year"]].drop_duplicates()
+    # keys_df は SQL 文字列からのみ参照されるため、ruff F841 自動修正で代入が
+    # 消されないよう明示 register する（replacement scan 頼みにしない）。
+    keys_df = df_to_insert[["point_id", "year"]].drop_duplicates()
+    conn.register("keys_df", keys_df)
     # 一時テーブルに key を登録してから DELETE
     conn.execute("CREATE TEMP TABLE IF NOT EXISTS _upsert_keys (point_id VARCHAR, year INTEGER)")
     conn.execute("DELETE FROM _upsert_keys")
@@ -770,7 +773,9 @@ def upsert_trade_prices(
 
     df_to_insert = _align_df_to_schema(df.copy(), table_cols)
 
-    df_to_insert[["trade_id", "year", "quarter"]].drop_duplicates()
+    # keys_df は SQL 文字列からのみ参照される（ruff F841 対策で明示 register）。
+    keys_df = df_to_insert[["trade_id", "year", "quarter"]].drop_duplicates()
+    conn.register("keys_df", keys_df)
     conn.execute(
         "CREATE TEMP TABLE IF NOT EXISTS _trade_upsert_keys "
         "(trade_id VARCHAR, year INTEGER, quarter INTEGER)"
