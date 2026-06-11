@@ -376,7 +376,8 @@ fn solve_hu_river(
 /// Same response shape as `solve_hu_river` (turn-root OOP strategy +
 /// exact exploitability + per-combo turn strategies for a heatmap).
 #[pyfunction]
-#[pyo3(signature = (board, pot_bb, effective_stack_bb, iterations=None, seed=None))]
+#[pyo3(signature = (board, pot_bb, effective_stack_bb, iterations=None, seed=None, ip_weights=None, oop_weights=None, turn_bet_pcts=None, river_bet_pcts=None, max_raises=None, pot_type=None, rake_pct=None, rake_cap_bb=None))]
+#[allow(clippy::too_many_arguments)]
 fn solve_hu_turn_river(
     py: Python<'_>,
     board: Vec<String>,
@@ -384,6 +385,14 @@ fn solve_hu_turn_river(
     effective_stack_bb: f64,
     iterations: Option<u32>,
     seed: Option<u64>,
+    ip_weights: Option<Vec<f64>>,
+    oop_weights: Option<Vec<f64>>,
+    turn_bet_pcts: Option<Vec<u32>>,
+    river_bet_pcts: Option<Vec<u32>>,
+    max_raises: Option<u8>,
+    pot_type: Option<&str>,
+    rake_pct: Option<f64>,
+    rake_cap_bb: Option<f64>,
 ) -> PyResult<PyObject> {
     use gto_hu::game::BB;
     use gto_hu::ranges::all_combos;
@@ -419,17 +428,53 @@ fn solve_hu_turn_river(
         seed: seed.unwrap_or(42),
     };
 
+    // Resolve all fallible inputs (config / rake / ranges) before releasing
+    // the GIL — validation errors must surface as Python exceptions.
+    let mut cfg = match pot_type.unwrap_or("srp") {
+        "srp" => TurnTreeConfig::srp(),
+        "3bet" => TurnTreeConfig {
+            turn: gto_hu::tree::StreetConfig::threebet_turn(),
+            river: gto_hu::tree::StreetConfig::threebet_river(),
+        },
+        "4bet" => TurnTreeConfig {
+            turn: gto_hu::tree::StreetConfig::fourbet_street(),
+            river: gto_hu::tree::StreetConfig::fourbet_street(),
+        },
+        other => {
+            return Err(pyo3::exceptions::PyValueError::new_err(format!(
+                "unknown pot_type '{other}' (srp | 3bet | 4bet)"
+            )))
+        }
+    };
+    if let Some(p) = turn_bet_pcts {
+        if p.iter().any(|&x| x == 0) {
+            return Err(pyo3::exceptions::PyValueError::new_err("turn_bet_pcts must be positive"));
+        }
+        cfg.turn.bet_pcts = p;
+    }
+    if let Some(p) = river_bet_pcts {
+        if p.iter().any(|&x| x == 0) {
+            return Err(pyo3::exceptions::PyValueError::new_err("river_bet_pcts must be positive"));
+        }
+        cfg.river.bet_pcts = p;
+    }
+    if let Some(m) = max_raises {
+        cfg.turn.max_raises = m;
+        cfg.river.max_raises = m;
+    }
+    let rake = rake_from_args(rake_pct, rake_cap_bb)?;
+    let ranges = [
+        range_from_weights(ip_weights, &board4)?,
+        range_from_weights(oop_weights, &board4)?,
+    ];
+
     // Heavy compute: solve (sampled chance) + exact enumerated exploitability +
     // per-combo turn strategies — all plain Rust, so release the GIL throughout.
     let combos = all_combos();
     let out = py.allow_threads(|| {
-        let tree = build_turn_river_tree(pot, stack, &TurnTreeConfig::srp());
-        let ranges = [
-            gto_hu::ranges::uniform_excluding(&board4),
-            gto_hu::ranges::uniform_excluding(&board4),
-        ];
+        let tree = build_turn_river_tree(pot, stack, &cfg);
         let mut solver =
-            TurnRiverSolver::new(tree, board4, ranges, CfrVariant::cfr_plus_default(), mode);
+            TurnRiverSolver::with_rake(tree, board4, ranges, CfrVariant::cfr_plus_default(), mode, rake);
         let start = Instant::now();
         solver.run(iters);
         let elapsed = start.elapsed().as_secs_f64();

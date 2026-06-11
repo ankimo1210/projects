@@ -84,3 +84,27 @@ def test_rake_reduces_total_value():
 def test_bad_rake_rejected():
     with pytest.raises(ValueError):
         gto_py.solve_hu_river(BOARD5, 20.0, 90.0, 100, None, None, None, None, None, 0.9)
+
+
+BOARD4 = ["Ah", "Kd", "7s", "2c"]
+
+
+def test_turn_river_custom_range_and_rake():
+    w = [0.0] * NUM_COMBOS
+    # OOP holds only 88 (none blocked)
+    e_cards = [_card("8" + s) for s in "cdhs"]
+    for i, a in enumerate(e_cards):
+        for b in e_cards[i + 1:]:
+            w[_combo_index(a, b)] = 1.0
+    r = gto_py.solve_hu_turn_river(
+        BOARD4, 20.0, 90.0, 400, 42, None, w, None, None, None, None, 0.05, 3.0
+    )
+    got = {(c["card_a"], c["card_b"]) for c in r["combos"]}
+    assert len(got) == 6 and all(a[0] == "8" and b[0] == "8" for a, b in got)
+    assert r["game_value_sb"] + r["game_value_bb"] < 0.0  # rake leaks value
+    assert "ev" in r["combos"][0]
+
+
+def test_turn_river_baseline_unchanged():
+    r = gto_py.solve_hu_turn_river(BOARD4, 20.0, 90.0, 300)
+    assert r["nashconv"] == r["br_sb"] + r["br_bb"]
