@@ -22,6 +22,15 @@ from db._connection import (
     _wal_path_for_db,
     get_connection,
 )
+from db._market_lake import (
+    create_market_lake_tables,
+    lake_stats,
+    lake_synced_keys,
+    mark_lake_synced,
+    replace_lake_gis,
+    replace_lake_pop,
+    replace_lake_tx,
+)
 from db._population import (
     _DDL_POPULATION_STATS,
     get_population_latest,
