@@ -1,6 +1,7 @@
 use super::regret::regret_matching;
 use super::showdown::{weighted_compat, ShowdownTable};
 use super::variant::CfrVariant;
+use crate::game::rake::RakeModel;
 use crate::game::terminal::{fold_payoffs, showdown_payoffs};
 use crate::ranges::{all_combos, Range, NUM_COMBOS};
 use crate::tree::{NodeKind, Tree};
@@ -11,8 +12,30 @@ const N: usize = NUM_COMBOS;
 #[derive(Debug, Clone, Copy)]
 pub struct ExplReport {
     pub br_value: [f64; 2],
-    /// (br0 + br1) / 2 — NashConv/2, 0 at equilibrium.
+    /// Avg-vs-avg game value per player ([0,0] where not computed —
+    /// zero-sum callers via `zero_sum()`).
+    pub game_value: [f64; 2],
+    /// BR_p − game_value_p (general-sum per-player incentive to deviate).
+    pub br_gain: [f64; 2],
+    /// Σ_p br_gain_p. For the unraked (zero-sum) game computed as
+    /// br0 + br1 — the identity is exact, and keeps rake=0 bit-identical.
+    pub nashconv: f64,
+    /// nashconv / 2 — bb/hand, 0 at equilibrium.
     pub exploitability: f64,
+}
+
+impl ExplReport {
+    /// Report for an exactly zero-sum game: NashConv = br0 + br1.
+    pub fn zero_sum(br_value: [f64; 2]) -> Self {
+        let nashconv = br_value[0] + br_value[1];
+        ExplReport {
+            br_value,
+            game_value: [0.0; 2],
+            br_gain: br_value,
+            nashconv,
+            exploitability: nashconv / 2.0,
+        }
+    }
 }
 
 /// Exact-combo vector CFR for a fixed river board.
@@ -23,6 +46,9 @@ pub struct VectorRiverSolver {
     pub board: [u8; 5],
     pub ranges: [Range; 2],
     pub variant: CfrVariant,
+    /// Rake applied at terminals (RakeModel::NONE keeps the legacy
+    /// zero-sum path bit-identical).
+    rake: RakeModel,
     /// [node][action * N + combo]
     regrets: Vec<Vec<f64>>,
     strat_sum: Vec<Vec<f64>>,
@@ -33,7 +59,17 @@ pub struct VectorRiverSolver {
 }
 
 impl VectorRiverSolver {
-    pub fn new(tree: Tree, board: [u8; 5], mut ranges: [Range; 2], variant: CfrVariant) -> Self {
+    pub fn new(tree: Tree, board: [u8; 5], ranges: [Range; 2], variant: CfrVariant) -> Self {
+        Self::with_rake(tree, board, ranges, variant, RakeModel::NONE)
+    }
+
+    pub fn with_rake(
+        tree: Tree,
+        board: [u8; 5],
+        mut ranges: [Range; 2],
+        variant: CfrVariant,
+        rake: RakeModel,
+    ) -> Self {
         for r in &mut ranges {
             r.remove_blockers(&board);
         }
@@ -52,6 +88,7 @@ impl VectorRiverSolver {
             board,
             ranges,
             variant,
+            rake,
             regrets,
             strat_sum,
             showdown,
@@ -83,17 +120,33 @@ impl VectorRiverSolver {
         match kind {
             NodeKind::FoldTerminal { winner } => {
                 let state = self.tree.nodes[node_id].state;
-                let pay = fold_payoffs(&state, winner)[traverser as usize] as f64 / 100.0;
+                let mut pay = fold_payoffs(&state, winner)[traverser as usize] as f64 / 100.0;
+                if traverser == winner {
+                    // Rake comes out of the won pot; the loser's payoff is
+                    // its own contribution either way.
+                    pay -= self.rake.rake_cbb(state.pot(), state.street) as f64 / 100.0;
+                }
                 let compat = weighted_compat(&self.combos, opp_reach);
                 compat.iter().map(|w| pay * w).collect()
             }
             NodeKind::Showdown => {
                 let state = self.tree.nodes[node_id].state;
-                // Winner nets the opponent's (equal) contribution.
                 let win_bb =
                     showdown_payoffs(&state, Some(traverser))[traverser as usize] as f64 / 100.0;
                 let diff = self.showdown_diff(opp_reach);
-                diff.iter().map(|d| win_bb * d).collect()
+                let rake_bb = self.rake.rake_cbb(state.pot(), state.street) as f64 / 100.0;
+                if rake_bb == 0.0 {
+                    // Legacy zero-sum fast path — bit-identical when unraked.
+                    diff.iter().map(|d| win_bb * d).collect()
+                } else {
+                    // winner nets win_bb − rake, loser −win_bb, chop −rake/2:
+                    //   EV = win_bb·diff − rake·(compat + diff)/2
+                    let compat = weighted_compat(&self.combos, opp_reach);
+                    diff.iter()
+                        .zip(compat.iter())
+                        .map(|(d, w)| win_bb * d - rake_bb * (w + d) / 2.0)
+                        .collect()
+                }
             }
             NodeKind::Chance { .. } => unreachable!("river-only tree has no chance nodes"),
             NodeKind::NextStreet { .. } => unreachable!("river-only trees have no NextStreet nodes"),
@@ -254,20 +307,33 @@ impl VectorRiverSolver {
         match kind {
             NodeKind::FoldTerminal { winner } => {
                 let state = self.tree.nodes[node_id].state;
-                let pay = fold_payoffs(&state, winner)[br_player as usize] as f64 / 100.0;
-                weighted_compat(&self.combos, opp_reach)
-                    .iter()
-                    .map(|w| pay * w)
-                    .collect()
+                let mut pay = fold_payoffs(&state, winner)[br_player as usize] as f64 / 100.0;
+                if br_player == winner {
+                    // Rake comes out of the won pot; the loser's payoff is
+                    // its own contribution either way.
+                    pay -= self.rake.rake_cbb(state.pot(), state.street) as f64 / 100.0;
+                }
+                let compat = weighted_compat(&self.combos, opp_reach);
+                compat.iter().map(|w| pay * w).collect()
             }
             NodeKind::Showdown => {
                 let state = self.tree.nodes[node_id].state;
                 let win_bb =
                     showdown_payoffs(&state, Some(br_player))[br_player as usize] as f64 / 100.0;
-                self.showdown_diff(opp_reach)
-                    .iter()
-                    .map(|d| win_bb * d)
-                    .collect()
+                let diff = self.showdown_diff(opp_reach);
+                let rake_bb = self.rake.rake_cbb(state.pot(), state.street) as f64 / 100.0;
+                if rake_bb == 0.0 {
+                    // Legacy zero-sum fast path — bit-identical when unraked.
+                    diff.iter().map(|d| win_bb * d).collect()
+                } else {
+                    // winner nets win_bb − rake, loser −win_bb, chop −rake/2:
+                    //   EV = win_bb·diff − rake·(compat + diff)/2
+                    let compat = weighted_compat(&self.combos, opp_reach);
+                    diff.iter()
+                        .zip(compat.iter())
+                        .map(|(d, w)| win_bb * d - rake_bb * (w + d) / 2.0)
+                        .collect()
+                }
             }
             NodeKind::Chance { .. } => unreachable!("river-only tree has no chance nodes"),
             NodeKind::NextStreet { .. } => unreachable!("river-only trees have no NextStreet nodes"),
@@ -320,19 +386,32 @@ impl VectorRiverSolver {
         match kind {
             NodeKind::FoldTerminal { winner } => {
                 let state = self.tree.nodes[node_id].state;
-                let pay = fold_payoffs(&state, winner)[player as usize] as f64 / 100.0;
-                weighted_compat(&self.combos, opp_reach)
-                    .iter()
-                    .map(|w| pay * w)
-                    .collect()
+                let mut pay = fold_payoffs(&state, winner)[player as usize] as f64 / 100.0;
+                if player == winner {
+                    // Rake comes out of the won pot; the loser's payoff is
+                    // its own contribution either way.
+                    pay -= self.rake.rake_cbb(state.pot(), state.street) as f64 / 100.0;
+                }
+                let compat = weighted_compat(&self.combos, opp_reach);
+                compat.iter().map(|w| pay * w).collect()
             }
             NodeKind::Showdown => {
                 let state = self.tree.nodes[node_id].state;
                 let win_bb = showdown_payoffs(&state, Some(player))[player as usize] as f64 / 100.0;
-                self.showdown_diff(opp_reach)
-                    .iter()
-                    .map(|d| win_bb * d)
-                    .collect()
+                let diff = self.showdown_diff(opp_reach);
+                let rake_bb = self.rake.rake_cbb(state.pot(), state.street) as f64 / 100.0;
+                if rake_bb == 0.0 {
+                    // Legacy zero-sum fast path — bit-identical when unraked.
+                    diff.iter().map(|d| win_bb * d).collect()
+                } else {
+                    // winner nets win_bb − rake, loser −win_bb, chop −rake/2:
+                    //   EV = win_bb·diff − rake·(compat + diff)/2
+                    let compat = weighted_compat(&self.combos, opp_reach);
+                    diff.iter()
+                        .zip(compat.iter())
+                        .map(|(d, w)| win_bb * d - rake_bb * (w + d) / 2.0)
+                        .collect()
+                }
             }
             NodeKind::Chance { .. } => unreachable!("river-only tree has no chance nodes"),
             NodeKind::NextStreet { .. } => unreachable!("river-only trees have no NextStreet nodes"),
@@ -371,33 +450,32 @@ impl VectorRiverSolver {
         }
     }
 
-    /// Game value (bb/hand) to player 0 when both players follow the
-    /// converged average strategy.  Intended for test / validation use.
-    ///
-    /// Normalization mirrors `exploitability_bb`:
-    ///   value = Σ_c r0[c]·v0[c]  /  Σ_c r0[c]·compat(r1)[c]
-    /// where v0 are counterfactual avg-vs-avg values for player 0.
-    pub fn game_value_p0(&self) -> f64 {
-        let r0 = self.ranges[0].weights;
-        let r1 = self.ranges[1].weights;
-        let vals = self.avg_values(0, 0, &r1);
-        let compat = weighted_compat(&self.combos, &r1);
+    /// Game value (bb/hand) to `player` when both follow the converged
+    /// average strategy. Same normalization as `exploitability_bb`.
+    pub fn game_value(&self, player: u8) -> f64 {
+        let own = self.ranges[player as usize].weights;
+        let opp = self.ranges[1 - player as usize].weights;
+        let vals = self.avg_values(0, player, &opp);
+        let compat = weighted_compat(&self.combos, &opp);
         let mut num = 0.0;
         let mut z = 0.0;
         for c in 0..N {
-            if r0[c] > 0.0 {
-                num += r0[c] * vals[c];
-                z += r0[c] * compat[c];
+            if own[c] > 0.0 {
+                num += own[c] * vals[c];
+                z += own[c] * compat[c];
             }
         }
-        if z > 0.0 {
-            num / z
-        } else {
-            0.0
-        }
+        if z > 0.0 { num / z } else { 0.0 }
     }
 
-    /// Exploitability in bb/hand: (BR_sb + BR_bb) / 2.
+    pub fn game_value_p0(&self) -> f64 {
+        self.game_value(0)
+    }
+
+    /// General-sum exploitability: per-player BR gain vs the avg-vs-avg
+    /// game value; NashConv = Σ gains. Unraked, NashConv = br0 + br1
+    /// exactly (zero-sum identity) — that branch is bit-identical to the
+    /// pre-rake formula.
     pub fn exploitability_bb(&self) -> ExplReport {
         let mut br_value = [0.0f64; 2];
         #[allow(clippy::needless_range_loop)]
@@ -416,9 +494,49 @@ impl VectorRiverSolver {
             }
             br_value[p] = if z > 0.0 { num / z } else { 0.0 };
         }
+        let game_value = [self.game_value(0), self.game_value(1)];
+        let br_gain = [br_value[0] - game_value[0], br_value[1] - game_value[1]];
+        let nashconv = if self.rake.is_none() {
+            br_value[0] + br_value[1]
+        } else {
+            br_gain[0] + br_gain[1]
+        };
         ExplReport {
             br_value,
-            exploitability: (br_value[0] + br_value[1]) / 2.0,
+            game_value,
+            br_gain,
+            nashconv,
+            exploitability: nashconv / 2.0,
         }
+    }
+
+    /// Range-vs-range equity for player 0 on this river (rake-independent:
+    /// pure win probability, ties counted half).
+    pub fn range_equity_p0(&self) -> f64 {
+        let r0 = self.ranges[0].weights;
+        let r1 = &self.ranges[1].weights;
+        let diff = self.showdown.diff(&self.combos, r1);
+        let compat = weighted_compat(&self.combos, r1);
+        let mut num = 0.0;
+        let mut z = 0.0;
+        for c in 0..N {
+            if r0[c] > 0.0 && compat[c] > 0.0 {
+                // per-combo equity = (w_win + w_tie/2)/W = (W + diff)/(2W)
+                num += r0[c] * (compat[c] + diff[c]) / 2.0;
+                z += r0[c] * compat[c];
+            }
+        }
+        if z > 0.0 { num / z } else { 0.5 }
+    }
+
+    /// Per-combo EV (bb) for `player` at the root under avg-vs-avg play,
+    /// normalized per live opponent matchup. 0.0 where no live matchups.
+    pub fn root_combo_evs(&self, player: u8) -> Vec<f64> {
+        let opp = self.ranges[1 - player as usize].weights;
+        let vals = self.avg_values(0, player, &opp);
+        let compat = weighted_compat(&self.combos, &opp);
+        (0..N)
+            .map(|c| if compat[c] > 0.0 { vals[c] / compat[c] } else { 0.0 })
+            .collect()
     }
 }

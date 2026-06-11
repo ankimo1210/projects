@@ -417,9 +417,6 @@ impl PreflopSolver {
             }
             br_value[p] = if z > 0.0 { num / z } else { 0.0 };
         }
-        ExplReport {
-            br_value,
-            exploitability: (br_value[0] + br_value[1]) / 2.0,
-        }
+        ExplReport::zero_sum(br_value)
     }
 }
