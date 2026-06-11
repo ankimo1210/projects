@@ -88,7 +88,7 @@ fn batch_solve_rust(
 
     // Group spots by (half_pot, effective_stack). The game tree's node pots are
     // derived from the spot's pot/stack, so a single tree is only correct for
-    // spots that share both. Mixed-pot batches (the production multistreet path)
+    // spots that share both. Mixed-pot batches
     // would otherwise solve every spot except the first with the wrong pot (B1).
     let groups = group_spots(&half_pots, &eff_stacks);
 

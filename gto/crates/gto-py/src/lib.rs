@@ -1,7 +1,7 @@
 use pyo3::prelude::*;
 use gto_core::card::Card;
 use gto_core::{monte_carlo, parse_cards};
-use gto_core::{solve, all_combos, evaluate7, solve_multistreet};
+use gto_core::{solve, all_combos, evaluate7};
 use gto_core::eval::parse_card as parse_card_u8;
 
 /// Plain-Rust result of a GIL-released HU solve, ready for dict-building
@@ -135,97 +135,6 @@ fn eval7(cards: Vec<u8>) -> PyResult<u16> {
     }
     let arr: [u8; 7] = cards.try_into().unwrap();
     Ok(evaluate7(&arr))
-}
-
-/// Single-street flop solve with external terminal EVs at NextStreet nodes.
-/// `terminal_evs`: list of 5 lists, each of length 1326.
-///   Index order matches tree NextStreet nodes (check-check, check-bet-call,
-///   check-bet-raise-call, bet-call, bet-raise-call).
-/// Returns {"strategy": [...], "exploitability": float}
-#[pyfunction]
-fn solve_flop_with_ev(
-    py: Python<'_>,
-    pot_bb: f64,
-    effective_stack_bb: f64,
-    board: Vec<String>,
-    terminal_evs: Vec<Vec<f64>>,
-    iterations: Option<u32>,
-) -> PyResult<PyObject> {
-    use gto_core::{multistreet::SubgameSolver, range::Range, tree::Street, eval::parse_card as pc};
-
-    let iters = iterations.unwrap_or(300);
-    let pot   = (pot_bb   * 100.0) as i64;
-    let stack = (effective_stack_bb * 100.0) as i64;
-    let board_u8: Vec<u8> = board.iter().filter_map(|s| pc(s)).collect();
-    if board_u8.len() != 3 {
-        return Err(pyo3::exceptions::PyValueError::new_err("board must have 3 cards"));
-    }
-    reject_duplicate_cards(&board_u8)?;
-
-    // Heavy compute runs without the GIL; all inputs are plain Rust types now.
-    let (strat, expl) = py.allow_threads(|| {
-        let ranges = [Range::new_uniform(), Range::new_uniform()];
-        let mut solver = SubgameSolver::new(pot, stack, board_u8, ranges, Street::Flop);
-
-        // Inject external terminal EVs at NextStreet nodes
-        let ns_ids = solver.next_street_node_ids();
-        for (i, &nid) in ns_ids.iter().enumerate() {
-            if let Some(ev_vec) = terminal_evs.get(i) {
-                solver.next_evs.insert(nid, ev_vec.iter().map(|&v| v).collect());
-            }
-        }
-
-        let expl = solver.run(iters);
-        let strat = solver.root_strategy();
-        (strat, expl)
-    });
-
-    let dict = pyo3::types::PyDict::new(py);
-    let agg  = pyo3::types::PyList::empty(py);
-    for (name, freq) in &strat {
-        let e = pyo3::types::PyDict::new(py);
-        e.set_item("action", name)?;
-        e.set_item("freq", freq)?;
-        agg.append(e)?;
-    }
-    dict.set_item("strategy", agg)?;
-    dict.set_item("exploitability", expl)?;
-    Ok(dict.into())
-}
-
-/// Full multi-street (flop→turn→river) GTO solve.
-/// Returns {"strategy": [...], "exploitability": float}
-#[pyfunction]
-fn solve_spot_multistreet(
-    py: Python<'_>,
-    pot_bb: f64,
-    effective_stack_bb: f64,
-    board: Vec<String>,
-    iterations: Option<u32>,
-) -> PyResult<PyObject> {
-    let iters = iterations.unwrap_or(300);
-    let board_u8: Vec<u8> = board.iter()
-        .filter_map(|s| parse_card_u8(s))
-        .collect();
-    if board_u8.len() != 3 {
-        return Err(pyo3::exceptions::PyValueError::new_err("board must have exactly 3 cards (flop)"));
-    }
-    reject_duplicate_cards(&board_u8)?;
-    let result = py.allow_threads(|| {
-        solve_multistreet(pot_bb, effective_stack_bb, &board_u8, iters)
-    });
-
-    let dict = pyo3::types::PyDict::new(py);
-    let agg = pyo3::types::PyList::empty(py);
-    for (name, freq) in &result.flop_strategy {
-        let e = pyo3::types::PyDict::new(py);
-        e.set_item("action", name)?;
-        e.set_item("freq", freq)?;
-        agg.append(e)?;
-    }
-    dict.set_item("strategy", agg)?;
-    dict.set_item("exploitability", result.exploitability)?;
-    Ok(dict.into())
 }
 
 /// Exact HU river equilibrium (gto-hu). Unlike `solve_spot` (gto-cuda,
@@ -473,8 +382,6 @@ fn gto_py(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(equity, m)?)?;
     m.add_function(wrap_pyfunction!(parse_card_fn, m)?)?;
     m.add_function(wrap_pyfunction!(solve_spot, m)?)?;
-    m.add_function(wrap_pyfunction!(solve_spot_multistreet, m)?)?;
-    m.add_function(wrap_pyfunction!(solve_flop_with_ev, m)?)?;
     m.add_function(wrap_pyfunction!(solve_hu_river, m)?)?;
     m.add_function(wrap_pyfunction!(solve_hu_turn_river, m)?)?;
     m.add_function(wrap_pyfunction!(eval7, m)?)?;
