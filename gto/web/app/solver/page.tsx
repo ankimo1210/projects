@@ -4,6 +4,7 @@ import { useState } from "react";
 import NeonShell from "@/components/layout/NeonShell";
 import { solveSpot, SolveResponse } from "@/lib/solver-api";
 import { ACTION_COLORS, ACTION_LABELS } from "@/lib/library-api";
+import CustomSolve from "./CustomSolve";
 
 // ---------------------------------------------------------------------------
 // Card picker
@@ -262,6 +263,12 @@ export default function SolverPage() {
               </div>
             </div>
           )}
+
+          {/* Equilibrium custom solve (gto-hu, exact exploitability) — distinct
+              from the legacy gto-cuda single-street approximation above. */}
+          <div className="border-t border-cyan-500/10 pt-2">
+            <CustomSolve />
+          </div>
         </main>
 
         {/* Right: quick reference */}
