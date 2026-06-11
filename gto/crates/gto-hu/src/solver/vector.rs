@@ -123,8 +123,12 @@ impl VectorRiverSolver {
                 let mut pay = fold_payoffs(&state, winner)[traverser as usize] as f64 / 100.0;
                 if traverser == winner {
                     // Rake comes out of the won pot; the loser's payoff is
-                    // its own contribution either way.
-                    pay -= self.rake.rake_cbb(state.pot(), state.street) as f64 / 100.0;
+                    // its own contribution either way. A fold faces a bet, so
+                    // the matched pot 2*min(contrib) excludes the uncalled bet
+                    // that fold_payoffs returns to the winner — rake that, not
+                    // the full pot.
+                    let matched_pot = 2 * state.contrib[0].min(state.contrib[1]);
+                    pay -= self.rake.rake_cbb(matched_pot, state.street) as f64 / 100.0;
                 }
                 let compat = weighted_compat(&self.combos, opp_reach);
                 compat.iter().map(|w| pay * w).collect()
@@ -310,8 +314,12 @@ impl VectorRiverSolver {
                 let mut pay = fold_payoffs(&state, winner)[br_player as usize] as f64 / 100.0;
                 if br_player == winner {
                     // Rake comes out of the won pot; the loser's payoff is
-                    // its own contribution either way.
-                    pay -= self.rake.rake_cbb(state.pot(), state.street) as f64 / 100.0;
+                    // its own contribution either way. A fold faces a bet, so
+                    // the matched pot 2*min(contrib) excludes the uncalled bet
+                    // that fold_payoffs returns to the winner — rake that, not
+                    // the full pot.
+                    let matched_pot = 2 * state.contrib[0].min(state.contrib[1]);
+                    pay -= self.rake.rake_cbb(matched_pot, state.street) as f64 / 100.0;
                 }
                 let compat = weighted_compat(&self.combos, opp_reach);
                 compat.iter().map(|w| pay * w).collect()
@@ -389,8 +397,12 @@ impl VectorRiverSolver {
                 let mut pay = fold_payoffs(&state, winner)[player as usize] as f64 / 100.0;
                 if player == winner {
                     // Rake comes out of the won pot; the loser's payoff is
-                    // its own contribution either way.
-                    pay -= self.rake.rake_cbb(state.pot(), state.street) as f64 / 100.0;
+                    // its own contribution either way. A fold faces a bet, so
+                    // the matched pot 2*min(contrib) excludes the uncalled bet
+                    // that fold_payoffs returns to the winner — rake that, not
+                    // the full pot.
+                    let matched_pot = 2 * state.contrib[0].min(state.contrib[1]);
+                    pay -= self.rake.rake_cbb(matched_pot, state.street) as f64 / 100.0;
                 }
                 let compat = weighted_compat(&self.combos, opp_reach);
                 compat.iter().map(|w| pay * w).collect()
