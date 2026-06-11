@@ -9,6 +9,7 @@ from gto.api.routers import (
     library,
     review,
     simulation,
+    solve,
     solver,
     trainer,
 )
@@ -31,6 +32,7 @@ app.include_router(library.router, prefix="/api")
 app.include_router(simulation.router, prefix="/api")
 app.include_router(review.router, prefix="/api")
 app.include_router(hu.router, prefix="/api")
+app.include_router(solve.router, prefix="/api")
 
 # Serve pre-computed solution data (Parquet + JSON cache) for direct browser fetch
 SOLUTIONS_DIR.mkdir(parents=True, exist_ok=True)

@@ -8,7 +8,7 @@ exact exploitability number attached. Fast enough to run live.
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Response
 from pydantic import BaseModel
 
 router = APIRouter()
@@ -53,7 +53,9 @@ class RiverResponse(BaseModel):
 
 
 @router.post("/hu/river", response_model=RiverResponse)
-async def solve_river(req: RiverRequest):
+async def solve_river(req: RiverRequest, response: Response):
+    response.headers["Deprecation"] = "true"
+    response.headers["Link"] = '</api/solve>; rel="successor-version"'
     if len(req.board) != 5:
         raise HTTPException(422, "river board must have exactly 5 cards")
     if req.iterations < 100 or req.iterations > 50_000:
@@ -81,10 +83,12 @@ async def solve_river(req: RiverRequest):
 
 
 @router.post("/hu/turn-river", response_model=RiverResponse)
-async def solve_turn_river(req: TurnRiverRequest):
+async def solve_turn_river(req: TurnRiverRequest, response: Response):
     """Exact turn+river equilibrium (river enumerated, turn sampled). The
     turn root strategy is OOP (BB). Slow: ~30-40 s at 10k iterations —
     the frontend must call this asynchronously."""
+    response.headers["Deprecation"] = "true"
+    response.headers["Link"] = '</api/solve>; rel="successor-version"'
     if len(req.board) != 4:
         raise HTTPException(422, "turn board must have exactly 4 cards")
     if req.iterations < 100 or req.iterations > 30_000:
