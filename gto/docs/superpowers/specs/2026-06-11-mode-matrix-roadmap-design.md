@@ -1,11 +1,16 @@
 # Mode Matrix Roadmap + M1 (Custom Solve Foundation) — Design
 
 Date: 2026-06-11 (rev 2)
-Status: rev 2 after a 59-agent adversarial re-review (workflow `wf_516fbff8-8bf`:
-5 lenses — architecture fitness, variant seam, M2 range data, compute budget,
-spec critique; 14 findings confirmed, 12 adjudicated, 1 refuted). The user
-explicitly authorized decommissioning existing assets where they dead-end.
-Spec awaiting user review.
+Status: **M1a implemented** (branch `feat/m1a-custom-solve`; plan
+`docs/superpowers/plans/2026-06-11-m1a-custom-solve-foundation.md`). M1b
+(flop binding + async job subsystem) and M2+ pending. Rev 2 followed a
+59-agent adversarial re-review (workflow `wf_516fbff8-8bf`: 5 lenses; 14
+findings confirmed, 12 adjudicated, 1 refuted). The user authorized
+decommissioning dead-end assets.
+Implementation note: §4.2's "Kuhn/Leduc + rake" validation was realized as
+hand-checkable degenerate-river-tree tests (Kuhn/Leduc run on `ScalarCfr`,
+which has no rake path); the fold-terminal rake base is the matched pot
+`2*min(contrib)` (uncalled bets are not raked).
 Project: `gto/` — product roadmap toward the full solver mode matrix
 Relation to Phase E: **M1 runs before E1**. The E1 spec
 (`2026-06-09-phase-e1-public-deploy-design.md`) stays valid for infra/auth but

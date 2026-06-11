@@ -1,10 +1,37 @@
 # GTO Poker Suite — 進捗 & TODO
 
-最終更新: 2026-06-11（コアロジック包括レビューの確定 30 件を修正・検証・ライブラリ再生成）
+最終更新: 2026-06-11（M1a カスタムソルブ基盤を実装。コアロジック修正・再生成も同日）
 
 ---
 
 ## 完了済み
+
+### M1a — Custom Solve 基盤 (2026-06-11)
+モードマトリクス・ロードマップ（`docs/superpowers/specs/2026-06-11-mode-matrix-
+roadmap-design.md`）の M1a を subagent-driven で実装（plan: `docs/superpowers/
+plans/2026-06-11-m1a-custom-solve-foundation.md`、branch `feat/m1a-custom-solve`）。
+- **近似 multistreet 層を廃止**（gto-core multistreet.rs / solve_spot_multistreet・
+  solve_flop_with_ev バインディング / multistreet_gpu.py / batch_multistreet.py /
+  _sample_multistreet.py）。API・ページから到達不能を検証済み。
+- **Rake + 一般和 exploitability**: `RakeModel`（none/site/live）を gto-hu の river・
+  turn+river 終端に適用（fold は **matched pot** = `2*min(contrib)` で課金、未コール
+  ベットは非課金）。`ExplReport` を per-player BR gain（NashConv）化。無 rake 時は
+  `br0+br1` 厳密恒等式でビット同一維持。退化ツリー手計算検証（強制チェックダウン
+  −1bb / 全チョップ −0.5bb / 非対称レンジ 9・−10bb）。terminal.rs は zero-sum 据置。
+- **PokerVariant thin seam**: gto-core に trait（combo_count/combo_cards/blocker_mask/
+  showdown_strengths）+ Nlhe 実装、gto-hu の vector ソルバを `nlhe()` 経由に配線
+  （`[f64;N]` 配列は M4 PLO まで据置、既存スイートとビット同一）。
+- **gto-py 拡張**: solve_hu_river / solve_hu_turn_river に ranges（1326 重み or 記法）/
+  bet sizes / pot type / rake 入力 + equity・per-combo EV・NashConv 出力。combo
+  エクスポートのフィルタを ranges[1]（root actor=BB）に修正（潜在バグ）。
+- **GameSpec API**: `POST /api/solve`（cash×nlhe×hu×postflop、未対応軸は 422 +
+  capabilities ポインタ）+ `GET /api/solve/capabilities` + 統一 SolveResult。
+  `/api/hu/*` に Deprecation ヘッダ。`gto.library.range_notation` 記法パーサ。
+- **Web**: /solver に Custom Solve フォーム（gto-hu 均衡 + exact exploitability
+  バナー）。Playwright で実描画検証（expl 0.0012bb / EV ±0.702 / 2000 iters）。
+- 検証: pytest 79 passed、cargo フルスイート green。
+- **残（M1b 別プラン）**: solve_hu_flop バインディング（未実装、CLI のみ）+ 非同期
+  ジョブ基盤 + flop カスタムソルブ。
 
 ### Core-logic 修正適用 (2026-06-11)
 2026-06-10 の包括レビュー（`docs/reviews/2026-06-10-core-logic-review.md`）の
