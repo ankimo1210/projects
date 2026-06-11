@@ -16,7 +16,7 @@ use super::vector::ExplReport;
 use crate::game::rake::RakeModel;
 use crate::game::terminal::{fold_payoffs, showdown_payoffs};
 use crate::game::Street;
-use crate::ranges::{all_combos, Range, NUM_COMBOS};
+use crate::ranges::{Range, NUM_COMBOS};
 use crate::tree::{NodeKind, Tree};
 
 const N: usize = NUM_COMBOS;
@@ -72,7 +72,8 @@ pub struct TurnRiverSolver {
 
 #[inline]
 fn combo_blocks(combo: (u8, u8), card: u8) -> bool {
-    combo.0 == card || combo.1 == card
+    use crate::ranges::{nlhe, PokerVariant};
+    nlhe().blocker_mask(&combo) & (1u64 << card) != 0
 }
 
 fn zero_card(combos: &[(u8, u8)], card: u8, weights: &mut [f64; N]) {
@@ -180,7 +181,7 @@ impl TurnRiverSolver {
             regret_disc_prefix_neg: vec![1.0],
             rng: SplitMix64::new(seed),
             iteration: 0,
-            combos: all_combos(),
+            combos: crate::ranges::nlhe().combos().to_vec(),
         }
     }
 

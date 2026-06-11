@@ -270,8 +270,10 @@ vector solvers; the N×N equity-model path is out (F3).
 
 Acceptance (replaces the rev-1 "no 1326 literal" criterion, which tested the
 wrong thing — only 7 doc-comment occurrences exist): (a) existing gto-hu
-suite bit-identical; (b) no direct `NUM_COMBOS` reference outside
-`gto-core::range` + the NLHE variant impl; (c) combo count / combo→cards /
+suite bit-identical; (b) no *behavioral* use of gto-core combo/strength/blocker
+functions outside the trait path in the three vector solvers; `NUM_COMBOS` may
+remain only as the `const N` array-dimension alias (the thin-seam boundary —
+array-type genericity is M4 scope); (c) combo count / combo→cards /
 blocker test / strengths reached only via the trait in the three vector
 solvers. Python side is NOT seamed in M1 (its 1326 duplication is recorded
 as M4 scope).

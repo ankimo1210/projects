@@ -3,7 +3,7 @@ use super::showdown::{weighted_compat, ShowdownTable};
 use super::variant::CfrVariant;
 use crate::game::rake::RakeModel;
 use crate::game::terminal::{fold_payoffs, showdown_payoffs};
-use crate::ranges::{all_combos, Range, NUM_COMBOS};
+use crate::ranges::{Range, NUM_COMBOS};
 use crate::tree::{NodeKind, Tree};
 
 const N: usize = NUM_COMBOS;
@@ -82,7 +82,7 @@ impl VectorRiverSolver {
         };
         let regrets = alloc(&tree);
         let strat_sum = alloc(&tree);
-        let combos = all_combos();
+        let combos = crate::ranges::nlhe().combos().to_vec();
         VectorRiverSolver {
             tree,
             board,

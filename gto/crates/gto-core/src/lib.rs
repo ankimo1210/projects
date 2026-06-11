@@ -4,6 +4,7 @@ pub mod eval;
 pub mod range;
 pub mod tree;
 pub mod cfr;
+pub mod variant;
 
 // Re-exports for downstream crates
 pub use card::{Card, Rank, Suit, HandRank, evaluate, full_deck};
@@ -12,6 +13,7 @@ pub use eval::{evaluate7, evaluate_best, parse_card, showdown_strengths};
 pub use range::{Range, all_combos, combo_index, NUM_COMBOS};
 pub use tree::{Action, GameTree, Node, NodeKind, Street};
 pub use cfr::CfrSolver;
+pub use variant::{Nlhe, PokerVariant};
 
 // ---------------------------------------------------------------------------
 // High-level solve API (mirrors gto-solver's top-level fn)

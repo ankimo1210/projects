@@ -35,7 +35,7 @@ use super::variant::CfrVariant;
 use super::vector::ExplReport;
 use crate::game::terminal::{fold_payoffs, showdown_payoffs};
 use crate::game::Street;
-use crate::ranges::{all_combos, Range, NUM_COMBOS};
+use crate::ranges::{Range, NUM_COMBOS};
 use crate::tree::{NodeKind, Tree};
 
 const N: usize = NUM_COMBOS;
@@ -425,7 +425,7 @@ impl FlopSolver {
             regret_disc_prefix_neg: vec![1.0],
             rng: SplitMix64::new(seed),
             iteration: 0,
-            combos: all_combos(),
+            combos: crate::ranges::nlhe().combos().to_vec(),
         }
     }
 

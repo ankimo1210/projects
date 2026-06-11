@@ -1,7 +1,5 @@
 //! Blocker-exact showdown machinery shared by the vector solvers.
 
-use gto_core::eval::showdown_strengths;
-
 use crate::ranges::NUM_COMBOS;
 
 const N: usize = NUM_COMBOS;
@@ -15,7 +13,12 @@ pub struct ShowdownTable {
 
 impl ShowdownTable {
     pub fn new(board: &[u8; 5]) -> Self {
-        let strengths = showdown_strengths(board);
+        use crate::ranges::PokerVariant;
+        Self::from_strengths(crate::ranges::nlhe().showdown_strengths(board))
+    }
+
+    /// Build from variant-provided strengths (PokerVariant seam).
+    pub fn from_strengths(strengths: Vec<u16>) -> Self {
         let mut sorted_idx: Vec<usize> = (0..N).filter(|&i| strengths[i] > 0).collect();
         sorted_idx.sort_unstable_by_key(|&i| strengths[i]);
         ShowdownTable {
