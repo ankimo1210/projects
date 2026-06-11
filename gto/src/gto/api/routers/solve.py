@@ -101,8 +101,10 @@ def _resolve_rake(r: RakeSpec) -> tuple[float, float]:
     if r.model == "custom":
         if r.pct is None or r.cap_bb is None:
             raise HTTPException(422, "custom rake requires pct and cap_bb")
-        if not 0.0 <= r.pct < 0.5 or r.cap_bb < 0:
-            raise HTTPException(422, "rake pct must be in [0, 0.5), cap_bb >= 0")
+        # A positive rake needs a positive cap (the binding rejects cap<=0);
+        # validate it here too so both layers agree on the boundary.
+        if not 0.0 <= r.pct < 0.5 or (r.pct > 0.0 and r.cap_bb <= 0.0) or r.cap_bb < 0.0:
+            raise HTTPException(422, "rake pct must be in [0, 0.5); cap_bb must be > 0 when pct > 0")
         return r.pct, r.cap_bb
     return RAKE_PRESETS[r.model]
 
