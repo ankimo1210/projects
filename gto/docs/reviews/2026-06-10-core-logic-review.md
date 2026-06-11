@@ -195,3 +195,36 @@ gto-hu `vector.rs:66-69` is the correct pattern.
 4 findings were refuted by adversarial verification (e.g. claims contradicted
 by guards elsewhere or unreachable inputs); 1 finding was split and adjudicated
 manually (B11). Full verifier transcripts: workflow run `wf_c805854e-55f`.
+
+## Applied — 2026-06-11
+
+All confirmed findings (B1–B14, I1/I2/I5/I9/I10/I12) were implemented and
+merged to `main` (commits `0022df5`, `0a4273f`, `9128d7a`, `0c58900`,
+`6f95e60`, `295fb60`).
+
+Verification:
+- **cargo test (full workspace): green.** New gto-cuda `showdown_diff` tests
+  (5) validate B1/B2/B3 against the gto-core CPU reference on the RTX 5080 and
+  B9 cross-thread context. gto-core: B8/B11 pinned. gto-hu: B7 lazy discount
+  (CFR+ bit-identical), I1/I2/I5 perf baselines, B13 1bb floor.
+- **pytest: 59 passed.** B4 GIL release (counter + 1.01× two-call wall-clock
+  overlap), B6 card-overlap (binding + API 4xx), B10 masking (A-first→gto-core
+  encoding + per-combo `live` divisor, exact-equality invariant; fails-without-
+  fix demonstrated: encoding leak → max 91.05, scalar divisor → 6.894).
+- **Mixed-pot B1 through the `gto_cuda.batch_solve_fast` pyfunction:** batched
+  results match per-spot solves exactly; cross-pot diff 38.0 confirms the match
+  is non-vacuous.
+
+Library regenerated via `batch_solve_rust` (the B2/B3 production path): 19,305
+spots, 53 min, pre-fix backup at `_data/gto/solutions_backup_20260611`. Drift:
+- strategy freq mean |Δ| = 0.114 — *every* spot moved >0.10 on some action;
+  BTN-100 Check aggregate shifted +~0.10 (B2 removed the phantom blocked-combo
+  bet-incentive). Exploitability unchanged (~0, single-street converged).
+- Per-combo strategies are board-aware (max |Δ| = 0.99 between `AcAdAh` and
+  `AcAdKc`). The range-level *aggregate* stays coarsely bucketed (55 distinct
+  Check values / 1755 boards in **both** old and new) — a pre-existing
+  aggregate-weighting artifact (I11 family), report-only, out of scope here.
+
+Backlog (flagged, not fixed): I3/I4/I6/I7/I8/I11; FastCfrSolver last-traverser
+EV perspective; SubgameSolver `opp_reach[c]` weighting; library
+aggregate-strategy board bucketing (I11 family); B12 json-parse smoke test.

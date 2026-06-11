@@ -72,9 +72,12 @@ cargo test --manifest-path gto/Cargo.toml
 - **Preflop is hardcoded**, not solved by CFR. The frequencies in
   `src/gto/trainer/preflop_data.py` are an approximation table.
 - **`2c` phantom card bug** — fixed (Phase 1 evaluator rewrite, see
-  `eval::showdown_strengths`). The library was fully regenerated with the
-  fixed evaluator on 2026-06-07 (19,305 spots); the old-evaluator Parquet
-  lives in `_data/gto/solutions_legacy_backup_20260607/`.
+  `eval::showdown_strengths`). The library was regenerated with the fixed
+  evaluator on 2026-06-07, then **again on 2026-06-11** with the core-logic
+  review fixes (gto-cuda B1/B2/B3 — per-spot pot, blocked-combo showdown,
+  node-pot showdown). Both prior Parquet snapshots are kept:
+  `_data/gto/solutions_backup_20260611/` (pre-B2/B3) and
+  `_data/gto/solutions_legacy_backup_20260607/` (pre-evaluator-fix).
 - **`uv sync` (or `uv run` without `--no-sync`) removes the maturin-built
   `gto_py` / `gto_cuda` modules** from the workspace venv — they are not in
   the lockfile. Rebuild with `maturin develop --uv` (plain `maturin develop`
@@ -82,7 +85,9 @@ cargo test --manifest-path gto/Cargo.toml
 - **CUDA 12.8 + sm_120**: hardware/driver assumption is RTX 5080 (Blackwell).
   Older GPUs likely fail at JIT compile.
 - **Do not delete** `_data/gto/solutions/` Parquet without explicit user
-  request — regenerating the full library takes ~24 minutes on GPU.
+  request — regenerating the full 19,305-spot library takes ~53 minutes on GPU
+  (`batch_solve_rust` hybrid path: BTN/CO/SB×{50,100,200} + HJ/UTG×{100},
+  iters=300, batch-size=32). Back up first (`mv solutions solutions_backup_<date>`).
 - **`gto/web/node_modules/`** is large; never grep into it.
 - **gto-hu is the only solver allowed to claim equilibrium output**, and
   only with its exploitability number attached. gto-core/gto-cuda remain

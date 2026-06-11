@@ -1,10 +1,31 @@
 # GTO Poker Suite — 進捗 & TODO
 
-最終更新: 2026-06-07（夜: 再生成・Phase B/C/D・HU フロップ木を完了）
+最終更新: 2026-06-11（コアロジック包括レビューの確定 30 件を修正・検証・ライブラリ再生成）
 
 ---
 
 ## 完了済み
+
+### Core-logic 修正適用 (2026-06-11)
+2026-06-10 の包括レビュー（`docs/reviews/2026-06-10-core-logic-review.md`）の
+確定 30 件を実装・マージ・検証済み（commits 0022df5, 0a4273f, 9128d7a,
+0c58900, 6f95e60, 295fb60）。
+- gto-cuda: B1 per-spot pot（`group_spots`）/ B2 ブロック済みコンボ /
+  B3 node-pot showdown / B9 cuCtxSetCurrent。`showdown_diff` 5 本が
+  RTX 5080 実機で CPU 参照と一致を検証。
+- gto-py: B4 GIL 解放（2 並列 solve が 1.01× で重なる）/ B6 カード重複 422。
+- gto-core: B5 希釈 / B8 DCFR 平均 / B11 reach binding。
+- gto-hu: B7 lazy discount（CFR+ ビット同一）/ I1・I2・I5 / B13 1bb floor。
+- Python: B10 multistreet マスク（A-first→gto-core 変換 + per-combo 分母）/
+  B14 stack 毎キャッシュ / I12 dead loop 削除。
+- **ライブラリ再生成**（batch_solve_rust, B2/B3 経路）: 19,305 spots / 53 分。
+  事前バックアップ `_data/gto/solutions_backup_20260611`。drift: 戦略頻度
+  平均|Δ|=0.114（全 spot が何らかのアクションで >0.10 移動）、BTN-100 Check
+  集約が +~0.10（B2 のファントム勝ち除去）。combo 単位はボード依存（正）、
+  range 集約は粗バケット（55 値/1755 ボード、新旧共通 = I11 系の既存仕様）。
+- cargo 全 green / pytest 59 passed。
+- 残: I3/I4/I6/I7/I8/I11、FastCfrSolver EV 視点、SubgameSolver opp_reach 重み、
+  集約戦略のボードバケット（I11 系）、B12 json smoke。
 
 ### Phase 0: モノレポ基盤
 - [x] Rust workspace → `gto-core`, `gto-py`, `gto-cuda`, `gto-hu`
