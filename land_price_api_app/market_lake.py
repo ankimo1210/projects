@@ -21,9 +21,10 @@ from __future__ import annotations
 import json
 import re
 from collections.abc import Iterable
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from dataclasses import dataclass
 from datetime import datetime
+from itertools import islice
 
 from api_client import fetch_json
 from config import REINFOLIB_BASE_URL, get_logger
@@ -360,36 +361,49 @@ def run_sync(
         except Exception as e:  # 失敗タイルは記録だけして続行（resume で再試行可能）
             return w, None, e
 
+    # フェッチはウィンドウ投入で in-flight を制限する。
+    # 一括 submit すると futures リストが完了済み結果（GeoJSON）への参照を保持し続け、
+    # 全レスポンスがメモリに累積する（実測: 136k 件で RSS 47GB → OOM kill rc=137）。
+    work_iter = iter(work)
+    window = max(workers * 4, 8)
+    processed = 0
     with ThreadPoolExecutor(max_workers=workers) as ex:
-        futures = [ex.submit(_fetch, w) for w in work]
-        for i, fut in enumerate(as_completed(futures), 1):
-            w, features, err = fut.result()
-            if err is not None:
-                stats["failed"] += 1
-                logger.warning("失敗 %s z%d/%d/%d w=%s: %s", w.layer, w.z, w.x, w.y, w.window, err)
-                continue
-            n = len(features)
-            if w.layer == "xpt001":
-                rows = normalize_tx_features(features)
-                db.replace_lake_tx(conn, w.z, w.x, w.y, w.window, rows)
-            elif w.layer == "xkt013":
-                rows = normalize_pop_features(features)
-                db.replace_lake_pop(conn, w.z, w.x, w.y, rows)
-            else:
-                rows = normalize_gis_features(features)
-                db.replace_lake_gis(conn, w.layer, w.z, w.x, w.y, rows)
-            db.mark_lake_synced(conn, w.layer, w.z, w.x, w.y, w.window, n)
-            stats["ok"] += 1
-            stats["features"] += n
-            if i % progress_every == 0 or i == total:
-                logger.info(
-                    "進捗 %d/%d (ok=%d failed=%d features=%d)",
-                    i,
-                    total,
-                    stats["ok"],
-                    stats["failed"],
-                    stats["features"],
-                )
+        in_flight = {ex.submit(_fetch, w) for w in islice(work_iter, window)}
+        while in_flight:
+            done, in_flight = wait(in_flight, return_when=FIRST_COMPLETED)
+            for fut in done:
+                w, features, err = fut.result()
+                processed += 1
+                if err is not None:
+                    stats["failed"] += 1
+                    logger.warning(
+                        "失敗 %s z%d/%d/%d w=%s: %s", w.layer, w.z, w.x, w.y, w.window, err
+                    )
+                else:
+                    n = len(features)
+                    if w.layer == "xpt001":
+                        rows = normalize_tx_features(features)
+                        db.replace_lake_tx(conn, w.z, w.x, w.y, w.window, rows)
+                    elif w.layer == "xkt013":
+                        rows = normalize_pop_features(features)
+                        db.replace_lake_pop(conn, w.z, w.x, w.y, rows)
+                    else:
+                        rows = normalize_gis_features(features)
+                        db.replace_lake_gis(conn, w.layer, w.z, w.x, w.y, rows)
+                    db.mark_lake_synced(conn, w.layer, w.z, w.x, w.y, w.window, n)
+                    stats["ok"] += 1
+                    stats["features"] += n
+                if processed % progress_every == 0 or processed == total:
+                    logger.info(
+                        "進捗 %d/%d (ok=%d failed=%d features=%d)",
+                        processed,
+                        total,
+                        stats["ok"],
+                        stats["failed"],
+                        stats["features"],
+                    )
+            # 消費した分だけ補充（in-flight ≤ window を維持）
+            in_flight |= {ex.submit(_fetch, w) for w in islice(work_iter, len(done))}
 
     stats["finished_at"] = datetime.now().isoformat()
     logger.info("同期完了: %s", stats)
