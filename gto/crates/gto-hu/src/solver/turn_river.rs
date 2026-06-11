@@ -13,6 +13,7 @@ use super::rng::SplitMix64;
 use super::showdown::{weighted_compat, ShowdownTable};
 use super::variant::CfrVariant;
 use super::vector::ExplReport;
+use crate::game::rake::RakeModel;
 use crate::game::terminal::{fold_payoffs, showdown_payoffs};
 use crate::game::Street;
 use crate::ranges::{all_combos, Range, NUM_COMBOS};
@@ -36,6 +37,9 @@ pub struct TurnRiverSolver {
     pub ranges: [Range; 2],
     pub variant: CfrVariant,
     pub mode: ChanceMode,
+    /// Rake applied at terminals (RakeModel::NONE keeps the legacy
+    /// zero-sum path bit-identical).
+    rake: RakeModel,
     /// Legal public river cards (off the turn board), ascending.
     /// The index into this vec is the "card context" (ctx).
     rivers: Vec<u8>,
@@ -83,9 +87,20 @@ impl TurnRiverSolver {
     pub fn new(
         tree: Tree,
         turn_board: [u8; 4],
+        ranges: [Range; 2],
+        variant: CfrVariant,
+        mode: ChanceMode,
+    ) -> Self {
+        Self::with_rake(tree, turn_board, ranges, variant, mode, RakeModel::NONE)
+    }
+
+    pub fn with_rake(
+        tree: Tree,
+        turn_board: [u8; 4],
         mut ranges: [Range; 2],
         variant: CfrVariant,
         mode: ChanceMode,
+        rake: RakeModel,
     ) -> Self {
         assert_eq!(
             tree.nodes[0].state.street,
@@ -155,6 +170,7 @@ impl TurnRiverSolver {
             ranges,
             variant,
             mode,
+            rake,
             rivers,
             tables,
             regrets,
@@ -256,22 +272,38 @@ impl TurnRiverSolver {
         match kind {
             NodeKind::FoldTerminal { winner } => {
                 let state = self.tree.nodes[node_id].state;
-                let pay = fold_payoffs(&state, winner)[traverser as usize] as f64 / 100.0;
-                weighted_compat(&self.combos, opp_reach)
-                    .iter()
-                    .map(|w| pay * w)
-                    .collect()
+                let mut pay = fold_payoffs(&state, winner)[traverser as usize] as f64 / 100.0;
+                if traverser == winner {
+                    // Rake comes out of the won pot; the loser's payoff is
+                    // its own contribution either way. A fold faces a bet, so
+                    // the matched pot 2*min(contrib) excludes the uncalled bet
+                    // that fold_payoffs returns to the winner — rake that, not
+                    // the full pot.
+                    let matched_pot = 2 * state.contrib[0].min(state.contrib[1]);
+                    pay -= self.rake.rake_cbb(matched_pot, state.street) as f64 / 100.0;
+                }
+                let compat = weighted_compat(&self.combos, opp_reach);
+                compat.iter().map(|w| pay * w).collect()
             }
             NodeKind::Showdown => {
                 let state = self.tree.nodes[node_id].state;
                 let win_bb =
                     showdown_payoffs(&state, Some(traverser))[traverser as usize] as f64 / 100.0;
                 let table = &self.tables[ctx.expect("showdown requires a river card")];
-                table
-                    .diff(&self.combos, opp_reach)
-                    .iter()
-                    .map(|d| win_bb * d)
-                    .collect()
+                let diff = table.diff(&self.combos, opp_reach);
+                let rake_bb = self.rake.rake_cbb(state.pot(), state.street) as f64 / 100.0;
+                if rake_bb == 0.0 {
+                    // Legacy zero-sum fast path — bit-identical when unraked.
+                    diff.iter().map(|d| win_bb * d).collect()
+                } else {
+                    // winner nets win_bb − rake, loser −win_bb, chop −rake/2:
+                    //   EV = win_bb·diff − rake·(compat + diff)/2
+                    let compat = weighted_compat(&self.combos, opp_reach);
+                    diff.iter()
+                        .zip(compat.iter())
+                        .map(|(d, w)| win_bb * d - rake_bb * (w + d) / 2.0)
+                        .collect()
+                }
             }
             NodeKind::Chance { child } => match self.mode {
                 ChanceMode::Enumerate => self.chance_enumerate(child, traverser, reach, opp_reach),
@@ -545,22 +577,38 @@ impl TurnRiverSolver {
         match self.tree.nodes[node_id].kind {
             NodeKind::FoldTerminal { winner } => {
                 let state = self.tree.nodes[node_id].state;
-                let pay = fold_payoffs(&state, winner)[br_player as usize] as f64 / 100.0;
-                weighted_compat(&self.combos, opp_reach)
-                    .iter()
-                    .map(|w| pay * w)
-                    .collect()
+                let mut pay = fold_payoffs(&state, winner)[br_player as usize] as f64 / 100.0;
+                if br_player == winner {
+                    // Rake comes out of the won pot; the loser's payoff is
+                    // its own contribution either way. A fold faces a bet, so
+                    // the matched pot 2*min(contrib) excludes the uncalled bet
+                    // that fold_payoffs returns to the winner — rake that, not
+                    // the full pot.
+                    let matched_pot = 2 * state.contrib[0].min(state.contrib[1]);
+                    pay -= self.rake.rake_cbb(matched_pot, state.street) as f64 / 100.0;
+                }
+                let compat = weighted_compat(&self.combos, opp_reach);
+                compat.iter().map(|w| pay * w).collect()
             }
             NodeKind::Showdown => {
                 let state = self.tree.nodes[node_id].state;
                 let win_bb =
                     showdown_payoffs(&state, Some(br_player))[br_player as usize] as f64 / 100.0;
                 let table = &self.tables[ctx.expect("showdown requires a river card")];
-                table
-                    .diff(&self.combos, opp_reach)
-                    .iter()
-                    .map(|d| win_bb * d)
-                    .collect()
+                let diff = table.diff(&self.combos, opp_reach);
+                let rake_bb = self.rake.rake_cbb(state.pot(), state.street) as f64 / 100.0;
+                if rake_bb == 0.0 {
+                    // Legacy zero-sum fast path — bit-identical when unraked.
+                    diff.iter().map(|d| win_bb * d).collect()
+                } else {
+                    // winner nets win_bb − rake, loser −win_bb, chop −rake/2:
+                    //   EV = win_bb·diff − rake·(compat + diff)/2
+                    let compat = weighted_compat(&self.combos, opp_reach);
+                    diff.iter()
+                        .zip(compat.iter())
+                        .map(|(d, w)| win_bb * d - rake_bb * (w + d) / 2.0)
+                        .collect()
+                }
             }
             NodeKind::Chance { child } => {
                 let w = 1.0 / self.legal_rivers_per_deal();
@@ -625,21 +673,37 @@ impl TurnRiverSolver {
         match self.tree.nodes[node_id].kind {
             NodeKind::FoldTerminal { winner } => {
                 let state = self.tree.nodes[node_id].state;
-                let pay = fold_payoffs(&state, winner)[player as usize] as f64 / 100.0;
-                weighted_compat(&self.combos, opp_reach)
-                    .iter()
-                    .map(|w| pay * w)
-                    .collect()
+                let mut pay = fold_payoffs(&state, winner)[player as usize] as f64 / 100.0;
+                if player == winner {
+                    // Rake comes out of the won pot; the loser's payoff is
+                    // its own contribution either way. A fold faces a bet, so
+                    // the matched pot 2*min(contrib) excludes the uncalled bet
+                    // that fold_payoffs returns to the winner — rake that, not
+                    // the full pot.
+                    let matched_pot = 2 * state.contrib[0].min(state.contrib[1]);
+                    pay -= self.rake.rake_cbb(matched_pot, state.street) as f64 / 100.0;
+                }
+                let compat = weighted_compat(&self.combos, opp_reach);
+                compat.iter().map(|w| pay * w).collect()
             }
             NodeKind::Showdown => {
                 let state = self.tree.nodes[node_id].state;
                 let win_bb = showdown_payoffs(&state, Some(player))[player as usize] as f64 / 100.0;
                 let table = &self.tables[ctx.expect("showdown requires a river card")];
-                table
-                    .diff(&self.combos, opp_reach)
-                    .iter()
-                    .map(|d| win_bb * d)
-                    .collect()
+                let diff = table.diff(&self.combos, opp_reach);
+                let rake_bb = self.rake.rake_cbb(state.pot(), state.street) as f64 / 100.0;
+                if rake_bb == 0.0 {
+                    // Legacy zero-sum fast path — bit-identical when unraked.
+                    diff.iter().map(|d| win_bb * d).collect()
+                } else {
+                    // winner nets win_bb − rake, loser −win_bb, chop −rake/2:
+                    //   EV = win_bb·diff − rake·(compat + diff)/2
+                    let compat = weighted_compat(&self.combos, opp_reach);
+                    diff.iter()
+                        .zip(compat.iter())
+                        .map(|(d, w)| win_bb * d - rake_bb * (w + d) / 2.0)
+                        .collect()
+                }
             }
             NodeKind::Chance { child } => {
                 let w = 1.0 / self.legal_rivers_per_deal();
@@ -688,30 +752,36 @@ impl TurnRiverSolver {
         }
     }
 
-    /// Game value (bb/hand) to player 0 (SB/IP) under avg-vs-avg play.
-    /// Always exact (chance enumerated), even when training used sampling.
-    pub fn game_value_p0(&self) -> f64 {
-        let r0 = self.ranges[0].weights;
-        let r1 = self.ranges[1].weights;
-        let vals = self.avg_values(0, 0, &r1, None);
-        let compat = weighted_compat(&self.combos, &r1);
+    /// Game value (bb/hand) to `player` when both follow the converged
+    /// average strategy. Always exact (chance enumerated), even when
+    /// training used sampling. Same normalization as `exploitability_bb`.
+    pub fn game_value(&self, player: u8) -> f64 {
+        let own = self.ranges[player as usize].weights;
+        let opp = self.ranges[1 - player as usize].weights;
+        let vals = self.avg_values(0, player, &opp, None);
+        let compat = weighted_compat(&self.combos, &opp);
         let mut num = 0.0;
         let mut z = 0.0;
         for c in 0..N {
-            if r0[c] > 0.0 {
-                num += r0[c] * vals[c];
-                z += r0[c] * compat[c];
+            if own[c] > 0.0 {
+                num += own[c] * vals[c];
+                z += own[c] * compat[c];
             }
         }
-        if z > 0.0 {
-            num / z
-        } else {
-            0.0
-        }
+        if z > 0.0 { num / z } else { 0.0 }
     }
 
-    /// Exploitability in bb/hand: (BR_sb + BR_bb) / 2. Always exact
-    /// (chance enumerated), even when training used sampling.
+    /// Game value (bb/hand) to player 0 (SB/IP) under avg-vs-avg play.
+    /// Always exact (chance enumerated), even when training used sampling.
+    pub fn game_value_p0(&self) -> f64 {
+        self.game_value(0)
+    }
+
+    /// General-sum exploitability: per-player BR gain vs the avg-vs-avg
+    /// game value; NashConv = Σ gains. Unraked, NashConv = br0 + br1
+    /// exactly (zero-sum identity) — that branch is bit-identical to the
+    /// pre-rake formula. Always exact (chance enumerated), even when
+    /// training used sampling.
     pub fn exploitability_bb(&self) -> ExplReport {
         let mut br_value = [0.0f64; 2];
         #[allow(clippy::needless_range_loop)]
@@ -730,6 +800,54 @@ impl TurnRiverSolver {
             }
             br_value[p] = if z > 0.0 { num / z } else { 0.0 };
         }
-        ExplReport::zero_sum(br_value)
+        let game_value = [self.game_value(0), self.game_value(1)];
+        let br_gain = [br_value[0] - game_value[0], br_value[1] - game_value[1]];
+        let nashconv = if self.rake.is_none() {
+            br_value[0] + br_value[1]
+        } else {
+            br_gain[0] + br_gain[1]
+        };
+        ExplReport {
+            br_value,
+            game_value,
+            br_gain,
+            nashconv,
+            exploitability: nashconv / 2.0,
+        }
+    }
+
+    /// Range-vs-range equity for player 0, river-enumerated via the
+    /// per-context showdown tables (rake-independent).
+    pub fn range_equity_p0(&self) -> f64 {
+        let r0 = self.ranges[0].weights;
+        let mut num = 0.0;
+        let mut z = 0.0;
+        for (ctx, &river) in self.rivers.iter().enumerate() {
+            let mut o = self.ranges[1].weights;
+            zero_card(&self.combos, river, &mut o);
+            let diff = self.tables[ctx].diff(&self.combos, &o);
+            let compat = weighted_compat(&self.combos, &o);
+            for c in 0..N {
+                if combo_blocks(self.combos[c], river) {
+                    continue;
+                }
+                if r0[c] > 0.0 && compat[c] > 0.0 {
+                    num += r0[c] * (compat[c] + diff[c]) / 2.0;
+                    z += r0[c] * compat[c];
+                }
+            }
+        }
+        if z > 0.0 { num / z } else { 0.5 }
+    }
+
+    /// Per-combo EV (bb) for `player` at the turn root under avg-vs-avg
+    /// play (chance enumerated), normalized per live opponent matchup.
+    pub fn root_combo_evs(&self, player: u8) -> Vec<f64> {
+        let opp = self.ranges[1 - player as usize].weights;
+        let vals = self.avg_values(0, player, &opp, None);
+        let compat = weighted_compat(&self.combos, &opp);
+        (0..N)
+            .map(|c| if compat[c] > 0.0 { vals[c] / compat[c] } else { 0.0 })
+            .collect()
     }
 }
