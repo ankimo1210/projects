@@ -1,0 +1,84 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Trebuchet MS', 'Segoe UI', 'Hiragino Kaku Gothic ProN', system-ui, sans-serif;
+  background: #14110c;
+}
+
+button {
+  font-family: inherit;
+}
+
+canvas {
+  display: block;
+}
+
+/* interactive paper buttons */
+.qw-btn {
+  transition:
+    filter 0.12s ease,
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+.qw-btn:hover:not(:disabled) {
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 12px rgba(20, 16, 8, 0.3);
+}
+.qw-btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.985);
+}
+
+/* toast dropping in from the top */
+@keyframes qw-pop-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* prompt / dialog rising from the bottom */
+@keyframes qw-rise-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 12px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* overlay fade (collection book) */
+@keyframes qw-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.qw-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+.qw-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.qw-scroll::-webkit-scrollbar-thumb {
+  background: #b9ae94;
+  border-radius: 5px;
+}
