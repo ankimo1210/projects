@@ -5,7 +5,7 @@
 |---|---|
 | **Status** | Preliminary case study for internal IC discussion — **not actionable** |
 | **Recommendation** | **Too early; proceed to confirmatory DD only** |
-| **Date / as of** | 2026-06-08 (sources retrieved 7 Jun 2026) |
+| **Date / as of** | 2026-06-11 (round 7; sources retrieved 7 Jun 2026) |
 | **Deliverables** | `AISAN_4667_Take_Private_Case_Study.pptx`（20 slides, EN）/ `AISAN_4667_LBO_Model.xlsx`（8 tabs, EN, live formulas + cached values）/ `AISAN_4667_Case_Study.html`（self-contained web版, model-sourced; supplementary）/ `FACT_CHECK_2026-06.md` / `PROGRESS_TODO_2026-06-07.md` |
 | **Language** | 成果物は英語（IC/英語監査向け）。本ノートは日本語ベース＋数値・固有表現は英語 |
 | **Confidentiality** | Strictly Private & Confidential。投資助言・バリュエーション意見・オファーではない |
@@ -40,13 +40,13 @@
 - **資本構成**: ほぼ無借金。ただし買収レバレッジは QoE・調査・季節性・レンダー次第で**抑制すべき**（classic leverage-driven LBO ではない）。
 - **株主**: 創業家／関係保有 ~18.5%（reported）。MBO を facilitate し得るが、**意思確認とロールオーバー経済性は confirmatory DD 項目**。
 
-**リターン（Base / Downside は ~20% ハードル未達；Upside 21.3% は DD クリア時のみ超過）**
+**リターン（Base / Downside は ~20% ハードル未達；Upside 22.9% は DD クリア時のみ超過）**
 
 | Scenario | Drivers | MOIC | Gross IRR |
 |---|---|---|---|
-| Downside | Rev +3% / margin ~8.5% / exit 8.0x / restatement drag | 0.83x | **−3.6%**（資本毀損） |
-| **Base** | Rev +6% / margin →12% / exit 10.0x / ~1.0x gross debt | **2.07x** | **15.6%** |
-| Upside | Rev +8% / margin →16% / exit 11.5x | 2.63x | 21.3% |
+| Downside | Rev +3% / margin ~8.5% / exit 8.0x / restatement drag | 0.94x | **−1.3%**（資本毀損） |
+| **Base** | Rev +6% / margin →12% / exit 10.0x / 2.0x gross debt・80% sweep | **2.17x** | **16.8%** |
+| Upside | Rev +8% / margin →16% / exit 11.5x / securities monetised | 2.80x | 22.9% |
 
 ---
 
@@ -59,19 +59,21 @@
 | Net shares used | 5.280m（5.549m issued less 0.269m treasury shares） |
 | Equity purchase price | ¥12,153m |
 | Transaction & financing fees | ¥400m |
-| New senior term loan | ¥800m（**1.0x gross new debt / LTM EBITDA**） |
+| New senior term loan | ¥1,600m（**2.0x gross new debt / FY26E EBITDA**; Assumptions note (1)） |
 | Excess cash used | ¥3,400m |
-| **Sponsor equity** | **¥8,453m**（Equity % ≈ 91.4%） |
-| Net debt at close | **¥0**（≈0.0x; net-cash company） |
+| **Sponsor equity** | **¥7,653m**（Equity % ≈ 82.7%） |
+| Net debt at close | **¥800m**（≈1.0x net; min-cash ¥800m 控除後） |
 | Entry EV / EV/EBITDA / EV/EBIT | ¥8,053m / 10.07x / 13.4x |
 | Exit EBITDA (FY31E) / exit multiple | ¥1,432m / 10.0x |
-| Exit EV / exit net cash / exit equity | ¥14,320m / ¥3,152m / ¥17,472m |
-| **MOIC / Gross IRR** | **2.07x / 15.6%** |
-| 20% hurdle walk-to-price | ~¥2,031/share（+20.9% vs ¥1,680; +5.3% vs 6m VWAP） |
+| Exit EV / exit net cash / exit equity | ¥14,320m / ¥2,282m / ¥16,603m（debt fully repaid FY30E） |
+| **MOIC / Gross IRR** | **2.17x / 16.8%** |
+| 20% hurdle walk-to-price | ~¥2,116/share（+25.9% vs ¥1,680; +9.7% vs 6m VWAP） |
 
-**Operating assumptions**: Revenue +5–7%/yr（CAGR ~6%）, EBIT margin 9.2%→12.0%, D&A ¥0.21–0.27bn, Capex 2.5% of revenue, ΔNWC 6% of Δrevenue, cash tax 31%, 100% cash sweep, 5-yr hold.
+**Operating assumptions**: Revenue +5–7%/yr（CAGR ~6%）, EBIT margin 9.2%→12.0%, D&A ¥0.21–0.27bn, Capex 2.5% of revenue, ΔNWC 6% of Δrevenue, cash tax 31%, **80% cash sweep**, 5-yr hold.（前提の根拠は `Assumptions` の **NOTES ON KEY ASSUMPTIONS (1)-(8)** に体系化）
 
-**Value-creation bridge（reconciles）**: Entry equity 8.45 + EBITDA growth 6.36 − Multiple change 0.09 + Deleverage/FCF/fees 2.75 = Exit equity **17.47**（`Returns!C9 = J9`）。
+**Value-creation bridge（reconciles）**: Entry equity 7.65 + EBITDA growth 6.36 − Multiple change 0.09 + Deleverage/FCF/fees 2.68 = Exit equity **16.60**（`Returns!C9 = J9`）。
+
+**Financing-policy sensitivities（Lev_Sensitivity）**: sweep 80→100% で IRR +2bp（16.75→16.77%）、interest 3.5→5.5% で −8bp — いずれもリターンの主因ではない（leverage 1.0–3.0x: 15.6–18.0%、3.0x でも 20% 未達）。
 
 ---
 
@@ -161,6 +163,39 @@
 - **ラベル修正**: `Debt_FCF!B13` 「Free cash flow (pre-financing)」→「Free cash flow (after interest & tax)」（同行は利息控除後＝レバード FCF のため正確化。数値・IRR 不変、recalc 446 数式・エラー0）。
 - **HTML 版実装**: `docs/AISAN_4667_Case_Study.html`（自己完結・依存なし・37KB）。生成器 `src/report/build_case_html.py` が **Excel（data_only）と peer/precedent CSV から数値をライブ取得**して描画（手打ち転記ゼロ＝モデルと乖離しない）。20スライドの叙述＋モデル表＋インライン SVG（revenue/EBITDA バー、value-creation ウォーターフォール）＋ IRR ヒートマップ。Chromium ヘッドレスで全14セクション視覚 QA 済み（タグ均衡・数値一致・None 漏れなし、n.a. は欠損ピア2件のみ）。提出必須物（pptx+xlsx）の補助物。
 
+**ラウンド7（2026-06-11）— 前提リベース（2.0x / 80% sweep）+ クラシック・ホワイト再デザイン**
+- **前提変更（ユーザー指示）**: `Assumptions!G5` 1.0x → **2.0x**（new senior debt / FY26E EBITDA, gross ¥1,600m）、`Assumptions!G8` 100% → **80%**（cash sweep % of FCF）。妥当性検証の結論: **両前提とも現実的**（邦銀シニアの典型 ~2–4x の保守側＋調査リスク考慮、80% sweep は標準コベナンツ水準）のため代替シナリオ不要と判断し採用。ヘッドライン **2.07x/15.6% → 2.17x/16.8%**、sponsor equity ¥8,453m → ¥7,653m、walk-to-price ¥2,031 → **¥2,116**。**推奨（20%未達 → DD ゲート）は不変**。
+- **ロジックバグ修正（sweep<100% 対応）**: `Debt_FCF` r20 が「スイープ予定額の債務超過分」のみ現金化する設計で、80% 時に未スイープ 20% の FCF が消失（現金保存則違反）→ r20 を **「FCF retained in cash (after sweep)」= MAX(0,FCF)+paydown** に修正。`Lev_Sensitivity` の4ミニスケジュール（F列）も 100% ハードコード → `*Assumptions!$G$8` 参照化。
+- **整合性修正（ロジックチェック発見）**: Upside シナリオの三角不整合（8%成長×16%マージン → EBITDA 1,693 なのに `E7`=1,760）→ **E7=1,690 / C7=960** に修正し成長・マージン・EBITDA を整合。`F5` ラベル「LTM EBITDA」→「**FY26E EBITDA**」（決算遅延中のため LTM 代理の旨を note (4) に明記）。Scenarios の exit-net-cash ハードコード（C9=−500 / E9=+2000）は**判断オーバーライドとして維持**し、機械的スケジュール値（+1.5bn / +2.6bn）との差異と理由を A16 に注記。
+- **体系的脚注（ユーザー指示）**: `Assumptions` に **NOTES ON KEY ASSUMPTIONS (1)-(8)**（leverage / sweep / interest / EBITDA basis / exit multiple / min cash / excess cash / tax の根拠を各1段落）を新設し、入力行の D/H 列注記から note 番号で参照。各シート末尾に Source 行を追加。PPT Slide 10 にも Key assumptions 脚注1行を追加。
+- **追加分析**: `Debt_FCF` に Gross debt / EBITDA 行（r28）追加（credit metrics 完備: net lev / coverage / cash yield / gross lev）。`Lev_Sensitivity` に **FINANCING POLICY SENSITIVITY**（sweep 80% vs 100%: IRR 16.75% vs 16.77%; interest 3.5/4.5/5.5%: 16.75/16.71/16.67%）をクローン・ミニスケジュール3本（行60-82、印刷範囲外）で実装。
+- **Excel クラシック・ホワイト整形（全8タブ）**: 全塗り除去（白地）・Arial 統一（青=入力の色/太字は保持）・タイトル行に金下線・セクション見出し紺太字+紺罫線・合計行上罫線・gridlines 非表示・IRR グリッドのヒートマップ塗り廃止 → **≥20% セルを紺枠+太字で再判定**（新値基準: 25%/10-12x, 30%/11-12x, 35%/12x）。Lev の 2.0x 行をベース行としてグレー強調。印刷 8 ページ維持（脚注 wrap・Scenarios G9 重なり・Lev ラベル切れを fix-and-verify で解消）。
+- **PPTX 数値伝播（82箇所 + chart4）**: slides 2/9/10/11/12/13/14/15/16/17/19 のモデル数値・グリッド20セル・S&U チャート（cached values + 埋込ワークシート、旧 9.03 残骸も是正）・leverage 表の 2.0x 行に「(base)」マーカー。文言: 「kept low (~1.0x)」→「kept moderate (2.0x gross / ~1.0x net)」、sweep 「100% to debt」→「80% of FCF」、Upside カード「extra leverage = more」→「securities monetised」。
+- **PPTX クラシック・ホワイト再デザイン（全20枚）**: 表紙・結論の紺ヒーローを白反転（装飾円削除、テキスト紺/スレート化、白カード+紺枠）。全スライド角丸→直角・影削除。ヘッダー下に金細罫線（帯見出しレイアウトの 9/14/15 は帯と衝突するため除外）。teal 帯（#007070）→ 紺に統一、takeaway 帯をクリームに統一。Slide 13 グリッドをヒートマップ→白地+グレー罫線+**淡金ハイライト（≥20%）**に変更（旧静的ヒートマップは新値とズレるため一石二鳥）。chart4 の同色凡例（term loan / equity purchase とも紺）→ equity purchase をスレートに変更。**全スライドに Source 行を整備**（欠落していた 2/3/4/5/6/7/8/10/11/12/13/16/17/18 に追加; データソース明示のユーザー指示対応）。
+- **HTML 再生成**: ビルダーのハードコード文言 4箇所（「~1.0x」「100% cash sweep」「≈0.0x net-cash」「1.0x new debt」）をライブ参照/新文言化して再生成。Playwright で数値・None 漏れ確認。
+- **QA**: recalc `{"status":"success","total_errors":0,"total_formulas":566}`。独立 Python 再実装との突合 **93/93 PASS**（entry/S&U/オペ連鎖/債務スケジュール80% sweep/リターン/ブリッジ/グリッド/walk/cash availability/MIP/leverage 4行/sweep・金利感応度/シナリオ）。2.0x tie-out 完全一致。zip 重複 0・20 sldIds。markitdown stale grep は正当な残存（leverage 表の 1.0x 比較行）のみ。サブエージェント視覚 QA → 指摘（slide10 脚注衝突・slide18 Source 二重・9/14/15 金罫線が帯貫通・slide11/2 カード際クリップ等）を修正し再検証。pytest 4 passed。
+
+**ラウンド7b（2026-06-11）— 追加分析3点 + 株価急変動の記録**
+- **LP ネットリターン試算（illustrative）**: `Scenarios` rows 18-27 に 2/20 型ファンドエコノミクス（fee 2%×5yr、carry 20% over 8% pref、MIP 5%）を数式実装 → **Net ≈ 1.84x / 13.0%**（vs gross 2.17x / 16.8%）。PPT Slide 15 の注記と HTML（MIP セクション、Scenarios C27/D27 をライブ参照）に反映。「gross-net ギャップが 20% ハードルへの不足をさらに広げる」を定量化。
+- **四半期季節性パネル（illustrative）**: `Debt_FCF` rows 32-42 に FY27E の四半期フェージング（blue inputs 15/20/25/40%、コスト均等）→ **トラフは Q2 末に約 −¥137mm**（最低現金フロアを下抜け）→ **~¥0.5bn の WC RCF 手当**を提言。年計はメインスケジュールと完全タイアウト（Q4 cash 1,237.6 + sweep 350.1 = 887.5 = F21）。PPT Slide 17 の Seasonality リスク行に反映。
+- **買い手ユニバース（exit routes）**: PPT Slide 14 に「Exit routes (illustrative; no contact made)」1行ストリップ（①auto OEM/Tier-1/AV ②geospatial/map consolidators ③construction-software strategics ④sponsor secondary; appetite unverified、exit は 10.0x 据置でストラテジック・プレミアムは upside 扱い）。
+- **株価急変動（8-10 Jun）の記録**: 8-Jun ¥1,551 → **9-Jun ¥1,951（ストップ高）** → 10-Jun ¥1,847。カタリストは **Tier IV の東証グロース上場申請判明による思惑買い**（株探; 会社開示ではない）。対応: Assumptions premium panel に 10-Jun 終値行を追加（+24.6% 換算表示）、Slide 8 note に追記、FACT_CHECK に2行記録。**参照株価 ¥1,680（5-Jun 表記付き）は維持** — リベースは提出前のユーザー判断事項（リベースすると offer/リターンが全面再計算になる）。
+- QA: recalc `{"status":"success","total_errors":0,"total_formulas":601}`、新ブロックはサイドカルクと一致（net 1.8427x/13.00%、trough −136.8、年末タイアウト 887.5=887.5）、印刷 8 ページ維持、slide 8/14/15/17 再レンダリング確認（slide 8 note は 2 行に収まるよう短縮）。pytest 4 passed。
+
+**ラウンド7c（2026-06-11）— データ・デザインのダブルチェック + GS 風さらなるクラシック化**
+- **データ突合（全数自動チェック）で丸め伝播バグ 3 件を発見・修正**: ①walk-to-price プレミアム — Excel 25.946% → 正しくは **+25.9%**（デッキは +26.0% と誤記、slide 14 の 2 箇所）②IRR グリッド 30%/10x — 18.748% → **18.7%**（誤記 18.8%）③同 40%/8x — 11.647% → **11.6%**（誤記 11.7%）。いずれも Excel・HTML は正しく、PPT への手動転記時の丸めミス。HANDOFF §4 / PROGRESS の +26.0% 表記も修正。それ以外は 18 指標 + グリッド 20 セル + ブリッジ + 不変条件すべて一致。
+- **GS 決算資料風リスタイル（全 20 枚）**: 全アイコン画像（46 点）と色付きサークルを削除（タイムラインの機能ドットのみ残置）。色帯見出し（teal→navy 化済みの帯、slide 17 赤/緑帯、slide 18 GATE 帯）→ **無地 + navy 太字 + 細罫線**（帯矩形を下端ヘアラインに変形）。slide 2 推奨バナー → 薄灰 + navy 左バー + navy テキスト。slide 12 リターンパネル → 白 + navy。表は全面デストライプ + **ヘアライン罫を全セルに注入**（9/14/15 はもともと罫線ゼロで縞依存だった）+ ヘッダー行は navy 上下罫 + navy 太字。見出し・タグ・アクセントバーの緑/赤/金を navy に統一（数値の意味色 −1.3% 赤 / 22.9% 緑、gold kicker、slide 8 のオファー強調行、ウォーターフォールの増減色は意図的に残置）。slide 16 のアイコン跡の空白を詰めタイトルを本文と左揃え、slide 6 も同様にテキストを左詰め。slide 9/14/15 のフッター/ページ番号位置を他スライドと統一（x=548640/11338560）。chart4 の Refi 系列の赤は据置（Uses の减算系列、視認上問題なし）→ 注: QA 指摘はあったが S&U の用途識別として許容判断。
+- QA: サブエージェント全数視覚検査 → 指摘をトリアージ（実修正 14 項目 / 既存仕様として却下: gold kicker 統一感・表紙/結論の gold ラベル・縞行高の既存不揃い等）→ 修正 → 再レンダリング確認。zip 重複 0・20 sldIds・旧誤記値 grep 0 件。
+
+**ラウンド8（2026-06-11）— 評価者レンズ（DiDi＝モビリティ・プラットフォームの戦略部門）を踏まえた戦略適合分析**
+- **背景**: 本ケースの評価側は DiDi（モビリティ・プラットフォーム; 日本は SoftBank との JV、日本版ライドシェア展開中、グローバルでは GAC Aion と L4 ロボタクシー量産・2026 年パイロット）。純 PE レンズ（20% 未達）に**戦略的買い手レンズ**を追加。
+- **追加リサーチ（FACT_CHECK 記録済み）**: AISAN×Tier IV — 2017 年業務提携+出資、AutowareMaps 共同開発（2018）、JapanTaxi 車両 AV タクシー実証（2019）、KDDI 遠隔運行実証（2017）、AV バス全国展開。AISAN は Autoware エコシステムの地図レイヤー。
+- **シナジーウォーク（Excel `Scenarios` rows 33-42）**: エグジット時シナジー EBITDA S に対する supportable offer = (exit equity + exit multiple×S)/(1+20%)^5 ベース。**S=0 → ¥2,116（walk）/ S≈¥244mm → ¥2,302（+37% オファーに正確一致）/ S=¥500mm → ¥2,496**。必要シナジー ¥244mm ≈ FY31E EBITDA の 17% ≈ 売上の 2.5%。「walk-to-price と提示オファーのギャップは、識別可能なシナジーでちょうど埋まる＝戦略保有者なら正当化可能、ファイナンシャルスポンサーには不可」という定量ブリッジ。
+- **新スライド 17「Strategic Fit — Mobility-Platform Lens」（デッキ 20→21 枚）**: 左=プラットフォーム適合 4 点（認証済み HD 地図と MMS 運用 / L4 SI 実績 / 公共・自治体接点 / Tier IV エコシステム）、右=シナジーウォーク表+規模感+source 列挙、Takeaway 帯。デッキ内で買い手名は出さず「mobility-platform owner」と一般化（面接先への含意は明白だが推定を押し付けない設計）。挿入は slide21.xml パート（新規 rId27 / sldId 277、Content_Types・app.xml Slides 21・TitlesOfParts 更新）、後続の chip/page を繰り下げ（Key Risks 17/18、Gating 18/19、Appendix p.21）、本文中の「(p.18)/(p.20)」参照も更新。
+- **HTML**: walk セクションに Strategic-owner lens バナー追加（Scenarios C39/D39 をライブ参照）。
+- 推奨の構造は不変: financial-only では sub-hurdle → DD ゲート。戦略レンズはギャップの橋渡し可能性を示すが、**ゲーティング DD とシナジーの払い過ぎ防止（strategic premium discipline）は同様に適用**。
+- QA: recalc 610 formulas / 0 errors、シナジー表はサイドカルク一致（S=244.0 → ¥2,302 / +37.0% 正確一致）、Excel 印刷 8 ページ維持、新スライド+繰り下げ 4 枚レンダリング確認、zip 重複 0・21 sldIds・app.xml Slides=21。
+
 ---
 
 ## 6. 出典 / Source traceability（PPT Slide 20 Source Appendix、retrieved 7 Jun 2026）
@@ -199,17 +234,18 @@
 ## 8. 検証ステータス / QC status（自動抽出で確認済み）
 
 - `Sources_Uses!G10 = 0`（Sources = Uses 一致） ✓
-- `Debt_FCF!F18:J18` ending debt 非負 `[343, 0, 0, 0, 0]` ✓
+- `Debt_FCF!F18:J18` ending debt 非負 `[1250, 834, 340, 0, 0]`（FY30E 完済; round 7） ✓
 - 税金は `Assumptions!G14`（31%）参照、税金ゼロ問題解消 ✓
-- `Returns!C9 = J9 = ¥17.47bn`（bridge 整合） ✓
-- XML/cached-value QA エラー **0**、Base **2.07x / 15.6%** ✓
-- `Lev_Sensitivity!E5/F5` が `Returns!C15/C16` と一致（1.0x tie-out） ✓
+- `Returns!C9 = J9 = ¥16.60bn`（bridge 整合; round 7） ✓
+- XML/cached-value QA エラー **0**、Base **2.17x / 16.8%**（round 7: 2.0x / 80% sweep） ✓
+- `Lev_Sensitivity!E6/F6` が `Returns!C15/C16` と一致（**2.0x base tie-out**; round 7 で基準行を移動） ✓
 - PPTX slide count **20**（現行）、Slide 9 `Valuation Context`（sec 08）/ Slide 14 `Walk-to-Price & Leverage`（sec 13）/ **Slide 15 `Excess Cash Is Central to Returns`（sec 14, round 4 追加）** / Slide 20 `Source Appendix` ✓
 - 全スライドの section チップ／page 番号を座標ベースで照合 → **ALL OK**、zip 重複エントリ **0** ✓
 - 旧文言／旧数値（¥1,675・¥2,295・¥12,733m・¥9,033m・9.03・1.93・14.1%・33.4x・68.8・~14%・year-low・unaffected・corrected・Remainder is dispersed・内部ファイル名）**残存ゼロ**（markitdown + python-pptx 全テキスト走査） ✓
-- チャートXML確認: chart4（S&U）= 0.8 / 3.4 / 8.45 / 12.15 に更新済、stale値ゼロ ✓
+- チャートXML確認: chart4（S&U）= 1.6 / 3.4 / 7.65 / 12.15（round 7; 埋込ワークシートも同値に整合、equity-purchase 系列をスレート色に変更）、stale値ゼロ ✓
 - 推奨は **"Too early; proceed to confirmatory DD only"** に統一、no-contact policy 維持 ✓
-- `uv run ... pytest tests` → **4 passed in 0.97s**（2026-06-08 再実行） ✓
+- `uv run ... pytest tests` → **4 passed in 1.01s**（2026-06-11 再実行） ✓
+- **ラウンド7 検証（2026-06-11, 現行）**: recalc `{"status":"success","total_errors":0,"total_formulas":566}`、独立 Python 再実装との突合 **93/93 PASS**、Excel 印刷 8 ページ・PPTX 20 枚全数視覚 QA（サブエージェント検査 → 修正 → 再検証） ✓
 - `PYTHONPATH=/tmp/aisan_testdeps:. python3 -m src.fetch.fetch_peer_multiples` → `peer_multiples.csv` 更新（6 sourced / 2 limited_or_missing / 1 needs_currency_check） ✓
 - `precedent_premium_check.csv` 追加、PASCO +31.37% prior-day / +17.45% 6m、Topcon +16.71% prior-day / +58.05% 6m を公式資料に紐付け ✓
 - **LibreOffice recalc 完了（2026-06-08, 現行）**: `recalc.py` → `{"status": "success", "total_errors": 0, "total_formulas": 446}`（round-4 の cash/MIP ブロック追加後。Lev_Sensitivity 数式化時点では 428）。再計算後に主要11値（S=U、bridge、MOIC/IRR、walk-to-price、Lev tie-out、Scenarios）を照合し全一致。
@@ -229,7 +265,7 @@
 
 ## 9. ファイル再生成 / Regeneration（参考）
 
-- Excel: 現ファイルは LibreOffice `recalc.py` で再計算済み（**446数式**・エラー0）。再編集後は同じ invariants を再確認する。印刷レイアウトは全8タブ landscape + fit-to-page(1×1) + print-area 設定済みで、PDF化すると8ページ（=タブ数）にクリーンに収まる（segment/cash/Lev のヘッダー折り返し・Assumptions 注記簡潔化を round 5 で実施済み）。
+- Excel: 現ファイルは LibreOffice `recalc.py` で再計算済み（**566数式**・エラー0; round 7 で sweep/金利感応度クローン+credit 行+脚注を追加）。再編集後は同じ invariants（S=U、bridge、**2.0x tie-out**、debt≥0、cash≥min）を再確認する。印刷レイアウトは全8タブ landscape + fit-to-page(1×1) + print-area 設定済みで、PDF化すると8ページにクリーンに収まる（Lev のクローン・ミニスケジュール行60-82は印刷範囲外）。openpyxl 保存後は**毎回 recalc.py 必須**。行・列の挿入は禁止（`build_case_html.py` が固定セル番地を参照）。
 - PPT: 追加2枚の生成に使った `update_pptx_addendum.py` は **`_archive/update_pptx_addendum.py.deprecated` に退避**（17枚前提・旧peer/PASCOプレースホルダを含む一回用スクリプト。パッケージ外へ移動し再実行入口を除去）。現行20枚デッキは最終成果物を直接編集済み。
 - 注: Excel/PPTX は最終成果物を直接編集済み。将来の大幅再生成は、モデル/デッキ生成スクリプトを別途整備する方が安全。
 - **注意（再発防止）**: python-pptx でスライドを追加する際、既存スライドとパート名（`slideN.xml`）が衝突すると保存毎にzipへ二重書込みされ、内容消失リスクがある。追加時は必ず未使用のパート名を割り当て、保存後に `zipfile` で重複エントリゼロを確認すること。

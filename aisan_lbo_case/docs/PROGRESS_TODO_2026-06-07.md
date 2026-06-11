@@ -1,7 +1,42 @@
 # AISAN 4667 Excel / PPTX Improvement Progress
 
-Updated: 2026-06-08 (Claude session — verification + remaining fixes)  
-Scope: Excel/PPTX deliverables only. HTML work intentionally out of scope.
+Updated: 2026-06-11 (round 7 — assumption rebase + classic-white redesign)  
+Scope: Excel / PPTX / HTML deliverables.
+
+## 2026-06-11 round 7 — 2.0x leverage / 80% sweep rebase + classic-white redesign
+
+- [x] **Assumption rebase (user-directed)**: `Assumptions!G5` 1.0x → 2.0x (new senior / FY26E EBITDA, ¥1,600mm), `G8` 100% → 80% sweep. Sanity-checked as realistic (JP senior ~2-4x, conservative end given investigation; 80% = standard covenant) → adopted, no alternative scenario needed. Headline 2.07x/15.6% → **2.17x/16.8%**; walk-to-price ¥2,031 → **¥2,116**; recommendation (sub-hurdle → DD-gated) unchanged.
+- [x] **Sweep<100% cash-conservation bug fixed**: `Debt_FCF!F20:J20` redefined as "FCF retained in cash (after sweep)" (= MAX(0,FCF)+paydown); Lev mini-schedule paydowns now reference `Assumptions!$G$8` (were hardwired 100%).
+- [x] **Logic-check finding fixed**: Upside scenario triangulation (8% growth × 16% margin ⇒ EBITDA 1,693 vs hardcode 1,760) → `E7`=1,690, `C7`=960; exit-cash overrides documented vs mechanical schedule (Scenarios!A16).
+- [x] **Systematic assumption notes**: Assumptions NOTES (1)-(8) block + note refs on input rows + per-sheet Source lines; PPT slide 10 key-assumptions footnote; per-slide Source lines added to 14 slides (data sources explicit).
+- [x] **Extras**: Gross debt/EBITDA credit row; FINANCING POLICY SENSITIVITY (sweep 80 vs 100%: 16.75% vs 16.77%; rate 3.5/4.5/5.5%: 16.75/16.71/16.67%) via 3 clone mini-schedules (rows 60-82, outside print range).
+- [x] **Classic-white redesign**: Excel all 8 tabs (white, Arial, navy headers, gold title rules, heatmap removed — ≥20% grid cells navy-boxed bold, 2.0x base row highlighted; 8 clean print pages re-verified). PPTX all 20 slides (cover/conclusion flipped to white, decorative circles removed, square corners, shadows off, gold header rules, teal bands → navy, slide-13 grid de-heatmapped with light-gold ≥20% highlights, chart4 legend colors disambiguated).
+- [x] **Numbers propagated**: 82 text edits + chart4 cache + embedded worksheet (stale 9.03 legacy also fixed) + IRR grid 20 cells + "(base)" marker on 2.0x lev row.
+- [x] **HTML regenerated** (builder hardcodes fixed: ~1.0x / 100% sweep / 0.0x net → live or new wording; Playwright check ok).
+- [x] **Verification**: recalc 566 formulas 0 errors; independent Python re-implementation **93/93 PASS** (incl. 80% sweep schedule, exact 2.0x tie-out); zip dups 0; subagent visual QA of all 20 slides → fixes (slide10 footnote collision, slide18 double source line, 9/14/15 gold-rule-through-band, slide2/11 card-edge clips, slide1 SECTOR wrap) → re-verified; pytest 4 passed.
+- Known cosmetic carry-over (pre-round-7, unchanged): banded-row striping on slides 9/14/15 tables has uneven row heights; footer x-offset differs on those 3 slides (separate layout).
+
+## 2026-06-11 round 7b — three further analyses + price-move log
+
+- [x] **Illustrative LP net returns** (`Scenarios` rows 18-27): 2/20-style economics (2% fee ×5yr, 20% carry over 8% pref, 5% MIP) → **net ≈ 1.84x / 13.0%** vs 2.17x/16.8% gross. Propagated to Slide 15 note + HTML (live from Scenarios C27/D27).
+- [x] **Quarterly seasonality panel** (`Debt_FCF` rows 32-42): FY27E phasing 15/20/25/40% (blue), even costs → trough **−¥137mm at Q2-end** (below the ¥0.8bn floor) → recommend ~¥0.5bn WC RCF. Annual tie-out exact (Q4 cash 1,237.6 + sweep 350.1 = 887.5 = F21). Propagated to Slide 17 seasonality risk bullet.
+- [x] **Exit routes / buyer universe**: one-line strip on Slide 14 (auto OEM/Tier-1/AV · map consolidators · construction-software strategics · sponsor secondary; appetite unverified; strategic premium = upside only).
+- [x] **Share-price move logged (8-10 Jun)**: ¥1,551 → ¥1,951 (limit-up, Tier IV TSE-Growth listing application speculation per Kabutan) → ¥1,847. Added 10-Jun close to Assumptions premium panel (+24.6% implied) + Slide 8 note + FACT_CHECK. Reference ¥1,680 (labeled 5-Jun) kept — re-base is a pre-submission decision.
+- [x] Verify: recalc 601 formulas 0 errors; new blocks match side-calc; 8 print pages; slides 8/14/15/17 re-rendered clean; pytest 4 passed.
+
+## 2026-06-11 round 7c — data/design double-check + GS-style classic pass
+
+- [x] **Data cross-check (scripted, deck+HTML vs Excel cache)** found 3 rounding-propagation errors in the PPT (Excel/HTML were correct): walk premium +26.0% → **+25.9%** (25.946%), grid 30%/10x 18.8% → **18.7%**, grid 40%/8x 11.7% → **11.6%**. All other 18 headline metrics, 20 grid cells, bridge and invariants matched. Logs updated.
+- [x] **GS-results-deck restyle (all 20 slides)**: all 46 icon images + colored circles removed (functional timeline dots kept); colored heading bands → plain navy bold + hairline rule (band rects converted to their own bottom hairline); slide-2 banner → light gray + navy left bar; slide-12 returns panel → white; tables fully de-striped with hairline grids injected (slides 9/14/15 previously had zero borders and relied on striping) + navy header rules; green/red/gold headings, tags and accent bars unified to navy (semantic value colors, gold kickers, slide-8 offer highlight and waterfall up/down colors deliberately retained); slide 6/16 icon-gap layouts tightened; slide 9/14/15 footers/page numbers aligned to the standard positions.
+- [x] Verify: subagent full-deck visual QA → 14 real fixes applied (taste-level findings triaged and documented); zip dups 0; 20 sldIds; stale wrong-value grep 0.
+
+## 2026-06-11 round 8 — strategic-fit analysis (evaluator = mobility-platform strategy team)
+
+- [x] **Research (FACT_CHECK rows added)**: AISAN × Tier IV (2017 alliance + equity investment; AutowareMaps co-development 2018; JapanTaxi AV-taxi pilot 2019; KDDI remote-ops pilot 2017; AV-bus rollouts) — AISAN is the map layer of the Autoware ecosystem. Platform context: DiDi AD × GAC Aion L4 robotaxi mass production end-2025 / 2026 pilots; DiDi Japan runs Japan rideshare (SoftBank JV).
+- [x] **Synergy walk (Excel `Scenarios` rows 33-42)**: supportable offer vs exit synergy EBITDA — S=0 → ¥2,116 (walk) / **S≈¥244mm → ¥2,302 (exactly the +37% offer)** / S=¥500mm → ¥2,496. Required synergy ≈ 17% of FY31E EBITDA ≈ 2.5% of revenue.
+- [x] **New slide 17 "Strategic Fit — Mobility-Platform Lens"** (deck 20 → **21 slides**): platform-fit four-point case + synergy-walk table + takeaway; acquirer kept generic ("mobility-platform owner"). Part slide21.xml (rId27/sldId 277); Content_Types, app.xml (Slides=21, TitlesOfParts), downstream chips/pages renumbered (Key Risks 17/p.18, Gating 18/p.19, Appendix p.21) and in-text (p.18)/(p.20) references updated.
+- [x] **HTML**: strategic-owner-lens banner added to the walk section (live from Scenarios C39/D39).
+- [x] Verify: recalc 610 formulas 0 errors; synergy table ties to side-calc (S=244.0 → ¥2,302/+37.0% exact); Excel 8 print pages; new + renumbered slides rendered clean; zip dups 0, 21 sldIds; pytest 4 passed.
 
 ## 2026-06-08 session additions
 
@@ -84,10 +119,13 @@ Scope: Excel/PPTX deliverables only. HTML work intentionally out of scope.
 | Check | Result |
 |---|---|
 | Excel Sources = Uses | `Sources_Uses!G10 = 0.0` |
-| Returns bridge | `Returns!C9 = Returns!J9 = 17472.1674` |
-| Base return | `2.067x MOIC / 15.63% IRR` |
-| Walk-to-price | `JPY2,031/share` for 20% gross IRR hurdle |
-| Leverage tie-out | `Lev_Sensitivity` 1.0x row ties to base return |
+| Returns bridge | `Returns!C9 = Returns!J9 = 16602.6117` (round 7) |
+| Base return | `2.169x MOIC / 16.75% IRR` (2.0x gross / 80% sweep) |
+| Walk-to-price | `JPY2,116/share` for 20% gross IRR hurdle (+25.9% vs ref; +9.7% vs 6m VWAP) |
+| Leverage tie-out | `Lev_Sensitivity` **2.0x row** ties to base return (diff 0.000000) |
+| Financing-policy sens. | sweep 100%: 16.77% / rate 4.5%: 16.71% / 5.5%: 16.67% |
+| Independent re-implementation | 93/93 checks PASS (<0.5 tol; most exact) |
+| Recalc | `{"status":"success","total_errors":0,"total_formulas":566}` |
 | PPTX slide count | 20 slides (incl. new "Excess Cash Is Central to Returns") |
 | PPTX stale-value search | No hits for old price / returns / P-E / wording terms |
 | Python tests | `4 passed, 1 warning` |

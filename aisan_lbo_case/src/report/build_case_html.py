@@ -396,15 +396,15 @@ SECOM/ITOCHU &amp; Topcon tender disclosures; M&amp;A Online.</p></div></div>"""
 <div class="card"><h3>Uses of funds (¥mm)</h3><table><tbody>{su_rows}</tbody></table></div>
 <div class="card"><h3>Sources of funds (¥mm)</h3><table><tbody>{so_rows}</tbody></table></div></div>
 <div class="kpis" style="margin-top:16px">
-{kpi("NEW SENIOR DEBT", bn(g(SU,'C12')), f"{x(g(LV,'A5'),1)} new debt / EBITDA")}
-{kpi("NET DEBT AT CLOSE", bn(g(SU,'C14')), "≈0.0x — net-cash company")}
+{kpi("NEW SENIOR DEBT", bn(g(SU,'C12')), f"{x(g(SU,'H5'),1)} new debt / EBITDA")}
+{kpi("NET DEBT AT CLOSE", bn(g(SU,'C14')), f"{x(g(SU,'C15'),1)} net debt / EBITDA")}
 {kpi("SPONSOR EQUITY", bn(g(SU,'G7')), f"{pct(g(SU,'C17'),0)} of capitalisation")}
 {kpi("TERM-LOAN PRICING", pct(g(A,'G7')), "TIBOR/TONA + spread")}
 </div>
-<p class="note">Net cash and excess balance-sheet cash fund most of the price; new leverage is kept deliberately low
-given lumpy EBITDA. This is not a classic leverage-driven LBO — sponsor equity stays high at {bn(g(SU,'G7'))}.</p>"""
+<p class="note">Net cash and excess balance-sheet cash fund most of the price; new leverage is kept moderate
+(2.0x gross / ~1.0x net) given lumpy EBITDA. This is not a classic leverage-driven LBO — sponsor equity stays high at {bn(g(SU,'G7'))}.</p>"""
     parts.append(sec("structure", "05", "Illustrative LBO Structure",
-                     "Net cash and excess cash fund most of the price; new leverage kept low (~1.0x)", struct_body))
+                     "Net cash and excess cash fund most of the price; new leverage kept moderate (2.0x gross / ~1.0x net)", struct_body))
 
     # Projections
     proj_body = f"""
@@ -416,7 +416,7 @@ given lumpy EBITDA. This is not a classic leverage-driven LBO — sponsor equity
 </div>
 <p class="note">Mid-single-digit growth in line with history; EBITDA margin expands ~11% → ~15% as overhead is
 rationalised and Mobility losses narrow. Capex {pct(g(A,'G26'),1)} of revenue, ΔNWC {pct(g(A,'I26'),0)} of Δrevenue,
-cash tax {pct(g(A,'G14'),0)}, 100% cash sweep. Deliberately conservative — not a hockey stick.</p>"""
+cash tax {pct(g(A,'G14'),0)}, {pct(g(A,'G8'),0)} cash sweep. Deliberately conservative — not a hockey stick.</p>"""
     parts.append(sec("projections", "06", "Projections — Base Case",
                      "Mid-single-digit growth with gradual margin expansion toward the software core", proj_body))
 
@@ -477,7 +477,8 @@ Trapped = cash unrecoverable. Extraction needs distributable reserves, lender co
 none assured pre-DD.</p></div>
 <div class="card"><h3>MIP dilution (gross → net)</h3>
 <table><thead><tr><th>MIP dilution</th><th>MOIC</th><th>Gross IRR</th></tr></thead><tbody>{mip_rows}</tbody></table>
-<p class="note">Returns are gross of fees &amp; carry; management incentive dilution widens the gap to a clean 20% hurdle.</p></div></div>
+<p class="note">Returns are gross of fees &amp; carry. Illustrative net to LPs after a 2% fee / 20-over-8 carry / 5% MIP
+≈ {x(g(SC,'C27'))} / {pct(g(SC,'D27'))} — widening the gap to a clean 20% hurdle (model: Scenarios net-returns panel).</p></div></div>
 <div class="banner"><b>Takeaway —</b> AISAN screens cheaply partly on excess cash, but returns hinge on whether that
 cash is legally and practically extractable. Treat as a confirmatory DD item, not a base-case assumption.</div>"""
     parts.append(sec("cash", "09", "Excess Cash Is Central to Returns",
@@ -504,7 +505,11 @@ bid discipline is essential.</p></div>
 <tbody>{lev_rows}</tbody></table>
 <p class="note">Even {x(g(LV,'A8'),1)} gross debt does not clear 20% and would be imprudent before QoE, seasonality,
 investigation impact &amp; lender appetite are confirmed. Returns are driven by entry price, cash, EBITDA growth,
-margin and exit multiple — not leverage.</p></div></div>"""
+margin and exit multiple — not leverage.</p></div></div>
+<div class="banner"><b>Strategic-owner lens —</b> a mobility-platform acquirer with ≈{yen(g(SC,'C39'))}mm of exit synergy
+EBITDA (~{pct(g(SC,'D39'))} of FY31E EBITDA; HD-map licensing for robotaxi ODDs, mapping-as-a-service, municipal AV projects)
+can support the full {yen(g(A,'C8'))} offer at a 20% hurdle — exactly closing the walk-to-price gap a financial sponsor cannot
+underwrite (model: Scenarios — synergy walk).</div>"""
     parts.append(sec("walk", "10", "Walk-to-Price & Leverage",
                      "Price discipline: the maximum offer clearing a 20% hurdle sits well below precedent-style premia", walk_body))
 
