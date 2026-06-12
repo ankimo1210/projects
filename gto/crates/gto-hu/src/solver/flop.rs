@@ -1158,6 +1158,18 @@ impl FlopSolver {
 
     /// Game value (bb/hand) to player 0 (SB/IP) under avg-vs-avg play.
     /// Always exact (chance enumerated), even when training used sampling.
+    /// Per-combo avg-vs-avg EV (bb) at the flop root for `player`, divided
+    /// by the opponent reach-weighted compatibility so it reads as a real
+    /// per-hand EV (mirrors `VectorRiverSolver::root_combo_evs`).
+    pub fn root_combo_evs(&self, player: u8) -> Vec<f64> {
+        let opp = self.ranges[1 - player as usize].weights;
+        let vals = self.avg_values(0, player, &opp, Ctx::PRE);
+        let compat = weighted_compat(&self.combos, &opp);
+        (0..N)
+            .map(|c| if compat[c] > 0.0 { vals[c] / compat[c] } else { 0.0 })
+            .collect()
+    }
+
     pub fn game_value_p0(&self) -> f64 {
         let r0 = self.ranges[0].weights;
         let r1 = self.ranges[1].weights;

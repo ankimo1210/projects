@@ -538,6 +538,236 @@ fn solve_hu_turn_river(
     Ok(dict.into())
 }
 
+/// FlopTreeConfig from pot_type + per-street overrides (bet sizes / max
+/// raises apply to all three streets, mirroring the turn_river binding).
+fn flop_config(
+    pot_type: Option<&str>,
+    bet_pcts: Option<Vec<u32>>,
+    max_raises: Option<u8>,
+) -> PyResult<gto_hu::tree::FlopTreeConfig> {
+    use gto_hu::tree::FlopTreeConfig;
+    let mut cfg = match pot_type.unwrap_or("srp") {
+        "srp" => FlopTreeConfig::srp(),
+        "3bet" | "3bp" => FlopTreeConfig::threebet(),
+        other => {
+            return Err(pyo3::exceptions::PyValueError::new_err(format!(
+                "unknown pot_type '{other}' (srp | 3bet)"
+            )))
+        }
+    };
+    if let Some(p) = bet_pcts {
+        if p.iter().any(|&x| x == 0) {
+            return Err(pyo3::exceptions::PyValueError::new_err(
+                "bet_pcts must be positive",
+            ));
+        }
+        cfg.flop.bet_pcts = p.clone();
+        cfg.turn.bet_pcts = p.clone();
+        cfg.river.bet_pcts = p;
+    }
+    if let Some(m) = max_raises {
+        cfg.flop.max_raises = m;
+        cfg.turn.max_raises = m;
+        cfg.river.max_raises = m;
+    }
+    Ok(cfg)
+}
+
+/// Exact-combo HU flop equilibrium (gto-hu `FlopSolver`). Turn and river are
+/// nested public chance nodes; the reported exploitability is always exact
+/// (both chance stages enumerated in the best response) and already INCLUDES
+/// the river/turn bucketing abstraction loss. Heavy/async tier:
+/// a bucketed (K_r=128) full SRP 100bb solve is ~10 GB / tens of minutes, so
+/// the caller MUST pass an `abstraction` (buckets_river/turn) and a sane
+/// `max_table_gb` — the solve refuses to start above that dense-table size.
+///
+/// Returns the same envelope shape as `solve_hu_river` minus `equity`
+/// (flop range-vs-range equity is not computed here), plus
+/// `buckets_river`/`buckets_turn`/`table_bytes_gb`/`dense_bytes_gb`.
+#[pyfunction]
+#[pyo3(signature = (board, pot_bb, effective_stack_bb, iterations=None, seed=None, ip_weights=None, oop_weights=None, bet_pcts=None, max_raises=None, pot_type=None, buckets_river=None, buckets_turn=None, max_table_gb=None, mode=None))]
+#[allow(clippy::too_many_arguments)]
+fn solve_hu_flop(
+    py: Python<'_>,
+    board: Vec<String>,
+    pot_bb: f64,
+    effective_stack_bb: f64,
+    iterations: Option<u32>,
+    seed: Option<u64>,
+    ip_weights: Option<Vec<f64>>,
+    oop_weights: Option<Vec<f64>>,
+    bet_pcts: Option<Vec<u32>>,
+    max_raises: Option<u8>,
+    pot_type: Option<&str>,
+    buckets_river: Option<usize>,
+    buckets_turn: Option<usize>,
+    max_table_gb: Option<f64>,
+    mode: Option<&str>,
+) -> PyResult<PyObject> {
+    use gto_hu::game::BB;
+    use gto_hu::ranges::all_combos;
+    use gto_hu::solver::{
+        dense_table_bytes_abstracted, Abstraction, CfrVariant, ChanceMode, FlopSolver,
+    };
+    use gto_hu::tree::build_flop_tree;
+    use std::time::Instant;
+
+    let iters = iterations.unwrap_or(3_000);
+    let board_u8: Vec<u8> = board.iter().filter_map(|s| parse_card_u8(s)).collect();
+    if board_u8.len() != 3 {
+        return Err(pyo3::exceptions::PyValueError::new_err(
+            "flop board must have exactly 3 cards",
+        ));
+    }
+    reject_duplicate_cards(&board_u8)?;
+    let board3: [u8; 3] = board_u8.try_into().unwrap();
+    let pot = (pot_bb * BB as f64).round() as i64;
+    let stack = (effective_stack_bb * BB as f64).round() as i64;
+    if pot <= 0 || pot % 2 != 0 || stack <= 0 {
+        return Err(pyo3::exceptions::PyValueError::new_err(
+            "pot must be positive and even (centi-bb); stack must be positive",
+        ));
+    }
+    let chance_mode = match mode.unwrap_or("sample") {
+        "sample" => ChanceMode::Sample { seed: seed.unwrap_or(42) },
+        "enumerate" => ChanceMode::Enumerate,
+        other => {
+            return Err(pyo3::exceptions::PyValueError::new_err(format!(
+                "unknown mode '{other}' (sample | enumerate)"
+            )))
+        }
+    };
+    let abs = Abstraction {
+        buckets_river: buckets_river.unwrap_or(0),
+        buckets_turn: buckets_turn.unwrap_or(0),
+    };
+
+    // Resolve all fallible inputs before releasing the GIL.
+    let cfg = flop_config(pot_type, bet_pcts, max_raises)?;
+    let ranges = [
+        range_from_weights(ip_weights, &board3)?,   // p0 = SB/IP
+        range_from_weights(oop_weights, &board3)?,  // p1 = BB/OOP
+    ];
+
+    // Memory guard: refuse infeasible dense-table sizes up front (fail loud)
+    // rather than swap the machine to death mid-solve.
+    let tree = build_flop_tree(pot, stack, &cfg);
+    let dense_bytes = dense_table_bytes_abstracted(&tree, abs);
+    let cap_gb = max_table_gb.unwrap_or(12.0);
+    if dense_bytes as f64 > cap_gb * 1e9 {
+        return Err(pyo3::exceptions::PyValueError::new_err(format!(
+            "dense tables {:.2} GB exceed max_table_gb {:.1} — raise buckets_river \
+             (e.g. 128), reduce the tree (pot_type 3bet, smaller stack), or raise \
+             max_table_gb if you have the RAM",
+            dense_bytes as f64 / 1e9,
+            cap_gb,
+        )));
+    }
+
+    let combos = all_combos();
+    let out = py.allow_threads(|| {
+        let mut solver =
+            FlopSolver::new_abstracted(tree, board3, ranges, CfrVariant::cfr_plus_default(), chance_mode, abs);
+        let start = Instant::now();
+        solver.run(iters);
+        let elapsed = start.elapsed().as_secs_f64();
+        let expl = solver.exploitability_bb();
+        let game_value = solver.game_value_p0();
+        let root = solver.aggregate_strategy(0, None, None);
+        let na = root.len();
+        let root_actor = solver.actor_at(0) as usize;
+        let combo_evs = solver.root_combo_evs(root_actor as u8);
+        let table_bytes = solver.table_bytes();
+        let mut combo_data = Vec::new();
+        for (c, &(ca, cb)) in combos.iter().enumerate() {
+            if solver.export_weight(root_actor, None, None, c) == 0.0 {
+                continue;
+            }
+            let s = solver.average_strategy(0, None, None, c);
+            combo_data.push((ca, cb, s.iter().take(na).copied().collect::<Vec<f64>>(), combo_evs[c]));
+        }
+        (root, expl, game_value, elapsed, combo_data, table_bytes)
+    });
+    let (root, expl, game_value, elapsed, combo_data, table_bytes) = out;
+
+    let dict = pyo3::types::PyDict::new(py);
+    let agg = pyo3::types::PyList::empty(py);
+    let actions = pyo3::types::PyList::empty(py);
+    for (name, freq) in &root {
+        let e = pyo3::types::PyDict::new(py);
+        e.set_item("action", name)?;
+        e.set_item("freq", freq)?;
+        agg.append(e)?;
+        actions.append(name)?;
+    }
+    dict.set_item("strategy", agg)?;
+    dict.set_item("actions", actions)?;
+    dict.set_item("exploitability", expl.exploitability)?;
+    dict.set_item("br_sb", expl.br_value[0])?;
+    dict.set_item("br_bb", expl.br_value[1])?;
+    dict.set_item("game_value_sb", game_value)?;
+    dict.set_item("game_value_bb", -game_value)?;
+    dict.set_item("iterations", iters)?;
+    dict.set_item("elapsed_secs", elapsed)?;
+    dict.set_item("br_gain_sb", expl.br_gain[0])?;
+    dict.set_item("br_gain_bb", expl.br_gain[1])?;
+    dict.set_item("nashconv", expl.nashconv)?;
+    dict.set_item("buckets_river", abs.buckets_river)?;
+    dict.set_item("buckets_turn", abs.buckets_turn)?;
+    dict.set_item("table_bytes_gb", table_bytes as f64 / 1e9)?;
+    dict.set_item("dense_bytes_gb", dense_bytes as f64 / 1e9)?;
+
+    let combo_list = pyo3::types::PyList::empty(py);
+    for (ca, cb, freqs_vec, ev) in &combo_data {
+        let e = pyo3::types::PyDict::new(py);
+        e.set_item("card_a", card_string(*ca))?;
+        e.set_item("card_b", card_string(*cb))?;
+        let freqs = pyo3::types::PyList::empty(py);
+        for &f in freqs_vec {
+            freqs.append(f)?;
+        }
+        e.set_item("freqs", freqs)?;
+        e.set_item("ev", *ev)?;
+        combo_list.append(e)?;
+    }
+    dict.set_item("combos", combo_list)?;
+    Ok(dict.into())
+}
+
+/// Dense-table size (GB) a flop solve would allocate for this tree +
+/// abstraction, WITHOUT solving. Lets the async tier reject infeasible
+/// configs and size its memory reservation before submitting a job.
+#[pyfunction]
+#[pyo3(signature = (pot_bb, effective_stack_bb, pot_type=None, buckets_river=None, buckets_turn=None, bet_pcts=None, max_raises=None))]
+fn flop_dense_table_gb(
+    pot_bb: f64,
+    effective_stack_bb: f64,
+    pot_type: Option<&str>,
+    buckets_river: Option<usize>,
+    buckets_turn: Option<usize>,
+    bet_pcts: Option<Vec<u32>>,
+    max_raises: Option<u8>,
+) -> PyResult<f64> {
+    use gto_hu::game::BB;
+    use gto_hu::solver::{dense_table_bytes_abstracted, Abstraction};
+    use gto_hu::tree::build_flop_tree;
+
+    let pot = (pot_bb * BB as f64).round() as i64;
+    let stack = (effective_stack_bb * BB as f64).round() as i64;
+    if pot <= 0 || pot % 2 != 0 || stack <= 0 {
+        return Err(pyo3::exceptions::PyValueError::new_err(
+            "pot must be positive and even (centi-bb); stack must be positive",
+        ));
+    }
+    let cfg = flop_config(pot_type, bet_pcts, max_raises)?;
+    let tree = build_flop_tree(pot, stack, &cfg);
+    let abs = Abstraction {
+        buckets_river: buckets_river.unwrap_or(0),
+        buckets_turn: buckets_turn.unwrap_or(0),
+    };
+    Ok(dense_table_bytes_abstracted(&tree, abs) as f64 / 1e9)
+}
+
 /// "Ah" style label for a `rank*4+suit` card index.
 fn card_string(c: u8) -> String {
     const RANKS: [char; 13] = [
@@ -554,6 +784,8 @@ fn gto_py(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(solve_spot, m)?)?;
     m.add_function(wrap_pyfunction!(solve_hu_river, m)?)?;
     m.add_function(wrap_pyfunction!(solve_hu_turn_river, m)?)?;
+    m.add_function(wrap_pyfunction!(solve_hu_flop, m)?)?;
+    m.add_function(wrap_pyfunction!(flop_dense_table_gb, m)?)?;
     m.add_function(wrap_pyfunction!(eval7, m)?)?;
     Ok(())
 }
