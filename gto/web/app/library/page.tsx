@@ -132,6 +132,12 @@ function LibraryContent() {
         ))}
       </div>
       <span className="text-zinc-600">vs BB · 100bb</span>
+      <span
+        className="ml-2 px-1.5 py-0.5 border border-amber-500/40 text-amber-400 text-[9px] tracking-widest"
+        title="gto-cuda single-street solves over uniform ranges — position labels differ only via pot size. For exact equilibria use the SOLVER page (gto-hu)."
+      >
+        PREVIEW — approximation
+      </span>
     </>
   );
 

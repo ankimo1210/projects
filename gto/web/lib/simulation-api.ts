@@ -19,8 +19,9 @@ export interface BBHand {
 export interface PostflopResult {
   strategy:       ActionFreq[];
   exploitability: number;
-  backend:        string;
+  backend:        string; // "gto-hu" (equilibrium) | "gpu-preview" (approximation)
   iterations:     number;
+  equilibrium_claim: boolean;
 }
 
 export interface SimResponse {

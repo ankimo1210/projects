@@ -1,4 +1,10 @@
-"""Solution library lookup API."""
+"""Solution library lookup API.
+
+M2 disposition: the 19,305-spot gto-cuda library is the INSTANT-PREVIEW tier
+(`equilibrium_claim=false` on every row). Its solves are single-street
+(flop = call->showdown) and use UNIFORM ranges — position labels differ only
+via pot size. The equilibrium-grade surface is gto-hu via POST /api/solve.
+"""
 
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
@@ -23,6 +29,9 @@ class SpotStrategy(BaseModel):
     texture: str
     exploitability: float
     strategy: list[ActionFreq]
+    # Preview tier: gto-cuda single-street approximation over uniform ranges.
+    equilibrium_claim: bool = False
+    tier: str = "instant-preview"
 
 
 class ComboStrategy(BaseModel):

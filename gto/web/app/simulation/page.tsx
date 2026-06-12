@@ -294,6 +294,13 @@ export default function SimulationPage() {
                 <div className="space-y-3 border-t border-zinc-800 pt-4">
                   <p className="text-[9px] tracking-widest text-cyan-500/40">
                     POSTFLOP — {board.join(" ")} · IP ranges · {result.postflop.backend.toUpperCase()}
+                    {result.postflop.equilibrium_claim ? (
+                      <span className="ml-2 px-1.5 py-0.5 border border-cyan-500/40 text-cyan-400">EQUILIBRIUM</span>
+                    ) : (
+                      <span className="ml-2 px-1.5 py-0.5 border border-amber-500/40 text-amber-400">
+                        APPROXIMATION — single-street preview
+                      </span>
+                    )}
                   </p>
                   <div className="max-w-sm space-y-2.5">
                     {result.postflop.strategy

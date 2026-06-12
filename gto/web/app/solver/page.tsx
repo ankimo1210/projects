@@ -240,6 +240,15 @@ export default function SolverPage() {
                   {result.iterations} iters · {result.backend.toUpperCase()} ·
                   exploitability {result.exploitability.toExponential(2)}
                 </span>
+                {result.equilibrium_claim ? (
+                  <span className="text-[9px] px-1.5 py-0.5 border border-cyan-500/40 text-cyan-400 tracking-widest">
+                    EQUILIBRIUM
+                  </span>
+                ) : (
+                  <span className="text-[9px] px-1.5 py-0.5 border border-amber-500/40 text-amber-400 tracking-widest">
+                    APPROXIMATION — single-street preview
+                  </span>
+                )}
               </div>
 
               <div className="space-y-2.5">
@@ -323,7 +332,7 @@ export default function SolverPage() {
               <p className="text-zinc-600 tracking-widest">LAST SOLVE</p>
               <p className="text-zinc-400">{board.join(" ")}</p>
               <p className="text-zinc-500">{result.iterations} iter</p>
-              <p className={result.backend === "gpu" ? "text-cyan-400" : "text-zinc-500"}>
+              <p className={result.equilibrium_claim ? "text-cyan-400" : "text-amber-400"}>
                 {result.backend.toUpperCase()}
               </p>
             </div>

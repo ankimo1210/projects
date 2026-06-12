@@ -1,7 +1,7 @@
 use pyo3::prelude::*;
 use gto_core::card::Card;
 use gto_core::{monte_carlo, parse_cards};
-use gto_core::{solve, all_combos, evaluate7};
+use gto_core::evaluate7;
 use gto_core::eval::parse_card as parse_card_u8;
 
 /// Plain-Rust result of a GIL-released HU solve, ready for dict-building
@@ -166,55 +166,9 @@ fn parse_card_fn(s: &str) -> PyResult<u8> {
         .ok_or_else(|| pyo3::exceptions::PyValueError::new_err(format!("invalid card: {s}")))
 }
 
-/// ⚠ Single-street approximation (river-only correctness). Flop/turn
-/// results ignore future streets; do not present them as GTO.
-#[pyfunction]
-fn solve_spot(
-    py: Python<'_>,
-    pot_bb: f64,
-    effective_stack_bb: f64,
-    board: Vec<String>,
-    iterations: Option<u32>,
-    max_bets: Option<u8>,
-) -> PyResult<PyObject> {
-    let board_u8: Vec<u8> = board.iter().filter_map(|s| parse_card_u8(s)).collect();
-    if board_u8.len() == board.len() {
-        reject_duplicate_cards(&board_u8)?;
-    }
-    let board_refs: Vec<&str> = board.iter().map(|s| s.as_str()).collect();
-    let iters = iterations.unwrap_or(200);
-    let bets  = max_bets.unwrap_or(2);
-    let result =
-        py.allow_threads(|| solve(pot_bb, effective_stack_bb, &board_refs, iters, bets));
-
-    let combos = all_combos();
-
-    let dict = pyo3::types::PyDict::new(py);
-
-    let agg = pyo3::types::PyList::empty(py);
-    for (name, freq) in &result.strategy {
-        let e = pyo3::types::PyDict::new(py);
-        e.set_item("action", name)?;
-        e.set_item("freq", freq)?;
-        agg.append(e)?;
-    }
-    dict.set_item("strategy", agg)?;
-
-    let combo_list = pyo3::types::PyList::empty(py);
-    for (ci, action, freq) in &result.combo_strats {
-        let (ca, cb) = combos[*ci];
-        let e = pyo3::types::PyDict::new(py);
-        e.set_item("card_a", ca)?;
-        e.set_item("card_b", cb)?;
-        e.set_item("action", action)?;
-        e.set_item("freq", freq)?;
-        combo_list.append(e)?;
-    }
-    dict.set_item("combo_strategies", combo_list)?;
-    dict.set_item("exploitability", result.exploitability)?;
-    dict.set_item("iterations", result.iterations)?;
-    Ok(dict.into())
-}
+// NOTE: the old `solve_spot` binding (gto-core single-street CFR) was
+// retired in M2 — the /solver and /simulation pages run on gto-hu via
+// /api/solve, and the instant-preview tier is gto_cuda.batch_solve_rust.
 
 #[pyfunction]
 fn eval7(cards: Vec<u8>) -> PyResult<u16> {
@@ -781,7 +735,6 @@ fn card_string(c: u8) -> String {
 fn gto_py(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(equity, m)?)?;
     m.add_function(wrap_pyfunction!(parse_card_fn, m)?)?;
-    m.add_function(wrap_pyfunction!(solve_spot, m)?)?;
     m.add_function(wrap_pyfunction!(solve_hu_river, m)?)?;
     m.add_function(wrap_pyfunction!(solve_hu_turn_river, m)?)?;
     m.add_function(wrap_pyfunction!(solve_hu_flop, m)?)?;

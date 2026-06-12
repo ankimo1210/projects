@@ -15,7 +15,8 @@ export interface SolveResponse {
   strategy: ActionFreq[];
   exploitability: number;
   iterations: number;
-  backend: string;
+  backend: string; // "gto-hu" (equilibrium) | "gpu-preview" (single-street approximation)
+  equilibrium_claim: boolean;
 }
 
 export async function solveSpot(req: SolveRequest): Promise<SolveResponse> {
