@@ -19,11 +19,14 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from typing import Literal
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
+from gto.api.auth import require_local
 from gto.api.jobs import JobStatus, job_manager
+from gto.api.ratelimit import rate_limited_user
+from gto.library.chart_ranges import CHART_OPENERS, chart_ranges
 from gto.library.range_notation import parse_range_notation
 
 router = APIRouter()
@@ -82,12 +85,27 @@ class GameSpec(BaseModel):
 
 
 CAPABILITIES = {
-    "game": ["cash"],
+    "game": ["cash", "tournament"],
     "variant": ["nlhe"],
-    "table": ["hu"],
+    "table": ["hu", "6max"],
     "spot": ["postflop"],
     "rake_models": [*list(RAKE_PRESETS), "custom"],
     "pot_types": ["srp", "3bet", "4bet"],
+    "tournament": {
+        # F2: with 2 players ICM $EV is linear in stack, so HU tournament ==
+        # chip EV. Antes are folded into pot_bb by the caller; rake is none.
+        "tables": ["hu", "6max"],
+        "rake": ["none"],
+        "note": "antes/BB-ante go into pot_bb; shallow stacks via stack_bb",
+        "stack_presets_bb": [10, 15, 20, 25, 30, 40],
+    },
+    "table_6max": {
+        # 2-player position-pair subgames with chart-fixed ranges (F1).
+        "positions": [[o, "BB"] for o in CHART_OPENERS],
+        "pot_types": ["srp", "3bet"],
+        "range_source": "chart (default; explicit notation/weights override)",
+        "note": "SB opener is OOP postflop (6max), unlike HU where SB is IP",
+    },
     "streets": {
         "river": {"board_cards": 5, "cost": "sync", "iterations": ITER_CLAMP["river"]},
         "turn_river": {"board_cards": 4, "cost": "sync_capped", "iterations": ITER_CLAMP["turn_river"]},
@@ -114,13 +132,29 @@ async def capabilities():
 
 
 def _reject_unsupported(spec: GameSpec) -> None:
+    if spec.table == "6max":
+        pos_ok = (
+            len(spec.config.positions) == 2
+            and "BB" in spec.config.positions
+            and _opener_of(spec) in CHART_OPENERS
+        )
+        table_checks = [
+            (not pos_ok, f"6max positions={spec.config.positions} (need [opener, BB])"),
+            (spec.config.pot_type not in ("srp", "3bet"),
+             f"6max pot_type={spec.config.pot_type} (charts cover srp / 3bet)"),
+        ]
+    else:
+        table_checks = [
+            (spec.table != "hu", f"table={spec.table}"),
+            (sorted(spec.config.positions) not in (["BB", "SB"], ["BB", "BTN"]),
+             f"positions={spec.config.positions}"),
+        ]
     checks = [
-        (spec.game != "cash", f"game={spec.game}"),
+        (spec.game == "tournament" and spec.rake.model != "none",
+         "tournament solves take no rake"),
         (spec.variant != "nlhe", f"variant={spec.variant}"),
-        (spec.table != "hu", f"table={spec.table}"),
+        *table_checks,
         (spec.spot != "postflop", f"spot={spec.spot}"),
-        (sorted(spec.config.positions) not in (["BB", "SB"], ["BB", "BTN"]),
-         f"positions={spec.config.positions}"),
         (len(spec.config.board) not in (3, 4, 5), f"board must have 3, 4 or 5 cards, got {len(spec.config.board)}"),
     ]
     for failed, what in checks:
@@ -129,6 +163,21 @@ def _reject_unsupported(spec: GameSpec) -> None:
                 422,
                 detail={"unsupported": what, "see": "/api/solve/capabilities"},
             )
+
+
+def _opener_of(spec: GameSpec) -> str | None:
+    others = [p for p in spec.config.positions if p != "BB"]
+    return others[0] if len(others) == 1 else None
+
+
+def _apply_chart_presets(spec: GameSpec) -> None:
+    """6max: fill unset/'chart' ranges from the preflop charts (F1 — ranges
+    fixed by the chart; explicit notation/weights inputs override)."""
+    derived = chart_ranges(_opener_of(spec), spec.config.pot_type)
+    for side in ("ip", "oop"):
+        v = spec.config.ranges.get(side)
+        if v is None or v in ("chart", "preset"):
+            spec.config.ranges[side] = derived[side]
 
 
 def _resolve_rake(r: RakeSpec) -> tuple[float, float]:
@@ -146,6 +195,8 @@ def _resolve_rake(r: RakeSpec) -> tuple[float, float]:
 def _resolve_range(v: str | list[float] | None) -> list[float] | None:
     if v is None or v == "preset" or v == "uniform":
         return None  # binding default: uniform minus blockers
+    if v == "chart":
+        raise HTTPException(422, "chart ranges require table=6max (positions [opener, BB])")
     if isinstance(v, str):
         try:
             return parse_range_notation(v).tolist()
@@ -157,10 +208,15 @@ def _resolve_range(v: str | list[float] | None) -> list[float] | None:
 
 
 @router.post("/solve")
-async def solve(spec: GameSpec):
+async def solve(spec: GameSpec, user: str = Depends(rate_limited_user)):
     _reject_unsupported(spec)
+    if spec.table == "6max":
+        _apply_chart_presets(spec)
     n = len(spec.config.board)
     if n == 3:
+        # The flop async tier pins ~12 GB for tens of minutes — local-only
+        # (E1 rev 2 gating); sync tiers below are auth + rate limited.
+        await require_local()
         return _submit_flop(spec)
     street = "river" if n == 5 else "turn_river"
     lo, hi, default = ITER_CLAMP[street]
@@ -273,7 +329,7 @@ def _submit_flop(spec: GameSpec):
     )
 
 
-@router.get("/solve/jobs/{job_id}")
+@router.get("/solve/jobs/{job_id}", dependencies=[Depends(require_local)])
 async def job_status(job_id: str):
     job = job_manager.get(job_id)
     if job is None:
@@ -284,7 +340,7 @@ async def job_status(job_id: str):
     return body
 
 
-@router.delete("/solve/jobs/{job_id}")
+@router.delete("/solve/jobs/{job_id}", dependencies=[Depends(require_local)])
 async def job_cancel(job_id: str):
     if job_manager.get(job_id) is None:
         raise HTTPException(404, "unknown or expired job id")

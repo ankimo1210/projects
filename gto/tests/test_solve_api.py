@@ -41,9 +41,9 @@ def test_capabilities_shape():
     "over",
     [
         {"variant": "plo"},
-        {"table": "6max"},
-        {"game": "tournament"},
+        {"table": "9max"},
         {"spot": "preflop"},
+        # table=6max and game=tournament became SUPPORTED in M2
     ],
 )
 def test_unsupported_axes_422_with_pointer(over):
@@ -113,6 +113,62 @@ def test_flop_submit_poll_result_flow():
 def test_job_status_unknown_404():
     assert client.get("/api/solve/jobs/deadbeef").status_code == 404
     assert client.delete("/api/solve/jobs/deadbeef").status_code == 404
+
+
+# ----- M2: 6max position pairs (chart ranges) + tournament ------------------
+
+
+def test_6max_bad_positions_422():
+    s = _spec(table="6max")
+    s["config"]["positions"] = ["UTG", "SB"]  # no BB
+    r = client.post("/api/solve", json=s)
+    assert r.status_code == 422
+    s["config"]["positions"] = ["HJ", "BB"]
+    s["config"]["pot_type"] = "4bet"  # charts cover srp/3bet only
+    assert client.post("/api/solve", json=s).status_code == 422
+
+
+def test_chart_range_requires_6max():
+    s = _spec()
+    s["config"]["ranges"] = {"ip": "chart"}
+    r = client.post("/api/solve", json=s)
+    assert r.status_code == 422
+    assert "6max" in r.json()["detail"]
+
+
+def test_tournament_rejects_rake():
+    s = _spec(game="tournament")
+    s["rake"] = {"model": "site"}
+    assert client.post("/api/solve", json=s).status_code == 422
+
+
+@pytest.mark.skipif(not HAS_BINDING, reason="gto_py not built")
+def test_6max_chart_solve_uses_chart_ranges():
+    # BTN vs BB SRP river: OOP (BB defend-call range) excludes AA (BB 3bets
+    # AA pre, so it never reaches an SRP river). The combo export is the
+    # root actor's (OOP) range -> no AA combos.
+    s = _spec(table="6max", iterations=200)
+    s["config"]["positions"] = ["BTN", "BB"]
+    s["config"]["pot_type"] = "srp"
+    s["config"]["pot_bb"] = 5.5
+    r = client.post("/api/solve", json=s)
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert body["meta"]["equilibrium_claim"] is True
+    combos = {(c["card_a"][0], c["card_b"][0]) for c in body["combo_strategies"]}
+    assert ("A", "A") not in combos  # AA is 3bet pre, not in the call range
+    # chart ranges echoed into the game spec (presets resolved server-side);
+    # QQ calls its non-3bet remainder (30%) vs the BTN open
+    assert "QQ:0.3" in body["meta"]["game_spec"]["config"]["ranges"]["oop"]
+
+
+@pytest.mark.skipif(not HAS_BINDING, reason="gto_py not built")
+def test_tournament_hu_shallow_solve():
+    s = _spec(iterations=200, game="tournament", stack_bb=15.0)
+    s["config"]["pot_bb"] = 5.0  # 2bb blinds + 1bb BB-ante folded into the pot
+    r = client.post("/api/solve", json=s)
+    assert r.status_code == 200, r.text
+    assert r.json()["meta"]["game_spec"]["game"] == "tournament"
 
 
 @pytest.mark.skipif(not HAS_BINDING, reason="gto_py not built")
