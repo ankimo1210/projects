@@ -15,7 +15,7 @@
 | **Phase HU** | ✅ 完了 | gto-hu river / turn+river / flop / preflop / blueprint の5 CLI |
 | **M1a** | ✅ 完了（2026-06-11） | GameSpec `POST /api/solve` + capabilities、Rake一般和、PokerVariant seam、Custom Solve Web フォーム |
 | **M1b** | ✅ 完了（2026-06-12） | `solve_hu_flop` + `flop_dense_table_gb` pyo3バインディング + メモリ会計付き非同期ジョブ基盤 + flop非同期ルーティング + Custom Solve Web 非同期UX |
-| **M2** | ⬜ 未着手 | 6max ポジションペア行列 v1（BB-as-sole-defender）+ Tournament-HU |
+| **M2** | ✅ 完了（2026-06-12） | 6max v1: チャート8枚+整合性バリデータ、`table=6max`（チャート由来レンジ）、`game=tournament`、/solver・/simulation gto-hu移行、gto-cuda preview降格、単一ストリートCFR退役。残: 14ペア=M3、CPU並列化実験 |
 | **M3** | ⬜ 未着手 | プリフロップ true solve（MCCFR）、ブループリント品質ラン、CPU並列化・GPU go/no-go |
 | **M4** | ⬜ 未着手 | PLO: `PokerVariant`実装 + HU PLO river prototype |
 | **Phase E** | ⬜ 未着手（M1後に着手） | Supabase認証 / Stripe / Cloud Run デプロイ / ドメイン |
@@ -28,8 +28,8 @@
 
 | | **Cash** | **Tournament** |
 |---|---|---|
-| **NLHE / HU** | ✅ Postflop（下表） | ⬜ M2（ante/shallow stack） |
-| **NLHE / 6max** | ⬜ M2（BB-def 8 charts） | ⬜ M3 |
+| **NLHE / HU** | ✅ Postflop（下表） | ✅ M2（ante は pot_bb 折込・rake なし・10–40bb presets） |
+| **NLHE / 6max** | ✅ M2 v1（opener-vs-BB 5ペア × srp/3bet、チャート由来レンジ） | ✅ 同左（tournament 軸は HU と同条件） |
 | **NLHE / 9max** | ⬜ M3（chart authoring） | ⬜ M3 |
 | **PLO / HU** | ⬜ M4 experiment | — |
 | **PLO / 6max+** | — Non-goal | — |

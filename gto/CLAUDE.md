@@ -12,13 +12,13 @@ Respond to the user in Japanese by default; code and identifiers in English.
 
 | Layer | Path | Role |
 |---|---|---|
-| Solver core | `crates/gto-core/` | CFR/DCFR, hand evaluator, `PokerVariant` trait/`Nlhe` (variant seam) (Rust, CPU). (`multistreet.rs` removed in M1a.) |
+| Solver core | `crates/gto-core/` | Hand evaluator, equity MC, `Range`, `PokerVariant` trait/`Nlhe` (variant seam) (Rust, CPU). (`multistreet.rs` removed in M1a; single-street `cfr.rs`/`tree.rs`/`solve()` retired in M2.) |
 | GPU solver | `crates/gto-cuda/` | NVRTC JIT kernels, batch CFR on RTX 5080 (sm_120). CUDA Driver API via `ctypes`. |
-| Python bindings | `crates/gto-py/` | pyo3 wrapper: `solve_hu_river` / `solve_hu_turn_river` (ranges + bet sizes + pot type + `RakeModel` + equity/per-combo-EV/NashConv outputs), `solve_hu_flop` (ranges + bet sizes + `Abstraction{buckets_river,turn}` + max_table_gb guard; no rake/equity — M1b), `flop_dense_table_gb` (a-priori table-size estimator), `solve_spot` (gto-cuda preview), `equity` |
+| Python bindings | `crates/gto-py/` | pyo3 wrapper: `solve_hu_river` / `solve_hu_turn_river` (ranges + bet sizes + pot type + `RakeModel` + equity/per-combo-EV/NashConv outputs), `solve_hu_flop` (ranges + bet sizes + `Abstraction{buckets_river,turn}` + max_table_gb guard; no rake/equity — M1b), `flop_dense_table_gb` (a-priori table-size estimator), `equity`. (`solve_spot` retired in M2.) |
 | HU solver | `crates/gto-hu/` | Abstract HU NLHE equilibrium solver: vector CFR+, rake + general-sum exploitability (NashConv), Kuhn/Leduc validation, exact best response. CLIs: `solve-hu-river`, `solve-hu-turn-river`, `solve-hu-flop`, `solve-hu-preflop`, `solve-hu-blueprint` |
 | Backend API | `src/gto/api/` | FastAPI app + routers (`solve` = GameSpec `POST /api/solve` + capabilities; river/turn sync, flop async via `jobs.py` → `GET/DELETE /api/solve/jobs/{id}`; `equity`, `trainer`, `solver`, `library`, `simulation`, `review`, `hu` [deprecated → `/api/solve`]). `jobs.py` = in-process job manager with memory-accounted admission (flop ≈1 concurrent on this box) |
 | Solution store | `src/gto/library/` | Batch precompute, Parquet I/O, range builder, flop canonical-form |
-| Trainer | `src/gto/trainer/` | Preflop GTO frequency tables (hardcoded approximation, not solved) |
+| Trainer | `src/gto/trainer/` | Preflop GTO frequency tables (hardcoded approximation, not solved). M2: 5 RFI + 5 BB-defend + 5 opener-vs-3bet charts; `chart_validator.py` enforces structural consistency (run it after ANY chart edit) |
 | Hand review | `src/gto/review/` | PokerStars hand-history parser + preflop GTO deviation flags |
 | Web UI | `web/` | Next.js 16 / React 19 / Tailwind v4 (pages: `/neon`, `/library`, `/report`, `/solver`, `/simulation`, `/review`, `/hu`) |
 
@@ -72,7 +72,14 @@ cargo test --manifest-path gto/Cargo.toml
   postflop equilibria use **gto-hu** via `POST /api/solve` (river / turn+river
   exact and synchronous; flop exact-but-bucketed and **async** since M1b —
   returns 202 + a job to poll). River-only gto-cuda solves are still correct.
-  (The old `gto-core::multistreet` approximation tier was removed in M1a.)
+  (The old `gto-core::multistreet` approximation tier was removed in M1a;
+  the single-street `gto-core` CFR + `gto_py.solve_spot` were retired in M2 —
+  /solver and /simulation now run gto-hu for 4/5-card boards and gto-cuda
+  preview for 3-card boards, with no CPU fallback.)
+- **6max = 2-player subgames with chart-fixed ranges** (`table="6max"` on
+  `POST /api/solve`): 5 opener-vs-BB pairs × srp/3bet, ranges derived from
+  the trainer charts via `gto.library.chart_ranges`. The SB opener is OOP
+  postflop (unlike HU where SB is IP) — `opener_is_ip` handles it.
 - **Preflop is hardcoded**, not solved by CFR. The frequencies in
   `src/gto/trainer/preflop_data.py` are an approximation table.
 - **`2c` phantom card bug** — fixed (Phase 1 evaluator rewrite, see

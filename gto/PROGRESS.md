@@ -1,10 +1,46 @@
 # GTO Poker Suite — 進捗 & TODO
 
-最終更新: 2026-06-12（M1b flop 非同期ソルブ基盤を実装）
+最終更新: 2026-06-12（M1b flop 非同期ソルブ + M2 6max 行列 v1 を実装）
 
 ---
 
 ## 完了済み
+
+### M2 — 6max ポジションペア行列 v1 + Tournament-HU + 移行 (2026-06-12)
+モードマトリクス・ロードマップ §3 M2 を実装（BB-as-sole-defender スコープ）。
+- **チャート 8 枚追加**（`src/gto/trainer/preflop_data.py`）: BB ディフェンド
+  BB_vs_UTG/HJ/SB + opener-vs-BB-3bet 5 枚（UTG/HJ/CO/BTN/SB、4B/C/F）。
+  `_face2`/`_vs3` ヘルパー（mixed-3bet 残りはコール、部分コール対応）。
+  既存 BB_vs_BTN/CO も `_face2` 化（**旧 `_face` のチャートバグ修正**: QQ が
+  BTN オープンに 30% フォールドしていた等。旧 `_face` は削除）。
+- **整合性バリデータ**（`src/gto/trainer/chart_validator.py`）: 頻度和=100 /
+  vs-3bet の継続ハンドは opener の RFI 支持内 / ディフェンド⇄レスポンスのペア /
+  継続頻度 [30%,75%] サニティバンド。**初回実行で実バグを 5 件検出**
+  （継続レンジが MDF 比で過小）→ 修正済み。出荷時 violations 0。
+  実測: BB 3bet 2.9%(UTG)〜9.1%(BTN)、opener 継続 30.2%(CO)〜43.4%(UTG)。
+- **チャート由来レンジ**（`src/gto/library/chart_ranges.py`）: SRP =
+  opener RFI × BB ディフェンドコール、3bet pot = BB 3bet × opener
+  (open×call) 条件付きレンジ。**SB opener は 6max ではポストフロップ OOP**
+  （HU 慣行と逆）を `opener_is_ip` で処理。
+- **GameSpec 拡張**: `table=6max`（5 ポジションペア × srp/3bet、レンジ既定 =
+  チャート、明示 notation/weights で上書き）+ `game=tournament`
+  （F2: HU ICM≡chip EV。ante は pot_bb に折込み、rake は 422、
+  シャロー stack presets を capabilities に記載）。
+- **/solver・/simulation の gto-hu 移行**: board 4/5 枚 → gto-hu 均衡
+  （exact expl、`equilibrium_claim=true`）、3 枚 → gto-cuda instant-preview
+  （`equilibrium_claim=false`、gto_cuda 不在時は 503）。
+  **gto-core 単一ストリート CFR を退役**（cfr.rs / tree.rs / solve() /
+  gto_py.solve_spot 削除 — 旧 CPU フォールバック 2 箇所が唯一の利用者だった）。
+- **gto-cuda ライブラリ preview 降格**: `/api/library/*` 全行に
+  `equilibrium_claim=false` + `tier="instant-preview"`。/library・/report に
+  「PREVIEW — approximation」ラベル（uniform レンジの事実も tooltip 記載）。
+- review パーサ副次効果: BB_vs_UTG/HJ/SB が deviation 判定でカバー済みに
+  （旧 missing_data テストは「カバー済み」検証に更新）。
+- 検証: pytest **115 passed**、cargo フルスイート green、Playwright 実描画
+  （/library・/report ラベル、/solver river の EQUILIBRIUM バッジ）、
+  実 HTTP（solver river=gto-hu / simulation turn=gto-hu / library flags）。
+- 残: 残り 14 ペア（20 チャート）= M3、intra-solve CPU 並列化実験（未着手）、
+  flop preview の chart 重み再生成判断。
 
 ### M1b — Flop 非同期カスタムソルブ (2026-06-12)
 モードマトリクス・ロードマップ（`docs/superpowers/specs/2026-06-11-mode-matrix-
