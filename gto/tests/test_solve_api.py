@@ -32,6 +32,9 @@ def test_capabilities_shape():
     caps = r.json()
     assert caps["variant"] == ["nlhe"]
     assert caps["streets"]["flop"]["cost"] == "async"
+    # flop is now available (M1b): no "not yet" status, abstraction defaults present
+    assert "status" not in caps["streets"]["flop"]
+    assert caps["streets"]["flop"]["abstraction"]["buckets_river_default"] == 128
 
 
 @pytest.mark.parametrize(
@@ -51,11 +54,65 @@ def test_unsupported_axes_422_with_pointer(over):
         assert detail["see"] == "/api/solve/capabilities"
 
 
-def test_flop_board_is_m1b_422():
+def test_flop_rake_rejected_422():
+    # FlopSolver has no rake path; a raked flop spec must 422 (not submit).
     s = _spec()
     s["config"]["board"] = ["Ah", "Kd", "7s"]
+    s["rake"] = {"model": "site"}
     r = client.post("/api/solve", json=s)
     assert r.status_code == 422
+    assert "rake" in r.json()["detail"].lower()
+
+
+def test_flop_infeasible_table_rejected_at_submit_422():
+    # Exact (no bucketing) 100bb SRP flop is ~105 GB -> reject immediately.
+    s = _spec()
+    s["config"]["board"] = ["Ah", "Kd", "7s"]
+    s["config"]["pot_bb"] = 5.0
+    s["stack_bb"] = 97.5
+    s["config"]["abstraction"] = {"buckets_river": 0, "max_table_gb": 12.0}
+    r = client.post("/api/solve", json=s)
+    assert r.status_code == 422
+
+
+@pytest.mark.skipif(not HAS_BINDING, reason="gto_py not built")
+def test_flop_submit_poll_result_flow():
+    s = _spec(iterations=40)
+    s["config"]["board"] = ["Ah", "Kd", "7s"]
+    s["config"]["pot_bb"] = 18.0
+    s["stack_bb"] = 41.0
+    s["config"]["pot_type"] = "3bet"
+    s["config"]["abstraction"] = {"buckets_river": 16, "max_table_gb": 12.0}
+    r = client.post("/api/solve", json=s)
+    assert r.status_code == 202, r.text
+    handle = r.json()
+    job_id = handle["job_id"]
+    assert handle["kind"] == "flop"
+
+    import time
+
+    envelope = None
+    for _ in range(600):  # up to ~60s for a tiny 40-iter flop solve
+        st = client.get(f"/api/solve/jobs/{job_id}")
+        assert st.status_code == 200
+        body = st.json()
+        if body["status"] == "done":
+            envelope = body["result"]
+            break
+        if body["status"] == "error":
+            raise AssertionError(f"flop job errored: {body['error']}")
+        time.sleep(0.1)
+    assert envelope is not None, "flop job did not finish in time"
+    assert envelope["meta"]["street"] == "flop"
+    assert envelope["meta"]["abstraction"] == {"buckets_river": 16, "buckets_turn": 0}
+    assert envelope["meta"]["equilibrium_claim"] is True
+    assert envelope["equity"] is None  # no flop equity
+    assert sum(a["freq"] for a in envelope["strategy"]) == pytest.approx(1.0)
+
+
+def test_job_status_unknown_404():
+    assert client.get("/api/solve/jobs/deadbeef").status_code == 404
+    assert client.delete("/api/solve/jobs/deadbeef").status_code == 404
 
 
 @pytest.mark.skipif(not HAS_BINDING, reason="gto_py not built")

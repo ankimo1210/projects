@@ -108,3 +108,62 @@ def test_turn_river_custom_range_and_rake():
 def test_turn_river_baseline_unchanged():
     r = gto_py.solve_hu_turn_river(BOARD4, 20.0, 90.0, 300)
     assert r["nashconv"] == r["br_sb"] + r["br_bb"]
+
+
+# ----- flop binding (M1b) ----------------------------------------------------
+
+BOARD3 = ["Ah", "Kd", "7s"]
+
+HAS_FLOP = hasattr(gto_py, "solve_hu_flop")
+flop_only = pytest.mark.skipif(not HAS_FLOP, reason="gto_py.solve_hu_flop not built")
+
+
+@flop_only
+def test_flop_solve_basic_shape_and_invariants():
+    # Small 3bet-pot flop with river bucketing keeps the table tiny + fast.
+    r = gto_py.solve_hu_flop(
+        BOARD3, 18.0, 41.0, iterations=40, seed=1,
+        pot_type="3bet", buckets_river=16, max_table_gb=12.0,
+    )
+    assert {"strategy", "actions", "exploitability", "nashconv", "combos"} <= set(r)
+    assert {"buckets_river", "buckets_turn", "table_bytes_gb", "dense_bytes_gb"} <= set(r)
+    # flop carries no range-vs-range equity
+    assert "equity_sb" not in r
+    # root strategy is a probability distribution
+    assert sum(a["freq"] for a in r["strategy"]) == pytest.approx(1.0)
+    # zero-sum (no rake): game values mirror, nashconv == br_sb + br_bb
+    assert r["game_value_sb"] == pytest.approx(-r["game_value_bb"])
+    assert r["nashconv"] == pytest.approx(r["br_sb"] + r["br_bb"])
+    assert r["buckets_river"] == 16
+    assert all("ev" in c and "freqs" in c for c in r["combos"])
+
+
+@flop_only
+def test_flop_more_iters_lowers_exploitability():
+    a = gto_py.solve_hu_flop(BOARD3, 18.0, 41.0, iterations=40, seed=1, pot_type="3bet", buckets_river=16)
+    b = gto_py.solve_hu_flop(BOARD3, 18.0, 41.0, iterations=300, seed=1, pot_type="3bet", buckets_river=16)
+    assert b["exploitability"] < a["exploitability"]
+
+
+@flop_only
+def test_flop_memory_guard_rejects_infeasible():
+    # Exact (unbucketed) 100bb SRP flop is ~105 GB -> refuse before solving.
+    with pytest.raises(ValueError, match="exceed max_table_gb"):
+        gto_py.solve_hu_flop(BOARD3, 5.0, 97.5, iterations=1, buckets_river=0, max_table_gb=12.0)
+
+
+@flop_only
+def test_flop_bad_board_and_dup_rejected():
+    with pytest.raises(ValueError, match="exactly 3 cards"):
+        gto_py.solve_hu_flop(["Ah", "Kd"], 18.0, 41.0, iterations=1)
+    with pytest.raises(ValueError, match="duplicate"):
+        gto_py.solve_hu_flop(["Ah", "Ah", "7s"], 18.0, 41.0, iterations=1, buckets_river=16)
+
+
+@flop_only
+def test_flop_dense_table_estimator():
+    exact = gto_py.flop_dense_table_gb(5.0, 97.5)               # exact 100bb SRP
+    bucketed = gto_py.flop_dense_table_gb(5.0, 97.5, "srp", 128)
+    assert exact > 100.0           # ~105 GB
+    assert bucketed < exact / 5    # bucketing collapses it by >5x
+
