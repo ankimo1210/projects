@@ -1,10 +1,41 @@
 # GTO Poker Suite — 進捗 & TODO
 
-最終更新: 2026-06-11（M1a カスタムソルブ基盤を実装。コアロジック修正・再生成も同日）
+最終更新: 2026-06-12（M1b flop 非同期ソルブ基盤を実装）
 
 ---
 
 ## 完了済み
+
+### M1b — Flop 非同期カスタムソルブ (2026-06-12)
+モードマトリクス・ロードマップ（`docs/superpowers/specs/2026-06-11-mode-matrix-
+roadmap-design.md` §4.4、受け入れ 6–7）の M1b を実装。
+- **`solve_hu_flop` pyo3 バインディング**（従来 CLI のみ・バインディング不在）—
+  board 3 枚 / ranges(1326重み or 記法) / bet sizes / pot_type(srp,3bet) /
+  `Abstraction{buckets_river,buckets_turn}` / max_table_gb / mode(sample,enumerate)。
+  `py.allow_threads` + 重複カード + メモリガード（dense > max_table_gb で fail-loud）。
+  FlopSolver に `root_combo_evs` を追加（river と同形）。equity は flop では非計算（null）。
+- **`flop_dense_table_gb` バインディング** — 解かずに dense テーブル size を見積もり、
+  submit 時に過大構成を即 422 + メモリ予約を正確化。
+- **In-process ジョブ基盤**（`src/gto/api/jobs.py`、外部ブローカーなし）—
+  submit/status/result/cancel + TTL + **メモリ会計付き入場制御**。
+  予約が予算を超えるジョブは queue（この箱 ~22GB free・flop 予約 ~dense GB →
+  flop は同時 1 本、2 本目は queue で OOM しない）。skip-and-continue 入場。
+  running ジョブの cancel は best-effort（Rust 側に中断フックなし＝結果破棄・
+  スロットはスレッド終了時に解放、と明記）。
+- **`POST /api/solve` flop 非同期ルーティング** — flop(3枚) は 202 + ジョブハンドル、
+  river/turn は従来同期。`GET /api/solve/jobs/{id}`（done 時 result 同梱）/
+  `DELETE`（cancel）。capabilities の flop を「async・srp/3bet・rake none・
+  abstraction 既定」に更新。flop の rake!=none / pot_type=4bet は 422。
+  envelope は flop で meta.abstraction を埋め equity=null。
+- **Web /solver Custom Solve** — board 3 枚で flop UI（abstraction 入力・rake 無効化・
+  4bet 無効化・iterations 欄）、submit→ポーリング→結果、ジョブ status 行 + cancel、
+  ABSTRACTION バッジ + expl ラベル。Playwright 実描画検証（localhost、Next16 の
+  allowedDevOrigins により 127.0.0.1 では HMR 遮断でハイドレーション不全＝localhost 必須）。
+- 検証: pytest **94 passed**（M1a 79 + jobs 7 + flop binding 5 + flop API 3）、
+  cargo gto-hu フルスイート green。実 HTTP で submit→queued/running/done→envelope 確認
+  （AhKd7s 3bet 18/41, K_r=16, 40→clamp100 iters, ~11s, expl 9.74bb, table 0.2GB）。
+- **残（M2）**: 6max ポジションペア行列、/solver・/simulation の gto-hu 移行、
+  gto-cuda ライブラリ preview 降格。flop の rake 対応は将来（FlopSolver に rake path なし）。
 
 ### M1a — Custom Solve 基盤 (2026-06-11)
 モードマトリクス・ロードマップ（`docs/superpowers/specs/2026-06-11-mode-matrix-
@@ -30,8 +61,8 @@ plans/2026-06-11-m1a-custom-solve-foundation.md`、branch `feat/m1a-custom-solve
 - **Web**: /solver に Custom Solve フォーム（gto-hu 均衡 + exact exploitability
   バナー）。Playwright で実描画検証（expl 0.0012bb / EV ±0.702 / 2000 iters）。
 - 検証: pytest 79 passed、cargo フルスイート green。
-- **残（M1b 別プラン）**: solve_hu_flop バインディング（未実装、CLI のみ）+ 非同期
-  ジョブ基盤 + flop カスタムソルブ。
+- **残（M1b）**: solve_hu_flop バインディング + 非同期ジョブ基盤 + flop カスタムソルブ
+  → **2026-06-12 実装完了**（上記 M1b セクション）。
 
 ### Core-logic 修正適用 (2026-06-11)
 2026-06-10 の包括レビュー（`docs/reviews/2026-06-10-core-logic-review.md`）の
@@ -300,6 +331,16 @@ gto-core/gto-cuda は single-street 近似のまま（river-only は正しい）
 ---
 
 ## TODO（優先順）
+
+開発計画の全体像（WP1–WP6・ゲート・見積もり）は
+[docs/development-plan.md](./docs/development-plan.md) を参照。
+
+### 次（M2 — WP4）
+- [ ] 6max ポジションペア行列 v1（BB-as-sole-defender、不足 8 チャート）
+- [ ] /solver・/simulation を gto-cuda single-street から gto-hu `/api/solve` へ移行
+- [ ] gto-cuda ライブラリを `equilibrium_claim=false` の preview tier に降格
+- [ ] Tournament-HU（ante/BB-ante + 10–40bb シャロー）
+- [ ] 実験: intra-solve CPU 並列化（rayon over 44–48 リバー文脈）
 
 ### Phase HU 続き（gto-hu ロードマップ）
 - [ ] ブループリント品質ラン — sample_flops の頻度重み + 15k iters（~7h）で

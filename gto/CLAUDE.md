@@ -14,9 +14,9 @@ Respond to the user in Japanese by default; code and identifiers in English.
 |---|---|---|
 | Solver core | `crates/gto-core/` | CFR/DCFR, hand evaluator, `PokerVariant` trait/`Nlhe` (variant seam) (Rust, CPU). (`multistreet.rs` removed in M1a.) |
 | GPU solver | `crates/gto-cuda/` | NVRTC JIT kernels, batch CFR on RTX 5080 (sm_120). CUDA Driver API via `ctypes`. |
-| Python bindings | `crates/gto-py/` | pyo3 wrapper: `solve_hu_river` / `solve_hu_turn_river` (ranges + bet sizes + pot type + `RakeModel` + equity/per-combo-EV/NashConv outputs), `solve_spot` (gto-cuda preview), `equity` |
+| Python bindings | `crates/gto-py/` | pyo3 wrapper: `solve_hu_river` / `solve_hu_turn_river` (ranges + bet sizes + pot type + `RakeModel` + equity/per-combo-EV/NashConv outputs), `solve_hu_flop` (ranges + bet sizes + `Abstraction{buckets_river,turn}` + max_table_gb guard; no rake/equity — M1b), `flop_dense_table_gb` (a-priori table-size estimator), `solve_spot` (gto-cuda preview), `equity` |
 | HU solver | `crates/gto-hu/` | Abstract HU NLHE equilibrium solver: vector CFR+, rake + general-sum exploitability (NashConv), Kuhn/Leduc validation, exact best response. CLIs: `solve-hu-river`, `solve-hu-turn-river`, `solve-hu-flop`, `solve-hu-preflop`, `solve-hu-blueprint` |
-| Backend API | `src/gto/api/` | FastAPI app + routers (`solve` = GameSpec `POST /api/solve` + capabilities, `equity`, `trainer`, `solver`, `library`, `simulation`, `review`, `hu` [deprecated → `/api/solve`]) |
+| Backend API | `src/gto/api/` | FastAPI app + routers (`solve` = GameSpec `POST /api/solve` + capabilities; river/turn sync, flop async via `jobs.py` → `GET/DELETE /api/solve/jobs/{id}`; `equity`, `trainer`, `solver`, `library`, `simulation`, `review`, `hu` [deprecated → `/api/solve`]). `jobs.py` = in-process job manager with memory-accounted admission (flop ≈1 concurrent on this box) |
 | Solution store | `src/gto/library/` | Batch precompute, Parquet I/O, range builder, flop canonical-form |
 | Trainer | `src/gto/trainer/` | Preflop GTO frequency tables (hardcoded approximation, not solved) |
 | Hand review | `src/gto/review/` | PokerStars hand-history parser + preflop GTO deviation flags |
@@ -70,7 +70,8 @@ cargo test --manifest-path gto/Cargo.toml
   ignoring Turn/River — qualitatively wrong flop incentives; it is the
   "instant-preview" tier only (`equilibrium_claim=false`). For correct
   postflop equilibria use **gto-hu** via `POST /api/solve` (river / turn+river
-  exact; flop is M1b). River-only gto-cuda solves are still correct.
+  exact and synchronous; flop exact-but-bucketed and **async** since M1b —
+  returns 202 + a job to poll). River-only gto-cuda solves are still correct.
   (The old `gto-core::multistreet` approximation tier was removed in M1a.)
 - **Preflop is hardcoded**, not solved by CFR. The frequencies in
   `src/gto/trainer/preflop_data.py` are an approximation table.
