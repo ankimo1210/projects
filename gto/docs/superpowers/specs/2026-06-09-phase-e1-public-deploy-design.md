@@ -1,7 +1,31 @@
 # Phase E1 — Public Deploy + Auth + Rate Limiting — Design
 
-Date: 2026-06-09
+Date: 2026-06-09 (rev 2: 2026-06-12 — gating tables revised post-M1/M2)
 Status: approved (brainstorm with user, gating model A)
+
+## Rev 2 — post-M1/M2 gating revision (supersedes §2's table)
+
+M1 made GameSpec `POST /api/solve` the API contract and M2 migrated /solver
+and /simulation onto it; the gating input is now the **cost class** from
+`GET /api/solve/capabilities`:
+
+| Tier | Surface | Cost class | Public deploy |
+|---|---|---|---|
+| Public, no auth | `/api/library/*` (instant-preview tier, `equilibrium_claim=false`), `/api/trainer/*`, static `/solutions/*`, frontend | static | open |
+| Auth + rate limit | `/api/equity`; `POST /api/solve` river (sync ~1s) and turn_river (sync-capped ~37s); legacy `/api/hu/*` (deprecated alias) | CPU seconds | login required |
+| Disabled (503) | `POST /api/solve` flop (async tier — 10.5 GB / ~49 min, local-only), `/api/solve/jobs/*`, `/api/solver/solve` 3-card preview (needs gto_cuda GPU), `/api/simulation/run` 3-card branch | GPU / heavy RAM | 503 `local-only` |
+
+Notes:
+- `/api/solver/solve` and `/api/simulation/run` 4/5-card paths run gto-hu on
+  CPU since M2 — they move from "disabled" (old table) to **gated** (same
+  budget as `/api/solve` turn_river). Their 3-card (gto-cuda) branches stay
+  disabled in public deploy.
+- turn+river at ~37 s vs proxy timeouts: Fly/Cloud Run default timeouts are
+  60 s+ — acceptable, but the iteration clamp must keep worst-case under
+  ~50 s (`ITER_CLAMP` already does at 30k).
+- The flop async job tier is NOT exposed publicly in E1 even behind auth
+  (one job pins ~12 GB for ~50 min — trivially DoS-able on a free-tier box).
+  Revisit in E3 with queue limits + per-user quotas if wanted.
 Project: `gto/` — first sub-project of Phase E (commercialization)
 Parent: PROGRESS.md "Phase E: 商用化" (decomposed; billing dropped —
 the near-term goal is **free public app + accounts**, not paid SaaS)

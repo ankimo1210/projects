@@ -1,8 +1,10 @@
 import gto_py
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 
-router = APIRouter()
+from gto.api.ratelimit import rate_limited_user
+
+router = APIRouter(dependencies=[Depends(rate_limited_user)])  # E1 gate
 
 
 class EquityResponse(BaseModel):
@@ -22,5 +24,5 @@ def get_equity(
     try:
         result = gto_py.equity(hero, villain, board, iterations)
     except ValueError as e:
-        raise HTTPException(status_code=422, detail=str(e))
+        raise HTTPException(status_code=422, detail=str(e)) from e
     return EquityResponse(**result)

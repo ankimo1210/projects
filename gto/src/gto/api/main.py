@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
+from gto.api.config import settings
 from gto.api.routers import (
     equity,
     health,
@@ -17,9 +18,10 @@ from gto.library.store import SOLUTIONS_DIR
 
 app = FastAPI(title="GTO Poker Suite API", version="0.1.0")
 
+# E1: CORS is open in dev, locked to ALLOWED_ORIGINS on public deploys.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.allowed_origins if settings.public_deploy else ["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )

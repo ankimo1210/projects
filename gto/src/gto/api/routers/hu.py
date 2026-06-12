@@ -8,10 +8,12 @@ exact exploitability number attached. Fast enough to run live.
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import BaseModel
 
-router = APIRouter()
+from gto.api.ratelimit import rate_limited_user
+
+router = APIRouter(dependencies=[Depends(rate_limited_user)])  # E1 gate
 _executor = ThreadPoolExecutor(max_workers=2)
 
 
