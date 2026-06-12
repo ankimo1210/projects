@@ -295,8 +295,11 @@ def test_empty_input() -> None:
     assert result.errors == []
 
 
-def test_deviation_missing_data_for_uncovered_scenario() -> None:
-    # BB facing a UTG open: no facing data exists for BB_vs_UTG.
+def test_deviation_bb_vs_utg_covered_since_m2() -> None:
+    # BB facing a UTG open used to be an uncovered scenario (missing_data);
+    # the M2 chart expansion added all five BB-vs-opener defend charts, so
+    # the deviation flag now resolves. QQ calls its non-3bet remainder
+    # (40%) vs a UTG open -> a hero call is flagged ok.
     text = """\
 PokerStars Hand #246000000001:  Hold'em No Limit ($0.50/$1.00 USD) - 2024/04/01 11:00:00 ET
 Table 'Mizar' 6-max Seat #3 is the button
@@ -330,8 +333,9 @@ Board [2c 7d Jh]
     assert hand.positions["utg_open"] == "UTG"
     dev = hand.preflop_deviation
     assert dev is not None
-    assert dev.flag == "missing_data"
-    assert dev.reason
+    assert dev.position == "BB_vs_UTG"
+    assert dev.flag == "ok"
+    assert dev.hero_action == "C"
 
 
 # ---------------------------------------------------------------------------
