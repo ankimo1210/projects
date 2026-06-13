@@ -379,12 +379,23 @@ gto-core/gto-cuda は single-street 近似のまま（river-only は正しい）
 - [ ] 実験: intra-solve CPU 並列化（rayon over 44–48 リバー文脈）
 
 ### Phase HU 続き（gto-hu ロードマップ）
-- [~] ブループリント品質ラン（WP2、G2 の入力）— 2026-06-12 の初回は
-      **OOM kill**（M2 開発の同時負荷で dense 31.98GB が 48GB を超過、結果なし）。
-      **2026-06-13 02:48 UTC 再実行**（K_r=24/K_t=16/M=3/15k iters、dense
-      23.95GB、単独実行、~09:48 UTC 完了見込み）。所見: **K_t はメモリをほぼ
-      減らさず、dense を支配するのは K_r**（K_t 32→16 で 31.98→31.91GB）。
-      結果は `_data/gto/hu/blueprint_quality_20260613/`。
+- [x] ブループリント品質ラン（WP2、G2 の入力）完了 — 2026-06-13。
+      初回(06-12 K_r/K_t=32)は M2 開発の同時負荷で **OOM kill**（dense
+      31.98GB>48GB、結果なし）。再実行 K_r=24/K_t=16/M=3/15k iters、dense
+      23.95GB、単独。**実測 expl 0.151 bb/hand**（BR_sb 0.271 / BR_bb 0.031、
+      game value SB 0.118、SB root fold20/call64/raise16%）。実計算 ~5.5h
+      （summary の elapsed 45037s はゲーム中の SIGSTOP ~7h を含み過大）。
+      結果: `_data/gto/hu/blueprint_quality_20260613/`。
+  - 所見: **K_t はメモリをほぼ減らさず dense を支配するのは K_r**（K_t 32→16
+    で 31.98→31.91GB）。**K_r=24≈K_r=32（0.151 vs 06-09 の 0.147）** で
+    リバー粒度は既に飽和。**残差は全て SB 側**（BR_bb 0.031 = ほぼ不可剝離）。
+  - **G2 判定（M3 方針）→ 基盤投資先行**。理由: 15k iters でも <0.1bb の
+    実用域に未達、river 粒度を上げても下がらない（K24≈K32）。現状 blueprint
+    は equilibrium-grade としての Web 露出は時期尚早。ただし残差が SB 多分岐に
+    集中＝収束 vs 抽象化の切り分けが未確定なので、**先に安価なプローブ**
+    （同 K で 30k iters）で SB BR が下げ止まるか確認 → 下げ止まれば
+    f32テーブル(×2メモリ)→ M 拡大 / ボードバケッティング（3→多 flop 代表）/
+    ディスクバックの基盤投資へ。下がり続ければ収束不足＝iters 増で対応。
 - [ ] 将来: f32 テーブル（×2）、ボードバケッティング、ディスクバック
       （M を実用規模に上げる前提技術）
 
