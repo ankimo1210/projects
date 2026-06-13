@@ -10,7 +10,7 @@
 # `johnhull/hullkit` is a workspace member (used by johnhull notebooks).
 # `rates_volatility_model/`, `notebooks/` have no managed env.
 
-.PHONY: help install sync lint fmt fmt-fix test clean tree
+.PHONY: help install sync lint fmt fmt-fix test clean tree report books hull-report hull-book
 
 help:
 	@echo "Workspace targets (run from repo root):"
@@ -22,6 +22,10 @@ help:
 	@echo "  make test     - uv run pytest"
 	@echo "  make clean    - remove pyc / __pycache__ / .pytest_cache / .ruff_cache"
 	@echo "  make tree     - print a project tree (depth 2, ignoring heavy dirs)"
+	@echo "  make report   - build the offline analytics portal (analytics/report/site/)"
+	@echo "  make books    - build the analytics Jupyter Books"
+	@echo "  make hull-report - build the offline johnhull portal (johnhull/report/site/)"
+	@echo "  make hull-book   - build the johnhull Jupyter Book (johnhull/book/_build/)"
 	@echo ""
 	@echo "Workspace members:"
 	@echo "  gto market-viz stock nbody-gpu line_backup land_price_api_app"
@@ -45,6 +49,24 @@ fmt-fix:
 
 test:
 	uv run --no-sync pytest
+
+report:
+	cd analytics/report && PYTHONPATH=. uv run --no-sync python -m report_builder.build
+	@echo "Open analytics/report/site/index.html in a browser (works offline)."
+
+books:
+	uv run --no-sync jupyter-book build analytics/linear_algebra/book/
+	uv run --no-sync jupyter-book build analytics/neural_net/book/
+	uv run --no-sync jupyter-book build analytics/bayesian/book/
+	uv run --no-sync jupyter-book build analytics/laplace/book/
+	uv run --no-sync jupyter-book build analytics/fourier/book/
+
+hull-report:
+	PYTHONPATH=johnhull/report uv run --no-sync python -m report_builder.build
+	@echo "Open johnhull/report/site/index.html in a browser (works offline)."
+
+hull-book:
+	uv run --no-sync jupyter-book build johnhull/book/
 
 clean:
 	@find . -type d \( -name __pycache__ -o -name .pytest_cache -o -name .ruff_cache -o -name .mypy_cache \) \

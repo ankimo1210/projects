@@ -23,6 +23,8 @@ members = [
     "analytics/linear_algebra",
     "analytics/neural_net",
     "analytics/bayesian",
+    "analytics/laplace",
+    "analytics/fourier",
 ]
 
 # PyTorch CUDA 12.8 — used by `gto`. Defined here so all workspace members
@@ -124,6 +126,8 @@ testpaths = [
     "analytics/linear_algebra/tests",
     "analytics/neural_net/tests",
     "analytics/bayesian/tests",
+    "analytics/laplace/tests",
+    "analytics/report/tests",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
