@@ -1,0 +1,15 @@
+# Table of contents for jupyter-book.
+# `notebooks/` here is a symlink to ../notebooks (Jupyter Book requires all
+# content below the book root).
+format: jb-book
+root: notebooks/00_overview
+chapters:
+  - file: notebooks/01_waves_complex_numbers_inner_products
+  - file: notebooks/02_fourier_series_periodic_functions
+  - file: notebooks/03_convergence_energy_parseval
+  - file: notebooks/04_fourier_transform_nonperiodic_functions
+  - file: notebooks/05_convolution_filtering_distributions
+  - file: notebooks/06_dft_fft_sampling_aliasing
+  - file: notebooks/07_time_frequency_stft_wavelets_intro
+  - file: notebooks/08_pde_spectral_methods
+  - file: notebooks/09_applications_signal_image_finance_ml

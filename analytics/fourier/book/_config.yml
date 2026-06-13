@@ -1,0 +1,24 @@
+title: フーリエ解析の風景 — 波・周波数・分解の言語
+author: Kazumasa
+language: ja
+only_build_toc_files: true
+
+execute:
+  # Notebooks are committed with their outputs already executed
+  # (see README: "Notebook の実行・再生成"). Keep the book build fast and deterministic.
+  execute_notebooks: "off"
+
+sphinx:
+  config:
+    # require.js is needed so Plotly figures embedded by nbconvert render
+    # in the static HTML (the documented Jupyter Book + Plotly setup).
+    html_js_files:
+      - https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js
+
+repository:
+  url: https://github.com/ankimo1210/projects
+  path_to_book: analytics/fourier
+
+html:
+  use_issues_button: false
+  use_repository_button: false

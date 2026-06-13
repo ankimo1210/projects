@@ -1,0 +1,36 @@
+[project]
+name = "fourier-book"
+version = "0.1.0"
+description = "Interactive Jupyter-Book Fourier-analysis textbook (Japanese): functions as sums of orthogonal waves — structure, energy, smoothness, time-variation"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.0",
+    "scipy>=1.13",
+    "sympy>=1.12",
+    "matplotlib>=3.9",
+    "plotly>=5.22",
+    "ipywidgets>=8.1",
+    "pandas>=2.2",
+    "jupyterlab>=4.2",
+    "jupyter-book>=1.0,<2",
+    "ipykernel>=6.29",
+    "nbformat>=5.10",
+    "nbclient>=0.10",
+]
+
+# Optional, never required by the core notebooks. The 09 applications notebook
+# uses a synthetic image by default; install these to swap in real photographs
+# (scikit-image sample data) and seaborn styling.
+#   pip install -e ".[extras]"
+[project.optional-dependencies]
+extras = [
+    "scikit-image>=0.24",
+    "seaborn>=0.13",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/fourier_book"]
