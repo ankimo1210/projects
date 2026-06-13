@@ -1,5 +1,11 @@
 # 地価公示 & 不動産取引 ローカルアプリ
 
+> ⚠️ **ARCHIVED (2026-06-13)** — この Streamlit PoC は `_archive/` に退避済み（uv workspace 非メンバー）。
+> データ取得基盤は `~/re_invest_os` の `packages/market-data`（import 名 `market_data`）へ移植され、
+> ローカル DuckDB / parquet レイクは `~/re_invest_os/data/market/` へ移動済み。
+> 本ディレクトリの `data/raw` `data/processed` シンボリックリンクは移動により dangling（参照先は移管済み）。
+> 現役の運用・同期手順は re_invest_os の `docs/data/market-data.md` を参照。以降は履歴保存用。
+
 国土交通省「不動産情報ライブラリ」API を使って、全国の地価公示・不動産取引価格データをローカルで取得・保存・分析・可視化するツールです。
 
 **ローカル専用**: 外部公開・クラウドデプロイ不要。API は Python サーバー側から呼び出します。

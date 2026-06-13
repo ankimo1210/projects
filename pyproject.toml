@@ -17,7 +17,6 @@ members = [
     "stock",
     "nbody-gpu",
     "line_backup",
-    "land_price_api_app",
     "akinator",
     "autostock",
     "johnhull/hullkit",
@@ -102,7 +101,6 @@ ignore = [
 "**/download_*.py" = ["E402"]
 "**/recompute_*.py" = ["E402"]
 "**/build_*.py" = ["E402"]
-"land_price_api_app/test_suite_validation.py" = ["E402"]
 "rates_volatility_model/test_suite_validation.py" = ["E402"]
 # __init__.py commonly re-exports symbols; allow F401 there.
 "**/__init__.py" = ["F401"]

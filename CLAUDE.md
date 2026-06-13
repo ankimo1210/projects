@@ -36,7 +36,6 @@ Prefer targeted file reads and the project's `README.md` / `CLAUDE.md` before br
 
 Applications:
 
-- `land_price_api_app/` — 地価公示・不動産取引ローカルアプリ (FastAPI + DuckDB)
 - `gto/` — GTO ポーカー分析アプリ (Rust + FastAPI + Next.js)
 - `stock/` — `stockkit` 株式分析ツールキット (Python + Dash)
 - `market-viz/` — マーケット可視化アプリ (Streamlit + Plotly + DuckDB)
@@ -57,6 +56,11 @@ Samples:
 
 Note: `re_invest_os` was moved out to its own repo (`~/re_invest_os`,
 GitHub `ankimo1210/re_invest_os`) — it is no longer in this workspace.
+
+Note: `land_price_api_app` (Streamlit PoC) was archived to
+`_archive/land_price_api_app/` (2026-06-13). Its market-data engine was ported
+to `~/re_invest_os` (`packages/market-data`); the local DuckDB/parquet lake now
+lives at `~/re_invest_os/data/market/`.
 
 Each project has its own `README.md` and sometimes its own `CLAUDE.md` /
 `AGENTS.md` — prefer those over the workspace root for project-specific work.
