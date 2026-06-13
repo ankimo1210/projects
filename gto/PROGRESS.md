@@ -379,8 +379,12 @@ gto-core/gto-cuda は single-street 近似のまま（river-only は正しい）
 - [ ] 実験: intra-solve CPU 並列化（rayon over 44–48 リバー文脈）
 
 ### Phase HU 続き（gto-hu ロードマップ）
-- [ ] ブループリント品質ラン — sample_flops の頻度重み + 15k iters（~7h）で
-      expl がどこまで下がるか計測。K_r/K_t の感度も
+- [~] ブループリント品質ラン（WP2、G2 の入力）— 2026-06-12 の初回は
+      **OOM kill**（M2 開発の同時負荷で dense 31.98GB が 48GB を超過、結果なし）。
+      **2026-06-13 02:48 UTC 再実行**（K_r=24/K_t=16/M=3/15k iters、dense
+      23.95GB、単独実行、~09:48 UTC 完了見込み）。所見: **K_t はメモリをほぼ
+      減らさず、dense を支配するのは K_r**（K_t 32→16 で 31.98→31.91GB）。
+      結果は `_data/gto/hu/blueprint_quality_20260613/`。
 - [ ] 将来: f32 テーブル（×2）、ボードバケッティング、ディスクバック
       （M を実用規模に上げる前提技術）
 
