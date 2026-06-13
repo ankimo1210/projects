@@ -59,12 +59,16 @@ def cross_validate_scores(
 ):
     """Return the per-fold cross-validation scores as a NumPy array.
 
-    Uses stratified folds for classification by default; pass ``stratified=False``
-    for plain k-fold (e.g. regression).
+    Uses stratified folds for classification when ``stratified=True`` (the
+    default), and automatically falls back to plain k-fold for regression
+    targets, so the same call works for both tasks.
     """
+    from sklearn.utils.multiclass import type_of_target
+
+    is_classification = type_of_target(y) in ("binary", "multiclass")
     cv = (
         StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=0)
-        if stratified
+        if stratified and is_classification
         else KFold(n_splits=n_splits, shuffle=True, random_state=0)
     )
     return cross_val_score(estimator, X, y, cv=cv, scoring=scoring)
@@ -159,6 +163,10 @@ def find_leaky_features(X, y, threshold: float = 0.98) -> list:
     A feature that is near-perfectly correlated with the target is almost always
     leakage (e.g. an id that encodes the label, or a post-outcome measurement).
     Works on a DataFrame (returns column names) or a 2-D array (returns indices).
+
+    Numeric features only: non-numeric columns are coerced to NaN and effectively
+    skipped, so a *string* copy of the label is not caught here — encode such
+    columns first, or check categorical leakage separately.
     """
     import pandas as pd
 

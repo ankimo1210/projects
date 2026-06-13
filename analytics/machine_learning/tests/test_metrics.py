@@ -66,3 +66,11 @@ def test_ece_is_low_for_calibrated_and_high_for_skewed():
     ece_bad = metrics.expected_calibration_error(y, np.full(5000, 0.99), n_bins=10)
     assert ece_good < 0.05
     assert ece_bad > 0.3
+
+
+def test_ece_counts_probability_zero():
+    # All predictions are exactly 0.0 but half are positive: conf=0, acc=0.5.
+    # The lowest bin must INCLUDE p==0.0, so ECE must be ~0.5 (not silently 0).
+    y = np.array([0, 1] * 50)
+    p = np.zeros(100)
+    assert metrics.expected_calibration_error(y, p, n_bins=10) == pytest.approx(0.5, abs=1e-9)

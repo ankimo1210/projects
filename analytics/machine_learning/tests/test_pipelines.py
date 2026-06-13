@@ -46,3 +46,17 @@ def test_nested_cv_score_shape():
     scores = pipelines.nested_cv_score(pipe, grid, X, y, inner=2, outer=3)
     assert scores.shape == (3,)
     assert np.all((scores >= 0) & (scores <= 1))
+
+
+def test_nested_cv_score_handles_regression():
+    # Regression target must fall back to plain KFold (StratifiedKFold would raise).
+    from sklearn.linear_model import Ridge
+    from sklearn.pipeline import Pipeline
+    from sklearn.preprocessing import StandardScaler
+
+    X, y = datasets.make_regression_dataset(n=150, n_features=4, seed=0)
+    pipe = Pipeline([("scale", StandardScaler()), ("model", Ridge())])
+    scores = pipelines.nested_cv_score(
+        pipe, {"model__alpha": [0.1, 1.0]}, X, y, inner=2, outer=3, scoring="r2"
+    )
+    assert scores.shape == (3,)

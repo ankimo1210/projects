@@ -368,3 +368,18 @@ def train_validation_test_split(
         X_rest, y_rest, test_size=rel_val, random_state=seed, stratify=strat_rest
     )
     return X_train, X_val, X_test, y_train, y_val, y_test
+
+
+def make_capstone_dataset(n: int = 40, x_range=(-3.0, 3.0), noise: float = 0.35, seed: int = 0):
+    """Shared 1-D regression data for the cross-book capstone (the same problem).
+
+    The SAME generator is defined identically in every analytics book so each can
+    solve one identical problem from its own lens without importing the others.
+    True curve f(x) = sin(1.5 x) + 0.3 x, with Gaussian noise. Returns (x, y) as
+    float64 arrays sorted by x.
+    """
+    rng = np.random.default_rng(seed)
+    x = np.sort(rng.uniform(x_range[0], x_range[1], n))
+    f = np.sin(1.5 * x) + 0.3 * x
+    y = f + noise * rng.standard_normal(n)
+    return x, y

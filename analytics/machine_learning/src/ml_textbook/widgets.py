@@ -68,19 +68,26 @@ def polynomial_degree_explorer(x, y):
 
 
 def regularization_strength_explorer(X, y):
-    """log10(alpha) slider for Ridge regression: coefficients shrink as alpha grows."""
+    """log10(alpha) slider for Ridge regression: coefficients shrink as alpha grows.
+
+    Standardises features first (inside a pipeline) so the penalty is applied on a
+    common scale, matching the notebook text.
+    """
     import ipywidgets as widgets
     from sklearn.linear_model import Ridge
     from sklearn.model_selection import train_test_split
+    from sklearn.pipeline import make_pipeline
+    from sklearn.preprocessing import StandardScaler
 
     Xtr, Xte, ytr, yte = train_test_split(X, y, test_size=0.3, random_state=0)
 
     def draw(log_alpha):
         alpha = 10.0**log_alpha
-        model = Ridge(alpha=alpha).fit(Xtr, ytr)
+        model = make_pipeline(StandardScaler(), Ridge(alpha=alpha)).fit(Xtr, ytr)
+        coef = model.named_steps["ridge"].coef_
         te = np.sqrt(np.mean((model.predict(Xte) - yte) ** 2))
         _, ax = plt.subplots(figsize=(7, 4))
-        ax.bar(range(len(model.coef_)), model.coef_, color="#1f77b4")
+        ax.bar(range(len(coef)), coef, color="#1f77b4")
         ax.axhline(0, color="gray", lw=0.6)
         ax.set_xlabel("feature index")
         ax.set_ylabel("coefficient")

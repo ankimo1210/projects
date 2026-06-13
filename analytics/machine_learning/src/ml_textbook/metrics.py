@@ -135,11 +135,11 @@ def expected_calibration_error(y_true, y_prob, n_bins: int = 10) -> float:
     bins = np.linspace(0.0, 1.0, n_bins + 1)
     ece = 0.0
     n = len(y_true)
-    for lo, hi in zip(bins[:-1], bins[1:], strict=True):
-        # Last bin is closed on the right so probability 1.0 is included.
-        in_bin = (
-            (y_prob > lo) & (y_prob <= hi) if hi < 1.0 else (y_prob > lo) & (y_prob <= hi + 1e-9)
-        )
+    for b in range(n_bins):
+        lo, hi = bins[b], bins[b + 1]
+        # First bin includes its lower edge so p == 0.0 is counted; every bin is
+        # closed on the right, so the last bin includes p == 1.0.
+        in_bin = (y_prob >= lo) & (y_prob <= hi) if b == 0 else (y_prob > lo) & (y_prob <= hi)
         count = int(np.sum(in_bin))
         if count == 0:
             continue

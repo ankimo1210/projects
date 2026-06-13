@@ -72,3 +72,10 @@ def test_find_leaky_features():
 def test_assert_disjoint_raises_on_overlap():
     with pytest.raises(AssertionError):
         validation.assert_disjoint_indices([1, 2, 3], [3, 4, 5])
+
+
+def test_cross_validate_scores_handles_regression():
+    # Continuous target must NOT trigger StratifiedKFold (it would raise).
+    X, y = datasets.make_regression_dataset(n=120, n_features=3, seed=0)
+    scores = validation.cross_validate_scores(LinearRegression(), X, y, n_splits=4, scoring="r2")
+    assert scores.shape == (4,)

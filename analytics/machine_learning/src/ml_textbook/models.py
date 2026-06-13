@@ -108,7 +108,12 @@ def get_hist_gradient_boosting(learning_rate: float = 0.1, max_iter: int = 200, 
 def get_svc(
     C: float = 1.0, kernel: str = "rbf", gamma: str | float = "scale", probability: bool = False
 ):
-    """Support-vector classifier. ``C`` = soft-margin penalty, ``gamma`` = RBF width."""
+    """Support-vector classifier. ``C`` = soft-margin penalty, ``gamma`` = RBF width.
+
+    ``probability`` defaults to False (faster). Set it True if you need
+    ``predict_proba`` / ROC / threshold tuning, or wrap the SVC in
+    ``CalibratedClassifierCV`` for better-calibrated probabilities.
+    """
     return SVC(C=C, kernel=kernel, gamma=gamma, probability=probability, random_state=0)
 
 

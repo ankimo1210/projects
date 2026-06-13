@@ -104,3 +104,17 @@ def test_train_validation_test_split_partition():
     # Disjoint and covering.
     all_idx = set(Xtr.ravel()) | set(Xval.ravel()) | set(Xte.ravel())
     assert all_idx == set(range(1000))
+
+
+def test_capstone_dataset_matches_shared_formula():
+    x, y = datasets.make_capstone_dataset(n=40, seed=0)
+    assert x.shape == (40,) and y.shape == (40,)
+    assert np.all(np.diff(x) >= 0)  # sorted by x
+    # Reproducible (so all books generate the identical problem).
+    x2, y2 = datasets.make_capstone_dataset(n=40, seed=0)
+    np.testing.assert_array_equal(x, x2)
+    np.testing.assert_array_equal(y, y2)
+    # Residuals around the documented true curve f(x)=sin(1.5x)+0.3x are small noise.
+    resid = y - (np.sin(1.5 * x) + 0.3 * x)
+    assert abs(resid.mean()) < 0.3
+    assert resid.std() < 0.8

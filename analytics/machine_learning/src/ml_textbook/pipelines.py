@@ -11,6 +11,7 @@ from __future__ import annotations
 import joblib
 from sklearn.model_selection import (
     GridSearchCV,
+    KFold,
     RandomizedSearchCV,
     StratifiedKFold,
     cross_val_score,
@@ -73,11 +74,20 @@ def nested_cv_score(pipeline, param_grid, X, y, inner: int = 3, outer: int = 5, 
     The honest estimate of "how well does my *tuning procedure* generalise". A
     single CV that both tunes and reports is optimistically biased because the
     same folds chose the hyper-parameters and graded them.
+
+    Stratified folds are used for classification and plain k-fold for regression,
+    chosen automatically from the target type.
     """
-    inner_cv = StratifiedKFold(n_splits=inner, shuffle=True, random_state=0)
-    outer_cv = StratifiedKFold(n_splits=outer, shuffle=True, random_state=1)
-    search = GridSearchCV(pipeline, param_grid, cv=inner_cv, scoring=scoring)
-    return cross_val_score(search, X, y, cv=outer_cv, scoring=scoring)
+    from sklearn.utils.multiclass import type_of_target
+
+    is_classification = type_of_target(y) in ("binary", "multiclass")
+
+    def make_cv(n_splits, seed):
+        cls = StratifiedKFold if is_classification else KFold
+        return cls(n_splits=n_splits, shuffle=True, random_state=seed)
+
+    search = GridSearchCV(pipeline, param_grid, cv=make_cv(inner, 0), scoring=scoring)
+    return cross_val_score(search, X, y, cv=make_cv(outer, 1), scoring=scoring)
 
 
 def save_pipeline(pipeline, path) -> None:
