@@ -25,6 +25,8 @@ members = [
     "analytics/bayesian",
     "analytics/laplace",
     "analytics/fourier",
+    "analytics/differential_equation/ode-book",
+    "analytics/differential_equation/pde-book",
 ]
 
 # PyTorch CUDA 12.8 — used by `gto`. Defined here so all workspace members
@@ -128,6 +130,8 @@ testpaths = [
     "analytics/bayesian/tests",
     "analytics/laplace/tests",
     "analytics/report/tests",
+    "analytics/differential_equation/ode-book/tests",
+    "analytics/differential_equation/pde-book/tests",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
