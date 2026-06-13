@@ -93,3 +93,35 @@ def test_root_locus_destabilizes():
     _, locus = S.root_locus(G, [1.0, 100.0])
     assert np.all(locus[0].real < 0)  # low gain: stable
     assert np.any(locus[1].real > 0)  # high gain: a pole in the RHP
+
+
+def test_routh_hurwitz_matches_root_count():
+    for den in ([1, 3, 2], [1, 1, 1, 6], [1, 6, 11, 6], [1, 6, 11, 106]):
+        stable, n_rhp, _ = S.routh_hurwitz(den)
+        truth = int(np.sum(np.roots(den).real > 1e-9))
+        assert n_rhp == truth
+        assert stable == (truth == 0)
+
+
+def test_partial_fraction_numeric_reconstructs():
+    # 1/((s+1)(s+2)) = 1/(s+1) - 1/(s+2); value at s=0 must be 1/((1)(2)) = 0.5.
+    r, p, k = S.partial_fraction_numeric([1.0], [1.0, 3.0, 2.0])
+    val = sum(ri / (0.0 - pi) for ri, pi in zip(r, p, strict=True)) + (
+        np.polyval(k, 0.0) if len(k) else 0.0
+    )
+    assert abs(val - 0.5) < 1e-9
+
+
+def test_gain_phase_margin_known_systems():
+    m1 = S.gain_phase_margin(S.tf([1.0], [1.0, 1.0, 0.0]))  # 1/(s(s+1))
+    assert abs(m1["phase_margin_deg"] - 51.83) < 0.5
+    assert np.isinf(m1["gain_margin"])  # phase never reaches -180 for a 2-pole type-1
+    # 1/((s+1)(s+2)(s+3)) destabilizes at k=60, so its gain margin is ~60.
+    m2 = S.gain_phase_margin(S.tf([1.0], np.poly([-1.0, -2.0, -3.0])))
+    assert abs(m2["gain_margin"] - 60.0) < 1.0
+
+
+def test_pid_pi_controller():
+    K = S.pid(kp=2.0, ki=1.0)  # 2 + 1/s (proper: no derivative term)
+    assert abs(S.evaluate(K, 1.0) - 3.0) < 1e-9  # K(1) = 2 + 1
+    assert abs(S.evaluate(K, 0.5) - 4.0) < 1e-9  # K(0.5) = 2 + 2

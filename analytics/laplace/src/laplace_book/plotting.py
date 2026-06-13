@@ -227,6 +227,33 @@ def plot_root_locus(g, k_values, ax=None):
     return ax
 
 
+def plot_nyquist(sys, w=None, ax=None):
+    """Nyquist plot: the locus of the open-loop L(jw) in the complex plane.
+
+    Encirclements of the -1 point predict closed-loop instability. The dashed
+    branch is the mirror image for w < 0.
+    """
+    from . import systems
+
+    if w is None:
+        w = np.logspace(-2, 3, 2000)
+    w = np.asarray(w, dtype=float)
+    H = systems.evaluate(sys, 1j * w)
+    if ax is None:
+        _, ax = plt.subplots(figsize=(5.5, 5))
+    ax.plot(H.real, H.imag, color=ACCENT, label="L(jw), w > 0")
+    ax.plot(H.real, -H.imag, color=ACCENT, ls="--", alpha=0.6, label="w < 0")
+    ax.scatter([-1.0], [0.0], color=UNSTABLE_COLOR, marker="+", s=140, zorder=3, label="-1 point")
+    ax.axhline(0, color="gray", lw=0.8)
+    ax.axvline(0, color="gray", lw=0.8)
+    ax.set_xlabel("Re L(jw)")
+    ax.set_ylabel("Im L(jw)")
+    ax.set_title("Nyquist plot")
+    ax.grid(alpha=0.25)
+    ax.legend(fontsize=8)
+    return ax
+
+
 # --------------------------------------------------------------------------- #
 # One Plotly figure: |F(s)| as a surface over the s-plane.
 # --------------------------------------------------------------------------- #

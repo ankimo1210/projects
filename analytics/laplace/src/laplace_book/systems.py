@@ -23,7 +23,12 @@ TransferFunction = signal.TransferFunction
 # Builders.
 # --------------------------------------------------------------------------- #
 def tf(num, den) -> TransferFunction:
-    """A transfer function H(s) = num(s)/den(s) from coefficient lists."""
+    """A transfer function H(s) = num(s)/den(s) from coefficient lists.
+
+    Note: scipy normalizes the stored num/den so the denominator is monic; the
+    ratio H(s) and its poles/zeros are unchanged (so reading raw ``sys.den`` back
+    may not show the coefficients you passed in).
+    """
     return signal.TransferFunction(
         np.atleast_1d(num).astype(float), np.atleast_1d(den).astype(float)
     )
@@ -106,6 +111,48 @@ def classify_stability(sys, tol: float = 1e-9) -> str:
     return "stable"
 
 
+def routh_hurwitz(den, tol: float = 1e-12):
+    """Routh-Hurwitz stability test from denominator coefficients (highest power first).
+
+    Returns ``(stable, n_rhp, table)``: ``stable`` is True iff the first column has
+    no sign change; ``n_rhp`` is the number of right-half-plane roots (= number of
+    first-column sign changes). A zero pivot is replaced by a small epsilon (the
+    standard trick); a full zero row (imaginary-axis roots) is a known edge case
+    this simple version does not special-case.
+    """
+    a = np.trim_zeros(np.atleast_1d(np.asarray(den, dtype=float)), "f")
+    n = a.size
+    if n == 0:
+        raise ValueError("empty denominator")
+    ncols = (n + 1) // 2
+    table = np.zeros((n, ncols))
+    table[0, : a[0::2].size] = a[0::2]
+    if n > 1:
+        table[1, : a[1::2].size] = a[1::2]
+    for i in range(2, n):
+        if abs(table[i - 1, 0]) < tol:
+            table[i - 1, 0] = tol  # epsilon trick for a zero pivot
+        for j in range(ncols - 1):
+            piv = table[i - 1, 0]
+            table[i, j] = (piv * table[i - 2, j + 1] - table[i - 2, 0] * table[i - 1, j + 1]) / piv
+    first = table[:, 0].copy()
+    first[np.abs(first) < tol] = tol
+    signs = np.sign(first)
+    n_rhp = int(np.sum(signs[1:] != signs[:-1]))
+    return (n_rhp == 0), n_rhp, table
+
+
+def partial_fraction_numeric(num, den):
+    """Numeric partial-fraction expansion via ``scipy.signal.residue``.
+
+    Returns ``(residues, poles, direct)`` with
+    num/den = sum_i residues[i]/(s - poles[i]) + direct(s). Complements the
+    symbolic ``transforms.partial_fractions`` and handles repeated poles.
+    """
+    r, p, k = signal.residue(np.atleast_1d(num).astype(float), np.atleast_1d(den).astype(float))
+    return r, p, k
+
+
 # --------------------------------------------------------------------------- #
 # Time-domain responses (wrap scipy.signal so notebooks pass a t-grid).
 # --------------------------------------------------------------------------- #
@@ -132,6 +179,41 @@ def bode(sys, w=None):
     return signal.bode(sys, w=w)
 
 
+def gain_phase_margin(sys, w=None):
+    """Gain and phase margins of open-loop ``sys`` under negative unity feedback.
+
+    Returns ``dict(gain_margin, phase_margin_deg, wgc, wpc)``. ``gain_margin`` is a
+    linear factor (inf if the phase never reaches -180 deg); ``phase_margin_deg`` is
+    in degrees (inf if the gain never reaches 1). The first crossing of each kind
+    is linearly interpolated on the frequency grid.
+    """
+    if w is None:
+        w = np.logspace(-2, 3, 4000)
+    w = np.asarray(w, dtype=float)
+    H = evaluate(sys, 1j * w)
+    mag = np.abs(H)
+    phase = np.unwrap(np.angle(H)) * 180.0 / np.pi
+
+    pm, wgc = float("inf"), float("nan")
+    gc = np.where(np.diff(np.sign(mag - 1.0)))[0]
+    if gc.size:
+        i = gc[0]
+        m1, m2 = mag[i] - 1.0, mag[i + 1] - 1.0
+        wgc = float(w[i] + (w[i + 1] - w[i]) * (-m1) / (m2 - m1))
+        pm = float(180.0 + np.interp(wgc, w, phase))
+
+    gm, wpc = float("inf"), float("nan")
+    pc = np.where(np.diff(np.sign(phase + 180.0)))[0]
+    if pc.size:
+        i = pc[0]
+        p1, p2 = phase[i] + 180.0, phase[i + 1] + 180.0
+        wpc = float(w[i] + (w[i + 1] - w[i]) * (-p1) / (p2 - p1))
+        m = float(np.interp(wpc, w, mag))
+        gm = 1.0 / m if m > 0 else float("inf")
+
+    return {"gain_margin": gm, "phase_margin_deg": pm, "wgc": wgc, "wpc": wpc}
+
+
 # --------------------------------------------------------------------------- #
 # Combining systems.
 # --------------------------------------------------------------------------- #
@@ -156,6 +238,24 @@ def feedback(g, k=None) -> TransferFunction:
     num = np.polymul(gnum, kden)
     den = np.polyadd(np.polymul(gden, kden), np.polymul(gnum, knum))
     return TransferFunction(num, den)
+
+
+def pid(kp: float = 0.0, ki: float = 0.0, kd: float = 0.0) -> TransferFunction:
+    """PID controller K(s) = kp + ki/s + kd s.
+
+    Written as (kd s^2 + kp s + ki)/s when an integral term is present, and as
+    kd s + kp otherwise -- so pure P / PD have a proper, pole-free form (no
+    spurious s/s that would make K(0) a 0/0). An ideal derivative (kd > 0) is
+    improper, so scipy will warn; a realizable controller filters it as
+    kd s / (tau s + 1).
+    """
+    if ki != 0.0:
+        num, den = [kd, kp, ki], [1.0, 0.0]
+    else:
+        num, den = [kd, kp], [1.0]
+    while len(num) > 1 and num[0] == 0:  # drop leading zeros (e.g. pure P -> just kp)
+        num = num[1:]
+    return tf(num, den)
 
 
 def root_locus(g, k_values):

@@ -69,3 +69,9 @@ def test_surface_abs_F_returns_plotly_figure():
     fig = P.surface_abs_F(lambda Z: 1.0 / ((Z + 1.0) ** 2 + 9.0), n=20)
     assert type(fig).__name__ == "Figure"
     assert len(fig.data) == 1
+
+
+def test_plot_nyquist():
+    L = S.tf([1.0], np.poly([-1.0, -2.0, -3.0]))
+    ax = P.plot_nyquist(L, w=np.logspace(-2, 3, 500))
+    assert isinstance(ax, plt.Axes)

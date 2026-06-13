@@ -1105,6 +1105,22 @@ for name, sysk in examples.items():
         ),
         md(
             """
+## 7b. Routh-Hurwitz — 係数だけで安定判定 (Advanced)
+
+極を数値で求めなくても、分母の **係数だけ** から右半面極の数が分かるのが Routh-Hurwitz 判定。
+Routh 表の第1列の符号変化の回数 = 右半面極の数(0 なら安定)。`systems.routh_hurwitz` が判定・極数・表を返す。
+"""
+        ),
+        code(
+            r"""
+for den in ([1, 6, 11, 6], [1, 1, 1, 6], [1, 6, 11, 106]):
+    stable, n_rhp, _ = systems.routh_hurwitz(den)
+    truth = int(np.sum(np.roots(den).real > 1e-9))   # cross-check against the actual roots
+    print(f"den={den}:  Routh n_rhp={n_rhp} (roots say {truth})  ->  {'stable' if stable else 'unstable'}")
+"""
+        ),
+        md(
+            """
 ## 8. Failure Mode / 過渡応答 と 定常応答
 
 ステップ応答は **過渡(極が決める、やがて消える)** と **定常(入力の極 $s=0$ が決める、残る)** の和。
@@ -1131,7 +1147,7 @@ widgets.explore_second_order()
 
 - **Basic**: $1/((s+2)^2+9)$ の極を求め、減衰の速さと振動数を読め。
 - **Applied**: $1/(s^2+bs+1)$ の $b$ を $0\\to3$ と変え、極の軌跡(根軌跡の一種)を $s$ 平面に描け。
-- **Advanced**: Routh-Hurwitz 判定法で、係数だけから右半面極の有無を判定する方法をまとめよ。
+- **Advanced**: `systems.routh_hurwitz`(§7b)で $1/(s^2+bs+1)$ を判定し、$b<0$ で不安定になることを確かめよ。
 - **Advanced**: 零点は応答の **形** に効くが安定性には効かない理由を説明せよ。
 """
         ),
@@ -1262,15 +1278,58 @@ plt.tight_layout()
         ),
         md(
             """
+## 6b. 安定余裕と Nyquist 線図 (Applied)
+
+開ループ $L(s)$ が単位負帰還で安定かは、**ゲイン余裕**(あと何倍ゲインを上げられるか)と
+**位相余裕**(あと何度位相が遅れてよいか)で測る。`systems.gain_phase_margin` が両者を返す。
+**Nyquist 線図** は $L(j\\omega)$ の軌跡で、点 $-1$ の周りの回り方が閉ループ安定性を決める。
+"""
+        ),
+        code(
+            r"""
+G3 = systems.tf([1.0], np.poly([-1.0, -2.0, -3.0]))   # 1/((s+1)(s+2)(s+3))
+m = systems.gain_phase_margin(G3)
+print(f"gain  margin = {m['gain_margin']:.1f} x      at w = {m['wpc']:.2f}")
+print(f"phase margin = {m['phase_margin_deg']:.1f} deg   at w = {m['wgc']:.2f}")
+# the gain margin ~60 matches the instability gain from the root locus (section 5b).
+plotting.plot_nyquist(G3, w=np.logspace(-2, 2, 1500))
+plt.tight_layout()
+"""
+        ),
+        md(
+            """
+## 6c. PI 制御で定常偏差を消す (Applied)
+
+比例(P)制御だけだと一定の定常偏差が残る。**積分項**(PI 制御 $K(s)=K_p+K_i/s$)を足すと、入力の極 $s=0$
+により閉ループの DC ゲインが 1 になり、ステップ目標への **定常偏差がゼロ** になる(最終値定理)。
+"""
+        ),
+        code(
+            r"""
+plant = systems.tf([1.0], [2.0, 1.0])     # 1/(2s+1)
+tt = np.linspace(0, 25, 600)
+fig, ax = plt.subplots(figsize=(7, 4.2))
+for label, K in [("P (Kp=2)", systems.pid(kp=2.0)), ("PI (Kp=2,Ki=3)", systems.pid(kp=2.0, ki=3.0))]:
+    closed = systems.feedback(systems.series(plant, K))
+    ax.plot(tt, systems.step_response(closed, tt),
+            label=f"{label}: DC gain = {systems.dc_gain(closed):.3f}")
+ax.axhline(1.0, color="gray", ls=":", lw=1)
+ax.set_title("P leaves a steady-state error; PI removes it")
+ax.set_xlabel("t"); ax.set_ylabel("output"); ax.legend(); ax.grid(alpha=0.25)
+plt.tight_layout()
+"""
+        ),
+        md(
+            """
 ## 7〜11. Application / Exercises / Advanced & TODO
 
 - **応用**: アンチエイリアスフィルタ、サスペンション、サーボ位置決め、温度制御。
 - **演習(Basic)**: RC で時定数を半分にするには $R,C$ をどうする?
 - **演習(Applied)**: `systems.feedback` で $G=1/(s(s+1))$ の閉ループ極を $K$ について追え。
-- **Advanced**: 比例 + 積分(PI)制御 $K(s)=K_p+K_i/s$ が定常偏差を消す理由を最終値定理で示せ。
+- **Advanced**: PI 制御が定常偏差を消す理由(§6c)を、最終値定理 $\\lim_{s\\to0}sE(s)$ から示せ。
 
-> **TODO(今後の拡張)**: PID 制御の設計例、位相余裕・ゲイン余裕、
-> オペアンプ回路の伝達関数、ナイキスト線図を追加(根軌跡は §5b で実装済み)。
+> **TODO(今後の拡張)**: フィルタ付き微分の実装可能 PID、状態空間表現、離散化($z$ 変換)を追加
+> (根軌跡=§5b、安定余裕/Nyquist=§6b、PI=§6c で実装済み)。
 """
         ),
     ]
