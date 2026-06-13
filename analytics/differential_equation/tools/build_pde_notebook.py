@@ -830,6 +830,56 @@ ax = plotting.plot_field_snapshots(x, U, [0, 5, 15, 40], dt=dt,
 plt.show()
 """),
         md(r"""
+## 8. 発展 — Crank-Nicolson・Neumann 境界・非線形 Burgers (Advanced)
+
+3 つの発展ソルバを `solvers` に用意しています。
+
+- **Crank-Nicolson**: 陽と陰の平均。**時間 2 次精度かつ無条件安定**(陽 FTCS の精度と陰の安定性の良いとこ取り)。
+- **Neumann 境界**(断熱端 $u_x=0$): 流束 0 の保存形なので **総熱量が厳密保存** し、場は平均へ均される。
+- **非線形 Burgers** $u_t + u u_x = \nu u_{xx}$: 移流の非線形性が波形を急峻化して **衝撃** を作り、粘性 $\nu$ が有限に保つ。
+"""),
+        code("""
+import numpy as np
+
+# Crank-Nicolson: 2nd-order in time, unconditionally stable. Here r=5 (FTCS would explode).
+g = grids.Grid1D(0.0, 1.0, 81)
+x, dx = g.x, g.dx
+dt = 5.0 * dx**2
+U = solvers.solve_heat_crank_nicolson(datasets.sine_combo(x, (1, 4), (1.0, 0.5)), 1.0, dx, dt, 40)
+plotting.plot_field_snapshots(x, U, [0, 3, 10, 40], dt=dt,
+                              title="Crank-Nicolson heat at r=5 (stable, 2nd-order in time)")
+plt.show()
+"""),
+        code("""
+import numpy as np
+
+# Neumann (insulated) ends: total heat is conserved; the field relaxes to its mean.
+g = grids.Grid1D(0.0, 1.0, 101)
+x, dx = g.x, g.dx
+u0 = datasets.gaussian(x, 0.35, 0.07) + 0.2
+U = solvers.solve_heat_neumann(u0, 1.0, dx, 0.4 * dx**2, 3000)
+ax = plotting.plot_field_snapshots(x, U, [0, 50, 300, 3000], dt=0.4 * dx**2,
+                                   title="insulated (Neumann) ends: relaxes to the mean")
+ax.axhline(u0.mean(), color="gray", ls="--", lw=1)
+plt.show()
+print("total heat  start =", round(float(U[0].sum() * dx), 6),
+      " end =", round(float(U[-1].sum() * dx), 6), " (conserved)")
+"""),
+        code("""
+import numpy as np
+
+# Burgers: a smooth sine steepens into a shock; viscosity keeps it finite.
+g = grids.Grid1D(0.0, 1.0, 201)
+x, dx = g.x, g.dx
+nu, dt = 2e-3, 0.002
+U = solvers.solve_burgers(np.sin(2 * np.pi * x), nu, dx, dt, 150)
+plotting.plot_field_snapshots(x, U, [0, 40, 90, 150], dt=dt,
+                              title="viscous Burgers: nonlinear steepening into a shock")
+plt.show()
+print("momentum  start =", round(float(U[0].sum() * dx), 8),
+      " end =", round(float(U[-1].sum() * dx), 8), " (conserved)")
+"""),
+        md(r"""
 ## Exercises
 
 1. 熱方程式の安定限界 $r \le 1/2$ を、モード $\sin(kx)$ の増幅率 $1 - 4r\sin^2(k\Delta x/2)$ から導け。

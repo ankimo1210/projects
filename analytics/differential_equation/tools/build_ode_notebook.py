@@ -560,6 +560,18 @@ fig.tight_layout()
 plt.show()
 """),
         md(r"""
+### trace-determinant 図 — 1 枚で型が読める
+
+2×2 の線形系の型は、**トレース $p=\mathrm{tr}(A)$ と行列式 $q=\det(A)$** だけで決まります。
+$q<0$ なら saddle、$q>0$ では判別式 $p^2-4q$ の符号で node/spiral が分かれ($q=p^2/4$ の放物線が境界)、
+$p<0$ で安定・$p>0$ で不安定。上の 5 例を $(p,q)$ 平面に置くと、領域と一対一で対応します。
+"""),
+        code("""
+# Every 2x2 type at a glance: place the example matrices on the (trace, det) plane.
+ax = plotting.trace_determinant_diagram(list(mats.values()), labels=list(mats.keys()))
+plt.show()
+"""),
+        md(r"""
 ## 7. Invariant / 8. Failure Mode — 線形化が効かないとき
 
 線形化は **固有値の実部がゼロでない(双曲型)** 固定点でのみ確実です(Hartman–Grobman)。
@@ -745,6 +757,18 @@ ax2.set_title("1e-8 initial gap grows exponentially (chaos)")
 ax2.grid(alpha=0.3, which="both")
 fig.tight_layout()
 plt.show()
+"""),
+        md(r"""
+### インタラクティブ: Lorenz アトラクタを回す(静的 HTML でも動く)
+
+ドラッグして回転・ズームすると、蝶形の二枚翼の構造が立体的に見えます。
+"""),
+        code("""
+import plotly.io as pio
+from ode_book import interactive
+
+pio.renderers.default = "plotly_mimetype+notebook_connected"
+interactive.plotly_lorenz_3d().show()
 """),
         md(r"""
 ## Exercises

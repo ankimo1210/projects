@@ -121,3 +121,27 @@ def plotly_method_dt(n_values=None):
         xaxis_title="t",
         yaxis_title="y",
     )
+
+
+def plotly_lorenz_3d(t_end=40.0, n=8000, y0=(1.0, 1.0, 1.0)):
+    """Interactive 3-D Lorenz attractor (drag to rotate; renders in exported HTML)."""
+    import plotly.graph_objects as go
+
+    t = np.linspace(0, t_end, n)
+    Y = solvers.solve(systems.lorenz(), list(y0), t, rtol=1e-9, atol=1e-9)
+    fig = go.Figure(
+        go.Scatter3d(
+            x=Y[:, 0],
+            y=Y[:, 1],
+            z=Y[:, 2],
+            mode="lines",
+            line=dict(color=t, colorscale="Viridis", width=2),
+        )
+    )
+    fig.update_layout(
+        title="Lorenz attractor (sigma=10, rho=28, beta=8/3) — drag to rotate",
+        scene=dict(xaxis_title="x", yaxis_title="y", zaxis_title="z"),
+        template="plotly_white",
+        height=560,
+    )
+    return fig

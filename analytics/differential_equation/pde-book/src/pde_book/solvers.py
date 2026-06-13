@@ -74,6 +74,58 @@ def heat_mode_solution(x, t, alpha, L, mode=1, amp=1.0):
     return amp * np.exp(-alpha * k**2 * t) * np.sin(k * x)
 
 
+def solve_heat_crank_nicolson(u0, alpha, dx, dt, steps):
+    """Crank-Nicolson heat solver: 2nd-order in time AND unconditionally stable.
+
+    Averages the explicit and implicit Laplacians:
+        (I - r/2 T) u^{n+1} = (I + r/2 T) u^n,   r = alpha dt / dx^2,
+    with Dirichlet ends held fixed. The sweet spot between FTCS (cheap, fragile)
+    and backward Euler (stable, only 1st order).
+    """
+    u = np.asarray(u0, dtype=float).copy()
+    n = u.size
+    r = alpha * dt / dx**2
+    m = n - 2
+    A = sp.diags(
+        [-r / 2 * np.ones(m - 1), (1 + r) * np.ones(m), -r / 2 * np.ones(m - 1)],
+        offsets=[-1, 0, 1],
+        format="csc",
+    )
+    lu = spla.splu(A)
+    U = np.empty((steps + 1, n))
+    U[0] = u
+    for k in range(steps):
+        ui = u[1:-1]
+        rhs = (1 - r) * ui + (r / 2) * (u[2:] + u[:-2])  # B u^n (B-side boundaries included here)
+        rhs[0] += (r / 2) * u[0]  # A-side boundary moved to RHS (ends fixed)
+        rhs[-1] += (r / 2) * u[-1]
+        u[1:-1] = lu.solve(rhs)
+        U[k + 1] = u
+    return U
+
+
+def solve_heat_neumann(u0, alpha, dx, dt, steps):
+    """Explicit heat with insulated (Neumann, u_x=0) ends, in conservative flux form.
+
+    Updates each cell by the net diffusive flux u_i += r (F_{i+1/2} - F_{i-1/2})
+    with F = (u_{i+1}-u_i) and the boundary fluxes set to zero. Because it is a
+    flux balance, the total heat sum(u)*dx is conserved to round-off, and the
+    field relaxes to its (mass-preserving) average. Stable for r <= 1/2.
+    """
+    u = np.asarray(u0, dtype=float).copy()
+    r = alpha * dt / dx**2
+    U = np.empty((steps + 1, u.size))
+    U[0] = u
+    for k in range(steps):
+        lap = np.empty_like(u)
+        lap[1:-1] = u[2:] - 2 * u[1:-1] + u[:-2]
+        lap[0] = u[1] - u[0]  # left flux F_{-1/2}=0 (insulated): net = F_{1/2}
+        lap[-1] = u[-2] - u[-1]  # right flux F_{N-1/2}=0 (insulated)
+        u = u + r * lap
+        U[k + 1] = u
+    return U
+
+
 # --------------------------------------------------------------------------- #
 # Hyperbolic: transport (advection) u_t + c u_x = 0.
 # --------------------------------------------------------------------------- #
@@ -97,6 +149,31 @@ def solve_transport(u0, c, dx, dt, steps, scheme="upwind"):
             u = u - 0.5 * C * (np.roll(u, -1) - np.roll(u, 1))
         else:  # pragma: no cover
             raise ValueError("scheme must be 'upwind' or 'ftcs'")
+        U[k + 1] = u
+    return U
+
+
+# --------------------------------------------------------------------------- #
+# Nonlinear: viscous Burgers  u_t + u u_x = nu u_xx.
+# --------------------------------------------------------------------------- #
+def solve_burgers(u0, nu, dx, dt, steps):
+    """Viscous Burgers equation on a periodic domain (the simplest nonlinear PDE).
+
+    Conservative form u_t + (u^2/2)_x = nu u_xx with a Rusanov (local
+    Lax-Friedrichs) flux, so the total momentum sum(u)*dx is conserved to
+    round-off. Nonlinearity steepens smooth data into a shock; viscosity nu
+    keeps it finite. Returns history of shape (steps+1, nx).
+    """
+    u = np.asarray(u0, dtype=float).copy()
+    U = np.empty((steps + 1, u.size))
+    U[0] = u
+    for k in range(steps):
+        f = 0.5 * u**2
+        a = np.maximum(np.abs(u), np.abs(np.roll(u, -1)))  # max wave speed at i+1/2
+        flux = 0.5 * (f + np.roll(f, -1)) - 0.5 * a * (np.roll(u, -1) - u)  # F_{i+1/2}
+        div = (flux - np.roll(flux, 1)) / dx  # (F_{i+1/2}-F_{i-1/2})/dx
+        lap = (np.roll(u, -1) - 2 * u + np.roll(u, 1)) / dx**2
+        u = u - dt * div + nu * dt * lap
         U[k + 1] = u
     return U
 
@@ -145,52 +222,34 @@ def solve_poisson_2d(rhs, grid, boundary):
 
     ``rhs`` and ``boundary`` are arrays of shape (ny, nx) (rhs used on interior,
     boundary used on the edges). Laplace's equation is the case rhs = 0.
-    Returns u of shape (ny, nx). Uses a sparse 5-point stencil + direct solve.
+    Returns u of shape (ny, nx).
+
+    The interior operator is the 2-D 5-point Laplacian built as a Kronecker sum
+    L = (I_y (x) Dxx) + (Dyy (x) I_x) of the 1-D second-difference operators —
+    assembled vectorized (no Python per-node loop), then solved directly.
     """
     nx, ny = grid.nx, grid.ny
     dx, dy = grid.dx, grid.dy
     rhs = np.asarray(rhs, dtype=float)
     boundary = np.asarray(boundary, dtype=float)
+    mx, my = nx - 2, ny - 2
 
+    # 1-D interior second-difference operators (already divided by dx^2 / dy^2).
+    dxx = sp.diags([1.0, -2.0, 1.0], [-1, 0, 1], shape=(mx, mx)) / dx**2
+    dyy = sp.diags([1.0, -2.0, 1.0], [-1, 0, 1], shape=(my, my)) / dy**2
+    # Interior unknowns ordered with x fastest (flat index = j*mx + i).
+    laplacian = sp.kron(sp.eye(my), dxx) + sp.kron(dyy, sp.eye(mx))
+
+    # RHS = interior rhs minus the known Dirichlet neighbours.
+    b = rhs[1:-1, 1:-1].copy()
+    cx, cy = 1.0 / dx**2, 1.0 / dy**2
+    b[:, 0] -= cx * boundary[1:-1, 0]
+    b[:, -1] -= cx * boundary[1:-1, -1]
+    b[0, :] -= cy * boundary[0, 1:-1]
+    b[-1, :] -= cy * boundary[-1, 1:-1]
+
+    sol = spla.spsolve(laplacian.tocsr(), b.ravel())
     u = boundary.copy()
-    ix = np.arange(1, nx - 1)
-    iy = np.arange(1, ny - 1)
-    mx, my = ix.size, iy.size
-    m = mx * my
-
-    def idx(i, j):  # interior (i in x, j in y) -> flat index
-        return j * mx + i
-
-    A = sp.lil_matrix((m, m))
-    b = np.zeros(m)
-    cx = 1.0 / dx**2
-    cy = 1.0 / dy**2
-    for jj in range(my):
-        for ii in range(mx):
-            row = idx(ii, jj)
-            i = ii + 1
-            j = jj + 1
-            A[row, row] = -2 * cx - 2 * cy
-            b[row] = rhs[j, i]
-            # x neighbours
-            if ii > 0:
-                A[row, idx(ii - 1, jj)] = cx
-            else:
-                b[row] -= cx * u[j, i - 1]
-            if ii < mx - 1:
-                A[row, idx(ii + 1, jj)] = cx
-            else:
-                b[row] -= cx * u[j, i + 1]
-            # y neighbours
-            if jj > 0:
-                A[row, idx(ii, jj - 1)] = cy
-            else:
-                b[row] -= cy * u[j - 1, i]
-            if jj < my - 1:
-                A[row, idx(ii, jj + 1)] = cy
-            else:
-                b[row] -= cy * u[j + 1, i]
-    sol = spla.spsolve(A.tocsr(), b)
     u[1:-1, 1:-1] = sol.reshape(my, mx)
     return u
 

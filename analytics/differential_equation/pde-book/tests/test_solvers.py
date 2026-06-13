@@ -109,3 +109,65 @@ def test_square_wave_partial_sum_converges_away_from_jump():
     e_few = abs(solvers.square_wave_partial_sum(np.pi / 2, 3, L=np.pi) - 1.0)
     e_many = abs(solvers.square_wave_partial_sum(np.pi / 2, 40, L=np.pi) - 1.0)
     assert e_many < e_few
+
+
+# --------------------------------------------------------------------------- #
+# Crank-Nicolson / Neumann / Burgers (enhancement solvers).
+# --------------------------------------------------------------------------- #
+def test_crank_nicolson_matches_mode_decay_and_is_stable():
+    g = grids.Grid1D(0.0, 1.0, 81)
+    x, dx = g.x, g.dx
+    alpha = 1.0
+    dt = 3.0 * dx**2 / alpha  # r = 3 (explicit would explode); CN is unconditionally stable
+    steps = 80
+    u0 = solvers.heat_mode_solution(x, 0.0, alpha, L=1.0, mode=1)
+    U = solvers.solve_heat_crank_nicolson(u0, alpha, dx, dt, steps)
+    assert np.max(np.abs(U[-1])) < np.max(np.abs(u0))  # decays, stays bounded
+    exact = solvers.heat_mode_solution(x, steps * dt, alpha, L=1.0, mode=1)
+    np.testing.assert_allclose(U[-1], exact, atol=3e-3)
+
+
+def test_crank_nicolson_is_second_order_in_time():
+    # Isolate the TIME error by comparing to the semi-discrete exact solution
+    # e^{lam_h t} v, where v=sin(pi x) is an exact eigenvector of the discrete
+    # Dirichlet Laplacian with eigenvalue lam_h. Halving dt then cuts the error
+    # ~4x for Crank-Nicolson (2nd order), vs ~2x for backward Euler.
+    g = grids.Grid1D(0.0, 1.0, 81)
+    x, dx = g.x, g.dx
+    alpha, k, t_end = 1.0, np.pi, 0.05
+    u0 = np.sin(k * x)
+    lam_h = alpha * (2 * np.cos(k * dx) - 2) / dx**2  # discrete-Laplacian eigenvalue
+    ref = np.exp(lam_h * t_end) * np.sin(k * x)
+    errs = []
+    for steps in (5, 10, 20):
+        U = solvers.solve_heat_crank_nicolson(u0, alpha, dx, t_end / steps, steps)
+        errs.append(np.max(np.abs(U[-1] - ref)))
+    assert errs[0] / errs[1] > 3.0 and errs[1] / errs[2] > 3.0  # ~4x each halving
+
+
+def test_heat_neumann_conserves_total_and_relaxes_to_mean():
+    # n=41 => dt=0.4 dx^2 gives t_end ~ 1.0 = ~10 relaxation times (tau = 1/pi^2),
+    # enough for the field to flatten to its mean.
+    g = grids.Grid1D(0.0, 1.0, 41)
+    x, dx = g.x, g.dx
+    u0 = datasets.gaussian(x, 0.35, 0.08) + 0.2
+    U = solvers.solve_heat_neumann(u0, 1.0, dx, 0.4 * dx**2, 4000)
+    total0, total1 = U[0].sum() * dx, U[-1].sum() * dx
+    assert abs(total1 - total0) / total0 < 1e-10  # insulated ends -> heat conserved
+    assert np.std(U[-1]) < 1e-3  # relaxes toward a flat (mean) profile
+    np.testing.assert_allclose(U[-1].mean(), u0.mean(), atol=1e-9)
+
+
+def test_burgers_conserves_momentum_and_forms_a_steepening_front():
+    g = grids.Grid1D(0.0, 1.0, 400)
+    x, dx = g.x, g.dx
+    u0 = np.sin(2 * np.pi * x)  # smooth; nonlinearity will steepen it
+    dt = 0.2 * dx
+    U = solvers.solve_burgers(u0, nu=2e-3, dx=dx, dt=dt, steps=300)
+    # conservative + periodic => total momentum conserved to round-off
+    assert abs(U[-1].sum() - U[0].sum()) * dx < 1e-10
+    assert np.all(np.isfinite(U[-1])) and np.max(np.abs(U[-1])) < 2.0  # bounded (viscosity)
+    # the maximum slope grows: a front has steepened relative to the initial sine
+    slope0 = np.max(np.abs(np.diff(U[0]))) / dx
+    slope1 = np.max(np.abs(np.diff(U[-1]))) / dx
+    assert slope1 > 1.5 * slope0

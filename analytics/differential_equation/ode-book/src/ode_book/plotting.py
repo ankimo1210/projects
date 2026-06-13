@@ -261,3 +261,42 @@ def line_animation(x, frames, interval=60, ylim=None, xlabel="x", title=None):
     anim = animation.FuncAnimation(fig, update, frames=len(frames), interval=interval, blit=True)
     plt.close(fig)
     return anim
+
+
+def trace_determinant_diagram(matrices=None, labels=None, ax=None):
+    """The trace-determinant plane: which region a 2-D linear system falls in.
+
+    For dx/dt = A x the fixed-point type is fixed by p = trace(A) and
+    q = det(A): q<0 saddle; q>0 with the discriminant p^2-4q>0 nodes, <0 spirals;
+    p<0 stable, p>0 unstable; the parabola q = p^2/4 separates nodes from spirals.
+    Optional ``matrices`` (2x2) are placed as points with their classification.
+    """
+    from .systems import classify_fixed_point
+
+    ax = _new_ax(ax, figsize=(6.5, 5.5))
+    p = np.linspace(-4, 4, 400)
+    ax.plot(p, p**2 / 4, "k-", lw=1.5, label="q = p^2/4 (node | spiral)")
+    ax.axhline(0, color="gray", lw=1)
+    ax.axvline(0, color="gray", lw=0.8)
+    ax.fill_between(p, p**2 / 4, 8, where=(p < 0), color="#1f77b4", alpha=0.10)  # stable spiral
+    ax.fill_between(p, p**2 / 4, 8, where=(p > 0), color="#d62728", alpha=0.10)  # unstable spiral
+    ax.fill_between(p, -8, 0, color="#7f7f7f", alpha=0.12)  # saddle (q<0)
+    ax.text(-3.4, 6.2, "stable\nspiral", color="#1f77b4", fontsize=9)
+    ax.text(2.0, 6.2, "unstable\nspiral", color="#d62728", fontsize=9)
+    ax.text(-3.8, 1.2, "stable node", color="#1f77b4", fontsize=9)
+    ax.text(1.6, 1.2, "unstable node", color="#d62728", fontsize=9)
+    ax.text(-1.4, -3.0, "saddle", color="#444444", fontsize=10)
+    if matrices is not None:
+        for i, M in enumerate(matrices):
+            M = np.asarray(M, dtype=float)
+            tr, det = np.trace(M), np.linalg.det(M)
+            ax.plot(tr, det, "o", color="#2ca02c", ms=9, zorder=6)
+            lab = labels[i] if labels else classify_fixed_point(M)
+            ax.annotate(lab, (tr, det), textcoords="offset points", xytext=(6, 6), fontsize=9)
+    ax.set_xlim(-4, 4)
+    ax.set_ylim(-4, 8)
+    ax.set_xlabel("trace p = tr(A)")
+    ax.set_ylabel("determinant q = det(A)")
+    ax.set_title("trace-determinant plane")
+    ax.legend(loc="lower right", fontsize=8)
+    return ax
