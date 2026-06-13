@@ -12,3 +12,5 @@ chapters:
   - file: notebooks/06_poles_zeros_stability
   - file: notebooks/07_control_systems_and_circuits
   - file: notebooks/08_applications_probability_signals_finance
+  - file: notebooks/09_capstone_three_lenses
+  - file: notebooks/10_exercise_solutions

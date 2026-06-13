@@ -48,3 +48,54 @@ def test_numeric_laplace_array_matches_analytic():
 def test_as_function_lambdify():
     f = T.as_function(sp.exp(-T.t))
     np.testing.assert_allclose(f(np.array([0.0, 1.0])), np.array([1.0, np.exp(-1.0)]), atol=1e-12)
+
+
+def test_numeric_laplace_high_omega_via_qawo():
+    # f=e^{-0.5t} -> F(s)=1/(s+0.5). Large omega: the weighted integrator stays accurate.
+    F = T.numeric_laplace(lambda x: np.exp(-0.5 * x), 0.5 + 20j)
+    assert abs(F - 1.0 / (1.0 + 20j)) < 1e-4
+
+
+def test_numeric_laplace_roc_warning():
+    import warnings
+
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        T.numeric_laplace(lambda x: np.exp(-2 * x), -3.0)  # outside ROC (Re(s) > -2 required)
+        assert any("ROC" in str(rec.message) for rec in w)
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        T.numeric_laplace(lambda x: np.exp(-2 * x), 3.0)  # inside ROC -> no warning
+        assert len(w) == 0
+
+
+def test_inverse_stehfest_smooth_pairs():
+    tt = np.array([0.5, 1.0, 2.0, 3.0])
+    # Smooth / decaying pairs: Gaver-Stehfest (N=14) gives ~4-5 digits.
+    np.testing.assert_allclose(
+        T.inverse_laplace_stehfest(lambda s: 1 / (s + 1), tt), np.exp(-tt), atol=1e-3
+    )
+    np.testing.assert_allclose(T.inverse_laplace_stehfest(lambda s: 1 / s, tt), 1.0, atol=1e-3)
+    np.testing.assert_allclose(T.inverse_laplace_stehfest(lambda s: 1 / s**2, tt), tt, atol=1e-3)
+    np.testing.assert_allclose(
+        T.inverse_laplace_stehfest(lambda s: 1 / (s + 1) ** 2, tt), tt * np.exp(-tt), atol=1e-3
+    )
+
+
+def test_inverse_talbot_handles_oscillation():
+    tt = np.array([0.5, 1.0, 2.0, 3.0])
+    np.testing.assert_allclose(
+        T.inverse_laplace_talbot(lambda s: 1 / (s + 1), tt), np.exp(-tt), atol=1e-6
+    )
+    # Talbot deforms the contour, so it handles oscillatory f where Stehfest fails.
+    w = 3.0
+    np.testing.assert_allclose(
+        T.inverse_laplace_talbot(lambda s: w / (s**2 + w**2), tt), np.sin(w * tt), atol=1e-5
+    )
+
+
+def test_stehfest_requires_even_n():
+    import pytest
+
+    with pytest.raises(ValueError):
+        T.inverse_laplace_stehfest(lambda s: 1 / s, 1.0, N=13)

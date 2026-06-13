@@ -18,7 +18,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from nbkit import code, md, write  # noqa: E402
+from nbkit import code, md, write
 
 NB_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "notebooks")
 
@@ -642,6 +642,46 @@ plt.tight_layout()
         ),
         md(
             """
+## 9b. 数値逆ラプラス変換 (Applied)
+
+$F(s)$ が記号で扱えない・複雑なときは、$F(s)$ を **数値的に** 時間へ戻す方法がある。本書は2つを用意:
+
+- **Gaver-Stehfest** (`inverse_laplace_stehfest`): 実軸上の $F(s)$ だけを使う簡便法。なめらかで減衰する
+  $f(t)$ には強いが、振動には弱い。
+- **Talbot** (`inverse_laplace_talbot`): 積分路を左半面へ変形する方法。振動・減衰のどちらにも強い。
+
+既知ペアで比べ、「なぜ数値逆変換が難しいか」を体感する。
+"""
+        ),
+        code(
+            r"""
+tt = np.linspace(0.3, 4, 200)
+
+# Smooth/decaying target e^{-t}: both methods are accurate.
+exact = np.exp(-tt)
+y_st = transforms.inverse_laplace_stehfest(lambda S: 1 / (S + 1), tt)
+y_tb = transforms.inverse_laplace_talbot(lambda S: 1 / (S + 1), tt)
+print("e^{-t} :  Stehfest max err =", np.max(np.abs(y_st - exact)),
+      "| Talbot max err =", np.max(np.abs(y_tb - exact)))
+
+# Oscillatory target sin(3t): Stehfest struggles, Talbot stays accurate.
+exact_o = np.sin(3 * tt)
+o_st = transforms.inverse_laplace_stehfest(lambda S: 3 / (S**2 + 9), tt)
+o_tb = transforms.inverse_laplace_talbot(lambda S: 3 / (S**2 + 9), tt)
+print("sin(3t):  Stehfest max err =", np.max(np.abs(o_st - exact_o)),
+      "| Talbot max err =", np.max(np.abs(o_tb - exact_o)))
+
+fig, ax = plt.subplots(figsize=(7, 4))
+ax.plot(tt, exact_o, "k", lw=2, label="exact sin(3t)")
+ax.plot(tt, o_st, "--", label="Gaver-Stehfest (struggles on oscillation)")
+ax.plot(tt, o_tb, ":", lw=2.5, label="Talbot (accurate)")
+ax.set_xlabel("t"); ax.set_ylabel("f(t)"); ax.legend(); ax.grid(alpha=0.25)
+ax.set_title("numerical inverse Laplace: oscillation is the hard case")
+plt.tight_layout()
+"""
+        ),
+        md(
+            """
 ## 11. Exercises / Advanced & TODO
 
 - **演習**: $\\dfrac{2s+1}{s^2+s}$、$\\dfrac{1}{(s+2)^3}$、$\\dfrac{s}{s^2+4}$ を逆変換せよ。
@@ -1183,6 +1223,30 @@ widgets.explore_feedback()
         ),
         md(
             """
+## 5b. 根軌跡 — ゲインで閉ループ極が描く軌跡
+
+ループゲイン $k$ を $0\\to\\infty$ と動かすと、閉ループ極(特性方程式 $D_G(s)+k\\,N_G(s)=0$ の根)が
+$s$ 平面に **軌跡** を描く。$k=0$ で開ループ極(×)から出発し、増やすと開ループ零点(○)や無限遠へ向かう。
+古典例 $G(s)=1/(s(s+1))$ では2極が $-0.5$ で合流し、虚軸と平行に上下へ抜ける。
+"""
+        ),
+        code(
+            r"""
+G = systems.tf([1.0], [1.0, 1.0, 0.0])      # 1 / (s(s+1))
+plotting.plot_root_locus(G, np.linspace(0, 12, 200))
+plt.tight_layout()
+
+# A 3-pole plant loses stability past a finite gain (a branch crosses into the RHP).
+G3 = systems.tf([1.0], np.poly([-1.0, -2.0, -3.0]))   # 1/((s+1)(s+2)(s+3))
+ks = np.arange(0, 120, 5)
+_, loc3 = systems.root_locus(G3, ks)
+max_re = np.array([r.real.max() for r in loc3])
+kcross = ks[np.argmax(max_re > 0)]
+print(f"3-pole plant: closed loop becomes unstable around k = {kcross}  (Routh bound: k < 60)")
+"""
+        ),
+        md(
+            """
 ## 6. Bode 線図の入口
 
 周波数応答 $H(i\\omega)$ の大きさ・位相を対数で描くのが Bode 線図。RC 低域通過のロールオフを見ます。
@@ -1205,8 +1269,8 @@ plt.tight_layout()
 - **演習(Applied)**: `systems.feedback` で $G=1/(s(s+1))$ の閉ループ極を $K$ について追え。
 - **Advanced**: 比例 + 積分(PI)制御 $K(s)=K_p+K_i/s$ が定常偏差を消す理由を最終値定理で示せ。
 
-> **TODO(今後の拡張)**: PID 制御の設計例、根軌跡(root locus)の作図、位相余裕・ゲイン余裕、
-> オペアンプ回路の伝達関数、ナイキスト線図を追加。
+> **TODO(今後の拡張)**: PID 制御の設計例、位相余裕・ゲイン余裕、
+> オペアンプ回路の伝達関数、ナイキスト線図を追加(根軌跡は §5b で実装済み)。
 """
         ),
     ]
@@ -1317,6 +1381,219 @@ $r\\le g$ だと積分が発散し、PV が定義できません。これは「R
     )
 
 
+# =========================================================================== #
+# 09 — Capstone: one system through three lenses  (FULL)
+# =========================================================================== #
+def nb09():
+    body = [
+        md(
+            """
+## 1. Big Picture — 1つの系を3つのレンズで
+
+これまでの道具を1つの系で束ねる。質量-バネ-ダンパ(ステップ強制・初期静止)
+
+$$ \\ddot y + 3\\dot y + 2y = 2\\,u(t), \\qquad y(0)=\\dot y(0)=0 $$
+
+を、(1) ODE をラプラスで解く、(2) インパルス応答と畳み込み、(3) 極と安定性、の3レンズで見る。
+**3つとも同じ $y(t)$** に行き着くことを確かめる。
+"""
+        ),
+        md(
+            """
+## 2. Lens 1 — ODE をラプラスで代数化
+
+微分則で $s$ 領域へ移すと $Y(s)=\\dfrac{2}{s(s^2+3s+2)}=\\dfrac{2}{s(s+1)(s+2)}$。部分分数 → 逆変換。
+"""
+        ),
+        code(
+            r"""
+Y = 2 / (s * (s + 1) * (s + 2))
+display(partial_fractions(Y))          # 1/s - 2/(s+1) + 1/(s+2)
+y1 = sp.simplify(Linv(Y))
+display(y1)                            # 1 - 2 e^{-t} + e^{-2t}
+"""
+        ),
+        md(
+            """
+## 3. Lens 2 — インパルス応答と畳み込み
+
+伝達関数 $H(s)=\\dfrac{2}{s^2+3s+2}$、インパルス応答 $h=\\mathcal{L}^{-1}\\{H\\}=2(e^{-t}-e^{-2t})$。
+ステップ応答は $h$ とステップの畳み込み。Lens 1 と一致するはず。
+"""
+        ),
+        code(
+            r"""
+dt = 0.005
+tt = np.arange(0, 12, dt)
+H = systems.tf([2.0], [1.0, 3.0, 2.0])                  # 2 / (s^2 + 3s + 2)
+h = systems.impulse_response(H, tt)                     # 2(e^{-t} - e^{-2t})
+step_conv = systems.convolve(h, np.ones_like(tt), dt)   # h * u
+step_lsim = systems.step_response(H, tt)
+y1fun = transforms.as_function(y1)
+print("Lens1 (Laplace) vs Lens2 (h*u)  max err:", np.max(np.abs(y1fun(tt) - step_conv)))
+print("Lens2  lsim     vs Lens2 (h*u)  max err:", np.max(np.abs(step_lsim - step_conv)))
+"""
+        ),
+        md(
+            """
+## 4. Lens 3 — 極と安定性(過渡 + 定常)
+
+$H$ の極は $-1,-2$(ともに左半面 → 安定)。応答は **過渡**(極由来、$e^{-t},e^{-2t}$ で消える)と
+**定常**(入力の極 $s=0$ 由来、DC ゲイン $=1$)の和。
+"""
+        ),
+        code(
+            r"""
+print("poles:", systems.poles(H), "->", systems.classify_stability(H))
+print("steady-state value (DC gain):", systems.dc_gain(H))
+print("transient part  y(t) - 1 =", sp.simplify(y1 - 1))   # -2 e^{-t} + e^{-2t} -> 0
+"""
+        ),
+        md(
+            """
+## 5. 3つのレンズ、ひとつの答え
+"""
+        ),
+        code(
+            r"""
+fig, axes = plt.subplots(1, 2, figsize=(11, 4.2))
+plotting.plot_s_plane(poles=systems.poles(H), ax=axes[0], title="poles of H (both LHP -> stable)")
+plotting.plot_time_responses(
+    tt, [y1fun(tt), step_conv, step_lsim],
+    labels=["Lens1: Laplace ODE", "Lens2: h * u", "Lens2: lsim"],
+    ax=axes[1], title="three lenses, one answer", ylabel="y(t)")
+axes[1].axhline(1.0, color="gray", ls=":", lw=1)
+plt.tight_layout()
+"""
+        ),
+        md(
+            """
+## 6. 何が違うのか — レンズごとの問い
+
+| レンズ | 答える問い | 道具(章) |
+|---|---|---|
+| ODE/ラプラス | 解の **時間の式** は? | 微分則・部分分数・逆変換(02–04) |
+| 畳み込み/インパルス応答 | 任意入力への **応答** は? | $h$, $Y=HX$(05) |
+| 極・安定性 | **形・安定性・速さ** は? | 極の位置(06) |
+
+同じ $y(t)=1-2e^{-t}+e^{-2t}$ を3つの角度から読んだ。これがラプラス変換の統一力。
+"""
+        ),
+        md(
+            """
+## 7. Exercises / Advanced
+
+- **Basic**: 同じ系を $y(0)=1,\\ \\dot y(0)=0$ で解き直し、零入力応答が加わることを3レンズで確認せよ。
+- **Applied**: ダンピングを $3\\to1$ に下げ(underdamped)、極が複素になり応答が振動することを示せ。
+- **Advanced**: 入力を $u(t)=\\sin\\omega t$ にし、定常応答の振幅が $|H(i\\omega)|$ で決まることを確かめよ。
+"""
+        ),
+    ]
+    return assemble(
+        "09. キャップストーン — 1つの系を3つのレンズで",
+        FULL_LAYERS,
+        "1つの2次系を ODE/ラプラス・畳み込み・極の3視点で解き、同じ $y(t)$ に到達することを確かめる。",
+        body,
+    )
+
+
+# =========================================================================== #
+# 10 — Exercise solutions  (appendix)
+# =========================================================================== #
+def nb10():
+    body = [
+        md(
+            """
+## このノートについて
+
+01〜08 章の演習の **解答例**。各章 1 セルで代表的な問いを `laplace_book` と SymPy で解く。
+"""
+        ),
+        md("## 01 章 — 半減期と複素周波数"),
+        code(
+            r"""
+# Half-life: e^{sigma*T}=1/2  ->  sigma = -ln2 / T_half
+T_half = 5.0
+sigma = -np.log(2) / T_half
+print("sigma =", sigma, " check e^{sigma*T_half} =", np.exp(sigma * T_half))   # 0.5
+"""
+        ),
+        md("## 02 章 — 線形性・周波数シフト・初期値定理"),
+        code(
+            r"""
+display(L(3 - 2 * sp.exp(-t)))               # 3/s - 2/(s+1)
+display(L(sp.exp(-t) * sp.cos(3 * t)))       # (s+1)/((s+1)^2 + 9)
+w = sp.symbols("omega", positive=True)
+print("initial value of cos(wt):", sp.limit(s * L(sp.cos(w * t)), s, sp.oo))   # 1
+"""
+        ),
+        md("## 03 章 — 逆変換(単純極・重根・複素極)"),
+        code(
+            r"""
+for F in [(2 * s + 1) / (s**2 + s), 1 / (s + 2) ** 3, s / (s**2 + 4)]:
+    display(sp.simplify(Linv(F)))            # 1 + e^{-t};  t^2 e^{-2t}/2;  cos(2t)
+"""
+        ),
+        md("## 04 章 — ODE と共振"),
+        code(
+            r"""
+display(Linv(3 / (s + 2)))                   # y'+2y=0, y(0)=3 -> 3 e^{-2t}
+# y'' + y = sin t, zero IC: Y = 1/(s^2+1)^2 -> resonance (amplitude grows with t)
+display(sp.simplify(Linv(1 / (s**2 + 1) ** 2)))   # (sin t - t cos t)/2
+"""
+        ),
+        md("## 05 章 — インパルス応答とステップ応答"),
+        code(
+            r"""
+display(Linv(1 / (s + 2)))                       # impulse response: e^{-2t}
+display(sp.simplify(Linv(1 / (s * (s + 2)))))    # step response: (1 - e^{-2t})/2
+"""
+        ),
+        md("## 06 章 — 極・安定性と零点の役割"),
+        code(
+            r"""
+H = systems.tf([1.0], [1.0, 4.0, 13.0])       # 1/((s+2)^2 + 9): poles -2 +/- 3i
+print("poles:", systems.poles(H))
+H2 = systems.tf([1.0, 1.0], [1.0, 4.0, 13.0]) # same poles, extra zero at -1
+print("stability without/with zero:", systems.classify_stability(H), systems.classify_stability(H2))
+"""
+        ),
+        md("## 07 章 — 時定数とフィードバックの定常偏差"),
+        code(
+            r"""
+# Halving tau = RC moves the pole left (faster response).
+print("tau=1.0ms pole:", systems.poles(circuits.rc_lowpass(1000.0, 1e-6)))
+print("tau=0.5ms pole:", systems.poles(circuits.rc_lowpass(500.0, 1e-6)))
+# PI control K(s)=2 + 1/s on plant 1/(s+1): closed-loop DC gain = 1 -> zero steady-state step error.
+plant = systems.tf([1.0], [1.0, 1.0])
+Kpi = systems.tf([2.0, 1.0], [1.0, 0.0])
+closed = systems.feedback(systems.series(plant, Kpi))
+print("PI closed-loop DC gain:", systems.dc_gain(closed), "-> steady-state step error = 0")
+"""
+        ),
+        md("## 08 章 — 永久債・ガンマ分布"),
+        code(
+            r"""
+c0, r = sp.symbols("c0 r", positive=True)
+display(sp.laplace_transform(c0, t, r, noconds=True))   # c0/r  (perpetuity present value)
+lam = sp.symbols("lambda", positive=True)
+display(L(lam**2 * t * sp.exp(-lam * t)))               # lambda^2/(s+lambda)^2  (Gamma, k=2)
+"""
+        ),
+        md(
+            """
+> すべて記号/数値で再現可能。詳しい解説は各章本文を参照。
+"""
+        ),
+    ]
+    return assemble(
+        "10. 演習解答",
+        [("—", "01〜08 章 演習の解答例")],
+        "各章の演習を `laplace_book` と SymPy で解いた解答集(付録)。",
+        body,
+    )
+
+
 BUILDERS = {
     "00_overview": nb00,
     "01_exponential_decay_complex_frequency": nb01,
@@ -1327,6 +1604,8 @@ BUILDERS = {
     "06_poles_zeros_stability": nb06,
     "07_control_systems_and_circuits": nb07,
     "08_applications_probability_signals_finance": nb08,
+    "09_capstone_three_lenses": nb09,
+    "10_exercise_solutions": nb10,
 }
 
 

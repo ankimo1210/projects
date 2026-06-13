@@ -24,7 +24,9 @@ TransferFunction = signal.TransferFunction
 # --------------------------------------------------------------------------- #
 def tf(num, den) -> TransferFunction:
     """A transfer function H(s) = num(s)/den(s) from coefficient lists."""
-    return signal.TransferFunction(np.atleast_1d(num).astype(float), np.atleast_1d(den).astype(float))
+    return signal.TransferFunction(
+        np.atleast_1d(num).astype(float), np.atleast_1d(den).astype(float)
+    )
 
 
 def first_order(tau: float, gain: float = 1.0) -> TransferFunction:
@@ -80,7 +82,7 @@ def second_order_params(sys):
     den = np.asarray(sys.den, dtype=float)
     if den.size != 3:
         raise ValueError("second_order_params expects a 2nd-order denominator")
-    a2, a1, a0 = den / den[0]
+    _, a1, a0 = den / den[0]
     wn = float(np.sqrt(a0))
     zeta = float(a1 / (2.0 * wn)) if wn > 0 else float("inf")
     return wn, zeta
@@ -121,7 +123,7 @@ def impulse_response(sys, t):
 
 def forced_response(sys, u, t):
     """Output y(t) for an arbitrary input u(t) sampled on t (uses lsim)."""
-    tout, y, _ = signal.lsim(sys, U=np.asarray(u, dtype=float), T=np.asarray(t, dtype=float))
+    _, y, _ = signal.lsim(sys, U=np.asarray(u, dtype=float), T=np.asarray(t, dtype=float))
     return y
 
 
@@ -154,6 +156,22 @@ def feedback(g, k=None) -> TransferFunction:
     num = np.polymul(gnum, kden)
     den = np.polyadd(np.polymul(gden, kden), np.polymul(gnum, knum))
     return TransferFunction(num, den)
+
+
+def root_locus(g, k_values):
+    """Closed-loop pole locations as the loop gain k sweeps over ``k_values``.
+
+    For unity feedback around k*G, the closed-loop poles are the roots of the
+    characteristic polynomial den_G(s) + k * num_G(s). At k=0 they start at the
+    open-loop poles; as k grows they migrate toward the open-loop zeros (and to
+    infinity). Returns (k_values, locus) where locus[i] is the pole array for
+    k_values[i].
+    """
+    num = np.atleast_1d(g.num).astype(float)
+    den = np.atleast_1d(g.den).astype(float)
+    k_values = np.asarray(k_values, dtype=float)
+    locus = [np.roots(np.polyadd(den, k * num)) for k in k_values]
+    return k_values, locus
 
 
 # --------------------------------------------------------------------------- #

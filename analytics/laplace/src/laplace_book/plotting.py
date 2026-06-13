@@ -58,8 +58,16 @@ def plot_damped_oscillation(t, sigma, omega, ax=None):
 # --------------------------------------------------------------------------- #
 def plot_s_plane(poles=(), zeros=(), ax=None, lim=None, annotate_regions=True, title="s-plane"):
     """Pole-zero map. Poles = 'x', zeros = 'o'. Shades stable (LHP) vs unstable (RHP)."""
-    poles = np.atleast_1d(np.asarray(poles, dtype=complex)) if len(poles) else np.array([], dtype=complex)
-    zeros = np.atleast_1d(np.asarray(zeros, dtype=complex)) if len(zeros) else np.array([], dtype=complex)
+    poles = (
+        np.atleast_1d(np.asarray(poles, dtype=complex))
+        if len(poles)
+        else np.array([], dtype=complex)
+    )
+    zeros = (
+        np.atleast_1d(np.asarray(zeros, dtype=complex))
+        if len(zeros)
+        else np.array([], dtype=complex)
+    )
     if ax is None:
         _, ax = plt.subplots(figsize=(5, 5))
     pts = np.concatenate([poles, zeros, [1 + 1j]])
@@ -76,8 +84,14 @@ def plot_s_plane(poles=(), zeros=(), ax=None, lim=None, annotate_regions=True, t
         ax.scatter(poles.real, poles.imag, marker="x", s=90, color="k", label="poles", zorder=3)
     if zeros.size:
         ax.scatter(
-            zeros.real, zeros.imag, marker="o", s=80, facecolors="none", edgecolors=ACCENT,
-            label="zeros", zorder=3,
+            zeros.real,
+            zeros.imag,
+            marker="o",
+            s=80,
+            facecolors="none",
+            edgecolors=ACCENT,
+            label="zeros",
+            zorder=3,
         )
     ax.set_xlim(-lim, lim)
     ax.set_ylim(-lim, lim)
@@ -163,6 +177,54 @@ def plot_bode(sys, w=None, axes=None):
     axes[1].grid(alpha=0.25, which="both")
     axes[0].set_title("Bode plot")
     return axes
+
+
+def plot_root_locus(g, k_values, ax=None):
+    """Plot how the closed-loop poles of unity feedback around k*G move with k.
+
+    'x' marks the open-loop poles (k=0 start), 'o' the open-loop zeros (where
+    branches end). The colored trail is the locus; crossing the imaginary axis
+    marks the gain at which the loop goes unstable.
+    """
+    from . import systems
+
+    k_values, locus = systems.root_locus(g, k_values)
+    p0, z0 = systems.poles(g), systems.zeros(g)
+    if ax is None:
+        _, ax = plt.subplots(figsize=(5.5, 5))
+    pts = np.concatenate(locus)
+    sc = ax.scatter(
+        pts.real,
+        pts.imag,
+        c=np.repeat(k_values, [len(r) for r in locus]),
+        cmap="viridis",
+        s=10,
+        alpha=0.7,
+    )
+    ax.scatter(
+        p0.real, p0.imag, marker="x", s=90, color="k", zorder=3, label="open-loop poles (k=0)"
+    )
+    if z0.size:
+        ax.scatter(
+            z0.real,
+            z0.imag,
+            marker="o",
+            s=80,
+            facecolors="none",
+            edgecolors=UNSTABLE_COLOR,
+            zorder=3,
+            label="open-loop zeros",
+        )
+    ax.axvline(0, color="k", lw=1.2)
+    ax.axhline(0, color="gray", lw=0.8)
+    ax.set_xlabel("Re(s)")
+    ax.set_ylabel("Im(s)")
+    ax.set_title("Root locus (closed-loop poles vs gain k)")
+    ax.set_aspect("equal")
+    ax.grid(alpha=0.2)
+    ax.legend(loc="upper left", fontsize=8)
+    plt.colorbar(sc, ax=ax, label="gain k", fraction=0.046, pad=0.04)
+    return ax
 
 
 # --------------------------------------------------------------------------- #

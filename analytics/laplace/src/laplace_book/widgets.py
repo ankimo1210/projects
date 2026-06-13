@@ -21,7 +21,7 @@ def explore_complex_frequency(t_max: float = 8.0, n: int = 400):
     t = np.linspace(0.0, t_max, n)
 
     def _draw(sigma=-0.4, omega=3.0):
-        fig, axes = plt.subplots(1, 2, figsize=(11, 4.2))
+        _, axes = plt.subplots(1, 2, figsize=(11, 4.2))
         plotting.plot_pole_and_response(sigma, omega, t, axes=axes)
         plt.show()
 
@@ -40,11 +40,12 @@ def explore_second_order(t_max: float = 12.0, n: int = 500):
 
     def _draw(wn=1.0, zeta=0.3):
         sys = systems.second_order(wn, zeta)
-        fig, axes = plt.subplots(1, 2, figsize=(11, 4.2))
+        _, axes = plt.subplots(1, 2, figsize=(11, 4.2))
         plotting.plot_s_plane(poles=systems.poles(sys), ax=axes[0], title="poles")
         y = systems.step_response(sys, t)
-        plotting.plot_time_responses(t, [y], labels=[f"zeta={zeta:.2f}"], ax=axes[1],
-                                     title="step response", ylabel="y(t)")
+        plotting.plot_time_responses(
+            t, [y], labels=[f"zeta={zeta:.2f}"], ax=axes[1], title="step response", ylabel="y(t)"
+        )
         axes[1].axhline(1.0, color="gray", ls=":", lw=1)
         plt.show()
 
@@ -65,11 +66,12 @@ def explore_feedback(t_max: float = 12.0, n: int = 500):
         plant = systems.tf([1.0], [1.0, 1.0, 0.0])  # 1 / (s^2 + s)
         loop = systems.series(plant, systems.tf([K], [1.0]))
         closed = systems.feedback(loop)
-        fig, axes = plt.subplots(1, 2, figsize=(11, 4.2))
+        _, axes = plt.subplots(1, 2, figsize=(11, 4.2))
         plotting.plot_s_plane(poles=systems.poles(closed), ax=axes[0], title="closed-loop poles")
         y = systems.step_response(closed, t)
-        plotting.plot_time_responses(t, [y], labels=[f"K={K:.1f}"], ax=axes[1],
-                                     title="closed-loop step", ylabel="y(t)")
+        plotting.plot_time_responses(
+            t, [y], labels=[f"K={K:.1f}"], ax=axes[1], title="closed-loop step", ylabel="y(t)"
+        )
         axes[1].axhline(1.0, color="gray", ls=":", lw=1)
         plt.show()
 

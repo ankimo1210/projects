@@ -62,7 +62,9 @@ def test_feedback_unity():
     # Unity feedback of G = 1/(tau s + 1) gives 1/(tau s + 2): DC gain 1/2.
     G = S.first_order(tau=3.0)
     H = S.feedback(G)
-    np.testing.assert_allclose(np.atleast_1d(H.den) / H.den[0], [3.0, 2.0] / np.array(3.0), atol=1e-9)
+    np.testing.assert_allclose(
+        np.atleast_1d(H.den) / H.den[0], [3.0, 2.0] / np.array(3.0), atol=1e-9
+    )
     assert abs(S.dc_gain(H) - 0.5) < 1e-12
 
 
@@ -70,3 +72,24 @@ def test_series_polynomial():
     H = S.series(S.tf([1.0], [1.0, 1.0]), S.tf([1.0], [1.0, 2.0]))
     np.testing.assert_allclose(np.atleast_1d(H.num), [1.0], atol=1e-12)
     np.testing.assert_allclose(np.atleast_1d(H.den), [1.0, 3.0, 2.0], atol=1e-12)
+
+
+def test_root_locus_classic_integrator_plant():
+    # G = 1/(s(s+1)): poles at 0,-1 (k=0); break away to -0.5 +/- j*... as k grows.
+    G = S.tf([1.0], [1.0, 1.0, 0.0])
+    _, locus = S.root_locus(G, [0.0, 0.25, 1.0])
+    np.testing.assert_allclose(np.sort(locus[0]), [-1.0, 0.0], atol=1e-9)  # open-loop poles
+    np.testing.assert_allclose(np.sort(locus[1]), [-0.5, -0.5], atol=1e-9)  # breakaway (double)
+    np.testing.assert_allclose(
+        np.sort_complex(locus[2]),
+        np.sort_complex([-0.5 + 0.8660254j, -0.5 - 0.8660254j]),
+        atol=1e-6,
+    )
+
+
+def test_root_locus_destabilizes():
+    # G = 1/((s+1)(s+2)(s+3)): for large enough k a branch crosses into the RHP.
+    G = S.tf([1.0], np.poly([-1.0, -2.0, -3.0]))
+    _, locus = S.root_locus(G, [1.0, 100.0])
+    assert np.all(locus[0].real < 0)  # low gain: stable
+    assert np.any(locus[1].real > 0)  # high gain: a pole in the RHP

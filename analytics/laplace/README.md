@@ -26,15 +26,19 @@ Jupyter Notebook ベースのラプラス変換教科書プロジェクト。
 | `06_poles_zeros_stability` | 極と零点・$s$ 平面・極と応答・左半面/虚軸/右半面・安定性 |
 | `07_control_systems_and_circuits` | RC/RLC・ステップ/インパルス応答・フィードバック・Bode の入口 |
 | `08_applications_probability_signals_finance` | 確率の MGF・割引現在価値(Gordon 成長と ROC)・待ち行列の入口 |
+| `09_capstone_three_lenses` | キャップストーン: 1つの2次系を ODE/畳み込み/極の3視点で解き一致を確認 |
+| `10_exercise_solutions` | 付録: 01〜08 章 演習の解答例 |
 
-重点実装は **01・02・04・05・06**。03・07・08 は実内容に加え「今後の拡張(TODO)」を明記している。
+重点実装は **01・02・04・05・06・09**。03・07・08 は実内容に加え「今後の拡張(TODO)」を明記している。
 
 共通関数は `src/laplace_book/` にまとまっている:
 
-- `transforms.py` — 記号(SymPy)/数値(求積)のラプラス変換、変換表、微分則の検証
-- `systems.py` — 伝達関数、極/零点、安定性判定、ステップ/インパルス/強制応答、直列・フィードバック、畳み込み
+- `transforms.py` — 記号(SymPy)/数値(求積)のラプラス変換、変換表、微分則の検証、
+  数値逆変換(Gaver-Stehfest / Talbot)
+- `systems.py` — 伝達関数、極/零点、安定性判定、ステップ/インパルス/強制応答、直列・フィードバック、
+  根軌跡(root locus)、畳み込み
 - `circuits.py` — RC/RLC 回路の伝達関数と減衰パラメータ
-- `plotting.py` — 指数・減衰振動・$s$ 平面・極と応答・畳み込み・Bode、Plotly の $|F(s)|$ サーフェス
+- `plotting.py` — 指数・減衰振動・$s$ 平面・極と応答・畳み込み・Bode・根軌跡、Plotly の $|F(s)|$ サーフェス
 - `widgets.py` — ipywidgets による複素周波数 / 2 次系 / フィードバックの対話的探索
 - `datasets.py` — 合成信号(ステップ・近似インパルス・減衰正弦など、seed 固定)
 
@@ -120,6 +124,7 @@ uv run pytest analytics/laplace/tests -q
 ## 今後追加すべき内容
 
 - 03 章: ヘヴィサイド展開定理の手計算、`scipy.signal.residue` による数値部分分数、むだ時間 $e^{-as}$ の逆変換
-- 07 章: PID 設計、根軌跡、位相余裕/ゲイン余裕、ナイキスト線図、オペアンプ回路
+- 07 章: PID 設計、位相余裕/ゲイン余裕、ナイキスト線図、オペアンプ回路(根軌跡は実装済み)
 - 08 章: ラプラス-スティルチェス変換と M/M/1、債券・期間構造、特性関数との対応、SDE 生成作用素
-- 全体: 演習解答ノート(姉妹本の `08_exercise_solutions` 相当)、両側変換・$z$ 変換への橋渡し、キャップストーン
+- 全体: 両側変換・$z$ 変換への橋渡し、アニメーション(変換パイプライン・根軌跡・共振)、
+  `analytics/report` ポータルへの代表可視化の登録
