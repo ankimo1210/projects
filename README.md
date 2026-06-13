@@ -6,14 +6,16 @@
 
 | ディレクトリ | 概要 | スタック |
 |---|---|---|
-| [`land_price_api_app/`](land_price_api_app/) | 国土交通省「不動産情報ライブラリ」API を使った地価公示・取引価格データのローカル取得・分析・可視化アプリ | Python / FastAPI / DuckDB |
 | [`gto/`](gto/) | テキサスホールデムの GTO 分析・ソリューション参照・GPU 計算を統合した Web アプリ | Rust / FastAPI / Next.js |
 | [`stock/`](stock/) | 日本株・米株の価格・財務・マクロを取得し Jupyter / Dash で分析する `stockkit` ツールキット | Python / DuckDB / Dash |
 | [`market-viz/`](market-viz/) | 個人用マーケット可視化・分析アプリ | Streamlit / Plotly / DuckDB |
 | [`nbody-gpu/`](nbody-gpu/) | GPU 加速 N 体シミュレーション + リアルタイム 3D 可視化 | CuPy / VisPy |
 | [`line_backup/`](line_backup/) | iPhone ローカルバックアップから LINE データを完全オフラインで解析する CLI | Python |
 | [`akinator/`](akinator/) | Wikidata をエンティティ源とするローカル・アキネーター風推測ゲーム（確率的候補更新エンジン） | Python / FastAPI |
-| [`johnhull/`](johnhull/) | Hull『Options, Futures, and Other Derivatives』11e の章別学習ボリューム + `hullkit` 共有パッケージ | Python / Jupyter |
+| [`pokemon/`](pokemon/) | Quokka Wilds: オリジナル 3D モンスター収集ゲーム | Vite / React Three Fiber |
+| [`analytics/`](analytics/) | 体験型インタラクティブ教科書シリーズ（線形代数・NN・ベイズ・フーリエ・ラプラス・微分方程式・機械学習）+ 統合オフラインポータル。索引: [`analytics/README.md`](analytics/README.md) | Python / Jupyter Book / Plotly |
+| [`johnhull/`](johnhull/) | Hull『Options, Futures, and Other Derivatives』11e の章別学習ボリューム + `hullkit` 共有パッケージ + Jupyter Book / オフラインポータル | Python / Jupyter |
+| [`autostock/`](autostock/) | Mag7 株ストラテジーの自律探索デモ（read-only バックテスト + OOS 評価） | Python |
 | [`rates_volatility_model/`](rates_volatility_model/) | 金利ボラティリティ・モデリングのリサーチノート | Python / Jupyter |
 | [`aisan_lbo_case/`](aisan_lbo_case/) | アイサンテクノロジー (4667.T) 非公開化 LBO ケーススタディ（公開情報ベース、HTML レポート出力） | Python / Jupyter |
 | [`notebooks/`](notebooks/) | 単発の分析ノートブック置き場（債券、ETF、不動産シミュ等） | Jupyter |
@@ -21,6 +23,9 @@
 
 > `re_invest_os`（不動産買付前 DD Web アプリ）は独立リポジトリへ移管済み:
 > ローカル `~/re_invest_os` / GitHub `ankimo1210/re_invest_os`
+>
+> `land_price_api_app`（地価公示 Streamlit PoC）は `_archive/land_price_api_app/` へ退避済み
+> （market-data エンジンは `~/re_invest_os/packages/market-data` へ移植）。
 
 ## ディレクトリ構成
 
@@ -57,7 +62,7 @@ make tree      # ヘビーディレクトリを除外したツリー表示
 
 - Windows 11 + WSL2 (Ubuntu)
 - Python は **ルート単一の uv workspace** で管理（`.venv` は repo root に1個）
-  - workspace メンバー: `gto`, `market-viz`, `stock`, `nbody-gpu`, `line_backup`, `land_price_api_app`, `akinator`, `johnhull/hullkit`
+  - workspace メンバー: `gto`, `market-viz`, `stock`, `nbody-gpu`, `line_backup`, `akinator`, `autostock`, `johnhull/hullkit`, `analytics/*`（各教材 + `report`）
   - 例外: `aisan_lbo_case` は `requirements.txt`、`csharp_calc` は .NET、`rates_volatility_model` / `notebooks` は env 管理なし
 - AI コラボ前提（Claude Code / Copilot）。エージェント向け規約は `CLAUDE.md` と `AGENTS.md` を参照
 

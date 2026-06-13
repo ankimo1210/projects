@@ -50,6 +50,14 @@ Research / notebooks:
   `aisan_lbo_case/` (LBO ケーススタディ), `notebooks/`
 - `autostock/` — Mag7 株ストラテジー自律探索デモ (read-only バックテストエンジン + OOS 評価)
 
+Analytics (体験型インタラクティブ教科書, Jupyter Book + Plotly):
+
+- 教材: `analytics/linear_algebra`, `analytics/neural_net`, `analytics/bayesian`,
+  `analytics/fourier`, `analytics/laplace`, `analytics/differential_equation`
+  (ODE/PDE 2分冊), `analytics/machine_learning` — 各冊が独立 workspace メンバー
+- `analytics/report/` — LA/NN/ベイズの代表可視化を束ねるオフライン統合ポータル
+  (`make report`)。索引・流儀は `analytics/README.md` を参照
+
 Samples:
 
 - `csharp_calc/` — WinForms 電卓サンプル (C# / .NET 9)
