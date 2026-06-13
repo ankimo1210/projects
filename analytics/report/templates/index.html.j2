@@ -1,0 +1,46 @@
+{% extends "base.html.j2" %}
+{% block title %}Analytics 教材ポータル{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>3つの数学を、動かして掴む。</h1>
+  <p class="lead">
+    線形代数・ニューラルネット・ベイズ推定 ——
+    直感 → 数式 → コード → <strong>インタラクティブ可視化</strong> で一貫した3冊の体験型教科書。
+    このポータルの図はすべてブラウザ内で動き、<strong>オフラインで完結</strong>します。
+  </p>
+  <div class="hero-cta">
+    <a class="btn primary" href="gallery.html">コンセプトギャラリーを見る →</a>
+    <a class="btn" href="integration.html">3冊を貫くキャップストーン</a>
+  </div>
+  <div class="stats">
+    <div><b>{{ n_figures }}</b><span>ライブ可視化</span></div>
+    <div><b>{{ n_new }}</b><span>新規スライダー</span></div>
+    <div><b>3</b><span>教科書</span></div>
+  </div>
+</section>
+
+<section class="cards">
+  {% for book in books %}
+  <article class="card">
+    <span class="ord">{{ "%02d"|format(loop.index) }}</span>
+    <h2>{{ book.title }}</h2>
+    <p class="sub">{{ book.subtitle }}</p>
+    <p class="count"><b>{{ counts[book.key] }}</b> 本のライブ図</p>
+    <div class="card-links">
+      <a class="btn small primary" href="{{ book.key }}.html">ショーケース</a>
+      <a class="btn small ghost" href="{{ book.book_index }}">教科書を開く ↗</a>
+    </div>
+  </article>
+  {% endfor %}
+</section>
+
+<section class="note">
+  <h3>このポータルの作り</h3>
+  <p>
+    各図は3教材のパッケージ(<code>la_book</code> / <code>nn_textbook</code> / <code>bayes_textbook</code>)の
+    <code>plotly_*</code> ビルダーを呼んで生成しています。図のロジックは教科書側に一本化されているため、
+    ポータルは常に本文と同期します。「教科書を開く」リンクは各 Jupyter Book のビルド出力に飛びます
+    (未ビルドなら <code>make</code> でビルドしてください)。
+  </p>
+</section>
+{% endblock %}

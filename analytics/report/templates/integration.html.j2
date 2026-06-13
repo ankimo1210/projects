@@ -1,0 +1,46 @@
+{% extends "base.html.j2" %}
+{% block title %}3冊を貫くキャップストーン · Analytics 教材{% endblock %}
+{% block content %}
+<section class="page-head">
+  <p class="eyebrow">Capstone</p>
+  <h1>1つの問題、3つのレンズ</h1>
+  <p class="lead">
+    同じ<strong>多項式回帰</strong>を、線形代数・ニューラルネット・ベイズの各視点で解く。
+    3冊が独立した話題ではなく、<strong>同じ構造の別の顔</strong>であることを体験するキャップストーン。
+  </p>
+</section>
+
+<section class="lenses">
+  <article class="lens">
+    <h2>① 線形代数</h2>
+    <p class="lens-eq">w* = (XᵀX + λI)⁻¹ Xᵀy</p>
+    <p>正規方程式の<strong>閉形式解</strong>。SVD で条件数を読み、リッジ項 λ が悪条件をどう安定させるかを見る。</p>
+    <a class="btn small ghost" href="linear_algebra.html">線形代数のショーケース →</a>
+  </article>
+  <article class="lens">
+    <h2>② ニューラルネット</h2>
+    <p class="lens-eq">w ← w − η ∇‖Xw − y‖²</p>
+    <p>同じモデルを<strong>1層の微分可能ネット</strong>として勾配降下で学習。反復解が①の閉形式解に収束する。</p>
+    <a class="btn small ghost" href="neural_net.html">NN のショーケース →</a>
+  </article>
+  <article class="lens">
+    <h2>③ ベイズ</h2>
+    <p class="lens-eq">p(w | X, y) = N(μ, Σ)</p>
+    <p>重みに<strong>事後分布</strong>を置く。事後平均はちょうど①のリッジ解、分散が予測の不確実性帯になる。</p>
+    <a class="btn small ghost" href="bayesian.html">ベイズのショーケース →</a>
+  </article>
+</section>
+
+<section class="bridge">
+  <h3>橋渡しになる等式</h3>
+  <p class="big-eq">
+    リッジ回帰 <b>=</b> 正規事前の MAP <b>=</b> ベイズ線形回帰の事後平均
+  </p>
+  <p>
+    λ = σ² / σ_w² と置くと、3つの「別々に見えた手続き」が完全に一致する。
+    線形代数は<em>解そのもの</em>を、NN は<em>解への辿り方</em>を、ベイズは<em>解の周りの不確実性</em>を教える ——
+    同じ地形を3方向から照らしている。
+  </p>
+  <a class="btn primary" href="gallery.html#bayesian">事後予測が締まる様子を見る →</a>
+</section>
+{% endblock %}

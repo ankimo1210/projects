@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Analytics 教材ポータル{% endblock %}</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <!-- plotly bundled locally -> the whole portal works offline -->
+  <script src="assets/plotly.min.js" charset="utf-8"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">Analytics<span>教材ポータル</span></a>
+    <nav>
+      <a href="index.html"{% if active == 'index' %} class="on"{% endif %}>ホーム</a>
+      <a href="gallery.html"{% if active == 'gallery' %} class="on"{% endif %}>ギャラリー</a>
+      <a href="linear_algebra.html"{% if active == 'linear_algebra' %} class="on"{% endif %}>線形代数</a>
+      <a href="neural_net.html"{% if active == 'neural_net' %} class="on"{% endif %}>NN</a>
+      <a href="bayesian.html"{% if active == 'bayesian' %} class="on"{% endif %}>ベイズ</a>
+      <a href="integration.html"{% if active == 'integration' %} class="on"{% endif %}>統合</a>
+    </nav>
+  </header>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="foot">
+    <p>オフライン自己完結 · plotly はローカル同梱 · 図は3教材の <code>plotly_*</code> ビルダーから自動生成</p>
+  </footer>
+</body>
+</html>
