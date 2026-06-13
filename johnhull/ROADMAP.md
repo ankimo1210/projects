@@ -22,3 +22,21 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 Shared module: `johnhull/hullkit` (uv workspace member) — bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options.
 
 **Status (2026-06-08): all 14 rows done → Hull 11e all 37 chapters covered.**
+
+## 可視化 & 深掘り(A1–A4) — 進行中
+
+Hull の射程の先(同じクオンツ系で Hull が浅い領域)を深掘りしつつ、既存 + 新規の全コンテンツを
+インタラクティブ可視化する取り組み。すべて johnhull 内で完結。
+
+- **可視化基盤**: `hullkit.plotly_viz`(既存の bsm/trees/hedging/risk/credit をラップする `plotly_*` ビルダー)。
+- **HTML/ポータル**: `johnhull/report`(jinja2 + plotly, オフライン自己完結) → `make hull-report`。
+  `johnhull/book`(全ボリュームを束ねる Jupyter Book) → `make hull-book`。
+
+| # | Volume | テーマ(Hull の先) | Status |
+|---|--------|------|--------|
+| P1 | 既存全14ノートの可視化 | `plotly_viz` 6 図 + ポータル疎通(offline test 緑) | done |
+| 13 | `volumes/13_stochastic_calculus` | A1 確率解析(伊藤・Girsanov・Feynman-Kac) | planned |
+| 14 | `volumes/14_stoch_vol_fourier` | A2 確率ボラ & Fourier(Heston/SABR/COS) | planned |
+| 15 | `volumes/15_advanced_numerics` | A3 高度な数値(分散減少/QMC/LSM/CN/AAD) | planned |
+| 16 | `volumes/16_xva_credit` | A4 XVA/信用(EE/PFE/CVA/コピュラ) | planned |
+| 17 | `volumes/17_capstone` | Heston×Fourier → Greeks → CVA 一気通貫 | planned |

@@ -1,0 +1,29 @@
+{% extends "base.html.j2" %}
+{% block title %}コンセプトギャラリー · Analytics 教材{% endblock %}
+{% block content %}
+<section class="page-head">
+  <p class="eyebrow">Gallery</p>
+  <h1>コンセプトギャラリー</h1>
+  <p class="lead">3教材の代表的な可視化を一望。すべてその場で動かせます(ドラッグでスライダー、ホバーで値、ズーム可)。</p>
+</section>
+
+{% for book in books %}
+<section class="book-section" id="{{ book.key }}">
+  <div class="section-head">
+    <h2>{{ book.title }} <span class="sub">{{ book.subtitle }}</span></h2>
+    <a class="btn small ghost" href="{{ book.key }}.html">この教材だけ見る →</a>
+  </div>
+  <div class="fig-grid">
+    {% for fr in fragments if fr.book == book.key %}
+    <figure class="fig-card">
+      <figcaption>
+        <h3>{{ fr.title }}{% if fr.is_new %} <span class="badge">NEW</span>{% endif %}</h3>
+        <p>{{ fr.blurb }}</p>
+      </figcaption>
+      <div class="fig-holder">{{ fr.html | safe }}</div>
+    </figure>
+    {% endfor %}
+  </div>
+</section>
+{% endfor %}
+{% endblock %}

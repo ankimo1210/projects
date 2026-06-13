@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}johnhull 可視化ポータル{% endblock %}</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <!-- plotly bundled locally -> the whole portal works offline -->
+  <script src="assets/plotly.min.js" charset="utf-8"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">johnhull<span>可視化ポータル</span></a>
+    <nav>
+      <a href="index.html"{% if active == 'index' %} class="on"{% endif %}>ホーム</a>
+      <a href="gallery.html"{% if active == 'gallery' %} class="on"{% endif %}>ギャラリー</a>
+      <a href="options_core.html"{% if active == 'options_core' %} class="on"{% endif %}>オプション</a>
+      <a href="numerics.html"{% if active == 'numerics' %} class="on"{% endif %}>数値</a>
+      <a href="risk_credit.html"{% if active == 'risk_credit' %} class="on"{% endif %}>リスク</a>
+      <a href="stochastic.html"{% if active == 'stochastic' %} class="on"{% endif %}>確率解析</a>
+      <a href="integration.html"{% if active == 'integration' %} class="on"{% endif %}>統合</a>
+    </nav>
+  </header>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="foot">
+    <p>オフライン自己完結 · plotly ローカル同梱 · 図は <code>hullkit.plotly_viz</code> ビルダーから自動生成(本文と同期)</p>
+  </footer>
+</body>
+</html>

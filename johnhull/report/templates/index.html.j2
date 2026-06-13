@@ -1,0 +1,46 @@
+{% extends "base.html.j2" %}
+{% block title %}johnhull 可視化ポータル{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>デリバティブの数理を、動かして掴む。</h1>
+  <p class="lead">
+    John Hull のテキストで学ぶ価格付けとリスク管理を、<strong>インタラクティブ可視化</strong>で直感に変える。
+    ペイオフ → グリークス → ヘッジ → リスク・信用。
+    図はすべてブラウザ内で動き(ドラッグでスライダー、ホバーで値)、<strong>オフラインで完結</strong>します。
+  </p>
+  <div class="hero-cta">
+    <a class="btn primary" href="gallery.html">ギャラリーを見る →</a>
+    <a class="btn" href="integration.html">背骨となる1本の論理</a>
+  </div>
+  <div class="stats">
+    <div><b>{{ n_figures }}</b><span>ライブ可視化</span></div>
+    <div><b>{{ n_new }}</b><span>インタラクティブ</span></div>
+    <div><b>{{ books|length }}</b><span>テーマ</span></div>
+  </div>
+</section>
+
+<section class="cards">
+  {% for book in books %}
+  <article class="card">
+    <span class="ord">{{ "%02d"|format(loop.index) }}</span>
+    <h2>{{ book.title }}</h2>
+    <p class="sub">{{ book.subtitle }}</p>
+    <p class="count"><b>{{ counts[book.key] }}</b> 本のライブ図</p>
+    <div class="card-links">
+      <a class="btn small primary" href="{{ book.key }}.html">ショーケース</a>
+      <a class="btn small ghost" href="{{ book.book_index }}">教科書を開く ↗</a>
+    </div>
+  </article>
+  {% endfor %}
+</section>
+
+<section class="note">
+  <h3>このポータルの作り</h3>
+  <p>
+    各図は <code>hullkit.plotly_viz</code> の <code>plotly_*</code> ビルダーを固定シードのデモ入力で呼んで生成しています。
+    ビルダーは <code>hullkit</code> の価格付け・リスク関数(<code>bsm</code> / <code>trees</code> / <code>hedging</code> /
+    <code>risk</code> / <code>credit</code> …)をそのまま使うため、可視化が教科書の数式から乖離しません。
+    「教科書を開く」リンクは johnhull の Jupyter Book ビルド出力に飛びます(未ビルドなら <code>make hull-book</code>)。
+  </p>
+</section>
+{% endblock %}

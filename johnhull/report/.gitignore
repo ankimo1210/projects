@@ -1,0 +1,4 @@
+# Generated portal output (rebuild with `make report`). The vendored
+# plotly.min.js (~4.7 MB) and large embedded-figure HTML are build artifacts,
+# like each book's book/_build/ directory.
+site/

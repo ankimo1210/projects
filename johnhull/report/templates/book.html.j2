@@ -1,0 +1,24 @@
+{% extends "base.html.j2" %}
+{% block title %}{{ book.title }} · ショーケース{% endblock %}
+{% block content %}
+<section class="page-head">
+  <p class="eyebrow">Showcase</p>
+  <h1>{{ book.title }}</h1>
+  <p class="lead">{{ book.subtitle }}</p>
+  <p style="margin-top:1.4rem"><a class="btn primary" href="{{ book.book_index }}">教科書(Jupyter Book)を開く ↗</a></p>
+</section>
+
+<section class="book-section">
+  <div class="fig-grid">
+    {% for fr in fragments %}
+    <figure class="fig-card">
+      <figcaption>
+        <h3>{{ fr.title }}{% if fr.is_new %} <span class="badge">NEW</span>{% endif %}</h3>
+        <p>{{ fr.blurb }}</p>
+      </figcaption>
+      <div class="fig-holder">{{ fr.html | safe }}</div>
+    </figure>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

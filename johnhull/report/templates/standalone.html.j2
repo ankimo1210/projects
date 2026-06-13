@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>johnhull 可視化ギャラリー(単一ファイル)</title>
+  <style>{{ css }}</style>
+  <script charset="utf-8">{{ plotly_js | safe }}</script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top">johnhull<span>可視化ギャラリー(単一ファイル)</span></a>
+    <nav>
+      {% for book in books %}
+      <a href="#{{ book.key }}">{{ book.title }}</a>
+      {% endfor %}
+    </nav>
+  </header>
+  <main id="top">
+    <section class="hero">
+      <h1>デリバティブの数理を、動かして掴む。</h1>
+      <p class="lead">
+        Hull のテキストで学ぶ価格付け・リスク管理の代表的な可視化を1ファイルに。
+        すべてブラウザ内で動き、<strong>どこに置いてもオフラインで完結</strong>します。
+      </p>
+      <div class="stats">
+        <div><b>{{ n_figures }}</b><span>ライブ可視化</span></div>
+        <div><b>{{ n_new }}</b><span>インタラクティブ</span></div>
+        <div><b>{{ books|length }}</b><span>テーマ</span></div>
+      </div>
+    </section>
+
+    {% for book in books %}
+    <section class="book-section" id="{{ book.key }}">
+      <div class="section-head">
+        <h2>{{ book.title }} <span class="sub">{{ book.subtitle }}</span></h2>
+      </div>
+      <div class="fig-grid">
+        {% for fr in fragments if fr.book == book.key %}
+        <figure class="fig-card">
+          <figcaption>
+            <h3>{{ fr.title }}{% if fr.is_new %} <span class="badge">NEW</span>{% endif %}</h3>
+            <p>{{ fr.blurb }}</p>
+          </figcaption>
+          <div class="fig-holder">{{ fr.html | safe }}</div>
+        </figure>
+        {% endfor %}
+      </div>
+    </section>
+    {% endfor %}
+  </main>
+  <footer class="foot">
+    <p>単一ファイル · plotly インライン同梱 · 図は <code>hullkit.plotly_viz</code> ビルダーから自動生成</p>
+  </footer>
+</body>
+</html>

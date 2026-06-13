@@ -1,0 +1,30 @@
+# Table of contents for jupyter-book.
+# `notebooks/` holds an overview page plus symlinks to the scattered volume
+# notebooks (Jupyter Book requires all content below the book root).
+format: jb-book
+root: notebooks/00_overview
+parts:
+  - caption: コア — Hull 11e 既刊ボリューム
+    chapters:
+      - file: notebooks/01_foundations
+      - file: notebooks/02_options_basics
+      - file: notebooks/03_greeks
+      - file: notebooks/04_futures_rates
+      - file: notebooks/05_vol_smile
+      - file: notebooks/06_numerical
+      - file: notebooks/07_swaps
+      - file: notebooks/08_risk_var
+      - file: notebooks/09_credit_xva
+      - file: notebooks/10_exotics
+      - file: notebooks/11_ir_options
+      - file: notebooks/12_qualitative_summary
+      - file: notebooks/15_bsm_ch15
+      - file: notebooks/31_ir_models
+  # 深掘り(A1-A4)ボリュームは各フェーズ完了時にここへ追加する:
+  #   - caption: 深掘り — 確率解析と高度なクオンツ
+  #     chapters:
+  #       - file: notebooks/13_stochastic_calculus
+  #       - file: notebooks/14_stoch_vol_fourier
+  #       - file: notebooks/15_advanced_numerics
+  #       - file: notebooks/16_xva_credit
+  #       - file: notebooks/17_capstone

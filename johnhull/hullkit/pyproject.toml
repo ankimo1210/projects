@@ -15,6 +15,7 @@ dependencies = [
     "nbclient>=0.10",
     "nbconvert>=7.16",
     "pandas>=2.2",
+    "plotly>=5.20",
 ]
 
 [build-system]

@@ -1,0 +1,46 @@
+{% extends "base.html.j2" %}
+{% block title %}1本の背骨 · johnhull{% endblock %}
+{% block content %}
+<section class="page-head">
+  <p class="eyebrow">Integration</p>
+  <h1>すべては「リスク中立評価」でつながる</h1>
+  <p class="lead">
+    バラバラに見えるトピックは、<strong>同じ1本の論理</strong>の別の顔。
+    ペイオフを決め、リスク中立測度で割引期待値を取り、感応度でヘッジし、残るテールをリスク量で測る。
+  </p>
+</section>
+
+<section class="lenses">
+  <article class="lens">
+    <h2>① ペイオフ</h2>
+    <p class="lens-eq">V_T = f(S_T)</p>
+    <p>満期の約束。脚の組み合わせが戦略の形を作る(<a href="options_core.html">オプション</a>)。</p>
+  </article>
+  <article class="lens">
+    <h2>② 価格 = 割引期待値</h2>
+    <p class="lens-eq">V₀ = e<sup>-rT</sup> E<sup>Q</sup>[V_T]</p>
+    <p>二項木でも BSM でも同じ値へ収束する(<a href="numerics.html">数値手法</a>)。</p>
+  </article>
+  <article class="lens">
+    <h2>③ ヘッジ</h2>
+    <p class="lens-eq">Δ = ∂V/∂S</p>
+    <p>感応度で複製。リヘッジを細かくすると費用が②の価格に締まる(<a href="options_core.html">グリークス</a>)。</p>
+  </article>
+  <article class="lens">
+    <h2>④ リスク・信用</h2>
+    <p class="lens-eq">VaR · ES · CVA</p>
+    <p>ヘッジしきれないテールと相手方の信用を測る(<a href="risk_credit.html">リスクと信用</a>)。</p>
+  </article>
+</section>
+
+<section class="bridge">
+  <h3>この先(深掘り)</h3>
+  <p class="big-eq">確率解析 → 確率ボラ &amp; Fourier → 高度な数値 → XVA</p>
+  <p>
+    同じ背骨を、より深い数理で支える: 伊藤の補題と Girsanov(②の測度の正体)、Heston/SABR と Fourier 価格付け、
+    分散減少・準モンテカルロ・LSM・有限差分(②の高速・高精度化)、そして CVA・コピュラ(④の本丸)。
+    各深掘りはこのポータルに順次追加されます。
+  </p>
+  <a class="btn primary" href="gallery.html">ギャラリーで全図を見る →</a>
+</section>
+{% endblock %}
