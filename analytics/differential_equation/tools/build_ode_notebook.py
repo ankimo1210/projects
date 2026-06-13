@@ -291,6 +291,20 @@ plt.show()
 print("max |analytic - RK4| =", np.max(np.abs(analytic - Y)))
 """),
         md(r"""
+### インタラクティブ: 成長率 $r$ を動かす(静的 HTML でも動く)
+
+`ipywidgets` は JupyterLab 専用ですが、**Plotly のスライダーはエクスポートした HTML でも動きます**。
+$r$ を大きくするほど収束が速くなり、平衡 $K$ は変わらないことを確かめてください。
+"""),
+        code("""
+import plotly.io as pio
+from ode_book import interactive
+
+pio.renderers.default = "plotly_mimetype+notebook_connected"
+fig = interactive.plotly_logistic_r()
+fig.show()
+"""),
+        md(r"""
 ## 7. Invariant — 平衡点
 
 $dy/dt = 0$ となる $y$ が **平衡点(定常解)**。ロジスティックでは $y=0$(不安定)と $y=K$(安定)。

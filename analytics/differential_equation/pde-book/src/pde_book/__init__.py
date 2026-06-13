@@ -6,10 +6,11 @@ Layout:
 - solvers    : FDM solvers (heat, transport, wave, Poisson) + Fourier helpers
 - plotting   : calculus visuals + field snapshots, heatmaps, animations
 - widgets    : ipywidgets demos (JupyterLab only)
+- interactive: Plotly slider figures (also render in exported HTML)
 - datasets   : initial/boundary conditions, sample fields
 """
 
-from . import calculus, datasets, grids, plotting, solvers, widgets
+from . import calculus, datasets, grids, interactive, plotting, solvers, widgets
 from .grids import Grid1D, Grid2D, courant_number, heat_number
 from .solvers import (
     solve_heat_explicit,
@@ -27,6 +28,7 @@ __all__ = [
     "datasets",
     "grids",
     "heat_number",
+    "interactive",
     "plotting",
     "solve_heat_explicit",
     "solve_heat_implicit",

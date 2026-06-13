@@ -13,3 +13,4 @@ chapters:
   - file: notebooks/05_separation_of_variables
   - file: notebooks/06_numerical_pde_fdm
   - file: notebooks/07_applications_physics_finance_ml
+  - file: notebooks/08_exercise_solutions

@@ -6,10 +6,11 @@ Layout:
 - systems    : right-hand-side factories + fixed-point analysis
 - plotting   : direction fields, phase portraits, calculus visuals
 - widgets    : ipywidgets demos (JupyterLab only)
+- interactive: Plotly slider figures (also render in exported HTML)
 - datasets   : seeded synthetic scenarios, bring-your-own-data hook
 """
 
-from . import calculus, datasets, plotting, solvers, systems, widgets
+from . import calculus, datasets, interactive, plotting, solvers, systems, widgets
 from .solvers import euler, heun, integrate_ode, rk4, solve
 from .systems import classify_fixed_point, jacobian, linear_system
 
@@ -20,6 +21,7 @@ __all__ = [
     "euler",
     "heun",
     "integrate_ode",
+    "interactive",
     "jacobian",
     "linear_system",
     "plotting",

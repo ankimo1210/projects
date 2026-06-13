@@ -13,3 +13,4 @@ chapters:
   - file: notebooks/05_nonlinear_dynamics
   - file: notebooks/06_numerical_methods
   - file: notebooks/07_applications_physics_biology_finance
+  - file: notebooks/08_exercise_solutions

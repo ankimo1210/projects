@@ -434,6 +434,20 @@ ax.set_title("Fourier partial sums of a square wave (Gibbs overshoot near jumps)
 plt.show()
 """),
         md(r"""
+### インタラクティブ: 項数を動かす(静的 HTML でも動く)
+
+スライダーで項数を増やすと近似が改善し、跳びの近くに **Gibbs の行き過ぎ** が残る様子が見えます
+(Plotly なのでエクスポート HTML でも動作)。
+"""),
+        code("""
+import plotly.io as pio
+from pde_book import interactive
+
+pio.renderers.default = "plotly_mimetype+notebook_connected"
+fig = interactive.plotly_fourier_square()
+fig.show()
+"""),
+        md(r"""
 ## 5. 周波数 — 低周波と高周波 (Applied)
 
 各サイン波の「振動数(周波数)」が、信号のどの成分を担うかを表します。
@@ -490,7 +504,8 @@ plt.show()
 
 1. 三角波の Fourier 級数を求め、矩形波より速く収束する(Gibbs が穏やか)ことを観察せよ。
 2. FFT で、サンプリング周波数の半分(Nyquist)を超える周波数が折り返す(エイリアシング)様子を作れ。
-3. 熱方程式で、モード $k=1$ と $k=4$ の振幅比が時間とともに $e^{-\alpha(1-16)t}$ で変化することを数値で確かめよ。
+3. 熱方程式で、モード $n=1$ と $n=4$($\sin(n\pi x)$, 固有値 $(n\pi)^2$)の振幅比が
+   時間とともに $e^{-\alpha(1-16)\pi^2 t}=e^{15\alpha\pi^2 t}$ で変化することを数値で確かめよ。
 
 ## Advanced Notes
 
@@ -753,6 +768,22 @@ fig.tight_layout()
 plt.show()
 """),
         md(r"""
+### インタラクティブ: 安定数を動かして「壊れる瞬間」を見る(静的 HTML でも動く)
+
+Plotly のスライダーで、熱方程式の拡散数 $r$ と移流の CFL 数 $C$ を動かします。
+それぞれ $r>1/2$、$C>1$ を超えた瞬間に数値解が崩れる(振動・発散)ことを体感してください。
+"""),
+        code("""
+import plotly.io as pio
+from pde_book import interactive
+
+pio.renderers.default = "plotly_mimetype+notebook_connected"
+interactive.plotly_heat_stability().show()      # heat: stable iff r <= 1/2
+"""),
+        code("""
+interactive.plotly_cfl_transport().show()        # advection: stable iff CFL C <= 1
+"""),
+        md(r"""
 ## 6. 数値拡散 — 安定でも「なまる」
 
 風上差分は安定ですが、一次精度ゆえに余分な **数値拡散** が入り、移流させると波形がだんだん **なまり**ます
@@ -910,6 +941,16 @@ ax2.set_xlabel("S")
 ax2.set_title("call value vs price at several times")
 fig.tight_layout()
 plt.show()
+"""),
+        md(r"""
+**インタラクティブ版**(ドラッグで回転・ズーム、静的 HTML でも動く):
+"""),
+        code("""
+import plotly.io as pio
+from pde_book import interactive
+
+pio.renderers.default = "plotly_mimetype+notebook_connected"
+interactive.plotly_bs_surface().show()
 """),
         code("""
 import numpy as np
