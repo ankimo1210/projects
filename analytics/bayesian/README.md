@@ -12,7 +12,7 @@ $$
 p(\theta \mid x) = \frac{p(x \mid \theta)\, p(\theta)}{p(x)}
 $$
 
-## 章構成(全 11 Notebook)
+## 章構成(全 14 Notebook)
 
 | Notebook | 内容 | 状態 |
 |---|---|---|
@@ -26,6 +26,9 @@ $$
 | `07_mcmc_intuition` | MH を 20 行で自作・提案幅と受容率・Gibbs・HMC/NUTS | ✅ |
 | `08_pymc_practical_modeling` | PyMC + ArviZ 実践(R-hat・ESS・PPC、閉形式と照合) | ✅ |
 | `09_model_checking_and_applications` | PPC・LOO-CV・ベイズファクター・実務応用 5 本 | ✅ |
+| `11_variational_inference_advi` | 変分推論(ADVI)・ELBO・平均場の限界・VAE との接続 | ✅ |
+| `12_bayesian_optimization_thompson` | ベイズ最適化・Thompson サンプリング・多腕バンディット | ✅ |
+| `13_capstone_three_lenses` | キャップストーン: 1つの回帰を3冊の視点で(事後平均 = リッジ = MAP) | ✅ |
 | `10_exercise_solutions` | 全演習(49 問)の解答 | ✅ |
 
 共通コードは `src/bayes_textbook/`
@@ -105,8 +108,9 @@ import 失敗時に案内を表示してスキップする。
 
 - [`analytics/linear_algebra`](../linear_algebra/) — 線形代数。05 章ベイズ回帰の行列計算の基礎
 - [`analytics/neural_net`](../neural_net/) — ニューラルネット。正則化 = 事前分布(05 章)、VAE の変分推論と地続き
+- [`analytics/report`](../report/) — **統合インタラクティブポータル**。3教材の代表可視化を
+  オフラインで束ねるショーケース(`make report`)。本書の信念更新・MCMC 収束・事後予測帯の
+  スライダーもここで一望できる。
 
 ## 今後追加すべき内容
 
-- 変分推論(ADVI)の章
-- ベイズ最適化・Thompson sampling の応用章

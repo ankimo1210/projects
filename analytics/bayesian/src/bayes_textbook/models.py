@@ -210,3 +210,109 @@ def autocorrelation(samples, max_lag: int = 50):
     acf = np.correlate(x, x, mode="full")[len(x) - 1 :]
     acf = acf / acf[0]
     return acf[: max_lag + 1]
+
+
+# ---------------------------------------------------------------------------
+# Gaussian process + bandits (chapter 12: Bayesian optimization / Thompson)
+# ---------------------------------------------------------------------------
+
+
+class GaussianProcess:
+    """Zero-mean GP regression with an RBF kernel and Gaussian noise.
+
+    The posterior over function values is Gaussian with closed form — the same
+    "Normal prior x Normal likelihood -> Normal posterior" machinery as ch.04,
+    lifted to functions. Used as the surrogate model in Bayesian optimization.
+    """
+
+    def __init__(self, length_scale: float = 1.0, signal_var: float = 1.0, noise: float = 1e-4):
+        self.length_scale = length_scale
+        self.signal_var = signal_var
+        self.noise = noise
+        self.X = None
+        self.y = None
+        self._L = None
+        self._alpha = None
+
+    def _kernel(self, A, B):
+        A = np.atleast_2d(A)
+        B = np.atleast_2d(B)
+        sq = np.sum(A**2, 1)[:, None] + np.sum(B**2, 1)[None, :] - 2 * A @ B.T
+        return self.signal_var * np.exp(-0.5 * sq / self.length_scale**2)
+
+    def fit(self, X, y):
+        self.X = np.atleast_2d(np.asarray(X, dtype=float))
+        self.y = np.asarray(y, dtype=float)
+        K = self._kernel(self.X, self.X) + self.noise * np.eye(len(self.X))
+        self._L = np.linalg.cholesky(K)
+        self._alpha = np.linalg.solve(self._L.T, np.linalg.solve(self._L, self.y))
+        return self
+
+    def predict(self, X_new):
+        """Posterior mean and standard deviation at new inputs."""
+        X_new = np.atleast_2d(np.asarray(X_new, dtype=float))
+        Ks = self._kernel(self.X, X_new)
+        mean = Ks.T @ self._alpha
+        v = np.linalg.solve(self._L, Ks)
+        var = np.diag(self._kernel(X_new, X_new)) - np.sum(v**2, 0)
+        return mean, np.sqrt(np.clip(var, 0, None))
+
+
+def expected_improvement(gp, X_grid, best_y, xi: float = 0.01):
+    """EI acquisition for MINIMIZATION: how much we expect to beat best_y."""
+    from scipy import stats
+
+    mean, sd = gp.predict(X_grid)
+    sd = np.maximum(sd, 1e-9)
+    z = (best_y - mean - xi) / sd
+    return (best_y - mean - xi) * stats.norm.cdf(z) + sd * stats.norm.pdf(z)
+
+
+def thompson_bandit(true_rates, n_rounds: int = 2000, seed: int = 0):
+    """Thompson sampling for Bernoulli bandits.
+
+    Each round: draw theta_k ~ Beta posterior of each arm, pull the argmax,
+    update that arm. Returns (pulls per arm, cumulative regret per round).
+    """
+    rng = np.random.default_rng(seed)
+    true_rates = np.asarray(true_rates, dtype=float)
+    k = len(true_rates)
+    alpha = np.ones(k)
+    beta = np.ones(k)
+    best = true_rates.max()
+    pulls = np.zeros(k, dtype=int)
+    regret = np.empty(n_rounds)
+    cum = 0.0
+    for t in range(n_rounds):
+        samples = rng.beta(alpha, beta)
+        arm = int(np.argmax(samples))
+        reward = rng.random() < true_rates[arm]
+        alpha[arm] += reward
+        beta[arm] += 1 - reward
+        pulls[arm] += 1
+        cum += best - true_rates[arm]
+        regret[t] = cum
+    return pulls, regret
+
+
+def epsilon_greedy_bandit(true_rates, n_rounds: int = 2000, epsilon: float = 0.1, seed: int = 0):
+    """Epsilon-greedy baseline for comparison with Thompson sampling."""
+    rng = np.random.default_rng(seed)
+    true_rates = np.asarray(true_rates, dtype=float)
+    k = len(true_rates)
+    wins = np.zeros(k)
+    pulls = np.zeros(k, dtype=int)
+    best = true_rates.max()
+    regret = np.empty(n_rounds)
+    cum = 0.0
+    for t in range(n_rounds):
+        if rng.random() < epsilon or pulls.min() == 0:
+            arm = int(rng.integers(k))
+        else:
+            arm = int(np.argmax(wins / np.maximum(pulls, 1)))
+        reward = rng.random() < true_rates[arm]
+        wins[arm] += reward
+        pulls[arm] += 1
+        cum += best - true_rates[arm]
+        regret[t] = cum
+    return pulls, regret

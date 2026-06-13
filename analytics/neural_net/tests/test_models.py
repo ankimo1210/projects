@@ -120,3 +120,29 @@ def test_denoiser_forward_and_learns():
         opt.step()
         losses.append(loss.item())
     assert losses[-1] < losses[0]
+
+
+def test_linear_ssm_impulse_decays():
+    import numpy as np
+    from nn_textbook.models import linear_ssm_scan
+
+    x = np.zeros(30)
+    x[0] = 1.0  # impulse input
+    y = linear_ssm_scan(x, A_diag=[0.8], B=[1.0], C=[1.0])
+    # h_0 = B*1 = 1, y_0 = C@h_0 = 1; then geometric decay 0.8^t.
+    np.testing.assert_allclose(y[:5], [0.8**t for t in range(5)], atol=1e-9)
+    assert abs(y[-1]) < abs(y[0])
+
+
+def test_linear_attention_shape_and_normalization():
+    import numpy as np
+    from nn_textbook.models import linear_attention
+
+    rng = np.random.default_rng(0)
+    Q, K, V = (rng.standard_normal((6, 8)) for _ in range(3))
+    out = linear_attention(Q, K, V)
+    assert out.shape == (6, 8)
+    # If all values are identical, any convex-combination attention returns that value.
+    Vc = np.ones((6, 4)) * 3.0
+    out_c = linear_attention(Q, K, Vc)
+    np.testing.assert_allclose(out_c, 3.0, atol=1e-6)

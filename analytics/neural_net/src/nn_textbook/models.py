@@ -330,3 +330,47 @@ class LoRALinear:
 
     def n_full_params(self) -> int:
         return self.W0.size
+
+
+# ---------------------------------------------------------------------------
+# Efficient sequence mixing (chapter 13: efficient attention / state-space)
+# ---------------------------------------------------------------------------
+
+
+def linear_ssm_scan(x, A_diag, B, C):
+    """Diagonal linear state-space model run as a sequential scan (NumPy).
+
+    State recurrence (the S4/Mamba backbone, in its simplest linear form):
+        h_t = A_diag * h_{t-1} + B * x_t          # elementwise A_diag
+        y_t = C @ h_t
+    x: (T,) input, A_diag/B: (state_dim,), C: (state_dim,). Returns y: (T,).
+    Cost is O(T * state_dim) -- linear in sequence length, unlike O(T^2) attention.
+    """
+    A_diag = np.asarray(A_diag, dtype=float)
+    B = np.asarray(B, dtype=float)
+    C = np.asarray(C, dtype=float)
+    h = np.zeros_like(A_diag)
+    out = np.empty(len(x))
+    for t, xt in enumerate(np.asarray(x, dtype=float)):
+        h = A_diag * h + B * xt
+        out[t] = C @ h
+    return out
+
+
+def linear_attention(Q, K, V, eps: float = 1e-6):
+    """Linear-attention approximation: O(T) instead of O(T^2).
+
+    Replaces softmax(QK^T)V with a feature map phi (here elu+1) and the
+    associativity trick: phi(Q) (phi(K)^T V). Returns (T, d_v).
+    """
+    Q = np.asarray(Q, dtype=float)
+    K = np.asarray(K, dtype=float)
+    V = np.asarray(V, dtype=float)
+
+    def phi(z):
+        return np.where(z > 0, z + 1.0, np.exp(z))  # elu + 1, always positive
+
+    Qp, Kp = phi(Q), phi(K)
+    kv = Kp.T @ V  # (d_k, d_v) -- summarizes all keys/values
+    z = Qp @ Kp.sum(axis=0) + eps  # (T,) normalizer
+    return (Qp @ kv) / z[:, None]

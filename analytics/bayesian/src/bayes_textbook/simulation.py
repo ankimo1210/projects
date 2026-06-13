@@ -109,6 +109,21 @@ def make_returns(
     return mu_d + sd_d * r.standard_normal(n_days)
 
 
+def make_capstone_dataset(n: int = 40, x_range=(-3.0, 3.0), noise: float = 0.35, seed: int = 0):
+    """Shared 1-D regression data for the cross-book capstone (three lenses).
+
+    The SAME generator is defined identically in all three analytics books so
+    each can solve the same problem from its own lens without importing the
+    others. True curve f(x) = sin(1.5 x) + 0.3 x, with Gaussian noise. Returns
+    (x, y) as float64 arrays sorted by x.
+    """
+    rng = np.random.default_rng(seed)
+    x = np.sort(rng.uniform(x_range[0], x_range[1], n))
+    f = np.sin(1.5 * x) + 0.3 * x
+    y = f + noise * rng.standard_normal(n)
+    return x, y
+
+
 def write_sample_csvs(data_dir: Path | None = None) -> list[Path]:
     """Write the small committed CSVs under data/ (reproducible from seeds)."""
     data_dir = Path(data_dir) if data_dir is not None else DATA_DIR

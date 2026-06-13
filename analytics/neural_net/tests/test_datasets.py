@@ -73,3 +73,12 @@ def test_train_val_split_partition():
     # Disjoint and covering.
     assert set(ytr.tolist()) | set(yval.tolist()) == set(range(100))
     assert not (set(ytr.tolist()) & set(yval.tolist()))
+
+
+def test_load_text_corpus_default_and_file(tmp_path):
+    from nn_textbook.datasets import load_text_corpus
+
+    assert len(load_text_corpus()) > 0  # default built-in corpus
+    f = tmp_path / "corpus.txt"
+    f.write_text("hello bayesian world", encoding="utf-8")
+    assert load_text_corpus(path=f) == "hello bayesian world"

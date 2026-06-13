@@ -13,4 +13,7 @@ chapters:
   - file: notebooks/07_mcmc_intuition
   - file: notebooks/08_pymc_practical_modeling
   - file: notebooks/09_model_checking_and_applications
+  - file: notebooks/11_variational_inference_advi
+  - file: notebooks/12_bayesian_optimization_thompson
+  - file: notebooks/13_capstone_three_lenses
   - file: notebooks/10_exercise_solutions

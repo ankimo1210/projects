@@ -115,3 +115,48 @@ def test_autocorrelation_white_noise_near_zero():
     acf = models.autocorrelation(rng.standard_normal(5000), max_lag=10)
     assert acf[0] == pytest.approx(1.0)
     assert np.abs(acf[1:]).max() < 0.06
+
+
+def test_gaussian_process_interpolates_training_points():
+    import numpy as np
+    from bayes_textbook.models import GaussianProcess
+
+    X = np.linspace(0, 10, 8)
+    y = np.sin(X)
+    gp = GaussianProcess(length_scale=1.5, noise=1e-8).fit(X[:, None], y)
+    mean, sd = gp.predict(X[:, None])
+    # With tiny noise, the GP nearly interpolates the training data...
+    np.testing.assert_allclose(mean, y, atol=1e-3)
+    assert (sd >= 0).all()
+    # ...and is more uncertain far from any training point.
+    _, sd_far = gp.predict(np.array([[20.0]]))
+    assert sd_far[0] > sd.mean()
+
+
+def test_expected_improvement_nonnegative_and_peaks_in_gaps():
+    import numpy as np
+    from bayes_textbook.models import GaussianProcess, expected_improvement
+
+    X = np.array([0.0, 5.0, 10.0])
+    y = np.array([1.0, 0.5, 0.8])
+    gp = GaussianProcess(length_scale=2.0).fit(X[:, None], y)
+    grid = np.linspace(0, 10, 100)[:, None]
+    ei = expected_improvement(gp, grid, best_y=y.min())
+    assert (ei >= -1e-9).all()
+
+
+def test_thompson_beats_epsilon_greedy_regret():
+    from bayes_textbook.models import epsilon_greedy_bandit, thompson_bandit
+
+    rates = [0.3, 0.5, 0.55]
+    _, r_ts = thompson_bandit(rates, n_rounds=3000, seed=0)
+    _, r_eps = epsilon_greedy_bandit(rates, n_rounds=3000, epsilon=0.1, seed=0)
+    assert r_ts[-1] < r_eps[-1]  # Thompson has lower cumulative regret
+
+
+def test_thompson_concentrates_on_best_arm():
+    import numpy as np
+    from bayes_textbook.models import thompson_bandit
+
+    pulls, _ = thompson_bandit([0.2, 0.4, 0.7], n_rounds=3000, seed=1)
+    assert int(np.argmax(pulls)) == 2  # the truly-best arm is pulled most

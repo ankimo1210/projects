@@ -276,6 +276,163 @@ def plotly_attention_slider(tokens, scores, temperatures, title: str | None = No
     return fig
 
 
+def plotly_decision_boundary(
+    X,
+    y,
+    sizes=(2, 16, 16, 2),
+    epochs: int = 120,
+    n_frames: int = 10,
+    lr: float = 0.3,
+    seed: int = 0,
+    grid_steps: int = 60,
+    margin: float = 0.5,
+    title="Decision boundary as training proceeds",
+    slider_name="epoch",
+):
+    """Train a NumPy MLP and animate its decision boundary over epochs (slider).
+
+    Each frame shows P(class 1) as a heatmap with the data overlaid; the slider
+    steps through training epochs. Self-contained (fixed seed) so it renders the
+    same way in the notebook and in the static portal.
+    """
+    import plotly.graph_objects as go
+
+    from .metrics import softmax_np
+    from .models import MLP
+    from .training import train_numpy_mlp
+
+    X = np.asarray(X, dtype=np.float32)
+    y = np.asarray(y)
+    x_min, x_max = float(X[:, 0].min() - margin), float(X[:, 0].max() + margin)
+    y_min, y_max = float(X[:, 1].min() - margin), float(X[:, 1].max() + margin)
+    xs = np.linspace(x_min, x_max, grid_steps)
+    ys = np.linspace(y_min, y_max, grid_steps)
+    xx, yy = np.meshgrid(xs, ys)
+    grid = np.c_[xx.ravel(), yy.ravel()].astype(np.float32)
+
+    model = MLP(list(sizes), activation="relu", task="classification", seed=seed)
+
+    def prob_grid():
+        return softmax_np(model.forward(grid), axis=1)[:, 1].reshape(xx.shape)
+
+    checkpoints = np.unique(np.linspace(0, epochs, n_frames).astype(int))
+    snapshots = [(0, prob_grid())]
+    prev = 0
+    for c in checkpoints:
+        if c == 0:
+            continue
+        train_numpy_mlp(model, X, y, lr=lr, epochs=int(c - prev), batch_size=32, seed=seed)
+        prev = int(c)
+        snapshots.append((int(c), prob_grid()))
+
+    def traces(z):
+        return [
+            go.Heatmap(
+                x=xs, y=ys, z=z, colorscale="RdBu", zmin=0, zmax=1, opacity=0.85, showscale=False
+            ),
+            go.Scatter(
+                x=list(X[:, 0]),
+                y=list(X[:, 1]),
+                mode="markers",
+                marker={
+                    "color": list(map(int, y)),
+                    "colorscale": "RdBu",
+                    "line": {"color": "black", "width": 0.5},
+                    "size": 7,
+                },
+                showlegend=False,
+            ),
+        ]
+
+    fig = go.Figure(
+        data=traces(snapshots[0][1]),
+        frames=[go.Frame(data=traces(z), name=str(ep)) for ep, z in snapshots],
+    )
+    steps = [
+        {
+            "args": [[str(ep)], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            "label": str(ep),
+            "method": "animate",
+        }
+        for ep, _ in snapshots
+    ]
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": f"{slider_name} = "}}],
+        width=560,
+        height=540,
+        title=title,
+        xaxis={"title": "x1", "range": [x_min, x_max]},
+        yaxis={"title": "x2", "range": [y_min, y_max], "scaleanchor": "x"},
+        margin={"l": 50, "r": 20, "t": 50, "b": 40},
+    )
+    return fig
+
+
+def plotly_training_curves(
+    histories,
+    labels,
+    key: str = "loss",
+    n_frames: int | None = None,
+    title="Training loss by configuration",
+    slider_name="epoch",
+):
+    """Reveal training-loss curves for several configs as the slider grows the window.
+
+    ``histories`` is a list of history dicts (each holding ``key``); ``labels``
+    names each configuration. Watch which setup descends fastest. Built on top of
+    :func:`plotly_curve_slider`-style frames with trailing values masked to NaN.
+    """
+    import plotly.graph_objects as go
+
+    series = [np.asarray(h[key], dtype=float) for h in histories]
+    length = min(len(s) for s in series)
+    series = [s[:length] for s in series]
+    epochs = np.arange(length)
+    if n_frames is None:
+        n_frames = min(length, 15)
+    cutoffs = np.unique(np.linspace(max(1, length // n_frames), length, n_frames).astype(int))
+
+    def traces(c):
+        shown = epochs < c
+        out = []
+        for lab, s in zip(labels, series, strict=True):
+            out.append(
+                go.Scatter(
+                    x=list(epochs), y=list(np.where(shown, s, np.nan)), mode="lines", name=lab
+                )
+            )
+        return out
+
+    fig = go.Figure(
+        data=traces(int(cutoffs[0])),
+        frames=[go.Frame(data=traces(int(c)), name=str(int(c))) for c in cutoffs],
+    )
+    steps = [
+        {
+            "args": [
+                [str(int(c))],
+                {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"},
+            ],
+            "label": str(int(c)),
+            "method": "animate",
+        }
+        for c in cutoffs
+    ]
+    ymax = max(float(s.max()) for s in series)
+    ymin = min(float(s.min()) for s in series)
+    pad = 0.05 * (ymax - ymin + 1e-9)
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": f"{slider_name} = "}}],
+        width=720,
+        height=450,
+        title=title,
+        xaxis={"title": "epoch"},
+        yaxis={"title": key, "range": [ymin - pad, ymax + pad]},
+        margin={"l": 60, "r": 20, "t": 50, "b": 40},
+    )
+    return fig
+
+
 def plot_benchmark(records, x_key, ax=None, title=None, log_y=True):
     """Grouped bar chart of benchmark timings (ms) by device across an x axis.
 
@@ -320,3 +477,175 @@ def plot_sequence_prediction(t, true, pred=None, ax=None, split_idx=None, title=
     if title:
         ax.set_title(title)
     return ax
+
+
+def plotly_activations(
+    names=("relu", "leaky_relu", "sigmoid", "tanh"),
+    x_range=(-5, 5),
+    title="Activations and their derivatives",
+):
+    """Slider over activation functions, each with its derivative.
+
+    Makes the vanishing-gradient story visible: sigmoid/tanh derivatives die
+    away from 0, while ReLU keeps a constant slope on the positive side.
+    """
+    import plotly.graph_objects as go
+
+    x = np.linspace(*x_range, 300)
+
+    def fns(name):
+        if name == "relu":
+            return np.maximum(0, x), (x > 0).astype(float)
+        if name == "leaky_relu":
+            a = 0.1
+            return np.where(x > 0, x, a * x), np.where(x > 0, 1.0, a)
+        if name == "sigmoid":
+            s = 1 / (1 + np.exp(-x))
+            return s, s * (1 - s)
+        t = np.tanh(x)
+        return t, 1 - t**2
+
+    def traces(name):
+        f, df = fns(name)
+        return [
+            go.Scatter(x=list(x), y=list(f), mode="lines", name="f(x)"),
+            go.Scatter(x=list(x), y=list(df), mode="lines", name="f'(x)", line={"dash": "dash"}),
+        ]
+
+    frames = [go.Frame(data=traces(nm), name=nm) for nm in names]
+    fig = go.Figure(data=traces(names[0]), frames=frames)
+    steps = [
+        {
+            "args": [[nm], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            "label": nm,
+            "method": "animate",
+        }
+        for nm in names
+    ]
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "activation = "}}],
+        xaxis_title="x",
+        width=680,
+        height=420,
+        title=title,
+        margin={"l": 50, "r": 20, "t": 50, "b": 40},
+    )
+    return fig
+
+
+def plotly_hidden_unfolding(
+    X=None,
+    y=None,
+    sizes=(2, 16, 16, 2),
+    epochs: int = 220,
+    n_frames: int = 10,
+    lr: float = 0.3,
+    seed: int = 0,
+    title="Output space: a net untangles the classes",
+):
+    """Train a NumPy MLP and animate how its 2-D output logits separate classes.
+
+    Reuses :class:`models.MLP` + :func:`training.train_numpy_mlp`. At epoch 0
+    the two classes overlap; as training proceeds they drift into linearly
+    separable blobs (the network 'unfolds' a problem that was not separable in
+    the input plane).
+    """
+    import plotly.graph_objects as go
+
+    from .datasets import make_circles_dataset
+    from .models import MLP
+    from .training import train_numpy_mlp
+
+    if X is None:
+        X, y = make_circles_dataset(n=240, seed=0)
+    X = np.asarray(X, dtype=np.float32)
+    y = np.asarray(y)
+    model = MLP(list(sizes), activation="relu", task="classification", seed=seed)
+    checkpoints = np.unique(np.linspace(0, epochs, n_frames).astype(int))
+    snaps = [(0, model.forward(X))]
+    prev = 0
+    for c in checkpoints:
+        if c == 0:
+            continue
+        train_numpy_mlp(model, X, y, lr=lr, epochs=int(c - prev), batch_size=32, seed=seed)
+        prev = int(c)
+        snaps.append((int(c), model.forward(X)))
+
+    def traces(H):
+        return [
+            go.Scatter(
+                x=list(H[:, 0]),
+                y=list(H[:, 1]),
+                mode="markers",
+                marker={
+                    "color": list(map(int, y)),
+                    "colorscale": "RdBu",
+                    "size": 6,
+                    "line": {"color": "black", "width": 0.4},
+                },
+                showlegend=False,
+            )
+        ]
+
+    frames = [go.Frame(data=traces(H), name=str(ep)) for ep, H in snaps]
+    fig = go.Figure(data=traces(snaps[0][1]), frames=frames)
+    steps = [
+        {
+            "args": [[str(ep)], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            "label": str(ep),
+            "method": "animate",
+        }
+        for ep, _ in snaps
+    ]
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "epoch = "}}],
+        xaxis_title="output logit 0",
+        yaxis_title="output logit 1",
+        width=560,
+        height=520,
+        title=title,
+        margin={"l": 50, "r": 20, "t": 50, "b": 40},
+    )
+    return fig
+
+
+def plotly_ssm_impulse(
+    decays=(0.3, 0.6, 0.85, 0.95), n_steps: int = 40, title="Diagonal linear SSM: memory vs decay"
+):
+    """Impulse response of a 1-state diagonal linear SSM, slider over the decay.
+
+    Reuses :func:`models.linear_ssm_scan`. The response is A_diag**t, so larger
+    A_diag = longer memory — the intuition behind state-space sequence models.
+    """
+    import plotly.graph_objects as go
+
+    from .models import linear_ssm_scan
+
+    t = np.arange(n_steps)
+    x = np.zeros(n_steps)
+    x[0] = 1.0  # unit impulse
+
+    def traces(a):
+        y = linear_ssm_scan(x, np.array([a]), np.array([1.0]), np.array([1.0]))
+        return [go.Scatter(x=list(t), y=list(y), mode="lines+markers", name="impulse response")]
+
+    frames = [go.Frame(data=traces(a), name=f"{a:g}") for a in decays]
+    fig = go.Figure(data=traces(decays[0]), frames=frames)
+    steps = [
+        {
+            "args": [[f"{a:g}"], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            "label": f"{a:g}",
+            "method": "animate",
+        }
+        for a in decays
+    ]
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "A_diag = "}}],
+        xaxis_title="time step",
+        yaxis_title="output y",
+        width=680,
+        height=420,
+        title=title,
+        margin={"l": 50, "r": 20, "t": 50, "b": 40},
+    )
+    return fig

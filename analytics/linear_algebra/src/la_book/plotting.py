@@ -280,6 +280,297 @@ def plot_convergence(histories: dict, ax=None, ylabel: str = "error"):
 # ---------------------------------------------------------------------------
 
 
+def plotly_eigen_sweep(A, n_angles: int = 49, title=None):
+    """Slider over a unit vector u(theta); shows u and Au, with eigen-lines drawn.
+
+    When Au lines up with u (and with an eigenvector line), theta is an
+    eigen-direction. Works in the static Jupyter Book HTML.
+    """
+    import plotly.graph_objects as go
+
+    A = np.asarray(A, dtype=float)
+    w, V = np.linalg.eig(A)
+    lim = 1.3 * max(1.0, float(np.abs(np.linalg.eigvals(A)).max()))
+    thetas = np.linspace(0, np.pi, n_angles)
+
+    def eig_lines():
+        lines = []
+        for i in range(V.shape[1]):
+            if np.isreal(w[i]):
+                v = np.real(V[:, i])
+                v = v / np.linalg.norm(v) * lim
+                lines.append(
+                    go.Scatter(
+                        x=[-v[0], v[0]],
+                        y=[-v[1], v[1]],
+                        mode="lines",
+                        line={"color": "gray", "dash": "dot", "width": 1},
+                        name="eigen-line",
+                        showlegend=False,
+                        hoverinfo="skip",
+                    )
+                )
+        return lines
+
+    def frame_data(th):
+        u = np.array([np.cos(th), np.sin(th)])
+        au = A @ u
+        return [
+            *eig_lines(),
+            go.Scatter(
+                x=[0, u[0]],
+                y=[0, u[1]],
+                mode="lines+markers",
+                line={"color": "#1f77b4", "width": 3},
+                name="u",
+            ),
+            go.Scatter(
+                x=[0, au[0]],
+                y=[0, au[1]],
+                mode="lines+markers",
+                line={"color": "#d62728", "width": 3},
+                name="Au",
+            ),
+        ]
+
+    frames = [go.Frame(data=frame_data(th), name=f"{np.degrees(th):.0f}") for th in thetas]
+    fig = go.Figure(data=frame_data(thetas[0]), frames=frames)
+    steps = [
+        {
+            "args": [
+                [f"{np.degrees(th):.0f}"],
+                {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"},
+            ],
+            "label": f"{np.degrees(th):.0f}",
+            "method": "animate",
+        }
+        for th in thetas
+    ]
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "angle (deg) = "}}],
+        width=560,
+        height=560,
+        title=title,
+        xaxis={"range": [-lim, lim], "scaleanchor": "y", "zeroline": True},
+        yaxis={"range": [-lim, lim], "zeroline": True},
+        margin={"l": 30, "r": 30, "t": 50, "b": 30},
+    )
+    return fig
+
+
+def plotly_grid_transform(matrices, labels, lim: float = 2.0, title=None):
+    """Slider over a list of 2x2 matrices showing the deformed unit grid.
+
+    Each frame draws the image of a square grid under one matrix. Works in the
+    static Jupyter Book HTML (the slider is client-side Plotly JS).
+    """
+    import plotly.graph_objects as go
+
+    ticks = np.arange(-lim, lim + 0.25, 0.5)
+    t = np.linspace(-lim, lim, 21)
+
+    def grid_traces(A):
+        A = np.asarray(A, dtype=float)
+        traces = []
+        for c in ticks:
+            for seg in (np.vstack([np.full_like(t, c), t]), np.vstack([t, np.full_like(t, c)])):
+                out = A @ seg
+                traces.append(
+                    go.Scatter(
+                        x=out[0],
+                        y=out[1],
+                        mode="lines",
+                        line={"color": "#1f77b4", "width": 1},
+                        showlegend=False,
+                        hoverinfo="skip",
+                    )
+                )
+        return traces
+
+    frames = [
+        go.Frame(data=grid_traces(M), name=str(lab))
+        for M, lab in zip(matrices, labels, strict=True)
+    ]
+    fig = go.Figure(data=grid_traces(matrices[0]), frames=frames)
+    steps = [
+        {
+            "args": [[str(lab)], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            "label": str(lab),
+            "method": "animate",
+        }
+        for lab in labels
+    ]
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": ""}}],
+        width=560,
+        height=560,
+        title=title,
+        xaxis={"range": [-2 * lim, 2 * lim], "scaleanchor": "y", "zeroline": True},
+        yaxis={"range": [-2 * lim, 2 * lim], "zeroline": True},
+        margin={"l": 30, "r": 30, "t": 50, "b": 30},
+    )
+    return fig
+
+
+def plotly_curve_slider(x, frames, slider_name: str = "step", title=None, ylim=None):
+    """Generic line-plot slider. ``frames`` = list of (label, [(name, y, dash), ...]).
+
+    Mirrors the helper used in the neural_net / bayesian books so the three
+    textbooks share one interactive idiom; works in static HTML.
+    """
+    import plotly.graph_objects as go
+
+    def traces(curves):
+        return [
+            go.Scatter(
+                x=list(x), y=list(y), mode="lines", name=name, line={"dash": dash} if dash else None
+            )
+            for name, y, dash in curves
+        ]
+
+    fig = go.Figure(
+        data=traces(frames[0][1]),
+        frames=[go.Frame(data=traces(c), name=str(lab)) for lab, c in frames],
+    )
+    steps = [
+        {
+            "args": [[str(lab)], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            "label": str(lab),
+            "method": "animate",
+        }
+        for lab, _ in frames
+    ]
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": f"{slider_name} = "}}],
+        width=720,
+        height=450,
+        title=title,
+        margin={"l": 60, "r": 20, "t": 50, "b": 30},
+    )
+    if ylim is not None:
+        fig.update_yaxes(range=list(ylim))
+    return fig
+
+
+def plotly_image_ranks(img, ks):
+    """Slider over rank-k SVD approximations of an image (static-HTML safe)."""
+    import plotly.graph_objects as go
+
+    from .decompositions import compression_ratio, svd_lowrank
+
+    img = np.asarray(img, dtype=float)
+    approx = {k: svd_lowrank(img, k) for k in ks}
+    frames = [
+        go.Frame(
+            data=[go.Heatmap(z=approx[k][::-1], colorscale="gray", showscale=False)], name=str(k)
+        )
+        for k in ks
+    ]
+    fig = go.Figure(
+        data=[go.Heatmap(z=approx[ks[0]][::-1], colorscale="gray", showscale=False)], frames=frames
+    )
+    steps = [
+        {
+            "args": [[str(k)], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            "label": f"{k} ({compression_ratio(img.shape, k):.0%})",
+            "method": "animate",
+        }
+        for k in ks
+    ]
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "rank = "}}],
+        width=460,
+        height=500,
+        title="low-rank image approximation",
+        xaxis={"visible": False},
+        yaxis={"visible": False, "scaleanchor": "x"},
+        margin={"l": 20, "r": 20, "t": 50, "b": 20},
+    )
+    return fig
+
+
+def plotly_svd_spectrum(A, max_k=None, title="Singular value spectrum & cumulative energy"):
+    """Energy share per singular value + cumulative energy, with a rank slider.
+
+    Complements :func:`plotly_image_ranks`: that one shows *what* a rank-k
+    approximation looks like, this one shows *why* a small k often suffices by
+    highlighting how quickly the cumulative energy reaches 1. Slider sweeps k.
+    """
+    import plotly.graph_objects as go
+
+    A = np.asarray(A, dtype=float)
+    s = np.linalg.svd(A, compute_uv=False)
+    r = len(s) if max_k is None else min(max_k, len(s))
+    s = s[:r]
+    energy = s**2
+    share = energy / energy.sum()
+    cum = np.cumsum(share)
+    idx = np.arange(1, r + 1)
+
+    def traces(k):
+        colors = ["#d62728" if i < k else "#c7c7c7" for i in range(r)]
+        return [
+            go.Bar(
+                x=list(idx),
+                y=list(share),
+                marker={"color": colors},
+                name="energy share",
+                showlegend=False,
+            ),
+            go.Scatter(
+                x=list(idx),
+                y=list(cum),
+                mode="lines",
+                name="cumulative energy",
+                line={"color": "#1f77b4"},
+                yaxis="y2",
+            ),
+            go.Scatter(
+                x=[k],
+                y=[float(cum[k - 1])],
+                mode="markers+text",
+                marker={"color": "#1f77b4", "size": 12, "symbol": "circle-open"},
+                text=[f"{cum[k - 1]:.0%}"],
+                textposition="top center",
+                showlegend=False,
+                yaxis="y2",
+            ),
+        ]
+
+    fig = go.Figure(
+        data=traces(1),
+        frames=[go.Frame(data=traces(int(k)), name=str(int(k))) for k in idx],
+    )
+    steps = [
+        {
+            "args": [
+                [str(int(k))],
+                {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"},
+            ],
+            "label": str(int(k)),
+            "method": "animate",
+        }
+        for k in idx
+    ]
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "rank k = "}}],
+        width=720,
+        height=450,
+        title=title,
+        xaxis={"title": "singular value index"},
+        yaxis={"title": "energy share", "rangemode": "tozero"},
+        yaxis2={
+            "title": "cumulative energy",
+            "overlaying": "y",
+            "side": "right",
+            "range": [0, 1.02],
+        },
+        margin={"l": 60, "r": 60, "t": 50, "b": 40},
+        bargap=0.15,
+    )
+    return fig
+
+
 def plotly_yield_curves(maturities, curves, every: int = 25):
     """Sampled yield curves colored from oldest (light) to newest (dark)."""
     import plotly.graph_objects as go
@@ -326,4 +617,160 @@ def plotly_pca_loadings(
         height=420,
         margin={"l": 60, "r": 20, "t": 30, "b": 50},
     )
+    return fig
+
+
+def plotly_iterative_convergence(
+    A=None, b=None, n_iter: int = 40, title="Iterative solvers: residual vs iteration"
+):
+    """Residual norm per iteration for Jacobi / Gauss-Seidel / Conjugate Gradient.
+
+    Reuses :func:`algebra.jacobi`, :func:`algebra.gauss_seidel`,
+    :func:`algebra.conjugate_gradient`. Default system is the 1-D Laplacian
+    (SPD), where CG converges in far fewer steps than the splitting methods.
+    """
+    import plotly.graph_objects as go
+
+    from .algebra import conjugate_gradient, gauss_seidel, jacobi
+
+    if A is None:
+        n = 20
+        A = 2 * np.eye(n) - np.eye(n, k=1) - np.eye(n, k=-1)
+    A = np.asarray(A, dtype=float)
+    b = np.ones(A.shape[0]) if b is None else np.asarray(b, dtype=float)
+    _, rj = jacobi(A, b, n_iter=n_iter, return_history=True)
+    _, rg = gauss_seidel(A, b, n_iter=n_iter, return_history=True)
+    _, rc = conjugate_gradient(A, b, max_iter=n_iter)
+    fig = go.Figure()
+    for name, res in [("Jacobi", rj), ("Gauss-Seidel", rg), ("Conjugate Gradient", rc)]:
+        res = np.clip(np.asarray(res, dtype=float), 1e-16, None)
+        fig.add_trace(
+            go.Scatter(x=list(range(len(res))), y=list(res), mode="lines+markers", name=name)
+        )
+    fig.update_layout(
+        xaxis_title="iteration",
+        yaxis_title="residual norm",
+        width=720,
+        height=440,
+        title=title,
+        margin={"l": 60, "r": 20, "t": 50, "b": 40},
+    )
+    fig.update_yaxes(type="log")
+    return fig
+
+
+def plotly_pagerank(names=None, adj=None, damping: float = 0.85, title="PageRank power iteration"):
+    """Bar chart of PageRank scores converging over power iterations (slider).
+
+    Reuses :func:`algebra.page_rank` (with history) and the default web graph
+    from :func:`datasets.make_web_graph`.
+    """
+    import plotly.graph_objects as go
+
+    from .algebra import page_rank
+    from .datasets import make_web_graph
+
+    if adj is None:
+        names, adj = make_web_graph()
+    _r, hist = page_rank(np.asarray(adj, dtype=float), damping=damping, return_history=True)
+    if len(hist) > 26:  # keep the slider light
+        idx = np.unique(np.linspace(0, len(hist) - 1, 26).astype(int))
+        hist = hist[idx]
+        labels = [str(int(i)) for i in idx]
+    else:
+        labels = [str(i) for i in range(len(hist))]
+    frames = [
+        go.Frame(data=[go.Bar(x=list(names), y=list(hist[t]))], name=labels[t])
+        for t in range(len(hist))
+    ]
+    fig = go.Figure(data=[go.Bar(x=list(names), y=list(hist[0]))], frames=frames)
+    steps = [
+        {
+            "args": [[lab], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            "label": lab,
+            "method": "animate",
+        }
+        for lab in labels
+    ]
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "iteration = "}}],
+        xaxis_title="page",
+        yaxis_title="PageRank",
+        width=680,
+        height=440,
+        title=title,
+        margin={"l": 60, "r": 20, "t": 50, "b": 40},
+    )
+    fig.update_yaxes(range=[0, float(hist.max()) * 1.1])
+    return fig
+
+
+def plotly_gradient_descent_quadratic(
+    A=None,
+    b=None,
+    lr: float = 0.12,
+    n_iter: int = 30,
+    x0=(-2.6, 2.6),
+    title="Gradient descent on a quadratic bowl",
+):
+    """Contour of f(x) = 0.5 xᵀA x − bᵀx with the GD path revealed by a slider.
+
+    Reuses :func:`algebra.gradient_descent_quadratic`. The anisotropic bowl
+    (unequal eigenvalues) makes the descent zig-zag toward the minimum.
+    """
+    import plotly.graph_objects as go
+
+    from .algebra import gradient_descent_quadratic
+
+    if A is None:
+        A = np.array([[3.0, 0.0], [0.0, 1.0]])
+    A = np.asarray(A, dtype=float)
+    b = np.zeros(A.shape[0]) if b is None else np.asarray(b, dtype=float)
+    path = gradient_descent_quadratic(A, b, lr=lr, n_iter=n_iter, x0=np.array(x0, dtype=float))
+    span = 3.0
+    g = np.linspace(-span, span, 60)
+    XX, YY = np.meshgrid(g, g)
+    Z = 0.5 * (A[0, 0] * XX**2 + (A[0, 1] + A[1, 0]) * XX * YY + A[1, 1] * YY**2) - (
+        b[0] * XX + b[1] * YY
+    )
+
+    def traces(k):
+        return [
+            go.Contour(
+                x=g,
+                y=g,
+                z=Z,
+                showscale=False,
+                contours_coloring="lines",
+                line_width=1,
+                colorscale="Greys",
+            ),
+            go.Scatter(
+                x=list(path[: k + 1, 0]),
+                y=list(path[: k + 1, 1]),
+                mode="lines+markers",
+                name="GD path",
+            ),
+        ]
+
+    frames = [go.Frame(data=traces(k), name=str(k)) for k in range(len(path))]
+    fig = go.Figure(data=traces(0), frames=frames)
+    steps = [
+        {
+            "args": [[str(k)], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            "label": str(k),
+            "method": "animate",
+        }
+        for k in range(len(path))
+    ]
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "step = "}}],
+        xaxis_title="x1",
+        yaxis_title="x2",
+        width=560,
+        height=540,
+        title=title,
+        margin={"l": 50, "r": 20, "t": 50, "b": 40},
+    )
+    fig.update_yaxes(scaleanchor="x")
     return fig

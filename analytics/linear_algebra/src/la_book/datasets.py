@@ -144,3 +144,37 @@ def make_two_cluster_graph(n_per: int = 12, p_in: float = 0.8, p_out: float = 0.
             if rng.random() < p:
                 adj[i, j] = adj[j, i] = 1.0
     return adj, labels
+
+
+def load_yield_curves(path=None, **synthetic_kwargs):
+    """Yield-curve panel for the finance PCA example (ch.07).
+
+    Bring-your-own-data hook: if ``path`` points to a CSV (rows = observation
+    dates, columns = maturities in years, values = yields in %), it is loaded
+    as-is. With ``path=None`` (the default) the seeded synthetic generator is
+    used, so the textbook stays download-free and reproducible.
+
+    Returns (maturities, DataFrame).
+    """
+    if path is None:
+        return make_yield_curves(**synthetic_kwargs)
+    import pandas as pd
+
+    df = pd.read_csv(path)
+    mats = np.array([float(c.rstrip("Yy")) for c in df.columns], dtype=float)
+    return mats, df
+
+
+def make_capstone_dataset(n: int = 40, x_range=(-3.0, 3.0), noise: float = 0.35, seed: int = 0):
+    """Shared 1-D regression data for the cross-book capstone (three lenses).
+
+    The SAME generator is defined identically in all three analytics books so
+    each can solve the same problem from its own lens without importing the
+    others. True curve f(x) = sin(1.5 x) + 0.3 x, with Gaussian noise. Returns
+    (x, y) as float64 arrays sorted by x.
+    """
+    rng = np.random.default_rng(seed)
+    x = np.sort(rng.uniform(x_range[0], x_range[1], n))
+    f = np.sin(1.5 * x) + 0.3 * x
+    y = f + noise * rng.standard_normal(n)
+    return x, y

@@ -103,6 +103,21 @@ def test_page_rank_sums_to_one_and_is_stationary():
     np.testing.assert_allclose(r @ G, r, atol=1e-10)
 
 
+def test_jacobi_and_gauss_seidel_solve_diagonally_dominant():
+    # Strictly diagonally dominant system -> both stationary methods converge.
+    A = np.array([[4.0, 1.0, 0.0], [1.0, 5.0, 1.0], [0.0, 1.0, 3.0]])
+    b = np.array([1.0, 2.0, 3.0])
+    x_true = np.linalg.solve(A, b)
+    xj, resj = algebra.jacobi(A, b, n_iter=100, return_history=True)
+    xg, resg = algebra.gauss_seidel(A, b, n_iter=100, return_history=True)
+    np.testing.assert_allclose(xj, x_true, atol=1e-8)
+    np.testing.assert_allclose(xg, x_true, atol=1e-8)
+    # Gauss-Seidel converges faster than Jacobi (fewer iters to a tolerance).
+    j_iters = int(np.argmax(resj < 1e-8)) or len(resj)
+    g_iters = int(np.argmax(resg < 1e-8)) or len(resg)
+    assert g_iters <= j_iters
+
+
 def test_conjugate_gradient_solves_spd():
     rng = np.random.default_rng(5)
     M = rng.standard_normal((8, 8))

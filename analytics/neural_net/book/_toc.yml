@@ -14,4 +14,6 @@ chapters:
   - file: notebooks/09_generative_models_gan_diffusion
   - file: notebooks/10_modern_llm_concepts
   - file: notebooks/11_appendix_cpu_vs_gpu
+  - file: notebooks/13_efficient_attention_state_space
+  - file: notebooks/14_capstone_three_lenses
   - file: notebooks/12_exercise_solutions

@@ -172,6 +172,42 @@ def gradient_descent_quadratic(A, b, lr: float, n_iter: int = 50, x0=None):
     return np.array(path)
 
 
+def jacobi(A, b, n_iter: int = 100, x0=None, return_history: bool = False):
+    """Jacobi iteration: split A = D + R, update x <- D^{-1}(b - R x).
+
+    Converges when A is (e.g.) strictly diagonally dominant. Returns x, or
+    (x, residual_norms) when return_history is True.
+    """
+    A = np.asarray(A, dtype=float)
+    b = np.asarray(b, dtype=float)
+    d = np.diag(A)
+    R = A - np.diag(d)
+    x = np.zeros_like(b) if x0 is None else np.array(x0, dtype=float)
+    res = [float(np.linalg.norm(A @ x - b))]
+    for _ in range(n_iter):
+        x = (b - R @ x) / d  # all components updated from the OLD x
+        res.append(float(np.linalg.norm(A @ x - b)))
+    return (x, np.array(res)) if return_history else x
+
+
+def gauss_seidel(A, b, n_iter: int = 100, x0=None, return_history: bool = False):
+    """Gauss-Seidel iteration: like Jacobi but uses already-updated components
+    within the same sweep (forward substitution on the lower-triangular part).
+
+    Usually converges about twice as fast as Jacobi.
+    """
+    A = np.asarray(A, dtype=float)
+    b = np.asarray(b, dtype=float)
+    n = b.size
+    x = np.zeros_like(b) if x0 is None else np.array(x0, dtype=float)
+    res = [float(np.linalg.norm(A @ x - b))]
+    for _ in range(n_iter):
+        for i in range(n):
+            x[i] = (b[i] - A[i, :i] @ x[:i] - A[i, i + 1 :] @ x[i + 1 :]) / A[i, i]
+        res.append(float(np.linalg.norm(A @ x - b)))
+    return (x, np.array(res)) if return_history else x
+
+
 def conjugate_gradient(A, b, tol: float = 1e-10, max_iter: int | None = None, x0=None):
     """Conjugate gradient for symmetric positive definite A.
 

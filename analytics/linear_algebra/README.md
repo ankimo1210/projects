@@ -20,6 +20,11 @@ Jupyter Notebook ベースの線形代数教科書プロジェクト。
 | `05_matrix_decompositions_svd_pca` | LU/QR/Cholesky・スペクトル定理・SVD・画像圧縮・PCA・白色化 |
 | `06_numerical_linear_algebra_optimization` | 浮動小数点誤差・条件数・solve vs inv・CG・勾配降下・Newton |
 | `07_applications_graph_markov_finance_quantum` | Markov 連鎖・PageRank・スペクトルクラスタリング・金融 PCA・量子入門 |
+| `09_iterative_methods_preconditioning` | 付録: Jacobi・Gauss-Seidel・GMRES・前処理 |
+| `10_complex_spaces_jordan_form` | 付録: 複素ベクトル空間・Unitary・複素固有値・Jordan 標準形 |
+| `11_kronecker_tensors_matrix_calculus` | 付録: クロネッカー積・vec・テンソル・行列微分 |
+| `12_capstone_three_lenses` | キャップストーン: 1つの回帰を3冊の視点で(正規方程式・SVD・リッジ) |
+| `08_exercise_solutions` | 付録: 全演習(01〜07、計42問)の解答 |
 
 共通関数は `src/la_book/` にまとめている
 (`plotting.py` / `widgets.py` / `algebra.py` / `decompositions.py` / `datasets.py`)。
@@ -84,6 +89,12 @@ cd ~/projects
 uv run pytest analytics/linear_algebra/tests -q
 ```
 
+## データの差し替え(bring your own data)
+
+外部ダウンロードに依存しないのが原則(既定はすべて seed 固定の合成データ)。
+実データで試したいときは `la_book.datasets.load_yield_curves(path="your.csv")` のように
+フックへパスを渡すだけで、07 章の金利カーブ PCA を実データで再現できる。
+
 ## 関連教材
 
 姉妹教材(同じ Jupyter Book 流儀の analytics シリーズ):
@@ -92,12 +103,9 @@ uv run pytest analytics/linear_algebra/tests -q
   本書の 05 章(SVD・低ランク近似・PCA)は、その 08 章(オートエンコーダ)・10 章(LoRA)に接続する。
 - [`analytics/bayesian`](../bayesian/) — ベイズ推定。
   本書の内積・正射影・行列分解は、ベイズ線形回帰や共分散の固有値分解の土台になる。
+- [`analytics/report`](../report/) — **統合インタラクティブポータル**。3教材の代表可視化を
+  オフラインで束ねるショーケース(`make report`)。本書の SVD スペクトル・低ランク近似・固有方向の
+  スライダーもここで一望できる。
 
 ## 今後追加すべき内容
 
-- 演習問題の解答編(現状は問題のみ、一部ヒント付き)
-- 複素ベクトル空間・Jordan 標準形の本格的な扱い(現状 Advanced Notes で言及のみ)
-- 反復法の拡充(Jacobi / Gauss-Seidel / GMRES、前処理)
-- テンソル・クロネッカー積・行列微分(ML 向け)
-- 実データ(実際の国債金利、画像)を使った応用例の差し替えオプション
-- ipywidgets デモの Plotly スライダー化(静的 HTML でも動くインタラクションへ)

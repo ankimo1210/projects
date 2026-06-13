@@ -93,3 +93,16 @@ def test_datasets_are_reproducible():
     assert adj.shape == (16, 16)
     assert labels.sum() == 8
     np.testing.assert_allclose(adj, adj.T)
+
+
+def test_load_yield_curves_default_and_csv(tmp_path):
+    from la_book.datasets import load_yield_curves
+
+    mats, df = load_yield_curves()  # default = synthetic
+    assert df.shape[1] == len(mats)
+    # round-trip a user CSV through the hook
+    csv = tmp_path / "yc.csv"
+    df.head(5).to_csv(csv, index=False)
+    mats2, df2 = load_yield_curves(path=csv)
+    assert df2.shape == (5, df.shape[1])
+    np.testing.assert_allclose(mats2, mats)

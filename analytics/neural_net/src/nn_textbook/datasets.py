@@ -243,3 +243,32 @@ def train_val_split(X, y, val_frac: float = 0.2, seed: int = 0):
     n_val = int(len(X) * val_frac)
     val, tr = perm[:n_val], perm[n_val:]
     return X[tr], y[tr], X[val], y[val]
+
+
+def load_text_corpus(path=None, repeat: int = 1) -> str:
+    """Text for the language-model notebooks (07 / 10).
+
+    Bring-your-own-data hook: with a file ``path`` it returns that file's text
+    (swap in Tiny Shakespeare, your own corpus, etc.); with ``path=None`` it
+    returns the built-in tiny corpus, keeping the textbook download-free.
+    """
+    if path is None:
+        return make_tiny_text_corpus(repeat=repeat)
+    from pathlib import Path
+
+    return Path(path).read_text(encoding="utf-8")
+
+
+def make_capstone_dataset(n: int = 40, x_range=(-3.0, 3.0), noise: float = 0.35, seed: int = 0):
+    """Shared 1-D regression data for the cross-book capstone (three lenses).
+
+    The SAME generator is defined identically in all three analytics books so
+    each can solve the same problem from its own lens without importing the
+    others. True curve f(x) = sin(1.5 x) + 0.3 x, with Gaussian noise. Returns
+    (x, y) as float64 arrays sorted by x.
+    """
+    rng = np.random.default_rng(seed)
+    x = np.sort(rng.uniform(x_range[0], x_range[1], n))
+    f = np.sin(1.5 * x) + 0.3 * x
+    y = f + noise * rng.standard_normal(n)
+    return x, y

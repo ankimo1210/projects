@@ -11,3 +11,8 @@ chapters:
   - file: notebooks/05_matrix_decompositions_svd_pca
   - file: notebooks/06_numerical_linear_algebra_optimization
   - file: notebooks/07_applications_graph_markov_finance_quantum
+  - file: notebooks/09_iterative_methods_preconditioning
+  - file: notebooks/10_complex_spaces_jordan_form
+  - file: notebooks/11_kronecker_tensors_matrix_calculus
+  - file: notebooks/12_capstone_three_lenses
+  - file: notebooks/08_exercise_solutions
