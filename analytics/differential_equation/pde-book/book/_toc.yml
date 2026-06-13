@@ -1,0 +1,15 @@
+# Table of contents for jupyter-book.
+# `notebooks/` here is a symlink to ../notebooks (Jupyter Book requires all
+# content below the book root). Landing page = the overview; the calculus
+# prelude (00) is the first chapter, matching the reading flow
+# 微分積分 -> ODE -> PDE -> 応用.
+format: jb-book
+root: notebooks/01_overview
+chapters:
+  - file: notebooks/00_calculus_foundations
+  - file: notebooks/02_transport_heat_wave
+  - file: notebooks/03_laplace_poisson_boundary_value
+  - file: notebooks/04_fourier_series_and_transform
+  - file: notebooks/05_separation_of_variables
+  - file: notebooks/06_numerical_pde_fdm
+  - file: notebooks/07_applications_physics_finance_ml
