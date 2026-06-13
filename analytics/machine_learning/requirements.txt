@@ -1,0 +1,19 @@
+# Standalone (non-uv) install:
+#   pip install -r requirements.txt && pip install -e .
+# Optional extras (seaborn / UMAP / SHAP) are NOT required by the core notebooks:
+#   pip install -e ".[extras]"
+numpy>=2.0
+pandas>=2.2
+scipy>=1.13
+matplotlib>=3.9
+plotly>=5.22
+ipywidgets>=8.1
+scikit-learn>=1.5
+joblib>=1.3
+tqdm>=4.66
+jupyterlab>=4.2
+jupyter-book>=1.0,<2
+ipykernel>=6.29
+nbformat>=5.10
+nbclient>=0.10
+pytest>=8.0

@@ -1,0 +1,15 @@
+# Table of contents for jupyter-book.
+# `notebooks/` here is a symlink to ../notebooks (Jupyter Book requires all
+# content below the book root).
+format: jb-book
+root: notebooks/01_machine_learning_overview
+chapters:
+  - file: notebooks/02_data_preprocessing_and_features
+  - file: notebooks/03_linear_models
+  - file: notebooks/04_model_evaluation_and_validation
+  - file: notebooks/05_tree_based_models
+  - file: notebooks/06_svm_and_kernel_methods
+  - file: notebooks/07_unsupervised_learning
+  - file: notebooks/08_time_series_ml
+  - file: notebooks/09_model_interpretability
+  - file: notebooks/10_practical_ml_pipeline

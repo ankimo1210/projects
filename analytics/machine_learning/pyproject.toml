@@ -1,0 +1,38 @@
+[project]
+name = "ml-textbook"
+version = "0.1.0"
+description = "Interactive Jupyter-Book machine-learning textbook (Japanese): formulate, preprocess, validate, interpret — correct ML with scikit-learn"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.0",
+    "pandas>=2.2",
+    "scipy>=1.13",
+    "matplotlib>=3.9",
+    "plotly>=5.22",
+    "ipywidgets>=8.1",
+    "scikit-learn>=1.5",
+    "joblib>=1.3",
+    "tqdm>=4.66",
+    "jupyterlab>=4.2",
+    "jupyter-book>=1.0,<2",
+    "ipykernel>=6.29",
+    "nbformat>=5.10",
+    "nbclient>=0.10",
+]
+
+# Optional, never required by the core notebooks. Imports are guarded so the
+# book runs without them; install with `pip install -e ".[extras]"` to enable
+# seaborn styling, UMAP projections (07) and SHAP values (09).
+[project.optional-dependencies]
+extras = [
+    "seaborn>=0.13",
+    "umap-learn>=0.5",
+    "shap>=0.45",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ml_textbook"]
