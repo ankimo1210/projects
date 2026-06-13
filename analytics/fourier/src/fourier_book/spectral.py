@@ -29,8 +29,11 @@ def spectral_derivative(u, L: float, order: int = 1) -> np.ndarray:
     u = np.asarray(u, dtype=float)
     n = len(u)
     k = wavenumbers(n, L)
+    factor = (1j * k) ** order
+    if order % 2 == 1 and n % 2 == 0:
+        factor[n // 2] = 0.0  # Nyquist mode has no well-defined odd derivative
     spectrum = np.fft.fft(u)
-    return np.fft.ifft((1j * k) ** order * spectrum).real
+    return np.fft.ifft(factor * spectrum).real
 
 
 def solve_heat_spectral(u0, L: float, alpha: float, t: float) -> np.ndarray:

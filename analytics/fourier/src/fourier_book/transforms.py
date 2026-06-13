@@ -58,7 +58,11 @@ def amplitude_spectrum(x, fs: float):
 
 
 def power_spectrum(x, fs: float):
-    """One-sided power spectrum ``(freqs, amplitude**2)``."""
+    """One-sided spectrum of **squared amplitude** ``(freqs, amplitude**2)``.
+
+    A pure tone ``A·sin`` peaks at ``A**2`` here (this is ``amplitude_spectrum``
+    squared), not the physical average power ``A**2 / 2``.
+    """
     freqs, amp = amplitude_spectrum(x, fs)
     return freqs, amp**2
 

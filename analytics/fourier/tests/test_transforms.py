@@ -88,3 +88,22 @@ def test_stft_istft_round_trip_interior():
     np.testing.assert_allclose(xr[128 : n - 128], x[128 : n - 128], atol=1e-6)
     assert z.shape[0] == len(f)
     assert z.shape[1] == len(tt)
+
+
+def test_amplitude_spectrum_recovers_cosine():
+    fs = 128.0
+    t, _ = signals.time_grid(1.0, fs)
+    x = signals.cosine(t, freq=8.0, amp=2.0)
+    freqs, amp = transforms.amplitude_spectrum(x, fs)
+    assert np.isclose(amp[np.argmin(np.abs(freqs - 8.0))], 2.0, atol=1e-6)
+
+
+def test_amplitude_spectrum_calibration_matches_power():
+    # Peak amplitude = A, and the sine's mean-square power = A^2 / 2, must agree.
+    fs = 256.0
+    t, _ = signals.time_grid(1.0, fs)
+    a = 1.7
+    x = signals.sine(t, 20.0, amp=a)
+    _, amp = transforms.amplitude_spectrum(x, fs)
+    assert np.isclose(amp.max(), a, atol=1e-6)
+    assert np.isclose(amp.max() ** 2 / 2, np.mean(x**2), atol=1e-6)

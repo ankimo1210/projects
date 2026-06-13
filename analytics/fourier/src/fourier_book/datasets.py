@@ -21,8 +21,8 @@ def make_multitone(
     thing for which the amplitude spectrum should read back the input ``amps``.
     """
     t, _ = signals.time_grid(duration, fs)
+    # Pure sine tones, so the amplitude spectrum reads back `amps` at `freqs`.
     x = signals.harmonic_sum(t, np.asarray(freqs), np.asarray(amps), phases=np.zeros(len(freqs)))
-    # harmonic_sum uses sines; convert to cosine-free pure sine tones is fine.
     if snr_db is not None:
         x = signals.add_noise(x, snr_db, seed=seed)
     return t, x

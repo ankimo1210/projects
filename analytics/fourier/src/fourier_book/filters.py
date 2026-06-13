@@ -96,6 +96,9 @@ def smooth_gaussian(x, sigma: float, size: int | None = None):
     """Smooth ``x`` by convolving with a Gaussian kernel (edge-padded)."""
     if size is None:
         size = int(2 * np.ceil(3 * sigma) + 1)
+    size = int(size)
+    if size % 2 == 0:
+        size += 1  # force odd so the centered 'valid' convolution preserves length
     kernel = gaussian_kernel(size, sigma)
     pad = size // 2
     xp = np.pad(np.asarray(x, dtype=float), pad, mode="edge")

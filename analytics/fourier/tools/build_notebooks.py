@@ -873,11 +873,14 @@ plt.show()"""),
 $k=0$ モード($\hat u_0$)は $e^{-\alpha\cdot 0\cdot t}=1$ で不変。つまり **総量(質量)
 $\int u\,dx$ は保存**します。一方で **エネルギー $\int u^2\,dx$ は単調に減少**(散逸)します。"""),
         code("""\
-# Mass (∫u dx) is conserved; energy (∫u² dx) dissipates.
+# Mass (∫u dx) is conserved; energy (∫u² dx) dissipates. Use the periodic
+# quadrature Σu·dx — np.trapezoid drops the wrap-around interval and would show
+# a spurious drift on a periodic (endpoint-excluded) grid.
+dx = x[1] - x[0]
 print(f"{'t':>6} {'mass ∫u':>12} {'energy ∫u²':>14}")
 for ti in [0.0, 0.05, 0.2, 1.0]:
     u = spectral.solve_heat_spectral(u0, L, alpha, ti)
-    print(f"{ti:6.2f} {np.trapezoid(u, x):12.4f} {np.trapezoid(u**2, x):14.4f}")"""),
+    print(f"{ti:6.2f} {u.sum() * dx:12.4f} {(u**2).sum() * dx:14.4f}")"""),
         md(r"""## Computation 3 — 波動方程式: 山が左右へ割れて進む
 
 局在した初期変位(速度 0)は、**左右に半分ずつ進む波** に分かれます(d'Alembert)。

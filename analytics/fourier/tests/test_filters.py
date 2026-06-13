@@ -72,3 +72,18 @@ def test_lowpass_mask_values():
     freqs = np.array([-30.0, -10.0, 0.0, 10.0, 30.0])
     m = filters.lowpass_mask(freqs, cutoff=15.0)
     np.testing.assert_array_equal(m, [0.0, 1.0, 1.0, 1.0, 0.0])
+
+
+def test_lowpass_idempotent():
+    fs = 500.0
+    t, _ = signals.time_grid(1.0, fs)
+    x = signals.sine(t, 5.0) + signals.sine(t, 80.0)
+    once = filters.lowpass(x, fs, cutoff=20.0)
+    twice = filters.lowpass(once, fs, cutoff=20.0)
+    np.testing.assert_allclose(once, twice, atol=1e-10)  # ideal brick-wall is idempotent
+
+
+def test_smooth_gaussian_preserves_length_for_even_size():
+    x = np.zeros(40)
+    for size in (10, 11, 20, 21):
+        assert len(filters.smooth_gaussian(x, sigma=2.0, size=size)) == len(x)
