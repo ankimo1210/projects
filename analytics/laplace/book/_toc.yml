@@ -1,0 +1,14 @@
+# Table of contents for jupyter-book.
+# `notebooks/` here is a symlink to ../notebooks (Jupyter Book requires all
+# content below the book root).
+format: jb-book
+root: notebooks/00_overview
+chapters:
+  - file: notebooks/01_exponential_decay_complex_frequency
+  - file: notebooks/02_definition_basic_properties
+  - file: notebooks/03_inverse_laplace_partial_fractions
+  - file: notebooks/04_solving_odes_with_laplace
+  - file: notebooks/05_convolution_impulse_response_transfer_functions
+  - file: notebooks/06_poles_zeros_stability
+  - file: notebooks/07_control_systems_and_circuits
+  - file: notebooks/08_applications_probability_signals_finance
