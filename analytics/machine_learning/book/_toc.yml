@@ -13,5 +13,7 @@ chapters:
   - file: notebooks/08_time_series_ml
   - file: notebooks/09_model_interpretability
   - file: notebooks/10_practical_ml_pipeline
+  - file: notebooks/13_imbalanced_learning
+  - file: notebooks/14_feature_selection
   - file: notebooks/11_capstone_four_lenses
   - file: notebooks/12_exercise_solutions

@@ -10,7 +10,7 @@ Jupyter Notebook ベースの **古典的機械学習 + 実務ワークフロー
 - 本文は日本語、コードとコメントは英語、LaTeX 内に日本語を入れない
 - インタラクティブは **静的 HTML でも動く Plotly スライダー** を主役にし、ipywidgets はライブカーネル用の補助
 
-## 章構成(本編 10 + 付録 2)
+## 章構成(本編 10 + 付録 4)
 
 | Notebook | 内容 | 状態 |
 |---|---|---|
@@ -24,6 +24,8 @@ Jupyter Notebook ベースの **古典的機械学習 + 実務ワークフロー
 | `08_time_series_ml` | 時間順・ラグ/ローリング特徴・TimeSeriesSplit・ウォークフォワード・ドリフト | ✅ |
 | `09_model_interpretability` | 係数・permutation 重要度・PDP/ICE・相関≠因果・反実仮想・SHAP(任意) | ✅ |
 | `10_practical_ml_pipeline` | Pipeline・GridSearch/RandomizedSearch・ネスト CV・保存/推論・ドリフト監視・誤差分析 | ✅ |
+| `13_imbalanced_learning` | 付録: 不均衡データ — class_weight・リサンプリング・SMOTE・PR-AUC/balanced acc・較正の崩れ | ✅ |
+| `14_feature_selection` | 付録: 特徴量選択 — filter/wrapper/embedded・CV 内選択(リーク防止)・選択の安定性 | ✅ |
 | `11_capstone_four_lenses` | 付録: 同一回帰を ML/線形代数/ベイズ/勾配降下の4視点で解き同一リッジ解に一致＋モデル選択早見表 | ✅ |
 | `12_exercise_solutions` | 付録: 01〜10 章 演習の解答 | ✅ |
 

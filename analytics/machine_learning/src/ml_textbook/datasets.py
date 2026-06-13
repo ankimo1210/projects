@@ -141,13 +141,18 @@ def make_classification_dataset(
 
 
 def make_imbalanced_classification_dataset(
-    n: int = 2000, weights: tuple[float, float] = (0.95, 0.05), seed: int = 0
+    n: int = 2000,
+    weights: tuple[float, float] = (0.95, 0.05),
+    class_sep: float = 1.0,
+    seed: int = 0,
 ):
     """Binary classification with a rare positive class. Returns (X[n, 2], y[n]).
 
     The default 95/5 split makes accuracy a misleading metric (the constant
     'always negative' classifier already scores 0.95) — the running example for
-    precision/recall/PR-AUC in the evaluation notebook.
+    precision/recall/PR-AUC in the evaluation notebook. Lower ``class_sep`` to
+    make the classes overlap, so a default-threshold model actually misses the
+    minority (used by the imbalanced-learning appendix).
     """
     X, y = make_classification(
         n_samples=n,
@@ -158,7 +163,7 @@ def make_imbalanced_classification_dataset(
         n_classes=2,
         n_clusters_per_class=1,
         weights=list(weights),
-        class_sep=1.0,
+        class_sep=class_sep,
         random_state=seed,
     )
     return X, y.astype(np.int64)
