@@ -26,7 +26,7 @@ help:
 	@echo "Workspace members:"
 	@echo "  gto market-viz stock nbody-gpu line_backup land_price_api_app"
 	@echo "  re_invest_os/apps/api re_invest_os/packages/financial-engine"
-	@echo "  akinator johnhull/hullkit"
+	@echo "  akinator johnhull/hullkit analytics/linear_algebra analytics/neural_net"
 	@echo ""
 	@echo "Outside the workspace:"
 	@echo "  rates_volatility_model, notebooks (manual envs)"

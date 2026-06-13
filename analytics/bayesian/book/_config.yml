@@ -1,0 +1,18 @@
+title: ベイズ推定の体験 — 信念の更新装置としての統計
+author: Kazumasa
+language: ja
+only_build_toc_files: true
+
+execute:
+  # Notebooks are committed with outputs already executed (see README).
+  execute_notebooks: "off"
+
+sphinx:
+  config:
+    # require.js lets nbconvert-embedded Plotly figures render in static HTML.
+    html_js_files:
+      - https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js
+
+html:
+  use_issues_button: false
+  use_repository_button: false

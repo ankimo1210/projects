@@ -1,0 +1,15 @@
+# Standalone (non-uv) install: pip install -r requirements.txt && pip install -e .
+numpy>=2.0
+scipy>=1.13
+sympy>=1.12
+matplotlib>=3.9
+plotly>=5.22
+ipywidgets>=8.1
+pandas>=2.2
+scikit-learn>=1.5
+jupyterlab>=4.2
+jupyter-book>=1.0,<2
+ipykernel>=6.29
+nbformat>=5.10
+nbclient>=0.10
+pytest>=8.0

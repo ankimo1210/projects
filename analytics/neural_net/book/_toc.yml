@@ -1,0 +1,17 @@
+# Table of contents for jupyter-book.
+# `notebooks/` here is a symlink to ../notebooks (Jupyter Book requires all
+# content below the book root).
+format: jb-book
+root: notebooks/01_overview_and_function_approximation
+chapters:
+  - file: notebooks/02_calculus_computation_graphs_backprop
+  - file: notebooks/03_mlp_from_scratch
+  - file: notebooks/04_training_dynamics_and_stabilization
+  - file: notebooks/05_convolutional_neural_networks
+  - file: notebooks/06_sequence_models_rnn_lstm_gru
+  - file: notebooks/07_attention_and_transformers
+  - file: notebooks/08_representation_learning_autoencoders
+  - file: notebooks/09_generative_models_gan_diffusion
+  - file: notebooks/10_modern_llm_concepts
+  - file: notebooks/11_appendix_cpu_vs_gpu
+  - file: notebooks/12_exercise_solutions

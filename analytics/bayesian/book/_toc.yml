@@ -1,0 +1,16 @@
+# Table of contents for jupyter-book.
+# `notebooks/` here is a symlink to ../notebooks (Jupyter Book requires all
+# content below the book root).
+format: jb-book
+root: notebooks/00_overview
+chapters:
+  - file: notebooks/01_bayes_theorem_and_probability
+  - file: notebooks/02_distributions_and_simulation
+  - file: notebooks/03_beta_binomial_model
+  - file: notebooks/04_conjugate_priors_and_posterior_predictive
+  - file: notebooks/05_bayesian_linear_regression
+  - file: notebooks/06_hierarchical_bayes
+  - file: notebooks/07_mcmc_intuition
+  - file: notebooks/08_pymc_practical_modeling
+  - file: notebooks/09_model_checking_and_applications
+  - file: notebooks/10_exercise_solutions

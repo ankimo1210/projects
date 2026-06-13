@@ -1,0 +1,13 @@
+# Table of contents for jupyter-book.
+# `notebooks/` here is a symlink to ../notebooks (Jupyter Book requires all
+# content below the book root).
+format: jb-book
+root: notebooks/00_overview
+chapters:
+  - file: notebooks/01_vectors_matrices_geometry
+  - file: notebooks/02_linear_systems_rank_basis
+  - file: notebooks/03_linear_maps_determinants_eigen
+  - file: notebooks/04_inner_products_projection_least_squares
+  - file: notebooks/05_matrix_decompositions_svd_pca
+  - file: notebooks/06_numerical_linear_algebra_optimization
+  - file: notebooks/07_applications_graph_markov_finance_quantum

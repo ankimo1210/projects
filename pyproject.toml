@@ -21,6 +21,9 @@ members = [
     "akinator",
     "autostock",
     "johnhull/hullkit",
+    "analytics/linear_algebra",
+    "analytics/neural_net",
+    "analytics/bayesian",
 ]
 
 # PyTorch CUDA 12.8 — used by `gto`. Defined here so all workspace members
@@ -29,6 +32,7 @@ members = [
 # nvrtc 12.6 cannot JIT sm_120 (CuPy hit CUDA_ERROR_NO_BINARY_FOR_GPU).
 [tool.uv.sources]
 torch = { index = "pytorch-cu128" }
+torchvision = { index = "pytorch-cu128" }
 
 [[tool.uv.index]]
 name = "pytorch-cu128"
@@ -87,6 +91,7 @@ ignore = [
 "rates_volatility_model/**/*.py" = ["N803", "N806", "N816", "E741"]
 "johnhull/**/*.py" = ["N803", "N806", "N816", "E741"]
 "autostock/**/*.py" = ["N803", "N806", "N816", "E741"]
+"analytics/**/*.py" = ["N803", "N806", "N816", "E741"]
 "notebooks/**/*.py" = ["E402", "F401", "F841", "N803", "N806"]
 # Tests can have unused variables / imports for fixture-driven patterns.
 "**/tests/**/*.py" = ["F841", "F401"]
@@ -118,6 +123,9 @@ testpaths = [
     "akinator/tests",
     "autostock/tests",
     "johnhull/hullkit/tests",
+    "analytics/linear_algebra/tests",
+    "analytics/neural_net/tests",
+    "analytics/bayesian/tests",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
