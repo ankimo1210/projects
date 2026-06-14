@@ -1,0 +1,31 @@
+# Japan-resident investor tax assumptions. Used by quantkit.tax (Phase 2). All rates
+# are ASSUMPTIONS held in config (never hard-coded) and must be shown in reports.
+# Not tax advice; verify against current NTA rules before relying on numbers.
+
+as_of_year: 2025
+
+taxable_account:
+  capital_gains_rate: 0.20315     # 15% income + 0.315% reconstruction + 5% local
+  dividend_rate: 0.20315          # listed-share dividends (separate taxation)
+  us_dividend_withholding: 0.10   # US withholding before JP tax (treaty)
+  foreign_tax_credit: true        # US withholding partially creditable
+  loss_carryforward_years: 3
+
+crypto:
+  # Crypto gains are miscellaneous income (progressive). Use a representative
+  # marginal rate here; a full bracket table can be added later.
+  treatment: miscellaneous_income
+  assumed_marginal_rate: 0.30
+  note: "Progressive (up to ~55% incl. local). 0.30 is a placeholder assumption."
+
+nisa_2024:
+  annual_growth_quota: 2400000        # 成長投資枠 / year (JPY)
+  annual_tsumitate_quota: 1200000     # つみたて投資枠 / year (JPY)
+  annual_total_cap: 3600000
+  lifetime_cap: 18000000
+  tax_rate_inside: 0.0                # gains/dividends tax-free inside NISA
+  note: "New NISA (2024-). Lifetime cap is acquisition-cost based."
+
+fx:
+  gains_treatment: miscellaneous_income
+  assumed_marginal_rate: 0.30
