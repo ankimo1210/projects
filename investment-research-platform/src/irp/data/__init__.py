@@ -14,10 +14,12 @@ from .cache import CacheManager
 from .connectors import (
     BinanceConnector,
     CoinGeckoConnector,
+    JQuantsConnector,
     StooqConnector,
     YFinanceConnector,
     get_connector,
 )
+from .fundamentals import SecEdgarConnector, fundamental_as_of
 from .quality import DataQualityReport, assess
 
 __all__ = [
@@ -29,10 +31,13 @@ __all__ = [
     "ConnectorError",
     "DataQualityReport",
     "FetchResult",
+    "JQuantsConnector",
+    "SecEdgarConnector",
     "StooqConnector",
     "YFinanceConnector",
     "assess",
     "connectors",
+    "fundamental_as_of",
     "get_connector",
     "get_prices",
     "quality",

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from .binance import BinanceConnector
 from .coingecko import CoinGeckoConnector
+from .jquants import JQuantsConnector
 from .stooq import StooqConnector
 from .yfinance_conn import YFinanceConnector
 
@@ -12,12 +13,14 @@ REGISTRY = {
     "yfinance": YFinanceConnector,
     "coingecko": CoinGeckoConnector,
     "binance": BinanceConnector,
+    "jquants": JQuantsConnector,
 }
 
 __all__ = [
     "REGISTRY",
     "BinanceConnector",
     "CoinGeckoConnector",
+    "JQuantsConnector",
     "StooqConnector",
     "YFinanceConnector",
 ]

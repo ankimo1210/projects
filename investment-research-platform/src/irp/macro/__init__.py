@@ -8,12 +8,13 @@ from __future__ import annotations
 
 from . import connectors, store
 from .base import MacroConnector
-from .connectors import FredConnector, TreasuryConnector, get_macro_connector
+from .connectors import EStatConnector, FredConnector, TreasuryConnector, get_macro_connector
 from .schema import MACRO_COLUMNS, MacroObservation, to_macro_frame
 from .store import as_of, latest, revisions
 
 __all__ = [
     "MACRO_COLUMNS",
+    "EStatConnector",
     "FredConnector",
     "MacroConnector",
     "MacroObservation",

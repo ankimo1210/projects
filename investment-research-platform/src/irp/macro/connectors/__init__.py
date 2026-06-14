@@ -1,9 +1,11 @@
-"""Macro connectors. Working in Phase 1: FRED/ALFRED, US Treasury. The rest are
-credential-gated or stubbed for later phases.
+"""Macro connectors. Implemented: FRED/ALFRED, US Treasury, e-Stat (JP). The rest
+are credential-gated or stubbed until needed. (Fundamentals = SEC EDGAR, in
+``irp.data.fundamentals``.)
 """
 
 from __future__ import annotations
 
+from .estat import EStatConnector
 from .fred import FredConnector
 from .stubs import (
     BeaConnector,
@@ -11,29 +13,33 @@ from .stubs import (
     BoJConnector,
     CensusConnector,
     EdinetConnector,
-    EStatConnector,
     MofConnector,
-    SecEdgarConnector,
 )
 from .treasury import TreasuryConnector
 
 REGISTRY = {
     "fred": FredConnector,
     "ustreasury": TreasuryConnector,
-    # stubs (Phase 2+)
     "estat": EStatConnector,
+    # stubs (land when needed)
     "boj": BoJConnector,
     "mof": MofConnector,
     "bea": BeaConnector,
     "bls": BlsConnector,
     "census": CensusConnector,
-    "sec_edgar": SecEdgarConnector,
     "edinet": EdinetConnector,
 }
 
-IMPLEMENTED = {"fred", "ustreasury"}
+IMPLEMENTED = {"fred", "ustreasury", "estat"}
 
-__all__ = ["IMPLEMENTED", "REGISTRY", "FredConnector", "TreasuryConnector", "get_macro_connector"]
+__all__ = [
+    "IMPLEMENTED",
+    "REGISTRY",
+    "EStatConnector",
+    "FredConnector",
+    "TreasuryConnector",
+    "get_macro_connector",
+]
 
 
 def get_macro_connector(source: str, **kwargs):

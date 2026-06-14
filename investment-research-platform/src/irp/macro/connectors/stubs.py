@@ -1,7 +1,7 @@
-"""Stub macro/fundamentals connectors — interface placeholders for sources planned
-in later phases. They declare the contract (so the structure matches the spec)
-but raise NotImplementedError until implemented. MVP US+JP macro is served by
-FRED + US Treasury; J-Quants/e-Stat are credential-gated and land next.
+"""Stub macro connectors — interface placeholders for sources not yet wired.
+They declare the contract but raise NotImplementedError until implemented.
+Implemented macro: FRED/ALFRED, US Treasury, e-Stat (JP). Fundamentals: SEC EDGAR
+(``irp.data.fundamentals``). The connectors below land as data becomes needed.
 """
 
 from __future__ import annotations
@@ -11,22 +11,16 @@ from ..schema import MacroObservation
 
 
 class _StubMacroConnector(MacroConnector):
-    note = "not implemented in Phase 1"
+    note = "not implemented yet"
 
     def _download(self, indicator, start, end, *, point_in_time, **_):
         raise NotImplementedError(
-            f"{self.source} connector is a Phase-1 stub ({self.note}). "
-            "Use FRED/Treasury for MVP US+JP macro; this source lands in a later phase."
+            f"{self.source} connector is a stub ({self.note}). "
+            "Use FRED/Treasury (US) or e-Stat (JP) for now; this source lands when needed."
         )
 
     def to_observations(self, raw, indicator, **_) -> list[MacroObservation]:
         raise NotImplementedError(self.source)
-
-
-class EStatConnector(_StubMacroConnector):
-    source = "estat"
-    country = "JP"
-    note = "needs ESTAT_APP_ID + per-table statsDataId mapping"
 
 
 class BoJConnector(_StubMacroConnector):
@@ -59,13 +53,7 @@ class CensusConnector(_StubMacroConnector):
     note = "Census economic indicators"
 
 
-class SecEdgarConnector(_StubMacroConnector):
-    source = "sec_edgar"
-    country = "US"
-    note = "company facts (fundamentals), not macro — modeled here for now"
-
-
 class EdinetConnector(_StubMacroConnector):
     source = "edinet"
     country = "JP"
-    note = "JP fundamentals"
+    note = "JP fundamentals (SEC EDGAR is implemented; EDINET equivalent lands next)"
