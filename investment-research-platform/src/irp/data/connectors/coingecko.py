@@ -1,7 +1,12 @@
-"""CoinGecko connector — free crypto daily prices (no API key).
+"""CoinGecko connector — crypto daily prices (free demo key).
 
-The free ``market_chart/range`` endpoint returns prices only (no full OHLC), so
+The ``market_chart/range`` endpoint returns prices only (no full OHLC), so
 ``open/high/low`` are left NaN and ``close``/``adj_close`` carry the daily price.
+
+NOTE: CoinGecko's public API now requires a free **demo** API key (sent as the
+``x-cg-demo-api-key`` header); without it the endpoint returns 401. Set
+``COINGECKO_API_KEY`` or pass ``api_key=``. For a no-key crypto source with full
+OHLCV, prefer :class:`~irp.data.connectors.binance.BinanceConnector`.
 """
 
 from __future__ import annotations
@@ -9,6 +14,7 @@ from __future__ import annotations
 import pandas as pd
 import requests
 
+from ...utils.config import env
 from ..base import Connector
 
 _IDS = {
@@ -30,9 +36,10 @@ class CoinGeckoConnector(Connector):
     source = "coingecko"
     BASE = "https://api.coingecko.com/api/v3"
 
-    def __init__(self, *a, **kw):
+    def __init__(self, *a, api_key: str | None = None, **kw):
         kw.setdefault("rate_limit_s", 2.5)  # free tier is rate-limited
         super().__init__(*a, **kw)
+        self.api_key = api_key or env("COINGECKO_API_KEY")
 
     def _download(self, symbol, start, end, *, coin_id: str | None = None, **_) -> pd.DataFrame:
         cid = coin_id or _coin_id(symbol)
@@ -41,7 +48,13 @@ class CoinGeckoConnector(Connector):
             "from": int(pd.Timestamp(start).timestamp()),
             "to": int(pd.Timestamp(end).timestamp()),
         }
-        r = requests.get(f"{self.BASE}/coins/{cid}/market_chart/range", params=params, timeout=30)
+        headers = {"x-cg-demo-api-key": self.api_key} if self.api_key else {}
+        r = requests.get(
+            f"{self.BASE}/coins/{cid}/market_chart/range",
+            params=params,
+            headers=headers,
+            timeout=30,
+        )
         r.raise_for_status()
         prices = r.json().get("prices", [])
         return pd.DataFrame(prices, columns=["ms", "price"])

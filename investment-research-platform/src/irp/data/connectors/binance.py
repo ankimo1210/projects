@@ -15,8 +15,14 @@ _PAIRS = {"btc": "BTCUSDT", "eth": "ETHUSDT", "sol": "SOLUSDT", "bnb": "BNBUSDT"
 
 
 def _pair(symbol: str) -> str:
-    s = symbol.upper().replace("-USD", "").replace("USD", "")
-    return _PAIRS.get(symbol.lower(), f"{s}USDT")
+    s = symbol.upper()
+    # already a full pair (e.g. "BTCUSDT", "ETHBTC") -> use as-is; don't strip "USD"
+    if s.endswith(("USDT", "BUSD", "USDC", "BTC", "ETH")) and len(s) > 4:
+        return s
+    if symbol.lower() in _PAIRS:
+        return _PAIRS[symbol.lower()]
+    base = s.replace("-USD", "").replace("USD", "")
+    return f"{base}USDT"
 
 
 class BinanceConnector(Connector):
