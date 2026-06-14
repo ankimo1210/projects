@@ -70,6 +70,14 @@ rng = np.random.default_rng(0)
 np.set_printoptions(precision=4, suppress=True)""")
 )
 
+cells.append(
+    md(r"""### 記号と単位
+
+- $S$=原資産価格・$K$=ストライク(同一通貨単位)、$r$=無リスク金利(**連続複利・年率**)、$\sigma$=ボラティリティ(**年率**)、$T,t$=時間(**年**)。
+- $W_t$=標準ブラウン運動、$[W]_t$=二次変分、$\mu$=実世界ドリフト(年率)、$\lambda=(\mu-r)/\sigma$=市場価格リスク、$Q$=リスク中立測度・$P$=実世界測度。
+- コードの `S0,K,r,sigma,T,mu` は上記に対応(例: `r=0.05`→年率5%、`sigma=0.2`→年率20%、`T=1.0`→1年)。""")
+)
+
 # ===========================================================================
 # 1. Brownian motion & quadratic variation
 # ===========================================================================
@@ -187,7 +195,7 @@ $$d\ln S=\Big(\mu-\tfrac12\sigma^2\Big)dt+\sigma\,dW
 
 cells.append(
     code(r"""# d(ln S) のドリフトが μ−σ²/2 になることを GBM サンプルで確認
-S0, mu, sigma, T = 100.0, 0.12, 0.25, 1.0
+S0, mu, sigma, T = 100.0, 0.12, 0.25, 1.0  # S0=100, μ=12%/年, σ=25%/年, T=1年
 paths = mc.simulate_gbm_paths(S0, mu, sigma, T, 1, 200_000, rng=np.random.default_rng(1))
 logret = np.log(paths[:, -1] / S0)
 print(f"E[ln(S_T/S0)]: sim={logret.mean(): .4f}  理論 (μ−σ²/2)T={(mu - 0.5 * sigma**2) * T: .4f}")

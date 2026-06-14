@@ -65,6 +65,14 @@ from hullkit import plotly_viz as pv
 np.set_printoptions(precision=4, suppress=True)""")
 )
 
+cells.append(
+    md(r"""### 記号と単位
+
+- $S,K$=価格、$r$=無リスク金利(連続複利・年率)、$\sigma$=ボラ(年率)、$T$=満期(年)、$q$=配当利回り(年率)。
+- $N$=サンプル数(MC)/ ステップ数、$\mathrm{SE}=\sigma_{\text{payoff}}/\sqrt N$=標準誤差、$\Delta t,\Delta x$=有限差分の時間・空間刻み。
+- グリークス: $\Delta=\partial V/\partial S$、ベガ $=\partial V/\partial\sigma$。""")
+)
+
 # 1. variance reduction
 cells.append(
     md(r"""## 1. モンテカルロ誤差と分散減少

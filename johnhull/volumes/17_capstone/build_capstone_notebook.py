@@ -57,12 +57,20 @@ from hullkit import aad, bsm, fourier, heston, mc, xva
 from hullkit import mc_advanced as mca
 
 # Heston パラメータ（株式の典型: 下方スキュー）
-S0, K, r, T = 100.0, 100.0, 0.05, 1.0
-v0, kappa, theta, xi, rho = 0.04, 1.5, 0.04, 0.6, -0.7
+S0, K, r, T = 100.0, 100.0, 0.05, 1.0  # S0,K=価格, r=年率5%(連続複利), T=1年
+v0, kappa, theta, xi, rho = 0.04, 1.5, 0.04, 0.6, -0.7  # 初期分散/平均回帰(/年)/長期分散/vol-of-vol/相関
 def cf(u):
     return heston.heston_cf(u, r, T, v0, kappa, theta, xi, rho)
 print(f"ポジション: 1年 ATM コール, S0={S0}, K={K}, r={r:.0%}")
 print(f"Heston: v0={v0}, κ={kappa}, θ={theta}, ξ={xi}, ρ={rho}")""")
+)
+
+cells.append(
+    md(r"""### 記号と単位
+
+- $S,K$=価格、$r$=無リスク金利(連続複利・年率)、$T$=満期(年)、$y=\ln(S_T/S_0)$=対数収益率。
+- Heston: $v_0$=初期分散・$\kappa$=平均回帰速度(/年)・$\theta$=長期分散・$\xi$=vol-of-vol・$\rho$=相関(分散は年率)。
+- $\lambda$=ハザード率(/年)、$R$=回収率、EE=期待エクスポージャ。価格・CVA は想定元本と同じ通貨単位。""")
 )
 
 # 1. price (A2) + 2. risk-neutral check (A1) + 3. numerics (A3)

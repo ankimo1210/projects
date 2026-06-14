@@ -62,6 +62,14 @@ from hullkit import plotly_viz as pv
 np.set_printoptions(precision=4, suppress=True)""")
 )
 
+cells.append(
+    md(r"""### 記号と単位
+
+- $S,K$=価格、$r$=無リスク金利(連続複利・年率)、$\sigma$=ボラ(年率)、$T,t$=時間(年)。
+- $V_t$=時価(MtM)、$E_t=\max(V_t,0)$=エクスポージャ、EE=期待エクスポージャ、PFE=将来エクスポージャ(高分位)、ENE=期待負エクスポージャ。
+- $\lambda$=ハザード率(**/年**)、$R$=回収率、$\mathrm{PD}$=デフォルト確率、$p$=各社の限界デフォルト確率、$\rho$=デフォルト相関、$M$=共通因子、$L$=損失割合。価格・CVA は想定元本と同じ通貨単位。""")
+)
+
 # 1. exposure
 cells.append(
     md(r"""## 1. カウンターパーティ・エクスポージャ
