@@ -14,9 +14,9 @@
     <nav>
       <a href="index.html"{% if active == 'index' %} class="on"{% endif %}>ホーム</a>
       <a href="gallery.html"{% if active == 'gallery' %} class="on"{% endif %}>ギャラリー</a>
-      <a href="linear_algebra.html"{% if active == 'linear_algebra' %} class="on"{% endif %}>線形代数</a>
-      <a href="neural_net.html"{% if active == 'neural_net' %} class="on"{% endif %}>NN</a>
-      <a href="bayesian.html"{% if active == 'bayesian' %} class="on"{% endif %}>ベイズ</a>
+      {% for b in books %}
+      <a href="{{ b.key }}.html"{% if active == b.key %} class="on"{% endif %}>{{ b.nav or b.title }}</a>
+      {% endfor %}
       <a href="integration.html"{% if active == 'integration' %} class="on"{% endif %}>統合</a>
     </nav>
   </header>
@@ -24,7 +24,7 @@
     {% block content %}{% endblock %}
   </main>
   <footer class="foot">
-    <p>オフライン自己完結 · plotly はローカル同梱 · 図は3教材の <code>plotly_*</code> ビルダーから自動生成</p>
+    <p>オフライン自己完結 · plotly はローカル同梱 · 図は各教材の <code>plotly_*</code> ビルダーから自動生成</p>
   </footer>
 </body>
 </html>

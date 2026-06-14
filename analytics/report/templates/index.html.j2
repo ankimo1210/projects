@@ -2,20 +2,20 @@
 {% block title %}Analytics 教材ポータル{% endblock %}
 {% block content %}
 <section class="hero">
-  <h1>3つの数学を、動かして掴む。</h1>
+  <h1>数学を、動かして掴む。</h1>
   <p class="lead">
-    線形代数・ニューラルネット・ベイズ推定 ——
-    直感 → 数式 → コード → <strong>インタラクティブ可視化</strong> で一貫した3冊の体験型教科書。
+    線形代数・ニューラルネット・ベイズ・ラプラス・機械学習・フーリエ・微分方程式 ——
+    直感 → 数式 → コード → <strong>インタラクティブ可視化</strong> で一貫した体験型教科書シリーズ。
     このポータルの図はすべてブラウザ内で動き、<strong>オフラインで完結</strong>します。
   </p>
   <div class="hero-cta">
     <a class="btn primary" href="gallery.html">コンセプトギャラリーを見る →</a>
-    <a class="btn" href="integration.html">3冊を貫くキャップストーン</a>
+    <a class="btn" href="integration.html">教材を貫くキャップストーン</a>
   </div>
   <div class="stats">
     <div><b>{{ n_figures }}</b><span>ライブ可視化</span></div>
     <div><b>{{ n_new }}</b><span>新規スライダー</span></div>
-    <div><b>3</b><span>教科書</span></div>
+    <div><b>{{ books|length + link_books|length }}</b><span>教材</span></div>
   </div>
 </section>
 
@@ -34,13 +34,31 @@
   {% endfor %}
 </section>
 
+{% if link_books %}
+<section class="more">
+  <h3 class="more-head">その他の教材<span>（図は教科書内に収録）</span></h3>
+  <div class="cards compact">
+    {% for book in link_books %}
+    <article class="card">
+      <h2>{{ book.title }}</h2>
+      <p class="sub">{{ book.subtitle }}</p>
+      <div class="card-links">
+        <a class="btn small ghost" href="{{ book.book_index }}">教科書を開く ↗</a>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
 <section class="note">
   <h3>このポータルの作り</h3>
   <p>
-    各図は3教材のパッケージ(<code>la_book</code> / <code>nn_textbook</code> / <code>bayes_textbook</code>)の
-    <code>plotly_*</code> ビルダーを呼んで生成しています。図のロジックは教科書側に一本化されているため、
-    ポータルは常に本文と同期します。「教科書を開く」リンクは各 Jupyter Book のビルド出力に飛びます
-    (未ビルドなら <code>make</code> でビルドしてください)。
+    各図は教材パッケージ(<code>la_book</code> / <code>nn_textbook</code> / <code>bayes_textbook</code> /
+    <code>laplace_book</code> / <code>ml_textbook</code> …)の <code>plotly_*</code> ビルダーを呼んで
+    生成しています。図のロジックは教科書側に一本化されているため、ポータルは常に本文と同期します。
+    「教科書を開く」リンクは各 Jupyter Book のビルド出力に飛びます(未ビルドなら
+    <code>make books</code> でビルドしてください)。
   </p>
 </section>
 {% endblock %}

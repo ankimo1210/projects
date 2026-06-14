@@ -19,8 +19,10 @@ class BookMeta:
     subtitle: str
     accent: str
     book_index: str  # relative path from site/ to the Jupyter Book index
+    nav: str = ""  # short label for the top nav (falls back to title)
 
 
+# Books with portal figures: drive the gallery, per-book showcase pages, and nav.
 BOOKS: dict[str, BookMeta] = {
     "linear_algebra": BookMeta(
         key="linear_algebra",
@@ -28,6 +30,7 @@ BOOKS: dict[str, BookMeta] = {
         subtitle="空間・情報・変換の言語",
         accent="#2563eb",
         book_index="../../linear_algebra/book/_build/html/index.html",
+        nav="線形代数",
     ),
     "neural_net": BookMeta(
         key="neural_net",
@@ -35,6 +38,7 @@ BOOKS: dict[str, BookMeta] = {
         subtitle="関数近似から Transformer まで",
         accent="#db2777",
         book_index="../../neural_net/book/_build/html/index.html",
+        nav="NN",
     ),
     "bayesian": BookMeta(
         key="bayesian",
@@ -42,6 +46,7 @@ BOOKS: dict[str, BookMeta] = {
         subtitle="信念の更新装置としての統計",
         accent="#16a34a",
         book_index="../../bayesian/book/_build/html/index.html",
+        nav="ベイズ",
     ),
     "laplace": BookMeta(
         key="laplace",
@@ -49,8 +54,46 @@ BOOKS: dict[str, BookMeta] = {
         subtitle="時間・複素周波数・システムの言語",
         accent="#7c3aed",
         book_index="../../laplace/book/_build/html/index.html",
+        nav="ラプラス",
+    ),
+    "machine_learning": BookMeta(
+        key="machine_learning",
+        title="機械学習の実践",
+        subtitle="定式化・検証・解釈",
+        accent="#ea580c",
+        book_index="../../machine_learning/book/_build/html/index.html",
+        nav="ML",
     ),
 }
+
+# Textbooks without portal figure builders yet: shown as landing cards + book
+# links only (no gallery section / showcase page).
+LINK_BOOKS: list[BookMeta] = [
+    BookMeta(
+        "fourier",
+        "フーリエ解析の風景",
+        "波・周波数・分解の言語",
+        "#0891b2",
+        "../../fourier/book/_build/html/index.html",
+        nav="フーリエ",
+    ),
+    BookMeta(
+        "diffeq_ode",
+        "微分方程式 (ODE)",
+        "常微分方程式 — 変化と流れ",
+        "#ca8a04",
+        "../../differential_equation/ode-book/book/_build/html/index.html",
+        nav="ODE",
+    ),
+    BookMeta(
+        "diffeq_pde",
+        "微分方程式 (PDE)",
+        "偏微分方程式 — 場と波",
+        "#0d9488",
+        "../../differential_equation/pde-book/book/_build/html/index.html",
+        nav="PDE",
+    ),
+]
 
 
 @dataclass(frozen=True)
@@ -324,6 +367,32 @@ def _lap_rlc_step():
     return lp.plotly_rlc_step_slider()
 
 
+# ---------------------------------------------------------------------------
+# machine_learning
+# ---------------------------------------------------------------------------
+
+
+def _ml_model_complexity():
+    import numpy as np
+    from ml_textbook import plotting as mviz
+
+    rng = np.random.default_rng(0)
+    x = np.linspace(-3, 3, 80)
+    y = np.sin(1.2 * x) + 0.3 * rng.standard_normal(80)
+    return mviz.plotly_model_complexity(x, y)
+
+
+def _ml_threshold_explorer():
+    import numpy as np
+    from ml_textbook import plotting as mviz
+
+    rng = np.random.default_rng(0)
+    n = 300
+    y_true = rng.integers(0, 2, n)
+    y_score = np.clip(0.5 + 0.32 * (y_true * 2 - 1) + 0.25 * rng.standard_normal(n), 0.0, 1.0)
+    return mviz.plotly_threshold_explorer(y_true, y_score)
+
+
 FIGURES: list[FigureSpec] = [
     # linear_algebra
     FigureSpec(
@@ -573,6 +642,25 @@ FIGURES: list[FigureSpec] = [
         _lap_rlc_step,
         is_new=True,
         tags=("slider", "circuit"),
+    ),
+    # machine_learning
+    FigureSpec(
+        "ml_model_complexity",
+        "machine_learning",
+        "モデル複雑度と過適合",
+        "多項式の次数を上げると訓練誤差は下がり続けるが、テスト誤差は U 字。バイアス-分散トレードオフ。",
+        _ml_model_complexity,
+        is_new=True,
+        tags=("slider", "overfitting"),
+    ),
+    FigureSpec(
+        "ml_threshold_explorer",
+        "machine_learning",
+        "閾値で動く適合率・再現率",
+        "分類の判定閾値を動かすと、適合率・再現率・F1 がトレードオフしながら変化する。",
+        _ml_threshold_explorer,
+        is_new=True,
+        tags=("slider", "classification"),
     ),
 ]
 

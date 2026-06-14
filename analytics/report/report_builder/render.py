@@ -13,7 +13,7 @@ import jinja2
 import plotly.io as pio
 from plotly.offline import get_plotlyjs
 
-from .figures import BOOKS, FIGURES, figures_for
+from .figures import BOOKS, FIGURES, LINK_BOOKS, figures_for
 from .theme import apply_theme
 
 PKG_DIR = Path(__file__).resolve().parent
@@ -80,7 +80,13 @@ def render_site(output_dir: Path | None = None, log=print) -> Path:
     books = list(BOOKS.values())
     counts = {key: len(figures_for(key)) for key in BOOKS}
 
-    common = {"books": books, "counts": counts, "n_figures": len(fragments), "n_new": n_new}
+    common = {
+        "books": books,
+        "link_books": list(LINK_BOOKS),
+        "counts": counts,
+        "n_figures": len(fragments),
+        "n_new": n_new,
+    }
 
     log("Rendering pages ...")
     (out / "index.html").write_text(
