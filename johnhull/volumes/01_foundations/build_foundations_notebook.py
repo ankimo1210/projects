@@ -10,6 +10,8 @@ Usage:
 import json
 import os
 
+from hullkit.teaching import caption, practice_box, scaffold
+
 # ---------------------------------------------------------------------------
 # Cell helpers (same pattern as build_ir_models_notebook.py)
 # ---------------------------------------------------------------------------
@@ -46,6 +48,19 @@ cells.append(
 > 続編: `notebooks/bsm_chapter15.ipynb`（Ch.15 BSM モデル）""")
 )
 
+# Cell: volume-level scaffold
+cells.append(
+    md(
+        scaffold(
+            core="デリバティブ価格は「満期ペイオフを複製する費用」。将来予想（実確率）は要らない。",
+            intuition="原資産と借入だけでオプションのペイオフを作れるなら、その複製コスト＝オプション価格"
+            "（一物一価）。上昇確率は複製の中で相殺されて消える。",
+            practice="この一点で投資銀行のデリバティブ・デスクが成立する。建値→動的ヘッジで方向観に依らず"
+            "鞘を取る。Ch.14 の確率微分方程式は、その複製を連続時間で記述する言語。",
+        )
+    )
+)
+
 # Cell 01: matplotlib magic (standalone, ir_models convention)
 cells.append(code(r"""%matplotlib widget"""))
 
@@ -80,6 +95,28 @@ $$f = e^{-rT}\bigl[p f_u + (1-p) f_d\bigr], \qquad p = \frac{e^{rT} - d}{u - d} 
 
 **重要**: 実世界の上昇確率は価格に一切現れません。$p$ は「全資産の期待収益率が
 無リスク金利になる世界（リスク中立世界）」での上昇確率と解釈できます。""")
+)
+cells.append(
+    md(
+        scaffold(
+            core="1 期間モデルでも、オプション価格は複製で一意に決まる：p=(a−d)/(u−d) で割引期待値。",
+            intuition="Δ 株ロング＋オプション売りを無リスクにできる Δ が必ず存在する。"
+            "無リスクなものは無リスク金利でしか増えない——これだけで価格が決まる。",
+            practice="マーケットメイカーはこの値で建値し、Δ を売買して鞘を確定する。"
+            "「上がる確率」を当てる必要が一切ない。",
+        )
+    )
+)
+cells.append(
+    md(
+        practice_box(
+            "リスク中立確率は「予測」ではない",
+            "p は「将来こう動く」という予想ではなく、複製コストを期待値の形に書き直したときに現れる"
+            "人工的な重み。だからトレーダーは現実の上昇確率を見積もらずに値付けできる。"
+            "価格が動くのは見通しが変わるからではなく $S,\\sigma,r$ が動くから——"
+            "オプション・デスクの損益がギリシャ文字（Greeks）で管理される理由がここにある。",
+        )
+    )
 )
 
 # Cell 04: one-step numeric check (Hull §13.1 example)
@@ -153,6 +190,14 @@ for w in (u_sl, d_sl, k_sl, r_sl):
 _upd_onestep()
 display(widgets.VBox([widgets.HBox([u_sl, d_sl]), widgets.HBox([k_sl, r_sl])]), fig1.canvas)""")
 )
+cells.append(
+    md(
+        caption(
+            "スライダーで p が (0,1) を外れると「裁定機会」と表示され計算が止まる。"
+            "これは d < e^{rT} < u（無裁定条件）が崩れた状態。価格が成立する範囲そのものが見える。"
+        )
+    )
+)
 
 # Cell 07: §13.3-13.4, 13.7-13.8 multi-step & CRR
 cells.append(
@@ -167,6 +212,16 @@ $$f = e^{-r\Delta t}\bigl[p f_u + (1-p) f_d\bigr], \qquad p = \frac{a - d}{u - d
 $$u = e^{\sigma\sqrt{\Delta t}}, \qquad d = \frac{1}{u} \quad \text{(13.15), (13.16)}$$
 
 測度を実世界からリスク中立に変えても $\sigma$ は変わりません（ギルサノフの定理、§13.7）。""")
+)
+cells.append(
+    md(
+        scaffold(
+            core="多ステップは「1 期間の複製」を末端から巻き戻すだけ（後退帰納）。u=e^{σ√Δt} で σ に整合。",
+            intuition="格子の各ノードで同じ無裁定論理を繰り返す。測度を変えても σ は不変（Girsanov）"
+            "なので、ボラだけで木を組める。",
+            practice="アメリカン・バリアなど閉形式の無い商品の標準評価器。エキゾチック・デスクの値付けの土台。",
+        )
+    )
 )
 
 # Cell 08: two-step & American examples
@@ -195,6 +250,16 @@ $$V = \max\bigl(e^{-r\Delta t}[p V_u + (1-p) V_d],\; \text{intrinsic}\bigr)$$
 
 ディープ ITM のプットでは「いま $K-S$ を受け取って金利で運用する」方が有利になることがあり、
 ツリー上では下方のノードで行使が発生します（下図の赤枠ノード）。""")
+)
+cells.append(
+    md(
+        scaffold(
+            core="各ノードで max(継続価値, 即時行使価値) を取る。",
+            intuition="「いま K−S を受け取り金利で運用する」方が得なら行使。ディープ ITM のプットで起きる。",
+            practice="早期行使境界は「いつ解約・行使すべきか」の実務判断そのもの"
+            "（転換社債のコール条項、住宅ローンの期前償還など同型の構造に効く）。",
+        )
+    )
 )
 
 # Cell 10: interactive tree visualization
@@ -258,6 +323,14 @@ display(
     fig2.canvas,
 )""")
 )
+cells.append(
+    md(
+        caption(
+            "赤枠＝即時行使が継続価値を上回るノード（早期行使域）。"
+            "σ を上げると赤枠が縮む＝ボラが高いほど「待つ価値」が増え、早く行使しなくなる。"
+        )
+    )
+)
 
 # Cell 11: §13.6 delta on the tree
 cells.append(
@@ -269,6 +342,16 @@ $$\Delta_{i,j} = \frac{V_{i+1,j} - V_{i+1,j+1}}{S_{i+1,j} - S_{i+1,j+1}}$$
 
 静的なヘッジは不可能で、**動的リバランス**が必要です。下表は Hull Fig 13.8 の
 アメリカンプット例の各ノードのデルタ。下方ノード（行使域）では $\Delta = -1$ に張り付きます。""")
+)
+cells.append(
+    md(
+        scaffold(
+            core="Δ はノードごと・時刻ごとに変わる。静的なヘッジは不可能で、動的リバランスが要る。",
+            intuition="ペイオフが曲がっている（凸）以上、複製比率も動く。だから一度組んだら終わりにできない。",
+            practice="「リバランス頻度 vs 取引コスト」の最適化はヘッジ・デスクの日常。"
+            "頻度を上げるほど複製誤差は減るがコストは増える。",
+        )
+    )
 )
 
 # Cell 12: node-delta table
@@ -294,6 +377,16 @@ cells.append(
 ステップ数 $N \to \infty$ で CRR 価格は BSM 公式に収束します（二項分布 → 正規分布）。
 誤差はおおむね $O(1/N)$ で、**奇数・偶数ステップで振動**するのが特徴です。
 実務では30ステップ以上、500ステップでほぼ BSM に一致します。""")
+)
+cells.append(
+    md(
+        scaffold(
+            core="N→∞ で CRR は BSM に収束。誤差は O(1/N)、奇数・偶数で振動。",
+            intuition="二項分布が正規分布へ近づく（中心極限）。離散の格子が連続の閉形式に化ける。",
+            practice="木と BSM が一致することは実装の検算（リグレッションテスト）に使える。"
+            "閉形式が無い商品は木に頼るので、この一致が信頼の根拠になる。",
+        )
+    )
 )
 
 # Cell 14: interactive convergence chart
@@ -335,6 +428,14 @@ k3_sl.observe(_upd_conv, "value")
 _upd_conv()
 display(widgets.HBox([sig3_sl, k3_sl]), fig3.canvas)""")
 )
+cells.append(
+    md(
+        caption(
+            "左：価格が鋸歯状に振動しながら BSM（破線）へ収束。右：誤差 |CRR−BSM| は両対数で"
+            "ほぼ傾き −1（O(1/N)）の直線。実装で何ステップ取れば十分かの目安になる。"
+        )
+    )
+)
 
 # Cell 15: §13.11 extensions
 cells.append(
@@ -350,6 +451,15 @@ cells.append(
 | 先物 | $1$ | 取得コストゼロ → リスク中立成長率ゼロ |
 
 `hullkit` では `q` 引数で統一的に扱います（先物は $q = r$）。""")
+)
+cells.append(
+    md(
+        scaffold(
+            core="リスク中立成長率の a を替えるだけで、指数・通貨・先物に同じ木が使える。",
+            intuition="保有利回り（配当 q・外国金利 r_f）の分だけ成長率が下がる。先物は取得コスト 0 なので a=1。",
+            practice="1 つのエンジンで株・指数・FX・先物オプションを値付け——プロダクトを跨ぐ共通基盤になる。",
+        )
+    )
 )
 
 # Cell 16: extension comparison table
@@ -390,6 +500,15 @@ $$z(T) - z(0) \sim \phi(0, T) \quad \text{(14.2)}$$
 不確実性（標準偏差）は **時間の平方根** に比例して増えます。
 分散は加法的（2年の分散=2）ですが標準偏差は非加法的（2年の標準偏差=$\sqrt{2}$）。""")
 )
+cells.append(
+    md(
+        scaffold(
+            core="不確実性（標準偏差）は時間の平方根 √t で増える。",
+            intuition="独立な増分を積み上げると分散が時間に比例。だから「2 年の散らばり」は 2 倍でなく √2 倍。",
+            practice="日次ボラ→年率の換算（σ_day×√252）、VaR の √t スケーリングは、すべてこの性質が根拠。",
+        )
+    )
+)
 
 # Cell 18: interactive Wiener paths
 cells.append(
@@ -426,6 +545,14 @@ dt_sl.observe(_upd_wiener, "value")
 _upd_wiener()
 display(dt_sl, fig5.canvas)""")
 )
+cells.append(
+    md(
+        caption(
+            "黒い帯は ±√t / ±2√t。Δt（刻み幅）を変えても帯は動かない＝"
+            "不確実性の広がりは刻み幅でなく経過時間だけで決まる、を目で確認できる。"
+        )
+    )
+)
 
 # Cell 19: §14.3 generalized Wiener process
 cells.append(
@@ -436,6 +563,16 @@ cells.append(
 $$dx = a\,dt + b\,dz, \qquad x(T) - x(0) \sim \phi(aT,\; b^2 T) \quad \text{(14.3)}$$
 
 期待値は $a$ に沿って直線的に進み、その周りに $b\sqrt{t}$ の不確実性が広がります。""")
+)
+cells.append(
+    md(
+        scaffold(
+            core="dx = a·dt + b·dz：トレンド（ドリフト a）＋ノイズ（拡散 b）の最小モデル。",
+            intuition="決定論的に a で進みながら、±b√t の帯で散らばる。これ以上単純な確率過程はない。",
+            practice="金利・クレジットスプレッドなど「水準そのもの」がさまよう量のモデル化の出発点"
+            "（負値を許すので株価には GBM を使う）。",
+        )
+    )
 )
 
 # Cell 20: interactive generalized Wiener + KDE
@@ -492,6 +629,15 @@ $$dS = \mu S\,dt + \sigma S\,dz \quad \text{(14.6)}$$
 シミュレーションには exact log-Euler 法（`hullkit.mc`）を使います —
 naive Euler（$\Delta S = \mu S \Delta t + \sigma S \epsilon \sqrt{\Delta t}$）は離散化誤差が蓄積します。""")
 )
+cells.append(
+    md(
+        scaffold(
+            core="dS = μS·dt + σS·dz。係数を株価に比例させると「%で動く」モデルになり、S_T は対数正規。",
+            intuition="変化率が水準に比例するので株価は 0 を割らない。これが現実の株価と整合する最小の仮定。",
+            practice="株式・FX・コモディティの業界標準モデル。BSM もモンテカルロも、この GBM の上に立っている。",
+        )
+    )
+)
 
 # Cell 22: interactive GBM + lognormal KDE
 cells.append(
@@ -534,6 +680,14 @@ sig7_sl.observe(_upd_gbm, "value")
 _upd_gbm()
 display(widgets.HBox([mu_sl, sig7_sl]), fig7.canvas)""")
 )
+cells.append(
+    md(
+        caption(
+            "右の終端分布は対数正規（右に裾を引く非対称）。破線は期待値 E[S_t]=S0·e^{μt}。"
+            "σ を上げると裾が伸び、中央値が期待値より下にずれる＝分散ドラッグの視覚化。"
+        )
+    )
+)
 
 # Cell 23: §14.6 Ito's lemma & ln S
 cells.append(
@@ -553,6 +707,26 @@ $$\ln S_T \sim \phi\!\left[\ln S_0 + \left(\mu - \tfrac{\sigma^2}{2}\right)T,\; 
 
 通常の微分の感覚で $d(\ln S) = dS/S$ とすると $-\sigma^2/2$ の項が欠落します。
 下のセルでこの差を数値で確認します。""")
+)
+cells.append(
+    md(
+        scaffold(
+            core="伊藤の補題：$(\\Delta x)^2 \\to b^2\\Delta t$ が消えない。d(lnS) のドリフトは μ−σ²/2。",
+            intuition="関数を確率変数で展開すると 2 次項が生き残る——ここが普通の微積と決定的に違う。",
+            practice="BSM 偏微分方程式の導出そのもの。σ²/2 の項を落とすと価格も期待リターン推定も系統的にズレる。",
+        )
+    )
+)
+cells.append(
+    md(
+        practice_box(
+            "分散ドラッグ——高ボラ資産の長期リターンが見かけより低い理由",
+            "$E[S_T]=S_0 e^{\\mu T}$ なのに、対数リターンの期待は $\\mu-\\sigma^2/2$。"
+            "σ が高いほど両者が開く（分散ドラッグ）。レバレッジ ETF やボラの高い銘柄を長期保有すると、"
+            "平均リターンが高くても複利成長は $\\sigma^2/2$ だけ目減りする。"
+            "ファンドのパフォーマンス評価やレバレッジ商品の設計で外せない事実。",
+        )
+    )
 )
 
 # Cell 24: Ito verification table

@@ -13,6 +13,7 @@ from . import (
     rates,
     risk,
     swaps,
+    teaching,
     trees,
     volatility,
 )
@@ -30,6 +31,7 @@ __all__ = [
     "rates",
     "risk",
     "swaps",
+    "teaching",
     "trees",
     "volatility",
 ]

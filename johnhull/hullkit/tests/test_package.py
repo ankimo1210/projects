@@ -4,7 +4,7 @@ import hullkit
 
 
 def test_all_submodules_exported():
-    assert len(hullkit.__all__) == 14
+    assert len(hullkit.__all__) == 15
     for name in hullkit.__all__:
         assert hasattr(hullkit, name)
 

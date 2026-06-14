@@ -41,6 +41,7 @@
           <figcaption>
             <h3>{{ fr.title }}{% if fr.is_new %} <span class="badge">NEW</span>{% endif %}</h3>
             <p>{{ fr.blurb }}</p>
+            {% if fr.practice %}<p class="practice"><span class="practice-tag">実務</span>{{ fr.practice }}</p>{% endif %}
           </figcaption>
           <div class="fig-holder">{{ fr.html | safe }}</div>
         </figure>
