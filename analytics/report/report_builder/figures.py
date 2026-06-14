@@ -43,6 +43,13 @@ BOOKS: dict[str, BookMeta] = {
         accent="#16a34a",
         book_index="../../bayesian/book/_build/html/index.html",
     ),
+    "laplace": BookMeta(
+        key="laplace",
+        title="ラプラス変換の風景",
+        subtitle="時間・複素周波数・システムの言語",
+        accent="#7c3aed",
+        book_index="../../laplace/book/_build/html/index.html",
+    ),
 }
 
 
@@ -276,6 +283,47 @@ def _bayes_gibbs_path():
     return bviz.plotly_gibbs_path()
 
 
+# ---------------------------------------------------------------------------
+# laplace
+# ---------------------------------------------------------------------------
+
+
+def _lap_pole_response():
+    from laplace_book import plotting as lp
+
+    return lp.plotly_pole_response_slider()
+
+
+def _lap_step_zeta():
+    from laplace_book import plotting as lp
+
+    return lp.plotly_step_response_slider()
+
+
+def _lap_pole_zero():
+    from laplace_book import plotting as lp
+
+    return lp.plotly_pole_zero()
+
+
+def _lap_abs_f_surface():
+    from laplace_book import plotting as lp
+
+    return lp.plotly_abs_F_surface()
+
+
+def _lap_root_locus():
+    from laplace_book import plotting as lp
+
+    return lp.plotly_root_locus()
+
+
+def _lap_rlc_step():
+    from laplace_book import plotting as lp
+
+    return lp.plotly_rlc_step_slider()
+
+
 FIGURES: list[FigureSpec] = [
     # linear_algebra
     FigureSpec(
@@ -470,6 +518,61 @@ FIGURES: list[FigureSpec] = [
         _bayes_gibbs_path,
         is_new=True,
         tags=("slider", "mcmc"),
+    ),
+    # laplace
+    FigureSpec(
+        "lap_pole_response",
+        "laplace",
+        "σ が極を虚軸の向こうへ運ぶ",
+        "複素周波数 s=σ+iω の実部 σ をスライダーで動かすと、応答 e^{σt}cos(ωt) が減衰→持続→発散と変わる。",
+        _lap_pole_response,
+        is_new=True,
+        tags=("slider",),
+    ),
+    FigureSpec(
+        "lap_step_zeta",
+        "laplace",
+        "2次系ステップ応答 vs 減衰比 ζ",
+        "ζ を掃引。<1 で行き過ぎて振動、=1 で最速、>1 でゆっくり。すべて極の位置が決める。",
+        _lap_step_zeta,
+        is_new=True,
+        tags=("slider",),
+    ),
+    FigureSpec(
+        "lap_pole_zero",
+        "laplace",
+        "極・零点と s 平面",
+        "H(s) の極(×)と零点(○)。極が左半面にあれば安定、虚軸を越えると不安定。",
+        _lap_pole_zero,
+        is_new=True,
+        tags=("poles",),
+    ),
+    FigureSpec(
+        "lap_abs_f_surface",
+        "laplace",
+        "|F(s)| は極で尖る地形",
+        "s 平面上の |F(s)| を高さとして描くと、極が山のように尖る(回して確認)。",
+        _lap_abs_f_surface,
+        is_new=True,
+        tags=("surface",),
+    ),
+    FigureSpec(
+        "lap_root_locus",
+        "laplace",
+        "根軌跡:ゲインで極が動く",
+        "ループゲイン k を上げると閉ループ極が軌跡を描く。虚軸を越えるゲインで不安定化する。",
+        _lap_root_locus,
+        is_new=True,
+        tags=("locus",),
+    ),
+    FigureSpec(
+        "lap_rlc_step",
+        "laplace",
+        "RLC のステップ応答 vs R",
+        "直列 RLC の抵抗 R を変えると、underdamped → critical → overdamped と過渡が切り替わる。",
+        _lap_rlc_step,
+        is_new=True,
+        tags=("slider", "circuit"),
     ),
 ]
 
