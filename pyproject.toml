@@ -96,7 +96,7 @@ ignore = [
 "rates_volatility_model/**/*.py" = ["N803", "N806", "N816", "E741"]
 "johnhull/**/*.py" = ["N803", "N806", "N816", "E741"]
 "autostock/**/*.py" = ["N803", "N806", "N816", "E741"]
-"investment-research-platform/**/*.py" = ["N803", "N806", "N816", "E741"]
+"investment-research-platform/**/*.py" = ["N803", "N806", "N812", "N816", "E741"]
 "analytics/**/*.py" = ["N802", "N803", "N806", "N812", "N816", "E741"]
 "notebooks/**/*.py" = ["E402", "F401", "F841", "N803", "N806"]
 # Tests can have unused variables / imports for fixture-driven patterns.
