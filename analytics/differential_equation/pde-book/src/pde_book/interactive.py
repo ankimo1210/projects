@@ -211,3 +211,128 @@ def plotly_field_evolution(
         sliders=[slider],
     )
     return fig
+
+
+def _anim_controls(idx_labels, duration=500):
+    """Play/Pause buttons + a slider for a frame animation. idx_labels: list of (name, label)."""
+    play = dict(
+        label="Play",
+        method="animate",
+        args=[None, {"frame": {"duration": duration, "redraw": True}, "fromcurrent": True}],
+    )
+    pause = dict(
+        label="Pause",
+        method="animate",
+        args=[[None], {"frame": {"duration": 0}, "mode": "immediate"}],
+    )
+    slider = dict(
+        active=0,
+        pad={"t": 40},
+        steps=[
+            dict(
+                method="animate",
+                label=lab,
+                args=[[name], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            )
+            for name, lab in idx_labels
+        ],
+    )
+    return (
+        [dict(type="buttons", direction="left", x=0.0, y=1.18, buttons=[play, pause])],
+        [slider],
+    )
+
+
+def plotly_riemann_convergence(f, a, b, n_values=None):
+    """Animate midpoint Riemann rectangles converging to the integral as n grows."""
+    import plotly.graph_objects as go
+
+    if n_values is None:
+        n_values = [2, 4, 8, 16, 32, 64]
+    xs = np.linspace(a, b, 400)
+    curve = go.Scatter(x=xs, y=f(xs), mode="lines", line=dict(color="black", width=2), name="f(x)")
+
+    def bars(n):
+        edges = np.linspace(a, b, n + 1)
+        mid = 0.5 * (edges[:-1] + edges[1:])
+        return go.Bar(
+            x=mid,
+            y=f(mid),
+            width=(b - a) / n,
+            marker_color="#1f77b4",
+            opacity=0.45,
+            name="midpoint sum",
+        ), float(np.sum(f(mid)) * (b - a) / n)
+
+    frames = []
+    for n in n_values:
+        bar, val = bars(n)
+        frames.append(
+            go.Frame(
+                data=[bar],
+                name=str(n),
+                traces=[1],
+                layout=dict(title=dict(text=f"midpoint Riemann sum: n={n}, sum={val:.4f}")),
+            )
+        )
+    fig = go.Figure(data=[curve, bars(n_values[0])[0]], frames=frames)
+    menus, sliders = _anim_controls([(str(n), f"n={n}") for n in n_values])
+    fig.update_layout(
+        title="midpoint Riemann sum converging to the integral",
+        template="plotly_white",
+        height=460,
+        xaxis_title="x",
+        yaxis_title="f(x)",
+        updatemenus=menus,
+        sliders=sliders,
+        bargap=0,
+    )
+    return fig
+
+
+def plotly_secant_to_tangent(f, x0, h_values=None):
+    """Animate secant lines through x0 shrinking onto the tangent as h -> 0."""
+    import plotly.graph_objects as go
+
+    if h_values is None:
+        h_values = [2.0, 1.0, 0.5, 0.25, 0.1, 0.02]
+    span = max(abs(h) for h in h_values) * 1.4
+    xs = np.linspace(x0 - span, x0 + span, 200)
+    f0 = float(f(x0))
+    hmin = min(h_values)
+    tan = (f(x0 + hmin) - f(x0 - hmin)) / (2 * hmin)
+    curve = go.Scatter(x=xs, y=f(xs), mode="lines", line=dict(color="black", width=2), name="f(x)")
+    tangent = go.Scatter(
+        x=xs,
+        y=f0 + tan * (xs - x0),
+        mode="lines",
+        line=dict(color="#2ca02c", dash="dash"),
+        name="tangent",
+    )
+    pt = go.Scatter(
+        x=[x0], y=[f0], mode="markers", marker=dict(color="black", size=8), showlegend=False
+    )
+
+    def secant(h):
+        s = (f(x0 + h) - f0) / h
+        return go.Scatter(
+            x=xs,
+            y=f0 + s * (xs - x0),
+            mode="lines",
+            line=dict(color="#d62728", width=2),
+            name="secant",
+        )
+
+    frames = [go.Frame(data=[secant(h)], name=f"{h:g}", traces=[3]) for h in h_values]
+    fig = go.Figure(data=[curve, tangent, pt, secant(h_values[0])], frames=frames)
+    menus, sliders = _anim_controls([(f"{h:g}", f"h={h:g}") for h in h_values])
+    fig.update_layout(
+        title="secant slope -> tangent slope as h -> 0",
+        template="plotly_white",
+        height=460,
+        xaxis_title="x",
+        yaxis_title="f(x)",
+        updatemenus=menus,
+        sliders=sliders,
+    )
+    return fig

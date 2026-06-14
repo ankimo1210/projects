@@ -150,6 +150,20 @@ plt.show()
     ))
     cells.append(md(
         r"""
+**アニメーション**(Play で再生、静的 HTML でも動く):$h$ を小さくすると割線(赤)が接線(緑)へ近づきます。
+"""
+    ))
+    cells.append(code(
+        f"""
+import plotly.io as pio
+from {pkg} import interactive
+
+pio.renderers.default = "plotly_mimetype+notebook_connected"
+interactive.plotly_secant_to_tangent(np.sin, x0=1.0).show()
+"""
+    ))
+    cells.append(md(
+        r"""
 導関数そのものを「もとの関数の各点での傾き」として描くと、$f'$ が何を測っているのかが見えます。
 数値微分(中心差分)と厳密な導関数を重ねて確認します。
 """
@@ -230,6 +244,20 @@ for ax, n in zip(axes, (4, 8, 32)):
 fig.tight_layout()
 plt.show()
 print("exact integral (adaptive quad) =", calculus.quad(g, 0, np.pi))
+"""
+    ))
+    cells.append(md(
+        r"""
+**アニメーション**(Play で再生):分割数 $n$ を増やすと、中点長方形の総和が真の面積へ収束していきます。
+"""
+    ))
+    cells.append(code(
+        f"""
+import plotly.io as pio
+from {pkg} import interactive
+
+pio.renderers.default = "plotly_mimetype+notebook_connected"
+interactive.plotly_riemann_convergence(lambda x: np.sin(x) + 1.2, 0, np.pi).show()
 """
     ))
     cells.append(md(

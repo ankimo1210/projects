@@ -974,6 +974,36 @@ fig.tight_layout()
 plt.show()
 """),
         md(r"""
+**アニメーション**(Play で再生):中央の熱い正方形が、時間とともに板全体へ拡散していく様子。
+"""),
+        code("""
+from matplotlib import animation
+from IPython.display import HTML
+
+# 2-D heat diffusion as a movie (matplotlib imshow -> to_jshtml; works offline in the book).
+na = 81
+ga = grids.Grid2D(0.0, 1.0, 0.0, 1.0, na, na)
+dxa = ga.dx
+ua = np.zeros((na, na))
+ua[na // 3:2 * na // 3, na // 3:2 * na // 3] = 1.0
+frames2d = [ua.copy()]
+for k in range(1, 601):
+    lapa = np.roll(ua, 1, 0) + np.roll(ua, -1, 0) + np.roll(ua, 1, 1) + np.roll(ua, -1, 1) - 4 * ua
+    ua = ua + 0.2 * lapa
+    ua[0, :] = ua[-1, :] = ua[:, 0] = ua[:, -1] = 0.0
+    if k % 30 == 0:
+        frames2d.append(ua.copy())
+figa, axa = plt.subplots(figsize=(4.5, 4))
+ima = axa.imshow(frames2d[0], origin="lower", cmap="inferno", vmin=0, vmax=1)
+axa.set_title("2-D heat diffusion")
+axa.set_xticks([])
+axa.set_yticks([])
+anim2d = animation.FuncAnimation(figa, lambda i: (ima.set_data(frames2d[i]), (ima,))[1],
+                                 frames=len(frames2d), interval=150, blit=True)
+plt.close(figa)
+HTML(anim2d.to_jshtml())
+"""),
+        md(r"""
 ## 3. 金融 — Black-Scholes 方程式 (Applied)
 
 オプション価格 $V(S, t)$ は **Black-Scholes 方程式**
