@@ -121,6 +121,35 @@ def plot_pole_and_response(sigma, omega, t, axes=None):
     return axes
 
 
+def plot_damping_geometry(wn=1.0, zetas=(0.2, 0.4, 0.6, 0.85), ax=None):
+    """Second-order poles lie on the circle |s|=wn at angle theta with cos(theta)=zeta.
+
+    Smaller zeta -> poles nearer the imaginary axis -> more oscillation; zeta=1
+    puts both poles on the negative real axis (critically damped).
+    """
+    if ax is None:
+        _, ax = plt.subplots(figsize=(5.5, 5))
+    th = np.linspace(np.pi / 2, 3 * np.pi / 2, 200)
+    ax.plot(wn * np.cos(th), wn * np.sin(th), "k--", lw=1, alpha=0.5, label=f"|s| = wn = {wn}")
+    colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#9467bd", "#d62728"]
+    for i, z in enumerate(zetas):
+        sig = -z * wn
+        wd = wn * np.sqrt(max(0.0, 1.0 - z * z))
+        c = colors[i % len(colors)]
+        ax.scatter([sig, sig], [wd, -wd], s=60, color=c, zorder=3)
+        ax.plot([0, sig], [0, wd], color=c, lw=1, alpha=0.6)
+        ax.annotate(f"zeta={z}", (sig, wd), fontsize=8, color=c)
+    ax.axvline(0, color="k", lw=1.2)
+    ax.axhline(0, color="gray", lw=0.8)
+    ax.set_aspect("equal")
+    ax.set_xlabel("Re(s)")
+    ax.set_ylabel("Im(s)")
+    ax.set_title("Second-order poles: cos(theta) = zeta on the |s|=wn circle")
+    ax.grid(alpha=0.2)
+    ax.legend(loc="lower left", fontsize=8)
+    return ax
+
+
 # --------------------------------------------------------------------------- #
 # Responses and convolution (chapters 04, 05).
 # --------------------------------------------------------------------------- #
@@ -364,6 +393,57 @@ def animate_resonance(omega_n=3.0, zeta=0.05, drive_freqs=None, t_max=24.0, n=70
         fig.tight_layout()
 
     return FuncAnimation(fig, draw, frames=len(drive_freqs), interval=150)
+
+
+def animate_convolution(f, g, t, frames=20):
+    """Animate the flip-and-slide convolution: g(t-tau) slides across f(tau).
+
+    The shaded product f(tau) g(t-tau) integrates to (f*g)(t), traced in the
+    lower panel -- the classic picture of convolution as a running overlap.
+    Returns a FuncAnimation.
+    """
+    from matplotlib.animation import FuncAnimation
+
+    t = np.asarray(t, dtype=float)
+    f = np.asarray(f, dtype=float)
+    g = np.asarray(g, dtype=float)
+    dt = t[1] - t[0]
+    conv = (np.convolve(f, g) * dt)[: t.size]
+    idxs = np.linspace(0, t.size - 1, frames).astype(int)
+    j = np.arange(t.size)
+    ymax = 1.15 * max(float(f.max()), float(g.max()), 1e-9)
+    cmax = 1.15 * max(float(conv.max()), 1e-9)
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5.6))
+
+    def draw(fi):
+        k = idxs[fi]
+        ax1.clear()
+        ax2.clear()
+        src = k - j
+        valid = (src >= 0) & (src < g.size)
+        g_shift = np.zeros_like(t)
+        g_shift[j[valid]] = g[src[valid]]
+        prod = f * g_shift
+        ax1.plot(t, f, color=ACCENT, label="f(tau)")
+        ax1.plot(t, g_shift, color="#ff7f0e", label="g(t - tau)")
+        ax1.fill_between(t, 0, prod, color=STABLE_COLOR, alpha=0.35, label="f(tau) g(t-tau)")
+        ax1.axvline(t[k], color="gray", ls=":")
+        ax1.set_ylim(0, ymax)
+        ax1.set_xlabel("tau")
+        ax1.set_title(f"t = {t[k]:.2f}: slide g(t-tau) across f(tau)")
+        ax1.legend(loc="upper right", fontsize=8)
+        ax1.grid(alpha=0.25)
+        ax2.plot(t[: k + 1], conv[: k + 1], color=STABLE_COLOR)
+        ax2.scatter([t[k]], [conv[k]], color=STABLE_COLOR, zorder=3)
+        ax2.set_xlim(t[0], t[-1])
+        ax2.set_ylim(0, cmax)
+        ax2.set_xlabel("t")
+        ax2.set_ylabel("(f * g)(t)")
+        ax2.set_title("(f * g)(t) = area of the shaded overlap")
+        ax2.grid(alpha=0.25)
+        fig.tight_layout()
+
+    return FuncAnimation(fig, draw, frames=len(idxs), interval=160)
 
 
 # --------------------------------------------------------------------------- #

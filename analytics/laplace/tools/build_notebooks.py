@@ -86,6 +86,30 @@ $$ F(s) = \\int_0^\\infty f(t)\\, e^{-st}\\, dt $$
 
 ここで $s = \\sigma + i\\omega$ は **複素周波数**。$\\sigma$ は成長・減衰の速さ、$\\omega$ は振動の速さを表します。
 つまりラプラス変換は、世の中の「成長・減衰・振動」をひとつの言葉でまとめて扱うための変換です。
+下の4枚は、本書が1つの言語($e^{st}$)で束ねる現象たち。
+"""
+        ),
+        code(
+            r"""
+tt = np.linspace(0, 8, 400)
+panels = [
+    ("growth:  s = +0.30", 0.30, 0.0),
+    ("decay:  s = -0.50", -0.50, 0.0),
+    ("oscillation:  s = +/- 3i", 0.0, 3.0),
+    ("damped osc:  s = -0.35 +/- 3i", -0.35, 3.0),
+]
+fig, axes = plt.subplots(2, 2, figsize=(11, 6))
+for ax, (lab, sig, om) in zip(axes.ravel(), panels):
+    env = np.exp(sig * tt)
+    ax.plot(tt, env * np.cos(om * tt), color=plotting.ACCENT)
+    ax.plot(tt, env, "--", color="gray", lw=1)
+    ax.plot(tt, -env, "--", color="gray", lw=1)
+    ax.axhline(0, color="gray", lw=0.8)
+    ax.set_title(lab)
+    ax.set_xlabel("t")
+    ax.grid(alpha=0.25)
+fig.suptitle("Four phenomena, one language:  e^{st} with s = sigma + i*omega")
+fig.tight_layout()
 """
         ),
         md(
@@ -625,6 +649,32 @@ display(Linv(F))                   # 2 e^{-t} - e^{-2t}
         ),
         md(
             """
+## 6b. 部分分数 = モードの重ね合わせ (Applied)
+
+部分分数分解は、$F(s)$ を **単純なモードの和** に割ること。各片の逆変換 $f_i(t)$ を足すと元の $f(t)$ に戻る。
+$F(s)=\\dfrac{1}{s(s+1)(s+2)}$ を3つのモード(定数・$e^{-t}$・$e^{-2t}$)に分けて重ね合わせる。
+"""
+        ),
+        code(
+            r"""
+Fsup = 1 / (s * (s + 1) * (s + 2))
+parts = partial_fractions(Fsup).as_ordered_terms()    # the additive pieces
+tt = np.linspace(0, 6, 400)
+fig, ax = plt.subplots(figsize=(7, 4.2))
+total = np.zeros_like(tt)
+for term in parts:
+    yk = transforms.as_function(sp.simplify(Linv(term)))(tt)
+    yk = np.broadcast_to(yk, tt.shape).astype(float)  # constants -> full array
+    total += yk
+    ax.plot(tt, yk, "--", lw=1.2, label=f"mode: {sp.simplify(Linv(term))}")
+ax.plot(tt, total, color="k", lw=2.5, label="sum = f(t)")
+ax.set_title("partial fractions = superposition of modes")
+ax.set_xlabel("t"); ax.set_ylabel("f(t)"); ax.legend(fontsize=8); ax.grid(alpha=0.25)
+plt.tight_layout()
+"""
+        ),
+        md(
+            """
 ## 7. 重根の場合
 
 $F(s)=\\dfrac{1}{(s+1)^2}$ のような重根は、$t$ が掛かった項を生みます。
@@ -838,6 +888,20 @@ $\\zeta>1$ はゆっくり(overdamped)。すべて分母(極)で決まります(
         ),
         md(
             """
+## 7b. 減衰比の幾何 (Applied)
+
+上の $\\zeta$ は、極の位置の **幾何** そのもの。2次系の極は半径 $\\omega_n$ の円上にあり、負の実軸からの
+角度 $\\theta$ が $\\cos\\theta=\\zeta$。$\\zeta$ が小さい(極が虚軸寄り)ほど振動的になる。
+"""
+        ),
+        code(
+            r"""
+plotting.plot_damping_geometry(wn=1.5, zetas=(0.2, 0.5, 0.85, 1.0))
+plt.tight_layout()
+"""
+        ),
+        md(
+            """
 ## 8. Failure Mode
 
 - 分母 $as^2+bs+c$ の根が **右半面** にあると $y(t)$ が発散(不安定、06 章)。
@@ -942,6 +1006,28 @@ g = np.exp(-2 * tt)                                             # exponential re
 conv = systems.convolve(f, g, dt)
 plotting.plot_convolution(tt, f, g, conv)
 plt.tight_layout()
+"""
+        ),
+        md(
+            """
+## 4b. 畳み込みのアニメーション (Applied)
+
+畳み込みの定番の見方:応答 $g$ を **反転して滑らせ**、各 $t$ での重なり(積 $f(\\tau)g(t-\\tau)$ の面積)が
+$(f*g)(t)$。下段にその出力が描かれていく。
+"""
+        ),
+        code(
+            r"""
+from IPython.display import HTML
+
+dt = 0.05
+tt = np.arange(0, 9, dt)
+f = datasets.unit_step(tt, 0.5) - datasets.unit_step(tt, 1.5)   # rectangular pulse
+g = np.exp(-2 * tt)                                             # exponential response
+anim = plotting.animate_convolution(f, g, tt)
+html = anim.to_jshtml(fps=8)
+plt.close("all")
+HTML(html)
 """
         ),
         md(
@@ -1439,6 +1525,25 @@ print("Var   =", sp.simplify(EX2 - EX**2))
         ),
         md(
             """
+## 2b. 指数分布とそのモーメント (Applied)
+
+指数分布 $\\lambda e^{-\\lambda x}$ の平均は $1/\\lambda$。$\\lambda$ を変えて密度と平均を描く。
+"""
+        ),
+        code(
+            r"""
+x = np.linspace(0, 6, 400)
+fig, ax = plt.subplots(figsize=(6.5, 4))
+for lam_v in [0.5, 1.0, 2.0]:
+    ax.plot(x, lam_v * np.exp(-lam_v * x), label=f"lambda={lam_v}: mean=1/lambda={1 / lam_v:.2f}")
+    ax.axvline(1 / lam_v, color="gray", ls=":", lw=1)
+ax.set_title("Exponential pdf  lambda e^{-lambda x}  (mean = 1/lambda)")
+ax.set_xlabel("x"); ax.set_ylabel("density"); ax.legend(); ax.grid(alpha=0.25)
+plt.tight_layout()
+"""
+        ),
+        md(
+            """
 ## 3. 割引現在価値 (PV) — 金融の中のラプラス変換
 
 連続割引の現在価値
@@ -1462,6 +1567,27 @@ print("PV analytic c0/(r-g):", c0 / (r - g))     # Gordon growth; requires r > g
             """
 $r\\le g$ だと積分が発散し、PV が定義できません。これは「ROC の外」と同じことで、
 **割引率が成長率を上回らねばならない** という金融の常識が、収束域として自然に出てきます。
+"""
+        ),
+        md(
+            """
+## 3b. PV は r → g で発散する (Applied)
+
+成長率 $g$ を固定して割引率 $r$ を動かすと、$PV=c_0/(r-g)$ は $r\\to g^+$ で発散する。
+発散の境界 $r=g$ が、ちょうどラプラス変換の **収束域(ROC)の縁** にあたる。
+"""
+        ),
+        code(
+            r"""
+g_fixed, c0v = 0.03, 100.0
+r_vals = np.linspace(0.035, 0.15, 300)
+fig, ax = plt.subplots(figsize=(6.5, 4))
+ax.plot(r_vals, c0v / (r_vals - g_fixed), color=plotting.ACCENT)
+ax.axvline(g_fixed, color="#d62728", ls="--", label=f"r = g = {g_fixed} (ROC boundary)")
+ax.set_ylim(0, 8000)
+ax.set_title("Gordon growth: PV = c0/(r-g) blows up as r -> g")
+ax.set_xlabel("discount rate r"); ax.set_ylabel("present value"); ax.legend(); ax.grid(alpha=0.25)
+plt.tight_layout()
 """
         ),
         md(

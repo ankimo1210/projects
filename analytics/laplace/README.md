@@ -39,8 +39,9 @@ Jupyter Notebook ベースのラプラス変換教科書プロジェクト。
 - `systems.py` — 伝達関数、極/零点、安定性判定(Routh-Hurwitz 含む)、数値部分分数、ステップ/インパルス/
   強制応答、直列・フィードバック・根軌跡、ゲイン/位相余裕、PID、畳み込み
 - `circuits.py` — RC/RLC 回路の伝達関数と減衰パラメータ
-- `plotting.py` — 指数・減衰振動・$s$ 平面・極と応答・畳み込み・Bode・根軌跡・Nyquist、
-  Plotly の $|F(s)|$ サーフェス、アニメーション(共振・安定境界クロス)、`analytics/report` 用 Plotly 図群
+- `plotting.py` — 指数・減衰振動・$s$ 平面・極と応答・畳み込み・Bode・根軌跡・Nyquist・減衰比の幾何、
+  Plotly の $|F(s)|$ サーフェス、アニメ(共振・安定境界クロス・畳み込みの flip-and-slide)、
+  `analytics/report` 用 Plotly 図群
 - `discrete.py` — z 変換の基礎・$z=e^{sT}$ 写像・離散伝達関数・離散の安定性(11 章)
 - `widgets.py` — ipywidgets による複素周波数 / 2 次系 / フィードバックの対話的探索
 - `datasets.py` — 合成信号(ステップ・近似インパルス・減衰正弦など、seed 固定)

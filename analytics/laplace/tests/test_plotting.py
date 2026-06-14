@@ -75,3 +75,22 @@ def test_plot_nyquist():
     L = S.tf([1.0], np.poly([-1.0, -2.0, -3.0]))
     ax = P.plot_nyquist(L, w=np.logspace(-2, 3, 500))
     assert isinstance(ax, plt.Axes)
+
+
+def test_plot_damping_geometry():
+    ax = P.plot_damping_geometry()
+    assert isinstance(ax, plt.Axes)
+
+
+def test_animations_render_jshtml():
+    t = np.linspace(0, 6, 100)
+    f = (t >= 0.5).astype(float) - (t >= 1.5).astype(float)
+    g = np.exp(-2 * t)
+    anims = [
+        P.animate_pole_crossing(sigmas=np.linspace(-0.5, 0.3, 4)),
+        P.animate_resonance(drive_freqs=np.linspace(1.0, 5.0, 4)),
+        P.animate_convolution(f, g, t, frames=5),
+    ]
+    for anim in anims:
+        assert anim.to_jshtml(fps=5)  # renders without error
+        plt.close("all")
