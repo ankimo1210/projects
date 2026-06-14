@@ -7,10 +7,11 @@ Layout:
 - plotting   : calculus visuals + field snapshots, heatmaps, animations
 - widgets    : ipywidgets demos (JupyterLab only)
 - interactive: Plotly slider figures (also render in exported HTML)
+- advanced    : spectral heat, KdV solitons, Gray-Scott reaction-diffusion, 2-D wave (09 章)
 - datasets   : initial/boundary conditions, sample fields
 """
 
-from . import calculus, datasets, grids, interactive, plotting, solvers, widgets
+from . import advanced, calculus, datasets, grids, interactive, plotting, solvers, widgets
 from .grids import Grid1D, Grid2D, courant_number, heat_number
 from .solvers import (
     solve_heat_explicit,
@@ -23,6 +24,7 @@ from .solvers import (
 __all__ = [
     "Grid1D",
     "Grid2D",
+    "advanced",
     "calculus",
     "courant_number",
     "datasets",
