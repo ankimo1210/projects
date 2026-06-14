@@ -54,7 +54,7 @@ import matplotlib.pyplot as plt
 import sympy as sp
 from IPython.display import display
 
-from laplace_book import transforms, systems, circuits, plotting, datasets, widgets
+from laplace_book import transforms, systems, circuits, plotting, datasets, widgets, discrete
 from laplace_book.transforms import t, s, L, Linv, numeric_laplace, partial_fractions
 
 import plotly.io as pio
@@ -429,6 +429,31 @@ $$ F(s)=\\int_0^\\infty f(t)e^{-st}\\,dt, \\qquad \\text{収束するのは } \\
 
 この $\\sigma_0$(収束横座標)より右側が **収束域 (ROC)**。$f$ が $e^{\\sigma_0 t}$ 程度の増大(指数オーダー)なら
 $\\sigma > \\sigma_0$ で積分が収まります。
+"""
+        ),
+        md(
+            """
+## 5b. 両側変換とフーリエの関係 (Advanced)
+
+$s=\\sigma+i\\omega$ の **虚軸**($\\sigma=0$)に制限すると、ラプラス変換はフーリエ変換になる。
+因果信号 $f(t)$($t\\ge0$、減衰)なら虚軸が収束域に入り、$|F(i\\omega)|$ がそのまま **振幅スペクトル**。
+下では $f=e^{-2t}$ で $F(i\\omega)=1/(2+i\\omega)$ を数値確認する。両側変換($t<0$ も含む積分)は
+フーリエを一般化した枠組みで、収束域の **帯** で表現が決まる。
+"""
+        ),
+        code(
+            r"""
+omega = np.linspace(-15, 15, 200)
+F_iw = numeric_laplace(lambda x: np.exp(-2 * x), 1j * omega)   # Laplace on the imaginary axis
+F_exact = 1.0 / (2.0 + 1j * omega)                            # = Fourier transform of e^{-2t} u(t)
+print("max |numeric F(iw) - 1/(2+iw)| =", np.max(np.abs(F_iw - F_exact)))
+
+fig, ax = plt.subplots(figsize=(6.5, 4))
+ax.plot(omega, np.abs(F_exact), color=plotting.ACCENT, label="|F(i omega)|  (amplitude spectrum)")
+ax.set_xlabel("omega"); ax.set_ylabel("|F(i omega)|")
+ax.set_title("Laplace on the imaginary axis = Fourier transform of e^{-2t} u(t)")
+ax.grid(alpha=0.25); ax.legend()
+plt.tight_layout()
 """
         ),
         md(
@@ -822,6 +847,24 @@ $\\zeta>1$ はゆっくり(overdamped)。すべて分母(極)で決まります(
         ),
         md(
             """
+## 8b. 共振のアニメーション (Applied)
+
+軽い減衰の2次系をいろいろな駆動周波数 $\\omega$ で揺らす。$\\omega$ が固有振動数 $\\omega_n$ に近づくと
+応答振幅が跳ね上がる(**共振**)。各フレームのタイトルに $|H(i\\omega)|$ を表示。
+"""
+        ),
+        code(
+            r"""
+from IPython.display import HTML
+
+anim = plotting.animate_resonance(omega_n=3.0, zeta=0.05)
+html = anim.to_jshtml(fps=8)
+plt.close("all")   # close the figure so the inline backend does not also show a static frame
+HTML(html)
+"""
+        ),
+        md(
+            """
 ## 9. Application
 
 RC/RLC 回路の過渡(07 章)、サスペンションの乗り心地、サーボの位置決め、いずれも本章のパイプラインそのもの。
@@ -1131,6 +1174,24 @@ for den in ([1, 6, 11, 6], [1, 1, 1, 6], [1, 6, 11, 106]):
             r"""
 # Interactive: wn and zeta move the pole pair and reshape the step response.
 widgets.explore_second_order()
+"""
+        ),
+        md(
+            """
+## 8b. 安定境界をまたぐアニメーション (Applied)
+
+共役な極対の実部 $\\sigma$ を負から正へ動かすと、極が虚軸を横切り、応答が **減衰 → 持続 → 発散** と
+変わる。安定性の境界(虚軸)を目で追う。
+"""
+        ),
+        code(
+            r"""
+from IPython.display import HTML
+
+anim = plotting.animate_pole_crossing(omega=3.0)
+html = anim.to_jshtml(fps=8)
+plt.close("all")
+HTML(html)
 """
         ),
         md(
@@ -1653,6 +1714,139 @@ display(L(lam**2 * t * sp.exp(-lam * t)))               # lambda^2/(s+lambda)^2 
     )
 
 
+# =========================================================================== #
+# 11 — z-transform: the discrete bridge  (extension)
+# =========================================================================== #
+def nb11():
+    body = [
+        md(
+            """
+## 1. Big Picture — サンプリングと z 変換
+
+連続信号を一定間隔 $T$ で **標本化** すると、時間は数列 $x[k]=x(kT)$ になる。連続のラプラス変換に
+対応するのが **z 変換**
+
+$$ X(z) = \\sum_{k=0}^{\\infty} x[k]\\, z^{-k}, $$
+
+そして両者は $z=e^{sT}$ で結ばれる。本章はラプラスから離散の世界への橋渡し(入口)。
+"""
+        ),
+        md(
+            """
+## 2. Problem / 3. Intuition
+
+離散の漸化式(差分方程式)も $z$ 領域では代数になる(微分が掛け算になったのと同じ構図)。
+$z^{-1}$ は **1サンプルの遅延**。連続の固有関数 $e^{st}$ の役を、離散では $z^k=e^{skT}$ が担う。
+"""
+        ),
+        md(
+            """
+## 4. Definition と 幾何級数ペア
+
+最重要ペアは幾何数列 $a^k$:
+
+$$ \\sum_{k=0}^{\\infty} a^k z^{-k} = \\frac{z}{z-a} \\quad (|z|>|a|). $$
+
+連続の $e^{-\\alpha t}\\leftrightarrow 1/(s+\\alpha)$ の離散版。`discrete.numeric_ztransform` で確認する。
+"""
+        ),
+        code(
+            r"""
+seq = discrete.geometric_sequence(0.5, 300)        # 0.5^k
+for z in [2.0, 1.5, 1.0 + 1j]:
+    num = discrete.numeric_ztransform(seq, z)
+    exact = complex(z) / (complex(z) - 0.5)
+    print(f"z={z}:  numeric={num:.4f}   z/(z-a)={exact:.4f}")
+"""
+        ),
+        md(
+            """
+## 5. s 平面 → z 平面($z=e^{sT}$)
+
+$z=e^{sT}$ は s 平面を z 平面へ巻きつける写像。一定 $\\sigma$ の縦線は半径 $e^{\\sigma T}$ の円になり、
+**左半面($\\sigma<0$)→ 単位円の内側**、**虚軸 → 単位円**、右半面 → 外側。
+"""
+        ),
+        code(
+            r"""
+dt = 1.0
+omega = np.linspace(-np.pi, np.pi, 240)            # one Nyquist band
+fig, (axs, axz) = plt.subplots(1, 2, figsize=(11, 4.6))
+for sig in [-0.8, -0.4, 0.0, 0.4]:
+    s = sig + 1j * omega
+    axs.plot(s.real, s.imag, label=f"sigma={sig}")
+    z = discrete.s_to_z(s, dt)
+    axz.plot(z.real, z.imag)
+th = np.linspace(0, 2 * np.pi, 240)
+axz.plot(np.cos(th), np.sin(th), "k--", lw=1, alpha=0.6, label="unit circle")
+axs.axvline(0, color="k", lw=1); axs.set_title("s-plane: lines of constant sigma")
+axs.set_xlabel("Re s"); axs.set_ylabel("Im s"); axs.legend(fontsize=8); axs.grid(alpha=0.2)
+axz.set_title("z = e^{s*dt}: LHP -> inside the unit circle")
+axz.set_xlabel("Re z"); axz.set_ylabel("Im z"); axz.set_aspect("equal")
+axz.legend(fontsize=8); axz.grid(alpha=0.2)
+plt.tight_layout()
+"""
+        ),
+        md(
+            """
+## 6. 離散の安定性とステップ応答
+
+連続では「極が左半面」で安定。離散では **極が単位円の内側** $|z|<1$ なら安定。
+`discrete.is_stable_discrete` が判定する。
+"""
+        ),
+        code(
+            r"""
+fig, ax = plt.subplots(figsize=(7, 4))
+for a, lab in [(0.5, "a=0.5 (stable)"), (0.9, "a=0.9 (stable, slow)"), (1.1, "a=1.1 (unstable)")]:
+    b = (1.0 - a) if a < 1 else 0.1                # gain so a stable system has DC gain 1
+    sysd = discrete.discrete_tf([b], [1.0, -a], dt=1.0)
+    k, y = discrete.discrete_step_response(sysd, n=30)
+    ax.step(k, y, where="post", label=f"{lab}, |z|={a}, stable={discrete.is_stable_discrete(sysd)}")
+ax.axhline(1.0, color="gray", ls=":"); ax.set_ylim(-0.3, 2.5)
+ax.set_xlabel("k (sample)"); ax.set_ylabel("y[k]")
+ax.set_title("discrete step: pole inside |z|<1 settles, outside diverges")
+ax.legend(fontsize=8); ax.grid(alpha=0.25)
+plt.tight_layout()
+"""
+        ),
+        md(
+            """
+## 7. ラプラスとの対応(まとめ)
+
+| 連続(ラプラス) | 離散(z 変換) |
+|---|---|
+| $\\mathcal{L}\\{f\\}=\\int_0^\\infty f e^{-st}dt$ | $X(z)=\\sum_k x[k] z^{-k}$ |
+| $e^{-\\alpha t}\\leftrightarrow 1/(s+\\alpha)$ | $a^k \\leftrightarrow z/(z-a)$ |
+| 微分 → $s$ 倍 | 1サンプル遅延 → $z^{-1}$ 倍 |
+| 安定 ⇔ 極が左半面 | 安定 ⇔ 極が単位円内 |
+| 虚軸 = フーリエ変換 | 単位円 = 離散時間フーリエ(DTFT) |
+
+橋は $z=e^{sT}$。サンプリング定理・エイリアシングは続編へ。
+"""
+        ),
+        md(
+            """
+## 8. Exercises / TODO
+
+- **Basic**: $x[k]=2^{-k}$ の z 変換を求め、収束域 $|z|>1/2$ を述べよ。
+- **Applied**: 差分方程式 $y[k]-0.8\\,y[k-1]=x[k]$ の伝達関数 $H(z)=1/(1-0.8z^{-1})$ を作り、
+  `discrete` でステップ応答を描け。
+- **Advanced**: 双一次変換 $s=\\frac{2}{T}\\frac{z-1}{z+1}$ による連続→離散の離散化をまとめよ。
+
+> **TODO(今後の拡張)**: サンプリング定理・エイリアシング、DTFT/DFT、双一次変換によるフィルタ設計、
+> 連続コントローラの離散化を追加。
+"""
+        ),
+    ]
+    return assemble(
+        "11. z 変換 — 離散の世界への橋渡し",
+        [("—", "サンプリング・z 変換・s→z 写像・離散の安定性")],
+        "サンプリングで連続→離散へ。$z=e^{sT}$ が s 平面を z 平面へ写し、左半面 → 単位円内、安定性も対応する。",
+        body,
+    )
+
+
 BUILDERS = {
     "00_overview": nb00,
     "01_exponential_decay_complex_frequency": nb01,
@@ -1665,6 +1859,7 @@ BUILDERS = {
     "08_applications_probability_signals_finance": nb08,
     "09_capstone_three_lenses": nb09,
     "10_exercise_solutions": nb10,
+    "11_z_transform_discrete_bridge": nb11,
 }
 
 

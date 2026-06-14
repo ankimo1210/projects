@@ -27,6 +27,7 @@ Jupyter Notebook ベースのラプラス変換教科書プロジェクト。
 | `07_control_systems_and_circuits` | RC/RLC・ステップ/インパルス応答・フィードバック・Bode の入口 |
 | `08_applications_probability_signals_finance` | 確率の MGF・割引現在価値(Gordon 成長と ROC)・待ち行列の入口 |
 | `09_capstone_three_lenses` | キャップストーン: 1つの2次系を ODE/畳み込み/極の3視点で解き一致を確認 |
+| `11_z_transform_discrete_bridge` | 拡張: サンプリング・z 変換・$z=e^{sT}$ による s→z 写像・離散の安定性 |
 | `10_exercise_solutions` | 付録: 01〜08 章 演習の解答例 |
 
 重点実装は **01・02・04・05・06・09**。03・07・08 は実内容に加え「今後の拡張(TODO)」を明記している。
@@ -39,7 +40,8 @@ Jupyter Notebook ベースのラプラス変換教科書プロジェクト。
   強制応答、直列・フィードバック・根軌跡、ゲイン/位相余裕、PID、畳み込み
 - `circuits.py` — RC/RLC 回路の伝達関数と減衰パラメータ
 - `plotting.py` — 指数・減衰振動・$s$ 平面・極と応答・畳み込み・Bode・根軌跡・Nyquist、
-  Plotly の $|F(s)|$ サーフェス
+  Plotly の $|F(s)|$ サーフェス、アニメーション(共振・安定境界クロス)、`analytics/report` 用 Plotly 図群
+- `discrete.py` — z 変換の基礎・$z=e^{sT}$ 写像・離散伝達関数・離散の安定性(11 章)
 - `widgets.py` — ipywidgets による複素周波数 / 2 次系 / フィードバックの対話的探索
 - `datasets.py` — 合成信号(ステップ・近似インパルス・減衰正弦など、seed 固定)
 
@@ -128,5 +130,6 @@ uv run pytest analytics/laplace/tests -q
 - 07 章: フィルタ付き微分の実装可能 PID、状態空間表現、オペアンプ回路
   (根軌跡・ゲイン/位相余裕・Nyquist・PI は実装済み)
 - 08 章: ラプラス-スティルチェス変換と M/M/1、債券・期間構造、特性関数との対応、SDE 生成作用素
-- 全体: 両側変換・$z$ 変換への橋渡し、アニメーション(変換パイプライン・根軌跡・共振)、
-  `analytics/report` ポータルへの代表可視化の登録
+- 11 章: サンプリング定理・エイリアシング、DTFT/DFT、双一次変換によるフィルタ設計
+- 全体: 変換パイプラインのアニメーション、両側変換のさらなる展開
+  (z 変換章・共振/安定境界アニメ・`analytics/report` 統合は実装済み)

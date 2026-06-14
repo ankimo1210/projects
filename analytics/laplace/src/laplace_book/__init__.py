@@ -6,13 +6,21 @@ where differentiation becomes multiplication, convolution becomes a product,
 and ODEs become algebra. These helpers keep that machinery out of the prose.
 """
 
-from . import circuits, datasets, plotting, systems, transforms, widgets
+from . import circuits, datasets, discrete, plotting, systems, transforms, widgets
 from .circuits import (
     rc_highpass,
     rc_lowpass,
     rlc_params,
     rlc_series_vc,
     rlc_series_vr,
+)
+from .discrete import (
+    discrete_step_response,
+    discrete_tf,
+    geometric_sequence,
+    is_stable_discrete,
+    numeric_ztransform,
+    s_to_z,
 )
 from .systems import (
     classify_stability,
@@ -59,16 +67,22 @@ __all__ = [
     "convolve",
     "datasets",
     "dc_gain",
+    "discrete",
+    "discrete_step_response",
+    "discrete_tf",
     "evaluate",
     "feedback",
     "first_order",
     "gain_phase_margin",
+    "geometric_sequence",
     "impulse_response",
     "inverse_laplace_stehfest",
     "inverse_laplace_talbot",
     "is_stable",
+    "is_stable_discrete",
     "laplace_pairs",
     "numeric_laplace",
+    "numeric_ztransform",
     "partial_fraction_numeric",
     "partial_fractions",
     "pid",
@@ -83,6 +97,7 @@ __all__ = [
     "root_locus",
     "routh_hurwitz",
     "s",
+    "s_to_z",
     "second_order",
     "second_order_params",
     "series",

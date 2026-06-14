@@ -283,3 +283,310 @@ def surface_abs_F(F_callable, sigma_range=(-2, 2), omega_range=(-6, 6), n=80):
         margin={"l": 0, "r": 0, "t": 40, "b": 0},
     )
     return fig
+
+
+# --------------------------------------------------------------------------- #
+# Animations (matplotlib FuncAnimation; display with HTML(anim.to_jshtml())).
+# --------------------------------------------------------------------------- #
+def animate_pole_crossing(omega=3.0, sigmas=None, t_max=12.0, n=300):
+    """Animate a conjugate pole pair sweeping across the imaginary axis.
+
+    As sigma goes from negative (decay) through 0 (sustained) to positive
+    (growth), the pole position and the response e^{sigma t} cos(omega t) change
+    together -- the stability boundary made visual. Returns a FuncAnimation.
+    """
+    from matplotlib.animation import FuncAnimation
+
+    if sigmas is None:
+        sigmas = np.linspace(-0.6, 0.4, 18)
+    t = np.linspace(0.0, t_max, n)
+    lim = 1.5 * max(1.0, omega)
+    ymax = float(np.exp(max(sigmas) * t_max))
+    fig, (ax_s, ax_t) = plt.subplots(1, 2, figsize=(11, 4.2))
+
+    def draw(i):
+        ax_s.clear()
+        ax_t.clear()
+        sig = sigmas[i]
+        plot_s_plane(
+            poles=[complex(sig, omega), complex(sig, -omega)],
+            ax=ax_s,
+            lim=lim,
+            title=f"pole: sigma = {sig:+.2f}",
+        )
+        env = np.exp(sig * t)
+        ax_t.plot(t, env * np.cos(omega * t), color=ACCENT)
+        ax_t.plot(t, env, "--", color="gray", lw=1)
+        ax_t.plot(t, -env, "--", color="gray", lw=1)
+        ax_t.axhline(0, color="gray", lw=0.8)
+        ax_t.set_ylim(-ymax, ymax)
+        ax_t.set_xlabel("t")
+        ax_t.set_ylabel("response")
+        regime = "stable" if sig < -1e-9 else ("marginal" if abs(sig) <= 1e-9 else "unstable")
+        ax_t.set_title(f"response ({regime})")
+        ax_t.grid(alpha=0.25)
+        fig.tight_layout()
+
+    return FuncAnimation(fig, draw, frames=len(sigmas), interval=120)
+
+
+def animate_resonance(omega_n=3.0, zeta=0.05, drive_freqs=None, t_max=24.0, n=700):
+    """Animate driving a lightly-damped 2nd-order system at sweeping frequencies.
+
+    The response amplitude peaks as the drive frequency approaches omega_n
+    (resonance), tracked by |H(i*omega_drive)|. Returns a FuncAnimation.
+    """
+    from matplotlib.animation import FuncAnimation
+
+    from . import systems
+
+    if drive_freqs is None:
+        drive_freqs = np.linspace(0.3 * omega_n, 1.8 * omega_n, 18)
+    t = np.linspace(0.0, t_max, n)
+    sys = systems.second_order(omega_n, zeta)
+    gains = np.array([abs(systems.evaluate(sys, 1j * wd)) for wd in drive_freqs])
+    ymax = 1.2 * float(gains.max())
+    fig, ax = plt.subplots(figsize=(7.5, 4.2))
+
+    def draw(i):
+        ax.clear()
+        wd = drive_freqs[i]
+        u = np.sin(wd * t)
+        y = systems.forced_response(sys, u, t)
+        ax.plot(t, y, color=ACCENT, label="response")
+        ax.plot(t, u, color="gray", lw=0.8, alpha=0.6, label="drive")
+        ax.set_ylim(-ymax, ymax)
+        ax.set_title(f"drive w = {wd:.2f}  (w_n = {omega_n}):  |H(iw)| = {gains[i]:.2f}")
+        ax.set_xlabel("t")
+        ax.set_ylabel("amplitude")
+        ax.legend(loc="upper right")
+        ax.grid(alpha=0.25)
+        fig.tight_layout()
+
+    return FuncAnimation(fig, draw, frames=len(drive_freqs), interval=150)
+
+
+# --------------------------------------------------------------------------- #
+# Plotly figures for the analytics report portal (self-contained, slider-based).
+# --------------------------------------------------------------------------- #
+def _plotly_slider(labels, frames_data, title, xaxis, yaxis, active=0, prefix=""):
+    """Assemble a Plotly slider figure from per-frame trace lists."""
+    import plotly.graph_objects as go
+
+    frames = [go.Frame(name=labels[i], data=frames_data[i]) for i in range(len(labels))]
+    fig = go.Figure(data=frames_data[active], frames=frames)
+    steps = [
+        {
+            "args": [[labels[i]], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            "label": labels[i],
+            "method": "animate",
+        }
+        for i in range(len(labels))
+    ]
+    fig.update_layout(
+        title=title,
+        xaxis_title=xaxis,
+        yaxis_title=yaxis,
+        height=440,
+        sliders=[{"active": active, "currentvalue": {"prefix": prefix}, "steps": steps}],
+        margin={"l": 50, "r": 20, "t": 50, "b": 40},
+    )
+    return fig
+
+
+def plotly_pole_response_slider(omega=3.0, t_max=12.0, n=300):
+    """Slider over sigma: the response e^{sigma t} cos(omega t) morphs decay -> growth."""
+    import plotly.graph_objects as go
+
+    sigmas = np.round(np.linspace(-0.6, 0.4, 11), 2)
+    t = np.linspace(0.0, t_max, n)
+    frames_data = []
+    for sig in sigmas:
+        env = np.exp(sig * t)
+        frames_data.append(
+            [
+                go.Scatter(x=t, y=env * np.cos(omega * t), name="response", line={"color": ACCENT}),
+                go.Scatter(x=t, y=env, name="envelope", line={"color": "gray", "dash": "dash"}),
+                go.Scatter(x=t, y=-env, showlegend=False, line={"color": "gray", "dash": "dash"}),
+            ]
+        )
+    return _plotly_slider(
+        [f"{s:+.2f}" for s in sigmas],
+        frames_data,
+        "sigma sweeps the pole across the imaginary axis (decay -> growth)",
+        "t",
+        "response",
+        active=len(sigmas) // 2,
+        prefix="sigma = ",
+    )
+
+
+def plotly_step_response_slider(wn=1.5, t_max=14.0, n=400):
+    """Slider over the damping ratio zeta of a second-order step response."""
+    import plotly.graph_objects as go
+
+    from . import systems
+
+    zetas = np.round(np.linspace(0.1, 2.0, 11), 2)
+    t = np.linspace(0.0, t_max, n)
+    frames_data = []
+    for z in zetas:
+        y = systems.step_response(systems.second_order(wn, z), t)
+        frames_data.append(
+            [
+                go.Scatter(x=t, y=y, name="step response", line={"color": ACCENT}),
+                go.Scatter(
+                    x=t, y=np.ones_like(t), name="target", line={"color": "gray", "dash": "dot"}
+                ),
+            ]
+        )
+    return _plotly_slider(
+        [f"{z:.2f}" for z in zetas],
+        frames_data,
+        "Second-order step response vs damping ratio zeta",
+        "t",
+        "y(t)",
+        active=2,
+        prefix="zeta = ",
+    )
+
+
+def plotly_pole_zero(num=(1.0, 1.0), den=(1.0, 1.0, 4.0)):
+    """Pole-zero map of a sample H(s) in the s-plane (poles = x, zeros = o)."""
+    import plotly.graph_objects as go
+
+    from . import systems
+
+    H = systems.tf(list(num), list(den))
+    p, z = systems.poles(H), systems.zeros(H)
+    fig = go.Figure()
+    fig.add_vline(x=0, line={"color": "black", "width": 1})
+    fig.add_trace(
+        go.Scatter(
+            x=p.real,
+            y=p.imag,
+            mode="markers",
+            name="poles",
+            marker={"symbol": "x", "size": 12, "color": "black"},
+        )
+    )
+    if z.size:
+        fig.add_trace(
+            go.Scatter(
+                x=z.real,
+                y=z.imag,
+                mode="markers",
+                name="zeros",
+                marker={"symbol": "circle-open", "size": 12, "color": ACCENT},
+            )
+        )
+    fig.update_layout(
+        title="Pole-zero map (left half-plane = stable)",
+        xaxis_title="Re(s)",
+        yaxis_title="Im(s)",
+        height=440,
+        margin={"l": 50, "r": 20, "t": 50, "b": 40},
+    )
+    fig.update_yaxes(scaleanchor="x", scaleratio=1)
+    return fig
+
+
+def plotly_abs_F_surface():
+    """The |F(s)| surface for F = 1/((s+1)^2+9): poles spike over the s-plane."""
+    return surface_abs_F(
+        lambda S: 1.0 / ((S + 1.0) ** 2 + 9.0), sigma_range=(-3, 1), omega_range=(-7, 7), n=70
+    )
+
+
+def plotly_root_locus(num=(1.0,), den=(1.0, 1.0, 0.0), k_max=12.0):
+    """Root locus of unity feedback around k*G, colored by gain k."""
+    import plotly.graph_objects as go
+
+    from . import systems
+
+    G = systems.tf(list(num), list(den))
+    ks = np.linspace(0.0, k_max, 60)
+    _, locus = systems.root_locus(G, ks)
+    pts = np.concatenate(locus)
+    kcol = np.repeat(ks, [len(r) for r in locus])
+    p0, z0 = systems.poles(G), systems.zeros(G)
+    fig = go.Figure()
+    fig.add_vline(x=0, line={"color": "black", "width": 1})
+    fig.add_trace(
+        go.Scatter(
+            x=pts.real,
+            y=pts.imag,
+            mode="markers",
+            name="closed-loop poles",
+            marker={
+                "size": 5,
+                "color": kcol,
+                "colorscale": "Viridis",
+                "colorbar": {"title": "k"},
+                "showscale": True,
+            },
+        )
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=p0.real,
+            y=p0.imag,
+            mode="markers",
+            name="open-loop poles (k=0)",
+            marker={"symbol": "x", "size": 12, "color": "black"},
+        )
+    )
+    if z0.size:
+        fig.add_trace(
+            go.Scatter(
+                x=z0.real,
+                y=z0.imag,
+                mode="markers",
+                name="open-loop zeros",
+                marker={"symbol": "circle-open", "size": 12, "color": UNSTABLE_COLOR},
+            )
+        )
+    fig.update_layout(
+        title="Root locus: closed-loop poles vs gain k",
+        xaxis_title="Re(s)",
+        yaxis_title="Im(s)",
+        height=440,
+        margin={"l": 50, "r": 20, "t": 50, "b": 40},
+    )
+    fig.update_yaxes(scaleanchor="x", scaleratio=1)
+    return fig
+
+
+def plotly_rlc_step_slider(L=1e-3, C=1e-6, t_max=4e-3, n=500):
+    """Slider over R: series-RLC step response cycles through the damping regimes."""
+    import plotly.graph_objects as go
+
+    from . import circuits, systems
+
+    resistors = [10.0, 30.0, 63.2, 150.0, 400.0]
+    t = np.linspace(0.0, t_max, n)
+    frames_data, labels = [], []
+    for R in resistors:
+        y = systems.step_response(circuits.rlc_series_vc(R, L, C), t)
+        regime = circuits.rlc_params(R, L, C)["regime"]
+        frames_data.append(
+            [
+                go.Scatter(x=t * 1e3, y=y, name="v_C / V_in", line={"color": ACCENT}),
+                go.Scatter(
+                    x=t * 1e3,
+                    y=np.ones_like(t),
+                    showlegend=False,
+                    line={"color": "gray", "dash": "dot"},
+                ),
+            ]
+        )
+        labels.append(f"R={R:g} ({regime})")
+    return _plotly_slider(
+        labels,
+        frames_data,
+        "Series RLC step response: damping regime vs R",
+        "t [ms]",
+        "v_C / V_in",
+        active=0,
+        prefix="",
+    )
