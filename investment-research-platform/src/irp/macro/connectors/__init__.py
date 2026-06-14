@@ -1,42 +1,40 @@
-"""Macro connectors. Implemented: FRED/ALFRED, US Treasury, e-Stat (JP). The rest
-are credential-gated or stubbed until needed. (Fundamentals = SEC EDGAR, in
-``irp.data.fundamentals``.)
+"""Macro connectors — all implemented (key-gated where the source requires it):
+FRED/ALFRED + US Treasury + e-Stat (JP) + BoJ/MoF (JP CSV) + BLS/BEA/Census (US).
+(Fundamentals: SEC EDGAR + EDINET in ``irp.data.fundamentals``.)
 """
 
 from __future__ import annotations
 
 from .estat import EStatConnector
 from .fred import FredConnector
-from .stubs import (
-    BeaConnector,
-    BlsConnector,
-    BoJConnector,
-    CensusConnector,
-    EdinetConnector,
-    MofConnector,
-)
+from .jp_extra import BoJConnector, MofConnector
 from .treasury import TreasuryConnector
+from .us_gov import BeaConnector, BlsConnector, CensusConnector
 
 REGISTRY = {
     "fred": FredConnector,
     "ustreasury": TreasuryConnector,
     "estat": EStatConnector,
-    # stubs (land when needed)
     "boj": BoJConnector,
     "mof": MofConnector,
-    "bea": BeaConnector,
     "bls": BlsConnector,
+    "bea": BeaConnector,
     "census": CensusConnector,
-    "edinet": EdinetConnector,
 }
 
-IMPLEMENTED = {"fred", "ustreasury", "estat"}
+#: connectors needing a key still implement the full contract (parsers tested offline)
+KEY_GATED = {"fred", "bea", "census"}
 
 __all__ = [
-    "IMPLEMENTED",
+    "KEY_GATED",
     "REGISTRY",
+    "BeaConnector",
+    "BlsConnector",
+    "BoJConnector",
+    "CensusConnector",
     "EStatConnector",
     "FredConnector",
+    "MofConnector",
     "TreasuryConnector",
     "get_macro_connector",
 ]

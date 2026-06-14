@@ -19,7 +19,7 @@ from .connectors import (
     YFinanceConnector,
     get_connector,
 )
-from .fundamentals import SecEdgarConnector, fundamental_as_of
+from .fundamentals import EdinetConnector, SecEdgarConnector, fundamental_as_of
 from .fx import fx_adjusted_returns, invert_quote, to_base_currency
 from .quality import DataQualityReport, assess
 
@@ -31,6 +31,7 @@ __all__ = [
     "Connector",
     "ConnectorError",
     "DataQualityReport",
+    "EdinetConnector",
     "FetchResult",
     "JQuantsConnector",
     "SecEdgarConnector",

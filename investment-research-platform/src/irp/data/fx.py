@@ -52,6 +52,8 @@ def to_base_currency(
     return pd.DataFrame(out, index=prices.index)
 
 
-def fx_adjusted_returns(local_returns: pd.Series | pd.DataFrame, fx_returns: pd.Series | pd.DataFrame):
+def fx_adjusted_returns(
+    local_returns: pd.Series | pd.DataFrame, fx_returns: pd.Series | pd.DataFrame
+):
     """Total return in base = (1 + local return)(1 + FX return) - 1 (no fill)."""
     return (1.0 + local_returns) * (1.0 + fx_returns) - 1.0

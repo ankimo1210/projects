@@ -93,3 +93,43 @@ def fundamental_as_of(obs: pd.DataFrame, date) -> float:
     if visible.empty:
         return float("nan")
     return float(visible.sort_values("period_end").iloc[-1]["value"])
+
+
+class EdinetConnector:
+    """EDINET (JP disclosures) — the document-discovery layer (requires a key).
+
+    EDINET API v2 lists the documents submitted on a date; full financials require
+    a further step (download each ``docID``'s ZIP and parse its XBRL). This
+    connector implements the discovery endpoint (key-gated) and parses the metadata
+    list; XBRL extraction is left as a documented next step. Set ``EDINET_API_KEY``.
+    """
+
+    source = "edinet"
+    BASE = "https://api.edinet-fsa.go.jp/api/v2/documents.json"
+
+    def __init__(self, api_key: str | None = None, *, timeout: float = 30.0):
+        self.api_key = api_key or env("EDINET_API_KEY")
+        self.timeout = timeout
+
+    @staticmethod
+    def parse_documents(payload: dict) -> pd.DataFrame:
+        """Parse the ``results`` list of an EDINET documents.json payload."""
+        results = (payload or {}).get("results", [])
+        if not results:
+            return pd.DataFrame(
+                columns=["docID", "filerName", "secCode", "docTypeCode", "periodEnd"]
+            )
+        keep = ["docID", "filerName", "secCode", "docTypeCode", "periodEnd", "submitDateTime"]
+        return pd.DataFrame(results)[[c for c in keep if any(c in r for r in results)]]
+
+    def list_documents(self, date) -> pd.DataFrame:
+        """Documents submitted on ``date`` (type=2 = metadata + results)."""
+        import requests
+
+        if not self.api_key:
+            raise RuntimeError("EDINET_API_KEY not set (free key from EDINET API v2 registration)")
+        params = {"date": pd.Timestamp(date).strftime("%Y-%m-%d"), "type": 2}
+        headers = {"Ocp-Apim-Subscription-Key": self.api_key}
+        r = requests.get(self.BASE, params=params, headers=headers, timeout=self.timeout)
+        r.raise_for_status()
+        return self.parse_documents(r.json())

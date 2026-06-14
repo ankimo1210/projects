@@ -10,7 +10,9 @@ from irp.data import fx_adjusted_returns, invert_quote, to_base_currency
 
 def test_to_base_currency_converts_only_foreign_columns():
     idx = pd.bdate_range("2024-01-01", periods=3)
-    prices = pd.DataFrame({"SPY": [400.0, 410.0, 420.0], "7203": [2000.0, 2100.0, 2200.0]}, index=idx)
+    prices = pd.DataFrame(
+        {"SPY": [400.0, 410.0, 420.0], "7203": [2000.0, 2100.0, 2200.0]}, index=idx
+    )
     # USD per JPY ~ 1/150
     fx = pd.DataFrame({"JPY": [1 / 150, 1 / 150, 1 / 150]}, index=idx)
     out = to_base_currency(prices, {"SPY": "USD", "7203": "JPY"}, fx, base="USD")
