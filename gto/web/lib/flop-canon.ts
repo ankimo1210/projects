@@ -1,6 +1,15 @@
-// Port of Python's flop_canon.canonicalize()
+// Port of Python's flop_canon.canonicalize() (src/gto/library/flop_canon.py).
 // Finds the lexicographically smallest suit-permutation of a 3-card flop.
-
+//
+// MUST stay byte-for-byte in sync with the Python implementation: the resulting
+// string is the cache key the precomputed library is stored under, so any drift
+// makes the frontend look up the wrong (or no) solution. Cross-verified against
+// the Python output in flop-canon.test.mjs.
+//
+// NOTE: this RANKS order ("AKQJT98765432", A=0) is the canon's own
+// lexicographic convention. It is deliberately NOT the backend card-int
+// encoding (gto-core: card = rank*4 + suit, rank 0=2 … 12=A); these two
+// representations are separate and must not be conflated.
 const RANKS = "AKQJT98765432";
 const SUITS = "cdhs";
 

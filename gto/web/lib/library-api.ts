@@ -166,23 +166,29 @@ export async function solveLive(
 }
 
 // --- Card helpers ---
-const RANKS = "AKQJT98765432";
+// Backend card encoding (gto-core/src/card.rs): card = rank*4 + suit, with
+// rank 0=2 … 12=A and suit 0=c,1=d,2=h,3=s. The integer card_a/card_b coming
+// back from /api/library/flop/combos are in THIS encoding, so decoding must use
+// RANK_ORDER (NOT the A-high display order) or every rank is mirror-flipped.
+const RANK_ORDER = "23456789TJQKA"; // index == backend rank index
 const SUITS = "cdhs";
+// A-high strength order, used only to label/order combos for display.
+const STRENGTH = "AKQJT98765432";
 
 export function cardIndex(rank: string, suit: string): number {
-  return RANKS.indexOf(rank) * 4 + SUITS.indexOf(suit);
+  return RANK_ORDER.indexOf(rank) * 4 + SUITS.indexOf(suit);
 }
 
 export function cardFromIndex(idx: number): { rank: string; suit: string } {
-  return { rank: RANKS[Math.floor(idx / 4)], suit: SUITS[idx % 4] };
+  return { rank: RANK_ORDER[Math.floor(idx / 4)], suit: SUITS[idx % 4] };
 }
 
 export function comboKey(cardA: number, cardB: number): string {
   const a = cardFromIndex(cardA);
   const b = cardFromIndex(cardB);
-  const ri = Math.min(RANKS.indexOf(a.rank), RANKS.indexOf(b.rank));
-  const rj = Math.max(RANKS.indexOf(a.rank), RANKS.indexOf(b.rank));
-  const r1 = RANKS[ri], r2 = RANKS[rj];
+  const ri = Math.min(STRENGTH.indexOf(a.rank), STRENGTH.indexOf(b.rank));
+  const rj = Math.max(STRENGTH.indexOf(a.rank), STRENGTH.indexOf(b.rank));
+  const r1 = STRENGTH[ri], r2 = STRENGTH[rj];
   if (ri === rj) return `${r1}${r2}`;
   const suited = a.suit === b.suit;
   return `${r1}${r2}${suited ? "s" : "o"}`;

@@ -1,8 +1,10 @@
+import logging
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from gto.api.config import settings
+from gto.api.config import settings, validate_settings
 from gto.api.routers import (
     equity,
     health,
@@ -15,6 +17,17 @@ from gto.api.routers import (
     trainer,
 )
 from gto.library.store import SOLUTIONS_DIR
+
+# Fail fast if PUBLIC_DEPLOY is set without its required secrets/origins, and
+# make the fully-open local-dev posture loud so a misconfigured deploy (which
+# silently falls back to no-auth, no-rate-limit, CORS="*") is visible in logs.
+validate_settings()
+if not settings.public_deploy:
+    logging.getLogger("gto.api").warning(
+        "GTO API running in OPEN local-dev posture: no auth, no rate limit, "
+        "CORS='*', GPU routes enabled. Set PUBLIC_DEPLOY=1 (with "
+        "SUPABASE_JWT_SECRET and ALLOWED_ORIGINS) for a public deploy."
+    )
 
 app = FastAPI(title="GTO Poker Suite API", version="0.1.0")
 

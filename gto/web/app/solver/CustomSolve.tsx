@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   cancelJob,
   customSolve,
@@ -36,6 +36,12 @@ export default function CustomSolve() {
   const [busy, setBusy] = useState(false);
   const [job, setJob] = useState<JobStatus | null>(null);
   const jobIdRef = useRef<string | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    // Stop any in-flight poll loop / fetch when the component unmounts.
+    return () => abortRef.current?.abort();
+  }, []);
 
   const cards = board.trim().split(/\s+/).filter(Boolean);
   const street =
@@ -43,6 +49,14 @@ export default function CustomSolve() {
   const isFlop = street === "flop";
 
   function buildReq(): SolveRequest {
+    // Drop NaN / non-positive bet tokens so a typo ("50,x") can't serialize a
+    // null into bet_sizes_pct; omit action_tree entirely if nothing valid left.
+    const parsedBets = betSizes.trim()
+      ? betSizes
+          .split(",")
+          .map((s) => parseInt(s.trim(), 10))
+          .filter((n) => Number.isFinite(n) && n > 0)
+      : [];
     return {
       stack_bb: stackBb,
       // flop has no rake path; force none.
@@ -57,13 +71,7 @@ export default function CustomSolve() {
           ...(ipRange.trim() ? { ip: ipRange.trim() } : {}),
           ...(oopRange.trim() ? { oop: oopRange.trim() } : {}),
         },
-        ...(betSizes.trim()
-          ? {
-              action_tree: {
-                bet_sizes_pct: betSizes.split(",").map((s) => parseInt(s.trim(), 10)),
-              },
-            }
-          : {}),
+        ...(parsedBets.length ? { action_tree: { bet_sizes_pct: parsedBets } } : {}),
         ...(isFlop
           ? {
               abstraction: {
@@ -82,6 +90,8 @@ export default function CustomSolve() {
     setError(null);
     setResult(null);
     setJob(null);
+    const controller = new AbortController();
+    abortRef.current = controller;
     try {
       if (isFlop) {
         const res = await solveFlopAsync(
@@ -90,21 +100,27 @@ export default function CustomSolve() {
           (h) => {
             jobIdRef.current = h.job_id;
           },
+          { signal: controller.signal },
         );
         setResult(res);
       } else {
-        setResult(await customSolve(buildReq()));
+        setResult(await customSolve(buildReq(), controller.signal));
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : String(e));
+      // Aborts (unmount / cancel) are intentional, not errors.
+      if (!(e instanceof DOMException && e.name === "AbortError")) {
+        setError(e instanceof Error ? e.message : String(e));
+      }
     } finally {
       setBusy(false);
       jobIdRef.current = null;
+      abortRef.current = null;
     }
   }
 
   async function cancel() {
-    if (jobIdRef.current) await cancelJob(jobIdRef.current);
+    abortRef.current?.abort(); // stop the local poll loop so busy clears promptly
+    if (jobIdRef.current) await cancelJob(jobIdRef.current); // best-effort server cancel
   }
 
   const canSolve = !busy && street !== "unsupported";

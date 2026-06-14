@@ -15,6 +15,9 @@ from gto.trainer.preflop_data import (
     ALL_HANDS,
     FACING_BB_VS_BTN,
     FACING_BB_VS_CO,
+    FACING_BB_VS_HJ,
+    FACING_BB_VS_SB,
+    FACING_BB_VS_UTG,
     RFI_BTN,
     RFI_CO,
     RFI_HJ,
@@ -36,6 +39,9 @@ RFI_TABLE = {
 FACING_TABLE = {
     "BTN": FACING_BB_VS_BTN,
     "CO": FACING_BB_VS_CO,
+    "SB": FACING_BB_VS_SB,
+    "HJ": FACING_BB_VS_HJ,
+    "UTG": FACING_BB_VS_UTG,
 }
 
 
@@ -118,13 +124,16 @@ def compute_preflop_outcome(position: str, dead_cards: list[str] | None = None) 
     ip_w = build_ip_range_weights(position)
     oop_w = build_oop_call_range_weights(position)
 
-    # Remove dead card blockers
+    # Remove dead card blockers; track which combos are blocked so the per-hand
+    # "alive" weight below counts only combos BB can actually hold.
+    blocked = np.zeros(NUM_COMBOS, dtype=bool)
     for a in range(51):
         for b in range(a + 1, 52):
             idx = combo_index(a, b)
             if a in dead_ints or b in dead_ints:
                 ip_w[idx] = 0.0
                 oop_w[idx] = 0.0
+                blocked[idx] = True
 
     # Aggregate fold / call / 3bet frequencies (weighted by how often BB holds each hand)
     fold_w = threebet_w = call_w = 0.0
@@ -137,12 +146,14 @@ def compute_preflop_outcome(position: str, dead_cards: list[str] | None = None) 
         call_freq_h = facing.get("C", 0) / 100.0
         tb_freq = facing.get("3B", 0) / 100.0
 
-        # BB sees this hand with uniform probability (each combo equally)
+        # BB sees this hand with uniform probability (each combo equally).
         combo_idxs = hand_to_combo_indices(hand)
-        len(combo_idxs)
 
-        # Weight: how often BB holds this hand (unblocked combos)
-        alive = sum(1 for idx in combo_idxs if oop_w[idx] > 0 or fold_freq > 0)
+        # Weight: number of combos BB can actually hold (dead cards removed).
+        # Counts every unblocked combo regardless of whether the hand is in the
+        # call range (so fold-only hands are weighted too), but excludes blocked
+        # combos — the old `or fold_freq > 0` short-circuit counted them anyway.
+        alive = sum(1 for idx in combo_idxs if not blocked[idx])
         if alive == 0:
             continue
 

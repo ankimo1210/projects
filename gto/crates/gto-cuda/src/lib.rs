@@ -10,6 +10,14 @@ use gto_core::evaluate7;
 use pyo3::prelude::*;
 use rayon::prelude::*;
 
+/// Wrapper asserting a raw pointer is safe to move into a `py.allow_threads`
+/// closure. The solver holds non-`Send` CUDA handles (`*mut c_void`), but
+/// `allow_threads` runs its closure synchronously on the *same* OS thread (it
+/// only releases the GIL), so the pointer is never used from another thread
+/// concurrently — making the `Send` bound a formality here.
+struct SendPtr<T>(*mut T);
+unsafe impl<T> Send for SendPtr<T> {}
+
 // ---------------------------------------------------------------------------
 // Hand strength precomputation
 // ---------------------------------------------------------------------------
@@ -65,6 +73,20 @@ fn batch_solve_rust(
     let bets  = max_bets.unwrap_or(2);
     let n     = spots.len();
     let nc    = NUM_COMBOS;
+
+    // Validate reach-weight lengths up front: indexed as iw[k % nc] below, a
+    // short array would panic across the FFI boundary and a long one would be
+    // silently truncated. Reject with a clean ValueError instead.
+    for (name, w) in [("ip_weights", &ip_weights), ("oop_weights", &oop_weights)] {
+        if let Some(v) = w {
+            if v.len() != nc {
+                return Err(pyo3::exceptions::PyValueError::new_err(format!(
+                    "{name} must have {nc} entries, got {}",
+                    v.len()
+                )));
+            }
+        }
+    }
 
     let mut boards:     Vec<Vec<u8>> = Vec::with_capacity(n);
     let mut half_pots:  Vec<f32>     = Vec::with_capacity(n);
@@ -137,11 +159,20 @@ fn batch_solve_rust(
         let tree   = GameTree::build(pot0, stack0, bets);
 
         let mut solver = BatchCfrSolver::new(tree, hero_str, opp_str, output_ranges, g_half_pots);
-        if ip_weights.is_some() || oop_weights.is_some() {
-            solver.run_with_reach(iters, ip_reach, oop_reach);
-        } else {
-            solver.run(iters);
-        }
+        let use_reach = ip_weights.is_some() || oop_weights.is_some();
+        // Release the GIL during the multi-second GPU solve so the FastAPI event
+        // loop (and the ThreadPoolExecutor offload in solver.py/simulation.py)
+        // keeps making progress instead of stalling for the whole solve.
+        let sp = SendPtr(&mut solver as *mut BatchCfrSolver);
+        py.allow_threads(move || {
+            let sp = sp; // capture the whole Send wrapper, not just the raw ptr
+            let solver = unsafe { &mut *sp.0 };
+            if use_reach {
+                solver.run_with_reach(iters, ip_reach, oop_reach);
+            } else {
+                solver.run(iters);
+            }
+        });
 
         // Extract root EV per combo for backward induction (one CPU pass).
         let root_evs = solver.root_ev_per_spot(); // [g × NC] f32
@@ -257,7 +288,13 @@ fn batch_solve_fast(
         };
 
         let mut solver = FastCfrSolver::new(&tree, hero_str, opp_str, ranges.clone(), g_half_pots);
-        solver.run(iters);
+        // Release the GIL during the GPU solve (see batch_solve_rust).
+        let sp = SendPtr(&mut solver as *mut FastCfrSolver);
+        py.allow_threads(move || {
+            let sp = sp; // capture the whole Send wrapper, not just the raw ptr
+            let solver = unsafe { &mut *sp.0 };
+            solver.run(iters);
+        });
 
         let root_evs = solver.root_ev_per_spot();
         let strat    = solver.root_strategy();

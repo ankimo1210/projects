@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from gto.trainer.quiz import random_spot, score_answer
@@ -51,9 +51,16 @@ def get_quiz():
 def post_answer(req: AnswerRequest):
     from gto.trainer.preflop_data import get_facing_spot, get_rfi_spot
 
-    if req.spot_type == "RFI":
-        spot = get_rfi_spot(req.position, req.hand)
-    else:
-        spot = get_facing_spot(req.position, req.hand)
+    try:
+        if req.spot_type == "RFI":
+            spot = get_rfi_spot(req.position, req.hand)
+        else:
+            spot = get_facing_spot(req.position, req.hand)
+    except KeyError as e:
+        raise HTTPException(
+            422,
+            f"unknown spot: spot_type={req.spot_type!r} "
+            f"position={req.position!r} hand={req.hand!r}",
+        ) from e
     result = score_answer(spot, req.chosen)
     return AnswerResponse(**result)

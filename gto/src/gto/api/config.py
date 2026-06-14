@@ -44,3 +44,26 @@ def reload_settings() -> Settings:
     global settings
     settings = Settings()
     return settings
+
+
+def validate_settings(s: Settings | None = None) -> None:
+    """Fail fast on an inconsistent public-deploy posture.
+
+    The whole security posture (auth, rate limits, CORS lock, GPU-route 503) is
+    gated on PUBLIC_DEPLOY. A deploy that sets PUBLIC_DEPLOY but forgets the JWT
+    secret or the origin allow-list would otherwise fail OPEN at request time
+    (auth returns 500 per call, CORS stays "*"); crash at boot instead so a
+    half-configured public deploy never serves traffic.
+    """
+    s = s if s is not None else settings
+    if not s.public_deploy:
+        return
+    missing = []
+    if not s.supabase_jwt_secret:
+        missing.append("SUPABASE_JWT_SECRET")
+    if not s.allowed_origins:
+        missing.append("ALLOWED_ORIGINS")
+    if missing:
+        raise RuntimeError(
+            "PUBLIC_DEPLOY is set but required settings are missing: " + ", ".join(missing)
+        )

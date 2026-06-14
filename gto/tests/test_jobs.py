@@ -104,6 +104,24 @@ def test_error_in_fn_becomes_error_status():
     assert "solver exploded" in error
 
 
+def test_base_exception_releases_reservation():
+    """A Rust panic surfaces as pyo3 PanicException, which subclasses
+    BaseException (not Exception). The worker must still free its memory
+    reservation, or the budget leaks and the async flop tier wedges forever."""
+
+    class Panic(BaseException):
+        pass
+
+    jm = JobManager(budget_gb=12.0)
+    jid = jm.submit("flop", est_gb=12.0, fn=lambda: (_ for _ in ()).throw(Panic("rust panic")))
+    assert _wait_until(lambda: jm.result(jid)[0] == JobStatus.ERROR)
+    assert jm.stats()["running_gb"] == 0.0
+    # The freed reservation lets a subsequent full-budget job be admitted.
+    jid2 = jm.submit("flop", est_gb=12.0, fn=lambda: "ok")
+    assert _wait_until(lambda: jm.result(jid2)[0] == JobStatus.DONE)
+    assert jm.result(jid2)[1] == "ok"
+
+
 def test_finished_jobs_evicted_after_ttl():
     jm = JobManager(budget_gb=12.0, ttl_s=0.02)
     jid = jm.submit("flop", est_gb=12.0, fn=lambda: 42)

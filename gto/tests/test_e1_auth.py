@@ -126,6 +126,31 @@ def test_rate_limit_429_with_retry_after(public_deploy):
     assert client.get("/api/equity", params=params, headers=other).status_code == 200
 
 
+def test_validate_settings_rejects_half_configured_public_deploy(monkeypatch):
+    # PUBLIC_DEPLOY set but no JWT secret -> fail fast at boot, not fail-open.
+    monkeypatch.setenv("PUBLIC_DEPLOY", "1")
+    monkeypatch.delenv("SUPABASE_JWT_SECRET", raising=False)
+    monkeypatch.setenv("ALLOWED_ORIGINS", "https://example.com")
+    with pytest.raises(RuntimeError):
+        config.validate_settings(config.Settings())
+
+
+def test_validate_settings_ok_for_local_dev(monkeypatch):
+    monkeypatch.delenv("PUBLIC_DEPLOY", raising=False)
+    config.validate_settings(config.Settings())  # no raise
+
+
+def test_ratelimit_prunes_fully_expired_users():
+    ratelimit.reset()
+    # start times in monotonic seconds; "stale" is far in the past, "fresh" future.
+    ratelimit._counters["stale"] = {"minute": (0.0, 1), "day": (0.0, 1)}
+    ratelimit._counters["fresh"] = {"minute": (1e18, 1), "day": (1e18, 1)}
+    ratelimit._prune(now=1e9)
+    assert "stale" not in ratelimit._counters
+    assert "fresh" in ratelimit._counters
+    ratelimit.reset()
+
+
 def test_flop_async_tier_503_in_public_deploy(public_deploy):
     spec = {
         "stack_bb": 41.0,

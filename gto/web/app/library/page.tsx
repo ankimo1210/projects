@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, Suspense } from "react";
+import { useState, useEffect, useCallback, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   fetchFlopSolution, fetchComboStrategies,
@@ -77,8 +77,14 @@ function LibraryContent() {
   const [error, setError]        = useState<string | null>(null);
   const [showPicker, setShowPicker] = useState(false);
 
+  const reqSeq = useRef(0);
+
   const fetchSolution = useCallback(async () => {
     if (boardCards.length !== 3) return;
+    // Sequence guard: only the most recent request may apply its result, so a
+    // slow earlier fetch (e.g. after a quick position change) can't overwrite a
+    // newer one's data.
+    const seq = ++reqSeq.current;
     setLoading(true); setError(null); setSolution(null); setCombos([]);
     try {
       const board = boardCards.join("");
@@ -86,6 +92,7 @@ function LibraryContent() {
         fetchFlopSolution(board, pos),
         fetchComboStrategies(board, pos),
       ]);
+      if (seq !== reqSeq.current) return; // superseded by a newer request
       if (!sol) {
         setError(`No solution found for ${pos} vs BB — ${board}. Run batch computation or try a different spot.`);
       } else {
@@ -93,9 +100,10 @@ function LibraryContent() {
         setCombos(cms);
       }
     } catch (e: unknown) {
+      if (seq !== reqSeq.current) return;
       setError(e instanceof Error ? e.message : "Error");
     } finally {
-      setLoading(false);
+      if (seq === reqSeq.current) setLoading(false);
     }
   }, [boardCards, pos]);
 

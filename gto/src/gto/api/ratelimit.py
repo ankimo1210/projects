@@ -22,6 +22,22 @@ _counters: dict[str, dict[str, tuple[float, int]]] = {}
 
 _WINDOWS = {"minute": 60.0, "day": 86400.0}
 
+# Bound memory: sweep fully-expired users at most this often (seconds).
+_PRUNE_EVERY = 60.0
+_last_prune = 0.0
+
+
+def _prune(now: float) -> None:
+    """Drop users whose every window has fully expired so _counters cannot grow
+    without bound on a public deploy with many distinct authenticated users."""
+    dead = [
+        user
+        for user, wins in _counters.items()
+        if all(now - start >= _WINDOWS.get(name, 0.0) for name, (start, _c) in wins.items())
+    ]
+    for user in dead:
+        del _counters[user]
+
 
 def _check_window(user: str, name: str, span: float, limit: int) -> None:
     now = time.monotonic()
@@ -42,13 +58,20 @@ def _check_window(user: str, name: str, span: float, limit: int) -> None:
 def check(user: str) -> None:
     if not config.settings.public_deploy:
         return
+    global _last_prune
+    now = time.monotonic()
+    if now - _last_prune >= _PRUNE_EVERY:
+        _last_prune = now
+        _prune(now)
     _check_window(user, "minute", _WINDOWS["minute"], config.settings.rate_per_min)
     _check_window(user, "day", _WINDOWS["day"], config.settings.rate_per_day)
 
 
 def reset() -> None:
     """Test hook: clear all counters."""
+    global _last_prune
     _counters.clear()
+    _last_prune = 0.0
 
 
 async def rate_limited_user(user: str = Depends(require_user)) -> str:

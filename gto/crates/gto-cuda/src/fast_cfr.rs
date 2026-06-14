@@ -39,6 +39,7 @@ fn discount(t: u32, exp: f64) -> f64 {
 // Kernel handles
 // ---------------------------------------------------------------------------
 
+#[derive(Clone, Copy)]
 struct Kernels {
     showdown:  CUfunction,
     reg_match: CUfunction,
@@ -48,6 +49,13 @@ struct Kernels {
     fold_ev:   CUfunction,
     spread:    CUfunction,
     _mods:     [CUmodule; 7],
+}
+
+thread_local! {
+    // Compiled once per thread, reused across solver instances (the CUDA context
+    // is thread-bound). Avoids recompiling 7 NVRTC kernels + loading 7 CUmodules
+    // on every FastCfrSolver::new.
+    static KERNELS: Kernels = Kernels::init();
 }
 
 impl Kernels {
@@ -69,6 +77,11 @@ impl Kernels {
             spread:    get_function(m6.0, "spread_reach"),
             _mods: [m0.0, m1.0, m2.0, m3.0, m4.0, m5.0, m6.0],
         }
+    }
+
+    /// Per-thread cached kernels; caller must have called `set_current()` first.
+    fn cached() -> Self {
+        KERNELS.with(|k| *k)
     }
 }
 
@@ -154,7 +167,7 @@ impl FastCfrSolver {
         set_current();
         let n    = half_pots.len();
         let flat = n * NUM_COMBOS;
-        let k    = Kernels::init();
+        let k    = Kernels::cached();
         let (ca, cb) = combo_tables();
 
         let g_hero = mem_alloc(flat * 2); memcpy_htod(g_hero, &hero_str);

@@ -51,11 +51,20 @@ class FlopReport(BaseModel):
 
 
 def _parse_board(board_str: str) -> list[str]:
-    """Parse 'Kh7d2c' or 'Kh 7d 2c' into ['Kh','7d','2c']."""
+    """Parse 'Kh7d2c' or 'Kh 7d 2c' into ['Kh','7d','2c'].
+
+    Rejects malformed input (e.g. odd-length 'Kh7d2') with 422 rather than
+    letting a 1-char token slip through the card-count check and crash deeper
+    in canonicalize() as a 500.
+    """
     board_str = board_str.strip()
     if " " in board_str:
-        return board_str.split()
-    return [board_str[i : i + 2] for i in range(0, len(board_str), 2)]
+        tokens = board_str.split()
+    else:
+        tokens = [board_str[i : i + 2] for i in range(0, len(board_str), 2)]
+    if any(len(t) != 2 for t in tokens):
+        raise HTTPException(422, f"malformed board {board_str!r}: each card must be 2 chars")
+    return tokens
 
 
 @router.get("/library/spots", response_model=list[SpotStrategy])

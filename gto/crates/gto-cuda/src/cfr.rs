@@ -178,15 +178,25 @@ impl GameTree {
 }
 
 // ---------------------------------------------------------------------------
-// Compiled kernels (lazy-init per process)
+// Compiled kernels (lazy-init, cached per thread)
 // ---------------------------------------------------------------------------
 
+#[derive(Clone, Copy)]
 struct Kernels {
     _m: [CUmodule; 4],
     showdown:    CUfunction,
     regret_match:   CUfunction,
     regret_update:  CUfunction,
     strategy_sum:   CUfunction,
+}
+
+thread_local! {
+    // Compiled once per thread and reused across solver instances. The CUDA
+    // context is thread-bound, so kernels JIT-compiled on a worker thread are
+    // valid for that thread's lifetime. Previously every BatchCfrSolver::new
+    // recompiled all 4 NVRTC kernels and loaded 4 CUmodules (never unloaded),
+    // wasting hundreds of ms per solve and leaking module handles.
+    static KERNELS: Kernels = Kernels::init();
 }
 
 impl Kernels {
@@ -202,6 +212,12 @@ impl Kernels {
             strategy_sum:   get_function(m4, "strategy_sum_update"),
             _m: [m1, m2, m3, m4],
         }
+    }
+
+    /// Per-thread cached kernels. The caller must have bound the CUDA context to
+    /// this thread first (`set_current()`), which BatchCfrSolver::new does.
+    fn cached() -> Self {
+        KERNELS.with(|k| *k)
     }
 }
 
@@ -256,7 +272,7 @@ impl BatchCfrSolver {
         set_current();
         let n   = half_pots.len();
         let nc  = NUM_COMBOS;
-        let k   = Kernels::init();
+        let k   = Kernels::cached();
         let (ca, cb) = combo_tables();
 
         let g_hero = mem_alloc(n * nc * 2); memcpy_htod(g_hero, &hero_str);

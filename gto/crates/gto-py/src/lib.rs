@@ -149,6 +149,11 @@ fn equity(
         .collect();
     reject_duplicate_cards(&all_cards)?;
     let iters = iterations.unwrap_or(10_000);
+    if iters == 0 {
+        return Err(pyo3::exceptions::PyValueError::new_err(
+            "iterations must be >= 1 (got 0)",
+        ));
+    }
     let result =
         py.allow_threads(|| monte_carlo(&hero_cards, &villain_cards, &board_cards, iters));
     let dict = pyo3::types::PyDict::new(py);

@@ -194,13 +194,19 @@ class JobManager:
                 i += 1
 
     def _run(self, jid: str) -> None:
-        job = self._jobs[jid]
-        fn = job._fn
+        with self._lock:
+            job = self._jobs[jid]
+            fn = job._fn
+        res: Any | None = None
+        err: str | None = None
         try:
             res = fn() if fn else None
-            err = None
-        except Exception as e:  # surface any solver error as the job's error
-            res, err = None, str(e)
+        except BaseException as e:
+            # Catch BaseException, not just Exception: a Rust panic surfaces as
+            # pyo3_runtime.PanicException, which subclasses BaseException. If it
+            # escaped this handler the reservation-release below would be skipped
+            # and est_gb would leak permanently, wedging the async flop tier.
+            err = repr(e)
         with self._lock:
             job.finished_at = time.monotonic()
             if err is not None:
