@@ -74,3 +74,36 @@ def test_foundation_loader_raises_clearly_without_backend():
         MD.load_foundation("chronos")
     with pytest.raises(KeyError):
         MD.load_foundation("not_a_model")
+
+
+def test_chronos_adapter_wiring_with_fake_backend(monkeypatch):
+    """Verify the Chronos adapter (load + fit + median extraction) without the
+    heavy torch/chronos install, by injecting fake backend modules."""
+    import sys
+    import types
+
+    fake_torch = types.ModuleType("torch")
+    fake_torch.tensor = lambda x, **k: x
+    fake_torch.cuda = types.SimpleNamespace(is_available=lambda: False)
+
+    fake_chronos = types.ModuleType("chronos")
+
+    class _FakePipeline:
+        @classmethod
+        def from_pretrained(cls, name, **kw):
+            return cls()
+
+        def predict(self, context, prediction_length=1):
+            # [num_series=1, num_samples=3, horizon] — median of {1,2,3} is 2
+            step = [1.0] * prediction_length
+            return np.array([[step, [2.0] * prediction_length, [3.0] * prediction_length]])
+
+    fake_chronos.ChronosPipeline = _FakePipeline
+    monkeypatch.setitem(sys.modules, "torch", fake_torch)
+    monkeypatch.setitem(sys.modules, "chronos", fake_chronos)
+
+    fc = MD.load_foundation("chronos")
+    assert isinstance(fc, MD.Forecaster)
+    fc.fit(pd.Series([10.0, 11.0, 12.0]))
+    pred = fc.predict(2)
+    assert pred.tolist() == [2.0, 2.0]  # median sample-path

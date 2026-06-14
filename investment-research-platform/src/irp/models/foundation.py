@@ -81,7 +81,43 @@ class ARForecaster(Forecaster):
         return np.array(out)
 
 
-def load_foundation(name: str = "chronos", **_kw) -> Forecaster:
+class ChronosForecaster(Forecaster):
+    """Adapter wrapping an Amazon Chronos pipeline as a :class:`Forecaster`.
+
+    Foundation models condition on a context series rather than "fitting", so
+    ``fit`` just stores the history and ``predict`` asks the pipeline for the
+    median sample-path of the next ``horizon`` steps. Built by
+    :func:`load_foundation`; not constructed directly (it needs a live pipeline).
+    """
+
+    name = "chronos"
+
+    def __init__(self, pipeline, *, quantile: float = 0.5) -> None:
+        self._pipeline = pipeline
+        self.quantile = quantile
+        self._context: np.ndarray | None = None
+
+    def fit(self, y: pd.Series) -> ChronosForecaster:
+        self._context = np.asarray(y.dropna(), dtype="float64")
+        return self
+
+    def predict(self, horizon: int) -> np.ndarray:
+        import torch
+
+        ctx = torch.tensor(self._context)
+        forecast = self._pipeline.predict(ctx, prediction_length=horizon)
+        samples = forecast[0]  # [num_samples, horizon] for the single series
+        samples = samples.numpy() if hasattr(samples, "numpy") else np.asarray(samples)
+        return np.quantile(samples, self.quantile, axis=0)
+
+
+def load_foundation(
+    name: str = "chronos",
+    *,
+    model_name: str = "amazon/chronos-t5-small",
+    device: str | None = None,
+    **_kw,
+) -> Forecaster:
     """Load a time-series foundation model as a :class:`Forecaster` (optional dep).
 
     Heavy backends (torch + model weights) are NOT a hard dependency of irp. This
@@ -90,17 +126,16 @@ def load_foundation(name: str = "chronos", **_kw) -> Forecaster:
     always-available baseline.
     """
     if name == "chronos":
-        try:  # pragma: no cover - exercised only when the optional dep is installed
-            import torch  # noqa: F401
-            from chronos import ChronosPipeline  # noqa: F401
+        try:
+            import torch
+            from chronos import ChronosPipeline
         except ImportError as e:
             raise ImportError(
                 "Chronos foundation model needs optional deps. Install with: "
                 "pip install 'chronos-forecasting' torch  (Tier-4 is optional; "
                 "the classical forecasters in irp.models.foundation are always available)."
             ) from e
-        raise NotImplementedError(  # pragma: no cover
-            "Chronos backend is installed but the adapter wiring is left to the user's "
-            "GPU/runtime setup; see irp.models.foundation.load_foundation."
-        )
+        dev = device or ("cuda" if torch.cuda.is_available() else "cpu")
+        pipeline = ChronosPipeline.from_pretrained(model_name, device_map=dev)
+        return ChronosForecaster(pipeline)
     raise KeyError(f"unknown foundation model {name!r} (supported: 'chronos')")

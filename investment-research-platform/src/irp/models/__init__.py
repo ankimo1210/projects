@@ -16,7 +16,13 @@ from __future__ import annotations
 from .base import Model, SklearnModel
 from .baselines import MeanModel, PersistenceModel, ZeroModel
 from .design import make_design, predictions_to_panel
-from .foundation import ARForecaster, Forecaster, SeasonalNaiveForecaster, load_foundation
+from .foundation import (
+    ARForecaster,
+    ChronosForecaster,
+    Forecaster,
+    SeasonalNaiveForecaster,
+    load_foundation,
+)
 from .linear import elastic_net, lasso, ridge
 from .neural import mlp
 from .tree import gradient_boosting, random_forest
@@ -24,6 +30,7 @@ from .walkforward import walk_forward_predict
 
 __all__ = [
     "ARForecaster",
+    "ChronosForecaster",
     "Forecaster",
     "MeanModel",
     "Model",
