@@ -96,24 +96,37 @@ def test_long_short_quantile_is_dollar_neutral():
 
 
 # --- registry -----------------------------------------------------------------
-def test_registry_lists_and_resolves():
+def test_registry_lists_all_six_families():
     assert set(S.available()) == {
         "momentum",
         "trend_following",
         "low_volatility",
         "mean_reversion",
         "macro_trend",
+        "value",
+        "quality",
+        "carry",
     }
     assert S.get_signal("momentum") is S.momentum_signal
     with pytest.raises(KeyError):
         S.get_signal("does_not_exist")
 
 
-def test_planned_families_raise_clearly():
-    for name in ("value", "quality", "carry"):
-        builder = S.get_signal(name)
-        with pytest.raises(NotImplementedError):
-            builder(_trending_panel())
+def test_value_quality_carry_rank_high_metric_top():
+    # a metric panel where asset E has the highest cheapness/quality/carry metric
+    idx = pd.bdate_range("2020-01-01", periods=5)
+    metric = pd.DataFrame(
+        {a: [v] * 5 for a, v in zip("ABCDE", [1.0, 2.0, 3.0, 4.0, 5.0], strict=True)}, index=idx
+    )
+    for builder, cat in [
+        (S.value_signal, SignalCategory.VALUE),
+        (S.quality_signal, SignalCategory.QUALITY),
+        (S.carry_signal, SignalCategory.CARRY),
+    ]:
+        sig = builder(metric)
+        assert sig.category == cat
+        last = sig.oriented.iloc[-1]
+        assert last.idxmax() == "E" and last.idxmin() == "A"  # higher metric -> higher score
 
 
 # --- causality ----------------------------------------------------------------

@@ -48,6 +48,24 @@ def test_loss_carryforward_expires():
     assert df.loc[2024, "tax"] == pytest.approx(RATE * 0.10)
 
 
+def test_dividends_are_taxed_even_in_a_loss_year():
+    # total return -5%, of which 2% was dividend income (taxed) and -7% capital (banked)
+    r = _yearly({"2020": -0.05})
+    df = TX.annual_after_tax(r, TX.TaxConfig(), dividend_yield=0.02)
+    assert df.loc[2020, "dividend_tax"] == pytest.approx(RATE * 0.02)  # income, no loss offset
+    assert df.loc[2020, "capital_gains_tax"] == 0.0  # capital portion is a loss
+    assert df.loc[2020, "tax"] == pytest.approx(RATE * 0.02)
+    assert df.loc[2020, "after_tax_return"] == pytest.approx(-0.05 - RATE * 0.02)
+
+
+def test_dividend_and_capital_split_sums_to_total_tax():
+    r = _yearly({"2020": 0.10})  # 2% dividend + 8% capital gain
+    df = TX.annual_after_tax(r, TX.TaxConfig(), dividend_yield=0.02)
+    assert df.loc[2020, "dividend_tax"] == pytest.approx(RATE * 0.02)
+    assert df.loc[2020, "capital_gains_tax"] == pytest.approx(RATE * 0.08)
+    assert df.loc[2020, "tax"] == pytest.approx(RATE * 0.10)
+
+
 def test_nisa_has_zero_tax():
     r = _yearly({"2020": 0.10, "2021": 0.20})
     df = TX.annual_after_tax(r, TX.TaxConfig.nisa())

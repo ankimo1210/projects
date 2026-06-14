@@ -109,19 +109,33 @@ def macro_trend_signal(
     )
 
 
-# --- families that need data not yet wired (Phase 2 connectors) ---------------
-def value_signal(*_args, **_kwargs) -> Signal:
-    raise NotImplementedError(
-        "value_signal needs fundamentals (SEC EDGAR / EDINET / J-Quants). "
-        "Those connectors are Phase 2 stubs — see irp.macro.connectors.stubs."
-    )
+# --- fundamentals / yield driven families -------------------------------------
+# These standardize a cross-sectional *metric panel* (rows = dates, cols = assets),
+# exactly as momentum standardizes a computed return. The metric itself is produced
+# upstream from fundamentals/yields (e.g. earnings yield from irp.data fundamentals,
+# carry from a yield curve) — keeping signal construction uniform across families.
+def value_signal(value_metric: pd.DataFrame, *, method: str = "zscore") -> Signal:
+    """Cross-sectional value: rank by a *cheapness* metric where higher = cheaper.
+
+    Pass e.g. earnings yield (E/P), book-to-market, or FCF yield. (Invert
+    price-multiples like P/E upstream so that higher always means cheaper.)
+    """
+    return from_raw("value", SignalCategory.VALUE, value_metric, direction=1, method=method)
 
 
-def quality_signal(*_args, **_kwargs) -> Signal:
-    raise NotImplementedError("quality_signal needs fundamentals (margins/ROE/accruals). Phase 2.")
+def quality_signal(quality_metric: pd.DataFrame, *, method: str = "zscore") -> Signal:
+    """Cross-sectional quality: rank by a metric where higher = higher quality.
+
+    Pass e.g. ROE, gross margin, or low-accruals (sign accruals upstream so that
+    higher = better).
+    """
+    return from_raw("quality", SignalCategory.QUALITY, quality_metric, direction=1, method=method)
 
 
-def carry_signal(*_args, **_kwargs) -> Signal:
-    raise NotImplementedError(
-        "carry_signal needs term structure / yields / funding (FX, futures, rates). Phase 2."
-    )
+def carry_signal(carry_metric: pd.DataFrame, *, method: str = "zscore") -> Signal:
+    """Cross-sectional carry: rank by income/yield per unit (higher = more carry).
+
+    Pass e.g. dividend yield, bond yield-to-maturity, futures roll yield, or FX
+    forward points — the income earned for holding, all to one sign convention.
+    """
+    return from_raw("carry", SignalCategory.CARRY, carry_metric, direction=1, method=method)

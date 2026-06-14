@@ -1,8 +1,9 @@
 """Signal registry — name → builder, so notebooks/backtests can iterate signals.
 
-Implemented baselines are registered; the not-yet-wired families are listed
-separately so callers can see the intended breadth (and get a clear error rather
-than a missing key) until their data connectors land.
+All six families (trend/value/quality/carry/risk/macro) are registered. Price-only
+families (momentum/trend/low-vol/mean-reversion) take a price panel; the
+fundamentals/yield families (value/quality/carry) take a cross-sectional *metric*
+panel; macro_trend takes a point-in-time macro level.
 """
 
 from __future__ import annotations
@@ -18,27 +19,22 @@ REGISTRY: dict[str, Callable[..., Signal]] = {
     "low_volatility": baselines.low_volatility_signal,
     "mean_reversion": baselines.mean_reversion_signal,
     "macro_trend": baselines.macro_trend_signal,
-}
-
-#: registered but data-gated — calling these raises NotImplementedError (Phase 2)
-PLANNED: dict[str, Callable[..., Signal]] = {
     "value": baselines.value_signal,
     "quality": baselines.quality_signal,
     "carry": baselines.carry_signal,
 }
 
+#: kept for backward-compatibility; all families are now implemented
+PLANNED: dict[str, Callable[..., Signal]] = {}
+
 
 def get_signal(name: str) -> Callable[..., Signal]:
-    """Return a signal builder by name (implemented or planned)."""
+    """Return a signal builder by name."""
     if name in REGISTRY:
         return REGISTRY[name]
-    if name in PLANNED:
-        return PLANNED[name]
-    raise KeyError(
-        f"unknown signal {name!r}; available: {sorted(REGISTRY)} (planned: {sorted(PLANNED)})"
-    )
+    raise KeyError(f"unknown signal {name!r}; available: {sorted(REGISTRY)}")
 
 
 def available() -> list[str]:
-    """Names of signals that are actually implemented."""
+    """Names of all registered signals (all six families)."""
     return sorted(REGISTRY)
