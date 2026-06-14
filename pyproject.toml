@@ -27,6 +27,7 @@ members = [
     "analytics/fourier",
     "analytics/differential_equation/ode-book",
     "analytics/differential_equation/pde-book",
+    "analytics/machine_learning",
 ]
 
 # PyTorch CUDA 12.8 — used by `gto`. Defined here so all workspace members
@@ -94,7 +95,7 @@ ignore = [
 "rates_volatility_model/**/*.py" = ["N803", "N806", "N816", "E741"]
 "johnhull/**/*.py" = ["N803", "N806", "N816", "E741"]
 "autostock/**/*.py" = ["N803", "N806", "N816", "E741"]
-"analytics/**/*.py" = ["N803", "N806", "N816", "E741"]
+"analytics/**/*.py" = ["N802", "N803", "N806", "N812", "N816", "E741"]
 "notebooks/**/*.py" = ["E402", "F401", "F841", "N803", "N806"]
 # Tests can have unused variables / imports for fixture-driven patterns.
 "**/tests/**/*.py" = ["F841", "F401"]
@@ -132,6 +133,7 @@ testpaths = [
     "analytics/report/tests",
     "analytics/differential_equation/ode-book/tests",
     "analytics/differential_equation/pde-book/tests",
+    "analytics/machine_learning/tests",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
