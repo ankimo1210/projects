@@ -418,6 +418,21 @@ ax.set_title("damped harmonic oscillator: position x(t)")
 plt.show()
 """),
         md(r"""
+**アニメーション**(Play で再生):同じ運動を **位相空間 $(x, v)$** で見ると、弱減衰の軌道は
+原点へ **らせん状に巻き込む**(= 04 章の stable spiral)。点が時間とともに内側へ回ります。
+"""),
+        code("""
+import plotly.io as pio
+from ode_book import interactive
+
+pio.renderers.default = "plotly_mimetype+notebook_connected"
+fu = systems.harmonic_oscillator(omega=1.0, gamma=0.15)
+tt = np.linspace(0, 30, 1500)
+traj = solvers.rk4(fu, [1.0, 0.0], tt)[:, :2]
+interactive.plotly_trajectory_anim(traj, step=15, xlabel="x", ylabel="v = x'",
+                                   title="underdamped oscillator spirals to rest (phase space)").show()
+"""),
+        md(r"""
 ## 5. Definition — 固有値が振る舞いを決める
 
 $d\mathbf{x}/dt = A\mathbf{x}$ の解は $A$ の固有値 $\lambda$ と固有ベクトル $\mathbf{v}$ を使って
@@ -676,6 +691,19 @@ a2.set_xlabel("t")
 a2.set_title("populations oscillate, predator lags prey")
 fig.tight_layout()
 plt.show()
+"""),
+        md(r"""
+**アニメーション**(Play で再生):3 つの初期値からの軌道を、点が時間とともに周回トレースする様子。
+閉軌道なので点は同じ輪の上をぐるぐる回り続けます(=個体数の周期振動)。
+"""),
+        code("""
+import plotly.io as pio
+from ode_book import interactive
+
+pio.renderers.default = "plotly_mimetype+notebook_connected"
+orbits = [solvers.rk4(f, y0, sc.t)[:, :2] for y0 in ([2, 1], [1.5, 1], [3, 1.5])]
+interactive.plotly_trajectory_anim(orbits, step=12, xlabel="prey x", ylabel="predator y",
+                                   title="Lotka-Volterra: orbits traced over time").show()
 """),
         md(r"""
 ## 6. SIR — 感染症の流行

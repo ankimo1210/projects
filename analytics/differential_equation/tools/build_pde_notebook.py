@@ -228,6 +228,20 @@ fig.tight_layout()
 plt.show()
 """),
         md(r"""
+**アニメーション**(Play で再生、静的 HTML でも動く):段差がなめらかに均されていく様子を時間発展で。
+"""),
+        code("""
+import plotly.io as pio
+from pde_book import interactive
+
+pio.renderers.default = "plotly_mimetype+notebook_connected"
+gA = grids.Grid1D(0.0, 1.0, 101)
+xA, dxA = gA.x, gA.dx
+UA = solvers.solve_heat_explicit(datasets.bump(xA, 0.5, 0.15), 1.0, dxA, 0.4 * dxA**2, 300)
+interactive.plotly_field_evolution(xA, UA, step=6, dt=0.4 * dxA**2,
+                                   title="heat equation: press Play to watch a bump diffuse").show()
+"""),
+        md(r"""
 ### 拡散と伝播の違い
 
 - **熱(拡散)**: 情報は **瞬時に** 全体へにじむ(無限の伝播速度)。エネルギーは散逸し、時間反転できない。
@@ -258,6 +272,19 @@ t = np.arange(U.shape[0]) * dt
 plotting.space_time_heatmap(U, x, t, ax=a2, cmap="seismic", title="u(x, t): X-shaped characteristics")
 fig.tight_layout()
 plt.show()
+"""),
+        md(r"""
+**アニメーション**(matplotlib の `line_animation` ヘルパ→ `to_jshtml` で HTML 埋め込み):
+弾いた波が左右に分裂し、端で反射して戻ってくる様子。
+"""),
+        code("""
+from IPython.display import HTML
+
+# Matplotlib animation embedded as self-contained HTML (works offline in the book).
+# Subsampled to keep the embedded frames light.
+anim = plotting.line_animation(x, U[::13], interval=80,
+                               title="wave: a pluck splits and reflects (matplotlib)")
+HTML(anim.to_jshtml())
 """),
         md(r"""
 時空間ヒートマップの **X 字** は、波が速度 $\pm c$ の **特性線** $x \pm ct = \text{const}$ に沿って伝わることを示します。

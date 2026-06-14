@@ -145,3 +145,100 @@ def plotly_lorenz_3d(t_end=40.0, n=8000, y0=(1.0, 1.0, 1.0)):
         height=560,
     )
     return fig
+
+
+def plotly_trajectory_anim(
+    traj, step=4, duration=40, title="phase trajectory", xlabel="x", ylabel="y", labels=None
+):
+    """Play/slider animation of a point tracing a 2-D trajectory (or several).
+
+    ``traj`` is an array (T, 2) or a list of such arrays (drawn in different
+    colors). The full path is shown faintly; an animated head + growing trail
+    sweep along it. Renders in exported HTML. Returns a go.Figure.
+    """
+    import plotly.graph_objects as go
+
+    trajs = (
+        [np.asarray(traj, dtype=float)]
+        if np.ndim(traj) == 2
+        else [np.asarray(t, float) for t in traj]
+    )
+    colors = ["#d62728", "#1f77b4", "#2ca02c", "#9467bd"]
+    T = min(len(t) for t in trajs)
+    idx = list(range(1, T, step))
+    if idx[-1] != T - 1:
+        idx.append(T - 1)
+
+    base = []  # faint full paths
+    for i, t in enumerate(trajs):
+        base.append(
+            go.Scatter(
+                x=t[:, 0],
+                y=t[:, 1],
+                mode="lines",
+                line=dict(color=colors[i % 4], width=1),
+                opacity=0.25,
+                name=(labels[i] if labels else f"orbit {i + 1}"),
+            )
+        )
+    heads = []  # moving heads (animated, start)
+    for i, t in enumerate(trajs):
+        heads.append(
+            go.Scatter(
+                x=[t[0, 0]],
+                y=[t[0, 1]],
+                mode="markers",
+                marker=dict(color=colors[i % 4], size=10),
+                showlegend=False,
+            )
+        )
+    n_base = len(base)
+    head_indices = list(range(n_base, n_base + len(trajs)))
+
+    def frame(k):
+        # Only the head markers are re-sent each frame; the faint paths stay fixed.
+        data = [
+            go.Scatter(
+                x=[t[k, 0]],
+                y=[t[k, 1]],
+                mode="markers",
+                marker=dict(color=colors[i % 4], size=10),
+                showlegend=False,
+            )
+            for i, t in enumerate(trajs)
+        ]
+        return go.Frame(data=data, name=str(k), traces=head_indices)
+
+    fig = go.Figure(data=base + heads, frames=[frame(k) for k in idx])
+    play = dict(
+        label="Play",
+        method="animate",
+        args=[None, {"frame": {"duration": duration, "redraw": True}, "fromcurrent": True}],
+    )
+    pause = dict(
+        label="Pause",
+        method="animate",
+        args=[[None], {"frame": {"duration": 0}, "mode": "immediate"}],
+    )
+    slider = dict(
+        active=0,
+        pad={"t": 40},
+        steps=[
+            dict(
+                method="animate",
+                label=str(k),
+                args=[[str(k)], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            )
+            for k in idx
+        ],
+    )
+    fig.update_layout(
+        title=title,
+        template="plotly_white",
+        height=520,
+        xaxis_title=xlabel,
+        yaxis_title=ylabel,
+        updatemenus=[dict(type="buttons", direction="left", x=0.0, y=1.15, buttons=[play, pause])],
+        sliders=[slider],
+    )
+    return fig

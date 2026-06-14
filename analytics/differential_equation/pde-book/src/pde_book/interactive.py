@@ -149,3 +149,65 @@ def plotly_bs_surface(K=1.0, r=0.05, sigma=0.2, T=1.0):
         height=560,
     )
     return fig
+
+
+def plotly_field_evolution(
+    x, U, step=2, duration=40, title="field evolution", ylim=None, dt=None, color="#d62728"
+):
+    """Play/slider animation of a 1-D field history U (shape (n_time, nx)).
+
+    Renders in exported HTML (Plotly frames). ``step`` subsamples time for size.
+    A fixed y-range keeps the motion readable. Returns a go.Figure.
+    """
+    import plotly.graph_objects as go
+
+    x = np.asarray(x, dtype=float)
+    U = np.asarray(U, dtype=float)
+    idx = list(range(0, U.shape[0], step))
+    if idx[-1] != U.shape[0] - 1:
+        idx.append(U.shape[0] - 1)
+    if ylim is None:
+        pad = 0.08 * (U.max() - U.min() + 1e-9)
+        ylim = (U.min() - pad, U.max() + pad)
+
+    def label(k):
+        return f"t={k * dt:.3f}" if dt is not None else f"step {k}"
+
+    frames = [go.Frame(data=[go.Scatter(x=x, y=U[k])], name=str(k)) for k in idx]
+    fig = go.Figure(
+        data=[go.Scatter(x=x, y=U[idx[0]], mode="lines", line=dict(color=color, width=2))],
+        frames=frames,
+    )
+    play = dict(
+        label="Play",
+        method="animate",
+        args=[None, {"frame": {"duration": duration, "redraw": True}, "fromcurrent": True}],
+    )
+    pause = dict(
+        label="Pause",
+        method="animate",
+        args=[[None], {"frame": {"duration": 0}, "mode": "immediate"}],
+    )
+    slider = dict(
+        active=0,
+        pad={"t": 40},
+        steps=[
+            dict(
+                method="animate",
+                label=label(k),
+                args=[[str(k)], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            )
+            for k in idx
+        ],
+    )
+    fig.update_layout(
+        title=title,
+        template="plotly_white",
+        height=460,
+        xaxis_title="x",
+        yaxis_title="u",
+        yaxis_range=list(ylim),
+        updatemenus=[dict(type="buttons", direction="left", x=0.0, y=1.15, buttons=[play, pause])],
+        sliders=[slider],
+    )
+    return fig

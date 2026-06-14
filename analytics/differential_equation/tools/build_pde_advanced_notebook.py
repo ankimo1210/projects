@@ -83,6 +83,17 @@ print("mass conserved:", abs(U[-1].sum() - U[0].sum()) * dx < 1e-6,
       "| momentum drift:", round(float(abs((U[-1]**2).sum() - (U[0]**2).sum()) * dx), 6))
 """),
         md(r"""
+**アニメーション**(Play で再生):背の高いソリトンが追いついて衝突し、すり抜けて両方とも形を保つ様子。
+"""),
+        code("""
+import plotly.io as pio
+from pde_book import interactive
+
+pio.renderers.default = "plotly_mimetype+notebook_connected"
+interactive.plotly_field_evolution(x, U, step=40, dt=dt,
+                                   title="KdV two-soliton collision (press Play)").show()
+"""),
+        md(r"""
 ## 3. 反応拡散 — Turing パターン (Gray-Scott)
 
 2 つの化学種が **拡散しながら反応** すると、一様な状態が自発的に崩れて斑点や縞ができます
