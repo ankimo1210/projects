@@ -1,0 +1,30 @@
+# Initial research universe (clean, liquid). Expand to JP single names (J-Quants)
+# and US fundamentals (SEC EDGAR) in later phases.
+
+us_etfs:
+  equity: [SPY, QQQ, IWM, DIA]
+  bonds: [TLT, IEF, SHY, HYG, LQD]
+  commodity: [GLD, USO]
+  sectors: [XLF, XLK, XLE, XLV, XLY, XLP, XLI, XLU, XLRE, XLB]
+
+japan:
+  # Free proxies via yfinance (.T). Index levels via Stooq (^nkx, ^tpx).
+  indices: { nikkei225: "^NKX", topix: "^TPX" }
+  etfs:
+    large_cap: "1306.T"      # TOPIX ETF
+    nikkei: "1321.T"         # Nikkei 225 ETF
+    banks: "1615.T"          # TOPIX Banks
+    reit: "1343.T"           # TSE REIT
+  note: "Trading companies / exporters baskets -> Phase 2 via J-Quants single names."
+
+fx:
+  pairs: [USDJPY, EURUSD, EURJPY, GBPUSD, AUDJPY]
+  dxy_proxy: "UUP"           # Invesco DB USD Index ETF as a free DXY proxy
+
+crypto:
+  symbols: [btc, eth, sol, bnb, xrp]
+
+rates:
+  us: { 3m: us_3m, 2y: us_2y, 5y: "DGS5", 10y: us_10y, 30y: "DGS30" }   # FRED ids/aliases
+  us_treasury_tenors: ["3m", "2y", "5y", "10y", "30y"]                   # ustreasury connector
+  japan: { 2y: "IRLTLT01JPM156N", 10y: "IRLTLT01JPM156N" }              # FRED (10y); JGB curve -> Phase 2

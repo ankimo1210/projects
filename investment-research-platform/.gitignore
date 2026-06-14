@@ -1,0 +1,16 @@
+# Cached data (regenerable from free sources): ignore contents, keep the
+# directory structure via .gitkeep.
+data/*/*
+!data/*/.gitkeep
+reports/*.html
+reports/*.png
+
+# secrets / env
+.env
+
+# python / notebooks
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.pytest_cache/
+.ruff_cache/

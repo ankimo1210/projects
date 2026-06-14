@@ -1,0 +1,20 @@
+# Model configuration (Phase 2+). Defaults for the model tiers in the spec.
+# Always compare complex models against simple baselines; never tune on full sample.
+
+baselines: [buy_and_hold, equal_weight, risk_parity, naive_momentum, ma_trend]
+
+tiers:
+  statistical: [linear, ridge, lasso, elastic_net, logistic, pca_factor, arima, garch]
+  trees: [random_forest, lightgbm, xgboost]
+  deep: [lstm, gru, tcn, nbeats, nhits, tft, patchtst]
+  foundation: [timesfm, chronos, time_moe, moment]   # evaluate if practical
+
+device:
+  prefer_cuda: true
+  fallback_cpu: true
+  reduce_size_on_cpu: true
+
+cross_validation:
+  scheme: walk_forward
+  purge: true        # purged CV to avoid leakage across the train/test boundary
+  embargo_days: 5
