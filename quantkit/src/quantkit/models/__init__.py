@@ -23,6 +23,7 @@ from .foundation import (
     SeasonalNaiveForecaster,
     load_foundation,
 )
+from .importance import mda_importance, rank_ic
 from .linear import elastic_net, lasso, ridge
 from .neural import mlp
 from .tree import gradient_boosting, random_forest
@@ -43,9 +44,11 @@ __all__ = [
     "lasso",
     "load_foundation",
     "make_design",
+    "mda_importance",
     "mlp",
     "predictions_to_panel",
     "random_forest",
+    "rank_ic",
     "ridge",
     "walk_forward_predict",
 ]

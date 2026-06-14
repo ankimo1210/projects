@@ -29,7 +29,14 @@ from .metrics import (
     sortino,
     summary,
 )
-from .split import Fold, is_leakage_free, walk_forward
+from .split import (
+    Fold,
+    combinatorial_purged,
+    is_leakage_free,
+    is_purged,
+    n_combinatorial_folds,
+    walk_forward,
+)
 
 __all__ = [
     "BacktestResult",
@@ -39,10 +46,13 @@ __all__ = [
     "annualized_return",
     "annualized_vol",
     "buy_and_hold",
+    "combinatorial_purged",
     "compare",
     "hit_rate",
     "is_leakage_free",
+    "is_purged",
     "max_drawdown",
+    "n_combinatorial_folds",
     "rebalanced",
     "run_backtest",
     "sharpe",
