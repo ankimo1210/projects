@@ -649,3 +649,89 @@ def plotly_ssm_impulse(
         margin={"l": 50, "r": 20, "t": 50, "b": 40},
     )
     return fig
+
+
+def plotly_function_approx(n_units_list=(1, 2, 4, 8, 16, 32, 64), seed: int = 0, title=None):
+    """Slider over the number of ReLU units fitting a fixed target curve.
+
+    Random ReLU features ``relu(w x + b)`` are fit to the target by least
+    squares; more units -> better fit. Demonstrates the universal approximation
+    idea (any continuous function on a bounded interval is reachable). The slider
+    label shows the training RMSE. Works in the static Jupyter Book HTML.
+    """
+    import plotly.graph_objects as go
+
+    rng = np.random.default_rng(seed)
+    x = np.linspace(-3, 3, 200)
+    target = np.sin(1.5 * x) + 0.3 * x
+    max_n = max(n_units_list)
+    w = rng.uniform(-3, 3, max_n)
+    b = rng.uniform(-4, 4, max_n)
+
+    def fit(n):
+        phi = np.maximum(0.0, np.outer(x, w[:n]) + b[:n])
+        phi = np.column_stack([np.ones_like(x), phi])
+        coef, *_ = np.linalg.lstsq(phi, target, rcond=None)
+        return phi @ coef
+
+    fits = [(n, fit(n)) for n in n_units_list]
+    labels = [
+        f"{n} units (RMSE={np.sqrt(np.mean((yh - target) ** 2)):.3f})" for n, yh in fits
+    ]
+
+    def traces(yhat):
+        return [
+            go.Scatter(x=list(x), y=list(target), mode="lines",
+                       line={"color": "gray", "width": 2}, name="target f(x)"),
+            go.Scatter(x=list(x), y=list(yhat), mode="lines",
+                       line={"color": "#d62728", "width": 2}, name="ReLU net fit"),
+        ]
+
+    frames = [go.Frame(data=traces(yh), name=lab) for (_, yh), lab in zip(fits, labels, strict=True)]
+    fig = go.Figure(data=traces(fits[0][1]), frames=frames)
+    steps = [
+        {"args": [[lab], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+         "label": lab, "method": "animate"}
+        for lab in labels
+    ]
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": ""}}],
+        width=720, height=440,
+        title=title or "ReLU ユニット数を増やすと任意関数に近づく（万能近似）",
+        xaxis={"title": "x"}, yaxis={"title": "y"},
+        margin={"l": 60, "r": 20, "t": 50, "b": 40},
+    )
+    return fig
+
+
+def plotly_softmax_temperature(tokens, logits, temperatures=(0.25, 0.5, 1.0, 2.0, 4.0), title=None):
+    """Slider over softmax temperature applied to fixed next-token logits.
+
+    Low temperature -> peaky (greedy) distribution; high temperature -> flat
+    (more random) — the core knob behind LLM sampling. Works in static HTML.
+    """
+    import plotly.graph_objects as go
+
+    from .metrics import softmax_np
+
+    logits = np.asarray(logits, dtype=float)
+    dists = [softmax_np(logits / t) for t in temperatures]
+
+    def traces(p):
+        return [go.Bar(x=list(tokens), y=list(p), marker={"color": "#1f77b4"})]
+
+    frames = [go.Frame(data=traces(p), name=f"{t:g}") for p, t in zip(dists, temperatures, strict=True)]
+    fig = go.Figure(data=traces(dists[2 if len(dists) > 2 else 0]), frames=frames)
+    steps = [
+        {"args": [[f"{t:g}"], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+         "label": f"{t:g}", "method": "animate"}
+        for t in temperatures
+    ]
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "temperature = "}}],
+        width=640, height=420,
+        title=title or "サンプリング温度で次トークン分布が尖る／平らになる",
+        xaxis={"title": "token"}, yaxis={"title": "probability", "range": [0, 1]},
+        margin={"l": 60, "r": 20, "t": 50, "b": 50},
+    )
+    return fig
