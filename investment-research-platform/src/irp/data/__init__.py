@@ -20,6 +20,7 @@ from .connectors import (
     get_connector,
 )
 from .fundamentals import SecEdgarConnector, fundamental_as_of
+from .fx import fx_adjusted_returns, invert_quote, to_base_currency
 from .quality import DataQualityReport, assess
 
 __all__ = [
@@ -38,9 +39,12 @@ __all__ = [
     "assess",
     "connectors",
     "fundamental_as_of",
+    "fx_adjusted_returns",
     "get_connector",
     "get_prices",
+    "invert_quote",
     "quality",
+    "to_base_currency",
 ]
 
 
