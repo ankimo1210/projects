@@ -153,6 +153,53 @@ ax.set_title("Bias-variance: validation accuracy peaks at an intermediate depth"
 plt.show()
 """),
     md(r"""
+### バイアスとバリアンスを分解して見る
+
+「複雑さ↑でバイアス↓・バリアンス↑」を数値で分解します。同じ真の関数からノイズだけ変えた訓練集合を
+何百個も作り、各次数で学習 → テスト点での予測の **ばらつき(variance)** と **平均的なズレ(bias²)** を測ります。
+両者の和(+既約ノイズ)が汎化誤差で、その U 字の底が最良の複雑さです。
+"""),
+    code("""
+from sklearn.linear_model import LinearRegression
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import PolynomialFeatures
+
+
+def true_fn(t):
+    return 0.5 * t**3 - t**2 - 2 * t + 1   # same curve as make_polynomial_dataset
+
+
+rng = np.random.default_rng(0)
+x_train = np.sort(rng.uniform(-3, 3, 40))
+x_test = np.linspace(-3, 3, 120)
+f_test = true_fn(x_test)
+noise_sd = 0.3 * true_fn(x_train).std()
+degrees = list(range(1, 11))
+R = 200
+
+bias2, variance = [], []
+for d in degrees:
+    preds = np.zeros((R, len(x_test)))
+    for r in range(R):
+        y_train = true_fn(x_train) + noise_sd * rng.standard_normal(40)
+        model = make_pipeline(PolynomialFeatures(d), LinearRegression()).fit(x_train[:, None], y_train)
+        preds[r] = model.predict(x_test[:, None])
+    bias2.append(float(np.mean((preds.mean(0) - f_test) ** 2)))
+    variance.append(float(np.mean(preds.var(0))))
+bias2, variance = np.array(bias2), np.array(variance)
+total = bias2 + variance + noise_sd**2
+
+fig, ax = plt.subplots(figsize=(7, 4.5))
+ax.plot(degrees, bias2, "o-", label="bias²", color="#1f77b4")
+ax.plot(degrees, variance, "o-", label="variance", color="#d62728")
+ax.plot(degrees, total, "o-", label="bias² + variance + noise", color="black")
+ax.axhline(noise_sd**2, ls=":", color="gray", label="irreducible noise")
+ax.axvline(degrees[int(np.argmin(total))], ls="--", color="green", alpha=0.6)
+ax.set_xlabel("polynomial degree (complexity)"); ax.set_ylabel("error")
+ax.set_title("Bias-variance decomposition"); ax.legend(); ax.grid(alpha=0.3); plt.show()
+print(f"best degree by total error: {degrees[int(np.argmin(total))]}")
+"""),
+    md(r"""
 ## 5. 決定境界 — モデルが世界をどう区切るか
 
 同じデータでも、モデルが引く **決定境界** はまるで違います。

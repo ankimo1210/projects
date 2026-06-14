@@ -128,6 +128,28 @@ sc = ax.scatter(Xg[:, 0], Xg[:, 1], c=proba.argmax(1), cmap="viridis", s=24, alp
 ax.set_title("GMM soft assignment (faint points = uncertain)"); ax.set_aspect("equal"); plt.show()
 print("example soft memberships (first 3 points):\\n", proba[:3].round(2))
 """),
+    md(r"""
+### GMM の共分散を楕円で見る
+
+各成分が学習した平均と **共分散** を 1σ / 2σ の楕円で重ねます。k-means の等方的な円と違い、
+GMM は **傾いた楕円** でクラスタの形に追従できます。
+"""),
+    code("""
+from matplotlib.patches import Ellipse
+
+fig, ax = plt.subplots(figsize=(6, 5))
+ax.scatter(Xg[:, 0], Xg[:, 1], c=gmm.predict(Xg), cmap="viridis", s=14, alpha=0.5)
+for mean, cov in zip(gmm.means_, gmm.covariances_):
+    vals, vecs = np.linalg.eigh(cov)
+    order = vals.argsort()[::-1]
+    vals, vecs = vals[order], vecs[:, order]
+    angle = float(np.degrees(np.arctan2(vecs[1, 0], vecs[0, 0])))
+    for nsd in (1, 2):
+        width, height = 2 * nsd * np.sqrt(vals)
+        ax.add_patch(Ellipse(mean, width, height, angle=angle, fill=False, edgecolor="red", lw=1.5, alpha=0.6))
+    ax.scatter(*mean, c="red", marker="x", s=90)
+ax.set_title("GMM components as covariance ellipses (1σ, 2σ)"); ax.set_aspect("equal"); plt.show()
+"""),
     md("""
 ## 4. 階層的クラスタリング
 

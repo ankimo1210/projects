@@ -118,6 +118,22 @@ ax.set_xlabel("MedInc"); ax.set_ylabel("predicted value"); ax.set_title("ICE cur
 ax.legend(); ax.grid(alpha=0.3); plt.show()
 """),
     md(r"""
+### 2 特徴の交互作用を見る (2-way PDP)
+
+2 つの特徴を同時に動かした部分依存をヒートマップで見ると、**交互作用**(片方の効きがもう片方に依存)が
+等高線の傾き・うねりとして現れます。
+"""),
+    code("""
+from sklearn.inspection import PartialDependenceDisplay
+
+fig, ax = plt.subplots(figsize=(6.5, 5))
+PartialDependenceDisplay.from_estimator(
+    rf, Xte.iloc[:500], [("MedInc", "AveOccup")], ax=ax, grid_resolution=20
+)
+ax.set_title("2-way partial dependence: MedInc x AveOccup")
+plt.tight_layout(); plt.show()
+"""),
+    md(r"""
 ## 5. 相関した特徴は重要度を不安定にする
 
 ほぼ同じ情報を持つ 2 特徴があると、モデルはどちらに功績を割り当てるか決められません。

@@ -126,6 +126,23 @@ print(f"  noise among them: {sum('noise' in c for c in chosen)} / 20")
 print(f"  real among them : {sum('noise' not in c for c in chosen)} / 30")
 """),
     md(r"""
+### RFECV: 特徴数ごとの交差検証スコア
+
+RFECV が内部で評価した「残す特徴数 → CV スコア」を描くと、少数の良い特徴で頭打ちになり、
+最良点(縦線)が選ばれた様子が見えます。
+"""),
+    code("""
+scores = rfecv.cv_results_["mean_test_score"]
+n_features = np.arange(len(scores)) * rfecv.step + rfecv.min_features_to_select
+n_features = n_features[n_features <= X.shape[1]]
+scores = scores[: len(n_features)]
+fig, ax = plt.subplots(figsize=(7, 4.5))
+ax.plot(n_features, scores, "o-", color="#1f77b4")
+ax.axvline(rfecv.n_features_, color="#d62728", ls="--", label=f"selected = {rfecv.n_features_}")
+ax.set_xlabel("number of features kept"); ax.set_ylabel("CV accuracy")
+ax.set_title("RFECV: accuracy vs subset size"); ax.legend(); ax.grid(alpha=0.3); plt.show()
+"""),
+    md(r"""
 ## 4. Embedded — 学習に組み込まれた選択
 
 - **L1 (Lasso / L1 ロジスティック)**: 罰則が係数を 0 にする → そのまま選択。

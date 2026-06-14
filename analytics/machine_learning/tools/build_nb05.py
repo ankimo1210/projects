@@ -84,6 +84,37 @@ for ax, depth in zip(axes, [1, 3, None]):
 plt.tight_layout(); plt.show()
 """),
     md("""
+### インタラクティブ: 木の深さと決定境界(静的 HTML 可)
+
+深さを上げると領域が細かく刻まれ、訓練データに食い込んでいきます(過学習)。
+"""),
+    code("""
+depths = [1, 2, 3, 5, 8, 15]
+pad = 0.5
+xs = np.linspace(X[:, 0].min() - pad, X[:, 0].max() + pad, 120)
+ys = np.linspace(X[:, 1].min() - pad, X[:, 1].max() + pad, 120)
+xx, yy = np.meshgrid(xs, ys)
+grid = np.c_[xx.ravel(), yy.ravel()]
+frames = []
+for d in depths:
+    clf = DecisionTreeClassifier(max_depth=d, random_state=0).fit(X, y)
+    Z = clf.predict(grid).reshape(xx.shape)
+    frames.append(go.Frame(name=str(d), data=[
+        go.Heatmap(x=xs, y=ys, z=Z, colorscale="RdBu", showscale=False, opacity=0.7),
+        go.Scatter(x=list(X[:, 0]), y=list(X[:, 1]), mode="markers",
+                   marker={"color": list(map(int, y)), "colorscale": "RdBu",
+                           "line": {"color": "black", "width": 0.5}, "size": 6}, showlegend=False),
+    ], layout={"title": f"max_depth = {d}  (train acc {clf.score(X, y):.2f})"}))
+fig = go.Figure(data=frames[0].data, frames=frames)
+steps = [{"args": [[f.name], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+          "label": f.name, "method": "animate"} for f in frames]
+fig.update_layout(sliders=[{"steps": steps, "currentvalue": {"prefix": "max_depth = "}}],
+                  title=frames[0].layout.title.text, width=600, height=560,
+                  xaxis={"title": "x1"}, yaxis={"title": "x2", "scaleanchor": "x"},
+                  margin={"l": 50, "r": 20, "t": 60, "b": 40})
+fig.show()
+"""),
+    md("""
 ### インタラクティブ(JupyterLab のみ): 木の深さ
 
 スライダーで深さを上げると訓練精度は 1.0 に近づくのにテスト精度は頭打ち/低下します(過学習)。

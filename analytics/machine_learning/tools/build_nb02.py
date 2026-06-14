@@ -23,6 +23,10 @@ cells = [
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+import plotly.io as pio
+
+pio.renderers.default = "plotly_mimetype+notebook_connected"
 
 from ml_textbook import datasets, preprocessing, validation
 
@@ -97,6 +101,32 @@ for ax, name in zip(axes, ["raw", "standard", "robust"]):
     ax.set_title(name); ax.grid(alpha=0.3); ax.legend()
 plt.tight_layout(); plt.show()
 print("Standard scaling squeezes the inliers into a tiny blob; robust keeps their spread.")
+"""),
+    md(r"""
+### インタラクティブ: 外れ値の強さとスケーラの頑健性
+
+外れ値の大きさ(σ)をスライダーで上げると、**標準化(standard)/min-max では内点(inlier)のばらつきが潰れ**、
+**robust はほぼ一定**に保たれます。外れ値があるなら RobustScaler、が一目で分かります(静的 HTML 可)。
+"""),
+    code("""
+mags = [0, 2, 4, 8, 16, 32]
+scaler_names = ["raw", "standard", "minmax", "robust"]
+colors = ["#999999", "#1f77b4", "#ff7f0e", "#2ca02c"]
+frames = []
+for m in mags:
+    Xo_m, idx_m = preprocessing.inject_outliers(Xb, frac=0.02, magnitude=float(m), seed=0)
+    inlier = np.ones(len(Xo_m), bool); inlier[idx_m] = False
+    scaled_m = preprocessing.compare_scalers(Xo_m)
+    spread = [float(scaled_m[name][inlier, 0].std()) for name in scaler_names]
+    frames.append(go.Frame(name=str(m), data=[go.Bar(x=scaler_names, y=spread, marker_color=colors)],
+                           layout={"title": f"outlier magnitude = {m}σ"}))
+fig = go.Figure(data=frames[0].data, frames=frames)
+steps = [{"args": [[f.name], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+          "label": f.name, "method": "animate"} for f in frames]
+fig.update_layout(sliders=[{"steps": steps, "currentvalue": {"prefix": "magnitude = "}}],
+                  title=frames[0].layout.title.text, yaxis_title="inlier spread (std) after scaling",
+                  width=620, height=440, margin={"l": 60, "r": 20, "t": 60, "b": 40})
+fig.show()
 """),
     md(r"""
 ## 4. なぜスケーリングが効くのか
