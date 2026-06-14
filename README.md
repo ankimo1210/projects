@@ -60,20 +60,64 @@ make tree      # ヘビーディレクトリを除外したツリー表示
 
 ## 環境前提
 
-- Windows 11 + WSL2 (Ubuntu)
+- 対応プラットフォーム: **WSL2 (Ubuntu) を主**とし、ネイティブ Windows (PowerShell) と macOS でも動作（差分は下記セットアップ参照）
 - Python は **ルート単一の uv workspace** で管理（`.venv` は repo root に1個）
-  - workspace メンバー: `gto`, `market-viz`, `stock`, `nbody-gpu`, `line_backup`, `akinator`, `autostock`, `johnhull/hullkit`、`analytics/{linear_algebra,neural_net,bayesian,fourier,laplace}` と `analytics/differential_equation/{ode-book,pde-book}`（`analytics/machine_learning` と `analytics/report` はメンバー外）
+  - workspace メンバー: `gto`, `market-viz`, `stock`, `nbody-gpu`, `line_backup`, `akinator`, `autostock`, `johnhull/hullkit`、`analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning}` と `analytics/differential_equation/{ode-book,pde-book}`（`analytics/report` のみメンバー外）
   - 例外: `aisan_lbo_case` は `requirements.txt`、`csharp_calc` は .NET、`rates_volatility_model` / `notebooks` は env 管理なし
 - AI コラボ前提（Claude Code / Copilot）。エージェント向け規約は `CLAUDE.md` と `AGENTS.md` を参照
 
 ## セットアップ
 
+コアは **Python ≥3.12 を uv の単一ワークスペースで管理**するだけです。Node / Rust / .NET は
+それらを使うプロジェクトで作業するときだけ追加で入れます。
+
+### 1. uv を入れる
+
+| 環境 | コマンド |
+|---|---|
+| WSL2 (Ubuntu) / Linux | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
+| macOS | `brew install uv`（または上の curl スクリプト） |
+| Windows (PowerShell) | `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 \| iex"`（または `winget install astral-sh.uv`） |
+
+uv が Python 3.12 自体も自動取得するので、別途 Python を入れる必要はありません。
+
+### 2. Python ワークスペースを sync
+
 ```bash
-uv sync --all-packages   # ルートに .venv が作られ、全メンバーが editable install
+uv sync --all-packages   # ルートに .venv が1個作られ、全メンバーが editable install
 make help                # 横断ターゲット一覧
 ```
 
-ワークスペース内のクロスインポートはそのまま動きます。例: `johnhull` のノートブックから `from hullkit import ...` が可能（`hullkit` パッケージは `johnhull/hullkit` 由来、workspace で自動リンク）。
+ワークスペース内のクロスインポートはそのまま動きます。例: `johnhull` のノートブックから
+`from hullkit import ...`（`hullkit` は `johnhull/hullkit` 由来、workspace で自動リンク）。
+
+> **macOS の注意**: torch が CUDA (cu128) インデックスに固定されている（`gto` と
+> `analytics/neural_net` が依存）ため、Mac では `--all-packages` が **失敗します**。torch 非依存の
+> メンバーだけを sync してください。例:
+> `uv sync --package la-book --package bayes-textbook --package ml-textbook`
+> （`gto` / `nn-textbook` を Mac で使う場合は CPU/MPS 版 torch への差し替えが別途必要）。
+
+### 3. プロジェクト別ツールチェーン（必要な分だけ）
+
+| ツール | 必要なプロジェクト | 入れ方 |
+|---|---|---|
+| Node.js 20+ | `gto/web`（Next.js）, `pokemon`（Vite） | WSL/Linux: nvm or apt ／ macOS: `brew install node` ／ Windows: `winget install OpenJS.NodeJS` |
+| Rust (cargo) | `gto`（Rust エンジン、maturin でビルド） | 全環境 `rustup`（<https://rustup.rs>） |
+| .NET 9 SDK | `csharp_calc` | macOS: `brew install dotnet` ／ Windows: `winget install Microsoft.DotNet.SDK.9` ／ WSL: 公式 apt リポジトリ |
+| NVIDIA CUDA | `nbody-gpu`（CuPy）, `gto` の GPU 機能（preview） | NVIDIA GPU + ドライバ必須。**macOS 非対応** |
+
+`gto` は Rust + FastAPI + Next.js で構成が重いので、起動・ビルド手順は `gto/README.md` を参照してください。
+
+### プラットフォーム別の注意
+
+- **WSL2 (Ubuntu)** — 主環境。上記の `make` ターゲットがそのまま使えます。リポジトリは WSL 側の
+  Linux パスに置く（`/mnt/c/...` 越しは避ける）と高速・安定です。
+- **macOS** — uv / Node / Rust / .NET は問題なし。ただし上記の torch (cu128) 制約と、GPU プロジェクト
+  （`nbody-gpu`, `gto-cuda`）は NVIDIA 前提なので動きません。
+- **Windows ネイティブ (PowerShell)** — `uv` と Python はそのまま動きますが、`make` と一部 shell
+  スクリプトは未対応です。`make test` → `uv run pytest`、`make lint` → `uv run ruff check .` のように
+  個別コマンドを直接実行してください。WSL/macOS と同じ手順を踏みたい場合は **WSL2 を推奨**します
+  （GPU 利用時も WSL2 のほうが CUDA 統合が安定）。
 
 ## このリポジトリで作業するときは
 

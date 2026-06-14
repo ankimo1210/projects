@@ -2,8 +2,8 @@
 
 数学・機械学習のトピックを「直感 → 図 → 最小限の数式 → Python 実装 → 実験 → 演習」の順で
 学ぶ、Jupyter Book ベースの教科書群。共通の流儀で揃えており、多くは uv workspace メンバー
-(`differential_equation` は `ode-book` / `pde-book` の2サブパッケージがメンバー、`machine_learning` と
-`report` はメンバー外)。
+(`differential_equation` は `ode-book` / `pde-book` の2サブパッケージがメンバー、`report` のみ
+メンバー外)。
 
 - 本文は日本語、コード・コメント・識別子は英語、**LaTeX 内に日本語を入れない**
 - 乱数は seed 固定で再現可能・**外部ダウンロード依存なし**(データは合成・同梱)
