@@ -54,7 +54,9 @@ Analytics (体験型インタラクティブ教科書, Jupyter Book + Plotly):
 
 - 教材: `analytics/linear_algebra`, `analytics/neural_net`, `analytics/bayesian`,
   `analytics/fourier`, `analytics/laplace`, `analytics/differential_equation`
-  (ODE/PDE 2分冊), `analytics/machine_learning` — 各冊が独立 workspace メンバー
+  (ODE/PDE 2分冊), `analytics/machine_learning`
+- workspace メンバーは LA/NN/ベイズ/fourier/laplace と diff-eq の `ode-book`/`pde-book`
+  (`machine_learning` と `report` はメンバー外)
 - `analytics/report/` — LA/NN/ベイズの代表可視化を束ねるオフライン統合ポータル
   (`make report`)。索引・流儀は `analytics/README.md` を参照
 

@@ -62,7 +62,7 @@ make tree      # ヘビーディレクトリを除外したツリー表示
 
 - Windows 11 + WSL2 (Ubuntu)
 - Python は **ルート単一の uv workspace** で管理（`.venv` は repo root に1個）
-  - workspace メンバー: `gto`, `market-viz`, `stock`, `nbody-gpu`, `line_backup`, `akinator`, `autostock`, `johnhull/hullkit`, `analytics/*`（各教材 + `report`）
+  - workspace メンバー: `gto`, `market-viz`, `stock`, `nbody-gpu`, `line_backup`, `akinator`, `autostock`, `johnhull/hullkit`、`analytics/{linear_algebra,neural_net,bayesian,fourier,laplace}` と `analytics/differential_equation/{ode-book,pde-book}`（`analytics/machine_learning` と `analytics/report` はメンバー外）
   - 例外: `aisan_lbo_case` は `requirements.txt`、`csharp_calc` は .NET、`rates_volatility_model` / `notebooks` は env 管理なし
 - AI コラボ前提（Claude Code / Copilot）。エージェント向け規約は `CLAUDE.md` と `AGENTS.md` を参照
 
