@@ -358,6 +358,155 @@ def plotly_eigen_sweep(A, n_angles: int = 49, title=None):
     return fig
 
 
+def plotly_linear_map_morph(
+    A, n_steps: int = 21, lim: float = 2.0, title="恒等写像 I から A へ: t を動かして平面を変形"
+):
+    """Slider over ``t`` in [0, 1] morphing the identity into ``A`` via
+    ``M(t) = (1 - t) I + t A``.
+
+    Each frame draws the deformed grid, the image of the unit square (its signed
+    area is ``det M(t)`` — the value is shown live in the slider label), and the
+    images of the basis vectors ``e1, e2``. This ties the grid-transform picture
+    to the determinant inside a single interactive figure: drag ``t`` and watch
+    the plane deform while ``det`` changes, flips sign (orientation reversal), or
+    hits 0 (the plane collapses). Works in the static Jupyter Book HTML.
+    """
+    import plotly.graph_objects as go
+
+    A = np.asarray(A, dtype=float)
+    eye = np.eye(2)
+    ts = np.linspace(0.0, 1.0, n_steps)
+    ticks = np.arange(-lim, lim + 0.25, 0.5)
+    t_line = np.linspace(-lim, lim, 21)
+    square = np.array([[0, 1, 1, 0, 0], [0, 0, 1, 1, 0]], dtype=float)
+
+    def frame_traces(M):
+        traces = []
+        for c in ticks:
+            for seg in (
+                np.vstack([np.full_like(t_line, c), t_line]),
+                np.vstack([t_line, np.full_like(t_line, c)]),
+            ):
+                out = M @ seg
+                traces.append(
+                    go.Scatter(
+                        x=out[0],
+                        y=out[1],
+                        mode="lines",
+                        line={"color": "#c7d6ee", "width": 1},
+                        showlegend=False,
+                        hoverinfo="skip",
+                    )
+                )
+        sq = M @ square
+        traces.append(
+            go.Scatter(
+                x=sq[0],
+                y=sq[1],
+                fill="toself",
+                fillcolor="rgba(214,39,40,0.22)",
+                line={"color": "#d62728", "width": 2},
+                name="unit square (area = |det|)",
+                hoverinfo="skip",
+            )
+        )
+        for col, name, color in ((M[:, 0], "Ae1", "#d62728"), (M[:, 1], "Ae2", "#1f77b4")):
+            traces.append(
+                go.Scatter(
+                    x=[0, col[0]],
+                    y=[0, col[1]],
+                    mode="lines+markers",
+                    line={"color": color, "width": 3},
+                    name=name,
+                )
+            )
+        return traces
+
+    mats = [(1 - t) * eye + t * A for t in ts]
+    dets = [float(np.linalg.det(M)) for M in mats]
+    labels = [f"{t:.2f}  (det={d:+.2f})" for t, d in zip(ts, dets, strict=True)]
+    frames = [
+        go.Frame(data=frame_traces(M), name=lab) for M, lab in zip(mats, labels, strict=True)
+    ]
+    fig = go.Figure(data=frame_traces(mats[0]), frames=frames)
+    steps = [
+        {
+            "args": [[lab], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            "label": lab,
+            "method": "animate",
+        }
+        for lab in labels
+    ]
+    corners = np.array([[lim, lim, -lim, -lim], [lim, -lim, lim, -lim]])
+    span = max(lim, 1.2 * float(np.abs(A @ corners).max()))
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "t = "}}],
+        width=560,
+        height=560,
+        title=title,
+        xaxis={"range": [-span, span], "scaleanchor": "y", "zeroline": True},
+        yaxis={"range": [-span, span], "zeroline": True},
+        margin={"l": 30, "r": 30, "t": 50, "b": 30},
+    )
+    return fig
+
+
+def plotly_svd_action(A, n_pts: int = 160, title=None):
+    """Slider over the four SVD stages applied to the unit circle:
+    circle -> ``V^T`` (rotate) -> ``Sigma`` (stretch) -> ``U`` (rotate) = ``A``.
+
+    Makes "any matrix = rotate, stretch, rotate" steppable: the circle always
+    becomes an ellipse whose semi-axis lengths are the singular values. Works in
+    the static Jupyter Book HTML.
+    """
+    import plotly.graph_objects as go
+
+    A = np.asarray(A, dtype=float)
+    U, s, Vt = np.linalg.svd(A)
+    th = np.linspace(0, 2 * np.pi, n_pts)
+    circ = np.vstack([np.cos(th), np.sin(th)])
+    stages = [
+        ("① 単位円", circ),
+        ("② 回転 Vᵀ", Vt @ circ),
+        ("③ 伸縮 Σ", np.diag(s) @ Vt @ circ),
+        ("④ 回転 U = A", U @ np.diag(s) @ Vt @ circ),
+    ]
+    lim = 1.3 * max(1.0, float(s.max()))
+
+    def traces(pts):
+        return [
+            go.Scatter(
+                x=list(pts[0]),
+                y=list(pts[1]),
+                mode="lines",
+                line={"color": "#2ca02c", "width": 2.5},
+                name="image",
+                hoverinfo="skip",
+            )
+        ]
+
+    frames = [go.Frame(data=traces(p), name=lab) for lab, p in stages]
+    fig = go.Figure(data=traces(stages[0][1]), frames=frames)
+    steps = [
+        {
+            "args": [[lab], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            "label": lab,
+            "method": "animate",
+        }
+        for lab, _ in stages
+    ]
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": ""}}],
+        width=520,
+        height=520,
+        title=title or "SVD: 円 → 回転 → 伸縮 → 回転 で楕円になる",
+        xaxis={"range": [-lim, lim], "scaleanchor": "y", "zeroline": True},
+        yaxis={"range": [-lim, lim], "zeroline": True},
+        margin={"l": 30, "r": 30, "t": 50, "b": 30},
+    )
+    return fig
+
+
 def plotly_grid_transform(matrices, labels, lim: float = 2.0, title=None):
     """Slider over a list of 2x2 matrices showing the deformed unit grid.
 
@@ -773,4 +922,305 @@ def plotly_gradient_descent_quadratic(
         margin={"l": 50, "r": 20, "t": 50, "b": 40},
     )
     fig.update_yaxes(scaleanchor="x")
+    return fig
+
+
+def _line_xy(coef, rhs, span):
+    """Sample a line ``coef . (x, y) = rhs`` across a square box of half-width
+    ``span`` (handles vertical/horizontal lines uniformly)."""
+    coef = np.asarray(coef, dtype=float)
+    n2 = coef @ coef
+    foot = coef * rhs / n2  # closest point to the origin on the line
+    direction = np.array([-coef[1], coef[0]]) / np.sqrt(n2)  # along the line
+    s = np.linspace(-3 * span, 3 * span, 2)
+    pts = foot[:, None] + direction[:, None] * s
+    return pts[0], pts[1]
+
+
+def plotly_two_line_system(A=None, b=None, n_steps: int = 21, span: float = 4.0, title=None):
+    """Row picture of a 2x2 system, with a slider that morphs equation 2 toward
+    being parallel to equation 1.
+
+    As ``t`` goes 0 -> 1, row 2 turns into a multiple of row 1: the determinant
+    shrinks to 0, the two lines become parallel, and the unique intersection
+    (the solution) shoots off to infinity and disappears. This makes "rank
+    deficiency = lost/blown-up solution" something you watch happen. Works in
+    the static Jupyter Book HTML.
+    """
+    import plotly.graph_objects as go
+
+    A = np.array([[1.0, 1.0], [1.0, -1.0]] if A is None else A, dtype=float)
+    b = np.array([3.0, 1.0] if b is None else b, dtype=float)
+    row1, row2_0 = A[0], A[1]
+    row2_par = 1.5 * row1  # the parallel target for row 2
+    ts = np.linspace(0.0, 1.0, n_steps)
+
+    def traces(t):
+        row2 = (1 - t) * row2_0 + t * row2_par
+        out = [
+            go.Scatter(
+                x=list(_line_xy(row1, b[0], span)[0]),
+                y=list(_line_xy(row1, b[0], span)[1]),
+                mode="lines",
+                line={"color": "#1f77b4", "width": 3},
+                name="equation 1",
+            ),
+            go.Scatter(
+                x=list(_line_xy(row2, b[1], span)[0]),
+                y=list(_line_xy(row2, b[1], span)[1]),
+                mode="lines",
+                line={"color": "#ff7f0e", "width": 3},
+                name="equation 2",
+            ),
+        ]
+        det = row1[0] * row2[1] - row1[1] * row2[0]
+        if abs(det) > 1e-3:
+            sol = np.linalg.solve(np.vstack([row1, row2]), b)
+            if np.abs(sol).max() <= span:
+                out.append(
+                    go.Scatter(
+                        x=[sol[0]],
+                        y=[sol[1]],
+                        mode="markers",
+                        marker={"color": "#d62728", "size": 13},
+                        name="solution",
+                    )
+                )
+        return out
+
+    dets = [row1[0] * ((1 - t) * row2_0 + t * row2_par)[1]
+            - row1[1] * ((1 - t) * row2_0 + t * row2_par)[0] for t in ts]
+    labels = [f"{t:.2f}  (det={d:+.2f})" for t, d in zip(ts, dets, strict=True)]
+    frames = [go.Frame(data=traces(t), name=lab) for t, lab in zip(ts, labels, strict=True)]
+    fig = go.Figure(data=traces(0.0), frames=frames)
+    steps = [
+        {
+            "args": [[lab], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            "label": lab,
+            "method": "animate",
+        }
+        for lab in labels
+    ]
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "t = "}}],
+        width=560,
+        height=560,
+        title=title or "二直線の交点 = 連立解（t→1 で平行になり解が消える）",
+        xaxis={"range": [-span, span], "scaleanchor": "y", "zeroline": True},
+        yaxis={"range": [-span, span], "zeroline": True},
+        margin={"l": 40, "r": 20, "t": 50, "b": 30},
+    )
+    return fig
+
+
+def plotly_projection_sweep(a=(2.0, 1.0), r: float = 2.2, n_angles: int = 37, title=None):
+    """Slider sweeping a vector ``b`` around a circle; shows its orthogonal
+    projection onto the fixed line ``span{a}`` and the residual.
+
+    The slider label reports the inner product ``a . b`` (max when b aligns with
+    a, zero when orthogonal, negative when opposed) so the algebra and the
+    picture move together. Works in the static Jupyter Book HTML.
+    """
+    import plotly.graph_objects as go
+
+    a = np.asarray(a, dtype=float)
+    na = a / np.linalg.norm(a)
+    lim = 1.4 * max(r, np.linalg.norm(a))
+    thetas = np.linspace(0, 2 * np.pi, n_angles)
+
+    def traces(th):
+        b = r * np.array([np.cos(th), np.sin(th)])
+        p = (a @ b) / (a @ a) * a
+        return [
+            go.Scatter(
+                x=[-lim * na[0], lim * na[0]],
+                y=[-lim * na[1], lim * na[1]],
+                mode="lines",
+                line={"color": "gray", "width": 1},
+                name="span{a}",
+                hoverinfo="skip",
+            ),
+            go.Scatter(x=[0, b[0]], y=[0, b[1]], mode="lines+markers",
+                       line={"color": "#1f77b4", "width": 3}, name="b"),
+            go.Scatter(x=[0, p[0]], y=[0, p[1]], mode="lines+markers",
+                       line={"color": "#d62728", "width": 3}, name="proj"),
+            go.Scatter(x=[b[0], p[0]], y=[b[1], p[1]], mode="lines",
+                       line={"color": "black", "width": 1.5, "dash": "dash"},
+                       name="residual", hoverinfo="skip"),
+        ]
+
+    dots = [float(a @ (r * np.array([np.cos(th), np.sin(th)]))) for th in thetas]
+    labels = [f"{np.degrees(th):.0f}°  (a·b={d:+.2f})" for th, d in zip(thetas, dots, strict=True)]
+    frames = [go.Frame(data=traces(th), name=lab) for th, lab in zip(thetas, labels, strict=True)]
+    fig = go.Figure(data=traces(thetas[0]), frames=frames)
+    steps = [
+        {
+            "args": [[lab], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            "label": lab,
+            "method": "animate",
+        }
+        for lab in labels
+    ]
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "angle = "}}],
+        width=560,
+        height=560,
+        title=title or "b を回すと影（射影）と残差が動く",
+        xaxis={"range": [-lim, lim], "scaleanchor": "y", "zeroline": True},
+        yaxis={"range": [-lim, lim], "zeroline": True},
+        margin={"l": 40, "r": 20, "t": 50, "b": 30},
+    )
+    return fig
+
+
+def plotly_poly_fit_degree(x, y, degrees=range(1, 13), title=None):
+    """Slider over polynomial degree fitting fixed (x, y) data.
+
+    Low degree underfits; very high degree overfits (the curve wiggles to chase
+    noise) even as the training RMSE keeps dropping — the slider label shows
+    that RMSE so the trade-off is explicit. Works in the static Jupyter Book HTML.
+    """
+    import plotly.graph_objects as go
+
+    x = np.asarray(x, dtype=float)
+    y = np.asarray(y, dtype=float)
+    xs = np.linspace(x.min(), x.max(), 200)
+    degrees = list(degrees)
+    pad = 0.5 * (y.max() - y.min())
+    ylim = [y.min() - pad, y.max() + pad]
+
+    def traces(d):
+        coeffs = np.polyfit(x, y, d)
+        rmse = float(np.sqrt(np.mean((np.polyval(coeffs, x) - y) ** 2)))
+        return rmse, [
+            go.Scatter(x=list(x), y=list(y), mode="markers",
+                       marker={"color": "#1f77b4", "size": 8}, name="data"),
+            go.Scatter(x=list(xs), y=list(np.polyval(coeffs, xs)), mode="lines",
+                       line={"color": "#d62728", "width": 2}, name=f"degree {d} fit"),
+        ]
+
+    info = [traces(d) for d in degrees]
+    labels = [f"degree {d}  (RMSE={rmse:.3f})" for d, (rmse, _) in zip(degrees, info, strict=True)]
+    frames = [go.Frame(data=tr, name=lab) for (_, tr), lab in zip(info, labels, strict=True)]
+    fig = go.Figure(data=info[0][1], frames=frames)
+    steps = [
+        {
+            "args": [[lab], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            "label": lab,
+            "method": "animate",
+        }
+        for lab in labels
+    ]
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": ""}}],
+        width=720,
+        height=460,
+        title=title or "多項式の次数を上げる：当てはまり vs 過学習",
+        xaxis={"title": "x"},
+        yaxis={"title": "y", "range": ylim},
+        margin={"l": 60, "r": 20, "t": 50, "b": 40},
+    )
+    return fig
+
+
+def plotly_complex_orbit(A, x0=(1.0, 0.0), n_steps: int = 24, title=None):
+    """Slider revealing the orbit ``x, Ax, A^2 x, ...`` of a 2x2 matrix.
+
+    When ``A`` has complex eigenvalues ``r e^{i theta}``, the orbit spirals:
+    ``theta`` sets the rotation per step and ``r`` sets growth (r>1), decay
+    (r<1), or a closed circle (r=1). This turns "complex eigenvalue = rotation +
+    scaling" into a picture you can step through. Works in static Jupyter Book HTML.
+    """
+    import plotly.graph_objects as go
+
+    A = np.asarray(A, dtype=float)
+    pts = [np.asarray(x0, dtype=float)]
+    for _ in range(n_steps):
+        pts.append(A @ pts[-1])
+    pts = np.array(pts)
+    lim = 1.2 * max(1.0, float(np.abs(pts).max()))
+
+    def traces(k):
+        return [
+            go.Scatter(x=list(pts[: k + 1, 0]), y=list(pts[: k + 1, 1]),
+                       mode="lines+markers", line={"color": "#1f77b4", "width": 1.5},
+                       marker={"size": 5}, name="orbit"),
+            go.Scatter(x=[pts[k, 0]], y=[pts[k, 1]], mode="markers",
+                       marker={"color": "#d62728", "size": 12}, name=f"x_{k}"),
+        ]
+
+    frames = [go.Frame(data=traces(k), name=str(k)) for k in range(len(pts))]
+    fig = go.Figure(data=traces(0), frames=frames)
+    steps = [
+        {
+            "args": [[str(k)], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            "label": str(k),
+            "method": "animate",
+        }
+        for k in range(len(pts))
+    ]
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "step k = "}}],
+        width=560,
+        height=560,
+        title=title or "軌道 x, Ax, A²x, … （複素固有値なら螺旋）",
+        xaxis={"range": [-lim, lim], "scaleanchor": "y", "zeroline": True},
+        yaxis={"range": [-lim, lim], "zeroline": True},
+        margin={"l": 40, "r": 20, "t": 50, "b": 30},
+    )
+    return fig
+
+
+def plotly_kron_blocks(A, B, title=None):
+    """Heatmap of the Kronecker product ``A (x) B`` with a slider that highlights
+    one block at a time.
+
+    ``A (x) B`` replaces each entry ``a_ij`` with the block ``a_ij * B``; the
+    slider walks the entries of ``A`` and outlines the matching block, so the
+    "matrix of matrices" structure is visible. Works in static Jupyter Book HTML.
+    """
+    import plotly.graph_objects as go
+
+    A = np.asarray(A, dtype=float)
+    B = np.asarray(B, dtype=float)
+    K = np.kron(A, B)
+    p, q = A.shape
+    r, s = B.shape
+
+    def rect(i, j):
+        x0, x1 = j * s - 0.5, (j + 1) * s - 0.5
+        y0, y1 = i * r - 0.5, (i + 1) * r - 0.5
+        return (
+            go.Heatmap(z=K, colorscale="RdBu", zmid=0, showscale=True),
+            go.Scatter(
+                x=[x0, x1, x1, x0, x0],
+                y=[y0, y0, y1, y1, y0],
+                mode="lines",
+                line={"color": "#000000", "width": 3},
+                name="block",
+                hoverinfo="skip",
+            ),
+        )
+
+    cells = [(i, j) for i in range(p) for j in range(q)]
+    labels = [f"a[{i},{j}] = {A[i, j]:+.1f}" for i, j in cells]
+    frames = [go.Frame(data=rect(i, j), name=lab) for (i, j), lab in zip(cells, labels, strict=True)]
+    fig = go.Figure(data=rect(*cells[0]), frames=frames)
+    steps = [
+        {
+            "args": [[lab], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            "label": lab,
+            "method": "animate",
+        }
+        for lab in labels
+    ]
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "block "}}],
+        width=560,
+        height=520,
+        title=title or "クロネッカー積 A⊗B：各ブロックは a_ij·B",
+        xaxis={"visible": False},
+        yaxis={"visible": False, "autorange": "reversed", "scaleanchor": "x"},
+        margin={"l": 20, "r": 20, "t": 50, "b": 20},
+    )
     return fig
