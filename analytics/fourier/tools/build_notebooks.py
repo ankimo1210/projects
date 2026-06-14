@@ -304,6 +304,17 @@ a0 = np.mean(f)                           # DC component
 print("a0 (mean)      =", a0)             # -> 3
 print("a2 (cos2 amp)  =", a2)             # -> 2
 print("via trig_coeffs:", transforms.trig_coeffs(lambda t: 3 + 2*np.cos(2*t) - np.sin(5*t), 5)[0][2])"""),
+        md(r"""### 射影としてのフーリエ係数(可視化)
+
+係数 $a_2$ は、信号 $f$ を基底波 $\cos 2x$ へ **射影** した成分の量です。赤が射影された成分
+$a_2\cos 2x$ — 「$f$ の中にどれだけ $\cos 2x$ が含まれるか」を図にしたもの。"""),
+        code("""\
+# A Fourier coefficient is a projection: the red curve is the cos(2x) content of f.
+xx = np.linspace(0, 2 * np.pi, 600, endpoint=False)
+f = 3 + 2 * np.cos(2 * xx) - np.sin(5 * xx)
+a2 = 2 * np.mean(f * np.cos(2 * xx))
+plotting.plot_projection(xx, f, np.cos(2 * xx), a2, basis_label="cos 2x")
+plt.show()"""),
         md(r"""## Exercises
 
 1. **位相と余弦**: $\sin(\theta+\pi/2)=\cos\theta$ を Euler の公式から示し、数値でも確認せよ。
@@ -369,6 +380,23 @@ try:
     widgets.interactive_square_partial_sum()
 except Exception as e:
     print("interactive demo needs JupyterLab:", e)"""),
+        md(r"""### 部分和の収束を一望(小分割)
+
+倍音数 $N$ を増やすほど角が立ち、矩形波に近づく様子を並べて見る。"""),
+        code("""\
+# Small multiples: the square wave emerges as more odd harmonics are added.
+t, _ = signals.time_grid(1.0, 2000.0)
+target = signals.square_wave(t, 3.0)
+fig, axes = plt.subplots(2, 3, figsize=(11, 5), sharex=True, sharey=True)
+for ax, N in zip(axes.ravel(), [1, 3, 5, 9, 15, 40], strict=True):
+    ax.plot(t, target, color="gray", lw=0.8)
+    ax.plot(t, signals.square_wave_partial_sum(t, 3.0, N), color="#d62728", lw=1.2)
+    ax.set_title(f"N = {N}", fontsize=9)
+    ax.set_xlim(0, 0.5)
+    ax.grid(alpha=0.2)
+fig.suptitle("square wave: more harmonics -> sharper corners")
+fig.tight_layout()
+plt.show()"""),
         md(r"""## Definition — 三角級数と複素級数
 
 $$ a_n = \frac{1}{\pi}\int_{-\pi}^{\pi} f(x)\cos nx\,dx, \qquad
@@ -550,6 +578,24 @@ ax.plot(np.arange(len(energy_cum)), energy_cum, color="#2ca02c")
 ax.axhline(1.0, color="black", ls="--", label="total energy = 1")
 ax.set_xlabel("harmonics included N"); ax.set_ylabel("accumulated energy")
 ax.set_title("Parseval: energy fills up as N grows"); ax.legend(); ax.grid(alpha=.25)
+plt.show()"""),
+        md(r"""### エネルギーは少数の倍音に集中する
+
+各倍音のエネルギー $\tfrac12(a_n^2+b_n^2)$ と、その累積が全エネルギー(=1)へ達する様子(Parseval)。"""),
+        code("""\
+# Energy per harmonic and its cumulative sum reaching the total (Parseval).
+sq = lambda x: np.sign(np.sin(x))
+a, b = transforms.trig_coeffs(sq, n_max=15, period=2 * np.pi)
+e = 0.5 * (a**2 + b**2)
+e[0] = (a[0] / 2) ** 2
+fig, ax = plt.subplots(1, 2, figsize=(10, 3.2))
+ax[0].bar(np.arange(len(e)), e, color="#1f77b4")
+ax[0].set_title("energy per harmonic"); ax[0].set_xlabel("n")
+ax[1].plot(np.arange(len(e)), np.cumsum(e), "o-", color="#2ca02c")
+ax[1].axhline(1.0, color="black", ls="--", label="total = 1")
+ax[1].set_title("cumulative energy -> 1"); ax[1].set_xlabel("harmonics included"); ax[1].legend(fontsize=8)
+for a_ in ax:
+    a_.grid(alpha=0.25)
 plt.show()"""),
         md(r"""## Invariant / Energy — 平均二乗誤差は単調に減る
 
@@ -752,6 +798,13 @@ ax.plot(f0, s_off_w, "^-", ms=3, label="10.5 Hz + Hann")
 ax.set_xlim(4, 17); ax.set_xlabel("frequency f [Hz]"); ax.set_ylabel("normalized amplitude")
 ax.set_title("spectral leakage and windowing"); ax.legend(fontsize=8); ax.grid(alpha=.25)
 plt.show()"""),
+        md(r"""### 窓関数の比較
+
+主葉の幅(周波数分解能)と側葉の高さ(漏れ)はトレードオフ。矩形窓は主葉が最も狭いが側葉が最悪。"""),
+        code("""\
+# Window shapes and their side-lobe behaviour (the resolution vs leakage trade-off).
+plotting.plot_window_comparison(n=128)
+plt.show()"""),
         md(r"""## Invariant / Energy — DFT でも Parseval
 
 DFT でもエネルギーは保存します: $\sum_n |x_n|^2 = \tfrac{1}{N}\sum_k |X_k|^2$(03 章)。
@@ -868,6 +921,17 @@ for k in [1, 8, 20]:
 ax.set_xlabel("time t"); ax.set_ylabel("relative amplitude")
 ax.set_title("mode decay exp(-α k² t)"); ax.legend(); ax.grid(alpha=.25)
 plt.show()"""),
+        md(r"""### 熱方程式の時空間ヒートマップ
+
+横=空間 $x$、縦=時間 $t$。高周波の細かい縞が時間とともに(上へ向かって)先に消え、滑らかになる。"""),
+        code("""\
+# Space-time view: high-frequency ripples fade upward (in time) -> smoothing.
+xg = np.linspace(0, L, 256, endpoint=False)
+u0_h = 1.0 + np.sin(xg) + 0.5 * np.sin(8 * xg) + 0.3 * np.sin(20 * xg)
+ts_h = np.linspace(0, 1.0, 120)
+field_h = np.array([spectral.solve_heat_spectral(u0_h, L, alpha, tt) for tt in ts_h])
+plotting.plot_spacetime(field_h, xg, ts_h, title="heat: u(x, t) — high freq fades upward")
+plt.show()"""),
         md(r"""## Invariant / Energy — 熱: 質量保存・エネルギー散逸
 
 $k=0$ モード($\hat u_0$)は $e^{-\alpha\cdot 0\cdot t}=1$ で不変。つまり **総量(質量)
@@ -899,6 +963,17 @@ for ti in [0.0, 0.4, 0.9, 1.4]:
     ax.plot(x, spectral.solve_wave_spectral(u0, v0, L, c, ti), label=f"t = {ti}")
 ax.set_xlabel("x"); ax.set_title("wave equation: the pulse splits and travels")
 ax.legend(fontsize=8); ax.grid(alpha=.25)
+plt.show()"""),
+        md(r"""### 波動方程式の時空間ヒートマップ
+
+2 本の特性線(左右へ進む波)が、傾いた帯として現れる。熱と違い形を保って伝わる。"""),
+        code("""\
+# Space-time view: the two characteristics (left/right movers) are slanted bands.
+xg = np.linspace(0, L, 256, endpoint=False)
+u0_w = np.exp(-((xg - np.pi) ** 2) / (2 * 0.08))
+ts_w = np.linspace(0, 2.0, 160)
+field_w = np.array([spectral.solve_wave_spectral(u0_w, np.zeros_like(xg), L, c, tt) for tt in ts_w])
+plotting.plot_spacetime(field_w, xg, ts_w, title="wave: u(x, t) — two characteristics")
 plt.show()"""),
         md(r"""## Failure Mode — 周期境界・非線形・aliasing
 
@@ -1020,6 +1095,39 @@ ax[1].legend(fontsize=8)
 for a in ax:
     a.grid(alpha=.25)
 plt.show()"""),
+            md(r"""### 時間シフトは位相だけを回す
+
+$f(x-a)$ の変換は振幅 $|\hat f|$ を変えず、$e^{-2\pi i a\xi}$ の **線形位相** を掛けるだけ。"""),
+            code("""\
+# A time shift leaves |spectrum| unchanged and adds a linear phase ramp.
+g = np.exp(-x**2)
+g_shift = np.exp(-(x - 2) ** 2)
+xi, G = cont_ft(x, g)
+_, Gs = cont_ft(x, g_shift)
+fig, ax = plt.subplots(1, 2, figsize=(11, 3.2))
+ax[0].plot(xi, np.abs(G), label="|F{g}|")
+ax[0].plot(xi, np.abs(Gs), "--", label="|F{shifted}|")
+ax[0].set_xlim(-3, 3); ax[0].set_title("shift: |spectrum| unchanged"); ax[0].legend(fontsize=8)
+ax[1].plot(xi, np.unwrap(np.angle(Gs)), color="#d62728")
+ax[1].set_xlim(-3, 3); ax[1].set_title("...adds a linear phase ramp"); ax[1].set_xlabel("ξ")
+for a in ax:
+    a.grid(alpha=0.25)
+plt.show()"""),
+            md(r"""### 変調はスペクトルを平行移動する
+
+$f(x)\cos(2\pi f_0 x)$ はスペクトルを $\pm f_0$ へずらす — AM 変調・ヘテロダインの核心。"""),
+            code("""\
+# Multiplying by a cosine shifts the spectrum to ±f0 (amplitude modulation).
+f0 = 3.0
+g = np.exp(-x**2)
+gm = g * np.cos(2 * np.pi * f0 * x)
+xi, G = cont_ft(x, g)
+_, Gm = cont_ft(x, gm)
+fig, ax = plt.subplots(figsize=(8, 3))
+ax.plot(xi, np.abs(G), label="baseband |F{g}|")
+ax.plot(xi, np.abs(Gm), color="#d62728", label="modulated (±f0)")
+ax.set_xlim(-6, 6); ax.set_title("modulation shifts the spectrum"); ax.legend(fontsize=8); ax.grid(alpha=0.25)
+plt.show()"""),
             md(r"""## Application & TODO
 
 応用: 分光・回折(空間版フーリエ変換)、量子力学(位置と運動量の不確定性)、
@@ -1073,6 +1181,16 @@ h = filters.gaussian_kernel(64, sigma=3.0)
 lhs = np.fft.fft(filters.circular_convolve(x, h))
 rhs = np.fft.fft(x) * np.fft.fft(h)
 print("‖fft(x*h) - fft(x)·fft(h)‖ =", np.max(np.abs(lhs - rhs)))"""),
+            md(r"""### 畳み込みは「反転してずらす」
+
+各シフト $t_0$ で $f(\tau)$ と $g(t_0-\tau)$ の重なり(積の面積)が $(f*g)(t_0)$ になる。"""),
+            code("""\
+# Convolution as flip-and-slide: the shaded product area is (f*g)(t0).
+t, _ = signals.time_grid(2.0, 200.0)
+f = ((t > 0.3) & (t < 0.8)).astype(float)
+g = np.exp(-((t - 1.0) ** 2) / (2 * 0.02))
+plotting.plot_convolution_slide(t, f, g)
+plt.show()"""),
             md(r"""## Computation 2 — 平滑化(ガウス畳み込み)でノイズを抑える"""),
             code("""\
 # Smoothing = convolution with a Gaussian kernel.
@@ -1108,6 +1226,24 @@ ax[1].plot(f0, a_in, color="lightgray", label="before")
 ax[1].plot(f0, a_out, color="#d62728", label="after")
 ax[1].axvline(20, color="black", ls="--"); ax[1].set_xlim(0, 80)
 ax[1].set_title("spectrum"); ax[1].set_xlabel("f [Hz]"); ax[1].legend(fontsize=8); ax[1].grid(alpha=.25)
+plt.show()"""),
+            md(r"""### ロー/バンド/ハイパスを一望
+
+同じ信号(5 + 40 + 150 Hz)から、残す周波数帯を選ぶ操作。"""),
+            code("""\
+# Three ideal filters on the same 3-tone signal: keep low / mid / high bands.
+fs = 1000.0
+t, _ = signals.time_grid(1.0, fs)
+x = signals.harmonic_sum(t, [5, 40, 150], [1.0, 1.0, 1.0])
+lo = filters.lowpass(x, fs, 20)
+bd = filters.bandpass(x, fs, 25, 80)
+hi = filters.highpass(x, fs, 100)
+fig, ax = plt.subplots(2, 2, figsize=(11, 5), sharex=True)
+for a_, sig, ttl in zip(ax.ravel(), [x, lo, bd, hi],
+                        ["original (5+40+150 Hz)", "low-pass < 20", "band-pass 25-80", "high-pass > 100"],
+                        strict=True):
+    a_.plot(t, sig, lw=0.8); a_.set_title(ttl, fontsize=9); a_.set_xlim(0, 0.2); a_.grid(alpha=0.25)
+fig.tight_layout()
 plt.show()"""),
             md(r"""## Application & TODO
 
@@ -1178,6 +1314,14 @@ fig, ax = plt.subplots(1, 2, figsize=(11, 3.4))
 for a, nperseg, label in zip(ax, [64, 512], ["short window (64)", "long window (512)"]):
     f, tt, S = transforms.spectrogram_db(xb, fs, nperseg=nperseg)
     plotting.plot_spectrogram(f, tt, S, ax=a, fmax=400, title=label)
+plt.show()"""),
+            md(r"""### STFT と wavelet の時間周波数タイル
+
+STFT は一様なタイルで平面を覆う。wavelet は高周波ほど時間分解能を上げる(定 Q)— 同じ
+不確定性の予算を、周波数帯ごとに違う配分で使う。"""),
+            code("""\
+# Heisenberg tiles: STFT tiles uniformly; wavelets give fine time at high freq.
+plotting.plot_tf_tiling()
 plt.show()"""),
             md(r"""## Application & TODO
 
@@ -1253,6 +1397,28 @@ for a, im, title in zip(ax, [img, low, comp],
                         ["original", "low-freq only (blur)",
                          f"top-3% coeffs (~{ratio:.0f}x, err {rel_err:.1%})"]):
     a.imshow(im, cmap="gray"); a.set_title(title, fontsize=9); a.axis("off")
+plt.show()"""),
+        md(r"""### ハイパス=エッジ、方向フィルタ
+
+高周波だけ残すと **エッジ** が出る。周波数面の中央の行(または列)だけ残すと、
+特定方向のなめらかな構造だけが残る(方向選択フィルタ)。"""),
+        code("""\
+# High-pass = edges; keeping a center row/column band keeps one spatial direction.
+F2 = np.fft.fftshift(np.fft.fft2(img))
+nimg = F2.shape[0]
+cc = nimg // 2
+block = np.zeros_like(F2, dtype=bool)
+block[cc - 8:cc + 8, cc - 8:cc + 8] = True
+high = np.fft.ifft2(np.fft.ifftshift(F2 * ~block)).real      # drop low freqs -> edges
+row = np.zeros_like(F2, dtype=bool); row[cc - 3:cc + 3, :] = True
+col = np.zeros_like(F2, dtype=bool); col[:, cc - 3:cc + 3] = True
+horiz = np.fft.ifft2(np.fft.ifftshift(F2 * row)).real        # keep low vertical freq
+vert = np.fft.ifft2(np.fft.ifftshift(F2 * col)).real         # keep low horizontal freq
+fig, ax = plt.subplots(1, 3, figsize=(11, 3.8))
+for a, im_, ttl in zip(ax, [high, horiz, vert],
+                       ["high-pass = edges", "keep low vertical freq", "keep low horizontal freq"],
+                       strict=True):
+    a.imshow(im_, cmap="gray"); a.set_title(ttl, fontsize=9); a.axis("off")
 plt.show()"""),
         md(r"""## 3. 金融時系列 — 探索的周波数解析とその限界
 
