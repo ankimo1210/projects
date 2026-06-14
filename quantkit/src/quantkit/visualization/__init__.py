@@ -13,23 +13,35 @@ from .figures import (
     cost_sensitivity,
     drawdown,
     equity_curves,
+    factor_heatmap,
     ic_bar,
     metrics_table,
+    monthly_returns_heatmap,
+    parameter_explorer,
     returns_histogram,
+    risk_return_scatter,
     rolling_sharpe,
+    rolling_volatility,
 )
-from .report import build_report, strategy_report
+from .report import build_report, comparison_dashboard, strategy_report, tearsheet
 from .theme import style
 
 __all__ = [
     "build_report",
+    "comparison_dashboard",
     "cost_sensitivity",
     "drawdown",
     "equity_curves",
+    "factor_heatmap",
     "ic_bar",
     "metrics_table",
+    "monthly_returns_heatmap",
+    "parameter_explorer",
     "returns_histogram",
+    "risk_return_scatter",
     "rolling_sharpe",
+    "rolling_volatility",
     "strategy_report",
     "style",
+    "tearsheet",
 ]

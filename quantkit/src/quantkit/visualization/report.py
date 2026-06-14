@@ -88,7 +88,7 @@ def strategy_report(
     results: dict,
     out_path: str | Path,
     *,
-    title: str = "IRP strategy report",
+    title: str = "quantkit strategy report",
     subtitle: str = "",
     ic=None,
     cost_sweep=None,
@@ -143,13 +143,101 @@ def strategy_report(
                 "figures": [figures.cost_sensitivity(cost_sweep)],
             }
         )
-    sections.append(
+    sections.append(_caveats_section(notes))
+    return build_report(title, sections, out_path, subtitle=subtitle)
+
+
+_DEFAULT_CAVEAT = (
+    "Research only — not investment advice. Figures may use synthetic/illustrative "
+    "data; transaction costs, slippage and taxes are assumptions held in configs/. "
+    "Complex models are shown next to simple baselines, including when they fail."
+)
+
+
+def _caveats_section(notes: str | None) -> dict:
+    return {"heading": "Notes & caveats", "note": notes or _DEFAULT_CAVEAT}
+
+
+def tearsheet(
+    result,
+    out_path: str | Path,
+    *,
+    benchmark=None,
+    title: str = "quantkit tearsheet",
+    subtitle: str = "",
+    periods: int = 252,
+    notes: str | None = None,
+) -> Path:
+    """Full single-strategy tearsheet (offline HTML): metrics, equity, drawdown,
+    monthly-returns calendar, rolling vol & Sharpe, distribution — vs an optional
+    benchmark."""
+    from ..backtest.metrics import compare
+
+    results = {"strategy": result}
+    if benchmark is not None:
+        results["benchmark"] = benchmark
+    cmp = compare(results, periods=periods)
+    sections = [
         {
-            "heading": "Notes & caveats",
-            "note": notes
-            or "Research only — not investment advice. Figures may use synthetic/illustrative "
-            "data; transaction costs, slippage and taxes are assumptions held in configs/. "
-            "Complex models are shown next to simple baselines, including when they fail.",
-        }
-    )
+            "heading": "Summary metrics",
+            "description": "Annualized; read against the benchmark when present.",
+            "figures": [figures.metrics_table(cmp)],
+        },
+        {
+            "heading": "Equity curve (log)",
+            "figures": [figures.equity_curves(results, log_y=True)],
+        },
+        {"heading": "Drawdown", "figures": [figures.drawdown(result)]},
+        {
+            "heading": "Monthly returns",
+            "description": "Compounded calendar-month returns; green = up, red = down.",
+            "figures": [figures.monthly_returns_heatmap(result)],
+        },
+        {
+            "heading": "Rolling volatility & Sharpe",
+            "figures": [
+                figures.rolling_volatility(result, periods=periods),
+                figures.rolling_sharpe(result, periods=periods),
+            ],
+        },
+        {"heading": "Return distribution", "figures": [figures.returns_histogram(result)]},
+        _caveats_section(notes),
+    ]
+    return build_report(title, sections, out_path, subtitle=subtitle)
+
+
+def comparison_dashboard(
+    results: dict,
+    out_path: str | Path,
+    *,
+    title: str = "quantkit strategy comparison",
+    subtitle: str = "",
+    periods: int = 252,
+    notes: str | None = None,
+) -> Path:
+    """Multi-strategy comparison dashboard (offline HTML): metrics table, risk/return
+    scatter, overlaid equity curves and per-strategy drawdowns."""
+    from ..backtest.metrics import compare
+
+    cmp = compare(results, periods=periods)
+    sections = [
+        {"heading": "Summary metrics", "figures": [figures.metrics_table(cmp)]},
+        {
+            "heading": "Risk vs return",
+            "description": "Annualized vol vs return — up-and-to-the-left is better.",
+            "figures": [figures.risk_return_scatter(cmp)],
+        },
+        {
+            "heading": "Equity curves",
+            "description": "Cumulative growth of 1 unit, net of costs.",
+            "figures": [figures.equity_curves(results)],
+        },
+        {
+            "heading": "Drawdowns",
+            "figures": [
+                figures.drawdown(r, title=f"Drawdown — {name}") for name, r in results.items()
+            ],
+        },
+        _caveats_section(notes),
+    ]
     return build_report(title, sections, out_path, subtitle=subtitle)
