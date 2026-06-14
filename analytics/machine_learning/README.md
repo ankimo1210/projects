@@ -120,6 +120,20 @@ PYTHONPATH=analytics/machine_learning/src uv run --no-sync pytest analytics/mach
 `models`(ファクトリ・GD 線形回帰が OLS に収束)・`plotting` / `widgets`(スモーク)・
 `interpretation` / `pipelines`(保存/再読込・ネスト CV)をカバー(52 本)。
 
+## 推論サービス (serve/)
+
+10 章で保存した `Pipeline` を実エンドポイントから叩くデモ(FastAPI サービス + CLI)。
+生の乗客データ(欠損・カテゴリ可)をそのまま投げると、前処理ごと同梱された `Pipeline` が推論する。
+
+```bash
+cd analytics/machine_learning
+PYTHONPATH=src python -m serve.train            # serve/model.joblib を生成
+PYTHONPATH=src uvicorn serve.app:app --reload   # http://127.0.0.1:8000/docs
+PYTHONPATH=src python -m serve.cli --pclass 1 --sex female --fare 100 --embarked C
+```
+
+依存は任意: `pip install -e ".[serve]"`(fastapi / uvicorn)。`serve/` はライブラリには含めず、プロジェクト直下から実行する。
+
 ## データ方針(bring your own data)
 
 `src/ml_textbook/datasets.py` のローダ/ジェネレータを差し替えれば、自分のデータで全章を再利用できる。

@@ -29,6 +29,11 @@ extras = [
     "umap-learn>=0.5",
     "shap>=0.45",
 ]
+# Optional serving layer (notebook 10 inference demo): FastAPI app + CLI.
+serve = [
+    "fastapi>=0.110",
+    "uvicorn>=0.27",
+]
 
 [build-system]
 requires = ["hatchling"]

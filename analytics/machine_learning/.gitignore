@@ -7,3 +7,4 @@ __pycache__/
 book/_build/
 _build/
 _data/
+serve/model.joblib

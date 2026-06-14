@@ -8,6 +8,10 @@ from here) can ``import ml_textbook`` directly. Harmless once installed.
 import sys
 from pathlib import Path
 
-SRC = Path(__file__).resolve().parents[1] / "src"
-if str(SRC) not in sys.path:
-    sys.path.insert(0, str(SRC))
+ROOT = Path(__file__).resolve().parents[1]
+SRC = ROOT / "src"
+# src/ for ``import ml_textbook``; project root for ``import serve`` (the app
+# layer, which is not part of the installable package).
+for p in (SRC, ROOT):
+    if str(p) not in sys.path:
+        sys.path.insert(0, str(p))
