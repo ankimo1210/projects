@@ -16,6 +16,7 @@ from __future__ import annotations
 from .base import Model, SklearnModel
 from .baselines import MeanModel, PersistenceModel, ZeroModel
 from .design import make_design, predictions_to_panel
+from .ensemble import EnsembleModel, StackingModel
 from .foundation import (
     ARForecaster,
     ChronosForecaster,
@@ -26,27 +27,37 @@ from .foundation import (
 from .importance import mda_importance, rank_ic
 from .linear import elastic_net, lasso, ridge
 from .neural import mlp
+from .ranking import RankModel, cross_sectional_rank, learning_to_rank
 from .tree import gradient_boosting, random_forest
+from .uncertainty import ConformalModel, QuantileModel, quantile_gbm
 from .walkforward import walk_forward_predict
 
 __all__ = [
     "ARForecaster",
     "ChronosForecaster",
+    "ConformalModel",
+    "EnsembleModel",
     "Forecaster",
     "MeanModel",
     "Model",
     "PersistenceModel",
+    "QuantileModel",
+    "RankModel",
     "SeasonalNaiveForecaster",
     "SklearnModel",
+    "StackingModel",
     "ZeroModel",
+    "cross_sectional_rank",
     "elastic_net",
     "gradient_boosting",
     "lasso",
+    "learning_to_rank",
     "load_foundation",
     "make_design",
     "mda_importance",
     "mlp",
     "predictions_to_panel",
+    "quantile_gbm",
     "random_forest",
     "rank_ic",
     "ridge",
