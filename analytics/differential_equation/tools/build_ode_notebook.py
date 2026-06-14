@@ -754,6 +754,21 @@ ax.grid(alpha=0.25)
 plt.show()
 """),
         md(r"""
+**アニメーション**(Play で再生):$dy/dt=-V'(y)$ となるポテンシャル $V(y)=-\tfrac{r}{2}y^2+\tfrac{1}{4}y^4$ を
+$r$ を動かして描くと、**1 つの谷が 2 つに割れる**(ボールが転がり落ちる先=安定平衡が分岐する)様子が見えます。
+"""),
+        code("""
+import plotly.io as pio
+from ode_book import interactive
+
+pio.renderers.default = "plotly_mimetype+notebook_connected"
+# Potential V(y) = -r/2 y^2 + 1/4 y^4 (dy/dt = -V'): one well splits into two as r crosses 0.
+yy = np.linspace(-1.4, 1.4, 200)
+Vr = np.array([-r * yy**2 / 2 + yy**4 / 4 for r in np.linspace(-1.0, 1.0, 40)])
+interactive.plotly_field_evolution(yy, Vr, step=1, duration=150,
+                                   title="pitchfork: potential well splits as r goes -1 -> 1").show()
+"""),
+        md(r"""
 ## 8. カオスの入口 — Lorenz 系 (Advanced)
 
 平面ではカオスは起きません(Poincaré–Bendixson)。3 次元になると話が変わります。**Lorenz 系**

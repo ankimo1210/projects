@@ -367,3 +367,51 @@ def plotly_secant_to_tangent(f, x0, h_values=None):
         sliders=sliders,
     )
     return fig
+
+
+def plotly_field_evolution(
+    x,
+    U,
+    step=2,
+    duration=40,
+    title="evolution",
+    ylim=None,
+    dt=None,
+    color="#d62728",
+    xlabel="x",
+    ylabel="u",
+):
+    """Play/slider animation of a sequence of 1-D curves U (shape (n_frames, nx)).
+
+    Generic frame animator (a field over time, a potential over a parameter, a
+    partial sum over term count, ...). Renders in exported HTML. ``step``
+    subsamples frames; a fixed y-range keeps the motion readable.
+    """
+    import plotly.graph_objects as go
+
+    x = np.asarray(x, dtype=float)
+    U = np.asarray(U, dtype=float)
+    idx = list(range(0, U.shape[0], step))
+    if idx[-1] != U.shape[0] - 1:
+        idx.append(U.shape[0] - 1)
+    if ylim is None:
+        pad = 0.08 * (U.max() - U.min() + 1e-9)
+        ylim = (U.min() - pad, U.max() + pad)
+    label = (lambda k: f"t={k * dt:.3f}") if dt is not None else (lambda k: f"step {k}")
+    frames = [go.Frame(data=[go.Scatter(x=x, y=U[k])], name=str(k)) for k in idx]
+    fig = go.Figure(
+        data=[go.Scatter(x=x, y=U[idx[0]], mode="lines", line=dict(color=color, width=2))],
+        frames=frames,
+    )
+    menus, sliders = _anim_controls([(str(k), label(k)) for k in idx], duration=duration)
+    fig.update_layout(
+        title=title,
+        template="plotly_white",
+        height=460,
+        xaxis_title=xlabel,
+        yaxis_title=ylabel,
+        yaxis_range=list(ylim),
+        updatemenus=menus,
+        sliders=sliders,
+    )
+    return fig
