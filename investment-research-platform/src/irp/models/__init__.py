@@ -1,8 +1,36 @@
-"""irp.models — Model tiers 0-4 (baselines, statistical, trees, deep learning, time-series foundation). Phase 2+.
+"""irp.models — a common fit/predict interface with tiered models.
 
-Placeholder package; implemented in a later phase per the platform spec.
+Tier 0 baselines (:mod:`~irp.models.baselines`: zero / mean / persistence) set the
+bar; Tier 1 linear (:mod:`~irp.models.linear`: ridge / lasso / elastic_net) and
+Tier 2 trees (:mod:`~irp.models.tree`: random_forest / gradient_boosting) must beat
+them on the *same* out-of-sample walk. :func:`~irp.models.design.make_design` builds
+the ``(date, asset)`` design matrix; :func:`~irp.models.walkforward.walk_forward_predict`
+fits per fold and returns OOS predictions for the backtest engine.
+
+(Tier 3 deep learning and Tier 4 time-series foundation models are later phases.)
 """
 
 from __future__ import annotations
 
-__all__: list[str] = []
+from .base import Model, SklearnModel
+from .baselines import MeanModel, PersistenceModel, ZeroModel
+from .design import make_design, predictions_to_panel
+from .linear import elastic_net, lasso, ridge
+from .tree import gradient_boosting, random_forest
+from .walkforward import walk_forward_predict
+
+__all__ = [
+    "MeanModel",
+    "Model",
+    "PersistenceModel",
+    "SklearnModel",
+    "ZeroModel",
+    "elastic_net",
+    "gradient_boosting",
+    "lasso",
+    "make_design",
+    "predictions_to_panel",
+    "random_forest",
+    "ridge",
+    "walk_forward_predict",
+]
