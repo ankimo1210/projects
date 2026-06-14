@@ -85,7 +85,13 @@ jupyter lab notebooks/          # 単体 venv の場合
 各 Notebook は上から順に実行できる(乱数 seed 固定、CPU 実行で各数十秒〜2 分以内)。
 出力込みでコミットしてあり、Jupyter Book ビルド時には再実行しない。
 
+Notebook は `tools/`(共有 `nbkit` + 各章ビルダ)から決定論的に再生成できる。
+`tools/build_notebooks.py` がセルを書き出し、その後 `nbconvert` で実行して出力を埋める:
+
 ```bash
+cd analytics/machine_learning
+PYTHONPATH=src python tools/build_notebooks.py        # セルを再生成(--check で temp 出力に dry-run)
+# 出力を埋める(再実行):
 cd ~/projects
 for nb in analytics/machine_learning/notebooks/*.ipynb; do
   PYTHONPATH=analytics/machine_learning/src uv run --no-sync \

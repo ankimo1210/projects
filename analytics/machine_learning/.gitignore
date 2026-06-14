@@ -5,6 +5,5 @@ __pycache__/
 .ruff_cache/
 *.egg-info/
 book/_build/
-_build/
 _data/
 serve/model.joblib
