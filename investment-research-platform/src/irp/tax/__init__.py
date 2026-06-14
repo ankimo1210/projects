@@ -1,8 +1,26 @@
-"""irp.tax — Japan tax module (taxable vs NISA, after-tax return, tax drag; assumptions from configs/tax_japan.yaml). Phase 2+.
+"""irp.tax — Japan-resident after-tax returns (taxable vs NISA).
 
-Placeholder package; implemented in a later phase per the platform spec.
+:class:`~irp.tax.japan.TaxConfig` carries the rate assumptions (from
+``configs/tax_japan.yaml``); :func:`~irp.tax.japan.annual_after_tax` applies an
+annual mark-to-market capital-gains tax with 3-year loss carryforward;
+:func:`~irp.tax.japan.compare_accounts` lays pre-tax vs taxable vs NISA side by
+side (CAGR, tax paid, drag). Rates are assumptions, shown in reports — not advice.
 """
 
 from __future__ import annotations
 
-__all__: list[str] = []
+from .japan import (
+    TaxConfig,
+    after_tax_cagr,
+    after_tax_equity,
+    annual_after_tax,
+    compare_accounts,
+)
+
+__all__ = [
+    "TaxConfig",
+    "after_tax_cagr",
+    "after_tax_equity",
+    "annual_after_tax",
+    "compare_accounts",
+]
