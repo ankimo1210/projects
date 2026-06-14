@@ -140,6 +140,25 @@ fig.tight_layout()
 plt.show()
 """),
         md(r"""
+**アニメーション**(Play で再生):膜の中央を弾いたあと、円形の波が広がり縁で反射して干渉する様子。
+"""),
+        code("""
+from matplotlib import animation
+from IPython.display import HTML
+
+# 2-D membrane wave as a movie (matplotlib imshow -> to_jshtml).
+fr = U[::6]
+figw, axw = plt.subplots(figsize=(4.5, 4))
+imw = axw.imshow(fr[0], origin="lower", cmap="seismic", vmin=-0.4, vmax=0.4)
+axw.set_title("2-D wave on a membrane")
+axw.set_xticks([])
+axw.set_yticks([])
+animw = animation.FuncAnimation(figw, lambda i: (imw.set_data(fr[i]), (imw,))[1],
+                                frames=len(fr), interval=120, blit=True)
+plt.close(figw)
+HTML(animw.to_jshtml())
+"""),
+        md(r"""
 ## Exercises
 
 1. スペクトル法で $\sin(kx)$ の導関数 $k\cos(kx)$ を FFT(波数 $ik$ 倍)で求め、差分との誤差を比べよ。

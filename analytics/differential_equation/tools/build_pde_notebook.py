@@ -475,6 +475,17 @@ fig = interactive.plotly_fourier_square()
 fig.show()
 """),
         md(r"""
+**アニメーション**(Play で再生):項を 1 つずつ足していくと、部分和が矩形波へ収束していく様子
+(各フレーム = 項数 1 つ増加)。
+"""),
+        code("""
+# Fourier partial sum building up term by term (reuses the field-evolution animator).
+xb = np.linspace(0, 2 * np.pi, 800)
+Ub = np.array([solvers.square_wave_partial_sum(xb, n, np.pi) for n in range(1, 31)])
+interactive.plotly_field_evolution(xb, Ub, step=1, duration=250, ylim=(-1.4, 1.4),
+                                   title="Fourier partial sum building up (term by term)").show()
+"""),
+        md(r"""
 ## 5. 周波数 — 低周波と高周波 (Applied)
 
 各サイン波の「振動数(周波数)」が、信号のどの成分を担うかを表します。
