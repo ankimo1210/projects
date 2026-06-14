@@ -20,11 +20,10 @@ parts:
       - file: notebooks/12_qualitative_summary
       - file: notebooks/15_bsm_ch15
       - file: notebooks/31_ir_models
-  # 深掘り(A1-A4)ボリュームは各フェーズ完了時にここへ追加する:
-  #   - caption: 深掘り — 確率解析と高度なクオンツ
-  #     chapters:
-  #       - file: notebooks/13_stochastic_calculus
-  #       - file: notebooks/14_stoch_vol_fourier
-  #       - file: notebooks/15_advanced_numerics
-  #       - file: notebooks/16_xva_credit
-  #       - file: notebooks/17_capstone
+  - caption: 深掘り — 確率解析と高度なクオンツ（A1–A4）
+    chapters:
+      - file: notebooks/13_stochastic_calculus
+      - file: notebooks/14_stoch_vol_fourier
+      - file: notebooks/15_advanced_numerics
+      - file: notebooks/16_xva_credit
+      - file: notebooks/17_capstone

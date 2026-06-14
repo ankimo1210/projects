@@ -10,18 +10,40 @@ import re
 from report_builder.figures import BOOKS, FIGURES, figures_for
 from report_builder.render import render_site
 
-PAGES = ("index", "gallery", "integration", "options_core", "numerics", "risk_credit", "stochastic")
+PAGES = (
+    "index",
+    "gallery",
+    "integration",
+    "options_core",
+    "numerics",
+    "risk_credit",
+    "stochastic",
+    "volatility",
+    "rates_swaps",
+    "exotics",
+)
 
 
 def test_registry_is_consistent():
-    assert set(BOOKS) == {"options_core", "numerics", "risk_credit", "stochastic"}
+    assert set(BOOKS) == {
+        "options_core",
+        "numerics",
+        "risk_credit",
+        "stochastic",
+        "volatility",
+        "rates_swaps",
+        "exotics",
+    }
     for f in FIGURES:
         assert f.book in BOOKS, f.id
-    assert len(figures_for("options_core")) == 3
-    assert len(figures_for("numerics")) == 1
-    assert len(figures_for("risk_credit")) == 2
+    assert len(figures_for("options_core")) == 5
+    assert len(figures_for("numerics")) == 5
+    assert len(figures_for("risk_credit")) == 7
     assert len(figures_for("stochastic")) == 3
-    assert len(FIGURES) == 9
+    assert len(figures_for("volatility")) == 5
+    assert len(figures_for("rates_swaps")) == 3
+    assert len(figures_for("exotics")) == 2
+    assert len(FIGURES) == 30
 
 
 def test_every_figure_builds():

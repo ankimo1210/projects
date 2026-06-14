@@ -21,6 +21,27 @@ BUILDERS = [
     pv.plotly_quadratic_variation,
     pv.plotly_ito_correction,
     pv.plotly_girsanov,
+    pv.plotly_heston_smile,
+    pv.plotly_cos_density_convergence,
+    pv.plotly_sabr_smile,
+    pv.plotly_mc_variance_reduction,
+    pv.plotly_qmc_vs_pseudo,
+    pv.plotly_american_boundary,
+    pv.plotly_exposure_profile,
+    pv.plotly_portfolio_loss_correlation,
+    pv.plotly_copula_scatter,
+    pv.plotly_gamma_surface,
+    pv.plotly_stop_loss_vs_delta_hedge,
+    pv.plotly_binomial_lattice,
+    pv.plotly_garch_volatility,
+    pv.plotly_garch_term_structure,
+    pv.plotly_merton_structural,
+    pv.plotly_portfolio_diversification,
+    pv.plotly_yield_curve,
+    pv.plotly_bond_convexity,
+    pv.plotly_swap_value,
+    pv.plotly_barrier_knockout,
+    pv.plotly_asian_vs_european,
 ]
 
 
@@ -42,6 +63,17 @@ def test_interactive_builders_have_a_control():
         pv.plotly_quadratic_variation,
         pv.plotly_ito_correction,
         pv.plotly_girsanov,
+        pv.plotly_heston_smile,
+        pv.plotly_cos_density_convergence,
+        pv.plotly_sabr_smile,
+        pv.plotly_american_boundary,
+        pv.plotly_exposure_profile,
+        pv.plotly_portfolio_loss_correlation,
+        pv.plotly_copula_scatter,
+        pv.plotly_stop_loss_vs_delta_hedge,
+        pv.plotly_merton_structural,
+        pv.plotly_yield_curve,
+        pv.plotly_barrier_knockout,
     ):
         assert fn().layout.sliders, fn.__name__
 
@@ -68,6 +100,25 @@ def test_var_increases_with_confidence():
     var_x = [tr.x[0] for tr in fig.data if tr.name.startswith("VaR")]
     # VaR lines sit at x = -VaR (left tail); higher confidence => more negative.
     assert all(b < a for a, b in pairwise(var_x)), var_x
+
+
+def test_ito_correction_concentrates_on_half_t():
+    # the figure plots (midpoint - left) = ½[W]_t; it must center on ½T and
+    # tighten as the mesh refines (the deterministic Itô correction).
+    fig = pv.plotly_ito_correction(T=1.0)
+    coarse, fine = fig.data[0].x, fig.data[3].x  # n=8 vs n=512
+    assert abs(float(np.mean(fine)) - 0.5) < 0.02
+    assert float(np.std(fine)) < float(np.std(coarse))
+
+
+def test_girsanov_q_price_invariant_across_drift():
+    # the headline claim: self-normalized Q call price stays at BSM for every μ.
+    fig = pv.plotly_girsanov()
+    prices = [
+        float(s["args"][1]["title.text"].split("≈")[1].split("(")[0])
+        for s in fig.layout.sliders[0].steps
+    ]
+    assert max(prices) - min(prices) < 0.05  # invariant to the real-world drift
 
 
 def test_delta_hedge_centers_on_bsm_price():
