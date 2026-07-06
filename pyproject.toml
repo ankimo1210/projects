@@ -119,6 +119,9 @@ quote-style = "double"
 indent-style = "space"
 
 [tool.pytest.ini_options]
+pythonpath = [
+    "shortest_path/src",
+]
 testpaths = [
     "gto/tests",
     "market-viz/tests",
@@ -137,6 +140,7 @@ testpaths = [
     "analytics/differential_equation/pde-book/tests",
     "analytics/machine_learning/tests",
     "quantkit/tests",
+    "shortest_path/tests",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]

@@ -1,0 +1,16 @@
+[project]
+name = "shortest-path-lab"
+version = "0.1.0"
+description = "Pathfinding algorithms and visualizations for Dijkstra and A* search."
+requires-python = ">=3.12"
+dependencies = []
+
+[tool.uv]
+package = true
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/shortest_path_lab"]

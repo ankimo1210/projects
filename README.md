@@ -13,6 +13,7 @@
 | [`line_backup/`](line_backup/) | iPhone ローカルバックアップから LINE データを完全オフラインで解析する CLI | Python |
 | [`akinator/`](akinator/) | Wikidata をエンティティ源とするローカル・アキネーター風推測ゲーム（確率的候補更新エンジン） | Python / FastAPI |
 | [`pokemon/`](pokemon/) | Quokka Wilds: オリジナル 3D モンスター収集ゲーム | Vite / React Three Fiber |
+| [`shortest_path/`](shortest_path/) | ダイクストラ法・A*・双方向探索の実装と可視化ラボ | Python / Jupyter / HTML |
 | [`analytics/`](analytics/) | 体験型インタラクティブ教科書シリーズ（線形代数・NN・ベイズ・フーリエ・ラプラス・微分方程式・機械学習）+ 統合オフラインポータル。索引: [`analytics/README.md`](analytics/README.md) | Python / Jupyter Book / Plotly |
 | [`johnhull/`](johnhull/) | Hull『Options, Futures, and Other Derivatives』11e の章別学習ボリューム + `hullkit` 共有パッケージ + Jupyter Book / オフラインポータル | Python / Jupyter |
 | [`autostock/`](autostock/) | Mag7 株ストラテジーの自律探索デモ（read-only バックテスト + OOS 評価） | Python |
@@ -63,7 +64,7 @@ make tree      # ヘビーディレクトリを除外したツリー表示
 - 対応プラットフォーム: **WSL2 (Ubuntu) を主**とし、ネイティブ Windows (PowerShell) と macOS でも動作（差分は下記セットアップ参照）
 - Python は **ルート単一の uv workspace** で管理（`.venv` は repo root に1個）
   - workspace メンバー: `gto`, `market-viz`, `stock`, `nbody-gpu`, `line_backup`, `akinator`, `autostock`, `johnhull/hullkit`、`analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning}` と `analytics/differential_equation/{ode-book,pde-book}`（`analytics/report` のみメンバー外）
-  - 例外: `aisan_lbo_case` は `requirements.txt`、`csharp_calc` は .NET、`rates_volatility_model` / `notebooks` は env 管理なし
+  - 例外: `aisan_lbo_case` は `requirements.txt`、`csharp_calc` は .NET、`rates_volatility_model` / `notebooks` は env 管理なし、`shortest_path` は依存なしの教材プロジェクト（`PYTHONPATH=shortest_path/src` で実行）
 - AI コラボ前提（Claude Code / Copilot）。エージェント向け規約は `CLAUDE.md` と `AGENTS.md` を参照
 
 ## セットアップ

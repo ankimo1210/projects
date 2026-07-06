@@ -33,7 +33,7 @@ help:
 	@echo "  analytics/differential_equation/{ode-book,pde-book}"
 	@echo ""
 	@echo "Outside the workspace:"
-	@echo "  rates_volatility_model, notebooks (manual envs)"
+	@echo "  rates_volatility_model, notebooks, shortest_path (manual envs)"
 
 install sync:
 	uv sync --all-packages
