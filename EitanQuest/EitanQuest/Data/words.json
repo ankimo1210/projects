@@ -1,0 +1,702 @@
+[
+  {
+    "id": "1",
+    "headword": "appointment",
+    "meaning": "約束、予約",
+    "category": "daily",
+    "exampleSentence": "I have a doctor's appointment tomorrow morning."
+  },
+  {
+    "id": "2",
+    "headword": "borrow",
+    "meaning": "借りる",
+    "category": "daily",
+    "exampleSentence": "Can I borrow your pen for a second?"
+  },
+  {
+    "id": "3",
+    "headword": "comfortable",
+    "meaning": "快適な",
+    "category": "daily",
+    "exampleSentence": "This chair is very comfortable to sit in."
+  },
+  {
+    "id": "4",
+    "headword": "discount",
+    "meaning": "割引",
+    "category": "daily",
+    "exampleSentence": "I got a 20 percent discount on these shoes."
+  },
+  {
+    "id": "5",
+    "headword": "embarrassed",
+    "meaning": "恥ずかしい",
+    "category": "daily",
+    "exampleSentence": "She felt embarrassed after forgetting his name."
+  },
+  {
+    "id": "6",
+    "headword": "fridge",
+    "meaning": "冷蔵庫",
+    "category": "daily",
+    "exampleSentence": "Put the milk back in the fridge, please."
+  },
+  {
+    "id": "7",
+    "headword": "grocery",
+    "meaning": "食料雑貨、食料品",
+    "category": "daily",
+    "exampleSentence": "We need to buy some groceries after work."
+  },
+  {
+    "id": "8",
+    "headword": "habit",
+    "meaning": "習慣",
+    "category": "daily",
+    "exampleSentence": "Reading before bed is a good habit."
+  },
+  {
+    "id": "9",
+    "headword": "ingredient",
+    "meaning": "材料、食材",
+    "category": "daily",
+    "exampleSentence": "Flour is the main ingredient in this cake."
+  },
+  {
+    "id": "10",
+    "headword": "journey",
+    "meaning": "旅、旅行",
+    "category": "daily",
+    "exampleSentence": "Our journey to the countryside took five hours."
+  },
+  {
+    "id": "11",
+    "headword": "kindness",
+    "meaning": "親切",
+    "category": "daily",
+    "exampleSentence": "Thank you for your kindness yesterday."
+  },
+  {
+    "id": "12",
+    "headword": "laundry",
+    "meaning": "洗濯（物）",
+    "category": "daily",
+    "exampleSentence": "I need to do the laundry this weekend."
+  },
+  {
+    "id": "13",
+    "headword": "mention",
+    "meaning": "言及する、述べる",
+    "category": "daily",
+    "exampleSentence": "She didn't mention her new job to anyone."
+  },
+  {
+    "id": "14",
+    "headword": "neighbor",
+    "meaning": "隣人",
+    "category": "daily",
+    "exampleSentence": "Our neighbor always waters our plants when we're away."
+  },
+  {
+    "id": "15",
+    "headword": "opportunity",
+    "meaning": "機会",
+    "category": "daily",
+    "exampleSentence": "This trip is a great opportunity to practice English."
+  },
+  {
+    "id": "16",
+    "headword": "postpone",
+    "meaning": "延期する",
+    "category": "daily",
+    "exampleSentence": "We had to postpone the picnic because of rain."
+  },
+  {
+    "id": "17",
+    "headword": "quarrel",
+    "meaning": "口論、けんか",
+    "category": "daily",
+    "exampleSentence": "The two brothers had a quarrel over the remote control."
+  },
+  {
+    "id": "18",
+    "headword": "recipe",
+    "meaning": "レシピ、調理法",
+    "category": "daily",
+    "exampleSentence": "Can you send me the recipe for this soup?"
+  },
+  {
+    "id": "19",
+    "headword": "schedule",
+    "meaning": "予定、スケジュール",
+    "category": "daily",
+    "exampleSentence": "My schedule is pretty full this week."
+  },
+  {
+    "id": "20",
+    "headword": "traffic",
+    "meaning": "交通、交通量",
+    "category": "daily",
+    "exampleSentence": "There was heavy traffic on the way to the airport."
+  },
+  {
+    "id": "21",
+    "headword": "umbrella",
+    "meaning": "傘",
+    "category": "daily",
+    "exampleSentence": "Don't forget your umbrella, it might rain later."
+  },
+  {
+    "id": "22",
+    "headword": "vacation",
+    "meaning": "休暇",
+    "category": "daily",
+    "exampleSentence": "We're planning a vacation to the beach next month."
+  },
+  {
+    "id": "23",
+    "headword": "weather",
+    "meaning": "天気",
+    "category": "daily",
+    "exampleSentence": "The weather has been really nice lately."
+  },
+  {
+    "id": "24",
+    "headword": "exhausted",
+    "meaning": "疲れ果てた",
+    "category": "daily",
+    "exampleSentence": "I was exhausted after the long flight."
+  },
+  {
+    "id": "25",
+    "headword": "grateful",
+    "meaning": "感謝している",
+    "category": "daily",
+    "exampleSentence": "I'm really grateful for your help today."
+  },
+  {
+    "id": "26",
+    "headword": "hesitate",
+    "meaning": "ためらう",
+    "category": "daily",
+    "exampleSentence": "Don't hesitate to call me if you need anything."
+  },
+  {
+    "id": "27",
+    "headword": "improve",
+    "meaning": "改善する、上達する",
+    "category": "daily",
+    "exampleSentence": "Her English has improved a lot this year."
+  },
+  {
+    "id": "28",
+    "headword": "jealous",
+    "meaning": "嫉妬した、うらやましい",
+    "category": "daily",
+    "exampleSentence": "He was a little jealous of his friend's new car."
+  },
+  {
+    "id": "29",
+    "headword": "lend",
+    "meaning": "貸す",
+    "category": "daily",
+    "exampleSentence": "Could you lend me some money until Friday?"
+  },
+  {
+    "id": "30",
+    "headword": "manage",
+    "meaning": "なんとかやり遂げる、管理する",
+    "category": "daily",
+    "exampleSentence": "We managed to finish the project on time."
+  },
+  {
+    "id": "31",
+    "headword": "nervous",
+    "meaning": "緊張した",
+    "category": "daily",
+    "exampleSentence": "I always get nervous before a job interview."
+  },
+  {
+    "id": "32",
+    "headword": "occasion",
+    "meaning": "場合、行事",
+    "category": "daily",
+    "exampleSentence": "We only use this plate on special occasions."
+  },
+  {
+    "id": "33",
+    "headword": "promise",
+    "meaning": "約束する",
+    "category": "daily",
+    "exampleSentence": "She promised to call me as soon as she arrived."
+  },
+  {
+    "id": "34",
+    "headword": "suggest",
+    "meaning": "提案する",
+    "category": "daily",
+    "exampleSentence": "I suggest we leave early to avoid the traffic."
+  },
+  {
+    "id": "35",
+    "headword": "agenda",
+    "meaning": "議題、予定表",
+    "category": "business",
+    "exampleSentence": "Let's go over today's agenda before the meeting starts."
+  },
+  {
+    "id": "36",
+    "headword": "budget",
+    "meaning": "予算",
+    "category": "business",
+    "exampleSentence": "The marketing team stayed within their budget this quarter."
+  },
+  {
+    "id": "37",
+    "headword": "client",
+    "meaning": "顧客、取引先",
+    "category": "business",
+    "exampleSentence": "We have a meeting with an important client tomorrow."
+  },
+  {
+    "id": "38",
+    "headword": "deadline",
+    "meaning": "締め切り",
+    "category": "business",
+    "exampleSentence": "The deadline for the report is next Friday."
+  },
+  {
+    "id": "39",
+    "headword": "efficient",
+    "meaning": "効率的な",
+    "category": "business",
+    "exampleSentence": "The new system is much more efficient than the old one."
+  },
+  {
+    "id": "40",
+    "headword": "feedback",
+    "meaning": "フィードバック、意見",
+    "category": "business",
+    "exampleSentence": "Please give me your feedback on the proposal."
+  },
+  {
+    "id": "41",
+    "headword": "invoice",
+    "meaning": "請求書",
+    "category": "business",
+    "exampleSentence": "We sent the invoice to the customer last week."
+  },
+  {
+    "id": "42",
+    "headword": "negotiate",
+    "meaning": "交渉する",
+    "category": "business",
+    "exampleSentence": "They negotiated a better price with the supplier."
+  },
+  {
+    "id": "43",
+    "headword": "outcome",
+    "meaning": "結果、成果",
+    "category": "business",
+    "exampleSentence": "The outcome of the negotiation was better than expected."
+  },
+  {
+    "id": "44",
+    "headword": "proposal",
+    "meaning": "提案書、企画案",
+    "category": "business",
+    "exampleSentence": "The board approved the new business proposal."
+  },
+  {
+    "id": "45",
+    "headword": "quarter",
+    "meaning": "四半期",
+    "category": "business",
+    "exampleSentence": "Sales increased significantly in the third quarter."
+  },
+  {
+    "id": "46",
+    "headword": "revenue",
+    "meaning": "収益、収入",
+    "category": "business",
+    "exampleSentence": "The company's revenue grew by ten percent last year."
+  },
+  {
+    "id": "47",
+    "headword": "strategy",
+    "meaning": "戦略",
+    "category": "business",
+    "exampleSentence": "We need a new marketing strategy for next year."
+  },
+  {
+    "id": "48",
+    "headword": "supervisor",
+    "meaning": "上司、監督者",
+    "category": "business",
+    "exampleSentence": "My supervisor asked me to finish the report by noon."
+  },
+  {
+    "id": "49",
+    "headword": "transaction",
+    "meaning": "取引",
+    "category": "business",
+    "exampleSentence": "The bank recorded the transaction within seconds."
+  },
+  {
+    "id": "50",
+    "headword": "vendor",
+    "meaning": "業者、販売業者",
+    "category": "business",
+    "exampleSentence": "We switched to a cheaper vendor for office supplies."
+  },
+  {
+    "id": "51",
+    "headword": "warranty",
+    "meaning": "保証（書）",
+    "category": "business",
+    "exampleSentence": "This laptop comes with a two-year warranty."
+  },
+  {
+    "id": "52",
+    "headword": "merger",
+    "meaning": "合併",
+    "category": "business",
+    "exampleSentence": "The merger between the two companies was announced today."
+  },
+  {
+    "id": "53",
+    "headword": "compliance",
+    "meaning": "（法令）遵守",
+    "category": "business",
+    "exampleSentence": "The department ensures compliance with safety regulations."
+  },
+  {
+    "id": "54",
+    "headword": "logistics",
+    "meaning": "物流",
+    "category": "business",
+    "exampleSentence": "The logistics team handles all our shipping needs."
+  },
+  {
+    "id": "55",
+    "headword": "inventory",
+    "meaning": "在庫",
+    "category": "business",
+    "exampleSentence": "We ran a full inventory check at the end of the month."
+  },
+  {
+    "id": "56",
+    "headword": "stakeholder",
+    "meaning": "利害関係者",
+    "category": "business",
+    "exampleSentence": "All stakeholders were invited to the annual meeting."
+  },
+  {
+    "id": "57",
+    "headword": "forecast",
+    "meaning": "予測",
+    "category": "business",
+    "exampleSentence": "The sales forecast for next quarter looks promising."
+  },
+  {
+    "id": "58",
+    "headword": "reimbursement",
+    "meaning": "払い戻し、返金",
+    "category": "business",
+    "exampleSentence": "You can request reimbursement for your travel expenses."
+  },
+  {
+    "id": "59",
+    "headword": "recruitment",
+    "meaning": "採用、募集",
+    "category": "business",
+    "exampleSentence": "The recruitment process usually takes about a month."
+  },
+  {
+    "id": "60",
+    "headword": "benchmark",
+    "meaning": "基準、指標",
+    "category": "business",
+    "exampleSentence": "We use last year's results as a benchmark."
+  },
+  {
+    "id": "61",
+    "headword": "overhead",
+    "meaning": "諸経費、間接費",
+    "category": "business",
+    "exampleSentence": "We need to cut overhead costs to increase profit."
+  },
+  {
+    "id": "62",
+    "headword": "subsidiary",
+    "meaning": "子会社",
+    "category": "business",
+    "exampleSentence": "The company opened a new subsidiary in Vietnam."
+  },
+  {
+    "id": "63",
+    "headword": "liability",
+    "meaning": "負債、責任",
+    "category": "business",
+    "exampleSentence": "The contract clearly states each party's liability."
+  },
+  {
+    "id": "64",
+    "headword": "asset",
+    "meaning": "資産",
+    "category": "business",
+    "exampleSentence": "Skilled employees are one of our biggest assets."
+  },
+  {
+    "id": "65",
+    "headword": "correspondence",
+    "meaning": "文書のやり取り、通信",
+    "category": "business",
+    "exampleSentence": "Please keep a record of all client correspondence."
+  },
+  {
+    "id": "66",
+    "headword": "procurement",
+    "meaning": "調達",
+    "category": "business",
+    "exampleSentence": "The procurement team negotiates prices with suppliers."
+  },
+  {
+    "id": "67",
+    "headword": "leverage",
+    "meaning": "活用する、てこ入れする",
+    "category": "business",
+    "exampleSentence": "We should leverage our existing customer network."
+  },
+  {
+    "id": "68",
+    "headword": "abundant",
+    "meaning": "豊富な",
+    "category": "exam",
+    "exampleSentence": "The region has abundant natural resources."
+  },
+  {
+    "id": "69",
+    "headword": "accumulate",
+    "meaning": "蓄積する",
+    "category": "exam",
+    "exampleSentence": "Dust had accumulated on the shelves over the years."
+  },
+  {
+    "id": "70",
+    "headword": "ambiguous",
+    "meaning": "曖昧な",
+    "category": "exam",
+    "exampleSentence": "His answer was so ambiguous that no one understood it."
+  },
+  {
+    "id": "71",
+    "headword": "arbitrary",
+    "meaning": "恣意的な、任意の",
+    "category": "exam",
+    "exampleSentence": "The rule seemed arbitrary and unfair to many students."
+  },
+  {
+    "id": "72",
+    "headword": "coherent",
+    "meaning": "一貫した、筋の通った",
+    "category": "exam",
+    "exampleSentence": "She gave a coherent explanation of the experiment."
+  },
+  {
+    "id": "73",
+    "headword": "compensate",
+    "meaning": "補う、埋め合わせる",
+    "category": "exam",
+    "exampleSentence": "Extra practice can compensate for a lack of talent."
+  },
+  {
+    "id": "74",
+    "headword": "controversial",
+    "meaning": "議論を呼ぶ",
+    "category": "exam",
+    "exampleSentence": "The new policy has become highly controversial."
+  },
+  {
+    "id": "75",
+    "headword": "deteriorate",
+    "meaning": "悪化する",
+    "category": "exam",
+    "exampleSentence": "His health began to deteriorate after the accident."
+  },
+  {
+    "id": "76",
+    "headword": "discrepancy",
+    "meaning": "食い違い、不一致",
+    "category": "exam",
+    "exampleSentence": "There is a discrepancy between the two reports."
+  },
+  {
+    "id": "77",
+    "headword": "eloquent",
+    "meaning": "雄弁な",
+    "category": "exam",
+    "exampleSentence": "The speaker gave an eloquent speech about climate change."
+  },
+  {
+    "id": "78",
+    "headword": "empirical",
+    "meaning": "経験的な、実証的な",
+    "category": "exam",
+    "exampleSentence": "The theory is based on empirical evidence."
+  },
+  {
+    "id": "79",
+    "headword": "fluctuate",
+    "meaning": "変動する",
+    "category": "exam",
+    "exampleSentence": "Stock prices tend to fluctuate throughout the day."
+  },
+  {
+    "id": "80",
+    "headword": "hypothesis",
+    "meaning": "仮説",
+    "category": "exam",
+    "exampleSentence": "The scientist tested her hypothesis in the lab."
+  },
+  {
+    "id": "81",
+    "headword": "inevitable",
+    "meaning": "避けられない",
+    "category": "exam",
+    "exampleSentence": "Change is inevitable in any growing organization."
+  },
+  {
+    "id": "82",
+    "headword": "infer",
+    "meaning": "推論する",
+    "category": "exam",
+    "exampleSentence": "From her tone, I could infer that she was upset."
+  },
+  {
+    "id": "83",
+    "headword": "inherent",
+    "meaning": "固有の、本来備わっている",
+    "category": "exam",
+    "exampleSentence": "Risk is inherent in any investment decision."
+  },
+  {
+    "id": "84",
+    "headword": "innovative",
+    "meaning": "革新的な",
+    "category": "exam",
+    "exampleSentence": "The company is known for its innovative products."
+  },
+  {
+    "id": "85",
+    "headword": "integrity",
+    "meaning": "誠実さ、完全性",
+    "category": "exam",
+    "exampleSentence": "He is respected for his honesty and integrity."
+  },
+  {
+    "id": "86",
+    "headword": "intricate",
+    "meaning": "複雑な、精巧な",
+    "category": "exam",
+    "exampleSentence": "The watch has an intricate mechanical design."
+  },
+  {
+    "id": "87",
+    "headword": "justify",
+    "meaning": "正当化する",
+    "category": "exam",
+    "exampleSentence": "She couldn't justify the high cost of the trip."
+  },
+  {
+    "id": "88",
+    "headword": "meticulous",
+    "meaning": "綿密な、几帳面な",
+    "category": "exam",
+    "exampleSentence": "He is meticulous about checking every detail."
+  },
+  {
+    "id": "89",
+    "headword": "notion",
+    "meaning": "概念、考え",
+    "category": "exam",
+    "exampleSentence": "The notion of free will has been debated for centuries."
+  },
+  {
+    "id": "90",
+    "headword": "obsolete",
+    "meaning": "廃れた、時代遅れの",
+    "category": "exam",
+    "exampleSentence": "This technology quickly became obsolete."
+  },
+  {
+    "id": "91",
+    "headword": "paradox",
+    "meaning": "逆説、矛盾",
+    "category": "exam",
+    "exampleSentence": "It's a paradox that saving time often costs more money."
+  },
+  {
+    "id": "92",
+    "headword": "perceive",
+    "meaning": "知覚する、認識する",
+    "category": "exam",
+    "exampleSentence": "People often perceive risk differently."
+  },
+  {
+    "id": "93",
+    "headword": "plausible",
+    "meaning": "もっともらしい、あり得る",
+    "category": "exam",
+    "exampleSentence": "Her explanation sounded plausible at first."
+  },
+  {
+    "id": "94",
+    "headword": "prevalent",
+    "meaning": "普及している、広まっている",
+    "category": "exam",
+    "exampleSentence": "The disease is more prevalent in certain regions."
+  },
+  {
+    "id": "95",
+    "headword": "pragmatic",
+    "meaning": "実用的な、現実的な",
+    "category": "exam",
+    "exampleSentence": "We need a pragmatic solution, not an ideal one."
+  },
+  {
+    "id": "96",
+    "headword": "reluctant",
+    "meaning": "気が進まない、渋々の",
+    "category": "exam",
+    "exampleSentence": "He was reluctant to change his opinion."
+  },
+  {
+    "id": "97",
+    "headword": "skepticism",
+    "meaning": "懐疑論、懐疑的な態度",
+    "category": "exam",
+    "exampleSentence": "Scientists approach new claims with healthy skepticism."
+  },
+  {
+    "id": "98",
+    "headword": "subsequent",
+    "meaning": "その後の、続く",
+    "category": "exam",
+    "exampleSentence": "The subsequent events proved her theory correct."
+  },
+  {
+    "id": "99",
+    "headword": "tangible",
+    "meaning": "明白な、具体的な",
+    "category": "exam",
+    "exampleSentence": "We need tangible proof before making a decision."
+  },
+  {
+    "id": "100",
+    "headword": "unprecedented",
+    "meaning": "前例のない",
+    "category": "exam",
+    "exampleSentence": "The company saw unprecedented growth last year."
+  }
+]
