@@ -4,699 +4,899 @@
     "headword": "appointment",
     "meaning": "約束、予約",
     "category": "daily",
-    "exampleSentence": "I have a doctor's appointment tomorrow morning."
+    "exampleSentence": "I have a doctor's appointment tomorrow morning.",
+    "phonetic": "/əˈpɔɪntmənt/",
+    "exampleSentenceJa": "明日の朝、医者の予約があります。"
   },
   {
     "id": "2",
     "headword": "borrow",
     "meaning": "借りる",
     "category": "daily",
-    "exampleSentence": "Can I borrow your pen for a second?"
+    "exampleSentence": "Can I borrow your pen for a second?",
+    "phonetic": "/ˈbɑːroʊ/",
+    "exampleSentenceJa": "ちょっとペンを借りてもいいですか？"
   },
   {
     "id": "3",
     "headword": "comfortable",
     "meaning": "快適な",
     "category": "daily",
-    "exampleSentence": "This chair is very comfortable to sit in."
+    "exampleSentence": "This chair is very comfortable to sit in.",
+    "phonetic": "/ˈkʌmftərbəl/",
+    "exampleSentenceJa": "この椅子は座り心地がとても良いです。"
   },
   {
     "id": "4",
     "headword": "discount",
     "meaning": "割引",
     "category": "daily",
-    "exampleSentence": "I got a 20 percent discount on these shoes."
+    "exampleSentence": "I got a 20 percent discount on these shoes.",
+    "phonetic": "/ˈdɪskaʊnt/",
+    "exampleSentenceJa": "この靴を20%割引で買いました。"
   },
   {
     "id": "5",
     "headword": "embarrassed",
     "meaning": "恥ずかしい",
     "category": "daily",
-    "exampleSentence": "She felt embarrassed after forgetting his name."
+    "exampleSentence": "She felt embarrassed after forgetting his name.",
+    "phonetic": "/ɪmˈbærəst/",
+    "exampleSentenceJa": "彼女は彼の名前を忘れてしまい、恥ずかしい思いをしました。"
   },
   {
     "id": "6",
     "headword": "fridge",
     "meaning": "冷蔵庫",
     "category": "daily",
-    "exampleSentence": "Put the milk back in the fridge, please."
+    "exampleSentence": "Put the milk back in the fridge, please.",
+    "phonetic": "/frɪdʒ/",
+    "exampleSentenceJa": "牛乳を冷蔵庫に戻しておいてください。"
   },
   {
     "id": "7",
     "headword": "grocery",
     "meaning": "食料雑貨、食料品",
     "category": "daily",
-    "exampleSentence": "We need to buy some groceries after work."
+    "exampleSentence": "We need to buy some groceries after work.",
+    "phonetic": "/ˈɡroʊsəri/",
+    "exampleSentenceJa": "仕事の後に食料品を買う必要があります。"
   },
   {
     "id": "8",
     "headword": "habit",
     "meaning": "習慣",
     "category": "daily",
-    "exampleSentence": "Reading before bed is a good habit."
+    "exampleSentence": "Reading before bed is a good habit.",
+    "phonetic": "/ˈhæbɪt/",
+    "exampleSentenceJa": "寝る前の読書は良い習慣です。"
   },
   {
     "id": "9",
     "headword": "ingredient",
     "meaning": "材料、食材",
     "category": "daily",
-    "exampleSentence": "Flour is the main ingredient in this cake."
+    "exampleSentence": "Flour is the main ingredient in this cake.",
+    "phonetic": "/ɪnˈɡriːdiənt/",
+    "exampleSentenceJa": "小麦粉がこのケーキの主な材料です。"
   },
   {
     "id": "10",
     "headword": "journey",
     "meaning": "旅、旅行",
     "category": "daily",
-    "exampleSentence": "Our journey to the countryside took five hours."
+    "exampleSentence": "Our journey to the countryside took five hours.",
+    "phonetic": "/ˈdʒɜːrni/",
+    "exampleSentenceJa": "田舎への旅は5時間かかりました。"
   },
   {
     "id": "11",
     "headword": "kindness",
     "meaning": "親切",
     "category": "daily",
-    "exampleSentence": "Thank you for your kindness yesterday."
+    "exampleSentence": "Thank you for your kindness yesterday.",
+    "phonetic": "/ˈkaɪndnəs/",
+    "exampleSentenceJa": "昨日はご親切にありがとうございました。"
   },
   {
     "id": "12",
     "headword": "laundry",
     "meaning": "洗濯（物）",
     "category": "daily",
-    "exampleSentence": "I need to do the laundry this weekend."
+    "exampleSentence": "I need to do the laundry this weekend.",
+    "phonetic": "/ˈlɔːndri/",
+    "exampleSentenceJa": "今週末は洗濯をしなければなりません。"
   },
   {
     "id": "13",
     "headword": "mention",
     "meaning": "言及する、述べる",
     "category": "daily",
-    "exampleSentence": "She didn't mention her new job to anyone."
+    "exampleSentence": "She didn't mention her new job to anyone.",
+    "phonetic": "/ˈmenʃən/",
+    "exampleSentenceJa": "彼女は新しい仕事のことを誰にも話しませんでした。"
   },
   {
     "id": "14",
     "headword": "neighbor",
     "meaning": "隣人",
     "category": "daily",
-    "exampleSentence": "Our neighbor always waters our plants when we're away."
+    "exampleSentence": "Our neighbor always waters our plants when we're away.",
+    "phonetic": "/ˈneɪbər/",
+    "exampleSentenceJa": "隣人は私たちの留守中、いつも植物に水をやってくれます。"
   },
   {
     "id": "15",
     "headword": "opportunity",
     "meaning": "機会",
     "category": "daily",
-    "exampleSentence": "This trip is a great opportunity to practice English."
+    "exampleSentence": "This trip is a great opportunity to practice English.",
+    "phonetic": "/ˌɑːpərˈtuːnəti/",
+    "exampleSentenceJa": "この旅行は英語を練習する絶好の機会です。"
   },
   {
     "id": "16",
     "headword": "postpone",
     "meaning": "延期する",
     "category": "daily",
-    "exampleSentence": "We had to postpone the picnic because of rain."
+    "exampleSentence": "We had to postpone the picnic because of rain.",
+    "phonetic": "/poʊstˈpoʊn/",
+    "exampleSentenceJa": "雨のためピクニックを延期しなければなりませんでした。"
   },
   {
     "id": "17",
     "headword": "quarrel",
     "meaning": "口論、けんか",
     "category": "daily",
-    "exampleSentence": "The two brothers had a quarrel over the remote control."
+    "exampleSentence": "The two brothers had a quarrel over the remote control.",
+    "phonetic": "/ˈkwɔːrəl/",
+    "exampleSentenceJa": "兄弟2人はリモコンをめぐって口論になりました。"
   },
   {
     "id": "18",
     "headword": "recipe",
     "meaning": "レシピ、調理法",
     "category": "daily",
-    "exampleSentence": "Can you send me the recipe for this soup?"
+    "exampleSentence": "Can you send me the recipe for this soup?",
+    "phonetic": "/ˈresəpi/",
+    "exampleSentenceJa": "このスープのレシピを送ってもらえますか？"
   },
   {
     "id": "19",
     "headword": "schedule",
     "meaning": "予定、スケジュール",
     "category": "daily",
-    "exampleSentence": "My schedule is pretty full this week."
+    "exampleSentence": "My schedule is pretty full this week.",
+    "phonetic": "/ˈskedʒuːl/",
+    "exampleSentenceJa": "今週は予定がかなり詰まっています。"
   },
   {
     "id": "20",
     "headword": "traffic",
     "meaning": "交通、交通量",
     "category": "daily",
-    "exampleSentence": "There was heavy traffic on the way to the airport."
+    "exampleSentence": "There was heavy traffic on the way to the airport.",
+    "phonetic": "/ˈtræfɪk/",
+    "exampleSentenceJa": "空港へ向かう道は交通量が多かったです。"
   },
   {
     "id": "21",
     "headword": "umbrella",
     "meaning": "傘",
     "category": "daily",
-    "exampleSentence": "Don't forget your umbrella, it might rain later."
+    "exampleSentence": "Don't forget your umbrella, it might rain later.",
+    "phonetic": "/ʌmˈbrelə/",
+    "exampleSentenceJa": "傘を忘れないで。あとで雨が降るかもしれません。"
   },
   {
     "id": "22",
     "headword": "vacation",
     "meaning": "休暇",
     "category": "daily",
-    "exampleSentence": "We're planning a vacation to the beach next month."
+    "exampleSentence": "We're planning a vacation to the beach next month.",
+    "phonetic": "/veɪˈkeɪʃən/",
+    "exampleSentenceJa": "来月、ビーチへの休暇を計画しています。"
   },
   {
     "id": "23",
     "headword": "weather",
     "meaning": "天気",
     "category": "daily",
-    "exampleSentence": "The weather has been really nice lately."
+    "exampleSentence": "The weather has been really nice lately.",
+    "phonetic": "/ˈweðər/",
+    "exampleSentenceJa": "最近は天気がとても良いです。"
   },
   {
     "id": "24",
     "headword": "exhausted",
     "meaning": "疲れ果てた",
     "category": "daily",
-    "exampleSentence": "I was exhausted after the long flight."
+    "exampleSentence": "I was exhausted after the long flight.",
+    "phonetic": "/ɪɡˈzɔːstɪd/",
+    "exampleSentenceJa": "長時間のフライトの後、疲れ果てていました。"
   },
   {
     "id": "25",
     "headword": "grateful",
     "meaning": "感謝している",
     "category": "daily",
-    "exampleSentence": "I'm really grateful for your help today."
+    "exampleSentence": "I'm really grateful for your help today.",
+    "phonetic": "/ˈɡreɪtfəl/",
+    "exampleSentenceJa": "今日は助けてくれて本当に感謝しています。"
   },
   {
     "id": "26",
     "headword": "hesitate",
     "meaning": "ためらう",
     "category": "daily",
-    "exampleSentence": "Don't hesitate to call me if you need anything."
+    "exampleSentence": "Don't hesitate to call me if you need anything.",
+    "phonetic": "/ˈhezɪteɪt/",
+    "exampleSentenceJa": "何か必要なときは、遠慮なく電話してください。"
   },
   {
     "id": "27",
     "headword": "improve",
     "meaning": "改善する、上達する",
     "category": "daily",
-    "exampleSentence": "Her English has improved a lot this year."
+    "exampleSentence": "Her English has improved a lot this year.",
+    "phonetic": "/ɪmˈpruːv/",
+    "exampleSentenceJa": "彼女の英語は今年とても上達しました。"
   },
   {
     "id": "28",
     "headword": "jealous",
     "meaning": "嫉妬した、うらやましい",
     "category": "daily",
-    "exampleSentence": "He was a little jealous of his friend's new car."
+    "exampleSentence": "He was a little jealous of his friend's new car.",
+    "phonetic": "/ˈdʒeləs/",
+    "exampleSentenceJa": "彼は友人の新車が少しうらやましかったのです。"
   },
   {
     "id": "29",
     "headword": "lend",
     "meaning": "貸す",
     "category": "daily",
-    "exampleSentence": "Could you lend me some money until Friday?"
+    "exampleSentence": "Could you lend me some money until Friday?",
+    "phonetic": "/lend/",
+    "exampleSentenceJa": "金曜日までお金を貸してもらえますか？"
   },
   {
     "id": "30",
     "headword": "manage",
     "meaning": "なんとかやり遂げる、管理する",
     "category": "daily",
-    "exampleSentence": "We managed to finish the project on time."
+    "exampleSentence": "We managed to finish the project on time.",
+    "phonetic": "/ˈmænɪdʒ/",
+    "exampleSentenceJa": "私たちはなんとか期限内にプロジェクトを終わらせました。"
   },
   {
     "id": "31",
     "headword": "nervous",
     "meaning": "緊張した",
     "category": "daily",
-    "exampleSentence": "I always get nervous before a job interview."
+    "exampleSentence": "I always get nervous before a job interview.",
+    "phonetic": "/ˈnɜːrvəs/",
+    "exampleSentenceJa": "就職の面接の前はいつも緊張します。"
   },
   {
     "id": "32",
     "headword": "occasion",
     "meaning": "場合、行事",
     "category": "daily",
-    "exampleSentence": "We only use this plate on special occasions."
+    "exampleSentence": "We only use this plate on special occasions.",
+    "phonetic": "/əˈkeɪʒən/",
+    "exampleSentenceJa": "このお皿は特別な行事のときにしか使いません。"
   },
   {
     "id": "33",
     "headword": "promise",
     "meaning": "約束する",
     "category": "daily",
-    "exampleSentence": "She promised to call me as soon as she arrived."
+    "exampleSentence": "She promised to call me as soon as she arrived.",
+    "phonetic": "/ˈprɑːmɪs/",
+    "exampleSentenceJa": "彼女は着いたらすぐ電話すると約束しました。"
   },
   {
     "id": "34",
     "headword": "suggest",
     "meaning": "提案する",
     "category": "daily",
-    "exampleSentence": "I suggest we leave early to avoid the traffic."
+    "exampleSentence": "I suggest we leave early to avoid the traffic.",
+    "phonetic": "/səɡˈdʒest/",
+    "exampleSentenceJa": "渋滞を避けるため、早めに出発することを提案します。"
   },
   {
     "id": "35",
     "headword": "agenda",
     "meaning": "議題、予定表",
     "category": "business",
-    "exampleSentence": "Let's go over today's agenda before the meeting starts."
+    "exampleSentence": "Let's go over today's agenda before the meeting starts.",
+    "phonetic": "/əˈdʒendə/",
+    "exampleSentenceJa": "会議が始まる前に今日の議題を確認しましょう。"
   },
   {
     "id": "36",
     "headword": "budget",
     "meaning": "予算",
     "category": "business",
-    "exampleSentence": "The marketing team stayed within their budget this quarter."
+    "exampleSentence": "The marketing team stayed within their budget this quarter.",
+    "phonetic": "/ˈbʌdʒɪt/",
+    "exampleSentenceJa": "マーケティングチームは今四半期、予算内に収めました。"
   },
   {
     "id": "37",
     "headword": "client",
     "meaning": "顧客、取引先",
     "category": "business",
-    "exampleSentence": "We have a meeting with an important client tomorrow."
+    "exampleSentence": "We have a meeting with an important client tomorrow.",
+    "phonetic": "/ˈklaɪənt/",
+    "exampleSentenceJa": "明日、重要な顧客との打ち合わせがあります。"
   },
   {
     "id": "38",
     "headword": "deadline",
     "meaning": "締め切り",
     "category": "business",
-    "exampleSentence": "The deadline for the report is next Friday."
+    "exampleSentence": "The deadline for the report is next Friday.",
+    "phonetic": "/ˈdedlaɪn/",
+    "exampleSentenceJa": "レポートの締め切りは来週の金曜日です。"
   },
   {
     "id": "39",
     "headword": "efficient",
     "meaning": "効率的な",
     "category": "business",
-    "exampleSentence": "The new system is much more efficient than the old one."
+    "exampleSentence": "The new system is much more efficient than the old one.",
+    "phonetic": "/ɪˈfɪʃənt/",
+    "exampleSentenceJa": "新しいシステムは古いものよりずっと効率的です。"
   },
   {
     "id": "40",
     "headword": "feedback",
     "meaning": "フィードバック、意見",
     "category": "business",
-    "exampleSentence": "Please give me your feedback on the proposal."
+    "exampleSentence": "Please give me your feedback on the proposal.",
+    "phonetic": "/ˈfiːdbæk/",
+    "exampleSentenceJa": "提案書についてご意見をお聞かせください。"
   },
   {
     "id": "41",
     "headword": "invoice",
     "meaning": "請求書",
     "category": "business",
-    "exampleSentence": "We sent the invoice to the customer last week."
+    "exampleSentence": "We sent the invoice to the customer last week.",
+    "phonetic": "/ˈɪnvɔɪs/",
+    "exampleSentenceJa": "先週、顧客に請求書を送りました。"
   },
   {
     "id": "42",
     "headword": "negotiate",
     "meaning": "交渉する",
     "category": "business",
-    "exampleSentence": "They negotiated a better price with the supplier."
+    "exampleSentence": "They negotiated a better price with the supplier.",
+    "phonetic": "/nɪˈɡoʊʃieɪt/",
+    "exampleSentenceJa": "彼らは仕入先とより良い価格を交渉しました。"
   },
   {
     "id": "43",
     "headword": "outcome",
     "meaning": "結果、成果",
     "category": "business",
-    "exampleSentence": "The outcome of the negotiation was better than expected."
+    "exampleSentence": "The outcome of the negotiation was better than expected.",
+    "phonetic": "/ˈaʊtkʌm/",
+    "exampleSentenceJa": "交渉の結果は予想以上に良いものでした。"
   },
   {
     "id": "44",
     "headword": "proposal",
     "meaning": "提案書、企画案",
     "category": "business",
-    "exampleSentence": "The board approved the new business proposal."
+    "exampleSentence": "The board approved the new business proposal.",
+    "phonetic": "/prəˈpoʊzəl/",
+    "exampleSentenceJa": "取締役会は新しい事業提案を承認しました。"
   },
   {
     "id": "45",
     "headword": "quarter",
     "meaning": "四半期",
     "category": "business",
-    "exampleSentence": "Sales increased significantly in the third quarter."
+    "exampleSentence": "Sales increased significantly in the third quarter.",
+    "phonetic": "/ˈkwɔːrtər/",
+    "exampleSentenceJa": "第3四半期に売上が大幅に伸びました。"
   },
   {
     "id": "46",
     "headword": "revenue",
     "meaning": "収益、収入",
     "category": "business",
-    "exampleSentence": "The company's revenue grew by ten percent last year."
+    "exampleSentence": "The company's revenue grew by ten percent last year.",
+    "phonetic": "/ˈrevənuː/",
+    "exampleSentenceJa": "会社の収益は昨年10%成長しました。"
   },
   {
     "id": "47",
     "headword": "strategy",
     "meaning": "戦略",
     "category": "business",
-    "exampleSentence": "We need a new marketing strategy for next year."
+    "exampleSentence": "We need a new marketing strategy for next year.",
+    "phonetic": "/ˈstrætədʒi/",
+    "exampleSentenceJa": "来年に向けて新しいマーケティング戦略が必要です。"
   },
   {
     "id": "48",
     "headword": "supervisor",
     "meaning": "上司、監督者",
     "category": "business",
-    "exampleSentence": "My supervisor asked me to finish the report by noon."
+    "exampleSentence": "My supervisor asked me to finish the report by noon.",
+    "phonetic": "/ˈsuːpərvaɪzər/",
+    "exampleSentenceJa": "上司から正午までにレポートを仕上げるよう頼まれました。"
   },
   {
     "id": "49",
     "headword": "transaction",
     "meaning": "取引",
     "category": "business",
-    "exampleSentence": "The bank recorded the transaction within seconds."
+    "exampleSentence": "The bank recorded the transaction within seconds.",
+    "phonetic": "/trænˈzækʃən/",
+    "exampleSentenceJa": "銀行は数秒以内にその取引を記録しました。"
   },
   {
     "id": "50",
     "headword": "vendor",
     "meaning": "業者、販売業者",
     "category": "business",
-    "exampleSentence": "We switched to a cheaper vendor for office supplies."
+    "exampleSentence": "We switched to a cheaper vendor for office supplies.",
+    "phonetic": "/ˈvendər/",
+    "exampleSentenceJa": "事務用品はより安い業者に切り替えました。"
   },
   {
     "id": "51",
     "headword": "warranty",
     "meaning": "保証（書）",
     "category": "business",
-    "exampleSentence": "This laptop comes with a two-year warranty."
+    "exampleSentence": "This laptop comes with a two-year warranty.",
+    "phonetic": "/ˈwɔːrənti/",
+    "exampleSentenceJa": "このノートPCには2年間の保証が付いています。"
   },
   {
     "id": "52",
     "headword": "merger",
     "meaning": "合併",
     "category": "business",
-    "exampleSentence": "The merger between the two companies was announced today."
+    "exampleSentence": "The merger between the two companies was announced today.",
+    "phonetic": "/ˈmɜːrdʒər/",
+    "exampleSentenceJa": "両社の合併が本日発表されました。"
   },
   {
     "id": "53",
     "headword": "compliance",
     "meaning": "（法令）遵守",
     "category": "business",
-    "exampleSentence": "The department ensures compliance with safety regulations."
+    "exampleSentence": "The department ensures compliance with safety regulations.",
+    "phonetic": "/kəmˈplaɪəns/",
+    "exampleSentenceJa": "その部署は安全規則の遵守を徹底しています。"
   },
   {
     "id": "54",
     "headword": "logistics",
     "meaning": "物流",
     "category": "business",
-    "exampleSentence": "The logistics team handles all our shipping needs."
+    "exampleSentence": "The logistics team handles all our shipping needs.",
+    "phonetic": "/ləˈdʒɪstɪks/",
+    "exampleSentenceJa": "物流チームが出荷業務をすべて担当しています。"
   },
   {
     "id": "55",
     "headword": "inventory",
     "meaning": "在庫",
     "category": "business",
-    "exampleSentence": "We ran a full inventory check at the end of the month."
+    "exampleSentence": "We ran a full inventory check at the end of the month.",
+    "phonetic": "/ˈɪnvəntɔːri/",
+    "exampleSentenceJa": "月末に全在庫の棚卸しを行いました。"
   },
   {
     "id": "56",
     "headword": "stakeholder",
     "meaning": "利害関係者",
     "category": "business",
-    "exampleSentence": "All stakeholders were invited to the annual meeting."
+    "exampleSentence": "All stakeholders were invited to the annual meeting.",
+    "phonetic": "/ˈsteɪkhoʊldər/",
+    "exampleSentenceJa": "すべての利害関係者が年次総会に招かれました。"
   },
   {
     "id": "57",
     "headword": "forecast",
     "meaning": "予測",
     "category": "business",
-    "exampleSentence": "The sales forecast for next quarter looks promising."
+    "exampleSentence": "The sales forecast for next quarter looks promising.",
+    "phonetic": "/ˈfɔːrkæst/",
+    "exampleSentenceJa": "来四半期の売上予測は有望です。"
   },
   {
     "id": "58",
     "headword": "reimbursement",
     "meaning": "払い戻し、返金",
     "category": "business",
-    "exampleSentence": "You can request reimbursement for your travel expenses."
+    "exampleSentence": "You can request reimbursement for your travel expenses.",
+    "phonetic": "/ˌriːɪmˈbɜːrsmənt/",
+    "exampleSentenceJa": "出張費の払い戻しを申請できます。"
   },
   {
     "id": "59",
     "headword": "recruitment",
     "meaning": "採用、募集",
     "category": "business",
-    "exampleSentence": "The recruitment process usually takes about a month."
+    "exampleSentence": "The recruitment process usually takes about a month.",
+    "phonetic": "/rɪˈkruːtmənt/",
+    "exampleSentenceJa": "採用プロセスには通常1か月ほどかかります。"
   },
   {
     "id": "60",
     "headword": "benchmark",
     "meaning": "基準、指標",
     "category": "business",
-    "exampleSentence": "We use last year's results as a benchmark."
+    "exampleSentence": "We use last year's results as a benchmark.",
+    "phonetic": "/ˈbentʃmɑːrk/",
+    "exampleSentenceJa": "昨年の実績を基準として使っています。"
   },
   {
     "id": "61",
     "headword": "overhead",
     "meaning": "諸経費、間接費",
     "category": "business",
-    "exampleSentence": "We need to cut overhead costs to increase profit."
+    "exampleSentence": "We need to cut overhead costs to increase profit.",
+    "phonetic": "/ˈoʊvərhed/",
+    "exampleSentenceJa": "利益を増やすには諸経費を削減する必要があります。"
   },
   {
     "id": "62",
     "headword": "subsidiary",
     "meaning": "子会社",
     "category": "business",
-    "exampleSentence": "The company opened a new subsidiary in Vietnam."
+    "exampleSentence": "The company opened a new subsidiary in Vietnam.",
+    "phonetic": "/səbˈsɪdieri/",
+    "exampleSentenceJa": "その会社はベトナムに新しい子会社を設立しました。"
   },
   {
     "id": "63",
     "headword": "liability",
     "meaning": "負債、責任",
     "category": "business",
-    "exampleSentence": "The contract clearly states each party's liability."
+    "exampleSentence": "The contract clearly states each party's liability.",
+    "phonetic": "/ˌlaɪəˈbɪləti/",
+    "exampleSentenceJa": "契約書には各当事者の責任が明確に記されています。"
   },
   {
     "id": "64",
     "headword": "asset",
     "meaning": "資産",
     "category": "business",
-    "exampleSentence": "Skilled employees are one of our biggest assets."
+    "exampleSentence": "Skilled employees are one of our biggest assets.",
+    "phonetic": "/ˈæset/",
+    "exampleSentenceJa": "熟練した社員は当社の最大の資産の一つです。"
   },
   {
     "id": "65",
     "headword": "correspondence",
     "meaning": "文書のやり取り、通信",
     "category": "business",
-    "exampleSentence": "Please keep a record of all client correspondence."
+    "exampleSentence": "Please keep a record of all client correspondence.",
+    "phonetic": "/ˌkɔːrəˈspɑːndəns/",
+    "exampleSentenceJa": "顧客とのやり取りはすべて記録しておいてください。"
   },
   {
     "id": "66",
     "headword": "procurement",
     "meaning": "調達",
     "category": "business",
-    "exampleSentence": "The procurement team negotiates prices with suppliers."
+    "exampleSentence": "The procurement team negotiates prices with suppliers.",
+    "phonetic": "/prəˈkjʊrmənt/",
+    "exampleSentenceJa": "調達チームが仕入先と価格交渉を行います。"
   },
   {
     "id": "67",
     "headword": "leverage",
     "meaning": "活用する、てこ入れする",
     "category": "business",
-    "exampleSentence": "We should leverage our existing customer network."
+    "exampleSentence": "We should leverage our existing customer network.",
+    "phonetic": "/ˈlevərɪdʒ/",
+    "exampleSentenceJa": "既存の顧客ネットワークを活用すべきです。"
   },
   {
     "id": "68",
     "headword": "abundant",
     "meaning": "豊富な",
     "category": "exam",
-    "exampleSentence": "The region has abundant natural resources."
+    "exampleSentence": "The region has abundant natural resources.",
+    "phonetic": "/əˈbʌndənt/",
+    "exampleSentenceJa": "その地域には天然資源が豊富にあります。"
   },
   {
     "id": "69",
     "headword": "accumulate",
     "meaning": "蓄積する",
     "category": "exam",
-    "exampleSentence": "Dust had accumulated on the shelves over the years."
+    "exampleSentence": "Dust had accumulated on the shelves over the years.",
+    "phonetic": "/əˈkjuːmjəleɪt/",
+    "exampleSentenceJa": "何年もかけて棚にほこりが積もっていました。"
   },
   {
     "id": "70",
     "headword": "ambiguous",
     "meaning": "曖昧な",
     "category": "exam",
-    "exampleSentence": "His answer was so ambiguous that no one understood it."
+    "exampleSentence": "His answer was so ambiguous that no one understood it.",
+    "phonetic": "/æmˈbɪɡjuəs/",
+    "exampleSentenceJa": "彼の答えはあまりに曖昧で、誰も理解できませんでした。"
   },
   {
     "id": "71",
     "headword": "arbitrary",
     "meaning": "恣意的な、任意の",
     "category": "exam",
-    "exampleSentence": "The rule seemed arbitrary and unfair to many students."
+    "exampleSentence": "The rule seemed arbitrary and unfair to many students.",
+    "phonetic": "/ˈɑːrbətreri/",
+    "exampleSentenceJa": "その規則は多くの学生にとって恣意的で不公平に思えました。"
   },
   {
     "id": "72",
     "headword": "coherent",
     "meaning": "一貫した、筋の通った",
     "category": "exam",
-    "exampleSentence": "She gave a coherent explanation of the experiment."
+    "exampleSentence": "She gave a coherent explanation of the experiment.",
+    "phonetic": "/koʊˈhɪrənt/",
+    "exampleSentenceJa": "彼女は実験について筋の通った説明をしました。"
   },
   {
     "id": "73",
     "headword": "compensate",
     "meaning": "補う、埋め合わせる",
     "category": "exam",
-    "exampleSentence": "Extra practice can compensate for a lack of talent."
+    "exampleSentence": "Extra practice can compensate for a lack of talent.",
+    "phonetic": "/ˈkɑːmpənseɪt/",
+    "exampleSentenceJa": "追加の練習は才能の不足を補うことができます。"
   },
   {
     "id": "74",
     "headword": "controversial",
     "meaning": "議論を呼ぶ",
     "category": "exam",
-    "exampleSentence": "The new policy has become highly controversial."
+    "exampleSentence": "The new policy has become highly controversial.",
+    "phonetic": "/ˌkɑːntrəˈvɜːrʃəl/",
+    "exampleSentenceJa": "その新しい政策は大きな議論を呼んでいます。"
   },
   {
     "id": "75",
     "headword": "deteriorate",
     "meaning": "悪化する",
     "category": "exam",
-    "exampleSentence": "His health began to deteriorate after the accident."
+    "exampleSentence": "His health began to deteriorate after the accident.",
+    "phonetic": "/dɪˈtɪriəreɪt/",
+    "exampleSentenceJa": "事故の後、彼の健康は悪化し始めました。"
   },
   {
     "id": "76",
     "headword": "discrepancy",
     "meaning": "食い違い、不一致",
     "category": "exam",
-    "exampleSentence": "There is a discrepancy between the two reports."
+    "exampleSentence": "There is a discrepancy between the two reports.",
+    "phonetic": "/dɪˈskrepənsi/",
+    "exampleSentenceJa": "2つの報告書の間に食い違いがあります。"
   },
   {
     "id": "77",
     "headword": "eloquent",
     "meaning": "雄弁な",
     "category": "exam",
-    "exampleSentence": "The speaker gave an eloquent speech about climate change."
+    "exampleSentence": "The speaker gave an eloquent speech about climate change.",
+    "phonetic": "/ˈeləkwənt/",
+    "exampleSentenceJa": "講演者は気候変動について雄弁なスピーチをしました。"
   },
   {
     "id": "78",
     "headword": "empirical",
     "meaning": "経験的な、実証的な",
     "category": "exam",
-    "exampleSentence": "The theory is based on empirical evidence."
+    "exampleSentence": "The theory is based on empirical evidence.",
+    "phonetic": "/ɪmˈpɪrɪkəl/",
+    "exampleSentenceJa": "その理論は実証的な証拠に基づいています。"
   },
   {
     "id": "79",
     "headword": "fluctuate",
     "meaning": "変動する",
     "category": "exam",
-    "exampleSentence": "Stock prices tend to fluctuate throughout the day."
+    "exampleSentence": "Stock prices tend to fluctuate throughout the day.",
+    "phonetic": "/ˈflʌktʃueɪt/",
+    "exampleSentenceJa": "株価は一日を通して変動しがちです。"
   },
   {
     "id": "80",
     "headword": "hypothesis",
     "meaning": "仮説",
     "category": "exam",
-    "exampleSentence": "The scientist tested her hypothesis in the lab."
+    "exampleSentence": "The scientist tested her hypothesis in the lab.",
+    "phonetic": "/haɪˈpɑːθəsɪs/",
+    "exampleSentenceJa": "その科学者は研究室で自分の仮説を検証しました。"
   },
   {
     "id": "81",
     "headword": "inevitable",
     "meaning": "避けられない",
     "category": "exam",
-    "exampleSentence": "Change is inevitable in any growing organization."
+    "exampleSentence": "Change is inevitable in any growing organization.",
+    "phonetic": "/ɪnˈevɪtəbəl/",
+    "exampleSentenceJa": "成長する組織において変化は避けられません。"
   },
   {
     "id": "82",
     "headword": "infer",
     "meaning": "推論する",
     "category": "exam",
-    "exampleSentence": "From her tone, I could infer that she was upset."
+    "exampleSentence": "From her tone, I could infer that she was upset.",
+    "phonetic": "/ɪnˈfɜːr/",
+    "exampleSentenceJa": "彼女の口調から、動揺しているのだと推測できました。"
   },
   {
     "id": "83",
     "headword": "inherent",
     "meaning": "固有の、本来備わっている",
     "category": "exam",
-    "exampleSentence": "Risk is inherent in any investment decision."
+    "exampleSentence": "Risk is inherent in any investment decision.",
+    "phonetic": "/ɪnˈhɪrənt/",
+    "exampleSentenceJa": "リスクはどんな投資判断にも本来つきものです。"
   },
   {
     "id": "84",
     "headword": "innovative",
     "meaning": "革新的な",
     "category": "exam",
-    "exampleSentence": "The company is known for its innovative products."
+    "exampleSentence": "The company is known for its innovative products.",
+    "phonetic": "/ˈɪnəveɪtɪv/",
+    "exampleSentenceJa": "その会社は革新的な製品で知られています。"
   },
   {
     "id": "85",
     "headword": "integrity",
     "meaning": "誠実さ、完全性",
     "category": "exam",
-    "exampleSentence": "He is respected for his honesty and integrity."
+    "exampleSentence": "He is respected for his honesty and integrity.",
+    "phonetic": "/ɪnˈteɡrəti/",
+    "exampleSentenceJa": "彼はその正直さと誠実さで尊敬されています。"
   },
   {
     "id": "86",
     "headword": "intricate",
     "meaning": "複雑な、精巧な",
     "category": "exam",
-    "exampleSentence": "The watch has an intricate mechanical design."
+    "exampleSentence": "The watch has an intricate mechanical design.",
+    "phonetic": "/ˈɪntrɪkət/",
+    "exampleSentenceJa": "その時計は精巧な機械式の設計になっています。"
   },
   {
     "id": "87",
     "headword": "justify",
     "meaning": "正当化する",
     "category": "exam",
-    "exampleSentence": "She couldn't justify the high cost of the trip."
+    "exampleSentence": "She couldn't justify the high cost of the trip.",
+    "phonetic": "/ˈdʒʌstɪfaɪ/",
+    "exampleSentenceJa": "彼女は旅行の高い費用を正当化できませんでした。"
   },
   {
     "id": "88",
     "headword": "meticulous",
     "meaning": "綿密な、几帳面な",
     "category": "exam",
-    "exampleSentence": "He is meticulous about checking every detail."
+    "exampleSentence": "He is meticulous about checking every detail.",
+    "phonetic": "/məˈtɪkjələs/",
+    "exampleSentenceJa": "彼はあらゆる細部の確認に几帳面です。"
   },
   {
     "id": "89",
     "headword": "notion",
     "meaning": "概念、考え",
     "category": "exam",
-    "exampleSentence": "The notion of free will has been debated for centuries."
+    "exampleSentence": "The notion of free will has been debated for centuries.",
+    "phonetic": "/ˈnoʊʃən/",
+    "exampleSentenceJa": "自由意志という概念は何世紀にもわたり議論されてきました。"
   },
   {
     "id": "90",
     "headword": "obsolete",
     "meaning": "廃れた、時代遅れの",
     "category": "exam",
-    "exampleSentence": "This technology quickly became obsolete."
+    "exampleSentence": "This technology quickly became obsolete.",
+    "phonetic": "/ˌɑːbsəˈliːt/",
+    "exampleSentenceJa": "この技術はあっという間に時代遅れになりました。"
   },
   {
     "id": "91",
     "headword": "paradox",
     "meaning": "逆説、矛盾",
     "category": "exam",
-    "exampleSentence": "It's a paradox that saving time often costs more money."
+    "exampleSentence": "It's a paradox that saving time often costs more money.",
+    "phonetic": "/ˈpærədɑːks/",
+    "exampleSentenceJa": "時間の節約がかえってお金を要するというのは逆説です。"
   },
   {
     "id": "92",
     "headword": "perceive",
     "meaning": "知覚する、認識する",
     "category": "exam",
-    "exampleSentence": "People often perceive risk differently."
+    "exampleSentence": "People often perceive risk differently.",
+    "phonetic": "/pərˈsiːv/",
+    "exampleSentenceJa": "人はしばしばリスクを異なる形で認識します。"
   },
   {
     "id": "93",
     "headword": "plausible",
     "meaning": "もっともらしい、あり得る",
     "category": "exam",
-    "exampleSentence": "Her explanation sounded plausible at first."
+    "exampleSentence": "Her explanation sounded plausible at first.",
+    "phonetic": "/ˈplɔːzəbəl/",
+    "exampleSentenceJa": "彼女の説明は最初はもっともらしく聞こえました。"
   },
   {
     "id": "94",
     "headword": "prevalent",
     "meaning": "普及している、広まっている",
     "category": "exam",
-    "exampleSentence": "The disease is more prevalent in certain regions."
+    "exampleSentence": "The disease is more prevalent in certain regions.",
+    "phonetic": "/ˈprevələnt/",
+    "exampleSentenceJa": "その病気は特定の地域でより広まっています。"
   },
   {
     "id": "95",
     "headword": "pragmatic",
     "meaning": "実用的な、現実的な",
     "category": "exam",
-    "exampleSentence": "We need a pragmatic solution, not an ideal one."
+    "exampleSentence": "We need a pragmatic solution, not an ideal one.",
+    "phonetic": "/præɡˈmætɪk/",
+    "exampleSentenceJa": "理想ではなく、現実的な解決策が必要です。"
   },
   {
     "id": "96",
     "headword": "reluctant",
     "meaning": "気が進まない、渋々の",
     "category": "exam",
-    "exampleSentence": "He was reluctant to change his opinion."
+    "exampleSentence": "He was reluctant to change his opinion.",
+    "phonetic": "/rɪˈlʌktənt/",
+    "exampleSentenceJa": "彼は自分の意見を変えることに気が進みませんでした。"
   },
   {
     "id": "97",
     "headword": "skepticism",
     "meaning": "懐疑論、懐疑的な態度",
     "category": "exam",
-    "exampleSentence": "Scientists approach new claims with healthy skepticism."
+    "exampleSentence": "Scientists approach new claims with healthy skepticism.",
+    "phonetic": "/ˈskeptɪsɪzəm/",
+    "exampleSentenceJa": "科学者は新しい主張に健全な懐疑心を持って向き合います。"
   },
   {
     "id": "98",
     "headword": "subsequent",
     "meaning": "その後の、続く",
     "category": "exam",
-    "exampleSentence": "The subsequent events proved her theory correct."
+    "exampleSentence": "The subsequent events proved her theory correct.",
+    "phonetic": "/ˈsʌbsɪkwənt/",
+    "exampleSentenceJa": "その後の出来事が彼女の理論の正しさを証明しました。"
   },
   {
     "id": "99",
     "headword": "tangible",
     "meaning": "明白な、具体的な",
     "category": "exam",
-    "exampleSentence": "We need tangible proof before making a decision."
+    "exampleSentence": "We need tangible proof before making a decision.",
+    "phonetic": "/ˈtændʒəbəl/",
+    "exampleSentenceJa": "決定を下す前に具体的な証拠が必要です。"
   },
   {
     "id": "100",
     "headword": "unprecedented",
     "meaning": "前例のない",
     "category": "exam",
-    "exampleSentence": "The company saw unprecedented growth last year."
+    "exampleSentence": "The company saw unprecedented growth last year.",
+    "phonetic": "/ʌnˈpresɪdentɪd/",
+    "exampleSentenceJa": "その会社は昨年、前例のない成長を遂げました。"
   }
 ]

@@ -22,6 +22,8 @@ struct QuizView: View {
     @State private var missedWords: [Word] = []
     @State private var advanceTask: Task<Void, Never>?
 
+    @AppStorage("autoPronounceEnabled") private var autoPronounceEnabled = true
+
     private let sessionSize = 10
     /// 正解時に自動で次の問題へ進むまでの待ち時間（例文を一瞬確認できる程度）
     private let autoAdvanceDelay: Duration = .seconds(1.4)
@@ -60,47 +62,63 @@ struct QuizView: View {
     private var quizContent: some View {
         let word = session[currentIndex]
 
-        return VStack(spacing: 20) {
-            progressHeader
+        return ScrollView {
+            VStack(spacing: 20) {
+                progressHeader
 
-            VStack(spacing: 12) {
-                Text(word.headword)
-                    .font(.system(size: 34, weight: .bold))
-                    .multilineTextAlignment(.center)
+                VStack(spacing: 12) {
+                    Text(word.headword)
+                        .font(.system(size: 34, weight: .bold))
+                        .multilineTextAlignment(.center)
 
-                Button {
-                    SpeechService.shared.speak(word.headword)
-                } label: {
-                    Label("発音を聞く", systemImage: "speaker.wave.2.fill")
-                }
-                .buttonStyle(.bordered)
-            }
-            .padding(.vertical, 16)
-
-            VStack(spacing: 12) {
-                ForEach(choices, id: \.id) { choice in
-                    choiceButton(choice, correctWord: word)
-                }
-            }
-
-            if isAnswered {
-                feedbackBanner(correctWord: word)
-                exampleCard(word)
-
-                if lastAnswerWasCorrect {
-                    Label("まもなく次の問題へ…", systemImage: "arrow.right.circle")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                } else {
-                    Button("次へ") {
-                        goToNext()
+                    if !word.phonetic.isEmpty {
+                        Text(word.phonetic)
+                            .font(.title3)
+                            .foregroundStyle(.secondary)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .frame(maxWidth: .infinity)
+
+                    Button {
+                        SpeechService.shared.speak(word.headword)
+                    } label: {
+                        Label("発音を聞く", systemImage: "speaker.wave.2.fill")
+                    }
+                    .buttonStyle(.bordered)
+                }
+                .padding(.vertical, 16)
+
+                VStack(spacing: 12) {
+                    ForEach(choices, id: \.id) { choice in
+                        choiceButton(choice, correctWord: word)
+                    }
+                }
+
+                if isAnswered {
+                    feedbackBanner(correctWord: word)
+                    exampleCard(word)
+
+                    if lastAnswerWasCorrect {
+                        Label("まもなく次の問題へ…", systemImage: "arrow.right.circle")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
                 }
             }
-
-            Spacer()
+        }
+        .scrollBounceBehavior(.basedOnSize)
+        .safeAreaInset(edge: .bottom) {
+            // コンテンツ量に関わらず必ず押せるよう、「次へ」は画面下部に固定する
+            if isAnswered && !lastAnswerWasCorrect {
+                Button {
+                    goToNext()
+                } label: {
+                    Text("次へ")
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 6)
+                }
+                .buttonStyle(.borderedProminent)
+                .padding(.top, 8)
+                .background(.bar)
+            }
         }
     }
 
@@ -120,8 +138,16 @@ struct QuizView: View {
         let isSelectedChoice = choice.id == selectedChoiceID
 
         let label = HStack {
-            Text(choice.meaning)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(choice.meaning)
+                // 回答後は誤答選択肢にも対応する英単語を出し、ダミーからも学べるようにする
+                if isAnswered {
+                    Text(choice.headword)
+                        .font(.caption)
+                        .opacity(0.85)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
             if isAnswered && isCorrectChoice {
                 Image(systemName: "checkmark.circle.fill")
             } else if isAnswered && isSelectedChoice {
@@ -130,12 +156,13 @@ struct QuizView: View {
         }
         .padding(.vertical, 4)
 
+        // .disabled() は回答後の正誤カラーまでグレーアウトしてしまうため使わない。
+        // 多重回答は select() 冒頭の guard で防ぐ。
         let button = Button {
             select(choice, correctWord: correctWord)
         } label: {
             label.frame(maxWidth: .infinity).padding(.vertical, 6)
         }
-        .disabled(isAnswered)
 
         if !isAnswered {
             button.buttonStyle(.bordered).tint(.accentColor)
@@ -176,6 +203,12 @@ struct QuizView: View {
             Text(word.exampleSentence)
                 .font(.callout)
                 .frame(maxWidth: .infinity, alignment: .leading)
+            if !word.exampleSentenceJa.isEmpty {
+                Text(word.exampleSentenceJa)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
         }
         .padding()
         .background(Color(.secondarySystemBackground))
@@ -218,10 +251,24 @@ struct QuizView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
 
-                Button("もう一度") {
-                    startSession()
+                if !missedWords.isEmpty {
+                    Button("間違えた単語だけもう一度（\(missedWords.count)語）") {
+                        startSession(pool: missedWords)
+                    }
+                    .buttonStyle(.borderedProminent)
                 }
-                .buttonStyle(.borderedProminent)
+
+                if missedWords.isEmpty {
+                    Button("もう一度") {
+                        startSession()
+                    }
+                    .buttonStyle(.borderedProminent)
+                } else {
+                    Button("もう一度（全\(session.count)語）") {
+                        startSession()
+                    }
+                    .buttonStyle(.bordered)
+                }
             }
             .padding(.top, 24)
         }
@@ -234,19 +281,56 @@ struct QuizView: View {
         startSession()
     }
 
-    private func startSession() {
+    /// - Parameter pool: 出題する単語を明示的に指定する場合に使う（例: 間違えた単語だけの再挑戦）。
+    ///   nil の場合は `words` から復習優先＋重み付きランダムでセッションを組み立てる。
+    private func startSession(pool: [Word]? = nil) {
         advanceTask?.cancel()
         currentIndex = 0
         correctInSession = 0
         isAnswered = false
         missedWords = []
 
-        let reviewWords = words.filter(\.needsReview).shuffled()
-        let otherWords = words.filter { !$0.needsReview }.shuffled()
-        let pool = reviewWords + otherWords
-
-        session = Array(pool.prefix(sessionSize))
+        if let pool {
+            session = Array(pool.shuffled().prefix(sessionSize))
+        } else {
+            let reviewWords = words.filter(\.needsReview).shuffled()
+            let remainingSlots = max(0, sessionSize - reviewWords.count)
+            let candidates = words.filter { !$0.needsReview }
+            let otherWords = weightedSample(candidates, count: remainingSlots, weight: reviewPriorityWeight)
+            session = Array((reviewWords + otherWords).prefix(sessionSize))
+        }
         prepareChoices()
+    }
+
+    /// 未学習の単語や間違いが多い単語ほど出やすくなる重み。
+    /// 本格的なSRSではなく、復習優先度に軽く傾ける程度の簡易ロジック。
+    private func reviewPriorityWeight(_ word: Word) -> Double {
+        guard word.isLearned else { return 1.4 }
+        return max(0.3, 1.0 + Double(word.incorrectCount) - Double(word.correctCount) * 0.25)
+    }
+
+    /// 重みに応じた復元抽出なしのランダムサンプリング（ルーレット選択）
+    private func weightedSample(_ items: [Word], count: Int, weight: (Word) -> Double) -> [Word] {
+        guard count > 0, !items.isEmpty else { return [] }
+        var pool = items
+        var weights = items.map { max(weight($0), 0.01) }
+        var result: [Word] = []
+
+        for _ in 0..<min(count, pool.count) {
+            let total = weights.reduce(0, +)
+            var r = Double.random(in: 0..<total)
+            var pickedIndex = weights.count - 1
+            for (i, w) in weights.enumerated() {
+                if r < w {
+                    pickedIndex = i
+                    break
+                }
+                r -= w
+            }
+            result.append(pool.remove(at: pickedIndex))
+            weights.remove(at: pickedIndex)
+        }
+        return result
     }
 
     private func prepareChoices() {
@@ -260,6 +344,10 @@ struct QuizView: View {
         choices = (wrongChoices + [correctWord]).shuffled()
         isAnswered = false
         selectedChoiceID = nil
+
+        if autoPronounceEnabled {
+            SpeechService.shared.speak(correctWord.headword)
+        }
     }
 
     private func select(_ choice: Word, correctWord: Word) {

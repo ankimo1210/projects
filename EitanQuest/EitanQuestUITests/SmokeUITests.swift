@@ -7,17 +7,19 @@ final class SmokeUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-    @MainActor
-    func testCategoryToQuizToStatsFlow() throws {
-        let app = XCUIApplication()
-        app.launch()
-
-        // 初回起動時の通知許可ダイアログ（SpringBoard側）を閉じる
+    private func dismissNotificationPromptIfNeeded(_ app: XCUIApplication) {
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         let allowButton = springboard.buttons["許可"]
         if allowButton.waitForExistence(timeout: 3) {
             allowButton.tap()
         }
+    }
+
+    @MainActor
+    func testCategoryToQuizToStatsFlow() throws {
+        let app = XCUIApplication()
+        app.launch()
+        dismissNotificationPromptIfNeeded(app)
 
         // カテゴリ選択画面
         let dailyRow = app.staticTexts["日常会話"]
@@ -31,32 +33,85 @@ final class SmokeUITests: XCTestCase {
         XCTAssertTrue(speakButton.waitForExistence(timeout: 5), "クイズ画面に「発音を聞く」ボタンが出ること")
         XCTAssertTrue(app.staticTexts["1 / 10"].exists, "問題番号 1 / 10 が表示されること")
 
-        // 選択肢（既知のボタン以外）を1つタップ
         let knownLabels = ["発音を聞く", "次へ", "学習", "統計", "カテゴリを選択", "Back"]
-        let predicate = NSPredicate(format: "NOT (label IN %@)", knownLabels)
-        let choice = app.buttons.matching(predicate).firstMatch
-        XCTAssertTrue(choice.waitForExistence(timeout: 3), "4択の選択肢が表示されること")
-        choice.tap()
+        let choicePredicate = NSPredicate(format: "NOT (label IN %@)", knownLabels)
+        var sawWrongAnswer = false
 
-        // 回答後: 正誤バナーと例文カードが出る
-        let correctBanner = app.staticTexts["正解！"]
-        let wrongBanner = app.staticTexts["おしい！"]
-        let bannerShown = correctBanner.waitForExistence(timeout: 3) || wrongBanner.exists
-        XCTAssertTrue(bannerShown, "回答後に正誤フィードバックバナーが出ること")
-        XCTAssertTrue(app.staticTexts["例文"].exists, "回答後に例文カードが表示されること")
+        // 10問すべて回答し、結果画面まで進める
+        for _ in 0..<10 {
+            let choice = app.buttons.matching(choicePredicate).firstMatch
+            XCTAssertTrue(choice.waitForExistence(timeout: 3), "4択の選択肢が表示されること")
+            choice.tap()
 
-        // 正解時は自動遷移、不正解時は「次へ」で進む
-        if wrongBanner.exists {
-            let nextButton = app.buttons["次へ"]
-            XCTAssertTrue(nextButton.waitForExistence(timeout: 3), "不正解時に「次へ」ボタンが出ること")
-            nextButton.tap()
+            let correctBanner = app.staticTexts["正解！"]
+            let wrongBanner = app.staticTexts["おしい！"]
+            let bannerShown = correctBanner.waitForExistence(timeout: 3) || wrongBanner.exists
+            XCTAssertTrue(bannerShown, "回答後に正誤フィードバックバナーが出ること")
+            XCTAssertTrue(app.staticTexts["例文"].exists, "回答後に例文カードが表示されること")
+
+            if wrongBanner.exists {
+                sawWrongAnswer = true
+                let nextButton = app.buttons["次へ"]
+                XCTAssertTrue(nextButton.waitForExistence(timeout: 3), "不正解時に「次へ」ボタンが出ること")
+                nextButton.tap()
+            } else {
+                // 正解時は自動遷移を待つ
+                sleep(2)
+            }
         }
-        XCTAssertTrue(app.staticTexts["2 / 10"].waitForExistence(timeout: 5), "次の問題 2 / 10 に進むこと")
+
+        // 結果画面
+        XCTAssertTrue(app.staticTexts["お疲れさまでした！"].waitForExistence(timeout: 5), "結果画面が表示されること")
+        if sawWrongAnswer {
+            let retryMissedPredicate = NSPredicate(format: "label BEGINSWITH '間違えた単語だけ'")
+            XCTAssertTrue(app.buttons.matching(retryMissedPredicate).firstMatch.exists, "間違いがあった場合は「間違えた単語だけもう一度」ボタンが出ること")
+        }
 
         // 統計タブへ切り替え
         app.tabBars.buttons["統計"].tap()
         XCTAssertTrue(app.navigationBars["学習統計"].waitForExistence(timeout: 5), "統計画面が表示されること")
         XCTAssertTrue(app.staticTexts["学習済み単語数"].exists)
         XCTAssertTrue(app.staticTexts["正答率"].exists)
+    }
+
+    @MainActor
+    func testSettingsToggle() throws {
+        let app = XCUIApplication()
+        app.launch()
+        dismissNotificationPromptIfNeeded(app)
+
+        XCTAssertTrue(app.staticTexts["日常会話"].waitForExistence(timeout: 5))
+
+        app.buttons["settingsButton"].tap()
+        let toggle = app.switches["autoPronounceToggle"]
+        XCTAssertTrue(toggle.waitForExistence(timeout: 5), "設定シートに自動発音トグルが表示されること")
+
+        let initialValue = toggle.value as? String
+        // Toggle の accessibilityIdentifier は行全体のラッパーに付くため、
+        // 実際にヒットテスト可能なスイッチ本体（子要素）をタップする
+        toggle.switches.firstMatch.tap()
+        let toggledValue = app.switches["autoPronounceToggle"].value as? String
+        XCTAssertNotEqual(initialValue, toggledValue, "トグルをタップすると値が切り替わること")
+
+        app.buttons["閉じる"].tap()
+        XCTAssertTrue(app.staticTexts["日常会話"].waitForExistence(timeout: 5), "設定を閉じるとカテゴリ選択画面に戻ること")
+    }
+
+    @MainActor
+    func testWordBrowseViaSwipe() throws {
+        let app = XCUIApplication()
+        app.launch()
+        dismissNotificationPromptIfNeeded(app)
+
+        let dailyRow = app.staticTexts["日常会話"]
+        XCTAssertTrue(dailyRow.waitForExistence(timeout: 5))
+        dailyRow.swipeLeft()
+
+        let browseButton = app.buttons["単語一覧"]
+        XCTAssertTrue(browseButton.waitForExistence(timeout: 3), "スワイプで単語一覧ボタンが出ること")
+        browseButton.tap()
+
+        XCTAssertTrue(app.navigationBars["日常会話 一覧"].waitForExistence(timeout: 5), "単語一覧画面が開くこと")
+        XCTAssertTrue(app.staticTexts["appointment"].waitForExistence(timeout: 3), "一覧に単語が表示されること")
     }
 }

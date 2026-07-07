@@ -9,6 +9,10 @@ final class Word {
     var meaning: String
     var categoryRaw: String
     var exampleSentence: String
+    /// 発音記号（IPA、第一アクセント記号付き）。旧データからの軽量マイグレーションのため既定値あり
+    var phonetic: String = ""
+    /// 例文の日本語訳。旧データからの軽量マイグレーションのため既定値あり
+    var exampleSentenceJa: String = ""
 
     // MARK: - 学習進捗
     var correctCount: Int
@@ -30,13 +34,17 @@ final class Word {
         headword: String,
         meaning: String,
         category: WordCategory,
-        exampleSentence: String
+        exampleSentence: String,
+        phonetic: String = "",
+        exampleSentenceJa: String = ""
     ) {
         self.id = id
         self.headword = headword
         self.meaning = meaning
         self.categoryRaw = category.rawValue
         self.exampleSentence = exampleSentence
+        self.phonetic = phonetic
+        self.exampleSentenceJa = exampleSentenceJa
         self.correctCount = 0
         self.incorrectCount = 0
         self.needsReview = false

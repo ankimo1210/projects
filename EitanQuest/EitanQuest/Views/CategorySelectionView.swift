@@ -5,10 +5,12 @@ import SwiftData
 private enum QuizDestination: Hashable {
     case category(WordCategory)
     case review
+    case browse(WordCategory)
 }
 
 struct CategorySelectionView: View {
     @Query private var words: [Word]
+    @State private var showSettings = false
 
     private var reviewCount: Int {
         words.filter { $0.needsReview }.count
@@ -21,6 +23,12 @@ struct CategorySelectionView: View {
                     ForEach(WordCategory.allCases) { category in
                         NavigationLink(value: QuizDestination.category(category)) {
                             CategoryRow(category: category, words: wordsFor(category))
+                        }
+                        .swipeActions(edge: .trailing) {
+                            NavigationLink(value: QuizDestination.browse(category)) {
+                                Label("単語一覧", systemImage: "list.bullet")
+                            }
+                            .tint(category.tint)
                         }
                     }
                 }
@@ -44,7 +52,22 @@ struct CategorySelectionView: View {
                     QuizView(words: wordsFor(category), title: category.displayName)
                 case .review:
                     QuizView(words: words.filter { $0.needsReview }, title: "苦手単語の復習")
+                case .browse(let category):
+                    WordListView(words: wordsFor(category), title: "\(category.displayName) 一覧")
                 }
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showSettings = true
+                    } label: {
+                        Image(systemName: "gearshape")
+                    }
+                    .accessibilityIdentifier("settingsButton")
+                }
+            }
+            .sheet(isPresented: $showSettings) {
+                SettingsView()
             }
         }
     }
