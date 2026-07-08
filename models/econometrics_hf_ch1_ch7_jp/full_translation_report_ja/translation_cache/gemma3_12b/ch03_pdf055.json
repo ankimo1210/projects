@@ -1,0 +1,13 @@
+{
+  "model": "gemma3:12b",
+  "chapter": 3,
+  "chapter_ja": "高頻度データの実証的性質",
+  "chapter_en": "Empirical Properties of High-Frequency Data",
+  "pdf_page": 55,
+  "printed_page": "40",
+  "source_chars": 739,
+  "translation_chars": 448,
+  "elapsed_seconds": 15.344,
+  "created_at": "2026-06-20T20:55:16",
+  "translation": "40                                              3 高頻度データの経験的性質\n\n\n\n\n図3.4 は、JP Morgan（NYSE）、Microsoft（NASDAQ）、Deutsche Telekom（XETRA）における取引間デュレーション、価格デュレーション、出来高デュレーション、超過出来高デュレーション、超過市場深度デュレーションのヒストグラムを示している。価格デュレーションの集計レベルは、JP Morganでは平均価格水準に対するベーシスポイント、MicrosoftとDeutsche Telekomでは最小ティックサイズで設定されている。超過出来高デュレーションの集計レベルは、平均取引サイズの10倍である。超過市場深度デュレーションの集計レベルは、注文板の平均深度の10%まで10レベル目までである。サンプル期間は、JP MorganとMicrosoftでは2009年6月、Deutsche Telekomでは2010年9月である。"
+}

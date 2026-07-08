@@ -1,0 +1,12 @@
+{
+  "source_pdf": "optvar_ocr.pdf",
+  "pages": 136,
+  "figures_detected": 113,
+  "tables_detected": 22,
+  "equation_candidates_detected": 261,
+  "notes": [
+    "Markdown-first export",
+    "Full-page images preserve all visual content",
+    "OCR text may be noisy for equations"
+  ]
+}

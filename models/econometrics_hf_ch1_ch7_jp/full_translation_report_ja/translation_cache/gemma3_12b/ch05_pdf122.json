@@ -1,0 +1,13 @@
+{
+  "model": "gemma3:12b",
+  "chapter": 5,
+  "chapter_ja": "単変量乗法誤差モデル",
+  "chapter_en": "Univariate Multiplicative Error Models",
+  "pdf_page": 122,
+  "printed_page": "107",
+  "source_chars": 2755,
+  "translation_chars": 1935,
+  "elapsed_seconds": 23.553,
+  "created_at": "2026-06-20T21:14:47",
+  "translation": "5.3 ACDモデルの推定                                                     107\n\n(iii) 「i D xi =\u0002i;0 は厳密に定常かつエルゴードである。\n(iv) 「i \bは非退化である。\n              ˇ\n(v) E \"2i ˇ Fi \u00021 < 1 a.s.\n(vi) supi E Œ ln ˇ0 C ˛0 \"i j Fi \u00021 \u0003 < 0 a:s: h        i\n                       P                   P\n(vii) ln L.XI \u0002/ D niD1 li .\u0002/ D \u0004 niD1 ln \u0002i C \u0002xii ; where \u0002i D ! C˛xi \u00021 C\n       ˇ\u0002i \u00021 .                                         P\n(viii) \u0002 0 は、n\u00021 niD1 EŒli .\u0002/ \u0004 li .\u0002 0 /\u0003 を最大化する一意に識別可能な値である。\nThen,\n                    \b                  \u00021=2 p                d\n                        Aı\u00021 Bı Aı\u00021          n.\u0002O \u0004 \u0002 0 / ! N .0; Ip /\n\nand\n                                     p                            p\n                            O ı \u0004 Aı !\n                            A          0     and BO ı \u0004 Bı ! 0:\n\nProof: Lee and Hansen (1994), p. 47ff. を参照のこと。                                            \u0002\nこれらの結果は、˛ C ˇ D 1 の場合にも有効である。さらに、標準化された\nデュレーションは、独立同一分布に従う必要はない。むしろ、それらは厳密に定常かつエルゴードである必要がある。この性質は、Drost\nand Werker (2004) が導入した、いわゆる半パラメータACDモデルを含む、より広範なモデルクラスにBollerslev and Wooldridge (1992) の結果を一般化するものである。注意すべきは、これらの結果は線形EACD(1,1)モデルに基づいているため、(非線形) EACD(P ,Q)モデルのようなより一般的なケースには必ずしも適用できないということである。いずれにしても、ACDモデルのQML推定における重要な要件は、条件付き平均制約の有効性、すなわち条件付き平均関数 \u0002i の正しい仕様である。この仮定については、5.6節でより詳細に検討する。\nExponential QML推定量の漸近一致性は、そのスコア関数が、以下の性質を持つ無条件モーメント関数に対応することと本質的に関連しているという事実から生じる。\n\n                        EŒsi .\u0002 0 /\u0003 D 0;   \u0002 0 2 \u0003;     i D 1; : : : ; n:       (5.19)\n\nこれにより、対応するモーメント推定量を構築することができる。Drost\nand Werker (2004) および Engle and Gallo (2006) が議論するように、この関係は、ガンマ分布を選択することによっても代替的に達成できる。 (5.16) からわかるように、単一の観測値 i の Exponential QML スコアへの寄与は、次のように書くことができる。\n\n                                                      @\n                                 si .\u0002/ D .\"i \u0004 1/      ln \u0002i :                  (5.20)\n                                                     @\u0002\n次に、ACDイノベーション \"i が正規化されたガンマ分布に従うと仮定する。すなわち、\"i \u0002 G.m; m/ であり、EŒ\"i \u0003 D 1 (補足Aを参照) であり、確率密度関数が"
+}

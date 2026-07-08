@@ -1,0 +1,60 @@
+# Page 021
+
+![Page 021](../assets/page_images/page-021.jpg)
+
+## OCR layout text
+
+```text
+Morgan Stanley                                                                                         Confidential
+
+                                      d
+                  subject to Hy < S°(qi t+ ui) < Hu,                                                            (6a)
+                                     i=l
+
+                               -Bisatu<sB,                Vie ld                                                (6b)
+                               —Sisu< Si,           Vie [d.                                                     (6c)
+If position increase is not allowed, we incorporate the extra constraints given in Eqs.
+3.2.5       Reformulation of the constraints
+
+In this section, we simplify and reformulate the constraints. We first consider the case when position
+increase is allowed. Under this scenario, there are some cases where the constraints are contra-
+dictory. In that situation the priority is put on the trading size constraint (6c) and, if applicable,
+the position increase constraints. More specifically, if several constraints cannot be simultaneously
+satisfied, the Opt-Var solution will at least satisfy (6c) and (5). After this, we look at the case
+when position increase is not allowed.
+
+    « Inconsistent       trading   size and     bucket    risk constraints.      In the case that there are no
+
+        prescribed size limit that bring the bucket risk into the admissible range. In this case, we
+        would like for the autohedger to propose trades so as to shift the bucket risk as much as
+
+        can be seen (details are provided in the appendix to this section - see
+        can be imposed on the algorithm by modifying the bucket risk const
+                                   min(—B; — q;,5;) < uj < max(B; — gq, —S;).
+        This conjunction of this bucket risk constraint and the trade size contraint can be jointly
+        expressed as
+                        max(min(—B;— qi, $;),—Si) < ui < min(max(B; — qi, —5;),Si).                               (7)
+        In the event that position increase is disallowed, we incorporate (5) into (7), yielding (again,
+        see appendix section
+
+
+                  max(—qi,—S:) < ui < min(max(B; — qi,—S;),0)               Vi [d]     such that gq >0          (8a)
+                    max(min(—B; — q;,5;),0) <u; < min(—g;,S,;)              Vie [d)    such that g, <0.         (8b)
+    + Inconsistent trading size and hedgeable risk limit constraints. It may further be the
+      case that after the relaxations described above, the compound trade size constraints remain
+        inconsistent with the total risk constraint            Let us use SE, SY to denote respectively the
+        final lower and upper constraints on the trai size ; (which may be read from (7) in the
+        case position increase is allowed, and either             , depending on the sign of gi, when
+        position increase is disallowed). Then, for example, it may be that we have
+
+                                                 ys (a + a)        > Au,
+                                                 i=1
+   “This is effectively a business decision. Mathematically, there are (of course) myriad ways to reconcile the con-
+straints.
+
+
+
+130115: Opt-Var                                                                                     Page 21 of 136
+
+                          [git] « Branch: iropt-var@be27d1a = Release:       (2024-10-31)
+```

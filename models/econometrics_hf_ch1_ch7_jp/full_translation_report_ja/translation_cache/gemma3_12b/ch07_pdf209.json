@@ -1,0 +1,13 @@
+{
+  "model": "gemma3:12b",
+  "chapter": 7,
+  "chapter_ja": "ベクトル乗法誤差モデル",
+  "chapter_en": "Vector Multiplicative Error Models",
+  "pdf_page": 209,
+  "printed_page": "194",
+  "source_chars": 554,
+  "translation_chars": 375,
+  "elapsed_seconds": 2.577,
+  "created_at": "2026-06-20T21:48:02",
+  "translation": "194                                                       7 ベクトル乗法誤差モデル（ベクトル乗法誤差モデル）\n\nLiesenfeld R (1998) 動的な二変量混合モデル：価格と取引量の行動モデリング. J Bus Econ Stat 16:101–109\nManganelli S (2005) 取引のデュレーション、出来高、ボラティリティへの影響. J Finan Markets 8:377–399\nRichard J-F, Zhang W (2007) 効率的な高次元重要度サンプリング. J Econom 141:1385–1411\nXu XE, Wu C (1999) 日中のリターンボラティリティ、取引、出来高の関係. Int Rev Econ Fin 8:375–397"
+}

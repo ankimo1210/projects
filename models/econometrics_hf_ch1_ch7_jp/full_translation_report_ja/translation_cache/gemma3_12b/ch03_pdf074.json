@@ -1,0 +1,13 @@
+{
+  "model": "gemma3:12b",
+  "chapter": 3,
+  "chapter_ja": "高頻度データの実証的性質",
+  "chapter_en": "Empirical Properties of High-Frequency Data",
+  "pdf_page": 74,
+  "printed_page": "59",
+  "source_chars": 447,
+  "translation_chars": 277,
+  "elapsed_seconds": 10.529,
+  "created_at": "2026-06-20T21:00:11",
+  "translation": "3.5 時間集計データの性質                                                      59\n\n図3.22 30秒ごとの取引数、累積取引高、累積純買い量、ビッド・アスク・スプレッド、レベル1の市場深度、および相対純気配深度の変化の自己相関関数（JP Morgan（NYSE）、Microsoft（NASDAQ）、Deutsche Telekom（XETRA））。サンプル期間は、JP MorganとMicrosoftについては2009年6月、Deutsche Telekomについては2010年9月である。"
+}

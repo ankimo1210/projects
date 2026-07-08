@@ -1,0 +1,62 @@
+# Page 022
+
+![Page 022](../assets/page_images/page-022.jpg)
+
+## OCR layout text
+
+```text
+Morgan Stanley                                                                                  Confidential
+
+
+        that is, that even reducing each of our positions by the maximal amount allowed by the size
+        constraints is insufficient to reduce the (signed) risk to the desired maximum level Hy. In this
+        case, we do not call the optimization routine and instead we simply propose to effect these
+        maximal trades for positive inventories: set allowPositionIncrease to False and let uj = SP
+        for i [d] such that q > 0. Similarly, when D4 (qi + SY) < Hh, we simply again disallow
+        position increase and take u; = SY for each i € [d] such that q; < 0.
+
+3.2.6     Existence and uniqueness of a solution.
+
+It can be shown, following standard reasoning, that the Opt-Var optimization problem such as
+detailed above admits a solution, and that this solution is unique. This is formally proved in
+appendix      3.7.
+3.2.7     The infinite horizon cost
+
+The vanilla Opt-Var model (that is, with 6.0 = 0) generates through updates of the portfolio q
+a portfolio trajectory whose only optimized step is the first one. This version of Opt-Var (with
+00 = 1) is predicated on the idea that we expect to save cost when considering the whole path in
+the optimization problem. In appendi:        we demonstrate that solving the single step Opt-Var
+problem with objective given by                is approximately equivalent to solving the infinite horizon
+control problem that arises when one attempts to optimize the entire hedging trajectory. Under
+the simplifying assumption that the quadratic cost matrix M is diagonal - M = mq, we further
+derive a closed-form expression for the infinite horizon cost function (and therefore for the matrix
+P)). Instead of optimizing only the effect of the first action of the trajectory at each risk position
+update, this extra cost takes into account the future variance and costs with the goal to better plan
+each hedge.
+
+3.2.8     Extension to optimal CRB              matching
+
+In the extension of the Opt-Var model to CRB optimization, instead of hedging externally on
+exchanges, the model proposes internal hedges with other desks. The idea is to minimize AIM
+and client variances, while maximizing the matching volume and respecting AIM and client risk
+constraints.
+    Starting from marketable internal client CRB orders, we regroup them by client and product
+by defining c) the marketable quantity client i has in product j. We consider N clients and d assets.
+     The objective function is the following:
+                       n        \t         N               N                             Nd
+               M (s+)                z (1+)         +20 (ei — ui) E (ce - wi) — OD ed
+                      =1                   =             =1                          i=1j=1
+The first term is AIM variance after the optimization, the second one is the sum of client variances
+after the optimization and the last is the opposite of the total trading volume. Indeed we want to
+maximize the total volume hence minimize its opposite. The variables are the u} corresponding to
+the traded quantity in asset j € [d] from client i € [N] to AIM. Hence after the trade, ATM position
+is   q+ Dj ui while client i position is cj — uj.
+
+Client constraints
+
+
+
+130115: Opt-Var                                                                               Page 22 of 136
+
+                           [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)
+```

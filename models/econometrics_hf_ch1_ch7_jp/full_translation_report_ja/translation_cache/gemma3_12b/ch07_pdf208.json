@@ -1,0 +1,13 @@
+{
+  "model": "gemma3:12b",
+  "chapter": 7,
+  "chapter_ja": "ベクトル乗法誤差モデル",
+  "chapter_en": "Vector Multiplicative Error Models",
+  "pdf_page": 208,
+  "printed_page": "193",
+  "source_chars": 3290,
+  "translation_chars": 2337,
+  "elapsed_seconds": 11.411,
+  "created_at": "2026-06-20T21:48:00",
+  "translation": "参考文献                                                                                   193\n\nこの発見は、観測された個々の変数間の因果関係の多くは、個々の構成要素を共同に指示する共通（情報）過程の存在が主に原因となっていることを示唆している。\n   さらに、潜在因子を含めることで、過程固有のイノベーション（˛O 1i i および ˛O 2i i for i D 1; 2; 3）の影響が軽減され、観測主導のダイナミクスにおける持続性が高まる。この発見は、第6.4.2節で示された単変量SMEM過程の結果と一致しており、ニュースは主に潜在因子を通じてモデルに入り、過程固有のイノベーションの影響を軽減するようである。\n   最後に、潜在成分を含めることで、多変量Ljung–Box統計量が減少することが示され、共通成分が個々の過程間の多変量ダイナミクスと相互依存性をうまく捉えていることが示されている。これは、潜在因子を持たないMEMと比較してSVMEMの適合度が向上することを示すベイズ情報量規準の減少によって裏付けられている。興味深いことに、最悪の性能は、観測主導のダイナミクスをすべて省略し、パラメータ主導のダイナミクスのみを含む仕様（4）で観察される。これは、単一の共通自己回帰成分では、多変量システムのダイナミクスを完全に捉えるには明らかに不十分であることを示しており、Andersen (1996) または Liesenfeld (1998) の知見を確認するものである。\n結局のところ、パラメータ主導のダイナミクスも観測主導のダイナミクスも棄却できず、提案された混合モデルの基本的なアイデアを確認するものである。\n\n\n\n参考文献\n\nAndersen TG (1996) Return volatility and trading volume: An information flow interpretation of\n   stochastic volatility. J Finance 51:169–204\nBlume L, Easley D, O‘Hara M (1994) Market statistics and technical analysis. J Finance\n   49(1):153–181\nBodnar T, Hautsch N (2011) Modeling time-varying covariances of trading processes: copula-\n   based dynamic conditional correlation multiplicative error processes. Working Paper,\n   Humboldt-Universität zu Berlin\nChan K, Fong W (2000) Trade size, order imbalance, and the volatility-volume relation. J Finan\n   Econ 57:247–273\nCipollini F, Engle RF, Gallo GM (2007) Vector multiplicative error models: representation and\n   inference. Working Paper, University of Florence\nEngle RF (2002) Dynamic conditional correlation. J Bus Econ Stat 20:339–350\nEngle RF, Hendry DF, Richard JF (1983) Exogeneity. Econometrica 51:277–304\nHautsch N (2008) Capturing common components in high-frequency financial time series: a\n   multivariate stochastic multiplicative error model. J Econ Dyn Control 32:3978–4009\nHautsch N, Jeleskovic V (2008) High-frequency volatility and liquidity. In: Härdle W, Hautsch N,\n   Overbeck L (ed) Applied quantitative finance. Springer, Berlin, Heidelberg\nHautsch N, Malec P, Schienle M (2010) Capturing the zero: a new class of zero-augmented distri-\n   butions and multiplicative error processes. Discussion Paper 2010-055, Humboldt-Universität\n   zu Berlin\nHuang RD, Masulis RW (2003) Trading activity and stock price volatility: evidence from the\n   London stock exchange. J Empir Financ 10:249–269"
+}

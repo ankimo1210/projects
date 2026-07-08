@@ -1,0 +1,61 @@
+# Page 029
+
+![Page 029](../assets/page_images/page-029.jpg)
+
+## OCR layout text
+
+```text
+Morgan Stanley                                                                                          Confidential
+
+
+however, ¥ is unknown (it is what we wish to estimate!). Ledoit and Wolf define the empirical
+quantities
+                                                my _= Tr(Sp
+                                                         BE
+                                                d= ||Sn — mn ll
+                                               p22 _       VR AIX T—Snll®
+                                                nT         as
+                                                bj = min(b,, dy)
+                                                 nad BR
+and prove that
+                                                       2            2
+                                              Sia Fa mayd + SS,
+                                                       B a
+is a consistent estimator of D%, as n + oo. We apply this method with the matrix X where Xij is
+the j-th observation of the centered yield increment of product i, using D*(X) as the final covari-
+ance matrix.
+Outright Risk Holding Time Scaled Covariance Matrix (EU)
+
+    The sample covariance matrix described previously reflects how the movements of the hedge
+instruments are correlated to each other, but it does not contain any information regarding how
+long each risk positions of the hedge stays in our portfolio relative to others. In practice, we
+modify the covariance matrix to account for the holding times, because up-weighting the risk-
+variance contribution from instruments that tend to stay for a long time in the book gives us a
+more comprehensive notion of the portfolio risk. For example, in EU, the 30-year German BUXL
+future position tends to stay longer in the portfolio           than the 10-year German BUND future position,
+because the 10-year point is more liquid and more actively traded than the 30-year point. Therefore,
+from a risk-management perspective, it can be desirable to favour hedge trades that reduce the risk
+in the BUXL bucket, which can be achieved by increasing the variance contribution of BUXL in
+the Opt-Var objective function.
+    Consider two hedge instruments « and y; we say that we hold the risk positions for times T.,
+T,, where T;,Ty denote the average times in between sign changes for the positions (that is, T;
+denotes the average time it takes for a short position to become long, or vice-versa), computed over
+a certain lookback with a sampling frequency f equal to once every five minuteq®} For instrument
+pairs x,y then, the effective time period that there is a correlation between the risk positions in
+x and y is given by Teffective = min{T;,Ty}. Since after Tey;ective, no matter how the yield of
+instrument y moves, our risk in x will not change as the position of x becomes zero. Thus, the cor-
+relation between our risks in « and y becomes zero after Tes ective. Therefore, we propose to scale
+the sample covariance matrix by the holding times via 5 = Yo W, where o denotes clementwise
+multiplication, and W = (Wj) with Wi = min(Tj,T,)/f for i=1,...,d, 7 =1,...,d.
+Risk Decomposition          Holding Time         Scaled Covariance Matrix            (EU)
+
+    ‘An alternative approach for scaling the covariance matrix considered in the EU is to use the
+holding time of the risk decompositions: in EGB, bookrunners monitor the risks of specific spreads
+    5The intraday portfolio risks are sampled every 5 minutes, from London time 7:30- 17:30 (or 08:00 to 17:30 if FLG
+is included), over a certain period. ‘The time lags between sign changes are used to compute the holding times values
+T.
+
+130115: Opt-Var                                                                                      Page 29 of 136
+
+                          [git] « Branch: iropt-var@be27d1a = Release:        (2024-10-31)
+```

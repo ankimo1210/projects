@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>数式候補インデックス</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body data-root="../">
+  <a class="skip-link" href="#content">本文へ移動</a>
+  <div class="layout">
+    
+<aside class="sidebar" aria-label="テキストブックナビゲーション">
+  <div class="brand">
+    <a href="../index.html">Opt-Var HTML</a>
+    <span>日本語テキストブック</span>
+  </div>
+  <form class="search-box" data-search-form>
+    <label for="site-search">OCR検索</label>
+    <input id="site-search" name="q" type="search" placeholder="例: lambda, covariance" autocomplete="off" data-search-input>
+    <div class="search-results" data-search-results aria-live="polite"></div>
+  </form>
+  <form class="page-jump" data-page-jump>
+    <label for="page-number">ページへ移動</label>
+    <div>
+      <input id="page-number" name="page" type="number" min="1" max="136" placeholder="1-136">
+      <button type="submit">開く</button>
+    </div>
+  </form>
+  <nav>
+    <h2>章</h2>
+    <ul class="nav-list">
+      <li><a class="" href="../chapters/front-matter.html">表紙・前付</a></li><li><a class="" href="../chapters/chapter-01.html">1. エグゼクティブサマリー</a></li><li><a class="" href="../chapters/chapter-02.html">2. ビジネスおよびアルゴリズム説明</a></li><li><a class="" href="../chapters/chapter-03.html">3. モデル説明</a></li><li><a class="" href="../chapters/chapter-04.html">4. モデル開発・選定プロセス</a></li><li><a class="" href="../chapters/chapter-05.html">5. モデルテスト</a></li><li><a class="" href="../chapters/chapter-06.html">6. モデルの制約・不確実性・緩和策</a></li><li><a class="" href="../chapters/chapter-07.html">7. モデルオーバーレイと上書き</a></li><li><a class="" href="../chapters/chapter-08.html">8. 本番実装と統制</a></li><li><a class="" href="../chapters/chapter-09.html">9. 継続的なモデル性能モニタリング</a></li><li><a class="" href="../chapters/chapter-10.html">10. モデル変更ログ</a></li><li><a class="" href="../chapters/chapter-11.html">11. 参考文献</a></li><li><a class="" href="../chapters/chapter-12.html">12. 用語定義</a></li><li><a class="" href="../chapters/chapter-13.html">13. 付録</a></li>
+    </ul>
+    <details open>
+      <summary>詳細目次</summary>
+      <ul class="nav-list toc-list">
+        <li><a class="" href="../chapters/chapter-01.html"><span class="toc-num">1</span>エグゼクティブサマリー</a></li><li><a class="" href="../pages/page-005.html#section-1-1"><span class="toc-num">1.1</span>モデルの目的と想定用途</a></li><li><a class="" href="../pages/page-007.html#section-1-2"><span class="toc-num">1.2</span>モデル概要</a></li><li><a class="" href="../pages/page-008.html#section-1-3"><span class="toc-num">1.3</span>主な前提と制約</a></li><li><a class="" href="../pages/page-008.html#section-1-4"><span class="toc-num">1.4</span>全体的なモデル性能評価</a></li><li><a class="" href="../pages/page-008.html#section-1-5"><span class="toc-num">1.5</span>結果サマリー</a></li><li><a class="" href="../chapters/chapter-02.html"><span class="toc-num">2</span>ビジネスおよびアルゴリズム説明</a></li><li><a class="" href="../pages/page-009.html#section-2-1"><span class="toc-num">2.1</span>Autohedger概要</a></li><li><a class="" href="../pages/page-010.html#section-2-2"><span class="toc-num">2.2</span>ポートフォリオリスク</a></li><li><a class="" href="../pages/page-010.html#section-2-3"><span class="toc-num">2.3</span>入出力量</a></li><li><a class="" href="../pages/page-012.html#section-2-4"><span class="toc-num">2.4</span>Opt-Varの原理</a></li><li><a class="" href="../pages/page-015.html#section-2-5"><span class="toc-num">2.5</span>Autohedger内の機能コンポーネント</a></li><li><a class="" href="../pages/page-017.html#section-2-6"><span class="toc-num">2.6</span>規制・ポリシー要件</a></li><li><a class="" href="../chapters/chapter-03.html"><span class="toc-num">3</span>モデル説明</a></li><li><a class="" href="../pages/page-017.html#section-3-1"><span class="toc-num">3.1</span>モデル前提</a></li><li><a class="" href="../pages/page-018.html#section-3-2"><span class="toc-num">3.2</span>モデル仕様</a></li><li><a class="" href="../pages/page-025.html#section-3-3"><span class="toc-num">3.3</span>モデル入力とデータ</a></li><li><a class="" href="../pages/page-027.html#section-3-4"><span class="toc-num">3.4</span>モデル出力</a></li><li><a class="" href="../pages/page-027.html#section-3-5"><span class="toc-num">3.5</span>モデル較正とパラメータ推定</a></li><li><a class="" href="../pages/page-034.html#section-3-6"><span class="toc-num">3.6</span>数値実装</a></li><li><a class="" href="../pages/page-036.html#section-3-7"><span class="toc-num">3.7</span>付録：技術詳細</a></li><li><a class="" href="../chapters/chapter-04.html"><span class="toc-num">4</span>モデル開発・選定プロセス</a></li><li><a class="" href="../pages/page-040.html#section-4-1"><span class="toc-num">4.1</span>モデル分割と変数選択</a></li><li><a class="" href="../pages/page-041.html#section-4-2"><span class="toc-num">4.2</span>代替理論・代替アプローチ</a></li><li><a class="" href="../pages/page-041.html#section-4-3"><span class="toc-num">4.3</span>主要ステークホルダー・独立ソースからの貢献</a></li><li><a class="" href="../chapters/chapter-05.html"><span class="toc-num">5</span>モデルテスト</a></li><li><a class="" href="../pages/page-041.html#section-5-1"><span class="toc-num">5.1</span>モデル診断テスト</a></li><li><a class="" href="../pages/page-057.html#section-5-2"><span class="toc-num">5.2</span>シナリオ分析とストレステスト</a></li><li><a class="" href="../pages/page-067.html#section-5-3"><span class="toc-num">5.3</span>感応度分析</a></li><li><a class="" href="../pages/page-086.html#section-5-4"><span class="toc-num">5.4</span>ベンチマーキング</a></li><li><a class="" href="../pages/page-089.html#section-5-5"><span class="toc-num">5.5</span>結果分析とバックテスト</a></li><li><a class="" href="../pages/page-092.html#section-5-6"><span class="toc-num">5.6</span>付録：技術詳細</a></li><li><a class="" href="../chapters/chapter-06.html"><span class="toc-num">6</span>モデルの制約・不確実性・緩和策</a></li><li><a class="" href="../chapters/chapter-07.html"><span class="toc-num">7</span>モデルオーバーレイと上書き</a></li><li><a class="" href="../chapters/chapter-08.html"><span class="toc-num">8</span>本番実装と統制</a></li><li><a class="" href="../pages/page-097.html#section-8-1"><span class="toc-num">8.1</span>本番実装</a></li><li><a class="" href="../pages/page-097.html#section-8-2"><span class="toc-num">8.2</span>モデルプロセスと統制</a></li><li><a class="" href="../pages/page-099.html#section-8-3"><span class="toc-num">8.3</span>コード変更管理とバージョン管理</a></li><li><a class="" href="../pages/page-099.html#section-8-4"><span class="toc-num">8.4</span>ソフトウェア開発ライフサイクル</a></li><li><a class="" href="../chapters/chapter-09.html"><span class="toc-num">9</span>継続的なモデル性能モニタリング</a></li><li><a class="" href="../pages/page-103.html#section-9-1"><span class="toc-num">9.1</span>指標と閾値</a></li><li><a class="" href="../pages/page-104.html#section-9-2"><span class="toc-num">9.2</span>エスカレーション</a></li><li><a class="" href="../pages/page-104.html#section-9-3"><span class="toc-num">9.3</span>MRMと共有されるデータ</a></li><li><a class="" href="../pages/page-106.html#section-9-4"><span class="toc-num">9.4</span>日中モニタリングツール</a></li><li><a class="" href="../chapters/chapter-10.html"><span class="toc-num">10</span>モデル変更ログ</a></li><li><a class="" href="../chapters/chapter-11.html"><span class="toc-num">11</span>参考文献</a></li><li><a class="" href="../chapters/chapter-12.html"><span class="toc-num">12</span>用語定義</a></li><li><a class="" href="../chapters/chapter-13.html"><span class="toc-num">13</span>付録</a></li><li><a class="" href="../pages/page-110.html#section-13-1"><span class="toc-num">13.1</span>収束テスト図</a></li><li><a class="" href="../pages/page-116.html#section-13-2"><span class="toc-num">13.2</span>ベンチマークテスト図</a></li><li><a class="" href="../pages/page-121.html#section-13-3"><span class="toc-num">13.3</span>結果分析・バックテスト図</a></li>
+      </ul>
+    </details>
+  </nav>
+</aside>
+
+    <main id="content" class="content">
+      
+<nav class="breadcrumb">
+  <a href="../index.html">トップ</a>
+  <span>/</span>
+  <span>数式候補インデックス</span>
+</nav>
+<article class="reference-doc">
+  <h1 id="equation-formula-candidate-index">Equation / Formula Candidate Index</h1>
+<p>OCR math can be noisy. The linked page images are the visual source of truth.</p>
+<h2 id="candidate-1-page-002">Candidate 1 - page 002</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-002.jpg"><img src="../assets/page_images/page-002.jpg" alt="Page 002" loading="lazy"></a><figcaption>Page 002</figcaption></figure>
+<pre class="code-block"><code>15            August 30, 2024              Dynamic Lambda         content added in relevant sec- | eRates US/EU</code></pre>
+<h2 id="candidate-2-page-002">Candidate 2 - page 002</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-002.jpg"><img src="../assets/page_images/page-002.jpg" alt="Page 002" loading="lazy"></a><figcaption>Page 002</figcaption></figure>
+<pre class="code-block"><code>item setistuben|                  FIDALGO_AUTOHEDGER_AM, FIDALGO_AUTOHEDGER_EU</code></pre>
+<h2 id="candidate-3-page-003">Candidate 3 - page 003</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-003.jpg"><img src="../assets/page_images/page-003.jpg" alt="Page 003" loading="lazy"></a><figcaption>Page 003</figcaption></figure>
+<pre class="code-block"><code>[I-1__Model Purpose and Intended Use]. . .                                                                               5</code></pre>
+<h2 id="candidate-4-page-003">Candidate 4 - page 003</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-003.jpg"><img src="../assets/page_images/page-003.jpg" alt="Page 003" loading="lazy"></a><figcaption>Page 003</figcaption></figure>
+<pre class="code-block"><code>[.2__ Model Description Summary]                                                                                         7</code></pre>
+<h2 id="candidate-5-page-003">Candidate 5 - page 003</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-003.jpg"><img src="../assets/page_images/page-003.jpg" alt="Page 003" loading="lazy"></a><figcaption>Page 003</figcaption></figure>
+<pre class="code-block"><code>[L.3_Key Assumptions and Limitations]                                                                                    8</code></pre>
+<h2 id="candidate-6-page-003">Candidate 6 - page 003</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-003.jpg"><img src="../assets/page_images/page-003.jpg" alt="Page 003" loading="lazy"></a><figcaption>Page 003</figcaption></figure>
+<pre class="code-block"><code>[2.3__Inputs and Outputs Volume|                                                                                       10</code></pre>
+<h2 id="candidate-7-page-003">Candidate 7 - page 003</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-003.jpg"><img src="../assets/page_images/page-003.jpg" alt="Page 003" loading="lazy"></a><figcaption>Page 003</figcaption></figure>
+<pre class="code-block"><code>—_                                                                                           17</code></pre>
+<h2 id="candidate-8-page-003">Candidate 8 - page 003</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-003.jpg"><img src="../assets/page_images/page-003.jpg" alt="Page 003" loading="lazy"></a><figcaption>Page 003</figcaption></figure>
+<pre class="code-block"><code>(5.3_Sensitivity</code></pre>
+<h2 id="candidate-9-page-003">Candidate 9 - page 003</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-003.jpg"><img src="../assets/page_images/page-003.jpg" alt="Page 003" loading="lazy"></a><figcaption>Page 003</figcaption></figure>
+<pre class="code-block"><code>[5.5__ Outcome Analysis and Backtesting] .                                                                            89</code></pre>
+<h2 id="candidate-10-page-003">Candidate 10 - page 003</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-003.jpg"><img src="../assets/page_images/page-003.jpg" alt="Page 003" loading="lazy"></a><figcaption>Page 003</figcaption></figure>
+<pre class="code-block"><code>[5.6_Appendix: Technical Details]... .                                                                                 92</code></pre>
+<h2 id="candidate-11-page-003">Candidate 11 - page 003</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-003.jpg"><img src="../assets/page_images/page-003.jpg" alt="Page 003" loading="lazy"></a><figcaption>Page 003</figcaption></figure>
+<pre class="code-block"><code>[6_ Model Limitations, Uncertainties and Mitigations|                                                                      97</code></pre>
+<h2 id="candidate-12-page-003">Candidate 12 - page 003</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-003.jpg"><img src="../assets/page_images/page-003.jpg" alt="Page 003" loading="lazy"></a><figcaption>Page 003</figcaption></figure>
+<pre class="code-block"><code>[7_Model Overlays and Overrides]                                                                                           97</code></pre>
+<h2 id="candidate-13-page-010">Candidate 13 - page 010</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-010.jpg"><img src="../assets/page_images/page-010.jpg" alt="Page 010" loading="lazy"></a><figcaption>Page 010</figcaption></figure>
+<pre class="code-block"><code>Back bond futures are handled by a separate instance of Opt-Var with zero lambda and zero</code></pre>
+<h2 id="candidate-14-page-010">Candidate 14 - page 010</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-010.jpg"><img src="../assets/page_images/page-010.jpg" alt="Page 010" loading="lazy"></a><figcaption>Page 010</figcaption></figure>
+<pre class="code-block"><code>The projected risk to hedge instrument i is given by Risk; = tradeSize * HedgeRatio;. The green</code></pre>
+<h2 id="candidate-15-page-010">Candidate 15 - page 010</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-010.jpg"><img src="../assets/page_images/page-010.jpg" alt="Page 010" loading="lazy"></a><figcaption>Page 010</figcaption></figure>
+<pre class="code-block"><code>See section [3] for the definition of lambda and bucket risk limit</code></pre>
+<h2 id="candidate-16-page-012">Candidate 16 - page 012</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-012.jpg"><img src="../assets/page_images/page-012.jpg" alt="Page 012" loading="lazy"></a><figcaption>Page 012</figcaption></figure>
+<pre class="code-block"><code>B. We consider the covariance matrix associated to their yield increments             U =   (2   1    110.5</code></pre>
+<h2 id="candidate-17-page-012">Candidate 17 - page 012</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-012.jpg"><img src="../assets/page_images/page-012.jpg" alt="Page 012" loading="lazy"></a><figcaption>Page 012</figcaption></figure>
+<pre class="code-block"><code>0.084‘): and the quadratic. cost matrix. M = ( 200e-8</code></pre>
+<h2 id="candidate-18-page-012">Candidate 18 - page 012</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-012.jpg"><img src="../assets/page_images/page-012.jpg" alt="Page 012" loading="lazy"></a><figcaption>Page 012</figcaption></figure>
+<pre class="code-block"><code>the cost vector C = (v0                                                0                       0. .): We</code></pre>
+<h2 id="candidate-19-page-012">Candidate 19 - page 012</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-012.jpg"><img src="../assets/page_images/page-012.jpg" alt="Page 012" loading="lazy"></a><figcaption>Page 012</figcaption></figure>
+<pre class="code-block"><code>. portfolio. qo =</code></pre>
+<h2 id="candidate-20-page-012">Candidate 20 - page 012</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-012.jpg"><img src="../assets/page_images/page-012.jpg" alt="Page 012" loading="lazy"></a><figcaption>Page 012</figcaption></figure>
+<pre class="code-block"><code>(&quot;5&quot;)          .         . parameter \. The Opt-Var</code></pre>
+<h2 id="candidate-21-page-012">Candidate 21 - page 012</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-012.jpg"><img src="../assets/page_images/page-012.jpg" alt="Page 012" loading="lazy"></a><figcaption>Page 012</figcaption></figure>
+<pre class="code-block"><code>min A(go + uo)&quot; (qo + wo) + CT luo] + ug Muo.</code></pre>
+<h2 id="candidate-22-page-012">Candidate 22 - page 012</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-012.jpg"><img src="../assets/page_images/page-012.jpg" alt="Page 012" loading="lazy"></a><figcaption>Page 012</figcaption></figure>
+<pre class="code-block"><code>The first term corresponds to the variance of the portfolio after hedging with an order uo while the</code></pre>
+<h2 id="candidate-23-page-013">Candidate 23 - page 013</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-013.jpg"><img src="../assets/page_images/page-013.jpg" alt="Page 013" loading="lazy"></a><figcaption>Page 013</figcaption></figure>
+<pre class="code-block"><code>point in the plots corresponds to a resolution with the value of \ displayed nearby. As we can see,</code></pre>
+<h2 id="candidate-24-page-013">Candidate 24 - page 013</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-013.jpg"><img src="../assets/page_images/page-013.jpg" alt="Page 013" loading="lazy"></a><figcaption>Page 013</figcaption></figure>
+<pre class="code-block"><code>the variance becomes smaller with a higher \ value and higher hedging ratio in Figure|| and this</code></pre>
+<h2 id="candidate-25-page-013">Candidate 25 - page 013</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-013.jpg"><img src="../assets/page_images/page-013.jpg" alt="Page 013" loading="lazy"></a><figcaption>Page 013</figcaption></figure>
+<pre class="code-block"><code>Figure 9: Pareto frontier of hedging ratio and variance.     Each dot corresponds to the value of \</code></pre>
+<h2 id="candidate-26-page-014">Candidate 26 - page 014</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-014.jpg"><img src="../assets/page_images/page-014.jpg" alt="Page 014" loading="lazy"></a><figcaption>Page 014</figcaption></figure>
+<pre class="code-block"><code>Lambda = 5e-08</code></pre>
+<h2 id="candidate-27-page-014">Candidate 27 - page 014</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-014.jpg"><img src="../assets/page_images/page-014.jpg" alt="Page 014" loading="lazy"></a><figcaption>Page 014</figcaption></figure>
+<pre class="code-block"><code>_        _ntohedgeseluton wh 2=08.A~ S608 infnts = False</code></pre>
+<h2 id="candidate-28-page-016">Candidate 28 - page 016</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-016.jpg"><img src="../assets/page_images/page-016.jpg" alt="Page 016" loading="lazy"></a><figcaption>Page 016</figcaption></figure>
+<pre class="code-block"><code>Performs portfolio hedging and suggests hedging trades to ensure:                                                      \</code></pre>
+<h2 id="candidate-29-page-019">Candidate 29 - page 019</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-019.jpg"><img src="../assets/page_images/page-019.jpg" alt="Page 019" loading="lazy"></a><figcaption>Page 019</figcaption></figure>
+<pre class="code-block"><code>Fy:      we Ros (q+u) (AD 4+ bcPy)(qt+u) +C&quot;                |u|    t+ulMu—al(q+u)                     (1)</code></pre>
+<h2 id="candidate-30-page-019">Candidate 30 - page 019</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-019.jpg"><img src="../assets/page_images/page-019.jpg" alt="Page 019" loading="lazy"></a><figcaption>Page 019</figcaption></figure>
+<pre class="code-block"><code>‘variance cost’ component Varg = (q + u)&#x27;5(q + u), the sum of the second and third terms we</code></pre>
+<h2 id="candidate-31-page-019">Candidate 31 - page 019</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-019.jpg"><img src="../assets/page_images/page-019.jpg" alt="Page 019" loading="lazy"></a><figcaption>Page 019</figcaption></figure>
+<pre class="code-block"><code>call the ‘trading cost’ (Costy = C&#x27;|u| + u&#x27;Mu),                and the final term is the ‘alpha’ component</code></pre>
+<h2 id="candidate-32-page-019">Candidate 32 - page 019</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-019.jpg"><img src="../assets/page_images/page-019.jpg" alt="Page 019" loading="lazy"></a><figcaption>Page 019</figcaption></figure>
+<pre class="code-block"><code>(q            +u)) P| the variables are:</code></pre>
+<h2 id="candidate-33-page-019">Candidate 33 - page 019</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-019.jpg"><img src="../assets/page_images/page-019.jpg" alt="Page 019" loading="lazy"></a><figcaption>Page 019</figcaption></figure>
+<pre class="code-block"><code>+ \ € R,, risk aversion factor determining the trade-off between risk taking and shedding,</code></pre>
+<h2 id="candidate-34-page-019">Candidate 34 - page 019</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-019.jpg"><img src="../assets/page_images/page-019.jpg" alt="Page 019" loading="lazy"></a><figcaption>Page 019</figcaption></figure>
+<pre class="code-block"><code>measured in 1/$ or 1/€. The choice of the \ value is a business decision based on expert</code></pre>
+<h2 id="candidate-35-page-019">Candidate 35 - page 019</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-019.jpg"><img src="../assets/page_images/page-019.jpg" alt="Page 019" loading="lazy"></a><figcaption>Page 019</figcaption></figure>
+<pre class="code-block"><code>« C=      (ct,c9,...,¢4)&#x27; € R¢ is the linear cost factor measured in bp;</code></pre>
+<h2 id="candidate-36-page-019">Candidate 36 - page 019</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-019.jpg"><img src="../assets/page_images/page-019.jpg" alt="Page 019" loading="lazy"></a><figcaption>Page 019</figcaption></figure>
+<pre class="code-block"><code>+ P\ € S14,       is the positive definite matrix solution to the matrix Riccati equation caracterizing</code></pre>
+<h2 id="candidate-37-page-019">Candidate 37 - page 019</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-019.jpg"><img src="../assets/page_images/page-019.jpg" alt="Page 019" loading="lazy"></a><figcaption>Page 019</figcaption></figure>
+<pre class="code-block"><code>*The variance cost, the infinite horizon cost (q+ u)&quot;da.P(q+ u), and the alpha part a” (q + u) all assume that</code></pre>
+<h2 id="candidate-38-page-019">Candidate 38 - page 019</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-019.jpg"><img src="../assets/page_images/page-019.jpg" alt="Page 019" loading="lazy"></a><figcaption>Page 019</figcaption></figure>
+<pre class="code-block"><code>the next position after hedging will be q + u. However, if P is the matrix of hedge ratios from liquid products to</code></pre>
+<h2 id="candidate-39-page-020">Candidate 39 - page 020</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-020.jpg"><img src="../assets/page_images/page-020.jpg" alt="Page 020" loading="lazy"></a><figcaption>Page 020</figcaption></figure>
+<pre class="code-block"><code>where H, € R_, Hy, € R,, are the hedgeable risk limits within which the net portfolio PVO1 must</code></pre>
+<h2 id="candidate-40-page-020">Candidate 40 - page 020</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-020.jpg"><img src="../assets/page_images/page-020.jpg" alt="Page 020" loading="lazy"></a><figcaption>Page 020</figcaption></figure>
+<pre class="code-block"><code>lio risk is admissible after the optimization - although high values of \ will induce proposed trades</code></pre>
+<h2 id="candidate-41-page-020">Candidate 41 - page 020</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-020.jpg"><img src="../assets/page_images/page-020.jpg" alt="Page 020" loading="lazy"></a><figcaption>Page 020</figcaption></figure>
+<pre class="code-block"><code>minimize    (q+ u) (N+ bx0Py(q+u)+C&quot;\ul+ulMu—al(q+u)</code></pre>
+<h2 id="candidate-42-page-021">Candidate 42 - page 021</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-021.jpg"><img src="../assets/page_images/page-021.jpg" alt="Page 021" loading="lazy"></a><figcaption>Page 021</figcaption></figure>
+<pre class="code-block"><code>subject to Hy &lt; S°(qi t+ ui) &lt; Hu,                                                            (6a)</code></pre>
+<h2 id="candidate-43-page-021">Candidate 43 - page 021</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-021.jpg"><img src="../assets/page_images/page-021.jpg" alt="Page 021" loading="lazy"></a><figcaption>Page 021</figcaption></figure>
+<pre class="code-block"><code>min(—B; — q;,5;) &lt; uj &lt; max(B; — gq, —S;).</code></pre>
+<h2 id="candidate-44-page-021">Candidate 44 - page 021</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-021.jpg"><img src="../assets/page_images/page-021.jpg" alt="Page 021" loading="lazy"></a><figcaption>Page 021</figcaption></figure>
+<pre class="code-block"><code>max(min(—B;— qi, $;),—Si) &lt; ui &lt; min(max(B; — qi, —5;),Si).                               (7)</code></pre>
+<h2 id="candidate-45-page-021">Candidate 45 - page 021</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-021.jpg"><img src="../assets/page_images/page-021.jpg" alt="Page 021" loading="lazy"></a><figcaption>Page 021</figcaption></figure>
+<pre class="code-block"><code>max(—qi,—S:) &lt; ui &lt; min(max(B; — qi,—S;),0)               Vi [d]     such that gq &gt;0          (8a)</code></pre>
+<h2 id="candidate-46-page-021">Candidate 46 - page 021</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-021.jpg"><img src="../assets/page_images/page-021.jpg" alt="Page 021" loading="lazy"></a><figcaption>Page 021</figcaption></figure>
+<pre class="code-block"><code>max(min(—B; — q;,5;),0) &lt;u; &lt; min(—g;,S,;)              Vie [d)    such that g, &lt;0.         (8b)</code></pre>
+<h2 id="candidate-47-page-022">Candidate 47 - page 022</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-022.jpg"><img src="../assets/page_images/page-022.jpg" alt="Page 022" loading="lazy"></a><figcaption>Page 022</figcaption></figure>
+<pre class="code-block"><code>the simplifying assumption that the quadratic cost matrix M is diagonal - M = mq, we further</code></pre>
+<h2 id="candidate-48-page-022">Candidate 48 - page 022</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-022.jpg"><img src="../assets/page_images/page-022.jpg" alt="Page 022" loading="lazy"></a><figcaption>Page 022</figcaption></figure>
+<pre class="code-block"><code>n        \t         N               N                             Nd</code></pre>
+<h2 id="candidate-49-page-023">Candidate 49 - page 023</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-023.jpg"><img src="../assets/page_images/page-023.jpg" alt="Page 023" loading="lazy"></a><figcaption>Page 023</figcaption></figure>
+<pre class="code-block"><code>min(c},0)</code></pre>
+<h2 id="candidate-50-page-023">Candidate 50 - page 023</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-023.jpg"><img src="../assets/page_images/page-023.jpg" alt="Page 023" loading="lazy"></a><figcaption>Page 023</figcaption></figure>
+<pre class="code-block"><code>min |S       c},0]         &lt; S°(c} —u}) &lt;max | $&gt;cj,0]},                       Viel,,N.                     (10)</code></pre>
+<h2 id="candidate-51-page-023">Candidate 51 - page 023</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-023.jpg"><img src="../assets/page_images/page-023.jpg" alt="Page 023" loading="lazy"></a><figcaption>Page 023</figcaption></figure>
+<pre class="code-block"><code>min(q,—B?)</code></pre>
+<h2 id="candidate-52-page-023">Candidate 52 - page 023</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-023.jpg"><img src="../assets/page_images/page-023.jpg" alt="Page 023" loading="lazy"></a><figcaption>Page 023</figcaption></figure>
+<pre class="code-block"><code>min (0jel q/,Hi) &lt;Dj=l (a + i=1Dom) &lt; max (0j=l a, Hu).</code></pre>
+<h2 id="candidate-53-page-023">Candidate 53 - page 023</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-023.jpg"><img src="../assets/page_images/page-023.jpg" alt="Page 023" loading="lazy"></a><figcaption>Page 023</figcaption></figure>
+<pre class="code-block"><code>min(2\Dq—a,—-C) &lt; 24D (: +e «) —a&lt;                                             max(2\Nq—a,C).</code></pre>
+<h2 id="candidate-54-page-023">Candidate 54 - page 023</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-023.jpg"><img src="../assets/page_images/page-023.jpg" alt="Page 023" loading="lazy"></a><figcaption>Page 023</figcaption></figure>
+<pre class="code-block"><code>Otherwise it has to be closer to the stable area. We point out that here \ is AIM risk-aversion</code></pre>
+<h2 id="candidate-55-page-024">Candidate 55 - page 024</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-024.jpg"><img src="../assets/page_images/page-024.jpg" alt="Page 024" loading="lazy"></a><figcaption>Page 024</figcaption></figure>
+<pre class="code-block"><code>min(q’,0)</code></pre>
+<h2 id="candidate-56-page-024">Candidate 56 - page 024</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-024.jpg"><img src="../assets/page_images/page-024.jpg" alt="Page 024" loading="lazy"></a><figcaption>Page 024</figcaption></figure>
+<pre class="code-block"><code>min (0,0) &lt;y@+h™) &lt;max (P90).</code></pre>
+<h2 id="candidate-57-page-025">Candidate 57 - page 025</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-025.jpg"><img src="../assets/page_images/page-025.jpg" alt="Page 025" loading="lazy"></a><figcaption>Page 025</figcaption></figure>
+<pre class="code-block"><code>« Initial position qo: The unhedged risks in PVO1        ($/bps in the US, €/bps in EU) in the</code></pre>
+<h2 id="candidate-58-page-025">Candidate 58 - page 025</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-025.jpg"><img src="../assets/page_images/page-025.jpg" alt="Page 025" loading="lazy"></a><figcaption>Page 025</figcaption></figure>
+<pre class="code-block"><code>+ Hedgeable risk limit H; € R_, H, € Ry: The minimum and maximum net unhedged</code></pre>
+<h2 id="candidate-59-page-026">Candidate 59 - page 026</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-026.jpg"><img src="../assets/page_images/page-026.jpg" alt="Page 026" loading="lazy"></a><figcaption>Page 026</figcaption></figure>
+<pre class="code-block"><code>+ Risk-aversion factor A: The risk aversion factor \ in the objective function (I), measured</code></pre>
+<h2 id="candidate-60-page-026">Candidate 60 - page 026</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-026.jpg"><img src="../assets/page_images/page-026.jpg" alt="Page 026" loading="lazy"></a><figcaption>Page 026</figcaption></figure>
+<pre class="code-block"><code>values of \ correspond to smaller terminal portfolios.</code></pre>
+<h2 id="candidate-61-page-026">Candidate 61 - page 026</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-026.jpg"><img src="../assets/page_images/page-026.jpg" alt="Page 026" loading="lazy"></a><figcaption>Page 026</figcaption></figure>
+<pre class="code-block"><code>1. Constant A: When this type is chosen, the \ value is fixed and will not change with-</code></pre>
+<h2 id="candidate-62-page-026">Candidate 62 - page 026</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-026.jpg"><img src="../assets/page_images/page-026.jpg" alt="Page 026" loading="lazy"></a><figcaption>Page 026</figcaption></figure>
+<pre class="code-block"><code>The idea of dynamic A is to decrease the \ value when we receive a flow trade (via B2C,</code></pre>
+<h2 id="candidate-63-page-027">Candidate 63 - page 027</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-027.jpg"><img src="../assets/page_images/page-027.jpg" alt="Page 027" loading="lazy"></a><figcaption>Page 027</figcaption></figure>
+<pre class="code-block"><code>The parameter Ayase is the value that dynamic \ will converge to when there is no</code></pre>
+<h2 id="candidate-64-page-027">Candidate 64 - page 027</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-027.jpg"><img src="../assets/page_images/page-027.jpg" alt="Page 027" loading="lazy"></a><figcaption>Page 027</figcaption></figure>
+<pre class="code-block"><code>flow trade. Amin is the lower bound of dynamic \. Hal flife controls the speed of</code></pre>
+<h2 id="candidate-65-page-027">Candidate 65 - page 027</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-027.jpg"><img src="../assets/page_images/page-027.jpg" alt="Page 027" loading="lazy"></a><figcaption>Page 027</figcaption></figure>
+<pre class="code-block"><code>In both cases, we require \ &gt; 0. If this condition is not satisfied, a default positive \ value</code></pre>
+<h2 id="candidate-66-page-027">Candidate 66 - page 027</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-027.jpg"><img src="../assets/page_images/page-027.jpg" alt="Page 027" loading="lazy"></a><figcaption>Page 027</figcaption></figure>
+<pre class="code-block"><code>and there is a plan to use dynamic \ in EU in the near future.</code></pre>
+<h2 id="candidate-67-page-027">Candidate 67 - page 027</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-027.jpg"><img src="../assets/page_images/page-027.jpg" alt="Page 027" loading="lazy"></a><figcaption>Page 027</figcaption></figure>
+<pre class="code-block"><code>«   CRB    AIM    Risk-aversion factor \;: This parameter is used for CRB AIM risk-aversion.</code></pre>
+<h2 id="candidate-68-page-027">Candidate 68 - page 027</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-027.jpg"><img src="../assets/page_images/page-027.jpg" alt="Page 027" loading="lazy"></a><figcaption>Page 027</figcaption></figure>
+<pre class="code-block"><code>«   Client Risk-aversion factor \2: This parameter is used for CRB clients risk-aversion.</code></pre>
+<h2 id="candidate-69-page-027">Candidate 69 - page 027</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-027.jpg"><img src="../assets/page_images/page-027.jpg" alt="Page 027" loading="lazy"></a><figcaption>Page 027</figcaption></figure>
+<pre class="code-block"><code>allocate the quantity w} to 01, 02, 03 ina first in first out way. If size(o1) &lt; |u}| &lt; size(o1)+size(o2),</code></pre>
+<h2 id="candidate-70-page-027">Candidate 70 - page 027</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-027.jpg"><img src="../assets/page_images/page-027.jpg" alt="Page 027" loading="lazy"></a><figcaption>Page 027</figcaption></figure>
+<pre class="code-block"><code>we fill entirely the order 0; and partially fill a quantity |u{|— size(o,) for order 09.</code></pre>
+<h2 id="candidate-71-page-028">Candidate 71 - page 028</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-028.jpg"><img src="../assets/page_images/page-028.jpg" alt="Page 028" loading="lazy"></a><figcaption>Page 028</figcaption></figure>
+<pre class="code-block"><code>min E [liz =i [2|</code></pre>
+<h2 id="candidate-72-page-028">Candidate 72 - page 028</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-028.jpg"><img src="../assets/page_images/page-028.jpg" alt="Page 028" loading="lazy"></a><figcaption>Page 028</figcaption></figure>
+<pre class="code-block"><code>a==|b- ul\|p</code></pre>
+<h2 id="candidate-73-page-029">Candidate 73 - page 029</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-029.jpg"><img src="../assets/page_images/page-029.jpg" alt="Page 029" loading="lazy"></a><figcaption>Page 029</figcaption></figure>
+<pre class="code-block"><code>my _= Tr(Sp</code></pre>
+<h2 id="candidate-74-page-029">Candidate 74 - page 029</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-029.jpg"><img src="../assets/page_images/page-029.jpg" alt="Page 029" loading="lazy"></a><figcaption>Page 029</figcaption></figure>
+<pre class="code-block"><code>p22 _       VR AIX T—Snll®</code></pre>
+<h2 id="candidate-75-page-029">Candidate 75 - page 029</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-029.jpg"><img src="../assets/page_images/page-029.jpg" alt="Page 029" loading="lazy"></a><figcaption>Page 029</figcaption></figure>
+<pre class="code-block"><code>bj = min(b,, dy)</code></pre>
+<h2 id="candidate-76-page-029">Candidate 76 - page 029</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-029.jpg"><img src="../assets/page_images/page-029.jpg" alt="Page 029" loading="lazy"></a><figcaption>Page 029</figcaption></figure>
+<pre class="code-block"><code>x and y is given by Teffective = min{T;,Ty}. Since after Tey;ective, no matter how the yield of</code></pre>
+<h2 id="candidate-77-page-029">Candidate 77 - page 029</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-029.jpg"><img src="../assets/page_images/page-029.jpg" alt="Page 029" loading="lazy"></a><figcaption>Page 029</figcaption></figure>
+<pre class="code-block"><code>multiplication, and W = (Wj) with Wi = min(Tj,T,)/f for i=1,...,d, 7 =1,...,d.</code></pre>
+<h2 id="candidate-78-page-031">Candidate 78 - page 031</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-031.jpg"><img src="../assets/page_images/page-031.jpg" alt="Page 031" loading="lazy"></a><figcaption>Page 031</figcaption></figure>
+<pre class="code-block"><code>ExecutionCost = VwapCost + uj = ci * ui + mi * uP.</code></pre>
+<h2 id="candidate-79-page-032">Candidate 79 - page 032</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-032.jpg"><img src="../assets/page_images/page-032.jpg" alt="Page 032" loading="lazy"></a><figcaption>Page 032</figcaption></figure>
+<pre class="code-block"><code>which are reported in BMET table aimcpnl_event in notional amounts, and then converted into</code></pre>
+<h2 id="candidate-80-page-034">Candidate 80 - page 034</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-034.jpg"><img src="../assets/page_images/page-034.jpg" alt="Page 034" loading="lazy"></a><figcaption>Page 034</figcaption></figure>
+<pre class="code-block"><code>minimize      (q+ u)&#x27;(AD + b0Pa)(qt+ u) +C&quot;        ful   +u&#x27;Mu-al(q+u)</code></pre>
+<h2 id="candidate-81-page-034">Candidate 81 - page 034</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-034.jpg"><img src="../assets/page_images/page-034.jpg" alt="Page 034" loading="lazy"></a><figcaption>Page 034</figcaption></figure>
+<pre class="code-block"><code>subject to    — Hy &lt; S0(qi+ui) &lt; Hu,</code></pre>
+<h2 id="candidate-82-page-034">Candidate 82 - page 034</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-034.jpg"><img src="../assets/page_images/page-034.jpg" alt="Page 034" loading="lazy"></a><figcaption>Page 034</figcaption></figure>
+<pre class="code-block"><code>|u| by a linear term in an additional state variable z to obtain a quadratic objective function. The</code></pre>
+<h2 id="candidate-83-page-034">Candidate 83 - page 034</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-034.jpg"><img src="../assets/page_images/page-034.jpg" alt="Page 034" loading="lazy"></a><figcaption>Page 034</figcaption></figure>
+<pre class="code-block"><code>minimize     ul (AD + bx0P\ + M)ut (2q&#x27; (AD + 60P,) — a                )ut+Clz</code></pre>
+<h2 id="candidate-84-page-035">Candidate 84 - page 035</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-035.jpg"><img src="../assets/page_images/page-035.jpg" alt="Page 035" loading="lazy"></a><figcaption>Page 035</figcaption></figure>
+<pre class="code-block"><code>—Wh&lt; a+              u) &lt; Hy</code></pre>
+<h2 id="candidate-85-page-035">Candidate 85 - page 035</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-035.jpg"><img src="../assets/page_images/page-035.jpg" alt="Page 035" loading="lazy"></a><figcaption>Page 035</figcaption></figure>
+<pre class="code-block"><code>to (12). We have the following relations: Fy(u*)            = F,(u*, |u*|) (immediate from definition of F;),</code></pre>
+<h2 id="candidate-86-page-035">Candidate 86 - page 035</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-035.jpg"><img src="../assets/page_images/page-035.jpg" alt="Page 035" loading="lazy"></a><figcaption>Page 035</figcaption></figure>
+<pre class="code-block"><code>and te any admissible u,z we have F,(u,z) &gt; F,(u, |u|) (each component of z takes non-negative</code></pre>
+<h2 id="candidate-87-page-035">Candidate 87 - page 035</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-035.jpg"><img src="../assets/page_images/page-035.jpg" alt="Page 035" loading="lazy"></a><figcaption>Page 035</figcaption></figure>
+<pre class="code-block"><code>values, so to minimize C7, we take the smallest admissible value - in this case, |u). It now follows</code></pre>
+<h2 id="candidate-88-page-035">Candidate 88 - page 035</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-035.jpg"><img src="../assets/page_images/page-035.jpg" alt="Page 035" loading="lazy"></a><figcaption>Page 035</figcaption></figure>
+<pre class="code-block"><code>that (u*,|u*|) is the solution to           (13), since for any admissible u, 2, we have</code></pre>
+<h2 id="candidate-89-page-035">Candidate 89 - page 035</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-035.jpg"><img src="../assets/page_images/page-035.jpg" alt="Page 035" loading="lazy"></a><figcaption>Page 035</figcaption></figure>
+<pre class="code-block"><code>and the conclusion follows because (u*,|u*|) is admissible for the modified problem.</code></pre>
+<h2 id="candidate-90-page-035">Candidate 90 - page 035</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-035.jpg"><img src="../assets/page_images/page-035.jpg" alt="Page 035" loading="lazy"></a><figcaption>Page 035</figcaption></figure>
+<pre class="code-block"><code>M=M+        Foo tias(®)-                                       (14)</code></pre>
+<h2 id="candidate-91-page-036">Candidate 91 - page 036</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-036.jpg"><img src="../assets/page_images/page-036.jpg" alt="Page 036" loading="lazy"></a><figcaption>Page 036</figcaption></figure>
+<pre class="code-block"><code>CRB setting.       Indeed, thanks to constraint (9), we know that sign(w}) = sign(c}).                      Hence |u}| =</code></pre>
+<h2 id="candidate-92-page-036">Candidate 92 - page 036</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-036.jpg"><img src="../assets/page_images/page-036.jpg" alt="Page 036" loading="lazy"></a><figcaption>Page 036</figcaption></figure>
+<pre class="code-block"><code>is non-empty - namely, take L, = min(L9,U;) and Ul = max(U9,L1). The twin constraints</code></pre>
+<h2 id="candidate-93-page-036">Candidate 93 - page 036</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-036.jpg"><img src="../assets/page_images/page-036.jpg" alt="Page 036" loading="lazy"></a><figcaption>Page 036</figcaption></figure>
+<pre class="code-block"><code>combined as L &lt; u &lt;U, where L = max(L1,L4) and U = min(U;, U3).</code></pre>
+<h2 id="candidate-94-page-036">Candidate 94 - page 036</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-036.jpg"><img src="../assets/page_images/page-036.jpg" alt="Page 036" loading="lazy"></a><figcaption>Page 036</figcaption></figure>
+<pre class="code-block"><code>max(—Sj, min(—B; — qi, S;)) &lt; uj &lt; min(S;, max(B; — qi, —S;))</code></pre>
+<h2 id="candidate-95-page-036">Candidate 95 - page 036</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-036.jpg"><img src="../assets/page_images/page-036.jpg" alt="Page 036" loading="lazy"></a><figcaption>Page 036</figcaption></figure>
+<pre class="code-block"><code>~max(—S;,min(—B; — qi, S;)) &lt; ui &lt; min(S;,Bi — gi)</code></pre>
+<h2 id="candidate-96-page-037">Candidate 96 - page 037</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-037.jpg"><img src="../assets/page_images/page-037.jpg" alt="Page 037" loading="lazy"></a><figcaption>Page 037</figcaption></figure>
+<pre class="code-block"><code>max(max(—S;,min(—B; — qi, Si)),0) &lt; ui &lt; min(min(5;, Bi — qi), —43)</code></pre>
+<h2 id="candidate-97-page-037">Candidate 97 - page 037</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-037.jpg"><img src="../assets/page_images/page-037.jpg" alt="Page 037" loading="lazy"></a><figcaption>Page 037</figcaption></figure>
+<pre class="code-block"><code>~max(min(—B; — qi, 5;),0) &lt; ui &lt; min(S;, —gi),</code></pre>
+<h2 id="candidate-98-page-037">Candidate 98 - page 037</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-037.jpg"><img src="../assets/page_images/page-037.jpg" alt="Page 037" loading="lazy"></a><figcaption>Page 037</figcaption></figure>
+<pre class="code-block"><code>function h : u € R4 +s (qt+u)&#x27; (AL + doc Pa)(q+u) — a!                          (q+) +u! Mu has a Hessian</code></pre>
+<h2 id="candidate-99-page-037">Candidate 99 - page 037</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-037.jpg"><img src="../assets/page_images/page-037.jpg" alt="Page 037" loading="lazy"></a><figcaption>Page 037</figcaption></figure>
+<pre class="code-block"><code>Moreover, the cost function u € R4++ CT |u| is conve:                 ;.as the sum of a convex function and</code></pre>
+<h2 id="candidate-100-page-037">Candidate 100 - page 037</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-037.jpg"><img src="../assets/page_images/page-037.jpg" alt="Page 037" loading="lazy"></a><figcaption>Page 037</figcaption></figure>
+<pre class="code-block"><code>min, SAG                 +)         Dg   4°) +O   u&#x27;| $ (uw)   Mul — a (gi +u&#x27;)</code></pre>
+<h2 id="candidate-101-page-037">Candidate 101 - page 037</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-037.jpg"><img src="../assets/page_images/page-037.jpg" alt="Page 037" loading="lazy"></a><figcaption>Page 037</figcaption></figure>
+<pre class="code-block"><code>max(min(—B, — g5,.5;),—Sj) &lt;u; &lt; min(max(B; — g;,—Sj),55) ¥j €1,--+ 4d,</code></pre>
+<h2 id="candidate-102-page-037">Candidate 102 - page 037</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-037.jpg"><img src="../assets/page_images/page-037.jpg" alt="Page 037" loading="lazy"></a><figcaption>Page 037</figcaption></figure>
+<pre class="code-block"><code>min Sq                  +u&#x27;) Ng tu’) +C le! + (u&#x27;)&#x27; Mui -a&#x27;(g +u&#x27;)</code></pre>
+<h2 id="candidate-103-page-038">Candidate 103 - page 038</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-038.jpg"><img src="../assets/page_images/page-038.jpg" alt="Page 038" loading="lazy"></a><figcaption>Page 038</figcaption></figure>
+<pre class="code-block"><code>M&lt; SG +uj) &lt; Hu</code></pre>
+<h2 id="candidate-104-page-038">Candidate 104 - page 038</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-038.jpg"><img src="../assets/page_images/page-038.jpg" alt="Page 038" loading="lazy"></a><figcaption>Page 038</figcaption></figure>
+<pre class="code-block"><code>max(min(—B, — qj,.5;),—Sj) &lt; uj &lt; min(max(B; — q},—S;),S;) Vj €1,---.d.</code></pre>
+<h2 id="candidate-105-page-038">Candidate 105 - page 038</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-038.jpg"><img src="../assets/page_images/page-038.jpg" alt="Page 038" loading="lazy"></a><figcaption>Page 038</figcaption></figure>
+<pre class="code-block"><code>min Aq? +.u®) TE(q? + u?) + CT fu] + (u®) Mu? — al (go +09)</code></pre>
+<h2 id="candidate-106-page-038">Candidate 106 - page 038</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-038.jpg"><img src="../assets/page_images/page-038.jpg" alt="Page 038" loading="lazy"></a><figcaption>Page 038</figcaption></figure>
+<pre class="code-block"><code>+O AG +u)TEG +u&#x27;) + Cla + (u&#x27;)&#x27; Mul</code></pre>
+<h2 id="candidate-107-page-038">Candidate 107 - page 038</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-038.jpg"><img src="../assets/page_images/page-038.jpg" alt="Page 038" loading="lazy"></a><figcaption>Page 038</figcaption></figure>
+<pre class="code-block"><code>Ms oq} + uf) &lt; Hu</code></pre>
+<h2 id="candidate-108-page-038">Candidate 108 - page 038</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-038.jpg"><img src="../assets/page_images/page-038.jpg" alt="Page 038" loading="lazy"></a><figcaption>Page 038</figcaption></figure>
+<pre class="code-block"><code>max(min(—B; — q), $;),—S;) &lt; ui, &lt; min(max(B; — q),—S;), $;) ¥j €1,--+ .d</code></pre>
+<h2 id="candidate-109-page-038">Candidate 109 - page 038</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-038.jpg"><img src="../assets/page_images/page-038.jpg" alt="Page 038" loading="lazy"></a><figcaption>Page 038</figcaption></figure>
+<pre class="code-block"><code>= pin, Ma? + uP) D(a? + u) CT ad] + (wl) Ma? — a! (g? + 0°)</code></pre>
+<h2 id="candidate-110-page-038">Candidate 110 - page 038</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-038.jpg"><img src="../assets/page_images/page-038.jpg" alt="Page 038" loading="lazy"></a><figcaption>Page 038</figcaption></figure>
+<pre class="code-block"><code>+ min, &gt; Agi tui)               (qi tu) + CT + (ui) Mut</code></pre>
+<h2 id="candidate-111-page-038">Candidate 111 - page 038</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-038.jpg"><img src="../assets/page_images/page-038.jpg" alt="Page 038" loading="lazy"></a><figcaption>Page 038</figcaption></figure>
+<pre class="code-block"><code>M&lt; Yq} +uj) &lt; Hu</code></pre>
+<h2 id="candidate-112-page-038">Candidate 112 - page 038</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-038.jpg"><img src="../assets/page_images/page-038.jpg" alt="Page 038" loading="lazy"></a><figcaption>Page 038</figcaption></figure>
+<pre class="code-block"><code>max(min(—B, — 4}, $;),—S;) &lt; uj &lt; min(max(B; — q?, —5;), $5) ¥j                       €1,--+.d,</code></pre>
+<h2 id="candidate-113-page-039">Candidate 113 - page 039</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-039.jpg"><img src="../assets/page_images/page-039.jpg" alt="Page 039" loading="lazy"></a><figcaption>Page 039</figcaption></figure>
+<pre class="code-block"><code>M&lt; Yq} +uj) &lt; Hu</code></pre>
+<h2 id="candidate-114-page-039">Candidate 114 - page 039</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-039.jpg"><img src="../assets/page_images/page-039.jpg" alt="Page 039" loading="lazy"></a><figcaption>Page 039</figcaption></figure>
+<pre class="code-block"><code>max(min(—B; ~ qj, $3), —S;) &lt; wy &lt; min(max(B;— q},—S;), $3) Vj €1,---.d,</code></pre>
+<h2 id="candidate-115-page-039">Candidate 115 - page 039</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-039.jpg"><img src="../assets/page_images/page-039.jpg" alt="Page 039" loading="lazy"></a><figcaption>Page 039</figcaption></figure>
+<pre class="code-block"><code>ol) = min So Ng + ug + ut) + (wt) Met</code></pre>
+<h2 id="candidate-116-page-039">Candidate 116 - page 039</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-039.jpg"><img src="../assets/page_images/page-039.jpg" alt="Page 039" loading="lazy"></a><figcaption>Page 039</figcaption></figure>
+<pre class="code-block"><code>E=\S+M</code></pre>
+<h2 id="candidate-117-page-039">Candidate 117 - page 039</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-039.jpg"><img src="../assets/page_images/page-039.jpg" alt="Page 039" loading="lazy"></a><figcaption>Page 039</figcaption></figure>
+<pre class="code-block"><code>using Woodbury identity (A+ B)-!= A-!—A-!(A-1 4 Bo!) tat.</code></pre>
+<h2 id="candidate-118-page-039">Candidate 118 - page 039</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-039.jpg"><img src="../assets/page_images/page-039.jpg" alt="Page 039" loading="lazy"></a><figcaption>Page 039</figcaption></figure>
+<pre class="code-block"><code>&lt;&gt;    P+ PMP +P\MOAD = Py HAD</code></pre>
+<h2 id="candidate-119-page-039">Candidate 119 - page 039</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-039.jpg"><img src="../assets/page_images/page-039.jpg" alt="Page 039" loading="lazy"></a><figcaption>Page 039</figcaption></figure>
+<pre class="code-block"><code>&lt;= PM &#x27;P\+P\M1AD-AD=0.</code></pre>
+<h2 id="candidate-120-page-040">Candidate 120 - page 040</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-040.jpg"><img src="../assets/page_images/page-040.jpg" alt="Page 040" loading="lazy"></a><figcaption>Page 040</figcaption></figure>
+<pre class="code-block"><code>In the simpler case of same quadratic cost for each asset, that is M = mlq with m € R,, the</code></pre>
+<h2 id="candidate-121-page-040">Candidate 121 - page 040</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-040.jpg"><img src="../assets/page_images/page-040.jpg" alt="Page 040" loading="lazy"></a><figcaption>Page 040</figcaption></figure>
+<pre class="code-block"><code>+ IMAS _ AE + Ay/D2 44RD</code></pre>
+<h2 id="candidate-122-page-040">Candidate 122 - page 040</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-040.jpg"><img src="../assets/page_images/page-040.jpg" alt="Page 040" loading="lazy"></a><figcaption>Page 040</figcaption></figure>
+<pre class="code-block"><code>2             _             2           °</code></pre>
+<h2 id="candidate-123-page-041">Candidate 123 - page 041</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-041.jpg"><img src="../assets/page_images/page-041.jpg" alt="Page 041" loading="lazy"></a><figcaption>Page 041</figcaption></figure>
+<pre class="code-block"><code>Var objective without the quadratic cost term u! Mu but only the linear cost term C™ |u|.</code></pre>
+<h2 id="candidate-124-page-044">Candidate 124 - page 044</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-044.jpg"><img src="../assets/page_images/page-044.jpg" alt="Page 044" loading="lazy"></a><figcaption>Page 044</figcaption></figure>
+<pre class="code-block"><code>SHTZ               0.00 (0.00%)   [| _100            0</code></pre>
+<h2 id="candidate-125-page-044">Candidate 125 - page 044</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-044.jpg"><img src="../assets/page_images/page-044.jpg" alt="Page 044" loading="lazy"></a><figcaption>Page 044</figcaption></figure>
+<pre class="code-block"><code>BUXL               0.01 (0.00%)    | _100            0</code></pre>
+<h2 id="candidate-126-page-044">Candidate 126 - page 044</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-044.jpg"><img src="../assets/page_images/page-044.jpg" alt="Page 044" loading="lazy"></a><figcaption>Page 044</figcaption></figure>
+<pre class="code-block"><code>BTS               0.00 (0.00%)   [| _100            0</code></pre>
+<h2 id="candidate-127-page-045">Candidate 127 - page 045</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-045.jpg"><img src="../assets/page_images/page-045.jpg" alt="Page 045" loading="lazy"></a><figcaption>Page 045</figcaption></figure>
+<pre class="code-block"><code>AIM Risk Aversion Factor \                            8e-8</code></pre>
+<h2 id="candidate-128-page-045">Candidate 128 - page 045</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-045.jpg"><img src="../assets/page_images/page-045.jpg" alt="Page 045" loading="lazy"></a><figcaption>Page 045</figcaption></figure>
+<pre class="code-block"><code>CRB AIM Risk Aversion Factor \1_|                       400e-8</code></pre>
+<h2 id="candidate-129-page-048">Candidate 129 - page 048</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-048.jpg"><img src="../assets/page_images/page-048.jpg" alt="Page 048" loading="lazy"></a><figcaption>Page 048</figcaption></figure>
+<pre class="code-block"><code>UXY client 1           [0.00 (0.00%)    |    _100           0</code></pre>
+<h2 id="candidate-130-page-048">Candidate 130 - page 048</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-048.jpg"><img src="../assets/page_images/page-048.jpg" alt="Page 048" loading="lazy"></a><figcaption>Page 048</figcaption></figure>
+<pre class="code-block"><code>US client 1           0.00 (0.00%)     [|   _100           0</code></pre>
+<h2 id="candidate-131-page-048">Candidate 131 - page 048</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-048.jpg"><img src="../assets/page_images/page-048.jpg" alt="Page 048" loading="lazy"></a><figcaption>Page 048</figcaption></figure>
+<pre class="code-block"><code>TY client 2           0.00 (0.00%) [| _100                 0</code></pre>
+<h2 id="candidate-132-page-048">Candidate 132 - page 048</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-048.jpg"><img src="../assets/page_images/page-048.jpg" alt="Page 048" loading="lazy"></a><figcaption>Page 048</figcaption></figure>
+<pre class="code-block"><code>UXY client 2_         | 0.00 (0.00%) | _100                 0</code></pre>
+<h2 id="candidate-133-page-048">Candidate 133 - page 048</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-048.jpg"><img src="../assets/page_images/page-048.jpg" alt="Page 048" loading="lazy"></a><figcaption>Page 048</figcaption></figure>
+<pre class="code-block"><code>US client 2            0.00 (0.00%) [| _100                0</code></pre>
+<h2 id="candidate-134-page-049">Candidate 134 - page 049</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-049.jpg"><img src="../assets/page_images/page-049.jpg" alt="Page 049" loading="lazy"></a><figcaption>Page 049</figcaption></figure>
+<pre class="code-block"><code>UXY client 1           [0.00 (0.00%)    |    _100           0</code></pre>
+<h2 id="candidate-135-page-049">Candidate 135 - page 049</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-049.jpg"><img src="../assets/page_images/page-049.jpg" alt="Page 049" loading="lazy"></a><figcaption>Page 049</figcaption></figure>
+<pre class="code-block"><code>US client 1           0.00 (0.00%)     [|   _100           0</code></pre>
+<h2 id="candidate-136-page-049">Candidate 136 - page 049</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-049.jpg"><img src="../assets/page_images/page-049.jpg" alt="Page 049" loading="lazy"></a><figcaption>Page 049</figcaption></figure>
+<pre class="code-block"><code>TY client 2           0.00 (0.00%) [| _100                 0</code></pre>
+<h2 id="candidate-137-page-049">Candidate 137 - page 049</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-049.jpg"><img src="../assets/page_images/page-049.jpg" alt="Page 049" loading="lazy"></a><figcaption>Page 049</figcaption></figure>
+<pre class="code-block"><code>UXY client 2 __ | 0.00 (0.00%) | _100                       0</code></pre>
+<h2 id="candidate-138-page-049">Candidate 138 - page 049</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-049.jpg"><img src="../assets/page_images/page-049.jpg" alt="Page 049" loading="lazy"></a><figcaption>Page 049</figcaption></figure>
+<pre class="code-block"><code>US client 2      0.00 (0.00%) [| _100                      0</code></pre>
+<h2 id="candidate-139-page-054">Candidate 139 - page 054</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-054.jpg"><img src="../assets/page_images/page-054.jpg" alt="Page 054" loading="lazy"></a><figcaption>Page 054</figcaption></figure>
+<pre class="code-block"><code>(4), when ) is in the range used in production.          For the US ETF case, when \ &lt; 100e — 8, this</code></pre>
+<h2 id="candidate-140-page-054">Candidate 140 - page 054</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-054.jpg"><img src="../assets/page_images/page-054.jpg" alt="Page 054" loading="lazy"></a><figcaption>Page 054</figcaption></figure>
+<pre class="code-block"><code>condition number is smaller than 663. In the EU case, when \ &lt; 200e— 6, this condition number is</code></pre>
+<h2 id="candidate-141-page-054">Candidate 141 - page 054</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-054.jpg"><img src="../assets/page_images/page-054.jpg" alt="Page 054" loading="lazy"></a><figcaption>Page 054</figcaption></figure>
+<pre class="code-block"><code>For convenience, let @ = (H,B, S,allowIncreasePosition, \, 5, d.0,C, M,a) denote the vector</code></pre>
+<h2 id="candidate-142-page-055">Candidate 142 - page 055</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-055.jpg"><img src="../assets/page_images/page-055.jpg" alt="Page 055" loading="lazy"></a><figcaption>Page 055</figcaption></figure>
+<pre class="code-block"><code>correlation p, a = 0 and risk-aversion parameter \ = 5e-8 $~!. The red area is the stable area,</code></pre>
+<h2 id="candidate-143-page-055">Candidate 143 - page 055</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-055.jpg"><img src="../assets/page_images/page-055.jpg" alt="Page 055" loading="lazy"></a><figcaption>Page 055</figcaption></figure>
+<pre class="code-block"><code>S={qeR?,           -C&lt;2\Nq&lt;C}</code></pre>
+<h2 id="candidate-144-page-056">Candidate 144 - page 056</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-056.jpg"><img src="../assets/page_images/page-056.jpg" alt="Page 056" loading="lazy"></a><figcaption>Page 056</figcaption></figure>
+<pre class="code-block"><code>_         _ntohedgeseluton wh 2=08.A~ S608 infnts = False</code></pre>
+<h2 id="candidate-145-page-056">Candidate 145 - page 056</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-056.jpg"><img src="../assets/page_images/page-056.jpg" alt="Page 056" loading="lazy"></a><figcaption>Page 056</figcaption></figure>
+<pre class="code-block"><code>_ntoheoge selon</code></pre>
+<h2 id="candidate-146-page-057">Candidate 146 - page 057</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-057.jpg"><img src="../assets/page_images/page-057.jpg" alt="Page 057" loading="lazy"></a><figcaption>Page 057</figcaption></figure>
+<pre class="code-block"><code>_         atanedoeslston mth 9~08,4~56.08 nt = Tr</code></pre>
+<h2 id="candidate-147-page-058">Candidate 147 - page 058</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-058.jpg"><img src="../assets/page_images/page-058.jpg" alt="Page 058" loading="lazy"></a><figcaption>Page 058</figcaption></figure>
+<pre class="code-block"><code>report the total risk 24, q (column &quot;PV01&#x27;) the scaled variances \g,&quot; Eq; (column &quot;Variance’)</code></pre>
+<h2 id="candidate-148-page-058">Candidate 148 - page 058</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-058.jpg"><img src="../assets/page_images/page-058.jpg" alt="Page 058" loading="lazy"></a><figcaption>Page 058</figcaption></figure>
+<pre class="code-block"><code>and the costs of the last trade CT u;_1| (column &quot;Cost&quot;). We take the covariance matrix given in</code></pre>
+<h2 id="candidate-149-page-058">Candidate 149 - page 058</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-058.jpg"><img src="../assets/page_images/page-058.jpg" alt="Page 058" loading="lazy"></a><figcaption>Page 058</figcaption></figure>
+<pre class="code-block"><code>Table 13 For CRB, the cost: is replaced by the total volume 5), ; |u/. Client risk are generated</code></pre>
+<h2 id="candidate-150-page-058">Candidate 150 - page 058</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-058.jpg"><img src="../assets/page_images/page-058.jpg" alt="Page 058" loading="lazy"></a><figcaption>Page 058</figcaption></figure>
+<pre class="code-block"><code>AIM Risk Aversion Factor \      8e-8</code></pre>
+<h2 id="candidate-151-page-059">Candidate 151 - page 059</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-059.jpg"><img src="../assets/page_images/page-059.jpg" alt="Page 059" loading="lazy"></a><figcaption>Page 059</figcaption></figure>
+<pre class="code-block"><code>&gt;|Z\z|</code></pre>
+<h2 id="candidate-152-page-063">Candidate 152 - page 063</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-063.jpg"><img src="../assets/page_images/page-063.jpg" alt="Page 063" loading="lazy"></a><figcaption>Page 063</figcaption></figure>
+<pre class="code-block"><code>2\Xq             0.22           -0.08    | -0.077 | -0.06      | -0.12 | -0.30 | 0.0078</code></pre>
+<h2 id="candidate-153-page-064">Candidate 153 - page 064</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-064.jpg"><img src="../assets/page_images/page-064.jpg" alt="Page 064" loading="lazy"></a><figcaption>Page 064</figcaption></figure>
+<pre class="code-block"><code>2\Nq             0.22   0.14         -0.07   -0.045 | -0.12 | -0.30 | -0.04</code></pre>
+<h2 id="candidate-154-page-064">Candidate 154 - page 064</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-064.jpg"><img src="../assets/page_images/page-064.jpg" alt="Page 064" loading="lazy"></a><figcaption>Page 064</figcaption></figure>
+<pre class="code-block"><code>repeated calls to Opt-Var for \ = 2e-58-1,</code></pre>
+<h2 id="candidate-155-page-064">Candidate 155 - page 064</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-064.jpg"><img src="../assets/page_images/page-064.jpg" alt="Page 064" loading="lazy"></a><figcaption>Page 064</figcaption></figure>
+<pre class="code-block"><code>repeated calls to Opt-Var for \ = 2e-5$-1.</code></pre>
+<h2 id="candidate-156-page-065">Candidate 156 - page 065</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-065.jpg"><img src="../assets/page_images/page-065.jpg" alt="Page 065" loading="lazy"></a><figcaption>Page 065</figcaption></figure>
+<pre class="code-block"><code>S\o[Zlole}                  &lt;&gt;            Siz</code></pre>
+<h2 id="candidate-157-page-065">Candidate 157 - page 065</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-065.jpg"><img src="../assets/page_images/page-065.jpg" alt="Page 065" loading="lazy"></a><figcaption>Page 065</figcaption></figure>
+<pre class="code-block"><code>=3                Z|S| _ 1%&amp;          .&gt;             El</code></pre>
+<h2 id="candidate-158-page-065">Candidate 158 - page 065</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-065.jpg"><img src="../assets/page_images/page-065.jpg" alt="Page 065" loading="lazy"></a><figcaption>Page 065</figcaption></figure>
+<pre class="code-block"><code>Z\ZAIS|SIB)                =a</code></pre>
+<h2 id="candidate-159-page-065">Candidate 159 - page 065</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-065.jpg"><img src="../assets/page_images/page-065.jpg" alt="Page 065" loading="lazy"></a><figcaption>Page 065</figcaption></figure>
+<pre class="code-block"><code>FISRIER)                   3              S\ISISSis|           S        |Shopehe}          S                    s                    a</code></pre>
+<h2 id="candidate-160-page-065">Candidate 160 - page 065</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-065.jpg"><img src="../assets/page_images/page-065.jpg" alt="Page 065" loading="lazy"></a><figcaption>Page 065</figcaption></figure>
+<pre class="code-block"><code>KSIZisl\s\S} =             =&amp;</code></pre>
+<h2 id="candidate-161-page-065">Candidate 161 - page 065</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-065.jpg"><img src="../assets/page_images/page-065.jpg" alt="Page 065" loading="lazy"></a><figcaption>Page 065</figcaption></figure>
+<pre class="code-block"><code>KIS s\sls| ==Ss</code></pre>
+<h2 id="candidate-162-page-065">Candidate 162 - page 065</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-065.jpg"><img src="../assets/page_images/page-065.jpg" alt="Page 065" loading="lazy"></a><figcaption>Page 065</figcaption></figure>
+<pre class="code-block"><code>ERIBEIS]                      -(S\S|s|s)</code></pre>
+<h2 id="candidate-163-page-065">Candidate 163 - page 065</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-065.jpg"><img src="../assets/page_images/page-065.jpg" alt="Page 065" loading="lazy"></a><figcaption>Page 065</figcaption></figure>
+<pre class="code-block"><code>S                                               Is \o    iS     g</code></pre>
+<h2 id="candidate-164-page-065">Candidate 164 - page 065</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-065.jpg"><img src="../assets/page_images/page-065.jpg" alt="Page 065" loading="lazy"></a><figcaption>Page 065</figcaption></figure>
+<pre class="code-block"><code>eiselele|                   =              |S\BBIe|   =                 I. S/S sie           8            | jsisigys}</code></pre>
+<h2 id="candidate-165-page-065">Candidate 165 - page 065</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-065.jpg"><img src="../assets/page_images/page-065.jpg" alt="Page 065" loading="lazy"></a><figcaption>Page 065</figcaption></figure>
+<pre class="code-block"><code>2%     IEee |B\B\2\2)</code></pre>
+<h2 id="candidate-166-page-068">Candidate 166 - page 068</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-068.jpg"><img src="../assets/page_images/page-068.jpg" alt="Page 068" loading="lazy"></a><figcaption>Page 068</figcaption></figure>
+<pre class="code-block"><code>to not consider the infinite horizon cost. As mentioned in|3.3.3} the choice of \ has a direct effect</code></pre>
+<h2 id="candidate-167-page-068">Candidate 167 - page 068</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-068.jpg"><img src="../assets/page_images/page-068.jpg" alt="Page 068" loading="lazy"></a><figcaption>Page 068</figcaption></figure>
+<pre class="code-block"><code>on the stable area where the portfolio converges. The larger the value of \ the smaller the final</code></pre>
+<h2 id="candidate-168-page-068">Candidate 168 - page 068</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-068.jpg"><img src="../assets/page_images/page-068.jpg" alt="Page 068" loading="lazy"></a><figcaption>Page 068</figcaption></figure>
+<pre class="code-block"><code>portfolio and variance, as confirmed by the Figures below. The total cost also increases with \</code></pre>
+<h2 id="candidate-169-page-069">Candidate 169 - page 069</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-069.jpg"><img src="../assets/page_images/page-069.jpg" alt="Page 069" loading="lazy"></a><figcaption>Page 069</figcaption></figure>
+<pre class="code-block"><code>smaller when 1 increases. With Set B of constraints, the solution is not very sensitive to \1, as</code></pre>
+<h2 id="candidate-170-page-069">Candidate 170 - page 069</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-069.jpg"><img src="../assets/page_images/page-069.jpg" alt="Page 069" loading="lazy"></a><figcaption>Page 069</figcaption></figure>
+<pre class="code-block"><code>solution is insensitive to AIM risk-aversion \ in this example.</code></pre>
+<h2 id="candidate-171-page-069">Candidate 171 - page 069</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-069.jpg"><img src="../assets/page_images/page-069.jpg" alt="Page 069" loading="lazy"></a><figcaption>Page 069</figcaption></figure>
+<pre class="code-block"><code>Figure 38: Terminal inventory in PVO1 through the repeated calls to CRB as a function of \1, the</code></pre>
+<h2 id="candidate-172-page-070">Candidate 172 - page 070</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-070.jpg"><img src="../assets/page_images/page-070.jpg" alt="Page 070" loading="lazy"></a><figcaption>Page 070</figcaption></figure>
+<pre class="code-block"><code>Figure 39: Terminal inventory in PVO1 through the repeated calls to CRB as a function of \1, the</code></pre>
+<h2 id="candidate-173-page-070">Candidate 173 - page 070</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-070.jpg"><img src="../assets/page_images/page-070.jpg" alt="Page 070" loading="lazy"></a><figcaption>Page 070</figcaption></figure>
+<pre class="code-block"><code>Figure 40: Terminal inventory in PVO1 through the repeated calls to CRB as a function of \s, the</code></pre>
+<h2 id="candidate-174-page-071">Candidate 174 - page 071</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-071.jpg"><img src="../assets/page_images/page-071.jpg" alt="Page 071" loading="lazy"></a><figcaption>Page 071</figcaption></figure>
+<pre class="code-block"><code>Figure 41: Terminal inventory in PVO1 through the repeated calls to CRB as a function of \s, the</code></pre>
+<h2 id="candidate-175-page-073">Candidate 175 - page 073</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-073.jpg"><img src="../assets/page_images/page-073.jpg" alt="Page 073" loading="lazy"></a><figcaption>Page 073</figcaption></figure>
+<pre class="code-block"><code>First we consider multiples of the cost vector   C = LC with a multiplier L in 0,10]. As mentioned</code></pre>
+<h2 id="candidate-176-page-074">Candidate 176 - page 074</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-074.jpg"><img src="../assets/page_images/page-074.jpg" alt="Page 074" loading="lazy"></a><figcaption>Page 074</figcaption></figure>
+<pre class="code-block"><code>The cost vector is T= LC with C = (0.22 0.17 0.08 0.1 0.12 0.3 0.15).</code></pre>
+<h2 id="candidate-177-page-074">Candidate 177 - page 074</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-074.jpg"><img src="../assets/page_images/page-074.jpg" alt="Page 074" loading="lazy"></a><figcaption>Page 074</figcaption></figure>
+<pre class="code-block"><code>tion of LZ, a multiplier in front of the £cost vector.              The cost vector is     C = LC   with     C =</code></pre>
+<h2 id="candidate-178-page-076">Candidate 178 - page 076</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-076.jpg"><img src="../assets/page_images/page-076.jpg" alt="Page 076" loading="lazy"></a><figcaption>Page 076</figcaption></figure>
+<pre class="code-block"><code>C =LC with C = 0.08 * np.ones(13).</code></pre>
+<h2 id="candidate-179-page-076">Candidate 179 - page 076</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-076.jpg"><img src="../assets/page_images/page-076.jpg" alt="Page 076" loading="lazy"></a><figcaption>Page 076</figcaption></figure>
+<pre class="code-block"><code>multiplier in front of the cost vector, with Set B of constraints. The cost vector is C = LC with</code></pre>
+<h2 id="candidate-180-page-076">Candidate 180 - page 076</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-076.jpg"><img src="../assets/page_images/page-076.jpg" alt="Page 076" loading="lazy"></a><figcaption>Page 076</figcaption></figure>
+<pre class="code-block"><code>C = 0.08 * np.ones(13).</code></pre>
+<h2 id="candidate-181-page-077">Candidate 181 - page 077</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-077.jpg"><img src="../assets/page_images/page-077.jpg" alt="Page 077" loading="lazy"></a><figcaption>Page 077</figcaption></figure>
+<pre class="code-block"><code>First we consider multiples of the quadratic cost vector M = KM + ;Ajdiag(X) with a multiplier</code></pre>
+<h2 id="candidate-182-page-078">Candidate 182 - page 078</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-078.jpg"><img src="../assets/page_images/page-078.jpg" alt="Page 078" loading="lazy"></a><figcaption>Page 078</figcaption></figure>
+<pre class="code-block"><code>quadratic cost matrix.        The quadratic cost matrix verifies         M = KM + ;Apdiag(Z) with</code></pre>
+<h2 id="candidate-183-page-078">Candidate 183 - page 078</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-078.jpg"><img src="../assets/page_images/page-078.jpg" alt="Page 078" loading="lazy"></a><figcaption>Page 078</figcaption></figure>
+<pre class="code-block"><code>M = diag(1740, 610, 397, 996, 961, 4846, 1699).</code></pre>
+<h2 id="candidate-184-page-078">Candidate 184 - page 078</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-078.jpg"><img src="../assets/page_images/page-078.jpg" alt="Page 078" loading="lazy"></a><figcaption>Page 078</figcaption></figure>
+<pre class="code-block"><code>KM + 7Apdiag(Z) with M = diag(1740, 610, 397, 996, 961, 4846, 1699).</code></pre>
+<h2 id="candidate-185-page-079">Candidate 185 - page 079</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-079.jpg"><img src="../assets/page_images/page-079.jpg" alt="Page 079" loading="lazy"></a><figcaption>Page 079</figcaption></figure>
+<pre class="code-block"><code>BUND     quadratic cost.          The quadratic cost matrix verifies          M =     M + Ajdiag(S) with</code></pre>
+<h2 id="candidate-186-page-079">Candidate 186 - page 079</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-079.jpg"><img src="../assets/page_images/page-079.jpg" alt="Page 079" loading="lazy"></a><figcaption>Page 079</figcaption></figure>
+<pre class="code-block"><code>M = diag(1740, 610, 397 « U, 996, 961, 4846, 1699).</code></pre>
+<h2 id="candidate-187-page-079">Candidate 187 - page 079</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-079.jpg"><img src="../assets/page_images/page-079.jpg" alt="Page 079" loading="lazy"></a><figcaption>Page 079</figcaption></figure>
+<pre class="code-block"><code>U, a multiplier in front of the BUND quadratic cost. The quadratic cost matrix verifies M =</code></pre>
+<h2 id="candidate-188-page-079">Candidate 188 - page 079</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-079.jpg"><img src="../assets/page_images/page-079.jpg" alt="Page 079" loading="lazy"></a><figcaption>Page 079</figcaption></figure>
+<pre class="code-block"><code>M + ppdiag(S) with M = diag(1740,   610, 397 « U, 996, 961, 4846, 1699).</code></pre>
+<h2 id="candidate-189-page-080">Candidate 189 - page 080</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-080.jpg"><img src="../assets/page_images/page-080.jpg" alt="Page 080" loading="lazy"></a><figcaption>Page 080</figcaption></figure>
+<pre class="code-block"><code>= _ 10000</code></pre>
+<h2 id="candidate-190-page-081">Candidate 190 - page 081</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-081.jpg"><img src="../assets/page_images/page-081.jpg" alt="Page 081" loading="lazy"></a><figcaption>Page 081</figcaption></figure>
+<pre class="code-block"><code>+ us</code></pre>
+<h2 id="candidate-191-page-086">Candidate 191 - page 086</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-086.jpg"><img src="../assets/page_images/page-086.jpg" alt="Page 086" loading="lazy"></a><figcaption>Page 086</figcaption></figure>
+<pre class="code-block"><code>2 5y                                      N\</code></pre>
+<h2 id="candidate-192-page-087">Candidate 192 - page 087</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-087.jpg"><img src="../assets/page_images/page-087.jpg" alt="Page 087" loading="lazy"></a><figcaption>Page 087</figcaption></figure>
+<pre class="code-block"><code>smaller than the value reached by the simple hedging strategy for different risk aversion \ values.</code></pre>
+<h2 id="candidate-193-page-087">Candidate 193 - page 087</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-087.jpg"><img src="../assets/page_images/page-087.jpg" alt="Page 087" loading="lazy"></a><figcaption>Page 087</figcaption></figure>
+<pre class="code-block"><code>We test \ values ranging from 0 to 2e-4 with every increase of le-6. This is consistent with the \</code></pre>
+<h2 id="candidate-194-page-087">Candidate 194 - page 087</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-087.jpg"><img src="../assets/page_images/page-087.jpg" alt="Page 087" loading="lazy"></a><figcaption>Page 087</figcaption></figure>
+<pre class="code-block"><code>hedges by Opt-Var and the simple hedging strategy for different \ values. The blue line gives the</code></pre>
+<h2 id="candidate-195-page-087">Candidate 195 - page 087</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-087.jpg"><img src="../assets/page_images/page-087.jpg" alt="Page 087" loading="lazy"></a><figcaption>Page 087</figcaption></figure>
+<pre class="code-block"><code>outperforming the benchmark hedging strategy for all the different \ values that we tested. We</code></pre>
+<h2 id="candidate-196-page-087">Candidate 196 - page 087</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-087.jpg"><img src="../assets/page_images/page-087.jpg" alt="Page 087" loading="lazy"></a><figcaption>Page 087</figcaption></figure>
+<pre class="code-block"><code>with Opt-Var decreases with the increase of ), as the the larger the \ value is, the more risk-averse</code></pre>
+<h2 id="candidate-197-page-087">Candidate 197 - page 087</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-087.jpg"><img src="../assets/page_images/page-087.jpg" alt="Page 087" loading="lazy"></a><figcaption>Page 087</figcaption></figure>
+<pre class="code-block"><code>after hedging times the given \ value. This gives the portfolio variance adjusted by our chosen</code></pre>
+<h2 id="candidate-198-page-087">Candidate 198 - page 087</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-087.jpg"><img src="../assets/page_images/page-087.jpg" alt="Page 087" loading="lazy"></a><figcaption>Page 087</figcaption></figure>
+<pre class="code-block"><code>hedging strategy for different risk aversion \ values. The objective function is expressed as F,</code></pre>
+<h2 id="candidate-199-page-088">Candidate 199 - page 088</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-088.jpg"><img src="../assets/page_images/page-088.jpg" alt="Page 088" loading="lazy"></a><figcaption>Page 088</figcaption></figure>
+<pre class="code-block"><code>hedging strategy for different risk aversion \ values.</code></pre>
+<h2 id="candidate-200-page-088">Candidate 200 - page 088</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-088.jpg"><img src="../assets/page_images/page-088.jpg" alt="Page 088" loading="lazy"></a><figcaption>Page 088</figcaption></figure>
+<pre class="code-block"><code>strategy for different risk aversion \ values. The variance cost value is given by Vary described in</code></pre>
+<h2 id="candidate-201-page-088">Candidate 201 - page 088</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-088.jpg"><img src="../assets/page_images/page-088.jpg" alt="Page 088" loading="lazy"></a><figcaption>Page 088</figcaption></figure>
+<pre class="code-block"><code>different risk aversion \ values. The trading cost value is given by Costy described in section</code></pre>
+<h2 id="candidate-202-page-090">Candidate 202 - page 090</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-090.jpg"><img src="../assets/page_images/page-090.jpg" alt="Page 090" loading="lazy"></a><figcaption>Page 090</figcaption></figure>
+<pre class="code-block"><code>BUND | _ 100                        0</code></pre>
+<h2 id="candidate-203-page-090">Candidate 203 - page 090</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-090.jpg"><img src="../assets/page_images/page-090.jpg" alt="Page 090" loading="lazy"></a><figcaption>Page 090</figcaption></figure>
+<pre class="code-block"><code>always smaller than the original portfolio variance for different non-zero \ values. Figure[?4]gives the</code></pre>
+<h2 id="candidate-204-page-090">Candidate 204 - page 090</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-090.jpg"><img src="../assets/page_images/page-090.jpg" alt="Page 090" loading="lazy"></a><figcaption>Page 090</figcaption></figure>
+<pre class="code-block"><code>axis gives the \ values ranging from 1e-6 to 2e-4 with every increase of le-6. The vertical axis</code></pre>
+<h2 id="candidate-205-page-091">Candidate 205 - page 091</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-091.jpg"><img src="../assets/page_images/page-091.jpg" alt="Page 091" loading="lazy"></a><figcaption>Page 091</figcaption></figure>
+<pre class="code-block"><code>for different risk aversion \ values.</code></pre>
+<h2 id="candidate-206-page-091">Candidate 206 - page 091</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-091.jpg"><img src="../assets/page_images/page-091.jpg" alt="Page 091" loading="lazy"></a><figcaption>Page 091</figcaption></figure>
+<pre class="code-block"><code>trading cost term Costy = C&quot;|u|-+u&#x27; Mu in the objective function|I| We compare the value of the</code></pre>
+<h2 id="candidate-207-page-091">Candidate 207 - page 091</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-091.jpg"><img src="../assets/page_images/page-091.jpg" alt="Page 091" loading="lazy"></a><figcaption>Page 091</figcaption></figure>
+<pre class="code-block"><code>in Buxl bucket for different \ values, ranging from zero to 2e-4. We can see from the plot, Opt-Var</code></pre>
+<h2 id="candidate-208-page-092">Candidate 208 - page 092</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-092.jpg"><img src="../assets/page_images/page-092.jpg" alt="Page 092" loading="lazy"></a><figcaption>Page 092</figcaption></figure>
+<pre class="code-block"><code>problem, and we formally define the Opt-Var dynamics q&#x27;*! = qi + ul; if Ag is empty, then we</code></pre>
+<h2 id="candidate-209-page-093">Candidate 209 - page 093</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-093.jpg"><img src="../assets/page_images/page-093.jpg" alt="Page 093" loading="lazy"></a><figcaption>Page 093</figcaption></figure>
+<pre class="code-block"><code>{qe R, -B; &lt;q &lt; Bi, Vie 1,--- ,d} due to the constraint max(min(—B; — q&#x27;, $;),—S;) &lt;</code></pre>
+<h2 id="candidate-210-page-093">Candidate 210 - page 093</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-093.jpg"><img src="../assets/page_images/page-093.jpg" alt="Page 093" loading="lazy"></a><figcaption>Page 093</figcaption></figure>
+<pre class="code-block"><code>ué &lt; min(max(B; — q&#x27;, —S;),S;) for which at least 0 is admissible.</code></pre>
+<h2 id="candidate-211-page-093">Candidate 211 - page 093</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-093.jpg"><img src="../assets/page_images/page-093.jpg" alt="Page 093" loading="lazy"></a><figcaption>Page 093</figcaption></figure>
+<pre class="code-block"><code>+ The starting point qo belongs to the admissible area Z. By the previous analysi                           it stays</code></pre>
+<h2 id="candidate-212-page-093">Candidate 212 - page 093</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-093.jpg"><img src="../assets/page_images/page-093.jpg" alt="Page 093" loading="lazy"></a><figcaption>Page 093</figcaption></figure>
+<pre class="code-block"><code>hedgeable area {q €R%, Hi &lt; 44 q&#x27; &lt; Hu} by more than min, $;. As a consequence, the</code></pre>
+<h2 id="candidate-213-page-093">Candidate 213 - page 093</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-093.jpg"><img src="../assets/page_images/page-093.jpg" alt="Page 093" loading="lazy"></a><figcaption>Page 093</figcaption></figure>
+<pre class="code-block"><code>min, S, |; by counting both the long and</code></pre>
+<h2 id="candidate-214-page-094">Candidate 214 - page 094</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-094.jpg"><img src="../assets/page_images/page-094.jpg" alt="Page 094" loading="lazy"></a><figcaption>Page 094</figcaption></figure>
+<pre class="code-block"><code>Laog      ue RE      Fy(u) + a(S          +uj)— Hy) + 0( — Sai tui) + cn)</code></pre>
+<h2 id="candidate-215-page-094">Candidate 215 - page 094</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-094.jpg"><img src="../assets/page_images/page-094.jpg" alt="Page 094" loading="lazy"></a><figcaption>Page 094</figcaption></figure>
+<pre class="code-block"><code>+30 Gai-1(ui — min(max(B; — qi, —S1), Si) + Gai(—ui + max(min(—B;— qi, Si), -Si)),</code></pre>
+<h2 id="candidate-216-page-094">Candidate 216 - page 094</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-094.jpg"><img src="../assets/page_images/page-094.jpg" alt="Page 094" loading="lazy"></a><figcaption>Page 094</figcaption></figure>
+<pre class="code-block"><code>Cxi-1Gi — min(max(B;— qi, —Si))) = 0, Vie Led</code></pre>
+<h2 id="candidate-217-page-094">Candidate 217 - page 094</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-094.jpg"><img src="../assets/page_images/page-094.jpg" alt="Page 094" loading="lazy"></a><figcaption>Page 094</figcaption></figure>
+<pre class="code-block"><code>Coi(—% — max(min(—B; — q;,5;),—S;)) =0, Viel,                        d</code></pre>
+<h2 id="candidate-218-page-094">Candidate 218 - page 094</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-094.jpg"><img src="../assets/page_images/page-094.jpg" alt="Page 094" loading="lazy"></a><figcaption>Page 094</figcaption></figure>
+<pre class="code-block"><code>OL go.¢(u) = {2AE + bo0Py)(q+ uw) + 2M u — a + 61 — 02 + Co — Ge} + OG(u),</code></pre>
+<h2 id="candidate-219-page-094">Candidate 219 - page 094</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-094.jpg"><img src="../assets/page_images/page-094.jpg" alt="Page 094" loading="lazy"></a><figcaption>Page 094</figcaption></figure>
+<pre class="code-block"><code>So with u = 0 we obtain</code></pre>
+<h2 id="candidate-220-page-095">Candidate 220 - page 095</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-095.jpg"><img src="../assets/page_images/page-095.jpg" alt="Page 095" loading="lazy"></a><figcaption>Page 095</figcaption></figure>
+<pre class="code-block"><code>property of the variance sequence (Vi)ien = ((q°) &#x27;Xq&#x27;)iew € RY. Indeed, in the the admissible area</code></pre>
+<h2 id="candidate-221-page-095">Candidate 221 - page 095</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-095.jpg"><img src="../assets/page_images/page-095.jpg" alt="Page 095" loading="lazy"></a><figcaption>Page 095</figcaption></figure>
+<pre class="code-block"><code>So0P_§</code></pre>
+<h2 id="candidate-222-page-095">Candidate 222 - page 095</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-095.jpg"><img src="../assets/page_images/page-095.jpg" alt="Page 095" loading="lazy"></a><figcaption>Page 095</figcaption></figure>
+<pre class="code-block"><code>n_ 0  ai</code></pre>
+<h2 id="candidate-223-page-095">Candidate 223 - page 095</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-095.jpg"><img src="../assets/page_images/page-095.jpg" alt="Page 095" loading="lazy"></a><figcaption>Page 095</figcaption></figure>
+<pre class="code-block"><code>noe                   co _</code></pre>
+<h2 id="candidate-224-page-096">Candidate 224 - page 096</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-096.jpg"><img src="../assets/page_images/page-096.jpg" alt="Page 096" loading="lazy"></a><figcaption>Page 096</figcaption></figure>
+<pre class="code-block"><code>min(max(B — q,—S),$)</code></pre>
+<h2 id="candidate-225-page-096">Candidate 225 - page 096</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-096.jpg"><img src="../assets/page_images/page-096.jpg" alt="Page 096" loading="lazy"></a><figcaption>Page 096</figcaption></figure>
+<pre class="code-block"><code>—max(min(—B — q, S),—S)</code></pre>
+<h2 id="candidate-226-page-096">Candidate 226 - page 096</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-096.jpg"><img src="../assets/page_images/page-096.jpg" alt="Page 096" loading="lazy"></a><figcaption>Page 096</figcaption></figure>
+<pre class="code-block"><code>client inventory c. First we see that if v € Agyu—u and u € Age then v + u € Aye. We prove</code></pre>
+<h2 id="candidate-227-page-096">Candidate 227 - page 096</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-096.jpg"><img src="../assets/page_images/page-096.jpg" alt="Page 096" loading="lazy"></a><figcaption>Page 096</figcaption></figure>
+<pre class="code-block"><code>min(c,0) &lt; min(¢ — w,0) &lt; ¢f — ul — u) &lt; max(c — w!,0) &lt; max(,0), ¥j                                €1,--- ,d, VEEL, N,</code></pre>
+<h2 id="candidate-228-page-096">Candidate 228 - page 096</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-096.jpg"><img src="../assets/page_images/page-096.jpg" alt="Page 096" loading="lazy"></a><figcaption>Page 096</figcaption></figure>
+<pre class="code-block"><code>so v +u      verifies the bucket risk constraint starting from (q,c). Define</code></pre>
+<h2 id="candidate-229-page-098">Candidate 229 - page 098</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-098.jpg"><img src="../assets/page_images/page-098.jpg" alt="Page 098" loading="lazy"></a><figcaption>Page 098</figcaption></figure>
+<pre class="code-block"><code>http: //stashblue.ms. com:11990/atlassian- stash/projects/FIDALGO_MMJ/repos/mmj/browse/fidalgo.</code></pre>
+<h2 id="candidate-230-page-098">Candidate 230 - page 098</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-098.jpg"><img src="../assets/page_images/page-098.jpg" alt="Page 098" loading="lazy"></a><figcaption>Page 098</figcaption></figure>
+<pre class="code-block"><code>(http: //stashblue.ms .com:11990/atlassian- stash/projects/FIDALGO_MMJ/repos/mmj/browse/fidalgo.</code></pre>
+<h2 id="candidate-231-page-098">Candidate 231 - page 098</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-098.jpg"><img src="../assets/page_images/page-098.jpg" alt="Page 098" loading="lazy"></a><figcaption>Page 098</figcaption></figure>
+<pre class="code-block"><code>(http: //stashblue.ms .com:11990/atlassian- stash/projects/FIDALGO_MMJ/repos/mmj/browse/fidalgo.</code></pre>
+<h2 id="candidate-232-page-098">Candidate 232 - page 098</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-098.jpg"><img src="../assets/page_images/page-098.jpg" alt="Page 098" loading="lazy"></a><figcaption>Page 098</figcaption></figure>
+<pre class="code-block"><code>{http://stashblue.ms.com:11990/atlassian- stash/projects/FIDALGO_MMJ/repos/mmj/browse/fidalgo.</code></pre>
+<h2 id="candidate-233-page-098">Candidate 233 - page 098</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-098.jpg"><img src="../assets/page_images/page-098.jpg" alt="Page 098" loading="lazy"></a><figcaption>Page 098</figcaption></figure>
+<pre class="code-block"><code>product. Namely for product é € [d], @, is replaced by max(—0.9 x C,, min(a,,0.9 x C,)).</code></pre>
+<h2 id="candidate-234-page-098">Candidate 234 - page 098</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-098.jpg"><img src="../assets/page_images/page-098.jpg" alt="Page 098" loading="lazy"></a><figcaption>Page 098</figcaption></figure>
+<pre class="code-block"><code>(http://stashblue.ms .com:11990/atlassian- stash/projects/FIDALGO_MMJ/repos/mmj/browse/fidalgo.</code></pre>
+<h2 id="candidate-235-page-098">Candidate 235 - page 098</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-098.jpg"><img src="../assets/page_images/page-098.jpg" alt="Page 098" loading="lazy"></a><figcaption>Page 098</figcaption></figure>
+<pre class="code-block"><code>http: //stashblue.ms. com:11990/atlassian- stash/projects/FIDALGO_MMJ/repos/mmj/browse/fidalgo.</code></pre>
+<h2 id="candidate-236-page-098">Candidate 236 - page 098</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-098.jpg"><img src="../assets/page_images/page-098.jpg" alt="Page 098" loading="lazy"></a><figcaption>Page 098</figcaption></figure>
+<pre class="code-block"><code>http: //stashblue.ms. com:11990/atlassian- stash/projects/FIDALGO_MMJ/repos/mmj/browse/fidalgo.</code></pre>
+<h2 id="candidate-237-page-099">Candidate 237 - page 099</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-099.jpg"><img src="../assets/page_images/page-099.jpg" alt="Page 099" loading="lazy"></a><figcaption>Page 099</figcaption></figure>
+<pre class="code-block"><code>http: //stashblue.ms. com:11990/atlassian- stash/projects/FIDALGO_MMJ/repos/mmj/browse/fidalgo.</code></pre>
+<h2 id="candidate-238-page-099">Candidate 238 - page 099</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-099.jpg"><img src="../assets/page_images/page-099.jpg" alt="Page 099" loading="lazy"></a><figcaption>Page 099</figcaption></figure>
+<pre class="code-block"><code>inttp: //stashblue. ms. com:11990/atlassian- stash/projects/FIDALGO_MMJ/repos/mmj/browse/fidalgo.</code></pre>
+<h2 id="candidate-239-page-099">Candidate 239 - page 099</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-099.jpg"><img src="../assets/page_images/page-099.jpg" alt="Page 099" loading="lazy"></a><figcaption>Page 099</figcaption></figure>
+<pre class="code-block"><code>«   Risk change control /http: //stashblue.ms.com:11990/atlass ian-stash/projects/FIDALGO_|</code></pre>
+<h2 id="candidate-240-page-099">Candidate 240 - page 099</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-099.jpg"><img src="../assets/page_images/page-099.jpg" alt="Page 099" loading="lazy"></a><figcaption>Page 099</figcaption></figure>
+<pre class="code-block"><code>243 and its test http://stashblue .ms.com:11990/atlassian- stash/projects/FIDALGO_MMJ/</code></pre>
+<h2 id="candidate-241-page-099">Candidate 241 - page 099</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-099.jpg"><img src="../assets/page_images/page-099.jpg" alt="Page 099" loading="lazy"></a><figcaption>Page 099</figcaption></figure>
+<pre class="code-block"><code>« Aim not hedging|http://stashblue .ms .com:11990/atlassian- stash/projects/FIDALGO_MMJ/|</code></pre>
+<h2 id="candidate-242-page-099">Candidate 242 - page 099</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-099.jpg"><img src="../assets/page_images/page-099.jpg" alt="Page 099" loading="lazy"></a><figcaption>Page 099</figcaption></figure>
+<pre class="code-block"><code>and its test|ht tp: //s tashblue.ms . com: 11990/at lassian- stash/projects/FIDALGO_MMJ/repos/</code></pre>
+<h2 id="candidate-243-page-101">Candidate 243 - page 101</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-101.jpg"><img src="../assets/page_images/page-101.jpg" alt="Page 101" loading="lazy"></a><figcaption>Page 101</figcaption></figure>
+<pre class="code-block"><code>\</code></pre>
+<h2 id="candidate-244-page-101">Candidate 244 - page 101</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-101.jpg"><img src="../assets/page_images/page-101.jpg" alt="Page 101" loading="lazy"></a><figcaption>Page 101</figcaption></figure>
+<pre class="code-block"><code>\</code></pre>
+<h2 id="candidate-245-page-101">Candidate 245 - page 101</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-101.jpg"><img src="../assets/page_images/page-101.jpg" alt="Page 101" loading="lazy"></a><figcaption>Page 101</figcaption></figure>
+<pre class="code-block"><code>\</code></pre>
+<h2 id="candidate-246-page-103">Candidate 246 - page 103</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-103.jpg"><img src="../assets/page_images/page-103.jpg" alt="Page 103" loading="lazy"></a><figcaption>Page 103</figcaption></figure>
+<pre class="code-block"><code>[proj ects/FIDALGO_MMJ/repos/mmj/pull-             ]</code></pre>
+<h2 id="candidate-247-page-104">Candidate 247 - page 104</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-104.jpg"><img src="../assets/page_images/page-104.jpg" alt="Page 104" loading="lazy"></a><figcaption>Page 104</figcaption></figure>
+<pre class="code-block"><code>criteria are the same for CRB. This corresponds to the segment US_CRB.</code></pre>
+<h2 id="candidate-248-page-107">Candidate 248 - page 107</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-107.jpg"><img src="../assets/page_images/page-107.jpg" alt="Page 107" loading="lazy"></a><figcaption>Page 107</figcaption></figure>
+<pre class="code-block"><code>6            2024-08-30 | Dynamic Lambda content added in relevant section.</code></pre>
+<h2 id="candidate-249-page-107">Candidate 249 - page 107</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-107.jpg"><img src="../assets/page_images/page-107.jpg" alt="Page 107" loading="lazy"></a><figcaption>Page 107</figcaption></figure>
+<pre class="code-block"><code>OJ.L_.2017.087.01.0417.01-ENG)[T</code></pre>
+<h2 id="candidate-250-page-108">Candidate 250 - page 108</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-108.jpg"><img src="../assets/page_images/page-108.jpg" alt="Page 108" loading="lazy"></a><figcaption>Page 108</figcaption></figure>
+<pre class="code-block"><code>[https://perso.ens-lyon.fr/patrick flandrin /Ledoit Wolf _JMA2004.pdf]23|</code></pre>
+<h2 id="candidate-251-page-116">Candidate 251 - page 116</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-116.jpg"><img src="../assets/page_images/page-116.jpg" alt="Page 116" loading="lazy"></a><figcaption>Page 116</figcaption></figure>
+<pre class="code-block"><code>hedging strategy for different risk aversion \ values. Examples 1-20.</code></pre>
+<h2 id="candidate-252-page-117">Candidate 252 - page 117</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-117.jpg"><img src="../assets/page_images/page-117.jpg" alt="Page 117" loading="lazy"></a><figcaption>Page 117</figcaption></figure>
+<pre class="code-block"><code>hedging strategy for different risk aversion \ values. Examples 21-40.</code></pre>
+<h2 id="candidate-253-page-118">Candidate 253 - page 118</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-118.jpg"><img src="../assets/page_images/page-118.jpg" alt="Page 118" loading="lazy"></a><figcaption>Page 118</figcaption></figure>
+<pre class="code-block"><code>hedging strategy for different risk aversion \ values. Examples 41-60.</code></pre>
+<h2 id="candidate-254-page-119">Candidate 254 - page 119</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-119.jpg"><img src="../assets/page_images/page-119.jpg" alt="Page 119" loading="lazy"></a><figcaption>Page 119</figcaption></figure>
+<pre class="code-block"><code>hedging strategy for different risk aversion \ values. Examples 61-80.</code></pre>
+<h2 id="candidate-255-page-120">Candidate 255 - page 120</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-120.jpg"><img src="../assets/page_images/page-120.jpg" alt="Page 120" loading="lazy"></a><figcaption>Page 120</figcaption></figure>
+<pre class="code-block"><code>hedging strategy for different risk aversion \ values. Examples 81-100.</code></pre>
+<h2 id="candidate-256-page-121">Candidate 256 - page 121</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-121.jpg"><img src="../assets/page_images/page-121.jpg" alt="Page 121" loading="lazy"></a><figcaption>Page 121</figcaption></figure>
+<pre class="code-block"><code>for different risk aversion \ values. Examples 1-20.</code></pre>
+<h2 id="candidate-257-page-122">Candidate 257 - page 122</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-122.jpg"><img src="../assets/page_images/page-122.jpg" alt="Page 122" loading="lazy"></a><figcaption>Page 122</figcaption></figure>
+<pre class="code-block"><code>for different risk aversion \ values. Examples 21-40.</code></pre>
+<h2 id="candidate-258-page-123">Candidate 258 - page 123</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-123.jpg"><img src="../assets/page_images/page-123.jpg" alt="Page 123" loading="lazy"></a><figcaption>Page 123</figcaption></figure>
+<pre class="code-block"><code>for different risk aversion \ values. Examples 41-60.</code></pre>
+<h2 id="candidate-259-page-124">Candidate 259 - page 124</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-124.jpg"><img src="../assets/page_images/page-124.jpg" alt="Page 124" loading="lazy"></a><figcaption>Page 124</figcaption></figure>
+<pre class="code-block"><code>for different risk aversion \ values. Examples 61-80.</code></pre>
+<h2 id="candidate-260-page-127">Candidate 260 - page 127</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-127.jpg"><img src="../assets/page_images/page-127.jpg" alt="Page 127" loading="lazy"></a><figcaption>Page 127</figcaption></figure>
+<pre class="code-block"><code>different risk aversion \ values. The trading cost value is given by Costg described in section|3.</code></pre>
+<h2 id="candidate-261-page-135">Candidate 261 - page 135</h2>
+<figure class="doc-image"><a href="../assets/page_images/page-135.jpg"><img src="../assets/page_images/page-135.jpg" alt="Page 135" loading="lazy"></a><figcaption>Page 135</figcaption></figure>
+<pre class="code-block"><code>2                      \</code></pre>
+</article>
+
+    </main>
+  </div>
+  <script src="../assets/search-index.js"></script>
+  <script src="../assets/app.js"></script>
+</body>
+</html>

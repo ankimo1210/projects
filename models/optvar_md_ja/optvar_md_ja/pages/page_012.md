@@ -1,0 +1,45 @@
+# Page 012
+
+![Page 012](../assets/page_images/page-012.jpg)
+
+## OCR layout text
+
+```text
+Morgan Stanley                                                                                   Confidential
+
+
+
+
+                  100
+
+
+
+
+          Figure 7: UST daily input and output volumes between 05/07/23 and 06/07/23
+
+
+
+
+  Figure 8: Opt-Var US daily input and output volumes ratio between 05/07/23 and 06/07/23
+
+2.4    Opt-Var     Principle
+
+We explain the principle of the Opt-Var model with a toy example with only two products A and
+                                                                                100.1 92.1 )
+B. We consider the covariance matrix associated to their yield increments             U =   (2   1    110.5
+
+                     0.084‘): and the quadratic. cost matrix. M = ( 200e-8
+the cost vector C = (v0                                                0                       0. .): We
+                                                                                            2000
+                    . portfolio. qo =
+also choose a starting                      50000
+                                              ("5")          .         . parameter \. The Opt-Var
+                                                      and a risk-aversion
+optimization problem in two dimensions is given by
+                          min A(go + uo)" (qo + wo) + CT luo] + ug Muo.
+The first term corresponds to the variance of the portfolio after hedging with an order uo while the
+other terms corresponds to hedging costs. The intuition behind the risk-aversion parameter ) is
+130115: Opt-Var                                                                              Page 12 of 136
+
+                        [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)
+```

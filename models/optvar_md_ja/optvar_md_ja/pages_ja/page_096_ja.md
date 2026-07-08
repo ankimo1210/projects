@@ -1,0 +1,64 @@
+# ページ 096
+
+![ページ 096](../assets/page_images/page-096.jpg)
+
+## 原文OCRテキスト
+
+```text
+Morgan Stanley                                                                                                 Confidential
+
+
+                                                         Ax <1(q),
+                                                                                                        da      -la
+                                                                                                    la          -la
+  5                29!
+                    (AL + docPy)          +                 AD+ docPy +M)               0           1           0.
+wath a) = (          a           Teh)           “), p=       (7          ra          gh      aa     tee         0 [ae
+                                                                                                     la              0
+                                                                                                    -la              0
+                           0a1
+                           0a1
+         =            Hy
+                       - Lit
+r(@) =                M+     DiGi
+               min(max(B — q,—S),$)
+             —max(min(—B — q, S),—S)
+
+   By Theorem 6.11 from [IQ], the minimum of the optimization problem is continuous in (b,r)
+hence continuous in g on the admissible area Z because b and r are continuous in g. So W is
+continuous at g~.        Hence @ = W(q') converges to V(g~).                  But @ converges to zero so it proves
+that U(q®) = 0 hence q® belongs to the stable area S.
+
+5.6.3.       CRB   convergence         in one step
+
+Let Ag,- be the admissible set defined by the CRB constraints with AIM inventory g, matchable
+client inventory c. First we see that if v € Agyu—u and u € Age then v + u € Aye. We prove
+it by looking at the client bucket risk constraint. The reasoning is exactly the same for all other
+constraints. Take v € Agyuc—u and u € Age:
+
+min(c,0) < min(¢ — w,0) < ¢f — ul — u) < max(c — w!,0) < max(,0), ¥j                                €1,--- ,d, VEEL, N,
+
+so v +u      verifies the bucket risk constraint starting from (q,c). Define
+                                                   T
+                                           N                      N             N
+                Vargc(u) = M1 (: + y)                  z (: + y») +2) (eG — ui)’ Z(G ui)
+                                  va      i=1                     i=l          i=1
+
+
+                   Vol(u) = S> >> lui,
+                                 i=1j=1
+and the CRB solution @ € argminye 4, .Varge(                      —Vol(u).
+By optimality we know that
+                            Vargc(u) — Vol(t) < Vargc(u) — Vol(u), Yu € Age.
+Then for any v € Agyu,c—u
+
+               Vargyac—a(v) — Vol(v) = Varge(v + %) — Vol(v + %) + Vol(v + %) — Vol(v)
+                                               > Varg,(@) — Vol(u) + Vol(v +a) — Vol(v),
+
+thanks to the previous property. Hence
+                      Varg+a,c-a(v) — Vol(v) > Vargc(t)                 = Varg+ac—a(0) — Vol(0),
+
+130115: Opt-Var                                                                                              Page 96 of 136
+
+                           [git] « Branch: iropt-var@be27d1a = Release:              (2024-10-31)
+```

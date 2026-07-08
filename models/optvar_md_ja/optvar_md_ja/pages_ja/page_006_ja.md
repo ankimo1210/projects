@@ -1,0 +1,54 @@
+# ページ 006
+
+![ページ 006](../assets/page_images/page-006.jpg)
+
+## 原文OCRテキスト
+
+```text
+Morgan Stanley                                                                             Confidential
+
+
+
+                         1s
+
+                         14
+
+                         13
+
+                         12
+
+                       S11
+
+                         10
+
+                         09
+
+                         08
+                               3.0        35           40          45     50
+                                               years to maturity
+
+Figure 2: This figure zooms into the yield curve between 3 years and 5 years left to maturity. The
+point of the figure is to emphasize there are illiquid bonds (red) that are in between the maturity
+of the liquid bonds (blue).
+   Now let’s say we have just purchased one unit of the red bond, see figure [3] The risk of this
+illiquid instrument is ‘projected’ on to the liquid instruments at 3 and 5 years left to maturity; this
+projected risk is represented by the light blue rectangles with the dotted outlines. The autohedger
+then sells this projected risk to obtain the target hedge, represented by the darker blue rectangles.
+     There are two steps to this hedging process. The first concerns the projection of the illiquid
+risk onto the liquid target hedge, using the given hedge ratios input to the autohedger. The second
+step, optimizing the variance, is about transacting the target hedge.
+    ‘As we will discuss below, we do not always transact the target hedge. Rather we try to opti-
+mize this process by spreading the transaction across all the liquid instruments to take advantage of
+potentially cheaper transaction costs (and the correlation structure of these liquid hedging instru-
+ments). This process is called ‘Optimizing Variance Reduction’ or ‘Opt-Var’ for short; which refers
+to the fact that Opt-Var seeks to minimize the portfolio risk variance (in the hedge instrument
+space); the incorporation of transaction costs into the Opt-Var objective function renders ensures
+that this variance reduction is carried out in an ‘optimal’ way.
+
+
+
+
+130115: Opt-Var                                                                           Page 6 of 136
+
+                       [git] « Branch: iropt-var@be27d1a = Release:     (2024-10-31)
+```

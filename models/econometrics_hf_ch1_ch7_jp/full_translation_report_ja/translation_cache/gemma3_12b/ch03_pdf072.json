@@ -1,0 +1,13 @@
+{
+  "model": "gemma3:12b",
+  "chapter": 3,
+  "chapter_ja": "高頻度データの実証的性質",
+  "chapter_en": "Empirical Properties of High-Frequency Data",
+  "pdf_page": 72,
+  "printed_page": "57",
+  "source_chars": 691,
+  "translation_chars": 335,
+  "elapsed_seconds": 13.647,
+  "created_at": "2026-06-20T20:59:46",
+  "translation": "3.5 時間集計データの性質                                                      57\n\n図3.20　JPモルガン（NYSE）、マイクロソフト（NASDAQ）、ドイツテレコム（XETRA）の2分間の取引数、累積取引高、累積純買いボリューム、ビッド・アスク・スプレッド、レベル1の市場深度、相対純気配深度の変化の自己相関関数。サンプル期間：JPモルガンとマイクロソフトは2009年6月、ドイツテレコムは2010年9月。\n\n図3.27–3.29は、2分間、30分、10秒の集計における異なる取引変数の間のクロス自己相関をプロットしている。JPMとMSFTでは、取引数、累積取引高の間で強い時間的なクロス依存性が見られる。"
+}

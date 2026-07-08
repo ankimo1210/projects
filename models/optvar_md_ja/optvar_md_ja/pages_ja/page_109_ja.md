@@ -1,0 +1,27 @@
+# ページ 109
+
+![ページ 109](../assets/page_images/page-109.jpg)
+
+## 原文OCRテキスト
+
+```text
+Morgan Stanley                                                                        Confidential
+
+
+Terminology          Description
+SHTZ                 German future
+TU                   2-Year T-Note future
+TY                   10-Year T-Note future
+UL                   Ultra US. Treasury Bond future
+us                   U.S. Treasury Bond future
+UST                  USS. Treasury Bonds
+UXY                  Ultra 10-Year U.S. Treasury Note
+VWAP                 Volume Weighted Average Price
+
+
+
+
+130115:   Opt-Var                                                                  Page   109 of 136
+
+                    [git] = Branch: ir.opt-var@bc27d1a = Release:   (2024-10-31)
+```

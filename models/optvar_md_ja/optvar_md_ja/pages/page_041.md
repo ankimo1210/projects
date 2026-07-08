@@ -1,0 +1,58 @@
+# Page 041
+
+![Page 041](../assets/page_images/page-041.jpg)
+
+## OCR layout text
+
+```text
+Morgan Stanley                                                                                   Confidential
+
+
+4,2       Alternative      Theories    and   Approaches
+
+    In this section, we list alternative approaches and explain the considerations in support of our
+choices.
+       « A model that proposes hedges without utilizing the correlations and costs of
+         different hedge instruments. This is the simplest approach to propose hedges. In this
+         approach, the model will always propose to trade the instrument itself if it exceeded a certain
+         limit without considering the correlations and costs of trading. Therefore, such an approach
+         can be costly for trading the hedges, and we may not end up with an optimal portfolio.
+       + Linear instead of quadratic cost term in the model.                 One could consider the Opt-
+         Var objective without the quadratic cost term u! Mu but only the linear cost term C™ |u|.
+         However, this would imply that this model converges to the stable area in one step, regardless
+         of how big the trade is (the proof of this can be derived based on sectio       . This approach
+         leads to larger trades and hence more price impact on the market; it follows that the execution
+         costs will also be larger in this case.
+
+4.3       Contributions from Key Stakeholders and Independent                        Sources
+The stakeholders are the following entities:
+
+       + Algo Traders (Bookrunners): Key stakeholder whose algorithms use the model, and who
+         control the model parameters.
+       « Strats: Building, enhancing and calibrating the model when needed. Strats make sure
+         that the Opt-Var model is valid and working properly, or in the opposite case, they have to
+         work with bookrunners to re-tune and re-calibrate the model’s parameters. Also, they are
+         responsible for the future enhancement and development of the model.
+
+       + Technology: The technology section is responsible for altering the model’s logics developed
+         by Strats to production environment. It ensures the correctness of the model implementa-
+         tion, and makes sure it meets the standards of MS for real-time application to guarantee
+         performance.
+       « Model    Owner:    In the case of the Opt-Var model, it is Strats Management.         The dedicated
+         contact is provided on the front matter of the document.
+
+       + ETRM: Managing the risk associated with the algos using the model.
+        Independent sources are detailed in section
+
+5       Model      Testing
+5.1.      Model Diagnostic Testing
+5.1.1      Implementation       Testing
+
+As described in section      the Opt-Var model is implemented in Java using the NAG library
+in the production environment. In this section, we implement the Opt-Var model in the Python
+environment and test that the production implementation and Python implementation give the
+same results. The NAG library requires a specific license to be accessed in Python. Therefore,
+130115: Opt-Var                                                                                Page 41 of 136
+
+                           [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)
+```

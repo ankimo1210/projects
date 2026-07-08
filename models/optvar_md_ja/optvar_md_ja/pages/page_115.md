@@ -1,0 +1,21 @@
+# Page 115
+
+![Page 115](../assets/page_images/page-115.jpg)
+
+## OCR layout text
+
+```text
+Morgan Stanley                                                                     Confidential
+
+
+
+
+Figure 88: Java and Python CRB Convergence Comparison. Examples 50-100. Set B of AIM
+constraints
+
+
+
+
+130115: Opt-Var                                                                 Page 115 of 136
+                  [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)
+```

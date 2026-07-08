@@ -1,0 +1,67 @@
+Morgan Stanley                                                                          Confidential
+
+
+
+
+                       30000
+
+                       20000
+
+
+
+                               “eo
+                               oy
+                               -e 5y
+                               7
+                               “2 10r
+                               e207
+                               = 307
+                               =
+                               “ew
+                               1
+                      30000    - uxy
+                               es
+                               eu            4-4                            +
+                                00      02     oe       o6       oe        10
+
+
+Figure 52: Terminal inventory in PVO1 through the repeated calls to CRB as a function of as
+function of N, a multiplier in front of the 2Y cost, with Set A of constraints.
+
+
+
+                        8000                                           ey
+                                                                       oy
+                                                                         5y
+                        6000                                           ay
+                                                                        = toy
+                                                                       e207
+                                                                        © 307
+                                                                        Tu
+                                                                       aa
+                                                                       =
+                                                                       eo uxr
+                                                                       = us
+                                                                       eu
+
+
+
+
+                               oo       02     oe       o6       oe        To
+
+
+Figure 53: Terminal inventory in PVO1 through the repeated calls to CRB as a function of N, a
+multiplier in front of the 2Y cost, with Set B of constraints.
+
+5.3.4    Effect of the quadratic cost parameter
+
+First we consider multiples of the quadratic cost vector M = KM + ;Ajdiag(X) with a multiplier
+K in [0,10]. The larger the quadratic cost the smaller the steps, as can be seen in Figure
+ consequence, the convergence requires more iterations. For K = 0, a stable portfolio is reached in
+ just 3 iterations; 40 steps are necessary when K = 10. We notice that the terminal scarcely varies
+ when we change the quadratic cost, as we see in Figure [55] Then we multiply the first quadratic
+ cost Mo of the BUND future by a multiplier U in [0,10], the other parameters being fixed. We
+
+130115: Opt-Var                                                                       Page 77 of 136
+
+                      [git] « Branch: iropt-var@be27d1a = Release:    (2024-10-31)

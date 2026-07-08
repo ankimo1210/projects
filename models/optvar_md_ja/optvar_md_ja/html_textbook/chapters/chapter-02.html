@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2. ビジネスおよびアルゴリズム説明 - Opt-Var</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body data-root="../">
+  <a class="skip-link" href="#content">本文へ移動</a>
+  <div class="layout">
+    
+<aside class="sidebar" aria-label="テキストブックナビゲーション">
+  <div class="brand">
+    <a href="../index.html">Opt-Var HTML</a>
+    <span>日本語テキストブック</span>
+  </div>
+  <form class="search-box" data-search-form>
+    <label for="site-search">OCR検索</label>
+    <input id="site-search" name="q" type="search" placeholder="例: lambda, covariance" autocomplete="off" data-search-input>
+    <div class="search-results" data-search-results aria-live="polite"></div>
+  </form>
+  <form class="page-jump" data-page-jump>
+    <label for="page-number">ページへ移動</label>
+    <div>
+      <input id="page-number" name="page" type="number" min="1" max="136" placeholder="1-136">
+      <button type="submit">開く</button>
+    </div>
+  </form>
+  <nav>
+    <h2>章</h2>
+    <ul class="nav-list">
+      <li><a class="" href="../chapters/front-matter.html">表紙・前付</a></li><li><a class="" href="../chapters/chapter-01.html">1. エグゼクティブサマリー</a></li><li><a class="active" href="../chapters/chapter-02.html">2. ビジネスおよびアルゴリズム説明</a></li><li><a class="" href="../chapters/chapter-03.html">3. モデル説明</a></li><li><a class="" href="../chapters/chapter-04.html">4. モデル開発・選定プロセス</a></li><li><a class="" href="../chapters/chapter-05.html">5. モデルテスト</a></li><li><a class="" href="../chapters/chapter-06.html">6. モデルの制約・不確実性・緩和策</a></li><li><a class="" href="../chapters/chapter-07.html">7. モデルオーバーレイと上書き</a></li><li><a class="" href="../chapters/chapter-08.html">8. 本番実装と統制</a></li><li><a class="" href="../chapters/chapter-09.html">9. 継続的なモデル性能モニタリング</a></li><li><a class="" href="../chapters/chapter-10.html">10. モデル変更ログ</a></li><li><a class="" href="../chapters/chapter-11.html">11. 参考文献</a></li><li><a class="" href="../chapters/chapter-12.html">12. 用語定義</a></li><li><a class="" href="../chapters/chapter-13.html">13. 付録</a></li>
+    </ul>
+    <details open>
+      <summary>詳細目次</summary>
+      <ul class="nav-list toc-list">
+        <li><a class="" href="../chapters/chapter-01.html"><span class="toc-num">1</span>エグゼクティブサマリー</a></li><li><a class="" href="../pages/page-005.html#section-1-1"><span class="toc-num">1.1</span>モデルの目的と想定用途</a></li><li><a class="" href="../pages/page-007.html#section-1-2"><span class="toc-num">1.2</span>モデル概要</a></li><li><a class="" href="../pages/page-008.html#section-1-3"><span class="toc-num">1.3</span>主な前提と制約</a></li><li><a class="" href="../pages/page-008.html#section-1-4"><span class="toc-num">1.4</span>全体的なモデル性能評価</a></li><li><a class="" href="../pages/page-008.html#section-1-5"><span class="toc-num">1.5</span>結果サマリー</a></li><li><a class="active" href="../chapters/chapter-02.html"><span class="toc-num">2</span>ビジネスおよびアルゴリズム説明</a></li><li><a class="" href="../pages/page-009.html#section-2-1"><span class="toc-num">2.1</span>Autohedger概要</a></li><li><a class="" href="../pages/page-010.html#section-2-2"><span class="toc-num">2.2</span>ポートフォリオリスク</a></li><li><a class="" href="../pages/page-010.html#section-2-3"><span class="toc-num">2.3</span>入出力量</a></li><li><a class="" href="../pages/page-012.html#section-2-4"><span class="toc-num">2.4</span>Opt-Varの原理</a></li><li><a class="" href="../pages/page-015.html#section-2-5"><span class="toc-num">2.5</span>Autohedger内の機能コンポーネント</a></li><li><a class="" href="../pages/page-017.html#section-2-6"><span class="toc-num">2.6</span>規制・ポリシー要件</a></li><li><a class="" href="../chapters/chapter-03.html"><span class="toc-num">3</span>モデル説明</a></li><li><a class="" href="../pages/page-017.html#section-3-1"><span class="toc-num">3.1</span>モデル前提</a></li><li><a class="" href="../pages/page-018.html#section-3-2"><span class="toc-num">3.2</span>モデル仕様</a></li><li><a class="" href="../pages/page-025.html#section-3-3"><span class="toc-num">3.3</span>モデル入力とデータ</a></li><li><a class="" href="../pages/page-027.html#section-3-4"><span class="toc-num">3.4</span>モデル出力</a></li><li><a class="" href="../pages/page-027.html#section-3-5"><span class="toc-num">3.5</span>モデル較正とパラメータ推定</a></li><li><a class="" href="../pages/page-034.html#section-3-6"><span class="toc-num">3.6</span>数値実装</a></li><li><a class="" href="../pages/page-036.html#section-3-7"><span class="toc-num">3.7</span>付録：技術詳細</a></li><li><a class="" href="../chapters/chapter-04.html"><span class="toc-num">4</span>モデル開発・選定プロセス</a></li><li><a class="" href="../pages/page-040.html#section-4-1"><span class="toc-num">4.1</span>モデル分割と変数選択</a></li><li><a class="" href="../pages/page-041.html#section-4-2"><span class="toc-num">4.2</span>代替理論・代替アプローチ</a></li><li><a class="" href="../pages/page-041.html#section-4-3"><span class="toc-num">4.3</span>主要ステークホルダー・独立ソースからの貢献</a></li><li><a class="" href="../chapters/chapter-05.html"><span class="toc-num">5</span>モデルテスト</a></li><li><a class="" href="../pages/page-041.html#section-5-1"><span class="toc-num">5.1</span>モデル診断テスト</a></li><li><a class="" href="../pages/page-057.html#section-5-2"><span class="toc-num">5.2</span>シナリオ分析とストレステスト</a></li><li><a class="" href="../pages/page-067.html#section-5-3"><span class="toc-num">5.3</span>感応度分析</a></li><li><a class="" href="../pages/page-086.html#section-5-4"><span class="toc-num">5.4</span>ベンチマーキング</a></li><li><a class="" href="../pages/page-089.html#section-5-5"><span class="toc-num">5.5</span>結果分析とバックテスト</a></li><li><a class="" href="../pages/page-092.html#section-5-6"><span class="toc-num">5.6</span>付録：技術詳細</a></li><li><a class="" href="../chapters/chapter-06.html"><span class="toc-num">6</span>モデルの制約・不確実性・緩和策</a></li><li><a class="" href="../chapters/chapter-07.html"><span class="toc-num">7</span>モデルオーバーレイと上書き</a></li><li><a class="" href="../chapters/chapter-08.html"><span class="toc-num">8</span>本番実装と統制</a></li><li><a class="" href="../pages/page-097.html#section-8-1"><span class="toc-num">8.1</span>本番実装</a></li><li><a class="" href="../pages/page-097.html#section-8-2"><span class="toc-num">8.2</span>モデルプロセスと統制</a></li><li><a class="" href="../pages/page-099.html#section-8-3"><span class="toc-num">8.3</span>コード変更管理とバージョン管理</a></li><li><a class="" href="../pages/page-099.html#section-8-4"><span class="toc-num">8.4</span>ソフトウェア開発ライフサイクル</a></li><li><a class="" href="../chapters/chapter-09.html"><span class="toc-num">9</span>継続的なモデル性能モニタリング</a></li><li><a class="" href="../pages/page-103.html#section-9-1"><span class="toc-num">9.1</span>指標と閾値</a></li><li><a class="" href="../pages/page-104.html#section-9-2"><span class="toc-num">9.2</span>エスカレーション</a></li><li><a class="" href="../pages/page-104.html#section-9-3"><span class="toc-num">9.3</span>MRMと共有されるデータ</a></li><li><a class="" href="../pages/page-106.html#section-9-4"><span class="toc-num">9.4</span>日中モニタリングツール</a></li><li><a class="" href="../chapters/chapter-10.html"><span class="toc-num">10</span>モデル変更ログ</a></li><li><a class="" href="../chapters/chapter-11.html"><span class="toc-num">11</span>参考文献</a></li><li><a class="" href="../chapters/chapter-12.html"><span class="toc-num">12</span>用語定義</a></li><li><a class="" href="../chapters/chapter-13.html"><span class="toc-num">13</span>付録</a></li><li><a class="" href="../pages/page-110.html#section-13-1"><span class="toc-num">13.1</span>収束テスト図</a></li><li><a class="" href="../pages/page-116.html#section-13-2"><span class="toc-num">13.2</span>ベンチマークテスト図</a></li><li><a class="" href="../pages/page-121.html#section-13-3"><span class="toc-num">13.3</span>結果分析・バックテスト図</a></li>
+      </ul>
+    </details>
+  </nav>
+</aside>
+
+    <main id="content" class="content">
+      
+<nav class="breadcrumb">
+  <a href="../index.html">トップ</a>
+  <span>/</span>
+  <span>2. ビジネスおよびアルゴリズム説明</span>
+</nav>
+<header class="chapter-header">
+  <p class="eyebrow">PDF 9-17 ページ</p>
+  <h1>2. ビジネスおよびアルゴリズム説明</h1>
+  <p>Business and Algo Description</p>
+</header>
+<section>
+  <h2>この章の目次</h2>
+  
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>節</th><th>日本語</th><th>English</th><th>ページ</th></tr></thead>
+    <tbody><tr><td><a href="#section-2">2</a></td><td>ビジネスおよびアルゴリズム説明</td><td>Business and Algo Description</td><td><a href="../pages/page-009.html">9</a></td></tr><tr><td><a href="#section-2-1">2.1</a></td><td>Autohedger概要</td><td>Autohedger Overview</td><td><a href="../pages/page-009.html">9</a></td></tr><tr><td><a href="#section-2-2">2.2</a></td><td>ポートフォリオリスク</td><td>Portfolio Risk</td><td><a href="../pages/page-010.html">10</a></td></tr><tr><td><a href="#section-2-3">2.3</a></td><td>入出力量</td><td>Inputs and Outputs Volume</td><td><a href="../pages/page-010.html">10</a></td></tr><tr><td><a href="#section-2-4">2.4</a></td><td>Opt-Varの原理</td><td>Opt-Var Principle</td><td><a href="../pages/page-012.html">12</a></td></tr><tr><td><a href="#section-2-5">2.5</a></td><td>Autohedger内の機能コンポーネント</td><td>Functional Components in the Autohedger</td><td><a href="../pages/page-015.html">15</a></td></tr><tr><td><a href="#section-2-6">2.6</a></td><td>規制・ポリシー要件</td><td>Regulatory and Policy Requirements</td><td><a href="../pages/page-017.html">17</a></td></tr></tbody>
+  </table>
+</div>
+
+</section>
+<section>
+  <h2>ページ本文</h2>
+  
+<article class="page-article" id="page-009">
+  <header class="page-header">
+    <p class="eyebrow">ビジネスおよびアルゴリズム説明</p>
+    <h2>ページ 009</h2>
+    <div class="section-badges"><a id="section-2" class="section-badge" href="#section-2">2 ビジネスおよびアルゴリズム説明</a><a id="section-2-1" class="section-badge" href="#section-2-1">2.1 Autohedger概要</a></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-009.jpg"><img src="../assets/page_images/page-009.jpg" alt="ページ 009 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                                        Confidential
+
+
+We have theoretically demonstrated the stability properties of the optimizer, which is confirmed
+numerically. Superior performance, in terms of hedging cost required to achieve a given level of
+risk reduction, is shown relative to alternative approaches.
+
+2     Business and Algo Description
+    The Opt-Var model detailed in this document is the key component of Morgan Stanley’s au-
+tohedger algo for the electronic market making business in EU and US government bond markets
+(EGB and UST markets). The autohedger is an automated hedging algorithm designed to man-
+age the risks in these trading books. Despite the fact that different government bonds and hedge
+instruments are traded in the respective markets, the automated hedging is done according to the
+same principles in both regions.
+
+
+                                 inventory
+              4 client
+                  trades   by)   bonds
+                                                    cted
+                                             2P ventory,                   3 trades
+                                                            Auto-Hedger                     market
+                                 hedges
+                                   y.
+                                                           4 hedge bonds
+
+
+
+Figure 4: A schematic diagram of the hedging process. In Step 1, new inventory comes into the
+bond book. In Step 2, the illiquid inventory is projected onto the target hedge position. Finally, in
+Step 3 trades are placed in the market so as to achieve the optimized version of the target hedge.
+    In this section, we first give an overview of the autohedger. Then, we explain the concept of
+portfolio risk, which is the risk that the autohedger is managing. Following that, we introduce the
+three key functional components in the autohedger and how they interact with each other: the risk
+calculator, the hedge calculator, and the hedge executor.
+2.1    Autohedger           Overview
+The autohedger is an automated algorithm that operates in the following context: during market
+hours, the EGB and UST e-trading desks buy and sell securities with clients through a Request for
+Quote (RFQ) protocol in government bond marketplaces such as Tradeweb and Bloomberg. These
+desks also trade directly with other brokers via B2B markets such as MTS and BrokerTec. When
+those trading activities result in &quot;Done&quot; trades (that is, when trades are actually executed), the risk
+is added to the e-trading books portfolio, and this portfolio risk needs to be managed effectively
+through appropriate hedging activities.
+    Hedging is a risk management strategy to offset potential losses in the portfolio by taking an
+opposite position in a related asset. At Morgan Stanley’s government bond e-trading desks, we
+use the on-the-run bonds and bond futures as the hedging instruments in EU. Specifically, at
+the moment this document is written, there are seven hedge instruments in the EU sphere: SHTZ,
+
+130115: Opt-Var                                                                                      Page 9 of 136
+
+                            [git] « Branch: iropt-var@be27d1a = Release:     (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-010">
+  <header class="page-header">
+    <p class="eyebrow">ビジネスおよびアルゴリズム説明</p>
+    <h2>ページ 010</h2>
+    <div class="section-badges"><a id="section-2-2" class="section-badge" href="#section-2-2">2.2 ポートフォリオリスク</a><a id="section-2-3" class="section-badge" href="#section-2-3">2.3 入出力量</a></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-010.jpg"><img src="../assets/page_images/page-010.jpg" alt="ページ 010 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                                   Confidential
+
+
+BOBL, BUND, BUXL, OAT, BTS, BTP, all of which are liquid front bond futures. However, based
+on the business request, we will add the UK long gilt front future (FLG) to the hedge instrument
+space in the near future. Within UST there are 18 hedge instruments: the 2Y, 3Y, 5Y, 7Y, 10Y,
+20Y, 30Y on-the-run bonds, the TU, FV, TY, UXY, US, UL front bond futures and the SHY,
+IEI, IEF, TLH, TLT bond ETFs. The number and choice of the hedge instruments are business
+decisions and are subject to change based on business needs.
+    Back bond futures are handled by a separate instance of Opt-Var with zero lambda and zero
+bucket risk limit constraint{?] It has the effect of liquidating any back future position in the
+portfolio.
+    To recap: the goal of the autohedger is to manage the portfolio risk - as projected to the hedge
+instruments listed above - through automated hedging activities.
+2.2       Portfolio Risk
+At any time of the day, the e-trading book holds a set of positions of bonds and futures coming
+from the trading activities with clients and other brokers. To measure the risk held in the e-trading
+book, we map the positions of each security to the hedge instruments space, a.k.a. different risk
+buckets. To do this, we use the pre-determined hedge ratios that input to the autohedger. We call
+the ensemble of the mapped risk positions to the hedge instruments space the portfolio risk. Figure
+       ‘ives an example of how we use the hedge ratios to convert the original position to the portfolio
+risk in the hedge instruments space. In the example, we have a trade to buy a particular Italian
+bond with a size of 100 PVO1.              After the trade is done, the position of this bond in the trading
+book will increase by 100 PVO1. We then map this bond position to the hedge instrument space.
+The projected risk to hedge instrument i is given by Risk; = tradeSize * HedgeRatio;. The green
+box below gives the hedge ratios of this bond. With these hedge ratios, the portfolio risk increase
+after this trade      is shown in the yellow box. This portfolio risk in the hedge instruments space is
+what monitored and managed by the autohedger. One should also note that the original positions
+of each security and the hedge ratios are the input to the autohedger but not the Opt-Var model,
+while the portfolio risk in the hedge instrument space is the input of the Opt-Var model.
+
+                                                      Hedge Ratios          Portfolio Risk
+                              Trade                     SHTZ: 0.0000          SHTZ: 0.00
+                             Security:                  BOBL: 0.0000          BOBL: 0.00
+                          170005534141                 BAUNIDE D2SED         BUND: -28.60
+                             Side: Buy                  BUXL: 0.3339          BUXL: 33.30
+                                                         OAT: 0.0000           OAT: 0.00
+                         Size: 100 PVO1                  BTS: 0.0000
+                                                        BTP: 0.8997,
+
+
+
+Figure 5: Illustration of how the pre-determined hedge ratios are used to project the Italian bond
+position IT0005534141 to the space of bond futures.
+
+
+2.3.      Inputs and        Outputs       Volume
+
+We here describe the typical volume of the inputs and outputs of the Opt-Var model, using the
+example in the US. The autohedger usually daily executes orders with a total volume of between
+      See section [3] for the definition of lambda and bucket risk limit
+
+
+
+
+130115: Opt-Var                                                                                Page   10 of 136
+
+                             [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-011">
+  <header class="page-header">
+    <p class="eyebrow">ビジネスおよびアルゴリズム説明</p>
+    <h2>ページ 011</h2>
+    <div class="section-badges"><span class="section-badge muted">2.2 ポートフォリオリスク 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-011.jpg"><img src="../assets/page_images/page-011.jpg" alt="ページ 011 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                            Confidential
+
+
+$ 50 M and $ 900 M in notional for each product. Note that the long-end products are used less
+frequently.
+                                             2Y     606 + 139
+                                             3Y     389 + 78
+                                             5Y     861 + 127
+                                             TY     197 + 44
+                                             10Y | 398 + 44
+                                             20Y | 32411
+                                             B30Y | 88 + 23
+                                             TU | 286 + 116
+                                             FV     388 + 68
+                                             TY = | 503 + 86
+                                             US     55 + 14
+                                             UXY | 57+ 10
+                                             UL     47413
+
+Table 1: Daily average of the executed volumes (M$ of notional) between 05/07/23 and 06/07/23.
+We provide a Student confidence interval.
+
+    We provide below in Figure [6] the intraday profile of the autohedger input and output volumes,
+from which we note several characteristics. The executed volume is smaller than the input volume.
+Activity appears to crescendo leading up to noon, followed by a calmer period, with activity picking
+up again in earnest towards the close of the day. Finally, we note that the typical input or output
+volume per minute is of the order of $ 10M in notional with some spikes above $ 100M.
+
+
+
+
+                     pa
+
+
+
+
+                    Figure 6: UST input and output volumes per minute on 05/22/23.
+
+    Between 05/07/23 and 06/07/23 the daily volumes are given in Figure [7| and their ratio is
+displayed in Figure|[8| The hedging volume represents around 30-40% of the input volume.
+
+
+
+
+130115:   Opt-Var                                                                       Page   11 of 136
+
+                          [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-012">
+  <header class="page-header">
+    <p class="eyebrow">ビジネスおよびアルゴリズム説明</p>
+    <h2>ページ 012</h2>
+    <div class="section-badges"><a id="section-2-4" class="section-badge" href="#section-2-4">2.4 Opt-Varの原理</a></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-012.jpg"><img src="../assets/page_images/page-012.jpg" alt="ページ 012 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                                   Confidential
+
+
+
+
+                  100
+
+
+
+
+          Figure 7: UST daily input and output volumes between 05/07/23 and 06/07/23
+
+
+
+
+  Figure 8: Opt-Var US daily input and output volumes ratio between 05/07/23 and 06/07/23
+
+2.4    Opt-Var     Principle
+
+We explain the principle of the Opt-Var model with a toy example with only two products A and
+                                                                                100.1 92.1 )
+B. We consider the covariance matrix associated to their yield increments             U =   (2   1    110.5
+
+                     0.084‘): and the quadratic. cost matrix. M = ( 200e-8
+the cost vector C = (v0                                                0                       0. .): We
+                                                                                            2000
+                    . portfolio. qo =
+also choose a starting                      50000
+                                              (&quot;5&quot;)          .         . parameter \. The Opt-Var
+                                                      and a risk-aversion
+optimization problem in two dimensions is given by
+                          min A(go + uo)&quot; (qo + wo) + CT luo] + ug Muo.
+The first term corresponds to the variance of the portfolio after hedging with an order uo while the
+other terms corresponds to hedging costs. The intuition behind the risk-aversion parameter ) is
+130115: Opt-Var                                                                              Page 12 of 136
+
+                        [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-013">
+  <header class="page-header">
+    <p class="eyebrow">ビジネスおよびアルゴリズム説明</p>
+    <h2>ページ 013</h2>
+    <div class="section-badges"><span class="section-badge muted">2.4 Opt-Varの原理 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-013.jpg"><img src="../assets/page_images/page-013.jpg" alt="ページ 013 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                           Confidential
+
+
+that increasing this term increases the weight of the variance risk term in the objective function,
+leading to solutions that trigger increased hedging activity relative to solutions corresponding to
+smaller values of A (indeed, doubling the value of X gives - all else held equal - the same behavior
+as if transaction costs were halved). The price to be paid for this reduction in variance is larger
+executed volumes and higher costs. This behaviour is illustrated in Figure [9] and [10] below. Each
+point in the plots corresponds to a resolution with the value of \ displayed nearby. As we can see,
+the variance becomes smaller with a higher \ value and higher hedging ratio in Figure|| and this
+is also at a cost of paying more to execute the hedges as shown in Figure
+
+
+
+                          Seeoer
+                        i      sor
+                        A            se00
+                                       ‘Soot
+                        Boe               ooo
+                                                eeo8
+
+
+
+
+Figure 9: Pareto frontier of hedging ratio and variance.     Each dot corresponds to the value of \
+nearby.
+
+
+
+
+                              pend
+                              ooo
+                               e007
+                                 e007
+                                    seo
+                                      eet
+                                        ero
+                                                esoe
+
+
+
+
+Figure 10: Pareto frontier of hedging cost and variance. Each dot corresponds to the value of
+nearby.
+    In practice, after the first hedge has been executed, the risk calculation system will update the
+portfolio risk. This triggers a reoptimization of the Opt-Var problem, which generates a new parent
+order. As a consequence, even without new incoming risk, the portfolio follows a trajectory with
+decreasing variance and may change after the first hedge order. In our simple toy model without
+new incoming risk, the trajectory is displayed in Figure [IT] We see that the model sells both the
+
+130115: Opt-Var                                                                        Page 13 of 136
+
+                      [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-014">
+  <header class="page-header">
+    <p class="eyebrow">ビジネスおよびアルゴリズム説明</p>
+    <h2>ページ 014</h2>
+    <div class="section-badges"><span class="section-badge muted">2.4 Opt-Varの原理 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-014.jpg"><img src="../assets/page_images/page-014.jpg" alt="ページ 014 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                                                 Confidential
+
+
+correlated products at the first step, then continues selling product A until it reaches an equilibrium
+(at roughly step 5); after this, the inventory is said to be stable.
+
+                                                      Lambda = 5e-08
+                        50000                                                               e Product A
+                                                                                            Me Product 8
+                        40000
+
+                        30000
+
+                     2 20000         i ae          eae         eo
+
+                        10000
+
+
+
+
+                       ~20000       Se              ce ee Ser ee ear                         er eee
+                                a    2         a            é             a            10       2
+                                                            Ireration
+
+                           Figure 11: Portfolio trajectory for the toy model
+    We can also represent in Figure[12] these trajectories in a two-dimensional space where the first
+coordinate is the position in the first bond and the second coordinate the position in the other
+bond. We display in red the area where the system converges, which can be explictly computed.
+The variance is represented by the black contours. We observe that the variance decreases along
+the trajectories.
+
+
+                                _        _ntohedgeseluton wh 2=08.A~ S608 infnts = False
+
+
+
+
+Figure 12: Two example trajectories starting from (50000, 0) for the green one and (-45000, 75000)
+for the purple one. The correlation value is p = 0.8, a = 0.
+
+
+130115: Opt-Var                                                                                              Page   14   of 136
+
+                       [git] « Branch: iropt-var@be27d1a = Release:                           (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-015">
+  <header class="page-header">
+    <p class="eyebrow">ビジネスおよびアルゴリズム説明</p>
+    <h2>ページ 015</h2>
+    <div class="section-badges"><a id="section-2-5" class="section-badge" href="#section-2-5">2.5 Autohedger内の機能コンポーネント</a></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-015.jpg"><img src="../assets/page_images/page-015.jpg" alt="ページ 015 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                               Confidential
+
+
+    When new risk appears in the portfolio, the variance increases and the Opt-Var iterations
+progressively decrease it until reaching an equilibrium where no other hedges are sent anymore, as
+represented schematically in Figure [13]
+
+             Portfolio variance
+
+
+
+
+                                                                                      Time
+
+                        Figure 13: Portfolio variance dynamics through time.
+
+2.5     Functional    Components        in the Autohedger
+There are three key functional components in the autohedger.           The diagram in Figure [14] below
+summarizes the functions of each component and how they interact with each other. The first
+component is the Risk Calculator, which transfers the positions of each security to the hedge
+instrument space (in PVO1). The transferred portfolio risk is then used as the input of the Hedge
+Calculator component.     The Hedge Calculator uses the Opt-Var model described in this document
+to calculate the hedging trades. The hedging trades will then be sent to external exchanges to be
+executed through the last component - Hedge Executor. Once these hedging tardes are executed,
+the trading book positions will be updated, and a new cycle of risk calculation, hedge calculation
+and hedging trades execution will be triggered.
+
+2.5.1    Risk Calculator
+
+The Risk Calculator keeps track of the positions in the trading book throughout the day and coverts
+them to portfolio risks. To track the book positions, the risk calculator uses two feeds: a fast feed
+and a slow feed. The fast feed comes from the algo apps that generate the trade confirmations,
+which include B2C from EQuote, internalization engine RatesX, Desk Interaction Manager (DIM),
+the autohedger itself etc. The slow feed is EPAK - a fast and reliable distributor that monitors the
+positions from the official positions manager, Big Mac. The positions from the fast and slow feed
+are synched if they do not diverge above a threshold, and the synched positions are used by the
+autohedger to calculate the portfolio risks. If the fast and slow feed diverge above the threshold,
+autohedger will breach. Bookrunners and Strats will then investigate the cause and manually syne
+the risk to unbreach it. To calculate the portfolio risk, the first step is to convert the positions
+from being expressed in notional terms to risk terms in PVO1. To do this, the Risk Calculator uses
+the dpdy of the bonds and futures coming from the MS internal pricing engine KPricer. Following
+that, the risk positions of each security are mapped to the hedge instruments space using the
+
+130115: Opt-Var                                                                           Page 15 of 136
+
+                        [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-016">
+  <header class="page-header">
+    <p class="eyebrow">ビジネスおよびアルゴリズム説明</p>
+    <h2>ページ 016</h2>
+    <div class="section-badges"><span class="section-badge muted">2.5 Autohedger内の機能コンポーネント 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-016.jpg"><img src="../assets/page_images/page-016.jpg" alt="ページ 016 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                                  Confidential
+
+
+                                               Risk Calculator
+Monitors the positions in the books and maps each bond and future position to the hedge instrument space       ‘---|
+using hedge ratios.                                                                                                    t
+                                                          Portfolio Risk                                               !
+                                  Hedge Calculator (Opt-Var Model)                                                     !
+Performs portfolio hedging and suggests hedging trades to ensure:                                                      \
+    + The portfolio risk in the book is below the risk limits.                                                         H
+    + The portfolio risk is allocated to different risk buckets in an optimal way.                                     &#x27;
+
+                                                          Hedging Trades                                               &#x27;
+
+                                              Hedge Executor                                                           &#x27;
+    + Sends the hedging trades to external exchanges to be executed.
+
+
+                    Figure 14: Three key functional components in the autohedger
+
+hedge ratios, as described in section   Finally, the projected risks for each position - in hedge
+instrument space - are aggregated as he portfolio risk of the book, which is passed to the Hedge
+Calculator component.
+2.5.2    Hedge    Calculator
+
+The Hedge Calculator is the place where the hedging decision is made. The Hedge Calculator takes
+the aggregated portfolio risk coming from the Risk Calculator as the input, and outputs a list of
+proposed hedging trades, which are passed to the Hedge Executor component.
+    ‘The hedge calculator proposes hedging trades to make sure at any time of the day the below
+two conditions are satisfied:
+    1. The portfolio risk in the book is smaller than the risk we are willing to take. This is controlled
+       by the risk limit parameters, the hedgeable risk limit and bucket risk limit, which we explain
+       in section
+    2. The portfolio risk is allocated to different risk buckets in an optimal way. Specifically, it
+       means the hedge calculator proposes trades that balance the trade-offs between the portfolio
+       variance, costs to execute the hedges and alpha capturing.
+     We use the Opt-Var model described below in subsequent sections as the Hedge Calculator. The
+Opt-Var model is a quadratic optimization model with constraints. Throughout this document, we
+will illustrate that the Opt-Var model meets the above two criteria, and is therefore suitable for
+use as a component of the autohedger.
+2.5.3    Hedge    Executor
+
+The final main functional component of autohedger is the Hedge Executor, which sends the hedging
+trades to the external exchanges for execution. Once the hedging trades are executed in the ex-
+change, the positions in the book will be updated, which will trigger a new cycle in the autohedger.
+130115: Opt-Var                                                                               Page 16 of 136
+
+                         [git] « Branch: iropt-var@be27d1a = Release:        (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-017">
+  <header class="page-header">
+    <p class="eyebrow">ビジネスおよびアルゴリズム説明</p>
+    <h2>ページ 017</h2>
+    <div class="section-badges"><a id="section-2-6" class="section-badge" href="#section-2-6">2.6 規制・ポリシー要件</a><a id="section-3" class="section-badge" href="#section-3">3 モデル説明</a><a id="section-3-1" class="section-badge" href="#section-3-1">3.1 モデル前提</a></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-017.jpg"><img src="../assets/page_images/page-017.jpg" alt="ページ 017 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                                    Confidential
+
+
+2.6      Regulatory and Policy Requirements
+The algo model covered in this document was developed in adherence with all aspects of the
+US Federal Reserve’s “Supervisory Guidance on Model Risk Management (SR 11-7)” [J] and the
+European Commission’s “MiFID IT Regulatory Technical Standards 6 (RTS-6)” [J]. Within Morgan
+Stanley, the model was developed in adherence with the “Global Model Risk Management Policy”
+[5] and its supplement, “Electronic Trading Algorithm Models: Supplement to the Global Model
+Risk Management Policy” [7].
+
+3       Model      Description
+Throughout, we use the notation [d] = {1,2,...,d} as a shorthand notation for the index set of the
+instruments.
+
+
+3.1      Model     Assumptions
+
+
+3.1.1      Data Source and Quality
+
+The model assumes the model parameters introduced in section                      are valid and reasonable.
+Specifically, it assumes:
+      « The covariance matrix ©     is positive definite.
+
+      + The upper hedgeable risk limit Hy, is non-negative. The lower hedgeable risk limit Hy is
+        non-positive.
+      « The bucket risk limit B; for each risk bucket i is non-negative.
+
+      + The trade size limit S$; for each risk bucket i is non-negative.
+      + The risk-aversion factor A is non-negative.
+    Checks and controls exist in the autohedger to make sure the inputs used by Opt-Var satisfy
+these assumptions. We discuss this in details in section 5
+3.1.2      Statistical
+
+The model assumes the following from statistical perspective:
+      + The hedgeable risk limit and trading size limit constraints which we explain in details in
+            i        are not contradictory, namely that the admissible set defined by these two
+        constraints is not empty. Otherwise there is nothing to optimize and the hedging decision
+        is made based on another rule described in section          [3.2.5} In the autohedger, checks exist to
+        make sure this assumption is satisfied before the Opt-Var model is called. The details are
+        discussed in section
+      + The alpha factor a is assumed to be smaller than the cost vector C. That is, Jai] &lt; Ci, Vi €
+        [d.. This assumption ensures convergence of the inventory to the stable area and boundedness
+        of hedge costs, as proved in Section   [5.1.5] The alpha value aj is capped at 90% of the cost Cy
+        in the code hence the assumption is always satisfied. The details are discussed in sectio1
+
+130115: Opt-Var                                                                                Page 17 of 136
+
+                          [git] « Branch: iropt-var@be27d1a = Release:    (2024-10-31)</code></pre>
+  </details>
+</article>
+
+</section>
+
+    </main>
+  </div>
+  <script src="../assets/search-index.js"></script>
+  <script src="../assets/app.js"></script>
+</body>
+</html>

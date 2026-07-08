@@ -1,0 +1,75 @@
+{
+  "source_package": "/mnt/data/econometrics_hf_ch1_ch7_markdown",
+  "version": "Japanese study edition",
+  "created_at_jst": "2026-06-20 19:55:49 JST",
+  "coverage": {
+    "chapters": "1-7",
+    "pdf_pages": "16-209",
+    "printed_pages": "1-194"
+  },
+  "notes": "Japanese summaries and navigation added. Original extracted English text and page renders preserved. This is not a complete line-by-line translation.",
+  "counts": {
+    "chapters_md": 7,
+    "raw_text": 7,
+    "page_renders": 194,
+    "embedded_images": 11
+  },
+  "chapters": [
+    {
+      "no": 1,
+      "en": "Introduction",
+      "ja": "導入",
+      "file": "ch01_introduction.md",
+      "pdf": "16-23",
+      "printed": "1-8"
+    },
+    {
+      "no": 2,
+      "en": "Microstructure Foundations",
+      "ja": "市場マイクロストラクチャーの基礎",
+      "file": "ch02_microstructure_foundations.md",
+      "pdf": "24-41",
+      "printed": "9-26"
+    },
+    {
+      "no": 3,
+      "en": "Empirical Properties of High-Frequency Data",
+      "ja": "高頻度データの実証的性質",
+      "file": "ch03_empirical_properties_of_high_frequency_data.md",
+      "pdf": "42-83",
+      "printed": "27-68"
+    },
+    {
+      "no": 4,
+      "en": "Financial Point Processes",
+      "ja": "金融点過程",
+      "file": "ch04_financial_point_processes.md",
+      "pdf": "84-113",
+      "printed": "69-98"
+    },
+    {
+      "no": 5,
+      "en": "Univariate Multiplicative Error Models",
+      "ja": "単変量乗法誤差モデル",
+      "file": "ch05_univariate_multiplicative_error_models.md",
+      "pdf": "114-157",
+      "printed": "99-142"
+    },
+    {
+      "no": 6,
+      "en": "Generalized Multiplicative Error Models",
+      "ja": "一般化乗法誤差モデル",
+      "file": "ch06_generalized_multiplicative_error_models.md",
+      "pdf": "158-191",
+      "printed": "143-176"
+    },
+    {
+      "no": 7,
+      "en": "Vector Multiplicative Error Models",
+      "ja": "ベクトル乗法誤差モデル",
+      "file": "ch07_vector_multiplicative_error_models.md",
+      "pdf": "192-209",
+      "printed": "177-194"
+    }
+  ]
+}

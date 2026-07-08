@@ -1,0 +1,49 @@
+# Page 106
+
+![Page 106](../assets/page_images/page-106.jpg)
+
+## OCR layout text
+
+```text
+Morgan Stanley                                                                                                              Confidential
+
+
+        — MRM can access metrics data through Invigilator.
+   Once a common data sharing procedure is established, the document will be updated referring to this
+common procedure.
+
+
+
+
+                   Opt-Var Performance Quarterly Report (EU) - 2023.10.01-2023.12.31
+
+
+
+                            Metnc                    Number of breaches
+            Count of unsuccessful optimizations              0
+                Count of infeasible portfolios               0
+            Count  of trades with size above limit           0
+
+
+
+
+                                    Figure 80: Sample quarterly ongoing report (EU)
+
+9.4    Intraday Monitoring Tools
+Apart from the daily report sent to Strats and quarterly monitoring report shared with MRM, tools in EoS
+are also available for bookrunners and Strats to monitor the model performance intraday. Figure [ST]and
+below show the monitoring GUI for EU and US respectively.
+
+                                                                          eoDssans | E00 Swing | Suna ea     How Trader
+                    Rak Tipe
+
+
+
+
+                                                     Figure 81: EOS GUI (EU)
+
+130115: Opt-Var                                                                                                           age 106
+                                                                                                                                of 136
+
+                               [git] » Branch: ir.opt-var @be27d1a » Release:                      (2024-10-31)
+```

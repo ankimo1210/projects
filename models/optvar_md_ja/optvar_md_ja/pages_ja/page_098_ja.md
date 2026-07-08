@@ -1,0 +1,63 @@
+# ページ 098
+
+![ページ 098](../assets/page_images/page-098.jpg)
+
+## 原文OCRテキスト
+
+```text
+Morgan Stanley                                                                                      Confidential
+
+
+            matrix does not pass the check.
+            http: //stashblue.ms. com:11990/atlassian- stash/projects/FIDALGO_MMJ/repos/mmj/browse/fidalgo.
+            mmj /src/main/java/mfire/utils/MathUtils. java#82)
+       (i) Checks on the Opt-Var model input net portfolio risk in PVO1 and parameter hedgeable risk
+           limit. If either of these values is null, NaN or infinite, or if the hedgeable risk limit is negtive,
+           then warnings will be logged and no hedge trades will be returned and executed.
+            (http: //stashblue.ms .com:11990/atlassian- stash/projects/FIDALGO_MMJ/repos/mmj/browse/fidalgo.
+            [mmj /src/main/java/erates/hedging/OptimalHedgeVarCost  Calculator. java#1004, 1206,
+            Checks and controls on the below inputs and parameters. If the below case happens and value
+            is not valid, warnings will be logged and default value will be used.
+               + Alpha: If is not specified, null or negative, use default value 0.
+               + Cost: If linear part of the execution cost is not specified, null, NaN or infinite, use default
+                  value 0.05.
+               + Quadratic cost: If quadratic part of the execution cost is not specified, null, NaN or negative,
+                  use default value 0.
+               + Bucket risk limit: If is null, NaN, infinite or negative, use default value 0.
+               + Trade size limit: If is null, NaN or negative, use default value 0.
+               + Allow position increase: If is null or negative, use default value false.
+               + Risk-aversion factor: If is null, NaN, infinite or negative, use default value 4e-6.
+           (http: //stashblue.ms .com:11990/atlassian- stash/projects/FIDALGO_MMJ/repos/mmj/browse/fidalgo.
+           |mmj /src/main/java/erates/hedging/HedgeCalculatorAssistant. java|
+       (iv) Checks that the hedgeable risk limit and trading size limit constraints are not contradictory.
+            Otherwise, we do not call the Opt-Var optimizer, and the hedging decision will be made based
+            on the rule described in section     An email alert will also be sent as a warning in this case.
+           {http://stashblue.ms.com:11990/atlassian- stash/projects/FIDALGO_MMJ/repos/mmj/browse/fidalgo.
+           mj /src/main/java/erates/hedging/OptimalHedgeVarCostCalculator.   java#396|
+       (v) Checks on the alpha.     The code caps the value of alpha at 90% of the cost of the associated
+            product. Namely for product é € [d], @, is replaced by max(—0.9 x C,, min(a,,0.9 x C,)).
+            (http://stashblue.ms .com:11990/atlassian- stash/projects/FIDALGO_MMJ/repos/mmj/browse/fidalgo.
+            |nmj /src/main/java/erates/hedging/HedgeCalculatorAssistant. java|
+       (vi) We perform the same checks as before for CRB optimization inputs, namely the covariance ma-
+            trix, portfolio risk, hedgeable risk limit, bucket risk limits, cost, alpha and risk-aversions.
+            http: //stashblue.ms. com:11990/atlassian- stash/projects/FIDALGO_MMJ/repos/mmj/browse/fidalgo.
+            inmj /src/main/java/erates/corvo/Optimizer InputService . java|
+ Model Outputs Control
+        (i) Checks on the Opt-Var model outputs. The code checks if the Opt-Var model outputs are valid
+            and within the specified limits as listed below. If the checks do not pass, autohedger will not
+            trade the Opt-Var proposed trades.
+              + The proposed trade is not NaN or infinite.
+              + The net portfolio risk post optimization should be within the hedgeable risk limit.
+              + The risk in each bucket post optimization should be within the bucket risk limit.
+              « If position increase is not allowed, then no position should be increased post optimization
+                in any buckets.
+              + The ausiliary variables used in solving the Opt-Var optimization should equal to the absolute
+                value of the trade variables.
+            http: //stashblue.ms. com:11990/atlassian- stash/projects/FIDALGO_MMJ/repos/mmj/browse/fidalgo.
+            nmj /src/main/java/erates/hedging/OptimalHedgeVarCost  Calculator. java#619)
+
+
+130115: Opt-Var                                                                                   Page 98 of 136
+
+                        [git] * Branch: r.opt-var@bc27d1a = Release: (2024-10-31)
+```

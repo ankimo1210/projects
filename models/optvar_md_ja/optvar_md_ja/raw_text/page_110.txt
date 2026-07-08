@@ -1,0 +1,20 @@
+Morgan Stanley                                                                             Confidential
+
+
+13.     Appendix
+13.1.    Convergence        Testing Plots
+
+
+
+
+                                                                  ae
+                                                                   =)
+
+
+                  Figure 83: Java and Python Convergence Comparison. Examples 1-50.
+
+
+
+130115: Opt-Var                                                                         Page 110 of 136
+
+                         [git] = Branch: ir.opt-var@bc27d1a = Release:   (2024-10-31)

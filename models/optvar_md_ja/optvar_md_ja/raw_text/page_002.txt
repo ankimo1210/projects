@@ -1,0 +1,45 @@
+Morgan Stanley                                                                                             Confidential
+
+
+Document               Version Control
+ Version                   Date                Summary of Key Changes                                      Author
+    1.0           December        6, 2023 |     Initial submission.                                     eRates US/EU
+    11            February 6, 2024          | SDLC and Ongoing          Monitoring thematic   limita- | eRates US/EU
+                                              tions addressed.
+    1.2            March    12, 2024            MRM    comments for initial certification addressed.   | eRates US/EU
+    13             April 11, 2024              UK gilt future content added in relevant sections | eRates US/EU
+                                               for EU.
+    14              July 25, 2024              CRB extension of OptVar for US + asymmetric | eRates US/EU
+                                               hedgeable risk limit.
+    15            August 30, 2024              Dynamic Lambda         content added in relevant sec- | eRates US/EU
+                                               tion.
+    1.6           October 31, 2024            | Added comment about asymmetric hedgeable risk | eRates US/EU
+                                                limit + additional CRB controls and architecture
+                                                details.
+    17        December        10, 2024 | Outliers cap for US covariance matrix.                         eRates US/EU
+
+
+
+Model         Identification and Stakeholders Summary
+ Model Name                       Opt-Var
+ Model ID*                         130115
+ item setistuben|                  FIDALGO_AUTOHEDGER_AM, FIDALGO_AUTOHEDGER_EU
+ Model     Tier                   Tier 3: Materiality Medium, Complexity Low
+
+ Legal Entity                      Morgan Stanley
+
+ IW Cr     BTS      feytem         Maximilien Germain,      Irene Wu
+
+ Model     Owners                 Thomas Klocker
+
+ Model Users                      eRates Trading (global)
+ Model     Validators             [i
+
+ “MCS      Model Number                ** e.g. System Names
+
+
+
+
+130115: Opt-Var                                                                                           Page 2 of 136
+
+                             [git] = Branch: ir.opt-var@bc27d1a = Release:          (2024-10-31)

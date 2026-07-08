@@ -1,0 +1,13 @@
+{
+  "model": "gemma3:12b",
+  "chapter": 5,
+  "chapter_ja": "単変量乗法誤差モデル",
+  "chapter_en": "Univariate Multiplicative Error Models",
+  "pdf_page": 126,
+  "printed_page": "111",
+  "source_chars": 805,
+  "translation_chars": 520,
+  "elapsed_seconds": 18.097,
+  "created_at": "2026-06-20T21:16:07",
+  "translation": "5.3 ACDモデルの推定                                                            111\n\n\n\n\n図5.1 般化されたF分布が内包するハザード関数。左：m D 0:8, a D 0:8,\n\u0004 D 1:0、上：\u0006 D 100、中央：\u0006 D 10、下：\u0006 D 0:5。右：m D 0:8, a D 1:1, \u0004 D 1:0、\n上：\u0006 D 100、中央：\u0006 D 10、下：\u0006 D 0:5\n\n\n\n\n図5.2 般化されたF分布が内包するハザード関数。左：m D 1:4, a D 0:9,\n\u0004 D 1:0、上：\u0006 D 100、中央：\u0006 D 10、下：\u0006 D 0:5。右：m D 1:4, a D 1:2, \u0004 D 1:0、\n上：\u0006 D 100、中央：\u0006 D 10、下：\u0006 D 0:5\n\n\n\n\n図5.3 般化されたF分布が内包するハザード関数。左：m D 1:2\u00021 , a D 1:2,\n\u0004 D 1:0、上：\u0006 D 100、中央：\u0006 D 10、下：\u0006 D 0:5。右：m D 1:2, a D 1:2\u00021 , \u0004 D 1:0、\n上：\u0006 D 100、中央：\u0006 D 10、下：\u0006 D 0:5"
+}

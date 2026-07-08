@@ -1,0 +1,25 @@
+# ページ 004
+
+![ページ 004](../assets/page_images/page-004.jpg)
+
+## 原文OCRテキスト
+
+```text
+Morgan Stanley                                                                        Confidential
+
+
+                                                                                             . . 108
+[13 Appendix]                                                                                .. 110
+    13.1 Convergence Testing Plot]........                                                   .. 110
+   {13.2
+    Benchmarking
+            Tests Plots}...                 ....                                             .. 116
+    [13.3 Outcome Analysis and Backtesting Plot                                                . 121
+
+
+
+
+ 130115: Opt-Var                                                                     Page   4 of 136
+
+                      [git] = Branch: ir.opt-var@bc27d1a = Release:   (2024-10-31)
+```

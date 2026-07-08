@@ -1,0 +1,59 @@
+# Page 093
+
+![Page 093](../assets/page_images/page-093.jpg)
+
+## OCR layout text
+
+```text
+Morgan Stanley                                                                                            Confidential
+
+
+5.6.1      Convergence to Admissible Area.
+
+Here we prove the remaining claim made in Sectio      3] namely, that the portfolio position process
+reaches the admissible area T in finitely many steps.
+    We first notice several stability properties for the trajectory:
+   1. Once the coordinate i of the position reaches the risk limit area {q € R, —B; <q < Bi, Vie
+            .d}, it stays there. Indeed if the hedgeable limit constraint is inconsistent with the
+      trading and risk constraint, the position in the asset i will stay the same if the risk is on the
+        other side as D4, q/ and its distance to zero 0 < |q'| < B; will decrease in the same side
+        case. Similarly, if there is no inconsistency then all the next positions in the asset ¢ will be in
+        {qe R, -B; <q < Bi, Vie 1,--- ,d} due to the constraint max(min(—B; — q', $;),—S;) <
+        ué < min(max(B; — q', —S;),S;) for which at least 0 is admissible.
+   2. Once the trajectory enters the admissible area Z, it stays there. Indeed in that case 0 is
+      always an admissible control so the hedgeable limit constraint is consistent with the trading
+        and risk constraint         and   the next   inventories will stay in Z due to the constraints.
+
+    We distinguish between several cases:
+   + The starting point qo belongs to the admissible area Z. By the previous analysi                           it stays
+      in TZ.
+   ¢ The starting point go belongs to the risk bucket region {q € R¢, —B; < q < Bi, Vie 1,--- ,d}.
+     By the analysis from  [I] it stays there because every coordinate verifies the risk bucket con-
+        straint.   If the hedgeable limit constraint is consistent with the trading and risk constraint
+        the next: step will make the inventory admissible. Otherwise, in case of inconsistency, the
+        inventory converges to the hedgeable area {q € R%, A < Sy                   ¢q' < Hu} ina finite number of
+        steps, bounded by tee]                       if D4, ai <0 (Ee)              in the other case). Indeed we
+        proved in Section [3.2.5]         that when constraints are inconsistent the sum 7,           q‘ moves to the
+        hedgeable area {q €R%, Hi < 44 q' < Hu} by more than min, $;. As a consequence, the
+        trajectory reaches the admissible area Z in a finite number of steps and stays there thanks to
+        the previous case.
+   + Exists an asset k such that q* is outside the risk bucket region {7                  €R, ~By <q < By}. We
+                                5|that in that case, without       inconsistent constraints,    either there exists an
+        admissible control sending qg to the risk bucket region {q € R, —By < q < Bg} either the
+        control is chosen to be +5,, depending on the sign of gy. Moreover, in case of inconsistency,
+        thanks to the constraints                           , either the negative or positive inventories move to
+        zero in one step, or get closer to zero by at least minj $j. So the number of steps to perform
+        to converge to the admissible area is bounded by 2p max.  gil
+                                                             min, S, |; by counting both the long and
+        short positions.
+We have proved the convergence of the portfolio to the admissible area Z in a finite number of
+steps, regardless of the starting inventory. From now on we assume that we have already converged
+to the admissible area Z.
+5.6.2      Convergence to Stable Area.
+
+Here we prove the convergence of the portfolio to the stable area. To characterize this area, we note
+that the objective function F is convex and non-differentiable (due to the absolute value costs).
+130115: Opt-Var                                                                                         Page 93 of 136
+
+                            [git] « Branch: iropt-var@be27d1a = Release:         (2024-10-31)
+```

@@ -1,0 +1,13 @@
+{
+  "model": "gemma3:12b",
+  "chapter": 3,
+  "chapter_ja": "高頻度データの実証的性質",
+  "chapter_en": "Empirical Properties of High-Frequency Data",
+  "pdf_page": 80,
+  "printed_page": "65",
+  "source_chars": 639,
+  "translation_chars": 360,
+  "elapsed_seconds": 8.055,
+  "created_at": "2026-06-20T21:01:27",
+  "translation": "3.6 主要な実証的知見のまとめ                                                         65\n\n図3.28 30秒あたりの取引数と累積取引量、二乗対数リターンと取引数、二乗対数リターンと累積取引量、二乗対数リターンとビッド・アスク・スプレッド、取引数とビッド・アスク・スプレッド、リターンとアスク・ビッド・デスの不均衡、取引数とデプス、および累積取引量とデプスのクロス・自己相関関数。JP Morgan（NYSE）、Microsoft（NASDAQ）、およびDeutsche Telekom（XETRA）について。サンプリング期間は、JP MorganとMicrosoftについては2009年6月、Deutsche Telekomについては2010年9月である。"
+}

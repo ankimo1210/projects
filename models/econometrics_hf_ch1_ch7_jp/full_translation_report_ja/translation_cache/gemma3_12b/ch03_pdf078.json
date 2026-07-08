@@ -1,0 +1,13 @@
+{
+  "model": "gemma3:12b",
+  "chapter": 3,
+  "chapter_ja": "高頻度データの実証的性質",
+  "chapter_en": "Empirical Properties of High-Frequency Data",
+  "pdf_page": 78,
+  "printed_page": "63",
+  "source_chars": 479,
+  "translation_chars": 281,
+  "elapsed_seconds": 15.581,
+  "created_at": "2026-06-20T21:01:08",
+  "translation": "3.6 主要な実証的知見のまとめ                                                     63\n\n図3.26 JP Morgan（NYSE）、Microsoft（NASDAQ）、Deutsche Telekom（XETRA）の2分間の取引回数、累積取引量（100株単位）、ビッド・アスク・スプレッド、二乗対数リターン、絶対累積純買い量（100株単位）の30分間ノードにおける三次スプライン関数。サンプル期間：JP MorganとMicrosoftは2009年6月、Deutsche Telekomは2010年9月。"
+}

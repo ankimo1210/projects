@@ -1,0 +1,54 @@
+Morgan Stanley                                                                                    Confidential
+
+
+                             a2 —u, Vie [d]
+                                        d
+
+                              —Wh< a+              u) < Hy
+                                       i=l
+
+                                 Sh<u<S?,             wield                                                 (13)
+This implemented form is now a 2d-dimensional optimization problem. It is easy to see that the
+modified problem (13) is equivalent to (12), in the sense that the solution for the proposed hedges
+u* is the same in both cases, as is the final objective function value. Indeed, let Fy(u), F(u, 2)
+denote the original and modified objective functions, respectively; let u* be the unique solution
+to (12). We have the following relations: Fy(u*)            = F,(u*, |u*|) (immediate from definition of F;),
+and te any admissible u,z we have F,(u,z) > F,(u, |u|) (each component of z takes non-negative
+values, so to minimize C7, we take the smallest admissible value - in this case, |u). It now follows
+that (u*,|u*|) is the solution to           (13), since for any admissible u, 2, we have
+                                     Fi(u, 2) > Fy(u, jul) = Fy(u)
+                                              > F,(u) = Fyu", Ju"),
+and the conclusion follows because (u*,|u*|) is admissible for the modified problem.
+
+A Small Change to the Covariance Matrix.
+
+    We note in passing that in practice, the diagonal terms of the covariance matrix are bumped
+by one percent in the quadratic term of the objective function. It can be seen (see e.g. Eq.
+that this has the same effect as considering the new quadratic cost
+                                                           A...
+                                             M=M+        Foo tias(®)-                                       (14)
+
+Untradable        products
+
+    It can happen that one market is closed or that some products are temporarily not available to
+trading.   For instance in the US, the futures market could be closed while the cash market stays
+open. In that case we need to take that into account in the optimization problem. Indeed we still
+need to consider the variance due to untradable products, but there is no associated control variables
+because no trade can be executed for these assets; we can however still hedge our positions with the
+other tradable correlated products. In this case, if U C [d] is the index set of untradable products,
+we simply implement the Opt-Var optimization (13) with the additional constraints u; = 0 for
+ieUu.
+
+3.6.3      CRB    optimization
+
+For the CRB optimization we also use the E04NQ routine. Instead of 100 as number of iterations
+limit, we use 150. We take zero as the optimizer initial position since it is always admissible. We
+don’t use the covariance diagonal bump.
+     Like previously we need to reformulate the problem for it to fit in the quadratic programming
+framework. It corresponds to removing the absolute value in the objective function. Contrarily
+to the previous case which required to introduce additional variables, it is not necessary in our
+
+
+130115: Opt-Var                                                                                Page   35 of 136
+
+                         [git] « Branch: iropt-var@be27d1a = Release:        (2024-10-31)

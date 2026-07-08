@@ -1,0 +1,61 @@
+Morgan Stanley                                                                        Confidential
+
+
+
+
+                        0000                                             -
+                        oo                                             fis
+                        sow                                           4] Ls
+                    5Eo                          iaa==:
+                     z           Sead                      Pees
+                                                             le 2 oo
+                     3Es 10000} oy
+                                 “5 3                                    ma
+                      :          aa                                      Ly
+                     8 oom |e 307
+                      H          Sv
+                     i           Sho
+                         30000 | 2 Tu
+                                 AW                                     Ss
+                         0000 aan$Y
+                                 Sos
+                         sooo | 2 Ut
+                                00         o2      a      06   oe       10
+
+
+Figure 66: Terminal inventory in PVO1 through the repeated calls to CRB as a function of G,
+a multiplier in front of the correlation matrix with Set A of constraints. The correlation matrix
+becomes Gécrp, with dcrp as above.
+
+
+
+                         8000                                         ey
+                                                                      So
+                                                                      sr
+                         6000                                         7
+                                ee                                    ey
+                         4000                                         “e 20v
+                     3                                                “S30
+                     g= 200                                           0
+                                                                      pay
+                      z                                               tr
+                      24                    oe                        wr
+                       z                                              seus
+                       >                                              su
+                      Sled           oe oe et eo       aad
+                      i
+                         1000
+                       =6000
+                       8000
+                                oo         02      oF     oe   oe       To
+
+Figure 67: Terminal inventory in PVO1 through the repeated calls to CRB as a function of G,
+a multiplier in front of the correlation matrix with Set B of constraints. The correlation matrix
+becomes Gécrp, with dcrp as above.
+
+
+
+
+130115: Opt-Var                                                                     Page 85 of 136
+
+                      [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)

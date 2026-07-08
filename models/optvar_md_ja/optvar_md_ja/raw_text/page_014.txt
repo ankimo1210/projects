@@ -1,0 +1,44 @@
+Morgan Stanley                                                                                                 Confidential
+
+
+correlated products at the first step, then continues selling product A until it reaches an equilibrium
+(at roughly step 5); after this, the inventory is said to be stable.
+
+                                                      Lambda = 5e-08
+                        50000                                                               e Product A
+                                                                                            Me Product 8
+                        40000
+
+                        30000
+
+                     2 20000         i ae          eae         eo
+
+                        10000
+
+
+
+
+                       ~20000       Se              ce ee Ser ee ear                         er eee
+                                a    2         a            é             a            10       2
+                                                            Ireration
+
+                           Figure 11: Portfolio trajectory for the toy model
+    We can also represent in Figure[12] these trajectories in a two-dimensional space where the first
+coordinate is the position in the first bond and the second coordinate the position in the other
+bond. We display in red the area where the system converges, which can be explictly computed.
+The variance is represented by the black contours. We observe that the variance decreases along
+the trajectories.
+
+
+                                _        _ntohedgeseluton wh 2=08.A~ S608 infnts = False
+
+
+
+
+Figure 12: Two example trajectories starting from (50000, 0) for the green one and (-45000, 75000)
+for the purple one. The correlation value is p = 0.8, a = 0.
+
+
+130115: Opt-Var                                                                                              Page   14   of 136
+
+                       [git] « Branch: iropt-var@be27d1a = Release:                           (2024-10-31)

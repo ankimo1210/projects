@@ -1,0 +1,58 @@
+# Page 017
+
+![Page 017](../assets/page_images/page-017.jpg)
+
+## OCR layout text
+
+```text
+Morgan Stanley                                                                                    Confidential
+
+
+2.6      Regulatory and Policy Requirements
+The algo model covered in this document was developed in adherence with all aspects of the
+US Federal Reserve’s “Supervisory Guidance on Model Risk Management (SR 11-7)” [J] and the
+European Commission’s “MiFID IT Regulatory Technical Standards 6 (RTS-6)” [J]. Within Morgan
+Stanley, the model was developed in adherence with the “Global Model Risk Management Policy”
+[5] and its supplement, “Electronic Trading Algorithm Models: Supplement to the Global Model
+Risk Management Policy” [7].
+
+3       Model      Description
+Throughout, we use the notation [d] = {1,2,...,d} as a shorthand notation for the index set of the
+instruments.
+
+
+3.1      Model     Assumptions
+
+
+3.1.1      Data Source and Quality
+
+The model assumes the model parameters introduced in section                      are valid and reasonable.
+Specifically, it assumes:
+      « The covariance matrix ©     is positive definite.
+
+      + The upper hedgeable risk limit Hy, is non-negative. The lower hedgeable risk limit Hy is
+        non-positive.
+      « The bucket risk limit B; for each risk bucket i is non-negative.
+
+      + The trade size limit S$; for each risk bucket i is non-negative.
+      + The risk-aversion factor A is non-negative.
+    Checks and controls exist in the autohedger to make sure the inputs used by Opt-Var satisfy
+these assumptions. We discuss this in details in section 5
+3.1.2      Statistical
+
+The model assumes the following from statistical perspective:
+      + The hedgeable risk limit and trading size limit constraints which we explain in details in
+            i        are not contradictory, namely that the admissible set defined by these two
+        constraints is not empty. Otherwise there is nothing to optimize and the hedging decision
+        is made based on another rule described in section          [3.2.5} In the autohedger, checks exist to
+        make sure this assumption is satisfied before the Opt-Var model is called. The details are
+        discussed in section
+      + The alpha factor a is assumed to be smaller than the cost vector C. That is, Jai] < Ci, Vi €
+        [d.. This assumption ensures convergence of the inventory to the stable area and boundedness
+        of hedge costs, as proved in Section   [5.1.5] The alpha value aj is capped at 90% of the cost Cy
+        in the code hence the assumption is always satisfied. The details are discussed in sectio1
+
+130115: Opt-Var                                                                                Page 17 of 136
+
+                          [git] « Branch: iropt-var@be27d1a = Release:    (2024-10-31)
+```

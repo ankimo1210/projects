@@ -1,0 +1,59 @@
+# ページ 040
+
+![ページ 040](../assets/page_images/page-040.jpg)
+
+## 原文OCRテキスト
+
+```text
+Morgan Stanley                                                                             Confidential
+
+
+In the simpler case of same quadratic cost for each asset, that is M = mlq with m € R,, the
+explicit solution to
+
+                               AE + VEZ
+                                      + IMAS _ AE + Ay/D2 44RD
+                        P=
+                                       2             _             2           °
+where the square root is understood in the sense of PSD matrices. We apply this result by approx-
+imating the quadratic cost matrix by m1q where m is the average quadratic cost over the assets.
+Replacing the infinite horizon value function v(q1) = q} Pq in (16) yields the Opt-Var problem
+     with 5, = 1. When the position increase is not allowed the reasoning is exactly the same,
+the only change being the different constraints at the first step. The infinite horizon problem and
+its solution remain the same. In practice, the parameter 55, is set to 1 or 0 at the trading desk’s
+discretion.
+
+4       Model     Development          and    Selection       Process
+
+4.1      Model    Segmentation and Variable Selection
+4.1.1     Model   Segmentation
+
+The Opt-Var model is a portfolio and cost optimization model used for automated hedging. The
+model can be adapted and applied to hedge any portfolios with a given set of products, provided
+the covariance matrix of the portfolio can be satisfactorily estimated, and the cost parameters can
+be calibrated. In our case, the model is used to hedge the UST bonds & futures portfolio in the
+US, and to hedge the portfolio of EU futures in EGB.
+4.1.2     Variable selection
+The decision variable in the Opt-Var model is the trade vector w as described in section
+clement in the trade vector corresponds to the amount we should trade to hedge the ris!
+instrument in the portfolio. The choice of the instruments included in the portfolio is a business
+decision made by bookrunners. There is no systematic approach to select the hedge instruments
+included in the portfolio, but an appropriate hedge instrument should meet the below criteria:
+      + The relationship between the instruments to be hedged and the hedge instruments can be
+        clearly identified. That is to say, when the price of the instrument to be hedged moves in a
+        certain way, we should be able to estimate the price movement of the hedge instrument based
+        on this information.
+      + The hedge instruments should be liquid enough so that we can easily trade them to hedge
+        the positions when needed.
+    ‘At the time of writing, the products included in the EU portfolio are the seven liquid front
+contract EGB futures. In the US, they are the liquid on-the-run treasuries and front contract UST
+futures as mentioned in section        The choice of the hedge instruments included in the portfolio
+and Opt-Var model can be adjusted based on the business needs on an ad hoc basis. When new
+products are added to the portfolio, the covariance matrix will need a recalibration to include those
+products, and the cost and risk limits parameters, etc., for those products will need to be calibrated,
+but otherwise the underlying logic of the model is unaffected.
+
+130115: Opt-Var                                                                          Page 40 of 136
+
+                        [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)
+```

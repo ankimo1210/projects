@@ -1,0 +1,1101 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>13. 付録 - Opt-Var</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body data-root="../">
+  <a class="skip-link" href="#content">本文へ移動</a>
+  <div class="layout">
+    
+<aside class="sidebar" aria-label="テキストブックナビゲーション">
+  <div class="brand">
+    <a href="../index.html">Opt-Var HTML</a>
+    <span>日本語テキストブック</span>
+  </div>
+  <form class="search-box" data-search-form>
+    <label for="site-search">OCR検索</label>
+    <input id="site-search" name="q" type="search" placeholder="例: lambda, covariance" autocomplete="off" data-search-input>
+    <div class="search-results" data-search-results aria-live="polite"></div>
+  </form>
+  <form class="page-jump" data-page-jump>
+    <label for="page-number">ページへ移動</label>
+    <div>
+      <input id="page-number" name="page" type="number" min="1" max="136" placeholder="1-136">
+      <button type="submit">開く</button>
+    </div>
+  </form>
+  <nav>
+    <h2>章</h2>
+    <ul class="nav-list">
+      <li><a class="" href="../chapters/front-matter.html">表紙・前付</a></li><li><a class="" href="../chapters/chapter-01.html">1. エグゼクティブサマリー</a></li><li><a class="" href="../chapters/chapter-02.html">2. ビジネスおよびアルゴリズム説明</a></li><li><a class="" href="../chapters/chapter-03.html">3. モデル説明</a></li><li><a class="" href="../chapters/chapter-04.html">4. モデル開発・選定プロセス</a></li><li><a class="" href="../chapters/chapter-05.html">5. モデルテスト</a></li><li><a class="" href="../chapters/chapter-06.html">6. モデルの制約・不確実性・緩和策</a></li><li><a class="" href="../chapters/chapter-07.html">7. モデルオーバーレイと上書き</a></li><li><a class="" href="../chapters/chapter-08.html">8. 本番実装と統制</a></li><li><a class="" href="../chapters/chapter-09.html">9. 継続的なモデル性能モニタリング</a></li><li><a class="" href="../chapters/chapter-10.html">10. モデル変更ログ</a></li><li><a class="" href="../chapters/chapter-11.html">11. 参考文献</a></li><li><a class="" href="../chapters/chapter-12.html">12. 用語定義</a></li><li><a class="active" href="../chapters/chapter-13.html">13. 付録</a></li>
+    </ul>
+    <details open>
+      <summary>詳細目次</summary>
+      <ul class="nav-list toc-list">
+        <li><a class="" href="../chapters/chapter-01.html"><span class="toc-num">1</span>エグゼクティブサマリー</a></li><li><a class="" href="../pages/page-005.html#section-1-1"><span class="toc-num">1.1</span>モデルの目的と想定用途</a></li><li><a class="" href="../pages/page-007.html#section-1-2"><span class="toc-num">1.2</span>モデル概要</a></li><li><a class="" href="../pages/page-008.html#section-1-3"><span class="toc-num">1.3</span>主な前提と制約</a></li><li><a class="" href="../pages/page-008.html#section-1-4"><span class="toc-num">1.4</span>全体的なモデル性能評価</a></li><li><a class="" href="../pages/page-008.html#section-1-5"><span class="toc-num">1.5</span>結果サマリー</a></li><li><a class="" href="../chapters/chapter-02.html"><span class="toc-num">2</span>ビジネスおよびアルゴリズム説明</a></li><li><a class="" href="../pages/page-009.html#section-2-1"><span class="toc-num">2.1</span>Autohedger概要</a></li><li><a class="" href="../pages/page-010.html#section-2-2"><span class="toc-num">2.2</span>ポートフォリオリスク</a></li><li><a class="" href="../pages/page-010.html#section-2-3"><span class="toc-num">2.3</span>入出力量</a></li><li><a class="" href="../pages/page-012.html#section-2-4"><span class="toc-num">2.4</span>Opt-Varの原理</a></li><li><a class="" href="../pages/page-015.html#section-2-5"><span class="toc-num">2.5</span>Autohedger内の機能コンポーネント</a></li><li><a class="" href="../pages/page-017.html#section-2-6"><span class="toc-num">2.6</span>規制・ポリシー要件</a></li><li><a class="" href="../chapters/chapter-03.html"><span class="toc-num">3</span>モデル説明</a></li><li><a class="" href="../pages/page-017.html#section-3-1"><span class="toc-num">3.1</span>モデル前提</a></li><li><a class="" href="../pages/page-018.html#section-3-2"><span class="toc-num">3.2</span>モデル仕様</a></li><li><a class="" href="../pages/page-025.html#section-3-3"><span class="toc-num">3.3</span>モデル入力とデータ</a></li><li><a class="" href="../pages/page-027.html#section-3-4"><span class="toc-num">3.4</span>モデル出力</a></li><li><a class="" href="../pages/page-027.html#section-3-5"><span class="toc-num">3.5</span>モデル較正とパラメータ推定</a></li><li><a class="" href="../pages/page-034.html#section-3-6"><span class="toc-num">3.6</span>数値実装</a></li><li><a class="" href="../pages/page-036.html#section-3-7"><span class="toc-num">3.7</span>付録：技術詳細</a></li><li><a class="" href="../chapters/chapter-04.html"><span class="toc-num">4</span>モデル開発・選定プロセス</a></li><li><a class="" href="../pages/page-040.html#section-4-1"><span class="toc-num">4.1</span>モデル分割と変数選択</a></li><li><a class="" href="../pages/page-041.html#section-4-2"><span class="toc-num">4.2</span>代替理論・代替アプローチ</a></li><li><a class="" href="../pages/page-041.html#section-4-3"><span class="toc-num">4.3</span>主要ステークホルダー・独立ソースからの貢献</a></li><li><a class="" href="../chapters/chapter-05.html"><span class="toc-num">5</span>モデルテスト</a></li><li><a class="" href="../pages/page-041.html#section-5-1"><span class="toc-num">5.1</span>モデル診断テスト</a></li><li><a class="" href="../pages/page-057.html#section-5-2"><span class="toc-num">5.2</span>シナリオ分析とストレステスト</a></li><li><a class="" href="../pages/page-067.html#section-5-3"><span class="toc-num">5.3</span>感応度分析</a></li><li><a class="" href="../pages/page-086.html#section-5-4"><span class="toc-num">5.4</span>ベンチマーキング</a></li><li><a class="" href="../pages/page-089.html#section-5-5"><span class="toc-num">5.5</span>結果分析とバックテスト</a></li><li><a class="" href="../pages/page-092.html#section-5-6"><span class="toc-num">5.6</span>付録：技術詳細</a></li><li><a class="" href="../chapters/chapter-06.html"><span class="toc-num">6</span>モデルの制約・不確実性・緩和策</a></li><li><a class="" href="../chapters/chapter-07.html"><span class="toc-num">7</span>モデルオーバーレイと上書き</a></li><li><a class="" href="../chapters/chapter-08.html"><span class="toc-num">8</span>本番実装と統制</a></li><li><a class="" href="../pages/page-097.html#section-8-1"><span class="toc-num">8.1</span>本番実装</a></li><li><a class="" href="../pages/page-097.html#section-8-2"><span class="toc-num">8.2</span>モデルプロセスと統制</a></li><li><a class="" href="../pages/page-099.html#section-8-3"><span class="toc-num">8.3</span>コード変更管理とバージョン管理</a></li><li><a class="" href="../pages/page-099.html#section-8-4"><span class="toc-num">8.4</span>ソフトウェア開発ライフサイクル</a></li><li><a class="" href="../chapters/chapter-09.html"><span class="toc-num">9</span>継続的なモデル性能モニタリング</a></li><li><a class="" href="../pages/page-103.html#section-9-1"><span class="toc-num">9.1</span>指標と閾値</a></li><li><a class="" href="../pages/page-104.html#section-9-2"><span class="toc-num">9.2</span>エスカレーション</a></li><li><a class="" href="../pages/page-104.html#section-9-3"><span class="toc-num">9.3</span>MRMと共有されるデータ</a></li><li><a class="" href="../pages/page-106.html#section-9-4"><span class="toc-num">9.4</span>日中モニタリングツール</a></li><li><a class="" href="../chapters/chapter-10.html"><span class="toc-num">10</span>モデル変更ログ</a></li><li><a class="" href="../chapters/chapter-11.html"><span class="toc-num">11</span>参考文献</a></li><li><a class="" href="../chapters/chapter-12.html"><span class="toc-num">12</span>用語定義</a></li><li><a class="active" href="../chapters/chapter-13.html"><span class="toc-num">13</span>付録</a></li><li><a class="" href="../pages/page-110.html#section-13-1"><span class="toc-num">13.1</span>収束テスト図</a></li><li><a class="" href="../pages/page-116.html#section-13-2"><span class="toc-num">13.2</span>ベンチマークテスト図</a></li><li><a class="" href="../pages/page-121.html#section-13-3"><span class="toc-num">13.3</span>結果分析・バックテスト図</a></li>
+      </ul>
+    </details>
+  </nav>
+</aside>
+
+    <main id="content" class="content">
+      
+<nav class="breadcrumb">
+  <a href="../index.html">トップ</a>
+  <span>/</span>
+  <span>13. 付録</span>
+</nav>
+<header class="chapter-header">
+  <p class="eyebrow">PDF 110-136 ページ</p>
+  <h1>13. 付録</h1>
+  <p>Appendix</p>
+</header>
+<section>
+  <h2>この章の目次</h2>
+  
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>節</th><th>日本語</th><th>English</th><th>ページ</th></tr></thead>
+    <tbody><tr><td><a href="#section-13">13</a></td><td>付録</td><td>Appendix</td><td><a href="../pages/page-110.html">110</a></td></tr><tr><td><a href="#section-13-1">13.1</a></td><td>収束テスト図</td><td>Convergence Testing Plots</td><td><a href="../pages/page-110.html">110</a></td></tr><tr><td><a href="#section-13-2">13.2</a></td><td>ベンチマークテスト図</td><td>Benchmarking Tests Plots</td><td><a href="../pages/page-116.html">116</a></td></tr><tr><td><a href="#section-13-3">13.3</a></td><td>結果分析・バックテスト図</td><td>Outcome Analysis and Backtesting Plots</td><td><a href="../pages/page-121.html">121</a></td></tr></tbody>
+  </table>
+</div>
+
+</section>
+<section>
+  <h2>ページ本文</h2>
+  
+<article class="page-article" id="page-110">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 110</h2>
+    <div class="section-badges"><a id="section-13" class="section-badge" href="#section-13">13 付録</a><a id="section-13-1" class="section-badge" href="#section-13-1">13.1 収束テスト図</a></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-110.jpg"><img src="../assets/page_images/page-110.jpg" alt="ページ 110 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                             Confidential
+
+
+13.     Appendix
+13.1.    Convergence        Testing Plots
+
+
+
+
+                                                                  ae
+                                                                   =)
+
+
+                  Figure 83: Java and Python Convergence Comparison. Examples 1-50.
+
+
+
+130115: Opt-Var                                                                         Page 110 of 136
+
+                         [git] = Branch: ir.opt-var@bc27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-111">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 111</h2>
+    <div class="section-badges"><span class="section-badge muted">13 付録 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-111.jpg"><img src="../assets/page_images/page-111.jpg" alt="ページ 111 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                          Confidential
+
+
+
+
+              Figure 84: Java and Python Convergence Comparison. Examples 50-100.
+
+
+
+
+130115: Opt-Var                                                                      Page 111 of 136
+
+                      [git] = Branch: ir.opt-var@bc27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-112">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 112</h2>
+    <div class="section-badges"><span class="section-badge muted">13 付録 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-112.jpg"><img src="../assets/page_images/page-112.jpg" alt="ページ 112 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                       Confidential
+
+
+
+
+Figure 85: Java and Python CRB Convergence Comparison.             Examples 1-50. Set A of AIM
+constraints
+
+
+
+
+130115:   Opt-Var                                                                 Page   112 of 136
+
+                    [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-113">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 113</h2>
+    <div class="section-badges"><span class="section-badge muted">13 付録 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-113.jpg"><img src="../assets/page_images/page-113.jpg" alt="ページ 113 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                       Confidential
+
+
+
+
+Figure 86: Java and Python CRB Convergence Comparison. Examples 50-100. Set A of AIM
+constraints
+
+
+
+
+130115:   Opt-Var                                                                 Page   113   of 136
+
+                    [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-114">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 114</h2>
+    <div class="section-badges"><span class="section-badge muted">13 付録 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-114.jpg"><img src="../assets/page_images/page-114.jpg" alt="ページ 114 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                       Confidential
+
+
+
+
+Figure 87: Java and Python CRB Convergence Comparison.             Examples 1-50. Set B of AIM
+constraints
+
+
+
+
+130115:   Opt-Var                                                                 Page   114 of 136
+
+                    [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-115">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 115</h2>
+    <div class="section-badges"><span class="section-badge muted">13 付録 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-115.jpg"><img src="../assets/page_images/page-115.jpg" alt="ページ 115 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                     Confidential
+
+
+
+
+Figure 88: Java and Python CRB Convergence Comparison. Examples 50-100. Set B of AIM
+constraints
+
+
+
+
+130115: Opt-Var                                                                 Page 115 of 136
+                  [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-116">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 116</h2>
+    <div class="section-badges"><a id="section-13-2" class="section-badge" href="#section-13-2">13.2 ベンチマークテスト図</a></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-116.jpg"><img src="../assets/page_images/page-116.jpg" alt="ページ 116 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                        Confidential
+
+
+13.2     Benchmarking Tests Plots
+
+
+
+
+Figure 89: Comparison of the objective function values Fy after hedging using Opt-Var and simple
+hedging strategy for different risk aversion \ values. Examples 1-20.
+
+
+
+
+130115: Opt-Var                                                                    Page 116 of 136
+
+                     [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-117">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 117</h2>
+    <div class="section-badges"><span class="section-badge muted">13.2 ベンチマークテスト図 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-117.jpg"><img src="../assets/page_images/page-117.jpg" alt="ページ 117 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                        Confidential
+
+
+
+
+Figure 90: Comparison of the objective function values F, after hedging using Opt-Var and simple
+hedging strategy for different risk aversion \ values. Examples 21-40.
+
+
+
+
+130115:   Opt-Var                                                                  Page   117 of 136
+
+
+                     [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-118">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 118</h2>
+    <div class="section-badges"><span class="section-badge muted">13.2 ベンチマークテスト図 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-118.jpg"><img src="../assets/page_images/page-118.jpg" alt="ページ 118 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                            Confidential
+
+
+
+
+Figure 91: Comparison of the objective function values F, after hedging using Opt-Var and simple
+hedging strategy for different risk aversion \ values. Examples 41-60.
+
+
+
+
+130115:   Opt-Var                                                                  Page     118 of 136
+
+
+                     [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-119">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 119</h2>
+    <div class="section-badges"><span class="section-badge muted">13.2 ベンチマークテスト図 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-119.jpg"><img src="../assets/page_images/page-119.jpg" alt="ページ 119 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                         Confidential
+
+
+
+
+Figure 92: Comparison of the objective function values F, after hedging using Opt-Var and simple
+hedging strategy for different risk aversion \ values. Examples 61-80.
+
+
+
+
+130115:   Opt-Var                                                                   Page   119 of 136
+
+
+                      [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-120">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 120</h2>
+    <div class="section-badges"><span class="section-badge muted">13.2 ベンチマークテスト図 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-120.jpg"><img src="../assets/page_images/page-120.jpg" alt="ページ 120 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                            Confidential
+
+
+
+
+Figure 93: Comparison of the objective function values F, after hedging using Opt-Var and simple
+hedging strategy for different risk aversion \ values. Examples 81-100.
+
+
+
+
+130115: Opt-Var                                                                    Page     120 of 136
+
+                     [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-121">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 121</h2>
+    <div class="section-badges"><a id="section-13-3" class="section-badge" href="#section-13-3">13.3 結果分析・バックテスト図</a></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-121.jpg"><img src="../assets/page_images/page-121.jpg" alt="ページ 121 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                            Confidential
+
+
+13.3.    Outcome   Analysis and Backtesting Plots
+13.3.1    Portfolio Variance
+
+
+
+
+Figure 94: Comparison of the portfolio variance values after hedging using Opt-Var versus no hedge
+for different risk aversion \ values. Examples 1-20.
+
+
+
+
+130115: Opt-Var                                                                     Pag     121 of 136
+
+                     [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-122">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 122</h2>
+    <div class="section-badges"><span class="section-badge muted">13.3 結果分析・バックテスト図 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-122.jpg"><img src="../assets/page_images/page-122.jpg" alt="ページ 122 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                         Confidential
+
+
+
+
+Figure 95: Comparison of the portfolio variance values after hedging using Opt-Var versus no hedge
+for different risk aversion \ values. Examples 21-40.
+
+
+
+
+130115: Opt-Var                                                                     Page   122 of 136
+
+
+                      [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-123">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 123</h2>
+    <div class="section-badges"><span class="section-badge muted">13.3 結果分析・バックテスト図 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-123.jpg"><img src="../assets/page_images/page-123.jpg" alt="ページ 123 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                         Confidential
+
+
+
+
+Figure 96: Comparison of the portfolio variance values after hedging using Opt-Var versus no hedge
+for different risk aversion \ values. Examples 41-60.
+
+
+
+
+130115: Opt-Var                                                                     Page   123 of 136
+
+
+                      [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-124">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 124</h2>
+    <div class="section-badges"><span class="section-badge muted">13.3 結果分析・バックテスト図 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-124.jpg"><img src="../assets/page_images/page-124.jpg" alt="ページ 124 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                         Confidential
+
+
+
+
+     ifo.
+
+
+
+
+Figure 97: Comparison of the portfolio variance values after hedging using Opt-Var versus no hedge
+for different risk aversion \ values. Examples 61-80.
+
+
+
+
+130115: Opt-Var                                                                     Page   124 of 136
+
+
+                      [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-125">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 125</h2>
+    <div class="section-badges"><span class="section-badge muted">13.3 結果分析・バックテスト図 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-125.jpg"><img src="../assets/page_images/page-125.jpg" alt="ページ 125 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                         Confidential
+
+
+
+
+Figure 98: Comparison of the portfolio variance values after hedging using Opt-Var versus no hedge
+for different risk aversion   values. Examples 81-100.
+
+13.3.2    Trading Cost
+Criteria 1
+
+
+
+
+130115: Opt-Var                                                                          125 of 136
+
+                        [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-126">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 126</h2>
+    <div class="section-badges"><span class="section-badge muted">13.3 結果分析・バックテスト図 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-126.jpg"><img src="../assets/page_images/page-126.jpg" alt="ページ 126 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                             Confidential
+
+
+
+
+                  a
+
+Figure 99: Comparison of the trading cost values using Opt-Var and simple hedging strategy for
+different risk aversion A values. The trading cost value is given by Costg described in section
+Examples 1-20.
+
+
+
+
+130115: Opt-Var                                                                     Page     126 of 136
+
+                      [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-127">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 127</h2>
+    <div class="section-badges"><span class="section-badge muted">13.3 結果分析・バックテスト図 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-127.jpg"><img src="../assets/page_images/page-127.jpg" alt="ページ 127 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                         Confidential
+
+
+
+
+Figure 100: Comparison of the trading cost values using Opt-Var and simple hedging strategy for
+different risk aversion \ values. The trading cost value is given by Costg described in section|3.
+Examples 21-40.
+
+
+
+
+130115: Opt-Var                                                                     Page   127 of 136
+
+
+                     [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-128">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 128</h2>
+    <div class="section-badges"><span class="section-badge muted">13.3 結果分析・バックテスト図 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-128.jpg"><img src="../assets/page_images/page-128.jpg" alt="ページ 128 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                         Confidential
+
+
+
+
+                  a
+
+Figure 101: Comparison of the trading cost values using Opt-Var and simple hedging strategy for
+different risk aversion A values. The trading cost value is given by Costg described in section
+Examples 41-60.
+
+
+
+
+130115: Opt-Var                                                                     Page 128 of 136
+
+                      [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-129">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 129</h2>
+    <div class="section-badges"><span class="section-badge muted">13.3 結果分析・バックテスト図 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-129.jpg"><img src="../assets/page_images/page-129.jpg" alt="ページ 129 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                            Confidential
+
+
+
+
+                            i:
+         Ce                      TFS                    TS    ee               Te           ae
+
+Figure 102: Comparison of the trading cost values using Opt-Var and simple hedging strategy for
+different risk aversion A values. The trading cost value is given by Cost, described in section|3.2.2|
+Examples 61-80.
+
+
+
+
+130115: Opt-Var                                                                        Page 129 of 136
+
+                      [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-130">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 130</h2>
+    <div class="section-badges"><span class="section-badge muted">13.3 結果分析・バックテスト図 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-130.jpg"><img src="../assets/page_images/page-130.jpg" alt="ページ 130 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                                                 Confidential
+
+
+
+
+                   ee
+
+Figure 103: Comparison of the trading cost values using Opt-Var and simple hedging strategy for
+different risk aversion A values. The trading cost value is given by Costg described in section
+Examples 81-100.
+Criteria 2
+
+                                                     Reaction to 25000 PVO1 SHTZ flow
+
+
+                   5000
+
+                  210000
+
+              E asco
+                  2000
+
+                           r)          3       %        7          Fr}         us        70      Ts    260
+                                                                    iN                                   x10
+
+Figure 104: Opt-Var proposed trades in reaction to an initial position of 25,000 PVO1 in SHTZ
+bucket for different values.
+
+
+
+130115: Opt-Var                                                                                                  130 of 136
+
+                                [git] « Branch: iropt-var@be27d1a = Release:            (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-131">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 131</h2>
+    <div class="section-badges"><span class="section-badge muted">13.3 結果分析・バックテスト図 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-131.jpg"><img src="../assets/page_images/page-131.jpg" alt="ページ 131 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                                                                                 Confidential
+
+
+                                                           Reaction to 25000 PVO1 SHTZ flow
+                                                                                                                 = Optvar Hedger
+                    14000                                                                                        = Trading Single Product
+
+                    32000
+                    10000
+                  3 8000
+
+                     6000
+                     4000
+
+                            Q              200      “400           ‘600               ‘200          3000          1200            1400
+                                                                     Portfolio variance (€*)                                             aoe
+
+Figure 105: Trading cost of Opt-Var proposed trades versus trading cost of hedging with single
+product for achieving different portfolio variance level. The trades are in reaction to an initial
+position of 25,000 PV01 in SHTZ bucket. The trading cost value is given by Cost, described in
+section [3.2.2]
+
+
+                                                           Reaction to 25000 PVO1 BOBL flow
+
+
+                     5000
+
+
+
+
+                    2000
+
+                                a          Ba      Pa          %               a0              us           Fy           as         200
+                                                                                »                                                     x10
+
+Figure 106: Opt-Var proposed trades in reaction to an initial position of 25,000 PVO1 in BOBL
+bucket for different values.
+
+
+
+
+130115: Opt-Var                                                                                                                           Page 131 of 136
+
+                                    [git] « Branch: iropt-var@be27d1a = Release:                           (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-132">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 132</h2>
+    <div class="section-badges"><span class="section-badge muted">13.3 結果分析・バックテスト図 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-132.jpg"><img src="../assets/page_images/page-132.jpg" alt="ページ 132 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                                                                               Confidential
+
+
+                                                             Reactionto 25000 PVO1 BOBL flow
+                                                                                                             &lt;= opt¥var Hedger
+                  7000.                                                                                      = Trading Sinal
+                                                                                                                         Single Product
+
+
+
+
+                  3000
+
+                  2000
+                           ry                   100       7260              7360                 “00         “30                 oo
+                                                                     Portola variance (@)                                             xaot
+
+Figure 107: Trading cost of Opt-Var proposed trades versus trading cost of hedging with single
+product for achieving different portfolio variance level. The trades are in reaction to an initial
+position of 25,000 PVO1 in BOBL bucket. The trading cost value is given by Costg described in
+sectio
+
+
+                          ——
+                           Reactionto 25000 PVO1 BUND flow
+
+
+                   5000
+                5                                                                                                            siz
+              Fy                                                                                                             poet
+                &amp; -10000                                                                                                     + BUND
+                 1                                                                                                           eux
+                 H                                                                                                              on
+              48 -15000                                                                                                      ers
+                                                                                                                              —78
+
+                  2000
+
+                                r)          3         %          7             300          us          70         Ts             260
+                                                                                iN                                                  x10
+
+Figure 108: Opt-Var proposed trades in reaction to an initial position of 25,000 PVO1 in BUND
+bucket for different values.
+
+
+
+
+130115: Opt-Var                                                                                                                        Page 132 of 136
+
+                                     [git] « Branch: iropt-var@be27d1a = Release:                      (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-133">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 133</h2>
+    <div class="section-badges"><span class="section-badge muted">13.3 結果分析・バックテスト図 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-133.jpg"><img src="../assets/page_images/page-133.jpg" alt="ページ 133 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                                                                      Confidential
+
+
+                                                      Reactionto 25000 PVO1 BUND flow
+                                                                                                        &lt;= optivar Hedger
+                  4000                                                                                  = Trading Single Product
+
+
+                  3500
+               ¥
+                8
+              3 3000.
+
+                  2500
+
+                  2000
+                          o          35          50              75                100        ws              150             vs
+                                                              Portfolio variance (€*)                                        wage
+
+Figure 109: Trading cost of Opt-Var proposed trades versus trading cost of hedging with single
+product for achieving different portfolio variance level. The trades are in reaction to an initial
+position of 25,000 PVO1 in BUND bucket. The trading cost value is given by Costg described in
+section B23
+
+
+                                                        Reaction to 25000 PVO1 OAT flow
+
+                2500
+                5000
+              g
+              = ~7500
+              geo
+                  12500   4 soet
+                  15000
+                  1750}   — erp
+                           r)        3       %            7             Fr}              us        70         Ts           260
+                                                                          a                                                  x10
+
+Figure 110: Opt-Var proposed trades in reaction to an initial position of 25,000 PVO1 in OAT
+bucket for different values.
+
+
+
+
+130115: Opt-Var                                                                                                                Page   133 of 136
+
+
+                              [git] « Branch: iropt-var@be27d1a = Release:                    (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-134">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 134</h2>
+    <div class="section-badges"><span class="section-badge muted">13.3 結果分析・バックテスト図 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-134.jpg"><img src="../assets/page_images/page-134.jpg" alt="ページ 134 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                                                                         Confidential
+
+
+                                                          Reaction to 25000 PVO1 OAT flow
+                  ‘8000                                                                                  &lt;= opt¥var Hedger
+                                                                                                         = Trading Single Product
+
+
+
+
+                  2000
+                           ry                   100       260                       7360          “60               ‘500
+                                                                    Portfolio variance (@)                                      xaot
+
+Figure 111: Trading cost of Opt-Var proposed trades versus trading cost of hedging with single
+product for achieving different portfolio variance level. The trades are in reaction to an initial
+position of 25,000 PVO1 in OAT bucket. The trading cost value is given by Costy described in
+sectio!
+
+                                                           Reaction to 25000 PVO1 BTS flow
+
+
+                   5000
+               5                                                                                                           swe
+              Fy                                                                                                           poet
+              &amp; -10000                                                                                                     + BUND
+                 1                                                                                                         = eux
+                 H                                                                                                          = ont
+               4B -15000                                                                                                   ers
+                                                                                                                            —78
+
+                  2000
+
+                                r)          3         %         7              300           us     70         Ts             260
+                                                                                iN                                              x10
+
+Figure 112: Opt-Var proposed trades in reaction to an initial position of 25,000 PVO1 in BTS
+bucket for different A values.
+
+
+
+
+130115: Opt-Var                                                                                                                  Page    134 of 136
+
+
+                                     [git] « Branch: iropt-var@be27d1a = Release:                 (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-135">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 135</h2>
+    <div class="section-badges"><span class="section-badge muted">13.3 結果分析・バックテスト図 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-135.jpg"><img src="../assets/page_images/page-135.jpg" alt="ページ 135 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                                                                                        Confidential
+
+
+                                                                  Reaction to 25000 PVO1 BTS flow
+                      35000                                                                                           = Optvar Hedger
+                                                                                                                      &lt;= Trading Single Product
+
+
+
+                  ¥
+                   3 20000
+                  E 15000
+
+                       0000
+                       so00
+                                   Q               ‘500        3000                1500                  2000         2500              &quot;3000
+                                                                            Portola variance (€*)                                               x08
+
+Figure 113: Trading cost of Opt-Var proposed trades versus trading cost of hedging with single
+product for achieving different portfolio variance level. The trades are in reaction to an initial
+position of 25,000 PVO1 in BTS bucket. The trading cost value is given by Cost, described in
+section [3.2.2]
+
+
+                                                                      Reaction to 25000 PVO1 BTP flow
+                               o
+
+                       5000
+                  g
+                  2                      \
+                      ~30000
+                  i            se sHTz
+                      ~as000 | —— 808
+                               + BUND
+                               Bux
+                               — oar
+                      20000 | = 8r5
+                               = erp
+                                 a            Ba          Pa            %            a0             us           Fy          as           200
+                                                                                      »                                                     x10
+
+Figure 114: Opt-Var proposed trades in reaction to an initial position of 25,000 PV01 in BTP
+bucket for different values.
+
+
+
+
+130115: Opt-Var                                                                                                                                  Page   135 of 136
+
+
+                                       [git] « Branch: iropt-var@be27d1a = Release:                             (2024-10-31)</code></pre>
+  </details>
+</article>
+
+
+<article class="page-article" id="page-136">
+  <header class="page-header">
+    <p class="eyebrow">付録</p>
+    <h2>ページ 136</h2>
+    <div class="section-badges"><span class="section-badge muted">13.3 結果分析・バックテスト図 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-136.jpg"><img src="../assets/page_images/page-136.jpg" alt="ページ 136 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel">
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                                                                 Confidential
+
+
+                                                     Reaction to 25000 PVO1 BTP flow
+                                                                                                  = Optvar Hedger
+                    32000                                                                         &lt;= Trading Single Product
+
+                    0000
+
+                  $ e000
+
+                  © ooo
+
+                     4000
+
+                     2000
+                            °               260             “400                      ‘600              ‘200
+                                                            Portfolio variance (€*)                                      aoe
+
+Figure 115: Trading cost of Opt-Var proposed trades versus trading cost of hedging with single
+product for achieving different portfolio variance level. The trades are in reaction to an initial
+position of 25,000 PVO1 in BTP bucket. The trading cost value is given by Cost, described in
+section [3.2.2]
+
+
+
+
+130115: Opt-Var                                                                                                           Page 136 of 136
+
+                                [git] « Branch: iropt-var@be27d1a = Release:                 (2024-10-31)</code></pre>
+  </details>
+</article>
+
+</section>
+
+    </main>
+  </div>
+  <script src="../assets/search-index.js"></script>
+  <script src="../assets/app.js"></script>
+</body>
+</html>

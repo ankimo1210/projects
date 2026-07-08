@@ -1,0 +1,13 @@
+{
+  "model": "gemma3:12b",
+  "chapter": 3,
+  "chapter_ja": "高頻度データの実証的性質",
+  "chapter_en": "Empirical Properties of High-Frequency Data",
+  "pdf_page": 83,
+  "printed_page": "68",
+  "source_chars": 428,
+  "translation_chars": 396,
+  "elapsed_seconds": 7.854,
+  "created_at": "2026-06-20T21:02:06",
+  "translation": "68                                             3 高頻度データの経験的特性\n\nRoll R (1984) A simple implicit measure of the effective bid-ask spread in an efficient market.\n   J Finance 39:1127–1139\nVeredas D, Rodriguez-Poo J, Espasa A (2008) Semiparametric estimation for financial durations.\n   In: Bauwens WPL, Veredas D (eds) High frequency financial econometrics. Physica-Verlag,\n   Heidelberg, pp 225–251"
+}

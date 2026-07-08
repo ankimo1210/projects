@@ -1,0 +1,52 @@
+# ページ 058
+
+![ページ 058](../assets/page_images/page-058.jpg)
+
+## 原文OCRテキスト
+
+```text
+Morgan Stanley                                                                                       Confidential
+
+
+                                     Parameter /Input            Value
+                                     Hedgeable Risk Limit | 10,000
+                                     Bucket Risk Limit        30,000
+                                     Trade Size Limit         50,000
+                                     Risk Aversion Factor A | 2e-5
+
+                                 Table 11: Other Parameters and Inputs
+
+
+report the total risk 24, q (column "PV01') the scaled variances \g," Eq; (column "Variance’)
+and the costs of the last trade CT u;_1| (column "Cost"). We take the covariance matrix given in
+Table 13 For CRB, the cost: is replaced by the total volume 5), ; |u/. Client risk are generated
+randomly and are the same through the different tests. The client portfolios are given in Table
+                           SHTZ      BOBL       BUND       BUXL         OAT        BTS     BTP
+                  SHTZ       7.04      2.91        1.09      216         3.15       601     3.35
+                  BOBL       2.91      2.79        1.10      158         2.15       271     2.34
+                  BUND       1.09      1.10       0.97       0.76        0.95       1.07    1.04
+                  BUXL       2.16      1.58       0.76       212         2.25       2.24    2.49
+                   OAT       3.15      2.15       0.95       2.25        2.89       3.28    3.29
+                   BTS       6.01      2.71        1.07      2.24        3.28      11.23    414
+                   BTP       3.35      2.34        1.04      249         3.29       414     4.48
+
+                                     Table 12: EU Covariance Matrix
+
+
+                                      Parameter /Input                   Value
+                                              Cost.                        0.08
+                                     Hedgeable Risk Limit                 50,000
+                                      Bucket Risk Limit         125,000
+                                  AIM Risk Aversion Factor \      8e-8
+                              CRB AIM Risk Aversion Factor 1 | 400e-8
+                             Client CRB Risk Aversion Factor Ay   le-8
+
+                               Table 13: US Parameters for CRB testing
+
+
+
+
+130115: Opt-Var                                                                                    Page 58 of 136
+
+                         [git] « Branch: iropt-var@be27d1a = Release:    (2024-10-31)
+```

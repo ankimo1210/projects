@@ -1,0 +1,56 @@
+# ページ 016
+
+![ページ 016](../assets/page_images/page-016.jpg)
+
+## 原文OCRテキスト
+
+```text
+Morgan Stanley                                                                                  Confidential
+
+
+                                               Risk Calculator
+Monitors the positions in the books and maps each bond and future position to the hedge instrument space       ‘---|
+using hedge ratios.                                                                                                    t
+                                                          Portfolio Risk                                               !
+                                  Hedge Calculator (Opt-Var Model)                                                     !
+Performs portfolio hedging and suggests hedging trades to ensure:                                                      \
+    + The portfolio risk in the book is below the risk limits.                                                         H
+    + The portfolio risk is allocated to different risk buckets in an optimal way.                                     '
+
+                                                          Hedging Trades                                               '
+
+                                              Hedge Executor                                                           '
+    + Sends the hedging trades to external exchanges to be executed.
+
+
+                    Figure 14: Three key functional components in the autohedger
+
+hedge ratios, as described in section   Finally, the projected risks for each position - in hedge
+instrument space - are aggregated as he portfolio risk of the book, which is passed to the Hedge
+Calculator component.
+2.5.2    Hedge    Calculator
+
+The Hedge Calculator is the place where the hedging decision is made. The Hedge Calculator takes
+the aggregated portfolio risk coming from the Risk Calculator as the input, and outputs a list of
+proposed hedging trades, which are passed to the Hedge Executor component.
+    ‘The hedge calculator proposes hedging trades to make sure at any time of the day the below
+two conditions are satisfied:
+    1. The portfolio risk in the book is smaller than the risk we are willing to take. This is controlled
+       by the risk limit parameters, the hedgeable risk limit and bucket risk limit, which we explain
+       in section
+    2. The portfolio risk is allocated to different risk buckets in an optimal way. Specifically, it
+       means the hedge calculator proposes trades that balance the trade-offs between the portfolio
+       variance, costs to execute the hedges and alpha capturing.
+     We use the Opt-Var model described below in subsequent sections as the Hedge Calculator. The
+Opt-Var model is a quadratic optimization model with constraints. Throughout this document, we
+will illustrate that the Opt-Var model meets the above two criteria, and is therefore suitable for
+use as a component of the autohedger.
+2.5.3    Hedge    Executor
+
+The final main functional component of autohedger is the Hedge Executor, which sends the hedging
+trades to the external exchanges for execution. Once the hedging trades are executed in the ex-
+change, the positions in the book will be updated, which will trigger a new cycle in the autohedger.
+130115: Opt-Var                                                                               Page 16 of 136
+
+                         [git] « Branch: iropt-var@be27d1a = Release:        (2024-10-31)
+```

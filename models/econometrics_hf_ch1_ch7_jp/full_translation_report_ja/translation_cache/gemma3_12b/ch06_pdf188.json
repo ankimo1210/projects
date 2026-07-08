@@ -1,0 +1,13 @@
+{
+  "model": "gemma3:12b",
+  "chapter": 6,
+  "chapter_ja": "一般化乗法誤差モデル",
+  "chapter_en": "Generalized Multiplicative Error Models",
+  "pdf_page": 188,
+  "printed_page": "173",
+  "source_chars": 3106,
+  "translation_chars": 1961,
+  "elapsed_seconds": 21.102,
+  "created_at": "2026-06-20T21:41:07",
+  "translation": "参考文献                                                                                   173\n\nこの（静的な）ガンマの不均一性を二つの独立したガウスランダム変数の関数とする指数デュレーションモデルの表現は、確率的ボラティリティ・デュレーション（SVD）モデルの動的な仕様の出発点として用いられる。Ghysels et al. (1998) は、周辺分布が N .0; I/ 分布に制約されるように、VAR表現で mi WD .m1;i m2;i /0 を指定することを提案している。ここで、I は単位行列を表す。この制約は、デュレーションの周辺分布がガンマの不均一性を持つ指数分布のクラスに属することを保証する。したがって、\n\n                                         X\n                                         P\n                                 mi D           \u0004j mi \u0002j C \"i ;                          (6.49)\n                                         j D1\n\nここで、\u0004j は自己回帰VARパラメータの行列であり、\"i は分散共分散行列 ˙ .\u0004/ を持つガウス白ノイズランダム変数のベクトルであり、V.mi / D I を保証する。\n   SVDモデルは、尤度関数を評価するのが典型的には困難な非線形動的因子モデルのクラスに属する。したがって、Ghysels et al. (1998) は、二段階の手法を提案している。第一段階では、xi の周辺分布がパラメータ a と \u000f に依存するパレート分布であることを利用する（付録を参照）。したがって、a と \u000f は (Q)ML によって推定することができる。第二段階では、シミュレートされたモーメントの手法を用いて自己回帰パラメータ \u0004j を推定する（詳細については、Ghysels et al. 1998 を参照）。\n   Ghysels et al. (1998) は、SVDモデルをパリ証券取引所で取引されるアルカテル社の株式の取引デュレーションを分析するために適用し、両方の因子に強いダイナミクスが存在するという実証的な証拠を見出す。しかし、SVDモデルのより高い動的な柔軟性は、強い分布上の仮定を誘発する。Bauwens et al. (2004) は、xi の周辺分布に対するパレート分布の仮定が、特定の種類の金融デュレーション（特に出来高デュレーション）に対して適切ではないことを示しており、これによりパレートパラメータ a と \u000f の推定が極めて困難になる。さらに、彼らは、代替ACD仕様と比較して、SVDモデルの予測性能が比較的低いことを発見した。\n\n参考文献\n\nBaillie RT (1996) Long memory processes and fractional integration in econometrics. J Econom\n   73:5–59\nBaillie RT, Bollerslev T, Mikkelsen H-O (1996) Fractionally integrated generalized autoregressive\n   conditional heteroskedasticity. J Econom 52:91–113\nBauwens L, Galli F (2009) Efficient importance sampling for ML estimation of SCD models.\n   Comput Stat Data Anal 53:1974–1992\nBauwens L, Giot P (2003) Asymmetric ACD models: introducing price information in ACD\n   models with a two state transition model. Empir Econ 28:1–23\nBauwens L, Veredas D (2004) The stochastic conditional duration model: a latent factor model for\n   the analysis of financial durations. J Econom 119:381–412"
+}

@@ -1,0 +1,13 @@
+{
+  "model": "gemma3:12b",
+  "chapter": 7,
+  "chapter_ja": "ベクトル乗法誤差モデル",
+  "chapter_en": "Vector Multiplicative Error Models",
+  "pdf_page": 192,
+  "printed_page": "177",
+  "source_chars": 1624,
+  "translation_chars": 919,
+  "elapsed_seconds": 17.062,
+  "created_at": "2026-06-20T21:42:22",
+  "translation": "第7章\nベクトル乗法誤差モデル\n\n本章では、乗法誤差モデルの多変量拡張に焦点を当てるものである。基本的な多変量（またはベクトル）乗法誤差モデルは、第7.1.1節で導入される。仕様、統計的推論について議論し、実証的な例を示すものである。第7.2節では、第5章で提示された単変量確率乗法誤差モデルに対応する確率ベクトルMEMについて述べる。ここでは、VMEMプロセスに共通の潜在因子を付加し、すべての個々のプロセスに共同に影響を与えるというアイデアを検討する。シミュレーション最大尤度を用いてこのクラスのモデルの推定方法を説明し、取引プロセスのモデリングへの応用を示すものである。\n\n7.1 VMEMプロセス\n\n7.1.1 基本的なVMEM仕様\n\nK次元の正値時系列を、fxi g、i D 1 : : : ; n、xi W D (.xi1 ; : : : ; xiK /)と表記する。xiに対するいわゆるベクトルMEM（VMEM）は、次のように定義される。\n\n                                    x i D ‰ i ˇ \"i ;\n\nここで、‰ i WD EŒxi jFi \u00021 \u0002 はK \u0002 1のベクトルであり、ˇはアダマール積（要素ごとの乗算）を表し、\"iは、j番目の要素が\n                      j\n                    \"i jFi \u00021 \u0003 i.i.d. D(1; \u0003j2 /)、j D 1; : : : ; Kとなる、K次元の相互に、また逐次的に独立同一分布のイノベーションプロセスのベクトルである。\n\nVMEMは、単変量線形MEM/ACDモデルの単純な拡張であり、Manganelli (2005)によって次のように指定される。\n\nN. Hautsch, Econometrics of Financial High-Frequency Data,                          177\nDOI 10.1007/978-3-642-21925-2 7, © Springer-Verlag Berlin Heidelberg 2012"
+}

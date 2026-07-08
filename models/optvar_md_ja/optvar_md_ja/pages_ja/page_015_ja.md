@@ -1,0 +1,54 @@
+# ページ 015
+
+![ページ 015](../assets/page_images/page-015.jpg)
+
+## 原文OCRテキスト
+
+```text
+Morgan Stanley                                                                               Confidential
+
+
+    When new risk appears in the portfolio, the variance increases and the Opt-Var iterations
+progressively decrease it until reaching an equilibrium where no other hedges are sent anymore, as
+represented schematically in Figure [13]
+
+             Portfolio variance
+
+
+
+
+                                                                                      Time
+
+                        Figure 13: Portfolio variance dynamics through time.
+
+2.5     Functional    Components        in the Autohedger
+There are three key functional components in the autohedger.           The diagram in Figure [14] below
+summarizes the functions of each component and how they interact with each other. The first
+component is the Risk Calculator, which transfers the positions of each security to the hedge
+instrument space (in PVO1). The transferred portfolio risk is then used as the input of the Hedge
+Calculator component.     The Hedge Calculator uses the Opt-Var model described in this document
+to calculate the hedging trades. The hedging trades will then be sent to external exchanges to be
+executed through the last component - Hedge Executor. Once these hedging tardes are executed,
+the trading book positions will be updated, and a new cycle of risk calculation, hedge calculation
+and hedging trades execution will be triggered.
+
+2.5.1    Risk Calculator
+
+The Risk Calculator keeps track of the positions in the trading book throughout the day and coverts
+them to portfolio risks. To track the book positions, the risk calculator uses two feeds: a fast feed
+and a slow feed. The fast feed comes from the algo apps that generate the trade confirmations,
+which include B2C from EQuote, internalization engine RatesX, Desk Interaction Manager (DIM),
+the autohedger itself etc. The slow feed is EPAK - a fast and reliable distributor that monitors the
+positions from the official positions manager, Big Mac. The positions from the fast and slow feed
+are synched if they do not diverge above a threshold, and the synched positions are used by the
+autohedger to calculate the portfolio risks. If the fast and slow feed diverge above the threshold,
+autohedger will breach. Bookrunners and Strats will then investigate the cause and manually syne
+the risk to unbreach it. To calculate the portfolio risk, the first step is to convert the positions
+from being expressed in notional terms to risk terms in PVO1. To do this, the Risk Calculator uses
+the dpdy of the bonds and futures coming from the MS internal pricing engine KPricer. Following
+that, the risk positions of each security are mapped to the hedge instruments space using the
+
+130115: Opt-Var                                                                           Page 15 of 136
+
+                        [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)
+```

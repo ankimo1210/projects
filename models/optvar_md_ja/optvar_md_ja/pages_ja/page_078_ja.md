@@ -1,0 +1,35 @@
+# ページ 078
+
+![ページ 078](../assets/page_images/page-078.jpg)
+
+## 原文OCRテキスト
+
+```text
+Morgan Stanley                                                                              Confidential
+
+
+observe similar behavior in that case, as seen in Figure [56]and Figure 57] This parameter mainly
+controls the convergence speed but not the endpoint, as proved in Section         - Convergence to
+the stable area, where it was shown that the stable area does not depend on
+
+
+
+
+Figure 54:        First hedge order in PVO1 as a function of K, a multiplier in front of the
+quadratic cost matrix.        The quadratic cost matrix verifies         M = KM + ;Apdiag(Z) with
+M = diag(1740, 610, 397, 996, 961, 4846, 1699).
+
+
+
+
+Figure 55: Terminal inventory in PV01 through the repeated calls to Opt-Var as a function of
+K, a multiplier in front of the quadratic cost matrix.         The quadratic cost matrix verifies    MW =
+KM + 7Apdiag(Z) with M = diag(1740, 610, 397, 996, 961, 4846, 1699).
+
+
+
+
+130115: Opt-Var                                                                           Page 78 of 136
+
+                         [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)
+```

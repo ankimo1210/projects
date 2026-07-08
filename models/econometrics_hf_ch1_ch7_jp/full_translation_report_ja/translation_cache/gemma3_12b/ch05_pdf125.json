@@ -1,0 +1,13 @@
+{
+  "model": "gemma3:12b",
+  "chapter": 5,
+  "chapter_ja": "単変量乗法誤差モデル",
+  "chapter_en": "Univariate Multiplicative Error Models",
+  "pdf_page": 125,
+  "printed_page": "110",
+  "source_chars": 3003,
+  "translation_chars": 2084,
+  "elapsed_seconds": 21.081,
+  "created_at": "2026-06-20T21:15:49",
+  "translation": "110                                                   5 単変量乗法誤差モデル（Univariate Multiplicative Error Models）\n\n一般化ガンマ分布（generalized gamma distribution）。一般化ガンマ族の密度関数は、m D 1の場合、ワイブル族（Weibull family）を内包し、a D 1の場合、（二パラメータ）ガンマ分布を内包する。\n\nこれらの分布はいずれも、ACDフレームワークにおいて既に成功裏に適用されており、Burr ACDモデル（Grammig and Maurer 2000）や一般化ガンマACDモデル（Lunde 2000）につながっている。しかし、両モデルは異なる分布族に属しており、互いに内包しない。一般化ガンマACDモデルの拡張であり、Burr族の一員も内包するものは、一般化ガンマ分布のガンマ混合に基づき、一般化F分布（generalized F distribution）（Kalbfleisch and Prentice 1980またはLancaster 1997を参照のこと）を導くものである。一般化F分布は、基本となるデュレーションモデルとして一般化ガンマモデルを仮定し、積分ハザードにガンマ変数 v \u0002 G.\u0006/ を乗じることで得られる。すると、周辺密度関数は次のように与えられる。\n\n                                  ax am\u00021 Œ\u0006 C .x=\u0004/a \u0003.\u0002\u0006\u0002m/ \u0006\u0006\n                      f .x/ D                                    ;                     (5.24)\n                                           \u0004am B.m; \u0006/\n\nここで、B.\u0006/ は完全ベータ関数を表し、B.m; \u0006/ D \b\b.m/\b .\u0006/\n                                                                  .mC\u0006/\n                                                                          : 一般化F分布のモーメントは次のように与えられる。\n\n                                  \b .m C s=a/\b .\u0006 \u0004 s=a/\n                EŒx s \u0003 D \u0004\u00061=a                          ;         s < a\u0006:             (5.25)\n                                        \b .m/\b .\u0006/\n\nしたがって、Hautsch (2003)によって導入された一般化F ACDモデルは、3つのパラメータ a, m および \u0006 に基づいており、\u0006 ! 1の場合、一般化ガンマACDモデル、m D 1; \u0006 ! 1の場合、ワイブルACDモデル、m D \u0006 D 1の場合、log-logistic ACDモデルを内包する。一般化F分布のより特殊なケースに関する議論については、Karanasos (2008)を参照のこと。図5.1–5.3は、異なるパラメータの組み合わせに基づいた一般化F分布が暗示するハザード関数を示す。ACD過程を、平均が1と等しくない分布（例えば、指数分布ではない）に基づいて指定する場合、一般性を失うことなく次のように書くことができる。\n\n                                xi D \u0002i \u00021 \"Qi DW ˚i \"Qi ;                             (5.26)\n\nここで、\"Qi は誤差項を表し、     WD EŒQ\"i \u0003 ¤ 1であり、\n                                          !       ˛\n                       ˚i WD \u0002i = D           C       xi \u00021 C ˇ˚i \u00021\n\n                                       D !Q C ˛x\n                                              Q i \u00021 C ˇ˚i \u00021                          (5.27)\n\nであり、!Q WD !=、˛Q WD ˛= である。\n\nしたがって、例えば一般化F分布に基づいてACDモデルを指定する場合、\u0004 と EŒ\u0002i \u0003 D !=.1 \u0004 ˛ \u0004 ˇ/ は同時に同定可能ではない。"
+}

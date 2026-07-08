@@ -1,0 +1,23 @@
+# Page 118
+
+![Page 118](../assets/page_images/page-118.jpg)
+
+## OCR layout text
+
+```text
+Morgan Stanley                                                                            Confidential
+
+
+
+
+Figure 91: Comparison of the objective function values F, after hedging using Opt-Var and simple
+hedging strategy for different risk aversion \ values. Examples 41-60.
+
+
+
+
+130115:   Opt-Var                                                                  Page     118 of 136
+
+
+                     [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)
+```

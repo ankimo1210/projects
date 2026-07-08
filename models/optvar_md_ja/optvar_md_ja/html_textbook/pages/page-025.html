@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ページ 025 - Opt-Var</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body data-root="../">
+  <a class="skip-link" href="#content">本文へ移動</a>
+  <div class="layout">
+    
+<aside class="sidebar" aria-label="テキストブックナビゲーション">
+  <div class="brand">
+    <a href="../index.html">Opt-Var HTML</a>
+    <span>日本語テキストブック</span>
+  </div>
+  <form class="search-box" data-search-form>
+    <label for="site-search">OCR検索</label>
+    <input id="site-search" name="q" type="search" placeholder="例: lambda, covariance" autocomplete="off" data-search-input>
+    <div class="search-results" data-search-results aria-live="polite"></div>
+  </form>
+  <form class="page-jump" data-page-jump>
+    <label for="page-number">ページへ移動</label>
+    <div>
+      <input id="page-number" name="page" type="number" min="1" max="136" placeholder="1-136">
+      <button type="submit">開く</button>
+    </div>
+  </form>
+  <nav>
+    <h2>章</h2>
+    <ul class="nav-list">
+      <li><a class="" href="../chapters/front-matter.html">表紙・前付</a></li><li><a class="" href="../chapters/chapter-01.html">1. エグゼクティブサマリー</a></li><li><a class="" href="../chapters/chapter-02.html">2. ビジネスおよびアルゴリズム説明</a></li><li><a class="" href="../chapters/chapter-03.html">3. モデル説明</a></li><li><a class="" href="../chapters/chapter-04.html">4. モデル開発・選定プロセス</a></li><li><a class="" href="../chapters/chapter-05.html">5. モデルテスト</a></li><li><a class="" href="../chapters/chapter-06.html">6. モデルの制約・不確実性・緩和策</a></li><li><a class="" href="../chapters/chapter-07.html">7. モデルオーバーレイと上書き</a></li><li><a class="" href="../chapters/chapter-08.html">8. 本番実装と統制</a></li><li><a class="" href="../chapters/chapter-09.html">9. 継続的なモデル性能モニタリング</a></li><li><a class="" href="../chapters/chapter-10.html">10. モデル変更ログ</a></li><li><a class="" href="../chapters/chapter-11.html">11. 参考文献</a></li><li><a class="" href="../chapters/chapter-12.html">12. 用語定義</a></li><li><a class="" href="../chapters/chapter-13.html">13. 付録</a></li>
+    </ul>
+    <details open>
+      <summary>詳細目次</summary>
+      <ul class="nav-list toc-list">
+        <li><a class="" href="../chapters/chapter-01.html"><span class="toc-num">1</span>エグゼクティブサマリー</a></li><li><a class="" href="../pages/page-005.html#section-1-1"><span class="toc-num">1.1</span>モデルの目的と想定用途</a></li><li><a class="" href="../pages/page-007.html#section-1-2"><span class="toc-num">1.2</span>モデル概要</a></li><li><a class="" href="../pages/page-008.html#section-1-3"><span class="toc-num">1.3</span>主な前提と制約</a></li><li><a class="" href="../pages/page-008.html#section-1-4"><span class="toc-num">1.4</span>全体的なモデル性能評価</a></li><li><a class="" href="../pages/page-008.html#section-1-5"><span class="toc-num">1.5</span>結果サマリー</a></li><li><a class="" href="../chapters/chapter-02.html"><span class="toc-num">2</span>ビジネスおよびアルゴリズム説明</a></li><li><a class="" href="../pages/page-009.html#section-2-1"><span class="toc-num">2.1</span>Autohedger概要</a></li><li><a class="" href="../pages/page-010.html#section-2-2"><span class="toc-num">2.2</span>ポートフォリオリスク</a></li><li><a class="" href="../pages/page-010.html#section-2-3"><span class="toc-num">2.3</span>入出力量</a></li><li><a class="" href="../pages/page-012.html#section-2-4"><span class="toc-num">2.4</span>Opt-Varの原理</a></li><li><a class="" href="../pages/page-015.html#section-2-5"><span class="toc-num">2.5</span>Autohedger内の機能コンポーネント</a></li><li><a class="" href="../pages/page-017.html#section-2-6"><span class="toc-num">2.6</span>規制・ポリシー要件</a></li><li><a class="" href="../chapters/chapter-03.html"><span class="toc-num">3</span>モデル説明</a></li><li><a class="" href="../pages/page-017.html#section-3-1"><span class="toc-num">3.1</span>モデル前提</a></li><li><a class="" href="../pages/page-018.html#section-3-2"><span class="toc-num">3.2</span>モデル仕様</a></li><li><a class="" href="../pages/page-025.html#section-3-3"><span class="toc-num">3.3</span>モデル入力とデータ</a></li><li><a class="" href="../pages/page-027.html#section-3-4"><span class="toc-num">3.4</span>モデル出力</a></li><li><a class="" href="../pages/page-027.html#section-3-5"><span class="toc-num">3.5</span>モデル較正とパラメータ推定</a></li><li><a class="" href="../pages/page-034.html#section-3-6"><span class="toc-num">3.6</span>数値実装</a></li><li><a class="" href="../pages/page-036.html#section-3-7"><span class="toc-num">3.7</span>付録：技術詳細</a></li><li><a class="" href="../chapters/chapter-04.html"><span class="toc-num">4</span>モデル開発・選定プロセス</a></li><li><a class="" href="../pages/page-040.html#section-4-1"><span class="toc-num">4.1</span>モデル分割と変数選択</a></li><li><a class="" href="../pages/page-041.html#section-4-2"><span class="toc-num">4.2</span>代替理論・代替アプローチ</a></li><li><a class="" href="../pages/page-041.html#section-4-3"><span class="toc-num">4.3</span>主要ステークホルダー・独立ソースからの貢献</a></li><li><a class="" href="../chapters/chapter-05.html"><span class="toc-num">5</span>モデルテスト</a></li><li><a class="" href="../pages/page-041.html#section-5-1"><span class="toc-num">5.1</span>モデル診断テスト</a></li><li><a class="" href="../pages/page-057.html#section-5-2"><span class="toc-num">5.2</span>シナリオ分析とストレステスト</a></li><li><a class="" href="../pages/page-067.html#section-5-3"><span class="toc-num">5.3</span>感応度分析</a></li><li><a class="" href="../pages/page-086.html#section-5-4"><span class="toc-num">5.4</span>ベンチマーキング</a></li><li><a class="" href="../pages/page-089.html#section-5-5"><span class="toc-num">5.5</span>結果分析とバックテスト</a></li><li><a class="" href="../pages/page-092.html#section-5-6"><span class="toc-num">5.6</span>付録：技術詳細</a></li><li><a class="" href="../chapters/chapter-06.html"><span class="toc-num">6</span>モデルの制約・不確実性・緩和策</a></li><li><a class="" href="../chapters/chapter-07.html"><span class="toc-num">7</span>モデルオーバーレイと上書き</a></li><li><a class="" href="../chapters/chapter-08.html"><span class="toc-num">8</span>本番実装と統制</a></li><li><a class="" href="../pages/page-097.html#section-8-1"><span class="toc-num">8.1</span>本番実装</a></li><li><a class="" href="../pages/page-097.html#section-8-2"><span class="toc-num">8.2</span>モデルプロセスと統制</a></li><li><a class="" href="../pages/page-099.html#section-8-3"><span class="toc-num">8.3</span>コード変更管理とバージョン管理</a></li><li><a class="" href="../pages/page-099.html#section-8-4"><span class="toc-num">8.4</span>ソフトウェア開発ライフサイクル</a></li><li><a class="" href="../chapters/chapter-09.html"><span class="toc-num">9</span>継続的なモデル性能モニタリング</a></li><li><a class="" href="../pages/page-103.html#section-9-1"><span class="toc-num">9.1</span>指標と閾値</a></li><li><a class="" href="../pages/page-104.html#section-9-2"><span class="toc-num">9.2</span>エスカレーション</a></li><li><a class="" href="../pages/page-104.html#section-9-3"><span class="toc-num">9.3</span>MRMと共有されるデータ</a></li><li><a class="" href="../pages/page-106.html#section-9-4"><span class="toc-num">9.4</span>日中モニタリングツール</a></li><li><a class="" href="../chapters/chapter-10.html"><span class="toc-num">10</span>モデル変更ログ</a></li><li><a class="" href="../chapters/chapter-11.html"><span class="toc-num">11</span>参考文献</a></li><li><a class="" href="../chapters/chapter-12.html"><span class="toc-num">12</span>用語定義</a></li><li><a class="" href="../chapters/chapter-13.html"><span class="toc-num">13</span>付録</a></li><li><a class="" href="../pages/page-110.html#section-13-1"><span class="toc-num">13.1</span>収束テスト図</a></li><li><a class="" href="../pages/page-116.html#section-13-2"><span class="toc-num">13.2</span>ベンチマークテスト図</a></li><li><a class="" href="../pages/page-121.html#section-13-3"><span class="toc-num">13.3</span>結果分析・バックテスト図</a></li>
+      </ul>
+    </details>
+  </nav>
+</aside>
+
+    <main id="content" class="content">
+      
+<nav class="breadcrumb">
+  <a href="../index.html">トップ</a>
+  <span>/</span>
+  <a href="../chapters/chapter-03.html">モデル説明</a>
+  <span>/</span>
+  <span>ページ 025</span>
+</nav>
+<div class="reader-controls">
+  <a class="button" href="page-024.html">前のページ</a>
+  <a class="button" href="../chapters/chapter-03.html">章へ戻る</a>
+  <a class="button" href="page-026.html">次のページ</a>
+</div>
+
+<article class="page-article" id="page-025">
+  <header class="page-header">
+    <p class="eyebrow">モデル説明</p>
+    <h2>ページ 025</h2>
+    <div class="section-badges"><a id="section-3-3" class="section-badge" href="#section-3-3">3.3 モデル入力とデータ</a></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-025.jpg"><img src="../assets/page_images/page-025.jpg" alt="ページ 025 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel" open>
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                             Confidential
+
+
+       + Volume control: we will implement volume controls at order, product and portfolio level for
+         risk swung to AIM.
+3.3.      Model    Inputs   and    Data
+
+3.3.1      Data Sources:
+
+The three main data sources are listed below.
+       + Autohedger feed: The autohedger itself produces real-time portfolio risks in the book which
+         are the input of the Opt-Var model.
+       + Market Bus: Market Bus is an internal market data service. Autohedger subscribes to
+         Market Bus to get the input covariance matrix that is calibrated offline and fed it into the
+         Opt-Var model. It also gets the hedge ratios from Market Bus to convert the original bonds
+         and futures positions to the hedge instrument space.
+       + EOS TDA tables: EOS is an internal GUI where traders monitor and control parameters
+         used in various applications. All the model parameters come from the TDA tables in EOS,
+         except for the covariance matrix. We present the model parameters in details in section
+         below.
+3.3.2.     Observable    Inputs:
+
+       « Initial position qo: The unhedged risks in PVO1        ($/bps in the US, €/bps in EU) in the
+         hedge instrument space.
+       + Alpha a € 4: Alpha signal in bps. At the moment, no alpha is used in EU, so a is zero. In
+         the US, alpha is manually entered by bookrunners.
+       + Internal client CRB orders (0;)icn: Marketable CRB orders submited by internal clients
+         to the Central Risk Book. Client self buy and sells are already matched by the CRB swing
+         engine which also does not transmit the non-marketable orders to the CRB optimizer. Internal
+         CRB orders are sorted by submission times.
+3.3.3      Model    Parameters:
+
+       * Covariance matrix © ¢ R%*¢: Covariance matrix of the hedge instruments yield increments
+         in bps’. In our case, we require the covariance matrix to be positive definite.
+       * Cost C € R*: Linear part of the execution costs in bps.
+       * Quadratic costs M € R®**4: Quadratic part of the execution cost in bps/PV01, a diagonal
+         matrix.
+       + Hedgeable risk limit H; € R_, H, € Ry: The minimum and maximum net unhedged
+         portfolio risk in PVO1 that we are willing to hold. It means our net risk position is bounded
+         between H; and Hy. The values chosen for Hj, H, are a business decision set by bookrunners.
+         Bookrunners can decide to use symmetric hedgeable risk limit, in that case the input is only
+         H, and by definition Hy = —Hy,. Otherwise they can decide to use possibly asymmetric
+         hedgeable risk limit and in that case they input both Hj; and Hy. The implementation for
+         asymmetric hedgeable risk limit is currently not put in production and bookrunners can only
+         use the symmetric hedgeable risk limit.
+130115: Opt-Var                                                                          Page 25 of 136
+
+                         [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)</code></pre>
+  </details>
+</article>
+
+<div class="reader-controls bottom">
+  <a class="button" href="page-024.html">前のページ</a>
+  <a class="button" href="../index.html">トップへ戻る</a>
+  <a class="button" href="page-026.html">次のページ</a>
+</div>
+
+    </main>
+  </div>
+  <script src="../assets/search-index.js"></script>
+  <script src="../assets/app.js"></script>
+</body>
+</html>

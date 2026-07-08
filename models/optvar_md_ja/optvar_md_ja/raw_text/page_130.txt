@@ -1,0 +1,33 @@
+Morgan Stanley                                                                                                 Confidential
+
+
+
+
+                   ee
+
+Figure 103: Comparison of the trading cost values using Opt-Var and simple hedging strategy for
+different risk aversion A values. The trading cost value is given by Costg described in section
+Examples 81-100.
+Criteria 2
+
+                                                     Reaction to 25000 PVO1 SHTZ flow
+
+
+                   5000
+
+                  210000
+
+              E asco
+                  2000
+
+                           r)          3       %        7          Fr}         us        70      Ts    260
+                                                                    iN                                   x10
+
+Figure 104: Opt-Var proposed trades in reaction to an initial position of 25,000 PVO1 in SHTZ
+bucket for different values.
+
+
+
+130115: Opt-Var                                                                                                  130 of 136
+
+                                [git] « Branch: iropt-var@be27d1a = Release:            (2024-10-31)

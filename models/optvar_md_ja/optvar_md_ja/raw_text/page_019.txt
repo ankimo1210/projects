@@ -1,0 +1,57 @@
+Morgan Stanley                                                                                           Confidential
+
+
+
+
+               Fy:      we Ros (q+u) (AD 4+ bcPy)(qt+u) +C"                |u|    t+ulMu—al(q+u)                     (1)
+    The first term (excluding the infinite horizon cost P, - more on this later) we refer to as the
+‘variance cost’ component Varg = (q + u)'5(q + u), the sum of the second and third terms we
+call the ‘trading cost’ (Costy = C'|u| + u'Mu),                and the final term is the ‘alpha’ component
+(Aq = —a!
+        (q            +u)) P| the variables are:
+    ° q = (u.@,-.-,4a)' € R? is the initial portfolio PVO1, measured in $/bp or €/bp (that is,
+        dollars per basis point for US or euros per basis point for EU) where d is the number of hedge
+        instruments;
+
+    © w= (ui, u,...,ug)! € R¢ is the trade to make, measured in PVO1 (so $/bp or €/bp), which is
+        the decision variable of the Opt-Var model;
+    and the parameters are:
+    + \ € R,, risk aversion factor determining the trade-off between risk taking and shedding,
+      measured in 1/$ or 1/€. The choice of the \ value is a business decision based on expert
+      judgement which we discuss in detail in section B.
+    + Se S4,         is the positive-definite covariance matrix of the hedge instruments measured in bp;
+
+    « C=      (ct,c9,...,¢4)' € R¢ is the linear cost factor measured in bp;
+
+    « M €S¢          is the diagonal quadratic cost matrix measured in bp/PV01;
+
+    * a=(a1,a9,...,04) € R¢ is the alpha factor measured in bp;
+
+    + P\ € S14,       is the positive definite matrix solution to the matrix Riccati equation caracterizing
+        the solution of the infinite horizon Opt-Var problem, discussed in Section
+    + doo is a binary parameter, equal to either 1 or 0 according to whether or not the infinite
+      horizon cost is included in the objective function.
+3.2.3       Constraints
+
+There are four sets of constraints in the Opt-Var model. The first three always apply, while the last
+only applies when the parameter allow increase position is set to False. The determination of the
+values of the constraints detailed below are business decisions based on bookrunners’ risk appetite.
+Hedgeable         Risk Limit Constraint
+
+                                                     ad
+                                              As     YO (ait us) < Hu,                                               (2)
+                                                    i=l
+
+
+   *The variance cost, the infinite horizon cost (q+ u)"da.P(q+ u), and the alpha part a” (q + u) all assume that
+the next position after hedging will be q + u. However, if P is the matrix of hedge ratios from liquid products to
+liquid products, the next position will be q+ Pu. The model therefore assumes that the liquid products are matched
+to themselves, namely P = Ig. If this is not the case, then the liquid hedge ratios should be included in the objective
+function.
+
+
+
+
+130115: Opt-Var                                                                                        Page   19 of 136
+
+                            [git] « Branch: iropt-var@be27d1a = Release:         (2024-10-31)

@@ -1,0 +1,61 @@
+# Page 072
+
+![Page 072](../assets/page_images/page-072.jpg)
+
+## OCR layout text
+
+```text
+Morgan Stanley                                                                              Confidential
+
+
+
+
+                          2000                                          oY
+                                                                        ae)
+                                                                        -o5Y
+                          6000                                          1
+                                                                        -e 10v
+                                                                        “e207
+                                                                        © 30v
+                                                                        “Tu
+                                                                        ae
+                                                                        oY
+                                                                        = uxr
+                                                                        ous
+                                                                        eu
+
+
+
+
+                                 10          107             10            10
+
+
+Figure 43: Terminal inventory in PVO1 through the repeated calls to CRB as a function of A, AIM
+risk-aversion parameter with Set B of constraints.
+
+5.3.2    Effect of the risk-aversion parameter           with the infinite horizon cost
+
+We consider values of ) in [le-7, 1e-3]/€ to demonstrate the effect of risk-aversion. Now we take
+J =1    in order to use the infinite horizon cost. The behavior is close to the one from the previous
+Section      but with the infinite horizon cost the first hedges and the terminal positions are
+monotonic functions of A. The graphs show less overshooting and are smoother.
+
+
+
+
+                        20000
+
+                        30000
+
+                                 ie     To          Te            Te       To
+
+
+        Figure 44: First hedge order in PVO1 as a function of A, the risk-aversion parameter.
+
+
+
+
+130115: Opt-Var                                                                           Page 72 of 136
+
+                       [git] « Branch: iropt-var@be27d1a = Release:    (2024-10-31)
+```

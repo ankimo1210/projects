@@ -1,0 +1,53 @@
+Morgan Stanley                                                                           Confidential
+
+
+that increasing this term increases the weight of the variance risk term in the objective function,
+leading to solutions that trigger increased hedging activity relative to solutions corresponding to
+smaller values of A (indeed, doubling the value of X gives - all else held equal - the same behavior
+as if transaction costs were halved). The price to be paid for this reduction in variance is larger
+executed volumes and higher costs. This behaviour is illustrated in Figure [9] and [10] below. Each
+point in the plots corresponds to a resolution with the value of \ displayed nearby. As we can see,
+the variance becomes smaller with a higher \ value and higher hedging ratio in Figure|| and this
+is also at a cost of paying more to execute the hedges as shown in Figure
+
+
+
+                          Seeoer
+                        i      sor
+                        A            se00
+                                       ‘Soot
+                        Boe               ooo
+                                                eeo8
+
+
+
+
+Figure 9: Pareto frontier of hedging ratio and variance.     Each dot corresponds to the value of \
+nearby.
+
+
+
+
+                              pend
+                              ooo
+                               e007
+                                 e007
+                                    seo
+                                      eet
+                                        ero
+                                                esoe
+
+
+
+
+Figure 10: Pareto frontier of hedging cost and variance. Each dot corresponds to the value of
+nearby.
+    In practice, after the first hedge has been executed, the risk calculation system will update the
+portfolio risk. This triggers a reoptimization of the Opt-Var problem, which generates a new parent
+order. As a consequence, even without new incoming risk, the portfolio follows a trajectory with
+decreasing variance and may change after the first hedge order. In our simple toy model without
+new incoming risk, the trajectory is displayed in Figure [IT] We see that the model sells both the
+
+130115: Opt-Var                                                                        Page 13 of 136
+
+                      [git] « Branch: iropt-var@be27d1a = Release:   (2024-10-31)

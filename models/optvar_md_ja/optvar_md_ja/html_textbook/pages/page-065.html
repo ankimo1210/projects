@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ページ 065 - Opt-Var</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body data-root="../">
+  <a class="skip-link" href="#content">本文へ移動</a>
+  <div class="layout">
+    
+<aside class="sidebar" aria-label="テキストブックナビゲーション">
+  <div class="brand">
+    <a href="../index.html">Opt-Var HTML</a>
+    <span>日本語テキストブック</span>
+  </div>
+  <form class="search-box" data-search-form>
+    <label for="site-search">OCR検索</label>
+    <input id="site-search" name="q" type="search" placeholder="例: lambda, covariance" autocomplete="off" data-search-input>
+    <div class="search-results" data-search-results aria-live="polite"></div>
+  </form>
+  <form class="page-jump" data-page-jump>
+    <label for="page-number">ページへ移動</label>
+    <div>
+      <input id="page-number" name="page" type="number" min="1" max="136" placeholder="1-136">
+      <button type="submit">開く</button>
+    </div>
+  </form>
+  <nav>
+    <h2>章</h2>
+    <ul class="nav-list">
+      <li><a class="" href="../chapters/front-matter.html">表紙・前付</a></li><li><a class="" href="../chapters/chapter-01.html">1. エグゼクティブサマリー</a></li><li><a class="" href="../chapters/chapter-02.html">2. ビジネスおよびアルゴリズム説明</a></li><li><a class="" href="../chapters/chapter-03.html">3. モデル説明</a></li><li><a class="" href="../chapters/chapter-04.html">4. モデル開発・選定プロセス</a></li><li><a class="" href="../chapters/chapter-05.html">5. モデルテスト</a></li><li><a class="" href="../chapters/chapter-06.html">6. モデルの制約・不確実性・緩和策</a></li><li><a class="" href="../chapters/chapter-07.html">7. モデルオーバーレイと上書き</a></li><li><a class="" href="../chapters/chapter-08.html">8. 本番実装と統制</a></li><li><a class="" href="../chapters/chapter-09.html">9. 継続的なモデル性能モニタリング</a></li><li><a class="" href="../chapters/chapter-10.html">10. モデル変更ログ</a></li><li><a class="" href="../chapters/chapter-11.html">11. 参考文献</a></li><li><a class="" href="../chapters/chapter-12.html">12. 用語定義</a></li><li><a class="" href="../chapters/chapter-13.html">13. 付録</a></li>
+    </ul>
+    <details open>
+      <summary>詳細目次</summary>
+      <ul class="nav-list toc-list">
+        <li><a class="" href="../chapters/chapter-01.html"><span class="toc-num">1</span>エグゼクティブサマリー</a></li><li><a class="" href="../pages/page-005.html#section-1-1"><span class="toc-num">1.1</span>モデルの目的と想定用途</a></li><li><a class="" href="../pages/page-007.html#section-1-2"><span class="toc-num">1.2</span>モデル概要</a></li><li><a class="" href="../pages/page-008.html#section-1-3"><span class="toc-num">1.3</span>主な前提と制約</a></li><li><a class="" href="../pages/page-008.html#section-1-4"><span class="toc-num">1.4</span>全体的なモデル性能評価</a></li><li><a class="" href="../pages/page-008.html#section-1-5"><span class="toc-num">1.5</span>結果サマリー</a></li><li><a class="" href="../chapters/chapter-02.html"><span class="toc-num">2</span>ビジネスおよびアルゴリズム説明</a></li><li><a class="" href="../pages/page-009.html#section-2-1"><span class="toc-num">2.1</span>Autohedger概要</a></li><li><a class="" href="../pages/page-010.html#section-2-2"><span class="toc-num">2.2</span>ポートフォリオリスク</a></li><li><a class="" href="../pages/page-010.html#section-2-3"><span class="toc-num">2.3</span>入出力量</a></li><li><a class="" href="../pages/page-012.html#section-2-4"><span class="toc-num">2.4</span>Opt-Varの原理</a></li><li><a class="" href="../pages/page-015.html#section-2-5"><span class="toc-num">2.5</span>Autohedger内の機能コンポーネント</a></li><li><a class="" href="../pages/page-017.html#section-2-6"><span class="toc-num">2.6</span>規制・ポリシー要件</a></li><li><a class="" href="../chapters/chapter-03.html"><span class="toc-num">3</span>モデル説明</a></li><li><a class="" href="../pages/page-017.html#section-3-1"><span class="toc-num">3.1</span>モデル前提</a></li><li><a class="" href="../pages/page-018.html#section-3-2"><span class="toc-num">3.2</span>モデル仕様</a></li><li><a class="" href="../pages/page-025.html#section-3-3"><span class="toc-num">3.3</span>モデル入力とデータ</a></li><li><a class="" href="../pages/page-027.html#section-3-4"><span class="toc-num">3.4</span>モデル出力</a></li><li><a class="" href="../pages/page-027.html#section-3-5"><span class="toc-num">3.5</span>モデル較正とパラメータ推定</a></li><li><a class="" href="../pages/page-034.html#section-3-6"><span class="toc-num">3.6</span>数値実装</a></li><li><a class="" href="../pages/page-036.html#section-3-7"><span class="toc-num">3.7</span>付録：技術詳細</a></li><li><a class="" href="../chapters/chapter-04.html"><span class="toc-num">4</span>モデル開発・選定プロセス</a></li><li><a class="" href="../pages/page-040.html#section-4-1"><span class="toc-num">4.1</span>モデル分割と変数選択</a></li><li><a class="" href="../pages/page-041.html#section-4-2"><span class="toc-num">4.2</span>代替理論・代替アプローチ</a></li><li><a class="" href="../pages/page-041.html#section-4-3"><span class="toc-num">4.3</span>主要ステークホルダー・独立ソースからの貢献</a></li><li><a class="" href="../chapters/chapter-05.html"><span class="toc-num">5</span>モデルテスト</a></li><li><a class="" href="../pages/page-041.html#section-5-1"><span class="toc-num">5.1</span>モデル診断テスト</a></li><li><a class="" href="../pages/page-057.html#section-5-2"><span class="toc-num">5.2</span>シナリオ分析とストレステスト</a></li><li><a class="" href="../pages/page-067.html#section-5-3"><span class="toc-num">5.3</span>感応度分析</a></li><li><a class="" href="../pages/page-086.html#section-5-4"><span class="toc-num">5.4</span>ベンチマーキング</a></li><li><a class="" href="../pages/page-089.html#section-5-5"><span class="toc-num">5.5</span>結果分析とバックテスト</a></li><li><a class="" href="../pages/page-092.html#section-5-6"><span class="toc-num">5.6</span>付録：技術詳細</a></li><li><a class="" href="../chapters/chapter-06.html"><span class="toc-num">6</span>モデルの制約・不確実性・緩和策</a></li><li><a class="" href="../chapters/chapter-07.html"><span class="toc-num">7</span>モデルオーバーレイと上書き</a></li><li><a class="" href="../chapters/chapter-08.html"><span class="toc-num">8</span>本番実装と統制</a></li><li><a class="" href="../pages/page-097.html#section-8-1"><span class="toc-num">8.1</span>本番実装</a></li><li><a class="" href="../pages/page-097.html#section-8-2"><span class="toc-num">8.2</span>モデルプロセスと統制</a></li><li><a class="" href="../pages/page-099.html#section-8-3"><span class="toc-num">8.3</span>コード変更管理とバージョン管理</a></li><li><a class="" href="../pages/page-099.html#section-8-4"><span class="toc-num">8.4</span>ソフトウェア開発ライフサイクル</a></li><li><a class="" href="../chapters/chapter-09.html"><span class="toc-num">9</span>継続的なモデル性能モニタリング</a></li><li><a class="" href="../pages/page-103.html#section-9-1"><span class="toc-num">9.1</span>指標と閾値</a></li><li><a class="" href="../pages/page-104.html#section-9-2"><span class="toc-num">9.2</span>エスカレーション</a></li><li><a class="" href="../pages/page-104.html#section-9-3"><span class="toc-num">9.3</span>MRMと共有されるデータ</a></li><li><a class="" href="../pages/page-106.html#section-9-4"><span class="toc-num">9.4</span>日中モニタリングツール</a></li><li><a class="" href="../chapters/chapter-10.html"><span class="toc-num">10</span>モデル変更ログ</a></li><li><a class="" href="../chapters/chapter-11.html"><span class="toc-num">11</span>参考文献</a></li><li><a class="" href="../chapters/chapter-12.html"><span class="toc-num">12</span>用語定義</a></li><li><a class="" href="../chapters/chapter-13.html"><span class="toc-num">13</span>付録</a></li><li><a class="" href="../pages/page-110.html#section-13-1"><span class="toc-num">13.1</span>収束テスト図</a></li><li><a class="" href="../pages/page-116.html#section-13-2"><span class="toc-num">13.2</span>ベンチマークテスト図</a></li><li><a class="" href="../pages/page-121.html#section-13-3"><span class="toc-num">13.3</span>結果分析・バックテスト図</a></li>
+      </ul>
+    </details>
+  </nav>
+</aside>
+
+    <main id="content" class="content">
+      
+<nav class="breadcrumb">
+  <a href="../index.html">トップ</a>
+  <span>/</span>
+  <a href="../chapters/chapter-05.html">モデルテスト</a>
+  <span>/</span>
+  <span>ページ 065</span>
+</nav>
+<div class="reader-controls">
+  <a class="button" href="page-064.html">前のページ</a>
+  <a class="button" href="../chapters/chapter-05.html">章へ戻る</a>
+  <a class="button" href="page-066.html">次のページ</a>
+</div>
+
+<article class="page-article" id="page-065">
+  <header class="page-header">
+    <p class="eyebrow">モデルテスト</p>
+    <h2>ページ 065</h2>
+    <div class="section-badges"><span class="section-badge muted">5.2 シナリオ分析とストレステスト 以降</span></div>
+  </header>
+  <figure class="page-image">
+    <a href="../assets/page_images/page-065.jpg"><img src="../assets/page_images/page-065.jpg" alt="ページ 065 の原本画像" loading="lazy"></a>
+  </figure>
+  <details class="ocr-panel" open>
+    <summary>原文OCRテキスト</summary>
+    <pre><code>Morgan Stanley                                                                                                                Confidential
+
+
+ I         Fd
+           Pea
+                            ro}
+                           oe
+                                           2)
+                                           2
+                                                  |S            3
+                                                               CI
+                                                                        2                  CI
+                                                                                             6             z                         é
+                                                                                                                                     C1
+
+S|         pS              &lt;              Z|      |8           &lt;                k          faa)
+S\o[Zlole}                  &lt;&gt;            Siz
+                                            IF IISIF]
+                                                      =3                Z|S| _ 1%&amp;          .&gt;             El
+                                                                                                          S|
+                                                                                                                     fs|e                &gt;
+                           Dn                                  n       IF lofisjolo]       A              MI         IBlolo|         ®
+ Shelter            |e      me             2                   he                                                                        Pay
+ SISIZ|ZE
+      B28]
+Z\ZAIS|SIB)                =a
+                             5             Slelalala
+                                           EEE]
+                                          IZ|SISIS|
+                                                                5
+                                                               =a       gheleeia|
+                                                                        BISIAIRIA)
+                                                                                           =ai]            2SIZIB IBIS               2i=)
+ ZIAD            |S |B                    BI |S    Fa                   SlSIgigin
+SIBSISIE}                  oOa            Z|EISR/E|IR]
+                                          FRISIR               =OS      ISB   Ele]
+                                                                        E|QISSIS|          =oO            LSaEIS
+                                                                                                               (SIS|S |S
+                                                                                                                 EIEIS|              ©
+  Elslsls]
+SIESSel                     =S              E
+                                          =Slelebs|            e&amp;       FREFF               22            FRR)                        s2
+FISRIER)                   3              S\ISISSis|           S        |Shopehe}          S                    s                    a
+AJAPSISIS]|                  &amp;            EFS)                  =       SiSpspes|            =            S|SiSh3h3)                 =
+     slsis|s|              z=                      Perri
+                                                   slelel      s2       EISIEEle|          =3             Elsie]
+                                                                                                          RISER)                      =
+AlSiges|                    =                   sigisig|       =                            2                                            3
+ER AIRR) 2                                BRIER)                £           siggis|          £                  eisigls|                 =
+rook!      peal baal pul
+                             =@           preer|                2@      BRIAR]
+                                                                             rprypeye
+                                                                                             25           BISISIS)  Pee
+                                                                                                                      ae
+                                                                                                                                         &amp;°
+VISIS|S(R|                                      Is|SiS|z)      8                           a                                         a
+SISA
+ i   Be] Ej=%                             SSSR)
+                                          PSles feo fo} e=-S            LISSEIE)
+                                                                             i fie |f
+                                                                        SiSpspeps)           =
+                                                                                           ER}                  selg|e|
+                                                                                                          IAlSISiRis|
+                                                                                                          KSIZisl\s\S} =             =&amp;
+
+-ISISS]|                     =                    slelel                                      82                        8
+BEREE}
+     bal
+                            =2
+                            &gt;             GEBEE)2
+                                          BERRI] =                      EEE)
+                                                                        SEpssts|           2S=            Elselele|
+                                                                                                          KIS s\sls| ==Ss
+                                                                                                          BESS}
+                                                                                                                iS          Ss |S     ~
+                           Ss                                   S
+     seis}
+  slgigg
+(Selsey
+                           ==               Slalele
+                                            Sissies}
+                                                               =&amp;           sieisis|
+                                                                                           =&amp;                   slelels|
+                                                                                                                                     =
+                                                                                                                                     &amp;
+ER]                          3.              SPS BBB] 42
+                                          ERIBEIS]                      -(S\S|s|s)
+                                                                        ERRRIS|             82            ESBS)
+                                                                                                                SEE)                 =
+                                                                                                              TRIAS                    &amp;
+     cla
+  skies
+           Rigg)           cs                  miele aols
+                                            SIRS
+                                                                                           oi
+                                                                                                             slelele|
+                                                                                                                                     z
+                                                                                                                                      ==
+                            S                                               Is \o    iS     g
+eiselele|                   =              |S\BBIe|   =                 I. S/S sie           8            | jsisigys}
+EPIT IF) 32                               FISISISIS]
+                                          Bs |  YT
+                                                                2%     IEee |B\B\2\2)
+                                                                            | 472 IF |
+                                                                                             2a           Elzlelz/2|
+                                                                                                          Bu |? |?   °)
+                                                                                                                                         =@
+ elelele                                                       Ss                                 =                                  i
+
+PISS}                      =              lglelgie|            =        5|gisigis|         =              lelslels]                  =
+FIFI)                        2            EISISEE)               2      FIF|FEIS)           2             FSES|E)                     2
+                           52                     lohehel      E=       le                 2E                                        2E
+                             §            (Selig                $       |S                   $            |S                             €
+                           3
+                                           SiS le ie ie
+                                          oa fim | la la       3g
+                                                                        BB lololo          }
+                                                                                                          SlSlelele                  z
+     lo                                                         a           slolelo|         =                  slelole|                 =
+  Sisisig}
+SIS   l\Ss                 «                    Slslele|
+                                                Sree           «        .|S|E(S/5|
+                                                                          S/S\sls          «                sigs]
+                                                                                                          ISIS ISS                   =
+RITES]
+S\|S falas)                 3
+                             2            EEIss\s|
+                                          IS |S   S|           3
+                                                                2       SIS|SlS|S|
+                                                                        RRR        ]        8
+                                                                                             =            iS
+                                                                                                          RR                FF]
+                                                                                                                                     J
+                                                                                                                                         2
+  sielek|                     &amp;                        g                  elslels|            £&amp;             elelele|                    =
+  SISK]
+ISIS]
+                            &amp;3              Sickle}
+                                          (SPSS
+                                                       2
+                                                  hs] ==
+                                                                          S\SS\5|
+                                                                        e\sisele|
+                                                                                            2=               sigs
+                                                                                                          =\SIS|SIS|                 3
+EBRAR|
+   EF                        =            ERISSS|
+                                          ERE                           =F |2 fF FF           a           ElR
+                                                                                                          Ell   BRIS]
+                           od                                  vv                          vv                                        em}
+
+
+     SEEE) 4&amp;                                   SEEE| =2                -EEELE|    =8                           SESE) =2
+     clelc|S                a                                   a           s\sisis         a                   =           So|o      o
+
+
+RIS|S|SS}                                 eelsisie}                       SIS|S|s|                        RISISIS|S|
+     slelekel]             =a
+                                                               é
+                                                               a
+                                                                          elelele| =
+                                                                          sigisis
+                                                                                            a
+                                                                                                             slelslcl =a
+     Sissi]                =                    sigisig|       =        IS|S|S   S| =                     IE SISIS| =
+BISSISs}                   &amp;              BSS)                 &amp;        BIS|S\S\S| &amp;                      Ble elel=) &amp;
+                           s                                   a                    2                                  e
+     elshohs|               2                    hohahe|       2            shohehe}        x                   Spspsps|             ¢
+     SSISS)                 Sa                  SSS}           2s           Sls  is         Bg                                       Ba
+-EERS|
+B|ee\|s|5)                 22
+                           22             LESERl
+                                          (E|RRR|              2
+                                                               £2       IEEE)
+                                                                        BSRRR)             £22             SIRE]
+                                                                                                           FEPFER)                   BS
+                                                                                                                                     2S
+                           B.                                  oe                          3.                 slslele]               2s
+     eglss|                £=               Sisjgis|           2           sisigis|        24                 Sess)                  2s
+|SS\sisis
+    iS\s
+IN |50     150 |6 |90
+                           aan
+                            ge
+                                  2       mISISIS IS
+                                           ISisicis
+                                          IN ]90 |90 |90 }o0
+                                                               7 g
+                                                               Sn
+                                                               a4
+                                                                        BISiSislé
+                                                                           Sjsijsis
+                                                                        HIS isisis         an
+                                                                                           Poel
+                                                                                                      g    Algklzle
+                                                                                                          I&gt; |S lS sla               Sn
+                                                                                                                                     gs
+                                                                                                                                               2
+
+ a                         2s              5                   2k       a                  2k              S                         2s
+2
+IAlolH|a|m|                a2
+                           = 8             2
+                                          In|jola|a|o|         a2 8
+                                                               ws       z
+                                                                        JAlo|a|s|eo}       24 8
+                                                                                           &quot;a             lB|o|4
+                                                                                                             Sse]                    a2
+                                                                                                                                     &amp;
+
+
+130115:          Opt-Var                                                                                                    Page
+                                                                                                                              65 of 13¢
+                                      [git] » Branch: ir.opt-var @be27d1a » Release:      (2024-10-31)</code></pre>
+  </details>
+</article>
+
+<div class="reader-controls bottom">
+  <a class="button" href="page-064.html">前のページ</a>
+  <a class="button" href="../index.html">トップへ戻る</a>
+  <a class="button" href="page-066.html">次のページ</a>
+</div>
+
+    </main>
+  </div>
+  <script src="../assets/search-index.js"></script>
+  <script src="../assets/app.js"></script>
+</body>
+</html>

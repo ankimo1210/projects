@@ -1,0 +1,52 @@
+Morgan Stanley                                                                                                                               Confidential
+
+
+level portfolio variance, the Opt-Var hedger always has a smaller trading cost. This suggests that
+Opt-Var model satisfies the trading cost criteria (ii). We also implement the test in other hedging
+buckets in EU. The results are presented in section [13.3.2] i           ix (Fi
+the conclusions are the same.
+                                                              Reaction to 25000 PVO1 BUXL flow
+
+
+                   S000
+
+                  “20000
+
+                  15000
+
+                  2000
+                                a             Ba      Pa         %              a0             us      Fy            us           200
+                                                                                 a                                                  x10
+
+Figure 75: Opt-Var proposed trades in reaction to an initial position of 25,000 PV01 in BUXL
+bucket for different A values.
+
+                                                             Reactionto 25000 PVO1 BUXL flow
+                                                                                                               = Opt-Var Hedger
+                                                                                                               = Trading Single Product
+
+
+
+
+                  2000
+                           ry            30         100         10              20             20       7360           7350           “460
+                                                                     Portfolio variance (€)                                          x10
+
+Figure 76: Trading cost of Opt-Var proposed trades versus trading cost of hedging with single
+product for achieving different portfolio variance level. The trades are in reaction to an initial
+position of 25,000 PVO1 in BUXL bucket. The trading cost value is given by Costg described in
+section
+
+5.6    Appendix:                Technical          Details
+
+Beginning with a position g' after iteration i, we let ui denote the solution to the optimization
+problem, and we formally define the Opt-Var dynamics q'*! = qi + ul; if Ag is empty, then we
+set allowPositionIncrease to False and we define gt                                           =Gt Sy for j € [d] such that gj < 0,
+(qi** = qi otherwise) if the total signed risk is too small (1'(q+ $Y) < Hj), and git! = qi + SE
+for j € [d] such that qi > 0, (g}*! = qi otherwise) if 17                                     (q+ 5") > Hy.
+
+
+
+130115: Opt-Var                                                                                                                           Page 92 of 136
+
+                                    [git] « Branch: iropt-var@be27d1a = Release:                      (2024-10-31)

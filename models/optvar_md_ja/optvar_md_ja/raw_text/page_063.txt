@@ -1,0 +1,57 @@
+Morgan Stanley                                                                                                 Confidential
+
+
+
+                           175000
+                           150000
+                           125000
+                           1100000
+                         5 15000
+                            50000
+                            25000
+
+
+                           25000
+                                     00     os       10       15       20    25        30
+                                                           hreration
+
+Figure 32: Inventories in PVO1 through the repeated calls to CRB for a non admissible initial
+portfolio and Set B of constraints for AIM
+
+5.2.3     Convergence to the stable area
+
+We verify that the stopping point of the trajectory belongs to the stable area, characterized in
+Section            - Convergence to the stable area.         We reproduce the cost column of Table
+below tables for convenience. In Section                   - Convergence to the stable area, it is proved that
+the stable area is given by
+
+                                                                                                        d
+ S={qeTZ, WER
+            3 RY, —C < WVq—at
+                          0-H + G—-&<C, (3°                                                                  ‘— Hy) =0,
+                                                                                                       i=l
+              d
+
+        62(— Sa’ — Hi) =0, @i-a(Bi—4h) = 0, Vie 1,--- 4d, G(—Bi—4‘) =0, Wi L,--- ,d}.
+             i=1
+
+
+This equation simplifies when the trajectory does not touch the constraints, namely —B; < gi < Bj
+and —H < Y44q' < H, to
+
+                                          S={qeT,         -C<2Eq-a<
+                                                                  Ch.                                                   (18)
+    We consider the endpoints of the previous examples, see Table                      [I5]and Table
+                                     SHTZ | BOBL | BUND | BUXL | OAT                   | BTS       | BTP
+             Final position | 5136         | 0          -1536 | 5818          -17518 | -2423 | 8423
+             2\Xq             0.22           -0.08    | -0.077 | -0.06      | -0.12 | -0.30 | 0.0078
+             Cost C           0.22           0.17       0.08     0.1          0.12     0.3     0.15
+
+Table 19: Testing if the terminal position does belong to the stable area with example from Table
+
+
+
+
+130115: Opt-Var                                                                                              Page 63 of 136
+
+                           [git] « Branch: iropt-var@be27d1a = Release:           (2024-10-31)

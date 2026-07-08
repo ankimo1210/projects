@@ -1,0 +1,54 @@
+# Page 055
+
+![Page 055](../assets/page_images/page-055.jpg)
+
+## OCR layout text
+
+```text
+Morgan Stanley                                                                                  Confidential
+
+
+Convergence to the admissible area in a finite number                     of steps
+
+    We argue that for any starting inventory g°, there is an integer N = N(q°) such that is it
+guaranteed that q” € T for all m > N. Firstly, we claim that if g* € Z, then q! € T for all
+£>k. To see this, note that q          €Z implies 0 € Ay, meaning that the optimization routine will be
+called and it follows that once the inventory process {q*},>9 reaches T, it never leaves (this is by
+definition: if the routine is called, it cannot propose a hedge trade u that would bring the inventory
+outside the admissible region). It remains to argue that the position process first hits I in fewer
+than N(q®) steps, which we do in the technical appendix, sectio1             We conclude that {q'}:s0
+converges to T in a finite number of steps.
+    We argue that for any starting inventory q°, there is an integer N = N(q°) such that is it guar-
+anteed that g” € T for all m > N. Firstly, we claim that if g* € T, then q’ € T for all > k. To
+see this, note that q € I implies 0 € Ay, meaning that the optimization routine will be called and
+it follows that once the inventory process {q*},>09 reaches Z, it never leaves (this is by definition: if
+the routine is called, it cannot propose a hedge trade u that would bring the inventory outside the
+admissible region). It remains to argue that the position          process first hits Z in fewer than N(q°)
+steps, which we do in the technical appendix, section               We conclude that {q'};s0 converges to
+T in a finite number of steps.
+Convergence to the stable area
+
+   In the appendix, sectio:           2] we prove that the process converges to the stable area S.
+Stability for the CRB            optimization
+
+   The CRB trajectory only has one step. We prove it in Section
+Numerical         illustration
+
+                                                       we numerically illustrate the convergence of
+the portfolio to the stable area S. In this example we consider a toy example with two bonds with
+correlation p, a = 0 and risk-aversion parameter \ = 5e-8 $~!. The red area is the stable area,
+computed using formula              which simplifies into
+
+      S={qeR?,           -C<2\Nq<C}
+         = {(go, a1) € R?, —Co < 2A(Zoogo + Zorg) < Co, —Ci < 2A(Zorgo + Vim) < Ci},
+with a = 0 in the case where the trajectory does not touch the constraints. These equations define
+the four red lines in the following plots. We also draw in black some contours of the scaled variance
+10-8 x q' Sq.
+
+
+
+
+130115: Opt-Var                                                                               Page 55 of 136
+
+                           [git] « Branch: iropt-var@be27d1a = Release:    (2024-10-31)
+```

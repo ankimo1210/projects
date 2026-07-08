@@ -1,0 +1,62 @@
+# Page 042
+
+![Page 042](../assets/page_images/page-042.jpg)
+
+## OCR layout text
+
+```text
+Morgan Stanley                                                                                       Confidential
+
+
+we use another optimization library CVXOPT in Python, which is easily accessible. The test is
+conducted using EU data.
+   We implemented the test on 100 random examples taking from production. The model input
+portfolio risks are randomly sampled from the portfolioRisk table logged in BMET on 06/26/23.
+Other model inputs and parameters used in this test are the same as the production setup on
+06/26/23 and listed below in table
+   Table [5] summarizes the comparison between Java and Python implementations for the 100
+examples. We compare the objective function values after the optimization and the proposed hedge
+trades for each hedge instruments. Column Avg Diff gives the average absolute difference between
+Java and Python solutions. The numbers in the parentheses give the difference as a percentage of
+the initial value before optimization.   For objective function value, the number is the difference as a
+percentage of the initial objective function value before optimization. For the futures, the number
+is the difference as a percentage of the initial position before optimization. Shown in the table,
+the average differences are all below 0.02 and 0.03%, which are small and negligible. These small
+differences are potentially due to different rounding and logging precisions implemented in Java and
+Python. The Match and Mismatch columns give the counts of matching and mismatching cases.
+We define Java and Python results match if the absolute difference are less than 10. Following this
+rule, the results match for all the 100 examples we tested.
+                           SHTZ       BOBL      BUND        BUXL         OAT      BTS     BTP
+                  SHTZ        5.44       2.97       1.67          2.23    3.18     4.55       3.25
+                  BOBL        2.97       2.75       1.62          154     2.07     265        2.14
+                  BUND         1.67      1.62       1.39          1.07    1.33     1.54
+                  BUXL        2.23       1.54       1.07          2.27    243      2.50
+                   OAT        3          2.07       1.33          2.43    3.10     3.59
+                   BTS                   2.65       1.54          2.50    3.59     9.66
+                   BTP                   2.14       1.38          2.53    3.30     4.21
+
+                             Table 2: EU Covariance Matrix asof 06/26/23
+
+                    Instrument | Cost | Quadratic          Cost     | Bucket     Risk Limit
+                       SHTZ       0.22        1740                             30,000
+                       BOBL       0.17         610                             30,000
+                       BUND       0.08         397                             30,000
+                       BUXL        0.1         996                             30,000
+                        OAT       0.12         961                             30,000
+                        BTS        0.3        4846                             30,000
+                        BTP       0.15        1699                             30,000
+
+              Table 3: EU Cost, Quadratic Cost and Bucket Risk Limits asof 06/26/23
+
+
+
+5.1.2    Optimization      Convergence Testing
+
+In this section, we test the convergence of Java and Python implementations, and prove that they
+converge to the same global minimum. We use the same examples described in section
+record the results after each iteration.
+
+130115: Opt-Var
+
+                         [git] « Branch: iropt-var@be27d1a = Release:     (2024-10-31)
+```

@@ -1,0 +1,58 @@
+# ページ 060
+
+![ページ 060](../assets/page_images/page-060.jpg)
+
+## 原文OCRテキスト
+
+```text
+Morgan Stanley                                                                                             Confidential
+
+
+5.2.1     Starting outside the admissible area with a very large risk
+
+We start from a portfolio which does not verify either the hedgeable constraint or the bucket risk
+constrains. We see that in two steps the hedgeable constraint is verified, and after the third step
+all constraints are satisfied. The portfolio takes a dozen steps to converge.
+ Step | SHTZ        | BOBL   | BUND | BUXL | OAT                    | BTS        BTP | PVO1         | Variance | Cost
+ 0         170000   | 100000 | 10000 |     10000 | -30000 | -10000 | 5000 | 255000 | 5730914 | 0
+ 1         120000   | 50000 | 0            0       -30000 | -10000 | 0       130000 | 2054098 | 22050
+ 2         70000    | 0        -12764 |    -6369 | -30000 | -22020 | -2145 | -3298 | 287510 | 25086
+ 3         24005    | 0        -4424 |     3208    -24244 | -11634 | 7164 | -5925 | 32275       16947
+ 14        5136       0        -1536 |     5818    -17518 | -2423 | 8423 | -2100 | 1887         0
+
+Table 15: Inventories in PVO1, scaled variances in $ and costs of last trades in $ through the
+repeated calls to Opt-Var for a non admissible initial portfolio with inconsistent constraints
+
+
+
+                                                                                         SWZ
+                                                                                         poet
+                                                                                         BUND
+                                                                                         uxt
+
+
+
+
+                                3      2      a     5               a       io   2         rv
+                                                        Iteration
+
+Figure 29: Inventories in PV01 through the repeated calls to Opt-Var for a non admissible initial
+portfolio with inconsistent constraints
+
+    We start from a portfolio which does not verify neither the hedgeable constraint nor the bucket
+risk constraints but has consistent constraints. In that case the portfolio becomes admissible after
+a single step, thanks to the constraints. The portfolio then converges in roughly 10 iterations.
+ Step     | SHTZ | BOBL | BUND        | BUXL | OAT | BTS         BTP                    | PVO1 | Variance | Cost
+ 0          80000 | 60000 | 10000    | 10000 | -30000 | -10000 | 5000                   | 125000 | 1249226 | 0
+ 1          30000 | 10000 | -6546    | 5190    ~30000 | -10748 | 3994                   | 1890     56065     21680
+ 2          12036 | 6585    -5566    | 8031    -25861 | -6021 | 7423                    | -3373 | 9683       7324
+ 14         4127 | 6585     -5258    | 8225    -21203 | -2181 | 7501                    | -2204 | 2387       0
+
+Table 16: Inventories in PVO1, scaled variances in $ and costs of last trades in $ through the
+repeated calls to Opt-Var for a non admissible initial portfolio with consistent constraints
+
+130115:   Opt-Var                                                                                        Page
+                                                                                                           60 of 136
+
+                         [git] = Branch: ir.opt-var@bc27d1a = Release:               (2024-10-31)
+```

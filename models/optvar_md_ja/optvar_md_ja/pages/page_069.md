@@ -1,0 +1,62 @@
+# Page 069
+
+![Page 069](../assets/page_images/page-069.jpg)
+
+## OCR layout text
+
+```text
+Morgan Stanley                                                                                    Confidential
+
+
+
+
+                          30000
+
+                          20000
+
+
+
+
+                         20000
+
+                         30000
+                                  1          10          To          1         o>
+
+
+Figure 37: Terminal inventory in PVO1 through the repeated calls to Opt-Var as a function of A,
+the risk-aversion parameter.
+    For CRB, we notice in Figure [38] with Set A of constraints that the trajectory endpoint is also
+smaller when 1 increases. With Set B of constraints, the solution is not very sensitive to \1, as
+visible in Figure Figure [39]      In Figure [40] and in Figure [41] we see that client risk-aversi
+the opposite effect by favouring the client risk reduction. In Figure
+                                                                  [42] and in Figure
+solution is insensitive to AIM risk-aversion \ in this example.
+
+
+
+
+                                  7Pe eeece,esseqeegre=:
+                                   Le
+                                   pad
+                                   ban
+                                   rer
+                                   pee                 ZL
+                                  pa
+                                  pad                            oe
+                         40000    Baa
+                                  =o]
+                                  ous
+                         50000 4 —* UL
+                                 10               1077          10             10
+
+
+Figure 38: Terminal inventory in PVO1 through the repeated calls to CRB as a function of \1, the
+CRB AIM risk-aversion parameter with Set A of constraints.
+
+
+
+
+130115: Opt-Var                                                                                 Page 69 of 136
+
+                        [git] « Branch: iropt-var@be27d1a = Release:      (2024-10-31)
+```

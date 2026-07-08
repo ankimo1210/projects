@@ -1,0 +1,55 @@
+# ページ 102
+
+![ページ 102](../assets/page_images/page-102.jpg)
+
+## 原文OCRテキスト
+
+```text
+Morgan Stanley                                                                                   Confidential
+
+
+   3. High level diagram of interfaces (Bow diagram).              As shown in the same figures (figur
+
+      specified in section {3.3} The outputs of the Opt-Var model are the hedging trades which are passed
+      to the Hedge Executor    component and sent as orders to the internal order management and routing
+      technologies. Eventually, these hedge orders will be sent to external exchanges to be executed. For
+      CRB optimization, the outputs are used to generate internal fills.
+   4. Languages. Python and Java are used for Opt-Var model research. Java is used for the runtime
+      production instance. Research code once reviewed are used as a guidance to implement the change
+      in production. As the research and production codes are using different languages, there are tests
+      in Python to compare the solutions for Java and Python optimizations. This ensures the production
+      implementation in Java and research implementation in Python are completely equivalent.
+   5. Environments.
+
+         + Research/Development: There is no specific environment for research. The research is conducted
+           in local python environment and local Java simulation.
+         + QA: After completing development, IT team deploys new Java code to QA environment, where
+            multiple testings are performed.
+         + Production: The environment where the algo is running in live.
+   6. Automated testing and continuous integration process. There is a unit test suite. The unit
+      test suite runs as part of the Jenkins build automatically for each PR, and as part of the automated
+      continuous integration builds.
+   7. Test process.     First, unit tests are run as part of both the pull request and release automated
+      continuous integration builds, After the change has been deployed to QA, dedicated developer will
+      run manual testing in the QA environment to ensure the functionalities implemented are working as
+      expected. In addition, there are functional and PRA test plans as well as an automated backtesting
+      simulation running on a daily basis. All test evidence is attached to TCM.
+   8. QA. Testing is performed by an independent QA function. Automated tests are required to pass for
+      release builds. The developers in the technology team verify the test plan for a release, they also
+      perform and verify extra manual QA tests. If any of the tests fails, developers will discuss with Strats
+      and plan the fix.
+   9. Re-calibration. As stated in section [3.5} the final parameters of the Opt-Var model are business
+      decisions chosen by bookrunners. However, Strats provide guidance for the parameters based on
+      quantitative methods as described in section         First, Strats get the guidance numbers using the
+      methodologies implemented in Python. Following this, bookrunners review the numbers and make the
+      decision. Finally, Strats help bookrunners enter the final parameters into Market Bus and EoS TDA
+      tables. However, bookrunners still have the full control to adjust the parameters afterwards if needed.
+  10. TRAIN. Application is onboarded to TRAIN:
+
+
+
+
+130115: Opt-Var                                                                               Page   102 of 136
+
+                         [git] « Branch: iropt-var@be27d1a = Release:      (2024-10-31)
+```
