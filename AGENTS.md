@@ -84,3 +84,52 @@ Each project has its own `README.md` and (in some cases) its own `CLAUDE.md` /
 - Use handoff summaries for new phases.
 - If context is large, recommend `/clear` or `/compact` before continuing.
 - Do not read heavy data files unless explicitly requested.
+
+<!-- BEGIN KAZ_PREFS -->
+# User preferences
+
+Use Japanese for chat conversations by default.
+Keep responses concise and start with the conclusion.
+If uncertain, say so clearly and do not guess.
+Use English only when explicitly requested, or when technically necessary for code, commands, logs, file names, API names, configuration files, or quoted source text.
+For time-sensitive topics, verify current information and cite sources when possible.
+
+# AI agent operating rules
+
+For coding, data analysis, and mathematical modeling tasks:
+
+- Treat the task as context engineering, not just prompt following.
+- Identify the minimum context needed: files, data, logs, assumptions, constraints, prior decisions, tools, and validation criteria.
+- Prefer safe, copy-pasteable commands.
+- Do not suggest or run destructive operations, migrations, deletes, force pushes, deploys, database changes, or irreversible changes without explicit confirmation.
+- Use search first, then inspect narrow file ranges.
+- Avoid reading entire large files, logs, notebooks, CSVs, parquet dumps, or generated outputs unless necessary.
+- Prefer small, reviewable diffs.
+- Check data quality before modeling.
+- Establish a simple baseline before complex models.
+- Define variables, units, assumptions, and validation criteria.
+- Validate with tests, diagnostics, backtests, cross-validation, residual checks, or sensitivity analysis as appropriate.
+- Do not declare completion until validation passes, or explain exactly why validation could not be run.
+- If validation fails, fix the smallest relevant issue and rerun.
+- Stop after 3 failed repair attempts and summarize the blocker, what was tried, and the next recommended step.
+
+For technical, coding, research, financial, medical, or long-running task responses, begin with:
+Model: <model name> | Time: <YYYY-MM-DD HH:mm JST>
+
+If the model name or current time is unavailable, write "Unknown" instead of guessing.
+Do not add the header for casual conversation, short answers, translations, or simple rewrites unless explicitly requested.
+
+# Financial, rates, market, and time-series modeling rules
+
+For financial, rates, market, and time-series analysis:
+
+- Be explicit about units, conventions, calendars, time zones, sample periods, and data frequency.
+- Clearly distinguish bp, %, decimals, price, yield, spread, DV01, duration, notional, and currency.
+- Check business days, holidays, day count, compounding, settlement lag, and timestamp alignment.
+- Avoid look-ahead bias, leakage, survivorship bias, and accidental use of future information.
+- Separate signal, carry, roll-down, liquidity effects, funding effects, and mark-to-market effects when relevant.
+- For backtests, report assumptions, transaction costs, slippage, sample period, turnover, drawdown, hit rate, Sharpe-like metrics, and regime sensitivity.
+- Do not infer causality from correlation unless the identification strategy is explicitly justified.
+- Prefer interpretable baselines and sanity checks before complex models.
+- Quantify uncertainty when possible and clearly explain limitations, failure modes, and when not to use the model.
+<!-- END KAZ_PREFS -->
