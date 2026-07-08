@@ -13,9 +13,8 @@ struct VocabQuizApp: App {
         }
     }()
 
-    init() {
-        NotificationService.requestAuthorization()
-    }
+    // 通知の許可リクエストは起動直後ではなく、初回クイズ完了時に行う
+    // （QuizView.requestNotificationPermissionIfNeeded を参照）
 
     var body: some Scene {
         WindowGroup {

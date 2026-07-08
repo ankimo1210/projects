@@ -5,10 +5,13 @@ import UserNotifications
 enum NotificationService {
     private static let reminderIdentifier = "dailyReminder"
 
-    static func requestAuthorization() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { _, error in
+    static func requestAuthorization(completion: ((Bool) -> Void)? = nil) {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if let error {
                 print("⚠️ 通知の許可リクエストに失敗しました: \(error)")
+            }
+            if let completion {
+                DispatchQueue.main.async { completion(granted) }
             }
         }
     }

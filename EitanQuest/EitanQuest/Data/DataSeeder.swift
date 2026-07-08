@@ -10,12 +10,14 @@ private struct WordSeed: Codable {
     let exampleSentence: String
     let phonetic: String
     let exampleSentenceJa: String
+    let partOfSpeech: String
+    let theme: String
 }
 
 enum DataSeeder {
     /// words.json の内容バージョン。単語データを更新したらインクリメントすると、
     /// 既存ユーザーのDBにも次回起動時に反映される（学習進捗は保持）。
-    static let seedDataVersion = 2
+    static let seedDataVersion = 4
     private static let versionKey = "seedDataVersion"
 
     /// DBが空なら全件投入、バージョンが古ければ単語コンテンツのみ更新する
@@ -46,6 +48,8 @@ enum DataSeeder {
                     word.exampleSentence = seed.exampleSentence
                     word.phonetic = seed.phonetic
                     word.exampleSentenceJa = seed.exampleSentenceJa
+                    word.partOfSpeech = seed.partOfSpeech
+                    word.themeRaw = seed.theme
                 } else {
                     let word = Word(
                         id: seed.id,
@@ -54,7 +58,9 @@ enum DataSeeder {
                         category: category,
                         exampleSentence: seed.exampleSentence,
                         phonetic: seed.phonetic,
-                        exampleSentenceJa: seed.exampleSentenceJa
+                        exampleSentenceJa: seed.exampleSentenceJa,
+                        partOfSpeech: seed.partOfSpeech,
+                        themeRaw: seed.theme
                     )
                     context.insert(word)
                 }
