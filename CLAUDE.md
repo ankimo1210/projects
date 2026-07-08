@@ -128,3 +128,9 @@ its actual output. When something is unverified, say which parts and why.
 - `node_modules/`
 - `target/` (Rust build output)
 - `__pycache__/`
+
+<!-- BEGIN KAZ_PREFS -->
+# Shared agent instructions
+
+@AGENTS.md
+<!-- END KAZ_PREFS -->
