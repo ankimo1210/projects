@@ -113,12 +113,6 @@ For coding, data analysis, and mathematical modeling tasks:
 - If validation fails, fix the smallest relevant issue and rerun.
 - Stop after 3 failed repair attempts and summarize the blocker, what was tried, and the next recommended step.
 
-For technical, coding, research, financial, medical, or long-running task responses, begin with:
-Model: <model name> | Time: <YYYY-MM-DD HH:mm JST>
-
-If the model name or current time is unavailable, write "Unknown" instead of guessing.
-Do not add the header for casual conversation, short answers, translations, or simple rewrites unless explicitly requested.
-
 # Financial, rates, market, and time-series modeling rules
 
 For financial, rates, market, and time-series analysis:
