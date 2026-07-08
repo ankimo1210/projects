@@ -13,6 +13,10 @@ final class Word {
     var phonetic: String = ""
     /// 例文の日本語訳。旧データからの軽量マイグレーションのため既定値あり
     var exampleSentenceJa: String = ""
+    /// 品詞（noun / verb / adjective）。同品詞の「惜しい」ハズレ選択肢を選ぶのに使う
+    var partOfSpeech: String = ""
+    /// 意味テーマ（emotion / money / …）。同テーマの引っ掛け選択肢とテーマ別出題に使う
+    var themeRaw: String = ""
 
     // MARK: - 学習進捗
     var correctCount: Int
@@ -23,6 +27,10 @@ final class Word {
 
     var category: WordCategory {
         WordCategory(rawValue: categoryRaw) ?? .daily
+    }
+
+    var theme: WordTheme? {
+        WordTheme(rawValue: themeRaw)
     }
 
     var isLearned: Bool {
@@ -36,7 +44,9 @@ final class Word {
         category: WordCategory,
         exampleSentence: String,
         phonetic: String = "",
-        exampleSentenceJa: String = ""
+        exampleSentenceJa: String = "",
+        partOfSpeech: String = "",
+        themeRaw: String = ""
     ) {
         self.id = id
         self.headword = headword
@@ -45,6 +55,8 @@ final class Word {
         self.exampleSentence = exampleSentence
         self.phonetic = phonetic
         self.exampleSentenceJa = exampleSentenceJa
+        self.partOfSpeech = partOfSpeech
+        self.themeRaw = themeRaw
         self.correctCount = 0
         self.incorrectCount = 0
         self.needsReview = false

@@ -7,6 +7,8 @@ final class SmokeUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    /// 通知許可ダイアログ（SpringBoard側）が出ていれば閉じる。
+    /// 許可リクエストは初回クイズ完了時（結果画面）に行われる仕様。
     private func dismissNotificationPromptIfNeeded(_ app: XCUIApplication) {
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         let allowButton = springboard.buttons["許可"]
@@ -19,7 +21,6 @@ final class SmokeUITests: XCTestCase {
     func testCategoryToQuizToStatsFlow() throws {
         let app = XCUIApplication()
         app.launch()
-        dismissNotificationPromptIfNeeded(app)
 
         // カテゴリ選択画面
         let dailyRow = app.staticTexts["日常会話"]
@@ -33,7 +34,7 @@ final class SmokeUITests: XCTestCase {
         XCTAssertTrue(speakButton.waitForExistence(timeout: 5), "クイズ画面に「発音を聞く」ボタンが出ること")
         XCTAssertTrue(app.staticTexts["1 / 10"].exists, "問題番号 1 / 10 が表示されること")
 
-        let knownLabels = ["発音を聞く", "次へ", "学習", "統計", "カテゴリを選択", "Back"]
+        let knownLabels = ["発音を聞く", "次へ", "学習", "テーマ", "統計", "カテゴリを選択", "Back"]
         let choicePredicate = NSPredicate(format: "NOT (label IN %@)", knownLabels)
         var sawWrongAnswer = false
 
@@ -60,12 +61,20 @@ final class SmokeUITests: XCTestCase {
             }
         }
 
-        // 結果画面
+        // 結果画面（初回はここで通知許可ダイアログが出る）
         XCTAssertTrue(app.staticTexts["お疲れさまでした！"].waitForExistence(timeout: 5), "結果画面が表示されること")
+        dismissNotificationPromptIfNeeded(app)
+        XCTAssertTrue(app.staticTexts["正答率"].exists, "結果画面に正答率リングが表示されること")
+        XCTAssertTrue(app.buttons["終了"].exists, "結果画面に「終了」ボタンが出ること")
         if sawWrongAnswer {
             let retryMissedPredicate = NSPredicate(format: "label BEGINSWITH '間違えた単語だけ'")
             XCTAssertTrue(app.buttons.matching(retryMissedPredicate).firstMatch.exists, "間違いがあった場合は「間違えた単語だけもう一度」ボタンが出ること")
         }
+
+        let resultShot = XCTAttachment(screenshot: app.screenshot())
+        resultShot.name = "result_screen"
+        resultShot.lifetime = .keepAlways
+        add(resultShot)
 
         // 統計タブへ切り替え
         app.tabBars.buttons["統計"].tap()
@@ -78,7 +87,6 @@ final class SmokeUITests: XCTestCase {
     func testSettingsToggle() throws {
         let app = XCUIApplication()
         app.launch()
-        dismissNotificationPromptIfNeeded(app)
 
         XCTAssertTrue(app.staticTexts["日常会話"].waitForExistence(timeout: 5))
 
@@ -101,7 +109,6 @@ final class SmokeUITests: XCTestCase {
     func testWordBrowseViaSwipe() throws {
         let app = XCUIApplication()
         app.launch()
-        dismissNotificationPromptIfNeeded(app)
 
         let dailyRow = app.staticTexts["日常会話"]
         XCTAssertTrue(dailyRow.waitForExistence(timeout: 5))
@@ -112,6 +119,25 @@ final class SmokeUITests: XCTestCase {
         browseButton.tap()
 
         XCTAssertTrue(app.navigationBars["日常会話 一覧"].waitForExistence(timeout: 5), "単語一覧画面が開くこと")
-        XCTAssertTrue(app.staticTexts["appointment"].waitForExistence(timeout: 3), "一覧に単語が表示されること")
+        XCTAssertTrue(app.cells.firstMatch.waitForExistence(timeout: 3), "一覧に単語が表示されること")
+    }
+
+    @MainActor
+    func testThemeQuizFlow() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        XCTAssertTrue(app.staticTexts["日常会話"].waitForExistence(timeout: 5))
+
+        app.tabBars.buttons["テーマ"].tap()
+        XCTAssertTrue(app.navigationBars["テーマ"].waitForExistence(timeout: 5), "テーマ画面が表示されること")
+
+        let emotionRow = app.staticTexts["感情"]
+        XCTAssertTrue(emotionRow.waitForExistence(timeout: 3), "テーマ一覧に「感情」が表示されること")
+        emotionRow.tap()
+
+        // テーマ別クイズが開く
+        XCTAssertTrue(app.buttons["発音を聞く"].waitForExistence(timeout: 5), "テーマ別クイズが開くこと")
+        XCTAssertTrue(app.navigationBars["感情"].exists, "クイズのタイトルがテーマ名になること")
     }
 }

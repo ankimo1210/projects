@@ -28,6 +28,12 @@ final class FeedbackService {
         return player
     }
 
+    /// 直後に correct()/incorrect() が呼ばれる見込みのタイミング（出題時）に呼ぶと、
+    /// Taptic Engine が事前起動され触覚の遅延が減る
+    func prepare() {
+        notification.prepare()
+    }
+
     func correct() {
         notification.notificationOccurred(.success)
         correctPlayer?.currentTime = 0

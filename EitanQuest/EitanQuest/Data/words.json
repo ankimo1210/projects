@@ -6,7 +6,9 @@
     "category": "daily",
     "exampleSentence": "I have a doctor's appointment tomorrow morning.",
     "phonetic": "/əˈpɔɪntmənt/",
-    "exampleSentenceJa": "明日の朝、医者の予約があります。"
+    "exampleSentenceJa": "明日の朝、医者の予約があります。",
+    "partOfSpeech": "noun",
+    "theme": "time"
   },
   {
     "id": "2",
@@ -14,8 +16,10 @@
     "meaning": "借りる",
     "category": "daily",
     "exampleSentence": "Can I borrow your pen for a second?",
-    "phonetic": "/ˈbɑːroʊ/",
-    "exampleSentenceJa": "ちょっとペンを借りてもいいですか？"
+    "phonetic": "/ˈbɑˌroʊ/",
+    "exampleSentenceJa": "ちょっとペンを借りてもいいですか？",
+    "partOfSpeech": "verb",
+    "theme": "money"
   },
   {
     "id": "3",
@@ -23,8 +27,10 @@
     "meaning": "快適な",
     "category": "daily",
     "exampleSentence": "This chair is very comfortable to sit in.",
-    "phonetic": "/ˈkʌmftərbəl/",
-    "exampleSentenceJa": "この椅子は座り心地がとても良いです。"
+    "phonetic": "/ˈkəmfərtəbəl/",
+    "exampleSentenceJa": "この椅子は座り心地がとても良いです。",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
   },
   {
     "id": "4",
@@ -33,7 +39,9 @@
     "category": "daily",
     "exampleSentence": "I got a 20 percent discount on these shoes.",
     "phonetic": "/ˈdɪskaʊnt/",
-    "exampleSentenceJa": "この靴を20%割引で買いました。"
+    "exampleSentenceJa": "この靴を20%割引で買いました。",
+    "partOfSpeech": "noun",
+    "theme": "shopping"
   },
   {
     "id": "5",
@@ -41,8 +49,10 @@
     "meaning": "恥ずかしい",
     "category": "daily",
     "exampleSentence": "She felt embarrassed after forgetting his name.",
-    "phonetic": "/ɪmˈbærəst/",
-    "exampleSentenceJa": "彼女は彼の名前を忘れてしまい、恥ずかしい思いをしました。"
+    "phonetic": "/ɪmˈbɛrəst/",
+    "exampleSentenceJa": "彼女は彼の名前を忘れてしまい、恥ずかしい思いをしました。",
+    "partOfSpeech": "adjective",
+    "theme": "emotion"
   },
   {
     "id": "6",
@@ -50,8 +60,10 @@
     "meaning": "冷蔵庫",
     "category": "daily",
     "exampleSentence": "Put the milk back in the fridge, please.",
-    "phonetic": "/frɪdʒ/",
-    "exampleSentenceJa": "牛乳を冷蔵庫に戻しておいてください。"
+    "phonetic": "/frɪʤ/",
+    "exampleSentenceJa": "牛乳を冷蔵庫に戻しておいてください。",
+    "partOfSpeech": "noun",
+    "theme": "home"
   },
   {
     "id": "7",
@@ -59,8 +71,10 @@
     "meaning": "食料雑貨、食料品",
     "category": "daily",
     "exampleSentence": "We need to buy some groceries after work.",
-    "phonetic": "/ˈɡroʊsəri/",
-    "exampleSentenceJa": "仕事の後に食料品を買う必要があります。"
+    "phonetic": "/ˈgroʊsəri/",
+    "exampleSentenceJa": "仕事の後に食料品を買う必要があります。",
+    "partOfSpeech": "noun",
+    "theme": "shopping"
   },
   {
     "id": "8",
@@ -68,8 +82,10 @@
     "meaning": "習慣",
     "category": "daily",
     "exampleSentence": "Reading before bed is a good habit.",
-    "phonetic": "/ˈhæbɪt/",
-    "exampleSentenceJa": "寝る前の読書は良い習慣です。"
+    "phonetic": "/ˈhæbət/",
+    "exampleSentenceJa": "寝る前の読書は良い習慣です。",
+    "partOfSpeech": "noun",
+    "theme": "personality"
   },
   {
     "id": "9",
@@ -77,8 +93,10 @@
     "meaning": "材料、食材",
     "category": "daily",
     "exampleSentence": "Flour is the main ingredient in this cake.",
-    "phonetic": "/ɪnˈɡriːdiənt/",
-    "exampleSentenceJa": "小麦粉がこのケーキの主な材料です。"
+    "phonetic": "/ˌɪnˈgridiənt/",
+    "exampleSentenceJa": "小麦粉がこのケーキの主な材料です。",
+    "partOfSpeech": "noun",
+    "theme": "food"
   },
   {
     "id": "10",
@@ -86,8 +104,10 @@
     "meaning": "旅、旅行",
     "category": "daily",
     "exampleSentence": "Our journey to the countryside took five hours.",
-    "phonetic": "/ˈdʒɜːrni/",
-    "exampleSentenceJa": "田舎への旅は5時間かかりました。"
+    "phonetic": "/ˈʤərni/",
+    "exampleSentenceJa": "田舎への旅は5時間かかりました。",
+    "partOfSpeech": "noun",
+    "theme": "travel"
   },
   {
     "id": "11",
@@ -96,7 +116,9 @@
     "category": "daily",
     "exampleSentence": "Thank you for your kindness yesterday.",
     "phonetic": "/ˈkaɪndnəs/",
-    "exampleSentenceJa": "昨日はご親切にありがとうございました。"
+    "exampleSentenceJa": "昨日はご親切にありがとうございました。",
+    "partOfSpeech": "noun",
+    "theme": "personality"
   },
   {
     "id": "12",
@@ -104,8 +126,10 @@
     "meaning": "洗濯（物）",
     "category": "daily",
     "exampleSentence": "I need to do the laundry this weekend.",
-    "phonetic": "/ˈlɔːndri/",
-    "exampleSentenceJa": "今週末は洗濯をしなければなりません。"
+    "phonetic": "/ˈlɔndri/",
+    "exampleSentenceJa": "今週末は洗濯をしなければなりません。",
+    "partOfSpeech": "noun",
+    "theme": "home"
   },
   {
     "id": "13",
@@ -113,8 +137,10 @@
     "meaning": "言及する、述べる",
     "category": "daily",
     "exampleSentence": "She didn't mention her new job to anyone.",
-    "phonetic": "/ˈmenʃən/",
-    "exampleSentenceJa": "彼女は新しい仕事のことを誰にも話しませんでした。"
+    "phonetic": "/ˈmɛnʃən/",
+    "exampleSentenceJa": "彼女は新しい仕事のことを誰にも話しませんでした。",
+    "partOfSpeech": "verb",
+    "theme": "communication"
   },
   {
     "id": "14",
@@ -123,7 +149,9 @@
     "category": "daily",
     "exampleSentence": "Our neighbor always waters our plants when we're away.",
     "phonetic": "/ˈneɪbər/",
-    "exampleSentenceJa": "隣人は私たちの留守中、いつも植物に水をやってくれます。"
+    "exampleSentenceJa": "隣人は私たちの留守中、いつも植物に水をやってくれます。",
+    "partOfSpeech": "noun",
+    "theme": "people"
   },
   {
     "id": "15",
@@ -131,8 +159,10 @@
     "meaning": "機会",
     "category": "daily",
     "exampleSentence": "This trip is a great opportunity to practice English.",
-    "phonetic": "/ˌɑːpərˈtuːnəti/",
-    "exampleSentenceJa": "この旅行は英語を練習する絶好の機会です。"
+    "phonetic": "/ˌɑpərˈtunəti/",
+    "exampleSentenceJa": "この旅行は英語を練習する絶好の機会です。",
+    "partOfSpeech": "noun",
+    "theme": "time"
   },
   {
     "id": "16",
@@ -141,7 +171,9 @@
     "category": "daily",
     "exampleSentence": "We had to postpone the picnic because of rain.",
     "phonetic": "/poʊstˈpoʊn/",
-    "exampleSentenceJa": "雨のためピクニックを延期しなければなりませんでした。"
+    "exampleSentenceJa": "雨のためピクニックを延期しなければなりませんでした。",
+    "partOfSpeech": "verb",
+    "theme": "time"
   },
   {
     "id": "17",
@@ -149,8 +181,10 @@
     "meaning": "口論、けんか",
     "category": "daily",
     "exampleSentence": "The two brothers had a quarrel over the remote control.",
-    "phonetic": "/ˈkwɔːrəl/",
-    "exampleSentenceJa": "兄弟2人はリモコンをめぐって口論になりました。"
+    "phonetic": "/kˈwɔrəl/",
+    "exampleSentenceJa": "兄弟2人はリモコンをめぐって口論になりました。",
+    "partOfSpeech": "noun",
+    "theme": "people"
   },
   {
     "id": "18",
@@ -158,8 +192,10 @@
     "meaning": "レシピ、調理法",
     "category": "daily",
     "exampleSentence": "Can you send me the recipe for this soup?",
-    "phonetic": "/ˈresəpi/",
-    "exampleSentenceJa": "このスープのレシピを送ってもらえますか？"
+    "phonetic": "/ˈrɛsəpi/",
+    "exampleSentenceJa": "このスープのレシピを送ってもらえますか？",
+    "partOfSpeech": "noun",
+    "theme": "food"
   },
   {
     "id": "19",
@@ -167,8 +203,10 @@
     "meaning": "予定、スケジュール",
     "category": "daily",
     "exampleSentence": "My schedule is pretty full this week.",
-    "phonetic": "/ˈskedʒuːl/",
-    "exampleSentenceJa": "今週は予定がかなり詰まっています。"
+    "phonetic": "/ˈskɛʤʊl/",
+    "exampleSentenceJa": "今週は予定がかなり詰まっています。",
+    "partOfSpeech": "noun",
+    "theme": "time"
   },
   {
     "id": "20",
@@ -177,7 +215,9 @@
     "category": "daily",
     "exampleSentence": "There was heavy traffic on the way to the airport.",
     "phonetic": "/ˈtræfɪk/",
-    "exampleSentenceJa": "空港へ向かう道は交通量が多かったです。"
+    "exampleSentenceJa": "空港へ向かう道は交通量が多かったです。",
+    "partOfSpeech": "noun",
+    "theme": "travel"
   },
   {
     "id": "21",
@@ -185,8 +225,10 @@
     "meaning": "傘",
     "category": "daily",
     "exampleSentence": "Don't forget your umbrella, it might rain later.",
-    "phonetic": "/ʌmˈbrelə/",
-    "exampleSentenceJa": "傘を忘れないで。あとで雨が降るかもしれません。"
+    "phonetic": "/ˈəmˌbrɛlə/",
+    "exampleSentenceJa": "傘を忘れないで。あとで雨が降るかもしれません。",
+    "partOfSpeech": "noun",
+    "theme": "weather"
   },
   {
     "id": "22",
@@ -195,7 +237,9 @@
     "category": "daily",
     "exampleSentence": "We're planning a vacation to the beach next month.",
     "phonetic": "/veɪˈkeɪʃən/",
-    "exampleSentenceJa": "来月、ビーチへの休暇を計画しています。"
+    "exampleSentenceJa": "来月、ビーチへの休暇を計画しています。",
+    "partOfSpeech": "noun",
+    "theme": "travel"
   },
   {
     "id": "23",
@@ -203,8 +247,10 @@
     "meaning": "天気",
     "category": "daily",
     "exampleSentence": "The weather has been really nice lately.",
-    "phonetic": "/ˈweðər/",
-    "exampleSentenceJa": "最近は天気がとても良いです。"
+    "phonetic": "/ˈwɛðər/",
+    "exampleSentenceJa": "最近は天気がとても良いです。",
+    "partOfSpeech": "noun",
+    "theme": "weather"
   },
   {
     "id": "24",
@@ -212,8 +258,10 @@
     "meaning": "疲れ果てた",
     "category": "daily",
     "exampleSentence": "I was exhausted after the long flight.",
-    "phonetic": "/ɪɡˈzɔːstɪd/",
-    "exampleSentenceJa": "長時間のフライトの後、疲れ果てていました。"
+    "phonetic": "/ɪgˈzɔstɪd/",
+    "exampleSentenceJa": "長時間のフライトの後、疲れ果てていました。",
+    "partOfSpeech": "adjective",
+    "theme": "health"
   },
   {
     "id": "25",
@@ -221,8 +269,10 @@
     "meaning": "感謝している",
     "category": "daily",
     "exampleSentence": "I'm really grateful for your help today.",
-    "phonetic": "/ˈɡreɪtfəl/",
-    "exampleSentenceJa": "今日は助けてくれて本当に感謝しています。"
+    "phonetic": "/ˈgreɪtfəl/",
+    "exampleSentenceJa": "今日は助けてくれて本当に感謝しています。",
+    "partOfSpeech": "adjective",
+    "theme": "emotion"
   },
   {
     "id": "26",
@@ -230,8 +280,10 @@
     "meaning": "ためらう",
     "category": "daily",
     "exampleSentence": "Don't hesitate to call me if you need anything.",
-    "phonetic": "/ˈhezɪteɪt/",
-    "exampleSentenceJa": "何か必要なときは、遠慮なく電話してください。"
+    "phonetic": "/ˈhɛzəˌteɪt/",
+    "exampleSentenceJa": "何か必要なときは、遠慮なく電話してください。",
+    "partOfSpeech": "verb",
+    "theme": "action"
   },
   {
     "id": "27",
@@ -239,8 +291,10 @@
     "meaning": "改善する、上達する",
     "category": "daily",
     "exampleSentence": "Her English has improved a lot this year.",
-    "phonetic": "/ɪmˈpruːv/",
-    "exampleSentenceJa": "彼女の英語は今年とても上達しました。"
+    "phonetic": "/ˌɪmˈpruv/",
+    "exampleSentenceJa": "彼女の英語は今年とても上達しました。",
+    "partOfSpeech": "verb",
+    "theme": "action"
   },
   {
     "id": "28",
@@ -248,8 +302,10 @@
     "meaning": "嫉妬した、うらやましい",
     "category": "daily",
     "exampleSentence": "He was a little jealous of his friend's new car.",
-    "phonetic": "/ˈdʒeləs/",
-    "exampleSentenceJa": "彼は友人の新車が少しうらやましかったのです。"
+    "phonetic": "/ˈʤɛləs/",
+    "exampleSentenceJa": "彼は友人の新車が少しうらやましかったのです。",
+    "partOfSpeech": "adjective",
+    "theme": "emotion"
   },
   {
     "id": "29",
@@ -257,8 +313,10 @@
     "meaning": "貸す",
     "category": "daily",
     "exampleSentence": "Could you lend me some money until Friday?",
-    "phonetic": "/lend/",
-    "exampleSentenceJa": "金曜日までお金を貸してもらえますか？"
+    "phonetic": "/lɛnd/",
+    "exampleSentenceJa": "金曜日までお金を貸してもらえますか？",
+    "partOfSpeech": "verb",
+    "theme": "money"
   },
   {
     "id": "30",
@@ -266,8 +324,10 @@
     "meaning": "なんとかやり遂げる、管理する",
     "category": "daily",
     "exampleSentence": "We managed to finish the project on time.",
-    "phonetic": "/ˈmænɪdʒ/",
-    "exampleSentenceJa": "私たちはなんとか期限内にプロジェクトを終わらせました。"
+    "phonetic": "/ˈmænɪʤ/",
+    "exampleSentenceJa": "私たちはなんとか期限内にプロジェクトを終わらせました。",
+    "partOfSpeech": "verb",
+    "theme": "work"
   },
   {
     "id": "31",
@@ -275,8 +335,10 @@
     "meaning": "緊張した",
     "category": "daily",
     "exampleSentence": "I always get nervous before a job interview.",
-    "phonetic": "/ˈnɜːrvəs/",
-    "exampleSentenceJa": "就職の面接の前はいつも緊張します。"
+    "phonetic": "/ˈnərvəs/",
+    "exampleSentenceJa": "就職の面接の前はいつも緊張します。",
+    "partOfSpeech": "adjective",
+    "theme": "emotion"
   },
   {
     "id": "32",
@@ -285,7 +347,9 @@
     "category": "daily",
     "exampleSentence": "We only use this plate on special occasions.",
     "phonetic": "/əˈkeɪʒən/",
-    "exampleSentenceJa": "このお皿は特別な行事のときにしか使いません。"
+    "exampleSentenceJa": "このお皿は特別な行事のときにしか使いません。",
+    "partOfSpeech": "noun",
+    "theme": "time"
   },
   {
     "id": "33",
@@ -293,8 +357,10 @@
     "meaning": "約束する",
     "category": "daily",
     "exampleSentence": "She promised to call me as soon as she arrived.",
-    "phonetic": "/ˈprɑːmɪs/",
-    "exampleSentenceJa": "彼女は着いたらすぐ電話すると約束しました。"
+    "phonetic": "/ˈprɑməs/",
+    "exampleSentenceJa": "彼女は着いたらすぐ電話すると約束しました。",
+    "partOfSpeech": "verb",
+    "theme": "communication"
   },
   {
     "id": "34",
@@ -302,8 +368,10 @@
     "meaning": "提案する",
     "category": "daily",
     "exampleSentence": "I suggest we leave early to avoid the traffic.",
-    "phonetic": "/səɡˈdʒest/",
-    "exampleSentenceJa": "渋滞を避けるため、早めに出発することを提案します。"
+    "phonetic": "/səˈʤɛst/",
+    "exampleSentenceJa": "渋滞を避けるため、早めに出発することを提案します。",
+    "partOfSpeech": "verb",
+    "theme": "communication"
   },
   {
     "id": "35",
@@ -311,8 +379,10 @@
     "meaning": "議題、予定表",
     "category": "business",
     "exampleSentence": "Let's go over today's agenda before the meeting starts.",
-    "phonetic": "/əˈdʒendə/",
-    "exampleSentenceJa": "会議が始まる前に今日の議題を確認しましょう。"
+    "phonetic": "/əˈʤɛndə/",
+    "exampleSentenceJa": "会議が始まる前に今日の議題を確認しましょう。",
+    "partOfSpeech": "noun",
+    "theme": "work"
   },
   {
     "id": "36",
@@ -320,8 +390,10 @@
     "meaning": "予算",
     "category": "business",
     "exampleSentence": "The marketing team stayed within their budget this quarter.",
-    "phonetic": "/ˈbʌdʒɪt/",
-    "exampleSentenceJa": "マーケティングチームは今四半期、予算内に収めました。"
+    "phonetic": "/ˈbəʤɪt/",
+    "exampleSentenceJa": "マーケティングチームは今四半期、予算内に収めました。",
+    "partOfSpeech": "noun",
+    "theme": "money"
   },
   {
     "id": "37",
@@ -329,8 +401,10 @@
     "meaning": "顧客、取引先",
     "category": "business",
     "exampleSentence": "We have a meeting with an important client tomorrow.",
-    "phonetic": "/ˈklaɪənt/",
-    "exampleSentenceJa": "明日、重要な顧客との打ち合わせがあります。"
+    "phonetic": "/klaɪənt/",
+    "exampleSentenceJa": "明日、重要な顧客との打ち合わせがあります。",
+    "partOfSpeech": "noun",
+    "theme": "work"
   },
   {
     "id": "38",
@@ -338,8 +412,10 @@
     "meaning": "締め切り",
     "category": "business",
     "exampleSentence": "The deadline for the report is next Friday.",
-    "phonetic": "/ˈdedlaɪn/",
-    "exampleSentenceJa": "レポートの締め切りは来週の金曜日です。"
+    "phonetic": "/ˈdɛˌdlaɪn/",
+    "exampleSentenceJa": "レポートの締め切りは来週の金曜日です。",
+    "partOfSpeech": "noun",
+    "theme": "work"
   },
   {
     "id": "39",
@@ -348,7 +424,9 @@
     "category": "business",
     "exampleSentence": "The new system is much more efficient than the old one.",
     "phonetic": "/ɪˈfɪʃənt/",
-    "exampleSentenceJa": "新しいシステムは古いものよりずっと効率的です。"
+    "exampleSentenceJa": "新しいシステムは古いものよりずっと効率的です。",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
   },
   {
     "id": "40",
@@ -356,8 +434,10 @@
     "meaning": "フィードバック、意見",
     "category": "business",
     "exampleSentence": "Please give me your feedback on the proposal.",
-    "phonetic": "/ˈfiːdbæk/",
-    "exampleSentenceJa": "提案書についてご意見をお聞かせください。"
+    "phonetic": "/ˈfidˌbæk/",
+    "exampleSentenceJa": "提案書についてご意見をお聞かせください。",
+    "partOfSpeech": "noun",
+    "theme": "work"
   },
   {
     "id": "41",
@@ -366,7 +446,9 @@
     "category": "business",
     "exampleSentence": "We sent the invoice to the customer last week.",
     "phonetic": "/ˈɪnvɔɪs/",
-    "exampleSentenceJa": "先週、顧客に請求書を送りました。"
+    "exampleSentenceJa": "先週、顧客に請求書を送りました。",
+    "partOfSpeech": "noun",
+    "theme": "money"
   },
   {
     "id": "42",
@@ -374,8 +456,10 @@
     "meaning": "交渉する",
     "category": "business",
     "exampleSentence": "They negotiated a better price with the supplier.",
-    "phonetic": "/nɪˈɡoʊʃieɪt/",
-    "exampleSentenceJa": "彼らは仕入先とより良い価格を交渉しました。"
+    "phonetic": "/nɪˈgoʊʃiˌeɪt/",
+    "exampleSentenceJa": "彼らは仕入先とより良い価格を交渉しました。",
+    "partOfSpeech": "verb",
+    "theme": "work"
   },
   {
     "id": "43",
@@ -383,8 +467,10 @@
     "meaning": "結果、成果",
     "category": "business",
     "exampleSentence": "The outcome of the negotiation was better than expected.",
-    "phonetic": "/ˈaʊtkʌm/",
-    "exampleSentenceJa": "交渉の結果は予想以上に良いものでした。"
+    "phonetic": "/ˈaʊtˌkəm/",
+    "exampleSentenceJa": "交渉の結果は予想以上に良いものでした。",
+    "partOfSpeech": "noun",
+    "theme": "work"
   },
   {
     "id": "44",
@@ -393,7 +479,9 @@
     "category": "business",
     "exampleSentence": "The board approved the new business proposal.",
     "phonetic": "/prəˈpoʊzəl/",
-    "exampleSentenceJa": "取締役会は新しい事業提案を承認しました。"
+    "exampleSentenceJa": "取締役会は新しい事業提案を承認しました。",
+    "partOfSpeech": "noun",
+    "theme": "work"
   },
   {
     "id": "45",
@@ -401,8 +489,10 @@
     "meaning": "四半期",
     "category": "business",
     "exampleSentence": "Sales increased significantly in the third quarter.",
-    "phonetic": "/ˈkwɔːrtər/",
-    "exampleSentenceJa": "第3四半期に売上が大幅に伸びました。"
+    "phonetic": "/kˈwɔrtər/",
+    "exampleSentenceJa": "第3四半期に売上が大幅に伸びました。",
+    "partOfSpeech": "noun",
+    "theme": "work"
   },
   {
     "id": "46",
@@ -410,8 +500,10 @@
     "meaning": "収益、収入",
     "category": "business",
     "exampleSentence": "The company's revenue grew by ten percent last year.",
-    "phonetic": "/ˈrevənuː/",
-    "exampleSentenceJa": "会社の収益は昨年10%成長しました。"
+    "phonetic": "/ˈrɛvəˌnu/",
+    "exampleSentenceJa": "会社の収益は昨年10%成長しました。",
+    "partOfSpeech": "noun",
+    "theme": "money"
   },
   {
     "id": "47",
@@ -419,8 +511,10 @@
     "meaning": "戦略",
     "category": "business",
     "exampleSentence": "We need a new marketing strategy for next year.",
-    "phonetic": "/ˈstrætədʒi/",
-    "exampleSentenceJa": "来年に向けて新しいマーケティング戦略が必要です。"
+    "phonetic": "/ˈstrætəʤi/",
+    "exampleSentenceJa": "来年に向けて新しいマーケティング戦略が必要です。",
+    "partOfSpeech": "noun",
+    "theme": "work"
   },
   {
     "id": "48",
@@ -428,8 +522,10 @@
     "meaning": "上司、監督者",
     "category": "business",
     "exampleSentence": "My supervisor asked me to finish the report by noon.",
-    "phonetic": "/ˈsuːpərvaɪzər/",
-    "exampleSentenceJa": "上司から正午までにレポートを仕上げるよう頼まれました。"
+    "phonetic": "/ˈsupərˌvaɪzər/",
+    "exampleSentenceJa": "上司から正午までにレポートを仕上げるよう頼まれました。",
+    "partOfSpeech": "noun",
+    "theme": "work"
   },
   {
     "id": "49",
@@ -438,7 +534,9 @@
     "category": "business",
     "exampleSentence": "The bank recorded the transaction within seconds.",
     "phonetic": "/trænˈzækʃən/",
-    "exampleSentenceJa": "銀行は数秒以内にその取引を記録しました。"
+    "exampleSentenceJa": "銀行は数秒以内にその取引を記録しました。",
+    "partOfSpeech": "noun",
+    "theme": "money"
   },
   {
     "id": "50",
@@ -446,8 +544,10 @@
     "meaning": "業者、販売業者",
     "category": "business",
     "exampleSentence": "We switched to a cheaper vendor for office supplies.",
-    "phonetic": "/ˈvendər/",
-    "exampleSentenceJa": "事務用品はより安い業者に切り替えました。"
+    "phonetic": "/ˈvɛndər/",
+    "exampleSentenceJa": "事務用品はより安い業者に切り替えました。",
+    "partOfSpeech": "noun",
+    "theme": "work"
   },
   {
     "id": "51",
@@ -455,8 +555,10 @@
     "meaning": "保証（書）",
     "category": "business",
     "exampleSentence": "This laptop comes with a two-year warranty.",
-    "phonetic": "/ˈwɔːrənti/",
-    "exampleSentenceJa": "このノートPCには2年間の保証が付いています。"
+    "phonetic": "/ˈwɔrənti/",
+    "exampleSentenceJa": "このノートPCには2年間の保証が付いています。",
+    "partOfSpeech": "noun",
+    "theme": "shopping"
   },
   {
     "id": "52",
@@ -464,8 +566,10 @@
     "meaning": "合併",
     "category": "business",
     "exampleSentence": "The merger between the two companies was announced today.",
-    "phonetic": "/ˈmɜːrdʒər/",
-    "exampleSentenceJa": "両社の合併が本日発表されました。"
+    "phonetic": "/ˈmərʤər/",
+    "exampleSentenceJa": "両社の合併が本日発表されました。",
+    "partOfSpeech": "noun",
+    "theme": "work"
   },
   {
     "id": "53",
@@ -474,7 +578,9 @@
     "category": "business",
     "exampleSentence": "The department ensures compliance with safety regulations.",
     "phonetic": "/kəmˈplaɪəns/",
-    "exampleSentenceJa": "その部署は安全規則の遵守を徹底しています。"
+    "exampleSentenceJa": "その部署は安全規則の遵守を徹底しています。",
+    "partOfSpeech": "noun",
+    "theme": "society"
   },
   {
     "id": "54",
@@ -482,8 +588,10 @@
     "meaning": "物流",
     "category": "business",
     "exampleSentence": "The logistics team handles all our shipping needs.",
-    "phonetic": "/ləˈdʒɪstɪks/",
-    "exampleSentenceJa": "物流チームが出荷業務をすべて担当しています。"
+    "phonetic": "/ləˈʤɪstɪks/",
+    "exampleSentenceJa": "物流チームが出荷業務をすべて担当しています。",
+    "partOfSpeech": "noun",
+    "theme": "work"
   },
   {
     "id": "55",
@@ -491,8 +599,10 @@
     "meaning": "在庫",
     "category": "business",
     "exampleSentence": "We ran a full inventory check at the end of the month.",
-    "phonetic": "/ˈɪnvəntɔːri/",
-    "exampleSentenceJa": "月末に全在庫の棚卸しを行いました。"
+    "phonetic": "/ˌɪnvənˈtɔri/",
+    "exampleSentenceJa": "月末に全在庫の棚卸しを行いました。",
+    "partOfSpeech": "noun",
+    "theme": "work"
   },
   {
     "id": "56",
@@ -500,8 +610,10 @@
     "meaning": "利害関係者",
     "category": "business",
     "exampleSentence": "All stakeholders were invited to the annual meeting.",
-    "phonetic": "/ˈsteɪkhoʊldər/",
-    "exampleSentenceJa": "すべての利害関係者が年次総会に招かれました。"
+    "phonetic": "/ˈsteɪˌkhoʊldər/",
+    "exampleSentenceJa": "すべての利害関係者が年次総会に招かれました。",
+    "partOfSpeech": "noun",
+    "theme": "work"
   },
   {
     "id": "57",
@@ -509,8 +621,10 @@
     "meaning": "予測",
     "category": "business",
     "exampleSentence": "The sales forecast for next quarter looks promising.",
-    "phonetic": "/ˈfɔːrkæst/",
-    "exampleSentenceJa": "来四半期の売上予測は有望です。"
+    "phonetic": "/ˈfɔrˌkæst/",
+    "exampleSentenceJa": "来四半期の売上予測は有望です。",
+    "partOfSpeech": "noun",
+    "theme": "work"
   },
   {
     "id": "58",
@@ -518,8 +632,10 @@
     "meaning": "払い戻し、返金",
     "category": "business",
     "exampleSentence": "You can request reimbursement for your travel expenses.",
-    "phonetic": "/ˌriːɪmˈbɜːrsmənt/",
-    "exampleSentenceJa": "出張費の払い戻しを申請できます。"
+    "phonetic": "/ˌriɪmˈbərsmənt/",
+    "exampleSentenceJa": "出張費の払い戻しを申請できます。",
+    "partOfSpeech": "noun",
+    "theme": "money"
   },
   {
     "id": "59",
@@ -527,8 +643,10 @@
     "meaning": "採用、募集",
     "category": "business",
     "exampleSentence": "The recruitment process usually takes about a month.",
-    "phonetic": "/rɪˈkruːtmənt/",
-    "exampleSentenceJa": "採用プロセスには通常1か月ほどかかります。"
+    "phonetic": "/rɪˈkrutmənt/",
+    "exampleSentenceJa": "採用プロセスには通常1か月ほどかかります。",
+    "partOfSpeech": "noun",
+    "theme": "work"
   },
   {
     "id": "60",
@@ -536,8 +654,10 @@
     "meaning": "基準、指標",
     "category": "business",
     "exampleSentence": "We use last year's results as a benchmark.",
-    "phonetic": "/ˈbentʃmɑːrk/",
-    "exampleSentenceJa": "昨年の実績を基準として使っています。"
+    "phonetic": "/ˈbɛnʧˌmɑrk/",
+    "exampleSentenceJa": "昨年の実績を基準として使っています。",
+    "partOfSpeech": "noun",
+    "theme": "work"
   },
   {
     "id": "61",
@@ -545,8 +665,10 @@
     "meaning": "諸経費、間接費",
     "category": "business",
     "exampleSentence": "We need to cut overhead costs to increase profit.",
-    "phonetic": "/ˈoʊvərhed/",
-    "exampleSentenceJa": "利益を増やすには諸経費を削減する必要があります。"
+    "phonetic": "/ˈoʊvərˈhɛd/",
+    "exampleSentenceJa": "利益を増やすには諸経費を削減する必要があります。",
+    "partOfSpeech": "noun",
+    "theme": "money"
   },
   {
     "id": "62",
@@ -554,8 +676,10 @@
     "meaning": "子会社",
     "category": "business",
     "exampleSentence": "The company opened a new subsidiary in Vietnam.",
-    "phonetic": "/səbˈsɪdieri/",
-    "exampleSentenceJa": "その会社はベトナムに新しい子会社を設立しました。"
+    "phonetic": "/səbˈsɪdiˌɛri/",
+    "exampleSentenceJa": "その会社はベトナムに新しい子会社を設立しました。",
+    "partOfSpeech": "noun",
+    "theme": "work"
   },
   {
     "id": "63",
@@ -563,8 +687,10 @@
     "meaning": "負債、責任",
     "category": "business",
     "exampleSentence": "The contract clearly states each party's liability.",
-    "phonetic": "/ˌlaɪəˈbɪləti/",
-    "exampleSentenceJa": "契約書には各当事者の責任が明確に記されています。"
+    "phonetic": "/ˌlaɪəˈbɪlɪti/",
+    "exampleSentenceJa": "契約書には各当事者の責任が明確に記されています。",
+    "partOfSpeech": "noun",
+    "theme": "money"
   },
   {
     "id": "64",
@@ -572,8 +698,10 @@
     "meaning": "資産",
     "category": "business",
     "exampleSentence": "Skilled employees are one of our biggest assets.",
-    "phonetic": "/ˈæset/",
-    "exampleSentenceJa": "熟練した社員は当社の最大の資産の一つです。"
+    "phonetic": "/ˈæˌsɛt/",
+    "exampleSentenceJa": "熟練した社員は当社の最大の資産の一つです。",
+    "partOfSpeech": "noun",
+    "theme": "money"
   },
   {
     "id": "65",
@@ -581,8 +709,10 @@
     "meaning": "文書のやり取り、通信",
     "category": "business",
     "exampleSentence": "Please keep a record of all client correspondence.",
-    "phonetic": "/ˌkɔːrəˈspɑːndəns/",
-    "exampleSentenceJa": "顧客とのやり取りはすべて記録しておいてください。"
+    "phonetic": "/ˌkɔrəˈspɑndəns/",
+    "exampleSentenceJa": "顧客とのやり取りはすべて記録しておいてください。",
+    "partOfSpeech": "noun",
+    "theme": "communication"
   },
   {
     "id": "66",
@@ -590,8 +720,10 @@
     "meaning": "調達",
     "category": "business",
     "exampleSentence": "The procurement team negotiates prices with suppliers.",
-    "phonetic": "/prəˈkjʊrmənt/",
-    "exampleSentenceJa": "調達チームが仕入先と価格交渉を行います。"
+    "phonetic": "/proʊˈkjʊrmənt/",
+    "exampleSentenceJa": "調達チームが仕入先と価格交渉を行います。",
+    "partOfSpeech": "noun",
+    "theme": "work"
   },
   {
     "id": "67",
@@ -599,8 +731,10 @@
     "meaning": "活用する、てこ入れする",
     "category": "business",
     "exampleSentence": "We should leverage our existing customer network.",
-    "phonetic": "/ˈlevərɪdʒ/",
-    "exampleSentenceJa": "既存の顧客ネットワークを活用すべきです。"
+    "phonetic": "/ˈlɛvərɪʤ/",
+    "exampleSentenceJa": "既存の顧客ネットワークを活用すべきです。",
+    "partOfSpeech": "verb",
+    "theme": "work"
   },
   {
     "id": "68",
@@ -608,8 +742,10 @@
     "meaning": "豊富な",
     "category": "exam",
     "exampleSentence": "The region has abundant natural resources.",
-    "phonetic": "/əˈbʌndənt/",
-    "exampleSentenceJa": "その地域には天然資源が豊富にあります。"
+    "phonetic": "/əˈbəndənt/",
+    "exampleSentenceJa": "その地域には天然資源が豊富にあります。",
+    "partOfSpeech": "adjective",
+    "theme": "quantity"
   },
   {
     "id": "69",
@@ -617,8 +753,10 @@
     "meaning": "蓄積する",
     "category": "exam",
     "exampleSentence": "Dust had accumulated on the shelves over the years.",
-    "phonetic": "/əˈkjuːmjəleɪt/",
-    "exampleSentenceJa": "何年もかけて棚にほこりが積もっていました。"
+    "phonetic": "/əˈkjumjəˌleɪt/",
+    "exampleSentenceJa": "何年もかけて棚にほこりが積もっていました。",
+    "partOfSpeech": "verb",
+    "theme": "quantity"
   },
   {
     "id": "70",
@@ -626,8 +764,10 @@
     "meaning": "曖昧な",
     "category": "exam",
     "exampleSentence": "His answer was so ambiguous that no one understood it.",
-    "phonetic": "/æmˈbɪɡjuəs/",
-    "exampleSentenceJa": "彼の答えはあまりに曖昧で、誰も理解できませんでした。"
+    "phonetic": "/æmˈbɪgjuəs/",
+    "exampleSentenceJa": "彼の答えはあまりに曖昧で、誰も理解できませんでした。",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
   },
   {
     "id": "71",
@@ -635,8 +775,10 @@
     "meaning": "恣意的な、任意の",
     "category": "exam",
     "exampleSentence": "The rule seemed arbitrary and unfair to many students.",
-    "phonetic": "/ˈɑːrbətreri/",
-    "exampleSentenceJa": "その規則は多くの学生にとって恣意的で不公平に思えました。"
+    "phonetic": "/ˈɑrbɪˌtrɛri/",
+    "exampleSentenceJa": "その規則は多くの学生にとって恣意的で不公平に思えました。",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
   },
   {
     "id": "72",
@@ -645,7 +787,9 @@
     "category": "exam",
     "exampleSentence": "She gave a coherent explanation of the experiment.",
     "phonetic": "/koʊˈhɪrənt/",
-    "exampleSentenceJa": "彼女は実験について筋の通った説明をしました。"
+    "exampleSentenceJa": "彼女は実験について筋の通った説明をしました。",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
   },
   {
     "id": "73",
@@ -653,8 +797,10 @@
     "meaning": "補う、埋め合わせる",
     "category": "exam",
     "exampleSentence": "Extra practice can compensate for a lack of talent.",
-    "phonetic": "/ˈkɑːmpənseɪt/",
-    "exampleSentenceJa": "追加の練習は才能の不足を補うことができます。"
+    "phonetic": "/ˈkɑmpənˌseɪt/",
+    "exampleSentenceJa": "追加の練習は才能の不足を補うことができます。",
+    "partOfSpeech": "verb",
+    "theme": "action"
   },
   {
     "id": "74",
@@ -662,8 +808,10 @@
     "meaning": "議論を呼ぶ",
     "category": "exam",
     "exampleSentence": "The new policy has become highly controversial.",
-    "phonetic": "/ˌkɑːntrəˈvɜːrʃəl/",
-    "exampleSentenceJa": "その新しい政策は大きな議論を呼んでいます。"
+    "phonetic": "/ˌkɑntrəˈvərʃəl/",
+    "exampleSentenceJa": "その新しい政策は大きな議論を呼んでいます。",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
   },
   {
     "id": "75",
@@ -671,8 +819,10 @@
     "meaning": "悪化する",
     "category": "exam",
     "exampleSentence": "His health began to deteriorate after the accident.",
-    "phonetic": "/dɪˈtɪriəreɪt/",
-    "exampleSentenceJa": "事故の後、彼の健康は悪化し始めました。"
+    "phonetic": "/dɪˈtɪriərˌeɪt/",
+    "exampleSentenceJa": "事故の後、彼の健康は悪化し始めました。",
+    "partOfSpeech": "verb",
+    "theme": "quantity"
   },
   {
     "id": "76",
@@ -680,8 +830,10 @@
     "meaning": "食い違い、不一致",
     "category": "exam",
     "exampleSentence": "There is a discrepancy between the two reports.",
-    "phonetic": "/dɪˈskrepənsi/",
-    "exampleSentenceJa": "2つの報告書の間に食い違いがあります。"
+    "phonetic": "/dɪˈskrɛpənsi/",
+    "exampleSentenceJa": "2つの報告書の間に食い違いがあります。",
+    "partOfSpeech": "noun",
+    "theme": "quantity"
   },
   {
     "id": "77",
@@ -689,8 +841,10 @@
     "meaning": "雄弁な",
     "category": "exam",
     "exampleSentence": "The speaker gave an eloquent speech about climate change.",
-    "phonetic": "/ˈeləkwənt/",
-    "exampleSentenceJa": "講演者は気候変動について雄弁なスピーチをしました。"
+    "phonetic": "/ˈɛləkwənt/",
+    "exampleSentenceJa": "講演者は気候変動について雄弁なスピーチをしました。",
+    "partOfSpeech": "adjective",
+    "theme": "communication"
   },
   {
     "id": "78",
@@ -698,8 +852,10 @@
     "meaning": "経験的な、実証的な",
     "category": "exam",
     "exampleSentence": "The theory is based on empirical evidence.",
-    "phonetic": "/ɪmˈpɪrɪkəl/",
-    "exampleSentenceJa": "その理論は実証的な証拠に基づいています。"
+    "phonetic": "/ˌɛmˈpɪrɪkəl/",
+    "exampleSentenceJa": "その理論は実証的な証拠に基づいています。",
+    "partOfSpeech": "adjective",
+    "theme": "study"
   },
   {
     "id": "79",
@@ -707,8 +863,10 @@
     "meaning": "変動する",
     "category": "exam",
     "exampleSentence": "Stock prices tend to fluctuate throughout the day.",
-    "phonetic": "/ˈflʌktʃueɪt/",
-    "exampleSentenceJa": "株価は一日を通して変動しがちです。"
+    "phonetic": "/ˈfləkʧəˌweɪt/",
+    "exampleSentenceJa": "株価は一日を通して変動しがちです。",
+    "partOfSpeech": "verb",
+    "theme": "quantity"
   },
   {
     "id": "80",
@@ -716,8 +874,10 @@
     "meaning": "仮説",
     "category": "exam",
     "exampleSentence": "The scientist tested her hypothesis in the lab.",
-    "phonetic": "/haɪˈpɑːθəsɪs/",
-    "exampleSentenceJa": "その科学者は研究室で自分の仮説を検証しました。"
+    "phonetic": "/haɪˈpɑθəsəs/",
+    "exampleSentenceJa": "その科学者は研究室で自分の仮説を検証しました。",
+    "partOfSpeech": "noun",
+    "theme": "study"
   },
   {
     "id": "81",
@@ -725,8 +885,10 @@
     "meaning": "避けられない",
     "category": "exam",
     "exampleSentence": "Change is inevitable in any growing organization.",
-    "phonetic": "/ɪnˈevɪtəbəl/",
-    "exampleSentenceJa": "成長する組織において変化は避けられません。"
+    "phonetic": "/ˌɪˈnɛvətəbəl/",
+    "exampleSentenceJa": "成長する組織において変化は避けられません。",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
   },
   {
     "id": "82",
@@ -734,8 +896,10 @@
     "meaning": "推論する",
     "category": "exam",
     "exampleSentence": "From her tone, I could infer that she was upset.",
-    "phonetic": "/ɪnˈfɜːr/",
-    "exampleSentenceJa": "彼女の口調から、動揺しているのだと推測できました。"
+    "phonetic": "/ˌɪnˈfər/",
+    "exampleSentenceJa": "彼女の口調から、動揺しているのだと推測できました。",
+    "partOfSpeech": "verb",
+    "theme": "study"
   },
   {
     "id": "83",
@@ -743,8 +907,10 @@
     "meaning": "固有の、本来備わっている",
     "category": "exam",
     "exampleSentence": "Risk is inherent in any investment decision.",
-    "phonetic": "/ɪnˈhɪrənt/",
-    "exampleSentenceJa": "リスクはどんな投資判断にも本来つきものです。"
+    "phonetic": "/ˌɪnˈhɛrənt/",
+    "exampleSentenceJa": "リスクはどんな投資判断にも本来つきものです。",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
   },
   {
     "id": "84",
@@ -752,8 +918,10 @@
     "meaning": "革新的な",
     "category": "exam",
     "exampleSentence": "The company is known for its innovative products.",
-    "phonetic": "/ˈɪnəveɪtɪv/",
-    "exampleSentenceJa": "その会社は革新的な製品で知られています。"
+    "phonetic": "/ˈɪnəˌveɪtɪv/",
+    "exampleSentenceJa": "その会社は革新的な製品で知られています。",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
   },
   {
     "id": "85",
@@ -761,8 +929,10 @@
     "meaning": "誠実さ、完全性",
     "category": "exam",
     "exampleSentence": "He is respected for his honesty and integrity.",
-    "phonetic": "/ɪnˈteɡrəti/",
-    "exampleSentenceJa": "彼はその正直さと誠実さで尊敬されています。"
+    "phonetic": "/ˌɪnˈtɛgrəti/",
+    "exampleSentenceJa": "彼はその正直さと誠実さで尊敬されています。",
+    "partOfSpeech": "noun",
+    "theme": "personality"
   },
   {
     "id": "86",
@@ -770,8 +940,10 @@
     "meaning": "複雑な、精巧な",
     "category": "exam",
     "exampleSentence": "The watch has an intricate mechanical design.",
-    "phonetic": "/ˈɪntrɪkət/",
-    "exampleSentenceJa": "その時計は精巧な機械式の設計になっています。"
+    "phonetic": "/ˈɪntrəkət/",
+    "exampleSentenceJa": "その時計は精巧な機械式の設計になっています。",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
   },
   {
     "id": "87",
@@ -779,8 +951,10 @@
     "meaning": "正当化する",
     "category": "exam",
     "exampleSentence": "She couldn't justify the high cost of the trip.",
-    "phonetic": "/ˈdʒʌstɪfaɪ/",
-    "exampleSentenceJa": "彼女は旅行の高い費用を正当化できませんでした。"
+    "phonetic": "/ˈʤəstəˌfaɪ/",
+    "exampleSentenceJa": "彼女は旅行の高い費用を正当化できませんでした。",
+    "partOfSpeech": "verb",
+    "theme": "communication"
   },
   {
     "id": "88",
@@ -789,7 +963,9 @@
     "category": "exam",
     "exampleSentence": "He is meticulous about checking every detail.",
     "phonetic": "/məˈtɪkjələs/",
-    "exampleSentenceJa": "彼はあらゆる細部の確認に几帳面です。"
+    "exampleSentenceJa": "彼はあらゆる細部の確認に几帳面です。",
+    "partOfSpeech": "adjective",
+    "theme": "personality"
   },
   {
     "id": "89",
@@ -798,7 +974,9 @@
     "category": "exam",
     "exampleSentence": "The notion of free will has been debated for centuries.",
     "phonetic": "/ˈnoʊʃən/",
-    "exampleSentenceJa": "自由意志という概念は何世紀にもわたり議論されてきました。"
+    "exampleSentenceJa": "自由意志という概念は何世紀にもわたり議論されてきました。",
+    "partOfSpeech": "noun",
+    "theme": "study"
   },
   {
     "id": "90",
@@ -806,8 +984,10 @@
     "meaning": "廃れた、時代遅れの",
     "category": "exam",
     "exampleSentence": "This technology quickly became obsolete.",
-    "phonetic": "/ˌɑːbsəˈliːt/",
-    "exampleSentenceJa": "この技術はあっという間に時代遅れになりました。"
+    "phonetic": "/ˌɑbsəˈlit/",
+    "exampleSentenceJa": "この技術はあっという間に時代遅れになりました。",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
   },
   {
     "id": "91",
@@ -815,8 +995,10 @@
     "meaning": "逆説、矛盾",
     "category": "exam",
     "exampleSentence": "It's a paradox that saving time often costs more money.",
-    "phonetic": "/ˈpærədɑːks/",
-    "exampleSentenceJa": "時間の節約がかえってお金を要するというのは逆説です。"
+    "phonetic": "/ˈpɛrəˌdɑks/",
+    "exampleSentenceJa": "時間の節約がかえってお金を要するというのは逆説です。",
+    "partOfSpeech": "noun",
+    "theme": "study"
   },
   {
     "id": "92",
@@ -824,8 +1006,10 @@
     "meaning": "知覚する、認識する",
     "category": "exam",
     "exampleSentence": "People often perceive risk differently.",
-    "phonetic": "/pərˈsiːv/",
-    "exampleSentenceJa": "人はしばしばリスクを異なる形で認識します。"
+    "phonetic": "/pərˈsiv/",
+    "exampleSentenceJa": "人はしばしばリスクを異なる形で認識します。",
+    "partOfSpeech": "verb",
+    "theme": "study"
   },
   {
     "id": "93",
@@ -833,8 +1017,10 @@
     "meaning": "もっともらしい、あり得る",
     "category": "exam",
     "exampleSentence": "Her explanation sounded plausible at first.",
-    "phonetic": "/ˈplɔːzəbəl/",
-    "exampleSentenceJa": "彼女の説明は最初はもっともらしく聞こえました。"
+    "phonetic": "/ˈplɔzəbəl/",
+    "exampleSentenceJa": "彼女の説明は最初はもっともらしく聞こえました。",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
   },
   {
     "id": "94",
@@ -842,8 +1028,10 @@
     "meaning": "普及している、広まっている",
     "category": "exam",
     "exampleSentence": "The disease is more prevalent in certain regions.",
-    "phonetic": "/ˈprevələnt/",
-    "exampleSentenceJa": "その病気は特定の地域でより広まっています。"
+    "phonetic": "/ˈprɛvələnt/",
+    "exampleSentenceJa": "その病気は特定の地域でより広まっています。",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
   },
   {
     "id": "95",
@@ -851,8 +1039,10 @@
     "meaning": "実用的な、現実的な",
     "category": "exam",
     "exampleSentence": "We need a pragmatic solution, not an ideal one.",
-    "phonetic": "/præɡˈmætɪk/",
-    "exampleSentenceJa": "理想ではなく、現実的な解決策が必要です。"
+    "phonetic": "/prægˈmætɪk/",
+    "exampleSentenceJa": "理想ではなく、現実的な解決策が必要です。",
+    "partOfSpeech": "adjective",
+    "theme": "personality"
   },
   {
     "id": "96",
@@ -860,8 +1050,10 @@
     "meaning": "気が進まない、渋々の",
     "category": "exam",
     "exampleSentence": "He was reluctant to change his opinion.",
-    "phonetic": "/rɪˈlʌktənt/",
-    "exampleSentenceJa": "彼は自分の意見を変えることに気が進みませんでした。"
+    "phonetic": "/rɪˈləktənt/",
+    "exampleSentenceJa": "彼は自分の意見を変えることに気が進みませんでした。",
+    "partOfSpeech": "adjective",
+    "theme": "personality"
   },
   {
     "id": "97",
@@ -869,8 +1061,10 @@
     "meaning": "懐疑論、懐疑的な態度",
     "category": "exam",
     "exampleSentence": "Scientists approach new claims with healthy skepticism.",
-    "phonetic": "/ˈskeptɪsɪzəm/",
-    "exampleSentenceJa": "科学者は新しい主張に健全な懐疑心を持って向き合います。"
+    "phonetic": "/ˈskɛptɪˌsɪzəm/",
+    "exampleSentenceJa": "科学者は新しい主張に健全な懐疑心を持って向き合います。",
+    "partOfSpeech": "noun",
+    "theme": "study"
   },
   {
     "id": "98",
@@ -878,8 +1072,10 @@
     "meaning": "その後の、続く",
     "category": "exam",
     "exampleSentence": "The subsequent events proved her theory correct.",
-    "phonetic": "/ˈsʌbsɪkwənt/",
-    "exampleSentenceJa": "その後の出来事が彼女の理論の正しさを証明しました。"
+    "phonetic": "/ˈsəbsəkwənt/",
+    "exampleSentenceJa": "その後の出来事が彼女の理論の正しさを証明しました。",
+    "partOfSpeech": "adjective",
+    "theme": "time"
   },
   {
     "id": "99",
@@ -887,8 +1083,10 @@
     "meaning": "明白な、具体的な",
     "category": "exam",
     "exampleSentence": "We need tangible proof before making a decision.",
-    "phonetic": "/ˈtændʒəbəl/",
-    "exampleSentenceJa": "決定を下す前に具体的な証拠が必要です。"
+    "phonetic": "/ˈtænʤəbəl/",
+    "exampleSentenceJa": "決定を下す前に具体的な証拠が必要です。",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
   },
   {
     "id": "100",
@@ -896,7 +1094,4464 @@
     "meaning": "前例のない",
     "category": "exam",
     "exampleSentence": "The company saw unprecedented growth last year.",
-    "phonetic": "/ʌnˈpresɪdentɪd/",
-    "exampleSentenceJa": "その会社は昨年、前例のない成長を遂げました。"
+    "phonetic": "/ənˈprɛsɪˌdɛntɪd/",
+    "exampleSentenceJa": "その会社は昨年、前例のない成長を遂げました。",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "101",
+    "headword": "anxious",
+    "meaning": "不安な",
+    "category": "daily",
+    "exampleSentence": "She felt anxious before the exam results came out.",
+    "exampleSentenceJa": "彼女は試験結果が出る前、不安だった。",
+    "phonetic": "/ˈæŋʃəs/",
+    "partOfSpeech": "adjective",
+    "theme": "emotion"
+  },
+  {
+    "id": "102",
+    "headword": "delighted",
+    "meaning": "大喜びの",
+    "category": "daily",
+    "exampleSentence": "He was delighted to see his old friends again.",
+    "exampleSentenceJa": "彼は旧友に再会できて大喜びだった。",
+    "phonetic": "/dɪˈlaɪtɪd/",
+    "partOfSpeech": "adjective",
+    "theme": "emotion"
+  },
+  {
+    "id": "103",
+    "headword": "furious",
+    "meaning": "激怒した",
+    "category": "daily",
+    "exampleSentence": "She was furious when the train was cancelled.",
+    "exampleSentenceJa": "電車が運休になり彼女は激怒した。",
+    "phonetic": "/fˈjʊriəs/",
+    "partOfSpeech": "adjective",
+    "theme": "emotion"
+  },
+  {
+    "id": "104",
+    "headword": "miserable",
+    "meaning": "惨めな",
+    "category": "daily",
+    "exampleSentence": "I felt miserable after losing the match.",
+    "exampleSentenceJa": "試合に負けて惨めな気持ちになった。",
+    "phonetic": "/ˈmɪzərəbəl/",
+    "partOfSpeech": "adjective",
+    "theme": "emotion"
+  },
+  {
+    "id": "105",
+    "headword": "envious",
+    "meaning": "うらやんで",
+    "category": "exam",
+    "exampleSentence": "He was envious of his brother's success.",
+    "exampleSentenceJa": "彼は兄の成功をうらやんでいた。",
+    "phonetic": "/ˈɛnviəs/",
+    "partOfSpeech": "adjective",
+    "theme": "emotion"
+  },
+  {
+    "id": "106",
+    "headword": "ashamed",
+    "meaning": "恥じている",
+    "category": "daily",
+    "exampleSentence": "She was ashamed of her rude behavior.",
+    "exampleSentenceJa": "彼女は自分の失礼な態度を恥じていた。",
+    "phonetic": "/əˈʃeɪmd/",
+    "partOfSpeech": "adjective",
+    "theme": "emotion"
+  },
+  {
+    "id": "107",
+    "headword": "thrilled",
+    "meaning": "わくわくした",
+    "category": "daily",
+    "exampleSentence": "The kids were thrilled about the trip to the zoo.",
+    "exampleSentenceJa": "子供たちは動物園への遠足にわくわくしていた。",
+    "phonetic": "/θrɪld/",
+    "partOfSpeech": "adjective",
+    "theme": "emotion"
+  },
+  {
+    "id": "108",
+    "headword": "frustrated",
+    "meaning": "いらだった",
+    "category": "daily",
+    "exampleSentence": "He got frustrated with the slow internet.",
+    "exampleSentenceJa": "彼は遅いインターネットにいらだった。",
+    "phonetic": "/ˈfrəˌstreɪtəd/",
+    "partOfSpeech": "adjective",
+    "theme": "emotion"
+  },
+  {
+    "id": "109",
+    "headword": "sorrow",
+    "meaning": "悲しみ",
+    "category": "exam",
+    "exampleSentence": "Her eyes were full of sorrow.",
+    "exampleSentenceJa": "彼女の目は悲しみに満ちていた。",
+    "phonetic": "/ˈsɑroʊ/",
+    "partOfSpeech": "noun",
+    "theme": "emotion"
+  },
+  {
+    "id": "110",
+    "headword": "grief",
+    "meaning": "深い悲しみ",
+    "category": "exam",
+    "exampleSentence": "He was overcome with grief at the funeral.",
+    "exampleSentenceJa": "彼は葬儀で深い悲しみに打ちひしがれた。",
+    "phonetic": "/grif/",
+    "partOfSpeech": "noun",
+    "theme": "emotion"
+  },
+  {
+    "id": "111",
+    "headword": "enthusiasm",
+    "meaning": "熱意",
+    "category": "daily",
+    "exampleSentence": "She spoke about the project with great enthusiasm.",
+    "exampleSentenceJa": "彼女は熱意を込めてその計画について語った。",
+    "phonetic": "/ɪnˈθuziˌæzəm/",
+    "partOfSpeech": "noun",
+    "theme": "emotion"
+  },
+  {
+    "id": "112",
+    "headword": "sympathy",
+    "meaning": "同情",
+    "category": "daily",
+    "exampleSentence": "I have a lot of sympathy for people who lost their homes.",
+    "exampleSentenceJa": "家を失った人々に深く同情する。",
+    "phonetic": "/ˈsɪmpəθi/",
+    "partOfSpeech": "noun",
+    "theme": "emotion"
+  },
+  {
+    "id": "113",
+    "headword": "relief",
+    "meaning": "安心",
+    "category": "daily",
+    "exampleSentence": "It was a relief to hear that everyone was safe.",
+    "exampleSentenceJa": "全員無事と聞いて安心した。",
+    "phonetic": "/rɪˈlif/",
+    "partOfSpeech": "noun",
+    "theme": "emotion"
+  },
+  {
+    "id": "114",
+    "headword": "dread",
+    "meaning": "恐れ",
+    "category": "exam",
+    "exampleSentence": "She felt a sense of dread before the interview.",
+    "exampleSentenceJa": "彼女は面接前に恐れを感じた。",
+    "phonetic": "/drɛd/",
+    "partOfSpeech": "noun",
+    "theme": "emotion"
+  },
+  {
+    "id": "115",
+    "headword": "empathy",
+    "meaning": "共感",
+    "category": "exam",
+    "exampleSentence": "A good nurse treats patients with empathy.",
+    "exampleSentenceJa": "良い看護師は患者に共感を持って接する。",
+    "phonetic": "/ˈɛmpəθi/",
+    "partOfSpeech": "noun",
+    "theme": "emotion"
+  },
+  {
+    "id": "116",
+    "headword": "comfort",
+    "meaning": "慰める",
+    "category": "daily",
+    "exampleSentence": "She tried to comfort the crying child.",
+    "exampleSentenceJa": "彼女は泣いている子供を慰めようとした。",
+    "phonetic": "/ˈkəmfərt/",
+    "partOfSpeech": "verb",
+    "theme": "emotion"
+  },
+  {
+    "id": "117",
+    "headword": "resent",
+    "meaning": "憤慨する",
+    "category": "exam",
+    "exampleSentence": "He resented being treated like a beginner.",
+    "exampleSentenceJa": "彼は初心者扱いされたことに憤慨した。",
+    "phonetic": "/rɪˈzɛnt/",
+    "partOfSpeech": "verb",
+    "theme": "emotion"
+  },
+  {
+    "id": "118",
+    "headword": "rejoice",
+    "meaning": "大喜びする",
+    "category": "exam",
+    "exampleSentence": "The whole town rejoiced at the good news.",
+    "exampleSentenceJa": "町中がその朗報に大喜びした。",
+    "phonetic": "/rɪˈʤɔɪs/",
+    "partOfSpeech": "verb",
+    "theme": "emotion"
+  },
+  {
+    "id": "119",
+    "headword": "mourn",
+    "meaning": "悼む",
+    "category": "exam",
+    "exampleSentence": "The nation mourned the loss of its leader.",
+    "exampleSentenceJa": "国民は指導者の死を悼んだ。",
+    "phonetic": "/mɔrn/",
+    "partOfSpeech": "verb",
+    "theme": "emotion"
+  },
+  {
+    "id": "120",
+    "headword": "cherish",
+    "meaning": "大切にする",
+    "category": "exam",
+    "exampleSentence": "I cherish the memories of my childhood.",
+    "exampleSentenceJa": "私は子供時代の思い出を大切にしている。",
+    "phonetic": "/ˈʧɛrɪʃ/",
+    "partOfSpeech": "verb",
+    "theme": "emotion"
+  },
+  {
+    "id": "121",
+    "headword": "envy",
+    "meaning": "うらやむ",
+    "category": "exam",
+    "exampleSentence": "Many people envy her carefree lifestyle.",
+    "exampleSentenceJa": "多くの人が彼女の気ままな暮らしをうらやむ。",
+    "phonetic": "/ˈɛnvi/",
+    "partOfSpeech": "verb",
+    "theme": "emotion"
+  },
+  {
+    "id": "122",
+    "headword": "loathe",
+    "meaning": "ひどく嫌う",
+    "category": "exam",
+    "exampleSentence": "He loathes waking up early on weekends.",
+    "exampleSentenceJa": "彼は週末に早起きするのがひどく嫌いだ。",
+    "phonetic": "/loʊð/",
+    "partOfSpeech": "verb",
+    "theme": "emotion"
+  },
+  {
+    "id": "123",
+    "headword": "diligent",
+    "meaning": "勤勉な",
+    "category": "exam",
+    "exampleSentence": "She is a diligent student who never misses class.",
+    "exampleSentenceJa": "彼女は授業を欠かさない勤勉な学生だ。",
+    "phonetic": "/ˈdɪlɪʤənt/",
+    "partOfSpeech": "adjective",
+    "theme": "personality"
+  },
+  {
+    "id": "124",
+    "headword": "arrogant",
+    "meaning": "横柄な",
+    "category": "exam",
+    "exampleSentence": "His arrogant attitude annoyed his coworkers.",
+    "exampleSentenceJa": "彼の横柄な態度は同僚をいらだたせた。",
+    "phonetic": "/ˈɛrəgənt/",
+    "partOfSpeech": "adjective",
+    "theme": "personality"
+  },
+  {
+    "id": "125",
+    "headword": "humble",
+    "meaning": "謙虚な",
+    "category": "exam",
+    "exampleSentence": "Despite his fame, he remained humble.",
+    "exampleSentenceJa": "有名になっても彼は謙虚なままだった。",
+    "phonetic": "/ˈhəmbəl/",
+    "partOfSpeech": "adjective",
+    "theme": "personality"
+  },
+  {
+    "id": "126",
+    "headword": "stubborn",
+    "meaning": "頑固な",
+    "category": "daily",
+    "exampleSentence": "My grandfather is too stubborn to ask for help.",
+    "exampleSentenceJa": "祖父は頑固すぎて助けを求めない。",
+    "phonetic": "/ˈstəbərn/",
+    "partOfSpeech": "adjective",
+    "theme": "personality"
+  },
+  {
+    "id": "127",
+    "headword": "generous",
+    "meaning": "気前のよい",
+    "category": "daily",
+    "exampleSentence": "She is generous with both her time and money.",
+    "exampleSentenceJa": "彼女は時間もお金も気前よく使う。",
+    "phonetic": "/ˈʤɛnərəs/",
+    "partOfSpeech": "adjective",
+    "theme": "personality"
+  },
+  {
+    "id": "128",
+    "headword": "cautious",
+    "meaning": "慎重な",
+    "category": "daily",
+    "exampleSentence": "Be cautious when crossing that busy street.",
+    "exampleSentenceJa": "あの交通量の多い通りを渡るときは慎重に。",
+    "phonetic": "/ˈkɔʃəs/",
+    "partOfSpeech": "adjective",
+    "theme": "personality"
+  },
+  {
+    "id": "129",
+    "headword": "sincere",
+    "meaning": "誠実な",
+    "category": "daily",
+    "exampleSentence": "Please accept my sincere apology.",
+    "exampleSentenceJa": "私の誠実なお詫びを受け入れてください。",
+    "phonetic": "/sɪnˈsɪr/",
+    "partOfSpeech": "adjective",
+    "theme": "personality"
+  },
+  {
+    "id": "130",
+    "headword": "ambitious",
+    "meaning": "野心的な",
+    "category": "business",
+    "exampleSentence": "She has ambitious plans to expand the company.",
+    "exampleSentenceJa": "彼女は会社を拡大する野心的な計画を持っている。",
+    "phonetic": "/æmˈbɪʃəs/",
+    "partOfSpeech": "adjective",
+    "theme": "personality"
+  },
+  {
+    "id": "131",
+    "headword": "modest",
+    "meaning": "控えめな",
+    "category": "exam",
+    "exampleSentence": "He is modest about his many achievements.",
+    "exampleSentenceJa": "彼は多くの功績について控えめだ。",
+    "phonetic": "/ˈmɑdəst/",
+    "partOfSpeech": "adjective",
+    "theme": "personality"
+  },
+  {
+    "id": "132",
+    "headword": "optimistic",
+    "meaning": "楽観的な",
+    "category": "daily",
+    "exampleSentence": "She stayed optimistic even in hard times.",
+    "exampleSentenceJa": "彼女は苦しいときでも楽観的だった。",
+    "phonetic": "/ˌɑptɪˈmɪstɪk/",
+    "partOfSpeech": "adjective",
+    "theme": "personality"
+  },
+  {
+    "id": "133",
+    "headword": "timid",
+    "meaning": "臆病な",
+    "category": "exam",
+    "exampleSentence": "The timid cat hid under the bed.",
+    "exampleSentenceJa": "その臆病な猫はベッドの下に隠れた。",
+    "phonetic": "/ˈtɪmɪd/",
+    "partOfSpeech": "adjective",
+    "theme": "personality"
+  },
+  {
+    "id": "134",
+    "headword": "reckless",
+    "meaning": "無謀な",
+    "category": "exam",
+    "exampleSentence": "Reckless driving causes many accidents.",
+    "exampleSentenceJa": "無謀な運転は多くの事故を引き起こす。",
+    "phonetic": "/ˈrɛkləs/",
+    "partOfSpeech": "adjective",
+    "theme": "personality"
+  },
+  {
+    "id": "135",
+    "headword": "courage",
+    "meaning": "勇気",
+    "category": "daily",
+    "exampleSentence": "It took courage to speak in front of the crowd.",
+    "exampleSentenceJa": "大勢の前で話すには勇気が要った。",
+    "phonetic": "/kərɪʤ/",
+    "partOfSpeech": "noun",
+    "theme": "personality"
+  },
+  {
+    "id": "136",
+    "headword": "patience",
+    "meaning": "忍耐",
+    "category": "daily",
+    "exampleSentence": "Teaching children requires a lot of patience.",
+    "exampleSentenceJa": "子供を教えるには多くの忍耐が要る。",
+    "phonetic": "/ˈpeɪʃəns/",
+    "partOfSpeech": "noun",
+    "theme": "personality"
+  },
+  {
+    "id": "137",
+    "headword": "curiosity",
+    "meaning": "好奇心",
+    "category": "daily",
+    "exampleSentence": "Her curiosity led her to study science.",
+    "exampleSentenceJa": "好奇心から彼女は科学を学んだ。",
+    "phonetic": "/ˌkjʊriˈɑsəti/",
+    "partOfSpeech": "noun",
+    "theme": "personality"
+  },
+  {
+    "id": "138",
+    "headword": "ambition",
+    "meaning": "野心",
+    "category": "business",
+    "exampleSentence": "His ambition is to become a CEO before forty.",
+    "exampleSentenceJa": "彼の野心は40歳までにCEOになることだ。",
+    "phonetic": "/æmˈbɪʃən/",
+    "partOfSpeech": "noun",
+    "theme": "personality"
+  },
+  {
+    "id": "139",
+    "headword": "honesty",
+    "meaning": "正直",
+    "category": "daily",
+    "exampleSentence": "I admire her honesty even when it is difficult.",
+    "exampleSentenceJa": "私は困難なときでも正直な彼女を尊敬する。",
+    "phonetic": "/ˈɑnəsti/",
+    "partOfSpeech": "noun",
+    "theme": "personality"
+  },
+  {
+    "id": "140",
+    "headword": "generosity",
+    "meaning": "寛大さ",
+    "category": "exam",
+    "exampleSentence": "We were touched by their generosity.",
+    "exampleSentenceJa": "私たちは彼らの寛大さに感動した。",
+    "phonetic": "/ˌʤɛnərˈɑsəti/",
+    "partOfSpeech": "noun",
+    "theme": "personality"
+  },
+  {
+    "id": "141",
+    "headword": "temperament",
+    "meaning": "気質",
+    "category": "exam",
+    "exampleSentence": "A calm temperament helps in stressful jobs.",
+    "exampleSentenceJa": "落ち着いた気質はストレスの多い仕事で役立つ。",
+    "phonetic": "/ˈtɛmpərmənt/",
+    "partOfSpeech": "noun",
+    "theme": "personality"
+  },
+  {
+    "id": "142",
+    "headword": "boast",
+    "meaning": "自慢する",
+    "category": "exam",
+    "exampleSentence": "He likes to boast about his new car.",
+    "exampleSentenceJa": "彼は新車を自慢したがる。",
+    "phonetic": "/boʊst/",
+    "partOfSpeech": "verb",
+    "theme": "personality"
+  },
+  {
+    "id": "143",
+    "headword": "persevere",
+    "meaning": "辛抱する",
+    "category": "exam",
+    "exampleSentence": "You must persevere to master a language.",
+    "exampleSentenceJa": "言語を習得するには辛抱しなければならない。",
+    "phonetic": "/pərsəˈvɪr/",
+    "partOfSpeech": "verb",
+    "theme": "personality"
+  },
+  {
+    "id": "144",
+    "headword": "tolerate",
+    "meaning": "我慢する",
+    "category": "exam",
+    "exampleSentence": "I cannot tolerate such rude behavior.",
+    "exampleSentenceJa": "私はそんな失礼な振る舞いは我慢できない。",
+    "phonetic": "/ˈtɑlərˌeɪt/",
+    "partOfSpeech": "verb",
+    "theme": "personality"
+  },
+  {
+    "id": "145",
+    "headword": "injury",
+    "meaning": "けが",
+    "category": "daily",
+    "exampleSentence": "He recovered quickly from his knee injury.",
+    "exampleSentenceJa": "彼は膝のけがから早く回復した。",
+    "phonetic": "/ˈɪnʤəri/",
+    "partOfSpeech": "noun",
+    "theme": "health"
+  },
+  {
+    "id": "146",
+    "headword": "symptom",
+    "meaning": "症状",
+    "category": "daily",
+    "exampleSentence": "A fever is a common symptom of the flu.",
+    "exampleSentenceJa": "発熱はインフルエンザのよくある症状だ。",
+    "phonetic": "/ˈsɪmptəm/",
+    "partOfSpeech": "noun",
+    "theme": "health"
+  },
+  {
+    "id": "147",
+    "headword": "fever",
+    "meaning": "熱",
+    "category": "daily",
+    "exampleSentence": "She stayed home because of a high fever.",
+    "exampleSentenceJa": "彼女は高熱のため家にいた。",
+    "phonetic": "/ˈfivər/",
+    "partOfSpeech": "noun",
+    "theme": "health"
+  },
+  {
+    "id": "148",
+    "headword": "disease",
+    "meaning": "病気",
+    "category": "daily",
+    "exampleSentence": "Regular exercise helps prevent heart disease.",
+    "exampleSentenceJa": "定期的な運動は心臓病の予防に役立つ。",
+    "phonetic": "/dɪˈziz/",
+    "partOfSpeech": "noun",
+    "theme": "health"
+  },
+  {
+    "id": "149",
+    "headword": "recovery",
+    "meaning": "回復",
+    "category": "daily",
+    "exampleSentence": "The doctor was pleased with her fast recovery.",
+    "exampleSentenceJa": "医師は彼女の早い回復を喜んだ。",
+    "phonetic": "/rɪˈkəvəri/",
+    "partOfSpeech": "noun",
+    "theme": "health"
+  },
+  {
+    "id": "150",
+    "headword": "treatment",
+    "meaning": "治療",
+    "category": "daily",
+    "exampleSentence": "The new treatment reduced his pain.",
+    "exampleSentenceJa": "新しい治療で彼の痛みは和らいだ。",
+    "phonetic": "/ˈtritmənt/",
+    "partOfSpeech": "noun",
+    "theme": "health"
+  },
+  {
+    "id": "151",
+    "headword": "diagnosis",
+    "meaning": "診断",
+    "category": "exam",
+    "exampleSentence": "The doctor gave a clear diagnosis after the tests.",
+    "exampleSentenceJa": "医師は検査の後、明確な診断を下した。",
+    "phonetic": "/ˌdaɪəgˈnoʊsəs/",
+    "partOfSpeech": "noun",
+    "theme": "health"
+  },
+  {
+    "id": "152",
+    "headword": "remedy",
+    "meaning": "治療法",
+    "category": "exam",
+    "exampleSentence": "There is no simple remedy for the common cold.",
+    "exampleSentenceJa": "普通の風邪に簡単な治療法はない。",
+    "phonetic": "/ˈrɛmədi/",
+    "partOfSpeech": "noun",
+    "theme": "health"
+  },
+  {
+    "id": "153",
+    "headword": "nutrition",
+    "meaning": "栄養",
+    "category": "daily",
+    "exampleSentence": "Good nutrition is important for growing children.",
+    "exampleSentenceJa": "良い栄養は成長期の子供に大切だ。",
+    "phonetic": "/nuˈtrɪʃən/",
+    "partOfSpeech": "noun",
+    "theme": "health"
+  },
+  {
+    "id": "154",
+    "headword": "fatigue",
+    "meaning": "疲労",
+    "category": "exam",
+    "exampleSentence": "Long working hours can cause severe fatigue.",
+    "exampleSentenceJa": "長時間労働はひどい疲労を引き起こすことがある。",
+    "phonetic": "/fəˈtig/",
+    "partOfSpeech": "noun",
+    "theme": "health"
+  },
+  {
+    "id": "155",
+    "headword": "wound",
+    "meaning": "傷",
+    "category": "daily",
+    "exampleSentence": "The nurse cleaned and bandaged the wound.",
+    "exampleSentenceJa": "看護師は傷を消毒して包帯を巻いた。",
+    "phonetic": "/wund/",
+    "partOfSpeech": "noun",
+    "theme": "health"
+  },
+  {
+    "id": "156",
+    "headword": "healthy",
+    "meaning": "健康な",
+    "category": "daily",
+    "exampleSentence": "Eating vegetables keeps you healthy.",
+    "exampleSentenceJa": "野菜を食べると健康を保てる。",
+    "phonetic": "/ˈhɛlθi/",
+    "partOfSpeech": "adjective",
+    "theme": "health"
+  },
+  {
+    "id": "157",
+    "headword": "ill",
+    "meaning": "病気の",
+    "category": "daily",
+    "exampleSentence": "She has been ill for a week.",
+    "exampleSentenceJa": "彼女は一週間ずっと病気だ。",
+    "phonetic": "/ɪl/",
+    "partOfSpeech": "adjective",
+    "theme": "health"
+  },
+  {
+    "id": "158",
+    "headword": "sore",
+    "meaning": "痛い",
+    "category": "daily",
+    "exampleSentence": "My legs are sore after the long hike.",
+    "exampleSentenceJa": "長いハイキングの後、脚が痛い。",
+    "phonetic": "/sɔr/",
+    "partOfSpeech": "adjective",
+    "theme": "health"
+  },
+  {
+    "id": "159",
+    "headword": "dizzy",
+    "meaning": "めまいがする",
+    "category": "daily",
+    "exampleSentence": "He felt dizzy after standing up too fast.",
+    "exampleSentenceJa": "急に立ち上がって彼はめまいがした。",
+    "phonetic": "/ˈdɪzi/",
+    "partOfSpeech": "adjective",
+    "theme": "health"
+  },
+  {
+    "id": "160",
+    "headword": "fragile",
+    "meaning": "虚弱な",
+    "category": "exam",
+    "exampleSentence": "The patient is still fragile after surgery.",
+    "exampleSentenceJa": "その患者は手術後まだ体が弱っている。",
+    "phonetic": "/ˈfræʤəl/",
+    "partOfSpeech": "adjective",
+    "theme": "health"
+  },
+  {
+    "id": "161",
+    "headword": "numb",
+    "meaning": "麻痺した",
+    "category": "exam",
+    "exampleSentence": "My fingers went numb in the cold.",
+    "exampleSentenceJa": "寒さで指の感覚がなくなった。",
+    "phonetic": "/nəm/",
+    "partOfSpeech": "adjective",
+    "theme": "health"
+  },
+  {
+    "id": "162",
+    "headword": "chronic",
+    "meaning": "慢性の",
+    "category": "exam",
+    "exampleSentence": "She suffers from chronic back pain.",
+    "exampleSentenceJa": "彼女は慢性の腰痛に悩まされている。",
+    "phonetic": "/ˈkrɑnɪk/",
+    "partOfSpeech": "adjective",
+    "theme": "health"
+  },
+  {
+    "id": "163",
+    "headword": "recover",
+    "meaning": "回復する",
+    "category": "daily",
+    "exampleSentence": "It took him a month to recover from the flu.",
+    "exampleSentenceJa": "インフルエンザから回復するのに一か月かかった。",
+    "phonetic": "/rɪˈkəvər/",
+    "partOfSpeech": "verb",
+    "theme": "health"
+  },
+  {
+    "id": "164",
+    "headword": "heal",
+    "meaning": "治る",
+    "category": "daily",
+    "exampleSentence": "The cut will heal in a few days.",
+    "exampleSentenceJa": "その切り傷は数日で治るだろう。",
+    "phonetic": "/hil/",
+    "partOfSpeech": "verb",
+    "theme": "health"
+  },
+  {
+    "id": "165",
+    "headword": "cure",
+    "meaning": "治療する",
+    "category": "daily",
+    "exampleSentence": "This medicine can cure the infection.",
+    "exampleSentenceJa": "この薬はその感染症を治療できる。",
+    "phonetic": "/kjʊr/",
+    "partOfSpeech": "verb",
+    "theme": "health"
+  },
+  {
+    "id": "166",
+    "headword": "cough",
+    "meaning": "せきをする",
+    "category": "daily",
+    "exampleSentence": "He coughed all night because of his cold.",
+    "exampleSentenceJa": "彼は風邪で一晩中せきをしていた。",
+    "phonetic": "/kɔf/",
+    "partOfSpeech": "verb",
+    "theme": "health"
+  },
+  {
+    "id": "167",
+    "headword": "sneeze",
+    "meaning": "くしゃみをする",
+    "category": "daily",
+    "exampleSentence": "Pollen makes me sneeze every spring.",
+    "exampleSentenceJa": "花粉のせいで毎春くしゃみが出る。",
+    "phonetic": "/sniz/",
+    "partOfSpeech": "verb",
+    "theme": "health"
+  },
+  {
+    "id": "168",
+    "headword": "breathe",
+    "meaning": "呼吸する",
+    "category": "daily",
+    "exampleSentence": "Try to breathe slowly and relax.",
+    "exampleSentenceJa": "ゆっくり呼吸してリラックスしてみて。",
+    "phonetic": "/brið/",
+    "partOfSpeech": "verb",
+    "theme": "health"
+  },
+  {
+    "id": "169",
+    "headword": "colleague",
+    "meaning": "同僚",
+    "category": "business",
+    "exampleSentence": "I discussed the plan with my colleagues.",
+    "exampleSentenceJa": "私は同僚とその計画を話し合った。",
+    "phonetic": "/ˈkɑlig/",
+    "partOfSpeech": "noun",
+    "theme": "people"
+  },
+  {
+    "id": "170",
+    "headword": "acquaintance",
+    "meaning": "知人",
+    "category": "exam",
+    "exampleSentence": "He is just an acquaintance, not a close friend.",
+    "exampleSentenceJa": "彼は親友ではなく、ただの知人だ。",
+    "phonetic": "/əkˈweɪntəns/",
+    "partOfSpeech": "noun",
+    "theme": "people"
+  },
+  {
+    "id": "171",
+    "headword": "relative",
+    "meaning": "親戚",
+    "category": "daily",
+    "exampleSentence": "We visit our relatives every summer.",
+    "exampleSentenceJa": "私たちは毎夏、親戚を訪ねる。",
+    "phonetic": "/ˈrɛlətɪv/",
+    "partOfSpeech": "noun",
+    "theme": "people"
+  },
+  {
+    "id": "172",
+    "headword": "spouse",
+    "meaning": "配偶者",
+    "category": "exam",
+    "exampleSentence": "You may bring your spouse to the party.",
+    "exampleSentenceJa": "パーティーには配偶者を連れてきてもよい。",
+    "phonetic": "/spaʊs/",
+    "partOfSpeech": "noun",
+    "theme": "people"
+  },
+  {
+    "id": "173",
+    "headword": "stranger",
+    "meaning": "見知らぬ人",
+    "category": "daily",
+    "exampleSentence": "A stranger kindly helped me carry the bags.",
+    "exampleSentenceJa": "見知らぬ人が親切に荷物を運んでくれた。",
+    "phonetic": "/ˈstreɪnʤər/",
+    "partOfSpeech": "noun",
+    "theme": "people"
+  },
+  {
+    "id": "174",
+    "headword": "companion",
+    "meaning": "仲間",
+    "category": "exam",
+    "exampleSentence": "The dog was his faithful companion for years.",
+    "exampleSentenceJa": "その犬は長年、彼の忠実な仲間だった。",
+    "phonetic": "/kəmˈpænjən/",
+    "partOfSpeech": "noun",
+    "theme": "people"
+  },
+  {
+    "id": "175",
+    "headword": "ancestor",
+    "meaning": "先祖",
+    "category": "exam",
+    "exampleSentence": "Her ancestors came from a small village.",
+    "exampleSentenceJa": "彼女の先祖は小さな村の出身だった。",
+    "phonetic": "/ˈænˌsɛstər/",
+    "partOfSpeech": "noun",
+    "theme": "people"
+  },
+  {
+    "id": "176",
+    "headword": "rival",
+    "meaning": "ライバル",
+    "category": "daily",
+    "exampleSentence": "The two teams are longtime rivals.",
+    "exampleSentenceJa": "その二つのチームは長年のライバルだ。",
+    "phonetic": "/ˈraɪvəl/",
+    "partOfSpeech": "noun",
+    "theme": "people"
+  },
+  {
+    "id": "177",
+    "headword": "mentor",
+    "meaning": "指導者",
+    "category": "business",
+    "exampleSentence": "She became my mentor at the company.",
+    "exampleSentenceJa": "彼女は会社で私の指導者になった。",
+    "phonetic": "/ˈmɛnˌtɔr/",
+    "partOfSpeech": "noun",
+    "theme": "people"
+  },
+  {
+    "id": "178",
+    "headword": "guardian",
+    "meaning": "保護者",
+    "category": "exam",
+    "exampleSentence": "A guardian must sign the school form.",
+    "exampleSentenceJa": "保護者が学校の書類に署名しなければならない。",
+    "phonetic": "/ˈgɑrdiən/",
+    "partOfSpeech": "noun",
+    "theme": "people"
+  },
+  {
+    "id": "179",
+    "headword": "sibling",
+    "meaning": "きょうだい",
+    "category": "exam",
+    "exampleSentence": "She has three siblings, all younger than her.",
+    "exampleSentenceJa": "彼女には自分より年下のきょうだいが三人いる。",
+    "phonetic": "/ˈsɪblɪŋ/",
+    "partOfSpeech": "noun",
+    "theme": "people"
+  },
+  {
+    "id": "180",
+    "headword": "bond",
+    "meaning": "絆",
+    "category": "exam",
+    "exampleSentence": "There is a strong bond between the twins.",
+    "exampleSentenceJa": "その双子の間には強い絆がある。",
+    "phonetic": "/bɑnd/",
+    "partOfSpeech": "noun",
+    "theme": "people"
+  },
+  {
+    "id": "181",
+    "headword": "accompany",
+    "meaning": "同伴する",
+    "category": "exam",
+    "exampleSentence": "A parent must accompany young children.",
+    "exampleSentenceJa": "小さな子供には親が同伴しなければならない。",
+    "phonetic": "/əˈkəmpəni/",
+    "partOfSpeech": "verb",
+    "theme": "people"
+  },
+  {
+    "id": "182",
+    "headword": "reconcile",
+    "meaning": "和解する",
+    "category": "exam",
+    "exampleSentence": "The two friends finally reconciled.",
+    "exampleSentenceJa": "その二人の友人はついに和解した。",
+    "phonetic": "/ˈrɛkənˌsaɪl/",
+    "partOfSpeech": "verb",
+    "theme": "people"
+  },
+  {
+    "id": "183",
+    "headword": "betray",
+    "meaning": "裏切る",
+    "category": "exam",
+    "exampleSentence": "He would never betray a close friend.",
+    "exampleSentenceJa": "彼は親友を決して裏切らないだろう。",
+    "phonetic": "/bɪˈtreɪ/",
+    "partOfSpeech": "verb",
+    "theme": "people"
+  },
+  {
+    "id": "184",
+    "headword": "cooperate",
+    "meaning": "協力する",
+    "category": "business",
+    "exampleSentence": "All departments must cooperate on this project.",
+    "exampleSentenceJa": "全部署がこの計画で協力しなければならない。",
+    "phonetic": "/kˈwɑpərˌeɪt/",
+    "partOfSpeech": "verb",
+    "theme": "people"
+  },
+  {
+    "id": "185",
+    "headword": "admire",
+    "meaning": "敬愛する",
+    "category": "daily",
+    "exampleSentence": "I really admire my grandmother's strength.",
+    "exampleSentenceJa": "私は祖母の強さを心から敬愛している。",
+    "phonetic": "/ædˈmaɪr/",
+    "partOfSpeech": "verb",
+    "theme": "people"
+  },
+  {
+    "id": "186",
+    "headword": "resemble",
+    "meaning": "似ている",
+    "category": "exam",
+    "exampleSentence": "She closely resembles her mother.",
+    "exampleSentenceJa": "彼女は母親によく似ている。",
+    "phonetic": "/rɪˈzɛmbəl/",
+    "partOfSpeech": "verb",
+    "theme": "people"
+  },
+  {
+    "id": "187",
+    "headword": "greet",
+    "meaning": "あいさつする",
+    "category": "daily",
+    "exampleSentence": "He greeted every guest at the door.",
+    "exampleSentenceJa": "彼はドアで一人ひとりの客にあいさつした。",
+    "phonetic": "/grit/",
+    "partOfSpeech": "verb",
+    "theme": "people"
+  },
+  {
+    "id": "188",
+    "headword": "apologize",
+    "meaning": "謝る",
+    "category": "daily",
+    "exampleSentence": "You should apologize for being late.",
+    "exampleSentenceJa": "遅刻したことを謝るべきだ。",
+    "phonetic": "/əˈpɑləˌʤaɪz/",
+    "partOfSpeech": "verb",
+    "theme": "people"
+  },
+  {
+    "id": "189",
+    "headword": "sociable",
+    "meaning": "社交的な",
+    "category": "exam",
+    "exampleSentence": "She is sociable and makes friends easily.",
+    "exampleSentenceJa": "彼女は社交的で友達をすぐに作る。",
+    "phonetic": "/ˈsoʊʃəbəl/",
+    "partOfSpeech": "adjective",
+    "theme": "people"
+  },
+  {
+    "id": "190",
+    "headword": "loyal",
+    "meaning": "忠実な",
+    "category": "daily",
+    "exampleSentence": "A loyal customer keeps coming back.",
+    "exampleSentenceJa": "忠実な客は何度も戻ってくる。",
+    "phonetic": "/lɔɪəl/",
+    "partOfSpeech": "adjective",
+    "theme": "people"
+  },
+  {
+    "id": "191",
+    "headword": "mutual",
+    "meaning": "相互の",
+    "category": "exam",
+    "exampleSentence": "Their friendship is based on mutual respect.",
+    "exampleSentenceJa": "彼らの友情は相互の尊敬に基づいている。",
+    "phonetic": "/mˈjuʧuəl/",
+    "partOfSpeech": "adjective",
+    "theme": "people"
+  },
+  {
+    "id": "192",
+    "headword": "intimate",
+    "meaning": "親密な",
+    "category": "exam",
+    "exampleSentence": "They share an intimate friendship.",
+    "exampleSentenceJa": "彼らは親密な友情を分かち合っている。",
+    "phonetic": "/ˈɪnɪmət/",
+    "partOfSpeech": "adjective",
+    "theme": "people"
+  },
+  {
+    "id": "193",
+    "headword": "decade",
+    "meaning": "10年間",
+    "category": "exam",
+    "exampleSentence": "The city has changed a lot over the past decade.",
+    "exampleSentenceJa": "この10年でその街は大きく変わった。",
+    "phonetic": "/ˈdɛkeɪd/",
+    "partOfSpeech": "noun",
+    "theme": "time"
+  },
+  {
+    "id": "194",
+    "headword": "era",
+    "meaning": "時代",
+    "category": "exam",
+    "exampleSentence": "We are living in the era of the internet.",
+    "exampleSentenceJa": "私たちはインターネットの時代に生きている。",
+    "phonetic": "/ˈɪrə/",
+    "partOfSpeech": "noun",
+    "theme": "time"
+  },
+  {
+    "id": "195",
+    "headword": "dawn",
+    "meaning": "夜明け",
+    "category": "exam",
+    "exampleSentence": "The birds start singing at dawn.",
+    "exampleSentenceJa": "鳥は夜明けに歌い始める。",
+    "phonetic": "/dɔn/",
+    "partOfSpeech": "noun",
+    "theme": "time"
+  },
+  {
+    "id": "196",
+    "headword": "dusk",
+    "meaning": "夕暮れ",
+    "category": "exam",
+    "exampleSentence": "The streetlights come on at dusk.",
+    "exampleSentenceJa": "夕暮れになると街灯がつく。",
+    "phonetic": "/dəsk/",
+    "partOfSpeech": "noun",
+    "theme": "time"
+  },
+  {
+    "id": "197",
+    "headword": "duration",
+    "meaning": "継続時間",
+    "category": "exam",
+    "exampleSentence": "The duration of the flight is about two hours.",
+    "exampleSentenceJa": "そのフライトの所要時間は約2時間だ。",
+    "phonetic": "/ˈdʊˈreɪʃən/",
+    "partOfSpeech": "noun",
+    "theme": "time"
+  },
+  {
+    "id": "198",
+    "headword": "interval",
+    "meaning": "間隔",
+    "category": "exam",
+    "exampleSentence": "The buses arrive at ten-minute intervals.",
+    "exampleSentenceJa": "バスは10分間隔で到着する。",
+    "phonetic": "/ˈɪntərvəl/",
+    "partOfSpeech": "noun",
+    "theme": "time"
+  },
+  {
+    "id": "199",
+    "headword": "leisure",
+    "meaning": "余暇",
+    "category": "daily",
+    "exampleSentence": "She reads novels in her leisure time.",
+    "exampleSentenceJa": "彼女は余暇に小説を読む。",
+    "phonetic": "/ˈlɛʒər/",
+    "partOfSpeech": "noun",
+    "theme": "time"
+  },
+  {
+    "id": "200",
+    "headword": "delay",
+    "meaning": "遅らせる",
+    "category": "daily",
+    "exampleSentence": "Heavy snow delayed all the flights.",
+    "exampleSentenceJa": "大雪で全便が遅れた。",
+    "phonetic": "/dɪˈleɪ/",
+    "partOfSpeech": "verb",
+    "theme": "time"
+  },
+  {
+    "id": "201",
+    "headword": "hasten",
+    "meaning": "急がせる",
+    "category": "exam",
+    "exampleSentence": "We hastened to finish before the rain.",
+    "exampleSentenceJa": "私たちは雨が降る前に急いで終わらせた。",
+    "phonetic": "/ˈheɪsən/",
+    "partOfSpeech": "verb",
+    "theme": "time"
+  },
+  {
+    "id": "202",
+    "headword": "linger",
+    "meaning": "長居する",
+    "category": "exam",
+    "exampleSentence": "The guests lingered after dinner.",
+    "exampleSentenceJa": "客たちは夕食後も長居した。",
+    "phonetic": "/ˈlɪŋər/",
+    "partOfSpeech": "verb",
+    "theme": "time"
+  },
+  {
+    "id": "203",
+    "headword": "expire",
+    "meaning": "期限が切れる",
+    "category": "daily",
+    "exampleSentence": "My passport will expire next month.",
+    "exampleSentenceJa": "私のパスポートは来月期限が切れる。",
+    "phonetic": "/ɪkˈspaɪr/",
+    "partOfSpeech": "verb",
+    "theme": "time"
+  },
+  {
+    "id": "204",
+    "headword": "precede",
+    "meaning": "先立つ",
+    "category": "exam",
+    "exampleSentence": "A short speech preceded the ceremony.",
+    "exampleSentenceJa": "式典の前に短いスピーチがあった。",
+    "phonetic": "/prɪˈsid/",
+    "partOfSpeech": "verb",
+    "theme": "time"
+  },
+  {
+    "id": "205",
+    "headword": "resume",
+    "meaning": "再開する",
+    "category": "business",
+    "exampleSentence": "The meeting will resume after lunch.",
+    "exampleSentenceJa": "会議は昼食後に再開される。",
+    "phonetic": "/ˈrɛzəˌmeɪ/",
+    "partOfSpeech": "verb",
+    "theme": "time"
+  },
+  {
+    "id": "206",
+    "headword": "await",
+    "meaning": "待つ",
+    "category": "exam",
+    "exampleSentence": "We eagerly await your reply.",
+    "exampleSentenceJa": "ご返信を心よりお待ちしています。",
+    "phonetic": "/əˈweɪt/",
+    "partOfSpeech": "verb",
+    "theme": "time"
+  },
+  {
+    "id": "207",
+    "headword": "temporary",
+    "meaning": "一時的な",
+    "category": "daily",
+    "exampleSentence": "He found a temporary job for the summer.",
+    "exampleSentenceJa": "彼は夏の間の一時的な仕事を見つけた。",
+    "phonetic": "/ˈtɛmpərˌɛri/",
+    "partOfSpeech": "adjective",
+    "theme": "time"
+  },
+  {
+    "id": "208",
+    "headword": "punctual",
+    "meaning": "時間に正確な",
+    "category": "exam",
+    "exampleSentence": "She is always punctual for meetings.",
+    "exampleSentenceJa": "彼女はいつも会議に時間どおりだ。",
+    "phonetic": "/ˈpəŋkʧuəl/",
+    "partOfSpeech": "adjective",
+    "theme": "time"
+  },
+  {
+    "id": "209",
+    "headword": "prompt",
+    "meaning": "迅速な",
+    "category": "business",
+    "exampleSentence": "Thank you for your prompt response.",
+    "exampleSentenceJa": "迅速なご返信をありがとうございます。",
+    "phonetic": "/prɑmpt/",
+    "partOfSpeech": "adjective",
+    "theme": "time"
+  },
+  {
+    "id": "210",
+    "headword": "eternal",
+    "meaning": "永遠の",
+    "category": "exam",
+    "exampleSentence": "They promised eternal friendship.",
+    "exampleSentenceJa": "彼らは永遠の友情を誓った。",
+    "phonetic": "/ɪˈtərnəl/",
+    "partOfSpeech": "adjective",
+    "theme": "time"
+  },
+  {
+    "id": "211",
+    "headword": "overdue",
+    "meaning": "期限を過ぎた",
+    "category": "daily",
+    "exampleSentence": "The library book is two weeks overdue.",
+    "exampleSentenceJa": "その図書館の本は返却期限を2週間過ぎている。",
+    "phonetic": "/ˈoʊvərˈdu/",
+    "partOfSpeech": "adjective",
+    "theme": "time"
+  },
+  {
+    "id": "212",
+    "headword": "brief",
+    "meaning": "短時間の",
+    "category": "daily",
+    "exampleSentence": "We had a brief chat before the class.",
+    "exampleSentenceJa": "授業前に私たちは短い雑談をした。",
+    "phonetic": "/brif/",
+    "partOfSpeech": "adjective",
+    "theme": "time"
+  },
+  {
+    "id": "213",
+    "headword": "annual",
+    "meaning": "毎年の",
+    "category": "business",
+    "exampleSentence": "The company holds an annual meeting in May.",
+    "exampleSentenceJa": "その会社は5月に年次総会を開く。",
+    "phonetic": "/ˈænjuəl/",
+    "partOfSpeech": "adjective",
+    "theme": "time"
+  },
+  {
+    "id": "214",
+    "headword": "wealth",
+    "meaning": "富",
+    "category": "exam",
+    "exampleSentence": "He built his wealth through wise investments.",
+    "exampleSentenceJa": "彼は賢い投資で富を築いた。",
+    "phonetic": "/wɛlθ/",
+    "partOfSpeech": "noun",
+    "theme": "money"
+  },
+  {
+    "id": "215",
+    "headword": "debt",
+    "meaning": "借金",
+    "category": "daily",
+    "exampleSentence": "She worked hard to pay off her debt.",
+    "exampleSentenceJa": "彼女は借金を返すため懸命に働いた。",
+    "phonetic": "/dɛt/",
+    "partOfSpeech": "noun",
+    "theme": "money"
+  },
+  {
+    "id": "216",
+    "headword": "profit",
+    "meaning": "利益",
+    "category": "business",
+    "exampleSentence": "The store made a big profit last year.",
+    "exampleSentenceJa": "その店は昨年、大きな利益を上げた。",
+    "phonetic": "/ˈprɑfɪt/",
+    "partOfSpeech": "noun",
+    "theme": "money"
+  },
+  {
+    "id": "217",
+    "headword": "expense",
+    "meaning": "費用",
+    "category": "business",
+    "exampleSentence": "Travel expenses will be paid by the company.",
+    "exampleSentenceJa": "旅費は会社が負担する。",
+    "phonetic": "/ɪkˈspɛns/",
+    "partOfSpeech": "noun",
+    "theme": "money"
+  },
+  {
+    "id": "218",
+    "headword": "income",
+    "meaning": "収入",
+    "category": "daily",
+    "exampleSentence": "Most of his income goes to rent.",
+    "exampleSentenceJa": "彼の収入の大半は家賃に消える。",
+    "phonetic": "/ˈɪnˌkəm/",
+    "partOfSpeech": "noun",
+    "theme": "money"
+  },
+  {
+    "id": "219",
+    "headword": "currency",
+    "meaning": "通貨",
+    "category": "exam",
+    "exampleSentence": "The yen is the currency of Japan.",
+    "exampleSentenceJa": "円は日本の通貨だ。",
+    "phonetic": "/ˈkərənsi/",
+    "partOfSpeech": "noun",
+    "theme": "money"
+  },
+  {
+    "id": "220",
+    "headword": "salary",
+    "meaning": "給料",
+    "category": "business",
+    "exampleSentence": "She earns a good salary at her new job.",
+    "exampleSentenceJa": "彼女は新しい仕事で良い給料を得ている。",
+    "phonetic": "/ˈsæləri/",
+    "partOfSpeech": "noun",
+    "theme": "money"
+  },
+  {
+    "id": "221",
+    "headword": "fee",
+    "meaning": "料金",
+    "category": "daily",
+    "exampleSentence": "There is a small fee to enter the museum.",
+    "exampleSentenceJa": "その博物館に入るには少額の料金がかかる。",
+    "phonetic": "/fi/",
+    "partOfSpeech": "noun",
+    "theme": "money"
+  },
+  {
+    "id": "222",
+    "headword": "loan",
+    "meaning": "融資",
+    "category": "business",
+    "exampleSentence": "They took out a loan to buy a house.",
+    "exampleSentenceJa": "彼らは家を買うために融資を受けた。",
+    "phonetic": "/loʊn/",
+    "partOfSpeech": "noun",
+    "theme": "money"
+  },
+  {
+    "id": "223",
+    "headword": "afford",
+    "meaning": "余裕がある",
+    "category": "daily",
+    "exampleSentence": "We can't afford a new car right now.",
+    "exampleSentenceJa": "今は新車を買う余裕がない。",
+    "phonetic": "/əˈfɔrd/",
+    "partOfSpeech": "verb",
+    "theme": "money"
+  },
+  {
+    "id": "224",
+    "headword": "invest",
+    "meaning": "投資する",
+    "category": "business",
+    "exampleSentence": "She decided to invest in the startup.",
+    "exampleSentenceJa": "彼女はそのスタートアップに投資することにした。",
+    "phonetic": "/ˌɪnˈvɛst/",
+    "partOfSpeech": "verb",
+    "theme": "money"
+  },
+  {
+    "id": "225",
+    "headword": "owe",
+    "meaning": "借りがある",
+    "category": "daily",
+    "exampleSentence": "I still owe him ten dollars.",
+    "exampleSentenceJa": "私はまだ彼に10ドル借りがある。",
+    "phonetic": "/oʊ/",
+    "partOfSpeech": "verb",
+    "theme": "money"
+  },
+  {
+    "id": "226",
+    "headword": "spend",
+    "meaning": "費やす",
+    "category": "daily",
+    "exampleSentence": "They spend too much money on eating out.",
+    "exampleSentenceJa": "彼らは外食にお金を使いすぎる。",
+    "phonetic": "/spɛnd/",
+    "partOfSpeech": "verb",
+    "theme": "money"
+  },
+  {
+    "id": "227",
+    "headword": "withdraw",
+    "meaning": "引き出す",
+    "category": "daily",
+    "exampleSentence": "I need to withdraw some cash from the bank.",
+    "exampleSentenceJa": "銀行でいくらか現金を引き出す必要がある。",
+    "phonetic": "/wɪθˈdrɔ/",
+    "partOfSpeech": "verb",
+    "theme": "money"
+  },
+  {
+    "id": "228",
+    "headword": "expensive",
+    "meaning": "高価な",
+    "category": "daily",
+    "exampleSentence": "That watch is far too expensive for me.",
+    "exampleSentenceJa": "その時計は私にはあまりに高価すぎる。",
+    "phonetic": "/ɪkˈspɛnsɪv/",
+    "partOfSpeech": "adjective",
+    "theme": "money"
+  },
+  {
+    "id": "229",
+    "headword": "wealthy",
+    "meaning": "裕福な",
+    "category": "daily",
+    "exampleSentence": "They live in a wealthy neighborhood.",
+    "exampleSentenceJa": "彼らは裕福な地域に住んでいる。",
+    "phonetic": "/ˈwɛlθi/",
+    "partOfSpeech": "adjective",
+    "theme": "money"
+  },
+  {
+    "id": "230",
+    "headword": "valuable",
+    "meaning": "価値のある",
+    "category": "daily",
+    "exampleSentence": "This ring is very valuable to me.",
+    "exampleSentenceJa": "この指輪は私にとってとても価値がある。",
+    "phonetic": "/ˈvæljəbəl/",
+    "partOfSpeech": "adjective",
+    "theme": "money"
+  },
+  {
+    "id": "231",
+    "headword": "financial",
+    "meaning": "財政の",
+    "category": "business",
+    "exampleSentence": "The company is in a strong financial position.",
+    "exampleSentenceJa": "その会社は強固な財政状態にある。",
+    "phonetic": "/ˌfaɪˈnænʃəl/",
+    "partOfSpeech": "adjective",
+    "theme": "money"
+  },
+  {
+    "id": "232",
+    "headword": "thrifty",
+    "meaning": "倹約的な",
+    "category": "exam",
+    "exampleSentence": "Being thrifty helped her save for a house.",
+    "exampleSentenceJa": "倹約したおかげで彼女は家の資金を貯めた。",
+    "phonetic": "/θˈrɪfti/",
+    "partOfSpeech": "adjective",
+    "theme": "money"
+  },
+  {
+    "id": "233",
+    "headword": "meal",
+    "meaning": "食事",
+    "category": "daily",
+    "exampleSentence": "We had a big meal after the game.",
+    "exampleSentenceJa": "試合の後、私たちはたっぷり食事をした。",
+    "phonetic": "/mil/",
+    "partOfSpeech": "noun",
+    "theme": "food"
+  },
+  {
+    "id": "234",
+    "headword": "flavor",
+    "meaning": "風味",
+    "category": "daily",
+    "exampleSentence": "This soup has a rich flavor.",
+    "exampleSentenceJa": "このスープは豊かな風味がある。",
+    "phonetic": "/ˈfleɪvər/",
+    "partOfSpeech": "noun",
+    "theme": "food"
+  },
+  {
+    "id": "235",
+    "headword": "beverage",
+    "meaning": "飲み物",
+    "category": "exam",
+    "exampleSentence": "Hot beverages are served after the meal.",
+    "exampleSentenceJa": "食後に温かい飲み物が出される。",
+    "phonetic": "/ˈbɛvərɪʤ/",
+    "partOfSpeech": "noun",
+    "theme": "food"
+  },
+  {
+    "id": "236",
+    "headword": "dessert",
+    "meaning": "デザート",
+    "category": "daily",
+    "exampleSentence": "We ordered ice cream for dessert.",
+    "exampleSentenceJa": "私たちはデザートにアイスクリームを頼んだ。",
+    "phonetic": "/dɪˈzərt/",
+    "partOfSpeech": "noun",
+    "theme": "food"
+  },
+  {
+    "id": "237",
+    "headword": "snack",
+    "meaning": "軽食",
+    "category": "daily",
+    "exampleSentence": "She packed some snacks for the trip.",
+    "exampleSentenceJa": "彼女は旅行用に軽食を詰めた。",
+    "phonetic": "/snæk/",
+    "partOfSpeech": "noun",
+    "theme": "food"
+  },
+  {
+    "id": "238",
+    "headword": "dish",
+    "meaning": "料理",
+    "category": "daily",
+    "exampleSentence": "This is my favorite dish at the restaurant.",
+    "exampleSentenceJa": "これはそのレストランで一番好きな料理だ。",
+    "phonetic": "/dɪʃ/",
+    "partOfSpeech": "noun",
+    "theme": "food"
+  },
+  {
+    "id": "239",
+    "headword": "portion",
+    "meaning": "一人前",
+    "category": "daily",
+    "exampleSentence": "The portions at that cafe are very large.",
+    "exampleSentenceJa": "あのカフェの一人前はとても多い。",
+    "phonetic": "/ˈpɔrʃən/",
+    "partOfSpeech": "noun",
+    "theme": "food"
+  },
+  {
+    "id": "240",
+    "headword": "appetite",
+    "meaning": "食欲",
+    "category": "exam",
+    "exampleSentence": "The long walk gave me a big appetite.",
+    "exampleSentenceJa": "長い散歩で食欲が湧いた。",
+    "phonetic": "/ˈæpəˌtaɪt/",
+    "partOfSpeech": "noun",
+    "theme": "food"
+  },
+  {
+    "id": "241",
+    "headword": "cuisine",
+    "meaning": "料理",
+    "category": "exam",
+    "exampleSentence": "I love the spicy cuisine of that region.",
+    "exampleSentenceJa": "私はその地域の辛い料理が大好きだ。",
+    "phonetic": "/kwɪˈzin/",
+    "partOfSpeech": "noun",
+    "theme": "food"
+  },
+  {
+    "id": "242",
+    "headword": "spice",
+    "meaning": "香辛料",
+    "category": "daily",
+    "exampleSentence": "Add a little spice to make it tastier.",
+    "exampleSentenceJa": "もっとおいしくするため香辛料を少し加えて。",
+    "phonetic": "/spaɪs/",
+    "partOfSpeech": "noun",
+    "theme": "food"
+  },
+  {
+    "id": "243",
+    "headword": "leftover",
+    "meaning": "残り物",
+    "category": "daily",
+    "exampleSentence": "We ate the leftovers for lunch.",
+    "exampleSentenceJa": "私たちは昼食に残り物を食べた。",
+    "phonetic": "/ˈlɛfˌtoʊvər/",
+    "partOfSpeech": "noun",
+    "theme": "food"
+  },
+  {
+    "id": "244",
+    "headword": "boil",
+    "meaning": "ゆでる",
+    "category": "daily",
+    "exampleSentence": "Boil the eggs for ten minutes.",
+    "exampleSentenceJa": "卵を10分間ゆでてください。",
+    "phonetic": "/bɔɪl/",
+    "partOfSpeech": "verb",
+    "theme": "food"
+  },
+  {
+    "id": "245",
+    "headword": "fry",
+    "meaning": "炒める",
+    "category": "daily",
+    "exampleSentence": "Fry the onions until they turn golden.",
+    "exampleSentenceJa": "玉ねぎがきつね色になるまで炒めて。",
+    "phonetic": "/fraɪ/",
+    "partOfSpeech": "verb",
+    "theme": "food"
+  },
+  {
+    "id": "246",
+    "headword": "bake",
+    "meaning": "焼く",
+    "category": "daily",
+    "exampleSentence": "She baked a chocolate cake for the party.",
+    "exampleSentenceJa": "彼女はパーティー用にチョコレートケーキを焼いた。",
+    "phonetic": "/beɪk/",
+    "partOfSpeech": "verb",
+    "theme": "food"
+  },
+  {
+    "id": "247",
+    "headword": "chop",
+    "meaning": "刻む",
+    "category": "daily",
+    "exampleSentence": "Chop the vegetables into small pieces.",
+    "exampleSentenceJa": "野菜を小さく刻んでください。",
+    "phonetic": "/ʧɑp/",
+    "partOfSpeech": "verb",
+    "theme": "food"
+  },
+  {
+    "id": "248",
+    "headword": "roast",
+    "meaning": "ローストする",
+    "category": "daily",
+    "exampleSentence": "We roasted a whole chicken for dinner.",
+    "exampleSentenceJa": "私たちは夕食に鶏を丸ごとローストした。",
+    "phonetic": "/roʊst/",
+    "partOfSpeech": "verb",
+    "theme": "food"
+  },
+  {
+    "id": "249",
+    "headword": "stir",
+    "meaning": "かき混ぜる",
+    "category": "daily",
+    "exampleSentence": "Stir the sauce so it doesn't burn.",
+    "exampleSentenceJa": "焦げないようにソースをかき混ぜて。",
+    "phonetic": "/stər/",
+    "partOfSpeech": "verb",
+    "theme": "food"
+  },
+  {
+    "id": "250",
+    "headword": "delicious",
+    "meaning": "おいしい",
+    "category": "daily",
+    "exampleSentence": "The homemade bread smells delicious.",
+    "exampleSentenceJa": "その手作りパンはおいしそうな匂いがする。",
+    "phonetic": "/dɪˈlɪʃəs/",
+    "partOfSpeech": "adjective",
+    "theme": "food"
+  },
+  {
+    "id": "251",
+    "headword": "spicy",
+    "meaning": "辛い",
+    "category": "daily",
+    "exampleSentence": "This curry is too spicy for me.",
+    "exampleSentenceJa": "このカレーは私には辛すぎる。",
+    "phonetic": "/ˈspaɪsi/",
+    "partOfSpeech": "adjective",
+    "theme": "food"
+  },
+  {
+    "id": "252",
+    "headword": "ripe",
+    "meaning": "熟した",
+    "category": "daily",
+    "exampleSentence": "These bananas are perfectly ripe.",
+    "exampleSentenceJa": "このバナナはちょうど食べ頃に熟している。",
+    "phonetic": "/raɪp/",
+    "partOfSpeech": "adjective",
+    "theme": "food"
+  },
+  {
+    "id": "253",
+    "headword": "raw",
+    "meaning": "生の",
+    "category": "daily",
+    "exampleSentence": "Some people don't like raw fish.",
+    "exampleSentenceJa": "生の魚が苦手な人もいる。",
+    "phonetic": "/rɑ/",
+    "partOfSpeech": "adjective",
+    "theme": "food"
+  },
+  {
+    "id": "254",
+    "headword": "bitter",
+    "meaning": "苦い",
+    "category": "daily",
+    "exampleSentence": "Black coffee tastes very bitter.",
+    "exampleSentenceJa": "ブラックコーヒーはとても苦い。",
+    "phonetic": "/ˈbɪtər/",
+    "partOfSpeech": "adjective",
+    "theme": "food"
+  },
+  {
+    "id": "255",
+    "headword": "furniture",
+    "meaning": "家具",
+    "category": "daily",
+    "exampleSentence": "They bought new furniture for the living room.",
+    "exampleSentenceJa": "彼らは居間用の新しい家具を買った。",
+    "phonetic": "/ˈfərnɪʧər/",
+    "partOfSpeech": "noun",
+    "theme": "home"
+  },
+  {
+    "id": "256",
+    "headword": "ceiling",
+    "meaning": "天井",
+    "category": "daily",
+    "exampleSentence": "There is a small crack in the ceiling.",
+    "exampleSentenceJa": "天井に小さなひびがある。",
+    "phonetic": "/ˈsilɪŋ/",
+    "partOfSpeech": "noun",
+    "theme": "home"
+  },
+  {
+    "id": "257",
+    "headword": "drawer",
+    "meaning": "引き出し",
+    "category": "daily",
+    "exampleSentence": "The scissors are in the top drawer.",
+    "exampleSentenceJa": "はさみは一番上の引き出しにある。",
+    "phonetic": "/drɔr/",
+    "partOfSpeech": "noun",
+    "theme": "home"
+  },
+  {
+    "id": "258",
+    "headword": "closet",
+    "meaning": "クローゼット",
+    "category": "daily",
+    "exampleSentence": "Her coats are hanging in the closet.",
+    "exampleSentenceJa": "彼女のコートはクローゼットに掛かっている。",
+    "phonetic": "/ˈklɑzət/",
+    "partOfSpeech": "noun",
+    "theme": "home"
+  },
+  {
+    "id": "259",
+    "headword": "basement",
+    "meaning": "地下室",
+    "category": "daily",
+    "exampleSentence": "We keep old boxes in the basement.",
+    "exampleSentenceJa": "私たちは古い箱を地下室に置いている。",
+    "phonetic": "/ˈbeɪsmənt/",
+    "partOfSpeech": "noun",
+    "theme": "home"
+  },
+  {
+    "id": "260",
+    "headword": "hallway",
+    "meaning": "廊下",
+    "category": "daily",
+    "exampleSentence": "Please don't leave shoes in the hallway.",
+    "exampleSentenceJa": "廊下に靴を置かないでください。",
+    "phonetic": "/ˈhɔlˌweɪ/",
+    "partOfSpeech": "noun",
+    "theme": "home"
+  },
+  {
+    "id": "261",
+    "headword": "stairs",
+    "meaning": "階段",
+    "category": "daily",
+    "exampleSentence": "Be careful going down the stairs.",
+    "exampleSentenceJa": "階段を下りるときは気をつけて。",
+    "phonetic": "/stɛrz/",
+    "partOfSpeech": "noun",
+    "theme": "home"
+  },
+  {
+    "id": "262",
+    "headword": "rent",
+    "meaning": "家賃",
+    "category": "daily",
+    "exampleSentence": "The rent for this apartment is quite high.",
+    "exampleSentenceJa": "このアパートの家賃はかなり高い。",
+    "phonetic": "/rɛnt/",
+    "partOfSpeech": "noun",
+    "theme": "home"
+  },
+  {
+    "id": "263",
+    "headword": "chore",
+    "meaning": "家事",
+    "category": "daily",
+    "exampleSentence": "Washing dishes is my least favorite chore.",
+    "exampleSentenceJa": "皿洗いは一番苦手な家事だ。",
+    "phonetic": "/ʧɔr/",
+    "partOfSpeech": "noun",
+    "theme": "home"
+  },
+  {
+    "id": "264",
+    "headword": "tenant",
+    "meaning": "借家人",
+    "category": "exam",
+    "exampleSentence": "The tenant pays the rent at the end of each month.",
+    "exampleSentenceJa": "その借家人は毎月末に家賃を払う。",
+    "phonetic": "/ˈtɛnənt/",
+    "partOfSpeech": "noun",
+    "theme": "home"
+  },
+  {
+    "id": "265",
+    "headword": "faucet",
+    "meaning": "蛇口",
+    "category": "daily",
+    "exampleSentence": "Please turn off the faucet tightly.",
+    "exampleSentenceJa": "蛇口をしっかり閉めてください。",
+    "phonetic": "/ˈfɔsət/",
+    "partOfSpeech": "noun",
+    "theme": "home"
+  },
+  {
+    "id": "266",
+    "headword": "tidy",
+    "meaning": "片付ける",
+    "category": "daily",
+    "exampleSentence": "Please tidy your room before dinner.",
+    "exampleSentenceJa": "夕食前に部屋を片付けてください。",
+    "phonetic": "/ˈtaɪdi/",
+    "partOfSpeech": "verb",
+    "theme": "home"
+  },
+  {
+    "id": "267",
+    "headword": "sweep",
+    "meaning": "掃く",
+    "category": "daily",
+    "exampleSentence": "He swept the floor after the party.",
+    "exampleSentenceJa": "彼はパーティーの後、床を掃いた。",
+    "phonetic": "/swip/",
+    "partOfSpeech": "verb",
+    "theme": "home"
+  },
+  {
+    "id": "268",
+    "headword": "decorate",
+    "meaning": "飾る",
+    "category": "daily",
+    "exampleSentence": "We decorated the room with balloons.",
+    "exampleSentenceJa": "私たちは風船で部屋を飾った。",
+    "phonetic": "/ˈdɛkərˌeɪt/",
+    "partOfSpeech": "verb",
+    "theme": "home"
+  },
+  {
+    "id": "269",
+    "headword": "furnish",
+    "meaning": "家具を備える",
+    "category": "exam",
+    "exampleSentence": "The apartment comes fully furnished.",
+    "exampleSentenceJa": "そのアパートは家具付きで提供される。",
+    "phonetic": "/ˈfərnɪʃ/",
+    "partOfSpeech": "verb",
+    "theme": "home"
+  },
+  {
+    "id": "270",
+    "headword": "scrub",
+    "meaning": "ごしごし洗う",
+    "category": "daily",
+    "exampleSentence": "She scrubbed the bathtub until it was clean.",
+    "exampleSentenceJa": "彼女は浴槽をきれいになるまでごしごし洗った。",
+    "phonetic": "/skrəb/",
+    "partOfSpeech": "verb",
+    "theme": "home"
+  },
+  {
+    "id": "271",
+    "headword": "vacuum",
+    "meaning": "掃除機をかける",
+    "category": "daily",
+    "exampleSentence": "I vacuum the carpet once a week.",
+    "exampleSentenceJa": "私は週に一度カーペットに掃除機をかける。",
+    "phonetic": "/ˈvækjum/",
+    "partOfSpeech": "verb",
+    "theme": "home"
+  },
+  {
+    "id": "272",
+    "headword": "cozy",
+    "meaning": "居心地のよい",
+    "category": "daily",
+    "exampleSentence": "Their living room is small but cozy.",
+    "exampleSentenceJa": "彼らの居間は狭いが居心地がよい。",
+    "phonetic": "/ˈkoʊzi/",
+    "partOfSpeech": "adjective",
+    "theme": "home"
+  },
+  {
+    "id": "273",
+    "headword": "spacious",
+    "meaning": "広々とした",
+    "category": "exam",
+    "exampleSentence": "The new house has a spacious kitchen.",
+    "exampleSentenceJa": "新しい家には広々としたキッチンがある。",
+    "phonetic": "/ˈspeɪʃəs/",
+    "partOfSpeech": "adjective",
+    "theme": "home"
+  },
+  {
+    "id": "274",
+    "headword": "messy",
+    "meaning": "散らかった",
+    "category": "daily",
+    "exampleSentence": "His desk is always messy.",
+    "exampleSentenceJa": "彼の机はいつも散らかっている。",
+    "phonetic": "/ˈmɛsi/",
+    "partOfSpeech": "adjective",
+    "theme": "home"
+  },
+  {
+    "id": "275",
+    "headword": "vacant",
+    "meaning": "空いている",
+    "category": "exam",
+    "exampleSentence": "The apartment upstairs is still vacant.",
+    "exampleSentenceJa": "上の階のアパートはまだ空いている。",
+    "phonetic": "/ˈveɪkənt/",
+    "partOfSpeech": "adjective",
+    "theme": "home"
+  },
+  {
+    "id": "276",
+    "headword": "receipt",
+    "meaning": "レシート",
+    "category": "daily",
+    "exampleSentence": "Keep the receipt in case you need a refund.",
+    "exampleSentenceJa": "返金が必要な場合に備えてレシートを取っておいて。",
+    "phonetic": "/rɪˈsit/",
+    "partOfSpeech": "noun",
+    "theme": "shopping"
+  },
+  {
+    "id": "277",
+    "headword": "bargain",
+    "meaning": "掘り出し物",
+    "category": "daily",
+    "exampleSentence": "This jacket was a real bargain.",
+    "exampleSentenceJa": "このジャケットは本当にお買い得だった。",
+    "phonetic": "/ˈbɑrgɪn/",
+    "partOfSpeech": "noun",
+    "theme": "shopping"
+  },
+  {
+    "id": "278",
+    "headword": "cashier",
+    "meaning": "レジ係",
+    "category": "daily",
+    "exampleSentence": "The cashier gave me the wrong change.",
+    "exampleSentenceJa": "レジ係が間違ったお釣りを渡した。",
+    "phonetic": "/kæˈʃɪr/",
+    "partOfSpeech": "noun",
+    "theme": "shopping"
+  },
+  {
+    "id": "279",
+    "headword": "merchandise",
+    "meaning": "商品",
+    "category": "business",
+    "exampleSentence": "The store displays its merchandise by color.",
+    "exampleSentenceJa": "その店は商品を色ごとに陳列している。",
+    "phonetic": "/ˈmərʧənˌdaɪz/",
+    "partOfSpeech": "noun",
+    "theme": "shopping"
+  },
+  {
+    "id": "280",
+    "headword": "retail",
+    "meaning": "小売",
+    "category": "business",
+    "exampleSentence": "She works in the retail industry.",
+    "exampleSentenceJa": "彼女は小売業界で働いている。",
+    "phonetic": "/ˈriˌteɪl/",
+    "partOfSpeech": "noun",
+    "theme": "shopping"
+  },
+  {
+    "id": "281",
+    "headword": "warehouse",
+    "meaning": "倉庫",
+    "category": "business",
+    "exampleSentence": "The goods are stored in a large warehouse.",
+    "exampleSentenceJa": "その商品は大きな倉庫に保管されている。",
+    "phonetic": "/ˈwɛˌrhaʊs/",
+    "partOfSpeech": "noun",
+    "theme": "shopping"
+  },
+  {
+    "id": "282",
+    "headword": "coupon",
+    "meaning": "クーポン",
+    "category": "daily",
+    "exampleSentence": "I used a coupon to get ten percent off.",
+    "exampleSentenceJa": "私はクーポンを使って10%引きにした。",
+    "phonetic": "/ˈkuˌpɔn/",
+    "partOfSpeech": "noun",
+    "theme": "shopping"
+  },
+  {
+    "id": "283",
+    "headword": "purchase",
+    "meaning": "購入",
+    "category": "business",
+    "exampleSentence": "Please keep the receipt for your purchase.",
+    "exampleSentenceJa": "ご購入のレシートは保管してください。",
+    "phonetic": "/ˈpərʧəs/",
+    "partOfSpeech": "noun",
+    "theme": "shopping"
+  },
+  {
+    "id": "284",
+    "headword": "aisle",
+    "meaning": "通路",
+    "category": "daily",
+    "exampleSentence": "The snacks are in the third aisle.",
+    "exampleSentenceJa": "お菓子は3番目の通路にある。",
+    "phonetic": "/aɪəl/",
+    "partOfSpeech": "noun",
+    "theme": "shopping"
+  },
+  {
+    "id": "285",
+    "headword": "browse",
+    "meaning": "見て回る",
+    "category": "daily",
+    "exampleSentence": "We browsed the shops all afternoon.",
+    "exampleSentenceJa": "私たちは午後中ずっと店を見て回った。",
+    "phonetic": "/braʊz/",
+    "partOfSpeech": "verb",
+    "theme": "shopping"
+  },
+  {
+    "id": "286",
+    "headword": "exchange",
+    "meaning": "交換する",
+    "category": "daily",
+    "exampleSentence": "Can I exchange this shirt for a larger size?",
+    "exampleSentenceJa": "このシャツを大きいサイズと交換できますか。",
+    "phonetic": "/ɪksˈʧeɪnʤ/",
+    "partOfSpeech": "verb",
+    "theme": "shopping"
+  },
+  {
+    "id": "287",
+    "headword": "deliver",
+    "meaning": "配達する",
+    "category": "daily",
+    "exampleSentence": "They will deliver the sofa on Friday.",
+    "exampleSentenceJa": "彼らは金曜日にソファを配達する。",
+    "phonetic": "/dɪˈlɪvər/",
+    "partOfSpeech": "verb",
+    "theme": "shopping"
+  },
+  {
+    "id": "288",
+    "headword": "wrap",
+    "meaning": "包む",
+    "category": "daily",
+    "exampleSentence": "Could you wrap this as a gift?",
+    "exampleSentenceJa": "これを贈り物として包んでもらえますか。",
+    "phonetic": "/ræp/",
+    "partOfSpeech": "verb",
+    "theme": "shopping"
+  },
+  {
+    "id": "289",
+    "headword": "restock",
+    "meaning": "補充する",
+    "category": "business",
+    "exampleSentence": "The staff restock the shelves every morning.",
+    "exampleSentenceJa": "店員は毎朝、棚に商品を補充する。",
+    "phonetic": "/riˈstɑk/",
+    "partOfSpeech": "verb",
+    "theme": "shopping"
+  },
+  {
+    "id": "290",
+    "headword": "haggle",
+    "meaning": "値切る",
+    "category": "exam",
+    "exampleSentence": "Tourists often haggle over prices at the market.",
+    "exampleSentenceJa": "観光客は市場でよく値段を値切る。",
+    "phonetic": "/ˈhægəl/",
+    "partOfSpeech": "verb",
+    "theme": "shopping"
+  },
+  {
+    "id": "291",
+    "headword": "cheap",
+    "meaning": "安い",
+    "category": "daily",
+    "exampleSentence": "I found a cheap flight to Osaka.",
+    "exampleSentenceJa": "大阪行きの安い便を見つけた。",
+    "phonetic": "/ʧip/",
+    "partOfSpeech": "adjective",
+    "theme": "shopping"
+  },
+  {
+    "id": "292",
+    "headword": "pricey",
+    "meaning": "高価な",
+    "category": "daily",
+    "exampleSentence": "That brand is a little pricey.",
+    "exampleSentenceJa": "そのブランドは少し高い。",
+    "phonetic": "/ˈpraɪsi/",
+    "partOfSpeech": "adjective",
+    "theme": "shopping"
+  },
+  {
+    "id": "293",
+    "headword": "secondhand",
+    "meaning": "中古の",
+    "category": "daily",
+    "exampleSentence": "She bought a secondhand bike online.",
+    "exampleSentenceJa": "彼女はネットで中古の自転車を買った。",
+    "phonetic": "/ˈsɛkənˌdhænd/",
+    "partOfSpeech": "adjective",
+    "theme": "shopping"
+  },
+  {
+    "id": "294",
+    "headword": "refundable",
+    "meaning": "返金可能な",
+    "category": "business",
+    "exampleSentence": "These tickets are not refundable.",
+    "exampleSentenceJa": "これらのチケットは返金できない。",
+    "phonetic": "/rɪˈfəndəbəl/",
+    "partOfSpeech": "adjective",
+    "theme": "shopping"
+  },
+  {
+    "id": "295",
+    "headword": "exclusive",
+    "meaning": "限定の",
+    "category": "business",
+    "exampleSentence": "This offer is exclusive to members.",
+    "exampleSentenceJa": "この特典は会員限定だ。",
+    "phonetic": "/ɪkˈsklusɪv/",
+    "partOfSpeech": "adjective",
+    "theme": "shopping"
+  },
+  {
+    "id": "296",
+    "headword": "destination",
+    "meaning": "目的地",
+    "category": "daily",
+    "exampleSentence": "Our final destination was a small island.",
+    "exampleSentenceJa": "私たちの最終目的地は小さな島だった。",
+    "phonetic": "/ˌdɛstɪˈneɪʃən/",
+    "partOfSpeech": "noun",
+    "theme": "travel"
+  },
+  {
+    "id": "297",
+    "headword": "luggage",
+    "meaning": "手荷物",
+    "category": "daily",
+    "exampleSentence": "She packed her luggage the night before.",
+    "exampleSentenceJa": "彼女は前の晩に荷物を詰めた。",
+    "phonetic": "/ˈləgɪʤ/",
+    "partOfSpeech": "noun",
+    "theme": "travel"
+  },
+  {
+    "id": "298",
+    "headword": "passport",
+    "meaning": "パスポート",
+    "category": "daily",
+    "exampleSentence": "Don't forget to bring your passport.",
+    "exampleSentenceJa": "パスポートを持ってくるのを忘れないで。",
+    "phonetic": "/ˈpæˌspɔrt/",
+    "partOfSpeech": "noun",
+    "theme": "travel"
+  },
+  {
+    "id": "299",
+    "headword": "itinerary",
+    "meaning": "旅程",
+    "category": "exam",
+    "exampleSentence": "The travel agent sent us the full itinerary.",
+    "exampleSentenceJa": "旅行代理店が詳しい旅程を送ってくれた。",
+    "phonetic": "/aɪˈtɪnərˌɛri/",
+    "partOfSpeech": "noun",
+    "theme": "travel"
+  },
+  {
+    "id": "300",
+    "headword": "souvenir",
+    "meaning": "土産",
+    "category": "daily",
+    "exampleSentence": "I bought a souvenir for my family.",
+    "exampleSentenceJa": "私は家族に土産を買った。",
+    "phonetic": "/ˌsuvəˈnɪr/",
+    "partOfSpeech": "noun",
+    "theme": "travel"
+  },
+  {
+    "id": "301",
+    "headword": "sightseeing",
+    "meaning": "観光",
+    "category": "daily",
+    "exampleSentence": "We spent the whole day sightseeing.",
+    "exampleSentenceJa": "私たちは一日中観光をして過ごした。",
+    "phonetic": "/ˈsaɪtˈsiɪŋ/",
+    "partOfSpeech": "noun",
+    "theme": "travel"
+  },
+  {
+    "id": "302",
+    "headword": "fare",
+    "meaning": "運賃",
+    "category": "daily",
+    "exampleSentence": "The train fare went up this year.",
+    "exampleSentenceJa": "今年、電車の運賃が上がった。",
+    "phonetic": "/fɛr/",
+    "partOfSpeech": "noun",
+    "theme": "travel"
+  },
+  {
+    "id": "303",
+    "headword": "departure",
+    "meaning": "出発",
+    "category": "daily",
+    "exampleSentence": "The departure was delayed by an hour.",
+    "exampleSentenceJa": "出発は1時間遅れた。",
+    "phonetic": "/dɪˈpɑrʧər/",
+    "partOfSpeech": "noun",
+    "theme": "travel"
+  },
+  {
+    "id": "304",
+    "headword": "arrival",
+    "meaning": "到着",
+    "category": "daily",
+    "exampleSentence": "Please check the arrival time online.",
+    "exampleSentenceJa": "到着時刻はオンラインで確認してください。",
+    "phonetic": "/ərˈaɪvəl/",
+    "partOfSpeech": "noun",
+    "theme": "travel"
+  },
+  {
+    "id": "305",
+    "headword": "voyage",
+    "meaning": "航海",
+    "category": "exam",
+    "exampleSentence": "The long voyage across the ocean took weeks.",
+    "exampleSentenceJa": "海を越える長い航海は数週間かかった。",
+    "phonetic": "/vɔɪəʤ/",
+    "partOfSpeech": "noun",
+    "theme": "travel"
+  },
+  {
+    "id": "306",
+    "headword": "tourist",
+    "meaning": "観光客",
+    "category": "daily",
+    "exampleSentence": "The city is full of tourists in summer.",
+    "exampleSentenceJa": "その街は夏になると観光客でいっぱいだ。",
+    "phonetic": "/ˈtʊrɪst/",
+    "partOfSpeech": "noun",
+    "theme": "travel"
+  },
+  {
+    "id": "307",
+    "headword": "depart",
+    "meaning": "出発する",
+    "category": "daily",
+    "exampleSentence": "The plane departs at nine in the morning.",
+    "exampleSentenceJa": "その飛行機は朝9時に出発する。",
+    "phonetic": "/dɪˈpɑrt/",
+    "partOfSpeech": "verb",
+    "theme": "travel"
+  },
+  {
+    "id": "308",
+    "headword": "board",
+    "meaning": "搭乗する",
+    "category": "daily",
+    "exampleSentence": "Passengers can board the flight now.",
+    "exampleSentenceJa": "乗客は今、搭乗できます。",
+    "phonetic": "/bɔrd/",
+    "partOfSpeech": "verb",
+    "theme": "travel"
+  },
+  {
+    "id": "309",
+    "headword": "commute",
+    "meaning": "通勤する",
+    "category": "daily",
+    "exampleSentence": "She commutes to the office by train.",
+    "exampleSentenceJa": "彼女は電車で会社に通勤している。",
+    "phonetic": "/kəmˈjut/",
+    "partOfSpeech": "verb",
+    "theme": "travel"
+  },
+  {
+    "id": "310",
+    "headword": "wander",
+    "meaning": "さまよう",
+    "category": "exam",
+    "exampleSentence": "We wandered around the old town for hours.",
+    "exampleSentenceJa": "私たちは何時間も旧市街をさまよった。",
+    "phonetic": "/ˈwɑndər/",
+    "partOfSpeech": "verb",
+    "theme": "travel"
+  },
+  {
+    "id": "311",
+    "headword": "explore",
+    "meaning": "探検する",
+    "category": "daily",
+    "exampleSentence": "They love to explore new cities on foot.",
+    "exampleSentenceJa": "彼らは新しい街を歩いて探検するのが好きだ。",
+    "phonetic": "/ɪkˈsplɔr/",
+    "partOfSpeech": "verb",
+    "theme": "travel"
+  },
+  {
+    "id": "312",
+    "headword": "embark",
+    "meaning": "乗り込む",
+    "category": "exam",
+    "exampleSentence": "The passengers embarked on the ship at noon.",
+    "exampleSentenceJa": "乗客は正午に船に乗り込んだ。",
+    "phonetic": "/ɪmˈbɑrk/",
+    "partOfSpeech": "verb",
+    "theme": "travel"
+  },
+  {
+    "id": "313",
+    "headword": "scenic",
+    "meaning": "景色のよい",
+    "category": "exam",
+    "exampleSentence": "We took the scenic route along the coast.",
+    "exampleSentenceJa": "私たちは海岸沿いの景色のよい道を選んだ。",
+    "phonetic": "/ˈsinɪk/",
+    "partOfSpeech": "adjective",
+    "theme": "travel"
+  },
+  {
+    "id": "314",
+    "headword": "remote",
+    "meaning": "遠く離れた",
+    "category": "exam",
+    "exampleSentence": "They live in a remote mountain village.",
+    "exampleSentenceJa": "彼らは遠く離れた山村に住んでいる。",
+    "phonetic": "/rɪˈmoʊt/",
+    "partOfSpeech": "adjective",
+    "theme": "travel"
+  },
+  {
+    "id": "315",
+    "headword": "adventurous",
+    "meaning": "冒険好きな",
+    "category": "exam",
+    "exampleSentence": "My adventurous friend loves hiking alone.",
+    "exampleSentenceJa": "冒険好きな私の友人は一人でのハイキングが好きだ。",
+    "phonetic": "/ædˈvɛnʧərəs/",
+    "partOfSpeech": "adjective",
+    "theme": "travel"
+  },
+  {
+    "id": "316",
+    "headword": "domestic",
+    "meaning": "国内の",
+    "category": "business",
+    "exampleSentence": "Domestic flights are cheaper this month.",
+    "exampleSentenceJa": "今月は国内線が安い。",
+    "phonetic": "/dəˈmɛstɪk/",
+    "partOfSpeech": "adjective",
+    "theme": "travel"
+  },
+  {
+    "id": "317",
+    "headword": "breeze",
+    "meaning": "そよ風",
+    "category": "daily",
+    "exampleSentence": "A cool breeze blew through the window.",
+    "exampleSentenceJa": "涼しいそよ風が窓から吹き込んだ。",
+    "phonetic": "/briz/",
+    "partOfSpeech": "noun",
+    "theme": "weather"
+  },
+  {
+    "id": "318",
+    "headword": "thunder",
+    "meaning": "雷",
+    "category": "daily",
+    "exampleSentence": "The thunder woke the baby at night.",
+    "exampleSentenceJa": "夜、雷で赤ちゃんが目を覚ました。",
+    "phonetic": "/ˈθəndər/",
+    "partOfSpeech": "noun",
+    "theme": "weather"
+  },
+  {
+    "id": "319",
+    "headword": "drought",
+    "meaning": "干ばつ",
+    "category": "exam",
+    "exampleSentence": "The long drought damaged the crops.",
+    "exampleSentenceJa": "長い干ばつが作物に被害を与えた。",
+    "phonetic": "/draʊt/",
+    "partOfSpeech": "noun",
+    "theme": "weather"
+  },
+  {
+    "id": "320",
+    "headword": "flood",
+    "meaning": "洪水",
+    "category": "daily",
+    "exampleSentence": "The heavy rain caused a serious flood.",
+    "exampleSentenceJa": "大雨が深刻な洪水を引き起こした。",
+    "phonetic": "/fləd/",
+    "partOfSpeech": "noun",
+    "theme": "weather"
+  },
+  {
+    "id": "321",
+    "headword": "storm",
+    "meaning": "嵐",
+    "category": "daily",
+    "exampleSentence": "The ship returned to port before the storm.",
+    "exampleSentenceJa": "船は嵐の前に港へ戻った。",
+    "phonetic": "/stɔrm/",
+    "partOfSpeech": "noun",
+    "theme": "weather"
+  },
+  {
+    "id": "322",
+    "headword": "frost",
+    "meaning": "霜",
+    "category": "exam",
+    "exampleSentence": "There was frost on the windows this morning.",
+    "exampleSentenceJa": "今朝、窓に霜がついていた。",
+    "phonetic": "/frɔst/",
+    "partOfSpeech": "noun",
+    "theme": "weather"
+  },
+  {
+    "id": "323",
+    "headword": "humidity",
+    "meaning": "湿度",
+    "category": "exam",
+    "exampleSentence": "The high humidity made the day feel hotter.",
+    "exampleSentenceJa": "高い湿度でその日はより暑く感じた。",
+    "phonetic": "/hjuˈmɪdəti/",
+    "partOfSpeech": "noun",
+    "theme": "weather"
+  },
+  {
+    "id": "324",
+    "headword": "climate",
+    "meaning": "気候",
+    "category": "exam",
+    "exampleSentence": "This region has a mild climate.",
+    "exampleSentenceJa": "この地域は穏やかな気候だ。",
+    "phonetic": "/ˈklaɪmɪt/",
+    "partOfSpeech": "noun",
+    "theme": "weather"
+  },
+  {
+    "id": "325",
+    "headword": "blizzard",
+    "meaning": "吹雪",
+    "category": "exam",
+    "exampleSentence": "The blizzard closed all the roads.",
+    "exampleSentenceJa": "吹雪ですべての道路が閉鎖された。",
+    "phonetic": "/ˈblɪzərd/",
+    "partOfSpeech": "noun",
+    "theme": "weather"
+  },
+  {
+    "id": "326",
+    "headword": "hail",
+    "meaning": "ひょう",
+    "category": "exam",
+    "exampleSentence": "Large hail damaged several cars.",
+    "exampleSentenceJa": "大きなひょうが数台の車を傷つけた。",
+    "phonetic": "/heɪl/",
+    "partOfSpeech": "noun",
+    "theme": "weather"
+  },
+  {
+    "id": "327",
+    "headword": "dew",
+    "meaning": "露",
+    "category": "exam",
+    "exampleSentence": "Morning dew covered the grass.",
+    "exampleSentenceJa": "朝露が草を覆っていた。",
+    "phonetic": "/du/",
+    "partOfSpeech": "noun",
+    "theme": "weather"
+  },
+  {
+    "id": "328",
+    "headword": "pour",
+    "meaning": "土砂降りになる",
+    "category": "daily",
+    "exampleSentence": "It started to pour just as we left.",
+    "exampleSentenceJa": "私たちが出た途端に土砂降りになった。",
+    "phonetic": "/pɔr/",
+    "partOfSpeech": "verb",
+    "theme": "weather"
+  },
+  {
+    "id": "329",
+    "headword": "freeze",
+    "meaning": "凍る",
+    "category": "daily",
+    "exampleSentence": "The lake freezes completely in winter.",
+    "exampleSentenceJa": "その湖は冬に完全に凍る。",
+    "phonetic": "/friz/",
+    "partOfSpeech": "verb",
+    "theme": "weather"
+  },
+  {
+    "id": "330",
+    "headword": "melt",
+    "meaning": "溶ける",
+    "category": "daily",
+    "exampleSentence": "The snow melts quickly in the sun.",
+    "exampleSentenceJa": "雪は日差しで早く溶ける。",
+    "phonetic": "/mɛlt/",
+    "partOfSpeech": "verb",
+    "theme": "weather"
+  },
+  {
+    "id": "331",
+    "headword": "drizzle",
+    "meaning": "小雨が降る",
+    "category": "exam",
+    "exampleSentence": "It drizzled lightly all afternoon.",
+    "exampleSentenceJa": "午後はずっと小雨がぱらついた。",
+    "phonetic": "/ˈdrɪzəl/",
+    "partOfSpeech": "verb",
+    "theme": "weather"
+  },
+  {
+    "id": "332",
+    "headword": "humid",
+    "meaning": "蒸し暑い",
+    "category": "daily",
+    "exampleSentence": "Summer here is hot and humid.",
+    "exampleSentenceJa": "ここの夏は暑くて蒸し暑い。",
+    "phonetic": "/ˈjumɪd/",
+    "partOfSpeech": "adjective",
+    "theme": "weather"
+  },
+  {
+    "id": "333",
+    "headword": "chilly",
+    "meaning": "肌寒い",
+    "category": "daily",
+    "exampleSentence": "It gets chilly in the evening.",
+    "exampleSentenceJa": "夕方になると肌寒くなる。",
+    "phonetic": "/ˈʧɪli/",
+    "partOfSpeech": "adjective",
+    "theme": "weather"
+  },
+  {
+    "id": "334",
+    "headword": "foggy",
+    "meaning": "霧の",
+    "category": "daily",
+    "exampleSentence": "The morning was too foggy to drive.",
+    "exampleSentenceJa": "その朝は霧が濃くて運転できなかった。",
+    "phonetic": "/ˈfɑgi/",
+    "partOfSpeech": "adjective",
+    "theme": "weather"
+  },
+  {
+    "id": "335",
+    "headword": "overcast",
+    "meaning": "どんより曇った",
+    "category": "exam",
+    "exampleSentence": "The sky was overcast all day.",
+    "exampleSentenceJa": "空は一日中どんより曇っていた。",
+    "phonetic": "/ˈoʊvərˌkæst/",
+    "partOfSpeech": "adjective",
+    "theme": "weather"
+  },
+  {
+    "id": "336",
+    "headword": "mild",
+    "meaning": "穏やかな",
+    "category": "daily",
+    "exampleSentence": "We had a mild winter this year.",
+    "exampleSentenceJa": "今年は穏やかな冬だった。",
+    "phonetic": "/maɪld/",
+    "partOfSpeech": "adjective",
+    "theme": "weather"
+  },
+  {
+    "id": "337",
+    "headword": "rumor",
+    "meaning": "うわさ",
+    "category": "daily",
+    "exampleSentence": "There is a rumor that the shop will close.",
+    "exampleSentenceJa": "その店が閉まるといううわさがある。",
+    "phonetic": "/ˈrumər/",
+    "partOfSpeech": "noun",
+    "theme": "communication"
+  },
+  {
+    "id": "338",
+    "headword": "gossip",
+    "meaning": "陰口",
+    "category": "daily",
+    "exampleSentence": "She doesn't like office gossip.",
+    "exampleSentenceJa": "彼女は職場の陰口が好きではない。",
+    "phonetic": "/ˈgɑsəp/",
+    "partOfSpeech": "noun",
+    "theme": "communication"
+  },
+  {
+    "id": "339",
+    "headword": "remark",
+    "meaning": "発言",
+    "category": "exam",
+    "exampleSentence": "His remark upset several people.",
+    "exampleSentenceJa": "彼の発言は何人かを怒らせた。",
+    "phonetic": "/rɪˈmɑrk/",
+    "partOfSpeech": "noun",
+    "theme": "communication"
+  },
+  {
+    "id": "340",
+    "headword": "argument",
+    "meaning": "議論",
+    "category": "daily",
+    "exampleSentence": "They had a long argument about money.",
+    "exampleSentenceJa": "彼らはお金について長い議論をした。",
+    "phonetic": "/ˈɑrgjəmənt/",
+    "partOfSpeech": "noun",
+    "theme": "communication"
+  },
+  {
+    "id": "341",
+    "headword": "statement",
+    "meaning": "声明",
+    "category": "business",
+    "exampleSentence": "The company issued an official statement.",
+    "exampleSentenceJa": "その会社は公式声明を出した。",
+    "phonetic": "/ˈsteɪtmənt/",
+    "partOfSpeech": "noun",
+    "theme": "communication"
+  },
+  {
+    "id": "342",
+    "headword": "announcement",
+    "meaning": "発表",
+    "category": "daily",
+    "exampleSentence": "An announcement was made at the station.",
+    "exampleSentenceJa": "駅で発表があった。",
+    "phonetic": "/əˈnaʊnsmɛnt/",
+    "partOfSpeech": "noun",
+    "theme": "communication"
+  },
+  {
+    "id": "343",
+    "headword": "conversation",
+    "meaning": "会話",
+    "category": "daily",
+    "exampleSentence": "We had a pleasant conversation over coffee.",
+    "exampleSentenceJa": "私たちはコーヒーを飲みながら楽しい会話をした。",
+    "phonetic": "/ˌkɑnvərˈseɪʃən/",
+    "partOfSpeech": "noun",
+    "theme": "communication"
+  },
+  {
+    "id": "344",
+    "headword": "gesture",
+    "meaning": "身ぶり",
+    "category": "exam",
+    "exampleSentence": "He made a friendly gesture with his hand.",
+    "exampleSentenceJa": "彼は手で親しげな身ぶりをした。",
+    "phonetic": "/ˈʤɛsʧər/",
+    "partOfSpeech": "noun",
+    "theme": "communication"
+  },
+  {
+    "id": "345",
+    "headword": "explanation",
+    "meaning": "説明",
+    "category": "daily",
+    "exampleSentence": "Her explanation was clear and simple.",
+    "exampleSentenceJa": "彼女の説明は明快で分かりやすかった。",
+    "phonetic": "/ˌɛkspləˈneɪʃən/",
+    "partOfSpeech": "noun",
+    "theme": "communication"
+  },
+  {
+    "id": "346",
+    "headword": "request",
+    "meaning": "依頼",
+    "category": "business",
+    "exampleSentence": "We received a request for more information.",
+    "exampleSentenceJa": "私たちは追加情報の依頼を受けた。",
+    "phonetic": "/rɪkˈwɛst/",
+    "partOfSpeech": "noun",
+    "theme": "communication"
+  },
+  {
+    "id": "347",
+    "headword": "whisper",
+    "meaning": "ささやく",
+    "category": "daily",
+    "exampleSentence": "She whispered the answer to her friend.",
+    "exampleSentenceJa": "彼女は友達に答えをささやいた。",
+    "phonetic": "/ˈwɪspər/",
+    "partOfSpeech": "verb",
+    "theme": "communication"
+  },
+  {
+    "id": "348",
+    "headword": "argue",
+    "meaning": "議論する",
+    "category": "daily",
+    "exampleSentence": "They often argue about politics.",
+    "exampleSentenceJa": "彼らはよく政治について議論する。",
+    "phonetic": "/ˈɑrgju/",
+    "partOfSpeech": "verb",
+    "theme": "communication"
+  },
+  {
+    "id": "349",
+    "headword": "declare",
+    "meaning": "宣言する",
+    "category": "exam",
+    "exampleSentence": "The mayor declared the festival open.",
+    "exampleSentenceJa": "市長は祭りの開幕を宣言した。",
+    "phonetic": "/dɪˈklɛr/",
+    "partOfSpeech": "verb",
+    "theme": "communication"
+  },
+  {
+    "id": "350",
+    "headword": "imply",
+    "meaning": "ほのめかす",
+    "category": "exam",
+    "exampleSentence": "Are you implying that I am wrong?",
+    "exampleSentenceJa": "私が間違っているとほのめかしているのですか。",
+    "phonetic": "/ˌɪmˈplaɪ/",
+    "partOfSpeech": "verb",
+    "theme": "communication"
+  },
+  {
+    "id": "351",
+    "headword": "persuade",
+    "meaning": "説得する",
+    "category": "exam",
+    "exampleSentence": "He persuaded her to join the team.",
+    "exampleSentenceJa": "彼は彼女をチームに入るよう説得した。",
+    "phonetic": "/pərsˈweɪd/",
+    "partOfSpeech": "verb",
+    "theme": "communication"
+  },
+  {
+    "id": "352",
+    "headword": "emphasize",
+    "meaning": "強調する",
+    "category": "business",
+    "exampleSentence": "The teacher emphasized the importance of rest.",
+    "exampleSentenceJa": "先生は休息の大切さを強調した。",
+    "phonetic": "/ˈɛmfəˌsaɪz/",
+    "partOfSpeech": "verb",
+    "theme": "communication"
+  },
+  {
+    "id": "353",
+    "headword": "translate",
+    "meaning": "翻訳する",
+    "category": "daily",
+    "exampleSentence": "Can you translate this letter into English?",
+    "exampleSentenceJa": "この手紙を英語に翻訳してもらえますか。",
+    "phonetic": "/trænzˈleɪt/",
+    "partOfSpeech": "verb",
+    "theme": "communication"
+  },
+  {
+    "id": "354",
+    "headword": "interrupt",
+    "meaning": "遮る",
+    "category": "daily",
+    "exampleSentence": "Please don't interrupt while I'm speaking.",
+    "exampleSentenceJa": "私が話している間、遮らないでください。",
+    "phonetic": "/ˌɪntərˈəpt/",
+    "partOfSpeech": "verb",
+    "theme": "communication"
+  },
+  {
+    "id": "355",
+    "headword": "inquire",
+    "meaning": "尋ねる",
+    "category": "business",
+    "exampleSentence": "She inquired about the price of the room.",
+    "exampleSentenceJa": "彼女は部屋の値段について尋ねた。",
+    "phonetic": "/ˌɪnkˈwaɪr/",
+    "partOfSpeech": "verb",
+    "theme": "communication"
+  },
+  {
+    "id": "356",
+    "headword": "verbal",
+    "meaning": "口頭の",
+    "category": "exam",
+    "exampleSentence": "We had a verbal agreement, not a written one.",
+    "exampleSentenceJa": "私たちは書面ではなく口頭の合意をした。",
+    "phonetic": "/ˈvərbəl/",
+    "partOfSpeech": "adjective",
+    "theme": "communication"
+  },
+  {
+    "id": "357",
+    "headword": "fluent",
+    "meaning": "流暢な",
+    "category": "daily",
+    "exampleSentence": "She is fluent in three languages.",
+    "exampleSentenceJa": "彼女は三か国語を流暢に話す。",
+    "phonetic": "/fluənt/",
+    "partOfSpeech": "adjective",
+    "theme": "communication"
+  },
+  {
+    "id": "358",
+    "headword": "theory",
+    "meaning": "理論",
+    "category": "exam",
+    "exampleSentence": "The professor explained a complex theory.",
+    "exampleSentenceJa": "教授は複雑な理論を説明した。",
+    "phonetic": "/ˈθɪri/",
+    "partOfSpeech": "noun",
+    "theme": "study"
+  },
+  {
+    "id": "359",
+    "headword": "concept",
+    "meaning": "概念",
+    "category": "exam",
+    "exampleSentence": "This concept is difficult for beginners.",
+    "exampleSentenceJa": "この概念は初心者には難しい。",
+    "phonetic": "/ˈkɑnsɛpt/",
+    "partOfSpeech": "noun",
+    "theme": "study"
+  },
+  {
+    "id": "360",
+    "headword": "analysis",
+    "meaning": "分析",
+    "category": "business",
+    "exampleSentence": "The report includes a detailed analysis.",
+    "exampleSentenceJa": "その報告書には詳細な分析が含まれている。",
+    "phonetic": "/æˈnælɪsɪs/",
+    "partOfSpeech": "noun",
+    "theme": "study"
+  },
+  {
+    "id": "361",
+    "headword": "knowledge",
+    "meaning": "知識",
+    "category": "daily",
+    "exampleSentence": "Reading widely increases your knowledge.",
+    "exampleSentenceJa": "幅広く読書すると知識が増える。",
+    "phonetic": "/ˈnɑlɪʤ/",
+    "partOfSpeech": "noun",
+    "theme": "study"
+  },
+  {
+    "id": "362",
+    "headword": "evidence",
+    "meaning": "証拠",
+    "category": "exam",
+    "exampleSentence": "There is little evidence to support the claim.",
+    "exampleSentenceJa": "その主張を裏付ける証拠はほとんどない。",
+    "phonetic": "/ˈɛvədəns/",
+    "partOfSpeech": "noun",
+    "theme": "study"
+  },
+  {
+    "id": "363",
+    "headword": "method",
+    "meaning": "方法",
+    "category": "daily",
+    "exampleSentence": "She uses a simple method to memorize words.",
+    "exampleSentenceJa": "彼女は単語を覚えるのに簡単な方法を使う。",
+    "phonetic": "/ˈmɛθəd/",
+    "partOfSpeech": "noun",
+    "theme": "study"
+  },
+  {
+    "id": "364",
+    "headword": "principle",
+    "meaning": "原理",
+    "category": "exam",
+    "exampleSentence": "He explained the basic principles of physics.",
+    "exampleSentenceJa": "彼は物理学の基本原理を説明した。",
+    "phonetic": "/ˈprɪnsəpəl/",
+    "partOfSpeech": "noun",
+    "theme": "study"
+  },
+  {
+    "id": "365",
+    "headword": "insight",
+    "meaning": "洞察",
+    "category": "exam",
+    "exampleSentence": "Her book offers deep insight into human nature.",
+    "exampleSentenceJa": "彼女の本は人間性への深い洞察を与える。",
+    "phonetic": "/ˈɪnˌsaɪt/",
+    "partOfSpeech": "noun",
+    "theme": "study"
+  },
+  {
+    "id": "366",
+    "headword": "conclusion",
+    "meaning": "結論",
+    "category": "exam",
+    "exampleSentence": "We reached the same conclusion.",
+    "exampleSentenceJa": "私たちは同じ結論に達した。",
+    "phonetic": "/kənˈkluʒən/",
+    "partOfSpeech": "noun",
+    "theme": "study"
+  },
+  {
+    "id": "367",
+    "headword": "assumption",
+    "meaning": "仮定",
+    "category": "exam",
+    "exampleSentence": "The plan is based on a false assumption.",
+    "exampleSentenceJa": "その計画は誤った仮定に基づいている。",
+    "phonetic": "/əˈsəmpʃən/",
+    "partOfSpeech": "noun",
+    "theme": "study"
+  },
+  {
+    "id": "368",
+    "headword": "analyze",
+    "meaning": "分析する",
+    "category": "business",
+    "exampleSentence": "Scientists analyze the data carefully.",
+    "exampleSentenceJa": "科学者はそのデータを注意深く分析する。",
+    "phonetic": "/ˈænəˌlaɪz/",
+    "partOfSpeech": "verb",
+    "theme": "study"
+  },
+  {
+    "id": "369",
+    "headword": "memorize",
+    "meaning": "暗記する",
+    "category": "daily",
+    "exampleSentence": "You don't need to memorize every word.",
+    "exampleSentenceJa": "すべての単語を暗記する必要はない。",
+    "phonetic": "/ˈmɛmərˌaɪz/",
+    "partOfSpeech": "verb",
+    "theme": "study"
+  },
+  {
+    "id": "370",
+    "headword": "comprehend",
+    "meaning": "理解する",
+    "category": "exam",
+    "exampleSentence": "It is hard to comprehend such a huge number.",
+    "exampleSentenceJa": "そんな巨大な数を理解するのは難しい。",
+    "phonetic": "/ˌkɑmpriˈhɛnd/",
+    "partOfSpeech": "verb",
+    "theme": "study"
+  },
+  {
+    "id": "371",
+    "headword": "investigate",
+    "meaning": "調査する",
+    "category": "exam",
+    "exampleSentence": "The police investigated the accident.",
+    "exampleSentenceJa": "警察はその事故を調査した。",
+    "phonetic": "/ˌɪnˈvɛstəˌgeɪt/",
+    "partOfSpeech": "verb",
+    "theme": "study"
+  },
+  {
+    "id": "372",
+    "headword": "examine",
+    "meaning": "調べる",
+    "category": "exam",
+    "exampleSentence": "The doctor examined the results closely.",
+    "exampleSentenceJa": "医師はその結果を詳しく調べた。",
+    "phonetic": "/ɪgˈzæmɪn/",
+    "partOfSpeech": "verb",
+    "theme": "study"
+  },
+  {
+    "id": "373",
+    "headword": "define",
+    "meaning": "定義する",
+    "category": "exam",
+    "exampleSentence": "Can you define this term clearly?",
+    "exampleSentenceJa": "この用語を明確に定義できますか。",
+    "phonetic": "/dɪˈfaɪn/",
+    "partOfSpeech": "verb",
+    "theme": "study"
+  },
+  {
+    "id": "374",
+    "headword": "summarize",
+    "meaning": "要約する",
+    "category": "business",
+    "exampleSentence": "Please summarize the article in one page.",
+    "exampleSentenceJa": "その記事を1ページに要約してください。",
+    "phonetic": "/ˈsəmərˌaɪz/",
+    "partOfSpeech": "verb",
+    "theme": "study"
+  },
+  {
+    "id": "375",
+    "headword": "interpret",
+    "meaning": "解釈する",
+    "category": "exam",
+    "exampleSentence": "Different readers interpret the poem differently.",
+    "exampleSentenceJa": "読者によってその詩の解釈は異なる。",
+    "phonetic": "/ˌɪnˈtərprət/",
+    "partOfSpeech": "verb",
+    "theme": "study"
+  },
+  {
+    "id": "376",
+    "headword": "theoretical",
+    "meaning": "理論的な",
+    "category": "exam",
+    "exampleSentence": "This is only a theoretical problem.",
+    "exampleSentenceJa": "これは理論上の問題にすぎない。",
+    "phonetic": "/ˌθiərˈɛtɪkəl/",
+    "partOfSpeech": "adjective",
+    "theme": "study"
+  },
+  {
+    "id": "377",
+    "headword": "logical",
+    "meaning": "論理的な",
+    "category": "daily",
+    "exampleSentence": "Her argument is clear and logical.",
+    "exampleSentenceJa": "彼女の主張は明快で論理的だ。",
+    "phonetic": "/ˈlɑʤɪkəl/",
+    "partOfSpeech": "adjective",
+    "theme": "study"
+  },
+  {
+    "id": "378",
+    "headword": "abstract",
+    "meaning": "抽象的な",
+    "category": "exam",
+    "exampleSentence": "Freedom is an abstract idea.",
+    "exampleSentenceJa": "自由は抽象的な概念だ。",
+    "phonetic": "/ˈæbˌstrækt/",
+    "partOfSpeech": "adjective",
+    "theme": "study"
+  },
+  {
+    "id": "379",
+    "headword": "hire",
+    "meaning": "雇う",
+    "category": "business",
+    "exampleSentence": "The company plans to hire ten new workers.",
+    "exampleSentenceJa": "その会社は新たに10人を雇う予定だ。",
+    "phonetic": "/haɪər/",
+    "partOfSpeech": "verb",
+    "theme": "work"
+  },
+  {
+    "id": "380",
+    "headword": "promote",
+    "meaning": "昇進させる",
+    "category": "business",
+    "exampleSentence": "She was promoted to manager last month.",
+    "exampleSentenceJa": "彼女は先月、部長に昇進した。",
+    "phonetic": "/prəˈmoʊt/",
+    "partOfSpeech": "verb",
+    "theme": "work"
+  },
+  {
+    "id": "381",
+    "headword": "assign",
+    "meaning": "割り当てる",
+    "category": "business",
+    "exampleSentence": "The boss assigned the task to a new hire.",
+    "exampleSentenceJa": "上司はその仕事を新人に割り当てた。",
+    "phonetic": "/əˈsaɪn/",
+    "partOfSpeech": "verb",
+    "theme": "work"
+  },
+  {
+    "id": "382",
+    "headword": "delegate",
+    "meaning": "委任する",
+    "category": "business",
+    "exampleSentence": "A good leader knows how to delegate work.",
+    "exampleSentenceJa": "優れたリーダーは仕事の委任の仕方を知っている。",
+    "phonetic": "/ˈdɛləˌgeɪt/",
+    "partOfSpeech": "verb",
+    "theme": "work"
+  },
+  {
+    "id": "383",
+    "headword": "supervise",
+    "meaning": "監督する",
+    "category": "business",
+    "exampleSentence": "She supervises a team of five people.",
+    "exampleSentenceJa": "彼女は5人のチームを監督している。",
+    "phonetic": "/ˈsupərˌvaɪz/",
+    "partOfSpeech": "verb",
+    "theme": "work"
+  },
+  {
+    "id": "384",
+    "headword": "submit",
+    "meaning": "提出する",
+    "category": "business",
+    "exampleSentence": "Please submit the report by Friday.",
+    "exampleSentenceJa": "金曜までに報告書を提出してください。",
+    "phonetic": "/səbˈmɪt/",
+    "partOfSpeech": "verb",
+    "theme": "work"
+  },
+  {
+    "id": "385",
+    "headword": "coordinate",
+    "meaning": "調整する",
+    "category": "business",
+    "exampleSentence": "He coordinates schedules across three offices.",
+    "exampleSentenceJa": "彼は三つの事業所の予定を調整している。",
+    "phonetic": "/koʊˈɔrdəˌneɪt/",
+    "partOfSpeech": "verb",
+    "theme": "work"
+  },
+  {
+    "id": "386",
+    "headword": "applicant",
+    "meaning": "応募者",
+    "category": "business",
+    "exampleSentence": "Only three applicants passed the interview.",
+    "exampleSentenceJa": "面接を通過した応募者は3人だけだった。",
+    "phonetic": "/ˈæplɪkənt/",
+    "partOfSpeech": "noun",
+    "theme": "work"
+  },
+  {
+    "id": "387",
+    "headword": "overtime",
+    "meaning": "残業",
+    "category": "business",
+    "exampleSentence": "He worked overtime to meet the deadline.",
+    "exampleSentenceJa": "彼は締め切りに間に合わせるため残業した。",
+    "phonetic": "/ˈoʊvərˌtaɪm/",
+    "partOfSpeech": "noun",
+    "theme": "work"
+  },
+  {
+    "id": "388",
+    "headword": "workload",
+    "meaning": "仕事量",
+    "category": "business",
+    "exampleSentence": "Her workload increased after the merger.",
+    "exampleSentenceJa": "合併後、彼女の仕事量は増えた。",
+    "phonetic": "/ˈwərˌkloʊd/",
+    "partOfSpeech": "noun",
+    "theme": "work"
+  },
+  {
+    "id": "389",
+    "headword": "grab",
+    "meaning": "つかむ",
+    "category": "daily",
+    "exampleSentence": "He grabbed his coat and ran out.",
+    "exampleSentenceJa": "彼はコートをつかんで走り出た。",
+    "phonetic": "/græb/",
+    "partOfSpeech": "verb",
+    "theme": "action"
+  },
+  {
+    "id": "390",
+    "headword": "toss",
+    "meaning": "軽く投げる",
+    "category": "daily",
+    "exampleSentence": "She tossed the ball to the dog.",
+    "exampleSentenceJa": "彼女はボールを犬に軽く投げた。",
+    "phonetic": "/tɔs/",
+    "partOfSpeech": "verb",
+    "theme": "action"
+  },
+  {
+    "id": "391",
+    "headword": "drag",
+    "meaning": "引きずる",
+    "category": "daily",
+    "exampleSentence": "He dragged the heavy box across the room.",
+    "exampleSentenceJa": "彼は重い箱を部屋の向こうへ引きずった。",
+    "phonetic": "/dræg/",
+    "partOfSpeech": "verb",
+    "theme": "action"
+  },
+  {
+    "id": "392",
+    "headword": "lift",
+    "meaning": "持ち上げる",
+    "category": "daily",
+    "exampleSentence": "Can you help me lift this table?",
+    "exampleSentenceJa": "このテーブルを持ち上げるのを手伝ってくれますか。",
+    "phonetic": "/lɪft/",
+    "partOfSpeech": "verb",
+    "theme": "action"
+  },
+  {
+    "id": "393",
+    "headword": "squeeze",
+    "meaning": "握りしめる",
+    "category": "daily",
+    "exampleSentence": "She squeezed the lemon over the fish.",
+    "exampleSentenceJa": "彼女は魚の上でレモンを絞った。",
+    "phonetic": "/skwiz/",
+    "partOfSpeech": "verb",
+    "theme": "action"
+  },
+  {
+    "id": "394",
+    "headword": "bend",
+    "meaning": "曲げる",
+    "category": "daily",
+    "exampleSentence": "Bend your knees when you lift something heavy.",
+    "exampleSentenceJa": "重い物を持ち上げるときは膝を曲げて。",
+    "phonetic": "/bɛnd/",
+    "partOfSpeech": "verb",
+    "theme": "action"
+  },
+  {
+    "id": "395",
+    "headword": "twist",
+    "meaning": "ねじる",
+    "category": "daily",
+    "exampleSentence": "Twist the lid to open the jar.",
+    "exampleSentenceJa": "ふたをねじって瓶を開けて。",
+    "phonetic": "/twɪst/",
+    "partOfSpeech": "verb",
+    "theme": "action"
+  },
+  {
+    "id": "396",
+    "headword": "shake",
+    "meaning": "振る",
+    "category": "daily",
+    "exampleSentence": "Shake the bottle well before use.",
+    "exampleSentenceJa": "使う前によく瓶を振ってください。",
+    "phonetic": "/ʃeɪk/",
+    "partOfSpeech": "verb",
+    "theme": "action"
+  },
+  {
+    "id": "397",
+    "headword": "stretch",
+    "meaning": "伸ばす",
+    "category": "daily",
+    "exampleSentence": "She stretched her arms after waking up.",
+    "exampleSentenceJa": "彼女は起きた後、腕を伸ばした。",
+    "phonetic": "/strɛʧ/",
+    "partOfSpeech": "verb",
+    "theme": "action"
+  },
+  {
+    "id": "398",
+    "headword": "crawl",
+    "meaning": "はう",
+    "category": "daily",
+    "exampleSentence": "The baby crawled across the floor.",
+    "exampleSentenceJa": "赤ちゃんは床をはって進んだ。",
+    "phonetic": "/krɔl/",
+    "partOfSpeech": "verb",
+    "theme": "action"
+  },
+  {
+    "id": "399",
+    "headword": "leap",
+    "meaning": "跳ぶ",
+    "category": "exam",
+    "exampleSentence": "The cat leaped onto the shelf.",
+    "exampleSentenceJa": "その猫は棚の上に跳び乗った。",
+    "phonetic": "/lip/",
+    "partOfSpeech": "verb",
+    "theme": "action"
+  },
+  {
+    "id": "400",
+    "headword": "slide",
+    "meaning": "滑る",
+    "category": "daily",
+    "exampleSentence": "The kids slid down the snowy hill.",
+    "exampleSentenceJa": "子供たちは雪の丘を滑り降りた。",
+    "phonetic": "/slaɪd/",
+    "partOfSpeech": "verb",
+    "theme": "action"
+  },
+  {
+    "id": "401",
+    "headword": "spin",
+    "meaning": "回転する",
+    "category": "daily",
+    "exampleSentence": "The dancer spun around gracefully.",
+    "exampleSentenceJa": "そのダンサーは優雅に回転した。",
+    "phonetic": "/spɪn/",
+    "partOfSpeech": "verb",
+    "theme": "action"
+  },
+  {
+    "id": "402",
+    "headword": "fold",
+    "meaning": "折りたたむ",
+    "category": "daily",
+    "exampleSentence": "Please fold the laundry neatly.",
+    "exampleSentenceJa": "洗濯物をきれいにたたんでください。",
+    "phonetic": "/foʊld/",
+    "partOfSpeech": "verb",
+    "theme": "action"
+  },
+  {
+    "id": "403",
+    "headword": "scatter",
+    "meaning": "まき散らす",
+    "category": "exam",
+    "exampleSentence": "The wind scattered the papers everywhere.",
+    "exampleSentenceJa": "風が紙をあちこちにまき散らした。",
+    "phonetic": "/ˈskætər/",
+    "partOfSpeech": "verb",
+    "theme": "action"
+  },
+  {
+    "id": "404",
+    "headword": "grasp",
+    "meaning": "しっかり握る",
+    "category": "exam",
+    "exampleSentence": "She grasped the rope tightly.",
+    "exampleSentenceJa": "彼女はロープをしっかり握った。",
+    "phonetic": "/græsp/",
+    "partOfSpeech": "verb",
+    "theme": "action"
+  },
+  {
+    "id": "405",
+    "headword": "dodge",
+    "meaning": "かわす",
+    "category": "exam",
+    "exampleSentence": "He dodged the ball just in time.",
+    "exampleSentenceJa": "彼はぎりぎりでボールをかわした。",
+    "phonetic": "/dɑʤ/",
+    "partOfSpeech": "verb",
+    "theme": "action"
+  },
+  {
+    "id": "406",
+    "headword": "tremble",
+    "meaning": "震える",
+    "category": "exam",
+    "exampleSentence": "Her hands trembled with cold.",
+    "exampleSentenceJa": "彼女の手は寒さで震えた。",
+    "phonetic": "/ˈtrɛmbəl/",
+    "partOfSpeech": "verb",
+    "theme": "action"
+  },
+  {
+    "id": "407",
+    "headword": "kick",
+    "meaning": "蹴る",
+    "category": "daily",
+    "exampleSentence": "He kicked the ball into the goal.",
+    "exampleSentenceJa": "彼はボールをゴールに蹴り込んだ。",
+    "phonetic": "/kɪk/",
+    "partOfSpeech": "verb",
+    "theme": "action"
+  },
+  {
+    "id": "408",
+    "headword": "poke",
+    "meaning": "つつく",
+    "category": "daily",
+    "exampleSentence": "She poked him gently to wake him up.",
+    "exampleSentenceJa": "彼女は彼を起こそうと軽くつついた。",
+    "phonetic": "/poʊk/",
+    "partOfSpeech": "verb",
+    "theme": "action"
+  },
+  {
+    "id": "409",
+    "headword": "adequate",
+    "meaning": "十分な",
+    "category": "exam",
+    "exampleSentence": "The room is adequate for a small meeting.",
+    "exampleSentenceJa": "その部屋は小さな会議には十分だ。",
+    "phonetic": "/ˈædəkˌweɪt/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "410",
+    "headword": "superior",
+    "meaning": "優れた",
+    "category": "exam",
+    "exampleSentence": "This model is superior to the older one.",
+    "exampleSentenceJa": "この型は旧型より優れている。",
+    "phonetic": "/suˈpɪriər/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "411",
+    "headword": "inferior",
+    "meaning": "劣った",
+    "category": "exam",
+    "exampleSentence": "The cheaper product felt inferior in quality.",
+    "exampleSentenceJa": "その安い製品は品質が劣って感じられた。",
+    "phonetic": "/ˌɪnˈfɪriər/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "412",
+    "headword": "genuine",
+    "meaning": "本物の",
+    "category": "exam",
+    "exampleSentence": "She wore a genuine leather jacket.",
+    "exampleSentenceJa": "彼女は本革のジャケットを着ていた。",
+    "phonetic": "/ˈʤɛnjuˌaɪn/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "413",
+    "headword": "artificial",
+    "meaning": "人工の",
+    "category": "exam",
+    "exampleSentence": "The drink contains artificial flavors.",
+    "exampleSentenceJa": "その飲み物には人工の香料が含まれている。",
+    "phonetic": "/ˌɑrtəˈfɪʃəl/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "414",
+    "headword": "flexible",
+    "meaning": "柔軟な",
+    "category": "daily",
+    "exampleSentence": "Our schedule is quite flexible this week.",
+    "exampleSentenceJa": "今週の予定はかなり柔軟だ。",
+    "phonetic": "/ˈflɛksəbəl/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "415",
+    "headword": "rigid",
+    "meaning": "硬直した",
+    "category": "exam",
+    "exampleSentence": "The rules here are too rigid.",
+    "exampleSentenceJa": "ここの規則は硬直しすぎている。",
+    "phonetic": "/ˈrɪʤɪd/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "416",
+    "headword": "precise",
+    "meaning": "正確な",
+    "category": "exam",
+    "exampleSentence": "We need precise measurements for the design.",
+    "exampleSentenceJa": "設計には正確な測定が必要だ。",
+    "phonetic": "/prɪˈsaɪs/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "417",
+    "headword": "vague",
+    "meaning": "漠然とした",
+    "category": "exam",
+    "exampleSentence": "His answer was too vague to be useful.",
+    "exampleSentenceJa": "彼の答えは漠然としすぎて役に立たなかった。",
+    "phonetic": "/veɪg/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "418",
+    "headword": "reliable",
+    "meaning": "信頼できる",
+    "category": "daily",
+    "exampleSentence": "She is a reliable and honest worker.",
+    "exampleSentenceJa": "彼女は信頼できる誠実な働き手だ。",
+    "phonetic": "/rɪˈlaɪəbəl/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "419",
+    "headword": "feasible",
+    "meaning": "実現可能な",
+    "category": "exam",
+    "exampleSentence": "The plan is ambitious but feasible.",
+    "exampleSentenceJa": "その計画は野心的だが実現可能だ。",
+    "phonetic": "/ˈfizəbəl/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "420",
+    "headword": "redundant",
+    "meaning": "余分な",
+    "category": "exam",
+    "exampleSentence": "Remove any redundant words from the essay.",
+    "exampleSentenceJa": "小論文から余分な言葉を削除して。",
+    "phonetic": "/rɪˈdəndənt/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "421",
+    "headword": "uniform",
+    "meaning": "均一な",
+    "category": "exam",
+    "exampleSentence": "The tiles are a uniform size.",
+    "exampleSentenceJa": "そのタイルは均一なサイズだ。",
+    "phonetic": "/ˈjunəˌfɔrm/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "422",
+    "headword": "diverse",
+    "meaning": "多様な",
+    "category": "exam",
+    "exampleSentence": "The city has a diverse population.",
+    "exampleSentenceJa": "その都市は多様な人々が暮らしている。",
+    "phonetic": "/dɪˈvərs/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "423",
+    "headword": "robust",
+    "meaning": "頑丈な",
+    "category": "exam",
+    "exampleSentence": "The bridge has a robust steel frame.",
+    "exampleSentenceJa": "その橋は頑丈な鋼鉄の骨組みを持つ。",
+    "phonetic": "/roʊˈbəst/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "424",
+    "headword": "delicate",
+    "meaning": "繊細な",
+    "category": "exam",
+    "exampleSentence": "The vase has a delicate pattern.",
+    "exampleSentenceJa": "その花瓶には繊細な模様がある。",
+    "phonetic": "/ˈdɛləkət/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "425",
+    "headword": "crucial",
+    "meaning": "極めて重要な",
+    "category": "exam",
+    "exampleSentence": "Sleep is crucial for good health.",
+    "exampleSentenceJa": "睡眠は健康にとって極めて重要だ。",
+    "phonetic": "/ˈkruʃəl/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "426",
+    "headword": "trivial",
+    "meaning": "ささいな",
+    "category": "exam",
+    "exampleSentence": "Don't worry about such a trivial matter.",
+    "exampleSentenceJa": "そんなささいなことを気にしないで。",
+    "phonetic": "/ˈtrɪviəl/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "427",
+    "headword": "superficial",
+    "meaning": "表面的な",
+    "category": "exam",
+    "exampleSentence": "His knowledge of the topic is superficial.",
+    "exampleSentenceJa": "その話題に関する彼の知識は表面的だ。",
+    "phonetic": "/ˌsupərˈfɪʃəl/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "428",
+    "headword": "profound",
+    "meaning": "深遠な",
+    "category": "exam",
+    "exampleSentence": "The book had a profound effect on me.",
+    "exampleSentenceJa": "その本は私に深い影響を与えた。",
+    "phonetic": "/proʊˈfaʊnd/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "429",
+    "headword": "distinct",
+    "meaning": "明確に異なる",
+    "category": "exam",
+    "exampleSentence": "There are two distinct meanings of this word.",
+    "exampleSentenceJa": "この単語には明確に異なる二つの意味がある。",
+    "phonetic": "/dɪˈstɪŋkt/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "430",
+    "headword": "subtle",
+    "meaning": "微妙な",
+    "category": "exam",
+    "exampleSentence": "There is a subtle difference in the colors.",
+    "exampleSentenceJa": "その色には微妙な違いがある。",
+    "phonetic": "/ˈsətəl/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "431",
+    "headword": "versatile",
+    "meaning": "多才な",
+    "category": "exam",
+    "exampleSentence": "She is a versatile athlete who plays many sports.",
+    "exampleSentenceJa": "彼女は多くの競技をこなす多才な選手だ。",
+    "phonetic": "/ˈvərsətəl/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "432",
+    "headword": "sturdy",
+    "meaning": "丈夫な",
+    "category": "exam",
+    "exampleSentence": "These sturdy boots last for years.",
+    "exampleSentenceJa": "この丈夫なブーツは何年ももつ。",
+    "phonetic": "/ˈstərdi/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "433",
+    "headword": "refined",
+    "meaning": "洗練された",
+    "category": "exam",
+    "exampleSentence": "She has refined taste in art.",
+    "exampleSentenceJa": "彼女は芸術に洗練された趣味を持っている。",
+    "phonetic": "/rɪˈfaɪnd/",
+    "partOfSpeech": "adjective",
+    "theme": "quality"
+  },
+  {
+    "id": "434",
+    "headword": "surplus",
+    "meaning": "余剰",
+    "category": "business",
+    "exampleSentence": "The country has a trade surplus this year.",
+    "exampleSentenceJa": "その国は今年、貿易黒字を出している。",
+    "phonetic": "/ˈsərpləs/",
+    "partOfSpeech": "noun",
+    "theme": "quantity"
+  },
+  {
+    "id": "435",
+    "headword": "deficit",
+    "meaning": "不足",
+    "category": "business",
+    "exampleSentence": "The budget deficit grew last year.",
+    "exampleSentenceJa": "昨年、財政赤字が拡大した。",
+    "phonetic": "/ˈdɛfəsət/",
+    "partOfSpeech": "noun",
+    "theme": "quantity"
+  },
+  {
+    "id": "436",
+    "headword": "majority",
+    "meaning": "大多数",
+    "category": "exam",
+    "exampleSentence": "The majority of students passed the test.",
+    "exampleSentenceJa": "大多数の生徒が試験に合格した。",
+    "phonetic": "/məˈʤɔrəti/",
+    "partOfSpeech": "noun",
+    "theme": "quantity"
+  },
+  {
+    "id": "437",
+    "headword": "minority",
+    "meaning": "少数",
+    "category": "exam",
+    "exampleSentence": "Only a minority disagreed with the plan.",
+    "exampleSentenceJa": "その計画に反対したのは少数だけだった。",
+    "phonetic": "/məˈnɔrəti/",
+    "partOfSpeech": "noun",
+    "theme": "quantity"
+  },
+  {
+    "id": "438",
+    "headword": "fraction",
+    "meaning": "ごく一部",
+    "category": "exam",
+    "exampleSentence": "Only a fraction of the work is done.",
+    "exampleSentenceJa": "作業のごく一部しか終わっていない。",
+    "phonetic": "/ˈfrækʃən/",
+    "partOfSpeech": "noun",
+    "theme": "quantity"
+  },
+  {
+    "id": "439",
+    "headword": "ratio",
+    "meaning": "比率",
+    "category": "exam",
+    "exampleSentence": "The ratio of boys to girls is nearly equal.",
+    "exampleSentenceJa": "男女の比率はほぼ同じだ。",
+    "phonetic": "/ˈreɪʃiˌoʊ/",
+    "partOfSpeech": "noun",
+    "theme": "quantity"
+  },
+  {
+    "id": "440",
+    "headword": "bulk",
+    "meaning": "大部分",
+    "category": "exam",
+    "exampleSentence": "The bulk of the money was spent on rent.",
+    "exampleSentenceJa": "お金の大部分は家賃に使われた。",
+    "phonetic": "/bəlk/",
+    "partOfSpeech": "noun",
+    "theme": "quantity"
+  },
+  {
+    "id": "441",
+    "headword": "average",
+    "meaning": "平均",
+    "category": "daily",
+    "exampleSentence": "The average of the two scores is eighty.",
+    "exampleSentenceJa": "その二つの点数の平均は80だ。",
+    "phonetic": "/ˈævərɪʤ/",
+    "partOfSpeech": "noun",
+    "theme": "quantity"
+  },
+  {
+    "id": "442",
+    "headword": "decline",
+    "meaning": "減少",
+    "category": "business",
+    "exampleSentence": "There was a sharp decline in sales.",
+    "exampleSentenceJa": "売上に急激な減少があった。",
+    "phonetic": "/dɪˈklaɪn/",
+    "partOfSpeech": "noun",
+    "theme": "quantity"
+  },
+  {
+    "id": "443",
+    "headword": "excess",
+    "meaning": "過剰",
+    "category": "exam",
+    "exampleSentence": "An excess of salt is bad for your health.",
+    "exampleSentenceJa": "塩分の過剰摂取は健康に悪い。",
+    "phonetic": "/ˈɛkˌsɛs/",
+    "partOfSpeech": "noun",
+    "theme": "quantity"
+  },
+  {
+    "id": "444",
+    "headword": "total",
+    "meaning": "合計",
+    "category": "daily",
+    "exampleSentence": "The total came to fifty dollars.",
+    "exampleSentenceJa": "合計は50ドルになった。",
+    "phonetic": "/ˈtoʊtəl/",
+    "partOfSpeech": "noun",
+    "theme": "quantity"
+  },
+  {
+    "id": "445",
+    "headword": "increase",
+    "meaning": "増える",
+    "category": "daily",
+    "exampleSentence": "Prices increase every year.",
+    "exampleSentenceJa": "物価は毎年上がる。",
+    "phonetic": "/ˌɪnˈkris/",
+    "partOfSpeech": "verb",
+    "theme": "quantity"
+  },
+  {
+    "id": "446",
+    "headword": "decrease",
+    "meaning": "減る",
+    "category": "daily",
+    "exampleSentence": "The number of visitors decreased in winter.",
+    "exampleSentenceJa": "冬には来場者数が減った。",
+    "phonetic": "/ˈdiˌkris/",
+    "partOfSpeech": "verb",
+    "theme": "quantity"
+  },
+  {
+    "id": "447",
+    "headword": "expand",
+    "meaning": "拡大する",
+    "category": "business",
+    "exampleSentence": "The company plans to expand overseas.",
+    "exampleSentenceJa": "その会社は海外進出を計画している。",
+    "phonetic": "/ɪkˈspænd/",
+    "partOfSpeech": "verb",
+    "theme": "quantity"
+  },
+  {
+    "id": "448",
+    "headword": "shrink",
+    "meaning": "縮む",
+    "category": "daily",
+    "exampleSentence": "The sweater shrank in the wash.",
+    "exampleSentenceJa": "そのセーターは洗濯で縮んだ。",
+    "phonetic": "/ʃrɪŋk/",
+    "partOfSpeech": "verb",
+    "theme": "quantity"
+  },
+  {
+    "id": "449",
+    "headword": "multiply",
+    "meaning": "増やす",
+    "category": "exam",
+    "exampleSentence": "The bacteria multiply very quickly.",
+    "exampleSentenceJa": "その細菌は非常に速く増殖する。",
+    "phonetic": "/ˈməltəˌplaɪ/",
+    "partOfSpeech": "verb",
+    "theme": "quantity"
+  },
+  {
+    "id": "450",
+    "headword": "diminish",
+    "meaning": "減少する",
+    "category": "exam",
+    "exampleSentence": "Interest in the topic gradually diminished.",
+    "exampleSentenceJa": "その話題への関心は徐々に薄れた。",
+    "phonetic": "/dɪˈmɪnɪʃ/",
+    "partOfSpeech": "verb",
+    "theme": "quantity"
+  },
+  {
+    "id": "451",
+    "headword": "exceed",
+    "meaning": "超える",
+    "category": "exam",
+    "exampleSentence": "The cost must not exceed the budget.",
+    "exampleSentenceJa": "費用は予算を超えてはならない。",
+    "phonetic": "/ɪkˈsid/",
+    "partOfSpeech": "verb",
+    "theme": "quantity"
+  },
+  {
+    "id": "452",
+    "headword": "reduce",
+    "meaning": "減らす",
+    "category": "daily",
+    "exampleSentence": "We must reduce our energy use.",
+    "exampleSentenceJa": "私たちはエネルギー消費を減らさねばならない。",
+    "phonetic": "/rɪˈdus/",
+    "partOfSpeech": "verb",
+    "theme": "quantity"
+  },
+  {
+    "id": "453",
+    "headword": "double",
+    "meaning": "倍になる",
+    "category": "daily",
+    "exampleSentence": "The population doubled in twenty years.",
+    "exampleSentenceJa": "人口は20年で倍になった。",
+    "phonetic": "/ˈdəbəl/",
+    "partOfSpeech": "verb",
+    "theme": "quantity"
+  },
+  {
+    "id": "454",
+    "headword": "amass",
+    "meaning": "蓄える",
+    "category": "exam",
+    "exampleSentence": "He amassed a fortune over the years.",
+    "exampleSentenceJa": "彼は長年かけて財産を蓄えた。",
+    "phonetic": "/əˈmæs/",
+    "partOfSpeech": "verb",
+    "theme": "quantity"
+  },
+  {
+    "id": "455",
+    "headword": "subtract",
+    "meaning": "引く",
+    "category": "daily",
+    "exampleSentence": "Subtract five from twelve to get seven.",
+    "exampleSentenceJa": "12から5を引くと7になる。",
+    "phonetic": "/səbˈtrækt/",
+    "partOfSpeech": "verb",
+    "theme": "quantity"
+  },
+  {
+    "id": "456",
+    "headword": "lessen",
+    "meaning": "和らげる",
+    "category": "exam",
+    "exampleSentence": "The medicine will lessen the pain.",
+    "exampleSentenceJa": "その薬は痛みを和らげる。",
+    "phonetic": "/ˈlɛsən/",
+    "partOfSpeech": "verb",
+    "theme": "quantity"
+  },
+  {
+    "id": "457",
+    "headword": "numerous",
+    "meaning": "多数の",
+    "category": "exam",
+    "exampleSentence": "She has visited the country numerous times.",
+    "exampleSentenceJa": "彼女はその国を何度も訪れている。",
+    "phonetic": "/ˈnumərəs/",
+    "partOfSpeech": "adjective",
+    "theme": "quantity"
+  },
+  {
+    "id": "458",
+    "headword": "scarce",
+    "meaning": "乏しい",
+    "category": "exam",
+    "exampleSentence": "Water is scarce in the desert.",
+    "exampleSentenceJa": "砂漠では水が乏しい。",
+    "phonetic": "/skɛrs/",
+    "partOfSpeech": "adjective",
+    "theme": "quantity"
+  },
+  {
+    "id": "459",
+    "headword": "ample",
+    "meaning": "十分な",
+    "category": "exam",
+    "exampleSentence": "There is ample space for everyone.",
+    "exampleSentenceJa": "全員に十分な空間がある。",
+    "phonetic": "/ˈæmpəl/",
+    "partOfSpeech": "adjective",
+    "theme": "quantity"
+  },
+  {
+    "id": "460",
+    "headword": "minimal",
+    "meaning": "最小限の",
+    "category": "exam",
+    "exampleSentence": "The damage was minimal.",
+    "exampleSentenceJa": "被害は最小限だった。",
+    "phonetic": "/ˈmɪnəməl/",
+    "partOfSpeech": "adjective",
+    "theme": "quantity"
+  },
+  {
+    "id": "461",
+    "headword": "massive",
+    "meaning": "巨大な",
+    "category": "daily",
+    "exampleSentence": "A massive crowd gathered in the square.",
+    "exampleSentenceJa": "巨大な群衆が広場に集まった。",
+    "phonetic": "/ˈmæsɪv/",
+    "partOfSpeech": "adjective",
+    "theme": "quantity"
+  },
+  {
+    "id": "462",
+    "headword": "moderate",
+    "meaning": "適度な",
+    "category": "exam",
+    "exampleSentence": "He does a moderate amount of exercise.",
+    "exampleSentenceJa": "彼は適度な量の運動をしている。",
+    "phonetic": "/ˈmɑdərˌeɪt/",
+    "partOfSpeech": "adjective",
+    "theme": "quantity"
+  },
+  {
+    "id": "463",
+    "headword": "sufficient",
+    "meaning": "十分な",
+    "category": "exam",
+    "exampleSentence": "We have sufficient supplies for the week.",
+    "exampleSentenceJa": "私たちには一週間分の十分な物資がある。",
+    "phonetic": "/səˈfɪʃənt/",
+    "partOfSpeech": "adjective",
+    "theme": "quantity"
+  },
+  {
+    "id": "464",
+    "headword": "immense",
+    "meaning": "莫大な",
+    "category": "exam",
+    "exampleSentence": "They put in an immense amount of effort.",
+    "exampleSentenceJa": "彼らは莫大な労力を注いだ。",
+    "phonetic": "/ˌɪˈmɛns/",
+    "partOfSpeech": "adjective",
+    "theme": "quantity"
+  },
+  {
+    "id": "465",
+    "headword": "countless",
+    "meaning": "無数の",
+    "category": "exam",
+    "exampleSentence": "There are countless stars in the sky.",
+    "exampleSentenceJa": "空には無数の星がある。",
+    "phonetic": "/ˈkaʊntləs/",
+    "partOfSpeech": "adjective",
+    "theme": "quantity"
+  },
+  {
+    "id": "466",
+    "headword": "slight",
+    "meaning": "わずかな",
+    "category": "daily",
+    "exampleSentence": "There was a slight change in the plan.",
+    "exampleSentenceJa": "計画にわずかな変更があった。",
+    "phonetic": "/slaɪt/",
+    "partOfSpeech": "adjective",
+    "theme": "quantity"
+  },
+  {
+    "id": "467",
+    "headword": "excessive",
+    "meaning": "過度の",
+    "category": "exam",
+    "exampleSentence": "Excessive noise can harm your ears.",
+    "exampleSentenceJa": "過度の騒音は耳を傷つけることがある。",
+    "phonetic": "/ɪkˈsɛsɪv/",
+    "partOfSpeech": "adjective",
+    "theme": "quantity"
+  },
+  {
+    "id": "468",
+    "headword": "gradual",
+    "meaning": "徐々の",
+    "category": "exam",
+    "exampleSentence": "There was a gradual rise in temperature.",
+    "exampleSentenceJa": "気温は徐々に上昇した。",
+    "phonetic": "/ˈgræʤuəl/",
+    "partOfSpeech": "adjective",
+    "theme": "quantity"
+  },
+  {
+    "id": "469",
+    "headword": "law",
+    "meaning": "法律",
+    "category": "daily",
+    "exampleSentence": "Everyone must obey the law.",
+    "exampleSentenceJa": "誰もが法律を守らなければならない。",
+    "phonetic": "/lɔ/",
+    "partOfSpeech": "noun",
+    "theme": "society"
+  },
+  {
+    "id": "470",
+    "headword": "regulation",
+    "meaning": "規制",
+    "category": "business",
+    "exampleSentence": "New safety regulations took effect today.",
+    "exampleSentenceJa": "新しい安全規制が本日施行された。",
+    "phonetic": "/ˌrɛgjəˈleɪʃən/",
+    "partOfSpeech": "noun",
+    "theme": "society"
+  },
+  {
+    "id": "471",
+    "headword": "policy",
+    "meaning": "政策",
+    "category": "business",
+    "exampleSentence": "The government announced a new tax policy.",
+    "exampleSentenceJa": "政府は新しい税政策を発表した。",
+    "phonetic": "/ˈpɑləsi/",
+    "partOfSpeech": "noun",
+    "theme": "society"
+  },
+  {
+    "id": "472",
+    "headword": "citizen",
+    "meaning": "市民",
+    "category": "exam",
+    "exampleSentence": "Every citizen has the right to vote.",
+    "exampleSentenceJa": "すべての市民に投票の権利がある。",
+    "phonetic": "/ˈsɪtɪzən/",
+    "partOfSpeech": "noun",
+    "theme": "society"
+  },
+  {
+    "id": "473",
+    "headword": "government",
+    "meaning": "政府",
+    "category": "daily",
+    "exampleSentence": "The government raised the sales tax.",
+    "exampleSentenceJa": "政府は消費税を引き上げた。",
+    "phonetic": "/ˈgəvərnmənt/",
+    "partOfSpeech": "noun",
+    "theme": "society"
+  },
+  {
+    "id": "474",
+    "headword": "authority",
+    "meaning": "権威",
+    "category": "exam",
+    "exampleSentence": "The police have the authority to stop cars.",
+    "exampleSentenceJa": "警察には車を止める権限がある。",
+    "phonetic": "/əˈθɔrəti/",
+    "partOfSpeech": "noun",
+    "theme": "society"
+  },
+  {
+    "id": "475",
+    "headword": "justice",
+    "meaning": "正義",
+    "category": "exam",
+    "exampleSentence": "They fought for justice and equality.",
+    "exampleSentenceJa": "彼らは正義と平等のために闘った。",
+    "phonetic": "/ˈʤəstɪs/",
+    "partOfSpeech": "noun",
+    "theme": "society"
+  },
+  {
+    "id": "476",
+    "headword": "crime",
+    "meaning": "犯罪",
+    "category": "daily",
+    "exampleSentence": "The city is working to reduce crime.",
+    "exampleSentenceJa": "その市は犯罪の削減に取り組んでいる。",
+    "phonetic": "/kraɪm/",
+    "partOfSpeech": "noun",
+    "theme": "society"
+  },
+  {
+    "id": "477",
+    "headword": "punishment",
+    "meaning": "罰",
+    "category": "exam",
+    "exampleSentence": "The punishment seemed too harsh.",
+    "exampleSentenceJa": "その罰は厳しすぎるように思えた。",
+    "phonetic": "/ˈpənɪʃmənt/",
+    "partOfSpeech": "noun",
+    "theme": "society"
+  },
+  {
+    "id": "478",
+    "headword": "welfare",
+    "meaning": "福祉",
+    "category": "exam",
+    "exampleSentence": "The program improves the welfare of children.",
+    "exampleSentenceJa": "その制度は子供の福祉を向上させる。",
+    "phonetic": "/ˈwɛlˌfɛr/",
+    "partOfSpeech": "noun",
+    "theme": "society"
+  },
+  {
+    "id": "479",
+    "headword": "poverty",
+    "meaning": "貧困",
+    "category": "exam",
+    "exampleSentence": "Many families still live in poverty.",
+    "exampleSentenceJa": "多くの家庭がいまだ貧困の中で暮らしている。",
+    "phonetic": "/ˈpɑvərti/",
+    "partOfSpeech": "noun",
+    "theme": "society"
+  },
+  {
+    "id": "480",
+    "headword": "democracy",
+    "meaning": "民主主義",
+    "category": "exam",
+    "exampleSentence": "A free press is essential to democracy.",
+    "exampleSentenceJa": "自由な報道は民主主義に不可欠だ。",
+    "phonetic": "/dɪˈmɑkrəsi/",
+    "partOfSpeech": "noun",
+    "theme": "society"
+  },
+  {
+    "id": "481",
+    "headword": "election",
+    "meaning": "選挙",
+    "category": "daily",
+    "exampleSentence": "The election will be held next month.",
+    "exampleSentenceJa": "選挙は来月行われる。",
+    "phonetic": "/ɪˈlɛkʃən/",
+    "partOfSpeech": "noun",
+    "theme": "society"
+  },
+  {
+    "id": "482",
+    "headword": "protest",
+    "meaning": "抗議",
+    "category": "exam",
+    "exampleSentence": "Thousands joined the peaceful protest.",
+    "exampleSentenceJa": "数千人が平和的な抗議に参加した。",
+    "phonetic": "/ˈproʊˌtɛst/",
+    "partOfSpeech": "noun",
+    "theme": "society"
+  },
+  {
+    "id": "483",
+    "headword": "tax",
+    "meaning": "税金",
+    "category": "daily",
+    "exampleSentence": "We pay tax on almost everything we buy.",
+    "exampleSentenceJa": "私たちは買う物のほとんどに税金を払う。",
+    "phonetic": "/tæks/",
+    "partOfSpeech": "noun",
+    "theme": "society"
+  },
+  {
+    "id": "484",
+    "headword": "duty",
+    "meaning": "義務",
+    "category": "exam",
+    "exampleSentence": "It is our duty to protect the environment.",
+    "exampleSentenceJa": "環境を守るのは私たちの義務だ。",
+    "phonetic": "/ˈduti/",
+    "partOfSpeech": "noun",
+    "theme": "society"
+  },
+  {
+    "id": "485",
+    "headword": "reform",
+    "meaning": "改革",
+    "category": "exam",
+    "exampleSentence": "The country needs serious education reform.",
+    "exampleSentenceJa": "その国は本格的な教育改革を必要としている。",
+    "phonetic": "/rɪˈfɔrm/",
+    "partOfSpeech": "noun",
+    "theme": "society"
+  },
+  {
+    "id": "486",
+    "headword": "freedom",
+    "meaning": "自由",
+    "category": "daily",
+    "exampleSentence": "Freedom of speech is protected by law.",
+    "exampleSentenceJa": "言論の自由は法律で守られている。",
+    "phonetic": "/ˈfridəm/",
+    "partOfSpeech": "noun",
+    "theme": "society"
+  },
+  {
+    "id": "487",
+    "headword": "obey",
+    "meaning": "従う",
+    "category": "daily",
+    "exampleSentence": "Soldiers must obey their commanders.",
+    "exampleSentenceJa": "兵士は指揮官に従わなければならない。",
+    "phonetic": "/oʊˈbeɪ/",
+    "partOfSpeech": "verb",
+    "theme": "society"
+  },
+  {
+    "id": "488",
+    "headword": "enforce",
+    "meaning": "施行する",
+    "category": "exam",
+    "exampleSentence": "The police enforce traffic laws strictly.",
+    "exampleSentenceJa": "警察は交通法を厳しく施行する。",
+    "phonetic": "/ɛnˈfɔrs/",
+    "partOfSpeech": "verb",
+    "theme": "society"
+  },
+  {
+    "id": "489",
+    "headword": "violate",
+    "meaning": "違反する",
+    "category": "exam",
+    "exampleSentence": "Drivers who violate the rules are fined.",
+    "exampleSentenceJa": "規則に違反する運転手は罰金を科される。",
+    "phonetic": "/ˈvaɪəleɪt/",
+    "partOfSpeech": "verb",
+    "theme": "society"
+  },
+  {
+    "id": "490",
+    "headword": "prohibit",
+    "meaning": "禁止する",
+    "category": "exam",
+    "exampleSentence": "The law prohibits smoking in restaurants.",
+    "exampleSentenceJa": "その法律はレストランでの喫煙を禁止している。",
+    "phonetic": "/proʊˈhɪbət/",
+    "partOfSpeech": "verb",
+    "theme": "society"
+  },
+  {
+    "id": "491",
+    "headword": "permit",
+    "meaning": "許可する",
+    "category": "exam",
+    "exampleSentence": "The city does not permit parking here.",
+    "exampleSentenceJa": "市はここでの駐車を許可していない。",
+    "phonetic": "/ˈpərˌmɪt/",
+    "partOfSpeech": "verb",
+    "theme": "society"
+  },
+  {
+    "id": "492",
+    "headword": "govern",
+    "meaning": "統治する",
+    "category": "exam",
+    "exampleSentence": "A president governs the country.",
+    "exampleSentenceJa": "大統領が国を統治する。",
+    "phonetic": "/ˈgəvərn/",
+    "partOfSpeech": "verb",
+    "theme": "society"
+  },
+  {
+    "id": "493",
+    "headword": "vote",
+    "meaning": "投票する",
+    "category": "daily",
+    "exampleSentence": "Citizens will vote for a new mayor.",
+    "exampleSentenceJa": "市民は新しい市長に投票する。",
+    "phonetic": "/voʊt/",
+    "partOfSpeech": "verb",
+    "theme": "society"
+  },
+  {
+    "id": "494",
+    "headword": "elect",
+    "meaning": "選出する",
+    "category": "exam",
+    "exampleSentence": "The members elected a new chairperson.",
+    "exampleSentenceJa": "会員は新しい議長を選出した。",
+    "phonetic": "/ɪˈlɛkt/",
+    "partOfSpeech": "verb",
+    "theme": "society"
+  },
+  {
+    "id": "495",
+    "headword": "abolish",
+    "meaning": "廃止する",
+    "category": "exam",
+    "exampleSentence": "The country abolished the old law.",
+    "exampleSentenceJa": "その国はその古い法律を廃止した。",
+    "phonetic": "/əˈbɑlɪʃ/",
+    "partOfSpeech": "verb",
+    "theme": "society"
+  },
+  {
+    "id": "496",
+    "headword": "restrict",
+    "meaning": "制限する",
+    "category": "exam",
+    "exampleSentence": "The rule restricts access to the building.",
+    "exampleSentenceJa": "その規則は建物への立ち入りを制限している。",
+    "phonetic": "/riˈstrɪkt/",
+    "partOfSpeech": "verb",
+    "theme": "society"
+  },
+  {
+    "id": "497",
+    "headword": "legal",
+    "meaning": "合法の",
+    "category": "daily",
+    "exampleSentence": "It is legal to work part-time here.",
+    "exampleSentenceJa": "ここではアルバイトをするのは合法だ。",
+    "phonetic": "/ˈligəl/",
+    "partOfSpeech": "adjective",
+    "theme": "society"
+  },
+  {
+    "id": "498",
+    "headword": "illegal",
+    "meaning": "違法の",
+    "category": "daily",
+    "exampleSentence": "Parking on this street is illegal.",
+    "exampleSentenceJa": "この通りでの駐車は違法だ。",
+    "phonetic": "/ˌɪˈligəl/",
+    "partOfSpeech": "adjective",
+    "theme": "society"
+  },
+  {
+    "id": "499",
+    "headword": "civil",
+    "meaning": "市民の",
+    "category": "exam",
+    "exampleSentence": "They fought for civil rights.",
+    "exampleSentenceJa": "彼らは市民権のために闘った。",
+    "phonetic": "/ˈsɪvəl/",
+    "partOfSpeech": "adjective",
+    "theme": "society"
+  },
+  {
+    "id": "500",
+    "headword": "political",
+    "meaning": "政治の",
+    "category": "daily",
+    "exampleSentence": "The two groups have different political views.",
+    "exampleSentenceJa": "その二つの集団は異なる政治的見解を持つ。",
+    "phonetic": "/pəˈlɪtɪkəl/",
+    "partOfSpeech": "adjective",
+    "theme": "society"
+  },
+  {
+    "id": "501",
+    "headword": "ethical",
+    "meaning": "倫理的な",
+    "category": "exam",
+    "exampleSentence": "The company follows strict ethical standards.",
+    "exampleSentenceJa": "その会社は厳格な倫理基準に従っている。",
+    "phonetic": "/ˈɛθɪkəl/",
+    "partOfSpeech": "adjective",
+    "theme": "society"
+  },
+  {
+    "id": "502",
+    "headword": "corrupt",
+    "meaning": "腐敗した",
+    "category": "exam",
+    "exampleSentence": "The corrupt official was arrested.",
+    "exampleSentenceJa": "その腐敗した役人は逮捕された。",
+    "phonetic": "/kərəpt/",
+    "partOfSpeech": "adjective",
+    "theme": "society"
+  },
+  {
+    "id": "503",
+    "headword": "urban",
+    "meaning": "都市の",
+    "category": "exam",
+    "exampleSentence": "Urban areas are growing rapidly.",
+    "exampleSentenceJa": "都市部は急速に拡大している。",
+    "phonetic": "/ˈərbən/",
+    "partOfSpeech": "adjective",
+    "theme": "society"
+  },
+  {
+    "id": "504",
+    "headword": "rural",
+    "meaning": "田舎の",
+    "category": "exam",
+    "exampleSentence": "Life in rural areas is quieter.",
+    "exampleSentenceJa": "田舎での暮らしはより静かだ。",
+    "phonetic": "/ˈrʊrəl/",
+    "partOfSpeech": "adjective",
+    "theme": "society"
+  },
+  {
+    "id": "505",
+    "headword": "mandatory",
+    "meaning": "義務的な",
+    "category": "exam",
+    "exampleSentence": "Attendance at the meeting is mandatory.",
+    "exampleSentenceJa": "その会議への出席は義務だ。",
+    "phonetic": "/ˈmændəˌtɔri/",
+    "partOfSpeech": "adjective",
+    "theme": "society"
   }
 ]

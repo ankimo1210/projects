@@ -6,6 +6,7 @@ struct QuizView: View {
     let title: String
 
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
 
     /// 誤答選択肢（ダミー）を作るための全単語プール。
     /// 復習モードなど session が数語しかない場合でも4択を必ず埋められるように、
@@ -21,6 +22,8 @@ struct QuizView: View {
     @State private var correctInSession = 0
     @State private var missedWords: [Word] = []
     @State private var advanceTask: Task<Void, Never>?
+    /// 正解後の自動遷移を例文タップで一時停止したかどうか
+    @State private var autoAdvancePaused = false
 
     @AppStorage("autoPronounceEnabled") private var autoPronounceEnabled = true
 
@@ -65,51 +68,30 @@ struct QuizView: View {
         return ScrollView {
             VStack(spacing: 20) {
                 progressHeader
-
-                VStack(spacing: 12) {
-                    Text(word.headword)
-                        .font(.system(size: 34, weight: .bold))
-                        .multilineTextAlignment(.center)
-
-                    if !word.phonetic.isEmpty {
-                        Text(word.phonetic)
-                            .font(.title3)
-                            .foregroundStyle(.secondary)
-                    }
-
-                    Button {
-                        SpeechService.shared.speak(word.headword)
-                    } label: {
-                        Label("発音を聞く", systemImage: "speaker.wave.2.fill")
-                    }
-                    .buttonStyle(.bordered)
-                }
-                .padding(.vertical, 16)
-
-                VStack(spacing: 12) {
-                    ForEach(choices, id: \.id) { choice in
-                        choiceButton(choice, correctWord: word)
-                    }
-                }
-
-                if isAnswered {
-                    feedbackBanner(correctWord: word)
-                    exampleCard(word)
-
-                    if lastAnswerWasCorrect {
-                        Label("まもなく次の問題へ…", systemImage: "arrow.right.circle")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                    }
-                }
+                questionBody(word)
+                    .id(word.id)
+                    .transition(
+                        .asymmetric(
+                            insertion: .move(edge: .trailing),
+                            removal: .move(edge: .leading)
+                        )
+                        .combined(with: .opacity)
+                    )
             }
         }
         .scrollBounceBehavior(.basedOnSize)
+        // 正解後は画面のどこをタップしても即座に次へ進める
+        .contentShape(Rectangle())
+        .onTapGesture {
+            if isAnswered && lastAnswerWasCorrect && !autoAdvancePaused {
+                goToNextAnimated()
+            }
+        }
         .safeAreaInset(edge: .bottom) {
             // コンテンツ量に関わらず必ず押せるよう、「次へ」は画面下部に固定する
-            if isAnswered && !lastAnswerWasCorrect {
+            if isAnswered && (!lastAnswerWasCorrect || autoAdvancePaused) {
                 Button {
-                    goToNext()
+                    goToNextAnimated()
                 } label: {
                     Text("次へ")
                         .frame(maxWidth: .infinity)
@@ -122,9 +104,55 @@ struct QuizView: View {
         }
     }
 
+    private func questionBody(_ word: Word) -> some View {
+        VStack(spacing: 20) {
+            VStack(spacing: 12) {
+                Text(word.headword)
+                    .font(.system(size: 34, weight: .bold))
+                    .multilineTextAlignment(.center)
+
+                if !word.phonetic.isEmpty {
+                    Text(word.phonetic)
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                }
+
+                Button {
+                    SpeechService.shared.speak(word.headword)
+                } label: {
+                    Label("発音を聞く", systemImage: "speaker.wave.2.fill")
+                }
+                .buttonStyle(.bordered)
+            }
+            .padding(.vertical, 16)
+
+            VStack(spacing: 12) {
+                ForEach(choices, id: \.id) { choice in
+                    choiceButton(choice, correctWord: word)
+                }
+            }
+
+            if isAnswered {
+                Group {
+                    feedbackBanner(correctWord: word)
+                    exampleCard(word)
+                }
+                .transition(.opacity.combined(with: .scale(scale: 0.97)))
+
+                if lastAnswerWasCorrect && !autoAdvancePaused {
+                    Label("タップで次へ", systemImage: "hand.tap")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+    }
+
     private var progressHeader: some View {
-        VStack(spacing: 6) {
-            ProgressView(value: Double(currentIndex), total: Double(session.count))
+        // 回答した瞬間にバーが進むよう、回答済みなら現在の問題も完了扱いにする
+        let completed = min(currentIndex + (isAnswered ? 1 : 0), session.count)
+        return VStack(spacing: 6) {
+            ProgressView(value: Double(completed), total: Double(session.count))
                 .tint(.accentColor)
             Text("\(currentIndex + 1) / \(session.count)")
                 .font(.caption)
@@ -137,17 +165,18 @@ struct QuizView: View {
         let isCorrectChoice = choice.id == correctWord.id
         let isSelectedChoice = choice.id == selectedChoiceID
 
-        let label = HStack {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(choice.meaning)
-                // 回答後は誤答選択肢にも対応する英単語を出し、ダミーからも学べるようにする
-                if isAnswered {
-                    Text(choice.headword)
-                        .font(.caption)
-                        .opacity(0.85)
-                }
+        // 回答後は誤答選択肢にも対応する英単語を出し、ダミーからも学べるようにする。
+        // 縦に伸びて画面からはみ出さないよう、意味の下に積まず同じ行の右側にインライン表示する。
+        let label = HStack(spacing: 8) {
+            Text(choice.meaning)
+                .lineLimit(2)
+            if isAnswered {
+                Text(choice.headword)
+                    .font(.caption)
+                    .opacity(0.85)
+                    .lineLimit(1)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            Spacer(minLength: 4)
             if isAnswered && isCorrectChoice {
                 Image(systemName: "checkmark.circle.fill")
             } else if isAnswered && isSelectedChoice {
@@ -213,15 +242,25 @@ struct QuizView: View {
         .padding()
         .background(Color(.secondarySystemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 12))
+        .contentShape(Rectangle())
+        // 例文を読みたい人向け: カードをタップすると自動遷移を止めて「次へ」に切り替える
+        .onTapGesture {
+            if isAnswered && lastAnswerWasCorrect && !autoAdvancePaused {
+                pauseAutoAdvance()
+            }
+        }
     }
 
     // MARK: - Result summary
 
     private var resultSummary: some View {
         ScrollView {
-            VStack(spacing: 16) {
+            VStack(spacing: 20) {
                 Text("お疲れさまでした！")
                     .font(.title2.bold())
+
+                AccuracyRing(accuracy: session.isEmpty ? 0 : Double(correctInSession) / Double(session.count))
+
                 Text("正解 \(correctInSession) / \(session.count)")
                     .font(.title3)
                     .foregroundStyle(.secondary)
@@ -229,20 +268,12 @@ struct QuizView: View {
                 if missedWords.isEmpty {
                     Label("全問正解！素晴らしい🎉", systemImage: "star.fill")
                         .foregroundStyle(.orange)
-                        .padding(.top, 4)
                 } else {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("間違えた単語（復習リストに追加）")
                             .font(.headline)
                         ForEach(missedWords, id: \.id) { word in
-                            HStack {
-                                Text(word.headword)
-                                    .fontWeight(.semibold)
-                                Spacer()
-                                Text(word.meaning)
-                                    .foregroundStyle(.secondary)
-                            }
-                            .font(.subheadline)
+                            missedWordRow(word)
                             Divider()
                         }
                     }
@@ -251,26 +282,70 @@ struct QuizView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
 
-                if !missedWords.isEmpty {
-                    Button("間違えた単語だけもう一度（\(missedWords.count)語）") {
-                        startSession(pool: missedWords)
-                    }
-                    .buttonStyle(.borderedProminent)
-                }
+                VStack(spacing: 10) {
+                    if !missedWords.isEmpty {
+                        Button("間違えた単語だけもう一度（\(missedWords.count)語）") {
+                            startSession(pool: missedWords)
+                        }
+                        .buttonStyle(.borderedProminent)
 
-                if missedWords.isEmpty {
-                    Button("もう一度") {
-                        startSession()
+                        Button("新しいセッションを始める（\(min(words.count, sessionSize))語）") {
+                            startSession()
+                        }
+                        .buttonStyle(.bordered)
+                    } else {
+                        Button("もう一度") {
+                            startSession()
+                        }
+                        .buttonStyle(.borderedProminent)
                     }
-                    .buttonStyle(.borderedProminent)
-                } else {
-                    Button("もう一度（全\(session.count)語）") {
-                        startSession()
+
+                    Button("終了") {
+                        dismiss()
                     }
                     .buttonStyle(.bordered)
+                    .tint(.secondary)
                 }
             }
             .padding(.top, 24)
+        }
+        .onAppear(perform: requestNotificationPermissionIfNeeded)
+    }
+
+    private func missedWordRow(_ word: Word) -> some View {
+        HStack(alignment: .firstTextBaseline) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(word.headword)
+                    .fontWeight(.semibold)
+                if !word.phonetic.isEmpty {
+                    Text(word.phonetic)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            Spacer()
+            Text(word.meaning)
+                .foregroundStyle(.secondary)
+            Button {
+                SpeechService.shared.speak(word.headword)
+            } label: {
+                Image(systemName: "speaker.wave.2.fill")
+            }
+            .buttonStyle(.borderless)
+        }
+        .font(.subheadline)
+    }
+
+    /// 初回のクイズ完了時にだけ通知許可を求める。
+    /// 起動直後に権限ダイアログを出すより、アプリの価値を体験した後の方が文脈が伝わる。
+    private func requestNotificationPermissionIfNeeded() {
+        let key = "didRequestNotificationAuth"
+        guard !UserDefaults.standard.bool(forKey: key) else { return }
+        UserDefaults.standard.set(true, forKey: key)
+        NotificationService.requestAuthorization { granted in
+            if granted {
+                NotificationService.scheduleDailyReminder()
+            }
         }
     }
 
@@ -337,26 +412,61 @@ struct QuizView: View {
         guard currentIndex < session.count else { return }
         let correctWord = session[currentIndex]
 
-        // 正解以外の全単語からランダムに3つ選ぶ（全100語プールから）
-        let wrongPool = allWords.filter { $0.id != correctWord.id }.shuffled()
-        let wrongChoices = Array(wrongPool.prefix(3))
+        let others = allWords.filter { $0.id != correctWord.id }
+        let wrongChoices = pickDistractors(for: correctWord, from: others, count: 3)
 
         choices = (wrongChoices + [correctWord]).shuffled()
         isAnswered = false
         selectedChoiceID = nil
+        autoAdvancePaused = false
+
+        // 回答時の触覚フィードバックの遅延を減らすため事前起動しておく
+        FeedbackService.shared.prepare()
 
         if autoPronounceEnabled {
             SpeechService.shared.speak(correctWord.headword)
         }
     }
 
+    /// 「惜しい」ハズレ選択肢を選ぶ。同品詞×同テーマ → 同品詞×同カテゴリ → 同品詞 → 残り
+    /// の順で優先し、消去法で解けないようにする。各段階でシャッフルするので毎回並びも顔ぶれも変わる。
+    /// テーマ/品詞が薄い場合でも段階的フォールバックで必ず count 件を確保する。
+    private func pickDistractors(for correct: Word, from pool: [Word], count: Int) -> [Word] {
+        let samePOS = pool.filter { !$0.partOfSpeech.isEmpty && $0.partOfSpeech == correct.partOfSpeech }
+        let hasTheme = !correct.themeRaw.isEmpty
+
+        // 同品詞・同テーマ（最も紛らわしい）
+        let tier1 = hasTheme ? samePOS.filter { $0.themeRaw == correct.themeRaw } : []
+        // 同品詞・同カテゴリ（テーマは違う）
+        let tier2 = samePOS.filter { $0.themeRaw != correct.themeRaw && $0.category == correct.category }
+        // 同品詞・その他
+        let tier3 = samePOS.filter { $0.themeRaw != correct.themeRaw && $0.category != correct.category }
+        // 品詞違い（最後の穴埋め）
+        let tier4 = pool.filter { $0.partOfSpeech != correct.partOfSpeech }
+
+        var result: [Word] = []
+        var seen = Set<String>()
+        for tier in [tier1, tier2, tier3, tier4] {
+            for word in tier.shuffled() where result.count < count {
+                if seen.insert(word.id).inserted {
+                    result.append(word)
+                }
+            }
+            if result.count >= count { break }
+        }
+        return result
+    }
+
     private func select(_ choice: Word, correctWord: Word) {
         guard !isAnswered else { return }
-        selectedChoiceID = choice.id
-        isAnswered = true
 
         let isCorrect = choice.id == correctWord.id
-        lastAnswerWasCorrect = isCorrect
+        withAnimation(.snappy) {
+            selectedChoiceID = choice.id
+            isAnswered = true
+            lastAnswerWasCorrect = isCorrect
+        }
+
         if isCorrect {
             correctWord.correctCount += 1
             correctWord.needsReview = false
@@ -376,8 +486,22 @@ struct QuizView: View {
             advanceTask = Task {
                 try? await Task.sleep(for: autoAdvanceDelay)
                 guard !Task.isCancelled else { return }
-                goToNext()
+                goToNextAnimated()
             }
+        }
+    }
+
+    private func pauseAutoAdvance() {
+        advanceTask?.cancel()
+        advanceTask = nil
+        withAnimation(.snappy) {
+            autoAdvancePaused = true
+        }
+    }
+
+    private func goToNextAnimated() {
+        withAnimation(.snappy) {
+            goToNext()
         }
     }
 
@@ -387,6 +511,43 @@ struct QuizView: View {
         currentIndex += 1
         if currentIndex < session.count {
             prepareChoices()
+        }
+    }
+}
+
+/// セッション正答率を示すリング。表示時に0から実際の値までアニメーションする。
+private struct AccuracyRing: View {
+    let accuracy: Double
+
+    @State private var animatedProgress: Double = 0
+
+    private var ringColor: Color {
+        if accuracy >= 0.8 { return .green }
+        if accuracy >= 0.5 { return .orange }
+        return .gray
+    }
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .stroke(Color(.systemGray5), lineWidth: 12)
+            Circle()
+                .trim(from: 0, to: animatedProgress)
+                .stroke(ringColor, style: StrokeStyle(lineWidth: 12, lineCap: .round))
+                .rotationEffect(.degrees(-90))
+            VStack(spacing: 2) {
+                Text("\(Int((accuracy * 100).rounded()))%")
+                    .font(.title.bold())
+                Text("正答率")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .frame(width: 132, height: 132)
+        .onAppear {
+            withAnimation(.easeOut(duration: 0.8)) {
+                animatedProgress = accuracy
+            }
         }
     }
 }
