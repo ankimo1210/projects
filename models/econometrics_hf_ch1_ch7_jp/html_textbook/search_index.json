@@ -1,0 +1,549 @@
+[
+  {
+    "title": "第1章: 導入",
+    "href": "chapters/ch01_introduction.html",
+    "headings": [
+      {
+        "level": 1,
+        "text": "第1章: 導入（Introduction）",
+        "anchor": "第1章-導入introduction"
+      },
+      {
+        "level": 2,
+        "text": "この章の位置づけ",
+        "anchor": "この章の位置づけ"
+      },
+      {
+        "level": 2,
+        "text": "重要概念",
+        "anchor": "重要概念"
+      },
+      {
+        "level": 2,
+        "text": "サブセクション別の日本語要約",
+        "anchor": "サブセクション別の日本語要約"
+      },
+      {
+        "level": 3,
+        "text": "1.1 Motivation",
+        "anchor": "1-1-motivation"
+      },
+      {
+        "level": 3,
+        "text": "1.2 Structure of the Book",
+        "anchor": "1-2-structure-of-the-book"
+      },
+      {
+        "level": 2,
+        "text": "学習上の読み方",
+        "anchor": "学習上の読み方"
+      },
+      {
+        "level": 2,
+        "text": "原文ページ別抽出とページ画像",
+        "anchor": "原文ページ別抽出とページ画像"
+      }
+    ]
+  },
+  {
+    "title": "第2章: 市場マイクロストラクチャーの基礎",
+    "href": "chapters/ch02_microstructure_foundations.html",
+    "headings": [
+      {
+        "level": 1,
+        "text": "第2章: 市場マイクロストラクチャーの基礎（Microstructure Foundations）",
+        "anchor": "第2章-市場マイクロストラクチャーの基礎microstructure-foundations"
+      },
+      {
+        "level": 2,
+        "text": "この章の位置づけ",
+        "anchor": "この章の位置づけ"
+      },
+      {
+        "level": 2,
+        "text": "重要概念",
+        "anchor": "重要概念"
+      },
+      {
+        "level": 2,
+        "text": "サブセクション別の日本語要約",
+        "anchor": "サブセクション別の日本語要約"
+      },
+      {
+        "level": 3,
+        "text": "2.1 The Institutional Framework of Trading",
+        "anchor": "2-1-the-institutional-framework-of-trading"
+      },
+      {
+        "level": 3,
+        "text": "2.1.1 Types of Traders and Forms of Trading",
+        "anchor": "2-1-1-types-of-traders-and-forms-of-trading"
+      },
+      {
+        "level": 3,
+        "text": "2.1.2 Types of Orders",
+        "anchor": "2-1-2-types-of-orders"
+      },
+      {
+        "level": 3,
+        "text": "2.1.3 Market Structures",
+        "anchor": "2-1-3-market-structures"
+      },
+      {
+        "level": 3,
+        "text": "2.1.4 Order Precedence and Pricing Rules",
+        "anchor": "2-1-4-order-precedence-and-pricing-rules"
+      },
+      {
+        "level": 3,
+        "text": "2.1.5 Trading Forms at Selected International Exchanges",
+        "anchor": "2-1-5-trading-forms-at-selected-international-exchanges"
+      },
+      {
+        "level": 3,
+        "text": "2.2 A Review of Market Microstructure Theory",
+        "anchor": "2-2-a-review-of-market-microstructure-theory"
+      },
+      {
+        "level": 3,
+        "text": "2.2.1 Asymmetric Information Based Models",
+        "anchor": "2-2-1-asymmetric-information-based-models"
+      },
+      {
+        "level": 3,
+        "text": "2.2.2 Inventory Models",
+        "anchor": "2-2-2-inventory-models"
+      },
+      {
+        "level": 3,
+        "text": "2.2.3 Major Implications for Trading Variables",
+        "anchor": "2-2-3-major-implications-for-trading-variables"
+      },
+      {
+        "level": 3,
+        "text": "2.2.4 Models for Limit Order Book Markets",
+        "anchor": "2-2-4-models-for-limit-order-book-markets"
+      },
+      {
+        "level": 2,
+        "text": "学習上の読み方",
+        "anchor": "学習上の読み方"
+      },
+      {
+        "level": 2,
+        "text": "原文ページ別抽出とページ画像",
+        "anchor": "原文ページ別抽出とページ画像"
+      }
+    ]
+  },
+  {
+    "title": "第3章: 高頻度データの実証的性質",
+    "href": "chapters/ch03_empirical_properties_of_high_frequency_data.html",
+    "headings": [
+      {
+        "level": 1,
+        "text": "第3章: 高頻度データの実証的性質（Empirical Properties of High-Frequency Data）",
+        "anchor": "第3章-高頻度データの実証的性質empirical-properties-of-high-frequency-data"
+      },
+      {
+        "level": 2,
+        "text": "この章の位置づけ",
+        "anchor": "この章の位置づけ"
+      },
+      {
+        "level": 2,
+        "text": "重要概念",
+        "anchor": "重要概念"
+      },
+      {
+        "level": 2,
+        "text": "サブセクション別の日本語要約",
+        "anchor": "サブセクション別の日本語要約"
+      },
+      {
+        "level": 3,
+        "text": "3.1 Handling High-Frequency Data",
+        "anchor": "3-1-handling-high-frequency-data"
+      },
+      {
+        "level": 3,
+        "text": "3.1.1 Databases and Trading Variables",
+        "anchor": "3-1-1-databases-and-trading-variables"
+      },
+      {
+        "level": 3,
+        "text": "3.1.2 Matching Trades and Quotes",
+        "anchor": "3-1-2-matching-trades-and-quotes"
+      },
+      {
+        "level": 3,
+        "text": "3.1.3 Data Cleaning",
+        "anchor": "3-1-3-data-cleaning"
+      },
+      {
+        "level": 3,
+        "text": "3.1.4 Split-Transactions",
+        "anchor": "3-1-4-split-transactions"
+      },
+      {
+        "level": 3,
+        "text": "3.1.5 Identification of Buyer- and Seller-Initiated Trades",
+        "anchor": "3-1-5-identification-of-buyer--and-seller-initiated-trades"
+      },
+      {
+        "level": 3,
+        "text": "3.2 Aggregation by Trading Events: Financial Durations",
+        "anchor": "3-2-aggregation-by-trading-events-financial-durations"
+      },
+      {
+        "level": 3,
+        "text": "3.3 Properties of Financial Durations",
+        "anchor": "3-3-properties-of-financial-durations"
+      },
+      {
+        "level": 3,
+        "text": "3.4 Properties of Trading Characteristics",
+        "anchor": "3-4-properties-of-trading-characteristics"
+      },
+      {
+        "level": 3,
+        "text": "3.5 Properties of Time Aggregated Data",
+        "anchor": "3-5-properties-of-time-aggregated-data"
+      },
+      {
+        "level": 3,
+        "text": "3.6 Summary of Major Empirical Findings",
+        "anchor": "3-6-summary-of-major-empirical-findings"
+      },
+      {
+        "level": 2,
+        "text": "学習上の読み方",
+        "anchor": "学習上の読み方"
+      },
+      {
+        "level": 2,
+        "text": "原文ページ別抽出とページ画像",
+        "anchor": "原文ページ別抽出とページ画像"
+      }
+    ]
+  },
+  {
+    "title": "第4章: 金融点過程",
+    "href": "chapters/ch04_financial_point_processes.html",
+    "headings": [
+      {
+        "level": 1,
+        "text": "第4章: 金融点過程（Financial Point Processes）",
+        "anchor": "第4章-金融点過程financial-point-processes"
+      },
+      {
+        "level": 2,
+        "text": "この章の位置づけ",
+        "anchor": "この章の位置づけ"
+      },
+      {
+        "level": 2,
+        "text": "重要概念",
+        "anchor": "重要概念"
+      },
+      {
+        "level": 2,
+        "text": "サブセクション別の日本語要約",
+        "anchor": "サブセクション別の日本語要約"
+      },
+      {
+        "level": 3,
+        "text": "4.1 Basic Concepts of Point Processes",
+        "anchor": "4-1-basic-concepts-of-point-processes"
+      },
+      {
+        "level": 3,
+        "text": "4.1.1 Fundamental Definitions",
+        "anchor": "4-1-1-fundamental-definitions"
+      },
+      {
+        "level": 3,
+        "text": "4.1.2 Compensators and Intensities",
+        "anchor": "4-1-2-compensators-and-intensities"
+      },
+      {
+        "level": 3,
+        "text": "4.1.3 The Homogeneous Poisson Process",
+        "anchor": "4-1-3-the-homogeneous-poisson-process"
+      },
+      {
+        "level": 3,
+        "text": "4.1.4 Generalizations of Poisson Processes",
+        "anchor": "4-1-4-generalizations-of-poisson-processes"
+      },
+      {
+        "level": 3,
+        "text": "4.1.5 A Random Time Change Argument",
+        "anchor": "4-1-5-a-random-time-change-argument"
+      },
+      {
+        "level": 3,
+        "text": "4.1.6 Intensity-Based Inference",
+        "anchor": "4-1-6-intensity-based-inference"
+      },
+      {
+        "level": 3,
+        "text": "4.1.7 Simulation and Diagnostics",
+        "anchor": "4-1-7-simulation-and-diagnostics"
+      },
+      {
+        "level": 3,
+        "text": "4.2 Four Ways to Model Point Processes",
+        "anchor": "4-2-four-ways-to-model-point-processes"
+      },
+      {
+        "level": 3,
+        "text": "4.3 Censoring and Time-Varying Covariates",
+        "anchor": "4-3-censoring-and-time-varying-covariates"
+      },
+      {
+        "level": 3,
+        "text": "4.4 An Outlook on Dynamic Extensions",
+        "anchor": "4-4-an-outlook-on-dynamic-extensions"
+      },
+      {
+        "level": 2,
+        "text": "学習上の読み方",
+        "anchor": "学習上の読み方"
+      },
+      {
+        "level": 2,
+        "text": "原文ページ別抽出とページ画像",
+        "anchor": "原文ページ別抽出とページ画像"
+      }
+    ]
+  },
+  {
+    "title": "第5章: 単変量乗法誤差モデル",
+    "href": "chapters/ch05_univariate_multiplicative_error_models.html",
+    "headings": [
+      {
+        "level": 1,
+        "text": "第5章: 単変量乗法誤差モデル（Univariate Multiplicative Error Models）",
+        "anchor": "第5章-単変量乗法誤差モデルunivariate-multiplicative-error-models"
+      },
+      {
+        "level": 2,
+        "text": "この章の位置づけ",
+        "anchor": "この章の位置づけ"
+      },
+      {
+        "level": 2,
+        "text": "重要概念",
+        "anchor": "重要概念"
+      },
+      {
+        "level": 2,
+        "text": "サブセクション別の日本語要約",
+        "anchor": "サブセクション別の日本語要約"
+      },
+      {
+        "level": 3,
+        "text": "5.1 ARMA Models for Log Variables",
+        "anchor": "5-1-arma-models-for-log-variables"
+      },
+      {
+        "level": 3,
+        "text": "5.2 A MEM for Durations: The ACD Model",
+        "anchor": "5-2-a-mem-for-durations-the-acd-model"
+      },
+      {
+        "level": 3,
+        "text": "5.3 Estimation of the ACD Model",
+        "anchor": "5-3-estimation-of-the-acd-model"
+      },
+      {
+        "level": 3,
+        "text": "5.3.1 QML Estimation",
+        "anchor": "5-3-1-qml-estimation"
+      },
+      {
+        "level": 3,
+        "text": "5.3.2 ML Estimation",
+        "anchor": "5-3-2-ml-estimation"
+      },
+      {
+        "level": 3,
+        "text": "5.4 Seasonalities and Explanatory Variables",
+        "anchor": "5-4-seasonalities-and-explanatory-variables"
+      },
+      {
+        "level": 3,
+        "text": "5.5 The Log-ACD Model",
+        "anchor": "5-5-the-log-acd-model"
+      },
+      {
+        "level": 3,
+        "text": "5.6 Testing the ACD Model",
+        "anchor": "5-6-testing-the-acd-model"
+      },
+      {
+        "level": 2,
+        "text": "学習上の読み方",
+        "anchor": "学習上の読み方"
+      },
+      {
+        "level": 2,
+        "text": "原文ページ別抽出とページ画像",
+        "anchor": "原文ページ別抽出とページ画像"
+      }
+    ]
+  },
+  {
+    "title": "第6章: 一般化乗法誤差モデル",
+    "href": "chapters/ch06_generalized_multiplicative_error_models.html",
+    "headings": [
+      {
+        "level": 1,
+        "text": "第6章: 一般化乗法誤差モデル（Generalized Multiplicative Error Models）",
+        "anchor": "第6章-一般化乗法誤差モデルgeneralized-multiplicative-error-models"
+      },
+      {
+        "level": 2,
+        "text": "この章の位置づけ",
+        "anchor": "この章の位置づけ"
+      },
+      {
+        "level": 2,
+        "text": "重要概念",
+        "anchor": "重要概念"
+      },
+      {
+        "level": 2,
+        "text": "サブセクション別の日本語要約",
+        "anchor": "サブセクション別の日本語要約"
+      },
+      {
+        "level": 3,
+        "text": "6.1 A Class of Augmented ACD Models",
+        "anchor": "6-1-a-class-of-augmented-acd-models"
+      },
+      {
+        "level": 3,
+        "text": "6.1.1 Special Cases",
+        "anchor": "6-1-1-special-cases"
+      },
+      {
+        "level": 3,
+        "text": "6.1.2 Theoretical Properties",
+        "anchor": "6-1-2-theoretical-properties"
+      },
+      {
+        "level": 3,
+        "text": "6.1.3 Empirical Illustrations",
+        "anchor": "6-1-3-empirical-illustrations"
+      },
+      {
+        "level": 3,
+        "text": "6.2 Regime-Switching ACD Models",
+        "anchor": "6-2-regime-switching-acd-models"
+      },
+      {
+        "level": 3,
+        "text": "6.3 Long Memory ACD Models",
+        "anchor": "6-3-long-memory-acd-models"
+      },
+      {
+        "level": 3,
+        "text": "6.4 Mixture and Component Multiplicative Error Models",
+        "anchor": "6-4-mixture-and-component-multiplicative-error-models"
+      },
+      {
+        "level": 3,
+        "text": "6.5 Further Generalizations of Multiplicative Error Models",
+        "anchor": "6-5-further-generalizations-of-multiplicative-error-models"
+      },
+      {
+        "level": 2,
+        "text": "学習上の読み方",
+        "anchor": "学習上の読み方"
+      },
+      {
+        "level": 2,
+        "text": "原文ページ別抽出とページ画像",
+        "anchor": "原文ページ別抽出とページ画像"
+      }
+    ]
+  },
+  {
+    "title": "第7章: ベクトル乗法誤差モデル",
+    "href": "chapters/ch07_vector_multiplicative_error_models.html",
+    "headings": [
+      {
+        "level": 1,
+        "text": "第7章: ベクトル乗法誤差モデル（Vector Multiplicative Error Models）",
+        "anchor": "第7章-ベクトル乗法誤差モデルvector-multiplicative-error-models"
+      },
+      {
+        "level": 2,
+        "text": "この章の位置づけ",
+        "anchor": "この章の位置づけ"
+      },
+      {
+        "level": 2,
+        "text": "重要概念",
+        "anchor": "重要概念"
+      },
+      {
+        "level": 2,
+        "text": "サブセクション別の日本語要約",
+        "anchor": "サブセクション別の日本語要約"
+      },
+      {
+        "level": 3,
+        "text": "7.1 VMEM Processes",
+        "anchor": "7-1-vmem-processes"
+      },
+      {
+        "level": 3,
+        "text": "7.1.1 The Basic VMEM Specification",
+        "anchor": "7-1-1-the-basic-vmem-specification"
+      },
+      {
+        "level": 3,
+        "text": "7.1.2 Statistical Inference",
+        "anchor": "7-1-2-statistical-inference"
+      },
+      {
+        "level": 3,
+        "text": "7.1.3 Applications",
+        "anchor": "7-1-3-applications"
+      },
+      {
+        "level": 3,
+        "text": "7.2 Stochastic Vector Multiplicative Error Models",
+        "anchor": "7-2-stochastic-vector-multiplicative-error-models"
+      },
+      {
+        "level": 3,
+        "text": "7.2.1 Stochastic VMEM Processes",
+        "anchor": "7-2-1-stochastic-vmem-processes"
+      },
+      {
+        "level": 3,
+        "text": "7.2.2 Simulation-Based Inference",
+        "anchor": "7-2-2-simulation-based-inference"
+      },
+      {
+        "level": 3,
+        "text": "7.2.3 Modelling Trading Processes",
+        "anchor": "7-2-3-modelling-trading-processes"
+      },
+      {
+        "level": 2,
+        "text": "学習上の読み方",
+        "anchor": "学習上の読み方"
+      },
+      {
+        "level": 2,
+        "text": "原文ページ別抽出とページ画像",
+        "anchor": "原文ページ別抽出とページ画像"
+      }
+    ]
+  }
+]

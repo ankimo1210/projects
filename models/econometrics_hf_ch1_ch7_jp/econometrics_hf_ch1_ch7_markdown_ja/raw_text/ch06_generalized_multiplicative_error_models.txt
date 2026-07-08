@@ -1,0 +1,1819 @@
+===== PDF page 158 / printed page 143 =====
+Chapter 6
+Generalized Multiplicative Error Models
+
+
+
+
+In this chapter, we present generalizations of the basic multiplicative error model
+as introduced in Chap. 5. Section 6.1 discusses a class of ACD models which
+can be presented in terms of a generalized polynomial random coefficient model
+according to Carrasco and Chen (2002). We illustrate various special cases,
+discuss the theoretical properties and show empirical illustrations. In Sect. 6.2,
+we consider regime-switching ACD models allowing for parameters which might
+change in dependence of observable or unobservable characteristics. We concentrate
+on threshold ACD models, smooth transition ACD models as well as Markov
+Switching ACD specifications. Section 6.3 focuses on ACD models accommodating
+long range dependence in the data. In this context, we discuss different possibilities
+to capture long memory. In Sect. 6.4, we focus on mixture and component models.
+We discuss two types of mixture models, where the conditional mean function is
+driven by a dynamic latent component. The stochastic conditional duration model
+proposed by Bauwens and Veredas (2004), as discussed in Sect. 6.4.1, assumes
+the conditional mean function to follow a latent AR(1) process. The stochastic
+multiplicative error model introduced by Hautsch (2008) shown in Sect. 6.4.2
+generalizes this idea and allows for both latent as well as observation-driven
+dynamics. Likewise, a component MEM specification as proposed by Brownlees
+et al. (2011) allows to combine intradaily dynamics with daily dynamics. Further
+generalizations, such as semiparametric ACD models and stochastic volatility
+duration models are discussed in Sect. 6.5.
+
+
+6.1 A Class of Augmented ACD Models
+
+In this section, we discuss a general class of ACD models which can be presented
+in terms of a generalized polynomial random coefficient ACD model as analyzed
+by Carrasco and Chen (2002). Building on the notation introduced in Chap. 5, this
+class of models is given by
+
+                           #.i / D A."i /#.i 1 / C C."i /;                   (6.1)
+
+N. Hautsch, Econometrics of Financial High-Frequency Data,                        143
+DOI 10.1007/978-3-642-21925-2 6, © Springer-Verlag Berlin Heidelberg 2012
+
+
+===== PDF page 159 / printed page 144 =====
+144                                             6 Generalized Multiplicative Error Models
+
+
+where #./ is a continuous function with domain Œ0; 1/, A and B are polynomial
+functions, and "i D xi =i denotes an i.i.d. innovation term with EŒ"i  D 1.
+
+
+6.1.1 Special Cases
+
+The class of generalized polynomial random coefficient ACD models contains
+various extensions of the basic linear ACD model allowing for additive as well as
+multiplicative stochastic components, i.e., specifications, where lagged innovations
+enter the conditional mean function additively and/or multiplicatively. Moreover,
+it contains parameterizations capturing not only linear but also more flexible news
+impact curves. For simplicity of exposition, the following discussions are restricted
+to models with a lag order of P D Q D 1.
+
+
+6.1.1.1 Additive and Multiplicative ACD (AMACD) Model
+
+A simple extension of the basic ACD specification incorporating both an additive
+and multiplicative innovation component is given by
+
+                         i D ! C .˛i 1 C /"i 1 C ˇi 1 ;                     (6.2)
+
+where  is a parameter. This specification implies a news impact curve with a
+slope given by ˛i 1 C . Thus, the lagged innovation enters the conditional mean
+function additively, as well as multiplicatively. In this sense, the (so called) Additive
+and Multiplicative ACD (AMACD) model is more flexible and nests the linear ACD
+model for  D 0.
+
+
+6.1.1.2 Box–Cox ACD (BACD) Model
+
+Hautsch (2003) suggests an additive ACD model based on power transformations
+of i and "i :
+
+                             iı1 D ! C ˛"ıi 1
+                                             2
+                                                C ˇiı1
+                                                      1
+                                                         ;                         (6.3)
+
+where ı1 ; ı2 > 0. It is easy to see that this model can be written in terms of Box–Cox
+transformations. Thus,
+
+                   iı1  1                            ı1  1
+                                   Q ıi 1
+                            D !Q C ˛."  2
+                                            1/=ı2 C ˇ i 1    ;                   (6.4)
+                      ı1                                  ı1
+
+where
+
+                         !C˛Cˇ1                                     ˛ı2
+                 !Q WD                          and          ˛Q WD       :
+                            ı1                                       ı1
+
+
+===== PDF page 160 / printed page 145 =====
+6.1 A Class of Augmented ACD Models                                                    145
+
+
+This specification allows for concave, convex, as well as linear news impact
+functions. It nests the AMACD model for ı1 D ı2 D 1, the LACD1 model for
+ı1 ! 0, ı2 ! 0 and the LACD2 model for ı1 ! 0, ı2 D 1 (see Chap. 5). For
+ı1 ! 0, it coincides with a Box–Cox ACD specification proposed by Dufour and
+Engle (2000).
+
+
+6.1.1.3 EXponential ACD (EXACD) Model
+
+Alternative parameterizations are obtained by the assumption of piece-wise linear
+news impact functions. Dufour and Engle (2000) introduce the so-called EXpo-
+nential1 ACD model capturing features of the EGARCH specification proposed by
+Nelson (1991). This model allows for a linear news impact function that is kinked
+at "i 1 D 1:
+
+                    ln i D ! C ˛"i 1 C cj"i 1  1j C ˇ ln i 1 :                 (6.5)
+
+For durations shorter than the conditional mean ("i 1 < 1), the news impact curve
+has a slope ˛  c and an intercept ! C c, while for durations longer than the
+conditional mean ("i 1 > 1), slope and intercept are ˛ C c and !  c, respectively.
+
+
+6.1.1.4 Augmented Box–Cox ACD (ABACD) Model
+
+While the EXACD model allows for news impact curves that are kinked at "i 1 D 1
+only, a valuable generalization is to parameterize also the position of the kink. Using
+the parameterization for modelling asymmetric GARCH processes introduced by
+Hentschel (1995), we obtain a specification that we call augmented Box–Cox ACD
+model:
+
+                iı1 D ! C ˛.j"i 1  bj C c."i 1  b//ı2 C ˇiı1
+                                                                 1
+                                                                    :                (6.6)
+
+In this specification, the parameter b gives the position of the kink while ı2
+determines the shape of the piecewise functions around the kink. For ı2 > 1, the
+shape is convex and for ı2 < 1, it is concave. It nests the BACD model for b D 0
+and c D 0. This model does not encompass the basic ACD model since the ABACD
+specification is based on an additive stochastic component.
+   Even though this specification of the news impact function allows for more
+flexibility, it has one major drawback since the parameter restriction jcj <D 1
+has to be imposed in order to circumvent complex values whenever ı2 ¤ 1. This
+restriction is binding in the case where the model has to be fitted to data that imply
+
+
+1
+ They use this notation to prevent confusion with the Exponential ACD model (EACD) based on
+an exponential distribution.
+
+
+===== PDF page 161 / printed page 146 =====
+146                                             6 Generalized Multiplicative Error Models
+
+
+an upward kinked concave news impact function. Such a pattern is quite typical
+for financial durations (see also the empirical results in Sect. 6.1.3) and is only
+possible for c < 1 (and ˛ < 0). Hence, in such a case, a restricted version of
+the BACD model must be estimated. In particular, for cases when c converges to the
+boundary, either ı2 or, alternatively, jcj has to be fixed to 1. Setting ı2 D 1 implies
+a piecewise linear news impact function that is kinked at b. In that case, the model
+is reformulated as
+
+                iı1  1                                 ı1  1
+                         D !Q C ˛"       Q i 1  bj C ˇ i 1
+                                Q i 1 C cj"                     ;                 (6.7)
+                   ı1                                       ı1
+
+where
+
+                    !  ˛cb C ˇ  1                 ˛c                    ˛
+            !Q WD                   ;       ˛Q WD      ;   and    cQ WD      :
+                          ı1                        ı1                    ı1
+
+Such a specification nests the EXACD model for ı1 ! 0 and b D 1. Alternatively,
+by setting c D 1, the specification becomes
+
+                    iı1 D ! C ˛."
+                               Q i 1  b/ı2 1l f"i 1 bg C ˇiı1
+                                                                 1
+                                                                    ;
+
+where ˛Q D 2ı2 ˛. Thus, the news impact function is zero for "i 1  b and follows
+a concave (convex) function for ı2 < 1 (ı2 > 1). Correspondingly, setting c D 1
+leads to
+
+                    iı1 D ! C ˛.b
+                               Q  "i 1 /ı2 1l f"i 1 bg C ˇiı1
+                                                                 1
+                                                                    :
+
+Note that the latter two restricted ABACD specifications do not nest the
+EXACD model but the BACD model for b D 0 (b ! 1) whenever c is set
+to 1 (1).
+
+
+6.1.1.5 Hentschel ACD (HACD) Model
+
+An alternative nonlinear ACD model is proposed by Fernandes and Grammig
+(2006). They introduce a specification that is the direct counterpart to the augmented
+GARCH process proposed by Hentschel (1995). Though Fernandes and Grammig
+call it augmented ACD model, here, we call it H(entschel)-ACD model in order to
+avoid confusion with other augmented ACD processes considered in this section.
+The HACD mode is given by
+
+             iı1 D ! C ˛iı1
+                            1
+                               .j"i 1  bj C c."i 1  b//ı2 C ˇiı1
+                                                                    1
+                                                                       :           (6.8)
+
+This specification is quite similar to the ABACD model. The main difference is that
+the HACD model is based on a multiplicative stochastic component (since iı1    1
+
+
+===== PDF page 162 / printed page 147 =====
+6.1 A Class of Augmented ACD Models                                                            147
+
+
+acts multiplicatively with a function of "i 1 ) while the ABACD model is based on
+an additive stochastic component. Therefore, the HACD model imposes the same
+parameter restriction for c as in the ABACD case. Since the HACD model includes
+a multiplicative stochastic component, it nests the basic linear ACD model for ı1 D
+ı2 D 1, b D c D 0. It coincides with a special case of the ABACD model for
+ı1 ! 0. Therefore, it nests also the LACD1 model for ı1 ! 0, ı2 ! 0, b D c D 0
+and the LACD2 model for ı1 ! 0, ı2 D 1, b D c D 0. Moreover, it corresponds
+to the Box–Cox specification introduced by Dufour and Engle (2000) for ı1 ! 0,
+b D c D 0 and to the EXACD model for ı1 ! 0, ı2 D b D 1. However, in general,
+it does not encompass the AMACD, BACD and ABACD model since it is based on
+a multiplicative stochastic component.
+
+
+6.1.1.6 Augmented Hentschel ACD (AHACD) Model
+
+An encompassing model that nests all specifications outlined above is given by
+
+         iı1 D ! C ˛iı1
+                        1
+                           .j"i 1  bj                                                      (6.9)
+
+                 C c."i 1  b//ı2 C .j"i 1  bj C c."i 1  b//ı2 C ˇiı1
+                                                                           1
+                                                                              :
+
+We call this specification augmented Hentschel ACD model since it combines the
+HACD model with the ABACD specification. This ACD model allows for both
+additive and multiplicative stochastic coefficients, and therefore implies an additive
+as well as a multiplicative impact of past shocks on the conditional mean function.
+It encompasses all specifications nested by the HACD model, as well as all other
+models based on additive stochastic components. In particular, it nests the AMACD
+model for ı1 D ı2 D 1, b D c D 0, the BACD model for ˛ D b D c D 0
+and the ABACD model for ˛ D 0. The AGACD, the HACD and the ABACD
+models coincide for ı1 ! 0. Therefore, the parameters ˛ and  are only separately
+identifiable whenever ı1 > 0. A further generalization would be to specify different
+news impact parameters b, c and ı2 for the additive and the stochastic component.
+However, in this case the estimation of the model becomes tricky due to numerical
+complexity.
+
+
+6.1.1.7 Spline News Impact ACD (SNIACD) Model
+
+A further type of ACD specification is obtained by modelling the news response in
+terms of a piecewise linear function. In the spirit of Engle and Ng (1993), the news
+impact curve might be parameterized as a linear spline function with nodes at given
+break points of "i 1 . In particular, the range of "i 1 is divided into M intervals where
+M  (M C ) denotes the number of intervals in the range "i 1 < 1 ("i 1 > 1) with
+M D M  CM C . By denoting the breakpoints by f"NM  ; : : : ; "N1 ; "N0 ; "N1 ; : : : ; "N M C g,
+the SNIACD model is given by
+
+
+===== PDF page 163 / printed page 148 =====
+148                                                    6 Generalized Multiplicative Error Models
+
+                                  C
+                              X
+                              M
+                                       C
+                  i D ! C            ˛m 1l f"i 1 N"m g ."i 1  "N m /
+                              mD0
+                            M
+                            X
+                                   
+                        C         ˛m 1l f"i 1 <N"m g ."i 1  "Nm / C ˇi 1 ;          (6.10)
+                            mD0
+
+         C         
+where ˛m    and ˛m   denote the coefficients associated with the piecewise linear
+spline. Alternatively, the model can also be specified in terms of a logarithmic
+transformation of i . In this form, the model is more easy to estimate since it does
+not require any non-negativity restrictions. The intervals must not be equally sized,
+nor do we need the same number of intervals on each side of "N0 . As pointed out
+by Engle and Ng (1993), a slow increase in M as a function of the sample size
+should asymptotically give a consistent estimate of the news impact curve. This
+specification allows for extremely flexible (nonlinear) news responses, but does not
+necessarily nest the other (parametric) ACD specifications.
+
+
+
+6.1.2 Theoretical Properties
+
+By recalling the formulation of ACD models in terms of a generalized polynomial
+coefficient model, (6.1), we can classify all ACD specifications discussed above
+by using a corresponding parameterization for #./, A./ and C./. This is shown in
+Table 6.1. The theoretical properties for this class of models are derived by Carrasco
+and Chen (2002) building on results by Mokkadem (1990). They provide sufficient
+conditions ensuring ˇ-mixing, strict stationarity and the existence of higher order
+moments. We reproduce the main findings in the following proposition:
+Proposition 6.1. Assume that the durations xi ; i D 1; : : : ; n, follow the process
+xi D i "i , where i is given by one of the processes in Table 6.1. Assume that
+"i is an i.i.d. random variable that is independent of i and presume that the
+marginal probability distribution of "i is absolutely continuous with respect to the
+Lebesgue measure on .0; 1/. Moreover, "i is independent of .#.i 1 ; : : : ; #.1 //.
+Let %.A.// be the largest eigenvalue in absolute value of the polynomial function
+A./. Moreover, assume that
+  (i) A./ and C./ are polynomial functions that are measurable with respect to the
+      sigma field generated by "i .
+ (ii) %.A.0// < 1.
+(iii) jA.0/j < 1, EŒA."i /s < 1 and EŒC."i /s < 1 for some integers s  1.
+Then, the process fi g is Markov geometrically ergodic and EŒi s < 1. If the
+processes fi gniD1 and fxi gniD1 are initialized from their ergodic distribution, then
+they are strictly stationary and ˇ-mixing with exponential decay.
+
+
+===== PDF page 164 / printed page 149 =====
+6.1 A Class of Augmented ACD Models                                                           149
+
+
+Table 6.1 Classification of ACD models
+Typ           #.i /           A."i /                    C ."i /
+Linear and logarithmic ACD models
+ACD            i             ˛"i1 C ˇ                  !
+LACD1          ln i          ˇ                          ! C ˛ ln "i1
+LACD2          ln i          ˇ                          ! C ˛"i1
+
+Nonlinear ACD models
+               ı                                                   ı
+BACD         i 1               ˇ                        ! C ˛"i1
+                                                                2
+
+
+EXACD        ln i              ˇ                        ! C ˛"i1 C cj"i1  1j
+               ı
+ABACD        i 1               ˇ                        ! C ˛.j"i1  bj C c."i1  b//ı2
+HACD         iı1               ˛.j"i1  bj C ˇ         !
+                                  Cc."i1  b//ı2
+
+Augmented ACD models
+AMACD       i                  ˛"i1 C ˇ                ! C "i1
+AHACD       iı1                ˛.j"i1  bj C ˇ         ! C .j"i1  bj C c."i1  b//ı2
+                                 Cc."i1  b//ı2
+
+Spline news impact ACD model
+                                                            PM C C
+SNIACD         i or ln i      ˇ                        ! C mD0 ˛m  1l              ."     "Nm /
+                                                            PM   f"i 1 N"m g i1
+                                                          C mD0 ˛m 1l f"i 1 <N"m g ."i1  "Nm /
+
+
+
+Proof: See Carrasco and Chen (2002), Proposition 2 and 5.                     
+   Hence, establishing stationarity and ergodicity conditions for the individual
+ACD specifications requires imposing restrictions on the functions A./ and C./.
+Corresponding examples in the context of individual GARCH specifications are
+given by Carrasco and Chen (2002). Generalizations of these results are given by
+Meitz and Saikkonen (2008) in the framework of Markov models.2
+
+
+
+6.1.3 Empirical Illustrations
+
+Table 6.4 shows estimates of different ACD specifications based on (de-sea-
+sonalized) trade durations and $0:05 midquote change durations for the Coca-Cola
+and GE stock traded at the NYSE covering the period from 01/02/01 to 05/31/01.
+For each type of financial duration, seven different ACD specifications are esti-
+mated, the basic ACD model, the LACD2 model, the BACD model, the EXACD
+model, the ABACD model and a logarithmic version of the SNIACD model. The
+individual time series are re-initialized every trading day and are estimated by
+
+
+
+2
+  See also Carrasco and Chen (2005) and Meitz and Saikkonen (2008) for a correction of some of
+the results provided by Carrasco and Chen (2002). These corrections, however, do not affect the
+proposition presented above.
+
+
+===== PDF page 165 / printed page 150 =====
+150                                                       6 Generalized Multiplicative Error Models
+
+
+QML. The lag orders are chosen according to the Bayes Information Criterion
+(BIC) suggesting ACD(2,1) or ACD(2,2) models as the preferred specification.
+Note that for the individual types of nonlinear ACD specifications, the inclusion
+of a second lag is not straightforward because it also requires a parameterization
+of the second lag news impact function. Hence, it doubles the corresponding news
+response parameters which is not practicable for the highly parameterized ABACD
+and SNIACD models. For this reason, a parameterization is chosen that allows, on
+the one hand, to account for higher order dynamics, but on the other hand, ensures
+model parsimony. In particular, the news impact of the second lag is modelled in the
+same way as for the first lag, i.e., based on the same parameters ı1 , ı2 , c, with only
+the autoregressive parameters ˛, ˇ, c and  being doubled. Then, the ABACD(2,2)
+model is given by
+
+
+                          X
+                          2                                                       X
+                                                                                  2
+          iı1 D ! C             ˛j .j"i j  bj C cj ."i j  b// C       ı2
+                                                                                         ˇj iıj
+                                                                                               1
+                                                                                                  :
+                          j D1                                                    j D1
+
+
+Correspondingly, the SNIACD(2,2) model is given by
+
+                     C                                            
+                 X
+                 M                                               X
+                                                                 M
+                          C                                             
+      i D ! C           ˛m 1l f"i 1 >N"m g ."i 1  "N m / C         ˛m 1l f"i 1 <N"m g ."i 1  "Nm /
+                 mD0                                             mD0
+
+               MC
+               X
+                      C
+           C        .˛m C aC /1l f"i 2 N"m g ."i 2  "Nm /
+               mD0
+                
+               X
+               M                                                       X
+                                                                       2
+                      
+           C        .˛m C a /1l f"i 2 <N"m g ."i 2  "Nm / C               ˇj i j :               (6.11)
+               mD0                                                     j D1
+
+
+   Tables 6.2–6.5 give the estimation results and diagnostics. Two difficulties have
+to be considered in this context. First, for nonlinear models involving absolute
+value functions in the news impact function, the estimation of the Hessian matrix
+is often cumbersome due to numerical problems. For this reason, the asymptotic
+standard errors are estimated by the OPG estimator of the variance covariance
+matrix. Second, in several specifications, the coefficients ı1 and c converge to their
+boundaries. Then, the coefficients are set to their boundaries and correspondingly
+restricted models are re-estimated. In this context, see the discussion in Sect. 6.1.1.4.
+   Analyzing the estimation results, the following findings can be summarized.
+First, the innovation parameters are quite low, while the persistence parameters are
+close to one. Note that no explicit non-negativity restrictions on the autoregressive
+parameters are imposed. For this reason, even negative values for ˛1 are obtained in
+several regressions. However, in these cases, they are overcompensated by positive
+
+
+===== PDF page 166 / printed page 151 =====
+6.1 A Class of Augmented ACD Models                                                             151
+
+
+Table 6.2 QML estimates of various types of augmented ACD models for Coca-Cola trade
+durations. Sample period 03/19/01 to 03/30/01. 15,174 observations. Standard errors based
+on OPG estimates (in parantheses). SNIACD model estimated based on the category bounds
+.0:1; 0:2; 0:5; 1:0; 1:5; 2:0; 3:0/ with "N0 D 1:0. Diagnostics: Log Likelihood (LL), Bayes Infor-
+mation Criterion (BIC), mean ("NOi ), standard deviation (S.D.) and Ljung–Box statistic with respect
+to 20 lags (LB) of ACD residuals
+         ACD            LACD           BACD          EXACD         ABACD                  SNIACD
+!        0.122          0.038         0.100         0.041        0.010         !        0.036
+         (0.016)        (0.003)        (0.043)       (0.004)       (0.010)                (0.011)
+˛1       0.024         0.025         0.026        0.075        0.066
+         (0.004)        (0.004)        (0.038)       (0.009)       (0.011)
+˛2       0.065          0.063          0.058         0.104         0.062
+         (0.005)        (0.005)        (0.087)       (0.009)       (0.011)
+ˇ1       0.837          0.869          0.872         0.868         0.871         ˇ1       0.899
+         (0.019)        (0.017)        (0.018)       (0.018)       (0.018)                (0.014)
+ı1                                     0.483                          a         ˛1C      0.062
+                                       (0.736)                        a                  (0.021)
+ı2                                     0.672                        1.000b       ˛2C      0.071
+                                       (0.089)                        b                  (0.039)
+b                                                                  1.420         ˛3C      0.031
+                                                                   (0.203)                (0.031)
+c1                                                   0.080         0.773        ˛4C      0.033
+                                                     (0.012)       (0.119)                (0.013)
+c2                                                   0.068        1.393        ˛1      0.124
+                                                     (0.013)       (0.187)                (0.020)
+1                                                                               ˛2      0.153
+                                                                                          (0.038)
+2                                                                               ˛3      0.245
+                                                                                          (0.112)
+                                                                                 ˛4      0.863
+                                                                                          (0.335)
+                                                                                 aC       0.230
+                                                                                          (0.026)
+                                                                                 a       0.009
+                                                                                          (0.004)
+
+LL         15,059       15,060       15,056       15,047       15,045                15,038
+BIC        15,079       15,079       15,085       15,075       15,079                15,095
+"NOi       1.000         1.000         1.000         1.000         1.000                  1.000
+S.D.       1.245         1.246         1.249         1.245         1.246                  1.242
+LB         17.146        15.823        16.083        15.254        15.761                 17.527
+a
+   Estimation based on a logarithmic specification
+b
+   Parameter set to boundary
+
+
+values of ˛2 .3 Nonetheless, based on the estimates we do not find any violations of
+the non-negativity restriction of i .
+
+
+3
+ Note that in a nonlinear ACD specification, an upward kinked concave news impact function
+actually implies a negative value for ˛; see also Sect. 6.1.1.4.
+
+
+===== PDF page 167 / printed page 152 =====
+152                                                   6 Generalized Multiplicative Error Models
+
+
+Table 6.3 QML estimates of various types of augmented ACD models for Coca-Cola $0.05
+price durations. Sample period 01/02/01 to 05/31/01. 12,971 observations. Standard errors
+based on OPG estimates (in parantheses). SNIACD model estimated based on the category
+bounds .0:1; 0:2; 0:5; 1:0; 1:5; 2:0; 3:0/ with "N0 D 1:0. Diagnostics: Log Likelihood (LL), Bayes
+Information Criterion (BIC), mean ("NOi ), standard deviation (S.D.) and Ljung–Box statistic with
+respect to 20 lags (LB) of ACD residuals
+         ACD            LACD           BACD          EXACD       ABACD                  SNIACD
+!        0.012          0.050         0.004        0.036      0.035         !        0.020
+         (0.002)        (0.003)        (0.027)       (0.003)     (0.007)                (0.009)
+˛1       0.079          0.075          0.037         0.183       0.170
+         (0.005)        (0.005)        (0.061)       (0.011)     (0.032)
+˛2       0.020         0.025         0.019        0.113      0.132
+         (0.003)        (0.004)        (0.031)       (0.010)     (0.025)
+ˇ1       0.930          0.988          0.987         0.990       0.991         ˇ1       0.989
+         (0.004)        (0.002)        (0.002)       (0.002)     (0.002)                (0.002)
+ı1                                     0.081                        a         ˛1C      0.021
+                                       (0.135)                      a                  (0.018)
+ı2                                     0.275                     1.096         ˛2C      0.010
+                                       (0.044)                   (0.137)                (0.034)
+b                                                                1.016         ˛3C      0.034
+                                                                 (0.103)                (0.029)
+c1                                                   0.179      1:000b       ˛4C      0.006
+                                                     (0.013)        b                  (0.014)
+c2                                                   0.136       0.801        ˛1      0.226
+                                                     (0.013)     (0.035)                (0.020)
+1                                                                             ˛2      0.246
+                                                                                        (0.038)
+2                                                                             ˛3      0.324
+                                                                                        (0.101)
+                                                                               ˛4      0.157
+                                                                                        (0.199)
+                                                                               aC       0.394
+                                                                                        (0.028)
+                                                                               a       0.005
+                                                                                        (0.003)
+
+LL         12,072       12,081       12,016       11,996     11,996                11,991
+BIC        12,091       12,100       12,044       12,024     12,029                12,048
+"NOi       1.008         1.008         1.033         1.005       1.005                  1.004
+S.D.       1.208         1.210         1.234         1.196       1.196                  1.194
+LB         30.816        31.776        26.809        23.016      24.431                 23.217
+a
+   Estimation based on a logarithmic specification
+b
+   Parameter set to boundary
+
+   Second, by comparing the goodness-of-fit of the specifications based on the BIC
+values, we find the best performance for EXACD and BACD models. Especially
+for price durations, the more simple (linear and logarithmic) models are rejected in
+favor of the (A)BACD and EXACD model. For trade durations, no clear picture is
+revealed. For the Coca-Cola stock, the EXACD model is the best specification, while
+
+
+===== PDF page 168 / printed page 153 =====
+6.1 A Class of Augmented ACD Models                                                             153
+
+
+Table 6.4 QML estimates of various types of augmented ACD models for GE trade dura-
+tions. Sample period 03/19/01 to 03/30/01. 25,101 observations. Standard errors based on
+OPG estimates (in parantheses). SNIACD model estimated based on the category bounds
+.0:1; 0:2; 0:5; 1:0; 1:5; 2:0; 3:0/ with "N0 D 1:0. Diagnostics: Log Likelihood (LL), Bayes Infor-
+mation Criterion (BIC), mean ("NOi ), standard deviation (S.D.) and Ljung–Box statistic with respect
+to 20 lags (LB) of ACD residuals
+         ACD            LACD          BACD           EXACD         ABACD                  SNIACD
+!        0.036          0.038        0.003         0.037        0.017         !        0.007
+         (0.005)        (0.003)       (0.030)        (0.003)       (0.024)                (0.007)
+˛1       0.001         0.001        0.000         0.014        0.016
+         (0.006)        (0.006)       (0.006)        (0.010)       (0.018)
+˛2       0.043          0.038         0.042          0.056         0.023
+         (0.006)        (0.006)       (0.033)        (0.010)       (0.024)
+ˇ1       0.922          0.965         0.964          0.966         0.960         ˇ1       0.962
+         (0.007)        (0.005)       (0.005)        (0.005)       (0.005)                (0.005)
+ı1                                    0.705                        0.497         ˛1C      0.039
+                                      (0.558)                      (0.528)                (0.014)
+ı2                                    0.758                        0.595         ˛2C      0.021
+                                      (0.107)                      (0.078)                (0.027)
+b                                                                  0.444         ˛3C      0.014
+                                                                   (0.030)                (0.023)
+c1                                                   0.023         0.956        ˛4C      0.008
+                                                     (0.014)       (0.143)                (0.012)
+c2                                                   0.031         1.000a       ˛1      0.030
+                                                     (0.014)          a                  (0.019)
+1                                                                               ˛2      0.048
+                                                                                          (0.030)
+2                                                                               ˛3      0.227
+                                                                                          (0.096)
+                                                                                 ˛4      0.636
+                                                                                          (1.290)
+                                                                                 aC       0.097
+                                                                                          (0.031)
+                                                                                 a       0.006
+                                                                                          (0.005)
+
+LL         24,813       24,815      24,811        24,813       24,803                24,801
+BIC        24,834       24,836      24,841        24,843       24,844                24,862
+"NOi       1.001         1.000        0.999          1.000         1.000                  1.001
+S.D.       1.007         1.007        1.006          1.007         1.006                  1.005
+LB         38.695        37.281       36.779         37.039        35.826                 36.380
+a
+    Parameter set to boundary
+
+for the GE stock, the basic ACD model leads to the highest BIC. Nonetheless, for
+all specifications, we observe the strongest increase of the log-likelihood function
+when the (L)ACD model is extended to a BACD or EXACD model. This result
+illustrates that for both types of financial durations, it is crucial to account for
+nonlinear news impact effects. Not surprisingly, the most flexible SNIACD model
+leads to the overall highest log-likelihood values for all series indicating the best fit
+to the data.
+
+
+===== PDF page 169 / printed page 154 =====
+154                                                   6 Generalized Multiplicative Error Models
+
+
+Table 6.5 QML estimates of various types of augmented ACD models for GE $0.05 price
+durations. Sample period 01/02/01 to 05/31/01. 16,008 observations. Standard errors based
+on OPG estimates (in parantheses). SNIACD model estimated based on the category bounds
+.0:1; 0:2; 0:5; 1:0; 1:5; 2:0; 3:0/ with "N0 D 1:0. Diagnostics: Bayes Information Criterion (BIC),
+mean ("NOi ), standard deviation (S.D.) and Ljung–Box statistic with respect to 20 lags (LB) of ACD
+residuals
+           ACD           LACD          BACD         EXACD        ABACD         SNIACD
+!          0.009         0.030        0.093       0.034       0.016        !            0.012
+           (0.002)        (0.004)      (0.017)      (0.005)      (0.003)                    (0.006)
+˛1         0.143         0.122         0.372        0.174        0.389
+           (0.009)        (0.007)      (0.049)      (0.011)      (0.062)
+˛2         0.094         0.092       0.269       0.128       0.325
+           (0.007)       (0.006)       (0.036)      (0.010)      (0.054)
+ˇ1         1.227         1.532         1.434        1.433        1.408         ˇ1           1.391
+           (0.073)        (0.057)      (0.063)      (0.067)      (0.066)                    (0.068)
+ˇ2         0.284         0.538       0.442       0.442       0.417        ˇ2           0.400
+           (0.066)        (0.056)      (0.062)      (0.066)      (0.065)                    (0.067)
+ı1                                         a                       a         ˛1C          0.020
+                                           a                       a                      (0.012)
+ı2                                     0.407                      1.000b       ˛2C          0.051
+                                       (0.051)                      b                      (0.024)
+b                                                                0.355         ˛3C          0.002
+                                                                 (0.032)                    (0.020)
+c1                                                  0.100       1.235        ˛4C          0.018
+                                                    (0.014)      (0.043)                    (0.009)
+c2                                                  0.082        1.179        ˛1          0.211
+                                                    (0.014)      (0.041)                    (0.017)
+1                                                                             ˛2          0.223
+                                                                                            (0.029)
+2                                                                             ˛3          0.120
+                                                                                            (0.072)
+  C
+˛1                                                                             ˛4          0.512
+                                                                                            (0.181)
+˛2C                                                                            aC           0.377
+                                                                                            (0.028)
+˛3C                                                                            a           0.039
+                                                                                            (0.006)
+
+BIC       14,729       14,730      14,699       14,708    14,699                     14,725
+"NOi      1.002         1.001        1.000         1.001      1.000                       1.000
+S.D.      1.060         1.057        1.059         1.059      1.056                       1.057
+LB        33.643        23.238       35.240        29.765     32.469                      33.801
+a
+   Estimation based on a logarithmic specification
+b
+   Parameter set to boundary
+
+
+
+   Third, the estimated Box–Cox parameters ıO1 and ıO2 are almost always lower than
+one for price durations, while for trade durations, values greater and less than one
+are obtained. These results are in conflict to the linear ACD and, in most cases, also
+
+
+===== PDF page 170 / printed page 155 =====
+6.1 A Class of Augmented ACD Models                                                   155
+
+
+to the LACD model. Hence, we notice that price duration processes imply concave
+news impact curves, i.e., the adjustments of the conditional expected mean are
+stronger in periods of smaller than expected price durations (volatility shocks) than
+in periods with unexpectedly low price intensities. Corresponding results are found
+based on the EXACD model as the mostly highly significant negative parameters for
+c imply upward kinked concave shaped news response curves. For trade durations,
+the picture is less clear since we obtain evidence for concave, as well as convex
+news impact curves.
+    Fourth, in most cases only restricted versions of the augmented ACD models
+are estimated because either ı1 tends to zero and/or jcj tends to one. Since most
+duration series seem to imply a concave news impact function, it is not surprising
+that the second restriction is binding for nearly all series. In the first case, the model
+is estimated under the restriction ı ! 0, which is performed by estimating the
+model based on a logarithmic transformation. Note that this has consequences for
+the estimates of !, ˛ and  as a logarithmic model belongs to the class of Box–
+Cox models and not to the class of power ACD models, which imply parameter
+transformations from !, ˛ and c to !,  Q ˛Q and cQ as illustrated in Sect. 6.1.1.4. In the
+second case, two restricted versions of the model are re-estimated: one specification
+under the restriction jcj D 1 and one model under ı2 D 1. Then, the specification
+is chosen that leads to the higher log-likelihood value. It turns out that generally
+neither of the restricted models outperforms the other.
+    Fifth, the SNIACD model is estimated using the categorization f0:1; 0:2; 0:5; 1:0;
+1:5; 2:0; 3:0g with "N0 D 1:0 which allows for more flexibility in case of very
+small and very large innovations. For most of the thresholds, we obtain significant
+estimates. However, since these coefficients belong to a spline function, it is not
+useful to interpret them separately. The mostly significant parameters aC and a
+indicate that it is also useful to account for flexible news impact effects for the
+second lag.
+    Figure 6.1 depicts the corresponding news impact functions implied by the
+estimates of the SNIACD model. The shape of the estimated news impact curves
+confirm the estimation results of the parametric ACD models. The news response
+curves for trade durations reveal high nonlinearities, especially for very small
+innovations. For Coca-Cola, we even observe a news response function that implies
+a downward shape for low values of "i 1 . Here, for extremely small innovations,
+the first order autocorrelation is negative rather than positive. This finding illustrates
+that small durations induce significantly different adjustments of the expected mean
+as long durations which has to be taken into account in the econometric modelling.
+This result is in line with the findings of Zhang et al. (2001) who provide evidence
+for similar effects based on estimations of the TACD model.
+   The news response function for price durations reveals a significantly different
+shape. The larger (positive) slope of the curve indicates a higher (positive) auto-
+correlation for price durations. Nonetheless, we notice a nonlinear news impact
+curve with a strongly increasing pattern for "i 1 < 1 and a nearly flat function
+for "i 1  1. Hence, we observe different adjustment processes for unexpectedly
+small price durations, i.e., in periods of unexpectedly high volatility.
+
+
+===== PDF page 171 / printed page 156 =====
+156                                                   6 Generalized Multiplicative Error Models
+
+
+
+
+Fig. 6.1 Estimated news impact curves for trade durations (left) and price durations (right) of the
+Coca-Cola and GE stock
+
+
+   Table 6.6 gives the (Q)ML estimates of ACD, EXACD and SNIACD models for
+de-seasonalized trade durations, 10 bp price durations, and 30-s as well as 2-min
+aggregated volumes for JP Morgan traded at NYSE, June 2009. We observe the
+following effects: First, the parameter estimates indicate that trade durations and
+price durations reveal a lower persistence than time aggregated trading volumes.
+Second, as indicated by the EXACD estimates, we observe clear evidence for asym-
+metric news impacts. The estimates of c are highly significant and reveal concave
+news impact functions. These effects are mostly evident based on aggregated data.
+Third, in terms of the BIC, the EXACD model yields the best goodness-of-fit.
+Hence, allowing for a kinked news impact function seems to be a parsimonious way
+to capture nonlinearities in MEM/ACD dynamics. These effects are confirmed by
+Fig. 6.2 depicting the estimated news impact curves based on the SNIACD model.
+
+
+
+6.2 Regime-Switching ACD Models
+
+In the following subsection, we summarize several further functional extensions of
+the ACD model. All models have in common that they allow for regime-dependence
+of the conditional mean function. The regimes are determined either based on
+observable variables, like in threshold ACD models and smooth transition ACD
+models or based on unobservable factors, as in Markov switching ACD models.
+
+
+
+6.2.1 Threshold ACD Models
+
+Zhang et al. (2001) introduce a threshold ACD (TACD) model which allows
+the expected duration to depend nonlinearly on past information variables. The
+TACD model can be seen as a generalization of the threshold GARCH models
+introduced by Rabemananjara and Zakoian (1993) and Zakoian (1994). Assume a
+
+
+===== PDF page 172 / printed page 157 =====
+6.2 Regime-Switching ACD Models                                                                           157
+
+
+Table 6.6 QML estimates of the ACD model for de-seasonalized trade durations, 10bp price
+durations, and 30-s as well as 2-min aggregated volumes for JP Morgan traded at NYSE, June
+2009. Category bounds for SNIACD model: .0:1; 0:2; 0:5; 1:0; 1:5; 2:0; 3:0/ with "N0 D 1:0
+Par.      Est.           p-val.      Est.           p-val.    Est.          p-val.      Est.        p-val.
+                 Trade dur.                 10bp dur.                30-s vol.             2-min vol.
+ACD
+!         0.019       0.000          0.009            0.000   0.031      0.000          0.007      0.000
+˛         0.055       0.000          0.078            0.000   0.245      0.000          0.245      0.000
+ˇ         0.925       0.000          0.913            0.000   0.738      0.000          0.760      0.000
+BIC            38,238                       9,939               16,204                   3,325
+LB              2.40                          48.6                  22.5                      31.1
+EXACD
+!     0.0494     0.000              0.0624     0.000        0.163     0.000          0.196     0.000
+˛     0.0631      0.000              0.1060      0.000        0.238      0.000          0.257      0.000
+c     0.9789      0.000              0.9801      0.000        0.961      0.000          0.985      0.000
+ˇ     0.0204     0.000              0.0596     0.000        0.112     0.000          0.133     0.000
+BIC        38,226                        9,915                  16,233                   3,324
+LB           2.53                           43.1                    27.3                      36.6
+SNIACD
+!     0.014       0.021              0.035        0.007       0.027       0.074         0.051      0.180
+ˇ     0.979       0.000              0.981        0.000       0.961       0.000         0.986      0.000
+˛1   0.460       0.034              0.238        0.134       -0.183      0.446         1.317     0.692
+˛2   0.020      0.530              0.196        0.173       0.162      0.364         0.250      0.701
+˛3   0.042      0.268              0.237       0.138       0.200       0.284         0.094     0.849
+˛4   0.113       0.000              0.215        0.003       0.221       0.009         0.375      0.082
+˛1C   0.061       0.008              0.039        0.413       0.268       0.000         0.190      0.227
+˛2C   0.011      0.807              0.041        0.653       0.116      0.255         0.183     0.585
+˛3C   0.005       0.888              0.004        0.953       0.073       0.413         0.207      0.506
+˛4C   0.041      0.021              0.068       0.043       0.182      0.000         0.154     0.407
+BIC        38,229                         9,934                  16,210                  3,325
+LB          2.49                            42.3                     25.3                     38.3
+
+
+categorization of durations into M categories with xN m , m D 1; : : : ; M , denoting the
+corresponding category bounds. Then, an M -regime TACD(P ,Q) model is given by
+       8
+       ˆ         .m/
+       <xi D i "i
+       ˆ
+                                                                            if xi 1 2 .xN m1 ; xN m 
+       ˆ
+       :̂ D ! .m/ C PP ˛ .m/ x       PQ     .m/
+          i           j D1 j   i j C  j D1 ˇj i j ;
+                                                                                                    (6.12)
+
+                            .m/                .m/
+   where ! .m/ > 0, ˛j  0 and ˇj                     0 are regime-switching ACD parameters.
+                               .m/                                                                        .m/
+The i.i.d. error term    is assumed to follow some distribution f" .sI " /
+                              "i
+         .m/
+with EŒ"i  D 1 depending on regime-switching distribution parameters  .m/
+                                                                         " .
+
+
+===== PDF page 173 / printed page 158 =====
+158                                                 6 Generalized Multiplicative Error Models
+
+
+
+
+Fig. 6.2 Estimated news impact curves for trade durations, 10bp price durations, and 30-s as well
+as 2-min aggregated volumes for JP Morgan (NYSE). June 2009
+
+Correspondingly to the basic ACD model, the model can be rewritten as
+
+                             X
+                           max.P;Q/
+                                        .m/  .m/
+                                                          X
+                                                          Q
+                                                                  .m/
+        xi D !   .m/
+                       C              .˛j C ˇj /xi j           ˇj i j C i ;         (6.13)
+                             j D1                         j D1
+
+
+with i W D xi  i . Hence, the TACD model corresponds to a threshold
+ARMA(M I max.P; Q/; Q) process.4 Obviously, the TACD model is strongly
+related to the SNIACD model. The main difference is that in the SNIACD model
+only the impact of lagged innovations is regime-dependent while in the TACD
+model all autoregressive and distributional parameters are allowed to be regime-
+switching. Hence, in this sense, the TACD model is more general and allows for
+various forms of nonlinear dynamics. However, the derivation of theoretical proper-
+ties is not straightforward in this framework. Zhang et al. (2001) derive conditions
+for geometric ergodicity and the existence of moments for the TACD(1,1) case.
+Moreover, in the SNIACD model, the threshold values associated with the particular
+regimes are given exogenously while in the TACD model they are endogenous and
+are estimated together with the other parameters. The estimation has to be performed
+by a grid search algorithm over the thresholds xN m and maximizing the conditional
+likelihood for each combination of the grid thresholds. Clearly, for higher numbers
+of M , this procedure becomes computationally quite cumbersome.
+
+
+6.2.2 Smooth Transition ACD Models
+
+Note that in the TACD model, as well as in the SNIACD model, the transition from
+one state to another state is not smooth but follows a jump process. An alternative is
+
+
+4
+ For more details concerning threshold autoregressive (TAR) models, see, for example, Tong
+(1990).
+
+
+===== PDF page 174 / printed page 159 =====
+6.2 Regime-Switching ACD Models                                                       159
+
+
+to allow for a smooth transition which is driven by some transition function. Smooth
+transition autoregressive (STAR) models are considered, for example, by Granger
+and Teräsvirta (1993), Teräsvirta (1994,1998) for the conditional mean of financial
+return processes and by Hagerud (1997) and Gonzalez-Rivera (1998) for conditional
+variance processes. Meitz and Teräsvirta (2006) propose a smooth transition ACD
+(STACD) model of the form
+
+                  X
+                  P                   X
+                                      P                          X
+                                                                 Q
+      i D ! C           ˛j xi j C     .!j C ˛j xi j /G./ C   ˇj i j ;       (6.14)
+                  j D1                j D1                       j D1
+
+                  X
+                  P                   X
+                                      P                        X
+                                                               Q
+         D!C             !j G./ C     .˛j C ˛j G.//xi j C   ˇj i j ;
+                  j D1                j D1                       j D1
+
+
+where G./ D G.ln xi I ; c/ denotes a transition function given by
+                                             (                          ) !1
+                                                 Y
+                                                 M
+        G.ln xi j I ; c/ D 1 C exp               .ln xi j  cm /           ;   (6.15)
+                                                 mD1
+
+
+for c1  : : :  cM ;  > 0. The choice of G./ as a logistic function ensures that
+it is bounded and non-negative. As it is defined on the entire real axis, ln xi j
+is used as the transition variable. As discussed by Meitz and Teräsvirta (2006),
+an alternative would be to choose a cumulative distribution function of a random
+variable with positive support as transition function. However, due to its non-
+decreasing nature, such a transition function would impose strong a priori structures
+preventing possible non-linearities. The parameter M determines the shape of
+the transition function. For M D 1, the transition function increases in xi j .
+Alternatively, choosing M D 2 allows very short and long durations having a
+different news impact than more moderate durations. Figure 6.3 shows the transition
+function for the case M D 2, c1 D 1, c2 D 1 and for different values for  . It
+is shown that the smoothness of the transition declines with  . Hence, in the limit,
+ ! 1, the transition is not smooth anymore and the model corresponds to a
+special case of the TACD model as proposed by Zhang et al. (2001). In this case, !
+and ˛ would jump between a regime for very short and long durations and a regime
+for moderate durations (as approximately given by 0:5  xi  2:5 in Fig. 6.3). In
+                                                                    .m/
+particular, a two-regime TACD(1,1) model with ˇ .1/ D ˇ .2/ and "i  Exp.1/,
+m D 1; 2, is the limiting case of a STACD(1,1) process for M D 1 and  ! 1.
+Correspondingly, a three-regime TACD model with ˇ .1/ D ˇ .2/ D ˇ .3/ , ! .1/ D ! .3/ ,
+                   .m/
+˛ .1/ D ˛ .3/ and "i  Exp.1/, m D 1; 2; 3, is the limiting case of a STACD(1,1)
+process with M D 2 and  ! 1.
+    Correspondingly, Meitz and Teräsvirta (2006) also suggest a smooth transition
+Log ACD (STLACD) model given by
+
+
+===== PDF page 175 / printed page 160 =====
+160                                                         6 Generalized Multiplicative Error Models
+
+
+
+
+Fig. 6.3 The transition function G.ln xi I ; c/ as a function of xi for M D 2, c1 D 1, c2 D 1
+and for  2 f1; 3; 5; 10; 50g. The smoothest (steepest) curves are associated with  D 1 ( D 50)
+
+
+                    X
+                    P                      X
+                                           P                               X
+                                                                           Q
+  ln i D ! C              ˛j ln xi j C       .!j C˛j ln xi j /G./C          ˇj ln i j ; (6.16)
+                    j D1                   j D1                            j D1
+
+                    X
+                    P                   X
+                                        P                                  X
+                                                                           Q
+          D!C              !j G./ C       .˛j C ˛j G.// ln xi j C           ˇj ln i j ;
+                    j D1                j D1                              j D1
+
+
+with G./ D G.ln xi j I ; c/. Clearly, there are numerous alternative possibilities
+to choose the transition variable. Instead of specifying G./ in terms of xi , it
+could be also specified in terms of the ACD innovation "i D xi =i . Then,
+regime switches would be driven by durations which are scaled by their conditional
+expectations, and thus “surprises” in durations. Alternatively, regime switching of
+ACD parameters could be also driven by deterministic time patterns. For instance,
+Meitz and Teräsvirta (2006) propose specifying G./ in terms of a standardized
+calendar time variable tNi 2 Œ0; 1 reflecting, e.g., the time of the day. Then, choosing
+the transition function as G  .tNi 1 I ; c/ D G.tNi 1 I ; c/  0:5 yields a so-called
+time-varying ACD (TVACD) specification,
+                                                            0                                    1
+             X
+             P                   X
+                                 Q
+                                                     X
+                                                     P                           X
+                                                                                 Q
+i D ! C            ˛j xi j C          ˇj i j C          @!j C ˛j xi j C          ˇj i j A G  ./
+             j D1                j D1                j D1                        j D1
+
+                                X
+                                P                                  X
+                                                                   P
+      D .! C !  G  .// C         .˛j C ˛j G  .//xi j C          .ˇj C ˇj G  .//i j ;
+                                j D1                               j D1
+                                                                                                     (6.17)
+
+
+===== PDF page 176 / printed page 161 =====
+6.2 Regime-Switching ACD Models                                                      161
+
+
+with G  ./ D G  .tNi 1 I ; c//. Here, not only ! and ˛ but also the persistence
+parameter ˇ vary.
+
+
+
+6.2.3 Markov Switching ACD Models
+
+Hujer et al. (2002) propose a Markov switching ACD model where the conditional
+mean function depends on an unobservable stochastic process, which follows a
+Markov chain. Define in the following Mi as a discrete valued stochastic process
+which indicates the state of the unobservable Markov chain and takes the values
+1; 2; : : : ; M . Then, the MSACD model is given by
+
+                         xi D  i " i ;     "i  f" .s/                            (6.18)
+                                 X
+                                 M
+                                                         .m/
+                         i D          Pr Mi D m jFti 1  i ;                   (6.19)
+                                 mD1
+
+                                 X
+                                 M
+                                                        
+                    f" .s/ D           Pr Mi D m jFti 1  f" .sI ".m/ /;        (6.20)
+                                 mD1
+
+        .m/
+where i      denotes the regime-specific conditional mean function
+
+                         .m/
+                                           X
+                                           P
+                                                   .m/
+                                                               X
+                                                               Q
+                                                                       .m/   .m/
+                    i         D ! .m/ C          ˛j xi j C          ˇj i j     (6.21)
+                                           j D1                j D1
+
+              .m/
+and f" .sI " / is the regime-dependent conditional density for "i . The Markov
+chain is characterized by a transition matrix P  with elements pkl
+                                                                 
+                                                                    WD PrŒMi D kj
+  
+Mi 1 D l. Hence, the marginal density of xi is given by
+
+                         X
+                         M
+                                                
+      f .xi jFi 1 / D          Pr Mi D m jFi 1  f .xi jMi D mI Fi 1 /:       (6.22)
+                         mD1
+
+Hujer et al. (2002) estimate the MSACD model based on the Expectation-
+Maximization (EM) algorithm proposed by Dempster et al. (1977). They show
+that the MSACD outperforms the basic (linear) ACD model and leads to a
+better description of the underlying duration process. In this sense, they confirm
+the results of Zhang et al. (2001) that nonlinear ACD specifications are more
+appropriate to model financial duration processes. Hujer et al. (2002) illustrate
+that the unobservable regime variable can be interpreted in light of market
+microstructure theory and allows for more sophisticated tests of corresponding
+theoretical hypotheses.
+
+
+===== PDF page 177 / printed page 162 =====
+162                                                        6 Generalized Multiplicative Error Models
+
+
+6.3 Long Memory ACD Models
+
+As illustrated in Chap. 3, trading variables typically exhibit a strong persistence
+implying ACD parameters ˛ and ˇ to sum nearly to one. A typical indication for the
+existence of long range dependence is an autocorrelation function which displays no
+exponential decay but a slow, hyperbolic rate of decay. Formally,
+                                                        ˛
+                                        lim    k =Œck         D 1;
+                                       k!1
+
+
+with ˛ 2 .0; 1/ and c > 0 (see, e.g. Beran, 1994). A consequence of this result is
+                                                                                N
+that the variance of sample averages computed over sub-samples of the length n, x,
+decline with a rate n˛ , i.e.
+
+                                    VŒxNn   cv n˛ ;        cv > 0:
+
+Figure 6.4 shows the plots of ln n vs. ln VŒxNn  for trade durations, price durations as
+well as the number of trades and cumulated volumes in 30-s intervals for JPM,
+Microsoft and Deutsche Telekom traded at the NYSE, NASDAQ and XETRA,
+respectively. The estimated slopes underlying the corresponding bivariate regres-
+sions yield clear evidence for long range dependence.
+   While the existence of long memory patterns in return and volatility series have
+been already explored in much detail,5 only a few approaches pay attention to such
+effects in high-frequency series. Engle (2000) applies a two-component model as
+proposed by Ding and Granger (1996), given by
+
+                                  i D w1;i C .1  w/2;i ;                                 (6.23)
+                                1;i D ˛1 xi 1 C .1  ˛1 /1;i 1 ;                         (6.24)
+                                2;i D ! C ˛2 xi 1 C ˇ2 2;i 1 :                           (6.25)
+
+    Hence, i consists of the weighted sum of two components, 1;i and 2;i with
+weights w and 1  w, respectively. Equation (6.24) is an integrated ACD(1,1)
+specification capturing long-term movements, while (6.25) is a standard ACD(1,1)
+specification that captures short-term fluctuations in financial durations. As illus-
+trated by Ding and Granger (1996), the resulting two-component process is
+covariance stationary, but allows for a slower decay of the ACF compared to the
+corresponding standard model. Engle (2000) shows that the two component ACD
+model improves the goodness-of-fit and captures the duration dynamics in a better
+way than the basic ACD model. Ding and Granger (1996) analyze the limiting
+case of a multi-component model by increasing the number of components towards
+infinity. They show that such a model implies autocorrelation functions that reflect
+
+
+5
+    For an overview, see Beran (1994) or Baillie (1996).
+
+
+===== PDF page 178 / printed page 163 =====
+6.3 Long Memory ACD Models                                                                  163
+
+
+
+
+Fig. 6.4 Plots of ln n vs. ln VŒxNn  for trade durations, midquote change durations, the number
+of trades as well as cumulated trading volumes during 30-s intervals for JP Morgan (NYSE),
+Microsoft (NASDAQ) and Deutsche Telekom (XETRA). Aggregation levels for price durations
+in basis points of the average price level for JP Morgan and in minimum tick size for Microsoft
+and Deutsche Telekom. Sample period: June 2009 for JP Morgan and Microsoft and September
+2010 for Deutsche Telekom
+
+
+the typical characteristics of long memory processes. Moreover, it is shown that the
+resulting model is closely related to the fractionally integrated GARCH (FIGARCH)
+model proposed by Baillie et al. (1996). Following this string of the literature,
+Jasiak (1998) proposes a fractionally integrated ACD (FIACD) model which is the
+counterpart to the FIGARCH model. The FIACD model is based on a fractionally
+integrated process for i and is given by
+
+                 Œ1  ˇ.L/i D ! C Œ1  ˇ.L/  .L/.1  L/d xi ;                        (6.26)
+
+
+===== PDF page 179 / printed page 164 =====
+164                                                        6 Generalized Multiplicative Error Models
+
+                                           P                    PQ
+where .L/ WD 1  ˛.L/  ˇ.L/, ˛.L/ WD PjD1 ˛j Lj and ˇ.L/ WD j D1 ˇj Lj
+denote polynomials in terms of the lag operator L. The fractional integration
+operator .1  L/d (with 0 < d < 1) is given by
+                       1  
+                       X                              1
+                                                      X
+                          d                                             .j  d /
+        .1  L/ Dd
+                                    .1/ L D
+                                          j    j
+                                                                                   Lj ;      (6.27)
+                       j D0
+                              j
+                                                      j D0
+                                                                     .d / .j C 1/
+
+where ./ denotes the gamma function. The FIACD model is not covariance
+stationary and implies infinite first and second unconditional moments of xi .
+Following the results of Bougerol and Picard (1992), it can be shown that it is strictly
+stationary and ergodic for 0  d  1. For d D 0, the model corresponds to the basic
+ACD model, whereas for d D 1, it corresponds to an integrated ACD process as the
+counterpart to an integrated GARCH model.
+    An alternative long memory specification is provided by Karanasos (2004) and
+is given by
+
+                                                         X1
+                                    1  ˇ.L/
+                     xi D ! C                   i D ! C      !j i j ;                     (6.28)
+                                   .L/.1  L/d           j D0
+
+
+ where i WD xi  i . As in the FIACD model, we have the case of long-range
+dependence and thus non-summable autocovariance functions for d > 0 with the
+model being weakly stationary for d < 0:5. As shown by Karanasos (2004), the
+model can be written as an infinite sum of lagged values of i ,
+                                                    1
+                                                    X
+                                   xi D ! C                !j i j ;                        (6.29)
+                                                    j D0
+
+
+where
+                                              j     
+                                  X
+                                  n           X   d
+                                          C                                     j 1
+                        !j WD                                         rl .1/          ;
+                                          r
+                                                     j l
+                                  rD1         lD0
+
+                                   X
+                                  minfl;mg
+
+                         rl WD                                       .ˇ0 WD 1/
+                                              lj
+                                              r .ˇj /
+                                   j D0
+
+                                     n1
+                         C
+                           WD Qn
+                                     r
+                                                                 :
+                               lD1;l¤r . r 
+                         r
+                                                            l/
+
+
+Moreover, i can be expressed as
+                                              X1
+                            .1  L/d .L/
+                i WD 1                   xi D                                  j xi j ;   (6.30)
+                               1  ˇ.L/         j D1
+
+
+with    1 > 0,   j  0 for j  2.
+
+
+===== PDF page 180 / printed page 165 =====
+6.3 Long Memory ACD Models                                                       165
+
+
+  In contrast to Jasiak’s FIACD model, (6.28) implies finite first and second
+moments of xi with EŒxi  D ! < 1 and EŒxi2  < 1 if
+                                         X1
+                                     1
+                              1               ! 2 < 1:
+                                   EŒ"2i  j D0 j
+
+An analytical expression for the autocorrelation function is given by Karanasos
+(2004).
+    A similar type of long memory ACD model is proposed by Koulikov (2003) and
+is given by
+                                          1
+                                          X
+                            i D ! C ˛           j 1 i j ;                (6.31)
+                                          j D1
+
+
+where fj W j  0g  R0C is an infinite sequence of coefficients with 0 D 1
+and ! and ˛ are model parameters. The process (6.31) is covariance stationary and
+ergodic as long as "i is a (zero mean) martingale difference, and the coefficients j
+are square-summable (see Koulikov 2003). Following Granger and Joyeux (1980),
+or Hosking (1981), a possible parameterization of the coefficients j is given by a
+power series expansion of .1  ˇz/1 .1  z/d as given by
+
+                                         X
+                                         j
+                                 j WD         ˇk jk ;                     (6.32)
+                                         kD0
+
+where
+
+                                     .d C j /
+                        j WD                         8 j  0;               (6.33)
+                                  .d / .1 C j /
+
+are the coefficients of the expansion of .1  z/d , ˇ is a model parameter with
+jˇj < 1 and ./ denotes the gamma function. For d 2 .0; 1/, (6.33) produces
+a non-summable autocovariance function, and thus long memory. For 0<d < 12 ,
+the power series expansion implies a sequence of square-summable hyperbolic
+decaying coefficients and thus ensures covariance stationarity. By replacing z by
+the lag operator L, we can re-write i as
+
+                      i D ! C ˛.1  ˇL/1 .1  L/d i 1                    (6.34)
+                        P
+with .1  L/d i 1 D 1  j D1 j 1 i j .
+   Table 6.7 gives QML estimates of the FIACD and the LMACD specification
+proposed by Karanasos (2004) for de-seasonalized trade durations, 10bp price
+durations, and 30-s number of trades for JP Morgan traded at NYSE. As revealed
+by the estimates of the long memory parameter d , there is strong evidence for the
+
+
+===== PDF page 181 / printed page 166 =====
+166                                                     6 Generalized Multiplicative Error Models
+
+
+Table 6.7 QML estimates of the FIACD and the LMACD specification proposed by Karanasos
+(2004) for de-seasonalized trade durations, 10 bp price durations, and 30-s number of trades for JP
+Morgan traded at NYSE. Sampling period: 01/06/09-05/06/09 for trade durations and June 2009
+for price durations and trade counts. Diagnostics: Bayes Information Criterion (BIC) and Ljung-
+Box (LB) statistics of ACD residuals associated with 20 lags
+par.            est.                 p-val.    est.             p-val.      est.            p-val.
+                        trade dur.                10bp price dur.           30-s no. of trades
+FIACD
+!               0.006                0.000     0.003            0.000       0.004           0.274
+˛               0.021                0.000     0.029            0.000       0.021           0.181
+ˇ               0.967                0.000     0.962            0.000       0.955           0.000
+d               0.092                0.000     0.124            0.000       0.247           0.000
+BIC                     36,657                        9,927                   16,041
+LB                       4.71                          15.39                      34.94
+LMACD
+!               1.053                0.000     1.086            0.000       0.994           0.000
+˛               0.023                0.000     0.031            0.000       0.021           0.174
+ˇ               0.965                0.000     0.960            0.000       0.955           0.000
+d               0.082                0.000     0.120            0.000       0.245           0.000
+BIC                     36,645                        9,929                   16,040
+LB                       4.41                          14.57                      34.87
+
+
+existence of long range dependence. In all cases, d is between .0; 0:5/ indicating
+the processes being stationary. The significance of ˛ and ˇ reveals also the presence
+of short memory dynamics. In terms of goodness-of-fit, as revealed by BIC and
+Ljung–Box statistics, all specifications perform relatively similar.
+    A counterpart to a long memory stochastic volatility model is proposed by Deo
+et al. (2010). This specification is discussed in more detail in Sect. 6.4.1. Conditions
+for the propagation of the long memory parameter from durations to counts are
+analyzed by Deo et al. (2009). In particular, they establish conditions for weakly
+stationary long range dependent duration processes with memory parameter d
+ensuring that the resulting counting process N.t/ satisfies VŒN.t/  C t 2d C1 ,
+C > 0 if t ! 1.
+
+
+6.4 Mixture and Component Multiplicative Error Models
+
+6.4.1 The Stochastic Conditional Duration Model
+
+In the Markov Switching ACD model the latent variable follows a Markov process,
+i.e., the state of the process depends only on the state of the previous observation.
+An alternative specification has been proposed by Bauwens and Veredas (2004).6
+
+
+6
+    See also Meddahi et al. (1998) who introduce a similar specification.
+
+
+===== PDF page 182 / printed page 167 =====
+6.4 Mixture and Component Multiplicative Error Models                                     167
+
+
+They assume that the conditional mean function i given the history Fi 1 is
+not deterministic but is driven by a latent AR(1) process. Hence, the Stochastic
+Conditional Duration (SCD) model is given by
+
+                              ln i D ! C ˇ ln i 1 C vi ;                            (6.35)
+
+where xi D i "i , "i denotes the usual i.i.d. ACD innovation term and vi is
+conditionally normally distributed, i.e., vi jFi 1  i.i.d. N .0;  2 / independently
+of "i . Hence, the marginal distribution of xi is determined by a mixture of a log-
+normal distribution of i and the distribution of "i . Economically, the latent factor
+can be interpreted as information flow (or general state of the market) that cannot
+be observed directly but drives the duration process. In this sense, the SCD model
+is the counterpart to the stochastic volatility model introduced by Taylor (1982).
+Bauwens and Veredas (2004) analyze the theoretical properties of the SCD model
+and illustrate that the SCD model, even with restrictive distributional assumptions
+for "i , is quite flexible and allows for a wide range of different (marginal) hazard
+functions of the durations. In a comparison study with the Log-ACD model they
+find a better fit of the SCD model. The model is estimated by simulated maximum
+likelihood (see Sect. 7.2) or, as proposed by Bauwens and Veredas (2004), based on
+QML by applying the Kalman filter.7
+    A long memory version of the SCD model is proposed by Deo et al. (2010). In
+their so-called long memory stochastic duration (LMSD) model, i is given by
+
+                                ln i D ! C .1  L/d vi                               (6.36)
+
+with d 2 Œ0; 0:5/. Deo et al. (2010) propose estimating the model by QML using the
+Whittle (1962) approximation. A further extension of the SCD model based on non-
+Gaussian state-space models and allowing for asymmetric behavior of the expected
+duration is suggested by Feng et al. (2004).
+
+
+6.4.2 Stochastic Multiplicative Error Models
+
+The major difference between the ACD and SCD model is that in the ACD
+framework, dynamics are observation-driven whereas in the SCD setting, dynamics
+are parameter-driven. This implies that EŒxi jFi 1  is deterministic in the ACD
+model, while it is stochastic in the SCD model. Hautsch (2008) proposes combining
+both types of dynamics resulting in an ACD model (or MEM, respectively) which
+is augmented by a dynamic latent factor. It is given by
+
+                                      xi D i e ı i "i ;                               (6.37)
+
+
+7
+ Alternatively, Strickland et al. (2006) propose estimating the SCD model based on Monte Carlo
+Markov Chain (MCMC) techniques. Bauwens and Galli (2009) employ efficient importance
+sampling techniques as discussed in Sect. 7.2.
+
+
+===== PDF page 183 / printed page 168 =====
+168                                              6 Generalized Multiplicative Error Models
+
+
+with ı > 0 being a parameter, i denoting a latent factor, "i being i.i.d. and
+following a distribution on positive support with EŒ"i  D 1. The conditional mean
+i can be specified according to various ACD specifications as discussed in the
+previous sections. Then, i e ı i corresponds to the conditional mean given Fi 1 and
+  i . Accordingly, i D EŒxi jFi 1  D xi =.e
+                                               ı i
+                                                   "i / is stochastic. The latent factor i
+is assumed to follow a zero mean AR(1) process, given by
+
+                          i D a i 1 C i ;   i  i.i.d. N .0; 1/;                (6.38)
+
+where i is assumed to be independent of "i . Note that because of the symmetry of
+the distribution of i , the sign of ı is not identified.
+    Hautsch (2008) calls the model a stochastic MEM (SMEM) or – in the ACD
+case – a stochastic ACD (SACD) model since it nests both the ACD model for
+ı D 0 and the SCD model for  being constant (i.e., ˛ D ˇ D 0 in case of a linear
+ACD model). Correspondingly, for ˛ ¤ 0 and ˇ D 0 an SCD model is obtained
+which is mixed with a further random variable. Hence, it allows to explicitly test for
+both types of dynamics. The SACD model can also be seen as a special case of a
+semiparametric ACD model with xi D i "Qi and "Q i D e i "i following a dynamic
+process. Moreover, due to its two-factor structure, the SMEM allows capturing
+dynamics not only in first conditional moments but also in higher order conditional
+moments. In this sense, the SMEM serves as an alternative to the SVD model (see
+Sect. 6.5.3). Due to its latent dynamic component, the model cannot be estimated by
+(Q)ML and requires simulation-based techniques. More information on estimation
+details as well as statistical properties are given in Sect. 7.2, where the SMEM is
+discussed in a multivariate setting.
+    As an illustration, Table 6.8 reproduces some of the estimation results of
+HautschP (2008) for SMEMs  PQ using a Log-ACD specification of i , i.e., ln i D
+! C PjD1 ˛j "i j C j D1 ˇj ln i j for 5 min averaged trade sizes and the
+number of trades for Boeing, traded at NYSE, 2001. The lag order, P and Q
+are restricted to P  2 and Q  2. As revealed by the estimates of a, there is
+significant evidence for the existence of a persistent latent component. Moreover, it
+is shown that both the parameter driven dynamics as well as the observation driven
+dynamics interact. The persistence parameter is driven toward one when the latent
+factor is taken into account. As discussed in Hautsch (2008), this finding indicates
+that news tend to enter the model primarily through the latent component, which
+is in line with the idea that the latter serves as a proxy for unobserved information
+driving the trading process. It is shown that the inclusion of the unobservable factor
+increases the goodness-of-fit of the model. Nevertheless, neither the parameter
+driven component nor the observation driven component can be rejected illustrating
+that trading dynamics are not sufficiently captured by a one-factor model but rather
+by a two-factor model.
+
+
+===== PDF page 184 / printed page 169 =====
+6.4 Mixture and Component Multiplicative Error Models                                             169
+
+
+Table 6.8 Maximum likelihood efficient importance sampling estimates of different parameter-
+izations of SMEMS for 5 min average trade sizes and number of trades for Boeing traded at the
+NYSE, sample period 02/01/01 to 31/05/01. Standard errors are computed based on the inverse
+of the estimated Hessian. The ML-EIS estimates are computed using R D 50 Monte Carlo
+replications based on 5 EIS iterations (for details on the EIS approach, see Sect. 7.2). Diagnostics:
+Log likelihood function (LL), Bayes Information Criterion (BIC), mean, standard deviation and
+Ljung–Box statistics (LB) based on 20 lags of the filtered residuals. Significance at the 1%, 5%
+and 10% levels are denoted by ***, ** and *, respectively
+                 (1)                (2)                (3)                (4)               (5)
+5 min average trade sizes
+!          0.403           0.416          5.841         0.070          0.057
+˛1          0.001           0.002                             0.011           0.006
+˛2                             0.000                                                  0.014
+ˇ1          0.928           0.761                              0.981          1.074
+ˇ2                             0.165                                                   0.091
+p           0.517           0.519            0.450          1.202          1.188
+m           8.032           7.991           12.753          4.276          4.321
+
+Latent component
+a                                                  0.954         0.260            0.391
+ı                                                  0.113         0.506            0.494
+LL         6,211              6,200             6,019            5,954             5,943
+BIC        6,234              6,232             6,041            5,985             5,983
+Mean       1.011               1.010              1.017             1.024              1.027
+S.D.       0.871               0.870              0.890             0.901              0.909
+LB         39.166           23.256             38.896         19.486             15.183
+
+5 min number of trades
+!         0.202            0.025          0.426         0.035          0.042
+˛1         0.077            0.105                             0.026           0.046
+˛2                             0.092                                               0.018
+ˇ1         0.953            1.704                              0.991          0.562
+ˇ2                             0.708                                               0.427
+p          1.632            1.752           2.170           2.563          2.366
+m          3.674            3.237           2.639           2.100          2.317
+Latent component
+a                                                  0.957         0.766           0.821
+ı                                                  0.067         0.110           0.092
+LL         1,982              1,957             1,975            1,925             1,921
+BIC        2,005              1,988             1,998            1,956             1,961
+Mean       0.999               0.999              1.002             1.001              1.002
+S.D.       0.323               0.322              0.324             0.322              0.322
+LB         55.018           33.285           54.158         36.095           24.503
+
+
+6.4.3 Component Multiplicative Error Models
+
+A further type of mixture MEM is proposed by Brownlees et al. (2011) to model the
+behavior of intraday volumes. To capture not only intra-day dynamics but also daily
+dynamics, they propose a so-called component MEM given by
+
+
+===== PDF page 185 / printed page 170 =====
+170                                                 6 Generalized Multiplicative Error Models
+
+
+                                                        i id
+                        xd;i D d;i d "d;i ;       "d;i  .1;  2 /;                 (6.39)
+
+where d indexes the corresponding trading day and i the intraday observation.
+Furthermore, d denotes a daily component varying from day to day but being
+constant during a day. By restricting the lag order for simplicity to one, it is given by
+
+                          d D ! d C ˛ d xd 1 C ˇ d d 1 ;                          (6.40)
+
+where ! d , ˛d and ˇ d are parameters, and xd is the standardized daily volume,
+
+                                          1 X  dn
+                                                 xd;i
+                                  xd D                ;                               (6.41)
+                                         nd i D1 d;i
+
+with nd denoting the number of observations on day d . Accordingly, d;i denotes
+the intraday component given by a standard MEM dynamic based on standardized
+intradaily volume,
+                                          xd;i 1
+                           d;i D ! C ˛           C ˇd;i 1 :                        (6.42)
+                                           d
+
+In order to make the model identifiable, the restriction ! D 1  ˛  ˇ is imposed
+ensuring that EŒd;i  D 1. Hence, the component d adjusts the mean level of
+the series on a daily basis, whereas d;i captures intraday variations around this
+level. Given that both types of dynamics are observation-driven, the model is
+straightforwardly estimated by QML or GMM.
+   Alternatively, the daily component might be specified in terms of a latent process
+with
+
+                 ln d D ! C ˛ d ln d 1 C ud ;          ud  N .0;  2 /:           (6.43)
+
+Such a specification is proposed by Brownlees and Vannucci (2010) and is similar
+to Hautsch’s (2008) SMEM. It also multiplicatively combines an observation driven
+dynamic as well as a parameter driven dynamic where, however, the latter is updated
+on a daily basis. Hence, as the SMEM, it cannot be estimated using (Q)ML and
+requires simulation-based techniques. Brownlees and Vannucci (2010) propose
+estimating the model using Bayesian inference and develop a corresponding MCMC
+algorithm.
+
+
+6.5 Further Generalizations of Multiplicative Error Models
+
+6.5.1 Competing Risks ACD Models
+
+Bauwens and Giot (2003) propose a two-state competing risks ACD specification to
+model the duration process in dependence of the direction of the contemporaneous
+
+
+===== PDF page 186 / printed page 171 =====
+6.5 Further Generalizations of Multiplicative Error Models                          171
+
+
+midquote change. They specify two competing ACD models (for upwards midquote
+movements vs. downwards midquote movements) with regime-switching parame-
+ters that are determined by the direction of lagged price movements. Then, at each
+observation the end of only one of the two spells can be observed (depending on
+whether one observes an increase or decrease of the midquote) while the other spell
+is censored. Engle and Lunde (2003) propose a similar competing risks model to
+study the interdependencies between the trade and quote arrival process. However,
+they impose an asymmetric treatment of both processes since they assume that the
+trade process is the “driving process” which is completely observed while the quote
+process is subject to censoring mechanisms.
+
+
+
+6.5.2 Semiparametric ACD Models
+
+The assumption of independently, identically distributed innovations "i is a standard
+assumption in the class of MEMs. However, Drost and Werker (2004) argue that
+the i.i.d. assumption for standardized durations could be too restrictive to describe
+financial duration processes accurately. In the semiparametric ACD model, the
+conditional p.d.f. of ACD innovations "i D xi =i is characterized by
+
+                               f ."i jFi 1 / D f ."i jHi 1 /;                  (6.44)
+
+where Hi         Fi . The terminology semiparametric ACD model stems from the
+fact that the conditional density f ."i jHi 1 / is not specified. The set Hi defines
+the relevant past variables driving the conditional distribution of "i and formalizes
+the dependence among the innovations "i . Clearly, if Hi equals the trivial sigma
+field, the innovations are assumed to be independent and the model coincides with
+the basic ACD model. Conversely, if Hi D Fi , the dependence structure of the
+innovations "i is completely unrestricted. In case of Hi D ."i / the innovations
+follow a Markov structure.
+    Drost and Werker (2004) show how to construct semiparametrically efficient
+estimators in case of (6.44) and f ."i jHi 1 / being non-specified. The key concept in
+this context is the semiparametric score function, i.e. the semiparametric counterpart
+to the score function EŒsi . 0 / D 0;  0 2 ; i D 1; : : : ; n: The semiparametric
+score function is computed using techniques based on tangent spaces (see Bickel
+et al. 1993) and is given by
+                                          ˇ 
+                "i  1           @         ˇ
+  si ./ D                 E       ln i ˇˇ Hi
+              VŒ"i jHi 1      @
+                                                                    ˇ      
+                        @f ."i jHi 1 /=@        @             @       ˇ
+               1C"i                                ln i E            ˇ
+                                                                  ln i ˇ Hi 1 ; (6.45)
+                            f ."i jHi 1 /       @            @
+
+
+===== PDF page 187 / printed page 172 =====
+172                                               6 Generalized Multiplicative Error Models
+
+
+where f ."i jHi 1 / (as well its derivative) has to be estimated by kernel techniques.
+Then, the semiparametric estimator is constructed as the one-step Newton-Raphson
+improvement from an arbitrary consistent parametric estimator. In particular, let Q n
+denote this arbitrary consistent estimator which is naturally chosen as the exponen-
+tial QML estimator. Then, the semiparametrically efficient estimator is obtained by
+                                                          !1
+                                1X  Q  Q 0                    1X  Q
+                                   n                               n
+               O n D Q n C          s . n /si . n /               s . n /:     (6.46)
+                                n i D1 i                        n i D1 i
+
+Applying this concept to ACD models based on different types of innovation
+processes, Drost and Werker (2004) illustrate that even small dependencies in the
+innovations can induce sizeable efficiency gains of the efficient semiparametric
+procedure over the QML procedure.
+
+
+
+6.5.3 Stochastic Volatility Duration Models
+
+One drawback of autoregressive duration models (like EARMA or ACD models)
+is that they do not allow for separate dynamic parameterizations of higher order
+moments. This is due to the fact that typical duration distributions, like the
+exponential distribution, imply a direct relationship between the first moment and
+higher order moments. To address this problem, Ghysels et al. (1998) propose a two
+factor model which allows one to estimate separate dynamics for the conditional
+variance of durations (the so-called duration volatility).
+    Consider an i.i.d. exponential model with gamma heterogeneity, xi D ui = i ;
+where ui is an i.i.d. standard exponential variate and the hazard i is assumed to
+depend on some heterogeneity component vi . Thus,
+
+                                i D avi ;     vi  G.; /                          (6.47)
+
+with vi assumed to be independent of ui . Ghysels et al. (1998) consider the equation
+xi D ui =.avi / as a two factor formulation and rewrite this expression in terms of
+Gaussian factors. Hence, xi is expressed as
+
+                                G 1 .1; ˚.m1 //     G.1; m1 /
+                       xi D                      WD            ;                    (6.48)
+                               aG 1 .; ˚.m2 //    aG.; m2 /
+
+where m1 and m2 are i.i.d. standard normal random variables, ˚./ is the c.d.f. of
+the standard normal distribution and G 1 .m; ˛/ is the ˛-quantile function of the
+G.m; m/ distribution. The function G.1; m1 / can be solved as G.1; m1 / D  log
+.1  ˚.m1 // while G.; m2 / does not allow for a simple analytical solution and has
+to be approximated numerically (for more details, see Ghysels et al. 1998).
+
+
+===== PDF page 188 / printed page 173 =====
+References                                                                                   173
+
+
+   This (static) representation of an exponential duration model with gamma het-
+erogeneity as the function of two independent Gaussian random variables is used as
+starting point for a dynamic specification of the stochastic volatility duration (SVD)
+model. Ghysels et al. (1998) propose specifying the process mi WD .m1;i m2;i /0 in
+terms of a VAR representation, where the marginal distribution is constrained to be
+a N .0; I/ distribution, where I denotes the identity matrix. This restriction ensures
+that the marginal distribution of the durations belongs to the class of exponential
+distributions with gamma heterogeneity. Thus,
+
+                                         X
+                                         P
+                                 mi D           j mi j C "i ;                          (6.49)
+                                         j D1
+
+
+where j denotes the matrix of autoregressive VAR parameters and "i is a vector
+of Gaussian white noise random variables with variance-covariance matrix ˙ ./
+which ensures that V.mi / D I.
+   The SVD model belongs to the class of nonlinear dynamic factor models for
+which the likelihood typically is difficult to evaluate. Therefore, Ghysels et al.
+(1998) propose a two step procedure. In the first step, one exploits the property that
+the marginal distribution of xi is a Pareto distribution depending on the parameters a
+and  (see appendix). Thus, a and  can be estimated by (Q)ML. In the second step,
+the autoregressive parameters j are estimated by using the methods of simulated
+moments (for more details, see Ghysels et al. 1998).
+   Ghysels et al. (1998) apply the SVD model to analyze trade durations of the
+Alcatel stock traded at the Paris Stock Exchange and find empirical evidence
+for strong dynamics in both factors. However, the higher dynamic flexibility of
+the SVD model induces strong distributional assumptions. Bauwens et al. (2004)
+show that the assumption of a Pareto distribution for the marginal distribution of
+xi is inappropriate for specific types of financial durations (particularly volume
+durations) which makes the estimation of the Pareto parameters a and  extremely
+cumbersome. Moreover, they find a relatively poor prediction performance of the
+SVD model compared to alternative ACD specifications.
+
+
+
+References
+
+Baillie RT (1996) Long memory processes and fractional integration in econometrics. J Econom
+   73:5–59
+Baillie RT, Bollerslev T, Mikkelsen H-O (1996) Fractionally integrated generalized autoregressive
+   conditional heteroskedasticity. J Econom 52:91–113
+Bauwens L, Galli F (2009) Efficient importance sampling for ML estimation of SCD models.
+   Comput Stat Data Anal 53:1974–1992
+Bauwens L, Giot P (2003) Asymmetric ACD models: introducing price information in ACD
+   models with a two state transition model. Empir Econ 28:1–23
+Bauwens L, Veredas D (2004) The stochastic conditional duration model: a latent factor model for
+   the analysis of financial durations. J Econom 119:381–412
+
+
+===== PDF page 189 / printed page 174 =====
+174                                                  6 Generalized Multiplicative Error Models
+
+
+Bauwens L, Giot P, Grammig J, Veredas D (2004) A comparison of financial duration models via
+   density forecasts. Int J Forecast 20:589–609
+Beran J (1994) Statistics for long-memory processes. Chapman and Hall, New York
+Bickel PJ, Klaasen CAJ, Ritov Y, Wellner AJ (1993) Efficient and addaptive statistical inference
+   for semiparametric models. John Hopkins University Press, Baltimore
+Brownlees C, Cipollini F, Gallo GM (2011) Intra-daily volume modeling and prediction for
+   algorithmic trading. J Financ Econom 9:489–518
+Brownlees C, Vannucci M (2010) A Bayesian approach for capturing daily heterogeneity in intra-
+   daily durations time series: the mixed autoregressive conditional duration model. Working
+   Paper, Stern School of Business, New York University
+Bougerol P, Picard N (1992) Stationarity of GARCH processes. J Econom 52:115–127
+Carrasco M, Chen X (2002) Mixing and moment properties of various GARCH and stochastic
+   volatility models. Econom Theory 18(1):17–39
+Carrasco M, Chen X (2005) Erratum: mixing and moment properties of various GARCH and
+   stochastic volatility models. Unpublished Manuscript
+Dempster AP, Laird NM, Rubin DB (1977) Maximum likelihood from incomplete data via the EM
+   algorithm. J R Stat Soc Series B 39:1–38
+Deo R, Hsieh M, Hurvich CM (2010) Long memory in intertrade durations, counts and realized
+   volatility of NYSE stocks. J Stat Plan Inference 140:3715–3733
+Deo R, Hurvich CM, Soulier P, Wang Y (2009) Conditions for the propagation of memory
+   parameter from durations to counts and realized volatility. Econom Theory 25:764–792
+Ding Z, Granger CWJ (1996) Modeling volatility persistence of speculative returns: a new
+   approach. J Econom 73:185–215
+Drost FC, Werker BJM (2004) Semiparametric duration models. J Bus Econ Stat 22:40–50
+Dufour A, Engle RF (2000) The ACD model: predictability of the time between consecutive trades.
+   Working Paper, ISMA Centre, University of Reading
+Engle RF (2000) The econometrics of ultra-high-frequency data. Econometrica 68(1):1–22
+Engle RF, Lunde A (2003) Trades and quotes: a bivariate point process. J Financ Econom 11:159–
+   188
+Engle RF, Ng VK (1993) Measuring and testing the impact of news on volatility. J Finance
+   48:1749–1778
+Feng D, Jiang GJ, Song PX-K (2004) Stochastic conditional duration models with ‘leverage effect’
+   for financial transaction data. J Financ Econom 2:390–421
+Fernandes M, Grammig J (2006) A family of autoregressive conditional duration models.
+   J Econom 130:1–23
+Ghysels E, Gouriéroux C, Jasiak J (1998) Stochastic volatility duration models. Discussion paper,
+   CIRANO
+Gonzalez-Rivera G (1998) Smooth transition GARCH models. Stud Nonlinear Dynamics Econo-
+   metrics 3:61–78
+Granger CWJ, Joyeux R (1980) An introduction to long-memory time series models and fractional
+   differencing. J Time Series Anal 1:15–39
+Granger CWJ, Teräsvirta T (1993) Modelling nonlinear economic relationships. Oxford University
+   Press, Oxford, UK
+Hagerud GE (1997) A new non-linear GARCH model. Discussion paper, EFI, Stockholm School
+   of Economics
+Hautsch N (2003) Assessing the risk of liquidity suppliers on the basis of excess demand
+   intensities. J Financ Econom 1:189–215
+Hautsch N (2008) Capturing common components in high-frequency financial time series: a
+   multivariate stochastic multiplicative error model. J Econ Dyn Control 32:3978–4009
+Hentschel L (1995) All in the family: nesting symmetric and asymmetric GARCH models. J Finan
+   Econ 39:71–104
+Hosking JRM (1981) Fractional differencing. Biometrika 68:165–176
+
+
+===== PDF page 190 / printed page 175 =====
+References                                                                                       175
+
+
+Hujer R, Vuletic S, Kokot S (2002) The Markov switching ACD model. Finance and Account-
+    ing Working Paper 90, Johann Wofgang Goethe-University, Frankfurt. Available at SSRN:
+    http://ssrn.com/abstract=332381
+Jasiak J (1998) Persistence in intratrade durations. Finance 19:166–195
+Karanasos M (2004) The statistical properties of long-memory ACD models. WSEAS Trans Bus
+    Econ 2:169–175
+Koulikov D (2003) Modeling sequences of long memory non-negative covariance stationary
+    random variables. Discussion Paper 156, CAF
+Meddahi N, Renault E, Werker BJ (1998) Modelling high-frequency data in continuous time.
+    Discussion paper, University de Montréal
+Meitz M, Saikkonen P (2008) Ergodicity, mixing, and existence of moments of a class of Markov
+    models with applications to GARCH and ACD models. Econom Theory 24:1291–1320
+Meitz M, Teräsvirta T (2006) Evaluatinsg models of autoregressive conditional duration. J Bus
+    Econ Stat 24:104–124
+Mokkadem A (1990) Propriétés de mélange des modèles autoregressifs polynomiaux. Annales de
+    l’Institut Henri Poincaré 26:219–260
+Nelson D (1991) Conditional heteroskedasticity in asset returns: a new approach. J Econom
+    43:227–251
+Rabemananjara J, Zakoian JM (1993) Threshold ARCH models and asymmetries in volatility.
+    J Appl Econom 8:31–49
+Strickland CM, Forbes CS, Martin MG (2006) Bayesian analysis of the stochastic conditional
+    duration model. Comput Stat Data Anal 50:2247–2267
+Taylor SJ (1982) Financial returns modelled by the product of two stochastic processes – a study
+    of daily sugar prices. In: Anderson OD (ed) Time series analysis: theory and practice, North-
+    Holland, Amsterdam
+Teräsvirta T (1994) Specification, estimation, and evaluation of smooth transition autoregressive
+    models. J Am Stat Assoc 89:208–218
+Terärsvirta T (1998) Modelling economic relationships with smooth transition regressions. In Ullah
+    A, Giles DEA, (eds) Handbook of applied economic statistics Marcel Dekker, New York, pp
+    507–552
+Tong H (1990) Non-linear time series: a dynamical system approach. Oxford University Press,
+    Oxford
+Whittle P (1962) Gaussian estimation in stationary time series. Bulletin de l’Institute International
+    de Statistique 39:105–129
+Zakoian JM (1994) Threshold heteroskedastic models. J Econ Dyn Control 18:931–955
+Zhang MY, Russell JR, Tsay RS (2001) A nonlinear autoregressive conditional duration model
+    with applications to financial transaction data. J Econom 104:179–207
+
+
+===== PDF page 191 / printed page 176 =====
+•

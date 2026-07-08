@@ -1,0 +1,13 @@
+{
+  "model": "gemma3:12b",
+  "chapter": 3,
+  "chapter_ja": "高頻度データの実証的性質",
+  "chapter_en": "Empirical Properties of High-Frequency Data",
+  "pdf_page": 53,
+  "printed_page": "38",
+  "source_chars": 619,
+  "translation_chars": 328,
+  "elapsed_seconds": 14.972,
+  "created_at": "2026-06-20T20:54:37",
+  "translation": "38                                            3 高頻度データの経験的特性\n\n\n\n\n図3.2 JPモルガン、NYSEの1日あたりの取引数月平均（2001–2009年）\n\n\n\n\n図3.3 S&P 1500 銘柄群における取引間隔（横軸；秒）のヒストグラム（2006–2009年）\n\n\n   図3.4 は、JPM、MSFT、DTEK の取引デュレーション、ミッドクオート（変化）デュレーション、出来高デュレーション、超過出来高デュレーション、超過市場深度デュレーションのヒストグラムを示している。JPM の取引デュレーションの50%以上が1秒以下であるのに対し、10秒を超える取引デュレーションはごくわずかである。"
+}

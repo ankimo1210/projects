@@ -1,0 +1,1603 @@
+===== PDF page 84 / printed page 69 =====
+Chapter 4
+Financial Point Processes
+
+
+
+
+This chapter provides the methodological background for the specification and
+estimation of financial point processes. We give a brief introduction to the funda-
+mental statistical concepts and the basic ways to model point processes. For ease of
+introduction, we restrict our attention to non-dynamic point processes. In Sect. 4.1,
+we discuss the most important theoretical concepts in point process theory. Here, the
+focus lies on the idea of the intensity function as a major concept in the theory of
+point processes. In Sect. 4.2, different ways to model point processes are discussed.
+Section 4.3 is concerned with the treatment of censoring mechanisms and time-
+varying covariates. Section 4.4 gives an outlook on different ways to dynamically
+extend basic point process models.
+
+
+4.1 Basic Concepts of Point Processes
+
+In this section, we discuss central concepts of point process theory. The mathemat-
+ical level of this chapter is chosen in a way such that concepts and relationships
+are understandable without requiring deep foundations in stochastics. In this
+sense, it provides a compromise between mathematical exactness and accessibility.
+Mathematically more rigorous textbook treatments of point process theory are given
+by Karr (1991), Snyder and Miller (1991) or Daley and Vere-Jones (2005). Classical
+textbooks on duration and failure time analysis are Kalbfleisch and Prentice (1980)
+and Lancaster (1997). A recent review of the literature on financial point processes
+is also given by Bauwens and Hautsch (2009).
+
+
+4.1.1 Fundamental Definitions
+4.1.1.1 Point Processes
+
+Let t denote physical (calendar) time and let fti gi 2f1;2;:::g be a random sequence of
+increasing event arrival times 0  ti  ti C1 . Then, the sequence fti g is called a
+
+N. Hautsch, Econometrics of Financial High-Frequency Data,                          69
+DOI 10.1007/978-3-642-21925-2 4, © Springer-Verlag Berlin Heidelberg 2012
+
+
+===== PDF page 85 / printed page 70 =====
+70                                                                         4 Financial Point Processes
+
+
+point process on Œ0; 1/ (on the line).1 Here, we restrict ourselves to point processes
+defined in time. If ti < ti C1 8 i , the process is called a simple point process
+excluding the possibility of the simultaneous occurrence of events. During the
+remainder of the book, we only focus on simple point processes. Furthermore,
+denote n as the number of observed events and tn as the last observed point of
+the process. Then, fti gniD1 is the complete observable process. Let fWi gi 2f1;:::;ng
+denote a sequence of marks with Wi 2 f1; 2; : : : ; Kg denoting the type of the i th
+event. Then, the double sequence fti ; Wi gi 2f1;2;:::;ng is called a (simple) marked point
+process or, alternatively, a (simple) K-dimensional point process. Marks specifically
+indicate different types of events, as, e.g., the arrival of buys, sells or certain limit
+orders in financial trading processes. The event-specific arrival times are denoted
+by ftik gi 2f1;:::;nk g , k D 1; : : : ; K, with nk defining the number of observed k-type
+events. Considering only the sequence fti g of a marked point process fti ; Wi g (or,
+equivalently, superposing the individual k-type arrival times for k D 1; : : : ; K)
+yields the so-called pooled process.
+
+
+4.1.1.2 Counting Processes
+                                          P
+The process N.t/ with N.t/ WD i 1 1l fti t g is called a right-continuous (càdlàg
+counting process associated with fti g.2 N.t/ is a right-continuous step function
+                                                                                         M
+with upward jumps      P (at each ti ) of magnitude one. Furthermore, the process N .t/
+        M
+with N .t/ WD i 1 1l fti <t g is called a left-continuous counting process associated
+with fti g. NM .t/ is a left-continuous step function and counts the number of events
+that occur before t. Often, a point process is characterized by its counting process
+N.t/. If N.t/ is a K-variate marked point process, the K sequences of event
+times
+P are represented by thek corresponding     P           k-type counting functions N k .t/ WD
+                                   M
+   i 1 1l fti t g 1l fWi Dkg and N .t/ WD   i 1 1l fti <t g 1l fWi Dkg .
+
+
+4.1.1.3 Durations and Backward Recurrence Times
+
+Define xi as the waiting time between two successive points, defined as
+                                      (
+                                          ti  ti 1 ; i D 2; : : : ; n;
+                              xi WD
+                                          ti ;         i D 1;
+
+with t0 WD 0. Then, fxi gi 2f1;2;:::;ng is called the duration process associated with fti g.
+Moreover, the process x.t/ with x.t/ WD t  tNM .t / is called the backward recurrence
+
+
+1
+  Point processes can also evolve over space yielding the class of spatial point processes or cluster
+processes, see, e.g., Daley and Vere-Jones (2005).
+2
+  A càdlàg (french: continue à droite, limitée à gauche) function is a function which is right-
+continuous with left-hand limits.
+
+
+===== PDF page 86 / printed page 71 =====
+4.1 Basic Concepts of Point Processes                                                              71
+
+
+time at t. The backward recurrence time is the time elapsed since the previous point
+and is a left-continuous function that grows linearly through time with discrete
+jumps back to zero after each arrival time ti . Note that x.ti / D ti  ti 1 WD xi .
+
+4.1.1.4 Filtrations and (Time-Varying) Covariates
+
+Throughout this book, we restrict ourselves to point processes which have an
+evolutionary character in time. That is, at any time t, the event probability of a point
+process N.t/ depends on information which is (at least instantaneously) known prior
+to t.3 This information might be the history of N.t/ and/or exogenous variables. To
+formalize such a concept, let Ft denote the information set up to and including t.
+The set Ft might be the so-called internal history or natural   P       filtration Ft WD FtN
+with Ft D .N .s/ W 0  s  t; k 2 /, N .s/ WD i 1 1l fti sg 1l fWi 2g , where
+        N           k                                 k
+
+ denotes the -field of all subsets of f1; : : : ; Kg.
+   If the occurrence (but not necessarily the type) of an event is driven by a vector of
+(weakly exogenous) variables fzi gi 2f1;2;:::g , which are known and constant prior to an
+event i , we call them time-invariant covariates. Conversely, time-varying covariates
+are characteristics which drive the occurrence of an event and can continuously
+change between two consecutive events. Correspondingly, they are denoted by the
+vector z.t/. For the covariates to be weakly exogenous for xi , the process z.t/ must
+be càdlàg with zNM .t /C1 D z.ti 1 / for all t with ti 1 < t  ti .
+   If Ft does not only include the internal history of the process but also the
+processes fzi g and fz.t/g, we have FtN  Ft .
+
+
+4.1.2 Compensators and Intensities
+
+A central concept in the theory of point processes is the intensity function which is
+heuristically defined as following:
+Definition 4.1. Let N.t/ be a simple point process on Œ0; 1/ that is adapted to
+some history Ft and assume that .tI Ft / is a positive-valued process with sample
+paths that are left-continuous and have right-hand limits. Then, the process
+
+                                   1
+    .tI Ft /  .tC/ WD lim         E Œ N.t C /  N.t/j Ft  ;             .tC/ > 0; 8 t;
+                               #0 
+
+
+with .tC; Ft / WD lim#0 .t C ; Ft /, is called the Ft -intensity process of the
+counting process N.t/.
+This definition is familiar in classical duration literature (see, e.g., Lancaster 1997)
+and manifests the intensity function as the instantaneous arrival rate of an event
+
+
+3
+ More general types of point processes not fulfilling this property are, e.g., spatial point processes
+or Neymann-Scott cluster processes. For more details, see, e.g., Daley and Vere-Jones (2005).
+
+
+===== PDF page 87 / printed page 72 =====
+72                                                                      4 Financial Point Processes
+
+
+in t conditional on the information up to t, Ft . Note that the terminology is not
+consistent in all papers or textbooks on point processes. Some authors, for example,
+Brémaud (1981) and Karr (1991), denote .tI Ft / as “stochastic intensity function”
+accounting for the fact that .tI Ft / is not necessarily deterministic but might follow
+a stochastic process. Daley and Vere-Jones (2005) refer .tI Ft / to as a “conditional
+intensity function” as .tI Ft / depends on conditioning information. Here, we call
+.tI Ft / just an intensity or, correspondingly, Ft -intensity whenever the type of
+conditioning information has to be stressed. The point process generated by an Ft -
+intensity is called Ft -adapted point process.
+   The above definition provides also the link to the concept of the hazard function
+which is given by
+                h.xi I Fi 1 / WD f .xi I Fi 1 /=S.xi I Fi 1 /                             (4.1)
+                                        1
+                              D lim         PrŒxi  Xi < xi C jXi  xi I Fi 1 ;           (4.2)
+                                  !0 
+
+with xi denoting the (inter-event) duration as represented by the realization of a ran-
+dom variable Xi with conditional probability density function (p.d.f.) f .xi I Fi 1 /,
+conditional survivor function S.xi I Fi 1 / WD 1  F .xi I Fi 1 /, and conditional
+cumulative distribution function (c.d.f.) F .xi I Fi 1 / WD PrŒXi  xi jFi 1 . While
+the intensity function is defined in continuous time and conditions on a possibly
+continuously varying information set Ft , the hazard rate is evaluated at the end of
+each duration xi and conditions just on the time elapsed since the beginning of the
+spell and potential covariates (e.g., capturing the process history). It is a central
+concept in traditional duration or survival analysis, where cross-sectional duration
+data are analyzed.4 Formulating the hazard function in terms of the backward
+recurrence time yields the corresponding continuous time representation
+                                              
+                               h x.t/I FNQ .t / D .tI x.t/; FNM .t / /                      (4.3)
+
+as an intensity which just depends on the time since the last event. As there
+are conflicting definitions and terminologies of hazard and intensity concepts, we
+distinguish them as follows: In the remainder of the book we call an intensity
+function a (conditional) hazard function whenever it can be represented in terms
+of the underlying duration process and can be stated in terms of the ratio of the
+conditional probability density function and the conditional survivor function of the
+durations given the information prevailing at the beginning of the spell, see (4.1).
+With this definition, we rule out that the information set changes over the course of
+a spell, as, e.g., in the case of time-varying covariates.
+   In point process theory, the intensity function plays an important role since it
+is closely linked to a corresponding likelihood function and thus opens up the
+possibility for likelihood-based inference. This relationship traditionally builds on
+the evolutionary character of a point process which is mathematically captured by
+
+4
+    See, e.g., Kalbfleisch and Prentice (1980), Kiefer (1988) or Lancaster (1997).
+
+
+===== PDF page 88 / printed page 73 =====
+4.1 Basic Concepts of Point Processes                                                       73
+
+
+martingale-based point process theory. Define an Ft -adapted process N.t/ with
+EŒN.t/ < 1 for each t to be a Ft -martingale if for 0  s < t < 1,
+
+                          EŒN.t/jFs  D N.s/ a.s. (almost surely);
+
+and to be a Ft -submartingale if
+
+                                    EŒN.t/jFs   N.s/ a.s.
+
+Then, according to the Doob–Meyer decomposition,5 any (bounded) Ft -
+submartingale N.t/ can be decomposed into a unique zero-mean Ft -martingale
+                                                      Q
+M.t/ and a unique Ft -predictable cumulative process .t/, i.e.,
+
+                                                   Q
+                                     N.t/ D M.t/ C .t/;                                  (4.4)
+
+                   Q is called the compensator with the property
+where the process .t/
+                                                Z t
+                                    Q D
+                                    .t/              .sI Fs /ds:                        (4.5)
+                                                 0
+
+The fact that
+                                          Z t
+                                N.t/           .t; Fs /ds D M.t/                        (4.6)
+                                           0
+
+is a martingale process will be exploited in the remainder of the book to construct
+diagnostic tests for intensity models. Accordingly, we obtain
+                                           Z t                   ˇ 
+                                                                  ˇ
+                        EŒN.t/jFs  D E               .uI Fu /d uˇFs ;   a.s.;
+                                                0
+
+or,
+                                  Z t               ˇ      h       ˇ i
+                                                     ˇ               ˇ
+     EŒN.t/  N.s/jFs  D E              .uI Fu /d uˇFs WD E .s; t/ˇFt ;        a.s.;   (4.7)
+                                     s
+
+which gives an alternative implicit definition of the intensity .tI Ft /. Thus, the
+expected number of events in the interval .s; t, given Fs , is computed as the
+conditional expectation of the so-called integrated intensity function defined as
+                                                     Z t
+                                   .s; t/ WD              .uI Fu /d u                   (4.8)
+                                                      s
+
+                 Q  .s/.
+with .s; t/ WD .t/ Q
+
+
+5
+    See, e.g., Daley and Vere-Jones (2005), Theorem A3.4.III.
+
+
+===== PDF page 89 / printed page 74 =====
+74                                                          4 Financial Point Processes
+
+
+4.1.3 The Homogeneous Poisson Process
+
+The simplest type of point process is given by the homogeneous Poisson process.
+The Poisson process of rate  is defined by the requirements that for all t, as the
+time interval  # 0,
+
+                 Pr Œ.N.t C /  N.t// D 1 jFt  D  C o./;                    (4.9)
+                 Pr Œ.N.t C /  N.t// > 1 jFt  D o./;                        (4.10)
+
+leading to
+
+               Pr Œ.N.t C /  N.t// D 0 jFt  D 1   C o./;                 (4.11)
+
+where o./ denotes a remainder term with the property o./= ! 0 as
+ ! 0. One major property of the Poisson process is that the probability for
+the occurrence of an event in .t; t C  is independent from Ft , i.e., it does not
+depend on the number of points observed before (and also exactly at) t. Equations
+(4.9) and (4.10) are associated with the intensity representation of a Poisson
+process.
+   Further key properties of the Poisson process are related to the distribution of
+events in a fixed time interval. Following Lancaster (1997), it is easy to see that the
+probability for the occurrence of j events before t C  is obtained by
+       h              i    h          i
+     Pr NM .t C / D j D Pr NM .t/ D j  Pr Œ.N.t C /  N.t// D 0
+                             h              i
+                        C Pr NM .t/ D j  1  Pr Œ.N.t C /  N.t// D 1
+                             h              i
+                        C Pr NM .t/ D j  2  Pr Œ.N.t C /  N.t// D 2
+
+                           ::
+                            :
+                             h          i
+                         D Pr NM .t/ D j  .1  /
+                               h              i
+                          C Pr NM .t/ D j  1   C o./:                      (4.12)
+
+By rearranging the terms and dividing by , one obtains
+            h               i    h           i
+        1 Pr NM .t C / D j  Pr NM .t/ D j
+                 h         i      h              i
+          D Pr NM .t/ D j C Pr NM .t/ D j  1 C o./1;                     (4.13)
+
+and thus, for  # 0,
+
+
+===== PDF page 90 / printed page 75 =====
+4.1 Basic Concepts of Point Processes                                                  75
+
+
+     d    h          i      h          i     h              i
+        Pr NM .t/ D j D Pr NM .t/ D j C Pr NM .t/ D j  1 :                     (4.14)
+     dt
+For j D 0, (4.14) becomes
+
+                    d    h         i         h         i
+                      Pr NM .t/ D 0 D Pr NM .t/ D 0 ;                   (4.15)
+                   dt
+           h             i
+because Pr NM .t/ D j  1 D 0 for j D 0. By accounting for the initial condition
+   h         i
+Pr NM .0/ D 0 D 1, we obtain
+
+                               h          i
+                             Pr NM .t/ D 0 D exp.t/;                             (4.16)
+
+which corresponds to the survivor function of an exponential distribution. Thus,
+the waiting time until the first event is exponentially distributed. Analogously it
+is shown that (4.16) is also the probability that no events occur in an interval
+of length t starting at any arbitrary point on the time axis, like, at the occur-
+rence of the previous event. Therefore, the duration between subsequent points
+is independent of the length of all other spells. Hence, it can be concluded that
+the durations are independently exponentially distributed with p.d.f. and c.d.f.
+given by
+
+                                f .x/ D  exp .x/;
+                                F .x/ D 1  exp .x/:
+
+Accordingly, the hazard function is given by h.x/ D f .x/=.1  F .x// D  and
+thus is identical to the Poisson intensity. These properties are associated with the
+duration representation of a Poisson process.
+   The third key property of the Poisson process is obtained by solving the
+differential equation (4.14) successively for j D 1; 2; : : : given the solution of (4.14)
+for j D 0. It is easily shown that this differential equation has the solution
+                  h          i  exp.t/.t/j
+                Pr NM .t/ D j D               ;            j D 1; 2; : : : :       (4.17)
+                                     jŠ
+
+Therefore, the number of events during an interval of length t is Poisson distributed
+with parameter t. Note that (4.17) does not depend on the starting point on the
+time axis, thus, the property holds for any time interval. Hence, the number of
+events in the interval .s; t, N.t/  N.s/, is Poisson distributed with parameter
+.t  s/. This relationship is called the counting representation of a Poisson
+process. The mean and variance of the number of points falling in the interval
+.s; t is given by .t  s/. This equality is often exploited to test for a Poisson
+process.
+
+
+===== PDF page 91 / printed page 76 =====
+76                                                           4 Financial Point Processes
+
+
+     Alternatively, we can express (4.17) as
+
+                                                 i 1
+                                                 X                 .x/j
+                Pr Œti > x D Pr ŒN.x/ < i  D          exp.x/         :       (4.18)
+                                                                     jŠ
+                                                 j D0
+
+
+Note that the resulting distribution only depends on the length x of the underlying
+interval but not on its position on the time scale t. Point processes fulfilling this
+property are called stationary point processes.
+
+
+
+4.1.4 Generalizations of Poisson Processes
+
+As discussed in the previous subsection, a key property of the homogeneous Poisson
+process is that the intensity is constant. Thus, the data generating process (DGP) is
+fully described by the intensity .tI Ft / D .
+    By allowing the intensity rate  to vary over time, we obtain the general class
+of non-homogeneous Poisson processes or inhomogeneous Poisson processes. For
+example, if the Poisson process depends on càdlàg covariates which are observable
+at the beginning of the spell, then the DGP is fully described by the zNM C1 .t/-
+intensity .tI zNM .t /C1 /. One special case is the so-called non-stationary Poisson
+process, where  is a function of time. It is described by (4.9)–(4.10) but with 
+replaced by .t/. A non-stationary Poisson process typically does not imply the
+independence of consecutive durations.
+    A further type of inhomogeneous Poisson process is obtained by the class of
+doubly stochastic Poisson processes (or so-called Cox processes). In this framework,
+it is assumed that the intensity is driven by some unobserved stochastic process
+ .t/. This leads to a DGP that is characterized by the intensity .tI Ft /, where
+Ft denotes the history of the unobserved process up to t. Such processes will be
+discussed in more detail in Chap. 11. For more details concerning specific types of
+inhomogeneous Poisson processes, see Cox and Isham (1980) or Daley and Vere-
+Jones (2005).
+    A general class of point processes is given by renewal processes which are
+characterized by independently identically distributed inter-event durations. In
+particular, the event arrival times of a renewal process are obtained by summing
+independent identically distributed non-negative random variables. The indepen-
+dence property is a crucial characteristic of renewal processes and stems from
+the idea of studying the sequence of intervals between successive replacements
+of a component which is replaced by a new component in case of failure. In the
+case where the event arrival times are driven by (partial) sums of i.i.d. standard
+exponential variables, we obtain the homogeneous Poisson process. Due to the
+independence of inter-event durations, the process history before ti 1 has no impact
+on the current intensity at ti 1 < ti . Therefore, a renewal process is typically used
+to model cross-sectional duration data.
+
+
+===== PDF page 92 / printed page 77 =====
+4.1 Basic Concepts of Point Processes                                                 77
+
+
+   Deviating from the exponential distribution and allowing for more flexible
+distributions with density f .xi / yields hazard functions h.xi / which are non-
+constant during a duration spell. In this case, in contrast to Poisson processes,
+the time since the previous event point does have an influence on the further
+development of the process. Because of this property, one has to take care of the
+initial conditions. In general, the forward recurrence time x1 from t D 0 to the first
+subsequent point does not have the density f ./ except for the case when there
+is a point in t D 0. In such a case, the process is called an ordinary renewal
+process, otherwise it is a modified renewal process. More details are given in Cox
+and Isham (1980) or Daley and Vere-Jones (2005). The shape of the hazard function
+determines the so-called duration dependence which is associated with the sign of
+dh.s/=ds. If dh.s/=ds > .</ 0, the process is said to exhibit positive (negative)
+duration dependence, i.e., the hazard rate increases (decreases) over the length of
+the spell.
+   More general types of point processes are obtained by allowing for serial
+dependencies in durations fxi g, i D 1; : : : ; n. This yields the class of dynamic point
+processes which is more systematically discussed in Sect. 4.4 and in the remainder
+of the book.
+   Alternative classes of point processes (on the line) are the classes of finite point
+processes, where the total number of points is finite with probability one and where
+dependence structures are typically described using combinatorial arguments. More
+general classes arise by relaxing the stationarity and orderliness of a point process,
+see, e.g., Daley and Vere-Jones (2005). These type of processes are, however, bey-
+ond the scope of this book.
+
+
+
+4.1.5 A Random Time Change Argument
+
+A fundamental result in martingale-based point process theory is the random time
+change theorem by Meyer (1971) which allows to transform a wide class of point
+processes to a unit-rate Poisson process.
+Theorem 4.2. Let N.t/ be a simple point process adapted to a history Ft with
+                                          Q with .1/
+intensity .tI Ft / and Ft -compensator .t/         Q D 1 almost surely. Define
+for all t, the stopping-time .t/ as the solution to
+                                 Z  .t /
+                                            .tI Fs /ds D t:                      (4.19)
+                                   0
+
+Then, the point process
+
+                            NQ .t/ D N..t// D N.Q 1 .t//                       (4.20)
+
+is a homogeneous Poisson process with intensity  D 1.
+
+
+===== PDF page 93 / printed page 78 =====
+78                                                                      4 Financial Point Processes
+
+
+Proof. See the proof of Theorem T16 in Brémaud (1981) or Theorem 7.4.I in Daley
+and Vere-Jones (2005).                                                        
+Hence, (4.19) corresponds to a change of the time scale from t to .t/ transforming
+N.t/ into a unit rate Poisson process NQ .t/ D N..t//.
+   In order to exploit this result for the construction of diagnostic tests,
+                                                                          R we still have
+to show that the realizations of .t/Q                            Q i / D ti .sI Fs /ds
+                                          evaluated at ti , i.e., .t       0
+correspond to the arrival times associated with NQ .t/, tQi for all i . This is shown in
+the following lemma by Bowsher (2007):
+
+Lemma 4.3. Denote tQi as the arrival times R t associated with the (transformed) point
+process NQ .t/ given by (4.20). Then, tQi D 0 i .sI Fs /ds 8 i .
+
+Proof. Assume tQi 1  s < tQi with NQ .s/ D N..s// D i  1. Then, if s " tQi , it
+follows that .s/ " .tQi /. Since N..tQi // D NQ .tQi / D i by (4.20), it follows that
+N..s// must jump from i  1 to i at .tQi /, i.e. s D tQi . Since by definition N.t/
+jumpsR to i only at ti , it follows that ti D .tQi /. Then, it follows from (4.19) that
+tQi D 0 i .sI Fs /ds.
+       t
+                                                                                      
+  Using Lemma 4.3 and Theorem 4.2 yields a theorem building the basis for the
+construction of diagnostic tests:
+Theorem 4.4. The durations tQi  tQi 1 associated with the (transformed) point
+process NQ .t/ according to (4.20) are given by
+
+                                                        Z ti
+                      tQi  tQi 1 D .ti 1 ; ti / D            .sI Fs /ds
+                                                         ti 1
+
+
+and correspond to i.i.d. unit exponential random variates. Then it follows that
+
+                              .ti 1 ; ti /  i.i.d. Exp.1/:                                 (4.21)
+
+                                                                                   R ti
+Proof. The proof straightforwardly follows from the fact that tQi D                 0     .sI Fs /ds
+are event times of a unit rate Poisson process.                                                    
+Hence, under fairly weak regularity conditions, the integrated intensity function
+.ti 1 ; ti / is i.i.d. unit exponentially distributed and establishes a powerful link
+between the intensity function and the duration until the occurrence of the next
+point. For example, in a simple case where the intensity function is constant during
+two points, the duration xi is given by xi D .ti 1 ; ti /=.ti I Fti /. Furthermore,
+.ti 1 ; ti / can be interpreted as a generalized error (for example, in the spirit of Cox
+and Snell 1968) and indicates whether the path of the conditional intensity function
+under-predicts (.ti 1 ; ti / > 1/ or over-predicts (.ti 1 ; ti / < 1) the number of
+events between ti and ti 1 .
+
+
+===== PDF page 94 / printed page 79 =====
+4.1 Basic Concepts of Point Processes                                                        79
+
+
+   The random time change argument also holds in case of a multivariate point
+process:
+Theorem 4.5. Let N.t/ be a K-variate point process adapted to a history
+                                                                      Rt       Ft with
+corresponding intensities k .tI Ft / and Ft -compensators Q k .t/ D 0 k .sI Fs /ds
+with Q k .1/ D 1 almost surely 8 k. Define for all t, the stopping-time  k .t/ as the
+solution to
+                                  Z  k .t /
+                                               k .sI Fs /ds D t:                         (4.22)
+                                    0
+
+
+Then, the multivariate point process .NQ 1 .t/; : : : ; NQ K .t// with
+
+                NQ k .t/ D N k . k .t// D N k .Qk .t/1 /;           k D 1 : : : ; K;   (4.23)
+
+is a multivariate Poisson process with components each having a unit rate and being
+independent of each other.
+    Moreover, the durations tQik  tQik1 associated with the Poisson processes NQ k .t/,
+k D 1 : : : ; K, are given by
+                                                           Z tik
+                     tQik  tQik1 D k .tik1 ; tik / D            k .sI Fs /ds
+                                                            tik1
+
+
+and correspond to i.i.d. unit exponential random variates.
+Proof. See Daley and Vere-Jones (2005), Meyer (1971) or Brown and Nair (1988)
+for a more accessible proof. The proof of the exponentiality of k .tik1 ; tik / follows
+straightforwardly by adapting Lemma 4.3 to the multivariate case.                      
+
+
+
+4.1.6 Intensity-Based Inference
+
+Karr (1991) proves the existence of a unique probability measure such that N.t/ has
+the Ft -intensity .tI Ft /. This theorem is fundamental for intensity-based statistical
+inference since it implies that a statistical model can be completely specified in
+terms of the Ft -intensity. A valuable conclusion from Karr’s Theorem 5.2 is the
+establishment of a likelihood function in terms of the intensity. Assume that the
+intensity process satisfies the condition
+                                   Z tn
+                                            .sI Fs /ds < 1:
+                                        0
+
+Then, the log-likelihood function associated with the matrix of underlying data Y
+and the parameter vector  is given by
+
+
+===== PDF page 95 / printed page 80 =====
+80                                                                                  4 Financial Point Processes
+
+                                     Z tn                          Z
+                ln L .Y; / D               .1  .sI Fs //ds C                  ln .sI Fs /dN.s/
+                                      0                                .0;tn 
+                                     Z tn                          X
+                              D             .1  .sI Fs //ds C            1l fti tn g ln .ti /;      (4.24)
+                                      0                            i 1
+
+
+where
+                                Z                         X
+                                           U.s/dN.s/ D           1l fti t g U.ti /                     (4.25)
+                                  .0;t                   i 1
+
+
+defines the stochastic Stieltjes integral6 of some measurable point process U.t/ with
+respect to N.t/.
+   Note that the relationship above holds under fairly weak conditions. Never-
+theless, by imposing more assumptions, we can establish a link between the
+intensity function .tI Ft / and the conditional survivor function S.xi I Fti / WD
+Pr ŒXi  xi jFti  yielding the so called “exponential formula” according to Yashin
+and Arjas (1988):
+
+                                     S.xi I Fti / D exp ..ti 1 ; ti // :                             (4.26)
+
+When there is no conditioning, this relationship is simply derived by solving the
+differential equation
+
+                                      d
+                                         S.xi / D .ti 1 C xi /S.xi /                                 (4.27)
+                                     dxi
+
+subject to the initial condition S.0/ D 1. As illustrated by Yashin and Arjas
+(1988), this relationship also holds if the conditioning is based on a fixed -algebra.
+However, it does not necessarily hold when the conditioning is “dynamic”, i.e.,
+depending on time-dependent random factors (e.g., time-varying covariates). More
+concretely, Yashin and Arjas (1988) prove that the “exponential formula” (4.26) is
+only valid if S.xi I Fti 1 Cxi / is absolutely continuous in xi . Note that his assumption
+excludes jumps of the conditional survivor function induced by changes of the
+information set during a spell.
+    Exploiting the “exponential formula” (4.26) yields another straightforward way
+showing that .ti 1 ; ti / is an i.i.d. standard exponential variate (see, for instance,
+Lancaster 1997). However, this proof requires undesirably restrictive assumptions
+which are problematic whenever information sets might change continuously,
+as, e.g., in case of time-varying covariates and multivariate processes. In these
+situations, the random time change argument as discussed in Sect. 4.1.5 is more
+universal since it requires less restrictive conditions.
+
+
+6
+    See, e.g., Karr (1991), p. 57.
+
+
+===== PDF page 96 / printed page 81 =====
+4.1 Basic Concepts of Point Processes                                                               81
+
+
+4.1.7 Simulation and Diagnostics
+
+The random time change argument allows us to construct simulation algorithms and
+diagnostic tests for point processes. A natural simulation algorithm for a univariate
+Ft -adapted point process N.t/ with Ft -intensity t and Ft -compensator .t/ Q    is
+obtained by exploiting the fact that .ti 1 ; ti /  i.i.d. Exp.1/. Then, using the
+inverse method we can simulate the process as follows:
+  (i) Simulate a sequence U1 ; U2 ; : : : ; Un of i.i.d. uniform U.0; 1/ random variables.
+ (ii) Using the inverse method, generate standard exponential variates by
+      Vi D  ln.1  Ui /, i D 1; 2; : : : ; n:
+(iii) Set t0 D 0. If .0; t1 / D V1 can be expressed as t1 D x1 D .0; V1 /1 with
+      1 denoting the inverse function of  depending only on V1 (and t0 ), set
+      t1 D x1 . Alternatively, solve .0; t1 / D V1 implicitly for t1 .
+(iv) For i D 2; : : : ; n: If .ti 1 ; ti / D Vi can be expressed as xi D 1 .ti 1 ; Vi /,
+      set ti D ti 1 C xi . Alternatively, solve .ti 1 ; ti / D Vi implicitly for ti .
+   Correspondingly, the simulation of a K-dimensional point process is similarly
+performed but requires to continuously update the (integrated) intensities whenever
+a new point of the pooled process N.t/ occurs:
+   (i) Simulate K (independent) sequences U1k ; U2k ; : : : ; Unk , k D 1; : : : ; K, of
+       i.i.d. uniform U.0; 1/ random variables.
+  (ii) Using the inverse method, generate standard exponential variates by
+       Vik D  ln.1  Uik /, i D 1; : : : ; n, k D 1; : : : ; K.
+ (iii) Set t0k D 0. If k .0; t1k / D V1k can be expressed as t1k D k .0; V1k /1 with
+       k ./1 denoting the inverse function of k depending only on V1k (and t0k ),
+       set t1k D x1k . Alternatively, solve k .0; t1k / D V1k implicitly for t1k .
+ (iv) Set t1 D minft11 ; : : : ; t1K g and W1 D arg mink ft11 ; : : : ; t1k ; : : : ; t1K g for
+       k D 1; : : : ; K.
+                                                            j                                    j
+  (v) For all j ¤ W1 : Compute j .0; t1 /. If j .0; t1 / D j .0; t1 / C j .t1 ; t1 / D
+       Y1k can be expressed as t1 D j .0; V1 /1 , set t1 D x1 .
+                                     j           j             j          j
+
+           For j D W1 : If j .t1 ; t2 / D Y2 can be expressed as x2 D j .t1 ; V2 /1 ,
+                                       j      j                                  j              j
+             j           j                                 j            j                   j
+       set t2 D t1 C x2 . Alternatively, solve j .t1 ; t2 / D Y2 implicitly for t2 .
+ (vi) Set t2 Dminft2 ; : : : ; t2 g and W2 Darg mink ft2 ; : : : ; t2 ; : : : ; t2 g for kD1; : : : ; K.
+                       1        K                        1          k            K
+
+(vii) Continue this procedure until nk , k D 1; : : : ; K, spells in each dimension are
+       generated.
+Alternative simulation techniques are discussed, e.g., by Daley and Vere-Jones
+(2005).
+   The random time change argument as discussed in Sect. 4.1.5 provides the
+possibility to construct different types of diagnostic tests. In particular, we perform
+diagnostics based on four different types of (generalized) errors in the spirit of Cox
+and Snell (1968) building on integrated intensities. Assume a K-dimensional point
+process and define
+
+
+===== PDF page 97 / printed page 82 =====
+82                                                                       4 Financial Point Processes
+
+                                             (
+                                                 1   if Wi D k;
+                                    yik WD                                                   (4.28)
+                                                 0   otherwise:
+
+     Then, define
+
+                          "ki;1 WD k .tik1 ; tik /;
+                                    X
+                                    K
+                          "i;2 WD         k .tik1 ; tik /yik ;
+                                    kD1
+
+                                    X
+                                    K
+                          "i;3 WD         k .ti 1 ; ti / D .ti 1 ; ti /;
+                                    kD1
+
+                          "i;4 WD K.tQi  tQi 1 /;
+                                                                                   P
+where tQi are the event times associated with the superposition NQ 0 .t/WD K               Qk
+                                                                                     kD1 N .t/
+and N k .t/, k D 1; : : : ; K, are the time-changed point processes according to
+(4.20). According to Theorems 4.4 and 4.5, all residuals "i;j , j D 1 : : : ; 4, are
+i.i.d. standard exponentially distributed. The exponentiality of "ki;1 , k D 1; : : : ; K,
+directly follows from Theorem 4.5. The errors "i;2 correspond to mixtures of
+i.i.d. standard exponentially distributed variates and thus must be i.i.d. standard
+exponentially distributed themselves. The errors "i;3 correspond to the integrated
+intensity of the (pooled) market point process and are standard exponentially
+distributed according to Theorem 4.4. Finally, the errors "i;4 are computed by
+                                                                          R tk
+sorting the transformed k-type specific event times tQik D 0 i k .sI Fs /ds for all
+k D 1; : : : ; K into ascending order yielding the superposed process NQ 0 .t/. Since
+the NQ k .t/ processes are independent Poisson processes with intensity equal to one,
+the intensity of NQ 0 .t/ is K yielding durations .tQi  tQi 1 / which are exponentially
+distributed with mean K 1 . Thus, scaling by K as in "i;4 yields unit exponential
+variates. These types of errors have been proposed by Bowsher (2007) as an
+“omnibus” test accounting for the multivariate nature of the process. Hence, errors
+"i;j , j D 2; 3; 4, depend not only on the individual process N k .t/ but also on
+(potential) cross-process interdependencies. In contrast, "ki;1 only depends on the
+individual k-type series. Obviously, all four types of model residuals coincide in the
+univariate case (K D 1).
+    Using the residual series, model evaluation can be done by testing the dynamical
+and distributional properties of f"Oki;1 ; "Oi;2 ; "Oi;3 ; "Oi;4 g. The dynamical properties are
+typically evaluated based on Portmanteau statistics or independence tests such
+as proposed by Brock et al. (1996) and discussed in Chap. 5. The distributional
+properties can be evaluated based on a test against excess dispersion. Define ei
+as the corresponding model induced residual, i.e. ei 2 f"Oki;1 ; "Oi;2 ; "Oi;3 ; "Oi;4 g. Engle
+and Russell (1998) propose a specific test on the exponentiality ofpthe series based
+on the asymptotically standard normally distributed test statistic ne =8 .O e2  1/,
+
+
+===== PDF page 98 / printed page 83 =====
+4.2 Four Ways to Model Point Processes                                                83
+
+
+where ne denotes the number of residuals and O e2 denotes the empirical variance of
+the residuals being one under the null hypothesis. Alternatively, the distributional
+properties of the residuals can be tested based on Pearsons’s classical 2 -goodness-
+of-fit tests or using graphical methods, such as quantile-quantile plots.
+
+
+
+4.2 Four Ways to Model Point Processes
+
+In this section, we briefly discuss four basic ways to model point processes:
+(i) models for intensity processes,
+(ii) models for hazard processes,
+(iii) models for duration processes,
+(iv) models for counting processes.
+Here, we restrict our focus on the non-dynamic case. In the following chapters of
+the book, duration and intensity concepts will be reconsidered in more detail and
+will be extended to a dynamic framework.
+
+
+
+4.2.1 Intensity Models
+
+An obvious way to model point processes is to model the intensity .tI Ft / directly.
+A general class of intensity models is given by
+
+                         .tI Ft / D 0 .tI g2 .Ft //g1 .tI Ft /;                 (4.29)
+
+where 0 denotes a baseline intensity function which is driven by time t and a
+function g2 depending on Ft . The function g2 might capture the dependence on
+(time-varying) covariates, past durations or characteristics of other point processes.
+Likewise, g1 most generally depends on the same information set but might have
+another form. It proportionally interacts with 0 . An example of such a process is
+a multivariate autoregressive conditional intensity model as discussed in Chap. 12,
+where g2 is a function of the backward recurrence time of other point processes and
+g1 is a function of the history of the process FNM .t / with FNM .t/    Ft . However,
+considering special cases of representation (4.29) allows to characterize different
+classes of models which will be discussed in more detail in the remainder of the
+book:
+ (i) For g1 D g2 , we obtain an intensity model where g1 does not only multi-
+     plicatively interact with 0 but enters 0 also as an argument. Moreover, if we
+     assume that 0 .tI g1 .Ft // can be expressed as 0 .tI g1 .Ft // D 0 .t=g1 .Ft //,
+     we obtain a class we refer to as accelerated intensity models as g1 scales
+     (and thus accelerates or decelerates) the time argument in 0 . This model is
+
+
+===== PDF page 99 / printed page 84 =====
+84                                                                       4 Financial Point Processes
+
+
+     the intensity counterpart to an accelerated failure time model as discussed
+     below.
+(ii) If we assume that g1 .Ft / D g1 .FNM .t / / as well as g2 .Ft / D g2 .FNM .t / /, and
+     0 .tI g2 .FNM .t / // D 0 .x.t/I g2 .FNM .t / //, then .tI Ft / only depends on infor-
+     mation prevailing at the beginning of the spell, i.e., .tI Ft / D 0 .x.t/I g2
+     .FNM .t / //g1 .FNM .t / /, and the resulting intensity corresponds to a conditional
+     hazard function
+
+                       .tI Ft / D h.x.t/; g1 .FNM .t / /; g2 .FNM .t / //
+                                        fx .x.t/I g2 .FNM .t / /; g1 .FNM .t / //
+                                  D                                                   :       (4.30)
+                                      1  Fx .x.t/I g2 .FNM .t / /; g1 .FNM .t / //
+
+     As the information set only changes at each event but not during a spell,
+     the hazard function can be represented in terms of the inter-event durations
+     xNM C1 D xi , i.e.,
+
+                                                    f .xi I g2 .Fti 1 /; g1 .Fti 1 //
+           h.xi I g2 .Fti 1 /; g1 .Fti 1 // D                                           :   (4.31)
+                                                  1  F .xi I g2 .Fti 1 /; g1 .Fti 1 //
+
+      According to the definitions stated in Sect. 4.1.2, we will refer to intensity
+      processes as long as possibly time-varying covariates have to be taken into
+      account and the process has to be updated during a spell. If, however, point
+      processes are only driven by information updated at each event time but not
+      during a spell, we will refer to hazard processes.
+(iii) If we assume that g2 D 0 and 0 is only a function of the time elapsed
+      since the last event, i.e., 0 .tI Ft / D 0 .x.t// D h0 .x.t//, we obtain the
+      class of proportional intensity models. If, in addition, g1 .Ft / D g1 .FNM .t / /,
+      then .tI Ft / D h0 .x.t//g1 .FNM .t / / corresponds to a proportional hazard (PH)
+      model.
+(iv) Assuming g1 .Ft / D g2 .Ft / D g1 .FNM .t / / and in addition 0 .tI g1 .FNM .t / // D
+      0 .t=g1 .FNM .t / //, then .tI Ft / D 0 .t=g1 .FNM .t / //g1 .FNM .t / / belongs to the
+      class of so-called accelerated failure time (AFT) models where the time scale
+      is accelerated (or decelerated) by observable characteristics. As shown below,
+      AFT models are naturally linked to duration models.
+ (v) The functional form of 0 can be chosen parametrically or can be left
+      unspecified (and can be estimated nonparametrically). For instance, assuming
+      0 .tI g2 .Ft // D 0 .x.t// D !x.t/a1 for ! > 0, a > 0, allows the intensity
+      to monotonically increase (for a > 1) or decrease (for a < 1) during the
+      spell. Under the additional assumption that g1 .Ft / D g1 .FNM .t / /, the resulting
+      intensity process .tI F / D !x.t/a1 g1 .FNM .t / / generates durations xi which
+      are Weibull distributed with shape parameter a and scale parameter g1 . As
+      illustrated below, this special case of a Weibull (proportional) hazard model
+      can be alternatively represented as a specific AFT model, which is obviously
+      driven by the specific parametric form of 0 . Finally, the case of a completely
+
+
+===== PDF page 100 / printed page 85 =====
+4.2 Four Ways to Model Point Processes                                                       85
+
+
+     unspecified baseline function 0 is mostly relevant in the class of proportional
+     hazard models yielding the class of semiparametric proportional hazard
+     models.
+   Models of the intensity function are discussed in a dynamic setting in Chap. 11.
+The special cases of (non-dynamic) PH and AFT models will be discussed in more
+detail in the next subsection which will build the basis for dynamic extensions
+discussed in the following chapters.
+
+
+
+4.2.2 Hazard Models
+
+4.2.2.1 Proportional Hazard (PH) Models
+
+The proportional hazard model has its origin in cross-sectional survival analysis in
+biostatistics7 and labor economics.8
+   As stated in the previous section, the PH model is specified as the product of a
+baseline hazard function h0 .xi / > 0 and a strictly positive function of a vector of
+covariates zi 1 with coefficients . It is given by
+
+                           h.xi I zi 1 / D h0 .xi / exp.z0i 1 /:                     (4.32)
+
+The baseline hazard h0 .x/ corresponds to h.xI z D 0/. That is, if the regressors are
+centered, h0 has an interpretation as the intensity function for the mean values of z.
+The key property of the PH model is that @ ln h.xI z/=@z D , thus, is interpreted
+as the constant proportional effect of z on the conditional arrival rate.
+      The most common examples of a (parametric) PH model are the exponential
+and Weibull regression model. In these models, the baseline hazard h0 is specified
+according to the exponential or Weibull hazard function. While the Weibull model
+allows only for monotonically increasing or decreasing hazard shapes, more flexible
+parameterizations are obtained, for instance, by the gamma, generalized gamma,
+Burr or generalized F distribution (see appendix). Alternatively, non-standard PH
+models are obtained by deviating from classical gamma or Burr shapes and
+parameterizing the baseline hazard function, for instance, as a linear spline function.
+Assume that the observed durations are partitioned into K categories, where
+xN k ; k D 1; : : : ; K  1 denote the chosen category bounds. Then, a spline baseline
+
+
+
+7
+  See, e.g., Kalbfleisch and Prentice (1980), Cox and Oakes (1984) or the recent survey by Oakes
+(2001).
+8
+  A well known example is the analysis of the length of unemployment spells which is studied
+by a wide range of theoretical and empirical papers, see e.g. Lancaster (1979), Nickell (1979),
+Heckmann and Singer (1984), Moffitt (1985), Honoré (1990), Meyer (1990), Han and Hausman
+(1990), Gritz (1993), McCall (1996) or van den Berg and van der Klaauw (2001) among many
+others.
+
+
+===== PDF page 101 / printed page 86 =====
+86                                                                           4 Financial Point Processes
+
+
+hazard is obtained by
+                                       "                                                #
+                                                 X
+                                                 K1
+                       h0 .x/ D exp        0 C                             N k  xi /
+                                                       0;m 1l fxi xN k g .x                ;    (4.33)
+                                                 kD1
+
+where 0 is a constant and 0;k are coefficients associated with the nodes of the
+spline function. Parametric PH models are easily estimated by maximum likelihood
+(ML) adapting the log likelihood function (4.24). Note that in a full information
+ML approach, a consistent estimation of requires the correct specification of h0 .
+However, often parametric distributions are not sufficient to capture the actually
+observed hazard shape. In such a case, a full information ML estimation of the PH
+model leads to inconsistent estimates of .
+    A more flexible PH model is proposed by Cox (1972). In this framework, the
+baseline hazard h0 remains completely unspecified and can be estimated non-
+parametrically. Cox (1975) illustrates that the estimation of does not require a
+specification of the baseline hazard, and thus, the estimation of and h0 can be
+separated. In order to estimate and h0 , he suggests a two-step approach where
+is consistently estimated using a partial likelihood approach while the estimation
+of the baseline hazard follows from a modification of the estimator by Kaplan and
+Meier (1958) as proposed by Breslow (1972, 1974).9
+    Since the partial likelihood approach proposed by Cox (1975) is based on the
+order statistics of the durations, this method is of limited use in the case of ties,
+i.e., when several observations have the same outcome. Then, only approximative
+procedures can be used (see, e.g., Breslow 1974). In this case, a valuable alternative
+way to estimate the PH model, is to apply a categorization approach as proposed by
+Han and Hausman (1990) and Meyer (1990). The main idea behind this procedure
+is to exploit the relationship between ordered response specifications and models for
+grouped durations (see Sueyoshi 1995). Since a categorization approach will play
+an important role in the context of (censored) autoregressive proportional hazard
+models (see Chap. 10), it will be discussed here in more detail.
+    The main idea is to write the PH model in terms of the (log) integrated
+baseline hazard. According to the implications of Theorem 4.2, the integrated hazard
+function
+                                           Z xi
+                                 H.xi / WD      .s/ds                          (4.34)
+                                                       0
+
+is i.i.d. standard exponentially distributed. Thus, the PH model is rewritten as
+
+                                   H0 .xi / D exp.z0i 1 /H.xi /;                                (4.35)
+
+where
+
+
+
+9
+    For more details, see Kalbfleisch and Prentice (1980) or in the survey of Kiefer (1988).
+
+
+===== PDF page 102 / printed page 87 =====
+4.2 Four Ways to Model Point Processes                                                              87
+
+                                                      Z xi
+                                      H0 .xi / WD            0 .s/ds
+                                                       0
+
+denotes the integrated baseline hazard. By assuming the validity of the “exponential
+formula”, (4.26), the integrated baseline hazard is written as H0 .xi / D  ln S0 .xi /,
+where S0 ./ denotes the baseline survivor function associated with the baseline haz-
+ard h0 . Hence, (4.35) can be formulated in terms of the baseline survivor function as
+
+                                 ln S0 .xi / D  exp.z0i 1 /H.xi /:                             (4.36)
+
+Since H.xi / is standard exponentially distributed, it is straightforward to verify that
+
+                                    EŒH0 .xi / D exp.z0i 1 /
+                                    VŒH0 .xi / D exp.2z0i 1 /:
+
+   Equivalently, the PH model can be expressed in terms of the log integrated hazard
+leading to
+
+             ln H0 .xi / D ln. ln S0 .xi // D z0i 1 C "i ;           i D 1; : : : ; n;        (4.37)
+
+where "i WD ln H.xi / follows an i.i.d. standard extreme value type I distribution
+(standard Gumbel (minimum) distribution) with mean EŒ"i  D 0:5772 (corre-
+sponding to the Euler–Mascheroni constant), variance VŒ"i  D 2 =6 and density
+function
+
+                                    f" .s/ D exp.s  exp.s//:                                   (4.38)
+
+Note that this approach does not require to specify the baseline hazard h0 , however
+it requires a complete parameterization of the log integrated baseline hazard. Thus,
+the PH model boils down to a regression model for ln H0 . The function H0
+can be interpreted as a transformation of the underlying duration xi , where the
+transformation is known when h0 is completely specified, otherwise it is unknown.
+For example, by assuming a standard Weibull specification, i.e., h0 .x/ D ax a1 ,
+the PH model yields
+
+                                                      1 
+                             ln xi D z0i 1       C    " ;    i D 1; : : : ; n:                  (4.39)
+                                              a       a i
+ In this case, the PH model is a log-linear model with standard extreme value
+distributed errors. The coefficient vector =a can be consistently (however, not
+efficiently) estimated by OLS.10 Alternatively, the (fully parametric) PH model is
+consistently and efficiently estimated by ML.
+
+
+10
+     In this case, an intercept term has to be included in (4.39) since "
+                                                                         i has a nonzero mean.
+
+
+===== PDF page 103 / printed page 88 =====
+88                                                                           4 Financial Point Processes
+
+
+   When h0 is non-specified, H0 is unknown and can be interpreted as a latent
+variable. Han and Hausman (1990) propose treating this model as a special type of
+ordered response model leading to a semiparametric estimation of h0 . The central
+idea is to introduce a categorization of the duration xi and to consider (4.37) as a
+latent process which is observable only at discrete points associated with the chosen
+category bounds. Then, by adapting the categorization introduced above, we define
+                               
+                               k WD ln H0 .x
+                                           N k /;         k D 1; : : : ; K  1;                  (4.40)
+
+as the value of the latent variable ln H0 ./ at the (observable) category bound xN k .
+In this formulation, the PH model is interpreted as an ordered response model
+based on a standard extreme value distribution. Hence, the thresholds of the latent
+model correspond to the log integrated baseline hazard calculated at the points
+of the corresponding categorized durations. The direct relationship between the
+latent thresholds and the log integrated baseline hazard function is one of the main
+advantages of this approach. Thus, the unknown baseline survivor function S0 can
+be estimated at the K  1 discrete points by a nonlinear function of the estimated
+thresholds k , thus
+
+                       S0 .xN k / D exp. exp. k //;            k D 1; : : : ; K  1:           (4.41)
+
+Based on the discrete points of the baseline survivor function, we can estimate
+a discrete baseline hazard hN 0 , corresponding to the conditional failure probability
+given the elapsed time since the last event,
+
+                     hN 0 .xN k / WD Pr ŒxN k  xi < xN kC1 jxi  xN k 
+                                  S0 .xN k /  S0 .xN kC1 /
+                              D                             ;       k D 0; : : : ; K  2;        (4.42)
+                                           S0 .xN k /
+
+where xN 0 WD 0. This formulation serves as an approximation of the baseline hazard
+if divided by the length of the discretization interval. If the length of the intervals
+goes to zero, the approximation converges to the original definition, (4.1), thus
+
+                                                           hN 0 .xN k /
+                                         h0 .xN k /                    :                        (4.43)
+                                                        xN kC1  xN k
+
+Note that the result of Cox (1975) also holds in this discretization framework.
+Hence, can be estimated consistently without an explicit specification of h0 , which
+means that the consistency of O does not depend on the chosen categorization and
+the number of the categories.11 This result will be exploited in a dynamic framework
+in Chap. 10.
+
+
+11
+     Nevertheless, the efficiency of the estimator is affected by the chosen categorization.
+
+
+===== PDF page 104 / printed page 89 =====
+4.2 Four Ways to Model Point Processes                                                                89
+
+
+   The log likelihood function associated with the PH model represented by (4.37),
+(4.38) and (4.40) has the well known form of an ordered response specification
+based on the standard extreme value distribution
+                                                                            z0
+                                 X X
+                                 n K1                                     k Z i 1
+
+                 ln L.YI / D               1l fxi 2.xN k1 ;xNk g ln                f" .s/ds:   (4.44)
+                                 i D1 kD1                                     0
+                                                                         k1 zi 1
+
+
+
+
+4.2.2.2 Accelerated Failure Time Models
+
+As illustrated above, in the PH model, explanatory variables act multiplicatively
+with the baseline intensity. In contrast, in the AFT model, it is assumed that zi
+accelerates (or decelerates) the time to failure. Thus, the covariates alter the rate at
+which one proceeds along the time axis, leading to a hazard function that is given by
+                                                          
+                       h.xi I zi 1 / D h0 xi exp.z0i 1 / exp.z0i 1 /;                         (4.45)
+
+which can be alternatively written as12
+
+                              ln xi D z0i 1 C "i ;           i D 1; : : : ; n;                    (4.46)
+
+where "i is an error term that follows some continuous distribution. Hence, while
+the PH model implies a linear model with an unknown left-hand variable and a
+standard extreme value distributed error term, the AFT model leads to a log-linear
+representation with xi as the left-hand variable and an unknown distribution of
+the error term. While in the PH model, the covariates act multiplicatively with the
+hazard function, in the AFT model, the covariates act multiplicatively with the log
+duration. For the special case when xi is Weibull distributed with parameter a (see
+Sect. 4.2.2.1), we obtain a model that belongs to both model families, implying a
+multiplicative relationship between the covariates and the intensity function, as well
+as between the covariates and the log duration. In this case, (4.46) corresponds to
+(4.39), hence, a"i D "i is standard extreme value distributed.
+    A more general class of models that nests both the PH model and the AFT model
+is introduced by Ridder (1990) and is called the Generalized Accelerated Failure
+Time (GAFT) model. It is given by
+
+                                      ln g.xi / D z0i 1 C "i ;                                    (4.47)
+
+where g./ is an arbitrary non-decreasing function defined on Œ0; 1/ and "i follows
+an unknown continuous distribution with p.d.f f ./. The GAFT model nests the PH
+
+
+
+12
+     See Kalbfleisch and Prentice (1980).
+
+
+===== PDF page 105 / printed page 90 =====
+90                                                           4 Financial Point Processes
+
+
+model if f ./ D f" and nests the AFT model if g.x/ D x. Ridder (1990) illustrates
+that the GAFT model can be identified non-parametrically.
+
+
+
+4.2.3 Duration Models
+
+Instead of specifying the intensity function, a point process can be alternatively
+directly described by the process of durations between subsequent points. In order
+to ensure non-negativity, the most simple approach is to specify the durations in
+terms of a log-linear regression model,
+
+                                ln xi D z0i 1 C "i ;                            (4.48)
+
+where "i is some i.i.d. error term. Such a model is easily estimated by OLS. As
+discussed in Sect. 4.2.2.2, this type of model belongs to the class of AFT models
+or – for the special case when "i is standard extreme value distributed – also to
+the class of PH models. However, generally, regression models for log durations
+are associated with AFT representations. A more detailed discussion of (dynamic)
+duration models will be given in Chap. 5.
+
+
+
+4.2.4 Count Data Models
+
+An alternative representation of a point process model is obtained by specifying
+the joint distribution of the number of points in equally spaced intervals of
+length . Denote Nj as the number of events in the interval Œj; .j C 1//,
+i.e.,
+
+                 Nj WD N..j C 1//  N.j/;            j D 1; 2; : : :          (4.49)
+
+The specification of a count data models require to aggregate the data which
+naturally induces a certain loss of information. Denote z j as a covariate vector
+associated with Nj , then, the most simple count data model is given by the Poisson
+model by assuming that
+
+                                Nj jz
+                                      j  P o./:                                (4.50)
+
+More general models are obtained by using the NegBin distribution (see, e.g.,
+Cameron and Trivedi 1998) or the double Poisson distribution introduced by
+Efron (1986). A more detailed discussion of (dynamic) count data models and
+corresponding distributions will be given in Chap. 12.
+
+
+===== PDF page 106 / printed page 91 =====
+4.3 Censoring and Time-Varying Covariates                                                 91
+
+
+4.3 Censoring and Time-Varying Covariates
+
+In this section, we discuss two phenomena which typically occur in traditional
+duration data (like unemployment data) and also play a role in financial point
+processes: The effects of censoring and of time-varying covariates. As will be
+illustrated, both phenomena are easily incorporated in an intensity framework.
+
+
+
+4.3.1 Censoring
+
+A typical property of economic duration data is the occurrence of censoring leading
+to incomplete spells. Therefore, a wide strand of econometric duration literature
+focuses on the consideration of censoring mechanisms.13 In the context of financial
+point processes, censoring occurs if there exist intervals in which the point process
+cannot be observed directly. This might be, for example, due to non-trading periods,
+like nights, weekends or holidays. Assume in the following that it is possible to
+identify whether a point ti lies within such a censoring interval. Consider, for
+example, a point process where the points are associated with the occurrence of
+a cumulative price change of given size.14 Then, prices move during non-trading
+periods as well (due to trading on other markets), but can be observed at the earliest
+at the beginning of the next trading day. In this case, we only know that a price event
+occurred but we do not know when it exactly occurred.15 Hence, we can identify
+only the minimum length of the corresponding duration (i.e., the time from the
+previous point ti 1 to the beginning of the censoring interval) and the maximum
+length of the spell (i.e., the time from the end of the censoring interval to the next
+point ti C1 ).
+    In the following, til and tiu with til  ti  tiu are defined as the boundaries of a
+potential censoring interval around ti , and ci is defined as the indicator variable that
+indicates whether ti occurs within a censoring interval, i.e.,
+                                       (
+                                           1   if ti 2 .til I tiu /;
+                               ci WD
+                                           0   if ti D til D tiu :
+
+In the case of left-censoring, right-censoring or left-right-censoring, the non-
+observed duration xi can be isolated by the boundaries xi 2 Œxil ; xiu  where the
+lower and upper boundary xil and xiu are computed corresponding to
+
+
+13
+   See, e.g., Horowitz and Neumann (1987, 1989), the survey by Neumann (1997), Gorgens and
+Horowitz (1999) or Orbe et al. (2002).
+14
+   Such processes will be discussed in more details in Chap. 10.
+15
+   However, note that we cannot identify whether more than one price movement occurred during
+the non-trading period.
+
+
+===== PDF page 107 / printed page 92 =====
+92                                                                            4 Financial Point Processes
+
+      8
+      ˆ
+      <Œti  ti 1 I ti  ti 1  if ci 1 D 1; ci D 0 (left-censoring)
+      ˆ         u           l
+
+  xi 2 Œtil  ti 1 I tiu  ti 1  if ci 1 D 0; ci D 1 (right-censoring)       (4.51)
+      ˆ
+      :̂Œt l  t u I t u  t l  if c
+          i     i 1 i       i 1       i 1 D 1; ci D 1 (left-right-censoring):
+
+
+A common assumption that is easily fulfilled in the context of financial data is the
+assumption of independent censoring. This assumption means that the censoring
+mechanism is determined exogenously and is not driven by the duration process
+itself. For a detailed exposition and a discussion of different types of censoring
+mechanisms, see e.g. Neumann (1997).
+    Under the assumption of independent censoring, the likelihood can be decom-
+posed into
+
+           L.YI jc1 ; : : : ; cn / D L.YI ; c1 ; : : : ; cn /  L.YI c1 ; : : : ; cn /:           (4.52)
+
+Hence, the second factor does not depend on the parameters of the model, and
+thus the parameter vector  is estimated by maximizing the first factor of (4.52).
+Therefore, the corresponding log likelihood function is given by
+
+                                      X
+                                      n
+     ln L.YI c1 ; : : : ; cn I / D          .1  ci /.1  ci 1 / ..ti 1 ; ti / C ln .ti I Fti //
+                                      i D1
+
+                                          X
+                                          n
+                                                                                                   
+                                      C          ci 1 .1  ci / ln S.ti  tiu1 /  S.ti  til1 /
+                                          i D1
+
+                                          X
+                                          n
+                                                                                                    
+                                      C          .1  ci 1 /ci ln S.til  ti 1 /  S.tiu  ti 1 /
+                                          i D1
+
+                                          X
+                                          n
+                                                                                             
+                                      C          ci 1 ci ln S.til  tiu1 /  S.tiu  til1 / :    (4.53)
+                                          i D1
+
+The first term in (4.53) is the log likelihood contribution of a non-censored duration
+while the following terms are the contributions of left-censored, right-censored and
+left-right-censored observations.
+
+
+4.3.2 Time-Varying Covariates
+
+In the following, we discuss the treatment of time-varying covariates z.t/. Here, the
+impact of the covariates on the intensity is not constant during the time from ti 1
+to ti , but is time-varying. However, the formulation of a continuous-time model for
+the covariate path is rather difficult, since it requires the identification of the precise
+timing of events on the continuous path. In order to circumvent these difficulties, one
+typically builds a model based on a discrete-time framework. Hence, it is common
+
+
+===== PDF page 108 / printed page 93 =====
+4.3 Censoring and Time-Varying Covariates                                                                 93
+
+
+to proceed by assuming that the occurrence of events can occur at discrete points of
+time only. This leads to a discretization of the intensity concept.
+    By following the notation in Lancaster (1997), denote Zi .x/ as the path of z.t/
+from z.ti 1 / to z.ti 1 C x/ and Zi .x1 ; x2 / as the path of z.t/ from z.ti 1 C x1 / to
+z.ti 1 C x2 /. Furthermore, according to the framework outlined in Sect. 4.2.2.1,
+the observed durations are divided into M intervals and it is assumed that the
+durations xi can only take the discrete values xN m ; m D 1; : : : ; M  1. Moreover,
+it is assumed that the discretization is sensitive enough to capture each particular
+point, i.e., minfxi g  xN 1 8 i .
+    Then, following Lancaster (1997), a discrete formulation of the intensity function
+at the points ti 1 C xN m is obtained by
+
+                 N i 1 C xN m I Zi .xN m // D Pr Œxi D xN m jxi  xN m I Zi .xN m / 
+                 .t                                                                                   (4.54)
+
+and can be computed based on
+
+                                      Y
+                                      m1
+                                             
+      Pr Œxi  xN m ; Zi .xN m / D                  N i 1 C xN j I Zi .xN j //
+                                                 1  .t
+                                      j D1
+
+                                        Y
+                                        m1
+                                                                         ˇ
+                                                  Pr Zi .xN j 1 ; xN j / ˇxi  xN j ; Zi .xN j 1 /   (4.55)
+                                         j D1
+
+
+and
+
+                                                  N i 1 C xN m I Zi .xN m //
+         PrŒxi D xN m ; xi  xN m ; Zi .xN m / D .t
+                                  Y
+                                  m1
+                                         
+                                                 N i 1 C xN j I Zi .xN j //
+                                             1  .t
+                                  j D1
+
+                                  Y
+                                  m
+                                                                ˇ
+                                         Pr Zi .xN j 1 ; xN j / ˇxi  xN j ; Zi .xN j 1 / :          (4.56)
+                                  j D1
+
+
+   The expressions (4.55) and (4.56) simplify in the case of a so-called exogenous
+covariate process, i.e., following the definition in Lancaster (1997), if and only if
+
+                   Pr ŒZi .x; x C / j xi  x C ; Zi .x/ 
+                       D Pr ŒZi .x; x C / jZi .x/  ;                 8 x  0;  > 0:                 (4.57)
+
+Hence, exogeneity of the covariate process means that the information that no
+further event has been observed until x C  has no predictability for the further
+path of the covariates from x to x C . In this case, (4.55) and (4.56) simplify to
+
+
+===== PDF page 109 / printed page 94 =====
+94                                                                      4 Financial Point Processes
+
+
+                                              Y
+                                              m1
+                                                     
+              Pr Œxi  xN m ; Zi .xN m / D               N i 1 C xN j I Zi .xN j //
+                                                      1  .t                               (4.58)
+                                              j D1
+
+
+and
+
+                                                       N i 1 C xN m I Zi .xN m //
+              PrŒxi D xN m ; xi  xN m ; Zi .xN m / D .t
+                                          Y
+                                          m1
+                                                 
+                                                         N i 1 C xN j I Zi .xN j // :
+                                                     1  .t                                (4.59)
+                                          j D1
+
+
+    Only when the covariates are exogenous, (4.55) and (4.56) can be interpreted
+as conditional probabilities, given the covariate path. However, even when they
+are valid probabilities they can never be interpreted as the values of a conditional
+survivor function or probability density function of xi given Zi .xN j / at the point xN m .
+This is due to the fact that Zi .xN j / is itself a function of t and the conditioning event
+of the conditional survivor function or conditional p.d.f. changes when the argument
+itself changes.
+    Nevertheless, even though it cannot be interpreted as the value of a (discrete)
+p.d.f., it can be used to draw statistical inference. Hence, the intensity function,
+given the covariate path, is always defined even when there exists no counterpart
+that is interpretable as a conditional density or conditional survivor function. These
+relationships illustrate the importance of the intensity concept in modelling duration
+data.
+
+
+4.4 An Outlook on Dynamic Extensions
+
+The implementation of autoregressive structures in point processes can be per-
+formed in alternative ways. According to the three possible specifications of a point
+process, dynamics can be introduced either in the intensity process, the duration
+process or in the counting process. A priori, it is quite unclear which way should
+be preferred and whether one specification is superior to another. Ultimately, the
+particular concepts have to be judged by their ability to result in well specified
+empirical models that provide a satisfying fit to the data and whose coefficients
+may be readily economically interpretable. Nonetheless, in the context of a dynamic
+framework, it is necessary to have a closer look at the fundamental differences
+between the particular approaches and at their strengths and weaknesses with regard
+to the specific properties of financial point processes.
+    The most simple and probably most intuitive way to model autoregressive point
+processes is to specify an autoregressive process in terms of the durations. While a
+renewal process is specified via independently identically distributed intervals, more
+general types of point processes arise by allowing for dynamics in successive event
+intervals fxi g, i D 1; : : : ; n. For instance, the class of so-called Wold processes
+
+
+===== PDF page 110 / printed page 95 =====
+4.4 An Outlook on Dynamic Extensions                                                     95
+
+
+ (see, e.g., Daley and Vere-Jones 2005) is obtained when the process fxi g forms a
+Markov chain, i.e., the distribution of xi C1 given xi ; xi 1 ; : : :, depends only on xi .
+In fact, a (stationary) AR(1) process for inter-event durations,
+
+                                 xi D c C xi 1 C "i ;
+
+with "i being an i.i.d. non-negative random variable and c > 0 and 0 <  < 1
+satisfying non-negativity restrictions would serve as a natural candidate of a Wold
+process. A so called Semi-Markov process according to Cox and Isham (1980)
+is obtained by specifying a stochastic sequence of distribution functions for the
+duration sequence. By supposing M distribution functions F .1/ ./; : : : ; F .M / ./
+associated with M particular states, the process is said to be in state j in t if the
+current distribution function of xNQ .t /C1 is F .j / ./. The transitions are determined by
+a transition matrix P  where the ij th element is the transition probability from state
+i to state j . For more details, see Cox and Isham (1980).
+    By relaxing the Markovian structure, more general dynamic point processes are
+obtained. Allowing for higher-order (ARMA-type) dynamics in duration processes
+yields the class of autoregressive duration processes. As discussed in more detail
+in Chap. 5, these processes are characterized by an intensity function containing an
+autoregressive component in terms of past durations.
+    A particular class of autoregressive duration models is proposed by Engle and
+Russell (1997, 1998) and Engle (1996, 2000) and is considered in more detail
+in Chaps. 5 and 6 of this book. The major advantage of such an approach is its
+practicability since standard time series packages for ARMA or GARCH models
+can be more or less directly applied to the duration data. Presumably for this reason,
+an autoregressive duration model is the most common type of financial point process
+specification and is commonly used in the recent financial econometrics literature.
+    Autoregressive duration models, however, also reveal major drawbacks. First,
+they are not easily extended to a multivariate framework as the individual processes
+occur asynchronously in time. Consequently, there exist no joint points that can be
+used to couple the processes making it difficult to estimate contemporaneous corre-
+lations between the individual processes. Second, the treatment of censoring effects
+is rather difficult. In the case of censoring, the exact timing of particular points of
+the process cannot be observed and can only be approximated by a corresponding
+interval. Such effects induce problems in an autoregressive framework because the
+information about the exact length of a spell is needed for the sequel of the time
+series. One possible solution is, for example, to build a modified model where non-
+observed durations are replaced by a function of their corresponding conditional
+expectations. However, such modifications are not straightforward in a time series
+context. Third, in a discrete-time duration framework, it is difficult to account for
+time-varying covariates. As discussed in Sect. 4.3.2, an intensity representation is
+more useful and convenient in such a context.
+    The key advantage of dynamic intensity models compared to autoregressive
+duration approaches is that they allow to model point processes in a continuous-
+time framework. Thus, while the duration between two points is by definition
+
+
+===== PDF page 111 / printed page 96 =====
+96                                                          4 Financial Point Processes
+
+
+observed at the individual points ti themselves, the intensity function is defined
+at any point in time. This property plays an important role in the modelling of
+time-varying covariates and in the context of autoregressive multivariate point
+process models. In an intensity framework, it is possible to couple the particular
+processes at each point of the pooled process, and thus addressing the problem of
+asynchronicity. Multivariate autoregressive intensity models are discussed in more
+detail in Chap. 12.
+   A particular type of dynamic point processes is the class of self-exciting
+processes. Hawkes (1971) introduces a special class of linear self-exciting processes
+where the intensity is a weighted function of the backward recurrence time to
+all previous points. The advantage of this approach is to estimate the nature of
+the dependence of the intensity without imposing a strong a priori time series
+structure. For more details and applications of Hawkes processes to financial data,
+see Chaps. 11 and 12.
+   An alternative to self-exciting processes is the class of autoregressive point
+processes. In this context, renewal processes are augmented by time series structures
+that may be specified in terms of the intensity function, the integrated hazard
+function, the duration between subsequent points, or in terms of the counting
+function. Detailed illustrations of such types of point processes will be given in
+the sequel of this book.
+   However, as in a duration framework, the treatment of censoring effects is rather
+difficult. For a censored observation, the occurrence time, and thus the intensity
+function at the particular time, is not exactly measurable. Thus, as long as these
+(unobserved) realizations are needed in the time series recursion of a dynamic
+model, approximations have to be used. Therefore, for the modelling of point
+processes that are subject to strong censoring mechanisms, alternative approaches
+are necessary. One alternative is to build a dynamic model based on a function of
+the survivor function. The survivor function plays an important role in the context
+of censoring (see Sect. 4.3.1), since it allows to isolate the non-observed occurrence
+times in terms of survivor probabilities with respect to corresponding censoring
+bounds. Hence, by exploiting the relationship between the survivor function and
+the integrated hazard function (see (4.26)), an alternative dynamic point process
+model can be built based on the integrated hazard function. Moreover, as illustrated
+in Chap. 10, autoregressive integrated hazard models are valuable approaches for
+dynamic extensions of semiparametric proportional hazard models. In this context,
+the discretization approach presented in Sect. 4.2.2.1 will be applied to obtain
+a semiparametric estimation of a non-specified baseline hazard in a dynamic
+framework.
+   A further possibility to model autoregressive point processes is to specify an
+autoregressive count data model. The strength of this approach is that these models
+are based (per assumption) on equi-distant time intervals. For this reason, they are
+easily extended to a multivariate framework (see Davis et al. 2001 or Heinen and
+Rengifo 2007). However, the treatment of censoring mechanisms and the inclusion
+of time-varying covariates is rather difficult in this context. These types of models
+are discussed in more detail in Chap. 13.
+
+
+===== PDF page 112 / printed page 97 =====
+References                                                                                    97
+
+
+References
+
+Bauwens L, Hautsch N (2009) Modelling Financial High Frequency Data Using Point Processes.
+    In: Andersen TG, Davis RA, Kreiss J-P, Mikosch T (eds) Handbook of financial time series.
+    Springer, Berlin, Heidelberg
+Bowsher CG (2007) Modelling security markets in continuous time: intensity based, multivariate
+    point process models. J Econom 141:876–912
+Brémaud P (1981) Point processes and queues, Martingale dynamics. Springer, New York
+Breslow N (1972) Contribution to the Discussion of the Paper by D. R. Cox. J R Stat Soc Series B
+    34:216–17
+Breslow NE (1974) Covariance analysis of censored survival data. Biometrics 30:89–100
+Brock W, Dechert WD, Scheinkman J, LeBaron B (1996) A test for independence based on the
+    correlation dimension. Econom Rev 15:197–235
+Brown TC, Nair MG (1988) A simple proof of the multivariate random time change theorem for
+    point processes. J Appl Probab 25:210–214
+Cameron AC, Trivedi PK (1998) Regression analysis of count data. Cambridge University Press,
+    Cambridge
+Cox DR (1972) Regression Models and Life Tables. J R Stat Soc Series B 34:187–220
+Cox DR (1975) Partial likelihood. Biometrika 62:269
+Cox DR, Isham V (1980) Point processes. Chapman and Hall, London
+Cox DR, Oakes D (1984) Analysis of survival data. Chapman and Hall, London
+Cox DR, Snell EJ (1968) A general definition of residuals. J R Stat Soc Series B 30:248–265
+Daley D, Vere-Jones D (2005) An introduction to the theory of point processes. Volume I:
+    Elementary theory and methods. Springer, New York
+Davis RA, Rydberg TH, Shephard N, Streett SB (2001) The CBin model for counts: testing
+    for common features in the speed of trading, quote changes, limit and market order arrivals.
+    Discussion paper, Nuffield College, Oxford
+Efron B (1986) Double exponential families and their use in generalized linear regression. J Am
+    Stat Assoc 81:709–721
+Engle RF (2000) The econometrics of ultra-high-frequency data. Econometrica 68(1):1–22
+Engle RF, Russell JR (1998) Autoregressive conditional duration: a new model for irregularly
+    spaced transaction data. Econometrica 66:1127–1162
+Gorgens T, Horowitz JL (1999) Semiparametric estimation of a censored regression model with an
+    unknown transformation of the dependent variable. J Econom 90:155–191
+Gritz RM (1993) The impact of training on the frequency and duration of employment. J Econom
+    57:21–51
+Han A, Hausman JA (1990) Flexible parametric estimation of duration and competing risk models.
+    J Appl Econom 5:1–28
+Hawkes AG (1971) Spectra of some self-exciting and mutually exciting point processes.
+    Biometrika 58:83–90
+Heckmann JJ, Singer B (1984) Econometrics duration analysis. J Econom 24:63–132
+Heinen A, Rengifo E (2007) Multivariate autoregressive modelling of time series count data using
+    copulas. Empir Financ 14:564–583
+Honoré BE (1990) Simple estimation of duration models with unobserved heterogeneity. Econo-
+    metrica 58:453–473
+Horowitz JL, Neumann GR (1987) Semiparametric estimation of employment duration models.
+    Econometric Review 6(1):5–40
+Kalbfleisch JD, Prentice RL (1980) The statistical analysis of failure time data. Wiley, New York
+Kaplan EL, Meier P (1958) Nonparametric estimation from incomplete observations. J Am Stat
+    Assoc 53:457–481
+Karr AF (1991) Point processes and their statistical inference. Dekker, New York
+Kiefer NM (1988) Economic duration data and hazard functions. J Econ Lit 26:646–679
+
+
+===== PDF page 113 / printed page 98 =====
+98                                                                  4 Financial Point Processes
+
+
+Lancaster T (1979) Econometric methods for the duration of unemployment. Econometrica
+   47(4):939–956
+Lancaster T (1997) The econometric analysis of transition data. Cambridge University Press
+McCall BP (1996) Unemployment insurance rules, joblessness and part-time work. Econometrica
+   64(3):647–682
+Meyer PA (1971) Démonstration simplifiée d’un théorème Knight. In Lecture Notes in Mathemat-
+   ics vol. 191. Springer, pp. 191–195
+Meyer BD (1990) Unemployment insurance and unemployment spells. Econometrica 58(4):757–
+   782
+Moffitt R (1985) Unemployment insurance and the distribution of unemployment spells. J Econom
+   28:85–101
+Neumann G (1997) Search models and duration data. In: Pesaran MH (ed) Handbook of Applied
+   Econometrics, chap. 7. Basil Blackwell, Oxford, pp 300–351
+Nickell S (1979) Estimating the probability of leaving unemployment. Econometrica 47(5):s 1249–
+   1266
+Oakes D (2001) Biometrika centenary: survival analysis. Biometrika 88:99–142
+Orbe J, Ferreira E, Nunez-Anton V (2002) Length of time spent in chapter 11 bankruptcy: a
+   censored partial regression model. Appl Econ 34:1949–1957
+Ridder G (1990) The non-parametric identification of generalized accelerated failure-time models.
+   Rev Econ Stud 57:167–182
+Snyder DL, Miller MI (1991) Random point processes and time and space, 2nd edn. Springer, New
+   York,
+Sueyoshi GT (1995) A class of binary response models for grouped duration data. J Appl Econom
+   10:411–431
+van den Berg GJ, B. van der Klaauw (2001) Combining micro and macro unemployment duration
+   data. J Econom 102:271–309
+Yashin A, Arjas E (1988) A note on random intensities and conditional survival functions. J Appl
+   Probab 25:630–635

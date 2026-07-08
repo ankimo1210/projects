@@ -1,0 +1,13 @@
+{
+  "model": "gemma3:12b",
+  "chapter": 5,
+  "chapter_ja": "単変量乗法誤差モデル",
+  "chapter_en": "Univariate Multiplicative Error Models",
+  "pdf_page": 157,
+  "printed_page": "142",
+  "source_chars": 2427,
+  "translation_chars": 1963,
+  "elapsed_seconds": 24.58,
+  "created_at": "2026-06-20T21:29:35",
+  "translation": "142                                                    5 単変量乗法誤差モデル（Univariate Multiplicative Error Models）\n\nLunde A (2000) は、一般化されたガンマ自己回帰条件付きデュレーションモデルに関する論文（Discussion paper, University of Aarhus）を発表した。\nManganelli S (2005) は、取引のデュレーション、出来高、ボラティリティへの影響を「Journal of Financial Markets」8巻377–399ページに報告した。\nMcLeod AI, Li WK (1983) は、二乗残差自己相関を用いたARMA時系列モデルの診断チェックについて「Journal of Time Series Analysis」4巻269–273ページに論じている。\nMeitz M, Teräsvirta T (2006) は、自己回帰条件付きデュレーションモデルの評価を「Journal of Business & Economic Statistics」24巻104–124ページに提示した。\nNelson D (1991) は、資産収益における条件付き不均一分散について新たなアプローチを「Journal of Econometrics」43巻227–255ページに提案した。\nNewey WK (1985) は、最尤推定によるモデル仕様テストと条件付きモーメントテストを「Econometrica」5巻1047–1070ページに示した。\nNewey WK, West KD (1987) は、単純で正半正定値の不均一分散と自己相関に一貫性のある共分散行列を「Econometrica」55巻703–708ページに導出した。\nPacurar M (2008) は、金融における自己回帰条件付きデュレーションモデルに関するサーベイ論文を「Journal of Economic Surveys」22巻711–751ページに発表し、理論的および実証的文献を概観した。\nPagan A, Vella F (1989) は、個別データに基づくモデルの診断テストに関するサーベイを「Journal of Applied Econometrics」4巻29–59ページにまとめた。\nRosenblatt M (1952) は、多変量変換に関する考察を「Annals of Mathematics and Statistics」23巻470–472ページに記した。\nSilverman BW (1986) は、統計およびデータ分析のための密度推定をChapman and Hall, Londonから出版した。\nTauchen G (1985) は、最尤モデルの診断テストと評価を「Journal of Econometrics」30巻415–443ページに示した。\nTaylor SJ (1982) は、2つの確率過程の積によってモデル化された金融収益 – 日次砂糖価格の研究を、Anderson OD (ed) の編集による「Time series analysis: theory and practice, North-Holland, Amsterdam」に掲載した。\nVeredas D, Rodriguez-Poo J, Espasa A (2008) は、金融デュレーションのための半パラメータ推定をBauwens WPL, Veredas D (eds) の編集による「High frequency financial econometrics. Physica-Verlag, Heidelberg」の225–251ページに提示した。\nWhite H (1982) は、モデルのミスペック化に対する最尤推定を「Econometrica」50(1)巻1–25ページに示した。\nWooldridge JM (1990) は、ロバストな回帰ベースの仕様テストへの統一的なアプローチを「Econometrica Theory」6巻17–43ページに提示した。\nWooldridge JM (1991) は、仕様テストと準最尤推定を「Journal of Econometrics」48巻29–55ページに論じた。\nZhang MY, Russell JR, Tsay RS (2001) は、金融取引データへの応用を含む非線形自己回帰条件付きデュレーションモデルを「Journal of Econometrics」104巻179–207ページに提案した。"
+}

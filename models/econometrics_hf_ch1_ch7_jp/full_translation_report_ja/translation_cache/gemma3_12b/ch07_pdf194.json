@@ -1,0 +1,13 @@
+{
+  "model": "gemma3:12b",
+  "chapter": 7,
+  "chapter_ja": "ベクトル乗法誤差モデル",
+  "chapter_en": "Vector Multiplicative Error Models",
+  "pdf_page": 194,
+  "printed_page": "179",
+  "source_chars": 2859,
+  "translation_chars": 2047,
+  "elapsed_seconds": 20.236,
+  "created_at": "2026-06-20T21:43:04",
+  "translation": "7.1 VMEM プロセス                                                                      179\n\nサポート Œ0; C1/K を単位平均 \u0003 と共分散行列 ˙ を持つものとすると、すなわち、\n\n                                  \"i jFi \u00021 \u0003 i.i.d. D.\u0003; ˙ /\n\nが示唆される。\n\n                                 E Œxi jFi \u00021 \u0002 D ‰ i ;\n                                                          0\n                                 V Œxi jFi \u00021 \u0002 D ‰ i ‰ i ˇ †:\n\n正のサポート上で定義された適切な多変量分布を見つけることは困難な課題である。Cipollini et al. (2007) が議論するように、考えられる候補の一つは多変量ガンマ分布であるが、これは誤差 \"i の同時相関に厳しい制約を課す。\n   あるいは、依存構造はコプラアプローチによって捉えることができる。Bodnar and Hautsch (2011) は、\"i の依存性を動的な相関行列を持つガウスコプラでモデル化することを提案している。以下のように定義する。\n\n                     \"\u0003i D .˚ \u00021 .F1 .\"1;i //; :::; ˚ \u00021 .FK .\"K;i ///0 ;\n\nここで、˚.:/ は単変量標準正規分布の累積分布関数を表し、Fj .:/ は \"i の周辺分布関数を表す。ガウスコプラの仮定は、変換された残差 \"\u0003i が条件付き相関行列 Ri を持つ条件付き正規分布に従うことを意味する。 \"i から \"\u0003i への変換は単調であるが非線形である。したがって、f\"\u0003i g ならびに f\"\u00032 i g の系列は自己相関を示す可能性がある一方で、f\"i g の系列自体は無相関である。これらの効果を捉えるために、Bodnar and Hautsch は VARMA-(M)GARCH パラメータ化を提案しており、それは以下で与えられる。\n\n                           \u0002\n                         X\n                         Q\n                 \"\u0003i D          Cj \"\u0003i \u0002j C \u0004 i ;                                      (7.4)\n                         j D1\n                         p\n                  \u0004i D       hi ˇ \u0005 i ;                                                (7.5)\n                                    h                                h\n                                  X\n                                  P                                X\n                                                                   Q\n                  hi D !h C              Aj .\u0004 i \u0002j ˇ \u0004 i \u0002j / C          Bj hi \u0002j ;   (7.6)\n                                  j D1                             j D1\n\n\nここで、Cj , Aj および Bj は \"\u0003i \u0003 N .0; Ri / を持つ K \u0002 K パラメータ行列である。それに対応して、hi は \u0004 i の条件付き分散の K \u00021 ベクトルであり、\u0005 i は i.i.d. N .0; 1/ のイノベーションのベクトルを表す。次に、条件付き相関行列 Ri は Engle’s (2002) Dynamic Conditional Correlation (DCC) モデルに従ってモデル化され、以下で与えられる。\n\n                                    Ri D Q\u0003i \u00021 Qi Q\u0003i \u00021 ;                            (7.7)"
+}
