@@ -133,3 +133,14 @@ For financial, rates, market, and time-series analysis:
 - Prefer interpretable baselines and sanity checks before complex models.
 - Quantify uncertainty when possible and clearly explain limitations, failure modes, and when not to use the model.
 <!-- END KAZ_PREFS -->
+
+## Decisions (ADR)
+
+Load-bearing decisions whose rationale git log can't recover — rejected
+alternatives, no-diff policy/constraint choices — go in `docs/decisions/` as
+ADRs (`NNNN-slug.md`: Status / Context / Decision / Consequences). Rule of
+thumb: if a future reader can't reconstruct the "why" from the diff/log, write
+an ADR; otherwise leave it to git log. Propose a new ADR when a session makes a
+significant design change or reversal. Repo-specific only — cross-project
+lessons distill to `~/wiki`. No CHANGELOG/releases/runbooks/glossary until
+there's a reader.
