@@ -50,6 +50,7 @@ cells.append(
 | 4 | COS 法による Fourier 価格付け | Fang & Oosterlee (2008) |
 | 5 | Heston スマイルの形（ρ, ξ, κ の役割） | Gatheral Ch.3 |
 | 6 | SABR と Hagan 公式 | Hagan+ (2002) |
+| 7 | モデル・パラメータの選択と Greeks（モデルリスク） | Hagan+ (2002) |
 
 > Hull 該当章: Ch.20（ボラティリティ・スマイル）。本巻はその生成メカニズムと価格付け。""")
 )
@@ -283,9 +284,97 @@ near = sabr.sabr_implied_vol(100, 100.0001, 1.0, 0.3, 1.0, -0.3, 0.4)
 print(f"ATM 連続性: atm={atm:.6f} ≈ near={near:.6f}")""")
 )
 
-# 7. teaser
+# 7. model choice / parameters -> Greeks (model risk)
 cells.append(
-    md(r"""## 7. この先
+    md(r"""## 7. モデル・パラメータの選択と Greeks — 市場が同じでもヘッジは違う
+
+オプションの**価格**は市場で観測できるが、**Greeks はモデルの出力**である。
+問うべきは3つ:
+
+1. **モデル選択のリスク（Hagan 2002, "delta risk"）**: 同一の市場スマイルに
+   $\beta=0/0.5/1$ の SABR をそれぞれ再校正 $(\alpha,\rho,\nu)$ すると、
+   **フィットは区別不能**（どの β も市場を完全に再現し、価格も一致）なのに、
+   バックボーンに沿った **smile-consistent の Δ・Γ・ベガは揃って乖離**する。
+   $\beta$ は市場データが決めてくれない**選択**であり、その選択がヘッジを決めてしまう —
+   モデルリスクの最も具体的な姿。
+2. **各パラメータを動かすと Greeks はどう変わるか**: β だけでなく **α・ρ・ν** を一つずつ
+   スイープすると、Δ・Γ・V・Θ の曲線がそれぞれ違う形で動く。α はボラ水準全体を持ち上げ、
+   β はバックボーンを回してΔを傾け、ρ はスキューを通じてΔ・Γ翼を非対称に動かし、
+   ν は主に Γ・ベガの翼を膨らませる。全スイープは共通の基準線（accent）を通るので、
+   各ノブが Greeks を基準からどちらへ引き剥がすかが読める。
+3. **パラメータの解剖学（符号とトレードオフ）**: 標準化バンプ（α は +1 volpt、β は ATM を
+   揃えて +0.1、ρ・ν は +0.1）に対する Δ・Γ・V・Θ の変化率を行列にすると、**1つの
+   パラメータが複数の Greeks を逆符号で動かすトレードオフ**が一目で分かる。あるGreekを
+   合わせにいくと別のGreekがずれる — キャリブレーションの自由度は、そのままヘッジの
+   自由度（＝曖昧さ）でもある。""")
+)
+cells.append(
+    md(r"""> **核心** — 価格は市場が決めるが、Greeks はモデルの選択が決める。<br>
+> **直感** — スマイルを「どう動くもの」と見なすか（sticky-strike / バックボーン）で微分が変わる。<br>
+> **実務** — β の選択・モデル検証・モデルリザーブの根拠。デスクごとのデルタの食い違いの正体。""")
+)
+
+cells.append(
+    code(r"""# (1) 同一の市場スマイルに β=1/0.5/0 を再校正 → フィットは同じ、Δ・Γ・ベガは違う
+ks = np.linspace(80.0, 125.0, 16)
+mkt = np.array([sabr.sabr_implied_vol(100, k, 1.0, 0.30, 1.0, -0.30, 0.40) for k in ks])
+print("同一スマイルへの再校正: フィット誤差と ATM Greeks")
+for b in (1.0, 0.5, 0.0):
+    a_, r_, n_ = sabr.calibrate_sabr(100, 1.0, ks, mkt, beta=b)
+    fit = np.array([sabr.sabr_implied_vol(100, k, 1.0, a_, b, r_, n_) for k in ks])
+    g = sabr.sabr_greeks(100, 100, 1.0, a_, b, r_, n_)
+    print(f"β={b:g}: fit誤差 {np.abs(fit - mkt).max():.1e}   "
+          f"Δ={g['delta']:.4f}  Γ={g['gamma']:.5f}  V={g['vega']:.2f}")
+iv_atm = mkt[np.argmin(np.abs(ks - 100))]
+print(f"（参考）sticky-strike ATM Δ = {sabr.sticky_strike_delta(100, 100, 1.0, iv_atm):.4f}")
+
+pv.plotly_smile_model_risk().show()""")
+)
+
+cells.append(
+    code(r"""# (2) 各パラメータをスイープ: α/β/ρ/ν をドロップダウンで選び Greeks 曲線の変化を見る
+# 全スイープは基準モデル（accent 線）を通る。各ノブが Δ・Γ・V・Θ をどう引き剥がすか
+ks = np.linspace(80.0, 125.0, 16)
+alpha0 = 0.30 * 100 ** (1 - 0.5)  # rates-style base: β=0.5, ATM ボラ 0.30
+print("各パラメータの端点で ATM ボラは概ね保たれる（α スイープを除く）:")
+for name, (a_, b_, r_, n_) in {
+    "ρ=-0.6": (alpha0, 0.5, -0.6, 0.4),
+    "ρ=0.0": (alpha0, 0.5, 0.0, 0.4),
+    "ν=0.15": (alpha0, 0.5, -0.3, 0.15),
+    "ν=0.65": (alpha0, 0.5, -0.3, 0.65),
+}.items():
+    atm = sabr.sabr_implied_vol(100, 100, 1.0, a_, b_, r_, n_)
+    g85, g115 = sabr.sabr_greeks(100, 85, 1.0, a_, b_, r_, n_), sabr.sabr_greeks(100, 115, 1.0, a_, b_, r_, n_)
+    print(f"  {name}: ATM={atm:.3f}  Δ(85)={g85['delta']:.3f} Δ(115)={g115['delta']:.3f}")
+
+pv.plotly_sabr_greeks_by_param().show()""")
+)
+
+cells.append(
+    md(r"""### 7.1 ρ と ν を個別に — スマイルの変化が Greeks に流れる
+
+$\beta$ は再校正でスマイルを固定できるが、$\rho$ と $\nu$ は**スマイルそのもの**を動かす。
+下の図は行に $\rho$・$\nu$、列にスマイル IV・Δ・Γ を並べる。左から右へ「スマイルがこう変わる →
+Δ がこう歪む → Γ がこう膨らむ」と読める。
+
+- **$\rho$（上段）**: スマイルを傾ける → Δ を歪め、Γ のピークを横にずらす。
+- **$\nu$（下段）**: 翼を持ち上げる → Γ とベガの翼を膨らませ、Δ は相対的に動きが小さい。""")
+)
+
+cells.append(
+    code(r"""# ρ と ν を個別にスイープ: スマイル IV → Δ → Γ の連鎖（上段 ρ / 下段 ν）
+pv.plotly_sabr_rho_nu_smile_greeks().show()""")
+)
+
+cells.append(
+    code(r"""# (3) パラメータの解剖学: どのパラメータがどの Greek に効くか（K スライダー）
+# 行=標準化バンプ、列=smile-consistent Greeks、セル=変化率%。行内の赤青混在＝トレードオフ
+pv.plotly_sabr_param_greeks().show()""")
+)
+
+# 8. teaser
+cells.append(
+    md(r"""## 8. この先
 
 - **rough volatility**: ボラの対数が粗い（Hurst $H\!\approx\!0.1$）分数ブラウン運動で駆動。
   短満期 ATM スキューの $T^{H-1/2}$ 挙動を説明（Gatheral-Jaisson-Rosenbaum 2018）。
@@ -316,6 +405,22 @@ pm, sm = heston.heston_mc_price(100, 100, 0.05, 1.0, v0, kappa, theta, xi, rho,
 checks.append(("Heston COS ≈ MC", pc, pm, 4 * sm + 0.03))
 # SABR flat limit
 checks.append(("SABR β=1,ν→0 == α", sabr.sabr_implied_vol(100, 110, 1.0, 0.3, 1.0, 0.0, 1e-8), 0.3, 1e-4))
+# flat smile: backbone delta == sticky-strike delta
+checks.append(("SABR Δ フラット極限 == sticky",
+               sabr.sabr_smile_delta(100, 110, 1.0, 0.2, 1.0, 0.0, 0.0),
+               sabr.sticky_strike_delta(100, 110, 1.0, 0.2), 1e-6))
+# flat smile: every smile-consistent Greek == r=q=0 Black Greek
+g_flat = sabr.sabr_greeks(100, 110, 1.0, 0.2, 1.0, 0.0, 0.0)
+checks.append(("SABR Γ フラット極限 == Black Γ", g_flat["gamma"], bsm.gamma(100, 110, 0.0, 0.2, 1.0), 1e-6))
+checks.append(("SABR V フラット極限 == Black V", g_flat["vega"], bsm.vega(100, 110, 0.0, 0.2, 1.0), 1e-3))
+# model risk: beta=1 vs beta=0 calibrated to the SAME smile -> ATM deltas ~12pts apart
+ks_c = np.linspace(80.0, 125.0, 16)
+mkt_c = np.array([sabr.sabr_implied_vol(100, k, 1.0, 0.30, 1.0, -0.30, 0.40) for k in ks_c])
+d_atm = {}
+for b in (1.0, 0.0):
+    a_, r_, n_ = sabr.calibrate_sabr(100, 1.0, ks_c, mkt_c, beta=b)
+    d_atm[b] = sabr.sabr_smile_delta(100, 100, 1.0, a_, b, r_, n_)
+checks.append(("同一スマイル β=1 vs 0 の ATM Δ 乖離", d_atm[1.0] - d_atm[0.0], 0.12, 0.03))
 for name, got, want, tol in checks:
     ok = abs(got - want) <= tol
     print(f"[{'OK' if ok else 'FAIL'}] {name}: got={got:.4f} want={want:.4f} (tol={tol:.3g})")

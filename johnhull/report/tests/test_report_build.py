@@ -36,14 +36,14 @@ def test_registry_is_consistent():
     }
     for f in FIGURES:
         assert f.book in BOOKS, f.id
-    assert len(figures_for("options_core")) == 5
+    assert len(figures_for("options_core")) == 7
     assert len(figures_for("numerics")) == 5
-    assert len(figures_for("risk_credit")) == 7
+    assert len(figures_for("risk_credit")) == 8
     assert len(figures_for("stochastic")) == 3
-    assert len(figures_for("volatility")) == 5
+    assert len(figures_for("volatility")) == 10
     assert len(figures_for("rates_swaps")) == 3
     assert len(figures_for("exotics")) == 2
-    assert len(FIGURES) == 30
+    assert len(FIGURES) == 38
 
 
 def test_every_figure_builds():

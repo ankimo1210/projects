@@ -60,17 +60,14 @@ def price_european_mc(
     return float(disc.mean()), float(disc.std(ddof=1) / np.sqrt(n_paths))
 
 
-def price_american_lsm(
-    S0, K, r, sigma, T, q=0.0, kind="put", n_steps=50, n_paths=100_000, rng=None
-):
-    """American option via Longstaff-Schwartz least-squares MC (Hull Ch.27).
+def _lsm_backward(paths, K, r, T, kind):
+    """Backward LSM sweep shared by the pricer and the boundary estimator.
 
-    Quadratic polynomial basis regressed on in-the-money paths; GBM paths
-    with risk-neutral drift r - q from simulate_gbm_paths.
+    Returns (cf, records): cf is each path's cashflow discounted to step 1,
+    records is a list of (step_index, extreme exercised spot) — max exercised
+    S for a put, min for a call — for every step where exercise occurred.
     """
-    if kind not in ("call", "put"):
-        raise ValueError(f"kind must be 'call' or 'put', got {kind!r}")
-    paths = simulate_gbm_paths(S0, r - q, sigma, T, n_steps, n_paths, rng=rng)
+    n_steps = paths.shape[1] - 1
 
     def intrinsic(s):
         return np.maximum(s - K, 0.0) if kind == "call" else np.maximum(K - s, 0.0)
@@ -78,6 +75,7 @@ def price_american_lsm(
     dt = T / n_steps
     disc = np.exp(-r * dt)
     cf = intrinsic(paths[:, -1])
+    records = []
     for i in range(n_steps - 1, 0, -1):
         cf = cf * disc
         s_i = paths[:, i]
@@ -89,6 +87,49 @@ def price_american_lsm(
             coef, *_ = np.linalg.lstsq(basis, cf[itm], rcond=None)
             cont = basis @ coef
             exercise = ex[itm] > cont
+            if exercise.any():
+                s_ex = x_itm[exercise]
+                records.append((i, float(s_ex.max() if kind == "put" else s_ex.min())))
             idx = np.nonzero(itm)[0][exercise]
             cf[idx] = ex[itm][exercise]
+    return cf, records
+
+
+def price_american_lsm(
+    S0, K, r, sigma, T, q=0.0, kind="put", n_steps=50, n_paths=100_000, rng=None
+):
+    """American option via Longstaff-Schwartz least-squares MC (Hull Ch.27).
+
+    Quadratic polynomial basis regressed on in-the-money paths; GBM paths
+    with risk-neutral drift r - q from simulate_gbm_paths.
+    """
+    if kind not in ("call", "put"):
+        raise ValueError(f"kind must be 'call' or 'put', got {kind!r}")
+    paths = simulate_gbm_paths(S0, r - q, sigma, T, n_steps, n_paths, rng=rng)
+    cf, _ = _lsm_backward(paths, K, r, T, kind)
+    disc = np.exp(-r * T / n_steps)
+
+    def intrinsic(s):
+        return np.maximum(s - K, 0.0) if kind == "call" else np.maximum(K - s, 0.0)
+
     return float(max(intrinsic(S0), np.mean(cf * disc)))
+
+
+def lsm_exercise_boundary(
+    S0, K, r, sigma, T, q=0.0, kind="put", n_steps=50, n_paths=20_000, rng=None
+):
+    """Early-exercise boundary implied by the LSM rule (Hull Ch.27).
+
+    At each step where the regression says exercise, record the extreme
+    exercised spot (max S for a put, min for a call). Returns (taus, boundary)
+    with tau = time to expiry, sorted by increasing tau — directly comparable
+    to the finite-difference boundary from :func:`hullkit.fd.fd_vanilla`.
+    """
+    if kind not in ("call", "put"):
+        raise ValueError(f"kind must be 'call' or 'put', got {kind!r}")
+    paths = simulate_gbm_paths(S0, r - q, sigma, T, n_steps, n_paths, rng=rng)
+    _, records = _lsm_backward(paths, K, r, T, kind)
+    dt = T / n_steps
+    taus = [T - i * dt for i, _ in records]  # records run backward -> taus ascending
+    boundary = [s for _, s in records]
+    return taus, boundary
