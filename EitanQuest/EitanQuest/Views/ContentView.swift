@@ -9,6 +9,11 @@ struct ContentView: View {
                     Label("学習", systemImage: "book.fill")
                 }
 
+            ThemeSelectionView()
+                .tabItem {
+                    Label("テーマ", systemImage: "square.grid.2x2.fill")
+                }
+
             StatsView()
                 .tabItem {
                     Label("統計", systemImage: "chart.bar.fill")
