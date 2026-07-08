@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import numpy as np
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 from . import bsm, credit, hedging, payoffs, rates, risk, swaps, trees, volatility
 
@@ -138,40 +139,47 @@ def plotly_delta_hedge_cost(
     T: float = 20.0 / 52.0,
     n_paths: int = 4000,
 ) -> go.Figure:
-    """Distribution of delta-hedging cost; slider over rebalance frequency.
+    """Distribution of delta-hedging cost; animated over rebalance frequency.
 
     Wraps :func:`hullkit.hedging.simulate_delta_hedge` (Hull §19.4). The dashed
-    accent line is the BSM price: as rebalancing gets finer the cost distribution
-    tightens around it, independent of the real-world drift.
+    accent line is the BSM price: press ▶ (or drag the slider) and the cost
+    distribution tightens around it as rebalancing gets finer, independent of
+    the real-world drift. Bins are fixed across frames so only the shape moves.
     """
     bsm_price = float(bsm.call_price(S0, K, r, sigma, T))
-    rebals = [1, 4, 13, 52]
-    fig = go.Figure()
-    for i, n in enumerate(rebals):
-        rng = np.random.default_rng(SEED)
-        cost = hedging.simulate_delta_hedge(S0, K, r, sigma, T, n, n_paths, rng=rng)
-        fig.add_trace(
-            go.Histogram(
-                x=cost,
-                nbinsx=70,
-                name=f"{n} 回",
-                marker={"color": INK},
-                visible=(i == 0),
-            )
+    rebals = [1, 2, 4, 8, 13, 26, 52]
+    costs = [
+        hedging.simulate_delta_hedge(
+            S0, K, r, sigma, T, n, n_paths, rng=np.random.default_rng(SEED)
         )
+        for n in rebals
+    ]
+    xmin = float(min(c.min() for c in costs))
+    xmax = float(max(c.max() for c in costs))
+
+    def hist(cost, n):
+        return go.Histogram(
+            x=cost,
+            xbins={"start": xmin, "end": xmax, "size": (xmax - xmin) / 70},
+            name=f"{n} 回",
+            marker={"color": INK},
+        )
+
+    def title(n):
+        return f"デルタヘッジ費用の分布 — リヘッジ {n} 回 (BSM 価格 = {bsm_price:.3f})"
+
+    fig = go.Figure(data=[hist(costs[0], rebals[0])])
+    fig.frames = [
+        go.Frame(name=f"{n}", data=[hist(c, n)], layout={"title": {"text": title(n)}})
+        for n, c in zip(rebals, costs, strict=True)
+    ]
     steps = [
         {
             "label": f"{n}",
-            "method": "update",
-            "args": [
-                {"visible": [j == i for j in range(len(rebals))]},
-                {
-                    "title.text": f"デルタヘッジ費用の分布 — リヘッジ {n} 回 "
-                    f"(BSM 価格 = {bsm_price:.3f})"
-                },
-            ],
+            "method": "animate",
+            "args": [[f"{n}"], {"mode": "immediate", "frame": {"duration": 0, "redraw": True}}],
         }
-        for i, n in enumerate(rebals)
+        for n in rebals
     ]
     fig.add_vline(
         x=bsm_price,
@@ -182,12 +190,34 @@ def plotly_delta_hedge_cost(
         annotation_position="top",
     )
     fig.update_layout(
-        title={
-            "text": f"デルタヘッジ費用の分布 — リヘッジ {rebals[0]} 回 (BSM 価格 = {bsm_price:.3f})"
-        },
+        title={"text": title(rebals[0])},
         xaxis_title="ヘッジ費用(t=0 割引・1株あたり)",
         yaxis_title="頻度",
         bargap=0.02,
+        updatemenus=[
+            {
+                "type": "buttons",
+                "x": 1.0,
+                "xanchor": "right",
+                "y": 1.16,
+                "yanchor": "top",
+                "buttons": [
+                    {
+                        "label": "▶ 再生",
+                        "method": "animate",
+                        "args": [
+                            None,
+                            {
+                                "mode": "immediate",
+                                "fromcurrent": True,
+                                "frame": {"duration": 700, "redraw": True},
+                                "transition": {"duration": 0},
+                            },
+                        ],
+                    }
+                ],
+            }
+        ],
         sliders=[{"active": 0, "currentvalue": {"prefix": "リヘッジ回数: "}, "steps": steps}],
     )
     return fig
@@ -712,45 +742,504 @@ def plotly_cos_density_convergence(
     return fig
 
 
-def plotly_sabr_smile(F=100.0, T=1.0, alpha=0.30, beta=1.0, rho=-0.30) -> go.Figure:
-    """SABR (Hagan) implied-vol smile; slider over vol-of-vol ν.
+def plotly_sabr_smile(F=100.0, T=1.0, alpha=0.30, rho=-0.30) -> go.Figure:
+    """SABR (Hagan) implied-vol smile; slider over ν, three β backbones per step.
 
-    ν=0 is flat at the backbone α; larger ν deepens the curvature and ρ<0 adds a
-    downward tilt — the market-standard smile parametrization (Hagan et al. 2002).
+    Each β uses α_β = α·F^(1-β) so all backbones share the same ATM vol — what
+    differs is the *shape*: β<1 adds skew even at ν=0 (the CEV backbone), ν adds
+    curvature, ρ<0 tilts (Hagan et al. 2002). β=1 is the accent line.
     """
     from . import sabr
 
     ks = np.linspace(70.0, 135.0, 27)
     nus = [0.0, 0.2, 0.4, 0.6, 0.8]
+    betas = [
+        (1.0, {"color": ACCENT, "width": 2.5}),
+        (0.5, {"color": INK, "dash": "dash"}),
+        (0.0, {"color": INK, "dash": "dot"}),
+    ]
     fig = go.Figure()
     for i, nu in enumerate(nus):
-        iv = [sabr.sabr_implied_vol(F, k, T, alpha, beta, rho, nu) for k in ks]
-        fig.add_trace(
-            go.Scatter(
-                x=ks,
-                y=iv,
-                mode="lines",
-                name=f"ν={nu:g}",
-                line={"color": ACCENT, "width": 2.5},
-                visible=(i == 0),
+        for beta, line in betas:
+            alpha_b = alpha * F ** (1.0 - beta)  # match ATM vol across backbones
+            iv = [sabr.sabr_implied_vol(F, k, T, alpha_b, beta, rho, nu) for k in ks]
+            fig.add_trace(
+                go.Scatter(
+                    x=ks,
+                    y=iv,
+                    mode="lines",
+                    name=f"β={beta:g}",
+                    line=line,
+                    visible=(i == 0),
+                )
             )
-        )
+    n_b = len(betas)
     steps = [
         {
             "label": f"{nu:g}",
             "method": "update",
             "args": [
-                {"visible": [j == i for j in range(len(nus))]},
-                {"title.text": f"SABR スマイル — vol-of-vol ν={nu:g}(β={beta:g}, ρ={rho:+.1f})"},
+                {"visible": [j // n_b == i for j in range(len(nus) * n_b)]},
+                {
+                    "title.text": f"SABR スマイル — vol-of-vol ν={nu:g}(ρ={rho:+.1f}, ATM を揃えた β 比較)"
+                },
             ],
         }
         for i, nu in enumerate(nus)
     ]
     fig.update_layout(
-        title={"text": f"SABR スマイル — vol-of-vol ν={nus[0]:g}(β={beta:g}, ρ={rho:+.1f})"},
+        title={
+            "text": f"SABR スマイル — vol-of-vol ν={nus[0]:g}(ρ={rho:+.1f}, ATM を揃えた β 比較)"
+        },
         xaxis_title="ストライク K",
         yaxis_title="インプライド・ボラティリティ",
         sliders=[{"active": 0, "currentvalue": {"prefix": "vol-of-vol ν: "}, "steps": steps}],
+    )
+    return fig
+
+
+def plotly_iv_surface(S0=100.0, r=0.05, v0=0.04, kappa=1.5, theta=0.04, xi=0.6) -> go.Figure:
+    """Heston implied-vol *surface* IV(K, T); slider over spot-vol correlation ρ.
+
+    Every point prices a vanilla with the COS method on the Heston CF and
+    inverts it to a BSM implied vol — the smile (strike direction) and its term
+    structure (maturity direction) in one picture. ρ<0 tilts every maturity into
+    the equity skew; the smile flattens as T grows (Gatheral Ch.3).
+    """
+    from . import fourier, heston, volatility
+
+    ks = np.linspace(80.0, 120.0, 13)
+    ts = np.array([0.25, 0.5, 1.0, 1.5, 2.0])
+    rhos = [-0.8, -0.4, 0.0]
+    surfaces = []
+    for rho in rhos:
+        iv = np.empty((len(ts), len(ks)))
+        for a, t in enumerate(ts):
+
+            def cf(u, t=t, rho=rho):
+                return heston.heston_cf(u, r, t, v0, kappa, theta, xi, rho)
+
+            for b, k in enumerate(ks):
+                price = fourier.cos_price(cf, S0, float(k), r, float(t))
+                iv[a, b] = volatility.implied_vol(price, S0, float(k), r, float(t))
+        surfaces.append(iv)
+    z_lo = min(iv.min() for iv in surfaces) - 0.01
+    z_hi = max(iv.max() for iv in surfaces) + 0.01
+    fig = go.Figure()
+    for i, (rho, iv) in enumerate(zip(rhos, surfaces, strict=True)):
+        fig.add_trace(
+            go.Surface(
+                x=ks,
+                y=ts,
+                z=iv,
+                colorscale="Greys",
+                reversescale=True,
+                cmin=z_lo,
+                cmax=z_hi,
+                colorbar={"title": "IV"},
+                visible=(i == 0),
+                name=f"ρ={rho:+.1f}",
+            )
+        )
+    steps = [
+        {
+            "label": f"{rho:+.1f}",
+            "method": "update",
+            "args": [
+                {"visible": [j == i for j in range(len(rhos))]},
+                {"title.text": f"Heston IV サーフェス IV(K, T) — ρ={rho:+.1f}"},
+            ],
+        }
+        for i, rho in enumerate(rhos)
+    ]
+    fig.update_layout(
+        title={"text": f"Heston IV サーフェス IV(K, T) — ρ={rhos[0]:+.1f}"},
+        scene={
+            "xaxis": {"title": "ストライク K"},
+            "yaxis": {"title": "満期 T"},
+            "zaxis": {"title": "IV", "range": [z_lo, z_hi]},
+        },
+        sliders=[{"active": 0, "currentvalue": {"prefix": "相関 ρ: "}, "steps": steps}],
+    )
+    return fig
+
+
+def plotly_smile_model_risk(F=100.0, T=1.0) -> go.Figure:
+    """Same market smile, different β — prices agree, the Greeks do not (Hagan 2002).
+
+    The "market" quotes (dots) come from a reference SABR (β=1, ρ=−0.3, ν=0.4,
+    α=0.30). For each β in {1, 0.5, 0} we recalibrate (α, ρ, ν) to those SAME
+    quotes (:func:`hullkit.sabr.calibrate_sabr`): panel 1 — every fit lies on
+    the dots, the market cannot tell the models apart. Panels 2-4 — the
+    smile-consistent Δ, Γ and vega (:func:`hullkit.sabr.sabr_greeks`, vega per
+    ATM-vol unit so it compares across β) the models imply, plus the naive
+    sticky-strike delta. The hedge — every Greek of it — depends on a choice
+    the market data does not pin down. Model risk in one picture.
+    """
+    from . import sabr
+
+    ks = np.linspace(80.0, 125.0, 16)
+    ref = {"alpha": 0.30, "beta": 1.0, "rho": -0.30, "nu": 0.40}
+    market_iv = np.array(
+        [
+            sabr.sabr_implied_vol(F, k, T, ref["alpha"], ref["beta"], ref["rho"], ref["nu"])
+            for k in ks
+        ]
+    )
+    styles = {
+        1.0: {"color": ACCENT, "width": 2.5},
+        0.5: {"color": INK, "dash": "dash"},
+        0.0: {"color": INK, "dash": "dot"},
+    }
+    fig = make_subplots(
+        rows=2,
+        cols=2,
+        subplot_titles=(
+            "市場スマイル(固定)と各 β のフィット",
+            "Δ デルタ(smile-consistent)",
+            "Γ ガンマ",
+            "V ベガ(ATM ボラ1単位あたり)",
+        ),
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=ks,
+            y=market_iv,
+            mode="markers",
+            name="市場 IV(固定)",
+            marker={"color": "#111111", "size": 7, "symbol": "circle-open"},
+        ),
+        row=1,
+        col=1,
+    )
+    for beta, line in styles.items():
+        a, r_, n_ = sabr.calibrate_sabr(F, T, ks, market_iv, beta)
+        fit_iv = [sabr.sabr_implied_vol(F, k, T, a, beta, r_, n_) for k in ks]
+        greeks = [sabr.sabr_greeks(F, k, T, a, beta, r_, n_) for k in ks]
+        fig.add_trace(
+            go.Scatter(x=ks, y=fit_iv, mode="lines", name=f"β={beta:g} フィット", line=line),
+            row=1,
+            col=1,
+        )
+        for key, row, col in (("delta", 1, 2), ("gamma", 2, 1), ("vega", 2, 2)):
+            fig.add_trace(
+                go.Scatter(
+                    x=ks,
+                    y=[g[key] for g in greeks],
+                    mode="lines",
+                    name=f"β={beta:g} の{key}",
+                    line=line,
+                    showlegend=False,
+                ),
+                row=row,
+                col=col,
+            )
+    fig.add_trace(
+        go.Scatter(
+            x=ks,
+            y=[sabr.sticky_strike_delta(F, k, T, iv) for k, iv in zip(ks, market_iv, strict=True)],
+            mode="lines",
+            name="sticky-strike Δ",
+            line={"color": "#999999", "width": 1.5},
+        ),
+        row=1,
+        col=2,
+    )
+    fig.update_layout(
+        title={"text": "同じ市場スマイルでも Greeks は違う — SABR β のモデルリスク(Hagan 2002)"},
+        legend={"orientation": "h", "y": -0.15},
+        height=620,
+    )
+    fig.update_xaxes(title_text="ストライク K", row=2, col=1)
+    fig.update_xaxes(title_text="ストライク K", row=2, col=2)
+    fig.update_yaxes(title_text="IV", row=1, col=1)
+    return fig
+
+
+def plotly_sabr_rho_nu_smile_greeks(
+    F=100.0, T=1.0, atm_vol=0.30, beta=0.5, rho=-0.30, nu=0.40
+) -> go.Figure:
+    """How ρ and ν reshape the smile — and the Greeks that follow (Hagan 2002).
+
+    Unlike β (which can be recalibrated to hold the smile fixed), ρ and ν ARE
+    the smile: moving them reshapes it, and the Greeks follow. Rows = the two
+    knobs; columns = the resulting smile IV, Δ and Γ. Five sweep curves per
+    cell with the shared base model in accent, so you read left-to-right how a
+    smile change becomes a hedge change:
+
+    - ρ (top): tilts the smile → skews Δ and shifts the Γ peak sideways;
+    - ν (bottom): lifts the wings → fattens Γ and the vega wings, Δ moves less.
+
+    Base: a rates-style SABR (β=0.5, ρ=−0.3, ν=0.4) with α set to ``atm_vol``.
+    """
+    from . import sabr
+
+    ks = np.linspace(80.0, 125.0, 16)
+    alpha0 = atm_vol * F ** (1.0 - beta)
+    rows = [
+        ("ρ", "{:+.2f}", [-0.6, -0.45, -0.30, -0.15, 0.0], lambda v: (alpha0, beta, v, nu)),
+        ("ν", "{:.2g}", [0.15, 0.275, 0.40, 0.525, 0.65], lambda v: (alpha0, beta, rho, v)),
+    ]
+    cols = [
+        ("スマイル IV", lambda a, b, r_, n_, k: sabr.sabr_implied_vol(F, k, T, a, b, r_, n_)),
+        ("Δ デルタ", lambda a, b, r_, n_, k: sabr.sabr_greeks(F, k, T, a, b, r_, n_)["delta"]),
+        ("Γ ガンマ", lambda a, b, r_, n_, k: sabr.sabr_greeks(F, k, T, a, b, r_, n_)["gamma"]),
+    ]
+    base_idx = 2
+
+    def line_for(vi):
+        if vi == base_idx:
+            return {"color": ACCENT, "width": 2.8}
+        op = 0.30 + 0.13 * abs(vi - base_idx)
+        return {
+            "color": f"rgba(127,127,127,{op:.2f})",
+            "width": 1.6,
+            "dash": "dot" if vi < base_idx else "dash",
+        }
+
+    fig = make_subplots(
+        rows=2,
+        cols=3,
+        subplot_titles=[f"{sym}: {ctitle}" for sym, _f, _v, _b in rows for ctitle, _cf in cols],
+    )
+    for ri, (sym, vfmt, vals, build) in enumerate(rows):
+        for vi, v in enumerate(vals):
+            a, b, r_, n_ = build(v)
+            for ci, (_ctitle, cfun) in enumerate(cols):
+                fig.add_trace(
+                    go.Scatter(
+                        x=ks,
+                        y=[cfun(a, b, r_, n_, float(k)) for k in ks],
+                        mode="lines",
+                        name=f"{sym}={vfmt.format(v)}",
+                        line=line_for(vi),
+                        legendgroup=sym,
+                        showlegend=(ci == 0),
+                        visible=True,
+                    ),
+                    row=ri + 1,
+                    col=ci + 1,
+                )
+    fig.update_layout(
+        title={"text": "ρ と ν はスマイルをどう変え、Greeks がどう追随するか(SABR)"},
+        height=620,
+        legend={"orientation": "h", "y": -0.13},
+    )
+    for ci in range(1, 4):
+        fig.update_xaxes(title_text="ストライク K", row=2, col=ci)
+    fig.update_yaxes(title_text="IV", row=1, col=1)
+    fig.update_yaxes(title_text="IV", row=2, col=1)
+    return fig
+
+
+def plotly_sabr_greeks_by_param(
+    F=100.0, T=1.0, atm_vol=0.30, beta=0.5, rho=-0.30, nu=0.40
+) -> go.Figure:
+    """Sweep any SABR parameter and watch the Greeks reshape; dropdown over α/β/ρ/ν.
+
+    2x2 panels (Δ, Γ, V, Θ vs strike K) wrapping :func:`hullkit.sabr.sabr_greeks`.
+    The dropdown chooses which parameter to sweep; five curves span its range with
+    the shared base model in accent. All four sweeps pass through the SAME accent
+    curve (the base), so the panels show how each knob *pulls the Greeks away* from
+    that anchor — and the pull is different in every panel:
+
+    - α (ATM vol): lifts the whole vol level — the biggest, most uniform mover;
+    - β (α rescaled to hold the ATM vol): the pure backbone/model-choice knob —
+      rotates Δ and reshapes Γ while leaving the ATM price untouched;
+    - ρ: tilts the smile, so it skews Δ and the Γ wings asymmetrically;
+    - ν (vol-of-vol): fattens the wings — mostly a Γ/vega-wing effect.
+
+    Base: a rates-style SABR (β=0.5, ρ=−0.3, ν=0.4) with α set to ``atm_vol``.
+    """
+    from . import sabr
+
+    ks = np.linspace(80.0, 125.0, 16)
+    greeks = [
+        ("delta", "Δ デルタ", 1, 1),
+        ("gamma", "Γ ガンマ", 1, 2),
+        ("vega", "V ベガ", 2, 1),
+        ("theta", "Θ セータ", 2, 2),
+    ]
+    alpha0 = atm_vol * F ** (1.0 - beta)
+
+    def by_atmvol(v):
+        return (v * F ** (1.0 - beta), beta, rho, nu)
+
+    def by_beta(b):
+        return (atm_vol * F ** (1.0 - b), b, rho, nu)
+
+    sweeps = [
+        ("α (ATM ボラ)", "ATMボラ", [0.20, 0.25, 0.30, 0.35, 0.40], by_atmvol, "{:.0%}"),
+        ("β (ATM 揃え)", "β", [0.0, 0.25, 0.5, 0.75, 1.0], by_beta, "{:.2g}"),
+        (
+            "ρ (相関)",
+            "ρ",
+            [-0.6, -0.45, -0.30, -0.15, 0.0],
+            lambda r_: (alpha0, beta, r_, nu),
+            "{:+.2f}",
+        ),
+        (
+            "ν (vol-of-vol)",
+            "ν",
+            [0.15, 0.275, 0.40, 0.525, 0.65],
+            lambda n_: (alpha0, beta, rho, n_),
+            "{:.2g}",
+        ),
+    ]
+    base_idx = 2  # middle value = shared base model, drawn in accent
+
+    def line_for(vi):
+        if vi == base_idx:
+            return {"color": ACCENT, "width": 2.8}
+        op = 0.30 + 0.13 * abs(vi - base_idx)
+        return {
+            "color": f"rgba(127,127,127,{op:.2f})",
+            "width": 1.6,
+            "dash": "dot" if vi < base_idx else "dash",
+        }
+
+    fig = make_subplots(rows=2, cols=2, subplot_titles=[g[1] for g in greeks])
+    for _label, sym, vals, build, vfmt in sweeps:
+        for vi, v in enumerate(vals):
+            a, b, r_, n_ = build(v)
+            gvals = [sabr.sabr_greeks(F, float(k), T, a, b, r_, n_) for k in ks]
+            for gi, (key, _title, row, col) in enumerate(greeks):
+                fig.add_trace(
+                    go.Scatter(
+                        x=ks,
+                        y=[g[key] for g in gvals],
+                        mode="lines",
+                        name=f"{sym}={vfmt.format(v)}",
+                        line=line_for(vi),
+                        showlegend=(gi == 0),
+                        visible=False,
+                    ),
+                    row=row,
+                    col=col,
+                )
+    n_per = len(sweeps[0][2]) * len(greeks)  # 5 values x 4 panels = 20 traces / sweep
+    for j in range(n_per):  # first sweep visible by default
+        fig.data[j].visible = True
+
+    def title(label):
+        return f"SABR パラメータを動かすと Greeks はどう変わるか — {label} をスイープ(他は固定)"
+
+    buttons = [
+        {
+            "label": label,
+            "method": "update",
+            "args": [
+                {"visible": [(idx // n_per) == pi for idx in range(len(sweeps) * n_per)]},
+                {"title.text": title(label)},
+            ],
+        }
+        for pi, (label, _sym, _vals, _build, _vfmt) in enumerate(sweeps)
+    ]
+    fig.update_layout(
+        title={"text": title(sweeps[0][0])},
+        height=640,
+        legend={"orientation": "h", "y": -0.14},
+        updatemenus=[
+            {
+                "buttons": buttons,
+                "direction": "down",
+                "x": 1.0,
+                "xanchor": "right",
+                "y": 1.15,
+                "yanchor": "bottom",
+            }
+        ],
+    )
+    fig.update_xaxes(title_text="ストライク K", row=2, col=1)
+    fig.update_xaxes(title_text="ストライク K", row=2, col=2)
+    return fig
+
+
+def plotly_sabr_param_greeks(
+    F=100.0, T=1.0, atm_vol=0.30, beta=0.5, rho=-0.30, nu=0.40
+) -> go.Figure:
+    """Which SABR parameter moves which Greek — %-change heatmap; slider over K.
+
+    Base model: a rates-style SABR (β=0.5) with α set so the ATM vol is
+    ``atm_vol``. Rows are standardized, comparable bumps — α by +1 ATM-vol
+    point, β by +0.1 *with α rescaled to keep the ATM vol* (the pure "model
+    choice" move), ρ and ν by +0.1. Columns are the smile-consistent Greeks
+    from :func:`hullkit.sabr.sabr_greeks`. Each cell is the % change of that
+    Greek; red/blue = up/down, and a row mixing both colours is a TRADE-OFF:
+    the same parameter fixes one Greek while breaking another. The slider
+    moves the option across strikes — the trade-off pattern itself changes
+    with moneyness.
+    """
+    from . import sabr
+
+    alpha = atm_vol * F ** (1.0 - beta)
+    d_alpha = 0.01 * F ** (1.0 - beta)
+    bumps = [
+        ("α +1 volpt", {"a": alpha + d_alpha}),
+        ("β +0.1(ATM 揃え)", {"b": beta + 0.1, "a": alpha * F ** (-0.1)}),
+        ("ρ +0.1", {"r_": rho + 0.1}),
+        ("ν +0.1", {"n_": nu + 0.1}),
+    ]
+    greek_labels = ["Δ", "Γ", "V", "Θ"]
+    ks = [85.0, 92.5, 100.0, 107.5, 115.0]
+
+    def greek_vec(k, a=None, b=None, r_=None, n_=None):
+        g = sabr.sabr_greeks(
+            F,
+            k,
+            T,
+            alpha if a is None else a,
+            beta if b is None else b,
+            rho if r_ is None else r_,
+            nu if n_ is None else n_,
+        )
+        return np.array([g["delta"], g["gamma"], g["vega"], g["theta"]])
+
+    matrices = []
+    for k in ks:
+        base = greek_vec(k)
+        rows = [(greek_vec(k, **kw) - base) / np.abs(base) * 100.0 for _label, kw in bumps]
+        matrices.append(np.array(rows))
+    zmax = max(float(np.abs(m).max()) for m in matrices)
+    fig = go.Figure()
+    for i, (k, m) in enumerate(zip(ks, matrices, strict=True)):
+        fig.add_trace(
+            go.Heatmap(
+                x=greek_labels,
+                y=[label for label, _kw in bumps],
+                z=m,
+                zmin=-zmax,
+                zmax=zmax,
+                colorscale="RdBu",
+                reversescale=True,  # red = up, blue = down
+                texttemplate="%{z:+.2f}%",
+                colorbar={"title": "Greek 変化率 %"},
+                visible=(i == 0),
+                name=f"K={k:g}",
+            )
+        )
+    steps = [
+        {
+            "label": f"{k:g}",
+            "method": "update",
+            "args": [
+                {"visible": [j == i for j in range(len(ks))]},
+                {
+                    "title.text": f"どのパラメータがどの Greek に効くか — K={k:g}"
+                    f"(SABR β={beta:g}, ATM ボラ {atm_vol:.0%})"
+                },
+            ],
+        }
+        for i, k in enumerate(ks)
+    ]
+    fig.update_layout(
+        title={
+            "text": f"どのパラメータがどの Greek に効くか — K={ks[0]:g}"
+            f"(SABR β={beta:g}, ATM ボラ {atm_vol:.0%})"
+        },
+        xaxis_title="Greeks(smile-consistent)",
+        yaxis_title="標準化バンプ",
+        sliders=[{"active": 0, "currentvalue": {"prefix": "ストライク K: "}, "steps": steps}],
     )
     return fig
 
@@ -839,11 +1328,13 @@ def plotly_qmc_vs_pseudo(n_pow=9, seed=0) -> go.Figure:
 def plotly_american_boundary(S0=100.0, K=100.0, r=0.05, T=1.0) -> go.Figure:
     """American-put early-exercise boundary S*(τ); slider over volatility σ.
 
-    Wraps :func:`hullkit.fd.fd_vanilla` (Crank-Nicolson, ``return_boundary``).
-    Below S*(τ) it is optimal to exercise; the boundary rises to K at expiry and
-    sits lower for higher σ (more value in waiting).
+    The accent line is the Crank-Nicolson boundary (:func:`hullkit.fd.fd_vanilla`,
+    Ch.21); the grey markers are the boundary implied by the Longstaff-Schwartz
+    regression rule (:func:`hullkit.mc.lsm_exercise_boundary`, Ch.27) — two very
+    different algorithms recovering the same economic object. Below S*(τ) it is
+    optimal to exercise; higher σ pushes the boundary down (more value in waiting).
     """
-    from . import fd
+    from . import fd, mc
 
     sigmas = [0.15, 0.20, 0.30, 0.40]
     fig = go.Figure()
@@ -866,25 +1357,49 @@ def plotly_american_boundary(S0=100.0, K=100.0, r=0.05, T=1.0) -> go.Figure:
                 x=taus,
                 y=bnd,
                 mode="lines",
-                name=f"σ={sig:g}",
+                name=f"FD (CN) σ={sig:g}",
                 line={"color": ACCENT, "width": 2.5},
                 visible=(i == 0),
             )
         )
+        lsm_taus, lsm_bnd = mc.lsm_exercise_boundary(
+            S0,
+            K,
+            r,
+            sig,
+            T,
+            kind="put",
+            n_steps=50,
+            n_paths=20_000,
+            rng=np.random.default_rng(SEED),
+        )
+        fig.add_trace(
+            go.Scatter(
+                x=lsm_taus,
+                y=lsm_bnd,
+                mode="markers",
+                name="LSM 回帰ルール",
+                marker={"color": INK, "size": 5, "opacity": 0.7},
+                visible=(i == 0),
+            )
+        )
     fig.add_hline(y=K, line_dash="dash", line_color=INK, annotation_text="K（行使価格）")
-    steps = [
-        {
-            "label": f"{sig:g}",
-            "method": "update",
-            "args": [
-                {"visible": [j == i for j in range(len(sigmas))]},
-                {"title.text": f"アメリカンプットの早期行使境界 S*(τ) — σ={sig:g}"},
-            ],
-        }
-        for i, sig in enumerate(sigmas)
-    ]
+    steps = []
+    for i, sig in enumerate(sigmas):
+        vis = [False] * (2 * len(sigmas))
+        vis[2 * i] = vis[2 * i + 1] = True
+        steps.append(
+            {
+                "label": f"{sig:g}",
+                "method": "update",
+                "args": [
+                    {"visible": vis},
+                    {"title.text": f"アメリカンプットの早期行使境界 S*(τ) — σ={sig:g}(FD vs LSM)"},
+                ],
+            }
+        )
     fig.update_layout(
-        title={"text": f"アメリカンプットの早期行使境界 S*(τ) — σ={sigmas[0]:g}"},
+        title={"text": f"アメリカンプットの早期行使境界 S*(τ) — σ={sigmas[0]:g}(FD vs LSM)"},
         xaxis_title="残存期間 τ",
         yaxis_title="行使境界 S*(τ)",
         sliders=[{"active": 0, "currentvalue": {"prefix": "ボラティリティ σ: "}, "steps": steps}],
@@ -952,6 +1467,77 @@ def plotly_exposure_profile(S0=100.0, r=0.05, K=None, T=1.0) -> go.Figure:
         xaxis_title="時間 t",
         yaxis_title="エクスポージャ",
         sliders=[{"active": 0, "currentvalue": {"prefix": "ボラティリティ σ: "}, "steps": steps}],
+    )
+    return fig
+
+
+def plotly_cva_sensitivity(S0=100.0, r=0.05, sigma=0.30, T=1.0, recovery=0.4) -> go.Figure:
+    """Where CVA accrues in time; slider over the counterparty hazard rate λ.
+
+    The accent area is the CVA integrand (1−R)·DF·EE·ΔPD per interval; the grey
+    line (right axis) is the fixed EE profile. A higher λ scales the total CVA
+    (title, also in bp of S0) and shifts the default weight earlier — CVA is the
+    overlap of *when the exposure is large* and *when default is likely*. Wraps
+    :func:`hullkit.xva.forward_exposure` and :func:`hullkit.xva.cva`.
+    """
+    from . import xva
+
+    K = S0 * np.exp(r * T)
+    t, mtm = xva.forward_exposure(
+        S0, r, sigma, K, T, n_steps=50, n_paths=40_000, rng=np.random.default_rng(SEED)
+    )
+    ee = xva.expected_exposure(mtm)
+    t_mid = 0.5 * (t[:-1] + t[1:])
+    df_mid = 0.5 * (np.exp(-r * t[:-1]) + np.exp(-r * t[1:]))
+    ee_mid = 0.5 * (ee[:-1] + ee[1:])
+    hazards = [0.005, 0.01, 0.02, 0.05, 0.10]
+    fig = go.Figure()
+    titles = []
+    for i, lam in enumerate(hazards):
+        pd_inc = -np.diff(np.exp(-lam * t))
+        integrand = (1.0 - recovery) * df_mid * ee_mid * pd_inc
+        total = float(xva.cva(t, ee, lam, recovery, r))
+        titles.append(
+            f"CVA の時間分解 — λ={lam:.1%}: CVA = {total:.4f}(名目 S0 の {total / S0 * 1e4:.1f}bp)"
+        )
+        fig.add_trace(
+            go.Scatter(
+                x=t_mid,
+                y=integrand,
+                mode="lines",
+                fill="tozeroy",
+                name=f"CVA 寄与 λ={lam:.1%}",
+                line={"color": ACCENT, "width": 2},
+                visible=(i == 0),
+            )
+        )
+    fig.add_trace(
+        go.Scatter(
+            x=t,
+            y=ee,
+            mode="lines",
+            name="EE(右軸)",
+            line={"color": INK, "dash": "dash"},
+            yaxis="y2",
+        )
+    )
+    steps = [
+        {
+            "label": f"{lam:.1%}",
+            "method": "update",
+            "args": [
+                {"visible": [*[j == i for j in range(len(hazards))], True]},
+                {"title.text": titles[i]},
+            ],
+        }
+        for i, lam in enumerate(hazards)
+    ]
+    fig.update_layout(
+        title={"text": titles[0]},
+        xaxis_title="時間 t",
+        yaxis_title="CVA 寄与(区間あたり)",
+        yaxis2={"title": "EE", "overlaying": "y", "side": "right", "showgrid": False},
+        sliders=[{"active": 0, "currentvalue": {"prefix": "ハザード率 λ: "}, "steps": steps}],
     )
     return fig
 
@@ -1074,6 +1660,126 @@ def plotly_gamma_surface(K=100.0, r=0.05, sigma=0.20) -> go.Figure:
         xaxis_title="原資産 S",
         yaxis_title="残存 T",
     )
+    return fig
+
+
+def plotly_greeks_map(K=100.0, r=0.05, sigma=0.20) -> go.Figure:
+    """Higher-order Greeks as (S, T) heatmaps; dropdown over vega/theta/vanna/vomma.
+
+    Companion to :func:`plotly_gamma_surface`, wrapping :func:`hullkit.bsm.vega`,
+    ``call_theta``, ``vanna`` and ``vomma`` (Hull Ch.19). Vega/vomma live at long
+    maturities, theta burns fastest ATM near expiry, and vanna concentrates on
+    the wings with opposite signs — the map of where smile risk sits.
+    """
+    s = np.linspace(60.0, 140.0, 80)
+    t = np.linspace(0.05, 1.0, 60)
+    sg, tg = s[None, :], t[:, None]
+    maps = [
+        ("ベガ", bsm.vega(sg, K, r, sigma, tg), "Greys", None),
+        ("セータ(コール)", bsm.call_theta(sg, K, r, sigma, tg), "RdBu", 0.0),
+        ("バンナ", bsm.vanna(sg, K, r, sigma, tg), "RdBu", 0.0),
+        ("ボンマ", bsm.vomma(sg, K, r, sigma, tg), "RdBu", 0.0),
+    ]
+    fig = go.Figure()
+    for i, (label, z, scale, zmid) in enumerate(maps):
+        fig.add_trace(
+            go.Heatmap(
+                x=s,
+                y=t,
+                z=z,
+                colorscale=scale,
+                zmid=zmid,
+                colorbar={"title": label},
+                visible=(i == 0),
+            )
+        )
+    buttons = [
+        {
+            "label": label,
+            "method": "update",
+            "args": [
+                {"visible": [j == i for j in range(len(maps))]},
+                {"title.text": f"グリークスの地図 — {label}(S × 残存 T)"},
+            ],
+        }
+        for i, (label, _z, _scale, _zmid) in enumerate(maps)
+    ]
+    fig.update_layout(
+        title={"text": f"グリークスの地図 — {maps[0][0]}(S × 残存 T)"},
+        xaxis_title="原資産 S",
+        yaxis_title="残存 T",
+        updatemenus=[
+            {
+                "buttons": buttons,
+                "direction": "down",
+                "x": 1.0,
+                "xanchor": "right",
+                "y": 1.16,
+                "yanchor": "top",
+            }
+        ],
+    )
+    return fig
+
+
+def plotly_bsm_greeks_sensitivity(S0=100.0, K=100.0, r=0.05, T=0.5) -> go.Figure:
+    """All four Greeks vs S with a σ slider — sensitivity to the hedging INPUT.
+
+    2x2 panels (Δ, Γ, Θ, V) wrapping :func:`hullkit.bsm` (Hull Ch.19). The dotted
+    vertical line marks the point S = K: drag σ and every Greek at that same
+    point changes. σ is a market-implied quantity, so this is input risk, not
+    model choice — feeding a stale or wrong vol mark mis-sizes every hedge.
+    (For genuine model risk — market data fixed, model choice varies — see
+    :func:`plotly_smile_model_risk`.)
+    """
+    sigmas = [0.10, 0.15, 0.20, 0.30, 0.40]
+    s = np.linspace(60.0, 140.0, 161)
+    panels = [
+        ("Δ デルタ", lambda sig: bsm.call_delta(s, K, r, sig, T), 1, 1),
+        ("Γ ガンマ", lambda sig: bsm.gamma(s, K, r, sig, T), 1, 2),
+        ("Θ セータ(年)", lambda sig: bsm.call_theta(s, K, r, sig, T), 2, 1),
+        ("V ベガ", lambda sig: bsm.vega(s, K, r, sig, T), 2, 2),
+    ]
+    fig = make_subplots(rows=2, cols=2, subplot_titles=[p[0] for p in panels])
+    for i, sig in enumerate(sigmas):
+        for _label, f, row, col in panels:
+            fig.add_trace(
+                go.Scatter(
+                    x=s,
+                    y=f(sig),
+                    mode="lines",
+                    name=f"σ={sig:g}",
+                    line={"color": ACCENT, "width": 2.5},
+                    visible=(i == 0),
+                    showlegend=False,
+                ),
+                row=row,
+                col=col,
+            )
+    fig.add_vline(x=S0, line_dash="dot", line_color=INK, row="all", col="all")
+
+    def title(sig):
+        d = float(bsm.call_delta(S0, K, r, sig, T))
+        return f"Greeks はボラ入力にどう依存するか — σ={sig:g} で Δ(S=K)={d:.3f}(S=K={K:g} は固定・点線)"
+
+    n_p = len(panels)
+    steps = [
+        {
+            "label": f"{sig:g}",
+            "method": "update",
+            "args": [
+                {"visible": [j // n_p == i for j in range(len(sigmas) * n_p)]},
+                {"title.text": title(sig)},
+            ],
+        }
+        for i, sig in enumerate(sigmas)
+    ]
+    fig.update_layout(
+        title={"text": title(sigmas[0])},
+        sliders=[{"active": 0, "currentvalue": {"prefix": "ボラティリティ σ: "}, "steps": steps}],
+    )
+    fig.update_xaxes(title_text="原資産 S", row=2, col=1)
+    fig.update_xaxes(title_text="原資産 S", row=2, col=2)
     return fig
 
 
