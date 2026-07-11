@@ -1,0 +1,301 @@
+sources:
+  - source_id: ankiweb_wset_l3_new
+    name: WSET Level 3 -- NEW shared deck
+    publisher: AnkiWeb community contributor
+    language: en
+    source_type: flashcard_site
+    urls: [https://ankiweb.net/shared/info/1521584113]
+    access_type: public
+    expected_content: [flashcards]
+    crawl_policy: metadata_and_excerpt
+    copyright_risk: high
+    enabled: true
+    reviewed_at: '2026-07-11'
+    notes: Public shared deck with 4,075 notes. Download only through AnkiWeb's normal public endpoint; keep the deck and note text private and ignored by Git.
+
+  - source_id: winerevision_public
+    name: WineRevision WSET Level 3 revision questions and flashcards
+    publisher: WineRevision
+    language: en
+    source_type: public_quiz
+    urls: [https://winerevision.com/]
+    access_type: public_with_terms_restrictions
+    expected_content: [multiple_choice, flashcards]
+    crawl_policy: metadata_and_excerpt
+    copyright_risk: high
+    enabled: true
+    reviewed_at: '2026-07-11'
+    notes: Public and registration-free. Keep all extracted wording in the ignored private-research area; public exports contain metadata only.
+
+  - source_id: wset_official_qualification
+    name: WSET Level 3 Award in Wines qualification page
+    publisher: Wine & Spirit Education Trust
+    language: en
+    source_type: official_webpage
+    urls: [https://www.wsetglobal.com/qualifications/wset-level-3-award-in-wines/]
+    access_type: public
+    expected_content: [exam_structure, learning_outcomes, tasting]
+    crawl_policy: metadata_and_excerpt
+    copyright_risk: high
+    enabled: true
+    reviewed_at: '2026-07-11'
+    notes: Official overview; keep only metadata and short research excerpts.
+
+  - source_id: wset_official_specification
+    name: WSET Level 3 Award in Wines Specification (2022 Issue 2)
+    publisher: Wine & Spirit Education Trust
+    language: en
+    source_type: official_pdf
+    urls: [https://www.wsetglobal.com/media/11731/wset_l3wines_specification_en_highres_may2022_issue2.pdf]
+    access_type: public
+    expected_content: [learning_outcomes, exam_structure, sample_mcq]
+    crawl_policy: metadata_and_public_document
+    copyright_risk: high
+    enabled: true
+    reviewed_at: '2026-07-11'
+    notes: Official public specification; raw PDF remains private and must not be republished.
+
+  - source_id: wset_official_sample_paper
+    name: WSET Level 3 Sample Short Written Answer Paper
+    publisher: Wine & Spirit Education Trust
+    language: en
+    source_type: official_pdf
+    urls: [https://www.wsetglobal.com/media/5061/wset_l3wines_samplepaper_en_minor-amend_oct2017.pdf]
+    access_type: public
+    expected_content: [short_written_answer, mark_allocation]
+    crawl_policy: metadata_and_public_document
+    copyright_risk: high
+    enabled: true
+    reviewed_at: '2026-07-11'
+    notes: Official public sample; extracted wording is private-research-only.
+
+  - source_id: wset_official_study_blog_part3
+    name: How to study for WSET Level 3 Award in Wines, part 3
+    publisher: Wine & Spirit Education Trust
+    language: en
+    source_type: official_webpage
+    urls: [https://www.wsetglobal.com/knowledge-centre/blog/2026/how-to-study-for-your-wset-level-3-award-in-wines-part-3/]
+    access_type: public
+    expected_content: [short_written_answer, answer_writing_guidance]
+    crawl_policy: metadata_and_excerpt
+    copyright_risk: high
+    enabled: true
+    reviewed_at: '2026-07-11'
+    notes: Public official article with a representative model question.
+
+  - source_id: wset_official_study_bites
+    name: Study bites WSET Level 3 Award in Wines
+    publisher: WSET School London
+    language: en
+    source_type: official_webpage
+    urls: [https://www.wsetglobal.com/wset-school-london/student-information/study-bites-wset-level-3-award-in-wines]
+    access_type: public
+    expected_content: [video, short_written_answer]
+    crawl_policy: metadata_and_excerpt
+    copyright_risk: high
+    enabled: true
+    reviewed_at: '2026-07-11'
+    notes: Public index; do not bulk-download embedded videos.
+
+  - source_id: wset_official_tasting_mock_keys
+    name: Level 3 tasting pack and mock exams marking keys
+    publisher: WSET School London
+    language: en
+    source_type: official_webpage
+    urls: [https://www.wsetglobal.com/wset-school-london/student-information/level-3-award-in-wines-tasting-pack-and-mock-exams-wine-lists-and-marking-key-uk]
+    access_type: public
+    expected_content: [tasting_practical, model_answer]
+    crawl_policy: metadata_only
+    copyright_risk: high
+    enabled: false
+    reviewed_at: '2026-07-11'
+    notes: Metadata only until the reuse terms for linked answer documents are reviewed.
+
+  - source_id: wine_planetary_ja
+    name: WSET Level 3 練習問題
+    publisher: The Planet of Wine
+    language: ja
+    source_type: independent_blog
+    urls:
+      - https://www.wine-planetary.com/wset/level-3/wset-level-3-exercises/
+      - https://www.wine-planetary.com/wset/level-3/choice-questions-factors-in-the-vinyard/
+      - https://www.wine-planetary.com/wset/level-3/wsetl3-writing-consideration/
+      - https://www.wine-planetary.com/wset/level-3/wsetl3-exercises-bordeaux/
+      - https://www.wine-planetary.com/wset/level-3/wsetl3-exercises-bourgogne/
+      - https://www.wine-planetary.com/wset/level-3/wsetl3-exercises-alsace/
+      - https://www.wine-planetary.com/wset/level-3/wsetl3-exercises-loire/
+      - https://www.wine-planetary.com/wset/level-3/wsetl3-exercises-rhone/
+      - https://www.wine-planetary.com/wset/level-3/wsetl3-exercises-southern-france/
+      - https://www.wine-planetary.com/wset/level-3/wsetl3-exercises-germany/
+      - https://www.wine-planetary.com/wset/level-3/wsetl3-exercises-tokaj/
+      - https://www.wine-planetary.com/wset/level-3/wsetl3-exercises-greece/
+      - https://www.wine-planetary.com/wset/level-3/wsetl3-exercises-italy/
+      - https://www.wine-planetary.com/wset/level-3/wsetl3-exercises-spain/
+      - https://www.wine-planetary.com/wset/level-3/wsetl3-exercises-portugal/
+      - https://www.wine-planetary.com/wset/level-3/wsetl3-exercises-america/
+      - https://www.wine-planetary.com/wset/level-3/wsetl3-exercises-the-grape-tree/
+      - https://www.wine-planetary.com/wset/level-3/wset-level3-excrcises-environment/
+    access_type: public_with_terms_restrictions
+    expected_content: [multiple_choice, short_written_answer]
+    crawl_policy: metadata_and_excerpt
+    copyright_risk: high
+    enabled: true
+    reviewed_at: '2026-07-11'
+    notes: Only the 18 explicitly listed public pages are approved. Member-only category links remain excluded. Terms prohibit redistribution, so all extracted text is private-research-only.
+
+  - source_id: wine_planetary_en
+    name: The Planet of Wine English WSET Level 3 resources
+    publisher: The Planet of Wine
+    language: en
+    source_type: independent_blog
+    urls: [https://en.wine-planetary.com/]
+    access_type: public_with_terms_restrictions
+    expected_content: [short_written_answer]
+    crawl_policy: manual_review_required
+    copyright_risk: high
+    enabled: false
+    reviewed_at: '2026-07-11'
+    notes: Review individual pages and membership boundaries manually.
+
+  - source_id: sommo_mock_test
+    name: WSET Level 3 Mock Exam — 50 Free Practice Questions
+    publisher: Sommo
+    language: en
+    source_type: public_quiz
+    urls: [https://sommo.app/wset/level-3/mock-test/]
+    access_type: public
+    expected_content: [multiple_choice, explanations]
+    crawl_policy: metadata_and_excerpt
+    copyright_risk: high
+    enabled: true
+    reviewed_at: '2026-07-11'
+    notes: Free public 50-question mock. Store locally for private analysis; never place question text in public-safe exports.
+
+  - source_id: acewset_samples
+    name: AceWSET Level 3 free sample questions
+    publisher: AceWSET
+    language: en
+    source_type: public_quiz
+    urls:
+      - https://www.acewset.com/sample-mock-exam-1
+      - https://www.acewset.com/sample-mock-exam-p-2-1
+      - https://www.acewset.com/sample-mock-exam-p-4
+    access_type: public
+    expected_content: [multiple_choice, short_written_answer]
+    crawl_policy: metadata_and_excerpt
+    copyright_risk: high
+    enabled: true
+    reviewed_at: '2026-07-11'
+    notes: Fetch only the three explicit free-sample pages. Paid mock sets and member areas remain excluded.
+
+  - source_id: thirtyfifty_l3
+    name: ThirtyFifty Level 3 mock exams and sample questions
+    publisher: ThirtyFifty
+    language: en
+    source_type: school_blog
+    urls: [https://www.thirtyfifty.co.uk/WSET-L3-Exam-Questions.asp]
+    access_type: paid
+    expected_content: [sample_question, mock_exam_metadata]
+    crawl_policy: metadata_only
+    copyright_risk: high
+    enabled: false
+    reviewed_at: '2026-07-11'
+    notes: Commercial bank; landing-page metadata only.
+
+  - source_id: wine_with_jimmy_l3
+    name: Wine With Jimmy Level 3 revision resources
+    publisher: Wine With Jimmy
+    language: en
+    source_type: school_blog
+    urls: [https://www.winewithjimmy.com/pass-your-wset-level-3-exam]
+    access_type: paid
+    expected_content: [short_written_answer, multiple_choice, video]
+    crawl_policy: metadata_only
+    copyright_risk: high
+    enabled: false
+    reviewed_at: '2026-07-11'
+    notes: Paid course; only public landing-page facts and separately public videos may be reviewed.
+
+  - source_id: quizlet_l3_practice
+    name: Quizlet WSET Level 3 exam practice questions
+    publisher: Quizlet user content
+    language: en
+    source_type: flashcard_site
+    urls: [https://quizlet.com/136735539/wset-level-3-exam-practice-questions-flash-cards/]
+    access_type: public_with_terms_restrictions
+    expected_content: [flashcards]
+    crawl_policy: do_not_fetch
+    copyright_risk: high
+    enabled: false
+    reviewed_at: '2026-07-11'
+    notes: User-generated set with uncertain provenance; metadata-only manual review.
+
+  - source_id: brainscape_l3
+    name: Brainscape WSET Level 3 practice test and flashcards
+    publisher: Brainscape
+    language: en
+    source_type: flashcard_site
+    urls: [https://www.brainscape.com/academy/wset-level-3-practice-test/]
+    access_type: registration_required
+    expected_content: [flashcards, practice_exam]
+    crawl_policy: do_not_fetch
+    copyright_risk: high
+    enabled: false
+    reviewed_at: '2026-07-11'
+    notes: Practice exam is delivered after signup; do not automate registration or email access.
+
+  - source_id: portnwine_l3_quiz
+    name: portnwine WSET Level 3 Practice Quiz
+    publisher: portnwine
+    language: en
+    source_type: public_quiz
+    urls: [https://www.portnwine.com/wset-3-practice]
+    access_type: public
+    expected_content: [multiple_choice]
+    crawl_policy: metadata_and_excerpt
+    copyright_risk: high
+    enabled: true
+    reviewed_at: '2026-07-11'
+    notes: Free public quiz. The public client loads a Level 3 bank; keep the extracted payload only in the ignored private-research area and never publish the text.
+
+  - source_id: fine_vintage_practice_pdf
+    name: Fine Vintage Level 3 Practice Exam Questions
+    publisher: Fine Vintage Ltd
+    language: en
+    source_type: public_pdf
+    urls: [https://www.finevintageltd.com/wp-content/uploads/2019/12/Fine-Vintage-Level-3-Practice-Questions.pdf]
+    access_type: public
+    expected_content: [multiple_choice]
+    crawl_policy: manual_review_required
+    copyright_risk: high
+    enabled: false
+    reviewed_at: '2026-07-11'
+    notes: PDF states questions were extracted from a WSET book; do not ingest pending rights review.
+
+  - source_id: vinsera_academy
+    name: Vinsera WSET Level 3 exam prep
+    publisher: Vinsera Academy
+    language: en
+    source_type: public_quiz
+    urls: [https://vinsera.academy/]
+    access_type: public_with_terms_restrictions
+    expected_content: [mock_exam, tasting_practical]
+    crawl_policy: metadata_only
+    copyright_risk: high
+    enabled: false
+    reviewed_at: '2026-07-11'
+    notes: Free entry point with product content; metadata only.
+
+  - source_id: app_store_l3_quizzes
+    name: WSET Level 3 Practice Quizzes App listing
+    publisher: Satofumi Abe / Apple App Store
+    language: en
+    source_type: app_listing
+    urls: [https://apps.apple.com/us/app/wset-level-3-practice-quizzes/id6760813653]
+    access_type: public
+    expected_content: [app_metadata, original_question_claim]
+    crawl_policy: metadata_only
+    copyright_risk: medium
+    enabled: false
+    reviewed_at: '2026-07-11'
+    notes: App listing only; no extraction from the app.

@@ -1,0 +1,6 @@
+# Xcode user-specific state
+**/xcuserdata/
+*.xcuserstate
+
+# Conversation deliverables; the canonical workbook lives in QuestionSources/
+outputs/
