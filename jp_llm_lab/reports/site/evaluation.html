@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>評価 — jp_llm_lab — 教育用日本語LLMラボ</title>
+<script src="assets/plotly.min.js"></script>
+<style>
+  :root { --ink:#1a1a2e; --sub:#5a5a72; --line:#e3e3ee; --accent:#3b4fd8; --bg:#fafafd; }
+  * { box-sizing:border-box; }
+  body { font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic UI",sans-serif; color:var(--ink);
+         margin:0; background:var(--bg); line-height:1.75; }
+  header { background:linear-gradient(135deg,#1a1a2e,#3b4fd8); color:#fff; padding:26px 24px 22px; }
+  header h1 { margin:0; font-size:1.3rem; }
+  header p { margin:4px 0 0; opacity:.8; font-size:.85rem; }
+  nav { position:sticky; top:0; background:#fff; border-bottom:1px solid var(--line);
+        padding:8px 16px; z-index:10; overflow-x:auto; white-space:nowrap; }
+  nav a { color:var(--accent); text-decoration:none; margin-right:14px; font-size:.85rem; padding:3px 0; }
+  nav a.active { font-weight:700; border-bottom:2px solid var(--accent); }
+  main { max-width:1040px; margin:0 auto; padding:24px; }
+  h2 { font-size:1.3rem; border-bottom:2px solid var(--accent); padding-bottom:8px; }
+  h3 { font-size:1.03rem; margin:24px 0 8px; }
+  .block { background:#fff; border:1px solid var(--line); border-radius:10px; padding:20px 24px; margin:18px 0; }
+  .figwrap { overflow-x:auto; }
+  dl.interp { background:#f5f6fc; border-left:4px solid var(--accent); border-radius:6px;
+              padding:12px 16px; margin:10px 0 0; font-size:.86rem; }
+  dl.interp dt { font-weight:700; color:var(--accent); margin-top:7px; }
+  dl.interp dt:first-child { margin-top:0; }
+  dl.interp dd { margin:2px 0 0; }
+  table.kv { border-collapse:collapse; width:100%; font-size:.85rem; }
+  table.kv td, table.kv th { border:1px solid var(--line); padding:6px 10px; text-align:left; vertical-align:top; }
+  table.kv th { background:#f2f3fa; }
+  pre { background:#f5f6fc; padding:12px; border-radius:6px; overflow-x:auto; font-size:.82rem; }
+  code { font-family:"Cascadia Code",Consolas,monospace; font-size:.85em; }
+  .gen-text { font-family:"Cascadia Code",Consolas,monospace; font-size:.8rem; white-space:pre-wrap; word-break:break-all; }
+  footer { text-align:center; color:var(--sub); font-size:.78rem; padding:26px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>jp_llm_lab — 教育用日本語LLMラボ</h1>
+  <p>全数値は実測値。各図に What / Why / How / Observation / Interpretation / Caveat / Next。</p>
+</header>
+<nav>
+  <a href="index.html" >概要</a><a href="corpus.html" >コーパス</a><a href="tokenizer.html" >トークナイザ</a><a href="architecture.html" >アーキテクチャ</a><a href="training.html" >学習過程</a><a href="attention.html" >Attention</a><a href="ablation.html" >アブレーション</a><a href="scaling.html" >スケーリング</a><a href="calibration.html" >確率較正</a><a href="generation.html" >生成</a><a href="memorization.html" >暗記</a><a href="sft.html" >SFT</a><a href="evaluation.html" class="active">評価</a><a href="conclusions.html" >結論と限界</a>
+</nav>
+<main>
+  <h2>評価</h2>
+  
+  <div class="block">
+    
+    
+    <p>固定評価セット 219 問を能力タイプ別に測定。Model L の cloze 正解率 0.115。<b>小型モデルに高度な知識回答は期待しない</b> — このセットは能力ギャップを測るためのもの。</p><table class="kv"><tr><th>category</th><th>n</th><th>cloze acc</th><th>反復率</th><th>distinct-2</th></tr><tr><td>causal</td><td>4</td><td>—</td><td>0.0</td><td>0.9552</td></tr><tr><td>completion</td><td>156</td><td>—</td><td>0.0059</td><td>0.8955</td></tr><tr><td>dialogue</td><td>9</td><td>—</td><td>0.1083</td><td>0.5185</td></tr><tr><td>explanation</td><td>5</td><td>—</td><td>0.0</td><td>0.9077</td></tr><tr><td>factual</td><td>3</td><td>—</td><td>0.0</td><td>0.9487</td></tr><tr><td>grammar</td><td>4</td><td>—</td><td>0.0</td><td>0.9616</td></tr><tr><td>grammar_particle</td><td>16</td><td>0.188</td><td>—</td><td>—</td></tr><tr><td>list</td><td>3</td><td>—</td><td>0.0</td><td>0.5812</td></tr><tr><td>number</td><td>10</td><td>0.0</td><td>—</td><td>—</td></tr><tr><td>paraphrase</td><td>2</td><td>—</td><td>0.0</td><td>0.8333</td></tr><tr><td>repetition</td><td>2</td><td>—</td><td>0.0</td><td>0.9231</td></tr><tr><td>story</td><td>2</td><td>—</td><td>0.0</td><td>0.5</td></tr><tr><td>unknown</td><td>3</td><td>—</td><td>0.0</td><td>0.9915</td></tr></table>
+    
+    <dl class="interp">
+      <dt>What</dt><dd>カテゴリ別の cloze 正解率・反復率・多様性。</dd>
+      <dt>Why</dt><dd>能力タイプ（文法/知識/補完）を分離測定。</dd>
+      <dt>How to read</dt><dd>cloze は次トークン一致率、completion は生成の反復/多様性。</dd>
+      <dt>Observation</dt><dd>cloze は全体で低い（助詞は複数正解ありノイズ大、数列は小モデルに困難）。補完は流暢だが内容は浅い。</dd>
+      <dt>Interpretation</dt><dd>言語モデリング能力 > 事実知識能力。流暢さと知識は別物。</dd>
+      <dt>Caveat</dt><dd>cloze「正解」は一意でない（助詞）。自動指標は品質の代理。</dd>
+      <dt>Next</dt><dd>人間評価との併用が必要（下の生成例）。</dd>
+    </dl>
+    
+  </div>
+  
+  <div class="block">
+    <h3>生成例（人間評価用）</h3>
+    
+    <table class="kv"><tr><th>むかしむかし、あるところに</th><td class="gen-text">帰宅。
+と、いうわけで、あれを連れて行って戻る。
+と行って来たら、へんなところへ帰って来たので肌寒く感じた。
+今日</td></tr><tr><th>春になると、桜が</th><td class="gen-text">咲いてくるのは初めて。
+夜は幼稚園を走らずに自然と歩行していた。
+早く帰るようになってから、秋は完走肌がきれいに飛び</td></tr><tr><th>彼は朝早く起きて、</th><td class="gen-text">何も起きない。
+「夜は灯を連れて行かなければならなかった」
+行き先の鍵が変わったら、帰宅途中の女性が置いてあった場所に集</td></tr><tr><th>その日は雨が降っていたので、</th><td class="gen-text">帰宅することができて、夕方には夕方の皆さんを呼んでくれました。
+普通行事の話はパソコンで発売されていて、着替えてみたんですが、しばらくしたの</td></tr><tr><th>駅に着くと、電車は</th><td class="gen-text">駅徒歩で15分ほど。
+駅を歩いて駅から少し離れて歩行者専用で、次へは向かう。
+駅からタクシーで30分ほど</td></tr><tr><th>手紙を開けると、そこには</th><td class="gen-text">何もないのです。
+アトリエの制作者は見積もり依頼をすると普通行うのは面白いのですが、なかなか見積もりが完了肌のままです。
+アトリ</td></tr></table>
+    
+  </div>
+  
+</main>
+<footer>jp_llm_lab — generated from saved experiment artifacts. Not a competitive LLM; a lab to make LLM internals observable.</footer>
+</body>
+</html>
