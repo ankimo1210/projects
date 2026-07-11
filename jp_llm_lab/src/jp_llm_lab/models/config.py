@@ -1,8 +1,14 @@
-"""Model configuration for the classical GPT (Milestone 1).
+"""Model configuration.
 
-Modern-GPT options (RMSNorm / RoPE / SwiGLU / bias-free) are introduced as an
-ablation chain in Milestone 3; the config gains those switches then, one at a
-time, so each architectural change stays a controlled experiment.
+The Classical→Modern ablation chain (spec §7.3) is driven by three switches
+plus `bias`, each changed ONE AT A TIME in Milestone 3:
+
+    norm: "layernorm" → "rmsnorm"
+    pos:  "learned"   → "rope"
+    mlp:  "gelu"      → "swiglu"
+    bias: True        → False
+
+Defaults reproduce the Milestone-1 Classical GPT exactly.
 """
 
 from __future__ import annotations
@@ -23,10 +29,24 @@ class ModelConfig:
     tie_weights: bool = True
     init_std: float = 0.02
     residual_scaled_init: bool = True  # GPT-2 style: proj layers scaled by 1/sqrt(2·n_layers)
+    norm: str = "layernorm"  # "layernorm" | "rmsnorm"
+    pos: str = "learned"  # "learned" | "rope"
+    mlp: str = "gelu"  # "gelu" | "swiglu"
 
     def __post_init__(self) -> None:
         assert self.d_model % self.n_heads == 0, "d_model must be divisible by n_heads"
         assert self.attn_impl in ("explicit", "sdpa")
+        assert self.norm in ("layernorm", "rmsnorm")
+        assert self.pos in ("learned", "rope")
+        assert self.mlp in ("gelu", "swiglu")
+        assert self.d_head % 2 == 0 or self.pos != "rope", "RoPE needs even d_head"
+
+    @classmethod
+    def modern(cls, **kwargs) -> ModelConfig:
+        """Modern GPT preset (spec §7.2): RMSNorm + RoPE + SwiGLU + bias-free."""
+        defaults = dict(norm="rmsnorm", pos="rope", mlp="swiglu", bias=False, attn_impl="sdpa")
+        defaults.update(kwargs)
+        return cls(**defaults)
 
     @property
     def d_head(self) -> int:
