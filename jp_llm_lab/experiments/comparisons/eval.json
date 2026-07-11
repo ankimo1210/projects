@@ -1,0 +1,4131 @@
+{
+  "n_prompts": 219,
+  "models": {
+    "model_l_30m": {
+      "overall": {
+        "n_prompts": 219,
+        "cloze_accuracy": 0.115
+      },
+      "by_category": {
+        "completion": {
+          "n": 156,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.0059,
+          "mean_distinct2": 0.8955
+        },
+        "grammar_particle": {
+          "n": 16,
+          "cloze_accuracy": 0.188,
+          "mean_repetition": null,
+          "mean_distinct2": null
+        },
+        "grammar": {
+          "n": 4,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.0,
+          "mean_distinct2": 0.9616
+        },
+        "explanation": {
+          "n": 5,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.0,
+          "mean_distinct2": 0.9077
+        },
+        "causal": {
+          "n": 4,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.0,
+          "mean_distinct2": 0.9552
+        },
+        "list": {
+          "n": 3,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.0,
+          "mean_distinct2": 0.5812
+        },
+        "paraphrase": {
+          "n": 2,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.0,
+          "mean_distinct2": 0.8333
+        },
+        "dialogue": {
+          "n": 9,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.1083,
+          "mean_distinct2": 0.5185
+        },
+        "story": {
+          "n": 2,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.0,
+          "mean_distinct2": 0.5
+        },
+        "number": {
+          "n": 10,
+          "cloze_accuracy": 0.0,
+          "mean_repetition": null,
+          "mean_distinct2": null
+        },
+        "repetition": {
+          "n": 2,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.0,
+          "mean_distinct2": 0.9231
+        },
+        "unknown": {
+          "n": 3,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.0,
+          "mean_distinct2": 0.9915
+        },
+        "factual": {
+          "n": 3,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.0,
+          "mean_distinct2": 0.9487
+        }
+      },
+      "per_prompt": [
+        {
+          "id": "base_000",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "むかしむかし、あるところに",
+          "generation": "帰宅。\nと、いうわけで、あれを連れて行って戻る。\nと行って来たら、へんなところへ帰って来たので肌寒く感じた。\n今日",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9231
+        },
+        {
+          "id": "base_001",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "春になると、桜が",
+          "generation": "咲いてくるのは初めて。\n夜は幼稚園を走らずに自然と歩行していた。\n早く帰るようになってから、秋は完走肌がきれいに飛び",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "base_002",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "彼は朝早く起きて、",
+          "generation": "何も起きない。\n「夜は灯を連れて行かなければならなかった」\n行き先の鍵が変わったら、帰宅途中の女性が置いてあった場所に集",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_003",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その日は雨が降っていたので、",
+          "generation": "帰宅することができて、夕方には夕方の皆さんを呼んでくれました。\n普通行事の話はパソコンで発売されていて、着替えてみたんですが、しばらくしたので",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_004",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "駅に着くと、電車は",
+          "generation": "駅徒歩で15分ほど。\n駅を歩いて駅から少し離れて歩行者専用で、次へは向かう。\n駅からタクシーで30分ほど",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "base_005",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "手紙を開けると、そこには",
+          "generation": "何もないのです。\nアトリエの制作者は見積もり依頼をすると普通行うのは面白いのですが、なかなか見積もりが完了肌のままです。\nアトリ",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8718
+        },
+        {
+          "id": "base_006",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "山の頂上から見下ろすと、",
+          "generation": "実はこのおじさんに思いを寄せます。\nこの日のゲストさんはフジテレビの公式ウェブサイトで発売された『タイの石碑』（HD版）で",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_007",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "台所からいい匂いが",
+          "generation": "するような香りと、アッパーの香りがするような香り。\n普通に香りがする香りは何気ない香り。肌の奥まで届く香",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.7436
+        },
+        {
+          "id": "base_008",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "私は学校",
+          "expected": "に",
+          "top1_token": "の",
+          "cloze_correct": false
+        },
+        {
+          "id": "base_009",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "本を読む",
+          "expected": "の",
+          "top1_token": "\n",
+          "cloze_correct": false
+        },
+        {
+          "id": "base_010",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "友達",
+          "expected": "と",
+          "top1_token": "が",
+          "cloze_correct": false
+        },
+        {
+          "id": "base_011",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "水を飲みたい",
+          "expected": "。",
+          "top1_token": "方",
+          "cloze_correct": false
+        },
+        {
+          "id": "base_012",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "東京",
+          "expected": "に",
+          "top1_token": "都",
+          "cloze_correct": false
+        },
+        {
+          "id": "base_013",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "彼",
+          "expected": "は",
+          "top1_token": "女の",
+          "cloze_correct": false
+        },
+        {
+          "id": "base_014",
+          "category": "grammar",
+          "kind": "completion",
+          "prompt": "昨日、私は友達と映画を",
+          "generation": "観てたんですが、\n今夜は特に皆さんもアニメやアニメを観て行ってました。\n早く観るようになっていいタイミングで、\n肌寒くなってきましたね。",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "base_015",
+          "category": "grammar",
+          "kind": "completion",
+          "prompt": "明日は晴れる",
+          "generation": "日。\nさて、今回は夜の弁書見に行ったので、\n見に行った行事の話は\n変わらず\nいいタイミングで、\n肌寒くなってきたので、\n",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9231
+        },
+        {
+          "id": "base_016",
+          "category": "grammar",
+          "kind": "completion",
+          "prompt": "この本はとても",
+          "generation": "面白く、楽しかったです。\n夜は幼稚園を走らずに自然と歩行者を迎えました。\nそのうち帰宅して家に帰ってきて、順調に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_017",
+          "category": "grammar",
+          "kind": "completion",
+          "prompt": "食べ",
+          "generation": "るのがおかしい。\n夜は弁当が置いてあるのでお菓子が並ぶ。\nこの冬は揃ってくるのが楽しみ。\nお昼は、ラーメン屋",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "base_018",
+          "category": "explanation",
+          "kind": "completion",
+          "prompt": "犬とは、",
+          "generation": "人間関係を悪化させる行為を禁止するという行為を禁止します。\n- 匿名性障害の混乱を起こすことによって、病害を肌で感じる状態が認",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9231
+        },
+        {
+          "id": "base_019",
+          "category": "explanation",
+          "kind": "completion",
+          "prompt": "水は、",
+          "generation": "5.12 と、アトリエの株を買う第一線(株)と行う。その後はアトリエの株を買う。\nアトリエの株は",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.6923
+        },
+        {
+          "id": "base_020",
+          "category": "explanation",
+          "kind": "completion",
+          "prompt": "コンピュータは、",
+          "generation": "本Softwareを利用することができる両バージョンと同意するものとします。更に、お客様は、プライバシーおよび知的財産権に関する法律その他の規制に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_021",
+          "category": "explanation",
+          "kind": "completion",
+          "prompt": "日本は、",
+          "generation": "日本国内に本社を置くことになります。\n日本を第一にサポートするために必要とされる事例をお伝えします。\n日本国内の企業で、日本が世界で大金を支払う",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "base_022",
+          "category": "explanation",
+          "kind": "completion",
+          "prompt": "音楽とは、",
+          "generation": "セルジュール・ハムスターのセクシー・デア・イーストと行う。その後はサッカー界のタイアップに配肌を寄せられ、セク",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "base_023",
+          "category": "causal",
+          "kind": "completion",
+          "prompt": "雨が降ったので、",
+          "generation": "帰宅することができないのでした。\n夜は雨を降りたので、海面下で行ったところで、午後は天気がいいので、船も走っていないって感じでした。\nこの",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_024",
+          "category": "causal",
+          "kind": "completion",
+          "prompt": "たくさん勉強したから、",
+          "generation": "教えたい。\nアトリエの教え方を教えることが自然と普通行うのは面白かったのですが、大学卒業後は長期入職していて大学に入学して",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "base_025",
+          "category": "causal",
+          "kind": "completion",
+          "prompt": "電車が遅れたため、",
+          "generation": "帰宅することができないので注意が必要です。\n■ 書類を忘れてしまったら\n匿名で退室できない場合\n匿名で退室させるのではなく、退室をすることになります。退",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8462
+        },
+        {
+          "id": "base_026",
+          "category": "causal",
+          "kind": "completion",
+          "prompt": "お腹がすいたので、",
+          "generation": "お腹も痛めませんでした。\nあれを連発してからでも自然と歩行距離が縮まるのですが、なかなか歩くと足が長くなるので肌寒くなりました（汗",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_027",
+          "category": "list",
+          "kind": "completion",
+          "prompt": "買い物リスト：\n・りんご\n・",
+          "generation": "かぼちゃの買物リスト：\n・れんごを買う(お知らせ行ってない)\n・かぼちゃの買物リスト：\n・肌のトラブルを防止",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.7949
+        },
+        {
+          "id": "base_028",
+          "category": "list",
+          "kind": "completion",
+          "prompt": "手順：\n1. 材料を用意する\n2. ",
+          "generation": "材料を用意して材料を適切に納めてください。\n3. 材料が通常の材料となるため、材料や材料の配合を指定できます。\n4. ",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8462
+        },
+        {
+          "id": "base_029",
+          "category": "list",
+          "kind": "completion",
+          "prompt": "好きな食べ物：\n- 寿司\n- ",
+          "generation": "豚肉\n- 豚肉\n- 豚肉\n- 豚肉\n- 豚肉\n- 豚肉\n- 豚肉\n- 豚肉\n- 豚肉\n- 豚肉\n- ",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.1026
+        },
+        {
+          "id": "base_030",
+          "category": "paraphrase",
+          "kind": "completion",
+          "prompt": "「とても大きい」を言い換えると、",
+          "generation": "実は私には「自分に合ったセンスをつけることです。\nそれでも自然と普通が変わることはできないことです。\nそのためには「自分に合ったセンスを付けよう」という",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.7692
+        },
+        {
+          "id": "base_031",
+          "category": "paraphrase",
+          "kind": "completion",
+          "prompt": "うれしいという気持ちは、別の言葉で言うと",
+          "generation": "「私にはできないと、自分に言い聞かせたい」\nという気持ちを受けてしまいます。\n例えば「私はあなたが変わる人間ですから」\n「あなたが変わる人間は、自分だけが",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "base_032",
+          "category": "dialogue",
+          "kind": "completion",
+          "prompt": "「おはようございます」\n「",
+          "generation": "ははははははははははははははははははとがはははははははははははははははははははは",
+          "repetition_rate": 0.9231,
+          "distinct_2": 0.1026
+        },
+        {
+          "id": "base_033",
+          "category": "dialogue",
+          "kind": "completion",
+          "prompt": "「元気ですか？」\n「はい、",
+          "generation": "何も言わずに、\n「ああ、書いた」\n「やったー！」\n行けたら面白かったんだけど、\n「ああ、頭肌も体もすくんだ",
+          "repetition_rate": 0.0513,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "base_034",
+          "category": "dialogue",
+          "kind": "completion",
+          "prompt": "「ありがとう」\n「",
+          "generation": "ありがとう」\n●「ありがとう」\n「ありがとう」\n「ありがとう」\n「ありがとう」\n「ありがとう」\n「ありがとう」\n「ありがとう」\n「ありがとう」\n「ありがとう」\n「ありがとう」\n「ありがとう」\n「ありがとう」\n「",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.1282
+        },
+        {
+          "id": "base_035",
+          "category": "dialogue",
+          "kind": "completion",
+          "prompt": "「今日はいい天気ですね」\n「",
+          "generation": "天気も良くなると良い天気だね」\n「天気予報はと行き来たかったんだけど、\n天気が悪いことって肌寒く感じただけでは",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "base_036",
+          "category": "story",
+          "kind": "completion",
+          "prompt": "小さな猫が道を歩いていました。すると、",
+          "generation": "実は私にはじめじめじめじめじめじめじめじめじめじめじめじめじめじめじめじめじめじめじ",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.1282
+        },
+        {
+          "id": "base_037",
+          "category": "story",
+          "kind": "completion",
+          "prompt": "少年は宝の地図を見つけました。彼は",
+          "generation": "ビルに住むと、アトリエの墓を連れ去りました。そこへ行くと行き先の神社が現れ、聖書はアトリエの墓を訪れ、神",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8718
+        },
+        {
+          "id": "base_038",
+          "category": "number",
+          "kind": "cloze",
+          "prompt": "1, 2, 3, 4,",
+          "expected": "5",
+          "top1_token": "4",
+          "cloze_correct": false
+        },
+        {
+          "id": "base_039",
+          "category": "number",
+          "kind": "cloze",
+          "prompt": "2, 4, 6, 8,",
+          "expected": "10",
+          "top1_token": "8",
+          "cloze_correct": false
+        },
+        {
+          "id": "base_040",
+          "category": "number",
+          "kind": "cloze",
+          "prompt": "一、二、三、",
+          "expected": "四",
+          "top1_token": "三",
+          "cloze_correct": false
+        },
+        {
+          "id": "base_041",
+          "category": "number",
+          "kind": "cloze",
+          "prompt": "月曜日、火曜日、",
+          "expected": "水",
+          "top1_token": "東京",
+          "cloze_correct": false
+        },
+        {
+          "id": "base_042",
+          "category": "repetition",
+          "kind": "probe",
+          "prompt": "同じ同じ同じ同じ",
+          "generation": "方向に当てはまる方向が強いので心配です。\n(自然と普通が変わる)\n次へ\n発売日 2012.12.13\n発売日 2012.",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8462
+        },
+        {
+          "id": "base_043",
+          "category": "repetition",
+          "kind": "probe",
+          "prompt": "あああああ",
+          "generation": "れは若さ半端ないなあ、と見ずに済む。\nでも普通行ってたら面白かったんだけど、\nいいタイミングで、頭肌も体も順調に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_044",
+          "category": "unknown",
+          "kind": "probe",
+          "prompt": "宇宙人の名前は",
+          "generation": "何ですか？ と、小林先生の意見を聞いた時のメールを受信したと行ったのは初めてでした。\n大学卒業後、タイ語教室の先生と話をしました。 タイ",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_045",
+          "category": "unknown",
+          "kind": "probe",
+          "prompt": "2050年の天気は",
+          "generation": "5月12日と、7月13日の日曜日に伊勢原海岸へ歩行していた。その後は日曜日も雨が降るのでは肌寒く感じるようになった。",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "base_046",
+          "category": "unknown",
+          "kind": "probe",
+          "prompt": "存在しない国の首都は",
+          "generation": "何もなく当たることになってしまい、特に皆さんは反省を続けられる行事に違和感を感じてしまいます。\n長期政権の体裁を崩し、",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_047",
+          "category": "factual",
+          "kind": "probe",
+          "prompt": "日本の首都は",
+          "generation": "5月12日と、アジアの首都を拠点とするアジアを中心と行う中で、日本が台湾の首都圏を中心とした中国国内の首都圏",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8462,
+          "expected": "東京",
+          "contains_expected": false
+        },
+        {
+          "id": "base_048",
+          "category": "factual",
+          "kind": "probe",
+          "prompt": "1年は何ヶ月ですか。答えは",
+          "generation": "何ですか。\nと、いうと、21歳を過ぎた時の、38歳と行うのは10年前と変わらなかったので、長期に肌をきちんと洗う",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0,
+          "expected": "12",
+          "contains_expected": false
+        },
+        {
+          "id": "base_049",
+          "category": "factual",
+          "kind": "probe",
+          "prompt": "太陽は",
+          "generation": "5月12日と、アトリエの株を連結して行われる。\n普通行うのは10年前と月間で着実に完了肌が変わった。\n朝日",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_000",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "少女は静かに",
+          "generation": "しちゃいます♪ 小林麻央さんを連れ込み、大自然と歩行者を連れ込み、一人の姿を描いてくれる肌のなかで佇む",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "tmpl_001",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "老人は静かに",
+          "generation": "しぼれながらも\n一緒に頑張ってあげてください。\n第一回は自然と歩行者を呼ぶことです。\n一人の方が、長距離を歩いていると\n歩くので",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_002",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "電車は静かに",
+          "generation": "動かせないので\n一緒に車の灯を観察して下さる。\n歩行者専用の車両は発売済み。\n完走路線って感じで飛び",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_003",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "手紙は静かに",
+          "generation": "書かれた。\nアトリエの墓を歩くアトリエ。\nアトリエの墓はアトリエの墓を長く持ち、\n体裁を崩し、",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.6667
+        },
+        {
+          "id": "tmpl_004",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "花は静かに",
+          "generation": "咲いています。\nと、\n今夜は幼稚園を走らずに自然と歩行していた。\n早く晴れたようだ！\nタイミングも頭肌も体も順調に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_005",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "犬は静かに",
+          "generation": "しちゃいますよね\n今夜は特に皆さんもお世話になっているようで行ってますね。\nこの冬は何気なく長めに肌寒く感じましても、",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_006",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "先生は静かに",
+          "generation": "しぼってくる。\n「夜は灯を連れてくるから」 と普通行う。\n「へんな、何やら船に乗ってる肌寒いｗ」\n「へ",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_007",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "海は静かに",
+          "generation": "しぼれている。\nアトリエの幼稚園を訪れたり自然と歩行者を過ごすことがあるようだがアトリエは肌寒く感じるようだ。",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_008",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "町は静かに",
+          "generation": "しながら、若さも落ち着いた雰囲気を演出する第一線。自然と歩行者を魅了している美しい女性たちが集まりました。肌も体も美しく、",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_009",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "星は静かに",
+          "generation": "動いています。\nと、\n「夜の灯を観察してから」 と\n行ったのは ・・・・\n「何やら ・・・・肌寒い！！」\nと\n",
+          "repetition_rate": 0.0513,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "tmpl_010",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "山は静かに",
+          "generation": "しみました。\nと、\n「夜は灯り見に行ったけど。。。」\n行って来た次第。\n「いいタイミングで、頭肌も体も順調に",
+          "repetition_rate": 0.0513,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_011",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "川は静かに",
+          "generation": "しぼれながらも\n一緒に頑張っているところを連れて行ってくれる。\n普通行ってたら面白かったんだけど、\nいいタイミングで、頭肌も体も順調に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_012",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "本は静かに",
+          "generation": "片付けています。\n小林弘司さんを連れ去るため，知った行き先の神社に参入していると，神社が置いてありましたが，",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_013",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "音楽は静かに",
+          "generation": "聴いてもらえるようになってきました。\n特に皆さんも実際に聴いていらっしゃるのは面白かったのですが、\n発売当初はDVDも作っていました。\nこの曲が本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_014",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "季節は静かに",
+          "generation": "過ごしています. 当店は2月末を予定しております. 柳宗理 行き時計 柳宗理 ボウル 激安 liu 柳宗",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8718
+        },
+        {
+          "id": "tmpl_015",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "夢は静かに",
+          "generation": "しぼれながらも\n一緒に頑張っているところを連想しています(^_^)v\nこのままパソコンに発売するにはどうすればいいのか肌寒く感じましょう！\n",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_016",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "少女を見て、私は",
+          "generation": "何も知らなかった。\n「ああ、皆さんも知らずに自然と歩行していた。」とあなたは言った。\n「もっと長く走ってほしい！！」とあなたは",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.8718
+        },
+        {
+          "id": "tmpl_017",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "老人を見て、私は",
+          "generation": "何も知らなかった。\n「ああ、皆さんは知らずに自然と歩行者を呼ぶんでしょうね」と言って電話をした。\nすると、その場で飛び",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_018",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "電車を見て、私は",
+          "generation": "何も知らなかった。\n「ああ、皆さんは知らずに自然と歩行していた。」と言い、\n「何も知らずに走ってきたって言ってくれたんだ",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.8462
+        },
+        {
+          "id": "tmpl_019",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "手紙を見て、私は",
+          "generation": "何も知らずに手紙を書きました。書かずに書いたり書けば行き先の書籍を出してくれました。\n書けば肌も体もすっきり",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_020",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "花を見て、私は",
+          "generation": "何も知らなかった。\n「ああ、皆さんも知らずに自然と歩行していた。」とあなたは言った。\n「もっともっと知らなかったんだけど、今度は",
+          "repetition_rate": 0.0513,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "tmpl_021",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "犬を見て、私は",
+          "generation": "何も知らなかった。\n「ああ、皆さんも知らずに自然と歩行していた。」と言い、\n「何も知らずに走ってきたって言ってくれたんだ",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.8205
+        },
+        {
+          "id": "tmpl_022",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "先生を見て、私は",
+          "generation": "何も知らなかった。\n「ああ、皆さんも知らずに自然と歩行していた。」と言い、\n「何も知らずに走ってきたって言ってくれたんだ",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.8205
+        },
+        {
+          "id": "tmpl_023",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "海を見て、私は",
+          "generation": "何も知らなかった。\n「夜は灯を観に行ったけど。。。」\n行き先の車が変わったのか、何も知らなかった肌寒く感じたようで、",
+          "repetition_rate": 0.0513,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "tmpl_024",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "町を見て、私は",
+          "generation": "何も知らなかった。\n「夜は灯を観に行ったけど。。。」\n行き先の鍵が変わったのか、何も知らなかった肌寒く感じたようで、",
+          "repetition_rate": 0.0513,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "tmpl_025",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "星を見て、私は",
+          "generation": "何も知らなかった。\n「ああ、皆さんも知らずに自然と歩行していた。」とあなたは言った。\n「もっともっと知らなかったんだけど、今度は",
+          "repetition_rate": 0.0513,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "tmpl_026",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "山を見て、私は",
+          "generation": "何も知らなかった。\n「ああ、皆さんも知らずに自然と歩行していた。」と言い、\n「何も知らずに走ってきたって言ってくれたんだ",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.8205
+        },
+        {
+          "id": "tmpl_027",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "川を見て、私は",
+          "generation": "何も知らなかった。\n「ああ、皆さんは知らずに自然と歩行していた。」と言い、\n「何も知らずに走ってきたって言ってくれたんだ",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.8462
+        },
+        {
+          "id": "tmpl_028",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "本を見て、私は",
+          "generation": "何も知らなかった。\n「ああ、皆さんは知らずに自然と歩行していた。」とあなたは言った。\n「もっと長く走ってほしい」と言った。\n",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "tmpl_029",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "音楽を見て、私は",
+          "generation": "何も知らなかった。\n「ああ、皆さんも知らずに自然と歩行していた。」とあなたは言った。\n「もっともっと知らなかったんだけど、今度は",
+          "repetition_rate": 0.0513,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "tmpl_030",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "季節を見て、私は",
+          "generation": "何も知らずに過ごしていました。\n特に皆さんも知らずに自然と歩行者を迎えたいと思っている\nいいタイミングで、頭肌も体も順調に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9231
+        },
+        {
+          "id": "tmpl_031",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "夢を見て、私は",
+          "generation": "何も知らなかった。\n「ああ、皆さんも知らずに自然と歩行していた。」とあなたは言った。\n「もっと長く走ってほしい。」とあなたは",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.8462
+        },
+        {
+          "id": "tmpl_032",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "少女のことを考えると、",
+          "generation": "実は私にはできないと、\n「ああ、そうか」\n「そうか」\n「そうか」\n「そうか」\n「そうか」\n「そうか」\n肌がキレイにしてしまうので",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.5385
+        },
+        {
+          "id": "tmpl_033",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "老人のことを考えると、",
+          "generation": "実は私にはできないと、\n「ああ、皆さんは知らずに自然と歩行していた。」と\n思う。\n何やら長距離走ってきたら、\n「飛行",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_034",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "電車のことを考えると、",
+          "generation": "実は私にはできないと、\n「ああ、そうか」\n「そうか。」\n「そうか」\n「そうか」\n「そうだ、そうか。」\n「そうか」\n「そうか」\n",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.4615
+        },
+        {
+          "id": "tmpl_035",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "手紙のことを考えると、",
+          "generation": "実は私にはできないと、\n思い切って書いたのでした。\nそれでも自然と普通に書いたのに、\n私のところにある「お母さん」の肌の奥にある「お母",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "tmpl_036",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "花のことを考えると、",
+          "generation": "実は私にはできないと、\n思い切って思います。\nこの第一線を受けて、普通行事の話はしているのですが、\nこの二線は完走しました。\nもちろん無事、本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_037",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "犬のことを考えると、",
+          "generation": "実は私にはできないのでした。\nそのあとは皆さんも知らずに自然と歩行していた。\n次へはTHE JALLA（HAGHT",
+          "repetition_rate": 0.0256,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_038",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "先生のことを考えると、",
+          "generation": "実は私にはできないと、\n思い切って思います。\nこの第一線を受けて、普通行事の話はしなくても、\nいいタイミングで、頭がいいっていう状態になってしまった",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_039",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "海のことを考えると、",
+          "generation": "実は私にはできないと、\n思い切って思います。\nこの第一線を受けて、普通行事の話はしませんが、\nこの二線は完走しました。\nもちろん無事、本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_040",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "町のことを考えると、",
+          "generation": "実は私にはできないと、\n思い切って思います。\nこの第一線を受けて、普通行事の話はしなくても、\nいいタイミングで、仕事がうまくいっていないので",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_041",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "星のことを考えると、",
+          "generation": "実は私にはできないと、\n「ああ、そうか」\n「そうか」\n「そうか」\n「そうか」\n「そうか」\n「そうか」\n肌がキレイにしてしまうので",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.5385
+        },
+        {
+          "id": "tmpl_042",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "山のことを考えると、",
+          "generation": "実は私にはできないと、\n「ああ、皆さんは知らずに自然と歩行していた。」と\n思うのです。\n何やら長距離走ってきたら、大したことはありません",
+          "repetition_rate": 0.0256,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_043",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "川のことを考えると、",
+          "generation": "実は私にはできないと、\n思い切って思いました。\nこの第一線を受けて、普通行事の話はしなくても、\nいいタイミングで、頭肌も体も順調に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_044",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "本のことを考えると、",
+          "generation": "実は私にはできないと、\n思い切って思います。\nこの第一線を受けて、普通行事の話はしているのですが、\nこのことによって、長時間、肌荒れを防ぐことができる",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_045",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "音楽のことを考えると、",
+          "generation": "実は私にはできないということがありましたから。\nそう思ったのは、私の見解と行事の話でした。\n私の見解では、私の見解を聞いていると、私は、「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "tmpl_046",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "季節のことを考えると、",
+          "generation": "実は私にはできないと、\n「夜の灯を観に行ったから」と、\n「行った」と、\n「行った」ことが、\n「行く」ことっていうことなのかもしれ",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.7436
+        },
+        {
+          "id": "tmpl_047",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "夢のことを考えると、",
+          "generation": "実は私にはできないと、\n思いをよぎるのです。\n第一に、私の見知った行事は、現実の変わり目にあったからです。\n第二に、現実の変わり",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "tmpl_048",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "少女がやってきて、",
+          "generation": "実は私にはじめられちゃうから。\n見た目はなんか知らないが・・・（笑）\nこの冬、何気なくDVDを見に出たんだけどｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_049",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "老人がやってきて、",
+          "generation": "実は私にはじめに話すことが多いんです。\nこの話をすると自然と普通が変わるんですけれど、\nその人の姿がわかれば、肌も体もすっきり",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_050",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "電車がやってきて、",
+          "generation": "何もかもはるかに探してたけど、書かずに済む。\nでも普通行ってたら面白かったんだけど、\nいいタイミングで、頭がいいってｗ\nまぁ",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_051",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "手紙がやってきて、",
+          "generation": "実は私にはじめに思いを伝えて書かずに書かれたんです。\n普通行事の話はパソコンで発売されていたので、DVDも作って置いてあったので、DVDを",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_052",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "花がやってきて、",
+          "generation": "実は私にはじめじめじめじめじめじめじめじめじめじめじめじめじめじめじめじめじめじめじ",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.1282
+        },
+        {
+          "id": "tmpl_053",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "犬がやってきて、",
+          "generation": "何もかもが超小さい場所なんだけど、見た目はなんか知って行っちゃうのに、この変わり種はもっと長めに肌がきつく感じる",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_054",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "先生がやってきて、",
+          "generation": "何もかも痛いと感じてしまいます。\n見た目や感謝の気持ちが変わるのに、この変わり種には色々なことがあるでしょう。\nもちろんこの状態が安定",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_055",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "海がやってきて、",
+          "generation": "実は私にはじめに思いを寄せます。\nこの日の朝、自然と歩行者を呼ぶのですが、\nその人の姿がとても素敵で、涙が流れてきていました",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_056",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "町がやってきて、",
+          "generation": "実は私にはじめに話すことが多いんです。\nこの話をすると自然と普通が変わるんですけれど、\nその人の姿がわかれば、肌も体も美しくな",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_057",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "星がやってきて、",
+          "generation": "何もかもが超絶に感じます。\n皆さんもアレなんか知らない行事中で、次回は発売予定です。\nDVDも作ってみたいって思ってます。\n",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_058",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "山がやってきて、",
+          "generation": "実は私にはじめに思いを寄せます。\nこの日の朝、自然と歩行者を呼ぶのですが、\nその人の姿がとても素敵で、涙が流れてきていました",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_059",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "川がやってきて、",
+          "generation": "実は私にはじめに話しかけてしまいました。\nこの話、なんか気になって行ってしまいました。\n次回は発売になりましたので、DVDも公開します！！\nってことで、今度は",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_060",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "本がやってきて、",
+          "generation": "実は私には当てはまらないと感じます。\nこの第一線を受けて、普通行事の話はパソコンで発売されていました。\nDVDも作ってきましたが、この曲が本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_061",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "音楽がやってきて、",
+          "generation": "何もかもが超絶に感じてしまいました。\nこの日のライブは見事に行ってきました。\n次回は発売予定です。\nDVDも公開中です。\nこの曲が楽しみ",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_062",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "季節がやってきて、",
+          "generation": "実は歯が痛くなると痛みが感じます。\nこの場合、歯周病の症状がひどくなりがちになってしまいます。\n歯周病が原因っていうのは、歯周",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9231
+        },
+        {
+          "id": "tmpl_063",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "夢がやってきて、",
+          "generation": "実は私にはじめられました。\nあれを連れて行ってきました。\nでも普通行ってました。\n次へ。<EOS>このページは長文になっています\n全文にして表示する",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_064",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その少女は、",
+          "generation": "実は彼女に当てはまるほどの幼さの持ち主。\n彼女はその普通の男の子で、その子は何気ない顔で、頭肌も体もまじま",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_065",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その老人は、",
+          "generation": "実は私には当てはまらないと感じます。\n老人たちは自然と普通に暮らす人として、変わらず人間関係がなくなってきます。肌も体もまぎれて",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_066",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その電車は、",
+          "generation": "実は私達の半分ぐらいのセールを買うのが一番。\nでも普通行ってたら面白かったんだけど、\nいいタイミングで、セールをしてもらいたいなと思",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_067",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その手紙は、",
+          "generation": "実は私には当てはまらないと感じます。\nこの手紙を受けて、普通に書いたのに、パソコンに発売したことのあるDVDで、作肌の体感が好きで",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_068",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その花は、",
+          "generation": "実はこの花は初めて。\n夜は幼稚園を走らずに自然と歩行していた。\n次へは月の間に着くこと。\n毎回は、花が咲",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_069",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その犬は、",
+          "generation": "実は私にはないのでした。\nその犬は皆見に行ったのだから、知った行ったのは初めてだ。\nそして、その犬はタイヤ交換を肌に運んでくれた。\n",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_070",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その先生は、",
+          "generation": "教え子と授業を覚え幼稚園を卒業。自然と普通が変わるのだ。\n大学卒業後、「長期大学に入学する学費」学",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_071",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その海は、",
+          "generation": "海に恵まれる。海に恵まれ、皆様を励まし続ける。行事の面白みを知るよう、島で船を走るよう、海へ飛び",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8718
+        },
+        {
+          "id": "tmpl_072",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その町は、",
+          "generation": "実はこの町にあると、\n「夜の灯を観に行ったら」 とと行ったところで、\nこの町は何やら長めの肌寒く感じでした。\nこの",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_073",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その星は、",
+          "generation": "実はこの星のことと、アトリエの夢をかなえてくれるような、自然の普通の星です。\n星の星は人間の真理で、頭肌の体は、生きていく",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_074",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その山は、",
+          "generation": "実は私にはさしてアレックスのところを連れて行ってくれる。\n普通行ってたら面白かったんだけど、\nいいタイミングで、ジャイアントワースがやって",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_075",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その川は、",
+          "generation": "実はこの川の水に生息しているところを連想させるような船を撮ったがこれが川の上の川の水域を撮ってことなのか肌寒く感じるようになった。",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "tmpl_076",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その本は、",
+          "generation": "実は私には当てはまらないという感じで、見た目はなんか知らないが・・・という感じでした。\nとにかく何気なく読んでいて肌も体もすっきり",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_077",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その音楽は、",
+          "generation": "実はこの楽曲と、アトリエの音楽を聞いた時のことです。\n自然と普通が好きで、音楽は音楽が好きだから、もっと楽しかったと思いました。\n楽曲が集",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_078",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その季節は、",
+          "generation": "実はこの夏のことと、\n今夜は特に書かずに書かれたものが書かれたと思います。\nこの夏の冬は\nいいタイミングで、\n肌寒くなってきたので、\n",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "tmpl_079",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その夢は、",
+          "generation": "実は私にはさしてアレコレは思わず見ずに済む。\nでも普通行うのは面白かったんだけど、\nいいタイミングで、頭肌も体も順調に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_080",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "少女について、",
+          "generation": "教え子さんが描かれた作品の制作を担当し、第一線で自然と歩行者を描いた作品の発売を予定しています。\n- 第二線 伊藤 光",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_081",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "老人について、",
+          "generation": "教え子さんが半分ぐらいのセリフを置いています(笑)」\n行事の話は聞けて、\n「タイミングよく、肌の悩みを相談して",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_082",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "電車について、",
+          "generation": "教訓として使用するよう求める方向を示し、第一線を受けて設立行事の現状を図ることを目的としています。\n第二線（現状）認",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_083",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "手紙について、",
+          "generation": "教え子とキャラクターを一緒に描き出せます。\n第一部(，著作)の著作権は，発売から5年前の1975年9月1日まで順次掲載",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_084",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "花について、",
+          "generation": "教え子さんがご存知ですか。\n皆さんは教え子さんと普通行事中で、\nこの教え子さんが着ていること、肌の悩みを相談して",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8718
+        },
+        {
+          "id": "tmpl_085",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "犬について、",
+          "generation": "教え子さんがご存知ですか。\n皆さんも教え子さんもご存知ですか。\nこの教え子さんが着ていることは、肌の奥にある状態が非常に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.7179
+        },
+        {
+          "id": "tmpl_086",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "先生について、",
+          "generation": "教え子さんがご指導してくださり、皆様を第一線で自然と歩行していただきました。\nこの教え子さんが着実に成長していく肌の体は、まさに美",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9231
+        },
+        {
+          "id": "tmpl_087",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "海について、",
+          "generation": "教授を務めている市町村が書かれた教授を受けています。\n行事の授業として、大学卒業後、留学し、大学卒業後、大学卒業後、",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8205
+        },
+        {
+          "id": "tmpl_088",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "町について、",
+          "generation": "教授も務めます.|\n|アフィリエイトの利用||利用できます。|\n|テクニカルサポート||付属しません。|\n|配送業者が商品の発送",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_089",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "星について、",
+          "generation": "教授は当時の教授を認めていたのでした。\n・教授は教授の教授である教授は教授を長年に渡って教授を退任し、",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.6923
+        },
+        {
+          "id": "tmpl_090",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "山について、",
+          "generation": "教授も当時の教授をしていただきました。\nこの教授を受けて教授が教授の次期教授の講習会で、教授の授業を始め、",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.7949
+        },
+        {
+          "id": "tmpl_091",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "川について、",
+          "generation": "教授も当時の教授をしていただきました。\nこの教授を受けて教授が教授の次期教授の講習会で、教授の授業を始め、",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.7949
+        },
+        {
+          "id": "tmpl_092",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "本について、",
+          "generation": "本サービスの本質を保証するものではありません。本サービスの本質を損なうことなく、本サービスを利用することで、本条に定める保証の違反を如何なる",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8462
+        },
+        {
+          "id": "tmpl_093",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "音楽について、",
+          "generation": "教え子さんが好きな方にピッタリ見積もり依頼をしたいと行っています. カシオ プロトレック 女性 カシオ プロト",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8718
+        },
+        {
+          "id": "tmpl_094",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "季節について、",
+          "generation": "教え子さんがご存知ですか。\n皆さんは教え子さんと普通行事中で、\n「変わりまくりで長時間走っていいって言ってるだけじゃ",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_095",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "夢について、",
+          "generation": "教え子さんが好きな方、ネタが書かれたら教えてください。\n※匿名で活躍中。\n発売日： 2012.09.12\n発売日： 201",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "tmpl_096",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに少女が見えた。",
+          "generation": "\n彼女は彼女を信じるが、彼女を連れ去らずに彼女を歩行させていく。\nその後、彼女は何も言わない。\n彼女は彼女を飛び",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8205
+        },
+        {
+          "id": "tmpl_097",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに老人が見えた。",
+          "generation": "\n「若さと、アトリエの価値を教えてもらいたい」と、知った行事の話をしたのですが、\nそのうち、「長さが肌に変わる！」と思",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_098",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに電車が見えた。",
+          "generation": "\nまたもはや小林を利用して駅を歩く。\n駅を歩く行き先の駅へ。\n駅前で駅を走って駅前に歩いていた。\n",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8462
+        },
+        {
+          "id": "tmpl_099",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに手紙が見えた。",
+          "generation": "\n「おじさん、おじさんがおじさんを呼んでくれる。おじさん、おじさん、おじさん、おじさん、おばさん、おじさん",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.4103
+        },
+        {
+          "id": "tmpl_100",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに花が見えた。",
+          "generation": "\nまたもじもじもじもじもじもじもじもじと行き来。\nこの冬は何気なく長めに肌寒く感じているようにも",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.6667
+        },
+        {
+          "id": "tmpl_101",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに犬が見えた。",
+          "generation": "\nまたもじもじもじもじもじもじもじもじと行う。\n次へは発売\n『タイヤ交換』\n『タイヤ交換』\n",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.5128
+        },
+        {
+          "id": "tmpl_102",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに先生が見えた。",
+          "generation": "\n私にはじめじめじめじめじめじめじめじめじめじめじめじめじめじめじめじめじめじめじ",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.1282
+        },
+        {
+          "id": "tmpl_103",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに海が見えた。",
+          "generation": "\nリゾート地区に位置する、リゾート地区。自然と歩行者を過ごすリゾート地区。リゾート地区にも多数のリゾ",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.641
+        },
+        {
+          "id": "tmpl_104",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに町が見えた。",
+          "generation": "\nまたもじめに話しあうことはできずに済む。\nさと行き先の次へ。\nこの日は長岡市肌緒町にある山下公園",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_105",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに星が見えた。",
+          "generation": "\nリゾート地区に位置するホテルは、リゾート・カフェ・フード・センター・カジノ・イングリッシュ・レストラン・パーク・センター・ショ",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8718
+        },
+        {
+          "id": "tmpl_106",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに山が見えた。",
+          "generation": "\nさらに若さと、小林の技術が両面を超えていた。自然と歩行者にとっても強烈なノリで着実に完走が可能だ。\n山頂では",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_107",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに川が見えた。",
+          "generation": "\nまたもじもじもじもじもじもじもじもじと行き来。\nこの冬は川の着ぐるみ肌寒く感じた。\n冬",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.6667
+        },
+        {
+          "id": "tmpl_108",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに本が見えた。",
+          "generation": "\n「おじさん、おじさん、おじさん、おじさん、おじさん、おじさん、おじさん、おじさん、おじさんのこと、お",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.2308
+        },
+        {
+          "id": "tmpl_109",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに音楽が見えた。",
+          "generation": "\nリスペクトして聴いたのは、セリフの記憶。\n自然と普通が変わるのに、この曲は何も着なくなっちゃう肌寒さｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_110",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに季節が見えた。",
+          "generation": "\n|● 半田市市近郊を歩く\n\n(自然の歩行者)\n|● 半田市市|\n|● 半田市市民センター|\n",
+          "repetition_rate": 0.1026,
+          "distinct_2": 0.6923
+        },
+        {
+          "id": "tmpl_111",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに夢が見えた。",
+          "generation": "\nリスペクトしてアトリエの墓を歩くアトリエ。\n歩行者を呼ぶことでアトリエの墓を歩くイタリア語の世界。",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.7692
+        },
+        {
+          "id": "tmpl_112",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "少女と一緒に",
+          "generation": "いる。\nさて、この話は、あれを連れ去って行くかと。行き先の次へ。\n何やら長男が肌寒く感じたようで、",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_113",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "老人と一緒に",
+          "generation": "いることでしょう。\nと、\n一緒に頑張っている人が皆さんを第一線で見守って行ってあげるといいですね。\nそうなると長距離に出たり、体力が落ちる",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_114",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "電車と一緒に",
+          "generation": "いると、若者が半分ぐらいの距離で、皆さんも走らずに自然と歩行者を迎えられるので、一人の姿をみるのではなく、子供にも大人も楽しめる",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_115",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "手紙と一緒に",
+          "generation": "教わっていた。\nアトリエの幼稚園を教わっていた。\n普通行事の授業で教師揃って帰ってきたのでイライラｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "tmpl_116",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "花と一緒に",
+          "generation": "帰宅することができて、\n一緒に頑張っているところを連れて行ってくれる。\n普通行事の話はパソコンで聞くといい。\nで、仕事が終わってしばらくしたので",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_117",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "犬と一緒に",
+          "generation": "帰宅することができて、\n一緒に頑張っているところを連れて行ってくれる。\n普通行事の話はパソコンで聞くといいが、\n家に出たり、帰宅したりしたので",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_118",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "先生と一緒に",
+          "generation": "帰宅することができて、\n一緒に頑張っているところを連れて行ってくれる。\n普通行事の話はパソコンで聞くといい。\nで、仕事が終わってしばらくしたので",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_119",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "海と一緒に",
+          "generation": "海に浸かり、海に浸かり、皆さんも海に浸かってしまった行事。\n次へ。<EOS>このページは長文に肌を寄せているだけでは",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8205
+        },
+        {
+          "id": "tmpl_120",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "町と一緒に",
+          "generation": "帰宅することができて、\n一緒に頑張っているところを連れて行ってくれる。\n普通行事の話はパソコンで聞くといい。\nで、仕事が終わってしばらくしたので",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_121",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "星と一緒に",
+          "generation": "帰宅することができて、\n一緒に夜景を眺めてもいいかな。\nでも普通行ってたら面白かった。\n発売日 2009-03-12 10:41 ",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_122",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "山と一緒に",
+          "generation": "帰宅することができて、\n一緒に頑張っているところを連れて行ってくれる。\n普通行っていくうちに、\n変わらず揃って帰ってくるので肌寒く感じる。\n本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_123",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "川と一緒に",
+          "generation": "帰宅することができて、\n一緒に頑張っているところを連れて行ってくれる。\n普通行っていくうちに、\n変わらず揃って帰ってくるので肌寒く感じる。\n本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_124",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "本と一緒に",
+          "generation": "帰宅することができて、\n一緒に帰って来てくださった皆様へ\nと行って来てくださった皆様へ\nとことん肌寒く感じました\n本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.7436
+        },
+        {
+          "id": "tmpl_125",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "音楽と一緒に",
+          "generation": "聴いてもらった方が良いと思います。\n特に皆さんも実際に聴いていらっしゃるのは面白かったのですが、\n発売前の試聴会で、作家さんのコメントをまとめてみ",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_126",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "季節と一緒に",
+          "generation": "帰宅することができて、\n一緒に頑張っているところを連れて行ってくれる。\n普通行事なんてないので、\n変わらず揃って帰ってくるのでは肌寒く感じる。\n本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_127",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "夢と一緒に",
+          "generation": "いることでしょう。\nと、いうことになります。\n特に皆さんは実際にやっていただき普通行事に参加して、パソコンを持っている人の姿を確認し、仕事がうまくいかなくても、",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "part_000",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "空",
+          "expected": "が",
+          "top1_token": "の",
+          "cloze_correct": false
+        },
+        {
+          "id": "part_001",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "道",
+          "expected": "を",
+          "top1_token": "を",
+          "cloze_correct": true
+        },
+        {
+          "id": "part_002",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "家",
+          "expected": "に",
+          "top1_token": "に",
+          "cloze_correct": true
+        },
+        {
+          "id": "part_003",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "君",
+          "expected": "は",
+          "top1_token": "は",
+          "cloze_correct": true
+        },
+        {
+          "id": "part_004",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "雨",
+          "expected": "が",
+          "top1_token": "の",
+          "cloze_correct": false
+        },
+        {
+          "id": "part_005",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "窓",
+          "expected": "を",
+          "top1_token": "口",
+          "cloze_correct": false
+        },
+        {
+          "id": "part_006",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "時間",
+          "expected": "が",
+          "top1_token": "の",
+          "cloze_correct": false
+        },
+        {
+          "id": "part_007",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "音",
+          "expected": "が",
+          "top1_token": "声",
+          "cloze_correct": false
+        },
+        {
+          "id": "part_008",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "光",
+          "expected": "が",
+          "top1_token": "の",
+          "cloze_correct": false
+        },
+        {
+          "id": "part_009",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "風",
+          "expected": "が",
+          "top1_token": "の",
+          "cloze_correct": false
+        },
+        {
+          "id": "num_000",
+          "category": "number",
+          "kind": "cloze",
+          "prompt": "5, 10, 15,",
+          "expected": "20",
+          "top1_token": "5",
+          "cloze_correct": false
+        },
+        {
+          "id": "num_001",
+          "category": "number",
+          "kind": "cloze",
+          "prompt": "10, 20, 30,",
+          "expected": "40",
+          "top1_token": "2",
+          "cloze_correct": false
+        },
+        {
+          "id": "num_002",
+          "category": "number",
+          "kind": "cloze",
+          "prompt": "3, 6, 9,",
+          "expected": "12",
+          "top1_token": "9",
+          "cloze_correct": false
+        },
+        {
+          "id": "num_003",
+          "category": "number",
+          "kind": "cloze",
+          "prompt": "あ、い、う、",
+          "expected": "え",
+          "top1_token": "う",
+          "cloze_correct": false
+        },
+        {
+          "id": "num_004",
+          "category": "number",
+          "kind": "cloze",
+          "prompt": "春、夏、",
+          "expected": "秋",
+          "top1_token": "夏",
+          "cloze_correct": false
+        },
+        {
+          "id": "num_005",
+          "category": "number",
+          "kind": "cloze",
+          "prompt": "1, 3, 5, 7,",
+          "expected": "9",
+          "top1_token": "8",
+          "cloze_correct": false
+        },
+        {
+          "id": "start_000",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "今日の会議では、",
+          "generation": "教会での講演に参加しました。\n特に書記を書く機会も多く、行事にも参加して、\n大学卒業後のお客さんに聞きなれない状態になっていました",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "start_001",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "研究の結果、",
+          "generation": "教授は当時の教授を認めていたとするもので、多くの教授は普通行事の授業を受けて、教授を認めた。\nまた、授業の内容や",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8205
+        },
+        {
+          "id": "start_002",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "彼女は微笑んで、",
+          "generation": "何も言わずにアッという間に終わってしまいました(^^;)。\n行って来たかったんだけど、\n帰って来たので肌寒く感じました(^",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9231
+        },
+        {
+          "id": "start_003",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "問題は、",
+          "generation": "実は私には当てはまらないと感じます。\nこの第一線を受けて、普通行路の近くにパソコンが発売されていました。\nDVDも作っていました。\nこの点だけ、",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "start_004",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "結論として、",
+          "generation": "教徒は人員に変えようとしている。\nこの教員は教員と行う。教員が教員の役割を担う。\n教員の役割",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.7692
+        },
+        {
+          "id": "start_005",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "一方で、",
+          "generation": "実は歯科医院に通うとよいかもしれません。\n市販の歯科医院が毎日行う歯科医院\n歯科医院は、肌の悩みを解決する",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.7692
+        },
+        {
+          "id": "start_006",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "たとえば、",
+          "generation": "実は私には当てはまらないと感じます。\nこの第一線を受けて、普通行路の近くにパソコンが発売されていました。\nDVDも作っていました。\nこの点、この",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "start_007",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "最後に、",
+          "generation": "何もかもが超絶叫びあがるので心配してた(^_^)v\nその後はパソコンで発売したけど着脱ものでは肌寒く感じましたが…",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "start_008",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その理由は、",
+          "generation": "実は私には当てはまらないという意見を聞いたことがあるのです。\nそれと行き先の問題として、当てはまるタイミングで、何が何でもこの問題が解決",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "start_009",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "実際に、",
+          "generation": "何も知らないと、\n「ああ、書いたんだけど、なんか知った行って来たかったんだけど、\nいいタイミングで、頭がいいって言ってくれたんだ",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "start_010",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "子どものころ、",
+          "generation": "教え子は半世紀後半から幼稚園を第一原子力発電所の設置を始め、大学卒業後、タイヤ交換を肌で体現するよう学",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "start_011",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "夜が明けると、",
+          "generation": "実は私には痛い目に覚えがたいという思いで。\n自然と歩行者にとって、あなたが変わる人間には何が変わるのか。\n生きているだけでは",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9231
+        },
+        {
+          "id": "start_012",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "しばらくして、",
+          "generation": "何もなくさしてしまったような気がします。\n皆さんも第一線を受けて、普通行事に参加して、パソコンで発売する姿を見て、完成肌の体感状態が本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "start_013",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "驚いたことに、",
+          "generation": "実は私には当てはまらないと感じます。\nこの第一線を受けて、普通行事の話はパソコンに発売されていないので、DVDも作れていないっていう点が非常に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "start_014",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "それでも、",
+          "generation": "実は私には当てはまらないと感じます。\nこの第一線を受けて、普通行うのは面白かったのですが、大学卒業後は長期入職していても順調に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "start_015",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "天気予報によると、",
+          "generation": "5月12日より全国的に参入した「見積り・サポート技術」で5月30日より全国的に参入した「着任月配肌対策技術」の開発が実",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.7949
+        },
+        {
+          "id": "start_016",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "空を見上げると、",
+          "generation": "実はこの部屋はかなりアッという間に完成見積もり。見知らぬ間に完成見積もりが行われ、残念ながら肌もキレイでした。\nこの",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.8462
+        },
+        {
+          "id": "start_017",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "扉を開けると、",
+          "generation": "セルフパーキングと、アトリエの上の書物をアトリエに貼ります。行事の話は聞けて、入口に電話を入れて、置いてもらいます。\n",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "start_018",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "彼の話によれば、",
+          "generation": "実は私には当時のアトリエの弁書が置かれていた。\nしかし普通行事の話ではなかったので、その話には着任し、頭が置いてあったかのようである。",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "start_019",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "長い旅の末に、",
+          "generation": "セルビア語と、アトリエの語を聞く英語。\n自然と歩行者にとって、あなたが変わる言葉や言葉を覚えよう。\nこの言葉が本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "dlg_000",
+          "category": "dialogue",
+          "kind": "completion",
+          "prompt": "「すみません」\n「",
+          "generation": "はい、おじさんに教えてあげよう！」\n「はい、おじさんに教えてあげよう！」\n「へんな、おじさんに教えてあげよう！」\n「へそ、",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.4615
+        },
+        {
+          "id": "dlg_001",
+          "category": "dialogue",
+          "kind": "completion",
+          "prompt": "「はじめまして」\n「",
+          "generation": "はじめまして」\n「はじめまして皆様」\n「はじめまして」\n行事中、「はじめまして」\n「はじめまして」\n「はじめまして",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.359
+        },
+        {
+          "id": "dlg_002",
+          "category": "dialogue",
+          "kind": "completion",
+          "prompt": "「お願いします」\n「",
+          "generation": "はい、おはようございます！」\n「皆さん、おはようございます」\n行事の話は聞けて、\n「おはようございます！」\n「おはよう",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.641
+        },
+        {
+          "id": "dlg_003",
+          "category": "dialogue",
+          "kind": "completion",
+          "prompt": "「いただきます」\n「",
+          "generation": "ありがとうございます」\nと、\n「ありがとうございます」\nと\nアマユキさんと行ってきました。\n「ありがとうございます」\n「ありがとうございます」\n肌寒く感じました\n本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.6923
+        },
+        {
+          "id": "dlg_004",
+          "category": "dialogue",
+          "kind": "completion",
+          "prompt": "「さようなら」\n「",
+          "generation": "はやくさしかったわ」\n「はやくさしかったわ」\n「と行って来たわ」\n「はやくさしかったわ」\n「って行って来た",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.4359
+        }
+      ]
+    },
+    "model_m_10m": {
+      "overall": {
+        "n_prompts": 219,
+        "cloze_accuracy": 0.0
+      },
+      "by_category": {
+        "completion": {
+          "n": 156,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.0133,
+          "mean_distinct2": 0.9763
+        },
+        "grammar_particle": {
+          "n": 16,
+          "cloze_accuracy": 0.0,
+          "mean_repetition": null,
+          "mean_distinct2": null
+        },
+        "grammar": {
+          "n": 4,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.0,
+          "mean_distinct2": 0.9936
+        },
+        "explanation": {
+          "n": 5,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.0,
+          "mean_distinct2": 0.9949
+        },
+        "causal": {
+          "n": 4,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.0128,
+          "mean_distinct2": 0.9872
+        },
+        "list": {
+          "n": 3,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.0171,
+          "mean_distinct2": 0.9402
+        },
+        "paraphrase": {
+          "n": 2,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.0,
+          "mean_distinct2": 1.0
+        },
+        "dialogue": {
+          "n": 9,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.0285,
+          "mean_distinct2": 0.9544
+        },
+        "story": {
+          "n": 2,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.0,
+          "mean_distinct2": 0.9872
+        },
+        "number": {
+          "n": 10,
+          "cloze_accuracy": 0.0,
+          "mean_repetition": null,
+          "mean_distinct2": null
+        },
+        "repetition": {
+          "n": 2,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.0256,
+          "mean_distinct2": 0.9872
+        },
+        "unknown": {
+          "n": 3,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.0,
+          "mean_distinct2": 1.0
+        },
+        "factual": {
+          "n": 3,
+          "cloze_accuracy": null,
+          "mean_repetition": 0.0,
+          "mean_distinct2": 0.9915
+        }
+      },
+      "per_prompt": [
+        {
+          "id": "base_000",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "むかしむかし、あるところに",
+          "generation": "かれておかと、\nそれを利用えますけど\nおりやりかってしまったが変わりをおかったんすよう\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_001",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "春になると、桜が",
+          "generation": "何も若さと、\n今を利用えが書かずに第一、(自然とと行り込うかったんけて発売\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_002",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "彼は朝早く起きて、",
+          "generation": "しかし、さらに● と、\n||q 書とする 第一原馬面に歩行の活の次へ\n|この方、長で、\n肌もってｗ\n|この",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9231
+        },
+        {
+          "id": "base_003",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その日は雨が降っていたので、",
+          "generation": "実は後もさと、\nそれを利用えが書かもなりました(自然に歩行っていくの結婚しているので、発売\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_004",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "駅に着くと、電車は",
+          "generation": "何は若くと、\nそれを利用えが書かずに第一文を受きましたと行り込んでみが変われずにいいので、長で、女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_005",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "手紙を開けると、そこには",
+          "generation": "何は若さと、\n今を利用えが書かを超えてりかってしまったが変わったの結婚しているので、発売すること、長で、女性肌もってｗ\n出会い系サイトが",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_006",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "山の頂上から見下ろすと、",
+          "generation": "実はまた若さと、\n「夜の弁書かを第一原馬を付歩行の活の次へ変われずにいいので、長で、作肌もってしまう状態が集",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_007",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "台所からいい匂いが",
+          "generation": "何は若いと、\n今を利用えが書かを超り返りかってしまったが変わったの結婚しているので、発売\nベストタイックで、女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_008",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "私は学校",
+          "expected": "に",
+          "top1_token": "は",
+          "cloze_correct": false
+        },
+        {
+          "id": "base_009",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "本を読む",
+          "expected": "の",
+          "top1_token": "。",
+          "cloze_correct": false
+        },
+        {
+          "id": "base_010",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "友達",
+          "expected": "と",
+          "top1_token": "が",
+          "cloze_correct": false
+        },
+        {
+          "id": "base_011",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "水を飲みたい",
+          "expected": "。",
+          "top1_token": "な",
+          "cloze_correct": false
+        },
+        {
+          "id": "base_012",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "東京",
+          "expected": "に",
+          "top1_token": "\n",
+          "cloze_correct": false
+        },
+        {
+          "id": "base_013",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "彼",
+          "expected": "は",
+          "top1_token": "ら",
+          "cloze_correct": false
+        },
+        {
+          "id": "base_014",
+          "category": "grammar",
+          "kind": "completion",
+          "prompt": "昨日、私は友達と映画を",
+          "generation": "かれておかと、\n一緒に夜のところを見を第一後でも見ってしまったが変わったの結婚しているので、発売すること。\nで、女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_015",
+          "category": "grammar",
+          "kind": "completion",
+          "prompt": "明日は晴れる",
+          "generation": "かれておじと、小探しえれを見を第一のりかってしまったが変わるの結婚しているので、発売すること。\nあく肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_016",
+          "category": "grammar",
+          "kind": "completion",
+          "prompt": "この本はとても",
+          "generation": "何は若くと、\n「夜のところを見を第一、海面は普通が変わったの結婚しているので、発売\nいいので、長で、女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "base_017",
+          "category": "grammar",
+          "kind": "completion",
+          "prompt": "食べ",
+          "generation": "かれておかと、\n今を利用えれを見を第一にりかってしまったが変わるの結婚しているので、発売すること、長ものでは肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_018",
+          "category": "explanation",
+          "kind": "completion",
+          "prompt": "犬とは、",
+          "generation": "実はさらに● キャラクター\n「夜の弁書かを超り返りかってしまったが変わったの結婚しているので、発売\nいいので、\nで、女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "base_019",
+          "category": "explanation",
+          "kind": "completion",
+          "prompt": "水は、",
+          "generation": "ビルリニロと、アトリネセルを連めてア・イを付と行するのはアカッチが発売すること。\n- ジャイート（フェラー（ナ",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_020",
+          "category": "explanation",
+          "kind": "completion",
+          "prompt": "コンピュータは、",
+          "generation": "セルリニロと、アトリネセップを連めて第一、ユムはフがスケストのカッチが発売する姿が長し、ジャイレッフェラーが集",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_021",
+          "category": "explanation",
+          "kind": "completion",
+          "prompt": "日本は、",
+          "generation": "ビルリニロと、アトリネセルを連めて第一の海面はフが見込うとパソコンが発売すること。\nアソイマッフェラーが集",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_022",
+          "category": "explanation",
+          "kind": "completion",
+          "prompt": "音楽とは、",
+          "generation": "ビルリニロと、アトリネセルを連めて第一の海面はフが見込うが、パソコンが発売すること。\nアソイレッフェラーが集",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_023",
+          "category": "causal",
+          "kind": "completion",
+          "prompt": "雨が降ったので、",
+          "generation": "実はまた若さと、\n「夜の弁書とすることです。\n・海面は普通が変わったの次へ\n発売\nベストタイ党の作肌もってｗ\n「食",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "base_024",
+          "category": "causal",
+          "kind": "completion",
+          "prompt": "たくさん勉強したから、",
+          "generation": "\n\n● と、\n「を利用えれを見を損することが見ってしまったが変わったの結婚しているので、発売\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "base_025",
+          "category": "causal",
+          "kind": "completion",
+          "prompt": "電車が遅れたため、",
+          "generation": "実はさらに● と、\n|AMPDD MOIS(， 00行の多かにあなたが変わえる\nベストタイ党の配肌もってｗ\nCO",
+          "repetition_rate": 0.0256,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_026",
+          "category": "causal",
+          "kind": "completion",
+          "prompt": "お腹がすいたので、",
+          "generation": "実は私もさと、\nそれを利用えれを見ずに第一、(自然に歩行り込うかったんすよう\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_027",
+          "category": "list",
+          "kind": "completion",
+          "prompt": "買い物リスト：\n・りんご\n・",
+          "generation": "セル\n● と、\n|Aq 書\n\n|ホテル(，\n普通行\n||次\n|発売\nベストタイ党\n- ^ 肌もってｗ\n|集",
+          "repetition_rate": 0.0513,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "base_028",
+          "category": "list",
+          "kind": "completion",
+          "prompt": "手順：\n1. 材料を用意する\n2. ",
+          "generation": "5/12 5\n621 書とする 1年 (8-00行するのは面白かったんけて発売\nベストタイックで、配肌もってｗ\n41 ",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_029",
+          "category": "list",
+          "kind": "completion",
+          "prompt": "好きな食べ物：\n- 寿司\n- ",
+          "generation": "教\n- 当と、\n- 夜の弁書とするもなりました(自然の歩行の活の次へ変われ\n- タイ党の作肌もってｗ\n- 集",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9231
+        },
+        {
+          "id": "base_030",
+          "category": "paraphrase",
+          "kind": "completion",
+          "prompt": "「とても大きい」を言い換えると、",
+          "generation": "しかし、さらに● と、\n|2q を触を損することが自然に歩行するのはこの次へは発売すること、 で、 肌を体は、\n 1 ",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_031",
+          "category": "paraphrase",
+          "kind": "completion",
+          "prompt": "うれしいという気持ちは、別の言葉で言うと",
+          "generation": "しれていかと、\nそれを利用えれを見を第一から良いかってしまった行り込うかったのですが、\nレビュー\nいいので、\nあく肌もってｗ\n出会い系サイトが",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_032",
+          "category": "dialogue",
+          "kind": "completion",
+          "prompt": "「おはようございます」\n「",
+          "generation": "かれておかと、\n「ああれを見を第一。\n自然に歩行っていくの結婚しているので、発売\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "base_033",
+          "category": "dialogue",
+          "kind": "completion",
+          "prompt": "「元気ですか？」\n「はい、",
+          "generation": "\n|● と、\n|Aq 書とする 第一原馬面は普通が含えています。\n|当発売\nベストタイ党の配肌も便利な状態が集",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "base_034",
+          "category": "dialogue",
+          "kind": "completion",
+          "prompt": "「ありがとう」\n「",
+          "generation": "何かね。\n\n「夜の感じを見を第一。\n自然に歩行っていく。\nパソコンが発売\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9231
+        },
+        {
+          "id": "base_035",
+          "category": "dialogue",
+          "kind": "completion",
+          "prompt": "「今日はいい天気ですね」\n「",
+          "generation": "何は若さと、\n今を利用えが書かんでやりかってしまったが変わったの結婚しているので、発売\nいいので、長で、女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_036",
+          "category": "story",
+          "kind": "completion",
+          "prompt": "小さな猫が道を歩いていました。すると、",
+          "generation": "実はさらに●当と、\n「夜の弁書とすることです。\n・海面は普通が変わりをお支払い、\n発売\nベストタイ党の配肌もってｗ\n「集",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "base_037",
+          "category": "story",
+          "kind": "completion",
+          "prompt": "少年は宝の地図を見つけました。彼は",
+          "generation": "教れておかと、アッネセルを触を第一、海面は普通が見込えた。\nハイノルシアタイ党の作肌もっており、やはり「タイ",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_038",
+          "category": "number",
+          "kind": "cloze",
+          "prompt": "1, 2, 3, 4,",
+          "expected": "5",
+          "top1_token": "3",
+          "cloze_correct": false
+        },
+        {
+          "id": "base_039",
+          "category": "number",
+          "kind": "cloze",
+          "prompt": "2, 4, 6, 8,",
+          "expected": "10",
+          "top1_token": "3",
+          "cloze_correct": false
+        },
+        {
+          "id": "base_040",
+          "category": "number",
+          "kind": "cloze",
+          "prompt": "一、二、三、",
+          "expected": "四",
+          "top1_token": "「",
+          "cloze_correct": false
+        },
+        {
+          "id": "base_041",
+          "category": "number",
+          "kind": "cloze",
+          "prompt": "月曜日、火曜日、",
+          "expected": "水",
+          "top1_token": "2",
+          "cloze_correct": false
+        },
+        {
+          "id": "base_042",
+          "category": "repetition",
+          "kind": "probe",
+          "prompt": "同じ同じ同じ同じ",
+          "generation": "かれておかと、アッネセルを見をアアミを付と行っていくのカッチが発売すること。\n- ジャイレッフェラーが集",
+          "repetition_rate": 0.0256,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_043",
+          "category": "repetition",
+          "kind": "probe",
+          "prompt": "あああああ",
+          "generation": "かれておじと、\n「ああれを見をうらりかってと行っていくの結婚していると発売\nいいので、\nあく肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "base_044",
+          "category": "unknown",
+          "kind": "probe",
+          "prompt": "宇宙人の名前は",
+          "generation": "何に若くと、\nそれを利用えが書かずに結婚することが見ってしまった行っていくの結婚しているので、発売\nいいので、\n被害肌もってｗ\n出会い系サイトが",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_045",
+          "category": "unknown",
+          "kind": "probe",
+          "prompt": "2050年の天気は",
+          "generation": "何は若価を乗りを利用えが書かずに第一から。\nでも普通が変わったの結婚しているので、発売\nベストタイ党の女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_046",
+          "category": "unknown",
+          "kind": "probe",
+          "prompt": "存在しない国の首都は",
+          "generation": "何は若価と、\n今年から思ったので\n第一年(自然に歩行り込をお支払い、\n発売\nベストタイ党の配肌もってｗ\n「集",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "base_047",
+          "category": "factual",
+          "kind": "probe",
+          "prompt": "日本の首都は",
+          "generation": "何は若くと、アッネセルを触めていらりかってしまったが変わったのカッチが発売していいので、同じこと。肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0,
+          "expected": "東京",
+          "contains_expected": false
+        },
+        {
+          "id": "base_048",
+          "category": "factual",
+          "kind": "probe",
+          "prompt": "1年は何ヶ月ですか。答えは",
+          "generation": "何は若価は小探しあれを触れたらり見ってしまったが変わるかに早くパソコンは発売もいいので、長ものでは肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0,
+          "expected": "12",
+          "contains_expected": false
+        },
+        {
+          "id": "base_049",
+          "category": "factual",
+          "kind": "probe",
+          "prompt": "太陽は",
+          "generation": "教れておかと、\n「夜から思ったのでもなりました(かってしまったが変わったの結婚しているので、発売\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_000",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "少女は静かに",
+          "generation": "何に若くと、\nそれを利用えが書かずに結婚することが見ってしまった行っていくの結婚しているので、発売\nいいので、\n被害肌もってｗ\n出会い系サイトが",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_001",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "老人は静かに",
+          "generation": "何に若くと、\nそれを利用えが書かずに結婚することが見ってしまった行っていくの結婚しているので、発売\nいいので、\n被害肌もってｗ\n出会い系サイトが",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_002",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "電車は静かに",
+          "generation": "かれておかと、\nそれを利用えが書かずに第一、(，知ったが変わるかに早くパソコンが発売\nベストタイ党の配肌もってｗ\n「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_003",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "手紙は静かに",
+          "generation": "かれておかと、\nそれを利用えが書かずに第一、(，知ったが変わるの結婚しているので、発売\nベストタイ党の女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_004",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "花は静かに",
+          "generation": "教れておかと、小生を決れを見を第一の海を付と行う。\nあなたが変われずにいいので、長で、女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_005",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "犬は静かに",
+          "generation": "教れても、当と、アトリネセルを触を第一、海を付と行するのはその前にパソコンが発売すること、長で、女性肌もっており、やはり「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_006",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "先生は静かに",
+          "generation": "何に若くと、\n今を利用えが書かずに結婚することが見ってしまった行っていくの結婚しているので、発売\nいいので、\n被害肌もってｗ\n出会い系サイトが",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_007",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "海は静かに",
+          "generation": "教れておかと、アッネセルを触を第一、海を付と行っていく。\nこのワノルやタイ党の作肌もっており、やはり「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_008",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "町は静かに",
+          "generation": "は大きく若くと、アッネセルを触めて第一、海を付と行っていく。\nこのワノルやタイ党の作肌もっており、やはり「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_009",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "星は静かに",
+          "generation": "は大きく若くと、アッネセルを触めて第一、海を付と行っていく。\nこのワノルやタイ党の作肌もっており、やはり「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_010",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "山は静かに",
+          "generation": "教れておかと、小生を決して書かを第一原馬を付と行う。\nあなたが変われ\nいいので、長で、女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_011",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "川は静かに",
+          "generation": "教れておかと、アッネセルを触を第一の海を付と行っていく。\nこのワノルやタイ党の作肌もっており、やはり「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_012",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "本は静かに",
+          "generation": "は大きく若くと、アトリネセルを触めて第一の海を付と行っていく。\nこのワノルやタイ党の作肌もっており、やはり「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_013",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "音楽は静かに",
+          "generation": "何に若くと、\n「夜の弁書かずに第一、海面は普通が変わったの結婚しているので、発売\nいいので、長で、女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_014",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "季節は静かに",
+          "generation": "教れておかと、\nそれを利用えが書かずに第一、(，知ったが変わったの結婚しているので、発売\nベストタイ党の女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_015",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "夢は静かに",
+          "generation": "教れておかと、アッネセルを触めていらりかってしまったが変わったのカッチが発売していいので、同じこと。肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_016",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "少女を見て、私は",
+          "generation": "何は若くと、\n「夜の感じを見を第一、海面は普通が変わったの結婚しているので、発売\nいいので、長で、女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_017",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "老人を見て、私は",
+          "generation": "何は若さと、\n今を利用えが書かずに第一、(自然とと行り込をお支払い、\n発売\nベストタイ党の配肌もってｗ\n「この",
+          "repetition_rate": 0.0256,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_018",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "電車を見て、私は",
+          "generation": "何は若さと、\n今を利用えが書かずに第一、(自然とと行り込をお支払い、\n発売\nベストタイ党の配肌もってｗ\n「この",
+          "repetition_rate": 0.0256,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_019",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "手紙を見て、私は",
+          "generation": "何は若さと、\n今を利用えが書かずに第一、(自然に歩行り込うかったんけて発売\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_020",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "花を見て、私は",
+          "generation": "何は若くと、\n今を利用えが書かずに第一から。\nでも普通が変わったの結婚しているので、発売\nいいので、\nで、女性肌もってｗ\n出会い系サイトが",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_021",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "犬を見て、私は",
+          "generation": "何は若くと、\n今を利用えが書かを第一から。\nでも普通が変わったの結婚しているので、発売\nいいので、\nで、女性肌もってｗ\n出会い系サイトが",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_022",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "先生を見て、私は",
+          "generation": "何は若くと、\n今を利用えが書かずに第一から。\nでも普通が変わったの結婚しているので、発売\nいいので、\nで、女性肌もってｗ\n出会い系サイトが",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_023",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "海を見て、私は",
+          "generation": "何は若くと、\n一緒に夜の感じを見を第一、海面は普通が変わったの結婚しているので、発売\nいいので、長ものでは肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_024",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "町を見て、私は",
+          "generation": "何は若くと、\n「夜の感じを見を第一、海面は普通が変わったの結婚しているので、発売\nいいので、長ものでは肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_025",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "星を見て、私は",
+          "generation": "何は若くと、\n「夜の感じを見を第一、海面は普通が変わったの結婚しているので、発売\nいいので、長ものでは肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_026",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "山を見て、私は",
+          "generation": "実は\n● と、\n「夜のところを見を第一、(，\n普通が変わったの結婚しているので、\n\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_027",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "川を見て、私は",
+          "generation": "何は若くと、\n「夜の感じを見を第一、海面は普通が変わったの結婚しているので、発売\nいいので、長ものでは肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_028",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "本を見て、私は",
+          "generation": "何は若くと、\n今を利用えが書かずに第一から。\nでも普通が変わったの結婚しているので、発売\nいいので、\nで、女性肌もってｗ\n出会い系サイトが",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_029",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "音楽を見て、私は",
+          "generation": "何は若くと、\n「夜のところを見を第一、海面は普通が変わったの結婚しているので、発売\nいいので、長ものでは肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_030",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "季節を見て、私は",
+          "generation": "何は若さと、\n今を利用えが書かずに第一、(自然とと行り込をお支払い、\n発売\nベストタイ党の配肌もってｗ\n「この",
+          "repetition_rate": 0.0256,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_031",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "夢を見て、私は",
+          "generation": "何は若くと、\n「夜の感じを見を第一、海面は普通が変わったの結婚しているので、発売\nいいので、長で、女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_032",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "少女のことを考えると、",
+          "generation": "実はまた若価と、\nそれを利用えが書かずに第一やりかってしまったが変わったの結婚しているので、発売\nいいので、\nで、女性肌もってｗ\n出会い系サイトが",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_033",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "老人のことを考えると、",
+          "generation": "実はまた若価と、\nそれを利用えが書かずに第一メールを受かってしまった行っていくの結婚しているので、発売\nいいので、\nで、女性肌もってｗ\n出会い系サイトが",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_034",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "電車のことを考えると、",
+          "generation": "実はまた若くと、\nそれを利用えが書かずに第一、\n自然に歩行り込をお支払い、\n発売\nベストタイ党の配肌もってｗ\n「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_035",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "手紙のことを考えると、",
+          "generation": "実は私もさと、\nそれを利用えが書かを第一、(自然に歩行り込えみが変われ\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_036",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "花のことを考えると、",
+          "generation": "実はまた若価と、\nそれを利用えが書とすることです。\nそれでも見ってしまった行の脱毛の結婚しているので、発売\nベストタイ党の女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_037",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "犬のことを考えると、",
+          "generation": "実はまた若価と、\nそれを利用えが書とすることです。\nそれでも見ってしまった行っていくの結婚しているので、発売\nいいので、\nで、女性肌もってｗ\n出会い系サイトが",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_038",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "先生のことを考えると、",
+          "generation": "実はまた若価と、アッネセルを触を第一、海面は普通が変わったのカッチが発売することが、長で、女性肌もってしまう状態が非常に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_039",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "海のことを考えると、",
+          "generation": "実はまた若価と、アッネセルを触を第一、海面は普通が変わったのカッチが発売することが、長で、女性肌もってしまう状態が非常に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_040",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "町のことを考えると、",
+          "generation": "実はまた若価と、\nそれを利用えが書とすることです。\nそれでも見ってしまった行の脱毛の結婚しているので、\n\nいいので、\nで、\n肌もってｗ\n出会い系サイトが",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_041",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "星のことを考えると、",
+          "generation": "実はまた若価と、\nそれを利用えが書とすることです。\nそれでも見ってしまった行り込をお支払い、\nレビュー\nベストタイックで、\n肌もってｗ\n「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_042",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "山のことを考えると、",
+          "generation": "実はまた若価と、アッネセルを触を第一、海面は普通が変わったのカッチが発売することが、長で、女性肌もってしまう状態が非常に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_043",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "川のことを考えると、",
+          "generation": "実はまた若価と、\nそれを利用えが書とすることです。\nそれでも見ってしまった行の脱毛の結婚しているので、発売\nベストタイ党の女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_044",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "本のことを考えると、",
+          "generation": "実はまた若価と、\nそれを利用えが書とすることです。\nそれでも見ってしまった行の脱毛の結婚しているので、発売\nベストタイ党の女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_045",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "音楽のことを考えると、",
+          "generation": "実はまた若価と、\nそれを利用えが書とすることです。\nそれでも見ってしまった行り込をお支払い、\nレビュー\nベストタイックで、\n肌もってｗ\n「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_046",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "季節のことを考えると、",
+          "generation": "実はまた若くと、\nそれを利用えが書かずに第一、(自然に歩行り込えみが変われ\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_047",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "夢のことを考えると、",
+          "generation": "実はまた若価と、アッネセルを触を第一、ユムはフが変わったのカッチが発売することが、DVDで、女性肌もっており、やはり「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_048",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "少女がやってきて、",
+          "generation": "実はまた若さと、\n「夜の弁書かを第一。\n自然とと行り込うかった。\n発売\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_049",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "老人がやってきて、",
+          "generation": "実はまた若価と、\n「夜の弁書かずに第一原馬を知ったが変わるの結婚しているので、発売\nベストタイ党の作肌もってｗ\n「食",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_050",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "電車がやってきて、",
+          "generation": "実は私もさと、\nそれを利用えが書かずに第一、(自然に歩行り込ってしまらくパソコンが発売\nベストタイ党の配肌もってｗ\n「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_051",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "手紙がやってきて、",
+          "generation": "実は私もさと、\nそれを利用えが書かずに第一、(自然に歩行り込ってしまらくパソコンが発売\nベストタイ党の配肌もってｗ\n「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_052",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "花がやってきて、",
+          "generation": "実はまた若価と、\n今年から思ったのでもなりましたね。\nでも普通が変わったの結婚しているので、発売\nいいので、\nで、\n肌もってｗ\n出会い系サイトが",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_053",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "犬がやってきて、",
+          "generation": "実はまた若価と、\n今年から思ったのでもなりましたね。\nでも普通が変わったの結婚しているので、発売\nいいので、\nで、\n肌もってｗ\n出会い系サイトが",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_054",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "先生がやってきて、",
+          "generation": "実はまた若さと、\n今を利用えが書かずに第一、(自然に歩行り込うかったんけて発売\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_055",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "海がやってきて、",
+          "generation": "実はまた若価と、アッネセルを触を第一、海面は普通が変わったのカッチが発売すること。\nアラ肌もってｗ\n「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_056",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "町がやってきて、",
+          "generation": "実はまた若価と、\n「夜の弁書とすることです。\n・海面は普通が変わったの結婚しているので、発売\nベストタイ党の配肌もってｗ\n「食",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_057",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "星がやってきて、",
+          "generation": "実はまた若さと、\n「夜の弁書かを第一。\n自然とと行り込うかった。\n発売\nベストタイ党の作肌もってｗ\n「食",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_058",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "山がやってきて、",
+          "generation": "実はまた若価と、\n今年から思ったのでもなりましたね。\nでも普通が変わったの結婚しているので、発売\nいいので、\nで、\n肌もってｗ\n出会い系サイトが",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_059",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "川がやってきて、",
+          "generation": "実はまた若価と、\n「夜の弁書とすることです。\n・海面は普通が変わったの結婚しているので、発売\nベストタイ党の配肌もってｗ\n「食",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_060",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "本がやってきて、",
+          "generation": "実は後もさと、アッネセが書かずにアアミムはフが変わったのカッチが発売すること。\nアラ肌もってｗ\n「チ",
+          "repetition_rate": 0.0256,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_061",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "音楽がやってきて、",
+          "generation": "実はまた若さと、\n「夜の弁書かを第一。\n自然とと行の脱毛の結婚しているので、発売\nベストタイ党の配肌もってｗ\n「食",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_062",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "季節がやってきて、",
+          "generation": "実は私もさと、\nそれを利用えが書かずに第一、(自然に歩行り込ってしまらくパソコンが発売\nベストタイ党の配肌もってｗ\n「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_063",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "夢がやってきて、",
+          "generation": "実はまた若さと、\n「夜の弁書かを第一。\n自然とと行り込うかった。\n発売\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_064",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その少女は、",
+          "generation": "実はさらに● と、\n「「セップを触を超することが見ってしまったが変わったの結婚しているので、\nこのこと、長で、女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_065",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その老人は、",
+          "generation": "しかし、さらに●当と、\n「夜の弁書かを第一、海面は普通が変わったの結婚しているので、発売\nベストタイ党の作肌もってｗ\n「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_066",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その電車は、",
+          "generation": "教れておかと、\nそれを利用えが書かずに結婚することが見ってしまった行っていくの結婚しているので、発売\nいいので、\n被害肌もってｗ\n出会い系サイトが",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_067",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その手紙は、",
+          "generation": "実はさらに● と、\n「夜のところを見を第一、(， と行り込うとパソコンが発売\nベストタイ党の作肌もってｗ\n「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_068",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その花は、",
+          "generation": "しかし、さらに●当と、\n「「あれを見を第一人。\nでもと行うのは面白いんが発売\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_069",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その犬は、",
+          "generation": "しかし、さらに●当と、\n「「あれを見を第一、(自然に歩行するのは面白いんが発売\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_070",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その先生は、",
+          "generation": "しかし、さらに●当と、\n「「あれを見を第一、(自然に歩行するのは面白いんが発売\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_071",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その海は、",
+          "generation": "しかし、さらに●当と、アトリネセルを触めて第一、ユムはフが変わったのカッチが発売することが、カントを肌もっており、GCO",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_072",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その町は、",
+          "generation": "しかし、さらに●当と、\n「「あれを見を第一、(自然とと行するのはその次へ\n発売\nベストタイ党の作肌もってｗ\n「この",
+          "repetition_rate": 0.0513,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_073",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その星は、",
+          "generation": "しかし、さらに●当と、\n「「あれを見を第一、(自然とと行するのはその次へ\n発売\nベストタイ党の作肌もってｗ\n「この",
+          "repetition_rate": 0.0513,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_074",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その山は、",
+          "generation": "しかし、さらに● と、\n「「あれを見を第一、(，知ったが変わったの早くパソコンが発売\nベストタイ党の女性肌もってｗ\n「この",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_075",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その川は、",
+          "generation": "しかし、さらに●当と、\n「「あれを見を第一、(自然に歩行するのは面白いんが発売\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_076",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その本は、",
+          "generation": "しかし、さらに● と、\n「「あれを見を第一、(，知ったが変わったの早くパソコンが発売\nベストタイ党の女性肌もってｗ\n「この",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_077",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その音楽は、",
+          "generation": "ビルリニロと、アトリネセルを連めて第一、ユムはフがスケストのカッチが発売される。\nタイ党の配肌もっており、GCO",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_078",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その季節は、",
+          "generation": "しかし、さらに●当と、\n「夜の弁書かを第一、海面は普通が変わったの結婚しているので、発売\nベストタイ党の作肌もってｗ\n「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_079",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その夢は、",
+          "generation": "しかし、さらに● キャラクターに探しました。\n【書とすることです。\n・サポートを付歩行するのはその前にパソコンが発売\nベストタイ党の配肌も便利な状態が集",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_080",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "少女について、",
+          "generation": "実はさらに● と、\n「夜のところを見を第一、(，知ったが変わったの早くパソコンが発売\nベストタイ党の女性肌もってｗ\n「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_081",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "老人について、",
+          "generation": "何は若さと、\n「夜の弁書かを超することが見ってしまった行っていくの結婚しているので、発売\nいいので、\n被害肌もってｗ\n「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_082",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "電車について、",
+          "generation": " リニロと、アトリネセップを連めていらりる。\nフが変わったのカッチが発売\nベストタイ党の作肌を体を加したので",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_083",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "手紙について、",
+          "generation": "何に若さと、\n「夜の弁書かを超らりかってしまったが変わったの結婚しているので、発売\nいいので、長で、女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_084",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "花について、",
+          "generation": "しかし、さらに● と、\n「「あれを見を第一、(，知ったが変わったの早くパソコンが発売\nベストタイ党の作肌もってｗ\n「この",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_085",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "犬について、",
+          "generation": "しかし、さらに● キャラクター\n「AMPDD MOIS(POSHLIWARETAN  JPL)肌線（SGCO",
+          "repetition_rate": 0.0256,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_086",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "先生について、",
+          "generation": "実は\n● と、\n「夜のところを見を第一、(，\n普通が変わったの結婚しているので、\n\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_087",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "海について、",
+          "generation": "ビルリニロと、アトリネセルを連めて第一、ユムはフがスケストのカッチが発売される。\nタイ党の配肌もっており、GCO",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_088",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "町について、",
+          "generation": "しかし、さらに● キャラクター\n同方\n【書とする 第一原馬面は普通行の活の混しい。\n\nベストタイ党の配肌もっており、\n「集",
+          "repetition_rate": 0.0256,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_089",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "星について、",
+          "generation": " リニ  ア ネセ 書とする ア サポート  フが含込をお支払い、 発売\nベスト イン 配肌 体 G 1 ",
+          "repetition_rate": 0.0513,
+          "distinct_2": 0.9231
+        },
+        {
+          "id": "tmpl_090",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "山について、",
+          "generation": "教れておかと、\n「「あれを見を第一原馬を知ったが変わったの早く一回発売\nベストタイ党の作肌もってｗ\n「集",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_091",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "川について、",
+          "generation": "教れておかと、\n「「あれを見を第一、(かってと行っていくの早くパソコンが発売\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_092",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "本について、",
+          "generation": "ビルリニロと、アトリネセルを連めて第一、ユムはフがスケストのカッチが発売される。\nタイ党の配肌もっており、GCO",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_093",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "音楽について、",
+          "generation": "ビルリニロと、アトリネセルを連めて第一、ユムはフがスケストのカッチが発売される。\nタイ党の配肌もっており、GCO",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_094",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "季節について、",
+          "generation": "教れておかと、\n「夜の弁書かを超することが見ってしまった行の脱毛の結婚しているので、発売\nベストタイ党の配肌もってｗ\n「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_095",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "夢について、",
+          "generation": "しかし、\n●当と、\n「「あれを見を第一、(自然に歩行するのは面白いんが発売\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_096",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに少女が見えた。",
+          "generation": "\nまた若価と、\n今年から思ったので\n第一年(自然に歩行り込をお支払い、\n発売\nベストタイ党の配肌もってｗ\n「集",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_097",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに老人が見えた。",
+          "generation": "\nまた若価を乗りを利用えが書かずに第一原馬を付歩行っていくの結婚しているので、発売すること、長で、女性肌もってｗ\n「食",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_098",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに電車が見えた。",
+          "generation": "\nさらに● 当 同方\n 書とする 第一原馬 付歩行の活の次へ 発売\nベスト 長 配肌置する 順 1 ",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_099",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに手紙が見えた。",
+          "generation": "\nまた若価を乗りを利用えが書かを超り返りかってしまった行っていくの結婚しているので、発売すること、長で、女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_100",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに花が見えた。",
+          "generation": "\nまも当と、\n「夜の弁書かを第一後でも見ってしまったが変わったの結婚しているので、発売\nベストタイ党の作肌もってｗ\n「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_101",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに犬が見えた。",
+          "generation": "\nまた若価と、\n「夜の弁書かを第一原馬を付歩行するのは面白いんすよう揃ってくるということ。肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_102",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに先生が見えた。",
+          "generation": "\nまた若価と、\n今年から思ったので\n第一年(自然に歩行り込をお支払い、\n発売\nベストタイ党の配肌もってｗ\n「集",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_103",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに海が見えた。",
+          "generation": "\nまた若価と、\n「夜の弁書とすることです。\n・海面は普通が変わったの結婚しているので、\n\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_104",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに町が見えた。",
+          "generation": "\n|● と、\n||q 書とする 第一原馬面は普通行の活の次へ\n|この方、長し、\n肌もってｗ\n|この",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "tmpl_105",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに星が見えた。",
+          "generation": "\n|● と、\n||q 書とする 第一原馬面は普通行の活の次へ\n|この方、長し、\n肌もってｗ\n|この",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "tmpl_106",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに山が見えた。",
+          "generation": "\n|● と、\n||q 書とする 第一原馬面は普通行の活の次へ\n|この方、長し、\n肌もってｗ\n|この",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "tmpl_107",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに川が見えた。",
+          "generation": "\n|● と、\n||q 書とする 第一原馬面は普通行の活の次へ\n|この方、長し、\n肌もってｗ\n|この",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "tmpl_108",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに本が見えた。",
+          "generation": "\nまた若価と、\n「夜の弁書かを第一原馬を付歩行するのは面白いんすよう揃ってくるということ。肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_109",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに音楽が見えた。",
+          "generation": "\n|● と、\n||q 書とする 第一原馬面は普通行の活の次へ\n|この方、長し、\n肌もってｗ\n|この",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.8974
+        },
+        {
+          "id": "tmpl_110",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに季節が見えた。",
+          "generation": "\n後は当と、\n「夜の弁書かを第一原馬を付歩行するのは面白いんすようだか着くこと。肌もってｗ\n「食",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_111",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "遠くに夢が見えた。",
+          "generation": "\nまいかと、\n「夜のところを触を第一、海面に歩行り込えはパソコンが発売\nベストタイ党の作肌もってｗ\n「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_112",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "少女と一緒に",
+          "generation": "何かね。\n\n「夜のところを見を第一。\n自然に歩行り込うみが変われ\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_113",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "老人と一緒に",
+          "generation": "何は若くと、\nそれを利用えますけど\nこの第一メール(自然の普通が変わったの結婚しているので、\n\nベストタイ党の女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_114",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "電車と一緒に",
+          "generation": "かれておかと、\n「夜のところを見を超えてりかってしまったが変わったの結婚しているので、発売\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_115",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "手紙と一緒に",
+          "generation": "かれておかと、\n「夜のところを見を第一、(，前と行り込うと。\n発売\nベストタイ党の作肌をってｗ\n「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_116",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "花と一緒に",
+          "generation": "何かね。\n\n「夜のところを見を第一。\n自然に歩行り込うみが変われ\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_117",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "犬と一緒に",
+          "generation": "何に若くと、\n一緒に覚えれを見を第一やりかってしまったが変わったの結婚しているので、\n何にはタイ党の女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "tmpl_118",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "先生と一緒に",
+          "generation": "何かね。\n\n今年から思ったので\n第一、(自然は普通が変わりをおみが変われ\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_119",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "海と一緒に",
+          "generation": "何に若くと、\nそれを利用えれを見を第一やりかってしまったが変わったの結婚しているので、\n\nいいので、\nで、\n肌もってｗ\n出会い系サイトが",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_120",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "町と一緒に",
+          "generation": "何は若くと、\n「夜の弁書とすることです。\n・海面は普通が変わったの結婚しているので、\nこの気分に完了肌もってｗ\n「集",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_121",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "星と一緒に",
+          "generation": "かれておかと、\n「ああれを見を第一のりかってと行っていくの早くパソコンが発売\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_122",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "山と一緒に",
+          "generation": "何かね。\n\n「夜のところを見を第一原馬を知ったが変わったの次へ。\nこの気着は完作肌もってｗ\n「この",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_123",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "川と一緒に",
+          "generation": "何かね。\n\n「夜のところを見を第一原馬を知ったが変わるの結婚しているので、発売\nベストタイ党の作肌もってｗ\n「この",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_124",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "本と一緒に",
+          "generation": "何は若くと、\n「夜の弁書とすることです。\n・海面は普通が変わったの結婚しているので、\nこの気分に完了肌もってｗ\n「集",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_125",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "音楽と一緒に",
+          "generation": "何かね。\n\n「夜のところを見を第一。\n自然に歩行り込うみが変われ\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "tmpl_126",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "季節と一緒に",
+          "generation": "かれておかと、\n「夜のところを見を第一のりかってしまったが変わったの結婚しているので、発売\nいいので、\nで、女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "tmpl_127",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "夢と一緒に",
+          "generation": "何かね。\n\n「夜のところを見を第一。\n自然に歩行り込うみが変われ\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9487
+        },
+        {
+          "id": "part_000",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "空",
+          "expected": "が",
+          "top1_token": "気",
+          "cloze_correct": false
+        },
+        {
+          "id": "part_001",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "道",
+          "expected": "を",
+          "top1_token": "の",
+          "cloze_correct": false
+        },
+        {
+          "id": "part_002",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "家",
+          "expected": "に",
+          "top1_token": "が",
+          "cloze_correct": false
+        },
+        {
+          "id": "part_003",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "君",
+          "expected": "は",
+          "top1_token": "。",
+          "cloze_correct": false
+        },
+        {
+          "id": "part_004",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "雨",
+          "expected": "が",
+          "top1_token": "に",
+          "cloze_correct": false
+        },
+        {
+          "id": "part_005",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "窓",
+          "expected": "を",
+          "top1_token": "の",
+          "cloze_correct": false
+        },
+        {
+          "id": "part_006",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "時間",
+          "expected": "が",
+          "top1_token": "\n",
+          "cloze_correct": false
+        },
+        {
+          "id": "part_007",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "音",
+          "expected": "が",
+          "top1_token": "の",
+          "cloze_correct": false
+        },
+        {
+          "id": "part_008",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "光",
+          "expected": "が",
+          "top1_token": "を",
+          "cloze_correct": false
+        },
+        {
+          "id": "part_009",
+          "category": "grammar_particle",
+          "kind": "cloze",
+          "prompt": "風",
+          "expected": "が",
+          "top1_token": "に",
+          "cloze_correct": false
+        },
+        {
+          "id": "num_000",
+          "category": "number",
+          "kind": "cloze",
+          "prompt": "5, 10, 15,",
+          "expected": "20",
+          "top1_token": "3",
+          "cloze_correct": false
+        },
+        {
+          "id": "num_001",
+          "category": "number",
+          "kind": "cloze",
+          "prompt": "10, 20, 30,",
+          "expected": "40",
+          "top1_token": "3",
+          "cloze_correct": false
+        },
+        {
+          "id": "num_002",
+          "category": "number",
+          "kind": "cloze",
+          "prompt": "3, 6, 9,",
+          "expected": "12",
+          "top1_token": "3",
+          "cloze_correct": false
+        },
+        {
+          "id": "num_003",
+          "category": "number",
+          "kind": "cloze",
+          "prompt": "あ、い、う、",
+          "expected": "え",
+          "top1_token": "\n",
+          "cloze_correct": false
+        },
+        {
+          "id": "num_004",
+          "category": "number",
+          "kind": "cloze",
+          "prompt": "春、夏、",
+          "expected": "秋",
+          "top1_token": "「",
+          "cloze_correct": false
+        },
+        {
+          "id": "num_005",
+          "category": "number",
+          "kind": "cloze",
+          "prompt": "1, 3, 5, 7,",
+          "expected": "9",
+          "top1_token": "3",
+          "cloze_correct": false
+        },
+        {
+          "id": "start_000",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "今日の会議では、",
+          "generation": "セルリニロと、アトリネセルを連めていらりる。\n普通が変わったのカッチが発売\nベストタイ党の作肌もっており、やはり「ナ",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "start_001",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "研究の結果、",
+          "generation": "          書       00       発売\n     肌     1 ",
+          "repetition_rate": 0.7436,
+          "distinct_2": 0.2821
+        },
+        {
+          "id": "start_002",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "彼女は微笑んで、",
+          "generation": "何は若くと、アッネセが書かずに第一、海面は普通が変わったのカッチが発売すること。\nアラ肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "start_003",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "問題は、",
+          "generation": "実はまた若価と、\n「夜の弁書かを第一原馬を知った行り込うと大きく変われずにいいので、長で、女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "start_004",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "結論として、",
+          "generation": "教れておかと、\nそれを利用えが書とすることです。\nそれでも見ってしまった行り込ってしまみが変われ\nいいので、\nで、\n肌もってｗ\n出会い系サイトが",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "start_005",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "一方で、",
+          "generation": "実はリニロと、アトリネセルを連をア・イを付と行するのはアカッチが発売すること。\n- ジャイン（フェラー（ナ",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "start_006",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "たとえば、",
+          "generation": "しかし、さらに● と、\n「「あれを見を第一、(かってと行り込うとんすよう\nいいので、\nで、女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "start_007",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "最後に、",
+          "generation": "実はさらに● キャラクター\n「夜の弁書かを超することが見ってしまったが変わったの結婚しているので、発売\nいいので、\nで、女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "start_008",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "その理由は、",
+          "generation": "ビルリニロと、アトリネセルを連めて第一、ユムはフがスケストのカッチが発売する姿が長し、女性肌もっており、GCO",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "start_009",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "実際に、",
+          "generation": "実は\n● と、\n「夜のところを見を損することが見ってしまった行するのはその前にパソコンが発売\nベストタイ党の配肌もってｗ\n「この",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "start_010",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "子どものころ、",
+          "generation": "実はまた若価と、\n「夜の弁書とすることです。\n・海面は普通が変わったの結婚しているので、発売\nベストタイ党の配肌もってｗ\n「食",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "start_011",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "夜が明けると、",
+          "generation": "実はまた若価と、\nそれを利用えが書かずに第一、馬を知った行するのは面白いんけて発売\nベストタイックで、女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "start_012",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "しばらくして、",
+          "generation": "実はさらに● と、\n「「あれを見を第一、(，知ったが変わったの早くパソコンが発売\nベストタイ党の作肌もってｗ\n「この",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "start_013",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "驚いたことに、",
+          "generation": "実はさらに● と、\n「夜のところを見を超り返りかってしまったが変わったの結婚しているので、発売\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "start_014",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "それでも、",
+          "generation": "実はさらに● キャラクターに探しました。\n【書かを超り返りかってしまったが変わったの結婚しているので、発売\nベストタイ党の女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "start_015",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "天気予報によると、",
+          "generation": "実はさらに●当と、\n「夜の弁書かずに第一原馬を付と行するのはその前にパソコンが発売\nベストタイ党の配肌もっており、やはり「認",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "start_016",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "空を見上げると、",
+          "generation": "実はさらに● と、\n「夜のところを見を超り返りかってしまったが変わったの結婚しているので、発売\nいいので、\nで、女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "start_017",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "扉を開けると、",
+          "generation": "実はさらに● と、\n「夜のところを見を超り返りかってしまったが変わったの結婚しているので、発売\nいいので、\nで、女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "start_018",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "彼の話によれば、",
+          "generation": "何に若くと、\n今年から思ったのでもなりましたね。\nでも普通が変わったの結婚しているので、発売\nいいので、\nで、女性肌もってｗ\n出会い系サイトが",
+          "repetition_rate": 0.0,
+          "distinct_2": 1.0
+        },
+        {
+          "id": "start_019",
+          "category": "completion",
+          "kind": "completion",
+          "prompt": "長い旅の末に、",
+          "generation": "\n|● と、\n||q 書かずに\n||自然に歩行の脱毛の次へ\n|\nベストタイ党の配肌もってｗ\n|この",
+          "repetition_rate": 0.0513,
+          "distinct_2": 0.8718
+        },
+        {
+          "id": "dlg_000",
+          "category": "dialogue",
+          "kind": "completion",
+          "prompt": "「すみません」\n「",
+          "generation": "かれておかと、\n「ああれを見を第一、(自然に歩行り込うかった。\n発売\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "dlg_001",
+          "category": "dialogue",
+          "kind": "completion",
+          "prompt": "「はじめまして」\n「",
+          "generation": "かれておかと、\n「ああれを見を第一、。\nでも普通が変わったの結婚していると発売\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "dlg_002",
+          "category": "dialogue",
+          "kind": "completion",
+          "prompt": "「お願いします」\n「",
+          "generation": "「「若さと、\n「「あれを見を第一。\n自然とと行っていくの結婚しているので、\n\nいいので、\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.1026,
+          "distinct_2": 0.9231
+        },
+        {
+          "id": "dlg_003",
+          "category": "dialogue",
+          "kind": "completion",
+          "prompt": "「いただきます」\n「",
+          "generation": "実は\n● と、\n「夜のところを見を第一、(，\n普通が変わったの結婚しているので、\n\nベストタイ党の女性肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.9744
+        },
+        {
+          "id": "dlg_004",
+          "category": "dialogue",
+          "kind": "completion",
+          "prompt": "「さようなら」\n「",
+          "generation": "何かね。\n\n「夜の感じを見を第一。\n自然に歩行り込うかった。\n発売\nいい。\nで、\n肌もってｗ\n「本当に",
+          "repetition_rate": 0.0256,
+          "distinct_2": 0.8974
+        }
+      ]
+    }
+  }
+}

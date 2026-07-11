@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>確率較正 — jp_llm_lab — 教育用日本語LLMラボ</title>
+<script src="assets/plotly.min.js"></script>
+<style>
+  :root { --ink:#1a1a2e; --sub:#5a5a72; --line:#e3e3ee; --accent:#3b4fd8; --bg:#fafafd; }
+  * { box-sizing:border-box; }
+  body { font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic UI",sans-serif; color:var(--ink);
+         margin:0; background:var(--bg); line-height:1.75; }
+  header { background:linear-gradient(135deg,#1a1a2e,#3b4fd8); color:#fff; padding:26px 24px 22px; }
+  header h1 { margin:0; font-size:1.3rem; }
+  header p { margin:4px 0 0; opacity:.8; font-size:.85rem; }
+  nav { position:sticky; top:0; background:#fff; border-bottom:1px solid var(--line);
+        padding:8px 16px; z-index:10; overflow-x:auto; white-space:nowrap; }
+  nav a { color:var(--accent); text-decoration:none; margin-right:14px; font-size:.85rem; padding:3px 0; }
+  nav a.active { font-weight:700; border-bottom:2px solid var(--accent); }
+  main { max-width:1040px; margin:0 auto; padding:24px; }
+  h2 { font-size:1.3rem; border-bottom:2px solid var(--accent); padding-bottom:8px; }
+  h3 { font-size:1.03rem; margin:24px 0 8px; }
+  .block { background:#fff; border:1px solid var(--line); border-radius:10px; padding:20px 24px; margin:18px 0; }
+  .figwrap { overflow-x:auto; }
+  dl.interp { background:#f5f6fc; border-left:4px solid var(--accent); border-radius:6px;
+              padding:12px 16px; margin:10px 0 0; font-size:.86rem; }
+  dl.interp dt { font-weight:700; color:var(--accent); margin-top:7px; }
+  dl.interp dt:first-child { margin-top:0; }
+  dl.interp dd { margin:2px 0 0; }
+  table.kv { border-collapse:collapse; width:100%; font-size:.85rem; }
+  table.kv td, table.kv th { border:1px solid var(--line); padding:6px 10px; text-align:left; vertical-align:top; }
+  table.kv th { background:#f2f3fa; }
+  pre { background:#f5f6fc; padding:12px; border-radius:6px; overflow-x:auto; font-size:.82rem; }
+  code { font-family:"Cascadia Code",Consolas,monospace; font-size:.85em; }
+  .gen-text { font-family:"Cascadia Code",Consolas,monospace; font-size:.8rem; white-space:pre-wrap; word-break:break-all; }
+  footer { text-align:center; color:var(--sub); font-size:.78rem; padding:26px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>jp_llm_lab — 教育用日本語LLMラボ</h1>
+  <p>全数値は実測値。各図に What / Why / How / Observation / Interpretation / Caveat / Next。</p>
+</header>
+<nav>
+  <a href="index.html" >概要</a><a href="corpus.html" >コーパス</a><a href="tokenizer.html" >トークナイザ</a><a href="architecture.html" >アーキテクチャ</a><a href="training.html" >学習過程</a><a href="attention.html" >Attention</a><a href="ablation.html" >アブレーション</a><a href="scaling.html" >スケーリング</a><a href="calibration.html" class="active">確率較正</a><a href="generation.html" >生成</a><a href="memorization.html" >暗記</a><a href="sft.html" >SFT</a><a href="evaluation.html" >評価</a><a href="conclusions.html" >結論と限界</a>
+</nav>
+<main>
+  <h2>確率較正</h2>
+  
+  <div class="block">
+    
+    <div class="figwrap"><div>                            <div id="a0f923df-8eb2-4a9f-b0eb-24c9cce5bdea" class="plotly-graph-div" style="height:420px; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("a0f923df-8eb2-4a9f-b0eb-24c9cce5bdea")) {                    Plotly.newPlot(                        "a0f923df-8eb2-4a9f-b0eb-24c9cce5bdea",                        [{"line":{"color":"#999","dash":"dash"},"mode":"lines","name":"\u5b8c\u5168\u8f03\u6b63","x":[0,1],"y":[0,1],"type":"scatter"},{"line":{"color":"#1f77b4"},"mode":"lines+markers","name":"\u5b9f\u6e2c","x":[0.040761083364486694,0.09956687688827515,0.16534459590911865,0.231659397482872,0.29843196272850037,0.36541086435317993,0.4321461021900177,0.49964383244514465,0.5663284063339233,0.6327566504478455,0.7003737688064575,0.7666428089141846,0.8348167538642883,0.9019379615783691,0.9790433645248413],"y":[0.04457142949104309,0.10158334672451019,0.1693824827671051,0.2331598848104477,0.29551753401756287,0.3739449679851532,0.441593736410141,0.5009983777999878,0.5770998597145081,0.6333412528038025,0.6937260031700134,0.7628336548805237,0.8385846018791199,0.8929027318954468,0.9747942090034485],"type":"scatter"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"#C8D4E3"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""},"bgcolor":"white","radialaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"yaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"zaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"baxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"bgcolor":"white","caxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2}}},"margin":{"l":60,"r":30,"t":60,"b":50},"legend":{"orientation":"h","yanchor":"bottom","y":1.02,"xanchor":"right","x":1},"font":{"size":12},"title":{"text":"Reliability diagram\uff08Model L, test split\uff09"},"xaxis":{"title":{"text":"\u5e73\u5747\u78ba\u4fe1\u5ea6"}},"yaxis":{"title":{"text":"\u5b9f\u7cbe\u5ea6"}},"height":420},                        {"displaylogo": false, "responsive": true}                    )                };            </script>        </div></div>
+    <table class="kv"><tr><th>fitted T</th><td>0.984（calibrationで最適化, testで評価）</td></tr><tr><th>raw NLL / scaled NLL</th><td>3.287 / 3.287</td></tr><tr><th>raw ECE (width)</th><td>0.0042</td></tr><tr><th>accuracy raw/scaled</th><td>0.3851 / 0.3851（不変）</td></tr></table>
+    
+    <dl class="interp">
+      <dt>What</dt><dd>確信度 vs 実精度の較正曲線と温度スケーリング。</dd>
+      <dt>Why</dt><dd>モデルの確率が信頼できるか。</dd>
+      <dt>How to read</dt><dd>対角線に近いほど良く較正。</dd>
+      <dt>Observation</dt><dd>T≈0.98（ほぼ1）で既に良較正、ECE 0.004。温度で accuracy 不変。</dd>
+      <dt>Interpretation</dt><dd>cross-entropy 学習は次トークン較正を良くする。温度は鋭さのみ調整。</dd>
+      <dt>Caveat</dt><dd>次トークン較正 ≠ 事実的正しさ。よく較正でも「もっともらしい誤り」を出す。</dd>
+      <dt>Next</dt><dd>hallucination 率は別問題。calibration breakdown（頻度別等）は拡張余地。</dd>
+    </dl>
+    
+  </div>
+  
+</main>
+<footer>jp_llm_lab — generated from saved experiment artifacts. Not a competitive LLM; a lab to make LLM internals observable.</footer>
+</body>
+</html>
