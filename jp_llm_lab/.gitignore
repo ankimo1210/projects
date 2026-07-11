@@ -7,6 +7,8 @@ reports/html/assets/
 
 # Downloaded corpus texts (manifests ARE committed)
 data/samples/*.txt
+data/snapshots/
+data/tokenized/
 
 # Python
 __pycache__/

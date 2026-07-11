@@ -1,0 +1,40 @@
+# Milestone 2: Model M (~10M params), Classical GPT, BPE 8K, pilot 10M tokens, <1 epoch.
+run_name: m2_model_m_classical
+data:
+  source: snapshot
+  tokenizer_version: bpe8k_v1
+  train_snapshot: pilot          # 10.5M tokens
+  val_snapshot: validation       # disjoint documents — real generalization
+  max_val_tokens: 500000
+model:
+  preset: classical
+  d_model: 320
+  n_heads: 8
+  n_layers: 6
+  context_len: 512
+  dropout: 0.0
+  attn_impl: sdpa
+train:
+  seed: 42
+  steps: 400                      # ~0.93 epoch of pilot — keeps memorization low
+  batch_size: 24
+  grad_accum: 2                   # effective 24*512*2 = 24576 tokens/step
+  context_len: 512
+  lr: 6.0e-4
+  warmup_frac: 0.03
+  min_lr_frac: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+  dtype: bf16
+  log_interval: 10
+  eval_interval: 50
+  eval_batches: 20
+  ratio_interval: 25
+  checkpoint_fracs: [0.0, 0.01, 0.05, 0.10, 0.25, 0.50, 0.75, 1.0]
+  fixed_prompts:
+    - "日本の首都は"
+    - "私は昨日、友人と"
+    - "科学とは、"
+    - "むかしむかし、あるところに"
+    - "この問題を解決するためには"
+  max_new_tokens: 100

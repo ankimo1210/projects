@@ -22,6 +22,7 @@ from torch import nn
 
 from .blocks import TransformerBlock
 from .config import ModelConfig, param_group_of
+from .norms import make_norm
 
 
 class ClassicalGPT(nn.Module):
@@ -29,10 +30,12 @@ class ClassicalGPT(nn.Module):
         super().__init__()
         self.cfg = cfg
         self.tok_emb = nn.Embedding(cfg.vocab_size, cfg.d_model)
-        self.pos_emb = nn.Embedding(cfg.context_len, cfg.d_model)
+        # learned positions get an embedding table; RoPE encodes positions by
+        # rotating q/k inside attention and has no positional parameters.
+        self.pos_emb = nn.Embedding(cfg.context_len, cfg.d_model) if cfg.pos == "learned" else None
         self.drop = nn.Dropout(cfg.dropout)
         self.blocks = nn.ModuleList([TransformerBlock(cfg, i) for i in range(cfg.n_layers)])
-        self.ln_f = nn.LayerNorm(cfg.d_model)
+        self.ln_f = make_norm(cfg.norm, cfg.d_model)
         self.lm_head = nn.Linear(cfg.d_model, cfg.vocab_size, bias=False)
         if cfg.tie_weights:
             # Weight tying: the output projection reuses the token embedding
@@ -47,7 +50,9 @@ class ClassicalGPT(nn.Module):
             # variance stays O(1) regardless of depth (2 writes per block).
             scaled = cfg.init_std / math.sqrt(2 * cfg.n_layers)
             for name, p in self.named_parameters():
-                if name.endswith("attn.proj.weight") or name.endswith("mlp.proj.weight"):
+                # the layers that WRITE into the residual stream: attention
+                # output proj, GELU-MLP proj, SwiGLU down-projection w2
+                if name.endswith(("attn.proj.weight", "mlp.proj.weight", "mlp.w2.weight")):
                     nn.init.normal_(p, mean=0.0, std=scaled)
 
     def _init_weights(self, module: nn.Module) -> None:
@@ -67,15 +72,20 @@ class ClassicalGPT(nn.Module):
     ) -> tuple[torch.Tensor, torch.Tensor | None]:
         _B, T = idx.shape
         assert T <= self.cfg.context_len, f"sequence {T} > context_len {self.cfg.context_len}"
-        pos = torch.arange(T, device=idx.device)
 
         tok = self.tok_emb(idx)  # [B,T,D]
-        posv = self.pos_emb(pos)[None, :, :]  # [1,T,D] broadcast over batch
-        x = self.drop(tok + posv)
+        if self.pos_emb is not None:
+            pos = torch.arange(T, device=idx.device)
+            posv = self.pos_emb(pos)[None, :, :]  # [1,T,D] broadcast over batch
+            x = self.drop(tok + posv)
+        else:  # RoPE: positions enter inside attention, not here
+            posv = None
+            x = self.drop(tok)
         if trace is not None:
             trace["input_ids"] = idx.detach()
             trace["token_embeddings"] = tok.detach()
-            trace["position_embeddings"] = posv.detach()
+            if posv is not None:
+                trace["position_embeddings"] = posv.detach()
             trace["embeddings"] = x.detach()
 
         for block in self.blocks:

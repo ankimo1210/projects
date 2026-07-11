@@ -33,6 +33,7 @@ class CausalSelfAttention(nn.Module):
         dropout: float = 0.0,
         attn_impl: str = "explicit",
         bias: bool = True,
+        pos: str = "learned",
     ):
         super().__init__()
         assert d_model % n_heads == 0
@@ -40,6 +41,7 @@ class CausalSelfAttention(nn.Module):
         self.d_head = d_model // n_heads
         self.dropout = dropout
         self.attn_impl = attn_impl
+        self.use_rope = pos == "rope"
         # One fused linear producing Q,K,V (3·D outputs) — cheaper than three
         # separate matmuls and standard practice; split happens in forward.
         self.qkv = nn.Linear(d_model, 3 * d_model, bias=bias)
@@ -48,6 +50,12 @@ class CausalSelfAttention(nn.Module):
         # Cached boolean lower-triangular mask [1,1,Tmax,Tmax]; True = allowed.
         mask = torch.tril(torch.ones(context_len, context_len, dtype=torch.bool))
         self.register_buffer("causal_mask", mask.view(1, 1, context_len, context_len), persistent=False)
+        if self.use_rope:
+            from .rope import rope_angles
+
+            cos, sin = rope_angles(context_len, self.d_head)
+            self.register_buffer("rope_cos", cos, persistent=False)
+            self.register_buffer("rope_sin", sin, persistent=False)
 
     def set_attn_impl(self, impl: str) -> None:
         assert impl in ("explicit", "sdpa")
@@ -63,6 +71,11 @@ class CausalSelfAttention(nn.Module):
         q = q.view(B, T, self.n_heads, self.d_head).transpose(1, 2)
         k = k.view(B, T, self.n_heads, self.d_head).transpose(1, 2)
         v = v.view(B, T, self.n_heads, self.d_head).transpose(1, 2)
+        if self.use_rope:
+            from .rope import apply_rope
+
+            q = apply_rope(q, self.rope_cos, self.rope_sin)
+            k = apply_rope(k, self.rope_cos, self.rope_sin)
 
         use_explicit = self.attn_impl == "explicit" or trace is not None
         if use_explicit:
