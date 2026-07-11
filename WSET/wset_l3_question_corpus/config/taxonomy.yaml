@@ -1,0 +1,51 @@
+version: 1
+question_formats:
+  - multiple_choice
+  - short_written_answer
+  - structured_written_answer
+  - comparison
+  - causal_explanation
+  - process_description
+  - definition
+  - identification
+  - map_question
+  - tasting_theory
+  - tasting_practical
+  - service
+  - storage
+  - food_pairing
+  - mixed
+  - unknown
+cognitive_skills:
+  - recall
+  - recognition
+  - description
+  - explanation
+  - comparison
+  - causal_reasoning
+  - application
+  - evaluation
+  - synthesis
+content_areas:
+  - vine
+  - vineyard_environment
+  - grape_growing
+  - winemaking
+  - maturation
+  - packaging
+  - storage
+  - service
+  - tasting
+  - still_wines
+  - sparkling_wines
+  - fortified_wines
+  - laws_and_regulations
+  - business_and_price
+  - quality_assessment
+style_quality_price: [style, quality, price, style_and_quality, style_quality_price, none]
+geography:
+  countries: [France, Italy, Spain, Portugal, Germany, Austria, Hungary, Greece, United States, Canada, Chile, Argentina, South Africa, Australia, New Zealand]
+  levels: [country, region, subregion, appellation, site]
+grape_varieties:
+  international: [Cabernet Sauvignon, Merlot, Pinot Noir, Syrah, Chardonnay, Sauvignon Blanc, Riesling]
+  regional: [Nebbiolo, Sangiovese, Tempranillo, Garnacha, Touriga Nacional, Chenin Blanc, Grüner Veltliner, Assyrtiko]

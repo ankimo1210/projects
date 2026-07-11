@@ -1,0 +1,85 @@
+{
+  "generated_at": "2026-07-11T06:02:30.870710+00:00",
+  "summary": {
+    "registered_sources": 20,
+    "fetched_sources": 11,
+    "candidate_questions": 5646,
+    "machine_screened": 5563,
+    "fact_check_required": 12,
+    "rejected": 71,
+    "human_reviewed": 0,
+    "japanese_candidates": 82,
+    "english_candidates": 5564,
+    "answered_candidates": 5524,
+    "public_safe_text_leaks": 0,
+    "original_patterns": 20,
+    "duplicate_member_rows": 1493
+  },
+  "status_counts": {
+    "machine_screened": 5563,
+    "rejected": 71,
+    "fact_check_required": 12
+  },
+  "quality_counts": {
+    "usable_after_review": 5208,
+    "weak": 114,
+    "strong": 312,
+    "reject": 12
+  },
+  "source_counts": {
+    "acewset_samples": 6,
+    "ankiweb_wset_l3_new": 4075,
+    "portnwine_l3_quiz": 136,
+    "sommo_mock_test": 452,
+    "wine_planetary_ja": 82,
+    "winerevision_public": 861,
+    "wset_official_qualification": 1,
+    "wset_official_sample_paper": 5,
+    "wset_official_specification": 24,
+    "wset_official_study_blog_part3": 4
+  },
+  "audit_checks": [
+    {
+      "evidence": "0 missing required values",
+      "severity": "pass",
+      "confidence": "high",
+      "check": "Required lineage fields"
+    },
+    {
+      "evidence": "5646/5646 unique",
+      "severity": "pass",
+      "confidence": "high",
+      "check": "Stable ID uniqueness"
+    },
+    {
+      "evidence": "0 leaking rows",
+      "severity": "pass",
+      "confidence": "high",
+      "check": "Public-safe text leakage"
+    },
+    {
+      "evidence": "12 character-spacing-damaged candidates",
+      "severity": "high",
+      "confidence": "high",
+      "check": "PDF extraction damage"
+    },
+    {
+      "evidence": "71 candidates rejected by screening",
+      "severity": "medium",
+      "confidence": "medium",
+      "check": "False positives / fragments"
+    },
+    {
+      "evidence": "82 safely ingested Japanese candidates",
+      "severity": "pass",
+      "confidence": "high",
+      "check": "Japanese coverage"
+    },
+    {
+      "evidence": "0/5646 human-reviewed",
+      "severity": "high",
+      "confidence": "high",
+      "check": "Human review coverage"
+    }
+  ]
+}

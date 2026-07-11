@@ -1,0 +1,501 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "WSET L3コーパス：データ品質監査",
+    "description": "明示承認した公開ソースの収集・抽出・公開安全性を監査",
+    "generatedAt": "2026-07-11T06:02:30.870710+00:00",
+    "cards": [
+      {
+        "id": "sources-card",
+        "description": "手動審査済みソース台帳",
+        "dataset": "summary",
+        "sourceId": "summary-sql",
+        "metrics": [
+          {
+            "label": "登録ソース",
+            "field": "registered_sources",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "fetched-card",
+        "description": "明示承認され取得に成功した公開ソース",
+        "dataset": "summary",
+        "sourceId": "summary-sql",
+        "metrics": [
+          {
+            "label": "取得成功",
+            "field": "fetched_sources",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "candidates-card",
+        "description": "人手審査前の質問らしいテキスト範囲",
+        "dataset": "summary",
+        "sourceId": "summary-sql",
+        "metrics": [
+          {
+            "label": "候補",
+            "field": "candidate_questions",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "screened-card",
+        "description": "保守的な機械スクリーニング通過数",
+        "dataset": "summary",
+        "sourceId": "summary-sql",
+        "metrics": [
+          {
+            "label": "機械通過",
+            "field": "machine_screened",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "leaks-card",
+        "description": "公開安全版に残った第三者本文フィールド",
+        "dataset": "summary",
+        "sourceId": "summary-sql",
+        "metrics": [
+          {
+            "label": "本文漏洩",
+            "field": "public_safe_text_leaks",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "patterns-card",
+        "description": "独自に作成した抽象問題パターン",
+        "dataset": "summary",
+        "sourceId": "summary-sql",
+        "metrics": [
+          {
+            "label": "独自パターン",
+            "field": "original_patterns",
+            "format": "number"
+          }
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "source-candidate-chart",
+        "title": "ソース別の質問候補数",
+        "subtitle": "全5646候補。未審査の抽出単位を集計",
+        "showDescription": true,
+        "intent": "comparison",
+        "question": "どの公開ソースが候補数を構成しているか",
+        "rationale": "10カテゴリの絶対数比較なので棒グラフを使用",
+        "type": "bar",
+        "dataset": "source_counts",
+        "sourceId": "source-counts-sql",
+        "encodings": {
+          "x": {
+            "field": "source_label",
+            "type": "nominal",
+            "label": "ソース"
+          },
+          "y": {
+            "field": "candidate_count",
+            "type": "quantitative",
+            "aggregate": "none",
+            "format": "number",
+            "label": "候補数"
+          },
+          "tooltip": [
+            {
+              "field": "candidate_count",
+              "type": "quantitative",
+              "label": "候補数"
+            },
+            {
+              "field": "share_of_candidates",
+              "type": "quantitative",
+              "format": "percent",
+              "label": "構成比"
+            },
+            {
+              "field": "fetched",
+              "type": "nominal",
+              "label": "取得成功"
+            }
+          ]
+        },
+        "layout": "full",
+        "maxRows": 10
+      }
+    ],
+    "tables": [
+      {
+        "id": "audit-table",
+        "title": "主要データ品質チェック",
+        "subtitle": "現在の収集時点。severityはアプリ投入への影響度",
+        "showDescription": true,
+        "dataset": "audit_checks",
+        "defaultSort": {
+          "field": "check",
+          "direction": "asc"
+        },
+        "density": "spacious",
+        "sourceId": "audit-sql",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "check",
+            "label": "チェック",
+            "type": "text"
+          },
+          {
+            "field": "evidence",
+            "label": "証拠",
+            "type": "text"
+          },
+          {
+            "field": "severity",
+            "label": "重要度",
+            "type": "text"
+          },
+          {
+            "field": "confidence",
+            "label": "確信度",
+            "type": "text"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "summary-sql",
+        "label": "Corpus quality summary query",
+        "path": "scripts/quality_summary.sql",
+        "query": {
+          "description": "DuckDB summary of registry, fetch, candidate, review, pattern, and public-safe outputs",
+          "language": "sql",
+          "executed_at": "2026-07-11T06:02:30.870710+00:00",
+          "filters": [
+            "All 5646 candidates from explicitly approved public URLs"
+          ],
+          "metric_definitions": [
+            "Candidate: one question-like text span at one source position",
+            "Machine-screened: passed conservative heading, fragment, and PDF-spacing checks"
+          ]
+        }
+      },
+      {
+        "id": "source-counts-sql",
+        "label": "Official source candidate-count query",
+        "path": "scripts/source_candidate_counts.sql",
+        "query": {
+          "description": "DuckDB source-level counts for the first approved fetch cohort",
+          "language": "sql",
+          "executed_at": "2026-07-11T06:02:30.870710+00:00",
+          "filters": [
+            "Registry reviewed on 2026-07-11"
+          ]
+        }
+      },
+      {
+        "id": "audit-sql",
+        "label": "Stable data-quality checks",
+        "path": "scripts/audit_checks.sql",
+        "query": {
+          "description": "DuckDB completeness, uniqueness, extraction, coverage, and leakage checks",
+          "language": "sql",
+          "executed_at": "2026-07-11T06:02:30.870710+00:00",
+          "metric_definitions": [
+            "Leak: any non-empty raw_text, normalized_text, or answer_text field"
+          ]
+        }
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# WSET L3コーパス：データ品質監査",
+        "layout": "full"
+      },
+      {
+        "id": "technical-summary",
+        "type": "markdown",
+        "sourceId": "summary-sql",
+        "layout": "full",
+        "body": "## 技術サマリー\n\n**公開研究データは5646件まで拡大したが、人手審査前である。** 11ソースの取得に成功し、英語5564件、日本語82件、解答付き5524件を構造化した。5563件が機械スクリーニングを通過、12件は要確認、71件は見出し・断片として除外候補。public-safe出力の本文漏洩は0件だった。"
+      },
+      {
+        "id": "metrics",
+        "type": "metric-strip",
+        "cardIds": [
+          "sources-card",
+          "fetched-card",
+          "candidates-card",
+          "screened-card",
+          "leaks-card",
+          "patterns-card"
+        ],
+        "layout": "full"
+      },
+      {
+        "id": "finding-source-concentration",
+        "type": "markdown",
+        "sourceId": "source-counts-sql",
+        "layout": "full",
+        "body": "## 候補の72%はWSET Level 3 -- NEW shared deckに集中\n\nWSET Level 3 -- NEW shared deck由来が4075/5646件で、コーパスの形式・分野分布を強く支配している。下図は候補数の所在を示すもので、品質や再利用許諾の比較ではない。"
+      },
+      {
+        "id": "source-chart",
+        "type": "chart",
+        "chartId": "source-candidate-chart",
+        "layout": "full"
+      },
+      {
+        "id": "scope",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## 対象・粒度・指標定義\n\n対象期間は2026年7月11日の取得スナップショット。粒度は `source_id + source_url + source_position` ごとの質問らしいテキスト範囲で、複数行設問の分断や学習到達目標を含みうる。`machine_screened` は保守的な見出し・断片・PDF文字間隔チェックを通った状態で、人による正誤・著作権・自然な日本語の承認を意味しない。"
+      },
+      {
+        "id": "method",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## 再現可能な監査方法\n\n明示承認した公開URLだけをrobots.txt確認、ドメイン毎6回/分、同時接続1で取得し、HTTP状態・取得時刻・SHA-256を記録した。HTML埋め込みJSON、公開フロントエンドが利用する匿名JSON、HTML本文、PDFを別々に抽出。決定的ID、必須項目、列挙値、信頼度範囲、exact/near重複、public-safe本文除去を自動テストした。詳細計算は `notebooks/03_quality_review.ipynb` に保存している。"
+      },
+      {
+        "id": "audit-heading",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "audit-sql",
+        "body": "## 系譜と公開安全性は合格、内容品質は未完成\n\n必須系譜とID一意性には欠損がなく、public-safeの本文漏洩は0件だった。一方、要確認12件と人手審査0件はアプリ投入を止める課題である。"
+      },
+      {
+        "id": "audit",
+        "type": "table",
+        "tableId": "audit-table",
+        "layout": "full"
+      },
+      {
+        "id": "limitations",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## 限界・不確実性・頑健性\n\n件数は大きく増えたが、AnkiWebの英語フラッシュカードに集中し、ソース横断の代表標本ではない。品質スコアはレビュー補助であり客観値ではない。フラッシュカードには旧制度・事実誤り・WSET範囲外が含まれる可能性がある。取得成功は再配布許諾を意味せず、第三者本文はprivate exportだけに保持する。有料・登録・会員限定素材にはアクセスしていない。"
+      },
+      {
+        "id": "next-steps",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "summary-sql",
+        "body": "## 次の推奨作業\n\n1. 5563件の機械通過候補を優先度順に人手審査する。\n2. 要確認12件のPDF・HTML分断を再構成する。\n3. 日本語82件について、設問と解答・採点基準を関連付ける。\n4. ソース別の事実誤り・旧制度・翻訳品質を検証する。\n5. public-safe漏洩0件を継続的なblocking testにする。"
+      },
+      {
+        "id": "questions",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## 次に決めるべき問い\n\n- 日本語問題の最初の対象を、栽培・醸造・主要産地のどこに置くか。\n- 第三者ソースはパターン分析だけに使い、アプリ本文を100%独自作成に固定するか。\n- 人手レビューの合格条件を、事実・WSET範囲・日本語・採点可能性・権利の5軸でどう定義するか。"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-07-11T06:02:30.870710+00:00",
+    "status": "ready",
+    "datasets": {
+      "summary": [
+        {
+          "registered_sources": 20,
+          "fetched_sources": 11,
+          "candidate_questions": 5646,
+          "machine_screened": 5563,
+          "fact_check_required": 12,
+          "rejected": 71,
+          "human_reviewed": 0,
+          "japanese_candidates": 82,
+          "english_candidates": 5564,
+          "answered_candidates": 5524,
+          "public_safe_text_leaks": 0,
+          "original_patterns": 20,
+          "duplicate_member_rows": 1493
+        }
+      ],
+      "source_counts": [
+        {
+          "source_id": "ankiweb_wset_l3_new",
+          "source_label": "WSET Level 3 -- NEW shared deck",
+          "candidate_count": 4075,
+          "share_of_candidates": 0.7217499114417286,
+          "fetched": true,
+          "reviewed_count": 0
+        },
+        {
+          "source_id": "winerevision_public",
+          "source_label": "WineRevision WSET Level 3 revision questions and flashcards",
+          "candidate_count": 861,
+          "share_of_candidates": 0.15249734325185973,
+          "fetched": true,
+          "reviewed_count": 0
+        },
+        {
+          "source_id": "sommo_mock_test",
+          "source_label": "Sommo",
+          "candidate_count": 452,
+          "share_of_candidates": 0.08005667729365923,
+          "fetched": true,
+          "reviewed_count": 0
+        },
+        {
+          "source_id": "portnwine_l3_quiz",
+          "source_label": "PortnWine",
+          "candidate_count": 136,
+          "share_of_candidates": 0.024087849805171802,
+          "fetched": true,
+          "reviewed_count": 0
+        },
+        {
+          "source_id": "wine_planetary_ja",
+          "source_label": "Wine Planetary (JA)",
+          "candidate_count": 82,
+          "share_of_candidates": 0.014523556500177117,
+          "fetched": true,
+          "reviewed_count": 0
+        },
+        {
+          "source_id": "wset_official_specification",
+          "source_label": "WSET Specification",
+          "candidate_count": 24,
+          "share_of_candidates": 0.004250797024442083,
+          "fetched": true,
+          "reviewed_count": 0
+        },
+        {
+          "source_id": "acewset_samples",
+          "source_label": "AceWSET samples",
+          "candidate_count": 6,
+          "share_of_candidates": 0.0010626992561105207,
+          "fetched": true,
+          "reviewed_count": 0
+        },
+        {
+          "source_id": "wset_official_sample_paper",
+          "source_label": "WSET Sample Paper",
+          "candidate_count": 5,
+          "share_of_candidates": 0.000885582713425434,
+          "fetched": true,
+          "reviewed_count": 0
+        },
+        {
+          "source_id": "wset_official_study_blog_part3",
+          "source_label": "WSET Study Blog",
+          "candidate_count": 4,
+          "share_of_candidates": 0.0007084661707403471,
+          "fetched": true,
+          "reviewed_count": 0
+        },
+        {
+          "source_id": "wset_official_qualification",
+          "source_label": "WSET Qualification",
+          "candidate_count": 1,
+          "share_of_candidates": 0.00017711654268508679,
+          "fetched": true,
+          "reviewed_count": 0
+        }
+      ],
+      "audit_checks": [
+        {
+          "evidence": "0 missing required values",
+          "severity": "pass",
+          "confidence": "high",
+          "check": "Required lineage fields"
+        },
+        {
+          "evidence": "5646/5646 unique",
+          "severity": "pass",
+          "confidence": "high",
+          "check": "Stable ID uniqueness"
+        },
+        {
+          "evidence": "0 leaking rows",
+          "severity": "pass",
+          "confidence": "high",
+          "check": "Public-safe text leakage"
+        },
+        {
+          "evidence": "12 character-spacing-damaged candidates",
+          "severity": "high",
+          "confidence": "high",
+          "check": "PDF extraction damage"
+        },
+        {
+          "evidence": "71 candidates rejected by screening",
+          "severity": "medium",
+          "confidence": "medium",
+          "check": "False positives / fragments"
+        },
+        {
+          "evidence": "82 safely ingested Japanese candidates",
+          "severity": "pass",
+          "confidence": "high",
+          "check": "Japanese coverage"
+        },
+        {
+          "evidence": "0/5646 human-reviewed",
+          "severity": "high",
+          "confidence": "high",
+          "check": "Human review coverage"
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "summary-sql",
+      "label": "Corpus quality summary query",
+      "path": "scripts/quality_summary.sql",
+      "query": {
+        "description": "DuckDB summary of registry, fetch, candidate, review, pattern, and public-safe outputs",
+        "language": "sql",
+        "executed_at": "2026-07-11T06:02:30.870710+00:00",
+        "filters": [
+          "All 5646 candidates from explicitly approved public URLs"
+        ],
+        "metric_definitions": [
+          "Candidate: one question-like text span at one source position",
+          "Machine-screened: passed conservative heading, fragment, and PDF-spacing checks"
+        ]
+      }
+    },
+    {
+      "id": "source-counts-sql",
+      "label": "Official source candidate-count query",
+      "path": "scripts/source_candidate_counts.sql",
+      "query": {
+        "description": "DuckDB source-level counts for the first approved fetch cohort",
+        "language": "sql",
+        "executed_at": "2026-07-11T06:02:30.870710+00:00",
+        "filters": [
+          "Registry reviewed on 2026-07-11"
+        ]
+      }
+    },
+    {
+      "id": "audit-sql",
+      "label": "Stable data-quality checks",
+      "path": "scripts/audit_checks.sql",
+      "query": {
+        "description": "DuckDB completeness, uniqueness, extraction, coverage, and leakage checks",
+        "language": "sql",
+        "executed_at": "2026-07-11T06:02:30.870710+00:00",
+        "metric_definitions": [
+          "Leak: any non-empty raw_text, normalized_text, or answer_text field"
+        ]
+      }
+    }
+  ]
+}
