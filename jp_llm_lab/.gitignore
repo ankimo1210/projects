@@ -1,0 +1,15 @@
+# Run artifacts — reproducible from configs; never committed (spec rule 9)
+checkpoints/
+experiments/runs/
+reports/env/
+reports/figures/
+reports/html/assets/
+
+# Downloaded corpus texts (manifests ARE committed)
+data/samples/*.txt
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.pytest_cache/
