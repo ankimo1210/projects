@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TS Rosetta — 学習ダッシュボード</title>
+<style>
+  :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+  body { margin: 0; padding: 2rem 1rem 4rem; background: light-dark(#f5f5f5, #1a1a1a); color: light-dark(#222, #eee); display: flex; justify-content: center; }
+  .wrap { width: min(960px, 96vw); }
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.15rem; margin-top: 2.2rem; border-bottom: 2px solid light-dark(#ddd,#444); padding-bottom: .3rem; }
+  p.lead { opacity: .8; }
+  /* hierarchy map */
+  .layer { display: flex; gap: .6rem; align-items: stretch; margin: .5rem 0; }
+  .layer .tag { flex: 0 0 9.5rem; font-size: .75rem; opacity: .65; display: flex; align-items: center; }
+  .box { flex: 1; border: 1px solid light-dark(#ccc,#555); border-radius: 8px; padding: .55rem .8rem; background: light-dark(#fff,#242424); text-align: center; }
+  .box small { display: block; opacity: .6; font-size: .7rem; margin-top: .15rem; }
+  .box.dim { opacity: .55; border-style: dashed; }
+  a.box { color: inherit; text-decoration: none; }
+  a.box:hover { border-color: light-dark(#222,#eee); }
+  .arrow { text-align: center; opacity: .5; font-size: .8rem; margin: -0.1rem 0 -0.1rem 10.1rem; }
+  table { border-collapse: collapse; width: 100%; font-size: .85rem; font-variant-numeric: tabular-nums; }
+  th, td { border: 1px solid light-dark(#ddd,#444); padding: .4rem .6rem; text-align: left; }
+  th { background: light-dark(#eee,#2e2e2e); }
+  td.num { text-align: right; }
+  .ok { color: light-dark(#0a7a2f,#5fd98a); } .ng { color: light-dark(#b00020,#ff6b6b); }
+  code { background: light-dark(#eee,#333); border-radius: 4px; padding: .05rem .35rem; font-size: .85em; }
+  .note { font-size: .78rem; opacity: .7; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>TS Rosetta — 同じアプリを、違う技術で</h1>
+<p class="lead">同一のタスク管理アプリ（＋ベンチ）を各階層の技術で実装し、構文・できること・性能・階層関係を比較する学習ラボ。</p>
+
+<h2>階層マップ（表の技術は「同じ土俵」ではない）</h2>
+<div class="layer">
+  <span class="tag">言語</span>
+  <div class="box"><strong>TypeScript</strong><small>開発時に書く言語（型あり）</small></div>
+</div>
+<div class="arrow">↓ tsc / bundler が変換（js-vs-ts デモ参照）</div>
+<div class="layer">
+  <span class="tag">言語（変換先）</span>
+  <div class="box"><strong>JavaScript</strong><small>ブラウザ / Node.js が実行できる唯一の言語</small></div>
+</div>
+<div class="arrow">↓ どこで実行する？</div>
+<div class="layer">
+  <span class="tag">実行環境</span>
+  <div class="box"><strong>ブラウザ</strong><small>UI を描画する側</small></div>
+  <div class="box"><strong>Node.js</strong><small>サーバー / ビルド / テストを動かす側</small></div>
+</div>
+<div class="layer">
+  <span class="tag">UI ライブラリ</span>
+  <a class="box" href="http://localhost:5173"><strong>React</strong><small>:5173 · JSX + hooks</small></a>
+  <a class="box" href="http://localhost:5174"><strong>Vue</strong><small>:5174 · SFC + ref/computed</small></a>
+  <a class="box" href="http://localhost:4200"><strong>Angular</strong><small>:4200 · DI + signals + テンプレ</small></a>
+  <div class="box"><strong>—</strong><small>Node 側は UI なし</small></div>
+</div>
+<div class="layer">
+  <span class="tag">フレームワーク</span>
+  <a class="box" href="http://localhost:3000"><strong>Next.js</strong><small>:3000 · React の上に SSR/API を追加（両側で動く）</small></a>
+  <a class="box" href="http://localhost:4000/tasks"><strong>Express</strong><small>:4000 · 最小・手続き的</small></a>
+  <a class="box" href="http://localhost:4001/tasks"><strong>NestJS</strong><small>:4001 · DI・デコレータ・構造化</small></a>
+</div>
+<div class="layer">
+  <span class="tag">プラットフォーム</span>
+  <div class="box dim"><strong>Electron</strong><small>デスクトップ = ブラウザ + Node を同梱（docs/platforms.md）</small></div>
+  <div class="box dim"><strong>React Native</strong><small>モバイル = React 構文でネイティブ部品を描画（docs/platforms.md）</small></div>
+</div>
+
+<h2>起動方法（リポジトリ root で）</h2>
+<table>
+<tr><th>実装</th><th>コマンド</th><th>URL</th></tr>
+<tr><td>React</td><td><code>pnpm dev:react</code></td><td>http://localhost:5173 （<a href="http://localhost:5173/#board">#board</a>）</td></tr>
+<tr><td>Vue</td><td><code>pnpm dev:vue</code></td><td>http://localhost:5174 （<a href="http://localhost:5174/#board">#board</a>）</td></tr>
+<tr><td>Angular</td><td><code>pnpm dev:angular</code></td><td>http://localhost:4200 （<a href="http://localhost:4200/#board">#board</a>）</td></tr>
+<tr><td>Solid（盤面のみ）</td><td><code>pnpm dev:solid</code></td><td>http://localhost:5175</td></tr>
+<tr><td>Next.js</td><td><code>pnpm dev:next</code></td><td>http://localhost:3000</td></tr>
+<tr><td>Express</td><td><code>pnpm dev:express</code></td><td>http://localhost:4000/tasks</td></tr>
+<tr><td>NestJS</td><td><code>pnpm dev:nest</code></td><td>http://localhost:4001/tasks</td></tr>
+<tr><td>このダッシュボード</td><td><code>pnpm dev:dashboard</code></td><td>http://localhost:8080</td></tr>
+</table>
+
+<h2>高頻度ライブ盤面 — リアクティビティ比較（2026-07-10 実測）</h2>
+<p class="lead">各アプリの <code>#board</code>：同一ティックストリーム（毎秒 N 回、銘柄の10%をランダムウォーク更新）を5通りの配線で描画。</p>
+<table>
+<tr><th>work/s（1,000銘柄 @60tps・touched ≈ 5,900/s）</th><th class="num">実測</th><th>意味</th></tr>
+<tr><td>React <strong>naive</strong>（useState 配列を毎tick差替）</td><td class="num"><strong>62,161</strong></td><td>= 行数×tick数。全行が毎tick再レンダー＝<strong>触られた行の10.6倍</strong></td></tr>
+<tr><td>React <strong>optimized</strong>（外部ストア+行単位購読）</td><td class="num">5,872</td><td rowspan="4">4つの異なる機構が「変わった行だけ」に収束（work ≈ touched）</td></tr>
+<tr><td>Vue（reactive オブジェクト in-place 変更）</td><td class="num">5,887</td></tr>
+<tr><td>Angular（signal/行 + OnPush + zone外実行）</td><td class="num">5,887</td></tr>
+<tr><td>Solid（store パス更新 → セル単位 effect）</td><td class="num">5,887</td></tr>
+</table>
+<p class="note">一方 <strong>fps はどの負荷でもフレームワーク間でほぼ差がつかない</strong>（CPU 4x絞りで全員23-34、5,000行で全員19-29）— 崩壊時の律速は巨大テーブルのブラウザ layout（共通コスト）。教訓: ①リアクティビティ戦略の差は fps でなく <strong>CPU 予算の消費</strong>に出る ②fps を守る本命は<strong>仮想化</strong> ③Solid のバンドルは 19.3kB と React の約1/10。詳細と罠→対策コードは <code>docs/reactivity.md</code>。再計測は <code>node tools/verify-board.mjs</code>。</p>
+
+<h2>実測比較（2026-07-09 · WSL2 / Chrome headless 149 · prod ビルド）</h2>
+<table>
+<tr><th>UI 実装</th><th class="num">アプリ LOC</th><th class="num">バンドル (raw)</th><th class="num">gzip</th><th class="num">10k render</th><th class="num">10k update-all</th></tr>
+<tr><td>React 19 + Vite</td><td class="num">193</td><td class="num">197.4 kB</td><td class="num">62.3 kB</td><td class="num">336.1 ms</td><td class="num">125.8 ms</td></tr>
+<tr><td>Vue 3 + Vite</td><td class="num">182</td><td class="num">68.5 kB</td><td class="num">27.2 kB</td><td class="num">232.9 ms</td><td class="num">181.2 ms</td></tr>
+<tr><td>Angular 20</td><td class="num">232</td><td class="num">152.8 kB</td><td class="num">47.0 kB</td><td class="num">224.3 ms</td><td class="num">155.5 ms</td></tr>
+</table>
+<p class="note">bench は 3 回計測の中央値。1,000 件では 3 者とも約 30ms（paint 律速）で差が出ない。10,000 件で初めて個性が出る：render は React が最遅、update-all は React が最速（差し替え vs 差分の設計差）。数値は環境依存 — <code>node tools/verify-bench.mjs</code> で再計測可能。</p>
+
+<table style="margin-top:1rem">
+<tr><th>サーバー実装</th><th class="num">LOC</th><th>構造</th></tr>
+<tr><td>Express 5</td><td class="num">67</td><td>1 ファイル・手続き的ルーティング</td></tr>
+<tr><td>NestJS 11</td><td class="num">137</td><td>module / controller / service / DTO ＋ DI・validation</td></tr>
+<tr><td>Next.js 15（参考: UI+API 込み）</td><td class="num">203</td><td>Server Component + Route Handler（First Load JS 102 kB）</td></tr>
+</table>
+
+<h2>できる / できない マトリクス</h2>
+<table>
+<tr><th></th><th>React/Vue/Angular<br>(SPA)</th><th>Next.js</th><th>Express/Nest</th><th>Electron</th><th>React Native</th></tr>
+<tr><td>DOM (div 等) を描画</td><td class="ok">✔</td><td class="ok">✔</td><td class="ng">✘</td><td class="ok">✔</td><td class="ng">✘ ネイティブ部品</td></tr>
+<tr><td>初期 HTML をサーバー生成 (SSR)</td><td class="ng">✘ 空 div を配る</td><td class="ok">✔ curl で確認可</td><td>△ テンプレなら可</td><td class="ng">—</td><td class="ng">—</td></tr>
+<tr><td>REST API を提供</td><td class="ng">✘</td><td class="ok">✔ Route Handler</td><td class="ok">✔</td><td>△ 内蔵可</td><td class="ng">✘</td></tr>
+<tr><td>ローカルファイル操作</td><td class="ng">✘ サンドボックス</td><td>△ サーバー側のみ</td><td class="ok">✔</td><td class="ok">✔ 売りの機能</td><td>△ 専用 API</td></tr>
+<tr><td>オフライン配布 / インストール</td><td class="ng">✘</td><td class="ng">✘</td><td class="ng">—</td><td class="ok">✔ .exe/.app</td><td class="ok">✔ ストア配布</td></tr>
+</table>
+
+<h2>コードの読み比べポイント</h2>
+<table>
+<tr><th>観点</th><th>React <code>apps/react/src/App.tsx</code></th><th>Vue <code>apps/vue/src/App.vue</code></th><th>Angular <code>apps/angular/src/app/</code></th></tr>
+<tr><td>状態</td><td><code>useState</code>（再レンダーで全再計算）</td><td><code>ref</code>（値の書き換えを追跡）</td><td><code>signal</code>（サービスに集約 + DI）</td></tr>
+<tr><td>派生値</td><td>毎レンダー再計算（素の式）</td><td><code>computed</code>（自動キャッシュ）</td><td><code>computed</code>（signal 連動）</td></tr>
+<tr><td>ビュー</td><td>JSX（JS の中に HTML）</td><td>SFC template（HTML に指令 <code>v-for</code>）</td><td>クラス + テンプレ（<code>@for</code> 構文）</td></tr>
+<tr><td>強制コミット</td><td><code>flushSync</code></td><td><code>await nextTick()</code></td><td>zone.js が自動検知</td></tr>
+</table>
+
+<p class="note" style="margin-top:2rem">同一ドメインロジックは <code>packages/core</code>（全実装が import）。TS↔JS の違いは <code>pnpm --filter @rosetta/core demo:ts / demo:js</code>。詳細は <code>docs/comparison.md</code>・<code>docs/js-vs-ts.md</code>・<code>docs/platforms.md</code>。</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,181 @@
+/* Shared minimal styles so all three UI apps look identical.
+   The point of the lab is comparing code, not CSS. */
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+}
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  background: light-dark(#f5f5f5, #1a1a1a);
+  color: light-dark(#222, #eee);
+}
+.app {
+  width: min(560px, 92vw);
+  margin: 2rem 0;
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: light-dark(#fff, #242424);
+  box-shadow: 0 2px 12px rgb(0 0 0 / 0.12);
+}
+.app h1 {
+  font-size: 1.4rem;
+  margin: 0 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.badge {
+  font-size: 0.7rem;
+  font-weight: normal;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: light-dark(#e8e8e8, #3a3a3a);
+}
+.row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  flex-wrap: wrap;
+}
+.row input[type='text'],
+.row input.url {
+  flex: 1;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid light-dark(#ccc, #555);
+  border-radius: 6px;
+  background: inherit;
+  color: inherit;
+  font: inherit;
+}
+button {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid light-dark(#ccc, #555);
+  border-radius: 6px;
+  background: light-dark(#fafafa, #333);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+button:hover {
+  background: light-dark(#eee, #444);
+}
+.filters button.active {
+  background: light-dark(#222, #eee);
+  color: light-dark(#fff, #222);
+}
+.stats {
+  margin-left: auto;
+  font-size: 0.8rem;
+  opacity: 0.75;
+}
+.tasks {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  max-height: 45vh;
+  overflow-y: auto;
+}
+.tasks li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.2rem;
+  border-bottom: 1px solid light-dark(#eee, #333);
+}
+.tasks li label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.tasks li .done {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+.tasks li button {
+  padding: 0.1rem 0.5rem;
+  font-size: 0.8rem;
+}
+.bench {
+  border-top: 2px dashed light-dark(#ddd, #444);
+  padding-top: 0.8rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.bench p {
+  width: 100%;
+  margin: 0.4rem 0 0;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+.error {
+  color: light-dark(#b00020, #ff6b6b);
+  font-size: 0.85rem;
+}
+
+/* ---- live board (shared by all framework boards) ---- */
+.app.board {
+  width: min(760px, 96vw);
+}
+.board-controls button.on {
+  background: light-dark(#222, #eee);
+  color: light-dark(#fff, #222);
+}
+.board-stats {
+  display: flex;
+  gap: 1rem;
+  margin: 0 0 0.8rem;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.9;
+}
+.board-stats span[data-stat] {
+  font-weight: 700;
+}
+.board-wrap {
+  max-height: 58vh;
+  overflow-y: auto;
+  border: 1px solid light-dark(#ddd, #444);
+  border-radius: 8px;
+}
+table.board-grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+.board-grid th {
+  position: sticky;
+  top: 0;
+  background: light-dark(#eee, #2e2e2e);
+  padding: 0.35rem 0.7rem;
+  text-align: right;
+  font-weight: 600;
+}
+.board-grid td {
+  padding: 0.12rem 0.7rem;
+  text-align: right;
+  border-bottom: 1px solid light-dark(#f0f0f0, #303030);
+  white-space: nowrap;
+}
+.board-grid th:first-child,
+.board-grid td.sym {
+  text-align: left;
+  font-weight: 600;
+}
+.board-grid td.up {
+  color: light-dark(#0a7a2f, #5fd98a);
+}
+.board-grid td.down {
+  color: light-dark(#b00020, #ff6b6b);
+}
+.board-idle {
+  padding: 2.5rem 0;
+  text-align: center;
+  opacity: 0.6;
+}
