@@ -1,0 +1,13 @@
+# Milestone 1: bigram baseline (count-based closed form vs neural SGD).
+run_name: m1_bigram_char
+data:
+  corpus: kokoro
+  val_frac: 0.1
+train:
+  seed: 42
+  steps: 600
+  batch_size: 64
+  context_len: 128
+  lr: 0.01
+  alpha: 0.05
+  log_interval: 10
