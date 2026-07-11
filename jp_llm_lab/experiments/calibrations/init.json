@@ -1,0 +1,133 @@
+{
+  "results": {
+    "normal_0.02": {
+      "init_loss": 9.067319869995117,
+      "logit_std": 0.3198775351047516,
+      "softmax_entropy": 8.959646224975586,
+      "resid_rms_by_layer": [
+        0.0437,
+        0.0549,
+        0.0654,
+        0.075,
+        0.0825,
+        0.0903
+      ],
+      "grad_norm_total": 3.7670751899729376,
+      "grad_norm_by_group": {
+        "token_emb": 0.73922,
+        "pos_emb": 0.40078,
+        "norm": 0.05047,
+        "attn_qkv": 0.54971,
+        "attn_proj": 2.14718,
+        "mlp": 2.92723
+      }
+    },
+    "normal_0.02_noscale": {
+      "init_loss": 9.041399955749512,
+      "logit_std": 0.3182033598423004,
+      "softmax_entropy": 8.960329055786133,
+      "resid_rms_by_layer": [
+        0.1184,
+        0.1805,
+        0.2274,
+        0.2601,
+        0.2995,
+        0.3272
+      ],
+      "grad_norm_total": 2.0531097890211867,
+      "grad_norm_by_group": {
+        "token_emb": 0.83244,
+        "pos_emb": 0.41518,
+        "norm": 0.06238,
+        "attn_qkv": 0.83017,
+        "attn_proj": 0.95949,
+        "mlp": 1.31766
+      }
+    },
+    "xavier": {
+      "init_loss": 9.030248641967773,
+      "logit_std": 0.24571985006332397,
+      "softmax_entropy": 8.980672836303711,
+      "resid_rms_by_layer": [
+        0.534,
+        0.8965,
+        1.1802,
+        1.4232,
+        1.6277,
+        1.7677
+      ],
+      "grad_norm_total": 1.2820755249332503,
+      "grad_norm_by_group": {
+        "token_emb": 0.8665,
+        "pos_emb": 0.54467,
+        "norm": 0.06993,
+        "attn_qkv": 0.45345,
+        "attn_proj": 0.32916,
+        "mlp": 0.52668
+      }
+    },
+    "kaiming": {
+      "init_loss": 9.976957321166992,
+      "logit_std": 1.41127347946167,
+      "softmax_entropy": 8.023271560668945,
+      "resid_rms_by_layer": [
+        1.7267,
+        2.6178,
+        3.2735,
+        3.9044,
+        4.5369,
+        5.0002
+      ],
+      "grad_norm_total": 3.0331470113663106,
+      "grad_norm_by_group": {
+        "token_emb": 1.27177,
+        "pos_emb": 1.07021,
+        "norm": 0.3296,
+        "attn_qkv": 1.37022,
+        "attn_proj": 1.0099,
+        "mlp": 1.85235
+      }
+    }
+  },
+  "meta": {
+    "timestamp_utc": "2026-07-11T16:38:39.072211+00:00",
+    "git_commit": "da38780c0dfe50030990c18a8c4fe4a9265d0e05",
+    "git_branch": "agent/add-ts-rosetta",
+    "git_dirty": true,
+    "python": "3.12.3",
+    "argv": [
+      "jp_llm_lab/scripts/run_calibrations.py",
+      "--which",
+      "init"
+    ],
+    "packages": {
+      "torch": "2.11.0+cu128",
+      "numpy": "2.4.6",
+      "matplotlib": "3.10.9",
+      "plotly": "6.7.0",
+      "jinja2": "3.1.6",
+      "pyyaml": "6.0.3",
+      "pandas": "3.0.3"
+    },
+    "env": {
+      "python_version": "3.12.3",
+      "torch_version": "2.11.0+cu128",
+      "cuda_version": "12.8",
+      "cuda_available": true,
+      "gpu_name": "NVIDIA GeForce RTX 5080",
+      "vram_gb": 15.92,
+      "capability": "12.0",
+      "bf16_supported": true,
+      "sdpa_backends": [
+        "math",
+        "flash",
+        "mem_efficient",
+        "cudnn"
+      ],
+      "compile_available": true,
+      "cpu_ram_gb": 47.0,
+      "cpu_count": 20,
+      "platform": "Linux-6.18.33.1-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+    }
+  }
+}

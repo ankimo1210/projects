@@ -1,0 +1,64 @@
+# Experiment card (spec §25) — Classical→Modern ablation chain
+experiment_id: m3_ablation_chain
+question: >
+  Classical GPT から Modern GPT へ、1要素ずつ（LayerNorm→RMSNorm→RoPE→SwiGLU→bias無し）
+  変更したとき、同一トークン予算・同一パラメータ規模で validation loss・速度・較正が
+  どう変わるか。各変更は run-to-run 変動を超える効果を持つか。
+hypothesis: >
+  Modern 構成の各要素は同等以上の val loss を、同等かより良い速度で達成する。
+  ただし小規模・短期学習では個々の差が seed 変動（§18）に埋もれる可能性が高い。
+independent_variable:
+  architecture_step: [classical, rmsnorm, rope, swiglu, modern]  # one switch flipped per step
+controlled_variables:
+  corpus_snapshot: fineweb2ja pilot (train first 8M tokens)
+  validation: fineweb2ja validation split (disjoint documents, 400K tokens)
+  tokenizer: bpe8k_v1
+  d_model: 320
+  n_layers: 6
+  n_heads: 8
+  context_len: 512
+  parameter_budget: approximately_equal (SwiGLU width = 8d/3 to match GELU 4d)
+  training_tokens: ~3.7M (300 steps × 24 × 512, <1 epoch)
+  optimizer: adamw lr 6e-4 cosine
+  seeds: [42, 43, 44]
+dependent_variables:
+  - validation_loss (mean ± std over 3 seeds)
+  - perplexity
+  - n_params
+  - top1_confidence (calibration proxy)
+  - prediction_entropy
+success_criteria:
+  interpretation_over_ranking: >
+    Report not just which is best, but the effect size relative to seed
+    std, whether it is worth the compute, and what cannot be concluded.
+limitations:
+  - Small model, <1 epoch, 3 seeds — differences may be within run-to-run variation.
+  - Parameter counts are only approximately equal (±2%).
+  - Extrapolation to Model L / longer training is NOT justified by this.
+
+# ---- appended after the run (2026-07-12, 3 seeds × 300 steps on pilot) ----
+result:
+  classical: {val_loss_mean: 6.4258, std: 0.0454, n_params: 10183680}
+  rmsnorm:   {val_loss_mean: 6.4330, std: 0.0038, delta_vs_prev: +0.007}
+  rope:      {val_loss_mean: 6.0932, std: 0.0501, delta_vs_prev: -0.340}
+  swiglu:    {val_loss_mean: 6.0229, std: 0.0248, delta_vs_prev: -0.070}
+  modern:    {val_loss_mean: 6.0991, std: 0.0996, delta_vs_prev: +0.076}
+  total_classical_to_modern: -0.327
+observation: >
+  Effect sizes differed sharply. RMSNorm: no change (within seed σ). RoPE:
+  LARGE improvement −0.34 nats, far beyond 2σ. SwiGLU: modest but significant
+  −0.07. bias-free: +0.08 but within its own σ (0.10) → indeterminate sign.
+interpretation: >
+  The prior hypothesis ("at this small scale all changes drown in seed
+  noise") was WRONG for RoPE — relative positional encoding helped
+  substantially even at 10M params / <1 epoch. RMSNorm is a simplification at
+  equal quality, not an improvement. Nearly ALL of the classical→modern gain
+  is RoPE; the coarse story "Modern is uniformly better" is false. The
+  methodological value (effect size vs variance) holds AND a real winner
+  emerged.
+caveats: >
+  3 seeds give coarse intervals; bias-free sign unresolved. Single corpus,
+  10M scale, <1 epoch. Do not extrapolate magnitudes to Model L.
+follow_up: >
+  Model L (M4) uses the Modern preset (RoPE included). Add an extrapolation
+  test (train ctx 512, eval ctx 1024) where RoPE should widen its lead.

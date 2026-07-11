@@ -1,0 +1,103 @@
+{
+  "results": [
+    {
+      "dtype": "fp32",
+      "attn": "explicit",
+      "compile": false,
+      "B": 16,
+      "T": 512,
+      "median_step_ms": 52.93,
+      "tokens_per_sec": 154773,
+      "peak_vram_gb": 2.84
+    },
+    {
+      "dtype": "fp32",
+      "attn": "sdpa",
+      "compile": false,
+      "B": 16,
+      "T": 512,
+      "median_step_ms": 33.44,
+      "tokens_per_sec": 244992,
+      "peak_vram_gb": 2.09
+    },
+    {
+      "dtype": "bf16",
+      "attn": "sdpa",
+      "compile": false,
+      "B": 16,
+      "T": 512,
+      "median_step_ms": 15.12,
+      "tokens_per_sec": 541906,
+      "peak_vram_gb": 1.45
+    },
+    {
+      "dtype": "bf16",
+      "attn": "sdpa",
+      "compile": false,
+      "B": 32,
+      "T": 512,
+      "median_step_ms": 25.25,
+      "tokens_per_sec": 648743,
+      "peak_vram_gb": 2.74
+    },
+    {
+      "dtype": "bf16",
+      "attn": "sdpa",
+      "compile": true,
+      "B": 32,
+      "T": 512,
+      "error": "CalledProcessError: Command '['/usr/bin/gcc', '/tmp/tmpg61zino8/cuda_utils.c', '"
+    },
+    {
+      "dtype": "bf16",
+      "attn": "sdpa",
+      "compile": false,
+      "B": 24,
+      "T": 256,
+      "median_step_ms": 14.16,
+      "tokens_per_sec": 433954,
+      "peak_vram_gb": 1.13
+    }
+  ],
+  "meta": {
+    "timestamp_utc": "2026-07-11T16:38:59.372441+00:00",
+    "git_commit": "da38780c0dfe50030990c18a8c4fe4a9265d0e05",
+    "git_branch": "agent/add-ts-rosetta",
+    "git_dirty": true,
+    "python": "3.12.3",
+    "argv": [
+      "jp_llm_lab/scripts/run_calibrations.py",
+      "--which",
+      "hardware"
+    ],
+    "packages": {
+      "torch": "2.11.0+cu128",
+      "numpy": "2.4.6",
+      "matplotlib": "3.10.9",
+      "plotly": "6.7.0",
+      "jinja2": "3.1.6",
+      "pyyaml": "6.0.3",
+      "pandas": "3.0.3"
+    },
+    "env": {
+      "python_version": "3.12.3",
+      "torch_version": "2.11.0+cu128",
+      "cuda_version": "12.8",
+      "cuda_available": true,
+      "gpu_name": "NVIDIA GeForce RTX 5080",
+      "vram_gb": 15.92,
+      "capability": "12.0",
+      "bf16_supported": true,
+      "sdpa_backends": [
+        "math",
+        "flash",
+        "mem_efficient",
+        "cudnn"
+      ],
+      "compile_available": true,
+      "cpu_ram_gb": 47.0,
+      "cpu_count": 20,
+      "platform": "Linux-6.18.33.1-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+    }
+  }
+}
