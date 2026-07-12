@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from pathlib import Path
 
 import nbformat
@@ -12,6 +13,33 @@ from nbconvert import HTMLExporter
 
 from .config import Config
 from .provenance import PROJECT_ROOT, artifact_dirs, provenance
+
+# Display ($$...$$) then inline ($...$) LaTeX. The inline pattern is anchored on
+# non-'$' boundaries so the greedy display pass never leaves a stray delimiter.
+_DISPLAY_MATH = re.compile(r"\$\$(.+?)\$\$", re.DOTALL)
+_INLINE_MATH = re.compile(r"(?<!\$)\$(?!\$)(.+?)(?<!\$)\$(?!\$)", re.DOTALL)
+
+
+def _render_math(markdown: str) -> str:
+    """Convert LaTeX math in a markdown cell to inline, self-contained MathML.
+
+    Runs at build time so the exported HTML needs no MathJax/KaTeX, no web
+    fonts, and no network — the offline-report invariant. Raises on malformed
+    LaTeX so a broken formula fails the build loudly instead of shipping raw
+    dollar signs.
+    """
+    if "$" not in markdown:
+        return markdown
+    from latex2mathml.converter import convert
+
+    def _display(match: re.Match[str]) -> str:
+        return convert(match.group(1).strip(), display="block")
+
+    def _inline(match: re.Match[str]) -> str:
+        return convert(match.group(1).strip(), display="inline")
+
+    return _INLINE_MATH.sub(_inline, _DISPLAY_MATH.sub(_display, markdown))
+
 
 # One entry per localized edition of the visual-lab notebook. The code cells are
 # identical across editions (identical figures/data); only markdown and the
@@ -80,6 +108,12 @@ def execute_notebook(cfg: Config, config_path: str | Path, locale: str = "en") -
         else:
             os.environ["OPTIMAL_EXECUTION_CONFIG"] = old_config
     nbformat.write(executed, executed_path)
+
+    # Typeset LaTeX ($…$, $$…$$) to inline MathML for the HTML export only; the
+    # saved .ipynb keeps clean LaTeX sources.
+    for cell in executed.cells:
+        if cell.cell_type == "markdown":
+            cell.source = _render_math(cell.source)
 
     exporter = HTMLExporter(template_name="lab")
     exporter.exclude_input_prompt = True
