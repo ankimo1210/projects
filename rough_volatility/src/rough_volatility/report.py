@@ -109,7 +109,9 @@ def _selector_buttons(
     ]
 
 
-def _fbm_selector(frame: pd.DataFrame, column: str, title: str, *, zoom: bool = False) -> go.Figure:
+def _fbm_selector(
+    frame: pd.DataFrame, column: str, title: str, subtitle: str, *, zoom: bool = False
+) -> go.Figure:
     figure = go.Figure()
     h_values = sorted(frame["h"].unique())
     trace_groups: list[float] = []
@@ -146,11 +148,10 @@ def _fbm_selector(frame: pd.DataFrame, column: str, title: str, *, zoom: bool = 
     )
     figure.update_xaxes(title="Time")
     figure.update_yaxes(title="Increment" if column == "increment" else "Process value")
-    subtitle = "Use the H selector; all paths have the same horizon and simulation convention"
     return _style_figure(figure, title, subtitle)
 
 
-def _acf_figure(frame: pd.DataFrame) -> go.Figure:
+def _acf_figure(frame: pd.DataFrame, title: str, subtitle: str) -> go.Figure:
     figure = go.Figure()
     for index, (h, group) in enumerate(frame.groupby("h", sort=True)):
         figure.add_trace(
@@ -165,14 +166,10 @@ def _acf_figure(frame: pd.DataFrame) -> go.Figure:
     figure.add_hline(y=0, line_color=INK, line_width=1)
     figure.update_xaxes(title="Lag")
     figure.update_yaxes(title="Increment ACF")
-    return _style_figure(
-        figure,
-        "Increment autocorrelation",
-        "Mean across synthetic paths; short lags distinguish anti-persistence from persistence",
-    )
+    return _style_figure(figure, title, subtitle)
 
 
-def _structure_figure(frame: pd.DataFrame) -> go.Figure:
+def _structure_figure(frame: pd.DataFrame, title: str, subtitle: str) -> go.Figure:
     figure = go.Figure()
     data = frame[frame["q"] == 2.0]
     for index, (h, group) in enumerate(data.groupby("h", sort=True)):
@@ -196,14 +193,10 @@ def _structure_figure(frame: pd.DataFrame) -> go.Figure:
         )
     figure.update_xaxes(type="log", title="Lag Δ")
     figure.update_yaxes(type="log", title="Second-order structure function")
-    return _style_figure(
-        figure,
-        "Second-order structure-function scaling",
-        "Observed moments and log-log fits; the fitted slope estimates 2H",
-    )
+    return _style_figure(figure, title, subtitle)
 
 
-def _hurst_distribution_figure(frame: pd.DataFrame) -> go.Figure:
+def _hurst_distribution_figure(frame: pd.DataFrame, title: str, subtitle: str) -> go.Figure:
     figure = go.Figure()
     data = frame[(frame["estimator"] == "variogram") & frame["ok"].astype(bool)]
     for index, ((h, sample_size), group) in enumerate(
@@ -218,15 +211,10 @@ def _hurst_distribution_figure(frame: pd.DataFrame) -> go.Figure:
             )
         )
     figure.update_yaxes(title="Estimated H")
-    return _style_figure(
-        figure,
-        "Finite-sample H-estimate distributions",
-        "Variogram estimator; boxes show replication dispersion by truth and sample size",
-        height=520,
-    )
+    return _style_figure(figure, title, subtitle, height=520)
 
 
-def _hurst_bias_figure(frame: pd.DataFrame) -> go.Figure:
+def _hurst_bias_figure(frame: pd.DataFrame, title: str, subtitle: str) -> go.Figure:
     figure = go.Figure()
     for index, ((h, estimator), group) in enumerate(
         frame.groupby(["true_h", "estimator"], sort=True)
@@ -243,14 +231,10 @@ def _hurst_bias_figure(frame: pd.DataFrame) -> go.Figure:
     figure.add_hline(y=0.0, line_color=INK, line_width=1)
     figure.update_xaxes(type="log", title="Increment count")
     figure.update_yaxes(title="Bias (mean estimate − true H)")
-    return _style_figure(
-        figure,
-        "Estimator bias versus sample size",
-        "Bias is estimator- and H-dependent; the horizontal reference is zero bias",
-    )
+    return _style_figure(figure, title, subtitle)
 
 
-def _ou_selector(frame: pd.DataFrame) -> go.Figure:
+def _ou_selector(frame: pd.DataFrame, title: str, subtitle: str) -> go.Figure:
     figure = go.Figure()
     models = list(frame["model"].drop_duplicates())
     trace_groups: list[str] = []
@@ -282,14 +266,12 @@ def _ou_selector(frame: pd.DataFrame) -> go.Figure:
     )
     figure.update_xaxes(title="Time (years)")
     figure.update_yaxes(title="Log-volatility")
-    return _style_figure(
-        figure,
-        "Ordinary versus fractional OU log-volatility",
-        "Use the model selector; broad scale is matched while local regularity differs",
-    )
+    return _style_figure(figure, title, subtitle)
 
 
-def _model_path_figure(frame: pd.DataFrame, *, rough_only: bool) -> go.Figure:
+def _model_path_figure(
+    frame: pd.DataFrame, title: str, subtitle: str, *, rough_only: bool
+) -> go.Figure:
     figure = make_subplots(rows=1, cols=2, subplot_titles=("Spot", "Variance"))
     data = frame[frame["model"] == "rough_bergomi"] if rough_only else frame
     for model_index, (model, model_data) in enumerate(data.groupby("model", sort=False)):
@@ -312,18 +294,10 @@ def _model_path_figure(frame: pd.DataFrame, *, rough_only: bool) -> go.Figure:
     figure.update_xaxes(title="Time (years)")
     figure.update_yaxes(title="Spot", row=1, col=1)
     figure.update_yaxes(title="Variance", row=1, col=2)
-    title = (
-        "Rough Bergomi path dynamics"
-        if rough_only
-        else "Rough Bergomi versus Heston under common shocks"
-    )
-    subtitle = (
-        "One retained path per model; both simulations reuse the same standardized spot driver"
-    )
     return _style_figure(figure, title, subtitle)
 
 
-def _terminal_figure(frame: pd.DataFrame) -> go.Figure:
+def _terminal_figure(frame: pd.DataFrame, title: str, subtitle: str) -> go.Figure:
     figure = make_subplots(
         rows=1, cols=2, subplot_titles=("Terminal log return", "Realized variance")
     )
@@ -354,14 +328,10 @@ def _terminal_figure(frame: pd.DataFrame) -> go.Figure:
             col=2,
         )
     figure.update_layout(barmode="overlay")
-    return _style_figure(
-        figure,
-        "Return and realized-variance distributions",
-        "Density-normalized Monte Carlo samples at the longest configured maturity",
-    )
+    return _style_figure(figure, title, subtitle)
 
 
-def _smile_selector(frame: pd.DataFrame) -> go.Figure:
+def _smile_selector(frame: pd.DataFrame, title: str, subtitle: str) -> go.Figure:
     figure = go.Figure()
     data = frame[frame["ok"].astype(bool)]
     maturities = sorted(data["maturity"].unique())
@@ -394,14 +364,10 @@ def _smile_selector(frame: pd.DataFrame) -> go.Figure:
     )
     figure.update_xaxes(title="Log-moneyness k")
     figure.update_yaxes(title="Implied volatility")
-    return _style_figure(
-        figure,
-        "Implied-volatility smiles",
-        "Use the maturity selector; error bars are 95% delta-method Monte Carlo intervals",
-    )
+    return _style_figure(figure, title, subtitle)
 
 
-def _surface_selector(frame: pd.DataFrame) -> go.Figure:
+def _surface_selector(frame: pd.DataFrame, title: str, subtitle: str) -> go.Figure:
     figure = go.Figure()
     data = frame[frame["ok"].astype(bool)]
     models = list(data["model"].drop_duplicates())
@@ -430,14 +396,10 @@ def _surface_selector(frame: pd.DataFrame) -> go.Figure:
     )
     figure.update_xaxes(title="Log-moneyness k")
     figure.update_yaxes(title="Maturity (years)")
-    return _style_figure(
-        figure,
-        "Implied-volatility surface",
-        "Heatmap view; use the model selector to compare identical strike/maturity coordinates",
-    )
+    return _style_figure(figure, title, subtitle)
 
 
-def _skew_term_figure(frame: pd.DataFrame) -> go.Figure:
+def _skew_term_figure(frame: pd.DataFrame, title: str, subtitle: str) -> go.Figure:
     figure = go.Figure()
     for index, (h, group) in enumerate(frame[frame["ok"].astype(bool)].groupby("h", sort=True)):
         figure.add_trace(
@@ -453,14 +415,12 @@ def _skew_term_figure(frame: pd.DataFrame) -> go.Figure:
     figure.add_hline(y=0.0, line_color=INK, line_width=1)
     figure.update_xaxes(type="log", title="Maturity (years)")
     figure.update_yaxes(title="ATM skew")
-    return _style_figure(
-        figure,
-        "ATM skew term structure",
-        "Weighted local-quadratic slopes with 95% Monte Carlo intervals",
-    )
+    return _style_figure(figure, title, subtitle)
 
 
-def _skew_scaling_figure(term: pd.DataFrame, powers: pd.DataFrame) -> go.Figure:
+def _skew_scaling_figure(
+    term: pd.DataFrame, powers: pd.DataFrame, title: str, subtitle: str
+) -> go.Figure:
     figure = go.Figure()
     power_map = powers.set_index("h")
     for index, (h, group) in enumerate(term[term["ok"].astype(bool)].groupby("h", sort=True)):
@@ -489,11 +449,7 @@ def _skew_scaling_figure(term: pd.DataFrame, powers: pd.DataFrame) -> go.Figure:
             )
     figure.update_xaxes(type="log", title="Maturity T")
     figure.update_yaxes(type="log", title="Absolute ATM skew")
-    return _style_figure(
-        figure,
-        "Short-maturity skew scaling",
-        "Finite-maturity weighted fit; theoretical exponent is H−1/2",
-    )
+    return _style_figure(figure, title, subtitle)
 
 
 def _scenario_selector(
@@ -541,7 +497,7 @@ def _scenario_selector(
     return _style_figure(figure, title, subtitle)
 
 
-def _hawkes_price_figure(frame: pd.DataFrame) -> go.Figure:
+def _hawkes_price_figure(frame: pd.DataFrame, title: str, subtitle: str) -> go.Figure:
     figure = make_subplots(
         rows=2, cols=1, shared_xaxes=True, subplot_titles=("Synthetic price", "Rolling RV proxy")
     )
@@ -578,15 +534,12 @@ def _hawkes_price_figure(frame: pd.DataFrame) -> go.Figure:
     figure.update_xaxes(title="Time", row=2, col=1)
     figure.update_yaxes(title="Price", row=1, col=1)
     figure.update_yaxes(title="Rolling RV", row=2, col=1)
-    return _style_figure(
-        figure,
-        "Signed-event price and volatility proxy",
-        "Use the scenario selector; the effective H is an empirical diagnostic only",
-        height=650,
-    )
+    return _style_figure(figure, title, subtitle, height=650)
 
 
-def _noise_selector(frame: pd.DataFrame) -> go.Figure:
+def _noise_selector(frame: pd.DataFrame, t: Translator) -> go.Figure:
+    # Receives the Translator (rather than resolved caption strings) because the
+    # subtitle interpolates the estimator name, which is selected from the data here.
     estimator = (
         "variogram" if "variogram" in set(frame["estimator"]) else frame["estimator"].iloc[0]
     )
@@ -624,8 +577,8 @@ def _noise_selector(frame: pd.DataFrame) -> go.Figure:
     figure.update_yaxes(title="Observation-noise standard deviation")
     return _style_figure(
         figure,
-        "H-estimation bias under measurement choices",
-        f"{estimator} estimator; use the preprocessing-mode selector; bias is estimate minus known H",
+        t("figure.noise_bias.title"),
+        t("figure.noise_bias.subtitle", estimator=estimator),
     )
 
 
@@ -655,29 +608,38 @@ def _load_frames(manifest: dict[str, Path]) -> dict[str, pd.DataFrame]:
 
 
 def _build_figures(frames: dict[str, pd.DataFrame], t: Translator) -> dict[str, go.Figure]:
+    def caption(key: str) -> tuple[str, str]:
+        return t(f"figure.{key}.title"), t(f"figure.{key}.subtitle")
+
     return {
-        "fbm_paths": _fbm_selector(
-            frames["fbm_paths"], "value", t("figure.fbm_paths.title")
-        ),
-        "fbm_zoom": _fbm_selector(
-            frames["fbm_paths"], "value", t("figure.fbm_zoom.title"), zoom=True
-        ),
+        "fbm_paths": _fbm_selector(frames["fbm_paths"], "value", *caption("fbm_paths")),
+        "fbm_zoom": _fbm_selector(frames["fbm_paths"], "value", *caption("fbm_zoom"), zoom=True),
         "fgn_increments": _fbm_selector(
-            frames["fbm_increments"], "increment", t("figure.fgn_increments.title")
+            frames["fbm_increments"], "increment", *caption("fgn_increments")
         ),
-        "increment_acf": _acf_figure(frames["fbm_acf"]),
-        "structure_scaling": _structure_figure(frames["fbm_structure"]),
-        "hurst_distributions": _hurst_distribution_figure(frames["hurst_recovery"]),
-        "hurst_bias": _hurst_bias_figure(frames["hurst_summary"]),
-        "ou_vs_fou": _ou_selector(frames["ou_paths"]),
-        "model_spot_variance": _model_path_figure(frames["model_paths"], rough_only=True),
-        "heston_comparison": _model_path_figure(frames["model_paths"], rough_only=False),
-        "terminal_distributions": _terminal_figure(frames["terminal_distributions"]),
-        "iv_smiles": _smile_selector(frames["option_surface"]),
-        "iv_surface": _surface_selector(frames["option_surface"]),
-        "skew_term": _skew_term_figure(frames["skew_term_structure"]),
+        "increment_acf": _acf_figure(frames["fbm_acf"], *caption("increment_acf")),
+        "structure_scaling": _structure_figure(
+            frames["fbm_structure"], *caption("structure_scaling")
+        ),
+        "hurst_distributions": _hurst_distribution_figure(
+            frames["hurst_recovery"], *caption("hurst_distributions")
+        ),
+        "hurst_bias": _hurst_bias_figure(frames["hurst_summary"], *caption("hurst_bias")),
+        "ou_vs_fou": _ou_selector(frames["ou_paths"], *caption("ou_vs_fou")),
+        "model_spot_variance": _model_path_figure(
+            frames["model_paths"], *caption("model_spot_variance"), rough_only=True
+        ),
+        "heston_comparison": _model_path_figure(
+            frames["model_paths"], *caption("heston_comparison"), rough_only=False
+        ),
+        "terminal_distributions": _terminal_figure(
+            frames["terminal_distributions"], *caption("terminal_distributions")
+        ),
+        "iv_smiles": _smile_selector(frames["option_surface"], *caption("iv_smiles")),
+        "iv_surface": _surface_selector(frames["option_surface"], *caption("iv_surface")),
+        "skew_term": _skew_term_figure(frames["skew_term_structure"], *caption("skew_term")),
         "skew_scaling": _skew_scaling_figure(
-            frames["skew_term_structure"], frames["skew_power_law"]
+            frames["skew_term_structure"], frames["skew_power_law"], *caption("skew_scaling")
         ),
         "hawkes_events": _scenario_selector(
             frames["hawkes_events"],
@@ -688,7 +650,7 @@ def _build_figures(frames: dict[str, pd.DataFrame], t: Translator) -> dict[str, 
             mode="markers",
             clip_to_first_100=True,
         ),
-        "hawkes_price": _hawkes_price_figure(frames["hawkes_series"]),
+        "hawkes_price": _hawkes_price_figure(frames["hawkes_series"], *caption("hawkes_price")),
         "hawkes_intensity": _scenario_selector(
             frames["hawkes_intensity"],
             x="time",
@@ -696,7 +658,7 @@ def _build_figures(frames: dict[str, pd.DataFrame], t: Translator) -> dict[str, 
             title=t("figure.hawkes_intensity.title"),
             subtitle=t("figure.hawkes_intensity.subtitle"),
         ),
-        "noise_bias": _noise_selector(frames["noise_fragility"]),
+        "noise_bias": _noise_selector(frames["noise_fragility"], t),
     }
 
 

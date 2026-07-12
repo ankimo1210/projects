@@ -75,6 +75,32 @@ _CALLOUT_ANCHORS = (
     "limitations-next-steps",
 )
 
+# Literal copy of the 19 figure keys from `rough_volatility.report.REPORT_FIGURE_ANCHORS`.
+# Every figure carries a localized `figure.<key>.title` and `figure.<key>.subtitle`
+# caption (rendered via `report._style_figure`). Kept as a literal tuple (not
+# imported) so i18n.py stays free of imports from report.py/notebook.py.
+_FIGURE_ANCHORS = (
+    "fbm_paths",
+    "fbm_zoom",
+    "fgn_increments",
+    "increment_acf",
+    "structure_scaling",
+    "hurst_distributions",
+    "hurst_bias",
+    "ou_vs_fou",
+    "model_spot_variance",
+    "heston_comparison",
+    "terminal_distributions",
+    "iv_smiles",
+    "iv_surface",
+    "skew_term",
+    "skew_scaling",
+    "hawkes_events",
+    "hawkes_price",
+    "hawkes_intensity",
+    "noise_bias",
+)
+
 REQUIRED_KEYS = {
     "document_title",
     "brand",
@@ -86,13 +112,8 @@ REQUIRED_KEYS = {
     "validation_gates_heading",
     *(f"section.{anchor}" for anchor in _SECTION_ANCHORS),
     *(f"callout.{anchor}" for anchor in _CALLOUT_ANCHORS),
-    "figure.fbm_paths.title",
-    "figure.fbm_zoom.title",
-    "figure.fgn_increments.title",
-    "figure.hawkes_events.title",
-    "figure.hawkes_events.subtitle",
-    "figure.hawkes_intensity.title",
-    "figure.hawkes_intensity.subtitle",
+    *(f"figure.{anchor}.title" for anchor in _FIGURE_ANCHORS),
+    *(f"figure.{anchor}.subtitle" for anchor in _FIGURE_ANCHORS),
 }
 
 
