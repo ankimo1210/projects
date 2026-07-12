@@ -13,14 +13,23 @@
 | [`line_backup/`](line_backup/) | iPhone ローカルバックアップから LINE データを完全オフラインで解析する CLI | Python |
 | [`akinator/`](akinator/) | Wikidata をエンティティ源とするローカル・アキネーター風推測ゲーム（確率的候補更新エンジン） | Python / FastAPI |
 | [`pokemon/`](pokemon/) | Quokka Wilds: オリジナル 3D モンスター収集ゲーム | Vite / React Three Fiber |
+| [`EitanQuest/`](EitanQuest/) | えいたんクエスト: iPhone 向け英単語 4 択クイズアプリ（オフライン完結 MVP） | Swift / SwiftUI / SwiftData |
+| [`NeonThread/`](NeonThread/) | 発光ラインを操作して隙間をくぐる iOS 無限ランゲーム | Swift / SwiftUI + SpriteKit |
 | [`shortest_path/`](shortest_path/) | ダイクストラ法・A*・双方向探索の実装と可視化ラボ | Python / Jupyter / HTML |
 | [`analytics/`](analytics/) | 体験型インタラクティブ教科書シリーズ（線形代数・NN・ベイズ・フーリエ・ラプラス・微分方程式・機械学習）+ 統合オフラインポータル。索引: [`analytics/README.md`](analytics/README.md) | Python / Jupyter Book / Plotly |
 | [`johnhull/`](johnhull/) | Hull『Options, Futures, and Other Derivatives』11e の章別学習ボリューム + `hullkit` 共有パッケージ + Jupyter Book / オフラインポータル | Python / Jupyter |
 | [`autostock/`](autostock/) | Mag7 株ストラテジーの自律探索デモ（read-only バックテスト + OOS 評価） | Python |
+| [`quantkit/`](quantkit/) | ローカル無料データで完結するマルチアセット投資リサーチ基盤（データ→シグナル→バックテスト→ポートフォリオ→可視化） | Python / DuckDB / Plotly |
+| [`rough_volatility/`](rough_volatility/) | ラフボラティリティ + Hawkes マイクロ構造のビジュアルラボ（exact rBergomi、オフライン日英レポート） | Python / Jupyter |
+| [`optimal_execution/`](optimal_execution/) | 最適執行ビジュアルラボ（Almgren-Chriss / OW / 反応型 LOB / PPO、日英レポート） | Python / Jupyter |
+| [`deep_hedge_price/`](deep_hedge_price/) | Deep Hedging デモ（PyTorch 方策で短期コールをヘッジ、BS / no-hedge 比較） | Python / PyTorch |
+| [`jp_llm_lab/`](jp_llm_lab/) | 日本語小型 LLM 教育ラボ（30M 級モデルを実走、可視化ファースト、静的サイト出力） | Python / PyTorch |
 | [`rates_volatility_model/`](rates_volatility_model/) | 金利ボラティリティ・モデリングのリサーチノート | Python / Jupyter |
 | [`aisan_lbo_case/`](aisan_lbo_case/) | アイサンテクノロジー (4667.T) 非公開化 LBO ケーススタディ（公開情報ベース、HTML レポート出力） | Python / Jupyter |
 | [`notebooks/`](notebooks/) | 単発の分析ノートブック置き場（債券、ETF、不動産シミュ等） | Jupyter |
 | [`csharp_calc/`](csharp_calc/) | WinForms 四則演算電卓サンプル（エンジンは UI 非依存・ユニットテスト付き） | C# / .NET 9 |
+| [`ts-rosetta/`](ts-rosetta/) | 同一タスクアプリを React / Vue / Angular / Next.js / Express / NestJS 等で並列実装した TS エコシステム学習ラボ | TypeScript / pnpm |
+| [`models/`](models/) | 洋書教科書の日本語翻訳パイプライン成果物（Markdown / HTML 教科書 3 冊分） | Markdown / HTML |
 
 > `re_invest_os`（不動産買付前 DD Web アプリ）は独立リポジトリへ移管済み:
 > ローカル `~/re_invest_os` / GitHub `ankimo1210/re_invest_os`
@@ -39,10 +48,12 @@ projects/
 ├── _data/                   # 重データ（gitignore 対象、`_data/<project>/` 規約）
 ├── _logs/                   # 実行ログ（gitignore 対象）
 ├── reports/                 # 共有レポート（PDF 等）
+├── docs/                    # ワークスペース ADR（decisions/）+ スキル生成物（superpowers/）
 ├── Makefile                 # ワークスペース横断の lint / test / install / clean
 ├── .pre-commit-config.yaml  # 共通フック (ruff, large file check, ...)
-├── CLAUDE.md, AGENTS.md     # AI エージェント向けガイド
-└── copilot-instructions.md
+├── AGENTS.md                # AI エージェント向けワークスペース規約（正）
+├── CLAUDE.md                # Claude Code 向け: AGENTS.md へのポインタ + 補足
+└── .github/copilot-instructions.md
 ```
 
 ## ワークスペース横断コマンド
@@ -63,8 +74,8 @@ make tree      # ヘビーディレクトリを除外したツリー表示
 
 - 対応プラットフォーム: **WSL2 (Ubuntu) を主**とし、ネイティブ Windows (PowerShell) と macOS でも動作（差分は下記セットアップ参照）
 - Python は **ルート単一の uv workspace** で管理（`.venv` は repo root に1個）
-  - workspace メンバー: `gto`, `market-viz`, `stock`, `nbody-gpu`, `line_backup`, `akinator`, `autostock`, `johnhull/hullkit`、`analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning}` と `analytics/differential_equation/{ode-book,pde-book}`（`analytics/report` のみメンバー外）
-  - 例外: `aisan_lbo_case` は `requirements.txt`、`csharp_calc` は .NET、`rates_volatility_model` / `notebooks` は env 管理なし、`shortest_path` は依存なしの教材プロジェクト（`PYTHONPATH=shortest_path/src` で実行）
+  - workspace メンバー: `gto`, `market-viz`, `stock`, `nbody-gpu`, `line_backup`, `akinator`, `autostock`, `quantkit`, `deep_hedge_price`, `optimal_execution`, `rough_volatility`, `jp_llm_lab`, `johnhull/hullkit`、`analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning}` と `analytics/differential_equation/{ode-book,pde-book}`（`analytics/report` のみメンバー外）
+  - 例外: `aisan_lbo_case` は `requirements.txt`、`csharp_calc` は .NET、`EitanQuest` / `NeonThread` は Xcode (Swift)、`ts-rosetta` は pnpm、`rates_volatility_model` / `notebooks` / `models` は env 管理なし、`shortest_path` は依存なしの教材プロジェクト（`PYTHONPATH=shortest_path/src` で実行）
 - AI コラボ前提（Claude Code / Copilot）。エージェント向け規約は `CLAUDE.md` と `AGENTS.md` を参照
 
 ## セットアップ
@@ -124,4 +135,4 @@ make help                # 横断ターゲット一覧
 
 1. まず該当プロジェクトの `README.md` を読む（あれば `CLAUDE.md` / `AGENTS.md` も）
 2. 横断的なチェックは `Makefile` 経由で行う
-3. リポジトリ全体を grep しない（`CLAUDE.md` の Workspace Policy 参照）
+3. リポジトリ全体を grep しない（`AGENTS.md` の Workspace Policy 参照）
