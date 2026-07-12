@@ -903,7 +903,8 @@ def build_standalone_report(
         raise RuntimeError("the shared narrative registry must contain 26 sections")
 
     toc = "".join(
-        f'<li><a href="#{section.anchor}">{index}. {html.escape(section.title)}</a></li>'
+        f'<li><a href="#{section.anchor}">{index}. '
+        f'{html.escape(t(f"section.{section.anchor}"))}</a></li>'
         for index, section in enumerate(SECTIONS, start=1)
     )
     sections_html: list[str] = []
@@ -917,7 +918,7 @@ def build_standalone_report(
         )
         sections_html.append(
             f'<section id="{section.anchor}"><div class="section-number">{index:02d}</div>'
-            f"<h2>{html.escape(section.title)}</h2>{narratives[section.anchor]}"
+            f'<h2>{html.escape(t(f"section.{section.anchor}"))}</h2>{narratives[section.anchor]}'
             f"{_section_extra(section.anchor, config, validation)}{figure_html}{evidence_note}</section>"
         )
     metric_cards = _metric_cards(config, frames, validation)
