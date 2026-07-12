@@ -172,3 +172,19 @@ def test_captions_and_evidence_note_localized(tmp_path: Path) -> None:
     assert "Hawkes event raster" in en
     assert "Increment autocorrelation" in en
     assert "variogram estimator; use the preprocessing-mode selector" in en
+
+
+def test_bilingual_numeric_parity(tmp_path: Path) -> None:
+    config = _report_config()
+    manifest = run_all(config, tmp_path, force=True)
+    from rough_volatility.report import build_reports
+
+    outputs = build_reports(config, tmp_path, manifest)
+    assert set(outputs) == {"en", "ja"}
+    texts = {loc: p.read_text(encoding="utf-8") for loc, p in outputs.items()}
+    assert "Rough Volatility Visual Lab" in texts["en"]
+    assert "ラフボラティリティ・ビジュアルラボ" in texts["ja"]
+    hashes = [re.search(r'"sha256": "([0-9a-f]+)"', t).group(1) for t in texts.values()]
+    assert len(set(hashes)) == 1  # numbers identical across languages
+    for t in texts.values():
+        assert not re.search(r'(?:src|href)=["\']https?://', t, re.IGNORECASE)
