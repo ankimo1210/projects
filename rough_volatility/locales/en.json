@@ -1,0 +1,8 @@
+{
+  "document_title": "Rough Volatility Visual Lab — Technical Report",
+  "brand": "Synthetic research lab",
+  "report_title": "Rough Volatility Visual Lab",
+  "report_subtitle": "Technical report · synthetic data only · seed {seed} · configuration {fingerprint}",
+  "badge": "SELF-CONTAINED · OFFLINE · {profile}",
+  "footer": "Generated locally from saved, provenance-stamped experiment artifacts. No market data, remote scripts, or external services are used."
+}
