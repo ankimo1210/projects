@@ -18,7 +18,7 @@ import torch
 from jinja2 import Environment, FileSystemLoader
 
 from ..utils.io import load_json, read_jsonl, repo_root
-from ..visualization import comparison, curves, params_viz
+from ..visualization import architecture_viz, comparison, curves, params_viz
 from ..visualization.attention_viz import attention_heatmap_grid
 from ..visualization.style import COLORS, base_layout
 
@@ -150,12 +150,31 @@ class SiteBuilder:
 
     def page_architecture(self) -> dict:
         cfg = load_json(self.L / "config.json")
+        mcfg = cfg["model_config"]
+        norm_name = "RMSNorm" if mcfg["norm"] == "rmsnorm" else "LayerNorm"
+        mlp_name = "SwiGLU" if mcfg["mlp"] == "swiglu" else "GELU MLP"
         return {"blocks": [
             {"html": "<p>Decoder-only Transformer を全て手書き実装（attention, block, 学習/評価/生成ループ, 計測フック）。"
-                     "SDPA は explicit 実装と出力一致を検証した上で高速パスとしてのみ使用。</p>"
-                     "<pre>residual stream: x → Norm → Attn → (+) → Norm → MLP → (+) → …\n"
-                     "Classical: LayerNorm + learned pos + GELU + bias\n"
-                     "Modern   : RMSNorm + RoPE + SwiGLU + bias-free</pre>"},
+                     "SDPA は explicit 実装と出力一致を検証した上で高速パスとしてのみ使用。"
+                     "Classical（LayerNorm + learned pos + GELU + bias）→ Modern（RMSNorm + RoPE + SwiGLU + bias-free）"
+                     "への切替アブレーションは <a href=\"ablation.html\">アブレーション</a> ページで比較。</p>"},
+            {"figure": _fig(architecture_viz.model_flow_figure(mcfg)), "meta": interp(
+                "Model L（Modern構成）の全体データフロー図。",
+                "入力から出力までテンソルがどう変換されるかを一目で把握するため。",
+                "上から下へ矢印の順にテンソルが流れる。箱にカーソルを合わせると実寸（次元・層数等）を表示。",
+                f"d_model={mcfg['d_model']}, n_layers={mcfg['n_layers']}, n_heads={mcfg['n_heads']}, "
+                f"vocab_size={mcfg['vocab_size']}。",
+                "パラメータの大半はMLPとtoken embeddingに集中する（下図参照）が、計算量はブロックの繰り返しに支配される。",
+                "簡略図であり、dropout・attn_implの分岐等の実装細部は省略。",
+                "ブロック内部の詳細は次の図。")},
+            {"figure": _fig(architecture_viz.block_internals_figure(mcfg)), "meta": interp(
+                "TransformerBlock 内部の pre-LN 残差構造。",
+                "「ブロックは入力を置き換えるのでなく、2つの分岐出力を足し込むだけ」という設計原理を可視化するため。",
+                "x から右に読む。上段が主経路（Norm→Attn/MLP）、下段が残差バイパス（恒等写像）。",
+                f"norm={mcfg['norm']}, mlp={mcfg['mlp']}（{norm_name}/{mlp_name}）。",
+                "残差パスが恒等写像であることが、深いスタックでも学習が安定する理由（pre-LN の既知挙動）。",
+                "1ブロック分の模式図。層間の違い（活性化の蓄積等）は training.html の RMS ヒートマップ参照。",
+                "パラメータ配分の実測値は次の図。")},
             {"figure": _fig(params_viz.param_breakdown_figure(cfg["param_breakdown"])), "meta": interp(
                 "Model L のパラメータ構成比。", "容量の配分を知ることはスケーリングの前提。",
                 "棒が高いほどパラメータが多い。", "MLP と token embedding が支配的。",
