@@ -1,5 +1,6 @@
 """Offline, structural and equation-rendering tests for the HTML report."""
 
+import json
 import re
 from dataclasses import replace
 from pathlib import Path
@@ -110,3 +111,44 @@ def test_callouts_are_localized_and_interpolated(tmp_path: Path) -> None:
     assert "合成ラボは市場データを用いずに" in ja  # executive-summary callout prose
     assert beta_text in ja  # interpolated skew value survives translation
     assert "H changes path regularity" not in ja  # EN callout fully replaced
+
+
+def _plotly_json_text(value: str) -> str:
+    """Encode a string the way Plotly's `to_html()` embeds figure titles:
+    as JSON with `ensure_ascii=True`, so non-ASCII characters appear as
+    `\\uXXXX` escapes inside the inline `Plotly.newPlot(...)` payload rather
+    than as literal UTF-8 text."""
+    return json.dumps(value)[1:-1]
+
+
+def test_captions_and_evidence_note_localized(tmp_path: Path) -> None:
+    config = _report_config()
+    manifest = run_all(config, tmp_path, force=True)
+    en = build_standalone_report(config, tmp_path, manifest, locale="en").read_text(
+        encoding="utf-8"
+    )
+    ja = build_standalone_report(config, tmp_path, manifest, locale="ja").read_text(
+        encoding="utf-8"
+    )
+    assert "根拠:" in ja  # evidence note prefix, JA
+    assert "Evidence: locally generated" not in ja
+    assert "<h3>検証ゲート</h3>" in ja  # validation_gates_heading, JA
+    assert "<h3>Validation gates</h3>" not in ja
+    # "Validation gates" also appears verbatim as a _metric_cards label, which
+    # stays English by design; only the <h3> heading text is localized.
+
+    # Figure titles/subtitles are rendered by Plotly's `to_html()`, which
+    # serializes the figure layout as `ensure_ascii=True` JSON, so the
+    # translated Japanese text shows up as `\uXXXX` escapes in the HTML
+    # source rather than literal characters.
+    assert _plotly_json_text("Hawkesイベント・ラスター") in ja  # figure.hawkes_events.title
+    assert "Hawkes event raster" not in ja
+    assert _plotly_json_text("条件付きHawkes強度") in ja  # figure.hawkes_intensity.title
+    assert "Conditional Hawkes intensity" not in ja
+    assert _plotly_json_text("フラクショナル・ブラウン運動のパス") in ja  # figure.fbm_paths.title
+    assert _plotly_json_text("フラクショナル・ガウスノイズの増分") in ja  # figure.fgn_increments.title
+    assert _plotly_json_text("拡大時の局所的なラフネス") in ja  # figure.fbm_zoom.title
+    # EN report keeps the original captions untouched (plain ASCII, so no
+    # escaping distinction applies).
+    assert "Fractional Brownian-motion paths" in en
+    assert "Hawkes event raster" in en

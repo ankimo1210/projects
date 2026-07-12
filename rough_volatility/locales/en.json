@@ -5,6 +5,8 @@
   "report_subtitle": "Technical report · synthetic data only · seed {seed} · configuration {fingerprint}",
   "badge": "SELF-CONTAINED · OFFLINE · {profile}",
   "footer": "Generated locally from saved, provenance-stamped experiment artifacts. No market data, remote scripts, or external services are used.",
+  "evidence_note": "Evidence: locally generated synthetic data; profile {profile}, seed {seed}, fingerprint {fingerprint}.",
+  "validation_gates_heading": "Validation gates",
   "section.executive-summary": "Technical summary",
   "section.conceptual-map": "From rough paths to option skew and order flow",
   "section.mathematical-definitions": "Definitions and scaling laws",
@@ -56,5 +58,12 @@
   "callout.noise-bias": "<p><strong>Measurement choices can manufacture or suppress apparent roughness.</strong> Use the preprocessing selector: raw, aggregated, and pre-averaged observations produce different H biases from the same latent paths.</p>",
   "callout.establishes": "<ul><li>Davies–Harte fBM reproduces clean scaling and estimator-recovery patterns.</li><li>The exact joint-Gaussian rBergomi grid preserves the configured forward variance within Monte Carlo error.</li><li>Short-maturity skew steepens as H decreases in these finite simulations.</li><li>Near-critical Hawkes flow is sufficient to create clustered activity and a rough-looking proxy.</li></ul>",
   "callout.does-not-establish": "<ul><li>An estimated H&lt;1/2 does not identify a fractional data-generating process.</li><li>The Hawkes proxy is not a derivation of rough Heston or a market calibration.</li><li>Finite-maturity skew fits do not prove the asymptotic exponent exactly.</li><li>Broadly matched Heston and rBergomi parameters are not economically equivalent calibrations.</li></ul>",
-  "callout.limitations-next-steps": "<p><strong>The next useful tests are robustness tests, not more decorative complexity.</strong></p><ol><li>Replace synthetic ξ₀ with a calibrated forward-variance curve and propagate quote uncertainty.</li><li>Add hybrid/FFT Volterra schemes and benchmark convergence against the exact-grid operator.</li><li>Use variance-reduction methods for short-wing IV and skew estimates.</li><li>Test noise-robust roughness estimators and alternative sampling schemes.</li><li>Fit Hawkes kernels from event data only after addressing seasonality and market-state conditioning.</li></ol><h3>Further questions</h3><p>How stable are the conclusions under alternative leverage, vol-of-vol, and maturity grids? Which estimator remains least biased under realistic price discreteness and asynchronous sampling?</p>"
+  "callout.limitations-next-steps": "<p><strong>The next useful tests are robustness tests, not more decorative complexity.</strong></p><ol><li>Replace synthetic ξ₀ with a calibrated forward-variance curve and propagate quote uncertainty.</li><li>Add hybrid/FFT Volterra schemes and benchmark convergence against the exact-grid operator.</li><li>Use variance-reduction methods for short-wing IV and skew estimates.</li><li>Test noise-robust roughness estimators and alternative sampling schemes.</li><li>Fit Hawkes kernels from event data only after addressing seasonality and market-state conditioning.</li></ol><h3>Further questions</h3><p>How stable are the conclusions under alternative leverage, vol-of-vol, and maturity grids? Which estimator remains least biased under realistic price discreteness and asynchronous sampling?</p>",
+  "figure.fbm_paths.title": "Fractional Brownian-motion paths",
+  "figure.fbm_zoom.title": "Local roughness under zoom",
+  "figure.fgn_increments.title": "Fractional Gaussian-noise increments",
+  "figure.hawkes_events.title": "Hawkes event raster",
+  "figure.hawkes_events.subtitle": "First 100 time units; use the scenario selector",
+  "figure.hawkes_intensity.title": "Conditional Hawkes intensity",
+  "figure.hawkes_intensity.subtitle": "Buy plus sell intensity; use the scenario selector"
 }

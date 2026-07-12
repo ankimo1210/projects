@@ -82,8 +82,17 @@ REQUIRED_KEYS = {
     "report_subtitle",
     "badge",
     "footer",
+    "evidence_note",
+    "validation_gates_heading",
     *(f"section.{anchor}" for anchor in _SECTION_ANCHORS),
     *(f"callout.{anchor}" for anchor in _CALLOUT_ANCHORS),
+    "figure.fbm_paths.title",
+    "figure.fbm_zoom.title",
+    "figure.fgn_increments.title",
+    "figure.hawkes_events.title",
+    "figure.hawkes_events.subtitle",
+    "figure.hawkes_intensity.title",
+    "figure.hawkes_intensity.subtitle",
 }
 
 
