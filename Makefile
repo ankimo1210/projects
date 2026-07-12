@@ -9,7 +9,7 @@
 # `aisan_lbo_case/` uses requirements.txt; `csharp_calc/` is .NET;
 # `rates_volatility_model/`, `notebooks/` have no managed env.
 
-.PHONY: help install sync lint fmt fmt-fix test clean tree report books hull-report hull-book
+.PHONY: help install sync lint fmt fmt-fix test clean tree report books hull-report hull-book rough-vol optimal-execution
 
 help:
 	@echo "Workspace targets (run from repo root):"
@@ -25,12 +25,15 @@ help:
 	@echo "  make books    - build the analytics Jupyter Books"
 	@echo "  make hull-report - build the offline johnhull portal (johnhull/report/site/)"
 	@echo "  make hull-book   - build the johnhull Jupyter Book (johnhull/book/_build/)"
+	@echo "  make rough-vol   - rough_volatility quick demo (experiments + report + notebook)"
+	@echo "  make optimal-execution - optimal_execution quick end-to-end visual lab"
 	@echo ""
 	@echo "Workspace members:"
 	@echo "  gto market-viz stock nbody-gpu line_backup akinator autostock"
 	@echo "  johnhull/hullkit"
 	@echo "  analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning}"
 	@echo "  analytics/differential_equation/{ode-book,pde-book}"
+	@echo "  quantkit deep_hedge_price optimal_execution rough_volatility"
 	@echo ""
 	@echo "Outside the workspace:"
 	@echo "  rates_volatility_model, notebooks, shortest_path (manual envs)"
@@ -70,6 +73,12 @@ hull-report:
 
 hull-book:
 	uv run --no-sync jupyter-book build johnhull/book/
+
+rough-vol:
+	cd rough_volatility && $(MAKE) demo
+
+optimal-execution:
+	cd optimal_execution && $(MAKE) demo
 
 clean:
 	@find . -type d \( -name __pycache__ -o -name .pytest_cache -o -name .ruff_cache -o -name .mypy_cache \) \
