@@ -1,0 +1,156 @@
+"""Structured English/Japanese report localization."""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Any
+
+LOCALE_DIR = Path(__file__).resolve().parents[2] / "locales"
+SUPPORTED_LOCALES = ("en", "ja")
+
+# Literal copy of the 26 `Section.anchor` values from `rough_volatility.notebook.SECTIONS`.
+# Kept as a literal tuple (not imported) so i18n.py stays free of imports from
+# report.py/notebook.py.
+_SECTION_ANCHORS = (
+    "executive-summary",
+    "conceptual-map",
+    "mathematical-definitions",
+    "configuration",
+    "fbm-path-comparison",
+    "local-zoom",
+    "fgn-increments",
+    "increment-acf",
+    "structure-functions",
+    "hurst-recovery",
+    "estimator-bias",
+    "ou-versus-fou",
+    "rough-bergomi-paths",
+    "heston-comparison",
+    "terminal-distributions",
+    "iv-smiles",
+    "iv-surface",
+    "atm-skew-term",
+    "skew-scaling",
+    "hawkes-events",
+    "order-flow-price",
+    "volatility-proxy",
+    "noise-bias",
+    "establishes",
+    "does-not-establish",
+    "limitations-next-steps",
+)
+
+# Literal copy of the narrative-callout anchors used by `rough_volatility.report._narratives`
+# (`report._NARRATIVE_ANCHORS`). Every section currently has a narrative callout, so this
+# mirrors `_SECTION_ANCHORS` exactly; kept as a separate literal tuple (not imported) so
+# i18n.py stays free of imports from report.py/notebook.py. Keep in sync with
+# `report._NARRATIVE_ANCHORS` if that ever changes.
+_CALLOUT_ANCHORS = (
+    "executive-summary",
+    "conceptual-map",
+    "mathematical-definitions",
+    "configuration",
+    "fbm-path-comparison",
+    "local-zoom",
+    "fgn-increments",
+    "increment-acf",
+    "structure-functions",
+    "hurst-recovery",
+    "estimator-bias",
+    "ou-versus-fou",
+    "rough-bergomi-paths",
+    "heston-comparison",
+    "terminal-distributions",
+    "iv-smiles",
+    "iv-surface",
+    "atm-skew-term",
+    "skew-scaling",
+    "hawkes-events",
+    "order-flow-price",
+    "volatility-proxy",
+    "noise-bias",
+    "establishes",
+    "does-not-establish",
+    "limitations-next-steps",
+)
+
+# Literal copy of the 19 figure keys from `rough_volatility.report.REPORT_FIGURE_ANCHORS`.
+# Every figure carries a localized `figure.<key>.title` and `figure.<key>.subtitle`
+# caption (rendered via `report._style_figure`). Kept as a literal tuple (not
+# imported) so i18n.py stays free of imports from report.py/notebook.py.
+_FIGURE_ANCHORS = (
+    "fbm_paths",
+    "fbm_zoom",
+    "fgn_increments",
+    "increment_acf",
+    "structure_scaling",
+    "hurst_distributions",
+    "hurst_bias",
+    "ou_vs_fou",
+    "model_spot_variance",
+    "heston_comparison",
+    "terminal_distributions",
+    "iv_smiles",
+    "iv_surface",
+    "skew_term",
+    "skew_scaling",
+    "hawkes_events",
+    "hawkes_price",
+    "hawkes_intensity",
+    "noise_bias",
+)
+
+REQUIRED_KEYS = {
+    "document_title",
+    "brand",
+    "report_title",
+    "report_subtitle",
+    "badge",
+    "footer",
+    "evidence_note",
+    "validation_gates_heading",
+    *(f"section.{anchor}" for anchor in _SECTION_ANCHORS),
+    *(f"callout.{anchor}" for anchor in _CALLOUT_ANCHORS),
+    *(f"figure.{anchor}.title" for anchor in _FIGURE_ANCHORS),
+    *(f"figure.{anchor}.subtitle" for anchor in _FIGURE_ANCHORS),
+}
+
+
+def load_locale(locale: str) -> dict[str, str]:
+    if locale not in SUPPORTED_LOCALES:
+        raise ValueError(f"unsupported locale {locale!r}; choose from {SUPPORTED_LOCALES}")
+    path = LOCALE_DIR / f"{locale}.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict) or not all(
+        isinstance(k, str) and isinstance(v, str) for k, v in payload.items()
+    ):
+        raise ValueError(f"locale file must be a flat string mapping: {path}")
+    missing = REQUIRED_KEYS - payload.keys()
+    if missing:
+        raise KeyError(f"locale {locale} is missing keys: {sorted(missing)}")
+    return payload
+
+
+def validate_locales() -> None:
+    payloads = {locale: load_locale(locale) for locale in SUPPORTED_LOCALES}
+    reference = set(payloads[SUPPORTED_LOCALES[0]])
+    for locale, payload in payloads.items():
+        keys = set(payload)
+        if keys != reference:
+            missing = sorted(reference - keys)
+            extra = sorted(keys - reference)
+            raise ValueError(f"locale key mismatch for {locale}: missing={missing}, extra={extra}")
+
+
+class Translator:
+    def __init__(self, locale: str):
+        self.locale = locale
+        self.messages = load_locale(locale)
+
+    def __call__(self, key: str, **values: Any) -> str:
+        try:
+            text = self.messages[key]
+        except KeyError as exc:
+            raise KeyError(f"missing translation {key!r} for {self.locale}") from exc
+        return text.format(**values) if values else text

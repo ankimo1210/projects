@@ -1,0 +1,163 @@
+{
+  "results": [
+    {
+      "impl": "explicit",
+      "dtype": "float32",
+      "T": 128,
+      "B": 32,
+      "d_model": 128,
+      "median_ms": 1.921,
+      "tokens_per_sec": 2131787,
+      "device": "cuda"
+    },
+    {
+      "impl": "sdpa",
+      "dtype": "float32",
+      "T": 128,
+      "B": 32,
+      "d_model": 128,
+      "median_ms": 0.908,
+      "tokens_per_sec": 4511691,
+      "device": "cuda"
+    },
+    {
+      "impl": "explicit",
+      "dtype": "float32",
+      "T": 256,
+      "B": 32,
+      "d_model": 128,
+      "median_ms": 3.213,
+      "tokens_per_sec": 2549294,
+      "device": "cuda"
+    },
+    {
+      "impl": "sdpa",
+      "dtype": "float32",
+      "T": 256,
+      "B": 32,
+      "d_model": 128,
+      "median_ms": 1.575,
+      "tokens_per_sec": 5202335,
+      "device": "cuda"
+    },
+    {
+      "impl": "explicit",
+      "dtype": "float32",
+      "T": 512,
+      "B": 32,
+      "d_model": 128,
+      "median_ms": 13.726,
+      "tokens_per_sec": 1193684,
+      "device": "cuda"
+    },
+    {
+      "impl": "sdpa",
+      "dtype": "float32",
+      "T": 512,
+      "B": 32,
+      "d_model": 128,
+      "median_ms": 4.025,
+      "tokens_per_sec": 4070086,
+      "device": "cuda"
+    },
+    {
+      "impl": "explicit",
+      "dtype": "bfloat16",
+      "T": 128,
+      "B": 32,
+      "d_model": 128,
+      "median_ms": 2.269,
+      "tokens_per_sec": 1804807,
+      "device": "cuda"
+    },
+    {
+      "impl": "sdpa",
+      "dtype": "bfloat16",
+      "T": 128,
+      "B": 32,
+      "d_model": 128,
+      "median_ms": 0.98,
+      "tokens_per_sec": 4180353,
+      "device": "cuda"
+    },
+    {
+      "impl": "explicit",
+      "dtype": "bfloat16",
+      "T": 256,
+      "B": 32,
+      "d_model": 128,
+      "median_ms": 1.676,
+      "tokens_per_sec": 4887152,
+      "device": "cuda"
+    },
+    {
+      "impl": "sdpa",
+      "dtype": "bfloat16",
+      "T": 256,
+      "B": 32,
+      "d_model": 128,
+      "median_ms": 1.132,
+      "tokens_per_sec": 7234733,
+      "device": "cuda"
+    },
+    {
+      "impl": "explicit",
+      "dtype": "bfloat16",
+      "T": 512,
+      "B": 32,
+      "d_model": 128,
+      "median_ms": 7.452,
+      "tokens_per_sec": 2198583,
+      "device": "cuda"
+    },
+    {
+      "impl": "sdpa",
+      "dtype": "bfloat16",
+      "T": 512,
+      "B": 32,
+      "d_model": 128,
+      "median_ms": 1.129,
+      "tokens_per_sec": 14513937,
+      "device": "cuda"
+    }
+  ],
+  "meta": {
+    "timestamp_utc": "2026-07-11T15:26:13.664718+00:00",
+    "git_commit": "d9d4ef33a349a9449b400935ea6d0ad1bca7b6ea",
+    "git_branch": "agent/add-ts-rosetta",
+    "git_dirty": true,
+    "python": "3.12.3",
+    "argv": [
+      "jp_llm_lab/scripts/bench_attention.py"
+    ],
+    "packages": {
+      "torch": "2.11.0+cu128",
+      "numpy": "2.4.6",
+      "matplotlib": "3.10.9",
+      "plotly": "6.7.0",
+      "jinja2": "3.1.6",
+      "pyyaml": "6.0.3",
+      "pandas": "3.0.3"
+    },
+    "env": {
+      "python_version": "3.12.3",
+      "torch_version": "2.11.0+cu128",
+      "cuda_version": "12.8",
+      "cuda_available": true,
+      "gpu_name": "NVIDIA GeForce RTX 5080",
+      "vram_gb": 15.92,
+      "capability": "12.0",
+      "bf16_supported": true,
+      "sdpa_backends": [
+        "math",
+        "flash",
+        "mem_efficient",
+        "cudnn"
+      ],
+      "compile_available": true,
+      "cpu_ram_gb": 47.0,
+      "cpu_count": 20,
+      "platform": "Linux-6.18.33.1-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+    }
+  }
+}

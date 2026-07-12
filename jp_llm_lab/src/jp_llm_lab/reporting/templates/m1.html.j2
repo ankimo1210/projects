@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }}</title>
+<script src="assets/plotly.min.js"></script>
+<style>
+  :root { --ink:#1a1a2e; --sub:#5a5a72; --line:#e3e3ee; --accent:#3b4fd8; --bg:#fafafd; }
+  * { box-sizing:border-box; }
+  body { font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic UI",sans-serif; color:var(--ink);
+         margin:0; background:var(--bg); line-height:1.75; }
+  header { background:linear-gradient(135deg,#1a1a2e,#3b4fd8); color:#fff; padding:42px 24px 34px; }
+  header h1 { margin:0 0 6px; font-size:1.7rem; }
+  header p  { margin:0; opacity:.85; font-size:.95rem; }
+  nav { position:sticky; top:0; background:#fff; border-bottom:1px solid var(--line);
+        padding:8px 24px; z-index:10; overflow-x:auto; white-space:nowrap; }
+  nav a { color:var(--accent); text-decoration:none; margin-right:16px; font-size:.88rem; }
+  main { max-width:1080px; margin:0 auto; padding:24px; }
+  section { background:#fff; border:1px solid var(--line); border-radius:10px;
+            padding:26px 30px; margin:22px 0; }
+  h2 { margin-top:0; font-size:1.25rem; border-bottom:2px solid var(--accent); padding-bottom:8px; }
+  h3 { font-size:1.03rem; margin:26px 0 8px; }
+  .figwrap { overflow-x:auto; margin:10px 0 4px; }
+  dl.interp { background:#f5f6fc; border-left:4px solid var(--accent); border-radius:6px;
+              padding:14px 18px; margin:10px 0 6px; font-size:.9rem; }
+  dl.interp dt { font-weight:700; color:var(--accent); margin-top:8px; }
+  dl.interp dt:first-child { margin-top:0; }
+  dl.interp dd { margin:2px 0 0 0; }
+  table.kv, table.gen { border-collapse:collapse; width:100%; font-size:.88rem; }
+  table.kv td, table.kv th, table.gen td, table.gen th
+    { border:1px solid var(--line); padding:6px 10px; text-align:left; vertical-align:top; }
+  table.kv th { background:#f2f3fa; width:220px; }
+  table.gen th { background:#f2f3fa; }
+  code, .mono { font-family:"Cascadia Code",Consolas,monospace; font-size:.85em; }
+  .gen-text { font-family:"Cascadia Code",Consolas,monospace; font-size:.82rem; white-space:pre-wrap;
+              word-break:break-all; background:#fbfbfe; }
+  .note { color:var(--sub); font-size:.85rem; }
+  footer { text-align:center; color:var(--sub); font-size:.8rem; padding:30px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>{{ title }}</h1>
+  <p>{{ subtitle }}</p>
+</header>
+<nav>
+  {% for s in sections %}<a href="#{{ s.id }}">{{ s.title }}</a>{% endfor %}
+</nav>
+<main>
+{% for s in sections %}
+<section id="{{ s.id }}">
+  <h2>{{ s.title }}</h2>
+  {% if s.intro %}<div>{{ s.intro }}</div>{% endif %}
+  {% for b in s.blocks %}
+    {% if b.heading %}<h3>{{ b.heading }}</h3>{% endif %}
+    {% if b.figure %}<div class="figwrap">{{ b.figure }}</div>{% endif %}
+    {% if b.html %}{{ b.html }}{% endif %}
+    {% if b.meta %}
+    <dl class="interp">
+      <dt>What（何を表示しているか）</dt><dd>{{ b.meta.what }}</dd>
+      <dt>Why（なぜ測定するか）</dt><dd>{{ b.meta.why }}</dd>
+      <dt>How to read（どう読むか）</dt><dd>{{ b.meta.how }}</dd>
+      <dt>Observation（観察）</dt><dd>{{ b.meta.observation }}</dd>
+      <dt>Interpretation（解釈）</dt><dd>{{ b.meta.interpretation }}</dd>
+      <dt>Caveat（断定できないこと）</dt><dd>{{ b.meta.caveat }}</dd>
+      <dt>Next（次に試すこと）</dt><dd>{{ b.meta.next }}</dd>
+    </dl>
+    {% endif %}
+  {% endfor %}
+</section>
+{% endfor %}
+</main>
+<footer>{{ footer }}</footer>
+</body>
+</html>

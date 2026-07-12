@@ -1,0 +1,161 @@
+# Default configuration — optimal_execution visual lab.
+#
+# UNITS (documented in docs/METHODOLOGY.md):
+#   time              seconds (trading year = 252 d x 6.5 h x 3600 s = 5,896,800 s)
+#   price / cash      currency units ("USD-like"); prices are per share
+#   quantity          shares; trade rate v = shares / second
+#   eta   (temporary) currency * s / share^2   (price concession = eta * v)
+#   gamma (permanent) currency / share         (mid shift = gamma * executed shares)
+#   ow_eta (transient) currency / share        (displacement jump per share, decays at rho)
+#   rho   (resilience) 1 / second              (exp decay rate of transient displacement)
+#   risk_aversion_lambda  1 / currency         (Almgren-Chriss mean-variance weight)
+#
+# CALIBRATION NOTE: eta/gamma are set so that with X=60k shares over 30 min
+# (notional 6M), TWAP temporary cost ~0.3 bp, one-step dump ~10 bp, TWAP
+# timing risk (1 sd) ~20 bp, and the AC shape parameter kappa*T ~ 1.5 — the
+# impact-vs-risk trade-off is visible at bps scale. X=60k is ~15.6% of the
+# expected interval market volume (384.6k shares), so TWAP fits inside the
+# 20% participation cap while front-loaded schedules (AC, immediate) hit it.
+# The task prompt's illustrative values (X=100k needs 26% > cap; eta=2.5e-7,
+# gamma=5e-8, rho=0.12 give kappa*T ~ 30 and sub-0.01 bp impact costs) are
+# covered by the sensitivity sweeps instead. LOB exogenous market-order flow
+# is DERIVED from average_daily_volume (2 sides x rate x mean size = ADV
+# rate), so the schedule world and the book world share one volume scale.
+
+profile: default
+seed: 1210
+
+# ---- Order / episode ---------------------------------------------------
+side: sell                      # sell | buy
+initial_inventory: 60000        # shares (X)
+horizon_seconds: 1800           # T
+n_decision_steps: 60            # N (decision interval = T / N)
+arrival_price: 100.0            # S0
+
+# ---- Unaffected price process -------------------------------------------
+annualized_volatility: 0.20
+vol_profile: u_shape            # constant | u_shape
+vol_u_amplitude: 0.5            # relative amplitude of the intraday U bump
+stochastic_vol:
+  enabled: false
+  regime_vol_mult: 2.0          # multiplier in the high-vol regime
+  switch_prob_per_step: 0.02
+jumps:
+  enabled: false
+  intensity_per_hour: 1.0
+  jump_sigma_bps: 15.0
+alpha:
+  enabled: false
+  drift_bps_per_hour: 0.0       # signed drift of the unaffected mid
+  decay_seconds: 600.0          # e-folding time of the alpha signal
+
+# ---- Volume / liquidity --------------------------------------------------
+average_daily_volume: 5000000   # shares / 6.5h day
+volume_profile: u_shape         # flat | u_shape
+volume_u_amplitude: 0.5
+volume_mult_sigma: 0.30         # lognormal sd of per-step volume multiplier
+spread_bps: 2.0                 # average quoted spread (full spread, bps of S0)
+tick_size: 0.01
+fee_bps: 0.10                   # commission, bps of executed notional
+liquidity:
+  spread_vol_beta: 0.5          # spread sensitivity to vol ratio
+  spread_stress_mult: 3.0       # spread multiplier in stressed regime
+  stress_prob_per_step: 0.0     # default: no stress regime
+  depth_shares: 4000            # mean visible L1 depth per side (shares)
+  depth_sigma: 0.35             # lognormal sd of depth fluctuations
+  deep_liquidity_mult: 5.0      # liquidity beyond L1 relative to L1 depth
+  replenish_rate: 0.25          # fraction of depth deficit refilled per sub-step
+
+# ---- Impact model ---------------------------------------------------------
+impact:
+  temporary_eta: 1.0e-4         # currency*s/share^2
+  permanent_gamma: 2.5e-7       # currency/share
+  transient_eta: 2.0e-6         # currency/share (OW displacement jump)
+  resilience_rho: 0.01          # 1/s  (half-life ~69 s)
+  propagator: exponential       # exponential | powerlaw
+  powerlaw_beta: 0.5
+  powerlaw_tau0: 30.0           # s
+  sqrt_impact_Y: 0.8            # I(Q) = Y * sigma_day * sqrt(Q / ADV)
+
+# ---- Objective / constraints ----------------------------------------------
+risk_aversion_lambda: 1.0e-6    # 1/currency
+max_participation_rate: 0.20    # cap on agent market-order share of market volume
+max_child_order_frac: 0.10      # max single child order, fraction of X
+terminal_inventory_penalty: 10.0  # phi: shaped-reward penalty scale (see RL_ENVIRONMENT.md)
+price_collar_bps: 150.0         # market orders may not execute beyond this vs arrival
+
+# ---- Reactive LOB simulator -----------------------------------------------
+lob:
+  sub_steps_per_decision: 15    # event sub-steps per decision interval
+  flow_scale: 1.0               # MO rate/side = flow_scale * ADV_rate / (2 * size)
+  market_order_size_mean: 250   # shares per market order
+  limit_order_rate_mult: 2.0    # LO arrival rate = mult * MO rate (per side)
+  limit_order_size_mean: 300
+  cancel_rate_mult: 1.0         # cancellation rate = mult * MO rate (per side)
+  imbalance_beta0: 0.0          # log-intensity betas: buy MO intensity
+  imbalance_beta1: 0.8          #   * queue imbalance
+  imbalance_beta2: 25.0         #   * recent return (per 1% move)
+  imbalance_beta3: 0.5          #   * stress indicator
+  intensity_cap_mult: 5.0       # hard cap: intensity <= cap_mult * base rate
+  adverse_alpha_phi: 0.97       # AR(1) of latent short-horizon alpha (per sub-step)
+  adverse_alpha_sigma_bps: 1.2  # innovation sd of latent alpha (bps per sub-step)
+  adverse_alpha_to_flow: 0.6    # how strongly latent alpha tilts MO flow
+  adverse_alpha_to_drift: 0.5   # how strongly latent alpha drifts the mid
+
+# ---- Monte Carlo sizes ------------------------------------------------------
+n_scenarios: 20000              # classical-world scenarios (calibration/plots)
+n_test_scenarios: 100000        # classical-world CRN test set
+mc_chunk_size: 20000
+
+# ---- LOB-world evaluation -----------------------------------------------
+lob_eval_episodes: 2000         # per strategy, main in-distribution comparison
+lob_stress_episodes: 500        # per strategy per stress regime
+lob_example_episodes: 8         # per strategy, trace exports for plots
+
+# ---- RL -----------------------------------------------------------------
+rl:
+  training_episodes: 50000
+  validation_episodes: 5000
+  test_episodes: 20000
+  seeds: [1210, 2026, 31415]
+  hidden_size: 64
+  learning_rate: 3.0e-4
+  gamma: 0.999
+  gae_lambda: 0.95
+  clip_epsilon: 0.2
+  entropy_coef: 0.01
+  entropy_final: 0.001
+  value_coef: 0.5
+  rollout_steps: 2048
+  minibatch_size: 256
+  update_epochs: 4
+  max_grad_norm: 0.5
+  eval_every_episodes: 1000
+  early_stop_patience: 8        # eval rounds without val improvement
+  reward:
+    cost_scale: 1.0e-3          # currency -> reward units
+    inventory_penalty: 1.0e-6   # lambda_inv * x^2 sigma^2 dt   (1/currency)
+    impact_penalty: 5.0e-2      # lambda_impact * D^2           (1/currency^2 scale)
+    constraint_penalty: 0.05    # per clipped/blocked action
+
+# ---- Ablation / misspecification -------------------------------------------
+ablation:
+  features: [imbalance, recent_flow, transient_impact, volume_state, vol_state]
+  training_episodes: 20000
+misspecification:
+  # train on default sim, test on this override set
+  test_overrides:
+    impact: { resilience_rho: 0.002, transient_eta: 4.0e-6 }
+    liquidity: { depth_shares: 2000, spread_stress_mult: 3.0, stress_prob_per_step: 0.05 }
+
+# ---- Stress regimes for out-of-sample evaluation ------------------------
+stress_regimes:
+  high_vol:       { annualized_volatility: 0.40 }
+  low_liquidity:  { liquidity: { depth_shares: 1500 }, lob: { limit_order_rate_mult: 0.75 } }
+  volume_shift:   { volume_profile: flat, volume_mult_sigma: 0.6 }
+  adverse_alpha:  { alpha: { enabled: true, drift_bps_per_hour: -30.0 } }
+  stressed_spread: { spread_bps: 6.0, impact: { resilience_rho: 0.002 }, liquidity: { stress_prob_per_step: 0.05 } }
+
+# ---- Output -----------------------------------------------------------------
+artifacts_dir: artifacts
+reports_dir: reports

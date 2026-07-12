@@ -1,0 +1,27 @@
+# Quick profile — CPU smoke tests, notebook iteration, `make demo`.
+# Inherits everything from default.yaml; overrides only scale knobs.
+extends: default.yaml
+profile: quick
+seed: 1210
+
+n_decision_steps: 30
+
+n_scenarios: 2000
+n_test_scenarios: 5000
+mc_chunk_size: 5000
+
+lob_eval_episodes: 600
+lob_stress_episodes: 200
+lob_example_episodes: 6
+
+rl:
+  training_episodes: 3000
+  validation_episodes: 200
+  test_episodes: 600
+  seeds: [1210]
+  eval_every_episodes: 250
+  early_stop_patience: 6
+
+ablation:
+  features: [imbalance, recent_flow, transient_impact, volume_state, vol_state]
+  training_episodes: 1500

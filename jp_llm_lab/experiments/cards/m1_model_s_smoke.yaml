@@ -1,0 +1,66 @@
+# Experiment card (spec §25) — Milestone 1 smoke run
+experiment_id: m1_model_s_smoke_seed42
+question: >
+  約1Mパラメータの Classical GPT は、文字レベルの日本語（『こころ』146K tokens）で
+  bigram ベースラインをどの程度上回り、学習過程の各計測器（loss/勾配/活性/attention/生成）は
+  期待どおりの信号を出すか。
+hypothesis: >
+  文脈を使える Transformer は bigram (val ~3.5 nats) を有意に下回る。
+  init loss は ln V に一致し、pre-LN 構成では residual RMS が層とともに成長する。
+independent_variable:
+  model_family:
+    - count_bigram
+    - neural_bigram
+    - classical_gpt_model_s
+controlled_variables:
+  corpus_snapshot: aozora_kokoro (sample_v1, sha256 in data/manifests/sample_v1.json)
+  tokenizer: char_v1 (vocab 2068)
+  context_length: 256
+  optimizer: adamw (lr 3e-3, warmup 5%, cosine, wd 0.1, clip 1.0)
+  precision: bf16 autocast
+  seed: 42
+dependent_variables:
+  - validation_loss
+  - perplexity
+  - tokens_per_second
+  - activation_rms
+  - attention_entropy
+  - fixed_prompt_generations
+success_criteria:
+  init_loss_close_to_ln_v: "|init - ln V| < 1.0"
+  beats_bigram_val_loss_by: 0.2
+  no_nan_inf: true
+limitations:
+  - 単一シード・単一コーパス。run-to-run 変動は未測定（M3 で複数シード）。
+  - 146K tokens を約45エポック周回する多エポック学習であり、train/val ギャップは暗記を含む。
+  - val は小説終盤の連続スライスで、文体ドリフトと分離できない。
+
+# ---- appended after the run (2026-07-12) ----
+result:
+  count_bigram_val_loss: 3.5919   # alpha=0.05, same val slice
+  neural_bigram_val_loss: 3.5407
+  model_s_val_loss: 3.1745
+  model_s_val_ppl: 23.91
+  model_s_train_eval_loss: 2.620
+  init_val_loss: 7.663            # ln V = 7.634
+  tokens_seen: 6553600
+  wallclock_sec: 41.6
+  attention_entropy_init_to_final: [1.970, 1.688]
+  nan_inf_events: 0
+observation: >
+  init loss は ln V と 0.03 nats 以内で一致。Model S は bigram を val で 0.37 nats 上回った
+  （成功基準 0.2 を満たす）。train/val ギャップ 0.55 nats。クリップ発動は序盤のみ。
+  residual RMS は層方向・学習方向ともに単調増加。attention エントロピーは全 head ほぼ一様
+  (1.97) から層依存 (最深層 1.48) に分化。固定プロンプト生成は
+  「単一文字連打 → 局所ループ → 文構造」の3段階で改善。
+interpretation: >
+  0.37 nats の改善が「文脈(>1 token)を条件づける能力」の寄与。計測器はすべて期待信号を出し、
+  Milestone 2 以降の統制実験に使える状態。学習データ冒頭文の続きすら P(だ)=0.004 であり、
+  この規模では逐語暗記より局所統計の獲得が支配的。
+caveats: >
+  改善幅はコーパス・トークナイザ・多エポック設定に固有。attention エントロピー低下は
+  1文に対する定性観察で、「文頭への集中が増える」という事前予想はこの文では不成立だった
+  （0.153 → 0.111 に減少）。仮説に合わない観察もそのまま記録している。
+follow_up: >
+  M2: 実コーパススナップショット（<1 epoch）で暗記と汎化を分離。BPE 8K で同一実験。
+  M3: 3シードで run-to-run 変動を測り、この差の有意性を判断。

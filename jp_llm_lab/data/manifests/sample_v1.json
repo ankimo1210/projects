@@ -1,0 +1,26 @@
+{
+  "version": "sample_v1",
+  "sources": {
+    "kokoro": {
+      "title": "こころ",
+      "author": "夏目漱石",
+      "url": "https://www.aozora.gr.jp/cards/000148/files/773_ruby_5968.zip",
+      "license": "Aozora Bunko public domain (author died >70y ago)",
+      "synthetic": false,
+      "sha256": "8a75c39986da9f1b7ba31d238f18f08307e6d515d9c771a7cda23a7467584766",
+      "n_chars": 162481,
+      "fetched_at": "2026-07-11T15:23:15.622306+00:00"
+    },
+    "hashire_merosu": {
+      "title": "走れメロス",
+      "author": "太宰治",
+      "url": "https://www.aozora.gr.jp/cards/000035/files/1567_ruby_4948.zip",
+      "license": "Aozora Bunko public domain (author died >70y ago)",
+      "synthetic": false,
+      "sha256": "23bf9ec28067649dcc5692014d1ca34c2549ba3d0868d785ca53c056c32751ab",
+      "n_chars": 9915,
+      "fetched_at": "2026-07-11T15:23:15.638879+00:00"
+    }
+  },
+  "updated_at": "2026-07-11T15:23:15.638892+00:00"
+}

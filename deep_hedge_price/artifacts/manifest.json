@@ -1,0 +1,10 @@
+{
+  "main_path_results": "/home/kazumasa/projects/deep_hedge_price/artifacts/data/main_path_results.csv.gz",
+  "policy_surface": "/home/kazumasa/projects/deep_hedge_price/artifacts/data/policy_surface.csv",
+  "risk_objective_summary": "/home/kazumasa/projects/deep_hedge_price/artifacts/data/risk_objective_summary.csv",
+  "sanity_checks": "/home/kazumasa/projects/deep_hedge_price/artifacts/metrics/sanity_checks.json",
+  "sensitivity_summary": "/home/kazumasa/projects/deep_hedge_price/artifacts/data/sensitivity_summary.csv",
+  "strategy_summary": "/home/kazumasa/projects/deep_hedge_price/artifacts/data/strategy_summary.csv",
+  "summary_metrics": "/home/kazumasa/projects/deep_hedge_price/artifacts/metrics/summary_metrics.json",
+  "trade_scatter": "/home/kazumasa/projects/deep_hedge_price/artifacts/data/trade_scatter.csv"
+}
