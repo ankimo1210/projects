@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>トークナイザ — jp_llm_lab — 教育用日本語LLMラボ</title>
+<script src="assets/plotly.min.js"></script>
+<style>
+  :root { --ink:#1a1a2e; --sub:#5a5a72; --line:#e3e3ee; --accent:#3b4fd8; --bg:#fafafd; }
+  * { box-sizing:border-box; }
+  body { font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic UI",sans-serif; color:var(--ink);
+         margin:0; background:var(--bg); line-height:1.75; }
+  header { background:linear-gradient(135deg,#1a1a2e,#3b4fd8); color:#fff; padding:26px 24px 22px; }
+  header h1 { margin:0; font-size:1.3rem; }
+  header p { margin:4px 0 0; opacity:.8; font-size:.85rem; }
+  nav { position:sticky; top:0; background:#fff; border-bottom:1px solid var(--line);
+        padding:8px 16px; z-index:10; overflow-x:auto; white-space:nowrap; }
+  nav a { color:var(--accent); text-decoration:none; margin-right:14px; font-size:.85rem; padding:3px 0; }
+  nav a.active { font-weight:700; border-bottom:2px solid var(--accent); }
+  main { max-width:1040px; margin:0 auto; padding:24px; }
+  h2 { font-size:1.3rem; border-bottom:2px solid var(--accent); padding-bottom:8px; }
+  h3 { font-size:1.03rem; margin:24px 0 8px; }
+  .block { background:#fff; border:1px solid var(--line); border-radius:10px; padding:20px 24px; margin:18px 0; }
+  .figwrap { overflow-x:auto; }
+  dl.interp { background:#f5f6fc; border-left:4px solid var(--accent); border-radius:6px;
+              padding:12px 16px; margin:10px 0 0; font-size:.86rem; }
+  dl.interp dt { font-weight:700; color:var(--accent); margin-top:7px; }
+  dl.interp dt:first-child { margin-top:0; }
+  dl.interp dd { margin:2px 0 0; }
+  table.kv { border-collapse:collapse; width:100%; font-size:.85rem; }
+  table.kv td, table.kv th { border:1px solid var(--line); padding:6px 10px; text-align:left; vertical-align:top; }
+  table.kv th { background:#f2f3fa; }
+  pre { background:#f5f6fc; padding:12px; border-radius:6px; overflow-x:auto; font-size:.82rem; }
+  code { font-family:"Cascadia Code",Consolas,monospace; font-size:.85em; }
+  .gen-text { font-family:"Cascadia Code",Consolas,monospace; font-size:.8rem; white-space:pre-wrap; word-break:break-all; }
+  footer { text-align:center; color:var(--sub); font-size:.78rem; padding:26px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>jp_llm_lab — 教育用日本語LLMラボ</h1>
+  <p>全数値は実測値。各図に What / Why / How / Observation / Interpretation / Caveat / Next。</p>
+</header>
+<nav>
+  <a href="index.html" >概要</a><a href="corpus.html" >コーパス</a><a href="tokenizer.html" class="active">トークナイザ</a><a href="architecture.html" >アーキテクチャ</a><a href="training.html" >学習過程</a><a href="attention.html" >Attention</a><a href="ablation.html" >アブレーション</a><a href="scaling.html" >スケーリング</a><a href="calibration.html" >確率較正</a><a href="generation.html" >生成</a><a href="memorization.html" >暗記</a><a href="sft.html" >SFT</a><a href="evaluation.html" >評価</a><a href="conclusions.html" >結論と限界</a>
+</nav>
+<main>
+  <h2>トークナイザ</h2>
+  
+  <div class="block">
+    
+    
+    <p>2種のトークナイザ: 教育用 char-level BPE（全merge履歴記録）と本番 HF-BPE 8K。両者とも特殊トークン <code>&lt;PAD&gt;&lt;UNK&gt;&lt;BOS&gt;&lt;EOS&gt;&lt;USER&gt;&lt;ASSISTANT&gt;</code> を id 0-5 に固定。</p><p>demo: 「私はその人を常に先生と呼んでいた。東京大学で自然言語処理を研究しています。」<br>prod BPE → 私は/その/人を/常に/先生/と/呼/んで/いた。/東京/大学/で/自然/言語/処理/を/研究/しています。</p>
+    
+  </div>
+  
+  <div class="block">
+    <h3>トークン化キャッシュ（chars/token = 圧縮率）</h3>
+    
+    <table class="kv"><tr><th>snapshot</th><th>tokens</th><th>chars/token</th></tr><tr><td>smoke</td><td>1,054,722</td><td>1.6144</td></tr><tr><td>pilot</td><td>10,523,324</td><td>1.6171</td></tr><tr><td>validation</td><td>1,079,739</td><td>1.5765</td></tr><tr><td>calibration</td><td>1,092,315</td><td>1.5584</td></tr><tr><td>test</td><td>1,079,368</td><td>1.5778</td></tr><tr><td>wiki_pilot</td><td>11,737,426</td><td>1.4488</td></tr><tr><td>main</td><td>108,465,345</td><td>1.569</td></tr></table>
+    
+    <dl class="interp">
+      <dt>What</dt><dd>各スナップショットのトークン数と圧縮率。</dd>
+      <dt>Why</dt><dd>系列長・計算量に直結するため。</dd>
+      <dt>How to read</dt><dd>chars/token が大きいほど圧縮的。</dd>
+      <dt>Observation</dt><dd>BPE8K で約1.6文字/トークン。</dd>
+      <dt>Interpretation</dt><dd>文字トークナイザ（1文字/トークン）より系列が短い。</dd>
+      <dt>Caveat</dt><dd>圧縮率はコーパス依存。</dd>
+      <dt>Next</dt><dd>語彙 2K/4K/8K の比較は NB03。</dd>
+    </dl>
+    
+  </div>
+  
+</main>
+<footer>jp_llm_lab — generated from saved experiment artifacts. Not a competitive LLM; a lab to make LLM internals observable.</footer>
+</body>
+</html>

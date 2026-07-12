@@ -1,0 +1,39 @@
+# Milestone 4: Model L (~30M params), Modern GPT, BPE 8K, main snapshot 100M tokens.
+run_name: m4_model_l_modern
+data:
+  source: snapshot
+  tokenizer_version: bpe8k_v1
+  train_snapshot: main           # 108M tokens
+  val_snapshot: validation       # disjoint documents
+  max_val_tokens: 500000
+model:
+  preset: modern                 # RMSNorm + RoPE + SwiGLU + bias-free
+  d_model: 512
+  n_heads: 8
+  n_layers: 8
+  context_len: 512
+train:
+  seed: 42
+  steps: 8000                    # 8000 * 24 * 512 = ~98M tokens ≈ 0.9 epoch of main
+  batch_size: 24
+  grad_accum: 1
+  context_len: 512
+  lr: 6.0e-4
+  warmup_frac: 0.02
+  min_lr_frac: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+  dtype: bf16
+  log_interval: 25
+  eval_interval: 250
+  eval_batches: 40
+  ratio_interval: 100
+  checkpoint_fracs: [0.0, 0.01, 0.05, 0.10, 0.25, 0.50, 0.75, 1.0]
+  fixed_prompts:
+    - "日本の首都は"
+    - "私は昨日、友人と"
+    - "科学とは、"
+    - "むかしむかし、あるところに"
+    - "この問題を解決するためには"
+    - "人工知能の研究は"
+  max_new_tokens: 120

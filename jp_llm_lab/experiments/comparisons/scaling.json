@@ -1,0 +1,78 @@
+{
+  "points": [
+    {
+      "name": "xs",
+      "n_params": 1852544,
+      "val_loss": 6.23608922958374,
+      "ppl": 510.85675580415233,
+      "tokens_seen": 6144000,
+      "wallclock_sec": 9.1
+    },
+    {
+      "name": "s",
+      "n_params": 6769920,
+      "val_loss": 5.646110725402832,
+      "ppl": 283.18792562418724,
+      "tokens_seen": 6144000,
+      "wallclock_sec": 13.4
+    },
+    {
+      "name": "m",
+      "n_params": 13767552,
+      "val_loss": 5.317512154579163,
+      "ppl": 203.87603846808892,
+      "tokens_seen": 6144000,
+      "wallclock_sec": 19.0
+    },
+    {
+      "name": "l",
+      "n_params": 29499904,
+      "val_loss": 5.5829683303833,
+      "ppl": 265.85959481474,
+      "tokens_seen": 6144000,
+      "wallclock_sec": 34.5
+    }
+  ],
+  "tokens_budget": 6144000,
+  "meta": {
+    "timestamp_utc": "2026-07-11T16:59:39.314216+00:00",
+    "git_commit": "5c580492f58f96f050b876b0b6b5733fb32403ef",
+    "git_branch": "agent/add-ts-rosetta",
+    "git_dirty": true,
+    "python": "3.12.3",
+    "argv": [
+      "jp_llm_lab/scripts/run_scaling.py",
+      "--steps",
+      "500"
+    ],
+    "packages": {
+      "torch": "2.11.0+cu128",
+      "numpy": "2.4.6",
+      "matplotlib": "3.10.9",
+      "plotly": "6.7.0",
+      "jinja2": "3.1.6",
+      "pyyaml": "6.0.3",
+      "pandas": "3.0.3"
+    },
+    "env": {
+      "python_version": "3.12.3",
+      "torch_version": "2.11.0+cu128",
+      "cuda_version": "12.8",
+      "cuda_available": true,
+      "gpu_name": "NVIDIA GeForce RTX 5080",
+      "vram_gb": 15.92,
+      "capability": "12.0",
+      "bf16_supported": true,
+      "sdpa_backends": [
+        "math",
+        "flash",
+        "mem_efficient",
+        "cudnn"
+      ],
+      "compile_available": true,
+      "cpu_ram_gb": 47.0,
+      "cpu_count": 20,
+      "platform": "Linux-6.18.33.1-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "train": {
+    "n": 40,
+    "mean_exact_match": 0.65,
+    "mean_lcs": 2.2,
+    "max_exact_match": 8
+  },
+  "validation": {
+    "n": 40,
+    "mean_exact_match": 0.575,
+    "mean_lcs": 1.925,
+    "max_exact_match": 3
+  },
+  "prefix_len": 40,
+  "continue_len": 60,
+  "note": "train >> validation on exact-match ⇒ memorization; similar ⇒ generalization"
+}

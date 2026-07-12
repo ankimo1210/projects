@@ -50,6 +50,12 @@ Thumbs.db
 # AI tooling scratch (brainstorm/plan artifacts)
 .superpowers/
 
+# Xcode per-user state
+**/xcuserdata/
+
+# LLM translation cache (models/ build scripts regenerate it)
+**/translation_cache/
+
 # Claude Code local settings / state (machine-specific)
 .claude/settings.local.json
 .claude/scheduled_tasks.lock

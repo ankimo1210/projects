@@ -1,0 +1,42 @@
+# Milestone 1 smoke run: Model S (~1.2M params) on the char-tokenized sample corpus.
+run_name: m1_model_s_smoke
+data:
+  corpus: kokoro
+  val_frac: 0.1
+tokenizer:
+  kind: char
+model:
+  d_model: 128
+  n_heads: 4
+  n_layers: 4
+  context_len: 256
+  dropout: 0.0
+  attn_impl: sdpa          # fast path for training; explicit path used for analysis
+  bias: true
+  tie_weights: true
+  init_std: 0.02
+  residual_scaled_init: true
+train:
+  seed: 42
+  steps: 400
+  batch_size: 64
+  grad_accum: 1
+  context_len: 256
+  lr: 3.0e-3
+  warmup_frac: 0.05
+  min_lr_frac: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+  dtype: bf16
+  log_interval: 5
+  eval_interval: 25
+  eval_batches: 16
+  ratio_interval: 10
+  checkpoint_fracs: [0.0, 0.01, 0.05, 0.10, 0.25, 0.50, 0.75, 1.0]
+  fixed_prompts:
+    - "私はその人を常に先生と呼んでいた。"
+    - "私は"
+    - "人間というものは、"
+    - "彼の顔を見た時、"
+    - "夏の暑い"
+  max_new_tokens: 120

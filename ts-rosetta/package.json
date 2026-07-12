@@ -1,0 +1,22 @@
+{
+  "name": "ts-rosetta",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Rosetta Stone learning lab: the same task app implemented across the TypeScript ecosystem",
+  "scripts": {
+    "test": "pnpm --filter @rosetta/core test",
+    "build": "pnpm -r build",
+    "dev:ui": "pnpm --parallel --filter @rosetta/app-react --filter @rosetta/app-vue --filter @rosetta/app-angular dev",
+    "dev:react": "pnpm --filter @rosetta/app-react dev",
+    "dev:vue": "pnpm --filter @rosetta/app-vue dev",
+    "dev:angular": "pnpm --filter @rosetta/app-angular start",
+    "dev:solid": "pnpm --filter @rosetta/app-solid dev",
+    "dev:next": "pnpm --filter @rosetta/app-next dev",
+    "dev:express": "pnpm --filter @rosetta/server-express dev",
+    "dev:nest": "pnpm --filter @rosetta/server-nest start:dev",
+    "dev:dashboard": "pnpm --filter @rosetta/dashboard dev"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.1"
+  }
+}

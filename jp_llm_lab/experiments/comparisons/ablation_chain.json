@@ -1,0 +1,151 @@
+{
+  "chain": [
+    "classical",
+    "rmsnorm",
+    "rope",
+    "swiglu",
+    "modern"
+  ],
+  "seeds": 3,
+  "steps": 300,
+  "results": {
+    "classical": {
+      "switches": {
+        "norm": "layernorm",
+        "pos": "learned",
+        "mlp": "gelu",
+        "bias": true
+      },
+      "n_params": 10183680,
+      "val_loss_mean": 6.425830523173015,
+      "val_loss_std": 0.04537771270635306,
+      "val_loss_seeds": [
+        6.475969195365906,
+        6.413941550254822,
+        6.387580823898316
+      ],
+      "ppl_mean": 618.0198535916917,
+      "top1_conf_mean": 0.04930143170058727,
+      "entropy_mean": 6.7498982667922975
+    },
+    "rmsnorm": {
+      "switches": {
+        "norm": "rmsnorm",
+        "pos": "learned",
+        "mlp": "gelu",
+        "bias": true
+      },
+      "n_params": 10179520,
+      "val_loss_mean": 6.43295947710673,
+      "val_loss_std": 0.0037915304542845466,
+      "val_loss_seeds": [
+        6.429933333396912,
+        6.437212538719177,
+        6.431732559204102
+      ],
+      "ppl_mean": 622.0150394543081,
+      "top1_conf_mean": 0.049198435122768086,
+      "entropy_mean": 6.771634189287821
+    },
+    "rope": {
+      "switches": {
+        "norm": "rmsnorm",
+        "pos": "rope",
+        "mlp": "gelu",
+        "bias": true
+      },
+      "n_params": 10015680,
+      "val_loss_mean": 6.093210999170939,
+      "val_loss_std": 0.05009246695115698,
+      "val_loss_seeds": [
+        6.036830854415894,
+        6.132591009140015,
+        6.110211133956909
+      ],
+      "ppl_mean": 443.2087845253316,
+      "top1_conf_mean": 0.06398841198533774,
+      "entropy_mean": 6.632444310188293
+    },
+    "swiglu": {
+      "switches": {
+        "norm": "rmsnorm",
+        "pos": "rope",
+        "mlp": "swiglu",
+        "bias": true
+      },
+      "n_params": 10079808,
+      "val_loss_mean": 6.022884901364645,
+      "val_loss_std": 0.024757879556791998,
+      "val_loss_seeds": [
+        6.019054818153381,
+        6.000265264511109,
+        6.049334621429443
+      ],
+      "ppl_mean": 412.85217137081435,
+      "top1_conf_mean": 0.0685322972635428,
+      "entropy_mean": 6.618743840853373
+    },
+    "modern": {
+      "switches": {
+        "norm": "rmsnorm",
+        "pos": "rope",
+        "mlp": "swiglu",
+        "bias": false
+      },
+      "n_params": 10059840,
+      "val_loss_mean": 6.0991460879643755,
+      "val_loss_std": 0.09963070006877502,
+      "val_loss_seeds": [
+        5.988562345504761,
+        6.181909823417664,
+        6.126966094970703
+      ],
+      "ppl_mean": 446.93348556977134,
+      "top1_conf_mean": 0.06304792612791062,
+      "entropy_mean": 6.648614605267842
+    }
+  },
+  "meta": {
+    "timestamp_utc": "2026-07-11T16:44:36.158109+00:00",
+    "git_commit": "da38780c0dfe50030990c18a8c4fe4a9265d0e05",
+    "git_branch": "agent/add-ts-rosetta",
+    "git_dirty": true,
+    "python": "3.12.3",
+    "argv": [
+      "jp_llm_lab/scripts/run_ablation.py",
+      "--seeds",
+      "3",
+      "--steps",
+      "300"
+    ],
+    "packages": {
+      "torch": "2.11.0+cu128",
+      "numpy": "2.4.6",
+      "matplotlib": "3.10.9",
+      "plotly": "6.7.0",
+      "jinja2": "3.1.6",
+      "pyyaml": "6.0.3",
+      "pandas": "3.0.3"
+    },
+    "env": {
+      "python_version": "3.12.3",
+      "torch_version": "2.11.0+cu128",
+      "cuda_version": "12.8",
+      "cuda_available": true,
+      "gpu_name": "NVIDIA GeForce RTX 5080",
+      "vram_gb": 15.92,
+      "capability": "12.0",
+      "bf16_supported": true,
+      "sdpa_backends": [
+        "math",
+        "flash",
+        "mem_efficient",
+        "cudnn"
+      ],
+      "compile_available": true,
+      "cpu_ram_gb": 47.0,
+      "cpu_count": 20,
+      "platform": "Linux-6.18.33.1-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+    }
+  }
+}

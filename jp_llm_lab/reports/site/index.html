@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>概要 — jp_llm_lab — 教育用日本語LLMラボ</title>
+<script src="assets/plotly.min.js"></script>
+<style>
+  :root { --ink:#1a1a2e; --sub:#5a5a72; --line:#e3e3ee; --accent:#3b4fd8; --bg:#fafafd; }
+  * { box-sizing:border-box; }
+  body { font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic UI",sans-serif; color:var(--ink);
+         margin:0; background:var(--bg); line-height:1.75; }
+  header { background:linear-gradient(135deg,#1a1a2e,#3b4fd8); color:#fff; padding:26px 24px 22px; }
+  header h1 { margin:0; font-size:1.3rem; }
+  header p { margin:4px 0 0; opacity:.8; font-size:.85rem; }
+  nav { position:sticky; top:0; background:#fff; border-bottom:1px solid var(--line);
+        padding:8px 16px; z-index:10; overflow-x:auto; white-space:nowrap; }
+  nav a { color:var(--accent); text-decoration:none; margin-right:14px; font-size:.85rem; padding:3px 0; }
+  nav a.active { font-weight:700; border-bottom:2px solid var(--accent); }
+  main { max-width:1040px; margin:0 auto; padding:24px; }
+  h2 { font-size:1.3rem; border-bottom:2px solid var(--accent); padding-bottom:8px; }
+  h3 { font-size:1.03rem; margin:24px 0 8px; }
+  .block { background:#fff; border:1px solid var(--line); border-radius:10px; padding:20px 24px; margin:18px 0; }
+  .figwrap { overflow-x:auto; }
+  dl.interp { background:#f5f6fc; border-left:4px solid var(--accent); border-radius:6px;
+              padding:12px 16px; margin:10px 0 0; font-size:.86rem; }
+  dl.interp dt { font-weight:700; color:var(--accent); margin-top:7px; }
+  dl.interp dt:first-child { margin-top:0; }
+  dl.interp dd { margin:2px 0 0; }
+  table.kv { border-collapse:collapse; width:100%; font-size:.85rem; }
+  table.kv td, table.kv th { border:1px solid var(--line); padding:6px 10px; text-align:left; vertical-align:top; }
+  table.kv th { background:#f2f3fa; }
+  pre { background:#f5f6fc; padding:12px; border-radius:6px; overflow-x:auto; font-size:.82rem; }
+  code { font-family:"Cascadia Code",Consolas,monospace; font-size:.85em; }
+  .gen-text { font-family:"Cascadia Code",Consolas,monospace; font-size:.8rem; white-space:pre-wrap; word-break:break-all; }
+  footer { text-align:center; color:var(--sub); font-size:.78rem; padding:26px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>jp_llm_lab — 教育用日本語LLMラボ</h1>
+  <p>全数値は実測値。各図に What / Why / How / Observation / Interpretation / Caveat / Next。</p>
+</header>
+<nav>
+  <a href="index.html" class="active">概要</a><a href="corpus.html" >コーパス</a><a href="tokenizer.html" >トークナイザ</a><a href="architecture.html" >アーキテクチャ</a><a href="training.html" >学習過程</a><a href="attention.html" >Attention</a><a href="ablation.html" >アブレーション</a><a href="scaling.html" >スケーリング</a><a href="calibration.html" >確率較正</a><a href="generation.html" >生成</a><a href="memorization.html" >暗記</a><a href="sft.html" >SFT</a><a href="evaluation.html" >評価</a><a href="conclusions.html" >結論と限界</a>
+</nav>
+<main>
+  <h2>概要</h2>
+  
+  <div class="block">
+    
+    
+    <p>本サイトは教育用日本語 LLM ラボ <code>jp_llm_lab</code> の全成果を、保存済み実験成果物から生成した静的レポートです。<b>目的は競争力ある LLM を作ることではなく、言語モデルの内部機構・学習ダイナミクス・アーキテクチャのトレードオフ・確率較正・限界を観測可能にすることです。</b></p><p>全数値は実測値で、実測と例示を混在させていません。各図には What / Why / How / Observation / Interpretation / Caveat / Next の7項目を付しています。</p>
+    
+  </div>
+  
+  <div class="block">
+    <h3>主要モデルと結果</h3>
+    
+    <table class="kv"><tr><th>Model S (M1)</th><td>1.1M params, char, 『こころ』 → val ppl 23.9</td></tr><tr><th>Model M (M2)</th><td>10.2M params, BPE8K, pilot 10M tok &lt;1ep → val loss 6.05</td></tr><tr><th>Model L (M4)</th><td>29,499,904 params, Modern(RoPE), main 98,304,000 tok → val loss 3.51 (ppl 33.5)</td></tr><tr><th>ハードウェア</th><td>RTX 5080, BF16, ~200-650K tokens/sec</td></tr></table>
+    
+  </div>
+  
+  <div class="block">
+    <h3>マイルストーン</h3>
+    
+    <ol><li>M1 教育的最小構成（char tok, bigram, explicit attention, 1M GPT, 全計測）</li><li>M2 計測付き学習（コーパススナップショット, BPE, attention/embedding 定量, Model M）</li><li>M3 統制実験（LR/batch/init 校正, Classical→Modern アブレーション）</li><li>M4 本事前学習（Model L 30M × 100M tokens, スケーリング）</li><li>M5 較正と SFT（reliability, temperature scaling, 暗記分析, instruction SFT）</li><li>M6 最終学習成果物（評価200問, 本サイト, 最終レポート）</li></ol>
+    
+  </div>
+  
+</main>
+<footer>jp_llm_lab — generated from saved experiment artifacts. Not a competitive LLM; a lab to make LLM internals observable.</footer>
+</body>
+</html>

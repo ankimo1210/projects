@@ -9,7 +9,6 @@ from datetime import date, timedelta
 
 import pandas as pd
 import streamlit as st
-import yaml
 from app.components.charts import candlestick_chart, drawdown_chart, equity_chart
 from market_viz.analytics.backtest import (
     ma_cross_signal,
@@ -18,12 +17,12 @@ from market_viz.analytics.backtest import (
     volatility_breakout_signal,
     zscore_reversion_signal,
 )
+from market_viz.config import PROJECT_ROOT, load_instruments_config, load_settings
 from market_viz.storage.duckdb_client import DuckDBClient
 
-with open("src/config/settings.yaml") as f:
-    _cfg = yaml.safe_load(f)
+_cfg = load_settings()
 
-DB_PATH = _cfg["data"]["db_path"]
+DB_PATH = PROJECT_ROOT / _cfg["data"]["db_path"]
 
 
 @st.cache_resource
@@ -35,8 +34,7 @@ def get_db() -> DuckDBClient:
 
 @st.cache_data(ttl=300)
 def get_tickers() -> list[str]:
-    with open("src/config/instruments.yaml") as f:
-        cfg = yaml.safe_load(f)
+    cfg = load_instruments_config()
     return [i["ticker"] for g in cfg["instruments"].values() for i in g]
 
 
