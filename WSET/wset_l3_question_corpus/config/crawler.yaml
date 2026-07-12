@@ -1,0 +1,13 @@
+user_agent: "wset-l3-question-corpus/0.1 (+private research; contact@example.com)"
+requests_per_domain_per_minute: 6
+concurrent_requests_per_domain: 1
+timeout_seconds: 30
+max_retries: 3
+max_response_bytes: 25000000
+honor_robots_txt: true
+stop_after_access_denials: 2
+allowed_content_types:
+  - text/html
+  - application/pdf
+  - application/json
+  - text/plain

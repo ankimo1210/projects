@@ -57,3 +57,6 @@ Thumbs.db
 
 # Large reference docs (textbooks, papers) — keep binaries out of git
 *.pdf
+
+# WSET personal-use question pack (contains third-party study text)
+WSET/WSET/PrivateData/question_pack.json
