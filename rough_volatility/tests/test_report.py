@@ -1,9 +1,11 @@
 """Offline, structural and equation-rendering tests for the HTML report."""
 
+import json
 import re
 from dataclasses import replace
 from pathlib import Path
 
+import pandas as pd
 import pytest
 from rough_volatility.config import ProjectConfig
 from rough_volatility.experiments import run_all
@@ -60,7 +62,7 @@ def test_report_is_self_contained_interactive_and_complete(tmp_path: Path) -> No
     manifest = run_all(config, tmp_path, force=True)
     output = build_standalone_report(config, tmp_path, manifest)
     html = output.read_text(encoding="utf-8")
-    assert output.name == "rough_volatility_report.html"
+    assert output.name == "rough_volatility_report_en.html"
     assert 1_000_000 < output.stat().st_size < 25_000_000
     assert not re.search(r"(?:src|href)=[\"']https?://", html, flags=re.IGNORECASE)
     assert "cdn.plot.ly" not in html.lower()
@@ -71,3 +73,118 @@ def test_report_is_self_contained_interactive_and_complete(tmp_path: Path) -> No
     assert len(SECTIONS) == 26
     for section in SECTIONS:
         assert f'id="{section.anchor}"' in html
+
+
+def test_locale_controls_language_and_filename(tmp_path: Path) -> None:
+    config = _report_config()
+    manifest = run_all(config, tmp_path, force=True)
+    ja = build_standalone_report(config, tmp_path, manifest, locale="ja")
+    assert ja.name == "rough_volatility_report_ja.html"
+    text = ja.read_text(encoding="utf-8")
+    assert '<html lang="ja">' in text
+    assert "ラフボラティリティ・ビジュアルラボ" in text
+
+
+def test_section_headings_are_localized(tmp_path: Path) -> None:
+    config = _report_config()
+    manifest = run_all(config, tmp_path, force=True)
+    en = build_standalone_report(config, tmp_path, manifest, locale="en").read_text(
+        encoding="utf-8"
+    )
+    ja = build_standalone_report(config, tmp_path, manifest, locale="ja").read_text(
+        encoding="utf-8"
+    )
+    assert "From rough paths to option skew and order flow" in en
+    assert "ラフパスからオプション・スキューと注文フローへ" in ja
+    assert "From rough paths to option skew and order flow" not in ja
+
+
+def test_callouts_are_localized_and_interpolated(tmp_path: Path) -> None:
+    config = _report_config()
+    manifest = run_all(config, tmp_path, force=True)
+    powers = pd.read_csv(manifest["skew_power_law"])
+    target = powers.iloc[(powers["h"] - config.bergomi.h).abs().argmin()]
+    beta_text = f"β={float(target['beta']):.3f}"
+    ja = build_standalone_report(config, tmp_path, manifest, locale="ja").read_text(
+        encoding="utf-8"
+    )
+    assert "合成ラボは市場データを用いずに" in ja  # executive-summary callout prose
+    assert beta_text in ja  # interpolated skew value survives translation
+    assert "H changes path regularity" not in ja  # EN callout fully replaced
+
+
+def _plotly_json_text(value: str) -> str:
+    """Encode a string the way Plotly's `to_html()` embeds figure titles:
+    as JSON with `ensure_ascii=True`, so non-ASCII characters appear as
+    `\\uXXXX` escapes inside the inline `Plotly.newPlot(...)` payload rather
+    than as literal UTF-8 text."""
+    return json.dumps(value)[1:-1]
+
+
+def test_captions_and_evidence_note_localized(tmp_path: Path) -> None:
+    config = _report_config()
+    manifest = run_all(config, tmp_path, force=True)
+    en = build_standalone_report(config, tmp_path, manifest, locale="en").read_text(
+        encoding="utf-8"
+    )
+    ja = build_standalone_report(config, tmp_path, manifest, locale="ja").read_text(
+        encoding="utf-8"
+    )
+    assert "根拠:" in ja  # evidence note prefix, JA
+    assert "Evidence: locally generated" not in ja
+    assert "<h3>検証ゲート</h3>" in ja  # validation_gates_heading, JA
+    assert "<h3>Validation gates</h3>" not in ja
+    # "Validation gates" also appears verbatim as a _metric_cards label, which
+    # stays English by design; only the <h3> heading text is localized.
+
+    # Figure titles/subtitles are rendered by Plotly's `to_html()`, which
+    # serializes the figure layout as `ensure_ascii=True` JSON, so the
+    # translated Japanese text shows up as `\uXXXX` escapes in the HTML
+    # source rather than literal characters.
+    assert _plotly_json_text("Hawkesイベント・ラスター") in ja  # figure.hawkes_events.title
+    assert "Hawkes event raster" not in ja
+    assert _plotly_json_text("条件付きHawkes強度") in ja  # figure.hawkes_intensity.title
+    assert "Conditional Hawkes intensity" not in ja
+    assert _plotly_json_text("フラクショナル・ブラウン運動のパス") in ja  # figure.fbm_paths.title
+    assert _plotly_json_text("フラクショナル・ガウスノイズの増分") in ja  # figure.fgn_increments.title
+    assert _plotly_json_text("拡大時の局所的なラフネス") in ja  # figure.fbm_zoom.title
+
+    # Helper-internal captions (previously hardcoded inside the drawing
+    # helpers rather than in _build_figures) are localized the same way.
+    assert _plotly_json_text("増分の自己相関") in ja  # figure.increment_acf.title
+    assert "Increment autocorrelation" not in ja
+    assert _plotly_json_text("IVスマイル") in ja  # figure.iv_smiles.title
+    assert "Implied-volatility smiles" not in ja
+    assert (
+        _plotly_json_text("共通ショック下のrBergomiとHestonの比較") in ja
+    )  # figure.heston_comparison.title
+    assert "Rough Bergomi versus Heston under common shocks" not in ja
+    # noise_bias subtitle interpolates the {estimator} name (stays EN) into JA prose.
+    assert _plotly_json_text("variogram推定量。前処理モードセレクター") in ja
+    assert "use the preprocessing-mode selector" not in ja
+    # The shared fBM-selector subtitle (hardcoded in _fbm_selector before) is localized.
+    assert _plotly_json_text("Hセレクターを使うこと") in ja  # figure.fbm_*.subtitle
+    assert "Use the H selector" not in ja
+
+    # EN report keeps the original captions untouched (plain ASCII, so no
+    # escaping distinction applies).
+    assert "Fractional Brownian-motion paths" in en
+    assert "Hawkes event raster" in en
+    assert "Increment autocorrelation" in en
+    assert "variogram estimator; use the preprocessing-mode selector" in en
+
+
+def test_bilingual_numeric_parity(tmp_path: Path) -> None:
+    config = _report_config()
+    manifest = run_all(config, tmp_path, force=True)
+    from rough_volatility.report import build_reports
+
+    outputs = build_reports(config, tmp_path, manifest)
+    assert set(outputs) == {"en", "ja"}
+    texts = {loc: p.read_text(encoding="utf-8") for loc, p in outputs.items()}
+    assert "Rough Volatility Visual Lab" in texts["en"]
+    assert "ラフボラティリティ・ビジュアルラボ" in texts["ja"]
+    hashes = [re.search(r'"sha256": "([0-9a-f]+)"', t).group(1) for t in texts.values()]
+    assert len(set(hashes)) == 1  # numbers identical across languages
+    for t in texts.values():
+        assert not re.search(r'(?:src|href)=["\']https?://', t, re.IGNORECASE)

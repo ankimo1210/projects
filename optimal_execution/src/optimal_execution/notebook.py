@@ -13,8 +13,24 @@ from nbconvert import HTMLExporter
 from .config import Config
 from .provenance import PROJECT_ROOT, artifact_dirs, provenance
 
+# One entry per localized edition of the visual-lab notebook. The code cells are
+# identical across editions (identical figures/data); only markdown and the
+# setup caption are translated, so both HTML reports share the same numbers.
+NOTEBOOK_LOCALES: dict[str, dict[str, str]] = {
+    "en": {
+        "source": "01_optimal_execution_visual_lab.ipynb",
+        "output": "01_optimal_execution_visual_lab.html",
+        "title_token": "Optimal Execution Visual Lab",
+    },
+    "ja": {
+        "source": "01_optimal_execution_visual_lab.ja.ipynb",
+        "output": "01_optimal_execution_visual_lab_ja.html",
+        "title_token": "最適執行ビジュアルラボ",
+    },
+}
 
-def execute_notebook(cfg: Config, config_path: str | Path) -> Path:
+
+def _ensure_inputs(cfg: Config) -> None:
     paths = artifact_dirs(cfg)
     required = (
         paths["metrics"] / "classical_strategy_summary.csv",
@@ -28,7 +44,17 @@ def execute_notebook(cfg: Config, config_path: str | Path) -> Path:
         run_all(cfg)
         build_reports(cfg)
 
-    source = PROJECT_ROOT / "notebooks" / "01_optimal_execution_visual_lab.ipynb"
+
+def execute_notebook(cfg: Config, config_path: str | Path, locale: str = "en") -> Path:
+    if locale not in NOTEBOOK_LOCALES:
+        raise ValueError(
+            f"unsupported notebook locale {locale!r}; choose from {sorted(NOTEBOOK_LOCALES)}"
+        )
+    spec = NOTEBOOK_LOCALES[locale]
+    _ensure_inputs(cfg)
+    paths = artifact_dirs(cfg)
+
+    source = PROJECT_ROOT / "notebooks" / spec["source"]
     if not source.exists():
         raise FileNotFoundError(source)
     executed_dir = PROJECT_ROOT / "notebooks" / "_executed"
@@ -77,18 +103,23 @@ def execute_notebook(cfg: Config, config_path: str | Path) -> Path:
         f'<script type="application/json" id="notebook-provenance">{notebook_provenance}</script></head>',
         1,
     )
-    output = paths["reports"] / "01_optimal_execution_visual_lab.html"
+    output = paths["reports"] / spec["output"]
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(body, encoding="utf-8")
-    _validate_notebook_html(output)
+    _validate_notebook_html(output, spec["title_token"])
     return output
 
 
-def _validate_notebook_html(path: Path) -> None:
+def execute_notebooks(cfg: Config, config_path: str | Path) -> dict[str, Path]:
+    """Execute every localized visual-lab edition; returns {locale: html path}."""
+    return {locale: execute_notebook(cfg, config_path, locale) for locale in NOTEBOOK_LOCALES}
+
+
+def _validate_notebook_html(path: Path, title_token: str) -> None:
     text = path.read_text(encoding="utf-8")
     if path.stat().st_size < 50_000:
         raise ValueError(f"notebook HTML unexpectedly small: {path}")
-    if "Optimal Execution Visual Lab" not in text:
+    if title_token not in text:
         raise ValueError(f"notebook title missing in {path}")
     if "Traceback (most recent call last)" in text:
         raise ValueError(f"executed notebook contains a traceback: {path}")
