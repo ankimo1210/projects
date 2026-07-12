@@ -80,6 +80,11 @@ _TEMPLATE = """<!doctype html>
     <p>{{ tr.market_setup_body }}</p>
   </section>
 
+  <section id="related-work">
+    <h2>{{ tr.related_work }}</h2>
+    {{ related_work | safe }}
+  </section>
+
   <section id="almgren-chriss">
     <h2>{{ tr.almgren_chriss }}</h2>
     <p>{{ tr.ac_body }}</p>
@@ -678,6 +683,310 @@ def _findings(frames: dict[str, pd.DataFrame], t: Translator) -> dict[str, str]:
     return {"reactive": reactive_finding, "shift": shift_finding, "conclusion": conclusion}
 
 
+def _related_work_html(t: Translator) -> str:
+    """Localized related-work section.
+
+    Field framing, the core models structured as problem -> proposal -> results
+    -> open questions, and a summary table (reference / approach / short note).
+    The same substance appears in the visual-lab notebook's survey cell.
+    """
+    e = html.escape
+    if t.locale == "ja":
+        framing = (
+            "最適執行が扱う中心問題は「速度のトレードオフ」です。大口の注文を決められた"
+            "時間内に売買するとき、速く執行すれば市場インパクト（自分の売買が価格を不利な"
+            "方向へ動かす効果）を多く払い、ゆっくり執行すればその間の価格変動（タイミング・"
+            "リスク）に晒されます。先行研究は、この費用を実装ショートフォール（到着価格に"
+            "対する超過コスト）の期待値・分散・テールで定量化し、最適な執行スケジュールや"
+            "戦術を求めてきました。派生する問いは大きく3つ——(1) 市場インパクトをどう"
+            "モデル化するか、(2) 注文板の内生的な反応・約定確率・逆選択をどう扱うか、"
+            "(3) モデル化しきれない動学の下で適応的な執行を学習できるか——であり、本ラボは"
+            "この3軸を可視化します。"
+        )
+        core_heading = "コア文献：問題 → 提案 → 結果 → 今後の課題"
+        labels = ("問題", "提案", "結果", "今後")
+        sep = "："
+        core = [
+            (
+                "Almgren–Chriss (2001)",
+                "平均–分散の執行スケジュール（実装：almgren_chriss.py）",
+                "線形インパクトの下で、期待執行コストと分散のトレードオフをどう最適化するか。",
+                "離散時間の平均–分散目的 E[C] + λ·Var[C] を解き、閉形式の sinh 在庫軌道と効率的フロンティアを導出。",
+                "リスク回避度 λ が大きいほど執行を前倒しし、λ→0 で TWAP に収束。効率的フロンティアが実務のベンチマークになった。",
+                "非線形・過渡的インパクト、内生的な板、確率的ボラティリティへの一般化。",
+            ),
+            (
+                "Obizhaeva–Wang (2013)",
+                "回復力のある流動性（実装：resilience.py）",
+                "板の流動性が有限で、消費後に時間をかけて回復（resilience）する動学の下での最適執行。",
+                "指数回復核をもつ板で価値関数を最小化し、「端点ブロック＋一定率＋端点ブロック」の閉形式スケジュールを導出。",
+                "回復が速いほど連続的な執行、遅いほど端点への集中となる。過渡的インパクトを明示的に扱う枠組み。",
+                "一般核（伝播核）、確率的流動性、マルチアセットのクロスインパクト。",
+            ),
+            (
+                "伝播核：Bouchaud et al. (2004) / Gatheral (2010)",
+                "過渡的インパクトの一般理論",
+                "一時的／恒久的の二分法では説明できないインパクトの時間減衰をどう表すか。",
+                "過去の取引を減衰核 G で重み付けした和で現在のインパクトを表現する（I(t) = Σ_{s<t} G(t−s)·v_s、v_s は取引速度）。Gatheral は無裁定と両立する核の条件を与えた。",
+                "過渡的インパクトを一般化。Obizhaeva–Wang の指数回復はその特殊例にあたる。",
+                "非線形伝播、経験核の推定、執行最適化との統合。",
+            ),
+            (
+                "平方根則：Almgren et al. (2005) / Tóth et al. (2011)",
+                "インパクトのサイズ依存（診断：sqrt_impact）",
+                "メタオーダー（分割された大口注文）のインパクトは注文サイズにどう依存するか。",
+                "インパクト ∝ σ·√(Q/V)（サイズの平方根則）を実証。Tóth らは流動性の希少性・臨界性から普遍的性質と論じた。",
+                "本ラボでは独立した診断として示し、線形モデルには加算しない。",
+                "時間依存性や日中変動の取り込み、線形モデルとの整合。",
+            ),
+            (
+                "強化学習：Nevmyvaka et al. (2006) / Hendricks–Wilcox (2014) / PPO：Schulman et al. (2017, 2016)",
+                "適応的執行（実装：rl_training.py, environment.py）",
+                "解析的にモデル化しきれない板動学の下で、適応的な執行方策を直接学習できるか。",
+                "状態（在庫・残時間・板特徴）から行動（子注文）への写像を学習。Hendricks–Wilcox は AC ベースラインまわりの調整（残差 RL の源流）。本ラボは PPO のクリップ代理目的＋GAE に安全層を重ねる。",
+                "シミュレータ内ではルールベースを下回ることがあるが、報酬設計・学習量・シードに強く依存する。",
+                "現実的な板較正、明示的なリスク制約、マルチシードでの頑健性、オフライン RL。",
+            ),
+        ]
+        list_heading = "先行研究一覧（アプローチと短サマリー）"
+        list_intro = "上記コア以外も含めた、本ラボが依拠・参照する主な先行研究です。"
+        cols = ("文献", "アプローチ", "短サマリー")
+        rows = [
+            (
+                "Bertsimas–Lo (1998)",
+                "リスク中立の動的計画法",
+                "期待コスト最小化。線形インパクトでは等分割（TWAP）が最適。AC の前身。",
+            ),
+            (
+                "Almgren–Chriss (2001)",
+                "平均–分散最適化",
+                "閉形式 sinh 軌道と効率的フロンティア。本ラボの古典ベンチマーク。",
+            ),
+            (
+                "Obizhaeva–Wang (2013)",
+                "回復力ある板の最適制御",
+                "端点ブロック＋一定率スケジュール。過渡的インパクトを明示。",
+            ),
+            (
+                "Kyle (1985)",
+                "情報均衡モデル",
+                "線形の恒久インパクト（Kyle's λ）と逆選択の理論的基礎。",
+            ),
+            ("Perold (1988)", "コスト指標の定義", "実装ショートフォール。本ラボ全体の評価指標。"),
+            (
+                "Bouchaud et al. (2004)",
+                "伝播核（応答関数）",
+                "過渡的インパクトを減衰核で一般化する視点。",
+            ),
+            ("Gatheral (2010)", "無裁定条件", "インパクトと減衰核の無裁定整合条件を導出。"),
+            ("Almgren et al. (2005)", "実証推定", "株式市場インパクトの平方根則を直接推定。"),
+            ("Tóth et al. (2011)", "臨界性の議論", "平方根則の普遍性を流動性の希少性から説明。"),
+            ("Nevmyvaka et al. (2006)", "強化学習", "執行に RL を本格適用した嚆矢。"),
+            (
+                "Hendricks–Wilcox (2014)",
+                "RL × AC",
+                "AC ベースラインまわりの RL 調整（残差 RL の発想）。",
+            ),
+            ("Schulman et al. (2017)", "PPO", "クリップ代理目的。本ラボの方策最適化アルゴリズム。"),
+            ("Schulman et al. (2016)", "GAE", "一般化アドバンテージ推定。分散を抑えた優位性推定。"),
+            (
+                "Huang–Lehalle–Rosenbaum (2015)",
+                "Queue-reactive モデル",
+                "状態依存の点過程で板を反応的に生成。反応型シミュレータの正典。",
+            ),
+            (
+                "Gatheral–Jaisson–Rosenbaum (2018)",
+                "ラフボラティリティ",
+                "ボラティリティの粗さ。将来拡張（ロードマップ項目）。",
+            ),
+            (
+                "Bacry et al. (2015)",
+                "Hawkes 過程",
+                "自己励起する注文フロー。将来拡張（ロードマップ項目）。",
+            ),
+            (
+                "Cartea–Jaimungal–Penalva (2015)",
+                "教科書",
+                "アルゴリズム・高頻度取引の体系的教科書。",
+            ),
+            ("Guéant (2016)", "教科書", "最適執行からマーケットメイクまでの数理。"),
+        ]
+    else:
+        framing = (
+            "The central problem of optimal execution is a trade-off in speed. When a "
+            "large order must be traded within a fixed horizon, trading faster pays more "
+            "market impact (the adverse price move caused by one's own trading), while "
+            "trading slower exposes the order to price moves over time (timing risk). "
+            "Prior work quantifies this cost through the expectation, variance, and tail "
+            "of implementation shortfall (excess cost relative to the arrival price) and "
+            "seeks optimal execution schedules and tactics. Three derived questions "
+            "dominate: (1) how to model market impact, (2) how to treat the endogenous "
+            "reaction of the order book, fill probability, and adverse selection, and "
+            "(3) whether adaptive execution can be learned under dynamics that cannot be "
+            "fully modeled. This lab visualizes these three axes."
+        )
+        core_heading = "Core works: problem -> proposal -> results -> open questions"
+        labels = ("Problem", "Proposal", "Results", "Open questions")
+        sep = ": "
+        core = [
+            (
+                "Almgren–Chriss (2001)",
+                "Mean–variance execution schedule (implementation: almgren_chriss.py)",
+                "Under linear impact, how to optimize the trade-off between expected execution cost and its variance.",
+                "Solve a discrete-time mean–variance objective E[C] + λ·Var[C], yielding a closed-form sinh inventory trajectory and an efficient frontier.",
+                "Higher risk aversion λ front-loads trading; λ→0 recovers TWAP. The efficient frontier became a practitioner benchmark.",
+                "Generalization to nonlinear/transient impact, endogenous order books, and stochastic volatility.",
+            ),
+            (
+                "Obizhaeva–Wang (2013)",
+                "Resilient liquidity (implementation: resilience.py)",
+                "Optimal execution when book liquidity is finite and recovers (resilience) over time after consumption.",
+                "Minimize a value function in a book with an exponential resilience kernel, giving a closed-form block + constant-rate + block schedule.",
+                "Faster resilience yields more continuous trading; slower yields concentration at the endpoints. An explicit treatment of transient impact.",
+                "General (propagator) kernels, stochastic liquidity, multi-asset cross-impact.",
+            ),
+            (
+                "Propagator: Bouchaud et al. (2004) / Gatheral (2010)",
+                "A general theory of transient impact",
+                "How to represent the time decay of impact that the temporary/permanent dichotomy cannot capture.",
+                "Express current impact as a decay-kernel-weighted sum of past trades, I(t) = Σ_{s<t} G(t−s)·v_s (v_s is the trade rate). Gatheral derived the no-arbitrage condition on admissible kernels.",
+                "Generalizes transient impact; Obizhaeva–Wang's exponential resilience is a special case.",
+                "Nonlinear propagation, empirical kernel estimation, integration with execution optimization.",
+            ),
+            (
+                "Square-root law: Almgren et al. (2005) / Tóth et al. (2011)",
+                "Size dependence of impact (diagnostic: sqrt_impact)",
+                "How does the impact of a metaorder depend on its size?",
+                "Empirically, impact ∝ σ·√(Q/V) (a square-root law in size). Tóth et al. argue it is universal, tied to the critical scarcity of liquidity.",
+                "Shown here as an independent diagnostic, not added to the linear model.",
+                "Time dependence and intraday variation; consistency with linear models.",
+            ),
+            (
+                "RL: Nevmyvaka et al. (2006) / Hendricks–Wilcox (2014) / PPO: Schulman et al. (2017, 2016)",
+                "Adaptive execution (implementation: rl_training.py, environment.py)",
+                "Can an adaptive execution policy be learned directly under book dynamics that resist analytical modeling?",
+                "Learn a map from state (inventory, time remaining, book features) to action (child orders). Hendricks–Wilcox adjust around an AC baseline (the residual-RL idea). This lab layers a safety wrapper on PPO's clipped surrogate objective with GAE.",
+                "Inside the simulator RL can underperform rule-based policies; outcomes depend strongly on reward design, training budget, and seed.",
+                "Realistic book calibration, explicit risk constraints, multi-seed robustness, offline RL.",
+            ),
+        ]
+        list_heading = "Related work at a glance (approach and short note)"
+        list_intro = (
+            "The main prior work this lab relies on or references, beyond the core models above."
+        )
+        cols = ("Reference", "Approach", "Note")
+        rows = [
+            (
+                "Bertsimas–Lo (1998)",
+                "Risk-neutral dynamic programming",
+                "Minimizes expected cost; with linear impact, equal splitting (TWAP) is optimal. Precursor to AC.",
+            ),
+            (
+                "Almgren–Chriss (2001)",
+                "Mean–variance optimization",
+                "Closed-form sinh trajectory and efficient frontier. The lab's classical benchmark.",
+            ),
+            (
+                "Obizhaeva–Wang (2013)",
+                "Optimal control of a resilient book",
+                "Block + constant-rate schedule; explicit transient impact.",
+            ),
+            (
+                "Kyle (1985)",
+                "Informational equilibrium",
+                "Linear permanent impact (Kyle's λ) and the basis for adverse selection.",
+            ),
+            (
+                "Perold (1988)",
+                "Cost metric",
+                "Implementation shortfall; the evaluation metric throughout the lab.",
+            ),
+            (
+                "Bouchaud et al. (2004)",
+                "Propagator (response function)",
+                "Generalizes transient impact via a decay kernel.",
+            ),
+            (
+                "Gatheral (2010)",
+                "No-arbitrage condition",
+                "Derives the no-arbitrage consistency between impact and decay kernel.",
+            ),
+            (
+                "Almgren et al. (2005)",
+                "Empirical estimation",
+                "Directly estimates the square-root law of equity impact.",
+            ),
+            (
+                "Tóth et al. (2011)",
+                "Criticality argument",
+                "Explains the universality of the square-root law via liquidity scarcity.",
+            ),
+            (
+                "Nevmyvaka et al. (2006)",
+                "Reinforcement learning",
+                "The first substantial application of RL to execution.",
+            ),
+            (
+                "Hendricks–Wilcox (2014)",
+                "RL × AC",
+                "RL adjustment around an AC baseline (the residual-RL idea).",
+            ),
+            (
+                "Schulman et al. (2017)",
+                "PPO",
+                "Clipped surrogate objective; the lab's policy optimizer.",
+            ),
+            (
+                "Schulman et al. (2016)",
+                "GAE",
+                "Generalized advantage estimation; low-variance advantages.",
+            ),
+            (
+                "Huang–Lehalle–Rosenbaum (2015)",
+                "Queue-reactive model",
+                "Reactive book from state-dependent point processes; the canon for the reactive simulator.",
+            ),
+            (
+                "Gatheral–Jaisson–Rosenbaum (2018)",
+                "Rough volatility",
+                "Roughness of volatility; a roadmap extension.",
+            ),
+            (
+                "Bacry et al. (2015)",
+                "Hawkes processes",
+                "Self-exciting order flow; a roadmap extension.",
+            ),
+            (
+                "Cartea–Jaimungal–Penalva (2015)",
+                "Textbook",
+                "Systematic textbook on algorithmic and high-frequency trading.",
+            ),
+            ("Guéant (2016)", "Textbook", "Mathematics from optimal execution to market making."),
+        ]
+
+    parts = [f"<p>{e(framing)}</p>", f"<h3>{e(core_heading)}</h3>"]
+    for title, subtitle, problem, proposal, result, future in core:
+        items = "".join(
+            f"<li><strong>{e(lab)}</strong>{e(sep)}{e(txt)}</li>"
+            for lab, txt in zip(labels, (problem, proposal, result, future), strict=True)
+        )
+        parts.append(f"<p><strong>{e(title)}</strong> — {e(subtitle)}</p><ul>{items}</ul>")
+    parts.append(f"<h3>{e(list_heading)}</h3>")
+    parts.append(f"<p>{e(list_intro)}</p>")
+    head = "".join(f'<th style="text-align:left">{e(c)}</th>' for c in cols)
+    body = "".join(
+        "<tr>"
+        + "".join(f'<td style="text-align:left;white-space:normal">{e(v)}</td>' for v in row)
+        + "</tr>"
+        for row in rows
+    )
+    parts.append(
+        f'<div class="table-wrap"><table><thead><tr>{head}</tr></thead>'
+        f"<tbody>{body}</tbody></table></div>"
+    )
+    return "".join(parts)
+
+
 def build_report(cfg: Config, locale: str) -> Path:
     validate_locales()
     t = Translator(locale)
@@ -747,6 +1056,7 @@ def build_report(cfg: Config, locale: str) -> Path:
             "misspecification": _table(frames["misspecification"], t),
         },
         hero_tiles=hero_html,
+        related_work=_related_work_html(t),
         seed_warning=len(cfg.rl.seeds) == 1,
         reactive_finding=findings["reactive"],
         shift_finding=findings["shift"],

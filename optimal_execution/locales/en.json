@@ -42,6 +42,7 @@
   "metric_strategy": "Strategy ID",
   "profile_note_template": "Profile: {profile}; master seed: {seed}; horizon: {horizon:.0f} s; order: {inventory:,.0f} shares; arrival price: {price:.2f}.",
   "reactive_lob": "Market versus limit orders and reactive LOB",
+  "related_work": "Related work: problem, proposal, results, and open questions",
   "report_subtitle": "A synthetic, reproducible visual laboratory for market impact, resilient liquidity, transaction-cost analysis, and safe RL execution",
   "report_title": "Market Microstructure and Optimal Execution",
   "reproduction": "Reproduction",

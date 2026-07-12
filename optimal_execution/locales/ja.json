@@ -42,6 +42,7 @@
   "metric_strategy": "戦略ID",
   "profile_note_template": "プロファイル：{profile}、マスターシード：{seed}、執行時間：{horizon:.0f}秒、注文量：{inventory:,.0f}株、到着価格：{price:.2f}。",
   "reactive_lob": "成行・指値注文と反応型の板",
+  "related_work": "先行研究：問題・提案・結果・今後の課題",
   "report_subtitle": "市場インパクト、回復力のある流動性、取引コスト分析、安全なRL執行を扱う再現可能な合成ビジュアル・ラボ",
   "report_title": "市場マイクロストラクチャーと最適執行",
   "reproduction": "再現方法",
