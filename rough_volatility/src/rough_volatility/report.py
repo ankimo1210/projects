@@ -831,42 +831,53 @@ def _validation_table(validation: dict[str, Any]) -> str:
     )
 
 
-def _narratives(config: ProjectConfig, frames: dict[str, pd.DataFrame]) -> dict[str, str]:
+# Module-level literal tuple of the anchors that carry a narrative callout, in the same
+# order as the dict this function used to return. Every section currently has a callout,
+# so this matches `i18n._SECTION_ANCHORS` / `i18n._CALLOUT_ANCHORS` exactly; keep the three
+# in sync if a section's narrative is ever added or removed.
+_NARRATIVE_ANCHORS: tuple[str, ...] = (
+    "executive-summary",
+    "conceptual-map",
+    "mathematical-definitions",
+    "configuration",
+    "fbm-path-comparison",
+    "local-zoom",
+    "fgn-increments",
+    "increment-acf",
+    "structure-functions",
+    "hurst-recovery",
+    "estimator-bias",
+    "ou-versus-fou",
+    "rough-bergomi-paths",
+    "heston-comparison",
+    "terminal-distributions",
+    "iv-smiles",
+    "iv-surface",
+    "atm-skew-term",
+    "skew-scaling",
+    "hawkes-events",
+    "order-flow-price",
+    "volatility-proxy",
+    "noise-bias",
+    "establishes",
+    "does-not-establish",
+    "limitations-next-steps",
+)
+
+
+def _narratives(
+    config: ProjectConfig, frames: dict[str, pd.DataFrame], t: Translator
+) -> dict[str, str]:
     powers = frames["skew_power_law"]
     target = powers.iloc[(powers["h"] - config.bergomi.h).abs().argmin()]
-    return {
-        "executive-summary": (
-            f"<p><strong>The synthetic lab reproduces the intended rough-volatility signatures without using market data.</strong> "
-            f"For H={config.bergomi.h:g}, the fitted ATM-skew exponent is β={target['beta']:.3f} versus the finite-asymptotic reference H−1/2={config.bergomi.h - 0.5:.2f}. "
-            "The exact-grid Volterra construction passes forward-variance and spot-martingale checks, while common random numbers make the Heston comparison interpretable.</p>"
-            "<p><strong>The microstructure result is diagnostic, not identifying.</strong> Near-critical Hawkes flow creates clustered activity and a rough-looking realized-variance proxy, but the noise experiment shows that estimated H changes materially with sampling and preprocessing.</p>"
-        ),
-        "conceptual-map": '<p><strong>The reading path is roughness → volatility dynamics → option skew → microstructure diagnostics.</strong> Each arrow is an experiment, not a claim that one mechanism uniquely causes the next.</p><div class="flow"><span>Rough paths</span><b>→</b><span>Rough log-volatility</span><b>→</b><span>rBergomi prices</span><b>→</b><span>ATM skew</span><b>↔</b><span>Hawkes proxy</span></div>',
-        "mathematical-definitions": "<p><strong>H controls local increment scaling.</strong> The covariance, structure function, rBergomi variance normalization, skew power law, and Hawkes intensity below define the quantities used throughout the report.</p>",
-        "configuration": "<p><strong>All evidence is locally generated under one resolved profile.</strong> Counts are Monte Carlo paths or event-process observations; option uncertainty is reported by standard error and delta-method IV error.</p>",
-        "fbm-path-comparison": "<p><strong>H changes path regularity, not simply amplitude.</strong> Use the selector to compare paths generated on the same horizon; lower H creates denser fine-scale oscillations.</p>",
-        "local-zoom": "<p><strong>The regularity difference survives magnification.</strong> A short window separates local texture from broad path range, preventing “rough” from being confused with “large variance.”</p>",
-        "fgn-increments": "<p><strong>Rough increments alternate more sharply.</strong> The visual comparison is descriptive; the ACF and scaling regression supply the quantitative evidence.</p>",
-        "increment-acf": "<p><strong>Levels can look persistent while increments are anti-persistent.</strong> For H&lt;1/2 the first-lag increment correlation is negative, whereas H&gt;1/2 produces positive dependence.</p>",
-        "structure-functions": "<p><strong>The fitted second-order slope follows 2H.</strong> Only a bounded log-spaced lag range is used, limiting the high-variance long-lag tail.</p>",
-        "hurst-recovery": "<p><strong>Finite-sample uncertainty is material even on clean fBM.</strong> Longer paths tighten the distribution, but regression standard errors do not capture every source of estimator dispersion.</p>",
-        "estimator-bias": "<p><strong>Bias depends on H, estimator, and sample length.</strong> This baseline is necessary before interpreting noisier volatility proxies.</p>",
-        "ou-versus-fou": "<p><strong>Matched broad dispersion does not imply matched local regularity.</strong> The fractional OU approximation produces sharper small-scale movement; it is a visualization-grade Euler construction, not an exact stationary sampler.</p>",
-        "rough-bergomi-paths": "<p><strong>The normalized Volterra driver produces abrupt variance movement while preserving E[V(t)]=ξ₀(t).</strong> The spot process uses the left-point variance and an exact discrete log-Euler martingale step.</p>",
-        "heston-comparison": "<p><strong>Common spot-driver normals isolate dynamics rather than shock luck.</strong> Heston is Markovian and full-truncated; the parameter match is broad rather than a calibration equivalence.</p>",
-        "terminal-distributions": "<p><strong>Different variance dynamics change pathwise and terminal dispersion.</strong> Histograms are density-normalized and use the same Monte Carlo path count.</p>",
-        "iv-smiles": "<p><strong>Short-maturity smiles are the noisiest and most model-sensitive.</strong> Use the maturity selector and read the error bars before interpreting wing differences.</p>",
-        "iv-surface": "<p><strong>The rough surface concentrates curvature and skew at short maturities.</strong> The heatmap uses identical k–T coordinates across models.</p>",
-        "atm-skew-term": "<p><strong>Smaller H produces larger short-maturity skew magnitude.</strong> Each point is a weighted local-quadratic derivative with at least five valid IV observations.</p>",
-        "skew-scaling": "<p><strong>The fitted direction agrees with T^(H−1/2).</strong> Agreement is finite-maturity and simulation-specific; the report does not treat it as exact asymptotic confirmation.</p>",
-        "hawkes-events": "<p><strong>Self-excitation turns rate-matched events into bursts.</strong> The Poisson, stable, and near-critical scenarios share the same target unconditional rate but differ in branching ratio.</p>",
-        "order-flow-price": "<p><strong>Signed imbalance translates bursts into a clustered pedagogical price.</strong> This construction is intentionally simple and is not a structural market-impact model.</p>",
-        "volatility-proxy": "<p><strong>Conditional-intensity bursts co-locate with elevated rolling RV proxies.</strong> The reported effective H is explicitly an empirical diagnostic only.</p>",
-        "noise-bias": "<p><strong>Measurement choices can manufacture or suppress apparent roughness.</strong> Use the preprocessing selector: raw, aggregated, and pre-averaged observations produce different H biases from the same latent paths.</p>",
-        "establishes": "<ul><li>Davies–Harte fBM reproduces clean scaling and estimator-recovery patterns.</li><li>The exact joint-Gaussian rBergomi grid preserves the configured forward variance within Monte Carlo error.</li><li>Short-maturity skew steepens as H decreases in these finite simulations.</li><li>Near-critical Hawkes flow is sufficient to create clustered activity and a rough-looking proxy.</li></ul>",
-        "does-not-establish": "<ul><li>An estimated H&lt;1/2 does not identify a fractional data-generating process.</li><li>The Hawkes proxy is not a derivation of rough Heston or a market calibration.</li><li>Finite-maturity skew fits do not prove the asymptotic exponent exactly.</li><li>Broadly matched Heston and rBergomi parameters are not economically equivalent calibrations.</li></ul>",
-        "limitations-next-steps": "<p><strong>The next useful tests are robustness tests, not more decorative complexity.</strong></p><ol><li>Replace synthetic ξ₀ with a calibrated forward-variance curve and propagate quote uncertainty.</li><li>Add hybrid/FFT Volterra schemes and benchmark convergence against the exact-grid operator.</li><li>Use variance-reduction methods for short-wing IV and skew estimates.</li><li>Test noise-robust roughness estimators and alternative sampling schemes.</li><li>Fit Hawkes kernels from event data only after addressing seasonality and market-state conditioning.</li></ol><h3>Further questions</h3><p>How stable are the conclusions under alternative leverage, vol-of-vol, and maturity grids? Which estimator remains least biased under realistic price discreteness and asynchronous sampling?</p>",
+    values = {
+        "executive-summary": {
+            "h": config.bergomi.h,
+            "beta": float(target["beta"]),
+            "h_minus_half": config.bergomi.h - 0.5,
+        },
     }
+    return {a: t(f"callout.{a}", **values.get(a, {})) for a in _NARRATIVE_ANCHORS}
 
 
 def _section_extra(
@@ -898,7 +909,7 @@ def build_standalone_report(
     figures = _build_figures(frames)
     fragments = _figure_fragments(figures)
     validation = json.loads(manifest["validation_checks"].read_text(encoding="utf-8"))
-    narratives = _narratives(config, frames)
+    narratives = _narratives(config, frames, t)
     if len(SECTIONS) != 26:
         raise RuntimeError("the shared narrative registry must contain 26 sections")
 

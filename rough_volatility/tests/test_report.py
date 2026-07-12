@@ -4,6 +4,7 @@ import re
 from dataclasses import replace
 from pathlib import Path
 
+import pandas as pd
 import pytest
 from rough_volatility.config import ProjectConfig
 from rough_volatility.experiments import run_all
@@ -95,3 +96,17 @@ def test_section_headings_are_localized(tmp_path: Path) -> None:
     assert "From rough paths to option skew and order flow" in en
     assert "ラフパスからオプション・スキューと注文フローへ" in ja
     assert "From rough paths to option skew and order flow" not in ja
+
+
+def test_callouts_are_localized_and_interpolated(tmp_path: Path) -> None:
+    config = _report_config()
+    manifest = run_all(config, tmp_path, force=True)
+    powers = pd.read_csv(manifest["skew_power_law"])
+    target = powers.iloc[(powers["h"] - config.bergomi.h).abs().argmin()]
+    beta_text = f"β={float(target['beta']):.3f}"
+    ja = build_standalone_report(config, tmp_path, manifest, locale="ja").read_text(
+        encoding="utf-8"
+    )
+    assert "合成ラボは市場データを用いずに" in ja  # executive-summary callout prose
+    assert beta_text in ja  # interpolated skew value survives translation
+    assert "H changes path regularity" not in ja  # EN callout fully replaced
