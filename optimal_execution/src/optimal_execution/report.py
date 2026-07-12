@@ -938,6 +938,16 @@ def _related_work_html(t: Translator) -> str:
             ),
             ("Gatheral (2010)", "無裁定条件", "インパクトと減衰核の無裁定整合条件を導出。"),
             (
+                "Huberman–Stanzl (2004)",
+                "無操作性の理論",
+                "恒久インパクトが線形でなければ往復取引で操作利益。線形恒久インパクトの根拠。",
+            ),
+            (
+                "Lehalle–Neuman (2019)",
+                "シグナル×執行",
+                "OUシグナル＋指数減衰インパクトの明示解。板不均衡が予測シグナル。潜在アルファ設計の正典。",
+            ),
+            (
                 "Almgren et al. (2005)",
                 "実証推定",
                 "株式インパクトを直接推定：一時的はべき指数≈0.6、恒久的は線形。",
@@ -956,9 +966,19 @@ def _related_work_html(t: Translator) -> str:
             ("Schulman et al. (2017)", "PPO", "クリップ代理目的。本ラボの方策最適化アルゴリズム。"),
             ("Schulman et al. (2016)", "GAE", "一般化アドバンテージ推定。分散を抑えた優位性推定。"),
             (
+                "España et al. (2025)",
+                "Queue-Reactive×RL",
+                "QRシミュレータ＋DDQNで執行学習し標準手法を上回る。本ラボと同構図の最新研究。",
+            ),
+            (
                 "Huang–Lehalle–Rosenbaum (2015)",
                 "Queue-reactive モデル",
                 "状態依存の点過程で板を反応的に生成。反応型シミュレータの正典。",
+            ),
+            (
+                "Moallemi–Yuan (2016)",
+                "キュー位置の価値",
+                "指値のキュー位置価値（静的＝スプレッド↔逆選択＋動的＝オプション性）。約定近似の裏付け。",
             ),
             (
                 "Gatheral–Jaisson–Rosenbaum (2018)",
@@ -1078,6 +1098,16 @@ def _related_work_html(t: Translator) -> str:
                 "Derives the no-arbitrage consistency between impact and decay kernel.",
             ),
             (
+                "Huberman–Stanzl (2004)",
+                "No-manipulation theory",
+                "Permanent impact must be linear to bar round-trip profits; basis for linear permanent impact.",
+            ),
+            (
+                "Lehalle–Neuman (2019)",
+                "Signals × execution",
+                "Closed-form strategy for an OU signal with exponentially decaying impact; book imbalance predicts price; the canon for latent alpha.",
+            ),
+            (
                 "Almgren et al. (2005)",
                 "Empirical estimation",
                 "Directly estimates equity impact: temporary power ≈0.6, permanent linear.",
@@ -1108,9 +1138,19 @@ def _related_work_html(t: Translator) -> str:
                 "Generalized advantage estimation; low-variance advantages.",
             ),
             (
+                "España et al. (2025)",
+                "Queue-Reactive × RL",
+                "RL (DDQN) execution in a queue-reactive simulator, beating standard methods; the closest recent analogue to this lab.",
+            ),
+            (
                 "Huang–Lehalle–Rosenbaum (2015)",
                 "Queue-reactive model",
                 "Reactive book from state-dependent point processes; the canon for the reactive simulator.",
+            ),
+            (
+                "Moallemi–Yuan (2016)",
+                "Queue-position value",
+                "Static (spread vs adverse selection) + dynamic (optionality) value of a limit order's queue position; backs the passive-fill proxy.",
             ),
             (
                 "Gatheral–Jaisson–Rosenbaum (2018)",
@@ -1199,6 +1239,24 @@ def _model_theory_html(t: Translator, charts: dict[str, str]) -> str:
             r"\hat{A}_t = \sum_{l \ge 0} (\gamma \lambda)^l\, \delta_{t+l}, \quad \delta_t = r_t + \gamma V_{t+1} - V_t",
             r"a_t = a_t^{\mathrm{AC}} + \Delta a_t",
         ),
+        "hs": (
+            r"g(z) = \gamma\, \mathrm{sign}(z)\, |z|^{\delta}, \quad P_k^{\mathrm{exec}} = P_0 + \sum_{j<k} g(z_j) + \tfrac{1}{2} g(z_k)",
+            r"\mathrm{PnL} = -\sum_k z_k\, P_k^{\mathrm{exec}}, \qquad \sum_k z_k = 0",
+            r"\delta = 1 \ \Rightarrow\ \mathrm{PnL} = -\frac{\gamma}{2} \Big( \sum_k z_k \Big)^{2} = 0",
+        ),
+        "ln": (
+            r"d\alpha_t = -\kappa_\alpha\, \alpha_t\, dt + \sigma_\alpha\, dW_t, \quad \bar{\alpha}_k = \alpha_0\, e^{-\kappa_\alpha t_k}",
+            r"J(q) = \eta \sum_k \frac{q_k^2}{\Delta t} + \lambda\, \sigma^2 \sum_k \Delta t\, x_{k+1}^2 - \sum_k \bar{\alpha}_k\, x_{k+1}\, \Delta t",
+            r"\min_{q \ge 0,\ \sum_k q_k = X} J(q), \qquad \alpha_0 = 0 \ \Rightarrow\ q^{\mathrm{LN}} = q^{\mathrm{AC}}",
+        ),
+        "my": (
+            r"V(Q_a) = P_{\mathrm{fill}}(Q_a) \left( \frac{s}{2} - c_{\mathrm{adv}}(Q_a) \right)",
+            r"c_{\mathrm{adv}}(Q_a) = s \left( 1 - e^{-Q_a/\bar{Q}} \right), \qquad V(Q_a) = 0 \ \Leftrightarrow\ Q_a = \bar{Q} \ln 2",
+        ),
+        "espana": (
+            r"s_t = (t,\ x_t,\ \mathrm{price},\ \mathrm{depth}), \qquad \pi_\theta : s_t \mapsto a_t",
+            r"y_t = r_t + \gamma\, Q_{\theta^-}\!\left(s_{t+1},\ \arg\max_a Q_\theta(s_{t+1}, a)\right)",
+        ),
     }
 
     if t.locale == "ja":
@@ -1263,6 +1321,30 @@ def _model_theory_html(t: Translator, charts: dict[str, str]) -> str:
                 ],
             },
             {
+                "key": "hs",
+                "title": "Huberman–Stanzl（無操作性と線形恒久インパクト）",
+                "impl": "impact.py: round_trip_pnl, manipulation_profit",
+                "desc": "恒久インパクトが線形でなければ、往復取引（開始と終了で在庫ゼロ）が正の期待利益を生み、価格操作が可能になることを示した定理。本ラボの恒久チャネルを γ×累計出来高と線形にしている理論的根拠。診断は冪指数 δ を振って最良の往復P&Lを計算し、δ=1 でのみ利益が消えることを確認する。",
+                "vars": [
+                    ("z_k", "符号付き取引（買い>0）"),
+                    ("g(z)", "恒久インパクト関数"),
+                    ("γ", "係数（g(Q) 固定で正規化）"),
+                    ("δ", "冪指数（1=線形）"),
+                    ("P_k^exec", "約定価格（半自己インパクト規約）"),
+                    ("n, Q", "分割数・往復数量"),
+                ],
+                "strengths": [
+                    "「なぜ恒久インパクトは線形か」に答える無裁定基礎。",
+                    "診断が閉形式で検証可能：(γQ²/2)(n^{1−δ}−1)。",
+                    "操作可能性という規制上も重要な観点を導入。",
+                ],
+                "weaknesses": [
+                    "恒久のみの理想化世界（核付きの一般化は Gatheral 2010）。",
+                    "取引コスト・スプレッドはゼロと仮定。",
+                    "理論上の利益と実市場での実行可能性は別問題。",
+                ],
+            },
+            {
                 "key": "ow",
                 "title": "Obizhaeva–Wang（回復力ある流動性の最適執行）",
                 "impl": "resilience.py",
@@ -1284,6 +1366,30 @@ def _model_theory_html(t: Translator, charts: dict[str, str]) -> str:
                     "リスク中立（リスク回避は AC レイヤに委譲）。",
                     "ブロック型の板を仮定。",
                     "単一資産・単一銘柄。",
+                ],
+            },
+            {
+                "key": "ln",
+                "title": "Lehalle–Neuman（シグナル適応執行・定型化版）",
+                "impl": "signal_adaptive.py",
+                "desc": "短期予測シグナル（OU過程のアルファ）を持つ執行者の最適スケジュール。本実装は定型化版：シグナルの期待経路 ᾱ_k が AC の線形2次計画に線形項として入り、Σq=X・q≥0 の下で KKT 系により解く。α₀=0 で離散 AC に厳密に一致し、さらに λ=0 なら TWAP。原論文は過渡インパクト核との相互作用を含む特異最適制御まで扱う。",
+                "vars": [
+                    ("α₀", "現在のシグナル（通貨/株/秒。売りで正=上昇予想）"),
+                    ("κ_α", "OU 平均回帰速度"),
+                    ("ᾱ_k", "期待シグナル経路 α₀e^{−κ_α t_k}"),
+                    ("λ, σ, η", "AC と同じリスク回避・ボラ・一時的係数"),
+                    ("L", "下三角1行列（x=X·1−Lq）"),
+                    ("q_k, x_{k+1}, Δt", "子注文・在庫・ステップ幅"),
+                ],
+                "strengths": [
+                    "シグナルと執行の統合を最小の数式で例示。",
+                    "α₀=0 で AC に退化するため検証が容易。",
+                    "板不均衡→短期予測という LN (2019) の実証に接続。",
+                ],
+                "weaknesses": [
+                    "期待経路のみ使用する静的計画（シグナル更新に再最適化しない）。",
+                    "q≥0 制約で往復は不可（原論文は許容）。",
+                    "過渡インパクトとの相互作用（原論文の核心）は省略。",
                 ],
             },
             {
@@ -1312,6 +1418,29 @@ def _model_theory_html(t: Translator, charts: dict[str, str]) -> str:
                 ],
             },
             {
+                "key": "my",
+                "title": "Moallemi–Yuan（キュー位置の価値・定型化版）",
+                "impl": "fills.py: queue_position_value",
+                "desc": "指値注文の価値はキューの前後で大きく異なる：約定すればハーフスプレッドを稼ぐが、深い位置は大きな（情報を持つ）フローに掃かれたときにだけ約定するため、条件付き逆選択コストが増す。定型化版は V=P_fill·(s/2−c_adv) とし、c_adv は深さで全スプレッドへ飽和する形を仮定（V は Q̄ln2 で符号反転）。原論文はこの価値をフロー動学から内生的に導出し、キュー価値がハーフスプレッド級であることを示す。",
+                "vars": [
+                    ("Q_a", "前方キュー（株）"),
+                    ("P_fill", "約定確率（Poisson 近似、fills.py と共有）"),
+                    ("s/2", "ハーフスプレッド（約定時の収益）"),
+                    ("c_adv", "条件付き逆選択コスト"),
+                    ("Q̄", "深さスケール（目標深度）"),
+                ],
+                "strengths": [
+                    "「指値はタダ飯ではない」を1本の曲線で示す。",
+                    "キュー価値≈ハーフスプレッド級という MY の定量結論を反映。",
+                    "既存 FIFO 近似（fills.py）と同じ部品で構成。",
+                ],
+                "weaknesses": [
+                    "c_adv の形は外生（原論文は内生導出）。",
+                    "キュー改善の動的オプション性は省略。",
+                    "単一価格帯・単一取引所。",
+                ],
+            },
+            {
                 "key": "rl",
                 "title": "強化学習方策（PPO＋GAE、残差／自由）",
                 "impl": "rl_training.py, environment.py",
@@ -1337,6 +1466,29 @@ def _model_theory_html(t: Translator, charts: dict[str, str]) -> str:
                     "非解釈的で、quick は1シードのため優位性は記述的。",
                 ],
             },
+            {
+                "key": "espana",
+                "title": "España et al. 2025（Queue-Reactive×RL——本ラボの構図）",
+                "impl": "order_book.py + rl_training.py + evaluation.py",
+                "desc": "España–Hafsi–Lillo–Vittori (2025) は queue-reactive シミュレータ上で Double DQN の執行方策を学習し、標準手法を上回ることを示した。本ラボは同じ構図（反応型板＋深層RL）を PPO＋安全層＋ペア共通乱数評価で実装している。対比のため DDQN のターゲットを示す：行動選択はオンライン網、価値評価はターゲット網が担い、Q値の過大推定を抑える——本ラボの PPO ではクリップ代理目的が同種の安定化を担う。",
+                "vars": [
+                    ("s_t", "状態（時刻・在庫・価格・深度）"),
+                    ("a_t", "行動（子注文）"),
+                    ("Q_θ, Q_{θ⁻}", "オンライン／ターゲット Q 網"),
+                    ("y_t", "DDQN ターゲット"),
+                    ("γ", "割引率"),
+                ],
+                "strengths": [
+                    "反応型板×深層RLという構図に査読研究の外部妥当性。",
+                    "DDQN（離散Q学習）と PPO（方策勾配）の設計対比が明確。",
+                    "本ラボはさらにペアCRN評価・安全層・誤指定テストを追加。",
+                ],
+                "weaknesses": [
+                    "両者とも合成シミュレータ内の結果（実運用の証拠ではない）。",
+                    "報酬設計・学習量・シード依存は共通の弱点。",
+                    "行動空間の設計（離散グリッド）に敏感。",
+                ],
+            },
         ]
         commons = [
             "共通の状態変数（在庫 x、残時間、価格）と共通指標（実装ショートフォール IS、bps）で全モデルを評価する。",
@@ -1352,6 +1504,10 @@ def _model_theory_html(t: Translator, charts: dict[str, str]) -> str:
             "ow": "回復が遅い（ρ 小）ほど端点に大きなブロックを置き中間は薄く、速い（ρ 大）ほど均等に近づく。図は ρ 別のステップ発注量。",
             "lob": "指値は前方キューが長いほど約定しにくく、反対側フローが多いほど約定しやすい。P1-5 の厳格化はこの曲線を実質右へずらす。図は約定確率。",
             "rl": "学習が進むほど執行コストが下がる。残差RLは AC を土台に微調整、自由RLは行動グリッドを直接学習。図は学習曲線（学習時ISの移動平均＋検証点）。残差は検証が良くても独立テストで悪化しやすい（選択の楽観性）。",
+            "hs": "δ=1（線形）を選ぶ限り、どんな往復取引も利益ゼロ＝操作インセンティブが消える。図は δ を振った往復P&L：δ<1 では「小口で買い上げ→一括売り」、δ>1 では「一括買い→小口売り」が利益化し、δ=1 でちょうど0になる。",
+            "ln": "有利なシグナル（売りで α₀>0＝上昇予想）は執行を後ろ倒しして在庫を長く保有し、不利なら前倒しで逃げる。図は α₀∈{−180, 0, +180 bps/h} の在庫軌道：AC（α₀=0）を挟んで上下に曲がる。",
+            "my": "前列ほど指値の価値が高く、深い位置では約定しても損（逆選択がスプレッド益を上回る）。図はフロー倍率別の V(Q_a)：フロー増で前列価値は上がるが、符号反転点 Q̄ln2 は c_adv の形で決まり動かない。",
+            "espana": "この構図を採用すると、方策は板状態（不均衡・深度・スプレッド）に反応する戦術を学習する。図は本ラボの実測——レジーム横断の平均IS（RL2種 vs 代表スクリプト戦略）で、分布内で学んだ適応がストレス下でどこまで持つかを示す。",
         }
     else:
         vars_h, str_h, weak_h, common_h = (
@@ -1420,6 +1576,30 @@ def _model_theory_html(t: Translator, charts: dict[str, str]) -> str:
                 ],
             },
             {
+                "key": "hs",
+                "title": "Huberman–Stanzl (no manipulation and linear permanent impact)",
+                "impl": "impact.py: round_trip_pnl, manipulation_profit",
+                "desc": "The theorem that unless permanent impact is linear, round trips (zero start and end inventory) earn a positive expected profit — price manipulation. This is the theoretical basis for the lab's linear permanent channel (γ × cumulative volume). The diagnostic sweeps the power exponent δ, computes the best round-trip P&L, and confirms the profit vanishes exactly at δ = 1.",
+                "vars": [
+                    ("z_k", "signed trade (buy > 0)"),
+                    ("g(z)", "permanent-impact function"),
+                    ("γ", "coefficient (normalized so g(Q) is fixed)"),
+                    ("δ", "power exponent (1 = linear)"),
+                    ("P_k^exec", "execution price (half-own-impact convention)"),
+                    ("n, Q", "number of pieces / round-trip quantity"),
+                ],
+                "strengths": [
+                    'A no-arbitrage answer to "why is permanent impact linear?".',
+                    "The diagnostic has a verifiable closed form: (γQ²/2)(n^{1−δ}−1).",
+                    "Introduces manipulability, a regulatory concern as well.",
+                ],
+                "weaknesses": [
+                    "An idealized permanent-only world (kernels: Gatheral 2010).",
+                    "Assumes zero spread and fees.",
+                    "Theoretical profit differs from real-world executability.",
+                ],
+            },
+            {
                 "key": "ow",
                 "title": "Obizhaeva–Wang (optimal execution with resilient liquidity)",
                 "impl": "resilience.py",
@@ -1441,6 +1621,33 @@ def _model_theory_html(t: Translator, charts: dict[str, str]) -> str:
                     "Risk-neutral (risk aversion is delegated to the AC layer).",
                     "Assumes a block-shaped book.",
                     "Single asset / single name.",
+                ],
+            },
+            {
+                "key": "ln",
+                "title": "Lehalle–Neuman (signal-adaptive execution, stylized)",
+                "impl": "signal_adaptive.py",
+                "desc": "The optimal schedule for an executor holding a short-horizon predictive signal (an OU alpha). This implementation is the stylized form: the expected signal path ᾱ_k enters the AC linear-quadratic program as a linear term, solved by a KKT system under Σq = X, q ≥ 0. With α₀ = 0 it reduces exactly to discrete AC, and additionally with λ = 0 to TWAP. The original paper treats the full singular control, including the interaction with a transient impact kernel.",
+                "vars": [
+                    (
+                        "α₀",
+                        "current signal (currency/share/s; positive = price expected to rise, for a sell)",
+                    ),
+                    ("κ_α", "OU mean-reversion rate"),
+                    ("ᾱ_k", "expected signal path α₀e^{−κ_α t_k}"),
+                    ("λ, σ, η", "risk aversion, volatility, temporary coefficient as in AC"),
+                    ("L", "lower-triangular ones matrix (x = X·1 − Lq)"),
+                    ("q_k, x_{k+1}, Δt", "child order, inventory, step length"),
+                ],
+                "strengths": [
+                    "Shows the signal–execution integration with minimal machinery.",
+                    "Reduces to AC at α₀ = 0, so it is easy to verify.",
+                    "Connects to LN (2019)'s evidence that book imbalance predicts prices.",
+                ],
+                "weaknesses": [
+                    "A static plan using only the expected path (no re-optimization).",
+                    "q ≥ 0 forbids round trips (the original allows them).",
+                    "Omits the transient-kernel interaction, the paper's core.",
                 ],
             },
             {
@@ -1472,6 +1679,29 @@ def _model_theory_html(t: Translator, charts: dict[str, str]) -> str:
                 ],
             },
             {
+                "key": "my",
+                "title": "Moallemi–Yuan (queue-position value, stylized)",
+                "impl": "fills.py: queue_position_value",
+                "desc": "A limit order's value differs sharply across the queue: a fill earns the half-spread, but deep positions fill only when large (more informed) flow sweeps the level, so the conditional adverse-selection cost grows. The stylized form is V = P_fill·(s/2 − c_adv) with c_adv saturating toward the full spread in depth (V changes sign at Q̄ln2). The original derives this value endogenously from the flow dynamics and shows queue value is of the order of the half-spread.",
+                "vars": [
+                    ("Q_a", "queue ahead (shares)"),
+                    ("P_fill", "fill probability (Poisson approximation, shared with fills.py)"),
+                    ("s/2", "half-spread (earned on fill)"),
+                    ("c_adv", "conditional adverse-selection cost"),
+                    ("Q̄", "depth scale (target depth)"),
+                ],
+                "strengths": [
+                    'Shows "limit orders are not free money" in one curve.',
+                    "Reflects MY's quantitative conclusion: queue value ≈ half-spread order.",
+                    "Built from the same parts as the existing FIFO proxy (fills.py).",
+                ],
+                "weaknesses": [
+                    "The shape of c_adv is exogenous (endogenous in the original).",
+                    "Omits the dynamic optionality of improving queue position.",
+                    "Single level, single venue.",
+                ],
+            },
+            {
                 "key": "rl",
                 "title": "Reinforcement-learning policy (PPO + GAE, residual / free)",
                 "impl": "rl_training.py, environment.py",
@@ -1497,6 +1727,29 @@ def _model_theory_html(t: Translator, charts: dict[str, str]) -> str:
                     "Not interpretable; the quick profile has one seed, so any edge is descriptive.",
                 ],
             },
+            {
+                "key": "espana",
+                "title": "España et al. 2025 (Queue-Reactive × RL — this lab's composition)",
+                "impl": "order_book.py + rl_training.py + evaluation.py",
+                "desc": "España–Hafsi–Lillo–Vittori (2025) train a Double DQN execution policy inside a queue-reactive simulator and beat standard approaches. This lab implements the same composition (reactive book + deep RL) with PPO, a safety layer, and paired common-random-number evaluation. For contrast the block shows the DDQN target: the online network selects the action while the target network evaluates it, curbing Q-value over-estimation — the role PPO's clipped surrogate plays here.",
+                "vars": [
+                    ("s_t", "state (time, inventory, price, depth)"),
+                    ("a_t", "action (child order)"),
+                    ("Q_θ, Q_{θ⁻}", "online / target Q networks"),
+                    ("y_t", "DDQN target"),
+                    ("γ", "discount factor"),
+                ],
+                "strengths": [
+                    "External validity: a peer-reviewed study shares the reactive-book × deep-RL composition.",
+                    "A clear design contrast between DDQN (discrete Q-learning) and PPO (policy gradient).",
+                    "This lab additionally applies paired-CRN evaluation, a safety layer, and misspecification tests.",
+                ],
+                "weaknesses": [
+                    "Both are results inside synthetic simulators, not production evidence.",
+                    "Reward design, training budget, and seed dependence are shared weaknesses.",
+                    "Sensitive to the action-space design (discrete grids).",
+                ],
+            },
         ]
         commons = [
             "All models are evaluated on shared state variables (inventory x, time remaining, price) and a shared metric (implementation shortfall IS, bps).",
@@ -1512,6 +1765,10 @@ def _model_theory_html(t: Translator, charts: dict[str, str]) -> str:
             "ow": "Slower resilience (small ρ) places large blocks at the endpoints with a thin interior; faster ρ approaches an even schedule. The chart shows per-step size by ρ.",
             "lob": "A limit order fills less readily as the queue ahead grows and more readily as opposite flow rises; the P1-5 stricter regime effectively shifts this curve right. The chart shows fill probability.",
             "rl": "Cost falls as training proceeds; residual RL fine-tunes around AC, free RL learns the action grid directly. The chart shows learning curves (training-IS moving average plus validation points). Residual can look good on validation yet degrade on the independent test (selection optimism).",
+            "hs": 'As long as you choose δ = 1 (linear), every round trip earns zero — the manipulation incentive disappears. The chart sweeps δ: for δ < 1 "buy in pieces, dump in one block" turns profitable, for δ > 1 the reverse does, and both vanish exactly at δ = 1.',
+            "ln": "A favorable signal (α₀ > 0 for a sell: price expected to rise) defers execution and holds inventory longer; an adverse one front-loads the exit. The chart shows inventory paths for α₀ ∈ {−180, 0, +180 bps/h}, bending on either side of AC (α₀ = 0).",
+            "my": "The front of the queue is worth the most; deep positions lose even when filled (adverse selection exceeds the spread gain). The chart shows V(Q_a) per flow multiplier: more flow raises front-of-queue value, while the sign change at Q̄ln2 is set by the shape of c_adv and does not move.",
+            "espana": "Adopting this composition, the policy learns tactics that react to book state (imbalance, depth, spread). The chart is this lab's own measurement — mean IS across regimes (two RL policies vs representative scripted strategies), showing how far in-distribution adaptation survives under stress.",
         }
 
     parts: list[str] = []
@@ -1580,14 +1837,17 @@ def _val_selection_html(cfg: Config, t: Translator, in_dist: pd.DataFrame) -> st
     return f"<p>{html.escape(t('val_selection_note'))}</p><ul>{''.join(rows)}</ul>"
 
 
-def _model_theory_figures(cfg: Config, t: Translator) -> dict[str, go.Figure]:
+def _model_theory_figures(
+    cfg: Config, t: Translator, frames: dict[str, pd.DataFrame]
+) -> dict[str, go.Figure]:
     """One parameter-sweep chart per model, computed analytically from the
     model code so each figure shows how a single knob reshapes the strategy or
     response (deterministic, offline)."""
     from .almgren_chriss import ac_inventory, kappa_for_lambda
-    from .fills import passive_fill_probability
-    from .impact import transient_decay_curve
+    from .fills import passive_fill_probability, queue_position_value
+    from .impact import manipulation_profit, transient_decay_curve
     from .resilience import ow_closed_form
+    from .signal_adaptive import ln_schedule
 
     locale = t.locale
     figs: dict[str, go.Figure] = {}
@@ -1737,6 +1997,148 @@ def _model_theory_figures(cfg: Config, t: Translator) -> dict[str, go.Figure]:
                 title=_axis(locale, "Implementation shortfall (bps)", "実装ショートフォール（bps）")
             )
             figs["mt_rl"] = fig
+
+    # Huberman–Stanzl: best round-trip P&L vs permanent-impact exponent delta.
+    deltas = np.linspace(0.6, 1.4, 33)
+    to_bps = 1e4 / cfg.notional
+    fig = go.Figure()
+    for i, (key, label_en, label_ja) in enumerate(
+        (
+            ("pieces_then_block", "pieces → block", "小口買い→一括売り"),
+            ("block_then_pieces", "block → pieces", "一括買い→小口売り"),
+        )
+    ):
+        pnl = [manipulation_profit(cfg, float(d))[key] * to_bps for d in deltas]
+        fig.add_trace(
+            go.Scatter(
+                x=deltas,
+                y=pnl,
+                mode="lines",
+                line={"color": COLORS[i], "width": 2},
+                name=_axis(locale, label_en, label_ja),
+            )
+        )
+    fig.add_hline(y=0, line_width=1, line_color="#64748b")
+    fig.add_vline(x=1.0, line_width=1, line_dash="dash", line_color="#64748b")
+    _base_layout(
+        fig,
+        _axis(
+            locale,
+            "Huberman–Stanzl: round-trip profit vs impact exponent",
+            "Huberman–Stanzl：往復利益と恒久インパクト冪指数",
+        ),
+    )
+    fig.update_xaxes(title=_axis(locale, "Permanent-impact exponent δ", "恒久インパクト冪指数 δ"))
+    fig.update_yaxes(
+        title=_axis(locale, "Round-trip P&L (bps of notional)", "往復損益（想定元本比 bps）")
+    )
+    figs["mt_hs"] = fig
+
+    # Lehalle–Neuman: inventory paths under adverse / zero / favorable signals.
+    kappa_alpha = 1e-3
+    fig = go.Figure()
+    for i, bph in enumerate((-180.0, 0.0, 180.0)):
+        alpha0 = bph * 1e-4 * cfg.arrival_price / 3600.0
+        q = ln_schedule(cfg, alpha0=alpha0, kappa_alpha=kappa_alpha)
+        inv = np.concatenate([[X], X - np.cumsum(q)])
+        fig.add_trace(
+            go.Scatter(
+                x=t_grid,
+                y=inv / X,
+                mode="lines",
+                line={"color": COLORS[i], "width": 2},
+                name=f"α₀={bph:+.0f} bps/h" if bph else "α₀=0 (AC)",
+            )
+        )
+    _base_layout(
+        fig,
+        _axis(
+            locale, "Lehalle–Neuman: signal-tilted schedules", "Lehalle–Neuman：シグナルで傾く執行"
+        ),
+    )
+    fig.update_xaxes(title=_axis(locale, "Time (seconds)", "時刻（秒）"))
+    fig.update_yaxes(title=_axis(locale, "Inventory / initial", "在庫／初期在庫"), range=[0, 1.02])
+    figs["mt_ln"] = fig
+
+    # Moallemi–Yuan: queue-position value vs queue ahead, opposite-flow sweep.
+    target_depth = cfg.liquidity.depth_shares
+    queue = np.linspace(0.0, 3.0 * target_depth, 61)
+    order_qty = X / N
+    fig = go.Figure()
+    for i, mult in enumerate((0.5, 1.0, 2.0)):
+        values = [
+            queue_position_value(
+                float(qa),
+                order_qty,
+                cfg.mo_rate_per_side * mult,
+                cfg.lob.market_order_size_mean,
+                dt,
+                cfg.half_spread,
+                target_depth,
+            )
+            for qa in queue
+        ]
+        fig.add_trace(
+            go.Scatter(
+                x=queue,
+                y=values,
+                mode="lines",
+                line={"color": COLORS[i], "width": 2},
+                name=_axis(locale, f"flow ×{mult:g}", f"フロー ×{mult:g}"),
+            )
+        )
+    fig.add_hline(y=0, line_width=1, line_color="#64748b")
+    fig.add_vline(
+        x=float(target_depth * np.log(2.0)),
+        line_width=1,
+        line_dash="dash",
+        line_color="#64748b",
+    )
+    _base_layout(
+        fig,
+        _axis(locale, "Moallemi–Yuan: value of queue position", "Moallemi–Yuan：キュー位置の価値"),
+    )
+    fig.update_xaxes(title=_axis(locale, "Queue ahead (shares)", "前方キュー（株）"))
+    fig.update_yaxes(
+        title=_axis(locale, "Value (currency/share)", "価値（通貨/株）"),
+    )
+    figs["mt_my"] = fig
+
+    # España et al.: this lab's RL vs scripted policies across stress regimes.
+    stress = frames.get("stress") if frames else None
+    if stress is not None and len(stress):
+        regimes = list(dict.fromkeys(stress["regime"]))
+        pivot = stress.pivot(index="strategy_id", columns="regime", values="is_mean_bps")
+        rl_ids = sorted(sid for sid in pivot.index if str(sid).startswith("rl_"))
+        scripted_ids = [sid for sid in ("ac_mkt", "twap_mkt") if sid in pivot.index]
+        fig = go.Figure()
+        for i, sid in enumerate(rl_ids + scripted_ids):
+            fig.add_trace(
+                go.Scatter(
+                    x=[_regime_name(locale, r) for r in regimes],
+                    y=[pivot.loc[sid, r] for r in regimes],
+                    mode="lines+markers",
+                    line={
+                        "color": COLORS[i % len(COLORS)],
+                        "width": 2,
+                        "dash": "solid" if str(sid).startswith("rl_") else "dot",
+                    },
+                    marker={"size": 6},
+                    name=f"{_strategy_name(t, str(sid))} · {sid}",
+                )
+            )
+        if fig.data:
+            _base_layout(
+                fig,
+                _axis(
+                    locale,
+                    "Queue-reactive × RL: robustness across regimes",
+                    "Queue-Reactive×RL：レジーム横断の頑健性",
+                ),
+            )
+            fig.update_xaxes(title=_axis(locale, "Evaluation regime", "評価レジーム"))
+            fig.update_yaxes(title=_axis(locale, "Mean IS (bps)", "平均IS（bps）"))
+            figs["mt_espana"] = fig
     return figs
 
 
@@ -1746,7 +2148,7 @@ def build_report(cfg: Config, locale: str) -> Path:
     frames = _artifact_frames(cfg)
     # Model-theory sweeps come first so the inline Plotly bundle attaches to the
     # earliest chart in the DOM (the model-theory section precedes the results).
-    figures = {**_model_theory_figures(cfg, t), **_charts(frames, t)}
+    figures = {**_model_theory_figures(cfg, t, frames), **_charts(frames, t)}
     chart_html = _fig_html(figures)
     findings = _findings(cfg, frames, t)
     quantitative = _quantitative_payload(frames)

@@ -5,7 +5,11 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from optimal_execution.fills import match_passive, passive_fill_probability
+from optimal_execution.fills import (
+    match_passive,
+    passive_fill_probability,
+    queue_position_value,
+)
 from optimal_execution.order_book import AgentLimitOrder, OrderBook
 from optimal_execution.random import scenario_rng
 
@@ -115,3 +119,40 @@ def test_statistical_adverse_selection(cfg):
             order.queue_ahead = 0.0
     assert len(fill_moves) > 50 and len(nofill_moves) > 50
     assert np.mean(fill_moves) > np.mean(nofill_moves)
+
+
+# ---- Moallemi–Yuan-style queue-position value --------------------------------
+
+_QPV_ARGS = dict(
+    order_qty=2000.0,
+    opposite_rate_per_s=0.4,
+    mean_order_size=250.0,
+    horizon_s=60.0,
+    half_spread=0.015,
+    target_depth=4000.0,
+)
+
+
+def test_queue_value_positive_at_front():
+    v0 = queue_position_value(0.0, **_QPV_ARGS)
+    p0 = passive_fill_probability(
+        0.0,
+        _QPV_ARGS["order_qty"],
+        _QPV_ARGS["opposite_rate_per_s"],
+        _QPV_ARGS["mean_order_size"],
+        _QPV_ARGS["horizon_s"],
+    )
+    assert v0 > 0
+    assert v0 == pytest.approx(p0 * _QPV_ARGS["half_spread"])
+
+
+def test_front_of_queue_is_most_valuable():
+    grid = np.linspace(0.0, 12000.0, 25)
+    values = [queue_position_value(q, **_QPV_ARGS) for q in grid]
+    assert values[0] == max(values)
+
+
+def test_queue_value_changes_sign_at_qbar_ln2():
+    crossing = _QPV_ARGS["target_depth"] * np.log(2.0)
+    assert queue_position_value(crossing * 0.8, **_QPV_ARGS) > 0
+    assert queue_position_value(crossing * 1.2, **_QPV_ARGS) < 0
