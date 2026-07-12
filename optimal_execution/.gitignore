@@ -1,0 +1,15 @@
+# Generated outputs — reproducible via `make demo` / `make all`.
+artifacts/data/
+artifacts/metrics/
+artifacts/checkpoints/
+artifacts/figures/
+reports/*.html
+notebooks/*.nbconvert.ipynb
+notebooks/_executed/
+
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+*.egg-info/

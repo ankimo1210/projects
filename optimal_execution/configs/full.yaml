@@ -1,0 +1,27 @@
+# Full profile — smoother tail metrics and multi-seed RL comparison.
+# Expect hours of CPU time; see README runtime notes.
+extends: default.yaml
+profile: full
+seed: 1210
+
+n_decision_steps: 60
+
+n_scenarios: 20000
+n_test_scenarios: 100000
+mc_chunk_size: 20000
+
+lob_eval_episodes: 5000
+lob_stress_episodes: 1000
+lob_example_episodes: 8
+
+rl:
+  training_episodes: 50000
+  validation_episodes: 1000
+  test_episodes: 5000
+  seeds: [1210, 2026, 31415]
+  eval_every_episodes: 2000
+  early_stop_patience: 8
+
+ablation:
+  features: [imbalance, recent_flow, transient_impact, volume_state, vol_state]
+  training_episodes: 20000
