@@ -148,7 +148,27 @@ def test_captions_and_evidence_note_localized(tmp_path: Path) -> None:
     assert _plotly_json_text("フラクショナル・ブラウン運動のパス") in ja  # figure.fbm_paths.title
     assert _plotly_json_text("フラクショナル・ガウスノイズの増分") in ja  # figure.fgn_increments.title
     assert _plotly_json_text("拡大時の局所的なラフネス") in ja  # figure.fbm_zoom.title
+
+    # Helper-internal captions (previously hardcoded inside the drawing
+    # helpers rather than in _build_figures) are localized the same way.
+    assert _plotly_json_text("増分の自己相関") in ja  # figure.increment_acf.title
+    assert "Increment autocorrelation" not in ja
+    assert _plotly_json_text("IVスマイル") in ja  # figure.iv_smiles.title
+    assert "Implied-volatility smiles" not in ja
+    assert (
+        _plotly_json_text("共通ショック下のrBergomiとHestonの比較") in ja
+    )  # figure.heston_comparison.title
+    assert "Rough Bergomi versus Heston under common shocks" not in ja
+    # noise_bias subtitle interpolates the {estimator} name (stays EN) into JA prose.
+    assert _plotly_json_text("variogram推定量。前処理モードセレクター") in ja
+    assert "use the preprocessing-mode selector" not in ja
+    # The shared fBM-selector subtitle (hardcoded in _fbm_selector before) is localized.
+    assert _plotly_json_text("Hセレクターを使うこと") in ja  # figure.fbm_*.subtitle
+    assert "Use the H selector" not in ja
+
     # EN report keeps the original captions untouched (plain ASCII, so no
     # escaping distinction applies).
     assert "Fractional Brownian-motion paths" in en
     assert "Hawkes event raster" in en
+    assert "Increment autocorrelation" in en
+    assert "variogram estimator; use the preprocessing-mode selector" in en
