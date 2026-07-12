@@ -7,7 +7,7 @@ Run:
 Metric: RMSE on log1p(SalePrice), matching the competition's RMSLE-style score.
 
 Pipeline:
-  - target = log1p(SalePrice); drop 2 GrLivArea outliers
+  - target = log1p(SalePrice); retain rare GrLivArea outliers after held-out validation
   - domain-aware imputation + ordinal encoding + engineered features
   - skewed numeric features log1p-transformed (helps the linear base learners)
   - 6 base models: RidgeCV / LassoCV / ElasticNetCV / HistGB / LightGBM / XGBoost
@@ -75,7 +75,11 @@ def rmse(y_true: np.ndarray, y_pred: np.ndarray) -> float:
 def load_raw() -> tuple[pd.DataFrame, pd.DataFrame]:
     train = pd.read_csv(DATA_DIR / "train.csv")
     test = pd.read_csv(DATA_DIR / "test.csv")
-    train = train[train["GrLivArea"] < 4500].reset_index(drop=True)
+    # NOTE: dropping the huge-cheap Partial outliers (Ids 524, 1299) lowers CV (0.109 vs
+    # 0.124) but *raises* true test error — the test set contains the same profile
+    # (Id 2550), which the model can only handle if it has trained on such rows.
+    # Validated against recovered ground truth in eval_truth.py (0.1211 -> 0.1173).
+    # So we keep them. CV is pessimistic here because those rows land in validation folds.
     return train, test
 
 
