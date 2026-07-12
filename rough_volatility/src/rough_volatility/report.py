@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import base64
+import hashlib
 import html
 import io
 import json
@@ -700,6 +701,29 @@ def _figure_fragments(figures: dict[str, go.Figure]) -> dict[str, str]:
     return fragments
 
 
+def _quantitative_fingerprint(
+    figures: dict[str, go.Figure], metric_cards: str, config: ProjectConfig
+) -> str:
+    """SHA-256 over language-neutral content (figure data, metrics, config).
+
+    A `go.Figure`'s JSON splits into `layout` (title/subtitle/axis text —
+    localized since Task 5, so it differs EN vs JA) and `data` (the trace
+    arrays: x/y/z values, marker sizes, hover templates keyed on numbers —
+    English/neutral regardless of locale). This hashes only the `data` half
+    of each figure, plus `metric_cards` (English/neutral by design) and
+    `config.fingerprint()`. Prose — headings, callouts, figure captions — is
+    excluded entirely, so the result is identical between the English and
+    Japanese reports built from the same artifacts, while still changing if
+    the underlying numbers do.
+    """
+    figure_payloads = [
+        json.dumps(json.loads(figures[key].to_json())["data"], sort_keys=True)
+        for key in sorted(figures)
+    ]
+    payload = " ".join([config.fingerprint(), metric_cards, *figure_payloads])
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
 def _configuration_table(config: ProjectConfig) -> str:
     rows = (
         ("Profile", config.profile),
@@ -901,6 +925,11 @@ def build_standalone_report(
         )
     metric_cards = _metric_cards(config, frames, validation)
     sections_html[0] = sections_html[0].replace("</section>", metric_cards + "</section>")
+    fingerprint_hex = _quantitative_fingerprint(figures, metric_cards, config)
+    fingerprint_tag = (
+        '<script type="application/json" id="quantitative-fingerprint">'
+        f'{{"sha256": "{fingerprint_hex}"}}</script>'
+    )
 
     css = """
     :root{--ink:#27313a;--muted:#66727c;--line:#dce2e7;--paper:#fff;--wash:#f5f7f9;--blue:#2f6bff;--gold:#d69e2e}
@@ -923,7 +952,8 @@ def build_standalone_report(
         f'<!doctype html><html lang="{locale}"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
         '<meta name="color-scheme" content="light">'
-        f"<title>{html.escape(t('document_title'))}</title><style>{css}</style></head>"
+        f"<title>{html.escape(t('document_title'))}</title><style>{css}</style>"
+        f"{fingerprint_tag}</head>"
         '<body><div class="layout"><nav class="sidebar" aria-label="Report sections">'
         f'<div class="brand">{html.escape(t("brand"))}</div>'
         f'<h1>{html.escape(t("report_title"))}</h1><ol>{toc}</ol></nav>'
@@ -937,3 +967,13 @@ def build_standalone_report(
     )
     output.write_text(document, encoding="utf-8")
     return output
+
+
+def build_reports(
+    config: ProjectConfig, root: str | Path, manifest: dict[str, Path]
+) -> dict[str, Path]:
+    """Build the English and Japanese reports from the same artifacts."""
+    return {
+        locale: build_standalone_report(config, root, manifest, locale=locale)
+        for locale in ("en", "ja")
+    }
