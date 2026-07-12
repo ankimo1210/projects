@@ -9,6 +9,38 @@ from typing import Any
 LOCALE_DIR = Path(__file__).resolve().parents[2] / "locales"
 SUPPORTED_LOCALES = ("en", "ja")
 
+# Literal copy of the 26 `Section.anchor` values from `rough_volatility.notebook.SECTIONS`.
+# Kept as a literal tuple (not imported) so i18n.py stays free of imports from
+# report.py/notebook.py.
+_SECTION_ANCHORS = (
+    "executive-summary",
+    "conceptual-map",
+    "mathematical-definitions",
+    "configuration",
+    "fbm-path-comparison",
+    "local-zoom",
+    "fgn-increments",
+    "increment-acf",
+    "structure-functions",
+    "hurst-recovery",
+    "estimator-bias",
+    "ou-versus-fou",
+    "rough-bergomi-paths",
+    "heston-comparison",
+    "terminal-distributions",
+    "iv-smiles",
+    "iv-surface",
+    "atm-skew-term",
+    "skew-scaling",
+    "hawkes-events",
+    "order-flow-price",
+    "volatility-proxy",
+    "noise-bias",
+    "establishes",
+    "does-not-establish",
+    "limitations-next-steps",
+)
+
 REQUIRED_KEYS = {
     "document_title",
     "brand",
@@ -16,6 +48,7 @@ REQUIRED_KEYS = {
     "report_subtitle",
     "badge",
     "footer",
+    *(f"section.{anchor}" for anchor in _SECTION_ANCHORS),
 }
 
 

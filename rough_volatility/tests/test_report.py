@@ -81,3 +81,17 @@ def test_locale_controls_language_and_filename(tmp_path: Path) -> None:
     text = ja.read_text(encoding="utf-8")
     assert '<html lang="ja">' in text
     assert "ラフボラティリティ・ビジュアルラボ" in text
+
+
+def test_section_headings_are_localized(tmp_path: Path) -> None:
+    config = _report_config()
+    manifest = run_all(config, tmp_path, force=True)
+    en = build_standalone_report(config, tmp_path, manifest, locale="en").read_text(
+        encoding="utf-8"
+    )
+    ja = build_standalone_report(config, tmp_path, manifest, locale="ja").read_text(
+        encoding="utf-8"
+    )
+    assert "From rough paths to option skew and order flow" in en
+    assert "ラフパスからオプション・スキューと注文フローへ" in ja
+    assert "From rough paths to option skew and order flow" not in ja
