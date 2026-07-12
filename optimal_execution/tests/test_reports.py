@@ -5,9 +5,11 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import pytest
 
 import optimal_execution.report as report_module
 from optimal_execution.config import Config
+from optimal_execution.provenance import config_fingerprint, model_fingerprint
 from optimal_execution.report import build_reports
 
 
@@ -115,6 +117,22 @@ def _fake_frames() -> dict[str, pd.DataFrame]:
         "ablation": ablation,
         "misspecification": miss,
     }
+
+
+def test_artifact_fingerprint_validation_rejects_stale_inputs(cfg: Config) -> None:
+    current = pd.DataFrame(
+        {
+            "config_fingerprint": [config_fingerprint(cfg)],
+            "model_fingerprint": [model_fingerprint()],
+        }
+    )
+    report_module._validate_artifact_fingerprints({"current": current}, cfg)
+
+    stale_cfg = cfg.with_overrides({"annualized_volatility": 0.4})
+    with pytest.raises(ValueError, match="do not match"):
+        report_module._validate_artifact_fingerprints({"stale": current}, stale_cfg)
+    with pytest.raises(ValueError, match="missing fingerprint"):
+        report_module._validate_artifact_fingerprints({"legacy": pd.DataFrame({"x": [1]})}, cfg)
 
 
 def test_bilingual_reports_generate_offline_with_identical_numbers(

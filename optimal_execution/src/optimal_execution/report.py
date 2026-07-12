@@ -17,7 +17,15 @@ from plotly.subplots import make_subplots
 
 from .config import Config
 from .i18n import Translator, validate_locales
-from .provenance import artifact_dirs, generated_at, git_commit, json_safe, write_json
+from .provenance import (
+    artifact_dirs,
+    config_fingerprint,
+    generated_at,
+    git_commit,
+    json_safe,
+    model_fingerprint,
+    write_json,
+)
 from .tca import bootstrap_mean_ci
 
 _TEMPLATE = """<!doctype html>
@@ -239,7 +247,29 @@ def _artifact_frames(cfg: Config) -> dict[str, pd.DataFrame]:
     out: dict[str, pd.DataFrame] = {}
     for name, path in required.items():
         out[name] = pd.read_parquet(path) if path.suffix == ".parquet" else pd.read_csv(path)
+    _validate_artifact_fingerprints(out, cfg)
     return out
+
+
+def _validate_artifact_fingerprints(frames: dict[str, pd.DataFrame], cfg: Config) -> None:
+    """Reject missing or stale numerical inputs before labelling a report."""
+    expected_config = config_fingerprint(cfg)
+    expected_model = model_fingerprint()
+    stale = []
+    for name, frame in frames.items():
+        required = {"config_fingerprint", "model_fingerprint"}
+        missing = required - set(frame.columns)
+        if missing:
+            stale.append(f"{name} (missing fingerprint)")
+            continue
+        observed_config = set(frame["config_fingerprint"].dropna().astype(str))
+        observed_model = set(frame["model_fingerprint"].dropna().astype(str))
+        if observed_config != {expected_config} or observed_model != {expected_model}:
+            stale.append(name)
+    if stale:
+        raise ValueError(
+            "report inputs do not match the current configuration; rerun `all`: " + ", ".join(stale)
+        )
 
 
 def _strategy_name(t: Translator, strategy_id: str) -> str:
@@ -2232,6 +2262,8 @@ def build_report(cfg: Config, locale: str) -> Path:
             {
                 "seed": cfg.seed,
                 "profile": cfg.profile,
+                "config_fingerprint": config_fingerprint(cfg),
+                "model_fingerprint": model_fingerprint(),
                 "generated_at": stamp,
                 "git_commit": git_commit(),
                 "model_parameters": cfg.raw,
@@ -2280,6 +2312,8 @@ def build_reports(cfg: Config) -> dict[str, Path]:
         {
             "seed": cfg.seed,
             "profile": cfg.profile,
+            "config_fingerprint": config_fingerprint(cfg),
+            "model_fingerprint": model_fingerprint(),
             "generated_at": generated_at(),
             "git_commit": git_commit(),
             "model_parameters": cfg.raw,

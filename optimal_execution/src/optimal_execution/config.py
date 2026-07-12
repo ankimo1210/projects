@@ -270,47 +270,52 @@ class Config:
     def from_dict(raw: dict[str, Any]) -> Config:
         r = raw
 
+        nested_keys = {
+            "stochastic_vol",
+            "jumps",
+            "alpha",
+            "liquidity",
+            "impact",
+            "lob",
+            "rl",
+            "ablation",
+        }
+        allowed_top = set(Config.__dataclass_fields__) - {"raw"}
+        allowed_top.update({"stress_regimes", "misspecification"})
+        unknown_top = set(r) - allowed_top
+        if unknown_top:
+            names = ", ".join(sorted(unknown_top))
+            raise ValueError(f"unknown top-level configuration key(s): {names}")
+
         def sub(cls: type, key: str, **renames: str) -> Any:
             data = dict(r.get(key) or {})
             fields = {f for f in cls.__dataclass_fields__}  # type: ignore[attr-defined]
+            unknown = {renames.get(k, k) for k in data} - fields
+            if unknown:
+                names = ", ".join(sorted(unknown))
+                raise ValueError(f"unknown configuration key(s) in {key}: {names}")
             kwargs = {}
             for k, v in data.items():
                 k = renames.get(k, k)
-                if k in fields:
-                    kwargs[k] = tuple(v) if isinstance(v, list) else v
+                kwargs[k] = tuple(v) if isinstance(v, list) else v
             return cls(**kwargs)
 
         rl_data = dict(r.get("rl") or {})
-        reward = sub(RewardConfig, "reward") if "reward" not in rl_data else None
-        if "reward" in rl_data:
-            reward_data = {
-                k: v
-                for k, v in (rl_data.pop("reward") or {}).items()
-                if k in RewardConfig.__dataclass_fields__
-            }
-            reward = RewardConfig(**reward_data)
-        rl_kwargs = {
-            k: (tuple(v) if isinstance(v, list) else v)
-            for k, v in rl_data.items()
-            if k in RLConfig.__dataclass_fields__
-        }
-        rl_cfg = RLConfig(reward=reward or RewardConfig(), **rl_kwargs)
+        reward_data = dict(rl_data.pop("reward", None) or {})
+        unknown_reward = set(reward_data) - set(RewardConfig.__dataclass_fields__)
+        if unknown_reward:
+            names = ", ".join(sorted(unknown_reward))
+            raise ValueError(f"unknown configuration key(s) in rl.reward: {names}")
+        reward = RewardConfig(**reward_data)
+        unknown_rl = set(rl_data) - set(RLConfig.__dataclass_fields__)
+        if unknown_rl:
+            names = ", ".join(sorted(unknown_rl))
+            raise ValueError(f"unknown configuration key(s) in rl: {names}")
+        rl_kwargs = {k: (tuple(v) if isinstance(v, list) else v) for k, v in rl_data.items()}
+        rl_cfg = RLConfig(reward=reward, **rl_kwargs)
 
         scalar_fields = {
-            f
-            for f in Config.__dataclass_fields__
-            if f
-            not in {
-                "raw",
-                "stochastic_vol",
-                "jumps",
-                "alpha",
-                "liquidity",
-                "impact",
-                "lob",
-                "rl",
-                "ablation",
-            }
+            f for f in Config.__dataclass_fields__ if f != "raw" and f not in nested_keys
         }
         scalars = {k: v for k, v in r.items() if k in scalar_fields}
         return Config(
@@ -328,7 +333,9 @@ class Config:
 
     def with_overrides(self, patch: dict[str, Any]) -> Config:
         """Return a new Config with ``patch`` deep-merged over the raw dict."""
-        return Config.from_dict(deep_merge(self.raw, patch))
+        cfg = Config.from_dict(deep_merge(self.raw, patch))
+        _validate(cfg)
+        return cfg
 
     def stress_regimes(self) -> dict[str, Config]:
         """Named stress-regime Configs built from ``stress_regimes`` overrides."""

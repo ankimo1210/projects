@@ -8,6 +8,8 @@ import torch
 
 from optimal_execution.environment import N_ACTIONS, OBS_DIM, ExecutionEnv
 from optimal_execution.evaluation import run_lob_episode
+from optimal_execution.experiments import _checkpoint_metadata_matches
+from optimal_execution.provenance import config_fingerprint, model_fingerprint
 from optimal_execution.rl_policy import (
     ActorCritic,
     RLPolicy,
@@ -47,6 +49,31 @@ def test_deterministic_evaluation(cfg):
     ep1 = run_lob_episode(env, policy, seed=77)
     ep2 = run_lob_episode(env, policy, seed=77)
     assert ep1["is_total"] == pytest.approx(ep2["is_total"])
+
+
+def test_checkpoint_reuse_requires_matching_configuration(cfg):
+    meta = {
+        "config_fingerprint": config_fingerprint(cfg),
+        "model_fingerprint": model_fingerprint(),
+        "run_id": "residual_quick_s1210",
+        "requested_episodes": cfg.rl.training_episodes,
+        "feature_mask": None,
+    }
+    assert _checkpoint_metadata_matches(
+        cfg,
+        meta,
+        run_id="residual_quick_s1210",
+        episodes=cfg.rl.training_episodes,
+        feature_mask=None,
+    )
+    changed = cfg.with_overrides({"rl": {"learning_rate": 1e-4}})
+    assert not _checkpoint_metadata_matches(
+        changed,
+        meta,
+        run_id="residual_quick_s1210",
+        episodes=cfg.rl.training_episodes,
+        feature_mask=None,
+    )
 
 
 @pytest.mark.slow

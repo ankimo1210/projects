@@ -59,13 +59,11 @@ NOTEBOOK_LOCALES: dict[str, dict[str, str]] = {
 
 
 def _ensure_inputs(cfg: Config) -> None:
-    paths = artifact_dirs(cfg)
-    required = (
-        paths["metrics"] / "classical_strategy_summary.csv",
-        paths["metrics"] / "lob_strategy_summary.csv",
-        paths["metrics"] / "stress_summary.csv",
-    )
-    if not all(path.exists() for path in required):
+    from .report import _artifact_frames
+
+    try:
+        _artifact_frames(cfg)
+    except (FileNotFoundError, ValueError):
         from .experiments import run_all
         from .report import build_reports
 
