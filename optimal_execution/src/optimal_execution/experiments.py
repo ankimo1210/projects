@@ -795,6 +795,7 @@ def build_manifest(cfg: Config, *, locales: Iterable[str] = ("en", "ja")) -> Pat
             )
     required = {
         "notebook_html": paths["reports"] / "01_optimal_execution_visual_lab.html",
+        "notebook_html_ja": paths["reports"] / "01_optimal_execution_visual_lab_ja.html",
         "report_en": paths["reports"] / "optimal_execution_report_en.html",
         "report_ja": paths["reports"] / "optimal_execution_report_ja.html",
         "classical_tca": paths["data"] / "classical_path_tca.parquet",
