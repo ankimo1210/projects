@@ -1,0 +1,87 @@
+profile: quick
+seed: 1210
+fbm:
+  h_values: [0.10, 0.50, 0.80]
+  n_steps: 2048
+  n_paths: 200
+  n_display_paths: 6
+  horizon: 1.0
+  n_lags: 15
+  max_lag_fraction: 0.10
+hurst:
+  h_values: [0.10, 0.50, 0.80]
+  sample_sizes: [512, 2048, 8192]
+  n_replications: 100
+  estimators: [variogram, madogram, aggregated_variance]
+  n_lags: 15
+ou:
+  kappa: 5.0
+  mean: -1.6094379124341003
+  target_std: 0.35
+  x0: -1.6094379124341003
+  hurst: 0.10
+  horizon: 4.0
+  n_steps: 2048
+  n_paths: 100
+  burn_in_steps: 512
+bergomi:
+  s0: 100.0
+  r: 0.0
+  h: 0.10
+  eta: 1.50
+  rho: -0.70
+  xi0: 0.04
+  maturity_years: 1.0
+  n_steps: 200
+  n_paths: 10000
+  chunk_size: 10000
+  keep_paths: 100
+  h_grid: [0.05, 0.10, 0.20, 0.50]
+  forward_variance: []
+heston:
+  v0: 0.04
+  kappa: 2.0
+  theta: 0.04
+  nu: 0.50
+  rho: -0.70
+options:
+  maturities: [0.05, 0.10, 0.25, 0.50, 1.00]
+  log_moneyness_span: 0.20
+  n_strikes: 11
+  skew_window_coeff: 1.50
+  skew_window_cap: 0.10
+  skew_window_floor: 0.03
+  skew_maturity_steps: 128
+hawkes:
+  horizon: 2000.0
+  target_rate: 10.0
+  exponential_beta: 1.0
+  betas: [0.1, 0.6309573445, 3.981071706, 25.11886432, 158.4893192, 1000.0]
+  alpha_tail: 0.50
+  branching_stable: 0.60
+  branching_critical: 0.97
+  cross_fraction: 0.80
+  max_events: 100000
+  bin_width: 1.0
+  intensity_grid_points: 2000
+microstructure:
+  p0: 100.0
+  tick_eps: 0.01
+  observation_noise_std: 0.0
+  rv_window: 25
+  intensity_window: 25
+  floor_quantile: 0.05
+noise:
+  latent_h: 0.10
+  n_steps: 2048
+  horizon: 1.0
+  n_replications: 20
+  noise_stds: [0.0, 0.02, 0.05, 0.10, 0.20]
+  strides: [1, 2, 4, 8]
+  estimators: [variogram, madogram, aggregated_variance]
+  aggregate_window: 4
+  preaverage_window: 4
+output:
+  artifacts_dir: artifacts
+  reports_dir: reports
+  notebook_path: notebooks/01_rough_volatility_visual_lab.ipynb
