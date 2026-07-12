@@ -53,20 +53,41 @@ final class WSETUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["重点学習"].exists)
         let dimensionPicker = app.buttons["study.focus.dimension"]
         XCTAssertTrue(dimensionPicker.exists)
-        XCTAssertTrue(app.buttons["study.focus.value"].exists)
+        let valuePicker = app.buttons["study.focus.value"]
+        XCTAssertTrue(valuePicker.exists)
+        XCTAssertTrue(valuePicker.label.contains("フランス（"))
         let availableCount = app.descendants(matching: .any)["study.focus.availableCount"]
         XCTAssertTrue(availableCount.exists)
         XCTAssertTrue(app.descendants(matching: .any)["study.focus.plannedCount"].exists)
         XCTAssertTrue(startButton.isEnabled)
 
-        dimensionPicker.tap()
-        let wineType = app.buttons["ワイン区分"]
-        XCTAssertTrue(wineType.waitForExistence(timeout: 5))
-        wineType.tap()
+        valuePicker.tap()
+        let bordeaux = app.buttons.matching(
+            NSPredicate(format: "label CONTAINS %@", "ボルドー（")
+        ).firstMatch
+        let burgundy = app.buttons.matching(
+            NSPredicate(format: "label CONTAINS %@", "ブルゴーニュ（")
+        ).firstMatch
+        XCTAssertTrue(bordeaux.waitForExistence(timeout: 5))
+        XCTAssertTrue(burgundy.exists)
+        app.buttons.matching(
+            NSPredicate(format: "label BEGINSWITH %@", "フランス（")
+        ).firstMatch.tap()
 
-        let wineTypeCount = NSPredicate(format: "label CONTAINS %@", "241問")
-        expectation(for: wineTypeCount, evaluatedWith: availableCount)
+        dimensionPicker.tap()
+        let grapeVariety = app.buttons["主要品種"]
+        XCTAssertTrue(grapeVariety.waitForExistence(timeout: 5))
+        grapeVariety.tap()
+
+        let cabernetSelected = NSPredicate(
+            format: "label CONTAINS %@", "カベルネ・ソーヴィニヨン（"
+        )
+        expectation(for: cabernetSelected, evaluatedWith: valuePicker)
         waitForExpectations(timeout: 5)
+
+        valuePicker.tap()
+        XCTAssertTrue(app.staticTexts["国際品種"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["準国際品種"].exists)
     }
 
     func testInterfaceRemainsJapaneseWhenDeviceLanguageIsEnglish() {
@@ -82,5 +103,30 @@ final class WSETUITests: XCTestCase {
         app.tabBars.buttons["学習"].tap()
         XCTAssertTrue(app.navigationBars["学習"].exists)
         XCTAssertFalse(app.staticTexts["アプリと問題の言語"].exists)
+    }
+
+    func testGlossaryAndClassificationReferencesAreReachable() {
+        let app = XCUIApplication()
+        app.launch()
+
+        XCTAssertTrue(app.tabBars.buttons["問題集"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["問題集"].tap()
+
+        let glossaryLink = app.descendants(matching: .any)["reference.glossary.link"]
+        XCTAssertTrue(glossaryLink.waitForExistence(timeout: 5))
+        glossaryLink.tap()
+        XCTAssertTrue(app.navigationBars["用語辞書"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts.matching(
+            NSPredicate(format: "label CONTAINS %@", "用語（680件）")
+        ).firstMatch.exists)
+
+        app.navigationBars["用語辞書"].buttons.firstMatch.tap()
+        let classificationLink = app.descendants(matching: .any)["reference.classification.link"]
+        XCTAssertTrue(classificationLink.waitForExistence(timeout: 5))
+        classificationLink.tap()
+        XCTAssertTrue(app.navigationBars["格付け一覧"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["ボルドー"].exists)
+        XCTAssertTrue(app.buttons["ブルゴーニュ"].exists)
+        XCTAssertTrue(app.buttons["シャンパーニュ"].exists)
     }
 }

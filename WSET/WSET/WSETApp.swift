@@ -12,7 +12,8 @@ struct WSETApp: App {
                 QuestionProgress.self,
                 StudyAttempt.self,
                 TastingNote.self,
-                MockExamSession.self
+                MockExamSession.self,
+                ReferenceTermProgress.self
             )
         } catch {
             fatalError("Unable to create the local study database: \(error)")

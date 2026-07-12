@@ -34,6 +34,8 @@ struct StudySetupView: View {
             StudyFocusItem(
                 questionID: question.id,
                 geography: question.geography,
+                countries: question.countries,
+                regions: question.regions,
                 grapeVarieties: question.grapeVarieties,
                 wineType: question.wineType,
                 category: question.category,
@@ -45,6 +47,13 @@ struct StudySetupView: View {
 
     private var focusOptions: [StudyFocusOption] {
         StudyFocusCatalog.options(for: selectedFocusDimension, in: focusItems)
+    }
+
+    private var focusOptionGroups: [StudyFocusOptionGroup] {
+        StudyFocusCatalog.optionGroups(
+            for: selectedFocusDimension,
+            options: focusOptions
+        )
     }
 
     private var selectedFocusOption: StudyFocusOption? {
@@ -137,9 +146,22 @@ struct StudySetupView: View {
                     Picker("対象", selection: focusValueSelection) {
                         if focusOptions.isEmpty {
                             Text("候補がありません").tag("")
+                        } else if selectedFocusDimension == .grapeVariety {
+                            ForEach(focusOptionGroups) { group in
+                                Section(group.title) {
+                                    ForEach(group.options) { option in
+                                        Text(
+                                            "\(StudyFocusCatalog.displayValue(for: option, dimension: selectedFocusDimension))（\(option.questionCount)問）"
+                                        )
+                                        .tag(option.value)
+                                    }
+                                }
+                            }
                         } else {
                             ForEach(focusOptions) { option in
-                                Text("\(option.value)（\(option.questionCount)問）")
+                                Text(
+                                    "\(StudyFocusCatalog.displayValue(for: option, dimension: selectedFocusDimension))（\(option.questionCount)問）"
+                                )
                                     .tag(option.value)
                             }
                         }
@@ -177,7 +199,9 @@ struct StudySetupView: View {
                 } header: {
                     Text("重点学習")
                 } footer: {
-                    Text("候補が多い切り口では2問以上ある対象のみ表示します。該当数が最大出題数未満の場合は全問を出題します。")
+                    Text(
+                        "\(StudyFocusCatalog.guidance(for: selectedFocusDimension)) 該当数が最大出題数未満の場合は全問を出題します。"
+                    )
                 }
 
                 Section("Focused review") {

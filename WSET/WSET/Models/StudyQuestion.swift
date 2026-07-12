@@ -19,6 +19,8 @@ final class StudyQuestion {
     var commandVerb: String?
     var language: String
     var geographyData: Data
+    var countriesData: Data? = nil
+    var regionsData: Data? = nil
     var grapeVarietiesData: Data
     var markAllocation: Double?
     var sourceID: String
@@ -63,6 +65,8 @@ final class StudyQuestion {
         commandVerb = packed.commandVerb
         language = packed.language
         geographyData = Self.encode(packed.geography)
+        countriesData = Self.encode(packed.countries ?? [])
+        regionsData = Self.encode(packed.regions ?? [])
         grapeVarietiesData = Self.encode(packed.grapeVarieties)
         markAllocation = packed.markAllocation
         sourceID = packed.sourceID
@@ -117,6 +121,14 @@ final class StudyQuestion {
             ?? explanation
     }
     var geography: [String] { Self.decode(geographyData) }
+    var countries: [String] {
+        guard let countriesData else { return [] }
+        return Self.decode(countriesData)
+    }
+    var regions: [String] {
+        guard let regionsData else { return [] }
+        return Self.decode(regionsData)
+    }
     var grapeVarieties: [String] { Self.decode(grapeVarietiesData) }
     var hasAnswer: Bool { visibleAnswer != nil }
 

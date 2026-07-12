@@ -19,15 +19,31 @@ struct QuestionLibraryView: View {
     var body: some View {
         NavigationStack {
             List {
+                Section("学習資料") {
+                    NavigationLink {
+                        GlossaryView()
+                    } label: {
+                        Label("用語辞書", systemImage: "character.book.closed")
+                    }
+                    .accessibilityIdentifier("reference.glossary.link")
+
+                    NavigationLink {
+                        ClassificationHubView()
+                    } label: {
+                        Label("格付け一覧", systemImage: "list.bullet.rectangle")
+                    }
+                    .accessibilityIdentifier("reference.classification.link")
+                }
+
                 Section {
-                    Picker("Learning outcome", selection: $selectedOutcome) {
+                    Picker("学習成果", selection: $selectedOutcome) {
                         ForEach(LearningOutcome.allCases) { outcome in
                             Text(outcome.shortLabel).tag(outcome)
                         }
                     }
                 }
 
-                Section("\(filteredQuestions.count.formatted()) questions") {
+                Section("\(filteredQuestions.count.formatted())問") {
                     ForEach(filteredQuestions) { question in
                         NavigationLink {
                             QuestionDetailView(question: question)
@@ -37,8 +53,8 @@ struct QuestionLibraryView: View {
                     }
                 }
             }
-            .searchable(text: $searchText, prompt: "Question, answer, or topic")
-            .navigationTitle("Library")
+            .searchable(text: $searchText, prompt: "問題、解答、トピックで検索")
+            .navigationTitle("問題集")
         }
     }
 }
