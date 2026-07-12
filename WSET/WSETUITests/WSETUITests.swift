@@ -39,6 +39,36 @@ final class WSETUITests: XCTestCase {
         XCTAssertTrue(app.buttons["バックアップから復元"].exists)
     }
 
+    func testFocusedStudyControlsAreReachable() {
+        let app = XCUIApplication()
+        app.launch()
+
+        XCTAssertTrue(app.tabBars.buttons["学習"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["学習"].tap()
+
+        let startButton = app.buttons["study.focus.startButton"]
+        for _ in 0..<5 where !startButton.exists {
+            app.swipeUp()
+        }
+        XCTAssertTrue(app.staticTexts["重点学習"].exists)
+        let dimensionPicker = app.buttons["study.focus.dimension"]
+        XCTAssertTrue(dimensionPicker.exists)
+        XCTAssertTrue(app.buttons["study.focus.value"].exists)
+        let availableCount = app.descendants(matching: .any)["study.focus.availableCount"]
+        XCTAssertTrue(availableCount.exists)
+        XCTAssertTrue(app.descendants(matching: .any)["study.focus.plannedCount"].exists)
+        XCTAssertTrue(startButton.isEnabled)
+
+        dimensionPicker.tap()
+        let wineType = app.buttons["ワイン区分"]
+        XCTAssertTrue(wineType.waitForExistence(timeout: 5))
+        wineType.tap()
+
+        let wineTypeCount = NSPredicate(format: "label CONTAINS %@", "241問")
+        expectation(for: wineTypeCount, evaluatedWith: availableCount)
+        waitForExpectations(timeout: 5)
+    }
+
     func testInterfaceRemainsJapaneseWhenDeviceLanguageIsEnglish() {
         let app = XCUIApplication()
         app.launchArguments += ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]

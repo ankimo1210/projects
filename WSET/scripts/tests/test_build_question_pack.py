@@ -25,14 +25,14 @@ class QuestionPackBuilderTests(unittest.TestCase):
         cls.rows = read_question_rows(DEFAULT_INPUT)
         cls.payload = build_pack(DEFAULT_INPUT, generated_at="2026-07-11T00:00:00Z")
 
-    def test_workbook_contains_the_expected_balanced_300_questions(self) -> None:
-        self.assertEqual(len(self.rows), 300)
+    def test_workbook_contains_the_expected_balanced_600_questions(self) -> None:
+        self.assertEqual(len(self.rows), 600)
         self.assertEqual(Counter(row["LO"] for row in self.rows), EXPECTED_LO_COUNTS)
         self.assertEqual(
             Counter(row["正答"] for row in self.rows),
             EXPECTED_CORRECT_ANSWER_COUNTS,
         )
-        self.assertEqual(len({row["問題ID"] for row in self.rows}), 300)
+        self.assertEqual(len({row["問題ID"] for row in self.rows}), 600)
 
     def test_first_question_is_mapped_to_schema_v3_without_translation_fields(self) -> None:
         question = self.payload["questions"][0]
@@ -55,14 +55,14 @@ class QuestionPackBuilderTests(unittest.TestCase):
 
     def test_metadata_and_review_flags_are_preserved(self) -> None:
         questions = self.payload["questions"]
-        self.assertEqual(sum(question["needsReview"] for question in questions), 16)
+        self.assertEqual(sum(question["needsReview"] for question in questions), 46)
         self.assertTrue(all(question["sourceID"] for question in questions))
         self.assertTrue(all(question["creationType"] == "オリジナル" for question in questions))
         self.assertTrue(all(question["misconceptionTags"] for question in questions))
         self.assertTrue(all(question["reviewStatus"] == "unreviewed" for question in questions))
         self.assertEqual(
             self.payload["source"]["file"],
-            "QuestionSources/wset_level3_original_questions_300_v2.xlsx",
+            "QuestionSources/wset_level3_original_questions_600_v3.xlsx",
         )
         self.assertEqual(self.payload["source"]["sheet"], "問題集")
 
@@ -109,7 +109,7 @@ class QuestionPackBuilderTests(unittest.TestCase):
             write_pack(self.payload, output)
             check_existing_pack(DEFAULT_INPUT, output)
             loaded = json.loads(output.read_text(encoding="utf-8"))
-            self.assertEqual(loaded["questionCount"], 300)
+            self.assertEqual(loaded["questionCount"], 600)
 
 
 if __name__ == "__main__":
