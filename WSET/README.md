@@ -4,8 +4,9 @@
 
 ## 主な機能
 
-- 自作した日本語4択問題300問
+- 自作した日本語4択問題600問
 - 10問・20問・50問の四択学習セッション
+- 国・産地、主要品種、ワイン区分、知識領域、難易度、思考スキル別の重点学習
 - 50問の模擬試験とLearning Outcome別の結果
 - ブックマーク、間違い復習、期限付き復習、学習統計
 - WSET Level 3 SAT形式のテイスティング記録
@@ -19,7 +20,7 @@
 
 ## 問題データ
 
-問題の正本は `QuestionSources/wset_level3_original_questions_300_v2.xlsx` です。次のコマンドでアプリ用JSONを生成します。
+問題の正本は `QuestionSources/wset_level3_original_questions_600_v3.xlsx` です。次のコマンドでアプリ用JSONを生成します。
 
 ```sh
 python3 scripts/build_question_pack.py

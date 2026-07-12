@@ -90,6 +90,137 @@ final class WSETCoreTests: XCTestCase {
         }
     }
 
+    func testFocusOptionsDeduplicateTrimAndSuppressSparseValues() {
+        let items = [
+            StudyFocusItem(
+                questionID: "q1",
+                geography: [" フランス ", "ボルドー", "フランス", "", "\n"],
+                grapeVarieties: ["メルロ", "メルロ", ""],
+                wineType: "非発泡性赤ワイン",
+                category: "自然要因",
+                difficulty: "D2",
+                cognitiveSkill: "因果説明"
+            ),
+            StudyFocusItem(
+                questionID: "q2",
+                geography: ["フランス", "アルザス"],
+                grapeVarieties: ["リースリング", "メルロ"],
+                wineType: "白非発泡性ワイン",
+                category: "自然要因",
+                difficulty: "D2",
+                cognitiveSkill: "因果説明"
+            ),
+            StudyFocusItem(
+                questionID: "q3",
+                geography: ["日本"],
+                grapeVarieties: ["甲州"],
+                wineType: "全般",
+                category: "サービス",
+                difficulty: "D1",
+                cognitiveSkill: "知識確認"
+            ),
+        ]
+
+        XCTAssertEqual(
+            StudyFocusCatalog.options(for: .geography, in: items),
+            [StudyFocusOption(value: "フランス", questionCount: 2)]
+        )
+        XCTAssertEqual(
+            StudyFocusCatalog.options(for: .grapeVariety, in: items),
+            [StudyFocusOption(value: "メルロ", questionCount: 2)]
+        )
+        XCTAssertEqual(
+            StudyFocusCatalog.options(for: .knowledgeArea, in: items),
+            [StudyFocusOption(value: "自然要因", questionCount: 2)]
+        )
+    }
+
+    func testFocusWineTypesUseFourStableGroups() {
+        let rawTypes = [
+            "赤非発泡性ワイン",
+            "非発泡性白ワイン",
+            "甘口非発泡性ワイン",
+            "発泡性ワイン",
+            "甘口発泡性ワイン",
+            "甘口酒精強化ワイン",
+            "全般",
+            "甘口ワイン",
+            "赤ワイン",
+            "白ワイン",
+            "赤・白ワイン",
+            "甘口白ワイン",
+            "ロゼワイン",
+        ]
+        let items = rawTypes.enumerated().map { index, wineType in
+            StudyFocusItem(
+                questionID: "q\(index)",
+                geography: [],
+                grapeVarieties: [],
+                wineType: wineType,
+                category: "分類",
+                difficulty: "D1",
+                cognitiveSkill: "知識確認"
+            )
+        }
+        let options = StudyFocusCatalog.options(for: .wineType, in: items)
+        let counts = Dictionary(uniqueKeysWithValues: options.map { ($0.value, $0.questionCount) })
+
+        XCTAssertEqual(counts["共通・横断"], 2)
+        XCTAssertEqual(counts["非発泡性ワイン"], 8)
+        XCTAssertEqual(counts["発泡性ワイン"], 2)
+        XCTAssertEqual(counts["酒精強化ワイン"], 1)
+        XCTAssertEqual(
+            StudyFocusCatalog.matchingQuestionIDs(
+                for: .wineType,
+                value: "非発泡性ワイン",
+                in: items
+            ),
+            Set(["q0", "q1", "q2", "q8", "q9", "q10", "q11", "q12"])
+        )
+    }
+
+    func testFocusMatchingIsExactAndOptionsSortByCount() {
+        let items = [
+            StudyFocusItem(
+                questionID: "france",
+                geography: ["フランス"],
+                grapeVarieties: [],
+                wineType: nil,
+                category: "分類",
+                difficulty: "D2",
+                cognitiveSkill: nil
+            ),
+            StudyFocusItem(
+                questionID: "south-france",
+                geography: ["南フランス"],
+                grapeVarieties: [],
+                wineType: nil,
+                category: "分類",
+                difficulty: "D2",
+                cognitiveSkill: nil
+            ),
+            StudyFocusItem(
+                questionID: "other",
+                geography: [],
+                grapeVarieties: [],
+                wineType: nil,
+                category: "別分類",
+                difficulty: "D1",
+                cognitiveSkill: nil
+            ),
+        ]
+
+        XCTAssertTrue(StudyFocusCatalog.matches(items[0], dimension: .geography, value: "フランス"))
+        XCTAssertFalse(StudyFocusCatalog.matches(items[1], dimension: .geography, value: "フランス"))
+        XCTAssertEqual(
+            StudyFocusCatalog.options(for: .difficulty, in: items),
+            [
+                StudyFocusOption(value: "D2", questionCount: 2),
+                StudyFocusOption(value: "D1", questionCount: 1),
+            ]
+        )
+    }
+
     func testMockExamSessionRoundTripsStoredResults() {
         let session = MockExamSession(
             correctCount: 42,
@@ -207,7 +338,7 @@ final class WSETCoreTests: XCTestCase {
             geography: ["日本", "山梨"],
             grapeVarieties: ["甲州"],
             markAllocation: nil,
-            sourceID: "wset_level3_original_300_v2",
+            sourceID: "wset_level3_original_600_v3",
             sourceURL: "",
             qualityScore: nil,
             reviewStatus: "未レビュー",

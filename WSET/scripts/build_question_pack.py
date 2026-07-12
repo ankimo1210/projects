@@ -21,12 +21,12 @@ from xml.etree import ElementTree
 from zipfile import BadZipFile, ZipFile
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_INPUT = PROJECT_ROOT / "QuestionSources" / "wset_level3_original_questions_300_v2.xlsx"
+DEFAULT_INPUT = PROJECT_ROOT / "QuestionSources" / "wset_level3_original_questions_600_v3.xlsx"
 DEFAULT_OUTPUT = PROJECT_ROOT / "WSET" / "QuestionData" / "question_pack.json"
 SHEET_NAME = "問題集"
 SCHEMA_VERSION = 3
-SOURCE_ID = "wset_level3_original_300_v2"
-EXPECTED_QUESTION_COUNT = 300
+SOURCE_ID = "wset_level3_original_600_v3"
+EXPECTED_QUESTION_COUNT = 600
 
 MAIN_NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
 OFFICE_REL_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
@@ -39,8 +39,8 @@ LO_MAP = {
     "LO4": "u1_lo4",
     "LO5": "u1_lo5",
 }
-EXPECTED_LO_COUNTS = {outcome: 60 for outcome in LO_MAP}
-EXPECTED_CORRECT_ANSWER_COUNTS = {letter: 75 for letter in "ABCD"}
+EXPECTED_LO_COUNTS = {outcome: 120 for outcome in LO_MAP}
+EXPECTED_CORRECT_ANSWER_COUNTS = {letter: 150 for letter in "ABCD"}
 CHOICE_COLUMNS = ["選択肢A", "選択肢B", "選択肢C", "選択肢D"]
 CHOICE_EXPLANATION_COLUMNS = ["A解説", "B解説", "C解説", "D解説"]
 
