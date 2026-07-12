@@ -21,12 +21,12 @@ from xml.etree import ElementTree
 from zipfile import BadZipFile, ZipFile
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_INPUT = PROJECT_ROOT / "QuestionSources" / "wset_level3_original_questions_600_v3.xlsx"
+DEFAULT_INPUT = PROJECT_ROOT / "QuestionSources" / "wset_level3_original_questions_1100_v6.xlsx"
 DEFAULT_OUTPUT = PROJECT_ROOT / "WSET" / "QuestionData" / "question_pack.json"
 SHEET_NAME = "問題集"
-SCHEMA_VERSION = 3
-SOURCE_ID = "wset_level3_original_600_v3"
-EXPECTED_QUESTION_COUNT = 600
+SCHEMA_VERSION = 4
+SOURCE_ID = "wset_level3_original_1100_v6"
+EXPECTED_QUESTION_COUNT = 1100
 
 MAIN_NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
 OFFICE_REL_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
@@ -39,8 +39,14 @@ LO_MAP = {
     "LO4": "u1_lo4",
     "LO5": "u1_lo5",
 }
-EXPECTED_LO_COUNTS = {outcome: 120 for outcome in LO_MAP}
-EXPECTED_CORRECT_ANSWER_COUNTS = {letter: 150 for letter in "ABCD"}
+EXPECTED_LO_COUNTS = {
+    "LO1": 180,
+    "LO2": 380,
+    "LO3": 180,
+    "LO4": 180,
+    "LO5": 180,
+}
+EXPECTED_CORRECT_ANSWER_COUNTS = {letter: 275 for letter in "ABCD"}
 CHOICE_COLUMNS = ["選択肢A", "選択肢B", "選択肢C", "選択肢D"]
 CHOICE_EXPLANATION_COLUMNS = ["A解説", "B解説", "C解説", "D解説"]
 
@@ -274,6 +280,7 @@ def _review_status(row: Mapping[str, str]) -> str:
         "承認": "approved",
         "レビュー済": "human_reviewed",
         "レビュー済み": "human_reviewed",
+        "改稿済み・専門家未承認": "ai_reviewed_pending_expert",
         "要修正": "needs_revision",
         "却下": "rejected",
     }
@@ -286,7 +293,7 @@ def _review_status(row: Mapping[str, str]) -> str:
 
 
 def pack_question(row: Mapping[str, str]) -> dict[str, Any]:
-    """Map one source row to the schema-version-3 app contract."""
+    """Map one source row to the schema-version-4 app contract."""
 
     source_lo = _required(row, "LO")
     try:
@@ -313,8 +320,10 @@ def pack_question(row: Mapping[str, str]) -> dict[str, Any]:
     if needs_review and review_reason is None:
         raise QuestionPackError(f"{_row_label(row)}: レビュー理由 is required when 要レビュー is Y")
 
-    geography = _split_values(row.get("国", ""))
-    for place in _split_values(row.get("産地", "")):
+    countries = _split_values(row.get("国", ""))
+    regions = _split_values(row.get("産地", ""))
+    geography = list(countries)
+    for place in regions:
         if place not in geography:
             geography.append(place)
 
@@ -340,6 +349,8 @@ def pack_question(row: Mapping[str, str]) -> dict[str, Any]:
         "difficulty": _required(row, "難易度"),
         "language": "ja",
         "geography": geography,
+        "countries": countries,
+        "regions": regions,
         "grapeVarieties": _split_values(row.get("主要品種", ""), strip_etc=True),
         "misconceptionTags": _split_tags(row.get("誤概念タグ", "")),
         "markAllocation": 1,
@@ -452,6 +463,20 @@ def validate_pack(payload: Mapping[str, Any]) -> None:
             raise QuestionPackError(f"{question.get('id')}: language must be ja")
         if question.get("studyMode") != "multiple_choice":
             raise QuestionPackError(f"{question.get('id')}: studyMode must be multiple_choice")
+        countries = question.get("countries")
+        regions = question.get("regions")
+        geography = question.get("geography")
+        if not isinstance(countries, list) or not all(
+            isinstance(value, str) for value in countries
+        ):
+            raise QuestionPackError(f"{question.get('id')}: countries must be a string list")
+        if not isinstance(regions, list) or not all(isinstance(value, str) for value in regions):
+            raise QuestionPackError(f"{question.get('id')}: regions must be a string list")
+        expected_geography = list(dict.fromkeys([*countries, *regions]))
+        if geography != expected_geography:
+            raise QuestionPackError(
+                f"{question.get('id')}: geography must equal countries followed by regions"
+            )
         choices = question.get("choices")
         explanations = question.get("choiceExplanations")
         correct_index = question.get("correctAnswerIndex")
@@ -472,7 +497,7 @@ def validate_pack(payload: Mapping[str, Any]) -> None:
         }
         if forbidden_translation_keys & question.keys():
             raise QuestionPackError(
-                f"{question.get('id')}: translation fields are not allowed in schema v3"
+                f"{question.get('id')}: translation fields are not allowed in schema v4"
             )
 
     expected_hash = _sha256(_canonical_questions(questions))
@@ -501,7 +526,7 @@ def check_existing_pack(input_path: Path, output_path: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Build the Japanese schema-v3 app question pack from the original Excel source"
+        description="Build the Japanese schema-v4 app question pack from the original Excel source"
     )
     parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)

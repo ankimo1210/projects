@@ -90,7 +90,7 @@ final class WSETCoreTests: XCTestCase {
         }
     }
 
-    func testFocusOptionsDeduplicateTrimAndSuppressSparseValues() {
+    func testFocusOptionsDeduplicateTrimAndSuppressSparseGrapesAndRegions() {
         let items = [
             StudyFocusItem(
                 questionID: "q1",
@@ -104,7 +104,7 @@ final class WSETCoreTests: XCTestCase {
             StudyFocusItem(
                 questionID: "q2",
                 geography: ["フランス", "アルザス"],
-                grapeVarieties: ["リースリング", "メルロ"],
+                grapeVarieties: ["メルロ"],
                 wineType: "白非発泡性ワイン",
                 category: "自然要因",
                 difficulty: "D2",
@@ -123,15 +123,129 @@ final class WSETCoreTests: XCTestCase {
 
         XCTAssertEqual(
             StudyFocusCatalog.options(for: .geography, in: items),
-            [StudyFocusOption(value: "フランス", questionCount: 2)]
+            [StudyFocusOption(value: "フランス", questionCount: 2, kind: .country)]
         )
         XCTAssertEqual(
             StudyFocusCatalog.options(for: .grapeVariety, in: items),
-            [StudyFocusOption(value: "メルロ", questionCount: 2)]
+            [StudyFocusOption(value: "メルロ", questionCount: 2, groupTitle: "国際品種")]
         )
         XCTAssertEqual(
             StudyFocusCatalog.options(for: .knowledgeArea, in: items),
-            [StudyFocusOption(value: "自然要因", questionCount: 2)]
+            [
+                StudyFocusOption(value: "自然要因", questionCount: 2),
+                StudyFocusOption(value: "サービス", questionCount: 1),
+            ]
+        )
+    }
+
+    func testFocusGeographyOrdersMajorCountriesAndIndentsRegions() {
+        let regionNames = [
+            "ボルドー", "ボルドー",
+            "ブルゴーニュ", "ブルゴーニュ",
+            "シャンパーニュ", "シャンパーニュ", "シャンパーニュ",
+        ]
+        var items = regionNames.enumerated().map { index, region in
+            StudyFocusItem(
+                questionID: "fr-\(index)",
+                geography: ["フランス", region],
+                countries: ["フランス"],
+                regions: [region],
+                grapeVarieties: [],
+                wineType: nil,
+                category: "産地",
+                difficulty: "D2",
+                cognitiveSkill: "知識確認"
+            )
+        }
+        items.append(
+            StudyFocusItem(
+                questionID: "it-1",
+                geography: ["イタリア", "ピエモンテ"],
+                countries: ["イタリア"],
+                regions: ["ピエモンテ"],
+                grapeVarieties: [],
+                wineType: nil,
+                category: "産地",
+                difficulty: "D2",
+                cognitiveSkill: "知識確認"
+            )
+        )
+
+        let options = StudyFocusCatalog.options(for: .geography, in: items)
+
+        XCTAssertEqual(options.map(\.value), ["フランス", "ボルドー", "ブルゴーニュ", "シャンパーニュ", "イタリア"])
+        XCTAssertEqual(options[0].kind, .country)
+        XCTAssertEqual(options[1].kind, .region)
+        XCTAssertTrue(options[1].displayValue.hasPrefix("\u{3000}\u{3000}"))
+    }
+
+    func testFocusGrapesUsePriorityGroupsAndMergeAliases() {
+        let grapeValues = [
+            "シラー", "シラーズ", "カベルネ・ソーヴィニヨン",
+            "グルナッシュ", "ガルナッチャ", "パロミノ", "パロミノ",
+            "ポート主要黒ブドウ", "ポート主要黒ブドウ",
+        ]
+        let items = grapeValues.enumerated().map { index, grape in
+            StudyFocusItem(
+                questionID: "g-\(index)",
+                geography: [],
+                grapeVarieties: [grape],
+                wineType: nil,
+                category: "品種",
+                difficulty: "D2",
+                cognitiveSkill: "知識確認"
+            )
+        }
+
+        let options = StudyFocusCatalog.options(for: .grapeVariety, in: items)
+        let groups = StudyFocusCatalog.optionGroups(for: .grapeVariety, options: options)
+
+        XCTAssertEqual(
+            options.map(\.value),
+            [
+                "カベルネ・ソーヴィニヨン", "シラー／シラーズ",
+                "グルナッシュ／ガルナッチャ", "パロミノ", "ポート主要黒ブドウ",
+            ]
+        )
+        XCTAssertEqual(groups.map(\.title), ["国際品種", "準国際品種", "地域・固有品種", "品種グループ"])
+        XCTAssertEqual(options.first { $0.value == "シラー／シラーズ" }?.questionCount, 2)
+    }
+
+    func testFocusKnowledgeAreasUseBroadLearningOrder() {
+        let categories = [
+            "法律面・サービス",
+            "発泡性ワイン製法・産地",
+            "自然要因・産地",
+            "推奨・フードペアリング",
+        ]
+        let items = categories.enumerated().map { index, category in
+            StudyFocusItem(
+                questionID: "k-\(index)",
+                geography: [],
+                grapeVarieties: [],
+                wineType: nil,
+                category: category,
+                difficulty: "D2",
+                cognitiveSkill: "知識確認"
+            )
+        }
+
+        let options = StudyFocusCatalog.options(for: .knowledgeArea, in: items)
+
+        XCTAssertEqual(
+            options.map(\.value),
+            [
+                "自然要因", "醸造・製法", "産地・スタイル", "法律・表示", "サービス",
+                "料理との組み合わせ", "情報提供・推奨",
+            ]
+        )
+        XCTAssertEqual(
+            StudyFocusCatalog.matchingQuestionIDs(
+                for: .knowledgeArea,
+                value: "産地・スタイル",
+                in: items
+            ),
+            Set(["k-1", "k-2"])
         )
     }
 
@@ -179,7 +293,7 @@ final class WSETCoreTests: XCTestCase {
         )
     }
 
-    func testFocusMatchingIsExactAndOptionsSortByCount() {
+    func testFocusMatchingIsExactAndDifficultyUsesLearningOrder() {
         let items = [
             StudyFocusItem(
                 questionID: "france",
@@ -215,8 +329,8 @@ final class WSETCoreTests: XCTestCase {
         XCTAssertEqual(
             StudyFocusCatalog.options(for: .difficulty, in: items),
             [
-                StudyFocusOption(value: "D2", questionCount: 2),
                 StudyFocusOption(value: "D1", questionCount: 1),
+                StudyFocusOption(value: "D2", questionCount: 2),
             ]
         )
     }
@@ -338,7 +452,7 @@ final class WSETCoreTests: XCTestCase {
             geography: ["日本", "山梨"],
             grapeVarieties: ["甲州"],
             markAllocation: nil,
-            sourceID: "wset_level3_original_600_v3",
+            sourceID: "wset_level3_original_1100_v6",
             sourceURL: "",
             qualityScore: nil,
             reviewStatus: "未レビュー",
@@ -397,6 +511,23 @@ final class WSETCoreTests: XCTestCase {
         XCTAssertEqual(try context.fetchCount(FetchDescriptor<TastingNote>()), 1)
     }
 
+    func testAdditiveQuestionPackMigrationPreservesStudyHistory() {
+        XCTAssertFalse(
+            QuestionImporter.shouldResetStudyHistory(
+                existingQuestionIDs: ["LO1-001", "LO2-180"],
+                newQuestionIDs: ["LO1-001", "LO2-180", "LO2-181"],
+                hasImportedHash: true
+            )
+        )
+        XCTAssertTrue(
+            QuestionImporter.shouldResetStudyHistory(
+                existingQuestionIDs: ["LO1-001", "removed-question"],
+                newQuestionIDs: ["LO1-001", "LO2-181"],
+                hasImportedHash: true
+            )
+        )
+    }
+
     func testBackupEncodingAndMergeRestore() throws {
         let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(
@@ -426,5 +557,46 @@ final class WSETCoreTests: XCTestCase {
         XCTAssertEqual(result.tastingCount, 1)
         XCTAssertEqual(try context.fetchCount(FetchDescriptor<StudyAttempt>()), 1)
         XCTAssertEqual(try context.fetchCount(FetchDescriptor<TastingNote>()), 1)
+    }
+
+    func testReferencePackLoadsExpectedTermsAndClassifications() throws {
+        let store = ReferenceStore.shared
+        XCTAssertNil(store.loadError)
+        XCTAssertEqual(store.terms.count, 680)
+        XCTAssertEqual(store.classificationEntries.count, 279)
+        XCTAssertEqual(store.classificationSystems.count, 6)
+
+        let malolactic = try XCTUnwrap(
+            store.terms.first { $0.nameJapanese == "マロラクティック発酵" }
+        )
+        XCTAssertEqual(malolactic.nameEnglish, "malolactic fermentation")
+        XCTAssertEqual(malolactic.nameFrench, "fermentation malolactique")
+        XCTAssertTrue(malolactic.matches("malolactique"))
+        XCTAssertTrue(malolactic.matches("ＭＬＦ"))
+        XCTAssertFalse(malolactic.questionIDs.isEmpty)
+    }
+
+    func testReferencePackPreservesRegionalClassificationCounts() {
+        let entries = ReferenceStore.shared.classificationEntries
+        let counts = Dictionary(grouping: entries, by: \.systemID).mapValues(\.count)
+
+        XCTAssertEqual(counts["bordeaux_1855_medoc"], 61)
+        XCTAssertEqual(counts["bordeaux_1855_sauternes"], 27)
+        XCTAssertEqual(counts["bordeaux_graves"], 14)
+        XCTAssertEqual(counts["bordeaux_saint_emilion_2022"], 85)
+        XCTAssertEqual(counts["burgundy_grand_cru"], 33)
+        XCTAssertEqual(counts["champagne_cru_2025"], 59)
+    }
+
+    func testReferenceTermProgressRecordsViewsAndBookmark() {
+        let progress = ReferenceTermProgress(termID: "term-test")
+        let viewedAt = Date(timeIntervalSince1970: 1_700_000_000)
+
+        progress.recordView(at: viewedAt)
+        progress.isBookmarked = true
+
+        XCTAssertEqual(progress.lastViewedAt, viewedAt)
+        XCTAssertEqual(progress.viewCount, 1)
+        XCTAssertTrue(progress.isBookmarked)
     }
 }

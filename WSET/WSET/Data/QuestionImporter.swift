@@ -32,7 +32,7 @@ enum QuestionImporter {
         }
 
         let pack = try JSONDecoder().decode(QuestionPack.self, from: Data(contentsOf: url))
-        guard [1, 2, 3].contains(pack.schemaVersion) else {
+        guard [1, 2, 3, 4].contains(pack.schemaVersion) else {
             throw QuestionImporterError.unsupportedSchema(pack.schemaVersion)
         }
         guard pack.questionCount == pack.questions.count else {
@@ -44,15 +44,22 @@ enum QuestionImporter {
 
         let defaults = UserDefaults.standard
         let importedHash = defaults.string(forKey: "questionPackSourceHash")
-        let existingCount = try context.fetchCount(FetchDescriptor<StudyQuestion>())
+        let existingQuestions = try context.fetch(FetchDescriptor<StudyQuestion>())
+        let existingCount = existingQuestions.count
         if existingCount > 0 && importedHash == pack.sourceHash {
             return
         }
-        if existingCount > 0 || importedHash != nil {
+        let existingQuestionIDs = Set(existingQuestions.map(\.id))
+        let newQuestionIDs = Set(pack.questions.map(\.id))
+        if shouldResetStudyHistory(
+            existingQuestionIDs: existingQuestionIDs,
+            newQuestionIDs: newQuestionIDs,
+            hasImportedHash: importedHash != nil
+        ) {
             try resetQuestionStudyHistory(in: context)
         }
         if existingCount > 0 {
-            for question in try context.fetch(FetchDescriptor<StudyQuestion>()) {
+            for question in existingQuestions {
                 context.delete(question)
             }
             try context.save()
@@ -66,6 +73,17 @@ enum QuestionImporter {
         }
         try context.save()
         defaults.set(pack.sourceHash, forKey: "questionPackSourceHash")
+    }
+
+    static func shouldResetStudyHistory(
+        existingQuestionIDs: Set<String>,
+        newQuestionIDs: Set<String>,
+        hasImportedHash: Bool
+    ) -> Bool {
+        if existingQuestionIDs.isEmpty {
+            return hasImportedHash
+        }
+        return !existingQuestionIDs.isSubset(of: newQuestionIDs)
     }
 
     static func resetQuestionStudyHistory(in context: ModelContext) throws {

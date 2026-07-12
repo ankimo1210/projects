@@ -49,7 +49,7 @@ struct StudySessionView: View {
                     } else if question.studyMode == "written_answer" && !isRevealed {
                         writtenAnswerEditor
                     } else if !isRevealed {
-                        Button("Reveal answer") {
+                        Button("解答を見る") {
                             withAnimation { isRevealed = true }
                         }
                         .buttonStyle(.borderedProminent)
@@ -60,6 +60,7 @@ struct StudySessionView: View {
                     if isRevealed {
                         answerCard
                             .id("answer-card")
+                        TermAnnotationsView(questionID: question.id)
                         ratingButtons
                     }
                 }
@@ -78,7 +79,7 @@ struct StudySessionView: View {
 
     private var writtenAnswerEditor: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Your answer")
+            Text("あなたの解答")
                 .font(.headline)
             TextEditor(text: $writtenResponse)
                 .frame(minHeight: 180)
@@ -128,7 +129,7 @@ struct StudySessionView: View {
 
     private var answerCard: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Answer")
+            Text("解答")
                 .font(.headline)
             Text(question.displayAnswer)
             if let explanation = question.displayExplanation, !explanation.isEmpty {
@@ -148,11 +149,11 @@ struct StudySessionView: View {
 
     private var ratingButtons: some View {
         HStack(spacing: 12) {
-            Button("Again") { recordAndAdvance(rating: 0) }
+            Button("もう一度") { recordAndAdvance(rating: 0) }
                 .buttonStyle(.bordered)
                 .tint(.red)
                 .frame(maxWidth: .infinity)
-            Button("Good") { recordAndAdvance(rating: 3) }
+            Button("理解できた") { recordAndAdvance(rating: 3) }
                 .buttonStyle(.borderedProminent)
                 .tint(AppTheme.wine)
                 .frame(maxWidth: .infinity)
@@ -161,9 +162,9 @@ struct StudySessionView: View {
 
     private var completionView: some View {
         ContentUnavailableView {
-            Label("Session complete", systemImage: "checkmark.seal.fill")
+            Label("学習完了", systemImage: "checkmark.seal.fill")
         } description: {
-            Text("\(correctCount) of \(questions.count) marked correct")
+            Text("\(questions.count)問中\(correctCount)問を正解として記録しました")
         }
     }
 

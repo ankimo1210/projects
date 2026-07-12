@@ -25,6 +25,8 @@ struct PackedQuestion: Decodable {
     let commandVerb: String?
     let language: String
     let geography: [String]
+    var countries: [String]? = nil
+    var regions: [String]? = nil
     let grapeVarieties: [String]
     let markAllocation: Double?
     let sourceID: String

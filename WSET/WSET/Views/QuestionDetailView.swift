@@ -51,13 +51,13 @@ struct QuestionDetailView: View {
 
                 if showAnswer {
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("Answer")
+                        Text("解答")
                             .font(.headline)
                         Text(question.displayAnswer)
                             .textSelection(.enabled)
                         if let explanation = question.displayExplanation, !explanation.isEmpty {
                             Divider()
-                            Text("Explanation")
+                            Text("解説")
                                 .font(.headline)
                             Text(explanation)
                                 .textSelection(.enabled)
@@ -72,12 +72,14 @@ struct QuestionDetailView: View {
                     .background(AppTheme.wineSoft, in: RoundedRectangle(cornerRadius: 16))
                     .id("question-answer")
                 } else {
-                    Button("Reveal answer") {
+                    Button("解答を見る") {
                         withAnimation { showAnswer = true }
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(AppTheme.wine)
                 }
+
+                TermAnnotationsView(questionID: question.id)
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text("問題情報")

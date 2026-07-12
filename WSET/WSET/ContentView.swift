@@ -64,7 +64,8 @@ struct ContentView: View {
                 QuestionProgress.self,
                 StudyAttempt.self,
                 TastingNote.self,
-                MockExamSession.self
+                MockExamSession.self,
+                ReferenceTermProgress.self
             ],
             inMemory: true
         )
