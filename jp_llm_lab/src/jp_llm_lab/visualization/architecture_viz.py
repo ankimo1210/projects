@@ -158,14 +158,18 @@ def block_internals_figure(model_cfg: dict) -> go.Figure:
         arrow(0.70, y_mid, 0.76, y_mid),                  # LN2 -> MLP
         arrow(0.90, y_mid, 0.915, y_mid),                 # MLP -> add2
         arrow(0.965, y_mid, 0.99, y_mid),                 # add2 -> output
-        arrow(0.04, y_mid - 0.20, 0.52, y_mid - 0.065),   # residual bypass #1 (x -> add1)
-        arrow(0.52, y_mid - 0.20, 0.94, y_mid - 0.065),   # residual bypass #2 (add1 -> add2)
+        dict(x=0.52, y=0.25, ax=0.04, ay=0.25, xref="x", yref="y", axref="x", ayref="y",
+             showarrow=True, arrowhead=0, arrowwidth=1.6, arrowcolor=_ARROW),  # bypass #1 horizontal run
+        arrow(0.52, 0.25, 0.52, y_mid - 0.065),                                # bypass #1 rise into add1
+        dict(x=0.94, y=0.25, ax=0.52, ay=0.25, xref="x", yref="y", axref="x", ayref="y",
+             showarrow=True, arrowhead=0, arrowwidth=1.6, arrowcolor=_ARROW),  # bypass #2 horizontal run
+        arrow(0.94, 0.25, 0.94, y_mid - 0.065),                                # bypass #2 rise into add2
     ]
     annotations.append(dict(x=0.04, y=y_mid + 0.20, text="x", showarrow=False,
                              font=dict(size=13, color=_LINE)))
     annotations.append(dict(x=0.99, y=y_mid + 0.20, text="output", showarrow=False,
                              font=dict(size=11, color=_ARROW)))
-    annotations.append(dict(x=0.28, y=y_mid - 0.30, text="残差バイパス（恒等写像）",
+    annotations.append(dict(x=0.28, y=y_mid - 0.38, text="残差バイパス（恒等写像）",
                              showarrow=False, font=dict(size=10, color=_ARROW)))
 
     fig = go.Figure()
