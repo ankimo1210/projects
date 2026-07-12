@@ -62,4 +62,8 @@ Thumbs.db
 .claude/worktrees/
 
 # Large reference docs (textbooks, papers) — keep binaries out of git
+# by default. Redistribution-OK papers (own work, permissive license,
+# open access with a redistribution-friendly license) are allowed under
+# papers/ only — verify the license before adding one.
 *.pdf
+!/papers/**/*.pdf

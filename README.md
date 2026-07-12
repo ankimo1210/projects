@@ -47,7 +47,8 @@ projects/
 ├── _archive/                # 過去成果物・旧プロンプト・旧 capability_index
 ├── _data/                   # 重データ（gitignore 対象、`_data/<project>/` 規約）
 ├── _logs/                   # 実行ログ（gitignore 対象）
-├── reports/                 # 共有レポート（PDF 等）
+├── reports/                 # 共有レポート（自作の分析成果物 PDF 等）
+├── papers/                  # 再配布可能なライセンスの論文・教科書 PDF（gitignore の例外）
 ├── docs/                    # ワークスペース ADR（decisions/）+ スキル生成物（superpowers/）
 ├── Makefile                 # ワークスペース横断の lint / test / install / clean
 ├── .pre-commit-config.yaml  # 共通フック (ruff, large file check, ...)
