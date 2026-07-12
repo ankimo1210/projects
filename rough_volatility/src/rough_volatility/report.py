@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import base64
+import hashlib
 import html
 import io
 import json
@@ -16,6 +17,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 from rough_volatility.config import ProjectConfig
+from rough_volatility.i18n import Translator
 from rough_volatility.notebook import SECTIONS
 
 INK = "#27313A"
@@ -108,7 +110,9 @@ def _selector_buttons(
     ]
 
 
-def _fbm_selector(frame: pd.DataFrame, column: str, title: str, *, zoom: bool = False) -> go.Figure:
+def _fbm_selector(
+    frame: pd.DataFrame, column: str, title: str, subtitle: str, *, zoom: bool = False
+) -> go.Figure:
     figure = go.Figure()
     h_values = sorted(frame["h"].unique())
     trace_groups: list[float] = []
@@ -145,11 +149,10 @@ def _fbm_selector(frame: pd.DataFrame, column: str, title: str, *, zoom: bool = 
     )
     figure.update_xaxes(title="Time")
     figure.update_yaxes(title="Increment" if column == "increment" else "Process value")
-    subtitle = "Use the H selector; all paths have the same horizon and simulation convention"
     return _style_figure(figure, title, subtitle)
 
 
-def _acf_figure(frame: pd.DataFrame) -> go.Figure:
+def _acf_figure(frame: pd.DataFrame, title: str, subtitle: str) -> go.Figure:
     figure = go.Figure()
     for index, (h, group) in enumerate(frame.groupby("h", sort=True)):
         figure.add_trace(
@@ -164,14 +167,10 @@ def _acf_figure(frame: pd.DataFrame) -> go.Figure:
     figure.add_hline(y=0, line_color=INK, line_width=1)
     figure.update_xaxes(title="Lag")
     figure.update_yaxes(title="Increment ACF")
-    return _style_figure(
-        figure,
-        "Increment autocorrelation",
-        "Mean across synthetic paths; short lags distinguish anti-persistence from persistence",
-    )
+    return _style_figure(figure, title, subtitle)
 
 
-def _structure_figure(frame: pd.DataFrame) -> go.Figure:
+def _structure_figure(frame: pd.DataFrame, title: str, subtitle: str) -> go.Figure:
     figure = go.Figure()
     data = frame[frame["q"] == 2.0]
     for index, (h, group) in enumerate(data.groupby("h", sort=True)):
@@ -195,14 +194,10 @@ def _structure_figure(frame: pd.DataFrame) -> go.Figure:
         )
     figure.update_xaxes(type="log", title="Lag Δ")
     figure.update_yaxes(type="log", title="Second-order structure function")
-    return _style_figure(
-        figure,
-        "Second-order structure-function scaling",
-        "Observed moments and log-log fits; the fitted slope estimates 2H",
-    )
+    return _style_figure(figure, title, subtitle)
 
 
-def _hurst_distribution_figure(frame: pd.DataFrame) -> go.Figure:
+def _hurst_distribution_figure(frame: pd.DataFrame, title: str, subtitle: str) -> go.Figure:
     figure = go.Figure()
     data = frame[(frame["estimator"] == "variogram") & frame["ok"].astype(bool)]
     for index, ((h, sample_size), group) in enumerate(
@@ -217,15 +212,10 @@ def _hurst_distribution_figure(frame: pd.DataFrame) -> go.Figure:
             )
         )
     figure.update_yaxes(title="Estimated H")
-    return _style_figure(
-        figure,
-        "Finite-sample H-estimate distributions",
-        "Variogram estimator; boxes show replication dispersion by truth and sample size",
-        height=520,
-    )
+    return _style_figure(figure, title, subtitle, height=520)
 
 
-def _hurst_bias_figure(frame: pd.DataFrame) -> go.Figure:
+def _hurst_bias_figure(frame: pd.DataFrame, title: str, subtitle: str) -> go.Figure:
     figure = go.Figure()
     for index, ((h, estimator), group) in enumerate(
         frame.groupby(["true_h", "estimator"], sort=True)
@@ -242,14 +232,10 @@ def _hurst_bias_figure(frame: pd.DataFrame) -> go.Figure:
     figure.add_hline(y=0.0, line_color=INK, line_width=1)
     figure.update_xaxes(type="log", title="Increment count")
     figure.update_yaxes(title="Bias (mean estimate − true H)")
-    return _style_figure(
-        figure,
-        "Estimator bias versus sample size",
-        "Bias is estimator- and H-dependent; the horizontal reference is zero bias",
-    )
+    return _style_figure(figure, title, subtitle)
 
 
-def _ou_selector(frame: pd.DataFrame) -> go.Figure:
+def _ou_selector(frame: pd.DataFrame, title: str, subtitle: str) -> go.Figure:
     figure = go.Figure()
     models = list(frame["model"].drop_duplicates())
     trace_groups: list[str] = []
@@ -281,14 +267,12 @@ def _ou_selector(frame: pd.DataFrame) -> go.Figure:
     )
     figure.update_xaxes(title="Time (years)")
     figure.update_yaxes(title="Log-volatility")
-    return _style_figure(
-        figure,
-        "Ordinary versus fractional OU log-volatility",
-        "Use the model selector; broad scale is matched while local regularity differs",
-    )
+    return _style_figure(figure, title, subtitle)
 
 
-def _model_path_figure(frame: pd.DataFrame, *, rough_only: bool) -> go.Figure:
+def _model_path_figure(
+    frame: pd.DataFrame, title: str, subtitle: str, *, rough_only: bool
+) -> go.Figure:
     figure = make_subplots(rows=1, cols=2, subplot_titles=("Spot", "Variance"))
     data = frame[frame["model"] == "rough_bergomi"] if rough_only else frame
     for model_index, (model, model_data) in enumerate(data.groupby("model", sort=False)):
@@ -311,18 +295,10 @@ def _model_path_figure(frame: pd.DataFrame, *, rough_only: bool) -> go.Figure:
     figure.update_xaxes(title="Time (years)")
     figure.update_yaxes(title="Spot", row=1, col=1)
     figure.update_yaxes(title="Variance", row=1, col=2)
-    title = (
-        "Rough Bergomi path dynamics"
-        if rough_only
-        else "Rough Bergomi versus Heston under common shocks"
-    )
-    subtitle = (
-        "One retained path per model; both simulations reuse the same standardized spot driver"
-    )
     return _style_figure(figure, title, subtitle)
 
 
-def _terminal_figure(frame: pd.DataFrame) -> go.Figure:
+def _terminal_figure(frame: pd.DataFrame, title: str, subtitle: str) -> go.Figure:
     figure = make_subplots(
         rows=1, cols=2, subplot_titles=("Terminal log return", "Realized variance")
     )
@@ -353,14 +329,10 @@ def _terminal_figure(frame: pd.DataFrame) -> go.Figure:
             col=2,
         )
     figure.update_layout(barmode="overlay")
-    return _style_figure(
-        figure,
-        "Return and realized-variance distributions",
-        "Density-normalized Monte Carlo samples at the longest configured maturity",
-    )
+    return _style_figure(figure, title, subtitle)
 
 
-def _smile_selector(frame: pd.DataFrame) -> go.Figure:
+def _smile_selector(frame: pd.DataFrame, title: str, subtitle: str) -> go.Figure:
     figure = go.Figure()
     data = frame[frame["ok"].astype(bool)]
     maturities = sorted(data["maturity"].unique())
@@ -393,14 +365,10 @@ def _smile_selector(frame: pd.DataFrame) -> go.Figure:
     )
     figure.update_xaxes(title="Log-moneyness k")
     figure.update_yaxes(title="Implied volatility")
-    return _style_figure(
-        figure,
-        "Implied-volatility smiles",
-        "Use the maturity selector; error bars are 95% delta-method Monte Carlo intervals",
-    )
+    return _style_figure(figure, title, subtitle)
 
 
-def _surface_selector(frame: pd.DataFrame) -> go.Figure:
+def _surface_selector(frame: pd.DataFrame, title: str, subtitle: str) -> go.Figure:
     figure = go.Figure()
     data = frame[frame["ok"].astype(bool)]
     models = list(data["model"].drop_duplicates())
@@ -429,14 +397,10 @@ def _surface_selector(frame: pd.DataFrame) -> go.Figure:
     )
     figure.update_xaxes(title="Log-moneyness k")
     figure.update_yaxes(title="Maturity (years)")
-    return _style_figure(
-        figure,
-        "Implied-volatility surface",
-        "Heatmap view; use the model selector to compare identical strike/maturity coordinates",
-    )
+    return _style_figure(figure, title, subtitle)
 
 
-def _skew_term_figure(frame: pd.DataFrame) -> go.Figure:
+def _skew_term_figure(frame: pd.DataFrame, title: str, subtitle: str) -> go.Figure:
     figure = go.Figure()
     for index, (h, group) in enumerate(frame[frame["ok"].astype(bool)].groupby("h", sort=True)):
         figure.add_trace(
@@ -452,14 +416,12 @@ def _skew_term_figure(frame: pd.DataFrame) -> go.Figure:
     figure.add_hline(y=0.0, line_color=INK, line_width=1)
     figure.update_xaxes(type="log", title="Maturity (years)")
     figure.update_yaxes(title="ATM skew")
-    return _style_figure(
-        figure,
-        "ATM skew term structure",
-        "Weighted local-quadratic slopes with 95% Monte Carlo intervals",
-    )
+    return _style_figure(figure, title, subtitle)
 
 
-def _skew_scaling_figure(term: pd.DataFrame, powers: pd.DataFrame) -> go.Figure:
+def _skew_scaling_figure(
+    term: pd.DataFrame, powers: pd.DataFrame, title: str, subtitle: str
+) -> go.Figure:
     figure = go.Figure()
     power_map = powers.set_index("h")
     for index, (h, group) in enumerate(term[term["ok"].astype(bool)].groupby("h", sort=True)):
@@ -488,11 +450,7 @@ def _skew_scaling_figure(term: pd.DataFrame, powers: pd.DataFrame) -> go.Figure:
             )
     figure.update_xaxes(type="log", title="Maturity T")
     figure.update_yaxes(type="log", title="Absolute ATM skew")
-    return _style_figure(
-        figure,
-        "Short-maturity skew scaling",
-        "Finite-maturity weighted fit; theoretical exponent is H−1/2",
-    )
+    return _style_figure(figure, title, subtitle)
 
 
 def _scenario_selector(
@@ -503,12 +461,13 @@ def _scenario_selector(
     title: str,
     subtitle: str,
     mode: str = "lines",
+    clip_to_first_100: bool = False,
 ) -> go.Figure:
     figure = go.Figure()
     scenarios = list(frame["scenario"].drop_duplicates())
     for index, scenario in enumerate(scenarios):
         group = frame[frame["scenario"] == scenario]
-        if title == "Hawkes event raster":
+        if clip_to_first_100:
             horizon = min(float(group[x].max()), 100.0) if len(group) else 100.0
             group = group[group[x] <= horizon]
         figure.add_trace(
@@ -539,7 +498,7 @@ def _scenario_selector(
     return _style_figure(figure, title, subtitle)
 
 
-def _hawkes_price_figure(frame: pd.DataFrame) -> go.Figure:
+def _hawkes_price_figure(frame: pd.DataFrame, title: str, subtitle: str) -> go.Figure:
     figure = make_subplots(
         rows=2, cols=1, shared_xaxes=True, subplot_titles=("Synthetic price", "Rolling RV proxy")
     )
@@ -576,15 +535,12 @@ def _hawkes_price_figure(frame: pd.DataFrame) -> go.Figure:
     figure.update_xaxes(title="Time", row=2, col=1)
     figure.update_yaxes(title="Price", row=1, col=1)
     figure.update_yaxes(title="Rolling RV", row=2, col=1)
-    return _style_figure(
-        figure,
-        "Signed-event price and volatility proxy",
-        "Use the scenario selector; the effective H is an empirical diagnostic only",
-        height=650,
-    )
+    return _style_figure(figure, title, subtitle, height=650)
 
 
-def _noise_selector(frame: pd.DataFrame) -> go.Figure:
+def _noise_selector(frame: pd.DataFrame, t: Translator) -> go.Figure:
+    # Receives the Translator (rather than resolved caption strings) because the
+    # subtitle interpolates the estimator name, which is selected from the data here.
     estimator = (
         "variogram" if "variogram" in set(frame["estimator"]) else frame["estimator"].iloc[0]
     )
@@ -622,8 +578,8 @@ def _noise_selector(frame: pd.DataFrame) -> go.Figure:
     figure.update_yaxes(title="Observation-noise standard deviation")
     return _style_figure(
         figure,
-        "H-estimation bias under measurement choices",
-        f"{estimator} estimator; use the preprocessing-mode selector; bias is estimate minus known H",
+        t("figure.noise_bias.title"),
+        t("figure.noise_bias.subtitle", estimator=estimator),
     )
 
 
@@ -652,48 +608,58 @@ def _load_frames(manifest: dict[str, Path]) -> dict[str, pd.DataFrame]:
     }
 
 
-def _build_figures(frames: dict[str, pd.DataFrame]) -> dict[str, go.Figure]:
+def _build_figures(frames: dict[str, pd.DataFrame], t: Translator) -> dict[str, go.Figure]:
+    def caption(key: str) -> tuple[str, str]:
+        return t(f"figure.{key}.title"), t(f"figure.{key}.subtitle")
+
     return {
-        "fbm_paths": _fbm_selector(
-            frames["fbm_paths"], "value", "Fractional Brownian-motion paths"
-        ),
-        "fbm_zoom": _fbm_selector(
-            frames["fbm_paths"], "value", "Local roughness under zoom", zoom=True
-        ),
+        "fbm_paths": _fbm_selector(frames["fbm_paths"], "value", *caption("fbm_paths")),
+        "fbm_zoom": _fbm_selector(frames["fbm_paths"], "value", *caption("fbm_zoom"), zoom=True),
         "fgn_increments": _fbm_selector(
-            frames["fbm_increments"], "increment", "Fractional Gaussian-noise increments"
+            frames["fbm_increments"], "increment", *caption("fgn_increments")
         ),
-        "increment_acf": _acf_figure(frames["fbm_acf"]),
-        "structure_scaling": _structure_figure(frames["fbm_structure"]),
-        "hurst_distributions": _hurst_distribution_figure(frames["hurst_recovery"]),
-        "hurst_bias": _hurst_bias_figure(frames["hurst_summary"]),
-        "ou_vs_fou": _ou_selector(frames["ou_paths"]),
-        "model_spot_variance": _model_path_figure(frames["model_paths"], rough_only=True),
-        "heston_comparison": _model_path_figure(frames["model_paths"], rough_only=False),
-        "terminal_distributions": _terminal_figure(frames["terminal_distributions"]),
-        "iv_smiles": _smile_selector(frames["option_surface"]),
-        "iv_surface": _surface_selector(frames["option_surface"]),
-        "skew_term": _skew_term_figure(frames["skew_term_structure"]),
+        "increment_acf": _acf_figure(frames["fbm_acf"], *caption("increment_acf")),
+        "structure_scaling": _structure_figure(
+            frames["fbm_structure"], *caption("structure_scaling")
+        ),
+        "hurst_distributions": _hurst_distribution_figure(
+            frames["hurst_recovery"], *caption("hurst_distributions")
+        ),
+        "hurst_bias": _hurst_bias_figure(frames["hurst_summary"], *caption("hurst_bias")),
+        "ou_vs_fou": _ou_selector(frames["ou_paths"], *caption("ou_vs_fou")),
+        "model_spot_variance": _model_path_figure(
+            frames["model_paths"], *caption("model_spot_variance"), rough_only=True
+        ),
+        "heston_comparison": _model_path_figure(
+            frames["model_paths"], *caption("heston_comparison"), rough_only=False
+        ),
+        "terminal_distributions": _terminal_figure(
+            frames["terminal_distributions"], *caption("terminal_distributions")
+        ),
+        "iv_smiles": _smile_selector(frames["option_surface"], *caption("iv_smiles")),
+        "iv_surface": _surface_selector(frames["option_surface"], *caption("iv_surface")),
+        "skew_term": _skew_term_figure(frames["skew_term_structure"], *caption("skew_term")),
         "skew_scaling": _skew_scaling_figure(
-            frames["skew_term_structure"], frames["skew_power_law"]
+            frames["skew_term_structure"], frames["skew_power_law"], *caption("skew_scaling")
         ),
         "hawkes_events": _scenario_selector(
             frames["hawkes_events"],
             x="time",
             y="mark",
-            title="Hawkes event raster",
-            subtitle="First 100 time units; use the scenario selector",
+            title=t("figure.hawkes_events.title"),
+            subtitle=t("figure.hawkes_events.subtitle"),
             mode="markers",
+            clip_to_first_100=True,
         ),
-        "hawkes_price": _hawkes_price_figure(frames["hawkes_series"]),
+        "hawkes_price": _hawkes_price_figure(frames["hawkes_series"], *caption("hawkes_price")),
         "hawkes_intensity": _scenario_selector(
             frames["hawkes_intensity"],
             x="time",
             y="total_intensity",
-            title="Conditional Hawkes intensity",
-            subtitle="Buy plus sell intensity; use the scenario selector",
+            title=t("figure.hawkes_intensity.title"),
+            subtitle=t("figure.hawkes_intensity.subtitle"),
         ),
-        "noise_bias": _noise_selector(frames["noise_fragility"]),
+        "noise_bias": _noise_selector(frames["noise_fragility"], t),
     }
 
 
@@ -733,6 +699,36 @@ def _figure_fragments(figures: dict[str, go.Figure]) -> dict[str, str]:
         fragments[key] = fragment
         first = False
     return fragments
+
+
+def _quantitative_fingerprint(
+    figures: dict[str, go.Figure], metric_cards: str, config: ProjectConfig
+) -> str:
+    """SHA-256 over language-neutral content (figure data, metrics, config).
+
+    A `go.Figure`'s JSON splits into `layout` (title/subtitle/axis text —
+    localized since Task 5, so it differs EN vs JA) and `data` (the trace
+    arrays: x/y/z values, marker sizes, hover templates keyed on numbers —
+    English/neutral regardless of locale). This hashes only the `data` half
+    of each figure, plus `metric_cards` (English/neutral by design) and
+    `config.fingerprint()`. Prose — headings, callouts, figure captions — is
+    excluded entirely, so the result is identical between the English and
+    Japanese reports built from the same artifacts, while still changing if
+    the underlying numbers do.
+
+    Caveat: a few trace-level strings (e.g. a colorbar `title`, such as "IV"
+    or "Bias") live inside `data`, not `layout`, and are currently hardcoded
+    English/locale-neutral by convention rather than by construction. If one
+    of those is ever localized, this hash would start differing between EN
+    and JA for identical underlying numbers — this parity test would catch
+    that regression.
+    """
+    figure_payloads = [
+        json.dumps(json.loads(figures[key].to_json())["data"], sort_keys=True)
+        for key in sorted(figures)
+    ]
+    payload = " ".join([config.fingerprint(), metric_cards, *figure_payloads])
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
 def _configuration_table(config: ProjectConfig) -> str:
@@ -830,55 +826,68 @@ def _validation_table(validation: dict[str, Any]) -> str:
     )
 
 
-def _narratives(config: ProjectConfig, frames: dict[str, pd.DataFrame]) -> dict[str, str]:
+# Module-level literal tuple of the anchors that carry a narrative callout, in the same
+# order as the dict this function used to return. Every section currently has a callout,
+# so this matches `i18n._SECTION_ANCHORS` / `i18n._CALLOUT_ANCHORS` exactly; keep the three
+# in sync if a section's narrative is ever added or removed.
+_NARRATIVE_ANCHORS: tuple[str, ...] = (
+    "executive-summary",
+    "conceptual-map",
+    "mathematical-definitions",
+    "configuration",
+    "fbm-path-comparison",
+    "local-zoom",
+    "fgn-increments",
+    "increment-acf",
+    "structure-functions",
+    "hurst-recovery",
+    "estimator-bias",
+    "ou-versus-fou",
+    "rough-bergomi-paths",
+    "heston-comparison",
+    "terminal-distributions",
+    "iv-smiles",
+    "iv-surface",
+    "atm-skew-term",
+    "skew-scaling",
+    "hawkes-events",
+    "order-flow-price",
+    "volatility-proxy",
+    "noise-bias",
+    "establishes",
+    "does-not-establish",
+    "limitations-next-steps",
+)
+
+
+def _narratives(
+    config: ProjectConfig, frames: dict[str, pd.DataFrame], t: Translator
+) -> dict[str, str]:
     powers = frames["skew_power_law"]
     target = powers.iloc[(powers["h"] - config.bergomi.h).abs().argmin()]
-    return {
-        "executive-summary": (
-            f"<p><strong>The synthetic lab reproduces the intended rough-volatility signatures without using market data.</strong> "
-            f"For H={config.bergomi.h:g}, the fitted ATM-skew exponent is β={target['beta']:.3f} versus the finite-asymptotic reference H−1/2={config.bergomi.h - 0.5:.2f}. "
-            "The exact-grid Volterra construction passes forward-variance and spot-martingale checks, while common random numbers make the Heston comparison interpretable.</p>"
-            "<p><strong>The microstructure result is diagnostic, not identifying.</strong> Near-critical Hawkes flow creates clustered activity and a rough-looking realized-variance proxy, but the noise experiment shows that estimated H changes materially with sampling and preprocessing.</p>"
-        ),
-        "conceptual-map": '<p><strong>The reading path is roughness → volatility dynamics → option skew → microstructure diagnostics.</strong> Each arrow is an experiment, not a claim that one mechanism uniquely causes the next.</p><div class="flow"><span>Rough paths</span><b>→</b><span>Rough log-volatility</span><b>→</b><span>rBergomi prices</span><b>→</b><span>ATM skew</span><b>↔</b><span>Hawkes proxy</span></div>',
-        "mathematical-definitions": "<p><strong>H controls local increment scaling.</strong> The covariance, structure function, rBergomi variance normalization, skew power law, and Hawkes intensity below define the quantities used throughout the report.</p>",
-        "configuration": "<p><strong>All evidence is locally generated under one resolved profile.</strong> Counts are Monte Carlo paths or event-process observations; option uncertainty is reported by standard error and delta-method IV error.</p>",
-        "fbm-path-comparison": "<p><strong>H changes path regularity, not simply amplitude.</strong> Use the selector to compare paths generated on the same horizon; lower H creates denser fine-scale oscillations.</p>",
-        "local-zoom": "<p><strong>The regularity difference survives magnification.</strong> A short window separates local texture from broad path range, preventing “rough” from being confused with “large variance.”</p>",
-        "fgn-increments": "<p><strong>Rough increments alternate more sharply.</strong> The visual comparison is descriptive; the ACF and scaling regression supply the quantitative evidence.</p>",
-        "increment-acf": "<p><strong>Levels can look persistent while increments are anti-persistent.</strong> For H&lt;1/2 the first-lag increment correlation is negative, whereas H&gt;1/2 produces positive dependence.</p>",
-        "structure-functions": "<p><strong>The fitted second-order slope follows 2H.</strong> Only a bounded log-spaced lag range is used, limiting the high-variance long-lag tail.</p>",
-        "hurst-recovery": "<p><strong>Finite-sample uncertainty is material even on clean fBM.</strong> Longer paths tighten the distribution, but regression standard errors do not capture every source of estimator dispersion.</p>",
-        "estimator-bias": "<p><strong>Bias depends on H, estimator, and sample length.</strong> This baseline is necessary before interpreting noisier volatility proxies.</p>",
-        "ou-versus-fou": "<p><strong>Matched broad dispersion does not imply matched local regularity.</strong> The fractional OU approximation produces sharper small-scale movement; it is a visualization-grade Euler construction, not an exact stationary sampler.</p>",
-        "rough-bergomi-paths": "<p><strong>The normalized Volterra driver produces abrupt variance movement while preserving E[V(t)]=ξ₀(t).</strong> The spot process uses the left-point variance and an exact discrete log-Euler martingale step.</p>",
-        "heston-comparison": "<p><strong>Common spot-driver normals isolate dynamics rather than shock luck.</strong> Heston is Markovian and full-truncated; the parameter match is broad rather than a calibration equivalence.</p>",
-        "terminal-distributions": "<p><strong>Different variance dynamics change pathwise and terminal dispersion.</strong> Histograms are density-normalized and use the same Monte Carlo path count.</p>",
-        "iv-smiles": "<p><strong>Short-maturity smiles are the noisiest and most model-sensitive.</strong> Use the maturity selector and read the error bars before interpreting wing differences.</p>",
-        "iv-surface": "<p><strong>The rough surface concentrates curvature and skew at short maturities.</strong> The heatmap uses identical k–T coordinates across models.</p>",
-        "atm-skew-term": "<p><strong>Smaller H produces larger short-maturity skew magnitude.</strong> Each point is a weighted local-quadratic derivative with at least five valid IV observations.</p>",
-        "skew-scaling": "<p><strong>The fitted direction agrees with T^(H−1/2).</strong> Agreement is finite-maturity and simulation-specific; the report does not treat it as exact asymptotic confirmation.</p>",
-        "hawkes-events": "<p><strong>Self-excitation turns rate-matched events into bursts.</strong> The Poisson, stable, and near-critical scenarios share the same target unconditional rate but differ in branching ratio.</p>",
-        "order-flow-price": "<p><strong>Signed imbalance translates bursts into a clustered pedagogical price.</strong> This construction is intentionally simple and is not a structural market-impact model.</p>",
-        "volatility-proxy": "<p><strong>Conditional-intensity bursts co-locate with elevated rolling RV proxies.</strong> The reported effective H is explicitly an empirical diagnostic only.</p>",
-        "noise-bias": "<p><strong>Measurement choices can manufacture or suppress apparent roughness.</strong> Use the preprocessing selector: raw, aggregated, and pre-averaged observations produce different H biases from the same latent paths.</p>",
-        "establishes": "<ul><li>Davies–Harte fBM reproduces clean scaling and estimator-recovery patterns.</li><li>The exact joint-Gaussian rBergomi grid preserves the configured forward variance within Monte Carlo error.</li><li>Short-maturity skew steepens as H decreases in these finite simulations.</li><li>Near-critical Hawkes flow is sufficient to create clustered activity and a rough-looking proxy.</li></ul>",
-        "does-not-establish": "<ul><li>An estimated H&lt;1/2 does not identify a fractional data-generating process.</li><li>The Hawkes proxy is not a derivation of rough Heston or a market calibration.</li><li>Finite-maturity skew fits do not prove the asymptotic exponent exactly.</li><li>Broadly matched Heston and rBergomi parameters are not economically equivalent calibrations.</li></ul>",
-        "limitations-next-steps": "<p><strong>The next useful tests are robustness tests, not more decorative complexity.</strong></p><ol><li>Replace synthetic ξ₀ with a calibrated forward-variance curve and propagate quote uncertainty.</li><li>Add hybrid/FFT Volterra schemes and benchmark convergence against the exact-grid operator.</li><li>Use variance-reduction methods for short-wing IV and skew estimates.</li><li>Test noise-robust roughness estimators and alternative sampling schemes.</li><li>Fit Hawkes kernels from event data only after addressing seasonality and market-state conditioning.</li></ol><h3>Further questions</h3><p>How stable are the conclusions under alternative leverage, vol-of-vol, and maturity grids? Which estimator remains least biased under realistic price discreteness and asynchronous sampling?</p>",
+    values = {
+        "executive-summary": {
+            "h": config.bergomi.h,
+            "beta": float(target["beta"]),
+            "h_minus_half": config.bergomi.h - 0.5,
+        },
     }
+    return {a: t(f"callout.{a}", **values.get(a, {})) for a in _NARRATIVE_ANCHORS}
 
 
 def _section_extra(
     anchor: str,
     config: ProjectConfig,
     validation: dict[str, Any],
+    t: Translator,
 ) -> str:
     if anchor == "mathematical-definitions":
         return _equation_gallery()
     if anchor == "configuration":
         return _configuration_table(config)
     if anchor == "limitations-next-steps":
-        return "<h3>Validation gates</h3>" + _validation_table(validation)
+        heading = html.escape(t("validation_gates_heading"))
+        return f"<h3>{heading}</h3>" + _validation_table(validation)
     return ""
 
 
@@ -887,38 +896,47 @@ def build_standalone_report(
     root: str | Path,
     manifest: dict[str, Path],
     *,
+    locale: str = "en",
     output_path: str | Path | None = None,
 ) -> Path:
     """Build the single-file, offline, interactive technical report."""
     config.validate()
+    t = Translator(locale)
     frames = _load_frames(manifest)
-    figures = _build_figures(frames)
+    figures = _build_figures(frames, t)
     fragments = _figure_fragments(figures)
     validation = json.loads(manifest["validation_checks"].read_text(encoding="utf-8"))
-    narratives = _narratives(config, frames)
+    narratives = _narratives(config, frames, t)
     if len(SECTIONS) != 26:
         raise RuntimeError("the shared narrative registry must contain 26 sections")
 
     toc = "".join(
-        f'<li><a href="#{section.anchor}">{index}. {html.escape(section.title)}</a></li>'
+        f'<li><a href="#{section.anchor}">{index}. '
+        f'{html.escape(t(f"section.{section.anchor}"))}</a></li>'
         for index, section in enumerate(SECTIONS, start=1)
     )
     sections_html: list[str] = []
     for index, section in enumerate(SECTIONS, start=1):
         figure_html = fragments.get(section.figure_key or "", "")
         evidence_note = (
-            '<p class="evidence-note">Evidence: locally generated synthetic data; '
-            f"profile {html.escape(config.profile)}, seed {config.seed}, fingerprint {config.fingerprint()}.</p>"
+            "<p class=\"evidence-note\">"
+            f"{html.escape(t('evidence_note', profile=config.profile, seed=config.seed, fingerprint=config.fingerprint()))}"
+            "</p>"
             if figure_html
             else ""
         )
         sections_html.append(
             f'<section id="{section.anchor}"><div class="section-number">{index:02d}</div>'
-            f"<h2>{html.escape(section.title)}</h2>{narratives[section.anchor]}"
-            f"{_section_extra(section.anchor, config, validation)}{figure_html}{evidence_note}</section>"
+            f'<h2>{html.escape(t(f"section.{section.anchor}"))}</h2>{narratives[section.anchor]}'
+            f"{_section_extra(section.anchor, config, validation, t)}{figure_html}{evidence_note}</section>"
         )
     metric_cards = _metric_cards(config, frames, validation)
     sections_html[0] = sections_html[0].replace("</section>", metric_cards + "</section>")
+    fingerprint_hex = _quantitative_fingerprint(figures, metric_cards, config)
+    fingerprint_tag = (
+        '<script type="application/json" id="quantitative-fingerprint">'
+        f'{{"sha256": "{fingerprint_hex}"}}</script>'
+    )
 
     css = """
     :root{--ink:#27313a;--muted:#66727c;--line:#dce2e7;--paper:#fff;--wash:#f5f7f9;--blue:#2f6bff;--gold:#d69e2e}
@@ -932,9 +950,37 @@ def build_standalone_report(
     output = (
         Path(output_path)
         if output_path is not None
-        else Path(root).resolve() / config.output.reports_dir / "rough_volatility_report.html"
+        else Path(root).resolve()
+        / config.output.reports_dir
+        / f"rough_volatility_report_{locale}.html"
     )
     output.parent.mkdir(parents=True, exist_ok=True)
-    document = f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>Rough Volatility Visual Lab — Technical Report</title><style>{css}</style></head><body><div class="layout"><nav class="sidebar" aria-label="Report sections"><div class="brand">Synthetic research lab</div><h1>Rough Volatility Visual Lab</h1><ol>{toc}</ol></nav><main class="content"><header><div class="badge">SELF-CONTAINED · OFFLINE · {html.escape(config.profile.upper())}</div><h1>Rough Volatility Visual Lab</h1><p>Technical report · synthetic data only · seed {config.seed} · configuration {config.fingerprint()}</p></header>{"".join(sections_html)}<div class="footer">Generated locally from saved, provenance-stamped experiment artifacts. No market data, remote scripts, or external services are used.</div></main></div></body></html>"""
+    document = (
+        f'<!doctype html><html lang="{locale}"><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width,initial-scale=1">'
+        '<meta name="color-scheme" content="light">'
+        f"<title>{html.escape(t('document_title'))}</title><style>{css}</style>"
+        f"{fingerprint_tag}</head>"
+        '<body><div class="layout"><nav class="sidebar" aria-label="Report sections">'
+        f'<div class="brand">{html.escape(t("brand"))}</div>'
+        f'<h1>{html.escape(t("report_title"))}</h1><ol>{toc}</ol></nav>'
+        '<main class="content"><header>'
+        f'<div class="badge">{html.escape(t("badge", profile=config.profile.upper()))}</div>'
+        f'<h1>{html.escape(t("report_title"))}</h1>'
+        f'<p>{html.escape(t("report_subtitle", seed=config.seed, fingerprint=config.fingerprint()))}</p>'
+        f'</header>{"".join(sections_html)}'
+        f'<div class="footer">{html.escape(t("footer"))}</div>'
+        "</main></div></body></html>"
+    )
     output.write_text(document, encoding="utf-8")
     return output
+
+
+def build_reports(
+    config: ProjectConfig, root: str | Path, manifest: dict[str, Path]
+) -> dict[str, Path]:
+    """Build the English and Japanese reports from the same artifacts."""
+    return {
+        locale: build_standalone_report(config, root, manifest, locale=locale)
+        for locale in ("en", "ja")
+    }

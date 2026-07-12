@@ -62,9 +62,9 @@ Existing checkpoints are reused. Add `--force` to `train-rl`, or
 
 ## Primary outputs
 
-- Notebook source: `notebooks/01_optimal_execution_visual_lab.ipynb`
+- Notebook source (EN / JA): `notebooks/01_optimal_execution_visual_lab.ipynb`, `notebooks/01_optimal_execution_visual_lab.ja.ipynb`
 - Executed notebook: `notebooks/_executed/01_optimal_execution_visual_lab.ipynb`
-- Notebook HTML: `reports/01_optimal_execution_visual_lab.html`
+- Notebook HTML (EN / JA): `reports/01_optimal_execution_visual_lab.html`, `reports/01_optimal_execution_visual_lab_ja.html`
 - English report: `reports/optimal_execution_report_en.html`
 - Japanese report: `reports/optimal_execution_report_ja.html`
 - Static PNG/SVG charts: `artifacts/figures/`

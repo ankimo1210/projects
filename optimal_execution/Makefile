@@ -18,7 +18,7 @@ help:
 	@echo "  make lob        - Experiments F-G (reactive LOB world)"
 	@echo "  make train-rl   - train RL policies (residual + unconstrained)"
 	@echo "  make evaluate   - Experiments H-J (strategy comparison, stress, ablation)"
-	@echo "  make notebook   - build + execute notebook, export HTML"
+	@echo "  make notebook   - execute EN + JA visual-lab notebooks, export both HTML"
 	@echo "  make report-en  - English standalone HTML report"
 	@echo "  make report-ja  - Japanese standalone HTML report"
 	@echo "  make reports    - both reports"

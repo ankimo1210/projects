@@ -59,5 +59,44 @@ def test_expected_thin_scripts_exist() -> None:
         "run_option_experiments.py",
         "run_microstructure_experiments.py",
         "run_all.py",
+        "build_reports.py",
     ):
         assert (root / "scripts" / name).exists()
+
+
+def test_report_cli_builds_both_locales_by_default(tmp_path: Path) -> None:
+    config_path = save_config(_paths_config(), tmp_path / "tiny.yaml")
+    rc = main(
+        [
+            "report",
+            "--config",
+            str(config_path),
+            "--root",
+            str(tmp_path),
+            "--force",
+        ]
+    )
+    assert rc == 0
+    reports = tmp_path / "reports"
+    assert (reports / "rough_volatility_report_en.html").exists()
+    assert (reports / "rough_volatility_report_ja.html").exists()
+
+
+def test_report_cli_locale_selects_a_single_file(tmp_path: Path) -> None:
+    config_path = save_config(_paths_config(), tmp_path / "tiny.yaml")
+    rc = main(
+        [
+            "report",
+            "--config",
+            str(config_path),
+            "--root",
+            str(tmp_path),
+            "--locale",
+            "ja",
+            "--force",
+        ]
+    )
+    assert rc == 0
+    reports = tmp_path / "reports"
+    assert (reports / "rough_volatility_report_ja.html").exists()
+    assert not (reports / "rough_volatility_report_en.html").exists()

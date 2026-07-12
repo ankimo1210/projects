@@ -4,7 +4,7 @@ import argparse
 from pathlib import Path
 
 from optimal_execution.config import load_config
-from optimal_execution.notebook import execute_notebook
+from optimal_execution.notebook import execute_notebooks
 
 
 def main() -> int:
@@ -12,7 +12,8 @@ def main() -> int:
     parser.add_argument("--config", type=Path, default=Path("configs/quick.yaml"))
     args = parser.parse_args()
     cfg = load_config(args.config)
-    print(execute_notebook(cfg, args.config))
+    for locale, path in execute_notebooks(cfg, args.config).items():
+        print(f"[{locale}] {path}")
     return 0
 
 

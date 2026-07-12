@@ -77,21 +77,23 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(f"[{locale}] {path}")
         build_manifest(cfg)
     elif args.command == "notebook":
-        from .notebook import execute_notebook
+        from .notebook import execute_notebooks
 
-        output = execute_notebook(cfg, args.config)
-        print(output)
+        notebooks = execute_notebooks(cfg, args.config)
+        for locale, path in notebooks.items():
+            print(f"[{locale}] {path}")
         build_manifest(cfg)
     elif args.command == "all":
         run_all(cfg, force_train=args.force_train)
         outputs = build_reports(cfg)
-        from .notebook import execute_notebook
+        from .notebook import execute_notebooks
 
-        notebook = execute_notebook(cfg, args.config)
+        notebooks = execute_notebooks(cfg, args.config)
         build_manifest(cfg)
         print(f"English report: {outputs['en']}")
         print(f"Japanese report: {outputs['ja']}")
-        print(f"Notebook HTML: {notebook}")
+        print(f"English notebook HTML: {notebooks['en']}")
+        print(f"Japanese notebook HTML: {notebooks['ja']}")
     return 0
 
 
