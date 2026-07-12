@@ -60,6 +60,18 @@ def save_figure(figure: Figure, base_path: str | Path) -> tuple[Path, Path]:
     return png, svg
 
 
+def show_figure(figure: Figure) -> None:
+    """Embed a figure as a PNG in a notebook, bypassing the forced Agg backend's no-op show()."""
+    import io
+
+    from IPython.display import Image, display
+
+    buffer = io.BytesIO()
+    figure.savefig(buffer, format="png", dpi=150)
+    plt.close(figure)
+    display(Image(data=buffer.getvalue()))
+
+
 def training_diagram() -> Figure:
     """Visualize the differentiable training path."""
     figure, axis = plt.subplots(figsize=(11, 2.6))
