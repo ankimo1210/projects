@@ -1,0 +1,45 @@
+profile: default
+market:
+  seed: 1210
+  s0: 100.0
+  strike: 100.0
+  maturity_years: 0.119047619
+  n_steps: 30
+  mu: 0.05
+  risk_free_rate: 0.0
+  volatility: 0.20
+  transaction_cost_bps: 5.0
+  option_position: -1.0
+  antithetic_sampling: true
+policy:
+  hidden_layers: 3
+  hidden_units: 64
+  activation: silu
+  layer_norm: false
+  action_min: -0.25
+  action_max: 1.25
+risk:
+  objective: mse
+  entropic_gamma: 10.0
+  cvar_alpha: 0.95
+training:
+  device: auto
+  batch_size: 4096
+  epochs: 200
+  learning_rate: 0.001
+  weight_decay: 0.000001
+  gradient_clip_norm: 5.0
+  validation_paths: 50000
+  test_paths: 100000
+  early_stopping_patience: 25
+  scheduler: reduce_on_plateau
+  evaluation_chunk_size: 8192
+  deterministic: true
+experiment:
+  transaction_cost_grid_bps: [0.0, 1.0, 5.0, 10.0, 25.0]
+  no_trade_band: 0.05
+  meaningful_trade_threshold: 0.001
+  run_entropic: true
+output:
+  artifacts_dir: artifacts
+  reports_dir: reports
