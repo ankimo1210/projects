@@ -41,6 +41,40 @@ _SECTION_ANCHORS = (
     "limitations-next-steps",
 )
 
+# Literal copy of the narrative-callout anchors used by `rough_volatility.report._narratives`
+# (`report._NARRATIVE_ANCHORS`). Every section currently has a narrative callout, so this
+# mirrors `_SECTION_ANCHORS` exactly; kept as a separate literal tuple (not imported) so
+# i18n.py stays free of imports from report.py/notebook.py. Keep in sync with
+# `report._NARRATIVE_ANCHORS` if that ever changes.
+_CALLOUT_ANCHORS = (
+    "executive-summary",
+    "conceptual-map",
+    "mathematical-definitions",
+    "configuration",
+    "fbm-path-comparison",
+    "local-zoom",
+    "fgn-increments",
+    "increment-acf",
+    "structure-functions",
+    "hurst-recovery",
+    "estimator-bias",
+    "ou-versus-fou",
+    "rough-bergomi-paths",
+    "heston-comparison",
+    "terminal-distributions",
+    "iv-smiles",
+    "iv-surface",
+    "atm-skew-term",
+    "skew-scaling",
+    "hawkes-events",
+    "order-flow-price",
+    "volatility-proxy",
+    "noise-bias",
+    "establishes",
+    "does-not-establish",
+    "limitations-next-steps",
+)
+
 REQUIRED_KEYS = {
     "document_title",
     "brand",
@@ -49,6 +83,7 @@ REQUIRED_KEYS = {
     "badge",
     "footer",
     *(f"section.{anchor}" for anchor in _SECTION_ANCHORS),
+    *(f"callout.{anchor}" for anchor in _CALLOUT_ANCHORS),
 }
 
 
