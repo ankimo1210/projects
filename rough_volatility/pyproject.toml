@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "ipykernel>=6.29",
+    "latex2mathml>=3.77",
     "matplotlib>=3.8",
     "nbclient>=0.9",
     "nbconvert>=7.16",
