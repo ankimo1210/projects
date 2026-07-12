@@ -16,6 +16,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 from rough_volatility.config import ProjectConfig
+from rough_volatility.i18n import Translator
 from rough_volatility.notebook import SECTIONS
 
 INK = "#27313A"
@@ -887,10 +888,12 @@ def build_standalone_report(
     root: str | Path,
     manifest: dict[str, Path],
     *,
+    locale: str = "en",
     output_path: str | Path | None = None,
 ) -> Path:
     """Build the single-file, offline, interactive technical report."""
     config.validate()
+    t = Translator(locale)
     frames = _load_frames(manifest)
     figures = _build_figures(frames)
     fragments = _figure_fragments(figures)
@@ -932,9 +935,26 @@ def build_standalone_report(
     output = (
         Path(output_path)
         if output_path is not None
-        else Path(root).resolve() / config.output.reports_dir / "rough_volatility_report.html"
+        else Path(root).resolve()
+        / config.output.reports_dir
+        / f"rough_volatility_report_{locale}.html"
     )
     output.parent.mkdir(parents=True, exist_ok=True)
-    document = f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>Rough Volatility Visual Lab — Technical Report</title><style>{css}</style></head><body><div class="layout"><nav class="sidebar" aria-label="Report sections"><div class="brand">Synthetic research lab</div><h1>Rough Volatility Visual Lab</h1><ol>{toc}</ol></nav><main class="content"><header><div class="badge">SELF-CONTAINED · OFFLINE · {html.escape(config.profile.upper())}</div><h1>Rough Volatility Visual Lab</h1><p>Technical report · synthetic data only · seed {config.seed} · configuration {config.fingerprint()}</p></header>{"".join(sections_html)}<div class="footer">Generated locally from saved, provenance-stamped experiment artifacts. No market data, remote scripts, or external services are used.</div></main></div></body></html>"""
+    document = (
+        f'<!doctype html><html lang="{locale}"><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width,initial-scale=1">'
+        '<meta name="color-scheme" content="light">'
+        f"<title>{html.escape(t('document_title'))}</title><style>{css}</style></head>"
+        '<body><div class="layout"><nav class="sidebar" aria-label="Report sections">'
+        f'<div class="brand">{html.escape(t("brand"))}</div>'
+        f'<h1>{html.escape(t("report_title"))}</h1><ol>{toc}</ol></nav>'
+        '<main class="content"><header>'
+        f'<div class="badge">{html.escape(t("badge", profile=config.profile.upper()))}</div>'
+        f'<h1>{html.escape(t("report_title"))}</h1>'
+        f'<p>{html.escape(t("report_subtitle", seed=config.seed, fingerprint=config.fingerprint()))}</p>'
+        f'</header>{"".join(sections_html)}'
+        f'<div class="footer">{html.escape(t("footer"))}</div>'
+        "</main></div></body></html>"
+    )
     output.write_text(document, encoding="utf-8")
     return output

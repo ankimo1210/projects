@@ -60,7 +60,7 @@ def test_report_is_self_contained_interactive_and_complete(tmp_path: Path) -> No
     manifest = run_all(config, tmp_path, force=True)
     output = build_standalone_report(config, tmp_path, manifest)
     html = output.read_text(encoding="utf-8")
-    assert output.name == "rough_volatility_report.html"
+    assert output.name == "rough_volatility_report_en.html"
     assert 1_000_000 < output.stat().st_size < 25_000_000
     assert not re.search(r"(?:src|href)=[\"']https?://", html, flags=re.IGNORECASE)
     assert "cdn.plot.ly" not in html.lower()
@@ -71,3 +71,13 @@ def test_report_is_self_contained_interactive_and_complete(tmp_path: Path) -> No
     assert len(SECTIONS) == 26
     for section in SECTIONS:
         assert f'id="{section.anchor}"' in html
+
+
+def test_locale_controls_language_and_filename(tmp_path: Path) -> None:
+    config = _report_config()
+    manifest = run_all(config, tmp_path, force=True)
+    ja = build_standalone_report(config, tmp_path, manifest, locale="ja")
+    assert ja.name == "rough_volatility_report_ja.html"
+    text = ja.read_text(encoding="utf-8")
+    assert '<html lang="ja">' in text
+    assert "ラフボラティリティ・ビジュアルラボ" in text
