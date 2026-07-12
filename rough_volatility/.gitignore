@@ -1,0 +1,12 @@
+# Generated experiment outputs (regenerate via `make all` / `make demo`).
+artifacts/data/*
+artifacts/metrics/*
+artifacts/figures/*
+!artifacts/data/.gitkeep
+!artifacts/metrics/.gitkeep
+!artifacts/figures/.gitkeep
+artifacts/manifest.json
+artifacts/resolved_config.yaml
+reports/*.html
+*.npz
+.ipynb_checkpoints/
