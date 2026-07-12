@@ -6,10 +6,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import streamlit as st
-import yaml
+from market_viz.config import PROJECT_ROOT, load_settings
 
-with open("src/config/settings.yaml") as f:
-    _settings = yaml.safe_load(f)
+_settings = load_settings()
 
 st.set_page_config(
     page_title=_settings["app"]["title"],
@@ -24,7 +23,7 @@ st.sidebar.markdown("---")
 from market_viz.data.update import update_crypto_intraday, update_daily
 from market_viz.storage.duckdb_client import DuckDBClient
 
-DB_PATH = _settings["data"]["db_path"]
+DB_PATH = PROJECT_ROOT / _settings["data"]["db_path"]
 
 
 @st.cache_resource

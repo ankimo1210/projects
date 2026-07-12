@@ -5,17 +5,12 @@ from __future__ import annotations
 from datetime import date, timedelta
 
 import streamlit as st
-import yaml
+from market_viz.config import load_instruments as _load_instruments
 
 
 @st.cache_data
 def load_instruments() -> list[dict]:
-    with open("src/config/instruments.yaml") as f:
-        cfg = yaml.safe_load(f)
-    result: list[dict] = []
-    for group in cfg.get("instruments", {}).values():
-        result.extend(group)
-    return result
+    return _load_instruments()
 
 
 def get_ticker_options() -> list[str]:

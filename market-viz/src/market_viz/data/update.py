@@ -4,21 +4,20 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from datetime import datetime, timedelta
-from pathlib import Path
 
 import pandas as pd
 import yaml
 
+from market_viz import config as mv_config
 from market_viz.data.loaders import load_ccxt, load_yfinance
 from market_viz.data.normalize import normalize_prices
 from market_viz.storage.duckdb_client import DuckDBClient
 
-_ROOT = Path(__file__).parent.parent.parent
-
 
 def _load_instruments(config_path: str = "") -> list[dict]:
-    path = Path(config_path) if config_path else _ROOT / "src/config/instruments.yaml"
-    with open(path) as f:
+    if not config_path:
+        return mv_config.load_instruments()
+    with open(config_path) as f:
         cfg = yaml.safe_load(f)
     result: list[dict] = []
     for group in cfg.get("instruments", {}).values():
@@ -27,8 +26,9 @@ def _load_instruments(config_path: str = "") -> list[dict]:
 
 
 def _load_settings(config_path: str = "") -> dict:
-    path = Path(config_path) if config_path else _ROOT / "src/config/settings.yaml"
-    with open(path) as f:
+    if not config_path:
+        return mv_config.load_settings()
+    with open(config_path) as f:
         return yaml.safe_load(f)
 
 
