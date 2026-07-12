@@ -37,7 +37,7 @@ def test_config_overrides(cfg):
     assert stressed.impact.resilience_rho == 0.5
     # untouched keys survive the merge
     assert stressed.impact.temporary_eta == cfg.impact.temporary_eta
-    assert len(cfg.stress_regimes()) == 5
+    assert len(cfg.stress_regimes()) == 6
 
 
 def test_sigma_units(cfg):

@@ -3701,6 +3701,7 @@ version = "0.1.0"
 source = { editable = "optimal_execution" }
 dependencies = [
     { name = "jinja2" },
+    { name = "latex2mathml" },
     { name = "matplotlib" },
     { name = "numpy" },
     { name = "pandas" },
@@ -3715,7 +3716,6 @@ dependencies = [
 dev = [
     { name = "ipykernel" },
     { name = "jupyter" },
-    { name = "latex2mathml" },
     { name = "nbclient" },
     { name = "nbconvert" },
     { name = "nbformat" },
@@ -3729,7 +3729,7 @@ requires-dist = [
     { name = "ipykernel", marker = "extra == 'dev'", specifier = ">=6.29" },
     { name = "jinja2", specifier = ">=3.1" },
     { name = "jupyter", marker = "extra == 'dev'", specifier = ">=1.0" },
-    { name = "latex2mathml", marker = "extra == 'dev'", specifier = ">=3.77" },
+    { name = "latex2mathml", specifier = ">=3.77" },
     { name = "matplotlib", specifier = ">=3.8" },
     { name = "nbclient", marker = "extra == 'dev'", specifier = ">=0.10" },
     { name = "nbconvert", marker = "extra == 'dev'", specifier = ">=7.16" },

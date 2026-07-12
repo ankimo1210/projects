@@ -627,10 +627,14 @@ def _evaluate_regime(
     episodes: int,
 ) -> tuple[pd.DataFrame, dict[str, pd.DataFrame]]:
     policies, baselines = _main_eval_policies(train_cfg, eval_cfg)
+    # Regime-independent scenario stream: every regime (and the misspecified
+    # simulator) draws the SAME scenario seeds, so a regime only rescales/​
+    # perturbs identical underlying draws. Cross-regime deltas are then paired
+    # (common random numbers *across* regimes), not confounded by sample drift.
     frames, _ = lob_world_run(
         eval_cfg,
         policies,
-        purpose=f"{train_cfg.profile}_rl_{regime}",
+        purpose=f"{train_cfg.profile}_rl_paired",
         n_episodes=episodes,
         baselines=baselines,
     )
@@ -675,6 +679,7 @@ def evaluate(cfg: Config, *, force_train: bool = False) -> dict[str, pd.DataFram
             **provenance(cfg, model_parameters=cfg.raw, timestamp=stamp),
             "results": stress.to_dict(orient="records"),
             "common_random_numbers_within_regime": True,
+            "common_random_numbers_across_regimes": True,
         },
     )
     write_frame(
