@@ -4909,6 +4909,7 @@ version = "0.1.0"
 source = { editable = "rough_volatility" }
 dependencies = [
     { name = "ipykernel" },
+    { name = "latex2mathml" },
     { name = "matplotlib" },
     { name = "nbclient" },
     { name = "nbconvert" },
@@ -4928,6 +4929,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "ipykernel", specifier = ">=6.29" },
+    { name = "latex2mathml", specifier = ">=3.77" },
     { name = "matplotlib", specifier = ">=3.8" },
     { name = "nbclient", specifier = ">=0.9" },
     { name = "nbconvert", specifier = ">=7.16" },

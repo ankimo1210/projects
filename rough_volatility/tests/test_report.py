@@ -9,6 +9,7 @@ import pandas as pd
 import pytest
 from rough_volatility.config import ProjectConfig
 from rough_volatility.experiments import run_all
+from rough_volatility.literature import PRIOR_WORKS
 from rough_volatility.notebook import SECTIONS
 from rough_volatility.report import (
     EQUATIONS,
@@ -104,13 +105,118 @@ def test_callouts_are_localized_and_interpolated(tmp_path: Path) -> None:
     manifest = run_all(config, tmp_path, force=True)
     powers = pd.read_csv(manifest["skew_power_law"])
     target = powers.iloc[(powers["h"] - config.bergomi.h).abs().argmin()]
-    beta_text = f"β={float(target['beta']):.3f}"
+    # The interpolated skew value now sits inside build-time MathML, so assert
+    # on the formatted digits (the sign becomes a MathML operator element).
+    beta_digits = f"{abs(float(target['beta'])):.3f}"
     ja = build_standalone_report(config, tmp_path, manifest, locale="ja").read_text(
         encoding="utf-8"
     )
-    assert "合成ラボは市場データを用いずに" in ja  # executive-summary callout prose
-    assert beta_text in ja  # interpolated skew value survives translation
+    assert "ボラティリティはラフである" in ja  # executive-summary callout prose
+    assert beta_digits in ja  # interpolated skew value survives translation
     assert "H changes path regularity" not in ja  # EN callout fully replaced
+
+
+def test_mathematical_definitions_define_every_gallery_variable(tmp_path: Path) -> None:
+    config = _report_config()
+    manifest = run_all(config, tmp_path, force=True)
+    en = build_standalone_report(config, tmp_path, manifest, locale="en").read_text(
+        encoding="utf-8"
+    )
+    ja = build_standalone_report(config, tmp_path, manifest, locale="ja").read_text(
+        encoding="utf-8"
+    )
+    assert "<h3>Variable definitions</h3>" in en
+    assert "<h3>変数の定義</h3>" in ja
+    # One group header per gallery equation, in both editions.
+    for text in (en, ja):
+        assert text.count('class="variable-group"') == len(EQUATIONS)
+        # Symbols and math-bearing prose are typeset as build-time MathML;
+        # the 18 symbol cells alone guarantee many <math> elements.
+        assert text.count("<math") >= 18
+        assert "<merror" not in text
+    # Spot-check localized descriptions.
+    assert "Hurst exponent in" in en
+    assert "Hurst 指数（" in ja
+    assert "branching ratio" in en
+    assert "分岐比" in ja
+
+
+def test_practical_qanda_section_is_japanese_only(tmp_path: Path) -> None:
+    config = _report_config()
+    manifest = run_all(config, tmp_path, force=True)
+    en = build_standalone_report(config, tmp_path, manifest, locale="en").read_text(
+        encoding="utf-8"
+    )
+    ja = build_standalone_report(config, tmp_path, manifest, locale="ja").read_text(
+        encoding="utf-8"
+    )
+    # Report-only Q&A: after the limitations section, before the margin note,
+    # with several Q&A pairs and MathML-typeset formulas.
+    assert 'id="practical-qanda"' in ja
+    assert "実務Q&amp;A" in ja  # section heading (html.escape turns & into &amp;)
+    assert ja.count('class="qa-item"') >= 6
+    assert "<merror" not in ja
+    assert (
+        ja.index('id="limitations-next-steps"')
+        < ja.index('id="practical-qanda"')
+        < ja.index('id="edge-note"')
+    )
+    # The full handoff is referenced, not inlined.
+    assert "HEDGING_HANDOFF.md" in ja
+    # EN keeps the section gated off via the empty catalog body.
+    assert 'id="practical-qanda"' not in en
+    assert 'class="qa-item"' not in en
+
+
+def test_edge_note_is_japanese_only_and_after_sections(tmp_path: Path) -> None:
+    config = _report_config()
+    manifest = run_all(config, tmp_path, force=True)
+    en = build_standalone_report(config, tmp_path, manifest, locale="en").read_text(
+        encoding="utf-8"
+    )
+    ja = build_standalone_report(config, tmp_path, manifest, locale="ja").read_text(
+        encoding="utf-8"
+    )
+    # The margin note sits at the end of the content column: after the last
+    # shared section and before the footer, with its math typeset as MathML.
+    assert 'id="edge-note"' in ja
+    assert "なぜ低い H は局所的にギザギザなのか" in ja
+    assert ja.index('id="limitations-next-steps"') < ja.index('id="edge-note"')
+    assert ja.index('id="edge-note"') < ja.index('class="footer"')
+    assert "<merror" not in ja
+    # EN keeps the note gated off via the empty catalog entry.
+    assert 'id="edge-note"' not in en
+    assert 'class="edge-note"' not in en
+
+
+def test_prior_literature_section_is_japanese_only_for_now(tmp_path: Path) -> None:
+    config = _report_config()
+    manifest = run_all(config, tmp_path, force=True)
+    en = build_standalone_report(config, tmp_path, manifest, locale="en").read_text(
+        encoding="utf-8"
+    )
+    ja = build_standalone_report(config, tmp_path, manifest, locale="ja").read_text(
+        encoding="utf-8"
+    )
+    # The JA report carries the report-only literature section right after the
+    # conceptual map, with the overview callout, the summary table, and one
+    # card per registered prior work.
+    assert 'id="prior-literature"' in ja
+    assert "先行研究" in ja
+    assert "Volatility is rough" in ja  # language-neutral citation text
+    assert ja.count('class="lit-card"') == len(PRIOR_WORKS)
+    assert (
+        ja.index('id="conceptual-map"')
+        < ja.index('id="prior-literature"')
+        < ja.index('id="mathematical-definitions"')
+    )
+    # All 26 shared sections are still present alongside the inserted one.
+    for section in SECTIONS:
+        assert f'id="{section.anchor}"' in ja
+    # The EN catalog keeps callout.prior-literature empty for now, which
+    # disables the section: the EN report keeps exactly the 26 shared sections.
+    assert 'id="prior-literature"' not in en
+    assert 'class="lit-card"' not in en  # CSS rules remain, but no rendered cards
 
 
 def _plotly_json_text(value: str) -> str:

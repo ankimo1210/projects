@@ -7,6 +7,7 @@ import hashlib
 import html
 import io
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -18,6 +19,11 @@ from plotly.subplots import make_subplots
 
 from rough_volatility.config import ProjectConfig
 from rough_volatility.i18n import Translator
+from rough_volatility.literature import (
+    LITERATURE_AFTER_ANCHOR,
+    LITERATURE_ANCHOR,
+    render_literature_section,
+)
 from rough_volatility.notebook import SECTIONS
 
 INK = "#27313A"
@@ -59,6 +65,30 @@ REPORT_FIGURE_ANCHORS: tuple[str, ...] = (
     "hawkes_intensity",
     "noise_bias",
 )
+
+
+_DISPLAY_MATH = re.compile(r"\$\$(.+?)\$\$", re.DOTALL)
+_INLINE_MATH = re.compile(r"(?<!\$)\$(?!\$)(.+?)(?<!\$)\$(?!\$)", re.DOTALL)
+
+
+def _render_prose_math(fragment: str) -> str:
+    """Convert `$...$`/`$$...$$` LaTeX in authored prose to inline MathML.
+
+    Runs at build time so the report stays self-contained (no MathJax/KaTeX,
+    no network). Apply this to authored prose only — never to Plotly figure
+    fragments, whose embedded JavaScript may contain literal dollar signs.
+    """
+    if "$" not in fragment:
+        return fragment
+    from latex2mathml.converter import convert
+
+    def _display(match: re.Match[str]) -> str:
+        return convert(match.group(1).strip(), display="block")
+
+    def _inline(match: re.Match[str]) -> str:
+        return convert(match.group(1).strip(), display="inline")
+
+    return _INLINE_MATH.sub(_inline, _DISPLAY_MATH.sub(_display, fragment))
 
 
 def render_equation_svg(mathtext: str) -> str:
@@ -798,6 +828,77 @@ def _metric_cards(
     )
 
 
+# Variable definitions for the equation gallery, grouped by `EQUATIONS` key.
+# Symbols are language-neutral LaTeX (typeset via `_render_prose_math`); the
+# descriptions live in the locale catalogs under `variable.<key>` so both
+# editions stay localized.
+_VARIABLE_GROUPS: tuple[tuple[str, tuple[tuple[str, str], ...]], ...] = (
+    (
+        "fbm_covariance",
+        (
+            (r"$B_t^H$, $B_s^H$", "fbm"),
+            (r"$H$", "hurst"),
+            (r"$t$, $s$", "times"),
+        ),
+    ),
+    (
+        "structure_function",
+        (
+            (r"$S_q(\Delta)$", "structure"),
+            (r"$X_t$", "process"),
+            (r"$\Delta$", "lag"),
+            (r"$q$", "order"),
+        ),
+    ),
+    (
+        "rough_bergomi",
+        (
+            (r"$V_t$", "variance"),
+            (r"$\xi_0(t)$", "forward_variance"),
+            (r"$\eta$", "vol_of_vol"),
+            (r"$\widetilde W_t^H$", "volterra"),
+        ),
+    ),
+    (
+        "skew_power",
+        (
+            (r"$\sigma_{\mathrm{imp}}$", "implied_vol"),
+            (r"$k$", "log_moneyness"),
+            (r"$T$", "maturity"),
+        ),
+    ),
+    (
+        "hawkes",
+        (
+            (r"$\lambda_t^i$", "intensity"),
+            (r"$\mu_i$", "baseline"),
+            (r"$\phi_{ij}(t-s)$", "kernel"),
+            (r"$N_t^j$", "counting"),
+        ),
+    ),
+)
+
+
+def _variable_table(t: Translator) -> str:
+    """Definition table for every symbol appearing in the equation gallery."""
+    if tuple(key for key, _ in _VARIABLE_GROUPS) != tuple(EQUATIONS):
+        raise RuntimeError("variable groups must mirror the equation gallery")
+    rows: list[str] = []
+    for equation_key, variables in _VARIABLE_GROUPS:
+        rows.append(
+            '<tr class="variable-group"><td colspan="2">'
+            f"{html.escape(t(f'variable.group.{equation_key}'))}</td></tr>"
+        )
+        rows.extend(
+            f"<tr><th>{symbol}</th><td>{t(f'variable.{key}')}</td></tr>"
+            for symbol, key in variables
+        )
+    return (
+        f"<h3>{html.escape(t('variables_heading'))}</h3>"
+        f'<table class="definition-table variable-table"><tbody>{"".join(rows)}</tbody></table>'
+    )
+
+
 def _equation_gallery() -> str:
     return (
         '<div class="equation-grid">'
@@ -882,13 +983,43 @@ def _section_extra(
     t: Translator,
 ) -> str:
     if anchor == "mathematical-definitions":
-        return _equation_gallery()
+        return _equation_gallery() + _variable_table(t)
     if anchor == "configuration":
         return _configuration_table(config)
     if anchor == "limitations-next-steps":
         heading = html.escape(t("validation_gates_heading"))
         return f"<h3>{heading}</h3>" + _validation_table(validation)
     return ""
+
+
+# Report-only practical Q&A, inserted after this shared-registry anchor. The
+# whole body lives in the locale catalog under `qanda.body` (empty disables the
+# section, mirroring the prior-literature gate).
+QANDA_ANCHOR = "practical-qanda"
+QANDA_AFTER_ANCHOR = "limitations-next-steps"
+
+
+def _qanda_section(t: Translator) -> str | None:
+    """Body HTML for the report-only practical Q&A, or None when gated off."""
+    body = t("qanda.body")
+    return body or None
+
+
+def _edge_note(t: Translator) -> str:
+    """Report-only margin note placed at the end of the content column.
+
+    Rendered only for locales whose catalog provides ``edge_note.body`` (empty
+    disables it, mirroring the prior-literature gate), and typeset through the
+    build-time MathML pipeline so its inline ``$...$`` math renders offline.
+    """
+    body = t("edge_note.body")
+    if not body:
+        return ""
+    heading = html.escape(t("edge_note.heading"))
+    return _render_prose_math(
+        f'<aside class="edge-note" id="edge-note" aria-label="{heading}">'
+        f"<h2>{heading}</h2>{body}</aside>"
+    )
 
 
 def build_standalone_report(
@@ -910,13 +1041,8 @@ def build_standalone_report(
     if len(SECTIONS) != 26:
         raise RuntimeError("the shared narrative registry must contain 26 sections")
 
-    toc = "".join(
-        f'<li><a href="#{section.anchor}">{index}. '
-        f'{html.escape(t(f"section.{section.anchor}"))}</a></li>'
-        for index, section in enumerate(SECTIONS, start=1)
-    )
-    sections_html: list[str] = []
-    for index, section in enumerate(SECTIONS, start=1):
+    entries: list[tuple[str, str, str]] = []  # (anchor, localized title, body html)
+    for section in SECTIONS:
         figure_html = fragments.get(section.figure_key or "", "")
         evidence_note = (
             "<p class=\"evidence-note\">"
@@ -925,11 +1051,54 @@ def build_standalone_report(
             if figure_html
             else ""
         )
-        sections_html.append(
-            f'<section id="{section.anchor}"><div class="section-number">{index:02d}</div>'
-            f'<h2>{html.escape(t(f"section.{section.anchor}"))}</h2>{narratives[section.anchor]}'
-            f"{_section_extra(section.anchor, config, validation, t)}{figure_html}{evidence_note}</section>"
+        entries.append(
+            (
+                section.anchor,
+                t(f"section.{section.anchor}"),
+                _render_prose_math(
+                    f"{narratives[section.anchor]}"
+                    f"{_section_extra(section.anchor, config, validation, t)}"
+                )
+                + figure_html
+                + evidence_note,
+            )
         )
+    # The prior-literature section is report-only (not in the shared 26-section
+    # registry) and appears only in locales whose catalog provides its prose.
+    literature_body = render_literature_section(t)
+    if literature_body is not None:
+        position = 1 + next(
+            index for index, entry in enumerate(entries) if entry[0] == LITERATURE_AFTER_ANCHOR
+        )
+        entries.insert(
+            position,
+            (
+                LITERATURE_ANCHOR,
+                t(f"section.{LITERATURE_ANCHOR}"),
+                _render_prose_math(literature_body),
+            ),
+        )
+    # The practical Q&A is also report-only and locale-gated; it goes after the
+    # limitations section so it reads as a forward-looking, practical appendix.
+    qanda_body = _qanda_section(t)
+    if qanda_body is not None:
+        position = 1 + next(
+            index for index, entry in enumerate(entries) if entry[0] == QANDA_AFTER_ANCHOR
+        )
+        entries.insert(
+            position,
+            (QANDA_ANCHOR, t(f"section.{QANDA_ANCHOR}"), _render_prose_math(qanda_body)),
+        )
+
+    toc = "".join(
+        f'<li><a href="#{anchor}">{index}. {html.escape(title)}</a></li>'
+        for index, (anchor, title, _) in enumerate(entries, start=1)
+    )
+    sections_html = [
+        f'<section id="{anchor}"><div class="section-number">{index:02d}</div>'
+        f"<h2>{html.escape(title)}</h2>{body}</section>"
+        for index, (anchor, title, body) in enumerate(entries, start=1)
+    ]
     metric_cards = _metric_cards(config, frames, validation)
     sections_html[0] = sections_html[0].replace("</section>", metric_cards + "</section>")
     fingerprint_hex = _quantitative_fingerprint(figures, metric_cards, config)
@@ -943,8 +1112,8 @@ def build_standalone_report(
     *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--wash);color:var(--ink);font-family:Arial,sans-serif;line-height:1.58}
     .layout{display:grid;grid-template-columns:280px minmax(0,1fr);max-width:1500px;margin:auto}.sidebar{position:sticky;top:0;height:100vh;overflow:auto;padding:28px 22px;background:#202a33;color:#fff}.brand{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#aebac4}.sidebar h1{font-size:21px;line-height:1.2;margin:12px 0 20px}.sidebar ol{padding-left:18px;margin:0}.sidebar li{margin:7px 0;color:#bfc9d0;font-size:12px}.sidebar a{color:inherit;text-decoration:none}.sidebar a:hover{color:#fff}.content{min-width:0;padding:44px 52px 90px;background:var(--paper)}header{border-bottom:1px solid var(--line);padding-bottom:26px;margin-bottom:20px}header h1{font-size:34px;line-height:1.12;margin:0 0 10px}header p{color:var(--muted);margin:0}.badge{display:inline-block;padding:5px 9px;border-radius:999px;background:#e8efff;color:#2455cc;font-size:12px;font-weight:700;margin-bottom:14px}
     section{position:relative;padding:34px 0;border-bottom:1px solid var(--line);scroll-margin-top:15px}section h2{font-size:25px;line-height:1.22;margin:0 0 15px;max-width:900px}section h3{margin-top:24px}.section-number{font:700 11px/1 monospace;color:var(--blue);letter-spacing:.12em;margin-bottom:10px}section>p,section>ul,section>ol{max-width:940px}.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px;margin:24px 0 2px}.metric-card{border:1px solid var(--line);border-radius:10px;padding:15px;background:#fff}.metric-card span,.metric-card small{display:block;color:var(--muted);font-size:11px}.metric-card strong{display:block;font-size:25px;margin:6px 0}.flow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:22px 0}.flow span{border:1px solid var(--line);border-radius:8px;padding:10px 13px;background:var(--wash)}.flow b{color:var(--blue)}
-    .equation-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}.equation-card{border:1px solid var(--line);border-radius:9px;padding:12px;overflow:auto}.equation-card span{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.equation-card img{display:block;max-width:100%;height:60px;margin-top:5px}.definition-table{width:100%;max-width:850px;border-collapse:collapse;margin:18px 0}.definition-table th,.definition-table td{text-align:left;border-bottom:1px solid var(--line);padding:10px 12px}.definition-table th{background:var(--wash);width:42%}.status{font-weight:700}.status.pass{color:#2455cc}.status.review{color:#a65512}.plotly-graph-div{width:100%!important}.evidence-note{font-size:11px;color:var(--muted);border-left:3px solid var(--line);padding-left:10px}.footer{color:var(--muted);font-size:12px;padding-top:26px}
-    @media(max-width:900px){.layout{display:block}.sidebar{position:relative;height:auto}.sidebar ol{columns:2}.content{padding:30px 22px}.content header h1{font-size:29px}}@media(max-width:560px){.sidebar ol{columns:1}.content{padding:24px 14px}.equation-grid{grid-template-columns:1fr}}
+    .equation-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}.equation-card{border:1px solid var(--line);border-radius:9px;padding:12px;overflow:auto}.equation-card span{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.equation-card img{display:block;max-width:100%;height:60px;margin-top:5px}.definition-table{width:100%;max-width:850px;border-collapse:collapse;margin:18px 0}.definition-table th,.definition-table td{text-align:left;border-bottom:1px solid var(--line);padding:10px 12px}.definition-table th{background:var(--wash);width:42%}.status{font-weight:700}.status.pass{color:#2455cc}.status.review{color:#a65512}.variable-table{max-width:940px}.variable-table th{width:20%;font-weight:600}.variable-table .variable-group td{background:var(--wash);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:none;color:var(--muted)}.lit-table{max-width:940px}.lit-table th{width:24%}.lit-table thead th{width:auto;background:var(--wash)}.lit-cards{display:grid;grid-template-columns:1fr;gap:14px;max-width:940px;margin-top:20px}.lit-card{border:1px solid var(--line);border-radius:10px;padding:16px 18px;background:#fff}.lit-card h3{margin:0 0 10px;font-size:15px}.lit-card dl{display:grid;grid-template-columns:110px minmax(0,1fr);gap:7px 14px;margin:0}.lit-card dt{color:var(--muted);font-size:12px;font-weight:700}.lit-card dd{margin:0;font-size:13px}.edge-note{max-width:940px;margin:36px 0 0;padding:15px 20px;border:1px dashed var(--line);border-left:3px solid var(--gold);border-radius:10px;background:var(--wash);font-size:13px;color:var(--muted)}.edge-note h2{font-size:14px;margin:0 0 8px;color:var(--ink)}.edge-note p{max-width:none;margin:8px 0}.edge-note strong{color:var(--ink)}.qa{max-width:940px}.qa-item{border-bottom:1px solid var(--line);padding:14px 0}.qa-item:last-child{border-bottom:none}.qa-q{font-weight:700;color:var(--ink);margin:0 0 6px}.qa-q::before{content:"Q. ";color:var(--blue)}.qa-a{margin:0}.qa-a::before{content:"A. ";color:var(--gold);font-weight:700}.qa-source{font-size:12px;color:var(--muted);margin:0 0 6px}.plotly-graph-div{width:100%!important}.evidence-note{font-size:11px;color:var(--muted);border-left:3px solid var(--line);padding-left:10px}.footer{color:var(--muted);font-size:12px;padding-top:26px}
+    @media(max-width:900px){.layout{display:block}.sidebar{position:relative;height:auto}.sidebar ol{columns:2}.content{padding:30px 22px}.content header h1{font-size:29px}}@media(max-width:560px){.sidebar ol{columns:1}.content{padding:24px 14px}.equation-grid{grid-template-columns:1fr}.lit-card dl{grid-template-columns:1fr}}
     @media print{.sidebar{display:none}.layout{display:block}.content{padding:0}.plotly-graph-div{page-break-inside:avoid}section{break-inside:avoid}}
     """
     output = (
@@ -969,6 +1138,7 @@ def build_standalone_report(
         f'<h1>{html.escape(t("report_title"))}</h1>'
         f'<p>{html.escape(t("report_subtitle", seed=config.seed, fingerprint=config.fingerprint()))}</p>'
         f'</header>{"".join(sections_html)}'
+        f"{_edge_note(t)}"
         f'<div class="footer">{html.escape(t("footer"))}</div>'
         "</main></div></body></html>"
     )

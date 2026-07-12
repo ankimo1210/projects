@@ -94,7 +94,7 @@ reports/
 └── 01_rough_volatility_visual_lab.html
 ```
 
-The standalone report embeds Plotly JavaScript once, has no remote script or stylesheet attributes, and opens directly from disk. The nbconvert notebook export is a separate artifact and may retain nbconvert's default MathJax reference for equation rendering; the notebook code, data, and static figures themselves are local.
+The standalone report embeds Plotly JavaScript once, has no remote script or stylesheet attributes, and opens directly from disk. LaTeX math in the report prose (callouts, the variable-definition table, the literature section) is converted to inline MathML at build time via `latex2mathml`, so equations render without MathJax/KaTeX or any network access; the equation gallery itself is rendered to inline SVG with matplotlib mathtext. The Japanese report additionally carries three report-only sections that the English edition omits until their locale entries are written: a prior-literature section (problems, proposals, results, and open questions of the rough-volatility literature, with a per-paper table and cards), a practical hedging/Greeks Q&A (distilled from `docs/HEDGING_HANDOFF.md`), and a short margin note on roughness and `H`. The nbconvert notebook export is a separate artifact and may retain nbconvert's default MathJax reference for equation rendering; the notebook code, data, and static figures themselves are local.
 
 Every metrics JSON records seed, profile, parameter fingerprint, sample size, UTC timestamp, Git commit when available, and package version. CSVs repeat the same provenance fields.
 
