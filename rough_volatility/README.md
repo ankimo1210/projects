@@ -89,7 +89,8 @@ artifacts/
 notebooks/
 └── 01_rough_volatility_visual_lab.ipynb
 reports/
-├── rough_volatility_report.html
+├── rough_volatility_report_en.html
+├── rough_volatility_report_ja.html
 └── 01_rough_volatility_visual_lab.html
 ```
 
