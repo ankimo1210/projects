@@ -8,7 +8,7 @@ import json
 
 import plotly.graph_objects as go
 
-from jp_llm_lab.visualization.architecture_viz import model_flow_figure
+from jp_llm_lab.visualization.architecture_viz import block_internals_figure, model_flow_figure
 
 MODEL_CFG = {
     "vocab_size": 8192,
@@ -53,3 +53,33 @@ def test_model_flow_figure_shows_real_config_values():
     assert "vocab_size=8192" in text
     assert "d_model=512" in text
     assert "n_layers=8" in text
+
+
+def test_block_internals_figure_returns_a_figure():
+    fig = block_internals_figure(MODEL_CFG)
+    assert isinstance(fig, go.Figure)
+
+
+def test_block_internals_figure_has_six_shapes():
+    fig = block_internals_figure(MODEL_CFG)
+    rects = [s for s in fig.layout.shapes if s.type == "rect"]
+    circles = [s for s in fig.layout.shapes if s.type == "circle"]
+    assert len(rects) == 4
+    assert len(circles) == 2
+
+
+def test_block_internals_figure_uses_modern_component_names():
+    text = _all_text(block_internals_figure(MODEL_CFG))
+    assert "RMSNorm" in text
+    assert "SwiGLU" in text
+    assert "LayerNorm" not in text
+    assert "GELU" not in text
+
+
+def test_block_internals_figure_uses_classical_component_names():
+    classical_cfg = dict(MODEL_CFG, norm="layernorm", mlp="gelu")
+    text = _all_text(block_internals_figure(classical_cfg))
+    assert "LayerNorm" in text
+    assert "GELU" in text
+    assert "RMSNorm" not in text
+    assert "SwiGLU" not in text
