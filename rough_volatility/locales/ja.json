@@ -5,6 +5,8 @@
   "report_subtitle": "テクニカルレポート · 合成データのみ · seed {seed} · 設定 {fingerprint}",
   "badge": "自己完結 · オフライン · {profile}",
   "footer": "保存済みの来歴付き実験アーティファクトからローカル生成。市場データ・外部スクリプト・外部サービスは一切使用していません。",
+  "evidence_note": "根拠: ローカル生成の合成データ。プロファイル {profile}、seed {seed}、fingerprint {fingerprint}。",
+  "validation_gates_heading": "検証ゲート",
   "section.executive-summary": "テクニカル・サマリー",
   "section.conceptual-map": "ラフパスからオプション・スキューと注文フローへ",
   "section.mathematical-definitions": "定義とスケーリング則",
@@ -56,5 +58,12 @@
   "callout.noise-bias": "<p><strong>計測方法の選択は、見かけ上のラフネスを作り出すことも、逆に消し去ることもある。</strong> 前処理セレクターを使うこと。raw・aggregated・pre-averagedの各観測は、同じ潜在パスから異なるHバイアスを生む。</p>",
   "callout.establishes": "<ul><li>Davies–Harte fBMはクリーンなスケーリングと推定量の回復パターンを再現する。</li><li>exact joint-GaussianなrBergomiグリッドは、設定したフォワード分散をモンテカルロ誤差の範囲内で保つ。</li><li>これらの有限シミュレーションでは、Hが小さくなるにつれて短期満期のスキューは急峻になる。</li><li>near-criticalなHawkesフローだけで、クラスター化した活動とラフに見えるプロキシを生み出すのに十分である。</li></ul>",
   "callout.does-not-establish": "<ul><li>推定されたH&lt;1/2は、フラクショナルなデータ生成過程を同定するものではない。</li><li>Hawkesプロキシはrough Hestonの導出でも、市場キャリブレーションでもない。</li><li>有限満期でのスキュー当てはめは、漸近指数を厳密に証明するものではない。</li><li>大まかに一致させたHestonとrBergomiのパラメータは、経済的に同値なキャリブレーションではない。</li></ul>",
-  "callout.limitations-next-steps": "<p><strong>次に行うべき有用なテストは頑健性テストであり、装飾的な複雑さを増やすことではない。</strong></p><ol><li>合成のξ₀をキャリブレーション済みのフォワード分散カーブに置き換え、クォートの不確実性を伝播させる。</li><li>hybrid/FFTのVolterraスキームを追加し、exact-gridオペレーターに対する収束をベンチマークする。</li><li>短期ウィングのIVとスキュー推定に分散削減法を用いる。</li><li>ノイズに頑健なラフネス推定量と代替のサンプリング方式を検証する。</li><li>季節性と市場状態への条件付けに対処した上で、初めてイベントデータからHawkesカーネルを当てはめる。</li></ol><h3>さらなる問い</h3><p>代替のleverage、vol-of-vol、満期グリッドの下で、結論はどれほど安定しているか。現実的な価格の離散性と非同期サンプリングの下で、どの推定量が最もバイアスが小さいままであるか。</p>"
+  "callout.limitations-next-steps": "<p><strong>次に行うべき有用なテストは頑健性テストであり、装飾的な複雑さを増やすことではない。</strong></p><ol><li>合成のξ₀をキャリブレーション済みのフォワード分散カーブに置き換え、クォートの不確実性を伝播させる。</li><li>hybrid/FFTのVolterraスキームを追加し、exact-gridオペレーターに対する収束をベンチマークする。</li><li>短期ウィングのIVとスキュー推定に分散削減法を用いる。</li><li>ノイズに頑健なラフネス推定量と代替のサンプリング方式を検証する。</li><li>季節性と市場状態への条件付けに対処した上で、初めてイベントデータからHawkesカーネルを当てはめる。</li></ol><h3>さらなる問い</h3><p>代替のleverage、vol-of-vol、満期グリッドの下で、結論はどれほど安定しているか。現実的な価格の離散性と非同期サンプリングの下で、どの推定量が最もバイアスが小さいままであるか。</p>",
+  "figure.fbm_paths.title": "フラクショナル・ブラウン運動のパス",
+  "figure.fbm_zoom.title": "拡大時の局所的なラフネス",
+  "figure.fgn_increments.title": "フラクショナル・ガウスノイズの増分",
+  "figure.hawkes_events.title": "Hawkesイベント・ラスター",
+  "figure.hawkes_events.subtitle": "最初の100時間単位。シナリオセレクターを使うこと",
+  "figure.hawkes_intensity.title": "条件付きHawkes強度",
+  "figure.hawkes_intensity.subtitle": "買い強度と売り強度の合計。シナリオセレクターを使うこと"
 }

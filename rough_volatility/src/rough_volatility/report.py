@@ -504,12 +504,13 @@ def _scenario_selector(
     title: str,
     subtitle: str,
     mode: str = "lines",
+    clip_to_first_100: bool = False,
 ) -> go.Figure:
     figure = go.Figure()
     scenarios = list(frame["scenario"].drop_duplicates())
     for index, scenario in enumerate(scenarios):
         group = frame[frame["scenario"] == scenario]
-        if title == "Hawkes event raster":
+        if clip_to_first_100:
             horizon = min(float(group[x].max()), 100.0) if len(group) else 100.0
             group = group[group[x] <= horizon]
         figure.add_trace(
@@ -653,16 +654,16 @@ def _load_frames(manifest: dict[str, Path]) -> dict[str, pd.DataFrame]:
     }
 
 
-def _build_figures(frames: dict[str, pd.DataFrame]) -> dict[str, go.Figure]:
+def _build_figures(frames: dict[str, pd.DataFrame], t: Translator) -> dict[str, go.Figure]:
     return {
         "fbm_paths": _fbm_selector(
-            frames["fbm_paths"], "value", "Fractional Brownian-motion paths"
+            frames["fbm_paths"], "value", t("figure.fbm_paths.title")
         ),
         "fbm_zoom": _fbm_selector(
-            frames["fbm_paths"], "value", "Local roughness under zoom", zoom=True
+            frames["fbm_paths"], "value", t("figure.fbm_zoom.title"), zoom=True
         ),
         "fgn_increments": _fbm_selector(
-            frames["fbm_increments"], "increment", "Fractional Gaussian-noise increments"
+            frames["fbm_increments"], "increment", t("figure.fgn_increments.title")
         ),
         "increment_acf": _acf_figure(frames["fbm_acf"]),
         "structure_scaling": _structure_figure(frames["fbm_structure"]),
@@ -682,17 +683,18 @@ def _build_figures(frames: dict[str, pd.DataFrame]) -> dict[str, go.Figure]:
             frames["hawkes_events"],
             x="time",
             y="mark",
-            title="Hawkes event raster",
-            subtitle="First 100 time units; use the scenario selector",
+            title=t("figure.hawkes_events.title"),
+            subtitle=t("figure.hawkes_events.subtitle"),
             mode="markers",
+            clip_to_first_100=True,
         ),
         "hawkes_price": _hawkes_price_figure(frames["hawkes_series"]),
         "hawkes_intensity": _scenario_selector(
             frames["hawkes_intensity"],
             x="time",
             y="total_intensity",
-            title="Conditional Hawkes intensity",
-            subtitle="Buy plus sell intensity; use the scenario selector",
+            title=t("figure.hawkes_intensity.title"),
+            subtitle=t("figure.hawkes_intensity.subtitle"),
         ),
         "noise_bias": _noise_selector(frames["noise_fragility"]),
     }
@@ -884,13 +886,15 @@ def _section_extra(
     anchor: str,
     config: ProjectConfig,
     validation: dict[str, Any],
+    t: Translator,
 ) -> str:
     if anchor == "mathematical-definitions":
         return _equation_gallery()
     if anchor == "configuration":
         return _configuration_table(config)
     if anchor == "limitations-next-steps":
-        return "<h3>Validation gates</h3>" + _validation_table(validation)
+        heading = html.escape(t("validation_gates_heading"))
+        return f"<h3>{heading}</h3>" + _validation_table(validation)
     return ""
 
 
@@ -906,7 +910,7 @@ def build_standalone_report(
     config.validate()
     t = Translator(locale)
     frames = _load_frames(manifest)
-    figures = _build_figures(frames)
+    figures = _build_figures(frames, t)
     fragments = _figure_fragments(figures)
     validation = json.loads(manifest["validation_checks"].read_text(encoding="utf-8"))
     narratives = _narratives(config, frames, t)
@@ -922,15 +926,16 @@ def build_standalone_report(
     for index, section in enumerate(SECTIONS, start=1):
         figure_html = fragments.get(section.figure_key or "", "")
         evidence_note = (
-            '<p class="evidence-note">Evidence: locally generated synthetic data; '
-            f"profile {html.escape(config.profile)}, seed {config.seed}, fingerprint {config.fingerprint()}.</p>"
+            "<p class=\"evidence-note\">"
+            f"{html.escape(t('evidence_note', profile=config.profile, seed=config.seed, fingerprint=config.fingerprint()))}"
+            "</p>"
             if figure_html
             else ""
         )
         sections_html.append(
             f'<section id="{section.anchor}"><div class="section-number">{index:02d}</div>'
             f'<h2>{html.escape(t(f"section.{section.anchor}"))}</h2>{narratives[section.anchor]}'
-            f"{_section_extra(section.anchor, config, validation)}{figure_html}{evidence_note}</section>"
+            f"{_section_extra(section.anchor, config, validation, t)}{figure_html}{evidence_note}</section>"
         )
     metric_cards = _metric_cards(config, frames, validation)
     sections_html[0] = sections_html[0].replace("</section>", metric_cards + "</section>")
