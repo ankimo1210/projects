@@ -29,6 +29,10 @@ members = [
     "analytics/differential_equation/pde-book",
     "analytics/machine_learning",
     "quantkit",
+    "deep_hedge_price",
+    "optimal_execution",
+    "rough_volatility",
+    "jp_llm_lab",
 ]
 
 # PyTorch CUDA 12.8 — used by `gto`. Defined here so all workspace members
@@ -97,6 +101,10 @@ ignore = [
 "johnhull/**/*.py" = ["N803", "N806", "N816", "E741"]
 "autostock/**/*.py" = ["N803", "N806", "N816", "E741"]
 "quantkit/**/*.py" = ["N803", "N806", "N812", "N816", "E741"]
+"optimal_execution/**/*.py" = ["N803", "N806", "N816", "E741"]
+"rough_volatility/**/*.py" = ["N803", "N806", "N816", "E741"]
+# jp_llm_lab: tensor-shape notation (B, T, D, H, V) follows the LLM literature.
+"jp_llm_lab/**/*.py" = ["N803", "N806", "N812", "N816", "E741"]
 "analytics/**/*.py" = ["N802", "N803", "N806", "N812", "N816", "E741"]
 "notebooks/**/*.py" = ["E402", "F401", "F841", "N803", "N806"]
 # Tests can have unused variables / imports for fixture-driven patterns.
@@ -140,6 +148,9 @@ testpaths = [
     "analytics/differential_equation/pde-book/tests",
     "analytics/machine_learning/tests",
     "quantkit/tests",
+    "optimal_execution/tests",
+    "rough_volatility/tests",
+    "jp_llm_lab/tests",
     "shortest_path/tests",
 ]
 python_files = ["test_*.py"]
