@@ -1,0 +1,14 @@
+artifacts/checkpoints/*
+!artifacts/checkpoints/.gitkeep
+artifacts/metrics/*
+!artifacts/metrics/.gitkeep
+artifacts/data/*
+!artifacts/data/.gitkeep
+artifacts/figures/*
+!artifacts/figures/.gitkeep
+reports/*.html
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+*.egg-info/
+build/
+dist/
