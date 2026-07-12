@@ -16,7 +16,7 @@ from rough_volatility.experiments import (
     run_path_experiments,
 )
 from rough_volatility.plotting import generate_static_figures
-from rough_volatility.report import build_standalone_report
+from rough_volatility.report import build_reports, build_standalone_report
 
 LOGGER = logging.getLogger(__name__)
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -104,7 +104,6 @@ def main(argv: Sequence[str] | None = None) -> int:
             except (FileNotFoundError, ValueError):
                 artifacts = run_all(config, root, force=False)
         figures = generate_static_figures(config, root, artifacts)
-        from rough_volatility.report import build_reports
 
         if args.locale == "all":
             reports = build_reports(config, root, artifacts)

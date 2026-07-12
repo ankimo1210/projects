@@ -715,6 +715,13 @@ def _quantitative_fingerprint(
     excluded entirely, so the result is identical between the English and
     Japanese reports built from the same artifacts, while still changing if
     the underlying numbers do.
+
+    Caveat: a few trace-level strings (e.g. a colorbar `title`, such as "IV"
+    or "Bias") live inside `data`, not `layout`, and are currently hardcoded
+    English/locale-neutral by convention rather than by construction. If one
+    of those is ever localized, this hash would start differing between EN
+    and JA for identical underlying numbers — this parity test would catch
+    that regression.
     """
     figure_payloads = [
         json.dumps(json.loads(figures[key].to_json())["data"], sort_keys=True)
