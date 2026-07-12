@@ -1153,7 +1153,7 @@ def _related_work_html(t: Translator) -> str:
     return "".join(parts)
 
 
-def _model_theory_html(t: Translator) -> str:
+def _model_theory_html(t: Translator, charts: dict[str, str]) -> str:
     """Localized model-theory section.
 
     Per model: description, typeset equations (LaTeX -> MathML at build time,
@@ -1345,6 +1345,14 @@ def _model_theory_html(t: Translator) -> str:
             "線形2次モデル（AC・OW）は閉形式／QP、LOB・RL は確率的・数値的。RL の残差版は AC をベースラインに内包する。",
             "符号規約が統一：子注文 q_k≥0 が在庫を減らし、正のコストは到着価格より不利な執行を意味する。",
         ]
+        behavior_label = "採用したときの行動："
+        behaviors = {
+            "ac": "リスク回避度 λ を上げるほど在庫を早く落とす（前倒し）。λ→0 では毎期同量＝TWAP（直線）。図は λ を動かした在庫軌道。",
+            "impact": "回復速度 ρ が大きいほど取引後のインパクトが速く消える。ρ が小さいと変位が長く残り、後続の約定を押し下げ続ける。図は取引停止後の過渡変位の減衰。",
+            "ow": "回復が遅い（ρ 小）ほど端点に大きなブロックを置き中間は薄く、速い（ρ 大）ほど均等に近づく。図は ρ 別のステップ発注量。",
+            "lob": "指値は前方キューが長いほど約定しにくく、反対側フローが多いほど約定しやすい。P1-5 の厳格化はこの曲線を実質右へずらす。図は約定確率。",
+            "rl": "学習が進むほど執行コストが下がる。残差RLは AC を土台に微調整、自由RLは行動グリッドを直接学習。図は学習曲線（学習時ISの移動平均＋検証点）。残差は検証が良くても独立テストで悪化しやすい（選択の楽観性）。",
+        }
     else:
         vars_h, str_h, weak_h, common_h = (
             "Variables",
@@ -1497,6 +1505,14 @@ def _model_theory_html(t: Translator) -> str:
             "Linear-quadratic models (AC, OW) are closed-form/QP; LOB and RL are stochastic/numerical. The RL residual variant embeds AC as its baseline.",
             "One sign convention throughout: a child order q_k≥0 reduces inventory, and a positive cost means execution worse than the arrival price.",
         ]
+        behavior_label = "Behavior when adopted:"
+        behaviors = {
+            "ac": "Raising risk aversion λ front-loads selling; λ→0 gives equal slices each period (TWAP, a straight line). The chart sweeps λ over the inventory path.",
+            "impact": "Larger resilience ρ makes post-trade impact fade faster; small ρ leaves displacement lingering and keeps pushing later fills. The chart shows transient decay after trading stops.",
+            "ow": "Slower resilience (small ρ) places large blocks at the endpoints with a thin interior; faster ρ approaches an even schedule. The chart shows per-step size by ρ.",
+            "lob": "A limit order fills less readily as the queue ahead grows and more readily as opposite flow rises; the P1-5 stricter regime effectively shifts this curve right. The chart shows fill probability.",
+            "rl": "Cost falls as training proceeds; residual RL fine-tunes around AC, free RL learns the action grid directly. The chart shows learning curves (training-IS moving average plus validation points). Residual can look good on validation yet degrade on the independent test (selection optimism).",
+        }
 
     parts: list[str] = []
     for m in models:
@@ -1511,6 +1527,12 @@ def _model_theory_html(t: Translator) -> str:
             f'<div class="swrap"><div><p><strong>{e(str_h)}</strong></p><ul>{s_items}</ul></div>'
             f"<div><p><strong>{e(weak_h)}</strong></p><ul>{w_items}</ul></div></div>"
         )
+        behavior = behaviors.get(m["key"])
+        if behavior:
+            parts.append(f"<p><strong>{e(behavior_label)}</strong> {e(behavior)}</p>")
+        chart = charts.get(f"mt_{m['key']}")
+        if chart:
+            parts.append(f'<div class="chart">{chart}</div>')
     c_items = "".join(f"<li>{e(x)}</li>" for x in commons)
     parts.append(f"<h3>{e(common_h)}</h3><ul>{c_items}</ul>")
     return "".join(parts)
@@ -1558,11 +1580,173 @@ def _val_selection_html(cfg: Config, t: Translator, in_dist: pd.DataFrame) -> st
     return f"<p>{html.escape(t('val_selection_note'))}</p><ul>{''.join(rows)}</ul>"
 
 
+def _model_theory_figures(cfg: Config, t: Translator) -> dict[str, go.Figure]:
+    """One parameter-sweep chart per model, computed analytically from the
+    model code so each figure shows how a single knob reshapes the strategy or
+    response (deterministic, offline)."""
+    from .almgren_chriss import ac_inventory, kappa_for_lambda
+    from .fills import passive_fill_probability
+    from .impact import transient_decay_curve
+    from .resilience import ow_closed_form
+
+    locale = t.locale
+    figs: dict[str, go.Figure] = {}
+    X, T, N = cfg.initial_inventory, cfg.horizon_seconds, cfg.n_decision_steps
+    dt = T / N
+    t_grid = np.linspace(0.0, T, N + 1)
+
+    # Almgren–Chriss: risk-aversion (lambda) sweep of the inventory path.
+    fig = go.Figure()
+    for i, lam in enumerate((1e-8, 1e-6, 1e-5, 1e-4)):
+        kappa = kappa_for_lambda(cfg, lam)
+        inv = ac_inventory(X, T, kappa, N)
+        fig.add_trace(
+            go.Scatter(
+                x=t_grid,
+                y=inv / X,
+                mode="lines",
+                line={"color": COLORS[i % len(COLORS)], "width": 2},
+                name=f"λ={lam:.0e} (κT={kappa * T:.2f})",
+            )
+        )
+    _base_layout(
+        fig,
+        _axis(
+            locale, "Almgren–Chriss: risk-aversion sweep", "Almgren–Chriss：リスク回避度スイープ"
+        ),
+    )
+    fig.update_xaxes(title=_axis(locale, "Time (seconds)", "時刻（秒）"))
+    fig.update_yaxes(title=_axis(locale, "Inventory / initial", "在庫／初期在庫"), range=[0, 1.02])
+    figs["mt_ac"] = fig
+
+    # Impact channels: resilience (rho) sweep of transient recovery.
+    fig = go.Figure()
+    for i, rho in enumerate((0.002, 0.01, 0.05)):
+        curve = transient_decay_curve(1.0, rho, dt, N)
+        fig.add_trace(
+            go.Scatter(
+                x=np.arange(N + 1) * dt,
+                y=curve,
+                mode="lines",
+                line={"color": COLORS[i], "width": 2},
+                name=f"ρ={rho:g}",
+            )
+        )
+    _base_layout(
+        fig,
+        _axis(locale, "Transient impact: resilience sweep", "過渡的インパクト：回復速度スイープ"),
+    )
+    fig.update_xaxes(title=_axis(locale, "Time after trading stops (s)", "取引停止後の時間（秒）"))
+    fig.update_yaxes(title=_axis(locale, "Displacement (normalized)", "変位（正規化）"))
+    figs["mt_impact"] = fig
+
+    # Obizhaeva–Wang: resilience (rho) sweep of the closed-form schedule shape.
+    fig = go.Figure()
+    for i, rho in enumerate((0.002, 0.01, 0.05)):
+        q = ow_closed_form(X, T, rho, N)
+        fig.add_trace(
+            go.Scatter(
+                x=np.arange(N) * dt,
+                y=q / X,
+                mode="lines+markers",
+                line={"color": COLORS[i], "width": 2},
+                marker={"size": 4},
+                name=f"ρ={rho:g}",
+            )
+        )
+    _base_layout(
+        fig,
+        _axis(
+            locale,
+            "Obizhaeva–Wang: schedule vs resilience",
+            "Obizhaeva–Wang：回復速度と発注スケジュール",
+        ),
+    )
+    fig.update_xaxes(title=_axis(locale, "Time (seconds)", "時刻（秒）"))
+    fig.update_yaxes(
+        title=_axis(locale, "Shares traded / initial (per step)", "ステップ別発注量／初期在庫")
+    )
+    figs["mt_ow"] = fig
+
+    # Reactive LOB: passive fill probability vs queue-ahead, opposite-flow sweep.
+    fig = go.Figure()
+    queue = np.linspace(0.0, 8000.0, 41)
+    order_qty = X / N
+    mean_size = cfg.lob.market_order_size_mean
+    base = cfg.mo_rate_per_side
+    for i, mult in enumerate((0.5, 1.0, 2.0)):
+        rate = base * mult
+        p = [passive_fill_probability(qa, order_qty, rate, mean_size, dt) for qa in queue]
+        fig.add_trace(
+            go.Scatter(
+                x=queue,
+                y=p,
+                mode="lines",
+                line={"color": COLORS[i], "width": 2},
+                name=_axis(locale, f"flow ×{mult:g}", f"フロー ×{mult:g}"),
+            )
+        )
+    _base_layout(
+        fig, _axis(locale, "Reactive LOB: passive fill probability", "反応型板：指値の約定確率")
+    )
+    fig.update_xaxes(title=_axis(locale, "Queue ahead (shares)", "前方キュー（株）"))
+    fig.update_yaxes(
+        title=_axis(locale, "Fill probability over one step", "1ステップの約定確率"),
+        range=[0, 1.02],
+    )
+    figs["mt_lob"] = fig
+
+    # RL: learning curves (training-IS moving average + validation points).
+    hist_path = artifact_dirs(cfg)["metrics"] / "rl_training_history.csv"
+    if hist_path.exists():
+        hist = pd.read_csv(hist_path)
+        seed = int(cfg.rl.seeds[0])
+        fig = go.Figure()
+        drew = False
+        for i, (variant, label_en, label_ja) in enumerate(
+            (("residual", "Residual RL", "残差RL"), ("free", "Free RL", "自由RL"))
+        ):
+            sub = hist[hist["run_id"] == f"{variant}_{cfg.profile}_s{seed}"].sort_values("episodes")
+            if sub.empty:
+                continue
+            drew = True
+            fig.add_trace(
+                go.Scatter(
+                    x=sub["episodes"],
+                    y=sub["train_is_ma_bps"],
+                    mode="lines",
+                    line={"color": COLORS[i], "width": 2},
+                    name=_axis(locale, label_en, label_ja),
+                )
+            )
+            val = sub.dropna(subset=["val_is_bps"])
+            if not val.empty:
+                fig.add_trace(
+                    go.Scatter(
+                        x=val["episodes"],
+                        y=val["val_is_bps"],
+                        mode="markers",
+                        marker={"color": COLORS[i], "size": 7, "symbol": "diamond"},
+                        name=_axis(locale, f"{label_en} val", f"{label_ja} 検証"),
+                    )
+                )
+        if drew:
+            _base_layout(fig, _axis(locale, "RL: learning curves", "RL：学習曲線"))
+            fig.update_xaxes(title=_axis(locale, "Training episodes", "学習エピソード"))
+            fig.update_yaxes(
+                title=_axis(locale, "Implementation shortfall (bps)", "実装ショートフォール（bps）")
+            )
+            figs["mt_rl"] = fig
+    return figs
+
+
 def build_report(cfg: Config, locale: str) -> Path:
     validate_locales()
     t = Translator(locale)
     frames = _artifact_frames(cfg)
-    figures = _charts(frames, t)
+    # Model-theory sweeps come first so the inline Plotly bundle attaches to the
+    # earliest chart in the DOM (the model-theory section precedes the results).
+    figures = {**_model_theory_figures(cfg, t), **_charts(frames, t)}
     chart_html = _fig_html(figures)
     findings = _findings(cfg, frames, t)
     quantitative = _quantitative_payload(frames)
@@ -1634,7 +1818,7 @@ def build_report(cfg: Config, locale: str) -> Path:
         },
         hero_tiles=hero_html,
         related_work=_related_work_html(t),
-        model_theory=_model_theory_html(t),
+        model_theory=_model_theory_html(t, chart_html),
         val_selection=_val_selection_html(cfg, t, in_dist),
         fingerprint_short=quantitative["sha256"][:12],
         seed_warning=len(cfg.rl.seeds) == 1,
