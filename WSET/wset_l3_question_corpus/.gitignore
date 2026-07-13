@@ -17,4 +17,3 @@ data/source_snapshots/*.json
 data/exports/*.csv
 data/exports/*.jsonl
 data/translations_private/**
-reports/*.html
