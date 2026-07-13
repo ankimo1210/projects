@@ -2,7 +2,6 @@
 # directory structure via .gitkeep.
 data/*/*
 !data/*/.gitkeep
-reports/*.html
 reports/*.png
 
 # secrets / env

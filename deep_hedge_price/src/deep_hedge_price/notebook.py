@@ -61,7 +61,7 @@ def build_notebook(project_root: str | Path) -> Path:
             "Economic P&L is the Black–Scholes premium minus this loss. The initial position is zero and the specified convention has no terminal liquidation charge."
         ),
         nbf.v4.new_markdown_cell("### Differentiable training path"),
-        nbf.v4.new_code_cell("training_diagram(); plt.show()"),
+        nbf.v4.new_code_cell("show_figure(training_diagram())"),
         nbf.v4.new_markdown_cell("## Configuration"),
         nbf.v4.new_code_cell(
             "config_rows = []\n"
@@ -71,8 +71,8 @@ def build_notebook(project_root: str | Path) -> Path:
             "display(pd.DataFrame(config_rows).head(40))"
         ),
         nbf.v4.new_markdown_cell("## Market simulation and payoff"),
-        nbf.v4.new_code_cell("sample_paths_figure(config); plt.show()"),
-        nbf.v4.new_code_cell("payoff_figure(config); plt.show()"),
+        nbf.v4.new_code_cell("show_figure(sample_paths_figure(config))"),
+        nbf.v4.new_code_cell("show_figure(payoff_figure(config))"),
         nbf.v4.new_markdown_cell("## Neural-policy architecture"),
         nbf.v4.new_code_cell(
             "model_config = config.with_risk(objective='mse')\n"
@@ -83,7 +83,7 @@ def build_notebook(project_root: str | Path) -> Path:
         nbf.v4.new_markdown_cell("## End-to-end training history"),
         nbf.v4.new_code_cell(
             "history = pd.read_csv(checkpoint_directory(model_config, project_root) / 'history.csv')\n"
-            "training_history_figure(history); plt.show()"
+            "show_figure(training_history_figure(history))"
         ),
         nbf.v4.new_markdown_cell("## Main comparison on common test paths"),
         nbf.v4.new_code_cell(
@@ -91,25 +91,25 @@ def build_notebook(project_root: str | Path) -> Path:
             "display(strategy_summary[comparison_columns].round(4))"
         ),
         nbf.v4.new_markdown_cell("### P&L distributions"),
-        nbf.v4.new_code_cell("pnl_distribution_figure(main_results); plt.show()"),
+        nbf.v4.new_code_cell("show_figure(pnl_distribution_figure(main_results))"),
         nbf.v4.new_markdown_cell("### Empirical CDF and lower tail"),
-        nbf.v4.new_code_cell("ecdf_figure(main_results); plt.show()"),
+        nbf.v4.new_code_cell("show_figure(ecdf_figure(main_results))"),
         nbf.v4.new_markdown_cell("### VaR and CVaR"),
-        nbf.v4.new_code_cell("var_cvar_figure(strategy_summary); plt.show()"),
+        nbf.v4.new_code_cell("show_figure(var_cvar_figure(strategy_summary))"),
         nbf.v4.new_markdown_cell("### Turnover and transaction cost"),
-        nbf.v4.new_code_cell("turnover_cost_figure(strategy_summary); plt.show()"),
+        nbf.v4.new_code_cell("show_figure(turnover_cost_figure(strategy_summary))"),
         nbf.v4.new_markdown_cell("## Policy surface\nThe following slice fixes the previous position at 0.5 shares."),
-        nbf.v4.new_code_cell("policy_heatmap_figure(policy_surface); plt.show()"),
+        nbf.v4.new_code_cell("show_figure(policy_heatmap_figure(policy_surface))"),
         nbf.v4.new_markdown_cell("### Neural minus Black–Scholes delta"),
-        nbf.v4.new_code_cell("policy_heatmap_figure(policy_surface, difference=True); plt.show()"),
+        nbf.v4.new_code_cell("show_figure(policy_heatmap_figure(policy_surface, difference=True))"),
         nbf.v4.new_markdown_cell("### Policy slices at several maturities"),
-        nbf.v4.new_code_cell("policy_slices_figure(policy_surface); plt.show()"),
+        nbf.v4.new_code_cell("show_figure(policy_slices_figure(policy_surface))"),
         nbf.v4.new_markdown_cell("### Trade size conditional on prior position and BS target"),
-        nbf.v4.new_code_cell("trade_scatter_figure(trade_scatter); plt.show()"),
+        nbf.v4.new_code_cell("show_figure(trade_scatter_figure(trade_scatter))"),
         nbf.v4.new_markdown_cell("## Transaction-cost sensitivity"),
-        nbf.v4.new_code_cell("display(sensitivity.round(4)); sensitivity_figure(sensitivity); plt.show()"),
+        nbf.v4.new_code_cell("display(sensitivity.round(4)); show_figure(sensitivity_figure(sensitivity))"),
         nbf.v4.new_markdown_cell("## Risk-objective comparison"),
-        nbf.v4.new_code_cell("display(risk_comparison.round(4)); risk_objective_figure(risk_comparison); plt.show()"),
+        nbf.v4.new_code_cell("display(risk_comparison.round(4)); show_figure(risk_objective_figure(risk_comparison))"),
         nbf.v4.new_markdown_cell("## Sanity checks and limitations"),
         nbf.v4.new_code_cell(
             "check_rows = [{'check': k, 'passed': v.get('passed'), 'details': str({x:y for x,y in v.items() if x != 'passed'})} for k,v in sanity.items() if isinstance(v, dict)]\n"

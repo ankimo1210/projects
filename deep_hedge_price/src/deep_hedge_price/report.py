@@ -240,6 +240,201 @@ def _metrics_table(summary: pd.DataFrame, language: str = "en") -> str:
     return table.to_html(float_format=lambda value: f"{value:.4f}", classes="metrics-table", border=0)
 
 
+MODEL_ROWS = [
+    (
+        "neural_mse",
+        "Neural hedge (MSE)",
+        "ニューラルヘッジ（MSE）",
+        "Shared MLP policy trained end to end to minimize expected squared discounted hedging error.",
+        "共有MLP方策を、割引ヘッジ誤差の二乗平均を最小化するようエンドツーエンドで学習。",
+    ),
+    (
+        "neural_entropic",
+        "Neural hedge (entropic)",
+        "ニューラルヘッジ（エントロピック）",
+        "Same architecture retrained with an entropic risk objective that penalizes tail losses more than MSE.",
+        "同一アーキテクチャを、MSEよりテール損失を強く罰するエントロピック・リスク目的で再学習。",
+    ),
+    (
+        "black_scholes_delta",
+        "Black–Scholes delta",
+        "Black–Scholesデルタ",
+        "Analytic Black–Scholes delta, rebalanced at every hedge date without regard to transaction cost.",
+        "Black–Scholes公式の解析的デルタを、取引コストを考慮せず毎ヘッジ時点で再調整。",
+    ),
+    (
+        "black_scholes_band",
+        "Black–Scholes band",
+        "Black–Scholesバンド",
+        "Black–Scholes delta with a fixed no-trade band, a classical heuristic for reducing turnover under cost.",
+        "Black–Scholesデルタに固定の不感帯を設けた、コスト下で回転量を抑える古典的ヒューリスティック。",
+    ),
+    (
+        "no_hedge",
+        "No hedge",
+        "ヘッジなし",
+        "Zero stock position throughout; the naive baseline.",
+        "全期間ゼロポジションの素朴なベースライン。",
+    ),
+]
+
+
+def _models_table(config: ProjectConfig, language: str) -> str:
+    rows = [row for row in MODEL_ROWS if row[0] != "neural_entropic" or config.experiment.run_entropic]
+    name_idx, desc_idx = (1, 3) if language == "en" else (2, 4)
+    header = ("Model", "What it optimizes") if language == "en" else ("モデル", "最適化対象")
+    body = "".join(
+        f"<tr><td>{html.escape(row[name_idx])}</td><td>{html.escape(row[desc_idx])}</td></tr>" for row in rows
+    )
+    return f"<table class='metrics-table'><thead><tr><th>{header[0]}</th><th>{header[1]}</th></tr></thead><tbody>{body}</tbody></table>"
+
+
+def _parameter_rows(config: ProjectConfig) -> list[tuple[str, str, str, str]]:
+    market, policy, risk, training, experiment = (
+        config.market,
+        config.policy,
+        config.risk,
+        config.training,
+        config.experiment,
+    )
+    architecture_en = f"{policy.hidden_layers} hidden layers × {policy.hidden_units} units, {policy.activation}" + (
+        " + LayerNorm" if policy.layer_norm else ""
+    )
+    architecture_ja = f"隠れ層{policy.hidden_layers}層 × {policy.hidden_units}ユニット、{policy.activation}" + (
+        "＋LayerNorm" if policy.layer_norm else ""
+    )
+    objective_en = f"{risk.objective}" + (f" / entropic (γ={risk.entropic_gamma:g})" if experiment.run_entropic else "")
+    objective_ja = f"{risk.objective}" + (f" / entropic（γ={risk.entropic_gamma:g}）" if experiment.run_entropic else "")
+    return [
+        ("Spot / strike", "スポット / 権利行使価格", f"{market.s0:.2f} / {market.strike:.2f}", f"{market.s0:.2f} / {market.strike:.2f}"),
+        (
+            "Maturity / hedge dates",
+            "満期 / ヘッジ時点数",
+            f"{market.maturity_years:.3f}y, {market.n_steps} steps",
+            f"{market.maturity_years:.3f}年、{market.n_steps}時点",
+        ),
+        (
+            "Volatility (σ) / drift (μ)",
+            "ボラティリティ（σ）/ ドリフト（μ）",
+            f"{market.volatility:.0%} / {market.mu:.1%}",
+            f"{market.volatility:.0%} / {market.mu:.1%}",
+        ),
+        ("Risk-free rate (r)", "無リスク金利（r）", f"{market.risk_free_rate:.1%}", f"{market.risk_free_rate:.1%}"),
+        (
+            "Transaction cost (this run)",
+            "取引コスト（本実行）",
+            f"{market.transaction_cost_bps:.1f} bp",
+            f"{market.transaction_cost_bps:.1f} bp",
+        ),
+        (
+            "No-trade band (BS-band baseline)",
+            "不感帯幅（BSバンド方策）",
+            f"±{experiment.no_trade_band:.0%} of target delta",
+            f"目標デルタの±{experiment.no_trade_band:.0%}",
+        ),
+        ("Policy network", "方策ネットワーク", architecture_en, architecture_ja),
+        (
+            "Position bounds",
+            "ポジション上下限",
+            f"[{policy.action_min:.2f}, {policy.action_max:.2f}] × short qty ({market.short_quantity:g} sh)",
+            f"[{policy.action_min:.2f}, {policy.action_max:.2f}] × 売建数量（{market.short_quantity:g}株）",
+        ),
+        ("Risk objective (main / alt.)", "リスク目的（主 / 代替）", objective_en, objective_ja),
+        (
+            "Training",
+            "学習",
+            f"{training.epochs} epochs, batch {training.batch_size}, lr {training.learning_rate:g}",
+            f"{training.epochs}エポック、バッチ{training.batch_size}、学習率{training.learning_rate:g}",
+        ),
+        (
+            "Evaluation paths (val / test)",
+            "評価経路数（検証 / テスト）",
+            f"{training.validation_paths:,} / {training.test_paths:,}",
+            f"{training.validation_paths:,} / {training.test_paths:,}",
+        ),
+    ]
+
+
+def _parameters_table(config: ProjectConfig, language: str) -> str:
+    label_idx, value_idx = (0, 2) if language == "en" else (1, 3)
+    header = ("Parameter", "Value") if language == "en" else ("パラメータ", "値")
+    rows = "".join(
+        f"<tr><td>{html.escape(row[label_idx])}</td><td>{html.escape(row[value_idx])}</td></tr>"
+        for row in _parameter_rows(config)
+    )
+    return f"<table class='metrics-table'><thead><tr><th>{header[0]}</th><th>{header[1]}</th></tr></thead><tbody>{rows}</tbody></table>"
+
+
+def _tradeoff_rows(neural: pd.Series, bs: pd.Series) -> list[tuple[str, str, str, str, str, str]]:
+    return [
+        (
+            "Cost awareness",
+            "コスト適応",
+            "Learned directly from transaction cost in the training loss",
+            "学習損失に取引コストを組み込み学習で獲得",
+            "None by construction (the band variant adds a fixed heuristic)",
+            "構造上は考慮なし（バンド版は固定の不感帯で代替）",
+        ),
+        (
+            "Risk target",
+            "リスク目的",
+            "Configurable: MSE, entropic, or CVaR",
+            "設定可能：MSE、エントロピック、CVaR",
+            "Delta-neutral only",
+            "デルタニュートラルのみ",
+        ),
+        (
+            "Interpretability",
+            "解釈可能性",
+            "Black-box MLP; needs empirical checks (policy surface, sanity checks)",
+            "ブラックボックスなMLP。方策面や健全性チェック等の実証的検証が必要",
+            "Closed-form formula, fully auditable",
+            "解析的公式で完全に監査可能",
+        ),
+        (
+            "Data & compute",
+            "データ・計算コスト",
+            "Needs a simulator/data and a training run per configuration",
+            "設定ごとにシミュレータ・データと学習実行が必要",
+            "None; evaluate the formula",
+            "不要。公式を評価するのみ",
+        ),
+        (
+            "Governance",
+            "ガバナンス",
+            "Requires model risk management: validation, monitoring, retraining policy",
+            "モデルリスク管理（検証・監視・再学習方針）が必要",
+            "Standard, well-understood governance",
+            "標準的で確立されたガバナンス",
+        ),
+        (
+            "This run's result",
+            "本実行の実測値",
+            f"99% CVaR loss {neural['cvar_loss_99']:.3f}, turnover {neural['average_turnover_shares']:.3f} sh/path",
+            f"99% CVaR損失 {neural['cvar_loss_99']:.3f}、回転量 {neural['average_turnover_shares']:.3f} 株/経路",
+            f"99% CVaR loss {bs['cvar_loss_99']:.3f}, turnover {bs['average_turnover_shares']:.3f} sh/path",
+            f"99% CVaR損失 {bs['cvar_loss_99']:.3f}、回転量 {bs['average_turnover_shares']:.3f} 株/経路",
+        ),
+    ]
+
+
+def _tradeoffs_table(neural: pd.Series, bs: pd.Series, language: str) -> str:
+    aspect_idx, neural_idx, bs_idx = (0, 2, 4) if language == "en" else (1, 3, 5)
+    header = (
+        ("Aspect", "Neural hedge", "Black–Scholes delta")
+        if language == "en"
+        else ("側面", "ニューラルヘッジ", "Black–Scholesデルタ")
+    )
+    body = "".join(
+        f"<tr><td>{html.escape(row[aspect_idx])}</td><td>{html.escape(row[neural_idx])}</td><td>{html.escape(row[bs_idx])}</td></tr>"
+        for row in _tradeoff_rows(neural, bs)
+    )
+    return (
+        f"<table class='metrics-table'><thead><tr><th>{header[0]}</th><th>{header[1]}</th><th>{header[2]}</th></tr>"
+        f"</thead><tbody>{body}</tbody></table>"
+    )
+
+
 def build_standalone_report(
     config: ProjectConfig,
     project_root: str | Path,
@@ -270,6 +465,24 @@ def build_standalone_report(
         f"quick実行では、共通のアウト・オブ・サンプル経路を{config.training.test_paths:,}本使用しました。ニューラルヘッジは、ヘッジなしに比べてP&Lのばらつきを{dispersion_reduction:.1%}削減しました。",
         f"取引コスト5 bpで、ニューラルヘッジの99% CVaR損失は{neural['cvar_loss_99']:.3f}、離散Black–Scholesデルタは{bs['cvar_loss_99']:.3f}でした。",
         "健全性チェックは観測結果をそのまま表示します。不合格を隠したり、根拠のない優位性へ言い換えたりしません。",
+    ]
+    models_table_en = _models_table(config, "en")
+    models_table_ja = _models_table(config, "ja")
+    parameters_table_en = _parameters_table(config, "en")
+    parameters_table_ja = _parameters_table(config, "ja")
+    tradeoffs_table_en = _tradeoffs_table(neural, bs, "en")
+    tradeoffs_table_ja = _tradeoffs_table(neural, bs, "ja")
+    business_use_en = [
+        "Trading desks hedging short-dated options where transaction costs are a material fraction of P&L can use this as a cost-aware alternative or overlay to delta hedging.",
+        "Risk managers can select the training risk objective to match a house mandate: MSE for symmetric dispersion reduction, entropic or CVaR for tail-loss-focused mandates.",
+        "Before adopting a learned policy in production, a report like this one supports the decision: compare economic P&L, tail loss, and turnover against the existing delta-hedging baseline on common paths.",
+        "This is Phase 1 research on GBM only. Production use needs Phase 2 extensions (realistic/jump dynamics, multi-asset support, integration with existing risk and execution systems, model risk governance) before it can replace, rather than inform, an existing hedging process.",
+    ]
+    business_use_ja = [
+        "取引コストがP&Lの無視できない割合を占める短期オプションをヘッジするトレーディングデスクにとって、デルタヘッジの代替またはオーバーレイとしてコスト適応的な選択肢になり得ます。",
+        "リスク管理者は学習時のリスク目的関数をハウスのマンデートに合わせて選択できます。対称的な分散低減にはMSE、テール損失重視のマンデートにはエントロピックやCVaRです。",
+        "本番投入前には、本レポートのような比較を意思決定支援として用い、共通経路上で学習方策の経済的P&L・テール損失・回転量を既存のデルタヘッジ基準と比較します。",
+        "本プロジェクトはPhase 1のGBM限定の研究段階です。本番投入には、より現実的な（ジャンプを含む）市場ダイナミクス、複数資産対応、既存のリスク・執行システムとの統合、モデルリスクガバナンスといったPhase 2の拡張が必要であり、現状は既存のヘッジ業務を置き換えるのではなく意思決定を補助する位置づけが適切です。",
     ]
     figures = [
         _distribution(frame),
@@ -371,6 +584,8 @@ pre{{overflow:auto;background:#0f172a;color:#e2e8f0;padding:16px;border-radius:8
 <section id="sensitivity"><h2><span data-lang="en">Transaction costs change trading behavior and risk</span><span data-lang="ja">取引コストによる売買行動とリスクの変化</span></h2><p data-lang="en">Each cost level receives a separately trained policy, while evaluation paths stay fixed. This distinguishes learned response from Monte Carlo sample noise.</p><p data-lang="ja">各コスト水準で方策を個別学習し、評価経路は固定します。これにより、学習した反応とMonte Carlo標本ノイズを区別します。</p><div class="chart" data-chart-index="3">{figure_blocks[3]}</div></section>
 <section id="policy"><h2><span data-lang="en">The policy depends on both market state and prior holdings</span><span data-lang="ja">方策は市場状態と前回保有量の両方に依存</span></h2><p data-lang="en">The two heatmaps condition on a 0.5-share prior position. They are slices of a five-dimensional policy, not unconditional target deltas.</p><p data-lang="ja">2つのヒートマップは前回ポジションを0.5株に固定した条件付き表示です。無条件の目標デルタではなく、5次元方策の断面です。</p><div class="chart" data-chart-index="4">{figure_blocks[4]}</div><div class="chart" data-chart-index="5">{figure_blocks[5]}</div></section>
 <section id="risk"><h2><span data-lang="en">Risk objective comparison</span><span data-lang="ja">リスク目的関数の比較</span></h2><p data-lang="en">MSE and entropic policies are evaluated with the same economic metrics. Ratios below one indicate a smaller value than the MSE policy, but no single ratio establishes overall superiority.</p><p data-lang="ja">MSE方策とエントロピック方策を同一の経済指標で評価します。1未満はMSE方策より小さい値ですが、単一の比率だけで総合的な優位性は判断できません。</p><div class="chart" data-chart-index="7">{figure_blocks[7]}</div></section>
+<section id="model-params"><h2><span data-lang="en">Models and parameters</span><span data-lang="ja">モデルとパラメータ</span></h2><p data-lang="en">All strategies above are evaluated under this run's configuration; each neural policy is a separately trained set of weights.</p><p data-lang="ja">上記の全戦略は本実行の設定の下で評価しており、ニューラル方策は学習ごとに個別の重みを持ちます。</p><h3><span data-lang="en">Models compared</span><span data-lang="ja">比較対象モデル</span></h3><div data-lang='en'>{models_table_en}</div><div data-lang='ja'>{models_table_ja}</div><h3><span data-lang="en">Key parameters (this run)</span><span data-lang="ja">主要パラメータ（本実行）</span></h3><div data-lang='en'>{parameters_table_en}</div><div data-lang='ja'>{parameters_table_ja}</div></section>
+<section id="tradeoffs"><h2><span data-lang="en">Advantages, disadvantages, and business use</span><span data-lang="ja">利点・欠点とビジネスユース</span></h2><h3><span data-lang="en">Neural hedge versus Black–Scholes delta</span><span data-lang="ja">ニューラルヘッジ vs Black–Scholesデルタ</span></h3><div data-lang='en'>{tradeoffs_table_en}</div><div data-lang='ja'>{tradeoffs_table_ja}</div><h3><span data-lang="en">Where this could be used</span><span data-lang="ja">想定される活用場面</span></h3><ul data-lang="en">{''.join(f'<li>{html.escape(sentence)}</li>' for sentence in business_use_en)}</ul><ul data-lang="ja">{''.join(f'<li>{html.escape(sentence)}</li>' for sentence in business_use_ja)}</ul></section>
 <section id="robustness"><h2><span data-lang="en">Robustness and sanity checks</span><span data-lang="ja">頑健性・健全性チェック</span></h2><table><thead><tr><th><span data-lang="en">Check</span><span data-lang="ja">チェック項目</span></th><th><span data-lang="en">Status</span><span data-lang="ja">状態</span></th></tr></thead><tbody>{sanity_rows}</tbody></table><p class="note" data-lang="en">A WARN is retained as an empirical limitation. It is not silently rewritten as a success.</p><p class="note" data-lang="ja">注意結果は実証上の制約として残し、成功へ書き換えません。</p></section>
 <section id="limitations"><h2><span data-lang="en">Limitations and uncertainty</span><span data-lang="ja">制約と不確実性</span></h2><ul data-lang="en"><li>GBM has constant volatility and no jumps, stochastic volatility, liquidity state, or model uncertainty.</li><li>Quick-profile 99% CVaR uses roughly {int(config.training.test_paths * .01)} tail observations and is noisier than the full profile.</li><li>The option premium is a reporting convention, not a price learned jointly with the hedge.</li><li>Results are educational research, not trading or investment advice.</li></ul><ul data-lang="ja"><li>GBMはボラティリティ一定で、ジャンプ、確率的ボラティリティ、流動性状態、モデル不確実性を含みません。</li><li>quickプロファイルの99% CVaRは約{int(config.training.test_paths * .01)}件のテール観測に基づき、fullプロファイルよりノイズが大きくなります。</li><li>オプションプレミアムは報告上の規約であり、ヘッジと同時学習した価格ではありません。</li><li>本結果は教育・研究目的で、取引・投資助言ではありません。</li></ul></section>
 <section id="reproduce"><h2><span data-lang="en">Reproduce and extend</span><span data-lang="ja">再現と拡張</span></h2><pre>python -m deep_hedge_price.cli train --config configs/quick.yaml
