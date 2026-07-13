@@ -7,6 +7,5 @@ artifacts/figures/*
 !artifacts/figures/.gitkeep
 artifacts/manifest.json
 artifacts/resolved_config.yaml
-reports/*.html
 *.npz
 .ipynb_checkpoints/

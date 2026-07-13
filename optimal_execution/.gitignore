@@ -3,7 +3,6 @@ artifacts/data/
 artifacts/metrics/
 artifacts/checkpoints/
 artifacts/figures/
-reports/*.html
 notebooks/*.nbconvert.ipynb
 notebooks/_executed/
 
