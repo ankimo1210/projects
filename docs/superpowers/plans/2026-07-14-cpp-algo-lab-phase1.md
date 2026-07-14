@@ -2049,6 +2049,19 @@ COLOR = {}
 for fam, algos in FAMILY_SERIES.items():
     for i, a in enumerate(algos):
         COLOR[a] = SLOTS[i]
+# fig_ops pools all comparison sorts on one axes, so per-family slot colors
+# would collide (bubble and merge both slot 1). Give that figure its own
+# assignment: reference-palette slots 1-7 in validated order. The quadratic
+# family keeps the same colors as everywhere else.
+OPS_COLOR = {
+    "bubble": "#2a78d6",
+    "insertion": "#1baf7a",
+    "selection": "#eda100",
+    "shell": "#008300",
+    "merge": "#4a3aa7",
+    "quick": "#e34948",
+    "heap": "#e87ba4",
+}
 DISTS = ["random", "sorted", "reversed", "nearly_sorted", "few_unique"]
 TRACE_ALGOS = [
     "bubble", "insertion", "selection", "shell", "merge",
@@ -2097,10 +2110,7 @@ def plot_series(ax, sub: pd.DataFrame, algo: str, color: str, dashed: bool = Fal
         return
     n, y = s["n"].to_numpy(float), s["median_ms"].to_numpy(float)
     ax.loglog(n, y, color=color, linestyle="--" if dashed else "-",
-              marker="o", markersize=4)
-    ax.annotate(f"{algo}{slope_label(n, y)}", (n[-1], y[-1]),
-                textcoords="offset points", xytext=(6, 0),
-                fontsize=8, color=INK_2, va="center")
+              marker="o", markersize=4, label=f"{algo}{slope_label(n, y)}")
 
 
 def fig_time_vs_n(times: pd.DataFrame) -> None:
@@ -2115,7 +2125,7 @@ def fig_time_vs_n(times: pd.DataFrame) -> None:
             plot_series(ax, sub, "std_stable_sort", BASELINE, dashed=True)
         ax.set_title(FAMILY_TITLES[fam], color=INK)
         ax.set_xlabel("n (elements)")
-        ax.margins(x=0.25)
+        ax.legend(fontsize=8, framealpha=0.9)
     axes[0].set_ylabel("median wall time [ms]")
     fig.suptitle("Sorting: time vs n (random input, log-log) — slope ≈ complexity exponent",
                  color=INK)
@@ -2188,18 +2198,15 @@ def fig_ops(ops: pd.DataFrame) -> None:
                  else s["moves"] + s["swaps"]).to_numpy(float)
             n = s["n"].to_numpy(float)
             keep = y > 0
-            ax.loglog(n[keep], y[keep], color=COLOR[algo], marker="o", markersize=3)
-            if keep.any():
-                ax.annotate(algo, (n[keep][-1], y[keep][-1]),
-                            textcoords="offset points", xytext=(6, 0), fontsize=8,
-                            color=INK_2, va="center")
+            ax.loglog(n[keep], y[keep], color=OPS_COLOR[algo], marker="o", markersize=3,
+                      label=algo)
         s = sub[sub["algo"] == "std_sort"].sort_values("n")
         y = (s["comparisons"] if col == "comparisons"
              else s["moves"] + s["swaps"]).to_numpy(float)
-        ax.loglog(s["n"], y, color=MUTED, linestyle="--")
+        ax.loglog(s["n"], y, color=MUTED, linestyle="--", label="std_sort")
         ax.set_title(title, color=INK)
         ax.set_xlabel("n")
-        ax.margins(x=0.25)
+        ax.legend(fontsize=8, framealpha=0.9)
     axes[0].set_ylabel("operation count")
     fig.suptitle("Sorting: operation counts vs n (random input)", color=INK)
     save(fig, "ops_vs_n.png")
