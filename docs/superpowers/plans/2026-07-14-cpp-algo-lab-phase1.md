@@ -1981,7 +1981,7 @@ Design (dataviz reference palette, light mode, entity-stable colors):
 | `time_by_dist.png` | 3 family rows × 5 distribution columns, log-log, shared y per row |
 | `heatmap_dist.png` | algo × dist median_ms at n=16384, LogNorm, sequential blue ramp, values annotated in cells |
 | `ops_vs_n.png` | 2 log-log panels (comparisons; moves+swaps), comparison sorts + std_sort, dist=random |
-| `ops_theory.png` | measured comparisons vs theory guides: insertion ≈ n²/4, merge ≈ n·log₂n, and reference lines n, n log₂ n, n² |
+| `ops_theory.png` | measured comparisons vs theory guides: insertion ≈ n²/4 and merge ≈ n·log₂n as dotted theory curves |
 | `traces.png` | 2×5 montage: imshow of each trace matrix (x=frame, y=position, color=value), sequential ramp |
 
 - [ ] **Step 1: Validate the categorical palette (dataviz rule: compute, don't eyeball)**
