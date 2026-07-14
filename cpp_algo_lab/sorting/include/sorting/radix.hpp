@@ -21,7 +21,7 @@ void radix_sort(RandomIt first, RandomIt last, KeyFn key = {}) {
 
     using T = typename std::iterator_traits<RandomIt>::value_type;
     std::vector<T> out(n);
-    for (int shift = 0; shift == 0 || (max_key >> shift) != 0; shift += 8) {
+    for (int shift = 0; shift == 0 || (shift < 64 && (max_key >> shift) != 0); shift += 8) {
         std::size_t count[257] = {};  // count[b+1] trick -> exclusive prefix in place
         for (auto it = first; it != last; ++it)
             ++count[((key(*it) >> shift) & 0xFF) + 1];
