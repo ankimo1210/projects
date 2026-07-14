@@ -1477,7 +1477,7 @@ void radix_sort(RandomIt first, RandomIt last, KeyFn key = {}) {
 
     using T = typename std::iterator_traits<RandomIt>::value_type;
     std::vector<T> out(n);
-    for (int shift = 0; shift == 0 || (max_key >> shift) != 0; shift += 8) {
+    for (int shift = 0; shift == 0 || (shift < 64 && (max_key >> shift) != 0); shift += 8) {
         std::size_t count[257] = {};  // count[b+1] trick -> exclusive prefix in place
         for (auto it = first; it != last; ++it)
             ++count[((key(*it) >> shift) & 0xFF) + 1];
@@ -1560,6 +1560,12 @@ cd cpp_algo_lab && make test
 ```
 
 Expected: `Status: SUCCESS!`. Note the oversized-range test allocates a 64M-entry histogram guard check only (no allocation happens — the throw fires first); the radix path sorts 2 elements.
+
+Note (2026-07-14, during execution): the original plan version of the radix pass
+loop lacked the `shift < 64` guard, so `max_key >= 2^56` evaluated `max_key >> 64`
+(undefined behavior). Found in task review; fixed with the guard above plus a
+regression test (`radix_sort: keys above 2^56 terminate without UB`) in commit
+`5a8710a`.
 
 - [ ] **Step 5: Commit**
 
