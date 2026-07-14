@@ -63,6 +63,20 @@ COLOR = {}
 for _fam, algos in FAMILY_SERIES.items():
     for i, a in enumerate(algos):
         COLOR[a] = SLOTS[i]
+
+# fig_ops pools all comparison sorts on one axes, so per-family slot colors
+# would collide (bubble and merge both slot 1). Give that figure its own
+# assignment: reference-palette slots 1-7 in validated order. The quadratic
+# family keeps the same colors as everywhere else.
+OPS_COLOR = {
+    "bubble": "#2a78d6",
+    "insertion": "#1baf7a",
+    "selection": "#eda100",
+    "shell": "#008300",
+    "merge": "#4a3aa7",
+    "quick": "#e34948",
+    "heap": "#e87ba4",
+}
 DISTS = ["random", "sorted", "reversed", "nearly_sorted", "few_unique"]
 TRACE_ALGOS = [
     "bubble",
@@ -236,7 +250,7 @@ def fig_ops(ops: pd.DataFrame) -> None:
             )
             n = s["n"].to_numpy(float)
             keep = y > 0
-            ax.loglog(n[keep], y[keep], color=COLOR[algo], marker="o", markersize=3, label=algo)
+            ax.loglog(n[keep], y[keep], color=OPS_COLOR[algo], marker="o", markersize=3, label=algo)
         s = sub[sub["algo"] == "std_sort"].sort_values("n")
         y = (s["comparisons"] if col == "comparisons" else s["moves"] + s["swaps"]).to_numpy(float)
         ax.loglog(s["n"], y, color=MUTED, linestyle="--", label="std_sort")
