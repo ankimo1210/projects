@@ -31,6 +31,11 @@ struct AlgoSpec {
     std::function<void(IntVec&)> run_int;
     std::function<void(CountedVec&)> run_counted;
     std::function<void(KeyIdxVec&)> run_keyidx;
+
+    // Trace hooks: run the algorithm on ints with an instrumented comparator /
+    // key extractor. Exactly one of these is set.
+    std::function<void(IntVec&, std::function<bool(const int&, const int&)>)> run_traced_comp;
+    std::function<void(IntVec&, std::function<std::uint64_t(const int&)>)> run_traced_key;
 };
 
 // Key extractors for non-comparison sorts over wrapper types.
@@ -41,36 +46,46 @@ const auto kCountedKey = [](const lab::Counted<int>& c) {
 std::vector<AlgoSpec> make_registry() {
     std::vector<AlgoSpec> r;
     auto comparison = [&](std::string name, std::string family, std::size_t cap, auto fn) {
-        r.push_back({std::move(name), std::move(family), true, cap,
-                     [fn](IntVec& v) { fn(v.begin(), v.end()); },
-                     [fn](CountedVec& v) { fn(v.begin(), v.end()); },
-                     [fn](KeyIdxVec& v) { fn(v.begin(), v.end()); }});
+        AlgoSpec s{std::move(name), std::move(family), true, cap,
+                   [fn](IntVec& v) { fn(v.begin(), v.end(), std::less<>{}); },
+                   [fn](CountedVec& v) { fn(v.begin(), v.end(), std::less<>{}); },
+                   [fn](KeyIdxVec& v) { fn(v.begin(), v.end(), std::less<>{}); },
+                   nullptr, nullptr};
+        s.run_traced_comp = [fn](IntVec& v, std::function<bool(const int&, const int&)> c) {
+            fn(v.begin(), v.end(), c);
+        };
+        r.push_back(std::move(s));
     };
     auto keyed = [&](std::string name, auto fn) {
-        r.push_back({std::move(name), "linear", false, 1u << 20,
-                     [fn](IntVec& v) { fn(v.begin(), v.end(), lab::IntegralKey{}); },
-                     [fn](CountedVec& v) { fn(v.begin(), v.end(), kCountedKey); },
-                     [fn](KeyIdxVec& v) { fn(v.begin(), v.end(), lab::KeyIdxKey{}); }});
+        AlgoSpec s{std::move(name), "linear", false, 1u << 20,
+                   [fn](IntVec& v) { fn(v.begin(), v.end(), lab::IntegralKey{}); },
+                   [fn](CountedVec& v) { fn(v.begin(), v.end(), kCountedKey); },
+                   [fn](KeyIdxVec& v) { fn(v.begin(), v.end(), lab::KeyIdxKey{}); },
+                   nullptr, nullptr};
+        s.run_traced_key = [fn](IntVec& v, std::function<std::uint64_t(const int&)> k) {
+            fn(v.begin(), v.end(), k);
+        };
+        r.push_back(std::move(s));
     };
     const std::size_t quad_cap = 32768;
     comparison("bubble", "n2", quad_cap,
-               [](auto f, auto l) { lab::bubble_sort(f, l); });
+               [](auto f, auto l, auto comp) { lab::bubble_sort(f, l, comp); });
     comparison("insertion", "n2", quad_cap,
-               [](auto f, auto l) { lab::insertion_sort(f, l); });
+               [](auto f, auto l, auto comp) { lab::insertion_sort(f, l, comp); });
     comparison("selection", "n2", quad_cap,
-               [](auto f, auto l) { lab::selection_sort(f, l); });
+               [](auto f, auto l, auto comp) { lab::selection_sort(f, l, comp); });
     comparison("shell", "n2", 1u << 20,
-               [](auto f, auto l) { lab::shell_sort(f, l); });
+               [](auto f, auto l, auto comp) { lab::shell_sort(f, l, comp); });
     comparison("merge", "nlogn", 1u << 20,
-               [](auto f, auto l) { lab::merge_sort(f, l); });
+               [](auto f, auto l, auto comp) { lab::merge_sort(f, l, comp); });
     comparison("quick", "nlogn", 1u << 20,
-               [](auto f, auto l) { lab::quick_sort(f, l); });
+               [](auto f, auto l, auto comp) { lab::quick_sort(f, l, comp); });
     comparison("heap", "nlogn", 1u << 20,
-               [](auto f, auto l) { lab::heap_sort(f, l); });
+               [](auto f, auto l, auto comp) { lab::heap_sort(f, l, comp); });
     comparison("std_sort", "nlogn", 1u << 20,
-               [](auto f, auto l) { std::sort(f, l); });
+               [](auto f, auto l, auto comp) { std::sort(f, l, comp); });
     comparison("std_stable_sort", "nlogn", 1u << 20,
-               [](auto f, auto l) { std::stable_sort(f, l); });
+               [](auto f, auto l, auto comp) { std::stable_sort(f, l, comp); });
     keyed("counting", [](auto f, auto l, auto k) { lab::counting_sort(f, l, k); });
     keyed("radix", [](auto f, auto l, auto k) { lab::radix_sort(f, l, k); });
     keyed("bucket", [](auto f, auto l, auto k) { lab::bucket_sort(f, l, k); });
@@ -148,12 +163,75 @@ void run_bench(bool quick) {
     std::cout << "\nCSV written to results/sorting_{times,ops,props}.csv\n";
 }
 
+void run_traces() {
+    constexpr std::size_t kTraceN = 256;
+    constexpr std::size_t kMaxFrames = 120;
+    const IntVec data = lab::generate(lab::Dist::random_uniform, kTraceN, 42);
+
+    for (const auto& a : make_registry()) {
+        if (a.name == "std_sort" || a.name == "std_stable_sort") continue;
+
+        // Pass 1: count events (comparisons or key extractions).
+        unsigned long long total = 0;
+        {
+            IntVec v = data;
+            if (a.run_traced_comp)
+                a.run_traced_comp(v, [&total](const int& x, const int& y) {
+                    ++total;
+                    return x < y;
+                });
+            else
+                a.run_traced_key(v, [&total](const int& x) {
+                    ++total;
+                    return lab::IntegralKey{}(x);
+                });
+        }
+        const unsigned long long interval = std::max<unsigned long long>(1, total / 119);
+
+        // Pass 2: snapshot the array every `interval` events.
+        IntVec v = data;
+        std::vector<IntVec> frames;
+        unsigned long long events = 0;
+        auto maybe_snapshot = [&] {
+            if (events % interval == 0 && frames.size() < kMaxFrames) frames.push_back(v);
+            ++events;
+        };
+        if (a.run_traced_comp)
+            a.run_traced_comp(v, [&](const int& x, const int& y) {
+                maybe_snapshot();
+                return x < y;
+            });
+        else
+            a.run_traced_key(v, [&](const int& x) {
+                maybe_snapshot();
+                return lab::IntegralKey{}(x);
+            });
+        frames.push_back(v);  // final sorted state
+
+        std::vector<std::string> header{"frame"};
+        for (std::size_t i = 0; i < kTraceN; ++i) header.push_back("p" + std::to_string(i));
+        lab::CsvWriter w("results/traces/trace_" + a.name + ".csv", header);
+        for (std::size_t f = 0; f < frames.size(); ++f) {
+            std::vector<std::string> row{lab::cell(f)};
+            for (int x : frames[f]) row.push_back(lab::cell(x));
+            w.write_row(row);
+        }
+        std::cout << "trace: " << a.name << " (" << frames.size() << " frames, " << total
+                  << " events)\n";
+    }
+}
+
 }  // namespace
 
 int main(int argc, char** argv) {
-    bool quick = false;
+    bool quick = false, trace = false;
     for (int i = 1; i < argc; ++i) {
         if (std::strcmp(argv[i], "--quick") == 0) quick = true;
+        if (std::strcmp(argv[i], "--trace") == 0) trace = true;
+    }
+    if (trace) {
+        run_traces();
+        return 0;
     }
     run_bench(quick);
     return 0;
