@@ -53,7 +53,15 @@ Create `cpp_algo_lab/.gitignore`:
 
 ```gitignore
 build/
+# The workspace root .gitignore ignores *.csv globally; benchmark outputs
+# under results/ are deliberately committed (see the Phase 1 plan).
+!results/**
 ```
+
+Note (2026-07-14, during execution): the `!results/**` re-include was added at Task 8
+time — the plan originally missed that the workspace root `.gitignore` has a global
+`*.csv` pattern, which silently kept `results/` out of Task 8's commit (fixed in
+`c5b9ada`).
 
 - [ ] **Step 2: Vendor doctest single header (pinned v2.4.11)**
 
