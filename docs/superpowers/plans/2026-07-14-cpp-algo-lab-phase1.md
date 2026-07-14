@@ -2123,7 +2123,7 @@ def fig_time_vs_n(times: pd.DataFrame) -> None:
 
 
 def fig_time_by_dist(times: pd.DataFrame) -> None:
-    fig, axes = plt.subplots(3, 5, figsize=(18, 10), sharex=False)
+    fig, axes = plt.subplots(3, 5, figsize=(18, 10), sharex=False, sharey="row")
     for ri, fam in enumerate(FAMILIES):
         for ci, dist in enumerate(DISTS):
             ax = axes[ri][ci]
