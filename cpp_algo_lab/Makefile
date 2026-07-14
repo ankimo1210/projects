@@ -27,8 +27,9 @@ $(BUILD)/test_sorting: sorting/tests/test_sorting.cpp $(SORT_HDRS) $(COMMON_HDRS
 $(BUILD)/bench_sorting: sorting/bench/bench_sorting.cpp $(SORT_HDRS) $(COMMON_HDRS) | $(BUILD)
 	$(CXX) $(BENCHFLAGS) $< -o $@
 
-test: $(BUILD)/test_common
+test: $(BUILD)/test_common $(BUILD)/test_sorting
 	$(BUILD)/test_common
+	$(BUILD)/test_sorting
 
 bench: $(BUILD)/bench_sorting
 	$(BUILD)/bench_sorting
