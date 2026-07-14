@@ -85,3 +85,45 @@ TEST_CASE("selection_sort") {
     CHECK_FALSE(lab::observed_stable(
         [](std::vector<lab::KeyIdx>& v) { lab::selection_sort(v.begin(), v.end()); }));
 }
+
+#include "sorting/heap.hpp"
+#include "sorting/merge.hpp"
+#include "sorting/quick.hpp"
+
+TEST_CASE("merge_sort") {
+    check_sorts_like_std([](auto f, auto l) { lab::merge_sort(f, l); });
+    check_custom_compare([](auto f, auto l) { lab::merge_sort(f, l, std::greater<>{}); });
+    CHECK(lab::observed_stable(
+        [](std::vector<lab::KeyIdx>& v) { lab::merge_sort(v.begin(), v.end()); }));
+}
+
+TEST_CASE("quick_sort") {
+    check_sorts_like_std([](auto f, auto l) { lab::quick_sort(f, l); });
+    check_custom_compare([](auto f, auto l) { lab::quick_sort(f, l, std::greater<>{}); });
+    CHECK_FALSE(lab::observed_stable(
+        [](std::vector<lab::KeyIdx>& v) { lab::quick_sort(v.begin(), v.end()); }));
+}
+
+TEST_CASE("quick_sort: adversarial inputs stay fast and correct") {
+    // sorted / reversed / all-equal, n = 20000. With median-of-three and
+    // smaller-side-first recursion this must finish quickly (no O(n^2) blowup,
+    // no deep stack). The sanitizer build would catch stack overflow.
+    for (const lab::Dist d : {lab::Dist::sorted_asc, lab::Dist::reversed}) {
+        auto v = lab::generate(d, 20000, 1);
+        auto expected = v;
+        std::sort(expected.begin(), expected.end());
+        lab::quick_sort(v.begin(), v.end());
+        CHECK(v == expected);
+    }
+    std::vector<int> eq(20000, 7);
+    auto v = eq;
+    lab::quick_sort(v.begin(), v.end());
+    CHECK(v == eq);
+}
+
+TEST_CASE("heap_sort") {
+    check_sorts_like_std([](auto f, auto l) { lab::heap_sort(f, l); });
+    check_custom_compare([](auto f, auto l) { lab::heap_sort(f, l, std::greater<>{}); });
+    CHECK_FALSE(lab::observed_stable(
+        [](std::vector<lab::KeyIdx>& v) { lab::heap_sort(v.begin(), v.end()); }));
+}
