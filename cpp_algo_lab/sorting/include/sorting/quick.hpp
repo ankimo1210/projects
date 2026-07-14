@@ -3,7 +3,9 @@
 // variant: the pivot is swapped to the front, the scans exclude it, and it
 // lands in its final slot). Recursing into the smaller side first keeps the
 // stack depth O(log n). Average O(n log n); median-of-three defuses
-// sorted/reversed inputs, and excluding the pivot from both partitions
+// already-sorted input, but exactly-reversed input still degrades to
+// Theta(n^2) here (see docs/sorting.md) -- the gap introsort's depth
+// guard exists to close. Excluding the pivot from both partitions
 // guarantees progress even on all-equal input.
 #include <algorithm>
 #include <functional>
