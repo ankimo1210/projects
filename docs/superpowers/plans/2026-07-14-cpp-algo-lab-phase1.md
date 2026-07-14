@@ -53,7 +53,15 @@ Create `cpp_algo_lab/.gitignore`:
 
 ```gitignore
 build/
+# The workspace root .gitignore ignores *.csv globally; benchmark outputs
+# under results/ are deliberately committed (see the Phase 1 plan).
+!results/**
 ```
+
+Note (2026-07-14, during execution): the `!results/**` re-include was added at Task 8
+time — the plan originally missed that the workspace root `.gitignore` has a global
+`*.csv` pattern, which silently kept `results/` out of Task 8's commit (fixed in
+`c5b9ada`).
 
 - [ ] **Step 2: Vendor doctest single header (pinned v2.4.11)**
 
@@ -63,7 +71,7 @@ curl -fsSL https://raw.githubusercontent.com/doctest/doctest/v2.4.11/doctest/doc
 head -5 cpp_algo_lab/third_party/doctest/doctest.h
 ```
 
-Expected: file ~650KB; head shows the doctest banner comment. If the URL fails, use the latest v2.4.x tag from https://github.com/doctest/doctest/releases.
+Expected: file ~320KB; head shows the doctest banner comment. If the URL fails, use the latest v2.4.x tag from https://github.com/doctest/doctest/releases.
 
 - [ ] **Step 3: Write the smoke test (failing build first — no Makefile yet)**
 
@@ -89,7 +97,7 @@ CXX      := g++
 STD      := -std=c++20
 WARN     := -Wall -Wextra -Wpedantic
 INC      := -Icommon -Isorting/include -Ithird_party
-TESTFLAGS  := $(STD) $(WARN) $(INC) -O1 -g -fsanitize=address,undefined
+TESTFLAGS  := $(STD) $(WARN) $(INC) -O1 -g -fsanitize=address,undefined -fno-sanitize-recover=undefined
 BENCHFLAGS := $(STD) $(WARN) $(INC) -O2 -DNDEBUG
 BUILD    := build
 
@@ -1122,9 +1130,14 @@ void merge_sort(RandomIt first, RandomIt last, Compare comp = {}) {
 
 ```cpp
 #pragma once
-// Quicksort: median-of-three pivot + Hoare partition, recursing into the
-// smaller side first so stack depth stays O(log n). Average O(n log n); the
-// median-of-three defuses sorted/reversed inputs, Hoare handles duplicates.
+// Quicksort: median-of-three pivot + Hoare-style partition (Sedgewick's
+// variant: the pivot is swapped to the front, the scans exclude it, and it
+// lands in its final slot). Recursing into the smaller side first keeps the
+// stack depth O(log n). Average O(n log n); median-of-three defuses
+// already-sorted input, but exactly-reversed input still degrades to
+// Theta(n^2) here (see docs/sorting.md) -- the gap introsort's depth
+// guard exists to close. Excluding the pivot from both partitions
+// guarantees progress even on all-equal input.
 #include <algorithm>
 #include <functional>
 
@@ -1141,33 +1154,41 @@ RandomIt median_of_three(RandomIt a, RandomIt b, RandomIt c, Compare comp) {
     return comp(*c, *b) ? c : b;
 }
 
+// Partition [first, last): returns p with *p in its final position,
+// [first, p) <= pivot and (p, last) >= pivot.
 template <class RandomIt, class Compare>
 RandomIt hoare_partition(RandomIt first, RandomIt last, Compare comp) {
     const auto mid = first + (last - first) / 2;
-    const auto pivot = *median_of_three(first, mid, last - 1, comp);  // by value
+    std::iter_swap(first, median_of_three(first, mid, last - 1, comp));
+    const auto pivot = *first;  // copy: element positions move during the scans
     auto i = first;
-    auto j = last - 1;
+    auto j = last;
     while (true) {
-        while (comp(*i, pivot)) ++i;
-        while (comp(pivot, *j)) --j;
-        if (i >= j) return j;
+        do {
+            ++i;
+        } while (i != last && comp(*i, pivot));
+        do {
+            --j;
+        } while (comp(pivot, *j));  // stops at first: *first == pivot
+        if (i >= j) break;
         std::iter_swap(i, j);
-        ++i;
-        --j;
     }
+    std::iter_swap(first, j);  // pivot into its final slot
+    return j;
 }
 
 template <class RandomIt, class Compare>
 void quick_sort_impl(RandomIt first, RandomIt last, Compare comp) {
     while (last - first > 1) {
         const auto p = hoare_partition(first, last, comp);
-        // Recurse into the smaller half, loop on the larger one.
-        if ((p + 1) - first < last - (p + 1)) {
-            quick_sort_impl(first, p + 1, comp);
+        // Recurse into the smaller half, loop on the larger one. The pivot
+        // at p is excluded from both, so each step strictly shrinks.
+        if (p - first < last - (p + 1)) {
+            quick_sort_impl(first, p, comp);
             first = p + 1;
         } else {
             quick_sort_impl(p + 1, last, comp);
-            last = p + 1;
+            last = p;
         }
     }
 }
@@ -1181,6 +1202,12 @@ void quick_sort(RandomIt first, RandomIt last, Compare comp = {}) {
 
 }  // namespace lab
 ```
+
+Note (2026-07-14, during execution): the original plan version of `hoare_partition`
+(while-form scans, partition split at `p + 1`) could return `p = last - 1` when the
+pivot was the maximum (e.g. n=2 sorted input), so `last = p + 1` made no progress —
+an infinite loop found by the Task 6 implementer. Replaced with the pivot-to-front
+variant above; fix commit `e2a5d54`.
 
 `cpp_algo_lab/sorting/include/sorting/heap.hpp`:
 
@@ -1460,7 +1487,7 @@ void radix_sort(RandomIt first, RandomIt last, KeyFn key = {}) {
 
     using T = typename std::iterator_traits<RandomIt>::value_type;
     std::vector<T> out(n);
-    for (int shift = 0; shift == 0 || (max_key >> shift) != 0; shift += 8) {
+    for (int shift = 0; shift == 0 || (shift < 64 && (max_key >> shift) != 0); shift += 8) {
         std::size_t count[257] = {};  // count[b+1] trick -> exclusive prefix in place
         for (auto it = first; it != last; ++it)
             ++count[((key(*it) >> shift) & 0xFF) + 1];
@@ -1543,6 +1570,12 @@ cd cpp_algo_lab && make test
 ```
 
 Expected: `Status: SUCCESS!`. Note the oversized-range test allocates a 64M-entry histogram guard check only (no allocation happens — the throw fires first); the radix path sorts 2 elements.
+
+Note (2026-07-14, during execution): the original plan version of the radix pass
+loop lacked the `shift < 64` guard, so `max_key >= 2^56` evaluated `max_key >> 64`
+(undefined behavior). Found in task review; fixed with the guard above plus a
+regression test (`radix_sort: keys above 2^56 terminate without UB`) in commit
+`5a8710a`.
 
 - [ ] **Step 5: Commit**
 
@@ -1950,7 +1983,7 @@ Design (dataviz reference palette, light mode, entity-stable colors):
 | `time_by_dist.png` | 3 family rows × 5 distribution columns, log-log, shared y per row |
 | `heatmap_dist.png` | algo × dist median_ms at n=16384, LogNorm, sequential blue ramp, values annotated in cells |
 | `ops_vs_n.png` | 2 log-log panels (comparisons; moves+swaps), comparison sorts + std_sort, dist=random |
-| `ops_theory.png` | measured comparisons vs theory guides: insertion ≈ n²/4, merge ≈ n·log₂n, and reference lines n, n log₂ n, n² |
+| `ops_theory.png` | measured comparisons vs theory guides: insertion ≈ n²/4 and merge ≈ n·log₂n as dotted theory curves |
 | `traces.png` | 2×5 montage: imshow of each trace matrix (x=frame, y=position, color=value), sequential ramp |
 
 - [ ] **Step 1: Validate the categorical palette (dataviz rule: compute, don't eyeball)**
@@ -2018,6 +2051,19 @@ COLOR = {}
 for fam, algos in FAMILY_SERIES.items():
     for i, a in enumerate(algos):
         COLOR[a] = SLOTS[i]
+# fig_ops pools all comparison sorts on one axes, so per-family slot colors
+# would collide (bubble and merge both slot 1). Give that figure its own
+# assignment: reference-palette slots 1-7 in validated order. The quadratic
+# family keeps the same colors as everywhere else.
+OPS_COLOR = {
+    "bubble": "#2a78d6",
+    "insertion": "#1baf7a",
+    "selection": "#eda100",
+    "shell": "#008300",
+    "merge": "#4a3aa7",
+    "quick": "#e34948",
+    "heap": "#e87ba4",
+}
 DISTS = ["random", "sorted", "reversed", "nearly_sorted", "few_unique"]
 TRACE_ALGOS = [
     "bubble", "insertion", "selection", "shell", "merge",
@@ -2066,10 +2112,7 @@ def plot_series(ax, sub: pd.DataFrame, algo: str, color: str, dashed: bool = Fal
         return
     n, y = s["n"].to_numpy(float), s["median_ms"].to_numpy(float)
     ax.loglog(n, y, color=color, linestyle="--" if dashed else "-",
-              marker="o", markersize=4)
-    ax.annotate(f"{algo}{slope_label(n, y)}", (n[-1], y[-1]),
-                textcoords="offset points", xytext=(6, 0),
-                fontsize=8, color=INK_2, va="center")
+              marker="o", markersize=4, label=f"{algo}{slope_label(n, y)}")
 
 
 def fig_time_vs_n(times: pd.DataFrame) -> None:
@@ -2084,7 +2127,7 @@ def fig_time_vs_n(times: pd.DataFrame) -> None:
             plot_series(ax, sub, "std_stable_sort", BASELINE, dashed=True)
         ax.set_title(FAMILY_TITLES[fam], color=INK)
         ax.set_xlabel("n (elements)")
-        ax.margins(x=0.25)
+        ax.legend(fontsize=8, framealpha=0.9)
     axes[0].set_ylabel("median wall time [ms]")
     fig.suptitle("Sorting: time vs n (random input, log-log) — slope ≈ complexity exponent",
                  color=INK)
@@ -2092,7 +2135,7 @@ def fig_time_vs_n(times: pd.DataFrame) -> None:
 
 
 def fig_time_by_dist(times: pd.DataFrame) -> None:
-    fig, axes = plt.subplots(3, 5, figsize=(18, 10), sharex=False)
+    fig, axes = plt.subplots(3, 5, figsize=(18, 10), sharex=False, sharey="row")
     for ri, fam in enumerate(FAMILIES):
         for ci, dist in enumerate(DISTS):
             ax = axes[ri][ci]
@@ -2157,18 +2200,15 @@ def fig_ops(ops: pd.DataFrame) -> None:
                  else s["moves"] + s["swaps"]).to_numpy(float)
             n = s["n"].to_numpy(float)
             keep = y > 0
-            ax.loglog(n[keep], y[keep], color=COLOR[algo], marker="o", markersize=3)
-            if keep.any():
-                ax.annotate(algo, (n[keep][-1], y[keep][-1]),
-                            textcoords="offset points", xytext=(6, 0), fontsize=8,
-                            color=INK_2, va="center")
+            ax.loglog(n[keep], y[keep], color=OPS_COLOR[algo], marker="o", markersize=3,
+                      label=algo)
         s = sub[sub["algo"] == "std_sort"].sort_values("n")
         y = (s["comparisons"] if col == "comparisons"
              else s["moves"] + s["swaps"]).to_numpy(float)
-        ax.loglog(s["n"], y, color=MUTED, linestyle="--")
+        ax.loglog(s["n"], y, color=MUTED, linestyle="--", label="std_sort")
         ax.set_title(title, color=INK)
         ax.set_xlabel("n")
-        ax.margins(x=0.25)
+        ax.legend(fontsize=8, framealpha=0.9)
     axes[0].set_ylabel("operation count")
     fig.suptitle("Sorting: operation counts vs n (random input)", color=INK)
     save(fig, "ops_vs_n.png")
