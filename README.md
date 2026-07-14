@@ -16,6 +16,7 @@
 | [`EitanQuest/`](EitanQuest/) | えいたんクエスト: iPhone 向け英単語 4 択クイズアプリ（オフライン完結 MVP） | Swift / SwiftUI / SwiftData |
 | [`NeonThread/`](NeonThread/) | 発光ラインを操作して隙間をくぐる iOS 無限ランゲーム | Swift / SwiftUI + SpriteKit |
 | [`shortest_path/`](shortest_path/) | ダイクストラ法・A*・双方向探索の実装と可視化ラボ | Python / Jupyter / HTML |
+| [`cpp_algo_lab/`](cpp_algo_lab/) | C++学習ラボ：ソート/文字列検索/CPU・GPU並列化の実装と計測（Phase 1: ソート10種+評価4軸） | C++20 / make / doctest |
 | [`analytics/`](analytics/) | 体験型インタラクティブ教科書シリーズ（線形代数・NN・ベイズ・フーリエ・ラプラス・微分方程式・機械学習）+ 統合オフラインポータル。索引: [`analytics/README.md`](analytics/README.md) | Python / Jupyter Book / Plotly |
 | [`johnhull/`](johnhull/) | Hull『Options, Futures, and Other Derivatives』11e の章別学習ボリューム + `hullkit` 共有パッケージ + Jupyter Book / オフラインポータル | Python / Jupyter |
 | [`autostock/`](autostock/) | Mag7 株ストラテジーの自律探索デモ（read-only バックテスト + OOS 評価） | Python |
