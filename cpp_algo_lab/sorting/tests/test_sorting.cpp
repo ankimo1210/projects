@@ -127,3 +127,47 @@ TEST_CASE("heap_sort") {
     CHECK_FALSE(lab::observed_stable(
         [](std::vector<lab::KeyIdx>& v) { lab::heap_sort(v.begin(), v.end()); }));
 }
+
+#include "sorting/all.hpp"
+
+TEST_CASE("shell_sort") {
+    check_sorts_like_std([](auto f, auto l) { lab::shell_sort(f, l); });
+    check_custom_compare([](auto f, auto l) { lab::shell_sort(f, l, std::greater<>{}); });
+    CHECK_FALSE(lab::observed_stable(
+        [](std::vector<lab::KeyIdx>& v) { lab::shell_sort(v.begin(), v.end()); }));
+}
+
+TEST_CASE("counting_sort / radix_sort / bucket_sort: sort like std::sort") {
+    check_sorts_like_std([](auto f, auto l) { lab::counting_sort(f, l); });
+    check_sorts_like_std([](auto f, auto l) { lab::radix_sort(f, l); });
+    check_sorts_like_std([](auto f, auto l) { lab::bucket_sort(f, l); });
+}
+
+TEST_CASE("non-comparison sorts: stability via KeyFn") {
+    auto by_key = lab::KeyIdxKey{};
+    CHECK(lab::observed_stable([&](std::vector<lab::KeyIdx>& v) {
+        lab::counting_sort(v.begin(), v.end(), by_key);
+    }));
+    CHECK(lab::observed_stable([&](std::vector<lab::KeyIdx>& v) {
+        lab::radix_sort(v.begin(), v.end(), by_key);
+    }));
+    CHECK(lab::observed_stable([&](std::vector<lab::KeyIdx>& v) {
+        lab::bucket_sort(v.begin(), v.end(), by_key);
+    }));
+}
+
+TEST_CASE("non-comparison sorts: negative keys are rejected") {
+    std::vector<int> v{3, -1, 2};
+    CHECK_THROWS_AS(lab::counting_sort(v.begin(), v.end()), std::invalid_argument);
+    CHECK_THROWS_AS(lab::radix_sort(v.begin(), v.end()), std::invalid_argument);
+    CHECK_THROWS_AS(lab::bucket_sort(v.begin(), v.end()), std::invalid_argument);
+}
+
+TEST_CASE("counting_sort: oversized key range is rejected") {
+    std::vector<int> v{0, 1 << 26};  // max_key + 1 exceeds kMaxCountingRange
+    CHECK_THROWS_AS(lab::counting_sort(v.begin(), v.end()), std::length_error);
+    // radix has no such limit: same data must sort fine.
+    lab::radix_sort(v.begin(), v.end());
+    CHECK(v[0] == 0);
+    CHECK(v[1] == (1 << 26));
+}
