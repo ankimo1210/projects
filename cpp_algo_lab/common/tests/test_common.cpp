@@ -97,3 +97,11 @@ TEST_CASE("datagen: per-distribution shape") {
     CHECK(in_order >= 450);  // >= 90% adjacent pairs in order
     CHECK_FALSE(std::is_sorted(nearly.begin(), nearly.end()));
 }
+
+TEST_CASE("datagen: dist_name returns exact CSV keys") {
+    CHECK(lab::dist_name(lab::Dist::random_uniform) == "random");
+    CHECK(lab::dist_name(lab::Dist::sorted_asc) == "sorted");
+    CHECK(lab::dist_name(lab::Dist::reversed) == "reversed");
+    CHECK(lab::dist_name(lab::Dist::nearly_sorted) == "nearly_sorted");
+    CHECK(lab::dist_name(lab::Dist::few_unique) == "few_unique");
+}
