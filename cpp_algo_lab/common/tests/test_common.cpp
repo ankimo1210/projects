@@ -56,3 +56,44 @@ TEST_CASE("Counted: works with std::sort") {
     CHECK(v[1].value() == 2);
     CHECK(v[2].value() == 3);
 }
+
+#include "lab/datagen.hpp"
+
+#include <set>
+
+TEST_CASE("datagen: size, determinism, non-negative range") {
+    for (lab::Dist d : lab::all_dists()) {
+        CAPTURE(lab::dist_name(d));
+        auto v1 = lab::generate(d, 1000, 42);
+        auto v2 = lab::generate(d, 1000, 42);
+        auto v3 = lab::generate(d, 1000, 43);
+        CHECK(v1.size() == 1000);
+        CHECK(v1 == v2);  // same seed -> same data
+        if (d == lab::Dist::random_uniform) CHECK(v1 != v3);
+        for (int x : v1) {
+            CHECK(x >= 0);
+            CHECK(x < 1000);
+        }
+        CHECK(lab::generate(d, 0, 42).empty());
+    }
+}
+
+TEST_CASE("datagen: per-distribution shape") {
+    auto sorted = lab::generate(lab::Dist::sorted_asc, 500, 1);
+    CHECK(std::is_sorted(sorted.begin(), sorted.end()));
+
+    auto rev = lab::generate(lab::Dist::reversed, 500, 1);
+    CHECK(std::is_sorted(rev.rbegin(), rev.rend()));
+    CHECK_FALSE(std::is_sorted(rev.begin(), rev.end()));
+
+    auto few = lab::generate(lab::Dist::few_unique, 500, 1);
+    std::set<int> uniq(few.begin(), few.end());
+    CHECK(uniq.size() <= 10);
+
+    auto nearly = lab::generate(lab::Dist::nearly_sorted, 500, 1);
+    int in_order = 0;
+    for (std::size_t i = 1; i < nearly.size(); ++i)
+        if (nearly[i - 1] <= nearly[i]) ++in_order;
+    CHECK(in_order >= 450);  // >= 90% adjacent pairs in order
+    CHECK_FALSE(std::is_sorted(nearly.begin(), nearly.end()));
+}
