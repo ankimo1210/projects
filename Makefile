@@ -36,7 +36,7 @@ help:
 	@echo "  quantkit deep_hedge_price optimal_execution rough_volatility"
 	@echo ""
 	@echo "Outside the workspace:"
-	@echo "  rates_volatility_model, notebooks, shortest_path (manual envs)"
+	@echo "  rates_volatility_model, notebooks, shortest_path, cpp_algo_lab (manual envs)"
 
 install sync:
 	uv sync --all-packages
