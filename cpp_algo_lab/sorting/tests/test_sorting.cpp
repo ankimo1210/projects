@@ -171,3 +171,11 @@ TEST_CASE("counting_sort: oversized key range is rejected") {
     CHECK(v[0] == 0);
     CHECK(v[1] == (1 << 26));
 }
+
+TEST_CASE("radix_sort: keys above 2^56 terminate without UB") {
+    // Regression: the pass loop must stop at shift 64 instead of evaluating
+    // max_key >> 64 (undefined behavior, would trip UBSan).
+    std::vector<long long> v{3LL << 56, 1LL, 1LL << 40, 0LL};
+    lab::radix_sort(v.begin(), v.end());
+    CHECK(std::is_sorted(v.begin(), v.end()));
+}
