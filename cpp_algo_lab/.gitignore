@@ -1,1 +1,4 @@
 build/
+# The workspace root .gitignore ignores *.csv globally; benchmark outputs
+# under results/ are deliberately committed (see the Phase 1 plan).
+!results/**
