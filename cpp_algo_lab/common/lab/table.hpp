@@ -1,5 +1,6 @@
 #pragma once
 // Fixed-width ASCII table for terminal summaries.
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>
