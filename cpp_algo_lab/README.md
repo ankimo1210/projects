@@ -47,7 +47,7 @@ cpp_algo_lab/
 推奨する読み順は次のとおり。
 
 1. **[`docs/sorting.md`](docs/sorting.md) を読む** — 各アルゴリズムの動き（手動トレース付き）・実装の要点・理論予想・実測の読み方を 1 本にまとめた中心ドキュメント。
-2. **ヘッダを読む** — `sorting/include/sorting/` を bubble → insertion → selection → shell → merge → quick → heap → counting → radix → bucket の順で。この順は「隣接交換 → shift → 探索と交換の分離 → gap → 分割統治 2 種 → 暗黙の木 → 非比較 3 種」という概念の積み上げになっている。どれも 20〜70 行。
+2. **ヘッダを読む** — `sorting/include/sorting/` を bubble → insertion → selection → shell → merge → quick → heap → counting → radix → bucket の順で。この順は「隣接交換 → shift → 探索と交換の分離 → gap → 分割統治 2 種 → 暗黙の木 → 非比較 3 種」という概念の積み上げになっている。どれも 20〜75 行。
 3. **`make bench && make plot` で図を再生成する** — 自分のマシンで数値がどう変わるか（キャッシュサイズや CPU が違えば bubble のジャンプ位置も変わる）を確かめる。
 4. **`results/plots/` の 6 図を `docs/sorting.md` の「結果の読み方」と突き合わせる** — 各アルゴリズム節の予想が図のどこに現れているか、逸脱（quick × reversed、bubble の傾き 2.37 など）がなぜ起きるかを確認する。
 
