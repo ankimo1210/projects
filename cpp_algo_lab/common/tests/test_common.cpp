@@ -105,3 +105,63 @@ TEST_CASE("datagen: dist_name returns exact CSV keys") {
     CHECK(lab::dist_name(lab::Dist::nearly_sorted) == "nearly_sorted");
     CHECK(lab::dist_name(lab::Dist::few_unique) == "few_unique");
 }
+
+#include "lab/csv.hpp"
+#include "lab/stability.hpp"
+#include "lab/table.hpp"
+#include "lab/timer.hpp"
+
+#include <filesystem>
+#include <fstream>
+#include <sstream>
+
+TEST_CASE("timer: median") {
+    CHECK(lab::median({3.0, 1.0, 2.0}) == 2.0);
+    CHECK(lab::median({4.0, 1.0, 3.0, 2.0}) == 2.5);
+    CHECK_THROWS_AS(lab::median({}), std::invalid_argument);
+    volatile long sink = 0;
+    const double ms = lab::time_ms([&] {
+        for (long i = 0; i < 100000; ++i) sink = sink + i;
+    });
+    CHECK(ms >= 0.0);
+}
+
+TEST_CASE("csv: writes header and rows, creates parent dirs") {
+    namespace fs = std::filesystem;
+    const fs::path p = fs::temp_directory_path() / "cpp_algo_lab_test" / "out.csv";
+    fs::remove_all(p.parent_path());
+    {
+        lab::CsvWriter w(p, {"algo", "n", "ms"});
+        w.write_row({"bubble", lab::cell(256), lab::cell(1.5)});
+    }
+    std::ifstream in(p);
+    std::string l1, l2;
+    std::getline(in, l1);
+    std::getline(in, l2);
+    CHECK(l1 == "algo,n,ms");
+    CHECK(l2 == "bubble,256,1.5");
+    fs::remove_all(p.parent_path());
+}
+
+TEST_CASE("table: aligned output") {
+    std::ostringstream os;
+    lab::print_table({"algo", "ms"}, {{"bubble", "12.5"}, {"quick", "0.8"}}, os);
+    const std::string s = os.str();
+    CHECK(s.find("algo") != std::string::npos);
+    CHECK(s.find("bubble") != std::string::npos);
+    // header separator present
+    CHECK(s.find("---") != std::string::npos);
+}
+
+TEST_CASE("stability probe: detects stable and unstable sorts") {
+    // std::stable_sort must be observed stable.
+    CHECK(lab::observed_stable(
+        [](std::vector<lab::KeyIdx>& v) { std::stable_sort(v.begin(), v.end()); }));
+    // A deliberately tie-reversing sort must be observed unstable.
+    CHECK_FALSE(lab::observed_stable([](std::vector<lab::KeyIdx>& v) {
+        std::sort(v.begin(), v.end(), [](const lab::KeyIdx& a, const lab::KeyIdx& b) {
+            if (a.key != b.key) return a.key < b.key;
+            return a.idx > b.idx;  // reverse ties
+        });
+    }));
+}
