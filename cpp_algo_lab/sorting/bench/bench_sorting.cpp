@@ -4,6 +4,7 @@
 // dominated by the quadratic sorts at n=32768.
 #include <algorithm>
 #include <cstring>
+#include <cstdint>
 #include <functional>
 #include <iostream>
 #include <string>

@@ -4,7 +4,7 @@ CXX      := g++
 STD      := -std=c++20
 WARN     := -Wall -Wextra -Wpedantic
 INC      := -Icommon -Isorting/include -Ithird_party
-TESTFLAGS  := $(STD) $(WARN) $(INC) -O1 -g -fsanitize=address,undefined
+TESTFLAGS  := $(STD) $(WARN) $(INC) -O1 -g -fsanitize=address,undefined -fno-sanitize-recover=undefined
 BENCHFLAGS := $(STD) $(WARN) $(INC) -O2 -DNDEBUG
 BUILD    := build
 

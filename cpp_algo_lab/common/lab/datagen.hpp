@@ -4,10 +4,12 @@
 // (counting/radix/bucket) are applicable to every distribution.
 #include <algorithm>
 #include <array>
+#include <cstddef>
 #include <cstdint>
 #include <numeric>
 #include <random>
 #include <string_view>
+#include <utility>
 #include <vector>
 
 namespace lab {
