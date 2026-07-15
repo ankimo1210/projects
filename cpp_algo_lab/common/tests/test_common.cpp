@@ -1,6 +1,10 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest/doctest.h"
 
+#include "lab/textgen.hpp"
+
+#include <string>
+
 TEST_CASE("smoke: doctest runs under sanitizers") {
     CHECK(1 + 1 == 2);
 }
@@ -164,4 +168,50 @@ TEST_CASE("stability probe: detects stable and unstable sorts") {
             return a.idx > b.idx;  // reverse ties
         });
     }));
+}
+
+TEST_CASE("textgen: text_name returns the exact CSV keys") {
+    CHECK(lab::text_name(lab::Text::dna) == "dna");
+    CHECK(lab::text_name(lab::Text::ascii_random) == "ascii");
+    CHECK(lab::text_name(lab::Text::english_like) == "english");
+    CHECK(lab::text_name(lab::Text::periodic) == "periodic");
+    CHECK(lab::all_texts().size() == 4);
+}
+
+TEST_CASE("textgen: exact sizes, determinism, alphabets") {
+    for (const lab::Text t : lab::all_texts()) {
+        CHECK(lab::generate_text(t, 0, 42).empty());
+        const std::string a = lab::generate_text(t, 1000, 42);
+        const std::string b = lab::generate_text(t, 1000, 42);
+        CHECK(a.size() == 1000);
+        CHECK(a == b);  // same seed, same text
+    }
+    // different seeds give different text (checked on the random kinds)
+    CHECK(lab::generate_text(lab::Text::dna, 64, 42) != lab::generate_text(lab::Text::dna, 64, 43));
+
+    for (char c : lab::generate_text(lab::Text::dna, 500, 42))
+        CHECK(std::string_view("ACGT").find(c) != std::string_view::npos);
+    for (char c : lab::generate_text(lab::Text::ascii_random, 500, 42)) {
+        CHECK(c >= 32);
+        CHECK(c <= 126);
+    }
+    for (char c : lab::generate_text(lab::Text::english_like, 500, 42))
+        CHECK(((c >= 'a' && c <= 'z') || c == ' '));
+    for (char c : lab::generate_text(lab::Text::periodic, 500, 42)) CHECK(c == 'a');
+}
+
+TEST_CASE("textgen: pattern_for rules") {
+    const std::string text = lab::generate_text(lab::Text::dna, 4096, 42);
+    const std::string pat = lab::pattern_for(lab::Text::dna, text, 16, 42);
+    CHECK(pat.size() == 16);
+    CHECK(text.find(pat) != std::string::npos);  // sampled patterns occur in the text
+    CHECK(pat == lab::pattern_for(lab::Text::dna, text, 16, 42));  // deterministic
+
+    const std::string ptext = lab::generate_text(lab::Text::periodic, 64, 42);
+    CHECK(lab::pattern_for(lab::Text::periodic, ptext, 16, 42) == "aaaaaaaaaaaaaaab");
+    CHECK(lab::pattern_for(lab::Text::periodic, ptext, 1, 42) == "b");
+
+    CHECK(lab::pattern_for(lab::Text::dna, text, 0, 42).empty());
+    CHECK_THROWS_AS(lab::pattern_for(lab::Text::dna, text, text.size() + 1, 42),
+                    std::invalid_argument);
 }
