@@ -31,6 +31,7 @@ MAIN_NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
 OFFICE_REL_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 PACKAGE_REL_NS = "http://schemas.openxmlformats.org/package/2006/relationships"
 COLUMN_REFERENCE_RE = re.compile(r"^([A-Z]+)")
+JAPANESE_CHARACTER_RE = re.compile(r"[ぁ-んァ-ヶ一-龠々]")
 
 SHEETS = {
     "用語": {
@@ -301,7 +302,7 @@ def build_pack(
         term: dict[str, Any] = {
             "id": identifier,
             "nameJapanese": required(row, "日本語", "用語"),
-            "nameEnglish": clean(row["English"]) or None,
+            "nameEnglish": required(row, "English", "用語"),
             "nameFrench": clean(row["Français"]) or None,
             "reading": clean(row["読み"]) or None,
             "category": required(row, "種別", "用語"),
@@ -347,11 +348,17 @@ def build_pack(
         source_id = required(row, "source_id", "格付け項目")
         if system_id not in system_ids or identifier not in term_ids or source_id not in source_ids:
             raise ReferencePackError(f"格付け項目 row {row['__excel_row__']}: broken reference")
+        name_japanese = required(row, "日本語名", "格付け項目")
+        name_original = required(row, "原語名", "格付け項目")
+        if name_japanese == name_original or not JAPANESE_CHARACTER_RE.search(name_japanese):
+            raise ReferencePackError(
+                f"格付け項目 row {row['__excel_row__']}: 日本語名 must be a Japanese rendering"
+            )
         entries.append({
             "id": required(row, "entry_id", "格付け項目"),
             "systemID": system_id,
-            "nameJapanese": required(row, "日本語名", "格付け項目"),
-            "nameOriginal": required(row, "原語名", "格付け項目"),
+            "nameJapanese": name_japanese,
+            "nameOriginal": name_original,
             "tier": required(row, "階級", "格付け項目"),
             "village": required(row, "村・アペラシオン", "格付け項目"),
             "subregion": required(row, "サブリージョン", "格付け項目"),
@@ -360,6 +367,17 @@ def build_pack(
             "notes": clean(row["注記"]) or None,
             "sourceID": source_id,
         })
+
+    terms_by_id = {term["id"]: term for term in terms}
+    for entry in entries:
+        term = terms_by_id[entry["termID"]]
+        if (
+            term["nameJapanese"] != entry["nameJapanese"]
+            or term["nameEnglish"] != entry["nameOriginal"]
+        ):
+            raise ReferencePackError(
+                f"{entry['id']}: classification and glossary names must match"
+            )
 
     sources = [
         {

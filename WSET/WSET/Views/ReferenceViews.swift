@@ -398,6 +398,11 @@ private struct ClassificationEntryRow: View {
         VStack(alignment: .leading, spacing: 5) {
             Text(entry.nameJapanese)
                 .font(.body.weight(.semibold))
+            if entry.nameOriginal != entry.nameJapanese {
+                Text(entry.nameOriginal)
+                    .font(.caption)
+                    .foregroundStyle(AppTheme.wine)
+            }
             HStack {
                 Text(entry.tier)
                     .foregroundStyle(AppTheme.wine)

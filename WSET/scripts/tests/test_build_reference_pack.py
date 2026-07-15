@@ -48,6 +48,21 @@ class ReferencePackBuilderTests(unittest.TestCase):
         self.assertIn("MLF", term["aliases"])
         self.assertTrue(term["questionIDs"])
 
+    def test_all_terms_have_japanese_and_english_names(self) -> None:
+        self.assertTrue(all(term["nameJapanese"] for term in self.payload["terms"]))
+        self.assertTrue(all(term["nameEnglish"] for term in self.payload["terms"]))
+
+    def test_classification_names_are_bilingual_and_match_glossary(self) -> None:
+        terms_by_id = {term["id"]: term for term in self.payload["terms"]}
+        for entry in self.payload["classificationEntries"]:
+            self.assertNotEqual(entry["nameJapanese"], entry["nameOriginal"])
+            self.assertEqual(
+                terms_by_id[entry["termID"]]["nameJapanese"], entry["nameJapanese"]
+            )
+            self.assertEqual(
+                terms_by_id[entry["termID"]]["nameEnglish"], entry["nameOriginal"]
+            )
+
     def test_structured_question_tags_create_reverse_links(self) -> None:
         self.assertGreater(len(self.terms["ボルドー"]["questionIDs"]), 0)
         self.assertGreater(len(self.terms["カベルネ・ソーヴィニヨン"]["questionIDs"]), 0)
