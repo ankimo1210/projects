@@ -12,7 +12,7 @@ COMMON_HDRS  := $(wildcard common/lab/*.hpp)
 SORT_HDRS    := $(wildcard sorting/include/sorting/*.hpp)
 SEARCH_HDRS  := $(wildcard search/include/search/*.hpp)
 
-.PHONY: all test bench bench-sorting bench-search bench-quick bench-search-quick trace plot clean
+.PHONY: all test bench bench-sorting bench-search bench-quick bench-search-quick trace plot plot-sorting plot-search clean
 
 all: $(BUILD)/test_common $(BUILD)/test_sorting $(BUILD)/test_search $(BUILD)/bench_sorting $(BUILD)/bench_search
 
@@ -56,8 +56,13 @@ bench-search-quick: $(BUILD)/bench_search
 trace: $(BUILD)/bench_sorting
 	$(BUILD)/bench_sorting --trace
 
-plot:
+plot: plot-sorting plot-search
+
+plot-sorting:
 	cd .. && uv run --no-sync python cpp_algo_lab/scripts/plot_results.py
+
+plot-search:
+	cd .. && uv run --no-sync python cpp_algo_lab/scripts/plot_search.py
 
 clean:
 	rm -rf $(BUILD)
