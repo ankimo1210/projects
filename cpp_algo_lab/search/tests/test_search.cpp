@@ -10,13 +10,11 @@
 #include <cstdint>
 #include <string>
 #include <string_view>
+#include <utility>
 #include <vector>
 
 #include "lab/textgen.hpp"
-#include "search/bmh.hpp"
-#include "search/kmp.hpp"
-#include "search/naive.hpp"
-#include "search/rabin_karp.hpp"
+#include "search/all.hpp"
 
 using Occ = std::vector<std::size_t>;
 using Runner = Occ (*)(std::string_view, std::string_view);
@@ -215,5 +213,59 @@ TEST_CASE("rabin_karp_search_counted: exact counts") {
         CHECK(st.pre_ops == 15);             // 8 hash steps + 7 power steps
         CHECK(st.text_reads == 8 + 57 * 8 + 56 * 2);  // 576
         CHECK(st.char_comparisons == 57 * 8);         // 456
+    }
+}
+
+TEST_CASE("boundary conventions hold for the std baselines") {
+    const std::vector<Runner> runners = {lab::sv_find_search, lab::std_bmh_search,
+                                         lab::std_bm_search};
+    for (const Runner run : runners) {
+        CHECK(run("abc", "") == Occ{0, 1, 2, 3});
+        CHECK(run("", "") == Occ{0});
+        CHECK(run("", "a").empty());
+        CHECK(run("ab", "abc").empty());
+        CHECK(run("abc", "abc") == Occ{0});
+        CHECK(run("aaaaaa", "aaa") == Occ{0, 1, 2, 3});  // overlapping via pos+1 restart
+        CHECK(run("xxab", "ab") == Occ{2});              // match at the very end
+    }
+}
+
+TEST_CASE("all implementations agree with naive on generated corpora") {
+    const std::vector<std::pair<std::string, Runner>> algos = {
+        {"kmp", lab::kmp_search},         {"bmh", lab::bmh_search},
+        {"rabin_karp", lab::rabin_karp_search}, {"sv_find", lab::sv_find_search},
+        {"std_bmh", lab::std_bmh_search}, {"std_bm", lab::std_bm_search},
+    };
+    const std::vector<std::size_t> sizes = {1, 2, 64, 1024, 4096};
+    const std::vector<std::size_t> pat_lens = {1, 4, 16};
+    for (const lab::Text t : lab::all_texts()) {
+        for (const std::size_t n : sizes) {
+            for (const std::uint32_t seed : {42u, 7u}) {
+                const std::string text = lab::generate_text(t, n, seed);
+                for (const std::size_t m : pat_lens) {
+                    if (m > n) continue;
+                    const std::string pattern = lab::pattern_for(t, text, m, seed);
+                    const Occ ref = lab::naive_search(text, pattern);
+                    for (const auto& [name, run] : algos) {
+                        INFO(name << " text=" << lab::text_name(t) << " n=" << n
+                                  << " m=" << m << " seed=" << seed);
+                        CHECK(run(text, pattern) == ref);
+                    }
+                    // counted variants return identical occurrences
+                    CHECK(lab::naive_search_counted(text, pattern).occurrences == ref);
+                    CHECK(lab::kmp_search_counted(text, pattern).occurrences == ref);
+                    CHECK(lab::bmh_search_counted(text, pattern).occurrences == ref);
+                    CHECK(lab::rabin_karp_search_counted(text, pattern).occurrences == ref);
+                }
+                // a pattern absent from every generator's alphabet
+                const std::string absent(3, '\x01');
+                const Occ ref = lab::naive_search(text, absent);
+                CHECK(ref.empty());
+                for (const auto& [name, run] : algos) {
+                    INFO(name << " absent-pattern text=" << lab::text_name(t) << " n=" << n);
+                    CHECK(run(text, absent) == ref);
+                }
+            }
+        }
     }
 }
