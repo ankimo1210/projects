@@ -5,6 +5,7 @@
 // occurrence-vector allocation: returning every match is part of the job.
 // Run from cpp_algo_lab/. Full run takes ~2-3 minutes.
 #include <cstddef>
+#include <cstdlib>
 #include <cstring>
 #include <functional>
 #include <iostream>
