@@ -4,7 +4,7 @@
 
 C++ を「アルゴリズムを素材に、測って理解する」ための学習ラボ。教科書の計算量表を眺めて終わりにせず、STL 形式のテンプレートとして自分で実装し、同じ計測ハーネスに 10 種のソートを通して、理論と実測のずれ（キャッシュ・分岐予測・アロケータ）まで含めて観察する。
 
-Phase 1 の内容はソート 10 種（bubble / insertion / selection / shell / merge / quick / heap / counting / radix / bucket）の実装と **4 軸評価** — ①実測時間、②操作回数（比較・move・swap）、③入力分布別の挙動（5 分布）、④安定性の観測。全体設計と後続フェーズの計画はスペック [`../docs/superpowers/specs/2026-07-14-cpp-algo-lab-design.md`](../docs/superpowers/specs/2026-07-14-cpp-algo-lab-design.md) にある。
+Phase 1 の内容はソート 10 種（bubble / insertion / selection / shell / merge / quick / heap / counting / radix / bucket）の実装と **4 軸評価** — ①実測時間、②操作回数（比較・move・swap）、③入力分布別の挙動（5 分布）、④安定性の観測。Phase 2 は文字列検索 4 種（naive / KMP / BMH / Rabin-Karp）+ 標準ライブラリ基準線 3 種（`string_view::find`・C++17 searcher 2 種）を、①時間 vs テキスト長 n、②時間 vs パターン長 m、③文字操作回数（前処理・読取・比較の分離）、④テキスト 4 種（dna / ascii / english / periodic）の 4 軸で計測する。全体設計と後続フェーズの計画はスペック [`../docs/superpowers/specs/2026-07-14-cpp-algo-lab-design.md`](../docs/superpowers/specs/2026-07-14-cpp-algo-lab-design.md) にある。
 
 ![time_vs_n](results/plots/time_vs_n.png)
 
@@ -15,10 +15,13 @@ Phase 1 の内容はソート 10 種（bubble / insertion / selection / shell / 
 | コマンド | 内容 |
 |---|---|
 | `make test` | ASan/UBSan 付きで全 doctest をビルド・実行（デフォルトターゲット） |
-| `make bench` | フル計測: 5 分布 × n=256〜1,048,576（二次族は 32,768 まで）→ `results/*.csv`。**数分かかる** |
-| `make bench-quick` | 縮小スイープ（n≤4096・2 反復）。配線確認用 |
+| `make bench` | ソート + 検索の全計測（`bench-sorting` + `bench-search`）→ `results/*.csv`。**数分かかる** |
+| `make bench-quick` | ソートの縮小スイープ（n≤4096・2 反復）。配線確認用 |
+| `make bench-search` | 検索のフル計測: 4 テキスト × テキスト長スイープ（n=4096〜4,194,304、m=16）+ パターン長スイープ（m=4〜1024、n=1,048,576）→ `results/search_*.csv`。**2〜3 分** |
+| `make bench-search-quick` | 検索の縮小スイープ（n≤65,536・2 反復）。配線確認用 |
 | `make trace` | n=256 の配列スナップショット列を採取 → `results/traces/trace_*.csv` |
-| `make plot` | リポジトリルートの uv 環境（pandas/matplotlib）で 6 枚の PNG を `results/plots/` に生成 |
+| `make plot` | リポジトリルートの uv 環境（pandas/matplotlib）で全 11 枚の PNG（ソート 6 + 検索 5）を `results/plots/` に生成 |
+| `make plot-search` | 検索 5 枚の PNG のみ再生成 |
 | `make clean` | `build/` を削除 |
 
 ## 構成
@@ -33,12 +36,18 @@ cpp_algo_lab/
 │   ├── include/sorting/  # 1 アルゴリズム = 1 ヘッダ（bubble.hpp … bucket.hpp、keys.hpp、all.hpp）
 │   ├── tests/            # 全ソート × 全分布 + エッジケース + 安定性のテスト
 │   └── bench/            # 計測・トレース実行体 bench_sorting.cpp
+├── search/
+│   ├── include/search/   # 1 アルゴリズム = 1 ヘッダ（naive/kmp/bmh/rabin_karp、baselines.hpp、stats.hpp、all.hpp）
+│   ├── tests/            # 全出現・境界規約・厳密演算数・naive との全実装一致テスト
+│   └── bench/            # 計測実行体 bench_search.cpp（n / m の 2 スイープ）
 ├── scripts/
-│   └── plot_results.py   # results/*.csv → 6 図の PNG
+│   ├── labviz.py         # 図の共有スタイル（パレット・傾きフィット）
+│   ├── plot_results.py   # sorting CSV → 6 図の PNG
+│   └── plot_search.py    # search CSV → 5 図の PNG
 ├── results/              # 計測結果（CSV・図・トレース）— 再現性のためコミット対象
-│   ├── plots/            # 6 枚の PNG
+│   ├── plots/            # 11 枚の PNG（ソート 6 + 検索 5）
 │   └── traces/           # アルゴリズム別スナップショット CSV
-├── docs/                 # 学習ドキュメント（sorting.md が中心）
+├── docs/                 # 学習ドキュメント（sorting.md / search.md が中心）
 └── third_party/doctest/  # 同梱テストフレームワーク（外部依存なし）
 ```
 
@@ -50,13 +59,14 @@ cpp_algo_lab/
 2. **ヘッダを読む** — `sorting/include/sorting/` を bubble → insertion → selection → shell → merge → quick → heap → counting → radix → bucket の順で。この順は「隣接交換 → shift → 探索と交換の分離 → gap → 分割統治 2 種 → 暗黙の木 → 非比較 3 種」という概念の積み上げになっている。どれも 20〜75 行。
 3. **`make bench && make plot` で図を再生成する** — 自分のマシンで数値がどう変わるか（キャッシュサイズや CPU が違えば bubble のジャンプ位置も変わる）を確かめる。
 4. **`results/plots/` の 6 図を `docs/sorting.md` の「結果の読み方」と突き合わせる** — 各アルゴリズム節の予想が図のどこに現れているか、逸脱（quick × reversed、bubble の傾き 2.37 など）がなぜ起きるかを確認する。
+5. **Phase 2（検索）も同じ型で** — [`docs/search.md`](docs/search.md) を読み、`search/include/search/` を naive → kmp → bmh → rabin_karp → baselines の順で読む。この順は「総当たり → 失敗を知識に変える → 読まずに飛ばす → 比べずに照合する → 標準ライブラリはどう切ったか」という概念の積み上げになっている。読んだら `make bench-search && make plot-search` で 5 図を再生成し、`docs/search.md` の §5 と突き合わせる（BMH の下降が σ で頭打ちになる位置、periodic 列の 4 実装の反応が見どころ）。
 
 ## Phase 状況
 
 | Phase | 内容 | 状態 |
 |---|---|---|
 | 1 | ソート 10 種 + 評価 4 軸（時間・操作回数・分布・安定性） | ✅ |
-| 2 | 文字列検索 | ⬜ |
+| 2 | 文字列検索 4 種 + 基準線 3 種（時間 n/m・操作回数・4 テキスト） | ✅ |
 | 3 | CPU 並列化 | ⬜ |
 | 4 | GPU | ⬜ |
 | 5 | ドキュメント仕上げ | ⬜ |
