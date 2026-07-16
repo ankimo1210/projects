@@ -14,7 +14,9 @@ struct IntegralKey {
     std::uint64_t operator()(const T& v) const {
         static_assert(std::is_integral_v<T>,
                       "IntegralKey requires an integral element type; pass a custom KeyFn");
-        if (v < 0) throw std::invalid_argument("non-comparison sort: negative key");
+        if constexpr (std::is_signed_v<T>) {
+            if (v < 0) throw std::invalid_argument("non-comparison sort: negative key");
+        }
         return static_cast<std::uint64_t>(v);
     }
 };

@@ -26,7 +26,11 @@ void bucket_sort(RandomIt first, RandomIt last, KeyFn key = {}) {
     const long double scale =
         static_cast<long double>(n) / (static_cast<long double>(max_key) + 1.0L);
     for (auto it = first; it != last; ++it) {
-        const auto b = static_cast<std::size_t>(static_cast<long double>(key(*it)) * scale);
+        // long double rounding could push key*scale to exactly n for the
+        // maximum key; clamp defensively (no deterministic test can force
+        // this on x86-64's 80-bit long double, hence comment-only rationale).
+        const auto b = std::min(
+            n - 1, static_cast<std::size_t>(static_cast<long double>(key(*it)) * scale));
         buckets[b].push_back(std::move(*it));
     }
     auto out = first;

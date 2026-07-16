@@ -21,7 +21,7 @@ void counting_sort(RandomIt first, RandomIt last, KeyFn key = {}) {
     if (n < 2) return;
     std::uint64_t max_key = 0;
     for (auto it = first; it != last; ++it) max_key = std::max(max_key, key(*it));
-    if (max_key + 1 > kMaxCountingRange)
+    if (max_key >= kMaxCountingRange)
         throw std::length_error("counting_sort: key range too large");
 
     std::vector<std::size_t> count(static_cast<std::size_t>(max_key) + 1, 0);
