@@ -1818,7 +1818,13 @@ git commit -m "feat(cpp_algo_lab): add search figures and shared plot style modu
 5. **§5 結果の読み方（5 図 × 実測値）** — 図ごとに 1 節。**引用する数値はすべて committed CSV と一致させること**：
    - `search_time_vs_n.png` — 全アルゴリズム slope ≈ 1（凡例の実測指数を引用）。
    - `search_time_vs_m.png` — BMH/std_bmh/std_bm の下降、KMP の平坦、naive×periodic の m 比例。sv_find（memchr/SIMD）がなぜ自作 4 種より速いか＝計算量とは別の「実装定数」の話。
-   - `search_reads_per_char.png` — BMH < 1（dna, m=1024 の実測値を引用）、KMP ≤ 2、naive×periodic = m、RK ≈ 3 付近で平坦（1 + 2(n−m)/n + 検証分）。
+   - `search_reads_per_char.png` — BMH < 1（dna, m=1024 の実測値を引用）、KMP ≤ 2、naive×periodic = m、RK ≈ 2 付近で平坦（(m + 2(n−m) + 検証分)/n、恒等式 reads = 2n − m + cmps）。
+
+   Note (2026-07-16, during execution): this bullet originally said "RK ≈ 3" —
+   a plan arithmetic slip (first window m + 2 reads per slide gives ≈2 reads
+   per char, not 3). Task 7's implementer verified the committed CSVs (2.00,
+   identity reads = 2n − m + cmps holding at every cell) and wrote the
+   measured value; the plan text is corrected to match.
    - `search_pre_vs_match.png` — 前処理は m 次元・照合は n 次元。m=1024 でも前処理 ≪ 照合である実数比。
    - `search_heatmap.png` — テキスト種 × アルゴリズムの総合対比。
 6. **§6 教訓・落とし穴** — periodic テキストが 4 実装の性格を全部暴くこと（naive 爆発 / KMP 本領 / BMH 優雅な退化 / RK 素通り）、BMH の「末尾専用文字 shift=m」、RK の mod 選択、`string_view` の非所有ゆえの寿命注意。
