@@ -2,7 +2,9 @@
 #include "doctest/doctest.h"
 
 #include <algorithm>
+#include <cstdint>
 #include <functional>
+#include <limits>
 #include <vector>
 
 #include "lab/counted.hpp"
@@ -178,4 +180,32 @@ TEST_CASE("radix_sort: keys above 2^56 terminate without UB") {
     std::vector<long long> v{3LL << 56, 1LL, 1LL << 40, 0LL};
     lab::radix_sort(v.begin(), v.end());
     CHECK(std::is_sorted(v.begin(), v.end()));
+}
+
+TEST_CASE("counting_sort: guard rejects huge key ranges without wrap-around") {
+    // A key of 2^64-1 makes max_key+1 wrap to 0, which slipped past the old
+    // `max_key + 1 > kMaxCountingRange` guard and then indexed out of bounds.
+    std::vector<int> v{1, 0};
+    const auto huge_key = [](const int& x) {
+        return x ? std::numeric_limits<std::uint64_t>::max() : std::uint64_t{0};
+    };
+    CHECK_THROWS_AS(lab::counting_sort(v.begin(), v.end(), huge_key), std::length_error);
+}
+
+TEST_CASE("non-comparison sorts accept unsigned element types") {
+    std::vector<unsigned> v{5u, 3u, 9u, 1u, 3u};
+    std::vector<unsigned> want = v;
+    std::sort(want.begin(), want.end());
+    SUBCASE("counting") {
+        lab::counting_sort(v.begin(), v.end());
+        CHECK(v == want);
+    }
+    SUBCASE("radix") {
+        lab::radix_sort(v.begin(), v.end());
+        CHECK(v == want);
+    }
+    SUBCASE("bucket") {
+        lab::bucket_sort(v.begin(), v.end());
+        CHECK(v == want);
+    }
 }

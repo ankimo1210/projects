@@ -15,36 +15,13 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from matplotlib.colors import LinearSegmentedColormap, LogNorm
+from labviz import BASELINE, INK, INK_2, MUTED, SEQ_CMAP, SLOTS, SLOTS7, apply_style, slope_label
+from labviz import save as labviz_save
+from matplotlib.colors import LogNorm
 
 BASE = Path(__file__).resolve().parent.parent
 RESULTS = BASE / "results"
 PLOTS = RESULTS / "plots"
-
-# --- dataviz reference palette (light mode) ---------------------------------
-SURFACE = "#fcfcfb"
-INK = "#0b0b0b"
-INK_2 = "#52514e"
-MUTED = "#898781"
-GRID = "#e1e0d9"
-BASELINE = "#c3c2b7"
-SLOTS = ["#2a78d6", "#1baf7a", "#eda100", "#008300"]  # validated fixed order
-SEQ_STEPS = [
-    "#cde2fb",
-    "#b7d3f6",
-    "#9ec5f4",
-    "#86b6ef",
-    "#6da7ec",
-    "#5598e7",
-    "#3987e5",
-    "#2a78d6",
-    "#256abf",
-    "#1c5cab",
-    "#184f95",
-    "#104281",
-    "#0d366b",
-]
-SEQ_CMAP = LinearSegmentedColormap.from_list("lab_blue", SEQ_STEPS)
 
 FAMILIES = ["n2", "nlogn", "linear"]
 FAMILY_TITLES = {
@@ -66,17 +43,13 @@ for _fam, algos in FAMILY_SERIES.items():
 
 # fig_ops pools all comparison sorts on one axes, so per-family slot colors
 # would collide (bubble and merge both slot 1). Give that figure its own
-# assignment: reference-palette slots 1-7 in validated order. The quadratic
-# family keeps the same colors as everywhere else.
-OPS_COLOR = {
-    "bubble": "#2a78d6",
-    "insertion": "#1baf7a",
-    "selection": "#eda100",
-    "shell": "#008300",
-    "merge": "#4a3aa7",
-    "quick": "#e34948",
-    "heap": "#e87ba4",
-}
+# assignment: the extended slot order. The quadratic family keeps the same
+# colors as everywhere else.
+OPS_COLOR = dict(
+    zip(
+        ["bubble", "insertion", "selection", "shell", "merge", "quick", "heap"], SLOTS7, strict=True
+    )
+)
 DISTS = ["random", "sorted", "reversed", "nearly_sorted", "few_unique"]
 TRACE_ALGOS = [
     "bubble",
@@ -91,42 +64,11 @@ TRACE_ALGOS = [
     "bucket",
 ]
 
-plt.rcParams.update(
-    {
-        "figure.facecolor": SURFACE,
-        "axes.facecolor": SURFACE,
-        "savefig.facecolor": SURFACE,
-        "text.color": INK,
-        "axes.labelcolor": INK_2,
-        "axes.edgecolor": BASELINE,
-        "xtick.color": MUTED,
-        "ytick.color": MUTED,
-        "grid.color": GRID,
-        "grid.linewidth": 0.8,
-        "axes.grid": True,
-        "axes.spines.top": False,
-        "axes.spines.right": False,
-        "lines.linewidth": 2.0,
-        "font.size": 10,
-        "axes.titlesize": 11,
-    }
-)
+apply_style()
 
 
 def save(fig: plt.Figure, name: str) -> None:
-    PLOTS.mkdir(parents=True, exist_ok=True)
-    out = PLOTS / name
-    fig.savefig(out, dpi=150, bbox_inches="tight")
-    plt.close(fig)
-    print(f"wrote {out.relative_to(BASE.parent)}")
-
-
-def slope_label(n: np.ndarray, y: np.ndarray) -> str:
-    """Empirical exponent from the last 3 points of a log-log series."""
-    if len(n) < 3 or np.any(y[-3:] <= 0):
-        return ""
-    k = np.polyfit(np.log(n[-3:]), np.log(y[-3:]), 1)[0]
-    return f" n^{k:.2f}"
+    labviz_save(fig, PLOTS, name)
 
 
 def plot_series(ax, sub: pd.DataFrame, algo: str, color: str, dashed: bool = False) -> None:
