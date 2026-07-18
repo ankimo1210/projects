@@ -15,7 +15,7 @@
 ## Architecture and invariants
 
 - GPU code lives below `cpp_algo_lab/parallel/gpu/`; CPU targets remain independent of CUDA.
-- Makefile always uses `/usr/local/cuda-12.9/bin/nvcc -arch=sm_120`; `/usr/bin/nvcc` is never selected.
+- Makefile defaults to `/usr/local/cuda-12.9/bin/nvcc -arch=sm_120`; `CUDA_HOME` and `GPU_ARCH` can be overridden explicitly for another verified environment.
 - Public host wrappers use `namespace lab::gpu` and throw `std::runtime_error` on CUDA API failure.
 - `bitonic_sort` accepts arbitrary vector sizes by padding to the next power of two with `INT_MAX`; the benchmark uses exactly $2^{24}$ elements and therefore needs no padding.
 - The bitonic kernel implements ascending compare-exchange stages. It is educational $O(n\log^2 n)$ code, not presented as a competitive integer sort.
@@ -82,8 +82,8 @@ The repository explicitly selects reproducible static Matplotlib PNGs as the del
 - [x] Create `parallel/gpu/tests/test_gpu.cu` using vendored doctest.
 - [x] Cover empty/single/non-power-of-two/duplicates/negative/`INT_MAX` sort cases and generated larger inputs.
 - [x] Cover empty pattern, pattern longer than text, exact/overlapping results, CUDA block boundaries, all text generators, and larger generated corpora.
-- [x] Add `gpu`, `gpu-test`, and `gpu-sanitize` Makefile targets with CUDA 12.9 and `sm_120` fixed.
-- [ ] Run `make gpu-test` and Compute Sanitizer memcheck successfully. (`gpu-test`: 66/66; Compute Sanitizer 2025.2 cannot launch even `/bin/true` in this WSL2 session, exit 13.)
+- [x] Add `gpu`, `gpu-test`, and `gpu-sanitize` Makefile targets with CUDA 12.9 and `sm_120` defaults.
+- [x] Run `make gpu-test` and Compute Sanitizer memcheck successfully. (`gpu-test`: 66/66; memcheck: 0 errors after directing sanitizer temporary FIFOs to Linux `/tmp`.)
 
 ## Task 3: GPU benchmark and committed results
 
@@ -113,7 +113,7 @@ The repository explicitly selects reproducible static Matplotlib PNGs as the del
 - [x] Update `cpp_algo_lab/README.md`: commands, tree, 17 figures, GPU dependencies, roadmap, Phase 4/5 completion.
 - [x] Update `docs/references.md` so GPU sources point to the concrete experiment and `parallel_gpu.md`.
 - [x] Confirm the workspace root README and Makefile already index/exclude `cpp_algo_lab`; change them only if stale.
-- [x] Run CPU tests, GPU tests, Compute Sanitizer, quick/full benchmark checks, all plots, Ruff, local-link validation, and `git diff --check`. (All passed except the separately recorded Compute Sanitizer launcher blocker.)
+- [x] Run CPU tests, GPU tests, Compute Sanitizer, quick/full benchmark checks, all plots, Ruff, local-link validation, and `git diff --check`.
 - [x] Commit Phase 4 implementation/results and Phase 5 documentation locally; do not push or publish without explicit approval.
 
 ## Acceptance criteria
@@ -123,13 +123,13 @@ The repository explicitly selects reproducible static Matplotlib PNGs as the del
 3. `make gpu-bench` produces complete, validated transfer-included/excluded CSVs and no correctness failures.
 4. `make plot` produces all 17 PNGs; GPU figures pass the chart contract and visual inspection.
 5. `parallel_gpu.md`, README, and references quote only validated data and state semantic/fairness caveats.
-6. Phase 4 and Phase 5 are marked complete, with Phase 3/4 changes committed locally and the remote untouched.
+6. Phase 4 and Phase 5 are marked complete, with changes committed locally and remote publication performed only after explicit user approval.
 
 ## Execution record (2026-07-18)
 
 - **PASS:** CPU ASan/UBSan tests: 58 test cases, 15,204 assertions.
 - **PASS:** ordinary CUDA tests: 8 test cases, 66 assertions on RTX 5080 `sm_120`.
-- **BLOCKED (environment):** Compute Sanitizer 2025.2 exits 13 at target launch in this WSL2 session; the same failure occurs with `/bin/true`, before CUDA code executes. Acceptance criterion 2 is therefore only partially met and memcheck must be rerun in a repaired WSL2 or native Linux environment.
+- **PASS:** Compute Sanitizer memcheck, initcheck, and synccheck report 0 errors; racecheck reports 0 hazards. The original exit 13 was traced to unsupported FIFO creation on the Windows DrvFS temporary directory and fixed by using Linux `/tmp`.
 - **PASS:** quick-output hash isolation and two complete full GPU benchmark runs; the latest non-cherry-picked run is retained.
 - **PASS:** exact GPU CSV validation, all 17 plots, both Ruff gates, visual inspection of the three GPU plots, 79 local Markdown links, and `git diff --check`.
-- **PASS:** implementation/results and documentation committed locally; no push or publication performed.
+- **PASS:** the original Phase 4 branch was pushed only after explicit user approval; finalization work continues on a clean local branch based at `28af90f`.
