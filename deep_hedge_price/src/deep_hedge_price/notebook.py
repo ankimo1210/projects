@@ -98,7 +98,9 @@ def build_notebook(project_root: str | Path) -> Path:
         nbf.v4.new_code_cell("show_figure(var_cvar_figure(strategy_summary))"),
         nbf.v4.new_markdown_cell("### Turnover and transaction cost"),
         nbf.v4.new_code_cell("show_figure(turnover_cost_figure(strategy_summary))"),
-        nbf.v4.new_markdown_cell("## Policy surface\nThe following slice fixes the previous position at 0.5 shares."),
+        nbf.v4.new_markdown_cell(
+            "## Policy surface\nThe following slice fixes the previous position at 0.5 shares."
+        ),
         nbf.v4.new_code_cell("show_figure(policy_heatmap_figure(policy_surface))"),
         nbf.v4.new_markdown_cell("### Neural minus Black–Scholes delta"),
         nbf.v4.new_code_cell("show_figure(policy_heatmap_figure(policy_surface, difference=True))"),
@@ -107,9 +109,13 @@ def build_notebook(project_root: str | Path) -> Path:
         nbf.v4.new_markdown_cell("### Trade size conditional on prior position and BS target"),
         nbf.v4.new_code_cell("show_figure(trade_scatter_figure(trade_scatter))"),
         nbf.v4.new_markdown_cell("## Transaction-cost sensitivity"),
-        nbf.v4.new_code_cell("display(sensitivity.round(4)); show_figure(sensitivity_figure(sensitivity))"),
+        nbf.v4.new_code_cell(
+            "display(sensitivity.round(4)); show_figure(sensitivity_figure(sensitivity))"
+        ),
         nbf.v4.new_markdown_cell("## Risk-objective comparison"),
-        nbf.v4.new_code_cell("display(risk_comparison.round(4)); show_figure(risk_objective_figure(risk_comparison))"),
+        nbf.v4.new_code_cell(
+            "display(risk_comparison.round(4)); show_figure(risk_objective_figure(risk_comparison))"
+        ),
         nbf.v4.new_markdown_cell("## Sanity checks and limitations"),
         nbf.v4.new_code_cell(
             "check_rows = [{'check': k, 'passed': v.get('passed'), 'details': str({x:y for x,y in v.items() if x != 'passed'})} for k,v in sanity.items() if isinstance(v, dict)]\n"
