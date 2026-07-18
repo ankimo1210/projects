@@ -66,12 +66,24 @@ final class R5UITests: XCTestCase {
         XCTAssertTrue(vocabulary.waitForExistence(timeout: 5))
         let form = app.collectionViews.firstMatch
         XCTAssertTrue(form.waitForExistence(timeout: 5))
-        let safeMaximumY = app.frame.maxY - 200
-        for _ in 0..<10 {
-            if vocabulary.frame.maxY < safeMaximumY { break }
-            form.swipeUp()
+        let safeMinimumY: CGFloat = 140
+        let safeMaximumY = app.frame.maxY - 160
+        for _ in 0..<12 {
+            let frame = vocabulary.frame
+            if frame.minY >= safeMinimumY && frame.maxY <= safeMaximumY { break }
+
+            let startY: CGFloat = frame.maxY > safeMaximumY ? 0.72 : 0.35
+            let endY: CGFloat = frame.maxY > safeMaximumY ? 0.52 : 0.55
+            form.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: startY))
+                .press(
+                    forDuration: 0.1,
+                    thenDragTo: form.coordinate(
+                        withNormalizedOffset: CGVector(dx: 0.5, dy: endY)
+                    )
+                )
         }
-        XCTAssertLessThan(vocabulary.frame.maxY, safeMaximumY)
+        XCTAssertGreaterThanOrEqual(vocabulary.frame.minY, safeMinimumY)
+        XCTAssertLessThanOrEqual(vocabulary.frame.maxY, safeMaximumY)
         vocabulary.tap()
 
         XCTAssertTrue(app.buttons["完了"].waitForExistence(timeout: 5))
@@ -82,10 +94,17 @@ final class R5UITests: XCTestCase {
         search.tap()
         search.typeText("レモ")
 
+        let searchKey = app.keyboards.buttons["Search"]
+        XCTAssertTrue(searchKey.waitForExistence(timeout: 5))
+        searchKey.tap()
+        XCTAssertTrue(app.keyboards.firstMatch.waitForNonExistence(timeout: 5))
+
         let lemon = app.buttons["tasting.vocabulary.candidate.レモン"]
         XCTAssertTrue(lemon.waitForExistence(timeout: 5))
         lemon.tap()
-        XCTAssertTrue(app.staticTexts["「レモン」を追加しました"].waitForExistence(timeout: 5))
+        let confirmation = app.staticTexts["tasting.vocabulary.confirmation"]
+        XCTAssertTrue(confirmation.waitForExistence(timeout: 5))
+        XCTAssertEqual(confirmation.label, "「レモン」を追加しました")
     }
 
     func testDailyStudyCombinesQuestionAndTermRecommendations() {
