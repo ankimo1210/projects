@@ -1,0 +1,402 @@
+{
+  "acceptance": {
+    "checks": [
+      {
+        "criterion": "exact four-model ladder with all joint components",
+        "name": "joint_model_ladder",
+        "observed": 4,
+        "passed": true
+      },
+      {
+        "criterion": "price/delta/gamma shapes match",
+        "name": "teacher_surrogate_pairing",
+        "observed": true,
+        "passed": true
+      },
+      {
+        "criterion": "aligned, nonnegative, and nontrivial standard errors",
+        "name": "teacher_uncertainty",
+        "observed": 16,
+        "passed": true
+      },
+      {
+        "criterion": "> 0 flagged observations",
+        "name": "ood_shell",
+        "observed": 4,
+        "passed": true
+      },
+      {
+        "criterion": "positive measured samples",
+        "name": "measured_cpu_timing",
+        "observed": "perf_counter_ns warm-cache median of 5",
+        "passed": true
+      },
+      {
+        "criterion": "> 1 at batch 1024",
+        "name": "surrogate_speedup",
+        "observed": 914.2897131825704,
+        "passed": true
+      },
+      {
+        "criterion": "all four component errors finite",
+        "name": "joint_objective_components",
+        "observed": true,
+        "passed": true
+      },
+      {
+        "criterion": "price and Greek RMSE finite in both domains",
+        "name": "in_domain_ood_diagnostics",
+        "observed": true,
+        "passed": true
+      }
+    ],
+    "model_performance_approved": false,
+    "negative_results": [
+      "The polynomial surrogate Greek RMSE is 25.3594; this is a reported negative result, not a Greek-accuracy approval.",
+      "The manufactured joint target has SPX RMSE 0.0364061 and VIX RMSE 4.13935."
+    ],
+    "passed": true,
+    "schema_version": 1,
+    "scope": "integration_and_reproducibility"
+  },
+  "artifact_role": "implementation-derived, identity-tested teaching reference",
+  "benchmark": {
+    "batch_size": [
+      16,
+      128,
+      1024
+    ],
+    "nondeterministic_fields": [
+      "nested_mc_ms",
+      "surrogate_ms",
+      "metrics.surrogate_speedup_1024"
+    ],
+    "schema_version": 1,
+    "sources": {
+      "johnhull/hullkit/src/hullkit/frontier_reference.py": "7d3ac14c0544f03a7673d29953a1450bf9ffdb37eb35a957ae9a6955605b9d72",
+      "johnhull/hullkit/src/hullkit/spx_vix.py": "99cc51034d2430fe0d50abd6e89fb043e22a6304b11e01451239121d25766b21"
+    },
+    "timing_method": "perf_counter_ns warm-cache median of 5"
+  },
+  "benchmark_policy": "volume 21 preserves its committed perf_counter sample; pass --refresh-timing to measure again",
+  "companion_schemas": {
+    "joint_surface.npz": {
+      "batch_size": {
+        "dtype": "int64",
+        "shape": [
+          3
+        ],
+        "unit": "rows"
+      },
+      "joint_loss": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "dimensionless weighted loss"
+      },
+      "maturity": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "years"
+      },
+      "model_names": {
+        "dtype": "<U19",
+        "shape": [
+          4
+        ],
+        "unit": "label"
+      },
+      "nested_mc_ms": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "milliseconds median"
+      },
+      "ood_error": {
+        "dtype": "float64",
+        "shape": [
+          24
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "ood_flag": {
+        "dtype": "bool",
+        "shape": [
+          24
+        ],
+        "unit": "boolean"
+      },
+      "ood_radius": {
+        "dtype": "float64",
+        "shape": [
+          24
+        ],
+        "unit": "normalized Euclidean distance"
+      },
+      "spx_afv": {
+        "dtype": "float64",
+        "shape": [
+          4,
+          17
+        ],
+        "unit": "decimal implied volatility"
+      },
+      "spx_model_grid": {
+        "dtype": "float64",
+        "shape": [
+          4,
+          4,
+          17
+        ],
+        "unit": "decimal implied volatility"
+      },
+      "spx_pdv": {
+        "dtype": "float64",
+        "shape": [
+          4,
+          17
+        ],
+        "unit": "decimal implied volatility"
+      },
+      "spx_quintic_ou": {
+        "dtype": "float64",
+        "shape": [
+          4,
+          17
+        ],
+        "unit": "decimal implied volatility"
+      },
+      "spx_rmse": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "decimal implied volatility"
+      },
+      "spx_rough_heston": {
+        "dtype": "float64",
+        "shape": [
+          4,
+          17
+        ],
+        "unit": "decimal implied volatility"
+      },
+      "spx_target": {
+        "dtype": "float64",
+        "shape": [
+          4,
+          17
+        ],
+        "unit": "decimal implied volatility"
+      },
+      "strike": {
+        "dtype": "float64",
+        "shape": [
+          17
+        ],
+        "unit": "synthetic index points"
+      },
+      "surrogate_delta": {
+        "dtype": "float64",
+        "shape": [
+          24
+        ],
+        "unit": "price per normalized scale"
+      },
+      "surrogate_features": {
+        "dtype": "float64",
+        "shape": [
+          24,
+          3
+        ],
+        "unit": "normalized features"
+      },
+      "surrogate_gamma": {
+        "dtype": "float64",
+        "shape": [
+          24
+        ],
+        "unit": "price per normalized scale squared"
+      },
+      "surrogate_ms": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "milliseconds median"
+      },
+      "surrogate_price": {
+        "dtype": "float64",
+        "shape": [
+          24
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "teacher_delta": {
+        "dtype": "float64",
+        "shape": [
+          24
+        ],
+        "unit": "price per normalized scale"
+      },
+      "teacher_gamma": {
+        "dtype": "float64",
+        "shape": [
+          24
+        ],
+        "unit": "price per normalized scale squared"
+      },
+      "teacher_price": {
+        "dtype": "float64",
+        "shape": [
+          24
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "teacher_standard_error": {
+        "dtype": "float64",
+        "shape": [
+          24
+        ],
+        "unit": "discounted index-point option price"
+      },
+      "variance_rmse": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "annualized variance"
+      },
+      "variance_term_model_grid": {
+        "dtype": "float64",
+        "shape": [
+          4,
+          4
+        ],
+        "unit": "annualized variance"
+      },
+      "variance_term_pdv": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "annualized variance"
+      },
+      "variance_term_target": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "annualized variance"
+      },
+      "vix_maturity": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "years"
+      },
+      "vix_model_grid": {
+        "dtype": "float64",
+        "shape": [
+          4,
+          4
+        ],
+        "unit": "VIX index points"
+      },
+      "vix_option_model_grid": {
+        "dtype": "float64",
+        "shape": [
+          4,
+          4
+        ],
+        "unit": "discounted index-point option price"
+      },
+      "vix_option_pdv": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "vix_option_rmse": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "vix_option_target": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "vix_pdv": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "VIX index points"
+      },
+      "vix_rmse": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "VIX index points"
+      },
+      "vix_target": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "VIX index points"
+      }
+    }
+  },
+  "companions": {
+    "joint_surface.npz": "f90b57db8af98ea91ce5b68106b6fbfb47d0063f344547860812108d2c11533e"
+  },
+  "data_policy": "synthetic-offline",
+  "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
+  "generator_api": "hullkit.frontier_reference.build_frontier_reference",
+  "limitations": [
+    "Synthetic results are not evidence of market forecasting power."
+  ],
+  "metrics": {
+    "in_domain_greek_rmse": 25.349173063933875,
+    "in_domain_price_rmse": 0.4256623957319136,
+    "joint_spx_rmse": 0.03640612872286824,
+    "joint_variance_rmse": 0.012136360789840171,
+    "joint_vix_option_rmse": 1.7147112919089407,
+    "joint_vix_rmse": 4.139354595392237,
+    "ood_count": 4,
+    "ood_greek_rmse": 25.41046863034563,
+    "ood_price_rmse": 0.3381758958670694,
+    "surrogate_delta_rmse": 5.043078088519851,
+    "surrogate_gamma_rmse": 35.50726161092219,
+    "surrogate_greek_rmse": 25.359399280280453,
+    "surrogate_price_rmse": 0.4123722655252687,
+    "surrogate_speedup_1024": 914.2897131825704,
+    "teacher": "hullkit.spx_vix.nested_vix_teacher",
+    "timing_method": "perf_counter_ns warm-cache median of 5",
+    "timing_nondeterministic": true
+  },
+  "schema_version": 1,
+  "seed": 20260739,
+  "semantic_sources": [
+    "johnhull/hullkit/src/hullkit/frontier_reference.py",
+    "johnhull/hullkit/src/hullkit/spx_vix.py"
+  ],
+  "semantic_tests": [
+    "johnhull/hullkit/tests/test_frontier_reference.py",
+    "johnhull/hullkit/tests/test_spx_vix.py"
+  ],
+  "volume": 21
+}
