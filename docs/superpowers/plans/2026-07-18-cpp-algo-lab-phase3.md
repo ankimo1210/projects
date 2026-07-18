@@ -270,7 +270,11 @@ void thread_merge_impl(RandomIt first, RandomIt last, Compare comp, int depth) {
         return;
     }
     const auto mid = first + n / 2;
-    std::thread left(
+    // std::jthread (C++20) joins in its destructor: if the current thread's
+    // recursive call below threw, a plain std::thread would still be
+    // joinable when unwound and std::terminate would fire. RAII join is the
+    // language's answer to exactly this hole.
+    std::jthread left(
         [first, mid, comp, depth] { thread_merge_impl(first, mid, comp, depth - 1); });
     thread_merge_impl(mid, last, comp, depth - 1);
     left.join();
@@ -294,6 +298,15 @@ void thread_merge_sort(RandomIt first, RandomIt last, Compare comp = {}, unsigne
 
 Run from `cpp_algo_lab/`: `make test`
 Expected: all four binaries build warning-free and report SUCCESS (test_parallel runs the 4 new cases). ASan/UBSan silent.
+
+Note (2026-07-18, during execution): the block originally spawned a plain
+`std::thread`; the Task 1 reviewer flagged the exception path (if the
+current thread's recursion throws, the joinable thread's destructor calls
+std::terminate). Fixed post-review to `std::jthread` with an explanatory
+comment — C++20's RAII-join type exists precisely for this hole, which
+makes it better teaching material as well. The explicit `left.join()`
+before `inplace_merge` stays (the join is semantically required there;
+jthread's destructor join is the safety net, not the mechanism).
 
 - [ ] **Step 7: Commit**
 
