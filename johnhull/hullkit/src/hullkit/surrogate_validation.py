@@ -15,6 +15,8 @@ import numpy as np
 
 @dataclass(frozen=True)
 class CheckResult:
+    """One hard check: violation count, rate, and maximum against its tolerance."""
+
     name: str
     n_checked: int
     n_violations: int
@@ -24,26 +26,32 @@ class CheckResult:
 
     @property
     def passed(self):
+        """True when the check recorded zero violations."""
         return self.n_violations == 0
 
     def to_dict(self):
+        """Serialize the check including the derived pass flag."""
         return asdict(self) | {"passed": self.passed}
 
 
 @dataclass(frozen=True)
 class HardValidationReport:
+    """Named hard-check bundle; arbitrage-free only when complete and all pass."""
+
     checks: tuple[CheckResult, ...]
     applicable_checks: tuple[str, ...] = ()
     metadata: Mapping[str, object] = field(default_factory=dict)
 
     @property
     def check_set_complete(self):
+        """True when check names are unique and match the applicable set."""
         names = tuple(check.name for check in self.checks)
         expected = self.applicable_checks or names
         return len(names) == len(set(names)) and set(names) == set(expected)
 
     @property
     def arbitrage_free(self):
+        """True only when the check set is complete and every check passed."""
         return (
             bool(self.checks)
             and self.check_set_complete
@@ -51,6 +59,7 @@ class HardValidationReport:
         )
 
     def to_dict(self):
+        """Serialize the report with derived flags for JSON artifacts."""
         return {
             "arbitrage_free": self.arbitrage_free,
             "check_set_complete": self.check_set_complete,
@@ -94,6 +103,7 @@ def check_price_bounds(
     kind="call",
     tolerance=1e-10,
 ):
+    """Merton lower/upper bounds on option prices (Hull 11e ch.11 with yield q)."""
     prices, spots, strikes, rates, maturities, dividends = _finite(
         prices, spots, strikes, rates, maturities, dividends
     )
@@ -123,6 +133,7 @@ def check_put_call_parity(
     *,
     tolerance=1e-10,
 ):
+    """European put-call parity residual (Hull 11e eq. 11.6 with yield q)."""
     calls, puts, spots, strikes, rates, maturities, dividends = _finite(
         calls, puts, spots, strikes, rates, maturities, dividends
     )
@@ -143,6 +154,7 @@ def _grid(values, prices, name):
 
 
 def check_strike_monotonicity(prices, strikes, *, kind="call", tolerance=1e-10):
+    """Calls non-increasing / puts non-decreasing along the strike grid."""
     strikes, prices = _grid(strikes, prices, "strike")
     differences = np.diff(prices, axis=-1)
     if kind == "call":
@@ -155,6 +167,7 @@ def check_strike_monotonicity(prices, strikes, *, kind="call", tolerance=1e-10):
 
 
 def check_spot_monotonicity(prices, spots, *, kind="call", tolerance=1e-10):
+    """Calls non-decreasing / puts non-increasing along the spot grid."""
     spots, prices = _grid(spots, prices, "spot")
     differences = np.diff(prices, axis=-1)
     if kind == "call":
@@ -167,6 +180,7 @@ def check_spot_monotonicity(prices, spots, *, kind="call", tolerance=1e-10):
 
 
 def check_strike_convexity(prices, strikes, *, tolerance=1e-10):
+    """Butterfly no-arbitrage: price slopes non-decreasing in strike."""
     strikes, prices = _grid(strikes, prices, "strike")
     if strikes.size < 3:
         raise ValueError("strike convexity needs at least three strikes")
@@ -175,11 +189,13 @@ def check_strike_convexity(prices, strikes, *, tolerance=1e-10):
 
 
 def check_calendar_monotonicity(prices, maturities, *, tolerance=1e-10):
+    """Prices non-decreasing in maturity along the calendar grid."""
     maturities, prices = _grid(maturities, prices, "maturity")
     return _result("calendar_monotonicity", -np.diff(prices, axis=-1), tolerance)
 
 
 def check_nonnegative_gamma(gammas, *, tolerance=1e-10):
+    """Convexity in spot: gamma must be non-negative."""
     gammas = np.asarray(gammas, dtype=float)
     if gammas.size == 0 or not np.all(np.isfinite(gammas)):
         raise ValueError("gamma check requires non-empty finite values")
@@ -194,6 +210,7 @@ def check_greek_consistency(
     *,
     tolerance=1e-4,
 ):
+    """Reported delta/gamma vs numerical gradients of the price grid."""
     spots, prices = _grid(spots, prices, "spot")
     deltas = np.asarray(deltas, dtype=float)
     gammas = np.asarray(gammas, dtype=float)

@@ -126,6 +126,8 @@ def liquidation_price(account: MarginAccount, funding_cashflow: float = 0.0) -> 
 
 @dataclass(frozen=True)
 class OracleRisk:
+    """Oracle staleness and mark/index dislocation flags for one snapshot."""
+
     age: float
     mark_index_dislocation: float
     last_index_dislocation: float
@@ -134,6 +136,7 @@ class OracleRisk:
 
     @property
     def usable(self) -> bool:
+        """True when the oracle is neither stale nor dislocated."""
         return not self.stale and not self.dislocated
 
 
@@ -159,6 +162,8 @@ def assess_oracle_risk(
 
 @dataclass(frozen=True)
 class OracleShock:
+    """Observed vs latent index and mark after a latency or manipulation shock."""
+
     observed_index: float
     latent_index: float
     shocked_mark: float
@@ -218,6 +223,8 @@ def execution_price(
 
 @dataclass(frozen=True)
 class LiquidationLedger:
+    """Cash-conserving close-out ledger across trader, insurance, ADL, and socialized legs."""
+
     execution_price: float
     account_equity: float
     liquidation_fee: float
@@ -233,6 +240,7 @@ class LiquidationLedger:
 
     @property
     def solvent(self) -> bool:
+        """True when losses are fully covered and the ledger conserves cash."""
         return self.uncovered_loss <= 1e-12 and abs(self.conservation_error) <= 1e-10
 
 

@@ -189,6 +189,8 @@ def simulate_terminal_futures(
 
 @dataclass(frozen=True)
 class CarbonOptionEstimate:
+    """Monte Carlo carbon option price with standard error and normal 95% CI."""
+
     price: float
     standard_error: float
     ci_low: float
@@ -243,6 +245,8 @@ def carbon_option_mc(
 
 @dataclass(frozen=True)
 class CarbonPremiumSensitivity:
+    """Premium shifts from toggling return, variance, and jump risk premia one at a time."""
+
     baseline: float
     return_shifted: float
     variance_shifted: float
@@ -250,14 +254,17 @@ class CarbonPremiumSensitivity:
 
     @property
     def return_effect(self) -> float:
+        """Premium shift attributable to the return risk premium alone."""
         return self.return_shifted - self.baseline
 
     @property
     def variance_effect(self) -> float:
+        """Premium shift attributable to the variance risk premium alone."""
         return self.variance_shifted - self.baseline
 
     @property
     def jump_effect(self) -> float:
+        """Premium shift attributable to the jump risk premium alone."""
         return self.jump_shifted - self.baseline
 
 

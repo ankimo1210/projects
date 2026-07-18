@@ -12,6 +12,8 @@ from . import bsm, fourier, heston, sabr, volatility
 
 @dataclass(frozen=True)
 class MonteCarloEstimate:
+    """Seeded Monte Carlo estimand with standard error, CI, and path-stream fingerprint."""
+
     estimate: float
     standard_error: float
     ci_lower: float
@@ -23,6 +25,7 @@ class MonteCarloEstimate:
     path_stream_fingerprint: str | None = None
 
     def to_dict(self):
+        """Serialize the estimate for JSON artifacts."""
         return {
             "estimate": self.estimate,
             "standard_error": self.standard_error,
@@ -56,6 +59,7 @@ class MonteCarloCallEstimates:
             raise ValueError("common-random-number estimates must share one path stream")
 
     def to_dict(self):
+        """Serialize price/delta/vega estimates for JSON artifacts."""
         return {
             "price": self.price.to_dict(),
             "delta": self.delta.to_dict(),

@@ -40,6 +40,8 @@ def cpmm_spot_price(reserve_x: float, reserve_y: float) -> float:
 
 @dataclass(frozen=True)
 class SwapResult:
+    """One CPMM trade: pre/post reserves, fill amounts, and the retained fee."""
+
     reserve_x_before: float
     reserve_y_before: float
     reserve_x_after: float
@@ -51,10 +53,12 @@ class SwapResult:
 
     @property
     def invariant_before(self) -> float:
+        """Product invariant ``x*y`` before the trade."""
         return self.reserve_x_before * self.reserve_y_before
 
     @property
     def invariant_after(self) -> float:
+        """Product invariant ``x*y`` after the trade (grows with retained fees)."""
         return self.reserve_x_after * self.reserve_y_after
 
 
@@ -106,6 +110,8 @@ def cpmm_reserves_at_price(
 
 @dataclass(frozen=True)
 class LVRResult:
+    """Loss-versus-rebalancing decomposition (Milionis et al. 2022) for one repricing."""
+
     old_price: float
     new_price: float
     rebalancing_value: float

@@ -201,6 +201,8 @@ def station_index(temperatures, weights) -> np.ndarray:
 
 @dataclass(frozen=True)
 class BasisRiskReport:
+    """Minimum-variance basis-hedge summary: ratio, correlation, variance reduction."""
+
     hedge_ratio: float
     correlation: float
     mismatch_rmse: float
