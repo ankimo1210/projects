@@ -150,7 +150,9 @@ def training_history_figure(history: pd.DataFrame, objective: str = "MSE") -> Fi
         label="Fixed validation set",
         color="#D97706",
     )
-    axis.set(title=f"Training and validation objective — {objective}", xlabel="Epoch", ylabel="Objective")
+    axis.set(
+        title=f"Training and validation objective — {objective}", xlabel="Epoch", ylabel="Objective"
+    )
     axis.legend()
     return figure
 
@@ -186,7 +188,9 @@ def ecdf_figure(frame: pd.DataFrame) -> Figure:
     for strategy, group in frame.groupby("strategy", sort=False):
         values = np.sort(group["discounted_pnl"].to_numpy())
         probabilities = np.arange(1, len(values) + 1) / len(values)
-        axis.plot(values, probabilities, color=COLORS.get(strategy), label=LABELS.get(strategy, strategy))
+        axis.plot(
+            values, probabilities, color=COLORS.get(strategy), label=LABELS.get(strategy, strategy)
+        )
     axis.set_xlim(lower, upper)
     axis.set_ylim(0, 0.25)
     axis.set(
@@ -203,8 +207,16 @@ def var_cvar_figure(summary: pd.DataFrame) -> Figure:
     x = np.arange(len(ordered))
     width = 0.36
     figure, axis = plt.subplots(figsize=(8.5, 4.6))
-    axis.bar(x - width / 2, summary.loc[ordered, "var_loss_99"], width, label="99% VaR", color="#93C5FD")
-    axis.bar(x + width / 2, summary.loc[ordered, "cvar_loss_99"], width, label="99% CVaR", color="#2563EB")
+    axis.bar(
+        x - width / 2, summary.loc[ordered, "var_loss_99"], width, label="99% VaR", color="#93C5FD"
+    )
+    axis.bar(
+        x + width / 2,
+        summary.loc[ordered, "cvar_loss_99"],
+        width,
+        label="99% CVaR",
+        color="#2563EB",
+    )
     axis.set_xticks(x, [LABELS[name] for name in ordered], rotation=12, ha="right")
     axis.set(title="99% tail loss by strategy", ylabel="Discounted economic loss")
     axis.legend()
@@ -217,7 +229,9 @@ def turnover_cost_figure(summary: pd.DataFrame) -> Figure:
     labels = [LABELS[name] for name in ordered]
     axes[0].barh(labels, summary.loc[ordered, "average_turnover_shares"], color="#2563EB")
     axes[0].set(title="Average turnover", xlabel="Shares per path")
-    axes[1].barh(labels, summary.loc[ordered, "average_discounted_transaction_cost"], color="#D97706")
+    axes[1].barh(
+        labels, summary.loc[ordered, "average_discounted_transaction_cost"], color="#D97706"
+    )
     axes[1].set(title="Average transaction cost", xlabel="Discounted currency units")
     figure.suptitle("Trading intensity and cost at 5 bp")
     figure.tight_layout()
@@ -260,13 +274,23 @@ def policy_heatmap_figure(surface: pd.DataFrame, *, difference: bool = False) ->
 def policy_slices_figure(surface: pd.DataFrame) -> Figure:
     figure, axis = plt.subplots(figsize=(8.6, 4.8))
     available = np.sort(surface["tau_normalized"].unique())
-    for requested, color in zip((0.1, 0.3, 0.6, 1.0), ("#BE185D", "#D97706", "#2563EB", "#111827"), strict=True):
+    for requested, color in zip(
+        (0.1, 0.3, 0.6, 1.0), ("#BE185D", "#D97706", "#2563EB", "#111827"), strict=True
+    ):
         tau = available[np.argmin(np.abs(available - requested))]
         subset = surface[np.isclose(surface["tau_normalized"], tau)]
-        axis.plot(subset["spot"], subset["neural_delta"], color=color, label=f"Neural τ/T={tau:.2f}")
+        axis.plot(
+            subset["spot"], subset["neural_delta"], color=color, label=f"Neural τ/T={tau:.2f}"
+        )
     maturity = available[np.argmin(np.abs(available - 0.6))]
     subset = surface[np.isclose(surface["tau_normalized"], maturity)]
-    axis.plot(subset["spot"], subset["black_scholes_delta"], color="#6B7280", ls="--", label="BS delta (τ/T≈0.6)")
+    axis.plot(
+        subset["spot"],
+        subset["black_scholes_delta"],
+        color="#6B7280",
+        ls="--",
+        label="BS delta (τ/T≈0.6)",
+    )
     axis.set(title="Neural policy slices across maturity", xlabel="Spot", ylabel="Stock position")
     axis.legend(ncol=2)
     return figure
@@ -300,7 +324,9 @@ def sensitivity_figure(sensitivity: pd.DataFrame) -> Figure:
         ("average_discounted_transaction_cost", "Average transaction cost"),
     ]
     for axis, (column, title) in zip(axes.flat, specs, strict=True):
-        axis.plot(sensitivity["transaction_cost_bps"], sensitivity[column], marker="o", color="#2563EB")
+        axis.plot(
+            sensitivity["transaction_cost_bps"], sensitivity[column], marker="o", color="#2563EB"
+        )
         axis.set(title=title, xlabel="Transaction cost (bp)")
     figure.suptitle("Neural hedge sensitivity to proportional transaction cost")
     figure.tight_layout()

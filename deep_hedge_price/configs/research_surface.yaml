@@ -1,0 +1,11 @@
+profile: research-surface
+enabled: false
+require_explicit_opt_in: true
+data_policy: synthetic-offline
+models:
+  - direct_inverse
+  - vae
+  - normalizing_flow
+  - simulation_based_inference
+download: false
+core_gate_dependency: false

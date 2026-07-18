@@ -236,9 +236,7 @@ def train_policy(
             best_value = validation_value
             stale_epochs = 0
             torch.save(
-                _checkpoint_payload(
-                    policy, risk, optimizer, config, epoch, validation_value
-                ),
+                _checkpoint_payload(policy, risk, optimizer, config, epoch, validation_value),
                 checkpoint_path,
             )
         else:

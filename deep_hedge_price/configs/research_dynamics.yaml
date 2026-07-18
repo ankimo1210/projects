@@ -1,0 +1,10 @@
+profile: research-dynamics
+enabled: false
+require_explicit_opt_in: true
+foundation_model:
+  local_checkpoint: null
+  download: false
+conditional_diffusion:
+  enabled: false
+  scenario_diagnostics: true
+core_gate_dependency: false
