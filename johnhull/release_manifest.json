@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "release": "beyond-hull-a5-a8",
+  "volumes": [
+    {
+      "number": 18,
+      "slug": "18_ml_surrogates",
+      "notebook": "ml_surrogates.ipynb",
+      "book_name": "18_ml_surrogates",
+      "portal_page": "ml_derivatives",
+      "portal_figures": ["ml_price_error", "ml_greek_error", "ml_hard_violations", "ml_speed"],
+      "semantic_sources": ["deep_hedge_price/src/deep_hedge_price/pricing_evaluation.py", "johnhull/hullkit/src/hullkit/surrogate_validation.py"],
+      "semantic_tests": ["deep_hedge_price/tests/test_pricing_evaluation.py", "johnhull/hullkit/tests/test_surrogate_validation.py"],
+      "references": ["reference/pricing_metrics.json", "reference/pricing_slices.npz"],
+      "validation": "VALIDATION.md"
+    },
+    {
+      "number": 19,
+      "slug": "19_inverse_surfaces",
+      "notebook": "inverse_surfaces.ipynb",
+      "book_name": "19_inverse_surfaces",
+      "portal_page": "ml_derivatives",
+      "portal_figures": ["surface_fit", "surface_identifiability", "surface_arbitrage", "variance_consistency"],
+      "semantic_sources": ["deep_hedge_price/src/deep_hedge_price/frontier_reference.py", "deep_hedge_price/src/deep_hedge_price/pricing_calibration.py", "deep_hedge_price/src/deep_hedge_price/surface_data.py", "johnhull/hullkit/src/hullkit/vol_surface.py"],
+      "semantic_tests": ["deep_hedge_price/tests/test_frontier_reference.py", "deep_hedge_price/tests/test_pricing_calibration.py", "deep_hedge_price/tests/test_surface_data.py", "johnhull/hullkit/tests/test_vol_surface.py"],
+      "references": ["reference/metrics.json", "reference/surfaces.npz"],
+      "validation": "VALIDATION.md"
+    },
+    {
+      "number": 20,
+      "slug": "20_surface_dynamics",
+      "notebook": "surface_dynamics.ipynb",
+      "book_name": "20_surface_dynamics",
+      "portal_page": "ml_derivatives",
+      "portal_figures": ["forecast_paths", "forecast_metrics", "hedge_pnl", "hedge_economics"],
+      "semantic_sources": ["deep_hedge_price/src/deep_hedge_price/frontier_reference.py", "deep_hedge_price/src/deep_hedge_price/volatility_data.py", "deep_hedge_price/src/deep_hedge_price/walk_forward.py", "deep_hedge_price/src/deep_hedge_price/surface_hedge_pipeline.py"],
+      "semantic_tests": ["deep_hedge_price/tests/test_frontier_reference.py", "deep_hedge_price/tests/test_volatility_data.py", "deep_hedge_price/tests/test_walk_forward.py", "deep_hedge_price/tests/test_surface_hedge_pipeline.py"],
+      "references": ["reference/metrics.json", "reference/forecast_paths.npz"],
+      "validation": "VALIDATION.md"
+    },
+    {
+      "number": 21,
+      "slug": "21_spx_vix",
+      "notebook": "spx_vix.ipynb",
+      "book_name": "21_spx_vix",
+      "portal_page": "volatility_frontiers",
+      "portal_figures": ["spx_joint_fit", "vix_joint_fit", "joint_model_error", "nested_mc_speed"],
+      "semantic_sources": ["johnhull/hullkit/src/hullkit/frontier_reference.py", "johnhull/hullkit/src/hullkit/spx_vix.py"],
+      "semantic_tests": ["johnhull/hullkit/tests/test_frontier_reference.py", "johnhull/hullkit/tests/test_spx_vix.py"],
+      "references": ["reference/metrics.json", "reference/joint_surface.npz"],
+      "validation": "VALIDATION.md"
+    },
+    {
+      "number": 22,
+      "slug": "22_zero_dte",
+      "notebook": "zero_dte.ipynb",
+      "book_name": "22_zero_dte",
+      "portal_page": "volatility_frontiers",
+      "portal_figures": ["zero_dte_clock", "zero_dte_jump", "zero_dte_expiry", "zero_dte_ood"],
+      "semantic_sources": ["johnhull/hullkit/src/hullkit/frontier_reference.py", "johnhull/hullkit/src/hullkit/zero_dte.py"],
+      "semantic_tests": ["johnhull/hullkit/tests/test_frontier_reference.py", "johnhull/hullkit/tests/test_zero_dte.py"],
+      "references": ["reference/metrics.json", "reference/intraday_slices.npz"],
+      "validation": "VALIDATION.md"
+    },
+    {
+      "number": 23,
+      "slug": "23_rfr_post_libor",
+      "notebook": "rfr_post_libor.ipynb",
+      "book_name": "23_rfr_post_libor",
+      "portal_page": "rates_swaps",
+      "portal_figures": ["rfr_compounding", "rfr_convexity", "rfr_smile", "rfr_delta"],
+      "semantic_sources": ["johnhull/hullkit/src/hullkit/frontier_reference.py", "johnhull/hullkit/src/hullkit/rfr.py", "johnhull/hullkit/src/hullkit/rfr_options.py", "johnhull/hullkit/src/hullkit/sabr_normal.py"],
+      "semantic_tests": ["johnhull/hullkit/tests/test_frontier_reference.py", "johnhull/hullkit/tests/test_rfr.py", "johnhull/hullkit/tests/test_rfr_options.py", "johnhull/hullkit/tests/test_sabr_normal.py"],
+      "references": ["reference/metrics.json", "reference/rfr_scenarios.npz"],
+      "validation": "VALIDATION.md"
+    },
+    {
+      "number": 24,
+      "slug": "24_crypto_market_structure",
+      "notebook": "crypto_market_structure.ipynb",
+      "book_name": "24_crypto_market_structure",
+      "portal_page": "crypto_market",
+      "portal_figures": ["perpetual_prices", "liquidation_waterfall", "crypto_solvency", "amm_lvr"],
+      "semantic_sources": ["johnhull/hullkit/src/hullkit/frontier_reference.py", "johnhull/hullkit/src/hullkit/perpetuals.py", "johnhull/hullkit/src/hullkit/liquidation.py", "johnhull/hullkit/src/hullkit/amm.py"],
+      "semantic_tests": ["johnhull/hullkit/tests/test_frontier_reference.py", "johnhull/hullkit/tests/test_perpetuals.py", "johnhull/hullkit/tests/test_liquidation.py", "johnhull/hullkit/tests/test_amm.py"],
+      "references": ["reference/metrics.json", "reference/stress_paths.npz"],
+      "validation": "VALIDATION.md"
+    },
+    {
+      "number": 25,
+      "slug": "25_climate_energy",
+      "notebook": "climate_energy.ipynb",
+      "book_name": "25_climate_energy",
+      "portal_page": "climate_energy",
+      "portal_figures": ["carbon_smile", "weather_paths", "weather_basis", "ppa_risk"],
+      "semantic_sources": ["johnhull/hullkit/src/hullkit/frontier_reference.py", "johnhull/hullkit/src/hullkit/carbon.py", "johnhull/hullkit/src/hullkit/weather.py", "johnhull/hullkit/src/hullkit/ppa.py"],
+      "semantic_tests": ["johnhull/hullkit/tests/test_frontier_reference.py", "johnhull/hullkit/tests/test_carbon.py", "johnhull/hullkit/tests/test_weather.py", "johnhull/hullkit/tests/test_ppa.py"],
+      "references": ["reference/metrics.json", "reference/scenarios.npz"],
+      "validation": "VALIDATION.md"
+    }
+  ],
+  "portal": {
+    "themes": 11,
+    "figures": 70
+  },
+  "allowed_book_remote_dependencies": [],
+  "allowed_legacy_book_runtime_dependencies": [
+    "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+  ],
+  "vendored_book_assets": {
+    "book/_static/require.min.js": "4da0ce5a233163cb1cfd539c467bf75323e11c646634d2531f82fd6b22b6885d",
+    "book/_static/requirejs-LICENSE.txt": "4e51314366fce8914fde48ccd4d52255d37f5fcb72e00fe0dccbc6cbb6682bc9"
+  },
+  "forbidden_notebook_tokens": [
+    "requests.",
+    "httpx.",
+    "aiohttp.",
+    "urllib.",
+    "urlopen(",
+    "socket.",
+    "subprocess.",
+    "os.system(",
+    "curl ",
+    "wget ",
+    "torch.cuda",
+    "pricing-train",
+    "pip install"
+  ]
+}
