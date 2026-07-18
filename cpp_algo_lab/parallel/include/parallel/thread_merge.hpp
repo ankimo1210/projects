@@ -32,7 +32,11 @@ void thread_merge_impl(RandomIt first, RandomIt last, Compare comp, int depth) {
         return;
     }
     const auto mid = first + n / 2;
-    std::thread left(
+    // std::jthread (C++20) joins in its destructor: if the current thread's
+    // recursive call below threw, a plain std::thread would still be
+    // joinable when unwound and std::terminate would fire. RAII join is the
+    // language's answer to exactly this hole.
+    std::jthread left(
         [first, mid, comp, depth] { thread_merge_impl(first, mid, comp, depth - 1); });
     thread_merge_impl(mid, last, comp, depth - 1);
     left.join();
