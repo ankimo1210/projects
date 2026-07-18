@@ -34,6 +34,7 @@ def _errors(prediction, target):
 
 
 def bucket_metrics(inputs, prediction, target):
+    """Price errors bucketed by moneyness and maturity."""
     x = inputs[:, 0]
     tau = inputs[:, 1]
     buckets = {
@@ -162,6 +163,7 @@ def evaluate_pricing_run(
     polynomial_path: str | Path,
     project_root: str | Path,
 ):
+    """Full evaluation: split metrics, Greeks, hard checks, and benchmarks."""
     manifest, arrays = load_pricing_dataset(Path(manifest_path))
     model, checkpoint = load_pricing_model(checkpoint_path, device="cpu")
     polynomial = PolynomialRidge.load(polynomial_path)

@@ -6,6 +6,7 @@ import torch
 
 
 def scale_balanced_mse(prediction, target, scale):
+    """MSE with per-output scale normalization (Huge-Savine balancing)."""
     scale = torch.clamp(
         torch.as_tensor(scale, dtype=prediction.dtype, device=prediction.device), min=1e-12
     )
@@ -13,6 +14,7 @@ def scale_balanced_mse(prediction, target, scale):
 
 
 def direct_greek_loss(prediction, target, scales):
+    """Scale-balanced MSE over direct Greek heads."""
     if prediction.shape != target.shape:
         raise ValueError("direct Greek prediction/target shapes differ")
     scales = torch.clamp(
@@ -43,6 +45,7 @@ def price_and_greek_loss(
     greek_weight=0.0,
     differential_weight=0.0,
 ):
+    """Weighted sum of price, direct-Greek, and differential (DML) losses."""
     losses = {"price": scale_balanced_mse(price, target_price, price_scale)}
     total = price_weight * losses["price"]
     if direct_greeks is not None and greek_weight > 0:

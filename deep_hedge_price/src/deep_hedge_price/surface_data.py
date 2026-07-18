@@ -11,6 +11,8 @@ SUPPORTED_MODELS = ("heston", "sabr", "rbergomi")
 
 @dataclass(frozen=True)
 class ForwardSurfaceDataset:
+    """Teacher IV surface with variance term structure and uncertainty."""
+
     model: str
     parameters: np.ndarray
     log_moneyness: np.ndarray
@@ -24,6 +26,8 @@ class ForwardSurfaceDataset:
 
 @dataclass(frozen=True)
 class SurfaceTradeoff:
+    """Joint-objective losses at one ``lambda_var`` weight."""
+
     lambda_var: float
     total_loss: float
     iv_loss: float

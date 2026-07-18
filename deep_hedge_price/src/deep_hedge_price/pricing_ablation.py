@@ -42,6 +42,7 @@ class PricingAblationProtocol:
     material_price_degradation_ratio: float = 1.10
 
     def validate(self) -> None:
+        """Require three distinct non-negative seeds and positive sizes."""
         if len(self.model_seeds) != 3 or len(set(self.model_seeds)) != 3:
             raise ValueError("pricing ablation requires exactly three distinct model seeds")
         if min(self.model_seeds) < 0:

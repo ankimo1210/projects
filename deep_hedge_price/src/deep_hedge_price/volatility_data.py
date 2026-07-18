@@ -9,6 +9,8 @@ import numpy as np
 
 @dataclass(frozen=True)
 class WalkForwardSplit:
+    """One purged walk-forward fold: train/test indices, horizon, embargo."""
+
     train: np.ndarray
     test: np.ndarray
     horizon: int
@@ -159,11 +161,14 @@ def build_volatility_targets(
 
 @dataclass(frozen=True)
 class TrainWindowStandardizer:
+    """Standardizer fitted only on one walk-forward training window."""
+
     mean: np.ndarray
     scale: np.ndarray
 
     @classmethod
     def fit(cls, features: np.ndarray, train_indices: np.ndarray) -> TrainWindowStandardizer:
+        """Fit means/scales on the training rows only (no future leakage)."""
         values = np.asarray(features, dtype=float)
         indices = np.asarray(train_indices, dtype=int)
         if values.ndim != 2 or indices.ndim != 1 or len(indices) == 0:
@@ -181,6 +186,7 @@ class TrainWindowStandardizer:
         return cls(mean=train.mean(axis=0), scale=np.where(scale > 0, scale, 1.0))
 
     def transform(self, features: np.ndarray) -> np.ndarray:
+        """Standardize rows with the train-window statistics."""
         values = np.asarray(features, dtype=float)
         if values.ndim != 2 or values.shape[1:] != self.mean.shape:
             raise ValueError("features must match the fitted feature dimension")
@@ -205,6 +211,7 @@ class TrainWindowPCA:
         *,
         n_components: int,
     ) -> TrainWindowPCA:
+        """Fit PCA by SVD on the training rows only (no future leakage)."""
         values = np.asarray(features, dtype=float)
         indices = np.asarray(train_indices, dtype=int)
         if values.ndim != 2 or np.any(~np.isfinite(values)):
@@ -231,6 +238,7 @@ class TrainWindowPCA:
         )
 
     def transform(self, features: np.ndarray) -> np.ndarray:
+        """Project rows onto the train-window principal components."""
         values = np.asarray(features, dtype=float)
         if values.ndim != 2 or values.shape[1] != self.mean.size:
             raise ValueError("features must match the fitted feature dimension")

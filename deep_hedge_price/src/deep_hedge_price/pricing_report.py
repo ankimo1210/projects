@@ -89,6 +89,7 @@ def build_pricing_report(
     history_path: str | Path | None = None,
     output_path: str | Path,
 ):
+    """Render the self-contained offline HTML pricing report."""
     evaluation_path = Path(evaluation_path)
     evaluation = json.loads(evaluation_path.read_text(encoding="utf-8"))
     history = (
