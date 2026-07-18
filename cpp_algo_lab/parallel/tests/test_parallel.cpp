@@ -8,6 +8,8 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <limits>
+#include <stdexcept>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -29,6 +31,7 @@ TEST_CASE("depth_for_threads: smallest depth with 2^depth >= threads") {
     CHECK(lab::detail::depth_for_threads(4) == 2);
     CHECK(lab::detail::depth_for_threads(16) == 4);
     CHECK(lab::detail::depth_for_threads(20) == 5);
+    CHECK(lab::detail::depth_for_threads(std::numeric_limits<unsigned>::max()) == 32);
 }
 
 TEST_CASE("thread_merge_sort: conformance vs std::sort") {
@@ -74,6 +77,22 @@ TEST_CASE("thread_merge_sort: custom comparator (descending)") {
     CHECK(v == want);
 }
 
+TEST_CASE("thread_merge_sort: propagates exceptions from the spawned branch") {
+    struct ThrowOnNegative {
+        bool operator()(int a, int b) const {
+            if (a < 0 || b < 0) throw std::runtime_error("negative value");
+            return a < b;
+        }
+    };
+
+    std::vector<int> v(static_cast<std::size_t>(lab::kParallelSortCutoff) * 2);
+    const auto mid = v.begin() + lab::kParallelSortCutoff;
+    std::fill(v.begin(), mid, -1);  // spawned left branch throws
+    std::fill(mid, v.end(), 1);     // current-thread right branch succeeds
+    CHECK_THROWS_AS(lab::thread_merge_sort(v.begin(), v.end(), ThrowOnNegative{}, 2),
+                    std::runtime_error);
+}
+
 TEST_CASE("omp_merge_sort: conformance vs std::sort (incl. odd thread counts)") {
     const std::vector<std::size_t> sizes = {0, 1, 2, 3, 100, 4096};
     for (const lab::Dist d : lab::all_dists()) {
@@ -104,6 +123,16 @@ TEST_CASE("omp_merge_sort: stable") {
         },
         200000, 7);
     CHECK(stable);
+}
+
+TEST_CASE("omp_merge_sort: default thread convention and custom comparator") {
+    for (const int threads : {0, -1}) {
+        std::vector<int> v = lab::generate(lab::Dist::random_uniform, 50000, 42);
+        std::vector<int> want = v;
+        std::sort(want.begin(), want.end(), std::greater<>{});
+        lab::omp_merge_sort(v.begin(), v.end(), std::greater<>{}, threads);
+        CHECK(v == want);
+    }
 }
 
 TEST_CASE("par_stl_sort: conformance vs std::sort") {
@@ -186,7 +215,7 @@ TEST_CASE("omp_bmh_search: overlapping matches across boundaries") {
 
 TEST_CASE("omp_bmh_search: module conventions hold for every thread count") {
     using Occ = std::vector<std::size_t>;
-    for (const int threads : {1, 8}) {
+    for (const int threads : {-1, 0, 1, 8}) {
         CHECK(lab::omp_bmh_search("abc", "", threads) == Occ{0, 1, 2, 3});
         CHECK(lab::omp_bmh_search("", "", threads) == Occ{0});
         CHECK(lab::omp_bmh_search("", "a", threads).empty());
