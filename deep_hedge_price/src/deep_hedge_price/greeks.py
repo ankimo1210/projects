@@ -30,6 +30,7 @@ def autodiff_greeks(model, inputs: torch.Tensor, *, create_graph=False):
 
 
 def direct_autodiff_consistency(model, inputs: torch.Tensor):
+    """Mean absolute gap between direct Greek heads and autodiff Greeks."""
     price, direct = model.components(inputs)
     if direct is None:
         raise ValueError("model has no direct Greek heads")

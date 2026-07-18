@@ -31,6 +31,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 def ensure_output_directories(config: ProjectConfig, project_root: Path) -> dict[str, Path]:
+    """Create and return the artifact/report directory layout."""
     artifacts = project_root / config.output.artifacts_dir
     paths = {
         "artifacts": artifacts,
@@ -61,6 +62,7 @@ def _json_safe(value: Any) -> Any:
 
 
 def write_json(payload: dict[str, Any], path: Path) -> Path:
+    """Write a sorted, numpy-safe JSON payload, creating parent directories."""
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(_json_safe(payload), indent=2, sort_keys=True), encoding="utf-8")
     return path

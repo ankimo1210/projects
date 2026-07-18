@@ -8,6 +8,7 @@ import torch
 
 
 def price_bound_penalty(prices, inputs):
+    """Squared soft penalty for Merton lower/upper bound violations."""
     x, tau, rate, dividend, _sigma = inputs.unbind(dim=-1)
     discounted_spot = x * torch.exp(-dividend * tau)
     discounted_strike = torch.exp(-rate * tau)

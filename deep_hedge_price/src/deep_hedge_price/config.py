@@ -13,6 +13,8 @@ import yaml
 
 @dataclass(frozen=True)
 class MarketConfig:
+    """GBM market, short-call contract, and transaction-cost parameters."""
+
     seed: int = 1210
     s0: float = 100.0
     strike: float = 100.0
@@ -27,6 +29,7 @@ class MarketConfig:
     reporting_premium: float | None = None
 
     def validate(self) -> None:
+        """Reject non-positive market inputs and non-short option positions."""
         if self.s0 <= 0 or self.strike <= 0:
             raise ValueError("s0 and strike must be positive")
         if self.maturity_years <= 0 or self.n_steps <= 0:
@@ -42,19 +45,24 @@ class MarketConfig:
 
     @property
     def dt(self) -> float:
+        """Hedging interval in years."""
         return self.maturity_years / self.n_steps
 
     @property
     def transaction_cost_rate(self) -> float:
+        """Proportional cost rate converted from basis points."""
         return self.transaction_cost_bps * 1e-4
 
     @property
     def short_quantity(self) -> float:
+        """Positive number of options sold short."""
         return -self.option_position
 
 
 @dataclass(frozen=True)
 class PolicyConfig:
+    """MLP hedge-policy architecture and action clamp bounds."""
+
     hidden_layers: int = 3
     hidden_units: int = 64
     activation: str = "silu"
@@ -63,6 +71,7 @@ class PolicyConfig:
     action_max: float = 1.25
 
     def validate(self) -> None:
+        """Reject non-positive dimensions, unknown activations, and bad clamps."""
         if self.hidden_layers <= 0 or self.hidden_units <= 0:
             raise ValueError("policy dimensions must be positive")
         if self.activation not in {"silu", "tanh"}:
@@ -73,11 +82,14 @@ class PolicyConfig:
 
 @dataclass(frozen=True)
 class RiskConfig:
+    """Training risk objective: mse, entropic, or CVaR with its parameters."""
+
     objective: str = "mse"
     entropic_gamma: float = 10.0
     cvar_alpha: float = 0.95
 
     def validate(self) -> None:
+        """Reject unknown objectives and out-of-range gamma/alpha."""
         if self.objective not in {"mse", "entropic", "cvar"}:
             raise ValueError("objective must be mse, entropic, or cvar")
         if self.entropic_gamma <= 0:
@@ -88,6 +100,8 @@ class RiskConfig:
 
 @dataclass(frozen=True)
 class TrainingConfig:
+    """Optimizer, batching, early-stopping, and device settings."""
+
     device: str = "auto"
     batch_size: int = 4096
     epochs: int = 200
@@ -102,6 +116,7 @@ class TrainingConfig:
     deterministic: bool = True
 
     def validate(self) -> None:
+        """Reject unknown devices/schedulers and non-positive counts."""
         if self.device not in {"auto", "cpu", "cuda"}:
             raise ValueError("device must be auto, cpu, or cuda")
         positive = (
@@ -124,12 +139,15 @@ class TrainingConfig:
 
 @dataclass(frozen=True)
 class ExperimentConfig:
+    """Cost-grid sweep, no-trade band, and optional entropic run switches."""
+
     transaction_cost_grid_bps: tuple[float, ...] = (0.0, 1.0, 5.0, 10.0, 25.0)
     no_trade_band: float = 0.05
     meaningful_trade_threshold: float = 0.001
     run_entropic: bool = True
 
     def validate(self) -> None:
+        """Reject an empty cost grid and negative costs/bands."""
         if not self.transaction_cost_grid_bps:
             raise ValueError("transaction cost grid cannot be empty")
         if any(cost < 0 for cost in self.transaction_cost_grid_bps):
@@ -140,12 +158,16 @@ class ExperimentConfig:
 
 @dataclass(frozen=True)
 class OutputConfig:
+    """Artifact and report output directories."""
+
     artifacts_dir: str = "artifacts"
     reports_dir: str = "reports"
 
 
 @dataclass(frozen=True)
 class ProjectConfig:
+    """Complete validated experiment configuration with a stable fingerprint."""
+
     profile: str = "default"
     market: MarketConfig = field(default_factory=MarketConfig)
     policy: PolicyConfig = field(default_factory=PolicyConfig)
@@ -155,6 +177,7 @@ class ProjectConfig:
     output: OutputConfig = field(default_factory=OutputConfig)
 
     def validate(self) -> None:
+        """Validate every sub-configuration."""
         self.market.validate()
         self.policy.validate()
         self.risk.validate()
@@ -162,16 +185,20 @@ class ProjectConfig:
         self.experiment.validate()
 
     def to_dict(self) -> dict[str, Any]:
+        """Plain-dict view used for YAML export and fingerprinting."""
         return asdict(self)
 
     def fingerprint(self, length: int = 12) -> str:
+        """Deterministic SHA-256 prefix of the sorted configuration JSON."""
         payload = json.dumps(self.to_dict(), sort_keys=True, separators=(",", ":"))
         return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:length]
 
     def with_market(self, **changes: Any) -> ProjectConfig:
+        """Copy with market-field overrides."""
         return replace(self, market=replace(self.market, **changes))
 
     def with_risk(self, **changes: Any) -> ProjectConfig:
+        """Copy with risk-field overrides."""
         return replace(self, risk=replace(self.risk, **changes))
 
 

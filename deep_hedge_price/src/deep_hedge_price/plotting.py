@@ -116,6 +116,7 @@ def training_diagram() -> Figure:
 
 
 def sample_paths_figure(config: ProjectConfig, n_paths: int = 24) -> Figure:
+    """Sample physical-measure GBM paths against the strike."""
     paths = simulate_gbm(config.market, n_paths, seed=config.market.seed + 40_000).numpy()
     days = np.arange(config.market.n_steps + 1)
     figure, axis = plt.subplots(figsize=(8.5, 4.5))
@@ -127,6 +128,7 @@ def sample_paths_figure(config: ProjectConfig, n_paths: int = 24) -> Figure:
 
 
 def payoff_figure(config: ProjectConfig) -> Figure:
+    """Terminal call payoff diagram for the configured strike."""
     spots = np.linspace(60, 140, 300)
     payoff = np.maximum(spots - config.market.strike, 0)
     figure, axis = plt.subplots(figsize=(7.5, 4.2))
@@ -141,6 +143,7 @@ def payoff_figure(config: ProjectConfig) -> Figure:
 
 
 def training_history_figure(history: pd.DataFrame, objective: str = "MSE") -> Figure:
+    """Training and validation objective curves by epoch."""
     figure, axis = plt.subplots(figsize=(8.5, 4.5))
     train = history.dropna(subset=["train_objective"])
     axis.plot(train["epoch"], train["train_objective"], label="Training", color="#2563EB")
@@ -158,6 +161,7 @@ def training_history_figure(history: pd.DataFrame, objective: str = "MSE") -> Fi
 
 
 def pnl_distribution_figure(frame: pd.DataFrame) -> Figure:
+    """Discounted P&L histograms per strategy on common paths."""
     figure, axis = plt.subplots(figsize=(9, 4.8))
     lower, upper = frame["discounted_pnl"].quantile([0.005, 0.995])
     bins = np.linspace(lower, upper, 90)
@@ -182,6 +186,7 @@ def pnl_distribution_figure(frame: pd.DataFrame) -> Figure:
 
 
 def ecdf_figure(frame: pd.DataFrame) -> Figure:
+    """Left-tail empirical CDF of discounted P&L per strategy."""
     figure, axis = plt.subplots(figsize=(9, 4.8))
     lower = frame["discounted_pnl"].quantile(0.001)
     upper = frame["discounted_pnl"].quantile(0.25)
@@ -203,6 +208,7 @@ def ecdf_figure(frame: pd.DataFrame) -> Figure:
 
 
 def var_cvar_figure(summary: pd.DataFrame) -> Figure:
+    """VaR and CVaR bars per strategy."""
     ordered = [name for name in LABELS if name in summary.index]
     x = np.arange(len(ordered))
     width = 0.36
@@ -224,6 +230,7 @@ def var_cvar_figure(summary: pd.DataFrame) -> Figure:
 
 
 def turnover_cost_figure(summary: pd.DataFrame) -> Figure:
+    """Turnover and transaction-cost bars per strategy."""
     ordered = [name for name in LABELS if name in summary.index]
     figure, axes = plt.subplots(1, 2, figsize=(10, 4.3))
     labels = [LABELS[name] for name in ordered]
@@ -244,6 +251,7 @@ def _surface_grid(surface: pd.DataFrame, value: str) -> tuple[np.ndarray, np.nda
 
 
 def policy_heatmap_figure(surface: pd.DataFrame, *, difference: bool = False) -> Figure:
+    """Learned holdings (or difference vs BS delta) over spot and maturity."""
     field = "difference" if difference else "neural_delta"
     spots, taus, values = _surface_grid(surface, field)
     figure, axis = plt.subplots(figsize=(8.6, 5.2))
@@ -272,6 +280,7 @@ def policy_heatmap_figure(surface: pd.DataFrame, *, difference: bool = False) ->
 
 
 def policy_slices_figure(surface: pd.DataFrame) -> Figure:
+    """Policy-vs-BS-delta slices at selected times to maturity."""
     figure, axis = plt.subplots(figsize=(8.6, 4.8))
     available = np.sort(surface["tau_normalized"].unique())
     for requested, color in zip(
@@ -297,6 +306,7 @@ def policy_slices_figure(surface: pd.DataFrame) -> Figure:
 
 
 def trade_scatter_figure(scatter: pd.DataFrame) -> Figure:
+    """Trade size vs previous holdings, revealing any no-trade band."""
     figure, axis = plt.subplots(figsize=(7.4, 5.3))
     points = axis.scatter(
         scatter["previous_delta"],
@@ -316,6 +326,7 @@ def trade_scatter_figure(scatter: pd.DataFrame) -> Figure:
 
 
 def sensitivity_figure(sensitivity: pd.DataFrame) -> Figure:
+    """Risk and cost metrics across the transaction-cost grid."""
     figure, axes = plt.subplots(2, 2, figsize=(10, 7.2), sharex=True)
     specs = [
         ("std_discounted_pnl_after_costs_including_premium", "P&L standard deviation"),
@@ -334,6 +345,7 @@ def sensitivity_figure(sensitivity: pd.DataFrame) -> Figure:
 
 
 def risk_objective_figure(risk: pd.DataFrame) -> Figure:
+    """Risk metrics compared across training objectives."""
     columns = [
         "std_discounted_pnl_after_costs_including_premium",
         "cvar_loss_99",
