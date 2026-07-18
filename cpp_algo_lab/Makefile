@@ -15,7 +15,7 @@ SORT_HDRS    := $(wildcard sorting/include/sorting/*.hpp)
 SEARCH_HDRS  := $(wildcard search/include/search/*.hpp)
 PAR_HDRS     := $(wildcard parallel/include/parallel/*.hpp)
 
-.PHONY: all test bench bench-sorting bench-search bench-parallel bench-quick bench-search-quick bench-parallel-quick trace plot plot-sorting plot-search clean
+.PHONY: all test bench bench-sorting bench-search bench-parallel bench-quick bench-search-quick bench-parallel-quick trace plot plot-sorting plot-search plot-parallel clean
 
 all: $(BUILD)/test_common $(BUILD)/test_sorting $(BUILD)/test_search $(BUILD)/test_parallel $(BUILD)/bench_sorting $(BUILD)/bench_search $(BUILD)/bench_parallel
 
@@ -72,13 +72,16 @@ bench-parallel-quick: $(BUILD)/bench_parallel
 trace: $(BUILD)/bench_sorting
 	$(BUILD)/bench_sorting --trace
 
-plot: plot-sorting plot-search
+plot: plot-sorting plot-search plot-parallel
 
 plot-sorting:
 	cd .. && uv run --no-sync python cpp_algo_lab/scripts/plot_results.py
 
 plot-search:
 	cd .. && uv run --no-sync python cpp_algo_lab/scripts/plot_search.py
+
+plot-parallel:
+	cd .. && uv run --no-sync python cpp_algo_lab/scripts/plot_parallel.py
 
 clean:
 	rm -rf $(BUILD)
