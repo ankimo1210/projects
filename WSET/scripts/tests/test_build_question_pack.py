@@ -11,6 +11,7 @@ from scripts.build_question_pack import (
     EXPECTED_CORRECT_ANSWER_COUNTS,
     EXPECTED_LO_COUNTS,
     QuestionPackError,
+    _distribution_status,
     build_pack,
     check_existing_pack,
     pack_question,
@@ -92,6 +93,7 @@ class QuestionPackBuilderTests(unittest.TestCase):
                 for question in questions
             )
         )
+        self.assertEqual(self.payload["distributionStatus"], "development_only")
         self.assertEqual(
             self.payload["source"]["file"],
             "QuestionSources/wset_level3_original_questions_1100_v6.xlsx",
@@ -141,6 +143,52 @@ class QuestionPackBuilderTests(unittest.TestCase):
         approved = dict(self.rows[0])
         approved["レビュー状態"] = "承認"
         self.assertEqual(pack_question(approved)["reviewStatus"], "approved")
+
+        target_hash = pack_question(self.rows[0])["reviewTargetHash"]
+        published = dict(self.rows[0])
+        published["レビュー状態"] = "公開"
+        published["要レビュー"] = "N"
+        published["レビュアー"] = "External reviewer"
+        published["レビュー日"] = "2026-07-19"
+        published["レビューコメント"] = "内容・正答・解説を確認済み"
+        published["レビュー対象ハッシュ"] = target_hash
+        packed = pack_question(published)
+        self.assertEqual(packed["reviewStatus"], "published")
+        self.assertEqual(_distribution_status([packed]), "release")
+
+    def test_published_question_requires_human_evidence_bound_to_content(self) -> None:
+        published = dict(self.rows[0])
+        published["レビュー状態"] = "公開"
+        published["要レビュー"] = "N"
+
+        with self.assertRaisesRegex(QuestionPackError, "external human reviewer"):
+            pack_question(published)
+
+        published["レビュアー"] = "External reviewer"
+        published["レビュー日"] = "2026-07-19"
+        published["レビューコメント"] = "レビュー完了"
+        published["レビュー対象ハッシュ"] = "0" * 64
+        with self.assertRaisesRegex(QuestionPackError, "missing or stale"):
+            pack_question(published)
+
+    def test_release_status_requires_every_question_to_be_published(self) -> None:
+        published = dict(self.payload["questions"][0])
+        published["reviewStatus"] = "published"
+        published["needsReview"] = False
+        published["reviewer"] = "External reviewer"
+        published["reviewedAt"] = "2026-07-19"
+        published["reviewComment"] = "レビュー完了"
+        published["reviewedContentHash"] = published["reviewTargetHash"]
+        pending = dict(published)
+        pending["reviewStatus"] = "ai_reviewed_pending_expert"
+
+        self.assertEqual(_distribution_status([published]), "release")
+        self.assertEqual(
+            _distribution_status([published, pending]),
+            "development_only",
+        )
+        published["needsReview"] = True
+        self.assertEqual(_distribution_status([published]), "development_only")
 
     def test_written_pack_can_be_checked_against_the_workbook(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

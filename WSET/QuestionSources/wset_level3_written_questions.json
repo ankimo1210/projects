@@ -1,0 +1,654 @@
+{
+  "schemaVersion": 1,
+  "questions": [
+    {
+      "id": "SAQ-LO1-001",
+      "prompt": "春の霜がブドウ樹と収量に与える影響を説明し、栽培者が利用できる対策を3つ評価してください。",
+      "modelAnswer": "春の霜は萌芽後の若い芽や花序を損傷し、当年の光合成能力と収量を低下させる。低地では冷気が滞留しやすく被害が大きい。遅く剪定して萌芽を遅らせる方法は低コストだが、生育期間を短くする可能性がある。送風機は逆転層がある放射霜で暖気を混合できるが、設備費と騒音が課題になる。散水は凍結時に放出される潜熱で組織を保護できるが、十分な水源と連続運転が必要で、水不足や氷の重量が制約になる。",
+      "explanation": "影響、立地条件、各対策の仕組みと制約を因果関係で結びます。",
+      "unit": "Theory",
+      "learningOutcome": "u1_lo1",
+      "learningOutcomeName": "ブドウ畑における自然要因と人的要因",
+      "category": "自然要因・栽培",
+      "subcategory": "気象災害",
+      "topic": "春の霜",
+      "cognitiveSkill": "評価",
+      "commandVerb": "説明・評価する",
+      "geography": [],
+      "countries": [],
+      "regions": [],
+      "grapeVarieties": [],
+      "markAllocation": 8,
+      "suggestedMinutes": 12,
+      "difficulty": "D3",
+      "wineType": "共通・横断",
+      "reviewStatus": "pending_external_review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "metadata": {
+        "authoringMethod": "AI支援を用いた独自草案",
+        "externalReviewRequired": true,
+        "reviewNotes": "WSET Level 3有識者による内容・配点レビュー待ち"
+      },
+      "rubricItems": [
+        {
+          "id": "SAQ-LO1-001-R1",
+          "criterion": "若い芽・花序の損傷と収量低下を説明している",
+          "marks": 2,
+          "knowledgeTags": ["自然要因", "栽培・ブドウ樹"],
+          "relatedTermIDs": ["term-4da73545bddc", "term-76e451fceaa3"]
+        },
+        {
+          "id": "SAQ-LO1-001-R2",
+          "criterion": "冷気滞留など立地によるリスク差を説明している",
+          "marks": 1,
+          "knowledgeTags": ["自然要因"],
+          "relatedTermIDs": ["term-dd83994a2ebb"]
+        },
+        {
+          "id": "SAQ-LO1-001-R3",
+          "criterion": "遅剪定の効果と制約を評価している",
+          "marks": 1,
+          "knowledgeTags": ["栽培・ブドウ樹"],
+          "relatedTermIDs": ["term-4da73545bddc"]
+        },
+        {
+          "id": "SAQ-LO1-001-R4",
+          "criterion": "送風機の仕組み、適用条件、制約を評価している",
+          "marks": 2,
+          "knowledgeTags": ["栽培・ブドウ樹"],
+          "relatedTermIDs": ["term-4da73545bddc", "term-dd83994a2ebb"]
+        },
+        {
+          "id": "SAQ-LO1-001-R5",
+          "criterion": "散水の仕組みと水源・運転上の制約を評価している",
+          "marks": 2,
+          "knowledgeTags": ["栽培・ブドウ樹"],
+          "relatedTermIDs": ["term-5a3bc330eab8", "term-4da73545bddc"]
+        }
+      ]
+    },
+    {
+      "id": "SAQ-LO2-001",
+      "prompt": "ボルドーでカベルネ・ソーヴィニヨンとメルロをブレンドする理由を、自然条件とワインスタイルの両面から説明してください。",
+      "modelAnswer": "ボルドーの海洋性気候では年ごとの降雨と気温が変動し、開花や成熟に影響する。早熟のメルロと晩熟のカベルネ・ソーヴィニヨンを組み合わせることで、品種ごとの不作リスクを分散できる。メルロは果実味、アルコール、ふくよかな口当たりを与えやすく、カベルネ・ソーヴィニヨンは酸、タンニン、黒系果実や熟成能力を与える。比率を区画とヴィンテージに合わせて調整することで、バランスと一貫性を高められる。",
+      "explanation": "品種の成熟時期と構造上の役割を、ブレンドの目的へ結びつけます。",
+      "unit": "Theory",
+      "learningOutcome": "u1_lo2",
+      "learningOutcomeName": "世界のスティルワイン",
+      "category": "産地・スタイル",
+      "subcategory": "ブレンド",
+      "topic": "ボルドーのブレンド",
+      "cognitiveSkill": "因果説明",
+      "commandVerb": "説明する",
+      "geography": ["フランス", "ボルドー"],
+      "countries": ["フランス"],
+      "regions": ["ボルドー"],
+      "grapeVarieties": ["カベルネ・ソーヴィニヨン", "メルロ"],
+      "markAllocation": 6,
+      "suggestedMinutes": 9,
+      "difficulty": "D2",
+      "wineType": "非発泡性ワイン",
+      "reviewStatus": "pending_external_review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "metadata": {
+        "authoringMethod": "AI支援を用いた独自草案",
+        "externalReviewRequired": true,
+        "reviewNotes": "WSET Level 3有識者による内容・配点レビュー待ち"
+      },
+      "rubricItems": [
+        {
+          "id": "SAQ-LO2-001-R1",
+          "criterion": "海洋性気候の変動と成熟リスクを説明している",
+          "marks": 1,
+          "knowledgeTags": ["自然要因"],
+          "relatedTermIDs": ["term-71cdcab321fd", "term-97f5e23c0c74"]
+        },
+        {
+          "id": "SAQ-LO2-001-R2",
+          "criterion": "成熟時期の異なる品種によるリスク分散を説明している",
+          "marks": 2,
+          "knowledgeTags": ["品種", "産地・スタイル"],
+          "relatedTermIDs": ["term-f2c340ce7b7b", "term-2a0610c58883"]
+        },
+        {
+          "id": "SAQ-LO2-001-R3",
+          "criterion": "メルロが果実味とふくよかさを与えることを説明している",
+          "marks": 1,
+          "knowledgeTags": ["品種"],
+          "relatedTermIDs": ["term-2a0610c58883"]
+        },
+        {
+          "id": "SAQ-LO2-001-R4",
+          "criterion": "カベルネ・ソーヴィニヨンが酸・タンニン・熟成力を与えることを説明している",
+          "marks": 1,
+          "knowledgeTags": ["品種"],
+          "relatedTermIDs": ["term-f2c340ce7b7b"]
+        },
+        {
+          "id": "SAQ-LO2-001-R5",
+          "criterion": "ヴィンテージや区画に応じた比率調整の目的を説明している",
+          "marks": 1,
+          "knowledgeTags": ["熟成・ブレンド"],
+          "relatedTermIDs": ["term-4ca2970b0160", "term-1b7de08b389e"]
+        }
+      ]
+    },
+    {
+      "id": "SAQ-LO2-002",
+      "prompt": "モーゼルのリースリングとクレア・ヴァレーのリースリングについて、自然条件、ブドウの成熟、典型的なワインスタイルを比較してください。",
+      "modelAnswer": "モーゼルは冷涼で、急斜面と川からの反射が成熟を助ける。ブドウは高い酸を保ち、糖度とアルコールが比較的低い状態でも香りを発達させやすい。ワインは軽いボディ、高い酸、柑橘や青リンゴ、場合により残糖を持つ。クレア・ヴァレーは温暖で日照が強いが、標高と冷涼な夜が酸の保持を助ける。辛口が中心で、熟したライム系果実、モーゼルより高いアルコールとボディを持ちやすく、熟成でトーストや石油を思わせる香りが発達し得る。",
+      "explanation": "単なる特徴列挙ではなく、自然条件から成熟とスタイルへつなげます。",
+      "unit": "Theory",
+      "learningOutcome": "u1_lo2",
+      "learningOutcomeName": "世界のスティルワイン",
+      "category": "産地・スタイル",
+      "subcategory": "産地比較",
+      "topic": "冷涼・温暖産地のリースリング",
+      "cognitiveSkill": "比較",
+      "commandVerb": "比較する",
+      "geography": ["ドイツ", "オーストラリア", "モーゼル", "クレア・ヴァレー"],
+      "countries": ["ドイツ", "オーストラリア"],
+      "regions": ["モーゼル", "クレア・ヴァレー"],
+      "grapeVarieties": ["リースリング"],
+      "markAllocation": 8,
+      "suggestedMinutes": 12,
+      "difficulty": "D3",
+      "wineType": "非発泡性ワイン",
+      "reviewStatus": "pending_external_review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "metadata": {
+        "authoringMethod": "AI支援を用いた独自草案",
+        "externalReviewRequired": true,
+        "reviewNotes": "WSET Level 3有識者による内容・配点レビュー待ち"
+      },
+      "rubricItems": [
+        {
+          "id": "SAQ-LO2-002-R1",
+          "criterion": "モーゼルの冷涼さ、斜面、川の影響を説明している",
+          "marks": 2,
+          "knowledgeTags": ["自然要因"],
+          "relatedTermIDs": ["term-754f057429dc", "term-4e7a12a4d8fa"]
+        },
+        {
+          "id": "SAQ-LO2-002-R2",
+          "criterion": "モーゼルの高い酸、軽いボディ、低めのアルコールまたは残糖を説明している",
+          "marks": 2,
+          "knowledgeTags": ["産地・スタイル"],
+          "relatedTermIDs": ["term-754f057429dc", "term-4e7a12a4d8fa"]
+        },
+        {
+          "id": "SAQ-LO2-002-R3",
+          "criterion": "クレア・ヴァレーの日照、標高、夜間の冷却を説明している",
+          "marks": 2,
+          "knowledgeTags": ["自然要因"],
+          "relatedTermIDs": ["term-36f0de2b0b7a", "term-2462daec884e"]
+        },
+        {
+          "id": "SAQ-LO2-002-R4",
+          "criterion": "クレア・ヴァレーの辛口、ライム系果実、相対的に高いボディと熟成特徴を説明している",
+          "marks": 2,
+          "knowledgeTags": ["産地・スタイル", "熟成・ブレンド"],
+          "relatedTermIDs": ["term-36f0de2b0b7a", "term-4e7a12a4d8fa"]
+        }
+      ]
+    },
+    {
+      "id": "SAQ-LO2-003",
+      "prompt": "リオハで熟成容器と熟成期間の選択が赤ワインのスタイルと価格に与える影響を説明してください。",
+      "modelAnswer": "オーク樽は酸素との緩やかな接触によってタンニンの重合と口当たりの軟化を促し、樽の種類や新旧に応じてバニラ、スパイス、トーストなどの香りを加える。長い熟成では果実香が発達香へ移り、革や乾燥果実の複雑性が増す一方、保管中は資金と在庫スペースが拘束される。新樽、小樽、長期熟成は樽代、蒸発、管理費を増やすため価格上昇要因になる。短い熟成や大きな古樽は果実味を保ち、より早く販売できる。生産者は目標スタイル、果実濃度、販売価格に合わせて選択する。",
+      "explanation": "容器・時間が香味、構造、在庫費用へ及ぼす影響を説明します。",
+      "unit": "Theory",
+      "learningOutcome": "u1_lo2",
+      "learningOutcomeName": "世界のスティルワイン",
+      "category": "熟成・商業",
+      "subcategory": "樽熟成",
+      "topic": "リオハの熟成",
+      "cognitiveSkill": "因果説明",
+      "commandVerb": "説明する",
+      "geography": ["スペイン", "リオハ"],
+      "countries": ["スペイン"],
+      "regions": ["リオハ"],
+      "grapeVarieties": ["テンプラニーリョ"],
+      "markAllocation": 6,
+      "suggestedMinutes": 9,
+      "difficulty": "D2",
+      "wineType": "非発泡性ワイン",
+      "reviewStatus": "pending_external_review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "metadata": {
+        "authoringMethod": "AI支援を用いた独自草案",
+        "externalReviewRequired": true,
+        "reviewNotes": "WSET Level 3有識者による内容・配点レビュー待ち"
+      },
+      "rubricItems": [
+        {
+          "id": "SAQ-LO2-003-R1",
+          "criterion": "酸素接触によるタンニン軟化を説明している",
+          "marks": 1,
+          "knowledgeTags": ["熟成・ブレンド"],
+          "relatedTermIDs": ["term-d9e0d57c9bf3", "term-0ebe62ef97f8"]
+        },
+        {
+          "id": "SAQ-LO2-003-R2",
+          "criterion": "樽由来香と発達香への影響を説明している",
+          "marks": 2,
+          "knowledgeTags": ["熟成・ブレンド"],
+          "relatedTermIDs": ["term-d9e0d57c9bf3", "term-8d9e8fb51794"]
+        },
+        {
+          "id": "SAQ-LO2-003-R3",
+          "criterion": "樽・保管・蒸発・資金拘束が価格を上げることを説明している",
+          "marks": 2,
+          "knowledgeTags": ["商業・価格・品質"],
+          "relatedTermIDs": ["term-0ebe62ef97f8", "term-4ca2970b0160"]
+        },
+        {
+          "id": "SAQ-LO2-003-R4",
+          "criterion": "短期熟成による果実味と早期販売の利点を説明している",
+          "marks": 1,
+          "knowledgeTags": ["熟成・ブレンド", "商業・価格・品質"],
+          "relatedTermIDs": ["term-0ebe62ef97f8", "term-8d9e8fb51794"]
+        }
+      ]
+    },
+    {
+      "id": "SAQ-LO3-001",
+      "prompt": "シャンパーニュ方式で瓶内二次発酵後の澱との接触と動瓶・澱抜きが、ワインのスタイルと生産コストに与える影響を説明してください。",
+      "modelAnswer": "瓶内二次発酵で生じた酵母の澱と接触させると自己分解によりパン、ビスケット、ブリオッシュのような香りが加わり、質感と複雑性が増す。接触期間が長いほどこの影響と在庫保管費が大きくなる。動瓶は澱を瓶口へ集め、澱抜きで除去するために必要である。手作業では労働費が高く、機械化には設備投資が必要になる。長期保管、瓶ごとの取扱い、澱抜き、補酒によって、タンク方式より時間とコストがかかりやすい。",
+      "explanation": "製法の各工程を香味・質感・費用へ結びつけます。",
+      "unit": "Theory",
+      "learningOutcome": "u1_lo3",
+      "learningOutcomeName": "スパークリングワイン",
+      "category": "醸造・製法",
+      "subcategory": "瓶内二次発酵",
+      "topic": "伝統方式",
+      "cognitiveSkill": "因果説明",
+      "commandVerb": "説明する",
+      "geography": ["フランス", "シャンパーニュ"],
+      "countries": ["フランス"],
+      "regions": ["シャンパーニュ"],
+      "grapeVarieties": ["シャルドネ", "ピノ・ノワール", "ムーニエ"],
+      "markAllocation": 8,
+      "suggestedMinutes": 12,
+      "difficulty": "D2",
+      "wineType": "発泡性ワイン",
+      "reviewStatus": "pending_external_review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "metadata": {
+        "authoringMethod": "AI支援を用いた独自草案",
+        "externalReviewRequired": true,
+        "reviewNotes": "WSET Level 3有識者による内容・配点レビュー待ち"
+      },
+      "rubricItems": [
+        {
+          "id": "SAQ-LO3-001-R1",
+          "criterion": "酵母自己分解による香りと複雑性を説明している",
+          "marks": 2,
+          "knowledgeTags": ["醸造・製法", "熟成・ブレンド"],
+          "relatedTermIDs": ["term-417e0c287a84", "term-13c6eb8f9233"]
+        },
+        {
+          "id": "SAQ-LO3-001-R2",
+          "criterion": "澱接触期間と質感・在庫費の関係を説明している",
+          "marks": 2,
+          "knowledgeTags": ["熟成・ブレンド", "商業・価格・品質"],
+          "relatedTermIDs": ["term-13c6eb8f9233", "term-b41a0670803e"]
+        },
+        {
+          "id": "SAQ-LO3-001-R3",
+          "criterion": "動瓶と澱抜きの目的を説明している",
+          "marks": 2,
+          "knowledgeTags": ["醸造・製法"],
+          "relatedTermIDs": ["term-f02ca9d1155c", "term-225d8e38e70f"]
+        },
+        {
+          "id": "SAQ-LO3-001-R4",
+          "criterion": "瓶ごとの処理、労働または設備投資がコストを上げることを説明している",
+          "marks": 2,
+          "knowledgeTags": ["商業・価格・品質"],
+          "relatedTermIDs": ["term-b41a0670803e", "term-225d8e38e70f"]
+        }
+      ]
+    },
+    {
+      "id": "SAQ-LO4-001",
+      "prompt": "フィノ・シェリーの生産においてフロールが果たす役割と、フロールを維持するために必要な条件を説明してください。",
+      "modelAnswer": "フロールはワイン表面を覆う酵母膜で、酸素からワインを部分的に保護しながら生物学的熟成を行う。酵母はアルコールやグリセロールなどを消費し、アセトアルデヒドを生成するため、フィノは辛口で軽いボディとなり、青リンゴ、アーモンド、パン生地を思わせる特徴を持つ。フロールには樽内の空間、酸素、適度な温度と湿度、栄養、新しいワインの補給が必要である。ソレラから定期的に取り出し、若いワインを補充することが活性維持に役立つ。",
+      "explanation": "フロールの生物学的作用、スタイル、維持条件を区別します。",
+      "unit": "Theory",
+      "learningOutcome": "u1_lo4",
+      "learningOutcomeName": "酒精強化ワイン",
+      "category": "醸造・製法",
+      "subcategory": "生物学的熟成",
+      "topic": "フィノ・シェリー",
+      "cognitiveSkill": "因果説明",
+      "commandVerb": "説明する",
+      "geography": ["スペイン", "ヘレス"],
+      "countries": ["スペイン"],
+      "regions": ["ヘレス"],
+      "grapeVarieties": ["パロミノ"],
+      "markAllocation": 6,
+      "suggestedMinutes": 9,
+      "difficulty": "D2",
+      "wineType": "酒精強化ワイン",
+      "reviewStatus": "pending_external_review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "metadata": {
+        "authoringMethod": "AI支援を用いた独自草案",
+        "externalReviewRequired": true,
+        "reviewNotes": "WSET Level 3有識者による内容・配点レビュー待ち"
+      },
+      "rubricItems": [
+        {
+          "id": "SAQ-LO4-001-R1",
+          "criterion": "フロールが表面を覆う酵母膜であることを説明している",
+          "marks": 1,
+          "knowledgeTags": ["醸造・製法"],
+          "relatedTermIDs": ["term-30892603b5c3"]
+        },
+        {
+          "id": "SAQ-LO4-001-R2",
+          "criterion": "酸素保護と生物学的熟成を説明している",
+          "marks": 1,
+          "knowledgeTags": ["熟成・ブレンド"],
+          "relatedTermIDs": ["term-f5d0f6653494", "term-30892603b5c3"]
+        },
+        {
+          "id": "SAQ-LO4-001-R3",
+          "criterion": "酵母代謝とフィノの香味・構造を結びつけている",
+          "marks": 2,
+          "knowledgeTags": ["醸造・製法", "産地・スタイル"],
+          "relatedTermIDs": ["term-30892603b5c3", "term-bc0cb08a3cd9"]
+        },
+        {
+          "id": "SAQ-LO4-001-R4",
+          "criterion": "樽内空間、酸素、温湿度など維持条件を説明している",
+          "marks": 1,
+          "knowledgeTags": ["熟成・ブレンド"],
+          "relatedTermIDs": ["term-30892603b5c3", "term-2ff50a3f0f1d"]
+        },
+        {
+          "id": "SAQ-LO4-001-R5",
+          "criterion": "ソレラでの若いワイン補給が活性維持に役立つことを説明している",
+          "marks": 1,
+          "knowledgeTags": ["熟成・ブレンド"],
+          "relatedTermIDs": ["term-81af8319f489", "term-30892603b5c3"]
+        }
+      ]
+    },
+    {
+      "id": "SAQ-LO4-002",
+      "prompt": "ドウロで高品質なヴィンテージ・ポート用ブドウを生産する際の自然条件と、醸造時に短期間で色とタンニンを抽出する方法を説明してください。",
+      "modelAnswer": "ドウロは夏が暑く乾燥し、片岩質の急斜面は排水性が高く、根が亀裂へ伸びて水を得られる。標高と斜面方位によって日照と温度が異なるため、区画選択が成熟と酸の保持に重要である。急斜面では機械化が難しく、段々畑の維持と手作業がコストを高める。発酵途中で酒精強化するため抽出期間が短く、足踏み、ロボット式ラガール、ピストン・プランジャーなどで果皮を頻繁かつ強く攪拌し、短期間で色、香味、タンニンを抽出する。",
+      "explanation": "畑の自然条件・コストと、短い発酵期間に対応する抽出技術を説明します。",
+      "unit": "Theory",
+      "learningOutcome": "u1_lo4",
+      "learningOutcomeName": "酒精強化ワイン",
+      "category": "自然要因・醸造",
+      "subcategory": "ポート",
+      "topic": "ドウロと抽出",
+      "cognitiveSkill": "統合判断",
+      "commandVerb": "説明する",
+      "geography": ["ポルトガル", "ドウロ"],
+      "countries": ["ポルトガル"],
+      "regions": ["ドウロ", "ポート"],
+      "grapeVarieties": ["トウリガ・ナシオナル"],
+      "markAllocation": 8,
+      "suggestedMinutes": 12,
+      "difficulty": "D3",
+      "wineType": "酒精強化ワイン",
+      "reviewStatus": "pending_external_review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "metadata": {
+        "authoringMethod": "AI支援を用いた独自草案",
+        "externalReviewRequired": true,
+        "reviewNotes": "WSET Level 3有識者による内容・配点レビュー待ち"
+      },
+      "rubricItems": [
+        {
+          "id": "SAQ-LO4-002-R1",
+          "criterion": "暑く乾燥した夏と水分ストレスを説明している",
+          "marks": 1,
+          "knowledgeTags": ["自然要因"],
+          "relatedTermIDs": ["term-99139cf01141", "term-058c62d3df55"]
+        },
+        {
+          "id": "SAQ-LO4-002-R2",
+          "criterion": "片岩質土壌の排水と根の水分獲得を説明している",
+          "marks": 1,
+          "knowledgeTags": ["自然要因"],
+          "relatedTermIDs": ["term-99139cf01141", "term-dd83994a2ebb"]
+        },
+        {
+          "id": "SAQ-LO4-002-R3",
+          "criterion": "標高・斜面方位による成熟差を説明している",
+          "marks": 1,
+          "knowledgeTags": ["自然要因"],
+          "relatedTermIDs": ["term-99139cf01141", "term-dd83994a2ebb"]
+        },
+        {
+          "id": "SAQ-LO4-002-R4",
+          "criterion": "急斜面の手作業とコストを説明している",
+          "marks": 1,
+          "knowledgeTags": ["商業・価格・品質"],
+          "relatedTermIDs": ["term-99139cf01141", "term-7e2b5f7806f9"]
+        },
+        {
+          "id": "SAQ-LO4-002-R5",
+          "criterion": "酒精強化によって抽出期間が短いことを説明している",
+          "marks": 1,
+          "knowledgeTags": ["醸造・製法"],
+          "relatedTermIDs": ["term-3893c43168b9", "term-7e2b5f7806f9"]
+        },
+        {
+          "id": "SAQ-LO4-002-R6",
+          "criterion": "ラガール等による強く頻繁な果皮攪拌を説明している",
+          "marks": 2,
+          "knowledgeTags": ["醸造・製法"],
+          "relatedTermIDs": ["term-a737e7844550", "term-7e2b5f7806f9"]
+        },
+        {
+          "id": "SAQ-LO4-002-R7",
+          "criterion": "抽出対象として色・香味・タンニンを示している",
+          "marks": 1,
+          "knowledgeTags": ["醸造・製法"],
+          "relatedTermIDs": ["term-a737e7844550"]
+        }
+      ]
+    },
+    {
+      "id": "SAQ-LO5-001",
+      "prompt": "高い酸と少量の残糖を持つリースリングを、辛味のある料理に提案する理由を説明し、提供時の実務上の注意を2つ示してください。",
+      "modelAnswer": "高い酸は料理とワインの双方を爽やかに感じさせ、脂肪分がある場合には口中を清める。少量の残糖は唐辛子の熱感を和らげ、低めのアルコールであればアルコールによる辛味の増幅を避けやすい。香りの強いリースリングは風味の強い料理にも負けにくい。提供時には十分に冷やすが香りが閉じるほど過度に冷却せず、適切な白ワイングラスを用いる。甘味度をゲストへ説明し、希望する辛口・甘口の程度を確認することも重要である。",
+      "explanation": "料理との相互作用と、温度・グラス・情報提供を分けて述べます。",
+      "unit": "Theory",
+      "learningOutcome": "u1_lo5",
+      "learningOutcomeName": "提案、保管、サービス",
+      "category": "料理との組み合わせ・サービス",
+      "subcategory": "提案",
+      "topic": "辛味料理とリースリング",
+      "cognitiveSkill": "適用",
+      "commandVerb": "説明・提案する",
+      "geography": [],
+      "countries": [],
+      "regions": [],
+      "grapeVarieties": ["リースリング"],
+      "markAllocation": 6,
+      "suggestedMinutes": 9,
+      "difficulty": "D2",
+      "wineType": "非発泡性ワイン",
+      "reviewStatus": "pending_external_review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "metadata": {
+        "authoringMethod": "AI支援を用いた独自草案",
+        "externalReviewRequired": true,
+        "reviewNotes": "WSET Level 3有識者による内容・配点レビュー待ち"
+      },
+      "rubricItems": [
+        {
+          "id": "SAQ-LO5-001-R1",
+          "criterion": "高い酸の爽快感または脂肪を切る効果を説明している",
+          "marks": 1,
+          "knowledgeTags": ["料理との組み合わせ"],
+          "relatedTermIDs": ["term-4e7a12a4d8fa"]
+        },
+        {
+          "id": "SAQ-LO5-001-R2",
+          "criterion": "残糖が辛味の熱感を和らげることを説明している",
+          "marks": 1,
+          "knowledgeTags": ["料理との組み合わせ"],
+          "relatedTermIDs": ["term-4e7a12a4d8fa", "term-754f057429dc"]
+        },
+        {
+          "id": "SAQ-LO5-001-R3",
+          "criterion": "低めのアルコールまたは強い香りの適性を説明している",
+          "marks": 1,
+          "knowledgeTags": ["料理との組み合わせ"],
+          "relatedTermIDs": ["term-4e7a12a4d8fa"]
+        },
+        {
+          "id": "SAQ-LO5-001-R4",
+          "criterion": "適切な提供温度を示している",
+          "marks": 1,
+          "knowledgeTags": ["サービス"],
+          "relatedTermIDs": ["term-4e7a12a4d8fa"]
+        },
+        {
+          "id": "SAQ-LO5-001-R5",
+          "criterion": "適切なグラスまたはゲストへの甘味度説明を示している",
+          "marks": 2,
+          "knowledgeTags": ["サービス", "情報提供・推奨"],
+          "relatedTermIDs": ["term-4e7a12a4d8fa", "term-754f057429dc"]
+        }
+      ]
+    },
+    {
+      "id": "SAQ-LO2-004",
+      "prompt": "バローロにおいて、自然条件とネッビオーロの特性が赤ワインのスタイル、品質、価格にどのようにつながるか説明してください。",
+      "modelAnswer": "バローロは大陸性気候で、丘陵の標高、斜面方位、日照によって成熟条件が異なる。晩熟のネッビオーロが十分に熟すには日当たりのよい斜面と長い生育期間が重要である。ネッビオーロは高い酸とタンニン、赤い果実や花の香りを持ちやすく、若いうちは引き締まっているが、熟成によってタンニンが和らぎ、乾燥した花、タール、土を思わせる複雑な香りが発達し得る。適地が限られること、収量管理、長い熟成、在庫保管と生産者の評価は、高品質品の価格を押し上げる要因になる。",
+      "explanation": "立地から成熟、品種特性、熟成可能性、コストまで因果関係を示します。",
+      "unit": "Theory",
+      "learningOutcome": "u1_lo2",
+      "learningOutcomeName": "世界のスティルワイン",
+      "category": "産地・スタイル",
+      "subcategory": "品質と価格",
+      "topic": "バローロとネッビオーロ",
+      "cognitiveSkill": "因果説明",
+      "commandVerb": "説明する",
+      "geography": ["イタリア", "ピエモンテ", "バローロ"],
+      "countries": ["イタリア"],
+      "regions": ["ピエモンテ", "バローロ"],
+      "grapeVarieties": ["ネッビオーロ"],
+      "markAllocation": 8,
+      "suggestedMinutes": 12,
+      "difficulty": "D3",
+      "wineType": "非発泡性ワイン",
+      "reviewStatus": "pending_external_review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "metadata": {
+        "authoringMethod": "AI支援を用いた独自草案",
+        "externalReviewRequired": true,
+        "reviewNotes": "WSET Level 3有識者による内容・配点レビュー待ち"
+      },
+      "rubricItems": [
+        {
+          "id": "SAQ-LO2-004-R1",
+          "criterion": "大陸性気候と長い生育期間が晩熟品種の成熟に与える影響を説明している",
+          "marks": 2,
+          "knowledgeTags": ["自然要因", "品種"],
+          "relatedTermIDs": ["term-6803a79e33e0", "term-f5ceb1ab84a0"]
+        },
+        {
+          "id": "SAQ-LO2-004-R2",
+          "criterion": "丘陵の標高・斜面方位・日照による成熟差を説明している",
+          "marks": 2,
+          "knowledgeTags": ["自然要因", "産地・スタイル"],
+          "relatedTermIDs": ["term-d8c2804dfb04", "term-dd83994a2ebb"]
+        },
+        {
+          "id": "SAQ-LO2-004-R3",
+          "criterion": "ネッビオーロの高い酸・タンニンと熟成によるスタイル変化を説明している",
+          "marks": 2,
+          "knowledgeTags": ["品種", "熟成・ブレンド"],
+          "relatedTermIDs": ["term-f5ceb1ab84a0", "term-d8c2804dfb04"]
+        },
+        {
+          "id": "SAQ-LO2-004-R4",
+          "criterion": "適地の限定、栽培・熟成・在庫費、評価が品質と価格へ与える影響を説明している",
+          "marks": 2,
+          "knowledgeTags": ["商業・価格・品質"],
+          "relatedTermIDs": ["term-d8c2804dfb04", "term-d70646472489"]
+        }
+      ]
+    },
+    {
+      "id": "SAQ-LO2-005",
+      "prompt": "トカイ・アスーの生産について、貴腐が発生する自然条件、ブドウへの作用、収穫・醸造上の判断がワインのスタイルと価格に与える影響を説明してください。",
+      "modelAnswer": "トカイでは川による秋の朝霧が貴腐菌の発生を助け、乾いた午後が有害な灰色かびの進行を抑えながらブドウの乾燥を促す。貴腐菌は果皮に微細な穴を開け、水分を失わせて糖、酸、香味を濃縮する。房や果粒ごとに感染状態が異なるため、アスー果粒を選択的に複数回収穫する必要があり、収量は低く労働費が高い。アスー果粒を破砕または浸漬してベースワインに成分を抽出し、発酵と熟成を行う。完成したワインは高い甘味と酸の均衡、濃縮した核果・柑橘・蜂蜜・スパイスの香りを持ちやすく、低収量、選果、長い生産期間が価格を高める。",
+      "explanation": "気象条件、菌の作用、選択収穫、抽出と熟成をスタイル・コストへ結びつけます。",
+      "unit": "Theory",
+      "learningOutcome": "u1_lo2",
+      "learningOutcomeName": "世界のスティルワイン",
+      "category": "甘口ワイン",
+      "subcategory": "貴腐ワイン",
+      "topic": "トカイ・アスー",
+      "cognitiveSkill": "統合判断",
+      "commandVerb": "説明する",
+      "geography": ["ハンガリー", "トカイ"],
+      "countries": ["ハンガリー"],
+      "regions": ["トカイ"],
+      "grapeVarieties": ["フルミント"],
+      "markAllocation": 8,
+      "suggestedMinutes": 12,
+      "difficulty": "D3",
+      "wineType": "非発泡性ワイン",
+      "reviewStatus": "pending_external_review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "metadata": {
+        "authoringMethod": "AI支援を用いた独自草案",
+        "externalReviewRequired": true,
+        "reviewNotes": "WSET Level 3有識者による内容・配点レビュー待ち"
+      },
+      "rubricItems": [
+        {
+          "id": "SAQ-LO2-005-R1",
+          "criterion": "秋の朝霧と乾いた午後が貴腐の発生・進行に与える影響を説明している",
+          "marks": 2,
+          "knowledgeTags": ["自然要因", "甘口ワイン"],
+          "relatedTermIDs": ["term-ead8721f641b", "term-18166cb03e25"]
+        },
+        {
+          "id": "SAQ-LO2-005-R2",
+          "criterion": "果皮への作用と水分喪失による糖・酸・香味の濃縮を説明している",
+          "marks": 2,
+          "knowledgeTags": ["自然要因", "甘口ワイン"],
+          "relatedTermIDs": ["term-18166cb03e25", "term-c08a6ad96952"]
+        },
+        {
+          "id": "SAQ-LO2-005-R3",
+          "criterion": "選択的な複数回収穫とアスー果粒からの抽出を説明している",
+          "marks": 2,
+          "knowledgeTags": ["栽培・ブドウ樹", "醸造・製法"],
+          "relatedTermIDs": ["term-ead8721f641b", "term-c08a6ad96952"]
+        },
+        {
+          "id": "SAQ-LO2-005-R4",
+          "criterion": "甘味と酸の均衡、濃縮香、低収量・選果・生産期間がスタイルと価格へ与える影響を説明している",
+          "marks": 2,
+          "knowledgeTags": ["産地・スタイル", "商業・価格・品質"],
+          "relatedTermIDs": ["term-ead8721f641b", "term-18166cb03e25"]
+        }
+      ]
+    }
+  ]
+}

@@ -3,16 +3,19 @@ import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct StudyBackup: Codable {
+nonisolated struct StudyBackup: Codable {
     let schemaVersion: Int
     let createdAt: Date
     let progress: [ProgressBackup]
     let attempts: [AttemptBackup]
+    let writtenDrafts: [WrittenAnswerDraftBackup]?
     let tastingNotes: [TastingBackup]
     let mockExams: [MockExamBackup]
+    let termProgress: [ReferenceTermProgressBackup]?
+    let theoryExams: [TheoryExamBackup]?
 }
 
-struct ProgressBackup: Codable {
+nonisolated struct ProgressBackup: Codable {
     let questionID: String
     let isBookmarked: Bool
     let attemptCount: Int
@@ -23,16 +26,29 @@ struct ProgressBackup: Codable {
     let lastWasCorrect: Bool?
 }
 
-struct AttemptBackup: Codable {
+nonisolated struct AttemptBackup: Codable {
     let id: UUID
     let questionID: String
     let isCorrect: Bool
     let rating: Int
     let studiedAt: Date
     let responseText: String?
+    let awardedMarks: Int?
+    let maximumMarks: Int?
+    let rubricSelections: [String]?
+    let durationSeconds: Int?
 }
 
-struct TastingBackup: Codable {
+nonisolated struct WrittenAnswerDraftBackup: Codable {
+    let questionID: String
+    let responseText: String
+    let rubricSelections: [String]
+    let startedAt: Date
+    let submittedAt: Date?
+    let updatedAt: Date
+}
+
+nonisolated struct TastingBackup: Codable {
     let id: UUID
     let sessionID: UUID?
     let sampleLabel: String
@@ -56,6 +72,11 @@ struct TastingBackup: Codable {
     let quality: String
     let readiness: String
     let conclusion: String
+    let examStartedAt: Date?
+    let examSubmittedAt: Date?
+    let examDurationSeconds: Int?
+    let examWasTimeExpired: Bool?
+    let examCompletionPercent: Double?
 
     var draft: TastingDraft {
         var draft = TastingDraft()
@@ -82,7 +103,7 @@ struct TastingBackup: Codable {
     }
 }
 
-struct MockExamBackup: Codable {
+nonisolated struct MockExamBackup: Codable {
     let id: UUID
     let completedAt: Date
     let correctCount: Int
@@ -91,14 +112,38 @@ struct MockExamBackup: Codable {
     let missedQuestionIDs: [String]
 }
 
-struct BackupRestoreResult {
+nonisolated struct TheoryExamBackup: Codable {
+    let id: UUID
+    let startedAt: Date
+    let deadline: Date
+    let submittedAt: Date?
+    let completedAt: Date?
+    let statusRawValue: String
+    let submissionReasonRawValue: String?
+    let currentIndex: Int
+    let multipleChoiceQuestionIDs: [String]
+    let writtenQuestionIDs: [String]
+    let selectedAnswers: [String: Int]
+    let writtenResponses: [String: String]
+    let flaggedQuestionIDs: [String]
+    let rubricSelections: [String: [String]]
+    let multipleChoiceCorrectCount: Int
+    let writtenAwardedMarks: Int
+    let writtenMaximumMarks: Int
+    let completionRecorded: Bool
+}
+
+nonisolated struct BackupRestoreResult {
     let progressCount: Int
     let attemptCount: Int
+    let writtenDraftCount: Int
     let tastingCount: Int
     let mockExamCount: Int
+    let termProgressCount: Int
+    let theoryExamCount: Int
 
     var summary: String {
-        "進捗\(progressCount)件、学習回答\(attemptCount)件、テイスティング\(tastingCount)件、模擬試験\(mockExamCount)件を復元しました。"
+        "進捗\(progressCount)件、学習回答\(attemptCount)件、記述下書き\(writtenDraftCount)件、用語\(termProgressCount)件、テイスティング\(tastingCount)件、ミニ模試\(mockExamCount)件、理論模試\(theoryExamCount)件を復元しました。"
     }
 }
 
@@ -124,7 +169,21 @@ enum BackupService {
                 isCorrect: $0.isCorrect,
                 rating: $0.rating,
                 studiedAt: $0.studiedAt,
-                responseText: $0.responseText
+                responseText: $0.responseText,
+                awardedMarks: $0.awardedMarks,
+                maximumMarks: $0.maximumMarks,
+                rubricSelections: $0.rubricSelections,
+                durationSeconds: $0.durationSeconds
+            )
+        }
+        let writtenDrafts = try context.fetch(FetchDescriptor<WrittenAnswerDraft>()).map {
+            WrittenAnswerDraftBackup(
+                questionID: $0.questionID,
+                responseText: $0.responseText,
+                rubricSelections: $0.rubricSelections,
+                startedAt: $0.startedAt,
+                submittedAt: $0.submittedAt,
+                updatedAt: $0.updatedAt
             )
         }
         let tastings = try context.fetch(FetchDescriptor<TastingNote>()).map {
@@ -151,7 +210,12 @@ enum BackupService {
                 flavourNotes: $0.flavourNotes,
                 quality: $0.quality,
                 readiness: $0.readiness,
-                conclusion: $0.conclusion
+                conclusion: $0.conclusion,
+                examStartedAt: $0.examStartedAt,
+                examSubmittedAt: $0.examSubmittedAt,
+                examDurationSeconds: $0.examDurationSeconds,
+                examWasTimeExpired: $0.examWasTimeExpired,
+                examCompletionPercent: $0.examCompletionPercent
             )
         }
         let exams = try context.fetch(FetchDescriptor<MockExamSession>()).map {
@@ -164,13 +228,41 @@ enum BackupService {
                 missedQuestionIDs: $0.missedQuestionIDs
             )
         }
+        let theoryExams = try context.fetch(FetchDescriptor<TheoryExamSession>()).map {
+            TheoryExamBackup(
+                id: $0.id,
+                startedAt: $0.startedAt,
+                deadline: $0.deadline,
+                submittedAt: $0.submittedAt,
+                completedAt: $0.completedAt,
+                statusRawValue: $0.statusRawValue,
+                submissionReasonRawValue: $0.submissionReasonRawValue,
+                currentIndex: $0.currentIndex,
+                multipleChoiceQuestionIDs: $0.multipleChoiceQuestionIDs,
+                writtenQuestionIDs: $0.writtenQuestionIDs,
+                selectedAnswers: $0.selectedAnswers,
+                writtenResponses: $0.writtenResponses,
+                flaggedQuestionIDs: Array($0.flaggedQuestionIDs).sorted(),
+                rubricSelections: $0.rubricSelections,
+                multipleChoiceCorrectCount: $0.multipleChoiceCorrectCount,
+                writtenAwardedMarks: $0.writtenAwardedMarks,
+                writtenMaximumMarks: $0.writtenMaximumMarks,
+                completionRecorded: $0.completionRecorded
+            )
+        }
         return StudyBackup(
             schemaVersion: 1,
             createdAt: .now,
             progress: progress,
             attempts: attempts,
+            writtenDrafts: writtenDrafts,
             tastingNotes: tastings,
-            mockExams: exams
+            mockExams: exams,
+            termProgress: R5BackupSupport.snapshots(
+                in: context,
+                termIDMigrations: ReferenceStore.shared.termIDMigrations
+            ),
+            theoryExams: theoryExams
         )
     }
 
@@ -211,11 +303,40 @@ enum BackupService {
                 isCorrect: snapshot.isCorrect,
                 rating: snapshot.rating,
                 responseText: snapshot.responseText,
+                awardedMarks: snapshot.awardedMarks,
+                maximumMarks: snapshot.maximumMarks,
+                rubricSelections: snapshot.rubricSelections ?? [],
+                durationSeconds: snapshot.durationSeconds,
                 studiedAt: snapshot.studiedAt
             )
             attempt.id = snapshot.id
             context.insert(attempt)
             attemptIDs.insert(snapshot.id)
+        }
+
+        var writtenDraftsByQuestionID = Dictionary(
+            uniqueKeysWithValues: try context.fetch(FetchDescriptor<WrittenAnswerDraft>()).map {
+                ($0.questionID, $0)
+            }
+        )
+        for snapshot in backup.writtenDrafts ?? [] {
+            let existing = writtenDraftsByQuestionID[snapshot.questionID]
+            if let existing, snapshot.updatedAt < existing.updatedAt { continue }
+            let draft = existing ?? WrittenAnswerDraft(
+                questionID: snapshot.questionID,
+                startedAt: snapshot.startedAt
+            )
+            if existing == nil {
+                context.insert(draft)
+                writtenDraftsByQuestionID[snapshot.questionID] = draft
+            }
+            draft.startedAt = snapshot.startedAt
+            draft.update(
+                responseText: snapshot.responseText,
+                rubricSelections: snapshot.rubricSelections,
+                submittedAt: snapshot.submittedAt,
+                at: snapshot.updatedAt
+            )
         }
 
         var tastingByID = Dictionary(
@@ -237,6 +358,11 @@ enum BackupService {
             note.sampleLabel = snapshot.sampleLabel
             note.tastedAt = snapshot.tastedAt
             note.update(from: snapshot.draft)
+            note.examStartedAt = snapshot.examStartedAt
+            note.examSubmittedAt = snapshot.examSubmittedAt
+            note.examDurationSeconds = snapshot.examDurationSeconds
+            note.examWasTimeExpired = snapshot.examWasTimeExpired
+            note.examCompletionPercent = snapshot.examCompletionPercent
         }
 
         var mockIDs = Set(try context.fetch(FetchDescriptor<MockExamSession>()).map(\.id))
@@ -254,17 +380,84 @@ enum BackupService {
             mockIDs.insert(snapshot.id)
         }
 
+        let termProgressCount = try R5BackupSupport.restore(
+            backup.termProgress ?? [],
+            into: context,
+            termIDMigrations: ReferenceStore.shared.termIDMigrations
+        )
+
+        var theoryByID = Dictionary(
+            uniqueKeysWithValues: try context.fetch(FetchDescriptor<TheoryExamSession>()).map {
+                ($0.id, $0)
+            }
+        )
+        for snapshot in backup.theoryExams ?? [] {
+            let existing = theoryByID[snapshot.id]
+            let session = existing ?? TheoryExamSession(
+                id: snapshot.id,
+                startedAt: snapshot.startedAt,
+                durationMinutes: max(1, Int(snapshot.deadline.timeIntervalSince(snapshot.startedAt) / 60)),
+                multipleChoiceQuestionIDs: snapshot.multipleChoiceQuestionIDs,
+                writtenQuestionIDs: snapshot.writtenQuestionIDs
+            )
+            if existing == nil {
+                context.insert(session)
+                theoryByID[snapshot.id] = session
+            }
+            guard shouldApply(snapshot, over: existing) else { continue }
+            session.startedAt = snapshot.startedAt
+            session.deadline = snapshot.deadline
+            session.submittedAt = snapshot.submittedAt
+            session.completedAt = snapshot.completedAt
+            session.statusRawValue = snapshot.statusRawValue
+            session.submissionReasonRawValue = snapshot.submissionReasonRawValue
+            session.currentIndex = snapshot.currentIndex
+            session.multipleChoiceQuestionIDsData = encode(snapshot.multipleChoiceQuestionIDs)
+            session.writtenQuestionIDsData = encode(snapshot.writtenQuestionIDs)
+            session.selectedAnswersData = encode(snapshot.selectedAnswers)
+            session.writtenResponsesData = encode(snapshot.writtenResponses)
+            session.flaggedQuestionIDsData = encode(snapshot.flaggedQuestionIDs)
+            session.rubricSelectionsData = encode(snapshot.rubricSelections)
+            session.multipleChoiceCorrectCount = snapshot.multipleChoiceCorrectCount
+            session.writtenAwardedMarks = snapshot.writtenAwardedMarks
+            session.writtenMaximumMarks = snapshot.writtenMaximumMarks
+            session.completionRecorded = snapshot.completionRecorded
+        }
+
         try context.save()
         return BackupRestoreResult(
             progressCount: backup.progress.count,
             attemptCount: backup.attempts.count,
+            writtenDraftCount: backup.writtenDrafts?.count ?? 0,
             tastingCount: backup.tastingNotes.count,
-            mockExamCount: backup.mockExams.count
+            mockExamCount: backup.mockExams.count,
+            termProgressCount: termProgressCount,
+            theoryExamCount: backup.theoryExams?.count ?? 0
         )
+    }
+
+    private static func shouldApply(
+        _ snapshot: TheoryExamBackup,
+        over existing: TheoryExamSession?
+    ) -> Bool {
+        guard let existing else { return true }
+        if existing.status == .completed, snapshot.statusRawValue != TheoryExamStatus.completed.rawValue {
+            return false
+        }
+        if snapshot.statusRawValue == TheoryExamStatus.completed.rawValue,
+           existing.status != .completed {
+            return true
+        }
+        return (snapshot.completedAt ?? snapshot.submittedAt ?? snapshot.startedAt)
+            >= (existing.completedAt ?? existing.submittedAt ?? existing.startedAt)
+    }
+
+    private static func encode<T: Encodable>(_ value: T) -> Data {
+        (try? JSONEncoder().encode(value)) ?? Data()
     }
 }
 
-struct StudyBackupDocument: FileDocument {
+nonisolated struct StudyBackupDocument: FileDocument {
     static var readableContentTypes: [UTType] { [.json] }
     var backup: StudyBackup
 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="880" viewBox="0 0 720 880">
+  <title>フランスの自作簡略図</title>
+  <desc>産地の相対位置を学ぶための概略輪郭。行政境界や原産地呼称境界を表さない。</desc>
+  <path
+    d="M220 43 L337 24 L428 58 L520 77 L579 132 L623 206 L615 282 L661 346
+       L635 419 L650 500 L608 568 L583 650 L517 692 L487 760 L416 825 L339 814
+       L285 773 L206 759 L166 696 L109 657 L85 577 L103 511 L61 439 L82 363
+       L63 291 L111 232 L127 159 L180 116 Z"
+    fill="#F5E9EA"
+    stroke="#6E1F31"
+    stroke-width="12"
+    stroke-linejoin="round" />
+  <path
+    d="M569 726 C604 704 648 714 661 753 C673 790 648 835 614 851
+       C586 833 574 795 584 765 Z"
+    fill="#F5E9EA"
+    stroke="#6E1F31"
+    stroke-width="10"
+    stroke-linejoin="round" />
+</svg>

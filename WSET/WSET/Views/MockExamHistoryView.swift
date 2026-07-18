@@ -10,23 +10,23 @@ struct MockExamHistoryView: View {
         List {
             if sessions.isEmpty {
                 ContentUnavailableView(
-                    "No mock exams yet",
+                    "模擬試験履歴はまだありません",
                     systemImage: "timer",
-                    description: Text("Completed 50-question mock exams will appear here.")
+                    description: Text("完了した50問模擬試験がここに表示されます。")
                 )
             } else {
-                Section("Score trend") {
+                Section("スコア推移") {
                     Chart(sessions) { session in
                         LineMark(
-                            x: .value("Date", session.completedAt),
-                            y: .value("Score", session.score * 100)
+                            x: .value("日付", session.completedAt),
+                            y: .value("スコア", session.score * 100)
                         )
                         .foregroundStyle(AppTheme.wine)
                         .interpolationMethod(.catmullRom)
 
                         PointMark(
-                            x: .value("Date", session.completedAt),
-                            y: .value("Score", session.score * 100)
+                            x: .value("日付", session.completedAt),
+                            y: .value("スコア", session.score * 100)
                         )
                         .foregroundStyle(AppTheme.wine)
                     }
@@ -44,7 +44,7 @@ struct MockExamHistoryView: View {
                     .frame(height: 220)
                 }
 
-                Section("History") {
+                Section("履歴") {
                     ForEach(sessions.reversed()) { session in
                         NavigationLink {
                             MockExamHistoryDetailView(
@@ -55,7 +55,7 @@ struct MockExamHistoryView: View {
                             HStack {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(session.completedAt, format: .dateTime.year().month().day().hour().minute())
-                                    Text("\(session.correctCount) of \(session.questionCount) correct")
+                                    Text("\(session.questionCount)問中\(session.correctCount)問正解")
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                 }
@@ -69,11 +69,17 @@ struct MockExamHistoryView: View {
                 }
             }
         }
-        .navigationTitle("Mock exam history")
+        .navigationTitle("模擬試験履歴")
     }
 
     private var questionByID: [String: StudyQuestion] {
-        Dictionary(uniqueKeysWithValues: questions.map { ($0.id, $0) })
+        let historicalQuestionIDs = Set(sessions.flatMap(\.missedQuestionIDs))
+        return Dictionary(uniqueKeysWithValues: questions.compactMap { question in
+            FeatureAccessPolicy.canReadHistoricalQuestion(
+                id: question.id,
+                recordedQuestionIDs: historicalQuestionIDs
+            ) ? (question.id, question) : nil
+        })
     }
 }
 
@@ -94,7 +100,7 @@ private struct MockExamHistoryDetailView: View {
                 .frame(maxWidth: .infinity)
             }
 
-            Section("By learning outcome") {
+            Section("学習成果別") {
                 ForEach(LearningOutcome.allCases.filter { $0 != .all }) { outcome in
                     if let result = session.outcomeResults[outcome.rawValue], result.total > 0 {
                         LabeledContent(outcome.shortLabel, value: "\(result.correct)/\(result.total)")
@@ -102,15 +108,15 @@ private struct MockExamHistoryDetailView: View {
                 }
             }
 
-            Section("Missed questions") {
+            Section("間違えた問題") {
                 if session.missedQuestionIDs.isEmpty {
-                    Label("Perfect score", systemImage: "checkmark.seal.fill")
-                        .foregroundStyle(.green)
+                    Label("全問正解", systemImage: "checkmark.seal.fill")
+                        .foregroundStyle(AppTheme.success)
                 } else {
                     ForEach(session.missedQuestionIDs, id: \.self) { questionID in
                         if let question = questionByID[questionID] {
                             NavigationLink {
-                                QuestionDetailView(question: question)
+                                HistoricalQuestionReviewView(question: question)
                             } label: {
                                 Text(question.displayPrompt)
                                     .lineLimit(3)
@@ -129,6 +135,30 @@ private struct MockExamHistoryDetailView: View {
                 )
             )
         )
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+/// A read-only review surface for a question that belongs to a completed exam.
+/// It deliberately does not link back into a new paid study session.
+private struct HistoricalQuestionReviewView: View {
+    let question: StudyQuestion
+
+    var body: some View {
+        List {
+            Section("問題") {
+                Text(question.displayPrompt)
+            }
+            Section("正解") {
+                Text(question.displayAnswer)
+            }
+            if let explanation = question.displayExplanation, !explanation.isEmpty {
+                Section("解説") {
+                    Text(explanation)
+                }
+            }
+        }
+        .navigationTitle("過去の問題")
         .navigationBarTitleDisplayMode(.inline)
     }
 }

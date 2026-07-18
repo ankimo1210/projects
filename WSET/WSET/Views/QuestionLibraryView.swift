@@ -2,17 +2,22 @@ import SwiftData
 import SwiftUI
 
 struct QuestionLibraryView: View {
+    @Environment(EntitlementStore.self) private var entitlementStore
     @Query(sort: \StudyQuestion.prompt) private var questions: [StudyQuestion]
     @State private var searchText = ""
     @State private var selectedOutcome = LearningOutcome.all
 
     private var filteredQuestions: [StudyQuestion] {
         questions.filter { question in
+            let canAccess = entitlementStore.policy.canAccessQuestion(
+                id: question.id,
+                studyMode: question.studyMode
+            )
             let matchesSearch = searchText.isEmpty
                 || question.searchableText.localizedCaseInsensitiveContains(searchText)
             let matchesOutcome = selectedOutcome == .all
                 || question.learningOutcome == selectedOutcome.rawValue
-            return matchesSearch && matchesOutcome
+            return canAccess && matchesSearch && matchesOutcome
         }
     }
 
@@ -33,6 +38,13 @@ struct QuestionLibraryView: View {
                         Label("格付け一覧", systemImage: "list.bullet.rectangle")
                     }
                     .accessibilityIdentifier("reference.classification.link")
+
+                    NavigationLink {
+                        RegionMapHubView()
+                    } label: {
+                        Label("産地マップ", systemImage: "map")
+                    }
+                    .accessibilityIdentifier("regionMap.hub.link")
                 }
 
                 Section {
@@ -50,6 +62,18 @@ struct QuestionLibraryView: View {
                         } label: {
                             QuestionRow(question: question)
                         }
+                    }
+                }
+
+                if !entitlementStore.hasProAccess {
+                    Section {
+                        NavigationLink {
+                            PaywallView(triggerFeature: .fullQuestionBank)
+                        } label: {
+                            Label("Proの問題集を見る", systemImage: "lock.fill")
+                        }
+                    } footer: {
+                        Text("無料版では公開済みの無料問題だけを表示します。")
                     }
                 }
             }

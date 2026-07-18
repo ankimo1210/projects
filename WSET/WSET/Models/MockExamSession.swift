@@ -1,7 +1,7 @@
 import Foundation
 import SwiftData
 
-struct MockOutcomeResult: Codable, Hashable {
+nonisolated struct MockOutcomeResult: Codable, Hashable {
     let correct: Int
     let total: Int
 }

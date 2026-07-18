@@ -1,11 +1,27 @@
 import Foundation
 
+nonisolated struct WrittenRubricItem: Codable, Identifiable, Hashable {
+    let id: String
+    let criterion: String
+    let marks: Int
+    let knowledgeTags: [String]
+    let relatedTermIDs: [String]
+}
+
+nonisolated struct WrittenContentMetadata: Codable, Hashable {
+    let authoringMethod: String
+    let externalReviewRequired: Bool
+    let reviewNotes: String
+}
+
 struct QuestionPack: Decodable {
     let schemaVersion: Int
     let generatedAt: String
     let sourceHash: String
     let questionCount: Int
     let questions: [PackedQuestion]
+    var distributionStatus: String? = nil
+    var referencePackSourceHash: String? = nil
 }
 
 struct PackedQuestion: Decodable {
@@ -46,6 +62,11 @@ struct PackedQuestion: Decodable {
     var translations: [String: PackedTranslationContent]? = nil
     var translationStatus: String? = nil
     var translationModel: String? = nil
+    var suggestedMinutes: Int? = nil
+    var rubricItems: [WrittenRubricItem]? = nil
+    var reviewer: String? = nil
+    var reviewedAt: String? = nil
+    var contentMetadata: WrittenContentMetadata? = nil
 }
 
 struct PackedTranslationContent: Codable {

@@ -103,14 +103,76 @@ struct StudyFocusOptionGroup: Identifiable, Hashable {
     var id: String { title }
 }
 
+/// Shared, side-effect-free question classification and review queries.
+///
+/// Views provide the current entitlement and time, while this layer owns the
+/// rules for deciding which questions belong to each study workflow. Keeping
+/// `now` explicit makes due-date behavior deterministic in unit tests.
+enum StudyQuestionQuery {
+    static func accessible(
+        _ questions: [StudyQuestion],
+        policy: FeatureAccessPolicy
+    ) -> [StudyQuestion] {
+        questions.filter {
+            policy.canAccessQuestion(id: $0.id, studyMode: $0.studyMode)
+        }
+    }
+
+    static func multipleChoice(
+        in questions: [StudyQuestion],
+        learningOutcome: String? = nil
+    ) -> [StudyQuestion] {
+        questions.filter { question in
+            question.studyMode == "multiple_choice"
+                && question.correctAnswerIndex != nil
+                && (learningOutcome == nil || question.learningOutcome == learningOutcome)
+        }
+    }
+
+    static func written(
+        in questions: [StudyQuestion],
+        requiringRubric: Bool = false
+    ) -> [StudyQuestion] {
+        questions.filter {
+            $0.studyMode == "written_answer"
+                && (!requiringRubric || !$0.rubricItems.isEmpty)
+        }
+    }
+
+    static func theoryCandidates(in questions: [StudyQuestion]) -> [StudyQuestion] {
+        multipleChoice(in: questions) + written(in: questions, requiringRubric: true)
+    }
+
+    static func mistakes(
+        in questions: [StudyQuestion],
+        progressByID: [String: QuestionProgress]
+    ) -> [StudyQuestion] {
+        questions.filter { progressByID[$0.id]?.lastWasCorrect == false }
+    }
+
+    static func due(
+        in questions: [StudyQuestion],
+        progressByID: [String: QuestionProgress],
+        now: Date
+    ) -> [StudyQuestion] {
+        questions.filter {
+            guard let progress = progressByID[$0.id] else { return false }
+            return progress.attemptCount > 0 && progress.dueDate <= now
+        }
+    }
+
+    static func bookmarked(
+        in questions: [StudyQuestion],
+        progressByID: [String: QuestionProgress]
+    ) -> [StudyQuestion] {
+        questions.filter { progressByID[$0.id]?.isBookmarked == true }
+    }
+}
+
 enum StudyFocusCatalog {
     private static let japaneseLocale = Locale(identifier: "ja_JP")
 
-    private static let countryOrder = [
-        "フランス", "イタリア", "スペイン", "ポルトガル", "ドイツ", "オーストリア",
-        "米国", "オーストラリア", "ニュージーランド", "南アフリカ", "チリ",
-        "アルゼンチン", "カナダ", "ハンガリー", "ギリシャ", "英国",
-    ]
+    private static let countryOrder = GeographyNormalizer.countryOrder
 
     private static let regionOrderByCountry: [String: [String]] = [
         "フランス": [
@@ -376,7 +438,7 @@ enum StudyFocusCatalog {
         return result
     }
 
-    private static func normalizedValues(
+    static func normalizedValues(
         for dimension: StudyFocusDimension,
         in item: StudyFocusItem
     ) -> Set<String> {
@@ -397,23 +459,16 @@ enum StudyFocusCatalog {
     }
 
     private static func countryValues(in item: StudyFocusItem) -> [String] {
-        if let countries = item.countries {
-            return unique(countries.map { trimmed($0) }.filter { !$0.isEmpty })
-        }
-        let knownCountries = Set(countryOrder)
-        return unique(item.geography.map { trimmed($0) }.filter { knownCountries.contains($0) })
+        GeographyNormalizer.countries(
+            explicit: item.countries,
+            fallbackGeography: item.geography
+        )
     }
 
     private static func regionValues(in item: StudyFocusItem) -> [String] {
-        if let regions = item.regions {
-            return unique(regions.map { normalizeRegion($0) }.filter { !$0.isEmpty })
-        }
-        let knownCountries = Set(countryOrder)
-        return unique(
-            item.geography
-                .map { trimmed($0) }
-                .filter { !$0.isEmpty && !knownCountries.contains($0) }
-                .map { normalizeRegion($0) }
+        GeographyNormalizer.regions(
+            explicit: item.regions,
+            fallbackGeography: item.geography
         )
     }
 
@@ -504,7 +559,9 @@ enum StudyFocusCatalog {
     }
 
     private static func normalize(_ value: String, for dimension: StudyFocusDimension) -> String {
-        let value = trimmed(value)
+        let value = dimension == .geography
+            ? GeographyNormalizer.normalize(value)
+            : trimmed(value)
         guard !value.isEmpty else { return "" }
 
         if dimension == .grapeVariety {
@@ -542,21 +599,8 @@ enum StudyFocusCatalog {
         return "非発泡性ワイン"
     }
 
-    private static func normalizeRegion(_ value: String) -> String {
-        switch trimmed(value) {
-        case "サンルーカル": "サンルーカル・デ・バラメダ"
-        case "ミュスカ・ドゥ・ボーム・ドゥ・ヴニーズ": "ミュスカ・ド・ボーム・ド・ヴニーズ"
-        default: trimmed(value)
-        }
-    }
-
     private static func trimmed(_ value: String) -> String {
         value.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-
-    private static func unique(_ values: [String]) -> [String] {
-        var seen: Set<String> = []
-        return values.filter { seen.insert($0).inserted }
     }
 
     private static func rank(_ value: String, in order: [String]) -> Int {

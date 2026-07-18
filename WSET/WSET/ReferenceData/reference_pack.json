@@ -1,13 +1,17 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-12T11:16:23Z",
-  "sourceHash": "4ca34c3c662f1474f66e5b23c85db817b0a6671a6155b92aa5f237f9bb586235",
-  "questionPackSourceHash": "fb29282e4dd1422fdbabcd69fff8b5109cfa0423351b47b2d687ef2bd0749e78",
+  "generatedAt": "2026-07-18T18:42:11Z",
+  "sourceHash": "4bc1ca9fc25fcd24c3df892205cded944eb8edb55d90164bfd92b05e7cf0324f",
+  "questionPackSourceHash": "8d4af8e4ab5a3642d8dc00f5ff5eeddb8e91cf7669effce032768ec9480d825d",
   "termCount": 680,
   "classificationEntryCount": 279,
   "source": {
     "file": "ReferenceSources/wset_reference_master.xlsx",
     "sha256": "901451e413f038a190af14b653f3931aa349115a5736449162073c49e1827327"
+  },
+  "termIDReviewSource": {
+    "file": "ReferenceSources/glossary_term_id_review.json",
+    "sha256": "929c002977a63dd0c731fa08886f1bd4315d1f8254f27d095bd00f8d3da422a0"
   },
   "terms": [
     {
@@ -23516,5 +23520,6 @@
       "effectiveDate": "2026-07-12",
       "checkedAt": "2026-07-12"
     }
-  ]
+  ],
+  "termIDMigrations": {}
 }

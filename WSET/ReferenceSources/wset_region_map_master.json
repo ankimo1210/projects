@@ -1,0 +1,418 @@
+{
+  "schemaVersion": 2,
+  "review": {
+    "status": "pending_external_review",
+    "reviewer": null,
+    "reviewedAt": null,
+    "reviewedContentHash": null,
+    "scopes": {
+      "regionNamesAndPositions": false,
+      "comparisonContent": false,
+      "sourceLicenses": false,
+      "trademarkAndAttribution": false,
+      "svgOriginality": false
+    },
+    "notes": "産地名・概略位置・比較記述・出典利用条件・商標・自作SVGの外部人手レビュー待ち"
+  },
+  "sources": [
+    {
+      "id": "wset_app_schematic_france_2026",
+      "name": "WSET学習アプリ用の自作フランス概略図",
+      "url": null,
+      "license": "プロジェクト自作",
+      "checkedAt": "2026-07-19",
+      "note": "産地の相対位置を学ぶための簡略図です。行政境界、原産地呼称の法的境界、正確な縮尺を表しません。"
+    },
+    {
+      "id": "official_bordeaux_2026",
+      "name": "Bordeaux.com（CIVB）",
+      "url": "https://www.bordeaux.com/en/",
+      "license": "参照のみ（本文・図版の転載なし）",
+      "checkedAt": "2026-07-19",
+      "note": "気候、土壌、品種、ワインスタイル、格付け、生産要因を独自に要約するため参照しました。"
+    },
+    {
+      "id": "official_bourgogne_2026",
+      "name": "Vins de Bourgogne（BIVB）",
+      "url": "https://www.vins-bourgogne.fr/",
+      "license": "参照のみ（本文・図版の転載なし）",
+      "checkedAt": "2026-07-19",
+      "note": "ブルゴーニュの自然条件、品種、Climat、AOC階層、生産要因を独自に要約するため参照しました。"
+    },
+    {
+      "id": "official_champagne_2026",
+      "name": "Champagne.fr（Comité Champagne）",
+      "url": "https://www.champagne.fr/en/",
+      "license": "参照のみ（本文・図版の転載なし）",
+      "checkedAt": "2026-07-19",
+      "note": "シャンパーニュのテロワール、品種、表示、生産方法を独自に要約するため参照しました。"
+    },
+    {
+      "id": "official_loire_2026",
+      "name": "Vins du Val de Loire（InterLoire）",
+      "url": "https://www.vinsvaldeloire.fr/",
+      "license": "参照のみ（本文・図版の転載なし）",
+      "checkedAt": "2026-07-19",
+      "note": "ロワールの地域差、品種、スタイル、アペラシオン、生産要因を独自に要約するため参照しました。"
+    },
+    {
+      "id": "official_alsace_2026",
+      "name": "Vins d’Alsace（CIVA）",
+      "url": "https://www.vinsalsace.com/en/",
+      "license": "参照のみ（本文・図版の転載なし）",
+      "checkedAt": "2026-07-19",
+      "note": "アルザスの気候、地質、品種、AOC、栽培・醸造を独自に要約するため参照しました。"
+    },
+    {
+      "id": "official_rhone_2026",
+      "name": "Vins Rhône（Inter Rhône）",
+      "url": "https://www.vins-rhone.com/en/",
+      "license": "参照のみ（本文・図版の転載なし）",
+      "checkedAt": "2026-07-19",
+      "note": "北部・南部ローヌの土壌、品種、AOC、栽培・醸造の差を独自に要約するため参照しました。"
+    },
+    {
+      "id": "official_provence_2026",
+      "name": "Vins de Provence（CIVP）",
+      "url": "https://www.vinsdeprovence.com/en",
+      "license": "参照のみ（本文・図版の転載なし）",
+      "checkedAt": "2026-07-19",
+      "note": "プロヴァンスのテロワール、品種、ロゼスタイル、AOP、生産方法を独自に要約するため参照しました。"
+    },
+    {
+      "id": "official_beaujolais_2026",
+      "name": "Beaujolais.com（Inter Beaujolais）",
+      "url": "https://www.beaujolais.com/en/",
+      "license": "参照のみ（本文・図版の転載なし）",
+      "checkedAt": "2026-07-19",
+      "note": "ボージョレの土壌、品種、12アペラシオン、スタイル、生産要因を独自に要約するため参照しました。"
+    },
+    {
+      "id": "official_languedoc_2026",
+      "name": "Languedoc Wines（CIVL）",
+      "url": "https://languedoc-wines.com/",
+      "license": "参照のみ（本文・図版の転載なし）",
+      "checkedAt": "2026-07-19",
+      "note": "ラングドックの自然条件、品種、AOP・IGP、スタイル、生産要因を独自に要約するため参照しました。"
+    },
+    {
+      "id": "official_roussillon_2026",
+      "name": "Vins du Roussillon（CIVR）",
+      "url": "https://www.vinsduroussillon.com/",
+      "license": "参照のみ（本文・図版の転載なし）",
+      "checkedAt": "2026-07-19",
+      "note": "ルーションの自然条件、品種、AOP・IGP、辛口・酒精強化スタイルを独自に要約するため参照しました。"
+    }
+  ],
+  "maps": [
+    {
+      "id": "france",
+      "level": "country",
+      "country": "フランス",
+      "nameJapanese": "フランス",
+      "nameOriginal": "France",
+      "assetName": "map_france",
+      "assetFile": "france.svg",
+      "aspectRatio": 0.8181818182,
+      "sourceIDs": [
+        "wset_app_schematic_france_2026"
+      ],
+      "regions": [
+        {
+          "id": "france_bordeaux",
+          "nameJapanese": "ボルドー",
+          "nameOriginal": "Bordeaux",
+          "focusValues": [
+            "ボルドー",
+            "メドック",
+            "グラーヴ",
+            "ペサック・レオニャン",
+            "アントル・ドゥー・メール",
+            "ソーテルヌ",
+            "バルサック",
+            "マルゴー",
+            "ポイヤック",
+            "サン・テステフ",
+            "サン・ジュリアン",
+            "ポムロール",
+            "サンテミリオン"
+          ],
+          "position": {"x": 0.20, "y": 0.66},
+          "labelOffset": {"x": 0.12, "y": 0.00},
+          "termIDs": ["term-97f5e23c0c74"],
+          "childMapID": null,
+          "polygons": [],
+          "comparison": {
+            "climateInfluence": {"summary": "おおむね北緯44〜45度。大西洋とジロンド川・支流の影響を受ける海洋性気候です。", "keywords": ["北緯44〜45度", "海洋性の影響", "河川の影響"], "sourceIDs": ["official_bordeaux_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "temperatureRainfallRisks": {"summary": "温和ですが年間を通じて雨があり、開花不良、病害、収穫期の降雨と年ごとの成熟差が主要リスクです。", "keywords": ["温暖", "降雨リスク", "病害リスク", "ヴィンテージ差"], "sourceIDs": ["official_bordeaux_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "soils": {"summary": "左岸は水はけのよい砂礫、右岸は粘土と石灰岩が重要で、品種配置と成熟に影響します。", "keywords": ["砂礫", "粘土", "石灰岩"], "sourceIDs": ["official_bordeaux_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "grapeVarieties": {"summary": "黒はメルロ、カベルネ・ソーヴィニヨン、カベルネ・フラン、白はソーヴィニヨン・ブランとセミヨンが中心です。", "keywords": ["メルロ", "カベルネ・ソーヴィニヨン", "カベルネ・フラン", "ソーヴィニヨン・ブラン", "セミヨン"], "sourceIDs": ["official_bordeaux_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "viticulture": {"summary": "土壌と成熟時期に合う品種・台木を区画ごとに選び、樹冠管理、病害防除、選果で変動の大きい天候へ対応します。", "keywords": ["品種と区画の適合", "樹冠管理", "病害管理", "選果"], "sourceIDs": ["official_bordeaux_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "winemakingMaturation": {"summary": "品種・区画を別々に醸造してブレンドし、赤では抽出とオーク熟成を調整します。甘口では貴腐果を複数回に分けて収穫します。", "keywords": ["ブレンド", "抽出管理", "オーク熟成", "貴腐"], "sourceIDs": ["official_bordeaux_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "wineStyles": {"summary": "ブレンドの辛口赤が中心で、辛口白、ソーテルヌなどの貴腐甘口も生産します。", "keywords": ["赤ワイン", "白ワイン", "甘口ワイン", "ブレンド"], "sourceIDs": ["official_bordeaux_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "qualityPriceFactors": {"summary": "AOPの細分化、シャトーの格付けと評判、区画、ヴィンテージ、選果、収量、熟成投資が品質と価格を左右します。", "keywords": ["産地の細分化", "シャトーの評判", "ヴィンテージ", "収量制限", "熟成コスト"], "sourceIDs": ["official_bordeaux_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "lawLabels": {"summary": "広域・地区・村名AOPに加え、1855年、グラーヴ、サンテミリオン、クリュ・ブルジョワなど別制度のシャトー格付けがあります。", "keywords": ["AOP", "地域名AOP", "村名AOP", "シャトー格付け"], "sourceIDs": ["official_bordeaux_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"}
+          }
+        },
+        {
+          "id": "france_burgundy",
+          "nameJapanese": "ブルゴーニュ",
+          "nameOriginal": "Bourgogne",
+          "focusValues": [
+            "ブルゴーニュ",
+            "シャブリ",
+            "コート・ド・ニュイ",
+            "コート・ド・ボーヌ",
+            "コート・シャロネーズ",
+            "マコネ",
+            "ジュヴレ・シャンベルタン",
+            "シャンボール・ミュジニー",
+            "ヴォーヌ・ロマネ",
+            "ムルソー",
+            "ピュリニー・モンラッシェ",
+            "プイィ・フュイッセ"
+          ],
+          "position": {"x": 0.60, "y": 0.53},
+          "labelOffset": {"x": 0.00, "y": -0.09},
+          "termIDs": ["term-9d9fa57ec700"],
+          "childMapID": null,
+          "polygons": [],
+          "comparison": {
+            "climateInfluence": {"summary": "おおむね北緯46〜48度。大陸性を中心に海洋・地中海の影響も交差し、地区と斜面ごとの差があります。", "keywords": ["北緯46〜48度", "大陸性の影響", "地域内差"], "sourceIDs": ["official_bourgogne_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "temperatureRainfallRisks": {"summary": "冷涼〜温和で年変動が大きく、春霜、雹、開花期や収穫期の雨、病害が主要リスクです。", "keywords": ["冷涼", "春霜リスク", "雹リスク", "降雨リスク", "ヴィンテージ差"], "sourceIDs": ["official_bourgogne_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "soils": {"summary": "石灰岩、泥灰土、粘土の比率と斜面位置が区画ごとのワイン特性を形づくります。", "keywords": ["石灰岩", "泥灰土", "粘土"], "sourceIDs": ["official_bourgogne_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "grapeVarieties": {"summary": "ピノ・ノワールとシャルドネが中心で、アリゴテとガメイも地域・呼称に応じて使われます。", "keywords": ["ピノ・ノワール", "シャルドネ", "アリゴテ", "ガメイ"], "sourceIDs": ["official_bourgogne_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "viticulture": {"summary": "Climat単位の区画、斜面位置・向き、植栽密度、収量、霜・雹対策を重視し、成熟差に応じて収穫日を決めます。", "keywords": ["区画管理", "斜面と方位", "収量制限", "霜対策", "収穫時期選択"], "sourceIDs": ["official_bourgogne_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "winemakingMaturation": {"summary": "区画別醸造が基本で、赤は除梗／全房と抽出、白は圧搾と澱接触を選び、マロラクティック発酵とオーク熟成を調整します。", "keywords": ["区画別醸造", "全房発酵", "抽出管理", "マロラクティック発酵", "オーク熟成"], "sourceIDs": ["official_bourgogne_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "wineStyles": {"summary": "単一品種を基本とする辛口赤・白が中心で区画差を表現し、クレマンも生産します。", "keywords": ["赤ワイン", "白ワイン", "スパークリングワイン", "単一品種"], "sourceIDs": ["official_bourgogne_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "qualityPriceFactors": {"summary": "畑の格付けと評判、Climat、収量、樹齢、ヴィンテージ、生産者、選果、少量生産と熟成投資が品質・価格へ強く影響します。", "keywords": ["畑の評判", "区画", "ヴィンテージ", "生産者の評判", "希少性", "熟成コスト"], "sourceIDs": ["official_bourgogne_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "lawLabels": {"summary": "地域名AOP、村名AOP、プルミエ・クリュ、グラン・クリュの順に原産地が狭まり、Climat名の表示が重要です。", "keywords": ["AOP", "地域名AOP", "村名AOP", "プルミエ・クリュ", "グラン・クリュ"], "sourceIDs": ["official_bourgogne_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"}
+          }
+        },
+        {
+          "id": "france_champagne",
+          "nameJapanese": "シャンパーニュ",
+          "nameOriginal": "Champagne",
+          "focusValues": [
+            "シャンパーニュ",
+            "モンターニュ・ド・ランス",
+            "ヴァレ・ド・ラ・マルヌ",
+            "コート・デ・ブラン",
+            "コート・ド・セザンヌ",
+            "コート・デ・バール"
+          ],
+          "position": {"x": 0.61, "y": 0.27},
+          "labelOffset": {"x": 0.03, "y": -0.08},
+          "termIDs": ["term-b41a0670803e"],
+          "childMapID": null,
+          "polygons": [],
+          "comparison": {
+            "climateInfluence": {"summary": "おおむね北緯48〜49.5度。海洋性と大陸性の二重の影響を受ける北限に近い産地です。", "keywords": ["北緯48〜49.5度", "海洋性の影響", "大陸性の影響"], "sourceIDs": ["official_champagne_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "temperatureRainfallRisks": {"summary": "冷涼で適度な降雨があり酸を保ちやすい一方、冬・春の霜、結実不良、雹、病害、年ごとの成熟差が主要リスクです。", "keywords": ["冷涼", "春霜リスク", "雹リスク", "病害リスク", "ヴィンテージ差"], "sourceIDs": ["official_champagne_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "soils": {"summary": "白亜を中心に泥灰土と石灰岩が広がり、多孔質の白亜は排水と水分供給の両方に寄与します。", "keywords": ["白亜", "泥灰土", "石灰岩"], "sourceIDs": ["official_champagne_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "grapeVarieties": {"summary": "シャルドネ、ピノ・ノワール、ムニエの3品種が中心で、地区ごとに適性が異なります。", "keywords": ["シャルドネ", "ピノ・ノワール", "ムニエ"], "sourceIDs": ["official_champagne_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "viticulture": {"summary": "斜面と品種の適合、高密度植栽、規定された剪定・収量、霜対策、健全な果実の選別と収穫時期が重要です。", "keywords": ["斜面と方位", "高密度植栽", "収量制限", "霜対策", "選果"], "sourceIDs": ["official_champagne_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "winemakingMaturation": {"summary": "穏やかな圧搾、地区・品種・年のアッサンブラージュ、瓶内二次発酵、澱熟成、動瓶・澱抜き、ドザージュを行います。", "keywords": ["瓶内二次発酵", "アッサンブラージュ", "澱熟成", "ドザージュ"], "sourceIDs": ["official_champagne_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "wineStyles": {"summary": "スパークリングが中心で、ノン・ヴィンテージ、ヴィンテージ、ブラン・ド・ブラン／ノワール、ロゼがあります。", "keywords": ["スパークリングワイン", "ブレンド", "ヴィンテージ表示", "ロゼワイン"], "sourceIDs": ["official_champagne_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "qualityPriceFactors": {"summary": "ブドウ・村・区画の出所、ヴィンテージ、リザーヴワイン、澱熟成期間、メゾン／生産者の評判、長い在庫期間が品質・価格を左右します。", "keywords": ["ブドウの出所", "ヴィンテージ", "生産者の評判", "澱熟成期間", "在庫コスト"], "sourceIDs": ["official_champagne_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "lawLabels": {"summary": "基本は単一のChampagne AOPです。ヴィンテージ等の表示や村に由来するPremier Cru／Grand Cru表示は直線的な品質階層ではありません。", "keywords": ["AOP", "ヴィンテージ表示", "プルミエ・クリュ", "グラン・クリュ", "統一的な品質階層なし"], "sourceIDs": ["official_champagne_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"}
+          }
+        },
+        {
+          "id": "france_loire",
+          "nameJapanese": "ロワール",
+          "nameOriginal": "Loire",
+          "focusValues": [
+            "ロワール",
+            "ミュスカデ",
+            "ミュスカデ・セーヴル・エ・メーヌ",
+            "サンセール",
+            "プイィ・フュメ",
+            "サンセール・プイィ・フュメ",
+            "ヴーヴレ",
+            "ヴーヴレ・ソーミュール",
+            "ソミュール",
+            "ソミュール・シャンピニー",
+            "サヴニエール",
+            "シノン",
+            "コトー・デュ・レイヨン"
+          ],
+          "position": {"x": 0.32, "y": 0.47},
+          "labelOffset": {"x": -0.02, "y": -0.09},
+          "termIDs": ["term-ba074b1d885d"],
+          "childMapID": null,
+          "polygons": [],
+          "comparison": {
+            "climateInfluence": {"summary": "おおむね北緯47〜48度。大西洋岸の海洋性から内陸東部の大陸性へ移行する長い流域です。", "keywords": ["北緯47〜48度", "海洋性の影響", "大陸性の影響", "地域内差"], "sourceIDs": ["official_loire_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "temperatureRainfallRisks": {"summary": "西部は温和で湿潤、東部ほど季節差が増します。春霜、開花・収穫期の雨、病害、年ごとの成熟差が主要リスクです。", "keywords": ["春霜リスク", "降雨リスク", "病害リスク", "ヴィンテージ差"], "sourceIDs": ["official_loire_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "soils": {"summary": "西部の片岩・花崗岩、中部のトゥフォー、東部の石灰岩・粘土・火打石など多様です。", "keywords": ["片岩", "花崗岩", "トゥフォー", "石灰岩", "粘土", "火打石"], "sourceIDs": ["official_loire_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "grapeVarieties": {"summary": "ムロン・ブラン、シュナン・ブラン、カベルネ・フラン、ソーヴィニヨン・ブランが主要品種です。", "keywords": ["ムロン・ブラン", "シュナン・ブラン", "カベルネ・フラン", "ソーヴィニヨン・ブラン"], "sourceIDs": ["official_loire_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "viticulture": {"summary": "地区に合う品種と斜面を選び、霜・病害を管理します。シュナンでは辛口、泡、甘口の目的に応じて収穫時期と選果を変えます。", "keywords": ["品種と区画の適合", "霜対策", "病害管理", "収穫時期選択", "選果"], "sourceIDs": ["official_loire_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "winemakingMaturation": {"summary": "ミュスカデの澱接触、シュナンの辛口〜貴腐醸造、カベルネ・フランの抽出、泡の瓶内二次発酵を地区と目的で使い分けます。", "keywords": ["澱熟成", "瓶内二次発酵", "貴腐", "抽出管理"], "sourceIDs": ["official_loire_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "wineStyles": {"summary": "軽快な辛口白から赤、ロゼ、瓶内二次発酵の泡、シュナンの辛口〜貴腐甘口まで幅広く生産します。", "keywords": ["赤ワイン", "白ワイン", "ロゼワイン", "スパークリングワイン", "甘口ワイン"], "sourceIDs": ["official_loire_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "qualityPriceFactors": {"summary": "地区・村・区画の評判、低収量、樹齢、手摘み選果、貴腐、澱熟成や瓶熟成、生産者の評判が品質と価格を左右します。", "keywords": ["産地の細分化", "区画", "収量制限", "貴腐", "熟成コスト", "生産者の評判"], "sourceIDs": ["official_loire_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "lawLabels": {"summary": "統一された上下階層はありません。ナント、アンジュー・ソーミュール、トゥーレーヌ、中央部の各地域・村名AOPとスタイル規定を読み分けます。", "keywords": ["AOP", "地域名AOP", "村名AOP", "統一的な品質階層なし"], "sourceIDs": ["official_loire_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"}
+          }
+        },
+        {
+          "id": "france_alsace",
+          "nameJapanese": "アルザス",
+          "nameOriginal": "Alsace",
+          "focusValues": ["アルザス"],
+          "position": {"x": 0.80, "y": 0.39},
+          "labelOffset": {"x": -0.03, "y": -0.08},
+          "termIDs": ["term-a2a15f74ce1f"],
+          "childMapID": null,
+          "polygons": [],
+          "comparison": {
+            "climateInfluence": {"summary": "おおむね北緯47.5〜49度。ヴォージュ山脈が海洋性の影響を遮る、日照の多い半大陸性気候です。", "keywords": ["北緯47.5〜49度", "大陸性の影響", "雨陰"], "sourceIDs": ["official_alsace_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "temperatureRainfallRisks": {"summary": "夏は暖かく乾燥し、秋は昼夜差があります。乾燥・水分ストレス、春霜、局地的な雹が主なリスクで、地域内差があります。", "keywords": ["乾燥", "日較差", "水分ストレス", "春霜リスク", "地域内差"], "sourceIDs": ["official_alsace_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "soils": {"summary": "花崗岩、石灰岩、粘土、片岩、砂岩などが狭い範囲で入り組む地質のモザイクです。", "keywords": ["花崗岩", "石灰岩", "粘土", "片岩", "砂岩"], "sourceIDs": ["official_alsace_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "grapeVarieties": {"summary": "リースリング、ゲヴュルツトラミネール、ピノ・グリ、ミュスカをはじめ、ピノ・ブランやピノ・ノワールも重要です。", "keywords": ["リースリング", "ゲヴュルツトラミネール", "ピノ・グリ", "ミュスカ", "ピノ・ブラン", "ピノ・ノワール"], "sourceIDs": ["official_alsace_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "viticulture": {"summary": "高い仕立てで霜害を抑え日照を確保し、斜面の侵食と水分を管理します。スタイルに応じ収穫時期と貴腐果の選別を変えます。", "keywords": ["高い仕立て", "斜面と方位", "水分管理", "収穫時期選択", "選果"], "sourceIDs": ["official_alsace_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "winemakingMaturation": {"summary": "香りと酸を保つ低酸化的な白ワイン醸造が中心です。甘口では遅摘み・貴腐、クレマンでは瓶内二次発酵を使います。", "keywords": ["低酸化的醸造", "瓶内二次発酵", "貴腐", "収穫時期選択"], "sourceIDs": ["official_alsace_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "wineStyles": {"summary": "香り高い単一品種名の白が中心で、辛口から甘口、クレマン、ヴァンダンジュ・タルディヴ、SGNまであります。", "keywords": ["白ワイン", "スパークリングワイン", "甘口ワイン", "単一品種"], "sourceIDs": ["official_alsace_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "qualityPriceFactors": {"summary": "Grand Cruの畑、品種、収量、手摘み選果、遅摘み・貴腐、熟成可能性、生産者の評判が品質と価格を左右します。", "keywords": ["畑の評判", "収量制限", "選果", "貴腐", "生産者の評判"], "sourceIDs": ["official_alsace_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "lawLabels": {"summary": "Alsace AOP、Crémant d’Alsace AOP、51のAlsace Grand Cru AOPがあり、品種表示が一般的です。遅摘み・貴腐にはVT／SGN表示があります。", "keywords": ["AOP", "グラン・クリュ", "品種表示", "遅摘み表示", "貴腐表示"], "sourceIDs": ["official_alsace_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"}
+          }
+        },
+        {
+          "id": "france_northern_rhone",
+          "nameJapanese": "北部ローヌ",
+          "nameOriginal": "Rhône septentrional",
+          "focusValues": [
+            "北部ローヌ",
+            "コート・ロティ",
+            "コンドリュー",
+            "エルミタージュ",
+            "クローズ・エルミタージュ",
+            "サン・ジョゼフ",
+            "コルナス"
+          ],
+          "position": {"x": 0.62, "y": 0.65},
+          "labelOffset": {"x": 0.04, "y": -0.08},
+          "termIDs": ["term-728433e6c8d7"],
+          "childMapID": null,
+          "polygons": [],
+          "comparison": {
+            "climateInfluence": {"summary": "おおむね北緯44.5〜46度。大陸性の影響が強いローヌ渓谷で、南へ向かうほど地中海性の影響が増します。", "keywords": ["北緯44.5〜46度", "大陸性の影響", "渓谷の影響"], "sourceIDs": ["official_rhone_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "temperatureRainfallRisks": {"summary": "夏は温暖〜暑く、ミストラルが湿気を減らします。急斜面の侵食、干ばつ、強風、局地的な雹と年ごとの成熟差が主要リスクです。", "keywords": ["温暖", "ミストラル", "水分ストレス", "強風リスク", "斜面侵食"], "sourceIDs": ["official_rhone_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "soils": {"summary": "花崗岩と風化した岩質土壌が中心で、場所により粘土や石の多い土壌もあります。", "keywords": ["花崗岩", "岩質土壌", "粘土"], "sourceIDs": ["official_rhone_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "grapeVarieties": {"summary": "赤はシラー、白はヴィオニエ、マルサンヌ、ルーサンヌが主要品種です。", "keywords": ["シラー", "ヴィオニエ", "マルサンヌ", "ルーサンヌ"], "sourceIDs": ["official_rhone_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "viticulture": {"summary": "急斜面の段々畑、支柱仕立て、手作業、侵食対策が重要です。斜面の向きと標高に合わせて成熟と収穫時期を管理します。", "keywords": ["急斜面", "段々畑", "手作業", "斜面と方位", "収穫時期選択"], "sourceIDs": ["official_rhone_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "winemakingMaturation": {"summary": "赤はシラーの抽出と樽熟成を調整し、コート・ロティではヴィオニエとの混醸も可能です。白は容器と澱接触で香りと質感を整えます。", "keywords": ["抽出管理", "混醸", "オーク熟成", "澱接触"], "sourceIDs": ["official_rhone_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "wineStyles": {"summary": "シラー主体の香り高く骨格ある辛口赤と、ヴィオニエまたはマルサンヌ／ルーサンヌの芳醇な辛口白が代表的です。", "keywords": ["赤ワイン", "白ワイン", "単一品種"], "sourceIDs": ["official_rhone_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "qualityPriceFactors": {"summary": "有名Cru、急斜面の優良区画、低収量、手作業、樹齢、生産者の評判、樽・瓶熟成と少量生産が品質・価格を押し上げます。", "keywords": ["クリュの評判", "急斜面", "収量制限", "手作業", "生産者の評判", "希少性"], "sourceIDs": ["official_rhone_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "lawLabels": {"summary": "Côtes du Rhône AOPと個別のCru AOPが共存します。Cruは各原産地呼称であり、畑の一律な格付け階層ではありません。", "keywords": ["AOP", "クリュAOP", "統一的な品質階層なし"], "sourceIDs": ["official_rhone_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"}
+          }
+        },
+        {
+          "id": "france_southern_rhone",
+          "nameJapanese": "南部ローヌ",
+          "nameOriginal": "Rhône méridional",
+          "focusValues": [
+            "南部ローヌ",
+            "シャトーヌフ・デュ・パプ",
+            "ジゴンダス",
+            "タヴェル",
+            "コート・デュ・ローヌ・ヴィラージュ",
+            "リラック",
+            "ボーム・ド・ヴニーズ",
+            "ミュスカ・ド・ボーム・ド・ヴニーズ"
+          ],
+          "position": {"x": 0.61, "y": 0.75},
+          "labelOffset": {"x": 0.04, "y": 0.08},
+          "termIDs": ["term-c11519922b34", "term-68dab4143bd2"],
+          "childMapID": null,
+          "polygons": [],
+          "comparison": {
+            "climateInfluence": {"summary": "おおむね北緯43.5〜44.5度。地中海性気候が支配的で、ローヌ渓谷を吹くミストラルの影響を受けます。", "keywords": ["北緯43.5〜44.5度", "地中海性の影響", "渓谷の影響"], "sourceIDs": ["official_rhone_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "temperatureRainfallRisks": {"summary": "暑く乾燥した夏、強い日照、少なく不規則な雨が特徴です。干ばつ、熱害、強風、激しい降雨が主要リスクです。", "keywords": ["高温", "乾燥", "ミストラル", "水分ストレス", "強風リスク"], "sourceIDs": ["official_rhone_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "soils": {"summary": "丸石、粘土、石灰岩、砂質土壌がモザイク状に分布し、保水・排水と熱の蓄積が場所ごとに異なります。", "keywords": ["丸石", "粘土", "石灰岩", "砂質土壌"], "sourceIDs": ["official_rhone_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "grapeVarieties": {"summary": "グルナッシュ、シラー、ムールヴェードルが赤の核で、サンソーなどを補助に使います。白はグルナッシュ・ブラン、クレレット等です。", "keywords": ["グルナッシュ", "シラー", "ムールヴェードル", "サンソー", "グルナッシュ・ブラン", "クレレット"], "sourceIDs": ["official_rhone_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "viticulture": {"summary": "乾燥と風に対応する低い株仕立て、土壌水分と収量の管理、日焼けを抑える樹冠、古木の維持、適切な収穫時期が重要です。", "keywords": ["株仕立て", "水分管理", "収量制限", "樹冠管理", "古木"], "sourceIDs": ["official_rhone_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "winemakingMaturation": {"summary": "複数品種を別々または一緒に発酵してブレンドし、抽出と大型槽・樽熟成を調整します。ロゼ、白、酒精強化甘口では別の工程を使います。", "keywords": ["ブレンド", "抽出管理", "オーク熟成", "酒精強化"], "sourceIDs": ["official_rhone_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "wineStyles": {"summary": "グルナッシュ主体の熟した果実とスパイスを持つ赤が中心で、ロゼ、白、ミュスカの酒精強化甘口もあります。", "keywords": ["赤ワイン", "白ワイン", "ロゼワイン", "甘口ワイン", "ブレンド"], "sourceIDs": ["official_rhone_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "qualityPriceFactors": {"summary": "村・Cruの評判、古木、低収量、区画、品種構成、選果、熟成、生産者の評判が品質と価格を左右します。", "keywords": ["クリュの評判", "古木", "収量制限", "区画", "生産者の評判", "熟成コスト"], "sourceIDs": ["official_rhone_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "lawLabels": {"summary": "Côtes du Rhône、Côtes du Rhône Villages、村名付きVillages、個別Cru AOPを区別します。Cruは個別呼称で一律の畑格付けではありません。", "keywords": ["AOP", "地域名AOP", "村名AOP", "クリュAOP"], "sourceIDs": ["official_rhone_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"}
+          }
+        },
+        {
+          "id": "france_provence",
+          "nameJapanese": "プロヴァンス",
+          "nameOriginal": "Provence",
+          "focusValues": ["プロヴァンス", "バンドール"],
+          "position": {"x": 0.72, "y": 0.83},
+          "labelOffset": {"x": 0.01, "y": 0.08},
+          "termIDs": ["term-c8df8c129e24"],
+          "childMapID": null,
+          "polygons": [],
+          "comparison": {
+            "climateInfluence": {"summary": "おおむね北緯43〜44度。地中海と山地の影響を受ける地中海性気候で、海への近さと標高により地域内差があります。", "keywords": ["北緯43〜44度", "地中海性の影響", "海洋の影響", "地域内差"], "sourceIDs": ["official_provence_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "temperatureRainfallRisks": {"summary": "暑く乾燥し日照が多く、ミストラルが湿気を減らします。干ばつ、熱害、強風、山火事、秋の豪雨が主要リスクです。", "keywords": ["高温", "乾燥", "ミストラル", "水分ストレス", "強風リスク"], "sourceIDs": ["official_provence_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "soils": {"summary": "西・北部の石灰岩と粘土、東・海岸部の結晶質岩や片岩など、標高と海からの距離に応じて多様です。", "keywords": ["石灰岩", "粘土", "結晶質岩", "片岩"], "sourceIDs": ["official_provence_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "grapeVarieties": {"summary": "グルナッシュ、サンソー、シラー、ムールヴェードルが主要黒品種で、白はロールなどを使います。", "keywords": ["グルナッシュ", "サンソー", "シラー", "ムールヴェードル", "ロール"], "sourceIDs": ["official_provence_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "viticulture": {"summary": "風と乾燥に対応する仕立て、水分・樹冠管理、ロゼ用の酸と香りを保つ早めの収穫、斜面や高標高区画の活用が重要です。", "keywords": ["水分管理", "樹冠管理", "収穫時期選択", "斜面と方位"], "sourceIDs": ["official_provence_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "winemakingMaturation": {"summary": "ロゼは直接圧搾または短い果皮浸漬、低温管理、酸化防止、ブレンドで淡い色と新鮮な香りを保ちます。赤は抽出と熟成を調整します。", "keywords": ["直接圧搾", "短時間の果皮浸漬", "低温発酵", "低酸化的醸造", "ブレンド"], "sourceIDs": ["official_provence_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "wineStyles": {"summary": "淡い色調で辛口、果実味と酸を持つロゼが代表的です。辛口赤・白もあり、バンドールでは熟成向き赤も重要です。", "keywords": ["ロゼワイン", "赤ワイン", "白ワイン", "ブレンド"], "sourceIDs": ["official_provence_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "qualityPriceFactors": {"summary": "AOP・補足地理名称、海・標高・土壌の区画差、果実の健全性、収量、選果、温度管理、生産者の評判が品質と価格を左右します。", "keywords": ["産地の細分化", "区画", "収量制限", "選果", "生産者の評判"], "sourceIDs": ["official_provence_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "lawLabels": {"summary": "Côtes de Provence、Coteaux d’Aix-en-Provence、Coteaux Varois en Provence等のAOPを区別し、Côtes de Provenceには補足地理名称があります。バンドールは別AOPです。", "keywords": ["AOP", "地域名AOP", "地理的補足名称", "統一的な品質階層なし"], "sourceIDs": ["official_provence_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"}
+          }
+        },
+        {
+          "id": "france_beaujolais",
+          "nameJapanese": "ボージョレ",
+          "nameOriginal": "Beaujolais",
+          "focusValues": ["ボージョレ", "フルーリー", "モルゴン"],
+          "position": {"x": 0.56, "y": 0.62},
+          "labelOffset": {"x": -0.10, "y": 0.02},
+          "termIDs": ["term-69e84211d0df"],
+          "childMapID": null,
+          "polygons": [],
+          "comparison": {
+            "climateInfluence": {"summary": "おおむね北緯46〜47度。半大陸性を基調に海洋性と地中海性の影響も受け、丘陵の標高・向きで差が出ます。", "keywords": ["北緯46〜47度", "大陸性の影響", "地域内差"], "sourceIDs": ["official_beaujolais_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "temperatureRainfallRisks": {"summary": "夏は温暖で日照があり、標高が酸を保ちます。春霜、雹、開花・収穫期の雨、病害、乾燥が主要リスクです。", "keywords": ["温暖", "標高の影響", "春霜リスク", "雹リスク", "降雨リスク"], "sourceIDs": ["official_beaujolais_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "soils": {"summary": "北部は花崗岩・片岩・青い石、南部は粘土石灰質が増え、砂質や堆積物も含む複雑なモザイクです。", "keywords": ["花崗岩", "片岩", "粘土", "石灰岩", "砂質土壌"], "sourceIDs": ["official_beaujolais_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "grapeVarieties": {"summary": "赤・ロゼはガメイが中心で、少量の白にはシャルドネを使います。", "keywords": ["ガメイ", "シャルドネ"], "sourceIDs": ["official_beaujolais_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "viticulture": {"summary": "丘陵・急斜面では手作業が多く、全房を傷めない収穫、収量管理、樹冠と水分の管理、Cru区画と古木の維持が重要です。", "keywords": ["急斜面", "手作業", "収量制限", "樹冠管理", "古木"], "sourceIDs": ["official_beaujolais_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "winemakingMaturation": {"summary": "全房を使う炭酸ガス浸漬または半炭酸ガス浸漬が特徴です。ヌーヴォーは短期、上位Cruは長い抽出や樽熟成も選びます。", "keywords": ["全房発酵", "炭酸ガス浸漬", "半炭酸ガス浸漬", "抽出管理", "オーク熟成"], "sourceIDs": ["official_beaujolais_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "wineStyles": {"summary": "果実味豊かで早飲みの赤とヌーヴォーから、構造と熟成力を持つ10 Cruの赤まであり、少量の白・ロゼもあります。", "keywords": ["赤ワイン", "白ワイン", "ロゼワイン", "単一品種", "早飲みスタイル"], "sourceIDs": ["official_beaujolais_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "qualityPriceFactors": {"summary": "Beaujolais、Villages、Cruの出所、丘陵区画、古木、低収量、醸造期間、生産者の評判が品質と価格を左右します。", "keywords": ["産地の細分化", "クリュの評判", "古木", "収量制限", "生産者の評判"], "sourceIDs": ["official_beaujolais_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "lawLabels": {"summary": "Beaujolais AOP、Beaujolais Villages AOP、10の個別Cru AOPを区別します。Nouveau／Primeurは若飲みワインの表示で、畑の格付けではありません。", "keywords": ["AOP", "地域名AOP", "クリュAOP", "ヌーヴォー表示"], "sourceIDs": ["official_beaujolais_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"}
+          }
+        },
+        {
+          "id": "france_languedoc_roussillon",
+          "nameJapanese": "ラングドック・ルーション",
+          "nameOriginal": "Languedoc-Roussillon",
+          "focusValues": [
+            "ペイ・ドックIGP",
+            "リムー",
+            "ミネルヴォワ",
+            "フィトゥー",
+            "コルビエール",
+            "ピクプール・ド・ピネ",
+            "ルーション",
+            "コート・デュ・ルーション・ヴィラージュ"
+          ],
+          "position": {"x": 0.44, "y": 0.82},
+          "labelOffset": {"x": -0.04, "y": 0.09},
+          "termIDs": ["term-98c2eccdd33f", "term-5300a26ddb7e"],
+          "childMapID": null,
+          "polygons": [],
+          "comparison": {
+            "climateInfluence": {"summary": "おおむね北緯42.5〜44度。地中海性が支配的で、海、山地、標高、トラモンタンなどの風により地域内差があります。", "keywords": ["北緯42.5〜44度", "地中海性の影響", "海洋の影響", "地域内差"], "sourceIDs": ["official_languedoc_2026", "official_roussillon_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "temperatureRainfallRisks": {"summary": "暑く乾燥し日照が多く、雨は少なく不規則です。干ばつ、熱害、山火事、強風、秋の豪雨が主要リスクです。", "keywords": ["高温", "乾燥", "水分ストレス", "強風リスク", "豪雨リスク"], "sourceIDs": ["official_languedoc_2026", "official_roussillon_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "soils": {"summary": "石灰岩、粘土、片岩、砂利、砂質土壌などが広域に分布し、山麓・海岸・河岸で大きく異なります。", "keywords": ["石灰岩", "粘土", "片岩", "砂礫", "砂質土壌"], "sourceIDs": ["official_languedoc_2026", "official_roussillon_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "grapeVarieties": {"summary": "赤はグルナッシュ、シラー、ムールヴェードル、カリニャン、白はグルナッシュ・ブラン、マカブー、ピクプール、ミュスカ等です。", "keywords": ["グルナッシュ", "シラー", "ムールヴェードル", "カリニャン", "グルナッシュ・ブラン", "マカブー", "ピクプール", "ミュスカ"], "sourceIDs": ["official_languedoc_2026", "official_roussillon_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "viticulture": {"summary": "乾燥と風に対応する株仕立て・樹冠・水分管理、標高の活用、古木と低収量区画の維持、酸を保つ収穫時期が重要です。", "keywords": ["株仕立て", "水分管理", "樹冠管理", "古木", "収量制限", "収穫時期選択"], "sourceIDs": ["official_languedoc_2026", "official_roussillon_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "winemakingMaturation": {"summary": "赤はブレンド、抽出、カリニャンの炭酸ガス浸漬、樽熟成を選択します。リムーの泡、ロゼ、白、ルーションの酒精強化甘口には別工程を使います。", "keywords": ["ブレンド", "炭酸ガス浸漬", "抽出管理", "オーク熟成", "瓶内二次発酵", "酒精強化"], "sourceIDs": ["official_languedoc_2026", "official_roussillon_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "wineStyles": {"summary": "熟した果実の赤ブレンド、辛口白・ロゼ、リムーの泡、ルーションの辛口とVDN、Pays d’Oc IGPの品種表示ワインまで幅広いです。", "keywords": ["赤ワイン", "白ワイン", "ロゼワイン", "スパークリングワイン", "甘口ワイン", "ブレンド"], "sourceIDs": ["official_languedoc_2026", "official_roussillon_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "qualityPriceFactors": {"summary": "AOP／IGP、村・区画、標高、古木、低収量、選果、醸造・熟成方法、生産者の評判が品質・価格を左右し、広域のため差が大きいです。", "keywords": ["産地の細分化", "区画", "古木", "収量制限", "生産者の評判", "地域内差"], "sourceIDs": ["official_languedoc_2026", "official_roussillon_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"},
+            "lawLabels": {"summary": "Pays d’Oc等のIGPと多数のAOPがあり、単一の上下階層ではありません。ラングドックの地域・村名AOP、ルーションの辛口AOPとVDN表示を区別します。", "keywords": ["IGP", "AOP", "地域名AOP", "村名AOP", "酒精強化表示", "統一的な品質階層なし"], "sourceIDs": ["official_languedoc_2026", "official_roussillon_2026"], "checkedAt": "2026-07-19", "effectiveDate": "2026-07-19"}
+          }
+        }
+      ]
+    }
+  ]
+}

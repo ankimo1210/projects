@@ -4,6 +4,7 @@ import SwiftUI
 struct MockExamView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    @Environment(EntitlementStore.self) private var entitlementStore
     let questions: [StudyQuestion]
     @State private var currentIndex = 0
     @State private var answers: [String: Int] = [:]
@@ -17,31 +18,50 @@ struct MockExamView: View {
     private var incorrectQuestions: [StudyQuestion] {
         questions.filter { answers[$0.id] != $0.correctAnswerIndex }
     }
+    private var inaccessibleQuestion: StudyQuestion? {
+        questions.first {
+            !entitlementStore.policy.canAccessQuestion(id: $0.id, studyMode: $0.studyMode)
+        }
+    }
 
     var body: some View {
-        Group {
-            if isSubmitted {
-                resultsView
-            } else {
-                examView
-            }
-        }
-        .navigationTitle(
-            isSubmitted ? "模擬試験結果" : "模擬試験"
-        )
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            if !isSubmitted {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Submit") { showingSubmitConfirmation = true }
+        if questions.isEmpty {
+            ContentUnavailableView(
+                "模擬試験の問題がありません",
+                systemImage: "questionmark.folder",
+                description: Text("問題データを確認してください。")
+            )
+        } else if let inaccessibleQuestion {
+            PaywallView(
+                triggerFeature: inaccessibleQuestion.studyMode == "written_answer"
+                    ? .fullWrittenPractice
+                    : .fullQuestionBank
+            )
+        } else {
+            Group {
+                if isSubmitted {
+                    resultsView
+                } else {
+                    examView
                 }
             }
-        }
-        .alert("Submit mock exam?", isPresented: $showingSubmitConfirmation) {
-            Button("Cancel", role: .cancel) {}
-            Button("Submit") { submit() }
-        } message: {
-            Text("\(questions.count - answers.count) questions are unanswered. Answers cannot be changed after submission.")
+            .navigationTitle(
+                isSubmitted ? "模擬試験結果" : "模擬試験"
+            )
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                if !isSubmitted {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("提出") { showingSubmitConfirmation = true }
+                    }
+                }
+            }
+            .alert("模擬試験を提出しますか？", isPresented: $showingSubmitConfirmation) {
+                Button("キャンセル", role: .cancel) {}
+                Button("提出") { submit() }
+            } message: {
+                Text("未回答が\(questions.count - answers.count)問あります。提出後は回答を変更できません。")
+            }
         }
     }
 
@@ -50,10 +70,10 @@ struct MockExamView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
                     HStack {
-                        Text("Question \(currentIndex + 1) of \(questions.count)")
+                        Text("問題 \(currentIndex + 1) / \(questions.count)")
                             .font(.headline)
                         Spacer()
-                        Text("\(answers.count) answered")
+                        Text("\(answers.count)問回答済み")
                             .foregroundStyle(.secondary)
                     }
 
@@ -101,7 +121,7 @@ struct MockExamView: View {
 
             Divider()
             HStack {
-                Button("Previous") {
+                Button("前へ") {
                     currentIndex = max(0, currentIndex - 1)
                 }
                 .disabled(currentIndex == 0)
@@ -109,11 +129,11 @@ struct MockExamView: View {
                 Spacer()
 
                 if currentIndex + 1 == questions.count {
-                    Button("Submit") { showingSubmitConfirmation = true }
+                    Button("提出") { showingSubmitConfirmation = true }
                         .buttonStyle(.borderedProminent)
                         .tint(AppTheme.wine)
                 } else {
-                    Button("Next") {
+                    Button("次へ") {
                         currentIndex += 1
                     }
                     .buttonStyle(.borderedProminent)
@@ -132,7 +152,7 @@ struct MockExamView: View {
                     Text("\(correctQuestions.count) / \(questions.count)")
                         .font(.system(size: 48, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.wine)
-                    Text("Practice score")
+                    Text("練習スコア")
                         .foregroundStyle(.secondary)
                     ProgressView(
                         value: Double(correctQuestions.count),
@@ -145,7 +165,7 @@ struct MockExamView: View {
                 .background(AppTheme.wineSoft, in: RoundedRectangle(cornerRadius: 18))
 
                 VStack(alignment: .leading, spacing: 14) {
-                    Text("By learning outcome")
+                    Text("学習成果別")
                         .font(.headline)
                     ForEach(LearningOutcome.allCases.filter { $0 != .all }) { outcome in
                         let outcomeQuestions = questions.filter {
@@ -167,17 +187,17 @@ struct MockExamView: View {
 
                 if !incorrectQuestions.isEmpty {
                     VStack(alignment: .leading, spacing: 14) {
-                        Text("Review missed questions")
+                        Text("間違えた問題を確認")
                             .font(.headline)
                         ForEach(incorrectQuestions) { missed in
                             VStack(alignment: .leading, spacing: 8) {
                                 Text(missed.displayPrompt)
                                     .font(.body.weight(.medium))
-                                Text("Correct: \(missed.displayAnswer)")
-                                    .foregroundStyle(.green)
+                                Text("正解：\(missed.displayAnswer)")
+                                    .foregroundStyle(AppTheme.success)
                                 if answers[missed.id] == nil {
-                                    Text("Unanswered")
-                                        .foregroundStyle(.orange)
+                                    Text("未回答")
+                                        .foregroundStyle(AppTheme.warning)
                                 }
                                 ChoiceExplanationsView(
                                     question: missed,
@@ -191,7 +211,7 @@ struct MockExamView: View {
                     }
                 }
 
-                Button("Done") { dismiss() }
+                Button("完了") { dismiss() }
                     .buttonStyle(.borderedProminent)
                     .tint(AppTheme.wine)
                     .frame(maxWidth: .infinity)

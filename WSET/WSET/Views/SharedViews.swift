@@ -84,8 +84,8 @@ struct ChoiceExplanationsView: View {
     }
 
     private func choiceColour(_ index: Int) -> Color {
-        if index == question.correctAnswerIndex { return .green }
-        if index == selectedChoice { return .red }
+        if index == question.correctAnswerIndex { return AppTheme.success }
+        if index == selectedChoice { return AppTheme.error }
         return AppTheme.wine
     }
 }

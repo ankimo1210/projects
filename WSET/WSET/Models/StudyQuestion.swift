@@ -47,6 +47,11 @@ final class StudyQuestion {
     var choicesJapaneseData: Data?
     var translationStatus: String?
     var translationModel: String?
+    var suggestedMinutes: Int?
+    var rubricItemsData: Data?
+    var reviewer: String?
+    var reviewedAt: String?
+    var contentMetadataData: Data?
 
     init(packed: PackedQuestion) {
         id = packed.id
@@ -97,6 +102,11 @@ final class StudyQuestion {
         choicesJapaneseData = japanese.map { Self.encode($0.choices) }
         translationStatus = packed.translationStatus
         translationModel = packed.translationModel
+        suggestedMinutes = packed.suggestedMinutes
+        rubricItemsData = packed.rubricItems.flatMap { try? JSONEncoder().encode($0) }
+        reviewer = packed.reviewer
+        reviewedAt = packed.reviewedAt
+        contentMetadataData = packed.contentMetadata.flatMap { try? JSONEncoder().encode($0) }
     }
 
     var choices: [String] { Self.decode(choicesData) }
@@ -130,6 +140,14 @@ final class StudyQuestion {
         return Self.decode(regionsData)
     }
     var grapeVarieties: [String] { Self.decode(grapeVarietiesData) }
+    var rubricItems: [WrittenRubricItem] {
+        guard let rubricItemsData else { return [] }
+        return (try? JSONDecoder().decode([WrittenRubricItem].self, from: rubricItemsData)) ?? []
+    }
+    var contentMetadata: WrittenContentMetadata? {
+        guard let contentMetadataData else { return nil }
+        return try? JSONDecoder().decode(WrittenContentMetadata.self, from: contentMetadataData)
+    }
     var hasAnswer: Bool { visibleAnswer != nil }
 
     var searchableText: String {
@@ -238,12 +256,20 @@ final class StudyAttempt {
     var rating: Int
     var studiedAt: Date
     var responseText: String?
+    var awardedMarks: Int?
+    var maximumMarks: Int?
+    var rubricSelectionsData: Data?
+    var durationSeconds: Int?
 
     init(
         questionID: String,
         isCorrect: Bool,
         rating: Int,
         responseText: String? = nil,
+        awardedMarks: Int? = nil,
+        maximumMarks: Int? = nil,
+        rubricSelections: [String] = [],
+        durationSeconds: Int? = nil,
         studiedAt: Date = .now
     ) {
         id = UUID()
@@ -252,6 +278,64 @@ final class StudyAttempt {
         self.rating = rating
         self.studiedAt = studiedAt
         self.responseText = responseText
+        self.awardedMarks = awardedMarks
+        self.maximumMarks = maximumMarks
+        rubricSelectionsData = rubricSelections.isEmpty
+            ? nil
+            : try? JSONEncoder().encode(rubricSelections)
+        self.durationSeconds = durationSeconds
+    }
+
+    var rubricSelections: [String] {
+        guard let rubricSelectionsData else { return [] }
+        return (try? JSONDecoder().decode([String].self, from: rubricSelectionsData)) ?? []
+    }
+}
+
+@Model
+final class WrittenAnswerDraft {
+    @Attribute(.unique) var questionID: String
+    var responseText: String
+    var rubricSelectionsData: Data?
+    var startedAt: Date
+    var submittedAt: Date?
+    var updatedAt: Date
+
+    init(
+        questionID: String,
+        responseText: String = "",
+        rubricSelections: [String] = [],
+        startedAt: Date = .now,
+        submittedAt: Date? = nil,
+        updatedAt: Date = .now
+    ) {
+        self.questionID = questionID
+        self.responseText = responseText
+        rubricSelectionsData = rubricSelections.isEmpty
+            ? nil
+            : try? JSONEncoder().encode(rubricSelections)
+        self.startedAt = startedAt
+        self.submittedAt = submittedAt
+        self.updatedAt = updatedAt
+    }
+
+    var rubricSelections: [String] {
+        guard let rubricSelectionsData else { return [] }
+        return (try? JSONDecoder().decode([String].self, from: rubricSelectionsData)) ?? []
+    }
+
+    func update(
+        responseText: String,
+        rubricSelections: [String],
+        submittedAt: Date?,
+        at date: Date = .now
+    ) {
+        self.responseText = responseText
+        rubricSelectionsData = rubricSelections.isEmpty
+            ? nil
+            : try? JSONEncoder().encode(rubricSelections)
+        self.submittedAt = submittedAt
+        updatedAt = date
     }
 }
 

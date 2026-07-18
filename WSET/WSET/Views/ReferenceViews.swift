@@ -2,6 +2,7 @@ import SwiftData
 import SwiftUI
 
 struct GlossaryView: View {
+    @Environment(EntitlementStore.self) private var entitlementStore
     @Query(sort: \ReferenceTermProgress.lastViewedAt, order: .reverse)
     private var progressRecords: [ReferenceTermProgress]
     @State private var searchText = ""
@@ -9,12 +10,18 @@ struct GlossaryView: View {
 
     private let store = ReferenceStore.shared
 
+    private var accessibleTerms: [ReferenceTerm] {
+        store.terms.filter {
+            entitlementStore.policy.canAccessGlossaryTerm(id: $0.id)
+        }
+    }
+
     private var categories: [String] {
-        ["すべて"] + Set(store.terms.map(\.category)).sorted()
+        ["すべて"] + Set(accessibleTerms.map(\.category)).sorted()
     }
 
     private var filteredTerms: [ReferenceTerm] {
-        store.terms.filter { term in
+        accessibleTerms.filter { term in
             (selectedCategory == "すべて" || term.category == selectedCategory)
                 && term.matches(searchText)
         }
@@ -25,7 +32,7 @@ struct GlossaryView: View {
     }
 
     private var bookmarkedTerms: [ReferenceTerm] {
-        store.terms.filter { progressByID[$0.id]?.isBookmarked == true }
+        accessibleTerms.filter { progressByID[$0.id]?.isBookmarked == true }
     }
 
     private var recentTerms: [ReferenceTerm] {
@@ -33,10 +40,61 @@ struct GlossaryView: View {
             .filter { $0.lastViewedAt != nil }
             .prefix(8)
             .compactMap { store.term(id: $0.termID) }
+            .filter { entitlementStore.policy.canAccessGlossaryTerm(id: $0.id) }
+    }
+
+    private var todayReviewTerms: [ReferenceTerm] {
+        ReferenceReviewScheduler.terms(
+            for: .today,
+            allTerms: accessibleTerms,
+            progressRecords: progressRecords
+        )
     }
 
     var body: some View {
         List {
+            Section("用語カード") {
+                NavigationLink {
+                    PremiumFeatureGate(feature: .glossarySRS) {
+                        GlossaryReviewView(source: .today)
+                    }
+                } label: {
+                    Label {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("今日の用語復習")
+                            Text("期限到来と未学習から最大\(todayReviewTerms.count)語")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    } icon: {
+                        Image(systemName: "rectangle.stack.fill")
+                            .foregroundStyle(AppTheme.wine)
+                    }
+                }
+                .disabled(todayReviewTerms.isEmpty)
+                .accessibilityIdentifier("glossary.review.today")
+
+                NavigationLink {
+                    PremiumFeatureGate(feature: .glossarySRS) {
+                        GlossaryReviewView(source: .bookmarks)
+                    }
+                } label: {
+                    Label {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("ブックマーク復習")
+                            Text("\(bookmarkedTerms.count)語")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    } icon: {
+                        Image(systemName: "bookmark.fill")
+                            .foregroundStyle(AppTheme.wine)
+                    }
+                }
+                .disabled(bookmarkedTerms.isEmpty)
+                .accessibilityIdentifier("glossary.review.bookmarks")
+            }
+
             Section {
                 Picker("種別", selection: $selectedCategory) {
                     ForEach(categories, id: \.self) { category in
@@ -93,6 +151,7 @@ struct GlossaryView: View {
             ReferenceTermRow(term: term)
         }
     }
+
 }
 
 private struct ReferenceTermRow: View {
@@ -125,6 +184,7 @@ private struct ReferenceTermRow: View {
 
 struct GlossaryTermDetailView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(EntitlementStore.self) private var entitlementStore
     @Query private var questions: [StudyQuestion]
     @Query private var progressRecords: [ReferenceTermProgress]
     @State private var hasRecordedView = false
@@ -139,16 +199,25 @@ struct GlossaryTermDetailView: View {
     private var relatedQuestions: [StudyQuestion] {
         let identifiers = Set(term.questionIDs)
         return questions
-            .filter { identifiers.contains($0.id) }
+            .filter {
+                identifiers.contains($0.id)
+                    && entitlementStore.policy.canAccessQuestion(
+                        id: $0.id,
+                        studyMode: $0.studyMode
+                    )
+            }
             .sorted { $0.id < $1.id }
     }
 
     private var relatedTerms: [ReferenceTerm] {
-        term.relatedTermIDs.compactMap { store.term(id: $0) }
+        term.relatedTermIDs
+            .compactMap { store.term(id: $0) }
+            .filter { entitlementStore.policy.canAccessGlossaryTerm(id: $0.id) }
     }
 
     var body: some View {
-        List {
+        if entitlementStore.policy.canAccessGlossaryTerm(id: term.id) {
+            List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(term.nameJapanese)
@@ -229,6 +298,36 @@ struct GlossaryTermDetailView: View {
                 }
             }
 
+            Section("記憶") {
+                NavigationLink {
+                    PremiumFeatureGate(feature: .glossarySRS) {
+                        GlossaryReviewView(source: .selected([term.id]))
+                    }
+                } label: {
+                    Label("この用語をカードで復習", systemImage: "rectangle.stack")
+                }
+
+                if let progress, progress.reviewAttemptCount > 0 {
+                    LabeledContent("復習回数", value: "\(progress.reviewAttemptCount)回")
+                    if let accuracy = progress.reviewAccuracy {
+                        LabeledContent(
+                            "正答率",
+                            value: accuracy.formatted(.percent.precision(.fractionLength(0)))
+                        )
+                    }
+                    if let dueDate = progress.reviewDueDate {
+                        LabeledContent {
+                            Text(dueDate, format: .dateTime.year().month().day().hour().minute())
+                        } label: {
+                            Text(progress.isReviewDue() ? "復習期限（到来）" : "次回復習")
+                        }
+                    }
+                } else {
+                    Text("まだカード学習の履歴はありません。")
+                        .foregroundStyle(.secondary)
+                }
+            }
+
             if let source = store.source(id: term.sourceID) {
                 Section("情報源") {
                     Text(source.name)
@@ -239,22 +338,25 @@ struct GlossaryTermDetailView: View {
                     }
                 }
             }
-        }
-        .navigationTitle("用語")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    toggleBookmark()
-                } label: {
-                    Image(systemName: progress?.isBookmarked == true ? "bookmark.fill" : "bookmark")
-                }
-                .accessibilityLabel(
-                    progress?.isBookmarked == true ? "用語のブックマークを解除" : "用語をブックマーク"
-                )
             }
+            .navigationTitle("用語")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        toggleBookmark()
+                    } label: {
+                        Image(systemName: progress?.isBookmarked == true ? "bookmark.fill" : "bookmark")
+                    }
+                    .accessibilityLabel(
+                        progress?.isBookmarked == true ? "用語のブックマークを解除" : "用語をブックマーク"
+                    )
+                }
+            }
+            .onAppear { recordViewIfNeeded() }
+        } else {
+            PaywallView(triggerFeature: .fullGlossary)
         }
-        .onAppear { recordViewIfNeeded() }
     }
 
     private func currentProgress() -> ReferenceTermProgress {
@@ -278,12 +380,254 @@ struct GlossaryTermDetailView: View {
     }
 }
 
+struct GlossaryReviewView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Environment(EntitlementStore.self) private var entitlementStore
+    @Query private var progressRecords: [ReferenceTermProgress]
+    @Query private var questions: [StudyQuestion]
+
+    let source: GlossaryReviewSource
+
+    @State private var termIDs: [String] = []
+    @State private var currentIndex = 0
+    @State private var isRevealed = false
+    @State private var isFinished = false
+    @State private var correctCount = 0
+    @State private var directionMode = GlossaryCardDirectionMode.mixed
+
+    private let store = ReferenceStore.shared
+
+    private var currentTerm: ReferenceTerm? {
+        guard termIDs.indices.contains(currentIndex) else { return nil }
+        return store.term(id: termIDs[currentIndex])
+    }
+
+    private var direction: GlossaryCardDirection {
+        guard let currentTerm else { return .japaneseToOriginal }
+        return ReferenceReviewScheduler.direction(
+            for: currentTerm,
+            index: currentIndex,
+            mode: directionMode
+        )
+    }
+
+    private var relatedQuestions: [StudyQuestion] {
+        guard let currentTerm else { return [] }
+        let ids = Set(currentTerm.questionIDs)
+        return questions
+            .filter {
+                ids.contains($0.id)
+                    && entitlementStore.policy.canAccessQuestion(
+                        id: $0.id,
+                        studyMode: $0.studyMode
+                    )
+            }
+            .sorted { $0.id < $1.id }
+    }
+
+    var body: some View {
+        if entitlementStore.policy.canAccess(.glossarySRS) {
+            Group {
+                if isFinished {
+                    completionView
+                } else if let currentTerm {
+                    reviewView(term: currentTerm)
+                } else {
+                    ContentUnavailableView(
+                        "復習する用語がありません",
+                        systemImage: "rectangle.stack",
+                        description: Text(
+                            source == .bookmarks
+                                ? "用語をブックマークすると、ここからまとめて復習できます。"
+                                : "今日の復習は完了しています。"
+                        )
+                    )
+                }
+            }
+            .navigationTitle(source.title)
+            .navigationBarTitleDisplayMode(.inline)
+            .onAppear(perform: prepareSessionIfNeeded)
+        } else {
+            PaywallView(triggerFeature: .glossarySRS)
+        }
+    }
+
+    private func reviewView(term: ReferenceTerm) -> some View {
+        ScrollView {
+            VStack(spacing: 18) {
+                ProgressView(value: Double(currentIndex), total: Double(max(termIDs.count, 1)))
+                    .tint(AppTheme.wine)
+
+                HStack {
+                    Text("\(currentIndex + 1) / \(termIDs.count)語")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Picker("カード方向", selection: $directionMode) {
+                        ForEach(GlossaryCardDirectionMode.allCases) { mode in
+                            Text(mode.label).tag(mode)
+                        }
+                    }
+                    .labelsHidden()
+                    .pickerStyle(.menu)
+                    .accessibilityLabel("カード方向")
+                }
+
+                VStack(alignment: .leading, spacing: 14) {
+                    Text(frontLabel)
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                    Text(frontText(for: term))
+                        .font(.title2.bold())
+                        .frame(maxWidth: .infinity, minHeight: 120, alignment: .center)
+                        .multilineTextAlignment(.center)
+
+                    if isRevealed {
+                        Divider()
+                        Text(backLabel)
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                        Text(backTitle(for: term))
+                            .font(.title3.bold())
+                        Text(term.description)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .padding(20)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(
+                    Color(.secondarySystemGroupedBackground),
+                    in: RoundedRectangle(cornerRadius: 18)
+                )
+                .accessibilityIdentifier("glossary.review.card")
+
+                if isRevealed {
+                    if !relatedQuestions.isEmpty {
+                        NavigationLink {
+                            StudySessionView(questions: Array(relatedQuestions.prefix(20)))
+                        } label: {
+                            Label(
+                                "関連問題を復習（\(min(relatedQuestions.count, 20))問）",
+                                systemImage: "scope"
+                            )
+                            .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
+                    }
+
+                    HStack(spacing: 12) {
+                        Button("もう一度") { recordAndAdvance(isCorrect: false) }
+                            .buttonStyle(.bordered)
+                            .tint(AppTheme.error)
+                            .frame(maxWidth: .infinity)
+                            .accessibilityIdentifier("glossary.review.again")
+                        Button("覚えた") { recordAndAdvance(isCorrect: true) }
+                            .buttonStyle(.borderedProminent)
+                            .tint(AppTheme.wine)
+                            .frame(maxWidth: .infinity)
+                            .accessibilityIdentifier("glossary.review.good")
+                    }
+                } else {
+                    Button("答えを見る") {
+                        withAnimation { isRevealed = true }
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(AppTheme.wine)
+                    .frame(maxWidth: .infinity)
+                    .accessibilityIdentifier("glossary.review.reveal")
+                }
+            }
+            .padding()
+        }
+    }
+
+    private var completionView: some View {
+        ContentUnavailableView {
+            Label("用語復習完了", systemImage: "checkmark.seal.fill")
+        } description: {
+            Text("\(termIDs.count)語中\(correctCount)語を覚えたと記録しました。")
+        }
+    }
+
+    private var frontLabel: String {
+        switch direction {
+        case .japaneseToOriginal: "日本語名"
+        case .originalToJapanese: "原語"
+        case .summaryToTerm: "概要"
+        case .regionToTerm: "産地"
+        }
+    }
+
+    private var backLabel: String {
+        switch direction {
+        case .japaneseToOriginal: "原語・意味"
+        case .originalToJapanese, .summaryToTerm, .regionToTerm: "用語・意味"
+        }
+    }
+
+    private func frontText(for term: ReferenceTerm) -> String {
+        switch direction {
+        case .japaneseToOriginal:
+            term.nameJapanese
+        case .originalToJapanese:
+            term.originalDisplayName ?? term.nameJapanese
+        case .summaryToTerm:
+            term.summary
+        case .regionToTerm:
+            term.regionDisplayName ?? term.nameJapanese
+        }
+    }
+
+    private func backTitle(for term: ReferenceTerm) -> String {
+        switch direction {
+        case .japaneseToOriginal:
+            return term.originalNames.isEmpty
+                ? "原語表記なし"
+                : term.originalNames.joined(separator: " / ")
+        case .originalToJapanese:
+            return term.nameJapanese
+        case .summaryToTerm, .regionToTerm:
+            let original = term.originalDisplayName.map { "（\($0)）" } ?? ""
+            return term.nameJapanese + original
+        }
+    }
+
+    private func prepareSessionIfNeeded() {
+        guard termIDs.isEmpty else { return }
+        termIDs = ReferenceReviewScheduler.terms(
+            for: source,
+            allTerms: store.terms,
+            progressRecords: progressRecords
+        ).map(\.id)
+    }
+
+    private func recordAndAdvance(isCorrect: Bool) {
+        guard let currentTerm else { return }
+        let existing = progressRecords.first { $0.termID == currentTerm.id }
+        let progress = existing ?? ReferenceTermProgress(termID: currentTerm.id)
+        if existing == nil { modelContext.insert(progress) }
+        progress.recordReview(isCorrect: isCorrect)
+        try? modelContext.save()
+        correctCount += isCorrect ? 1 : 0
+
+        if currentIndex + 1 >= termIDs.count {
+            isFinished = true
+        } else {
+            currentIndex += 1
+            isRevealed = false
+        }
+    }
+}
+
 struct TermAnnotationsView: View {
+    @Environment(EntitlementStore.self) private var entitlementStore
     let questionID: String
     private let store = ReferenceStore.shared
 
     private var terms: [ReferenceTerm] {
-        store.terms(forQuestionID: questionID)
+        store.terms(forQuestionID: questionID).filter {
+            entitlementStore.policy.canAccessGlossaryTerm(id: $0.id)
+        }
     }
 
     var body: some View {
