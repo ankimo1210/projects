@@ -15,9 +15,9 @@ SORT_HDRS    := $(wildcard sorting/include/sorting/*.hpp)
 SEARCH_HDRS  := $(wildcard search/include/search/*.hpp)
 PAR_HDRS     := $(wildcard parallel/include/parallel/*.hpp)
 
-.PHONY: all test bench bench-sorting bench-search bench-quick bench-search-quick trace plot plot-sorting plot-search clean
+.PHONY: all test bench bench-sorting bench-search bench-parallel bench-quick bench-search-quick bench-parallel-quick trace plot plot-sorting plot-search clean
 
-all: $(BUILD)/test_common $(BUILD)/test_sorting $(BUILD)/test_search $(BUILD)/test_parallel $(BUILD)/bench_sorting $(BUILD)/bench_search
+all: $(BUILD)/test_common $(BUILD)/test_sorting $(BUILD)/test_search $(BUILD)/test_parallel $(BUILD)/bench_sorting $(BUILD)/bench_search $(BUILD)/bench_parallel
 
 $(BUILD):
 	mkdir -p $(BUILD)
@@ -40,13 +40,16 @@ $(BUILD)/bench_sorting: sorting/bench/bench_sorting.cpp $(SORT_HDRS) $(COMMON_HD
 $(BUILD)/bench_search: search/bench/bench_search.cpp $(SEARCH_HDRS) $(COMMON_HDRS) | $(BUILD)
 	$(CXX) $(BENCHFLAGS) $< -o $@
 
+$(BUILD)/bench_parallel: parallel/bench/bench_parallel.cpp $(PAR_HDRS) $(SEARCH_HDRS) $(SORT_HDRS) $(COMMON_HDRS) | $(BUILD)
+	$(CXX) $(BENCHFLAGS) $(OMPFLAGS) $< -o $@ $(TBBLIB)
+
 test: $(BUILD)/test_common $(BUILD)/test_sorting $(BUILD)/test_search $(BUILD)/test_parallel
 	$(BUILD)/test_common
 	$(BUILD)/test_sorting
 	$(BUILD)/test_search
 	$(BUILD)/test_parallel
 
-bench: bench-sorting bench-search
+bench: bench-sorting bench-search bench-parallel
 
 bench-sorting: $(BUILD)/bench_sorting
 	$(BUILD)/bench_sorting
@@ -59,6 +62,12 @@ bench-quick: $(BUILD)/bench_sorting
 
 bench-search-quick: $(BUILD)/bench_search
 	$(BUILD)/bench_search --quick
+
+bench-parallel: $(BUILD)/bench_parallel
+	$(BUILD)/bench_parallel
+
+bench-parallel-quick: $(BUILD)/bench_parallel
+	$(BUILD)/bench_parallel --quick
 
 trace: $(BUILD)/bench_sorting
 	$(BUILD)/bench_sorting --trace
