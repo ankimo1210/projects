@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "evaluationPurpose": "AI記述添削がWSET Level 3向けrubricに沿い、根拠のない加点や過度に断定的な助言をしないかを人手で評価する。",
+  "ratingScale": {
+    "1": "重大な誤採点・rubric逸脱・危険な断定がある",
+    "2": "複数の見落とし、または根拠の弱い加点がある",
+    "3": "概ね妥当だが、点数か説明に小さな修正が必要",
+    "4": "rubricと回答根拠に整合し、改善案も具体的",
+    "5": "全criterionで一貫し、簡潔で教育的かつ不確実性も適切"
+  },
+  "requiredHumanChecks": [
+    "criterionごとの加点が候補回答中の明示的な根拠に対応している",
+    "合計点がcriterion点の合計と一致し上限を超えない",
+    "モデル解答と異なる正当な表現を不当に減点しない",
+    "回答にない知識をあるものとして扱わない",
+    "改善フィードバックがrubricに紐づき具体的である"
+  ],
+  "cases": [
+    {
+      "id": "HUMAN-AI-001",
+      "questionID": "SAQ-LO2-001",
+      "prompt": "ボルドーでカベルネ・ソーヴィニヨンとメルロをブレンドする理由を、自然条件とワインスタイルの両面から説明してください。",
+      "candidateAnswer": "メルロは早く熟し、カベルネ・ソーヴィニヨンは遅く熟すので、天候による不作リスクを分散できる。メルロは果実味と柔らかさを、カベルネは酸とタンニンを与える。",
+      "rubric": [
+        {"id": "SAQ-LO2-001-R1", "criterion": "海洋性気候の変動と成熟リスクを説明している", "maximumMarks": 1},
+        {"id": "SAQ-LO2-001-R2", "criterion": "成熟時期の異なる品種によるリスク分散を説明している", "maximumMarks": 2},
+        {"id": "SAQ-LO2-001-R3", "criterion": "メルロが果実味とふくよかさを与えることを説明している", "maximumMarks": 1},
+        {"id": "SAQ-LO2-001-R4", "criterion": "カベルネ・ソーヴィニヨンが酸・タンニン・熟成力を与えることを説明している", "maximumMarks": 1},
+        {"id": "SAQ-LO2-001-R5", "criterion": "ヴィンテージや区画に応じた比率調整の目的を説明している", "maximumMarks": 1}
+      ],
+      "expectedScoreRange": {"minimum": 3, "maximum": 5},
+      "mustNotClaim": ["海洋性気候を明示した", "熟成能力を明示した", "区画ごとの比率調整を説明した"]
+    },
+    {
+      "id": "HUMAN-AI-002",
+      "questionID": "SAQ-LO1-001",
+      "prompt": "春の霜がブドウ樹と収量に与える影響を説明し、栽培者が利用できる対策を3つ評価してください。",
+      "candidateAnswer": "霜は若い芽を傷めて収量を下げる。送風機を使うとよい。",
+      "rubric": [
+        {"id": "SAQ-LO1-001-R1", "criterion": "若い芽・花序の損傷と収量低下を説明している", "maximumMarks": 2},
+        {"id": "SAQ-LO1-001-R2", "criterion": "冷気滞留など立地によるリスク差を説明している", "maximumMarks": 1},
+        {"id": "SAQ-LO1-001-R3", "criterion": "遅剪定の効果と制約を評価している", "maximumMarks": 1},
+        {"id": "SAQ-LO1-001-R4", "criterion": "送風機の仕組み、適用条件、制約を評価している", "maximumMarks": 2},
+        {"id": "SAQ-LO1-001-R5", "criterion": "散水の仕組みと水源・運転上の制約を評価している", "maximumMarks": 2}
+      ],
+      "expectedScoreRange": {"minimum": 1, "maximum": 2},
+      "mustNotClaim": ["送風機の仕組みを説明した", "3つの対策を評価した", "冷気滞留を説明した"]
+    },
+    {
+      "id": "HUMAN-AI-003",
+      "questionID": "SAQ-LO2-002",
+      "prompt": "モーゼルとクレア・ヴァレーのリースリングを比較してください。",
+      "candidateAnswer": "モーゼルは冷涼で酸が高く軽い。クレアは日照が強いが標高と夜の冷却で酸を保ち、より熟したライム香と高いボディになりやすい。",
+      "rubric": [
+        {"id": "SAQ-LO2-002-R1", "criterion": "モーゼルの冷涼さ、斜面、川の影響を説明している", "maximumMarks": 2},
+        {"id": "SAQ-LO2-002-R2", "criterion": "モーゼルの高い酸、軽いボディ、低めのアルコールまたは残糖を説明している", "maximumMarks": 2},
+        {"id": "SAQ-LO2-002-R3", "criterion": "クレア・ヴァレーの日照、標高、夜間の冷却を説明している", "maximumMarks": 2},
+        {"id": "SAQ-LO2-002-R4", "criterion": "クレア・ヴァレーの辛口、ライム系果実、相対的に高いボディと熟成特徴を説明している", "maximumMarks": 2}
+      ],
+      "expectedScoreRange": {"minimum": 4, "maximum": 6},
+      "mustNotClaim": ["モーゼルの斜面と川の影響を説明した", "クレアの熟成特徴を説明した"]
+    }
+  ]
+}

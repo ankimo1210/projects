@@ -2,24 +2,39 @@ import SwiftData
 import SwiftUI
 
 struct HomeView: View {
+    @Environment(EntitlementStore.self) private var entitlementStore
     @Query private var questions: [StudyQuestion]
     @Query private var progressRecords: [QuestionProgress]
     @Query private var attempts: [StudyAttempt]
 
     private var visibleQuestions: [StudyQuestion] {
-        questions
+        questions.filter {
+            entitlementStore.policy.canAccessQuestion(id: $0.id, studyMode: $0.studyMode)
+        }
+    }
+
+    private var visibleQuestionIDs: Set<String> {
+        Set(visibleQuestions.map(\.id))
     }
 
     private var studiedCount: Int {
-        progressRecords.count(where: { $0.attemptCount > 0 })
+        progressRecords.count {
+            visibleQuestionIDs.contains($0.questionID) && $0.attemptCount > 0
+        }
     }
 
     private var dueCount: Int {
-        progressRecords.count(where: { $0.attemptCount > 0 && $0.dueDate <= .now })
+        progressRecords.count {
+            visibleQuestionIDs.contains($0.questionID)
+                && $0.attemptCount > 0
+                && $0.dueDate <= .now
+        }
     }
 
     private var bookmarkedCount: Int {
-        progressRecords.count(where: \.isBookmarked)
+        progressRecords.count {
+            visibleQuestionIDs.contains($0.questionID) && $0.isBookmarked
+        }
     }
 
     var body: some View {
@@ -34,14 +49,14 @@ struct HomeView: View {
                     }
 
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 14) {
-                        StatCard(title: "Questions", value: visibleQuestions.count.formatted(), systemImage: "books.vertical")
-                        StatCard(title: "Studied", value: studiedCount.formatted(), systemImage: "checkmark.circle")
-                        StatCard(title: "Due", value: dueCount.formatted(), systemImage: "calendar")
-                        StatCard(title: "Bookmarks", value: bookmarkedCount.formatted(), systemImage: "bookmark")
+                        StatCard(title: "問題数", value: visibleQuestions.count.formatted(), systemImage: "books.vertical")
+                        StatCard(title: "学習済み", value: studiedCount.formatted(), systemImage: "checkmark.circle")
+                        StatCard(title: "復習期限", value: dueCount.formatted(), systemImage: "calendar")
+                        StatCard(title: "ブックマーク", value: bookmarkedCount.formatted(), systemImage: "bookmark")
                     }
 
                     VStack(alignment: .leading, spacing: 14) {
-                        Text("Coverage")
+                        Text("学習成果別の収録数")
                             .font(.headline)
                         ForEach(LearningOutcome.allCases.filter { $0 != .all }) { outcome in
                             let count = visibleQuestions.count(where: { $0.learningOutcome == outcome.rawValue })
@@ -59,16 +74,16 @@ struct HomeView: View {
 
                     if attempts.isEmpty {
                         ContentUnavailableView(
-                            "No study history yet",
+                            "学習履歴はまだありません",
                             systemImage: "rectangle.stack",
-                            description: Text("Start a session to build your personal progress profile.")
+                            description: Text("学習セッションを開始すると進捗が記録されます。")
                         )
                     }
                 }
                 .padding()
             }
             .background(Color(.systemGroupedBackground))
-            .navigationTitle("WSET Study")
+            .navigationTitle("WSET学習")
         }
     }
 }

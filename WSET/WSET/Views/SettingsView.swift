@@ -4,55 +4,97 @@ import UniformTypeIdentifiers
 
 struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(EntitlementStore.self) private var entitlementStore
     @Query private var progressRecords: [QuestionProgress]
     @Query private var attempts: [StudyAttempt]
     @Query private var tastingNotes: [TastingNote]
     @Query private var mockExams: [MockExamSession]
+    @Query private var theoryExams: [TheoryExamSession]
     @AppStorage(ReviewNotificationService.enabledKey) private var notificationsEnabled = false
     @State private var backupDocument: StudyBackupDocument?
     @State private var showingExporter = false
     @State private var showingImporter = false
     @State private var statusMessage: String?
+    @State private var isRestoringPurchase = false
 
     var body: some View {
         Form {
-            Section("Review reminders") {
+            Section("Pro") {
+                LabeledContent(
+                    "利用状態",
+                    value: entitlementStore.hasProAccess ? "購入済み" : "無料版"
+                )
+                if !entitlementStore.hasProAccess {
+                    NavigationLink {
+                        PaywallView()
+                    } label: {
+                        Label("Proの機能を見る", systemImage: "graduationcap.fill")
+                    }
+                }
+                Button {
+                    restorePurchase()
+                } label: {
+                    HStack {
+                        Label("購入を復元", systemImage: "arrow.clockwise")
+                        if isRestoringPurchase {
+                            Spacer()
+                            ProgressView()
+                        }
+                    }
+                }
+                .disabled(isRestoringPurchase)
+            }
+
+            Section("復習通知") {
                 Toggle(
-                    "Daily and next-due notifications",
+                    "毎日と次回期限の通知",
                     isOn: Binding(
                         get: { notificationsEnabled },
                         set: { updateNotifications(enabled: $0) }
                     )
                 )
-                Text("A daily reminder is scheduled for 09:00, plus one notification for the next due review.")
+                Text("毎日9:00の通知に加え、次に復習期限を迎える問題を1件通知します。")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
 
             Section {
-                LabeledContent("Progress records", value: progressRecords.count.formatted())
-                LabeledContent("Study attempts", value: attempts.count.formatted())
-                LabeledContent("Tasting notes", value: tastingNotes.count.formatted())
-                LabeledContent("Mock exams", value: mockExams.count.formatted())
+                LabeledContent("進捗記録", value: progressRecords.count.formatted())
+                LabeledContent("学習履歴", value: attempts.count.formatted())
+                LabeledContent("テイスティング記録", value: tastingNotes.count.formatted())
+                LabeledContent("ミニ模試", value: mockExams.count.formatted())
+                LabeledContent("理論模試", value: theoryExams.count.formatted())
 
                 Button {
                     exportBackup()
                 } label: {
-                    Label("Export backup", systemImage: "square.and.arrow.up")
+                    Label("バックアップを書き出す", systemImage: "square.and.arrow.up")
                 }
 
                 Button {
                     showingImporter = true
                 } label: {
-                    Label("Restore from backup", systemImage: "square.and.arrow.down")
+                    Label("バックアップから復元", systemImage: "square.and.arrow.down")
                 }
             } header: {
-                Text("Backup")
+                Text("バックアップ")
             } footer: {
-                Text("Backups contain progress, study attempts, tasting notes, and mock exams, but not the question library. Restore merges records by ID and does not delete newer local attempts.")
+                Text("問題集本体を除く、進捗・学習履歴・テイスティング・模試・用語復習を保存します。復元はIDごとに統合し、新しい端末内履歴を削除しません。")
+            }
+
+            Section("情報") {
+                NavigationLink("プライバシーとデータ") {
+                    PrivacyInformationView()
+                }
+                NavigationLink("任意オンライン機能の準備") {
+                    R7ReadinessView()
+                }
+                NavigationLink("本アプリについて") {
+                    LegalInformationView()
+                }
             }
         }
-        .navigationTitle("Settings")
+        .navigationTitle("設定")
         .navigationBarTitleDisplayMode(.inline)
         .fileExporter(
             isPresented: $showingExporter,
@@ -70,13 +112,27 @@ struct SettingsView: View {
         .fileImporter(isPresented: $showingImporter, allowedContentTypes: [.json]) { result in
             importBackup(result)
         }
-        .alert("WSET Study", isPresented: Binding(
+        .alert("WSET学習", isPresented: Binding(
             get: { statusMessage != nil },
             set: { if !$0 { statusMessage = nil } }
         )) {
             Button("閉じる") { statusMessage = nil }
         } message: {
             Text(statusMessage ?? "")
+        }
+    }
+
+    private func restorePurchase() {
+        isRestoringPurchase = true
+        Task {
+            defer { isRestoringPurchase = false }
+            do {
+                statusMessage = try await entitlementStore.restorePurchases()
+                    ? "購入を復元しました。"
+                    : "復元できる購入は見つかりませんでした。"
+            } catch {
+                statusMessage = "購入を復元できませんでした。通信状態を確認してください。"
+            }
         }
     }
 

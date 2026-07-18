@@ -41,6 +41,7 @@ final class WSETUITests: XCTestCase {
 
     func testFocusedStudyControlsAreReachable() {
         let app = XCUIApplication()
+        app.launchArguments.append("-UITestProEntitlement")
         app.launch()
 
         XCTAssertTrue(app.tabBars.buttons["学習"].waitForExistence(timeout: 20))
@@ -62,15 +63,15 @@ final class WSETUITests: XCTestCase {
         XCTAssertTrue(startButton.isEnabled)
 
         valuePicker.tap()
-        let bordeaux = app.buttons.matching(
+        let bordeaux = app.descendants(matching: .any).matching(
             NSPredicate(format: "label CONTAINS %@", "ボルドー（")
         ).firstMatch
-        let burgundy = app.buttons.matching(
+        let burgundy = app.descendants(matching: .any).matching(
             NSPredicate(format: "label CONTAINS %@", "ブルゴーニュ（")
         ).firstMatch
         XCTAssertTrue(bordeaux.waitForExistence(timeout: 5))
         XCTAssertTrue(burgundy.exists)
-        app.buttons.matching(
+        app.descendants(matching: .any).matching(
             NSPredicate(format: "label BEGINSWITH %@", "フランス（")
         ).firstMatch.tap()
 
@@ -99,14 +100,30 @@ final class WSETUITests: XCTestCase {
         XCTAssertTrue(app.tabBars.buttons["学習"].exists)
         XCTAssertTrue(app.tabBars.buttons["問題集"].exists)
         XCTAssertFalse(app.tabBars.buttons["Home"].exists)
+        XCTAssertTrue(app.navigationBars["WSET学習"].exists)
+        XCTAssertTrue(app.staticTexts["学習成果別の収録数"].exists)
+        XCTAssertFalse(app.navigationBars["WSET Study"].exists)
+        XCTAssertFalse(app.staticTexts["Coverage"].exists)
 
         app.tabBars.buttons["学習"].tap()
         XCTAssertTrue(app.navigationBars["学習"].exists)
+        XCTAssertTrue(app.staticTexts["クイック学習"].exists)
+        XCTAssertTrue(app.buttons["混合学習を開始"].exists)
+        XCTAssertFalse(app.staticTexts["Quick study"].exists)
+        XCTAssertFalse(app.buttons["Start mixed study session"].exists)
         XCTAssertFalse(app.staticTexts["アプリと問題の言語"].exists)
+
+        app.tabBars.buttons["進捗"].tap()
+        XCTAssertTrue(app.navigationBars["進捗"].exists)
+        XCTAssertTrue(app.staticTexts["学習成果別"].exists)
+        XCTAssertTrue(app.buttons["設定"].exists)
+        XCTAssertFalse(app.navigationBars["Progress"].exists)
+        XCTAssertFalse(app.buttons["Settings"].exists)
     }
 
     func testGlossaryAndClassificationReferencesAreReachable() {
         let app = XCUIApplication()
+        app.launchArguments.append("-UITestFreeEntitlement")
         app.launch()
 
         XCTAssertTrue(app.tabBars.buttons["問題集"].waitForExistence(timeout: 20))
@@ -117,7 +134,7 @@ final class WSETUITests: XCTestCase {
         glossaryLink.tap()
         XCTAssertTrue(app.navigationBars["用語辞書"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts.matching(
-            NSPredicate(format: "label CONTAINS %@", "用語（680件）")
+            NSPredicate(format: "label CONTAINS %@", "用語（60件）")
         ).firstMatch.exists)
 
         app.navigationBars["用語辞書"].buttons.firstMatch.tap()

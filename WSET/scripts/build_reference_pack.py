@@ -11,6 +11,7 @@ import re
 import unicodedata
 from collections import defaultdict
 from datetime import UTC, datetime
+from itertools import combinations
 from pathlib import Path
 from typing import Any
 from xml.etree import ElementTree
@@ -18,6 +19,9 @@ from zipfile import BadZipFile, ZipFile
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_INPUT = PROJECT_ROOT / "ReferenceSources" / "wset_reference_master.xlsx"
+DEFAULT_TERM_ID_REVIEW = (
+    PROJECT_ROOT / "ReferenceSources" / "glossary_term_id_review.json"
+)
 DEFAULT_QUESTION_PACK = PROJECT_ROOT / "WSET" / "QuestionData" / "question_pack.json"
 DEFAULT_OUTPUT = PROJECT_ROOT / "WSET" / "ReferenceData" / "reference_pack.json"
 SCHEMA_VERSION = 1
@@ -204,12 +208,137 @@ def canonical_json(value: Any) -> bytes:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
 
 
+def source_path_label(path: Path) -> str:
+    resolved = path.resolve()
+    try:
+        return resolved.relative_to(PROJECT_ROOT.resolve()).as_posix()
+    except ValueError:
+        return resolved.as_posix()
+
+
 def validate_unique(rows: list[dict[str, str]], column: str, sheet: str) -> set[str]:
     values = [required(row, column, sheet) for row in rows]
     duplicates = sorted(value for value in set(values) if values.count(value) > 1)
     if duplicates:
         raise ReferencePackError(f"{sheet}: duplicate {column}: {duplicates[:10]}")
     return set(values)
+
+
+def duplicate_term_candidate_pairs(
+    term_rows: list[dict[str, str]],
+) -> set[tuple[str, str]]:
+    """Return pairs sharing a normalized canonical display name.
+
+    This is intentionally a review signal, not an automatic synonym decision.
+    Japanese, English, and French canonical names are compared because two
+    context-specific cards can legitimately share an original-language name.
+    """
+
+    identifiers_by_name: dict[str, set[str]] = defaultdict(set)
+    for row in term_rows:
+        identifier = required(row, "term_id", "用語")
+        for column in ("日本語", "English", "Français"):
+            value = clean(row.get(column))
+            if value:
+                identifiers_by_name[normalize(value)].add(identifier)
+
+    pairs: set[tuple[str, str]] = set()
+    for identifiers in identifiers_by_name.values():
+        pairs.update(combinations(sorted(identifiers), 2))
+    return pairs
+
+
+def load_term_id_migrations(
+    term_rows: list[dict[str, str]],
+    review_path: Path = DEFAULT_TERM_ID_REVIEW,
+) -> dict[str, str]:
+    """Validate the expert-review ledger and return approved old-to-new IDs."""
+
+    try:
+        review = json.loads(review_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ReferencePackError(f"Invalid term ID review: {review_path}") from error
+    if review.get("schemaVersion") != 1:
+        raise ReferencePackError("Unsupported term ID review schema")
+    candidates = review.get("candidates")
+    if not isinstance(candidates, list):
+        raise ReferencePackError("Term ID review candidates must be a list")
+
+    known_ids = {required(row, "term_id", "用語") for row in term_rows}
+    reviewed_pairs: set[tuple[str, str]] = set()
+    candidate_ids: set[str] = set()
+    migrations: dict[str, str] = {}
+    used_term_ids: set[str] = set()
+    allowed_decisions = {"pending_expert_review", "merge", "keep_separate"}
+
+    for candidate in candidates:
+        if not isinstance(candidate, dict):
+            raise ReferencePackError("Term ID review candidate must be an object")
+        candidate_id = clean(candidate.get("candidateID"))
+        if not candidate_id or candidate_id in candidate_ids:
+            raise ReferencePackError("Term ID review candidateID must be unique")
+        candidate_ids.add(candidate_id)
+
+        raw_term_ids = candidate.get("termIDs")
+        if (
+            not isinstance(raw_term_ids, list)
+            or len(raw_term_ids) != 2
+            or not all(isinstance(value, str) and value for value in raw_term_ids)
+        ):
+            raise ReferencePackError(f"{candidate_id}: termIDs must contain two IDs")
+        pair = tuple(sorted(raw_term_ids))
+        if pair in reviewed_pairs:
+            raise ReferencePackError(f"{candidate_id}: duplicate candidate pair")
+        if set(pair) - known_ids:
+            raise ReferencePackError(f"{candidate_id}: unknown term ID")
+        if used_term_ids & set(pair):
+            raise ReferencePackError(f"{candidate_id}: term appears in multiple candidates")
+        reviewed_pairs.add(pair)
+        used_term_ids.update(pair)
+
+        decision = candidate.get("decision")
+        if decision not in allowed_decisions:
+            raise ReferencePackError(f"{candidate_id}: invalid decision")
+        canonical_id = candidate.get("canonicalTermID")
+        rationale = clean(candidate.get("rationale"))
+        reviewer = clean(candidate.get("reviewer"))
+        reviewed_at = clean(candidate.get("reviewedAt"))
+
+        if decision == "pending_expert_review":
+            if canonical_id is not None or reviewer or reviewed_at:
+                raise ReferencePackError(
+                    f"{candidate_id}: pending review cannot contain an approval"
+                )
+            continue
+
+        if not rationale or not reviewer or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", reviewed_at):
+            raise ReferencePackError(
+                f"{candidate_id}: decided review requires rationale, reviewer, and reviewedAt"
+            )
+        if decision == "keep_separate":
+            if canonical_id is not None:
+                raise ReferencePackError(
+                    f"{candidate_id}: keep_separate cannot have canonicalTermID"
+                )
+            continue
+
+        if canonical_id not in pair:
+            raise ReferencePackError(
+                f"{candidate_id}: canonicalTermID must be one of termIDs"
+            )
+        retired_id = pair[0] if pair[1] == canonical_id else pair[1]
+        migrations[retired_id] = canonical_id
+
+    detected_pairs = duplicate_term_candidate_pairs(term_rows)
+    if reviewed_pairs != detected_pairs:
+        missing = sorted(detected_pairs - reviewed_pairs)
+        extra = sorted(reviewed_pairs - detected_pairs)
+        raise ReferencePackError(
+            f"Term ID review does not match detected candidates; missing={missing}, extra={extra}"
+        )
+    if set(migrations.values()) & set(migrations):
+        raise ReferencePackError("Term ID migrations must be direct and cannot form chains")
+    return dict(sorted(migrations.items()))
 
 
 def question_ids_for_term(
@@ -247,6 +376,7 @@ def question_ids_for_term(
 def build_pack(
     workbook_path: Path = DEFAULT_INPUT,
     question_pack_path: Path = DEFAULT_QUESTION_PACK,
+    term_id_review_path: Path = DEFAULT_TERM_ID_REVIEW,
     *,
     generated_at: str | None = None,
 ) -> dict[str, Any]:
@@ -268,21 +398,65 @@ def build_pack(
     system_ids = validate_unique(rows["格付け制度"], "system_id", "格付け制度")
     validate_unique(rows["格付け項目"], "entry_id", "格付け項目")
     source_ids = validate_unique(rows["情報源"], "source_id", "情報源")
+    term_id_migrations = load_term_id_migrations(rows["用語"], term_id_review_path)
+
+    publication_by_id: dict[str, str] = {}
+    term_rows_by_id: dict[str, dict[str, str]] = {}
+    for row in rows["用語"]:
+        identifier = required(row, "term_id", "用語")
+        publication = required(row, "公開", "用語")
+        if publication not in {"Y", "N"}:
+            raise ReferencePackError("用語: 公開 must be Y or N")
+        publication_by_id[identifier] = publication
+        term_rows_by_id[identifier] = row
+    inactive_ids = {
+        identifier for identifier, value in publication_by_id.items() if value == "N"
+    }
+    if inactive_ids != set(term_id_migrations):
+        raise ReferencePackError(
+            "Every unpublished term must be an approved retired ID, and vice versa"
+        )
+    active_term_ids = term_ids - inactive_ids
+    if any(publication_by_id[target] != "Y" for target in term_id_migrations.values()):
+        raise ReferencePackError("Every canonical term ID must remain published")
 
     aliases_by_term: dict[str, list[str]] = defaultdict(list)
     canonical_names = {
         normalize(required(row, "日本語", "用語")): required(row, "term_id", "用語")
         for row in rows["用語"]
+        if publication_by_id[required(row, "term_id", "用語")] == "Y"
     }
     for row in rows["別名"]:
         identifier = required(row, "term_id", "別名")
         if identifier not in term_ids:
             raise ReferencePackError(f"別名: unknown term_id {identifier}")
+        identifier = term_id_migrations.get(identifier, identifier)
         alias = required(row, "表記", "別名")
         collision = canonical_names.get(normalize(alias))
         if collision is not None and collision != identifier:
             raise ReferencePackError(f"別名 {alias!r} conflicts with another canonical term")
         aliases_by_term[identifier].append(alias)
+    for retired_id, canonical_id in term_id_migrations.items():
+        retired_row = term_rows_by_id[retired_id]
+        canonical_row = term_rows_by_id[canonical_id]
+        canonical_values = {
+            normalize(value)
+            for value in (
+                required(canonical_row, "日本語", "用語"),
+                required(canonical_row, "English", "用語"),
+                clean(canonical_row["Français"]),
+            )
+            if value
+        }
+        aliases_by_term[canonical_id].extend(
+            value
+            for value in (
+                required(retired_row, "日本語", "用語"),
+                required(retired_row, "English", "用語"),
+                clean(retired_row["Français"]),
+            )
+            if value and normalize(value) not in canonical_values
+        )
 
     question_pack = json.loads(question_pack_path.read_text(encoding="utf-8"))
     questions = question_pack.get("questions")
@@ -291,8 +465,6 @@ def build_pack(
 
     terms: list[dict[str, Any]] = []
     for row in rows["用語"]:
-        if required(row, "公開", "用語") not in {"Y", "N"}:
-            raise ReferencePackError("用語: 公開 must be Y or N")
         if row["公開"] != "Y":
             continue
         identifier = required(row, "term_id", "用語")
@@ -321,7 +493,7 @@ def build_pack(
         terms.append(term)
 
     for term in terms:
-        unknown = set(term["relatedTermIDs"]) - term_ids
+        unknown = set(term["relatedTermIDs"]) - active_term_ids
         if unknown:
             raise ReferencePackError(f"{term['id']}: unknown related terms {sorted(unknown)}")
 
@@ -346,7 +518,11 @@ def build_pack(
         system_id = required(row, "system_id", "格付け項目")
         identifier = required(row, "term_id", "格付け項目")
         source_id = required(row, "source_id", "格付け項目")
-        if system_id not in system_ids or identifier not in term_ids or source_id not in source_ids:
+        if (
+            system_id not in system_ids
+            or identifier not in active_term_ids
+            or source_id not in source_ids
+        ):
             raise ReferencePackError(f"格付け項目 row {row['__excel_row__']}: broken reference")
         name_japanese = required(row, "日本語名", "格付け項目")
         name_original = required(row, "原語名", "格付け項目")
@@ -394,6 +570,7 @@ def build_pack(
         "classificationSystems": systems,
         "classificationEntries": entries,
         "sources": sources,
+        "termIDMigrations": term_id_migrations,
     }
     payload = {
         "schemaVersion": SCHEMA_VERSION,
@@ -404,8 +581,12 @@ def build_pack(
         "termCount": len(terms),
         "classificationEntryCount": len(entries),
         "source": {
-            "file": workbook_path.resolve().relative_to(PROJECT_ROOT.resolve()).as_posix(),
+            "file": source_path_label(workbook_path),
             "sha256": sha256(workbook_path.read_bytes()),
+        },
+        "termIDReviewSource": {
+            "file": source_path_label(term_id_review_path),
+            "sha256": sha256(term_id_review_path.read_bytes()),
         },
         **content,
     }
@@ -418,7 +599,18 @@ def validate_pack(payload: dict[str, Any]) -> None:
         raise ReferencePackError("Unsupported reference pack schema")
     terms = payload.get("terms")
     entries = payload.get("classificationEntries")
-    if not isinstance(terms, list) or len(terms) != EXPECTED_TERM_COUNT:
+    migrations = payload.get("termIDMigrations")
+    if (
+        not isinstance(migrations, dict)
+        or not all(
+            isinstance(source, str) and isinstance(target, str)
+            for source, target in migrations.items()
+        )
+        or set(migrations) & set(migrations.values())
+    ):
+        raise ReferencePackError("Invalid termIDMigrations")
+    expected_term_count = EXPECTED_TERM_COUNT - len(migrations)
+    if not isinstance(terms, list) or len(terms) != expected_term_count:
         raise ReferencePackError("Reference pack term count mismatch")
     if not isinstance(entries, list) or len(entries) != EXPECTED_CLASSIFICATION_COUNT:
         raise ReferencePackError("Reference pack classification count mismatch")
@@ -426,11 +618,15 @@ def validate_pack(payload: dict[str, Any]) -> None:
         raise ReferencePackError("termCount mismatch")
     if payload.get("classificationEntryCount") != len(entries):
         raise ReferencePackError("classificationEntryCount mismatch")
+    active_ids = {term.get("id") for term in terms if isinstance(term, dict)}
+    if set(migrations) & active_ids or not set(migrations.values()) <= active_ids:
+        raise ReferencePackError("termIDMigrations must resolve retired IDs to active terms")
     content = {
         "terms": terms,
         "classificationSystems": payload.get("classificationSystems"),
         "classificationEntries": entries,
         "sources": payload.get("sources"),
+        "termIDMigrations": migrations,
     }
     if payload.get("sourceHash") != sha256(canonical_json(content)):
         raise ReferencePackError("sourceHash mismatch")
@@ -441,14 +637,25 @@ def write_pack(payload: dict[str, Any], output_path: Path) -> None:
     output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def check_existing_pack(input_path: Path, question_pack: Path, output_path: Path) -> None:
+def check_existing_pack(
+    input_path: Path,
+    question_pack: Path,
+    output_path: Path,
+    *,
+    term_id_review_path: Path = DEFAULT_TERM_ID_REVIEW,
+) -> None:
     existing = json.loads(output_path.read_text(encoding="utf-8"))
     validate_pack(existing)
-    expected = build_pack(input_path, question_pack, generated_at="ignored-for-check")
+    expected = build_pack(
+        input_path,
+        question_pack,
+        term_id_review_path,
+        generated_at="ignored-for-check",
+    )
     for key in (
         "schemaVersion", "sourceHash", "questionPackSourceHash", "termCount",
-        "classificationEntryCount", "source", "terms", "classificationSystems",
-        "classificationEntries", "sources",
+        "classificationEntryCount", "source", "termIDReviewSource", "terms",
+        "classificationSystems", "classificationEntries", "sources", "termIDMigrations",
     ):
         if existing.get(key) != expected.get(key):
             raise ReferencePackError(f"Generated reference pack is stale: {key}")
@@ -458,14 +665,23 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Build the WSET offline reference pack")
     parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
     parser.add_argument("--question-pack", type=Path, default=DEFAULT_QUESTION_PACK)
+    parser.add_argument("--term-id-review", type=Path, default=DEFAULT_TERM_ID_REVIEW)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
     if args.check:
-        check_existing_pack(args.input, args.question_pack, args.output)
-        print(f"Verified {args.output}: {EXPECTED_TERM_COUNT} terms, {EXPECTED_CLASSIFICATION_COUNT} classifications")
+        check_existing_pack(
+            args.input,
+            args.question_pack,
+            args.output,
+            term_id_review_path=args.term_id_review,
+        )
+        print(
+            f"Verified {args.output}: reference terms and "
+            f"{EXPECTED_CLASSIFICATION_COUNT} classifications"
+        )
         return
-    payload = build_pack(args.input, args.question_pack)
+    payload = build_pack(args.input, args.question_pack, args.term_id_review)
     write_pack(payload, args.output)
     linked = sum(bool(term["questionIDs"]) for term in payload["terms"])
     print(

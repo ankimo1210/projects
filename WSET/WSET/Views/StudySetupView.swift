@@ -2,8 +2,12 @@ import SwiftData
 import SwiftUI
 
 struct StudySetupView: View {
+    @Environment(EntitlementStore.self) private var entitlementStore
     @Query private var questions: [StudyQuestion]
     @Query private var progressRecords: [QuestionProgress]
+    @Query(sort: \WrittenAnswerDraft.updatedAt, order: .reverse)
+    private var writtenDrafts: [WrittenAnswerDraft]
+    @Query private var attempts: [StudyAttempt]
     @State private var selectedOutcome = LearningOutcome.all
     @State private var sessionSize = 20
     @State private var focusSessionSize = 20
@@ -15,18 +19,69 @@ struct StudySetupView: View {
     @State private var showingMockExam = false
 
     private var eligibleQuestions: [StudyQuestion] {
-        questions.filter { question in
-            question.studyMode == "multiple_choice"
-                && question.correctAnswerIndex != nil
-                && (selectedOutcome == .all || question.learningOutcome == selectedOutcome.rawValue)
-        }
+        StudyQuestionQuery.multipleChoice(
+            in: accessibleQuestions,
+            learningOutcome: selectedOutcome == .all ? nil : selectedOutcome.rawValue
+        )
     }
 
     private var mcqQuestions: [StudyQuestion] {
-        questions.filter {
-            $0.studyMode == "multiple_choice"
-                && $0.correctAnswerIndex != nil
+        StudyQuestionQuery.multipleChoice(in: accessibleQuestions)
+    }
+
+    private var writtenQuestions: [StudyQuestion] {
+        StudyQuestionQuery.written(in: accessibleQuestions)
+            .sorted { $0.id < $1.id }
+    }
+
+    private var writtenPracticeButtonTitle: String {
+        switch writtenQuestions.count {
+        case 0: "公開済みの記述式問題はありません"
+        case 1: "記述式1問を練習"
+        default: "記述式\(writtenQuestions.count)問を練習"
         }
+    }
+
+    private var theoryExamMultipleChoiceCount: Int {
+        StudyQuestionQuery.multipleChoice(in: questions).count
+    }
+
+    private var theoryExamWrittenQuestions: [StudyQuestion] {
+        StudyQuestionQuery.written(in: questions, requiringRubric: true)
+    }
+
+    private var canStartTheoryExam: Bool {
+        theoryExamMultipleChoiceCount >= TheoryExamBuilder.multipleChoiceCount
+            && theoryExamWrittenQuestions.count >= TheoryExamBuilder.writtenCount
+    }
+
+    private var theoryExamContainsPendingReview: Bool {
+        theoryExamWrittenQuestions.contains {
+            $0.reviewStatus == "pending_external_review"
+        }
+    }
+
+    private var theoryExamEntryTitle: String {
+        if !canStartTheoryExam { return "理論模擬試験（公開準備中）" }
+        if theoryExamContainsPendingReview { return "理論模擬試験（開発用候補）" }
+        return "120分理論模擬試験"
+    }
+
+    private var writtenDraftQuestions: [StudyQuestion] {
+        let questionsByID = Dictionary(uniqueKeysWithValues: writtenQuestions.map { ($0.id, $0) })
+        return writtenDrafts.compactMap { questionsByID[$0.questionID] }
+    }
+
+    private var hasWrittenHistory: Bool {
+        attempts.contains { $0.awardedMarks != nil && $0.responseText != nil }
+    }
+
+    private var miniMockQuestionCount: Int {
+        entitlementStore.policy.miniMockQuestionCount
+    }
+
+    private var accessibleQuestions: [StudyQuestion] {
+        StudyQuestionQuery.accessible(questions, policy: entitlementStore.policy)
     }
 
     private var focusItems: [StudyFocusItem] {
@@ -86,35 +141,38 @@ struct StudySetupView: View {
     }
 
     private var mistakeQuestions: [StudyQuestion] {
-        questions.filter {
-            progressByID[$0.id]?.lastWasCorrect == false
-        }
+        StudyQuestionQuery.mistakes(
+            in: accessibleQuestions,
+            progressByID: progressByID
+        )
     }
 
     private var dueQuestions: [StudyQuestion] {
-        questions.filter {
-            guard let progress = progressByID[$0.id] else { return false }
-            return progress.attemptCount > 0 && progress.dueDate <= .now
-        }
+        StudyQuestionQuery.due(
+            in: accessibleQuestions,
+            progressByID: progressByID,
+            now: .now
+        )
     }
 
     private var bookmarkedQuestions: [StudyQuestion] {
-        questions.filter {
-            progressByID[$0.id]?.isBookmarked == true
-        }
+        StudyQuestionQuery.bookmarked(
+            in: accessibleQuestions,
+            progressByID: progressByID
+        )
     }
 
     var body: some View {
         NavigationStack {
             Form {
-                Section("Quick study") {
-                    Picker("Learning outcome", selection: $selectedOutcome) {
+                Section("クイック学習") {
+                    Picker("学習成果", selection: $selectedOutcome) {
                         ForEach(LearningOutcome.allCases) { outcome in
                             Text(outcome.shortLabel).tag(outcome)
                         }
                     }
 
-                    Picker("Questions", selection: $sessionSize) {
+                    Picker("出題数", selection: $sessionSize) {
                         Text("10").tag(10)
                         Text("20").tag(20)
                         Text("50").tag(50)
@@ -122,17 +180,71 @@ struct StudySetupView: View {
                     .pickerStyle(.segmented)
                     .accessibilityIdentifier("study.quick.sessionSize")
 
-                    LabeledContent("Available", value: eligibleQuestions.count.formatted())
+                    LabeledContent("対象問題数", value: eligibleQuestions.count.formatted())
 
                     Button {
                         startSession(with: eligibleQuestions, count: sessionSize)
                     } label: {
-                        Label("Start mixed study session", systemImage: "play.fill")
+                        Label("混合学習を開始", systemImage: "play.fill")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(AppTheme.wine)
                     .disabled(eligibleQuestions.isEmpty)
+                }
+
+                Section {
+                    LabeledContent("利用可能な問題", value: "\(writtenQuestions.count)問")
+                        .accessibilityIdentifier("study.written.availableCount")
+
+                    if !writtenDraftQuestions.isEmpty {
+                        Button {
+                            sessionQuestions = writtenDraftQuestions
+                            showingSession = true
+                        } label: {
+                            Label(
+                                "入力中の下書きを再開（\(writtenDraftQuestions.count)問）",
+                                systemImage: "square.and.pencil.circle"
+                            )
+                        }
+                        .accessibilityIdentifier("study.written.resumeDrafts")
+                    }
+
+                    if hasWrittenHistory {
+                        NavigationLink {
+                            WrittenPracticeHistoryListView()
+                        } label: {
+                            Label("過去回答と得点推移", systemImage: "chart.xyaxis.line")
+                        }
+                        .accessibilityIdentifier("study.written.history")
+                    }
+
+                    Button {
+                        startSession(with: writtenQuestions, count: writtenQuestions.count)
+                    } label: {
+                        Label(
+                            writtenPracticeButtonTitle,
+                            systemImage: "square.and.pencil"
+                        )
+                        .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(AppTheme.wine)
+                    .disabled(writtenQuestions.isEmpty)
+                    .accessibilityIdentifier("study.written.startButton")
+                } header: {
+                    Text("記述式練習")
+                } footer: {
+                    if writtenQuestions.isEmpty {
+                        Text("人手レビュー済みの問題が公開されるまで、記述式練習は開始できません。")
+                    } else {
+                        Text("利用可能な\(writtenQuestions.count)問を、模範解答と採点基準で自己採点します。")
+                    }
+                    if writtenQuestions.contains(where: {
+                        $0.reviewStatus == "pending_external_review"
+                    }) {
+                        Text("開発用の候補問題です。内容と配点は外部人手レビュー待ちです。")
+                    }
                 }
 
                 Section {
@@ -204,28 +316,63 @@ struct StudySetupView: View {
                     )
                 }
 
-                Section("Focused review") {
+                Section("今日の学習") {
+                    NavigationLink {
+                        DailyStudyView()
+                    } label: {
+                        Label("おすすめ問題を学習", systemImage: "sparkles")
+                    }
+                    .accessibilityIdentifier("study.daily.open")
+
+                    NavigationLink {
+                        WeaknessDashboardView()
+                    } label: {
+                        Label("弱点を確認", systemImage: "chart.bar.xaxis")
+                    }
+                    .accessibilityIdentifier("study.weakness.open")
+                }
+
+                Section("集中復習") {
                     reviewButton("間違えた問題を復習", systemImage: "xmark.circle", questions: mistakeQuestions)
                     reviewButton("期限の来た問題を学習", systemImage: "calendar", questions: dueQuestions)
                     reviewButton("ブックマークを学習", systemImage: "bookmark", questions: bookmarkedQuestions)
                 }
 
                 Section {
-                    LabeledContent("Question bank", value: mcqQuestions.count.formatted())
-                    Button {
-                        mockQuestions = Array(mcqQuestions.shuffled().prefix(50))
-                        showingMockExam = mockQuestions.count == 50
+                    NavigationLink {
+                        TheoryExamDashboardView()
                     } label: {
-                        Label("Start 50-question mock exam", systemImage: "timer")
+                        Label(theoryExamEntryTitle, systemImage: "doc.text.magnifyingglass")
+                    }
+                    .accessibilityIdentifier("study.theoryExam.open")
+
+                    LabeledContent("四択問題数", value: mcqQuestions.count.formatted())
+                    LabeledContent("ミニ模試の出題数", value: "\(miniMockQuestionCount)問")
+                        .accessibilityIdentifier("study.miniMock.questionCount")
+                    Button {
+                        mockQuestions = Array(
+                            mcqQuestions.shuffled().prefix(miniMockQuestionCount)
+                        )
+                        showingMockExam = mockQuestions.count == miniMockQuestionCount
+                    } label: {
+                        Label("\(miniMockQuestionCount)問ミニ模試を開始", systemImage: "timer")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(AppTheme.wine)
-                    .disabled(mcqQuestions.count < 50)
+                    .disabled(mcqQuestions.count < miniMockQuestionCount)
+                    .accessibilityIdentifier("study.miniMock.startButton")
                 } header: {
-                    Text("Mock examination")
+                    Text("本番形式")
                 } footer: {
-                    Text("Answers remain hidden until submission. The result is saved to your progress history.")
+                    if !canStartTheoryExam {
+                        Text("理論模擬試験は、人手レビュー済みの公開問題が四択50問・記述4問揃うまで開始できません。")
+                    } else if theoryExamContainsPendingReview {
+                        Text("理論模擬試験は開発用候補を含み、内容と配点は外部人手レビュー待ちです。")
+                    } else {
+                        Text("120分模試は四択50問と記述4問です。")
+                    }
+                    Text("ミニ模試は四択\(miniMockQuestionCount)問で、提出まで正答を表示しません。")
                 }
 
             }
@@ -237,7 +384,7 @@ struct StudySetupView: View {
             .onChange(of: focusOptions) { _, _ in
                 reconcileFocusSelection()
             }
-            .navigationTitle("Study")
+            .navigationTitle("学習")
             .navigationDestination(isPresented: $showingSession) {
                 StudySessionView(questions: sessionQuestions)
             }

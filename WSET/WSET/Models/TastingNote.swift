@@ -73,8 +73,22 @@ final class TastingNote {
     var quality: String
     var readiness: String
     var conclusion: String
+    var examStartedAt: Date? = nil
+    var examSubmittedAt: Date? = nil
+    var examDurationSeconds: Int? = nil
+    var examWasTimeExpired: Bool? = nil
+    var examCompletionPercent: Double? = nil
 
-    init(draft: TastingDraft, sessionID: UUID? = nil, sampleLabel: String = "Wine") {
+    init(
+        draft: TastingDraft,
+        sessionID: UUID? = nil,
+        sampleLabel: String = "Wine",
+        examStartedAt: Date? = nil,
+        examSubmittedAt: Date? = nil,
+        examDurationSeconds: Int? = nil,
+        examWasTimeExpired: Bool? = nil,
+        examCompletionPercent: Double? = nil
+    ) {
         id = UUID()
         self.sessionID = sessionID
         self.sampleLabel = sampleLabel
@@ -98,6 +112,11 @@ final class TastingNote {
         quality = draft.quality
         readiness = draft.readiness
         conclusion = draft.conclusion
+        self.examStartedAt = examStartedAt
+        self.examSubmittedAt = examSubmittedAt
+        self.examDurationSeconds = examDurationSeconds
+        self.examWasTimeExpired = examWasTimeExpired
+        self.examCompletionPercent = examCompletionPercent
     }
 
     func update(from draft: TastingDraft) {
@@ -123,7 +142,7 @@ final class TastingNote {
     }
 }
 
-struct TastingDraft {
+nonisolated struct TastingDraft: Codable, Equatable {
     var wineName = ""
     var appearanceClarity = "Clear"
     var appearanceIntensity = "Medium"
@@ -146,6 +165,7 @@ struct TastingDraft {
 
     init() {}
 
+    @MainActor
     init(note: TastingNote) {
         wineName = note.wineName
         appearanceClarity = note.appearanceClarity

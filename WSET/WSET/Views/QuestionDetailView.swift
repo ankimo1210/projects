@@ -3,14 +3,19 @@ import SwiftUI
 
 struct QuestionDetailView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(EntitlementStore.self) private var entitlementStore
     let question: StudyQuestion
     @State private var showAnswer = false
     @State private var isBookmarked = false
 
     var body: some View {
-        ScrollViewReader { proxy in
-            ScrollView {
-                VStack(alignment: .leading, spacing: 22) {
+        if entitlementStore.policy.canAccessQuestion(
+            id: question.id,
+            studyMode: question.studyMode
+        ) {
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 22) {
                 HStack {
                     MetadataPill(text: question.learningOutcomeLabel)
                     MetadataPill(text: question.modeLabel)
@@ -40,7 +45,7 @@ struct QuestionDetailView: View {
                                 Spacer()
                                 if showAnswer && index == question.correctAnswerIndex {
                                     Image(systemName: "checkmark.circle.fill")
-                                        .foregroundStyle(.green)
+                                        .foregroundStyle(AppTheme.success)
                                 }
                             }
                             .padding()
@@ -81,6 +86,15 @@ struct QuestionDetailView: View {
 
                 TermAnnotationsView(questionID: question.id)
 
+                if question.studyMode == "written_answer" {
+                    NavigationLink {
+                        WrittenAnswerHistoryView(question: question)
+                    } label: {
+                        Label("過去回答と得点推移", systemImage: "chart.xyaxis.line")
+                    }
+                    .accessibilityIdentifier("question.written.history")
+                }
+
                 VStack(alignment: .leading, spacing: 8) {
                     Text("問題情報")
                         .font(.headline)
@@ -100,6 +114,9 @@ struct QuestionDetailView: View {
                     if let skill = question.cognitiveSkill, !skill.isEmpty {
                         LabeledContent("思考スキル", value: skill)
                     }
+                    if question.reviewStatus == "pending_external_review" {
+                        LabeledContent("コンテンツ状態", value: "外部人手レビュー待ち（開発用）")
+                    }
                     if !question.geography.isEmpty {
                         LabeledContent("国・産地", value: question.geography.joined(separator: "・"))
                     }
@@ -108,21 +125,28 @@ struct QuestionDetailView: View {
                     }
                 }
                 .font(.subheadline)
-            }
-                .padding()
-            }
-            .onChange(of: showAnswer) { _, revealed in
-                guard revealed else { return }
-                DispatchQueue.main.async {
-                    withAnimation {
-                        proxy.scrollTo("question-answer", anchor: .center)
+                    }
+                    .padding()
+                }
+                .onChange(of: showAnswer) { _, revealed in
+                    guard revealed else { return }
+                    DispatchQueue.main.async {
+                        withAnimation {
+                            proxy.scrollTo("question-answer", anchor: .center)
+                        }
                     }
                 }
             }
+            .navigationTitle("問題")
+            .navigationBarTitleDisplayMode(.inline)
+            .onAppear { loadBookmark() }
+        } else {
+            PaywallView(
+                triggerFeature: question.studyMode == "written_answer"
+                    ? .fullWrittenPractice
+                    : .fullQuestionBank
+            )
         }
-        .navigationTitle("問題")
-        .navigationBarTitleDisplayMode(.inline)
-        .onAppear { loadBookmark() }
     }
 
     private func progressRecord() -> QuestionProgress? {

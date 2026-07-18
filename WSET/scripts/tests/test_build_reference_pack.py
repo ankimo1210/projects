@@ -10,10 +10,16 @@ from typing import Any
 from scripts.build_reference_pack import (
     DEFAULT_INPUT,
     DEFAULT_QUESTION_PACK,
+    DEFAULT_TERM_ID_REVIEW,
     EXPECTED_CLASSIFICATION_COUNT,
     EXPECTED_TERM_COUNT,
+    ReferencePackError,
+    SHEETS,
     build_pack,
     check_existing_pack,
+    duplicate_term_candidate_pairs,
+    load_term_id_migrations,
+    read_sheet_rows,
     write_pack,
 )
 
@@ -40,6 +46,51 @@ class ReferencePackBuilderTests(unittest.TestCase):
         self.assertEqual(
             len({term["id"] for term in self.payload["terms"]}), EXPECTED_TERM_COUNT
         )
+        self.assertEqual(self.payload["termIDMigrations"], {})
+
+    def test_all_normalized_duplicate_candidates_are_pending_human_review(self) -> None:
+        rows = read_sheet_rows(DEFAULT_INPUT, "用語", SHEETS["用語"])
+        review = json.loads(DEFAULT_TERM_ID_REVIEW.read_text(encoding="utf-8"))
+
+        self.assertEqual(len(duplicate_term_candidate_pairs(rows)), 9)
+        self.assertEqual(len(review["candidates"]), 9)
+        self.assertTrue(
+            all(
+                candidate["decision"] == "pending_expert_review"
+                and candidate["canonicalTermID"] is None
+                for candidate in review["candidates"]
+            )
+        )
+        self.assertEqual(load_term_id_migrations(rows), {})
+
+    def test_merge_decision_requires_named_and_dated_human_review(self) -> None:
+        rows = read_sheet_rows(DEFAULT_INPUT, "用語", SHEETS["用語"])
+        review = json.loads(DEFAULT_TERM_ID_REVIEW.read_text(encoding="utf-8"))
+        candidate = review["candidates"][0]
+        candidate["decision"] = "merge"
+        candidate["canonicalTermID"] = candidate["termIDs"][0]
+
+        with tempfile.TemporaryDirectory() as directory:
+            review_path = Path(directory) / "review.json"
+            review_path.write_text(
+                json.dumps(review, ensure_ascii=False),
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(ReferencePackError, "requires rationale"):
+                load_term_id_migrations(rows, review_path)
+
+            candidate["rationale"] = "専門家が同一概念と確認した。"
+            candidate["reviewer"] = "Reviewer"
+            candidate["reviewedAt"] = "2026-07-19"
+            review_path.write_text(
+                json.dumps(review, ensure_ascii=False),
+                encoding="utf-8",
+            )
+            retired_id = candidate["termIDs"][1]
+            self.assertEqual(
+                load_term_id_migrations(rows, review_path),
+                {retired_id: candidate["canonicalTermID"]},
+            )
 
     def test_original_language_annotations_are_preserved(self) -> None:
         term = self.terms["マロラクティック発酵"]

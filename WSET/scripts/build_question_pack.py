@@ -14,7 +14,7 @@ import posixpath
 import re
 from collections import Counter
 from collections.abc import Iterable, Mapping
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any
 from xml.etree import ElementTree
@@ -280,6 +280,8 @@ def _review_status(row: Mapping[str, str]) -> str:
         "承認": "approved",
         "レビュー済": "human_reviewed",
         "レビュー済み": "human_reviewed",
+        "公開": "published",
+        "公開済": "published",
         "改稿済み・専門家未承認": "ai_reviewed_pending_expert",
         "要修正": "needs_revision",
         "却下": "rejected",
@@ -290,6 +292,60 @@ def _review_status(row: Mapping[str, str]) -> str:
         raise QuestionPackError(
             f"{_row_label(row)}: unknown レビュー状態 {source_status!r}"
         ) from error
+
+
+_REVIEW_FIELDS = {
+    "reviewStatus",
+    "needsReview",
+    "reviewReason",
+    "reviewer",
+    "reviewedAt",
+    "reviewComment",
+    "reviewTargetHash",
+    "reviewedContentHash",
+}
+_NON_HUMAN_REVIEWER_PLACEHOLDERS = {"AI", "生成AI", "AI誤答レビュー"}
+
+
+def _review_target_hash(question: Mapping[str, Any]) -> str:
+    """Fingerprint only reviewable content, not its mutable review metadata."""
+
+    content = {
+        key: value for key, value in question.items() if key not in _REVIEW_FIELDS
+    }
+    return _sha256(_canonical_questions([content]))
+
+
+def _validate_published_review(question: Mapping[str, Any], label: str) -> None:
+    """Require auditable human evidence before a question can be published."""
+
+    if question.get("reviewStatus") != "published":
+        return
+    if question.get("needsReview") is not False:
+        raise QuestionPackError(f"{label}: published question must set 要レビュー to N")
+
+    reviewer = _clean_text(question.get("reviewer"))
+    if not reviewer or reviewer in _NON_HUMAN_REVIEWER_PLACEHOLDERS:
+        raise QuestionPackError(
+            f"{label}: published question requires an external human reviewer"
+        )
+    reviewed_at = _clean_text(question.get("reviewedAt"))
+    try:
+        if date.fromisoformat(reviewed_at).isoformat() != reviewed_at:
+            raise ValueError
+    except ValueError as error:
+        raise QuestionPackError(
+            f"{label}: published question requires レビュー日 in YYYY-MM-DD format"
+        ) from error
+    if not _clean_text(question.get("reviewComment")):
+        raise QuestionPackError(
+            f"{label}: published question requires a non-empty レビューコメント"
+        )
+    if question.get("reviewedContentHash") != question.get("reviewTargetHash"):
+        raise QuestionPackError(
+            f"{label}: レビュー対象ハッシュ is missing or stale; regenerate the "
+            "content review packet and re-review the current content"
+        )
 
 
 def pack_question(row: Mapping[str, str]) -> dict[str, Any]:
@@ -327,7 +383,7 @@ def pack_question(row: Mapping[str, str]) -> dict[str, Any]:
         if place not in geography:
             geography.append(place)
 
-    return {
+    question: dict[str, Any] = {
         "id": _required(row, "問題ID"),
         "prompt": _required(row, "問題文"),
         "answer": answer,
@@ -363,6 +419,15 @@ def pack_question(row: Mapping[str, str]) -> dict[str, Any]:
         "creationType": _required(row, "作成区分"),
         "creationBasis": _required(row, "作成根拠"),
     }
+    question["reviewer"] = _clean_text(row.get("レビュアー")) or None
+    question["reviewedAt"] = _clean_text(row.get("レビュー日")) or None
+    question["reviewComment"] = _clean_text(row.get("レビューコメント")) or None
+    question["reviewTargetHash"] = _review_target_hash(question)
+    question["reviewedContentHash"] = (
+        _clean_text(row.get("レビュー対象ハッシュ")) or None
+    )
+    _validate_published_review(question, _row_label(row))
+    return question
 
 
 def _counts(rows: Iterable[Mapping[str, str]], key: str) -> Counter[str]:
@@ -405,6 +470,22 @@ def _canonical_questions(questions: list[dict[str, Any]]) -> bytes:
     ).encode("utf-8")
 
 
+def _distribution_status(questions: list[Mapping[str, Any]]) -> str:
+    """Keep non-published authoring content out of a releasable pack."""
+
+    if questions and all(
+        question.get("reviewStatus") == "published"
+        and question.get("needsReview") is False
+        and question.get("reviewTargetHash") == question.get("reviewedContentHash")
+        and bool(_clean_text(question.get("reviewer")))
+        and bool(_clean_text(question.get("reviewedAt")))
+        and bool(_clean_text(question.get("reviewComment")))
+        for question in questions
+    ):
+        return "release"
+    return "development_only"
+
+
 def _sha256(content: bytes) -> str:
     return hashlib.sha256(content).hexdigest()
 
@@ -431,6 +512,7 @@ def build_pack(
         or datetime.now(UTC).isoformat(timespec="seconds").replace("+00:00", "Z"),
         "sourceHash": _sha256(_canonical_questions(questions)),
         "questionCount": len(questions),
+        "distributionStatus": _distribution_status(questions),
         "source": {
             "id": SOURCE_ID,
             "type": "user_authored_workbook",
@@ -454,11 +536,17 @@ def validate_pack(payload: Mapping[str, Any]) -> None:
         raise QuestionPackError("Question pack questionCount does not match questions")
     if len(questions) != EXPECTED_QUESTION_COUNT:
         raise QuestionPackError(f"Question pack must contain {EXPECTED_QUESTION_COUNT} questions")
+    expected_distribution_status = _distribution_status(questions)
+    if payload.get("distributionStatus") != expected_distribution_status:
+        raise QuestionPackError(
+            "Question pack distributionStatus does not match its review states"
+        )
 
     identifiers = [question.get("id") for question in questions]
     if len(identifiers) != len(set(identifiers)):
         raise QuestionPackError("Question pack contains duplicate IDs")
     for question in questions:
+        _validate_published_review(question, str(question.get("id") or "unknown"))
         if question.get("language") != "ja":
             raise QuestionPackError(f"{question.get('id')}: language must be ja")
         if question.get("studyMode") != "multiple_choice":
@@ -519,7 +607,14 @@ def check_existing_pack(input_path: Path, output_path: Path) -> None:
     expected = build_pack(input_path, generated_at="ignored-for-check")
     existing = json.loads(output_path.read_text(encoding="utf-8"))
     validate_pack(existing)
-    for key in ("schemaVersion", "sourceHash", "questionCount", "source", "questions"):
+    for key in (
+        "schemaVersion",
+        "sourceHash",
+        "questionCount",
+        "distributionStatus",
+        "source",
+        "questions",
+    ):
         if existing.get(key) != expected.get(key):
             raise QuestionPackError(f"Generated pack is stale or differs from the workbook: {key}")
 
@@ -551,7 +646,9 @@ def main() -> None:
     review_count = sum(question["needsReview"] for question in payload["questions"])
     print(
         f"Wrote {payload['questionCount']} Japanese questions to {args.output} "
-        f"(schema v{payload['schemaVersion']}, sourceHash={payload['sourceHash']})"
+        f"(schema v{payload['schemaVersion']}, "
+        f"distribution={payload['distributionStatus']}, "
+        f"sourceHash={payload['sourceHash']})"
     )
     print(f"LO distribution: {dict(sorted(lo_counts.items()))}")
     print(f"Needs review: {review_count}")

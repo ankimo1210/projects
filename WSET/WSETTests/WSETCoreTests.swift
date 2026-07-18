@@ -61,6 +61,10 @@ final class WSETCoreTests: XCTestCase {
             "問題データがこのビルドに含まれていません。"
         )
         XCTAssertEqual(
+            QuestionImporterError.developmentContentUnavailable.errorDescription,
+            "公開レビュー済みの問題データがこのビルドに含まれていません。"
+        )
+        XCTAssertEqual(
             ReviewNotificationError.permissionDenied.errorDescription,
             "WSET学習の通知が無効です。復習通知を受け取るにはiOSの設定で通知を許可してください。"
         )
@@ -483,6 +487,7 @@ final class WSETCoreTests: XCTestCase {
         let container = try ModelContainer(
             for: QuestionProgress.self,
             StudyAttempt.self,
+            WrittenAnswerDraft.self,
             TastingNote.self,
             MockExamSession.self,
             configurations: configuration
@@ -490,6 +495,7 @@ final class WSETCoreTests: XCTestCase {
         let context = container.mainContext
         context.insert(QuestionProgress(questionID: "old-question"))
         context.insert(StudyAttempt(questionID: "old-question", isCorrect: true, rating: 3))
+        context.insert(WrittenAnswerDraft(questionID: "old-question", responseText: "下書き"))
         context.insert(
             MockExamSession(
                 correctCount: 1,
@@ -507,6 +513,7 @@ final class WSETCoreTests: XCTestCase {
 
         XCTAssertEqual(try context.fetchCount(FetchDescriptor<QuestionProgress>()), 0)
         XCTAssertEqual(try context.fetchCount(FetchDescriptor<StudyAttempt>()), 0)
+        XCTAssertEqual(try context.fetchCount(FetchDescriptor<WrittenAnswerDraft>()), 0)
         XCTAssertEqual(try context.fetchCount(FetchDescriptor<MockExamSession>()), 0)
         XCTAssertEqual(try context.fetchCount(FetchDescriptor<TastingNote>()), 1)
     }
@@ -526,15 +533,55 @@ final class WSETCoreTests: XCTestCase {
                 hasImportedHash: true
             )
         )
+        XCTAssertFalse(
+            QuestionImporter.shouldResetStudyHistory(
+                existingQuestionIDs: ["LO1-001", "SAQ-PENDING"],
+                newQuestionIDs: ["LO1-001"],
+                hasImportedHash: true,
+                ignoredContentIDs: ["SAQ-PENDING"]
+            )
+        )
+    }
+
+    func testDevelopmentOnlyWrittenPackIsRejectedOutsideDebugDistribution() throws {
+        let data = Data(
+            """
+            {
+              "schemaVersion": 1,
+              "generatedAt": "2026-07-19T00:00:00Z",
+              "sourceHash": "test",
+              "questionCount": 0,
+              "questions": [],
+              "distributionStatus": "development_only",
+              "referencePackSourceHash": "4ca34c3c662f1474f66e5b23c85db817b0a6671a6155b92aa5f237f9bb586235"
+            }
+            """.utf8
+        )
+        let pack = try JSONDecoder().decode(QuestionPack.self, from: data)
+        XCTAssertEqual(
+            pack.referencePackSourceHash,
+            "4ca34c3c662f1474f66e5b23c85db817b0a6671a6155b92aa5f237f9bb586235"
+        )
+
+        XCTAssertTrue(
+            QuestionImporter.shouldImport(pack, allowsDevelopmentContent: true)
+        )
+        XCTAssertFalse(
+            QuestionImporter.shouldImport(pack, allowsDevelopmentContent: false)
+        )
     }
 
     func testBackupEncodingAndMergeRestore() throws {
         let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(
-            for: QuestionProgress.self,
+            for: StudyQuestion.self,
+            QuestionProgress.self,
             StudyAttempt.self,
+            WrittenAnswerDraft.self,
             TastingNote.self,
             MockExamSession.self,
+            TheoryExamSession.self,
+            ReferenceTermProgress.self,
             configurations: configuration
         )
         let context = container.mainContext
@@ -598,5 +645,168 @@ final class WSETCoreTests: XCTestCase {
         XCTAssertEqual(progress.lastViewedAt, viewedAt)
         XCTAssertEqual(progress.viewCount, 1)
         XCTAssertTrue(progress.isBookmarked)
+    }
+
+    func testStudyQuestionQueryClassifiesAndUsesInjectedCurrentTime() {
+        let multipleChoice = makeQueryQuestion(
+            id: "mcq",
+            studyMode: "multiple_choice",
+            learningOutcome: "u1_lo1",
+            correctAnswerIndex: 0
+        )
+        let incompleteMultipleChoice = makeQueryQuestion(
+            id: "mcq-incomplete",
+            studyMode: "multiple_choice",
+            learningOutcome: "u1_lo2",
+            correctAnswerIndex: nil
+        )
+        let written = makeQueryQuestion(
+            id: "written",
+            studyMode: "written_answer",
+            learningOutcome: "u1_lo2",
+            correctAnswerIndex: nil,
+            rubricItems: [
+                WrittenRubricItem(
+                    id: "written-r1",
+                    criterion: "根拠を説明する",
+                    marks: 2,
+                    knowledgeTags: ["自然要因"],
+                    relatedTermIDs: []
+                ),
+            ]
+        )
+        let incompleteWritten = makeQueryQuestion(
+            id: "written-incomplete",
+            studyMode: "written_answer",
+            learningOutcome: "u1_lo3",
+            correctAnswerIndex: nil
+        )
+        let questions = [
+            multipleChoice,
+            incompleteMultipleChoice,
+            written,
+            incompleteWritten,
+        ]
+
+        XCTAssertEqual(
+            StudyQuestionQuery.multipleChoice(in: questions).map(\.id),
+            ["mcq"]
+        )
+        XCTAssertEqual(
+            StudyQuestionQuery.multipleChoice(
+                in: questions,
+                learningOutcome: "u1_lo2"
+            ).map(\.id),
+            []
+        )
+        XCTAssertEqual(
+            StudyQuestionQuery.written(in: questions).map(\.id),
+            ["written", "written-incomplete"]
+        )
+        XCTAssertEqual(
+            StudyQuestionQuery.written(
+                in: questions,
+                requiringRubric: true
+            ).map(\.id),
+            ["written"]
+        )
+        XCTAssertEqual(
+            StudyQuestionQuery.theoryCandidates(in: questions).map(\.id),
+            ["mcq", "written"]
+        )
+
+        let manifest = FreeContentManifest(
+            schemaVersion: 1,
+            selectionVersion: "test",
+            multipleChoiceQuestionIDs: ["mcq"],
+            writtenQuestionIDs: ["written"],
+            glossaryTermIDs: [],
+            mapCountries: []
+        )
+        let freePolicy = FeatureAccessPolicy(
+            hasProAccess: false,
+            freeContentManifest: manifest
+        )
+        XCTAssertEqual(
+            StudyQuestionQuery.accessible(questions, policy: freePolicy).map(\.id),
+            ["mcq", "written"]
+        )
+
+        let now = Date(timeIntervalSince1970: 1_700_000_000)
+        let progress = QuestionProgress(questionID: "mcq")
+        progress.attemptCount = 1
+        progress.lastWasCorrect = false
+        progress.isBookmarked = true
+        progress.dueDate = now
+        let progressByID = [progress.questionID: progress]
+
+        XCTAssertEqual(
+            StudyQuestionQuery.mistakes(
+                in: questions,
+                progressByID: progressByID
+            ).map(\.id),
+            ["mcq"]
+        )
+        XCTAssertEqual(
+            StudyQuestionQuery.bookmarked(
+                in: questions,
+                progressByID: progressByID
+            ).map(\.id),
+            ["mcq"]
+        )
+        XCTAssertEqual(
+            StudyQuestionQuery.due(
+                in: questions,
+                progressByID: progressByID,
+                now: now.addingTimeInterval(-1)
+            ).map(\.id),
+            []
+        )
+        XCTAssertEqual(
+            StudyQuestionQuery.due(
+                in: questions,
+                progressByID: progressByID,
+                now: now
+            ).map(\.id),
+            ["mcq"]
+        )
+    }
+
+    private func makeQueryQuestion(
+        id: String,
+        studyMode: String,
+        learningOutcome: String,
+        correctAnswerIndex: Int?,
+        rubricItems: [WrittenRubricItem] = []
+    ) -> StudyQuestion {
+        StudyQuestion(
+            packed: PackedQuestion(
+                id: id,
+                prompt: "問題",
+                answer: "解答",
+                explanation: nil,
+                choices: studyMode == "multiple_choice" ? ["正答", "誤答"] : [],
+                correctAnswerIndex: correctAnswerIndex,
+                studyMode: studyMode,
+                originalFormat: studyMode,
+                unit: "unit_1",
+                learningOutcome: learningOutcome,
+                category: "自然要因",
+                topic: "気候",
+                cognitiveSkill: "因果説明",
+                commandVerb: studyMode == "written_answer" ? "説明する" : nil,
+                language: "ja",
+                geography: [],
+                grapeVarieties: [],
+                markAllocation: rubricItems.isEmpty
+                    ? nil
+                    : Double(rubricItems.reduce(0) { $0 + $1.marks }),
+                sourceID: "query-test",
+                sourceURL: "",
+                qualityScore: 1,
+                reviewStatus: "published",
+                rubricItems: rubricItems
+            )
+        )
     }
 }

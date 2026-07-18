@@ -46,7 +46,19 @@ struct ContentView: View {
             guard !hasStartedImport else { return }
             hasStartedImport = true
             do {
+                let migratedTermCount = try R5BackupSupport.migrateTermIDs(
+                    ReferenceStore.shared.termIDMigrations,
+                    in: modelContext
+                )
+                if migratedTermCount > 0 {
+                    try modelContext.save()
+                }
                 try QuestionImporter.importIfNeeded(into: modelContext)
+#if DEBUG
+                if ProcessInfo.processInfo.arguments.contains("-UITestResetStudyHistory") {
+                    try QuestionImporter.resetQuestionStudyHistory(in: modelContext)
+                }
+#endif
                 await ReviewNotificationService.refreshIfEnabled(in: modelContext)
             } catch {
                 importError = (error as? QuestionImporterError)?.errorDescription
@@ -58,13 +70,16 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environment(EntitlementStore())
         .modelContainer(
             for: [
                 StudyQuestion.self,
                 QuestionProgress.self,
                 StudyAttempt.self,
+                WrittenAnswerDraft.self,
                 TastingNote.self,
                 MockExamSession.self,
+                TheoryExamSession.self,
                 ReferenceTermProgress.self
             ],
             inMemory: true

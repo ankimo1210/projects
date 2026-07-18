@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "candidates": [
+    {
+      "candidateID": "vallee-de-la-marne-katakana",
+      "termIDs": [
+        "term-00a4c53d009d",
+        "term-3dd20d108b42"
+      ],
+      "matchEvidence": [
+        "English (diacritic-insensitive): Vallée de la Marne / Vallee de La Marne"
+      ],
+      "decision": "pending_expert_review",
+      "canonicalTermID": null,
+      "rationale": "",
+      "reviewer": null,
+      "reviewedAt": null
+    },
+    {
+      "candidateID": "germany-country-region",
+      "termIDs": [
+        "term-f5526525be70",
+        "term-af21879df853"
+      ],
+      "matchEvidence": [
+        "日本語: ドイツ",
+        "English: Germany"
+      ],
+      "decision": "pending_expert_review",
+      "canonicalTermID": null,
+      "rationale": "",
+      "reviewer": null,
+      "reviewedAt": null
+    },
+    {
+      "candidateID": "glera-katakana",
+      "termIDs": [
+        "term-1ee726e167f9",
+        "term-c35d105c495c"
+      ],
+      "matchEvidence": [
+        "English: Glera"
+      ],
+      "decision": "pending_expert_review",
+      "canonicalTermID": null,
+      "rationale": "",
+      "reviewer": null,
+      "reviewedAt": null
+    },
+    {
+      "candidateID": "meunier-katakana",
+      "termIDs": [
+        "term-3b7cc8219508",
+        "term-aca8186e4b2d"
+      ],
+      "matchEvidence": [
+        "English: Meunier"
+      ],
+      "decision": "pending_expert_review",
+      "canonicalTermID": null,
+      "rationale": "",
+      "reviewer": null,
+      "reviewedAt": null
+    },
+    {
+      "candidateID": "muscat-blanc-katakana",
+      "termIDs": [
+        "term-c36d514e7005",
+        "term-2ec98f818937"
+      ],
+      "matchEvidence": [
+        "English: Muscat Blanc à Petits Grains"
+      ],
+      "decision": "pending_expert_review",
+      "canonicalTermID": null,
+      "rationale": "",
+      "reviewer": null,
+      "reviewedAt": null
+    },
+    {
+      "candidateID": "beaumes-de-venise-katakana",
+      "termIDs": [
+        "term-7a676739ee91",
+        "term-37414ca53fc7"
+      ],
+      "matchEvidence": [
+        "English: Muscat de Beaumes-de-Venise"
+      ],
+      "decision": "pending_expert_review",
+      "canonicalTermID": null,
+      "rationale": "",
+      "reviewer": null,
+      "reviewedAt": null
+    },
+    {
+      "candidateID": "pinot-gris-grigio",
+      "termIDs": [
+        "term-837aa50433bd",
+        "term-2a0523caaee7"
+      ],
+      "matchEvidence": [
+        "Français: Pinot Gris"
+      ],
+      "decision": "pending_expert_review",
+      "canonicalTermID": null,
+      "rationale": "",
+      "reviewer": null,
+      "reviewedAt": null
+    },
+    {
+      "candidateID": "syrah-shiraz",
+      "termIDs": [
+        "term-f33d6c9b7f02",
+        "term-3cbfd0c8cfbb"
+      ],
+      "matchEvidence": [
+        "Français: Syrah"
+      ],
+      "decision": "pending_expert_review",
+      "canonicalTermID": null,
+      "rationale": "",
+      "reviewer": null,
+      "reviewedAt": null
+    },
+    {
+      "candidateID": "touriga-nacional-katakana",
+      "termIDs": [
+        "term-3cc4f9234b51",
+        "term-ae44abb3b96a"
+      ],
+      "matchEvidence": [
+        "English: Touriga Nacional and other varieties"
+      ],
+      "decision": "pending_expert_review",
+      "canonicalTermID": null,
+      "rationale": "",
+      "reviewer": null,
+      "reviewedAt": null
+    }
+  ]
+}
