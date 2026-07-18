@@ -14,6 +14,8 @@
 
 #include "lab/datagen.hpp"
 #include "lab/stability.hpp"
+#include "parallel/omp_merge.hpp"
+#include "parallel/par_stl.hpp"
 #include "parallel/thread_merge.hpp"
 
 TEST_CASE("depth_for_threads: smallest depth with 2^depth >= threads") {
@@ -65,5 +67,53 @@ TEST_CASE("thread_merge_sort: custom comparator (descending)") {
     std::vector<int> want = v;
     std::sort(want.begin(), want.end(), std::greater<>{});
     lab::thread_merge_sort(v.begin(), v.end(), std::greater<>{}, 4);
+    CHECK(v == want);
+}
+
+TEST_CASE("omp_merge_sort: conformance vs std::sort (incl. odd thread counts)") {
+    const std::vector<std::size_t> sizes = {0, 1, 2, 3, 100, 4096};
+    for (const lab::Dist d : lab::all_dists()) {
+        for (const std::size_t n : sizes) {
+            for (const int threads : {1, 2, 3, 5, 8, 20}) {
+                std::vector<int> v = lab::generate(d, n, 42);
+                std::vector<int> want = v;
+                std::sort(want.begin(), want.end());
+                lab::omp_merge_sort(v.begin(), v.end(), std::less<>{}, threads);
+                INFO("dist=" << lab::dist_name(d) << " n=" << n << " threads=" << threads);
+                CHECK(v == want);
+            }
+        }
+    }
+    for (const int threads : {1, 3, 20}) {
+        std::vector<int> v = lab::generate(lab::Dist::random_uniform, 200000, 42);
+        std::vector<int> want = v;
+        std::sort(want.begin(), want.end());
+        lab::omp_merge_sort(v.begin(), v.end(), std::less<>{}, threads);
+        CHECK(v == want);
+    }
+}
+
+TEST_CASE("omp_merge_sort: stable") {
+    const bool stable = lab::observed_stable(
+        [](std::vector<lab::KeyIdx>& v) {
+            lab::omp_merge_sort(v.begin(), v.end(), std::less<>{}, 8);
+        },
+        200000, 7);
+    CHECK(stable);
+}
+
+TEST_CASE("par_stl_sort: conformance vs std::sort") {
+    for (const std::size_t n : {std::size_t{0}, std::size_t{1}, std::size_t{1000},
+                                std::size_t{100000}}) {
+        std::vector<int> v = lab::generate(lab::Dist::random_uniform, n, 42);
+        std::vector<int> want = v;
+        std::sort(want.begin(), want.end());
+        lab::par_stl_sort(v.begin(), v.end());
+        CHECK(v == want);
+    }
+    std::vector<int> v = lab::generate(lab::Dist::random_uniform, 50000, 42);
+    std::vector<int> want = v;
+    std::sort(want.begin(), want.end(), std::greater<>{});
+    lab::par_stl_sort(v.begin(), v.end(), std::greater<>{});
     CHECK(v == want);
 }
