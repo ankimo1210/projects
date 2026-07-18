@@ -3,18 +3,21 @@
 CXX      := g++
 STD      := -std=c++20
 WARN     := -Wall -Wextra -Wpedantic
-INC      := -Icommon -Isorting/include -Isearch/include -Ithird_party
+INC      := -Icommon -Isorting/include -Isearch/include -Iparallel/include -Ithird_party
 TESTFLAGS  := $(STD) $(WARN) $(INC) -O1 -g -fsanitize=address,undefined -fno-sanitize-recover=undefined
 BENCHFLAGS := $(STD) $(WARN) $(INC) -O2 -DNDEBUG
+OMPFLAGS := -fopenmp
+TBBLIB   := -ltbb
 BUILD    := build
 
 COMMON_HDRS  := $(wildcard common/lab/*.hpp)
 SORT_HDRS    := $(wildcard sorting/include/sorting/*.hpp)
 SEARCH_HDRS  := $(wildcard search/include/search/*.hpp)
+PAR_HDRS     := $(wildcard parallel/include/parallel/*.hpp)
 
 .PHONY: all test bench bench-sorting bench-search bench-quick bench-search-quick trace plot plot-sorting plot-search clean
 
-all: $(BUILD)/test_common $(BUILD)/test_sorting $(BUILD)/test_search $(BUILD)/bench_sorting $(BUILD)/bench_search
+all: $(BUILD)/test_common $(BUILD)/test_sorting $(BUILD)/test_search $(BUILD)/test_parallel $(BUILD)/bench_sorting $(BUILD)/bench_search
 
 $(BUILD):
 	mkdir -p $(BUILD)
@@ -28,16 +31,20 @@ $(BUILD)/test_sorting: sorting/tests/test_sorting.cpp $(SORT_HDRS) $(COMMON_HDRS
 $(BUILD)/test_search: search/tests/test_search.cpp $(SEARCH_HDRS) $(COMMON_HDRS) | $(BUILD)
 	$(CXX) $(TESTFLAGS) $< -o $@
 
+$(BUILD)/test_parallel: parallel/tests/test_parallel.cpp $(PAR_HDRS) $(SEARCH_HDRS) $(SORT_HDRS) $(COMMON_HDRS) | $(BUILD)
+	$(CXX) $(TESTFLAGS) $(OMPFLAGS) $< -o $@ $(TBBLIB)
+
 $(BUILD)/bench_sorting: sorting/bench/bench_sorting.cpp $(SORT_HDRS) $(COMMON_HDRS) | $(BUILD)
 	$(CXX) $(BENCHFLAGS) $< -o $@
 
 $(BUILD)/bench_search: search/bench/bench_search.cpp $(SEARCH_HDRS) $(COMMON_HDRS) | $(BUILD)
 	$(CXX) $(BENCHFLAGS) $< -o $@
 
-test: $(BUILD)/test_common $(BUILD)/test_sorting $(BUILD)/test_search
+test: $(BUILD)/test_common $(BUILD)/test_sorting $(BUILD)/test_search $(BUILD)/test_parallel
 	$(BUILD)/test_common
 	$(BUILD)/test_sorting
 	$(BUILD)/test_search
+	$(BUILD)/test_parallel
 
 bench: bench-sorting bench-search
 
