@@ -1,8 +1,10 @@
 # cpp_algo_lab — build/test/bench/plot. Run make from this directory.
 .DEFAULT_GOAL := test
 CXX      := g++
-CUDA_HOME := /usr/local/cuda-12.9
-NVCC     := $(CUDA_HOME)/bin/nvcc
+CUDA_HOME ?= /usr/local/cuda-12.9
+GPU_ARCH ?= sm_120
+SANITIZER_TMP ?= /tmp
+NVCC     ?= $(CUDA_HOME)/bin/nvcc
 STD      := -std=c++20
 WARN     := -Wall -Wextra -Wpedantic
 INC      := -Icommon -Isorting/include -Isearch/include -Iparallel/include -Ithird_party
@@ -11,7 +13,7 @@ BENCHFLAGS := $(STD) $(WARN) $(INC) -O2 -DNDEBUG
 GPUINC   := $(INC) -Iparallel/gpu/include
 # nvcc-generated #line directives trigger host -Wpedantic diagnostics; retain the
 # useful host warnings without flooding otherwise clean CUDA builds.
-GPUFLAGS := -std=c++20 -arch=sm_120 $(GPUINC) -O2 -lineinfo -Xcompiler=-Wall,-Wextra
+GPUFLAGS := -std=c++20 -arch=$(GPU_ARCH) $(GPUINC) -O2 -lineinfo -Xcompiler=-Wall,-Wextra
 OMPFLAGS := -fopenmp
 TBBLIB   := -ltbb
 BUILD    := build
@@ -88,7 +90,8 @@ gpu-test: $(BUILD)/test_gpu
 	$(BUILD)/test_gpu
 
 gpu-sanitize: $(BUILD)/test_gpu
-	$(CUDA_HOME)/bin/compute-sanitizer --tool memcheck --error-exitcode=1 $(BUILD)/test_gpu
+	TMPDIR=$(SANITIZER_TMP) TMP=$(SANITIZER_TMP) TEMP=$(SANITIZER_TMP) \
+		$(CUDA_HOME)/bin/compute-sanitizer --tool memcheck --error-exitcode=1 $(BUILD)/test_gpu
 
 gpu-bench: $(BUILD)/bench_gpu
 	$(BUILD)/bench_gpu

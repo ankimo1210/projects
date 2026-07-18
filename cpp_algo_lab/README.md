@@ -21,8 +21,8 @@ Phase 1 の内容はソート 10 種（bubble / insertion / selection / shell / 
 | `make bench-search-quick` | 検索の縮小スイープ（n≤65,536・2 反復）。配線確認用 |
 | `make bench-parallel` | CPU 並列のフル計測: sort n=2²⁴、search n=2²⁶、1〜20 threads、5 反復 → `results/parallel_*.csv` |
 | `make bench-parallel-quick` | CPU 並列の縮小計測（2 反復）→ `build/parallel_*_quick.csv`。正式結果は変更しない |
-| `make gpu-test` | CUDA sort / search の doctest をビルド・実行（RTX 5080 / `sm_120`） |
-| `make gpu-sanitize` | GPU doctest を Compute Sanitizer memcheck で実行。現在の WSL2 では launcher exit 13 の既知制約あり |
+| `make gpu-test` | CUDA sort / search の doctest をビルド・実行（既定: CUDA 12.9 / `sm_120`） |
+| `make gpu-sanitize` | GPU doctest を Compute Sanitizer memcheck で実行。一時 FIFO 用に Linux 側 `/tmp` を明示 |
 | `make gpu-bench` | GPU のフル計測: sort n=2²⁴、search n=2²⁶、kernel / end-to-end、5 反復 → `results/gpu_*.csv` |
 | `make gpu-bench-quick` | GPU の縮小計測（2 反復）→ `build/gpu_*_quick.csv`。正式結果は変更しない |
 | `make trace` | n=256 の配列スナップショット列を採取 → `results/traces/trace_*.csv` |
@@ -85,11 +85,11 @@ cpp_algo_lab/
 | 1 | ソート 10 種 + 評価 4 軸（時間・操作回数・分布・安定性） | ✅ |
 | 2 | 文字列検索 4 種 + 基準線 3 種（時間 n/m・操作回数・4 テキスト） | ✅ |
 | 3 | CPU 並列化 | ✅ |
-| 4 | GPU（CUDA bitonic / Thrust / naive search、kernel・end-to-end 計測） | ✅ ※ memcheck 起動制約は下記 |
+| 4 | GPU（CUDA bitonic / Thrust / naive search、kernel・end-to-end 計測） | ✅ |
 | 5 | ドキュメント仕上げ | ✅ |
 
 ## 依存
 
 - **ビルド・テスト・計測**: g++ 13（C++20）、make、OpenMP（libgomp）、TBB。doctest は `third_party/` に同梱。Phase 3 の `std::execution::par` テスト・ベンチは `-ltbb` でリンクするため、TBB がない環境では `make test` も完結しない。
-- **GPU（任意）**: CUDA Toolkit 12.9（`/usr/local/cuda-12.9`）、compute capability 12.0 の NVIDIA GPU（Makefile は RTX 5080 向け `sm_120` を固定）。GPU target は通常の `make test` / CPU bench から分離している。現在の WSL2 セッションでは Compute Sanitizer 2025.2 が対象プロセスを起動できず exit 13 になるため、memcheck は native Linux または修復した WSL toolchain での再確認が必要。通常 CUDA テスト 66 assertions と全 benchmark repeat の逐次参照一致は通過済み。
+- **GPU（任意）**: 既定は CUDA Toolkit 12.9（`/usr/local/cuda-12.9`）と RTX 5080 向け `sm_120`。別環境では `CUDA_HOME` と `GPU_ARCH` を make 変数で上書きできる（例: `make gpu-test CUDA_HOME=/opt/cuda GPU_ARCH=sm_90`）。GPU target は通常の `make test` / CPU bench から分離している。この WSL2 環境では Windows 側 `TEMP` の DrvFS 上に Compute Sanitizer が FIFO を作れないため、`gpu-sanitize` は `TMPDIR` / `TMP` / `TEMP` を Linux 側 `/tmp` へ限定する。memcheck・initcheck・synccheck は 0 errors、racecheck は 0 hazards を確認済み。
 - **図の生成のみ**: リポジトリルートの uv workspace（pandas / matplotlib）。`make plot` が内部で `uv run --no-sync` を呼ぶ。
