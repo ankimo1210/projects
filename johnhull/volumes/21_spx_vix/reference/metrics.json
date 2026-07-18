@@ -34,7 +34,7 @@
       {
         "criterion": "> 1 at batch 1024",
         "name": "surrogate_speedup",
-        "observed": 914.2897131825704,
+        "observed": 781.9083514612693,
         "passed": true
       },
       {
@@ -74,7 +74,7 @@
     "schema_version": 1,
     "sources": {
       "johnhull/hullkit/src/hullkit/frontier_reference.py": "7d3ac14c0544f03a7673d29953a1450bf9ffdb37eb35a957ae9a6955605b9d72",
-      "johnhull/hullkit/src/hullkit/spx_vix.py": "99cc51034d2430fe0d50abd6e89fb043e22a6304b11e01451239121d25766b21"
+      "johnhull/hullkit/src/hullkit/spx_vix.py": "610509c60cb59bcbad89b335cf8088fee6a2b2816aa590ed28bd4bde46baa472"
     },
     "timing_method": "perf_counter_ns warm-cache median of 5"
   },
@@ -361,7 +361,7 @@
     }
   },
   "companions": {
-    "joint_surface.npz": "f90b57db8af98ea91ce5b68106b6fbfb47d0063f344547860812108d2c11533e"
+    "joint_surface.npz": "7eecd2427657c5c603ebbfdd4a3475a9dae8f4d7f4363ad4d4015fe20a4c047b"
   },
   "data_policy": "synthetic-offline",
   "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
@@ -383,7 +383,7 @@
     "surrogate_gamma_rmse": 35.50726161092219,
     "surrogate_greek_rmse": 25.359399280280453,
     "surrogate_price_rmse": 0.4123722655252687,
-    "surrogate_speedup_1024": 914.2897131825704,
+    "surrogate_speedup_1024": 781.9083514612693,
     "teacher": "hullkit.spx_vix.nested_vix_teacher",
     "timing_method": "perf_counter_ns warm-cache median of 5",
     "timing_nondeterministic": true
