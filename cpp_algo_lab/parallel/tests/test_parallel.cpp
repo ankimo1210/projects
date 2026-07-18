@@ -14,9 +14,13 @@
 
 #include "lab/datagen.hpp"
 #include "lab/stability.hpp"
+#include "lab/textgen.hpp"
 #include "parallel/omp_merge.hpp"
+#include "parallel/omp_search.hpp"
 #include "parallel/par_stl.hpp"
 #include "parallel/thread_merge.hpp"
+#include "search/bmh.hpp"
+#include "search/naive.hpp"
 
 TEST_CASE("depth_for_threads: smallest depth with 2^depth >= threads") {
     CHECK(lab::detail::depth_for_threads(1) == 0);
@@ -116,4 +120,81 @@ TEST_CASE("par_stl_sort: conformance vs std::sort") {
     std::sort(want.begin(), want.end(), std::greater<>{});
     lab::par_stl_sort(v.begin(), v.end(), std::greater<>{});
     CHECK(v == want);
+}
+
+TEST_CASE("omp_bmh_search: agrees with sequential bmh on generated corpora") {
+    for (const lab::Text t : lab::all_texts()) {
+        for (const std::size_t n : {std::size_t{1}, std::size_t{64}, std::size_t{4096},
+                                    std::size_t{65536}}) {
+            const std::string text = lab::generate_text(t, n, 42);
+            for (const std::size_t m : {std::size_t{1}, std::size_t{4}, std::size_t{16},
+                                        std::size_t{64}}) {
+                if (m > n) continue;
+                const std::string pattern = lab::pattern_for(t, text, m, 42);
+                const auto ref = lab::bmh_search(text, pattern);
+                for (const int threads : {1, 2, 3, 5, 8, 20}) {
+                    INFO("text=" << lab::text_name(t) << " n=" << n << " m=" << m
+                                 << " threads=" << threads);
+                    CHECK(lab::omp_bmh_search(text, pattern, threads) == ref);
+                }
+            }
+        }
+    }
+}
+
+TEST_CASE("omp_bmh_search: matches straddling every chunk boundary are found") {
+    // Plant the pattern at start positions that straddle each internal chunk
+    // boundary (b-(m-1): maximal straddle; b-1: one char before; b: first
+    // owned start). The chunk arithmetic here mirrors the implementation's
+    // lo_c = starts*c/threads split on purpose -- if the implementation's
+    // split changes, this test must be updated with it.
+    const std::string pattern = "NEEDLE";
+    const std::size_t m = pattern.size();
+    for (const int threads : {2, 3, 4, 7, 16}) {
+        const std::size_t n = 1000;
+        std::string text(n, 'x');
+        const std::size_t starts = n - m + 1;
+        const auto nchunks = static_cast<std::size_t>(threads);
+        std::vector<std::size_t> planted;
+        for (std::size_t c = 1; c < nchunks; ++c) {
+            const std::size_t b = starts * c / nchunks;  // first start owned by chunk c
+            // b >= starts/16 = 62 > m-1 here, so b-(m-1) cannot underflow.
+            for (const std::size_t pos : {b - (m - 1), b - 1, b}) {
+                if (pos + m <= n && (planted.empty() || pos >= planted.back() + m))
+                    planted.push_back(pos);
+            }
+        }
+        for (const std::size_t pos : planted) text.replace(pos, m, pattern);
+        const auto expected = lab::naive_search(text, pattern);
+        REQUIRE(expected == planted);  // construction sanity: exactly the planted set
+        INFO("threads=" << threads);
+        CHECK(lab::omp_bmh_search(text, pattern, threads) == expected);
+    }
+}
+
+TEST_CASE("omp_bmh_search: overlapping matches across boundaries") {
+    // All-'a' text with pattern "aaa": every start position matches, so any
+    // dropped or duplicated boundary position changes the result.
+    const std::string text(1000, 'a');
+    const auto ref = lab::naive_search(text, "aaa");
+    CHECK(ref.size() == 998);
+    for (const int threads : {2, 3, 7, 20}) {
+        INFO("threads=" << threads);
+        CHECK(lab::omp_bmh_search(text, "aaa", threads) == ref);
+    }
+}
+
+TEST_CASE("omp_bmh_search: module conventions hold for every thread count") {
+    using Occ = std::vector<std::size_t>;
+    for (const int threads : {1, 8}) {
+        CHECK(lab::omp_bmh_search("abc", "", threads) == Occ{0, 1, 2, 3});
+        CHECK(lab::omp_bmh_search("", "", threads) == Occ{0});
+        CHECK(lab::omp_bmh_search("", "a", threads).empty());
+        CHECK(lab::omp_bmh_search("ab", "abc", threads).empty());
+        CHECK(lab::omp_bmh_search("abc", "abc", threads) == Occ{0});
+        CHECK(lab::omp_bmh_search("xxab", "ab", threads) == Occ{2});
+        CHECK(lab::omp_bmh_search("banana", "a", threads) == Occ{1, 3, 5});
+    }
+    // More threads than candidate start positions: empty chunks must be fine.
+    CHECK(lab::omp_bmh_search("needle", "needle", 20) == Occ{0});
 }
