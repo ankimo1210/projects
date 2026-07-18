@@ -38,6 +38,7 @@ def permutation_importance(
     *,
     seed: int = 0,
 ) -> np.ndarray:
+    """MSE increase per feature when that feature column is shuffled."""
     x, y = _diagnostic_inputs(features, targets)
     baseline = np.mean((_prediction(predict, x) - y) ** 2)
     rng = np.random.default_rng(seed)
@@ -54,6 +55,7 @@ def occlusion_importance(
     features: np.ndarray,
     targets: np.ndarray,
 ) -> np.ndarray:
+    """MSE increase per feature when that feature is fixed at its median."""
     x, y = _diagnostic_inputs(features, targets)
     baseline = np.mean((_prediction(predict, x) - y) ** 2)
     result = np.empty(x.shape[1])
@@ -71,6 +73,7 @@ def integrated_gradients(
     baseline: torch.Tensor | None = None,
     steps: int = 32,
 ) -> torch.Tensor:
+    """Trapezoid integrated gradients from a baseline to the inputs."""
     if steps < 2:
         raise ValueError("steps must be at least two")
     reference = torch.zeros_like(inputs) if baseline is None else baseline

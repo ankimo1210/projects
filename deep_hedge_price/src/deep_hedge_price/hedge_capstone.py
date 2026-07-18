@@ -13,6 +13,8 @@ DEFAULT_NO_TRADE_WIDTH = 0.04
 
 @dataclass(frozen=True)
 class HedgeComparison:
+    """Common-path hedge comparison: per-strategy P&L, turnover, and metrics."""
+
     path_ids: np.ndarray
     pnl: dict[str, np.ndarray]
     turnover: dict[str, np.ndarray]

@@ -64,6 +64,7 @@ def run_label(config: ProjectConfig) -> str:
 
 
 def checkpoint_directory(config: ProjectConfig, project_root: Path) -> Path:
+    """Checkpoint path keyed by run label and configuration fingerprint."""
     return (
         project_root
         / config.output.artifacts_dir
