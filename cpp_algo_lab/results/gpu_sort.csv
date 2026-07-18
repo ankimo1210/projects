@@ -1,0 +1,6 @@
+algo,mode,n,repeats,median_ms,mad_ms
+std_sort_cpu,host,16777216,5,922.90338,2.139584
+bitonic,kernel,16777216,5,15.147872,0.19315243
+bitonic,end_to_end,16777216,5,68.898021,1.571036
+thrust,kernel,16777216,5,2.4949119,0.066847801
+thrust,end_to_end,16777216,5,15.658305,1.340866
