@@ -10,6 +10,8 @@ from scipy.optimize import least_squares, minimize
 
 @dataclass(frozen=True)
 class SSVIParameters:
+    """SSVI slice parameters ``(theta, rho, phi)`` of Gatheral & Jacquier (2014)."""
+
     theta: float
     rho: float
     phi: float
@@ -25,6 +27,7 @@ class SurfaceConstraintComparison:
     diagnostics: dict[str, dict[str, float | int | bool]]
 
     def to_dict(self) -> dict[str, object]:
+        """Serialize decoder prices and diagnostics for JSON artifacts."""
         return {
             "prices": {
                 "unconstrained": self.unconstrained.tolist(),

@@ -35,6 +35,7 @@ class TradingSession:
     holidays: tuple[date, ...] = ()
 
     def validate(self) -> ZoneInfo:
+        """Resolve the timezone and reject inconsistent session times or holidays."""
         try:
             zone = ZoneInfo(self.timezone)
         except ZoneInfoNotFoundError as exc:
@@ -46,6 +47,7 @@ class TradingSession:
         return zone
 
     def is_trading_day(self, day: date) -> bool:
+        """True on weekdays that are not configured holidays."""
         self.validate()
         return day.weekday() < 5 and day not in self.holidays
 
@@ -60,6 +62,7 @@ class TradingSession:
         )
 
     def settlement(self, day: date) -> datetime:
+        """Timezone-aware settlement datetime for a trading day."""
         zone = self.validate()
         if not self.is_trading_day(day):
             raise ValueError(f"{day.isoformat()} is not a trading day")
@@ -229,6 +232,7 @@ class ScheduledJump:
     variance: float
 
     def validate(self) -> None:
+        """Require a label, an aware timestamp, and finite non-negative variance."""
         if not self.label or self.timestamp.tzinfo is None:
             raise ValueError("scheduled jumps require a label and aware timestamp")
         if not np.isfinite(self.variance) or self.variance < 0.0:

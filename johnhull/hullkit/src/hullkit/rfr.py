@@ -27,6 +27,7 @@ class BusinessCalendar:
     weekend: tuple[int, ...] = (5, 6)
 
     def validate(self) -> None:
+        """Reject duplicate holidays and malformed weekend definitions."""
         if len(set(self.holidays)) != len(self.holidays):
             raise ValueError("holidays must be unique")
         if not self.weekend or len(set(self.weekend)) != len(self.weekend):
@@ -35,6 +36,7 @@ class BusinessCalendar:
             raise ValueError("weekend weekdays must lie in [0, 6]")
 
     def is_business_day(self, day: date) -> bool:
+        """True when the day is neither a weekend day nor a holiday."""
         self.validate()
         return day.weekday() not in self.weekend and day not in self.holidays
 
@@ -84,6 +86,7 @@ class RFRConvention:
     observation_shift: bool = False
 
     def validate(self) -> None:
+        """Reject a non-positive day-count basis and negative lookback/lockout."""
         if self.day_count_basis <= 0:
             raise ValueError("day_count_basis must be positive")
         if self.lookback_business_days < 0 or self.lockout_business_days < 0:
@@ -314,6 +317,7 @@ class RfrCurve:
         return float(np.exp(-zero * target))
 
     def simple_forward(self, start: date, end: date, *, basis: int = 360) -> float:
+        """Simple money-market forward rate between two dates from discount factors."""
         if end <= start or basis <= 0:
             raise ValueError("forward interval/basis is invalid")
         year_fraction = (end - start).days / basis
@@ -329,6 +333,7 @@ class MultiCurveScenario:
     collateral_currency: str
 
     def validate(self) -> None:
+        """Check both curves and require discounting in the collateral currency."""
         self.forecast_curve._validated_nodes()
         self.discount_curve._validated_nodes()
         if not self.collateral_currency:

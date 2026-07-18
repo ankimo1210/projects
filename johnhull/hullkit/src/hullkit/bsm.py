@@ -15,6 +15,7 @@ def d1(S, K, r, sigma, T, q=0.0):
 
 
 def d2(S, K, r, sigma, T, q=0.0):
+    """Hull eq. (15.20): ``d1 - sigma * sqrt(T)``."""
     return d1(S, K, r, sigma, T, q) - sigma * np.sqrt(T)
 
 

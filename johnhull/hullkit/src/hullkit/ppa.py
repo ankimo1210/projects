@@ -80,6 +80,8 @@ def ppa_settlement(
 
 @dataclass(frozen=True)
 class PriceGenerationScenarios:
+    """Correlated electricity-price and renewable-generation scenario paths."""
+
     spot_prices: np.ndarray
     generation: np.ndarray
     target_correlation: float
@@ -129,6 +131,8 @@ def simulate_price_generation(
 
 @dataclass(frozen=True)
 class CashFlowRisk:
+    """Lower-tail cash-flow risk: expectation, quantile, CFaR, and CVaR."""
+
     expected_cash_flow: float
     lower_quantile: float
     tail_mean: float
@@ -159,6 +163,8 @@ def cash_flow_risk(cash_flows, *, alpha: float = 0.95) -> CashFlowRisk:
 
 @dataclass(frozen=True)
 class PPAValuation:
+    """PPA fair value with merchant/hedged cash flows and volume/shape/profile risks."""
+
     fair_value: float
     expected_merchant_revenue: float
     expected_hedged_cash_flow: float

@@ -65,6 +65,7 @@ class PDVParameters:
     volatility_floor: float = 1e-4
 
     def validate(self) -> None:
+        """Reject decays outside [0, 1), non-finite coefficients, and a bad floor."""
         decays = (*self.return_decays, *self.variance_decays)
         if any(not 0.0 <= decay < 1.0 for decay in decays):
             raise ValueError("PDV decays must lie in [0, 1)")
@@ -211,6 +212,7 @@ class JointMarketTargets:
     variance_term: FloatArray
 
     def validated(self) -> JointMarketTargets:
+        """Return a copy with every target vector checked finite and non-negative."""
         return JointMarketTargets(
             spx_iv=_finite_vector(self.spx_iv, "spx_iv", nonnegative=True),
             vix_futures=_finite_vector(self.vix_futures, "vix_futures", nonnegative=True),
@@ -378,6 +380,7 @@ class PolynomialSurrogate:
     upper: FloatArray
 
     def predict(self, samples: ArrayLike) -> FloatArray:
+        """Evaluate the quadratic surrogate on finite feature rows."""
         values = np.asarray(samples, dtype=float)
         if values.ndim != 2 or values.shape[1] != self.n_features:
             raise ValueError("samples do not match the surrogate feature count")
@@ -386,6 +389,7 @@ class PolynomialSurrogate:
         return np.asarray(_quadratic_design(values) @ self.coefficients)
 
     def ood(self, samples: ArrayLike) -> NDArray[np.bool_]:
+        """Flag rows lying outside the training-domain box."""
         return out_of_domain_flags(samples, self.lower, self.upper)
 
 

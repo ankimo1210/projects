@@ -61,14 +61,17 @@ class MarketSnapshot:
 
     @property
     def oracle_age(self) -> float:
+        """Elapsed time between the snapshot and its oracle print."""
         return float(self.timestamp - self.oracle_timestamp)
 
     @property
     def mark_index_basis(self) -> float:
+        """Mark/index basis ``mark / index - 1``."""
         return float(self.mark_price / self.index_price - 1.0)
 
     @property
     def last_index_dislocation(self) -> float:
+        """Last-trade dislocation ``last / index - 1``."""
         return float(self.last_price / self.index_price - 1.0)
 
 
@@ -250,6 +253,7 @@ class FundingLedger:
 
     @property
     def conservation_error(self) -> float:
+        """Sum of long, short, and venue cash flows (zero when funding conserves cash)."""
         return float(self.long_cashflow + self.short_cashflow + self.venue_residual)
 
 
@@ -275,6 +279,8 @@ def matched_funding_ledger(
 
 @dataclass(frozen=True)
 class BasisPath:
+    """Simulated index/mark price paths with the basis and funding-rate series."""
+
     index_prices: np.ndarray
     mark_prices: np.ndarray
     basis: np.ndarray
