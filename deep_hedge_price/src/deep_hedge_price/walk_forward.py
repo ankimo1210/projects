@@ -20,6 +20,7 @@ class Garch11Fit:
 
 
 def persistence_forecast(values: np.ndarray) -> np.ndarray:
+    """Naive forecast: previous observation carried forward."""
     series = np.asarray(values, dtype=float)
     if series.ndim != 1 or len(series) < 2:
         raise ValueError("values must contain at least two observations")
@@ -27,6 +28,7 @@ def persistence_forecast(values: np.ndarray) -> np.ndarray:
 
 
 def ewma_forecast(values: np.ndarray, decay: float = 0.94) -> np.ndarray:
+    """RiskMetrics-style exponentially weighted forecast (no look-ahead)."""
     series = np.asarray(values, dtype=float)
     if series.ndim != 1 or len(series) < 2 or not 0 < decay < 1:
         raise ValueError("invalid values or decay")
@@ -155,16 +157,20 @@ def har_features(values: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 
 @dataclass(frozen=True)
 class LinearForecast:
+    """Fitted linear forecaster (Log-HAR / regularized linear)."""
+
     intercept: float
     coefficients: np.ndarray
 
     def predict(self, features: np.ndarray) -> np.ndarray:
+        """Linear prediction from feature rows."""
         return self.intercept + np.asarray(features, dtype=float) @ self.coefficients
 
 
 def fit_regularized_linear(
     features: np.ndarray, targets: np.ndarray, ridge: float = 1e-4
 ) -> LinearForecast:
+    """Closed-form ridge regression for the linear forecast baselines."""
     x = np.asarray(features, dtype=float)
     y = np.asarray(targets, dtype=float)
     if x.ndim != 2 or y.shape != (len(x),) or ridge < 0:
@@ -205,6 +211,7 @@ class SequenceForecaster(nn.Module):
         self.output = nn.Linear(hidden, 1)
 
     def forward(self, sequence: torch.Tensor) -> torch.Tensor:
+        """Score a lag window and return one variance forecast per row."""
         if sequence.ndim != 2:
             raise ValueError("sequence must have shape [batch, time]")
         if self.kind == "harnet":
@@ -247,6 +254,7 @@ def fit_sequence_forecaster(
     epochs: int = 20,
     learning_rate: float = 0.01,
 ) -> list[float]:
+    """Full-batch Adam training loop; returns the loss history."""
     if epochs < 1 or sequences.ndim != 2 or targets.shape != (len(sequences),):
         raise ValueError("invalid training inputs")
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
@@ -261,6 +269,7 @@ def fit_sequence_forecaster(
 
 
 def forecast_metrics(actual: np.ndarray, predicted: np.ndarray) -> dict[str, float]:
+    """QLIKE, RMSE, and MAE for positive variance forecasts."""
     observed = np.asarray(actual, dtype=float)
     forecast = np.asarray(predicted, dtype=float)
     if (
@@ -288,6 +297,7 @@ def block_bootstrap_metric_ci(
     seed: int = 0,
     confidence: float = 0.95,
 ) -> tuple[float, float, float]:
+    """Moving-block bootstrap mean and CI for serially dependent losses."""
     values = np.asarray(losses, dtype=float)
     if (
         values.ndim != 1

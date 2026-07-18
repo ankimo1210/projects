@@ -24,6 +24,8 @@ from .pricing_policy import (
 
 @dataclass
 class PricingTrainingResult:
+    """Trained model with checkpoint/baseline/history paths and reuse flag."""
+
     model: PricingMLP
     checkpoint_path: Path
     polynomial_path: Path
@@ -63,6 +65,7 @@ def _model_from_payload(payload, device):
 
 
 def load_pricing_model(checkpoint_path: str | Path, *, device="cpu"):
+    """Load a schema-checked pricing checkpoint and its payload."""
     payload = torch.load(checkpoint_path, map_location=device, weights_only=False)
     if payload.get("schema_version") != 1 or payload.get("artifact_kind") != "pricing_checkpoint":
         raise ValueError("incompatible pricing checkpoint")

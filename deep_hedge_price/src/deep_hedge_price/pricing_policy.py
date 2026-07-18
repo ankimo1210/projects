@@ -62,6 +62,7 @@ class PolynomialRidge:
     coefficients: np.ndarray | None = None
 
     def fit(self, inputs: np.ndarray, targets: np.ndarray):
+        """Fit normalized ridge coefficients in closed form."""
         inputs = np.asarray(inputs, dtype=np.float64)
         targets = np.asarray(targets, dtype=np.float64).reshape(-1)
         if inputs.shape != (len(targets), 5):
@@ -75,12 +76,14 @@ class PolynomialRidge:
         return self
 
     def predict(self, inputs: np.ndarray) -> np.ndarray:
+        """Evaluate the fitted polynomial baseline."""
         if self.mean is None or self.scale is None or self.coefficients is None:
             raise RuntimeError("polynomial baseline is not fitted")
         design = _polynomial_features((np.asarray(inputs) - self.mean) / self.scale, self.degree)
         return design @ self.coefficients
 
     def save(self, path: str | Path) -> Path:
+        """Serialize the fitted state to a pickle-free NPZ."""
         if self.coefficients is None:
             raise RuntimeError("polynomial baseline is not fitted")
         output = Path(path)
@@ -97,6 +100,7 @@ class PolynomialRidge:
 
     @classmethod
     def load(cls, path: str | Path):
+        """Restore a fitted baseline from its NPZ file."""
         with np.load(path, allow_pickle=False) as data:
             return cls(
                 degree=int(data["degree"]),
@@ -142,6 +146,7 @@ class PricingMLP(nn.Module):
             self.greek_head = None
 
     def set_normalization(self, mean, scale):
+        """Store the five feature means and positive scales in buffers."""
         mean = torch.as_tensor(mean, dtype=self.feature_mean.dtype, device=self.feature_mean.device)
         scale = torch.as_tensor(
             scale, dtype=self.feature_scale.dtype, device=self.feature_scale.device
@@ -153,6 +158,7 @@ class PricingMLP(nn.Module):
 
     @staticmethod
     def feature_map(inputs: torch.Tensor):
+        """BS-structured features: d1, d2, total vol, discounted spot/strike."""
         x, tau, rate, dividend, sigma = inputs.unbind(dim=-1)
         sqrt_tau = torch.sqrt(torch.clamp(tau, min=1e-12))
         total_vol = torch.clamp(sigma * sqrt_tau, min=1e-12)
@@ -173,6 +179,7 @@ class PricingMLP(nn.Module):
         )
 
     def components(self, inputs: torch.Tensor):
+        """Return the price and, when configured, the direct Greek heads."""
         mapped = self.feature_map(inputs)
         features = self.trunk((mapped - self.feature_mean) / self.feature_scale)
         raw_price = self.price_head(features).squeeze(-1)
@@ -202,8 +209,10 @@ class PricingMLP(nn.Module):
         return price, direct
 
     def forward(self, inputs: torch.Tensor):
+        """Return the normalized price ``C/K``."""
         return self.components(inputs)[0]
 
     @property
     def parameter_count(self):
+        """Total number of trainable parameters."""
         return sum(parameter.numel() for parameter in self.parameters())

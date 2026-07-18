@@ -21,6 +21,8 @@ REQUIRED_LABELS = ("price", "delta", "gamma", "vega", "theta", "rho")
 
 @dataclass(frozen=True)
 class PricingDatasetManifest:
+    """Versioned dataset manifest: teacher, seed, split fingerprints, checksums."""
+
     schema_version: int
     artifact_kind: str
     model: str
@@ -62,6 +64,7 @@ def fingerprint_rows(array: np.ndarray) -> str:
 
 
 def split_overlap_count(split_rows: Mapping[str, np.ndarray]) -> int:
+    """Count duplicate input rows across the train/validation/test/ood splits."""
     seen: set[str] = set()
     overlap = 0
     for split in SPLITS:

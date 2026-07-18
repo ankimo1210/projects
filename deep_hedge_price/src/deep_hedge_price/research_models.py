@@ -25,6 +25,7 @@ class DirectInverseNetwork(nn.Module):
         )
 
     def forward(self, quotes: torch.Tensor) -> torch.Tensor:
+        """Map a quote vector directly to model parameters."""
         return self.network(quotes)
 
 
@@ -39,6 +40,7 @@ class LocalFoundationAdapter:
         self._predict = predict
 
     def predict(self, context: np.ndarray) -> np.ndarray:
+        """Run the wrapped local zero-shot model on a context array."""
         return np.asarray(self._predict(np.asarray(context, dtype=float)), dtype=float)
 
 

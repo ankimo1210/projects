@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 
 
 def error_comparison_figure(evaluation):
+    """Polynomial vs neural price MAE on the common test split."""
     split = evaluation["splits"]["test"]
     figure = go.Figure(
         [
@@ -25,6 +26,7 @@ def error_comparison_figure(evaluation):
 
 
 def greek_error_figure(evaluation):
+    """Autodiff Greek MAE bars on the test split."""
     metrics = evaluation["splits"]["test"]["greeks"]
     figure = go.Figure(
         go.Bar(
@@ -36,6 +38,7 @@ def greek_error_figure(evaluation):
 
 
 def hard_check_figure(evaluation):
+    """Violation rate per canonical hard arbitrage check."""
     checks = evaluation["hard_validation"]["checks"]
     figure = go.Figure(
         go.Bar(
@@ -51,6 +54,7 @@ def hard_check_figure(evaluation):
 
 
 def speed_figure(evaluation):
+    """Batch-latency comparison across pricing methods."""
     figure = go.Figure()
     methods = (
         ("analytic", "#111827"),

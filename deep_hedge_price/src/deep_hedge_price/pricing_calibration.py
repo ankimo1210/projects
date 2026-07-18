@@ -13,6 +13,8 @@ ForwardModel = Callable[[np.ndarray], np.ndarray]
 
 @dataclass(frozen=True)
 class CalibrationStart:
+    """One optimizer start: initial point, solution, RMSE, and evaluation count."""
+
     initial: np.ndarray
     parameters: np.ndarray
     repricing_rmse: float
@@ -22,6 +24,8 @@ class CalibrationStart:
 
 @dataclass(frozen=True)
 class CalibrationResult:
+    """Best multi-start calibration with per-start results and dispersion."""
+
     parameters: np.ndarray
     repricing_rmse: float
     starts: tuple[CalibrationStart, ...]
@@ -38,6 +42,7 @@ class DirectInverseRidge:
     coefficients: np.ndarray
 
     def predict(self, surface_features: np.ndarray) -> np.ndarray:
+        """Map normalized surface features to model parameters."""
         features = np.asarray(surface_features, dtype=float)
         if features.ndim != 2 or features.shape[1] != self.feature_mean.size:
             raise ValueError("surface_features must match the fitted feature dimension")

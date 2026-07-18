@@ -13,6 +13,8 @@ from .walk_forward import fit_regularized_linear, har_features
 
 @dataclass(frozen=True)
 class SurfaceHedgePipelineResult:
+    """End-to-end result: calibration, forecast, and common-path hedge."""
+
     calibration: CalibrationResult
     true_parameters: np.ndarray
     forecast_variance: float

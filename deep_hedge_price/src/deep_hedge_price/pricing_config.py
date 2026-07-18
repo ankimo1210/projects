@@ -18,6 +18,8 @@ import yaml
 
 @dataclass(frozen=True)
 class PricingDataConfig:
+    """Latin-hypercube sampling design and dimensionless parameter bounds."""
+
     seed: int = 1210
     train_size: int = 8192
     validation_size: int = 2048
@@ -35,6 +37,7 @@ class PricingDataConfig:
     )
 
     def validate(self) -> None:
+        """Reject bad seeds, sizes, sampling kinds, and parameter bounds."""
         if self.seed < 0:
             raise ValueError("data.seed must be non-negative")
         if min(self.train_size, self.validation_size, self.test_size, self.ood_size) <= 0:
@@ -55,6 +58,8 @@ class PricingDataConfig:
 
 @dataclass(frozen=True)
 class PricingModelConfig:
+    """Pricing MLP architecture, output mode, and optional Greek heads."""
+
     hidden_layers: int = 3
     hidden_units: int = 64
     activation: str = "silu"
@@ -62,6 +67,7 @@ class PricingModelConfig:
     direct_greek_heads: bool = False
 
     def validate(self) -> None:
+        """Reject non-positive dimensions and unknown activation/output modes."""
         if self.hidden_layers <= 0 or self.hidden_units <= 0:
             raise ValueError("pricing model dimensions must be positive")
         if self.activation not in {"silu", "tanh"}:
@@ -72,6 +78,8 @@ class PricingModelConfig:
 
 @dataclass(frozen=True)
 class PricingTrainingConfig:
+    """Optimizer settings and price/Greek/differential/penalty loss weights."""
+
     device: str = "cpu"
     batch_size: int = 1024
     epochs: int = 150
@@ -84,6 +92,7 @@ class PricingTrainingConfig:
     penalty_weight: float = 0.0
 
     def validate(self) -> None:
+        """Reject unknown devices, non-positive counts, and negative weights."""
         if self.device not in {"cpu", "cuda", "auto"}:
             raise ValueError("pricing device must be cpu, cuda, or auto")
         positive = (
@@ -104,11 +113,14 @@ class PricingTrainingConfig:
 
 @dataclass(frozen=True)
 class PricingOutputConfig:
+    """Namespaced artifact and report output locations."""
+
     artifacts_dir: str = "artifacts/pricing"
     reports_dir: str = "reports"
     namespace: str = "default"
 
     def validate(self) -> None:
+        """Require a safe relative namespace (no absolute paths or '..')."""
         if (
             not self.namespace
             or Path(self.namespace).is_absolute()
@@ -119,6 +131,8 @@ class PricingOutputConfig:
 
 @dataclass(frozen=True)
 class PricingConfig:
+    """Complete Phase-2 pricing configuration with a stable fingerprint."""
+
     profile: str = "default"
     data: PricingDataConfig = field(default_factory=PricingDataConfig)
     model: PricingModelConfig = field(default_factory=PricingModelConfig)
@@ -126,6 +140,7 @@ class PricingConfig:
     output: PricingOutputConfig = field(default_factory=PricingOutputConfig)
 
     def validate(self) -> None:
+        """Require a profile name and validate every sub-configuration."""
         if not self.profile:
             raise ValueError("profile must be non-empty")
         self.data.validate()
@@ -134,9 +149,11 @@ class PricingConfig:
         self.output.validate()
 
     def to_dict(self) -> dict[str, Any]:
+        """Plain-dict view used for JSON export and fingerprinting."""
         return asdict(self)
 
     def fingerprint(self, length: int = 16) -> str:
+        """Deterministic SHA-256 prefix of the sorted configuration JSON."""
         payload = json.dumps(self.to_dict(), sort_keys=True, separators=(",", ":"))
         return hashlib.sha256(payload.encode()).hexdigest()[:length]
 
