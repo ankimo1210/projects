@@ -11,6 +11,7 @@
 #include <cstddef>
 #include <omp.h>
 #include <string_view>
+#include <utility>
 #include <vector>
 
 #include "search/bmh.hpp"

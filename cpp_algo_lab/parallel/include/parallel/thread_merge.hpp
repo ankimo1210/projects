@@ -7,6 +7,8 @@
 // safe. Spawning whole levels means effective parallelism is the smallest
 // power of two >= the requested thread count.
 #include <algorithm>
+#include <bit>
+#include <exception>
 #include <functional>
 #include <thread>
 
@@ -18,9 +20,8 @@ namespace lab {
 namespace detail {
 
 inline int depth_for_threads(unsigned threads) {
-    int depth = 0;
-    while ((1u << depth) < threads) ++depth;
-    return depth;  // smallest depth with 2^depth >= threads
+    if (threads <= 1) return 0;
+    return static_cast<int>(std::bit_width(threads - 1));
 }
 
 template <class RandomIt, class Compare>
@@ -32,14 +33,20 @@ void thread_merge_impl(RandomIt first, RandomIt last, Compare comp, int depth) {
         return;
     }
     const auto mid = first + n / 2;
-    // std::jthread (C++20) joins in its destructor: if the current thread's
-    // recursive call below threw, a plain std::thread would still be
-    // joinable when unwound and std::terminate would fire. RAII join is the
-    // language's answer to exactly this hole.
-    std::jthread left(
-        [first, mid, comp, depth] { thread_merge_impl(first, mid, comp, depth - 1); });
+    // jthread provides RAII join if the current thread throws. Exceptions in
+    // the spawned branch cannot cross a thread boundary, so capture and
+    // rethrow them after the explicit join.
+    std::exception_ptr left_error;
+    std::jthread left([first, mid, comp, depth, &left_error] {
+        try {
+            thread_merge_impl(first, mid, comp, depth - 1);
+        } catch (...) {
+            left_error = std::current_exception();
+        }
+    });
     thread_merge_impl(mid, last, comp, depth - 1);
     left.join();
+    if (left_error) std::rethrow_exception(left_error);
     std::inplace_merge(first, mid, last, comp);
 }
 
