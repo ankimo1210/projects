@@ -666,6 +666,7 @@ private struct TastingFormSections: View {
     var onFieldEdited: (TastingField) -> Void = { _ in }
     @State private var isAromaVocabularyPresented = false
     @State private var isFlavourVocabularyPresented = false
+    @State private var lastAddedVocabulary: String?
 
     private let appearanceIntensity = ["Pale", "Medium", "Deep"]
     private let intensity = ["Light", "Medium(-)", "Medium", "Medium(+)", "Pronounced"]
@@ -694,6 +695,7 @@ private struct TastingFormSections: View {
                 TextField("香りの特徴", text: $draft.aromaNotes, axis: .vertical)
                     .lineLimit(3...7)
                 Button {
+                    lastAddedVocabulary = nil
                     isAromaVocabularyPresented = true
                 } label: {
                     Label("香りの語彙候補から追加", systemImage: "text.badge.plus")
@@ -701,7 +703,10 @@ private struct TastingFormSections: View {
                 .accessibilityIdentifier("tasting.vocabulary.aroma")
                 .sheet(isPresented: $isAromaVocabularyPresented) {
                     NavigationStack {
-                        TastingVocabularyPicker(target: .aroma) { value in
+                        TastingVocabularyPicker(
+                            target: .aroma,
+                            lastAdded: $lastAddedVocabulary
+                        ) { value in
                             appendVocabulary(value, to: .aroma)
                         }
                     }
@@ -731,6 +736,7 @@ private struct TastingFormSections: View {
                 TextField("風味の特徴", text: $draft.flavourNotes, axis: .vertical)
                     .lineLimit(3...7)
                 Button {
+                    lastAddedVocabulary = nil
                     isFlavourVocabularyPresented = true
                 } label: {
                     Label("風味の語彙候補から追加", systemImage: "text.badge.plus")
@@ -738,7 +744,10 @@ private struct TastingFormSections: View {
                 .accessibilityIdentifier("tasting.vocabulary.flavour")
                 .sheet(isPresented: $isFlavourVocabularyPresented) {
                     NavigationStack {
-                        TastingVocabularyPicker(target: .flavour) { value in
+                        TastingVocabularyPicker(
+                            target: .flavour,
+                            lastAdded: $lastAddedVocabulary
+                        ) { value in
                             appendVocabulary(value, to: .flavour)
                         }
                     }
@@ -822,11 +831,11 @@ private struct TastingVocabularyPicker: View {
     @Environment(EntitlementStore.self) private var entitlementStore
     @Query(sort: \TastingNote.tastedAt, order: .reverse) private var tastingNotes: [TastingNote]
     let target: TastingVocabularyTarget
+    @Binding var lastAdded: String?
     let onSelect: (String) -> Void
 
     @State private var source = TastingVocabularySource.fixed
     @State private var searchText = ""
-    @State private var lastAdded: String?
 
     private let referenceStore = ReferenceStore.shared
     private let suggestedReferenceCategories = Set([
@@ -870,6 +879,15 @@ private struct TastingVocabularyPicker: View {
                     }
                 }
                 .pickerStyle(.segmented)
+            }
+
+            if let lastAdded {
+                Section {
+                    Text("「\(lastAdded)」を追加しました")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(AppTheme.success)
+                        .accessibilityIdentifier("tasting.vocabulary.confirmation")
+                }
             }
 
             if source == .fixed {
@@ -926,16 +944,6 @@ private struct TastingVocabularyPicker: View {
                 Button("完了") { dismiss() }
             }
         }
-        .overlay(alignment: .bottom) {
-            if let lastAdded {
-                Text("「\(lastAdded)」を追加しました")
-                    .font(.caption.weight(.semibold))
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 8)
-                    .background(.ultraThinMaterial, in: Capsule())
-                    .padding(.bottom, 10)
-            }
-        }
     }
 
     private func candidateButton(_ value: String) -> some View {
@@ -948,14 +956,15 @@ private struct TastingVocabularyPicker: View {
                 Image(systemName: "plus.circle")
                     .foregroundStyle(AppTheme.wine)
             }
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier("tasting.vocabulary.candidate.\(value)")
     }
 
     private func add(_ value: String) {
-        onSelect(value)
         lastAdded = value
+        onSelect(value)
     }
 }
 
