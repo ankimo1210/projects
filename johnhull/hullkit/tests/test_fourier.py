@@ -30,3 +30,11 @@ def test_cos_density_integrates_to_one():
     y, f = fourier.cos_density(cf, N=256, L=12.0, n_grid=4000)
     assert abs(float(np.trapezoid(f, y)) - 1.0) < 1e-3
     assert f.min() > -1e-6  # essentially non-negative
+
+
+def test_cos_deep_otm_outside_truncation_interval_is_zero():
+    cf = fourier.lognormal_cf(0.05, 1.0, 0.2)
+    call = fourier.cos_price(cf, 100.0, 1_000_000.0, 0.05, 1.0, kind="call")
+    put = fourier.cos_price(cf, 100.0, 0.001, 0.05, 1.0, kind="put")
+    assert call == 0.0
+    assert put == 0.0
