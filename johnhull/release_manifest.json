@@ -124,8 +124,8 @@
     }
   ],
   "portal": {
-    "themes": 11,
-    "figures": 70
+    "themes": 12,
+    "figures": 78
   },
   "allowed_book_remote_dependencies": [],
   "allowed_legacy_book_runtime_dependencies": [

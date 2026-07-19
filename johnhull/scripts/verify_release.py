@@ -334,9 +334,9 @@ def verify(*, require_tracked: bool = False) -> list[Finding]:
     if not isinstance(volumes, list):
         return [*findings, Finding("manifest", "release manifest volumes must be a list")]
     numbers = [item.get("number") for item in volumes if isinstance(item, dict)]
-    if numbers != list(range(18, 26)):
+    if numbers != list(range(18, 28)):
         findings.append(
-            Finding("manifest", f"volume numbers must exactly equal 18..25, got {numbers}")
+            Finding("manifest", f"volume numbers must exactly equal 18..27, got {numbers}")
         )
     toc = (PROJECT / "book/_toc.yml").read_text(encoding="utf-8")
     roadmap = (PROJECT / "ROADMAP.md").read_text(encoding="utf-8")

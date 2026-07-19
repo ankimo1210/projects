@@ -298,8 +298,8 @@ VOLUME_META = {
             "## 演習\n\n"
             "1. `kupiec_size_reject_flags` から棄却率を再計算し、n_obs を 250 に変えたときの離散性による size 歪みを議論せよ。\n"
             "2. `clustered_exceedances` の Markov 遷移確率を推定し、Christoffersen 独立性 LR が iid 系列より大きくなる理由を説明せよ。\n"
-            "3. `mean_excess_threshold` に対する `mean_excess_curve` の傾きから GPD の $\\xi/(1-\\xi)$ を読み取り、`gpd_xi_hat` と比較せよ。\n"
-            "4. `pnl_matrix` の尾部シナリオ集合を取り出し、`es_components` の加法性 $\\sum_i CES_i = ES_{total}$ を手計算で確認せよ。\n"
+            "3. `mean_excess_threshold` に対する `mean_excess_curve` の傾きから GPD の `xi/(1-xi)` を読み取り、`gpd_xi_hat` と比較せよ。\n"
+            "4. `pnl_matrix` の尾部シナリオ集合を取り出し、`es_components` の加法性 `sum_i CES_i = ES_total` を手計算で確認せよ。\n"
             "5. `factor_moves`・`vol_moves` を半分にしたとき、delta-only 残差と delta-gamma-vega 残差の縮小率の違い（線形 vs 二次）を予測し、`taylor_*_half` で検算せよ。"
         ),
         "citations": "Kupiec (1995); Christoffersen (1998); BCBS (1996); Barone-Adesi, Giannopoulos & Vosper (1999); McNeil & Frey (2000); Tasche (1999).",
