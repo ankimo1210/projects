@@ -25,6 +25,13 @@ AXIS_LINE = "#c3c2b7"
 MUTED_TEXT = "#898781"
 CATEGORICAL = ["#2a78d6", "#008300", "#e87ba4", "#eda100",
                "#1baf7a", "#eb6834", "#4a3aa7", "#e34948"]
+# For thin 2px lines, skip the palette's WARN-contrast slots (magenta #e87ba4,
+# yellow #eda100, aqua #1baf7a — all sub-3:1 on the light surface per
+# scripts/validate_palette.js); thin marks are exactly where low contrast is
+# risky, unlike thick fills where the palette's own WARN is tolerable behind
+# the legend. Relative fixed order is preserved (slot 1, then 2, then 6),
+# just skipping the WARN slots rather than slicing the first N.
+LINE_SAFE = [CATEGORICAL[0], CATEGORICAL[1], CATEGORICAL[5]]
 
 
 def _style(fig):
@@ -55,7 +62,7 @@ def body_page() -> None:
         else:
             renamed = sub.rename(columns={m: JP_LABELS[m] for m in metrics})
             cols = [JP_LABELS[m] for m in metrics]
-            fig = px.line(renamed, x="date", y=cols, color_discrete_sequence=CATEGORICAL,
+            fig = px.line(renamed, x="date", y=cols, color_discrete_sequence=LINE_SAFE,
                          labels={"date": "日付", "value": "%", "variable": ""})
             fig.update_traces(line_width=2)
         st.plotly_chart(_style(fig), use_container_width=True, theme=None)
