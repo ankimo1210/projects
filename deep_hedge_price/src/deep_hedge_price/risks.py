@@ -47,6 +47,7 @@ class RiskObjective(nn.Module):
             self.register_parameter("q", None)
 
     def forward(self, loss: torch.Tensor) -> torch.Tensor:
+        """Evaluate the configured risk objective on hedging losses."""
         if self.config.objective == "mse":
             return mse_risk(loss)
         normalized = loss / self.s0

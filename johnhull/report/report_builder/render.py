@@ -64,6 +64,15 @@ def _fragment(spec, log) -> dict:
 def render_site(output_dir: Path | None = None, log=print) -> Path:
     out = Path(output_dir) if output_dir is not None else SITE_DIR
     out.mkdir(parents=True, exist_ok=True)
+    expected_html = {
+        "index.html",
+        "gallery.html",
+        "integration.html",
+        *(f"{key}.html" for key in BOOKS),
+    }
+    for stale in out.glob("*.html"):
+        if stale.name not in expected_html:
+            stale.unlink()
     assets_out = out / "assets"
     assets_out.mkdir(parents=True, exist_ok=True)
 

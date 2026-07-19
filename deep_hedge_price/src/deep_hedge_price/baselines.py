@@ -10,9 +10,7 @@ from .config import MarketConfig
 
 def no_hedge_deltas(paths: torch.Tensor, config: MarketConfig) -> torch.Tensor:
     """Return zero stock positions."""
-    return torch.zeros(
-        (paths.shape[0], config.n_steps), device=paths.device, dtype=paths.dtype
-    )
+    return torch.zeros((paths.shape[0], config.n_steps), device=paths.device, dtype=paths.dtype)
 
 
 def black_scholes_deltas(paths: torch.Tensor, config: MarketConfig) -> torch.Tensor:

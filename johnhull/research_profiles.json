@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "enabled_by_default": false,
+  "core_gate_dependency": false,
+  "network_download": false,
+  "tracks": {
+    "surface_inverse": ["direct_inverse", "vae", "normalizing_flow", "simulation_based_inference"],
+    "surface_dynamics": ["local_foundation_zero_shot", "conditional_diffusion"],
+    "spx_vix": ["signature_model", "perturbed_optimal_transport"],
+    "zero_dte": ["differential_ml", "pide_surrogate"],
+    "climate_energy": ["storage_real_option"]
+  },
+  "promotion_rule": "A research model enters core only after beating a mature baseline on common data while passing hard checks and reproducibility review."
+}

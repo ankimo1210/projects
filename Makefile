@@ -9,7 +9,7 @@
 # `aisan_lbo_case/` uses requirements.txt; `csharp_calc/` is .NET;
 # `rates_volatility_model/`, `notebooks/` have no managed env.
 
-.PHONY: help install sync lint fmt fmt-fix test clean tree report books hull-report hull-book rough-vol optimal-execution
+.PHONY: help install sync lint fmt fmt-fix test clean tree report books hull-report hull-book hull-artifacts-check hull-notebooks-check hull-release-check hull-release rough-vol optimal-execution
 
 help:
 	@echo "Workspace targets (run from repo root):"
@@ -25,6 +25,11 @@ help:
 	@echo "  make books    - build the analytics Jupyter Books"
 	@echo "  make hull-report - build the offline johnhull portal (johnhull/report/site/)"
 	@echo "  make hull-book   - build the johnhull Jupyter Book (johnhull/book/_build/)"
+	@echo "  make hull-artifacts-check - rebuild vol 19-25 in /tmp and compare references"
+	@echo "  make hull-notebooks-check - fresh-execute vol 18-25 in /tmp"
+	@echo "  make hull-release-check - verify the johnhull A5-A8 release candidate contract"
+	@echo "    add HULL_RELEASE_FLAGS=--require-tracked after committing release files"
+	@echo "  make hull-release - fresh project tests/lint/notebooks/report/book/release gate"
 	@echo "  make rough-vol   - rough_volatility quick demo (experiments + report + notebook)"
 	@echo "  make optimal-execution - optimal_execution quick end-to-end visual lab"
 	@echo ""
@@ -73,6 +78,26 @@ hull-report:
 
 hull-book:
 	uv run --no-sync jupyter-book build johnhull/book/
+
+hull-notebooks-check:
+	uv run --no-sync --package hullkit python johnhull/scripts/verify_frontier_notebooks.py
+
+hull-artifacts-check:
+	uv run --no-sync --package hullkit python johnhull/scripts/verify_frontier_artifacts.py
+
+hull-release-check:
+	PYTHONPATH=johnhull/report uv run --no-sync --package hullkit python johnhull/scripts/verify_release.py $(HULL_RELEASE_FLAGS)
+
+hull-release:
+	uv run --no-sync --package deep-hedge-price pytest -s -q deep_hedge_price/tests
+	uv run --no-sync --package hullkit pytest -s -q johnhull/hullkit/tests johnhull/report/tests
+	uv run --no-sync ruff check deep_hedge_price/src deep_hedge_price/tests deep_hedge_price/scripts deep_hedge_price/notebooks/02_neural_pricing_surrogate.ipynb johnhull/hullkit/src johnhull/hullkit/tests johnhull/scripts johnhull/report/report_builder johnhull/report/tests
+	uv run --no-sync ruff format --check deep_hedge_price/src deep_hedge_price/tests deep_hedge_price/scripts deep_hedge_price/notebooks/02_neural_pricing_surrogate.ipynb johnhull/hullkit/src johnhull/hullkit/tests johnhull/scripts johnhull/report/report_builder johnhull/report/tests
+	$(MAKE) hull-artifacts-check
+	$(MAKE) hull-notebooks-check
+	$(MAKE) hull-report
+	$(MAKE) hull-book
+	$(MAKE) hull-release-check
 
 rough-vol:
 	cd rough_volatility && $(MAKE) demo

@@ -24,11 +24,7 @@ def scaffold(core: str, intuition: str, practice: str) -> str:
 
     Renders as a single blockquote with three labelled lines.
     """
-    return (
-        f"> **核心** — {core}<br>\n"
-        f"> **直感** — {intuition}<br>\n"
-        f"> **実務** — {practice}"
-    )
+    return f"> **核心** — {core}<br>\n> **直感** — {intuition}<br>\n> **実務** — {practice}"
 
 
 def practice_box(title: str, body: str) -> str:
