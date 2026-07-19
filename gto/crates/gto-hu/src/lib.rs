@@ -5,6 +5,7 @@
 //! levels, exploitability is always reported alongside strategies.
 
 pub mod bench;
+pub mod checkpoint;
 pub mod game;
 pub mod games;
 pub mod ranges;

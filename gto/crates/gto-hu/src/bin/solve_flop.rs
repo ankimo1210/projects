@@ -17,18 +17,22 @@
 //! 100bb SRP trees need card bucketing (design spec §8, Phase 6) and are
 //! rejected here rather than silently swapping the machine to death.
 
-use std::path::PathBuf;
+use std::io;
+use std::path::{Path, PathBuf};
 use std::process::exit;
 use std::time::Instant;
 
 use gto_core::eval::parse_card;
+use gto_hu::checkpoint::{self, current_build_id, CheckpointTrigger};
 use gto_hu::game::BB;
 use gto_hu::ranges::uniform_excluding;
 use gto_hu::reports::{
     tree_stats, write_flop_strategy_csv, write_flop_summary_json, write_turn_aggregate_csv,
     FlopSolverStats,
 };
-use gto_hu::solver::{dense_table_bytes_abstracted, Abstraction, CfrVariant, ChanceMode, FlopSolver};
+use gto_hu::solver::{
+    dense_table_bytes_abstracted, Abstraction, CfrVariant, ChanceMode, FlopSolver,
+};
 use gto_hu::tree::{build_flop_tree, FlopTreeConfig};
 
 fn usage() -> ! {
@@ -36,7 +40,10 @@ fn usage() -> ! {
         "usage: solve-hu-flop --board AhKd7s --pot <bb> --stack <bb> \
          [--iterations N=10000] [--variant cfr+|dcfr] [--pot-type srp|3bp] \
          [--mode sample|enumerate] [--seed N=42] [--out DIR] [--max-table-gb G=8] \
-         [--buckets-river K=0 (0=exact)] [--buckets-turn K=0 (0=exact)]"
+         [--buckets-river K=0 (0=exact)] [--buckets-turn K=0 (0=exact)] \
+         [--checkpoint-dir PATH] [--checkpoint-every-minutes N=30] \
+         [--checkpoint-every-iters N] [--resume auto|PATH] \
+         [--keep-checkpoints N=2]"
     );
     exit(2);
 }
@@ -75,6 +82,12 @@ fn main() {
     let mut buckets_river: usize = 0;
     let mut buckets_turn: usize = 0;
     let mut board_raw = String::new();
+    let mut checkpoint_dir: Option<PathBuf> = None;
+    let mut checkpoint_every_minutes = 30u64;
+    let mut checkpoint_every_iters: Option<u32> = None;
+    let mut checkpoint_interval_requested = false;
+    let mut resume: Option<String> = None;
+    let mut keep_checkpoints = 2usize;
 
     let mut i = 0;
     while i < args.len() {
@@ -150,6 +163,28 @@ fn main() {
                 buckets_turn = need(i).parse().unwrap_or_else(|_| usage());
                 i += 2;
             }
+            "--checkpoint-dir" => {
+                checkpoint_dir = Some(PathBuf::from(need(i)));
+                i += 2;
+            }
+            "--checkpoint-every-minutes" => {
+                checkpoint_every_minutes = need(i).parse().unwrap_or_else(|_| usage());
+                checkpoint_interval_requested = true;
+                i += 2;
+            }
+            "--checkpoint-every-iters" => {
+                checkpoint_every_iters = Some(need(i).parse().unwrap_or_else(|_| usage()));
+                checkpoint_interval_requested = true;
+                i += 2;
+            }
+            "--resume" => {
+                resume = Some(need(i));
+                i += 2;
+            }
+            "--keep-checkpoints" => {
+                keep_checkpoints = need(i).parse().unwrap_or_else(|_| usage());
+                i += 2;
+            }
             _ => usage(),
         }
     }
@@ -161,6 +196,47 @@ fn main() {
     if pot <= 0 || pot % 2 != 0 || stack <= 0 {
         eprintln!("error: pot must be positive and split evenly; stack must be positive");
         exit(2);
+    }
+    if keep_checkpoints < 2 {
+        eprintln!("error: --keep-checkpoints must be at least 2");
+        exit(2);
+    }
+    if checkpoint_interval_requested && checkpoint_dir.is_none() && resume.is_none() {
+        eprintln!("error: checkpoint intervals require --checkpoint-dir");
+        exit(2);
+    }
+    if resume.as_deref() == Some("auto") && checkpoint_dir.is_none() {
+        eprintln!("error: --resume auto requires --checkpoint-dir");
+        exit(2);
+    }
+    if let Some(path) = resume.as_deref().filter(|value| *value != "auto") {
+        if checkpoint_dir.is_none() {
+            checkpoint_dir = Some(
+                Path::new(path)
+                    .parent()
+                    .filter(|parent| !parent.as_os_str().is_empty())
+                    .unwrap_or_else(|| Path::new("."))
+                    .to_path_buf(),
+            );
+        }
+    }
+    if resume.is_none() {
+        if let Some(dir) = checkpoint_dir.as_deref() {
+            match checkpoint::recovery_candidates(dir) {
+                Ok(_) => {
+                    eprintln!(
+                        "error: checkpoint generations already exist in {}; use --resume auto or a new directory",
+                        dir.display()
+                    );
+                    exit(1);
+                }
+                Err(error) if error.kind() == io::ErrorKind::NotFound => {}
+                Err(error) => {
+                    eprintln!("error: {error}");
+                    exit(1);
+                }
+            }
+        }
     }
 
     let cfg = match pot_type.as_str() {
@@ -181,7 +257,10 @@ fn main() {
 
     let tree = build_flop_tree(pot, stack, &cfg);
     let ts = tree_stats(&tree);
-    let abs = Abstraction { buckets_river, buckets_turn };
+    let abs = Abstraction {
+        buckets_river,
+        buckets_turn,
+    };
     let dense = dense_table_bytes_abstracted(&tree, abs);
     eprintln!(
         "tree: {} nodes ({} action, {} chance, {} fold, {} showdown), dense tables {:.2} GB (river rows: {})",
@@ -217,18 +296,111 @@ fn main() {
         setup_start.elapsed().as_secs_f64()
     );
 
+    let build_id = current_build_id();
+    let mut done = 0u32;
+    match resume.as_deref() {
+        None => {}
+        Some("auto") => match solver.resume_latest(checkpoint_dir.as_deref().unwrap(), &build_id) {
+            Ok(info) => {
+                done = info.iteration;
+                eprintln!(
+                    "resumed {} at iter {} ({:.2} MiB, read+validate {:.2}s)",
+                    info.path.display(),
+                    done,
+                    info.bytes as f64 / (1024.0 * 1024.0),
+                    info.io_s
+                );
+            }
+            Err(error) if error.kind() == io::ErrorKind::NotFound => {
+                eprintln!("no prior checkpoint found; starting a new solve");
+            }
+            Err(error) => {
+                eprintln!("error: {error}");
+                exit(1);
+            }
+        },
+        Some(path) => match solver.restore_checkpoint(Path::new(path), &build_id) {
+            Ok(info) => {
+                done = info.iteration;
+                eprintln!("resumed {} at iter {}", info.path.display(), done);
+            }
+            Err(error) => {
+                eprintln!("error: {error}");
+                exit(1);
+            }
+        },
+    }
+    if done > iterations {
+        eprintln!("error: checkpoint iteration {done} exceeds requested total {iterations}");
+        exit(1);
+    }
+
     let start = Instant::now();
-    let chunk = (iterations / 10).max(1);
-    let mut done = 0;
-    while done < iterations {
-        let n = chunk.min(iterations - done);
-        solver.run(n);
-        done += n;
-        eprintln!(
-            "iter {done}/{iterations}  elapsed {:.1}s  tables {:.2} GB",
-            start.elapsed().as_secs_f64(),
-            solver.table_bytes() as f64 / 1e9,
-        );
+    let progress_every = (iterations / 10).max(1);
+    let mut trigger =
+        CheckpointTrigger::new(checkpoint_every_minutes, checkpoint_every_iters, done);
+    let mut last_saved = (resume.is_some() && done > 0).then_some(done);
+    if checkpoint_dir.is_some() {
+        while done < iterations {
+            solver.run(1);
+            done += 1;
+            if trigger.due(done) {
+                let info = solver
+                    .save_checkpoint(
+                        checkpoint_dir.as_deref().unwrap(),
+                        &build_id,
+                        keep_checkpoints,
+                    )
+                    .unwrap_or_else(|error| {
+                        eprintln!("error: checkpoint write failed: {error}");
+                        exit(1);
+                    });
+                eprintln!(
+                    "checkpoint {}: iter {}, {:.2} MiB, write {:.2}s",
+                    info.path.display(),
+                    info.iteration,
+                    info.bytes as f64 / (1024.0 * 1024.0),
+                    info.io_s
+                );
+                last_saved = Some(done);
+                trigger.mark_saved(done);
+            }
+            if done % progress_every == 0 || done == iterations {
+                eprintln!(
+                    "iter {done}/{iterations}  elapsed {:.1}s  tables {:.2} GB",
+                    start.elapsed().as_secs_f64(),
+                    solver.table_bytes() as f64 / 1e9,
+                );
+            }
+        }
+    } else {
+        while done < iterations {
+            let n = progress_every.min(iterations - done);
+            solver.run(n);
+            done += n;
+            eprintln!(
+                "iter {done}/{iterations}  elapsed {:.1}s  tables {:.2} GB",
+                start.elapsed().as_secs_f64(),
+                solver.table_bytes() as f64 / 1e9,
+            );
+        }
+    }
+    if let Some(dir) = checkpoint_dir.as_deref() {
+        if last_saved != Some(done) {
+            let info = solver
+                .save_checkpoint(dir, &build_id, keep_checkpoints)
+                .unwrap_or_else(|error| {
+                    eprintln!("error: final checkpoint write failed: {error}");
+                    exit(1);
+                });
+            eprintln!(
+                "final checkpoint {}: iter {}, {:.2} MiB, write {:.2}s",
+                info.path.display(),
+                info.iteration,
+                info.bytes as f64 / (1024.0 * 1024.0),
+                info.io_s
+            );
+        }
     }
     let elapsed = start.elapsed().as_secs_f64();
     eprintln!("computing exact best response (49 turns × 48 rivers enumerated)…");
