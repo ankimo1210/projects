@@ -1,4 +1,4 @@
-"""Build vol 19--25 references from the tested implementation APIs."""
+"""Build vol 19--26 references from the tested implementation APIs."""
 
 from __future__ import annotations
 
@@ -31,6 +31,7 @@ FILES = {
     23: ("23_rfr_post_libor", "metrics.json", "rfr_scenarios.npz"),
     24: ("24_crypto_market_structure", "metrics.json", "stress_paths.npz"),
     25: ("25_climate_energy", "metrics.json", "scenarios.npz"),
+    26: ("26_inflation_jgbi", "metrics.json", "inflation_scenarios.npz"),
 }
 
 UNITS_BY_VOLUME: dict[int, dict[str, str]] = {
@@ -265,6 +266,48 @@ UNITS_BY_VOLUME: dict[int, dict[str, str]] = {
         "hedge_ratio": "dimensionless hedge ratio",
         "hedge_ratio_residual": "synthetic monetary units",
     },
+    26: {
+        "maturity": "years",
+        "nominal_discount_factor": "discount factor",
+        "real_discount_factor": "discount factor",
+        "hw_market_discount_factor": "discount factor",
+        "hw_model_discount_factor": "discount factor",
+        "hw_swaption_expiry": "years",
+        "hw_swaption_price": "currency units per unit notional",
+        "month_index": "calendar months from base date",
+        "month_names": "label",
+        "seasonality_log_factor": "log CPI multiplier",
+        "cpi_trend": "synthetic CPI index points",
+        "cpi_seasonal": "synthetic CPI index points",
+        "zcis_maturity": "years",
+        "zcis_quote": "annualized decimal inflation rate",
+        "zcis_repriced": "annualized decimal inflation rate",
+        "yoy_payment": "years",
+        "yoy_deterministic_ratio": "CPI index ratio",
+        "yoy_jy_ratio": "expected CPI index ratio",
+        "jy_observation": "years",
+        "jy_forward_index": "synthetic CPI index points",
+        "jy_mc_forward_index": "synthetic CPI index points",
+        "jy_mc_standard_error": "synthetic CPI index points",
+        "jgbi_payment_year": "years from issue",
+        "jgbi_cashflow_names": "label",
+        "jgbi_index_ratio": "indexation coefficient",
+        "jgbi_coupon": "currency units per 100 face",
+        "jgbi_unfloored_principal": "currency units per 100 face",
+        "jgbi_floored_principal": "currency units per 100 face",
+        "inflation_volatility": "annualized decimal volatility",
+        "floor_analytic": "currency units per 100 face",
+        "floor_mc": "currency units per 100 face",
+        "floor_mc_standard_error": "currency units per 100 face",
+        "bei_names": "label",
+        "breakeven_inflation": "annualized decimal inflation rate",
+        "hedge_risk_names": "label",
+        "unhedged_normalized_risk": "normalized risk units",
+        "hedged_normalized_risk": "normalized risk units",
+        "floor_value": "currency units per 100 face",
+        "floor_cpi_delta": "currency units per CPI index point",
+        "floor_inflation_vega": "currency units per unit volatility",
+    },
 }
 
 
@@ -331,10 +374,15 @@ def _preserve_vol21_timing_reference(
     if not json_path.exists() or not npz_path.exists():
         return
     previous = json.loads(json_path.read_text(encoding="utf-8"))
+    previous_benchmark = previous.get("benchmark", {})
+    stable_previous = {
+        key: value for key, value in previous_benchmark.items() if key != "sources"
+    }
+    stable_current = {key: value for key, value in benchmark.items() if key != "sources"}
     if (
         previous.get("generated_by") != "johnhull/scripts/build_frontier_artifacts.py"
         or previous.get("generator_api") != "hullkit.frontier_reference.build_frontier_reference"
-        or previous.get("benchmark") != benchmark
+        or stable_previous != stable_current
     ):
         return
     with np.load(npz_path, allow_pickle=False) as archive:

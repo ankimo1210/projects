@@ -1,4 +1,4 @@
-"""API-to-artifact contract tests for beyond-Hull volumes 21--25."""
+"""API-to-artifact contract tests for beyond-Hull volumes 21--26."""
 
 import numpy as np
 import pytest
@@ -7,7 +7,7 @@ from hullkit import frontier_reference
 
 @pytest.fixture(scope="module")
 def references() -> dict[int, frontier_reference.FrontierReference]:
-    return {volume: frontier_reference.build_frontier_reference(volume) for volume in range(21, 26)}
+    return {volume: frontier_reference.build_frontier_reference(volume) for volume in range(21, 27)}
 
 
 @pytest.mark.parametrize(
@@ -141,6 +141,37 @@ def references() -> dict[int, frontier_reference.FrontierReference]:
                 "ppa_profile_risk",
             },
             {"weather_premium_principle", "price_generation_correlation"},
+        ),
+        (
+            26,
+            {
+                "nominal_discount_factor",
+                "real_discount_factor",
+                "hw_market_discount_factor",
+                "hw_model_discount_factor",
+                "seasonality_log_factor",
+                "cpi_trend",
+                "cpi_seasonal",
+                "zcis_quote",
+                "zcis_repriced",
+                "yoy_deterministic_ratio",
+                "yoy_jy_ratio",
+                "jy_forward_index",
+                "jy_mc_forward_index",
+                "jgbi_index_ratio",
+                "jgbi_coupon",
+                "jgbi_unfloored_principal",
+                "jgbi_floored_principal",
+                "floor_analytic",
+                "floor_mc",
+                "breakeven_inflation",
+            },
+            {
+                "hw_curve_fit_max_error",
+                "zcis_repricing_max_error",
+                "floor_decomposition_error",
+                "measure_treatment",
+            },
         ),
     ],
 )
@@ -357,13 +388,37 @@ def test_volume25_exposes_incomplete_market_and_hedge_sensitivities(
     assert -1.0 < reference.metrics["price_generation_correlation"] < 0.0
 
 
+def test_volume26_exposes_measure_consistent_inflation_and_jgbi_identities(
+    references: dict[int, frontier_reference.FrontierReference],
+) -> None:
+    reference = references[26]
+    arrays = reference.arrays
+    np.testing.assert_allclose(
+        arrays["hw_market_discount_factor"], arrays["hw_model_discount_factor"], atol=1e-14
+    )
+    assert abs(arrays["seasonality_log_factor"].sum()) < 1e-12
+    np.testing.assert_allclose(arrays["zcis_quote"], arrays["zcis_repriced"], atol=1e-12)
+    assert np.max(np.abs(arrays["jy_mc_forward_index"] - arrays["jy_forward_index"])) < (
+        3.0 * np.max(arrays["jy_mc_standard_error"])
+    )
+    assert np.all(np.diff(arrays["floor_analytic"]) >= 0.0)
+    assert reference.metrics["floor_mc_zscore_max"] < 3.0
+    assert arrays["jgbi_floored_principal"][-1] > arrays["jgbi_unfloored_principal"][-1]
+    assert arrays["jgbi_coupon"].shape == arrays["jgbi_index_ratio"].shape
+    assert arrays["breakeven_inflation"][1] != pytest.approx(
+        arrays["breakeven_inflation"][0]
+    )
+    assert reference.metrics["principal_floor_redemption_only"] is True
+    assert reference.metrics["measure_treatment"] == "nominal_payment_forward"
+
+
 def test_dispatcher_rejects_non_frontier_volume_and_accepts_explicit_seed() -> None:
-    with pytest.raises(ValueError, match=r"\[21, 25\]"):
+    with pytest.raises(ValueError, match=r"\[21, 26\]"):
         frontier_reference.build_frontier_reference(20)
     assert frontier_reference.build_frontier_reference(24, seed=7).seed == 7
 
 
-@pytest.mark.parametrize("volume", range(21, 26))
+@pytest.mark.parametrize("volume", range(21, 27))
 def test_fixed_seed_reproduces_all_non_timing_values(
     references: dict[int, frontier_reference.FrontierReference],
     volume: int,

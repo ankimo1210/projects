@@ -29,3 +29,17 @@ research trackの失敗や未導入dependencyから独立する。
 
 無効化されたtrackの正本は`johnhull/research_profiles.json`と、`deep_hedge_price/configs/research_*.yaml`である。
 既定ではnetwork downloadもlocal checkpoint探索も行わない。
+
+## Volume 26 inflation/JGBi reference
+
+vol 26 の `metrics.json` と `inflation_scenarios.npz` も同じ
+`synthetic-offline` 方針に従う。名目・実質curve、CPI fixing、月次seasonality、
+ZCIS/YoY quote、JGBi cash flow、Jarrow–Yildirim option/Monte Carlo sample はすべて
+公開 `hullkit` API と固定seedから生成し、実際の総務省CPI、財務省銘柄データ、
+broker quote、顧客portfolioを含めない。
+
+JGBi convention 実装は Japan CPI excluding fresh food を入力とするが、reference
+artifact の index level は架空値である。実市場へ適用する利用者は、指数系列の
+vintage/rebase、銘柄固有のbase reference date、reopening/odd coupon条件、settlement
+calendar、データライセンスを別途検証する必要がある。vol 26 notebook は committed
+JSON/NPZだけを読み、network access、download、training、GPU検出を行わない。
