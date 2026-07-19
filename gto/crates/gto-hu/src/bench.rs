@@ -3,6 +3,7 @@
 //! Audit spec: `docs/superpowers/specs/2026-07-19-gtowizard-parity-ios-design.md`
 //! §5.0. Long-run checkpointing and JSON records are added by later P0a tasks.
 
+use crate::checkpoint::{CheckpointInfo, StableHasher};
 use crate::game::BB;
 use crate::ranges::{uniform_excluding, NUM_COMBOS};
 use crate::solver::{
@@ -15,6 +16,8 @@ use crate::tree::{
 };
 use gto_core::eval::parse_card;
 use std::fmt::Write as _;
+use std::io;
+use std::path::Path;
 use std::time::Instant;
 
 /// A common interface over the four production solver families measured by P0a.
@@ -64,6 +67,79 @@ impl CaseSolver {
             CaseSolver::TurnRiver(solver) => solver.table_bytes(),
             CaseSolver::Flop(solver) => solver.table_bytes(),
             CaseSolver::Blueprint(solver) => solver.table_bytes(),
+        }
+    }
+
+    pub fn checkpoint_supported(&self) -> bool {
+        matches!(self, Self::Flop(_) | Self::Blueprint(_))
+    }
+
+    pub fn iteration(&self) -> Option<u32> {
+        match self {
+            Self::Flop(solver) => Some(solver.iteration()),
+            Self::Blueprint(solver) => Some(solver.iteration()),
+            Self::River(_) | Self::TurnRiver(_) => None,
+        }
+    }
+
+    pub fn state_checksum(&self) -> Option<u64> {
+        match self {
+            Self::Flop(solver) => Some(solver.state_checksum()),
+            Self::Blueprint(solver) => Some(solver.state_checksum()),
+            Self::River(_) | Self::TurnRiver(_) => None,
+        }
+    }
+
+    fn checkpoint_unsupported() -> io::Error {
+        io::Error::new(
+            io::ErrorKind::Unsupported,
+            "durable checkpoints are supported only for flop and blueprint cases",
+        )
+    }
+
+    pub fn save_checkpoint(
+        &self,
+        dir: &Path,
+        build_id: &str,
+        keep: usize,
+        companion: Option<&[u8]>,
+    ) -> io::Result<CheckpointInfo> {
+        match self {
+            Self::Flop(solver) => {
+                solver.save_checkpoint_with_companion(dir, build_id, keep, companion)
+            }
+            Self::Blueprint(solver) => {
+                solver.save_checkpoint_with_companion(dir, build_id, keep, companion)
+            }
+            Self::River(_) | Self::TurnRiver(_) => Err(Self::checkpoint_unsupported()),
+        }
+    }
+
+    pub fn validate_checkpoint(&self, path: &Path, build_id: &str) -> io::Result<CheckpointInfo> {
+        match self {
+            Self::Flop(solver) => solver.validate_checkpoint(path, build_id),
+            Self::Blueprint(solver) => solver.validate_checkpoint(path, build_id),
+            Self::River(_) | Self::TurnRiver(_) => Err(Self::checkpoint_unsupported()),
+        }
+    }
+
+    pub fn restore_checkpoint(
+        &mut self,
+        path: &Path,
+        build_id: &str,
+    ) -> io::Result<CheckpointInfo> {
+        match self {
+            Self::Flop(solver) => solver.restore_checkpoint(path, build_id),
+            Self::Blueprint(solver) => solver.restore_checkpoint(path, build_id),
+            Self::River(_) | Self::TurnRiver(_) => Err(Self::checkpoint_unsupported()),
+        }
+    }
+
+    pub fn resume_latest(&mut self, dir: &Path, build_id: &str) -> io::Result<CheckpointInfo> {
+        match self {
+            Self::Flop(solver) => solver.resume_latest(dir, build_id),
+            Self::Blueprint(solver) => solver.resume_latest(dir, build_id),
+            Self::River(_) | Self::TurnRiver(_) => Err(Self::checkpoint_unsupported()),
         }
     }
 }
@@ -306,6 +382,354 @@ pub struct RunTiming {
     pub solve_s: f64,
     pub checkpoint_br_s: f64,
     pub final_br_s: f64,
+    pub checkpoint_s: f64,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct RunSegment {
+    pub start_iters: u32,
+    pub end_iters: u32,
+    pub build_s: f64,
+    pub solve_s: f64,
+    pub br_s: f64,
+    pub checkpoint_s: f64,
+}
+
+#[derive(Debug, Clone)]
+pub struct BenchRunState {
+    pub run_fingerprint: u64,
+    pub iteration: u32,
+    pub resume_count: u32,
+    pub build_s: f64,
+    pub solve_s: f64,
+    pub br_s: f64,
+    pub checkpoint_s: f64,
+    pub checkpoints: Vec<Checkpoint>,
+    pub segments: Vec<RunSegment>,
+}
+
+impl BenchRunState {
+    pub fn new(run_fingerprint: u64, build_s: f64) -> Self {
+        Self {
+            run_fingerprint,
+            iteration: 0,
+            resume_count: 0,
+            build_s,
+            solve_s: 0.0,
+            br_s: 0.0,
+            checkpoint_s: 0.0,
+            checkpoints: Vec::new(),
+            segments: vec![RunSegment {
+                start_iters: 0,
+                end_iters: 0,
+                build_s,
+                solve_s: 0.0,
+                br_s: 0.0,
+                checkpoint_s: 0.0,
+            }],
+        }
+    }
+
+    pub fn begin_resume(&mut self, iteration: u32, build_s: f64) {
+        self.iteration = iteration;
+        self.resume_count += 1;
+        self.build_s += build_s;
+        self.segments.push(RunSegment {
+            start_iters: iteration,
+            end_iters: iteration,
+            build_s,
+            solve_s: 0.0,
+            br_s: 0.0,
+            checkpoint_s: 0.0,
+        });
+    }
+
+    pub fn add_solve(&mut self, iteration: u32, seconds: f64) {
+        self.iteration = iteration;
+        self.solve_s += seconds;
+        let segment = self.segments.last_mut().expect("run has a process segment");
+        segment.end_iters = iteration;
+        segment.solve_s += seconds;
+    }
+
+    pub fn add_checkpoint(&mut self, checkpoint: Checkpoint) {
+        self.br_s += checkpoint.br_s;
+        self.segments
+            .last_mut()
+            .expect("run has a process segment")
+            .br_s += checkpoint.br_s;
+        self.checkpoints.push(checkpoint);
+    }
+
+    pub fn add_checkpoint_io(&mut self, seconds: f64) {
+        self.checkpoint_s += seconds;
+        self.segments
+            .last_mut()
+            .expect("run has a process segment")
+            .checkpoint_s += seconds;
+    }
+
+    pub fn timing(&self) -> RunTiming {
+        let final_br_s = self
+            .checkpoints
+            .last()
+            .filter(|checkpoint| checkpoint.iters == self.iteration)
+            .map_or(0.0, |checkpoint| checkpoint.br_s);
+        RunTiming {
+            build_s: self.build_s,
+            solve_s: self.solve_s,
+            checkpoint_br_s: self.br_s - final_br_s,
+            final_br_s,
+            checkpoint_s: self.checkpoint_s,
+        }
+    }
+
+    pub fn to_sidecar(&self, solver_state_checksum: u64) -> Vec<u8> {
+        let mut bytes =
+            Vec::with_capacity(80 + self.checkpoints.len() * 44 + self.segments.len() * 44);
+        bytes.extend_from_slice(b"GTOBEN1\0");
+        push_u32(&mut bytes, 1);
+        push_u64(&mut bytes, self.run_fingerprint);
+        push_u64(&mut bytes, solver_state_checksum);
+        push_u32(&mut bytes, self.iteration);
+        push_u32(&mut bytes, self.resume_count);
+        for value in [self.build_s, self.solve_s, self.br_s, self.checkpoint_s] {
+            push_f64(&mut bytes, value);
+        }
+        push_u32(&mut bytes, self.checkpoints.len() as u32);
+        for checkpoint in &self.checkpoints {
+            push_u32(&mut bytes, checkpoint.iters);
+            for value in [
+                checkpoint.solve_s,
+                checkpoint.br_s,
+                checkpoint.expl,
+                checkpoint.br[0],
+                checkpoint.br[1],
+            ] {
+                push_f64(&mut bytes, value);
+            }
+        }
+        push_u32(&mut bytes, self.segments.len() as u32);
+        for segment in &self.segments {
+            push_u32(&mut bytes, segment.start_iters);
+            push_u32(&mut bytes, segment.end_iters);
+            for value in [
+                segment.build_s,
+                segment.solve_s,
+                segment.br_s,
+                segment.checkpoint_s,
+            ] {
+                push_f64(&mut bytes, value);
+            }
+        }
+        let mut hasher = StableHasher::new(b"gto-hu/bench-sidecar/v1");
+        hasher.update(&bytes);
+        push_u64(&mut bytes, hasher.finish());
+        bytes
+    }
+
+    pub fn from_sidecar(bytes: &[u8]) -> io::Result<(Self, u64)> {
+        if bytes.len() < 8 {
+            return Err(invalid_sidecar("bench sidecar is truncated"));
+        }
+        let (body, checksum_bytes) = bytes.split_at(bytes.len() - 8);
+        let stored_checksum = u64::from_le_bytes(checksum_bytes.try_into().unwrap());
+        let mut hasher = StableHasher::new(b"gto-hu/bench-sidecar/v1");
+        hasher.update(body);
+        if stored_checksum != hasher.finish() {
+            return Err(invalid_sidecar("bench sidecar checksum mismatch"));
+        }
+
+        let mut reader = SidecarReader::new(body);
+        if reader.read_exact(8)? != b"GTOBEN1\0" {
+            return Err(invalid_sidecar("bench sidecar magic mismatch"));
+        }
+        let version = reader.read_u32()?;
+        if version != 1 {
+            return Err(invalid_sidecar(format!(
+                "bench sidecar version mismatch: {version}"
+            )));
+        }
+        let run_fingerprint = reader.read_u64()?;
+        let solver_state_checksum = reader.read_u64()?;
+        let iteration = reader.read_u32()?;
+        let resume_count = reader.read_u32()?;
+        let build_s = reader.read_f64()?;
+        let solve_s = reader.read_f64()?;
+        let br_s = reader.read_f64()?;
+        let checkpoint_s = reader.read_f64()?;
+        if [build_s, solve_s, br_s, checkpoint_s]
+            .into_iter()
+            .any(|value| value < 0.0)
+        {
+            return Err(invalid_sidecar("bench sidecar contains a negative timing"));
+        }
+
+        let checkpoint_count = reader.read_count(44, "checkpoints")?;
+        let mut checkpoints = Vec::with_capacity(checkpoint_count);
+        for _ in 0..checkpoint_count {
+            checkpoints.push(Checkpoint {
+                iters: reader.read_u32()?,
+                solve_s: reader.read_f64()?,
+                br_s: reader.read_f64()?,
+                expl: reader.read_f64()?,
+                br: [reader.read_f64()?, reader.read_f64()?],
+            });
+        }
+
+        let segment_count = reader.read_count(40, "segments")?;
+        let mut segments = Vec::with_capacity(segment_count);
+        for _ in 0..segment_count {
+            segments.push(RunSegment {
+                start_iters: reader.read_u32()?,
+                end_iters: reader.read_u32()?,
+                build_s: reader.read_f64()?,
+                solve_s: reader.read_f64()?,
+                br_s: reader.read_f64()?,
+                checkpoint_s: reader.read_f64()?,
+            });
+        }
+        if !reader.is_empty() {
+            return Err(invalid_sidecar("trailing bytes in bench sidecar"));
+        }
+        if checkpoints
+            .windows(2)
+            .any(|window| window[0].iters >= window[1].iters)
+            || checkpoints
+                .last()
+                .is_some_and(|checkpoint| checkpoint.iters > iteration)
+            || checkpoints.iter().any(|checkpoint| {
+                checkpoint.solve_s < 0.0 || checkpoint.br_s < 0.0 || checkpoint.expl < 0.0
+            })
+        {
+            return Err(invalid_sidecar(
+                "invalid checkpoint ordering in bench sidecar",
+            ));
+        }
+        if segments.is_empty() {
+            return Err(invalid_sidecar("bench sidecar has no process segments"));
+        }
+        if segments.iter().any(|segment| {
+            segment.start_iters > segment.end_iters
+                || segment.end_iters > iteration
+                || [
+                    segment.build_s,
+                    segment.solve_s,
+                    segment.br_s,
+                    segment.checkpoint_s,
+                ]
+                .into_iter()
+                .any(|value| value < 0.0)
+        }) {
+            return Err(invalid_sidecar("invalid process segment in bench sidecar"));
+        }
+
+        Ok((
+            Self {
+                run_fingerprint,
+                iteration,
+                resume_count,
+                build_s,
+                solve_s,
+                br_s,
+                checkpoint_s,
+                checkpoints,
+                segments,
+            },
+            solver_state_checksum,
+        ))
+    }
+}
+
+fn push_u32(bytes: &mut Vec<u8>, value: u32) {
+    bytes.extend_from_slice(&value.to_le_bytes());
+}
+
+fn push_u64(bytes: &mut Vec<u8>, value: u64) {
+    bytes.extend_from_slice(&value.to_le_bytes());
+}
+
+fn push_f64(bytes: &mut Vec<u8>, value: f64) {
+    push_u64(bytes, value.to_bits());
+}
+
+fn invalid_sidecar(message: impl Into<String>) -> io::Error {
+    io::Error::new(io::ErrorKind::InvalidData, message.into())
+}
+
+struct SidecarReader<'a> {
+    bytes: &'a [u8],
+    offset: usize,
+}
+
+impl<'a> SidecarReader<'a> {
+    fn new(bytes: &'a [u8]) -> Self {
+        Self { bytes, offset: 0 }
+    }
+
+    fn read_exact(&mut self, len: usize) -> io::Result<&'a [u8]> {
+        let end = self
+            .offset
+            .checked_add(len)
+            .ok_or_else(|| invalid_sidecar("bench sidecar offset overflow"))?;
+        let value = self
+            .bytes
+            .get(self.offset..end)
+            .ok_or_else(|| invalid_sidecar("bench sidecar is truncated"))?;
+        self.offset = end;
+        Ok(value)
+    }
+
+    fn read_u32(&mut self) -> io::Result<u32> {
+        Ok(u32::from_le_bytes(self.read_exact(4)?.try_into().unwrap()))
+    }
+
+    fn read_u64(&mut self) -> io::Result<u64> {
+        Ok(u64::from_le_bytes(self.read_exact(8)?.try_into().unwrap()))
+    }
+
+    fn read_f64(&mut self) -> io::Result<f64> {
+        let value = f64::from_bits(self.read_u64()?);
+        if !value.is_finite() {
+            return Err(invalid_sidecar("bench sidecar contains a non-finite value"));
+        }
+        Ok(value)
+    }
+
+    fn read_count(&mut self, item_bytes: usize, what: &str) -> io::Result<usize> {
+        let count = self.read_u32()? as usize;
+        if count > self.bytes.len().saturating_sub(self.offset) / item_bytes {
+            return Err(invalid_sidecar(format!(
+                "bench sidecar {what} count exceeds remaining bytes"
+            )));
+        }
+        Ok(count)
+    }
+
+    fn is_empty(&self) -> bool {
+        self.offset == self.bytes.len()
+    }
+}
+
+pub fn bench_run_fingerprint(
+    case: &str,
+    config: &str,
+    label: &str,
+    seed: u64,
+    iterations: u32,
+    points: usize,
+    threads: usize,
+) -> u64 {
+    let mut hasher = StableHasher::new(b"gto-hu/bench-run/v1");
+    for value in [case, config, label] {
+        hasher.write_u64(value.len() as u64);
+        hasher.update(value.as_bytes());
+    }
+    hasher.write_u64(seed);
+    hasher.write_u32(iterations);
+    hasher.write_u64(points as u64);
+    hasher.write_u64(threads as u64);
+    hasher.finish()
 }
 
 /// Ascending geometric cumulative iteration counts, deduplicated and ending
@@ -374,6 +798,7 @@ pub fn run_with_checkpoints(
             solve_s,
             checkpoint_br_s: br_total_s - final_br_s,
             final_br_s,
+            checkpoint_s: 0.0,
         },
     )
 }
@@ -432,9 +857,11 @@ pub struct RunRecord {
     pub cmdline: String,
     pub table_bytes: usize,
     pub peak_rss_mb: f64,
+    pub state_checksum: Option<u64>,
     pub resume_count: u32,
     pub timing: RunTiming,
     pub checkpoints: Vec<Checkpoint>,
+    pub segments: Vec<RunSegment>,
 }
 
 fn escape_json(value: &str) -> String {
@@ -459,6 +886,9 @@ fn escape_json(value: &str) -> String {
 
 impl RunRecord {
     pub fn to_json(&self) -> String {
+        let state_checksum = self
+            .state_checksum
+            .map_or_else(|| "null".to_string(), |value| format!("\"{value:016x}\""));
         let checkpoints: Vec<String> = self
             .checkpoints
             .iter()
@@ -475,6 +905,22 @@ impl RunRecord {
                 )
             })
             .collect();
+        let segments: Vec<String> = self
+            .segments
+            .iter()
+            .map(|segment| {
+                format!(
+                    "    {{\"start_iters\": {}, \"end_iters\": {}, \"build_s\": {:.3}, \
+                     \"solve_s\": {:.3}, \"br_s\": {:.3}, \"checkpoint_s\": {:.3}}}",
+                    segment.start_iters,
+                    segment.end_iters,
+                    segment.build_s,
+                    segment.solve_s,
+                    segment.br_s,
+                    segment.checkpoint_s
+                )
+            })
+            .collect();
         format!(
             concat!(
                 "{{\n",
@@ -484,10 +930,13 @@ impl RunRecord {
                 "  \"iterations\": {},\n  \"points\": {},\n  \"threads\": {},\n",
                 "  \"build_profile\": \"{}\",\n  \"cpu\": \"{}\",\n  \"kernel\": \"{}\",\n",
                 "  \"cmdline\": \"{}\",\n",
-                "  \"table_bytes\": {},\n  \"peak_rss_mb\": {:.1},\n  \"resume_count\": {},\n",
+                "  \"table_bytes\": {},\n  \"peak_rss_mb\": {:.1},\n",
+                "  \"state_checksum\": {},\n  \"resume_count\": {},\n",
                 "  \"timing\": {{\"build_s\": {:.3}, \"solve_s\": {:.3}, ",
-                "\"checkpoint_br_s\": {:.3}, \"final_br_s\": {:.3}}},\n",
-                "  \"checkpoints\": [\n{}\n  ]\n}}\n",
+                "\"checkpoint_br_s\": {:.3}, \"final_br_s\": {:.3}, ",
+                "\"checkpoint_s\": {:.3}}},\n",
+                "  \"checkpoints\": [\n{}\n  ],\n",
+                "  \"segments\": [\n{}\n  ]\n}}\n",
             ),
             self.schema_version,
             escape_json(&self.case),
@@ -505,12 +954,15 @@ impl RunRecord {
             escape_json(&self.cmdline),
             self.table_bytes,
             self.peak_rss_mb,
+            state_checksum,
             self.resume_count,
             self.timing.build_s,
             self.timing.solve_s,
             self.timing.checkpoint_br_s,
             self.timing.final_br_s,
-            checkpoints.join(",\n")
+            self.timing.checkpoint_s,
+            checkpoints.join(",\n"),
+            segments.join(",\n")
         )
     }
 }

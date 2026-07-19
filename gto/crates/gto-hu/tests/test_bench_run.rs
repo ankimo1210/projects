@@ -1,6 +1,6 @@
 use gto_hu::bench::{
-    geometric_schedule, peak_rss_mb, reference_cases, run_with_checkpoints, Checkpoint, RunRecord,
-    RunTiming,
+    geometric_schedule, peak_rss_mb, reference_cases, run_with_checkpoints, BenchRunState,
+    Checkpoint, RunRecord, RunSegment, RunTiming,
 };
 
 #[test]
@@ -57,12 +57,14 @@ fn json_has_expected_keys_metadata_and_string_escaping() {
         cmdline: "solver-bench \\\"arg\\\"".into(),
         table_bytes: 123,
         peak_rss_mb: 1.5,
+        state_checksum: Some(0xDEAD_BEEF),
         resume_count: 0,
         timing: RunTiming {
             build_s: 0.1,
             solve_s: 0.5,
             checkpoint_br_s: 0.2,
             final_br_s: 0.3,
+            checkpoint_s: 0.4,
         },
         checkpoints: vec![Checkpoint {
             iters: 1,
@@ -70,6 +72,14 @@ fn json_has_expected_keys_metadata_and_string_escaping() {
             br_s: 0.3,
             expl: 2.0,
             br: [1.0, 1.0],
+        }],
+        segments: vec![RunSegment {
+            start_iters: 0,
+            end_iters: 1,
+            build_s: 0.1,
+            solve_s: 0.5,
+            br_s: 0.3,
+            checkpoint_s: 0.4,
         }],
     };
     let json = record.to_json();
@@ -90,13 +100,16 @@ fn json_has_expected_keys_metadata_and_string_escaping() {
         "\"cmdline\"",
         "\"table_bytes\"",
         "\"peak_rss_mb\"",
+        "\"state_checksum\"",
         "\"resume_count\"",
         "\"timing\"",
         "\"build_s\"",
         "\"solve_s\"",
         "\"checkpoint_br_s\"",
         "\"final_br_s\"",
+        "\"checkpoint_s\"",
         "\"checkpoints\"",
+        "\"segments\"",
         "\"iters\"",
         "\"br_s\"",
         "\"expl\"",
@@ -108,4 +121,34 @@ fn json_has_expected_keys_metadata_and_string_escaping() {
     assert!(json.contains("quoted \\\"label\\\"\\nline"));
     assert!(json.contains("solver-bench \\\\\\\"arg\\\\\\\""));
     assert!(peak_rss_mb() > 0.0);
+}
+
+#[test]
+fn bench_sidecar_round_trips_timing_checkpoints_and_segments() {
+    let mut state = BenchRunState::new(0x1234, 1.25);
+    state.add_solve(4, 2.5);
+    state.add_checkpoint(Checkpoint {
+        iters: 4,
+        solve_s: 2.5,
+        br_s: 0.75,
+        expl: 1.0,
+        br: [-0.25, 2.25],
+    });
+    state.add_checkpoint_io(0.125);
+    let bytes = state.to_sidecar(0xDEAD_BEEF);
+    let (restored, solver_checksum) = BenchRunState::from_sidecar(&bytes).unwrap();
+
+    assert_eq!(solver_checksum, 0xDEAD_BEEF);
+    assert_eq!(restored.run_fingerprint, state.run_fingerprint);
+    assert_eq!(restored.iteration, 4);
+    assert_eq!(restored.checkpoints.len(), 1);
+    assert_eq!(
+        restored.checkpoints[0].br[0].to_bits(),
+        (-0.25f64).to_bits()
+    );
+    assert_eq!(restored.segments.len(), 1);
+
+    let mut corrupt = bytes;
+    corrupt[20] ^= 0x80;
+    assert!(BenchRunState::from_sidecar(&corrupt).is_err());
 }

@@ -26,6 +26,8 @@
 //! front (fail loud, spec §8).
 
 use std::collections::HashMap;
+use std::io;
+use std::path::Path;
 
 use super::regret::regret_matching;
 use super::rng::SplitMix64;
@@ -33,6 +35,10 @@ use super::showdown::{weighted_compat, ShowdownTable};
 use super::turn_river::ChanceMode;
 use super::variant::CfrVariant;
 use super::vector::ExplReport;
+use crate::checkpoint::{
+    self, CheckpointInfo, ExpectedCheckpoint, PayloadReader, PayloadWriter, SolverKind,
+    StableHasher,
+};
 use crate::game::terminal::{fold_payoffs, showdown_payoffs};
 use crate::game::Street;
 use crate::ranges::{Range, NUM_COMBOS};
@@ -140,6 +146,7 @@ pub struct FlopSolver {
     rng: SplitMix64,
     iteration: u32,
     combos: Vec<(u8, u8)>,
+    config_fingerprint: u64,
 }
 
 #[inline]
@@ -195,8 +202,16 @@ pub fn dense_table_bytes_bucketed(tree: &Tree, buckets_river: usize) -> usize {
 /// Dense table size under a street abstraction. The `--max-table-gb`
 /// gate uses this.
 pub fn dense_table_bytes_abstracted(tree: &Tree, abs: Abstraction) -> usize {
-    let river_dim = if abs.buckets_river == 0 { N } else { abs.buckets_river };
-    let turn_dim = if abs.buckets_turn == 0 { N } else { abs.buckets_turn };
+    let river_dim = if abs.buckets_river == 0 {
+        N
+    } else {
+        abs.buckets_river
+    };
+    let turn_dim = if abs.buckets_turn == 0 {
+        N
+    } else {
+        abs.buckets_turn
+    };
     tree.nodes
         .iter()
         .map(|n| match n.kind {
@@ -237,6 +252,309 @@ fn percentile_buckets(scores: &[f32], live: &[bool], k: usize) -> Vec<u16> {
         g = h;
     }
     out
+}
+
+fn hash_variant(hasher: &mut StableHasher, variant: CfrVariant) {
+    match variant {
+        CfrVariant::Vanilla => hasher.write_u8(0),
+        CfrVariant::CfrPlus {
+            avg_delay,
+            linear_weighting,
+        } => {
+            hasher.write_u8(1);
+            hasher.write_u32(avg_delay);
+            hasher.write_u8(u8::from(linear_weighting));
+        }
+        CfrVariant::Dcfr { alpha, beta, gamma } => {
+            hasher.write_u8(2);
+            hasher.write_f64(alpha);
+            hasher.write_f64(beta);
+            hasher.write_f64(gamma);
+        }
+    }
+}
+
+fn flop_config_fingerprint(
+    tree: &Tree,
+    flop_board: [u8; 3],
+    ranges: &[Range; 2],
+    variant: CfrVariant,
+    mode: ChanceMode,
+    abs: Abstraction,
+) -> u64 {
+    let mut hasher = StableHasher::new(b"gto-hu/flop-config/v1");
+    let tree_debug = format!("{tree:?}");
+    hasher.write_u64(tree_debug.len() as u64);
+    hasher.update(tree_debug.as_bytes());
+    hasher.update(&flop_board);
+    for range in ranges {
+        for &weight in &range.weights {
+            hasher.write_f64(weight);
+        }
+    }
+    hash_variant(&mut hasher, variant);
+    match mode {
+        ChanceMode::Enumerate => hasher.write_u8(0),
+        ChanceMode::Sample { seed } => {
+            hasher.write_u8(1);
+            hasher.write_u64(seed);
+        }
+    }
+    hasher.write_u64(abs.buckets_river as u64);
+    hasher.write_u64(abs.buckets_turn as u64);
+    hasher.finish()
+}
+
+fn checked_len_add(total: &mut u64, amount: u64) -> io::Result<()> {
+    *total = total
+        .checked_add(amount)
+        .ok_or_else(|| io::Error::new(io::ErrorKind::InvalidData, "checkpoint length overflow"))?;
+    Ok(())
+}
+
+fn encoded_f64_vec_len(values: &[f64]) -> io::Result<u64> {
+    let data = (values.len() as u64)
+        .checked_mul(8)
+        .ok_or_else(|| io::Error::new(io::ErrorKind::InvalidData, "checkpoint length overflow"))?;
+    8u64.checked_add(data)
+        .ok_or_else(|| io::Error::new(io::ErrorKind::InvalidData, "checkpoint length overflow"))
+}
+
+fn encoded_nested_u32_len(values: &[Vec<u32>]) -> io::Result<u64> {
+    let mut total = 8u64;
+    for row in values {
+        checked_len_add(&mut total, 8)?;
+        checked_len_add(
+            &mut total,
+            (row.len() as u64).checked_mul(4).ok_or_else(|| {
+                io::Error::new(io::ErrorKind::InvalidData, "checkpoint length overflow")
+            })?,
+        )?;
+    }
+    Ok(total)
+}
+
+fn encoded_node_tables_len(tables: &[NodeTable]) -> io::Result<u64> {
+    let mut total = 8u64;
+    for table in tables {
+        checked_len_add(&mut total, 16)?;
+        for slab in &table.slabs {
+            checked_len_add(&mut total, 1)?;
+            if slab.is_some() {
+                checked_len_add(
+                    &mut total,
+                    (table.slab_len as u64).checked_mul(8).ok_or_else(|| {
+                        io::Error::new(io::ErrorKind::InvalidData, "checkpoint length overflow")
+                    })?,
+                )?;
+            }
+        }
+    }
+    Ok(total)
+}
+
+fn write_f64_vec(writer: &mut PayloadWriter<'_>, values: &[f64]) -> io::Result<()> {
+    writer.write_u64(values.len() as u64)?;
+    for &value in values {
+        writer.write_f64(value)?;
+    }
+    Ok(())
+}
+
+fn write_nested_u32(writer: &mut PayloadWriter<'_>, values: &[Vec<u32>]) -> io::Result<()> {
+    writer.write_u64(values.len() as u64)?;
+    for row in values {
+        writer.write_u64(row.len() as u64)?;
+        for &value in row {
+            writer.write_u32(value)?;
+        }
+    }
+    Ok(())
+}
+
+fn write_node_tables(writer: &mut PayloadWriter<'_>, tables: &[NodeTable]) -> io::Result<()> {
+    writer.write_u64(tables.len() as u64)?;
+    for table in tables {
+        writer.write_u64(table.slabs.len() as u64)?;
+        writer.write_u64(table.slab_len as u64)?;
+        for slab in &table.slabs {
+            match slab {
+                None => writer.write_u8(0)?,
+                Some(values) => {
+                    writer.write_u8(1)?;
+                    for &value in values.iter() {
+                        writer.write_f64(value)?;
+                    }
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
+fn expect_len(actual: u64, expected: usize, what: &str) -> io::Result<()> {
+    if actual != expected as u64 {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidData,
+            format!("{what} length mismatch: expected {expected}, got {actual}"),
+        ));
+    }
+    Ok(())
+}
+
+fn validate_f64_vec(reader: &mut PayloadReader<'_>, expected: usize, what: &str) -> io::Result<()> {
+    expect_len(reader.read_u64()?, expected, what)?;
+    reader.skip_bytes((expected as u64).checked_mul(8).unwrap())
+}
+
+fn validate_nested_u32(
+    reader: &mut PayloadReader<'_>,
+    expected: &[Vec<u32>],
+    what: &str,
+) -> io::Result<()> {
+    expect_len(reader.read_u64()?, expected.len(), what)?;
+    for (index, row) in expected.iter().enumerate() {
+        expect_len(reader.read_u64()?, row.len(), &format!("{what}[{index}]"))?;
+        reader.skip_bytes((row.len() as u64).checked_mul(4).unwrap())?;
+    }
+    Ok(())
+}
+
+fn validate_node_tables(
+    reader: &mut PayloadReader<'_>,
+    expected: &[NodeTable],
+    what: &str,
+) -> io::Result<()> {
+    expect_len(reader.read_u64()?, expected.len(), what)?;
+    for (node, table) in expected.iter().enumerate() {
+        expect_len(
+            reader.read_u64()?,
+            table.slabs.len(),
+            &format!("{what}[{node}].slabs"),
+        )?;
+        expect_len(
+            reader.read_u64()?,
+            table.slab_len,
+            &format!("{what}[{node}].slab_len"),
+        )?;
+        for context in 0..table.slabs.len() {
+            match reader.read_u8()? {
+                0 => {}
+                1 => reader.skip_bytes((table.slab_len as u64).checked_mul(8).unwrap())?,
+                marker => {
+                    return Err(io::Error::new(
+                        io::ErrorKind::InvalidData,
+                        format!("invalid {what}[{node}][{context}] presence marker {marker}"),
+                    ));
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
+fn read_f64_vec_into(
+    reader: &mut PayloadReader<'_>,
+    target: &mut Vec<f64>,
+    expected: usize,
+    what: &str,
+) -> io::Result<()> {
+    expect_len(reader.read_u64()?, expected, what)?;
+    target.resize(expected, 0.0);
+    for value in target {
+        *value = reader.read_f64()?;
+    }
+    Ok(())
+}
+
+fn read_nested_u32_into(
+    reader: &mut PayloadReader<'_>,
+    target: &mut [Vec<u32>],
+    what: &str,
+) -> io::Result<()> {
+    expect_len(reader.read_u64()?, target.len(), what)?;
+    for (index, row) in target.iter_mut().enumerate() {
+        expect_len(reader.read_u64()?, row.len(), &format!("{what}[{index}]"))?;
+        for value in row {
+            *value = reader.read_u32()?;
+        }
+    }
+    Ok(())
+}
+
+fn read_node_tables_into(
+    reader: &mut PayloadReader<'_>,
+    target: &mut [NodeTable],
+    what: &str,
+) -> io::Result<()> {
+    expect_len(reader.read_u64()?, target.len(), what)?;
+    for (node, table) in target.iter_mut().enumerate() {
+        expect_len(
+            reader.read_u64()?,
+            table.slabs.len(),
+            &format!("{what}[{node}].slabs"),
+        )?;
+        expect_len(
+            reader.read_u64()?,
+            table.slab_len,
+            &format!("{what}[{node}].slab_len"),
+        )?;
+        for (context, slab) in table.slabs.iter_mut().enumerate() {
+            match reader.read_u8()? {
+                0 => *slab = None,
+                1 => {
+                    let values =
+                        slab.get_or_insert_with(|| vec![0.0; table.slab_len].into_boxed_slice());
+                    for value in values.iter_mut() {
+                        *value = reader.read_f64()?;
+                    }
+                }
+                marker => {
+                    return Err(io::Error::new(
+                        io::ErrorKind::InvalidData,
+                        format!("invalid {what}[{node}][{context}] presence marker {marker}"),
+                    ));
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
+fn hash_f64_vec(hasher: &mut StableHasher, values: &[f64]) {
+    hasher.write_u64(values.len() as u64);
+    for &value in values {
+        hasher.write_f64(value);
+    }
+}
+
+fn hash_nested_u32(hasher: &mut StableHasher, values: &[Vec<u32>]) {
+    hasher.write_u64(values.len() as u64);
+    for row in values {
+        hasher.write_u64(row.len() as u64);
+        for &value in row {
+            hasher.write_u32(value);
+        }
+    }
+}
+
+fn hash_node_tables(hasher: &mut StableHasher, tables: &[NodeTable]) {
+    hasher.write_u64(tables.len() as u64);
+    for table in tables {
+        hasher.write_u64(table.slabs.len() as u64);
+        hasher.write_u64(table.slab_len as u64);
+        for slab in &table.slabs {
+            match slab {
+                None => hasher.write_u8(0),
+                Some(values) => {
+                    hasher.write_u8(1);
+                    for &value in values.iter() {
+                        hasher.write_f64(value);
+                    }
+                }
+            }
+        }
+    }
 }
 
 impl FlopSolver {
@@ -339,10 +657,18 @@ impl FlopSolver {
         // (equal-strength combos share rows), NOT a silent exact
         // fallback (review finding: that no-op made the differential
         // test vacuous).
-        let bucket_maps = (buckets_river > 0)
-            .then(|| tables.iter().map(|t| t.strength_buckets(river_dim)).collect());
+        let bucket_maps = (buckets_river > 0).then(|| {
+            tables
+                .iter()
+                .map(|t| t.strength_buckets(river_dim))
+                .collect()
+        });
 
-        let turn_dim = if abs.buckets_turn == 0 { N } else { abs.buckets_turn };
+        let turn_dim = if abs.buckets_turn == 0 {
+            N
+        } else {
+            abs.buckets_turn
+        };
         assert!(turn_dim <= N, "more buckets than combos is meaningless");
         // Turn buckets: score = mean strength percentile over the legal
         // rivers of each turn card (bucketing design spec §3, "later"
@@ -404,6 +730,8 @@ impl FlopSolver {
             ChanceMode::Sample { seed } => seed,
             ChanceMode::Enumerate => 0,
         };
+        let config_fingerprint =
+            flop_config_fingerprint(&tree, flop_board, &ranges, variant, mode, abs);
         FlopSolver {
             tree,
             flop_board,
@@ -426,6 +754,7 @@ impl FlopSolver {
             rng: SplitMix64::new(seed),
             iteration: 0,
             combos: crate::ranges::nlhe().combos().to_vec(),
+            config_fingerprint,
         }
     }
 
@@ -467,6 +796,204 @@ impl FlopSolver {
             .chain(self.strat_sum.iter())
             .map(|t| t.bytes())
             .sum()
+    }
+
+    pub fn iteration(&self) -> u32 {
+        self.iteration
+    }
+
+    pub(crate) fn config_fingerprint(&self) -> u64 {
+        self.config_fingerprint
+    }
+
+    fn prefix_len_for_iteration(&self, iteration: u32) -> io::Result<usize> {
+        if matches!(self.variant, CfrVariant::Dcfr { .. }) {
+            usize::try_from(iteration)
+                .ok()
+                .and_then(|value| value.checked_add(1))
+                .ok_or_else(|| {
+                    io::Error::new(io::ErrorKind::InvalidData, "iteration length overflow")
+                })
+        } else {
+            Ok(1)
+        }
+    }
+
+    pub(crate) fn checkpoint_state_payload_len(&self) -> io::Result<u64> {
+        let mut total = 12u64; // iteration + raw RNG state
+        checked_len_add(
+            &mut total,
+            encoded_f64_vec_len(&self.regret_disc_prefix_pos)?,
+        )?;
+        checked_len_add(
+            &mut total,
+            encoded_f64_vec_len(&self.regret_disc_prefix_neg)?,
+        )?;
+        checked_len_add(
+            &mut total,
+            encoded_nested_u32_len(&self.last_discount_iter)?,
+        )?;
+        checked_len_add(&mut total, encoded_node_tables_len(&self.regrets)?)?;
+        checked_len_add(&mut total, encoded_node_tables_len(&self.strat_sum)?)?;
+        Ok(total)
+    }
+
+    pub(crate) fn write_checkpoint_state(&self, writer: &mut PayloadWriter<'_>) -> io::Result<()> {
+        writer.write_u32(self.iteration)?;
+        writer.write_u64(self.rng.state())?;
+        write_f64_vec(writer, &self.regret_disc_prefix_pos)?;
+        write_f64_vec(writer, &self.regret_disc_prefix_neg)?;
+        write_nested_u32(writer, &self.last_discount_iter)?;
+        write_node_tables(writer, &self.regrets)?;
+        write_node_tables(writer, &self.strat_sum)
+    }
+
+    pub(crate) fn validate_checkpoint_state(
+        &self,
+        reader: &mut PayloadReader<'_>,
+    ) -> io::Result<u32> {
+        let iteration = reader.read_u32()?;
+        let _rng_state = reader.read_u64()?;
+        let prefix_len = self.prefix_len_for_iteration(iteration)?;
+        validate_f64_vec(reader, prefix_len, "regret_disc_prefix_pos")?;
+        validate_f64_vec(reader, prefix_len, "regret_disc_prefix_neg")?;
+        validate_nested_u32(reader, &self.last_discount_iter, "last_discount_iter")?;
+        validate_node_tables(reader, &self.regrets, "regrets")?;
+        validate_node_tables(reader, &self.strat_sum, "strat_sum")?;
+        Ok(iteration)
+    }
+
+    pub(crate) fn apply_checkpoint_state(
+        &mut self,
+        reader: &mut PayloadReader<'_>,
+    ) -> io::Result<u32> {
+        let iteration = reader.read_u32()?;
+        let rng_state = reader.read_u64()?;
+        let prefix_len = self.prefix_len_for_iteration(iteration)?;
+        read_f64_vec_into(
+            reader,
+            &mut self.regret_disc_prefix_pos,
+            prefix_len,
+            "regret_disc_prefix_pos",
+        )?;
+        read_f64_vec_into(
+            reader,
+            &mut self.regret_disc_prefix_neg,
+            prefix_len,
+            "regret_disc_prefix_neg",
+        )?;
+        read_nested_u32_into(reader, &mut self.last_discount_iter, "last_discount_iter")?;
+        read_node_tables_into(reader, &mut self.regrets, "regrets")?;
+        read_node_tables_into(reader, &mut self.strat_sum, "strat_sum")?;
+        self.rng = SplitMix64::from_state(rng_state);
+        self.iteration = iteration;
+        Ok(iteration)
+    }
+
+    fn expected_checkpoint<'a>(&self, build_id: &'a str) -> ExpectedCheckpoint<'a> {
+        ExpectedCheckpoint {
+            kind: SolverKind::Flop,
+            build_id,
+            config_fingerprint: self.config_fingerprint,
+        }
+    }
+
+    pub fn save_checkpoint(
+        &self,
+        dir: &Path,
+        build_id: &str,
+        keep: usize,
+    ) -> io::Result<CheckpointInfo> {
+        self.save_checkpoint_with_companion(dir, build_id, keep, None)
+    }
+
+    pub(crate) fn save_checkpoint_with_companion(
+        &self,
+        dir: &Path,
+        build_id: &str,
+        keep: usize,
+        companion: Option<&[u8]>,
+    ) -> io::Result<CheckpointInfo> {
+        let payload_bytes = self.checkpoint_state_payload_len()?;
+        checkpoint::write_checkpoint(
+            dir,
+            SolverKind::Flop,
+            build_id,
+            self.config_fingerprint,
+            self.iteration,
+            payload_bytes,
+            keep,
+            companion,
+            |writer| self.write_checkpoint_state(writer),
+        )
+    }
+
+    pub fn validate_checkpoint(&self, path: &Path, build_id: &str) -> io::Result<CheckpointInfo> {
+        let (info, payload_iteration) =
+            checkpoint::read_checkpoint(path, self.expected_checkpoint(build_id), |reader| {
+                self.validate_checkpoint_state(reader)
+            })?;
+        if payload_iteration != info.iteration {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                format!(
+                    "payload iteration {payload_iteration} does not match header iteration {}",
+                    info.iteration
+                ),
+            ));
+        }
+        Ok(info)
+    }
+
+    pub fn restore_checkpoint(
+        &mut self,
+        path: &Path,
+        build_id: &str,
+    ) -> io::Result<CheckpointInfo> {
+        let validated = self.validate_checkpoint(path, build_id)?;
+        let expected = self.expected_checkpoint(build_id);
+        let (mut applied, payload_iteration) =
+            checkpoint::read_checkpoint(path, expected, |reader| {
+                self.apply_checkpoint_state(reader)
+            })?;
+        if payload_iteration != validated.iteration
+            || applied.iteration != validated.iteration
+            || applied.checksum != validated.checksum
+        {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                "checkpoint changed between validation and restore",
+            ));
+        }
+        applied.io_s += validated.io_s;
+        Ok(applied)
+    }
+
+    pub fn resume_latest(&mut self, dir: &Path, build_id: &str) -> io::Result<CheckpointInfo> {
+        let candidates = checkpoint::recovery_candidates(dir)?;
+        let mut errors = Vec::new();
+        for path in candidates {
+            match self.validate_checkpoint(&path, build_id) {
+                Ok(_) => return self.restore_checkpoint(&path, build_id),
+                Err(error) => errors.push(format!("{}: {error}", path.display())),
+            }
+        }
+        Err(io::Error::new(
+            io::ErrorKind::InvalidData,
+            format!("no valid checkpoint generation: {}", errors.join("; ")),
+        ))
+    }
+
+    pub fn state_checksum(&self) -> u64 {
+        let mut hasher = StableHasher::new(b"gto-hu/flop-state/v1");
+        hasher.write_u32(self.iteration);
+        hasher.write_u64(self.rng.state());
+        hash_f64_vec(&mut hasher, &self.regret_disc_prefix_pos);
+        hash_f64_vec(&mut hasher, &self.regret_disc_prefix_neg);
+        hash_nested_u32(&mut hasher, &self.last_discount_iter);
+        hash_node_tables(&mut hasher, &self.regrets);
+        hash_node_tables(&mut hasher, &self.strat_sum);
+        hasher.finish()
     }
 
     /// Slab context index for a node given the traversal context.
@@ -999,13 +1526,7 @@ impl FlopSolver {
 
     /// Counterfactual BR values for `br_player` (opponent plays the
     /// average strategy).
-    fn br_values(
-        &self,
-        node_id: usize,
-        br_player: u8,
-        opp_reach: &[f64; N],
-        ctx: Ctx,
-    ) -> Vec<f64> {
+    fn br_values(&self, node_id: usize, br_player: u8, opp_reach: &[f64; N], ctx: Ctx) -> Vec<f64> {
         match self.tree.nodes[node_id].kind {
             NodeKind::FoldTerminal { winner } => {
                 let state = self.tree.nodes[node_id].state;
@@ -1081,13 +1602,7 @@ impl FlopSolver {
 
     /// Counterfactual values for `player` when BOTH players follow the
     /// average strategy (chance enumerated exactly).
-    fn avg_values(
-        &self,
-        node_id: usize,
-        player: u8,
-        opp_reach: &[f64; N],
-        ctx: Ctx,
-    ) -> Vec<f64> {
+    fn avg_values(&self, node_id: usize, player: u8, opp_reach: &[f64; N], ctx: Ctx) -> Vec<f64> {
         match self.tree.nodes[node_id].kind {
             NodeKind::FoldTerminal { winner } => {
                 let state = self.tree.nodes[node_id].state;
@@ -1166,7 +1681,13 @@ impl FlopSolver {
         let vals = self.avg_values(0, player, &opp, Ctx::PRE);
         let compat = weighted_compat(&self.combos, &opp);
         (0..N)
-            .map(|c| if compat[c] > 0.0 { vals[c] / compat[c] } else { 0.0 })
+            .map(|c| {
+                if compat[c] > 0.0 {
+                    vals[c] / compat[c]
+                } else {
+                    0.0
+                }
+            })
             .collect()
     }
 
