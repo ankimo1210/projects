@@ -13,3 +13,11 @@ export {
   type CardInt,
 } from "./cards.ts";
 export { canonicalizeBoard } from "./flop-canon.ts";
+export {
+  RANKS_DESC,
+  GRID_SIZE,
+  NUM_HAND_LABELS,
+  ALL_HAND_LABELS_GRID,
+  gridHandLabel,
+  comboCount,
+} from "./hand-grid.ts";

@@ -13,6 +13,9 @@ importers:
       '@gto/domain':
         specifier: workspace:*
         version: link:../packages/domain
+      '@gto/packs':
+        specifier: workspace:*
+        version: link:../packages/packs
       expo:
         specifier: ~57.0.7
         version: 57.0.7(@babel/core@7.29.7(supports-color@8.1.1))(@expo/dom-webview@57.0.1)(react-native@0.86.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1)(typescript@6.0.3)
@@ -34,6 +37,19 @@ importers:
         version: 6.0.3
 
   packages/domain:
+    devDependencies:
+      '@types/node':
+        specifier: ^22
+        version: 22.20.1
+      typescript:
+        specifier: ^5
+        version: 5.9.3
+
+  packages/packs:
+    dependencies:
+      '@gto/domain':
+        specifier: workspace:*
+        version: link:../domain
     devDependencies:
       '@types/node':
         specifier: ^22
