@@ -53,6 +53,10 @@ histories — offline-capable, with honest quality labeling.
 5. TestFlight beta: crash-free sessions ≥ **99.5%**.
 6. App Store approval (17+ rating, "no real-money gambling" positioning).
 
+Additionally, a **development gate** precedes everything heavy: the P0a
+algorithm-optimization audit (§5.0) must pass (or be consciously
+re-negotiated) before mass content generation and app phases P2+ begin.
+
 ---
 
 ## 3. System architecture
@@ -137,6 +141,43 @@ Three structural commitments:
 ---
 
 ## 5. Content generation pipeline (P0 — longest lead time)
+
+### 5.0 Algorithm optimization audit (P0a — hard gate before mass generation)
+
+User-mandated gate (2026-07-19): solver throughput is the make-or-break for
+this product. Before any detailed implementation of §5.1–5.2 or the app
+build-out beyond scaffolding, verify the algorithm is sufficiently
+optimized — measured, not assumed.
+
+1. **Benchmark harness**: standardized reference set (river / turn+river /
+   flop spots + the WP2 3-flop blueprint config) with fixed seeds; measures
+   iteration throughput, wall-clock to target expl, expl-vs-iteration curves,
+   peak RSS. Reproducible CLI, JSON output, results committed as baseline
+   artifacts (fingerprint discipline).
+2. **Profiling**: flamegraphs + hardware counters (cache misses, memory
+   bandwidth) on the flop-solver and blueprint hot loops; classify each as
+   compute-bound vs bandwidth-bound; rayon scaling curve (1→N cores) to find
+   the parallel-efficiency ceiling.
+3. **Algorithm-level review vs state of the art**: DCFR/CFR+ parameterization,
+   sampling scheme (public-chance sampling vs external sampling vs turn
+   enumeration), SIMD/vectorization over combo arrays, f32 numerical safety,
+   dense-table layout, best-response evaluation cost. Sanity-check against
+   comparable public CFR systems (open-source postflop solvers, published
+   blueprint compute budgets): we should be within a small constant factor of
+   what comparable implementations achieve, or know exactly why not.
+4. **Quantified go/no-go targets** (these size the §5.2 grid):
+   - **G-A1**: median per-flop solve reaching its expl gate in **≤ 12 min**
+     on the reference set (else Tier 1 is rescoped: fewer flops or configs).
+   - **G-A2**: blueprint convergence slope restored to ~1/T (fitted exponent
+     **≤ −0.85**) on the 3-flop reference after variance reduction (current
+     baseline: −0.51). If unmet, a different sampling scheme is required
+     before any M expansion.
+   - **G-A3**: M=25 blueprint fits **≤ 48 GB** RAM with f32 + board
+     bucketing — measured on a real run, not estimated.
+5. **Output**: a benchmark/audit report in `docs/reviews/` with an explicit
+   go/no-go decision per target. Mass generation (§5.2) and app phases P2+
+   do not start until this gate passes or the targets/grid are consciously
+   re-negotiated with the user.
 
 ### 5.1 Blueprint quality foundation (absorbs old M3)
 
@@ -295,9 +336,10 @@ scraping only (see §11).
 
 | Phase | Deliverable | Depends on |
 |---|---|---|
-| **P0** | Quality foundation: variance reduction, f32 + board bucketing, M ≥ 25 blueprint quality run, real-flop mapping, pack format + build CLI + R2 upload | — (longest lead; start first, runs in background) |
-| **P1** | Expo scaffold, `@gto/domain` / `@gto/packs` / `@gto/api-client`, Study tab (preflop first, postflop when Tier-1 grid lands), Skia perf spike | P0 preflop pack (charts can land before blueprint) |
-| **P2** | Practice + Play: table UI, grading engine, session scoring, bot | P0 blueprint bundle |
+| **P0a** | Algorithm optimization audit (§5.0): benchmark harness, profiling, algorithm review, G-A1..3 go/no-go report | — (first; hard gate for P0b mass generation and P2+) |
+| **P0b** | Quality foundation: variance reduction, f32 + board bucketing, M ≥ 25 blueprint quality run, real-flop mapping, pack format + build CLI + R2 upload | P0a gate passed |
+| **P1** | Expo scaffold, `@gto/domain` / `@gto/packs` / `@gto/api-client`, Study tab (preflop first, postflop when Tier-1 grid lands), Skia perf spike | P0b preflop pack (charts can land before blueprint; scaffold may start during P0a) |
+| **P2** | Practice + Play: table UI, grading engine, session scoring, bot | P0b blueprint bundle |
 | **P3** | Analyze: parse integration + on-device grading + aggregates | P2 grading engine |
 | **P4** | Commercialization: Supabase auth, IAP + entitlements, gating, pack management UI, TestFlight beta → **App Store submission** | P1–P3 |
 | v1.x | See §12 (future roadmap) | — |
