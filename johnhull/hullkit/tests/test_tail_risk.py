@@ -68,6 +68,15 @@ def test_fhs_length_mismatch_raises():
         tail_risk.filtered_historical_var_es([0.01, 0.02], [0.01])
 
 
+def test_fhs_nonpositive_current_sigma_raises():
+    returns = np.array([0.01, -0.02, 0.005])
+    sigma = np.array([0.01, 0.02, 0.01])
+    with pytest.raises(ValueError):
+        tail_risk.filtered_historical_var_es(returns, sigma, current_sigma=0.0)
+    with pytest.raises(ValueError):
+        tail_risk.filtered_historical_var_es(returns, sigma, current_sigma=-0.02)
+
+
 # --- fit_gpd_pot ------------------------------------------------------------
 
 
@@ -87,6 +96,20 @@ def test_fit_gpd_pot_too_few_exceedances_raises():
     losses = np.concatenate([np.full(10, 6.0), np.full(50, 1.0)])
     with pytest.raises(ValueError):
         tail_risk.fit_gpd_pot(losses, threshold=5.0, min_exceedances=30)
+
+
+def test_fit_gpd_pot_raises_when_optimizer_does_not_converge(monkeypatch):
+    class _FailedResult:
+        success = False
+        message = "did not converge (test double)"
+        x = (0.1, 1.0)
+
+    monkeypatch.setattr(tail_risk, "minimize", lambda *args, **kwargs: _FailedResult())
+
+    rng = np.random.default_rng(41)
+    losses = rng.exponential(scale=1.0, size=200) + 5.0
+    with pytest.raises(ValueError, match="did not converge"):
+        tail_risk.fit_gpd_pot(losses, threshold=0.0, min_exceedances=30)
 
 
 def test_fit_gpd_pot_exponential_limit_recovers_near_zero_xi():
