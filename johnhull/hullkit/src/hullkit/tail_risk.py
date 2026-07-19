@@ -46,6 +46,11 @@ def _validate_positive_sigma(sigma: np.ndarray) -> None:
         raise ValueError("sigma must be strictly positive")
 
 
+def _validate_positive_scalar_sigma(value: float, name: str) -> None:
+    if not math.isfinite(value) or value <= 0.0:
+        raise ValueError(f"{name} must be finite and strictly positive, got {value}")
+
+
 def filtered_historical_var_es(returns, sigma, alpha=0.99, current_sigma=None):
     """Filtered historical simulation (FHS) VaR/ES (Barone-Adesi et al. 1999).
 
@@ -57,8 +62,8 @@ def filtered_historical_var_es(returns, sigma, alpha=0.99, current_sigma=None):
     `z_i * current_sigma`, and reuses `hullkit.risk.historical_var_es`'s
     tail-selection convention on those rescaled scenarios. Returns
     `(var, es)` as positive loss amounts. Raises ValueError on a length
-    mismatch between `returns` and `sigma`, empty input, or non-positive
-    `sigma`.
+    mismatch between `returns` and `sigma`, empty input, non-positive
+    `sigma`, or a non-finite/non-positive `current_sigma`.
     """
     returns_arr = np.asarray(returns, dtype=float)
     sigma_arr = np.asarray(sigma, dtype=float)
@@ -70,6 +75,7 @@ def filtered_historical_var_es(returns, sigma, alpha=0.99, current_sigma=None):
     _validate_alpha(alpha)
 
     target_sigma = float(sigma_arr[-1]) if current_sigma is None else float(current_sigma)
+    _validate_positive_scalar_sigma(target_sigma, "current_sigma")
     z = returns_arr / sigma_arr
     scenarios = z * target_sigma
     return risk.historical_var_es(scenarios, alpha=alpha)
@@ -94,10 +100,10 @@ def _gpd_neg_loglik(params, y: np.ndarray) -> float:
     if abs(xi) < _XI_ZERO_TOL:
         # exponential limit (xi -> 0): pdf = (1/beta) exp(-y/beta)
         return float(n_u * math.log(beta) + np.sum(y) / beta)
-    z = 1.0 + xi * y / beta
-    if np.any(z <= 0.0):
+    z = xi * y / beta
+    if np.any(z <= -1.0):
         return 1e10
-    return float(n_u * math.log(beta) + (1.0 + 1.0 / xi) * np.sum(np.log(z)))
+    return float(n_u * math.log(beta) + (1.0 + 1.0 / xi) * np.sum(np.log1p(z)))
 
 
 def fit_gpd_pot(losses, threshold, min_exceedances=30):
