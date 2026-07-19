@@ -12,9 +12,13 @@ wheels/
 crates/*/target/
 
 # Node
-web/node_modules/
+node_modules/
 web/.next/
 web/out/
+mobile/.expo/
+mobile/ios/
+mobile/android/
+mobile/dist/
 
 # Data
 data/*.duckdb
