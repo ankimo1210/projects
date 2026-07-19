@@ -92,12 +92,20 @@ const TURN_ENUM_CFG: &str =
     "board=2c7d9hJh pot=5bb stack=97bb ranges=uniform variant=cfr+ tree=srp mode=enumerate";
 const TURN_SAMPLE_CFG: &str =
     "board=2c7d9hJh pot=5bb stack=97bb ranges=uniform variant=cfr+ tree=srp mode=sample";
-const FLOP_SRP_CFG: &str =
-    "pot=5bb stack=97bb ranges=uniform variant=cfr+ tree=srp mode=sample buckets_turn=16";
+const FLOP_SRP_AHKD7S_K24_CFG: &str =
+    "board=AhKd7s pot=5bb stack=97bb ranges=uniform variant=cfr+ tree=srp mode=sample buckets_river=24 buckets_turn=16";
+const FLOP_SRP_QSJH2C_K24_CFG: &str =
+    "board=QsJh2c pot=5bb stack=97bb ranges=uniform variant=cfr+ tree=srp mode=sample buckets_river=24 buckets_turn=16";
+const FLOP_SRP_8D8H3S_K24_CFG: &str =
+    "board=8d8h3s pot=5bb stack=97bb ranges=uniform variant=cfr+ tree=srp mode=sample buckets_river=24 buckets_turn=16";
+const FLOP_SRP_AHKD7S_K64_CFG: &str =
+    "board=AhKd7s pot=5bb stack=97bb ranges=uniform variant=cfr+ tree=srp mode=sample buckets_river=64 buckets_turn=16";
 const FLOP_THREE_BET_CFG: &str =
     "board=AhKd7s pot=18bb stack=89bb ranges=uniform variant=cfr+ tree=3bet mode=sample buckets_river=24 buckets_turn=16";
-const BLUEPRINT_CFG: &str =
-    "flops=AhKd7s,QsJh2c,8d8h3s weights=equal stack=100bb ranges=uniform variant=cfr+ buckets_river=24 buckets_turn=16";
+const BLUEPRINT_SAMPLE_CFG: &str =
+    "flops=AhKd7s,QsJh2c,8d8h3s weights=equal stack=100bb ranges=uniform variant=cfr+ mode=sample buckets_river=24 buckets_turn=16";
+const BLUEPRINT_ENUM_CFG: &str =
+    "flops=AhKd7s,QsJh2c,8d8h3s weights=equal stack=100bb ranges=uniform variant=cfr+ mode=enumerate buckets_river=24 buckets_turn=16";
 
 fn abstraction_24_16() -> Abstraction {
     Abstraction {
@@ -200,7 +208,7 @@ pub fn reference_cases() -> Vec<BenchCase> {
         },
         BenchCase {
             name: "flop_srp100_AhKd7s_k24",
-            config: FLOP_SRP_CFG,
+            config: FLOP_SRP_AHKD7S_K24_CFG,
             build: |seed| {
                 flop_case(
                     [card("Ah"), card("Kd"), card("7s")],
@@ -214,7 +222,7 @@ pub fn reference_cases() -> Vec<BenchCase> {
         },
         BenchCase {
             name: "flop_srp100_QsJh2c_k24",
-            config: FLOP_SRP_CFG,
+            config: FLOP_SRP_QSJH2C_K24_CFG,
             build: |seed| {
                 flop_case(
                     [card("Qs"), card("Jh"), card("2c")],
@@ -228,7 +236,7 @@ pub fn reference_cases() -> Vec<BenchCase> {
         },
         BenchCase {
             name: "flop_srp100_8d8h3s_k24",
-            config: FLOP_SRP_CFG,
+            config: FLOP_SRP_8D8H3S_K24_CFG,
             build: |seed| {
                 flop_case(
                     [card("8d"), card("8h"), card("3s")],
@@ -242,7 +250,7 @@ pub fn reference_cases() -> Vec<BenchCase> {
         },
         BenchCase {
             name: "flop_srp100_AhKd7s_k64",
-            config: FLOP_SRP_CFG,
+            config: FLOP_SRP_AHKD7S_K64_CFG,
             build: |seed| {
                 flop_case(
                     [card("Ah"), card("Kd"), card("7s")],
@@ -270,12 +278,12 @@ pub fn reference_cases() -> Vec<BenchCase> {
         },
         BenchCase {
             name: "bp3_sample",
-            config: BLUEPRINT_CFG,
+            config: BLUEPRINT_SAMPLE_CFG,
             build: |seed| blueprint_case(true, seed),
         },
         BenchCase {
             name: "bp3_enum",
-            config: BLUEPRINT_CFG,
+            config: BLUEPRINT_ENUM_CFG,
             build: |seed| blueprint_case(false, seed),
         },
     ]
