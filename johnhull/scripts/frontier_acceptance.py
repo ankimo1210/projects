@@ -1,7 +1,8 @@
-"""Canonical integration-gate checks for johnhull volumes 18--26."""
+"""Canonical integration-gate checks for johnhull volumes 18--27."""
 
 from __future__ import annotations
 
+import math
 from typing import Any
 
 import numpy as np
@@ -1043,12 +1044,9 @@ def _volume26(
         "<= 1e-10",
         metrics["zcis_repricing_max_error"] <= 1e-10,
     )
-    jy_shapes = (
-        arrays["jy_forward_index"].shape
-        == arrays["jy_mc_forward_index"].shape
-        == arrays["jy_mc_standard_error"].shape
-        and np.all(arrays["jy_mc_standard_error"] > 0.0)
-    )
+    jy_shapes = arrays["jy_forward_index"].shape == arrays["jy_mc_forward_index"].shape == arrays[
+        "jy_mc_standard_error"
+    ].shape and np.all(arrays["jy_mc_standard_error"] > 0.0)
     _add(
         checks,
         "jy_forward_measure_mc",
@@ -1136,6 +1134,225 @@ def _volume26(
     ]
 
 
+def _hist_var_es_np(pnl: np.ndarray, alpha: float) -> tuple[float, float]:
+    """Vol-08 historical VaR/ES recomputation (k worst losses) in pure NumPy."""
+    losses = -np.asarray(pnl, dtype=float)
+    n = losses.size
+    k = max(1, math.ceil((1.0 - alpha) * n - 1e-9))
+    worst = np.sort(losses)[::-1][:k]
+    return float(worst[-1]), float(worst.mean())
+
+
+def _xlogy_np(a: float, b: float) -> float:
+    """`a * ln(b)` with the convention `0 * ln(0) = 0` (NumPy-only)."""
+    return 0.0 if a <= 0.0 else float(a * math.log(b))
+
+
+def _lr_independence_np(exceedances: np.ndarray) -> float:
+    """Christoffersen (1998) independence LR statistic recomputed in NumPy."""
+    exc = np.asarray(exceedances, dtype=int)
+    if exc.size < 2 or np.unique(exc).size == 1:
+        return 0.0
+    prev, curr = exc[:-1], exc[1:]
+    n00 = float(np.sum((prev == 0) & (curr == 0)))
+    n01 = float(np.sum((prev == 0) & (curr == 1)))
+    n10 = float(np.sum((prev == 1) & (curr == 0)))
+    n11 = float(np.sum((prev == 1) & (curr == 1)))
+    n_trans = n00 + n01 + n10 + n11
+    pi01 = n01 / (n00 + n01) if (n00 + n01) > 0 else 0.0
+    pi11 = n11 / (n10 + n11) if (n10 + n11) > 0 else 0.0
+    pi_bar = (n01 + n11) / n_trans
+    log_num = _xlogy_np(n00 + n10, 1.0 - pi_bar) + _xlogy_np(n01 + n11, pi_bar)
+    log_den = (
+        _xlogy_np(n00, 1.0 - pi01)
+        + _xlogy_np(n01, pi01)
+        + _xlogy_np(n10, 1.0 - pi11)
+        + _xlogy_np(n11, pi11)
+    )
+    return float(-2.0 * (log_num - log_den))
+
+
+def _volume27(
+    metrics: dict[str, Any], arrays: dict[str, np.ndarray]
+) -> tuple[list[dict[str, Any]], list[str]]:
+    checks: list[dict[str, Any]] = []
+    alpha = float(metrics.get("alpha", 0.99))
+    p = 1.0 - alpha
+
+    # 1. Kupiec size calibration recomputed from the committed rejection flags.
+    reject_flags = np.asarray(arrays["kupiec_size_reject_flags"], dtype=float)
+    n_replications = int(reject_flags.size)
+    rejection_rate = float(reject_flags.mean())
+    binomial_se = math.sqrt(0.05 * 0.95 / n_replications)
+    size_zscore = abs(rejection_rate - 0.05) / binomial_se
+    _add(
+        checks,
+        "kupiec_size_calibration",
+        size_zscore,
+        "iid rejection rate within z < 3 of nominal 5% (binomial SE, 400 replications)",
+        size_zscore < 3.0,
+    )
+
+    # 2. Christoffersen independence detects clustering (LR recomputed from arrays).
+    lr_iid = _lr_independence_np(arrays["iid_exceedances"])
+    lr_clustered = _lr_independence_np(arrays["clustered_exceedances"])
+    pvalue_clustered = float(metrics["christoffersen_ind_pvalue_clustered"])
+    detects_clustering = pvalue_clustered < 0.05 and lr_clustered > lr_iid
+    _add(
+        checks,
+        "christoffersen_detects_clustering",
+        pvalue_clustered,
+        "clustered LR_ind p-value < 0.05 and LR_ind statistic exceeds the iid series",
+        detects_clustering,
+    )
+
+    # 3. Constant-sigma FHS equals plain historical simulation.
+    hs_var, _ = _hist_var_es_np(arrays["garch_returns"], alpha)
+    fhs_constant_error = abs(float(metrics["fhs_var_constant"]) - hs_var)
+    _add(
+        checks,
+        "fhs_constant_vol_identity",
+        fhs_constant_error,
+        "<= 1e-12",
+        fhs_constant_error <= 1e-12,
+    )
+
+    # 4. FHS coverage beats plain HS on the GARCH path.
+    hs_rate = float(np.asarray(arrays["hs_violations"], dtype=float).mean())
+    fhs_rate = float(np.asarray(arrays["fhs_violations"], dtype=float).mean())
+    coverage_improved = abs(fhs_rate - p) < abs(hs_rate - p)
+    _add(
+        checks,
+        "fhs_coverage_improvement",
+        fhs_rate,
+        "|FHS violation rate - (1-alpha)| < |plain-HS violation rate - (1-alpha)|",
+        coverage_improved,
+    )
+
+    # 5. GPD parameter recovery.
+    xi_true = float(metrics["gpd_xi_true"])
+    beta_true = float(metrics["gpd_beta_true"])
+    xi_hat = float(metrics["gpd_xi_hat"])
+    beta_hat = float(metrics["gpd_beta_hat"])
+    xi_error = abs(xi_hat - xi_true)
+    beta_ratio_error = abs(beta_hat / beta_true - 1.0)
+    _add(
+        checks,
+        "gpd_parameter_recovery",
+        xi_error,
+        "|xi_hat - xi| <= 0.1 and |beta_hat/beta - 1| <= 0.15",
+        xi_error <= 0.1 and beta_ratio_error <= 0.15,
+    )
+
+    # 6. EVT ES closed-form identity.
+    threshold = float(metrics["evt_threshold"])
+    evt_var = float(metrics["evt_var"])
+    evt_es = float(metrics["evt_es"])
+    evt_es_check = (evt_var + beta_hat - xi_hat * threshold) / (1.0 - xi_hat)
+    evt_identity_error = abs(evt_es - evt_es_check)
+    _add(
+        checks,
+        "evt_var_es_identity",
+        evt_identity_error,
+        "<= 1e-12",
+        evt_identity_error <= 1e-12,
+    )
+
+    # 7. Analytic Euler additivity: components sum to normal VaR.
+    component_var = np.asarray(arrays["alloc_component_var"], dtype=float)
+    normal_var = float(metrics["alloc_normal_var"])
+    euler_error = abs(float(component_var.sum()) - normal_var)
+    _add(checks, "euler_additivity_normal", euler_error, "<= 1e-12", euler_error <= 1e-12)
+
+    # 8. Analytic marginal VaR matches a central finite difference.
+    amounts = np.asarray(arrays["alloc_amounts"], dtype=float)
+    vols = np.asarray(arrays["alloc_vols"], dtype=float)
+    corr = np.asarray(arrays["alloc_corr"], dtype=float)
+    covariance = corr * np.outer(vols, vols)
+    sigma_p = math.sqrt(float(amounts @ covariance @ amounts))
+    z_alpha = normal_var / sigma_p  # recover z from committed data (avoids scipy)
+    marginal = np.asarray(arrays["alloc_marginal_var"], dtype=float)
+    step = 1e-6 * np.maximum(np.abs(amounts), 1.0)
+    finite_difference = np.empty_like(amounts)
+    for i in range(amounts.size):
+        forward = amounts.copy()
+        backward = amounts.copy()
+        forward[i] += step[i]
+        backward[i] -= step[i]
+        sigma_fwd = math.sqrt(float(forward @ covariance @ forward))
+        sigma_bwd = math.sqrt(float(backward @ covariance @ backward))
+        finite_difference[i] = z_alpha * (sigma_fwd - sigma_bwd) / (2.0 * step[i])
+    relative_error = float(
+        np.max(np.abs(marginal - finite_difference) / np.maximum(np.abs(marginal), 1e-12))
+    )
+    _add(
+        checks,
+        "marginal_fd_consistency",
+        relative_error,
+        "analytic vs central-difference marginals, relative error <= 1e-6",
+        relative_error <= 1e-6,
+    )
+
+    # 9. Simulation Euler ES additivity recomputed from the P&L matrix.
+    pnl_matrix = np.asarray(arrays["pnl_matrix"], dtype=float)
+    total = pnl_matrix.sum(axis=1)
+    n = total.size
+    k = max(1, math.ceil((1.0 - alpha) * n - 1e-9))
+    tail = np.argsort(total, kind="stable")[:k]
+    es_total = float((-total[tail]).mean())
+    es_components_recomputed = -pnl_matrix[tail].mean(axis=0)
+    stored_es_components = np.asarray(arrays["es_components"], dtype=float)
+    additivity_error = abs(float(es_components_recomputed.sum()) - es_total)
+    component_match = float(np.max(np.abs(es_components_recomputed - stored_es_components)))
+    _add(
+        checks,
+        "euler_es_additivity_sim",
+        max(additivity_error, component_match),
+        "sum(ES components) == total historical ES and matches committed array, <= 1e-12",
+        additivity_error <= 1e-12 and component_match <= 1e-12,
+    )
+
+    # 10. P&L-explain Taylor ordering and shrinkage.
+    dgv_residual = abs(float(metrics["taylor_full_pnl"]) - float(metrics["taylor_dgv_total"]))
+    delta_residual = abs(float(metrics["taylor_full_pnl"]) - float(metrics["taylor_delta_only"]))
+    dgv_residual_half = abs(
+        float(metrics["taylor_full_pnl_half"]) - float(metrics["taylor_dgv_total_half"])
+    )
+    delta_residual_half = abs(
+        float(metrics["taylor_full_pnl_half"]) - float(metrics["taylor_delta_only_half"])
+    )
+    taylor_ordered = (
+        dgv_residual < delta_residual
+        and dgv_residual_half < dgv_residual
+        and delta_residual_half < delta_residual
+    )
+    _add(
+        checks,
+        "pnl_explain_taylor_ordering",
+        dgv_residual,
+        "dgv residual < delta-only residual; both shrink when moves halve",
+        taylor_ordered,
+    )
+
+    # 11. Desk-report scalars reproduce the recomputed VaR/ES exactly.
+    desk_var_error = abs(float(metrics["desk_report_var"]) - float(component_var.sum()))
+    desk_es_error = abs(float(metrics["desk_report_es"]) - es_total)
+    _add(
+        checks,
+        "desk_report_reproducible",
+        max(desk_var_error, desk_es_error),
+        "desk-report VaR equals Euler component sum and ES equals total historical ES",
+        desk_var_error <= 1e-12 and desk_es_error <= 1e-12,
+    )
+
+    return checks, [
+        "All P&L, exceedance, and tail samples are synthetic fixed-seed draws, not market data.",
+        "FHS uses the committed EWMA conditional-volatility path; no live model calibration is performed.",
+        "The Basel multiplier schedule is the 250-day BCBS table and is only documented, not re-derived, elsewhere.",
+        "Cross-gamma, vanna, and vomma P&L-explain terms are out of scope (see hullkit.pnl_explain).",
+    ]
+
+
 _EVALUATORS = {
     18: _volume18,
     19: _volume19,
@@ -1146,6 +1363,7 @@ _EVALUATORS = {
     24: _volume24,
     25: _volume25,
     26: _volume26,
+    27: _volume27,
 }
 
 
@@ -1158,7 +1376,7 @@ def evaluate_acceptance(
     try:
         evaluator = _EVALUATORS[volume]
     except KeyError as exc:
-        raise ValueError("acceptance volume must lie in [18, 26]") from exc
+        raise ValueError("acceptance volume must lie in [18, 27]") from exc
     checks, negative_results = evaluator(metrics, arrays)
     return {
         "schema_version": 1,

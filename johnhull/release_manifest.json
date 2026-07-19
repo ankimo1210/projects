@@ -109,6 +109,18 @@
       "semantic_tests": ["johnhull/hullkit/tests/test_frontier_reference.py", "johnhull/hullkit/tests/test_rates.py", "johnhull/hullkit/tests/test_hull_white.py", "johnhull/hullkit/tests/test_inflation.py", "johnhull/hullkit/tests/test_jarrow_yildirim.py", "johnhull/hullkit/tests/test_jgbi.py", "johnhull/hullkit/tests/test_jgbi_floor.py"],
       "references": ["reference/metrics.json", "reference/inflation_scenarios.npz"],
       "validation": "VALIDATION.md"
+    },
+    {
+      "number": 27,
+      "slug": "27_risk_desk",
+      "notebook": "risk_desk.ipynb",
+      "book_name": "27_risk_desk",
+      "portal_page": "risk_management",
+      "portal_figures": ["var_traffic_light", "fhs_vs_hs_coverage", "gpd_tail_fit", "risk_allocation_bars"],
+      "semantic_sources": ["johnhull/hullkit/src/hullkit/frontier_reference.py", "johnhull/hullkit/src/hullkit/var_backtest.py", "johnhull/hullkit/src/hullkit/tail_risk.py", "johnhull/hullkit/src/hullkit/risk_allocation.py", "johnhull/hullkit/src/hullkit/pnl_explain.py"],
+      "semantic_tests": ["johnhull/hullkit/tests/test_frontier_reference.py", "johnhull/hullkit/tests/test_var_backtest.py", "johnhull/hullkit/tests/test_tail_risk.py", "johnhull/hullkit/tests/test_risk_allocation.py", "johnhull/hullkit/tests/test_pnl_explain.py"],
+      "references": ["reference/metrics.json", "reference/risk_desk_scenarios.npz"],
+      "validation": "VALIDATION.md"
     }
   ],
   "portal": {

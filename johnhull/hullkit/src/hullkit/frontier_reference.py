@@ -1,4 +1,4 @@
-"""CPU-quick, API-backed reference payloads for beyond-Hull volumes 21--26.
+"""CPU-quick, API-backed reference payloads for beyond-Hull volumes 21--27.
 
 The committed teaching artifacts are deliberately small, but their numbers
 must still come from the public :mod:`hullkit` APIs.  This module is the bridge:
@@ -23,6 +23,7 @@ from scipy.optimize import brentq
 
 from . import (
     amm,
+    bsm,
     carbon,
     hull_white,
     inflation,
@@ -30,12 +31,18 @@ from . import (
     jgbi,
     liquidation,
     perpetuals,
+    pnl_explain,
     ppa,
     rates,
     rfr,
     rfr_options,
+    risk,
+    risk_allocation,
     sabr_normal,
     spx_vix,
+    tail_risk,
+    var_backtest,
+    volatility,
     weather,
     zero_dte,
 )
@@ -54,8 +61,8 @@ class FrontierReference:
     metrics: dict[str, Scalar]
 
     def __post_init__(self) -> None:
-        if self.volume not in range(21, 27):
-            raise ValueError("frontier reference volume must lie in [21, 26]")
+        if self.volume not in range(21, 28):
+            raise ValueError("frontier reference volume must lie in [21, 27]")
         if not self.arrays or not self.metrics:
             raise ValueError("reference arrays and metrics must be non-empty")
         for name, values in self.arrays.items():
@@ -1755,7 +1762,10 @@ def volume26_reference(*, seed: int = 20260744) -> FrontierReference:
     hw_params = hull_white.HullWhiteParams(0.10, 0.009)
     hw_market_discount = nominal_discount.copy()
     hw_model_discount = np.asarray(
-        [hull_white.hw_discount_bond(0.0, value, 0.0, nominal_curve, hw_params) for value in maturity]
+        [
+            hull_white.hw_discount_bond(0.0, value, 0.0, nominal_curve, hw_params)
+            for value in maturity
+        ]
     )
     swaption_expiry = np.asarray([1.0, 2.0, 3.0])
     swaption_price: list[float] = []
@@ -1766,13 +1776,9 @@ def volume26_reference(*, seed: int = 20260744) -> FrontierReference:
         spec = hull_white.HullWhiteSwaption(
             float(expiry), payment_times, tuple(cashflows), "receiver"
         )
-        swaption_price.append(
-            hull_white.hw_jamshidian_swaption(spec, nominal_curve, hw_params)
-        )
+        swaption_price.append(hull_white.hw_jamshidian_swaption(spec, nominal_curve, hw_params))
 
-    raw_seasonality = np.asarray(
-        [0.0030, -0.0015, 0.0010, -0.0020, 0.0025, -0.0010] * 2
-    )
+    raw_seasonality = np.asarray([0.0030, -0.0015, 0.0010, -0.0020, 0.0025, -0.0010] * 2)
     raw_seasonality -= raw_seasonality.mean()
     seasonality = inflation.MonthlySeasonality(tuple(raw_seasonality))
     flat_seasonality = inflation.MonthlySeasonality((0.0,) * 12)
@@ -1788,8 +1794,7 @@ def volume26_reference(*, seed: int = 20260744) -> FrontierReference:
         flat_seasonality,
     )
     month_dates = tuple(
-        date(2026 + month_index // 12, month_index % 12 + 1, 1)
-        for month_index in range(24)
+        date(2026 + month_index // 12, month_index % 12 + 1, 1) for month_index in range(24)
     )
     cpi_trend = np.asarray(
         [inflation.seasonal_forward_index(day, trend_curve) for day in month_dates]
@@ -1803,9 +1808,7 @@ def volume26_reference(*, seed: int = 20260744) -> FrontierReference:
     zcis_curve = inflation.bootstrap_zc_inflation_curve(
         base_date, 100.0, zcis_maturity, zcis_quote, seasonality=seasonality
     )
-    zcis_repriced = np.asarray(
-        [zcis_curve.zero_rate(value) for value in zcis_maturity]
-    )
+    zcis_repriced = np.asarray([zcis_curve.zero_rate(value) for value in zcis_maturity])
 
     jy_params = jarrow_yildirim.JarrowYildirimParams(
         0.08, 0.010, 0.12, 0.008, 0.015, 0.25, -0.15, 0.30
@@ -1813,12 +1816,8 @@ def volume26_reference(*, seed: int = 20260744) -> FrontierReference:
     yoy_payment = np.asarray([1.0, 2.0, 3.0, 4.0, 5.0])
     yoy_deterministic_ratio = np.asarray(
         [
-            jarrow_yildirim.jy_cpi_forward(
-                0.0, end, 100.0, nominal_curve, real_curve
-            )
-            / jarrow_yildirim.jy_cpi_forward(
-                0.0, end - 1.0, 100.0, nominal_curve, real_curve
-            )
+            jarrow_yildirim.jy_cpi_forward(0.0, end, 100.0, nominal_curve, real_curve)
+            / jarrow_yildirim.jy_cpi_forward(0.0, end - 1.0, 100.0, nominal_curve, real_curve)
             for end in yoy_payment
         ]
     )
@@ -1893,9 +1892,9 @@ def volume26_reference(*, seed: int = 20260744) -> FrontierReference:
     floor_mc: list[float] = []
     floor_mc_standard_error: list[float] = []
     floor_models: list[jarrow_yildirim.JarrowYildirimParams] = []
-    for index, volatility in enumerate(inflation_volatility):
+    for index, vol_level in enumerate(inflation_volatility):
         model = jarrow_yildirim.JarrowYildirimParams(
-            0.08, 0.0, 0.12, 0.0, float(volatility), 0.0, 0.0, 0.0
+            0.08, 0.0, 0.12, 0.0, float(vol_level), 0.0, 0.0, 0.0
         )
         floor_models.append(model)
         analytic = jgbi.jgbi_deflation_floor_jy(
@@ -1959,16 +1958,15 @@ def volume26_reference(*, seed: int = 20260744) -> FrontierReference:
     jy_zscores = np.abs(jy_mc_forward - jy_forward_index) / jy_mc_standard_error
     nonzero_floor_se = floor_se_array > 0.0
     floor_zscores = np.zeros_like(floor_se_array)
-    floor_zscores[nonzero_floor_se] = np.abs(
-        floor_mc_array[nonzero_floor_se] - floor_analytic_array[nonzero_floor_se]
-    ) / floor_se_array[nonzero_floor_se]
+    floor_zscores[nonzero_floor_se] = (
+        np.abs(floor_mc_array[nonzero_floor_se] - floor_analytic_array[nonzero_floor_se])
+        / floor_se_array[nonzero_floor_se]
+    )
     coupon_floor_error = max(
         abs(left.coupon - right.coupon)
         for left, right in zip(floored_cashflows, unfloored_cashflows, strict=True)
     )
-    replication_error = abs(
-        (raw_clean_price + floor_analytic_array[2]) - adjusted_clean_price
-    )
+    replication_error = abs((raw_clean_price + floor_analytic_array[2]) - adjusted_clean_price)
     arrays: ArrayMap = {
         "maturity": maturity,
         "nominal_discount_factor": nominal_discount,
@@ -2019,7 +2017,9 @@ def volume26_reference(*, seed: int = 20260744) -> FrontierReference:
         "hw_curve_fit_max_error": float(np.max(np.abs(hw_market_discount - hw_model_discount))),
         "seasonality_annual_log_sum": float(abs(raw_seasonality.sum())),
         "zcis_repricing_max_error": float(np.max(np.abs(zcis_quote - zcis_repriced))),
-        "yoy_convexity_bp": float(10_000.0 * np.max(np.abs(yoy_jy_ratio - yoy_deterministic_ratio))),
+        "yoy_convexity_bp": float(
+            10_000.0 * np.max(np.abs(yoy_jy_ratio - yoy_deterministic_ratio))
+        ),
         "jy_forward_mc_zscore_max": float(np.max(jy_zscores)),
         "floor_mc_zscore_max": float(np.max(floor_zscores)),
         "floor_monotone_in_volatility": bool(np.all(np.diff(floor_analytic_array) >= 0.0)),
@@ -2033,6 +2033,330 @@ def volume26_reference(*, seed: int = 20260744) -> FrontierReference:
     return FrontierReference(26, seed, arrays, metrics)
 
 
+def _simulate_garch_t(
+    rng: np.random.Generator, n: int, omega: float, alpha: float, beta: float, df: int
+) -> tuple[np.ndarray, np.ndarray]:
+    """Simulate a GARCH(1,1) return path with unit-variance Student-t innovations."""
+    variance = np.empty(n)
+    returns = np.empty(n)
+    variance[0] = omega / (1.0 - alpha - beta)
+    scale = np.sqrt((df - 2.0) / df)
+    for t in range(n):
+        innovation = rng.standard_t(df) * scale
+        returns[t] = np.sqrt(variance[t]) * innovation
+        if t + 1 < n:
+            variance[t + 1] = omega + alpha * returns[t] ** 2 + beta * variance[t]
+    return returns, np.sqrt(variance)
+
+
+def volume27_reference(*, seed: int = 20260745) -> FrontierReference:
+    """Build the synthetic advanced VaR/ES risk-desk reference (vol 27).
+
+    Assembles fixed-seed backtest series (Kupiec size study, Christoffersen
+    clustering), a GARCH(1,1) filtered-historical-simulation coverage
+    experiment, a peaks-over-threshold GPD tail fit, an analytic/simulation
+    Euler risk decomposition, and a delta-gamma-vega P&L-explain capstone
+    from the tested :mod:`hullkit` risk APIs. All identities that the
+    ``_volume27`` acceptance gate recomputes (FHS/EVT/Euler additivity,
+    marginal finite differences, Taylor ordering) are exact by construction.
+    """
+    alpha = 0.99
+    p = 1.0 - alpha
+
+    # --- Backtest statistics: Kupiec size study and Christoffersen clustering ---
+    n_replications = 400
+    kupiec_obs = 500
+    rng_kupiec = np.random.default_rng(seed + 1)
+    reject_flags = np.empty(n_replications, dtype=float)
+    for i in range(n_replications):
+        exceedances = (rng_kupiec.random(kupiec_obs) < p).astype(int)
+        x = int(exceedances.sum())
+        _, pvalue = var_backtest.kupiec_pof(x, kupiec_obs, alpha=alpha)
+        reject_flags[i] = 1.0 if pvalue < 0.05 else 0.0
+    kupiec_rate = float(reject_flags.mean())
+    kupiec_se = np.sqrt(0.05 * 0.95 / n_replications)
+    kupiec_zscore = float(abs(kupiec_rate - 0.05) / kupiec_se)
+
+    n_backtest = 250
+    rng_cluster = np.random.default_rng(seed + 2)
+    iid_exceedances = (rng_cluster.random(n_backtest) < p).astype(int)
+    clustered = np.zeros(n_backtest, dtype=int)
+    prob_enter, prob_stay = 0.01, 0.55
+    state = 0
+    for i in range(n_backtest):
+        draw = rng_cluster.random()
+        state = int(draw < (prob_stay if state == 1 else prob_enter))
+        clustered[i] = state
+    lr_ind_iid, pvalue_ind_iid = var_backtest.christoffersen_independence(iid_exceedances)
+    lr_ind_clustered, pvalue_ind_clustered = var_backtest.christoffersen_independence(clustered)
+
+    traffic_x = np.arange(16)
+    traffic_zones = [
+        var_backtest.basel_traffic_light(int(x), n_obs=250, alpha=alpha) for x in traffic_x
+    ]
+    traffic_cumulative = np.asarray([zone.cumulative_probability for zone in traffic_zones])
+    traffic_multiplier = np.asarray([zone.multiplier for zone in traffic_zones])
+
+    # --- Filtered historical simulation on a GARCH(1,1) path ---
+    n_path = 2200
+    window = 200
+    ewma_lambda = 0.96
+    rng_garch = np.random.default_rng(seed)
+    garch_returns, _true_sigma = _simulate_garch_t(rng_garch, n_path, 6e-6, 0.12, 0.87, 6)
+    conditional_sigma = np.sqrt(volatility.ewma_variance(garch_returns, lam=ewma_lambda))
+    backtest_day = np.arange(window, n_path, dtype=float)
+    hs_var_forecast = np.empty(n_path - window)
+    fhs_var_forecast = np.empty(n_path - window)
+    hs_violations = np.empty(n_path - window, dtype=float)
+    fhs_violations = np.empty(n_path - window, dtype=float)
+    for offset, t in enumerate(range(window, n_path)):
+        window_returns = garch_returns[t - window : t]
+        window_sigma = conditional_sigma[t - window : t]
+        hs_var, _ = risk.historical_var_es(window_returns, alpha=alpha)
+        fhs_var, _ = tail_risk.filtered_historical_var_es(
+            window_returns, window_sigma, alpha=alpha, current_sigma=float(conditional_sigma[t])
+        )
+        loss = -float(garch_returns[t])
+        hs_var_forecast[offset] = hs_var
+        fhs_var_forecast[offset] = fhs_var
+        hs_violations[offset] = 1.0 if loss > hs_var else 0.0
+        fhs_violations[offset] = 1.0 if loss > fhs_var else 0.0
+    hs_violation_rate = float(hs_violations.mean())
+    fhs_violation_rate = float(fhs_violations.mean())
+    constant_sigma = float(conditional_sigma[-1])
+    fhs_constant_var, _ = tail_risk.filtered_historical_var_es(
+        garch_returns, np.full(n_path, constant_sigma), alpha=alpha, current_sigma=constant_sigma
+    )
+    hs_all_var, _ = risk.historical_var_es(garch_returns, alpha=alpha)
+    coverage_names = np.asarray(["plain HS", "FHS"])
+    coverage_rate = np.asarray([hs_violation_rate, fhs_violation_rate])
+
+    # --- Extreme value theory: peaks-over-threshold GPD fit ---
+    rng_gpd = np.random.default_rng(seed + 3)
+    xi_true, beta_true, threshold = 0.2, 1.0, 5.0
+    n_tail, n_bulk = 500, 1500
+    uniform_tail = rng_gpd.random(n_tail)
+    tail_losses = threshold + (beta_true / xi_true) * ((1.0 - uniform_tail) ** (-xi_true) - 1.0)
+    bulk_losses = rng_gpd.uniform(0.0, threshold, size=n_bulk)
+    gpd_losses = np.concatenate([bulk_losses, tail_losses])
+    rng_gpd.shuffle(gpd_losses)
+    gpd_fit = tail_risk.fit_gpd_pot(gpd_losses, threshold, min_exceedances=30)
+    sorted_losses = np.sort(gpd_losses)
+    top_threshold = float(sorted_losses[-40])
+    mean_excess_threshold = np.linspace(3.0, top_threshold, 25)
+    mean_excess_curve = tail_risk.mean_excess(gpd_losses, mean_excess_threshold)
+    evt_quantile_alpha = np.asarray([0.95, 0.99, 0.995, 0.999])
+    evt_pairs = [tail_risk.evt_var_es(gpd_fit, alpha=float(a)) for a in evt_quantile_alpha]
+    evt_var_ladder = np.asarray([pair[0] for pair in evt_pairs])
+    empirical_var_ladder = np.asarray(
+        [np.quantile(gpd_losses, float(a)) for a in evt_quantile_alpha]
+    )
+    evt_alpha = 0.999
+    evt_var, evt_es = tail_risk.evt_var_es(gpd_fit, alpha=evt_alpha)
+    evt_es_identity = (evt_var + gpd_fit.beta - gpd_fit.xi * threshold) / (1.0 - gpd_fit.xi)
+
+    # --- Risk decomposition: analytic Euler and simulation ES ---
+    asset_names = np.asarray(["equity", "rates", "credit", "fx", "commodity"])
+    alloc_amounts = np.asarray([120.0, -80.0, 60.0, 40.0, -30.0])
+    alloc_vols = np.asarray([0.18, 0.25, 0.30, 0.22, 0.28])
+    alloc_corr = np.asarray(
+        [
+            [1.00, 0.30, 0.20, 0.10, -0.10],
+            [0.30, 1.00, 0.25, 0.15, -0.05],
+            [0.20, 0.25, 1.00, 0.35, 0.10],
+            [0.10, 0.15, 0.35, 1.00, 0.20],
+            [-0.10, -0.05, 0.10, 0.20, 1.00],
+        ]
+    )
+    alloc_marginal_var = risk_allocation.marginal_var_normal(
+        alloc_amounts, alloc_vols, alloc_corr, alpha=alpha
+    )
+    alloc_component_var = risk_allocation.component_var_normal(
+        alloc_amounts, alloc_vols, alloc_corr, alpha=alpha
+    )
+    alloc_normal_var = risk.normal_var(
+        risk.portfolio_sigma(alloc_amounts, alloc_vols, alloc_corr), alpha=alpha
+    )
+    rng_pnl = np.random.default_rng(seed + 4)
+    cholesky = np.linalg.cholesky(alloc_corr)
+    correlated = rng_pnl.standard_normal((2000, 5)) @ cholesky.T
+    pnl_matrix = correlated * (alloc_amounts * alloc_vols)[None, :]
+    alloc_incremental_var = np.asarray(
+        [risk_allocation.incremental_var(pnl_matrix, i, alpha=alpha) for i in range(5)]
+    )
+    es_components = risk_allocation.euler_es_components(pnl_matrix, alpha=alpha)
+    _, total_historical_es = risk.historical_var_es(pnl_matrix.sum(axis=1), alpha=alpha)
+
+    # --- P&L explain capstone (Black-Scholes full revaluation) ---
+    factor_names = np.asarray(["index", "single-name", "etf"])
+    spot = np.asarray([100.0, 50.0, 200.0])
+    strike = np.asarray([100.0, 55.0, 190.0])
+    sigma0 = np.asarray([0.20, 0.30, 0.25])
+    expiry = np.asarray([0.50, 1.00, 0.25])
+    rate = 0.02
+    weights = np.asarray([10.0, -5.0, 8.0])
+    is_call = np.asarray([True, False, True])
+
+    def _price(index: int, spot_value: float, vol_value: float) -> float:
+        if is_call[index]:
+            return bsm.call_price(spot_value, strike[index], rate, vol_value, expiry[index])
+        return bsm.put_price(spot_value, strike[index], rate, vol_value, expiry[index])
+
+    position_delta = np.asarray(
+        [
+            bsm.call_delta(spot[i], strike[i], rate, sigma0[i], expiry[i])
+            if is_call[i]
+            else bsm.put_delta(spot[i], strike[i], rate, sigma0[i], expiry[i])
+            for i in range(3)
+        ]
+    )
+    position_gamma = np.asarray(
+        [bsm.gamma(spot[i], strike[i], rate, sigma0[i], expiry[i]) for i in range(3)]
+    )
+    position_vega = np.asarray(
+        [bsm.vega(spot[i], strike[i], rate, sigma0[i], expiry[i]) for i in range(3)]
+    )
+    book_delta, book_gamma, book_vega = pnl_explain.aggregate_exposures(
+        weights, np.diag(position_delta), np.diag(position_gamma), np.diag(position_vega)
+    )
+    factor_moves = np.asarray([2.0, -1.5, 4.0])
+    vol_moves = np.asarray([0.02, -0.01, 0.015])
+
+    def _full_reval(scale: float) -> float:
+        total = 0.0
+        for i in range(3):
+            base_price = _price(i, float(spot[i]), float(sigma0[i]))
+            shocked = _price(
+                i, float(spot[i] + scale * factor_moves[i]), float(sigma0[i] + scale * vol_moves[i])
+            )
+            total += float(weights[i]) * (shocked - base_price)
+        return total
+
+    taylor_full = _full_reval(1.0)
+    taylor_full_half = _full_reval(0.5)
+    taylor_dgv = pnl_explain.delta_gamma_vega_pnl(
+        book_delta, book_gamma, book_vega, factor_moves, vol_moves
+    )
+    taylor_dgv_half = pnl_explain.delta_gamma_vega_pnl(
+        book_delta, book_gamma, book_vega, 0.5 * factor_moves, 0.5 * vol_moves
+    )
+    taylor_delta_only = float(book_delta @ factor_moves)
+    taylor_delta_only_half = float(book_delta @ (0.5 * factor_moves))
+    taylor_component_names = np.asarray(["delta", "gamma", "vega", "total"])
+    taylor_component_value = np.asarray(
+        [taylor_dgv["delta"], taylor_dgv["gamma"], taylor_dgv["vega"], taylor_dgv["total"]]
+    )
+    taylor_attribution = pnl_explain.pnl_attribution(taylor_full, taylor_dgv["total"])
+
+    limit_names = np.asarray(["equity", "rates", "credit", "fx", "commodity"])
+    limit_measure = np.abs(alloc_component_var)
+    limit_value = np.asarray([12.0, 9.0, 11.0, 6.0, 5.0])
+    limit_result = pnl_explain.limit_utilization(limit_measure, limit_value)
+    limit_utilization_ratio = limit_result["utilization"]
+
+    clustered_zone = var_backtest.basel_traffic_light(int(clustered.sum()), n_obs=250, alpha=alpha)
+    desk = pnl_explain.desk_report(
+        var=float(alloc_normal_var),
+        es=float(total_historical_es),
+        components={
+            name: float(value) for name, value in zip(asset_names, alloc_component_var, strict=True)
+        },
+        utilization=limit_result,
+        backtest=clustered_zone,
+    )
+
+    arrays: ArrayMap = {
+        "exceedance_day": np.arange(n_backtest, dtype=float),
+        "iid_exceedances": iid_exceedances.astype(float),
+        "clustered_exceedances": clustered.astype(float),
+        "kupiec_size_names": np.asarray(["observed rejection rate", "nominal 5% size"]),
+        "kupiec_size_values": np.asarray([kupiec_rate, 0.05]),
+        "kupiec_size_reject_flags": reject_flags,
+        "traffic_light_x": traffic_x.astype(float),
+        "traffic_light_cumulative_prob": traffic_cumulative,
+        "traffic_light_multiplier": traffic_multiplier,
+        "return_day": np.arange(n_path, dtype=float),
+        "garch_returns": garch_returns,
+        "conditional_sigma": conditional_sigma,
+        "backtest_day": backtest_day,
+        "hs_var_forecast": hs_var_forecast,
+        "fhs_var_forecast": fhs_var_forecast,
+        "hs_violations": hs_violations,
+        "fhs_violations": fhs_violations,
+        "coverage_names": coverage_names,
+        "coverage_rate": coverage_rate,
+        "gpd_losses": gpd_losses,
+        "mean_excess_threshold": mean_excess_threshold,
+        "mean_excess_curve": mean_excess_curve,
+        "evt_quantile_alpha": evt_quantile_alpha,
+        "evt_var_ladder": evt_var_ladder,
+        "empirical_var_ladder": empirical_var_ladder,
+        "asset_names": asset_names,
+        "alloc_amounts": alloc_amounts,
+        "alloc_vols": alloc_vols,
+        "alloc_corr": alloc_corr,
+        "alloc_marginal_var": alloc_marginal_var,
+        "alloc_component_var": alloc_component_var,
+        "alloc_incremental_var": alloc_incremental_var,
+        "pnl_matrix": pnl_matrix,
+        "es_components": es_components,
+        "factor_names": factor_names,
+        "book_delta": np.asarray(book_delta),
+        "book_gamma": np.asarray(book_gamma),
+        "book_vega": np.asarray(book_vega),
+        "factor_moves": factor_moves,
+        "vol_moves": vol_moves,
+        "taylor_component_names": taylor_component_names,
+        "taylor_component_value": taylor_component_value,
+        "limit_names": limit_names,
+        "limit_measure": limit_measure,
+        "limit_value": limit_value,
+        "limit_utilization_ratio": limit_utilization_ratio,
+    }
+    metrics: dict[str, Scalar] = {
+        "alpha": alpha,
+        "kupiec_size_rejection_rate": kupiec_rate,
+        "kupiec_size_zscore": kupiec_zscore,
+        "christoffersen_ind_lr_iid": float(lr_ind_iid),
+        "christoffersen_ind_lr_clustered": float(lr_ind_clustered),
+        "christoffersen_ind_pvalue_iid": float(pvalue_ind_iid),
+        "christoffersen_ind_pvalue_clustered": float(pvalue_ind_clustered),
+        "fhs_var_constant": float(fhs_constant_var),
+        "fhs_constant_vol_error": float(abs(fhs_constant_var - hs_all_var)),
+        "hs_violation_rate": hs_violation_rate,
+        "fhs_violation_rate": fhs_violation_rate,
+        "gpd_xi_true": xi_true,
+        "gpd_beta_true": beta_true,
+        "gpd_xi_hat": float(gpd_fit.xi),
+        "gpd_beta_hat": float(gpd_fit.beta),
+        "gpd_n_exceedances": int(gpd_fit.n_exceedances),
+        "evt_threshold": threshold,
+        "evt_alpha": evt_alpha,
+        "evt_var": float(evt_var),
+        "evt_es": float(evt_es),
+        "evt_es_identity_error": float(abs(evt_es - evt_es_identity)),
+        "alloc_normal_var": float(alloc_normal_var),
+        "euler_additivity_error": float(abs(alloc_component_var.sum() - alloc_normal_var)),
+        "total_historical_es": float(total_historical_es),
+        "euler_es_additivity_error": float(abs(es_components.sum() - total_historical_es)),
+        "taylor_full_pnl": float(taylor_full),
+        "taylor_full_pnl_half": float(taylor_full_half),
+        "taylor_dgv_total": float(taylor_dgv["total"]),
+        "taylor_dgv_total_half": float(taylor_dgv_half["total"]),
+        "taylor_delta_only": taylor_delta_only,
+        "taylor_delta_only_half": taylor_delta_only_half,
+        "taylor_dgv_residual": float(abs(taylor_full - taylor_dgv["total"])),
+        "taylor_delta_residual": float(abs(taylor_full - taylor_delta_only)),
+        "taylor_dgv_residual_half": float(abs(taylor_full_half - taylor_dgv_half["total"])),
+        "taylor_delta_residual_half": float(abs(taylor_full_half - taylor_delta_only_half)),
+        "taylor_unexplained_share": float(taylor_attribution["unexplained_share"]),
+        "desk_report_var": float(desk["var"]),
+        "desk_report_es": float(desk["es"]),
+        "clustered_basel_zone": clustered_zone.zone,
+    }
+    return FrontierReference(27, seed, arrays, metrics)
+
+
 _BUILDERS: dict[int, Callable[..., FrontierReference]] = {
     21: volume21_reference,
     22: volume22_reference,
@@ -2040,14 +2364,15 @@ _BUILDERS: dict[int, Callable[..., FrontierReference]] = {
     24: volume24_reference,
     25: volume25_reference,
     26: volume26_reference,
+    27: volume27_reference,
 }
 
 
 def build_frontier_reference(volume: int, *, seed: int | None = None) -> FrontierReference:
-    """Build a serialization-ready vol 21--26 payload by volume number."""
+    """Build a serialization-ready vol 21--27 payload by volume number."""
 
     try:
         builder = _BUILDERS[volume]
     except KeyError as exc:
-        raise ValueError("frontier reference volume must lie in [21, 26]") from exc
+        raise ValueError("frontier reference volume must lie in [21, 27]") from exc
     return builder() if seed is None else builder(seed=seed)
