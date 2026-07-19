@@ -1,4 +1,4 @@
-"""Build vol 19--26 references from the tested implementation APIs."""
+"""Build vol 19--27 references from the tested implementation APIs."""
 
 from __future__ import annotations
 
@@ -32,6 +32,7 @@ FILES = {
     24: ("24_crypto_market_structure", "metrics.json", "stress_paths.npz"),
     25: ("25_climate_energy", "metrics.json", "scenarios.npz"),
     26: ("26_inflation_jgbi", "metrics.json", "inflation_scenarios.npz"),
+    27: ("27_risk_desk", "metrics.json", "risk_desk_scenarios.npz"),
 }
 
 UNITS_BY_VOLUME: dict[int, dict[str, str]] = {
@@ -308,6 +309,54 @@ UNITS_BY_VOLUME: dict[int, dict[str, str]] = {
         "floor_cpi_delta": "currency units per CPI index point",
         "floor_inflation_vega": "currency units per unit volatility",
     },
+    27: {
+        "exceedance_day": "trading days",
+        "iid_exceedances": "exceedance indicator",
+        "clustered_exceedances": "exceedance indicator",
+        "kupiec_size_names": "label",
+        "kupiec_size_values": "rejection probability",
+        "kupiec_size_reject_flags": "rejection indicator",
+        "traffic_light_x": "exceedance count",
+        "traffic_light_cumulative_prob": "binomial cumulative probability",
+        "traffic_light_multiplier": "capital multiplier",
+        "return_day": "trading days",
+        "garch_returns": "synthetic daily return",
+        "conditional_sigma": "conditional volatility",
+        "backtest_day": "trading days",
+        "hs_var_forecast": "VaR loss in return units",
+        "fhs_var_forecast": "VaR loss in return units",
+        "hs_violations": "exceedance indicator",
+        "fhs_violations": "exceedance indicator",
+        "coverage_names": "label",
+        "coverage_rate": "violation rate",
+        "gpd_losses": "synthetic loss amount",
+        "mean_excess_threshold": "loss threshold",
+        "mean_excess_curve": "mean excess loss",
+        "evt_quantile_alpha": "coverage level",
+        "evt_var_ladder": "VaR loss amount",
+        "empirical_var_ladder": "VaR loss amount",
+        "asset_names": "label",
+        "alloc_amounts": "synthetic position amount",
+        "alloc_vols": "annualized decimal volatility",
+        "alloc_corr": "correlation",
+        "alloc_marginal_var": "VaR per unit amount",
+        "alloc_component_var": "VaR loss amount",
+        "alloc_incremental_var": "VaR loss amount",
+        "pnl_matrix": "synthetic P&L amount",
+        "es_components": "ES loss amount",
+        "factor_names": "label",
+        "book_delta": "P&L per factor unit",
+        "book_gamma": "P&L per factor unit squared",
+        "book_vega": "P&L per volatility unit",
+        "factor_moves": "factor price move",
+        "vol_moves": "volatility move",
+        "taylor_component_names": "label",
+        "taylor_component_value": "explained P&L amount",
+        "limit_names": "label",
+        "limit_measure": "risk usage amount",
+        "limit_value": "risk limit amount",
+        "limit_utilization_ratio": "utilization ratio",
+    },
 }
 
 
@@ -375,9 +424,7 @@ def _preserve_vol21_timing_reference(
         return
     previous = json.loads(json_path.read_text(encoding="utf-8"))
     previous_benchmark = previous.get("benchmark", {})
-    stable_previous = {
-        key: value for key, value in previous_benchmark.items() if key != "sources"
-    }
+    stable_previous = {key: value for key, value in previous_benchmark.items() if key != "sources"}
     stable_current = {key: value for key, value in benchmark.items() if key != "sources"}
     if (
         previous.get("generated_by") != "johnhull/scripts/build_frontier_artifacts.py"

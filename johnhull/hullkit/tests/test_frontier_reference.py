@@ -1,4 +1,4 @@
-"""API-to-artifact contract tests for beyond-Hull volumes 21--26."""
+"""API-to-artifact contract tests for beyond-Hull volumes 21--27."""
 
 import numpy as np
 import pytest
@@ -7,7 +7,7 @@ from hullkit import frontier_reference
 
 @pytest.fixture(scope="module")
 def references() -> dict[int, frontier_reference.FrontierReference]:
-    return {volume: frontier_reference.build_frontier_reference(volume) for volume in range(21, 27)}
+    return {volume: frontier_reference.build_frontier_reference(volume) for volume in range(21, 28)}
 
 
 @pytest.mark.parametrize(
@@ -171,6 +171,40 @@ def references() -> dict[int, frontier_reference.FrontierReference]:
                 "zcis_repricing_max_error",
                 "floor_decomposition_error",
                 "measure_treatment",
+            },
+        ),
+        (
+            27,
+            {
+                "iid_exceedances",
+                "clustered_exceedances",
+                "kupiec_size_reject_flags",
+                "traffic_light_cumulative_prob",
+                "traffic_light_multiplier",
+                "garch_returns",
+                "conditional_sigma",
+                "hs_violations",
+                "fhs_violations",
+                "gpd_losses",
+                "mean_excess_curve",
+                "evt_var_ladder",
+                "empirical_var_ladder",
+                "alloc_marginal_var",
+                "alloc_component_var",
+                "alloc_incremental_var",
+                "pnl_matrix",
+                "es_components",
+                "taylor_component_value",
+                "limit_utilization_ratio",
+            },
+            {
+                "alloc_normal_var",
+                "euler_additivity_error",
+                "evt_es_identity_error",
+                "fhs_violation_rate",
+                "hs_violation_rate",
+                "gpd_xi_hat",
+                "desk_report_var",
             },
         ),
     ],
@@ -405,20 +439,57 @@ def test_volume26_exposes_measure_consistent_inflation_and_jgbi_identities(
     assert reference.metrics["floor_mc_zscore_max"] < 3.0
     assert arrays["jgbi_floored_principal"][-1] > arrays["jgbi_unfloored_principal"][-1]
     assert arrays["jgbi_coupon"].shape == arrays["jgbi_index_ratio"].shape
-    assert arrays["breakeven_inflation"][1] != pytest.approx(
-        arrays["breakeven_inflation"][0]
-    )
+    assert arrays["breakeven_inflation"][1] != pytest.approx(arrays["breakeven_inflation"][0])
     assert reference.metrics["principal_floor_redemption_only"] is True
     assert reference.metrics["measure_treatment"] == "nominal_payment_forward"
 
 
+def test_volume27_exposes_recomputable_risk_desk_identities(
+    references: dict[int, frontier_reference.FrontierReference],
+) -> None:
+    reference = references[27]
+    arrays = reference.arrays
+    metrics = reference.metrics
+    # Analytic Euler additivity: component VaR sums to the normal VaR.
+    np.testing.assert_allclose(
+        arrays["alloc_component_var"].sum(), metrics["alloc_normal_var"], atol=1e-12
+    )
+    # Closed-form EVT ES identity.
+    es_check = (
+        metrics["evt_var"]
+        + metrics["gpd_beta_hat"]
+        - metrics["gpd_xi_hat"] * metrics["evt_threshold"]
+    ) / (1.0 - metrics["gpd_xi_hat"])
+    assert abs(metrics["evt_es"] - es_check) <= 1e-12
+    # Simulation Euler ES additivity from the committed P&L matrix.
+    total = arrays["pnl_matrix"].sum(axis=1)
+    n = total.size
+    k = max(1, int(np.ceil(0.01 * n - 1e-9)))
+    tail = np.argsort(total, kind="stable")[:k]
+    es_total = float((-total[tail]).mean())
+    np.testing.assert_allclose(arrays["es_components"].sum(), es_total, atol=1e-12)
+    # FHS coverage beats plain HS on the GARCH path.
+    assert abs(metrics["fhs_violation_rate"] - 0.01) < abs(metrics["hs_violation_rate"] - 0.01)
+    # Christoffersen independence detects the clustered series.
+    assert metrics["christoffersen_ind_pvalue_clustered"] < 0.05
+    assert metrics["christoffersen_ind_lr_clustered"] > metrics["christoffersen_ind_lr_iid"]
+    # GPD parameter recovery within the acceptance tolerances.
+    assert abs(metrics["gpd_xi_hat"] - metrics["gpd_xi_true"]) <= 0.1
+    assert abs(metrics["gpd_beta_hat"] / metrics["gpd_beta_true"] - 1.0) <= 0.15
+    # Taylor P&L-explain ordering.
+    dgv_residual = abs(metrics["taylor_full_pnl"] - metrics["taylor_dgv_total"])
+    delta_residual = abs(metrics["taylor_full_pnl"] - metrics["taylor_delta_only"])
+    assert dgv_residual < delta_residual
+    assert arrays["asset_names"].tolist() == ["equity", "rates", "credit", "fx", "commodity"]
+
+
 def test_dispatcher_rejects_non_frontier_volume_and_accepts_explicit_seed() -> None:
-    with pytest.raises(ValueError, match=r"\[21, 26\]"):
+    with pytest.raises(ValueError, match=r"\[21, 27\]"):
         frontier_reference.build_frontier_reference(20)
     assert frontier_reference.build_frontier_reference(24, seed=7).seed == 7
 
 
-@pytest.mark.parametrize("volume", range(21, 27))
+@pytest.mark.parametrize("volume", range(21, 28))
 def test_fixed_seed_reproduces_all_non_timing_values(
     references: dict[int, frontier_reference.FrontierReference],
     volume: int,
