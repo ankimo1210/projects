@@ -56,11 +56,11 @@ class Store:
                 "ON CONFLICT DO UPDATE SET value = excluded.value", rows)
 
     def upsert_sleep(self, rows) -> None:
+        set_clause = ", ".join(f"{c} = excluded.{c}" for c in _SLEEP_COLS if c != "log_id")
         for r in rows:
             self.con.execute(
                 f"INSERT INTO sleep_sessions VALUES ({', '.join('?' * len(_SLEEP_COLS))}) "
-                "ON CONFLICT DO UPDATE SET minutes_asleep = excluded.minutes_asleep, "
-                "efficiency = excluded.efficiency",
+                f"ON CONFLICT DO UPDATE SET {set_clause}",
                 [r[c] for c in _SLEEP_COLS])
 
     def upsert_intraday(self, rows) -> None:

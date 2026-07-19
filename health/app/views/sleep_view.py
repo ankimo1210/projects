@@ -71,3 +71,19 @@ def sleep_page() -> None:
                      labels={"date": "日付", "hour": "時刻", "event": ""})
     fig.update_traces(marker=dict(size=8, line=dict(width=2, color=SURFACE)))
     st.plotly_chart(_style(fig), use_container_width=True, theme=None)
+
+    st.subheader("曜日パターン")
+    weekday_labels = ["月", "火", "水", "木", "金", "土", "日"]
+    wp = sf.copy()
+    wp["date"] = pd.to_datetime(wp["date"])
+    wp["weekday"] = wp["date"].dt.weekday
+    agg = wp.groupby("weekday")["minutes_asleep"].mean().reset_index()
+    if agg.empty:
+        st.info("睡眠データがありません。")
+    else:
+        agg["weekday"] = agg["weekday"].map(dict(enumerate(weekday_labels)))
+        fig = px.bar(agg, x="weekday", y="minutes_asleep",
+                    category_orders={"weekday": weekday_labels},
+                    labels={"weekday": "曜日", "minutes_asleep": "平均睡眠時間（分）"})
+        fig.update_traces(marker_color=CATEGORICAL[0])
+        st.plotly_chart(_style(fig), use_container_width=True, theme=None)

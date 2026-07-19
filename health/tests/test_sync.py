@@ -98,6 +98,24 @@ def test_rate_limited_mid_run_pauses_with_retry_after(store):
     assert store.get_sync_state("intraday_hr") == date(2026, 6, 25)
 
 
+def test_profile_fetch_rate_limited_pauses_without_propagating(store):
+    # resumed backfill: fresh engine (member_since=None) hits the rate limit on
+    # the profile fetch itself — must pause cleanly, not raise into the caller.
+    client = FakeClient(fail_after=0)
+    engine = SyncEngine(client, store, catalog=steps_only(), today=date(2026, 7, 20))
+    report = engine.sync_all()
+    assert report.paused and report.resume_in_s == 900
+    assert client.calls == []
+
+
+def test_budget_exhausted_before_profile_fetch_pauses_without_any_call(store):
+    client = FakeClient(remaining=3)  # below min_budget, member_since not yet known
+    engine = SyncEngine(client, store, catalog=steps_only(), today=date(2026, 7, 20))
+    report = engine.sync_all(min_budget=5)
+    assert report.paused and report.resume_in_s == 1800
+    assert client.calls == []
+
+
 def test_progress_callback_invoked(store):
     seen = []
     client = FakeClient()

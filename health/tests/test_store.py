@@ -44,6 +44,22 @@ def test_sleep_roundtrip_idempotent(store):
     assert len(store.sleep_frame()) == 1
 
 
+def test_sleep_upsert_revises_all_columns(store):
+    # trailing-3-day refetch can deliver a revised sleep log for the same log_id;
+    # every non-PK column (not just minutes_asleep/efficiency) must refresh.
+    row = {"log_id": 1, "date": "2026-07-01", "start_ts": "2026-06-30 23:41:30",
+           "end_ts": "2026-07-01 07:05:30", "minutes_asleep": 402, "minutes_deep": 80,
+           "minutes_light": 220, "minutes_rem": 102, "minutes_wake": 42,
+           "efficiency": 93, "is_main": True}
+    store.upsert_sleep([row])
+    revised = dict(row, minutes_deep=95, start_ts="2026-06-30 23:20:00")
+    store.upsert_sleep([revised])
+    df = store.sleep_frame()
+    assert len(df) == 1
+    assert df.loc[0, "minutes_deep"] == 95
+    assert str(df.loc[0, "start_ts"]).startswith("2026-06-30 23:20:00")
+
+
 def test_intraday_roundtrip(store):
     store.upsert_intraday([("hr", "2026-07-01 00:00:00", 62.0),
                            ("hr", "2026-07-01 00:01:00", 63.0),
