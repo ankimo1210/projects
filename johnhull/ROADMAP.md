@@ -82,6 +82,10 @@ research track は既定無効・core gate 非依存のままとする。
 
 Design plan: `docs/superpowers/plans/2026-07-19-johnhull-inflation-jgbi.md`
 
+| Volume | Path | Topic | Status |
+|---:|---|---|---|
+| 26 | `volumes/26_inflation_jgbi` | inflation-linked rates and JGBi (beyond Hull ch.25) | done |
+
 | Phase | Scope | Status |
 |---:|---|---|
 | 1 | Shared nominal/real curve helpers | done |
@@ -111,7 +115,7 @@ Design plan: `docs/superpowers/plans/2026-07-20-johnhull-vol27-risk-desk.md`
 | 3 | Euler risk decomposition: marginal/component/incremental VaR and simulation ES | done |
 | 4 | P&L explain: factor exposures, delta-gamma-vega attribution, limits, desk report | done |
 | 5 | `volumes/27_risk_desk` reference, `_volume27` acceptance, artifact-only notebook | done |
-| 6 | Portal `risk_management` page, Jupyter Book page, full tracked release | pending |
+| 6 | Portal `risk_management` page, Jupyter Book page, full tracked release | done |
 
 Phase 5 の `done` は synthetic-offline の integration/reproducibility gate（`_volume27`
 の 11 恒等式チェックと byte 再現性）を表し、市場較正・model performance の承認ではない。
