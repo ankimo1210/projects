@@ -4,6 +4,7 @@
 //! full GTO solver.** Fixed action abstraction, explicit card abstraction
 //! levels, exploitability is always reported alongside strategies.
 
+pub mod bench;
 pub mod game;
 pub mod games;
 pub mod ranges;
