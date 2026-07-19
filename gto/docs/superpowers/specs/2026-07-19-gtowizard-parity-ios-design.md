@@ -1,9 +1,10 @@
 # GTO Wizard-Parity Product (iOS-first) — Design
 
 Date: 2026-07-19
-Status: **Approved design, pre-implementation.** Brainstormed section-by-section
-with the user; all four sections approved. Next step: implementation plan
-(`docs/superpowers/plans/`).
+Status: **Approved design; P0a implementation plan finalized (rev 2),
+implementation not started.** Brainstormed section-by-section with the user;
+all four sections approved. P0a execution follows
+`docs/superpowers/plans/2026-07-19-p0a-algorithm-audit.md`.
 Project: `gto/` — turn the existing solver/API/web stack into a commercial
 GTO Wizard-like product: **iOS app first (monetized), web freemium later**.
 Relation to earlier specs:
