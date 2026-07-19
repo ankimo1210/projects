@@ -76,6 +76,7 @@ synthetic-data method demonstrations, not market-performance claims.
 | Model | Theory | Implementation | Tests | Notebook | Validation |
 |---|---|---|---|---|---|
 | Historical & normal VaR / ES | Hull ch.22 | `hullkit.risk:historical_var_es`, `hullkit.risk:normal_var`, `hullkit.risk:normal_es`, `hullkit.risk:portfolio_sigma` | `test_risk.py` | vol 08 | Pinned to Hull examples |
+| VaR backtesting (Kupiec POF, Christoffersen, Basel traffic light) | Kupiec (1995); Christoffersen (1998); BCBS (1996) | `hullkit.var_backtest:exceedance_series`, `hullkit.var_backtest:kupiec_pof`, `hullkit.var_backtest:christoffersen_independence`, `hullkit.var_backtest:christoffersen_cc`, `hullkit.var_backtest:basel_traffic_light`, `hullkit.var_backtest:BaselZone` | `test_var_backtest.py` | vol 27 | Hand-computed LR_pof; CC = POF(transitions) + independence exact identity; Basel zone/multiplier pinned at n=250 |
 | Hazard rates & CDS pricing | Hull ch.24-25 | `hullkit.credit:hazard_from_spread`, `hullkit.credit:cds_spread`, `hullkit.credit:survival_prob` | `test_credit.py` | vol 09 | Spread round-trip |
 | Merton structural default model | Merton (1974) | `hullkit.credit:merton_default_prob` | `test_credit.py` | vol 09 | d2 convention pinned (sigma*sqrt(T)) |
 | Vasicek / Gaussian copula portfolio credit | Vasicek (2002); Hull ch.25 | `hullkit.copula:vasicek_loss_cdf`, `hullkit.copula:gaussian_copula_samples`, `hullkit.credit:vasicek_credit_var` | `test_copula.py`, `test_credit.py` | vol 09, 16 | Mean = pd; tail fattens with rho |
