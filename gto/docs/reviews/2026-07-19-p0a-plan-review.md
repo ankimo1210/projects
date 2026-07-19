@@ -4,7 +4,16 @@ Date: 2026-07-19
 Reviewed plan: `docs/superpowers/plans/2026-07-19-p0a-algorithm-audit.md`  
 Related spec: `docs/superpowers/specs/2026-07-19-gtowizard-parity-ios-design.md`
 
-## Verdict
+## Resolution
+
+**Resolved in plan rev 2 (`da913d7`), finalized 2026-07-19.** All findings
+below were incorporated into the implementation plan and the governing iOS
+spec. G-A3 was explicitly renegotiated to a validated-projection P0a gate,
+with the first real M=25 peak-RSS measurement retained as a blocking P0b entry
+gate. This document preserves the original review evidence; it is not an
+active execution hold.
+
+## Original verdict (rev 1)
 
 **HOLD — revise before execution.**
 

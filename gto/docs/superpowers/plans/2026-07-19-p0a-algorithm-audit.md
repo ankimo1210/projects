@@ -21,7 +21,7 @@ P0b work, sized by this audit.
 Python 3.12 (numpy; already a dep), pytest, hand-rolled JSON (house style,
 no serde).
 
-**Review status: rev 2 — all findings from
+**Plan status: FINAL (rev 2) — all findings from
 `docs/reviews/2026-07-19-p0a-plan-review.md` incorporated.** P0-1 resolved by
 user decision (2026-07-19): G-A3 is a validated-projection gate in P0a, and
 the first real M=25 run (peak RSS ≤ 48 GB) is a blocking **P0b entry gate**
@@ -72,8 +72,9 @@ assertion instead of branch creation (P2-3).
 - Commit messages follow house style (`feat(gto-hu): …`, `bench(gto): …`,
   `docs(gto): …`) and end with the Claude trailer used on this branch.
 
-**Branch:** work on `claude/gto-p0a-audit` cut from `claude/gto-ios-v1-spec`
-(create in Task 1 Step 1). Audit artifacts (JSON baselines, report) are
+**Branch:** work on the existing `claude/gto-p0a-audit` branch, cut from
+`claude/gto-ios-v1-spec` and asserted in Task 1 Step 1. Audit artifacts
+(JSON baselines, report) are
 committed to the repo under `gto/docs/reviews/2026-07-19-p0a-audit/`.
 
 ---
@@ -1481,7 +1482,7 @@ that threshold).
 //! stream, same arithmetic); k>1 must be deterministic and converge.
 
 use gto_core::eval::parse_card;
-use gto_hu::game::BB;
+use gto_hu::game::{Street, BB};
 use gto_hu::ranges::{uniform_excluding, NUM_COMBOS};
 use gto_hu::solver::{Abstraction, CfrVariant, ChanceMode, FlopSolver};
 use gto_hu::tree::{build_flop_tree, FlopTreeConfig};
@@ -1506,9 +1507,27 @@ fn tiny_flop(mode: ChanceMode) -> FlopSolver {
 fn checksum(s: &FlopSolver) -> u64 {
     let mut acc = 0u64;
     for node_id in s.action_node_ids() {
-        for combo in 0..NUM_COMBOS {
-            for p in s.average_strategy(node_id, combo) {
-                mix(&mut acc, p);
+        let actor = s.actor_at(node_id) as usize;
+        let ctxs: Vec<(Option<usize>, Option<usize>)> = match s.tree.nodes[node_id].state.street {
+            Street::Flop => vec![(None, None)],
+            Street::Turn => (0..s.turns().len()).map(|t| (Some(t), None)).collect(),
+            Street::River => {
+                let mut v = Vec::new();
+                for t in 0..s.turns().len() {
+                    for r in 0..s.rivers(t).len() {
+                        v.push((Some(t), Some(r)));
+                    }
+                }
+                v
+            }
+            Street::Preflop => unreachable!(),
+        };
+        for (t, r) in ctxs {
+            for combo in 0..NUM_COMBOS {
+                if s.export_weight(actor, t, r, combo) == 0.0 { continue; }
+                for p in s.average_strategy(node_id, t, r, combo) {
+                    mix(&mut acc, p);
+                }
             }
         }
     }
@@ -1581,10 +1600,9 @@ fn multisample_expectation_matches_enumeration_across_seeds() {
 }
 ```
 
-Note: `average_strategy` on FlopSolver takes `(node_id, combo)` per
-`flop.rs:903` — verify the exact signature (turn/river nodes may need a
-ctx like the turn solver; if so, restrict the checksum to flop-street
-action nodes, which is sufficient for the identity check).
+The checksum deliberately mirrors `test_perf_baseline.rs`: it enumerates the
+valid `(turn_ctx, river_ctx)` pairs and calls the actual four-argument
+`FlopSolver::average_strategy(node_id, turn_ctx, river_ctx, combo)` API.
 
 - [ ] **Step 2: Run to verify failure**
 
@@ -1601,8 +1619,8 @@ In `turn_river.rs`, extend the enum (keep `Copy`/`Clone` derives intact):
 pub enum ChanceMode {
     Enumerate,
     Sample { seed: u64 },
-    /// k i.i.d. public-card samples (with replacement) per chance visit;
-    /// the EV estimate is the mean of the k single-sample estimators.
+    /// k distinct public-card samples (without replacement) per chance
+    /// visit; partial enumeration with an unbiased chance-node EV.
     /// `samples: 1` is bit-identical to `Sample`.
     MultiSample { seed: u64, samples: u8 },
 }
@@ -1670,7 +1688,7 @@ everywhere.
 cargo test -p gto-hu --test test_multisample 2>&1 | tail -4
 cargo test -p gto-hu 2>&1 | tail -3
 ```
-Expected: 2 passed; and **every** existing test still green — in
+Expected: 4 passed; and **every** existing test still green — in
 particular `test_perf_baseline` checksums, which prove `Sample` behavior
 is untouched.
 
