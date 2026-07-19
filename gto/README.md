@@ -43,7 +43,7 @@ GTO (Game Theory Optimal) ポーカー分析アプリ。テキサスホールデ
 
 ## 🚀 クイックスタート
 
-### 前提
+### 前提（既存solver / web、Wレーン）
 
 - Linux / WSL2 (Ubuntu 22+)
 - CUDA Driver 12.6+ (sm_120 = Blackwell, RTX 5080 で動作確認)
@@ -51,6 +51,10 @@ GTO (Game Theory Optimal) ポーカー分析アプリ。テキサスホールデ
 - Rust (rustup 経由)
 - pnpm
 - [uv](https://docs.astral.sh/uv/)
+
+iOS native開発はMac / Xcode / 物理iPhoneを使うMレーンで行う。2環境の
+担当範囲、成果物の受け渡し、handoff gateは
+[docs/development-environments.md](./docs/development-environments.md) を参照。
 
 ### セットアップ
 
@@ -142,6 +146,7 @@ gto/
 - [ARCHITECTURE.md](./ARCHITECTURE.md) — システム構成・データフロー・図
 - [PROGRESS.md](./PROGRESS.md) — 進捗・TODO・既知の制限
 - [DEV.md](./DEV.md) — 開発起動の簡易メモ
+- [docs/development-environments.md](./docs/development-environments.md) — Windows/WSL GPUとMac/iOSの開発レーン・受け渡しgate
 
 ### ワークスペース全体
 - [`~/projects/README.md`](../README.md) — ワークスペース概要

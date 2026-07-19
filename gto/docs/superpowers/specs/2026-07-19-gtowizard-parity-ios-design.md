@@ -95,6 +95,21 @@ Three structural commitments:
    flops + a real-flop → representative-flop mapping). Same structure as
    Libratus/Pluribus blueprints. No network round-trip per decision.
 
+### 3.1 Development environment lanes
+
+開発環境はハードウェア要件で明確に分離する。正本は
+[`docs/development-environments.md`](../../development-environments.md)。
+
+| Lane | Primary environment | Scope |
+|---|---|---|
+| **W: Solver / Content** | Windows 11 + WSL2 + RTX 5080 | P0a/P0b、solver、pack writer、content generation、FastAPI |
+| **M: App / Release** | Mac + Xcode + physical iPhone | P1–P4のExpo/RN、iOS native、IAP、TestFlight、App Store |
+
+P0aはWレーンだけで完結し、Macを必要としない。P1のnative作業はWindowsでは
+検証しない。両レーンは同一commit SHA、versioned manifest、SHA-256、Rust
+writer → TS readerの小さなgolden fixtureで接続する。Mac環境確認（H0）はP1の
+native scaffold開始条件だが、P0aのblockerではない。
+
 ---
 
 ## 4. Content packs
@@ -365,15 +380,15 @@ scraping only (see §11).
 
 ## 10. Phases (iOS-first; P0 runs concurrently with P1–P3)
 
-| Phase | Deliverable | Depends on |
-|---|---|---|
-| **P0a** | Algorithm optimization audit (§5.0): benchmark harness, profiling, algorithm review, G-A1..3 go/no-go report | — (first; hard gate for P0b mass generation and P2+) |
-| **P0b** | Quality foundation: variance reduction, f32 + board bucketing, M-cap lift (u8 masks / 2^M zsum → M ≥ 25), M ≥ 25 blueprint quality run (**entry gate: first real M=25 run peak RSS ≤ 48 GB — G-A3 confirmation**), real-flop mapping, pack format + build CLI + R2 upload | P0a gate passed |
-| **P1** | Expo scaffold, `@gto/domain` / `@gto/packs` / `@gto/api-client`, Study tab (preflop first, postflop when Tier-1 grid lands), Skia perf spike | P0b preflop pack (charts can land before blueprint; scaffold may start during P0a) |
-| **P2** | Practice + Play: table UI, grading engine, session scoring, bot | P0b blueprint bundle |
-| **P3** | Analyze: parse integration + on-device grading + aggregates | P2 grading engine |
-| **P4** | Commercialization: Supabase auth, IAP + entitlements, gating, pack management UI, TestFlight beta → **App Store submission** | P1–P3 |
-| v1.x | See §12 (future roadmap) | — |
+| Phase | Primary environment | Deliverable | Depends on |
+|---|---|---|---|
+| **P0a** | **W** | Algorithm optimization audit (§5.0): benchmark harness, profiling, algorithm review, G-A1..3 go/no-go report | — (first; hard gate for P0b mass generation and P2+) |
+| **P0b** | **W**; M validates contract | Quality foundation: variance reduction, f32 + board bucketing, M-cap lift (u8 masks / 2^M zsum → M ≥ 25), M ≥ 25 blueprint quality run (**entry gate: first real M=25 run peak RSS ≤ 48 GB — G-A3 confirmation**), real-flop mapping, pack format + build CLI + R2 upload | P0a gate passed |
+| **P1** | **M** | Expo scaffold, `@gto/domain` / `@gto/packs` / `@gto/api-client`, Study tab (preflop first, postflop when Tier-1 grid lands), Skia perf spike | H0 Mac ready; P0b preflop pack (scaffold may start during P0a with fixtures) |
+| **P2** | **M** | Practice + Play: table UI, grading engine, session scoring, bot | P0a gate passed; P0b blueprint bundle |
+| **P3** | **M** + W/cloud backend | Analyze: parse integration + on-device grading + aggregates | P2 grading engine |
+| **P4** | **M** + cloud | Commercialization: Supabase auth, IAP + entitlements, gating, pack management UI, TestFlight beta → **App Store submission** | P1–P3; H1–H4 |
+| v1.x | Per feature | See §12 (future roadmap) | — |
 
 TestFlight beta can start after P2 (Study + Practice + Play working) while
 P3/P4 complete — earliest real-user signal.

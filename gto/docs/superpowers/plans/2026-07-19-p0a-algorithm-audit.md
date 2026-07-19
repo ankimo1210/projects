@@ -37,6 +37,11 @@ assertion instead of branch creation (P2-3).
 
 ## Global Constraints
 
+- **Environment lane W only:** execute this plan on the Windows 11 host in
+  WSL2's Linux filesystem with the RTX 5080 and required RAM. It must not
+  depend on macOS, Xcode, signing, or an iOS device. The Mac/iOS lane and H0
+  feedback are defined in `gto/docs/development-environments.md`; its P1 work
+  may proceed independently, but does not change P0a verdicts.
 - **No new production dependencies** in Rust or Python without explicit
   user approval (workspace policy). JSON is hand-rolled like
   `src/bin/solve_blueprint.rs` does; CLI args are hand-parsed like existing
