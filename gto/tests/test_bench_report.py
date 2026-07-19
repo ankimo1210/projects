@@ -146,3 +146,20 @@ def test_aggregate_keeps_distinct_labels_separate():
         ("threads-1", 1),
         ("threads-2", 1),
     ]
+
+
+def test_aggregate_deduplicates_resumed_artifacts_by_seed():
+    original = _synthetic_run("case_a", seed=1)
+    resumed = _synthetic_run("case_a", seed=1)
+    resumed["resume_count"] = 2
+    aggregated = aggregate_seeds([original, resumed])
+    assert aggregated[0]["n_seeds"] == 1
+    assert aggregated[0]["runs"] == [resumed]
+
+
+def test_render_handles_too_few_points_for_a_slope():
+    run = _synthetic_run("case_a")
+    run["checkpoints"] = run["checkpoints"][:1]
+    markdown = render_markdown([run])
+    row = next(line for line in markdown.splitlines() if line.startswith("| case_a"))
+    assert " | — | " in row

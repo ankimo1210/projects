@@ -109,21 +109,43 @@ def aggregate_seeds(runs: list[dict], min_frac: float = 0.125) -> list[dict]:
     Labels are kept separate so thread sweeps or other named variants of the
     same case are never mixed into one seed interval.
     """
-    grouped: dict[tuple[str, str], list[dict]] = {}
+    grouped: dict[tuple[str, str], dict[int, dict]] = {}
     for run in runs:
-        grouped.setdefault((run["case"], run.get("label", "")), []).append(run)
+        seed_runs = grouped.setdefault((run["case"], run.get("label", "")), {})
+        seed = int(run.get("seed", 0))
+        previous = seed_runs.get(seed)
+        rank = (
+            run["checkpoints"][-1]["iters"] if run.get("checkpoints") else 0,
+            run.get("resume_count", 0),
+        )
+        previous_rank = (
+            previous["checkpoints"][-1]["iters"]
+            if previous is not None and previous.get("checkpoints")
+            else 0,
+            previous.get("resume_count", 0) if previous is not None else 0,
+        )
+        if previous is None or rank > previous_rank:
+            seed_runs[seed] = run
 
     aggregated = []
-    for (case, label), case_runs in sorted(grouped.items()):
-        slopes = sorted(fit_slope(*fit_window(run["checkpoints"], min_frac)) for run in case_runs)
+    for (case, label), seed_runs in sorted(grouped.items()):
+        case_runs = [seed_runs[seed] for seed in sorted(seed_runs)]
+        slopes = []
+        for run in case_runs:
+            try:
+                slopes.append(fit_slope(*fit_window(run["checkpoints"], min_frac)))
+            except ValueError:
+                pass
+        slopes.sort()
         aggregated.append(
             {
                 "case": case,
                 "label": label,
                 "n_seeds": len(case_runs),
-                "slope_median": float(np.median(slopes)),
-                "slope_min": slopes[0],
-                "slope_max": slopes[-1],
+                "n_slopes": len(slopes),
+                "slope_median": float(np.median(slopes)) if slopes else None,
+                "slope_min": slopes[0] if slopes else None,
+                "slope_max": slopes[-1] if slopes else None,
                 "runs": case_runs,
             }
         )
@@ -149,14 +171,20 @@ def render_markdown(runs: list[dict], targets: tuple[float, ...] = (0.5, 0.3, 0.
     rows = []
 
     for aggregate in aggregate_seeds(runs):
+        if aggregate["n_slopes"] == aggregate["n_seeds"]:
+            slope_cell = (
+                f"{aggregate['slope_median']:.2f} "
+                f"[{aggregate['slope_min']:.2f}, {aggregate['slope_max']:.2f}]"
+            )
+        elif aggregate["n_slopes"] > 0:
+            slope_cell = "censored"
+        else:
+            slope_cell = "—"
         cells = [
             aggregate["case"],
             aggregate["label"],
             aggregate["n_seeds"],
-            (
-                f"{aggregate['slope_median']:.2f} "
-                f"[{aggregate['slope_min']:.2f}, {aggregate['slope_max']:.2f}]"
-            ),
+            slope_cell,
         ]
         for target in targets:
             times = [artifact_time_to(target, run) for run in aggregate["runs"]]
