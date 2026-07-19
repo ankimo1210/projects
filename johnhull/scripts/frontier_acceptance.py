@@ -1,4 +1,4 @@
-"""Canonical integration-gate checks for johnhull volumes 18--25."""
+"""Canonical integration-gate checks for johnhull volumes 18--26."""
 
 from __future__ import annotations
 
@@ -1018,6 +1018,124 @@ def _volume25(
     ]
 
 
+def _volume26(
+    metrics: dict[str, Any], arrays: dict[str, np.ndarray]
+) -> tuple[list[dict[str, Any]], list[str]]:
+    checks: list[dict[str, Any]] = []
+    _add(
+        checks,
+        "hull_white_initial_curve",
+        metrics["hw_curve_fit_max_error"],
+        "<= 1e-12",
+        metrics["hw_curve_fit_max_error"] <= 1e-12,
+    )
+    _add(
+        checks,
+        "annual_seasonality_normalization",
+        metrics["seasonality_annual_log_sum"],
+        "<= 1e-12",
+        metrics["seasonality_annual_log_sum"] <= 1e-12,
+    )
+    _add(
+        checks,
+        "zcis_quote_repricing",
+        metrics["zcis_repricing_max_error"],
+        "<= 1e-10",
+        metrics["zcis_repricing_max_error"] <= 1e-10,
+    )
+    jy_shapes = (
+        arrays["jy_forward_index"].shape
+        == arrays["jy_mc_forward_index"].shape
+        == arrays["jy_mc_standard_error"].shape
+        and np.all(arrays["jy_mc_standard_error"] > 0.0)
+    )
+    _add(
+        checks,
+        "jy_forward_measure_mc",
+        metrics["jy_forward_mc_zscore_max"],
+        "aligned arrays and maximum analytic/MC z-score < 3",
+        jy_shapes and metrics["jy_forward_mc_zscore_max"] < 3.0,
+    )
+    floor_shapes = (
+        arrays["floor_analytic"].shape
+        == arrays["floor_mc"].shape
+        == arrays["floor_mc_standard_error"].shape
+        == arrays["inflation_volatility"].shape
+    )
+    _add(
+        checks,
+        "jgbi_floor_analytic_mc",
+        metrics["floor_mc_zscore_max"],
+        "aligned arrays and maximum non-degenerate z-score < 3",
+        floor_shapes and metrics["floor_mc_zscore_max"] < 3.0,
+    )
+    _add(
+        checks,
+        "floor_volatility_monotonicity",
+        metrics["floor_monotone_in_volatility"],
+        "analytic floor is non-decreasing in inflation volatility",
+        metrics["floor_monotone_in_volatility"] is True,
+    )
+    redemption_only = (
+        metrics["principal_floor_redemption_only"] is True
+        and metrics["coupon_floor_max_error"] == 0.0
+        and arrays["jgbi_floored_principal"][-1] > arrays["jgbi_unfloored_principal"][-1]
+    )
+    _add(
+        checks,
+        "redemption_only_principal_floor",
+        metrics["coupon_floor_max_error"],
+        "coupons identical and floored final principal exceeds unfloored principal",
+        redemption_only,
+    )
+    _add(
+        checks,
+        "floor_payoff_decomposition",
+        metrics["floor_decomposition_error"],
+        "<= 1e-12",
+        metrics["floor_decomposition_error"] <= 1e-12,
+    )
+    measure_ok = (
+        metrics["measure_treatment"] == "nominal_payment_forward"
+        and np.ptp(arrays["yoy_jy_ratio"] - arrays["yoy_deterministic_ratio"]) > 0.0
+    )
+    _add(
+        checks,
+        "nominal_payment_forward_measure",
+        metrics["measure_treatment"],
+        "explicit nominal payment-forward measure with non-zero YoY convexity",
+        measure_ok,
+    )
+    bei_ok = (
+        arrays["bei_names"].tolist() == ["raw", "floor-adjusted"]
+        and arrays["breakeven_inflation"][0] != arrays["breakeven_inflation"][1]
+    )
+    _add(
+        checks,
+        "raw_and_floor_adjusted_breakeven",
+        float(arrays["breakeven_inflation"][1] - arrays["breakeven_inflation"][0]),
+        "two explicitly different BEI measures",
+        bei_ok,
+    )
+    hedge_ok = (
+        arrays["hedge_risk_names"].tolist() == ["nominal duration", "CPI delta"]
+        and np.all(arrays["unhedged_normalized_risk"] > 0.0)
+        and np.allclose(arrays["hedged_normalized_risk"], 0.0)
+    )
+    _add(
+        checks,
+        "synthetic_hedge_decomposition",
+        len(arrays["hedge_risk_names"]),
+        "nominal-duration and CPI-delta residuals are reported separately",
+        hedge_ok,
+    )
+    return checks, [
+        "All curves, CPI fixings, option quotes, and hedge ratios are synthetic rather than market calibrated.",
+        "The v1 model uses deterministic seasonality and one-factor nominal/real Gaussian rates.",
+        "Production ISDA disruption fallbacks and live JGBi settlement operations are out of scope.",
+    ]
+
+
 _EVALUATORS = {
     18: _volume18,
     19: _volume19,
@@ -1027,6 +1145,7 @@ _EVALUATORS = {
     23: _volume23,
     24: _volume24,
     25: _volume25,
+    26: _volume26,
 }
 
 
@@ -1039,7 +1158,7 @@ def evaluate_acceptance(
     try:
         evaluator = _EVALUATORS[volume]
     except KeyError as exc:
-        raise ValueError("acceptance volume must lie in [18, 25]") from exc
+        raise ValueError("acceptance volume must lie in [18, 26]") from exc
     checks, negative_results = evaluator(metrics, arrays)
     return {
         "schema_version": 1,

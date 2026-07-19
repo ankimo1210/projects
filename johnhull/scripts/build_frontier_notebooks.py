@@ -1,4 +1,4 @@
-"""Generate and execute artifact-only notebooks for johnhull vol 18--25."""
+"""Generate and execute artifact-only notebooks for johnhull vol 18--26."""
 
 from __future__ import annotations
 
@@ -163,6 +163,67 @@ VOLUME_META = {
         ],
         "citations": "Benth & Benth (2013), Modeling and Pricing in Financial Markets for Weather Derivatives; energy PPA literature.",
         "gate": "G7",
+    },
+    26: {
+        "title": "Hull--White, Inflation Swaps & JGBi",
+        "question": "名目・実質金利、CPI観測、forward measure、JGBi元本保証を混同せずに評価できるか。",
+        "focus": "CPI fixing/forecast、3か月lag、月次seasonalityを先に固定する。Hull--White 1Fで名目・実質curveを表現し、ZCISとYoYを別cash flowとして評価する。Jarrow--YildirimではCPIを実質economyから名目economyへの為替とみなし、各支払日の名目forward measureを明示する。JGBiは10日基準indexと償還時だけの元本保証を分離し、raw BEIとfloor-adjusted BEIを併記する。",
+        "sections": [
+            (
+                "nominal_discount_factor",
+                "名目・実質discount curveとnumeraire",
+                "line2:maturity:real_discount_factor",
+            ),
+            (
+                "cpi_seasonal",
+                "CPI trend・fixing・3か月lag・rebasing",
+                "line2:month_index:cpi_trend",
+            ),
+            (
+                "seasonality_log_factor",
+                "決定論的月次seasonality（年率和ゼロ）",
+                "bar:month_names",
+            ),
+            (
+                "hw_model_discount_factor",
+                "Hull--White initial-curve fit",
+                "line2:maturity:hw_market_discount_factor",
+            ),
+            ("hw_swaption_price", "Hull--White option ladder", "line:hw_swaption_expiry"),
+            (
+                "zcis_repriced",
+                "ZC inflation swap quote/repricing",
+                "line2:zcis_maturity:zcis_quote",
+            ),
+            (
+                "yoy_jy_ratio",
+                "YoY swapとforward-ratio convexity",
+                "line2:yoy_payment:yoy_deterministic_ratio",
+            ),
+            (
+                "jy_mc_forward_index",
+                "Jarrow--Yildirim payment-forward measure",
+                "line2:jy_observation:jy_forward_index",
+            ),
+            (
+                "jgbi_coupon",
+                "JGBi cash flow・10日基準index・settlement",
+                "bar:jgbi_cashflow_names:jgbi_floored_principal",
+            ),
+            (
+                "floor_analytic",
+                "JGBi deflation floor：analytic vs MC",
+                "line2:inflation_volatility:floor_mc",
+            ),
+            ("breakeven_inflation", "raw vs floor-adjusted BEI", "bar:bei_names"),
+            (
+                "unhedged_normalized_risk",
+                "JGBi・名目債・inflation swap hedge decomposition",
+                "bar:hedge_risk_names:hedged_normalized_risk",
+            ),
+        ],
+        "citations": "Hull & White (1990); Jarrow & Yildirim (2003); Ministry of Finance Japan, Inflation-Indexed Bonds product conventions.",
+        "gate": "G8",
     },
 }
 
@@ -436,10 +497,10 @@ def build_volume(number: int, *, execute: bool = True) -> Path:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--volume", type=int, choices=range(18, 26))
+    parser.add_argument("--volume", type=int, choices=range(18, 27))
     parser.add_argument("--no-execute", action="store_true")
     args = parser.parse_args(argv)
-    numbers = [args.volume] if args.volume else list(range(18, 26))
+    numbers = [args.volume] if args.volume else list(range(18, 27))
     for number in numbers:
         path = build_volume(number, execute=not args.no_execute)
         print(f"built {path.relative_to(ROOT)}")

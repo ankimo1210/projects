@@ -1,4 +1,4 @@
-"""Rebuild vol 19--25 in /tmp and compare them with committed references."""
+"""Rebuild vol 19--26 in /tmp and compare them with committed references."""
 
 from __future__ import annotations
 
@@ -79,7 +79,7 @@ def main() -> int:
         changed = [path for path, digest in first_hashes.items() if _sha256(path) != digest]
         if changed:
             raise RuntimeError(f"ordinary rebuild is not byte-stable: {changed}")
-        print("[PASS] vol 19--25: second ordinary rebuild is byte-identical")
+        print("[PASS] vol 19--26: second ordinary rebuild is byte-identical")
     return 0
 
 

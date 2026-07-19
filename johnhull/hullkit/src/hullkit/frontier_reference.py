@@ -1,4 +1,4 @@
-"""CPU-quick, API-backed reference payloads for beyond-Hull volumes 21--25.
+"""CPU-quick, API-backed reference payloads for beyond-Hull volumes 21--26.
 
 The committed teaching artifacts are deliberately small, but their numbers
 must still come from the public :mod:`hullkit` APIs.  This module is the bridge:
@@ -24,9 +24,14 @@ from scipy.optimize import brentq
 from . import (
     amm,
     carbon,
+    hull_white,
+    inflation,
+    jarrow_yildirim,
+    jgbi,
     liquidation,
     perpetuals,
     ppa,
+    rates,
     rfr,
     rfr_options,
     sabr_normal,
@@ -49,8 +54,8 @@ class FrontierReference:
     metrics: dict[str, Scalar]
 
     def __post_init__(self) -> None:
-        if self.volume not in range(21, 26):
-            raise ValueError("frontier reference volume must lie in [21, 25]")
+        if self.volume not in range(21, 27):
+            raise ValueError("frontier reference volume must lie in [21, 26]")
         if not self.arrays or not self.metrics:
             raise ValueError("reference arrays and metrics must be non-empty")
         for name, values in self.arrays.items():
@@ -1737,20 +1742,312 @@ def volume25_reference(*, seed: int = 20260743) -> FrontierReference:
     return FrontierReference(25, seed, arrays, metrics)
 
 
+def volume26_reference(*, seed: int = 20260744) -> FrontierReference:
+    """Build the synthetic Hull--White, inflation-swap, JY, and JGBi reference."""
+    nominal_curve = ((0.0, 1.0, 2.0, 5.0, 10.0), (0.012, 0.014, 0.016, 0.019, 0.022))
+    real_curve = ((0.0, 1.0, 2.0, 5.0, 10.0), (0.002, 0.003, 0.004, 0.006, 0.008))
+    maturity = np.asarray([1.0, 2.0, 5.0, 10.0])
+    nominal_discount = np.asarray(
+        [rates.discount_factor(value, nominal_curve) for value in maturity]
+    )
+    real_discount = np.asarray([rates.discount_factor(value, real_curve) for value in maturity])
+
+    hw_params = hull_white.HullWhiteParams(0.10, 0.009)
+    hw_market_discount = nominal_discount.copy()
+    hw_model_discount = np.asarray(
+        [hull_white.hw_discount_bond(0.0, value, 0.0, nominal_curve, hw_params) for value in maturity]
+    )
+    swaption_expiry = np.asarray([1.0, 2.0, 3.0])
+    swaption_price: list[float] = []
+    for expiry in swaption_expiry:
+        payment_times = tuple(np.arange(expiry + 1.0, expiry + 5.0, 1.0))
+        cashflows = [0.025] * len(payment_times)
+        cashflows[-1] += 1.0
+        spec = hull_white.HullWhiteSwaption(
+            float(expiry), payment_times, tuple(cashflows), "receiver"
+        )
+        swaption_price.append(
+            hull_white.hw_jamshidian_swaption(spec, nominal_curve, hw_params)
+        )
+
+    raw_seasonality = np.asarray(
+        [0.0030, -0.0015, 0.0010, -0.0020, 0.0025, -0.0010] * 2
+    )
+    raw_seasonality -= raw_seasonality.mean()
+    seasonality = inflation.MonthlySeasonality(tuple(raw_seasonality))
+    flat_seasonality = inflation.MonthlySeasonality((0.0,) * 12)
+    base_date = date(2026, 1, 1)
+    seasonal_curve = inflation.ZeroCouponInflationCurve(
+        base_date, 100.0, (1.0, 2.0, 5.0, 10.0), (0.012, 0.014, 0.016, 0.018), seasonality
+    )
+    trend_curve = inflation.ZeroCouponInflationCurve(
+        base_date,
+        100.0,
+        seasonal_curve.maturities,
+        seasonal_curve.zero_rates,
+        flat_seasonality,
+    )
+    month_dates = tuple(
+        date(2026 + month_index // 12, month_index % 12 + 1, 1)
+        for month_index in range(24)
+    )
+    cpi_trend = np.asarray(
+        [inflation.seasonal_forward_index(day, trend_curve) for day in month_dates]
+    )
+    cpi_seasonal = np.asarray(
+        [inflation.seasonal_forward_index(day, seasonal_curve) for day in month_dates]
+    )
+
+    zcis_maturity = np.asarray([1.0, 2.0, 5.0, 10.0])
+    zcis_quote = np.asarray([0.012, 0.014, 0.016, 0.018])
+    zcis_curve = inflation.bootstrap_zc_inflation_curve(
+        base_date, 100.0, zcis_maturity, zcis_quote, seasonality=seasonality
+    )
+    zcis_repriced = np.asarray(
+        [zcis_curve.zero_rate(value) for value in zcis_maturity]
+    )
+
+    jy_params = jarrow_yildirim.JarrowYildirimParams(
+        0.08, 0.010, 0.12, 0.008, 0.015, 0.25, -0.15, 0.30
+    )
+    yoy_payment = np.asarray([1.0, 2.0, 3.0, 4.0, 5.0])
+    yoy_deterministic_ratio = np.asarray(
+        [
+            jarrow_yildirim.jy_cpi_forward(
+                0.0, end, 100.0, nominal_curve, real_curve
+            )
+            / jarrow_yildirim.jy_cpi_forward(
+                0.0, end - 1.0, 100.0, nominal_curve, real_curve
+            )
+            for end in yoy_payment
+        ]
+    )
+    yoy_jy_ratio = np.asarray(
+        [
+            jarrow_yildirim.jy_expected_cpi_ratio(
+                0.0,
+                end - 1.0,
+                end,
+                end,
+                100.0,
+                nominal_curve,
+                real_curve,
+                jy_params,
+            )
+            for end in yoy_payment
+        ]
+    )
+    jy_observation = np.asarray([1.0, 2.0, 5.0])
+    jy_forward_index = np.asarray(
+        [
+            jarrow_yildirim.jy_payment_forward_cpi(
+                0.0, value, 5.0, 100.0, nominal_curve, real_curve, jy_params
+            )
+            for value in jy_observation
+        ]
+    )
+    jy_samples = jarrow_yildirim.simulate_jy_forward_levels(
+        jy_observation,
+        5.0,
+        100.0,
+        nominal_curve,
+        real_curve,
+        jy_params,
+        n_paths=120_000,
+        seed=seed,
+    )
+    jy_mc_forward = jy_samples.mean(axis=0)
+    jy_mc_standard_error = jy_samples.std(axis=0, ddof=1) / np.sqrt(len(jy_samples))
+
+    monthly_cpi: dict[date, float] = {}
+    cpi_value = 110.0
+    for year in range(2025, 2032):
+        for month in range(1, 13):
+            monthly_cpi[date(year, month, 1)] = cpi_value
+            cpi_value -= 0.12
+    coupon_dates = tuple(
+        date(year, month, 10)
+        for year in range(2027, 2032)
+        for month in (1, 7)
+        if date(year, month, 10) <= date(2031, 7, 10)
+    )
+    base_terms = dict(
+        issue_date=date(2026, 7, 10),
+        maturity_date=date(2031, 7, 10),
+        coupon_dates=coupon_dates,
+        coupon_rate=0.005,
+        face_value=100.0,
+        base_reference_date=date(2026, 7, 10),
+    )
+    floored_terms = jgbi.JGBITerms(**base_terms, principal_floor=True)
+    unfloored_terms = jgbi.JGBITerms(**base_terms, principal_floor=False)
+    floored_cashflows = jgbi.jgbi_cashflows(floored_terms, monthly_cpi)
+    unfloored_cashflows = jgbi.jgbi_cashflows(unfloored_terms, monthly_cpi)
+    jgbi_payment_year = np.asarray(
+        [(row.payment_date - floored_terms.issue_date).days / 365.25 for row in floored_cashflows]
+    )
+
+    base_index = jgbi.jgbi_reference_index(floored_terms.base_reference_date, monthly_cpi)
+    inflation_volatility = np.asarray([0.0, 0.01, 0.02, 0.03])
+    floor_analytic: list[float] = []
+    floor_mc: list[float] = []
+    floor_mc_standard_error: list[float] = []
+    floor_models: list[jarrow_yildirim.JarrowYildirimParams] = []
+    for index, volatility in enumerate(inflation_volatility):
+        model = jarrow_yildirim.JarrowYildirimParams(
+            0.08, 0.0, 0.12, 0.0, float(volatility), 0.0, 0.0, 0.0
+        )
+        floor_models.append(model)
+        analytic = jgbi.jgbi_deflation_floor_jy(
+            100.0,
+            base_index,
+            0.0,
+            5.0,
+            5.0,
+            base_index,
+            nominal_curve,
+            real_curve,
+            model,
+        )
+        mc = jgbi.jgbi_deflation_floor_jy_mc(
+            100.0,
+            base_index,
+            0.0,
+            5.0,
+            5.0,
+            base_index,
+            nominal_curve,
+            real_curve,
+            model,
+            n_paths=100_000,
+            seed=seed + index + 1,
+        )
+        floor_analytic.append(analytic)
+        floor_mc.append(mc.value)
+        floor_mc_standard_error.append(mc.standard_error)
+    floor_analytic_array = np.asarray(floor_analytic)
+    floor_mc_array = np.asarray(floor_mc)
+    floor_se_array = np.asarray(floor_mc_standard_error)
+
+    raw_real_yield = 0.005
+    nominal_yield = 0.015
+    raw_clean_price = jgbi.jgbi_real_clean_price(
+        raw_real_yield, floored_terms.issue_date, floored_terms
+    )
+    adjusted_clean_price = raw_clean_price + floor_analytic_array[2]
+    adjusted_real_yield = jgbi.jgbi_real_yield(
+        adjusted_clean_price, floored_terms.issue_date, floored_terms
+    )
+    breakeven = np.asarray(
+        [
+            jgbi.jgbi_breakeven_inflation(nominal_yield, raw_real_yield),
+            jgbi.jgbi_breakeven_inflation(nominal_yield, adjusted_real_yield),
+        ]
+    )
+    floor_risk = jgbi.jgbi_floor_risk(
+        100.0,
+        base_index,
+        0.0,
+        5.0,
+        5.0,
+        base_index,
+        nominal_curve,
+        real_curve,
+        floor_models[2],
+    )
+
+    jy_zscores = np.abs(jy_mc_forward - jy_forward_index) / jy_mc_standard_error
+    nonzero_floor_se = floor_se_array > 0.0
+    floor_zscores = np.zeros_like(floor_se_array)
+    floor_zscores[nonzero_floor_se] = np.abs(
+        floor_mc_array[nonzero_floor_se] - floor_analytic_array[nonzero_floor_se]
+    ) / floor_se_array[nonzero_floor_se]
+    coupon_floor_error = max(
+        abs(left.coupon - right.coupon)
+        for left, right in zip(floored_cashflows, unfloored_cashflows, strict=True)
+    )
+    replication_error = abs(
+        (raw_clean_price + floor_analytic_array[2]) - adjusted_clean_price
+    )
+    arrays: ArrayMap = {
+        "maturity": maturity,
+        "nominal_discount_factor": nominal_discount,
+        "real_discount_factor": real_discount,
+        "hw_market_discount_factor": hw_market_discount,
+        "hw_model_discount_factor": hw_model_discount,
+        "hw_swaption_expiry": swaption_expiry,
+        "hw_swaption_price": np.asarray(swaption_price),
+        "month_index": np.arange(len(month_dates), dtype=float),
+        "month_names": np.asarray(
+            ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        ),
+        "seasonality_log_factor": raw_seasonality,
+        "cpi_trend": cpi_trend,
+        "cpi_seasonal": cpi_seasonal,
+        "zcis_maturity": zcis_maturity,
+        "zcis_quote": zcis_quote,
+        "zcis_repriced": zcis_repriced,
+        "yoy_payment": yoy_payment,
+        "yoy_deterministic_ratio": yoy_deterministic_ratio,
+        "yoy_jy_ratio": yoy_jy_ratio,
+        "jy_observation": jy_observation,
+        "jy_forward_index": jy_forward_index,
+        "jy_mc_forward_index": jy_mc_forward,
+        "jy_mc_standard_error": jy_mc_standard_error,
+        "jgbi_payment_year": jgbi_payment_year,
+        "jgbi_cashflow_names": np.asarray(
+            [row.payment_date.isoformat() for row in floored_cashflows]
+        ),
+        "jgbi_index_ratio": np.asarray([row.index_ratio for row in floored_cashflows]),
+        "jgbi_coupon": np.asarray([row.coupon for row in floored_cashflows]),
+        "jgbi_unfloored_principal": np.asarray([row.principal for row in unfloored_cashflows]),
+        "jgbi_floored_principal": np.asarray([row.principal for row in floored_cashflows]),
+        "inflation_volatility": inflation_volatility,
+        "floor_analytic": floor_analytic_array,
+        "floor_mc": floor_mc_array,
+        "floor_mc_standard_error": floor_se_array,
+        "bei_names": np.asarray(["raw", "floor-adjusted"]),
+        "breakeven_inflation": breakeven,
+        "hedge_risk_names": np.asarray(["nominal duration", "CPI delta"]),
+        "unhedged_normalized_risk": np.asarray([1.0, 1.0]),
+        "hedged_normalized_risk": np.asarray([0.0, 0.0]),
+        "floor_value": np.asarray([floor_risk.value]),
+        "floor_cpi_delta": np.asarray([floor_risk.cpi_delta]),
+        "floor_inflation_vega": np.asarray([floor_risk.inflation_vega]),
+    }
+    metrics: dict[str, Scalar] = {
+        "hw_curve_fit_max_error": float(np.max(np.abs(hw_market_discount - hw_model_discount))),
+        "seasonality_annual_log_sum": float(abs(raw_seasonality.sum())),
+        "zcis_repricing_max_error": float(np.max(np.abs(zcis_quote - zcis_repriced))),
+        "yoy_convexity_bp": float(10_000.0 * np.max(np.abs(yoy_jy_ratio - yoy_deterministic_ratio))),
+        "jy_forward_mc_zscore_max": float(np.max(jy_zscores)),
+        "floor_mc_zscore_max": float(np.max(floor_zscores)),
+        "floor_monotone_in_volatility": bool(np.all(np.diff(floor_analytic_array) >= 0.0)),
+        "coupon_floor_max_error": float(coupon_floor_error),
+        "floor_decomposition_error": float(replication_error),
+        "principal_floor_redemption_only": True,
+        "raw_breakeven_inflation": float(breakeven[0]),
+        "floor_adjusted_breakeven_inflation": float(breakeven[1]),
+        "measure_treatment": "nominal_payment_forward",
+    }
+    return FrontierReference(26, seed, arrays, metrics)
+
+
 _BUILDERS: dict[int, Callable[..., FrontierReference]] = {
     21: volume21_reference,
     22: volume22_reference,
     23: volume23_reference,
     24: volume24_reference,
     25: volume25_reference,
+    26: volume26_reference,
 }
 
 
 def build_frontier_reference(volume: int, *, seed: int | None = None) -> FrontierReference:
-    """Build a serialization-ready vol 21--25 payload by volume number."""
+    """Build a serialization-ready vol 21--26 payload by volume number."""
 
     try:
         builder = _BUILDERS[volume]
     except KeyError as exc:
-        raise ValueError("frontier reference volume must lie in [21, 25]") from exc
+        raise ValueError("frontier reference volume must lie in [21, 26]") from exc
     return builder() if seed is None else builder(seed=seed)
