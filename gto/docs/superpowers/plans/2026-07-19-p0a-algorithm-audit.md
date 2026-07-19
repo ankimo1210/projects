@@ -21,6 +21,20 @@ P0b work, sized by this audit.
 Python 3.12 (numpy; already a dep), pytest, hand-rolled JSON (house style,
 no serde).
 
+**Review status: rev 2 — all findings from
+`docs/reviews/2026-07-19-p0a-plan-review.md` incorporated.** P0-1 resolved by
+user decision (2026-07-19): G-A3 is a validated-projection gate in P0a, and
+the first real M=25 run (peak RSS ≤ 48 GB) is a blocking **P0b entry gate**
+— the spec's §5.0 gate text carries the renegotiated wording. The other
+findings are folded into the tasks: Task 4A recovery snapshots (P1-5),
+seed-tripled G-A2 protocol with a pre-registered fit window (P1-4),
+pre-registered G-A1 thresholds with timeout-as-censored semantics and a 3bet
+tree case (P1-1), segmented wall-clock accounting (P1-2), MultiSample defined
+as partial enumeration without replacement (P1-3), a capacity-vs-allocated
+memory model with an RSS overhead anchor (P0-2), aligned `time_to()`
+semantics (P2-1), self-describing run metadata (P2-2), and a branch
+assertion instead of branch creation (P2-3).
+
 ## Global Constraints
 
 - **No new production dependencies** in Rust or Python without explicit
@@ -41,9 +55,20 @@ no serde).
 - Benchmark runs use `--release`. Tests use the default profile.
 - Long solver runs: run solo (no concurrent heavy jobs — WP2's first run
   OOM'd under concurrent load), monitor by PID, SIGSTOP/SIGCONT allowed.
-- Spec gate values (verbatim): G-A1 median per-flop solve to its expl gate
-  **≤ 12 min**; G-A2 fitted blueprint slope exponent **≤ −0.85** (baseline
-  −0.51); G-A3 M=25 blueprint **≤ 48 GB** with f32 + board bucketing.
+- Any run expected to exceed 15 minutes must use the durable recovery
+  snapshots from Task 4A. Default checkpoint interval is 30 minutes. Snapshot
+  files live under `_data/gto/checkpoints/`, are never committed, and retain
+  two valid generations so an interrupted write cannot destroy the previous
+  restore point.
+- Spec gate values (post-renegotiation, see spec §5.0): G-A1 median per-flop
+  **artifact time (build + solve + final BR)** to the **pre-registered** expl
+  threshold **≤ 12 min** — candidate thresholds {0.5, 0.3, 0.15, 0.05} bb,
+  chosen by the user from the Pareto curve before the verdict; timeouts are
+  censored no-go data, never a relaxed threshold. G-A2 fitted slope exponent
+  **≤ −0.85** with the whole ≥3-seed interval below the bar, fit on the
+  pre-registered window (checkpoints with iters ≥ max_iters/8). G-A3
+  validated-projection: modeled M=25 f32(+bucketing) **≤ 48 GB**; real-run
+  confirmation is a blocking P0b entry gate, not P0a.
 - Commit messages follow house style (`feat(gto-hu): …`, `bench(gto): …`,
   `docs(gto): …`) and end with the Claude trailer used on this branch.
 
@@ -68,7 +93,11 @@ committed to the repo under `gto/docs/reviews/2026-07-19-p0a-audit/`.
 - Produces (used by Tasks 2–3):
   - `pub enum CaseSolver { River(VectorRiverSolver), TurnRiver(TurnRiverSolver), Flop(Box<FlopSolver>), Blueprint(Box<BlueprintSolver>) }`
   - `impl CaseSolver { pub fn run_chunk(&mut self, n: u32); pub fn expl(&self) -> ExplReport; pub fn table_bytes(&self) -> usize }`
-  - `pub struct BenchCase { pub name: &'static str, pub build: fn() -> CaseSolver }`
+  - `pub struct BenchCase { pub name: &'static str, pub config: &'static str, pub build: fn(u64) -> CaseSolver }`
+    — `build` takes the run seed (P1-4: stochastic modes run ≥ 3 seeds;
+    deterministic cases ignore the argument); `config` is a canonical
+    human-readable description of tree/ranges/variant/abstraction recorded
+    in the run JSON (P2-2)
   - `pub fn reference_cases() -> Vec<BenchCase>`
 
 Reference set (uniform ranges — the audit measures solver speed, not
@@ -80,18 +109,24 @@ product content; uniform is reproducible and range-shape-independent):
 | `turn_srp100_enum` / `turn_srp100_sample` | `build_turn_river_tree(5*BB, 97*BB, &TurnTreeConfig::srp())`, board `2c 7d 9h Jh`, `Enumerate` / `Sample{seed:42}` |
 | `flop_srp100_<board>_k24` for boards `AhKd7s`, `QsJh2c`, `8d8h3s` | `build_flop_tree(5*BB, 97*BB, &FlopTreeConfig::srp())`, `Sample{seed:42}`, `Abstraction{buckets_river:24, buckets_turn:16}` |
 | `flop_srp100_AhKd7s_k64` | same, `buckets_river:64` |
-| `bp3_sample` / `bp3_enum` | `BlueprintSolver::new(build_preflop_tree(100*BB), uniform, cfr_plus_default, flops [AhKd7s,QsJh2c,8d8h3s], equal weights, Abstraction{24,16}, sample=true/false, seed 42)` — the WP2 configuration |
+| `flop_3bet100_AhKd7s_k24` | `build_flop_tree(18*BB, 89*BB, &FlopTreeConfig::threebet())`, board `Ah Kd 7s`, `Sample{seed}`, `Abstraction{24,16}` — the Tier-1 grid contains both SRP and 3bet trees, so G-A1 must measure both (review P1-1) |
+| `bp3_sample` / `bp3_enum` | `BlueprintSolver::new(build_preflop_tree(100*BB), uniform, cfr_plus_default, flops [AhKd7s,QsJh2c,8d8h3s], equal weights, Abstraction{24,16}, sample=true/false, seed)` — the WP2 configuration |
 
 (If `TurnTreeConfig::srp()` does not exist, use the literal `TurnTreeConfig`
 from `test_perf_baseline.rs::turn_cfg()` but with production street configs
 `StreetConfig::srp_turn()` / `srp_river()`; check `tree/` for the actual
 constructor names before writing.)
 
-- [ ] **Step 1: Create the work branch**
+- [ ] **Step 1: Confirm the work branch and clean scope**
 
 ```bash
-cd /home/kazumasa/projects && git checkout claude/gto-ios-v1-spec && git checkout -b claude/gto-p0a-audit
+cd /home/kazumasa/projects
+test "$(git branch --show-current)" = "claude/gto-p0a-audit"
+git status --short --branch
 ```
+
+Expected: current branch is `claude/gto-p0a-audit`; no unrelated changes are
+silently staged or overwritten.
 
 - [ ] **Step 2: Write the failing test**
 
@@ -109,7 +144,7 @@ fn all_cases_construct_and_report_finite_expl() {
         // Blueprint/flop construction allocates GBs; keep this test to
         // the cheap cases and just require the builders exist for all.
         if case.name.starts_with("river") || case.name.starts_with("turn") {
-            let mut s = (case.build)();
+            let mut s = (case.build)(42);
             s.run_chunk(2);
             let e = s.expl();
             assert!(e.exploitability.is_finite(), "{}", case.name);
@@ -128,7 +163,7 @@ fn case_names_are_unique_and_stable() {
     for expected in ["river_srp100", "turn_srp100_enum", "turn_srp100_sample",
                      "flop_srp100_AhKd7s_k24", "flop_srp100_QsJh2c_k24",
                      "flop_srp100_8d8h3s_k24", "flop_srp100_AhKd7s_k64",
-                     "bp3_sample", "bp3_enum"] {
+                     "flop_3bet100_AhKd7s_k24", "bp3_sample", "bp3_enum"] {
         assert!(names.contains(&expected), "missing case {expected}");
     }
 }
@@ -137,7 +172,7 @@ fn case_names_are_unique_and_stable() {
 fn river_case_is_deterministic() {
     let case = reference_cases().into_iter().find(|c| c.name == "river_srp100").unwrap();
     let run = |mut s: CaseSolver| { s.run_chunk(5); s.expl().exploitability.to_bits() };
-    assert_eq!(run((case.build)()), run((case.build)()));
+    assert_eq!(run((case.build)(42)), run((case.build)(42)));
 }
 ```
 
@@ -213,13 +248,19 @@ fn c(s: &str) -> u8 {
 
 const SRP_POT: u32 = 5 * BB;
 const SRP_STACK: u32 = 97 * BB;
-const SEED: u64 = 42;
+// 3bet pot: 100bb stacks, open 2.5 + 3bet to 9 → 18bb pot, 89bb behind.
+const TBP_POT: u32 = 18 * BB;
+const TBP_STACK: u32 = 89 * BB;
+
+const SRP_CFG: &str = "srp 5bb pot / 97bb stacks / uniform ranges / CFR+ / K_r=24 K_t=16";
+const TBP_CFG: &str = "3bet 18bb pot / 89bb stacks / uniform ranges / CFR+ / K_r=24 K_t=16";
+const BP_CFG: &str = "blueprint flops AhKd7s,QsJh2c,8d8h3s / 100bb / uniform / CFR+ / K_r=24 K_t=16";
 
 fn abs24() -> Abstraction {
     Abstraction { buckets_river: 24, buckets_turn: 16 }
 }
 
-fn river_case() -> CaseSolver {
+fn river_case(_seed: u64) -> CaseSolver {
     let tree = build_river_tree(SRP_POT, SRP_STACK, &StreetConfig::srp_river());
     let board = [c("2c"), c("7d"), c("9h"), c("Jh"), c("Kd")];
     let ranges = [uniform_excluding(&board), uniform_excluding(&board)];
@@ -235,15 +276,22 @@ fn turn_case(mode: ChanceMode) -> CaseSolver {
     ))
 }
 
-fn flop_case(board: [u8; 3], buckets_river: usize) -> CaseSolver {
-    let tree = build_flop_tree(SRP_POT, SRP_STACK, &FlopTreeConfig::srp());
+fn flop_case(
+    board: [u8; 3],
+    buckets_river: usize,
+    pot: u32,
+    stack: u32,
+    cfg: FlopTreeConfig,
+    seed: u64,
+) -> CaseSolver {
+    let tree = build_flop_tree(pot, stack, &cfg);
     let ranges = [uniform_excluding(&board), uniform_excluding(&board)];
     CaseSolver::Flop(Box::new(FlopSolver::new_abstracted(
         tree,
         board,
         ranges,
         CfrVariant::cfr_plus_default(),
-        ChanceMode::Sample { seed: SEED },
+        ChanceMode::Sample { seed },
         Abstraction { buckets_river, buckets_turn: 16 },
     )))
 }
@@ -256,32 +304,37 @@ pub fn bp_flops() -> Vec<[u8; 3]> {
     ]
 }
 
-fn blueprint_case(sample: bool) -> CaseSolver {
+fn blueprint_case(sample: bool, seed: u64) -> CaseSolver {
     let tree = build_preflop_tree(100 * BB);
     let ranges = [uniform_excluding(&[]), uniform_excluding(&[])];
     let flops = bp_flops();
     let weights = vec![1.0; flops.len()];
     CaseSolver::Blueprint(Box::new(BlueprintSolver::new(
-        tree, ranges, CfrVariant::cfr_plus_default(), flops, weights, abs24(), sample, SEED,
+        tree, ranges, CfrVariant::cfr_plus_default(), flops, weights, abs24(), sample, seed,
     )))
 }
 
 pub fn reference_cases() -> Vec<BenchCase> {
     vec![
-        BenchCase { name: "river_srp100", build: river_case_thunk },
-        BenchCase { name: "turn_srp100_enum", build: || turn_case(ChanceMode::Enumerate) },
-        BenchCase { name: "turn_srp100_sample", build: || turn_case(ChanceMode::Sample { seed: SEED }) },
-        BenchCase { name: "flop_srp100_AhKd7s_k24", build: || flop_case([c2("Ah"), c2("Kd"), c2("7s")], 24) },
-        BenchCase { name: "flop_srp100_QsJh2c_k24", build: || flop_case([c2("Qs"), c2("Jh"), c2("2c")], 24) },
-        BenchCase { name: "flop_srp100_8d8h3s_k24", build: || flop_case([c2("8d"), c2("8h"), c2("3s")], 24) },
-        BenchCase { name: "flop_srp100_AhKd7s_k64", build: || flop_case([c2("Ah"), c2("Kd"), c2("7s")], 64) },
-        BenchCase { name: "bp3_sample", build: || blueprint_case(true) },
-        BenchCase { name: "bp3_enum", build: || blueprint_case(false) },
+        BenchCase { name: "river_srp100", config: SRP_CFG, build: river_case },
+        BenchCase { name: "turn_srp100_enum", config: SRP_CFG,
+                    build: |_| turn_case(ChanceMode::Enumerate) },
+        BenchCase { name: "turn_srp100_sample", config: SRP_CFG,
+                    build: |seed| turn_case(ChanceMode::Sample { seed }) },
+        BenchCase { name: "flop_srp100_AhKd7s_k24", config: SRP_CFG,
+                    build: |s| flop_case([c("Ah"), c("Kd"), c("7s")], 24, SRP_POT, SRP_STACK, FlopTreeConfig::srp(), s) },
+        BenchCase { name: "flop_srp100_QsJh2c_k24", config: SRP_CFG,
+                    build: |s| flop_case([c("Qs"), c("Jh"), c("2c")], 24, SRP_POT, SRP_STACK, FlopTreeConfig::srp(), s) },
+        BenchCase { name: "flop_srp100_8d8h3s_k24", config: SRP_CFG,
+                    build: |s| flop_case([c("8d"), c("8h"), c("3s")], 24, SRP_POT, SRP_STACK, FlopTreeConfig::srp(), s) },
+        BenchCase { name: "flop_srp100_AhKd7s_k64", config: SRP_CFG,
+                    build: |s| flop_case([c("Ah"), c("Kd"), c("7s")], 64, SRP_POT, SRP_STACK, FlopTreeConfig::srp(), s) },
+        BenchCase { name: "flop_3bet100_AhKd7s_k24", config: TBP_CFG,
+                    build: |s| flop_case([c("Ah"), c("Kd"), c("7s")], 24, TBP_POT, TBP_STACK, FlopTreeConfig::threebet(), s) },
+        BenchCase { name: "bp3_sample", config: BP_CFG, build: |s| blueprint_case(true, s) },
+        BenchCase { name: "bp3_enum", config: BP_CFG, build: |s| blueprint_case(false, s) },
     ]
 }
-
-fn river_case_thunk() -> CaseSolver { river_case() }
-fn c2(s: &str) -> u8 { c(s) }
 ```
 
 Adaptation notes for the implementer (verify against the actual code, do
@@ -324,13 +377,37 @@ git commit -m "feat(gto-hu): P0a bench reference cases behind one CaseSolver wra
 
 **Interfaces:**
 - Consumes: `CaseSolver` (Task 1).
-- Produces (used by Task 3 CLI and Task 4 Python reader):
-  - `pub struct Checkpoint { pub iters: u32, pub elapsed_s: f64, pub expl: f64, pub br: [f64; 2] }`
+- Produces (used by Task 3 CLI, Task 4 Python reader, Task 4A sidecar):
+  - `pub struct Checkpoint { pub iters: u32, pub solve_s: f64, pub br_s: f64, pub expl: f64, pub br: [f64; 2] }`
+    — `solve_s` = cumulative solve-only seconds at this checkpoint; `br_s` =
+    seconds this checkpoint's exact best-response evaluation took (P1-2:
+    measurement cost tracked separately from solver throughput)
   - `pub fn geometric_schedule(max_iters: u32, points: usize) -> Vec<u32>` — ascending cumulative iteration counts, last == max_iters
-  - `pub fn run_with_checkpoints(s: &mut CaseSolver, schedule: &[u32]) -> Vec<Checkpoint>` — `elapsed_s` counts **solve time only** (exploitability evaluation excluded)
+  - `pub struct RunTiming { pub build_s: f64, pub solve_s: f64, pub checkpoint_br_s: f64, pub final_br_s: f64 }`
+    — `build_s` is filled by the CLI (solver construction time);
+    `final_br_s` = the last checkpoint's BR time (the run's final BR IS the
+    last checkpoint's evaluation); `checkpoint_br_s` = Σ br_s of the
+    non-final checkpoints. **G-A1 artifact time = build_s +
+    solve-time-at-threshold + final_br_s** (assembled in Task 4's Python).
+  - `pub fn run_with_checkpoints(s: &mut CaseSolver, schedule: &[u32]) -> (Vec<Checkpoint>, RunTiming)` — returns `build_s: 0.0` for the caller to fill
   - `pub fn peak_rss_mb() -> f64`
-  - `pub struct RunRecord { pub case: String, pub label: String, pub threads: usize, pub table_bytes: usize, pub peak_rss_mb: f64, pub checkpoints: Vec<Checkpoint> }`
-  - `impl RunRecord { pub fn to_json(&self) -> String }` — keys exactly: `case`, `label`, `threads`, `table_bytes`, `peak_rss_mb`, `checkpoints` (array of objects with keys `iters`, `elapsed_s`, `expl`, `br0`, `br1`)
+  - `pub fn cpu_model() -> String` (/proc/cpuinfo model name) and
+    `pub fn kernel_release() -> String` (/proc/sys/kernel/osrelease)
+  - `pub struct RunRecord` — P2-2 self-describing metadata. Fields:
+    `schema_version: u32` (=1), `case: String`, `config: String` (the
+    BenchCase canonical config), `label: String`, `git_commit: String`
+    (full SHA), `dirty: bool`, `seed: u64`, `iterations: u32`,
+    `points: usize`, `threads: usize`, `build_profile: &'static str`
+    (`"release"`/`"debug"` via `cfg!(debug_assertions)`), `cpu: String`,
+    `kernel: String`, `cmdline: String`, `table_bytes: usize`,
+    `peak_rss_mb: f64`, `resume_count: u32` (0 until Task 4A fills it),
+    `timing: RunTiming`, `checkpoints: Vec<Checkpoint>`
+  - `impl RunRecord { pub fn to_json(&self) -> String }` — top-level keys
+    exactly as the field names; `timing` nested with keys `build_s`,
+    `solve_s`, `checkpoint_br_s`, `final_br_s`; checkpoint objects with
+    keys `iters`, `solve_s`, `br_s`, `expl`, `br0`, `br1`. (Values under
+    our control contain no JSON-special characters; the writer does not
+    escape — documented in the module.)
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -338,7 +415,8 @@ git commit -m "feat(gto-hu): P0a bench reference cases behind one CaseSolver wra
 
 ```rust
 use gto_hu::bench::{
-    geometric_schedule, peak_rss_mb, reference_cases, run_with_checkpoints, RunRecord,
+    geometric_schedule, peak_rss_mb, reference_cases, run_with_checkpoints, Checkpoint,
+    RunRecord, RunTiming,
 };
 
 #[test]
@@ -351,33 +429,50 @@ fn schedule_is_ascending_dedup_and_ends_at_max() {
 }
 
 #[test]
-fn river_checkpoints_are_deterministic_and_monotone_in_iters() {
+fn river_checkpoints_are_deterministic_with_separated_timing() {
     let case = reference_cases().into_iter().find(|c| c.name == "river_srp100").unwrap();
     let sched = geometric_schedule(40, 4);
-    let mut a = (case.build)();
-    let mut b = (case.build)();
-    let ca = run_with_checkpoints(&mut a, &sched);
-    let cb = run_with_checkpoints(&mut b, &sched);
+    let mut a = (case.build)(42);
+    let mut b = (case.build)(42);
+    let (ca, ta) = run_with_checkpoints(&mut a, &sched);
+    let (cb, _tb) = run_with_checkpoints(&mut b, &sched);
     assert_eq!(ca.len(), sched.len());
     for (x, y) in ca.iter().zip(&cb) {
         assert_eq!(x.iters, y.iters);
         assert_eq!(x.expl.to_bits(), y.expl.to_bits(), "nondeterministic expl");
-        assert!(x.elapsed_s >= 0.0);
+        assert!(x.solve_s >= 0.0 && x.br_s > 0.0);
     }
     assert!(ca.last().unwrap().expl < ca.first().unwrap().expl, "no convergence");
+    // Timing identities reconcile (P1-2).
+    assert_eq!(ta.build_s, 0.0, "build_s is the caller's to fill");
+    assert!((ta.solve_s - ca.last().unwrap().solve_s).abs() < 1e-9);
+    let br_sum: f64 = ca.iter().map(|c| c.br_s).sum();
+    assert!((ta.checkpoint_br_s + ta.final_br_s - br_sum).abs() < 1e-9);
+    assert!((ta.final_br_s - ca.last().unwrap().br_s).abs() < 1e-12);
 }
 
 #[test]
-fn json_has_expected_keys() {
+fn json_has_expected_keys_and_metadata() {
     let rec = RunRecord {
-        case: "x".into(), label: "l".into(), threads: 4,
-        table_bytes: 123, peak_rss_mb: 1.5,
-        checkpoints: vec![gto_hu::bench::Checkpoint { iters: 1, elapsed_s: 0.5, expl: 2.0, br: [1.0, 1.0] }],
+        schema_version: 1,
+        case: "x".into(), config: "cfg".into(), label: "l".into(),
+        git_commit: "deadbeef".into(), dirty: false, seed: 42,
+        iterations: 10, points: 2, threads: 4,
+        build_profile: "release", cpu: "cpu".into(), kernel: "k".into(),
+        cmdline: "solver-bench".into(),
+        table_bytes: 123, peak_rss_mb: 1.5, resume_count: 0,
+        timing: RunTiming { build_s: 0.1, solve_s: 0.5, checkpoint_br_s: 0.2, final_br_s: 0.3 },
+        checkpoints: vec![Checkpoint { iters: 1, solve_s: 0.5, br_s: 0.3, expl: 2.0, br: [1.0, 1.0] }],
     };
     let j = rec.to_json();
-    for key in ["\"case\"", "\"label\"", "\"threads\"", "\"table_bytes\"",
-                "\"peak_rss_mb\"", "\"checkpoints\"", "\"iters\"",
-                "\"elapsed_s\"", "\"expl\"", "\"br0\"", "\"br1\""] {
+    for key in ["\"schema_version\"", "\"case\"", "\"config\"", "\"label\"",
+                "\"git_commit\"", "\"dirty\"", "\"seed\"", "\"iterations\"",
+                "\"points\"", "\"threads\"", "\"build_profile\"", "\"cpu\"",
+                "\"kernel\"", "\"cmdline\"", "\"table_bytes\"",
+                "\"peak_rss_mb\"", "\"resume_count\"", "\"timing\"",
+                "\"build_s\"", "\"solve_s\"", "\"checkpoint_br_s\"",
+                "\"final_br_s\"", "\"checkpoints\"", "\"iters\"", "\"br_s\"",
+                "\"expl\"", "\"br0\"", "\"br1\""] {
         assert!(j.contains(key), "missing {key} in {j}");
     }
     assert!(peak_rss_mb() > 0.0);
@@ -400,9 +495,20 @@ use std::time::Instant;
 
 pub struct Checkpoint {
     pub iters: u32,
-    pub elapsed_s: f64,
+    /// Cumulative solve-only seconds at this checkpoint (construction and
+    /// best-response evaluation excluded).
+    pub solve_s: f64,
+    /// Seconds this checkpoint's exact best-response evaluation took.
+    pub br_s: f64,
     pub expl: f64,
     pub br: [f64; 2],
+}
+
+pub struct RunTiming {
+    pub build_s: f64,
+    pub solve_s: f64,
+    pub checkpoint_br_s: f64,
+    pub final_br_s: f64,
 }
 
 /// Ascending cumulative iteration counts: max, max/2, max/4, … (deduped,
@@ -420,28 +526,45 @@ pub fn geometric_schedule(max_iters: u32, points: usize) -> Vec<u32> {
     v
 }
 
-/// Run to each cumulative checkpoint; `elapsed_s` accumulates SOLVE time
-/// only — the exact best-response evaluation at each checkpoint is
-/// excluded so timing reflects generation cost, not measurement cost.
-pub fn run_with_checkpoints(s: &mut CaseSolver, schedule: &[u32]) -> Vec<Checkpoint> {
+/// Run to each cumulative checkpoint. Solve and best-response time are
+/// accumulated separately (P1-2): solver throughput must not be distorted
+/// by measurement cost, and the G-A1 artifact time needs build + solve +
+/// ONE final BR, which Task 4's Python assembles from RunTiming.
+/// `build_s` is returned as 0.0 for the caller (CLI) to fill.
+pub fn run_with_checkpoints(
+    s: &mut CaseSolver,
+    schedule: &[u32],
+) -> (Vec<Checkpoint>, RunTiming) {
     let mut out = Vec::with_capacity(schedule.len());
     let mut done = 0u32;
     let mut solve_s = 0.0f64;
+    let mut br_total = 0.0f64;
     for &target in schedule {
         let chunk = target - done;
         let t = Instant::now();
         s.run_chunk(chunk);
         solve_s += t.elapsed().as_secs_f64();
         done = target;
+        let t = Instant::now();
         let e = s.expl();
+        let br_s = t.elapsed().as_secs_f64();
+        br_total += br_s;
         out.push(Checkpoint {
             iters: done,
-            elapsed_s: solve_s,
+            solve_s,
+            br_s,
             expl: e.exploitability,
             br: e.br_value,
         });
     }
-    out
+    let final_br_s = out.last().map(|cp| cp.br_s).unwrap_or(0.0);
+    let timing = RunTiming {
+        build_s: 0.0,
+        solve_s,
+        checkpoint_br_s: br_total - final_br_s,
+        final_br_s,
+    };
+    (out, timing)
 }
 
 /// Peak resident set (VmHWM) in MB from /proc/self/status (Linux/WSL2).
@@ -456,25 +579,78 @@ pub fn peak_rss_mb() -> f64 {
     0.0
 }
 
+/// Best-effort host identity for self-describing runs (P2-2).
+pub fn cpu_model() -> String {
+    std::fs::read_to_string("/proc/cpuinfo")
+        .unwrap_or_default()
+        .lines()
+        .find_map(|l| {
+            l.strip_prefix("model name")
+                .map(|r| r.trim_start_matches([':', '\t', ' ']).to_string())
+        })
+        .unwrap_or_default()
+}
+
+pub fn kernel_release() -> String {
+    std::fs::read_to_string("/proc/sys/kernel/osrelease")
+        .unwrap_or_default()
+        .trim()
+        .to_string()
+}
+
+/// Self-describing run record (P2-2). Field values are under our control
+/// and contain no JSON-special characters; the writer does not escape.
 pub struct RunRecord {
+    pub schema_version: u32,
     pub case: String,
+    pub config: String,
     pub label: String,
+    pub git_commit: String,
+    pub dirty: bool,
+    pub seed: u64,
+    pub iterations: u32,
+    pub points: usize,
     pub threads: usize,
+    pub build_profile: &'static str,
+    pub cpu: String,
+    pub kernel: String,
+    pub cmdline: String,
     pub table_bytes: usize,
     pub peak_rss_mb: f64,
+    pub resume_count: u32,
+    pub timing: RunTiming,
     pub checkpoints: Vec<Checkpoint>,
 }
 
 impl RunRecord {
     pub fn to_json(&self) -> String {
         let cps: Vec<String> = self.checkpoints.iter().map(|c| format!(
-            "    {{\"iters\": {}, \"elapsed_s\": {:.3}, \"expl\": {:.6}, \"br0\": {:.6}, \"br1\": {:.6}}}",
-            c.iters, c.elapsed_s, c.expl, c.br[0], c.br[1]
+            "    {{\"iters\": {}, \"solve_s\": {:.3}, \"br_s\": {:.3}, \"expl\": {:.6}, \"br0\": {:.6}, \"br1\": {:.6}}}",
+            c.iters, c.solve_s, c.br_s, c.expl, c.br[0], c.br[1]
         )).collect();
         format!(
-            "{{\n  \"case\": \"{}\",\n  \"label\": \"{}\",\n  \"threads\": {},\n  \"table_bytes\": {},\n  \"peak_rss_mb\": {:.1},\n  \"checkpoints\": [\n{}\n  ]\n}}\n",
-            self.case, self.label, self.threads, self.table_bytes,
-            self.peak_rss_mb, cps.join(",\n")
+            concat!(
+                "{{\n",
+                "  \"schema_version\": {},\n",
+                "  \"case\": \"{}\",\n  \"config\": \"{}\",\n  \"label\": \"{}\",\n",
+                "  \"git_commit\": \"{}\",\n  \"dirty\": {},\n  \"seed\": {},\n",
+                "  \"iterations\": {},\n  \"points\": {},\n  \"threads\": {},\n",
+                "  \"build_profile\": \"{}\",\n  \"cpu\": \"{}\",\n  \"kernel\": \"{}\",\n",
+                "  \"cmdline\": \"{}\",\n",
+                "  \"table_bytes\": {},\n  \"peak_rss_mb\": {:.1},\n  \"resume_count\": {},\n",
+                "  \"timing\": {{\"build_s\": {:.3}, \"solve_s\": {:.3}, \"checkpoint_br_s\": {:.3}, \"final_br_s\": {:.3}}},\n",
+                "  \"checkpoints\": [\n{}\n  ]\n}}\n",
+            ),
+            self.schema_version,
+            self.case, self.config, self.label,
+            self.git_commit, self.dirty, self.seed,
+            self.iterations, self.points, self.threads,
+            self.build_profile, self.cpu, self.kernel,
+            self.cmdline,
+            self.table_bytes, self.peak_rss_mb, self.resume_count,
+            self.timing.build_s, self.timing.solve_s,
+            self.timing.checkpoint_br_s, self.timing.final_br_s,
+            cps.join(",\n")
         )
     }
 }
@@ -505,7 +681,7 @@ git commit -m "feat(gto-hu): checkpointed bench runner with solve-only timing an
 **Interfaces:**
 - Consumes: `reference_cases`, `geometric_schedule`, `run_with_checkpoints`,
   `peak_rss_mb`, `RunRecord` (Tasks 1–2).
-- Produces: CLI `solver-bench --case NAME --iterations N [--points K=10] [--threads T=0] [--label S=""] [--out FILE]`; `--list` prints case names. `--threads 0` = rayon default. Exit 2 on bad args (house style `usage()`).
+- Produces: CLI `solver-bench --case NAME --iterations N [--points K=10] [--threads T=0] [--seed S=42] [--label STR] [--git-commit SHA] [--dirty 0|1] [--out FILE]`; `--list` prints case names. `--threads 0` = rayon default. `--seed` feeds `BenchCase::build` (P1-4 multi-seed runs); `--git-commit`/`--dirty` are recorded verbatim in the JSON (P2-2 — the run commands pass `$(git rev-parse HEAD)` and a porcelain-derived flag). Exit 2 on bad args (house style `usage()`).
 
 - [ ] **Step 1: Write the bin**
 
@@ -513,33 +689,42 @@ git commit -m "feat(gto-hu): checkpointed bench runner with solve-only timing an
 
 ```rust
 //! solver-bench — P0a audit driver: run a named reference case with
-//! exploitability checkpoints; write a RunRecord JSON.
+//! exploitability checkpoints; write a self-describing RunRecord JSON.
 //!
 //! Example:
 //!   solver-bench --case river_srp100 --iterations 2000 --points 10 \
-//!     --label "$(git rev-parse --short HEAD)" --out baselines/river.json
+//!     --seed 42 --label baseline --git-commit "$(git rev-parse HEAD)" \
+//!     --dirty "$([ -z "$(git status --porcelain)" ] && echo 0 || echo 1)" \
+//!     --out baselines/river.json
 
 use std::process::exit;
+use std::time::Instant;
 
 use gto_hu::bench::{
-    geometric_schedule, peak_rss_mb, reference_cases, run_with_checkpoints, RunRecord,
+    cpu_model, geometric_schedule, kernel_release, peak_rss_mb, reference_cases,
+    run_with_checkpoints, RunRecord,
 };
 
 fn usage() -> ! {
     eprintln!(
         "usage: solver-bench --case NAME --iterations N [--points K=10] \
-         [--threads T=0] [--label S] [--out FILE] | --list"
+         [--threads T=0] [--seed S=42] [--label STR] \
+         [--git-commit SHA] [--dirty 0|1] [--out FILE] | --list"
     );
     exit(2);
 }
 
 fn main() {
-    let args: Vec<String> = std::env::args().skip(1).collect();
+    let argv: Vec<String> = std::env::args().collect();
+    let args: Vec<String> = argv[1..].to_vec();
     let mut case_name = String::new();
     let mut iterations: u32 = 0;
     let mut points: usize = 10;
     let mut threads: usize = 0;
+    let mut seed: u64 = 42;
     let mut label = String::new();
+    let mut git_commit = String::new();
+    let mut dirty = false;
     let mut out: Option<String> = None;
 
     let mut i = 0;
@@ -554,7 +739,10 @@ fn main() {
             "--iterations" => { iterations = need(i).parse().unwrap_or_else(|_| usage()); i += 2; }
             "--points" => { points = need(i).parse().unwrap_or_else(|_| usage()); i += 2; }
             "--threads" => { threads = need(i).parse().unwrap_or_else(|_| usage()); i += 2; }
+            "--seed" => { seed = need(i).parse().unwrap_or_else(|_| usage()); i += 2; }
             "--label" => { label = need(i); i += 2; }
+            "--git-commit" => { git_commit = need(i); i += 2; }
+            "--dirty" => { dirty = need(i) == "1"; i += 2; }
             "--out" => { out = Some(need(i)); i += 2; }
             _ => usage(),
         }
@@ -567,21 +755,37 @@ fn main() {
     let case = reference_cases().into_iter().find(|c| c.name == case_name)
         .unwrap_or_else(|| { eprintln!("unknown case '{case_name}' (use --list)"); exit(2) });
 
-    eprintln!("building {case_name} …");
-    let mut solver = (case.build)();
-    eprintln!("table_bytes = {}", solver.table_bytes());
+    eprintln!("building {case_name} (seed {seed}) …");
+    let t = Instant::now();
+    let mut solver = (case.build)(seed);
+    let build_s = t.elapsed().as_secs_f64();
+    eprintln!("built in {build_s:.1}s, table_bytes = {}", solver.table_bytes());
     let sched = geometric_schedule(iterations, points);
-    let cps = run_with_checkpoints(&mut solver, &sched);
+    let (cps, mut timing) = run_with_checkpoints(&mut solver, &sched);
+    timing.build_s = build_s;
     for c in &cps {
-        eprintln!("iters {:>7}  solve {:>9.1}s  expl {:.4} bb  (br0 {:.4} / br1 {:.4})",
-                  c.iters, c.elapsed_s, c.expl, c.br[0], c.br[1]);
+        eprintln!("iters {:>7}  solve {:>9.1}s  br {:>7.1}s  expl {:.4} bb  (br0 {:.4} / br1 {:.4})",
+                  c.iters, c.solve_s, c.br_s, c.expl, c.br[0], c.br[1]);
     }
     let rec = RunRecord {
+        schema_version: 1,
         case: case_name,
+        config: case.config.to_string(),
         label,
+        git_commit,
+        dirty,
+        seed,
+        iterations,
+        points,
         threads: if threads == 0 { rayon::current_num_threads() } else { threads },
+        build_profile: if cfg!(debug_assertions) { "debug" } else { "release" },
+        cpu: cpu_model(),
+        kernel: kernel_release(),
+        cmdline: argv.join(" "),
         table_bytes: solver.table_bytes(),
         peak_rss_mb: peak_rss_mb(),
+        resume_count: 0,
+        timing,
         checkpoints: cps,
     };
     match out {
@@ -645,9 +849,12 @@ git commit -m "feat(gto-hu): solver-bench CLI for P0a audit runs"
 - Consumes: RunRecord JSON files (Task 2 schema).
 - Produces:
   - `fit_slope(iters: Sequence[float], expl: Sequence[float]) -> float` — least-squares slope of log(expl) vs log(iters)
-  - `time_to(target_expl: float, checkpoints: list[dict]) -> float | None` — first crossing, log-linear interpolation on (elapsed_s, expl); None if never reached
-  - `load_dir(path: Path) -> list[dict]` — parsed `*.json`, sorted by case
-  - `render_markdown(runs: list[dict], targets: tuple[float, ...] = (0.5, 0.3, 0.15)) -> str` — one table row per run: case, label, threads, final iters/expl, slope, time-to each target (`—` if unreached), peak RSS
+  - `fit_window(checkpoints: list[dict], min_frac: float = 0.125) -> tuple[list, list]` — the **pre-registered G-A2 fit window** (P1-4): keeps checkpoints with `iters ≥ max_iters × min_frac` (the latter convergence region), returns (iters, expl) for `fit_slope`
+  - `time_to(target_expl: float, checkpoints: list[dict]) -> float | None` — first crossing in cumulative `solve_s`; linear interpolation of `solve_s` against `log(expl)` between the bracketing checkpoints (P2-1: this definition is exact when the crossing lands on a checkpoint, and the tests compute the expected interpolated value from the same definition); None if never reached
+  - `artifact_time_to(target_expl: float, run: dict) -> float | None` — **the G-A1 metric**: `timing.build_s + time_to(...) + timing.final_br_s`
+  - `load_dir(path: Path) -> list[dict]` — parsed `*.json`, sorted by (case, seed)
+  - `aggregate_seeds(runs: list[dict], min_frac: float = 0.125) -> list[dict]` — group by `case`; per case: `n_seeds`, windowed-slope median/min/max (P1-4 interval rule), the member runs
+  - `render_markdown(runs: list[dict], targets: tuple[float, ...] = (0.5, 0.3, 0.15, 0.05)) -> str` — one row per **case** (seeds aggregated): seed count, slope median [min, max], median artifact-time per target (`censored` when only some seeds reached it, `—` when none), max peak RSS
   - CLI: `uv run --no-sync python -m gto.bench <dir> [-o report.md]`
 
 - [ ] **Step 1: Write the failing tests**
@@ -658,16 +865,24 @@ git commit -m "feat(gto-hu): solver-bench CLI for P0a audit runs"
 import json
 import math
 
-from gto.bench import fit_slope, load_dir, render_markdown, time_to
+from gto.bench import (
+    aggregate_seeds, artifact_time_to, fit_slope, fit_window, load_dir,
+    render_markdown, time_to,
+)
 
 
-def _synthetic_run(case="synth", c=100.0, slope=-1.0, secs_per_iter=0.01):
+def _synthetic_run(case="synth", seed=42, c=100.0, slope=-1.0, secs_per_iter=0.01):
     iters = [10, 20, 40, 80, 160, 320]
     return {
-        "case": case, "label": "t", "threads": 1, "table_bytes": 1,
-        "peak_rss_mb": 10.0,
+        "schema_version": 1, "case": case, "config": "cfg", "label": "t",
+        "git_commit": "deadbeef", "dirty": False, "seed": seed,
+        "iterations": 320, "points": 6, "threads": 1,
+        "build_profile": "release", "cpu": "c", "kernel": "k", "cmdline": "x",
+        "table_bytes": 1, "peak_rss_mb": 10.0, "resume_count": 0,
+        "timing": {"build_s": 2.0, "solve_s": 3.2,
+                   "checkpoint_br_s": 0.5, "final_br_s": 1.0},
         "checkpoints": [
-            {"iters": t, "elapsed_s": t * secs_per_iter,
+            {"iters": t, "solve_s": t * secs_per_iter, "br_s": 0.1,
              "expl": c * t ** slope, "br0": 0.0, "br1": 0.0}
             for t in iters
         ],
@@ -675,24 +890,47 @@ def _synthetic_run(case="synth", c=100.0, slope=-1.0, secs_per_iter=0.01):
 
 
 def test_fit_slope_recovers_exponent():
-    run = _synthetic_run(slope=-1.0)
-    cps = run["checkpoints"]
+    cps = _synthetic_run(slope=-1.0)["checkpoints"]
     s = fit_slope([c["iters"] for c in cps], [c["expl"] for c in cps])
     assert math.isclose(s, -1.0, abs_tol=1e-9)
 
 
-def test_time_to_interpolates_and_handles_unreached():
+def test_fit_window_keeps_the_latter_region():
+    cps = _synthetic_run()["checkpoints"]
+    it, ex = fit_window(cps, min_frac=0.125)
+    assert it == [40, 80, 160, 320]  # iters >= 320/8
+    assert len(ex) == 4
+
+
+def test_time_to_exact_at_checkpoint_and_interpolates():
     cps = _synthetic_run(c=100.0, slope=-1.0)["checkpoints"]
-    # expl == 1.0 at iters=100 -> elapsed 1.0s (log-linear interpolation)
-    assert math.isclose(time_to(1.0, cps), 1.0, rel_tol=1e-6)
+    # Crossing exactly AT a checkpoint: expl(80) = 1.25 -> solve_s = 0.8.
+    assert math.isclose(time_to(1.25, cps), 0.8, rel_tol=1e-9)
+    # Between checkpoints: expected value computed from the SAME definition
+    # (linear in solve_s against log expl) — P2-1 alignment.
+    lo, hi = cps[3], cps[4]  # expl 1.25 -> 0.625 over solve_s 0.8 -> 1.6
+    f = (math.log(lo["expl"]) - math.log(1.0)) / (math.log(lo["expl"]) - math.log(hi["expl"]))
+    expected = lo["solve_s"] + f * (hi["solve_s"] - lo["solve_s"])
+    assert math.isclose(time_to(1.0, cps), expected, rel_tol=1e-9)
     assert time_to(1e-9, cps) is None
 
 
-def test_load_dir_and_render(tmp_path):
-    (tmp_path / "a.json").write_text(json.dumps(_synthetic_run("case_a")))
+def test_artifact_time_adds_build_and_final_br():
+    run = _synthetic_run()
+    assert math.isclose(artifact_time_to(1.25, run), 2.0 + 0.8 + 1.0, rel_tol=1e-9)
+    assert artifact_time_to(1e-9, run) is None
+
+
+def test_load_aggregate_and_render(tmp_path):
+    for s in (1, 2, 3):
+        (tmp_path / f"a_s{s}.json").write_text(json.dumps(_synthetic_run("case_a", seed=s)))
     (tmp_path / "b.json").write_text(json.dumps(_synthetic_run("case_b")))
     runs = load_dir(tmp_path)
-    assert [r["case"] for r in runs] == ["case_a", "case_b"]
+    assert [r["case"] for r in runs] == ["case_a", "case_a", "case_a", "case_b"]
+    agg = aggregate_seeds(runs)
+    a = next(r for r in agg if r["case"] == "case_a")
+    assert a["n_seeds"] == 3
+    assert math.isclose(a["slope_median"], -1.0, abs_tol=1e-9)
     md = render_markdown(runs)
     assert "case_a" in md and "case_b" in md and "slope" in md
 ```
@@ -714,9 +952,25 @@ Expected: FAIL — `ModuleNotFoundError: gto.bench`.
 Reads solver-bench RunRecord JSON (see crates/gto-hu/src/bench.rs).
 """
 
-from gto.bench.report import fit_slope, load_dir, render_markdown, time_to
+from gto.bench.report import (
+    aggregate_seeds,
+    artifact_time_to,
+    fit_slope,
+    fit_window,
+    load_dir,
+    render_markdown,
+    time_to,
+)
 
-__all__ = ["fit_slope", "time_to", "load_dir", "render_markdown"]
+__all__ = [
+    "aggregate_seeds",
+    "artifact_time_to",
+    "fit_slope",
+    "fit_window",
+    "load_dir",
+    "render_markdown",
+    "time_to",
+]
 ```
 
 `gto/src/gto/bench/report.py`:
@@ -743,52 +997,106 @@ def fit_slope(iters: Sequence[float], expl: Sequence[float]) -> float:
     return float(np.polyfit(x, y, 1)[0])
 
 
+def fit_window(checkpoints: list[dict], min_frac: float = 0.125) -> tuple[list, list]:
+    """Pre-registered G-A2 fit window (review P1-4): keep the latter
+    convergence region, iters >= max_iters * min_frac, so transient early
+    behavior does not contaminate the asymptotic slope."""
+    mx = max(c["iters"] for c in checkpoints)
+    keep = [c for c in checkpoints if c["iters"] >= mx * min_frac]
+    return [c["iters"] for c in keep], [c["expl"] for c in keep]
+
+
 def time_to(target_expl: float, checkpoints: list[dict]) -> float | None:
-    """Solve-seconds until expl first crosses target (log-linear
-    interpolation between the bracketing checkpoints); None if unreached."""
+    """Cumulative solve-seconds until expl first reaches target.
+
+    Definition (review P2-1): linear interpolation of cumulative solve_s
+    against log(expl) between the bracketing checkpoints. When the
+    crossing lands exactly on a checkpoint the interpolation factor is 1,
+    so the checkpoint's own solve_s is returned. None if never reached.
+    """
     prev = None
     for cp in checkpoints:
         if cp["expl"] <= target_expl:
-            if prev is None or prev["expl"] <= target_expl:
-                return float(cp["elapsed_s"])
-            # interpolate in (elapsed, log expl)
+            if prev is None:
+                return float(cp["solve_s"])
             f = (math.log(prev["expl"]) - math.log(target_expl)) / (
                 math.log(prev["expl"]) - math.log(cp["expl"])
             )
-            return float(prev["elapsed_s"] + f * (cp["elapsed_s"] - prev["elapsed_s"]))
+            return float(prev["solve_s"] + f * (cp["solve_s"] - prev["solve_s"]))
         prev = cp
     return None
 
 
+def artifact_time_to(target_expl: float, run: dict) -> float | None:
+    """G-A1 metric: build + solve-to-target + one final best response."""
+    t = time_to(target_expl, run["checkpoints"])
+    if t is None:
+        return None
+    tm = run["timing"]
+    return float(tm["build_s"] + t + tm["final_br_s"])
+
+
 def load_dir(path: Path) -> list[dict]:
     runs = [json.loads(p.read_text()) for p in sorted(Path(path).glob("*.json"))]
-    return sorted(runs, key=lambda r: (r["case"], r.get("label", "")))
+    return sorted(runs, key=lambda r: (r["case"], r.get("seed", 0)))
 
 
-def _fmt_t(seconds: float | None) -> str:
-    if seconds is None:
-        return "—"
+def aggregate_seeds(runs: list[dict], min_frac: float = 0.125) -> list[dict]:
+    """Group runs by case; windowed-slope median and seed-level [min, max]
+    interval (review P1-4: G-A2 passes only if the WHOLE interval is below
+    the bar)."""
+    # Group by (case, label): seed replicas share a label and aggregate;
+    # thread-sweep runs of one case carry distinct labels and stay apart.
+    by_key: dict[tuple[str, str], list[dict]] = {}
+    for r in runs:
+        by_key.setdefault((r["case"], r.get("label", "")), []).append(r)
+    out = []
+    for (case, label), rs in sorted(by_key.items()):
+        slopes = sorted(fit_slope(*fit_window(r["checkpoints"], min_frac)) for r in rs)
+        out.append({
+            "case": case,
+            "label": label,
+            "n_seeds": len(rs),
+            "slope_median": float(np.median(slopes)),
+            "slope_min": slopes[0],
+            "slope_max": slopes[-1],
+            "runs": rs,
+        })
+    return out
+
+
+def _fmt_t(seconds: float) -> str:
     return f"{seconds / 60:.1f}m" if seconds >= 60 else f"{seconds:.1f}s"
 
 
-def render_markdown(runs: list[dict], targets: tuple[float, ...] = (0.5, 0.3, 0.15)) -> str:
+def render_markdown(runs: list[dict], targets: tuple[float, ...] = (0.5, 0.3, 0.15, 0.05)) -> str:
+    """One row per case, seeds aggregated. Artifact-time cells: median when
+    every seed reached the target, `censored` when only some did (review
+    P1-1: partial timeouts are surfaced, never averaged away), `—` when
+    none did."""
     head = (
-        "| case | label | threads | iters | expl (bb) | slope | "
+        "| case | label | seeds | slope median [min, max] | "
         + " | ".join(f"t→{t}bb" for t in targets)
         + " | peak RSS |\n"
     )
-    sep = "|" + "---|" * (7 + len(targets)) + "\n"
+    sep = "|" + "---|" * (5 + len(targets)) + "\n"
     rows = []
-    for r in runs:
-        cps = r["checkpoints"]
-        slope = fit_slope([c["iters"] for c in cps], [c["expl"] for c in cps])
-        last = cps[-1]
+    for a in aggregate_seeds(runs):
         cells = [
-            r["case"], r.get("label", ""), str(r["threads"]),
-            str(last["iters"]), f"{last['expl']:.4f}", f"{slope:.2f}",
-            *[_fmt_t(time_to(t, cps)) for t in targets],
-            f"{r['peak_rss_mb'] / 1024:.1f} GB",
+            a["case"], a["label"], str(a["n_seeds"]),
+            f"{a['slope_median']:.2f} [{a['slope_min']:.2f}, {a['slope_max']:.2f}]",
         ]
+        for t in targets:
+            ts = [artifact_time_to(t, r) for r in a["runs"]]
+            reached = [x for x in ts if x is not None]
+            if len(reached) == len(ts) and reached:
+                cells.append(_fmt_t(float(np.median(reached))))
+            elif reached:
+                cells.append("censored")
+            else:
+                cells.append("—")
+        rss = max(r["peak_rss_mb"] for r in a["runs"])
+        cells.append(f"{rss / 1024:.1f} GB")
         rows.append("| " + " | ".join(cells) + " |")
     return head + sep + "\n".join(rows) + "\n"
 ```
@@ -834,6 +1142,171 @@ git commit -m "feat(gto): bench slope-fit and audit report renderer"
 
 ---
 
+### Task 4A: Durable solver checkpoint/resume (blocking for long runs)
+
+This task is distinct from the exploitability checkpoints in Task 2. Those
+are measurements; this task persists the complete mutable CFR state so a
+crash, OOM, WSL restart, or reboot loses at most one checkpoint interval.
+
+**Files:**
+- Create: `gto/crates/gto-hu/src/checkpoint.rs` (format, CRC, atomic rotation)
+- Modify: `gto/crates/gto-hu/src/lib.rs`
+- Modify: `gto/crates/gto-hu/src/solver/rng.rs` (exact state export/import)
+- Modify: `gto/crates/gto-hu/src/solver/flop.rs` (stream mutable state)
+- Modify: `gto/crates/gto-hu/src/solver/blueprint.rs` (preflop + subgames)
+- Modify: `gto/crates/gto-hu/src/bench.rs` (CaseSolver save/restore hooks)
+- Modify: `gto/crates/gto-hu/src/bin/solver_bench.rs`
+- Modify: `gto/crates/gto-hu/src/bin/solve_flop.rs`
+- Modify: `gto/crates/gto-hu/src/bin/solve_blueprint.rs`
+- Test: `gto/crates/gto-hu/tests/test_checkpoint_resume.rs`
+
+**Scope:** FlopSolver and BlueprintSolver are mandatory because they own the
+multi-hour P0 runs. The `CaseSolver` interface may return a clear unsupported
+error for River/TurnRiver initially; their planned P0a runs are shorter and
+can be added after the blocking paths are proven. Do not generalize all four
+solvers before the two long-running paths work end to end.
+
+**Snapshot contract:**
+
+- Canonical location:
+  `_data/gto/checkpoints/<run-id>/checkpoint-<iteration>.bin`; never under
+  `gto/`, never committed.
+- Hand-rolled little-endian binary, no new dependency. Header fields: magic,
+  schema version, solver kind, endianness marker, exact git commit/build id,
+  canonical configuration fingerprint, completed iteration, payload length.
+- Footer: payload length repeated plus a streaming CRC64. This is accidental
+  corruption detection, not a security boundary.
+- Persist every mutable value required for exact continuation: iteration;
+  regrets; strategy sums; lazy slab presence/order; `last_discount_iter`;
+  DCFR prefix arrays; raw SplitMix64 state; Blueprint preflop tables; and the
+  mutable state of every `(leaf, flop)` subgame.
+- Rebuild immutable trees, showdown tables, bucket maps, ranges, boards, and
+  equity tables from the canonical CLI/case configuration, then require the
+  stored fingerprint to match before applying mutable state.
+- Write directly through `BufWriter` + checksum wrapper. Never serialize the
+  full solver into an in-memory `Vec<u8>` or clone all tables.
+- Commit protocol: write `checkpoint.tmp`, flush, `sync_all`, rename to the
+  numbered checkpoint, fsync the directory where supported, then atomically
+  replace `LATEST`. Keep the newest two validated numbered checkpoints.
+- Recovery tries `LATEST`, then the prior generation. A partial/corrupt newest
+  file must not prevent recovery from the previous valid snapshot.
+- Strict compatibility: reject solver-kind, config, schema, build-commit,
+  payload-length, or CRC mismatch. P0a has no `--force-resume` escape hatch.
+
+**CLI contract:**
+
+```text
+--checkpoint-dir PATH
+--checkpoint-every-minutes N     # default 30 for long runs; 0 disables
+--checkpoint-every-iters N       # optional deterministic test/override
+--resume auto|PATH               # auto = newest valid generation
+--keep-checkpoints N             # default 2, minimum 2
+```
+
+Checkpoint only between complete CFR iterations, after both traversers have
+finished. `solver-bench` also persists its completed analytical checkpoints,
+cumulative active solve/BR timing, and process-segment list in an atomic
+sidecar. Downtime is not counted as active compute; the final RunRecord records
+`resume_count` and all timing segments.
+
+- [ ] **Step 1: Write failing exact-resume tests**
+
+Cover all of the following with tiny trees/buckets:
+
+1. Sampled FlopSolver: uninterrupted 80 iterations vs 30 + save/load + 50;
+   exploitability bits and a full mutable-state/strategy checksum must match.
+2. BlueprintSolver: uninterrupted 20 vs 7 + save/load + 13, including its
+   preflop tables and all `(leaf, flop)` subgames; final checksum bit-identical.
+3. DCFR sampled mode: resume across a skipped-context lazy-discount interval;
+   checks `last_discount_iter`, prefix arrays, and RNG are restored.
+4. Configuration mismatch: changing board, seed, abstraction, variant, tree,
+   or flop list must fail before mutating the rebuilt solver.
+5. Corruption/truncation: a bad newest generation is rejected and `auto`
+   falls back to the prior valid generation.
+6. Interrupted write: a leftover `.tmp` does not change `LATEST` and does not
+   remove either prior generation.
+
+```bash
+cd /home/kazumasa/projects/gto
+cargo test -p gto-hu --test test_checkpoint_resume 2>&1 | tail -8
+```
+
+Expected before implementation: unresolved checkpoint APIs.
+
+- [ ] **Step 2: Implement the streaming format and solver hooks**
+
+Keep binary primitives and CRC code in `checkpoint.rs`. Put private-field
+state traversal inside `flop.rs` and `blueprint.rs`; do not make solver fields
+public merely for serialization. Expose the raw SplitMix64 state through a
+small crate-private getter/constructor and pin it with a sequence-continuation
+test.
+
+Run the focused tests, then the bit-identity suite:
+
+```bash
+cargo test -p gto-hu --test test_checkpoint_resume
+cargo test -p gto-hu --test test_perf_baseline
+cargo test -p gto-hu
+```
+
+- [ ] **Step 3: Add CLI rotation and automatic resume**
+
+The original command remains the source of immutable configuration. On
+`--resume auto`, rebuild from those arguments, verify the snapshot fingerprint,
+restore mutable state, and run only the remaining iterations. If the snapshot
+already reached the requested total, do not train again; proceed to final BR
+and artifact export.
+
+Example recovery flow:
+
+```bash
+cd /home/kazumasa/projects/gto
+CK=../_data/gto/checkpoints/p0a/bp3_sample
+cargo run --release -p gto-hu --bin solver-bench -- \
+  --case bp3_sample --iterations 1500 --points 8 \
+  --checkpoint-dir "$CK" --checkpoint-every-minutes 30 --resume auto \
+  --out docs/reviews/2026-07-19-p0a-audit/baselines/bp3_sample.json
+```
+
+Re-running the same command after termination resumes from the latest valid
+snapshot. A different case/configuration must fail loudly.
+
+- [ ] **Step 4: Fault-injection and operational validation**
+
+Run a release-mode tiny/medium checkpointed job, terminate it during both
+training and snapshot write, then rerun the same command. Record:
+
+- restored iteration and lost iterations/time;
+- snapshot bytes and write/read seconds;
+- peak RSS delta during save/load;
+- final checksum vs an uninterrupted control;
+- fallback behavior after deliberate truncation of a copied newest snapshot.
+
+Acceptance targets:
+
+- final result bit-identical to uninterrupted execution;
+- no valid prior generation lost during a failed write;
+- maximum lost active compute <= configured interval (default 30 min);
+- streaming save peak-RSS increase <= 256 MiB;
+- checkpoint overhead target <= 10% of active wall time at the default
+  interval. If size/write speed makes the loss-window and overhead targets
+  incompatible, stop and present the measured trade-off instead of silently
+  relaxing either target.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add crates/gto-hu/src/checkpoint.rs crates/gto-hu/src/lib.rs \
+        crates/gto-hu/src/solver/rng.rs crates/gto-hu/src/solver/flop.rs \
+        crates/gto-hu/src/solver/blueprint.rs crates/gto-hu/src/bench.rs \
+        crates/gto-hu/src/bin/solver_bench.rs crates/gto-hu/src/bin/solve_flop.rs \
+        crates/gto-hu/src/bin/solve_blueprint.rs \
+        crates/gto-hu/tests/test_checkpoint_resume.rs
+git commit -m "feat(gto-hu): durable bit-identical checkpoint and resume for long solves"
+```
+
+---
+
 ### Task 5: Baseline capture — fast set + blueprint sample/enumerate slopes (G-A2 evidence)
 
 **Files:**
@@ -845,40 +1318,58 @@ git commit -m "feat(gto): bench slope-fit and audit report renderer"
 - Produces: committed baseline JSONs + rendered table; the `bp3_sample` vs
   `bp3_enum` slope comparison that decides G-A2's direction.
 
-Runtime notes: river ≈ minutes; turn sample ≈ tens of minutes; `bp3_sample`
-1500 iters ≈ 40 min (WP2 measured 1.54 s/iter); `bp3_enum` multiplies
-per-iteration cost by roughly the number of legal turns (≈ 45×) — 100
-iterations ≈ 2 h. Run sequentially, solo on the box. Blueprint checkpoints
-each pay an exact best-response evaluation — keep `--points 8`.
+Runtime notes: river ≈ minutes; turn sample ≈ tens of minutes per seed;
+`bp3_sample` 1500 iters ≈ 40 min **per seed × 3 seeds ≈ 2 h** (P1-4:
+stochastic modes run seeds {42, 1042, 9042}; deterministic enumerate runs
+once); `bp3_enum` multiplies per-iteration cost by roughly the number of
+legal turns (≈ 45×) — 100 iterations ≈ 2 h. Total for this task ≈ 5 h. Run
+sequentially, solo on the box. Blueprint checkpoints each pay an exact
+best-response evaluation — keep `--points 8`.
 
-- [ ] **Step 1: Fast set (river + turn, ~1 h total)**
+Every command expected to exceed 15 minutes must add
+`--checkpoint-dir ../_data/gto/checkpoints/p0a/<case> \
+--checkpoint-every-minutes 30 --resume auto`. A restarted run must append a
+new timing segment and preserve the earlier analytical checkpoints.
+
+- [ ] **Step 1: Fast set (river + turn, ~1.5 h total)**
 
 ```bash
 cd /home/kazumasa/projects/gto
 B=docs/reviews/2026-07-19-p0a-audit/baselines
-L=$(git rev-parse --short HEAD)
-cargo run --release -p gto-hu --bin solver-bench -- --case river_srp100      --iterations 2000  --points 10 --label "$L" --out $B/river_srp100.json
-cargo run --release -p gto-hu --bin solver-bench -- --case turn_srp100_enum  --iterations 400   --points 8  --label "$L" --out $B/turn_srp100_enum.json
-cargo run --release -p gto-hu --bin solver-bench -- --case turn_srp100_sample --iterations 4000 --points 10 --label "$L" --out $B/turn_srp100_sample.json
+GC=$(git rev-parse HEAD)
+DTY=$([ -z "$(git status --porcelain)" ] && echo 0 || echo 1)
+META="--label baseline --git-commit $GC --dirty $DTY"
+cargo run --release -p gto-hu --bin solver-bench -- --case river_srp100     --iterations 2000 --points 10 $META --out $B/river_srp100.json
+cargo run --release -p gto-hu --bin solver-bench -- --case turn_srp100_enum --iterations 400  --points 8  $META --out $B/turn_srp100_enum.json
+for S in 42 1042 9042; do
+  cargo run --release -p gto-hu --bin solver-bench -- --case turn_srp100_sample --iterations 4000 --points 10 --seed $S $META --out $B/turn_srp100_sample_s$S.json
+done
 ```
-Expected: three JSON files; expl decreasing across checkpoints in each.
+Expected: five JSON files; expl decreasing across checkpoints in each.
 
-- [ ] **Step 2: Blueprint sample-mode slope (~40 min)**
+- [ ] **Step 2: Blueprint sample-mode slopes, 3 seeds (~2 h)**
 
 ```bash
-cargo run --release -p gto-hu --bin solver-bench -- --case bp3_sample --iterations 1500 --points 8 --label "$L" --out $B/bp3_sample.json
+for S in 42 1042 9042; do
+  cargo run --release -p gto-hu --bin solver-bench -- --case bp3_sample --iterations 1500 --points 8 --seed $S $META \
+    --checkpoint-dir ../_data/gto/checkpoints/p0a/bp3_sample_s$S --checkpoint-every-minutes 30 --resume auto \
+    --out $B/bp3_sample_s$S.json
+done
 ```
-Expected: final expl in the ~1.5 bb range (WP2: 1.506 bb at 1500 iters);
-fitted slope near −0.5.
+Expected: final expl per seed in the ~1.5 bb range (WP2: 1.506 bb at 1500
+iters, seed 42); windowed slope near −0.5 per seed, with the seed spread
+becoming the G-A2 baseline interval.
 
-- [ ] **Step 3: Blueprint enumerate-mode slope (~2 h)**
+- [ ] **Step 3: Blueprint enumerate-mode slope (deterministic, 1 run, ~2 h)**
 
 ```bash
-cargo run --release -p gto-hu --bin solver-bench -- --case bp3_enum --iterations 100 --points 6 --label "$L" --out $B/bp3_enum.json
+cargo run --release -p gto-hu --bin solver-bench -- --case bp3_enum --iterations 100 --points 6 $META \
+  --checkpoint-dir ../_data/gto/checkpoints/p0a/bp3_enum --checkpoint-every-minutes 30 --resume auto \
+  --out $B/bp3_enum.json
 ```
-Expected: much higher per-iteration cost; slope fitted on 6 points. This is
-the core G-A2 measurement: does enumerate reach a given expl in less
-wall-clock than sample despite the per-iter cost?
+Expected: much higher per-iteration cost; slope fitted on the windowed
+points. This is the core G-A2 comparison: wall-clock-to-quality (via
+`artifact_time_to`), not only slope-per-iteration (P1-4).
 
 - [ ] **Step 4: Render and commit**
 
@@ -898,39 +1389,58 @@ cd gto && git add docs/reviews/2026-07-19-p0a-audit && git commit -m "bench(gto)
 
 **Interfaces:**
 - Consumes: `solver-bench` flop cases (Task 1), `gto.bench` (Task 4).
-- Produces: per-flop time-to-{0.5, 0.3, 0.15} bb table — the direct G-A1
-  input (median across the three boards at each target).
+- Produces: the **quality/time Pareto evidence** for G-A1 over the
+  pre-registered candidate thresholds **{0.5, 0.3, 0.15, 0.05} bb** —
+  per-case median artifact time (`build + solve + final BR`) to each
+  candidate, with unreached targets reported as **censored** evidence
+  (P1-1: the threshold is chosen from this curve by the user BEFORE the
+  G-A1 verdict; a timeout never becomes a relaxed threshold). Both SRP and
+  3bet trees are measured because both are in the Tier-1 grid.
 
 Runtime: ~49 min per 3k-iteration flop run at K_r=128 historically; K_r=24
-is faster per iteration. Four runs below ≈ 3–5 h total. Run sequentially.
+is faster per iteration. Five runs below ≈ 4–6 h total. Run sequentially.
+All runs use Task 4A recovery snapshots with a per-case checkpoint
+directory and `--resume auto`.
 
-- [ ] **Step 1: Run the matrix (3 boards × k24, plus AhKd7s × k64)**
+Range-representativeness note for the report: uniform ranges keep every
+combo live, which upper-bounds traversal and best-response cost relative
+to chart-derived production ranges — the timing is conservative on ranges;
+tree-shape coverage comes from measuring SRP and 3bet configs.
+
+- [ ] **Step 1: Run the matrix (3 SRP boards × k24, AhKd7s × k64, AhKd7s 3bet × k24)**
 
 ```bash
 cd /home/kazumasa/projects/gto
 F=docs/reviews/2026-07-19-p0a-audit/flops
-L=$(git rev-parse --short HEAD)
-for case in flop_srp100_AhKd7s_k24 flop_srp100_QsJh2c_k24 flop_srp100_8d8h3s_k24 flop_srp100_AhKd7s_k64; do
-  cargo run --release -p gto-hu --bin solver-bench -- --case $case --iterations 3000 --points 8 --label "$L" --out $F/$case.json
+GC=$(git rev-parse HEAD)
+DTY=$([ -z "$(git status --porcelain)" ] && echo 0 || echo 1)
+META="--label flop-matrix --git-commit $GC --dirty $DTY"
+for case in flop_srp100_AhKd7s_k24 flop_srp100_QsJh2c_k24 flop_srp100_8d8h3s_k24 flop_srp100_AhKd7s_k64 flop_3bet100_AhKd7s_k24; do
+  cargo run --release -p gto-hu --bin solver-bench -- --case $case --iterations 3000 --points 8 $META \
+    --checkpoint-dir ../_data/gto/checkpoints/p0a/$case --checkpoint-every-minutes 30 --resume auto \
+    --out $F/$case.json
 done
 ```
-Expected: four JSONs. Sanity anchor: WP2-era full-SRP flop reached
+Expected: five JSONs. Sanity anchor: WP2-era full-SRP flop reached
 expl ≈ 1.17 bb at 3k iterations (K_r=128) — K_r=24 values will differ but
 should be same order of magnitude.
 
-- [ ] **Step 2: Render, read the medians, commit**
+- [ ] **Step 2: Render the Pareto table, commit**
 
 ```bash
 cd /home/kazumasa/projects
 uv run --no-sync python -m gto.bench gto/docs/reviews/2026-07-19-p0a-audit/flops -o gto/docs/reviews/2026-07-19-p0a-audit/flop-report.md
 cd gto && git add docs/reviews/2026-07-19-p0a-audit/flops docs/reviews/2026-07-19-p0a-audit/flop-report.md
-git commit -m "bench(gto): P0a flop time-to-expl matrix (G-A1 evidence)"
+git commit -m "bench(gto): P0a flop quality/time Pareto matrix (G-A1 evidence)"
 ```
 
-In the report, note explicitly: which expl target is *reachable* within the
-G-A1 12-minute budget at these settings, and what per-file expl gate that
-implies for spec §4.2 (the spec left the per-flop gate number to this
-measurement).
+The report presents, per candidate threshold: median artifact time across
+the measured cases (censored rows shown as censored), and the implied
+Tier-1 grid GPU-hours at that threshold. **The G-A1 verdict is NOT issued
+in this task**: Task 9 presents the Pareto curve, the user picks the
+per-file threshold, and only then is G-A1 judged (median artifact time at
+the chosen threshold ≤ 12 min; a censored median is an automatic no-go at
+that threshold).
 
 ---
 
@@ -944,10 +1454,23 @@ measurement).
 
 **Interfaces:**
 - Consumes: existing `ChanceMode { Sample { seed }, Enumerate }`.
-- Produces: `ChanceMode::MultiSample { seed: u64, samples: u8 }` — k
-  i.i.d. turn samples (with replacement, same SplitMix64 stream), EV =
-  mean of the k single-sample estimators. `MultiSample { seed, samples: 1 }`
-  must be **bit-identical** to `Sample { seed }`.
+- Produces: `ChanceMode::MultiSample { seed: u64, samples: u8 }` — defined
+  as **partial enumeration** (review P1-3 resolution): at a sampled chance
+  deal the solver draws k DISTINCT cards (partial Fisher–Yates over the
+  deal's index range, same SplitMix64 stream), recurses into each sampled
+  subtree exactly as `Enumerate` recurses into all of them (regret and
+  strategy updates below happen per visited subtree — the same
+  within-iteration sequential accumulation `Enumerate` already performs,
+  so this is NOT claimed to be k estimators under a frozen strategy), and
+  returns `(n_pub / legal) · (1/k) · Σ v_i` as the chance-node EV — an
+  unbiased estimator of the enumerated value under without-replacement
+  sampling. Iteration and discount accounting are untouched: one traversal
+  remains one CFR iteration regardless of k.
+  `MultiSample { seed, samples: 1 }` must be **bit-identical** to
+  `Sample { seed }` (the first Fisher–Yates draw makes exactly the one
+  `next_index(n_pub)` call the current code makes). `samples = n_pub`
+  visits every child like `Enumerate` but in shuffled order — equal in
+  expectation, not bit-identical.
 
 - [ ] **Step 1: Write the failing bit-identity + determinism tests**
 
@@ -1019,6 +1542,43 @@ fn multisample_k4_is_deterministic_and_converges() {
     assert_eq!(c1, c2);
     assert!(e1.is_finite() && e1 > 0.0);
 }
+
+// Tolerances below are generous sanity bounds (review P1-3: differential
+// and expectation checks against enumeration). Tighten from observed
+// values if the implementation allows; never loosen without reporting.
+
+#[test]
+fn multisample_full_k_matches_enumeration_closely() {
+    // k = n_pub visits every turn child like Enumerate, in shuffled order
+    // (different float summation order → tolerance, not bit identity).
+    // n_pub for a turn deal is 49 (52 − 3 board cards); verify against
+    // the solver's turns().len() and adjust if the fixture differs.
+    let mut e = tiny_flop(ChanceMode::Enumerate);
+    let mut m = tiny_flop(ChanceMode::MultiSample { seed: 3, samples: 49 });
+    e.run(60);
+    m.run(60);
+    let ee = e.exploitability_bb().exploitability;
+    let em = m.exploitability_bb().exploitability;
+    assert!((ee - em).abs() / ee.max(1e-12) < 0.05, "enum {ee} vs full-k {em}");
+}
+
+#[test]
+fn multisample_expectation_matches_enumeration_across_seeds() {
+    // Multi-seed expectation check: the k=4 estimator's game value
+    // averaged over seeds approaches the enumerated value.
+    let mut e = tiny_flop(ChanceMode::Enumerate);
+    e.run(40);
+    let ge = e.game_value_p0();
+    let seeds = [1u64, 2, 3, 4, 5, 6, 7, 8];
+    let mut acc = 0.0;
+    for &s in &seeds {
+        let mut m = tiny_flop(ChanceMode::MultiSample { seed: s, samples: 4 });
+        m.run(40);
+        acc += m.game_value_p0();
+    }
+    let gm = acc / seeds.len() as f64;
+    assert!((ge - gm).abs() < 0.15, "enum {ge} vs mean-of-seeds {gm}");
+}
 ```
 
 Note: `average_strategy` on FlopSolver takes `(node_id, combo)` per
@@ -1052,7 +1612,7 @@ In **flop.rs**: seed extraction (`flop.rs:404`) gains
 `ChanceMode::MultiSample { seed, .. } => seed`; the traverse match
 (`flop.rs:602`) treats `MultiSample { .. }` exactly like `Sample { .. }`
 (turn deal sampled, river enumerated) but passes the sample count; and
-`chance_sample` becomes a k-loop around its existing single-sample body:
+`chance_sample` becomes a partial-enumeration loop over k DISTINCT cards:
 
 ```rust
 fn chance_sample(
@@ -1065,11 +1625,25 @@ fn chance_sample(
     ctx: Ctx,
     k: u8, // 1 for Sample; ChanceMode::MultiSample passes its `samples`
 ) -> Vec<f64> {
+    // (n_pub, legal) lookup stays exactly as today.
+    let k = (k as usize).min(n_pub).max(1);
+    // Partial Fisher–Yates over 0..n_pub on a stack array (n_pub ≤ 49):
+    // the j-th draw calls next_index(n_pub - j), so the k=1 path performs
+    // exactly the single next_index(n_pub) call the current code makes —
+    // bit-identical RNG stream and arithmetic.
+    let mut order = [0usize; 52];
+    for (i, o) in order.iter_mut().take(n_pub).enumerate() { *o = i; }
     let mut ev = vec![0.0; N];
-    for _ in 0..k {
-        // ---- existing single-sample body, verbatim, accumulating: ----
-        // draw idx from self.rng exactly as today, deal the card,
-        // recurse, and add `scale * v[c]` into ev[c] for unblocked combos
+    let scale = n_pub as f64 / legal;
+    for j in 0..k {
+        let r = self.rng.next_index(n_pub - j);
+        order.swap(j, j + r);
+        let idx = order[j];
+        // ---- existing single-sample body for `idx`, verbatim:
+        // resolve the card for this deal street, zero blocked reaches,
+        // recurse via traverse (updates below happen per visited subtree,
+        // as Enumerate already does), and add `scale * v[c]` into ev[c]
+        // for unblocked combos ----
     }
     if k > 1 {
         let inv = 1.0 / k as f64;
@@ -1079,12 +1653,16 @@ fn chance_sample(
 }
 ```
 
-The `k == 1` path must not multiply (no `* 1.0` reordering) so the Sample
-stream and float ops stay bit-identical. Apply the same transformation to
-the sampling site in `turn_river.rs` (its `Sample` samples the river deal;
-same k-loop pattern, same k=1 discipline). Fix all `match` sites the
-compiler flags — exhaustive matches on `ChanceMode` exist in both files
-and in `src/bin/` CLIs; map `MultiSample` alongside `Sample` everywhere.
+The `k == 1` path must not multiply (no `* 1.0` reordering) and must not
+change the RNG call pattern, so the Sample stream and float ops stay
+bit-identical (guarded by the k=1 test and `test_perf_baseline`).
+Iteration/discount accounting is NOT touched: one traversal remains one
+CFR iteration for any k. Apply the same transformation to the sampling
+site in `turn_river.rs` (its `Sample` samples the river deal; same
+partial-Fisher–Yates pattern, same k=1 discipline). Fix all `match` sites
+the compiler flags — exhaustive matches on `ChanceMode` exist in both
+files and in `src/bin/` CLIs; map `MultiSample` alongside `Sample`
+everywhere.
 
 - [ ] **Step 4: Run the new tests and the full suite (bit-identity guard)**
 
@@ -1106,11 +1684,13 @@ to; `solve_blueprint.rs` gains `--turn-samples N` mapping to
 `MultiSample { seed, samples }`):
 
 ```rust
-BenchCase { name: "flop_srp100_AhKd7s_k24_ms4",
-            build: || flop_case_mode([c2("Ah"), c2("Kd"), c2("7s")], 24,
-                    ChanceMode::MultiSample { seed: SEED, samples: 4 }) },
-BenchCase { name: "bp3_ms4",  build: || blueprint_case_mode(ChanceMode::MultiSample { seed: SEED, samples: 4 }) },
-BenchCase { name: "bp3_ms16", build: || blueprint_case_mode(ChanceMode::MultiSample { seed: SEED, samples: 16 }) },
+BenchCase { name: "flop_srp100_AhKd7s_k24_ms4", config: SRP_CFG,
+            build: |s| flop_case_mode([c("Ah"), c("Kd"), c("7s")], 24,
+                    ChanceMode::MultiSample { seed: s, samples: 4 }) },
+BenchCase { name: "bp3_ms4",  config: BP_CFG,
+            build: |s| blueprint_case_mode(ChanceMode::MultiSample { seed: s, samples: 4 }) },
+BenchCase { name: "bp3_ms16", config: BP_CFG,
+            build: |s| blueprint_case_mode(ChanceMode::MultiSample { seed: s, samples: 16 }) },
 ```
 
 (`flop_case_mode` / `blueprint_case_mode` are the Task-1 builders with the
@@ -1126,74 +1706,120 @@ git add crates/gto-hu/src/solver/turn_river.rs crates/gto-hu/src/solver/flop.rs 
 git commit -m "feat(gto-hu): ChanceMode::MultiSample turn deals (k=1 bit-identical to Sample)"
 ```
 
-- [ ] **Step 7: Measure MultiSample slopes (~2 h)**
+- [ ] **Step 7: Measure MultiSample slopes, 3 seeds each (~6 h)**
+
+All runs use Task 4A recovery snapshots. A resumed run must restore the raw
+SplitMix64 stream so its final result stays bit-identical to uninterrupted
+execution.
 
 ```bash
 cd /home/kazumasa/projects/gto
 B=docs/reviews/2026-07-19-p0a-audit/baselines
-L=$(git rev-parse --short HEAD)
-cargo run --release -p gto-hu --bin solver-bench -- --case bp3_ms4  --iterations 400 --points 8 --label "$L" --out $B/bp3_ms4.json
-cargo run --release -p gto-hu --bin solver-bench -- --case bp3_ms16 --iterations 100 --points 6 --label "$L" --out $B/bp3_ms16.json
+GC=$(git rev-parse HEAD)
+DTY=$([ -z "$(git status --porcelain)" ] && echo 0 || echo 1)
+META="--label multisample --git-commit $GC --dirty $DTY"
+for S in 42 1042 9042; do
+  cargo run --release -p gto-hu --bin solver-bench -- --case bp3_ms4  --iterations 400 --points 8 --seed $S $META \
+    --checkpoint-dir ../_data/gto/checkpoints/p0a/bp3_ms4_s$S --checkpoint-every-minutes 30 --resume auto \
+    --out $B/bp3_ms4_s$S.json
+  cargo run --release -p gto-hu --bin solver-bench -- --case bp3_ms16 --iterations 100 --points 6 --seed $S $META \
+    --checkpoint-dir ../_data/gto/checkpoints/p0a/bp3_ms16_s$S --checkpoint-every-minutes 30 --resume auto \
+    --out $B/bp3_ms16_s$S.json
+done
 cd /home/kazumasa/projects
 uv run --no-sync python -m gto.bench gto/docs/reviews/2026-07-19-p0a-audit/baselines -o gto/docs/reviews/2026-07-19-p0a-audit/baseline-report.md
-cd gto && git add docs/reviews/2026-07-19-p0a-audit && git commit -m "bench(gto): MultiSample k=4/16 blueprint slopes (G-A2 evidence)"
+cd gto && git add docs/reviews/2026-07-19-p0a-audit && git commit -m "bench(gto): MultiSample k=4/16 blueprint slopes, 3 seeds (G-A2 evidence)"
 ```
 
-Expected: slope steepens monotonically from `bp3_sample` (−0.5) toward
-`bp3_enum` as k grows; the report now contains the full
-sample/ms4/ms16/enumerate trade-off curve.
+**Hypothesis under test, NOT an acceptance condition (P1-3):** slope
+steepens from `bp3_sample` (≈ −0.5) toward `bp3_enum` as k grows. Whatever
+the data shows goes into the report; G-A2 is judged by the seed-interval
+rule on the winning mode, and the mode choice for P0b weighs
+wall-clock-to-quality, not slope alone.
 
 ---
 
-### Task 8: Blueprint memory model (G-A3 evidence)
+### Task 8: Blueprint memory model (G-A3 projection evidence)
+
+Review P0-2 governs this task: `BlueprintSolver::table_bytes()` sums only
+the **currently allocated lazy slabs** — near zero right after construction
+— so it must never be compared against dense capacity at construction time,
+and a blanket `bytes / 2` is valid only for f64 numeric slabs, never for
+total resident memory. The model therefore distinguishes three quantities:
+**capacity** (what a fully-visited run allocates in numeric slabs),
+**allocated** (`table_bytes()`, grows lazily toward capacity), and **RSS**
+(process total: capacity + trees, bucket maps, equity/all-in tables,
+allocator overhead — captured as a measured overhead factor, not modeled
+component by component).
 
 **Files:**
 - Modify: `gto/crates/gto-hu/src/bench.rs`
+- Modify: `gto/crates/gto-hu/src/solver/blueprint.rs` (expose `config_for`)
+- Modify: `gto/crates/gto-hu/src/bin/solver_bench.rs` (`--memory-model`)
 - Test: `gto/crates/gto-hu/tests/test_bench_memory.rs`
 
 **Interfaces:**
 - Consumes: `dense_table_bytes_abstracted(tree, abs)` (`flop.rs:197`),
-  `BlueprintSolver::table_bytes()` (`blueprint.rs:229`),
-  `BlueprintSolver::betting_leaf_node_ids()`, tree builders.
+  `BlueprintSolver::table_bytes()` (`blueprint.rs:229` — ALLOCATED, lazy),
+  `BlueprintSolver::run`, tree builders.
 - Produces:
-  - `pub fn blueprint_bytes_model(m: usize, stack_bb: u32, abs: Abstraction) -> usize` — predicted total table bytes for an M-flop blueprint at the production configs (per preflop betting leaf: pot-type config → `dense_table_bytes_abstracted` × M, summed; plus the preflop layer, modeled the same way `BlueprintSolver` allocates it)
-  - `pub fn f32_projection(bytes: usize) -> usize` — bytes × 1/2 for the f64 slabs (document which slabs halve: regret + strategy accumulators; index/bucket maps do not)
+  - `pub fn config_for(pot_type: PotType) -> FlopTreeConfig` — moved from
+    `src/bin/solve_blueprint.rs` into `solver/blueprint.rs` as the single
+    source of truth (the CLI re-imports it)
+  - `pub fn blueprint_dense_capacity_bytes(m: usize, stack_bb: u32, abs: Abstraction) -> usize`
+    — CAPACITY: per preflop betting leaf, `dense_table_bytes_abstracted`
+    of that leaf's `config_for` flop tree × m, summed, plus the preflop
+    layer's own numeric tables (read `BlueprintSolver::new` and count
+    exactly the slabs it can allocate)
+  - `pub fn f32_slab_projection(bytes: usize) -> usize` — halves ONLY the
+    numeric-slab bytes passed in; callers must not feed it RSS or
+    non-slab overhead
+  - `pub fn build_blueprint_for_test(stack_bb: u32, abs: Abstraction) -> BlueprintSolver`
+    — tiny 3-flop blueprint in **enumerate** mode (reuses the Task-1
+    builder internals with stack parameterized)
 
-- [ ] **Step 1: Write the failing test**
+- [ ] **Step 1: Write the failing tests**
 
 `gto/crates/gto-hu/tests/test_bench_memory.rs`:
 
 ```rust
-//! The memory model must reproduce the real allocator's accounting on a
-//! configuration small enough to construct in a test.
+//! Capacity model vs the real allocator (review P0-2): table_bytes() is
+//! LAZY — the model is validated by growing a tiny enumerate-mode run to
+//! full allocation, plus real-RSS anchors in the --memory-model step.
 
-use gto_hu::bench::{blueprint_bytes_model, f32_projection};
+use gto_hu::bench::{
+    blueprint_dense_capacity_bytes, build_blueprint_for_test, f32_slab_projection,
+};
 use gto_hu::solver::Abstraction;
 
 #[test]
-fn model_matches_actual_m3_tables_within_2pct() {
+fn allocated_bytes_start_near_zero_and_grow_to_capacity() {
     let abs = Abstraction { buckets_river: 8, buckets_turn: 4 };
-    // Construct the real thing at a small stack + tiny buckets so the
-    // test allocates MBs, not GBs — same code path as production.
-    let actual = {
-        use gto_hu::bench::build_blueprint_for_test;
-        let bp = build_blueprint_for_test(20, abs);
-        bp.table_bytes()
-    };
-    let model = blueprint_bytes_model(3, 20, abs);
-    let err = (model as f64 - actual as f64).abs() / actual as f64;
-    assert!(err < 0.02, "model {model} vs actual {actual} (err {err:.3})");
+    let mut bp = build_blueprint_for_test(20, abs);
+    let at_construction = bp.table_bytes();
+    let capacity = blueprint_dense_capacity_bytes(3, 20, abs);
+    assert!(
+        at_construction < capacity / 10,
+        "lazy tables must start far below capacity: {at_construction} vs {capacity}"
+    );
+    // Enumerate mode visits every betting line and chance context, so a
+    // few iterations allocate every slab on this tiny configuration.
+    bp.run(3);
+    let after = bp.table_bytes();
+    assert!(after > at_construction, "no slab growth after training");
+    assert!(after <= capacity, "allocated {after} exceeds capacity {capacity}");
+    let frac = after as f64 / capacity as f64;
+    assert!(frac > 0.9, "expected near-full allocation, got {frac:.3}");
+    // If full enumeration provably cannot reach some slabs (document
+    // which), lower the bound to the reachable fraction and say why in
+    // this comment — reached-capacity is the honest comparison.
 }
 
 #[test]
-fn f32_projection_halves() {
-    assert_eq!(f32_projection(1000), 500);
+fn f32_projection_halves_slab_bytes_only() {
+    assert_eq!(f32_slab_projection(1000), 500);
 }
 ```
-
-(`build_blueprint_for_test(stack_bb, abs)` is a small helper added to
-`bench.rs` that builds the 3-flop blueprint at the given stack — reuse the
-Task-1 `blueprint_case` internals with stack parameterized.)
 
 - [ ] **Step 2: Run to verify failure; implement; re-run**
 
@@ -1201,42 +1827,48 @@ Task-1 `blueprint_case` internals with stack parameterized.)
 cargo test -p gto-hu --test test_bench_memory 2>&1 | tail -4
 ```
 
-Implement `blueprint_bytes_model` by mirroring `BlueprintSolver::new`'s
-allocation structure: build the preflop tree at `stack_bb`, take its
-betting leaves, map each leaf's `PotType` through the same `config_for`
-the solver uses (`src/bin/solve_blueprint.rs::config_for` — move/expose it
-in `solver/blueprint.rs` as `pub fn config_for(pot_type) -> FlopTreeConfig`
-so both share one source of truth), build each flop tree once, and sum
-`dense_table_bytes_abstracted(&tree, abs) * m` plus the preflop layer's own
-tables (read `BlueprintSolver::table_bytes` to see exactly which pieces it
-counts, and count the same pieces). Then re-run: both tests pass.
+Implement by mirroring `BlueprintSolver::new`'s allocation structure:
+build the preflop tree at `stack_bb`, take its betting leaves, map each
+leaf's `PotType` through the now-shared `config_for`, build each flop tree
+once, and sum `dense_table_bytes_abstracted(&tree, abs) * m` plus the
+preflop layer's numeric tables. Then re-run: both tests pass, and the full
+`cargo test -p gto-hu` suite stays green.
 
-- [ ] **Step 3: Print the G-A3 projection table**
+- [ ] **Step 3: Print the G-A3 projection table with RSS anchors**
 
-Add a `--memory-model` flag to `solver-bench` that prints, for
-stack 100 bb: M ∈ {3, 10, 25, 50} × f64/f32 (via `f32_projection`) ×
-`Abstraction{24,16}`, in GB. Run it and paste the table into the audit
-report (Task 9):
+Add a `--memory-model` flag to `solver-bench` that prints, for stack
+100 bb and `Abstraction{24,16}`, rows M ∈ {3, 10, 25, 50} with columns:
+
+1. capacity f64 (GB) — `blueprint_dense_capacity_bytes`
+2. f32-slab projection (GB) — `f32_slab_projection` of column 1
+3. projected peak RSS (GB) — column 2 × the **measured overhead factor**,
+   printed with its provenance: WP2's real M=3 run measured 23.95 GB dense
+   capacity and 27.8 GB peak RSS → overhead ≈ 1.16. The flag also prints
+   the model-vs-WP2 cross-check (M=3 capacity within ~2% of 23.95 GB).
 
 ```bash
 cargo run --release -p gto-hu --bin solver-bench -- --memory-model
 ```
-Expected: M=3/f64 within ~2% of WP2's measured 23.95 GB dense table
-(external validation of the model against a real historical run); the
-M=25/f32 row is the G-A3 number.
+
+The **G-A3 projection verdict** reads from the M=25 row: projected peak
+RSS ≤ 48 GB. Board bucketing is NOT in the model (its reduction factor is
+unknown before P0b): if M=25 passes without it, G-A3 passes with margin;
+if not, the report states the required bucketing reduction factor and the
+verdict is conditional on P0b achieving it — never silently assumed.
 
 - [ ] **Step 4: Commit**
 
 ```bash
 git add crates/gto-hu/src/bench.rs crates/gto-hu/src/bin/solver_bench.rs \
         crates/gto-hu/src/solver/blueprint.rs crates/gto-hu/tests/test_bench_memory.rs
-git commit -m "feat(gto-hu): blueprint memory model + f32 projection (G-A3 evidence)"
+git commit -m "feat(gto-hu): blueprint capacity model + f32 slab projection (G-A3 evidence)"
 ```
 
-G-A3 honesty note for the report: the f32 and board-bucketing *factors* are
-projections (those features are P0b work); the model itself is validated
-against real allocations (test) and a real run (WP2). Final confirmation
-lands with the first P0b M=25 run — say so explicitly in the report.
+G-A3 contract note for the report (renegotiated spec §5.0): P0a ships this
+**validated projection**; the engine's current M ≤ 8 cap (`blueprint.rs:119`,
+u8 masks / 2^M zsum) means the model deliberately extrapolates past the
+implemented range, and the **first P0b M=25 real run (peak RSS ≤ 48 GB) is
+the blocking P0b entry gate** that confirms it.
 
 ---
 
@@ -1254,16 +1886,23 @@ lands with the first P0b M=25 run — say so explicitly in the report.
 
 - [ ] **Step 1: Thread-scaling sweep on the blueprint (~1 h)**
 
+Each individual 100-iteration process is short enough that durable snapshots
+are optional here. Do not reuse a checkpoint directory across thread counts.
+
 ```bash
 cd /home/kazumasa/projects/gto
 T=docs/reviews/2026-07-19-p0a-audit/threads
-L=$(git rev-parse --short HEAD)
+GC=$(git rev-parse HEAD)
+DTY=$([ -z "$(git status --porcelain)" ] && echo 0 || echo 1)
 for n in 1 2 4 8 16; do
-  cargo run --release -p gto-hu --bin solver-bench -- --case bp3_sample --iterations 100 --points 2 --threads $n --label "$L-t$n" --out $T/bp3_t$n.json
+  cargo run --release -p gto-hu --bin solver-bench -- --case bp3_sample --iterations 100 --points 2 --threads $n \
+    --label "threads-t$n" --git-commit $GC --dirty $DTY --out $T/bp3_t$n.json
 done
 cd /home/kazumasa/projects && uv run --no-sync python -m gto.bench gto/docs/reviews/2026-07-19-p0a-audit/threads -o gto/docs/reviews/2026-07-19-p0a-audit/thread-report.md
 ```
-Expected: iter/s from `elapsed_s` at the final checkpoint; WP2 anchor:
+(Distinct `--label` values keep the thread runs on separate report rows —
+`aggregate_seeds` groups by (case, label).)
+Expected: iter/s from `solve_s` at the final checkpoint; WP2 anchor:
 (leaf,m) rayon parallelism gave 7.7× on this workload. Note: each `--threads`
 run is a fresh process (build_global can only be called once per process).
 
@@ -1296,12 +1935,18 @@ Date / commit / box (RTX 5080, RAM, WSL2 kernel)
 
 ## 2. Results
 2.1 Baseline table (paste baseline-report.md)
-2.2 Flop time-to-expl matrix (paste flop-report.md) → implied per-flop
-    expl gate for spec §4.2 and Tier-1 grid hours at that gate
-2.3 Variance reduction: sample / ms4 / ms16 / enumerate slopes + the
-    time-to-expl winner at 0.3 bb and 0.15 bb
+2.2 Flop quality/time **Pareto curve** (paste flop-report.md): per
+    candidate threshold {0.5, 0.3, 0.15, 0.05} bb — median artifact time,
+    censored cases, and implied Tier-1 grid GPU-hours. This section feeds
+    the user's threshold selection; no G-A1 verdict is written here.
+2.3 Variance reduction: sample / ms4 / ms16 / enumerate — windowed slope
+    median [min, max] per mode (3 seeds for stochastic modes) + the
+    wall-clock-to-quality winner at 0.3 bb and 0.15 bb
 2.4 Thread scaling table; profiling findings (or the WSL2 caveat)
-2.5 Memory model table (M × precision), WP2 23.95 GB cross-check
+2.5 Memory model table (capacity × precision × RSS-overhead), WP2
+    23.95 GB dense / 27.8 GB RSS cross-checks
+2.6 Recovery snapshots: size, write/read time, peak-RSS delta, maximum lost
+    work, resume count, corruption fallback, and bit-identity result
 
 ## 3. Algorithm review
 - CFR variant + parameterization vs literature (CFR+/DCFR choices)
@@ -1316,9 +1961,9 @@ Date / commit / box (RTX 5080, RAM, WSL2 kernel)
 
 ## 4. Gate verdicts
 | Gate | Target | Measured | Verdict |
-| G-A1 | ≤ 12 min median per-flop to gate | … | go / no-go / re-scope |
-| G-A2 | slope ≤ −0.85 | … | … |
-| G-A3 | M=25 ≤ 48 GB (f32+bucketing projection) | … | conditional-go: model validated; confirm at first P0b M=25 run |
+| G-A1 | ≤ 12 min median artifact time at the USER-SELECTED threshold (censored median = automatic no-go at that threshold) | … | go / no-go / re-scope |
+| G-A2 | whole ≥3-seed slope interval ≤ −0.85 on the pre-registered window; wall-clock-to-quality reported alongside | … | … |
+| G-A3 | validated projection: modeled M=25 f32(+stated bucketing factor if needed) ≤ 48 GB | … | go / no-go — real-run confirmation is the P0b ENTRY gate |
 
 ## 5. Recommendation
 (what P0b should build, in what order; what the Tier-1 grid actually is
@@ -1338,24 +1983,41 @@ git add docs/reviews/2026-07-19-p0a-audit docs/reviews/2026-07-19-p0a-algorithm-
 git commit -m "docs(gto): P0a algorithm audit report with G-A1..3 verdicts"
 ```
 
-Present the gate-verdict table and recommendation to the user for the
-go/no-go decision — P0b mass generation and app phases P2+ stay blocked
-until the user accepts the verdicts (spec §5.0).
+Present in this order: **first** the §2.2 Pareto curve for the user to
+select the per-flop threshold (P1-1 — the G-A1 verdict cannot be written
+before this choice), **then** the completed gate-verdict table and
+recommendation for the go/no-go decision. P0b mass generation and app
+phases P2+ stay blocked until the user accepts the verdicts (spec §5.0),
+and the first P0b M=25 real run remains the blocking G-A3 confirmation.
 
 ---
 
 ## Self-review notes (kept for the executor)
 
-- Spec §5.0 coverage: harness (Tasks 1–4) → item 1; profiling +
-  thread scaling (Task 9) → item 2; algorithm review (Task 9) → item 3;
-  G-A1 (Task 6), G-A2 (Tasks 5+7), G-A3 (Task 8) → item 4; report
+- Spec §5.0 coverage: harness + snapshots (Tasks 1–4, 4A) → item 1;
+  profiling + thread scaling (Task 9) → item 2; algorithm review (Task 9)
+  → item 3; G-A1 (Task 6 evidence + Task 9 user-selected verdict), G-A2
+  (Tasks 5+7, seed-interval rule), G-A3 (Task 8 validated projection;
+  real-run confirmation deferred to the P0b entry gate) → item 4; report
   (Task 9) → item 5.
-- The only solver-numerics change is Task 7; it is fenced by the
-  `test_perf_baseline` suite plus its own k=1 bit-identity test.
+- Review-finding map (docs/reviews/2026-07-19-p0a-plan-review.md): P0-1 →
+  renegotiated spec + Task 8 contract note; P0-2 → Task 8 capacity/
+  allocated/RSS model; P1-1 → Task 6 + G-A1 wording; P1-2 → Task 2 timing
+  split + Task 3 build_s + Python `artifact_time_to`; P1-3 → Task 7
+  partial-enumeration semantics + differential/expectation tests; P1-4 →
+  3-seed loops (Tasks 5/7) + `fit_window` + interval rule; P1-5 → Task 4A;
+  P2-1 → Task 4 `time_to` tests derived from the implementation's own
+  definition; P2-2 → RunRecord metadata + CLI flags; P2-3 → Task 1 Step 1
+  branch assertion.
+- Solver-numerics changes are Task 7 (MultiSample) and Task 4A (state
+  save/restore, behavior-neutral by contract); both are fenced by
+  `test_perf_baseline` checksums plus their own bit-identity tests
+  (k=1 identity; save/reload/resume identity).
 - API names copied from source on 2026-07-19 (`flop.rs`, `blueprint.rs`,
   `turn_river.rs`, `vector.rs`, `test_perf_baseline.rs`). Where a helper's
   existence was not verified (`TurnTreeConfig::srp()`, blueprint preflop
   range construction, `FlopSolver::average_strategy` ctx arity), the task
   says "verify against the actual code" — do that before writing.
-- Long-running steps (5.2–5.3, 6.1, 7.7, 9.1) are sequential solo runs;
-  everything else is minutes.
+- Long-running steps (5.1–5.3 ≈ 5 h, 6.1 ≈ 4–6 h, 7.7 ≈ 6 h, 9.1 ≈ 1 h,
+  plus 4A fault-injection) are sequential solo runs; everything else is
+  minutes. Every >15-minute run carries Task 4A snapshots.

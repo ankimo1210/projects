@@ -154,6 +154,14 @@ optimized — measured, not assumed.
    iteration throughput, wall-clock to target expl, expl-vs-iteration curves,
    peak RSS. Reproducible CLI, JSON output, results committed as baseline
    artifacts (fingerprint discipline).
+   Every run expected to exceed 15 minutes must additionally use a durable,
+   versioned recovery snapshot. The snapshot must preserve the complete CFR
+   training state (including RNG and lazy-discount state), be written by
+   temp-file + fsync + atomic rename, retain at least two valid generations,
+   and resume bit-identically. Default maximum lost compute is 30 minutes;
+   snapshot time, size, and peak-memory overhead are measured in the audit.
+   Recovery snapshots live under `_data/gto/checkpoints/` and are never
+   committed; only their metadata and validation results enter the report.
 2. **Profiling**: flamegraphs + hardware counters (cache misses, memory
    bandwidth) on the flop-solver and blueprint hot loops; classify each as
    compute-bound vs bandwidth-bound; rayon scaling curve (1→N cores) to find
@@ -166,14 +174,33 @@ optimized — measured, not assumed.
    blueprint compute budgets): we should be within a small constant factor of
    what comparable implementations achieve, or know exactly why not.
 4. **Quantified go/no-go targets** (these size the §5.2 grid):
-   - **G-A1**: median per-flop solve reaching its expl gate in **≤ 12 min**
-     on the reference set (else Tier 1 is rescoped: fewer flops or configs).
+   - **G-A1**: median per-flop artifact time (build + solve + final best
+     response) reaching the **pre-registered** per-file exploitability
+     threshold in **≤ 12 min** on the reference set (else Tier 1 is
+     rescoped: fewer flops or configs). The threshold is fixed before the
+     runs from the candidate set {0.5, 0.3, 0.15, 0.05} bb; if product
+     quality cannot pin it beforehand, the audit reports the measured
+     quality/time Pareto curve and the user selects the threshold before
+     the G-A1 verdict is issued. Runs that time out are censored no-go
+     evidence — the threshold is never relaxed to fit the budget.
    - **G-A2**: blueprint convergence slope restored to ~1/T (fitted exponent
      **≤ −0.85**) on the 3-flop reference after variance reduction (current
-     baseline: −0.51). If unmet, a different sampling scheme is required
-     before any M expansion.
-   - **G-A3**: M=25 blueprint fits **≤ 48 GB** RAM with f32 + board
-     bucketing — measured on a real run, not estimated.
+     baseline: −0.51). Protocol: pre-registered fit window (the latter
+     convergence region), **≥ 3 independent seeds** per stochastic mode,
+     median slope with a seed-level interval — the gate passes only if the
+     whole interval is ≤ −0.85 — and wall-clock-to-quality compared
+     alongside slope-per-iteration. If unmet, a different sampling scheme
+     is required before any M expansion.
+   - **G-A3** (renegotiated 2026-07-19 after plan review): the P0a gate is
+     a **validated projection** — a component-level memory model (dense
+     capacity vs allocated bytes, f32 halving applied only to numeric
+     slabs), validated against real allocations and real peak RSS (WP2
+     anchor: 23.95 GB dense / 27.8 GB RSS), must project the M=25
+     blueprint with f32 + board bucketing to **≤ 48 GB**. The current
+     engine caps M ≤ 8 (u8 board masks, 2^M zsum), so a real M=25 run
+     requires P0b's data-structure work; therefore the **first P0b M=25
+     run measuring real peak RSS ≤ 48 GB is a blocking P0b entry gate** —
+     mass generation must not start before it passes.
 5. **Output**: a benchmark/audit report in `docs/reviews/` with an explicit
    go/no-go decision per target. Mass generation (§5.2) and app phases P2+
    do not start until this gate passes or the targets/grid are consciously
@@ -197,7 +224,10 @@ abstraction-limited):
 
 Operational lessons carried over: monitor by PID (`while kill -0 $PID`), no
 double-backgrounding, SIGSTOP/SIGCONT for pausing, run heavy jobs solo (WP2
-first attempt OOM'd under concurrent dev load).
+first attempt OOM'd under concurrent dev load), and write rotating recovery
+snapshots at safe iteration boundaries. A restart must reconstruct the same
+solver configuration, reject incompatible/corrupt snapshots, and continue
+without changing the final numerical result relative to an uninterrupted run.
 
 ### 5.2 Postflop grid (tiered; OTA-expandable)
 
@@ -337,7 +367,7 @@ scraping only (see §11).
 | Phase | Deliverable | Depends on |
 |---|---|---|
 | **P0a** | Algorithm optimization audit (§5.0): benchmark harness, profiling, algorithm review, G-A1..3 go/no-go report | — (first; hard gate for P0b mass generation and P2+) |
-| **P0b** | Quality foundation: variance reduction, f32 + board bucketing, M ≥ 25 blueprint quality run, real-flop mapping, pack format + build CLI + R2 upload | P0a gate passed |
+| **P0b** | Quality foundation: variance reduction, f32 + board bucketing, M-cap lift (u8 masks / 2^M zsum → M ≥ 25), M ≥ 25 blueprint quality run (**entry gate: first real M=25 run peak RSS ≤ 48 GB — G-A3 confirmation**), real-flop mapping, pack format + build CLI + R2 upload | P0a gate passed |
 | **P1** | Expo scaffold, `@gto/domain` / `@gto/packs` / `@gto/api-client`, Study tab (preflop first, postflop when Tier-1 grid lands), Skia perf spike | P0b preflop pack (charts can land before blueprint; scaffold may start during P0a) |
 | **P2** | Practice + Play: table UI, grading engine, session scoring, bot | P0b blueprint bundle |
 | **P3** | Analyze: parse integration + on-device grading + aggregates | P2 grading engine |
