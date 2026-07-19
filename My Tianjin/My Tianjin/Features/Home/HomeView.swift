@@ -4,6 +4,8 @@ import SwiftUI
 struct HomeView: View {
     @Binding var selectedTab: Int
     @Query private var progress: [StudyProgressRecord]
+    @Query(sort: \ConversationSessionRecord.endedAt, order: .reverse)
+    private var conversationHistory: [ConversationSessionRecord]
     @EnvironmentObject private var contentStore: LearningContentStore
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
@@ -89,6 +91,32 @@ struct HomeView: View {
                     color: .teal,
                     tab: 3
                 )
+                NavigationLink {
+                    ConversationHubView()
+                } label: {
+                    HStack(spacing: 14) {
+                        Image(systemName: "waveform.and.mic")
+                            .font(.title2)
+                            .foregroundStyle(.white)
+                            .frame(width: 48, height: 48)
+                            .background(.indigo, in: RoundedRectangle(cornerRadius: 13))
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("AI自由会話")
+                                .font(.headline)
+                                .foregroundStyle(.primary)
+                            Text("端末内AI・音声入力・会話後の復習")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundStyle(.tertiary)
+                    }
+                    .padding()
+                    .background(.background, in: RoundedRectangle(cornerRadius: 16))
+                    .overlay { RoundedRectangle(cornerRadius: 16).stroke(.quaternary) }
+                }
+                .buttonStyle(.plain)
             }
             .padding()
         }
@@ -148,11 +176,19 @@ struct HomeView: View {
         let attempts = records.reduce(0) { $0 + $1.attemptCount }
         let correct = records.reduce(0) { $0 + $1.correctCount }
         let accuracy = attempts > 0 ? Int((Double(correct) / Double(attempts) * 100).rounded()) : 0
+        let activityLabel: String
+        if skill == .speaking, !conversationHistory.isEmpty {
+            activityLabel = attempts > 0
+                ? "\(conversationHistory.count)会話・\(attempts)練習"
+                : "\(conversationHistory.count)会話"
+        } else {
+            activityLabel = attempts == 0 ? "未学習" : "\(attempts)回・正答\(accuracy)%"
+        }
         return HStack {
             Image(systemName: icon).foregroundStyle(.blue)
             VStack(alignment: .leading, spacing: 2) {
                 Text(label).font(.subheadline.bold())
-                Text(attempts == 0 ? "未学習" : "\(attempts)回・正答\(accuracy)%")
+                Text(activityLabel)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

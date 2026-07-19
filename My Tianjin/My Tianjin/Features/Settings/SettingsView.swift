@@ -7,6 +7,9 @@ struct SettingsView: View {
     @AppStorage("speechSpeedRawValue") private var speechSpeedRawValue = SpeechSpeed.normal.rawValue
     @AppStorage("readingShowsPinyin") private var readingShowsPinyin = true
     @AppStorage("readingShowsJapanese") private var readingShowsJapanese = false
+    @AppStorage("conversationShowsPinyin") private var conversationShowsPinyin = true
+    @AppStorage("conversationShowsJapanese") private var conversationShowsJapanese = false
+    @AppStorage("conversationAutoSpeak") private var conversationAutoSpeak = true
 
     private var speed: SpeechSpeed {
         SpeechSpeed(rawValue: speechSpeedRawValue) ?? .normal
@@ -32,6 +35,15 @@ struct SettingsView: View {
             Section("読解の初期表示") {
                 Toggle("ピンインを表示", isOn: $readingShowsPinyin)
                 Toggle("日本語訳を表示", isOn: $readingShowsJapanese)
+            }
+
+            Section("自由会話") {
+                Toggle("相手の返答を自動で発音", isOn: $conversationAutoSpeak)
+                Toggle("ピンインを表示", isOn: $conversationShowsPinyin)
+                Toggle("日本語訳を表示", isOn: $conversationShowsJapanese)
+                Text("会話生成と音声認識はAppleの端末内機能を優先します。非対応端末では内蔵シナリオに自動で切り替わり、文字入力でも練習できます。")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
             }
 
             Section("コンテンツ") {

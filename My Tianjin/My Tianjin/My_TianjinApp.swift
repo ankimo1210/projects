@@ -19,6 +19,10 @@ struct My_TianjinApp: App {
                 .environmentObject(contentStore)
                 .environmentObject(speechService)
         }
-        .modelContainer(for: [StudyProgressRecord.self, StudySessionRecord.self])
+        .modelContainer(for: [
+            StudyProgressRecord.self,
+            StudySessionRecord.self,
+            ConversationSessionRecord.self
+        ])
     }
 }

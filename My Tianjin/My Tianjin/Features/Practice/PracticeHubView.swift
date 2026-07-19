@@ -17,6 +17,19 @@ struct PracticeHubView: View {
 
     var body: some View {
         List {
+            Section("会話") {
+                NavigationLink {
+                    ConversationHubView()
+                } label: {
+                    practiceRow(
+                        title: "AI自由会話",
+                        subtitle: "端末内AI・音声／文字入力・5分練習",
+                        icon: "waveform.and.mic",
+                        color: .indigo
+                    )
+                }
+            }
+
             Section("基礎〜中級") {
                 NavigationLink {
                     ChoicePracticeView(title: "単語穴埋め", questions: clozeQuestions)
