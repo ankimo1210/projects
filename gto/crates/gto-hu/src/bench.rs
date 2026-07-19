@@ -14,6 +14,8 @@ use crate::tree::{
     StreetConfig, TurnTreeConfig,
 };
 use gto_core::eval::parse_card;
+use std::fmt::Write as _;
+use std::time::Instant;
 
 /// A common interface over the four production solver families measured by P0a.
 pub enum CaseSolver {
@@ -277,4 +279,230 @@ pub fn reference_cases() -> Vec<BenchCase> {
             build: |seed| blueprint_case(false, seed),
         },
     ]
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct Checkpoint {
+    pub iters: u32,
+    /// Cumulative solve-only seconds at this checkpoint.
+    pub solve_s: f64,
+    /// Exact best-response evaluation time for this checkpoint.
+    pub br_s: f64,
+    pub expl: f64,
+    pub br: [f64; 2],
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct RunTiming {
+    pub build_s: f64,
+    pub solve_s: f64,
+    pub checkpoint_br_s: f64,
+    pub final_br_s: f64,
+}
+
+/// Ascending geometric cumulative iteration counts, deduplicated and ending
+/// at `max_iters`. At most `points` values are returned.
+pub fn geometric_schedule(max_iters: u32, points: usize) -> Vec<u32> {
+    if max_iters == 0 || points == 0 {
+        return Vec::new();
+    }
+    let mut schedule = Vec::with_capacity(points);
+    let mut iterations = max_iters;
+    for _ in 0..points {
+        schedule.push(iterations);
+        if iterations == 1 {
+            break;
+        }
+        iterations = (iterations / 2).max(1);
+    }
+    schedule.dedup();
+    schedule.reverse();
+    schedule
+}
+
+/// Run to each cumulative checkpoint while keeping solve and exact-BR cost
+/// separate. Construction time is owned by the caller, so `build_s` is zero.
+pub fn run_with_checkpoints(
+    solver: &mut CaseSolver,
+    schedule: &[u32],
+) -> (Vec<Checkpoint>, RunTiming) {
+    assert!(
+        schedule.windows(2).all(|window| window[0] < window[1]),
+        "checkpoint schedule must be strictly ascending"
+    );
+
+    let mut checkpoints = Vec::with_capacity(schedule.len());
+    let mut completed = 0u32;
+    let mut solve_s = 0.0;
+    let mut br_total_s = 0.0;
+    for &target in schedule {
+        assert!(target > 0, "checkpoint iterations must be positive");
+        let solve_start = Instant::now();
+        solver.run_chunk(target - completed);
+        solve_s += solve_start.elapsed().as_secs_f64();
+        completed = target;
+
+        let br_start = Instant::now();
+        let report = solver.expl();
+        let br_s = br_start.elapsed().as_secs_f64();
+        br_total_s += br_s;
+        checkpoints.push(Checkpoint {
+            iters: completed,
+            solve_s,
+            br_s,
+            expl: report.exploitability,
+            br: report.br_value,
+        });
+    }
+
+    let final_br_s = checkpoints
+        .last()
+        .map(|checkpoint| checkpoint.br_s)
+        .unwrap_or(0.0);
+    (
+        checkpoints,
+        RunTiming {
+            build_s: 0.0,
+            solve_s,
+            checkpoint_br_s: br_total_s - final_br_s,
+            final_br_s,
+        },
+    )
+}
+
+/// Peak resident set (VmHWM) in MiB from `/proc/self/status` on Linux/WSL2.
+pub fn peak_rss_mb() -> f64 {
+    let status = std::fs::read_to_string("/proc/self/status").unwrap_or_default();
+    status
+        .lines()
+        .find_map(|line| {
+            line.strip_prefix("VmHWM:")?
+                .split_whitespace()
+                .next()?
+                .parse::<f64>()
+                .ok()
+        })
+        .unwrap_or(0.0)
+        / 1024.0
+}
+
+/// Best-effort host identity for self-describing benchmark artifacts.
+pub fn cpu_model() -> String {
+    std::fs::read_to_string("/proc/cpuinfo")
+        .unwrap_or_default()
+        .lines()
+        .find_map(|line| {
+            let (key, value) = line.split_once(':')?;
+            (key.trim() == "model name").then(|| value.trim().to_string())
+        })
+        .unwrap_or_default()
+}
+
+pub fn kernel_release() -> String {
+    std::fs::read_to_string("/proc/sys/kernel/osrelease")
+        .unwrap_or_default()
+        .trim()
+        .to_string()
+}
+
+/// Self-describing P0a run artifact. The schema intentionally stays
+/// dependency-free so the solver harness adds no production crate.
+pub struct RunRecord {
+    pub schema_version: u32,
+    pub case: String,
+    pub config: String,
+    pub label: String,
+    pub git_commit: String,
+    pub dirty: bool,
+    pub seed: u64,
+    pub iterations: u32,
+    pub points: usize,
+    pub threads: usize,
+    pub build_profile: &'static str,
+    pub cpu: String,
+    pub kernel: String,
+    pub cmdline: String,
+    pub table_bytes: usize,
+    pub peak_rss_mb: f64,
+    pub resume_count: u32,
+    pub timing: RunTiming,
+    pub checkpoints: Vec<Checkpoint>,
+}
+
+fn escape_json(value: &str) -> String {
+    let mut escaped = String::with_capacity(value.len());
+    for character in value.chars() {
+        match character {
+            '"' => escaped.push_str("\\\""),
+            '\\' => escaped.push_str("\\\\"),
+            '\u{08}' => escaped.push_str("\\b"),
+            '\u{0c}' => escaped.push_str("\\f"),
+            '\n' => escaped.push_str("\\n"),
+            '\r' => escaped.push_str("\\r"),
+            '\t' => escaped.push_str("\\t"),
+            control if control <= '\u{1f}' => {
+                write!(escaped, "\\u{:04x}", control as u32).expect("write to String");
+            }
+            other => escaped.push(other),
+        }
+    }
+    escaped
+}
+
+impl RunRecord {
+    pub fn to_json(&self) -> String {
+        let checkpoints: Vec<String> = self
+            .checkpoints
+            .iter()
+            .map(|checkpoint| {
+                format!(
+                    "    {{\"iters\": {}, \"solve_s\": {:.3}, \"br_s\": {:.3}, \
+                     \"expl\": {:.6}, \"br0\": {:.6}, \"br1\": {:.6}}}",
+                    checkpoint.iters,
+                    checkpoint.solve_s,
+                    checkpoint.br_s,
+                    checkpoint.expl,
+                    checkpoint.br[0],
+                    checkpoint.br[1]
+                )
+            })
+            .collect();
+        format!(
+            concat!(
+                "{{\n",
+                "  \"schema_version\": {},\n",
+                "  \"case\": \"{}\",\n  \"config\": \"{}\",\n  \"label\": \"{}\",\n",
+                "  \"git_commit\": \"{}\",\n  \"dirty\": {},\n  \"seed\": {},\n",
+                "  \"iterations\": {},\n  \"points\": {},\n  \"threads\": {},\n",
+                "  \"build_profile\": \"{}\",\n  \"cpu\": \"{}\",\n  \"kernel\": \"{}\",\n",
+                "  \"cmdline\": \"{}\",\n",
+                "  \"table_bytes\": {},\n  \"peak_rss_mb\": {:.1},\n  \"resume_count\": {},\n",
+                "  \"timing\": {{\"build_s\": {:.3}, \"solve_s\": {:.3}, ",
+                "\"checkpoint_br_s\": {:.3}, \"final_br_s\": {:.3}}},\n",
+                "  \"checkpoints\": [\n{}\n  ]\n}}\n",
+            ),
+            self.schema_version,
+            escape_json(&self.case),
+            escape_json(&self.config),
+            escape_json(&self.label),
+            escape_json(&self.git_commit),
+            self.dirty,
+            self.seed,
+            self.iterations,
+            self.points,
+            self.threads,
+            escape_json(self.build_profile),
+            escape_json(&self.cpu),
+            escape_json(&self.kernel),
+            escape_json(&self.cmdline),
+            self.table_bytes,
+            self.peak_rss_mb,
+            self.resume_count,
+            self.timing.build_s,
+            self.timing.solve_s,
+            self.timing.checkpoint_br_s,
+            self.timing.final_br_s,
+            checkpoints.join(",\n")
+        )
+    }
 }
