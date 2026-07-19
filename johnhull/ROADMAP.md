@@ -95,3 +95,29 @@ Design plan: `docs/superpowers/plans/2026-07-19-johnhull-inflation-jgbi.md`
 Phase 7 の `done` は synthetic-offline の integration/reproducibility gate を表し、
 市場較正、production valuation、model performance の承認ではない。Portal、Jupyter
 Book、full tracked release への登録は Phase 8 以降へ明示的に繰り延べる。
+
+## Advanced VaR/ES risk desk — Phase 1–6 (2026-07-20)
+
+Design plan: `docs/superpowers/plans/2026-07-20-johnhull-vol27-risk-desk.md`
+
+| Volume | Path | Topic | Status |
+|---:|---|---|---|
+| 27 | `volumes/27_risk_desk` | advanced daily VaR/ES risk desk (beyond Hull ch.22) | done |
+
+| Phase | Scope | Status |
+|---:|---|---|
+| 1 | VaR backtesting: Kupiec POF, Christoffersen ind/CC, quantified Basel traffic light | done |
+| 2 | Filtered historical simulation and EVT/GPD peaks-over-threshold tail VaR/ES | done |
+| 3 | Euler risk decomposition: marginal/component/incremental VaR and simulation ES | done |
+| 4 | P&L explain: factor exposures, delta-gamma-vega attribution, limits, desk report | done |
+| 5 | `volumes/27_risk_desk` reference, `_volume27` acceptance, artifact-only notebook | done |
+| 6 | Portal `risk_management` page, Jupyter Book page, full tracked release | pending |
+
+Phase 5 の `done` は synthetic-offline の integration/reproducibility gate（`_volume27`
+の 11 恒等式チェックと byte 再現性）を表し、市場較正・model performance の承認ではない。
+Phase 6 の portal 図（`var_traffic_light`・`fhs_vs_hs_coverage`・`gpd_tail_fit`・
+`risk_allocation_bars`）、`risk_management` book page、Jupyter Book 登録、full tracked
+release は明示的に繰り延べる。
+
+FRTB IMA（liquidity-horizon ES 集約、stressed ES scaling、NMRF、P&L attribution
+eligibility test、IMA/SA 資本比較）は **vol 28 候補**として scope 外に記録する。
