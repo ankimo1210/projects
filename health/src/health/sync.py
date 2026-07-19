@@ -53,7 +53,16 @@ class SyncEngine:
         report = SyncReport()
         member_since = self.member_since
         if member_since is None:
-            member_since = self.member_since = self._fetch_member_since()
+            if self.client.remaining is not None and self.client.remaining < min_budget:
+                report.paused = True
+                report.resume_in_s = self.client.reset_s
+                return report
+            try:
+                member_since = self.member_since = self._fetch_member_since()
+            except RateLimited as exc:
+                report.paused = True
+                report.resume_in_s = exc.retry_after_s
+                return report
         for m in self.catalog:
             prog = MetricProgress(metric=m.name)
             report.progress.append(prog)
