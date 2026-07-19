@@ -43,9 +43,7 @@ def simulate_gbm(
     rng = generator or make_generator(target_device, config.seed if seed is None else seed)
     if config.antithetic_sampling:
         half = (n_paths + 1) // 2
-        base = torch.randn(
-            (half, config.n_steps), device=target_device, dtype=dtype, generator=rng
-        )
+        base = torch.randn((half, config.n_steps), device=target_device, dtype=dtype, generator=rng)
         shocks = torch.cat((base, -base), dim=0)[:n_paths]
     else:
         shocks = torch.randn(

@@ -1,0 +1,35 @@
+profile: full
+data:
+  seed: 1210
+  train_size: 65536
+  validation_size: 16384
+  test_size: 16384
+  ood_size: 16384
+  sampling: latin_hypercube
+  bounds:
+    x: [0.4, 1.8]
+    tau: [0.002739726, 5.0]
+    r: [-0.05, 0.15]
+    q: [0.0, 0.12]
+    sigma: [0.02, 1.2]
+model:
+  hidden_layers: 4
+  hidden_units: 128
+  activation: silu
+  output_mode: price
+  direct_greek_heads: true
+training:
+  device: auto
+  batch_size: 2048
+  epochs: 300
+  learning_rate: 0.001
+  weight_decay: 0.000001
+  early_stopping_patience: 40
+  price_weight: 1.0
+  greek_weight: 0.2
+  differential_weight: 0.2
+  penalty_weight: 0.02
+output:
+  artifacts_dir: artifacts/pricing
+  reports_dir: reports
+  namespace: full

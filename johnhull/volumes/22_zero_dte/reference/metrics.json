@@ -1,0 +1,269 @@
+{
+  "acceptance": {
+    "checks": [
+      {
+        "criterion": "New York 6.5-hour session with nonnegative settlement clock",
+        "name": "session_convention",
+        "observed": "America/New_York",
+        "passed": true
+      },
+      {
+        "criterion": "monotone from 0 to 1",
+        "name": "variance_clock",
+        "observed": 1.0,
+        "passed": true
+      },
+      {
+        "criterion": "zero violations and nonnegative forward variance",
+        "name": "expiry_consistency",
+        "observed": 0,
+        "passed": true
+      },
+      {
+        "criterion": "> 0",
+        "name": "event_teacher_uncertainty",
+        "observed": 0.013281518665180658,
+        "passed": true
+      },
+      {
+        "criterion": "open/midday/close with aligned price and Greek buckets",
+        "name": "time_of_day_diagnostics",
+        "observed": 3,
+        "passed": true
+      },
+      {
+        "criterion": "mask counts and two-way diagnostics agree",
+        "name": "event_non_event_split",
+        "observed": "7/6",
+        "passed": true
+      }
+    ],
+    "model_performance_approved": false,
+    "negative_results": [
+      "The intraday teacher and event schedule are synthetic fixtures, not causal dealer-flow evidence."
+    ],
+    "passed": true,
+    "schema_version": 1,
+    "scope": "integration_and_reproducibility"
+  },
+  "artifact_role": "implementation-derived, identity-tested teaching reference",
+  "benchmark": {
+    "nondeterministic_fields": [],
+    "schema_version": 1
+  },
+  "benchmark_policy": "no nondeterministic benchmark fields",
+  "companion_schemas": {
+    "intraday_slices.npz": {
+      "adjacent_expiry_minutes": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "trading minutes"
+      },
+      "baseline_delta": {
+        "dtype": "float64",
+        "shape": [
+          13
+        ],
+        "unit": "price per underlying unit"
+      },
+      "baseline_price": {
+        "dtype": "float64",
+        "shape": [
+          13
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "delta": {
+        "dtype": "float64",
+        "shape": [
+          13
+        ],
+        "unit": "price per underlying unit"
+      },
+      "event_greek_rmse": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "price per underlying unit"
+      },
+      "event_jump_intensity": {
+        "dtype": "float64",
+        "shape": [
+          13
+        ],
+        "unit": "jump intensity per session"
+      },
+      "event_mask": {
+        "dtype": "bool",
+        "shape": [
+          13
+        ],
+        "unit": "boolean"
+      },
+      "event_price_rmse": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "event_split_names": {
+        "dtype": "<U9",
+        "shape": [
+          2
+        ],
+        "unit": "label"
+      },
+      "forward_variance": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "forward variance"
+      },
+      "gamma": {
+        "dtype": "float64",
+        "shape": [
+          13
+        ],
+        "unit": "price per underlying unit squared"
+      },
+      "greek_mae": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "price per underlying unit"
+      },
+      "minute": {
+        "dtype": "int64",
+        "shape": [
+          13
+        ],
+        "unit": "trading minutes"
+      },
+      "model_total_variance": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "total variance"
+      },
+      "non_event_jump_intensity": {
+        "dtype": "float64",
+        "shape": [
+          13
+        ],
+        "unit": "jump intensity per session"
+      },
+      "price_mae": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "scheduled_variance": {
+        "dtype": "float64",
+        "shape": [
+          13
+        ],
+        "unit": "variance"
+      },
+      "seconds_to_settlement": {
+        "dtype": "float64",
+        "shape": [
+          13
+        ],
+        "unit": "seconds"
+      },
+      "teacher_price": {
+        "dtype": "float64",
+        "shape": [
+          13
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "teacher_standard_error": {
+        "dtype": "float64",
+        "shape": [
+          13
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "time_of_day": {
+        "dtype": "<U6",
+        "shape": [
+          13
+        ],
+        "unit": "label"
+      },
+      "tod_names": {
+        "dtype": "<U6",
+        "shape": [
+          3
+        ],
+        "unit": "label"
+      },
+      "total_variance": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "total variance"
+      },
+      "variance_clock": {
+        "dtype": "float64",
+        "shape": [
+          13
+        ],
+        "unit": "cumulative variance fraction"
+      },
+      "variance_weight": {
+        "dtype": "float64",
+        "shape": [
+          13
+        ],
+        "unit": "normalized variance weight"
+      }
+    }
+  },
+  "companions": {
+    "intraday_slices.npz": "2161a389aaa1555d968b72a2a34737a4dbebe53689b86107d9d28903434f98cb"
+  },
+  "data_policy": "synthetic-offline",
+  "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
+  "generator_api": "hullkit.frontier_reference.build_frontier_reference",
+  "limitations": [
+    "Synthetic results are not evidence of market forecasting power."
+  ],
+  "metrics": {
+    "adjacent_expiry_violations": 0,
+    "calendar_violations": 0,
+    "event_count": 7,
+    "event_greek_mae": 0.0028003921838527907,
+    "event_greek_rmse": 0.006149003242174065,
+    "event_price_mae": 0.0055099021873426125,
+    "event_price_rmse": 0.01160374776324586,
+    "event_teacher_standard_error": 0.013281518665180658,
+    "non_event_count": 6,
+    "non_event_greek_rmse": 0.010687180266627646,
+    "non_event_price_rmse": 0.022463991836340305,
+    "session_seconds": 23400.0,
+    "timezone": "America/New_York"
+  },
+  "schema_version": 1,
+  "seed": 20260740,
+  "semantic_sources": [
+    "johnhull/hullkit/src/hullkit/frontier_reference.py",
+    "johnhull/hullkit/src/hullkit/zero_dte.py"
+  ],
+  "semantic_tests": [
+    "johnhull/hullkit/tests/test_frontier_reference.py",
+    "johnhull/hullkit/tests/test_zero_dte.py"
+  ],
+  "volume": 22
+}
