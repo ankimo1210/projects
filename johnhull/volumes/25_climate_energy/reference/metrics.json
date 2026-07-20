@@ -1,0 +1,450 @@
+{
+  "acceptance": {
+    "checks": [
+      {
+        "criterion": "== incomplete",
+        "name": "market_completeness",
+        "observed": "incomplete",
+        "passed": true
+      },
+      {
+        "criterion": "three explicit non-traded-index principles",
+        "name": "premium_principles",
+        "observed": 3,
+        "passed": true
+      },
+      {
+        "criterion": "> 0",
+        "name": "carbon_premium_sensitivity",
+        "observed": 1.1303935436982258,
+        "passed": true
+      },
+      {
+        "criterion": "Black-76 and three MC models with aligned uncertainty",
+        "name": "carbon_model_ladder",
+        "observed": 4,
+        "passed": true
+      },
+      {
+        "criterion": "fractional OU lag-1 correlation exceeds OU with finite degree-day moments",
+        "name": "weather_long_memory",
+        "observed": 0.9661916217361509,
+        "passed": true
+      },
+      {
+        "criterion": "increases from zero-distance baseline",
+        "name": "weather_basis_risk",
+        "observed": 5.566902660585961,
+        "passed": true
+      },
+      {
+        "criterion": "finite hedge ratios and variance reduction in [0, 1]",
+        "name": "basis_hedge_diagnostics",
+        "observed": 0.9999414442205588,
+        "passed": true
+      },
+      {
+        "criterion": "finite CVaR/residual and hedge sensitivity",
+        "name": "ppa_risk_decomposition",
+        "observed": 3,
+        "passed": true
+      },
+      {
+        "criterion": "finite aligned CFaR diagnostics and CVaR >= CFaR > 0",
+        "name": "ppa_cashflow_risk",
+        "observed": 65.69238346389739,
+        "passed": true
+      }
+    ],
+    "model_performance_approved": false,
+    "negative_results": [
+      "Weather and PPA values are premium-principle dependent because the underlying market is incomplete."
+    ],
+    "passed": true,
+    "schema_version": 1,
+    "scope": "integration_and_reproducibility"
+  },
+  "artifact_role": "implementation-derived, identity-tested teaching reference",
+  "benchmark": {
+    "nondeterministic_fields": [],
+    "schema_version": 1
+  },
+  "benchmark_policy": "no nondeterministic benchmark fields",
+  "companion_schemas": {
+    "scenarios.npz": {
+      "basis_hedge_ratio": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "dimensionless hedge ratio"
+      },
+      "basis_residual": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "weather payoff units"
+      },
+      "basis_rmse": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "weather payoff units"
+      },
+      "basis_variance_reduction": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "dimensionless fraction"
+      },
+      "carbon_black76_price": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "carbon_gbm_iv": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "decimal volatility"
+      },
+      "carbon_gbm_price": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "carbon_gbm_standard_error": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "carbon_heston_iv": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "decimal volatility"
+      },
+      "carbon_heston_price": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "carbon_heston_standard_error": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "carbon_jump_iv": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "decimal volatility"
+      },
+      "carbon_jump_price": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "carbon_jump_standard_error": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "carbon_model_names": {
+        "dtype": "<U10",
+        "shape": [
+          4
+        ],
+        "unit": "label"
+      },
+      "carbon_model_price": {
+        "dtype": "float64",
+        "shape": [
+          4,
+          9
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "carbon_model_standard_error": {
+        "dtype": "float64",
+        "shape": [
+          4,
+          9
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "cash_flow_at_risk": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "cvar95": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "day": {
+        "dtype": "float64",
+        "shape": [
+          180
+        ],
+        "unit": "index"
+      },
+      "degree_day_mean": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "degree-days"
+      },
+      "degree_day_std": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "degree-days"
+      },
+      "expected_hedged_cash_flow": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "hedge_ratio": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "dimensionless hedge ratio"
+      },
+      "hedge_ratio_residual": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "hedge_residual": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "ppa_fair_value": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "ppa_fixed": {
+        "dtype": "float64",
+        "shape": [
+          12
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "ppa_floor_collar": {
+        "dtype": "float64",
+        "shape": [
+          12
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "ppa_pay_as_produced": {
+        "dtype": "float64",
+        "shape": [
+          12
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "ppa_profile_risk": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "ppa_shape_risk": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "ppa_volume_risk": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "premium_principle_names": {
+        "dtype": "<U18",
+        "shape": [
+          3
+        ],
+        "unit": "label"
+      },
+      "premium_sensitivity": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "risk_names": {
+        "dtype": "<U15",
+        "shape": [
+          3
+        ],
+        "unit": "label"
+      },
+      "risk_premium_names": {
+        "dtype": "<U8",
+        "shape": [
+          3
+        ],
+        "unit": "label"
+      },
+      "station_distance_km": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "kilometres"
+      },
+      "strike": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "synthetic carbon price units"
+      },
+      "temperature_fou": {
+        "dtype": "float64",
+        "shape": [
+          180
+        ],
+        "unit": "degrees Celsius"
+      },
+      "temperature_lag1_autocorrelation": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "dimensionless correlation"
+      },
+      "temperature_model_names": {
+        "dtype": "<U13",
+        "shape": [
+          2
+        ],
+        "unit": "label"
+      },
+      "temperature_ou": {
+        "dtype": "float64",
+        "shape": [
+          180
+        ],
+        "unit": "degrees Celsius"
+      },
+      "temperature_path_std": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "degrees Celsius"
+      },
+      "temperature_seasonal": {
+        "dtype": "float64",
+        "shape": [
+          180
+        ],
+        "unit": "degrees Celsius"
+      },
+      "unhedged_cash_flow_std": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "weather_premium": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "synthetic monetary units"
+      }
+    }
+  },
+  "companions": {
+    "scenarios.npz": "46969f01a8f61e146096ca44aecb30230a1cb3cebbcfaefebb445c8ad562e487"
+  },
+  "data_policy": "synthetic-offline",
+  "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
+  "generator_api": "hullkit.frontier_reference.build_frontier_reference",
+  "limitations": [
+    "Synthetic results are not evidence of market forecasting power."
+  ],
+  "metrics": {
+    "carbon_atm_black76_price": 9.750668398221954,
+    "carbon_atm_heston_price": 9.293620958236868,
+    "carbon_atm_jump_price": 9.77883384942297,
+    "carbon_atm_standard_error": 0.17495521242041653,
+    "carbon_model_ladder_complete": true,
+    "hedge_residual": 40.42651541814297,
+    "market_completeness": "incomplete",
+    "ppa_cash_flow_at_risk95": 65.69238346389739,
+    "ppa_cvar95": 82.3691062150823,
+    "ppa_hedge_residual": 40.42651541814297,
+    "premium_principle": "standard_deviation",
+    "price_generation_correlation": -0.5927276785284812,
+    "weather_basis_rmse_100km": 2.4258099230251826,
+    "weather_fou_lag1_autocorrelation": 0.9661916217361509,
+    "weather_ou_lag1_autocorrelation": 0.8306188484659933,
+    "weather_premium_principle": "standard_deviation"
+  },
+  "schema_version": 1,
+  "seed": 20260743,
+  "semantic_sources": [
+    "johnhull/hullkit/src/hullkit/frontier_reference.py",
+    "johnhull/hullkit/src/hullkit/carbon.py",
+    "johnhull/hullkit/src/hullkit/weather.py",
+    "johnhull/hullkit/src/hullkit/ppa.py"
+  ],
+  "semantic_tests": [
+    "johnhull/hullkit/tests/test_frontier_reference.py",
+    "johnhull/hullkit/tests/test_carbon.py",
+    "johnhull/hullkit/tests/test_weather.py",
+    "johnhull/hullkit/tests/test_ppa.py"
+  ],
+  "volume": 25
+}

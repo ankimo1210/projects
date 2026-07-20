@@ -31,6 +31,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 def ensure_output_directories(config: ProjectConfig, project_root: Path) -> dict[str, Path]:
+    """Create and return the artifact/report directory layout."""
     artifacts = project_root / config.output.artifacts_dir
     paths = {
         "artifacts": artifacts,
@@ -61,6 +62,7 @@ def _json_safe(value: Any) -> Any:
 
 
 def write_json(payload: dict[str, Any], path: Path) -> Path:
+    """Write a sorted, numpy-safe JSON payload, creating parent directories."""
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(_json_safe(payload), indent=2, sort_keys=True), encoding="utf-8")
     return path
@@ -250,9 +252,7 @@ def _policy_surface(
                 pd.DataFrame(
                     {
                         "spot": spots.cpu().numpy(),
-                        "log_moneyness": torch.log(spots / run_config.market.strike)
-                        .cpu()
-                        .numpy(),
+                        "log_moneyness": torch.log(spots / run_config.market.strike).cpu().numpy(),
                         "tau_normalized": float(tau_normalized.cpu()),
                         "previous_delta": previous,
                         "neural_delta": neural.cpu().numpy(),
@@ -310,13 +310,9 @@ def _sanity_checks(
     )
     competent_std = min(
         main_metrics["neural_mse"]["std_discounted_pnl_after_costs_including_premium"],
-        main_metrics["black_scholes_delta"][
-            "std_discounted_pnl_after_costs_including_premium"
-        ],
+        main_metrics["black_scholes_delta"]["std_discounted_pnl_after_costs_including_premium"],
     )
-    no_hedge_std = main_metrics["no_hedge"][
-        "std_discounted_pnl_after_costs_including_premium"
-    ]
+    no_hedge_std = main_metrics["no_hedge"]["std_discounted_pnl_after_costs_including_premium"]
     checks = {
         "near_frictionless_closer_to_bs_than_25bp": {
             "passed": bool(low["policy_bs_rmse"] < high["policy_bs_rmse"]),
@@ -342,7 +338,10 @@ def _sanity_checks(
         "common_random_numbers": {"passed": True, "test_seed": config.market.seed + 20_000},
         "separate_train_validation_test": {
             "passed": True,
-            "training_seed_range": [config.market.seed + 1, config.market.seed + config.training.epochs],
+            "training_seed_range": [
+                config.market.seed + 1,
+                config.market.seed + config.training.epochs,
+            ],
             "validation_seed": config.market.seed + 10_000,
             "test_seed": config.market.seed + 20_000,
         },

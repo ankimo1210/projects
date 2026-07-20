@@ -1,0 +1,13 @@
+algo,family,comparison_based,stable_observed,n_cap
+bubble,n2,yes,yes,32768
+insertion,n2,yes,yes,32768
+selection,n2,yes,no,32768
+shell,n2,yes,no,1048576
+merge,nlogn,yes,yes,1048576
+quick,nlogn,yes,no,1048576
+heap,nlogn,yes,no,1048576
+std_sort,nlogn,yes,no,1048576
+std_stable_sort,nlogn,yes,yes,1048576
+counting,linear,no,yes,1048576
+radix,linear,no,yes,1048576
+bucket,linear,no,yes,1048576

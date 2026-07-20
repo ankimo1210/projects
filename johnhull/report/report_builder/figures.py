@@ -17,6 +17,8 @@ from dataclasses import dataclass, field
 
 from hullkit import plotly_viz as pv
 
+from . import frontier_figures as ff
+
 
 @dataclass(frozen=True)
 class BookMeta:
@@ -75,6 +77,41 @@ BOOKS: dict[str, BookMeta] = {
         title="エキゾチック",
         subtitle="バリア・アジアン",
         accent="#0d9488",
+        book_index="../../book/_build/html/index.html",
+    ),
+    "ml_derivatives": BookMeta(
+        key="ml_derivatives",
+        title="MLとデリバティブ",
+        subtitle="surrogate・surface・forecast・hedge",
+        accent="#4f46e5",
+        book_index="../../book/_build/html/index.html",
+    ),
+    "volatility_frontiers": BookMeta(
+        key="volatility_frontiers",
+        title="ボラ最前線",
+        subtitle="joint SPX/VIX・0DTE",
+        accent="#e11d48",
+        book_index="../../book/_build/html/index.html",
+    ),
+    "crypto_market": BookMeta(
+        key="crypto_market",
+        title="Crypto市場構造",
+        subtitle="perpetual・liquidation・AMM",
+        accent="#f97316",
+        book_index="../../book/_build/html/index.html",
+    ),
+    "climate_energy": BookMeta(
+        key="climate_energy",
+        title="気候とエネルギー",
+        subtitle="carbon・weather・PPA",
+        accent="#059669",
+        book_index="../../book/_build/html/index.html",
+    ),
+    "risk_management": BookMeta(
+        key="risk_management",
+        title="リスク管理デスク",
+        subtitle="バックテスト・EVT・配賦・PnL explain",
+        accent="#dc2626",
         book_index="../../book/_build/html/index.html",
     ),
 }
@@ -480,6 +517,324 @@ FIGURES: list[FigureSpec] = [
         tags=("exotic",),
     ),
 ]
+
+
+_FRONTIER_SPECS = (
+    (
+        "ml_price_error",
+        "ml_derivatives",
+        "ML価格誤差サーフェス",
+        "moneyness×maturityで平均値に隠れる局所誤差を確認。",
+        "surrogateの危険領域を配置前に特定する。",
+    ),
+    (
+        "ml_greek_error",
+        "ml_derivatives",
+        "Differential MLのGreek誤差",
+        "Delta/Gammaの誤差を同じsplitで比較。",
+        "価格精度だけでなくhedge入力の品質を検証する。",
+    ),
+    (
+        "ml_hard_violations",
+        "ml_derivatives",
+        "soft lossとhard無裁定検査",
+        "penalty前後の違反件数をhard checkで測る。",
+        "soft lossをarbitrage-freeの証明と取り違えない。",
+    ),
+    (
+        "ml_speed",
+        "ml_derivatives",
+        "teacherとsurrogateのbreak-even",
+        "batch size別のCPU latency。",
+        "較正内の反復呼出しで近似器が効く規模を判断する。",
+    ),
+    (
+        "surface_fit",
+        "ml_derivatives",
+        "hard-constrained IV fit",
+        "市場surfaceと制約付きfitを満期別に重ねる。",
+        "repricingとsurface shapeを同時に監視する。",
+    ),
+    (
+        "surface_identifiability",
+        "ml_derivatives",
+        "識別性とrepricing誤差",
+        "同じ価格誤差でもparameter errorが異なる。",
+        "parameter解釈よりrepricing riskを優先すべき場面を示す。",
+    ),
+    (
+        "surface_arbitrage",
+        "ml_derivatives",
+        "fitと無裁定のtrade-off",
+        "unconstrained/hard surfaceの形状診断。",
+        "見かけのfit改善が静的裁定を生まないか検査する。",
+    ),
+    (
+        "variance_consistency",
+        "ml_derivatives",
+        "IVとvariance termの同時較正",
+        "IV-onlyとjoint lossの期間構造。",
+        "VIX系商品とSPX smileの整合を確認する。",
+    ),
+    (
+        "forecast_paths",
+        "ml_derivatives",
+        "leakage-free RV forecast",
+        "Log-HARと小型Transformerを同じwalk-forward窓で比較。",
+        "複雑モデルを単純baselineより先に採用しない。",
+    ),
+    (
+        "forecast_metrics",
+        "ml_derivatives",
+        "forecast metricと不確実性",
+        "RMSEとQLIKEをモデル別に比較。",
+        "metric選択で順位が変わるmodel riskを可視化する。",
+    ),
+    (
+        "hedge_pnl",
+        "ml_derivatives",
+        "common-path hedge P&L",
+        "同じscenarioでstrategy別P&L分布を比較。",
+        "予測改善が実際のhedging errorへ届くか確認する。",
+    ),
+    (
+        "hedge_economics",
+        "ml_derivatives",
+        "CVaRとturnover",
+        "tail riskと取引量を同時表示。",
+        "低誤差でも過剰売買なら採用しない。",
+    ),
+    (
+        "spx_joint_fit",
+        "volatility_frontiers",
+        "SPX IV joint fit",
+        "PDV/AFVのSPX smile fit。",
+        "VIXも同時に合う状態モデルを選ぶ。",
+    ),
+    (
+        "vix_joint_fit",
+        "volatility_frontiers",
+        "VIX term structure joint fit",
+        "VIX futures proxyの期間構造。",
+        "SPXだけの過学習をVIX側から検査する。",
+    ),
+    (
+        "joint_model_error",
+        "volatility_frontiers",
+        "PDV・AFV・rough・quintic比較",
+        "SPX/VIX誤差を同じ表で比較。",
+        "単一市場のfitだけでモデルを決めない。",
+    ),
+    (
+        "nested_mc_speed",
+        "volatility_frontiers",
+        "nested MCとsurrogate",
+        "batch size別のteacher/surrogate速度。",
+        "joint calibrationの計算予算を見積もる。",
+    ),
+    (
+        "zero_dte_clock",
+        "volatility_frontiers",
+        "0DTE variance clock",
+        "暦時間と異なる日中varianceの進み方。",
+        "open/closeへ集中するriskを正しい時計で測る。",
+    ),
+    (
+        "zero_dte_jump",
+        "volatility_frontiers",
+        "scheduled jump intensity",
+        "event日と非event日を分離。",
+        "FOMC等の既知時刻riskを通常拡散へ混ぜない。",
+    ),
+    (
+        "zero_dte_expiry",
+        "volatility_frontiers",
+        "隣接expiryのtotal variance",
+        "満期を跨ぐtotal variance consistency。",
+        "0DTE quoteのcalendar arbitrageを検査する。",
+    ),
+    (
+        "zero_dte_ood",
+        "volatility_frontiers",
+        "時刻別price/Greek OOD",
+        "open/midday/event/closeの誤差。",
+        "平均誤差が隠すevent windowを監視する。",
+    ),
+    (
+        "rfr_compounding",
+        "rates_swaps",
+        "RFR離散複利と連続極限",
+        "daily compoundingとcontinuous limitを比較。",
+        "lookback/lockout等の規約実装を手計算で検査する。",
+    ),
+    (
+        "rfr_convexity",
+        "rates_swaps",
+        "futures-forward convexity",
+        "満期別convexity adjustment。",
+        "futures quoteをforwardと同一視しない。",
+    ),
+    (
+        "rfr_smile",
+        "rates_swaps",
+        "Bachelierとshifted SABR",
+        "負金利を含むnormal/shifted smile。",
+        "近似式のwing・long maturity model riskを見る。",
+    ),
+    (
+        "rfr_delta",
+        "rates_swaps",
+        "sticky-strikeとBartlett delta",
+        "二つのhedge conventionの誤差。",
+        "smile moveを含むdelta選択を経済損失で比べる。",
+    ),
+    (
+        "perpetual_prices",
+        "crypto_market",
+        "index・mark・last price",
+        "三つの価格stateをstress pathで分離。",
+        "清算とfundingの参照価格混同を防ぐ。",
+    ),
+    (
+        "liquidation_waterfall",
+        "crypto_market",
+        "insurance fundとADL",
+        "清算損失のwaterfallを追跡。",
+        "fund枯渇後のsocialized lossを可視化する。",
+    ),
+    (
+        "crypto_solvency",
+        "crypto_market",
+        "solvency ledger",
+        "equity/liabilityのstress推移。",
+        "全cash flowが保存則に合うか確認する。",
+    ),
+    (
+        "amm_lvr",
+        "crypto_market",
+        "AMM LVRとfee補償",
+        "LVR・固定fee・dynamic feeを分離。",
+        "fee収益をLVR削減と取り違えない。",
+    ),
+    (
+        "carbon_smile",
+        "climate_energy",
+        "carbon GBMとSV+jump",
+        "jump riskがcarbon option smileへ与える影響。",
+        "return/variance/jump premiumを分けて感応度管理する。",
+    ),
+    (
+        "weather_paths",
+        "climate_energy",
+        "temperature OUとfOU",
+        "seasonality・短期平均回帰・long memory。",
+        "weather payoffの期間依存をモデル別に見る。",
+    ),
+    (
+        "weather_basis",
+        "climate_energy",
+        "station/location basis risk",
+        "距離とindex mismatchの誤差。",
+        "非取引可能な現地weather riskの残差を測る。",
+    ),
+    (
+        "ppa_risk",
+        "climate_energy",
+        "PPA shape・volume・profile risk",
+        "CVaRとhedge residualをrisk別に比較。",
+        "fair valueとcash-flow-at-riskを別々に報告する。",
+    ),
+)
+
+FIGURES.extend(
+    FigureSpec(
+        figure_id,
+        book,
+        title,
+        blurb,
+        ff.FRONTIER_BUILDERS[figure_id],
+        practice=practice,
+        is_new=True,
+        tags=("a5-a8", "artifact"),
+    )
+    for figure_id, book, title, blurb, practice in _FRONTIER_SPECS
+)
+
+
+# Beyond A5--A8: inflation/JGBi (vol 26) and the risk desk (vol 27), also
+# artifact-backed and read via ``frontier_figures``.
+_BEYOND_SPECS = (
+    (
+        "inflation_curves",
+        "rates_swaps",
+        "名目・実質割引カーブ",
+        "名目と実質の割引factorを満期別に。両者の比がbreakeven inflationを決める。",
+        "名目・実質カーブからBEIを読む。インフレ連動債値付けの出発点。",
+    ),
+    (
+        "inflation_swaps",
+        "rates_swaps",
+        "ゼロクーポンインフレスワップの再評価",
+        "committed ZCIS quoteと再評価値を満期別に比較。再評価誤差は恒等式でゼロ。",
+        "市場ZCISからインフレカーブを較正した整合性の検算。",
+    ),
+    (
+        "jgbi_floor",
+        "rates_swaps",
+        "JGBiデフレフロアとインフレボラ",
+        "元本フロア価値をインフレボラ別に。analyticは単調増加、MCと標準誤差内で一致。",
+        "デフレ時の元本保証(フロア)の価値。ボラが上がるほど厚くなるオプション価値。",
+    ),
+    (
+        "jgbi_bei",
+        "rates_swaps",
+        "raw vs フロア調整後BEI",
+        "生のbreakeven inflationと、デフレフロアを織り込んだ調整後BEIの差。",
+        "フロア(オプション性)を無視した素朴なBEIが割高評価になる点の可視化。",
+    ),
+    (
+        "var_traffic_light",
+        "risk_management",
+        "Baselトラフィックライトと資本乗数",
+        "超過回数ごとの二項ゾーン(緑/黄/赤)と資本乗数のステップ。250日99%の枠組み。",
+        "バックテスト超過が資本add-onへ翻訳される規制の仕組みを一望する。",
+    ),
+    (
+        "fhs_vs_hs_coverage",
+        "risk_management",
+        "FHS vs 素朴HSのVaRカバレッジ",
+        "ローリングVaR予測(HS/FHS)と違反日。FHSは条件付ボラで違反率を1%へ近づける。",
+        "危機時のVaR過小評価をFHSが是正する様子。カバレッジ改善の実証。",
+    ),
+    (
+        "gpd_tail_fit",
+        "risk_management",
+        "GPDテールフィットと平均超過",
+        "経験VaR ladderとGPD(POT)フィット分位、横に平均超過プロット。",
+        "希少テール(0.1%)の外挿。経験分位が尽きる領域をEVTで埋める。",
+    ),
+    (
+        "risk_allocation_bars",
+        "risk_management",
+        "コンポーネントVaR/ESの配賦",
+        "資産別のcomponent VaRとES。Euler配賦で合計はポート全体に厳密一致(加法性)。",
+        "リスク限度をデスク別に割り当てる。合計がポート値に一致する配賦の実務。",
+    ),
+)
+
+FIGURES.extend(
+    FigureSpec(
+        figure_id,
+        book,
+        title,
+        blurb,
+        ff.FRONTIER_BUILDERS[figure_id],
+        practice=practice,
+        is_new=True,
+        tags=("beyond-hull", "artifact"),
+    )
+    for figure_id, book, title, blurb, practice in _BEYOND_SPECS
+)
 
 
 def figures_for(book: str) -> list[FigureSpec]:

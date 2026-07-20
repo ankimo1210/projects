@@ -37,7 +37,7 @@ def test_config_overrides(cfg):
     assert stressed.impact.resilience_rho == 0.5
     # untouched keys survive the merge
     assert stressed.impact.temporary_eta == cfg.impact.temporary_eta
-    assert len(cfg.stress_regimes()) == 5
+    assert len(cfg.stress_regimes()) == 6
 
 
 def test_sigma_units(cfg):
@@ -138,8 +138,8 @@ def test_depth_positive(cfg):
 
 def test_invalid_config_rejected(cfg):
     with pytest.raises(ValueError):
-        load_config_bad = cfg.with_overrides({"side": "hold"})
-        # with_overrides doesn't validate; emulate loader validation
-        from optimal_execution.config import _validate
-
-        _validate(load_config_bad)
+        cfg.with_overrides({"side": "hold"})
+    with pytest.raises(ValueError, match="unknown top-level"):
+        cfg.with_overrides({"annualised_volatility": 0.4})
+    with pytest.raises(ValueError, match="in impact"):
+        cfg.with_overrides({"impact": {"temporay_eta": 1e-4}})

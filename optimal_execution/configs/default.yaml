@@ -155,6 +155,11 @@ stress_regimes:
   volume_shift:   { volume_profile: flat, volume_mult_sigma: 0.6 }
   adverse_alpha:  { alpha: { enabled: true, drift_bps_per_hour: -30.0 } }
   stressed_spread: { spread_bps: 6.0, impact: { resilience_rho: 0.002 }, liquidity: { stress_prob_per_step: 0.05 } }
+  # Stricter limit-order assumptions: passive fills are more adversely selected
+  # (2x latent-alpha vol, stronger adverse drift/flow tilt) and slower (less
+  # queue erosion ahead, more competing passive supply). Re-evaluates the SAME
+  # trained policies to test whether any passive-execution edge survives.
+  strict_limits:  { lob: { adverse_alpha_sigma_bps: 2.4, adverse_alpha_to_drift: 0.8, adverse_alpha_to_flow: 0.9, cancel_rate_mult: 0.5, limit_order_rate_mult: 3.0 } }
 
 # ---- Output -----------------------------------------------------------------
 artifacts_dir: artifacts

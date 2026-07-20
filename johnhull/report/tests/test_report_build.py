@@ -10,18 +10,7 @@ import re
 from report_builder.figures import BOOKS, FIGURES, figures_for
 from report_builder.render import render_site
 
-PAGES = (
-    "index",
-    "gallery",
-    "integration",
-    "options_core",
-    "numerics",
-    "risk_credit",
-    "stochastic",
-    "volatility",
-    "rates_swaps",
-    "exotics",
-)
+PAGES = ("index", "gallery", "integration", *BOOKS)
 
 
 def test_registry_is_consistent():
@@ -33,6 +22,11 @@ def test_registry_is_consistent():
         "volatility",
         "rates_swaps",
         "exotics",
+        "ml_derivatives",
+        "volatility_frontiers",
+        "crypto_market",
+        "climate_energy",
+        "risk_management",
     }
     for f in FIGURES:
         assert f.book in BOOKS, f.id
@@ -41,9 +35,14 @@ def test_registry_is_consistent():
     assert len(figures_for("risk_credit")) == 8
     assert len(figures_for("stochastic")) == 3
     assert len(figures_for("volatility")) == 10
-    assert len(figures_for("rates_swaps")) == 3
+    assert len(figures_for("rates_swaps")) == 11
     assert len(figures_for("exotics")) == 2
-    assert len(FIGURES) == 38
+    assert len(figures_for("ml_derivatives")) == 12
+    assert len(figures_for("volatility_frontiers")) == 8
+    assert len(figures_for("crypto_market")) == 4
+    assert len(figures_for("climate_energy")) == 4
+    assert len(figures_for("risk_management")) == 4
+    assert len(FIGURES) == 78
 
 
 def test_every_figure_builds():
@@ -54,8 +53,11 @@ def test_every_figure_builds():
 
 
 def test_render_site_is_offline_and_complete(tmp_path):
+    stale = tmp_path / "johnhull_gallery_standalone.html"
+    stale.write_text('<script src="https://cdn.example.invalid/plotly.js"></script>')
     out = render_site(output_dir=tmp_path, log=lambda *_a: None)
 
+    assert not stale.exists()
     for name in PAGES:
         assert (out / f"{name}.html").exists(), name
     assert (out / "assets" / "plotly.min.js").exists()

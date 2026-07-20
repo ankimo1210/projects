@@ -12,6 +12,7 @@ import json
 import math
 import subprocess
 from datetime import UTC, datetime
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -20,6 +21,26 @@ import pandas as pd
 from .config import Config
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+MODEL_SOURCE_FILES = (
+    "almgren_chriss.py",
+    "config.py",
+    "environment.py",
+    "evaluation.py",
+    "experiments.py",
+    "fills.py",
+    "impact.py",
+    "liquidity.py",
+    "order_book.py",
+    "price_process.py",
+    "random.py",
+    "resilience.py",
+    "rl_policy.py",
+    "rl_training.py",
+    "signal_adaptive.py",
+    "strategies.py",
+    "tca.py",
+    "volume.py",
+)
 
 
 def resolve_project_path(path: str | Path) -> Path:
@@ -67,6 +88,29 @@ def generated_at() -> str:
     return datetime.now(UTC).isoformat(timespec="seconds")
 
 
+def config_fingerprint(cfg: Config) -> str:
+    """Stable SHA-256 of the complete merged experiment configuration."""
+    payload = json.dumps(
+        json_safe(cfg.raw),
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+@lru_cache(maxsize=1)
+def model_fingerprint() -> str:
+    """Hash model/training source so stale outputs survive neither dirty nor new commits."""
+    digest = hashlib.sha256()
+    source_root = Path(__file__).resolve().parent
+    for name in MODEL_SOURCE_FILES:
+        digest.update(name.encode("utf-8"))
+        digest.update((source_root / name).read_bytes())
+    return digest.hexdigest()
+
+
 def provenance(
     cfg: Config,
     *,
@@ -77,6 +121,8 @@ def provenance(
     out: dict[str, Any] = {
         "seed": cfg.seed,
         "profile": cfg.profile,
+        "config_fingerprint": config_fingerprint(cfg),
+        "model_fingerprint": model_fingerprint(),
         "generated_at": timestamp or generated_at(),
         "git_commit": git_commit(),
         "model_parameters": model_parameters or {},
@@ -97,7 +143,14 @@ def with_provenance_columns(
     """Return a copy with locale-independent provenance columns."""
     meta = provenance(cfg, strategy_id=strategy_id, timestamp=timestamp)
     out = frame.copy()
-    for key in ("seed", "profile", "generated_at", "git_commit"):
+    for key in (
+        "seed",
+        "profile",
+        "config_fingerprint",
+        "model_fingerprint",
+        "generated_at",
+        "git_commit",
+    ):
         out[key] = meta[key]
     params = model_parameters or {
         "side": cfg.side,

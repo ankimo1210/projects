@@ -1,0 +1,415 @@
+{
+  "acceptance": {
+    "checks": [
+      {
+        "criterion": "<= 1e-12",
+        "name": "hull_white_initial_curve",
+        "observed": 0.0,
+        "passed": true
+      },
+      {
+        "criterion": "<= 1e-12",
+        "name": "annual_seasonality_normalization",
+        "observed": 1.734723475976807e-18,
+        "passed": true
+      },
+      {
+        "criterion": "<= 1e-10",
+        "name": "zcis_quote_repricing",
+        "observed": 0.0,
+        "passed": true
+      },
+      {
+        "criterion": "aligned arrays and maximum analytic/MC z-score < 3",
+        "name": "jy_forward_measure_mc",
+        "observed": 1.4888912714624325,
+        "passed": true
+      },
+      {
+        "criterion": "aligned arrays and maximum non-degenerate z-score < 3",
+        "name": "jgbi_floor_analytic_mc",
+        "observed": 1.1974973083142517,
+        "passed": true
+      },
+      {
+        "criterion": "analytic floor is non-decreasing in inflation volatility",
+        "name": "floor_volatility_monotonicity",
+        "observed": true,
+        "passed": true
+      },
+      {
+        "criterion": "coupons identical and floored final principal exceeds unfloored principal",
+        "name": "redemption_only_principal_floor",
+        "observed": 0.0,
+        "passed": true
+      },
+      {
+        "criterion": "<= 1e-12",
+        "name": "floor_payoff_decomposition",
+        "observed": 0.0,
+        "passed": true
+      },
+      {
+        "criterion": "explicit nominal payment-forward measure with non-zero YoY convexity",
+        "name": "nominal_payment_forward_measure",
+        "observed": "nominal_payment_forward",
+        "passed": true
+      },
+      {
+        "criterion": "two explicitly different BEI measures",
+        "name": "raw_and_floor_adjusted_breakeven",
+        "observed": 0.0002785788824835045,
+        "passed": true
+      },
+      {
+        "criterion": "nominal-duration and CPI-delta residuals are reported separately",
+        "name": "synthetic_hedge_decomposition",
+        "observed": 2,
+        "passed": true
+      }
+    ],
+    "model_performance_approved": false,
+    "negative_results": [
+      "All curves, CPI fixings, option quotes, and hedge ratios are synthetic rather than market calibrated.",
+      "The v1 model uses deterministic seasonality and one-factor nominal/real Gaussian rates.",
+      "Production ISDA disruption fallbacks and live JGBi settlement operations are out of scope."
+    ],
+    "passed": true,
+    "schema_version": 1,
+    "scope": "integration_and_reproducibility"
+  },
+  "artifact_role": "implementation-derived, identity-tested teaching reference",
+  "benchmark": {
+    "nondeterministic_fields": [],
+    "schema_version": 1
+  },
+  "benchmark_policy": "no nondeterministic benchmark fields",
+  "companion_schemas": {
+    "inflation_scenarios.npz": {
+      "bei_names": {
+        "dtype": "<U14",
+        "shape": [
+          2
+        ],
+        "unit": "label"
+      },
+      "breakeven_inflation": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "annualized decimal inflation rate"
+      },
+      "cpi_seasonal": {
+        "dtype": "float64",
+        "shape": [
+          24
+        ],
+        "unit": "synthetic CPI index points"
+      },
+      "cpi_trend": {
+        "dtype": "float64",
+        "shape": [
+          24
+        ],
+        "unit": "synthetic CPI index points"
+      },
+      "floor_analytic": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "currency units per 100 face"
+      },
+      "floor_cpi_delta": {
+        "dtype": "float64",
+        "shape": [
+          1
+        ],
+        "unit": "currency units per CPI index point"
+      },
+      "floor_inflation_vega": {
+        "dtype": "float64",
+        "shape": [
+          1
+        ],
+        "unit": "currency units per unit volatility"
+      },
+      "floor_mc": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "currency units per 100 face"
+      },
+      "floor_mc_standard_error": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "currency units per 100 face"
+      },
+      "floor_value": {
+        "dtype": "float64",
+        "shape": [
+          1
+        ],
+        "unit": "currency units per 100 face"
+      },
+      "hedge_risk_names": {
+        "dtype": "<U16",
+        "shape": [
+          2
+        ],
+        "unit": "label"
+      },
+      "hedged_normalized_risk": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "normalized risk units"
+      },
+      "hw_market_discount_factor": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "discount factor"
+      },
+      "hw_model_discount_factor": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "discount factor"
+      },
+      "hw_swaption_expiry": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "years"
+      },
+      "hw_swaption_price": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "currency units per unit notional"
+      },
+      "inflation_volatility": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "annualized decimal volatility"
+      },
+      "jgbi_cashflow_names": {
+        "dtype": "<U10",
+        "shape": [
+          10
+        ],
+        "unit": "label"
+      },
+      "jgbi_coupon": {
+        "dtype": "float64",
+        "shape": [
+          10
+        ],
+        "unit": "currency units per 100 face"
+      },
+      "jgbi_floored_principal": {
+        "dtype": "float64",
+        "shape": [
+          10
+        ],
+        "unit": "currency units per 100 face"
+      },
+      "jgbi_index_ratio": {
+        "dtype": "float64",
+        "shape": [
+          10
+        ],
+        "unit": "indexation coefficient"
+      },
+      "jgbi_payment_year": {
+        "dtype": "float64",
+        "shape": [
+          10
+        ],
+        "unit": "years from issue"
+      },
+      "jgbi_unfloored_principal": {
+        "dtype": "float64",
+        "shape": [
+          10
+        ],
+        "unit": "currency units per 100 face"
+      },
+      "jy_forward_index": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "synthetic CPI index points"
+      },
+      "jy_mc_forward_index": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "synthetic CPI index points"
+      },
+      "jy_mc_standard_error": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "synthetic CPI index points"
+      },
+      "jy_observation": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "years"
+      },
+      "maturity": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "years"
+      },
+      "month_index": {
+        "dtype": "float64",
+        "shape": [
+          24
+        ],
+        "unit": "calendar months from base date"
+      },
+      "month_names": {
+        "dtype": "<U3",
+        "shape": [
+          12
+        ],
+        "unit": "label"
+      },
+      "nominal_discount_factor": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "discount factor"
+      },
+      "real_discount_factor": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "discount factor"
+      },
+      "seasonality_log_factor": {
+        "dtype": "float64",
+        "shape": [
+          12
+        ],
+        "unit": "log CPI multiplier"
+      },
+      "unhedged_normalized_risk": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "normalized risk units"
+      },
+      "yoy_deterministic_ratio": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "CPI index ratio"
+      },
+      "yoy_jy_ratio": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "expected CPI index ratio"
+      },
+      "yoy_payment": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "years"
+      },
+      "zcis_maturity": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "years"
+      },
+      "zcis_quote": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "annualized decimal inflation rate"
+      },
+      "zcis_repriced": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "annualized decimal inflation rate"
+      }
+    }
+  },
+  "companions": {
+    "inflation_scenarios.npz": "26f8661dcf2004dfa79475b9942dc8480ffe9c8fdf872a81fe679c7b9215bb9f"
+  },
+  "data_policy": "synthetic-offline",
+  "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
+  "generator_api": "hullkit.frontier_reference.build_frontier_reference",
+  "limitations": [
+    "Synthetic results are not evidence of market forecasting power."
+  ],
+  "metrics": {
+    "coupon_floor_max_error": 0.0,
+    "floor_adjusted_breakeven_inflation": 0.010228827638702365,
+    "floor_decomposition_error": 0.0,
+    "floor_mc_zscore_max": 1.1974973083142517,
+    "floor_monotone_in_volatility": true,
+    "hw_curve_fit_max_error": 0.0,
+    "jy_forward_mc_zscore_max": 1.4888912714624325,
+    "measure_treatment": "nominal_payment_forward",
+    "principal_floor_redemption_only": true,
+    "raw_breakeven_inflation": 0.00995024875621886,
+    "seasonality_annual_log_sum": 1.734723475976807e-18,
+    "yoy_convexity_bp": 0.9818821980900339,
+    "zcis_repricing_max_error": 0.0
+  },
+  "schema_version": 1,
+  "seed": 20260744,
+  "semantic_sources": [
+    "johnhull/hullkit/src/hullkit/frontier_reference.py",
+    "johnhull/hullkit/src/hullkit/rates.py",
+    "johnhull/hullkit/src/hullkit/hull_white.py",
+    "johnhull/hullkit/src/hullkit/inflation.py",
+    "johnhull/hullkit/src/hullkit/jarrow_yildirim.py",
+    "johnhull/hullkit/src/hullkit/jgbi.py"
+  ],
+  "semantic_tests": [
+    "johnhull/hullkit/tests/test_frontier_reference.py",
+    "johnhull/hullkit/tests/test_rates.py",
+    "johnhull/hullkit/tests/test_hull_white.py",
+    "johnhull/hullkit/tests/test_inflation.py",
+    "johnhull/hullkit/tests/test_jarrow_yildirim.py",
+    "johnhull/hullkit/tests/test_jgbi.py",
+    "johnhull/hullkit/tests/test_jgbi_floor.py"
+  ],
+  "volume": 26
+}

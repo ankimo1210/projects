@@ -9,17 +9,39 @@ import numpy as np
 from scipy.stats import norm
 
 
+def _validate_price_inputs(S, K, sigma, T):
+    if np.any(~np.isfinite(np.asarray(S, dtype=float))) or np.any(np.asarray(S) <= 0.0):
+        raise ValueError("S must contain only finite values > 0")
+    if np.any(~np.isfinite(np.asarray(K, dtype=float))) or np.any(np.asarray(K) <= 0.0):
+        raise ValueError("K must contain only finite values > 0")
+    sigma_array = np.asarray(sigma, dtype=float)
+    if np.any(~np.isfinite(sigma_array)) or np.any(sigma_array < 0.0):
+        raise ValueError("sigma must be finite and >= 0")
+    time_array = np.asarray(T, dtype=float)
+    if np.any(~np.isfinite(time_array)) or np.any(time_array < 0.0):
+        raise ValueError("T must be finite and >= 0")
+
+
 def d1(S, K, r, sigma, T, q=0.0):
     """Hull eq. (15.20) numerator term."""
+    _validate_price_inputs(S, K, sigma, T)
+    if np.any(np.asarray(sigma) == 0.0) or np.any(np.asarray(T) == 0.0):
+        raise ValueError("d1 is undefined when sigma or T is zero")
     return (np.log(S / K) + (r - q + 0.5 * sigma**2) * T) / (sigma * np.sqrt(T))
 
 
 def d2(S, K, r, sigma, T, q=0.0):
+    """Hull eq. (15.20): ``d1 - sigma * sqrt(T)``."""
     return d1(S, K, r, sigma, T, q) - sigma * np.sqrt(T)
 
 
 def call_price(S, K, r, sigma, T, q=0.0):
     """European call price, Hull eq. (15.20) / (17.4)."""
+    _validate_price_inputs(S, K, sigma, T)
+    if np.all(np.asarray(T) == 0.0):
+        return np.maximum(np.asarray(S) - K, 0.0)
+    if np.all(np.asarray(sigma) == 0.0):
+        return np.maximum(np.asarray(S) * np.exp(-q * T) - K * np.exp(-r * T), 0.0)
     return S * np.exp(-q * T) * norm.cdf(d1(S, K, r, sigma, T, q)) - K * np.exp(-r * T) * norm.cdf(
         d2(S, K, r, sigma, T, q)
     )
@@ -27,6 +49,11 @@ def call_price(S, K, r, sigma, T, q=0.0):
 
 def put_price(S, K, r, sigma, T, q=0.0):
     """European put price, Hull eq. (15.21) / (17.5)."""
+    _validate_price_inputs(S, K, sigma, T)
+    if np.all(np.asarray(T) == 0.0):
+        return np.maximum(K - np.asarray(S), 0.0)
+    if np.all(np.asarray(sigma) == 0.0):
+        return np.maximum(K * np.exp(-r * T) - np.asarray(S) * np.exp(-q * T), 0.0)
     return K * np.exp(-r * T) * norm.cdf(-d2(S, K, r, sigma, T, q)) - S * np.exp(-q * T) * norm.cdf(
         -d1(S, K, r, sigma, T, q)
     )

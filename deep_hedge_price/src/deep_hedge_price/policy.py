@@ -32,6 +32,7 @@ class FeatureScaler(nn.Module):
         self.register_buffer("scales", scales)
 
     def forward(self, state: torch.Tensor) -> torch.Tensor:
+        """Standardize the raw state with the stored means and scales."""
         return (state - self.means) / self.scales
 
 
@@ -58,6 +59,7 @@ class MLPHedgePolicy(nn.Module):
         self.action_high = market.short_quantity * config.action_max
 
     def forward(self, state: torch.Tensor) -> torch.Tensor:
+        """Map the state to holdings, tanh-clamped to the action range."""
         raw = self.network(self.scaler(state)).squeeze(-1)
         midpoint = (self.action_low + self.action_high) / 2
         half_range = (self.action_high - self.action_low) / 2
@@ -65,6 +67,7 @@ class MLPHedgePolicy(nn.Module):
 
     @property
     def parameter_count(self) -> int:
+        """Total number of trainable parameters."""
         return sum(parameter.numel() for parameter in self.parameters())
 
 

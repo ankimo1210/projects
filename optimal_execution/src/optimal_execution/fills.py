@@ -19,6 +19,7 @@ tactical heuristic and the tests.
 
 from __future__ import annotations
 
+import math
 from typing import TYPE_CHECKING
 
 from scipy import stats
@@ -64,6 +65,35 @@ def match_passive(
     return fill, False
 
 
+def queue_position_value(
+    queue_ahead: float,
+    order_qty: float,
+    opposite_rate_per_s: float,
+    mean_order_size: float,
+    horizon_s: float,
+    half_spread: float,
+    target_depth: float,
+) -> float:
+    """Stylized Moallemi–Yuan (2016) value of a resting order's queue position.
+
+        V(Q_a) = P_fill(Q_a) * (half_spread - c_adv(Q_a)),
+        c_adv(Q_a) = 2 * half_spread * (1 - exp(-Q_a / target_depth)).
+
+    Filling earns the half-spread; conditional on filling, deeper queue
+    positions are reached only when large (more informed) flow sweeps the
+    level, so the adverse-selection cost grows toward the full spread. The
+    value therefore crosses zero at Q_a = target_depth * ln 2 and the front
+    of the queue is worth ~ P_fill(0) * half_spread. This is a reduced form
+    in the spirit of Moallemi–Yuan — their model prices the position from
+    the flow dynamics; here the shape is postulated for exposition.
+    """
+    p_fill = passive_fill_probability(
+        queue_ahead, order_qty, opposite_rate_per_s, mean_order_size, horizon_s
+    )
+    c_adv = 2.0 * half_spread * (1.0 - math.exp(-queue_ahead / max(target_depth, 1e-12)))
+    return p_fill * (half_spread - c_adv)
+
+
 def passive_fill_probability(
     queue_ahead: float,
     order_qty: float,
@@ -81,8 +111,6 @@ def passive_fill_probability(
     lam = opposite_rate_per_s * horizon_s
     need = max(queue_ahead + 0.5 * order_qty, 0.0) / mean_order_size
     # P(N >= ceil(need)) = survival function at need - 1
-    import math
-
     k = max(math.ceil(need) - 1, -1)
     p = float(stats.poisson.sf(k, lam))
     return min(max(p, 0.0), 1.0)

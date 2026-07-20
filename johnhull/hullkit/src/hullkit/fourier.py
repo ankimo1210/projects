@@ -67,10 +67,14 @@ def cos_price(cf, S0, K, r, T, kind="call", N=256, L=12.0, cumulants=None):
     fk = np.real(cf(omega) * np.exp(-1j * omega * a))
     if kind == "call":
         lo, hi = max(np.log(K / S0), a), b
+        if lo >= hi:
+            return 0.0
         chi, psi = _chi_psi(k, a, b, lo, hi)
         uk = (2.0 / (b - a)) * (S0 * chi - K * psi)
     else:
         lo, hi = a, min(np.log(K / S0), b)
+        if lo >= hi:
+            return 0.0
         chi, psi = _chi_psi(k, a, b, lo, hi)
         uk = (2.0 / (b - a)) * (K * psi - S0 * chi)
     weights = np.ones(N)

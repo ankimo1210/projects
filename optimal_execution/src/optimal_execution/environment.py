@@ -221,11 +221,26 @@ class ExecutionEnv:
         cap_part = cfg.max_participation_rate * self.vol_ema
         if q > cap_part:
             q, clipped = cap_part, True
-        # price collar: block aggression once the touch is beyond the collar
+        # Price collar: cap quantity against the estimated block-average price,
+        # including book walk and the current block's own impact.
         collar = cfg.price_collar_bps * 1e-4 * self.arrival_s0
-        touch = self.book.best_bid if cfg.sign > 0 else self.book.best_ask
-        if q > 0 and cfg.sign * (self.arrival_s0 - touch) > collar:
-            q, clipped = 0.0, True
+        if q > 0:
+            avg_price, _, _ = self.book.market_order_quote(q)
+            if cfg.sign * (self.arrival_s0 - avg_price) > collar:
+                touch_price, _, _ = self.book.market_order_quote(0.0)
+                if cfg.sign * (self.arrival_s0 - touch_price) > collar:
+                    q = 0.0
+                else:
+                    lo, hi = 0.0, q
+                    for _ in range(50):
+                        mid = 0.5 * (lo + hi)
+                        price, _, _ = self.book.market_order_quote(mid)
+                        if cfg.sign * (self.arrival_s0 - price) <= collar:
+                            lo = mid
+                        else:
+                            hi = mid
+                    q = lo if lo > 1e-9 else 0.0
+                clipped = True
         if clipped and desired > 0:
             self.violations += 1
         return q
@@ -293,9 +308,26 @@ class ExecutionEnv:
 
         # ---- decode action --------------------------------------------------
         if isinstance(action, dict):
-            desired_mkt = float(action.get("market_qty", 0.0))
+            try:
+                desired_mkt = float(action.get("market_qty", 0.0))
+            except (TypeError, ValueError):
+                desired_mkt = float("nan")
             limit_mode = str(action.get("limit", "none"))
-            limit_qty_req = action.get("limit_qty", None)
+            if limit_mode not in LIMIT_MODES:
+                self.violations += 1
+                limit_mode = "none"
+            raw_limit_qty = action.get("limit_qty", None)
+            limit_qty_req: float | None
+            if raw_limit_qty is None:
+                limit_qty_req = None
+            else:
+                try:
+                    limit_qty_req = float(raw_limit_qty)
+                except (TypeError, ValueError):
+                    limit_qty_req = float("nan")
+                if not np.isfinite(limit_qty_req) or limit_qty_req < 0:
+                    self.violations += 1
+                    limit_qty_req = 0.0
         else:
             mult, limit_mode = decode_action(int(action))
             desired_mkt = mult * self.baseline[k]
@@ -326,7 +358,7 @@ class ExecutionEnv:
                 else (book.best_bid + tick if improve else book.best_bid)
             )
             outstanding = (self.order.qty - self.order.filled) if self.order else 0.0
-            want_qty = float(limit_qty_req) if limit_qty_req is not None else self.baseline[k]
+            want_qty = limit_qty_req if limit_qty_req is not None else self.baseline[k]
             want_qty = min(max(want_qty, 0.0), max(self.x, 0.0))
             same_level = (
                 self.order is not None
@@ -402,7 +434,10 @@ class ExecutionEnv:
         # uses the step's cost components + risk penalties (all in currency).
         step_cost = self._is_running() - getattr(self, "_is_prev", 0.0)
         self._is_prev = self._is_running()
-        risk_pen = rw.inventory_penalty * (self.x**2) * (cfg.sigma_abs**2) * self.dt
+        sub_start = k * self.n_sub
+        sub_stop = (k + 1) * self.n_sub
+        sigma_sq = float(np.mean(book._sigma_sub[sub_start:sub_stop] ** 2))
+        risk_pen = rw.inventory_penalty * (self.x**2) * sigma_sq * self.dt
         impact_pen = rw.impact_penalty * (book.D**2)
         constr_pen = rw.constraint_penalty * (
             1.0 if self.violations > getattr(self, "_viol_prev", 0) else 0.0

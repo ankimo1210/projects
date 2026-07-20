@@ -1,6 +1,5 @@
 run.log
 results.tsv
-report.html
 report_preview.png
 __pycache__/
 *.pyc

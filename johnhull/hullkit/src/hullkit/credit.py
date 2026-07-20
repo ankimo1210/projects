@@ -53,6 +53,9 @@ def merton_default_prob(E0, sigma_E, D, r, T):
     Returns (V0, sigma_V, Q) with Q = N(-d2).
     """
 
+    if E0 <= 0.0 or sigma_E <= 0.0 or D <= 0.0 or T <= 0.0:
+        raise ValueError("E0, sigma_E, D, and T must be > 0")
+
     def equations(x):
         v0, sig_v = x
         d1 = (math.log(v0 / D) + (r + 0.5 * sig_v**2) * T) / (sig_v * math.sqrt(T))
@@ -61,7 +64,21 @@ def merton_default_prob(E0, sigma_E, D, r, T):
         eq2 = norm.cdf(d1) * sig_v * v0 - sigma_E * E0
         return [eq1, eq2]
 
-    v0, sig_v = fsolve(equations, [E0 + D, 0.2], full_output=False)
+    solution, info, ier, message = fsolve(equations, [E0 + D, 0.2], full_output=True)
+    v0, sig_v = solution
+    residual = float(max(abs(value) for value in info["fvec"]))
+    residual_scale = max(E0, sigma_E * E0, 1.0)
+    invalid_solution = not all(math.isfinite(value) and value > 0.0 for value in (v0, sig_v))
+    if (
+        ier != 1
+        or invalid_solution
+        or not math.isfinite(residual)
+        or residual > 1e-8 * residual_scale
+    ):
+        raise ValueError(
+            "merton_default_prob did not converge to a positive solution "
+            f"(status={ier}, residual={residual:.3g}): {message}"
+        )
     d1 = (math.log(v0 / D) + (r + 0.5 * sig_v**2) * T) / (sig_v * math.sqrt(T))
     d2 = d1 - sig_v * math.sqrt(T)
     return float(v0), float(sig_v), float(norm.cdf(-d2))
