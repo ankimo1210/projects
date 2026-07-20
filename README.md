@@ -29,6 +29,7 @@
 | [`aisan_lbo_case/`](aisan_lbo_case/) | アイサンテクノロジー (4667.T) 非公開化 LBO ケーススタディ（公開情報ベース、HTML レポート出力） | Python / Jupyter |
 | [`notebooks/`](notebooks/) | 単発の分析ノートブック置き場（債券、ETF、不動産シミュ等） | Jupyter |
 | [`csharp_calc/`](csharp_calc/) | WinForms 四則演算電卓サンプル（エンジンは UI 非依存・ユニットテスト付き） | C# / .NET 9 |
+| [`CsharpApp/`](CsharpApp/) | WPF / MVVM 学習用リアルタイム価格ティッカー（オフライン GBM、固定長履歴、カスタムチャート） | C# / WPF / .NET 9 |
 | [`ts-rosetta/`](ts-rosetta/) | 同一タスクアプリを React / Vue / Angular / Next.js / Express / NestJS 等で並列実装した TS エコシステム学習ラボ | TypeScript / pnpm |
 | [`models/`](models/) | 洋書教科書の日本語翻訳パイプライン成果物（Markdown / HTML 教科書 3 冊分） | Markdown / HTML |
 
@@ -77,7 +78,7 @@ make tree      # ヘビーディレクトリを除外したツリー表示
 - 対応プラットフォーム: **WSL2 (Ubuntu) を主**とし、ネイティブ Windows (PowerShell) と macOS でも動作（差分は下記セットアップ参照）
 - Python は **ルート単一の uv workspace** で管理（`.venv` は repo root に1個）
   - workspace メンバー: `gto`, `market-viz`, `stock`, `nbody-gpu`, `line_backup`, `akinator`, `autostock`, `quantkit`, `deep_hedge_price`, `optimal_execution`, `rough_volatility`, `jp_llm_lab`, `johnhull/hullkit`、`analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning}` と `analytics/differential_equation/{ode-book,pde-book}`（`analytics/report` のみメンバー外）
-  - 例外: `aisan_lbo_case` は `requirements.txt`、`csharp_calc` は .NET、`EitanQuest` / `NeonThread` は Xcode (Swift)、`ts-rosetta` は pnpm、`rates_volatility_model` / `notebooks` / `models` は env 管理なし、`shortest_path` は依存なしの教材プロジェクト（`PYTHONPATH=shortest_path/src` で実行）
+  - 例外: `aisan_lbo_case` は `requirements.txt`、`csharp_calc` / `CsharpApp` は .NET、`EitanQuest` / `NeonThread` は Xcode (Swift)、`ts-rosetta` は pnpm、`rates_volatility_model` / `notebooks` / `models` は env 管理なし、`shortest_path` は依存なしの教材プロジェクト（`PYTHONPATH=shortest_path/src` で実行）
 - AI コラボ前提（Claude Code / Copilot）。エージェント向け規約は `CLAUDE.md` と `AGENTS.md` を参照
 
 ## セットアップ
@@ -117,7 +118,7 @@ make help                # 横断ターゲット一覧
 |---|---|---|
 | Node.js 20+ | `gto/web`（Next.js）, `pokemon`（Vite） | WSL/Linux: nvm or apt ／ macOS: `brew install node` ／ Windows: `winget install OpenJS.NodeJS` |
 | Rust (cargo) | `gto`（Rust エンジン、maturin でビルド） | 全環境 `rustup`（<https://rustup.rs>） |
-| .NET 9 SDK | `csharp_calc` | macOS: `brew install dotnet` ／ Windows: `winget install Microsoft.DotNet.SDK.9` ／ WSL: 公式 apt リポジトリ |
+| .NET 9 SDK | `csharp_calc`, `CsharpApp` | macOS: `brew install dotnet` ／ Windows: `winget install Microsoft.DotNet.SDK.9` ／ WSL: 公式 apt リポジトリ |
 | NVIDIA CUDA | `nbody-gpu`（CuPy）, `gto` の GPU 機能（preview） | NVIDIA GPU + ドライバ必須。**macOS 非対応** |
 
 `gto` は Rust + FastAPI + Next.js で構成が重いので、起動・ビルド手順は `gto/README.md` を参照してください。
