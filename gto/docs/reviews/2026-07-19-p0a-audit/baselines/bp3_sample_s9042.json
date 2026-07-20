@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "case": "bp3_sample",
+  "config": "flops=AhKd7s,QsJh2c,8d8h3s weights=equal stack=100bb ranges=uniform variant=cfr+ mode=sample buckets_river=24 buckets_turn=16",
+  "label": "baseline",
+  "git_commit": "611980dd07d4d2dbefe44686919bb49cba29cfc2",
+  "dirty": false,
+  "seed": 9042,
+  "iterations": 1500,
+  "points": 8,
+  "threads": 20,
+  "build_profile": "release",
+  "cpu": "Intel(R) Core(TM) Ultra 9 285K",
+  "kernel": "6.18.33.1-microsoft-standard-WSL2",
+  "cmdline": "target/release/solver-bench --case bp3_sample --iterations 1500 --points 8 --seed 9042 --label baseline --git-commit 611980dd07d4d2dbefe44686919bb49cba29cfc2 --dirty 0 --checkpoint-dir /home/kazumasa/projects/_data/gto/checkpoints/p0a/bp3_sample_s9042 --checkpoint-every-minutes 30 --resume auto --out docs/reviews/2026-07-19-p0a-audit/baselines/bp3_sample_s9042.json",
+  "table_bytes": 23954831424,
+  "peak_rss_mb": 27199.2,
+  "state_checksum": "7c76603799702522",
+  "resume_count": 0,
+  "timing": {"build_s": 49.863, "solve_s": 2304.251, "checkpoint_br_s": 2574.138, "final_br_s": 387.476, "checkpoint_s": 537.687},
+  "checkpoints": [
+    {"iters": 11, "solve_s": 15.555, "br_s": 352.703, "expl": 13.071998, "br0": 20.568025, "br1": 5.575972},
+    {"iters": 23, "solve_s": 32.850, "br_s": 356.541, "expl": 13.747545, "br0": 19.823070, "br1": 7.672021},
+    {"iters": 46, "solve_s": 66.449, "br_s": 363.333, "expl": 13.669205, "br0": 19.577431, "br1": 7.760979},
+    {"iters": 93, "solve_s": 135.932, "br_s": 370.957, "expl": 12.052563, "br0": 16.996961, "br1": 7.108165},
+    {"iters": 187, "solve_s": 277.044, "br_s": 373.850, "expl": 9.758598, "br0": 12.936447, "br1": 6.580748},
+    {"iters": 375, "solve_s": 563.483, "br_s": 376.944, "expl": 5.754785, "br0": 7.327887, "br1": 4.181683},
+    {"iters": 750, "solve_s": 1142.623, "br_s": 379.811, "expl": 2.933089, "br0": 3.628198, "br1": 2.237980},
+    {"iters": 1500, "solve_s": 2304.251, "br_s": 387.476, "expl": 1.455206, "br0": 1.749219, "br1": 1.161193}
+  ],
+  "segments": [
+    {"start_iters": 0, "end_iters": 1500, "build_s": 49.863, "solve_s": 2304.251, "br_s": 2961.614, "checkpoint_s": 537.687}
+  ]
+}
