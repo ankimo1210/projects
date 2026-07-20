@@ -43,7 +43,12 @@ REVIEW_SCOPES = (
     "svgOriginality",
 )
 REVIEW_STATUSES = {"pending_external_review", "published"}
-_NON_HUMAN_REVIEWER_PLACEHOLDERS = {"AI", "生成AI", "AI誤答レビュー"}
+_NON_HUMAN_REVIEWER_PLACEHOLDERS = {
+    "AI",
+    "生成AI",
+    "AI誤答レビュー",
+    "AI選択肢論理監査",
+}
 
 GEOGRAPHY_ALIASES = {
     "サンルーカル": "サンルーカル・デ・バラメダ",

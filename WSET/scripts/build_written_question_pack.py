@@ -16,7 +16,12 @@ DEFAULT_OUTPUT = PROJECT_ROOT / "WSET" / "QuestionData" / "written_question_pack
 DEFAULT_REFERENCE_PACK = PROJECT_ROOT / "WSET" / "ReferenceData" / "reference_pack.json"
 SCHEMA_VERSION = 1
 REVIEW_STATUSES = {"draft", "pending_external_review", "published", "rejected"}
-_NON_HUMAN_REVIEWER_PLACEHOLDERS = {"AI", "生成AI", "AI誤答レビュー"}
+_NON_HUMAN_REVIEWER_PLACEHOLDERS = {
+    "AI",
+    "生成AI",
+    "AI誤答レビュー",
+    "AI選択肢論理監査",
+}
 
 
 class WrittenQuestionPackError(ValueError):
