@@ -6,6 +6,7 @@
 
 | ディレクトリ | 概要 | スタック |
 |---|---|---|
+| [`JHRMBS/`](JHRMBS/) | JHF MBS の公開データ取得、期限前償還推定、CF・WAL・価格リスク分析基盤 | Python / Pandas / SciPy |
 | [`gto/`](gto/) | テキサスホールデムの GTO 分析・ソリューション参照・GPU 計算を統合した Web アプリ | Rust / FastAPI / Next.js |
 | [`stock/`](stock/) | 日本株・米株の価格・財務・マクロを取得し Jupyter / Dash で分析する `stockkit` ツールキット | Python / DuckDB / Dash |
 | [`market-viz/`](market-viz/) | 個人用マーケット可視化・分析アプリ | Streamlit / Plotly / DuckDB |

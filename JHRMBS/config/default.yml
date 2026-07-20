@@ -1,0 +1,58 @@
+data_root: ../_data/jhrmbs
+http:
+  timeout_seconds: 60
+  retries: 3
+  backoff_seconds: 0.5
+  max_download_mb: 64
+  user_agent: "jhrmbs/0.1 public-research-client"
+features:
+  publication_lag_months: 1
+  psj_seasoning_months: 60
+  rate_feature_mode: jgb_proxy
+models:
+  fixed_psj_terminal_cpr_pct: 6.0
+  time_test_months: 12
+  vintage_test_years: 2
+  l2_penalty: 0.0001
+  minimum_train_rows: 250
+  random_seed: 20260720
+cashflow:
+  cleanup_threshold: 0.10
+  cleanup_lag_months: 1
+  valuation_yield_pct: 2.0
+sources:
+  - id: jhf_monthly
+    kind: link_collection
+    url: https://www.jhf.go.jp/about/investor/shisan_tanpo/kihatsu/m_f_monthly.html
+    link_pattern: "\\.xls[x]?(?:$|\\?)"
+    allowed_hosts: [www.jhf.go.jp]
+    data_definition: JHF MBS issue-level scheduled/actual factors, WAC, WAM, CPR, WALA and cancellation rates
+    coverage: 2008 fiscal year to present; workbook history is updated monthly
+  - id: mof_jgb
+    kind: file
+    url: https://www.mof.go.jp/jgbs/reference/interest_rate/data/jgbcm_all.csv
+    filename: jgbcm_all.csv
+    allowed_hosts: [www.mof.go.jp]
+    data_definition: Ministry of Finance constant-maturity JGB yields by business day
+    coverage: 1974 to present
+  - id: flat35_current
+    kind: file
+    url: https://www.simulation.jhf.go.jp/flat35/kinri/index.php/rates/top
+    filename: flat35_current.html
+    allowed_hosts: [www.simulation.jhf.go.jp]
+    data_definition: Current FLAT35 rate range and modal rate for 21-35 year loans at LTV 90% or less
+    coverage: current publication month; monthly history accumulates from snapshots
+  - id: mlit_housing_starts
+    kind: file
+    url: https://www.mlit.go.jp/sogoseisaku/jouhouka/content/jyuu_ken.xls
+    filename: mlit_housing_starts.xls
+    allowed_hosts: [www.mlit.go.jp]
+    data_definition: MLIT monthly housing starts by use category
+    coverage: 1965 to present
+  - id: boj_m3
+    kind: file
+    url: "https://www.stat-search.boj.or.jp/api/v1/getDataCode?format=csv&lang=en&db=MD02&startDate=200801&code=MAM1NAM3M3MO"
+    filename: boj_m3.csv
+    allowed_hosts: [www.stat-search.boj.or.jp]
+    data_definition: BOJ M3 average amounts outstanding via code API; 100 million yen
+    coverage: 2008 to present

@@ -12,6 +12,7 @@ package = false
 
 [tool.uv.workspace]
 members = [
+    "JHRMBS",
     "gto",
     "market-viz",
     "stock",
@@ -132,6 +133,7 @@ pythonpath = [
     "shortest_path/src",
 ]
 testpaths = [
+    "JHRMBS/tests",
     "gto/tests",
     "market-viz/tests",
     "stock/tests",
