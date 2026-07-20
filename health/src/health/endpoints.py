@@ -110,66 +110,449 @@ def response_points(metric: Metric, page: dict) -> list[dict]:
     return value
 
 
-# -- parsers (stubs; completed in Task 5) -------------------------------------
-# Each metric gets its own named callable so the catalog never references a
-# shared placeholder. None of these are exercised by this task's contract
-# tests -- they exist only to satisfy Metric.parse_pages' type.
+# -- numeric / date / time coercion helpers ------------------------------------
+# Many contract fields are JSON strings (countSum, beatsPerMinute, minutesAsleep,
+# ...) and some are JSON numbers (kcalSum, weightGramsAvg, ...); these helpers
+# accept either.
+
+
+def _to_float(value: object) -> float:
+    """Coerce a JSON number or numeric string to float."""
+    return float(value)  # type: ignore[arg-type]
+
+
+def _to_int(value: object) -> int:
+    """Coerce a JSON number or numeric string to int, via float so both
+    integer-valued strings ("80") and numbers (80 or 80.0) work."""
+    return int(float(value))  # type: ignore[arg-type]
+
+
+def _google_date(d: dict) -> date:
+    """Google `Date` {year, month, day} -> stdlib date."""
+    return date(d["year"], d["month"], d["day"])
+
+
+def _civil_to_datetime(civil: dict) -> datetime:
+    """CivilDateTime {date, time} -> naive local datetime. `time` subfields
+    default to 0 when absent (e.g. local midnight is often `{"time": {}}`)."""
+    d = civil["date"]
+    t = civil.get("time") or {}
+    return datetime(
+        d["year"],
+        d["month"],
+        d["day"],
+        t.get("hours", 0),
+        t.get("minutes", 0),
+        t.get("seconds", 0),
+        t.get("nanos", 0) // 1000,
+    )
+
+
+def _duration_seconds(text: str) -> float:
+    """Protobuf `Duration` JSON string, e.g. "32400s" -> 32400.0 seconds."""
+    return float(text[:-1]) if text.endswith("s") else float(text)
+
+
+def _physical_to_local_datetime(physical_time: str, utc_offset: str) -> datetime:
+    """RFC3339 UTC instant + a UTC-offset duration -> naive local datetime."""
+    utc_dt = datetime.fromisoformat(physical_time.replace("Z", "+00:00"))
+    local_dt = utc_dt + timedelta(seconds=_duration_seconds(utc_offset))
+    return local_dt.replace(tzinfo=None)
+
+
+def _local_datetime(
+    civil: dict | None,
+    physical_time: str | None,
+    utc_offset: str | None,
+    metric_name: str,
+    field: str,
+) -> datetime:
+    """Prefer CivilDateTime; fall back to physicalTime + utcOffset when civil
+    is absent. Neither present means the row can't be placed -- PayloadError."""
+    if civil and "date" in civil:
+        return _civil_to_datetime(civil)
+    if physical_time and utc_offset:
+        return _physical_to_local_datetime(physical_time, utc_offset)
+    raise PayloadError(metric_name, f"missing {field} (no civil time, no physical time/offset)")
+
+
+def _metric(name: str) -> Metric:
+    """Look up this module's own CATALOG entry by name. Parsers use this to
+    get the Metric object response_points() needs (.method / .name); resolved
+    lazily at call time -- CATALOG is only fully built after this module's
+    top-level code finishes running, which is always true by the time any
+    parser is actually invoked."""
+    return next(m for m in CATALOG if m.name == name)
+
+
+# -- rollup parsers -------------------------------------------------------------
+# Shared engine: a rollupDataPoint's `civilStartTime.date` places the row and
+# is required (PayloadError if missing/malformed); the metric's own value
+# field is an optional measurement -- absent means that day has no reading
+# for it, so `build` returns None for that series and the row is skipped.
+
+
+def _rollup_daily_rows(
+    pages: Sequence[dict],
+    metric_name: str,
+    build: Callable[[dict], list[tuple[str, float | None]]],
+) -> tuple[DailyRow, ...]:
+    metric = _metric(metric_name)
+    seen: set[tuple[str, date]] = set()
+    out: list[DailyRow] = []
+    for page in pages:
+        for point in response_points(metric, page):
+            civil_start = point.get("civilStartTime")
+            if not civil_start or "date" not in civil_start:
+                raise PayloadError(metric_name, "rollupDataPoint missing civilStartTime.date")
+            d = _google_date(civil_start["date"])
+            for series_name, value in build(point):
+                if value is None:
+                    continue
+                key = (series_name, d)
+                if key in seen:
+                    raise PayloadError(metric_name, f"duplicate ({series_name}, {d})")
+                seen.add(key)
+                out.append((series_name, d, value))
+    return tuple(out)
 
 
 def parse_steps_rollup(pages: Sequence[dict]) -> ParsedRows:
-    raise NotImplementedError("parse_steps_rollup: implemented in Task 5")
+    def build(point: dict) -> list[tuple[str, float | None]]:
+        obj = point.get("steps") or {}
+        value = _to_float(obj["countSum"]) if "countSum" in obj else None
+        return [("steps", value)]
+
+    return ParsedRows(daily=_rollup_daily_rows(pages, "steps", build))
 
 
 def parse_distance_rollup(pages: Sequence[dict]) -> ParsedRows:
-    raise NotImplementedError("parse_distance_rollup: implemented in Task 5")
+    def build(point: dict) -> list[tuple[str, float | None]]:
+        obj = point.get("distance") or {}
+        value = _to_float(obj["millimetersSum"]) / 1_000_000 if "millimetersSum" in obj else None
+        return [("distance_km", value)]
+
+    return ParsedRows(daily=_rollup_daily_rows(pages, "distance", build))
 
 
 def parse_calories_rollup(pages: Sequence[dict]) -> ParsedRows:
-    raise NotImplementedError("parse_calories_rollup: implemented in Task 5")
+    def build(point: dict) -> list[tuple[str, float | None]]:
+        obj = point.get("totalCalories") or {}
+        value = _to_float(obj["kcalSum"]) if "kcalSum" in obj else None
+        return [("calories", value)]
+
+    return ParsedRows(daily=_rollup_daily_rows(pages, "calories", build))
+
+
+_ACTIVITY_LEVEL_SERIES = {
+    "LIGHT": "minutes_lightly_active",
+    "MODERATE": "minutes_fairly_active",
+    "VIGOROUS": "minutes_very_active",
+}
 
 
 def parse_active_minutes_rollup(pages: Sequence[dict]) -> ParsedRows:
-    raise NotImplementedError("parse_active_minutes_rollup: implemented in Task 5")
+    def build(point: dict) -> list[tuple[str, float | None]]:
+        levels = (point.get("activeMinutes") or {}).get("activeMinutesRollupByActivityLevel") or []
+        out: list[tuple[str, float | None]] = []
+        for entry in levels:
+            series = _ACTIVITY_LEVEL_SERIES.get(entry.get("activityLevel"))
+            if series is None or "activeMinutesSum" not in entry:
+                continue
+            out.append((series, _to_float(entry["activeMinutesSum"])))
+        return out
+
+    return ParsedRows(daily=_rollup_daily_rows(pages, "active_minutes", build))
 
 
 def parse_weight_rollup(pages: Sequence[dict]) -> ParsedRows:
-    raise NotImplementedError("parse_weight_rollup: implemented in Task 5")
+    def build(point: dict) -> list[tuple[str, float | None]]:
+        obj = point.get("weight") or {}
+        value = _to_float(obj["weightGramsAvg"]) / 1000 if "weightGramsAvg" in obj else None
+        return [("weight_kg", value)]
+
+    return ParsedRows(daily=_rollup_daily_rows(pages, "weight", build))
 
 
 def parse_body_fat_rollup(pages: Sequence[dict]) -> ParsedRows:
-    raise NotImplementedError("parse_body_fat_rollup: implemented in Task 5")
+    def build(point: dict) -> list[tuple[str, float | None]]:
+        obj = point.get("bodyFat") or {}
+        value = _to_float(obj["bodyFatPercentageAvg"]) if "bodyFatPercentageAvg" in obj else None
+        return [("fat_pct", value)]
+
+    return ParsedRows(daily=_rollup_daily_rows(pages, "body_fat", build))
+
+
+# -- daily reconcile parsers ------------------------------------------------------
+# Shared engine: a dataPoint missing this metric's own union field (outer_key)
+# doesn't concern this parser and is skipped silently (not an error). Once
+# that field is present, its own `date` is required to place the row
+# (PayloadError if absent); the value fields `build` inspects are optional
+# measurements that skip only their own series row.
+
+
+def _reconcile_daily_rows(
+    pages: Sequence[dict],
+    metric_name: str,
+    outer_key: str,
+    build: Callable[[dict], list[tuple[str, float | None]]],
+) -> tuple[DailyRow, ...]:
+    metric = _metric(metric_name)
+    seen: set[tuple[str, date]] = set()
+    out: list[DailyRow] = []
+    for page in pages:
+        for point in response_points(metric, page):
+            obj = point.get(outer_key)
+            if obj is None:
+                continue
+            if "date" not in obj:
+                raise PayloadError(metric_name, f"{outer_key} missing date")
+            d = _google_date(obj["date"])
+            for series_name, value in build(obj):
+                if value is None:
+                    continue
+                key = (series_name, d)
+                if key in seen:
+                    raise PayloadError(metric_name, f"duplicate ({series_name}, {d})")
+                seen.add(key)
+                out.append((series_name, d, value))
+    return tuple(out)
 
 
 def parse_resting_hr_reconcile(pages: Sequence[dict]) -> ParsedRows:
-    raise NotImplementedError("parse_resting_hr_reconcile: implemented in Task 5")
+    def build(obj: dict) -> list[tuple[str, float | None]]:
+        value = _to_float(obj["beatsPerMinute"]) if "beatsPerMinute" in obj else None
+        return [("resting_hr", value)]
+
+    return ParsedRows(
+        daily=_reconcile_daily_rows(pages, "resting_hr", "dailyRestingHeartRate", build)
+    )
 
 
 def parse_hrv_reconcile(pages: Sequence[dict]) -> ParsedRows:
-    raise NotImplementedError("parse_hrv_reconcile: implemented in Task 5")
+    def build(obj: dict) -> list[tuple[str, float | None]]:
+        avg = (
+            _to_float(obj["averageHeartRateVariabilityMilliseconds"])
+            if "averageHeartRateVariabilityMilliseconds" in obj
+            else None
+        )
+        deep_key = "deepSleepRootMeanSquareOfSuccessiveDifferencesMilliseconds"
+        deep = _to_float(obj[deep_key]) if deep_key in obj else None
+        return [("hrv_rmssd", avg), ("hrv_deep_rmssd", deep)]
+
+    return ParsedRows(daily=_reconcile_daily_rows(pages, "hrv", "dailyHeartRateVariability", build))
 
 
 def parse_spo2_reconcile(pages: Sequence[dict]) -> ParsedRows:
-    raise NotImplementedError("parse_spo2_reconcile: implemented in Task 5")
+    def build(obj: dict) -> list[tuple[str, float | None]]:
+        return [
+            (
+                "spo2_avg",
+                _to_float(obj["averagePercentage"]) if "averagePercentage" in obj else None,
+            ),
+            (
+                "spo2_lower_bound",
+                _to_float(obj["lowerBoundPercentage"]) if "lowerBoundPercentage" in obj else None,
+            ),
+            (
+                "spo2_upper_bound",
+                _to_float(obj["upperBoundPercentage"]) if "upperBoundPercentage" in obj else None,
+            ),
+        ]
+
+    return ParsedRows(daily=_reconcile_daily_rows(pages, "spo2", "dailyOxygenSaturation", build))
 
 
 def parse_temp_skin_reconcile(pages: Sequence[dict]) -> ParsedRows:
-    raise NotImplementedError("parse_temp_skin_reconcile: implemented in Task 5")
+    def build(obj: dict) -> list[tuple[str, float | None]]:
+        # baseline missing -> skip the row entirely; relativeNightlyStddev30dCelsius
+        # is a different statistic and is never used as a substitute.
+        if "baselineTemperatureCelsius" not in obj or "nightlyTemperatureCelsius" not in obj:
+            return [("temp_skin_relative", None)]
+        value = _to_float(obj["nightlyTemperatureCelsius"]) - _to_float(
+            obj["baselineTemperatureCelsius"]
+        )
+        return [("temp_skin_relative", value)]
+
+    return ParsedRows(
+        daily=_reconcile_daily_rows(pages, "temp_skin", "dailySleepTemperatureDerivations", build)
+    )
 
 
 def parse_br_reconcile(pages: Sequence[dict]) -> ParsedRows:
-    raise NotImplementedError("parse_br_reconcile: implemented in Task 5")
+    def build(obj: dict) -> list[tuple[str, float | None]]:
+        value = _to_float(obj["breathsPerMinute"]) if "breathsPerMinute" in obj else None
+        return [("breathing_rate", value)]
+
+    return ParsedRows(daily=_reconcile_daily_rows(pages, "br", "dailyRespiratoryRate", build))
+
+
+# -- sleep parser -----------------------------------------------------------------
+
+_SLEEP_ROW_KEYS = (
+    "provider_id",
+    "date",
+    "start_ts",
+    "end_ts",
+    "minutes_asleep",
+    "minutes_deep",
+    "minutes_light",
+    "minutes_rem",
+    "minutes_wake",
+    "efficiency",
+    "is_main",
+)
 
 
 def parse_sleep_reconcile(pages: Sequence[dict]) -> ParsedRows:
-    raise NotImplementedError("parse_sleep_reconcile: implemented in Task 5")
+    metric = _metric("sleep")
+    entries: list[dict[str, object]] = []
+    seen_ids: set[str] = set()
+    for page in pages:
+        for point in response_points(metric, page):
+            provider_id = point.get("dataPointName")
+            if not provider_id:
+                raise PayloadError(metric.name, "sleep dataPoint missing dataPointName")
+            if provider_id in seen_ids:
+                raise PayloadError(metric.name, f"duplicate sleep provider_id: {provider_id}")
+            seen_ids.add(provider_id)
+
+            sleep = point.get("sleep")
+            if sleep is None:
+                raise PayloadError(metric.name, f"{provider_id}: missing sleep")
+            interval = sleep.get("interval") or {}
+            start_ts = _local_datetime(
+                interval.get("civilStartTime"),
+                interval.get("startTime"),
+                interval.get("startUtcOffset"),
+                metric.name,
+                f"{provider_id}: interval.civilStartTime/startTime",
+            )
+            end_ts = _local_datetime(
+                interval.get("civilEndTime"),
+                interval.get("endTime"),
+                interval.get("endUtcOffset"),
+                metric.name,
+                f"{provider_id}: interval.civilEndTime/endTime",
+            )
+
+            summary = sleep.get("summary") or {}
+            if "minutesAsleep" not in summary:
+                raise PayloadError(metric.name, f"{provider_id}: missing summary.minutesAsleep")
+            minutes_asleep = _to_int(summary["minutesAsleep"])
+
+            stages_summary = summary.get("stagesSummary") or []
+            stage_minutes = {"DEEP": 0, "LIGHT": 0, "REM": 0, "AWAKE": 0}
+            for stage in stages_summary:
+                stage_type = stage.get("type")
+                if stage_type in stage_minutes:
+                    stage_minutes[stage_type] += _to_int(stage.get("minutes", 0))
+            if stages_summary:
+                # STAGES sleep: wake minutes come from the AWAKE stage bucket.
+                minutes_wake = stage_minutes["AWAKE"]
+            else:
+                # Classic sleep has no stagesSummary at all -- fall back to
+                # summary.minutesAwake. Deep/light/rem stay 0 (not a blocker).
+                minutes_wake = _to_int(summary["minutesAwake"]) if "minutesAwake" in summary else 0
+
+            minutes_in_period = summary.get("minutesInSleepPeriod")
+            denom = _to_int(minutes_in_period) if minutes_in_period not in (None, "") else 0
+            efficiency = round(minutes_asleep / denom * 100) if denom else 0
+
+            nap = bool((sleep.get("metadata") or {}).get("nap", False))
+            entries.append(
+                {
+                    "provider_id": provider_id,
+                    "date": end_ts.date(),
+                    "start_ts": start_ts,
+                    "end_ts": end_ts,
+                    "minutes_asleep": minutes_asleep,
+                    "minutes_deep": stage_minutes["DEEP"],
+                    "minutes_light": stage_minutes["LIGHT"],
+                    "minutes_rem": stage_minutes["REM"],
+                    "minutes_wake": minutes_wake,
+                    "efficiency": efficiency,
+                    "_nap": nap,
+                }
+            )
+
+    # Main-session selection is resolved across the whole call: group by wake
+    # date, prefer the longest non-nap session; if every session that date is
+    # a nap, the longest session overall is main.
+    by_date: dict[date, list[dict[str, object]]] = {}
+    for entry in entries:
+        by_date.setdefault(entry["date"], []).append(entry)  # type: ignore[arg-type]
+    for group in by_date.values():
+        non_nap = [e for e in group if not e["_nap"]]
+        candidates = non_nap or group
+        main = max(candidates, key=lambda e: e["minutes_asleep"])
+        for e in group:
+            e["is_main"] = e is main
+
+    rows = tuple({k: e[k] for k in _SLEEP_ROW_KEYS} for e in entries)
+    return ParsedRows(sleep=rows)
+
+
+# -- intraday parsers ---------------------------------------------------------------
+# A dataPoint missing this metric's own field (heartRate / steps) doesn't
+# concern this parser and is skipped silently. Once present, its sample/
+# interval start time is required to place the row (PayloadError if it can't
+# be resolved via civil time or the physical-time/offset fallback); the
+# actual bpm/count value is an optional measurement that skips only its row.
 
 
 def parse_intraday_hr_reconcile(pages: Sequence[dict]) -> ParsedRows:
-    raise NotImplementedError("parse_intraday_hr_reconcile: implemented in Task 5")
+    metric = _metric("intraday_hr")
+    series_name = metric.series_names[0]
+    seen: set[datetime] = set()
+    out: list[IntradayRow] = []
+    for page in pages:
+        for point in response_points(metric, page):
+            hr = point.get("heartRate")
+            if hr is None:
+                continue
+            sample_time = hr.get("sampleTime") or {}
+            ts = _local_datetime(
+                sample_time.get("civilTime"),
+                sample_time.get("physicalTime"),
+                sample_time.get("utcOffset"),
+                metric.name,
+                "heartRate.sampleTime",
+            )
+            if "beatsPerMinute" not in hr:
+                continue
+            if ts in seen:
+                raise PayloadError(metric.name, f"duplicate hr timestamp: {ts}")
+            seen.add(ts)
+            out.append((series_name, ts, _to_float(hr["beatsPerMinute"])))
+    return ParsedRows(intraday=tuple(out))
 
 
 def parse_intraday_steps_reconcile(pages: Sequence[dict]) -> ParsedRows:
-    raise NotImplementedError("parse_intraday_steps_reconcile: implemented in Task 5")
+    metric = _metric("intraday_steps")
+    series_name = metric.series_names[0]
+    seen: set[datetime] = set()
+    out: list[IntradayRow] = []
+    for page in pages:
+        for point in response_points(metric, page):
+            steps = point.get("steps")
+            if steps is None:
+                continue
+            interval = steps.get("interval") or {}
+            ts = _local_datetime(
+                interval.get("civilStartTime"),
+                interval.get("startTime"),
+                interval.get("startUtcOffset"),
+                metric.name,
+                "steps.interval.civilStartTime",
+            )
+            if "count" not in steps:
+                continue
+            if ts in seen:
+                raise PayloadError(metric.name, f"duplicate steps timestamp: {ts}")
+            seen.add(ts)
+            out.append((series_name, ts, _to_float(steps["count"])))
+    return ParsedRows(intraday=tuple(out))
 
 
 # -- 14-entry metric catalog ---------------------------------------------------
