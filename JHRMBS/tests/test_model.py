@@ -4,8 +4,41 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import pytest
+from jhrmbs.exceptions import ModelError
 from jhrmbs.models.fractional_logit import FractionalLogitModel
-from jhrmbs.models.training import select_champion
+from jhrmbs.models.training import ensure_rate_definition_coverage, select_champion
+
+
+def _definition_frame(definitions: list[str | None]) -> pd.DataFrame:
+    return pd.DataFrame(
+        {
+            "rate_feature_pct": [
+                1.0 if definition is not None else None for definition in definitions
+            ],
+            "mortgage_rate_definition": definitions,
+        }
+    )
+
+
+def test_mortgage_mode_requires_single_definition_to_cover_ninety_percent() -> None:
+    mixed = _definition_frame(["official"] * 17 + ["manual"] * 3)
+    with pytest.raises(ModelError, match="85"):
+        ensure_rate_definition_coverage(mixed, "mortgage_rate")
+
+    dominant = _definition_frame(["official"] * 19 + ["manual"])
+    ensure_rate_definition_coverage(dominant, "mortgage_rate")
+
+
+def test_mortgage_mode_counts_missing_rates_against_coverage() -> None:
+    sparse = _definition_frame(["official"] * 17 + [None] * 3)
+    with pytest.raises(ModelError, match="85"):
+        ensure_rate_definition_coverage(sparse, "mortgage_rate")
+
+
+def test_jgb_proxy_mode_skips_definition_coverage_check() -> None:
+    mixed = _definition_frame(["official"] * 10 + [None] * 10)
+    ensure_rate_definition_coverage(mixed, "jgb_proxy")
 
 
 def test_fractional_logit_fits_predicts_and_round_trips(tmp_path: Path) -> None:

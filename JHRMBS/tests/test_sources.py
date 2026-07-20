@@ -4,8 +4,14 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
+from jhrmbs.exceptions import SourceFormatError
 from jhrmbs.sources.dates import parse_japanese_month
-from jhrmbs.sources.external import parse_flat35_current, parse_mof_jgb
+from jhrmbs.sources.external import (
+    parse_boj_m3,
+    parse_flat35_current,
+    parse_mlit_housing_starts,
+    parse_mof_jgb,
+)
 from jhrmbs.sources.jhf import issue_identity, parse_jhf_workbook
 
 
@@ -65,6 +71,60 @@ def test_mof_parser_uses_last_observation_in_month(tmp_path: Path) -> None:
     parsed = parse_mof_jgb(path)
     assert parsed.loc[0, "as_of_date"] == pd.Timestamp("2026-07-31")
     assert parsed.loc[0, "jgb_10y_pct"] == pytest.approx(1.6)
+
+
+def test_boj_m3_yoy_uses_calendar_alignment_across_gaps(tmp_path: Path) -> None:
+    lines = [
+        "メタデータ行",
+        "SERIES_CODE,SURVEY_DATES,VALUES",
+        "M3,202301,100.0",
+        "M3,202302,100.0",
+        "M3,202401,110.0",
+        "M3,202402,121.0",
+    ]
+    path = tmp_path / "boj_m3.csv"
+    path.write_text("\n".join(lines), encoding="utf-8")
+    parsed = parse_boj_m3(path)
+    by_month = parsed.set_index("month")["m3_yoy_pct"]
+    assert by_month[pd.Timestamp("2024-01-01")] == pytest.approx(10.0)
+    assert by_month[pd.Timestamp("2024-02-01")] == pytest.approx(21.0)
+    assert pd.isna(by_month[pd.Timestamp("2023-01-01")])
+
+
+def _mlit_workbook(tmp_path: Path, *, yoy_offset: float) -> Path:
+    rows: list[list[object]] = []
+    total = 70_000.0
+    totals: dict[pd.Timestamp, float] = {}
+    for year, era_year in ((2023, 5), (2024, 6)):
+        for month in range(1, 13):
+            total = total * (1.01 if year == 2023 else 0.99)
+            stamp = pd.Timestamp(year, month, 1)
+            totals[stamp] = total
+            previous = totals.get(pd.Timestamp(year - 1, month, 1))
+            yoy = (
+                (total / previous - 1.0) * 100.0 + yoy_offset
+                if previous is not None
+                else None
+            )
+            rows.append(
+                [f"R{era_year}年{month}月", total, yoy] + [None] * 2 + [1.0]
+                + [None] * 3 + [2.0] + [None] + [3.0] + [None] + [4.0]
+            )
+    path = tmp_path / "mlit.xlsx"
+    with pd.ExcelWriter(path, engine="openpyxl") as writer:
+        pd.DataFrame(rows).to_excel(writer, sheet_name="jyuu", index=False, header=False)
+    return path
+
+
+def test_mlit_yoy_column_consistent_with_totals_passes(tmp_path: Path) -> None:
+    parsed = parse_mlit_housing_starts(_mlit_workbook(tmp_path, yoy_offset=0.0))
+    assert len(parsed) == 24
+    assert parsed["housing_starts_yoy_pct"].notna().sum() == 12
+
+
+def test_mlit_yoy_column_inconsistent_with_totals_raises(tmp_path: Path) -> None:
+    with pytest.raises(SourceFormatError, match="YoY"):
+        parse_mlit_housing_starts(_mlit_workbook(tmp_path, yoy_offset=40.0))
 
 
 def test_flat35_current_parser(tmp_path: Path) -> None:

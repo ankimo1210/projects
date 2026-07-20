@@ -35,13 +35,18 @@ model artifact に保存する。乱数 seed は設定と run metadata に記録
 
 - pool state は同じ回号の $t-1$ 支払月、外部系列は既定で $t-1$ 月を使用する。
 - target 月の実績 Factor、CPR、将来改訂値を feature にしない。
-- 発行時に前月値がない行だけ、JHF の発行時 WAC/WAM/WALA と Factor 1.0 を使う。
+- 発行時に前月値がない行（各回号の先頭行）だけ、JHF の発行時 WAC/WAM/WALA と Factor 1.0 を
+  使う。それ以外の欠損 lag は補完せず null のまま残し、学習対象から除外する。
+- 学習母集団は `series_type=monthly` の通常回号のみとする。他 series への予測は外挿として
+  警告し、prediction metadata に `outside_training_population` を記録する。
 - 将来予測では予定 Factor path は JHF 公表値、pool Factor は一段ずつ予測して burnout を更新する。
 - 金利・macro は経路 model を持たず、直近既知値を固定する。CLI で mortgage / JGB rate を上書き
   した場合は metadata に残す。
 - 金利特徴量は run 内で定義を統一する。既定は全期間 `WAC-JGB 10年`。`mortgage_rate` mode は
-  `WAC-current mortgage rate` を使うが、同一定義の履歴が学習行の90%以上を覆う場合だけ学習する。
-  proxy と住宅ローン金利差を同一係数へ自動混在させない。override は run の mode と一致するものだけ許可する。
+  `WAC-current mortgage rate` を使うが、`mortgage_rate_definition` で識別した**単一定義**の履歴が
+  学習行の90%以上を覆う場合だけ学習する。proxy と住宅ローン金利差を同一係数へ自動混在させない。
+  override は run の mode と一致するものだけ許可する。予測時の rate feature 平行シフト
+  （`rate_feature_shift_pct`）は感応度診断であり、金利パスモデルではない。
 
 ## 4. Out-of-sample 評価
 
@@ -80,6 +85,10 @@ B_t=B_t^{sched}(1-s_t),\qquad I_t=B_{t-1}\frac{coupon}{12}.
 $$
 
 clean-up call は契約を推測せず、明示シナリオ時だけ設定 threshold 到達後の指定 lag で残高を償還する。
+
+既定の $s_t$ は任意期限前償還のみである。明示フラグ時のみ、長期延滞・その他解約の直近12か月
+平均月率を生存確率積 $1-\prod_k(1-s_{k})$ で合成した total decrement を適用し、scenario 名に
+`_totaldec` を付して区別する。
 
 ## 6. 選定・高度化基準
 

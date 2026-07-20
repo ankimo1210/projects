@@ -109,7 +109,32 @@ def parse_mlit_housing_starts(path: Path) -> pd.DataFrame:
     result = pd.DataFrame(rows).drop_duplicates("month", keep="last").sort_values("month")
     if result.empty:
         raise SourceFormatError("国交省住宅着工Excelから月次行を検出できません")
-    return result.reset_index(drop=True)
+    result = result.reset_index(drop=True)
+    _check_mlit_yoy_consistency(result)
+    return result
+
+
+def _check_mlit_yoy_consistency(result: pd.DataFrame) -> None:
+    """Guard against silent column drift by reconciling the YoY column with totals."""
+    previous = result[["month", "housing_starts_total"]].copy()
+    previous["month"] = previous["month"] + pd.DateOffset(years=1)
+    merged = result.merge(
+        previous.rename(columns={"housing_starts_total": "prior_year_total"}),
+        on="month",
+        how="left",
+    )
+    comparable = merged[
+        merged["housing_starts_yoy_pct"].notna() & (merged["prior_year_total"] > 0.0)
+    ]
+    if len(comparable) < 6:
+        return
+    implied = (comparable["housing_starts_total"] / comparable["prior_year_total"] - 1.0) * 100.0
+    deviation = float((comparable["housing_starts_yoy_pct"] - implied).abs().median())
+    if deviation > 1.0:
+        raise SourceFormatError(
+            "国交省住宅着工のYoY列が総戸数から計算した前年比と一致しません "
+            f"(median deviation {deviation:.1f}pt); 列位置のずれを確認してください"
+        )
 
 
 def parse_boj_m3(path: Path) -> pd.DataFrame:
@@ -128,5 +153,13 @@ def parse_boj_m3(path: Path) -> pd.DataFrame:
     frame["month"] = pd.to_datetime(frame["SURVEY_DATES"], format="%Y%m", errors="coerce")
     frame["m3_100m_jpy"] = pd.to_numeric(frame["VALUES"], errors="coerce")
     frame = frame.dropna(subset=["month", "m3_100m_jpy"]).sort_values("month")
-    frame["m3_yoy_pct"] = frame["m3_100m_jpy"].pct_change(12) * 100.0
+    # YoY is aligned on the calendar month, not row position, so gaps stay null.
+    previous = frame[["month", "m3_100m_jpy"]].copy()
+    previous["month"] = previous["month"] + pd.DateOffset(years=1)
+    frame = frame.merge(
+        previous.rename(columns={"m3_100m_jpy": "m3_prior_year_100m_jpy"}),
+        on="month",
+        how="left",
+    )
+    frame["m3_yoy_pct"] = (frame["m3_100m_jpy"] / frame["m3_prior_year_100m_jpy"] - 1.0) * 100.0
     return frame[["month", "m3_100m_jpy", "m3_yoy_pct"]].reset_index(drop=True)

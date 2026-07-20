@@ -199,7 +199,9 @@ def validate_panel(
     return report
 
 
-def validate_features(features: pd.DataFrame) -> dict[str, Any]:
+def validate_features(
+    features: pd.DataFrame, *, fail_on_invalid: bool = True
+) -> dict[str, Any]:
     target_source = (
         features["target_smm"]
         if "target_smm" in features
@@ -212,7 +214,7 @@ def validate_features(features: pd.DataFrame) -> dict[str, Any]:
     rate_missing = (
         float(features.loc[observed, "rate_feature_pct"].isna().mean()) if observed.any() else 1.0
     )
-    return {
+    report = {
         "dataset": "model_features",
         "grain": "one row per issue_id and prediction payment_month",
         "row_count": len(features),
@@ -222,3 +224,11 @@ def validate_features(features: pd.DataFrame) -> dict[str, Any]:
         "rate_feature_missing_rate": rate_missing,
         "status": "pass" if not invalid.any() and duplicate_count == 0 else "fail",
     }
+    if fail_on_invalid and report["status"] == "fail":
+        failed = [
+            name
+            for name in ("invalid_target_rows", "duplicate_rows")
+            if int(str(report[name])) > 0
+        ]
+        raise DataQualityError(f"critical feature checks failed: {', '.join(failed)}")
+    return report

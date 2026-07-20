@@ -173,6 +173,30 @@ def _evaluate_one(
     return metrics
 
 
+def ensure_rate_definition_coverage(frame: pd.DataFrame, rate_feature_mode: str) -> None:
+    """Require one mortgage-rate definition to cover at least 90% of training rows.
+
+    Rows with a missing rate or a missing definition count against coverage, so a
+    mixture of series definitions can never silently share one coefficient.
+    """
+    if rate_feature_mode != "mortgage_rate" or frame.empty:
+        return
+    definitions = (
+        frame["mortgage_rate_definition"]
+        if "mortgage_rate_definition" in frame.columns
+        else pd.Series(index=frame.index, dtype=object)
+    )
+    valued = frame["rate_feature_pct"].notna() & definitions.notna()
+    counts = definitions[valued].value_counts()
+    coverage = float(counts.iloc[0]) / float(len(frame)) if not counts.empty else 0.0
+    if coverage < 0.90:
+        dominant = str(counts.index[0]) if not counts.empty else "none"
+        raise ModelError(
+            "mortgage_rate mode requires one mortgage-rate definition to cover at least "
+            f"90% of training rows; best coverage={coverage:.1%} ({dominant})"
+        )
+
+
 def _training_frame(config: AppConfig) -> pd.DataFrame:
     path = DataPaths(config.data_root).features / "model_features.parquet"
     frame = read_table(path)
@@ -183,12 +207,7 @@ def _training_frame(config: AppConfig) -> pd.DataFrame:
         & (frame["series_type"] == "monthly")
     )
     result = frame[eligible].sort_values(["payment_month", "issue_id"]).reset_index(drop=True)
-    rate_missing = float(result["rate_feature_pct"].isna().mean())
-    if config.features.rate_feature_mode == "mortgage_rate" and rate_missing > 0.10:
-        raise ModelError(
-            "mortgage_rate mode requires historical mortgage rates for at least 90% of "
-            f"training rows; missing={rate_missing:.1%}"
-        )
+    ensure_rate_definition_coverage(result, config.features.rate_feature_mode)
     if len(result) < config.models.minimum_train_rows:
         raise ModelError(
             f"学習可能行が不足しています: {len(result)} < {config.models.minimum_train_rows}"

@@ -55,7 +55,16 @@ uv run --no-sync jhrmbs predict --issue JHF-220 \
 # clean-up call は自動推測せず明示した場合だけ残高10%で発動
 uv run --no-sync jhrmbs cashflow --issue JHF-220 --cleanup-call \
   --valuation-yield-pct 2.25
+
+# 長期延滞・その他解約の直近12か月平均を生存確率積で合成した total decrement シナリオ
+uv run --no-sync jhrmbs cashflow --issue JHF-220 --include-other-decrements
+
+# 凍結 rate feature の平行シフト感応度（レポートには ±0.5pt の表を自動掲載）
+uv run --no-sync jhrmbs cashflow --issue JHF-220 --rate-feature-shift-pct 0.5
 ```
+
+`cashflow` でシナリオに無関係な引数（`--scenario model` での `--psj-terminal-cpr-pct` 等）を
+指定した場合は警告を表示して無視します。
 
 ## 計算の要点
 
@@ -68,16 +77,20 @@ uv run --no-sync jhrmbs cashflow --issue JHF-220 --cleanup-call \
 - 既定の `rate_feature_mode: jgb_proxy` は全学習・予測期間で一貫して `WAC - JGB 10年` を使います。
   公式フラット35 snapshot と proxy を同一係数へ混在させません。これは住宅ローン借換金利そのものではありません。
 - キャッシュフローは「予定 Factor 比による約定元本 → 予定元本後残高への SMM → 任意の
-  clean-up call」の順です。
+  clean-up call」の順です。既定の SMM は任意期限前償還のみで、`--include-other-decrements`
+  指定時だけ長期延滞・その他解約の直近12か月平均を生存確率積で合成します。
 - 価格は指定した年複利のフラット利回りによる dirty price です。Duration / Convexity は
   期限前償還パスを固定した平行シフトで、OAS ではありません。
+- 学習母集団は通常回号（`series_type=monthly`）のみです。S・T・グリーン・E55 への予測は
+  外挿として警告し、予測メタデータに `outside_training_population` を記録します。
 
 ## 任意の住宅ローン金利履歴
 
 公式スナップショットより前の金利履歴を使用する場合は、データ root の
 `raw/manual/mortgage_rates.csv` に次の列を置けます。出所・定義を利用者側で管理し、将来月の値を
 入れないでください。モデルに使うには設定を `rate_feature_mode: mortgage_rate` に変更して dataset と
-model を再構築します。定義混在を防ぐため、学習行の90%以上を同じ住宅ローン金利系列で覆う必要があります。
+model を再構築します。定義混在を防ぐため、`mortgage_rate_definition`（手動 CSV は `source_note`）で
+識別される**単一の定義**が学習行の90%以上を覆わない場合、学習は停止します。
 
 ```csv
 month,mortgage_rate_mode_pct,source_note

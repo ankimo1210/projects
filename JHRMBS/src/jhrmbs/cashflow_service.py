@@ -9,9 +9,15 @@ from jhrmbs.cashflow import CashflowAssumptions, CashflowPoint, generate_cashflo
 from jhrmbs.config import AppConfig
 from jhrmbs.exceptions import ModelError
 from jhrmbs.forecast import fixed_psj_forecast, forecast_issue
+from jhrmbs.metrics import combine_competing_monthly_rates, cpr_to_smm, smm_to_cpr
 from jhrmbs.paths import DataPaths
 from jhrmbs.risk import risk_summary
 from jhrmbs.util import atomic_write_json, utc_now
+
+
+def _trailing_mean_monthly_rate(observed: pd.DataFrame, column: str, months: int = 12) -> float:
+    values = pd.to_numeric(observed[column], errors="coerce").dropna().tail(months)
+    return float(values.mean()) / 100.0 if not values.empty else 0.0
 
 
 def create_issue_cashflow(
@@ -24,6 +30,9 @@ def create_issue_cashflow(
     psj_terminal_cpr_pct: float = 6.0,
     valuation_yield_pct: float | None = None,
     cleanup_call: bool = False,
+    include_published_decrements: bool = False,
+    rate_feature_shift_pct: float = 0.0,
+    forecast: pd.DataFrame | None = None,
     save: bool = True,
 ) -> tuple[pd.DataFrame, dict[str, float | str | bool]]:
     paths = DataPaths(config.data_root)
@@ -38,7 +47,15 @@ def create_issue_cashflow(
     current = observed.iloc[-1]
     issue = issues[issues["issue_id"] == issue_id].iloc[0]
     if scenario == "model":
-        forecast = forecast_issue(config, issue_id, model_name=model_name, run_id=run_id, save=save)
+        if forecast is None:
+            forecast = forecast_issue(
+                config,
+                issue_id,
+                model_name=model_name,
+                run_id=run_id,
+                rate_feature_shift_pct=rate_feature_shift_pct,
+                save=save,
+            )
         selected_model = str(forecast["model_name"].iloc[0])
         scenario_name = f"model_{selected_model}"
     elif scenario == "psj":
@@ -46,11 +63,33 @@ def create_issue_cashflow(
         scenario_name = f"psj_{psj_terminal_cpr_pct:g}pct"
     else:
         raise ModelError(f"unsupported cashflow scenario: {scenario}")
+    long_delinquency_smm = 0.0
+    other_cancellation_smm = 0.0
+    if include_published_decrements:
+        long_delinquency_smm = _trailing_mean_monthly_rate(
+            observed, "long_delinquency_pct_monthly"
+        )
+        other_cancellation_smm = _trailing_mean_monthly_rate(
+            observed, "other_cancellation_pct_monthly"
+        )
+        scenario_name = f"{scenario_name}_totaldec"
+
+    def _point_cpr(predicted_cpr_pct: float) -> float:
+        voluntary_smm = float(cpr_to_smm(predicted_cpr_pct / 100.0))
+        if not include_published_decrements:
+            return predicted_cpr_pct / 100.0
+        combined_smm = float(
+            combine_competing_monthly_rates(
+                voluntary_smm, long_delinquency_smm, other_cancellation_smm
+            )
+        )
+        return float(smm_to_cpr(combined_smm))
+
     points = [
         CashflowPoint(
             payment_date=pd.Timestamp(cast(Any, row.payment_month)).date(),
             scheduled_factor=float(cast(Any, row.scheduled_factor)),
-            annual_cpr=float(cast(Any, row.predicted_cpr_pct)) / 100.0,
+            annual_cpr=_point_cpr(float(cast(Any, row.predicted_cpr_pct))),
         )
         for row in forecast.itertuples(index=False)
     ]
@@ -78,6 +117,9 @@ def create_issue_cashflow(
         "scenario": scenario_name,
         "valuation_date": str(pd.Timestamp(current["payment_month"]).date()),
         "cleanup_call_assumed": cleanup_call,
+        "published_decrements_included": include_published_decrements,
+        "assumed_long_delinquency_smm": long_delinquency_smm,
+        "assumed_other_cancellation_smm": other_cancellation_smm,
         **risk_summary(
             rows,
             valuation_date=pd.Timestamp(current["payment_month"]).date(),

@@ -127,6 +127,12 @@ def _parse_flat35_history(config: AppConfig) -> pd.DataFrame:
         if not required.issubset(manual.columns):
             raise SourceFormatError(f"manual mortgage CSV requires: {sorted(required)}")
         manual["month"] = pd.to_datetime(manual["month"]).dt.to_period("M").dt.to_timestamp()
+        if "mortgage_rate_definition" not in manual.columns:
+            manual["mortgage_rate_definition"] = (
+                manual["source_note"].astype(str)
+                if "source_note" in manual.columns
+                else "manual mortgage_rates.csv"
+            )
         official = pd.concat([official, manual], ignore_index=True).drop_duplicates(
             "month", keep="last"
         )
