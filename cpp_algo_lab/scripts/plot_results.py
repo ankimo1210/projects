@@ -1,7 +1,7 @@
 """Render sorting benchmark CSVs into PNG figures.
 
 Run from repo root:  uv run --no-sync python cpp_algo_lab/scripts/plot_results.py
-(or `make plot` inside cpp_algo_lab/). Reads results/*.csv relative to this
+(or `make plot-sorting` inside cpp_algo_lab/). Reads results/*.csv relative to this
 file's parent project directory, writes results/plots/*.png.
 """
 

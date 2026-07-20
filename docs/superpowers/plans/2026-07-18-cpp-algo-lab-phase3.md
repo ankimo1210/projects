@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build the CPU rungs of the parallelization ladder: parallel merge sort via raw `std::thread` divide-and-conquer, OpenMP tasks, and `std::execution::par` (TBB backend), plus OpenMP chunked BMH search with the boundary-overlap correctness lesson — with thread-scaling benchmarks (1→20), 2 committed CSVs, 3 figures, and Japanese docs whose headline is "search scales almost linearly, sort plateaus".
+**Goal:** Build the CPU rungs of the parallelization ladder: parallel merge sort via raw `std::thread` divide-and-conquer, OpenMP tasks, and `std::execution::par` (TBB backend), plus OpenMP chunked BMH search with the boundary-overlap correctness lesson — with thread-scaling benchmarks (1→20), 2 committed CSVs, 3 figures, and Japanese docs whose measured headline is "search scales almost linearly through 12 threads; both search and sort eventually saturate".
 
 **Architecture:** Header-only C++20 (`parallel/include/parallel/*.hpp`, one rung per header) delegating sequential base cases to the existing `lab::merge_sort` (each call owns its buffer → concurrent calls are safe) and `lab::bmh_search`. One benchmark executable writes 2 CSVs; `scripts/plot_parallel.py` renders 3 PNGs on the shared `labviz` style. Layout note: the spec's tree sketched `parallel/cpu/`; we use `parallel/include/parallel/` to match the established `-I<module>/include` convention (GPU `.cu` files will live in `parallel/gpu/` in Phase 4). Spec: `docs/superpowers/specs/2026-07-14-cpp-algo-lab-design.md` §2.3 (CPU portion only; GPU is Phase 4).
 
@@ -12,6 +12,16 @@
 
 **Model policy (SDD):** implementers T1–T4 haiku (transcription), T5–T6 sonnet (run bench / verify figures), T7 fable (Japanese docs). Task reviewers sonnet. Final whole-branch review fable. Branch: `cpp-algo-lab/phase3` from main.
 Operational notes carried from Phase 2: distrust haiku implementer-report arithmetic (reviewers re-derive); physics-check thresholds must leave single-sample margin; also touch up plot_results.py's docstring wording in T7 (deferred from Phase 2).
+
+**Execution status (2026-07-18):** Tasks 1–7 are implemented and the whole-phase verification passes on `cpp-algo-lab/phase3`. The unchecked step boxes below preserve the original execution script rather than serving as current status. A post-implementation review found the following amendments, which supersede conflicting snippets in Tasks 4–7:
+
+- `--quick` writes ignored `build/parallel_{sort,search}_quick.csv`; it never overwrites the committed full-sweep CSVs.
+- A full run writes staged CSVs under `build/` and replaces the committed-result paths only after both benchmark sections finish successfully.
+- Every configuration gets an untimed warm-up. Five timed rounds use deterministic shuffled configuration order; correctness is verified after every repeat, not only the first.
+- CSVs include robust dispersion (`mad_ms`) as well as the median. Plot time curves show MAD error bars and reject quick, partial, or schema-mismatched inputs.
+- OpenMP dynamic team sizing is disabled and each requested team size is verified before measurement.
+- The pre-review data regressed sharply after 12 threads. Two amended-protocol runs showed that fixed-order bias had exaggerated that result; the final candidate reaches its best search point at t=16 (english 11.47×, DNA 10.63×) and has large MAD at t=20, so the documented conclusion is saturation with an uncertain late-thread regression.
+- Amdahl inversion is reported only as an **effective serial fraction**: it also absorbs runtime, memory-system, allocation, cutoff, and scheduling overhead. The sequential merge chain is a contributor, not a uniquely proven cause.
 
 ## Global Constraints
 
@@ -34,13 +44,13 @@ Operational notes carried from Phase 2: distrust haiku implementer-report arithm
 - `lab::kParallelSortCutoff = std::ptrdiff_t{1} << 15` (32768): subranges below this sort sequentially (in `parallel/tuning.hpp`).
 - Both parallel merge sorts are **stable** (sequential base is stable; `std::inplace_merge` is stable). `par_stl_sort` makes no stability claim.
 - **Search chunking invariant (the teaching core):** the n−m+1 start positions are split into `threads` contiguous ranges `[lo_c, hi_c)` with `lo_c = starts·c/threads`; chunk c scans the slice `text.substr(lo_c, (hi_c−lo_c)+m−1)`. A slice of that length can only contain matches starting at slice offsets `0..hi_c−lo_c−1`, so every match is found by exactly one chunk — no duplicates, no misses, no post-filtering.
-- **Bench sweeps (seed 42, repeats 5, median):**
+- **Bench sweeps (seed 42, one warm-up, repeats 5, median + MAD; configuration order shuffled per repeat):**
   - Sort: n = 2^24 random ints. Rows: `merge_seq` (t=1), `std_sort_seq` (t=1), `thread_merge` t ∈ {1,2,4,8,16}, `omp_merge` t ∈ {1,2,4,6,8,12,16,20}, `par_stl` (t=0 meaning "library default, all cores"). 16 data rows.
   - Search: n = 2^26 chars, m = 16, texts {english, dna}. Rows per text: `bmh_seq` (t=1), `omp_bmh` t ∈ {1,2,4,6,8,12,16,20}. 18 data rows.
-  - `--quick`: sort n = 2^20 with thread lists {1,4}; search n = 2^22, threads {1,4}; repeats 2.
+  - `--quick`: sort n = 2^20 with thread lists {1,4}; search n = 2^22, threads {1,4}; repeats 2; outputs go to `build/*_quick.csv` and do not touch canonical results.
 - **CSV schemas:**
-  - `results/parallel_sort.csv`: `algo,threads,n,repeats,median_ms`
-  - `results/parallel_search.csv`: `algo,text,threads,n,m,repeats,median_ms,occurrences`
+  - `results/parallel_sort.csv`: `algo,threads,n,repeats,median_ms,mad_ms`
+  - `results/parallel_search.csv`: `algo,text,threads,n,m,repeats,median_ms,mad_ms,occurrences`
 - **Figures (3):** `parallel_sort_scaling.png`, `parallel_search_scaling.png`, `parallel_speedup.png` (the headline contrast).
 - **Chart palette:** thread_merge `#2a78d6`, omp_merge `#1baf7a`, omp_bmh(english) `#eda100`, omp_bmh(dna) `#008300`; sequential/library references MUTED `#898781` with linestyles merge_seq `--`, std_sort_seq `-.`, par_stl `:`; ideal-speedup diagonal MUTED dotted.
 
@@ -270,7 +280,11 @@ void thread_merge_impl(RandomIt first, RandomIt last, Compare comp, int depth) {
         return;
     }
     const auto mid = first + n / 2;
-    std::thread left(
+    // std::jthread (C++20) joins in its destructor: if the current thread's
+    // recursive call below threw, a plain std::thread would still be
+    // joinable when unwound and std::terminate would fire. RAII join is the
+    // language's answer to exactly this hole.
+    std::jthread left(
         [first, mid, comp, depth] { thread_merge_impl(first, mid, comp, depth - 1); });
     thread_merge_impl(mid, last, comp, depth - 1);
     left.join();
@@ -294,6 +308,15 @@ void thread_merge_sort(RandomIt first, RandomIt last, Compare comp = {}, unsigne
 
 Run from `cpp_algo_lab/`: `make test`
 Expected: all four binaries build warning-free and report SUCCESS (test_parallel runs the 4 new cases). ASan/UBSan silent.
+
+Note (2026-07-18, during execution): the block originally spawned a plain
+`std::thread`; the Task 1 reviewer flagged the exception path (if the
+current thread's recursion throws, the joinable thread's destructor calls
+std::terminate). Fixed post-review to `std::jthread` with an explanatory
+comment — C++20's RAII-join type exists precisely for this hole, which
+makes it better teaching material as well. The explicit `left.join()`
+before `inplace_merge` stays (the join is semantically required there;
+jthread's destructor join is the safety net, not the mechanism).
 
 - [ ] **Step 7: Commit**
 
@@ -898,7 +921,7 @@ Expected: `physics ok`. If a check fails, do NOT relax it yourself — report BL
 
 - [ ] **Step 3: Sanity-judge the summary table**
 
-Beyond the scripted checks: medians positive and plausible (sort t=1 in the seconds range at n=2^24, par_stl clearly fastest sort config; search medians in the tens-of-ms range at n=2^26, decreasing with threads then flattening). If anything looks physically absurd (zeros, negatives, non-monotone chaos beyond noise), stop and report.
+Beyond the scripted checks: medians must be positive and MAD non-negative. Judge any late-thread regression against MAD and a second independent run; do not silently relabel it as oversubscription. On this WSL2 environment `lscpu` reports 20 CPUs, 20 cores, and one thread per core, so t=20 is not oversubscription by count alone. If anything looks physically absurd, stop and report.
 
 - [ ] **Step 4: Commit the CSVs**
 
@@ -1077,7 +1100,7 @@ uv run --no-sync ruff format --check cpp_algo_lab/scripts
 
 Expected: 3 `wrote ...` lines; both ruff gates clean (mechanical fixes sanctioned — note each in your report).
 
-**Visually verify each PNG** (open the files): (1) sort_scaling shows both curves dropping then flattening, par_stl reference clearly lowest; (2) search_scaling shows near-monotone descent on both texts; (3) speedup is the headline — search curves track well above the sort curves and closer to the ideal line, sort curves visibly plateau. Legends readable, no collisions (layout adjustments are yours; colors/content fixed). If a figure contradicts the physics (e.g. search speedup BELOW sort speedup), STOP and report BLOCKED.
+**Visually verify each PNG** (open the files): (1) sort_scaling shows both curves dropping then flattening, with par_stl as a distinct unstable-library reference; (2) search_scaling honestly shows both the near-linear region and any measured late-thread regression; (3) speedup states the measured scope rather than assuming monotonic scaling. MAD bars, legends, and the t=6/t=12 ticks must be readable. Do not reject a physically plausible regression merely because it complicates the planned headline.
 
 - [ ] **Step 4: Run `make test` (regression) and commit**
 
@@ -1108,10 +1131,10 @@ git commit -m "feat(cpp_algo_lab): add CPU parallel scaling figures"
 3. **§3 OpenMP task と firstprivate** — `#pragma omp task` のデフォルトキャプチャ（locals → firstprivate）がイテレータのコピーを保証し dangling を防ぐこと。`num_threads` で任意スレッド数（thread_merge は 2 の冪のみ — depth_for_threads の意味）。
 4. **§4 検索のチャンク分割と境界の証明** — omp_search.hpp の overlap-slice 不変条件を図解入りで：開始位置 [lo, hi) + スライス長 (hi−lo)+m−1 → 「重複なし・取りこぼしなしが構成的に成立」。off-by-one がどこに潜むか（m−1 を忘れる／フィルタで二重計上）。boundary-planting テストの読み方。チャンクごとの shift 表再構築 = shared-nothing の正直なコスト。
 5. **§5 結果の読み方（3 図 × 実測値）** — 図ごとに 1 節、**引用数値は committed CSV と一致必須**：
-   - `parallel_sort_scaling.png` — thread_merge / omp_merge の下降と頭打ち、merge_seq / std_sort_seq / par_stl の基準線。par_stl が圧倒的（実測値引用）である理由＝ライブラリの並列イントロソート+30年分のチューニング。
-   - `parallel_search_scaling.png` — english / dna 両方でほぼ単調な下降（実測値）。
-   - `parallel_speedup.png` — **見出しの結論**：検索は理想直線に近く、ソートは頭打ち（t=8, 16, 20 の実測 speedup を両方引用して対比）。頭打ちの定量化：Amdahl で逐次分数 s を逆算してみせる（s = (t/S − 1/… 実測 speedup S(20) から s ≈ (20/S − 1)/19 を計算）。
-6. **§6 教訓・落とし穴** — WSL2 での計測ばらつき（中央値採用）、20 論理コアと物理コアの違いに注意、oversubscription（t=20 で伸びが鈍る/逆転する場合の解釈）、thread_merge の「2 の冪しか効かない」設計制約、ASan+並列ランタイムが今回クリーンだった事実と一般には要注意という注記。
+   - `parallel_sort_scaling.png` — thread_merge / omp_merge の下降と頭打ち、merge_seq / std_sort_seq / par_stl の基準線。par_stl は不安定ソート、merge 系は安定ソートなので同一意味論の直接比較ではない。par_stl の優位は最適化済みバックエンド、異なるアルゴリズム、メモリ挙動を含む。
+   - `parallel_search_scaling.png` — english / dna の t=1→12 の下降と、それ以降の飽和・逆転をMAD込みで記述する。
+   - `parallel_speedup.png` — **見出しの結論**：検索は12スレッドまで理想直線に近いが、その後は検索も後退し得る。Amdahl の逆算は $s=(p/S(p)-1)/(p-1)$ とし、「実効逐次率」であってソースコード上の逐次部分そのものではないと明記する。
+6. **§6 教訓・落とし穴** — WSL2 での計測ばらつき（中央値 + MAD、測定順シャッフル）、実測環境は20 CPU・20 core・1 thread/coreであること、t=20 の逆転はメモリ帯域・ランタイム・異種コア・WSL2 scheduling 等の候補を分離できていないこと、thread_merge の「2 の冪しか効かない」設計制約、ASan/UBSan はデータ競合を検出しないことを記す。
 7. **§7 Phase 4 への接続** — 「検索 = 1 スレッド 1 開始位置」の極限が GPU（PFAC 的世界観、references の Kouzinopoulos）。ソートは GPU でも「賢い結合」が必要（bitonic / radix、Onesweep 系譜）— CPU で見た頭打ちが GPU で別の形で現れる予告。
 
 - [ ] **Step 2: Update `README.md`**
@@ -1121,6 +1144,7 @@ git commit -m "feat(cpp_algo_lab): add CPU parallel scaling figures"
 - 構成ツリー: `parallel/` を search/ の後に追加（include/parallel/=CPU ラダー 5 ヘッダ、tests/、bench/ の行）、`scripts/` に `plot_parallel.py`、`docs/` に `parallel_cpu.md`。
 - 学習ロードマップ: ステップ追加 — `docs/parallel_cpu.md` → `parallel/include/parallel/` を tuning → thread_merge → omp_merge → par_stl → omp_search の順で読む（「手動 → ランタイム → ライブラリ → 分割統治すら不要」の積み上げ）→ `make bench-parallel && make plot-parallel` → speedup 図と §5 の突き合わせ。
 - Phase 状況表: Phase 3 を ✅ に。
+- 依存節: Phase 3 の OpenMP/libgomp と TBB（`std::execution::par` backend）を追加し、「C++側の外部依存ゼロ」という旧記述を訂正する。
 
 - [ ] **Step 3: Update `docs/references.md`**
 
@@ -1145,7 +1169,8 @@ git commit -m "docs(cpp_algo_lab): add CPU parallel learning notes and update RE
 ## Verification (whole phase)
 
 1. `make test` from `cpp_algo_lab/` — four doctest binaries SUCCESS under ASan/UBSan (no-recover), warning-free.
-2. `make bench-parallel` regenerates both CSVs; committed versions from a full run (rows incl. header 17 / 19).
-3. `make plot` renders 6 + 5 + 3 PNGs; committed parallel PNGs match the committed CSVs.
-4. Both ruff gates clean from repo root.
-5. `docs/parallel_cpu.md` quotes only numbers present in (or exactly derivable from) the committed CSVs.
+2. `make bench-parallel-quick` leaves both canonical result hashes unchanged and writes ignored quick CSVs under `build/`.
+3. `make bench-parallel` regenerates both staged-then-published CSVs; committed versions from a full run (rows incl. header 17 / 19) include `mad_ms`.
+4. `make plot` renders 6 + 5 + 3 PNGs; committed parallel PNGs match validated full-sweep CSVs.
+5. Both ruff gates clean from repo root.
+6. `docs/parallel_cpu.md` quotes only numbers present in (or exactly derivable from) the committed CSVs and distinguishes measured facts from causal hypotheses.
