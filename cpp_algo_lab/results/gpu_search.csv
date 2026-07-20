@@ -1,0 +1,9 @@
+algo,text,mode,n,m,repeats,median_ms,mad_ms,occurrences
+naive_cpu,english,host,67108864,16,5,107.16338,0.514499,95
+bmh_cpu,english,host,67108864,16,5,22.833876,0.241306,95
+cuda_naive,english,kernel,67108864,16,5,0.60755199,0.026784003,95
+cuda_naive,english,end_to_end,67108864,16,5,54.981712,0.479063,95
+naive_cpu,dna,host,67108864,16,5,154.23129,0.166401,1
+bmh_cpu,dna,host,67108864,16,5,49.749992,0.152749,1
+cuda_naive,dna,kernel,67108864,16,5,0.63798398,0.026592016,1
+cuda_naive,dna,end_to_end,67108864,16,5,58.623787,1.906065,1
