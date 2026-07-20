@@ -1,4 +1,4 @@
-"""Artifact-backed Plotly figures for johnhull volumes 18--25."""
+"""Artifact-backed Plotly figures for johnhull volumes 18--27."""
 
 from __future__ import annotations
 
@@ -455,12 +455,14 @@ def _vol27_coverage() -> go.Figure:
     day = data["backtest_day"]
     names = data["coverage_names"].astype(str)
     rate = data["coverage_rate"]
+    name_index = {name: i for i, name in enumerate(names)}
     fig = go.Figure()
     lines = (
-        ("hs_var_forecast", "hs_violations", names[0], rate[0], "#94a3b8"),
-        ("fhs_var_forecast", "fhs_violations", names[1], rate[1], "#dc2626"),
+        ("hs_var_forecast", "hs_violations", "plain HS", "#94a3b8"),
+        ("fhs_var_forecast", "fhs_violations", "FHS", "#dc2626"),
     )
-    for forecast, violation, label, viol_rate, color in lines:
+    for forecast, violation, label, color in lines:
+        viol_rate = rate[name_index[label]]
         fig.add_trace(
             go.Scatter(
                 x=day,
