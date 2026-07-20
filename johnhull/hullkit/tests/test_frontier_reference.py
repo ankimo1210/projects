@@ -502,3 +502,76 @@ def test_fixed_seed_reproduces_all_non_timing_values(
     excluded_metrics = {"surrogate_speedup_1024"}
     for name in original.metrics.keys() - excluded_metrics:
         assert original.metrics[name] == repeated.metrics[name]
+
+
+# --- vol 27 acceptance gate independence -------------------------------
+
+
+def _frontier_acceptance():
+    """Import the acceptance script (it lives outside the installed packages)."""
+    import sys
+    from pathlib import Path
+
+    scripts = Path(__file__).resolve().parents[2] / "scripts"
+    if str(scripts) not in sys.path:
+        sys.path.insert(0, str(scripts))
+    import frontier_acceptance
+
+    return frontier_acceptance
+
+
+def _volume27_checks(metrics: dict, arrays: dict) -> dict[str, dict]:
+    checks, _ = _frontier_acceptance()._volume27(metrics, arrays)
+    return {check["name"]: check for check in checks}
+
+
+def test_volume27_christoffersen_gate_ignores_the_stored_pvalue(
+    references: dict[int, frontier_reference.FrontierReference],
+) -> None:
+    """Tampering with the JSON p-value must not be able to flip the gate to PASS."""
+    reference = references[27]
+    arrays = dict(reference.arrays)
+    honest = _volume27_checks(dict(reference.metrics), arrays)
+    assert honest["christoffersen_detects_clustering"]["passed"] is True
+    assert honest["christoffersen_pvalue_matches_recomputation"]["passed"] is True
+
+    tampered_metrics = dict(reference.metrics)
+    tampered_metrics["christoffersen_ind_pvalue_clustered"] = 0.0
+    tampered = _volume27_checks(tampered_metrics, arrays)
+
+    # The detection gate is decided by the arrays, so the tamper cannot reach it ...
+    assert tampered["christoffersen_detects_clustering"]["passed"] is True
+    assert tampered["christoffersen_detects_clustering"]["observed"] == pytest.approx(
+        honest["christoffersen_detects_clustering"]["observed"]
+    )
+    # ... and the tampered metric is caught by the consistency check instead.
+    assert tampered["christoffersen_pvalue_matches_recomputation"]["passed"] is False
+
+
+def test_volume27_christoffersen_gate_fails_when_clustering_is_absent(
+    references: dict[int, frontier_reference.FrontierReference],
+) -> None:
+    """With an iid series in place of the clustered one the gate must FAIL."""
+    reference = references[27]
+    arrays = dict(reference.arrays)
+    arrays["clustered_exceedances"] = arrays["iid_exceedances"]
+    metrics = dict(reference.metrics)
+    acceptance = _frontier_acceptance()
+    lr = acceptance._lr_independence_np(arrays["clustered_exceedances"])
+    metrics["christoffersen_ind_pvalue_clustered"] = acceptance._chi2_sf_df1(lr)
+
+    checks = _volume27_checks(metrics, arrays)
+    assert checks["christoffersen_detects_clustering"]["passed"] is False
+
+
+def test_volume27_christoffersen_pvalue_matches_scipy(
+    references: dict[int, frontier_reference.FrontierReference],
+) -> None:
+    """The scipy-free erfc recomputation must agree with chi2.sf(LR, df=1)."""
+    from scipy.stats import chi2
+
+    acceptance = _frontier_acceptance()
+    arrays = references[27].arrays
+    for name in ("iid_exceedances", "clustered_exceedances"):
+        lr = acceptance._lr_independence_np(arrays[name])
+        assert acceptance._chi2_sf_df1(lr) == pytest.approx(float(chi2.sf(lr, df=1)), abs=1e-12)
