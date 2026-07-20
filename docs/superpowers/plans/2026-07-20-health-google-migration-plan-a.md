@@ -28,7 +28,14 @@ uv run --no-sync ...
 ```
 
 - production dependency、公開API、remote systemを変更しない。
-- commitは別途明示された場合だけ行う。この計画の完了条件にcommit/pushは含めない。
+- commitはtaskごとにbranch上で行う（user指示 2026-07-20）。pushはこの計画の完了条件に含めない。commit messageは英語`type(health): summary`形式とし、次のtrailerで終える。
+
+```text
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_011b3F76ZJJXGstFzyki1PF9
+```
+
+- API contractの正は`.superpowers/sdd/health-google-api-contracts.md`（discovery rev 20260715から抽出、全field名検証済み）。designとの矛盾があればcontracts fileが勝つ。
 
 ## Corrected contracts that must not regress
 
