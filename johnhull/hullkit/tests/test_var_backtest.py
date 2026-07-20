@@ -131,6 +131,25 @@ def test_christoffersen_independence_clustered_exceeds_spread():
     assert lr_clustered > lr_spread
 
 
+def test_christoffersen_independence_rejects_exceedance_counts():
+    # Counts (not 0/1 flags) must not silently truncate via int cast --
+    # this would otherwise be misread as a clean "independent" series.
+    counts = [0, 2, 0, 0, 2, 0, 0, 0, 1, 0]
+    with pytest.raises(ValueError, match="binary"):
+        var_backtest.christoffersen_independence(counts)
+
+
+def test_christoffersen_independence_rejects_probabilities():
+    probs = [0.4, 0.6, 0.1, 0.9, 0.2, 0.3]
+    with pytest.raises(ValueError, match="binary"):
+        var_backtest.christoffersen_independence(probs)
+
+
+def test_christoffersen_independence_rejects_non_finite():
+    with pytest.raises(ValueError, match="finite"):
+        var_backtest.christoffersen_independence([0, 1, np.nan, 0, 1])
+
+
 # --- christoffersen_cc -----------------------------------------------------
 
 
@@ -148,6 +167,14 @@ def test_christoffersen_cc_matches_sum_of_parts():
 
     assert lr_cc == pytest.approx(lr_pof_trans + lr_ind, abs=1e-12)
     assert p_cc == pytest.approx(float(chi2.sf(lr_cc, df=2)), abs=1e-12)
+
+
+def test_christoffersen_cc_rejects_exceedance_counts():
+    # Same guard as christoffersen_independence: counts summed raw would
+    # silently break the LR_cc = LR_pof + LR_ind identity documented above.
+    counts = [0, 2, 0, 0, 2, 0, 0, 0, 1, 0]
+    with pytest.raises(ValueError, match="binary"):
+        var_backtest.christoffersen_cc(counts, alpha=0.99)
 
 
 # --- basel_traffic_light ----------------------------------------------------

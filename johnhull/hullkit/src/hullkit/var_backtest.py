@@ -34,6 +34,25 @@ def _validate_counts(n_exceedances: int, n_obs: int) -> None:
         raise ValueError("n_exceedances cannot exceed n_obs")
 
 
+def _validate_binary_exceedances(exceedances) -> np.ndarray:
+    """Cast `exceedances` to a 0/1 int array, raising ValueError otherwise.
+
+    Guards against exceedance *counts* or *probabilities* being passed where
+    a 0/1 indicator series is required -- an int cast of those would
+    silently truncate instead of raising.
+    """
+    exc = np.asarray(exceedances, dtype=float)
+    if not np.all(np.isfinite(exc)):
+        raise ValueError(f"exceedances must be finite, got {exc.tolist()}")
+    bad_mask = ~np.isin(exc, (0.0, 1.0))
+    if np.any(bad_mask):
+        bad_values = np.unique(exc[bad_mask]).tolist()
+        raise ValueError(
+            f"exceedances must be a binary 0/1 series, got non-binary values {bad_values}"
+        )
+    return exc.astype(int)
+
+
 def exceedance_series(pnl, var_forecasts) -> np.ndarray:
     """Daily 0/1 exceedance indicator: 1 where `-pnl[i] > var_forecast[i]` (strict).
 
@@ -78,10 +97,12 @@ def christoffersen_independence(exceedances) -> tuple[float, float]:
     0/1 exceedance series and compares the restricted model (constant
     exceedance probability `pi_bar`) against the unrestricted 2-state Markov
     model. Returns `(lr_stat, p_value)` with `p_value = chi2.sf(lr_stat, df=1)`.
-    Raises ValueError if fewer than 2 observations are given. A degenerate
-    all-zero or all-one series returns `(0.0, 1.0)` (no transitions to test).
+    Raises ValueError if fewer than 2 observations are given, or if any
+    element of `exceedances` is not exactly 0 or 1 (e.g. exceedance counts
+    or probabilities passed by mistake). A degenerate all-zero or all-one
+    series returns `(0.0, 1.0)` (no transitions to test).
     """
-    exc = np.asarray(exceedances, dtype=int)
+    exc = _validate_binary_exceedances(exceedances)
     if exc.size < 2:
         raise ValueError("christoffersen_independence requires at least 2 observations")
     if np.unique(exc).size == 1:
@@ -117,10 +138,11 @@ def christoffersen_cc(exceedances, alpha: float = 0.99) -> tuple[float, float]:
     `kupiec_pof` evaluated on the transition-conditioned sample (the n-1
     observations `exceedances[1:]`) so the sum is an exact identity with
     `christoffersen_independence`. Returns `(lr_stat, p_value)` with
-    `p_value = chi2.sf(lr_stat, df=2)`.
+    `p_value = chi2.sf(lr_stat, df=2)`. Raises ValueError if any element of
+    `exceedances` is not exactly 0 or 1, same as `christoffersen_independence`.
     """
     _validate_alpha(alpha)
-    exc = np.asarray(exceedances, dtype=int)
+    exc = _validate_binary_exceedances(exceedances)
     lr_ind, _ = christoffersen_independence(exc)
     n = exc.size
     x_trans = int(exc[1:].sum())
