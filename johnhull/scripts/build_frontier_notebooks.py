@@ -588,10 +588,10 @@ def build_volume(number: int, *, execute: bool = True) -> Path:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--volume", type=int, choices=range(18, 27))
+    parser.add_argument("--volume", type=int, choices=range(18, 28))
     parser.add_argument("--no-execute", action="store_true")
     args = parser.parse_args(argv)
-    numbers = [args.volume] if args.volume else list(range(18, 27))
+    numbers = [args.volume] if args.volume else list(range(18, 28))
     for number in numbers:
         path = build_volume(number, execute=not args.no_execute)
         print(f"built {path.relative_to(ROOT)}")
