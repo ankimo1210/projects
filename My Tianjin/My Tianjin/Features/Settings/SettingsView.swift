@@ -56,8 +56,57 @@ struct SettingsView: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
+
+            Section("情報") {
+                NavigationLink("コンテンツの出典とライセンス") {
+                    ContentCreditsView()
+                }
+                Link(
+                    "プライバシーポリシー",
+                    destination: URL(string: "https://ankimo1210.github.io/projects/my-tianjin/privacy.html")!
+                )
+                Link(
+                    "サポート",
+                    destination: URL(string: "https://ankimo1210.github.io/projects/my-tianjin/")!
+                )
+            }
         }
         .navigationTitle("設定")
         .onDisappear { speech.stop() }
+    }
+}
+
+private struct ContentCreditsView: View {
+    var body: some View {
+        List {
+            Section("My Tianjin") {
+                Text("日本語話者向けに制作した非公式の中国語学習アプリです。HSKの実施・運営団体とは関係ありません。")
+            }
+
+            Section("新版HSK考试大纲（2025）") {
+                Text("語彙の見出し、ピンイン、品詞、公式通番、レベルの参照元です。公式過去問は収録していません。")
+                Link(
+                    "公式シラバスを開く",
+                    destination: URL(string: "https://hsk.cn-bj.ufileos.com/3.0/%E6%96%B0%E7%89%88HSK%E8%80%83%E8%AF%95%E5%A4%A7%E7%BA%B21219.pdf")!
+                )
+            }
+
+            Section("CC-CEDICT") {
+                Text("一部の日本語仮訳は、CC-CEDICTの英語語義を補助情報として作成しています。該当する派生コンテンツはCC BY-SA 4.0に従います。")
+                Link(
+                    "CC-CEDICTを開く",
+                    destination: URL(string: "https://www.mdbg.net/chinese/dictionary?page=cc-cedict")!
+                )
+                Link(
+                    "CC BY-SA 4.0",
+                    destination: URL(string: "https://creativecommons.org/licenses/by-sa/4.0/")!
+                )
+            }
+
+            Section("練習コンテンツ") {
+                Text("例文、語順問題、読解文、作文・翻訳・口頭課題は本アプリ向けに作成した教材です。機械生成または仮訳の項目にはアプリ内でラベルを表示します。")
+            }
+        }
+        .navigationTitle("出典とライセンス")
     }
 }
