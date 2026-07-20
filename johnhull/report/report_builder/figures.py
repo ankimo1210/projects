@@ -107,6 +107,13 @@ BOOKS: dict[str, BookMeta] = {
         accent="#059669",
         book_index="../../book/_build/html/index.html",
     ),
+    "risk_management": BookMeta(
+        key="risk_management",
+        title="リスク管理デスク",
+        subtitle="バックテスト・EVT・配賦・PnL explain",
+        accent="#dc2626",
+        book_index="../../book/_build/html/index.html",
+    ),
 }
 
 
@@ -751,6 +758,82 @@ FIGURES.extend(
         tags=("a5-a8", "artifact"),
     )
     for figure_id, book, title, blurb, practice in _FRONTIER_SPECS
+)
+
+
+# Beyond A5--A8: inflation/JGBi (vol 26) and the risk desk (vol 27), also
+# artifact-backed and read via ``frontier_figures``.
+_BEYOND_SPECS = (
+    (
+        "inflation_curves",
+        "rates_swaps",
+        "名目・実質割引カーブ",
+        "名目と実質の割引factorを満期別に。両者の比がbreakeven inflationを決める。",
+        "名目・実質カーブからBEIを読む。インフレ連動債値付けの出発点。",
+    ),
+    (
+        "inflation_swaps",
+        "rates_swaps",
+        "ゼロクーポンインフレスワップの再評価",
+        "committed ZCIS quoteと再評価値を満期別に比較。再評価誤差は恒等式でゼロ。",
+        "市場ZCISからインフレカーブを較正した整合性の検算。",
+    ),
+    (
+        "jgbi_floor",
+        "rates_swaps",
+        "JGBiデフレフロアとインフレボラ",
+        "元本フロア価値をインフレボラ別に。analyticは単調増加、MCと標準誤差内で一致。",
+        "デフレ時の元本保証(フロア)の価値。ボラが上がるほど厚くなるオプション価値。",
+    ),
+    (
+        "jgbi_bei",
+        "rates_swaps",
+        "raw vs フロア調整後BEI",
+        "生のbreakeven inflationと、デフレフロアを織り込んだ調整後BEIの差。",
+        "フロア(オプション性)を無視した素朴なBEIが割高評価になる点の可視化。",
+    ),
+    (
+        "var_traffic_light",
+        "risk_management",
+        "Baselトラフィックライトと資本乗数",
+        "超過回数ごとの二項ゾーン(緑/黄/赤)と資本乗数のステップ。250日99%の枠組み。",
+        "バックテスト超過が資本add-onへ翻訳される規制の仕組みを一望する。",
+    ),
+    (
+        "fhs_vs_hs_coverage",
+        "risk_management",
+        "FHS vs 素朴HSのVaRカバレッジ",
+        "ローリングVaR予測(HS/FHS)と違反日。FHSは条件付ボラで違反率を1%へ近づける。",
+        "危機時のVaR過小評価をFHSが是正する様子。カバレッジ改善の実証。",
+    ),
+    (
+        "gpd_tail_fit",
+        "risk_management",
+        "GPDテールフィットと平均超過",
+        "経験VaR ladderとGPD(POT)フィット分位、横に平均超過プロット。",
+        "希少テール(0.1%)の外挿。経験分位が尽きる領域をEVTで埋める。",
+    ),
+    (
+        "risk_allocation_bars",
+        "risk_management",
+        "コンポーネントVaR/ESの配賦",
+        "資産別のcomponent VaRとES。Euler配賦で合計はポート全体に厳密一致(加法性)。",
+        "リスク限度をデスク別に割り当てる。合計がポート値に一致する配賦の実務。",
+    ),
+)
+
+FIGURES.extend(
+    FigureSpec(
+        figure_id,
+        book,
+        title,
+        blurb,
+        ff.FRONTIER_BUILDERS[figure_id],
+        practice=practice,
+        is_new=True,
+        tags=("beyond-hull", "artifact"),
+    )
+    for figure_id, book, title, blurb, practice in _BEYOND_SPECS
 )
 
 

@@ -1,4 +1,4 @@
-"""Generate and execute artifact-only notebooks for johnhull vol 18--25."""
+"""Generate and execute artifact-only notebooks for johnhull vol 18--27."""
 
 from __future__ import annotations
 
@@ -163,6 +163,147 @@ VOLUME_META = {
         ],
         "citations": "Benth & Benth (2013), Modeling and Pricing in Financial Markets for Weather Derivatives; energy PPA literature.",
         "gate": "G7",
+    },
+    26: {
+        "title": "Hull--White, Inflation Swaps & JGBi",
+        "question": "名目・実質金利、CPI観測、forward measure、JGBi元本保証を混同せずに評価できるか。",
+        "focus": "CPI fixing/forecast、3か月lag、月次seasonalityを先に固定する。Hull--White 1Fで名目・実質curveを表現し、ZCISとYoYを別cash flowとして評価する。Jarrow--YildirimではCPIを実質economyから名目economyへの為替とみなし、各支払日の名目forward measureを明示する。JGBiは10日基準indexと償還時だけの元本保証を分離し、raw BEIとfloor-adjusted BEIを併記する。",
+        "sections": [
+            (
+                "nominal_discount_factor",
+                "名目・実質discount curveとnumeraire",
+                "line2:maturity:real_discount_factor",
+            ),
+            (
+                "cpi_seasonal",
+                "CPI trend・fixing・3か月lag・rebasing",
+                "line2:month_index:cpi_trend",
+            ),
+            (
+                "seasonality_log_factor",
+                "決定論的月次seasonality（年率和ゼロ）",
+                "bar:month_names",
+            ),
+            (
+                "hw_model_discount_factor",
+                "Hull--White initial-curve fit",
+                "line2:maturity:hw_market_discount_factor",
+            ),
+            ("hw_swaption_price", "Hull--White option ladder", "line:hw_swaption_expiry"),
+            (
+                "zcis_repriced",
+                "ZC inflation swap quote/repricing",
+                "line2:zcis_maturity:zcis_quote",
+            ),
+            (
+                "yoy_jy_ratio",
+                "YoY swapとforward-ratio convexity",
+                "line2:yoy_payment:yoy_deterministic_ratio",
+            ),
+            (
+                "jy_mc_forward_index",
+                "Jarrow--Yildirim payment-forward measure",
+                "line2:jy_observation:jy_forward_index",
+            ),
+            (
+                "jgbi_coupon",
+                "JGBi cash flow・10日基準index・settlement",
+                "bar:jgbi_cashflow_names:jgbi_floored_principal",
+            ),
+            (
+                "floor_analytic",
+                "JGBi deflation floor：analytic vs MC",
+                "line2:inflation_volatility:floor_mc",
+            ),
+            ("breakeven_inflation", "raw vs floor-adjusted BEI", "bar:bei_names"),
+            (
+                "unhedged_normalized_risk",
+                "JGBi・名目債・inflation swap hedge decomposition",
+                "bar:hedge_risk_names:hedged_normalized_risk",
+            ),
+        ],
+        "citations": "Hull & White (1990); Jarrow & Yildirim (2003); Ministry of Finance Japan, Inflation-Indexed Bonds product conventions.",
+        "gate": "G8",
+    },
+    27: {
+        "title": "Advanced VaR/ES Risk Desk",
+        "question": "そのVaRは信頼できるか——backtest、条件付きボラ、尾部、リスク分解、P&L explainで検証する。",
+        "focus": "vol.08のhistorical/normal VaRを起点に、Kupiec POFとChristoffersen条件付き被覆で1日VaRを検定し、Basel traffic lightで資本乗数を定量化する。GARCH条件付きボラでFHSを組み、EWMA条件付きσでplain-HSより被覆を改善する。POT/GPDで尾部VaR/ESを閉形式に外挿し、Euler配分でmarginal/component/incremental VaRとsimulation ES寄与を厳密加法的に分解し、delta-gamma-vega Taylorとfull revaluationのP&L explainとlimit監視でdesk日次レポートを組み立てる。",
+        "sections": [
+            (
+                "iid_exceedances",
+                "iid vs クラスタ型 exceedance系列",
+                "line2:exceedance_day:clustered_exceedances",
+            ),
+            ("kupiec_size_values", "Kupiec POF size study（nominal 5%）", "bar:kupiec_size_names"),
+            (
+                "traffic_light_cumulative_prob",
+                "Basel traffic light：二項累積確率",
+                "line:traffic_light_x",
+            ),
+            ("traffic_light_multiplier", "Basel traffic light：資本乗数", "line:traffic_light_x"),
+            (
+                "conditional_sigma",
+                "GARCHボラティリティ・クラスタリング",
+                "line2:return_day:garch_returns",
+            ),
+            (
+                "hs_var_forecast",
+                "plain-HS vs FHS VaR forecast",
+                "line2:backtest_day:fhs_var_forecast",
+            ),
+            ("coverage_rate", "被覆率：plain-HS vs FHS（目標 1%）", "bar:coverage_names"),
+            ("mean_excess_curve", "平均超過関数（POT閾値診断）", "line:mean_excess_threshold"),
+            (
+                "evt_var_ladder",
+                "EVT vs 経験 VaR ladder",
+                "line2:evt_quantile_alpha:empirical_var_ladder",
+            ),
+            (
+                "alloc_component_var",
+                "component vs incremental VaR",
+                "bar:asset_names:alloc_incremental_var",
+            ),
+            ("es_components", "simulation Euler ES 寄与", "bar:asset_names"),
+            (
+                "taylor_component_value",
+                "P&L explain：delta-gamma-vega 分解",
+                "bar:taylor_component_names",
+            ),
+            ("limit_utilization_ratio", "limit utilization", "bar:limit_names"),
+        ],
+        "verification": (
+            "import math\n"
+            "m = manifest['metrics']\n"
+            "comp = data['alloc_component_var']\n"
+            "assert abs(float(comp.sum()) - m['alloc_normal_var']) <= 1e-12\n"
+            "es_check = (m['evt_var'] + m['gpd_beta_hat'] - m['gpd_xi_hat'] * m['evt_threshold']) / (1.0 - m['gpd_xi_hat'])\n"
+            "assert abs(m['evt_es'] - es_check) <= 1e-12\n"
+            "pm = data['pnl_matrix']\n"
+            "total = pm.sum(axis=1)\n"
+            "n = total.size\n"
+            "k = max(1, math.ceil(0.01 * n - 1e-9))\n"
+            "tail = np.argsort(total, kind='stable')[:k]\n"
+            "es_total = float((-total[tail]).mean())\n"
+            "assert abs(float((-pm[tail].mean(axis=0)).sum()) - es_total) <= 1e-12\n"
+            "hs_rate = float(data['hs_violations'].mean())\n"
+            "fhs_rate = float(data['fhs_violations'].mean())\n"
+            "assert abs(fhs_rate - 0.01) < abs(hs_rate - 0.01)\n"
+            "dgv_res = abs(m['taylor_full_pnl'] - m['taylor_dgv_total'])\n"
+            "delta_res = abs(m['taylor_full_pnl'] - m['taylor_delta_only'])\n"
+            "assert dgv_res < delta_res\n"
+            "print('recomputed from artifact: Euler VaR add., EVT ES identity, sim Euler ES add., FHS coverage, Taylor ordering — all hold')"
+        ),
+        "exercises": (
+            "## 演習\n\n"
+            "1. `kupiec_size_reject_flags` から棄却率を再計算し、n_obs を 250 に変えたときの離散性による size 歪みを議論せよ。\n"
+            "2. `clustered_exceedances` の Markov 遷移確率を推定し、Christoffersen 独立性 LR が iid 系列より大きくなる理由を説明せよ。\n"
+            "3. `mean_excess_threshold` に対する `mean_excess_curve` の傾きから GPD の `xi/(1-xi)` を読み取り、`gpd_xi_hat` と比較せよ。\n"
+            "4. `pnl_matrix` の尾部シナリオ集合を取り出し、`es_components` の加法性 `sum_i CES_i = ES_total` を手計算で確認せよ。\n"
+            "5. `factor_moves`・`vol_moves` を半分にしたとき、delta-only 残差と delta-gamma-vega 残差の縮小率の違い（線形 vs 二次）を予測し、`taylor_*_half` で検算せよ。"
+        ),
+        "citations": "Kupiec (1995); Christoffersen (1998); BCBS (1996); Barone-Adesi, Giannopoulos & Vosper (1999); McNeil & Frey (2000); Tasche (1999).",
+        "gate": "G9",
     },
 }
 
@@ -384,6 +525,17 @@ def build_volume(number: int, *, execute: bool = True) -> Path:
             _md(f"## {title}\n\n単一のaggregate scoreではなく、構造別・時間別・stress別に読む。")
         )
         cells.append(_code(_plot_code(key, title, kind)))
+    if meta.get("verification"):
+        cells.append(
+            _md(
+                "## Artifact恒等式の再計算検証\n\n"
+                "acceptance identityをcommitted artifactから直接recomputeし、"
+                "JSONのフラグに依存せず主要な数値恒等式を確認する。"
+            )
+        )
+        cells.append(_code(meta["verification"]))
+    if meta.get("exercises"):
+        cells.append(_md(meta["exercises"]))
     cells.extend(
         [
             _md(
@@ -436,10 +588,10 @@ def build_volume(number: int, *, execute: bool = True) -> Path:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--volume", type=int, choices=range(18, 26))
+    parser.add_argument("--volume", type=int, choices=sorted(VOLUME_META))
     parser.add_argument("--no-execute", action="store_true")
     args = parser.parse_args(argv)
-    numbers = [args.volume] if args.volume else list(range(18, 26))
+    numbers = [args.volume] if args.volume else sorted(VOLUME_META)
     for number in numbers:
         path = build_volume(number, execute=not args.no_execute)
         print(f"built {path.relative_to(ROOT)}")

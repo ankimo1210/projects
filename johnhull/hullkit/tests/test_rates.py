@@ -80,3 +80,21 @@ def test_zero_interp_flat_extrapolation():
     assert rates.zero_interp(0.10, [0.25, 1.0], [0.02, 0.03]) == pytest.approx(0.02)
     assert rates.zero_interp(5.00, [0.25, 1.0], [0.02, 0.03]) == pytest.approx(0.03)
     assert rates.zero_interp(0.625, [0.25, 1.0], [0.02, 0.03]) == pytest.approx(0.025)
+
+
+def test_discount_and_forward_helpers_on_flat_curve():
+    curve = ([0.25, 1.0, 5.0], [0.03, 0.03, 0.03])
+    assert rates.discount_factor(0.0, curve) == 1.0
+    assert rates.discount_factor(2.0, curve) == pytest.approx(np.exp(-0.06), abs=1e-14)
+    assert rates.forward_discount(1.0, 2.0, curve) == pytest.approx(np.exp(-0.03), abs=1e-14)
+    assert rates.instantaneous_forward(0.0, curve) == pytest.approx(0.03, abs=1e-10)
+    assert rates.instantaneous_forward(2.0, curve) == pytest.approx(0.03, abs=1e-10)
+
+
+def test_new_curve_helpers_reject_invalid_inputs():
+    with pytest.raises(ValueError, match="strictly increasing"):
+        rates.discount_factor(1.0, ([1.0, 0.5], [0.02, 0.03]))
+    with pytest.raises(ValueError, match="0 <= start <= end"):
+        rates.forward_discount(2.0, 1.0, ([1.0, 2.0], [0.02, 0.03]))
+    with pytest.raises(ValueError, match="bump"):
+        rates.instantaneous_forward(1.0, ([1.0], [0.02]), bump=0.0)

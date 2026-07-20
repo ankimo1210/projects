@@ -97,11 +97,35 @@
       "semantic_tests": ["johnhull/hullkit/tests/test_frontier_reference.py", "johnhull/hullkit/tests/test_carbon.py", "johnhull/hullkit/tests/test_weather.py", "johnhull/hullkit/tests/test_ppa.py"],
       "references": ["reference/metrics.json", "reference/scenarios.npz"],
       "validation": "VALIDATION.md"
+    },
+    {
+      "number": 26,
+      "slug": "26_inflation_jgbi",
+      "notebook": "inflation_jgbi.ipynb",
+      "book_name": "26_inflation_jgbi",
+      "portal_page": "rates_swaps",
+      "portal_figures": ["inflation_curves", "inflation_swaps", "jgbi_floor", "jgbi_bei"],
+      "semantic_sources": ["johnhull/hullkit/src/hullkit/frontier_reference.py", "johnhull/hullkit/src/hullkit/rates.py", "johnhull/hullkit/src/hullkit/hull_white.py", "johnhull/hullkit/src/hullkit/inflation.py", "johnhull/hullkit/src/hullkit/jarrow_yildirim.py", "johnhull/hullkit/src/hullkit/jgbi.py"],
+      "semantic_tests": ["johnhull/hullkit/tests/test_frontier_reference.py", "johnhull/hullkit/tests/test_rates.py", "johnhull/hullkit/tests/test_hull_white.py", "johnhull/hullkit/tests/test_inflation.py", "johnhull/hullkit/tests/test_jarrow_yildirim.py", "johnhull/hullkit/tests/test_jgbi.py", "johnhull/hullkit/tests/test_jgbi_floor.py"],
+      "references": ["reference/metrics.json", "reference/inflation_scenarios.npz"],
+      "validation": "VALIDATION.md"
+    },
+    {
+      "number": 27,
+      "slug": "27_risk_desk",
+      "notebook": "risk_desk.ipynb",
+      "book_name": "27_risk_desk",
+      "portal_page": "risk_management",
+      "portal_figures": ["var_traffic_light", "fhs_vs_hs_coverage", "gpd_tail_fit", "risk_allocation_bars"],
+      "semantic_sources": ["johnhull/hullkit/src/hullkit/frontier_reference.py", "johnhull/hullkit/src/hullkit/var_backtest.py", "johnhull/hullkit/src/hullkit/tail_risk.py", "johnhull/hullkit/src/hullkit/risk_allocation.py", "johnhull/hullkit/src/hullkit/pnl_explain.py"],
+      "semantic_tests": ["johnhull/hullkit/tests/test_frontier_reference.py", "johnhull/hullkit/tests/test_var_backtest.py", "johnhull/hullkit/tests/test_tail_risk.py", "johnhull/hullkit/tests/test_risk_allocation.py", "johnhull/hullkit/tests/test_pnl_explain.py"],
+      "references": ["reference/metrics.json", "reference/risk_desk_scenarios.npz"],
+      "validation": "VALIDATION.md"
     }
   ],
   "portal": {
-    "themes": 11,
-    "figures": 70
+    "themes": 12,
+    "figures": 78
   },
   "allowed_book_remote_dependencies": [],
   "allowed_legacy_book_runtime_dependencies": [

@@ -1,0 +1,483 @@
+{
+  "acceptance": {
+    "checks": [
+      {
+        "criterion": "iid rejection rate within z < 3 of nominal 5% (binomial SE, 400 replications)",
+        "name": "kupiec_size_calibration",
+        "observed": 0.0,
+        "passed": true
+      },
+      {
+        "criterion": "clustered LR_ind p-value < 0.05 and LR_ind statistic exceeds the iid series",
+        "name": "christoffersen_detects_clustering",
+        "observed": 0.00165759575466473,
+        "passed": true
+      },
+      {
+        "criterion": "<= 1e-12",
+        "name": "fhs_constant_vol_identity",
+        "observed": 0.0,
+        "passed": true
+      },
+      {
+        "criterion": "|FHS violation rate - (1-alpha)| < |plain-HS violation rate - (1-alpha)|",
+        "name": "fhs_coverage_improvement",
+        "observed": 0.01,
+        "passed": true
+      },
+      {
+        "criterion": "|xi_hat - xi| <= 0.1 and |beta_hat/beta - 1| <= 0.15",
+        "name": "gpd_parameter_recovery",
+        "observed": 0.04567805084324694,
+        "passed": true
+      },
+      {
+        "criterion": "<= 1e-12",
+        "name": "evt_var_es_identity",
+        "observed": 0.0,
+        "passed": true
+      },
+      {
+        "criterion": "<= 1e-12",
+        "name": "euler_additivity_normal",
+        "observed": 0.0,
+        "passed": true
+      },
+      {
+        "criterion": "analytic vs central-difference marginals, relative error <= 1e-6",
+        "name": "marginal_fd_consistency",
+        "observed": 1.027118008182688e-09,
+        "passed": true
+      },
+      {
+        "criterion": "sum(ES components) == total historical ES and matches committed array, <= 1e-12",
+        "name": "euler_es_additivity_sim",
+        "observed": 0.0,
+        "passed": true
+      },
+      {
+        "criterion": "dgv residual < delta-only residual; both shrink when moves halve",
+        "name": "pnl_explain_taylor_ordering",
+        "observed": 0.3900125643060548,
+        "passed": true
+      },
+      {
+        "criterion": "desk-report VaR equals Euler component sum and ES equals total historical ES",
+        "name": "desk_report_reproducible",
+        "observed": 0.0,
+        "passed": true
+      }
+    ],
+    "model_performance_approved": false,
+    "negative_results": [
+      "All P&L, exceedance, and tail samples are synthetic fixed-seed draws, not market data.",
+      "FHS uses the committed EWMA conditional-volatility path; no live model calibration is performed.",
+      "The Basel multiplier schedule is the 250-day BCBS table and is only documented, not re-derived, elsewhere.",
+      "Cross-gamma, vanna, and vomma P&L-explain terms are out of scope (see hullkit.pnl_explain)."
+    ],
+    "passed": true,
+    "schema_version": 1,
+    "scope": "integration_and_reproducibility"
+  },
+  "artifact_role": "implementation-derived, identity-tested teaching reference",
+  "benchmark": {
+    "nondeterministic_fields": [],
+    "schema_version": 1
+  },
+  "benchmark_policy": "no nondeterministic benchmark fields",
+  "companion_schemas": {
+    "risk_desk_scenarios.npz": {
+      "alloc_amounts": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "synthetic position amount"
+      },
+      "alloc_component_var": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "VaR loss amount"
+      },
+      "alloc_corr": {
+        "dtype": "float64",
+        "shape": [
+          5,
+          5
+        ],
+        "unit": "correlation"
+      },
+      "alloc_incremental_var": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "VaR loss amount"
+      },
+      "alloc_marginal_var": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "VaR per unit amount"
+      },
+      "alloc_vols": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "annualized decimal volatility"
+      },
+      "asset_names": {
+        "dtype": "<U9",
+        "shape": [
+          5
+        ],
+        "unit": "label"
+      },
+      "backtest_day": {
+        "dtype": "float64",
+        "shape": [
+          2000
+        ],
+        "unit": "trading days"
+      },
+      "book_delta": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "P&L per factor unit"
+      },
+      "book_gamma": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "P&L per factor unit squared"
+      },
+      "book_vega": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "P&L per volatility unit"
+      },
+      "clustered_exceedances": {
+        "dtype": "float64",
+        "shape": [
+          250
+        ],
+        "unit": "exceedance indicator"
+      },
+      "conditional_sigma": {
+        "dtype": "float64",
+        "shape": [
+          2200
+        ],
+        "unit": "conditional volatility"
+      },
+      "coverage_names": {
+        "dtype": "<U8",
+        "shape": [
+          2
+        ],
+        "unit": "label"
+      },
+      "coverage_rate": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "violation rate"
+      },
+      "empirical_var_ladder": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "VaR loss amount"
+      },
+      "es_components": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "ES loss amount"
+      },
+      "evt_quantile_alpha": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "coverage level"
+      },
+      "evt_var_ladder": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "VaR loss amount"
+      },
+      "exceedance_day": {
+        "dtype": "float64",
+        "shape": [
+          250
+        ],
+        "unit": "trading days"
+      },
+      "factor_moves": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "factor price move"
+      },
+      "factor_names": {
+        "dtype": "<U11",
+        "shape": [
+          3
+        ],
+        "unit": "label"
+      },
+      "fhs_var_forecast": {
+        "dtype": "float64",
+        "shape": [
+          2000
+        ],
+        "unit": "VaR loss in return units"
+      },
+      "fhs_violations": {
+        "dtype": "float64",
+        "shape": [
+          2000
+        ],
+        "unit": "exceedance indicator"
+      },
+      "garch_returns": {
+        "dtype": "float64",
+        "shape": [
+          2200
+        ],
+        "unit": "synthetic daily return"
+      },
+      "gpd_losses": {
+        "dtype": "float64",
+        "shape": [
+          2000
+        ],
+        "unit": "synthetic loss amount"
+      },
+      "hs_var_forecast": {
+        "dtype": "float64",
+        "shape": [
+          2000
+        ],
+        "unit": "VaR loss in return units"
+      },
+      "hs_violations": {
+        "dtype": "float64",
+        "shape": [
+          2000
+        ],
+        "unit": "exceedance indicator"
+      },
+      "iid_exceedances": {
+        "dtype": "float64",
+        "shape": [
+          250
+        ],
+        "unit": "exceedance indicator"
+      },
+      "kupiec_size_names": {
+        "dtype": "<U23",
+        "shape": [
+          2
+        ],
+        "unit": "label"
+      },
+      "kupiec_size_reject_flags": {
+        "dtype": "float64",
+        "shape": [
+          400
+        ],
+        "unit": "rejection indicator"
+      },
+      "kupiec_size_values": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "rejection probability"
+      },
+      "limit_measure": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "risk usage amount"
+      },
+      "limit_names": {
+        "dtype": "<U9",
+        "shape": [
+          5
+        ],
+        "unit": "label"
+      },
+      "limit_utilization_ratio": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "utilization ratio"
+      },
+      "limit_value": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "risk limit amount"
+      },
+      "mean_excess_curve": {
+        "dtype": "float64",
+        "shape": [
+          25
+        ],
+        "unit": "mean excess loss"
+      },
+      "mean_excess_threshold": {
+        "dtype": "float64",
+        "shape": [
+          25
+        ],
+        "unit": "loss threshold"
+      },
+      "pnl_matrix": {
+        "dtype": "float64",
+        "shape": [
+          2000,
+          5
+        ],
+        "unit": "synthetic P&L amount"
+      },
+      "return_day": {
+        "dtype": "float64",
+        "shape": [
+          2200
+        ],
+        "unit": "trading days"
+      },
+      "taylor_component_names": {
+        "dtype": "<U5",
+        "shape": [
+          4
+        ],
+        "unit": "label"
+      },
+      "taylor_component_value": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "explained P&L amount"
+      },
+      "traffic_light_cumulative_prob": {
+        "dtype": "float64",
+        "shape": [
+          16
+        ],
+        "unit": "binomial cumulative probability"
+      },
+      "traffic_light_multiplier": {
+        "dtype": "float64",
+        "shape": [
+          16
+        ],
+        "unit": "capital multiplier"
+      },
+      "traffic_light_x": {
+        "dtype": "float64",
+        "shape": [
+          16
+        ],
+        "unit": "exceedance count"
+      },
+      "vol_moves": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "volatility move"
+      }
+    }
+  },
+  "companions": {
+    "risk_desk_scenarios.npz": "25151c5b284d277684f78248d0a5e4958ce71b7a2018e1b195dd2ced8c0849fc"
+  },
+  "data_policy": "synthetic-offline",
+  "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
+  "generator_api": "hullkit.frontier_reference.build_frontier_reference",
+  "limitations": [
+    "Synthetic results are not evidence of market forecasting power."
+  ],
+  "metrics": {
+    "alloc_normal_var": 77.52904630663974,
+    "alpha": 0.99,
+    "christoffersen_ind_lr_clustered": 9.894654433330203,
+    "christoffersen_ind_lr_iid": 0.008064537982836129,
+    "christoffersen_ind_pvalue_clustered": 0.00165759575466473,
+    "christoffersen_ind_pvalue_iid": 0.9284439448072724,
+    "clustered_basel_zone": "yellow",
+    "desk_report_es": 89.2145706813487,
+    "desk_report_var": 77.52904630663974,
+    "euler_additivity_error": 0.0,
+    "euler_es_additivity_error": 0.0,
+    "evt_alpha": 0.999,
+    "evt_es": 20.753067047383286,
+    "evt_es_identity_error": 0.0,
+    "evt_threshold": 5.0,
+    "evt_var": 15.949662940402645,
+    "fhs_constant_vol_error": 0.0,
+    "fhs_var_constant": 0.04886253563711847,
+    "fhs_violation_rate": 0.01,
+    "gpd_beta_hat": 0.9332212999765327,
+    "gpd_beta_true": 1.0,
+    "gpd_n_exceedances": 500,
+    "gpd_xi_hat": 0.24567805084324695,
+    "gpd_xi_true": 0.2,
+    "hs_violation_rate": 0.0145,
+    "kupiec_size_rejection_rate": 0.05,
+    "kupiec_size_zscore": 0.0,
+    "taylor_delta_only": 29.343901557687268,
+    "taylor_delta_only_half": 14.671950778843634,
+    "taylor_delta_residual": 11.690588536237144,
+    "taylor_delta_residual_half": 5.630239148711208,
+    "taylor_dgv_residual": 0.3900125643060548,
+    "taylor_dgv_residual_half": 0.08376719185447001,
+    "taylor_dgv_total": 41.424502658230466,
+    "taylor_dgv_total_half": 20.385957119409312,
+    "taylor_full_pnl": 41.03449009392441,
+    "taylor_full_pnl_half": 20.302189927554842,
+    "taylor_unexplained_share": 0.009504506170622559,
+    "total_historical_es": 89.2145706813487
+  },
+  "schema_version": 1,
+  "seed": 20260745,
+  "semantic_sources": [
+    "johnhull/hullkit/src/hullkit/frontier_reference.py",
+    "johnhull/hullkit/src/hullkit/var_backtest.py",
+    "johnhull/hullkit/src/hullkit/tail_risk.py",
+    "johnhull/hullkit/src/hullkit/risk_allocation.py",
+    "johnhull/hullkit/src/hullkit/pnl_explain.py"
+  ],
+  "semantic_tests": [
+    "johnhull/hullkit/tests/test_frontier_reference.py",
+    "johnhull/hullkit/tests/test_var_backtest.py",
+    "johnhull/hullkit/tests/test_tail_risk.py",
+    "johnhull/hullkit/tests/test_risk_allocation.py",
+    "johnhull/hullkit/tests/test_pnl_explain.py"
+  ],
+  "volume": 27
+}

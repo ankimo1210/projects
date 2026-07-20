@@ -26,6 +26,7 @@ def test_registry_is_consistent():
         "volatility_frontiers",
         "crypto_market",
         "climate_energy",
+        "risk_management",
     }
     for f in FIGURES:
         assert f.book in BOOKS, f.id
@@ -34,13 +35,14 @@ def test_registry_is_consistent():
     assert len(figures_for("risk_credit")) == 8
     assert len(figures_for("stochastic")) == 3
     assert len(figures_for("volatility")) == 10
-    assert len(figures_for("rates_swaps")) == 7
+    assert len(figures_for("rates_swaps")) == 11
     assert len(figures_for("exotics")) == 2
     assert len(figures_for("ml_derivatives")) == 12
     assert len(figures_for("volatility_frontiers")) == 8
     assert len(figures_for("crypto_market")) == 4
     assert len(figures_for("climate_energy")) == 4
-    assert len(FIGURES) == 70
+    assert len(figures_for("risk_management")) == 4
+    assert len(FIGURES) == 78
 
 
 def test_every_figure_builds():

@@ -1,4 +1,4 @@
-"""Artifact-backed Plotly figures for johnhull volumes 18--25."""
+"""Artifact-backed Plotly figures for johnhull volumes 18--27."""
 
 from __future__ import annotations
 
@@ -8,6 +8,7 @@ from pathlib import Path
 
 import numpy as np
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 VOLUMES = Path(__file__).resolve().parents[2] / "volumes"
 
@@ -349,6 +350,211 @@ def _vol25_ppa() -> go.Figure:
     return _bar(data, "risk_names", ("cvar95", "hedge_residual"), "PPA risk decomposition")
 
 
+def _vol26_curves() -> go.Figure:
+    data = _load("26_inflation_jgbi", "inflation_scenarios.npz")
+    return _line(
+        data,
+        "maturity",
+        ("nominal_discount_factor", "real_discount_factor"),
+        "Nominal vs real discount curves",
+    )
+
+
+def _vol26_swaps() -> go.Figure:
+    data = _load("26_inflation_jgbi", "inflation_scenarios.npz")
+    return _bar(
+        data,
+        "zcis_maturity",
+        ("zcis_quote", "zcis_repriced"),
+        "Zero-coupon inflation swap repricing",
+    )
+
+
+def _vol26_floor() -> go.Figure:
+    data = _load("26_inflation_jgbi", "inflation_scenarios.npz")
+    vol = data["inflation_volatility"]
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(
+            x=vol,
+            y=data["floor_analytic"],
+            mode="lines+markers",
+            name="analytic floor",
+            line={"color": "#dc2626"},
+        )
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=vol,
+            y=data["floor_mc"],
+            mode="markers",
+            name="Monte Carlo floor",
+            error_y={
+                "type": "data",
+                "array": data["floor_mc_standard_error"],
+                "visible": True,
+            },
+        )
+    )
+    fig.update_layout(
+        title="JGBi deflation floor vs inflation volatility",
+        xaxis_title="inflation volatility",
+        yaxis_title="floor value (per 100 face)",
+    )
+    return fig
+
+
+def _vol26_bei() -> go.Figure:
+    data = _load("26_inflation_jgbi", "inflation_scenarios.npz")
+    return _bar(
+        data,
+        "bei_names",
+        ("breakeven_inflation",),
+        "Raw vs floor-adjusted breakeven inflation",
+    )
+
+
+def _vol27_traffic_light() -> go.Figure:
+    data = _load("27_risk_desk", "risk_desk_scenarios.npz")
+    count = data["traffic_light_x"]
+    cumulative = data["traffic_light_cumulative_prob"]
+    multiplier = data["traffic_light_multiplier"]
+    zone_color = np.where(
+        cumulative < 0.95, "#16a34a", np.where(cumulative < 0.9999, "#ca8a04", "#dc2626")
+    )
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+    fig.add_trace(
+        go.Bar(
+            x=count,
+            y=multiplier,
+            marker_color=zone_color,
+            name="capital multiplier",
+            opacity=0.85,
+        ),
+        secondary_y=False,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=count,
+            y=cumulative,
+            mode="lines+markers",
+            name="P(X<=x) binomial",
+            line={"color": "#1f77b4"},
+        ),
+        secondary_y=True,
+    )
+    fig.update_xaxes(title_text="exceedance count (250-day, 99%)")
+    fig.update_yaxes(title_text="capital multiplier", secondary_y=False)
+    fig.update_yaxes(title_text="binomial cumulative probability", secondary_y=True)
+    fig.update_layout(title="Basel traffic light: green/yellow/red zones and capital multiplier")
+    return fig
+
+
+def _vol27_coverage() -> go.Figure:
+    data = _load("27_risk_desk", "risk_desk_scenarios.npz")
+    day = data["backtest_day"]
+    names = data["coverage_names"].astype(str)
+    rate = data["coverage_rate"]
+    name_index = {name: i for i, name in enumerate(names)}
+    fig = go.Figure()
+    lines = (
+        ("hs_var_forecast", "hs_violations", "plain HS", "#94a3b8"),
+        ("fhs_var_forecast", "fhs_violations", "FHS", "#dc2626"),
+    )
+    for forecast, violation, label, color in lines:
+        viol_rate = rate[name_index[label]]
+        fig.add_trace(
+            go.Scatter(
+                x=day,
+                y=data[forecast],
+                mode="lines",
+                name=f"{label} VaR (violations {viol_rate:.2%})",
+                line={"color": color},
+            )
+        )
+        mask = data[violation] > 0.5
+        fig.add_trace(
+            go.Scatter(
+                x=day[mask],
+                y=data[forecast][mask],
+                mode="markers",
+                marker={"symbol": "x", "size": 6, "color": color},
+                name=f"{label} violation",
+            )
+        )
+    fig.update_layout(
+        title="Rolling 99% VaR coverage: plain HS vs filtered historical simulation",
+        xaxis_title="backtest day",
+        yaxis_title="VaR (return units)",
+    )
+    return fig
+
+
+def _vol27_gpd() -> go.Figure:
+    data = _load("27_risk_desk", "risk_desk_scenarios.npz")
+    fig = make_subplots(
+        rows=1,
+        cols=2,
+        column_widths=[0.6, 0.4],
+        subplot_titles=("VaR ladder: empirical vs GPD", "Mean-excess function"),
+    )
+    alpha = data["evt_quantile_alpha"]
+    fig.add_trace(
+        go.Scatter(x=alpha, y=data["empirical_var_ladder"], mode="lines+markers", name="empirical"),
+        row=1,
+        col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=alpha,
+            y=data["evt_var_ladder"],
+            mode="lines+markers",
+            name="GPD tail",
+            line={"color": "#dc2626"},
+        ),
+        row=1,
+        col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=data["mean_excess_threshold"],
+            y=data["mean_excess_curve"],
+            mode="lines+markers",
+            name="mean excess",
+            line={"color": "#1f77b4"},
+        ),
+        row=1,
+        col=2,
+    )
+    fig.update_xaxes(title_text="coverage level", row=1, col=1)
+    fig.update_yaxes(title_text="VaR loss", row=1, col=1)
+    fig.update_xaxes(title_text="threshold u", row=1, col=2)
+    fig.update_yaxes(title_text="mean excess", row=1, col=2)
+    fig.update_layout(title="GPD peaks-over-threshold tail fit")
+    return fig
+
+
+def _vol27_allocation() -> go.Figure:
+    data = _load("27_risk_desk", "risk_desk_scenarios.npz")
+    metrics = _metrics("27_risk_desk")
+    names = data["asset_names"].astype(str)
+    fig = go.Figure()
+    fig.add_trace(go.Bar(x=names, y=data["alloc_component_var"], name="component VaR"))
+    fig.add_trace(go.Bar(x=names, y=data["es_components"], name="component ES"))
+    var_total = metrics["alloc_normal_var"]
+    es_total = metrics["total_historical_es"]
+    fig.update_layout(
+        title=(
+            f"Euler risk allocation — sum CVaR={var_total:.2f} (VaR), "
+            f"sum CES={es_total:.2f} (ES); additivity exact"
+        ),
+        barmode="group",
+        xaxis_title="desk / asset",
+        yaxis_title="loss amount",
+    )
+    return fig
+
+
 FRONTIER_BUILDERS: dict[str, Callable[[], go.Figure]] = {
     "ml_price_error": _vol18_price,
     "ml_greek_error": _vol18_greeks,
@@ -382,4 +588,12 @@ FRONTIER_BUILDERS: dict[str, Callable[[], go.Figure]] = {
     "weather_paths": _vol25_weather,
     "weather_basis": _vol25_basis,
     "ppa_risk": _vol25_ppa,
+    "inflation_curves": _vol26_curves,
+    "inflation_swaps": _vol26_swaps,
+    "jgbi_floor": _vol26_floor,
+    "jgbi_bei": _vol26_bei,
+    "var_traffic_light": _vol27_traffic_light,
+    "fhs_vs_hs_coverage": _vol27_coverage,
+    "gpd_tail_fit": _vol27_gpd,
+    "risk_allocation_bars": _vol27_allocation,
 }

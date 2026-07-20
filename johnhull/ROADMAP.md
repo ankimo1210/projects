@@ -73,7 +73,56 @@ separate. No production dependency was added for G0/G1 core implementation.
 各巻に validation report、fingerprinted JSON/NPZ、artifact-only notebook、book
 symlinkがあり、各巻の `integration_and_reproducibility` gate は PASS。これは
 **model performance の承認ではない**。`release_manifest.json` の現行契約は portal
-**70 図/11 テーマ**、Jupyter Book 28 ページ。G8 で fresh artifact/notebook/
+**78 図/12 テーマ**、Jupyter Book 30 ページ。G8 で fresh artifact/notebook/
 report/book/test/lint を再検証し、最終結果と model risk を `johnhull/VALIDATION.md`
 に固定した。strict tracked gate と専用 branch への remote push も完了した。
 research track は既定無効・core gate 非依存のままとする。
+
+## Inflation-linked rates and JGBi — Phase 1–7 (2026-07-19)
+
+Design plan: `docs/superpowers/plans/2026-07-19-johnhull-inflation-jgbi.md`
+
+| Volume | Path | Topic | Status |
+|---:|---|---|---|
+| 26 | `volumes/26_inflation_jgbi` | inflation-linked rates and JGBi (beyond Hull ch.25) | done |
+
+| Phase | Scope | Status |
+|---:|---|---|
+| 1 | Shared nominal/real curve helpers | done |
+| 2 | Hull–White 1F curve fit, exact transition, bond option, Jamshidian swaption | done |
+| 3 | CPI lag/interpolation/rebasing, deterministic seasonality, ZCIS, YoY | done |
+| 4 | JGBi tenth-day reference index, rounding, cash flow, settlement, real yield | done |
+| 5 | Jarrow–Yildirim nominal/real numeraires and payment-forward measures | done |
+| 6 | JGBi redemption-only deflation floor, analytic/MC value and risk | done |
+| 7 | `volumes/26_inflation_jgbi` reproducible artifact-only notebook | done |
+
+Phase 7 の `done` は synthetic-offline の integration/reproducibility gate を表し、
+市場較正、production valuation、model performance の承認ではない。Portal（`rates_swaps`
+テーマの `inflation_curves`・`inflation_swaps`・`jgbi_floor`・`jgbi_bei` 4 図）、
+Jupyter Book 登録、full tracked release への収録はいずれも完了した。
+
+## Advanced VaR/ES risk desk — Phase 1–6 (2026-07-20)
+
+Design plan: `docs/superpowers/plans/2026-07-20-johnhull-27-risk-desk.md`
+
+| Volume | Path | Topic | Status |
+|---:|---|---|---|
+| 27 | `volumes/27_risk_desk` | advanced daily VaR/ES risk desk (beyond Hull ch.22) | done |
+
+| Phase | Scope | Status |
+|---:|---|---|
+| 1 | VaR backtesting: Kupiec POF, Christoffersen ind/CC, quantified Basel traffic light | done |
+| 2 | Filtered historical simulation and EVT/GPD peaks-over-threshold tail VaR/ES | done |
+| 3 | Euler risk decomposition: marginal/component/incremental VaR and simulation ES | done |
+| 4 | P&L explain: factor exposures, delta-gamma-vega attribution, limits, desk report | done |
+| 5 | `volumes/27_risk_desk` reference, `_volume27` acceptance, artifact-only notebook | done |
+| 6 | Portal `risk_management` page, Jupyter Book page, full tracked release | done |
+
+Phase 5 の `done` は synthetic-offline の integration/reproducibility gate（`_volume27`
+の 11 恒等式チェックと byte 再現性）を表し、市場較正・model performance の承認ではない。
+Phase 6 の portal 図（`var_traffic_light`・`fhs_vs_hs_coverage`・`gpd_tail_fit`・
+`risk_allocation_bars`）、`risk_management` book page、Jupyter Book 登録、full tracked
+release はすべて完了した（commit 691877f, 63f83ce）。
+
+FRTB IMA（liquidity-horizon ES 集約、stressed ES scaling、NMRF、P&L attribution
+eligibility test、IMA/SA 資本比較）は **vol 28 候補**として scope 外に記録する。

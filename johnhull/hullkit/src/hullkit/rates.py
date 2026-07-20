@@ -64,6 +64,65 @@ def zero_interp(t, times, rates):
     return float(np.interp(t, times, rates))
 
 
+def _validated_curve(curve):
+    """Return finite, strictly ordered curve arrays for new curve helpers."""
+    try:
+        times, zeros = curve
+    except (TypeError, ValueError) as exc:
+        raise ValueError("curve must be a (times, zero_rates) pair") from exc
+    times = np.asarray(times, dtype=float)
+    zeros = np.asarray(zeros, dtype=float)
+    if times.ndim != 1 or zeros.ndim != 1 or times.size != zeros.size or not times.size:
+        raise ValueError("curve times and zero rates must be non-empty one-dimensional arrays")
+    if not np.all(np.isfinite(times)) or not np.all(np.isfinite(zeros)):
+        raise ValueError("curve times and zero rates must be finite")
+    if np.any(times < 0.0) or np.any(np.diff(times) <= 0.0):
+        raise ValueError("curve times must be non-negative and strictly increasing")
+    return times, zeros
+
+
+def discount_factor(t, curve):
+    """Continuous-compounding discount factor ``P(0,t)`` from a zero curve."""
+    t = float(t)
+    if not math.isfinite(t) or t < 0.0:
+        raise ValueError("discount time must be finite and non-negative")
+    if t == 0.0:
+        return 1.0
+    times, zeros = _validated_curve(curve)
+    return math.exp(-zero_interp(t, times, zeros) * t)
+
+
+def forward_discount(start, end, curve):
+    """Forward discount factor ``P(0,end) / P(0,start)`` for ``end >= start``."""
+    start = float(start)
+    end = float(end)
+    if not math.isfinite(start) or not math.isfinite(end) or start < 0.0 or end < start:
+        raise ValueError("forward-discount times must satisfy 0 <= start <= end")
+    return discount_factor(end, curve) / discount_factor(start, curve)
+
+
+def instantaneous_forward(t, curve, *, bump=1e-5):
+    r"""Numerical instantaneous forward ``f(0,t)=-d log P(0,t)/dt``.
+
+    A central difference is used away from zero and a forward difference at the
+    origin.  The helper deliberately follows the interpolation convention of the
+    supplied zero curve instead of fitting an additional smoothing model.
+    """
+    t = float(t)
+    bump = float(bump)
+    if not math.isfinite(t) or t < 0.0:
+        raise ValueError("forward time must be finite and non-negative")
+    if not math.isfinite(bump) or bump <= 0.0:
+        raise ValueError("bump must be finite and positive")
+
+    def log_discount(time):
+        return math.log(discount_factor(time, curve))
+
+    if t < bump:
+        return -(log_discount(t + bump) - log_discount(t)) / bump
+    return -(log_discount(t + bump) - log_discount(t - bump)) / (2.0 * bump)
+
+
 def bootstrap_zero_curve(instruments):
     """Bootstrap continuous zero rates from bond prices (Hull §4.7, Table 4.3).
 
