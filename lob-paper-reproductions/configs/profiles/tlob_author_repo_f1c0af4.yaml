@@ -1,0 +1,131 @@
+paper_id: tlob_2025
+implementation_profile: tlob_author_repo_f1c0af4
+fidelity_class: A_AUTHOR_CODE_EXACT
+paper_version: arXiv:2502.15757v3
+source_code_commit: f1c0af4d81067978914361766db0457a7d8b6a46
+dataset_profile: fi2010_noauction_zscore_cf7_8_9
+random_seed: 1
+model:
+  sequence_length: 128
+  num_layers: 4
+  hidden_dim_static_config: 40
+  hidden_dim: 144
+  runtime_hidden_dim_override: fi2010_to_feature_count
+  num_heads: 1
+  positional_embedding: sinusoidal
+  bin_mode: reference_compat
+  attention_mask: none
+  attention_dropout: 0.0
+  all_features: true
+  detach_order_type_embedding: true
+  expected_parameters: 2656724
+data:
+  features: 144
+  training_file: Train_Dst_NoAuction_ZScore_CF_7.txt
+  train_fraction: 0.8
+  validation_fraction: 0.2
+  test_files: [Test_Dst_NoAuction_ZScore_CF_7.txt, Test_Dst_NoAuction_ZScore_CF_8.txt, Test_Dst_NoAuction_ZScore_CF_9.txt]
+  horizons: [10, 20, 30, 50, 100]
+  class_order: [up, stationary, down]
+  batch_size: 32
+  boundary_policy: contiguous_file_windows
+training:
+  loss: CrossEntropyLoss
+  optimizer: Adam
+  learning_rate: 0.0001
+  adam_epsilon: 0.00000001
+  max_epochs: 10
+  train_shuffle: true
+  validation_shuffle: false
+  initialization: torch_default_after_seed
+  framework: torch_2.5.0_cu121
+  ema_decay: 0.999
+  ema_use_num_updates: true
+  ema_update_timing: before_automatic_backward_and_optimizer_step
+  validation_under_ema: true
+  test_under_ema: true
+  checkpoint_metric: minimum_validation_loss
+  learning_rate_rule: halve_on_non_improvement_or_improvement_less_than_0.002
+  metric: macro_f1
+material_fields:
+  - random_seed
+  - model.sequence_length
+  - model.num_layers
+  - model.hidden_dim_static_config
+  - model.hidden_dim
+  - model.runtime_hidden_dim_override
+  - model.num_heads
+  - model.positional_embedding
+  - model.bin_mode
+  - model.attention_mask
+  - model.attention_dropout
+  - model.all_features
+  - model.detach_order_type_embedding
+  - model.expected_parameters
+  - data.features
+  - data.training_file
+  - data.train_fraction
+  - data.validation_fraction
+  - data.test_files
+  - data.horizons
+  - data.class_order
+  - data.batch_size
+  - data.boundary_policy
+  - training.loss
+  - training.optimizer
+  - training.learning_rate
+  - training.adam_epsilon
+  - training.max_epochs
+  - training.train_shuffle
+  - training.validation_shuffle
+  - training.initialization
+  - training.framework
+  - training.ema_decay
+  - training.ema_use_num_updates
+  - training.ema_update_timing
+  - training.validation_under_ema
+  - training.test_under_ema
+  - training.checkpoint_metric
+  - training.learning_rate_rule
+  - training.metric
+provenance:
+  random_seed: {source_type: AUTHOR_CODE, locator: "config/config.py:80; main.py:88-92", confidence: verified}
+  model.sequence_length: {source_type: AUTHOR_CODE, locator: "config/config.py:21-24", confidence: verified}
+  model.num_layers: {source_type: AUTHOR_CODE, locator: "config/config.py:21-24", confidence: verified}
+  model.hidden_dim_static_config: {source_type: AUTHOR_CODE, locator: "config/config.py:21-24", confidence: verified}
+  model.hidden_dim: {source_type: AUTHOR_CODE, locator: "main.py:27-29 FI_2010 runtime override", confidence: verified}
+  model.runtime_hidden_dim_override: {source_type: AUTHOR_CODE, locator: "main.py:27-29", confidence: verified}
+  model.num_heads: {source_type: AUTHOR_CODE, locator: "config/config.py:21-24", confidence: verified}
+  model.positional_embedding: {source_type: AUTHOR_CODE, locator: "config/config.py:21-24; models/tlob.py:75-79", confidence: verified}
+  model.bin_mode: {source_type: AUTHOR_CODE, locator: "models/bin.py:5-85", confidence: verified}
+  model.attention_mask: {source_type: AUTHOR_CODE, locator: "models/tlob.py:39-49", confidence: verified}
+  model.attention_dropout: {source_type: AUTHOR_CODE, locator: "models/tlob.py:35 default", confidence: verified}
+  model.all_features: {source_type: AUTHOR_CODE, locator: "config/config.py:21-24", confidence: verified}
+  model.detach_order_type_embedding: {source_type: AUTHOR_CODE, locator: "models/tlob.py:100-105", confidence: verified}
+  model.expected_parameters: {source_type: AUTHOR_CODE, locator: "main.py FI_2010 override + executable clean-room count", confidence: verified}
+  data.features: {source_type: AUTHOR_CODE, locator: "preprocessing/fi_2010.py:28-33", confidence: verified}
+  data.training_file: {source_type: AUTHOR_CODE, locator: "preprocessing/fi_2010.py:8", confidence: verified}
+  data.train_fraction: {source_type: AUTHOR_CODE, locator: "preprocessing/fi_2010.py:9-10; constants.py:70", confidence: verified}
+  data.validation_fraction: {source_type: AUTHOR_CODE, locator: "preprocessing/fi_2010.py:9-10", confidence: verified}
+  data.test_files: {source_type: AUTHOR_CODE, locator: "preprocessing/fi_2010.py:11-14", confidence: verified}
+  data.horizons: {source_type: AUTHOR_CODE, locator: "preprocessing/fi_2010.py:16-27", confidence: verified}
+  data.class_order: {source_type: AUTHOR_CODE, locator: "preprocessing/fi_2010.py:35-37; FI-2010 labels", confidence: verified}
+  data.batch_size: {source_type: AUTHOR_CODE, locator: "config/config.py:45-49", confidence: verified}
+  data.boundary_policy: {source_type: AUTHOR_CODE, locator: "preprocessing/dataset.py:23-25", confidence: verified}
+  training.loss: {source_type: AUTHOR_CODE, locator: "models/engine.py:55-57", confidence: verified}
+  training.optimizer: {source_type: AUTHOR_CODE, locator: "config/config.py:84; models/engine.py:201-208", confidence: verified}
+  training.learning_rate: {source_type: AUTHOR_CODE, locator: "config/config.py:21-24", confidence: verified}
+  training.adam_epsilon: {source_type: AUTHOR_CODE, locator: "models/engine.py:201-208", confidence: verified}
+  training.max_epochs: {source_type: AUTHOR_CODE, locator: "config/config.py:82", confidence: verified}
+  training.train_shuffle: {source_type: AUTHOR_CODE, locator: "preprocessing/dataset.py:35,51-58", confidence: verified}
+  training.validation_shuffle: {source_type: AUTHOR_CODE, locator: "preprocessing/dataset.py:61-69", confidence: verified}
+  training.initialization: {source_type: AUTHOR_CODE, locator: "main.py:88-92; no custom initializer", confidence: verified}
+  training.framework: {source_type: AUTHOR_CODE, locator: "requirements.txt:16", confidence: verified}
+  training.ema_decay: {source_type: AUTHOR_CODE, locator: "models/engine.py:55", confidence: verified}
+  training.ema_use_num_updates: {source_type: AUTHOR_CODE, locator: "models/engine.py:12,55; requirements.txt:17 torch_ema default use_num_updates=True -> effective decay min(.999,(1+n)/(10+n))", confidence: verified}
+  training.ema_update_timing: {source_type: AUTHOR_CODE, locator: "models/engine.py:80-90", confidence: verified}
+  training.validation_under_ema: {source_type: AUTHOR_CODE, locator: "models/engine.py:94-104", confidence: verified}
+  training.test_under_ema: {source_type: AUTHOR_CODE, locator: "models/engine.py:107-130", confidence: verified}
+  training.checkpoint_metric: {source_type: AUTHOR_CODE, locator: "models/engine.py:138-150", confidence: verified}
+  training.learning_rate_rule: {source_type: AUTHOR_CODE, locator: "models/engine.py:138-150", confidence: verified}
+  training.metric: {source_type: AUTHOR_CODE, locator: "models/engine.py:158-164", confidence: verified}

@@ -1,0 +1,74 @@
+paper_id: deeplob
+implementation_profile: deeplob_ieee_2019
+fidelity_class: B_PAPER_EXACT
+paper_version: IEEE TSP 67(11), 2019 / arXiv:1808.03668v6
+source_code_commit: null
+dataset_profile: fi2010_synthetic_v1
+random_seed: 7
+model:
+  input_layout: BCTF
+  sequence_length: 100
+  raw_features: 40
+  conv_channels: 16
+  inception_branch_channels: 32
+  lstm_hidden: 64
+  leaky_relu_slope: 0.01
+  temporal_padding: same
+  classes: 3
+data:
+  feature_order: [ask_price, ask_volume, bid_price, bid_volume]
+  class_order: [up, stationary, down]
+  label_horizons: [10, 20, 30, 50, 100]
+  setup_1: anchored_9_folds
+  setup_2: first_7_days_train_last_3_days_test
+training:
+  loss: categorical_cross_entropy
+  optimizer: Adam
+  learning_rate: 0.01
+  adam_epsilon: 1.0
+  batch_size: 32
+  early_stopping_metric: validation_accuracy
+  early_stopping_patience: 20
+material_fields:
+  - model.input_layout
+  - model.sequence_length
+  - model.raw_features
+  - model.conv_channels
+  - model.inception_branch_channels
+  - model.lstm_hidden
+  - model.leaky_relu_slope
+  - model.temporal_padding
+  - data.feature_order
+  - data.class_order
+  - data.label_horizons
+  - data.setup_1
+  - data.setup_2
+  - training.loss
+  - training.optimizer
+  - training.learning_rate
+  - training.adam_epsilon
+  - training.batch_size
+  - training.early_stopping_metric
+  - training.early_stopping_patience
+provenance:
+  model.input_layout: {source_type: PAPER, locator: "p.4-5 Eq.6/Fig.3; named port layout", confidence: inferred_from_shape}
+  model.sequence_length: {source_type: PAPER, locator: "p.4-5 Eq.6", confidence: verified}
+  model.raw_features: {source_type: PAPER, locator: "p.4-5 Eq.6", confidence: verified}
+  model.conv_channels: {source_type: PAPER, locator: "p.5 Fig.3", confidence: verified}
+  model.inception_branch_channels: {source_type: PAPER, locator: "p.6 Fig.4", confidence: verified}
+  model.lstm_hidden: {source_type: PAPER, locator: "p.5-6 Fig.3/Sec.IV-c", confidence: verified}
+  model.leaky_relu_slope: {source_type: PAPER, locator: "p.5 Sec.IV-a", confidence: verified}
+  model.temporal_padding: {source_type: PAPER, locator: "p.5 Sec.IV-a", confidence: verified}
+  data.feature_order: {source_type: PAPER, locator: "p.5 Eq.6", confidence: verified}
+  data.class_order: {source_type: DATASET_DOC, locator: "FI-2010 v5 p.13-14", confidence: verified}
+  data.label_horizons: {source_type: DATASET_DOC, locator: "FI-2010 v5 p.13-14", confidence: verified}
+  data.setup_1: {source_type: PAPER, locator: "p.6 Sec.V-B", confidence: verified}
+  data.setup_2: {source_type: PAPER, locator: "p.6 Sec.V-B", confidence: verified}
+  training.loss: {source_type: PAPER, locator: "p.6 Sec.V-A", confidence: verified}
+  training.optimizer: {source_type: PAPER, locator: "p.6 Sec.V-A", confidence: verified}
+  training.learning_rate: {source_type: PAPER, locator: "p.6 Sec.V-A", confidence: verified}
+  training.adam_epsilon: {source_type: PAPER, locator: "p.6 Sec.V-A", confidence: verified}
+  training.batch_size: {source_type: PAPER, locator: "p.6 Sec.V-A", confidence: verified}
+  training.early_stopping_metric: {source_type: PAPER, locator: "p.6 Sec.V-A", confidence: verified}
+  training.early_stopping_patience: {source_type: PAPER, locator: "p.6 Sec.V-A", confidence: verified}
+

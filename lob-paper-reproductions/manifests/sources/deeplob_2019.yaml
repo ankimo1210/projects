@@ -1,0 +1,11 @@
+paper_id: deeplob
+canonical_title: "DeepLOB: Deep Convolutional Neural Networks for Limit Order Books"
+authors: [Zihao Zhang, Stefan Zohren, Stephen Roberts]
+arxiv_id: "1808.03668"
+arxiv_version: v6
+paper_version: IEEE Transactions on Signal Processing 67(11), 2019; arXiv v6
+doi: 10.1109/TSP.2019.2907260
+source_url: https://arxiv.org/pdf/1808.03668v6
+retrieved_at_utc: "2026-07-20T09:11:11Z"
+local_path: sources/papers/deeplob_1808.03668v6.pdf
+sha256: f50d57a80644ac427433824b540c9bc713ffd2249c2042ba975d986078295913

@@ -1,0 +1,28 @@
+repository: LeonardoBerti00/TLOB
+repository_url: https://github.com/LeonardoBerti00/TLOB
+commit: f1c0af4d81067978914361766db0457a7d8b6a46
+commit_tree: 8e9890f8a00b5764c3edd73448fc1f65ba124447
+commit_date_utc: "2026-02-24T17:41:05Z"
+archive_url: https://codeload.github.com/LeonardoBerti00/TLOB/tar.gz/f1c0af4d81067978914361766db0457a7d8b6a46
+archive_sha256: 8e0c9acc0b2d89b6f36ea7b57a9915a48c4a8112897a7d93c76a26fe3f46d916
+retrieved_at_utc: "2026-07-20T09:11:11Z"
+local_path: sources/references/tlob_f1c0af4
+license_file: LICENSE
+license_status: confirmed
+license_spdx: MIT
+vendoring_allowed: true
+files_used_as_evidence:
+  - {path: LICENSE, sha256: 622476939f6aad03c8c80fcd25a131b7ebaecdf44f23e8ee5423d9494f34f5c3}
+  - {path: config/config.py, sha256: 3b14ee43f6114c01e2f092c474a0107a7ffd2cd5aa5dd3da7f2b116a7f37c110}
+  - {path: constants.py, sha256: e3a66aa7f65b0f32fa742468911e96190bdd896fbe56a5653cecdc82d8a291ae}
+  - {path: main.py, sha256: 081b15814f2d0a3b45bf07162894a2b782c5462f2418bc79cc88ab963cfb2cb5}
+  - {path: run.py, sha256: 3a7f67431352c73a4cdac2a873b7f671b289d883897d557bb3e5e73b7e871c50}
+  - {path: requirements.txt, sha256: 90385e5692c18ab668292e80e8ee94633bd2408fdd2227fbc9b24b387753bd97}
+  - {path: models/bin.py, sha256: 1efd98dbad2a40612879b3148ef7bf534b2b100ce95d671f13dd3de91684807d}
+  - {path: models/engine.py, sha256: 3ce9779fd0216341d738130ee64896564a079889aa2fcbd448f7f2112ca57c94}
+  - {path: models/mlplob.py, sha256: dbd518a3757bc56f90de96a0b89ec45e1c2c146de29b813efa784430f212ac61}
+  - {path: models/tlob.py, sha256: 607e69dac8e87f978cbec338db612437ebd3b097e79bca0064fee166d347c55e}
+  - {path: preprocessing/fi_2010.py, sha256: 4d8b55bfb6c29416f1b6a7e9595b0feff9dc967ed67acfab17d5d9d6055ab16e}
+  - {path: preprocessing/dataset.py, sha256: eadb2dc867e8e739f70a2cbbf65282121082a2bb699d93bd5ee7f979b8a99e38}
+  - {path: preprocessing/lobster.py, sha256: 48a31b7d3726b247260902cda24de5d7f6ade870dfa4107a4a3776c908c780d6}
+  - {path: utils/utils_data.py, sha256: 5161f8a3a5542e27633d85c0fd121bb147ba5f80b6056360b589f9484eca2676}

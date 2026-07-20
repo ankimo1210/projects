@@ -1,0 +1,11 @@
+dataset_profile: fi2010_synthetic_v1
+kind: deterministic_synthetic_fixture
+rows: 149
+raw_feature_rows: [0, 40]
+engineered_feature_rows: [40, 144]
+label_rows: [144, 149]
+label_horizons: [10, 20, 30, 50, 100]
+instruments: [KESBV, OUT1V, SAMPO, RTRKS, WRT1V]
+random_seed: 7
+claim_limit: structural_only
+

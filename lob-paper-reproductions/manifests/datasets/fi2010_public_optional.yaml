@@ -1,0 +1,14 @@
+dataset_profile: fi2010_public_optional
+kind: optional_public_benchmark
+canonical_reference: arXiv:1705.03233v5
+terms_url: http://urn.fi/urn:nbn:fi:csc-kata20170601153214969115
+author_archive_url: https://raw.githubusercontent.com/zcakhaa/DeepLOB-Deep-Convolutional-Neural-Networks-for-Limit-Order-Books/ff14d7c2fd38bdfc143389786993d0f0236d4eb8/data/data.zip
+author_archive_sha256: 7a5564290a504bdc104dccaf44aa6c0b3857bf1db6b0517b9b88577c2def3e5f
+redistribution_status: unresolved
+default_download: false
+requires_accept_terms: true
+variants_in_pinned_author_archive:
+  - NoAuction_DecPre_CF_7_8_9
+required_separately_for_tlob_author_profile:
+  - NoAuction_ZScore_CF_7_8_9
+tlob_zscore_availability: unresolved

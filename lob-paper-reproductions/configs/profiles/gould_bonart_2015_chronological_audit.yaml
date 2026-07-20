@@ -1,0 +1,15 @@
+paper_id: gould_bonart_2015
+implementation_profile: gould_bonart_2015_chronological_audit
+fidelity_class: D_MODERNIZED_AUDIT
+paper_version: arXiv:1512.03492v1
+source_code_commit: null
+dataset_profile: queue_imbalance_synthetic_v1
+random_seed: 7
+model: {estimator: logistic_and_local_logistic, local_kernel: tricube, nearest_neighbor_bandwidth: 0.65}
+data: {sampling_clock: continuous, interval: open, observations_per_day: 100, trading_days: 252, response_up: 1, response_down: 0}
+split: {strategy: chronological, train_fraction: 0.8}
+evaluation: {metrics: [roc_auc, mean_squared_residual], null_probability: 0.5}
+material_fields: [split.strategy]
+provenance:
+  split.strategy: {source_type: ASSUMPTION, locator: "AUDIT-GB-CHRONOLOGICAL", confidence: verified}
+
