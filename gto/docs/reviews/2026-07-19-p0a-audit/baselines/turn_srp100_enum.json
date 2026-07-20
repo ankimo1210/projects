@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "case": "turn_srp100_enum",
+  "config": "board=2c7d9hJh pot=5bb stack=97bb ranges=uniform variant=cfr+ tree=srp mode=enumerate",
+  "label": "baseline",
+  "git_commit": "611980dd07d4d2dbefe44686919bb49cba29cfc2",
+  "dirty": false,
+  "seed": 42,
+  "iterations": 400,
+  "points": 8,
+  "threads": 20,
+  "build_profile": "release",
+  "cpu": "Intel(R) Core(TM) Ultra 9 285K",
+  "kernel": "6.18.33.1-microsoft-standard-WSL2",
+  "cmdline": "target/release/solver-bench --case turn_srp100_enum --iterations 400 --points 8 --label baseline --git-commit 611980dd07d4d2dbefe44686919bb49cba29cfc2 --dirty 0 --out docs/reviews/2026-07-19-p0a-audit/baselines/turn_srp100_enum.json",
+  "table_bytes": 351124800,
+  "peak_rss_mb": 340.0,
+  "state_checksum": null,
+  "resume_count": 0,
+  "timing": {"build_s": 0.099, "solve_s": 116.264, "checkpoint_br_s": 1.774, "final_br_s": 0.253, "checkpoint_s": 0.000},
+  "checkpoints": [
+    {"iters": 3, "solve_s": 1.126, "br_s": 0.251, "expl": 11.271817, "br0": 10.629556, "br1": 11.914077},
+    {"iters": 6, "solve_s": 1.997, "br_s": 0.257, "expl": 4.659800, "br0": 4.237739, "br1": 5.081861},
+    {"iters": 12, "solve_s": 3.751, "br_s": 0.251, "expl": 1.939618, "br0": 2.037018, "br1": 1.842217},
+    {"iters": 25, "solve_s": 7.510, "br_s": 0.253, "expl": 0.839066, "br0": 0.905974, "br1": 0.772158},
+    {"iters": 50, "solve_s": 14.813, "br_s": 0.255, "expl": 0.389187, "br0": 0.591178, "br1": 0.187196},
+    {"iters": 100, "solve_s": 29.372, "br_s": 0.251, "expl": 0.153722, "br0": 0.373843, "br1": -0.066398},
+    {"iters": 200, "solve_s": 58.348, "br_s": 0.256, "expl": 0.058764, "br0": 0.266993, "br1": -0.149464},
+    {"iters": 400, "solve_s": 116.264, "br_s": 0.253, "expl": 0.021120, "br0": 0.223873, "br1": -0.181633}
+  ],
+  "segments": [
+    {"start_iters": 0, "end_iters": 400, "build_s": 0.099, "solve_s": 116.264, "br_s": 2.027, "checkpoint_s": 0.000}
+  ]
+}
