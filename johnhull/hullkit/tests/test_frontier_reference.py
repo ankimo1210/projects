@@ -502,3 +502,176 @@ def test_fixed_seed_reproduces_all_non_timing_values(
     excluded_metrics = {"surrogate_speedup_1024"}
     for name in original.metrics.keys() - excluded_metrics:
         assert original.metrics[name] == repeated.metrics[name]
+
+
+# --- vol 27 acceptance gate independence -------------------------------
+
+
+def _frontier_acceptance():
+    """Import the acceptance script (it lives outside the installed packages)."""
+    import sys
+    from pathlib import Path
+
+    scripts = Path(__file__).resolve().parents[2] / "scripts"
+    if str(scripts) not in sys.path:
+        sys.path.insert(0, str(scripts))
+    import frontier_acceptance
+
+    return frontier_acceptance
+
+
+def _volume27_checks(metrics: dict, arrays: dict) -> dict[str, dict]:
+    checks, _ = _frontier_acceptance()._volume27(metrics, arrays)
+    return {check["name"]: check for check in checks}
+
+
+def test_volume27_christoffersen_gate_ignores_the_stored_pvalue(
+    references: dict[int, frontier_reference.FrontierReference],
+) -> None:
+    """Tampering with the JSON p-value must not be able to flip the gate to PASS."""
+    reference = references[27]
+    arrays = dict(reference.arrays)
+    honest = _volume27_checks(dict(reference.metrics), arrays)
+    assert honest["christoffersen_detects_clustering"]["passed"] is True
+    assert honest["christoffersen_pvalue_matches_recomputation"]["passed"] is True
+
+    tampered_metrics = dict(reference.metrics)
+    tampered_metrics["christoffersen_ind_pvalue_clustered"] = 0.0
+    tampered = _volume27_checks(tampered_metrics, arrays)
+
+    # The detection gate is decided by the arrays, so the tamper cannot reach it ...
+    assert tampered["christoffersen_detects_clustering"]["passed"] is True
+    assert tampered["christoffersen_detects_clustering"]["observed"] == pytest.approx(
+        honest["christoffersen_detects_clustering"]["observed"]
+    )
+    # ... and the tampered metric is caught by the consistency check instead.
+    assert tampered["christoffersen_pvalue_matches_recomputation"]["passed"] is False
+
+
+def test_volume27_christoffersen_gate_fails_when_clustering_is_absent(
+    references: dict[int, frontier_reference.FrontierReference],
+) -> None:
+    """With an iid series in place of the clustered one the gate must FAIL."""
+    reference = references[27]
+    arrays = dict(reference.arrays)
+    arrays["clustered_exceedances"] = arrays["iid_exceedances"]
+    metrics = dict(reference.metrics)
+    acceptance = _frontier_acceptance()
+    lr = acceptance._lr_independence_np(arrays["clustered_exceedances"])
+    metrics["christoffersen_ind_pvalue_clustered"] = acceptance._chi2_sf_df1(lr)
+
+    checks = _volume27_checks(metrics, arrays)
+    assert checks["christoffersen_detects_clustering"]["passed"] is False
+
+
+def test_volume27_christoffersen_pvalue_matches_scipy(
+    references: dict[int, frontier_reference.FrontierReference],
+) -> None:
+    """The scipy-free erfc recomputation must agree with chi2.sf(LR, df=1)."""
+    from scipy.stats import chi2
+
+    acceptance = _frontier_acceptance()
+    arrays = references[27].arrays
+    for name in ("iid_exceedances", "clustered_exceedances"):
+        lr = acceptance._lr_independence_np(arrays[name])
+        assert acceptance._chi2_sf_df1(lr) == pytest.approx(float(chi2.sf(lr, df=1)), abs=1e-12)
+
+
+# --- vol 27 cross-asset capstone ---------------------------------------
+
+
+def test_volume27_capstone_maps_equity_and_rate_positions(
+    references: dict[int, frontier_reference.FrontierReference],
+) -> None:
+    """The capstone book must span equities and rates through explicit factors."""
+    arrays = references[27].arrays
+    positions = arrays["position_names"].tolist()
+    factors = arrays["factor_names"].tolist()
+    assert positions == ["index call", "single-name put", "receive-fixed IRS"]
+    assert factors == ["index_spot", "single_name_spot", "parallel_zero_rate"]
+
+    shape = (len(positions), len(factors))
+    for name in ("position_factor_delta", "position_factor_gamma", "position_factor_vega"):
+        assert arrays[name].shape == shape
+
+    rate_column = factors.index("parallel_zero_rate")
+    swap_row = positions.index("receive-fixed IRS")
+    assert arrays["position_factor_delta"][swap_row, rate_column] != 0.0
+    # A swap revalued off a deterministic curve carries no vega.
+    assert np.all(arrays["position_factor_vega"][:, rate_column] == 0.0)
+    assert arrays["position_factor_vega"][swap_row, :].tolist() == [0.0, 0.0, 0.0]
+
+
+def test_volume27_swap_sensitivities_match_an_independent_bump(
+    references: dict[int, frontier_reference.FrontierReference],
+) -> None:
+    """Re-derive the IRS rate delta/gamma from scratch with the same curve bump."""
+    from hullkit import swaps
+
+    reference = references[27]
+    metrics = reference.metrics
+    arrays = reference.arrays
+
+    notional = metrics["swap_notional"]
+    fixed_rate = metrics["swap_fixed_rate"]
+    bump = metrics["swap_rate_bump"]
+    pay_times = np.asarray([0.5, 1.0, 1.5, 2.0, 2.5, 3.0])
+    curve_times = np.asarray([0.25, 0.5, 1.0, 2.0, 3.0, 5.0])
+    curve_zeros = np.asarray([0.018, 0.019, 0.021, 0.023, 0.024, 0.026])
+
+    def value(shift: float) -> float:
+        return float(swaps.irs_value_fras(notional, fixed_rate, pay_times, (curve_times, curve_zeros + shift)))
+
+    base, up, down = value(0.0), value(bump), value(-bump)
+    expected_delta = (up - down) / (2.0 * bump)
+    expected_gamma = (up - 2.0 * base + down) / bump**2
+
+    assert metrics["swap_base_value"] == pytest.approx(base, rel=1e-12)
+    assert metrics["swap_rate_delta"] == pytest.approx(expected_delta, rel=1e-12)
+    assert metrics["swap_rate_gamma"] == pytest.approx(expected_gamma, rel=1e-9)
+
+    factors = arrays["factor_names"].tolist()
+    swap_row = arrays["position_names"].tolist().index("receive-fixed IRS")
+    rate_column = factors.index("parallel_zero_rate")
+    assert arrays["position_factor_delta"][swap_row, rate_column] == pytest.approx(
+        expected_delta, rel=1e-12
+    )
+
+
+def test_volume27_full_revaluation_sums_across_positions(
+    references: dict[int, frontier_reference.FrontierReference],
+) -> None:
+    reference = references[27]
+    arrays = reference.arrays
+    metrics = reference.metrics
+    np.testing.assert_allclose(
+        arrays["position_full_pnl"].sum(), metrics["taylor_full_pnl"], atol=1e-9
+    )
+    np.testing.assert_allclose(
+        arrays["position_full_pnl_half"].sum(), metrics["taylor_full_pnl_half"], atol=1e-9
+    )
+    np.testing.assert_allclose(
+        arrays["position_shocked_value"] - arrays["position_base_value"],
+        arrays["position_full_pnl"],
+        atol=1e-9,
+    )
+
+
+def test_volume27_taylor_residual_shrinks_faster_than_delta_only(
+    references: dict[int, frontier_reference.FrontierReference],
+) -> None:
+    """dgv beats delta-only, and halving the move shrinks both residuals."""
+    metrics = references[27].metrics
+    assert metrics["taylor_dgv_residual"] < metrics["taylor_delta_residual"]
+    assert metrics["taylor_dgv_residual_half"] < metrics["taylor_dgv_residual"]
+    assert metrics["taylor_delta_residual_half"] < metrics["taylor_delta_residual"]
+
+
+def test_volume27_reference_is_deterministic() -> None:
+    """The capstone must regenerate identically for the same seed."""
+    first = frontier_reference.volume27_reference()
+    second = frontier_reference.volume27_reference()
+    assert first.metrics == second.metrics
+    assert set(first.arrays) == set(second.arrays)
+    for name, values in first.arrays.items():
+        np.testing.assert_array_equal(values, second.arrays[name])

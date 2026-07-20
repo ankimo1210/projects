@@ -228,7 +228,7 @@ VOLUME_META = {
     27: {
         "title": "Advanced VaR/ES Risk Desk",
         "question": "そのVaRは信頼できるか——backtest、条件付きボラ、尾部、リスク分解、P&L explainで検証する。",
-        "focus": "vol.08のhistorical/normal VaRを起点に、Kupiec POFとChristoffersen条件付き被覆で1日VaRを検定し、Basel traffic lightで資本乗数を定量化する。GARCH条件付きボラでFHSを組み、EWMA条件付きσでplain-HSより被覆を改善する。POT/GPDで尾部VaR/ESを閉形式に外挿し、Euler配分でmarginal/component/incremental VaRとsimulation ES寄与を厳密加法的に分解し、delta-gamma-vega Taylorとfull revaluationのP&L explainとlimit監視でdesk日次レポートを組み立てる。",
+        "focus": "vol.08のhistorical/normal VaRを起点に、Kupiec POFとChristoffersen条件付き被覆で1日VaRを検定し、Basel traffic lightで資本乗数を定量化する。GARCH条件付きボラでFHSを組み、EWMA条件付きσでplain-HSより被覆を改善する。POT/GPDで尾部VaR/ESを閉形式に外挿し、Euler配分でmarginal/component/incremental VaRとsimulation ES寄与を厳密加法的に分解し、株価指数コール・single-nameプット・receive-fixed IRSをindex_spot/single_name_spot/parallel_zero_rateの3ファクターへ明示的にマップし、delta-gamma-vega Taylorとfull revaluationのcross-asset P&L explainとlimit監視でdesk日次レポートを組み立てる。",
         "sections": [
             (
                 "iid_exceedances",
@@ -270,6 +270,11 @@ VOLUME_META = {
                 "P&L explain：delta-gamma-vega 分解",
                 "bar:taylor_component_names",
             ),
+            (
+                "position_full_pnl",
+                "cross-asset full revaluation P&L（株式2本＋receive-fixed IRS）",
+                "bar:position_names",
+            ),
             ("limit_utilization_ratio", "limit utilization", "bar:limit_names"),
         ],
         "verification": (
@@ -292,6 +297,11 @@ VOLUME_META = {
             "dgv_res = abs(m['taylor_full_pnl'] - m['taylor_dgv_total'])\n"
             "delta_res = abs(m['taylor_full_pnl'] - m['taylor_delta_only'])\n"
             "assert dgv_res < delta_res\n"
+            "assert abs(float(data['position_full_pnl'].sum()) - m['taylor_full_pnl']) <= 1e-9\n"
+            "rate_col = list(data['factor_names']).index('parallel_zero_rate')\n"
+            "swap_row = list(data['position_names']).index('receive-fixed IRS')\n"
+            "assert data['position_factor_delta'][swap_row, rate_col] != 0.0\n"
+            "assert float(data['position_factor_vega'][:, rate_col].max()) == 0.0\n"
             "print('recomputed from artifact: Euler VaR add., EVT ES identity, sim Euler ES add., FHS coverage, Taylor ordering — all hold')"
         ),
         "exercises": (
@@ -300,7 +310,8 @@ VOLUME_META = {
             "2. `clustered_exceedances` の Markov 遷移確率を推定し、Christoffersen 独立性 LR が iid 系列より大きくなる理由を説明せよ。\n"
             "3. `mean_excess_threshold` に対する `mean_excess_curve` の傾きから GPD の `xi/(1-xi)` を読み取り、`gpd_xi_hat` と比較せよ。\n"
             "4. `pnl_matrix` の尾部シナリオ集合を取り出し、`es_components` の加法性 `sum_i CES_i = ES_total` を手計算で確認せよ。\n"
-            "5. `factor_moves`・`vol_moves` を半分にしたとき、delta-only 残差と delta-gamma-vega 残差の縮小率の違い（線形 vs 二次）を予測し、`taylor_*_half` で検算せよ。"
+            "5. `factor_moves`・`vol_moves` を半分にしたとき、delta-only 残差と delta-gamma-vega 残差の縮小率の違い（線形 vs 二次）を予測し、`taylor_*_half` で検算せよ。\n"
+            "6. `position_factor_delta` は position×factor の**既にマップ済み**行列であり、`aggregate_exposures` はその集計だけを行う。IRS 行の rate delta を `swap_rate_bump` を使った中心差分で再計算し、`swap_rate_delta` と一致することを確かめよ。IRS 行の vega がゼロである理由も述べよ。"
         ),
         "citations": "Kupiec (1995); Christoffersen (1998); BCBS (1996); Barone-Adesi, Giannopoulos & Vosper (1999); McNeil & Frey (2000); Tasche (1999).",
         "gate": "G9",
