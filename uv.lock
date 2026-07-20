@@ -3065,7 +3065,7 @@ wheels = [
 [[package]]
 name = "lob-paper-reproductions"
 version = "0.1.0"
-source = { editable = "lob-paper-reproductions" }
+source = { editable = "market_nn" }
 dependencies = [
     { name = "numpy" },
     { name = "pandas" },

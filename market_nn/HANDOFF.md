@@ -50,11 +50,11 @@ PDF、repository archive、使用 evidence files の SHA-256 は `manifests/sour
 ```bash
 cd /home/kazumasa/projects
 uv sync --package lob-paper-reproductions --group dev
-make -C lob-paper-reproductions verify-provenance
-make -C lob-paper-reproductions test
-make -C lob-paper-reproductions lint
+make -C market_nn verify-provenance
+make -C market_nn test
+make -C market_nn lint
 uv run --no-sync --package lob-paper-reproductions \
-  python lob-paper-reproductions/scripts/run_reproduction_matrix.py
+  python market_nn/scripts/run_reproduction_matrix.py
 ```
 
 ## 確認済みの重要な paper/code 差分

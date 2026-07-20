@@ -41,15 +41,15 @@ uv run --package lob-paper-reproductions lob-repro smoke \
 uv run --package lob-paper-reproductions lob-repro run \
   --profile gould_bonart_2015_paper --data synthetic
 uv run --package lob-paper-reproductions python \
-  lob-paper-reproductions/scripts/run_reproduction_matrix.py
+  market_nn/scripts/run_reproduction_matrix.py
 ```
 
 短縮形:
 
 ```bash
-make -C lob-paper-reproductions verify-provenance
-make -C lob-paper-reproductions test
-make -C lob-paper-reproductions smoke
+make -C market_nn verify-provenance
+make -C market_nn test
+make -C market_nn smoke
 ```
 
 コマンドの import 時にダウンロードや学習は発生しません。TensorFlow は公式 TF2
