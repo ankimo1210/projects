@@ -456,7 +456,7 @@ final class WSETCoreTests: XCTestCase {
             geography: ["日本", "山梨"],
             grapeVarieties: ["甲州"],
             markAllocation: nil,
-            sourceID: "wset_level3_original_1100_v6",
+            sourceID: "wset_level3_original_1100_v7",
             sourceURL: "",
             qualityScore: nil,
             reviewStatus: "未レビュー",

@@ -20,7 +20,7 @@ python3 scripts/build_content_review_packet.py
 
 - `ContentReviews/external-review-request.md`
 - `ContentReviews/content_review_request.json`
-- `QuestionSources/wset_level3_original_questions_1100_v6.xlsx`
+- `QuestionSources/wset_level3_original_questions_1100_v7.xlsx`
 - `QuestionSources/wset_level3_written_questions.json`
 - `ReferenceSources/wset_region_map_master.json`
 - `ReferenceSources/RegionMaps/france.svg`

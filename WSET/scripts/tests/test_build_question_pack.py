@@ -64,22 +64,61 @@ class QuestionPackBuilderTests(unittest.TestCase):
         self.assertNotIn("translationStatus", question)
         self.assertNotIn("translationModel", question)
 
-    def test_existing_900_questions_are_unchanged(self) -> None:
+    def test_v7_is_a_bounded_reaudit_of_v6(self) -> None:
         previous_input = DEFAULT_INPUT.with_name(
-            "wset_level3_original_questions_900_v5.xlsx"
+            "wset_level3_original_questions_1100_v6.xlsx"
         )
         previous_rows = read_question_rows(previous_input)
-        combined_by_id = {row["問題ID"]: row for row in self.rows}
+        current_by_id = {row["問題ID"]: row for row in self.rows}
+        previous_by_id = {row["問題ID"]: row for row in previous_rows}
+        allowed_changed_fields = {
+            "問題文",
+            "選択肢A",
+            "選択肢B",
+            "選択肢C",
+            "選択肢D",
+            "正答本文",
+            "A解説",
+            "B解説",
+            "C解説",
+            "D解説",
+            "誤概念タグ",
+            "レビュアー",
+            "レビュー日",
+            "レビューコメント",
+        }
+        content_fields = allowed_changed_fields - {
+            "レビュアー",
+            "レビュー日",
+            "レビューコメント",
+        }
+        choice_fields = {"選択肢A", "選択肢B", "選択肢C", "選択肢D"}
+        content_changed_questions = 0
+        choice_changed_questions = 0
+        changed_choice_count = 0
 
-        self.assertEqual(len(previous_rows), 900)
-        for previous in previous_rows:
+        self.assertEqual(set(current_by_id), set(previous_by_id))
+        for identifier, previous in previous_by_id.items():
             identifier = previous["問題ID"]
-            current = combined_by_id[identifier]
+            current = current_by_id[identifier]
+            changed_fields = {
+                key
+                for key in current
+                if key != "__excel_row__" and current[key] != previous[key]
+            }
             with self.subTest(question_id=identifier):
-                self.assertEqual(
-                    {key: value for key, value in current.items() if key != "__excel_row__"},
-                    {key: value for key, value in previous.items() if key != "__excel_row__"},
-                )
+                self.assertLessEqual(changed_fields, allowed_changed_fields)
+                self.assertEqual(current["正答"], previous["正答"])
+            if changed_fields & content_fields:
+                content_changed_questions += 1
+            changed_choices = changed_fields & choice_fields
+            if changed_choices:
+                choice_changed_questions += 1
+                changed_choice_count += len(changed_choices)
+
+        self.assertEqual(content_changed_questions, 90)
+        self.assertEqual(choice_changed_questions, 90)
+        self.assertEqual(changed_choice_count, 325)
 
     def test_metadata_and_review_flags_are_preserved(self) -> None:
         questions = self.payload["questions"]
@@ -96,7 +135,7 @@ class QuestionPackBuilderTests(unittest.TestCase):
         self.assertEqual(self.payload["distributionStatus"], "development_only")
         self.assertEqual(
             self.payload["source"]["file"],
-            "QuestionSources/wset_level3_original_questions_1100_v6.xlsx",
+            "QuestionSources/wset_level3_original_questions_1100_v7.xlsx",
         )
         self.assertEqual(self.payload["source"]["sheet"], "問題集")
         geographic = next(
