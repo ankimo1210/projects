@@ -40,6 +40,7 @@ from . import (
     risk_allocation,
     sabr_normal,
     spx_vix,
+    swaps,
     tail_risk,
     var_backtest,
     volatility,
@@ -2187,53 +2188,112 @@ def volume27_reference(*, seed: int = 20260745) -> FrontierReference:
     es_components = risk_allocation.euler_es_components(pnl_matrix, alpha=alpha)
     _, total_historical_es = risk.historical_var_es(pnl_matrix.sum(axis=1), alpha=alpha)
 
-    # --- P&L explain capstone (Black-Scholes full revaluation) ---
-    factor_names = np.asarray(["index", "single-name", "etf"])
-    spot = np.asarray([100.0, 50.0, 200.0])
-    strike = np.asarray([100.0, 55.0, 190.0])
-    sigma0 = np.asarray([0.20, 0.30, 0.25])
-    expiry = np.asarray([0.50, 1.00, 0.25])
+    # --- Cross-asset P&L explain capstone (full revaluation) ---
+    # Three positions on three explicit risk factors: an index call and a
+    # single-name put on their own spots, and a receive-fixed IRS on a
+    # parallel zero-rate shift. The mapping matrices below are what
+    # `aggregate_exposures` consumes -- it aggregates an ALREADY-MAPPED
+    # position x factor matrix, it does not do the mapping itself.
+    position_names = np.asarray(["index call", "single-name put", "receive-fixed IRS"])
+    factor_names = np.asarray(["index_spot", "single_name_spot", "parallel_zero_rate"])
+    spot = np.asarray([100.0, 50.0])
+    strike = np.asarray([100.0, 55.0])
+    sigma0 = np.asarray([0.20, 0.30])
+    expiry = np.asarray([0.50, 1.00])
     rate = 0.02
-    weights = np.asarray([10.0, -5.0, 8.0])
-    is_call = np.asarray([True, False, True])
+    weights = np.asarray([10.0, -5.0, 1.0])
+    is_call = np.asarray([True, False])
+
+    swap_notional = 1_000_000.0
+    swap_fixed_rate = 0.025
+    swap_pay_times = np.asarray([0.5, 1.0, 1.5, 2.0, 2.5, 3.0])
+    swap_curve_times = np.asarray([0.25, 0.5, 1.0, 2.0, 3.0, 5.0])
+    swap_curve_zeros = np.asarray([0.018, 0.019, 0.021, 0.023, 0.024, 0.026])
+    # A parallel zero-rate factor: one basis point of shift is one unit of move.
+    rate_bump = 1e-4
 
     def _price(index: int, spot_value: float, vol_value: float) -> float:
         if is_call[index]:
             return bsm.call_price(spot_value, strike[index], rate, vol_value, expiry[index])
         return bsm.put_price(spot_value, strike[index], rate, vol_value, expiry[index])
 
-    position_delta = np.asarray(
+    def _swap_value(shift: float) -> float:
+        """Receive-fixed IRS value under a parallel zero-rate shift (in absolute rate)."""
+        curve = (swap_curve_times, swap_curve_zeros + shift)
+        return float(
+            swaps.irs_value_fras(swap_notional, swap_fixed_rate, swap_pay_times, curve)
+        )
+
+    swap_base_value = _swap_value(0.0)
+    swap_up = _swap_value(rate_bump)
+    swap_down = _swap_value(-rate_bump)
+    # Central finite difference on the same curve bump used for revaluation.
+    swap_rate_delta = (swap_up - swap_down) / (2.0 * rate_bump)
+    swap_rate_gamma = (swap_up - 2.0 * swap_base_value + swap_down) / (rate_bump**2)
+
+    option_delta = np.asarray(
         [
             bsm.call_delta(spot[i], strike[i], rate, sigma0[i], expiry[i])
             if is_call[i]
             else bsm.put_delta(spot[i], strike[i], rate, sigma0[i], expiry[i])
-            for i in range(3)
+            for i in range(2)
         ]
     )
-    position_gamma = np.asarray(
-        [bsm.gamma(spot[i], strike[i], rate, sigma0[i], expiry[i]) for i in range(3)]
+    option_gamma = np.asarray(
+        [bsm.gamma(spot[i], strike[i], rate, sigma0[i], expiry[i]) for i in range(2)]
     )
-    position_vega = np.asarray(
-        [bsm.vega(spot[i], strike[i], rate, sigma0[i], expiry[i]) for i in range(3)]
+    option_vega = np.asarray(
+        [bsm.vega(spot[i], strike[i], rate, sigma0[i], expiry[i]) for i in range(2)]
     )
-    book_delta, book_gamma, book_vega = pnl_explain.aggregate_exposures(
-        weights, np.diag(position_delta), np.diag(position_gamma), np.diag(position_vega)
-    )
-    factor_moves = np.asarray([2.0, -1.5, 4.0])
-    vol_moves = np.asarray([0.02, -0.01, 0.015])
 
-    def _full_reval(scale: float) -> float:
-        total = 0.0
-        for i in range(3):
+    # position x factor mapping matrices (rows: positions, columns: factors).
+    # Each option loads on its own spot factor only; the swap loads on the
+    # rate factor only. The swap carries no vega: its value has no volatility
+    # argument in this deterministic-curve revaluation.
+    position_factor_delta = np.zeros((3, 3))
+    position_factor_gamma = np.zeros((3, 3))
+    position_factor_vega = np.zeros((3, 3))
+    position_factor_delta[0, 0] = option_delta[0]
+    position_factor_delta[1, 1] = option_delta[1]
+    position_factor_delta[2, 2] = swap_rate_delta
+    position_factor_gamma[0, 0] = option_gamma[0]
+    position_factor_gamma[1, 1] = option_gamma[1]
+    position_factor_gamma[2, 2] = swap_rate_gamma
+    position_factor_vega[0, 0] = option_vega[0]
+    position_factor_vega[1, 1] = option_vega[1]
+
+    book_delta, book_gamma, book_vega = pnl_explain.aggregate_exposures(
+        weights, position_factor_delta, position_factor_gamma, position_factor_vega
+    )
+    # Spot factors move in price units; the rate factor moves in absolute rate.
+    factor_moves = np.asarray([2.0, -1.5, 15.0 * rate_bump])
+    vol_moves = np.asarray([0.02, -0.01, 0.0])
+
+    def _position_full_pnl(scale: float) -> np.ndarray:
+        """Per-position full-revaluation P&L for a scaled factor move."""
+        pnl = np.empty(3)
+        for i in range(2):
             base_price = _price(i, float(spot[i]), float(sigma0[i]))
             shocked = _price(
                 i, float(spot[i] + scale * factor_moves[i]), float(sigma0[i] + scale * vol_moves[i])
             )
-            total += float(weights[i]) * (shocked - base_price)
-        return total
+            pnl[i] = float(weights[i]) * (shocked - base_price)
+        pnl[2] = float(weights[2]) * (_swap_value(scale * factor_moves[2]) - swap_base_value)
+        return pnl
 
-    taylor_full = _full_reval(1.0)
-    taylor_full_half = _full_reval(0.5)
+    position_full_pnl = _position_full_pnl(1.0)
+    position_full_pnl_half = _position_full_pnl(0.5)
+    position_base_value = np.asarray(
+        [
+            float(weights[0]) * _price(0, float(spot[0]), float(sigma0[0])),
+            float(weights[1]) * _price(1, float(spot[1]), float(sigma0[1])),
+            float(weights[2]) * swap_base_value,
+        ]
+    )
+    position_shocked_value = position_base_value + position_full_pnl
+
+    taylor_full = float(position_full_pnl.sum())
+    taylor_full_half = float(position_full_pnl_half.sum())
     taylor_dgv = pnl_explain.delta_gamma_vega_pnl(
         book_delta, book_gamma, book_vega, factor_moves, vol_moves
     )
@@ -2301,6 +2361,15 @@ def volume27_reference(*, seed: int = 20260745) -> FrontierReference:
         "pnl_matrix": pnl_matrix,
         "es_components": es_components,
         "factor_names": factor_names,
+        "position_names": position_names,
+        "position_weights": weights,
+        "position_factor_delta": position_factor_delta,
+        "position_factor_gamma": position_factor_gamma,
+        "position_factor_vega": position_factor_vega,
+        "position_base_value": position_base_value,
+        "position_shocked_value": position_shocked_value,
+        "position_full_pnl": position_full_pnl,
+        "position_full_pnl_half": position_full_pnl_half,
         "book_delta": np.asarray(book_delta),
         "book_gamma": np.asarray(book_gamma),
         "book_vega": np.asarray(book_vega),
@@ -2350,6 +2419,13 @@ def volume27_reference(*, seed: int = 20260745) -> FrontierReference:
         "taylor_dgv_residual_half": float(abs(taylor_full_half - taylor_dgv_half["total"])),
         "taylor_delta_residual_half": float(abs(taylor_full_half - taylor_delta_only_half)),
         "taylor_unexplained_share": float(taylor_attribution["unexplained_share"]),
+        "swap_notional": swap_notional,
+        "swap_fixed_rate": swap_fixed_rate,
+        "swap_base_value": float(swap_base_value),
+        "swap_rate_bump": rate_bump,
+        "swap_rate_delta": float(swap_rate_delta),
+        "swap_rate_gamma": float(swap_rate_gamma),
+        "cross_asset_position_sum_error": float(abs(position_full_pnl.sum() - taylor_full)),
         "desk_report_var": float(desk["var"]),
         "desk_report_es": float(desk["es"]),
         "clustered_basel_zone": clustered_zone.zone,
