@@ -8,8 +8,10 @@ import pytest
 from optimal_execution.impact import (
     ImpactChannels,
     classical_execution,
+    manipulation_profit,
     propagator_displacement,
     propagator_matrix,
+    round_trip_pnl,
     sqrt_impact,
     temporary_concession,
     temporary_cost,
@@ -132,3 +134,46 @@ def test_buy_sell_signs(cfg):
     np.testing.assert_allclose(
         cfg.arrival_price - sell["exec_price"], buy["exec_price"] - cfg.arrival_price
     )
+
+
+# ---- Huberman–Stanzl no-manipulation diagnostic -----------------------------
+
+
+def test_round_trip_pnl_zero_for_linear_impact():
+    """delta = 1: PnL = -(gamma/2)(sum z)^2 = 0 for any round trip."""
+    rng = np.random.default_rng(7)
+    z = rng.normal(size=25) * 1000.0
+    z -= z.mean()  # round trip: sum z = 0
+    assert round_trip_pnl(z, gamma=2.5e-7, delta=1.0) == pytest.approx(0.0, abs=1e-6)
+
+
+def test_round_trip_pnl_matches_closed_form_linear():
+    """Non-round-trip sanity: PnL = -(gamma/2)(sum z)^2 under delta = 1."""
+    z = np.array([1000.0, 2000.0, -500.0])
+    gamma = 1e-6
+    expected = -0.5 * gamma * z.sum() ** 2
+    assert round_trip_pnl(z, gamma=gamma, delta=1.0) == pytest.approx(expected)
+
+
+def test_manipulation_zero_at_linear(cfg):
+    result = manipulation_profit(cfg, delta=1.0)
+    assert result["best_pnl"] == pytest.approx(0.0, abs=1e-6)
+
+
+def test_concave_impact_admits_pump_and_dump(cfg):
+    """delta < 1: many small trades then one block earns a positive PnL."""
+    result = manipulation_profit(cfg, delta=0.6, n_pieces=10)
+    assert result["pieces_then_block"] > 0
+    assert result["best_pnl"] == pytest.approx(result["pieces_then_block"])
+    # closed form: (gamma Q^2 / 2)(n^{1-delta} - 1)
+    Q = cfg.initial_inventory
+    gamma = cfg.impact.permanent_gamma
+    expected = 0.5 * gamma * Q * Q * (10 ** (1 - 0.6) - 1)
+    assert result["pieces_then_block"] == pytest.approx(expected, rel=1e-9)
+
+
+def test_convex_impact_admits_block_then_pieces(cfg):
+    """delta > 1: one block then many small trades earns a positive PnL."""
+    result = manipulation_profit(cfg, delta=1.4, n_pieces=10)
+    assert result["block_then_pieces"] > 0
+    assert result["best_pnl"] == pytest.approx(result["block_then_pieces"])

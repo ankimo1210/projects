@@ -36,8 +36,10 @@ from .plotting import (
 from .price_process import simulate_mid_paths
 from .provenance import (
     artifact_dirs,
+    config_fingerprint,
     ensure_artifact_dirs,
     generated_at,
+    model_fingerprint,
     provenance,
     sha256_file,
     write_frame,
@@ -441,6 +443,7 @@ def _enrich_checkpoint(
     *,
     run_id: str,
     feature_mask: np.ndarray | None,
+    requested_episodes: int,
     timestamp: str,
 ) -> dict[str, Any]:
     blob = torch.load(checkpoint, map_location="cpu", weights_only=False)
@@ -462,11 +465,31 @@ def _enrich_checkpoint(
                 timestamp=timestamp,
             ),
             "run_id": run_id,
+            "requested_episodes": requested_episodes,
+            "feature_mask": None if feature_mask is None else feature_mask.astype(float).tolist(),
         }
     )
     blob["meta"] = meta
     torch.save(blob, checkpoint)
     return meta
+
+
+def _checkpoint_metadata_matches(
+    cfg: Config,
+    meta: dict[str, Any],
+    *,
+    run_id: str,
+    episodes: int,
+    feature_mask: np.ndarray | None,
+) -> bool:
+    expected_mask = None if feature_mask is None else feature_mask.astype(float).tolist()
+    return (
+        meta.get("config_fingerprint") == config_fingerprint(cfg)
+        and meta.get("model_fingerprint") == model_fingerprint()
+        and meta.get("run_id") == run_id
+        and meta.get("requested_episodes") == episodes
+        and meta.get("feature_mask") == expected_mask
+    )
 
 
 def _train_or_reuse(
@@ -485,10 +508,18 @@ def _train_or_reuse(
     checkpoint = _checkpoint_path(cfg, variant, seed, feature)
     history_path = _history_path(cfg, run_id)
     if checkpoint.exists() and history_path.exists() and not force:
-        _log(f"reuse checkpoint {checkpoint.name}")
-        history = pd.read_csv(history_path)
         _, meta = load_checkpoint(checkpoint)
-        return checkpoint, history, meta
+        if _checkpoint_metadata_matches(
+            cfg,
+            meta,
+            run_id=run_id,
+            episodes=episodes,
+            feature_mask=feature_mask,
+        ):
+            _log(f"reuse checkpoint {checkpoint.name}")
+            history = pd.read_csv(history_path)
+            return checkpoint, history, meta
+        _log(f"checkpoint metadata changed; retrain {checkpoint.name}")
 
     _log(f"train PPO {run_id} ({episodes} episodes)")
     result = train_ppo(
@@ -523,6 +554,7 @@ def _train_or_reuse(
         checkpoint,
         run_id=run_id,
         feature_mask=feature_mask,
+        requested_episodes=episodes,
         timestamp=timestamp,
     )
     return checkpoint, history, meta
@@ -627,10 +659,14 @@ def _evaluate_regime(
     episodes: int,
 ) -> tuple[pd.DataFrame, dict[str, pd.DataFrame]]:
     policies, baselines = _main_eval_policies(train_cfg, eval_cfg)
+    # Regime-independent scenario stream: every regime (and the misspecified
+    # simulator) draws the SAME scenario seeds, so a regime only rescales/​
+    # perturbs identical underlying draws. Cross-regime deltas are then paired
+    # (common random numbers *across* regimes), not confounded by sample drift.
     frames, _ = lob_world_run(
         eval_cfg,
         policies,
-        purpose=f"{train_cfg.profile}_rl_{regime}",
+        purpose=f"{train_cfg.profile}_rl_paired",
         n_episodes=episodes,
         baselines=baselines,
     )
@@ -644,12 +680,9 @@ def evaluate(cfg: Config, *, force_train: bool = False) -> dict[str, pd.DataFram
     """Run Experiments H--J: OOS, stress, ablation, and misspecification."""
     paths = ensure_artifact_dirs(cfg)
     stamp = generated_at()
-    if force_train or not all(
-        _checkpoint_path(cfg, variant, int(seed)).exists()
-        for seed in cfg.rl.seeds
-        for variant in ("residual", "free")
-    ):
-        train_rl(cfg, force=force_train)
+    # Always pass through the metadata-aware reuse gate. This is cheap when all
+    # checkpoints are current and retrains any stale or incomplete run.
+    train_rl(cfg, force=force_train)
 
     _log("RL evaluation stage start")
     summaries: list[pd.DataFrame] = []
@@ -675,6 +708,7 @@ def evaluate(cfg: Config, *, force_train: bool = False) -> dict[str, pd.DataFram
             **provenance(cfg, model_parameters=cfg.raw, timestamp=stamp),
             "results": stress.to_dict(orient="records"),
             "common_random_numbers_within_regime": True,
+            "common_random_numbers_across_regimes": True,
         },
     )
     write_frame(

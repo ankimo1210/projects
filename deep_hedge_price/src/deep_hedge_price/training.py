@@ -64,6 +64,7 @@ def run_label(config: ProjectConfig) -> str:
 
 
 def checkpoint_directory(config: ProjectConfig, project_root: Path) -> Path:
+    """Checkpoint path keyed by run label and configuration fingerprint."""
     return (
         project_root
         / config.output.artifacts_dir
@@ -236,9 +237,7 @@ def train_policy(
             best_value = validation_value
             stale_epochs = 0
             torch.save(
-                _checkpoint_payload(
-                    policy, risk, optimizer, config, epoch, validation_value
-                ),
+                _checkpoint_payload(policy, risk, optimizer, config, epoch, validation_value),
                 checkpoint_path,
             )
         else:

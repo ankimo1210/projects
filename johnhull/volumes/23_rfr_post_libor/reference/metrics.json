@@ -1,0 +1,489 @@
+{
+  "acceptance": {
+    "checks": [
+      {
+        "criterion": "four observation conventions and both coupon timings",
+        "name": "rfr_conventions",
+        "observed": 4,
+        "passed": true
+      },
+      {
+        "criterion": "< 1e-12",
+        "name": "daily_compounding_handcheck",
+        "observed": 0.0,
+        "passed": true
+      },
+      {
+        "criterion": "< 1e-5",
+        "name": "continuous_limit",
+        "observed": 4.45993810761075e-06,
+        "passed": true
+      },
+      {
+        "criterion": "< 1e-12",
+        "name": "bachelier_quadrature_handcheck",
+        "observed": 6.938893903907228e-18,
+        "passed": true
+      },
+      {
+        "criterion": "SOFR/OIS/TONA curves plus policy and collateral scenarios",
+        "name": "multi_curve_policy_collateral",
+        "observed": 3,
+        "passed": true
+      },
+      {
+        "criterion": "> 0 with positive SE",
+        "name": "nonzero_nu_teacher",
+        "observed": 0.65,
+        "passed": true
+      },
+      {
+        "criterion": "regime errors reported and static checks pass",
+        "name": "hagan_diagnostics",
+        "observed": 60.63518673342441,
+        "passed": true
+      },
+      {
+        "criterion": "sticky and Bartlett errors differ",
+        "name": "independent_hedge_paths",
+        "observed": true,
+        "passed": true
+      },
+      {
+        "criterion": "shifted/free-boundary approximations and MC teacher with positive SE",
+        "name": "sabr_model_ladder",
+        "observed": 9,
+        "passed": true
+      }
+    ],
+    "model_performance_approved": false,
+    "negative_results": [
+      "Hagan's quick-grid worst error is 60.6352 bp.",
+      "The free-boundary SABR fixture uses an explicit shift boundary rather than an endogenous boundary solve.",
+      "Monte Carlo standard errors do not include time-discretization bias."
+    ],
+    "passed": true,
+    "schema_version": 1,
+    "scope": "integration_and_reproducibility"
+  },
+  "artifact_role": "implementation-derived, identity-tested teaching reference",
+  "benchmark": {
+    "nondeterministic_fields": [],
+    "schema_version": 1
+  },
+  "benchmark_policy": "no nondeterministic benchmark fields",
+  "companion_schemas": {
+    "rfr_scenarios.npz": {
+      "bachelier_price": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "rate-option price units"
+      },
+      "bartlett_hedge_error": {
+        "dtype": "float64",
+        "shape": [
+          96
+        ],
+        "unit": "rate-option price units"
+      },
+      "basis_spread_bp": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "basis points"
+      },
+      "collateral_currency_names": {
+        "dtype": "<U3",
+        "shape": [
+          2
+        ],
+        "unit": "label"
+      },
+      "collateral_currency_pv": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "collateral_pv": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "collateral_shift_bp": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "basis points"
+      },
+      "continuous_accrual": {
+        "dtype": "float64",
+        "shape": [
+          64
+        ],
+        "unit": "accrual factor"
+      },
+      "convention_accumulation": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "accrual factor"
+      },
+      "convention_day_count": {
+        "dtype": "int64",
+        "shape": [
+          4,
+          64
+        ],
+        "unit": "days"
+      },
+      "convention_names": {
+        "dtype": "<U21",
+        "shape": [
+          4
+        ],
+        "unit": "label"
+      },
+      "convention_observation_ordinal": {
+        "dtype": "int64",
+        "shape": [
+          4,
+          64
+        ],
+        "unit": "days"
+      },
+      "convention_rate": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "annualized decimal rate"
+      },
+      "coupon_cashflow": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "coupon_names": {
+        "dtype": "<U10",
+        "shape": [
+          2
+        ],
+        "unit": "label"
+      },
+      "curve_discount_factor": {
+        "dtype": "float64",
+        "shape": [
+          3,
+          6
+        ],
+        "unit": "discount factor"
+      },
+      "curve_forward_rate": {
+        "dtype": "float64",
+        "shape": [
+          3,
+          6
+        ],
+        "unit": "annualized decimal rate"
+      },
+      "curve_names": {
+        "dtype": "<U18",
+        "shape": [
+          3
+        ],
+        "unit": "label"
+      },
+      "daily_rate": {
+        "dtype": "float64",
+        "shape": [
+          64
+        ],
+        "unit": "decimal rate"
+      },
+      "day": {
+        "dtype": "int64",
+        "shape": [
+          64
+        ],
+        "unit": "index"
+      },
+      "day_count": {
+        "dtype": "int64",
+        "shape": [
+          64
+        ],
+        "unit": "year fraction"
+      },
+      "discount_factor": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "discount factor"
+      },
+      "discrete_accrual": {
+        "dtype": "float64",
+        "shape": [
+          64
+        ],
+        "unit": "accrual factor"
+      },
+      "forward_change": {
+        "dtype": "float64",
+        "shape": [
+          96
+        ],
+        "unit": "decimal rate"
+      },
+      "forward_rate": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "decimal rate"
+      },
+      "free_boundary_sabr_iv": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "decimal normal volatility"
+      },
+      "free_boundary_sabr_price": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "rate-option price units"
+      },
+      "futures_forward_bp": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "basis points"
+      },
+      "hagan_error_bp": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "basis points"
+      },
+      "hagan_price": {
+        "dtype": "float64",
+        "shape": [
+          3,
+          9
+        ],
+        "unit": "rate-option price units"
+      },
+      "hedge_names": {
+        "dtype": "<U13",
+        "shape": [
+          2
+        ],
+        "unit": "label"
+      },
+      "hedge_rmse": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "rate-option price units"
+      },
+      "hedge_teacher_standard_error": {
+        "dtype": "float64",
+        "shape": [
+          96
+        ],
+        "unit": "rate-option price units"
+      },
+      "maturity": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "years"
+      },
+      "normal_iv": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "decimal normal volatility"
+      },
+      "option_price_change": {
+        "dtype": "float64",
+        "shape": [
+          96
+        ],
+        "unit": "rate-option price units"
+      },
+      "policy_date_ordinal": {
+        "dtype": "int64",
+        "shape": [
+          5
+        ],
+        "unit": "days"
+      },
+      "policy_jump_bp": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "basis points"
+      },
+      "policy_rate_path": {
+        "dtype": "float64",
+        "shape": [
+          2,
+          5
+        ],
+        "unit": "annualized decimal rate"
+      },
+      "policy_scenario_names": {
+        "dtype": "<U10",
+        "shape": [
+          2
+        ],
+        "unit": "label"
+      },
+      "quadrature_price": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "rate-option price units"
+      },
+      "shifted_sabr_iv": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "decimal normal volatility"
+      },
+      "shifted_sabr_price": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "rate-option price units"
+      },
+      "shifted_teacher_price": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "rate-option price units"
+      },
+      "shifted_teacher_standard_error": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "rate-option price units"
+      },
+      "sticky_hedge_error": {
+        "dtype": "float64",
+        "shape": [
+          96
+        ],
+        "unit": "rate-option price units"
+      },
+      "strike": {
+        "dtype": "float64",
+        "shape": [
+          9
+        ],
+        "unit": "decimal rate"
+      },
+      "teacher_maturity": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "years"
+      },
+      "teacher_price": {
+        "dtype": "float64",
+        "shape": [
+          3,
+          9
+        ],
+        "unit": "rate-option price units"
+      },
+      "teacher_standard_error": {
+        "dtype": "float64",
+        "shape": [
+          3,
+          9
+        ],
+        "unit": "rate-option price units"
+      }
+    }
+  },
+  "companions": {
+    "rfr_scenarios.npz": "cdca59fe9f452481d789f63ea5c252d3afb5aeae89356990ca991723cda4894c"
+  },
+  "data_policy": "synthetic-offline",
+  "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
+  "generator_api": "hullkit.frontier_reference.build_frontier_reference",
+  "limitations": [
+    "Synthetic results are not evidence of market forecasting power."
+  ],
+  "metrics": {
+    "bartlett_hedge_rmse": 0.0003340079814252839,
+    "continuous_limit_error": 4.45993810761075e-06,
+    "daily_compounding_handcheck_error": 0.0,
+    "hagan_calendar_monotone_pass": true,
+    "hagan_high_vol_rmse_bp": 26.214443819654765,
+    "hagan_long_maturity_rmse_bp": 26.214443819654765,
+    "hagan_nonnegative_pass": true,
+    "hagan_static_arbitrage_pass": true,
+    "hagan_strike_convex_pass": true,
+    "hagan_strike_monotone_pass": true,
+    "hagan_wing_rmse_bp": 21.32424980935272,
+    "hagan_worst_error_bp": 60.63518673342441,
+    "hedge_teacher": "shifted-SABR full-truncation MC with common random numbers",
+    "in_advance_coupon": 10273.128311712791,
+    "in_arrears_coupon": 10352.53834410721,
+    "lockout_rate": 0.04142026796545917,
+    "lookback_rate": 0.04151231072451367,
+    "multi_curve_coupon_pv": 2.6399144642570382,
+    "observation_shift_rate": 0.041484401111674174,
+    "quadrature_handcheck_error": 6.938893903907228e-18,
+    "sabr_teacher": "conditional normal-SABR MC; shifted-SABR full-truncation MC",
+    "sabr_teacher_nu": 0.65,
+    "single_curve_coupon_pv": 2.631479252266155,
+    "sofr_tona_basis_bp_1y": 275.96927108916867,
+    "sticky_hedge_rmse": 0.00036271090191143066,
+    "zero_rate_handcheck_error": 0.0
+  },
+  "schema_version": 1,
+  "seed": 20260741,
+  "semantic_sources": [
+    "johnhull/hullkit/src/hullkit/frontier_reference.py",
+    "johnhull/hullkit/src/hullkit/rfr.py",
+    "johnhull/hullkit/src/hullkit/rfr_options.py",
+    "johnhull/hullkit/src/hullkit/sabr_normal.py"
+  ],
+  "semantic_tests": [
+    "johnhull/hullkit/tests/test_frontier_reference.py",
+    "johnhull/hullkit/tests/test_rfr.py",
+    "johnhull/hullkit/tests/test_rfr_options.py",
+    "johnhull/hullkit/tests/test_sabr_normal.py"
+  ],
+  "volume": 23
+}

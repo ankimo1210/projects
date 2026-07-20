@@ -49,7 +49,8 @@ def test_oversized_order_walks_the_book(cfg):
     q_big = 5.0 * depth
     _, cash_big, detail_big = book2.market_order(q_big)
     p_big = cash_big / q_big
-    assert p_small == pytest.approx(touch)  # inside L1: executes at touch
+    own_impact = 0.5 * (cfg.impact.permanent_gamma + cfg.impact.transient_eta) * q_small
+    assert p_small == pytest.approx(touch - own_impact)
     assert p_big < touch  # walked deeper levels
     assert detail_big["walk"] > 0
 
@@ -99,6 +100,29 @@ def test_permanent_impact_shifts_mid(cfg):
     assert book.mid < mid0
 
 
+def test_current_block_pays_half_own_impact(cfg):
+    deep = cfg.with_overrides(
+        {
+            "liquidity": {"depth_shares": 1e9, "deep_liquidity_mult": 1e9},
+            "impact": {"permanent_gamma": 1e-6, "transient_eta": 2e-6},
+        }
+    )
+    q = 10_000.0
+    book = make_book(deep)
+    touch = book.best_bid
+    _, cash, detail = book.market_order(q)
+    assert cash / q == pytest.approx(touch - 0.5 * (1e-6 + 2e-6) * q)
+    assert detail["permanent"] == pytest.approx(0.5 * 1e-6 * q**2)
+    assert detail["transient"] == pytest.approx(0.5 * 2e-6 * q**2)
+
+    replay = make_book(deep, reactive=False)
+    replay_touch = replay.best_bid
+    _, replay_cash, replay_detail = replay.market_order(q)
+    assert replay_cash / q == pytest.approx(replay_touch)
+    assert replay_detail["permanent"] == 0.0
+    assert replay_detail["transient"] == 0.0
+
+
 def test_intensities_finite_under_extreme_state(cfg):
     book = make_book(cfg)
     book.recent_return = 10.0  # absurd 10-currency EMA move
@@ -125,4 +149,5 @@ def test_buy_side_symmetry(cfg):
     touch = book.best_ask
     _, cash, _ = book.market_order(1000.0)
     assert book.ask_depth == pytest.approx(d0 - 1000.0)  # buys consume the ask
-    assert cash / 1000.0 == pytest.approx(touch)
+    own_impact = 0.5 * (buy_cfg.impact.permanent_gamma + buy_cfg.impact.transient_eta) * 1000.0
+    assert cash / 1000.0 == pytest.approx(touch + own_impact)

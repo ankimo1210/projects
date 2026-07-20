@@ -1,0 +1,558 @@
+{
+  "acceptance": {
+    "checks": [
+      {
+        "criterion": "linear/inverse/quanto long-short and zero-move identities",
+        "name": "perpetual_contract_identities",
+        "observed": 3,
+        "passed": true
+      },
+      {
+        "criterion": "< 1e-12",
+        "name": "cashflow_conservation",
+        "observed": 7.105427357601002e-15,
+        "passed": true
+      },
+      {
+        "criterion": "positive interval, absolute cap, and conserved transfers",
+        "name": "funding_cap_interval",
+        "observed": 8.0,
+        "passed": true
+      },
+      {
+        "criterion": "< 1e-12",
+        "name": "solvency_identity",
+        "observed": 0.0,
+        "passed": true
+      },
+      {
+        "criterion": "< 1e-12",
+        "name": "insurance_identity",
+        "observed": 0.0,
+        "passed": true
+      },
+      {
+        "criterion": "ADL/social loss tracked with zero uncovered loss",
+        "name": "stress_waterfall",
+        "observed": 6.443163968193039,
+        "passed": true
+      },
+      {
+        "criterion": "forced sale and auction conserve their stress waterfalls",
+        "name": "liquidation_method_waterfalls",
+        "observed": 2,
+        "passed": true
+      },
+      {
+        "criterion": "< 1e-12",
+        "name": "amm_identity",
+        "observed": 0.0,
+        "passed": true
+      },
+      {
+        "criterion": "CPMM identity plus finite fixed/dynamic/concentrated LVR",
+        "name": "amm_lvr_fee_variants",
+        "observed": 7.105427357601002e-15,
+        "passed": true
+      },
+      {
+        "criterion": "both explicit flags agree with their counts",
+        "name": "oracle_staleness_dislocation",
+        "observed": "5/1",
+        "passed": true
+      }
+    ],
+    "model_performance_approved": false,
+    "negative_results": [
+      "The liquidation cascade is deliberately synthetic and is not a reconstruction of a market event.",
+      "The dynamic fee does not reduce gross LVR in this fixture; fee compensation is reported separately."
+    ],
+    "passed": true,
+    "schema_version": 1,
+    "scope": "integration_and_reproducibility"
+  },
+  "artifact_role": "implementation-derived, identity-tested teaching reference",
+  "benchmark": {
+    "nondeterministic_fields": [],
+    "schema_version": 1
+  },
+  "benchmark_policy": "no nondeterministic benchmark fields",
+  "companion_schemas": {
+    "stress_paths.npz": {
+      "adl_notional": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "amm_identity_error": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "bankruptcy_price": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic USD per asset"
+      },
+      "concentrated_lp_value": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "token-Y value"
+      },
+      "concentrated_lvr": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "token-Y value"
+      },
+      "contract_names": {
+        "dtype": "<U7",
+        "shape": [
+          3
+        ],
+        "unit": "label"
+      },
+      "contract_pnl_long": {
+        "dtype": "float64",
+        "shape": [
+          3,
+          3
+        ],
+        "unit": "contract settlement units"
+      },
+      "contract_pnl_short": {
+        "dtype": "float64",
+        "shape": [
+          3,
+          3
+        ],
+        "unit": "contract settlement units"
+      },
+      "contract_settlement_price": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "synthetic USD per asset"
+      },
+      "cpmm_invariant_gain": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "reserve product"
+      },
+      "cpmm_swap_identity_error": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "token amount identity residual"
+      },
+      "dynamic_fee_gross_lvr": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "token-Y value"
+      },
+      "dynamic_fee_income": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "dynamic_fee_net_lvr": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "token-Y value"
+      },
+      "elapsed_hours": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "hours"
+      },
+      "equity": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "fee_income": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "fixed_fee_gross_lvr": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "token-Y value"
+      },
+      "fixed_fee_net_lvr": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "token-Y value"
+      },
+      "funding_cashflow": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "funding_conservation_error": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "funding_long_cashflow": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "funding_rate": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "decimal rate"
+      },
+      "funding_rate_cap": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "decimal rate per settlement interval"
+      },
+      "funding_settled_intervals": {
+        "dtype": "int64",
+        "shape": [
+          8
+        ],
+        "unit": "count"
+      },
+      "funding_short_cashflow": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "funding_venue_cashflow": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "index_price": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic USD per asset"
+      },
+      "initial_margin_requirement": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "insurance_fund": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "insurance_used": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "last_price": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic USD per asset"
+      },
+      "liability": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "liquidation_conservation_error": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "liquidation_execution_price": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "synthetic USD per asset"
+      },
+      "liquidation_loss": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "liquidation_method_adl_used": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "liquidation_method_auction_recovery": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "liquidation_method_conservation_error": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "liquidation_method_equity": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "liquidation_method_insurance_used": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "liquidation_method_names": {
+        "dtype": "<U11",
+        "shape": [
+          2
+        ],
+        "unit": "label"
+      },
+      "liquidation_method_socialized_loss": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "liquidation_method_uncovered_loss": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "liquidation_price": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic USD per asset"
+      },
+      "lp_value": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "lvr": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "maintenance_margin_requirement": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "mark_index_basis": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "dimensionless price ratio"
+      },
+      "mark_price": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic USD per asset"
+      },
+      "oracle_age": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "seconds"
+      },
+      "oracle_dislocated": {
+        "dtype": "bool",
+        "shape": [
+          8
+        ],
+        "unit": "boolean"
+      },
+      "oracle_latent_dislocation": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "dimensionless price ratio"
+      },
+      "oracle_latent_index": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic USD per asset"
+      },
+      "oracle_observed_dislocation": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "dimensionless price ratio"
+      },
+      "oracle_shocked_mark": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic USD per asset"
+      },
+      "oracle_stale": {
+        "dtype": "bool",
+        "shape": [
+          8
+        ],
+        "unit": "boolean"
+      },
+      "rebalanced_value": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "socialized_loss": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "step": {
+        "dtype": "int64",
+        "shape": [
+          8
+        ],
+        "unit": "index"
+      },
+      "uncovered_loss": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic monetary units"
+      }
+    }
+  },
+  "companions": {
+    "stress_paths.npz": "e65fe57fcc5bb0b9c443c446cb979af9f2503fa146c1a9d94e6a039931a26459"
+  },
+  "data_policy": "synthetic-offline",
+  "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
+  "generator_api": "hullkit.frontier_reference.build_frontier_reference",
+  "limitations": [
+    "Synthetic results are not evidence of market forecasting power."
+  ],
+  "metrics": {
+    "auction_socialized_loss": 6.443163968193039,
+    "cashflow_conservation_error": 7.105427357601002e-15,
+    "contract_long_short_sign_error": 0.0,
+    "contract_zero_move_error": 0.0,
+    "dynamic_fee_compensation": 24.658350911738395,
+    "dynamic_fee_gross_lvr_reduction": 0.0,
+    "ending_adl_notional": 3.0,
+    "ending_insurance_fund": 0.0,
+    "ending_socialized_loss": 6.443163968193039,
+    "ending_uncovered_loss": 0.0,
+    "forced_sale_socialized_loss": 8.22316396819304,
+    "funding_absolute_cap": 0.005,
+    "funding_interval_hours": 8.0,
+    "insurance_identity_error": 0.0,
+    "oracle_dislocated_count": 1,
+    "oracle_stale_count": 5,
+    "solvency_identity_error": 0.0,
+    "solvent": true,
+    "synthetic_cascade": true
+  },
+  "schema_version": 1,
+  "seed": 20260742,
+  "semantic_sources": [
+    "johnhull/hullkit/src/hullkit/frontier_reference.py",
+    "johnhull/hullkit/src/hullkit/perpetuals.py",
+    "johnhull/hullkit/src/hullkit/liquidation.py",
+    "johnhull/hullkit/src/hullkit/amm.py"
+  ],
+  "semantic_tests": [
+    "johnhull/hullkit/tests/test_frontier_reference.py",
+    "johnhull/hullkit/tests/test_perpetuals.py",
+    "johnhull/hullkit/tests/test_liquidation.py",
+    "johnhull/hullkit/tests/test_amm.py"
+  ],
+  "volume": 24
+}
