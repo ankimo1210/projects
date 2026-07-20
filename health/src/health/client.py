@@ -140,9 +140,15 @@ class HealthClient:
         return self._parse(resp)
 
     def _dispatch(self, method: str, url: str, budget: RequestBudget, **kwargs):
+        # Resolving a token (and therefore any auth-internal near-expiry
+        # refresh) is a precondition for attempting a send, not itself a
+        # physical Health API send. It must happen -- and be allowed to
+        # raise AuthError -- before budget/pace are touched, or a failed
+        # token resolution burns a budget slot and a pacing tick for zero
+        # HTTP traffic to the Health API.
+        headers = {"Authorization": f"Bearer {self.auth.access_token()}"}
         budget.consume()  # before send: an exhausted budget sends nothing
         self._pace()
-        headers = {"Authorization": f"Bearer {self.auth.access_token()}"}
         try:
             if method == "GET":
                 return self.session.get(url, headers=headers, timeout=30, **kwargs)
