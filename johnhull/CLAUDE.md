@@ -1,6 +1,6 @@
 # CLAUDE.md — johnhull（モデルライブラリ / 学習ノート）
 
-Hull 11e 全 37 章 + Beyond-Hull（vol 18–25）の教材・検証済みモデル実装群。
+Hull 11e 全 37 章 + Beyond-Hull（vol 18–27）の教材・検証済みモデル実装群。
 **参照実装カタログ + エージェント作業基盤**として使う。
 
 ## ナビゲーション（探す順番）
@@ -8,7 +8,7 @@ Hull 11e 全 37 章 + Beyond-Hull（vol 18–25）の教材・検証済みモデ
 1. **`MODEL_INDEX.md`** — モデル・手法の横断カタログ。まずここを検索する。
    `package.module:symbol` 形式の実装参照・テスト・使用例 notebook・検証内容つき。
 2. `ROADMAP.md` — 巻 ↔ Hull 章の対応と各巻の状態。
-3. `release_manifest.json` — vol 18–25 の成果物配線（notebook / portal 図 / semantic tests / reference artifacts）。
+3. `release_manifest.json` — vol 18–27 の成果物配線（notebook / portal 図 / semantic tests / reference artifacts）。
 4. `VALIDATION.md` — 検証の実行記録。**PASS = integration・数値恒等式・再現性のみ。
    モデル性能・市場予測力の承認ではない**（データは全て synthetic）。
 
@@ -23,7 +23,7 @@ uv run --no-sync --package deep-hedge-price pytest -q deep_hedge_price/tests
 make hull-report            # オフラインポータル生成（johnhull/report/site/）
 make hull-book              # Jupyter Book
 make hull-artifacts-check   # reference artifact の semantic 一致 + byte 再現
-make hull-notebooks-check   # vol 18-25 notebook の artifact-only 実行
+make hull-notebooks-check   # vol 18-27 notebook の artifact-only 実行
 make hull-release-check     # release 契約（scripts/verify_release.py）
 ```
 

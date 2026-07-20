@@ -102,20 +102,35 @@ def lookback_floating_call(S, S_min, r, sigma, T, q=0.0):
     )
 
 
+def _exp_integral(rate, T):
+    """Stable value of integral_0^T exp(rate*t) dt."""
+    x = rate * T
+    if abs(x) < 1e-7:
+        return T * (1.0 + x / 2.0 + x**2 / 6.0 + x**3 / 24.0 + x**4 / 120.0)
+    return math.expm1(x) / rate
+
+
+def _exp_integral_derivative(rate, T):
+    """Derivative of :func:`_exp_integral` with respect to ``rate``."""
+    x = rate * T
+    if abs(x) < 1e-5:
+        return T**2 * (0.5 + x / 3.0 + x**2 / 8.0 + x**3 / 30.0 + x**4 / 144.0)
+    return T**2 * (x * math.exp(x) - math.expm1(x)) / x**2
+
+
 def asian_call_turnbull_wakeman(S, K, r, sigma, T, q=0.0):
     """Average-price Asian call via Turnbull-Wakeman moment matching into
     Black-76 (Hull eq. 26.3/26.4, continuous arithmetic average)."""
+    if S <= 0.0 or K <= 0.0 or sigma <= 0.0 or T <= 0.0:
+        raise ValueError("S, K, sigma, and T must be > 0")
     b = r - q
-    if abs(b) < 1e-12:
-        m1 = S
-        m2 = 2.0 * S**2 * (math.exp(sigma**2 * T) - sigma**2 * T - 1.0) / (sigma**4 * T**2)
+    m1 = S * _exp_integral(b, T) / T
+    delta = b + sigma**2
+    if abs(delta * T) < 1e-7:
+        second_integral = _exp_integral_derivative(b, T)
     else:
-        m1 = (math.exp(b * T) - 1.0) / (b * T) * S
-        m2 = 2.0 * math.exp((2.0 * b + sigma**2) * T) * S**2 / (
-            (b + sigma**2) * (2.0 * b + sigma**2) * T**2
-        ) + 2.0 * S**2 / (b * T**2) * (
-            1.0 / (2.0 * b + sigma**2) - math.exp(b * T) / (b + sigma**2)
-        )
+        second_integral = (_exp_integral(2.0 * b + sigma**2, T) - _exp_integral(b, T)) / delta
+    m2 = 2.0 * S**2 * second_integral / T**2
     f0 = m1
     sigma_a = math.sqrt(math.log(m2 / m1**2) / T)
     d1 = (math.log(f0 / K) + 0.5 * sigma_a**2 * T) / (sigma_a * math.sqrt(T))

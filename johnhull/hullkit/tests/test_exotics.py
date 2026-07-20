@@ -109,6 +109,22 @@ def test_asian_b_zero_limit():
     assert a > 0.0 and math.isfinite(a)
 
 
+@pytest.mark.parametrize(
+    ("r", "q"),
+    [
+        (0.00, 0.04),  # b = -sigma^2
+        (0.02, 0.04),  # 2b = -sigma^2
+    ],
+)
+def test_asian_removable_singularities_are_finite_and_continuous(r, q):
+    args = (100.0, 100.0, r, 0.20, 1.0)
+    at_limit = exotics.asian_call_turnbull_wakeman(*args, q=q)
+    below = exotics.asian_call_turnbull_wakeman(*args, q=q - 1e-7)
+    above = exotics.asian_call_turnbull_wakeman(*args, q=q + 1e-7)
+    assert math.isfinite(at_limit) and at_limit > 0.0
+    assert at_limit == pytest.approx(0.5 * (below + above), abs=1e-5)
+
+
 def test_lookback_b_zero_raises():
     with pytest.raises(ValueError):
         exotics.lookback_floating_call(100.0, 100.0, 0.05, 0.20, 1.0, q=0.05)

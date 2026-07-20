@@ -37,3 +37,7 @@ parts:
       - file: notebooks/23_rfr_post_libor
       - file: notebooks/24_crypto_market_structure
       - file: notebooks/25_climate_energy
+  - caption: Hull の先 — インフレ連動とリスク管理デスク（vol 26–27）
+    chapters:
+      - file: notebooks/26_inflation_jgbi
+      - file: notebooks/27_risk_desk

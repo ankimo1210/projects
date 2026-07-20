@@ -58,3 +58,24 @@ def test_vectorized_over_spot_array():
     # a Greek too
     g = bsm.gamma(S, K, r, sigma, T)
     assert g.shape == (3,) and np.all(g > 0.0)
+
+
+def test_expiry_returns_intrinsic_value_including_atm():
+    import numpy as np
+
+    spots = np.array([80.0, 100.0, 120.0])
+    assert np.array_equal(bsm.call_price(spots, 100.0, 0.05, 0.2, 0.0), [0.0, 0.0, 20.0])
+    assert np.array_equal(bsm.put_price(spots, 100.0, 0.05, 0.2, 0.0), [20.0, 0.0, 0.0])
+
+
+def test_zero_volatility_uses_deterministic_terminal_value():
+    call = bsm.call_price(100.0, 100.0, 0.05, 0.0, 1.0)
+    put = bsm.put_price(100.0, 100.0, 0.05, 0.0, 1.0)
+    assert call == pytest.approx(100.0 - 100.0 * math.exp(-0.05), abs=1e-12)
+    assert put == 0.0
+
+
+@pytest.mark.parametrize(("sigma", "T"), [(0.2, 0.0), (0.0, 1.0), (-0.2, 1.0), (0.2, -1.0)])
+def test_d1_rejects_undefined_or_invalid_domain(sigma, T):
+    with pytest.raises(ValueError):
+        bsm.d1(100.0, 100.0, 0.05, sigma, T)

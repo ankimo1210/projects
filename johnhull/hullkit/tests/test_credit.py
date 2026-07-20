@@ -30,6 +30,11 @@ def test_merton_example_24_3():
     assert q == pytest.approx(0.12697, abs=5e-4)  # Hull 12.7%
 
 
+def test_merton_non_convergence_does_not_return_negative_asset_volatility():
+    with pytest.raises(ValueError, match="did not converge"):
+        credit.merton_default_prob(1.0, 0.01, 100.0, 0.05, 1.0)
+
+
 def test_gaussian_copula_conditional_monotonic():
     q = 0.05
     a = 0.5

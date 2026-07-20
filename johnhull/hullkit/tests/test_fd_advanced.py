@@ -4,6 +4,7 @@ The explicit scheme is accurate when stable (small von-Neumann factor) and
 blows up when the time grid is too coarse — the reason CN/implicit are preferred.
 """
 
+import pytest
 from hullkit import bsm
 from hullkit import fd_advanced as fda
 
@@ -24,3 +25,12 @@ def test_stability_factor_scales_with_steps():
     # finer time grid (larger n_t) lowers the factor; finer space grid raises it
     assert fda.stability_factor(0.20, 100, 8000) < fda.stability_factor(0.20, 100, 1000)
     assert fda.stability_factor(0.20, 400, 1000) > fda.stability_factor(0.20, 100, 1000)
+
+
+@pytest.mark.parametrize(("kind", "strike"), [("call", 500.0), ("put", 20.0)])
+def test_explicit_grid_expands_for_distant_strike(kind, strike):
+    price = fda.fd_explicit(100.0, strike, 0.05, 1.0, 2.0, kind=kind, n_s=100, n_t=8000)
+    reference_fn = bsm.call_price if kind == "call" else bsm.put_price
+    reference = reference_fn(100.0, strike, 0.05, 1.0, 2.0)
+    assert price >= 0.0
+    assert price == pytest.approx(reference, abs=0.05)

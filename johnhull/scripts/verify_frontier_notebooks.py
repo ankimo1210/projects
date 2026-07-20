@@ -1,4 +1,4 @@
-"""Fresh-execute vol 18--25 notebooks into a temporary directory."""
+"""Fresh-execute vol 18--27 notebooks into a temporary directory."""
 
 from __future__ import annotations
 
