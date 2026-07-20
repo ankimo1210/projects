@@ -1148,6 +1148,18 @@ def _xlogy_np(a: float, b: float) -> float:
     return 0.0 if a <= 0.0 else float(a * math.log(b))
 
 
+def _chi2_sf_df1(statistic: float) -> float:
+    """`scipy.stats.chi2.sf(statistic, df=1)` without importing scipy.
+
+    For one degree of freedom the survival function is exactly
+    `erfc(sqrt(x/2))`, so the gate can recompute its own p-value from the
+    committed arrays instead of reading one out of the JSON metrics.
+    """
+    if statistic <= 0.0:
+        return 1.0
+    return float(math.erfc(math.sqrt(statistic / 2.0)))
+
+
 def _lr_independence_np(exceedances: np.ndarray) -> float:
     """Christoffersen (1998) independence LR statistic recomputed in NumPy."""
     exc = np.asarray(exceedances, dtype=int)
@@ -1196,14 +1208,27 @@ def _volume27(
     # 2. Christoffersen independence detects clustering (LR recomputed from arrays).
     lr_iid = _lr_independence_np(arrays["iid_exceedances"])
     lr_clustered = _lr_independence_np(arrays["clustered_exceedances"])
-    pvalue_clustered = float(metrics["christoffersen_ind_pvalue_clustered"])
+    pvalue_clustered = _chi2_sf_df1(lr_clustered)
     detects_clustering = pvalue_clustered < 0.05 and lr_clustered > lr_iid
     _add(
         checks,
         "christoffersen_detects_clustering",
         pvalue_clustered,
-        "clustered LR_ind p-value < 0.05 and LR_ind statistic exceeds the iid series",
+        "clustered LR_ind p-value (recomputed from the arrays) < 0.05 and LR_ind "
+        "statistic exceeds the iid series",
         detects_clustering,
+    )
+
+    # 2b. The stored p-value must agree with the recomputation (metric integrity).
+    stored_pvalue = float(metrics["christoffersen_ind_pvalue_clustered"])
+    pvalue_consistency = abs(stored_pvalue - pvalue_clustered)
+    _add(
+        checks,
+        "christoffersen_pvalue_matches_recomputation",
+        pvalue_consistency,
+        "stored christoffersen_ind_pvalue_clustered matches erfc(sqrt(LR/2)) recomputed "
+        "from the committed exceedance series (<= 1e-12)",
+        pvalue_consistency <= 1e-12,
     )
 
     # 3. Constant-sigma FHS equals plain historical simulation.
