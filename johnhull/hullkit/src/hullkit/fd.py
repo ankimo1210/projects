@@ -9,6 +9,25 @@ import numpy as np
 from scipy.linalg import solve_banded
 
 
+def _log_price_grid(S0, K, sigma, T, n_s, s_max_mult):
+    """Log-price grid containing S0 and K while preserving the requested resolution."""
+    if S0 <= 0.0 or K <= 0.0:
+        raise ValueError("S0 and K must be > 0")
+    if n_s < 2:
+        raise ValueError("n_s must be >= 2")
+    if s_max_mult <= 1.0:
+        raise ValueError("s_max_mult must be > 1")
+    base_half_width = float(np.log(s_max_mult))
+    log_moneyness = abs(float(np.log(K / S0)))
+    diffusion_width = 4.0 * sigma * float(np.sqrt(T))
+    half_width = max(base_half_width, log_moneyness + base_half_width, diffusion_width)
+    n_intervals = max(n_s, int(np.ceil(n_s * half_width / base_half_width)))
+    if n_intervals % 2:
+        n_intervals += 1
+    center = float(np.log(S0))
+    return np.linspace(center - half_width, center + half_width, n_intervals + 1)
+
+
 def fd_vanilla(
     S0,
     K,
@@ -27,6 +46,10 @@ def fd_vanilla(
 ):
     """Theta-scheme FD price of a vanilla option; ln S0 is a grid node.
 
+    ``n_s`` is the minimum number of space intervals. The log-price domain and
+    interval count expand when needed to contain a distant strike or a wide
+    ``4 * sigma * sqrt(T)`` diffusion range without reducing local resolution.
+
     With return_boundary=True (American puts), also returns (taus, boundary)
     — the early-exercise boundary S*(tau) read off the grid at each step.
 
@@ -41,9 +64,11 @@ def fd_vanilla(
         raise ValueError(f"kind must be 'call' or 'put', got {kind!r}")
     if method not in ("implicit", "cn"):
         raise ValueError(f"method must be 'implicit' or 'cn', got {method!r}")
+    if T <= 0.0 or sigma <= 0.0 or n_t < 1:
+        raise ValueError("T, sigma, and n_t must be > 0")
     theta = 1.0 if method == "implicit" else 0.5
 
-    x = np.linspace(np.log(S0 / s_max_mult), np.log(S0 * s_max_mult), n_s + 1)
+    x = _log_price_grid(S0, K, sigma, T, n_s, s_max_mult)
     s_grid = np.exp(x)
     dx = x[1] - x[0]
     dt = T / n_t
@@ -59,7 +84,7 @@ def fd_vanilla(
     di = -2.0 * a_coef - r
     up = a_coef + b_coef
 
-    n_int = n_s - 1
+    n_int = len(x) - 2
     ab = np.zeros((3, n_int))
     ab[0, 1:] = -theta * dt * up
     ab[1, :] = 1.0 - theta * dt * di
@@ -71,9 +96,9 @@ def fd_vanilla(
         rhs = f[1:-1] + (1.0 - theta) * dt * (lo * f[:-2] + di * f[1:-1] + up * f[2:])
         if kind == "call":
             f_lo = 0.0
-            f_hi = s_grid[-1] * np.exp(-q * tau) - K * np.exp(-r * tau)
+            f_hi = max(s_grid[-1] * np.exp(-q * tau) - K * np.exp(-r * tau), 0.0)
         else:
-            f_lo = K * np.exp(-r * tau) - s_grid[0] * np.exp(-q * tau)
+            f_lo = max(K * np.exp(-r * tau) - s_grid[0] * np.exp(-q * tau), 0.0)
             f_hi = 0.0
         rhs[0] += theta * dt * lo * f_lo
         rhs[-1] += theta * dt * up * f_hi

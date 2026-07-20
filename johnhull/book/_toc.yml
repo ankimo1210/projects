@@ -27,3 +27,17 @@ parts:
       - file: notebooks/15_advanced_numerics
       - file: notebooks/16_xva_credit
       - file: notebooks/17_capstone
+  - caption: Hull の先 — ML・市場構造・新市場（A5–A8）
+    chapters:
+      - file: notebooks/18_ml_surrogates
+      - file: notebooks/19_inverse_surfaces
+      - file: notebooks/20_surface_dynamics
+      - file: notebooks/21_spx_vix
+      - file: notebooks/22_zero_dte
+      - file: notebooks/23_rfr_post_libor
+      - file: notebooks/24_crypto_market_structure
+      - file: notebooks/25_climate_energy
+  - caption: Hull の先 — インフレ連動とリスク管理デスク（vol 26–27）
+    chapters:
+      - file: notebooks/26_inflation_jgbi
+      - file: notebooks/27_risk_desk

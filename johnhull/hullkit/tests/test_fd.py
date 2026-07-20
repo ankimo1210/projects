@@ -34,6 +34,15 @@ def test_dividend_yield_consistency():
     assert c == pytest.approx(bsm.call_price(100.0, 95.0, 0.04, 0.3, 0.75, q=0.02), abs=2e-2)
 
 
+@pytest.mark.parametrize(("kind", "strike"), [("call", 500.0), ("put", 20.0)])
+def test_grid_expands_for_strike_outside_default_domain(kind, strike):
+    price = fd.fd_vanilla(100.0, strike, 0.05, 1.0, 2.0, kind=kind, n_s=300, n_t=300)
+    reference_fn = bsm.call_price if kind == "call" else bsm.put_price
+    reference = reference_fn(100.0, strike, 0.05, 1.0, 2.0)
+    assert price >= 0.0
+    assert price == pytest.approx(reference, abs=0.15)
+
+
 def test_boundary_extraction_for_american_put():
     price, taus, boundary = fd.fd_vanilla(
         **AM, kind="put", american=True, method="cn", return_boundary=True

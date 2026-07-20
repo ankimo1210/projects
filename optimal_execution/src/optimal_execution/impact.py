@@ -147,6 +147,61 @@ def sqrt_impact(Q: np.ndarray | float, cfg: Config) -> np.ndarray | float:
     return cfg.impact.sqrt_impact_Y * cfg.sigma_daily * np.sqrt(Q / cfg.average_daily_volume)
 
 
+def permanent_power_impact(z: np.ndarray | float, gamma: float, delta: float) -> np.ndarray | float:
+    """Signed power-law permanent impact g(z) = gamma sign(z) |z|^delta.
+
+    delta = 1 is the lab's (linear) permanent channel; other exponents exist
+    only inside the Huberman–Stanzl manipulation diagnostic below.
+    """
+    z = np.asarray(z, dtype=float)
+    return gamma * np.sign(z) * np.abs(z) ** delta
+
+
+def round_trip_pnl(z: np.ndarray, gamma: float, delta: float) -> float:
+    """P&L of a signed trade sequence under permanent-only power impact.
+
+    Execution uses the lab's half-own-impact convention,
+    P_k = P0 + sum_{j<k} g(z_j) + 0.5 g(z_k), and PnL = -sum z_k (P_k - P0)
+    (the arrival price cancels whenever sum z = 0). For delta = 1 this is
+    exactly -(gamma/2)(sum z)^2: zero for every round trip — the
+    Huberman–Stanzl (2004) no-manipulation result. Nonlinear permanent
+    impact (delta != 1) breaks it, which is what the diagnostic shows.
+    """
+    z = np.asarray(z, dtype=float)
+    g = permanent_power_impact(z, gamma, delta)
+    prior = np.concatenate([[0.0], np.cumsum(g)[:-1]])
+    return float(-np.sum(z * (prior + 0.5 * g)))
+
+
+def manipulation_profit(
+    cfg: Config, delta: float, n_pieces: int = 10, quantity: float | None = None
+) -> dict[str, float]:
+    """Round-trip profit achievable when permanent impact has exponent delta.
+
+    Two canonical pump-and-dump schedules over Q shares: ``n_pieces`` equal
+    trades then one opposite block, and the reverse. gamma is renormalised as
+    gamma_delta = gamma * Q^(1-delta) so the full-block impact g(Q) is held
+    fixed across delta and the profits are comparable. Closed form:
+    pieces-then-block earns (gamma Q^2 / 2)(n^(1-delta) - 1) — positive for
+    concave impact (delta < 1); the reverse direction earns its negative
+    (positive for convex impact); both are exactly zero at delta = 1.
+    """
+    Q = cfg.initial_inventory if quantity is None else quantity
+    gamma_delta = cfg.impact.permanent_gamma * Q ** (1.0 - delta)
+    piece = Q / n_pieces
+    pieces_then_block = round_trip_pnl(
+        np.concatenate([np.full(n_pieces, piece), [-Q]]), gamma_delta, delta
+    )
+    block_then_pieces = round_trip_pnl(
+        np.concatenate([[Q], np.full(n_pieces, -piece)]), gamma_delta, delta
+    )
+    return {
+        "pieces_then_block": pieces_then_block,
+        "block_then_pieces": block_then_pieces,
+        "best_pnl": max(pieces_then_block, block_then_pieces),
+    }
+
+
 def classical_execution(
     cfg: Config,
     q: np.ndarray,

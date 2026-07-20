@@ -1,0 +1,222 @@
+{
+  "acceptance": {
+    "checks": [
+      {
+        "criterion": "== 0",
+        "name": "split_overlap_count",
+        "observed": 0,
+        "passed": true
+      },
+      {
+        "criterion": "< 0.001",
+        "name": "price_mae_normalized",
+        "observed": 0.0005593846268355811,
+        "passed": true
+      },
+      {
+        "criterion": "< 0.002",
+        "name": "delta_mae",
+        "observed": 0.0017494819891811248,
+        "passed": true
+      },
+      {
+        "criterion": "exact documented 8-check set",
+        "name": "hard_check_set",
+        "observed": 8,
+        "passed": true
+      },
+      {
+        "criterion": "== 0",
+        "name": "hard_check_violations",
+        "observed": 0,
+        "passed": true
+      },
+      {
+        "criterion": "< raw-price MAE",
+        "name": "residual_baseline",
+        "observed": 0.0006117290429284944,
+        "passed": true
+      },
+      {
+        "criterion": "each estimand in [0.80, 1.00]",
+        "name": "mc_ci_coverage",
+        "observed": 0.9,
+        "passed": true
+      },
+      {
+        "criterion": "each 4x-path ratio in [0.40, 0.60]",
+        "name": "mc_standard_error_scaling",
+        "observed": 0.5036523091029843,
+        "passed": true
+      }
+    ],
+    "model_performance_approved": false,
+    "negative_results": [
+      "The quick soft-penalty ablation did not improve the hard-check count.",
+      "No neural CPU break-even batch was observed in the measured quick profile."
+    ],
+    "passed": true,
+    "schema_version": 1,
+    "scope": "integration_and_reproducibility"
+  },
+  "artifact_role": "validated Phase 2 quick-run reference for artifact-only teaching",
+  "companion_schemas": {
+    "pricing_slices.npz": {
+      "analytic_us": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "microseconds median"
+      },
+      "batch_size": {
+        "dtype": "int64",
+        "shape": [
+          3
+        ],
+        "unit": "rows"
+      },
+      "check_names": {
+        "dtype": "<U21",
+        "shape": [
+          8
+        ],
+        "unit": "hard-check identifier"
+      },
+      "delta_error": {
+        "dtype": "float64",
+        "shape": [
+          29
+        ],
+        "unit": "absolute d(C/K)/d(S/K) error"
+      },
+      "gamma_error": {
+        "dtype": "float64",
+        "shape": [
+          29
+        ],
+        "unit": "absolute d2(C/K)/d(S/K)2 error"
+      },
+      "maturity": {
+        "dtype": "float64",
+        "shape": [
+          21
+        ],
+        "unit": "years"
+      },
+      "mlp_us": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "microseconds median"
+      },
+      "moneyness": {
+        "dtype": "float64",
+        "shape": [
+          29
+        ],
+        "unit": "S/K"
+      },
+      "neural_price": {
+        "dtype": "float64",
+        "shape": [
+          21,
+          29
+        ],
+        "unit": "C/K"
+      },
+      "price_error": {
+        "dtype": "float64",
+        "shape": [
+          21,
+          29
+        ],
+        "unit": "absolute C/K error"
+      },
+      "truth_price": {
+        "dtype": "float64",
+        "shape": [
+          21,
+          29
+        ],
+        "unit": "C/K"
+      },
+      "violations_constrained": {
+        "dtype": "int64",
+        "shape": [
+          8
+        ],
+        "unit": "count"
+      },
+      "violations_unconstrained": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "count averaged across 3 seeds"
+      }
+    }
+  },
+  "companions": {
+    "pricing_slices.npz": "a36059022f5c68d29e9def86ea29744e502329395d44cc4b8bb75a10c22a3852"
+  },
+  "data_policy": "synthetic-offline",
+  "engine_evidence": {
+    "ablation_sha256": "16735089fd0c977c835a0a58e1a34d14b67ba5730068576b2fe8df30d8b27f3f",
+    "acceptance": {
+      "all_hard_checks_pass": true,
+      "delta_mae_below_2e-3": true,
+      "price_mae_below_1e-3": true
+    },
+    "checkpoint_epoch": 229,
+    "config_fingerprint": "2d4ba8e38acfa5cc",
+    "dataset_split_fingerprints": {
+      "ood": "sha256:d7b9931976238b936b27e47f4161b87ef92d17aa521badd1fe673a39fc46932d",
+      "test": "sha256:41a351c53ea9177ab69179a8fedd3ed91598c2bd81fe15b5b26fc74c0bb7bc38",
+      "train": "sha256:3bc76cdee74d41a42458a7f514a318b51b6b246d828347f0cb358dbbf4635b9e",
+      "validation": "sha256:7da3dd99040830561e3130d65cf805edc5cd1c40c5b2eacfe39fccfd3fd9cfb2"
+    },
+    "greek_route": "direct_heads"
+  },
+  "generated_by": "deep_hedge_price/scripts/export_johnhull_pricing_reference.py",
+  "limitations": [
+    "Synthetic Black-Scholes accuracy is not evidence of market forecasting power.",
+    "The OOD shell remains a stress diagnostic and is not an acceptance claim.",
+    "The 512-path Monte-Carlo benchmark is a latency workload, not a precision result.",
+    "The small ablation may fail absolute main-run thresholds and is used only for relative comparison."
+  ],
+  "metrics": {
+    "break_even_batch": null,
+    "delta_mae": 0.0017494819891811248,
+    "dml_improved_a_greek_without_price_degradation": true,
+    "hard_violation_rate": 0.0,
+    "heston_bsm_residual_mae": 0.0006117290429284944,
+    "heston_raw_price_mae": 0.012620526620790065,
+    "price_mae_normalized": 0.0005593846268355811,
+    "soft_penalty_improved_hard_checks": false,
+    "split_overlap_count": 0,
+    "teacher_ci_coverage_20_seeds": 0.9,
+    "teacher_ci_coverage_20_seeds_by_estimand": {
+      "delta": 1.0,
+      "price": 0.9,
+      "vega": 0.9
+    },
+    "teacher_se_ratio_4x_paths": 0.5036523091029843,
+    "teacher_se_ratio_4x_paths_by_estimand": {
+      "delta": 0.5000675502958665,
+      "price": 0.5036523091029843,
+      "vega": 0.5018588397313818
+    }
+  },
+  "schema_version": 1,
+  "semantic_sources": [
+    "deep_hedge_price/src/deep_hedge_price/pricing_evaluation.py",
+    "johnhull/hullkit/src/hullkit/surrogate_validation.py"
+  ],
+  "semantic_tests": [
+    "deep_hedge_price/tests/test_pricing_evaluation.py",
+    "johnhull/hullkit/tests/test_surrogate_validation.py"
+  ],
+  "volume": 18
+}
