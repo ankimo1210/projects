@@ -213,31 +213,8 @@ class OrderBook:
         if q <= 0:
             return 0.0, 0.0, {"spread": 0.0, "walk": 0.0, "permanent": 0.0, "transient": 0.0}
         cfg = self.cfg
-        tick = cfg.tick_size
         sign = self.sign
-        depth = self.bid_depth if sign > 0 else self.ask_depth
-        touch = self.best_bid if sign > 0 else self.best_ask
-
-        l1 = min(q, depth)
-        overflow = q - l1
-        # overflow walks the deeper book at deep_density shares per tick;
-        # average extra concession = tick * (1 + levels) / 2 beyond one tick.
-        levels = overflow / max(self.deep_density, 1.0)
-        walk_conc = tick * (1.0 + 0.5 * levels) if overflow > 0 else 0.0
-        avg_price = touch - sign * (overflow / max(q, 1e-12)) * walk_conc
-
-        # latent decomposition vs unaffected mid s0 (positive = adverse).
-        # Exactly mirrors the executed price: p = s0 -/+ (spread/2 + walk_share
-        # + perm_state + D_state); the *own* permanent/transient impact of this
-        # trade only moves future prices, so it is charged to later fills.
-        pre_half_spread = 0.5 * self.spread
-        perm_state = cfg.impact.permanent_gamma * self.cum_agent_mkt
-        detail = {
-            "spread": pre_half_spread * q,
-            "walk": (overflow * walk_conc),
-            "permanent": perm_state * q,
-            "transient": self.D * q,
-        }
+        avg_price, l1, detail = self.market_order_quote(q)
 
         if self.reactive:
             # consume visible liquidity and register impact
@@ -249,10 +226,53 @@ class OrderBook:
             self.cum_agent_mkt += q
             # depletion widens the spread until replenishment catches up
             deficit = max(0.0, 1.0 - min(self.bid_depth, self.ask_depth) / self.target_depth)
-            self.spread = max(self.spread * (1.0 + 0.6 * deficit), tick)
+            self.spread = max(self.spread * (1.0 + 0.6 * deficit), cfg.tick_size)
 
         cash = q * avg_price
         return q, cash, detail
+
+    def market_order_quote(self, q: float) -> tuple[float, float, dict[str, float]]:
+        """Estimate average price and cost decomposition without mutating state.
+
+        Reactive execution charges half of the current block's permanent and
+        transient jump to its block-average price, matching the classical model.
+        Replay execution deliberately suppresses those agent-footprint channels.
+        """
+        if q <= 0:
+            touch = self.best_bid if self.sign > 0 else self.best_ask
+            return (
+                touch,
+                0.0,
+                {
+                    "spread": 0.0,
+                    "walk": 0.0,
+                    "permanent": 0.0,
+                    "transient": 0.0,
+                },
+            )
+        cfg = self.cfg
+        sign = self.sign
+        depth = self.bid_depth if sign > 0 else self.ask_depth
+        touch = self.best_bid if sign > 0 else self.best_ask
+        l1 = min(q, depth)
+        overflow = q - l1
+        # Overflow starts one tick beyond the touch and walks a linear density.
+        levels = overflow / max(self.deep_density, 1.0)
+        walk_conc = cfg.tick_size * (1.0 + 0.5 * levels) if overflow > 0 else 0.0
+        walk_total = overflow * walk_conc
+
+        own_perm = 0.5 * cfg.impact.permanent_gamma * q if self.reactive else 0.0
+        own_transient = 0.5 * cfg.impact.transient_eta * q if self.reactive else 0.0
+        perm_state = cfg.impact.permanent_gamma * self.cum_agent_mkt + own_perm
+        transient_state = self.D + own_transient
+        detail = {
+            "spread": 0.5 * self.spread * q,
+            "walk": walk_total,
+            "permanent": perm_state * q,
+            "transient": transient_state * q,
+        }
+        current_concession = walk_total / q + own_perm + own_transient
+        return touch - sign * current_concession, l1, detail
 
     def agent_improve_quote(self) -> None:
         """An improving limit order tightens the touch by one tick (reactive)."""

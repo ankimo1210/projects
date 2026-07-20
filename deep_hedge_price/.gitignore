@@ -6,7 +6,8 @@ artifacts/data/*
 !artifacts/data/.gitkeep
 artifacts/figures/*
 !artifacts/figures/.gitkeep
-reports/*.html
+artifacts/pricing/*
+!artifacts/pricing/.gitkeep
 .ipynb_checkpoints/
 notebooks/.ipynb_checkpoints/
 *.egg-info/

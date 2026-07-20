@@ -2,6 +2,35 @@
 
 Phase 2 must be implemented as a separate, validated pricing problem. It must not infer a price merely from the Phase 1 hedge loss.
 
+## Ownership and A5 mapping
+
+- `deep_hedge_price` is the source of truth for the Phase 2 PyTorch learning engine,
+  pricing configs, checkpoints, evaluation, and standalone report.
+- `hullkit` owns NumPy/SciPy analytic/COS/Monte-Carlo teachers and hard financial
+  validation. It remains torch-free.
+- `johnhull` owns the vol 18 teaching notebook and book/portal integration.
+- Differentiable penalties in `deep_hedge_price.arbitrage` are training aids. Only
+  `hullkit.surrogate_validation` produces the canonical hard report and aggregate
+  `arbitrage_free` decision.
+- Phase 1 uses `ProjectConfig`, `artifacts/checkpoints/`, and the hedge manifest.
+  Phase 2 uses `PricingConfig`, `artifacts/pricing/<namespace>/<fingerprint>/`, and
+  versioned JSON+NPZ datasets. Their configs, checkpoints, and manifests are not interchangeable.
+
+Mapping to the A5 implementation plan:
+
+| This roadmap | A5 task |
+|---|---:|
+| BS supervised surrogate | G1 Task 4–5 |
+| Joint/Differential Greeks | G1 Task 6 |
+| Arbitrage-aware losses/checks | G0 Task 3 + G1 Task 7 |
+| MC and Heston/COS labels | G1 Task 8 |
+| Calibration/speed/OOD | G1 Task 9 |
+| Notebook/report delivery | G1 Task 10–11 |
+
+G0 contracts are implemented without adding a new production dependency. Gate
+completion still requires the project-scoped test/lint and delivery verification
+listed in Task 12 of the A5 plan.
+
 ## 1. Black–Scholes supervised surrogate
 
 Add `pricing_data.py`, `pricing_policy.py`, `pricing_training.py`, `greeks.py`, and `arbitrage.py`. Generate a stratified design over normalized spot/strike, maturity, rate, dividend yield, and volatility. Labels are analytic Black–Scholes prices, delta, gamma, vega, theta, and rho. Train a small MLP on normalized price `C/K` and retain analytic values as the baseline.

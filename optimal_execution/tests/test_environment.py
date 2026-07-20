@@ -75,6 +75,26 @@ def test_participation_cap_enforced(cfg):
     assert env.violations >= 1
 
 
+def test_price_collar_caps_walked_average_price(cfg):
+    shallow = cfg.with_overrides(
+        {
+            "liquidity": {"depth_shares": 100.0, "deep_liquidity_mult": 1.0},
+            "price_collar_bps": 5.0,
+            "max_child_order_frac": 1.0,
+            "max_participation_rate": 1.0,
+        }
+    )
+    env = ExecutionEnv(shallow)
+    env.reset(7)
+    _, _, _, info = env.step({"market_qty": 1000.0, "limit": "none"})
+    executed = info["executed"]
+    assert 0 < executed < 1000.0
+    avg_price = env.cash / executed
+    collar = shallow.price_collar_bps * 1e-4 * env.arrival_s0
+    assert shallow.sign * (env.arrival_s0 - avg_price) <= collar + 1e-9
+    assert env.violations >= 1
+
+
 def test_economic_vs_shaped_reward_separate(cfg):
     env = ExecutionEnv(cfg)
     total_r, ep = run_episode(env, 2)
@@ -85,6 +105,29 @@ def test_economic_vs_shaped_reward_separate(cfg):
         abs(-(ep["is_total"] + ep["risk_penalty"]) * cfg.rl.reward.cost_scale - ep["shaped_reward"])
         < abs(ep["shaped_reward"]) + 1.0
     )
+
+
+def test_inventory_risk_uses_current_sigma_profile(cfg):
+    env = ExecutionEnv(cfg)
+    env.reset(9)
+    env.step({"market_qty": 0.0, "limit": "none"})
+    assert env.book is not None
+    sigma_sq = np.mean(env.book._sigma_sub[: env.n_sub] ** 2)
+    expected = cfg.rl.reward.inventory_penalty * cfg.initial_inventory**2 * sigma_sq * env.dt
+    assert env.risk_penalty_total == pytest.approx(expected)
+
+
+def test_invalid_limit_action_is_rejected_and_counted(cfg):
+    env = ExecutionEnv(cfg)
+    env.reset(7)
+    env.step({"market_qty": 0.0, "limit": "typo", "limit_qty": 100.0})
+    assert env.limit_posted == 0.0
+    assert env.violations == 1
+
+    env.reset(7)
+    env.step({"market_qty": 0.0, "limit": "join", "limit_qty": np.nan})
+    assert env.limit_posted == 0.0
+    assert env.violations == 1
 
 
 def test_decomposition_identity(cfg):

@@ -25,6 +25,4 @@ def test_fixed_seed_training_is_reproducible(tiny_config, tmp_path):
     first = train_policy(tiny_config, tmp_path / "one", force=True)
     second = train_policy(tiny_config, tmp_path / "two", force=True)
     assert torch.allclose(_state_vector(first.policy), _state_vector(second.policy), atol=1e-7)
-    assert first.history["validation_objective"].equals(
-        second.history["validation_objective"]
-    )
+    assert first.history["validation_objective"].equals(second.history["validation_objective"])
