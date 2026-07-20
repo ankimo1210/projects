@@ -1,6 +1,7 @@
 """Tests for hullkit.tail_risk: filtered historical simulation and EVT/GPD tail risk."""
 
 import math
+import warnings
 
 import numpy as np
 import pytest
@@ -233,3 +234,100 @@ def test_mean_excess_empirical_slope_consistent_with_gpd_sample():
     assert not np.any(np.isnan(e))
     slope, _ = np.polyfit(thresholds, e, 1)
     assert slope == pytest.approx(xi_true / (1.0 - xi_true), abs=0.05)
+
+
+# --- input contract: FHS returns, GPD fit inputs, GPDFit invariants ----
+
+
+@pytest.mark.parametrize("bad", [np.nan, np.inf, -np.inf])
+def test_fhs_rejects_non_finite_returns(bad):
+    """A NaN return produced a FINITE, sign-flipped VaR before this guard."""
+    returns = np.full(200, 0.01)
+    returns[3] = bad
+    with pytest.raises(ValueError, match="finite"):
+        tail_risk.filtered_historical_var_es(returns, np.full(200, 0.01), alpha=0.99)
+
+
+def test_fhs_rejects_two_dimensional_inputs():
+    returns = np.full((2, 100), 0.01)
+    with pytest.raises(ValueError, match="one-dimensional"):
+        tail_risk.filtered_historical_var_es(returns, np.full((2, 100), 0.01), alpha=0.99)
+
+
+@pytest.mark.parametrize("bad", [np.nan, np.inf])
+def test_fit_gpd_pot_rejects_non_finite_losses(bad):
+    rng = np.random.default_rng(11)
+    losses = rng.gumbel(size=400)
+    losses[7] = bad
+    with pytest.raises(ValueError, match="finite"):
+        tail_risk.fit_gpd_pot(losses, threshold=0.0, min_exceedances=30)
+
+
+def test_fit_gpd_pot_rejects_non_finite_threshold():
+    rng = np.random.default_rng(12)
+    with pytest.raises(ValueError, match="finite"):
+        tail_risk.fit_gpd_pot(rng.gumbel(size=400), threshold=np.nan)
+
+
+def test_fit_gpd_pot_rejects_two_dimensional_losses():
+    rng = np.random.default_rng(13)
+    with pytest.raises(ValueError, match="one-dimensional"):
+        tail_risk.fit_gpd_pot(rng.gumbel(size=400).reshape(2, 200), threshold=0.0)
+
+
+@pytest.mark.parametrize("bad_min", [0, -1, 2.5, True])
+def test_fit_gpd_pot_rejects_invalid_min_exceedances(bad_min):
+    rng = np.random.default_rng(14)
+    with pytest.raises(ValueError, match="min_exceedances"):
+        tail_risk.fit_gpd_pot(rng.gumbel(size=400), threshold=0.0, min_exceedances=bad_min)
+
+
+@pytest.mark.parametrize(
+    ("kwargs", "match"),
+    [
+        ({"xi": np.nan}, "finite"),
+        ({"beta": np.inf}, "finite"),
+        ({"threshold": np.nan}, "finite"),
+        ({"beta": -1.0}, "beta"),
+        ({"beta": 0.0}, "beta"),
+        ({"n_exceedances": 0}, "n_exceedances"),
+        ({"n_exceedances": 900}, "n_exceedances"),
+        ({"n_exceedances": True}, "integer"),
+        ({"n_total": 2.5}, "integer"),
+        ({"xi": 1.0}, "xi"),
+        ({"xi": 1.5}, "xi"),
+    ],
+)
+def test_evt_var_es_rejects_invalid_fit(kwargs, match):
+    """Every invalid GPDFit must raise ValueError, never NaN or a bare numeric error."""
+    base = {
+        "xi": 0.2,
+        "beta": 1.0,
+        "threshold": 0.0,
+        "n_exceedances": 50,
+        "n_total": 500,
+    }
+    fit = tail_risk.GPDFit(**{**base, **kwargs})
+    with pytest.raises(ValueError, match=match):
+        tail_risk.evt_var_es(fit, alpha=0.99)
+
+
+def test_evt_var_es_no_warning_or_nan_leaks_from_invalid_fits():
+    """None of the invalid fits may leak a RuntimeWarning, ZeroDivisionError or NaN."""
+    bad_fits = [
+        tail_risk.GPDFit(xi=np.nan, beta=1.0, threshold=0.0, n_exceedances=50, n_total=500),
+        tail_risk.GPDFit(xi=0.2, beta=-1.0, threshold=0.0, n_exceedances=50, n_total=500),
+        tail_risk.GPDFit(xi=0.2, beta=1.0, threshold=0.0, n_exceedances=0, n_total=500),
+        tail_risk.GPDFit(xi=0.2, beta=1.0, threshold=0.0, n_exceedances=900, n_total=500),
+    ]
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        for fit in bad_fits:
+            with pytest.raises(ValueError):
+                tail_risk.evt_var_es(fit, alpha=0.99)
+
+
+def test_evt_var_es_returns_finite_values_for_valid_fit():
+    fit = tail_risk.GPDFit(xi=0.2, beta=1.0, threshold=0.0, n_exceedances=50, n_total=500)
+    var, es = tail_risk.evt_var_es(fit, alpha=0.99)
+    assert math.isfinite(var) and math.isfinite(es)
