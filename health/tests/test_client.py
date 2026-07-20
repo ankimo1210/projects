@@ -367,3 +367,47 @@ def test_pacing_applies_to_every_reconcile_page(tmp_path):
     ], clock=clock.now, wait=clock.sleep, min_interval_s=0.5)
     list(client.iter_reconciled(metric, START, END, budget))
     assert clock.waits == [0.5, 0.5]  # 3 sends, 2 gaps, no real time elapsed
+
+
+# -- token resolution must precede budget consumption and pacing -----------------
+#
+# auth.access_token() (built from headers) has to succeed before a physical
+# send is even attempted -- acquiring a token is a precondition for sending,
+# not itself a Health API send. If it raises (no tokens stored yet, or a
+# failed proactive near-expiry refresh inside auth.py), no budget slot and no
+# pacing tick may be spent, since zero HTTP requests reached the Health API.
+
+
+def test_access_token_failure_leaves_budget_and_session_untouched(tmp_path):
+    metric = by_name("steps")
+    budget = RequestBudget(5)
+    # No tokens ever stored: auth.access_token() raises AuthError immediately,
+    # before client._dispatch() would otherwise consume budget/pace/send.
+    auth = GoogleHealthAuth("CID", "SECRET", tmp_path, session=FakeSession(),
+                             clock=lambda: 1000.0)
+    client, _ = make_client(tmp_path, [], auth=auth)
+    with pytest.raises(AuthError):
+        client.daily_rollup(metric, START, END, budget)
+    assert budget.used == 0
+    assert client.session.calls == []
+
+
+def test_next_send_after_access_token_failure_still_never_waits(tmp_path):
+    metric = by_name("steps")
+    budget = RequestBudget(5)
+    auth = GoogleHealthAuth("CID", "SECRET", tmp_path, session=FakeSession(),
+                             clock=lambda: 1000.0)
+    clock = FakeClock(start=0.0)
+    client, _ = make_client(tmp_path, [FakeResponse(200, {"rollupDataPoints": []})],
+                             clock=clock.now, wait=clock.sleep, auth=auth)
+    with pytest.raises(AuthError):
+        client.daily_rollup(metric, START, END, budget)  # phantom attempt: no send
+    # simulate completing OAuth after the failed attempt
+    auth._store_tokens(
+        {"access_token": "AT1", "refresh_token": "RT1", "expires_in": 3600, "scope": "s"},
+        existing=None,
+    )
+    result = client.daily_rollup(metric, START, END, budget)  # the actual first send
+    assert result == {"rollupDataPoints": []}
+    assert budget.used == 1  # only the real send counted, not the phantom attempt
+    assert clock.waits == []  # pacing state wasn't corrupted by the earlier failure
