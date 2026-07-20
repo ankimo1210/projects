@@ -22,7 +22,10 @@ class FakeSession:
 
     def _record(self, method, url, **kw):
         self.calls.append({"method": method, "url": url, **kw})
-        return self.queue.pop(0)
+        item = self.queue.pop(0)
+        if isinstance(item, Exception):
+            raise item  # simulate a network error (e.g. requests.ConnectionError)
+        return item
 
     def get(self, url, headers=None, timeout=None):
         return self._record("GET", url, headers=headers)
