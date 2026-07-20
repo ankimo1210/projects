@@ -29,6 +29,10 @@ LOGGER = logging.getLogger("jhrmbs.ingest")
 RETRYABLE_STATUS = {429, 500, 502, 503, 504}
 
 
+class _NonRetryableDownloadError(DownloadError):
+    """Deterministic download failure that a retry cannot fix."""
+
+
 class LinkExtractor(HTMLParser):
     def __init__(self) -> None:
         super().__init__()
@@ -109,7 +113,7 @@ class RawDownloader:
     def _validate_url(url: str, source: SourceConfig) -> None:
         parsed = urlparse(url)
         if parsed.scheme != "https" or parsed.hostname not in source.allowed_hosts:
-            raise DownloadError(f"許可されていない取得先です: {url}")
+            raise _NonRetryableDownloadError(f"許可されていない取得先です: {url}")
 
     @staticmethod
     def _filename(url: str, configured: str | None, media_type: str, source_id: str) -> str:
@@ -202,7 +206,9 @@ class RawDownloader:
                     for chunk in response.iter_bytes():
                         size += len(chunk)
                         if size > limit:
-                            raise DownloadError(f"download exceeds {limit} bytes: {url}")
+                            raise _NonRetryableDownloadError(
+                                f"download exceeds {limit} bytes: {url}"
+                            )
                         chunks.append(chunk)
                     data = b"".join(chunks)
                     media_type = response.headers.get("content-type", "application/octet-stream")
@@ -249,7 +255,14 @@ class RawDownloader:
                     }
                     LOGGER.info("%s %s (%d bytes)", cache_status, url, size)
                     return record
+            except _NonRetryableDownloadError:
+                raise
             except (httpx.HTTPError, DownloadError) as exc:
+                if (
+                    isinstance(exc, httpx.HTTPStatusError)
+                    and exc.response.status_code not in RETRYABLE_STATUS
+                ):
+                    raise DownloadError(f"取得に失敗しました: {url}: {exc}") from exc
                 last_error = exc
                 if attempt >= self.config.http.retries:
                     break

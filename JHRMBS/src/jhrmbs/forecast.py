@@ -33,6 +33,7 @@ def forecast_issue(
     run_id: str | None = None,
     mortgage_rate_pct: float | None = None,
     jgb_10y_pct: float | None = None,
+    rate_feature_shift_pct: float = 0.0,
     save: bool = True,
 ) -> pd.DataFrame:
     paths = DataPaths(config.data_root)
@@ -50,6 +51,15 @@ def forecast_issue(
     if future.empty:
         raise ModelError(f"issue has no future scheduled factor path: {issue_id}")
     issue = issues.loc[issues["issue_id"] == issue_id].iloc[0]
+    series_type = str(issue["series_type"])
+    outside_training_population = series_type != "monthly"
+    if outside_training_population:
+        LOGGER.warning(
+            "issue %s has series_type=%s, outside the monthly-only training population; "
+            "the fitted model is extrapolating",
+            issue_id,
+            series_type,
+        )
     run_directory = resolve_run_directory(config, run_id)
     selected_model_name = resolve_model_name(config, model_name, run_id)
     model = load_model(config, model_name=selected_model_name, run_id=run_id)
@@ -99,6 +109,7 @@ def forecast_issue(
             )
         rate_feature = current_wac - jgb_10y_pct
         rate_is_proxy = True
+    rate_feature += rate_feature_shift_pct
 
     predicted_factor = float(current["actual_factor"])
     previous_scheduled = float(current["scheduled_factor"])
@@ -164,9 +175,12 @@ def forecast_issue(
                 "model_name": selected_model_name,
                 "run_id": run_directory.name,
                 "current_observation_month": str(pd.Timestamp(current["payment_month"]).date()),
+                "series_type": series_type,
+                "outside_training_population": outside_training_population,
                 "rate_feature_pct": rate_feature,
                 "rate_feature_is_proxy": rate_is_proxy,
                 "rate_feature_mode": rate_feature_mode,
+                "rate_feature_shift_pct": rate_feature_shift_pct,
                 "mortgage_rate_override_pct": mortgage_rate_pct,
                 "jgb_10y_override_pct": jgb_10y_pct,
                 "unmodeled_components": ["long delinquency", "other cancellations", "cleanup call"],
@@ -174,6 +188,17 @@ def forecast_issue(
         )
         LOGGER.info("forecast %s model=%s rows=%d", issue_id, selected_model_name, len(result))
     return result
+
+
+def _current_wala_months(observed: pd.DataFrame, issue_id: str) -> float:
+    """WALA at the latest observed month, advanced from the last published value."""
+    with_wala = observed[pd.to_numeric(observed["wala_months"], errors="coerce").notna()]
+    if with_wala.empty:
+        raise ModelError(f"WALA is not published for any observed month: {issue_id}")
+    last = with_wala.iloc[-1]
+    current_month = pd.Timestamp(observed["payment_month"].iloc[-1]).to_period("M")
+    last_month = pd.Timestamp(last["payment_month"]).to_period("M")
+    return float(last["wala_months"]) + float(current_month.ordinal - last_month.ordinal)
 
 
 def fixed_psj_forecast(
@@ -189,7 +214,7 @@ def fixed_psj_forecast(
         raise ModelError(f"unknown or unobserved issue: {issue_id}")
     current = observed.iloc[-1]
     future = issue_rows[issue_rows["payment_month"] > current["payment_month"]].copy()
-    wala = float(current["wala_months"])
+    wala = _current_wala_months(observed, issue_id)
     future["prediction_wala_months"] = wala + np.arange(1, len(future) + 1)
     future["predicted_cpr_pct"] = (
         np.asarray(

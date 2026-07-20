@@ -16,7 +16,7 @@ from jhrmbs.artifacts import read_table
 from jhrmbs.cashflow_service import create_issue_cashflow
 from jhrmbs.config import AppConfig
 from jhrmbs.forecast import fixed_psj_forecast, forecast_issue
-from jhrmbs.models.training import resolve_run_directory
+from jhrmbs.models.training import MODEL_SPECS, resolve_run_directory
 from jhrmbs.paths import DataPaths
 from jhrmbs.util import atomic_write_bytes, atomic_write_json, read_json, utc_now
 
@@ -172,6 +172,7 @@ def _metrics_table(metrics: pd.DataFrame, model_name: str) -> str:
         [
             "split",
             "model",
+            "test_rows",
             "weighted_rmse_cpr_pct",
             "weighted_mae_cpr_pct",
             "cashflow_cumulative_principal_mae_pct",
@@ -181,6 +182,7 @@ def _metrics_table(metrics: pd.DataFrame, model_name: str) -> str:
         columns={
             "split": "分割",
             "model": "モデル",
+            "test_rows": "test 行数",
             "weighted_rmse_cpr_pct": "加重 RMSE (CPR pt)",
             "weighted_mae_cpr_pct": "加重 MAE (CPR pt)",
             "cashflow_cumulative_principal_mae_pct": "累積元本誤差 (%)",
@@ -194,6 +196,41 @@ def _metrics_table(metrics: pd.DataFrame, model_name: str) -> str:
         float_format=lambda value: f"{value:.3f}",
     )
     return rendered
+
+
+def _split_disagreement_note(metrics: pd.DataFrame) -> str | None:
+    fitted = metrics[metrics["model"].isin(MODEL_SPECS)]
+    if fitted.empty or fitted["split"].nunique() < 2:
+        return None
+    winners = fitted.loc[fitted.groupby("split")["weighted_rmse_cpr_pct"].idxmin()]
+    if winners["model"].nunique() <= 1:
+        return None
+    listed = "、".join(
+        f"{split}: {model}"
+        for split, model in zip(winners["split"], winners["model"], strict=True)
+    )
+    return (
+        f"OOS split 間で最良モデルが一致しません（{listed}）。champion は平均順位で"
+        "選択されますが、単一モデルの優位を確定せず、regime / vintage 安定性を追加検証"
+        "してください。test 行数が小さい split の順位は特にノイズに敏感です。"
+    )
+
+
+def _sensitivity_table(rows: list[dict[str, float]]) -> str:
+    body = "".join(
+        "<tr>"
+        f"<th>{row['shift']:+.2f}</th>"
+        f"<td>{_format_number(row['mean_cpr_pct'])}</td>"
+        f"<td>{_format_number(row['wal_years'])}</td>"
+        f"<td>{_format_number(row['dirty_price_per_100'], 3)}</td>"
+        "</tr>"
+        for row in rows
+    )
+    return (
+        "<table><thead><tr><th>rate feature shift (pt)</th><th>平均予測 CPR 12か月 (%)</th>"
+        "<th>WAL（年）</th><th>Dirty price / 100</th></tr></thead>"
+        f"<tbody>{body}</tbody></table>"
+    )
 
 
 def generate_issue_report(
@@ -227,6 +264,7 @@ def generate_issue_report(
         run_id=run_id,
         valuation_yield_pct=valuation_yield_pct,
         cleanup_call=cleanup_call,
+        forecast=model_forecast,
         save=True,
     )
     psj_cashflow, psj_summary = create_issue_cashflow(
@@ -253,6 +291,52 @@ def generate_issue_report(
     issue = issue_record.iloc[0]
     prepayment_svg = _prepayment_chart(issue_history, model_forecast, psj_forecast)
     cashflow_svg = _cashflow_chart(model_cashflow, psj_cashflow)
+
+    uses_rate_feature = "rate_feature_pct" in MODEL_SPECS.get(selected_model_name, ())
+    sensitivity_rows: list[dict[str, float]] = []
+    if uses_rate_feature:
+        for shift in (-0.5, 0.0, 0.5):
+            if shift == 0.0:
+                shifted_cashflow, shifted_summary = model_cashflow, model_summary
+            else:
+                shifted_cashflow, shifted_summary = create_issue_cashflow(
+                    config,
+                    issue_id,
+                    scenario="model",
+                    model_name=model_name,
+                    run_id=run_id,
+                    valuation_yield_pct=valuation_yield_pct,
+                    cleanup_call=cleanup_call,
+                    rate_feature_shift_pct=shift,
+                    save=False,
+                )
+            sensitivity_rows.append(
+                {
+                    "shift": shift,
+                    "mean_cpr_pct": float(
+                        pd.to_numeric(shifted_cashflow["annual_cpr"]).head(12).mean() * 100.0
+                    ),
+                    "wal_years": float(shifted_summary["wal_years"]),
+                    "dirty_price_per_100": float(shifted_summary["dirty_price_per_100"]),
+                }
+            )
+    sensitivity_section = (
+        "<h2>金利 proxy 感応度</h2>"
+        "<p>予測時に凍結する rate feature（既定は WAC − JGB 10年 proxy）を平行シフトした"
+        "場合の予測感応度。金利パスモデルや OAS ではなく、期限前償還モデルの弾力性を示す"
+        "診断値である。</p>"
+        f"{_sensitivity_table(sensitivity_rows)}"
+        if sensitivity_rows
+        else (
+            "<h2>金利 proxy 感応度</h2>"
+            f"<p>選択された {html.escape(selected_model_name)} モデルは金利特徴量を使用"
+            "しないため、rate feature 感応度はゼロである。</p>"
+        )
+    )
+    disagreement = _split_disagreement_note(metrics)
+    disagreement_html = (
+        f'<p class="callout">{html.escape(disagreement)}</p>' if disagreement else ""
+    )
     sources = {source.id: source.url for source in config.sources}
     rate_note = (
         "設定された同一定義の住宅ローン金利系列を使用"
@@ -320,8 +404,11 @@ code{{background:#f2f4f7;padding:2px 5px;}} a{{color:var(--blue);}} ul{{padding-
 <tbody>{_summary_table(model_summary, psj_summary)}</tbody></table>
 <p class="note">予定元本は連続する JHF 当初予定 Factor の比率、任意期限前償還は予定元本控除後残高 × SMM、利息は月初残高 × coupon / 12。</p>
 
+{sensitivity_section}
+
 <h2>Out-of-sample 評価</h2>
 <p>暦月 holdout と最新 vintage holdout の双方で再推定した。CPR 誤差は残高加重指標を主指標とし、累積元本と観測窓内 truncated WAL も確認する。</p>
+{disagreement_html}
 {_metrics_table(metrics, selected_model_name)}
 
 <h2>データ品質</h2>

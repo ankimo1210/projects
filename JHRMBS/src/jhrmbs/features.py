@@ -58,8 +58,12 @@ def build_features(
         "wam_years_lag1": frame["issue_id"].map(issue_initial["initial_wam_years"]),
         "wala_months_lag1": frame["issue_id"].map(issue_initial["initial_wala_months"]),
     }
+    # Issue-time values substitute a missing lag only on each issue's first row;
+    # any later missing lag stays null so it cannot silently enter training weights.
+    first_issue_row = grouped.cumcount() == 0
     for column, initial in initial_map.items():
-        frame[column] = frame[column].fillna(initial)
+        fill_mask = first_issue_row & frame[column].isna()
+        frame.loc[fill_mask, column] = initial[fill_mask]
 
     cpr_decimal = pd.to_numeric(frame["voluntary_cpr_pct"], errors="coerce") / 100.0
     frame["target_smm"] = cpr_to_smm(cpr_decimal.to_numpy())
@@ -87,7 +91,13 @@ def build_features(
     )
 
     frame = _merge_monthly(frame, jgb, ["jgb_10y_pct"])
-    frame = _merge_monthly(frame, mortgage_rates, ["mortgage_rate_mode_pct"])
+    frame = _merge_monthly(
+        frame,
+        mortgage_rates,
+        ["mortgage_rate_mode_pct", "mortgage_rate_definition"],
+    )
+    if "mortgage_rate_definition" not in frame.columns:
+        frame["mortgage_rate_definition"] = np.nan
     frame = _merge_monthly(
         frame,
         housing,

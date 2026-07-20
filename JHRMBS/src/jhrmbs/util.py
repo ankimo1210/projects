@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import os
 import tempfile
 import unicodedata
@@ -45,8 +46,21 @@ def atomic_write_bytes(path: Path, data: bytes) -> None:
         raise
 
 
+def _json_safe(value: Any) -> Any:
+    if isinstance(value, float) and not math.isfinite(value):
+        return None
+    if isinstance(value, dict):
+        return {key: _json_safe(item) for key, item in value.items()}
+    if isinstance(value, list | tuple):
+        return [_json_safe(item) for item in value]
+    return value
+
+
 def atomic_write_json(path: Path, payload: Any) -> None:
-    data = (json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode()
+    data = (
+        json.dumps(_json_safe(payload), ensure_ascii=False, indent=2, sort_keys=True, allow_nan=False)
+        + "\n"
+    ).encode()
     atomic_write_bytes(path, data)
 
 

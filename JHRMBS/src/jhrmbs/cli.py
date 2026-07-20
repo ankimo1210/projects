@@ -49,15 +49,18 @@ def _parser() -> argparse.ArgumentParser:
     predict_parser.add_argument("--run-id")
     predict_parser.add_argument("--mortgage-rate-pct", type=float)
     predict_parser.add_argument("--jgb-10y-pct", type=float)
+    predict_parser.add_argument("--rate-feature-shift-pct", type=float, default=0.0)
 
     cashflow_parser = commands.add_parser("cashflow", help="generate issue cash flows")
     cashflow_parser.add_argument("--issue", required=True, dest="issue_id")
     cashflow_parser.add_argument("--scenario", choices=("model", "psj"), default="model")
     cashflow_parser.add_argument("--model", default="champion", dest="model_name")
     cashflow_parser.add_argument("--run-id")
-    cashflow_parser.add_argument("--psj-terminal-cpr-pct", type=float, default=6.0)
+    cashflow_parser.add_argument("--psj-terminal-cpr-pct", type=float, default=None)
     cashflow_parser.add_argument("--valuation-yield-pct", type=float)
     cashflow_parser.add_argument("--cleanup-call", action="store_true")
+    cashflow_parser.add_argument("--include-other-decrements", action="store_true")
+    cashflow_parser.add_argument("--rate-feature-shift-pct", type=float, default=0.0)
 
     report_parser = commands.add_parser("report", help="build a self-contained issue report")
     report_parser.add_argument("--issue", required=True, dest="issue_id")
@@ -95,6 +98,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 run_id=args.run_id,
                 mortgage_rate_pct=args.mortgage_rate_pct,
                 jgb_10y_pct=args.jgb_10y_pct,
+                rate_feature_shift_pct=args.rate_feature_shift_pct,
             )
             _print(
                 {
@@ -105,15 +109,28 @@ def main(argv: Sequence[str] | None = None) -> int:
                 }
             )
         elif args.command == "cashflow":
+            if args.scenario == "model" and args.psj_terminal_cpr_pct is not None:
+                LOGGER.warning("--psj-terminal-cpr-pct is ignored for --scenario model")
+            if args.scenario == "psj":
+                if args.model_name != "champion":
+                    LOGGER.warning("--model is ignored for --scenario psj")
+                if args.run_id:
+                    LOGGER.warning("--run-id is ignored for --scenario psj")
+                if args.rate_feature_shift_pct:
+                    LOGGER.warning("--rate-feature-shift-pct is ignored for --scenario psj")
             frame, summary = create_issue_cashflow(
                 config,
                 args.issue_id,
                 scenario=args.scenario,
                 model_name=args.model_name,
                 run_id=args.run_id,
-                psj_terminal_cpr_pct=args.psj_terminal_cpr_pct,
+                psj_terminal_cpr_pct=(
+                    args.psj_terminal_cpr_pct if args.psj_terminal_cpr_pct is not None else 6.0
+                ),
                 valuation_yield_pct=args.valuation_yield_pct,
                 cleanup_call=args.cleanup_call,
+                include_published_decrements=args.include_other_decrements,
+                rate_feature_shift_pct=args.rate_feature_shift_pct,
             )
             _print({"rows": len(frame), **summary})
         elif args.command == "report":
