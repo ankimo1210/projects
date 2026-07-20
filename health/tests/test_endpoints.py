@@ -220,6 +220,22 @@ def test_daily_rollup_and_reconcile_method_counts():
     assert len(reconcile) == 8
 
 
+# -- scope: must be one of the 3 OAuth scopes auth.py actually requests --------
+
+REQUESTED_SCOPES = {"activity_and_fitness", "health_metrics_and_measurements", "sleep"}
+
+
+def test_catalog_scope_is_one_of_requested_oauth_scopes():
+    for m in CATALOG:
+        assert m.scope in REQUESTED_SCOPES, f"{m.name}: unexpected scope {m.scope!r}"
+
+
+def test_catalog_scope_spot_values():
+    assert by_name("steps").scope == "activity_and_fitness"
+    assert by_name("weight").scope == "health_metrics_and_measurements"
+    assert by_name("sleep").scope == "sleep"
+
+
 # -- fixtures: shape sanity via response_points --------------------------------
 
 ROLLUP_FIXTURES = [
