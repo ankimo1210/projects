@@ -1,0 +1,14 @@
+profiles:
+  - gould_bonart_2015_paper
+  - gould_bonart_2015_chronological_audit
+  - deeplob_ieee_2019
+  - deeplob_author_tf2_ff14d7c
+  - deeplob_author_tf2_corrected_dropout_audit
+  - deeplob_author_pytorch_ff14d7c
+  - sirignano_cont_2019_paper_constrained
+  - tlob_paper_arxiv_2502_15757
+  - tlob_author_repo_f1c0af4
+  - tlob_corrected_bin_audit
+  - mlplob_paper_arxiv_2502_15757
+  - mlplob_author_repo_f1c0af4
+

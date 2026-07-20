@@ -27,6 +27,7 @@
 | [`deep_hedge_price/`](deep_hedge_price/) | Deep Hedging デモ（PyTorch 方策で短期コールをヘッジ、BS / no-hedge 比較） | Python / PyTorch |
 | [`jp_llm_lab/`](jp_llm_lab/) | 日本語小型 LLM 教育ラボ（30M 級モデルを実走、可視化ファースト、静的サイト出力） | Python / PyTorch |
 | [`rates_volatility_model/`](rates_volatility_model/) | 金利ボラティリティ・モデリングのリサーチノート | Python / Jupyter |
+| [`lob-paper-reproductions/`](lob-paper-reproductions/) | LOB予測論文の一次資料・公式コード差分を追跡する構造再現スイート | Python / PyTorch |
 | [`aisan_lbo_case/`](aisan_lbo_case/) | アイサンテクノロジー (4667.T) 非公開化 LBO ケーススタディ（公開情報ベース、HTML レポート出力） | Python / Jupyter |
 | [`notebooks/`](notebooks/) | 単発の分析ノートブック置き場（債券、ETF、不動産シミュ等） | Jupyter |
 | [`csharp_calc/`](csharp_calc/) | WinForms 四則演算電卓サンプル（エンジンは UI 非依存・ユニットテスト付き） | C# / .NET 9 |

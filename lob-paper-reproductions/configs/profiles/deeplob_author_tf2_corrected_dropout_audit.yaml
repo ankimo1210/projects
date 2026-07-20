@@ -1,0 +1,13 @@
+paper_id: deeplob
+implementation_profile: deeplob_author_tf2_corrected_dropout_audit
+fidelity_class: D_MODERNIZED_AUDIT
+paper_version: arXiv:1808.03668v6
+source_code_commit: ff14d7c2fd38bdfc143389786993d0f0236d4eb8
+dataset_profile: fi2010_noauction_decpre_cf7_8_9
+random_seed: 7
+model: {input_layout: BTFC, sequence_length: 100, raw_features: 40, conv_channels: 32, inception_branch_channels: 64, lstm_hidden: 64, temporal_padding: same, dropout: 0.2, dropout_forced_training: false, expected_parameters: 142435}
+data: {horizon_index: 4, horizon_events: 100, class_order: [up, stationary, down]}
+training: {loss: categorical_crossentropy, optimizer: Adam, learning_rate: 0.0001, batch_size: 128}
+material_fields: [model.dropout_forced_training]
+provenance:
+  model.dropout_forced_training: {source_type: ASSUMPTION, locator: "AUDIT-DL-TF2-DROPOUT", confidence: verified}

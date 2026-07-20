@@ -35,6 +35,7 @@ members = [
     "optimal_execution",
     "rough_volatility",
     "jp_llm_lab",
+    "lob-paper-reproductions",
 ]
 
 # PyTorch CUDA 12.8 — used by `gto`. Defined here so all workspace members
@@ -156,6 +157,7 @@ testpaths = [
     "rough_volatility/tests",
     "jp_llm_lab/tests",
     "shortest_path/tests",
+    "lob-paper-reproductions/tests",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
