@@ -22,7 +22,8 @@
    4 モジュールが追加され、公開 API docstring 100% と MODEL_INDEX 掲載 +
    参照解決を guard tests が保証する。
 2. vol 27 notebook が artifact-only で実行でき、G8 式 acceptance check
-   （§4 の 11 項目）を `frontier_acceptance.py` がコミット済み配列から再計算して
+   （§4 の 13 項目。当初 11 項目に、レビュー修正で
+   `christoffersen_pvalue_matches_recomputation` と `cross_asset_factor_mapping` を追加）を `frontier_acceptance.py` がコミット済み配列から再計算して
    全 PASS する。
 3. 既存の全ゲート（hullkit suite・`make hull-artifacts-check` /
    `hull-notebooks-check` / `hull-release-check`・ruff）が引き続き通る。
@@ -63,7 +64,12 @@
 | `var_backtest.py` | `exceedance_series`, `kupiec_pof`, `christoffersen_independence`, `christoffersen_cc`, `basel_traffic_light` | LR 統計量 + p 値、`LR_cc = LR_pof + LR_ind`、ゾーン判定（binomial 累積確率）と乗数 3.0→4.0 |
 | `tail_risk.py` | `filtered_historical_var_es`, `fit_gpd_pot`, `evt_var_es`, `mean_excess` | devol→revol の FHS、GPD の MLE（POT）、GPD 閉形式 VaR/ES、閾値診断 |
 | `risk_allocation.py` | `marginal_var_normal`, `component_var_normal`, `incremental_var`, `euler_es_components` | 正規解析の ∂VaR/∂w と Euler 成分、with/without の Incremental、シミュレーション版 Euler ES（テール条件付き期待値） |
-| `pnl_explain.py` | `map_to_factors`, `delta_gamma_vega_pnl`, `pnl_attribution`, `limit_utilization`, `desk_report` | ファクターマッピング、Taylor P&L、explained/unexplained 分解、限度消化率、日次レポート組立 |
+| `pnl_explain.py` | `aggregate_exposures`, `delta_gamma_vega_pnl`, `pnl_attribution`, `limit_utilization`, `desk_report` | position×factor の**マップ済み**感応度行列の集計、Taylor P&L、explained/unexplained 分解、限度消化率、日次レポート組立 |
+
+実装時の決定（2026-07-20 レビュー修正で確定）: 公開 API は増やさず、`map_to_factors` は
+実装しない。ファクターマッピングは capstone 側が position×factor の delta/gamma/vega
+行列を artifact へ保存して明示し、`aggregate_exposures` はその**既にマップされた行列**の
+集計だけを担う。
 
 テスト: `test_var_backtest.py` / `test_tail_risk.py` / `test_risk_allocation.py` /
 `test_pnl_explain.py`。
@@ -109,6 +115,8 @@ Notebook セル構成:
 | `euler_es_additivity_sim` | シミュレーション Euler ES 成分の和 = total ES（構成上厳密） |
 | `pnl_explain_taylor_ordering` | 小変動で delta-gamma-vega 残差 ≪ delta-only 残差 |
 | `desk_report_reproducible` | capstone レポート数値の決定的再現 |
+| `christoffersen_pvalue_matches_recomputation` | JSON 格納 p 値が配列からの再計算 `erfc(sqrt(LR/2))` と一致（≤1e-12） |
+| `cross_asset_factor_mapping` | mapping 行列が (n_positions, n_factors)、`parallel_zero_rate` が存在し rate delta≠0・rate vega=0、position 別 full P&L の和がデスク full P&L と一致 |
 
 数値許容値（GPD 回復誤差など表中で明示していないもの）は、固定 seed の実測に
 余裕を持たせて実装時に確定し acceptance 表へ記録する（vol 18–26 の慣行）。

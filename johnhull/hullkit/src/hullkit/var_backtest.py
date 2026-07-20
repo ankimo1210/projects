@@ -25,7 +25,22 @@ def _validate_alpha(alpha: float) -> None:
         raise ValueError(f"alpha must be in (0, 1), got {alpha}")
 
 
+def _validate_integer_count(value, name: str) -> int:
+    """Return `value` as an int, rejecting bool, fractional and non-finite counts.
+
+    `bool` is excluded deliberately: `isinstance(True, int)` is True in Python,
+    so an unguarded count would treat `True` as one exceedance.
+    """
+    if isinstance(value, (bool, np.bool_)):
+        raise ValueError(f"{name} must be an integer, got bool {value}")
+    if isinstance(value, (int, np.integer)):
+        return int(value)
+    raise ValueError(f"{name} must be an integer, got {type(value).__name__} {value}")
+
+
 def _validate_counts(n_exceedances: int, n_obs: int) -> None:
+    n_exceedances = _validate_integer_count(n_exceedances, "n_exceedances")
+    n_obs = _validate_integer_count(n_obs, "n_obs")
     if n_obs <= 0:
         raise ValueError(f"n_obs must be positive, got {n_obs}")
     if n_exceedances < 0:
@@ -42,6 +57,8 @@ def _validate_binary_exceedances(exceedances) -> np.ndarray:
     silently truncate instead of raising.
     """
     exc = np.asarray(exceedances, dtype=float)
+    if exc.ndim != 1:
+        raise ValueError(f"exceedances must be one-dimensional, got shape {exc.shape}")
     if not np.all(np.isfinite(exc)):
         raise ValueError(f"exceedances must be finite, got {exc.tolist()}")
     bad_mask = ~np.isin(exc, (0.0, 1.0))
@@ -56,15 +73,33 @@ def _validate_binary_exceedances(exceedances) -> np.ndarray:
 def exceedance_series(pnl, var_forecasts) -> np.ndarray:
     """Daily 0/1 exceedance indicator: 1 where `-pnl[i] > var_forecast[i]` (strict).
 
-    `pnl` and `var_forecasts` are equal-length, gains-positive P&L and positive
-    VaR-forecast arrays. Raises ValueError on a length mismatch or empty input.
+    `pnl` and `var_forecasts` are equal-length, one-dimensional, gains-positive
+    P&L and non-negative VaR-forecast arrays. Raises ValueError on a length
+    mismatch, empty or multi-dimensional input, a non-finite element, or a
+    negative VaR forecast. Non-finite elements are rejected rather than
+    compared, because a missing P&L or VaR would otherwise be silently
+    classified as a non-exceedance. A zero forecast is allowed: it marks a
+    zero-risk day, on which any loss is an exceedance.
     """
     pnl_arr = np.asarray(pnl, dtype=float)
     var_arr = np.asarray(var_forecasts, dtype=float)
+    if pnl_arr.ndim != 1 or var_arr.ndim != 1:
+        raise ValueError(
+            "pnl and var_forecasts must be one-dimensional, got shapes "
+            f"{pnl_arr.shape} and {var_arr.shape}"
+        )
     if pnl_arr.shape != var_arr.shape:
         raise ValueError("pnl and var_forecasts must have the same length")
     if pnl_arr.size == 0:
         raise ValueError("exceedance_series requires non-empty pnl/var_forecasts")
+    if not np.all(np.isfinite(pnl_arr)):
+        raise ValueError("pnl must be finite; a missing P&L cannot be classified")
+    if not np.all(np.isfinite(var_arr)):
+        raise ValueError("var_forecasts must be finite; a missing VaR cannot be classified")
+    if np.any(var_arr < 0.0):
+        raise ValueError(
+            f"var_forecasts must be non-negative, got minimum {float(var_arr.min())}"
+        )
     return (-pnl_arr > var_arr).astype(int)
 
 

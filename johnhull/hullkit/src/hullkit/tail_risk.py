@@ -53,6 +53,30 @@ def _validate_positive_scalar_sigma(value: float, name: str) -> None:
         raise ValueError(f"{name} must be finite and strictly positive, got {value}")
 
 
+def _validate_finite_1d(values, name: str) -> np.ndarray:
+    """Return `values` as a finite one-dimensional float array or raise ValueError."""
+    arr = np.asarray(values, dtype=float)
+    if arr.ndim != 1:
+        raise ValueError(f"{name} must be one-dimensional, got shape {arr.shape}")
+    if arr.size == 0:
+        raise ValueError(f"{name} must be non-empty")
+    if not np.all(np.isfinite(arr)):
+        raise ValueError(f"{name} must be finite")
+    return arr
+
+
+def _validate_integer_count(value, name: str) -> int:
+    """Return `value` as an int, rejecting bool and non-integer counts.
+
+    `bool` is excluded deliberately: `isinstance(True, int)` is True in Python.
+    """
+    if isinstance(value, (bool, np.bool_)):
+        raise ValueError(f"{name} must be an integer, got bool {value}")
+    if isinstance(value, (int, np.integer)):
+        return int(value)
+    raise ValueError(f"{name} must be an integer, got {type(value).__name__} {value}")
+
+
 def filtered_historical_var_es(returns, sigma, alpha=0.99, current_sigma=None):
     """Filtered historical simulation (FHS) VaR/ES (Barone-Adesi et al. 1999).
 
@@ -63,16 +87,16 @@ def filtered_historical_var_es(returns, sigma, alpha=0.99, current_sigma=None):
     `sigma[-1]`, i.e. today's level) to build FHS scenario P&Ls
     `z_i * current_sigma`, and reuses `hullkit.risk.historical_var_es`'s
     tail-selection convention on those rescaled scenarios. Returns
-    `(var, es)` as positive loss amounts. Raises ValueError on a length
-    mismatch between `returns` and `sigma`, empty input, non-finite or
-    non-positive `sigma`, or a non-finite/non-positive `current_sigma`.
+    `(var, es)` as positive loss amounts. Raises ValueError unless `returns`
+    and `sigma` are non-empty, one-dimensional, equal-length and finite, and
+    `sigma`/`current_sigma` are strictly positive. Non-finite returns are
+    rejected rather than propagated: NaN sorts to the end of the scenario
+    array, which would displace the tail and yield a finite but wrong VaR.
     """
-    returns_arr = np.asarray(returns, dtype=float)
-    sigma_arr = np.asarray(sigma, dtype=float)
+    returns_arr = _validate_finite_1d(returns, "returns")
+    sigma_arr = _validate_finite_1d(sigma, "sigma")
     if returns_arr.shape != sigma_arr.shape:
         raise ValueError("returns and sigma must have the same length")
-    if returns_arr.size == 0:
-        raise ValueError("filtered_historical_var_es requires non-empty returns/sigma")
     _validate_positive_sigma(sigma_arr)
     _validate_alpha(alpha)
 
@@ -116,10 +140,20 @@ def fit_gpd_pot(losses, threshold, min_exceedances=30):
     1e-6` uses the numerically stable exponential-limit form) via
     Nelder-Mead, with a large penalty for `beta <= 0` or support violations
     `1 + xi*y/beta <= 0` -- same style as `hullkit.volatility.garch11_fit`.
-    Raises ValueError if fewer than `min_exceedances` exceedances are found
-    or the optimizer does not converge.
+    Raises ValueError unless `losses` is a non-empty, one-dimensional, finite
+    array, `threshold` is finite and `min_exceedances` is a positive integer;
+    if fewer than `min_exceedances` exceedances are found; if the optimizer
+    does not converge; or if the fitted parameters are not a usable GPD
+    (non-finite `xi`/`beta`, `beta <= 0`, a support violation, or a
+    non-finite objective).
     """
-    losses_arr = np.asarray(losses, dtype=float)
+    losses_arr = _validate_finite_1d(losses, "losses")
+    threshold = float(threshold)
+    if not math.isfinite(threshold):
+        raise ValueError(f"threshold must be finite, got {threshold}")
+    min_exceedances = _validate_integer_count(min_exceedances, "min_exceedances")
+    if min_exceedances <= 0:
+        raise ValueError(f"min_exceedances must be positive, got {min_exceedances}")
     y = losses_arr[losses_arr > threshold] - threshold
     n_exceedances = int(y.size)
     n_total = int(losses_arr.size)
@@ -153,6 +187,17 @@ def fit_gpd_pot(losses, threshold, min_exceedances=30):
         raise ValueError(f"fit_gpd_pot did not converge: {res.message}")
 
     xi_hat, beta_hat = (float(v) for v in res.x)
+    if not (math.isfinite(xi_hat) and math.isfinite(beta_hat)):
+        raise ValueError(f"fit_gpd_pot produced non-finite parameters: xi={xi_hat}, beta={beta_hat}")
+    if beta_hat <= 0.0:
+        raise ValueError(f"fit_gpd_pot produced a non-positive scale: beta={beta_hat}")
+    if xi_hat < 0.0 and np.any(1.0 + xi_hat * y / beta_hat <= 0.0):
+        raise ValueError(
+            "fit_gpd_pot produced parameters that violate the GPD support "
+            f"1 + xi*y/beta > 0 (xi={xi_hat}, beta={beta_hat})"
+        )
+    if not math.isfinite(_gpd_neg_loglik((xi_hat, beta_hat), y)):
+        raise ValueError("fit_gpd_pot produced a non-finite log-likelihood at the optimum")
     return GPDFit(
         xi=xi_hat,
         beta=beta_hat,
@@ -168,16 +213,36 @@ def evt_var_es(fit: GPDFit, alpha: float = 0.99) -> tuple[float, float]:
     `VaR = u + (beta/xi)[(n/N_u * (1-alpha))^-xi - 1]`,
     `ES = (VaR + beta - xi*u) / (1 - xi)`; `|xi| < 1e-6` uses the
     exponential-limit formulas `VaR = u + beta*ln(N_u/(n*(1-alpha)))`,
-    `ES = VaR + beta`. Raises ValueError if `xi >= 1` (infinite-mean
-    regime) or if the implied VaR falls below the fitted threshold (alpha
-    is not extreme enough to be covered by this tail fit).
+    `ES = VaR + beta`. Validates the `GPDFit` invariants before computing:
+    finite `xi`/`beta`/`threshold`, `beta > 0`, integer counts with
+    `0 < n_exceedances <= n_total`, and `xi < 1`. Raises ValueError on any
+    violation -- including the infinite-mean regime `xi >= 1` and an implied
+    VaR below the fitted threshold (alpha not extreme enough for this tail
+    fit) -- rather than returning NaN or raising a bare numeric error.
     """
     _validate_alpha(alpha)
+    for name in ("xi", "beta", "threshold"):
+        value = getattr(fit, name)
+        if not math.isfinite(value):
+            raise ValueError(f"evt_var_es: fit.{name} must be finite, got {value}")
+    if fit.beta <= 0.0:
+        raise ValueError(f"evt_var_es: fit.beta must be strictly positive, got {fit.beta}")
+    n_exceedances = _validate_integer_count(fit.n_exceedances, "fit.n_exceedances")
+    n_total = _validate_integer_count(fit.n_total, "fit.n_total")
+    if n_exceedances <= 0:
+        raise ValueError(f"evt_var_es: fit.n_exceedances must be positive, got {n_exceedances}")
+    if n_exceedances > n_total:
+        raise ValueError(
+            f"evt_var_es: fit.n_exceedances ({n_exceedances}) cannot exceed "
+            f"fit.n_total ({n_total})"
+        )
     if fit.xi >= 1.0:
-        raise ValueError("evt_var_es: xi >= 1 is an infinite-mean regime; VaR/ES undefined")
+        raise ValueError(
+            f"evt_var_es: fit.xi >= 1 is an infinite-mean regime; VaR/ES undefined, got {fit.xi}"
+        )
 
     p = 1.0 - alpha
-    ratio = (fit.n_total / fit.n_exceedances) * p
+    ratio = (n_total / n_exceedances) * p
     if abs(fit.xi) < _XI_ZERO_TOL:
         var = fit.threshold + fit.beta * math.log(1.0 / ratio)
         es = var + fit.beta
@@ -190,6 +255,8 @@ def evt_var_es(fit: GPDFit, alpha: float = 0.99) -> tuple[float, float]:
             "evt_var_es: implied VaR falls below the threshold; alpha is not covered "
             "by this POT tail fit"
         )
+    if not (math.isfinite(var) and math.isfinite(es)):
+        raise ValueError(f"evt_var_es produced non-finite output: var={var}, es={es}")
     return float(var), float(es)
 
 

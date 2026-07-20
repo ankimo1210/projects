@@ -1148,6 +1148,18 @@ def _xlogy_np(a: float, b: float) -> float:
     return 0.0 if a <= 0.0 else float(a * math.log(b))
 
 
+def _chi2_sf_df1(statistic: float) -> float:
+    """`scipy.stats.chi2.sf(statistic, df=1)` without importing scipy.
+
+    For one degree of freedom the survival function is exactly
+    `erfc(sqrt(x/2))`, so the gate can recompute its own p-value from the
+    committed arrays instead of reading one out of the JSON metrics.
+    """
+    if statistic <= 0.0:
+        return 1.0
+    return float(math.erfc(math.sqrt(statistic / 2.0)))
+
+
 def _lr_independence_np(exceedances: np.ndarray) -> float:
     """Christoffersen (1998) independence LR statistic recomputed in NumPy."""
     exc = np.asarray(exceedances, dtype=int)
@@ -1196,14 +1208,27 @@ def _volume27(
     # 2. Christoffersen independence detects clustering (LR recomputed from arrays).
     lr_iid = _lr_independence_np(arrays["iid_exceedances"])
     lr_clustered = _lr_independence_np(arrays["clustered_exceedances"])
-    pvalue_clustered = float(metrics["christoffersen_ind_pvalue_clustered"])
+    pvalue_clustered = _chi2_sf_df1(lr_clustered)
     detects_clustering = pvalue_clustered < 0.05 and lr_clustered > lr_iid
     _add(
         checks,
         "christoffersen_detects_clustering",
         pvalue_clustered,
-        "clustered LR_ind p-value < 0.05 and LR_ind statistic exceeds the iid series",
+        "clustered LR_ind p-value (recomputed from the arrays) < 0.05 and LR_ind "
+        "statistic exceeds the iid series",
         detects_clustering,
+    )
+
+    # 2b. The stored p-value must agree with the recomputation (metric integrity).
+    stored_pvalue = float(metrics["christoffersen_ind_pvalue_clustered"])
+    pvalue_consistency = abs(stored_pvalue - pvalue_clustered)
+    _add(
+        checks,
+        "christoffersen_pvalue_matches_recomputation",
+        pvalue_consistency,
+        "stored christoffersen_ind_pvalue_clustered matches erfc(sqrt(LR/2)) recomputed "
+        "from the committed exceedance series (<= 1e-12)",
+        pvalue_consistency <= 1e-12,
     )
 
     # 3. Constant-sigma FHS equals plain historical simulation.
@@ -1312,15 +1337,29 @@ def _volume27(
         additivity_error <= 1e-12 and component_match <= 1e-12,
     )
 
-    # 10. P&L-explain Taylor ordering and shrinkage.
-    dgv_residual = abs(float(metrics["taylor_full_pnl"]) - float(metrics["taylor_dgv_total"]))
-    delta_residual = abs(float(metrics["taylor_full_pnl"]) - float(metrics["taylor_delta_only"]))
-    dgv_residual_half = abs(
-        float(metrics["taylor_full_pnl_half"]) - float(metrics["taylor_dgv_total_half"])
-    )
-    delta_residual_half = abs(
-        float(metrics["taylor_full_pnl_half"]) - float(metrics["taylor_delta_only_half"])
-    )
+    # 10. P&L-explain Taylor ordering and shrinkage, recomputed from the arrays.
+    book_delta = np.asarray(arrays["book_delta"], dtype=float)
+    book_gamma = np.asarray(arrays["book_gamma"], dtype=float)
+    book_vega = np.asarray(arrays["book_vega"], dtype=float)
+    factor_moves = np.asarray(arrays["factor_moves"], dtype=float)
+    vol_moves = np.asarray(arrays["vol_moves"], dtype=float)
+
+    def _taylor(scale: float) -> tuple[float, float]:
+        """(delta-only, delta-gamma-vega) Taylor P&L for a scaled factor move."""
+        moves = scale * factor_moves
+        delta_only = float(book_delta @ moves)
+        dgv = delta_only + 0.5 * float(book_gamma @ moves**2) + float(book_vega @ (scale * vol_moves))
+        return delta_only, dgv
+
+    # Full revaluation is the sum of the committed per-position P&L, not a stored scalar.
+    full_pnl = float(np.asarray(arrays["position_full_pnl"], dtype=float).sum())
+    full_pnl_half = float(np.asarray(arrays["position_full_pnl_half"], dtype=float).sum())
+    delta_only, dgv_total = _taylor(1.0)
+    delta_only_half, dgv_total_half = _taylor(0.5)
+    dgv_residual = abs(full_pnl - dgv_total)
+    delta_residual = abs(full_pnl - delta_only)
+    dgv_residual_half = abs(full_pnl_half - dgv_total_half)
+    delta_residual_half = abs(full_pnl_half - delta_only_half)
     taylor_ordered = (
         dgv_residual < delta_residual
         and dgv_residual_half < dgv_residual
@@ -1330,8 +1369,43 @@ def _volume27(
         checks,
         "pnl_explain_taylor_ordering",
         dgv_residual,
-        "dgv residual < delta-only residual; both shrink when moves halve",
+        "dgv residual < delta-only residual; both shrink when moves halve "
+        "(all four recomputed from the committed exposure and P&L arrays)",
         taylor_ordered,
+    )
+
+    # 10b. Cross-asset factor mapping: equities and rates in one book.
+    factor_names = [str(name) for name in arrays["factor_names"]]
+    position_full_pnl = np.asarray(arrays["position_full_pnl"], dtype=float)
+    mapping_delta = np.asarray(arrays["position_factor_delta"], dtype=float)
+    mapping_vega = np.asarray(arrays["position_factor_vega"], dtype=float)
+    n_positions = int(np.asarray(arrays["position_names"]).size)
+    n_factors = len(factor_names)
+    desk_sum_error = abs(float(position_full_pnl.sum()) - full_pnl)
+    rate_factor = "parallel_zero_rate"
+    has_rate_factor = rate_factor in factor_names
+    rate_column = factor_names.index(rate_factor) if has_rate_factor else 0
+    rate_delta_nonzero = has_rate_factor and bool(
+        np.any(np.abs(mapping_delta[:, rate_column]) > 0.0)
+    )
+    # The rate leg is a swap revalued off a deterministic curve: no vega.
+    rate_vega_zero = has_rate_factor and bool(np.all(mapping_vega[:, rate_column] == 0.0))
+    shapes_match = mapping_delta.shape == (n_positions, n_factors) and mapping_vega.shape == (
+        n_positions,
+        n_factors,
+    )
+    _add(
+        checks,
+        "cross_asset_factor_mapping",
+        desk_sum_error,
+        "position x factor mapping is (n_positions, n_factors) over explicit factor labels "
+        "including parallel_zero_rate with a non-zero rate delta and zero rate vega, and the "
+        "per-position full P&L sums to the desk full P&L (<= 1e-9)",
+        shapes_match
+        and has_rate_factor
+        and rate_delta_nonzero
+        and rate_vega_zero
+        and desk_sum_error <= 1e-9,
     )
 
     # 11. Desk-report scalars reproduce the recomputed VaR/ES exactly.

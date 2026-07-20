@@ -6,7 +6,7 @@
 - Scope: integration, numerical identities, reproducibility, and offline delivery
 - Data policy: fixed-seed synthetic references; no market-performance claim
 
-`PASS` は vol 18–25 の教材・実装・成果物が再現可能で、定義した数値恒等式と
+`PASS` は vol 18–27 の教材・実装・成果物が再現可能で、定義した数値恒等式と
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
 
@@ -85,7 +85,7 @@ Pricing and release benchmarks: CPU
 | hullkit + portal tests | `uv run --no-sync --package hullkit pytest -s -q johnhull/hullkit/tests johnhull/report/tests` — 294 passed, 2 dependency deprecation warnings | PASS |
 | Scoped lint/format | Ruff over deep pricing, hullkit, release scripts, portal, tests, and Notebook 02 | PASS |
 | Reference rebuild | `make hull-artifacts-check` — vol 19–25 semantic match and second-build byte identity | PASS |
-| Notebook execution | `make hull-notebooks-check` — vol 18–25 artifact-only execution | PASS |
+| Notebook execution | `make hull-notebooks-check` — vol 18–27 artifact-only execution | PASS |
 | Portal | `make hull-report` — 11 themes / 70 figures; exact generated HTML set; no external URL | PASS |
 | Jupyter Book | clean `make hull-book` — 28 pages | PASS with legacy warnings |
 | Release contract | `make hull-release-check` | PASS |
@@ -94,7 +94,7 @@ Pricing and release benchmarks: CPU
 
 The clean Book build completed with 29 pre-existing legacy warnings/errors located in
 vol 13–17/legacy chapter 15 sources (header levels, old Plotly MIME outputs, and one
-transition diagnostic). No warning originates in vol 18–25. The new pages use vendored
+transition diagnostic). No warning originates in vol 18–27. The new pages use vendored
 RequireJS and add no remote runtime asset. Legacy pages retain the explicitly allowlisted
 MathJax CDN dependency; therefore the repository does not claim that every legacy page is
 fully offline.
@@ -111,8 +111,49 @@ failures do not invalidate the scoped release candidate:
 | `rough_volatility` | 1 | Its notebook kernel inherited Windows TEMP under WSL; Jupyter rejected NTFS mode `0o677` instead of `0o600`. The failure is outside johnhull and occurs before notebook code execution. |
 
 There were no functional failures in the scoped `deep_hedge_price`, `hullkit`, portal,
-artifact, or vol 18–25 notebook gates. These exceptions are recorded rather than hidden
+artifact, or vol 18–27 notebook gates. These exceptions are recorded rather than hidden
 or used to claim a green workspace-wide suite.
+
+## 2026-07-20 review-fix run (vol 26/27 input contracts and cross-asset capstone)
+
+Scope: the eight defects listed in
+`docs/superpowers/plans/2026-07-20-johnhull-vol27-review-fixes.md`. Every one was
+reproduced before the fix and re-run after it. The common shape of the set was a
+SILENT failure in the passing direction — bad input produced a plausible number
+rather than an error — so each fix turns a quietly wrong number into a raise.
+
+| Check | Command / evidence | Result |
+|---|---|:---:|
+| Boundary-value regressions | `pytest johnhull/hullkit/tests/test_var_backtest.py test_tail_risk.py test_bsm.py` — 102 passed (40 + 43 + 19), 25 of them new | PASS |
+| hullkit + portal tests | `uv run --no-sync --package hullkit pytest -q --confcutdir=johnhull johnhull/hullkit/tests johnhull/report/tests` — 784 passed | PASS |
+| Deep pricing tests | `uv run --no-sync --package deep-hedge-price pytest -q deep_hedge_price/tests` — 206 passed | PASS |
+| vol 27 acceptance | `frontier_acceptance.evaluate_acceptance(27, ...)` — 13/13 PASS (was 11; added `christoffersen_pvalue_matches_recomputation` and `cross_asset_factor_mapping`) | PASS |
+| Reference rebuild | `make hull-artifacts-check` — vol 19–27 semantic match and second-build byte identity | PASS |
+| Notebook execution | `make hull-notebooks-check` — vol 18–27 artifact-only execution | PASS |
+| Portal | `make hull-report` — 12 themes / 78 figures | PASS |
+| Jupyter Book | `make hull-book` — 30 pages | PASS with legacy warnings |
+| Release contract | `make hull-release-check` | PASS |
+| Scoped lint | Ruff over hullkit src/tests, release scripts, portal builder and tests | PASS |
+
+Artifacts regenerated as intentional schema changes: vol 27 (nine new capstone arrays
+for the position x factor mapping, plus the acceptance record embedded in
+`metrics.json`) and vol 21 (its benchmark contract embeds the SHA-256 of
+`frontier_reference.py`, which this run edited).
+
+Two findings from this run are worth carrying forward:
+
+- Routing every `bsm.call_price`/`put_price` call through a broadcast element-wise
+  path — rather than only the mixed-boundary calls — shifted vol 19's calibrated
+  parameters by ~1e-7 and broke artifact reproducibility. `np.exp`/`np.log` round
+  differently in their SIMD and scalar paths, and a downstream optimizer amplifies
+  the last ulp. Uniform inputs therefore keep the original whole-array expressions.
+- `christoffersen_detects_clustering` had been reading its p-value out of the
+  committed JSON, so a single edited number could flip the gate. It now recomputes
+  from the exceedance arrays via `erfc(sqrt(LR/2))`, which equals `chi2.sf(LR, 1)`
+  exactly and needs no scipy inside the gate.
+
+The scope of PASS is unchanged: integration, numerical identity and reproducibility on
+synthetic data. Nothing here approves model performance or market predictive power.
 
 ## Negative results and residual model risk
 
