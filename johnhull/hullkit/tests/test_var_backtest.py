@@ -209,3 +209,77 @@ def test_basel_traffic_light_invalid_inputs_raise():
         var_backtest.basel_traffic_light(251, n_obs=250, alpha=0.99)
     with pytest.raises(ValueError):
         var_backtest.basel_traffic_light(5, n_obs=0, alpha=0.99)
+
+
+# --- input contract: non-finite, shape, and count types ----------------
+
+
+@pytest.mark.parametrize(
+    ("pnl", "var_forecasts"),
+    [
+        ([-100.0], [np.nan]),
+        ([np.nan], [1.0]),
+        ([-100.0], [np.inf]),
+        ([-np.inf], [1.0]),
+    ],
+)
+def test_exceedance_series_rejects_non_finite(pnl, var_forecasts):
+    """A missing P&L or VaR must raise, not silently become a non-exceedance."""
+    with pytest.raises(ValueError, match="finite"):
+        var_backtest.exceedance_series(pnl, var_forecasts)
+
+
+def test_exceedance_series_rejects_negative_forecast():
+    with pytest.raises(ValueError, match="non-negative"):
+        var_backtest.exceedance_series([-1.0, 2.0], [-5.0, 3.0])
+
+
+def test_exceedance_series_allows_zero_forecast():
+    """A zero-risk day is legitimate: any loss on it is an exceedance."""
+    result = var_backtest.exceedance_series([-1.0, 1.0], [0.0, 0.0])
+    np.testing.assert_array_equal(result, np.array([1, 0]))
+
+
+def test_exceedance_series_rejects_two_dimensional():
+    with pytest.raises(ValueError, match="one-dimensional"):
+        var_backtest.exceedance_series([[1.0, 2.0]], [[1.0, 1.0]])
+
+
+def test_christoffersen_rejects_two_dimensional_series():
+    exc = np.array([[0, 1, 0], [1, 0, 1]])
+    with pytest.raises(ValueError, match="one-dimensional"):
+        var_backtest.christoffersen_independence(exc)
+    with pytest.raises(ValueError, match="one-dimensional"):
+        var_backtest.christoffersen_cc(exc)
+
+
+@pytest.mark.parametrize(
+    ("n_exceedances", "n_obs"),
+    [
+        (0.5, 250),
+        (5, 250.5),
+        (True, 250),
+        (5, False),
+        (np.nan, 250),
+        (np.inf, 250),
+        (5, np.nan),
+    ],
+)
+def test_kupiec_pof_rejects_non_integer_counts(n_exceedances, n_obs):
+    with pytest.raises(ValueError, match="integer"):
+        var_backtest.kupiec_pof(n_exceedances, n_obs, alpha=0.99)
+
+
+def test_basel_traffic_light_rejects_non_integer_counts():
+    with pytest.raises(ValueError, match="integer"):
+        var_backtest.basel_traffic_light(5.5, 250)
+
+
+def test_numpy_integer_counts_match_python_ints():
+    """np.int64 is a legitimate count type and must give identical numbers."""
+    numpy_result = var_backtest.kupiec_pof(np.int64(5), np.int64(250), alpha=0.99)
+    python_result = var_backtest.kupiec_pof(5, 250, alpha=0.99)
+    assert numpy_result == python_result
+    assert var_backtest.basel_traffic_light(np.int64(5), np.int64(250)) == (
+        var_backtest.basel_traffic_light(5, 250)
+    )
