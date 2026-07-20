@@ -22,6 +22,14 @@ impl SplitMix64 {
     pub fn next_index(&mut self, n: usize) -> usize {
         (self.next_u64() % n as u64) as usize
     }
+
+    pub(crate) fn state(&self) -> u64 {
+        self.0
+    }
+
+    pub(crate) fn from_state(state: u64) -> Self {
+        Self(state)
+    }
 }
 
 #[cfg(test)]
@@ -54,5 +62,17 @@ mod tests {
         // (Steele/Lea/Flood; first output for seed 0).
         let mut r = SplitMix64::new(0);
         assert_eq!(r.next_u64(), 0xE220_A839_7B1D_CDAF);
+    }
+
+    #[test]
+    fn raw_state_restores_sequence_exactly() {
+        let mut original = SplitMix64::new(0xC0FFEE);
+        for _ in 0..37 {
+            original.next_u64();
+        }
+        let mut restored = SplitMix64::from_state(original.state());
+        for _ in 0..100 {
+            assert_eq!(original.next_u64(), restored.next_u64());
+        }
     }
 }

@@ -24,6 +24,19 @@ Respond to the user in Japanese by default; code and identifiers in English.
 
 Data flow: see `ARCHITECTURE.md`. Roadmap and known limitations: `PROGRESS.md`.
 
+## Development Environment Boundary
+
+- **W lane**: Windows 11 + WSL2 + RTX 5080 owns solver audit, CUDA,
+  content generation, pack writing, and the FastAPI backend.
+- **M lane**: Mac + Xcode + physical iPhone owns `mobile/`, shared TS pack
+  reading, signing, IAP, TestFlight, and App Store validation.
+- Never make P0a depend on Xcode or make iOS native validation depend on CUDA.
+  Cross-machine integration uses versioned manifests and committed small golden
+  fixtures; large packs and checkpoints are not committed.
+
+The canonical prerequisites and handoff gates are in
+`docs/development-environments.md`.
+
 ## Run & Verify
 
 Python deps live in the workspace `.venv` at `~/projects/`. Rust crates

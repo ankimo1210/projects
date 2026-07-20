@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "case": "river_srp100",
+  "config": "board=2c7d9hJhKd pot=5bb stack=97bb ranges=uniform variant=cfr+ tree=srp-river",
+  "label": "baseline",
+  "git_commit": "611980dd07d4d2dbefe44686919bb49cba29cfc2",
+  "dirty": false,
+  "seed": 42,
+  "iterations": 2000,
+  "points": 10,
+  "threads": 20,
+  "build_profile": "release",
+  "cpu": "Intel(R) Core(TM) Ultra 9 285K",
+  "kernel": "6.18.33.1-microsoft-standard-WSL2",
+  "cmdline": "target/release/solver-bench --case river_srp100 --iterations 2000 --points 10 --label baseline --git-commit 611980dd07d4d2dbefe44686919bb49cba29cfc2 --dirty 0 --out docs/reviews/2026-07-19-p0a-audit/baselines/river_srp100.json",
+  "table_bytes": 1124448,
+  "peak_rss_mb": 5.0,
+  "state_checksum": null,
+  "resume_count": 0,
+  "timing": {"build_s": 0.003, "solve_s": 1.022, "checkpoint_br_s": 0.013, "final_br_s": 0.001, "checkpoint_s": 0.000},
+  "checkpoints": [
+    {"iters": 3, "solve_s": 0.001, "br_s": 0.001, "expl": 8.312982, "br0": 6.935915, "br1": 9.690048},
+    {"iters": 7, "solve_s": 0.004, "br_s": 0.001, "expl": 2.193621, "br0": 2.240114, "br1": 2.147128},
+    {"iters": 15, "solve_s": 0.008, "br_s": 0.001, "expl": 0.994241, "br0": 1.090400, "br1": 0.898083},
+    {"iters": 31, "solve_s": 0.016, "br_s": 0.001, "expl": 0.552622, "br0": 0.687065, "br1": 0.418179},
+    {"iters": 62, "solve_s": 0.032, "br_s": 0.001, "expl": 0.290653, "br0": 0.385450, "br1": 0.195856},
+    {"iters": 125, "solve_s": 0.063, "br_s": 0.001, "expl": 0.100035, "br0": 0.256213, "br1": -0.056143},
+    {"iters": 250, "solve_s": 0.127, "br_s": 0.001, "expl": 0.032541, "br0": 0.208360, "br1": -0.143278},
+    {"iters": 500, "solve_s": 0.253, "br_s": 0.001, "expl": 0.013401, "br0": 0.190814, "br1": -0.164011},
+    {"iters": 1000, "solve_s": 0.507, "br_s": 0.001, "expl": 0.005888, "br0": 0.183750, "br1": -0.171973},
+    {"iters": 2000, "solve_s": 1.022, "br_s": 0.001, "expl": 0.002093, "br0": 0.179830, "br1": -0.175644}
+  ],
+  "segments": [
+    {"start_iters": 0, "end_iters": 2000, "build_s": 0.003, "solve_s": 1.022, "br_s": 0.014, "checkpoint_s": 0.000}
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "case": "bp3_enum",
+  "config": "flops=AhKd7s,QsJh2c,8d8h3s weights=equal stack=100bb ranges=uniform variant=cfr+ mode=enumerate buckets_river=24 buckets_turn=16",
+  "label": "baseline",
+  "git_commit": "611980dd07d4d2dbefe44686919bb49cba29cfc2",
+  "dirty": false,
+  "seed": 42,
+  "iterations": 100,
+  "points": 6,
+  "threads": 20,
+  "build_profile": "release",
+  "cpu": "Intel(R) Core(TM) Ultra 9 285K",
+  "kernel": "6.18.33.1-microsoft-standard-WSL2",
+  "cmdline": "target/release/solver-bench --case bp3_enum --iterations 100 --points 6 --label baseline --git-commit 611980dd07d4d2dbefe44686919bb49cba29cfc2 --dirty 0 --checkpoint-dir /home/kazumasa/projects/_data/gto/checkpoints/p0a/bp3_enum --checkpoint-every-minutes 30 --resume auto --out docs/reviews/2026-07-19-p0a-audit/baselines/bp3_enum.json",
+  "table_bytes": 23954831424,
+  "peak_rss_mb": 27224.5,
+  "state_checksum": "9cf54d2c6ff94954",
+  "resume_count": 0,
+  "timing": {"build_s": 50.827, "solve_s": 7773.629, "checkpoint_br_s": 1951.606, "final_br_s": 403.536, "checkpoint_s": 850.656},
+  "checkpoints": [
+    {"iters": 3, "solve_s": 202.346, "br_s": 377.454, "expl": 13.231345, "br0": 17.246556, "br1": 9.216134},
+    {"iters": 6, "solve_s": 411.843, "br_s": 380.525, "expl": 4.914832, "br0": 6.966125, "br1": 2.863538},
+    {"iters": 12, "solve_s": 840.129, "br_s": 389.862, "expl": 1.957004, "br0": 2.583610, "br1": 1.330399},
+    {"iters": 25, "solve_s": 1804.246, "br_s": 400.245, "expl": 0.998270, "br0": 1.231842, "br1": 0.764698},
+    {"iters": 50, "solve_s": 3716.488, "br_s": 403.519, "expl": 0.491682, "br0": 0.644237, "br1": 0.339128},
+    {"iters": 100, "solve_s": 7773.629, "br_s": 403.536, "expl": 0.230277, "br0": 0.374887, "br1": 0.085668}
+  ],
+  "segments": [
+    {"start_iters": 0, "end_iters": 100, "build_s": 50.827, "solve_s": 7773.629, "br_s": 2355.141, "checkpoint_s": 850.656}
+  ]
+}

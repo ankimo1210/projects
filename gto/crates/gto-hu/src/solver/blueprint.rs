@@ -15,12 +15,19 @@
 //! equilibrium claim. Convergence under bucketed subgame storage is
 //! empirical; the exact composed best response keeps the number honest.
 
+use std::io;
+use std::path::Path;
+
 use super::equity_model::flop_allin_equity;
 use super::flop::{Abstraction, FlopSolver};
 use super::regret::regret_matching;
 use super::turn_river::ChanceMode;
 use super::variant::CfrVariant;
 use super::vector::ExplReport;
+use crate::checkpoint::{
+    self, CheckpointInfo, ExpectedCheckpoint, PayloadReader, PayloadWriter, SolverKind,
+    StableHasher,
+};
 use crate::game::terminal::fold_payoffs;
 use crate::game::{PotType, Street};
 use crate::ranges::{all_combos, Range, NUM_COMBOS};
@@ -57,6 +64,7 @@ pub struct BlueprintSolver {
     strat_sum: Vec<Vec<f64>>,
     iteration: u32,
     combos: Vec<(u8, u8)>,
+    config_fingerprint: u64,
 }
 
 fn config_for(pot_type: PotType) -> FlopTreeConfig {
@@ -65,6 +73,151 @@ fn config_for(pot_type: PotType) -> FlopTreeConfig {
         PotType::ThreeBet => FlopTreeConfig::threebet(),
         PotType::FourBet => FlopTreeConfig::fourbet(),
         PotType::AllInPreflop => unreachable!("all-in leaves have no betting subgame"),
+    }
+}
+
+fn hash_variant(hasher: &mut StableHasher, variant: CfrVariant) {
+    match variant {
+        CfrVariant::Vanilla => hasher.write_u8(0),
+        CfrVariant::CfrPlus {
+            avg_delay,
+            linear_weighting,
+        } => {
+            hasher.write_u8(1);
+            hasher.write_u32(avg_delay);
+            hasher.write_u8(u8::from(linear_weighting));
+        }
+        CfrVariant::Dcfr { alpha, beta, gamma } => {
+            hasher.write_u8(2);
+            hasher.write_f64(alpha);
+            hasher.write_f64(beta);
+            hasher.write_f64(gamma);
+        }
+    }
+}
+
+#[allow(clippy::too_many_arguments)]
+fn blueprint_config_fingerprint(
+    preflop_tree: &Tree,
+    ranges: &[Range; 2],
+    variant: CfrVariant,
+    flops: &[[u8; 3]],
+    weights: &[f64],
+    abs: Abstraction,
+    sample: bool,
+    seed: u64,
+    leaves: &[Leaf],
+) -> u64 {
+    let mut hasher = StableHasher::new(b"gto-hu/blueprint-config/v1");
+    let tree_debug = format!("{preflop_tree:?}");
+    hasher.write_u64(tree_debug.len() as u64);
+    hasher.update(tree_debug.as_bytes());
+    for range in ranges {
+        for &weight in &range.weights {
+            hasher.write_f64(weight);
+        }
+    }
+    hash_variant(&mut hasher, variant);
+    hasher.write_u64(flops.len() as u64);
+    for flop in flops {
+        hasher.update(flop);
+    }
+    hasher.write_u64(weights.len() as u64);
+    for &weight in weights {
+        hasher.write_f64(weight);
+    }
+    hasher.write_u64(abs.buckets_river as u64);
+    hasher.write_u64(abs.buckets_turn as u64);
+    hasher.write_u8(u8::from(sample));
+    hasher.write_u64(seed);
+    hasher.write_u64(leaves.len() as u64);
+    for leaf in leaves {
+        hasher.write_u64(leaf.node_id as u64);
+        hasher.write_u64(leaf.subgames.len() as u64);
+        for subgame in &leaf.subgames {
+            hasher.write_u64(subgame.config_fingerprint());
+        }
+    }
+    hasher.finish()
+}
+
+fn checkpoint_length_overflow() -> io::Error {
+    io::Error::new(io::ErrorKind::InvalidData, "checkpoint length overflow")
+}
+
+fn encoded_nested_f64_len(values: &[Vec<f64>]) -> io::Result<u64> {
+    let mut total = 8u64;
+    for row in values {
+        total = total
+            .checked_add(8)
+            .ok_or_else(checkpoint_length_overflow)?;
+        total = total
+            .checked_add(
+                (row.len() as u64)
+                    .checked_mul(8)
+                    .ok_or_else(checkpoint_length_overflow)?,
+            )
+            .ok_or_else(checkpoint_length_overflow)?;
+    }
+    Ok(total)
+}
+
+fn write_nested_f64(writer: &mut PayloadWriter<'_>, values: &[Vec<f64>]) -> io::Result<()> {
+    writer.write_u64(values.len() as u64)?;
+    for row in values {
+        writer.write_u64(row.len() as u64)?;
+        for &value in row {
+            writer.write_f64(value)?;
+        }
+    }
+    Ok(())
+}
+
+fn expect_len(actual: u64, expected: usize, what: &str) -> io::Result<()> {
+    if actual != expected as u64 {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidData,
+            format!("{what} length mismatch: expected {expected}, got {actual}"),
+        ));
+    }
+    Ok(())
+}
+
+fn validate_nested_f64(
+    reader: &mut PayloadReader<'_>,
+    expected: &[Vec<f64>],
+    what: &str,
+) -> io::Result<()> {
+    expect_len(reader.read_u64()?, expected.len(), what)?;
+    for (index, row) in expected.iter().enumerate() {
+        expect_len(reader.read_u64()?, row.len(), &format!("{what}[{index}]"))?;
+        reader.skip_bytes((row.len() as u64).checked_mul(8).unwrap())?;
+    }
+    Ok(())
+}
+
+fn read_nested_f64_into(
+    reader: &mut PayloadReader<'_>,
+    target: &mut [Vec<f64>],
+    what: &str,
+) -> io::Result<()> {
+    expect_len(reader.read_u64()?, target.len(), what)?;
+    for (index, row) in target.iter_mut().enumerate() {
+        expect_len(reader.read_u64()?, row.len(), &format!("{what}[{index}]"))?;
+        for value in row {
+            *value = reader.read_f64()?;
+        }
+    }
+    Ok(())
+}
+
+fn hash_nested_f64(hasher: &mut StableHasher, values: &[Vec<f64>]) {
+    hasher.write_u64(values.len() as u64);
+    for row in values {
+        hasher.write_u64(row.len() as u64);
+        for &value in row {
+            hasher.write_f64(value);
+        }
     }
 }
 
@@ -190,6 +343,17 @@ impl BlueprintSolver {
         };
         let regrets = alloc(&preflop_tree);
         let strat_sum = alloc(&preflop_tree);
+        let config_fingerprint = blueprint_config_fingerprint(
+            &preflop_tree,
+            &ranges,
+            variant,
+            &flops,
+            &weights,
+            abs,
+            sample,
+            seed,
+            &leaves,
+        );
         BlueprintSolver {
             preflop_tree,
             ranges,
@@ -205,6 +369,7 @@ impl BlueprintSolver {
             strat_sum,
             iteration: 0,
             combos,
+            config_fingerprint,
         }
     }
 
@@ -232,6 +397,234 @@ impl BlueprintSolver {
             .flat_map(|l| l.subgames.iter())
             .map(|s| s.table_bytes())
             .sum()
+    }
+
+    pub fn iteration(&self) -> u32 {
+        self.iteration
+    }
+
+    fn checkpoint_payload_len(&self) -> io::Result<u64> {
+        let mut total = 4u64;
+        total = total
+            .checked_add(encoded_nested_f64_len(&self.regrets)?)
+            .ok_or_else(checkpoint_length_overflow)?;
+        total = total
+            .checked_add(encoded_nested_f64_len(&self.strat_sum)?)
+            .ok_or_else(checkpoint_length_overflow)?;
+        total = total
+            .checked_add(8)
+            .ok_or_else(checkpoint_length_overflow)?;
+        for leaf in &self.leaves {
+            total = total
+                .checked_add(16)
+                .ok_or_else(checkpoint_length_overflow)?;
+            for subgame in &leaf.subgames {
+                total = total
+                    .checked_add(subgame.checkpoint_state_payload_len()?)
+                    .ok_or_else(checkpoint_length_overflow)?;
+            }
+        }
+        Ok(total)
+    }
+
+    fn write_checkpoint_state(&self, writer: &mut PayloadWriter<'_>) -> io::Result<()> {
+        writer.write_u32(self.iteration)?;
+        write_nested_f64(writer, &self.regrets)?;
+        write_nested_f64(writer, &self.strat_sum)?;
+        writer.write_u64(self.leaves.len() as u64)?;
+        for leaf in &self.leaves {
+            writer.write_u64(leaf.node_id as u64)?;
+            writer.write_u64(leaf.subgames.len() as u64)?;
+            for subgame in &leaf.subgames {
+                subgame.write_checkpoint_state(writer)?;
+            }
+        }
+        Ok(())
+    }
+
+    fn validate_checkpoint_state(&self, reader: &mut PayloadReader<'_>) -> io::Result<u32> {
+        let iteration = reader.read_u32()?;
+        validate_nested_f64(reader, &self.regrets, "preflop_regrets")?;
+        validate_nested_f64(reader, &self.strat_sum, "preflop_strat_sum")?;
+        expect_len(reader.read_u64()?, self.leaves.len(), "leaves")?;
+        for (leaf_index, leaf) in self.leaves.iter().enumerate() {
+            let node_id = reader.read_u64()?;
+            if node_id != leaf.node_id as u64 {
+                return Err(io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    format!(
+                        "leaf {leaf_index} node id mismatch: expected {}, got {node_id}",
+                        leaf.node_id
+                    ),
+                ));
+            }
+            expect_len(
+                reader.read_u64()?,
+                leaf.subgames.len(),
+                &format!("leaf[{leaf_index}].subgames"),
+            )?;
+            for (flop_index, subgame) in leaf.subgames.iter().enumerate() {
+                let subgame_iteration = subgame.validate_checkpoint_state(reader)?;
+                if subgame_iteration != iteration {
+                    return Err(io::Error::new(
+                        io::ErrorKind::InvalidData,
+                        format!(
+                            "leaf {leaf_index} flop {flop_index} iteration {subgame_iteration} \
+                             does not match blueprint iteration {iteration}"
+                        ),
+                    ));
+                }
+            }
+        }
+        Ok(iteration)
+    }
+
+    fn apply_checkpoint_state(&mut self, reader: &mut PayloadReader<'_>) -> io::Result<u32> {
+        let iteration = reader.read_u32()?;
+        read_nested_f64_into(reader, &mut self.regrets, "preflop_regrets")?;
+        read_nested_f64_into(reader, &mut self.strat_sum, "preflop_strat_sum")?;
+        expect_len(reader.read_u64()?, self.leaves.len(), "leaves")?;
+        for (leaf_index, leaf) in self.leaves.iter_mut().enumerate() {
+            let node_id = reader.read_u64()?;
+            if node_id != leaf.node_id as u64 {
+                return Err(io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    format!(
+                        "leaf {leaf_index} node id mismatch: expected {}, got {node_id}",
+                        leaf.node_id
+                    ),
+                ));
+            }
+            expect_len(
+                reader.read_u64()?,
+                leaf.subgames.len(),
+                &format!("leaf[{leaf_index}].subgames"),
+            )?;
+            for (flop_index, subgame) in leaf.subgames.iter_mut().enumerate() {
+                let subgame_iteration = subgame.apply_checkpoint_state(reader)?;
+                if subgame_iteration != iteration {
+                    return Err(io::Error::new(
+                        io::ErrorKind::InvalidData,
+                        format!(
+                            "leaf {leaf_index} flop {flop_index} iteration {subgame_iteration} \
+                             does not match blueprint iteration {iteration}"
+                        ),
+                    ));
+                }
+            }
+        }
+        self.iteration = iteration;
+        Ok(iteration)
+    }
+
+    fn expected_checkpoint<'a>(&self, build_id: &'a str) -> ExpectedCheckpoint<'a> {
+        ExpectedCheckpoint {
+            kind: SolverKind::Blueprint,
+            build_id,
+            config_fingerprint: self.config_fingerprint,
+        }
+    }
+
+    pub fn save_checkpoint(
+        &self,
+        dir: &Path,
+        build_id: &str,
+        keep: usize,
+    ) -> io::Result<CheckpointInfo> {
+        self.save_checkpoint_with_companion(dir, build_id, keep, None)
+    }
+
+    pub(crate) fn save_checkpoint_with_companion(
+        &self,
+        dir: &Path,
+        build_id: &str,
+        keep: usize,
+        companion: Option<&[u8]>,
+    ) -> io::Result<CheckpointInfo> {
+        let payload_bytes = self.checkpoint_payload_len()?;
+        checkpoint::write_checkpoint(
+            dir,
+            SolverKind::Blueprint,
+            build_id,
+            self.config_fingerprint,
+            self.iteration,
+            payload_bytes,
+            keep,
+            companion,
+            |writer| self.write_checkpoint_state(writer),
+        )
+    }
+
+    pub fn validate_checkpoint(&self, path: &Path, build_id: &str) -> io::Result<CheckpointInfo> {
+        let (info, payload_iteration) =
+            checkpoint::read_checkpoint(path, self.expected_checkpoint(build_id), |reader| {
+                self.validate_checkpoint_state(reader)
+            })?;
+        if payload_iteration != info.iteration {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                format!(
+                    "payload iteration {payload_iteration} does not match header iteration {}",
+                    info.iteration
+                ),
+            ));
+        }
+        Ok(info)
+    }
+
+    pub fn restore_checkpoint(
+        &mut self,
+        path: &Path,
+        build_id: &str,
+    ) -> io::Result<CheckpointInfo> {
+        let validated = self.validate_checkpoint(path, build_id)?;
+        let expected = self.expected_checkpoint(build_id);
+        let (mut applied, payload_iteration) =
+            checkpoint::read_checkpoint(path, expected, |reader| {
+                self.apply_checkpoint_state(reader)
+            })?;
+        if payload_iteration != validated.iteration
+            || applied.iteration != validated.iteration
+            || applied.checksum != validated.checksum
+        {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                "checkpoint changed between validation and restore",
+            ));
+        }
+        applied.io_s += validated.io_s;
+        Ok(applied)
+    }
+
+    pub fn resume_latest(&mut self, dir: &Path, build_id: &str) -> io::Result<CheckpointInfo> {
+        let candidates = checkpoint::recovery_candidates(dir)?;
+        let mut errors = Vec::new();
+        for path in candidates {
+            match self.validate_checkpoint(&path, build_id) {
+                Ok(_) => return self.restore_checkpoint(&path, build_id),
+                Err(error) => errors.push(format!("{}: {error}", path.display())),
+            }
+        }
+        Err(io::Error::new(
+            io::ErrorKind::InvalidData,
+            format!("no valid checkpoint generation: {}", errors.join("; ")),
+        ))
+    }
+
+    pub fn state_checksum(&self) -> u64 {
+        let mut hasher = StableHasher::new(b"gto-hu/blueprint-state/v1");
+        hasher.write_u32(self.iteration);
+        hash_nested_f64(&mut hasher, &self.regrets);
+        hash_nested_f64(&mut hasher, &self.strat_sum);
+        hasher.write_u64(self.leaves.len() as u64);
+        for leaf in &self.leaves {
+            hasher.write_u64(leaf.node_id as u64);
+            hasher.write_u64(leaf.subgames.len() as u64);
+            for subgame in &leaf.subgames {
+                hasher.write_u64(subgame.state_checksum());
+            }
+        }
+        hasher.finish()
     }
 
     /// Σ_o opp_reach[o] · compat(c,o) · Z(c,o) per combo c — the fold-
@@ -329,8 +722,7 @@ impl BlueprintSolver {
                 let opp = self.ranges[1 - traverser as usize].weights;
 
                 // Phase 1: reach pairs at betting leaves.
-                let mut at_leaf: Vec<Option<([f64; N], [f64; N])>> =
-                    vec![None; self.leaves.len()];
+                let mut at_leaf: Vec<Option<([f64; N], [f64; N])>> = vec![None; self.leaves.len()];
                 self.collect_leaf_reaches(0, traverser, &reach, &opp, &mut at_leaf);
 
                 // Phase 2: all (leaf, m) subgames in parallel.
@@ -470,8 +862,7 @@ impl BlueprintSolver {
                 for m in 0..m_count {
                     let r = self.masked(m, reach);
                     let o = self.masked(m, opp_reach);
-                    let v =
-                        self.leaves[leaf].subgames[m].subgame_traverse(traverser, &r, &o, iter);
+                    let v = self.leaves[leaf].subgames[m].subgame_traverse(traverser, &r, &o, iter);
                     let w = self.weights[m];
                     for c in 0..N {
                         if self.block_mask[c] & (1 << m) == 0 {
@@ -495,7 +886,13 @@ impl BlueprintSolver {
                         for c in 0..N {
                             nr[c] *= strat[a * N + c];
                         }
-                        action_vals.push(self.traverse(child, traverser, &nr, opp_reach, leaf_values));
+                        action_vals.push(self.traverse(
+                            child,
+                            traverser,
+                            &nr,
+                            opp_reach,
+                            leaf_values,
+                        ));
                     }
                     let mut ev = vec![0.0; N];
                     for c in 0..N {

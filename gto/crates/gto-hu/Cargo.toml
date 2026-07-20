@@ -27,3 +27,7 @@ path = "src/bin/solve_preflop.rs"
 [[bin]]
 name = "solve-hu-blueprint"
 path = "src/bin/solve_blueprint.rs"
+
+[[bin]]
+name = "solver-bench"
+path = "src/bin/solver_bench.rs"
