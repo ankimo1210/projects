@@ -63,6 +63,18 @@ def test_fhs_nonpositive_sigma_raises():
         tail_risk.filtered_historical_var_es(returns, [0.01, -0.01, 0.01])
 
 
+def test_fhs_nan_sigma_raises():
+    # A NaN sigma must not slip past `sigma <= 0.0` (False for NaN) -- it
+    # would otherwise sort to the tail end and silently displace the true
+    # worst-loss scenario, corrupting VaR while ES visibly reports NaN.
+    rng = np.random.default_rng(99)
+    returns = rng.standard_normal(500) * 0.01
+    sigma = np.full(500, 0.02)
+    sigma[123] = np.nan
+    with pytest.raises(ValueError, match="finite"):
+        tail_risk.filtered_historical_var_es(returns, sigma, alpha=0.99)
+
+
 def test_fhs_length_mismatch_raises():
     with pytest.raises(ValueError):
         tail_risk.filtered_historical_var_es([0.01, 0.02], [0.01])

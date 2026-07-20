@@ -42,6 +42,8 @@ def _validate_alpha(alpha: float) -> None:
 
 
 def _validate_positive_sigma(sigma: np.ndarray) -> None:
+    if not np.all(np.isfinite(sigma)):
+        raise ValueError("sigma must be finite")
     if np.any(sigma <= 0.0):
         raise ValueError("sigma must be strictly positive")
 
@@ -62,8 +64,8 @@ def filtered_historical_var_es(returns, sigma, alpha=0.99, current_sigma=None):
     `z_i * current_sigma`, and reuses `hullkit.risk.historical_var_es`'s
     tail-selection convention on those rescaled scenarios. Returns
     `(var, es)` as positive loss amounts. Raises ValueError on a length
-    mismatch between `returns` and `sigma`, empty input, non-positive
-    `sigma`, or a non-finite/non-positive `current_sigma`.
+    mismatch between `returns` and `sigma`, empty input, non-finite or
+    non-positive `sigma`, or a non-finite/non-positive `current_sigma`.
     """
     returns_arr = np.asarray(returns, dtype=float)
     sigma_arr = np.asarray(sigma, dtype=float)
