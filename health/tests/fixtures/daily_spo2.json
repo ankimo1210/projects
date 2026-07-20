@@ -1,0 +1,14 @@
+{
+  "dataPoints": [
+    {
+      "dataPointName": "users/me/dataTypes/daily-oxygen-saturation/dataPoints/fake-spo2-1",
+      "dailyOxygenSaturation": {
+        "averagePercentage": 96.5,
+        "date": {"year": 2026, "month": 7, "day": 1},
+        "lowerBoundPercentage": 93.0,
+        "standardDeviationPercentage": 1.2,
+        "upperBoundPercentage": 98.0
+      }
+    }
+  ]
+}

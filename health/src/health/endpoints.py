@@ -1,33 +1,90 @@
-"""Fitbit metric catalog: endpoint definitions, range chunking, payload parsers."""
+"""Google Health API v4 metric catalog: request/response contracts, chunking, parser stubs.
+
+Contract source of truth: `.superpowers/sdd/health-google-api-contracts.md`
+(extracted verbatim from the v4 discovery document). `CivilDateTime` never
+carries a UTC offset; `dailyRollUp` ranges are closed-open; `reconcile`
+filters use the full snake_case data-type path, never a bare field name.
+"""
+
 from __future__ import annotations
 
-from collections.abc import Callable
-from dataclasses import dataclass, field
-from datetime import date, timedelta
-from typing import Any
+from collections.abc import Callable, Sequence
+from dataclasses import dataclass
+from datetime import date, datetime, timedelta
 
-API = "https://api.fitbit.com"
+DAILY_ROLLUP = "daily_rollup"
+RECONCILE = "reconcile"
+
+DailyRow = tuple[str, date, float]
+IntradayRow = tuple[str, datetime, float]
+SleepRow = dict[str, object]
+
+
+class PayloadError(ValueError):
+    """A response's repeated field exists but is not a list."""
+
+    def __init__(self, metric: str, detail: str):
+        self.metric = metric
+        self.detail = detail
+        super().__init__(f"{metric}: {detail}")
 
 
 @dataclass(frozen=True)
 class ParsedRows:
-    daily: Any = ()      # [(metric, "YYYY-MM-DD", value)]
-    sleep: Any = ()      # [dict] matching sleep_sessions columns
-    intraday: Any = ()   # [(metric, "YYYY-MM-DD HH:MM:SS", value)]
+    daily: tuple[DailyRow, ...] = ()
+    sleep: tuple[SleepRow, ...] = ()
+    intraday: tuple[IntradayRow, ...] = ()
 
 
 @dataclass(frozen=True)
 class Metric:
     name: str
-    path: str            # contains {start}/{end} (kind="range") or {date} (kind="per_day")
-    kind: str
+    data_type: str
+    method: str  # DAILY_ROLLUP or RECONCILE
     max_range_days: int
     scope: str
-    full_history: bool   # False: backfill only trailing 30 days
-    parse: Callable[[Any], ParsedRows] = field(repr=False)
+    full_history: bool  # False: backfill only trailing 30 days (intraday)
+    series_names: tuple[str, ...]
+    parse_pages: Callable[[Sequence[dict]], ParsedRows]
+    page_size: int = 1000
+    filter_path: str | None = None  # reconcile only; None for dailyRollUp
+
+
+# -- request / response contract helpers -------------------------------------
+
+
+def civil_midnight(d: date) -> dict[str, object]:
+    """A CivilDateTime at local midnight: {date, time}, never a UTC offset."""
+    return {
+        "date": {"year": d.year, "month": d.month, "day": d.day},
+        "time": {},
+    }
+
+
+def daily_rollup_body(start: date, end: date) -> dict[str, object]:
+    """DailyRollUpDataPointsRequest body. `end` is inclusive on our side but
+    the API range is closed-open, so the wire end is `end + 1 day`."""
+    return {
+        "range": {
+            "start": civil_midnight(start),
+            "end": civil_midnight(end + timedelta(days=1)),
+        },
+        "windowSizeDays": 1,
+    }
+
+
+def closed_open_filter(path: str, start: date, end: date) -> str:
+    """reconcile/list filter expression over a full snake_case data-type path,
+    e.g. `daily_resting_heart_rate.date`. `end` is inclusive on our side; the
+    wire filter is closed-open so the upper bound is `end + 1 day`."""
+    stop = end + timedelta(days=1)
+    return f'{path} >= "{start}" AND {path} < "{stop}"'
 
 
 def chunk_ranges(start: date, end: date, max_days: int) -> list[tuple[date, date]]:
+    """Split [start, end] into contiguous, non-overlapping <= max_days chunks."""
+    if max_days < 1:
+        raise ValueError(f"max_days must be >= 1, got {max_days}")
     out, cur = [], start
     while cur <= end:
         stop = min(cur + timedelta(days=max_days - 1), end)
@@ -36,130 +93,263 @@ def chunk_ranges(start: date, end: date, max_days: int) -> list[tuple[date, date
     return out
 
 
-def _series_parser(key: str, metric: str) -> Callable[[Any], ParsedRows]:
-    def parse(payload: Any) -> ParsedRows:
-        rows = [(metric, e["dateTime"], float(e["value"])) for e in payload.get(key, [])]
-        return ParsedRows(daily=rows)
-    return parse
+def response_points(metric: Metric, page: dict) -> list[dict]:
+    """Read the repeated data-point field for one response page.
 
-
-_ZONES = {"Out of Range": "out_of_range", "Fat Burn": "fat_burn",
-          "Cardio": "cardio", "Peak": "peak"}
-
-
-def _parse_heart(payload: Any) -> ParsedRows:
-    rows = []
-    for e in payload.get("activities-heart", []):
-        d, v = e["dateTime"], e.get("value") or {}
-        if "restingHeartRate" in v:
-            rows.append(("resting_hr", d, float(v["restingHeartRate"])))
-        for z in v.get("heartRateZones", []):
-            slug = _ZONES.get(z.get("name"))
-            if slug and "minutes" in z:
-                rows.append((f"hr_zone_{slug}_min", d, float(z["minutes"])))
-    return ParsedRows(daily=rows)
-
-
-def _parse_sleep(payload: Any) -> ParsedRows:
-    daily, sessions = [], []
-    for s in payload.get("sleep", []):
-        summary = (s.get("levels") or {}).get("summary") or {}
-
-        def mins(k: str) -> int:
-            return int((summary.get(k) or {}).get("minutes", 0))
-
-        sessions.append({
-            "log_id": s["logId"], "date": s["dateOfSleep"],
-            "start_ts": s["startTime"].replace("T", " ")[:19],
-            "end_ts": s["endTime"].replace("T", " ")[:19],
-            "minutes_asleep": int(s.get("minutesAsleep", 0)),
-            "minutes_deep": mins("deep"), "minutes_light": mins("light"),
-            "minutes_rem": mins("rem"), "minutes_wake": mins("wake"),
-            "efficiency": int(s.get("efficiency", 0)),
-            "is_main": bool(s.get("isMainSleep", False)),
-        })
-        if s.get("isMainSleep", False):
-            daily.append(("sleep_minutes", s["dateOfSleep"], float(s.get("minutesAsleep", 0))))
-    return ParsedRows(daily=daily, sleep=sessions)
-
-
-def _parse_weight(payload: Any) -> ParsedRows:
-    rows = []
-    for e in payload.get("weight", []):
-        rows.append(("weight_kg", e["date"], float(e["weight"])))
-        if "fat" in e:
-            rows.append(("fat_pct", e["date"], float(e["fat"])))
-    return ParsedRows(daily=rows)
-
-
-def _value_fields_parser(key: str | None, fields: dict[str, str]) -> Callable[[Any], ParsedRows]:
-    """Parser for hrv/spo2/temp/br shapes: entries with dateTime + value{...}.
-
-    key=None means the payload itself is the entry list (spo2).
-    fields maps response field -> our metric name.
+    dailyRollUp pages carry `rollupDataPoints`; reconcile pages carry
+    `dataPoints`. A missing key is treated as an empty page (protobuf JSON
+    omits empty repeated fields); a present-but-non-list value means the
+    payload is malformed and raises PayloadError.
     """
-    def parse(payload: Any) -> ParsedRows:
-        entries = payload if key is None else payload.get(key, [])
-        rows = []
-        for e in entries:
-            v = e.get("value") or {}
-            for src, metric in fields.items():
-                if v.get(src) is not None:
-                    rows.append((metric, e["dateTime"], float(v[src])))
-        return ParsedRows(daily=rows)
-    return parse
+    key = "rollupDataPoints" if metric.method == DAILY_ROLLUP else "dataPoints"
+    if key not in page:
+        return []
+    value = page[key]
+    if not isinstance(value, list):
+        raise PayloadError(metric.name, f"{key!r} is not a list: {type(value).__name__}")
+    return value
 
 
-def _intraday_parser(summary_key: str, dataset_key: str, metric: str) -> Callable[[Any], ParsedRows]:
-    def parse(payload: Any) -> ParsedRows:
-        summary = payload.get(summary_key, [])
-        if not summary:
-            return ParsedRows()
-        d = summary[0]["dateTime"]
-        rows = [(metric, f"{d} {e['time']}", float(e["value"]))
-                for e in payload.get(dataset_key, {}).get("dataset", [])]
-        return ParsedRows(intraday=rows)
-    return parse
+# -- parsers (stubs; completed in Task 5) -------------------------------------
+# Each metric gets its own named callable so the catalog never references a
+# shared placeholder. None of these are exercised by this task's contract
+# tests -- they exist only to satisfy Metric.parse_pages' type.
 
+
+def parse_steps_rollup(pages: Sequence[dict]) -> ParsedRows:
+    raise NotImplementedError("parse_steps_rollup: implemented in Task 5")
+
+
+def parse_distance_rollup(pages: Sequence[dict]) -> ParsedRows:
+    raise NotImplementedError("parse_distance_rollup: implemented in Task 5")
+
+
+def parse_calories_rollup(pages: Sequence[dict]) -> ParsedRows:
+    raise NotImplementedError("parse_calories_rollup: implemented in Task 5")
+
+
+def parse_active_minutes_rollup(pages: Sequence[dict]) -> ParsedRows:
+    raise NotImplementedError("parse_active_minutes_rollup: implemented in Task 5")
+
+
+def parse_weight_rollup(pages: Sequence[dict]) -> ParsedRows:
+    raise NotImplementedError("parse_weight_rollup: implemented in Task 5")
+
+
+def parse_body_fat_rollup(pages: Sequence[dict]) -> ParsedRows:
+    raise NotImplementedError("parse_body_fat_rollup: implemented in Task 5")
+
+
+def parse_resting_hr_reconcile(pages: Sequence[dict]) -> ParsedRows:
+    raise NotImplementedError("parse_resting_hr_reconcile: implemented in Task 5")
+
+
+def parse_hrv_reconcile(pages: Sequence[dict]) -> ParsedRows:
+    raise NotImplementedError("parse_hrv_reconcile: implemented in Task 5")
+
+
+def parse_spo2_reconcile(pages: Sequence[dict]) -> ParsedRows:
+    raise NotImplementedError("parse_spo2_reconcile: implemented in Task 5")
+
+
+def parse_temp_skin_reconcile(pages: Sequence[dict]) -> ParsedRows:
+    raise NotImplementedError("parse_temp_skin_reconcile: implemented in Task 5")
+
+
+def parse_br_reconcile(pages: Sequence[dict]) -> ParsedRows:
+    raise NotImplementedError("parse_br_reconcile: implemented in Task 5")
+
+
+def parse_sleep_reconcile(pages: Sequence[dict]) -> ParsedRows:
+    raise NotImplementedError("parse_sleep_reconcile: implemented in Task 5")
+
+
+def parse_intraday_hr_reconcile(pages: Sequence[dict]) -> ParsedRows:
+    raise NotImplementedError("parse_intraday_hr_reconcile: implemented in Task 5")
+
+
+def parse_intraday_steps_reconcile(pages: Sequence[dict]) -> ParsedRows:
+    raise NotImplementedError("parse_intraday_steps_reconcile: implemented in Task 5")
+
+
+# -- 14-entry metric catalog ---------------------------------------------------
 
 CATALOG: list[Metric] = [
-    Metric("steps", "/1/user/-/activities/steps/date/{start}/{end}.json",
-           "range", 1095, "activity", True, _series_parser("activities-steps", "steps")),
-    Metric("distance", "/1/user/-/activities/distance/date/{start}/{end}.json",
-           "range", 1095, "activity", True, _series_parser("activities-distance", "distance_km")),
-    Metric("calories", "/1/user/-/activities/calories/date/{start}/{end}.json",
-           "range", 1095, "activity", True, _series_parser("activities-calories", "calories")),
-    Metric("minutes_very_active", "/1/user/-/activities/minutesVeryActive/date/{start}/{end}.json",
-           "range", 1095, "activity", True,
-           _series_parser("activities-minutesVeryActive", "minutes_very_active")),
-    Metric("minutes_fairly_active", "/1/user/-/activities/minutesFairlyActive/date/{start}/{end}.json",
-           "range", 1095, "activity", True,
-           _series_parser("activities-minutesFairlyActive", "minutes_fairly_active")),
-    Metric("minutes_lightly_active", "/1/user/-/activities/minutesLightlyActive/date/{start}/{end}.json",
-           "range", 1095, "activity", True,
-           _series_parser("activities-minutesLightlyActive", "minutes_lightly_active")),
-    Metric("heart", "/1/user/-/activities/heart/date/{start}/{end}.json",
-           "range", 365, "heartrate", True, _parse_heart),
-    Metric("sleep", "/1.2/user/-/sleep/date/{start}/{end}.json",
-           "range", 100, "sleep", True, _parse_sleep),
-    Metric("weight", "/1/user/-/body/log/weight/date/{start}/{end}.json",
-           "range", 31, "weight", True, _parse_weight),
-    Metric("hrv", "/1/user/-/hrv/date/{start}/{end}.json",
-           "range", 30, "heartrate", True,
-           _value_fields_parser("hrv", {"dailyRmssd": "hrv_rmssd", "deepRmssd": "hrv_deep_rmssd"})),
-    Metric("spo2", "/1/user/-/spo2/date/{start}/{end}.json",
-           "range", 30, "oxygen_saturation", True,
-           _value_fields_parser(None, {"avg": "spo2_avg", "min": "spo2_min", "max": "spo2_max"})),
-    Metric("temp_skin", "/1/user/-/temp/skin/date/{start}/{end}.json",
-           "range", 30, "temperature", True,
-           _value_fields_parser("tempSkin", {"nightlyRelative": "temp_skin_relative"})),
-    Metric("br", "/1/user/-/br/date/{start}/{end}.json",
-           "range", 30, "respiratory_rate", True,
-           _value_fields_parser("br", {"breathingRate": "breathing_rate"})),
-    Metric("intraday_hr", "/1/user/-/activities/heart/date/{date}/1d/1min.json",
-           "per_day", 1, "heartrate", False,
-           _intraday_parser("activities-heart", "activities-heart-intraday", "hr")),
-    Metric("intraday_steps", "/1/user/-/activities/steps/date/{date}/1d/1min.json",
-           "per_day", 1, "activity", False,
-           _intraday_parser("activities-steps", "activities-steps-intraday", "steps")),
+    Metric("steps", "steps", DAILY_ROLLUP, 90, "activity", True, ("steps",), parse_steps_rollup),
+    Metric(
+        "distance",
+        "distance",
+        DAILY_ROLLUP,
+        90,
+        "activity",
+        True,
+        ("distance_km",),
+        parse_distance_rollup,
+    ),
+    Metric(
+        "calories",
+        "total-calories",
+        DAILY_ROLLUP,
+        14,
+        "activity",
+        True,
+        ("calories",),
+        parse_calories_rollup,
+    ),
+    Metric(
+        "active_minutes",
+        "active-minutes",
+        DAILY_ROLLUP,
+        14,
+        "activity",
+        True,
+        ("minutes_lightly_active", "minutes_fairly_active", "minutes_very_active"),
+        parse_active_minutes_rollup,
+    ),
+    Metric(
+        "weight", "weight", DAILY_ROLLUP, 90, "weight", True, ("weight_kg",), parse_weight_rollup
+    ),
+    Metric(
+        "body_fat",
+        "body-fat",
+        DAILY_ROLLUP,
+        90,
+        "weight",
+        True,
+        ("fat_pct",),
+        parse_body_fat_rollup,
+    ),
+    Metric(
+        "resting_hr",
+        "daily-resting-heart-rate",
+        RECONCILE,
+        90,
+        "heartrate",
+        True,
+        ("resting_hr",),
+        parse_resting_hr_reconcile,
+        filter_path="daily_resting_heart_rate.date",
+    ),
+    Metric(
+        "hrv",
+        "daily-heart-rate-variability",
+        RECONCILE,
+        90,
+        "heartrate",
+        True,
+        ("hrv_rmssd", "hrv_deep_rmssd"),
+        parse_hrv_reconcile,
+        filter_path="daily_heart_rate_variability.date",
+    ),
+    Metric(
+        "spo2",
+        "daily-oxygen-saturation",
+        RECONCILE,
+        90,
+        "oxygen_saturation",
+        True,
+        ("spo2_avg", "spo2_lower_bound", "spo2_upper_bound"),
+        parse_spo2_reconcile,
+        filter_path="daily_oxygen_saturation.date",
+    ),
+    Metric(
+        "temp_skin",
+        "daily-sleep-temperature-derivations",
+        RECONCILE,
+        90,
+        "temperature",
+        True,
+        ("temp_skin_relative",),
+        parse_temp_skin_reconcile,
+        filter_path="daily_sleep_temperature_derivations.date",
+    ),
+    Metric(
+        "br",
+        "daily-respiratory-rate",
+        RECONCILE,
+        90,
+        "respiratory_rate",
+        True,
+        ("breathing_rate",),
+        parse_br_reconcile,
+        filter_path="daily_respiratory_rate.date",
+    ),
+    Metric(
+        "sleep",
+        "sleep",
+        RECONCILE,
+        90,
+        "sleep",
+        True,
+        ("sleep_minutes",),
+        parse_sleep_reconcile,
+        page_size=25,
+        filter_path="sleep.interval.civil_end_time",
+    ),
+    Metric(
+        "intraday_hr",
+        "heart-rate",
+        RECONCILE,
+        1,
+        "heartrate",
+        False,
+        ("hr",),
+        parse_intraday_hr_reconcile,
+        filter_path="heart_rate.sample_time.civil_time",
+    ),
+    Metric(
+        "intraday_steps",
+        "steps",
+        RECONCILE,
+        1,
+        "activity",
+        False,
+        ("steps",),
+        parse_intraday_steps_reconcile,
+        filter_path="steps.interval.civil_start_time",
+    ),
 ]
+
+
+# -- published Google Health data types (superset of CATALOG) -----------------
+# id -> (label, scope). Ids and shapes come from the ReconciledDataPoint union
+# in the contracts file (plus `total-calories`, rollup-only). Not every
+# published data type is implemented; CATALOG's data types are a subset.
+
+KNOWN_DATA_TYPES: dict[str, tuple[str, str]] = {
+    "steps": ("Steps", "activity"),
+    "distance": ("Distance", "activity"),
+    "total-calories": ("Total calories", "activity"),
+    "active-minutes": ("Active minutes", "activity"),
+    "active-energy-burned": ("Active energy burned", "activity"),
+    "active-zone-minutes": ("Active zone minutes", "activity"),
+    "activity-level": ("Activity level", "activity"),
+    "altitude": ("Altitude", "activity"),
+    "basal-energy-burned": ("Basal energy burned", "activity"),
+    "exercise": ("Exercise session", "activity"),
+    "floors": ("Floors climbed", "activity"),
+    "sedentary-period": ("Sedentary period", "activity"),
+    "swim-lengths-data": ("Swim lengths", "activity"),
+    "time-in-heart-rate-zone": ("Time in heart rate zone", "heartrate"),
+    "weight": ("Weight", "weight"),
+    "body-fat": ("Body fat percentage", "weight"),
+    "height": ("Height", "weight"),
+    "heart-rate": ("Heart rate", "heartrate"),
+    "heart-rate-variability": ("Heart rate variability (sample)", "heartrate"),
+    "daily-resting-heart-rate": ("Daily resting heart rate", "heartrate"),
+    "daily-heart-rate-variability": ("Daily heart rate variability", "heartrate"),
+    "daily-heart-rate-zones": ("Daily heart rate zones", "heartrate"),
+    "daily-oxygen-saturation": ("Daily oxygen saturation", "oxygen_saturation"),
+    "oxygen-saturation": ("Oxygen saturation (sample)", "oxygen_saturation"),
+    "daily-sleep-temperature-derivations": ("Daily sleep temperature derivation", "temperature"),
+    "core-body-temperature": ("Core body temperature", "temperature"),
+    "daily-respiratory-rate": ("Daily respiratory rate", "respiratory_rate"),
+    "respiratory-rate-sleep-summary": ("Respiratory rate sleep summary", "respiratory_rate"),
+    "sleep": ("Sleep session", "sleep"),
+    "blood-glucose": ("Blood glucose", "vitals"),
+    "nutrition-log": ("Nutrition log", "nutrition"),
+    "hydration-log": ("Hydration log", "nutrition"),
+    "daily-vo2-max": ("Daily VO2 max", "fitness"),
+    "run-vo2-max": ("Run VO2 max", "fitness"),
+    "vo2-max": ("VO2 max", "fitness"),
+}

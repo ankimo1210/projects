@@ -1,19 +1,96 @@
+"""Contract tests for health.endpoints: request/response shapes and the
+14-entry Google Health catalog. Parser stubs (Task 5 scope) are not called
+here -- only their presence and NotImplementedError contract are implicit
+in Metric construction succeeding.
+"""
+
+import json
 from datetime import date
+from itertools import pairwise
+from pathlib import Path
 
-from health.endpoints import CATALOG, ParsedRows, chunk_ranges
+import pytest
+from health.endpoints import (
+    CATALOG,
+    DAILY_ROLLUP,
+    KNOWN_DATA_TYPES,
+    RECONCILE,
+    Metric,
+    ParsedRows,
+    PayloadError,
+    chunk_ranges,
+    civil_midnight,
+    closed_open_filter,
+    daily_rollup_body,
+    response_points,
+)
+
+FIXTURES = Path(__file__).parent / "fixtures"
 
 
-def by_name(name):
+def by_name(name: str) -> Metric:
     return next(m for m in CATALOG if m.name == name)
 
 
-def test_chunk_ranges_splits_inclusive():
+def load_fixture(filename: str) -> dict:
+    return json.loads((FIXTURES / filename).read_text())
+
+
+# -- civil_midnight / daily_rollup_body ---------------------------------------
+
+
+def test_civil_midnight_nests_date_and_time_with_no_offset():
+    got = civil_midnight(date(2026, 7, 1))
+    assert got == {"date": {"year": 2026, "month": 7, "day": 1}, "time": {}}
+    assert "utcOffsetSeconds" not in got
+    assert "utcOffsetSeconds" not in got["date"]
+    assert "utcOffsetSeconds" not in got["time"]
+
+
+def test_daily_rollup_body_end_is_exclusive_next_day():
+    body = daily_rollup_body(date(2026, 7, 1), date(2026, 7, 3))
+    assert body["range"]["start"] == civil_midnight(date(2026, 7, 1))
+    assert body["range"]["end"] == civil_midnight(date(2026, 7, 4))
+    assert body["windowSizeDays"] == 1
+
+
+def test_daily_rollup_body_single_day_end_rolls_to_next_day():
+    body = daily_rollup_body(date(2026, 7, 5), date(2026, 7, 5))
+    assert body["range"]["end"] == civil_midnight(date(2026, 7, 6))
+
+
+# -- closed_open_filter --------------------------------------------------------
+
+
+def test_closed_open_filter_uses_full_path_and_end_plus_one_day():
+    got = closed_open_filter("daily_resting_heart_rate.date", date(2026, 7, 1), date(2026, 7, 3))
+    assert (
+        got
+        == 'daily_resting_heart_rate.date >= "2026-07-01" AND daily_resting_heart_rate.date < "2026-07-04"'
+    )
+
+
+def test_closed_open_filter_single_day():
+    got = closed_open_filter("sleep.interval.civil_end_time", date(2026, 7, 5), date(2026, 7, 5))
+    assert (
+        got
+        == 'sleep.interval.civil_end_time >= "2026-07-05" AND sleep.interval.civil_end_time < "2026-07-06"'
+    )
+
+
+# -- chunk_ranges ---------------------------------------------------------------
+
+
+def test_chunk_ranges_no_gap_or_overlap():
     out = chunk_ranges(date(2026, 1, 1), date(2026, 1, 10), 4)
     assert out == [
         (date(2026, 1, 1), date(2026, 1, 4)),
         (date(2026, 1, 5), date(2026, 1, 8)),
         (date(2026, 1, 9), date(2026, 1, 10)),
     ]
+    # contiguous: each chunk's start is the day after the previous chunk's end
+    for (_, prev_end), (next_start, _) in pairwise(out):
+        assert next_start == date.fromordinal(prev_end.toordinal() + 1)
 
 
 def test_chunk_ranges_single_day():
@@ -22,91 +99,210 @@ def test_chunk_ranges_single_day():
     ]
 
 
-def test_catalog_shape():
+@pytest.mark.parametrize("max_days", [0, -1])
+def test_chunk_ranges_invalid_max_days_raises(max_days):
+    with pytest.raises(ValueError):
+        chunk_ranges(date(2026, 1, 1), date(2026, 1, 10), max_days)
+
+
+# -- response_points ------------------------------------------------------------
+
+
+def _dummy_metric(method: str) -> Metric:
+    return Metric(
+        "dummy", "dummy-type", method, 90, "activity", True, ("dummy",), lambda pages: ParsedRows()
+    )
+
+
+def test_response_points_reads_rollup_data_points_for_daily_rollup():
+    metric = _dummy_metric(DAILY_ROLLUP)
+    page = {"rollupDataPoints": [{"a": 1}, {"a": 2}]}
+    assert response_points(metric, page) == [{"a": 1}, {"a": 2}]
+
+
+def test_response_points_reads_data_points_for_reconcile():
+    metric = _dummy_metric(RECONCILE)
+    page = {"dataPoints": [{"a": 1}]}
+    assert response_points(metric, page) == [{"a": 1}]
+
+
+def test_response_points_missing_key_is_empty_list():
+    assert response_points(_dummy_metric(DAILY_ROLLUP), {}) == []
+    assert response_points(_dummy_metric(RECONCILE), {}) == []
+
+
+def test_response_points_non_list_raises_payload_error():
+    with pytest.raises(PayloadError) as exc:
+        response_points(_dummy_metric(RECONCILE), {"dataPoints": "not-a-list"})
+    assert exc.value.metric == "dummy"
+    assert "dataPoints" in exc.value.detail
+
+
+def test_response_points_non_list_rollup_raises_payload_error():
+    with pytest.raises(PayloadError) as exc:
+        response_points(_dummy_metric(DAILY_ROLLUP), {"rollupDataPoints": {"oops": True}})
+    assert exc.value.metric == "dummy"
+
+
+# -- catalog shape ---------------------------------------------------------------
+
+
+def test_catalog_has_14_unique_names():
     names = [m.name for m in CATALOG]
+    assert len(names) == 14
     assert len(names) == len(set(names))
+
+
+def test_known_data_types_is_superset_of_catalog_data_types():
     for m in CATALOG:
-        assert m.path.startswith("/")
-        if m.kind == "range":
-            assert "{start}" in m.path and "{end}" in m.path
-        else:
-            assert m.kind == "per_day" and "{date}" in m.path and m.max_range_days == 1
+        assert m.data_type in KNOWN_DATA_TYPES, f"{m.name}'s data_type {m.data_type!r} missing"
 
 
-def test_parse_steps():
-    payload = {"activities-steps": [{"dateTime": "2026-07-01", "value": "8123"}]}
-    rows = by_name("steps").parse(payload)
-    assert rows.daily == [("steps", "2026-07-01", 8123.0)]
-    assert rows.sleep == () and rows.intraday == ()
+def test_rollup_metrics_have_no_filter_path():
+    for m in CATALOG:
+        if m.method == DAILY_ROLLUP:
+            assert m.filter_path is None, m.name
 
 
-def test_parse_heart_resting_and_zones():
-    payload = {"activities-heart": [{
-        "dateTime": "2026-07-01",
-        "value": {"restingHeartRate": 62, "heartRateZones": [
-            {"name": "Fat Burn", "minutes": 40},
-            {"name": "Cardio", "minutes": 12},
-        ]},
-    }]}
-    daily = dict((m, v) for m, d, v in by_name("heart").parse(payload).daily)
-    assert daily["resting_hr"] == 62.0
-    assert daily["hr_zone_fat_burn_min"] == 40.0
-    assert daily["hr_zone_cardio_min"] == 12.0
+def test_rollup_chunk_limits_are_14_or_90_days():
+    fourteen_day = {"calories", "active_minutes"}
+    for m in CATALOG:
+        if m.method != DAILY_ROLLUP:
+            continue
+        expected = 14 if m.name in fourteen_day else 90
+        assert m.max_range_days == expected, m.name
 
 
-def test_parse_heart_missing_resting_hr_skipped():
-    payload = {"activities-heart": [{"dateTime": "2026-07-01", "value": {"heartRateZones": []}}]}
-    metrics = [m for m, d, v in by_name("heart").parse(payload).daily]
-    assert "resting_hr" not in metrics
-
-
-def test_parse_sleep_sessions_and_daily():
-    payload = {"sleep": [{
-        "logId": 44, "dateOfSleep": "2026-07-01", "startTime": "2026-06-30T23:41:30.000",
-        "endTime": "2026-07-01T07:05:30.000", "minutesAsleep": 402, "efficiency": 93,
-        "isMainSleep": True,
-        "levels": {"summary": {"deep": {"minutes": 80}, "light": {"minutes": 220},
-                               "rem": {"minutes": 102}, "wake": {"minutes": 42}}},
-    }]}
-    rows = by_name("sleep").parse(payload)
-    (s,) = rows.sleep
-    assert s["log_id"] == 44 and s["minutes_deep"] == 80
-    assert s["start_ts"] == "2026-06-30 23:41:30"
-    assert rows.daily == [("sleep_minutes", "2026-07-01", 402.0)]
-
-
-def test_parse_sleep_classic_log_defaults_stages_to_zero():
-    payload = {"sleep": [{"logId": 45, "dateOfSleep": "2026-07-02",
-                          "startTime": "2026-07-02T01:00:00.000",
-                          "endTime": "2026-07-02T07:00:00.000",
-                          "minutesAsleep": 330, "efficiency": 90, "isMainSleep": False}]}
-    (s,) = by_name("sleep").parse(payload).sleep
-    assert s["minutes_deep"] == 0 and s["is_main"] is False
-    assert by_name("sleep").parse(payload).daily == []  # non-main sleep: no daily row
-
-
-def test_parse_spo2_bare_list():
-    payload = [{"dateTime": "2026-07-01", "value": {"avg": 96.1, "min": 93.0, "max": 98.4}}]
-    daily = dict((m, v) for m, d, v in by_name("spo2").parse(payload).daily)
-    assert daily == {"spo2_avg": 96.1, "spo2_min": 93.0, "spo2_max": 98.4}
-
-
-def test_parse_weight_fat_optional():
-    payload = {"weight": [{"date": "2026-07-01", "weight": 72.5, "fat": 21.1},
-                          {"date": "2026-07-02", "weight": 72.1}]}
-    daily = by_name("weight").parse(payload).daily
-    assert ("weight_kg", "2026-07-01", 72.5) in daily
-    assert ("fat_pct", "2026-07-01", 21.1) in daily
-    assert ("weight_kg", "2026-07-02", 72.1) in daily
-    assert not any(m == "fat_pct" and d == "2026-07-02" for m, d, v in daily)
-
-
-def test_parse_intraday_hr():
-    payload = {
-        "activities-heart": [{"dateTime": "2026-07-01"}],
-        "activities-heart-intraday": {"dataset": [{"time": "00:00:00", "value": 62},
-                                                  {"time": "00:01:00", "value": 63}]},
+def test_reconcile_filter_paths_are_exact():
+    expected = {
+        "resting_hr": "daily_resting_heart_rate.date",
+        "hrv": "daily_heart_rate_variability.date",
+        "spo2": "daily_oxygen_saturation.date",
+        "temp_skin": "daily_sleep_temperature_derivations.date",
+        "br": "daily_respiratory_rate.date",
+        "sleep": "sleep.interval.civil_end_time",
+        "intraday_hr": "heart_rate.sample_time.civil_time",
+        "intraday_steps": "steps.interval.civil_start_time",
     }
-    rows = by_name("intraday_hr").parse(payload)
-    assert rows.intraday[0] == ("hr", "2026-07-01 00:00:00", 62.0)
-    assert len(rows.intraday) == 2
+    for name, path in expected.items():
+        assert by_name(name).filter_path == path
+
+
+def test_sleep_page_size_is_25_other_reconcile_metrics_are_1000():
+    assert by_name("sleep").page_size == 25
+    reconcile_others = [m for m in CATALOG if m.method == RECONCILE and m.name != "sleep"]
+    assert reconcile_others  # sanity: there are other reconcile metrics
+    for m in reconcile_others:
+        assert m.page_size == 1000, m.name
+
+
+def test_only_two_intraday_metrics_have_full_history_false():
+    not_full = [m.name for m in CATALOG if not m.full_history]
+    assert sorted(not_full) == ["intraday_hr", "intraday_steps"]
+
+
+def test_active_minutes_declares_existing_3_series():
+    assert by_name("active_minutes").series_names == (
+        "minutes_lightly_active",
+        "minutes_fairly_active",
+        "minutes_very_active",
+    )
+
+
+def test_body_fat_declares_fat_pct_series():
+    assert by_name("body_fat").series_names == ("fat_pct",)
+
+
+def test_daily_rollup_and_reconcile_method_counts():
+    rollup = [m for m in CATALOG if m.method == DAILY_ROLLUP]
+    reconcile = [m for m in CATALOG if m.method == RECONCILE]
+    assert len(rollup) == 6
+    assert len(reconcile) == 8
+
+
+# -- fixtures: shape sanity via response_points --------------------------------
+
+ROLLUP_FIXTURES = [
+    "rollup_steps.json",
+    "rollup_distance.json",
+    "rollup_calories.json",
+    "rollup_active_minutes.json",
+    "rollup_weight.json",
+    "rollup_body_fat.json",
+]
+
+RECONCILE_FIXTURES = [
+    "daily_resting_hr.json",
+    "daily_hrv.json",
+    "daily_spo2.json",
+    "daily_skin_temperature.json",
+    "daily_respiratory_rate.json",
+    "sleep_stages.json",
+    "sleep_classic.json",
+    "intraday_hr.json",
+    "intraday_steps.json",
+]
+
+
+@pytest.mark.parametrize("filename", ROLLUP_FIXTURES)
+def test_rollup_fixture_parses_via_response_points(filename):
+    page = load_fixture(filename)
+    points = response_points(_dummy_metric(DAILY_ROLLUP), page)
+    assert len(points) >= 1
+    for point in points:
+        assert "civilStartTime" in point
+        assert "civilEndTime" in point
+
+
+@pytest.mark.parametrize("filename", RECONCILE_FIXTURES)
+def test_reconcile_fixture_parses_via_response_points(filename):
+    page = load_fixture(filename)
+    points = response_points(_dummy_metric(RECONCILE), page)
+    assert len(points) >= 1
+    for point in points:
+        assert "dataPointName" in point
+
+
+def test_sleep_stages_fixture_has_stages_summary_and_type():
+    (point,) = load_fixture("sleep_stages.json")["dataPoints"]
+    sleep = point["sleep"]
+    assert sleep["type"] == "STAGES"
+    assert len(sleep["summary"]["stagesSummary"]) == 4
+    # numeric-string fields per contract: minutesAsleep, stagesSummary[].minutes/count
+    assert isinstance(sleep["summary"]["minutesAsleep"], str)
+    assert isinstance(sleep["summary"]["stagesSummary"][0]["minutes"], str)
+    assert isinstance(sleep["summary"]["stagesSummary"][0]["count"], str)
+
+
+def test_sleep_classic_fixture_has_no_stages_and_classic_type():
+    (point,) = load_fixture("sleep_classic.json")["dataPoints"]
+    sleep = point["sleep"]
+    assert sleep["type"] == "CLASSIC"
+    assert sleep["stages"] == []
+    assert sleep["summary"]["stagesSummary"] == []
+    assert sleep["metadata"]["nap"] is False
+
+
+def test_rollup_fixture_numeric_string_fields():
+    steps_point = load_fixture("rollup_steps.json")["rollupDataPoints"][0]
+    assert isinstance(steps_point["steps"]["countSum"], str)
+    distance_point = load_fixture("rollup_distance.json")["rollupDataPoints"][0]
+    assert isinstance(distance_point["distance"]["millimetersSum"], str)
+    active_minutes_point = load_fixture("rollup_active_minutes.json")["rollupDataPoints"][0]
+    levels = active_minutes_point["activeMinutes"]["activeMinutesRollupByActivityLevel"]
+    assert {lvl["activityLevel"] for lvl in levels} == {"LIGHT", "MODERATE", "VIGOROUS"}
+    assert all(isinstance(lvl["activeMinutesSum"], str) for lvl in levels)
+    # kcalSum and *Avg fields are numbers, not strings, per the contracts file
+    calories_point = load_fixture("rollup_calories.json")["rollupDataPoints"][0]
+    assert isinstance(calories_point["totalCalories"]["kcalSum"], (int, float))
+    weight_point = load_fixture("rollup_weight.json")["rollupDataPoints"][0]
+    assert isinstance(weight_point["weight"]["weightGramsAvg"], (int, float))
+
+
+def test_reconcile_fixture_numeric_string_fields():
+    resting = load_fixture("daily_resting_hr.json")["dataPoints"][0]
+    assert isinstance(resting["dailyRestingHeartRate"]["beatsPerMinute"], str)
+    hr_point = load_fixture("intraday_hr.json")["dataPoints"][0]
+    assert isinstance(hr_point["heartRate"]["beatsPerMinute"], str)
+    steps_point = load_fixture("intraday_steps.json")["dataPoints"][0]
+    assert isinstance(steps_point["steps"]["count"], str)
