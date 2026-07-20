@@ -2,6 +2,7 @@
 
 import math
 
+import numpy as np
 import pytest
 from hullkit import bsm
 
@@ -79,3 +80,62 @@ def test_zero_volatility_uses_deterministic_terminal_value():
 def test_d1_rejects_undefined_or_invalid_domain(sigma, T):
     with pytest.raises(ValueError):
         bsm.d1(100.0, 100.0, 0.05, sigma, T)
+
+
+# --- mixed boundary vectors --------------------------------------------
+
+
+def test_call_price_mixed_maturity_vector():
+    """T=[0, 1] must price element-wise: intrinsic at expiry, BSM elsewhere."""
+    prices = bsm.call_price(100.0, 95.0, 0.05, 0.2, np.array([0.0, 1.0]))
+    assert prices[0] == pytest.approx(5.0)
+    assert prices[1] == pytest.approx(bsm.call_price(100.0, 95.0, 0.05, 0.2, 1.0))
+
+
+def test_put_price_mixed_maturity_vector():
+    prices = bsm.put_price(100.0, 105.0, 0.05, 0.2, np.array([0.0, 1.0]))
+    assert prices[0] == pytest.approx(5.0)
+    assert prices[1] == pytest.approx(bsm.put_price(100.0, 105.0, 0.05, 0.2, 1.0))
+
+
+def test_call_price_mixed_volatility_vector():
+    """sigma=[0, 0.2] must use the discounted deterministic payoff at sigma=0."""
+    prices = bsm.call_price(100.0, 90.0, 0.05, np.array([0.0, 0.2]), 1.0)
+    expected_zero_vol = max(100.0 - 90.0 * math.exp(-0.05), 0.0)
+    assert prices[0] == pytest.approx(expected_zero_vol)
+    assert prices[1] == pytest.approx(bsm.call_price(100.0, 90.0, 0.05, 0.2, 1.0))
+
+
+def test_put_price_mixed_volatility_vector():
+    prices = bsm.put_price(100.0, 110.0, 0.05, np.array([0.0, 0.2]), 1.0)
+    expected_zero_vol = max(110.0 * math.exp(-0.05) - 100.0, 0.0)
+    assert prices[0] == pytest.approx(expected_zero_vol)
+    assert prices[1] == pytest.approx(bsm.put_price(100.0, 110.0, 0.05, 0.2, 1.0))
+
+
+def test_price_broadcasts_spot_strike_and_maturity():
+    """A surface built by broadcasting S, K and T must match element-wise pricing."""
+    spots = np.array([[90.0], [110.0]])
+    maturities = np.array([0.0, 0.5, 1.0])
+    surface = bsm.call_price(spots, 100.0, 0.03, 0.25, maturities)
+    assert surface.shape == (2, 3)
+    for i, spot in enumerate([90.0, 110.0]):
+        for j, maturity in enumerate(maturities):
+            assert surface[i, j] == pytest.approx(
+                bsm.call_price(spot, 100.0, 0.03, 0.25, maturity)
+            )
+
+
+def test_mixed_boundary_put_call_parity_in_diffusive_region():
+    spots = np.array([95.0, 100.0, 105.0])
+    maturities = np.array([0.25, 0.5, 1.0])
+    call = bsm.call_price(spots, 100.0, 0.04, 0.2, maturities, q=0.01)
+    put = bsm.put_price(spots, 100.0, 0.04, 0.2, maturities, q=0.01)
+    parity = spots * np.exp(-0.01 * maturities) - 100.0 * np.exp(-0.04 * maturities)
+    np.testing.assert_allclose(call - put, parity, rtol=1e-12, atol=1e-12)
+
+
+def test_scalar_price_still_returns_scalar():
+    price = bsm.call_price(100.0, 100.0, 0.05, 0.2, 1.0)
+    assert np.ndim(price) == 0
+    assert float(price) == pytest.approx(10.450583572185565, rel=1e-12)
