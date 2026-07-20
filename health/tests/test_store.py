@@ -282,6 +282,70 @@ def test_replace_chunk_empty_replacement_deletes_old_rows_and_still_advances_wat
     assert n_raw == 0
 
 
+def test_replace_chunk_delete_range_is_inclusive_of_both_boundaries(store):
+    metric = by_name("steps")
+    store.upsert_daily(
+        [
+            ("steps", "2026-06-30", 1.0),  # start - 1 -> survives
+            ("steps", "2026-07-01", 2.0),  # start -> deleted
+            ("steps", "2026-07-05", 3.0),  # end -> deleted
+            ("steps", "2026-07-06", 4.0),  # end + 1 -> survives
+        ]
+    )
+    store.replace_chunk(metric, date(2026, 7, 1), date(2026, 7, 5), [{"p": 0}], ParsedRows())
+    got = {r[0] for r in store.con.execute("SELECT date FROM daily_series").fetchall()}
+    assert got == {date(2026, 6, 30), date(2026, 7, 6)}
+
+
+def test_replace_chunk_daily_then_intraday_same_series_name_no_cross_table_delete(store):
+    # "steps" (daily rollup) and "intraday_steps" (reconcile intraday) share the
+    # literal series name "steps" but write to different tables; one metric's
+    # replace_chunk must never delete the other's rows.
+    daily_metric = by_name("steps")
+    intraday_metric = by_name("intraday_steps")
+    assert daily_metric.series_names == intraday_metric.series_names == ("steps",)
+    day = date(2026, 7, 10)
+
+    store.replace_chunk(
+        daily_metric, day, day, [{"p": 0}], ParsedRows(daily=(("steps", day, 1234.0),))
+    )
+    store.replace_chunk(
+        intraday_metric,
+        day,
+        day,
+        [{"p": 0}],
+        ParsedRows(intraday=(("steps", datetime(2026, 7, 10, 8, 0), 50.0),)),
+    )
+
+    daily_rows = store.con.execute("SELECT metric, date, value FROM daily_series").fetchall()
+    assert daily_rows == [("steps", day, 1234.0)]
+    intraday_rows = store.con.execute("SELECT metric, ts, value FROM intraday").fetchall()
+    assert intraday_rows == [("steps", datetime(2026, 7, 10, 8, 0), 50.0)]
+
+
+def test_replace_chunk_intraday_then_daily_same_series_name_no_cross_table_delete(store):
+    # same collision, opposite call order -- must be symmetric.
+    daily_metric = by_name("steps")
+    intraday_metric = by_name("intraday_steps")
+    day = date(2026, 7, 10)
+
+    store.replace_chunk(
+        intraday_metric,
+        day,
+        day,
+        [{"p": 0}],
+        ParsedRows(intraday=(("steps", datetime(2026, 7, 10, 8, 0), 50.0),)),
+    )
+    store.replace_chunk(
+        daily_metric, day, day, [{"p": 0}], ParsedRows(daily=(("steps", day, 1234.0),))
+    )
+
+    daily_rows = store.con.execute("SELECT metric, date, value FROM daily_series").fetchall()
+    assert daily_rows == [("steps", day, 1234.0)]
+    intraday_rows = store.con.execute("SELECT metric, ts, value FROM intraday").fetchall()
+    assert intraday_rows == [("steps", datetime(2026, 7, 10, 8, 0), 50.0)]
+
+
 def test_replace_chunk_rolls_back_raw_typed_and_watermark_on_failure(store):
     metric = by_name("steps")
     start, end = date(2026, 7, 1), date(2026, 7, 3)

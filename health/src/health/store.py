@@ -108,30 +108,42 @@ class Store:
                     "INSERT INTO raw_json VALUES (?, ?, ?, ?, now(), ?)",
                     [metric.name, start, end, page_index, json.dumps(payload)],
                 )
-            # 3. drop typed rows for this metric's series within the range
-            con.execute(
-                f"DELETE FROM daily_series WHERE metric IN ({series_ph}) AND date BETWEEN ? AND ?",
-                [*series, start, end],
-            )
-            con.execute(
-                f"DELETE FROM intraday WHERE metric IN ({series_ph}) "
-                "AND CAST(ts AS DATE) BETWEEN ? AND ?",
-                [*series, start, end],
-            )
+            # 3. drop typed rows for this metric's series within the range, but
+            # only in the ONE table this metric actually writes to. A given
+            # series name is not unique across tables -- e.g. "steps" (daily
+            # rollup) and "intraday_steps" (reconcile intraday) both have
+            # series_names == ("steps",) -- so the target table must come from
+            # the metric's own identity (full_history=False marks the two
+            # intraday-cadence metrics), never from which fields of `rows`
+            # happen to be non-empty on this particular call: an empty-payload
+            # replacement must still clear stale rows in the metric's real
+            # table.
+            if metric.full_history:
+                con.execute(
+                    f"DELETE FROM daily_series WHERE metric IN ({series_ph}) "
+                    "AND date BETWEEN ? AND ?",
+                    [*series, start, end],
+                )
+            else:
+                con.execute(
+                    f"DELETE FROM intraday WHERE metric IN ({series_ph}) "
+                    "AND CAST(ts AS DATE) BETWEEN ? AND ?",
+                    [*series, start, end],
+                )
             # 4. sleep sessions are keyed by wake date, not series name
             if metric.name == "sleep":
                 con.execute("DELETE FROM sleep_sessions WHERE date BETWEEN ? AND ?", [start, end])
-            # 5. insert the freshly parsed typed rows
-            if rows.daily:
+            # 5. insert the freshly parsed typed rows, same table restriction as above
+            if metric.full_history and rows.daily:
                 con.executemany("INSERT INTO daily_series VALUES (?, ?, ?)", list(rows.daily))
+            elif not metric.full_history and rows.intraday:
+                con.executemany("INSERT INTO intraday VALUES (?, ?, ?)", list(rows.intraday))
             if rows.sleep:
                 for r in rows.sleep:
                     con.execute(
                         f"INSERT INTO sleep_sessions VALUES ({', '.join('?' * len(_SLEEP_COLS))})",
                         [r[c] for c in _SLEEP_COLS],
                     )
-            if rows.intraday:
-                con.executemany("INSERT INTO intraday VALUES (?, ?, ?)", list(rows.intraday))
             # 6. advance the watermark
             con.execute(
                 "INSERT INTO sync_state VALUES (?, ?, 'ok', now()) "
