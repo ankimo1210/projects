@@ -4,7 +4,18 @@ import SwiftUI
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var contentStore: LearningContentStore
-    @State private var selectedTab = 0
+    @State private var selectedTab: Int
+
+    init() {
+        #if DEBUG
+        let arguments = ProcessInfo.processInfo.arguments
+        let requestedTab = arguments.firstIndex(of: "-appStoreScreenshotTab")
+            .flatMap { index in arguments.indices.contains(index + 1) ? Int(arguments[index + 1]) : nil }
+        _selectedTab = State(initialValue: requestedTab ?? 0)
+        #else
+        _selectedTab = State(initialValue: 0)
+        #endif
+    }
 
     var body: some View {
         TabView(selection: $selectedTab) {
