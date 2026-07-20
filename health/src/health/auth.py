@@ -139,7 +139,10 @@ class GoogleHealthAuth:
     def load_tokens(self) -> dict | None:
         if not self.tokens_path.exists():
             return None
-        return json.loads(self.tokens_path.read_text())
+        try:
+            return json.loads(self.tokens_path.read_text())
+        except json.JSONDecodeError:
+            return None  # corrupt token file: behave like "not connected"
 
     def forget_tokens(self) -> None:
         self.tokens_path.unlink(missing_ok=True)
@@ -149,7 +152,7 @@ class GoogleHealthAuth:
         existing = existing or {}
         now = self.clock()
         tokens = {"access_token": payload["access_token"],
-                  "refresh_token": payload.get("refresh_token", existing.get("refresh_token")),
+                  "refresh_token": payload.get("refresh_token") or existing.get("refresh_token"),
                   "expires_at": now + payload.get("expires_in", 3600),
                   "scope": payload.get("scope", existing.get("scope", ""))}
         refresh_expires_in = payload.get("refresh_token_expires_in")

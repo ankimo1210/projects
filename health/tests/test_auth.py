@@ -209,6 +209,20 @@ def test_refresh_preserves_refresh_token_when_response_omits_it(tmp_path):
     assert tokens["refresh_token"] == "RT1"  # preserved, not lost
 
 
+def test_refresh_preserves_refresh_token_when_response_has_explicit_null(tmp_path):
+    # Some token endpoints may send the key with a JSON null instead of
+    # omitting it; null must behave like "omitted", not like "clear it".
+    session = FakeSession([FakeResponse(200, token_payload(1)),
+                            FakeResponse(200, {"access_token": "AT2", "refresh_token": None,
+                                                "expires_in": 3600, "scope": SCOPES})])
+    auth = make_auth(tmp_path, session=session)
+    complete_with_new_pending(auth, tmp_path)
+    auth.refresh()
+    tokens = auth.load_tokens()
+    assert tokens["access_token"] == "AT2"
+    assert tokens["refresh_token"] == "RT1"  # preserved despite explicit null
+
+
 def test_refresh_adopts_new_refresh_token_when_present(tmp_path):
     session = FakeSession([FakeResponse(200, token_payload(1)),
                             FakeResponse(200, token_payload(2))])
@@ -289,6 +303,15 @@ def test_access_token_refreshes_within_60s_of_expiry(tmp_path):
 def test_access_token_without_tokens_raises(tmp_path):
     with pytest.raises(AuthError):
         make_auth(tmp_path, session=FakeSession()).access_token()
+
+
+def test_load_tokens_returns_none_on_corrupt_json(tmp_path):
+    auth = make_auth(tmp_path, session=FakeSession())
+    tmp_path.mkdir(parents=True, exist_ok=True)
+    (tmp_path / "tokens.json").write_text("{not json")
+    assert auth.load_tokens() is None
+    with pytest.raises(AuthError):
+        auth.access_token()  # corrupt token file behaves like "not connected"
 
 
 # -- forget_tokens -------------------------------------------------------------
