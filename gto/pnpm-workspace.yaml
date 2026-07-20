@@ -1,0 +1,6 @@
+# M-lane (Mac/iOS) workspace: mobile app + shared TS packages.
+# web/ is intentionally NOT in this workspace — it remains its own pnpm root
+# (web/pnpm-workspace.yaml) until the v1.x web refresh consumes packages/*.
+packages:
+  - mobile
+  - packages/*
