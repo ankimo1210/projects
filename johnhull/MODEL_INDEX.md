@@ -8,7 +8,7 @@ How to use this index (for agents):
    `deep_hedge_price/src/deep_hedge_price/<module>.py`.
 3. Tests are relative to each package's `tests/` directory; notebooks are
    `johnhull/volumes/<vol>/`. Companion docs: `ROADMAP.md` (volume <-> Hull
-   chapters), `release_manifest.json` (vol 18-25 wiring), `VALIDATION.md`
+   chapters), `release_manifest.json` (vol 18-27 wiring), `VALIDATION.md`
    (what PASS does and does not mean).
 4. Freshness is test-enforced: every module below must stay listed and every
    `module:symbol` reference must resolve (`test_model_index.py` in both
