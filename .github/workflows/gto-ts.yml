@@ -1,0 +1,57 @@
+# M-lane CI for the gto TypeScript workspace (packages/* + mobile).
+# The H1 contract gate (Rust writer -> TS reader golden round-trip) extends
+# this workflow once gto/fixtures/packs gains the P0b binary fixtures.
+name: gto-ts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "gto/packages/**"
+      - "gto/mobile/**"
+      - "gto/fixtures/**"
+      - "gto/scripts/build_preflop_fixture.py"
+      - "gto/pnpm-workspace.yaml"
+      - "gto/pnpm-lock.yaml"
+      - "gto/package.json"
+      - ".github/workflows/gto-ts.yml"
+  pull_request:
+    paths:
+      - "gto/packages/**"
+      - "gto/mobile/**"
+      - "gto/fixtures/**"
+      - "gto/scripts/build_preflop_fixture.py"
+      - "gto/pnpm-workspace.yaml"
+      - "gto/pnpm-lock.yaml"
+      - "gto/package.json"
+      - ".github/workflows/gto-ts.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: gto
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Enable pnpm (version pinned by gto/package.json packageManager)
+        run: corepack enable
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm -r typecheck
+
+      - name: Test
+        run: pnpm -r test
+
+      - name: Preflop fixture drift check
+        run: |
+          PYTHONPATH=src python3 scripts/build_preflop_fixture.py
+          git diff --exit-code fixtures/
