@@ -22,15 +22,16 @@ in the separate `deep_hedge_price` workspace project, while `hullkit` remains
 torch-free.  Volumes 18–25 and the G8 release are complete: fresh validation,
 the strict tracked-file gate, and publication on
 `codex/johnhull-beyond-hull-g8` are recorded in `VALIDATION.md`. Volumes 26 and
-27 are complete through their artifact/notebook gates; the portal pages, book,
-and the full tracked release remain explicitly deferred.
+27 are complete through their artifact/notebook gates, the portal pages
+(`rates_swaps` and `risk_management` themes), the Jupyter Book pages, and the
+full tracked release.
 
 Run release checks from the workspace root:
 
 ```bash
 make hull-artifacts-check  # rebuild vol. 19–27 in /tmp and compare references
 make hull-notebooks-check  # fresh execution in /tmp
-make hull-report           # offline portal: 11 themes / 70 figures
+make hull-report           # offline portal: 12 themes / 78 figures
 make hull-book             # Jupyter Book
 make hull-release-check    # cross-artifact release contract
 make hull-release          # project tests/lint + all checks and builds above

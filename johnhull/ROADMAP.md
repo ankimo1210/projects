@@ -73,7 +73,7 @@ separate. No production dependency was added for G0/G1 core implementation.
 各巻に validation report、fingerprinted JSON/NPZ、artifact-only notebook、book
 symlinkがあり、各巻の `integration_and_reproducibility` gate は PASS。これは
 **model performance の承認ではない**。`release_manifest.json` の現行契約は portal
-**70 図/11 テーマ**、Jupyter Book 28 ページ。G8 で fresh artifact/notebook/
+**78 図/12 テーマ**、Jupyter Book 30 ページ。G8 で fresh artifact/notebook/
 report/book/test/lint を再検証し、最終結果と model risk を `johnhull/VALIDATION.md`
 に固定した。strict tracked gate と専用 branch への remote push も完了した。
 research track は既定無効・core gate 非依存のままとする。
@@ -97,8 +97,9 @@ Design plan: `docs/superpowers/plans/2026-07-19-johnhull-inflation-jgbi.md`
 | 7 | `volumes/26_inflation_jgbi` reproducible artifact-only notebook | done |
 
 Phase 7 の `done` は synthetic-offline の integration/reproducibility gate を表し、
-市場較正、production valuation、model performance の承認ではない。Portal、Jupyter
-Book、full tracked release への登録は Phase 8 以降へ明示的に繰り延べる。
+市場較正、production valuation、model performance の承認ではない。Portal（`rates_swaps`
+テーマの `inflation_curves`・`inflation_swaps`・`jgbi_floor`・`jgbi_bei` 4 図）、
+Jupyter Book 登録、full tracked release への収録はいずれも完了した。
 
 ## Advanced VaR/ES risk desk — Phase 1–6 (2026-07-20)
 
@@ -121,7 +122,7 @@ Phase 5 の `done` は synthetic-offline の integration/reproducibility gate（
 の 11 恒等式チェックと byte 再現性）を表し、市場較正・model performance の承認ではない。
 Phase 6 の portal 図（`var_traffic_light`・`fhs_vs_hs_coverage`・`gpd_tail_fit`・
 `risk_allocation_bars`）、`risk_management` book page、Jupyter Book 登録、full tracked
-release は明示的に繰り延べる。
+release はすべて完了した（commit 691877f, 63f83ce）。
 
 FRTB IMA（liquidity-horizon ES 集約、stressed ES scaling、NMRF、P&L attribution
 eligibility test、IMA/SA 資本比較）は **vol 28 候補**として scope 外に記録する。
