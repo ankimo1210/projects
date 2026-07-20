@@ -1,0 +1,14 @@
+{
+  "dataPoints": [
+    {
+      "dataPointName": "users/me/dataTypes/daily-heart-rate-variability/dataPoints/fake-hrv-1",
+      "dailyHeartRateVariability": {
+        "averageHeartRateVariabilityMilliseconds": 45.2,
+        "date": {"year": 2026, "month": 7, "day": 1},
+        "deepSleepRootMeanSquareOfSuccessiveDifferencesMilliseconds": 38.7,
+        "entropy": 3.1,
+        "nonRemHeartRateBeatsPerMinute": "60"
+      }
+    }
+  ]
+}
