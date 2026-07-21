@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "paper_id": "gould_bonart_1512.03492v1",
+  "title": "Queue Imbalance as a One-Tick-Ahead Price Predictor in a Limit Order Book",
+  "source": {
+    "path": "sources/papers/gould_bonart_1512.03492v1.pdf",
+    "filename": "gould_bonart_1512.03492v1.pdf",
+    "sha256": "a5051285adfe2d8a2d7f46a758486f357d556a46a964bc89b245de7e7a0bc338",
+    "bytes": 1649240
+  },
+  "conversion": {
+    "tool": "docling",
+    "version": "2.114.0",
+    "generated_at": "2026-07-21T13:58:10.111410+00:00",
+    "device": "auto",
+    "ocr": false,
+    "table_mode": "accurate",
+    "formula_enrichment": false,
+    "chunker": "hybrid",
+    "chunk_max_tokens": 480
+  },
+  "document": {
+    "pages": 30,
+    "text_blocks": 496,
+    "tables": 6,
+    "pictures": 7,
+    "markdown_chars": 80976,
+    "math_blocks": 20,
+    "chunks": 61,
+    "max_chunk_tokens": 488,
+    "pages_in_chunks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30
+    ]
+  },
+  "quality": {
+    "source_text_chars": 76595,
+    "markdown_to_source_text_ratio": 1.0572,
+    "has_abstract": true,
+    "has_references": true
+  }
+}

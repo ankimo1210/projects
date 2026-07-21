@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "paper_id": "deeplob_1808.03668v6",
+  "title": "DeepLOB: Deep Convolutional Neural Networks for Limit Order Books",
+  "source": {
+    "path": "sources/papers/deeplob_1808.03668v6.pdf",
+    "filename": "deeplob_1808.03668v6.pdf",
+    "sha256": "f50d57a80644ac427433824b540c9bc713ffd2249c2042ba975d986078295913",
+    "bytes": 640497
+  },
+  "conversion": {
+    "tool": "docling",
+    "version": "2.114.0",
+    "generated_at": "2026-07-21T13:58:09.925080+00:00",
+    "device": "auto",
+    "ocr": false,
+    "table_mode": "accurate",
+    "formula_enrichment": false,
+    "chunker": "hybrid",
+    "chunk_max_tokens": 480
+  },
+  "document": {
+    "pages": 12,
+    "text_blocks": 607,
+    "tables": 4,
+    "pictures": 9,
+    "markdown_chars": 74253,
+    "math_blocks": 7,
+    "chunks": 56,
+    "max_chunk_tokens": 492,
+    "pages_in_chunks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ]
+  },
+  "quality": {
+    "source_text_chars": 65190,
+    "markdown_to_source_text_ratio": 1.139,
+    "has_abstract": true,
+    "has_references": true
+  }
+}

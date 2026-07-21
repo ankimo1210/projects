@@ -1,0 +1,439 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-21T13:58:10.519487+00:00",
+  "paper_count": 7,
+  "papers": [
+    {
+      "schema_version": 1,
+      "paper_id": "deeplob_1808.03668v6",
+      "title": "DeepLOB: Deep Convolutional Neural Networks for Limit Order Books",
+      "source": {
+        "path": "sources/papers/deeplob_1808.03668v6.pdf",
+        "filename": "deeplob_1808.03668v6.pdf",
+        "sha256": "f50d57a80644ac427433824b540c9bc713ffd2249c2042ba975d986078295913",
+        "bytes": 640497
+      },
+      "conversion": {
+        "tool": "docling",
+        "version": "2.114.0",
+        "generated_at": "2026-07-21T13:58:09.925080+00:00",
+        "device": "auto",
+        "ocr": false,
+        "table_mode": "accurate",
+        "formula_enrichment": false,
+        "chunker": "hybrid",
+        "chunk_max_tokens": 480
+      },
+      "document": {
+        "pages": 12,
+        "text_blocks": 607,
+        "tables": 4,
+        "pictures": 9,
+        "markdown_chars": 74253,
+        "math_blocks": 7,
+        "chunks": 56,
+        "max_chunk_tokens": 492,
+        "pages_in_chunks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      },
+      "quality": {
+        "source_text_chars": 65190,
+        "markdown_to_source_text_ratio": 1.139,
+        "has_abstract": true,
+        "has_references": true
+      }
+    },
+    {
+      "schema_version": 1,
+      "paper_id": "fi2010_1705.03233v5",
+      "title": "Benchmark Dataset for Mid-Price Forecasting of Limit Order Book Data with Machine Learning Methods",
+      "source": {
+        "path": "sources/papers/fi2010_1705.03233v5.pdf",
+        "filename": "fi2010_1705.03233v5.pdf",
+        "sha256": "22d856cd9e1d951ddcec917bd7fcaf7e83f233b39c05f6a990617f32d201b31d",
+        "bytes": 1086764
+      },
+      "conversion": {
+        "tool": "docling",
+        "version": "2.114.0",
+        "generated_at": "2026-07-21T13:58:09.999608+00:00",
+        "device": "auto",
+        "ocr": false,
+        "table_mode": "accurate",
+        "formula_enrichment": false,
+        "chunker": "hybrid",
+        "chunk_max_tokens": 480
+      },
+      "document": {
+        "pages": 25,
+        "text_blocks": 265,
+        "tables": 9,
+        "pictures": 3,
+        "markdown_chars": 69243,
+        "math_blocks": 17,
+        "chunks": 62,
+        "max_chunk_tokens": 490,
+        "pages_in_chunks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25
+        ]
+      },
+      "quality": {
+        "source_text_chars": 62614,
+        "markdown_to_source_text_ratio": 1.1059,
+        "has_abstract": true,
+        "has_references": true
+      }
+    },
+    {
+      "schema_version": 1,
+      "paper_id": "gould_bonart_1512.03492v1",
+      "title": "Queue Imbalance as a One-Tick-Ahead Price Predictor in a Limit Order Book",
+      "source": {
+        "path": "sources/papers/gould_bonart_1512.03492v1.pdf",
+        "filename": "gould_bonart_1512.03492v1.pdf",
+        "sha256": "a5051285adfe2d8a2d7f46a758486f357d556a46a964bc89b245de7e7a0bc338",
+        "bytes": 1649240
+      },
+      "conversion": {
+        "tool": "docling",
+        "version": "2.114.0",
+        "generated_at": "2026-07-21T13:58:10.111410+00:00",
+        "device": "auto",
+        "ocr": false,
+        "table_mode": "accurate",
+        "formula_enrichment": false,
+        "chunker": "hybrid",
+        "chunk_max_tokens": 480
+      },
+      "document": {
+        "pages": 30,
+        "text_blocks": 496,
+        "tables": 6,
+        "pictures": 7,
+        "markdown_chars": 80976,
+        "math_blocks": 20,
+        "chunks": 61,
+        "max_chunk_tokens": 488,
+        "pages_in_chunks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30
+        ]
+      },
+      "quality": {
+        "source_text_chars": 76595,
+        "markdown_to_source_text_ratio": 1.0572,
+        "has_abstract": true,
+        "has_references": true
+      }
+    },
+    {
+      "schema_version": 1,
+      "paper_id": "ref_cont_de_larrard_markovian_lob_1104.4596",
+      "title": "Price dynamics in a Markovian limit order market",
+      "source": {
+        "path": "sources/papers/ref_cont_de_larrard_markovian_lob_1104.4596.pdf",
+        "filename": "ref_cont_de_larrard_markovian_lob_1104.4596.pdf",
+        "sha256": "9d25a6d69ff1e72722fe744f2975f24013acc66d8518ec90c6e337a83ea137a6",
+        "bytes": 680082
+      },
+      "conversion": {
+        "tool": "docling",
+        "version": "2.114.0",
+        "generated_at": "2026-07-21T13:58:10.181611+00:00",
+        "device": "auto",
+        "ocr": false,
+        "table_mode": "accurate",
+        "formula_enrichment": false,
+        "chunker": "hybrid",
+        "chunk_max_tokens": 480
+      },
+      "document": {
+        "pages": 18,
+        "text_blocks": 311,
+        "tables": 4,
+        "pictures": 5,
+        "markdown_chars": 52528,
+        "math_blocks": 55,
+        "chunks": 47,
+        "max_chunk_tokens": 481,
+        "pages_in_chunks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ]
+      },
+      "quality": {
+        "source_text_chars": 43923,
+        "markdown_to_source_text_ratio": 1.1959,
+        "has_abstract": true,
+        "has_references": true
+      }
+    },
+    {
+      "schema_version": 1,
+      "paper_id": "ref_cont_price_impact_1011.6402",
+      "title": "The price impact of order book events",
+      "source": {
+        "path": "sources/papers/ref_cont_price_impact_1011.6402.pdf",
+        "filename": "ref_cont_price_impact_1011.6402.pdf",
+        "sha256": "40d1d5f0baf7944a1b9f4c12d3644038e657acf4a3dfb500b2057c2269edd25f",
+        "bytes": 741640
+      },
+      "conversion": {
+        "tool": "docling",
+        "version": "2.114.0",
+        "generated_at": "2026-07-21T13:58:10.371079+00:00",
+        "device": "auto",
+        "ocr": false,
+        "table_mode": "accurate",
+        "formula_enrichment": false,
+        "chunker": "hybrid",
+        "chunk_max_tokens": 480
+      },
+      "document": {
+        "pages": 26,
+        "text_blocks": 278,
+        "tables": 6,
+        "pictures": 10,
+        "markdown_chars": 164002,
+        "math_blocks": 33,
+        "chunks": 158,
+        "max_chunk_tokens": 491,
+        "pages_in_chunks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26
+        ]
+      },
+      "quality": {
+        "source_text_chars": 71999,
+        "markdown_to_source_text_ratio": 2.2778,
+        "has_abstract": true,
+        "has_references": true
+      }
+    },
+    {
+      "schema_version": 1,
+      "paper_id": "ref_cont_stochastic_order_book_dynamics_2010",
+      "title": "A stochastic model for order book dynamics",
+      "source": {
+        "path": "sources/papers/ref_cont_stochastic_order_book_dynamics_2010.pdf",
+        "filename": "ref_cont_stochastic_order_book_dynamics_2010.pdf",
+        "sha256": "23181104d259f7a17d8a9cf66c24fd26ba02d363fe509e20d90a27555c2967e2",
+        "bytes": 233125
+      },
+      "conversion": {
+        "tool": "docling",
+        "version": "2.114.0",
+        "generated_at": "2026-07-21T13:58:10.443792+00:00",
+        "device": "auto",
+        "ocr": false,
+        "table_mode": "accurate",
+        "formula_enrichment": false,
+        "chunker": "hybrid",
+        "chunk_max_tokens": 480
+      },
+      "document": {
+        "pages": 21,
+        "text_blocks": 447,
+        "tables": 11,
+        "pictures": 3,
+        "markdown_chars": 73089,
+        "math_blocks": 57,
+        "chunks": 66,
+        "max_chunk_tokens": 487,
+        "pages_in_chunks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21
+        ]
+      },
+      "quality": {
+        "source_text_chars": 54953,
+        "markdown_to_source_text_ratio": 1.33,
+        "has_abstract": false,
+        "has_references": true
+      }
+    },
+    {
+      "schema_version": 1,
+      "paper_id": "ref_dixon_rnn_lob_1707.05642",
+      "title": "Sequence Classification of the Limit Order Book using Recurrent Neural Networks",
+      "source": {
+        "path": "sources/papers/ref_dixon_rnn_lob_1707.05642.pdf",
+        "filename": "ref_dixon_rnn_lob_1707.05642.pdf",
+        "sha256": "57d457d2f740a04c54286ed3595d2182964da763caf35682f3e5d83435991277",
+        "bytes": 624204
+      },
+      "conversion": {
+        "tool": "docling",
+        "version": "2.114.0",
+        "generated_at": "2026-07-21T13:58:10.518731+00:00",
+        "device": "auto",
+        "ocr": false,
+        "table_mode": "accurate",
+        "formula_enrichment": false,
+        "chunker": "hybrid",
+        "chunk_max_tokens": 480
+      },
+      "document": {
+        "pages": 20,
+        "text_blocks": 599,
+        "tables": 4,
+        "pictures": 10,
+        "markdown_chars": 56967,
+        "math_blocks": 11,
+        "chunks": 42,
+        "max_chunk_tokens": 486,
+        "pages_in_chunks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ]
+      },
+      "quality": {
+        "source_text_chars": 55204,
+        "markdown_to_source_text_ratio": 1.0319,
+        "has_abstract": true,
+        "has_references": true
+      }
+    }
+  ]
+}

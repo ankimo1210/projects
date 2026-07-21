@@ -53,6 +53,22 @@ def normalize_markdown(markdown: str, paper_id: str) -> str:
     return clean_math_whitespace(markdown)
 
 
+def normalize_document_artifact_paths(value: Any, paper_id: str) -> Any:
+    """Replace Docling's staging paths with portable corpus-relative image paths."""
+    if isinstance(value, dict):
+        return {
+            key: normalize_document_artifact_paths(item, paper_id) for key, item in value.items()
+        }
+    if isinstance(value, list):
+        return [normalize_document_artifact_paths(item, paper_id) for item in value]
+    if isinstance(value, str):
+        artifact_pattern = re.compile(rf"(?:^|[/\\]){re.escape(paper_id)}_artifacts[/\\]([^/\\]+)$")
+        match = artifact_pattern.search(value)
+        if match:
+            return f"images/{match.group(1)}"
+    return value
+
+
 def extract_title(markdown: str, fallback: str) -> str:
     for line in markdown.splitlines():
         if line.startswith("# "):
@@ -132,7 +148,13 @@ def prepare_paper(
     markdown = normalize_markdown(staged_markdown.read_text(encoding="utf-8"), paper_id)
     title = extract_title(markdown, paper_id)
     (destination / "document.md").write_text(markdown, encoding="utf-8")
-    shutil.copy2(staged_json, destination / "document.json")
+    document = normalize_document_artifact_paths(
+        json.loads(staged_json.read_text(encoding="utf-8")), paper_id
+    )
+    (destination / "document.json").write_text(
+        json.dumps(document, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
     artifacts = staging / f"{paper_id}_artifacts"
     if artifacts.is_dir():
@@ -149,7 +171,6 @@ def prepare_paper(
         source_sha256=source_digest,
         docling_version=docling_version,
     )
-    document = json.loads(staged_json.read_text(encoding="utf-8"))
     page_count = len(document.get("pages", {}))
     raw_text_chars = source_text_chars(pdf)
     extraction_ratio = len(markdown) / raw_text_chars if raw_text_chars else None

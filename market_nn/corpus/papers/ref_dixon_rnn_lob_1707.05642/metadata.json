@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "paper_id": "ref_dixon_rnn_lob_1707.05642",
+  "title": "Sequence Classification of the Limit Order Book using Recurrent Neural Networks",
+  "source": {
+    "path": "sources/papers/ref_dixon_rnn_lob_1707.05642.pdf",
+    "filename": "ref_dixon_rnn_lob_1707.05642.pdf",
+    "sha256": "57d457d2f740a04c54286ed3595d2182964da763caf35682f3e5d83435991277",
+    "bytes": 624204
+  },
+  "conversion": {
+    "tool": "docling",
+    "version": "2.114.0",
+    "generated_at": "2026-07-21T13:58:10.518731+00:00",
+    "device": "auto",
+    "ocr": false,
+    "table_mode": "accurate",
+    "formula_enrichment": false,
+    "chunker": "hybrid",
+    "chunk_max_tokens": 480
+  },
+  "document": {
+    "pages": 20,
+    "text_blocks": 599,
+    "tables": 4,
+    "pictures": 10,
+    "markdown_chars": 56967,
+    "math_blocks": 11,
+    "chunks": 42,
+    "max_chunk_tokens": 486,
+    "pages_in_chunks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ]
+  },
+  "quality": {
+    "source_text_chars": 55204,
+    "markdown_to_source_text_ratio": 1.0319,
+    "has_abstract": true,
+    "has_references": true
+  }
+}
