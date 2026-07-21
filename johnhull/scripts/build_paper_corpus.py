@@ -7,7 +7,8 @@ the workspace root with::
     uv run --no-project --with pymupdf4llm \
         python johnhull/scripts/build_paper_corpus.py --sample
 
-Use ``--all`` after reviewing the five-paper sample quality report.
+Use ``--all`` after reviewing the five-paper sample quality report. Add
+``--resume`` to reuse validated per-paper outputs after an interrupted run.
 """
 
 from __future__ import annotations
@@ -81,6 +82,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--ocr-language", default="eng")
     parser.add_argument("--force-ocr", action="store_true")
     parser.add_argument(
+        "--resume",
+        action="store_true",
+        help="With --all, reuse validated per-paper outputs and rebuild corpus indexes.",
+    )
+    parser.add_argument(
         "--write-images",
         action=argparse.BooleanOptionalAction,
         default=True,
@@ -103,6 +109,8 @@ def parse_args() -> argparse.Namespace:
         parser.error("--max-chunk-chars must be at least 1000")
     if args.overlap_chars < 0 or args.overlap_chars >= args.max_chunk_chars:
         parser.error("--overlap-chars must be non-negative and smaller than max-chunk-chars")
+    if args.resume and not args.all:
+        parser.error("--resume requires --all")
     return args
 
 
@@ -392,6 +400,25 @@ def write_jsonl(path: Path, records: list[dict[str, Any]]) -> None:
     path.write_text("\n".join(lines) + ("\n" if lines else ""), encoding="utf-8")
 
 
+def read_json(path: Path) -> dict[str, Any]:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise TypeError(f"expected JSON object: {path}")
+    return value
+
+
+def read_jsonl(path: Path) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+        if not line.strip():
+            continue
+        value = json.loads(line)
+        if not isinstance(value, dict):
+            raise TypeError(f"expected JSON object: {path}:{line_number}")
+        records.append(value)
+    return records
+
+
 def validate_generated_output(
     paper_dir: Path,
     paper_markdown: str,
@@ -430,6 +457,91 @@ def relative_to_project(path: Path) -> str:
         return path.resolve().relative_to(PROJECT_ROOT).as_posix()
     except ValueError:
         return path.resolve().as_posix()
+
+
+def conversion_options(args: argparse.Namespace) -> dict[str, Any]:
+    return {
+        "header": False,
+        "footer": False,
+        "use_ocr": True,
+        "force_ocr": args.force_ocr,
+        "ocr_language": args.ocr_language,
+        "write_images": args.write_images,
+        "max_chunk_chars": args.max_chunk_chars,
+        "overlap_chars": args.overlap_chars,
+    }
+
+
+def make_index_entry(
+    metadata: dict[str, Any],
+    pages: list[dict[str, Any]],
+    chunks: list[dict[str, Any]],
+    quality: dict[str, Any],
+) -> dict[str, Any]:
+    paper_id = str(metadata["paper_id"])
+    return {
+        **{key: metadata[key] for key in ("paper_id", "title", "authors", "year", "source_url")},
+        "page_count": len(pages),
+        "chunk_count": len(chunks),
+        "quality_status": quality["status"],
+        "paper_markdown": f"{paper_id}/paper.md",
+    }
+
+
+def load_cached_output(
+    converter: Any,
+    pdf_path: Path,
+    output_root: Path,
+    catalog: dict[str, CatalogEntry],
+    args: argparse.Namespace,
+) -> tuple[dict[str, Any], list[dict[str, Any]], dict[str, Any]] | None:
+    paper_id = pdf_path.stem
+    paper_dir = output_root / paper_id
+    try:
+        metadata = read_json(paper_dir / "metadata.json")
+        pages = read_jsonl(paper_dir / "pages.jsonl")
+        chunks = read_jsonl(paper_dir / "chunks.jsonl")
+        quality = read_json(paper_dir / "quality.json")
+        paper_markdown = (paper_dir / "paper.md").read_text(encoding="utf-8")
+
+        if metadata["paper_id"] != paper_id:
+            raise ValueError("paper id changed")
+        if metadata["source_pdf"] != relative_to_project(pdf_path):
+            raise ValueError("source path changed")
+        if metadata["source_sha256"] != sha256_file(pdf_path):
+            raise ValueError("source PDF changed")
+        if metadata["converter"] != f"PyMuPDF4LLM {converter.__version__}":
+            raise ValueError("converter version changed")
+        if metadata["conversion_options"] != conversion_options(args):
+            raise ValueError("conversion options changed")
+
+        catalog_entry = catalog.get(pdf_path.name)
+        if catalog_entry is None:
+            if "catalog metadata missing" not in quality.get("warnings", []):
+                raise ValueError("catalog entry was removed")
+        else:
+            expected_catalog = {
+                "title": catalog_entry.title,
+                "authors": catalog_entry.authors,
+                "year": catalog_entry.year,
+                "source_url": catalog_entry.source_url,
+            }
+            if any(metadata[key] != value for key, value in expected_catalog.items()):
+                raise ValueError("catalog metadata changed")
+
+        image_count = validate_generated_output(paper_dir, paper_markdown, pages, chunks)
+        if quality["page_count"] != len(pages):
+            raise ValueError("cached page count changed")
+        if quality["chunk_count"] != len(chunks):
+            raise ValueError("cached chunk count changed")
+        if quality["image_files"] != image_count:
+            raise ValueError("cached image count changed")
+    except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError, RuntimeError) as exc:
+        print(f"Rebuilding {pdf_path.name}: {exc}", file=sys.stderr, flush=True)
+        return None
+
+    print(f"Reusing {pdf_path.name}...", file=sys.stderr, flush=True)
+    return make_index_entry(metadata, pages, chunks, quality), chunks, quality
 
 
 def convert_pdf(
@@ -476,16 +588,7 @@ def convert_pdf(
         "source_pdf": relative_to_project(pdf_path),
         "source_sha256": sha256_file(pdf_path),
         "converter": f"PyMuPDF4LLM {converter.__version__}",
-        "conversion_options": {
-            "header": False,
-            "footer": False,
-            "use_ocr": True,
-            "force_ocr": args.force_ocr,
-            "ocr_language": args.ocr_language,
-            "write_images": args.write_images,
-            "max_chunk_chars": args.max_chunk_chars,
-            "overlap_chars": args.overlap_chars,
-        },
+        "conversion_options": conversion_options(args),
         "pdf_metadata": {
             key: value
             for key, value in pdf_metadata.items()
@@ -501,13 +604,7 @@ def convert_pdf(
     image_count = validate_generated_output(paper_dir, paper_markdown, pages, chunks)
     quality = quality_metrics(paper_id, pages, chunks, image_count, catalog_entry)
     write_json(paper_dir / "quality.json", quality)
-    index_entry = {
-        **{key: metadata[key] for key in ("paper_id", "title", "authors", "year", "source_url")},
-        "page_count": len(pages),
-        "chunk_count": len(chunks),
-        "quality_status": quality["status"],
-        "paper_markdown": f"{paper_id}/paper.md",
-    }
+    index_entry = make_index_entry(metadata, pages, chunks, quality)
     return index_entry, chunks, quality
 
 
@@ -543,9 +640,13 @@ def main() -> int:
     corpus: list[dict[str, Any]] = []
     qualities: list[dict[str, Any]] = []
     for pdf_path in pdfs:
-        index_entry, chunks, quality = convert_pdf(
-            converter, pdf_path, output_root, catalog, args
-        )
+        cached = load_cached_output(converter, pdf_path, output_root, catalog, args) if args.resume else None
+        if cached is None:
+            index_entry, chunks, quality = convert_pdf(
+                converter, pdf_path, output_root, catalog, args
+            )
+        else:
+            index_entry, chunks, quality = cached
         index.append(index_entry)
         corpus.extend(chunks)
         qualities.append(quality)
