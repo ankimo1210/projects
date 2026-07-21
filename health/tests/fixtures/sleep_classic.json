@@ -1,0 +1,39 @@
+{
+  "dataPoints": [
+    {
+      "dataPointName": "users/me/dataTypes/sleep/dataPoints/fake-sleep-classic-1",
+      "sleep": {
+        "createTime": "2026-07-03T07:05:00Z",
+        "interval": {
+          "civilStartTime": {"date": {"year": 2026, "month": 7, "day": 2},
+                             "time": {"hours": 23, "minutes": 0, "nanos": 0, "seconds": 0}},
+          "civilEndTime": {"date": {"year": 2026, "month": 7, "day": 3},
+                           "time": {"hours": 6, "minutes": 30, "nanos": 0, "seconds": 0}},
+          "endTime": "2026-07-03T06:30:00Z",
+          "endUtcOffset": "32400s",
+          "startTime": "2026-07-02T23:00:00Z",
+          "startUtcOffset": "32400s"
+        },
+        "metadata": {
+          "externalId": "fake-ext-2",
+          "manuallyEdited": false,
+          "nap": false,
+          "processed": true,
+          "stagesStatus": "UNKNOWN"
+        },
+        "outOfBedSegments": [],
+        "stages": [],
+        "summary": {
+          "minutesAfterWakeUp": "0",
+          "minutesAsleep": "390",
+          "minutesAwake": "20",
+          "minutesInSleepPeriod": "410",
+          "minutesToFallAsleep": "5",
+          "stagesSummary": []
+        },
+        "type": "CLASSIC",
+        "updateTime": "2026-07-03T07:05:00Z"
+      }
+    }
+  ]
+}

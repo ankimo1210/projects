@@ -1,0 +1,20 @@
+{
+  "dataPoints": [
+    {
+      "dataPointName": "users/me/dataTypes/steps/dataPoints/fake-steps-intraday-1",
+      "steps": {
+        "count": "12",
+        "interval": {
+          "civilEndTime": {"date": {"year": 2026, "month": 7, "day": 1},
+                           "time": {"hours": 0, "minutes": 1, "nanos": 0, "seconds": 0}},
+          "civilStartTime": {"date": {"year": 2026, "month": 7, "day": 1},
+                             "time": {"hours": 0, "minutes": 0, "nanos": 0, "seconds": 0}},
+          "endTime": "2026-07-01T00:01:00Z",
+          "endUtcOffset": "32400s",
+          "startTime": "2026-07-01T00:00:00Z",
+          "startUtcOffset": "32400s"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "dataPoints": [
+    {
+      "dataPointName": "users/me/dataTypes/sleep/dataPoints/fake-sleep-stages-1",
+      "sleep": {
+        "createTime": "2026-07-02T07:10:00Z",
+        "interval": {
+          "civilStartTime": {"date": {"year": 2026, "month": 7, "day": 1},
+                             "time": {"hours": 23, "minutes": 30, "nanos": 0, "seconds": 0}},
+          "civilEndTime": {"date": {"year": 2026, "month": 7, "day": 2},
+                           "time": {"hours": 7, "minutes": 0, "nanos": 0, "seconds": 0}},
+          "endTime": "2026-07-02T07:00:00Z",
+          "endUtcOffset": "32400s",
+          "startTime": "2026-07-01T23:30:00Z",
+          "startUtcOffset": "32400s"
+        },
+        "metadata": {
+          "externalId": "fake-ext-1",
+          "manuallyEdited": false,
+          "nap": false,
+          "processed": true,
+          "stagesStatus": "STAGES"
+        },
+        "outOfBedSegments": [],
+        "stages": [
+          {
+            "createTime": "2026-07-02T07:10:00Z",
+            "endTime": "2026-07-02T00:30:00Z",
+            "endUtcOffset": "32400s",
+            "startTime": "2026-07-01T23:30:00Z",
+            "startUtcOffset": "32400s",
+            "type": "LIGHT",
+            "updateTime": "2026-07-02T07:10:00Z"
+          }
+        ],
+        "summary": {
+          "minutesAfterWakeUp": "5",
+          "minutesAsleep": "420",
+          "minutesAwake": "30",
+          "minutesInSleepPeriod": "450",
+          "minutesToFallAsleep": "10",
+          "stagesSummary": [
+            {"count": "4", "minutes": "80", "type": "DEEP"},
+            {"count": "6", "minutes": "220", "type": "LIGHT"},
+            {"count": "5", "minutes": "100", "type": "REM"},
+            {"count": "3", "minutes": "20", "type": "AWAKE"}
+          ]
+        },
+        "type": "STAGES",
+        "updateTime": "2026-07-02T07:10:00Z"
+      }
+    }
+  ]
+}
