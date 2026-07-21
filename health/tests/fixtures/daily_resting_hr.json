@@ -1,0 +1,18 @@
+{
+  "dataPoints": [
+    {
+      "dataPointName": "users/me/dataTypes/daily-resting-heart-rate/dataPoints/fake-resting-hr-1",
+      "dailyRestingHeartRate": {
+        "beatsPerMinute": "58",
+        "date": {"year": 2026, "month": 7, "day": 1}
+      }
+    },
+    {
+      "dataPointName": "users/me/dataTypes/daily-resting-heart-rate/dataPoints/fake-resting-hr-2",
+      "dailyRestingHeartRate": {
+        "beatsPerMinute": "60",
+        "date": {"year": 2026, "month": 7, "day": 2}
+      }
+    }
+  ]
+}

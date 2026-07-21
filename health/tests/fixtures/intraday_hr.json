@@ -1,0 +1,29 @@
+{
+  "dataPoints": [
+    {
+      "dataPointName": "users/me/dataTypes/heart-rate/dataPoints/fake-hr-1",
+      "heartRate": {
+        "beatsPerMinute": "63",
+        "sampleTime": {
+          "civilTime": {"date": {"year": 2026, "month": 7, "day": 1},
+                        "time": {"hours": 0, "minutes": 1, "nanos": 0, "seconds": 0}},
+          "physicalTime": "2026-07-01T00:01:00Z",
+          "utcOffset": "32400s"
+        }
+      }
+    },
+    {
+      "dataPointName": "users/me/dataTypes/heart-rate/dataPoints/fake-hr-2",
+      "heartRate": {
+        "beatsPerMinute": "65",
+        "sampleTime": {
+          "civilTime": {"date": {"year": 2026, "month": 7, "day": 1},
+                        "time": {"hours": 0, "minutes": 2, "nanos": 0, "seconds": 0}},
+          "physicalTime": "2026-07-01T00:02:00Z",
+          "utcOffset": "32400s"
+        }
+      }
+    }
+  ],
+  "nextPageToken": "fake-page-token-1"
+}
