@@ -1,4 +1,7 @@
-.PHONY: verify-provenance test smoke lint
+.PHONY: verify-provenance test smoke lint paper-corpus paper-corpus-check
+
+DOCLING_VERSION := 2.114.0
+PAPER_CORPUS_ARGS ?=
 
 verify-provenance:
 	uv run --directory .. --no-sync --package lob-paper-reproductions lob-repro evidence build
@@ -12,3 +15,9 @@ smoke:
 lint:
 	uv run --directory .. --no-sync ruff check market_nn/src market_nn/tests market_nn/scripts
 	uv run --directory .. --no-sync ruff format --check market_nn/src market_nn/tests market_nn/scripts
+
+paper-corpus:
+	uvx --from docling==$(DOCLING_VERSION) python scripts/build_paper_corpus.py --overwrite $(PAPER_CORPUS_ARGS)
+
+paper-corpus-check:
+	uvx --from docling==$(DOCLING_VERSION) python scripts/build_paper_corpus.py --check-only

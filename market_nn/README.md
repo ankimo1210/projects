@@ -50,6 +50,7 @@ uv run --package lob-paper-reproductions python \
 make -C market_nn verify-provenance
 make -C market_nn test
 make -C market_nn smoke
+make -C market_nn paper-corpus
 ```
 
 コマンドの import 時にダウンロードや学習は発生しません。TensorFlow は公式 TF2
@@ -69,6 +70,13 @@ make -C market_nn smoke
 根拠、差分、未解決事項は [docs/source_audit.md](docs/source_audit.md)、
 [docs/evidence_ledger.md](docs/evidence_ledger.md)、
 [docs/discrepancy_matrix.md](docs/discrepancy_matrix.md) を参照してください。
+
+## AI 向け論文コーパス
+
+`sources/papers/` の PDF は Docling `2.114.0` で Markdown、構造化 JSON、検索用
+JSONL chunk、画像へ変換できる。生成物は Git 管理外の `corpus/papers/` に置き、
+各 chunk から原本 PDF、ページ、SHA-256 を追跡できる。生成方法、出力形式、数式補完の
+要件は [docs/paper_corpus.md](docs/paper_corpus.md) を参照。
 
 ## 主張できること / できないこと
 
