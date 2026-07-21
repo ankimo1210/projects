@@ -43,7 +43,7 @@
 # comments cite corrections through 2021). This is accumulated upstream
 # transcription drift between two independently-maintained archives, not a
 # bug in this script.
-set -uo pipefail
+set -euo pipefail
 cd "$(dirname "$0")/.."
 YAYUL=$PWD/build/agc/yaYUL
 
