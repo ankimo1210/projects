@@ -155,7 +155,13 @@ Figure 4: Probability that the future best ask price Y = y given that Y ≥ y &g
 
 Although Figure 3 is compelling, it is only one stock. A detailed analysis is now conducted across the entire dataset of 489 stocks. The results provide strong evidence for local spatial structure. For each stock, we perform a logistic regression similar to Figure 3. Specifically, let Y be the best ask price at t +∆ t . Without loss of generality, let 0 be the current best ask price at time t and let the best ask price at time t be the frame of reference for the entire limit order book. We fit a logistic regression for:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0001" status="text_layer_fallback" source-page="15" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0001](images/formula_0001.png)
+```text
+PDF text layer: P [ Y > y | Y ≥ y ] = ( 1 + exp( b + θ · ( size at level y -K,..., size at level y + K ) -1 , y > 0 , (1)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 15. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where b ∈ R , θ = ( θ y -K , . . . , θ y + K ) ∈ R 2 K +1 , and K = 10 . The sizes are from the current limit order book state at time t and are normalized. Ask sizes are given a positive sign, while bid sizes are given a negative sign. 9 Ignoring bid sizes and performing the statistical analysis solely for ask sizes yields similar results. Bid/ask sizes are from the state of the limit order book at time t . The time horizon ∆ t is 1 second.
 
@@ -165,13 +171,25 @@ We fit the logistic regression (1) for each stock in the dataset, resulting in 4
 
 θ 1 , . . . , θ 489 . Fitting is performed on the time period January 1, 2014 until May 31, 2015 (which will also be the training set used later in this paper for fitting models). For each stock j , the following 'coefficient ratio' is calculated:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0002" status="text_layer_fallback" source-page="16" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0002](images/formula_0002.png)
+```text
+PDF text layer: Coefficient ratio for stock j = max y -p,...,y + p θ j y max y ′ = y -K,...,y -p -1 ,y + p +1 ,...,y + K | θ j y ′ | . (2)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 16. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 The coefficient ratio (2) compares the local influence of levels close to y versus the influence of levels farther away. θ j y ′ is the coefficient for the size at level y ′ for stock j . The larger the magnitude of the coefficient θ j y ′ , the greater the dependence on the size at level y ′ . If p = 0 :
 
 ̸
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0003" status="text_layer_fallback" source-page="16" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0003](images/formula_0003.png)
+```text
+PDF text layer: Coefficient ratio for stock j = θ j y max y ′ = y | θ j y ′ | , (3)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 16. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 and the coefficient ratio measures the influence of the size locally at level y versus the sizes at levels y -K,... , y -1 , y +1 , . . . , y + K . It also gives the direction of the dependence on the size at level y . If (3) is positive, then P [ Y &gt; y | Y ≥ y ] decreases as the size at level y increases. Table 2 gives summary statistics for the coefficient ratio (2) across all the stocks in the dataset. There is a strong dependence on the local size at level y for the majority of stocks. The sign is also positive.
 
@@ -196,13 +214,25 @@ Figure 5: Plot of the coefficient ratio with p = 0 versus the standard deviation
 
 The limit order book's local structure motivates a simple local model for the upper tail of the best ask price, which will later form the core of the new neural network architecture proposed in Section 4.3. Let Y be the future best ask price and let x y be the size at level y . Then, conditional on an increase in the best ask price (i.e., Y &gt; 0 ), we can model the magnitude of the increase as follows:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0004" status="text_layer_fallback" source-page="17" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0004](images/formula_0004.png)
+```text
+PDF text layer: P [ Y = y | Y ≥ y ] = f ( x y ) , y > 0 . (4)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 17. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 (4) completely describes the distribution of the random variable Y conditional on it increasing. It is analogous to modeling Y as a geometric random variable, but with a non-constant probability of increasing at each step which depends locally upon the state of the limit order book. (4) mimics the local behavior described in Sections 3.1 and 3.2. Note that P [ Y &gt; y | Y ≥ y ] is simply 1 -f ( x y ) .
 
 Although (4) has a local dependence on the state of the limit order book (only taking as an input the size at level y ), globally the distribution of Y depends upon all of the ask sizes . That is,
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0005" status="text_layer_fallback" source-page="18" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0005](images/formula_0005.png)
+```text
+PDF text layer: P [ Y = y | Y > 0] = f ( x y ) y -1 ∏ y ′ =1 ( 1 -f ( x y ′ ) ) , y > 0 . (5)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 18. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 An alternative to (4) would be to model P [ Y = y | Y &gt; 0] as a function g ( y, x 1 , x 2 , . . . , x L ) where L is the total number of levels in the limit order book. The function g is far more complex than the function f due to the high-dimensionality of the former's input. Furthermore, if the local behavior in (4) holds, (5) shows that g will depend in a nontrivial way upon all the ask sizes as it will be the composition of many f functions. Even if f takes a simple form (such as a logistic regression), the global distribution (5) will be highly nonlinear, requiring g to also be highly nonlinear.
 
@@ -226,19 +256,37 @@ The basic neural network for classification is a highly nonlinear parameterized 
 
 Given an input x , the output f θ,l ( x ) ∈ R d l of the l -th layer of a neural network is
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0006" status="text_layer_fallback" source-page="19" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0006](images/formula_0006.png)
+```text
+PDF text layer: f θ,l ( x ) = g l ( W l f θ,l -1 ( x ) + b l ) , l = 1 , . . . , L, (6)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 19. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where W l ∈ R d l × R d l -1 , b l ∈ R d l , f θ, 0 ( x ) = x , and d L = |Y| . For l = 1 , . . . , L -1 , the nonlinear transformation g l ( z ) = ( σ ( z 1 ) , . . . , σ ( z d l ) ) for z ∈ R d l and z 1 , . . . , z d l ∈ R . The function σ is nonlinear; typical choices are sigmoidal functions, tanh, rectified linear units (ReLU), and clipped rectified linear units.
 
 The function g L for the final layer L is the softmax function g .
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0007" status="text_layer_fallback" source-page="20" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0007](images/formula_0007.png)
+```text
+PDF text layer: g ( z ) = ( e z 1 ∑ d L i =1 e z i , . . . , e z d L ∑ d L i =1 e z i ) , z ∈ R d L . (7)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 20. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 The final output of the neural network f θ,L ( x ) is a probability distribution on Y conditional on the features x . The parameters collectively are θ = ( W 1 , . . . , W L , b 1 , . . . , b L ) , where L is the number of layers in the neural network. The objective is to choose the parameters θ such that the log-likelihood L of the neural network's output f θ,L is maximized for the data.
 
 Let the data be D = { ( x 1 , y 1 ) , . . . , ( x N , y N ) } where ( x n , y n ) ∈ X × Y . Then, the normalized loglikelihood of the data for the neural network model is
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0008" status="text_layer_fallback" source-page="20" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0008](images/formula_0008.png)
+```text
+PDF text layer: L ( D ) = 1 N N ∑ n =1 ∑ y ∈Y 1 y = y n log f y θ,L ( x n ) , (8)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 20. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where f y θ,L is the y -th element of the vector f θ,L .
 
@@ -256,7 +304,13 @@ There are other disadvantages to applying the standard neural network to modelin
 
 There is a straightforward modification to create a neural network which generalizes over space. This modification has been studied before; for instance, see Likas (2001). Let f θ ( x, y ) : X × Y → R be the unnormalized log-probability of the event y conditional on the feature x , where f θ ( x, y ) is a neural network with inputs ( x, y ) . The probability of y conditional on the feature x is
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0009" status="text_layer_fallback" source-page="22" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0009](images/formula_0009.png)
+```text
+PDF text layer: e f θ ( x,y ) ∑ y ′ ∈Y e f θ ( x,y ′ ) . (9)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 22. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Due to the continuity of f θ , the probabilities (conditional on the feature x ) of y 1 and y 2 will be close if the distance between y 1 and y 2 is small.
 
@@ -268,7 +322,13 @@ A second disadvantage is that (9) cannot model distributions on R d but instead 
 
 This section develops a new neural network architecture for modeling distributions on R d (the 'spatial neural network'). We first consider modeling a distribution on R + = (0 , ∞ ) , which is discretized into R + = r 1 , r 2 , . . . . Later this is extended to the more general case of R d . Let f θ ( x, y ) : X × R → R be a neural network. The distribution of a random variable Y ∈ R + conditional on the random variable X ∈ X is completely specified by the following model:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0010" status="text_layer_fallback" source-page="22" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0010](images/formula_0010.png)
+```text
+PDF text layer: P [ Y = y ∣ ∣ Y ≥ y, X = x ] = e f θ ( x,y ) 1 + e f θ ( x,y ) . (10)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 22. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 (10) is analogous to a 'geometric random variable' with a non-constant probability of increasing at each step.
 
@@ -282,7 +342,13 @@ See Appendices B and C for the proof. Theorem 4.1 covers many common choices of 
 
 The log-likelihood of the model (10) for a training sample ( x, y ) is
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0011" status="text_layer_fallback" source-page="23" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0011](images/formula_0011.png)
+```text
+PDF text layer: L ( { ( x, y ) } ) = log ( e f θ ( x,y ) 1 + e f θ ( x,y ) ) + ∑ y ′ ∈R + : y ′ <y log ( 1 1 + e f θ ( x,y ′ ) ) (11)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 23. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 The architecture (10) has two advantages over (9). The first is that the neural network f θ ( x, y ) and its gradient need to be evaluated at far fewer grid points. For each sample ( x, y ) , (10) only needs to be evaluated up until y while (9) needs to be evaluated on the entire grid. Secondly, (10) can model the entire space R + ; there is no need to form a truncated grid as in (9).
 
@@ -294,15 +360,33 @@ The architecture (10) has two advantages over (9). The first is that the neural 
 
 (12)
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0012" status="text_layer_fallback" source-page="24" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0012](images/formula_0012.png)
+```text
+PDF text layer: P [ Y = ( y 1 , . . . , y d ) ∣ ∣ X = x ] = P [ Y 1 = y 1 ∣ ∣ X = x ] d ∏ i =2 P [ Y i = y i ∣ ∣ Y 0: i -1 = y 0: i -1 , X = x ] , P [ Y 1 = y 1 ∣ ∣ X = x ] = g 1 θ ( x, y 1 ) , P [ Y i = y i ∣ ∣ Y 0: i -1 = y 0: i -1 , X = x ] = g i θ ( x, y 0: i -1 , y i ) ,
+```
+*Formula quality: `text_layer_fallback`; source PDF page 24. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 The conditional distributions g 1 , . . . , g d will be functions of neural networks, which will be specified shortly. Note that the framework (12) avoids the curse of dimensionality for large d since the computational expense of the log-likelihood grows linearly with d : 13
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0013" status="text_layer_fallback" source-page="24" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0013](images/formula_0013.png)
+```text
+PDF text layer: L ( { ( x, y ) } ) = log ( g 1 θ ( x, y 1 ) ) + d ∑ i =2 log ( g i θ ( x, y 0: i -1 , y i ) ) . (13)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 24. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 The conditional distribution of Y 1 conditional on X is completely specified by:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0014" status="text_layer_fallback" source-page="24" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0014](images/formula_0014.png)
+```text
+PDF text layer:              P [ Y 1 = y 1 ∣ ∣ Y 1 ≥ y 1 , X = x ] = e f 1 , + θ ( x,y 1 ) 1+ e f 1 , + θ ( x,y 1 ) y 1 ≥ r 1 P [ Y 1 = z | X = x ] = h 1 ,z θ ( x ) z ∈ { y 1 > 0 } , { y 1 = 0 } , { y 1 < 0 } P [ Y 1 = y 1 ∣ ∣ Y 1 ≤ y 1 , X = x ] = e f 1 , -θ ( x,y 1 ) 1+ e f 1 , -θ ( x,y 1 ) y 1 ≤ r -1
+```
+*Formula quality: `text_layer_fallback`; source PDF page 24. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 f 1 , -θ : X × R → R and f 1 , + θ : X × R → R are neural networks. The neural network h 1 θ ( x ) is a standard neural network for classification (as described in Section 4) which produces a vector of three probabilities for the events { y 1 &gt; 0 } , { y 1 = 0 } , { y 1 &lt; 0 } , and h 1 ,z θ ( x ) is the z -th vector element of h 1 θ ( x ) . The standard neural network for classification h 1 θ is required to 'stitch' together R + and R -= . . . , r -2 , r -1 .
 
@@ -310,11 +394,23 @@ Similarly, the conditional distribution of Y i conditional on ( Y 0: i -1 , X ) 
 
 13 The approach (12) can also be used with the standard neural network architecture. In order to make a fair comparison between the models, we use the approach (12) for the logistic regression, standard neural network, and spatial neural network in Section 6. Without the 'dimension splitting' operation in (12), training becomes impractical for the standard neural network even in low dimensions due to the large number of grid points.
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0015" status="text_layer_fallback" source-page="25" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0015](images/formula_0015.png)
+```text
+PDF text layer:              P [ Y i = y i ∣ ∣ Y i ≥ y i , Y 0: i -1 = y 0: i -1 , X = x ] = e f i, + θ ( x,y 0: i -1 ,y i ) 1+ e f i, + θ ( x,y 0: i -1 ,y i ) y i ≥ r 1 P [ Y i = z | Y 0: i -1 = y 0: i -1 , X = x ] = h i,z θ ( x, y 0: i -1 ) z ∈ { y i > 0 } , { y i = 0 } , { y i < 0 } P [ Y i = y i ∣ ∣ Y i ≤ y i , Y 0: i -1 = y 0: i -1 , X = x ] = e f i, -θ ( x,y 0: i -1 ,y i ) 1+ e f i, -θ ( x,y 0: i -1 ,y i ) y i ≤ r -1
+```
+*Formula quality: `text_layer_fallback`; source PDF page 25. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Example 4.2 (Limit Order Book) . Modeling the best ask and best bid prices at a future time conditional on the current state of the limit order book is equivalent to modeling the change in the best ask and best bid prices. We measure the change by the number of levels that the best ask and best bid prices move.
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0016" status="text_layer_fallback" source-page="25" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0016](images/formula_0016.png)
+```text
+PDF text layer: ( Y 1 , Y 2 ) = ( change in best ask price , change in best bid price ) ∈ ( . . . , -2 , -1 , 0 , 1 , 2 , . . . ) 2 .
+```
+*Formula quality: `text_layer_fallback`; source PDF page 25. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 The neural network h 1 predicts whether the best ask price will increase, decrease, or stay the same. If h 1 predicts that the best ask increases, f 1 , + predicts how many levels it will increase. If h 1 predicts that the best ask decreases, f 1 , -predicts how many levels it will decrease. h 2 , f 2 , + , and f 2 , -play similar roles for the best bid price.
 
@@ -607,7 +703,13 @@ LLTC, JD, NVDA, COG, BBBY, HAS, BRK.B, AES, ADT, HRS, GILD, ABBV, BA, ALXN, ALKS
 
 Without loss of generality let, R + = { 1 , 2 , . . . } . Let q k = P [ Y = k | Y ≥ k ] for k = 1 , 2 , . . . . If the hidden units are bounded, the output of the neural network f θ ( x, y ) is bounded. Since q k is the softmax of a bounded function, 0 &lt; a ≤ q k ≤ b &lt; 1 . Let p k = P [ Y = k ] = q k ∏ k -1 i =1 (1 -q i ) . Also, define:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0017" status="text_layer_fallback" source-page="45" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0017](images/formula_0017.png)
+```text
+PDF text layer: F N = N ∑ n =1 p n . (14)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 45. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 We want to show that F N → 1 as N → ∞ . In other words, the distribution of Y does not have positive mass at + ∞ .
 
@@ -615,11 +717,23 @@ Let ˜ q k = q k for k ≤ N and ˜ q N +1 = 1 . Let ˜ p k = ˜ q k ∏ k -1 i 
 
 Note that F N can be rewritten as:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0018" status="text_layer_fallback" source-page="45" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0018](images/formula_0018.png)
+```text
+PDF text layer: F N = N ∑ n =1 p n = N ∑ n =1 ˜ p n = 1 -P [ Z > N ] = 1 -N ∏ n =1 (1 -˜ q n ) = 1 -N ∏ n =1 (1 -q n ) (15)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 45. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Now, we have that for all N :
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0019" status="text_layer_fallback" source-page="46" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0019](images/formula_0019.png)
+```text
+PDF text layer: 1 -N ∏ n =1 (1 -a ) ≤ F N ≤ 1 -N ∏ n =1 (1 -b ) (16)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 46. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 The LHS and RHS converge to 1 , which shows F N → 1 .
 
@@ -631,11 +745,23 @@ In general, if q k has no positive lower bound, F N may not converge to 1 . This
 
 Rectified linear units are of the form max( z, 0) for an input z . We re-state the equation for F N from Section B:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0020" status="text_layer_fallback" source-page="46" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0020](images/formula_0020.png)
+```text
+PDF text layer: F N = 1 -N ∏ n =1 (1 -q n ) . (17)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 46. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Recall that
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0021" status="text_layer_fallback" source-page="46" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0021](images/formula_0021.png)
+```text
+PDF text layer: 1 -q n = 1 1 + e f θ ( x,n ) , (18)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 46. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where f θ is a neural network with ReLU hidden units. If all hidden units of the neural network f θ ( x, y ) are ReLU units, f θ ( x, y ) has three possible forms for large y : (1) 0 , (2) C 2 + K 2 y , or (3) C 3 -K 3 y . More precisely, there exists an N 0 such that f θ ( x, y ) equals either (1), (2), or (3) for all y ≥ N 0 . The specific form the neural network takes for large y depends upon the parameters θ . F N → 1 as N →∞ for cases (1) and (2). However, F N → ¯ F where 0 &lt; ¯ F &lt; 1 in case (3).
 
@@ -643,25 +769,55 @@ To prove that F N → ¯ F where 0 &lt; ¯ F &lt; 1 in case (3), we will show an
 
 however, this limit will not be 1 .
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0022" status="text_layer_fallback" source-page="47" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0022](images/formula_0022.png)
+```text
+PDF text layer: F N = 1 -N ∏ n =1 1 1 + e f θ ( x,n ) = 1 -exp ( -N ∑ n =1 log(1 + e f θ ( x,n ) ) ) . (19)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 47. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Using the inequality log(1 + z ) ≤ z for z &gt; -1 :
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0023" status="text_layer_fallback" source-page="47" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0023](images/formula_0023.png)
+```text
+PDF text layer: N ∑ n =1 log(1 + e f θ ( x,n ) ) ≤ N ∑ n =1 e f θ ( x,n ) ≤ D 3 + N ∑ n = N 0 e f θ ( x,n ) = D 3 + N ∑ n = N 0 e C 3 -K 3 n ≤ D 3 + e C 3 -K 3 N 0 + ∫ N n = N 0 e C 3 -K 3 y dy. (20)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 47. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 The RHS of (20) converges to a finite positive number as N →∞ . Combining (20) with (19) implies that:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0024" status="text_layer_fallback" source-page="47" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0024](images/formula_0024.png)
+```text
+PDF text layer: F N = 1 -exp ( -N ∑ n =1 log(1 + e f θ ( x,n ) ) ) ≤ G < 1 . (21)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 47. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Therefore, in case (3), F N does not converge to 1 as N →∞ .
 
 We now show that F N → 1 in cases (1) and (2). In case (1),
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0025" status="text_layer_fallback" source-page="47" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0025](images/formula_0025.png)
+```text
+PDF text layer: N ∑ n =1 log(1 + e f θ ( x,n ) ) = D 1 + N ∑ n = N 0 e 0 → N →∞ ∞ (22)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 47. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Combining (22) with (19) implies that F N → 1 as N →∞ . For case (2), consider the lower bound:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0026" status="text_layer_fallback" source-page="47" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0026](images/formula_0026.png)
+```text
+PDF text layer: N ∑ n =1 log(1 + e f θ ( x,n ) ) ≥ N ∑ n =1 f θ ( x, n ) = D 2 + N ∑ n = N 0 ( C 2 + K 2 n ) → N →∞ ∞ . (23)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 47. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Combining (23) with (19) (and recalling that F N ≤ 1 ) implies that F N → 1 as N → ∞ . Note that the constants D 1 , D 2 , D 3 , C 2 , and C 3 implicitly depend upon x and θ .
 
@@ -671,7 +827,13 @@ Theoretical models have made key contributions to the economic understanding of 
 
 The theoretical models cannot be directly compared against the data-driven models in this paper due to the theoretical models' lack of tractability for computing a distribution on N × N , which is the quantity this paper is interested in. For the interested reader, we provide here a comparison in the much simpler case of predicting the direction of the next move of the best ask price (i.e., the probability that it moves up or down). We compare the model from the seminal paper of Cont &amp; Larrard (2012) against logistic regression and a neural network. The model from Cont &amp; Larrard (2012) for the direction of the next price move is
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_sirignano_deep_lob_1601.01987:formula:0027" status="text_layer_fallback" source-page="48" -->
+![Source formula ref_sirignano_deep_lob_1601.01987:formula:0027](images/formula_0027.png)
+```text
+PDF text layer: p up = 1 2 -arctan( √ 1+ ρ 1 -ρ best ask size -best bid size best ask size + best bid size ) 2 arctan( √ 1+ ρ 1 -ρ ) , (24)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 48. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where ρ is the correlation between the increments of the best bid and best ask sizes. Tables 16 and 17 compare the data-driven models with the theoretical model. The comparison is performed using a subset of 109 stocks from the dataset. The 'error' is the cross-entropy error (i.e., the negative log-likelihood).
 

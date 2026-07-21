@@ -44,13 +44,25 @@ To set the stage, we first discuss the self-attention mechanism, introduced by [
 
 For an input feature map x ∈ R C in × H × W with number of input channels C in , height H , and width W , the output of a self-attention layer at each position is given by
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kisiel_axial_lob_2212.01807:formula:0001" status="text_layer_fallback" source-page="2" -->
+![Source formula ref_kisiel_axial_lob_2212.01807:formula:0001](images/formula_0001.png)
+```text
+PDF text layer: y ij = H ∑ h =1 W ∑ w =1 softmax ( q T ij k hw ) v hw , (1)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 2. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where q = W Q x , k = W K x , and v = W V x are the query, key, and value linear projections of the input x , computed using learnable matrices W Q , W K , W V ∈ R C in × C out . We notice from (1) that, unlike convolution, the self-attention mechanism utilizes the whole feature map to capture non-local context by pooling values v using global affinities given by the output of the softmax operation.
 
 We can extend this computation to multi-head attention to capture information from multiple representation subspaces,
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kisiel_axial_lob_2212.01807:formula:0002" status="text_layer_fallback" source-page="2" -->
+![Source formula ref_kisiel_axial_lob_2212.01807:formula:0002](images/formula_0002.png)
+```text
+PDF text layer: MHA = Concatenate ( head 1 , · · · , head H ) W O , (2)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 2. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where the single-head attention of (1) is computed H times in parallel using different projection matrices W h Q , W h K , W h V , ∀ h ∈ { 1 , ..., H } , and the final output is obtained by concatenating results from each head and linearly projecting with a learnable matrix W O . It has to be noted, however, that self-attention, in its original form, is very expensive to compute, having complexity O ( h 2 w 2 ) , which makes it infeasible to apply to high-dimensional inputs.
 
@@ -62,13 +74,25 @@ To tackle the high computational cost of the na¨ ıve attention mechanism, one 
 
 Axial-LOB incorporates a further extension to the concept of axial attention, that of gated positional embeddings. These were proposed in [18], as an extension of the work of [19], which enhances axial attention by incorporating learned relative positional encodings into the attentional affinities. These extra bias terms, in essence, provide the model with a dynamic prior on which parts of the receptive field are most relevant,
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kisiel_axial_lob_2212.01807:formula:0003" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_kisiel_axial_lob_2212.01807:formula:0003](images/formula_0003.png)
+```text
+PDF text layer: y ij = H ∑ h =1 softmax ( q T ij k hj + q T ij r q hj + k T hj r k hj )( v hj + r v hj ) , (3)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where r q , r k , r v ∈ R H × H are the learnable positional encodings for queries, keys, and values, respectively. Since (3) describes position-sensitive axial attention applied only along the height axis, to obtain the global receptive field, the same operation is also carried out along the width axis.
 
 As mentioned, we use an extension of (3), proposed in [18], which uses additional gating mechanisms. However, our AxialLOB model, instead of applying gates to both the value vector and its positional encoding, controls only the information flow from the positional bias terms, as visualised in Fig. 3 and described using the following expression
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kisiel_axial_lob_2212.01807:formula:0004" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_kisiel_axial_lob_2212.01807:formula:0004](images/formula_0004.png)
+```text
+PDF text layer: y ij = H ∑ h =1 softmax ( q T ij k hj + g q b q + g k b k )( v hj + g v b v ) , (4)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where b q = q T ij r q hj , b k = k T hj r k hj , b v = r v hj and g q , g k , g v are the gating mechanisms, which are learnable parameters. The intuition behind this design choice is analogous to that proposed by [18]. More specifically, it may be difficult to learn accurate positional bias representations from highly noisy financial data. Therefore, in such circumstances, it becomes advantageous to control, through the use of gates, the level of influence that these positional encodings have on the computation of long-range context.
 
@@ -90,15 +114,33 @@ The FI-2010 dataset [20] is a large publicly available benchmark dataset contain
 
 The objective of the Axial-LOB model is to predict future movements of the mid-price , as introduced and illustrated by Fig. 2, and defined using the following form
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kisiel_axial_lob_2212.01807:formula:0005" status="text_layer_fallback" source-page="4" -->
+![Source formula ref_kisiel_axial_lob_2212.01807:formula:0005](images/formula_0005.png)
+```text
+PDF text layer: p ( t ) = p 1 a ( t ) + p 1 b ( t ) 2 , (5)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 4. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 with the aim of classifying mid-price movement into going up, staying approximately stationary (with respect to a threshold α discussed below), or going down. We note that since events are measured in tick time, not clock time, the interval between consecutive events can vary from a fraction of a second to seconds. In addition, since financial data are highly noisy, a smoothed version of the future mid-price is in practice used, which corresponds to the mean of the next k mid-prices, computed as follows,
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kisiel_axial_lob_2212.01807:formula:0006" status="text_layer_fallback" source-page="4" -->
+![Source formula ref_kisiel_axial_lob_2212.01807:formula:0006](images/formula_0006.png)
+```text
+PDF text layer: m + k ( t ) = 1 k k ∑ i =0 p ( t + i ) , (6)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 4. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where k is the prediction horizon , which can also be thought of as the length of the denoising window, and we conduct experiments using five different values of k = (10 , 20 , 30 , 50 , 100) . The direction of the price movement is then computed as the proportional change of the smoothed future mid-price with respect to the mid-price observed at t :
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kisiel_axial_lob_2212.01807:formula:0007" status="text_layer_fallback" source-page="4" -->
+![Source formula ref_kisiel_axial_lob_2212.01807:formula:0007](images/formula_0007.png)
+```text
+PDF text layer: d k ( t ) = m + k ( t ) -p ( t ) p ( t ) . (7)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 4. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Finally, to obtain the target labels, the price direction d k ( t ) is compared with a threshold α . We use α = 0 . 002 , in order for our results to be comparable to the work of others (benchmark models of Section III-D, which also used this value), and label the price direction as 'up' if d k ( t ) &gt; α , 'down' if d k ( t ) &lt; -α and all other cases as the 'stationary' class. We are aware of other more sophisticated techniques for computing future price direction, but we use the formula in (7) to establish a fair comparison with the previous studies.
 
@@ -112,11 +154,23 @@ The ten-day FI-2010 dataset is split into training and test segments, where the 
 
 The Axial-LOB network is trained via mini-batch stochastic gradient descent (SGD) by minimising the cross-entropy loss between the predicted class probabilities and the ground truth label,
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kisiel_axial_lob_2212.01807:formula:0008" status="text_layer_fallback" source-page="4" -->
+![Source formula ref_kisiel_axial_lob_2212.01807:formula:0008](images/formula_0008.png)
+```text
+PDF text layer: L CE = -C ∑ c =1 y c × log ( exp ( x c ) ∑ C i =1 exp ( x i ) ) , (8)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 4. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where x is the input to the softmax operator, y is the target label, and the summation is applied over all three classes denoted as C . The total loss is then obtained by computing an average of the losses over all training examples. We use momentum [21], a batch size of 64, and train the network for 100 epochs. Training of the gating elements is delayed until epoch 5 since this makes their convergence faster and more stable. The learning rate is adjusted at each step using a cosine annealing schedule [22] that lowers the initial rate as the training progresses using the learning rate multiplier,
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kisiel_axial_lob_2212.01807:formula:0009" status="text_layer_fallback" source-page="5" -->
+![Source formula ref_kisiel_axial_lob_2212.01807:formula:0009](images/formula_0009.png)
+```text
+PDF text layer: LR decay = 1 2 × ( 1 + cos ( π × T cur T total )) , (9)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 5. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where T cur is the current optimizer step and T total corresponds to the total number of training steps over which the cosine decay function is applied. Additionally, to tackle problems related to overfitting, we implement early stopping, where the training of the model is terminated when the validation loss does not improve for 10 consecutive epochs. All experiments are conducted on a single NVIDIA Tesla P100 16GB GPU with 55GB of RAM memory.
 

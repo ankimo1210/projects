@@ -48,25 +48,55 @@ The input data consists of 10 orders for each side of the LOB (bid and ask). Eac
 
 The dataset is made up of 10 days for 5 different stocks and the total number of messages is 4 . 5 million with equally many separate depths. Since the price and volume range is much greater than the range of the values of the activation function of our neural network, we need to normalize the data before feeding them to the network. To this end, standardization (z-score) is employed to normalize the data:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tsantekidis_cnn_lob_2017:formula:0001" status="verified_manual" source-page="3" -->
+$$
+x_{\mathrm{norm}}=\frac{x-\bar{x}}{\sigma_{\bar{x}}} \tag{1}
+$$
+![Source formula ref_tsantekidis_cnn_lob_2017:formula:0001](images/formula_0001.png)
+*Formula quality: `verified_manual`; source PDF page 3. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 where x is the vector of values we want to normalize, ¯ x is the mean value of the data and σ ¯ x is the standard deviation of the data. Instead of simply normalizing all the values together, we take into account the scale differences between order prices and order volumes and we use a separate normalizer, with different mean and standard deviation, for each of them. Also, since different stocks have different price ranges and drastic distributions shifts might occur in individual stocks for different days, the normalization of the current day's values uses the mean and standard deviation calculated using previous day's data.
 
 We want to predict the direction towards which the price will change. In this work the term price is used to refer to the mid-price of a stock, which is defined as the mean between the best bid price and best ask price at time t :
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tsantekidis_cnn_lob_2017:formula:0002" status="verified_manual" source-page="3" -->
+$$
+p_t=\frac{p_a^{(1)}(t)+p_b^{(1)}(t)}{2} \tag{2}
+$$
+![Source formula ref_tsantekidis_cnn_lob_2017:formula:0002](images/formula_0002.png)
+*Formula quality: `verified_manual`; source PDF page 3. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 This is a virtual value for the price since no order can happen at that exact price, but predicting its upwards or downwards movement provides a good estimate of the price of the future orders. A set of discrete choices must be constructed from our data to use as targets for our classification model. Simply using p t &gt; p t + k to determine the direction of the mid price would introduce unmanageable amount of noise, since the smallest change would be registered as an upward or downward movement.
 
 Note that each consecutive depth sample is only slightly different from the previous one. Thus the shortterm changes between prices are very small and noisy. In order to filter such noise from the extracted labels we use the following smoothed approach. First, the mean of the previous k mid-prices, denoted by m b , and the mean of the next k mid-prices, denoted by m a , are defined as:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tsantekidis_cnn_lob_2017:formula:0003" status="verified_manual" source-page="3" -->
+$$
+m_b(t)=\frac{1}{k}\sum_{i=0}^{k}p_{t-i} \tag{3}
+$$
+![Source formula ref_tsantekidis_cnn_lob_2017:formula:0003](images/formula_0003.png)
+*Formula quality: `verified_manual`; source PDF page 3. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tsantekidis_cnn_lob_2017:formula:0004" status="verified_manual" source-page="3" -->
+$$
+m_a(t)=\frac{1}{k}\sum_{i=1}^{k}p_{t+i} \tag{4}
+$$
+![Source formula ref_tsantekidis_cnn_lob_2017:formula:0004](images/formula_0004.png)
+*Formula quality: `verified_manual`; source PDF page 3. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 where p t is the mid price as described in Equation (2). Then, a label l t that express the direction of price movement at time t is extracted by comparing the previously defined quantities ( m b and m a ):
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tsantekidis_cnn_lob_2017:formula:0005" status="verified_manual" source-page="3" -->
+$$
+l_t=\begin{cases}1,&\text{if }m_b(t)>m_a(t)(1+\alpha),\\-1,&\text{if }m_b(t)<m_a(t)(1-\alpha),\\0,&\text{otherwise.}\end{cases} \tag{5}
+$$
+![Source formula ref_tsantekidis_cnn_lob_2017:formula:0005](images/formula_0005.png)
+*Formula quality: `verified_manual`; source PDF page 3. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 where the threshold α is set as the least amount of change in price that must occur for it to be considered upward or downward. If the price does not exceed this limit, the sample will be considered to belong to the stationary class. Therefore, the resulting label expresses the current trend we wish to predict. Note that this process is applied for every time step in our data.
 
@@ -80,11 +110,23 @@ Fig. 1: Typical Convolutional Neural Network architecture using 1D convolutions.
 
 The parameters of the model are learned by minimizing the categorical cross entropy loss defined as:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tsantekidis_cnn_lob_2017:formula:0006" status="verified_manual" source-page="4" -->
+$$
+L(W)=-\sum_{i=1}^{L}y_i\cdot\log\hat{y}_i \tag{6}
+$$
+![Source formula ref_tsantekidis_cnn_lob_2017:formula:0006](images/formula_0006.png)
+*Formula quality: `verified_manual`; source PDF page 4. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 where L is the number of different labels and the notation W is used to refer to the parameters of the CNN. The ground truth vector is denoted by y , while ˆ y is the predicted label distribution. The loss is summed over all samples in each batch. The most commonly used method to minimize the loss function defined in Equation (6) and learn the parameters W of the model is gradient descent [16]:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tsantekidis_cnn_lob_2017:formula:0007" status="verified_manual" source-page="4" -->
+$$
+W'=W-\eta\frac{\partial L}{\partial W} \tag{7}
+$$
+![Source formula ref_tsantekidis_cnn_lob_2017:formula:0007](images/formula_0007.png)
+*Formula quality: `verified_manual`; source PDF page 4. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 where W ′ are the parameters of the model after each gradient descent step and η is the learning rate. In this work we utilize the Adaptive Moment Estimation algorithm, known as ADAM [17], which ensures that the learning steps are scale invariant with respect to the parameter gradients.
 

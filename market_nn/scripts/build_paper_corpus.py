@@ -8,6 +8,7 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 from datetime import UTC, datetime
 from pathlib import Path
@@ -332,6 +333,16 @@ def convert_papers(
             json.dumps(index, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
         )
+        subprocess.run(
+            [
+                sys.executable,
+                str(Path(__file__).with_name("repair_paper_formulas.py")),
+                "--corpus-dir",
+                str(prepared),
+            ],
+            check=True,
+            cwd=PROJECT_ROOT,
+        )
 
         if output_dir.exists():
             if not overwrite:
@@ -359,6 +370,8 @@ def validate_corpus(source_dir: Path, output_dir: Path) -> dict[str, Any]:
         )
     chunk_count = 0
     math_blocks = 0
+    formula_count = 0
+    verified_formula_count = 0
     for pdf in pdfs:
         paper_dir = output_dir / pdf.stem
         required = [
@@ -368,6 +381,9 @@ def validate_corpus(source_dir: Path, output_dir: Path) -> dict[str, Any]:
             paper_dir / "metadata.json",
         ]
         missing = [path.name for path in required if not path.is_file() or path.stat().st_size == 0]
+        formula_manifest = paper_dir / "formulas.jsonl"
+        if not formula_manifest.is_file():
+            missing.append(formula_manifest.name)
         if missing:
             raise RuntimeError(f"Missing or empty corpus files for {pdf.stem}: {missing}")
         metadata = json.loads((paper_dir / "metadata.json").read_text(encoding="utf-8"))
@@ -377,13 +393,45 @@ def validate_corpus(source_dir: Path, output_dir: Path) -> dict[str, Any]:
             chunks = [json.loads(line) for line in handle]
         if not chunks or any(chunk["paper_id"] != pdf.stem for chunk in chunks):
             raise RuntimeError(f"Invalid chunks for {pdf.stem}")
+        with formula_manifest.open(encoding="utf-8") as handle:
+            formulas = [json.loads(line) for line in handle]
+        if any(formula["paper_id"] != pdf.stem for formula in formulas):
+            raise RuntimeError(f"Invalid formula provenance for {pdf.stem}")
+        formula_ids = [formula["formula_id"] for formula in formulas]
+        document_markdown = (paper_dir / "document.md").read_text(encoding="utf-8")
+        if "<!-- formula-not-decoded -->" in document_markdown:
+            raise RuntimeError(f"Unresolved formula placeholder for {pdf.stem}")
+        document_formula_ids = re.findall(r'<!-- formula-start id="([^"]+)"', document_markdown)
+        if document_formula_ids != formula_ids:
+            raise RuntimeError(f"Formula order mismatch in document.md for {pdf.stem}")
+        for field in ("text", "raw_text"):
+            chunk_formula_ids = [
+                formula_id
+                for chunk in chunks
+                for formula_id in re.findall(
+                    r'<!-- formula-start id="([^"]+)"', str(chunk.get(field, ""))
+                )
+            ]
+            if chunk_formula_ids != formula_ids:
+                raise RuntimeError(f"Formula order mismatch in chunks.{field} for {pdf.stem}")
+        for formula in formulas:
+            image = formula.get("source_image")
+            if image and not (paper_dir / image).is_file():
+                raise RuntimeError(f"Missing formula source crop for {formula['formula_id']}")
+        quality = metadata.get("formula_quality", {})
+        if quality.get("total") != len(formulas):
+            raise RuntimeError(f"Formula metadata count mismatch for {pdf.stem}")
         chunk_count += len(chunks)
         math_blocks += int(metadata["document"]["math_blocks"])
+        formula_count += len(formulas)
+        verified_formula_count += int(quality.get("verified_manual", 0))
     summary = {
         "ok": True,
         "paper_count": len(pdfs),
         "chunk_count": chunk_count,
         "math_blocks": math_blocks,
+        "formula_count": formula_count,
+        "verified_formula_count": verified_formula_count,
         "output_dir": str(output_dir),
     }
     print(json.dumps(summary, ensure_ascii=False, indent=2))

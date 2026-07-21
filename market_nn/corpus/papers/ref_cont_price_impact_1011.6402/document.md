@@ -74,19 +74,46 @@ The bid price and size represent the demand for a stock, while the ask price and
 
 We define the variable e n which measures the contribution of the n -th event to the size of bid and ask queues:
 
-$$e _ { n } = I _ { \{ P _ { n } ^ { B } \geq P _ { n - 1 } ^ { B } \} } q _ { n } ^ { B } - I _ { \{ P _ { n } ^ { B } \leq P _ { n - 1 } ^ { B } \} } q _ { n - 1 } ^ { B } - I _ { \{ P _ { n } ^ { A } \leq P _ { n - 1 } ^ { A } \} } q _ { n } ^ { A } + I _ { \{ P _ { n } ^ { A } \geq P _ { n - 1 } ^ { A } \} } q _ { n - 1 } ^ { A }$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0001" status="decoded_unverified" source-page="4" -->
+$$
+e _ { n } = I _ { \{ P _ { n } ^ { B } \geq P _ { n - 1 } ^ { B } \} } q _ { n } ^ { B } - I _ { \{ P _ { n } ^ { B } \leq P _ { n - 1 } ^ { B } \} } q _ { n - 1 } ^ { B } - I _ { \{ P _ { n } ^ { A } \leq P _ { n - 1 } ^ { A } \} } q _ { n } ^ { A } + I _ { \{ P _ { n } ^ { A } \geq P _ { n - 1 } ^ { A } \} } q _ { n - 1 } ^ { A }
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0001](images/formula_0001.png)
+```text
+PDF text layer: e n = I { P n B ≥ P B n -1 } q B n -I { P n B ≤ P B n -1 } q B n -1 -I { P n A ≤ P A n -1 } q A n + I { P n A ≥ P A n -1 } q A n -1
+```
+*Formula quality: `decoded_unverified`; source PDF page 4. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Note that if q B increases but P B remains the same, we assign e n = q B n -q B n -1 , representing the size that was added at the bid. If q B decreases, we also assign e n = q B n -q B n -1 , representing the size that was removed from the bid, whether due to a market sell or cancel buy order. If P B increases, we let e n = q B n , representing the size of a price-improving limit order. If P B decreases, we let e n = q B n -1 , representing the size that was removed, whether due to a market order or a cancellation. The same classification is done for events on the ask side, with signs reversed.
 
 Events affecting the order book occur at random times τ n , and we define N ( t ) = max { n | τ n ≤ t } to be the number of events during [0 , t ]. We define the order flow imbalance over time intervals [ t k -1 , t k ] as a sum of individual event contributions e n over these intervals:
 
-$$O F I _ { k } = \sum _ { n = N ( t _ { k - 1 } ) + 1 } ^ { N ( t _ { k } ) } e _ { n } ,$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0002" status="decoded_unverified" source-page="4" -->
+$$
+O F I _ { k } = \sum _ { n = N ( t _ { k - 1 } ) + 1 } ^ { N ( t _ { k } ) } e _ { n } ,
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0002](images/formula_0002.png)
+```text
+PDF text layer: OFI k = N ( t k ) ∑ n = N ( t k -1 )+1 e n ,
+```
+*Formula quality: `decoded_unverified`; source PDF page 4. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where N ( t k -1 ) + 1 and N ( t k ) are the index of the first and the index of the last event in the interval [ t k -1 , t k ]. The order flow imbalance is a measure of supply/demand imbalance, which encompasses trades, limit orders and cancelations. Whereas previous studies [10, 20, 22, 29, 38, 43] focused on measures of 'trade imbalance' 1 , using orders provides a more natural way of measuring supply and demand.
 
 We also consider mid-price changes (in number of ticks) over the same time grid:
 
-$$\Delta P _ { k } = ( P _ { k } - P _ { k - 1 } ) / \delta ,$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0003" status="decoded_unverified" source-page="4" -->
+$$
+\Delta P _ { k } = ( P _ { k } - P _ { k - 1 } ) / \delta ,
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0003](images/formula_0003.png)
+```text
+PDF text layer: ∆ P k = ( P k -P k -1 ) /δ,
+```
+*Formula quality: `decoded_unverified`; source PDF page 4. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where P k is the mid-quote price at time t k and δ is the tick size (equal to 1 cent in our data).
 
@@ -113,17 +140,53 @@ We will show that under these assumptions a linear relation holds between order 
 
 The three variables M b , C s and L s for the ask can be defined analogously. Under the above assumptions, the impact of order book events at the bid (ask) side of the book is additive and only depends on their net effect on the bid (ask) queue size:
 
-$$\Delta P ^ { b } = \lceil ( L ^ { b } - C ^ { b } - M ^ { s } ) / D \rceil$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0004" status="decoded_unverified" source-page="6" -->
+$$
+\Delta P ^ { b } = \lceil ( L ^ { b } - C ^ { b } - M ^ { s } ) / D \rceil
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0004](images/formula_0004.png)
+```text
+PDF text layer: ∆ P b = ⌈ ( L b -C b -M s ) /D ⌉
+```
+*Formula quality: `decoded_unverified`; source PDF page 6. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
-$$\Delta P ^ { a } = - \lceil ( L ^ { s } - C ^ { s } - M ^ { b } ) / D \rceil$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0005" status="decoded_unverified" source-page="6" -->
+$$
+\Delta P ^ { a } = - \lceil ( L ^ { s } - C ^ { s } - M ^ { b } ) / D \rceil
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0005](images/formula_0005.png)
+```text
+PDF text layer: ∆ P a = -⌈ ( L s -C s -M b ) /D ⌉
+```
+*Formula quality: `decoded_unverified`; source PDF page 6. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 These relations are remarkably simple - they involve no parameters and incorporate the effects of all order book events on bid and ask prices. Although the following analysis can be carried for the bid and the ask prices separately, we take their average (the mid-price) to simplify the analysis:
 
-$$\Delta P = \frac { 1 } { 2 } \left \lceil ( L ^ { b } - C ^ { b } - M ^ { s } ) / D \right \rceil - \frac { 1 } { 2 } \lceil ( L ^ { s } - C ^ { s } - M ^ { b } ) / D \rceil$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0006" status="decoded_unverified" source-page="6" -->
+$$
+\Delta P = \frac { 1 } { 2 } \left \lceil ( L ^ { b } - C ^ { b } - M ^ { s } ) / D \right \rceil - \frac { 1 } { 2 } \lceil ( L ^ { s } - C ^ { s } - M ^ { b } ) / D \rceil
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0006](images/formula_0006.png)
+```text
+PDF text layer: ∆ P = 1 2 ⌈ ( L b -C b -M s ) /D ⌉ -1 2 ⌈ ( L s -C s -M b ) /D ⌉
+```
+*Formula quality: `decoded_unverified`; source PDF page 6. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Note that the above is equivalent (up to truncation) to
 
-$$\Delta P = \frac { O F I } { 2 D } + \epsilon ,$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0007" status="decoded_unverified" source-page="6" -->
+$$
+\Delta P = \frac { O F I } { 2 D } + \epsilon ,
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0007](images/formula_0007.png)
+```text
+PDF text layer: ∆ P = OFI 2 D + ϵ, (1)
+```
+*Formula quality: `decoded_unverified`; source PDF page 6. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where OFI = L b -C b -M s -L s + C s + M b and ϵ is the truncation error. This expression for OFI is obtained from its definition by grouping individual order contrubutions e i by their types (limit buys, market sells, etc).
 
@@ -131,15 +194,42 @@ where OFI = L b -C b -M s -L s + C s + M b and ϵ is the truncation error. This 
 
 In reality, order books have complex dynamics and the relation (1) will only hold in a statistical sense. For example, limit orders and cancelations occur at all levels of the order book. The distribution of depth across price levels often has humps, gaps and is itself a separate object of study [39, 46]. Moreover, the depth is subject to important intraday fluctuations. Finally, there may be hidden orders in the book which are not reported in the data [5]. With these considerations, we suggest the following relation:
 
-$$\Delta P _ { k } = \beta \, \ O F I _ { k } + \epsilon _ { k } ,$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0008" status="decoded_unverified" source-page="6" -->
+$$
+\Delta P _ { k } = \beta \, \ O F I _ { k } + \epsilon _ { k } ,
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0008](images/formula_0008.png)
+```text
+PDF text layer: ∆ P k = β OFI k + ϵ k , (2)
+```
+*Formula quality: `decoded_unverified`; source PDF page 6. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where β is the price impact coefficient and ϵ k is a noise term due to the influence of deeper levels of the order book and rounding errors. Our earlier discussion suggests that the price impact coefficient is inversely related to market depth, which is itself subject to intraday fluctuations. We define a measure of depth by averaging the bid/ask queue sizes over intervals [ T i -1 , T i ]:
 
-$$A D _ { i } = \frac { 1 } { 2 ( N ( T _ { i } ) - N ( T _ { i - 1 } ) - 1 ) } \sum _ { n = N ( T _ { i - 1 } ) + 1 } ^ { N ( T _ { i } ) } ( q _ { n } ^ { B } + q _ { n } ^ { A } )$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0009" status="decoded_unverified" source-page="6" -->
+$$
+A D _ { i } = \frac { 1 } { 2 ( N ( T _ { i } ) - N ( T _ { i - 1 } ) - 1 ) } \sum _ { n = N ( T _ { i - 1 } ) + 1 } ^ { N ( T _ { i } ) } ( q _ { n } ^ { B } + q _ { n } ^ { A } )
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0009](images/formula_0009.png)
+```text
+PDF text layer: AD i = 1 2( N ( T i ) -N ( T i -1 ) -1) N ( T i ) ∑ n = N ( T i -1 )+1 ( q B n + q A n )
+```
+*Formula quality: `decoded_unverified`; source PDF page 6. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 We therefore specify the following relation between the price impact coefficient β i in the time interval [ T i -1 , T i ] and our measure of market depth as:
 
-$$\beta _ { i } = \frac { c } { A D _ { i } ^ { \lambda } } + \nu _ { i } ,$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0010" status="decoded_unverified" source-page="6" -->
+$$
+\beta _ { i } = \frac { c } { A D _ { i } ^ { \lambda } } + \nu _ { i } ,
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0010](images/formula_0010.png)
+```text
+PDF text layer: β i = c AD λ i + ν i , (3)
+```
+*Formula quality: `decoded_unverified`; source PDF page 6. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where c, λ are constants and ν i is a noise term. Note that the stylized model exposed above corresponds to λ = 1.
 
@@ -177,7 +267,16 @@ We use a uniform grid in time { t 0 , . . . , t N } with a timescale t k -t k -1
 
 We assume that the price impact coefficient β is constant over each half-hour interval [ T i , T i +1 ] and estimate the model by ordinary least squares regression in each half-hour subsample for each stock:
 
-$$\Delta P _ { k } = \hat { \alpha } _ { i } + \hat { \beta } _ { i } O F I _ { k } + \hat { \epsilon } _ { k } ,$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0011" status="decoded_unverified" source-page="8" -->
+$$
+\Delta P _ { k } = \hat { \alpha } _ { i } + \hat { \beta } _ { i } O F I _ { k } + \hat { \epsilon } _ { k } ,
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0011](images/formula_0011.png)
+```text
+PDF text layer: ∆ P k = ˆ α i + ˆ β i OFI k +ˆ ϵ k , (4)
+```
+*Formula quality: `decoded_unverified`; source PDF page 8. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Figure 2 presents a scatter plot of ∆ P k against OFI k for one of the half-hour subsamples. Table 2 reports regression outputs, averaged across time for each stock. This table provides strong evidence of a linear relation between order flow imbalance and price changes. The goodness of fit is surprisingly high for all of the stocks, suggesting that the model (2) performs well regardless of stock-specific features 3 . In addition to the high quality of fits, the regression coefficient β i is virtually always statistically significant (at a 95% level of the z-test), while the intercept is mostly insignificant. Figure 3 represents the histogram of excess kurtosis values of the residuals ˆ ϵ k across subsamples: the relatively low level of kurtosis shows that the residuals are not predominantly associated with large price changes. Since the regression residuals demonstrate heteroscedasticity, we used White's heteroscedasticity-consistent standard errors for the z-test. To check for higher order/nonlinear dependence we add a quadratic term ˆ γ Q,i OFI k | OFI k | to the regression. The increase in R 2 , from 65% to 68% on average, is barely noticeable and the coefficient ˆ γ Q,i is statistically insignificant in most samples.
 
@@ -313,17 +412,44 @@ Table 2. Relation between price changes and order flow imbalance.
 
 Table 2 presents a cross-section of results (averaged across time) for the regressions:
 
-$$\Delta P _ { k } & = \hat { \alpha } _ { i } + \hat { \beta } _ { i } O F I _ { k } + \hat { \epsilon } _ { k } , \\ \Delta P _ { k } & = \hat { \alpha } _ { Q , i } + \hat { \beta } _ { Q , i } O F I _ { k } + \hat { \gamma } _ { Q , i } O F I _ { k } | O F I _ { k } | + \hat { \epsilon } _ { Q , k } ,$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0012" status="decoded_unverified" source-page="11" -->
+$$
+\Delta P _ { k } & = \hat { \alpha } _ { i } + \hat { \beta } _ { i } O F I _ { k } + \hat { \epsilon } _ { k } , \\ \Delta P _ { k } & = \hat { \alpha } _ { Q , i } + \hat { \beta } _ { Q , i } O F I _ { k } + \hat { \gamma } _ { Q , i } O F I _ { k } | O F I _ { k } | + \hat { \epsilon } _ { Q , k } ,
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0012](images/formula_0012.png)
+```text
+PDF text layer: ∆ P k = ˆ α i + ˆ β i OFI k +ˆ ϵ k , ∆ P k = ˆ α Q,i + ˆ β Q,i OFI k + ˆ γ Q,i OFI k | OFI k | +ˆ ϵ Q,k ,
+```
+*Formula quality: `decoded_unverified`; source PDF page 11. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where ∆ P k are the 10-second mid-price changes and OFI k are the contemporaneous order flow imbalances. These regressions were estimated using 273 half-hour subsamples (indexed by i ) for each stock and their outputs were averaged across subsamples. Each subsample typically contains about 180 observations (indexed by k ). The t-statistics were computed using White's standard errors. For brevity, we report the R 2 , the average ˆ α i and the average ˆ β i only for the first regression (with a single OFI k term). There is almost no difference between averages of estimates ˆ β i and ˆ β Qi and the R 2 in two regressions. The last three columns report the percentage of samples where the coefficient(s) passed the z-test at the 5% significance level.
 
 Next, we estimate the parameters λ and c in (3). For each stock, we first obtain ˆ λ fi t via a loglinear regression:
 
-$$\log \hat { \beta } _ { i } = \alpha \hat { L } _ { , i } - \hat { \lambda } \log A D _ { i } + \hat { \epsilon } _ { L , i }$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0013" status="decoded_unverified" source-page="12" -->
+$$
+\log \hat { \beta } _ { i } = \alpha \hat { L } _ { , i } - \hat { \lambda } \log A D _ { i } + \hat { \epsilon } _ { L , i }
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0013](images/formula_0013.png)
+```text
+PDF text layer: log ˆ β i = ˆ α L,i -ˆ λ log AD i +ˆ ϵ L,i (5)
+```
+*Formula quality: `decoded_unverified`; source PDF page 12. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Then, using ˆ λ , we estimate c in a linear regression:
 
-$$\hat { \beta } _ { i } = \alpha \hat { M } _ { i } + \frac { \hat { c } } { A D _ { i } ^ { \hat { \lambda } } } + \hat { \epsilon } _ { M , i }$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0014" status="decoded_unverified" source-page="12" -->
+$$
+\hat { \beta } _ { i } = \alpha \hat { M } _ { i } + \frac { \hat { c } } { A D _ { i } ^ { \hat { \lambda } } } + \hat { \epsilon } _ { M , i }
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0014](images/formula_0014.png)
+```text
+PDF text layer: ˆ β i = ˆ α M,i + ˆ c AD ˆ λ i +ˆ ϵ M,i (6)
+```
+*Formula quality: `decoded_unverified`; source PDF page 12. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Both regressions are estimated using ordinary least squares. The results are presented in Table 3: the quality of these fits convincingly demonstrates that the instantaneous price impact (measured by ˆ β i ) is inversely related to market depth. There are three stocks with bad fits (namely APOL, AZO and CME) and we note that they also have wide spreads and low values of depth. It is possible that for these stocks other factors, such as the presence of hidden orders and depth beyond the best price levels the order book may dominate the instantaneous price impact. The intercept ˆ α L,i is highly statistically significant (being an estimate of parameter c ) and ˆ α M,i , which is included to absorb the means, is mostly insignificant. Since the residuals of these regressions appear to be autocorrelated, the t-statistics and confidence intervals in Table 3 are computed with Newey-West standard errors. Coinciding with our intuition for (1), estimates ˆ λ are very close to 1 across stocks and the hypothesis { λ = 1 } cannot be rejected for 35 out of 50 stocks. The restricted model (with λ = 1) also demonstrates a good quality of fit, making this a good approximation. However, the coefficient ˆ c is generally different from c = 1 2 in (1). Lower values of ˆ c mean that mid-prices are (on average) more resilient to the incoming orders than indicated by AD i (which is only a rough measure of market depth). In summary, λ = 1 appears to be a good approximation for most of the stocks and only the constant c needs to be calibrated to the data. The general case of regression (5) is illustrated on Figure 4 by a scatter plot for a representative stock.
 
@@ -391,7 +517,16 @@ Table 3. Relation between the price impact coefficient and market depth.
 
 Table 3 presents the results of regressions:
 
-$$\log \hat { \beta } _ { i } & = \alpha \hat { L } _ { , i } - \hat { \lambda } \log A D _ { i } + \hat { \epsilon } _ { L , i } , \\ \hat { \beta } _ { i } & = \alpha \hat { M } _ { , i } + \frac { \hat { c } } { A D _ { i } ^ { \lambda } } + \hat { \epsilon } _ { M , i } ,$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0015" status="decoded_unverified" source-page="13" -->
+$$
+\log \hat { \beta } _ { i } & = \alpha \hat { L } _ { , i } - \hat { \lambda } \log A D _ { i } + \hat { \epsilon } _ { L , i } , \\ \hat { \beta } _ { i } & = \alpha \hat { M } _ { , i } + \frac { \hat { c } } { A D _ { i } ^ { \lambda } } + \hat { \epsilon } _ { M , i } ,
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0015](images/formula_0015.png)
+```text
+PDF text layer: log ˆ β i = ˆ α L,i -ˆ λ log AD i +ˆ ϵ L,i , ˆ β i = ˆ α M,i + ˆ c AD ˆ λ i +ˆ ϵ M,i ,
+```
+*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where ˆ β i is the price impact coefficient for the i -th half-hour subsample and AD i is the average market depth for that subsample. These regressions were estimated for each of the 50 stocks, using 273 estimates of ˆ β i for that stock, obtained from (4). The second regression uses estimates ˆ λ obtained from the first regression. The t-statistics and the confidence intervals were computed using Newey-West standard errors. Confidence intervals are built with normal critical values. The last three columns provide three alternative fit measures - the R 2 of the linear regression (5), the squared correlation between ˆ β i and fitted values ˆ ˆ β i = ˆ c AD ˆ λ i and the squared correlation between ˆ β i and ˆ ˆ β ∗ i = ˆ c AD i .
 
@@ -407,7 +542,16 @@ Near the market open, depth is two times lower than it is on average, indicating
 
 The intraday pattern in price impact can be used to explain the intraday patterns in price volatility, observed by many researchers ([1], [4], [21], [33]). Similarly to the price impact coefficient and the market depth, we computed the intraday patterns in variances of ∆ P k and OFI k , using half-hour subsamples (indexed by i ). Taking the variance on both sides of equation (2) demonstrates the link between var [∆ P k ] i , var [ OFI k ] i and β i :
 
-$$v a r [ \Delta P _ { k } ] _ { i } = \beta _ { i } ^ { 2 } v a r [ O F I _ { k } ] _ { i } + v a r [ \epsilon _ { k } ] _ { i } & & ( 7 )$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0016" status="decoded_unverified" source-page="14" -->
+$$
+v a r [ \Delta P _ { k } ] _ { i } = \beta _ { i } ^ { 2 } v a r [ O F I _ { k } ] _ { i } + v a r [ \epsilon _ { k } ] _ { i } & & ( 7 )
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0016](images/formula_0016.png)
+```text
+PDF text layer: var [∆ P k ] i = β 2 i var [ OFI k ] i + var [ ϵ k ] i (7)
+```
+*Formula quality: `decoded_unverified`; source PDF page 14. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 The average patterns are plotted on Figure 6. Notice that the price volatility has a sharp peak near the market open, while the volatility of order flow imbalance has a peak near the market close. This peak is, however, offset by a low price impact, which gradually declines throughout the day. For the i -th half-hour interval, the equation (7) implies that var [∆ P k ] i ≈ ˆ β 2 i var [ OFI k ] i which is demonstrated on Figure 6 4 .
 
@@ -429,17 +573,53 @@ The previous section discussed the linear relation between price changes and OFI
 
 For convenience we will call 'buy trade' a transaction initiated by a market buy order and 'sell trade' a transaction initiated by a market sell order. We define the trade imbalance during a time interval [ t k -1 , t k ] as the difference between volumes of buy and sell trades during that interval:
 
-$$T I _ { k } = \sum _ { n = N ( t _ { k - 1 } ) + 1 } ^ { N ( t _ { k } ) } b _ { n } - \sum _ { n = N ( t _ { k - 1 } ) + 1 } ^ { N ( t _ { k } ) } s _ { n } ,$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0017" status="decoded_unverified" source-page="16" -->
+$$
+T I _ { k } = \sum _ { n = N ( t _ { k - 1 } ) + 1 } ^ { N ( t _ { k } ) } b _ { n } - \sum _ { n = N ( t _ { k - 1 } ) + 1 } ^ { N ( t _ { k } ) } s _ { n } ,
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0017](images/formula_0017.png)
+```text
+PDF text layer: TI k = N ( t k ) ∑ n = N ( t k -1 )+1 b n -N ( t k ) ∑ n = N ( t k -1 )+1 s n ,
+```
+*Formula quality: `decoded_unverified`; source PDF page 16. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Here, b n is the size of a buyer-initiated trade that occurs at the n -th quote; b n = 0 if no buy trade occurs at that quote. Similarly, s n is the size of a sell trade that occurs at the n -th quote or zero. The procedure that matches trades with quotes and classifies them as buys or sells is described in the Appendix.
 
 To compare the explanatory power of trade and order flow imbalances with respect to price changes, we perform the following regressions:
 
-$$\Delta P _ { k } = \hat { \alpha } _ { i } + \hat { \beta } _ { i } O F I _ { k } + \hat { \epsilon } _ { k }$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0018" status="decoded_unverified" source-page="16" -->
+$$
+\Delta P _ { k } = \hat { \alpha } _ { i } + \hat { \beta } _ { i } O F I _ { k } + \hat { \epsilon } _ { k }
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0018](images/formula_0018.png)
+```text
+PDF text layer: ∆ P k = ˆ α i + ˆ β i OFI k +ˆ ϵ k (8a)
+```
+*Formula quality: `decoded_unverified`; source PDF page 16. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
-$$\Delta P _ { k } = \hat { \alpha } _ { T , i } + \hat { \beta } _ { T , i } T I _ { k } + \hat { \epsilon } _ { T , k }$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0019" status="decoded_unverified" source-page="16" -->
+$$
+\Delta P _ { k } = \hat { \alpha } _ { T , i } + \hat { \beta } _ { T , i } T I _ { k } + \hat { \epsilon } _ { T , k }
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0019](images/formula_0019.png)
+```text
+PDF text layer: ∆ P k = ˆ α T,i + ˆ β T,i TI k +ˆ ϵ T,k (8b)
+```
+*Formula quality: `decoded_unverified`; source PDF page 16. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
-$$\Delta P _ { k } = \hat { \alpha } _ { D , i } + \hat { \theta } _ { O , i } O F I _ { k } + \hat { \theta } _ { T , i } T I _ { k } + \hat { \epsilon } _ { D , k }$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0020" status="decoded_unverified" source-page="16" -->
+$$
+\Delta P _ { k } = \hat { \alpha } _ { D , i } + \hat { \theta } _ { O , i } O F I _ { k } + \hat { \theta } _ { T , i } T I _ { k } + \hat { \epsilon } _ { D , k }
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0020](images/formula_0020.png)
+```text
+PDF text layer: ∆ P k = ˆ α D,i + ˆ θ O,i OFI k + ˆ θ T,i TI k +ˆ ϵ D,k (8c)
+```
+*Formula quality: `decoded_unverified`; source PDF page 16. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 The regressions are estimated separately for every half-hour subsample of data (indexed by i ). If the effect of trades is included in the order flow imbalance, the coefficients ˆ θ T,i in (8c) must be indistinguishable from zero. We note that regressions (8a-8c) contain only the linear terms, because we found no evidence of non-linear price impacts in our data (for neither OFI k nor TI k ). The average results of these regressions are presented in Panel A of Table 4. Clearly, when OFI k and TI k are taken individually, each of them has a statistically significant influence on price changes. Comparing the two we observe that OFI k explains price changes better than TI k - the average R 2 for order flow imbalance is 65% compared to 32% for the trade imbalance. When two variables are used together to explain price changes, the dependence on trade imbalance becomes questionable. The average t-statistic of TI k decreases by a factor of four and the coefficients ˆ θ T,i are statistically significant in only 31% of subsamples. However, the dependence on OFI k remains convincingly strong.
 
@@ -538,7 +718,16 @@ We extend this result in two ways. First, we show that even when prices are driv
 
 The volume traded during a time interval [ t k -1 , t k ] is:
 
-$$V O L _ { k } = \sum _ { n = N ( t _ { k - 1 } ) + 1 } ^ { N ( t _ { k } ) } b _ { n } + \sum _ { n = N ( t _ { k - 1 } ) + 1 } ^ { N ( t _ { k } ) } s _ { n } = \sum _ { n = N ( t _ { k - 1 } ) + 1 } ^ { N ( t _ { k } ) } w _ { n } ,$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0021" status="decoded_unverified" source-page="18" -->
+$$
+V O L _ { k } = \sum _ { n = N ( t _ { k - 1 } ) + 1 } ^ { N ( t _ { k } ) } b _ { n } + \sum _ { n = N ( t _ { k - 1 } ) + 1 } ^ { N ( t _ { k } ) } s _ { n } = \sum _ { n = N ( t _ { k - 1 } ) + 1 } ^ { N ( t _ { k } ) } w _ { n } ,
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0021](images/formula_0021.png)
+```text
+PDF text layer: V OL k = N ( t k ) ∑ n = N ( t k -1 )+1 b n + N ( t k ) ∑ n = N ( t k -1 )+1 s n = N ( t k ) ∑ n = N ( t k -1 )+1 w n ,
+```
+*Formula quality: `decoded_unverified`; source PDF page 18. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where w n = b n + s n is the size of any trade (either buy or sell) if it occurs at the n -th quote or zero otherwise. Comparing this definition with the definition of OFI k we note that both quantities are sums of random variables. As the aggregation window [ t k -1 , t k ] becomes progressively larger, the behavior of these sums (under certain assumptions) will be governed by the Law of Large Numbers and the Central Limit Theorem. We consider a time interval [0 , T ) and denote by N ( T ) the number of order book events during that time interval. We also denote by OFI ( T ) and V OL ( T ), respectively, the order flow imbalance and the traded volume during [0 , T ). The following proposition shows a link between OFI ( T ) and V OL ( T ) as T grows.
 
@@ -550,49 +739,148 @@ where w n = b n + s n is the size of any trade (either buy or sell) if it occurs
 2. { e i } ∞ i =1 are i.i.d. random variables with a finite variance σ 2 ,
 3. { w i } ∞ i =1 are i.i.d. random variables with a finite mean µπ , where π is the proportion of order book events that correspond to trades and µ is the mean trade size.
 
-$$T h e n = \frac { \sqrt { \mu \pi } } { \sigma } \frac { O F I ( T ) } { \sqrt { V O L ( T ) } } \Rightarrow \xi , \ a s \ T \to \infty$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0022" status="decoded_unverified" source-page="19" -->
+$$
+T h e n = \frac { \sqrt { \mu \pi } } { \sigma } \frac { O F I ( T ) } { \sqrt { V O L ( T ) } } \Rightarrow \xi , \ a s \ T \to \infty
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0022](images/formula_0022.png)
+```text
+PDF text layer: Then √ µπ σ OFI ( T ) √ V OL ( T ) ⇒ ξ, as T →∞ (9)
+```
+*Formula quality: `decoded_unverified`; source PDF page 19. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where ξ ∼ N (0 , 1) is a standard normal random variable and ⇒ denotes convergence in distribution.
 
 Proof: First, we apply the law of large numbers to the traded volume. Assumption (1) ensures that N ( T ) →∞ as T →∞ :
 
-$$\frac { V O L ( T ) } { N ( T ) } = \frac { \sum _ { i = 1 } ^ { N ( T ) } w _ { i } } { N ( T ) } \rightarrow \mu \pi , w . p . 1 , \ a s \ T \rightarrow \infty ,$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0023" status="decoded_unverified" source-page="19" -->
+$$
+\frac { V O L ( T ) } { N ( T ) } = \frac { \sum _ { i = 1 } ^ { N ( T ) } w _ { i } } { N ( T ) } \rightarrow \mu \pi , w . p . 1 , \ a s \ T \rightarrow \infty ,
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0023](images/formula_0023.png)
+```text
+PDF text layer: V OL ( T ) N ( T ) = ∑ N ( T ) i =1 w i N ( T ) → µπ, w.p. 1 , as T →∞ , (10)
+```
+*Formula quality: `decoded_unverified`; source PDF page 19. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Second, event contributions e i have a finite variance σ 2 and, under our assumptions, we can apply the classical central limit theorem to the order flow imbalance:
 
-$$\frac { O F I ( T ) } { \sigma \sqrt { N ( T ) } } \equiv \frac { \sum _ { i = 1 } ^ { N ( T ) } e _ { i } } { \sigma \sqrt { N ( T ) } } \Rightarrow \xi , \ a s \ T \to \infty ,$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0024" status="decoded_unverified" source-page="19" -->
+$$
+\frac { O F I ( T ) } { \sigma \sqrt { N ( T ) } } \equiv \frac { \sum _ { i = 1 } ^ { N ( T ) } e _ { i } } { \sigma \sqrt { N ( T ) } } \Rightarrow \xi , \ a s \ T \to \infty ,
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0024](images/formula_0024.png)
+```text
+PDF text layer: OFI ( T ) σ √ N ( T ) ≡ ∑ N ( T ) i =1 e i σ √ N ( T ) ⇒ ξ, as T →∞ , (11)
+```
+*Formula quality: `decoded_unverified`; source PDF page 19. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where ξ ∼ N (0 , 1) is a standard normal random variable. Although the denominator σ √ N ( T ) is random, it goes to infinity by assumption (1) and Anscombe's lemma ensures that we can use such a normalization in the central limit theorem [13, Lemma 2.5.8]. Since the square root function is continuous, the convergence in (10) takes place almost-surely and the limit in (10) is deterministic, we can combine (10) and (11) in the following way:
 
-$$\frac { \sqrt { \mu \pi } } { \sigma } \frac { O F I ( T ) } { \sqrt { V O L ( T ) } } \equiv \frac { \frac { \sum _ { i = 1 } ^ { N ( T ) } e _ { i } } { \sigma \sqrt { N ( T ) } } } { \sqrt { \frac { \sum _ { i = 1 } ^ { N ( T ) } w _ { i } } { \mu \pi ( N ( T ) ) } } } \Rightarrow \xi , \, a s \, T \to \infty$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0025" status="decoded_unverified" source-page="19" -->
+$$
+\frac { \sqrt { \mu \pi } } { \sigma } \frac { O F I ( T ) } { \sqrt { V O L ( T ) } } \equiv \frac { \frac { \sum _ { i = 1 } ^ { N ( T ) } e _ { i } } { \sigma \sqrt { N ( T ) } } } { \sqrt { \frac { \sum _ { i = 1 } ^ { N ( T ) } w _ { i } } { \mu \pi ( N ( T ) ) } } } \Rightarrow \xi , \, a s \, T \to \infty
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0025](images/formula_0025.png)
+```text
+PDF text layer: √ µπ σ OFI ( T ) √ V OL ( T ) ≡ ∑ N ( T ) i =1 e i σ √ N ( T ) √ ∑ N ( T ) i =1 w i µπ ( N ( T )) ⇒ ξ, as T →∞ (12)
+```
+*Formula quality: `decoded_unverified`; source PDF page 19. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 ■
 
 If the time interval [0 , T ) includes a large enough number of order book events and trades, the above limit argument implies a noisy scaling relation between order flow imbalance and the square root of traded volume:
 
-$$O F I ( T ) = \xi \frac { \sigma } { \sqrt { \mu \pi } } \sqrt { V O L ( T ) } ,$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0026" status="decoded_unverified" source-page="19" -->
+$$
+O F I ( T ) = \xi \frac { \sigma } { \sqrt { \mu \pi } } \sqrt { V O L ( T ) } ,
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0026](images/formula_0026.png)
+```text
+PDF text layer: OFI ( T ) = ξ σ √ µπ √ V OL ( T ) , (13)
+```
+*Formula quality: `decoded_unverified`; source PDF page 19. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where µ, π and σ are constants and ξ ∼ N (0 , 1). Now, assume that it holds not just for the first interval, but for every time interval [ t k -1 , t k ) of large enough length ∆ t , regardless of its index k . Then, (13) can be substituted into our model (2), to yield:
 
-$$\Delta P _ { k } = \theta _ { k } \sqrt { V O L _ { k } } + \epsilon _ { k } ,$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0027" status="decoded_unverified" source-page="19" -->
+$$
+\Delta P _ { k } = \theta _ { k } \sqrt { V O L _ { k } } + \epsilon _ { k } ,
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0027](images/formula_0027.png)
+```text
+PDF text layer: ∆ P k = θ k √ V OL k + ϵ k , (14)
+```
+*Formula quality: `decoded_unverified`; source PDF page 19. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where θ k = β i ξ k σ √ µπ is a slope coefficient and ξ k ∼ N (0 , 1) is a noise term due to scaling. Due to the scaling approximation, the slope θ k in (14) is a random normal variable: θ k ∼ N (0 , β 2 i σ 2 µπ ). For every time interval [ t k -1 , t k ) the ratio √ µπ σ OFI k √ V OL k is a different draw from the N (0 , 1) distribution, leading to a different θ k in each case. This additional randomness makes this model considerably less robust than (2) and we do not recommend to use it.
 
 Equation (14) shows that even if prices are driven by the order flow imbalance (i.e. even if ϵ k = 0 ∀ k ), there will be a noisy square-root relation between the price changes and the traded volume. However, if the assumptions of Proposition 1 do not hold (e.g. { e i } ∞ i =1 are strongly dependent or have infinite variance), the price-volume relation may have a different exponent. A variety of exponents 0 &lt; H &lt; 1 have been observed in the relation between prices changes and trade sizes [8], suggesting the following model:
 
-$$\Delta P _ { k } = \theta _ { k } V O L _ { k } ^ { H } + \epsilon _ { k } ,$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0028" status="decoded_unverified" source-page="20" -->
+$$
+\Delta P _ { k } = \theta _ { k } V O L _ { k } ^ { H } + \epsilon _ { k } ,
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0028](images/formula_0028.png)
+```text
+PDF text layer: ∆ P k = θ k V OL H k + ϵ k , (15)
+```
+*Formula quality: `decoded_unverified`; source PDF page 20. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 To estimate the exponent H , we put ϵ k = 0 and θ k = ¯ θ i ξ k in (15) and fit a logarithmic regression to every half-hour subsample, indexed by i :
 
-$$\log | \Delta P _ { t _ { k } } | = \log \hat { \bar { \theta } } _ { i } + \hat { H } _ { i } \log V O L _ { k } + \log \hat { \xi } _ { k }$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0029" status="decoded_unverified" source-page="20" -->
+$$
+\log | \Delta P _ { t _ { k } } | = \log \hat { \bar { \theta } } _ { i } + \hat { H } _ { i } \log V O L _ { k } + \log \hat { \xi } _ { k }
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0029](images/formula_0029.png)
+```text
+PDF text layer: log | ∆ P t k | = log ˆ ¯ θ i + ˆ H i log V OL k +log ˆ ξ k (16)
+```
+*Formula quality: `decoded_unverified`; source PDF page 20. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Based on Proposition 1, we expect the price-volume relation to be indirect (i.e. come through OFI k ) and noisy. To empirically confirm this, we compare the following three regressions:
 
-$$| \Delta P _ { k } | = \hat { \alpha } _ { O , i } + \hat { \beta } _ { O , i } | O F I _ { k } | + \hat { \epsilon } _ { O , k } & & ( 1 7 a )$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0030" status="decoded_unverified" source-page="20" -->
+$$
+| \Delta P _ { k } | = \hat { \alpha } _ { O , i } + \hat { \beta } _ { O , i } | O F I _ { k } | + \hat { \epsilon } _ { O , k } & & ( 1 7 a )
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0030](images/formula_0030.png)
+```text
+PDF text layer: | ∆ P k | = ˆ α O,i + ˆ β O,i | OFI k | +ˆ ϵ O,k (17a)
+```
+*Formula quality: `decoded_unverified`; source PDF page 20. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
-$$| \Delta P _ { k } | = \hat { \alpha } _ { V , i } + \hat { \beta } _ { V , i } V O L _ { k } ^ { \hat { H } _ { i } } + \hat { \epsilon } _ { V , k } & & ( 1 7 b )$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0031" status="decoded_unverified" source-page="20" -->
+$$
+| \Delta P _ { k } | = \hat { \alpha } _ { V , i } + \hat { \beta } _ { V , i } V O L _ { k } ^ { \hat { H } _ { i } } + \hat { \epsilon } _ { V , k } & & ( 1 7 b )
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0031](images/formula_0031.png)
+```text
+PDF text layer: | ∆ P k | = ˆ α V,i + ˆ β V,i V OL ˆ H i k +ˆ ϵ V,k (17b)
+```
+*Formula quality: `decoded_unverified`; source PDF page 20. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
-$$| \Delta P _ { k } | = \hat { \alpha } _ { W , i } + \hat { \phi } _ { O , i } | O F I _ { k } | + \hat { \phi } _ { V , i } V O L _ { k } ^ { \hat { H } _ { i } } + \hat { \epsilon } _ { W , k }$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0032" status="decoded_unverified" source-page="20" -->
+$$
+| \Delta P _ { k } | = \hat { \alpha } _ { W , i } + \hat { \phi } _ { O , i } | O F I _ { k } | + \hat { \phi } _ { V , i } V O L _ { k } ^ { \hat { H } _ { i } } + \hat { \epsilon } _ { W , k }
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0032](images/formula_0032.png)
+```text
+PDF text layer: | ∆ P k | = ˆ α W,i + ˆ φ O,i | OFI k | + ˆ φ V,i V OL ˆ H i k +ˆ ϵ W,k (17c)
+```
+*Formula quality: `decoded_unverified`; source PDF page 20. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 These regressions are estimated for every half-hour subsample with the exponents ˆ H i preestimated by (16). The averages of ˆ H i and their standard deviation for each stock are presented on the left panel in Table 5. The exponent varies considerably across stocks and time, but is generally below 1/2 in our data. The average results of regressions (17a-17c) for each stock are presented on the middle and right panels. We observe that | OFI k | explains the magnitude of price moves better than V OL ˆ H i k . Although both variables appear to be statistically significant when taken individually, only | OFI k | remains significant in the multiple regression. Thus, the dependence between the magnitude of price moves and the traded volume is mostly due to correlation between V OL k and | OFI k | . Interestingly, the number of trades variable (suggested in [26]) is also statistically significant on a stand-alone basis, but becomes insignificant when added to (17c) as a third variable.
 
@@ -664,7 +952,16 @@ Table 5. Comparison of traded volume and order flow imbalance.
 
 Table 5 presents the average results of regressions:
 
-$$| \Delta P _ { k } | & = \hat { \alpha } _ { O , i } + \hat { \beta } _ { O , i } | O F I _ { k } | + \hat { \epsilon } _ { O , k } , \\ | \Delta P _ { k } | & = \hat { \alpha } _ { V , i } + \hat { \beta } _ { V , i } V O L _ { k } ^ { \hat { H } _ { i } } + \hat { \epsilon } _ { V , k } , \\ | \Delta P _ { k } | & = \hat { \alpha } _ { W , i } + \hat { \phi } _ { O , i } | O F I _ { k } | + \hat { \phi } _ { V , i } V O L _ { k } ^ { \hat { H } _ { i } } + \hat { \epsilon } _ { W , k } ,$$
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0033" status="decoded_unverified" source-page="22" -->
+$$
+| \Delta P _ { k } | & = \hat { \alpha } _ { O , i } + \hat { \beta } _ { O , i } | O F I _ { k } | + \hat { \epsilon } _ { O , k } , \\ | \Delta P _ { k } | & = \hat { \alpha } _ { V , i } + \hat { \beta } _ { V , i } V O L _ { k } ^ { \hat { H } _ { i } } + \hat { \epsilon } _ { V , k } , \\ | \Delta P _ { k } | & = \hat { \alpha } _ { W , i } + \hat { \phi } _ { O , i } | O F I _ { k } | + \hat { \phi } _ { V , i } V O L _ { k } ^ { \hat { H } _ { i } } + \hat { \epsilon } _ { W , k } ,
+$$
+![Source formula ref_cont_price_impact_1011.6402:formula:0033](images/formula_0033.png)
+```text
+PDF text layer: | ∆ P k | = ˆ α O,i + ˆ β O,i | OFI k | +ˆ ϵ O,k , | ∆ P k | = ˆ α V,i + ˆ β V,i V OL ˆ H i k +ˆ ϵ V,k , | ∆ P k | = ˆ α W,i + ˆ φ O,i | OFI k | + ˆ φ V,i V OL ˆ H i k +ˆ ϵ W,k ,
+```
+*Formula quality: `decoded_unverified`; source PDF page 22. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where ∆ P k are the 10-second mid-price changes, OFI k are the contemporaneous order flow imbalances and V OL k are the contemporaneous trade volumes. The exponents ˆ H i were estimated in each subsample beforehand using a logarithmic regression: log | ∆ P k | = log ˆ ¯ θ i + ˆ H i log V OL k + log ˆ ξ k . These regressions were estimated using 273 half-hour subsamples (indexed by i ) for each stock and their outputs were averaged across subsamples. Each subsample typically contains about 180 observations (indexed by k ). The t-statistics were computed using White's standard errors. For each of three regressions, Table 5 reports the average R 2 , the average t-statistic of the coefficient(s), the percentage of samples where the coefficient(s) passed the z-sest at the 5% significance level and the F-statistic of the regression.
 

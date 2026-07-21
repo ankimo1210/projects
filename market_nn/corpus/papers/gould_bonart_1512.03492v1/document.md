@@ -46,17 +46,53 @@ Orders that result in an immediate matching upon arrival are called market order
 
 At a given time t , the bid price b ( t ) is the highest stated price among active buy orders,
 
-$$b ( t ) \coloneqq \max _ { \{ x \in \mathcal { L } ( t ) | \omega _ { x } < 0 \} } p _ { x } ,$$
+<!-- formula-start id="gould_bonart_1512.03492v1:formula:0001" status="decoded_unverified" source-page="4" -->
+$$
+b ( t ) \coloneqq \max _ { \{ x \in \mathcal { L } ( t ) | \omega _ { x } < 0 \} } p _ { x } ,
+$$
+![Source formula gould_bonart_1512.03492v1:formula:0001](images/formula_0001.png)
+```text
+PDF text layer: b ( t ) := max { x ∈L ( t ) | ω x < 0 } p x , (1)
+```
+*Formula quality: `decoded_unverified`; source PDF page 4. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 and the ask price a ( t ) is the lowest stated price among active sell orders,
 
-$$a ( t ) \colon = \min _ { \{ x \in \mathcal { L } ( t ) | \omega _ { x } > 0 \} } p _ { x } .$$
+<!-- formula-start id="gould_bonart_1512.03492v1:formula:0002" status="decoded_unverified" source-page="4" -->
+$$
+a ( t ) \colon = \min _ { \{ x \in \mathcal { L } ( t ) | \omega _ { x } > 0 \} } p _ { x } .
+$$
+![Source formula gould_bonart_1512.03492v1:formula:0002](images/formula_0002.png)
+```text
+PDF text layer: a ( t ) := min { x ∈L ( t ) | ω x > 0 } p x . (2)
+```
+*Formula quality: `decoded_unverified`; source PDF page 4. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 The bid price and ask price are collectively called the best quotes . The bid-ask spread at time t is
 
-$$s ( t ) \colon = a ( t ) - b ( t ) .$$
+<!-- formula-start id="gould_bonart_1512.03492v1:formula:0003" status="decoded_unverified" source-page="4" -->
+$$
+s ( t ) \colon = a ( t ) - b ( t ) .
+$$
+![Source formula gould_bonart_1512.03492v1:formula:0003](images/formula_0003.png)
+```text
+PDF text layer: s ( t ) := a ( t ) -b ( t ) . (3)
+```
+*Formula quality: `decoded_unverified`; source PDF page 4. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
-$$m ( t ) \colon = \frac { a ( t ) + b ( t ) } { 2 } .$$
+<!-- formula-start id="gould_bonart_1512.03492v1:formula:0004" status="decoded_unverified" source-page="4" -->
+$$
+m ( t ) \colon = \frac { a ( t ) + b ( t ) } { 2 } .
+$$
+![Source formula gould_bonart_1512.03492v1:formula:0004](images/formula_0004.png)
+```text
+PDF text layer: m ( t ) := a ( t ) + b ( t ) 2 . (4)
+```
+*Formula quality: `decoded_unverified`; source PDF page 4. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 1 Some platforms allow other order types (such as fill-or-kill, stop-loss, or peg orders [Knight Capital Group, 2015]), but it is always possible to decompose the resulting order flow into limit and/or market orders. Therefore, we study LOBs in terms of these simple building blocks.
 
@@ -68,11 +104,29 @@ LOBs implement two resolution parameters: the tick size π &gt; 0, which specifi
 
 Because the tick size is strictly positive, the price axis of an LOB is a onedimensional lattice, whose points correspond to positive integer multiples of π . An LOB can therefore be regarded as a set of queues, each of which consists of active buy or sell orders at a specified price (see Figure 1). At a given price p and time t , the total size of active buy orders (i.e., the length of the queue of buy limit orders) is given by
 
-$$n ^ { b } ( p , t ) \coloneqq \sum _ { \{ x \in \mathcal { L } ( t ) | \omega _ { x } < 0 , p _ { x } = p \} } | \omega _ { x } |$$
+<!-- formula-start id="gould_bonart_1512.03492v1:formula:0005" status="decoded_unverified" source-page="5" -->
+$$
+n ^ { b } ( p , t ) \coloneqq \sum _ { \{ x \in \mathcal { L } ( t ) | \omega _ { x } < 0 , p _ { x } = p \} } | \omega _ { x } |
+$$
+![Source formula gould_bonart_1512.03492v1:formula:0005](images/formula_0005.png)
+```text
+PDF text layer: n b ( p, t ) := ∑ { x ∈L ( t ) | ω x < 0 ,p x = p } | ω x | (5)
+```
+*Formula quality: `decoded_unverified`; source PDF page 5. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 and the total size of active sell orders (i.e., the length of the queue of sell limit orders) is given by
 
-$$\ n ^ { a } ( p , t ) \coloneqq \sum _ { \{ x \in \mathcal { L } ( t ) | \omega _ { x } > 0 , p _ { x } = p \} } \omega _ { x } .$$
+<!-- formula-start id="gould_bonart_1512.03492v1:formula:0006" status="decoded_unverified" source-page="5" -->
+$$
+\ n ^ { a } ( p , t ) \coloneqq \sum _ { \{ x \in \mathcal { L } ( t ) | \omega _ { x } > 0 , p _ { x } = p \} } \omega _ { x } .
+$$
+![Source formula gould_bonart_1512.03492v1:formula:0006](images/formula_0006.png)
+```text
+PDF text layer: n a ( p, t ) := ∑ { x ∈L ( t ) | ω x > 0 ,p x = p } ω x . (6)
+```
+*Formula quality: `decoded_unverified`; source PDF page 5. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 In an LOB, the value of b ( t ) increases whenever a new buy limit order arrives inside the bid-ask spread, and decreases whenever the total volume of buy limit orders at b ( t ) depletes to 0 (which occurs when all buy limit orders at b ( t ) either match to an incoming sell market order or are cancelled by their owners). Similarly, the value of a ( t ) decreases whenever a new sell limit order arrives inside the bid-ask spread, and increases whenever the total volume of sell limit orders at a ( t ) depletes to 0. The value of m ( t ) increases (respectively, decreases) whenever either either of b ( t ) or a ( t ) increases (respectively, decreases).
 
@@ -100,7 +154,16 @@ Despite the appealing nature of these results, Gar` eche et al. [2013] presented
 
 In a recent publication, Yang and Zhu [2015] argued that the property of the best bid and ask queues most useful for price prediction is not their lengths, but rather their imbalance. Specifically, at a given time t , let
 
-$$I ( t ) \coloneqq \frac { n ^ { b } ( b _ { t } , t ) - n ^ { a } ( a _ { t } , t ) } { n ^ { b } ( b _ { t } , t ) + n ^ { a } ( a _ { t } , t ) }$$
+<!-- formula-start id="gould_bonart_1512.03492v1:formula:0007" status="decoded_unverified" source-page="7" -->
+$$
+I ( t ) \coloneqq \frac { n ^ { b } ( b _ { t } , t ) - n ^ { a } ( a _ { t } , t ) } { n ^ { b } ( b _ { t } , t ) + n ^ { a } ( a _ { t } , t ) }
+$$
+![Source formula gould_bonart_1512.03492v1:formula:0007](images/formula_0007.png)
+```text
+PDF text layer: I ( t ) := n b ( b t , t ) -n a ( a t , t ) n b ( b t , t ) + n a ( a t , t ) (7)
+```
+*Formula quality: `decoded_unverified`; source PDF page 7. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 denote the queue imbalance at time t . The quantity I measures the (normalized) difference between n b ( b t , t ) and n a ( a t , t ), and thereby provides a quantitative assessment of the relative strengths of buying and selling pressure in an LOB. 2
 
@@ -150,19 +213,40 @@ For each stock and each trading day in our sample, we first create an ordered se
 
 ̸
 
-$$T = \left \{ t \left | \ m ( t ) \neq \lim _ { \varepsilon \downarrow 0 } m ( t - \varepsilon ) \right \} .$$
+<!-- formula-start id="gould_bonart_1512.03492v1:formula:0008" status="verified_manual" source-page="11" -->
+$$
+\mathcal{T}=\left\{t\mid m(t)\neq\lim_{\epsilon\downarrow0}m(t-\epsilon)\right\} \tag{8}
+$$
+![Source formula gould_bonart_1512.03492v1:formula:0008](images/formula_0008.png)
+*Formula quality: `verified_manual`; source PDF page 11. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 Let t 1 &lt; t 2 &lt; . . . &lt; t N denote the times in T , and let t 0 denote the time of the first LOB event for the given stock on the given day (which, for our data, occurs at or after 10:00 - see Section 4).
 
 For each time t i ∈ T , we calculate an indicator variable y i to describe whether or not the mid-price movement at t i was upwards,
 
-$$y _ { i } \colon = \begin{{cases} & 1 , \quad \text {if } m ( t _ { i } ) > m ( t _ { i - 1 } ) , \\ & 0 , \quad \text {if } m ( t _ { i } ) < m ( t _ { i - 1 } ) . \end{cases}$$
+<!-- formula-start id="gould_bonart_1512.03492v1:formula:0009" status="verified_manual" source-page="11" -->
+$$
+y_i:=\begin{cases}1,&\text{if }m(t_i)>m(t_{i-1}),\\0,&\text{if }m(t_i)<m(t_{i-1}).\end{cases} \tag{9}
+$$
+![Source formula gould_bonart_1512.03492v1:formula:0009](images/formula_0009.png)
+*Formula quality: `verified_manual`; source PDF page 11. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 We choose to study price changes via this simple indicator variable, rather than studying the signed change in mid price, because the magnitude of such price changes are determined not only by n b ( b ( t ) , t ) and n a ( a ( t ) , t ), but also by the prices and lengths of order queues deeper into the LOB. We therefore restrict our attention to the direction of mid-price movements, not their size.
 
 For each time t i ∈ T , we choose a time ˜ t i uniformly at random in the open interval ( t i -1 , t i ) and sample the imbalance I ( ˜ t i ) at this time. To ease exposition, we introduce the notation
 
-$$I _ { i } = I ( \tilde { t } _ { i } ) .$$
+<!-- formula-start id="gould_bonart_1512.03492v1:formula:0010" status="decoded_unverified" source-page="11" -->
+$$
+I _ { i } = I ( \tilde { t } _ { i } ) .
+$$
+![Source formula gould_bonart_1512.03492v1:formula:0010](images/formula_0010.png)
+```text
+PDF text layer: I i = I ( ˜ t i ) . (10)
+```
+*Formula quality: `decoded_unverified`; source PDF page 11. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 In this paper, we seek to assess the predictive power of I i for forecasting y i . There are many other possible choices for when to sample the imbalance to perform predictions (such as sampling I immediately after t i -1 or immediately before t i ), but we restrict our attention to the case of sampling ˜ t i uniformly at random. We return to the discussion of possible alternative approaches in Section 8.
 
@@ -187,31 +271,94 @@ The aim of the present study is to assess the predictive power of I i for foreca
 
 We then consider this question in the context of a probabilistic classifier, which, for a given queue imbalance I i , seeks to predict the probability that y i = 1. We note that if we choose the function y i for our binary classifier such that
 
-$$\hat { y } \colon ( - 1 , 1 ) \to [ 0 , 1 ] \, ,$$
+<!-- formula-start id="gould_bonart_1512.03492v1:formula:0011" status="decoded_unverified" source-page="13" -->
+$$
+\hat { y } \colon ( - 1 , 1 ) \to [ 0 , 1 ] \, ,
+$$
+![Source formula gould_bonart_1512.03492v1:formula:0011](images/formula_0011.png)
+```text
+PDF text layer: ˆ y : ( -1 , 1) → [0 , 1] , (11)
+```
+*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
-$$\hat { y } _ { i } \colon = \mathbb { P } \left ( y _ { i } = 1 | I _ { i } \right ) ,$$
+<!-- formula-start id="gould_bonart_1512.03492v1:formula:0012" status="decoded_unverified" source-page="13" -->
+$$
+\hat { y } _ { i } \colon = \mathbb { P } \left ( y _ { i } = 1 | I _ { i } \right ) ,
+$$
+![Source formula gould_bonart_1512.03492v1:formula:0012](images/formula_0012.png)
+```text
+PDF text layer: ˆ y i := P ( y i = 1 | I i ) , (12)
+```
+*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 then we can use the same function ˆ y to perform both binary classification and probabilistic prediction.
 
 Consider a queue imbalance I i ′ chosen uniformly at random among all observations for which y i = 1 and another queue imbalance I j ′ chosen uniformly at random among all observations for which y i = 0. If I i provides predictive power to perform binary classification, then the resulting values of ˆ y will satisfy
 
-$$\mathbb { P } ( \hat { y } _ { i ^ { \prime } } > \hat { y } _ { j ^ { \prime } } ) > 1 / 2 .$$
+<!-- formula-start id="gould_bonart_1512.03492v1:formula:0013" status="decoded_unverified" source-page="13" -->
+$$
+\mathbb { P } ( \hat { y } _ { i ^ { \prime } } > \hat { y } _ { j ^ { \prime } } ) > 1 / 2 .
+$$
+![Source formula gould_bonart_1512.03492v1:formula:0013](images/formula_0013.png)
+```text
+PDF text layer: P (ˆ y i ′ > ˆ y j ′ ) > 1 / 2 . (13)
+```
+*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 If, however, I i provides no predictive power to perform binary classification, then the resulting values of ˆ y will satisfy
 
-$$\mathbb { P } ( \hat { y } _ { i ^ { \prime } } > \hat { y } _ { j ^ { \prime } } ) = \mathbb { P } ( \hat { y } _ { j ^ { \prime } } > \hat { y } _ { i ^ { \prime } } ) = 1 / 2 .$$
+<!-- formula-start id="gould_bonart_1512.03492v1:formula:0014" status="decoded_unverified" source-page="13" -->
+$$
+\mathbb { P } ( \hat { y } _ { i ^ { \prime } } > \hat { y } _ { j ^ { \prime } } ) = \mathbb { P } ( \hat { y } _ { j ^ { \prime } } > \hat { y } _ { i ^ { \prime } } ) = 1 / 2 .
+$$
+![Source formula gould_bonart_1512.03492v1:formula:0014](images/formula_0014.png)
+```text
+PDF text layer: P (ˆ y i ′ > ˆ y j ′ ) = P (ˆ y j ′ > ˆ y i ′ ) = 1 / 2 . (14)
+```
+*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Similarly, if I i provides predictive power to perform probabilistic classification, then the resulting values of ˆ y will satisfy
 
-$$\mathbb { P } ( \hat { y } _ { i ^ { \prime } } > 1 / 2 ) > 1 / 2 \text { and } \mathbb { P } ( \hat { y } _ { j ^ { \prime } } > 1 / 2 ) < 1 / 2 .$$
+<!-- formula-start id="gould_bonart_1512.03492v1:formula:0015" status="decoded_unverified" source-page="13" -->
+$$
+\mathbb { P } ( \hat { y } _ { i ^ { \prime } } > 1 / 2 ) > 1 / 2 \text { and } \mathbb { P } ( \hat { y } _ { j ^ { \prime } } > 1 / 2 ) < 1 / 2 .
+$$
+![Source formula gould_bonart_1512.03492v1:formula:0015](images/formula_0015.png)
+```text
+PDF text layer: P (ˆ y i ′ > 1 / 2) > 1 / 2 and P (ˆ y j ′ > 1 / 2) < 1 / 2 . (15)
+```
+*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 If, however, I i provides no predictive power to perform probabilistic classification, then the resulting values of ˆ y will satisfy
 
-$$\mathbb { P } ( \hat { y } _ { i ^ { \prime } } > 1 / 2 ) = 1 / 2 \text { and } \mathbb { P } ( \hat { y } _ { j ^ { \prime } } > 1 / 2 ) = 1 / 2 .$$
+<!-- formula-start id="gould_bonart_1512.03492v1:formula:0016" status="decoded_unverified" source-page="13" -->
+$$
+\mathbb { P } ( \hat { y } _ { i ^ { \prime } } > 1 / 2 ) = 1 / 2 \text { and } \mathbb { P } ( \hat { y } _ { j ^ { \prime } } > 1 / 2 ) = 1 / 2 .
+$$
+![Source formula gould_bonart_1512.03492v1:formula:0016](images/formula_0016.png)
+```text
+PDF text layer: P (ˆ y i ′ > 1 / 2) = 1 / 2 and P (ˆ y j ′ > 1 / 2) = 1 / 2 . (16)
+```
+*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 To formulate our estimate of the function ˆ y , we perform a logistic regression of y i onto I i . Specifically, we use the data in our training set to calculate maximum likelihood estimates of the coefficients x 0 and x 1 in the relationship
 
-$$\hat { y } ( I ) = \frac { 1 } { 1 + e ^ { - ( x _ { 0 } + I x _ { 1 } ) } } .$$
+<!-- formula-start id="gould_bonart_1512.03492v1:formula:0017" status="decoded_unverified" source-page="13" -->
+$$
+\hat { y } ( I ) = \frac { 1 } { 1 + e ^ { - ( x _ { 0 } + I x _ { 1 } ) } } .
+$$
+![Source formula gould_bonart_1512.03492v1:formula:0017](images/formula_0017.png)
+```text
+PDF text layer: ˆ y ( I ) = 1 1 + e -( x 0 + Ix 1 ) . (17)
+```
+*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 For a detailed introduction to logistic regression, see Hosmer and Lemeshow [2004], McCullagh and Nelder [1989].
 
@@ -221,7 +368,16 @@ and if we interpret ˆ y as
 
 To assess the predictive power of our logistic regressions for performing binary and probabilistic classification, we compare their output to that of a simple null model in which we assume that I provides no useful information for predicting the direction of mid-price movements, such that
 
-$$\hat { y } ( I ) = 1 / 2 \text { for all } I .$$
+<!-- formula-start id="gould_bonart_1512.03492v1:formula:0018" status="decoded_unverified" source-page="14" -->
+$$
+\hat { y } ( I ) = 1 / 2 \text { for all } I .
+$$
+![Source formula gould_bonart_1512.03492v1:formula:0018](images/formula_0018.png)
+```text
+PDF text layer: ˆ y ( I ) = 1 / 2 for all I. (18)
+```
+*Formula quality: `decoded_unverified`; source PDF page 14. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 In words, our null model predicts that the probability of an upward price movement is always 1 / 2, irrespective of the queue imbalance.
 
@@ -229,11 +385,26 @@ To assess the predictive power of our fits for performing binary classification,
 
 To assess the predictive power of our fitted logistic regressions for performing probabilistic classification, we use our function ˆ y to make out-of-sample forecasts ˆ y i for each I i in the testing set, and calculate the corresponding residuals
 
-$$r _ { i } \colon = \hat { y } _ { i } - y _ { i } ,$$
+<!-- formula-start id="gould_bonart_1512.03492v1:formula:0019" status="decoded_unverified" source-page="14" -->
+$$
+r _ { i } \colon = \hat { y } _ { i } - y _ { i } ,
+$$
+![Source formula gould_bonart_1512.03492v1:formula:0019](images/formula_0019.png)
+```text
+PDF text layer: r i := ˆ y i -y i . (19)
+```
+*Formula quality: `decoded_unverified`; source PDF page 14. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 We then calculate the mean square residual across all observations in the testing set. For the null model, ˆ y i = 0 . 5 for all i , so r i is given by
 
-$$r _ { i } = \left \{ \begin{array} { l l } { - 1 / 2 , } & { \text {if } y _ { i } = 1 , } \\ { 1 / 2 , } & { \text {if } y _ { i } = 0 } \end{array}$$
+<!-- formula-start id="gould_bonart_1512.03492v1:formula:0020" status="verified_manual" source-page="14" -->
+$$
+r_i=\begin{cases}-\frac{1}{2},&\text{if }y_i=1,\\\frac{1}{2},&\text{if }y_i=0.\end{cases} \tag{20}
+$$
+![Source formula gould_bonart_1512.03492v1:formula:0020](images/formula_0020.png)
+*Formula quality: `verified_manual`; source PDF page 14. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 and the mean squared residual is exactly 1 / 4.
 

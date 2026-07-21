@@ -36,11 +36,23 @@ Let { X ( i ) ∈ R d × L ; i = 1 , ..., N } be a collection of N time series, 
 
 The goal of the proposed method is to learn how the measurements x ( i ) j should be normalized by appropriately shifting and scaling them:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_passalis_dain_1902.07892:formula:0001" status="text_layer_fallback" source-page="2" -->
+![Source formula ref_passalis_dain_1902.07892:formula:0001](images/formula_0001.png)
+```text
+PDF text layer: ˜ x ( i ) j = ( x ( i ) j -α ( i ) ) ⊘ β ( i ) , (1)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 2. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where ⊘ is the Hadamard (entrywise) division operator. Note that global z-score normalization is a special case with α ( i ) = α = [ µ 1 , µ 2 , . . . , µ d ] and β ( i ) = β = [ σ 1 , σ 2 , . . . , σ d ] , where µ k and σ k refer to the global average and standard deviation of the k -th input feature:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_passalis_dain_1902.07892:formula:0002" status="text_layer_fallback" source-page="2" -->
+![Source formula ref_passalis_dain_1902.07892:formula:0002](images/formula_0002.png)
+```text
+PDF text layer: µ k = 1 NL N ∑ i =1 L ∑ j =1 x ( i ) j,k , σ k = √ √ √ √ 1 NL N ∑ i =1 L ∑ j =1 ( x ( i ) j,k -µ k ) 2 .
+```
+*Formula quality: `text_layer_fallback`; source PDF page 2. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 However, as it was already discussed, the obtained estimations for α and β might not be the optimal for normalizing every possible measurement vector, since the distribution of the data might significantly drift, invalidating the previous choice for these parameters. This issue becomes even more apparent when the data are multimodal, e.g., when training model using time series data from different stocks that exhibit significantly different behavior (price levels, trading frequency, etc.). To overcome these limitations we propose to dynamically estimate these quantities and separately normalize each time series by implicitly estimating the distribution from which each measurement was generated. Therefore, in this work, we propose normalizing each time series so that α and β are
 
@@ -56,41 +68,89 @@ learned and depend on the current input , instead of being the global averages c
 
 The proposed architecture is summarized in Fig. 1. First a summary representation of the time series is extracted by averaging all the L measurements:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_passalis_dain_1902.07892:formula:0003" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_passalis_dain_1902.07892:formula:0003](images/formula_0003.png)
+```text
+PDF text layer: a ( i ) = 1 L L ∑ j =1 x ( i ) j ∈ R d . (2)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 This representation provides an initial estimation for the mean of the current time series and, as a result, it can be used to estimate the distribution from which the current time series was generated, in order to appropriately modify the normalization procedure. Then, the shifting operator α ( i ) is defined using a linear transformation of the extracted summary representation as:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_passalis_dain_1902.07892:formula:0004" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_passalis_dain_1902.07892:formula:0004](images/formula_0004.png)
+```text
+PDF text layer: α ( i ) = W a a ( i ) ∈ R d , (3)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where W a ∈ R d × d is the weight matrix of the first neural layer, which is responsible for shifting the measurements across each dimension. Employing a linear transformation layer ensures that the proposed method will be able to handle data that are not appropriately normalized (or even not normalized at all), allowing for training the proposed model in an end-to-end fashion without having to deal with stability issues, such as saturating the activation functions. This layer is called adaptive shifting layer , since it estimates how the data must be shifted before feeding them to the network. Note that this approach allows for exploiting possible correlations between different features to perform more robust normalization.
 
 After centering the data using the process described in (3), the data must be appropriately scaled using the scaling operator β ( i ) . To this end, we calculate an updated summary representation that corresponds to the standard deviation of the data as:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_passalis_dain_1902.07892:formula:0005" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_passalis_dain_1902.07892:formula:0005](images/formula_0005.png)
+```text
+PDF text layer: b ( i ) k = √ √ √ √ 1 L L ∑ j =1 ( x ( i ) j,k -α ( i ) k ) 2 , k = 1 , 2 , . . . , d. (4)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Then, the scaling function can be similarly defined as a linear transformation of this summary representation allowing for scaling each of the shifted measurements:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_passalis_dain_1902.07892:formula:0006" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_passalis_dain_1902.07892:formula:0006](images/formula_0006.png)
+```text
+PDF text layer: β ( i ) = W b b ( i ) ∈ R d , (5)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where W b ∈ R d × d is the weight matrix the scaling layer. This layer is called adaptive scaling layer , since it estimates how the data must be scaled before feeding them to the network. Also, note that this process corresponds to scaling the data according to their variance, as performed with z-score normalization.
 
 Finally, the data are fed to an adaptive gating layer , which is capable of suppressing features that are not relevant or useful for the task as hand as:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_passalis_dain_1902.07892:formula:0007" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_passalis_dain_1902.07892:formula:0007](images/formula_0007.png)
+```text
+PDF text layer: ˜ ˜ x ( i ) j = ˜ x ( i ) j ⊙ γ ( i ) , (6)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where ⊙ is Hadamard (entrywise) multiplication operator and
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_passalis_dain_1902.07892:formula:0008" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_passalis_dain_1902.07892:formula:0008](images/formula_0008.png)
+```text
+PDF text layer: γ ( i ) = sigm ( W c c ( i ) + d ) ∈ R d , (7)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 sigm ( x ) = 1 / (1 + exp( -x )) is the sigmoid function, W c ∈ R d × d and d ∈ R d are the parameters of the gating layer, and c ( i ) is a third summary representation calculated as:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_passalis_dain_1902.07892:formula:0009" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_passalis_dain_1902.07892:formula:0009](images/formula_0009.png)
+```text
+PDF text layer: c ( i ) = 1 L L ∑ j =1 ˜ x ( i ) j ∈ R d . (8)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Note that in contrast with the previous layers, this layer is nonlinear and it is capable of suppressing the normalized features. In this way, features that are not relevant to the task at hand or can harm the generalization abilities of the network, e.g., features with excessive variance, can be appropriate filtered before being fed to the network. Overall, α ( i ) , β ( i ) , γ ( i ) are dependent on current 'local' data on window i and the 'global' estimates of W a , W b , W c , d that are trained using multiple samples on time-series, { X ( i ) ∈ R d × L ; i = 1 , ..., M } , where M is the number of samples in the training data.
 
 The output of the proposed normalization layer, which is called Deep Adaptive Input Normalization (DAIN), can be obtained simply by feed-forwarding through its three layers, as shown in Fig. 1, while the parameters of the layers are kept fixed during the inference process. Therefore, no additional training is required during inference. All the parameters of the resulting deep model can be directly learned in an end-to-end fashion using gradient descent:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_passalis_dain_1902.07892:formula:0010" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_passalis_dain_1902.07892:formula:0010](images/formula_0010.png)
+```text
+PDF text layer: (9) ∆ ( W a , W b , W c , d , W ) = -η ( η a ∂ L ∂ W a , η b ∂ L ∂ W b , η c ∂ L ∂ W c , η c ∂ L ∂ d , ∂ L ∂ W )
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where L denotes the loss function used for training the network and W denotes the weights of the neural network that follows the proposed layer. Therefore, the proposed normalization scheme can be used on top of every deep learning network and the resulting architecture can be trained using the regular backpropagation algorithm, as also experimentally demonstrated in Section III. Note that separate learning rates are used for the parameters of each sub-layer, i.e., η a , η b and η c . This was proven essential to ensure the smooth convergence of the proposed method due to the enormous differences in the resulting gradients between the parameters of the various sublayers.
 

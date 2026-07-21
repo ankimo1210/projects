@@ -24,7 +24,7 @@
     "text_blocks": 265,
     "tables": 9,
     "pictures": 3,
-    "markdown_chars": 69243,
+    "markdown_chars": 74136,
     "math_blocks": 17,
     "chunks": 62,
     "max_chunk_tokens": 490,
@@ -61,5 +61,17 @@
     "markdown_to_source_text_ratio": 1.1059,
     "has_abstract": true,
     "has_references": true
+  },
+  "formula_quality": {
+    "overlay": "source-linked-v1",
+    "total": 17,
+    "docling_decoded": 17,
+    "verified_manual": 17,
+    "manual_corrected": 17,
+    "manual_recovered": 0,
+    "decoded_unverified": 0,
+    "text_layer_fallback": 0,
+    "source_crops": 17,
+    "latex_blocks": 17
   }
 }

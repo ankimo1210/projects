@@ -178,13 +178,37 @@ In compliance with NASDAQ OMX agreements, the normalized feature dataset is made
 
 In order to make our dataset a benchmark that can be used for the evaluation of HTF methods based on LOB information, the data is accompanied by the following experimental protocol. We develop a day-based prediction framework following an anchored forward cross-validation format. More specifically, the training set is increases by one day in each fold and stops after n -1 days (i.e. after 9 days in our case where n = 10). On each fold, the test set corresponds to one day of data, which moves in a rolling window format. The experimental setup is illustrated in Fig. 2. Performance is measured by calculating the mean accuracy, recall, precision, and F1 score over all folds, as well as the corresponding standard deviation. We measure our results based on these metrics, which are defined as follows:
 
-$$A c c u r a c y = \frac { T P + T N } { T P + T N + F P + F N } \quad ( 1 )$$
+<!-- formula-start id="fi2010_1705.03233v5:formula:0001" status="verified_manual" source-page="11" -->
+$$
+\mathrm{Accuracy} = \frac{TP+TN}{TP+TN+FP+FN} \tag{1}
+$$
+![Source formula fi2010_1705.03233v5:formula:0001](images/formula_0001.png)
+*Formula quality: `verified_manual`; source PDF page 11. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
-$$P r e c i s i o n = \frac { T P } { T P + F P }$$
+<!-- formula-start id="fi2010_1705.03233v5:formula:0002" status="verified_manual" source-page="11" -->
+$$
+\mathrm{Precision} = \frac{TP}{TP+FP} \tag{2}
+$$
+![Source formula fi2010_1705.03233v5:formula:0002](images/formula_0002.png)
+*Formula quality: `verified_manual`; source PDF page 11. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
-$$R e c a l l = \frac { T P } { T P + F N }$$
+<!-- formula-start id="fi2010_1705.03233v5:formula:0003" status="verified_manual" source-page="11" -->
+$$
+\mathrm{Recall} = \frac{TP}{TP+FN} \tag{3}
+$$
+![Source formula fi2010_1705.03233v5:formula:0003](images/formula_0003.png)
+*Formula quality: `verified_manual`; source PDF page 11. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
-$$F 1 = 2 \times \frac { P r e c i s i o n \times R e c a l l } { P r e c i s i o n + R e c a l l }$$
+<!-- formula-start id="fi2010_1705.03233v5:formula:0004" status="verified_manual" source-page="11" -->
+$$
+F_1 = 2\times\frac{\mathrm{Precision}\times\mathrm{Recall}}{\mathrm{Precision}+\mathrm{Recall}} \tag{4}
+$$
+![Source formula fi2010_1705.03233v5:formula:0004](images/formula_0004.png)
+*Formula quality: `verified_manual`; source PDF page 11. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 where TP and TF represents the true positives and true negatives, respectively, of the mid-price prediction label compared with the ground truth, where FP and FN represents the false positives and false negatives, respectively. From among the above metrics, we focus on the F1 score performance. The main reason that we focus on F1 score is based on its ability to only be affected in one direction of skew distributions, in the case of unbalanced classes like ours. On the contary, accuracy cannot differentiate between the number of correct labels (i.e. related to mid-price movement direction prediction) of different classes where the other three metrics can separate the correct labels among different classes with F1 being the harmonic mean of Precision and Recall.
 
@@ -196,15 +220,33 @@ We follow an event-based inflow, as used in Li et al. (2016). This is due to the
 
 We provide three sets of data, each created by following a different data normalization strategy, i.e. z-score, min-max, and decimal precision normalization, for every i datasample. Z-score, in particular, is the normalization process through which we subtract the mean from our input data for each feature sep- arately and divide by the standard deviation of the given sample:
 
-$$x _ { i } ^ { ( Z _ { s core } ) } = \frac { x _ { i } - \frac { 1 } { N } \sum _ { j = 1 } ^ { N } x _ { j } } { \sqrt { \frac { 1 } { N } \sum _ { j = 1 } ^ { N } ( x _ { j } - \bar { x } ) ^ { 2 } } } ,$$
+<!-- formula-start id="fi2010_1705.03233v5:formula:0005" status="verified_manual" source-page="13" -->
+$$
+x_i^{(\mathrm{Zscore})} = \frac{x_i-\frac{1}{N}\sum_{j=1}^{N}x_j}{\sqrt{\frac{1}{N}\sum_{j=1}^{N}(x_j-\bar{x})^2}} \tag{5}
+$$
+![Source formula fi2010_1705.03233v5:formula:0005](images/formula_0005.png)
+*Formula quality: `verified_manual`; source PDF page 13. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 where ¯ x denotes the mean vector, as appears in Eq. 5. On the other hand, min-max scaling, as described by:
 
-$$x _ { i } ^ { ( M M ) } = \frac { x _ { i } - x _ { \min } } { x _ { \max } - x _ { \min } } ,$$
+<!-- formula-start id="fi2010_1705.03233v5:formula:0006" status="verified_manual" source-page="13" -->
+$$
+x_i^{(\mathrm{MM})} = \frac{x_i-x_{\min}}{x_{\max}-x_{\min}} \tag{6}
+$$
+![Source formula fi2010_1705.03233v5:formula:0006](images/formula_0006.png)
+*Formula quality: `verified_manual`; source PDF page 13. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 is the process of subtracting the minimum value from each feature and dividing it by the difference between the maximum and minimum value of that feature sample. The third scaling setup is the decimal precision approach. This normalization method is based on moving the decimal points of each of the feature values. Calculations follow the absolute value of each feature sample:
 
-$$x _ { i } ^ { ( D P ) } = \frac { x _ { i } } { 1 0 ^ { k } } ,$$
+<!-- formula-start id="fi2010_1705.03233v5:formula:0007" status="verified_manual" source-page="13" -->
+$$
+x_i^{(\mathrm{DP})} = \frac{x_i}{10^k} \tag{7}
+$$
+![Source formula fi2010_1705.03233v5:formula:0007](images/formula_0007.png)
+*Formula quality: `verified_manual`; source PDF page 13. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 where k is the integer that will give us the maximum value for | x DP | &lt; 1.
 
@@ -220,7 +262,13 @@ Having defined the event representations, we use five different projection horiz
 
 Our labels describe the percentage change of the mid-price, which is calculated as follows:
 
-$$l _ { i } ^ { ( j ) } = \frac { \frac { 1 } { k } \sum _ { j = i + 1 } ^ { i + k } m _ { j } - m _ { i } } { m _ { i } } ,$$
+<!-- formula-start id="fi2010_1705.03233v5:formula:0008" status="verified_manual" source-page="13" -->
+$$
+l_i^{(j)} = \frac{1}{k}\sum_{j=i+1}^{i+k}\frac{m_j-m_i}{m_i} \tag{8}
+$$
+![Source formula fi2010_1705.03233v5:formula:0008](images/formula_0008.png)
+*Formula quality: `verified_manual`; source PDF page 13. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 where m j is the future mid-prices ( k = 1, 2, 3, 5, or 10 next events in our representations) and m i is the current mid-price. The extracted labels are based on a threshold for the percentage change of 0.002. For percentage changes equal to or greater than 0.002, we use label 1. For percentage change that varies from -0.00199 to 0.00199, we use label 2, and, for percentage change smaller or equal to -0.002, we use label 3.
 
@@ -259,19 +307,43 @@ Ridge regression defines a linear mapping, expressed by the matrix W ∈ R D × 
 
 24 The authors provide a threshold, which is based on 250 events per 10-minute sample interval.
 
-$$W ^ { * } = \arg \min _ { W } \, \sum _ { i = 1 } ^ { N } \| W ^ { T } x _ { i } - t _ { i } \| _ { 2 } ^ { 2 } + \lambda \| W \| _ { F } ^ { 2 } ,$$
+<!-- formula-start id="fi2010_1705.03233v5:formula:0009" status="verified_manual" source-page="16" -->
+$$
+W^* = \operatorname*{arg\,min}_{W}\sum_{i=1}^{N}\lVert W^T x_i-t_i\rVert_2^2+\lambda\lVert W\rVert_F^2 \tag{9}
+$$
+![Source formula fi2010_1705.03233v5:formula:0009](images/formula_0009.png)
+*Formula quality: `verified_manual`; source PDF page 16. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 or using a matrix notation:
 
-$$W ^ { * } = \arg \min _ { W } \left \| W ^ { T } X - T \right \| _ { F } ^ { 2 } + \lambda \| W \| _ { F } ^ { 2 } .$$
+<!-- formula-start id="fi2010_1705.03233v5:formula:0010" status="verified_manual" source-page="16" -->
+$$
+W^* = \operatorname*{arg\,min}_{W}\lVert W^T X-T\rVert_F^2+\lambda\lVert W\rVert_F^2 \tag{10}
+$$
+![Source formula fi2010_1705.03233v5:formula:0010](images/formula_0010.png)
+*Formula quality: `verified_manual`; source PDF page 16. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 In the above, X = [ x i , . . . , x N ] and T = [ t i , . . . , t N ] are matrices formed by the samples x i and t i as columns, respectively.
 
 In our case, each sample x i corresponds to an event, represented by a vector (with D = 144), as described in Section 3.4. For the three-class classification problems in our dataset, the elements of vectors t i ∈ R C ( C = 3 in our case) take values equal to t ik = 1, if x i belongs to class k , and, if t ik = -1, otherwise. The solution of Eq. 10 is given by:
 
-$$W = X \left ( X ^ { T } X + \lambda I \right ) ^ { - 1 } T ^ { T } ,$$
+<!-- formula-start id="fi2010_1705.03233v5:formula:0011" status="verified_manual" source-page="16" -->
+$$
+W = X(X^T X+\lambda I)^{-1}T^T \tag{11}
+$$
+![Source formula fi2010_1705.03233v5:formula:0011](images/formula_0011.png)
+*Formula quality: `verified_manual`; source PDF page 16. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
-$$W = \left ( X X ^ { T } + \lambda I \right ) ^ { - 1 } X T ^ { T } , & & ( 1 2 )$$
+<!-- formula-start id="fi2010_1705.03233v5:formula:0012" status="verified_manual" source-page="16" -->
+$$
+W = (XX^T+\lambda I)^{-1}XT^T \tag{12}
+$$
+![Source formula fi2010_1705.03233v5:formula:0012](images/formula_0012.png)
+*Formula quality: `verified_manual`; source PDF page 16. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 or
 
@@ -279,7 +351,13 @@ where I is the identity matrix of appropriate dimensions. Here, we should note t
 
 After the calculation of W , a new (test) sample x ∈ R D is mapped on its corresponding representation in space R C , i.e. o = W T x , and is classified according to the maximal value of its projection, i.e.:
 
-$$l _ { x } = \arg \max _ { k } \, o _ { k } .$$
+<!-- formula-start id="fi2010_1705.03233v5:formula:0013" status="verified_manual" source-page="16" -->
+$$
+l_x = \operatorname*{arg\,max}_{k} o_k \tag{13}
+$$
+![Source formula fi2010_1705.03233v5:formula:0013](images/formula_0013.png)
+*Formula quality: `verified_manual`; source PDF page 16. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 ## 5.2. SLFN Network-based Nonlinear Regression
 
@@ -293,21 +371,45 @@ Fig. 3. SLFN
 
 ![Image](images/image_000002_da1d4d71c5dcaa81b29b65150eddb380ddc3546b5786bf6d78a7482693ba31bf.png)
 
-$$h _ { i k } = \exp \left ( \frac { \| x _ { i } - v _ { k } \| ^ { 2 } _ { 2 } } { 2 \sigma ^ { 2 } } \right ) , \ k = 1 , \dots , K ,$$
+<!-- formula-start id="fi2010_1705.03233v5:formula:0014" status="verified_manual" source-page="17" -->
+$$
+h_{ik}=\exp\!\left(\frac{\lVert x_i-v_k\rVert_2^2}{2\sigma^2}\right),\quad k=1,\ldots,K \tag{14}
+$$
+![Source formula fi2010_1705.03233v5:formula:0014](images/formula_0014.png)
+*Formula quality: `verified_manual`; source PDF page 17. Positive exponent retained exactly as printed in the source PDF; this is not silently corrected to the conventional negative RBF exponent.*
+<!-- formula-end -->
 
 where σ is a hyper-parameter denoting the spread of the RBF neuron and v k corresponds to the k -th column of V .
 
 The network's output weights W ∈ R K × C are subsequently determined by solving for:
 
-$$W ^ { * } = \arg \min _ { W } \left \| W ^ { T } H - T \right \| _ { F } ^ { 2 } + \lambda \| W \| _ { F } ^ { 2 } ,$$
+<!-- formula-start id="fi2010_1705.03233v5:formula:0015" status="verified_manual" source-page="17" -->
+$$
+W^* = \operatorname*{arg\,min}_{W}\lVert W^T H-T\rVert_F^2+\lambda\lVert W\rVert_F^2 \tag{15}
+$$
+![Source formula fi2010_1705.03233v5:formula:0015](images/formula_0015.png)
+*Formula quality: `verified_manual`; source PDF page 17. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 where H = [ h 1 , . . . , h N ] is a matrix formed by the network's hidden layer outputs for the training data and T is a matrix formed by the network's target vectors t i , i = 1 , . . . , N as defined in Section 5.1. The network's output weights are given by:
 
-$$W = \left ( \text {HH} ^ { T } + \lambda \text {I} \right ) ^ { - 1 } \text {HT} ^ { T } .$$
+<!-- formula-start id="fi2010_1705.03233v5:formula:0016" status="verified_manual" source-page="17" -->
+$$
+W = (HH^T+\lambda I)^{-1}HT^T \tag{16}
+$$
+![Source formula fi2010_1705.03233v5:formula:0016](images/formula_0016.png)
+*Formula quality: `verified_manual`; source PDF page 17. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 After calculation of the network parameters V and W , a new (test) sample x ∈ R D is mapped on its corresponding representations in spaces R K and R C , i.e. h = φ RBF ( x ) and o = W T h , respectively. It is classified according to the maximal network output, i.e.:
 
-$$l _ { x } = \arg \max _ { k } \ o _ { k } .$$
+<!-- formula-start id="fi2010_1705.03233v5:formula:0017" status="verified_manual" source-page="17" -->
+$$
+l_x = \operatorname*{arg\,max}_{k} o_k \tag{17}
+$$
+![Source formula fi2010_1705.03233v5:formula:0017](images/formula_0017.png)
+*Formula quality: `verified_manual`; source PDF page 17. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 ## 6. Results
 

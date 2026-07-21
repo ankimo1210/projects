@@ -32,19 +32,37 @@ Deep neural networks have seen significant improvement over the past decades tha
 
 We are not aware of any data-driven normalization scheme for time-series, except the recently proposed Deep Adaptive Input Normalization (DAIN) formulation [20], which applies normalization to the input time-series via a 3-stage procedure. Specifically, let { X ( i ) ∈ R D × T ; i = 1 , . . . , N } be a collection N time-series where T denotes the temporal dimension and D denotes the spatial/feature dimension. In addition, we denote x ( i ) 2 ( t ) ∈ R D the representation (temporal slice) at time instance t of series i . Here the subscript denotes the tensor mode (1 for feature slices and 2 for temporal slices). DAIN first shifts the input time-series by:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tran_bin_2003.00598:formula:0001" status="text_layer_fallback" source-page="2" -->
+![Source formula ref_tran_bin_2003.00598:formula:0001](images/formula_0001.png)
+```text
+PDF text layer: y ( i ) 2 ( t ) = x ( i ) 2 ( t ) -α ( i ) α ( i ) = W a a ( i ) a ( i ) = 1 T T ∑ t =1 x ( i ) 2 ( t ) (1)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 2. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where W a ∈ R D × D is a learnable weight matrix that estimates the amount of shifting from the mean temporal slice ( a ( i ) ) calculated from each series.
 
 After shifting, the intermediate representation y ( i ) 2 ( t ) is then scaled as follows:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tran_bin_2003.00598:formula:0002" status="text_layer_fallback" source-page="2" -->
+![Source formula ref_tran_bin_2003.00598:formula:0002](images/formula_0002.png)
+```text
+PDF text layer: z ( i ) 2 ( t ) = y ( i ) 2 ( t ) varoslash β ( i ) β ( i ) = W b b ( i ) b ( i ) = √ √ √ √ 1 T T ∑ t =1 ( y ( i ) 2 ( t ) ⊙ y ( i ) 2 ( t ) ) (2)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 2. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where W b ∈ R D × D is a learnable weight matrix that estimates the amount of scaling from the standard deviation ( b ( i ) ) along the temporal dimension. In Eq. (2), the square-root operator is applied element-wise; ⊙ and varoslash denote the element-wise multiplication and division, respectively.
 
 The final step in DAIN is gating, which aims to suppress irrelevant features:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tran_bin_2003.00598:formula:0003" status="text_layer_fallback" source-page="2" -->
+![Source formula ref_tran_bin_2003.00598:formula:0003](images/formula_0003.png)
+```text
+PDF text layer: ˜ x ( i ) 2 ( t ) = z ( i ) 2 ( t ) ⊙ γ ( i ) γ ( i ) = sigmoid ( W c c ( i ) + W d ) c ( i ) = 1 T T ∑ t =1 z ( i ) 2 ( t ) (3)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 2. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where W c ∈ R D × D and W d ∈ R D are learnable weights.
 
@@ -56,7 +74,13 @@ Our proposed BiN layer formulation bears some resemblances to DAIN and IN in tha
 
 The core idea in TABL networks is the separate modeling of linear dependency along the temporal and feature dimension. That is, the interactions between temporal slices and feature slices are captured by bilinear projection:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tran_bin_2003.00598:formula:0004" status="text_layer_fallback" source-page="2" -->
+![Source formula ref_tran_bin_2003.00598:formula:0004](images/formula_0004.png)
+```text
+PDF text layer: Y ( i ) = W 1 X ( i ) W 2 (4)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 2. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where W 1 ∈ R D 1 × D and W 2 ∈ R T × T 1 are the projection parameters, and Y ( i ) ∈ R D 1 × T 1 is the transformed series.
 
@@ -66,13 +90,37 @@ Due to the above property, it is intuitive to shift and scale not only the distr
 
 The normalization along the temporal dimension in BiN is described by the following equations:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tran_bin_2003.00598:formula:0005" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_tran_bin_2003.00598:formula:0005](images/formula_0005.png)
+```text
+PDF text layer: ¯ x ( i ) 2 = 1 T T ∑ t =1 x ( i ) 2 ( t ) (5a)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tran_bin_2003.00598:formula:0006" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_tran_bin_2003.00598:formula:0006](images/formula_0006.png)
+```text
+PDF text layer: σ ( i ) 2 = √ √ √ √ 1 T T ∑ t =1 ( x ( i ) 2 ( t ) -¯ x ( i ) 2 ) ⊙ ( x ( i ) 2 ( t ) -¯ x ( i ) 2 ) (5b)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tran_bin_2003.00598:formula:0007" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_tran_bin_2003.00598:formula:0007](images/formula_0007.png)
+```text
+PDF text layer: Z ( i ) 2 = ( X ( i ) -¯ x ( i ) 2 1 T T ) varoslash ( σ ( i ) 2 1 T T ) (5c)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tran_bin_2003.00598:formula:0008" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_tran_bin_2003.00598:formula:0008](images/formula_0008.png)
+```text
+PDF text layer: ˜ X ( i ) 2 = ( γ 2 1 T T ) ⊙ Z ( i ) 2 + β 2 1 T T (5d)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where γ 2 ∈ R D and β 2 ∈ R D are two learnable weight vectors of BiN. In addition, 1 T ∈ R T is a constant vector having all elements equal to one and 1 T T ∈ R 1 × T is its transpose.
 
@@ -84,19 +132,49 @@ In order to interpret the effects of Eq. (5), we can view the input series X ( i
 
 While the effect of non-stationarity in the temporal mode are often visible and has been heavily studied, its effects when considered from the feature dimension perspective are less obvious. To see this, let us now view the series X ( i ) as the set D ( i ) of D points (its D feature slices) in a T -dimensional space. Let us also take the previous scenario where two series, X ( i ) and X ( j ) , have T ( i ) and T ( j ) scattered in different regions of a D -dimensional co-ordinate system (viewed under the temporal perspective) before the normalization step in Eq. (5). When T ( i ) and T ( j ) are very far away, being viewed from the feature perspective, these two series are also likely to possess D ( i ) and D ( j ) which are distributed in two different regions of a T -dimensional co-ordinate system, although having very similar arrangement. This scenario also prevents W 1 in TABL networks to effectively capture the prominent linear/nonlinear patterns existing in the feature dimension of all input series. Thus, BiN also normalizes the input series along the feature dimension as follows:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tran_bin_2003.00598:formula:0009" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_tran_bin_2003.00598:formula:0009](images/formula_0009.png)
+```text
+PDF text layer: ¯ x ( i ) 1 = 1 D D ∑ d =1 x ( i ) 1 ( d ) (6a)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tran_bin_2003.00598:formula:0010" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_tran_bin_2003.00598:formula:0010](images/formula_0010.png)
+```text
+PDF text layer: σ ( i ) 1 = √ √ √ √ 1 D D ∑ d =1 ( x ( i ) 1 ( d ) -¯ x ( i ) 1 ) ⊙ ( x ( i ) 1 ( d ) -¯ x ( i ) 1 ) (6b)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tran_bin_2003.00598:formula:0011" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_tran_bin_2003.00598:formula:0011](images/formula_0011.png)
+```text
+PDF text layer: Z ( i ) 1 = ( X ( i ) -1 D (¯ x ( i ) 1 ) T ) varoslash ( 1 D ( σ ( i ) 2 ) T ) (6c)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tran_bin_2003.00598:formula:0012" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_tran_bin_2003.00598:formula:0012](images/formula_0012.png)
+```text
+PDF text layer: ˜ X ( i ) 1 = ( 1 D γ T 1 ) ⊙ Z ( i ) 1 + 1 D β T 1 (6d)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where γ 1 ∈ R T and β 1 ∈ R T are two learnable weights, and the superscript ( . ) T denotes the transpose operator.
 
 Overall, BiN takes as input the series X ( i ) and outputs ˜ X ( i ) , which is the linear combination of ˜ X ( i ) 1 and ˜ X ( i ) 2 from Eq. (6d) and (5d), respectively:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tran_bin_2003.00598:formula:0013" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_tran_bin_2003.00598:formula:0013](images/formula_0013.png)
+```text
+PDF text layer: ˜ X ( i ) = λ 1 ˜ X ( i ) 1 + λ 2 ˜ X ( i ) 2 (7)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where λ 1 ∈ R and λ 2 ∈ R are two learnable scalars, which enables BiN to weigh the importance of temporal and feature normalization. Here we should note that λ 1 and λ 2 are constrained to be non-negative. This constraint is achieved during stochastic optimization by setting the value (of λ 1 or λ 2 ) to 0 whenever the updated value is negative.
 
