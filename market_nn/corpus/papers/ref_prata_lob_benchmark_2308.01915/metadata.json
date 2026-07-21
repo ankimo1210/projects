@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "paper_id": "ref_prata_lob_benchmark_2308.01915",
+  "title": "LOB-Based Deep Learning Models for Stock Price Trend Prediction: A Benchmark Study",
+  "source": {
+    "path": "sources/papers/ref_prata_lob_benchmark_2308.01915.pdf",
+    "filename": "ref_prata_lob_benchmark_2308.01915.pdf",
+    "sha256": "796467b4a310a315402544accfac1338116d236bdf8a4426a9c8f2335f40c6b9",
+    "bytes": 1218445
+  },
+  "conversion": {
+    "tool": "docling",
+    "version": "2.114.0",
+    "generated_at": "2026-07-21T14:03:32.048404+00:00",
+    "device": "auto",
+    "ocr": false,
+    "table_mode": "accurate",
+    "formula_enrichment": false,
+    "chunker": "hybrid",
+    "chunk_max_tokens": 480
+  },
+  "document": {
+    "pages": 29,
+    "text_blocks": 2503,
+    "tables": 6,
+    "pictures": 12,
+    "markdown_chars": 105302,
+    "math_blocks": 0,
+    "chunks": 84,
+    "max_chunk_tokens": 487,
+    "pages_in_chunks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+    ]
+  },
+  "quality": {
+    "source_text_chars": 103360,
+    "markdown_to_source_text_ratio": 1.0188,
+    "has_abstract": true,
+    "has_references": true
+  }
+}

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-21T13:58:10.519487+00:00",
-  "paper_count": 7,
+  "generated_at": "2026-07-21T14:03:32.050626+00:00",
+  "paper_count": 12,
   "papers": [
     {
       "schema_version": 1,
@@ -431,6 +431,327 @@
       "quality": {
         "source_text_chars": 55204,
         "markdown_to_source_text_ratio": 1.0319,
+        "has_abstract": true,
+        "has_references": true
+      }
+    },
+    {
+      "schema_version": 1,
+      "paper_id": "ref_gould_limit_order_books_1012.0349",
+      "title": "Limit order books",
+      "source": {
+        "path": "sources/papers/ref_gould_limit_order_books_1012.0349.pdf",
+        "filename": "ref_gould_limit_order_books_1012.0349.pdf",
+        "sha256": "7ac42422db565b2dee81238544efc51f2eb8066e2c7699d88a0b6c36cdf0959b",
+        "bytes": 5034163
+      },
+      "conversion": {
+        "tool": "docling",
+        "version": "2.114.0",
+        "generated_at": "2026-07-21T14:03:31.630358+00:00",
+        "device": "auto",
+        "ocr": false,
+        "table_mode": "accurate",
+        "formula_enrichment": false,
+        "chunker": "hybrid",
+        "chunk_max_tokens": 480
+      },
+      "document": {
+        "pages": 42,
+        "text_blocks": 780,
+        "tables": 7,
+        "pictures": 6,
+        "markdown_chars": 235334,
+        "math_blocks": 0,
+        "chunks": 152,
+        "max_chunk_tokens": 487,
+        "pages_in_chunks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42
+        ]
+      },
+      "quality": {
+        "source_text_chars": 201620,
+        "markdown_to_source_text_ratio": 1.1672,
+        "has_abstract": true,
+        "has_references": true
+      }
+    },
+    {
+      "schema_version": 1,
+      "paper_id": "ref_kercheval_zhang_svm_2013",
+      "title": "Modeling high-frequency limit order book dynamics with support vector machines",
+      "source": {
+        "path": "sources/papers/ref_kercheval_zhang_svm_2013.pdf",
+        "filename": "ref_kercheval_zhang_svm_2013.pdf",
+        "sha256": "bb1c6183d440a01c707d594bf87a81ae8d00efa47664839bc7f8b331f6bbab4d",
+        "bytes": 912545
+      },
+      "conversion": {
+        "tool": "docling",
+        "version": "2.114.0",
+        "generated_at": "2026-07-21T14:03:31.757692+00:00",
+        "device": "auto",
+        "ocr": false,
+        "table_mode": "accurate",
+        "formula_enrichment": false,
+        "chunker": "hybrid",
+        "chunk_max_tokens": 480
+      },
+      "document": {
+        "pages": 36,
+        "text_blocks": 521,
+        "tables": 15,
+        "pictures": 7,
+        "markdown_chars": 76902,
+        "math_blocks": 0,
+        "chunks": 62,
+        "max_chunk_tokens": 490,
+        "pages_in_chunks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36
+        ]
+      },
+      "quality": {
+        "source_text_chars": 65380,
+        "markdown_to_source_text_ratio": 1.1762,
+        "has_abstract": true,
+        "has_references": true
+      }
+    },
+    {
+      "schema_version": 1,
+      "paper_id": "ref_kisiel_axial_lob_2212.01807",
+      "title": "Axial-LOB: High-Frequency Trading with Axial Attention",
+      "source": {
+        "path": "sources/papers/ref_kisiel_axial_lob_2212.01807.pdf",
+        "filename": "ref_kisiel_axial_lob_2212.01807.pdf",
+        "sha256": "7cdfeef5c004ba06f7c9b0a2c25da63cfe182eba17d3dc04554d3a0b85e87b01",
+        "bytes": 444509
+      },
+      "conversion": {
+        "tool": "docling",
+        "version": "2.114.0",
+        "generated_at": "2026-07-21T14:03:31.807202+00:00",
+        "device": "auto",
+        "ocr": false,
+        "table_mode": "accurate",
+        "formula_enrichment": false,
+        "chunker": "hybrid",
+        "chunk_max_tokens": 480
+      },
+      "document": {
+        "pages": 7,
+        "text_blocks": 129,
+        "tables": 3,
+        "pictures": 5,
+        "markdown_chars": 38063,
+        "math_blocks": 0,
+        "chunks": 27,
+        "max_chunk_tokens": 490,
+        "pages_in_chunks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "quality": {
+        "source_text_chars": 33501,
+        "markdown_to_source_text_ratio": 1.1362,
+        "has_abstract": true,
+        "has_references": true
+      }
+    },
+    {
+      "schema_version": 1,
+      "paper_id": "ref_passalis_dain_1902.07892",
+      "title": "Deep Adaptive Input Normalization for Time Series Forecasting",
+      "source": {
+        "path": "sources/papers/ref_passalis_dain_1902.07892.pdf",
+        "filename": "ref_passalis_dain_1902.07892.pdf",
+        "sha256": "83338bed88a70332fad68651aacb82b5c4618d196f7d1451c8de21181b14ae21",
+        "bytes": 371152
+      },
+      "conversion": {
+        "tool": "docling",
+        "version": "2.114.0",
+        "generated_at": "2026-07-21T14:03:31.846365+00:00",
+        "device": "auto",
+        "ocr": false,
+        "table_mode": "accurate",
+        "formula_enrichment": false,
+        "chunker": "hybrid",
+        "chunk_max_tokens": 480
+      },
+      "document": {
+        "pages": 7,
+        "text_blocks": 214,
+        "tables": 3,
+        "pictures": 1,
+        "markdown_chars": 39057,
+        "math_blocks": 0,
+        "chunks": 28,
+        "max_chunk_tokens": 483,
+        "pages_in_chunks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "quality": {
+        "source_text_chars": 37415,
+        "markdown_to_source_text_ratio": 1.0439,
+        "has_abstract": true,
+        "has_references": true
+      }
+    },
+    {
+      "schema_version": 1,
+      "paper_id": "ref_prata_lob_benchmark_2308.01915",
+      "title": "LOB-Based Deep Learning Models for Stock Price Trend Prediction: A Benchmark Study",
+      "source": {
+        "path": "sources/papers/ref_prata_lob_benchmark_2308.01915.pdf",
+        "filename": "ref_prata_lob_benchmark_2308.01915.pdf",
+        "sha256": "796467b4a310a315402544accfac1338116d236bdf8a4426a9c8f2335f40c6b9",
+        "bytes": 1218445
+      },
+      "conversion": {
+        "tool": "docling",
+        "version": "2.114.0",
+        "generated_at": "2026-07-21T14:03:32.048404+00:00",
+        "device": "auto",
+        "ocr": false,
+        "table_mode": "accurate",
+        "formula_enrichment": false,
+        "chunker": "hybrid",
+        "chunk_max_tokens": 480
+      },
+      "document": {
+        "pages": 29,
+        "text_blocks": 2503,
+        "tables": 6,
+        "pictures": 12,
+        "markdown_chars": 105302,
+        "math_blocks": 0,
+        "chunks": 84,
+        "max_chunk_tokens": 487,
+        "pages_in_chunks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29
+        ]
+      },
+      "quality": {
+        "source_text_chars": 103360,
+        "markdown_to_source_text_ratio": 1.0188,
         "has_abstract": true,
         "has_references": true
       }
