@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "paper_id": "sirignano_cont_1803.06917v1",
+  "title": "Universal features of price formation in financial markets: perspectives from Deep Learning",
+  "source": {
+    "path": "sources/papers/sirignano_cont_1803.06917v1.pdf",
+    "filename": "sirignano_cont_1803.06917v1.pdf",
+    "sha256": "8ae07ac2ae3bd803210f36acfca5a4ceb298acdd1b8f9a9d44a036822dd964fd",
+    "bytes": 1284778
+  },
+  "conversion": {
+    "tool": "docling",
+    "version": "2.114.0",
+    "generated_at": "2026-07-21T14:08:42.438293+00:00",
+    "device": "auto",
+    "ocr": false,
+    "table_mode": "accurate",
+    "formula_enrichment": false,
+    "chunker": "hybrid",
+    "chunk_max_tokens": 480
+  },
+  "document": {
+    "pages": 20,
+    "text_blocks": 292,
+    "tables": 4,
+    "pictures": 11,
+    "markdown_chars": 48120,
+    "math_blocks": 0,
+    "chunks": 29,
+    "max_chunk_tokens": 472,
+    "pages_in_chunks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ]
+  },
+  "quality": {
+    "source_text_chars": 46318,
+    "markdown_to_source_text_ratio": 1.0389,
+    "has_abstract": true,
+    "has_references": true
+  }
+}

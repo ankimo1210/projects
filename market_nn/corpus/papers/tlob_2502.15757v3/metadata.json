@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "paper_id": "tlob_2502.15757v3",
+  "title": "TLOB: A Novel Transformer Model with Dual Attention for Price Trend Prediction with Limit Order Book Data",
+  "source": {
+    "path": "sources/papers/tlob_2502.15757v3.pdf",
+    "filename": "tlob_2502.15757v3.pdf",
+    "sha256": "da90d24cfcc7a0074187fd7d2c6d27c4a7ffbcc86cece5dd4d5ba12901e2e03b",
+    "bytes": 6833692
+  },
+  "conversion": {
+    "tool": "docling",
+    "version": "2.114.0",
+    "generated_at": "2026-07-21T14:08:42.745257+00:00",
+    "device": "auto",
+    "ocr": false,
+    "table_mode": "accurate",
+    "formula_enrichment": false,
+    "chunker": "hybrid",
+    "chunk_max_tokens": 480
+  },
+  "document": {
+    "pages": 11,
+    "text_blocks": 176,
+    "tables": 10,
+    "pictures": 4,
+    "markdown_chars": 58303,
+    "math_blocks": 0,
+    "chunks": 46,
+    "max_chunk_tokens": 482,
+    "pages_in_chunks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
+  },
+  "quality": {
+    "source_text_chars": 53190,
+    "markdown_to_source_text_ratio": 1.0961,
+    "has_abstract": true,
+    "has_references": true
+  }
+}

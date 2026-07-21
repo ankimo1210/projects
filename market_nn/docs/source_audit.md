@@ -12,9 +12,10 @@
 | TLOB | arXiv:2502.15757v3 | `da90d24cfcc7a0074187fd7d2c6d27c4a7ffbcc86cece5dd4d5ba12901e2e03b` |
 | FI-2010 | arXiv:1705.03233v5 | `22d856cd9e1d951ddcec917bd7fcaf7e83f233b39c05f6a990617f32d201b31d` |
 
-PDF は Git 管理外であり、`lob-repro sources fetch` で再取得できる。版履歴は arXiv
-abs page で確認した。DeepLOB v6 は2020年の最終 arXiv 版で、IEEE 2019 paper の
-書誌情報と DOI `10.1109/TSP.2019.2907260` を併記する。
+PDF は自己完結した監査資料として `sources/papers/` で Git 管理し、必要に応じて
+`lob-repro sources fetch` で再取得できる。版履歴は arXiv abs page で確認した。
+DeepLOB v6 は2020年の最終 arXiv 版で、IEEE 2019 paper の書誌情報と DOI
+`10.1109/TSP.2019.2907260` を併記する。
 
 ## 公式コード
 

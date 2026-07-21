@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "paper_id": "ref_tsantekidis_stationary_lob_1810.09965",
+  "title": "Using Deep Learning for price prediction by exploiting stationary limit order book features",
+  "source": {
+    "path": "sources/papers/ref_tsantekidis_stationary_lob_1810.09965.pdf",
+    "filename": "ref_tsantekidis_stationary_lob_1810.09965.pdf",
+    "sha256": "d4bd10b9deed256343b5e92feaa80316a0dca9d7959fd9512ff38d46c9a39d21",
+    "bytes": 375979
+  },
+  "conversion": {
+    "tool": "docling",
+    "version": "2.114.0",
+    "generated_at": "2026-07-21T14:08:42.180137+00:00",
+    "device": "auto",
+    "ocr": false,
+    "table_mode": "accurate",
+    "formula_enrichment": false,
+    "chunker": "hybrid",
+    "chunk_max_tokens": 480
+  },
+  "document": {
+    "pages": 19,
+    "text_blocks": 282,
+    "tables": 3,
+    "pictures": 4,
+    "markdown_chars": 58651,
+    "math_blocks": 0,
+    "chunks": 41,
+    "max_chunk_tokens": 484,
+    "pages_in_chunks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ]
+  },
+  "quality": {
+    "source_text_chars": 51912,
+    "markdown_to_source_text_ratio": 1.1298,
+    "has_abstract": true,
+    "has_references": true
+  }
+}
