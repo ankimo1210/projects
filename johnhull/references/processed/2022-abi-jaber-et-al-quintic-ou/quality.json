@@ -1,0 +1,20 @@
+{
+  "paper_id": "2022-abi-jaber-et-al-quintic-ou",
+  "status": "review",
+  "page_count": 14,
+  "total_chars": 30604,
+  "average_chars_per_page": 2186.0,
+  "empty_pages": [],
+  "short_pages": [],
+  "replacement_characters": 5,
+  "heading_count": 9,
+  "image_references": 42,
+  "image_files": 42,
+  "latex_math_markers": 1,
+  "chunk_count": 7,
+  "max_chunk_chars": 4766,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

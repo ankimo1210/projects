@@ -1,0 +1,20 @@
+{
+  "paper_id": "2010-lord-koekkoek-van-dijk-heston-simulation",
+  "status": "review",
+  "page_count": 32,
+  "total_chars": 88902,
+  "average_chars_per_page": 2778.2,
+  "empty_pages": [],
+  "short_pages": [],
+  "replacement_characters": 7,
+  "heading_count": 29,
+  "image_references": 64,
+  "image_files": 64,
+  "latex_math_markers": 0,
+  "chunk_count": 21,
+  "max_chunk_chars": 4791,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

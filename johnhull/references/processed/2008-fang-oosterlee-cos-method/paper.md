@@ -1,0 +1,1107 @@
+---
+paper_id: "2008-fang-oosterlee-cos-method"
+title: "A Novel Pricing Method for European Options Based on Fourier-Cosine Series Expansions"
+authors: "Fang Fang; Cornelis W. Oosterlee"
+year: "2008"
+source_url: "https://doi.org/10.1137/080718061"
+source_pdf: "references/papers/2008-fang-oosterlee-cos-method.pdf"
+source_sha256: "2795f7dc610868a5c58e4fac43d9610526a8d7a0f71f00fc394d9623c749207b"
+converter: "PyMuPDF4LLM 1.28.0"
+---
+
+<!-- page: 1 -->
+
+# **A NOVEL PRICING METHOD FOR EUROPEAN OPTIONS BASED ON FOURIER-COSINE SERIES EXPANSIONS**<sup>_∗_</sup> 
+
+F. FANG<sup>_†_</sup> AND C. W. OOSTERLEE<sup>_‡_</sup> 
+
+**Abstract.** Here we develop an option pricing method for European options based on the Fouriercosine series and call it the COS method. The key insight is in the close relation of the characteristic function with the series coefficients of the Fourier-cosine expansion of the density function. In most cases, the convergence rate of the COS method is exponential and the computational complexity is linear. Its range of application covers underlying asset processes for which the characteristic function is known and various types of option contracts. We will present the method and its applications in two separate parts. The first one is this paper, where we deal with European options in particular. In a follow-up paper we will present its application to options with early-exercise features. 
+
+**Key words.** option pricing, European options, Fourier-cosine expansion 
+
+## **AMS subject classifications.** 65T40, 42A10, 60E10, 62P05, 91B28 
+
+**DOI.** 10.1137/080718061 
+
+**1. Introduction.** In option pricing, it is the famous Feynman–Kac theorem that relates the conditional expectation of the value of a contract payoff function under the risk-neutral measure to the solution of a partial differential equation. In the research areas covered by this theorem, various numerical pricing techniques can be developed. In brief, existing numerical methods can be classified into three groups: partial-(integro) differential equation (PIDE) methods, Monte Carlo simulation, and numerical integration methods. The distinction between the PIDE and the integration methods is, however, subtle: Given the option pricing PIDE, one can formally write down the solution as a Green’s function integral. Often the Fourier transform of the Green’s function is known; hence the problem reduces to evaluating the integral numerically. The Green’s function, modulo a discounting term, is the risk-neutral probability density in finance-speak. 
+
+Efficient numerical methods are required to rapidly price complex contracts and calibrate financial models. During calibration, i.e., when fitting model parameters of the stochastic asset processes to market data, we typically need to price European options at a single spot price, with many different strike prices, very quickly. Particular examples of where this is important would be processes with several parameters, like the Heston model [14] or the infinite activity L´evy processes (see, for example, [10]), since there the pricing problem (for many strikes) is used inside an optimization method. 
+
+The integration methods are used for calibration purposes whenever the characteristic function of the asset price process is known analytically. State-of-the-art numerical integration techniques have in common that they rely on a transformation to the Fourier domain [8, 20]. The Carr–Madan method [8] is one of the best known examples of this class. The probability density function appearing in the integration 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0001-11.png)
+
+
+> _∗_ Received by the editors March 10, 2008; accepted for publication (in revised form) July 15, 2008; published electronically November 14, 2008. http://www.siam.org/journals/sisc/31-2/71806.html 
+
+> _†_ Delft Institute of Applied Mathematics, Delft University of Technology, Delft, The Netherlands (f.fang@ewi.tudelft.nl). 
+
+> _‡_ CWI – Centrum Wiskunde & Informatica, Amsterdam, The Netherlands (c.w.oosterlee@cwi.nl).
+
+<!-- page: 2 -->
+
+in the original pricing domain is not known for many relevant asset processes. However, its Fourier transform, the characteristic function, is often available, for example from the L´evy–Khinchine theorem for underlying L´evy processes or by other means, as for the Heston model. In the Fourier domain it is then possible to price various derivative contracts efficiently. By means of the fast Fourier transform (FFT), integration can be performed with a computational complexity of _O_ ( _N_ log2 _N_ ), where _N_ represents the number of integration points. The computational speed, especially for plain vanilla options, makes these integration methods state of the art for calibration at institutions. 
+
+An important aspect of research in computational finance is to further increase the performance of the pricing methods. Quadrature rule based techniques are not of the highest efficiency when solving Fourier transformed integrals. As the integrands are highly oscillatory, a relatively fine grid has to be used for satisfactory accuracy with the FFT. 
+
+In this paper we will focus on _Fourier-cosine expansions_ in the context of numerical integration as an alternative for the methods based on the FFT. We will show that this novel method, called the COS method, can further improve the speed of pricing plain vanilla and some exotic options. Its application to American-style products will be covered in a follow-up paper. It is due to the impressive speed reported here for the COS method that we devote a paper to the European-style products. 
+
+Other highly efficient techniques for pricing plain vanilla options include the fast Gauss transform [6] and the double-exponential transformation [19, 25]. The COS method can, however, handle more general dynamics for the underlying compared to these methods. In fact, we can price a vector of strike prices simultaneously. Furthermore, the COS method offers a highly efficient way to recover the density from the characteristic function, which is of importance for several financial applications, like calibration, the computation of forward starting options, or static hedging. 
+
+This paper is organized as follows. In section 2, we introduce the Fourier-cosine expansion for solving inverse Fourier integrals. Based on this, we derive, in section 3, the formulas for pricing European options and the Greeks. We focus on the L´evy and the Heston processes for the underlying. An error analysis is presented in section 4, and numerical results are given in section 5. 
+
+The results presented in this paper are the following: 
+
+- Options for many strikes can be priced highly efficiently in one computation with the COS method. 
+
+- The method does not rely on artificial damping parameters for convergence. 
+
+- A detailed comparison with other FFT methods is presented. 
+
+- The COS method can exhibit exponential convergence. 
+
+**2. Fourier integrals and cosine series.** The point of departure for pricing European options with numerical integration techniques is the risk-neutral valuation formula: 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0002-13.png)
+
+
+where _v_ denotes the option value, Δ _t_ is the difference between the maturity, _T_ , and the initial date, _t_ 0, and E<sup>Q</sup> [ _·_ ] is the expectation operator under risk-neutral measure Q. _x_ and _y_ are state variables at times _t_ 0 and _T_ , respectively; _f_ ( _y|x_ ) is the probability density of _y_ given _x_ , and _r_ is the risk-neutral interest rate.
+
+<!-- page: 3 -->
+
+In the Carr–Madan approach [8] and its variants, the Fourier transform of a version of valuation formula (1) is taken with respect to the log-strike price. Damping of the payoff is then necessary as, for example, a call option is not _L_<sup>1</sup> -integrable with respect to the logarithm of the strike price. The method’s accuracy depends on the correct value of the damping parameter. A closed-form expression for the resulting integral is available in Fourier space. To return to the log-price domain, quadrature rules have to be applied to the inverse Fourier integral for which the application of the FFT algorithm is appropriate. 
+
+The range of applications of numerical integration methods in finance has recently been increased by the presentation of efficient techniques for options with early exercise features [20, 2, 3, 17]. Especially the CONV method [17] achieves almost linear complexity, also with the help of the FFT algorithm, for Bermudan and American options. This method can also be efficiently used for European options, and numerical experiments in [17] show that the accuracy is not influenced by the choice of the damping parameter. The difference with the Carr–Madan approach is that the transform is with respect to the log-spot price in the CONV method instead of the log-strike price (something which [15] and [22] also consider). In the derivation of the CONV method the risk-neutral valuation formula is rewritten as a cross-correlation between the option value and the transition density. The cross-correlation is handled numerically by replacing the option value by its Fourier series expansion so that the cross-correlation is transformed into an inner product of series coefficients. The coefficients are recovered by applying quadrature rules, combined with the FFT algorithm. Error analysis and experimental results have demonstrated second order accuracy and _O_ ( _N_ log2( _N_ )) computational complexity for European options. 
+
+These numerical integration methods have to numerically solve certain forward or inverse<sup>1</sup> Fourier integrals. The density and its characteristic function, _f_ ( _x_ ) and _φ_ ( _ω_ ), form an example of a Fourier pair, 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0003-05.png)
+
+
+Existing numerical integration methods in finance typically compute the Fourier integrals by applying equally spaced numerical integration rules and then employing the FFT algorithm by imposing the Nyquist relation to the grid sizes in the _x_ - and _ω_ -domains, 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0003-07.png)
+
+
+with _N_ representing the number of grid points. The grid values can then be obtained in _O_ ( _N_ log2 _N_ ) operations. However, there are three disadvantages: The error convergence of equally spaced integration rules, except for the Clenshaw–Curtis rule, is not very high; _N_ has to be a power of two; finally, the relation imposed on the grid sizes prevents one from using coarse grids in both domains. 
+
+_Remark_ 2.1. In principle we could use the fractional FFT algorithm (FrFT), which does not require the Nyquist relation to be satisfied, as in [9]. However, numerical tests for several options indicated that this advantage of the FrFT did not outweigh the speed of the FFT in our applications. 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0003-10.png)
+
+
+> 1Here we use the convention of the Fourier transform definition often seen in the financial engineering literature. Other conventions can also be used, and modifications to the methods are then straightforward.
+
+<!-- page: 4 -->
+
+_Remark_ 2.2. Alternative methods for the forward Fourier integral, based on replacing _f_ ( _x_ ) in (2) by its Chebyshev [21] or Legendre [11] polynomial expansion, can achieve a high accuracy with only a limited number of terms in the expansion. However, the resulting computational complexity is typically at least quadratic. 
+
+**2.1. Inverse Fourier integral via cosine expansion.** In this section, as a first step, we present a different methodology for solving, in particular, the inverse Fourier integral in (3). The main idea is to reconstruct the whole integral—not just the integrand—from its Fourier-cosine series expansion (also called “cosine expansion”), extracting the series coefficients directly from the integrand. Fourier-cosine series expansions usually give an optimal approximation of functions with a finite support<sup>2</sup> [5]. In fact, the cosine expansion of _f_ ( _x_ ) in _x_ equals the Chebyshev series expansion of _f_ (cos<sup>_−_1</sup> ( _t_ )) in _t_ . 
+
+For a function supported on [0 _, π_ ], the cosine expansion reads 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0004-05.png)
+
+
+where<sup>�</sup><sup>_′_</sup> indicates that the first term in the summation is weighted by one-half. For functions supported on any other finite interval, say [ _a, b_ ] _∈_ R, the Fourier-cosine series expansion can easily be obtained via a change of variables: 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0004-07.png)
+
+
+It then reads 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0004-09.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0004-10.png)
+
+
+with 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0004-12.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0004-13.png)
+
+
+Since any real function has a cosine expansion when it is finitely supported, the derivation starts with a truncation of the infinite integration range in (3). Due to the conditions for the existence of a Fourier transform, the integrands in (3) have to decay to zero at _±∞_ and we can truncate the integration range in a proper way without losing accuracy. 
+
+Suppose [ _a, b_ ] _∈_ R is chosen such that the truncated integral approximates the infinite counterpart very well, i.e., 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0004-16.png)
+
+
+By subscripts for variables, like _i_ in _φi_ , we denote subsequent numerical approximations (not to be confused with subscripted series coefficients, _Ak_ and _Fk_ ). 
+
+Comparing (7) with the cosine series coefficients of _f_ ( _x_ ) on [ _a, b_ ] in (6), we find that 
+
+(8) 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0004-20.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0004-21.png)
+
+
+> 2The usual Fourier series expansion is actually superior when a function is periodic.
+
+<!-- page: 5 -->
+
+where Re _{·}_ denotes taking the real part of the argument. It then follows from (7) that _Ak ≈ Fk_ with 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0005-03.png)
+
+
+We now _replace Ak_ by _Fk_ in the series expansion of _f_ ( _x_ ) on [ _a, b_ ], i.e., 
+
+The resulting error in _f_ 2( _x_ ) consists of two parts: a series truncation error from (10) to (11) and an error originating from the approximation of _Ak_ by _Fk_ . An error analysis that takes these different approximations into account is presented in section 4. 
+
+Since the cosine series expansion of _entire functions_ (i.e., functions without any singularities<sup>3</sup> anywhere in the complex plane, except at _∞_ ) exhibits an _exponential convergence_ [5], we can expect (11) to give highly accurate approximations to functions that have no singularities on [ _a, b_ ], with a small _N_ . 
+
+To demonstrate this, here we evaluate (11), where 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0005-08.png)
+
+
+and determine the accuracy for different values of _N_ . We choose [ _a, b_ ] = [ _−_ 10 _,_ 10], and the maximum absolute error is measured at _x_ = _{−_ 5 _, −_ 4 _, . . .,_ 4 _,_ 5 _}_ . 
+
+Table 1 indicates that a very small error is obtained with only a small number of terms, _N_ , in the expansion. From the differences in the CPU times in the table, defined as “time( _N_ )-time( _N/_ 2),” we can observe a linear complexity. This technique is thus highly efficient for the recovery of the density function; see also section 5. 
+
+Table 1 _Maximum error when recovering f_ ( _x_ ) _from φ_ ( _ω_ ) _by Fourier-cosine expansion._ 
+
+|_N_|4|8|16|32|64|
+|---|---|---|---|---|---|
+|Error|0.25|0.11|0.0072|4.04e-07|3.33e-16|
+|CPU time (msec.)|0.046<br> <br>|0.061<br> <br>|0.088<br>|0.16|0.29|
+|Dif. in CPU (msec.)|–<br>I<br>|0.015<br>I<br>|0.027<br>I|0.072|0.13|
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0005-13.png)
+
+
+**3. Pricing European options.** In this section, we derive the COS formula for European-style options by replacing the density function by its Fourier-cosine series. We make use of the fact that a density function tends to be smooth and therefore only a few terms in the expansion may already give a good approximation. 
+
+Since the density rapidly decays to zero as _y →±∞_ in (1), we truncate the infinite integration range without losing significant accuracy to [ _a, b_ ] _⊂_ R, and we obtain approximation _v_ 1: 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0005-16.png)
+
+
+We will give insight into the choice of [ _a, b_ ] in section 5. 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0005-18.png)
+
+
+> 3By “singularity” we mean [5] poles, fractional powers, logarithms, other branch points, and discontinuities in a function or in any of its derivatives.
+
+<!-- page: 6 -->
+
+In the second step, since _f_ ( _y|x_ ) is usually not known whereas the characteristic function is, we replace the density by its cosine expansion in _y_ , 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0006-03.png)
+
+
+with 
+
+(14) 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0006-06.png)
+
+
+so that 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0006-08.png)
+
+
+We interchange the summation and integration, and insert the definition 
+
+resulting in 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0006-11.png)
+
+
+Note that the _Vk_ are the cosine series coefficients of payoff function _v_ ( _y, T_ ) in _y_ . Thus, from (12) to (17) we have transformed the product of two real functions, _f_ ( _y|x_ ) and _v_ ( _y, T_ ), into that of their Fourier-cosine series coefficients. 
+
+Due to the rapid decay rate of these coefficients, we further truncate the series summation to obtain approximation _v_ 2: 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0006-14.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0006-15.png)
+
+
+Similar to section 2, coefficients _Ak_ ( _x_ ) defined in (14) can be approximated by _Fk_ ( _x_ ) as defined in (9). Replacing _Ak_ ( _x_ ) in (18) by _Fk_ ( _x_ ), we obtain 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0006-17.png)
+
+
+with characteristic function _φ_ . This is the COS formula for general underlying processes. We will show that the _Vk_ can be obtained analytically for plain vanilla and digital options, and that (19) can be simplified for the L´evy and the Heston models, so that many strikes can be handled simultaneously. 
+
+The key step in obtaining this semianalytic formula (19) for option pricing is the replacement of the probability density function by its Fourier-cosine series expansion. The advantage is that the product of the density and the payoff is transformed into a linear combination of products of cosine basis functions and a (payoff) function which is known analytically. 
+
+Important for convergence is therefore the convergence of the density function’s cosine series, not the cosine series of the payoff, which appears only because we interchanged the summation and the integration in (17). 
+
+Heuristically speaking, we decompose the probability density into a weighted sum of many “density-like basis functions” with which option values can be obtained analytically. What matters for the accuracy and the computational speed is how well this probability density function is approximated.
+
+<!-- page: 7 -->
+
+**3.1. Coefficients** **_Vk_ for plain vanilla options.** Before we can use (19) for pricing options, the payoff series coefficients, _Vk_ , have to be recovered. We can find analytic solutions for _Vk_ for several contracts. 
+
+As we assume here that the characteristic function of the log-asset price is known, we represent the payoff as a function of the log-asset price. Let us denote the log-asset prices by 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0007-04.png)
+
+
+with _St_ the underlying price at time _t_ and _K_ the strike price. The payoff for European options, in log-asset price, reads 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0007-06.png)
+
+
+Before deriving _Vk_ from its definition in (16), we need two mathematical results. Result 3.1. _The cosine series coefficients, χk, of g_ ( _y_ ) = _e_<sup>_y_</sup> _on_ [ _c, d_ ] _⊂_ [ _a, b_ ] _,_ 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0007-08.png)
+
+
+_and the cosine series coefficients, ψk, of g_ ( _y_ ) = 1 _on_ [ _c, d_ ] _⊂_ [ _a, b_ ] _,_ 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0007-10.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0007-11.png)
+
+
+_are known analytically._ 
+
+_Proof._ Basic calculus shows that 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0007-14.png)
+
+
+Focusing, for example, on a call option, we obtain 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0007-16.png)
+
+
+where _χk_ and _ψk_ are given by (22) and (23), respectively. Similarly, for a vanilla put, we 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0007-18.png)
+
+
+Analytic expressions of _Vk_ can also be obtained for some exotic options.
+
+<!-- page: 8 -->
+
+**3.2. Coefficients** **_Vk_ for digital and gap options.** Whereas for European products (19) always applies, the coefficients _Vk_ are different for different payoff functions. With analytic expressions for these coefficients, the convergence of the COS does not depend on the continuity of the payoff. 
+
+Digital options are popular in the financial markets for hedging and speculation. They are also important to financial engineers as building blocks for constructing more complex option products. Here we consider the payoff of a cash-or-nothing call option as an example, which is 0 if _ST ≤ K_ and _K_ if _ST > K_ . For this contract the cash-or-nothing call coefficients, _Vk_<sup>_cash_</sup> , can be obtained analytically: 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0008-04.png)
+
+
+We also give the formula for a so-called gap call option [13], whose payoff reads 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0008-06.png)
+
+
+where **1** Ψ equals 0 if Ψ is empty and 1 otherwise, and _Rb_ is a so-called rebate and is paid if the barrier is hit. The time-dependent version of this payoff represents a barrier option, which will be discussed in the follow-up paper. The integral that defines _Vk_<sup>_gap_</sup> for such payoff functions can be split into two parts: 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0008-08.png)
+
+
+where _h_ := ln( _H/K_ ). It then follows that 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0008-10.png)
+
+
+For those contracts, however, for which the _Vk_ can be obtained only numerically, the error convergence is dominated by the numerical rules employed. 
+
+**3.3. Formula for exponential L´evy processes and the Heston model.** It is worth mentioning that (19) is greatly simplified for the L´evy and the Heston models, so that options _for many strike prices_ can be computed simultaneously. Here we use boldfaced values to distinguish vectors. 
+
+For L´evy processes, whose characteristic functions can be represented by 
+
+(27) _φ_ ( _ω_ ; **x** ) = _ϕlevy_ ( _ω_ ) _· e_<sup>_iω_</sup><sup>**x**</sup> with _ϕlevy_ ( _ω_ ) := _φ_ ( _ω_ ; 0) _,_ 
+
+the pricing formula is simplified to 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0008-16.png)
+
+
+Recalling the _Vk_ -formulas for vanilla European options in (24) and (25), we can now present them as a vector multiplied by a scalar, 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0008-18.png)
+
+
+where 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0008-20.png)
+
+<!-- page: 9 -->
+
+As a result, the pricing formula reads<sup>4</sup> 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0009-03.png)
+
+
+where the summation can be written as a matrix-vector product if **K** (and therefore **x** ) is a vector. In the section with numerical results, we will show that with very small _N_ we can achieve highly accurate results. 
+
+_Remark_ 3.1. Equation (30) is an expression with independent variable **x** . It is therefore possible to obtain the option prices for different strikes in one single numerical experiment, by choosing a **K** -vector as the input vector (the same is true for the Carr–Madan formula). 
+
+Next, we give some details of the characteristic functions for the L´evy processes and refer the reader to the literature [10, 7, 14] for background information on these processes. In particular, for the CGMY/KoBol model, which encompasses the geometric Brownian motion (GBM) and variance gamma (VG) models, the characteristic function of the log-asset price is of the form 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0009-07.png)
+
+
+where _r_ is the risk-free interest rate, _q_ is a continuous dividend yield, and Γ( _·_ ) represents the gamma function. In the CGMY model, the parameters should satisfy _C ≥_ 0 _, G ≥_ 0 _, M ≥_ 0, and _Y <_ 2. When _σ_ = 0 and _Y_ = 0 we obtain the VG model; for _C_ = 0 the Black–Scholes model is obtained. 
+
+In the Heston model [14], the volatility, denoted by<sup>_√_</sup> _ut_ , is modeled by an additional stochastic differential equation, 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0009-10.png)
+
+
+where _xt_ denotes the log-asset price variable and _ut_ the variance of the asset price process. Parameters _λ ≥_ 0 _,_ ¯ _u ≥_ 0, and _η ≥_ 0 are called the speed of mean reversion, the mean level of variance, and the volatility of volatility, respectively. Furthermore, the Brownian motions _W_ 1 _t_ and _W_ 2 _t_ are assumed to be correlated with correlation coefficient _ρ_ . 
+
+For the Heston model, the COS pricing equation is also simplified, since 
+
+(33) _φ_ ( _ω_ ; **x** _, u_ 0) = _ϕhes_ ( _ω_ ; _u_ 0) _· e_<sup>_iω_</sup><sup>**x**</sup> _,_ 
+
+with _u_ 0 the volatility of the underlying at the initial time and _ϕhes_ ( _ω_ ; _u_ 0) := _φ_ ( _ω_ ; 0 _, u_ 0). We then 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0009-15.png)
+
+
+The characteristic function of the log-asset price, _ϕhes_ ( _ω_ ; _u_ 0), reads 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0009-17.png)
+
+
+> 4Although the _Uk_ values are real, we keep them in the curly brackets. This allows us to interchange Re _{·}_ and<sup>�</sup><sup>_′_</sup> , and it simplifies the implementation in MATLAB.
+
+<!-- page: 10 -->
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-00.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-01.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-02.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-03.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-04.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-05.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-06.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-07.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-08.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-09.png)
+
+
+<!-- Start of picture text -->
+= {(—)<br><!-- End of picture text -->
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-10.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-11.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-12.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-13.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-14.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-15.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-16.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-17.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-18.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-19.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-20.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-21.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-22.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0010-23.png)
+
+
+- »
+
+<!-- page: 11 -->
+
+3. The error related to approximating _Ak_ ( _x_ ) by _Fk_ ( _x_ ) in (9): 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0011-03.png)
+
+
+We do not have to take any error in the coefficients _Vk_ into account here, as we have a closed-form solution, at least for the plain vanilla options considered in this paper. The key to bound the errors lies in the decay rate of the cosine series coefficients. The convergence rate of the Fourier-cosine series depends on the properties of the functions on the expansion interval. We first give the definitions classifying the rate of convergence of the series for different classes of functions, taken from [5]. 
+
+Definition 4.1 (algebraic index of convergence). _The algebraic index of convergence n_ ( _≥_ 0) _is the largest number for which_ 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0011-06.png)
+
+
+_where the Ak are the coefficients of the series. An alternative definition is that if the coefficients of a series, Ak, decay asymptotically as_ 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0011-08.png)
+
+
+_then n is the algebraic index of convergence._ 
+
+Definition 4.2 (exponential index of convergence). _If the algebraic index of convergence n_ ( _≥_ 0) _is unbounded—in other words, if the coefficients, Ak, decrease faster than_ 1 _/k_<sup>_n_</sup> _for any finite n—the series is said to have exponential convergence. Alternatively, if_ 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0011-11.png)
+
+
+_with γ, the constant, being the “asymptotic rate of convergence,” for some r >_ 0 _, then the series shows exponential convergence. The exponent r is the index of convergence. For r <_ 1 _, the convergence is called subgeometric._ 
+
+_For r_ = 1 _, the convergence is either called supergeometric with_ 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0011-14.png)
+
+
+_(for some j >_ 0 _) or geometric with_ 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0011-16.png)
+
+
+The density of the GBM process is a typical function that has a geometrically converging cosine series expansion. 
+
+Proposition 4.1 (convergence of Fourier-cosine series [5, pp. 70–71]). _If g_ ( _x_ ) _is infinitely differentiable with nonzero derivatives, then its Fourier-cosine series expansion on_ [ _a, b_ ] _has geometric convergence. The constant γ in_ (41) _is then determined by the location in the complex plane of the singularities nearest to the expansion interval. Exponent n is determined by the type and strength of the singularity._ 
+
+_Otherwise, the convergence is algebraic. Integration by parts shows that the algebraic index of convergence, n, is at least as large as n_<sup>_′_</sup> _, with n_<sup>_′_</sup> _denoting the highest order of derivative that exists or is nonzero._
+
+<!-- page: 12 -->
+
+_If the function g_ ( _x_ ) _has a discontinuity in_ [ _a,b_ ] _, say at x_ 0 _, then at the discontinuity the series value converges to_<sup>1</sup> 2<sup>(</sup><sup>_g_(</sup><sup>_x_</sup> 0<sup>+) +</sup><sup>_g_(</sup><sup>_x−_</sup> 0<sup>))</sup><sup>_,astheFourier-cosineserieshasin_</sup> _essence the same properties as a Fourier series._ 
+
+References to the proof of this proposition are available in [5]. Note that in the case of a discontinuous probability density function, we will encounter a very low algebraic convergence order, which can be related to the well-known Gibbs phenomenon observed in Fourier series expansions of discontinuous functions. 
+
+The following proposition further bounds the series truncation error of an algebraically converging series. 
+
+Proposition 4.2 (series truncation error of algebraically converging series). _It can be shown that the series truncation error of an algebraically converging series behaves like_ 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0012-06.png)
+
+
+The proof can be found in [4]. 
+
+With the two propositions above, we can state the following lemmas. 
+
+Lemma 4.1. _Error ϵ_ 3 _merely consists of integration range truncation errors, and can be bounded by_ 
+
+(42) _|ϵ_ 3 _| < |ϵ_ 1 _|_ + _Q |ϵ_ 4 _| ,_ 
+
+_where Q is some constant independent of N and_ 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0012-12.png)
+
+
+_Proof_ . Assuming _f_ ( _y|x_ ) to be a real function, we rewrite (40) as 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0012-14.png)
+
+
+After interchanging the summation and integration, we rewrite<sup>�</sup><sup>_′N_</sup> _k_ =0<sup>_−_1as(�</sup><sup>_′_+</sup> _k_ =0<sup>_∞−_</sup> �+ _k_ = _∞N_<sup>)andreplacethecosineexpansionof</sup><sup>_v_(</sup><sup>_y, T_)in</sup><sup>_y_by</sup><sup>_v_(</sup><sup>_y, T_):</sup> 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0012-16.png)
+
+
+According to Propositions 4.1 and 4.2, the _Vk_ exhibit at least algebraic convergence, and we can therefore bound the expression as follows: 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0012-18.png)
+
+
+for some positive constant _Q_<sup>_∗_</sup> . It then follows from (43) that 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0012-20.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0012-21.png)
+
+<!-- page: 13 -->
+
+Thus, two of the three error components are truncation range related. When the truncation range is sufficiently large, the overall error is dominated by _ϵ_ 2. 
+
+Equation (39) indicates that _ϵ_ 2 depends on both _Ak_ ( _x_ ) and _Vk_ , the series coefficients of the density and that of the payoff, respectively. We assume that the density is typically smoother than the payoff functions in finance and that the coefficients _Ak_ decay faster than _Vk_ . Consequently, the product of _Ak_ and _Vk_ converges faster than either _Ak_ or _Vk_ , and we can bound this product as follows: 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0013-04.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0013-05.png)
+
+
+with _C_ some constant. Error _ϵ_ 2 is thus dominated by the series truncation error of the density function. 
+
+Proposition 4.3 (series truncation error of geometrically converging series [5, p. 48]). _If a series has geometrical convergence, then the error after truncation of the expansion after_ ( _N_ + 1) _terms, ET_ ( _N_ ) _, reads_ 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0013-08.png)
+
+
+_Here constant ν >_ 0 _is called the asymptotic rate of convergence of the series, which satisfies_ 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0013-10.png)
+
+
+_and P_<sup>_∗_</sup> _denotes a factor which varies less than exponentially with N ._ 
+
+Lemma 4.2. _Error ϵ_ 2 _converges exponentially in the case of density functions g_ ( _x_ ) _∈_ C<sup>_∞_</sup> ([ _a, b_ ]) _with nonzero derivatives:_ 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0013-13.png)
+
+
+_where ν >_ 0 _is a constant and P is a term that varies less than exponentially with N ._ The proof of this is straightforward, applying Proposition 4.3 to (44). 
+
+Based on Proposition 4.2, we can prove the following lemma. 
+
+Lemma 4.3. _Error ϵ_ 2 _for densities having discontinuous derivatives can be bounded as follows:_ 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0013-17.png)
+
+
+_where P_<sup>¯</sup> _is a constant and β ≥ n ≥_ 1 _(n the algebraic index of convergence of Vk)._ 
+
+The proof of this lemma is straightforward. Note that _β ≥ n_ because the density function is usually smoother than a payoff function. 
+
+Collecting the results (38), (42), (45), and (46), we can summarize that, with a properly chosen truncation of the integration range, the overall error converges either exponentially for density functions, with nonzero derivatives, belonging to C<sup>_∞_</sup> ([ _a, b_ ] _⊂_ R), i.e., 
+
+(47) _|ϵ| <_ 2 _|ϵ_ 1 _|_ + _Q |ϵ_ 4 _|_ + _Pe_<sup>_−_(</sup><sup>_N−_1)</sup><sup>_ν_</sup> _,_ 
+
+or algebraically for density functions with a discontinuity in one of its derivatives, i.e.,
+
+<!-- page: 14 -->
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0014-02.png)
+
+
+**5. Numerical results.** In this section, we perform a variety of numerical tests to evaluate the efficiency and accuracy of the COS method. Implementation of the COS formula is straightforward. We focus on the plain vanilla European options and consider different processes for the underlying asset from GBM to the Heston stochastic volatility process and the infinite activity L´evy processes VG and CGMY. In the latter case we choose a value for parameter _Y_ close to 2, representing a distribution with very heavy tails. We will choose long and short maturities in the tests. The underlying density function for each individual experiment is also recovered with the help of the cosine series based inversion technique presented in section 2. This may help the reader to get some insight into the relationship between the error convergence and the properties of the densities. 
+
+We compare our results with the COS method to two of its competitors, the Carr– Madan method [8] and the CONV method [17]. However, contrary to the common implementations of these methods we use the Simpson rule for the Fourier integrals in order to achieve fourth order accuracy. The FFT has been used for the Carr–Madan as well as for the CONV method. 
+
+By these numerical experiments and comparisons with the other methods, we aim to demonstrate the stability and robustness of the COS method, also under extreme conditions. 
+
+It should be noted that parameter _N_ in the experiments to follow denotes, for the COS method, the number of terms in the Fourier-cosine expansion, and it denotes the number of grid points for the other two methods. 
+
+All CPU times presented, in milliseconds, are determined after averaging the computing times obtained from 10<sup>4</sup> experiments. The computer used for all experiments has an Intel Pentium 4 CPU, 2.80GHz with cache size 1024 KB; the code is written in MATLAB 7-4. 
+
+_Remark_ 5.1. Some experience is helpful when choosing the correct truncation range and damping factor _α_ in the Carr–Madan method. A suitable choice appears to be _α_ = 0 _._ 75 from [23] for the experiments based on GBM as well as on the Heston model. This is the parameter used in the experiments to follow. However, many _α_ -values have been suggested in the literature for optimal convergence, even _α_ = 25 in [22]. Optimal values are determined numerically in [16]. 
+
+The CONV method can be used without any form of damping for the option parameters here. 
+
+**5.1. Truncation range for COS method.** To determine the interval of integration [ _a, b_ ] within the COS method, we propose the following: 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0014-11.png)
+
+
+Here _cn_ denotes the _n_ th cumulant of ln( _ST /K_ ). The cumulants for the models employed are presented in Appendix A. 
+
+Cumulant _c_ 4 is included in (49), because the density functions of many L´evy processes for short maturity, _T_ , have sharp peaks and fat tails (correctly indicated via _c_ 4).
+
+<!-- page: 15 -->
+
+|= 10.<br>It then defnes<br>10_−_12. Larger values of<br>of accuracy.<br>uracy exhibits some sen-<br>yof grows exponentially<br>ncellation error for large<br>yof value is bounded by<br>r stay with _L ∈_[7_._5_,_10]<br>_rT ._<br>s, which gives a slightly<br>rformed under the GBM<br>or this test are<br> = 0_._25_._<br>, _K_ = 80_,_100, and 120,<br> _the experiments; K_ = 100_,_<br> the small maturity time<br>er, implies that the tails<br>s a result, the truncation<br>to be selected relatively<br> the other two methods<br>S method is exponential<br>d Carr–Madan methods.<br>ence values. Further, we|_L_<br>�<br>_c_2+<br>�<br>_c_4+_√_<br>_c_6_,_<br>_c_1+<br> like _T_ = 0_._001. The sixth|article is prohibited.|
+|---|---|---|
+|E<br> _T_ <br>nd <br>vel <br>acc<br>l pa<br>ca<br> pa<br>ithe<br>**K**_e−_<br>call<br>s pe<br>d f<br>_σ_ <br>ices<br>1.5<br>ear<br>_d in_<br>ith <br>wev<br>. A<br>has<br>d to<br>CO<br>an<br>efer<br>|_c_1_−_<br>ties,<br>|this|
+|F. FANG AND C. W. OOSTERLE<br>ormula (49) is accurate5 in the range _T_ = 0_._1 to<br>ncation range which gives a truncation error arou<br>eter _L_ would require larger _N_ to reach the same le<br>_emark_5.2. When pricing call options, the method’s<br>y regarding the choice of parameter_L_in (49). A cal<br>he log-stock price which may introduce a signifcant<br> of _L_. Put options do not sufer from this, as their <br>lue _K_. For pricing call options, one can therefore e<br>y on the well-known put-call parity,<br>_vcall_(**x**_, t_0) =_vput_(**x**_, t_0) +_S_0_e−qT −_<br> experiments to follow, we use (50) when pricing <br> accuracy than directly applying (28) with (49).<br>**2. GBM.** The frst set of call option experiments i<br>ss with a short time to maturity. Parameters selecte<br>_S_0 = 100_,_<br>_r_= 0_._1_,_<br>_q_ = 0_,_<br>_T_ = 0_._1_,_<br>he convergence behavior at three diferent strike pr<br>cked.<br>−1.5<br>−1<br>−0.5<br>0<br>0.5<br>1<br>−1<br>0<br>1<br>2<br>3<br>4<br>5<br>6<br>x<br>Density of the GBM model<br>T=0.1 y<br>g. 1. _Recovered density function of the GBM model involve_<br>_her parameters as in_ (51)_._<br>igure 1 shows that the recovered density function w<br>s not have fat tails, as is commonly known. This, ho<br>characteristic function in the Fourier domain are fat<br>for the Carr–Madan method in the Fourier domain<br> requiring a signifcantly larger value of _N_ compare<br>ieve the same level of accuracy.<br>s shown in Figure 2, the error convergence of the <br>etric) and superior to that of the fourth order CONV<br>_N_ = 26, the COS results already coincide with the r<br>~|truncation rule which includes cumulant _c_6, such as [_a, b_] :=<br>�<br>+<br>�<br>_c_4+_√_<br>_c_6<br>�<br>_,_ is more accurate for extremely short maturi<br>nt is, however, relatively difcult to derive for many models.|opyright©by SIAM. Unauthorized reproduction of|
+|F<br>ru<br>am<br>_R_<br>vit<br>h t<br>ues<br> va<br>el<br>)<br>the<br>her<br>**5.**<br>ce<br>)<br>T<br>he<br>Fi<br> _ot_<br>F<br>oe<br>he<br>ge<br>e, <br>ach<br>A<br>om<br>th|5A<br>_c_2 <br>ula|C|
+|40<br> t<br>ar<br>ti<br>it<br>al<br>e <br>r r<br>0<br> <br>ig<br>ro<br>1<br> c<br>_ith_<br> d<br>t<br>n<br>rg<br> <br>e<br>i|�<br><br>m||
+|8<br>a <br>p<br>si<br>w<br>v<br>th<br>o<br>(5<br>In<br>h<br>p<br>(5<br>is <br>_w_<br>_T_ <br>of<br>ra<br>la<br>to<br>(g<br>W|_L_<br><br>cu||
+
+<!-- page: 16 -->
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0016-02.png)
+
+
+<!-- Start of picture text -->
+I·-+- · Carr−Madan -•- CONV -- COS I<br>K=80 K=100 K=120<br>0 0 0 \<br>−2 −2 −2 - ..<br>−4 −4 −4 \<br>−6 −6 −6 ", ll  \  +,<br>−8 −8 −8 '\1,  ...<br>−10 −10 −10 V<br>−12 −12 −12<br>−14 −14 −14<br>5 10 15 5 10 15 5 10 15<br>d, N=2 d d, N=2 d d, N=2 d<br>(|error|) (|error|) (|error|)<br>10 10 10<br>log log log<br><!-- End of picture text -->
+
+Fig. 2. _COS versus Carr–Madan and CONV in error convergence for pricing European call options under the GBM model._ 
+
+observe that the error convergence rate is basically the same for the different strike prices. 
+
+In Table 2, CPU time and error convergence information, comparing the COS and the Carr–Madan method, are displayed for pricing the options at _K_ = 80 _,_ 100, and 120. The maximum error of the option values over the three strike prices is presented. The results for these strikes are obtained in one single computation for both methods. 
+
+To get the same level of accuracy, the COS method uses significantly less CPU time, which becomes more prominent when the desired accuracy is high. For the Carr–Madan computation we have used a truncation range of size [0 _,_ 100] in this latter experiment.<sup>6</sup> 
+
+_Remark_ 5.3. In all numerical experiments we observe a linear computational complexity for the COS method. By doubling _N_ , performing the computations, and checking the _differences_ between subsequent timings, we can distinguish the linear complexity from the computational overhead. 
+
+Table 2 
+
+_Error convergence and CPU time comparing the COS and Carr–Madan methods for European calls under GBM, with parameters as in_ (51) _; K_ = 80 _,_ 100 _,_ 120 _; reference val._ = 20 _._ 799226309 _. . . ,_ 3 _._ 659968453 _. . . , and_ 0 _._ 044577814 _. . . , respectively._ 
+
+||_N_|16|32|64|128|256|
+|---|---|---|---|---|---|---|
+|COS|msec.|0.33|0.38|0.50|0.73|1.30|
+||max. abs. err.|6.66e-03|7.17e-08|3.91e-14|3.91e-14|3.91e-14|
+|Carr–Madan|msec.<br>|2.45<br> <br>|2.57<br> <br>|2.74<br> <br>|3.18<br> <br>|3.85<br>|
+||max. abs. err.<br>|2.45e+07<br>I<br>|1.76e+06<br> <br>|1.62e+03<br>I<br>|1.62e+01<br> <br>|7.95e-02<br>I|
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0016-11.png)
+
+
+**5.2.1. Cash-or-nothing option.** We confirm that the convergence of the COS method does not depend on a discontinuity in the payoff function, provided we have an analytic expression for the coefficients _Vk_<sup>_cash_</sup> by pricing a cash-or-nothing call option here. The underlying process is GBM, so that an analytic solution exists. Parameters selected for this test are 
+
+(52) _S_ 0 = 100 _, K_ = 120 _, r_ = 0 _._ 05 _, q_ = 0 _, T_ = 0 _._ 1 _, σ_ = 0 _._ 2 _._ 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0016-14.png)
+
+
+> 6To produce the Carr–Madan results from Figure 2 with the very small errors, we needed a larger truncation range, i.e., [0 _,_ 1200].
+
+<!-- page: 17 -->
+
+Table 3 
+
+_Error and CPU time for a cash-or-nothing call option with the COS method, with parameters as in_ (52) _; reference val._ = 0 _._ 273306496 _. . .._ 
+
+|_N_|40|60|80|100|120|140|
+|---|---|---|---|---|---|---|
+|Error|2.46e-02<br> <br>|1.64e-02<br> <br>|6.35e-04<br> <br>|6.85e-06<br> <br>|2.44e-08<br> <br>|2.79e-11<br>|
+|CPU time (msec.)|0.330<br>I<br>|0.334<br>I<br>|0.38<br>I<br>|0.43<br>I<br>|0.49<br>I<br>|0.50<br>I|
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0017-05.png)
+
+
+Table 3 presents the exponential convergence of the COS method. Since the payoff is bounded here, we apply the COS formula (30) directly. 
+
+**5.3. The Heston model.** As a second test we choose the Heston model and price calls with the following parameters: 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0017-08.png)
+
+
+Two maturities, _T_ = 1 and _T_ = 10, are considered. Since the analytic formula for _c_ 4 is involved (it can be obtained using Maple, but it is lengthy), we define the truncation range, instead of (49), by 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0017-10.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0017-11.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0017-12.png)
+
+
+Cumulant _c_ 2 may become negative for sets of Heston parameters that do not satisfy the Feller condition, i.e., 2¯ _uλ > η_<sup>2</sup> . We therefore use the absolute value of _c_ 2. 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0017-14.png)
+
+
+<!-- Start of picture text -->
+4<br>T=10 years<br>3.5 T=1 year<br>3<br>2.5<br>2<br>1.5<br>1<br>0.5<br>0<br>−0.5<br>−2.5 −2 −1.5 −1 −0.5 0 0.5 1 1.5 2<br>x<br>Density of the Heston model<br><!-- End of picture text -->
+
+Fig. 3. _Recovered density functions of the Heston experiments, with parameters as in_ (53) _._ 
+
+Figure 3 presents the recovered density functions. It shows that _T_ = 1 gives rise to a sharper-peaked density than _T_ = 10, as expected. 
+
+In this test, we compare the COS method with the Carr–Madan method, which is often used for the calibration of the Heston model in industry. The option price reference values are obtained by the Carr–Madan method using _N_ = 2<sup>17</sup> points, and the truncated Fourier domain is set to [0 _,_ 1200] for the experiment with _T_ = 1 and to [0 _,_ 500] for _T_ = 10. 
+
+Tables 4 and 5 illustrate the high efficiency of the COS method compared to the Carr–Madan method. 
+
+Note the very different values of _N_ that the two methods require for satisfactory convergence. All CPU times are given in milliseconds. The COS method appears to
+
+<!-- page: 18 -->
+
+Table 4 
+
+_Error convergence and CPU times for the COS and Carr–Madan methods for calls under the Heston model with T_ = 1 _, with parameters as in_ (53) _; reference val._ = 5 _._ 785155450 _. . .._ 
+
+||COS|||Carr–Ma|dan|
+|---|---|---|---|---|---|
+|_N_|Error|Time (msec.)|_N_|Error|Time (msec.)|
+|64|_−_4.92e-03|0.61|256|_−_2.29e+06|4.70|
+|96|_−_2.99e-04|0.78|512|2.31e+01|6.94|
+|128|1.94e-05|0.94|1024|_−_2.61e-01|11.30|
+|160|2.99e-06|1.11|2048|_−_2.14e-03|20.29|
+|192|_−_3.17e-07|1.27|4096|3.76e-07|38.54|
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0018-05.png)
+
+
+<!-- Start of picture text -->
+192 − 3.17e-07 1.27 4096 3.76e-07 38.54<br><!-- End of picture text -->
+
+Table 5 
+
+_Error convergence and CPU time for the COS and Carr–Madan methods for calls under the Heston model with T_ = 10 _, with parameters as in_ (53) _; reference val._ = 22 _._ 318945791 _. . .._ 
+
+||COS|||Carr–Ma|dan|
+|---|---|---|---|---|---|
+|_N_|Error|Time (msec.)|_N_|Error|Time (msec.)|
+|32|7.40e-03|0.46|128|_−_1.99e+06|3.64|
+|64|_−_5.02e-05|0.62|256|1.36e+05|4.78|
+|96|1.40e-07|0.81|512|3.27e+01|7.08|
+|128|4.92e-10|0.98|1024|_−_2.61e-01|11.38|
+|160|_−_1.85e-10|1.36|2048|_−_2.15e-03|20.93|
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0018-09.png)
+
+
+<!-- Start of picture text -->
+160 − 1.85e-10 1.36 2048 − 2.15e-03 20.93<br><!-- End of picture text -->
+
+be approximately a factor 20 faster than the Carr–Madan method for the same level of accuracy. The convergence rate of the COS method is somewhat slower for the short maturity example, as compared to the 10 year maturity. This is due to the fact that the density function for the latter case is smoother, as seen in Figure 3. The COS convergence rate for _T_ = 1 is, however, still exponential in the Heston model. 
+
+Additionally, for a fair comparison, we mimic the calibration situation, in which around 20 strikes are priced simultaneously. We repeat the experiment for _T_ = 1 but now with 21 consecutive strikes, _K_ = 50 _,_ 55 _,_ 60 _, . . .,_ 150; see the results in Table 6. The maximum error over all strike prices is presented. With _N_ = 160, the COS method can price all options for 21 strikes highly accurately, within 3 milliseconds. 
+
+Table 6 
+
+_Error convergence and CPU time for calls under the Heston model by the COS and Carr–Madan method, pricing_ 21 _strikes, with T_ = 1 _, with parameters as in_ (53) _._ 
+
+||_N_|32|64|96|128|160|
+|---|---|---|---|---|---|---|
+|COS|CPU time (msec.)<br>max. abs. err.|0.85<br>1.43e-01|1.45<br>6.75e-03|2.04<br>4.52e-04|2.64<br>2.61e-05|3.22<br>4.40e-06|
+||_N_|512|1024|2048|4096|8192|
+|Carr–Madan<br>|CPU time (msec.)<br>|7.44<br> <br>|12.84<br> <br>|20.36<br> <br>|37.69<br> <br>|76.02<br>|
+||max. error<br>|4.70e+06<br>I<br>|6.69e+01<br> <br>|2.61e-01<br>I<br>|2.15e-03<br>I<br>|2.08e-07<br>I|
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0018-15.png)
+
+
+<!-- Start of picture text -->
+max. error 4.70e+06 6.69e+01 2.61e-01 2.15e-03 2.08e-07<br><!-- End of picture text -->
+
+**5.4. VG.** As a next example we price call options under the VG process, which belongs to the class of infinite activity L´evy processes. The VG process is usually parameterized with parameters _σ, θ_ , and _ν_ related to _C, G_ , and _M_ in (31) through 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0018-17.png)
+
+
+The parameters selected in the numerical experiments are 
+
+(55) _K_ = 90 _, S_ 0 = 100 _, r_ = 0 _._ 1 _, q_ = 0 _, σ_ = 0 _._ 12 _, θ_ = _−_ 0 _._ 14 _, ν_ = 0 _._ 2 _, L_ = 10 _._
+
+<!-- page: 19 -->
+
+F. FANG AND C. W. OOSTERLEE 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0019-02.png)
+
+
+<!-- Start of picture text -->
+25 60<br>20 r  I  T=1 yearT=0.1 year 50 T=1 yearT=0.1 year<br>I<br>15 t  40<br>~  I<br>10 30 y<br>5 20<br>0 10<br>−5 0<br>−1.5 −1 −0.5 0 0.5 1 1.5 −0.2 −0.1 0 0.1 0.2 0.3<br>x x<br>(a) Whole density function (b) Zoom in<br>density of VG model density of VG model<br><!-- End of picture text -->
+
+Fig. 4. _Recovered density functions for the VG model and two maturity dates; K_ = 90 _, with other parameters as in_ (55) _._ 
+
+Table 7 
+
+_Convergence of the COS method for a call under the VG model with K_ = 90 _and other parameters as in_ (55) _._ 
+
+|||COS|method|||
+|---|---|---|---|---|---|
+|_T_ = 0|_._1; Reference va|l. = 10_._993703187_. . ._|_T_ = 1|; Reference va|l. = 19_._099354724_. . ._|
+|_N_|Error|Time (msec.)|_N_|Error|Time (msec.)|
+|64|_−_1.66e-03|0.46|32|_−_6.57e-04|0.35|
+|128|4.35e-04|0.65|64|2.10e-06|0.47|
+|256|4.55e-05|1.03|96|_−_3.32e-08|0.56|
+|512|_−_1.13e-06|1.79|128|4.19e-10|0.64|
+|1024|2.52e-08|3.40|160|_−_1.88e-11|0.75|
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0019-07.png)
+
+
+<!-- Start of picture text -->
+1024 2.52e-08 3.40 160 − 1.88e-11 0.75<br><!-- End of picture text -->
+
+This case has been chosen because a relatively slow convergence was reported for the CONV method for very short maturities in [17]. Here we compare the convergence for _T_ = 1 year and for _T_ = 0 _._ 1 year. 
+
+Figure 4 presents the difference in shape of the two recovered density functions. For _T_ = 0 _._ 1, the density is much more peaked. Results are summarized in Table 7. Note that for _T_ = 0 _._ 1 the error convergence of the COS method is algebraic instead of exponential. This is in agreement with the recovered density function in Figure 4, which is clearly not in _C_<sup>_∞_</sup> ([ _a, b_ ]). In the extreme case, we would observe a delta function-like function for _T →_ 0. 
+
+We also plot the errors in Figure 5, comparing the convergence of the COS method to that of the CONV method.<sup>7</sup> The convergence rate of the COS method for _T_ = 1 is significantly faster than that of the CONV method, but for _T_ = 0 _._ 1 the convergence is comparable. 
+
+**5.5. CGMY process.** Finally, we evaluate the method’s convergence for calls under the CGMY model. It has been reported in [1, 24] that PIDE methods have difficulty solving the cases for which parameter _Y ∈_ [1 _,_ 2]. Therefore we evaluate the COS method with _Y_ = 0 _._ 5, _Y_ = 1 _._ 5, and _Y_ = 1 _._ 98, respectively. The other parameters are selected as follows: 
+
+(56) _S_ 0 = 100 _, K_ = 100 _, r_ = 0 _._ 1 _, q_ = 0 _, C_ = 1 _, G_ = 5 _, M_ = 5 _, T_ = 1 _._ 
+
+In Figure 6, the recovered density functions for the three cases are plotted. For large values of _Y_ , the tails of the density function are fatter and the center of the 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0019-14.png)
+
+
+> 7The Simpson rule did not improve the convergence rate here.
+
+<!-- page: 20 -->
+
+## COSINE EXPANSIONS FOR OPTION PRICING 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0020-02.png)
+
+
+<!-- Start of picture text -->
+0 COS, T=0.1 year<br>CONV, T=0.1 year<br>−2 COS, T=1 year<br>CONV, T=1 year<br>−4<br>−6<br>−8<br>−10<br>−12<br>−14<br>4 6 8 10 12 14<br>d, N=2 d<br>(|error|)<br>10<br>log<br><!-- End of picture text -->
+
+Fig. 5. _Convergence of the COS method for the VG model._ 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0020-04.png)
+
+
+<!-- Start of picture text -->
+1.4 1.5<br>Y=0.5<br>1.2 Y=0.5 Y=1.5<br>1 F7~ Y=1.5Y=1.98 1 Y=1.98<br>0.8<br>0.6<br>0.5<br>0.4<br>0.2<br>0<br>−100 −80 −60 −40 −20 0 20 −8 −6 −4 −2 0 2 4 6 8<br>x x<br>(a) Complete density functions (b) Zoom of density functions<br>Recovered density of CGMY Recovered density of CGMY<br><!-- End of picture text -->
+
+Fig. 6. _Recovered density functions for the CGMY model with different values of Y ; other parameters are as in_ (56) _._ 
+
+distribution shifts. 
+
+Reference values for the numerical experiments are computed by the COS method with _N_ = 2<sup>14</sup> , as there are no reference values available for the latter cases. The numerical results are presented in Tables 8 and 9 for _Y_ = 0 _._ 5 and _Y_ = 1 _._ 5, respectively. 
+
+Again, the COS method converges exponentially, which is faster than the fourth order convergence of the CONV method. With a relatively small value of _N_ , i.e., _N ≤_ 100, the COS results are accurate up to seven digits. The computational time spent is less than 0 _._ 1 millisecond. Comparing Tables 8 and 9, we notice that the convergence rate with _Y_ = 1 _._ 5 is faster than that of _Y_ = 0 _._ 5, because density functions from fat-tailed distributions can often be well represented by cosine basis functions. In Table 10, for example, with _Y_ = 1 _._ 98 we need very small values of _N_ for highly accurate call option prices. No other pricing method, to our knowledge, can price options for very large _Y ≈_ 2 accurately in a robust way. 
+
+**6. Conclusions and discussion.** In this paper we have introduced an option pricing method based on Fourier-cosine series expansions, the COS method, for pricing European-style options. The method can be used as long as a characteristic function for the underlying price process is available. The COS method is based on the insight that the series coefficients of many density functions can be accurately retrieved from their characteristic functions. As such, one can decompose a density function into a linear combination of cosine functions. It is this decomposition that makes the numerical computation of the risk-neutral valuation formula easy and highly efficient. Derivation of the COS method has been accompanied by an error analysis. In several numerical experiments, the convergence rate of the COS method has shown to
+
+<!-- page: 21 -->
+
+Table 8 
+
+_Comparison of the COS and CONV methods in accuracy and speed for CGMY with Y_ = 0 _._ 5 _and other parameters as in_ (56) _; reference val._ = 19 _._ 812948843 _. . .._ 
+
+||CO|S||CON|V|
+|---|---|---|---|---|---|
+|_N_|Error|Time (msec.)|_N_|Error|Time (msec.)|
+|32|1.36e-02|0.61|64|1.53e-02|0.66|
+|48|5.61e-04|0.69|128|5.31e-04|0.94|
+|64|3.32e-05|0.78|256|3.15e-05|1.49|
+|80|2.57e-06|0.89|512|1.62e-06|2.89|
+|96|2.44e-07|0.95|1024|_−_1.82e-07|4.90|
+|128|3.11e-09|1.11|2048|_−_2.71e-07|9.64|
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0021-05.png)
+
+
+<!-- Start of picture text -->
+128 3.11e-09 1.11 2048 − 2.71e-07 9.64<br><!-- End of picture text -->
+
+Table 9 
+
+_Comparison of the COS and CONV methods in accuracy and speed for CGMY with Y_ = 1 _._ 5 _and other parameters from_ (56) _; reference val._ = 49 _._ 790905469 _. . .._ 
+
+||CO|S||CON|V|
+|---|---|---|---|---|---|
+|_N_|Error|Time (msec.)|_N_|Error|Time (msec.)|
+|8|2.40e-01|0.53|64|1.21e-02|0.70|
+|16|_−_4.92e-02|0.56|128|7.12e-04|1.13|
+|24|_−_1.73e-03|0.58|256|4.37e-05|1.79|
+|32|_−_1.23e-05|0.63|512|2.81e-06|3.13|
+|40|_−_2.16e-08|0.68|1024|1.49e-07|5.32|
+|48|_−_3.60e-11|0.72|2048|6.49e-10|9.98|
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0021-09.png)
+
+
+<!-- Start of picture text -->
+48 − 3.60e-11 0.72 2048 6.49e-10 9.98<br><!-- End of picture text -->
+
+Table 10 
+
+_The COS method for CGMY model with Y_ = 1 _._ 98 _and other parameters as in_ (56) _; reference val._ = 99 _._ 999905510 _. . .._ 
+
+|_N_|8|16|24|32|40|48|
+|---|---|---|---|---|---|---|
+|Msec.<br> <br>|0.52<br> <br>|0.55<br> <br>|0.61<br> <br>|0.63<br> <br>|0.66<br> <br>|0.70<br>|
+|Error<br> <br>|_−_6.36e-01<br>I<br>|2.65e-02<br>I<br>|1.00e-04<br>I<br>|4.29e-06<br>I<br>|3.25e-09<br>I<br>|1.18e-11<br>I|
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0021-13.png)
+
+
+<!-- Start of picture text -->
+I  Error I  − 6.36e-01 I  2.65e-02 I  1.00e-04 I  4.29e-06 I  3.25e-09 I  1.18e-11<br><!-- End of picture text -->
+
+be exponential, in accordance with the analysis. When the density function of the underlying process has a discontinuity in one of its derivatives an algebraic convergence is expected and was observed. The computational complexity of the COS method is linear in the number of terms, _N_ , chosen in the Fourier-cosine series expansion. Very fast computing times were reported here for the Heston and the L´evy models. With _N <_ 150, all numerical results (except for the VG model with very short maturities) are accurate up to eight digits, in less than 1 millisecond of CPU time. By recovering the density function we can estimate the convergence behavior of our numerical method. 
+
+The generalization of the COS method for options with early-exercise features, like Bermudan and American options, is on its way; see [12]. 
+
+The generalization to high dimensional option pricing problems is not trivial, because an analytic formula for the coefficients _Vk_ cannot easily be obtained. The _Vk_ should then be recovered numerically, which has an impact on the convergence rate of the COS method. This is part of our future research. 
+
+**Appendix A. Cumulants of ln(** **_St/K_ ).** The cumulants, _cn_ , are defined by the cumulant-generating function _g_ ( _t_ ): 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0021-18.png)
+
+
+for some random variable _X_ . The cumulants are given by the derivatives, at zero, of _g_ ( _t_ ). We present the cumulants _c_ 1 _, c_ 2, and _c_ 4 needed to determine the truncation
+
+<!-- page: 22 -->
+
+Table 11 
+
+_Cumulants, cn, of_ ln( _St/K_ ) _for different models of the underlying; and w, the drift correction term, which satisfies_ exp( _−wt_ ) = _ϕ_ ( _−i, t_ ) _._ 
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0022-04.png)
+
+
+|GBM|_c_1 =<br>_c_2 =<br>_c_4 =<br>_w_ =|_μT_<br>_σ_<sup>2</sup>_T_<br>0<br>0|
+|---|---|---|
+|Heston|_c_1 =<br>_c_2 =<br>_w_ =|_μT_ + (1_−e_<sup>_−λT_ </sup>) <sup>¯</sup><sup>_u−u_0</sup><br>2_λ_<br>_−_<sup>1</sup><br>2 <sup>¯</sup><sup>_uT_</sup><br>1<br>8_λ_<sup>3</sup><br>�_ηTλe−λT_(_u_0 _−_¯_u_)(8_λρ −_4_η_)<br>+_λρη_(1_−e_<sup>_−λT_ </sup>)(16¯_u −_8_u_0)<br>+2¯_uλT_(_−_4_λρη_+_η_<sup>2 </sup>+ 4_λ_<sup>2</sup>)<br>+_η_<sup>2</sup>((¯_u −_2_u_0)_e_<sup>_−_2</sup><sup>_λT_ </sup>+ ¯_u_(6_e_<sup>_−λT _</sup>_−_7) + 2_u_0)<br>+8_λ_<sup>2</sup>(_u_0_−_¯_u_)(1_−e_<sup>_−λT_ </sup>)<br>�<br>0|
+|VG|_c_1 =<br>_c_2 =<br>_c_4 =<br>_w_ =|(_μ_+_θ_)_T_<br>(_σ_<sup>2 </sup>+_νθ_<sup>2</sup>)_T_<br>3(_σ_<sup>4</sup>_ν_ + 2_θ_<sup>4</sup>_ν_<sup>3 </sup>+ 4_σ_<sup>2</sup>_θ_<sup>2</sup>_ν_<sup>2</sup>)_T_<br>1<br>_ν_ <sup>ln(1</sup><sup>_−θν −σ_2</sup><sup>_ν/_2)</sup>|
+|CGMY|_c_1 =<br>_c_2 =<br>_c_4 =<br>_w_ =|_μT_ +_CT_Γ(1_−Y_) <sup>�</sup>_M_<sup>_Y −_1</sup> _−G_<sup>_Y −_1�</sup><br>_σ_<sup>2</sup>_T_ +_CT_Γ(2_−Y_) <sup>�</sup>_M_<sup>_Y −_2 </sup>+_G_<sup>_Y −_2�</sup><br>_CT_Γ(4_−Y_)<br>�<br>_M_<sup>_Y −_4 </sup>+_G_<sup>_Y −_4�</sup><br>_−C_Γ(_−Y_)[(_M −_1)<sup>_Y _</sup>_−M_<sup>_Y_ </sup>+ (_G_+ 1)<sup>_Y _</sup>_−G_<sup>_Y_ </sup>]|
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0022-06.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0022-07.png)
+
+
+![](assets/2008-fang-oosterlee-cos-method.pdf-0022-08.png)
+
+
+range in (49). They are given, for the price processes discussed in this paper, in Table 11. 
+
+**Acknowledgments.** The authors would like to thank Roger Lord (Rabobank, London), Mike Staunton (London Business School), and Hans van der Weide (Delft University of Technology) for fruitful discussions. 
+
+## REFERENCES 
+
+> [1] A. Almendral and C. W. Oosterlee, _Accurate evaluation of European and American options under the CGMY process_ , SIAM J. Sci. Comput., 29 (2007), pp. 93–117. 
+
+> [2] A. D. Andricopoulos, M. Widdicks, P. W. Duck, and D. P. Newton, _Universal option valuation using quadrature methods_ , J. Fin. Economics, 67 (2003), pp. 447–471. 
+
+> [3] A. D. Andricopoulos, M. Widdicks, P. W. Duck, and D. P. Newton, _Extending quadrature methods to value multi-asset and complex path dependent options_ , J. Fin. Economics, 83 (2007), pp. 471–499. 
+
+> [4] C. M. Bender and S. A. Orszag, _Advanced Mathematical Methods for Scientists and Engineers_ , McGraw–Hill, New York, 1978. 
+
+> [5] J. P. Boyd, _Chebyshev & Fourier Spectral Methods_ , Springer-Verlag, Berlin, 1989. 
+
+> [6] M. Broadie and Y. Yamamoto, _Application of the fast Gauss transform to option pricing_ , Management Sci., 49 (2003), pp. 1071–1008. 
+
+> [7] P. P. Carr, H. Geman, D. B. Madan, and M. Yor, _The fine structure of asset returns: An empirical investigation_ , J. Business, 75 (2002), pp. 305–332. 
+
+- [8] P. P. Carr and D. B. Madan, _Option valuation using the fast Fourier transform_ , J. Comp. Finance, 2 (1999), pp. 61–73. 
+
+- [9] K. Chourdakis, _Option pricing using the fractional FFT_ , J. Comp. Finance, 8 (2004), pp. 1–18.
+
+<!-- page: 23 -->
+
+## F. FANG AND C. W. OOSTERLEE 
+
+- [10] R. Cont and P. Tankov, _Financial Modelling with Jump Processes_ , Chapman and Hall, Boca Raton, FL, 2004. 
+
+- [11] G. A. Evans and J. R. Webster, _A comparison of some methods for the evaluation of highly oscillatory integrals_ , J. Comput. Appl. Math., 112 (1999), pp. 55–69. 
+
+- [12] F. Fang and C. W. Oosterlee, _Pricing Early-Exercise and Discrete Barrier Options by Fourier-Cosine Series Expansions_ , http://ta.twi.tudelft.nl/mf/users/oosterle/oosterlee /bermCOS.pdf (2008), submitted. 
+
+- [13] E. G. Haug, _The Complete Guide to Option Pricing Formulas_ , McGraw–Hill, New York, 1998. 
+
+- [14] S. Heston, _A closed-form solution for options with stochastic volatility with applications to bond and currency options_ , Rev. Financ. Studies, 6 (1993), pp. 327–343. 
+
+- [15] A. Lewis, _A Simple Option Formula for General Jump-Diffusion and Other Exponential L´evy Processes_ , SSRN working paper, http://ssrn.com/abstract=282110 (2001). 
+
+- [16] R. Lord and C. Kahl, _Optimal Fourier inversion in semi-analytical option pricing_ , J. Comp. Finance, 10 (2007), pp. 1–30. 
+
+- [17] R. Lord, F. Fang, F. Bervoets, and C. W. Oosterlee, _A fast and accurate FFT-based method for pricing early-exercise options under L´evy processes_ , SIAM J. Sci. Comput., 30 (2008), pp. 1678–1705. 
+
+- [18] R. Lord and Ch. Kahl, _Complex Logarithms in Heston-Like Models_ , Working paper, Rabobank International and ABN-AMRO, http://ssrn.com/abstract - id=1105998 (2008). 
+
+- [19] M. Mori and M. Sugihara, _The double-exponential transformation in numerical analysis_ , J. Comput. Appl. Math., 127 (2001), pp. 287–296. 
+
+- [20] C. O’Sullivan, _Path Dependent Option Pricing under L´evy Processes_ , EFA 2005 Moscow Meetings paper, http://ssrn.com/abstract=673424 (Feb., 2005). 
+
+- [21] R. Piessens and F. Poleunis, _A numerical method for the integration of oscillatory functions_ , BIT, 11 (1971), pp. 317–327. 
+
+- [22] S. Raible, _L´evy Processes in Finance: Theory, Numerics and Empirical Facts_ , Ph.D. thesis, Inst. f¨ur Math. Stochastik, Albert-Ludwigs-University Freiburg, Freiburg, Germany, 2000. 
+
+- [23] W. Schoutens, E. Simons, and J. Tistaert, _A perfect calibration! Now what?_ , Wilmott Magazine, March, 2004, pp. 66–78. 
+
+- [24] I. Wang, J. W. Wan, and P. Forsyth, _Robust numerical valuation of European and American options under the CGMY process_ , J. Comp. Finance, 10 (2007), pp. 31–70. 
+
+- [25] Y. Yamamoto, _Double-exponential fast Gauss transform algorithms for pricing discrete lookback options_ , Publ. Res. Inst. Math. Sci., 41 (2005), pp. 989–1006.

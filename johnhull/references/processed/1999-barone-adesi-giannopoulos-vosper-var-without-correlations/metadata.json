@@ -1,0 +1,34 @@
+{
+  "paper_id": "1999-barone-adesi-giannopoulos-vosper-var-without-correlations",
+  "title": "VaR Without Correlations for Portfolios of Derivative Securities",
+  "authors": "Giovanni Barone-Adesi; Kostas Giannopoulos; Les Vosper",
+  "year": "1999",
+  "source_url": "https://doc.rero.ch/record/306980",
+  "source_pdf": "references/papers/1999-barone-adesi-giannopoulos-vosper-var-without-correlations.pdf",
+  "source_sha256": "787964528e645ecdf2c6bbf494f8dac345e69b2fcfc1a38c1777251708807d30",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.2",
+    "title": "Microsoft Word - WP9904.doc",
+    "author": "",
+    "subject": "",
+    "keywords": "",
+    "creator": "Windows NT 4.0",
+    "producer": "Acrobat Distiller 3.01 for Windows",
+    "creationDate": "D:19990903122535",
+    "modDate": "",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 29
+  }
+}

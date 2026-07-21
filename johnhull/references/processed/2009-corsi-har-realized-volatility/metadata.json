@@ -1,0 +1,34 @@
+{
+  "paper_id": "2009-corsi-har-realized-volatility",
+  "title": "A Simple Approximate Long-Memory Model of Realized Volatility",
+  "authors": "Fulvio Corsi",
+  "year": "2009",
+  "source_url": "https://doi.org/10.1093/jjfinec/nbp001",
+  "source_pdf": "references/papers/2009-corsi-har-realized-volatility.pdf",
+  "source_sha256": "18c305635feefc152a0522791de67677b5db037dd10958a09134c7d55cf222e5",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.6",
+    "title": "jfin-toc.dvi",
+    "author": "",
+    "subject": "",
+    "keywords": "",
+    "creator": "dvips(k) 5.95a Copyright 2005 Radical Eye Software",
+    "producer": "Acrobat Distiller Server 6.0.1 (Sparc Solaris, Built: 2003-11-03)",
+    "creationDate": "D:20090312091640+05'30'",
+    "modDate": "D:20160421142136+02'00'",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 23
+  }
+}

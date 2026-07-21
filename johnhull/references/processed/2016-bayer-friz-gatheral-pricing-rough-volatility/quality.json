@@ -1,0 +1,23 @@
+{
+  "paper_id": "2016-bayer-friz-gatheral-pricing-rough-volatility",
+  "status": "review",
+  "page_count": 38,
+  "total_chars": 42013,
+  "average_chars_per_page": 1105.6,
+  "empty_pages": [],
+  "short_pages": [
+    23,
+    24
+  ],
+  "replacement_characters": 5,
+  "heading_count": 20,
+  "image_references": 63,
+  "image_files": 63,
+  "latex_math_markers": 0,
+  "chunk_count": 10,
+  "max_chunk_chars": 4789,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

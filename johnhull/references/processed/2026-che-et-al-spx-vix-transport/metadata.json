@@ -1,0 +1,34 @@
+{
+  "paper_id": "2026-che-et-al-spx-vix-transport",
+  "title": "SPX-VIX Risk Computations Via Perturbed Optimal Transport",
+  "authors": "Charlie Che et al.",
+  "year": "2026",
+  "source_url": "https://arxiv.org/abs/2603.10857",
+  "source_pdf": "references/papers/2026-che-et-al-spx-vix-transport.pdf",
+  "source_sha256": "fd1229e982a0b81088ee27b8b0274f4f505691d9c4d7ebebb4f64ecc5c0279ba",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.7",
+    "title": "SPX-VIX Risk Computations Via Perturbed Optimal Transport",
+    "author": "Charlie Che; Hanxuan Lin; Yudong Yang; Guofan Hu; Lei Fang",
+    "subject": "",
+    "keywords": "",
+    "creator": "arXiv GenPDF (tex2pdf:a6404ea)",
+    "producer": "pikepdf 8.15.1",
+    "creationDate": "",
+    "modDate": "",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 36
+  }
+}

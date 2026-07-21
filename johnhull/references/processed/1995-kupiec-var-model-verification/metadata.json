@@ -1,0 +1,34 @@
+{
+  "paper_id": "1995-kupiec-var-model-verification",
+  "title": "Techniques for Verifying the Accuracy of Risk Measurement Models",
+  "authors": "Paul H. Kupiec",
+  "year": "1995",
+  "source_url": "https://fraser.stlouisfed.org/title/finance-economics-discussion-series-1491/techniques-verifying-accuracy-risk-measurement-models-717921",
+  "source_pdf": "references/papers/1995-kupiec-var-model-verification.pdf",
+  "source_sha256": "99d8cb03e47bb9c18bb00194ea4a6e880d930b06fd34adb3aab7bfc0428d3cbc",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.6",
+    "title": "Finance and Economics Discussion Series: Techniques for Verifying the Accuracy of Risk Measurement Models, 95-24",
+    "author": "Board of Governors of the Federal Reserve System|Paul H. Kupiec",
+    "subject": "",
+    "keywords": "",
+    "creator": "Acrobat 5.0 Scan Plug-in for Windows",
+    "producer": "ABBYY Recognition Server; modified using iTextSharp 4.1.6 by 1T3XT",
+    "creationDate": "D:20120328230008-04'00'",
+    "modDate": "D:20260114143010-06'00'",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 47
+  }
+}

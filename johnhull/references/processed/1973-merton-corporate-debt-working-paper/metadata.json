@@ -1,0 +1,34 @@
+{
+  "paper_id": "1973-merton-corporate-debt-working-paper",
+  "title": "On the Pricing of Corporate Debt: The Risk Structure of Interest Rates",
+  "authors": "Robert C. Merton",
+  "year": "1974",
+  "source_url": "https://doi.org/10.1111/j.1540-6261.1974.tb03058.x",
+  "source_pdf": "references/papers/1973-merton-corporate-debt-working-paper.pdf",
+  "source_sha256": "d9872c57be5763178ad2fe15cd0dc7e672c04a24ec002dbf8c762a527597d86d",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.4",
+    "title": "",
+    "author": "",
+    "subject": "",
+    "keywords": "",
+    "creator": " ",
+    "producer": " ",
+    "creationDate": "",
+    "modDate": "",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 35
+  }
+}

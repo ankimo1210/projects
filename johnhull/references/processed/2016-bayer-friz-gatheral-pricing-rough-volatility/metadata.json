@@ -1,0 +1,34 @@
+{
+  "paper_id": "2016-bayer-friz-gatheral-pricing-rough-volatility",
+  "title": "Pricing Under Rough Volatility",
+  "authors": "Christian Bayer; Peter K. Friz; Jim Gatheral",
+  "year": "2016",
+  "source_url": "https://doi.org/10.1080/14697688.2015.1099717",
+  "source_pdf": "references/papers/2016-bayer-friz-gatheral-pricing-rough-volatility.pdf",
+  "source_sha256": "29e26a04d611153ed99217e2c0a596e4105536f04b190249938b9be5d07afe75",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.5",
+    "title": "",
+    "author": "",
+    "subject": "",
+    "keywords": "",
+    "creator": "LaTeX with hyperref package",
+    "producer": "pdfTeX-1.40.15",
+    "creationDate": "D:20150123175723-05'00'",
+    "modDate": "D:20150616124423-04'00'",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 38
+  }
+}

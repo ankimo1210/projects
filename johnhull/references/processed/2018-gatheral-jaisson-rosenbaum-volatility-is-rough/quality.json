@@ -1,0 +1,20 @@
+{
+  "paper_id": "2018-gatheral-jaisson-rosenbaum-volatility-is-rough",
+  "status": "review",
+  "page_count": 41,
+  "total_chars": 55371,
+  "average_chars_per_page": 1350.5,
+  "empty_pages": [],
+  "short_pages": [],
+  "replacement_characters": 1,
+  "heading_count": 26,
+  "image_references": 67,
+  "image_files": 67,
+  "latex_math_markers": 0,
+  "chunk_count": 13,
+  "max_chunk_chars": 4794,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

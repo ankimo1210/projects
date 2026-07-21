@@ -1,0 +1,20 @@
+{
+  "paper_id": "2001-longstaff-schwartz-american-options-lsm",
+  "status": "review",
+  "page_count": 36,
+  "total_chars": 97541,
+  "average_chars_per_page": 2709.5,
+  "empty_pages": [],
+  "short_pages": [],
+  "replacement_characters": 0,
+  "heading_count": 25,
+  "image_references": 12,
+  "image_files": 12,
+  "latex_math_markers": 0,
+  "chunk_count": 24,
+  "max_chunk_chars": 4795,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

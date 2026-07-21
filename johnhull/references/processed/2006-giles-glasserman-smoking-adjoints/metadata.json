@@ -1,0 +1,34 @@
+{
+  "paper_id": "2006-giles-glasserman-smoking-adjoints",
+  "title": "Smoking Adjoints: Fast Monte Carlo Greeks",
+  "authors": "Mike Giles; Paul Glasserman",
+  "year": "2006",
+  "source_url": "https://ora.ox.ac.uk/objects/uuid:f536b1a8-c988-4bda-9c5f-a322652139fd",
+  "source_pdf": "references/papers/2006-giles-glasserman-smoking-adjoints.pdf",
+  "source_sha256": "532d46c48bb98b6ef049f08b433237d0b5be114d281d09ceae387abed7de666a",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.3",
+    "title": "",
+    "author": "",
+    "subject": "",
+    "keywords": "",
+    "creator": "",
+    "producer": "GNU Ghostscript 7.05",
+    "creationDate": "",
+    "modDate": "",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 15
+  }
+}

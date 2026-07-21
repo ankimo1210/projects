@@ -1,0 +1,21 @@
+{
+  "paper_id": "2025-huge-savine-axes-that-matter",
+  "status": "review",
+  "page_count": 15,
+  "total_chars": 40846,
+  "average_chars_per_page": 2723.1,
+  "empty_pages": [],
+  "short_pages": [],
+  "replacement_characters": 61,
+  "heading_count": 12,
+  "image_references": 20,
+  "image_files": 20,
+  "latex_math_markers": 0,
+  "chunk_count": 10,
+  "max_chunk_chars": 4784,
+  "warnings": [
+    "high replacement-character ratio",
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

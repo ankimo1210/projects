@@ -1,0 +1,25 @@
+{
+  "paper_id": "2019-el-euch-rosenbaum-rough-heston-characteristic-function",
+  "status": "review",
+  "page_count": 35,
+  "total_chars": 50281,
+  "average_chars_per_page": 1436.6,
+  "empty_pages": [],
+  "short_pages": [
+    14,
+    15,
+    20,
+    22
+  ],
+  "replacement_characters": 19,
+  "heading_count": 18,
+  "image_references": 106,
+  "image_files": 106,
+  "latex_math_markers": 0,
+  "chunk_count": 12,
+  "max_chunk_chars": 4788,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

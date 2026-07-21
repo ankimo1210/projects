@@ -1,0 +1,365 @@
+---
+paper_id: "2000-mcneil-frey-tail-risk-evt"
+title: "Estimation of Tail-Related Risk Measures for Heteroscedastic Financial Time Series"
+authors: "Alexander J. McNeil; Rüdiger Frey"
+year: "2000"
+source_url: "https://doi.org/10.1016/S0927-5398(00)00012-8"
+source_pdf: "references/papers/2000-mcneil-frey-tail-risk-evt.pdf"
+source_sha256: "9ab9f1149fe5acb8e9e6502e245676a855c4c629e3207179d4c0090acc465e03"
+converter: "PyMuPDF4LLM 1.28.0"
+---
+
+<!-- page: 1 -->
+
+Estimation of Tail-Related Risk Measures for Heteroscedastic Financial Time Series: an Extreme Value Approach Alexander J. McNeil� R udiger� Frey� Department of Mathematics Swiss Banking Institute Federal Institute of Technology University of Zurich ETH Zentrum Plattenstrasse 14 CH-8092 Zurich CH-8032 Zurich Tel: +41 1 632 61 62 Tel: +41 1 634 29 57 Fax: +41 1 632 15 23 Fax: +41 1 634 49 03 mcneil@math.ethz.ch freyr@isb.unizh.ch June 19, 1999 Abstract We prop ose a metho d for estimating VaR and related risk measures describing the tail of the conditional distribution of a heteroscedastic �nancial return series. Our approach combines pseudo-maximum-likeliho o d �tting of GARCH mo dels to estimate the current volatility and extreme value theory (EVT) for estimating the tail of the innovation distribution of the GARCH mo del. We use our metho d to estimate conditional quantiles (VaR) and conditional exp ected shortfalls (the exp ected size of a return exceeding VaR), this b eing an alternative measure of tail risk with b etter theoretical prop erties than the quantile. Using backtesting of historical daily return series we show that our pro cedure gives b etter one-day estimates than metho ds which ignore the heavy tails of the innovations or the sto chastic nature of the volatility. With the help of our �tted mo dels we adopt a Monte Carlo approach to estimating the conditional quantiles of returns over multiple-day horizons and �nd that this outp erforms the simple square-ro ot-of-time scaling metho d. J.E.L. Sub ject Classi�cation: C.22, G.10, G.21 Keywords: Risk Measures, Value at Risk, Financial Time Series, GARCH mo dels, Extreme Value Theory, Backtesting 1 Intro duction The large increase in the numb er of traded assets in the p ortfolio of most �nancial institutions has made the measurement of market risk (the risk that a �nancial institution incurs losses on its trading b o ok due to adverse market movements) a primary concern for regulators and for internal risk control. In particular, banks are now required to hold a certain amount of capital as a cushion against adverse market movements. According to the Capital Adequacy Directive by the Bank of International Settlement (BIS) in Basle, (Basle Comittee 1996) the risk capital of a bank must b e suÆcient to cover losses on the bank's trading p ortfolio over a ten-day holding p erio d in 99% of o ccasions. This value is � We wish to thank Paul Embrechts, Peter Buhlmann,� Daniel Straumann, Neil Shephard, an anonymous referee and seminar participants at UBS-Warburg Dillon Read for interesting remarks. The data on goldprices were obtained from the Finanzmarktdatenbank maintained by the SFB 303 at the University of Bonn. The binomial test in section 3 was suggested by Daniel Straumann. Financial supp ort from Swiss Re (McNeil) and from UBS (Frey) is gratefully acknowledged. 
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0001-01.png)
+
+<!-- page: 2 -->
+
+usually referred to as Value at Risk (VaR). Of course, holding p erio d and con�dence level may vary according to application; for purp oses of internal risk control most �nancial �rms also use a holding p erio d of one day and a con�dence level of 95%. From a mathematical viewp oint VaR is simply a quantile of the Pro�t-and-Loss (P&L) distribution of a given p ortfolio over a prescrib ed holding p erio d. Alternative measures of market risk have b een prop osed in the literature. In two recent pap ers, Artzner et al. (1997, 1998) show that VaR has various theoretical de�ciencies as a measure of market risk; they prop ose the use of the so-called expected shortfal l or tail conditional expectation instead. The exp ected shortfall measures the exp ected loss given that the loss L exceeds VaR; in mathematical terms it is given by E [LjL > VaR ]. From a statistical viewp oint the main challenge in implementing one of these risk-measures is to come up with a go o d estimate for the tails of the underlying P&L distribution; given such an estimate b oth VaR and exp ected shortfall are fairly easy to compute. In this pap er we are concerned with tail estimation for �nancial return series. Our basic idealisation is that returns follow a stationary time series mo del with sto chastic volatility structure. There is strong empirical supp ort for sto chastic volatility in �nancial time series; see for instance Pagan (1996). The presence of sto chastic volatility implies that returns are not necessarily indep endent over time. Hence with such mo dels there are two typ es of return distribution to b e considered { the conditional return distribution where the conditioning is on the current volatility and the marginal or stationary distribution of the pro cess. Both distributions are of relevance to risk managers. A risk-manager who wants to measure the market risk of a given p ortfolio is mainly concerned with the p ossible extent of a loss caused by an adverse market movement over the next day (or next few days) given the current volatility background. His main interest is in the tails of the conditional return distribution, which are also the fo cus of the present pap er. The estimation of unconditional tails provides di�erent, but complementary information ab out risk. Here we take the long-term view and attempt to assign a magnitude to a sp eci�ed rare adverse event, such as a 5-year loss (the size of a daily loss which o ccurs on average once every 5 years). This kind of information may b e of interest to the risk manager who wishes to p erform a scenario analysis and get a feeling for the scale of worst case or stress losses. In a referee's rep ort the concern was raised that the use of conditional return distributions for market risk measurement might lead to capital requirements that �uctuate wildly over time and are therefore diÆcult to implement. Our answer to this imp ortant p oint is threefold: First, while it is admittedly imp ossible for a �nancial institution to rapidly adjust its capital base to changing market conditions, the �rm might very well b e able to adjust the size of its exp osure instead. Moreover, b esides providing a basis for the determination of risk capital, measures of market risk are also employed to give the management of a �nancial �rm a b etter understanding of the riskiness of its p ortfolio, or parts thereof. We are convinced that the riskiness of a p ortfolio do es indeed vary with the general level of market volatility, so that the current volatility background should b e re�ected in the risk-numb ers rep orted to management. Finally, we think that the economic problem of de�ning an appropriate risk-measure for setting capital-adequacy standards should b e separated from the statistical problem of estimating a given measure of market risk, which is the fo cus of the present pap er. Schematically the existing approaches for estimating the P&L distribution of a p ortfolio of securities can b e divided into three groups: the nonparametric historical simulation (HS) metho d; fully parametric metho ds based on an econometric mo del for volatility dynamics and the assumption of conditional normality (e.g. J.P. Morgan's Riskmetrics and most mo dels from the ARCH/GARCH family); and �nally metho ds based on extreme value theory (EVT). In the HS-approach the estimated P&L distribution of a p ortfolio is simply given by the 
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0002-01.png)
+
+
+<!-- Start of picture text -->
+2<br><!-- End of picture text -->
+
+<!-- page: 3 -->
+
+empirical distribution of past gains and losses on this p ortfolio. The metho d is therefore easy to implement and avoids \ad-ho c-assumptions" on the form of the P&L distribution. However, the metho d su�ers from some serious drawbacks. Extreme quantiles are notoriously diÆcult to estimate, as extrap olation b eyond past observations is imp ossible and extreme quantile estimates within sample tend to b e very ineÆcient | the estimator is sub ject to a high variance. Furthermore, if we seek to mitigate these problems by considering long samples the metho d is unable to distinguish b etween p erio ds of high and low volatility. Econometric mo dels of volatility dynamics that assume conditional normality, such as GARCH-mo dels, do yield VaR estimates which re�ect the current volatility background. The main weakness of this approach is that the assumption of conditional normality do es not seem to hold for real data. As shown, for instance, in Danielsson and de Vries (1997c), mo dels based on conditional normality are therefore not well-suited to estimating large quantiles of the P&L-distribution.1 The estimation of return distributions of �nancial time series via EVT is a topical issue which has given rise to some recent work (Embrechts, Resnick, and Samoro dnitsky 1998b, Embrechts, Resnick, and Samoro dnitsky 1998a, Longin 1997b, Longin 1997a, McNeil 1997, McNeil 1998, Danielsson and de Vries 1997b, Danielsson and de Vries 1997c, Danielsson, Hartmann, and de Vries 1998). In all these pap ers the fo cus is on estimating the unconditional (stationary) distribution of asset returns. Longin (1997b) and McNeil (1998) use estimation techniques based on limit theorems for blo ck maxima. Longin ignores the sto chastic volatility exhibited by most �nancial return series and simply applies estimators for the iid-case. McNeil uses a similar approach but shows how to correct for the clustering of extremal events caused by sto chastic volatility. Danielsson and de Vries (1997a,b) use a semiparametric approach based on the Hill-estimator of the tail index. Embrechts, Resnick, and Samoro dnitsky (1998a) advo cate the use of a parametric estimation technique which is based on a limit result for the excess-distribution over high thresholds. This approach will b e adopted in this pap er and explained in detail in Section 2.2. EVT-based metho ds have two features which make them attractive for tail estimation: yhey are based on a sound statistical theory; they o�er a parametric form for the tail of a distribution. Hence these metho ds allow for some extrap olation b eyond the range of the data, even if care is required at this p oint. However, none of the previous EVT-based metho ds for quantile estimation yields VaR-estimates which re�ect the current volatility background. Given the conditional heteroscedasticity of most �nancial data, which is welldo cumented by the considerable success of the mo dels from the ARCH/GARCH family, we b elieve this to b e a ma jor drawback of any kind of VaR-estimator. In order to overcome the drawbacks of each of the ab ove metho ds we combine ideas from all three approaches. We use GARCH-mo delling and pseudo-maximum-likeliho o d estimation to obtain estimates of the conditional volatility. Statistical tests and exploratory data analysis con�rm that the error terms or residuals do form, at least approximately, an iid series that exhibit heavy tails. We use historical simulation (for the central part of the distribution) and threshold metho ds from EVT (for the tails) to estimate the distribution of the residuals. The application of these metho ds is facilitated by the (approximate) indep endence over time of the residuals. An estimate of the conditional return distribution is now easily constructed from the estimated distribution of the residuals and estimates of the conditional mean and volatility. This approach re�ects two stylized facts exhibited by most �nancial return series, namely sto chastic volatility and the fat-tailedness of conditional return distributions over short time horizons. 1 Note that the marginal distribution of a GARCH-mo del with normally distributed errors is usually fat-tailed as it is a a mixture of normal distributions. However, this matters only for quantile estimation over longer time-horizons; see e.g. DuÆe and Pan (1997). 3 
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0003-01.png)
+
+<!-- page: 4 -->
+
+In a very recent pap er Barone-Adesi, Bourgoin, and Giannop oulos (1998) have indep endently prop osed an approach with some similarities to our own. They �t a GARCHmo del to a �nancial return series and use historical simulation to infer the distribution of the residuals. They do not use EVT-based metho ds to estimate the tails of the distribution of the residuals. Their approach may work well in large data sets | they use 13 years of daily data | where the empirical quantile provides a reasonable quantile estimator in the tails. With smaller data sets threshold metho ds from EVT will give b etter estimates of the tails of the residuals. During the revision of this pap er we also learned that the central idea of our approach | the application of EVT to mo del residuals | has b een indep endently prop osed by Dieb old, Schuermann, and Stroughair (1999). We test our approach on various return series. Backtesting shows that it yields b etter estimates of VaR and exp ected shortfall than unconditional EVT or GARCH-mo delling with normally distributed error terms. In particular, our analysis contradicts Danielsson and de Vries (1997c), who state that \an unconditional approach is b etter suited for VaR estimation than conditional volatility forecasts" (page 3 of their pap er). On the other hand, we see that mo dels with normally distributed conditional return distribution yield very bad estimates of the exp ected shortfall, so that there is a real need for working with leptokurtic error distributions. We also study quantile estimation over longer timehorizons using simulation. This is of interest, if we want to obtain an estimate of the 10-day VaR (as required by the BIS-rule) from a mo del �tted to daily data. 2 Metho ds Let (Xt ; t 2 Z) b e a strictly stationary time series representing daily observations of the negative log return on a �nancial asset price.2 We assume that the dynamics of X are given by Xt = �t + �t Zt ; (1) where the innovations Zt are a strict white noise pro cess (i.e. indep endent, identically distributed) with zero mean, unit variance and marginal distribution function FZ (z ). We assume that �t and �t are measurable with resp ect to Gt�1 , the information ab out the return pro cess available up to time t � 1. Let FX (x) denote the marginal distribution of (Xt ) and, for a horizon h 2 N, let FXt+1 +:::+Xt+h jGt (x) denote the predictive distribution of the return over the next h days, given knowledge of returns up to and including day t. We are interested in estimating quantiles in the tails of these distributions. For 0 < q < 1, an unconditional quantile is a quantile of the marginal distribution denoted by 
+
+xq = inf fx 2 R : FX (x) � q g ; and a conditional quantile is a quantile of the predictive distribution for the return over the next h days denoted by xtq (h) = inf �x 2 R : FXt+1 +:::+Xt+h jGt (x) � q � : We also consider an alternative measure of risk for the tail of a distribution known as the exp ected shortfall. The unconditional exp ected shortfall is de�ned to b e Sq = E [X j X > xq ] ; 2 In the present pap er we test our approach on return series generated by single assets only. However, the metho d obviously also applies to the time series of pro�ts and losses generated by p ortfolios of �nancial instruments and can therefore by used for the estimation of market risk measures in a p ortfolio context. 4 
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0004-02.png)
+
+<!-- page: 5 -->
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0005-00.png)
+
+
+these measures simplify to xtq = �t+1 + �t+1 zq ; (2) Sqt = �t+1 + �t+1 E [Z j Z > zq ] ; (3) where zq is the upp er q th quantile of the marginal distribution of Zt which by assumption do es not dep end on t. To implement an estimation pro cedure for these measures we must cho ose a sp e- ci�c pro cess in the class (1) , i.e. a particular mo del for the dynamics of the conditional mean and volatility. Many di�erent mo dels for volatility dynamics have b een prop osed in the econometric literature including mo dels from the ARCH/GARCH family (Bollerslev, Chou, and Kroner 1992), HARCH pro cesses (Muller,� Dacarogna, Dav�e, Olsen, Pictet, and von Weizs�acker 1995) and sto c
+
+<!-- page: 6 -->
+
+2. Consider the residuals to b e a realisation of a strict white noise pro cess and use extreme value theory (EVT) to mo del the tail of FZ (z ). Use this EVT mo del to estimate zq for q > 0:95. We go into these stages in more detail in the next sections and illustrate them by means of an example using daily negative log returns on the Standard & Po ors index. 2.1 Estimating �t+1 and �t+1 using PML For predictive purp oses we �x a constant memory n so that at the end of day t our data consist of the last n negative log returns (xt�n+1 ; : : : ; xt�1 ; xt ). We consider these to b e a realisation from a AR(1){GARCH(1,1) pro cess. Hence the conditional variance of the mean-adjusted series �t = Xt � �t is given by 2 2 2 �t = �0 + �1 �t�1 + � �t�1 ; (4) where �0 > 0, �1 > 0 and � > 0. The conditional mean is given by �t = �Xt�1 : (5) This mo del is a sp ecial case of the general �rst order sto chastic volatility pro cess considered by Duan (1996), who uses a result by Brandt (1986) to give conditions for strict stationarity. The mean-adjusted series (�t ) is strictly stationary if 2 E �log �� + �1 Zt�1 �� < 0: (6) By using Jensen's inequality and the convexity of � log (x) it is seen that a suÆcient condition for (6) is that � + �1 < 1, which moreover ensures that the marginal distribution FX (x) has a �nite second moment. This mo del is �tted using the pseudo-maximum-likeliho o d (PML) metho d. This means thatobtaintheparameterlikeliho o destimatesfor a GAR�^ =CH(1,1)(�^; �b0 ; mo�b1 ;del�^)T with. Whilstnormalthisinnoamounvationsts tois�ttingmaximizeda mo delto using a distributional assumption we do not necessarily b elieve, the PML metho d delivers reasonable parameter estimates. In fact, it can b e shown that the PML metho d yields a consistent and asymptotically normal estimator; see for instance Chapter 4 of Gouri�eroux (1997). ^ ^ Estimates of the conditional mean and standard deviation series (�t�n+1 ; : : : ; �t ) and ^ ^ (�t�n+1 ; : : : ; �t ) can b e calculated recursively from (4) and (5) after substitution of sensible starting values. In Figure 1 we show an arbitrary thousand day excerpt from our dataset containing the sto ck market crash of Octob er 1987; the estimated conditional standard deviation derived from the GARCH �t is shown b elow the series. Residuals are calculated b oth to check the adequacy of the GARCH mo delling and to use in Stage 2 of the metho d. They are calculated as ^ ^ xt�n+1 � �t�n+1 xt � �t (zt�n+1 ; : : : ; zt ) = ^ ; : : : ; ^ ; � �t�n+1 �t � and should b e iid if the �tted mo del is tenable. In Figure 2 we plot correlograms for the raw data and their absolute values as well as for the residuals and absolute residuals. While the raw data are clearly not iid, this assumption may b e tenable for the residuals.3 If we are satis�ed with the �tted mo del, we end stage 1 by calculating estimates of the conditional mean and variance for day t + 1, which are the obvious 1{step forecasts ^ ^ �t+1 = �xt ; ^ 2 c c ^2 ^ ^ 2 �t+1 = �0 + �1 �t + � �t ; ^ ^ where �t = xt � �t . 3 We also ran some Ljung-Box tests in selected time p erio ds and found no evidence against the iid{ hyp othesis for the residuals. 
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0006-01.png)
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0006-02.png)
+
+
+<!-- Start of picture text -->
+6<br><!-- End of picture text -->
+
+<!-- page: 7 -->
+
+2.2 Estimating zq using EVT We b egin stage 2 by forming a QQ{Plot of the residuals against the normal distribution to con�rm that an assumption of conditional normality is unrealistic, and that the innovation pro cess has fat tails or is leptokurtic { see Figure 3. We then �x a high threshold u and we assume that excess residuals over this threshold have a generalized Pareto distribution (GPD) with df 1 � (1 + � y =� )�1=� if � = 0; G� ;� (y ) = (1 � exp(�y =� ) if � = 0; where � > 0, and the supp ort is y � 0 when � � 0 and 0 � y � �� =� when � < 0. This particular distributional choice is motivated by a limit result in EVT. Consider a general df F and the corresp onding excess distribution ab ove the threshold u given by Fu (y ) = P f X � u � y j X > ug = F (y 1+�uF) �(uF) (u) ; for 0 � y < x0 � u, where x0 is the (�nite or in�nite) right endp oint of F . Balkema and de Haan (1974) and Pickands (1975) showed for a large class of distributions F that it is p ossible to �nd a p ositive measurable function � (u) such that ulim!x0 0�ysup<x0 �u jFu (y ) � G� ;� (u) (y )j = 0: (7) For more details consult Theorem 3.4.13 on page 165 of Embrechts, Klupp� elb erg, and Mikosch (1997). In the class of distributions for which this result holds are essentially all the common continuous distributions of statistics,4 and these may b e further sub divided into three groups according to the value of the parameter � in the limiting GPD approximation to the excess distribution. The case � > 0 corresp onds to heavy-tailed distributions whose tails decay like p ower functions, such as the Pareto, Student's t, Cauchy, Burr, loggamma � and Frechet distributions. The case � = 0 corresp onds to distributions like the normal, exp onential, gamma and lognormal, whose tails essentially decay exp onentially. The �nal group of distributions are short-tailed distributions (� < 0) with a �nite right endp oint, such as the uniform and b eta distributions. We assume the the tail of the underlying distribution b egins at the threshold u. From our sample of n p oints a random numb er N = Nu > 0 will exceed this threshold. If we assume that the N excesses over the threshold are iid with^ exact^ GPD^ distribution,^ Smith (1987) has shown that maximum likeliho o d estimates � = �N and � = �N of the GPD parameters � and � are consistent and asymptotically normal as N ! 1, provided � > �1=2. Under the weaker assumption that the excesses are iid from Fu^(y ) whic^ h is only approximately GPD he also obtains asymptotic normality results for � and � . By letting u = un ! x0 and N = Nu ! 1 as n ! 1 he shows essentially that the pro cedure is asymptotically unbiased provided that u ! x0 suÆciently fast. The necessary sp eed dep ends on the rate of convergence in (7). In practical terms this means that our b est GPD estimator of the excess distribution is obtained by trading bias o� against variance. We cho ose u high to reduce the chance of bias whilst keeping N large (i.e. u low) to control the variance of the parameter estimates. The choice of u (or N ) is the most imp ortant implementation issue in EVT and we discuss this issue in the context of �nite samples from typical return distributions in Section 2.3. 4 More precisely, the class comprises all distributions in the maximum domain of attraction of an extreme value distribution. 
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0007-01.png)
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0007-02.png)
+
+
+<!-- Start of picture text -->
+7<br><!-- End of picture text -->
+
+<!-- page: 8 -->
+
+Consider now the following equality for p oints x > u in the tail of F 1 � F (x) = (1 � F (u)) ( 1 � Fu (x � u)) : (8) If we estimate the �rst term on the right hand side of (8) using the random prop ortion of the data in the tail N =n, and if we estimate the second term by approximating the excess distribution with a generalized Pareto distribution �tted by maximum likeliho o d, we get the tail estimator ^ [ N ^x � u �1=� F (x) = 1 � 1 + � ^ ; n � � � for x > u. Smith (1987) also investigates the asymptotic relative error of this estimator and gets a result of the form [ N 1=2 11 �� FF ((xx)) � 1 !d N (0; v 2 ); ! as u = un ! x0 and N = Nu ! 1, where the asymptotic unbiasedness again requires that u ! x0 suÆciently fast. In practice we will actually mo dify the pro cedure slightly and �x the numb er of data in the tail to b e N = k where k � n. This e�ectively gives us a random threshold at the (k + 1)th order statistic. Let z(1) � z(2) � : : : � z(n) represent the ordered residuals. The generalized Pareto distribution with parameters � and � is �tted to the data (z(1) � z(k +1) ; : : : ; z(k ) � z(k +1) ), the excess amounts over the threshold for all residuals exceeding the threshold. The form of the tail estimator for FZ (z ) is then ^ F\Z (z ) = 1 � k 1 + �^z � z^(k +1) �1=� : (9) n � � � For q > 1 � k =n we can invert this tail formula to get ^ � ^ zbq = zcq ; k = z(k +1) + �^ 1 � q � � 1 ; (10) � � k =n � ! c we use the zq ; k notation when we want to emphasize the dep endence of the estimator on the choice of k and the simpler zbq notation otherwise. In Table 1 we give threshold values and GPD parameter estimates for b oth tails of the innovation distribution of the test data in the case that n = 1000 and k = 100; we discuss this choice of k in Section 2.3. In Figure 4 we show the corresp onding tail estimators (9). We are principally interested in the left picture marked Losses which corresp onds to large p ositive residuals. The solid lines in b oth pictures corresp ond to the GPD tail estimates and can b e seen to mo del the residuals well. Also shown is a dashed line which corresp onds to the standard normal distribution and a dotted line which corresp onds to the estimated conditional t distribution (scaled to have variance 1) in a GARCH mo del with t-innovations. The normal distribution clearly underestimates the extent of large losses and also of the largest gains, which we would already exp ect from the QQ{plot. The t-distribution, on the other hand, underestimates the losses and overestimates the gains. This illustrates the drawbacks of using a symmetric distribution with data which are asymmetric in the tails. With more symmetric data the conditional t-distribution often works quite well and it can, in fact, b e viewed as a sp ecial case of our metho d. As already mentioned, it is an example of a heavy-tailed distribution, i.e. a distribution whose limiting excess distribution 8
+
+<!-- page: 9 -->
+
+^ ^ Tail z(k +1) � s.e. � s.e. Losses 1.215 0.224 (0.122) 0.568 (0.089) Gains 1.120 -0.096 (0.090) 0.589 (0.079) Table 1: Threshold values and maximum likeliho o d GPD parameter estimates used in the construction of tail estimators for b oth tails of the innovation distribution of the test data. Note that k = 100 in b oth cases. Standard errors (s.e.s) are calculated using a standard likeliho o d approach based on the observed Fisher information matrix. is GPD with � > 0. Gnedenko (1943) characterized all such distributions as having tails of the form 1 � F (x) = x�1=� L(x); (11) where L(x) is a slowly varying function and � is the p ositive parameter of the limiting GPD. 1=� is often referred to as the tail index of F . For the t-distribution with � degrees of freedom the tail can b e shown to satisfy 1 � F (x) � � (� �2)=2 x�� ; (12) B (1=2; � =2) where B (a; b) denotes the b eta function, so that this provides a very simple example of a symmetric distribution in this class, and the value of � in the limiting GPD is the recipro cal of the degrees of freedom (see McNeil and Saladin (1997)). Fitting a GARCH mo del with t innovations can b e thought of as estimating the � in our GPD tail estimator by simpler means. Insp ection of the form of the likeliho o d of the t-distribution shows that the estimate of � will b e sensitive mainly to large observations so that it is not surprising that the metho d gives a reasonable �t in the tails although all data are used in the estimation. Our metho d has, however, the advantage that we have an explicit mo del for each tail. We estimate two parameters in each case, which gives a b etter �t in general. We also use the GPD tail estimator (9) to estimate the right tail of the negative return distribution FX (x) by applying it directly to the raw return data xt�n+1 ; : : : ; xt ; in this way we calculate an unconditional quantile estimate x^ q using unconditional EVT. t We investigate whether this approach also provides reasonable estimates of xq . It should however b e noted that the assumption of indep endent excesses over threshold is much less satisfactory for the raw return data. The asymptotics of the GPD-based tail estimator are therefore much more p o orly understo o d if applied directly to the raw return data. Even if the pro cedure can b e shown to b e asymmptotically justi�ed, in practice it is likely to give much more unstable results when applied to non{iid, �nite sample data. Embrechts, Klupp� elb erg, and Mikosch (1997) provide a related example (see Figure 5.5.4. on page 270); they construct a �rst order autoregressive AR(1) pro cess driven by a symmetric, heavy-tailed, iid noise, so that b oth noise distribution and marginal distribution of the pro cess have the same tail index. They apply the Hill estimator (an alternative EVT pro cedure describ ed in Section 2.3) to simulated data from the pro cess and also to residuals obtained after �tting an AR(1) mo del to the raw data and �nd estimates of the tail index to b e much more accurate and stable for the residuals, although the Hill estimator is theoretically consistent in b oth cases. This example supp orts the idea that pre-whitening of data through �tting of a dynamic mo del may b e a sensible prelude to EVT analysis in practice. 
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0009-01.png)
+
+
+<!-- Start of picture text -->
+9<br><!-- End of picture text -->
+
+<!-- page: 10 -->
+
+2.3 Simulation study of threshold choice To investigate the issue of threshold choice (i.e. choice of k ) we p erform a small simulation study. We also use this study to compare the GPD approach to tail estimation with the approach based on the Hill estimator and the approach based on the empirical distribution function (historical simulation). The Hill estimator (Hill 1975) is designed for data from heavy-tailed distributions admitting the representation (11) with � > 0. The estimator for � , based on the k exceedances of the (k + 1)th order statistic, is k �^(H ) = �^k(H ) = k �1 X log z(j ) � log z(k +1) ; j =1 and an asso ciated quantile estimator is zbq (H ) = zcq ; (kH ) = z(k +1) 1 � q ��^(H ) ; (13) � k =n � see Danielsson and de Vries (1997b) for details. The prop erties of these estimators have b een extensively investigated in the EVT literature; in particular, a numb er of recent pap ers show consistency of the Hill estimator for dep endent data (Resnick and St�aric�a 1995, Resnick and St�aric�a 1996) and develop b o otstrap metho ds for optimal choice of the threshold z(k +1) (Danielsson and de Vries 1997a). In the simulation study we generate samples of size n = 1000 from Student's t- distribution which, as we have observed, provides a rough approximation to the observed distribution of mo del residuals. The size of sample corresp onds to the window length wt-distributione use in applicationsand quanoftilesthearetweasilyo-stepcalculated.metho d. FWrome calculate(12) we �^knok andw thezcq ; ktail(theindexmaximof um-the likeliho o d and GPD-based estimators of � and zq based on k threshold exceedances) as ^(H ) c (H ) well as �k and zq ; k for various values of k ; for the quantile estimates we restrict our attention to values of k such that k > 1000(1 � q ), so that the target quantile is b eyond the threshold. Of interest are the mean squared errors (MSEs) and biases of these estimators, and the dep endence of these errors on the choice of k . For each estimator we estimate MSE and bias using Monte Carlo estimates based on 1000 indep endent samples. For example, we estimate MSE(zcq ; k ) by 1000 MSE[ (zcq ; k ) = X �zcq ; (kj ) � zq �2 ; j =1 c (j ) where zq ; k represents the quantile estimate obtained from the j th sample. Although the Hill estimator is generally the most eÆcient estimator of � (it gives the lowest MSE for sensibly chosen k ) it do es not provide the most eÆcient nor the most stable quantile estimator. Our simulations suggest that the GPD metho d should b e preferred for estimating high quantiles. An example is given in Figure 5. We plot the bias and MSE of estimators of the 99th p ercentile against k , in the case that the degrees of freedom of the t{distribution is � = 4. The Hill estimator is marked with a solid line, the GPD estimator is marked with a dashed line and the empirical HS-estimate z(11) of the quantile is marked by a dotted line. The Hill metho d has a negative bias for low values of k that b ecomes p ositive and then grows rapidly with k ; the GPD estimator has a p ositive bias that grows much more slowly; the empirical estimate has a negative bias. The MSE reveals more ab out the relative merits of the metho ds: the GPD estimator attains its lowest value corresp onding 10
+
+<!-- page: 11 -->
+
+to a k value of ab out 100 but, more imp ortantly, the MSE is very robust to the choice of k b ecause of the slow growth of the bias. The Hill metho d p erforms well for k � 70 but then deteriorates rapidly. The HS metho d is obviously less eÆcient than the two EVT metho ds, which shows that EVT do es indeed give more precise estimates of the 99th p ercentile based on samples of size 1000 from the t-distribution. For the 99th p ercentile b oth the GPD and Hill estimators are clearly useful, if used correctly. In the case of GPD we must ensure that the variance of the estimator is kept low by setting k suÆciently high, but as long as k is greater than ab out 50 the metho d is robust; the issue of cho osing an optimal threshold do es not seem so critical for the GPD metho d. For the Hill metho d it is more imp ortant b ecause the eÆcient range for k is smaller; it is imp ortant that the bias b e kept under control by cho osing a low k . In this pap er we only show results for the t-distribution with four degrees of freedom, but further simulations suggest that the same qualitative conclusions hold for other values of � and other heavy-tailed distributions. For estimating more distant quantiles we observe that the GPD metho d app ears to b e more eÆcient than the Hill metho d and maintains its relativestimator,e stabilit^whicyh withinvolvrespes aectsecondto choiceestimatedof k . Thescalegreaterparametercomplexit�^ asywofelltheas GPDthe tailquanindextile estimator � �1 , seems to lead to b etter �nite sample p erformance. 2.4 Summary: Advantages of the GPD approach We favour the GPD approach to tail estimation in this pap er for a variety of reasons that we list b elow. � In �nite samples of the order of 1000 p oints from typical return distributions EVT quantile estimators (whether maximum-likeliho o d and GPD-based or Hill-based) are more eÆcient than the historical simulation metho d. � The GPD-based quantile estimator is more stable (in terms of mean squared error) with resp ect to choice of k than the Hill quantile estimator. In the present application a k value of 100 seems reasonable, but we could equally cho ose to use k values of 80 or 150. � For high quantiles with q � 0:99 the GPD metho d is at least as eÆcient as the Hill metho d. � The GPD metho d allows e�ective estimates of exp ected shortfall to b e constructed as will b e describ ed in Section 4. � The GPD metho d is applicable to light-tailed data (� = 0) or even short-tailed data (� < 0), whereas the Hill metho d is designed sp eci�cally for the heavy-tailed case (� > 0). There are p erio ds when the conditional distribution of �nancial returns app ears light-tailed rather than heavy-tailed. 3 Backtesting We backtest the metho d on �ve historical series of log returns: the Standard & Po ors index from January 1960 to June 1993, the DAX index from January 1973 to July 1996, the BMW share price over the same p erio d, the US dollar British p ound exchange rate from January 1980 to May 1996 and the price of gold from January 1980 to Decemb er 1997. To backtest the metho d on a historical series x1 ; : : : xm , where m � n, we calculate x^ tq on days t in the set T = f n; : : : ; m � 1g using a time window of n days each time. In our implementation we have set n = 1000 so that we use somewhat less than the last 
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0011-01.png)
+
+
+<!-- Start of picture text -->
+11<br><!-- End of picture text -->
+
+<!-- page: 12 -->
+
+four years of data for each prediction. In a long backtest it is less feasible to examine the �tted mo del carefully every day and to cho ose a new value of k for the tail estimator each time; for this reason we always set k = 100 in these backtests, a choice that is supp orted by the simulation study of the previous section. This means e�ectively that the 90th p ercentile of the innovation distribution is estimated by historical simulation, but that higher p ercentiles are estimated using the GPD tail estimator. On each day t 2 T we �t a new AR(1)-GARCH(1,1) mo del and determine a new GPD tail estimate. Figure 6 shows part of the backtest for the DAX index. We have plotted the negative log returns for a three year p erio d commencing on the �rst of Octob er 1987; sup erimp osed on this plot is the EVT conditional quantile estimate x^ t0:99 (dashed line) and the EVT unconditional quantile estimate x^ 0:99 (dotted line). ^ t We compare xq with xt+1 for q 2 f0:95; 0:99; 0:995g . A violation is said to o ccur ^ t whenever xt+1 > xq . The violations corresp onding to the backtest in Figure 6 are shown in Figure 7. We use di�erent plotting symb ols to show violations of the conditional EVT, conditional normal and unconditional EVT quantile estimates. In Figure 8 the p ortion of Figure 7 relating to the crash of Octob er 1987 has b een enlarged. S&P DAX BMW $/$ Gold Length of Test 7414 5146 5146 3274 3413 0.95 Quantile Exp ected 371 257 257 164 171 Conditional EVT 366 (0.81) 258 (0.97) 261 (0.82) 151 (0.32) 155 (0.22) Conditional Normal 384 (0.49) 238 (0.22) 210 (0.00) 169 (0.69) 122 (0.00) Conditional t 404 (0.08) 253 (0.80) 245 (0.44) 186 (0.08) 168 (0.84) Unonditional EVT 402 (0.10) 266 (0.59) 251 (0.70) 156 (0.55) 131 (0.00) 0.99 Quantile Exp ected 74 51 51 33 34 Conditional EVT 73 (0.91) 55 (0.62) 48 (0.67) 35 (0.72) 25 (0.12) Conditional Normal 104 (0.00) 74 (0.00) 86 (0.00) 56 (0.00) 43 (0.14) Conditional t 78 (0.68) 61 (0.18) 52 (0.94) 40 (0.22) 29 (0.39) Unonditional EVT 86 (0.18) 59 (0.29) 55 (0.62) 35 (0.72) 25 (0.12) 0.995 Quantile Exp ected 37 26 26 16 17 Conditional EVT 43 (0.36) 24 (0.77) 29 (0.55) 21 (0.26) 18 (0.90) Conditional Normal 63 (0.00) 44 (0.00) 57 (0.00) 41 (0.00) 33 (0.00) Conditional t 45 (0.22) 32 (0.23) 18 (0.14) 21 (0.26) 20 (0.54) Unonditional EVT 50 (0.04) 36 (0.05) 31 (0.32) 21 (0.26) 11 (0.15) Table 2: Backtesting Results: Theoretically exp ected numb er of violations and numb er of violations obtained using our approach (conditional EVT), a GARCH-mo del with normally distributed innovations, a GARCH-mo del with Student t-innovations, and quantile estimates obtained from unconditional EVT for various return series. p-values for a binomial test are given in brackets. It is p ossible to develop a binomial test of the success of these quantile estimation metho ds based on the numb er of violations. If we assume the dynamics describ ed in (1), the indicator for a violation at time t 2 T is Bernoulli It := 1fXt+1 >xtq g = 1fZt+1 >zq g � B e(1 � q ): Moreover, It and Is are indep endent for t; s 2 T and t = s, since Zt+1 and Zs+1 are 
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0012-01.png)
+
+
+<!-- Start of picture text -->
+12<br><!-- End of picture text -->
+
+<!-- page: 13 -->
+
+indep endent. Therefore X It � B (card(T ); 1 � q ) ; t2T i.e. the total numb er of violations is binomially distributed under the mo del. Under the null hyp othesis that a metho d correctly estimates the conditional quantiles, the empirical version of this statistic Pt2T 1fxt+1 >x^ tq g is from the binomial distribution B (card(T ); 1 � q ) . We p erform a two-sided binomial test of the null hyp othesis against the alternative that the metho d has a systematic estimation error and gives to o few or to o many violations.5 The corresp onding binomial probabilities are given in Table 2 alongside the numb ers of violations for each metho d. A p-value less than or equal to 0.05 will b e interpreted as evidence against the null hyp othesis. In 11 out of 15 cases our approach is closest to the mark. On two o ccasions GARCH with conditional t innovations is b est and on one o ccasion GARCH with conditional normal innovations is b est. In one further case our approach and the conditional t approach are joint b est. On no o ccasion do es our approach fail (lead to rejection of the null hyp othesis), whereas the conditional normal approach fails 11 times; unconditional EVT fails three times. Figures 7 and 8 give some idea of how the latter two metho ds fail. The conditional normal estimate of xt0:99 like the conditional EVT estimate resp onds to changing volatility but tends to b e violated rather more often, b ecause it do es not take into account the leptokurtosis of the residuals. The unconditional EVT estimate cannot resp ond quickly to changing volatility and tends to b e violated several times in a row in stress p erio ds. 4 Exp ected Shortfall In two recent pap ers Artzner et. al (1997, 1998) have criticized quantile-based riskmeasures such as VaR as a measure of market risk on two grounds. First they show that VaR is not necessarily subadditive, i.e. there are cases where a p ortfolio can b e split into sub-p ortfolios such that the sum of the VaR corresp onding to the sub-p ortfolios is smaller than the VaR of the total p ortfolio. They explain that this may cause problems, if one bases a risk-management system of a �nancial institution on VaR-limits for individual b o oks. Moreover, VaR gives only an upp er b ound on the losses that o ccur with a given frequency; VaR tells us nothing ab out the p otential size of the loss given that a loss exceeding this upp er b ound has o ccurred. The exp ected shortfall, as de�ned in Section 2, is an alternative risk measure to the quantile which overcomes the theoretical de�ciencies of the latter. In particular, this risk measure gives some information ab out the size of the p otential losses given that a loss bigger than VaR has o ccurred. In this section we discuss metho ds for estimating the exp ected shortfall in our mo dels. Moreover, we develop an approach for backtesting our estimates. Not surprisingly, we �nd that the estimates of exp ected shortfall are very sensitive to the choice of the mo del for the tail of the return distribution. In particular, while the conditional 0.95 quantile estimates derived under the GPD and normal assumptions typically do not di�er greatly, we �nd that the same is not true of estimates of the exp ected shortfall at this quantile. It is thus much more problematic to base estimates of the conditional exp ected shortfall at even the 0.95 quantile on an assumption of conditional normality when there is evidence that the residuals are heavy{tailed. 5 See also Christo�ersen, Dieb old, and Schuermann (1998) for related work on tests of data on VaR violations. 
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0013-01.png)
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0013-02.png)
+
+
+<!-- Start of picture text -->
+13<br><!-- End of picture text -->
+
+<!-- page: 14 -->
+
+4.1 Estimation We recall from (3) that the conditional (1{step) exp ected shortfall is given by Sqt = �t+1 + �t+1 E [ Z j Z > zq ] : To estimate this risk measure we require an estimate of the exp ected shortfall for the innovation distribution E [Z j Z > zq ]. For a random variable W with an exact GPD distribution with parameters � < 1 and � it can b e veri�ed that w + � E [W j W > w ] = 1 � � ; (14) 
+
+where � + w � > 0. Supp ose that excesses over the threshold u have exactly this distribution, i.e. Z � u j Z > u � G� ;� . By noting that for zq > u we can write Z � zq j Z > zq = (Z � u) � (zq � u) j (Z � u) > (zq � u); it can b e easily shown that Z � zq j Z > zq
+
+<!-- page: 15 -->
+
+as x ! 1, from which it is clear that the exp ected shortfall to quantile ratio converges to one as q ! 1.6 This can b e compared with the limit in the GPD case; for � > 0 the ratio converges to (1 � � )�1 > 1 as q ! 1; for � � 0 the ratio converges to 1. In Table 3 we give values for E [ Z j Z > zq ] =zq in the GPD (� > 0) and normal cases. For the value of the threshold u and the GPD parameters � and � we have taken the values obtained from our analysis of the p ositive residuals from our test data (see Table 1). The table shows that when the innovation distribution is heavy{tailed the exp ected shortfall to quantile ratio is considerably larger than would b e exp ected under an assumption of normality. It also shows that, at the kind of probability levels that interest us, the ratio is considerably larger than its asymptotic value so that scaling quantiles with the asymptotic ratio would tend to lead to an underestimation of exp ected shortfall. q 0.95 0.99 0.995 q ! 1 GPD 1.52 1.42 1.39 1.29 Normal 1.25 1.15 1.12 1.00 Table 3: Values of the exp ected shortfall to quantile ratio for various quantiles of the noise distribution under two di�erent distributional assumptions. In the �rst row we assume that excesses over the threshold u = 1:215 have an exact GPD distribution with parameters � = 0:224 and � = 0:568 (see Table 1). In the second row we assume that the innovation distribution is standard normal. 4.3 Backtesting It is p ossible to develop a test along similar lines to the binomial test of quantile violation to verify that the GPD{based metho d gives much b etter estimates of the conditional exp ected shortfall than the normal metho d for our datasets. This time we are interested in the size of the discrepancy b etween Xt+1 and Sqt in the event of quantile violation. We de�ne residuals Rt+1 = Xt+1 � Sqt = Zt+1 � E [Z j Z > zq ] : �t+1 It is clear that under our mo del (1) these residuals are iid and that, conditional on �Xt+1 > xtq � or equivalently fZt+1 > zq g, they have exp ected value zero. Supp ose we again backtest on days in the set T . We can form empirical versions of t these residuals on days when violation o ccurs, i.e. days on which xt+1 > xq . We will call these residuals exceedance residuals and denote them by 
+
+�rt+1 : t 2 T ; xt+1 > x^ tq � ; where rt+1 = xt+1^ � S^qt ; �t+1 ^ t where Sq is an estimate of the shortfall. Under the null hyp othesis that we correctly estimate the dynamics of the pro cess (�t+1 and �t+1 ) and the �rst moment of the truncated innovation distribution (E [Z j Z > zq ]), these residuals should b ehave like an iid sample with mean zero. In Figure 9 we show these exceedance residuals for the BMW series and q = 0:95. Clearly for residuals calculated under an assumption of conditional normality the null hyp othesis seems doubtful. To test the hyp othesis of mean zero we use a b o otstrap test that makes no assumption ab out the underlying distribution of the residuals (see page 224 of Efron and Tibshirani 6 �1 �1 A useful approximation to Mill' ratio for x values in the range [� (0:95); � (0:995)] is �(x) � x �1 + (p1 + 8=x2 � 1)=4� ; see Johnson and Kotz (1970) for details. 15
+
+<!-- page: 16 -->
+
+(1993)). We conduct a one-sided test against the alternative hyp othesis that the residuals have mean greater than zero or, equivalently, that conditional exp ected shortfall is systematically underestimated, since this is the likely direction of failure. The residuals derived under an assumption of normality always fail the test with p{values in all cases much less than 0.01; we conclude that an assumption of conditional normality is useless for the purp oses of calculating exp ected shortfall. On the other hand, the GPD{based residuals are much more plausibly mean zero. In the following Table 4 we give p-values for the test applied to the GPD residuals for all �ve test series and various values of q . The most problematic series are the two indices (S&P and DAX); for the former the null hyp othesis is rejected (at the 5% level) for q = 0:99 and q = 0:995; for the latter the null hyp othesis is rejected for q = 0:995. The null hyp othesis is also rejected for the Gold price returns series and q = 0:99. In all other cases it is not rejected and for the BMW and USD-GBP series the hyp othesis of zero-mean seems quite strongly supp orted. q 0.95 0.99 0.995 S & P 0.06 0.01 0.01 DAX 0.09 0.06 0.01 BMW 0.36 0.08 0.11 USD.GBP 0.28 0.26 0.62 Gold 0.24 0.04 0.12 Table 4: p-values for a one-sided b o otstrap test of the hyp othesis that the exceedance residuals in the GPD case have mean zero against the alternative that the mean is greater than zero. 5 Multiple Day Returns In this section we consider estimates of xtq (h) for h > 1. Among other reasons, this is of interest, if we want to obtain an estimate of the 10-day VaR (as required by the BISrule) from a mo del �tted to daily data. For GARCH-mo dels FXt+1 +:::+Xt+h jGt (x) is not known analytically even for a known innovation distribution, so we adopt a simulation approach to obtaining these estimates as follows. Working with the last n negative log parametersreturnstails of thewe �tinnoof asthevationbGPDeforedistributiontheexcessAR(1){GARdistributionFZ (z ).CH(1,1)�^(1)for andthemo�p^(1)ositivdelareande usedtailthisandtotimedenote�^(2)weandestimatethe�^(2)estimateddenoteb oth the corresp onding parameters for the negative tail. We simulate iid noise from the innovation distribution by a combination of b o otstrap and GPD simulation according to the following algorithm which was also prop osed indep endently by Danielsson and de Vries (1997c). 1. Randomly select a residual from the sample of n residuals. 2. If the residual exceeds z(k +1) sample a GPD(�^(1) ,�^(1) ) distributed excess y1 from the right tail and return z(k +1) + y1 . 3. If the residual is less than z(n�k ) sample a GPD(�^(2) ,�^(2) ) distributed excess y2 from the left tail and return z(n�k ) � y2 . 4. Otherwise return the residual itself. 5. Replace residual in sample and rep eat. 
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0016-01.png)
+
+
+<!-- Start of picture text -->
+16<br><!-- End of picture text -->
+
+<!-- page: 17 -->
+
+This gives p oints from the distribution ^ \ 8>>>> nk �1 + �^(2) jz ��z^((2)n�k ) j ��1=� (2) if z < z(n�k ) FZ (z ) = < n1 Pni=1 1fzi �z g ^ if z(n�k ) � z � z(k +1) >>>>:1 � nk � 1 + �^(1) z ��z^((1)k +1) ��1=� (1) if z > z(k +1) ; which approximates FZ (z ). Using this comp osite estimate of the noise distribution and the �tted GARCH mo del we can simulate future paths (xt+1 ; : : : ; xt+h ) and calculate the corresp onding cumulative sums which are simulated iid observations from our estimate for the distribution FXt+1 +:::+Xt+h jGt (x). In our implementation we cho ose to simulate 1000 paths and to construct 1000 iid observations of the conditional h-day return. To increase precision we then apply a second round of EVT by setting a threshold at the 101st order statistic of these data and calculating GPD-based estimates of xt0:95 (h) and xt0:99 (h). In principle it would also b e p ossible to calculate estimates of S0t :95 (h) and S0t :99 (h) in this way, although we do not go this far. S&P DAX BMW $/$ Gold h = 5; length of test 7409 5141 5141 3270 3409 0.95 Quantile Exp ected 371 257 257 164 170 Conditional EVT (h-day) 380 247 231 185 156 Square-ro ot-of-time 581 315 322 199 160 0.99 Quantile Exp ected 74 51 51 33 34 Conditional EVT (h-day) 81 46 57 44 38 Square-ro ot-of-time 176 71 65 42 27 h = 10; length of test 7405 5136 5136 3265 3404 0.95 Quantile Exp ected 370 257 257 163 170 Conditional EVT (h-day) 403 249 231 170 147 Square-ro ot-of-time 623 318 315 196 163 0.99 Quantile Exp ected 74 51 51 33 34 Conditional EVT (h-day) 85 48 53 46 34 Square-ro ot-of-time 206 83 70 42 25 Table 5: Backtesting Results: Theoretically exp ected numb er of violations and numb er of violations obtained using our approach (Monte Carlo simulation from the k -day conditional distribution) and square-ro ot-of-time scaling of 1-day estimates. For horizons of h = 5 and h = 10 days backtesting results are collected in Table 5 for the same datasets used in Table 2. We compare the Monte-Carlo metho d prop osed ab ove, which we again lab el conditional EVT, with the approach where the conditional 1-day EVT estimates are simply scaled with the square-ro ot of the horizon h. For a ^ t given historical series x1 ; : : : ; xm , with m � n, we calculate xq (h) on days t in the set T = fn; : : : ; m � hg and compare each estimate with xt+1 + : : : + xt+h . Under the null hyp othesis of no systematic estimation error each comparison is a realization of a Bernoulli event with failure probability 1 � q , but we have a series of dep endent comparisons b ecause we use overlapping k -day returns. It is thus diÆcult to construct formal tests of violation 
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0017-01.png)
+
+
+<!-- Start of picture text -->
+17<br><!-- End of picture text -->
+
+<!-- page: 18 -->
+
+counts, as we did in the case of 1-day horizons. For the multiple day backtests we simply provide qualitative comparisons of exp ected and observed numb ers of violations for the two metho ds. In 16 out of 20 backtests the Monte Carlo metho d is closer to the exp ected numb er of violations and in all cases it p erforms reasonably well. In contrast, square-ro ot-of-time seems to severely underestimate the relevant quantiles for the BMW sto ck returns and the two sto ck indices. Its p erformance is somewhat b etter for the dollar-sterling exchange rate and the price of gold. We are not aware of a theoretical justi�cation for a universal p ower law scaling relat t � tionship of the form xq (h)=xq � h for conditional quantiles. However, if such a rule is to b e used, our results suggest that the exp onent � should b e greater than a half, certainly for sto ck market return series. In this context see Dieb old, Schuermann, Hickmann, and Inoue (1998), who also argue against square-ro ot-of-time scaling. Our results also cast doubt on the usefulness for conditional quantiles of a scaling law prop osed by Danielsson and de Vries (1997c) where the scaling exp onent is � , the recipro cal of the tail index of the marginal distribution of the stationary time series, which typically takes values around 0.25. 6 Conclusion The present pap er is concerned with tail estimation for �nancial return series and, in particular, the estimation of measures of market risk such as value at risk (VaR) or the exp ected shortfall. We �t GARCH{mo dels to return data using pseudo maximum likeliho o d and use a GPD-approximation suggested by extreme value theory to mo del the tail of the distribution of the innovations. This approach is compared to various other metho ds for tail estimation for �nancial data. Our main �ndings can b e summarized as follows. � We �nd that a conditional approach that mo dels the conditional distribution of asset returns against the current volatility background is b etter suited for VaR estimation than an unconditional approach that tries to estimate the marginal distribution of the pro cess generating the returns. The conditional approach is vindicated by the very satisfying overall p erformance of our metho d in various backtesting exp eriments. 
+
+- The distribution of the residuals is often found to b e leptokurtic. As an \ad-ho c approach" the innovations can b e mo deled by a t-distribution where the degree-offreedom parameter is estimated with Maximum Likeliho o d. This approach works quite well for return series with symmetric tails but fails when the tails are asymmetric. We �nd the GPD-approximation to b e preferable, b ecause it can deal with asymmetries in the tails. Moreover, this metho d is based on a sound theoretical theory. 
+
+- We advo cate the exp ected shortfall as an alternative risk measure with go o d theoretical prop erties. This risk measure is easy to estimate in our mo del. A comparison of estimates for the exp ected shortfall using our approach and a standard GARCHmo del with normal innovations shows again that the innovation distribution should b e mo delled by a fat-tailed distribution, preferably using EVT. 
+
+- We �nd that square-ro ot-of-time scaling of one-day VaR estimates to obtain VaR estimates for longer time horizons of 5 or 10 days do es not p erform well in practice, particularly for sto ck market returns. In contrast we prop ose a Monte Carlo metho d based on our �tted mo dels that gives more reasonable results. 18
+
+<!-- page: 19 -->
+
+- In practice, VaR estimation is often concerned with multivariate return series. We are optimistic that our \two-stage-metho d" can b e extended to multivariate series. However, a detailed analysis of this question is left for future research. References Artzner, P., F. Delbaen, J. Eber, and D. Heath (1997): \Thinking Coherently," RISK, 10(11), 68{71. 
+
+- Artzner, P., F. Delbaen, J. Eber, and D. Heath (1998): \Coherent Measures of Risk," Universit�e de Strasb ourg, preprint. 
+
+- Balkema, A., and L. de Haan (1974): \Residual life time at great age," Annals of Probability, 2, 792{804. 
+
+- Barone-Adesi, G., F. Bourgoin, and K. Giannopoulos (1998): \Don't lo ok back," Risk, 11(8). 
+
+- Basle Comittee (1996): Overview of the Amendment of the Capital Accord to Incorporate Market Risk, Basle Committee on Banking Sup ervision. 
+
+- Bollerslev, T., R. Chou, and K. Kroner (1992): \ARCH mo deling in �nance," Journal of Econometrics, 52, 5{59. 
+
+- Brandt, A. (1986): \The sto chastic equation Yn+1 = An Yn + Bn with stationary co eÆcients," Advances in Applied Probability, 18, 211{220. 
+
+- Christoffersen, P., F. Diebold, and T. Schuermann (1998): \Horizon problems and extreme events in �nancial risk management," preprint, International Monetary Fund. 
+
+- Danielsson, J., and C. de Vries (1997a): \Beyond the sample: extreme quantile and probability estimation," Preprint, Tinb ergen Institute, Rotterdam. 
+
+- Danielsson, J., and C. de Vries (1997b): \Tail index and quantile estimation with very high frequency data," Journal of Empirical Finance, 4, 241{257. 
+
+- Danielsson, J., and C. de Vries (1997c): \Value-at-Risk and extreme returns," FMGDiscussion Pap er NO 273, Financial Markets Group, London Scho ol of Economics. 
+
+- Danielsson, J., P. Hartmann, and C. de Vries (1998): \The cost of conservatism," RISK, 11(1), 101{103. 
+
+- Diebold, F., T. Schuermann, A. Hickmann, and A. Inoue (1998): \Scale Mo dels," Risk, 11, 104{107. 
+
+- Diebold, F., T. Schuermann, and J. Stroughair (1999): \Pitfalls and Opp ortunities in the Use of Extreme Value Theory in Risk Management," in Advances in Computational Finance. Kluwer Academic Publishers, Amsterdam, To app ear. 
+
+- Duan, J.-C. (1996): \Augmented GARCH(p,q) pro cess and its di�usion limit," Journal of Econometrics, To app ear. 
+
+- Duffie, D., and J. Pan (1997): \An overview of Value at Risk," The Journal of Derivatives, (Spring:1997), 7{49. 
+
+- Efron, B., and R. Tibshirani (1993): An introduction to the bootstrap. Chapman & Hall, New York. 19
+
+<!-- page: 20 -->
+
+- Embrechts, P., C. Kluppelber� g, and T. Mikosch (1997): Model ling extremal events for insurance and �nance. Springer, Berlin. 
+
+- Embrechts, P., S. Resnick, and G. Samorodnitsky (1998a): \Extreme Value Theory as a Risk Management To ol," North American Actuarial Journal, to app ear. 
+
+- Embrechts, P., S. Resnick, and G. Samorodnitsky (1998b): \Living on the Edge," RISK Magazine, 11(1), 96{100. 
+
+- Gnedenko, B. (1943): \Sur la distribution limite du terme maximum d'une s�erie al�eatoire," Annals of Mathematics, 44, 423{453. 
+
+- Gouri�eroux, C. (1997): ARCH-Models and Financial Applications, Springer Series in Statistics. Springer, New York. 
+
+- Hill, B. (1975): \A simple general approach to inference ab out the tail of a distribution," Annals of Statistics, 3, 1163{1174. 
+
+- Johnson, N., and S. Kotz (1970): Continuous univariate distributions - 2. Wiley, New York. 
+
+- Longin, F. (1997a): \Beyond the VaR," Discussion Pap er 97-011, CERESSEC. Longin, F. (1997b): \From value at risk to stress testing, the extreme value approach," Discussion Pap er 97-004, CERESSEC. 
+
+- McNeil, A. (1997): \Estimating the Tails of Loss Severity Distributions using Extreme Value Theory," ASTIN Bul letin, 27, 117{137. 
+
+- McNeil, A. (1998): \Calculating Quantile Risk Measures for Financial Return Series using Extreme Value Theory," preprint, ETH Zuric� h. 
+
+- McNeil, A., and T. Saladin (1997): \The Peaks over Thresholds Metho d for Estimating High Quantiles of Loss Distributions," in Proceedings of XXVIIth International ASTIN Col loquium, pp. 23{43, Cairns, Australia. 
+
+- Muller,� O., M. Dacarogna, R. Dav�e, R. Olsen, O. Pictet, and J. von � 
+
+- Weizsacker (1995): \Volatilities of di�erent time resolutions { analyzing the dynamics of market comp onents," Journal of Empirical Finance, to app ear. 
+
+- Pagan, A. (1996): \The Econometrics of Financial Markets," Journal of Empirical Finance, 3, 15{102. 
+
+- Pickands, J. (1975): \Statistical inference using extreme order statistics," The Annals of Statistics, 3, 119{131. 
+
+- Resnick, S., and C. Staric� a� (1995): \Consistency of Hill's estimator for dep endent data," Journal of Applied probability, 32, 239{167. 
+
+- Resnick, S., and C. Staric� a� (1996): \Tail index estimation for dep endent data," Technical Rep ort, Scho ol of ORIE, Cornell University. 
+
+- RiskMetrics (1995): RiskMetrics Technical Document, 3rd ed.,J.P. Morgan. Shephard, N. (1996): \Statistical Asp ects of ARCH and Sto chastic Volatility," in Time Series Models in Econometrics, Finance and other Fields, ed. by D. Cox, D. Hinkley, and O. Barndor�-Nielsen, pp. 1{55, London. Chapman & Hall. 
+
+- Smith, R. (1987): \Estimating Tails of Probability Distributions," The Annals of Statistics, 15, 1174{1207. 
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0020-01.png)
+
+
+<!-- Start of picture text -->
+20<br><!-- End of picture text -->
+
+<!-- page: 21 -->
+
+0 200 400 600 800 1000 0 200 400 600 800 1000 Series and Conditional SD Figure 1: 1000 day excerpt from series of negative log returns on Standard & Po ors index containing crash of 1987; lower plot shows estimate of the conditional standard deviation derived from PML �tting of AR(1){GARCH(1,1) mo del 
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0021-01.png)
+
+
+<!-- Start of picture text -->
+21<br><!-- End of picture text -->
+
+<!-- page: 22 -->
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0022-00.png)
+
+
+<!-- Start of picture text -->
+ Series : data  Series : abs(data)<br>0 5 10 15 20 25 30 0 5 10 15 20 25 30<br>Lag Lag<br> Series : residuals  Series : abs(residuals)<br>0 5 10 15 20 25 30 0 5 10 15 20 25 30<br>Lag Lag<br>Figure 2: Correlograms for the raw data and their absolute values as well as for the<br>residuals and absolute residuals. While the raw data are clearly not iid, this assumption<br>may b e tenable for the residuals.<br>1.0 1.0<br>0.8 0.8<br>0.6 0.6<br>ACF ACF<br>0.4 0.4<br>0.2<br>0.2<br>0.0<br>0.0<br>1.0 1.0<br>0.8 0.8<br>0.6 0.6<br>ACF ACF<br>0.4 0.4<br>0.2 0.2<br>0.0 0.0<br><!-- End of picture text -->
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0022-01.png)
+
+
+<!-- Start of picture text -->
+22<br><!-- End of picture text -->
+
+<!-- page: 23 -->
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0023-00.png)
+
+
+<!-- Start of picture text -->
+•1000<br>998 • 999<br>• • •<br>• • •••••••••••••••• • • ••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••• •• ••• ••••••••••••••••••<br>•<br>-2 0 2<br>Quantiles of Standard Normal<br>Figure 3: Quantile-quantile plot of residuals against the normal distribution showsws resid-<br>uals to b e leptokurtotic.<br>23<br>8<br>6<br>4<br>xres 2<br>0<br>-2<br>-4<br><!-- End of picture text -->
+
+showsws resid-
+
+<!-- page: 24 -->
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0024-00.png)
+
+
+<!-- Start of picture text -->
+••••••• • ••••••••••••••• • •••• • ••<br>•••••••••••••••••••••••••••••<br>•<br>•<br>•<br>•<br>0.0500<br>0.0050<br>0.0005<br><!-- End of picture text -->
+
+|0.0001|
+|---|
+
+<!-- page: 25 -->
+
+|Fi<br>of<br>sa<br>ap<br>ap<br>to||Bias (0.99 quantile)||
+|---|---|---|---|
+|gure<br>the<br>mple<br>proa<br>proa<br>k<br>ex||0.0<br>0.1<br>0.2|0.3|
+|5:<br>Estimated<br>bias<br>and<br>MSE<br>(mean<br>0.99<br>quan<br>tile<br>of<br>a<br>t<br>distribution<br><br><br>of<br>1000<br>p<br>oin<br>ts.<br>Solid<br>line<br>is<br>Hill<br>es<br>c<br>h;<br>dotted<br>line<br>is<br>the<br>empirical<br>q<br>c<br>h).<br>The<br>alternativ<br>e<br>x-axis<br>lab<br>els<br>a<br>pressed<br>as<br>a<br>sample<br>p<br>ercen<br>tile.|k<br>100<br>200<br>300|||
+|squared<br>e<br>with<br>�<br>=<br>4<br>timator;<br>d<br>uan<br>tile<br>est<br>b<br>o<br>v<br>e<br>the<br>gr<br>25||MSE (0.99 quantile)<br>0.10<br>0.12<br>0.14<br>0.16<br>0.18|0.20|
+|rror)<br>against<br>k<br>for<br>v<br>arious<br>estimators<br><br>degrees<br>of<br>freedom<br>based<br>on<br>an<br>iid<br>ashed<br>line<br>is<br>estimator<br>based<br>on<br>GPD<br>imator<br>(i.e.<br>the<br>historical<br>sim<br>ulation<br>aphs<br>giv<br>e<br>the<br>threshold<br>corresp<br>onding|k<br>100<br>200<br>300|||
+
+<!-- page: 26 -->
+
+01.10.87 01.04.88 01.10.88 01.04.89 01.10.89 01.04.90 Time Figure 6: Three years of the DAX backtest b eginning in Octob er 1987 and showing the EVT conditional quantile estimate x^ t0:99 (dashed line) and the EVT unconditional quantile estimate x^ 0:99 (dotted line) sup erimp osed on the negative log returns. The conditional EVT estimate clearly resp onds quickly to the high volatility around the 1987 sto ck market crash. 
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0026-01.png)
+
+
+<!-- Start of picture text -->
+26<br><!-- End of picture text -->
+
+<!-- page: 27 -->
+
+01.10.87 01.04.88 01.10.88 01.04.89 01.10.89 01.04.90 Time Figure 7: Violations of x^ t0:99 and x^ 0:99 corresp onding to the backtest in Figure 6. Triangles, circles and squares denote violations of the conditional normal, conditional EVT and unconditional EVT estimates resp ectively. The conditional normal estimate like the conditional EVT estimate resp onds to changing volatility but tends to b e violated rather more often, b ecause it do es not take into account the leptokurtosis of the residuals. The unconditional EVT estimate cannot resp ond quickly to changing volatility and tends to b e violated several times in a row in stress p erio ds. 
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0027-01.png)
+
+
+<!-- Start of picture text -->
+27<br><!-- End of picture text -->
+
+<!-- page: 28 -->
+
+01.10.87 22.10.87 12.11.87 03.12.87 24.12.87 14.01.88 Time Figure 8: Enlarged section of Figure 7 corresp onding to the crash of 1987. Triangles, circles and squares denote violations of the conditional normal, conditional EVT and unconditional EVT estimates resp ectively. The dotted line shows the path of the unconditional EVT estimate, the dashed line shows the path of the conditional EVT estimate and the long dashed line shows the conditional normal estimate. 
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0028-01.png)
+
+
+<!-- Start of picture text -->
+28<br><!-- End of picture text -->
+
+<!-- page: 29 -->
+
+# GPD 
+
+# Normal 
+
+15.11.76 15.11.82 15.11.88 15.11.94 15.11.76 15.11.82 15.11.88 15.11.94 Time Time Figure 9: Exceedance residuals for the BMW series and q = 0:95. Under the null hyp othesis that the dynamics in (1) and the tail of the innovation distribution are correctly estimated, these should have mean zero. The right graph shows clear evidence against the conditional normality assumption; the left graph shows the assumption of a conditional GPD tail is more reasonable. Note that there are only 210 normal residuals as opp osed to 261 GPD residuals; refer to Table 2 to see that conditional normality overestimates the conditional quantile xt0:95 for the BMW data. 
+
+
+![](assets/2000-mcneil-frey-tail-risk-evt.pdf-0029-03.png)
+
+
+<!-- Start of picture text -->
+29<br><!-- End of picture text -->

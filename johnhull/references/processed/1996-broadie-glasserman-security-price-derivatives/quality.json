@@ -1,0 +1,20 @@
+{
+  "paper_id": "1996-broadie-glasserman-security-price-derivatives",
+  "status": "review",
+  "page_count": 28,
+  "total_chars": 67138,
+  "average_chars_per_page": 2397.8,
+  "empty_pages": [],
+  "short_pages": [],
+  "replacement_characters": 5,
+  "heading_count": 20,
+  "image_references": 76,
+  "image_files": 76,
+  "latex_math_markers": 0,
+  "chunk_count": 16,
+  "max_chunk_chars": 4791,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

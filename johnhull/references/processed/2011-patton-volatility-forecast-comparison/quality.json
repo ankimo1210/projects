@@ -1,0 +1,20 @@
+{
+  "paper_id": "2011-patton-volatility-forecast-comparison",
+  "status": "review",
+  "page_count": 11,
+  "total_chars": 67032,
+  "average_chars_per_page": 6093.8,
+  "empty_pages": [],
+  "short_pages": [],
+  "replacement_characters": 27,
+  "heading_count": 13,
+  "image_references": 38,
+  "image_files": 38,
+  "latex_math_markers": 0,
+  "chunk_count": 16,
+  "max_chunk_chars": 4781,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

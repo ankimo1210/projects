@@ -1,0 +1,636 @@
+---
+paper_id: "2011-patton-volatility-forecast-comparison"
+title: "Volatility Forecast Comparison Using Imperfect Volatility Proxies"
+authors: "Andrew J. Patton"
+year: "2011"
+source_url: "https://doi.org/10.1016/j.jeconom.2010.03.034"
+source_pdf: "references/papers/2011-patton-volatility-forecast-comparison.pdf"
+source_sha256: "2b85bc30f188dc19d0ac7dbfe854929148d27c42e3f73d2b16605558daf60cee"
+converter: "PyMuPDF4LLM 1.28.0"
+---
+
+<!-- page: 1 -->
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0001-02.png)
+
+
+Contents lists available at ScienceDirect 
+
+# Journal of Econometrics 
+
+journal homepage: www.elsevier.com/locate/jeconom 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0001-06.png)
+
+
+# Volatility forecast comparison using imperfect volatility proxies 
+
+$ 
+
+## Andrew J. Patton<sup>∗</sup> 
+
+_Department of Economics, Duke University, USA Oxford-Man Institute of Quantitative Finance, University of Oxford, UK_ 
+
+### a r t i c l e i n f o a b s t r a c t 
+
+|_Article history:_|The use of a conditionally unbiased, but imperfect, volatility proxy can lead to undesirable outcomes in|
+|---|---|
+|Available online xxxx|standard methods for comparing conditional variance forecasts. We motivate our study with analytical<br>results on the distortions caused by some widely used loss functions, when used with standard volatility|
+|_JEL classification:_|proxies such as squared returns, the intra-daily range or realised volatility. We then derive necessary and|
+|C53<br>|sufficient conditions on the functional form of the loss function for the ranking of competing volatility|
+|C52<br>C22|forecasts to be robust to the presence of noise in the volatility proxy, and derive some useful special cases<br>of this class of ‘‘robust’’ loss functions. The methods are illustrated with an application to the volatility of|
+|_Keywords:_<br>Forecast evaluation|returns on IBM over the period 1993 to 2003.<br>©2010 Published by Elsevier B.V.|
+|Forecast comparison||
+|Loss functions||
+|Realised variance||
+|Range||
+
+
+#### **1. Introduction** 
+
+Many forecasting problems in economics and finance involve a variable of interest that is unobservable, even _ex post_ . The most prominent example of such a problem is the forecasting of volatility for use in financial decision making. Other problems include forecasting the true rates of inflation, GDP growth or unemployment (not simply the announced rates); forecasting trade intensities; and forecasting default probabilities or ‘crash’ probabilities. While evaluating and comparing economic forecasts is a well-studied problem, dating back at least to Cowles (1933), if the variable of interest is latent then the problem of forecast evaluation and comparison becomes more complicated.<sup>1</sup> 
+
+This complication can be resolved, at least partly, if an unbiased estimator of the latent variable of interest is available. In volatility forecasting, for example, the squared return on an asset over the period _t_ (assuming a zero mean return) can be interpreted as a conditionally unbiased estimator of the true unobserved 
+
+- $ Matlab code used in this paper is available from 
+
+- http://econ.duke.edu/~ap172/code.html. 
+
+conditional variance of the asset over the period _t_ .<sup>2</sup> Many of the standard methods for forecast evaluation and comparison, such as the Mincer and Zarnowitz (1969) regression and the Diebold and Mariano (1995) and West (1996) tests, can be shown to be applicable when such a conditionally unbiased proxy is used, see Hansen and Lunde (2006) for example. However, it is not true that using a conditionally unbiased proxy will _always_ lead to the same outcome as if the true latent variable were used: Andersen and Bollerslev (1998) and Andersen et al. (2005), amongst others, study the reduction in finite-sample power of tests based on noisy volatility proxies; we focus, like Hansen and Lunde (2006), on distortions in the rankings of competing forecasts that can arise when using a noisy volatility proxy in some commonly used tests for forecast comparison. 
+
+For example, in the volatility forecasting literature numerous authors have expressed concern that a few extreme observations may have an unduly large impact on the outcomes of forecast evaluation and comparison tests, see Bollerslev and Ghysels (1994), Andersen et al. (1999) and Poon and Granger (2003) amongst others. One common response to this concern is to employ forecast loss functions that are ‘‘less sensitive’’ to large observations than the usual squared forecast error loss function, such as absolute error or proportional error loss functions. In 
+
+∗ Corresponding address: Department of Economics, Duke University, 213 Social Sciences Building, Box 90097, Durham NC 27708-0097, USA. _E-mail address:_ andrew.patton@duke.edu. 
+
+1 For recent surveys of the forecast evaluation literature see Clements (2005) and West (2006). For recent surveys of the volatility forecasting literature, see Andersen et al. (2006), Poon and Granger (2003) and Shephard (2005). 
+
+2 The high/low range and realised volatility, see Parkinson (1980) and Andersen et al. (2003) for example, have also been used as volatility proxies. These are discussed in detail below. 
+
+0304-4076/$ – see front matter © 2010 Published by Elsevier B.V. doi:10.1016/j.jeconom.2010.03.034 
+
+Please cite this article in press as: Patton, A.J., Volatility forecast comparison using imperfect volatility proxies. doi:10.1016/j.jeconom.2010.03.034
+
+<!-- page: 2 -->
+
+this paper we show analytically that such approaches can lead to incorrect inferences and the selection of inferior forecasts over better forecasts. 
+
+We focus on volatility forecasting as a specific case of the more general problem of latent variable forecasting. In Section 5 we discuss the extension of our results to other latent variable forecasting problems. Our research builds on work by Andersen and Bollerslev (1998), Meddahi (2001) and Hansen and Lunde (2006), who were among the first to analyse the problems introduced by the presence of noise in a volatility proxy. This paper extends the existing literature in two important directions, discussed below. 
+
+Firstly, we derive explicit analytical results for the distortions that may arise when some common loss functions are employed, considering the three most commonly used volatility proxies: the daily squared return, the intra-daily range and a realised variance estimator. We show that these distortions can be large, even for favourable scenarios (such as Gaussianity). Further, we show that the distortions vary greatly with the choice of loss function, thus providing a theoretical explanation for the widespread finding of conflicting rankings of volatility forecasts when ‘‘non-robust’’ loss functions (defined precisely in Section 2) are used in applied work, see Lamoureux and Lastrapes (1993), Hamilton and Susmel (1994), Bollerslev and Ghysels (1994) and Hansen and Lunde (2005), amongst many others.<sup>3</sup> 
+
+Secondly, we provide necessary and sufficient conditions on the functional form of the loss function to ensure that the ranking of various forecasts is preserved when using a noisy volatility proxy. These conditions are related to those of Gourieroux et al. (1984) for quasi-maximum likelihood estimation. Interestingly, we find that there are an infinite number of loss functions that satisfy these conditions, and that these loss functions differ in meaningful ways (such as the penalty applied to over-prediction versus underprediction). Thus our class of ‘‘robust’’ loss functions is not simply the quadratic loss function or minor variations thereof. 
+
+The canonical problem in point forecasting is to find the forecast that minimises the expected loss, conditional on time _t_ information. That is, 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0002-08.png)
+
+
+where _Yt_ + _h_ is the variable of interest, _L_ is the forecast user’s loss function, Y is the set of possible forecasts, and F _t_ is the time _t_ information set. Starting with the assumption that the forecast user is interested in the conditional variance, we effectively take the _solution_ of the optimisation problem above (the conditional variance) as given, and consider the loss functions that will generate the desired solution. This approach is unusual in the economic forecasting literature: the more common approach is to take the forecast user’s loss function as given and derive the optimal forecast for that loss function; related papers here are Granger (1969), Engle (1993), Christoffersen and Diebold (1997), Christoffersen and Jacobs (2004) and Patton and Timmermann (2007), amongst others. The fact that we know the forecast user desires a variance forecast places limits on the class of loss functions that may be used for volatility comparison, ruling out 
+
+3 All of the results in this paper apply directly to the problem of forecasting integrated variance (IV), which Andersen et al. (2010), amongst others, argue is a more ‘‘relevant’’ notion of variability. We focus on the problem of conditional variance forecasting due to its prevalence in applied work in the past two decades. If we take expected IV rather than the conditional variance as the latent object of interest, then we only require that an unbiased realised variance estimator is available for the results to go through. In the presence of jumps in the price process, quadratic variation (QV) is a more appropriate measure of risk, and a similar extension is possible. 
+
+some choices previously used in the literature. However we show that the class of ‘‘robust’’ loss functions still admits a wide variety of loss functions, allowing much flexibility in representing volatility forecast users’ preferences. 
+
+One practical implication of this paper is that the stated goal of forecasting the conditional variance is not consistent with the use of some loss functions when an imperfect volatility proxy is employed. However, these loss functions are _not_ inherently invalid or inappropriate: if the forecast user’s preferences are indeed described by an ‘‘non-robust’’ loss function, then this simply implies that the object of interest to that forecast user is not the conditional variance but rather some other quantity.<sup>4</sup> In academic research the preferences of the end-user of the forecast are often unknown, and a common response to this to is to select forecasts based on their average distance, somehow measured, to the true latent conditional variance. In such cases, the methods outlined in this paper can be applied to identify the forecast that is closest to the true conditional variance by using imperfect volatility proxy and a ‘‘robust’’ loss function. 
+
+The remainder of this paper is as follows. In Section 2 we analytically consider volatility forecast comparison tests using an imperfect volatility proxy, showing the problems that arise when using some common loss functions. We initially consider using squared daily returns as the proxy, and then consider using the range and realised variance. In Section 3 we provide necessary and sufficient conditions on the functional form of a loss function for the ranking of competing volatility forecasts to be robust to the presence of noise in the volatility proxy, and derive some useful special cases of this class of robust loss functions. One of these special cases is a parametric family of loss functions that nests two of the most widely used loss functions in the literature, namely the MSE and QLIKE loss functions (defined in Eqs. (5) and (6) below). In Section 4 we present an empirical illustration using two widely used volatility forecasting methods, and in Section 5 we conclude and suggest extensions. All proofs and derivations are provided in Appendix. 
+
+#### _1.1. Notation_ 
+
+Let _rt_ be the variable whose conditional variance is of interest, usually a daily or monthly asset return in the volatility forecasting literature. The information set used in defining the conditional variance of interest is denoted F _t_ −1, which is assumed to contain _σ(rt_ − _j, j_ ≥ 1 _)_ , but may also include other variables and/or variables measured at a higher frequency than _rt_ (such as intra-daily returns). Denote _V_ [ _rt_ |F _t_ −1] ≡ _Vt_ −1[ _rt_ ] ≡ _σt_<sup>2.Wewillassume</sup> throughout that _E_ [ _rt_ |F _t_ −1] ≡ _Et_ −1[ _rt_ ] = 0, and so _σt_<sup>2=</sup><sup>_Et_−1[</sup><sup>_r_</sup> _t_<sup>2].</sup> Let _εt_ ≡ _rt /σt_ denote the ‘standardised return’. Let a forecast of the conditional variance ofthan one forecast under analysis. We will take forecasts as ‘‘primi- _rt_ be denoted _ht_ , or _hi,t_ if there is more tive’’, and not consider the specific models and estimators that may have generated the forecasts. The loss function of the forecast user is _L_ : R+ × H → R+, where the first argument of _L_ is _σt_<sup>2or some</sup> proxy for _σt_<sup>2, denoted</sup><sup>_σ_ˆ</sup> _t_<sup>2, and the second is</sup><sup>_ht_. R+ and R++ denote</sup> the non-negative and positive parts of the real line respectively, and H is a compact subset of R++. Commonly used volatility proxies are the squared return, _rt_<sup>2, realised volatility, RV</sup><sup>_t_, and the range,</sup> RG _t_ . Optimal forecasts for a given loss function and proxy are denoted _h_<sup>∗</sup> _t_<sup>and are defined as:</sup> 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0002-16.png)
+
+
+4 For example, the utility of realised returns on a portfolio formed using a volatility forecast, or the profits obtained from an option trading strategy based on a volatility forecast, see West et al. (1993) and Engle et al. (1993) for example, define economically meaningful loss functions, even though the optimal forecasts under those loss functions will not generally be the true conditional variance.
+
+<!-- page: 3 -->
+
+#### **2. Volatility forecast comparison using an imperfect volatility proxy** 
+
+We consider volatility forecast comparisons based on expected loss, or distance to the true conditional variance. These comparisons can be implemented in finite samples using the tests of Diebold and Mariano (1995) and West (1996), (henceforth DMW). If we define _ui,t_ ≡ _L(σt_<sup>2</sup><sup>_, hi,t)_,where</sup><sup>_L_istheforecastuser’sloss</sup> function, and let _dt_ = _u_ 1 _,t_ − _u_ 2 _,t_ , then a DMW test of equal predictive accuracy can be conducted as a simple Wald test that _E_ [ _dt_ ] = 0.<sup>5</sup> 
+
+Of primary interest is whether the feasible ranking of two forecasts obtained using an imperfect volatility proxy is the same as the infeasible ranking that would be obtained using the unobservable true conditional variance. In such a case we are able to compare average forecast accuracy even though the variable of interest is unobservable. We define loss functions that yield such an equivalence as ‘‘robust’’: 
+
+**Definition 1.** A loss function, _L_ , is ‘‘robust’’ if the ranking of any two (possibly imperfect) volatility forecasts, _h_ 1 _t_ and _h_ 2 _t_ , by expected loss is the same whether the ranking is done using the true conditional variance, _σt_<sup>2, or some conditionally unbiased volatility</sup> proxy, _σ_ ˆ _t_<sup>2. That is,</sup> 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0003-06.png)
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0003-07.png)
+
+
+is robust to noise in _σ_ ˆ _t_<sup>2.HansenandLunde(2006)showedthat</sup> the _R_<sup>2</sup> from a regression of log _(_ ˆ _σt_<sup>2</sup><sup>_)_onaconstantandlog</sup><sup>_(ht)_is</sup> not robust to noise, and showed more generally that a sufficient condition for a loss function to be robust is that _∂_<sup>2</sup> _L(σ_<sup>2</sup> _, h)/∂(σ_<sup>2</sup> _)_<sup>2</sup> does not depend on _h_ . In Section 3 we generalise this result by providing necessary and sufficient conditions for a loss function to be robust.<sup>6</sup><sup>_,_7</sup> 
+
+It is worth noting that although the ranking obtained from a robust loss function will be invariant to noise in the proxy, the actual _level_ of expected loss obtained using a proxy will be larger than that which would be obtained when using the true conditional variance. This point was compellingly presented in Andersen and Bollerslev (1998) and Andersen et al. (2004). Andersen et al. (2005) provide a method to estimate the distortion in the level of expected loss and thereby obtain an estimator of the 
+
+5 The key difference between the approaches of Diebold and Mariano (1995) and West (1996) is that the latter explicitly allows for forecasts that are based on estimated parameters, whereas the null of equal predictive accuracy is based on population parameters, see West (2006). The problems we identify below arise even in the absence of estimation error in the forecasts, thus our treatment of the forecasts as primitive, and so for our purposes these two approaches coincide. 
+
+6 Our use of the adjective ‘‘robust’’ is related, though not equivalent, to its use in estimation theory, where it applies to estimators that insensitive/less sensitive to the presence of outliers in the data, see Huber (1981) for example. A ‘‘robust’’ loss function, in the sense of Definition 1, will generally not be robust to the presence of outliers. 
+
+7 In recent work Giacomini and White (2006) propose ranking forecasts by expected loss conditional on some information set G _t_ , rather than by unconditional expected loss as in Definition 1. The numerical examples provided below will differ in this more general case, of course, however the theoretical results in this paper go through if G _t_ ⊆ F _t_ −1, which is true for all of the examples considered by Giacomini and White (2006). 
+
+level of expected loss that would be obtained using the true latent variable of interest. 
+
+It follows directly from the definition of a robust loss function that the true conditional variance is the optimal forecast (we formally show this in the proof of Proposition 1), and thus a necessary condition for a loss function to be robust to noise is that the true conditional variance is the optimal forecast. In this section we determine whether this condition holds for some common loss functions, and analytically characterise the distortion for those cases where it is violated. 
+
+A common response to the concern that a few extreme observations drive the results of volatility forecast comparison studies is to employ alternative measures of forecast accuracy to the usual MSE loss function, see Pagan and Schwert (1990), Bollerslev and Ghysels (1994); Bollerslev et al. (1994), Diebold and Lopez (1996), Andersen et al. (1999), Poon and Granger (2003) and Hansen and Lunde (2005), for example. A collection of loss functions employed in the literature on volatility forecast evaluation is presented below.<sup>8</sup> In the next two sub-sections we will study the properties of these loss functions and show that for almost all choices of volatility proxy most of these loss functions are _not_ robust and can lead to incorrect rankings of volatility forecasts. 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0003-16.png)
+
+
+#### _2.1. Using squared returns as a volatility proxy_ 
+
+In this section we will focus on the use of daily squared returns for volatility forecast evaluation, and in Section 2.2 we will examine the use of realised volatility and the range. We will derive our results under three assumptions for the conditional distribution of daily returns: 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0003-19.png)
+
+
+where _Ft (_ 0 _, σt_<sup>2</sup><sup>_)_issomeunspecifieddistributionwithmean</sup> zero and variance _σt_<sup>2,andStudent’s</sup><sup>_t(_0</sup><sup>_, σ_</sup> _t_<sup>2</sup><sup>_, ν)_isaStudent’s</sup><sup>_t_</sup> distribution with mean zero, variance _σt_<sup>2and</sup><sup>_ν_degrees of freedom.</sup> 
+
+8 Some of these loss functions are called different names by different authors: MSE-prop is also known as ‘‘heteroskedasticity-adjusted MSE (HMSE)’’; MAE-prop is also known as ‘‘mean absolute percentage error (MAPE)’’ or as ‘‘heteroskedasticity-adjusted MAE (HMAE)’’. 
+
+Please cite this article in press as: Patton, A.J., Volatility forecast comparison using imperfect volatility proxies. doi:10.1016/j.jeconom.2010.03.034
+
+<!-- page: 4 -->
+
+In all cases it is clear that _Et_ −1[ _rt_<sup>2]=</sup><sup>_σ_</sup> _t_<sup>2, and so the squared daily</sup> return is a valid volatility proxy. 
+
+It is trivial to show that the MSE loss function generates an optimal forecast equal to the conditional variance: _h_<sup>∗</sup> _t_<sup>=</sup><sup>_Et_−1[</sup><sup>_r_</sup> _t_<sup>2]=</sup> _σt_<sup>2, and thus satisfies the necessary condition for robustness. Fur-</sup> ther, the MSE loss function also satisfies the sufficient condition of Hansen and Lunde (2006), and thus MSE is a ‘‘robust’’ loss function. Another commonly used loss function is the MSE loss function on standard deviations rather than variances, MSE-SD, see Eq. (8). The motivation for this loss function is that taking square root of the two arguments of the squared-error loss function shrinks the larger values towards zero, reducing the impact of the most extreme values of _rt_ . However it also leads to an incorrect volatility forecast being selected as optimal: 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0004-05.png)
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0004-06.png)
+
+
+This distortion is present even under Gaussianity, and excess kurtosis in asset returns exacerbates the distortion: For example, if returns follow the Student’s _t_ distribution with six degrees of freedom then the coefficient on _σt_<sup>2in the above expression is 0.56.</sup> 
+
+As mentioned in the Introduction, if the forecast user’s loss function truly is the square of the difference between the _absolute return_ and the square root of the forecast, then the ‘‘distortion’’ in the optimal forecast above is desirable, as this is the forecast that minimises his/her expected loss. However, if the goal is to find the forecast that is closest to the _true conditional variance_ , then this distortion in the optimal forecast can lead to an incorrect ranking of competing forecasts.<sup>9</sup> Thus the MSE-SD loss function is not consistent with the goal of ranking volatility forecasts by their distance to the true conditional variance when using the squared return as the volatility proxy: either the proxy has to be re-scaled by a term that depends critically on the underlying conditional distribution of returns, or, more simply, a different loss function must be chosen. 
+
+The corresponding calculations for the remaining loss functions in Eqs. (5) to (13) are provided in Patton (2006), and the results are summarised in Table 1. This table shows that the degree of distortion in the optimal forecast according to some of the loss functions used in the literature can be substantial. Under normality the optimal forecast under these loss functions ranges from about one quarter of the true conditional variance to three times the true conditional variance. If returns exhibit excess conditional kurtosis then the range of optimal forecasts from these loss functions is even wider. 
+
+Table 1 provides a theoretical explanation for the widespread finding of conflicting rankings of volatility forecasts when nonrobust loss functions are used in applied work. Lamoureux and Lastrapes (1993), Hamilton and Susmel (1994), Bollerslev and 
+
+9 This distortion remains if the target is instead the conditional standard deviation, as the absolute return is not an unbiased proxy for that quantity. 
+
+Ghysels (1994) and Hansen and Lunde (2005), amongst many others, use some or all of the nine loss functions considered in Table 1 and find that the best-performing volatility model changes with the choice of loss function. Given that, for example, the MSE-prop loss function leads to an optimal forecast that is biased _upwards_ by at least a factor of three, while the MAE loss function leads to an optimal forecast that is biased _downwards_ by at least a factor of two, it is no surprise that different rankings of volatility forecasts are found. 
+
+#### _2.2. Using better volatility proxies_ 
+
+It has long been known that squared returns are a rather noisy proxy for the true conditional variance. One alternative volatility proxy that has gained much attention recently is ‘‘realised volatility’’, see Andersen et al. (2001, 2003), and Barndorff-Nielsen and Shephard (2002, 2004). Another commonly used alternative to squared returns is the intra-daily range. It is well known that if the log stock price follows a Brownian motion then both of these estimators are unbiased and more efficient than the squared return. In this section we obtain the rate at which the distortion in the ranking of alternative forecasts disappears when using realised volatility as the proxy, as the sampling frequency increases, for a simple data generating process (DGP). 
+
+Assume that there are _m_ equally-spaced observations per trade day, and let _ri,m,t_ denote the _i_ th intra-daily return on day _t_ . While recent work on realised volatility would enable us to consider a quite general class of DGPs, in order to obtain analytical results for problems involving the _range_ as a volatility proxy we consider only a simple DGP: zero mean return, no jumps, and constant conditional volatility within a trade day.<sup>10</sup> Patton and Sheppard (2009) present the corresponding results for a range of more realistic DGPs via simulation.<sup>11</sup> Let 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0004-16.png)
+
+
+The ‘‘realised volatility’’ or ‘‘realised variance’’ is defined as: 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0004-18.png)
+
+
+Realised variance, like the daily squared return (which is obtained in the above framework by setting _m_ = 1), is a conditionally unbiased estimator of the daily conditional variance. Its main advantage is that it is more efficient estimator than the daily squared return: for this DGP it can be shown that _Et_ −1[ _(rt_<sup>2−</sup><sup>_σ_2</sup> _t_<sup>_)_2]=2</sup><sup>_σ_</sup> _t_<sup>4while</sup> _Et_ −1[ _(_ RV<sup>_(_</sup> _t_<sup>_m)_</sup> − _σt_<sup>2</sup><sup>_)_2]=2</sup><sup>_σ_</sup> _t_<sup>4</sup><sup>_/m_.ThusRV</sup><sup>_(_</sup> _t_<sup>_m)_</sup> →<sup>_p_</sup> _σt_<sup>2as</sup><sup>_m_→∞,</sup> under these assumptions, and we find in this case that _σt_<sup>2isob-</sup> servable. As expected, all distortions vanish in this case. 
+
+10 Analytical and empirical results on the range and ‘‘realised range’’ under more flexible DGPs are presented in two recent papers by Christensen and Podolskij (2007) and Martens and van Dijk (2007). 
+
+11 When the DGP is specified to be log-normal or GARCH stochastic volatility diffusions, Patton and Sheppard (2009) find results very similar to those obtained for the case below. Using the same parameterisations as those in the simulations of Gonçalves and Meddahi (2009), slightly larger biases from the non-robust loss functions are found, but they generally differ from those in Table 2 only in the second decimal place. In contrast, the biases are found to be much larger under the two-factor stochastic volatility diffusion considered by Gonçalves and Meddahi (2009).
+
+<!-- page: 5 -->
+
+**Table 1** 
+
+Optimal forecasts under various loss functions. 
+
+|Loss function|Distribution of dailyreturn|s||||
+|---|---|---|---|---|---|
+||_Ft(_0_, σ_ <sup>2</sup><br>_t _<sup>_)_</sup>|Student’s_t(_0_, σ_ <sup>2</sup><br>_t _<sup>_, ν)_</sup>||||
+|||_ν_|_ν_ = 6|_ν_ = 10|_ν_ →∞|
+|MSE|_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|
+|QLIKE|_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|
+|MSE-LOG|exp{_Et_−1[log_ε_<sup>2</sup><br>_t_ <sup>]}</sup><sup>_σ_ 2</sup><br>_t_|exp<br>�<br>_Ψ_<br>�1<br>2<br>�<br>−_Ψ_<br>�_ν_<br>2<br>��<br>_(ν_−2_)σ_ <sup>2</sup><br>_t_|0_._22_σ_ <sup>2</sup><br>_t_|0_._25_σ_ <sup>2</sup><br>_t_|0_._28_σ_ <sup>2</sup><br>_t_|
+|MSE-SD|_(Et_−1[|_εt_|]_)_<sup>2</sup>_σ_ <sup>2</sup><br>_t_|_ν_−2<br>_π_<br>�<br>_�_<br>�_ν_−1<br>2<br>�<br>_/�_<br>�_ν_<br>2<br>��2_σ_2<br>_t_|0_._56_σ_ <sup>2</sup><br>_t_|0_._60_σ_ <sup>2</sup><br>_t_|0_._64_σ_ <sup>2</sup><br>_t_|
+|MSE-prop|Kurtosis_t_−1[_rt_]_σ_ <sup>2</sup><br>_t_|3 <sup>_ν_−2</sup><br>_ν_−4 <sup>_σ_ 2</sup><br>_t_|6_._00_σ_ <sup>2</sup><br>_t_|4_._00_σ_ <sup>2</sup><br>_t_|3_._00_σ_ <sup>2</sup><br>_t_|
+|MAE|Median_t_−1[_r_<sup>2</sup><br>_t_ <sup>]</sup>|_ν_−2<br>_ν_<br>Median[_F_1_,ν_]_σ_ <sup>2</sup><br>_t_|0_._34_σ_ <sup>2</sup><br>_t_|0_._39_σ_ <sup>2</sup><br>_t_|0_._45_σ_ <sup>2</sup><br>_t_|
+|MAE-LOG|Median_t_−1[_r_<sup>2</sup><br>_t_ <sup>]</sup>|_ν_−2<br>_ν_<br>Median[_F_1_,ν_]_σ_ <sup>2</sup><br>_t_|0_._34_σ_ <sup>2</sup><br>_t_|0_._39_σ_ <sup>2</sup><br>_t_|0_._45_σ_ <sup>2</sup><br>_t_|
+|MAE-SD|Median_t_−1[_r_<sup>2</sup><br>_t_ <sup>]</sup>|_ν_−2<br>_ν_<br>Median[_F_1_,ν_]_σ_ <sup>2</sup><br>_t_|0_._34_σ_ <sup>2</sup><br>_t_|0_._39_σ_ <sup>2</sup><br>_t_|0_._45_σ_ <sup>2</sup><br>_t_|
+|MAE-prop<sup>a</sup><br>Notes: This table presen<br>for various loss functio<br>variance_σ_ <sup>2</sup><br>_t_ <sup>, the second</sup><br>the final column presen<br>a The expressions giv|_n/a_<br>ts the forecast that minimises the co<br>ns_L_. The first column presents the s<br><sup>, third, and fourth columns present</sup><br>ts the solutions when returns are co<br>en for MAE-prop are based on a num|�<br>2_._36+ <sup>1</sup><sup>_._00</sup><br>_ν_<br>+ <sup>7</sup><sup>_._78</sup><br>_ν_<sup>2</sup><br>�<br>_σ_ <sup>2</sup><br>_t_<br>nditional expected loss when the squared retu<br>olutions when returns have an arbitrary cond<br><sup>results with returns have a Student’s</sup><sup>_t_ distribu</sup><br>nditionally normally distributed._�_is the gam<br>erical approximation, seePatton(2006) for de|2_._73_σ_ <sup>2</sup><br>_t_<br>rn is used as a volatility<br>itional distribution_rt_|F<br><sup>tion with mean zero, v</sup><br>ma function and_Ψ_ is th<br>tails.|2_._55_σ_ <sup>2</sup><br>_t_<br>proxy. That is,_h_<sup>∗</sup><br>_t_ <sup>minimis</sup><br>_t_−1 ∼_Ft_ with mean zero<br><sup>ariance</sup><sup>_σ_ 2</sup><br>_t_ <sup>and degrees o</sup><br>e digamma function.|2_._36_σ_ <sup>2</sup><br>_t_<br><sup>es</sup><sup>_Et_−1[</sup><sup>_L(r_2</sup><br>_t _<sup>_, h)_],</sup><br>and conditional<br><sup>f freedom</sup><sup>_ν_, and</sup>|
+
+
+Notes: This table presents the forecast that minimises the conditional expected loss when the squared return is used as a volatility proxy. That is, _h_<sup>∗</sup> _t_<sup>minimises</sup><sup>_Et_−1[</sup><sup>_L(r_</sup> _t_<sup>2</sup><sup>_, h)_],</sup> for various loss functions _L_ . The first column presents the solutions when returns have an arbitrary conditional distribution _rt_ |F _t_ −1 ∼ _Ft_ with mean zero and conditional variance _σt_<sup>2, the second, third, and fourth columns present results with returns have a Student’s</sup><sup>_t_distribution with mean zero, variance</sup><sup>_σ_2</sup> _t_<sup>and degrees of freedom</sup><sup>_ν_, and</sup> the final column presents the solutions when returns are conditionally normally distributed. _�_ is the gamma function and _Ψ_ is the digamma function. a The expressions given for MAE-prop are based on a numerical approximation, see Patton (2006) for details. 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0005-07.png)
+
+
+The range, or the high/low, estimator has been used in finance for many years, see Garman and Klass (1980) and Parkinson (1980). The intra-daily log range is defined as: 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0005-09.png)
+
+
+Under the dynamics in Eq. (16) Feller (1951) presented the density of RG _t_ , and Parkinson (1980) presented a formula for obtaining moments of the range, which enable us to compute: 
+
+The results for the MSE-SD loss function using realised volatility show that reducing the noise in the volatility proxy improves the optimal forecast,<sup>12</sup> consistent with Hansen and Lunde (2006). Using the range we find that 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0005-12.png)
+
+
+Details on the distributional properties of the range under this DGP are presented in Patton (2006). The above expression shows that squared range is _not_ a conditionally unbiased estimator of _σt_<sup>2; we</sup> will thus focus below on the _adjusted range_ : 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0005-14.png)
+
+
+and so the distortion from using the range is approximately equal to that incurred when using a realised volatility constructed using 6 intra-daily observations. Calculations for the remaining loss functions are collected in Patton (2006), and the results are summarised in Table 2. 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0005-16.png)
+
+
+which, when squared, is an unbiased proxy for the conditional variance. Note that the adjustment factor depends critically on the assumed DGP, which is a potential drawback of the range as a volatility proxy. Using the results of Parkinson (1980) it is simple to determine that MSE _t_ −1[RG<sup>∗</sup> _t_<sup>2]≈</sup> 0 _._ 4073 _σt_<sup>4,whichisapproxi-</sup> mately one-fifth of the MSE of the daily squared return. 
+
+The results in Table 2 confirm that as the proxy used to measure the true conditional variance gets more efficient the degree of distortion decreases for all loss functions. Using half-hour returns (13 intra-daily observations) or the intra-daily range still leaves substantial distortions in the optimal forecasts, but using 5-min returns (78 intra-daily observations) eliminates almost all of the bias, at least in this simple framework. While high frequency data is available and reliable for some assets (the most liquid assets on well-developed exchanges), for most assets it is not possible to obtain reliable high-frequency data, and thus the impact of noise in the volatility proxy cannot be ignored. 
+
+We now determine the optimal forecasts obtained using the various loss functions considered above, when _σ_ ˆ _t_<sup>2=RV</sup><sup>_(_</sup> _t_<sup>_m)_</sup> or _σ_ ˆ _t_<sup>2=</sup> RG<sup>∗</sup> _t_<sup>2</sup> is used as a proxy for the conditional variance rather than _rt_<sup>2.</sup> We initially leave _m_ unspecified for the realised volatility proxy, and then specialise to three cases: _m_ = 1, 13 and 78, corresponding to the use of daily, half-hourly and 5-min returns, on a stock listed on the New York Stock Exchange (NYSE). 
+
+For MSE and QLIKE the optimal forecast is simply the conditional mean of _σ_ ˆ _t_<sup>2, which equals the conditional variance, as</sup> RV<sup>_(_</sup> _t_<sup>_m)_</sup> and RG<sup>∗</sup> _t_<sup>2</sup> are both conditionally unbiased. The MSE-SD loss function yields _(Et_ −1[ ˆ _σt_ ] _)_<sup>2</sup> as the optimal forecast. Under the setup above, 
+
+#### **3. A class of robust loss functions** 
+
+In the previous section we showed that amongst nine loss functions commonly used to compare volatility forecasts, only the MSE and the QLIKE loss functions lead to _h_<sup>∗</sup> _t_<sup>=</sup><sup>_Et_−1[ ˆ</sup><sup>_σ_2</sup> _t_<sup>]=</sup><sup>_σ_</sup> _t_<sup>2,</sup> which is a necessary condition for a loss function to be robust 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0005-23.png)
+
+
+12 Note that the result for _m_ = 1 is different to that obtained in Section 2, which was _h_<sup>∗</sup> _t_<sup>=</sup> _π_ 2<sup>_σ_2</sup> _t_<sup>≈0</sup><sup>_._6366</sup><sup>_σ_</sup> _t_<sup>2. This is because for</sup><sup>_m_=1 we can obtain the expression</sup> exactly, using results for the normal distribution, whereas for arbitrary _m_ we relied on a second-order Taylor series approximation.
+
+<!-- page: 6 -->
+
+**Table 2** 
+
+Optimal forecasts under various loss functions, using realised volatility and range. 
+
+|Loss function|Volatility proxy||||||
+|---|---|---|---|---|---|---|
+||Range|Realised volatility|||||
+|||Arbitrary_m_|_m_= 1|_m_= 13|_m_= 78|_m_→∞|
+|MSE|_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|
+|QLIKE|_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|
+|MSE-LOG<sup>a</sup>|0_._85_σ_ <sup>2</sup><br>_t_|e<sup>−1</sup><sup>_._2741</sup><sup>_/m_</sup>_σ_ <sup>2</sup><br>_t_|0_._28_σ_ <sup>2</sup><br>_t_|0_._91_σ_ <sup>2</sup><br>_t_|0_._98_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|
+|MSE-SD|0_._92_σ_ <sup>2</sup><br>_t_|1<br>_m_<br>�<br>_E_<br>�~~�~~<br>_χ_ <sup>2</sup><br>_m_<br>��2<br>_σ_ <sup>2</sup><br>_t_|0_._56_σ_ <sup>2</sup><br>_t_|0_._96_σ_ <sup>2</sup><br>_t_|0_._99_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|
+|MSE-prop|1_._41_σ_ <sup>2</sup><br>_t_|�<br>1+ <sup>2</sup><br>_m_<br>�<br>_σ_ <sup>2</sup><br>_t_|3_._00_σ_ <sup>2</sup><br>_t_|1_._15_σ_ <sup>2</sup><br>_t_|1_._03_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|
+|MAE|0_._83_σ_ <sup>2</sup><br>_t_|1<br>_m_ <sup>Median [</sup><sup>_χ_ 2</sup><br>_m_<sup>]</sup><sup>_σ_ 2</sup><br>_t_|0_._45_σ_ <sup>2</sup><br>_t_|0_._95_σ_ <sup>2</sup><br>_t_|0_._99_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|
+|MAE-LOG|0_._83_σ_ <sup>2</sup><br>_t_|1<br>_m_ <sup>Median [</sup><sup>_χ_ 2</sup><br>_m_<sup>]</sup><sup>_σ_ 2</sup><br>_t_|0_._45_σ_ <sup>2</sup><br>_t_|0_._95_σ_ <sup>2</sup><br>_t_|0_._99_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|
+|MAE-SD|0_._83_σ_ <sup>2</sup><br>_t_|1<br>_m_ <sup>Median [</sup><sup>_χ_ 2</sup><br>_m_<sup>]</sup><sup>_σ_ 2</sup><br>_t_|0_._45_σ_ <sup>2</sup><br>_t_|0_._95_σ_ <sup>2</sup><br>_t_|0_._99_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|
+|MAE-prop<sup>a</sup>|1_._19_σ_ <sup>2</sup><br>_t_|�<br>1+ <sup>1</sup><sup>_._3624</sup><br>_m_<br>�<br>_σ_ <sup>2</sup><br>_t_|2_._36_σ_ <sup>2</sup><br>_t_|1_._10_σ_ <sup>2</sup><br>_t_|1_._02_σ_ <sup>2</sup><br>_t_|_σ_ <sup>2</sup><br>_t_|
+|Notes: This table prese|nts the forecast that min|imises the conditional expected lo|ss when the range or r|ealised volatility is used|as a volatility proxy. T|hat is,_h_<sup>∗</sup><br>_t_ <sup>minimises</sup>|
+|_Et_−1[_L(_ˆ_σ_ <sup>2</sup><br>_t _<sup>_, h)_], for ˆ</sup><sup>_σ_ 2</sup><br>_t_ <sup>=</sup><br>volatility within each tr<br>variance with 5-min ret<br>a For the MSE-LOG a<br>computation of the figu|<sup>RG∗2</sup><br>_t_<br>or ˆ_σ_ <sup>2</sup><br>_t_ <sup>= RV</sup><sup>_t_, for</sup><br>ade day and no jumps. T<br>urns respectively. The c<br>nd MAE-prop loss functi<br>res in this table are give|<sup>various loss functions</sup> <sup>_L_. In all cas</sup><br>he cases of_m_= 1_,_13_,_78 correspo<br>ase that_m_→∞corresponds to th<br>ons we used simulations, numeric<br>n inPatton(2006).|<sup>es returns are assume</sup><br>nd to the use of daily s<br>e case where the cond<br>al integration and num|<sup>d to be generated as a z</sup><br>quared returns, realised<br>itional variance is obser<br>erical optimisation to o|<sup>ero mean Brownian m</sup><br>variance with 30-min<br>vable ex post without<br>btain the expressions g|<sup>otion with constant</sup><br>returns and realised<br>error.<br>iven. Details on the|
+
+
+to noise in the volatility proxy. The following proposition is the main theoretical contribution of the paper; it provides a necessary and sufficient class of robust loss functions for volatility forecast comparison, which are related to the class of linear-exponential densities of Gourieroux et al. (1984), and to the work of Gourieroux et al. (1987). We will show below that this class contains an infinite number of loss functions, and allows for asymmetric penalties to be applied to over- versus under-predictions, as well as for a symmetric penalty. We make the following assumptions: A1: _Et_ −1[ ˆ _σt_<sup>2] =</sup><sup>_σ_2</sup> _t_<sup>for all</sup><sup>_t_.</sup> A2: _σ_ ˆ _t_<sup>2|F</sup><sup>_t_−1∼</sup><sup>_Ft_∈˜</sup><sup>_F_, the set of all absolutely continuous dis-</sup> tribution functions on R+. 
+
+A3: _L_ is twice continuously differentiable with respect to _h_ and ˆ ˆ _σ_<sup>2</sup> , and has a unique minimum at _σ_<sup>2</sup> = _h_ . 
+
+A4: There exists some _h_<sup>∗</sup> _t_<sup>∈int</sup><sup>_(_H</sup><sup>_)_suchthat</sup><sup>_h_∗</sup> _t_<sup>=</sup><sup>_Et_−1[ ˆ</sup><sup>_σ_</sup> _t_<sup>2],</sup> where H is a compact subset of R++. A5: _L_ and _Ft_ are such that: (a) _Et_ −1[ _L(σ_ ˆ _t_<sup>2</sup><sup>_, h)_]</sup><sup>_<_∞for some</sup><sup>_h_∈</sup> H ; (b) | _Et_ −1[ _∂L(_ ˆ _σt_<sup>2</sup><sup>_, h)/∂h_|</sup> _h_ = _σt_<sup>2]|</sup><sup>_<_∞;and(c) |</sup><sup>_Et_−1[</sup><sup>_∂_2</sup><sup>_L(σ_ˆ 2</sup> _t_<sup>_, h)/_</sup> _∂h_<sup>2</sup> | _h_ = _σt_ 2<sup>]|</sup><sup>_<_∞, for all</sup><sup>_t_.</sup> 
+
+**Proposition 1.** _Let assumptions_ A1 _to_ A5 _hold. Then a loss function L is robust, in the sense of Definition_ 1 _, if and only if it takes the following form:_ 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0006-08.png)
+
+
+_where B and C are twice continuously differentiable, C is a strictly decreasing function on_ H _, and C_<sup>˜</sup> _is the anti-derivative of C._ 
+
+**Remark 1.** If we normalise the loss function to yield zero loss ˆ when _σ_<sup>2</sup> = _h_ , then _B(σ_ ˆ<sup>2</sup> _)_ = − _C_<sup>˜</sup> _(_ ˆ _σ_<sup>2</sup> _)_ . 
+
+**Remark 2.** Up to additive and multiplicative constants, MSE loss is obtained by setting _C(z)_ = − _z_ , _C_<sup>˜</sup> _(z)_ = − _z_<sup>2</sup> _/_ 2 and _B(z)_ = _z_<sup>2</sup> _/_ 2, and QLIKE is obtained by setting _C(z)_ = 1 _/z, C_<sup>˜</sup> _(z)_ = log _(z)_ and _B(z)_ = 0. 
+
+Given the widespread interest in economics and finance in loss functions that depend only on the forecast error or the standardised forecast error, we present below a somewhat surprising result on the subset of robust loss functions that satisfy one of these restrictions. 
+
+- **Proposition 2.** (i) _The ‘‘MSE’’ loss function is the only robust loss function satisfying assumptions_ A1 _–_ A5 _that depends solely on the_ ˆ 
+
+- _forecast error, σ_<sup>2</sup> − _h._ 
+
+- (ii) _The ‘‘QLIKE’’ loss function is the only robust loss function satisfying assumptions_ A1 _–_ A5 _that depends solely on the standardised forecast error, σ_ ˆ<sup>2</sup> _/h._ 
+
+The standardised forecast error will be centred approximately around 1 (if _h_ is somewhat accurate) and, more interestingly, the conditional variance of the standardised forecast error will be approximately 2 (under Gaussianity) regardless of the level of volatility of returns. Thus the average QLIKE loss will be less affected (generally) by the most extreme observations in the sample. The MSE loss, on the other hand, depends on the usual ˆ forecast error, _σ_<sup>2</sup> − _h_ , which will be centred approximately around zero, but will have variance that is proportional to the square of the variance of returns, i.e., _σ_<sup>4</sup> . As noted by several previous authors, this implies that MSE is sensitive to extreme observations and the level of volatility of returns. 
+
+In most economic and financial applications, the choice of units of measurement is arbitrary, e.g., measuring prices in dollars versus cents, or measuring returns in percentages versus decimals. Given this, it is useful to consider the impact of a simple change in units on the ranking of two competing forecasts by expected loss. The class of loss functions presented in Proposition 1 guarantees that the true conditional variance will be chosen (subject to sampling variation) over any other forecast regardless of the choice units. However it does not guarantee that the ranking of two _imperfect_ forecasts will be invariant to the choice of units. The following proposition shows that by using a _homogeneous_ robust loss function, the ranking of any two (possibly imperfect) forecasts is invariant to a re-scaling of the data. It further provides an example where the ranking can be reversed simply with a rescaling of the data if a non-homogeneous robust loss function is used. 
+
+**Proposition 3.** _Recall that a loss function L is homogeneous of order k if_ 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0006-18.png)
+
+
+_Then:_ 
+
+- (i) _The ranking of any two (possibly imperfect) volatility forecasts by expected loss is invariant to a re-scaling of the data if the loss function is homogeneous._
+
+<!-- page: 7 -->
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0007-01.png)
+
+
+<!-- Start of picture text -->
+A.J. Patton / Journal of Econometrics ( ) – 7<br><!-- End of picture text -->
+
+- (ii) _The ranking of any two (possibly imperfect) volatility forecasts by expected loss may not be invariant to a re-scaling of the data if the loss function is robust but not homogeneous._ 
+
+With the above motivation for homogeneous loss functions, we now derive the subset of homogeneous, robust loss functions. It turns out that this subset of functions is indexed by a single parameter, which determines the both degree of homogeneity and the shape of the loss function. Naturally, the MSE loss function is nested in this case (homogeneous of order 2), as is the QLIKE loss function (homogeneous of order zero). 
+
+**Proposition 4.** _The following family of loss functions, indexed by the scalar parameter b, corresponds to the entire subset of robust and homogeneous loss functions. The degree of homogeneity is equal to b_ + 2 _._ 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0007-05.png)
+
+
+The MSE loss function is obtained when _b_ = 0 and the QLIKE loss function is obtained when _b_ = −2, up to additive and multiplicative constants. In Fig. 1 we present the above class of functions for various values of _b_ , ranging from 1 to −5, and including the MSE and QLIKE cases. This figure shows that this family of loss functions can take a wide variety of shapes, ranging from symmetric ( _b_ = 0, corresponding to MSE) to asymmetric, with heavier penalty either on under-prediction ( _b <_ 0) or over-prediction ( _b >_ 0). Fig. 2 plots the ratio of losses incurred for negative forecast errors to those incurred for positive forecast errors, to make clearer the form of asymmetries in these loss functions. Other considerations when choosing a loss function from the class in Eq. (24) include the moment conditions required for formal tests and the finite-sample power of these tests. Patton (2006) presents results on how moment and memory conditions required for DMW tests vary with the shape parameter _b_ . It is noteworthy that the moment conditions required under MSE loss are substantially stronger than those using QLIKE loss. Related to this, Patton and Sheppard (2009) find that the power of DMW tests using QLIKE loss are higher than those using MSE loss, providing further motivation for using QLIKE rather than MSE in volatility forecasting applications. 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0007-07.png)
+
+
+**Fig. 1.** Loss functions for various choices of _b_ . True _σ_<sup>2</sup> = 2 in this example, with the volatility forecast ranging between 0 and 4. _b_ = 0 and _b_ = −2 correspond to the MSE and QLIKE loss functions respectively. 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0007-09.png)
+
+
+**Fig. 2.** Ratio of losses from negative forecast errors to positive forecast errors, for various choices of _b_ . True _σ_<sup>2</sup> = 2 in this example, with the volatility forecast ranging between 0 and 4. _b_ = 0 and _b_ = −2 correspond to the MSE and QLIKE loss functions respectively. 
+
+#### **4. Empirical application to forecasting IBM return volatility** 
+
+In this section we consider the problem of forecasting the conditional variance of the daily open-to-close return on IBM, using data from the TAQ database over the period from January 1993 to December 2003. We consider two simple volatility forecasting models that are widely used in industry: a 60-day rolling window forecast, and the RiskMetrics volatility forecast based on daily returns: 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0007-13.png)
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0007-14.png)
+
+
+We use approximately the first year of observations (272 observations) to initialise the RiskMetrics forecasts, and the remaining 2500 observations to compare the forecasts. A plot of the volatility forecasts is provided in Fig. 3. Recall that the theory in the previous 
+
+section requires that the volatility _proxy (σ_ ˆ _t_<sup>2</sup><sup>_)_is conditionally unbi-</sup> ased, but no such assumption is required for the volatility _forecasts (hit )_ : the rolling window and RiskMetrics forecasts can be biased, or inaccurate in other ways. (Indeed, Mincer–Zarnowitz tests reported in Patton (2006) indicate that both of these forecasts are biased.) 
+
+We employ a variety of volatility proxies in the comparison of these forecasts: the daily squared return, and realised variance (RV) computed using 65-min, 15-min and 5-min returns.<sup>13</sup> In order for the theory in the previous section to be applied, we require the proxy to be conditionally unbiased. For a liquid stock such as IBM, all of these proxies can plausibly be considered free from market microstructure effects. The same is not likely true for very high 
+
+13 We use 65-min returns rather than 60-min returns so that there are an even number of intervals within the NYSE trade day, which runs from 9.30 am to 4 pm. 
+
+Please cite this article in press as: Patton, A.J., Volatility forecast comparison using imperfect volatility proxies. doi:10.1016/j.jeconom.2010.03.034
+
+<!-- page: 8 -->
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0008-01.png)
+
+
+<!-- Start of picture text -->
+8<br><!-- End of picture text -->
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0008-02.png)
+
+
+<!-- Start of picture text -->
+A.J. Patton / Journal of Econometrics ( ) –<br><!-- End of picture text -->
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0008-03.png)
+
+
+**Fig. 3.** Conditional variance forecasts for IBM returns from 60-day rolling window and RiskMetrics models, January 1994 to December 2003. 
+
+**Table 3** 
+
+Comparison of rolling window and RiskMetrics forecasts. 
+
+|Loss function|Volatility proxy||||
+|---|---|---|---|---|
+||Daily squared return|65-min realised vol.|15-min realised vol.|5-min realised vol.|
+|_b_= 1|−1.58|−1.66|−1.30|−1.35|
+|_b_= 0 (MSE)|−0.59|−0.80|−0.03|−0.13|
+|_b_= −1|1.30|1.04|1.65|−1.55|
+|_b_= −2 (QLIKE)|1.94|2.21<sup>∗</sup>|2.73<sup>∗</sup>|2.41<sup>∗</sup>|
+|_b_= −5|−0.17|0.25|1.63|0.65|
+
+
+Notes: This table presents the _t_ -statistics from Diebold–Mariano–West tests of equal predictive accuracy for a 60-day rolling window forecast and a RiskMetrics forecast, for IBM over the period January 1994 to December 2003. A _t_ -statistic greater than 1.96 in absolute value indicates a rejection of the null of equal predictive accuracy at the 0.05 level. These statistics are marked with an asterisk. The sign of the _t_ -statistics indicates which forecast performed better for each loss function: a positive _t_ -statistic indicates that the rolling window forecast produced larger average loss than the RiskMetrics forecast, while a negative sign indicates the opposite. 
+
+frequencies (such as 1-s or 30-s), and may not be true for 5-min RV for less liquid stocks. 
+
+In comparing these forecasts we present the results of Diebold–Mariano–West tests using the loss function presented in Proposition 4, for five different choices of the loss function parameter: _b_ = {1 _,_ 0 _,_ −1 _,_ −2 _,_ −5}. MSE loss and QLIKE loss correspond to _b_ = 0 and _b_ = −2 respectively. Table 3 presents tests comparing the RiskMetrics forecasts based on daily returns with the 60-day rolling window volatility forecasts. The only loss function for which the difference in forecast performance is significantly different from zero is the QLIKE loss function: the difference is significant at the 0.05 level using 65-min, 15-min and 5-min realised variances as the volatility proxy, and significant at the 0.10 level using daily squared returns as the proxy. In all of these cases the _t_ -statistic is positive, indicating that the rolling window forecasts generated larger average loss than the RiskMetrics forecasts. 
+
+Interestingly, under MSE loss, the differences in average loss favour the rolling window forecasts, though these differences are not statistically significant. Mincer–Zarnowitz tests (presented in Patton (2006)) revealed, unsurprisingly, that neither of these forecasts is optimal. Robust loss functions are designed to always select the true conditional variance over any competing forecast, but when comparing two _imperfect_ forecasts the ranking can, as in this example, change depending on the choice of loss function. This emphasises the flexibility that remains even when we restrict attention to homogeneous, robust loss functions. 
+
+#### **5. Conclusion** 
+
+This paper analytically demonstrated some problems with volatility forecast comparison techniques used in the literature. These techniques invariably rely on a volatility proxy, which is some imperfect estimator of the true conditional variance, and the presence of noise in the volatility proxy can lead an imperfect 
+
+volatility forecast being selected over the true conditional variance for certain choices of loss function. Thus noisy volatility proxies not only reduce power, as discussed in Andersen and Bollerslev (1998) for example, they can also seriously affect the asymptotic size of commonly used tests. We showed analytically that less noisy volatility proxies, such as the intra-daily range and realised volatility, lead to less distortion, though in many cases the degree of distortion is still large. 
+
+We derived necessary and sufficient conditions for the loss function to yield rankings of volatility forecasts that are robust to noise in the proxy. We also proposed a new parametric family of robust and homogeneous loss functions, which yield inference that is invariant to the choice of units of measurement. The new family of loss function nests both squared-error (MSE) and the ‘‘QLIKE’’ loss functions, two of the most widely used in the volatility forecasting literature. A small empirical study of IBM equity volatility illustrated the new loss functions in forecast comparison tests. 
+
+Whilst volatility forecasting is a prominent example of a problem in economics where the variable of interest is unobserved, there are many other such examples: forecasting the true rate of GDP growth (not simply the announced rate); forecasting default probabilities; and forecasting covariances or correlations. The derivations in this paper exploited the fact that the latent variable of interest in volatility forecasting (namely the conditional variance) is a positive random variable, and the proxy is nonnegative and continuously distributed. Extending the results in this paper to handle latent variables of interest with support on the entire real line, as would be required for applications to studies of the ‘‘true’’ rates of growth in macroeconomic aggregates or to conditional covariances, should not be difficult. Extending our results to handle proxies with discrete support, such as those that would be used in default forecasting applications, may require a different method of proof. We leave such extensions to future research. 
+
+Please cite this article in press as: Patton, A.J., Volatility forecast comparison using imperfect volatility proxies. Journal of Econometrics (2010), doi:10.1016/j.jeconom.2010.03.034
+
+<!-- page: 9 -->
+
+~~eee~~ eee () / 
+
+() fof ( ) / () () 
+
+co DI 
+
+coo [CD cone) ~~() tC)~~ () () ( ) 0) () () ~~Co~~ yy) <u>/()</u> ~~-~~ () () ( ) CO» ~~Ko~~ te () ~~-~~ () 6) <u>-</u> (¢ ef J] £e YD i ~~-~~ () 
+
+/
+
+<!-- page: 10 -->
+
+Using Proposition 4 below, this implies that the loss function must be of the form: 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0010-04.png)
+
+
+which is the QLIKE loss function up to additive and multiplicative constants. □ 
+
+**Proof of Proposition 3.** (i) If _L_ is homogeneous then _E_ [ _L(a_ ˆ _σt_<sup>2</sup><sup>_,_</sup> _ah_ 1 _t )_ ] ≥ _E_ [ _L(a_ ˆ _σt_<sup>2</sup><sup>_, ah_2</sup><sup>_t)_]⇔</sup><sup>_E_[</sup><sup>_akL(_ˆ</sup><sup>_σ_</sup> _t_<sup>2</sup><sup>_, h_1</sup><sup>_t)_]≥</sup><sup>_E_[</sup><sup>_akL(σ_ˆ</sup> _t_<sup>2</sup><sup>_, h_2</sup><sup>_t)_]⇔</sup> _E_ [ _L(σ_ ˆ _t_<sup>2</sup><sup>_, h_1</sup><sup>_t)_] ≥</sup><sup>_E_[</sup><sup>_L(σ_ˆ</sup> _t_<sup>2</sup><sup>_, h_2</sup><sup>_t)_], for any</sup><sup>_a >_0.</sup> 
+
+(ii) Here we need only provide an example. Consider the following stylised case: _σt_<sup>2</sup> = 1 a.s. ∀ _t_ , _(h_ 1 _t , h_ 2 _t )_ = _(γ_ 1 _, γ_ 2 _)_ ∀ _t_ , and _σ_ ˆ _t_<sup>2issuchthat</sup><sup>_Et_−1[ ˆ</sup><sup>_σ_2</sup> _t_<sup>]=1a.s.∀</sup><sup>_t_.Asarobustbutnon-</sup> homogeneous loss we will use the one generated by the following specification for _C_<sup>′</sup> : 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0010-08.png)
+
+
+where _γ_ is an unknown scalar. Since _C_<sup>′</sup> _<_ 0 we know that _γ <_ 0, and as this is just a scaling parameter we set it to −1 without loss of generality. 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0010-10.png)
+
+
+where _z_ 1 and _z_ 2 are constants of integration. Finally, we substitute the expressions for _C_ and _C_<sup>˜</sup> into Eq. (23), set _B_ = − _C_<sup>˜</sup> , and simplify to obtain the loss functions in Eq. (24) with _k_ = _b_ + 2. □ 
+
+#### **References** 
+
+so _C (h)_ = _h_ − _(_ 1 + _h)_ log _(_ 1 + _h)_ 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0010-14.png)
+
+
+For small _h_ this loss function resembles the _b_ = 1 loss function from Proposition 4 (up to a scaling constant), but for medium to large _h_ this loss function does not correspond to any in Proposition 4. 
+
+Given this set-up, we have 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0010-17.png)
+
+
+Then define 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0010-19.png)
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0010-20.png)
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0010-21.png)
+
+
+Let _h_ 1 _t_ = _γ_ 1 = 1 _/_ 3 and let _h_ 2 _t_ = _γ_ 2 = 3 _/_ 2. Then _E_ [ _dt (h_ 1 _t , h_ 2 _t ,_ 1 _)_ ] = −0 _._ 0087, and so the first forecast has lower expected loss than the second using the ‘‘original’’ scaling of the data. But _E_ [ _dt (h_ 1 _t , h_ 2 _t ,_ 2 _)_ ] = 0 _._ 0061, and so if all variables are multiplied by 2 then the second forecast has lower expected loss than the first. □ 
+
+**Proof of Proposition 4.** We seek the subset of robust loss functions that are homogeneous of order _k_ : _L(a_ ˆ _σ_<sup>2</sup> _, ah)_ = _a_<sup>_k_</sup> _L(σ_ ˆ<sup>2</sup> _, h)_ ∀ _a >_ 0. Let 
+
+
+![](assets/2011-patton-volatility-forecast-comparison.pdf-0010-24.png)
+
+
+Since _L_ is homogeneous of order _k, λ_ is homogeneous of order _(k_ − 1 _)_ . This implies _λ(a_ ˆ _σ_<sup>2</sup> _, ah)_ = _a_<sup>_k_−1</sup> _λ(_ ˆ _σ_<sup>2</sup> _, h)_ = _a_<sup>_k_−1</sup> _C_<sup>′</sup> _(h)(_ ˆ _σ_<sup>2</sup> − _h)_ , while direct substitution yields _λ(a_ ˆ _σ_<sup>2</sup> _, ah)_ = _aC_<sup>′</sup> _(ah)(_ ˆ _σ_<sup>2</sup> − _h)_ . Thus _C_<sup>′</sup> _(ah)_ = _a_<sup>_k_−2</sup> _C_<sup>′</sup> _(h)_ ∀ _a >_ 0, that is, _C_<sup>′</sup> is homogeneous of order _(k_ − 2 _)_ . 
+
+Next we apply Euler’s Theorem to _C_<sup>′</sup> : _C_<sup>′′</sup> _(h)h_ = _(k_ − 2 _)C_<sup>′</sup> _(h)_ ∀ _h >_ 0, and so 
+
+### _(_ 2 − _k) C_<sup>′</sup> _(h)_ + _C_<sup>′′</sup> _(h) h_ = 0 _._ 
+
+We can solve this first-order differential equation to find: 
+
+_C_<sup>′</sup> _(h)_ = _γ h_<sup>_k_−2</sup> 
+
+- Andersen, T.G., Bollerslev, T., 1998. Answering the skeptics: yes, standard volatility models do provide accurate forecasts. International Economic Review 39, 885–905. 
+
+- Andersen, T.G., Bollerslev, T., Christoffersen, P.F., Diebold, F.X., 2006. Volatility and correlation forecasting. In: Elliott, G., Granger, C.W.J., Timmermann, A. (Eds.), Handbook of Economic Forecasting. North Holland Press, Amsterdam. 
+
+- Andersen, T.G., Bollerslev, T., Diebold, F.X., 2010. Parametric and nonparametric volatility measurement. In: Hansen, L.P., Aï t-Sahalia, Y. (Eds.), Handbook of Financial Econometrics. North-Holland Press, Amsterdam. 
+
+- Andersen, T.G., Bollerslev, T., Diebold, F.X., Ebens, H., 2001. The distribution of realized stock return volatility. Journal of Financial Economics 61, 43–76. 
+
+- Andersen, T.G., Bollerslev, T., Diebold, F.X., Labys, P., 2003. Modeling and forecasting realized volatility. Econometrica 71 (2), 579–625. 
+
+- Andersen, T.G., Bollerslev, T., Lange, S., 1999. Forecasting financial market volatility: sample frequency vis-à-vis forecast horizon. Journal of Empirical Finance 6, 457–477. 
+
+- Andersen, T.G., Bollerslev, T., Meddahi, N., 2005. Correcting the errors: volatility forecast evaluation using high-frequency data and realized volatilities. Econometrica 73 (1), 279–296. 
+
+- Andersen, T.G., Bollerslev, T., Meddahi, N., 2004. Analytic evaluation of volatility forecasts. International Economic Review 45, 1079–1110. 
+
+- Barndorff-Nielsen, O.E., Shephard, N., 2002. Econometric analysis of realised volatility and its use in estimating stochastic volatility models. Journal of the Royal Statistical Society, Series B 64, 253–280. 
+
+- Barndorff-Nielsen, O.E., Shephard, N., 2004. Econometric analysis of realized covariation: high frequency based covariance, regression and correlation in financial economics. Econometrica 72 (3), 885–925. 
+
+- Bollerslev, T., Engle, R.F., Nelson, D.B., 1994. ARCH models. In: Engle, R.F., McFadden, D. (Eds.), Handbook of Econometrics. North Holland Press, Amsterdam. 
+
+- Bollerslev, T., Ghysels, E., 1994. Periodic autoregressive conditional heteroscedasticity. Journal of Business and Economic Statistics 14 (2), 139–151. 
+
+- Christensen, K., Podolskij, M., 2007. Realized range-based estimation of integrated variance. Journal of Econometrics 141, 323–349. 
+
+- Christoffersen, P.F., Diebold, F.X., 1997. Optimal prediction under asymmetric loss. Econometric Theory 13, 808–817. 
+
+- Christoffersen, P.F., Jacobs, K., 2004. The importance of the loss function in option valuation. Journal of Financial Economics 72, 291–318. 
+
+- Clements, M.P., 2005. Evaluating Econometric Forecasts of Economic and Financial Variables. Palgrave MacMillan, United Kingdom. 
+
+- Cowles, A., 1933. Can stock market forecasters forecast? Econometrica 1 (3), 309–324. 
+
+- Diebold, F.X., Lopez, J.A., 1996. Forecast evaluation and combination. In: Maddala, G.S., Rao, C.R. (Eds.), Handbook of Statistics. North-Holland, Amsterdam, pp. 241–268. 
+
+- Diebold, F.X., Mariano, R.S., 1995. Comparing predictive accuracy. Journal of Business and Economic Statistics 13 (3), 253–263. 
+
+- Engle, R.F., 1993. A comment on Hendry and Clements on the limitations of comparing mean square forecast errors. Journal of Forecasting 12, 642–644. 
+
+- Engle, R.F., Hong, C.-H., Kane, A., Noh, J., 1993. Arbitrage valuation of variance forecasts with simulated options. In: Chance, D., Tripp, R. (Eds.), Advances in Futures and Options Research. JIA Press, Greenwich, USA. 
+
+- Feller, W., 1951. The asymptotic distribution of the range of sums of random variables. Annals of Mathematical Statistics 22, 427–432. 
+
+- Garman, M.B., Klass, M.J., 1980. On the estimation of security price volatilities from historical data. Journal of Business 53 (1), 67–78. 
+
+- Giacomini, R., White, H., 2006. Tests of conditional predictive ability. Econometrica 74 (6), 1545–1578. 
+
+- Gonçalves, S., Meddahi, N., 2009. Bootstrapping realized volatility. Econometrica 77 (1), 283–306. 
+
+- Gourieroux, C., Monfort, A., 1996. Statistics and Econometric Models, Vol. 1. Cambridge University Press, Great Britain, (Q. Vuong, Trans.) (in French). 
+
+- Gourieroux, C., Monfort, A., Renault, E., 1987. Consistent _M_ -estimators in a semiparametric model, CEPREMAP Working Paper 8720. 
+
+Please cite this article in press as: Patton, A.J., Volatility forecast comparison using imperfect volatility proxies. doi:10.1016/j.jeconom.2010.03.034
+
+<!-- page: 11 -->
+
+_A.J. Patton / Journal of Econometrics ( ) –_ 11 
+
+- Gourieroux, C., Monfort, A., Trognon, A., 1984. Pseudo maximum likelihood methods: theory. Econometrica 52 (3), 681–700. 
+
+- Granger, C.W.J., 1969. Prediction with a generalized cost function. Operations Research Quarterly 20, 199–207. 
+
+- Hamilton, J.D., Susmel, R., 1994. Autoregressive conditional heteroskedasticity and changes in regime. Journal of Econometrics 64 (1–2), 307–333. 
+
+- Hansen, P.R., Lunde, A., 2006. Consistent ranking of volatility models. Journal of Econometrics 131 (1–2), 97–121. 
+
+- Hansen, P.R., Lunde, A., 2005. A forecast comparison of volatility models: does anything beat a GARCH(1, 1)? Journal of Applied Econometrics 20 (7), 873–889. 
+
+- Huber, P.J., 1981. Robust Statistics. Wiley, New York, USA. 
+
+- Komunjer, I., Vuong, Q., 2006. Efficientt conditional quantile estimation: the time 
+
+- series case, Working Paper 2006–10, Department of Economics, UC-San Diego. 
+
+- Lamoureux, C.G., Lastrapes, W.D., 1993. Forecasting stock return variance: toward an understanding of stochastic implied volatilities. Review of Financial Studies 6 (2), 293–326. 
+
+- Martens, M., van Dijk, D., 2007. Measuring volatility with the realized range. Journal of Econometrics 138, 181–207. 
+
+- Meddahi, N., 2001. A theoretical comparison between integrated and realized volatilities, Manuscript, Université de Montréal. 
+
+- Mincer, J., Zarnowitz, V., 1969. The evaluation of economic forecasts. In: Zarnowitz, J. (Ed.), Economic Forecasts and Expectations. National Bureau of Economic Research, New York. 
+
+- Pagan, A.R., Schwert, G.W., 1990. Alternative models for conditional volatility. Journal of Econometrics 45, 267–290. 
+
+- Parkinson, M., 1980. The extreme value method for estimating the variance of the rate of return. Journal of Business 53 (1), 61–65. 
+
+- Patton, A.J., 2006. Volatility forecast comparison using imperfect volatility proxies, Research Paper 175, Quantitative Finance Research Centre, University of Technology Sydney. 
+
+- Patton, A.J., Sheppard, K., 2009. Evaluating volatility and correlation forecasts. In: Andersen, T.G., Davis, R.A., Kreiss, J.-P., Mikosch, T. (Eds.), The Handbook of Financial Time Series. Springer Verlag. 
+
+- Patton, A.J., Timmermann, A., 2007. Properties of optimal forecasts under asymmetric loss and nonlinearity. Journal of Econometrics 140 (2), 884–918. 
+
+- Poon, S.-H., Granger, C.W.J., 2003. Forecasting volatility in financial markets. Journal of Economic Literature 41, 478–539. 
+
+- Shephard, N., 2005. Stochastic Volatility: Selected Readings. Oxford University Press, United Kingdom. 
+
+- West, K.D., 2006. Forecast evaluation. In: Elliott, G., Granger, C.W.J., Timmermann, A. (Eds.), Handbook of Economic Forecasting. North Holland Press, Amsterdam. 
+
+- West, K.D., 1996. Asymptotic inference about predictive ability. Econometrica 64, 1067–1084. 
+
+- West, K.D., Edison, H.J., Cho, D., 1993. A utility-based comparison of some models of exchange rate volatility. Journal of International Economics 35, 23–45.

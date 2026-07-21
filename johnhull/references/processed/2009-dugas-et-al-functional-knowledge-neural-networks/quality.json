@@ -1,0 +1,22 @@
+{
+  "paper_id": "2009-dugas-et-al-functional-knowledge-neural-networks",
+  "status": "review",
+  "page_count": 24,
+  "total_chars": 56116,
+  "average_chars_per_page": 2338.2,
+  "empty_pages": [],
+  "short_pages": [
+    22
+  ],
+  "replacement_characters": 5,
+  "heading_count": 22,
+  "image_references": 59,
+  "image_files": 59,
+  "latex_math_markers": 0,
+  "chunk_count": 13,
+  "max_chunk_chars": 4789,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

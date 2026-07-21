@@ -1,0 +1,34 @@
+{
+  "paper_id": "2001-longstaff-schwartz-american-options-lsm",
+  "title": "Valuing American Options by Simulation: A Simple Least-Squares Approach",
+  "authors": "Francis A. Longstaff; Eduardo S. Schwartz",
+  "year": "2001",
+  "source_url": "https://escholarship.org/uc/item/43n1k4jb",
+  "source_pdf": "references/papers/2001-longstaff-schwartz-american-options-lsm.pdf",
+  "source_sha256": "61d9d3b20400c4c76bc083ba717338ee1a48dc0db11bdfb999203aff1ac34a8b",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.3",
+    "title": "",
+    "author": "",
+    "subject": "",
+    "keywords": "",
+    "creator": "",
+    "producer": "; modified using iText® 7.0.4 ©2000-2017 iText Group NV (AGPL-version)",
+    "creationDate": "D:20050502124524Z",
+    "modDate": "D:20170925173706-07'00'",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 36
+  }
+}

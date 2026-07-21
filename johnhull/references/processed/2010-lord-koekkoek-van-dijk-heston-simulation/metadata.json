@@ -1,0 +1,34 @@
+{
+  "paper_id": "2010-lord-koekkoek-van-dijk-heston-simulation",
+  "title": "A Comparison of Biased Simulation Schemes for Stochastic Volatility Models",
+  "authors": "Roger Lord; Remmert Koekkoek; Dick van Dijk",
+  "year": "2010",
+  "source_url": "https://doi.org/10.1080/14697680802392496",
+  "source_pdf": "references/papers/2010-lord-koekkoek-van-dijk-heston-simulation.pdf",
+  "source_sha256": "07f2d65648c992aae62bde97a245dd4c053219b02a8183b69d27b3b396d1526a",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.6",
+    "title": "Microsoft Word - Webvoorblad 06046.doc",
+    "author": "wdriesse",
+    "subject": "",
+    "keywords": "",
+    "creator": "PScript5.dll Version 5.2.2",
+    "producer": "Acrobat Distiller 7.0 (Windows)",
+    "creationDate": "D:20070605135627+02'00'",
+    "modDate": "D:20080325122024+01'00'",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 32
+  }
+}

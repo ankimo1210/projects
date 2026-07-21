@@ -1,0 +1,20 @@
+{
+  "paper_id": "2019-buehler-et-al-deep-hedging",
+  "status": "review",
+  "page_count": 32,
+  "total_chars": 89485,
+  "average_chars_per_page": 2796.4,
+  "empty_pages": [],
+  "short_pages": [],
+  "replacement_characters": 11,
+  "heading_count": 9,
+  "image_references": 66,
+  "image_files": 66,
+  "latex_math_markers": 0,
+  "chunk_count": 20,
+  "max_chunk_chars": 4796,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

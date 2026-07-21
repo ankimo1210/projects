@@ -1,0 +1,34 @@
+{
+  "paper_id": "2025-kim-park-perpetual-funding-rates",
+  "title": "Designing Funding Rates for Perpetual Futures in Cryptocurrency Markets",
+  "authors": "Jaehyun Kim; Hyungbin Park",
+  "year": "2025",
+  "source_url": "https://arxiv.org/abs/2506.08573",
+  "source_pdf": "references/papers/2025-kim-park-perpetual-funding-rates.pdf",
+  "source_sha256": "437775ec55297e2cc200082b9a32fce8664e52c6c29d09c315fb7aab3aa08fae",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.5",
+    "title": "Designing funding rates for perpetual futures in cryptocurrency markets",
+    "author": "Jaehyun Kim; Hyungbin Park",
+    "subject": "",
+    "keywords": "",
+    "creator": "arXiv GenPDF (tex2pdf:)",
+    "producer": "pikepdf 8.15.1",
+    "creationDate": "",
+    "modDate": "",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 43
+  }
+}

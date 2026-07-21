@@ -1,0 +1,34 @@
+{
+  "paper_id": "2009-dugas-et-al-functional-knowledge-neural-networks",
+  "title": "Incorporating Functional Knowledge in Neural Networks",
+  "authors": "Charles Dugas et al.",
+  "year": "2009",
+  "source_url": "https://www.jmlr.org/papers/v10/dugas09a.html",
+  "source_pdf": "references/papers/2009-dugas-et-al-functional-knowledge-neural-networks.pdf",
+  "source_sha256": "ffde0e8f4a08d2d406798498891087ed695e0ce26bb0c8958942c12fe190fdb9",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.4",
+    "title": "",
+    "author": "",
+    "subject": "",
+    "keywords": "",
+    "creator": "",
+    "producer": "GPL Ghostscript 8.61",
+    "creationDate": "D:20090627145721-05'00'",
+    "modDate": "D:20090627145721-05'00'",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 24
+  }
+}

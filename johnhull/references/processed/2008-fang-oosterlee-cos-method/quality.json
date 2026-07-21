@@ -1,0 +1,20 @@
+{
+  "paper_id": "2008-fang-oosterlee-cos-method",
+  "status": "review",
+  "page_count": 23,
+  "total_chars": 65246,
+  "average_chars_per_page": 2836.8,
+  "empty_pages": [],
+  "short_pages": [],
+  "replacement_characters": 19,
+  "heading_count": 5,
+  "image_references": 117,
+  "image_files": 117,
+  "latex_math_markers": 0,
+  "chunk_count": 16,
+  "max_chunk_chars": 4799,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

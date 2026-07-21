@@ -1,0 +1,34 @@
+{
+  "paper_id": "2003-ait-sahalia-duarte-nonparametric-option-pricing",
+  "title": "Nonparametric Option Pricing Under Shape Restrictions",
+  "authors": "Yacine Aït-Sahalia; Jefferson Duarte",
+  "year": "2003",
+  "source_url": "https://doi.org/10.1016/S0304-4076(03)00102-7",
+  "source_pdf": "references/papers/2003-ait-sahalia-duarte-nonparametric-option-pricing.pdf",
+  "source_sha256": "77d39d5dc39bb405e1c15f4b845cc94d722ce6c8e50aae761925c509ef9559fd",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.3",
+    "title": "doi:10.1016/S0304-4076(03)00102-7",
+    "author": "",
+    "subject": "",
+    "keywords": "",
+    "creator": "Elsevier Science",
+    "producer": "Acrobat Distiller 4.05 for Windows",
+    "creationDate": "D:20030621124116",
+    "modDate": "D:20030627152111+05'30'",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 39
+  }
+}

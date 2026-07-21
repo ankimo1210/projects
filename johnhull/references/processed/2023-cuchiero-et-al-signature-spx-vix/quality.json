@@ -1,0 +1,27 @@
+{
+  "paper_id": "2023-cuchiero-et-al-signature-spx-vix",
+  "status": "review",
+  "page_count": 51,
+  "total_chars": 101948,
+  "average_chars_per_page": 1999.0,
+  "empty_pages": [],
+  "short_pages": [
+    13,
+    17,
+    27,
+    28,
+    29,
+    34
+  ],
+  "replacement_characters": 53,
+  "heading_count": 17,
+  "image_references": 132,
+  "image_files": 132,
+  "latex_math_markers": 0,
+  "chunk_count": 24,
+  "max_chunk_chars": 4791,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

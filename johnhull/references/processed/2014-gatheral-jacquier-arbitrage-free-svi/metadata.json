@@ -1,0 +1,34 @@
+{
+  "paper_id": "2014-gatheral-jacquier-arbitrage-free-svi",
+  "title": "Arbitrage-Free SVI Volatility Surfaces",
+  "authors": "Jim Gatheral; Antoine Jacquier",
+  "year": "2014",
+  "source_url": "https://arxiv.org/abs/1204.0646",
+  "source_pdf": "references/papers/2014-gatheral-jacquier-arbitrage-free-svi.pdf",
+  "source_sha256": "d4f938b8b988dbd594160a791df5ef5dd9a1740287f26f6f8034258e3c21c7cc",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.5",
+    "title": "",
+    "author": "",
+    "subject": "",
+    "keywords": "",
+    "creator": "LaTeX with hyperref package",
+    "producer": "pdfTeX-1.40.12",
+    "creationDate": "D:20241127055638Z",
+    "modDate": "D:20241127055638Z",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 27
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "paper_id": "2022-reisenhofer-et-al-harnet",
+  "status": "review",
+  "page_count": 22,
+  "total_chars": 69990,
+  "average_chars_per_page": 3181.4,
+  "empty_pages": [],
+  "short_pages": [],
+  "replacement_characters": 6,
+  "heading_count": 19,
+  "image_references": 40,
+  "image_files": 40,
+  "latex_math_markers": 0,
+  "chunk_count": 17,
+  "max_chunk_chars": 4790,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

@@ -1,0 +1,34 @@
+{
+  "paper_id": "2000-mcneil-frey-tail-risk-evt",
+  "title": "Estimation of Tail-Related Risk Measures for Heteroscedastic Financial Time Series",
+  "authors": "Alexander J. McNeil; Rüdiger Frey",
+  "year": "2000",
+  "source_url": "https://doi.org/10.1016/S0927-5398(00)00012-8",
+  "source_pdf": "references/papers/2000-mcneil-frey-tail-risk-evt.pdf",
+  "source_sha256": "9ab9f1149fe5acb8e9e6502e245676a855c4c629e3207179d4c0090acc465e03",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.1",
+    "title": "revised.dvi",
+    "author": "Dr. Alexander J. McNeil,HG D53.2,2 6162,",
+    "subject": "",
+    "keywords": "",
+    "creator": "dvips(k) 5.78 Copyright 1998 Radical Eye Software (www.radicaleye.com)",
+    "producer": "Acrobat Distiller Command 3.01 for Solaris 2.3 and later (SPARC)",
+    "creationDate": "D:19990619112858",
+    "modDate": "",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 29
+  }
+}

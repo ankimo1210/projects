@@ -1,0 +1,34 @@
+{
+  "paper_id": "1996-broadie-glasserman-security-price-derivatives",
+  "title": "Estimating Security Price Derivatives Using Simulation",
+  "authors": "Mark Broadie; Paul Glasserman",
+  "year": "1996",
+  "source_url": "https://doi.org/10.1287/mnsc.42.2.269",
+  "source_pdf": "references/papers/1996-broadie-glasserman-security-price-derivatives.pdf",
+  "source_sha256": "e835ea55fb532d33c5dc03c345dd1a03f596714e0f6fb18505399731642ee604",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.1",
+    "title": "E:NEXT33NEXT21SIMDERIVPAPER_0595SIM.DVI",
+    "author": "Mark Broadie (Columbia U) 4046 1999 Mar 12 12:06:03",
+    "subject": "TeX output 2000.04.10:1537",
+    "keywords": "",
+    "creator": "DVIPSONE (32) 2.1.4 http://www.YandY.com",
+    "producer": "Acrobat Distiller 3.01 for Windows",
+    "creationDate": "D:20000410153958",
+    "modDate": "",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 28
+  }
+}

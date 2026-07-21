@@ -1,0 +1,34 @@
+{
+  "paper_id": "1993-heston-closed-form-stochastic-volatility",
+  "title": "A Closed-Form Solution for Options with Stochastic Volatility with Applications to Bond and Currency Options",
+  "authors": "Steven L. Heston",
+  "year": "1993",
+  "source_url": "https://doi.org/10.1093/rfs/6.2.327",
+  "source_pdf": "references/papers/1993-heston-closed-form-stochastic-volatility.pdf",
+  "source_sha256": "4f1331c37be25045e2b60e5aa969ff5917a488e43c24abad0f99a55641c2b3a3",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.4",
+    "title": "A Closed-Form Solution for Options with Stochastic Volatility with Applications to Bond and Currency Options",
+    "author": "Steven L. Heston",
+    "subject": " ",
+    "keywords": " ",
+    "creator": "Capture Reviewer 2.01",
+    "producer": "Acrobat PDFWriter 3.03 for Windows",
+    "creationDate": "D:00000101000000Z",
+    "modDate": "D:20031104204249+05'30'",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 17
+  }
+}

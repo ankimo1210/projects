@@ -1,0 +1,34 @@
+{
+  "paper_id": "1973-black-scholes-options-corporate-liabilities",
+  "title": "The Pricing of Options and Corporate Liabilities",
+  "authors": "Fischer Black; Myron Scholes",
+  "year": "1973",
+  "source_url": "https://doi.org/10.1086/260062",
+  "source_pdf": "references/papers/1973-black-scholes-options-corporate-liabilities.pdf",
+  "source_sha256": "5d7fff3799e94a563edd232d4678f898703176d408d213ec4f2984b009c46157",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.4",
+    "title": "",
+    "author": "",
+    "subject": "",
+    "keywords": "",
+    "creator": "",
+    "producer": "Adobe PDF Library 7.0",
+    "creationDate": "D:20080115104655Z",
+    "modDate": "D:20080115104717Z",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 19
+  }
+}

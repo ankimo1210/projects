@@ -1,0 +1,24 @@
+{
+  "paper_id": "2025-alos-et-al-volatility-rough-paths",
+  "status": "review",
+  "page_count": 42,
+  "total_chars": 112199,
+  "average_chars_per_page": 2671.4,
+  "empty_pages": [],
+  "short_pages": [
+    11,
+    12,
+    28
+  ],
+  "replacement_characters": 28,
+  "heading_count": 23,
+  "image_references": 163,
+  "image_files": 163,
+  "latex_math_markers": 0,
+  "chunk_count": 26,
+  "max_chunk_chars": 4791,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}
