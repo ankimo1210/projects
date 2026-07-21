@@ -11,10 +11,10 @@ build/
 # Primary-source binaries and separately fetched reference code are local only.
 sources/papers/*.pdf
 sources/references/
+corpus/
 tmp/
 outputs/
 
 # Public benchmark data is never committed by default.
 data/raw/
 data/cache/
-
