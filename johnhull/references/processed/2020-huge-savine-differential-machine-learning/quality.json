@@ -1,0 +1,23 @@
+{
+  "paper_id": "2020-huge-savine-differential-machine-learning",
+  "status": "review",
+  "page_count": 51,
+  "total_chars": 120789,
+  "average_chars_per_page": 2368.4,
+  "empty_pages": [],
+  "short_pages": [
+    16,
+    36
+  ],
+  "replacement_characters": 18,
+  "heading_count": 77,
+  "image_references": 97,
+  "image_files": 97,
+  "latex_math_markers": 1,
+  "chunk_count": 28,
+  "max_chunk_chars": 4786,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

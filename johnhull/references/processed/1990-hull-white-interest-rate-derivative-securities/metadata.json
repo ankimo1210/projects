@@ -1,0 +1,34 @@
+{
+  "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+  "title": "Pricing Interest-Rate-Derivative Securities",
+  "authors": "John Hull; Alan White",
+  "year": "1990",
+  "source_url": "https://doi.org/10.1093/rfs/3.4.573",
+  "source_pdf": "references/papers/1990-hull-white-interest-rate-derivative-securities.pdf",
+  "source_sha256": "1a9b8fad1135e95315278379e02d7d16d13f125f3fccba3976ed2732dcd8378a",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.2",
+    "title": "Pricing Interest-Rate-Derivative Securities",
+    "author": "John Hull and Alan White",
+    "subject": "",
+    "keywords": "",
+    "creator": "Capture Reviewer 2.01",
+    "producer": "Acrobat PDFWriter 3.03 for Windows",
+    "creationDate": "Wednesday, May 20, 1998 3:52:44 PM",
+    "modDate": "D:19980619111604",
+    "trapped": "",
+    "encryption": "Standard V1 R2 40-bit RC4",
+    "page_count": 20
+  }
+}

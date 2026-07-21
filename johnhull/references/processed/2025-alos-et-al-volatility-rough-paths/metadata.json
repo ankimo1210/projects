@@ -1,0 +1,34 @@
+{
+  "paper_id": "2025-alos-et-al-volatility-rough-paths",
+  "title": "Volatility Modeling with Rough Paths: A Signature-Based Alternative to Classical Expansions",
+  "authors": "Elisa Alòs et al.",
+  "year": "2025",
+  "source_url": "https://arxiv.org/abs/2507.23392",
+  "source_pdf": "references/papers/2025-alos-et-al-volatility-rough-paths.pdf",
+  "source_sha256": "eaa6512aa674a3c7abcd5beffe93156246e25654361b6ffd5a603d442a1f2b43",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.7",
+    "title": "Volatility Modeling with Rough Paths: A Signature-Based Alternative to Classical Expansions",
+    "author": "Elisa Alòs; Òscar Burés; Rafael de Santiago; Josep Vives",
+    "subject": "",
+    "keywords": "",
+    "creator": "arXiv GenPDF (tex2pdf:a6404ea)",
+    "producer": "pikepdf 8.15.1",
+    "creationDate": "",
+    "modDate": "",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 42
+  }
+}

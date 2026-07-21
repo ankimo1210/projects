@@ -1,0 +1,20 @@
+{
+  "paper_id": "2006-giles-glasserman-smoking-adjoints",
+  "status": "review",
+  "page_count": 15,
+  "total_chars": 31337,
+  "average_chars_per_page": 2089.1,
+  "empty_pages": [],
+  "short_pages": [],
+  "replacement_characters": 0,
+  "heading_count": 12,
+  "image_references": 49,
+  "image_files": 49,
+  "latex_math_markers": 0,
+  "chunk_count": 8,
+  "max_chunk_chars": 4789,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

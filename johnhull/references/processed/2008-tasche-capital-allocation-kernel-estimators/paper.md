@@ -1,0 +1,974 @@
+---
+paper_id: "2008-tasche-capital-allocation-kernel-estimators"
+title: "Capital Allocation for Credit Portfolios with Kernel Estimators"
+authors: "Dirk Tasche"
+year: "2008/2009"
+source_url: "https://arxiv.org/abs/math/0612470"
+source_pdf: "references/papers/2008-tasche-capital-allocation-kernel-estimators.pdf"
+source_sha256: "69f1c9cdbb55e23cd3a07552e62012dbf289d964954cae3a9aab85a5ef540a14"
+converter: "PyMuPDF4LLM 1.28.0"
+---
+
+<!-- page: 1 -->
+
+# Capital allocation for credit portfolios with kernel estimators 
+
+Dirk Tasche<sup>∗</sup> 
+
+May 2008 
+
+##### Abstract 
+
+Determining contributions by sub-portfolios or single exposures to portfolio-wide economic capital for credit risk is an important risk measurement task. Often economic capital is measured as Valueat-Risk (VaR) of the portfolio loss distribution. For many of the credit portfolio risk models used in practice, the VaR contributions then have to be estimated from Monte Carlo samples. In the context of a partly continuous loss distribution (i.e. continuous except for a positive point mass on zero), we investigate how to combine kernel estimation methods with importance sampling to achieve more efficient (i.e. less volatile) estimation of VaR contributions. 
+
+## 1 Introduction 
+
+In many financial institutions, there is a well established practice of measuring the risk of their portfolios in terms of economic capital (cf., e.g. Dev, 2004). Measuring portfolio-wide economic capital, however, is only the first step towards active, portfolio-oriented risk management. For purposes like identification of risk concentrations, risk-sensitive pricing or portfolio optimisation it is also necessary to decompose portfolio-wide economic capital into a sum of risk contributions by sub-portfolios or single exposures (see, e.g., Litterman, 1996). 
+
+While already calculating or estimating economic capital is non-trivial in general, determining risk decompositions is even more demanding (see, e.g., Yamai and Yoshiba, 2002). For most of the economic capital models used in practice, no closed-form solutions for risk contributions are available<sup>1</sup> . As a consequence, for such models there is a need for simulation to create samples from which to estimate economic capital as well as risk contributions. These estimations often involve evaluations of very far tails of the risk return distributions, causing high variability of the estimates. Various variance reduction techniques have been proposed, one of the more popular being importance sampling (see Glasserman and Li, 2005; Merino and Nyfeler, 2004; Kalkbrener et al., 2004, for its application to credit risk). Glasserman (2005) suggests a two-step importance sampling approach to the estimation of contributions to Value-at-Risk (VaR), the most popular metric underlying economic capital methodologies. 
+
+Glasserman’s approach, however, does apply to discrete loss distributions only (i.e. to distributions such that each potential loss value has a positive probability to be assumed), which means a significant restriction as loss distributions based on continuous loss given default rate distributions seem to be more realistic in practical applications. According to Theorem 3.3 below such loss distributions have the property that each single potential positive loss has probability zero to be assumed but there is a positive probability of not observing any loss. The probability of not observing losses is significantly positive in particular for small and medium portfolio sizes (with 200 names or less) which occur, for instance, in typical securitisation deals. 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0001-10.png)
+
+
+> ∗Lloyds TSB Corporate Markets, Red Lion Court, 46-48 Park Street, London SE1 9EQ, United Kingdom. E-mail: dirk.tasche@gmx.net 
+
+> The opinions expressed in this paper are those of the author and do not necessarily reflect views of Lloyds TSB. 
+
+> 1See Tasche (2004) or Tasche (2006) for notable exceptions.
+
+<!-- page: 2 -->
+
+To solve the problem of determining VaR contributions when positive losses have a continuous distribution<sup>2</sup> , in this paper we follow, where possible, the path used by Gouri´eroux et al. (2000), Epperlein and Smillie (2006), and Gouri´eroux and Liu (2006) who apply kernel estimation methods for estimating VaR contributions and contributions to spectral risk measures in a market risk context with continuous distributions. Kernel estimators are a well-established concept (see, e.g., Pagan and Ullah, 1999) to deal with the issue of estimating non-elementary expectations as they occur in the context of capital allocation. Due to the rare event issue characteristic for credit risk, entailing rather volatile estimates when standard Monte Carlo simulation is used, we combine the kernel estimation technique with importance sampling (shifting the means of the systematic factors to be more specific) for reducing estimation variance. The paper is organized as follows: 
+
+- Section 2 contains a review, in the necessary details, of the capital allocation problem and the specific issues with the estimation of risk contributions when the loss distribution is partly continuous. 
+
+- Section 3 provides a brief review of kernel estimators for densities and conditional expectations as well as its application to credit loss distributions with a partly continuous distribution. 
+
+- Section 4 introduces the model studied here and explains how to combine the kernel estimators from Section 3 with importance sampling for credit risk. 
+
+- Application of the algorithms introduced is illustrated with a numerical example in Section 5. 
+
+- We conclude with an assessment in Section 6 of what has been reached. 
+
+## 2 Capital allocation 
+
+In the following, we consider the following stochastic credit portfolio loss model: 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0002-08.png)
+
+
+L1, . . . , Ln ≥ 0 are random variables that represent the losses that a financial institution suffers on its exposures to borrowers i = 1, . . . , n within a fixed time-period, e.g. one year. The random variable L then expresses the portfolio-wide loss. We denote by P[. . .] the real-world probability distribution that underlies model (2.1). In other words, P[. . .] is calibrated in such a way that it reflects as close as possible observed loss frequencies. P[L ≤ ℓ], for instance, stands for the probability of observing portfolio-wide losses that do not exceed the amount ℓ. The operator EP[. . .] is defined as mathematical expectation with respect to probability P. In particular, EP[L] reflects the real-world probability weighted mean of the portfolio-wide loss. 
+
+As mentioned in the introduction, it is common practice for financial institutions to measure the risk inherent in their portfolios in terms of economic capital (EC). As credit risk, for most institutions, is considered to be most important, this is in particular relevant for credit portfolios. EC is commonly understood as a capital buffer intended to cover the losses of the lending financial institution with a high probability. This interpretation makes appear very natural the definition 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0002-11.png)
+
+
+where the Value-at-Risk (VaR) is given as a high-level (e.g. α = 99.9%) quantile of the portfolio-wide loss: 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0002-13.png)
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0002-14.png)
+
+
+> 2Instead of trying to determine VaR contributions in a continuous or semi-continuous setting, some risk managers use contributions to expected shortfall. This approach is very fruitful and has some other advantages (see Kalkbrener et al., 2004; Merino and Nyfeler, 2004).
+
+<!-- page: 3 -->
+
+Hence, if a financial institutions holds EC according to (2.2a) and charges the loans granted with upfront fees adding up to EP[L], the probability that it will lose all its EC is not higher than 1 − α. Note that, despite its intuitive appeal, VaR as a risk measure is criticised, e.g. for its potential lack of rewarding diversification (see Acerbi and Tasche, 2002, and the references therein). 
+
+Active risk management involves more than just measuring portfolio-wide capital according to (2.2a). Additionally, it is of interest to identify which parts of the portfolio bind the largest portions of EC. The corresponding process of determining a risk-sensitive decomposition of EC is called capital allocation. While for the expectation part EP[L] of EC on the right-hand side of (2.2a) there is the natural decomposition 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0003-02.png)
+
+
+there is no such obvious decomposition 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0003-04.png)
+
+
+for the VaR-part of EC into risk contributions<sup>3</sup> . Indeed, the choice of the decomposition method depends on the concept of risk sensitivity adopted. Interpreting risk sensitivity as compatibility with portfolio optimization, Tasche (1999) proved that the risk contributions VaRP,α(Li | L) on the right-hand side of (2.3b) should be defined as directional derivatives, i.e. 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0003-06.png)
+
+
+As VaR is a positively homogeneous<sup>4</sup> risk measure, by Euler’s theorem, then (2.3b) holds. (2.4) displays the concept of risk contribution applied in this paper. Note however that in general, and in particular if the distribution of L has no density, the derivative on the right-hand side (2.4) need not exist. See, e.g., Tasche (1999, Assumption (S)) for conditions ensuring existence of the derivative. Depending on the objective of the portfolio analysis, other approaches to determining risk contributions are reasonable, see, e.g., Section 3.1 of Tasche (2006) for an account of these. 
+
+In general, no closed-form representations of VaRP,α(L) and the risk contributions VaRP,α(Li | L) are available. Therefore, often, these quantities can only be inferred from Monte-Carlo samples. This means essentially to generate a sample 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0003-09.png)
+
+
+and then to estimate the quantities under consideration on the basis of this sample. How to do this is quite obvious for VaR, but is much less clear for the risk contributions VaRP,α(Li | L) as, in general, estimating derivatives of stochastic quantities without closed-form representation is a subtle issue. 
+
+Fortunately, it turns out (Gouri´eroux et al., 2000; Lemus, 1999; Tasche, 1999) that, under fairly general conditions on the joint distribution of L and Li, the derivative (2.4) coincides with an expectation of the loss related to borrower i conditional on the event of observing a portfolio-wide loss equal to VaR. 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0003-12.png)
+
+
+If P[L = VaRP,α(L)] is positive, the conditional expectation on the right-hand side of (2.6) is given by 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0003-14.png)
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0003-15.png)
+
+
+> 3Kalkbrener (2005) considers relation (2.3b) in a more general context. He calls it “linear aggregation”. 
+
+> 4I.e. VaRP,α(h L) = h VaRP,α(L) for positive h.
+
+<!-- page: 4 -->
+
+Even if P[L = VaRP,α(L)] is positive, its magnitude will usually be very small, such as 1 − α or less. Glasserman (2005) shows how to apply importance sampling in such a situation in order to efficiently estimate EP[Li | L = VaRP,α(L)]. 
+
+However, a crucial condition for (2.6) to hold exactly is the existence of a density of the distribution of L. The probability P[L = VaRP,α(L)] then equals zero, and consequently the right-hand side of (2.7) is undefined<sup>5</sup> . In this situation, the conditional expectation EP[Li | L = VaRP,α(L)] is still well-defined (see, e.g., Remark 5.4 of Tasche, 1999), but its estimation from a sample like (2.5) requires more elaborated nonparametric methods. Mausser and Rosen (2004) suggest using an estimation method based on weighted combinations of order-statistics. We follow here Gouri´eroux et al. (2000) who applied kernel estimation methods for VaR contributions when optimizing returns in a portfolio of stocks. The kernel estimation procedures, however, have to be adapted to the rare-event character of credit risk. Therefore, in the remainder of the paper we modify the approach by Gouri´eroux et al. in a way that can be described as a combination of kernel estimation and importance sampling. 
+
+## 3 Kernel estimators 
+
+In this section, we introduce the classical Rosenblatt-Parzen kernel estimator for densities and the Nadaraya-Watson kernel estimator for conditional expectations in a way that links naturally to the risk contribution concept of Section 2. The general reference for this section is Pagan and Ullah (1999, Chapters 2 and 3). 
+
+### 3.1 The Rosenblatt-Parzen kernel estimator for densities 
+
+Assume that x1, . . . , xT is a sample of independent realisations of a random variable X with density f . The Rosenblatt-Parzen estimator f<sup>ˆ</sup> h with bandwidth h > 0 for f can be constructed as follows: 
+
+- Let X<sup>∗</sup> be a random variable whose distribution is given by the empirical distribution corresponding to the sample x1, . . . , xT , i.e. P[X<sup>∗</sup> = xt] = 1/T , t = 1, . . . , T . 
+
+- Let ξ a random variable with density (kernel) ϕ. 
+
+- Assume that X<sup>∗</sup> and ξ are independent. 
+
+- Then the estimator f<sup>ˆ</sup> h is defined as the density of X<sup>∗</sup> + h ξ: 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0004-10.png)
+
+
+If f and ϕ are appropriately “smooth” (see Pagan and Ullah, 1999, Theorem 2.5 for details), it can be T →∞ T →∞ shown for h = hT −−−−→ 0, hT T −−−−→∞ that f<sup>ˆ</sup> hT (x) is a pointwise mean-squared consistent estimator of f , i.e. 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0004-12.png)
+
+
+with independent copies X1, . . . , XT of X. While the Rosenblatt-Parzen density estimator is rather robust with respect to the choice of the kernel ϕ, it is quite sensitive to the choice of the bandwidth h. For the univariate case we consider here, efficient techniques like cross validation for the choice of the bandwidth are available. However, such more elaborated techniques usually involve some optimisation procedures that can be very time-consuming for large samples. As a consequence, for the purpose of this paper we 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0004-14.png)
+
+
+> 5This problem can be avoided by using the risk measure Expected Shortfall (see, e.g., Acerbi and Tasche, 2002) instead of VaR. With the definition of Expected Shortfall slightly simplified for practical purposes, (2.7) then reads EP[Li | L ≥ VaRP,α(L)] = (1 − α)<sup>−1</sup> EP[Li 1{L≥VaRP,α(L)}].
+
+<!-- page: 5 -->
+
+confine ourselves to applying a simple rule of thumb by Silverman (cf. Chapter 2 in Pagan and Ullah, 1999) 
+
+h = 1.06 σ T<sup>−1/5</sup> , (3.3) 
+
+where σ denotes the standard deviation of the sample x1, . . . , xT . Moreover, we choose the standard normal density as the kernel ϕ. 
+
+### 3.2 The Nadaraya-Watson kernel estimator for conditional expectations 
+
+Assume that (x1, y1), . . . , (xT , yT ) is a sample of realisations of a random vector (X, Y ) where X has a density f . The Nadaraya-Watson estimator E<sup>ˆ</sup> h[Y | X = x] with bandwidth h for E[Y | X = x] can be constructed as follows: 
+
+- Let (X<sup>∗</sup> , Y<sup>∗</sup> ) a random vector whose distribution is given by the empirical distribution corresponding to the sample (x1, y1), . . . , (xT , yT ), i.e. P[(X<sup>∗</sup> , Y<sup>∗</sup> ) = (xt, yt)] = 1/T . 
+
+- Let ξ a random variable with density (kernel) ϕ. 
+
+- Assume that (X<sup>∗</sup> , Y<sup>∗</sup> ) and ξ are independent. 
+
+- Then the estimator E<sup>ˆ</sup> h[Y | X = x] is defined as the expectation of Y<sup>∗</sup> conditional on X<sup>∗</sup> + h ξ = x: 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0005-09.png)
+
+
+If f and ϕ are appropriately “smooth” (see Pagan and Ullah, 1999, Theorem 3.4 for details), it can be T →∞ T →∞ shown for h = hT −−−−→ 0, hT T −−−−→∞, and f (x) > 0 that E<sup>ˆ</sup> h[Y | X = x] is a pointwise consistent estimator of E[Y | X = x], i.e. 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0005-11.png)
+
+
+with independent copies (X1, Y1), . . . , (XT , YT ) of (X, Y ). The construction of the Nadaraya-Watson estimator (3.4) as described above allows to interpret the conditional expectation estimation problem as an extended density estimation problem. This suggests to choose the same bandwidth h and the same kernel ϕ for the estimators (3.1) and (3.4). 
+
+Remark 3.1 Assume that in the random vector (X, Y ) the X-component is a sum of random variables X1, . . . , Xn and that we are interested in estimating E[Xi | X = x], i = 1, . . . , n. Define (X1<sup>∗, . . . , X</sup> n<sup>∗),</sup> analogously to (X<sup>∗</sup> , Y<sup>∗</sup> ) as the “empirical” version of (X1, . . . , Xn). According to (3.4), the NadarayaWatson estimator of E[Xi | X = x] can then be specified as 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0005-14.png)
+
+
+with an appropriate auxiliary variable ξ independent of (X1<sup>∗, . . . , X</sup> n<sup>∗).Ifthesamebandwidthhisapplied</sup> for all i, then from representation (3.6a) follows 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0005-16.png)
+
+
+As we will note in Section 5.2 when commenting on Table 6, the size of the difference of the left-hand side of (3.6b) and x can be regarded as providing additional information on the choice of the bandwidth h. We will apply the multiplicative adjustment suggested by Epperlein and Smillie (2006, Equation (7)) to force additivity in the sense of (2.3b) on the estimated contributions to VaR.
+
+<!-- page: 6 -->
+
+### 3.3 Application to credit losses 
+
+For every credit risk portfolio, there is some positive probability of observing no losses. While for large portfolios, this probability will usually be negligibly small, we will see by the example from Section 5 that the probability of zero loss can be of significant magnitude for smaller portfolios. As a consequence, we cannot assume that the loss variable L from model (2.1) has an unconditional density. For otherwise P[L = 0] would be zero. Hence, at first glance, applying the estimators (3.1) and (3.4) seems not possible in the context of model (2.1). The following assumption, however, allows us to deal with this problem. 
+
+Assumption 3.2 There is a random vector (S1, . . . , Sk), (called systematic factors), with the following properties: 
+
+- (i) The loss variables Li in (2.1) are independent conditional on realisations of (S1, . . . , Sk). 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0006-04.png)
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0006-05.png)
+
+
+Under Assumption 3.2, it is easy to derive the following result on the representation of the unconditional distribution of the portfolio-wide loss L. 
+
+Theorem 3.3 Define In = {1, . . . , n} and write<sup>�</sup> for the multiple convolution of densities. Then, under assumption 3.2, for ℓ ≥ 0 the distribution function of the loss variable L from (2.1) can be written as 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0006-08.png)
+
+
+with 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0006-10.png)
+
+
+Although, due to the involved multiple convolutions, (3.8) is not really useful for calculating the distribution of L, it allows us to assume that, conditional on being positive, the portfolio-wide loss has a density, i.e. for ℓ ≥ 0 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0006-12.png)
+
+
+Define P<sup>∗</sup> by 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0006-14.png)
+
+
+for any relevant event A. The following lemma is then obvious. 
+
+Lemma 3.4 If the probability P<sup>∗</sup> is given by (3.10), then for ℓ> 0 the expectations conditional on L = ℓ with respect to P<sup>∗</sup> and P are identical. In particular, in the context of model (2.1) for all i = 1, . . . , n and ℓ> 0 we have 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0006-17.png)
+
+<!-- page: 7 -->
+
+Note that a sample (2.5) generated under measure P becomes a sample generated under measure P<sup>∗</sup> when all (n + 1)-tuples (L<sup>(t)</sup> , L<sup>(</sup> 1<sup>t), . . . , L</sup> n<sup>(t))withL(t)=0areeliminated.</sup> For this sub-sample then the preconditions for applying estimators (3.1) and (3.4) are satisfied. This observation leads to the following algorithm for estimating the risk contributions according to (2.6) for model (2.1) by Monte Carlo sampling. 
+
+Algorithm 3.5 
+
+1. Generate a sample like (2.5) from the real-world probability measure P. 
+
+2. Determine an estimate<sup>6</sup> ℓ<sup>ˆ</sup> of VaRP,α(L) from this sample. 
+
+3. Extract the sub-sample with L<sup>(t)</sup> > 0 from the previous sample. 
+
+4. Calculate, on the basis of the sub-sample with L<sup>(t)</sup> > 0, the bandwidth h<sup>∗</sup> according to (3.3). 
+
+5. Calculate the estimates for EP[Li | L = VaRP,α(L)], i = 1, . . . , n, on the basis of the sub-sample with L<sup>(t)</sup> > 0, according to (3.4) as E<sup>ˆ</sup> h∗ [Li | L = ℓ<sup>ˆ</sup> ] (cf. Remark 3.1). 
+
+In the following section, we will modify this algorithm by incorporating importance sampling for reducing the variances of the estimates. 
+
+## 4 Importance sampling for credit risk 
+
+McNeil et al. (2005), at the beginning of Chapter 8.5, write “A possible method for calculating risk measures and related quantities such as capital allocations is to use Monte Carlo (MC) simulation, although the problem of rare event simulation arises.” They then explain, in the context of risk contributions to Expected Shortfall, that “the standard MC estimator . . . will be unstable and subject to high variability, unless the number of simulations is very large. The problem is of course that most simulations are ‘wasted’, in that they lead to a value of L which is smaller than VaRP,α(L).” What applies to contributions to expected shortfall applies even more to VaR contributions as these, according to (2.6), are related to events still more rare and actually in our case of probability zero. Thus, the key idea with importance sampling is to replace the real-world probability measure P by a probability measure Q which puts more mass on the interesting events. 
+
+Some technical assumptions are needed to guarantee that such a replacement of probabilities does really work. 
+
+#### Assumption 4.1 
+
+- The probability measures P and Q are defined on the same measurable space (Ω, F ). 
+
+- There is a measure µ on (Ω, F ) such that both P and Q are absolutely continuous with respect to µ. Denote by f the density of P and by g the density of Q. 
+
+- f > 0 implies g > 0, i.e. P is absolutely continuous with respect to Q. 
+
+Under Assumption 4.1, the likelihood ratio 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0007-16.png)
+
+
+is Q-almost surely well-defined. This implies that any expectation with respect to P can be expressed as an expectation with respect to Q, i.e. for any integrable X holds 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0007-18.png)
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0007-19.png)
+
+
+> 6We may assume ℓ>ˆ 0 as for real-world portfolios the case ℓˆ = 0 seems very unlikely.
+
+<!-- page: 8 -->
+
+However, according to (2.6), for the purpose of this paper it is a conditional rather than an unconditional expectation we are interested in. The following proposition gives a result analogous to (4.2), for conditional expectations. 
+
+Proposition 4.2 Let P and Q be probability measures as in Assumption 4.1, with µ-densities f and g respectively. Define the likelihood ratio R by (4.1). Then we have for any sub-σ-algebra A of F and any integrable random variable X 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0008-02.png)
+
+
+Proof. See e.g. Klebaner (2005, Theorem 10.8). 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0008-04.png)
+
+
+The choice of an appropriate measure Q for use in (4.2) and (4.3) is not at all obvious. Inspecting (2.1) and (2.6), it becomes clear that, for the purpose of this paper, we are interested in events that result in losses close<sup>7</sup> to ℓ<sup>ˆ</sup> = VaRP,α(L), as defined by (2.2b). 
+
+In Section 5, we will specifically consider a numerical example that satisfies the following conditions which reflect assumptions commonly made for models in industry. 
+
+Assumption 4.3 The portfolio-wide loss L is given by (2.1). L1, . . . , Ln are given as 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0008-08.png)
+
+
+D1, . . . , Dn are independent (default) events, conditional on a set of systematic factors (S1, . . . , Sk), with P[Di] = pi. The loss severity variables A1, . . . , An are positive and independent, as well as independent of the D1, . . . , Dn and the S1, . . . , Sk. The distribution of Ai is specified via its density ai(s) ≥ 0. 
+
+Note that, under the condition of the Ai having densities, Assumption 4.3 is a special case of Assumption 3.2. As a consequence of this, according to Theorem 3.3 the loss variable L from (2.1) has, in theory, a density for its positive realisations. 
+
+Merino and Nyfeler (2004) and Glasserman and Li (2005) suggest a nested simulation procedure where exponential twisting is applied for the estimation of expectations conditional on the systematic factors.The resulting conditional loss distribution then can essentially be described again by Assumption 4.3, with independence instead of conditional independence and modified probabilities of default. Unfortunately, this nested procedure cannot be applied for our problem of estimating EP[Li | L = ·] as there is no independence conditional on L. In general, we have σ(L) ⊂ σ(S1, . . . , Sk) and σ(S1, . . . , Sk) ⊂ σ(L). Therefore, no nesting of conditioning is applicable either. Exponential twisting can be applied nevertheless but does not yield satisfactory results as it is not clear how an optimal tilting parameter should be determined. 
+
+Approaches by Kalkbrener et al. (2004) and Glasserman and Li (2005) are promising alternatives to exponential twisting. In these approaches, the importance sampling measure Q is created by changing the means of the systematic factors from Assumption 4.3. Kalkbrener et al. (2004) suggest to determine the factor means appropriate for importance sampling by solving a minimisation problem for the variance of the estimator they consider. Glasserman and Li (2005) instead look for factor means that make the mode of the factor distribution coincide (approximately) with the mode of the “zero-variance importance sampling” distribution. However, these approaches are more complex compared to exponential twisting as they involve – in the case of a multi-factor model – choosing several parameters instead of only one as required by exponential twisting. 
+
+The approach we follow in this paper is close in spirit to the approach by Glasserman and Li (2005). Define the importance sampling probability measure Q = Qµ by Assumption 4.3, but replace the vector 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0008-14.png)
+
+
+> 7In general, ℓˆ itself will have to be estimated. Thus, at first glance, it seems strange to choose it as a basis for finding Q. However, in a first step, for instance, it can be replaced by a rough estimate and be refined in further stages of the estimation procedure.
+
+<!-- page: 9 -->
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0009-00.png)
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0009-01.png)
+
+
+where µ = (µ1, . . . , µk) satisfies 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0009-03.png)
+
+
+The conditional expectations in (4.4b) are estimated by applying the Nadaraya-Watson estimator (3.4). 
+
+Algorithm 3.5 for estimating the risk contributions according to (2.6) for model (2.1) by Monte Carlo sampling has to be modified as follows when importance sampling is applied. 
+
+#### Algorithm 4.4 
+
+1. Generate a sample (L<sup>(t)</sup> , L<sup>(</sup> 1<sup>t), . . . , L</sup> n<sup>(t)), t = 1, . . . , T</sup> 1<sup>, from the original sampling probability measure</sup> P. 
+
+2. Determine an estimate ℓ<sup>ˆ</sup> of VaRP,α(L) from this sample. 
+
+3. Calculate, on the basis of the sub-sample with L<sup>(t)</sup> > 0, the standard MC simulation bandwidth h<sup>∗</sup> according to (3.3). 
+
+4. Estimate the mean shift parameters µi according to (4.4b) from the sample (L<sup>(t)</sup> , L<sup>(</sup> 1<sup>t), . . . , L</sup> n<sup>(t)),</sup> t = 1, . . . , T1, for instance by applying the Nadaraya-Watson estimator. 
+
+5. Generate a sample<sup>8</sup> (L<sup>(t)</sup> , L<sup>(</sup> 1<sup>t), . . . , L</sup> n<sup>(t), R(t)),t=1, . . . , T</sup> 2<sup>,fromtheimportancesamplingproba-</sup> bility measure Qµ. R<sup>(t)</sup> denotes realisations of the likelihood ratio as defined by (4.1). 
+
+6. (Optional) Determine a refined estimate<sup>9</sup> ℓ<sup>ˆ</sup> of VaRP,α(L) from this sample. 
+
+7. Calculate, on the basis of the sub-sample with L<sup>(t)</sup> > 0, the importance sampling bandwidth h<sup>∗</sup> according to (3.3). 
+
+8. ℓEstimate,ˆ] and EQµon[R Lthei |basis L = ℓofˆ],thei = 1sub-sample, . . . , n accordingwith L<sup>(t)</sup> to>(3.4) 0, thewithQµ-conditionalbandwidth h<sup>∗</sup> expectations. EQµ[R | L = 
+
+9. Calculate the estimates for EP[Li | L = VaRP,α(L)], i = 1, . . . , n according to (4.3), inserting the estimates from the previous step. 
+
+## 5 Numerical example 
+
+This section is divided into two parts. In Sub-section 5.1 we provide details of the portfolio model that is used for the simulation study and describe the numerical results we seek to obtain. In Sub-section 5.2 we comment on the results and point out their essential features. 
+
+### 5.1 Description of simulation study 
+
+We examine the performance of importance sampling estimation of VaR contributions under Assumption 4.3. Due to restriction in computational power, the portfolio we consider is relatively small, with 96 assets. Note that, with such a portfolio size, there may be a significant positive probability of not observing any losses, demonstrating that the issue tackled in Lemma 3.4 has some relevance. 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0009-20.png)
+
+
+> 8The new sample need not necessarily be generated by a new Monte Carlo simulation. Alternatively, as done in Section 5, the new sample can be created from the previous sample by substituting (S1<sup>∗, . . . , S</sup> k<sup>∗)from(4.4a)for(S1, . . . , Sk).In</sup> this case T2 = T1. 
+
+> 9For instance, by ordering the pairs (L(t), R(t)) in descending order according to the L-component and selecting the largest t with<sup>Pt</sup> k=1<sup>R(k)≤1 −α.TakethenL(t)astheestimator.</sup>
+
+<!-- page: 10 -->
+
+The dependence structure of the portfolio is determined by four correlated systematic factors (S1, S2, S3, S4) which are each standard normal and are jointly normally distributed with correlation matrix 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0010-01.png)
+
+
+According to (5.1), factors S1 and S2 are strongly correlated, factors S3 and S4 are moderately correlated, and the pairs (S1, S2) and (S3, S4) are weakly dependent. 
+
+Each factor corresponds to one sector that includes 24 assets. In each of the four sectors, the risk characteristics of the 24 assets are specified as shown in Table 1. According to Table 1, each of the four sectors in the portfolio includes 12 high (2%) PD (probability of default) assets and 12 low (0.5%) PD assets. In both of these two sub-sectors there are 4 high exposure (25$), 4 medium-size exposure (5$), and 4 low exposure (1$) assets. Of the 4 high exposure assets, all have equal LGD (loss given default) mean 50% but 2 assets have high LGD variance (12.5%) and 2 assets have low LGD variance (3.125%). Similarly, among the 4 medium-size (low) exposure assets of equal LGD mean, there are 2 high LGD variance and 2 low LGD variance assets. Note that for each combination of sector, PD, exposure, and LGD variance there are two assets with identical risk characteristics. This feature of the portfolio composition is intended to deliver a rough assessment of estimation uncertainty due to the Monte Carlo simulation. For, by symmetry, risk contributions for assets with identical risk characteristics should be equal but will not be when estimated by Monte Carlo simulation. 
+
+Assumption 5.1 For any asset i ∈{1, 2, . . ., 96} in the portfolio, its individual loss variable Li in the sense of Assumption 4.3 is specified by the asset’s sector k(i) ∈{1, 2, 3, 4}, probability of default PDi, exposure vi, mean loss given default LGDi, and LGD variance varLGDi (as shown in Table 1) as follows: 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0010-05.png)
+
+
+- The default event of the asset is given by Di = {<sup>√</sup> r Sk(i) +<sup>√</sup> 1 − r ξi ≤ Φ<sup>−1</sup> (PDi)} where Φ denotes the standard normal distribution function, r = 0.18 (equal for all i), and ξ1, ξ2, . . . , ξ96 are i.i.d. standard normal. 
+
+- The loss severity variable is given by Ai = vi Bi where B1, B2, . . . , B96 are independent betadistributed random variables with E[Bi] = LGDi and var[Bi] = varLGDi. 
+
+The constant r in the definition of the default events is the loading of the systematic risk in this model. Its value was chosen with a view on the asset correlations in the Basel II corporate risk weight formula which have a range from 0.12 to 0.24 (BCBS, 2006, paragraph 272). The loss severity distributions of the high LGD variance assets in Assumption 5.1 are U-shaped (beta parameters a = 0.5 and b = 0.5), the severity distributions of the low LGD variance assets are bell-shaped (beta parameters a = 3.5 and b = 3.5). 
+
+By portfolio construction, on the one hand Sectors 1 and 2 are identical with respect to their composition and risk characteristics. On the other hand, this holds also for Sectors 3 and 4. As Sectors 1 and 2 are, however, stronger correlated than Sectors 3 and 4, one should expect that due to this concentration the risk contributions of assets in Sectors 1 or 2 are higher than the risk contributions of the corresponding assets in Sectors 3 or 4. 
+
+The simulation exercise<sup>10</sup> we conduct is structured as follows: 
+
+1. We run 25 times a Monte Carlo simulation with 50,000 joint realisations of the losses of all the assets in the portfolio. 
+
+2. In each simulation run, the following quantities are estimated: 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0010-13.png)
+
+
+> 10The R-script for the calculations can be down-loaded at http://www-m4.ma.tum.de/pers/tasche/.
+
+<!-- page: 11 -->
+
+- Portfolio-wide VaR at 99.9% level (by standard MC and importance sampling MC, see Table 2 for the results). 
+
+   - For each factor, the conditional expectation EP[Si | L = VaRP,α(L)] of the factor conditional on L = VaRP,α(L) (by standard MC, Table 3). 
+
+   - For each sector, sector-stand-alone VaR at 99.9% level (by standard MC and importance sampling MC, Table 5). 
+
+   - For each asset, the contribution of the asset to portfolio-wide VaR at 99.9% level (by standard MC and importance sampling MC, Table 7). Additionally, for each asset, the contribution of the asset to portfolio-wide VaR at 99.9% level by importance sampling MC with reduced and enlarged respectively bandwidth for the conditional expectation, Table 8). 
+
+3. Based on the estimates of step 2, in each simulation run the following quantities are calculated: 
+
+   - The portfolio-wide mean of the loss, standard deviation of the loss, and the probability of observing a loss<sup>11</sup> (Table 4). 
+
+   - The ratio of the sum of the VaR contributions of all assets and portfolio-wide VaR (Table 6). 
+
+   - For each sector, the contribution of the sector to portfolio-wide VaR at 99.9% level (as the sum of the VaR contributions of the assets in the sector, Table 9). 
+
+   - The portfolio-wide diversification index<sup>12</sup> (Table 10) 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0011-09.png)
+
+
+- For each asset i, the marginal diversification index (Table 11) 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0011-11.png)
+
+
+- For each sector, its marginal diversification index (defined as the sum of the VaR contributions of the assets in the sector divided by the VaR of the sector, Table 12). 
+
+Marginal diversification indices as defined by (5.2b) represent a direct application of risk contributions for risk concentration analysis. By construction, I(Li | L) > I(L) implies that reduction of the exposure to asset i will improve portfolio diversification (Tasche, 2006, Section 4). Here, “diversification” is understood in a relative sense, namely comparing the actual economic capital assigned to the portfolio under consideration to the economic capital assigned to a worst case portfolio composed of co-monotonic loss variables. 
+
+4. We report three results for each of the values that is estimated or calculated from estimates: 
+
+   - The result of the simulation run. 
+
+   - The mean of the results of all 25 simulation runs (as approximation of the true value). 
+
+   - The coefficients of variation<sup>13</sup> of the results of all 25 simulation runs (as measure of estimation uncertainty). 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0011-18.png)
+
+
+> 11For further reduction of the estimation variance, the standard deviation and sample size of the positive losses for the bandwidth (both for standard MC as well as for importance sampling) according to (3.3) are not estimated but numerically calculated. Under Assumption 5.1 this can be done exactly for the standard deviation of the positive losses and approximately for the sample size of the positive losses, by approximating the distribution of the number of defaults via moment matching by a negative binomial distribution. 
+
+> 12See Tasche (2006, Section 4) for a motivation of this definition and the definition of marginal diversification indices. The diversification indices are calculated on an unexpected loss (UL) basis, in accordance with definition (2.2a) of economic capital. Note that the value of the portfolio-wide diversification index depends upon whether the portfolio is decomposed into assets or into sectors since in the latter case the diversification potential is larger. 
+
+> 13The coefficient of variation of a sample is defined as the ratio of the sample standard deviation and the sample mean.
+
+<!-- page: 12 -->
+
+### 5.2 Comments on the results 
+
+Table 2. With respect to the estimation of portfolio-wide VaR, according to the results displayed in Table 2, there is a minor advantage in using importance sampling. With multi-step importance sampling as suggested for instance by Glasserman and Li (2005) this advantage could be increased. However, the purpose of this paper is to deal with the estimation of VaR contributions. Therefore, here we need not look into the details of efficient estimation of VaR itself. As indicated by the relatively small sample variation coefficients both for standard as well as importance Monte Carlo sampling, the estimates in the simulation run do not much from the means of 25 simulation runs. 
+
+Table 3. Table 3 shows that the estimates for the shift constants of the distribution of the systematic factors according to (4.4a) and (4.4b) are not very stable. This is indicated both by the high sample variation coefficients as well as by the 1st run estimate of the constant for the fourth factor which differs much from the sample mean. As the strongly correlated factors 1 and 2 might contribute more to portfolio risk as measured by VaR than the factors 3 and 4, it is no surprise that the indicated shifts of factors 1 and 2 are larger than the ones of factors 3 and 4. 
+
+Table 4. The difference between the loss distribution under the original probability measure P and the importance sampling measures is demonstrated by Table 4. The mean loss grows by more than ten times and then slightly overshoots the portfolio VaR under the original probability measure P. The loss standard deviation increases by four times. The proportion of portfolio loss realisations with positive losses grows from 60% to almost 100%. Hence the proportion of the sample that can be used for kernel estimation is much greater in the case of importance sampling. Note that the characteristics of the shift loss distribution do not seem to vary much in the 25 simulation runs. 
+
+Table 5. By construction, from a risk perspective the four portfolio sectors are identical when considered stand-alone. This is confirmed by the estimates of stand-alone sector VaR as displayed in Table 5. The significantly higher sample variation coefficients of sectors 3 and 4 in the case of importance sampling show that the shift factor distribution according to (4.4a) and (4.4b) is not very well suited for the estimation of stand-alone sector characteristics. 
+
+Table 6. As indicated in Remark 3.1, although in theory the sum of the VaR contributions according to (2.6) equals VaR, a sum of VaR contribution estimates made by kernel estimation can differ from VaR. Table 6 displays for different estimation approaches how large the difference can be. In general, it is larger for importance sampling and increases with the kernel estimation bandwidth. As we will see, the choice of the importance sampling bandwidth according to Silverman’s rule of thumb (3.3) seems to be a reasonable compromise between reduction of sample variation by oversmoothing and unbiasedness as measured by the difference between the sum of VaR contributions and VaR. Note that, to make comparable the VaR contribution estimates by different approaches, the contributions as displayed in Tables 7, 8, and 9 are normalised such that their sum equals portfolio VaR. 
+
+Tables 7 and 8. As by symmetry results for sectors 2 and 4 are not essentially different from the results for sectors 1 and 3 respectively, Tables 7 and 8 display the results of VaR contribution estimates at asset level only for sectors 1 and 3. The tables allow to compare the estimation performance as yielded by four different approaches: kernel estimation based on standard Monte Carlo sampling, kernel estimation based on importance sampling with bandwidth chosen according to Silverman’s rule of thumb, kernel estimation based on importance sampling with reduced bandwidth, and kernel estimation based on importance sampling with enlarged bandwidth. The average results of all the approaches do not differ too much – which is also a consequence of the normalising applied to have the sum of the contributions equal to portfolio VaR. The variation of the estimates, as indicated by their coefficients of variation, is clearly highest for standard Monte Carlo, followed by importance sampling with 50% of Silverman’s
+
+<!-- page: 13 -->
+
+bandwidth. Importance sampling with 200% of Silverman’s bandwidth has lower sample variation than importance sampling with 100% of Silverman’s bandwidth. As noticed above, the latter, however, need not be so much adjusted as the former. For this reason, importance sampling with bandwidth according to Silverman’s rule might be considered the best estimation method for VaR contributions among the four approaches discussed here. 
+
+Taking into account that the values in Tables 7 and 8 were calculated on the basis of 25 simulation runs each with 50,000 loss realisations, the results are somewhat disappointing as the sample variation is still large in particular for small exposures with low probability of default. As demonstrated by Figure 1, there is nevertheless a clear gain in estimation efficiency by the application of importance sampling. Additionally, in contrast to the standard Monte Carlo approach, the importance sampling approaches have no problem with seeming zero VaR contributions of some assets (compare the first run results). 
+
+Note that the correlation structure of the portfolio is clearly reflected in the VaR contributions as the contributions by assets in sector 1 are significantly higher than the contributions by the assets with similar risk characteristics in sector 3. Note also that LGD variance has a strong impact on an asset’s VaR contribution, in particular for those assets with the high exposures. The greater the LGD variance, the greater the VaR contribution. 
+
+Table 9. Table 9 displays at sector level what Table 7 shows at asset level. Compared to the asset level, sample variation at sector level is slightly less. Again, by importance sampling there is some gain in estimation efficiency compared to standard sampling. Note in particular for sector 1 the misleading first run standard estimate of the VaR contribution which seems to indicate that sector 1 is less correlated to the rest of the portfolio than sectors 2, 3, or 4. 
+
+Table 10. As demonstrated in Table 10, estimates of portfolio-wide diversification indices in asset and sector context are fairly stable, and there is not much difference in efficiency between standard and importance sampling. The specification of the context in which the diversification indices are calculated indicates the scope of possible actions for a reduction of portfolio concentration. Sector context means that only the relative weights of the sectors may be changed but not relative weights of single assets. Superficially, the sector diversification index looks worse. This is caused by the fact that its denominator – compared to the asset context – is less because the sector VaR figures already incorporate a lot of diversification. In general, it does not make sense to compare diversification indices that were calculated in different contexts. Portfolio-wide diversification indices should rather be compared to the corresponding asset or sector diversification indices because this way guidance can be provided on how to change the portfolio for better diversification. 
+
+Table 11. Not surprisingly, as Table 11 shows importance sampling estimates are more efficient than standard sampling estimates also for the estimation of asset-level marginal diversification indices. In particular, importance sampling avoids observing negative diversification indices even in the first run estimates where estimation is much more uncertain than in the “mean of all runs” columns. Note however, that also the importance sampling first run estimates are misleading in so far as they seem to indicate that asset 4 (with low LGD variance) in sector 1 is the most dangerous in the portfolio. In fact, assets 1 and 2 in this sector with same exposure size, PD, and mean LGD are more dangerous – as is correctly shown in columns 4 and 7 of Table 11 – because they have got higher LGD variance. Note also that exposure concentration can “override” concentration caused by correlation. This is illustrated by assets 1 to 4 of sector 3 whose diversification indices are higher than the portfolio-wide index although sector 3 clearly has less correlation to the rest of the portfolio than sectors 1 or 2. 
+
+Table 12. Also at sector level the importance sampling estimates of the marginal diversification indices display less variation than the standard sampling estimates. In particular, the standard sampling first run estimate of the index for sector 1 is lower than the portfolio-wide diversification index. The misleading
+
+<!-- page: 14 -->
+
+conclusion could be that shifting weight to sector 1 contributes to portfolio diversification, in spite of the strong correlation between sectors 1 and 2. In contrast, the importance sampling first run estimate of the diversification index for sector 1 correctly indicates that the index is larger than the portfolio-wide index. However, it also indicates erroneously that sector 1 is worse for portfolio diversification than sector 2. 
+
+## 6 Conclusions 
+
+In general, determining VaR contributions in a credit portfolio risk model that involves continuous loss given default rate distributions is a non-trivial task. In the context of the common approach by means of Monte-Carlo simulation, we have discussed how to adapt kernel estimation methods for this problem and how to combine them with importance sampling. Importance sampling, in the form of a shift of the distribution of the systematic factors, is applied here since the variability of the estimates is quite strong, as a consequence of the rare-event character of credit risk realisations. 
+
+The numerical example presented in Section 5 illustrates that the gain in estimation efficiency by these methods is significant. It also reveals, however, that the results yielded with these methods are not yet too satisfactory in so far as in particular the variability of estimates of VaR contributions for exposures with very small PDs remains still quite large. It seems worthwhile to analyse in more detail how multistep approaches e.g. by Glasserman et al. (2005) have to be modified for successful application on the estimation of VaR contributions as studied here. Further research on this issue could be useful. 
+
+## References 
+
+- C. Acerbi and D. Tasche. On the coherence of expected shortfall. Journal of Banking & Finance, 26(7): 1487–1503, 2002. 
+
+- BCBS. International Convergence of Capital Measurement and Capital Standards. A Revised Framework, Comprehensive Version. Basel Committee of Banking Supervision, June 2006. 
+
+- A. Dev, editor. Economic Capital: A Practitioner Guide, 2004. Risk Books. 
+
+- E. Epperlein and A. Smillie. Cracking VAR with kernels. RISK, 19(8):70–74, August 2006. 
+
+- P. Glasserman. Measuring Marginal Risk Contributions in Credit Portfolios. Journal of Computational Finance, 9:1–41, 2005. 
+
+- P. Glasserman, W. Kang, and P. Shahabuddin. Fast simulation of multifactor portfolio credit risk. Working paper, Columbia University, 2005. 
+
+- P. Glasserman and J. Li. Importance sampling for portfolio credit risk. Management Science, 51(11): 1643–1656, 2005. 
+
+- C. Gouri´eroux, J. P. Laurent, and O. Scaillet. Sensitivity analysis of values at risk. Journal of Empirical Finance, 7:225–245, 2000. 
+
+- C. Gouri´eroux and W. Liu. Efficient portfolio analysis using distortion risk measures. Les Cahiers du CREF 06-35, 2006. 
+
+- M. Kalkbrener. An axiomatic approach to capital allocation. Mathematical Finance, 15(3):425–437, 2005. 
+
+- M. Kalkbrener, H. Lotter, and L. Overbeck. Sensible and efficient allocation for credit portfolios. RISK, 17:S19–S24, January 2004. 
+
+- F. C. Klebaner. Introduction to Stochastic Calculus with Applications. Imperial College Press, second edition, 2005.
+
+<!-- page: 15 -->
+
+- G. Lemus. Portfolio Optimization with Quantile-based Risk Measures. PhD thesis, Sloan School of Management, MIT, 1999. 
+
+- R. Litterman. Hot spots<sup>TM</sup> and hedges. The Journal of Portfolio Management, 22:52–75, 1996. 
+
+- H. Mausser and D. Rosen. Allocating credit capital with var contributions. Working paper, Algorithmics Inc., 2004. 
+
+- A. McNeil, R. Frey, and P. Embrechts. Quantitative Risk Management. Princeton University Press, 2005. 
+
+- S. Merino and M. A. Nyfeler. Applying importance sampling for estimating coherent credit risk contributions. Quantitative Finance, 4:199–207, 2004. 
+
+- A. Pagan and A. Ullah. Nonparametric econometrics. Cambridge University Press, 1999. 
+
+- D. Tasche. Risk contributions and performance measurement. Working paper, Technische Universit¨at M¨unchen, 1999. 
+
+- D. Tasche. Capital Allocation with CreditRisk<sup>+</sup> . In V. M. Gundlach and F. B. Lehrbass, editors, CreditRisk<sup>+</sup> in the Banking Industry, pages 25–44. Springer, 2004. 
+
+- D. Tasche. Measuring sectoral diversification in an asymptotic multifactor framework. Journal of Credit Risk, 2(3):33–55, 2006. 
+
+- Y. Yamai and T. Yoshiba. Comparative Analyses of Expected Shortfall and VaR: their estimation error, decomposition, and optimization. Monetary and economic studies 20(1), Bank of Japan, 2002. 
+
+Table 1: Risk characteristics of assets. Identical for all four sectors. 
+
+|Asset No.|PD|Exposure|LGD mean|LGD variance|Stand-alone VaR99.9%|
+|---|---|---|---|---|---|
+|1|0.02|25|0.5|0.125|24.846|
+|2|0.02|25|0.5|0.125|24.846|
+|3|0.02|25|0.5|0.03125|19.778|
+|4|0.02|25|0.5|0.03125|19.778|
+|5|0.02|5|0.5|0.125|4.969|
+|6|0.02|5|0.5|0.125|4.969|
+|7|0.02|5|0.5|0.03125|3.956|
+|8|0.02|5|0.5|0.03125|3.956|
+|9|0.02|1|0.5|0.125|0.994|
+|10|0.02|1|0.5|0.125|0.994|
+|11|0.02|1|0.5|0.03125|0.791|
+|12|0.02|1|0.5|0.03125|0.791|
+|13|0.005|25|0.5|0.125|22.613|
+|14|0.005|25|0.5|0.125|22.613|
+|15|0.005|25|0.5|0.03125|16.51|
+|16|0.005|25|0.5|0.03125|16.51|
+|17|0.005|5|0.5|0.125|4.523|
+|18|0.005|5|0.5|0.125|4.523|
+|19|0.005|5|0.5|0.03125|3.302|
+|20|0.005|5|0.5|0.03125|3.302|
+|21|0.005|1|0.5|0.125|0.905|
+|22|0.005|1|0.5|0.125|0.905|
+|23|0.005|1|0.5|0.03125|0.66|
+|24|0.005|1|0.5|0.03125|0.66|
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0015-12.png)
+
+
+<!-- Start of picture text -->
+24 0.005 1 0.5 0.03125 0.66<br><!-- End of picture text -->
+
+<!-- page: 16 -->
+
+Table 2: Standard Monte Carlo and importance sampling estimates of portfolio VaR at 99.9% level and coefficients of variation of estimates. 
+
+|Sampling method|1st run|Mean of all runs|Coef. of var.|
+|---|---|---|---|
+|Standard MC|69.29|69.22|1.88%|
+|Imp. samp. MC|68.4|68.7|1.22%|
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0016-02.png)
+
+
+<!-- Start of picture text -->
+Imp. samp. MC 68.4 68.7 1.22%<br><!-- End of picture text -->
+
+Table 3: Standard Monte Carlo estimates of conditional expectations of systematic factors conditional on “Loss equals portfolio VaR at 99.9% level” and coefficients of variation of estimates. 
+
+|Factor|1st run|Mean of all runs|Coef. of var.|
+|---|---|---|---|
+|1|-1.327|-1.449|16.38%|
+|2|-1.313|-1.471|14.23%|
+|3|-0.852|-0.854|22.04%|
+|4|-1.244|-0.87|34.15%|
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0016-05.png)
+
+
+<!-- Start of picture text -->
+4 -1.244 -0.87 34.15%<br><!-- End of picture text -->
+
+Table 4: Portfolio loss distribution characteristics mean of loss, standard deviation of loss, and probability of observing positive losses for original and importance sampling distribution. Characteristics for original distribution are calculated without simulation only once before the 1st simulation run. 
+
+|Sector|Original distribution|Impo|rtance sampling di|stribution|
+|---|---|---|---|---|
+|||1st run|Mean of all runs|Coef. of var.|
+|Expected loss|6.2|70.101|73.204|15.73%|
+|Stddev of loss|10.359|41.406|42.204|8.14%|
+|Prob. pos. loss|59.411%|99.911%|99.881%|0.15%|
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0016-08.png)
+
+
+<!-- Start of picture text -->
+Prob. pos. loss 59.411% 99.911% 99.881% 0.15%<br><!-- End of picture text -->
+
+Table 5: Standard Monte Carlo and importance sampling estimates of stand-alone sector-VaR at 99.9% level and coefficients of variation of estimates. 
+
+|Sector||Standard MC|||Importance samp|ling|
+|---|---|---|---|---|---|---|
+||1st run|Mean of all runs|Coef. of var.|1st run|Mean of all runs|Coef. of var.|
+|1|39.434|41.379|2.79%|40.366|41.253|1.95%|
+|2|42.302|41.524|2.67%|39.969|41.487|2.53%|
+|3|40.954|41.504|2.49%|40.369|41.211|3.37%|
+|4|41.15|41.285|2.08%|42.674|41.623|4.71%|
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0016-11.png)
+
+
+<!-- Start of picture text -->
+4 41.15 41.285 2.08% 42.674 41.623 4.71%<br><!-- End of picture text -->
+
+Table 6: Ratio of sum of asset VaR contributions and portfolio-wide VaR (at 99.9% level) for Standard Monte Carlo, importance sampling, importance sampling with 50% of bandwidth, and importance sampling with 200% of bandwidth. 
+
+|Sampling method|1st run|With mean contributions and VaRs of all runs|
+|---|---|---|
+|Standard MC|99.69%|99.6%|
+|Imp. samp. MC|96.84%|96.2%|
+|50% bandwidth|99.15%|98.96%|
+|200% bandwidth|85.31%|85.29%|
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0016-14.png)
+
+
+<!-- Start of picture text -->
+200% bandwidth 85.31% 85.29%<br><!-- End of picture text -->
+
+<!-- page: 17 -->
+
+Table 7: Standard Monte Carlo and importance sampling estimates of asset contributions to portfolio-wide VaR at 99.9% level and coefficients of variation of estimates. Only sectors 1 and 3. See Figure 1 for a graphical comparison of the coefficients of variation. 
+
+|Sector<br>Asset||Standard MC|||Importance sam|pling|
+|---|---|---|---|---|---|---|
+||1st run|Mean of all runs|Coef. of var.|1st run|Mean of all runs|Coef. of var.|
+|1<br>1|3.73991|4.13472|39.57%|3.5955|4.1292|28.43%|
+|1<br>2|2.48008|3.98558|42.72%|4.57874|4.10322|14.51%|
+|1<br>3|1.86887|2.78517|43.7%<br>|2.13936|2.70369|16.58%<br>|
+|1<br>4|1.67832|2.98133|41.23%|3.90476|2.79776|23.62%|
+|1<br>5|0.00852|0.32861|64.19%|0.29531|0.261|25.11%|
+|1<br>6|0.25436|0.26363|68.58%|0.36958|0.28069|20.92%|
+|1<br>7|0.01275|0.29346|60.74%|0.28293|0.23594|19.17%|
+|1<br>8|0.10971|0.24488|61.28%<br>|0.2703|0.24198|20.01%<br>|
+|1<br>9|0.04055|0.04092|64.45%|0.05336|0.04391|26.94%|
+|1<br>10|0.03549|0.03701|75.96%|0.04931|0.03976|14.91%|
+|1<br>11|0.03|0.04138|62.7%|0.0448|0.04162|16.32%|
+|1<br>12|0.05875|0.05802|66.77%|0.0462|0.04339|22.3%|
+|1<br>13|0.90201|1.26936|98.54%|1.35922|1.33622|30.04%|
+|1<br>14|0.72223|0.99663|73.19%<br>|1.96059|1.27473|22.41%<br>|
+|1<br>15|0.00017|0.58035|85.56%|0.81998|0.97163|28.52%|
+|1<br>16|0.88218|0.78081|65.45%|1.191|0.87679|20.11%|
+|1<br>17|0.01785|0.09645|126.93%|0.08795|0.09451|58.51%|
+|1<br>18|0.02523|0.10587|100.98%|0.05491|0.08176|24.24%|
+|1<br>19|0.00297|0.08758|109.65%|0.09981|0.08263|34.23%|
+|1<br>20|0.18965|0.10518|120.03%|0.07885|0.08013|39.55%|
+|1<br>21|0.01695|0.02205|94.88%|0.02105|0.01382|31.04%|
+|1<br>22|0.00065|0.0101|182.79%|0.01315|0.01494|41.93%|
+|1<br>23|0.01227|0.01647|115.13%|0.01212|0.01434|22.03%|
+|1<br>24|0.00011|0.00962|123.95%|0.00676|0.01353|25.55%|
+|3<br>1|4.22536|2.87626|50.72%|3.20845|2.93319|23.72%|
+|3<br>2|4.16669|3.57096|35.82%|2.42476|2.82777|22.43%|
+|3<br>3|1.85084|1.82327|60.66%|1.62841|1.94189|26.81%|
+|3<br>4|1.86416|1.71489|44.15%|1.67836|1.92037|28.6%|
+|3<br>5|0.00607|0.15006|86.14%|0.30478|0.17055|31.19%|
+|3<br>6|0.26857|0.23839|69.98%|0.29962|0.15907|29.65%|
+|3<br>7|0.18092|0.16485|75.66%|0.13607|0.17009|27.24%|
+|3<br>8|0.31751|0.1394|76.11%|0.23939|0.15737|35.18%|
+|3<br>9|0.03608|0.02836|91.3%|0.0307|0.02636|30.25%|
+|3<br>10|0.04145|0.03967|76.9%|0.02157|0.02805|33.13%|
+|3<br>11|0.01261|0.02728|93.85%|0.03185|0.02711|35.09%|
+|3<br>12|0.01994|0.02723|85.55%|0.01969|0.02961|23.47%|
+|3<br>13|1.38858|1.22577|88.2%|0.91357|1.04637|85.95%|
+|3<br>14|1.68561|1.0336|77.07%|0.80861|0.87244|29.14%|
+|3<br>15|0.64665|0.54598|93.05%|0.53973|0.58639|29.58%|
+|3<br>16|1.06298|0.80942|75.61%|0.73897|0.62549|42.79%|
+|3<br>17|0.00001|0.04572|201.77%|0.07141|0.05265|46.15%|
+|3<br>18|0.00037|0.04821|178.53%|0.06335|0.0534|61.58%|
+|3<br>19|0.00561|0.06153|126.15%|0.05904|0.04706|36.99%|
+|3<br>20|0.00008|0.03582|165.25%|0.04812|0.05005|80.54%|
+|3<br>21|0.02334|0.016|132.45%|0.00505|0.0107|68.05%|
+|3<br>22|0.04998|0.00533|230.52%|0.01307|0.00966|60.67%|
+|3<br>23|0|0.01009|192.67%|0.00971|0.00835|65.11%|
+|3<br>24|0|0.00651|152.59%|0.0074|0.01027|58.74%|
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0017-02.png)
+
+
+<!-- Start of picture text -->
+3 24 0 0.00651 152.59% 0.0074 0.01027 58.74%<br><!-- End of picture text -->
+
+<!-- page: 18 -->
+
+Figure 1: Graphical comparison of coefficients of variation from Table 7. 
+
+**Sector 1: Coefficients of variation of VaR contribution estimates** 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0018-02.png)
+
+
+<!-- Start of picture text -->
+Standard MC<br>150%<br>Importance sampling<br>100%<br>50%<br>0%<br>1 3 5 7 9 11 13 15 17 19 21 23<br>Asset<br><!-- End of picture text -->
+
+**Sector 3: Coefficients of variation of VaR contribution estimates** 
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0018-04.png)
+
+
+<!-- Start of picture text -->
+200% Standard MC<br>Importance sampling<br>150%<br>100%<br>50%<br>0%<br>1 3 5 7 9 11 13 15 17 19 21 23<br>Asset<br><!-- End of picture text -->
+
+<!-- page: 19 -->
+
+Table 8: Importance sampling estimates with half and double of bandwidth according to (3.3) for asset contributions to portfolio-wide VaR at 99.9% level and coefficients of variation of estimates. Only sectors 1 and 3. 
+
+|Sector<br>Asset|Im|p. samp., 50% ban|dwidth|Im|p. samp., 200% ba|ndwidth|
+|---|---|---|---|---|---|---|
+||1st run|Mean of all runs|Coef. of var.|1st run|Mean of all runs|Coef. of var.|
+|1<br>1|3.26946|4.29182|38.02%|4.05739|4.00807|16.07%|
+|1<br>2|4.66724|3.94153|16.02%|4.03265|4.09244|12.27%|
+|1<br>3<br>|1.98064|2.64532<br>|19.71%<br>|2.14906<br>|2.72078<br>|16.23%<br>|
+|1<br>4|3.80636|2.57832|23.22%|3.34566|2.8715|18.5%|
+|1<br>5|0.26897|0.26431|41.28%|0.28143|0.25674|16.95%|
+|1<br>6|0.33207|0.29524|34.96%|0.30172|0.26413|12.17%|
+|1<br>7|0.26506|0.23521|19.71%|0.24753|0.2373|16.24%|
+|1<br>8|0.24949|0.24084|25.59%|0.23923|0.24002|14.17%|
+|1<br>9|0.05815|0.04473|34.66%|0.04556|0.04185|15.54%|
+|1<br>10|0.05494|0.03912|21.92%|0.04404|0.04157|10.76%|
+|1<br>11|0.04378|0.04123|20.37%|0.04292|0.04141|12.44%|
+|1<br>12|0.04586|0.04448|38.31%|0.04482|0.04233|12.57%|
+|1<br>13|1.34413|1.3799|43.47%|1.17617|1.26651|18.33%|
+|1<br>14|1.90522|1.31631|31.05%|1.56665|1.21016|17.01%|
+|1<br>15|0.84645|1.04631|45.4%|0.85945|0.88251|20.24%|
+|1<br>16|1.27248|0.87883|36.64%|0.92764|0.88677|18.53%|
+|1<br>17|0.05814|0.09153|57.75%|0.10907|0.08864|43.24%|
+|1<br>18|0.04969|0.08279|30.12%|0.06831|0.0812|17.81%|
+|1<br>19|0.10725|0.08509|52.91%|0.08653|0.07897|19.23%|
+|1<br>20|0.0893|0.08236|62.2%|0.06944|0.08108|21.85%|
+|1<br>21|0.02114|0.01322|47.88%|0.01951|0.01459|30.43%|
+|1<br>22|0.01281|0.01556|50.13%|0.01248|0.01424|25.29%|
+|1<br>23|0.01032|0.01462|31.32%|0.01293|0.01341|18.77%|
+|1<br>24|0.0058|0.01343|38.54%|0.00996|0.0133|20.48%|
+|3<br>1|4.01468|3.04237|34.49%|2.93766|3.06196|16.15%|
+|3<br>2|2.43925|2.88584|33.77%|2.67336|2.9815|12.16%|
+|3<br>3|1.66845|1.96384|36.29%|1.94701|2.05924|24.65%|
+|3<br>4|1.61369|1.89573|45.73%|1.79944|2.00395|17.04%|
+|3<br>5|0.39934|0.17245|46.26%|0.22462|0.17462|19.1%|
+|3<br>6|0.30854|0.15244|34.22%|0.26823|0.17591|19.79%|
+|3<br>7|0.14593|0.17199|35.86%|0.17599|0.1761|19.23%|
+|3<br>8|0.3268|0.15174|46.17%|0.22091|0.17559|29.68%|
+|3<br>9|0.03699|0.02606|45.78%|0.03159|0.02761|21.52%|
+|3<br>10|0.0174|0.02805|46.25%|0.0248|0.02895|22.52%|
+|3<br>11|0.03086|0.02792|47.53%|0.0313|0.02822|21.98%|
+|3<br>12|0.01679|0.02996|35.62%|0.02146|0.02889|15.67%|
+|3<br>13|0.92607|1.08528|113.38%|0.88461|1.01339|44.1%|
+|3<br>14|0.66095|0.86246|41.28%|0.89759|0.93943|25.98%|
+|3<br>15|0.32995|0.57864|39.28%|0.71209|0.63163|17.53%|
+|3<br>16|0.76557|0.59353|66.16%|0.80199|0.63174|27.11%|
+|3<br>17|0.10155|0.05401|50.01%|0.05136|0.05413|33.84%|
+|3<br>18|0.08667|0.05428|85.39%|0.06688|0.05492|35.01%|
+|3<br>19|0.05978|0.0426|57.18%|0.05109|0.04891|26.68%|
+|3<br>20|0.03033|0.05615|121.29%|0.06657|0.0519|34.31%|
+|3<br>21|0.00573|0.01152|102.81%|0.00803|0.01021|44.1%|
+|3<br>22|0.00939|0.00933|100.7%|0.01451|0.01001|43.49%|
+|3<br>23|0.01156|0.00858|102.21%|0.00945|0.00872|37%|
+|3<br>24|0.00558|0.0119|83.98%|0.00905|0.00922|34.99%|
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0019-02.png)
+
+
+<!-- Start of picture text -->
+3 24 0.00558 0.0119 83.98% 0.00905 0.00922 34.99%<br><!-- End of picture text -->
+
+<!-- page: 20 -->
+
+Table 9: Standard Monte Carlo and importance sampling estimates of sector contributions to VaR at 99.9% level and coefficients of variation of estimates. 
+
+|Sector||Standard MC|||Importance samp|ling|
+|---|---|---|---|---|---|---|
+||1st run|Mean of all runs|Coef. of var.|1st run|Mean of all runs|Coef. of var.|
+|1|13.09|19.275|23.61%|21.336|19.777|7.92%|
+|2|20.507|20.512|16.39%|18.51|19.683|10.29%|
+|3|17.853|14.645|23.53%|13.302|13.764|14.01%|
+|4|17.845|14.784|28.72%|15.257|15.474|15.31%|
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0020-02.png)
+
+
+<!-- Start of picture text -->
+4 17.845 14.784 28.72% 15.257 15.474 15.31%<br><!-- End of picture text -->
+
+Table 10: Standard Monte Carlo and importance sampling estimates of portfolio-wide diversification index with respect to VaR at 99.9% level, in asset-level and sector-level context, and coefficients of variation of estimates. 
+
+|Context||Standard MC|||Importance samp|ling|
+|---|---|---|---|---|---|---|
+||1st run|Mean of all runs|Coef. of var.|1st run|Mean of all runs|Coef. of var.|
+|Assets|7.65%|7.64%|2.06%|7.54%|7.58%|1.34%|
+|Sectors|40.02%|39.51%|2.09%|39.58%|39.21%|2.03%|
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0020-05.png)
+
+
+<!-- Start of picture text -->
+Sectors 40.02% 39.51% 2.09% 39.58% 39.21% 2.03%<br><!-- End of picture text -->
+
+<!-- page: 21 -->
+
+Table 11: Standard Monte Carlo and importance sampling estimates of marginal diversification indices at asset-level with respect to portfolio-wide VaR at 99.9% level and coefficients of variation of estimates. Only sectors 1 and 3. 
+
+|Sector|Asset||Standard MC|||Importance samp|ling|
+|---|---|---|---|---|---|---|---|
+|||1st run|Mean of all runs|Coef. of var.|1st run|Mean of all runs|Coef. of var.|
+|1|1|14.19%|15.8%|42.12%|13.61%|15.79%|30.35%|
+|1|2|9.07%|15.19%|45.6%|17.62%|15.69%|15.5%|
+|1|3|8.29%|12.98%|48.03%|9.66%|12.56%|18.33%|
+|1|4|7.31%|13.99%|45.01%|18.74%|13.05%|26.05%|
+|1|5|-0.85%|5.66%|75.78%|4.97%|4.27%|31.38%|
+|1<br>|6<br>|4.15%<br>|4.34%<br>|84.72%<br>|6.48%<br>|4.67%<br>|25.68%<br>|
+|1|7|-0.96%|6.23%|73.27%|5.94%|4.73%|24.63%|
+|1|8|1.53%<br>|4.99%<br>|77.09%<br>|5.62%<br>|4.88%<br>|25.47%<br>|
+|1|9|3.1%|3.14%|85.41%|4.39%|3.42%|35.3%|
+|1|10|2.59%|2.74%|104.24%|3.98%|3%|20.21%|
+|1|11|2.56%|4.01%|82.79%|4.43%|4.01%|21.77%|
+|1|12|6.24%|6.15%|80.74%|4.61%|4.24%|29.35%|
+|1|13|3.72%|5.35%|103.64%|5.76%|5.66%|31.61%|
+|1|14|2.93%<br>|4.14%<br>|78.11%<br>|8.44%<br>|5.39%<br>|23.6%<br>|
+|1|15|-0.38%|3.15%|95.93%|4.61%|5.53%|30.56%|
+|1|16|4.98%<br>|4.37%<br>|71.17%<br>|6.87%<br>|4.96%<br>|21.72%<br>|
+|1|17|0.12%|1.86%|145.91%|1.67%|1.81%|67.75%|
+|1|18|0.28%|2.07%|114.54%|0.93%|1.53%|28.81%|
+|1|19|-0.29%|2.28%|127.99%|2.65%|2.13%|40.63%|
+|1|20|5.39%|2.82%|136.3%|2.01%|2.05%|47.16%|
+|1|21|1.6%<br>|2.17%<br>|107.04%<br>|2.05%<br>|1.25%<br>|38.24%<br>|
+|1|22|-0.21%|0.84%|243.25%|1.18%|1.37%|50.75%|
+|1|23|1.48%|2.12%|135.81%|1.45%|1.79%|26.88%|
+|1|24|-0.36%<br>|1.08%<br>|167.71%<br>|0.64%<br>|1.67%<br>|31.62%<br>|
+|3|1|16.16%|10.68%|55.57%|12.03%|10.91%|26.02%|
+|3|2|15.93%|13.5%|38.53%|8.84%|10.48%|24.7%|
+|3|3|8.2%|8.05%|70.34%|7.04%|8.65%|30.96%|
+|3|4|8.26%|7.5%|51.71%|7.3%|8.54%|33.08%|
+|3|5|-0.9%|2.03%|129.42%|5.16%|2.42%|44.94%|
+|3|6|4.44%|3.83%|88.67%|5.06%|2.19%|44.09%|
+|3|7|3.35%|2.94%|108.77%|2.17%|3.04%|39.1%|
+|3|8|6.85%|2.28%|118.93%|4.82%|2.71%|52.58%|
+|3|9|2.65%|1.86%|141.32%|2.08%|1.63%|49.99%|
+|3|10|3.19%|3.01%|102.98%|1.15%|1.8%|52.75%|
+|3|11|0.33%|2.21%|148.43%|2.77%|2.15%|56.96%|
+|3|12|1.27%|2.2%|135.55%|1.2%|2.47%|36.1%|
+|3|13|5.88%<br>|5.16%<br>|92.98%<br>|3.78%<br>|4.37%<br>|91.65%<br>|
+|3|14|7.2%|4.31%|82.07%|3.31%|3.59%|31.49%|
+|3|15|3.55%|2.94%|105.14%|2.9%|3.18%|33.27%|
+|3|16|6.08%|4.54%|81.95%|4.11%|3.42%|47.75%|
+|3|17|-0.28%|0.74%|278.06%|1.3%|0.88%|61.29%|
+|3|18|-0.27%|0.79%|241.35%|1.12%|0.9%|81.37%|
+|3|19|-0.21%|1.49%|158.46%|1.41%|1.04%|51.06%|
+|3<br>|20<br>|-0.38%<br>|0.71%<br>|254.37%<br>|1.07%<br>|1.13%<br>|108.81%<br>|
+|3|21|2.31%|1.5%|157.1%|0.27%|0.9%|89.92%|
+|3<br>|22<br>|5.26%<br>|0.31%<br>|435.57%<br>|1.17%<br>|0.79%<br>|83.06%<br>|
+|3|23|-0.38%|1.15%|256.44%|1.09%|0.88%|94.5%|
+|3|24|-0.38%|0.61%|248.39%|0.74%|1.17%|78.71%|
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0021-02.png)
+
+
+<!-- Start of picture text -->
+3 24 -0.38% 0.61% 248.39% 0.74% 1.17% 78.71%<br><!-- End of picture text -->
+
+<!-- page: 22 -->
+
+Table 12: Standard Monte Carlo and importance sampling estimates of diversification indices at sector-level with respect to portfolio-wide VaR at 99.9% level and coefficients of variation of estimates. 
+
+|Sector||Standard MC|||Importance samp|ling|
+|---|---|---|---|---|---|---|
+||1st run|Mean of all runs|Coef. of var.|1st run|Mean of all runs|Coef. of var.|
+|1|30.46%|44.51%|25.27%|51.01%|45.94%|9.39%|
+|2|46.52%|47.44%|17.04%|44.16%|45.43%|10.78%|
+|3|41.37%|32.77%|25.98%|30.24%|30.76%|15.13%|
+|4|41.15%|33.3%|32.32%|33.32%|34.73%|15.97%|
+
+
+![](assets/2008-tasche-capital-allocation-kernel-estimators.pdf-0022-02.png)
+
+
+<!-- Start of picture text -->
+4 41.15% 33.3% 32.32% 33.32% 34.73% 15.97%<br><!-- End of picture text -->

@@ -1,0 +1,20 @@
+{
+  "paper_id": "2017-hagan-lesniewski-bartlett-delta",
+  "status": "review",
+  "page_count": 10,
+  "total_chars": 15958,
+  "average_chars_per_page": 1595.8,
+  "empty_pages": [],
+  "short_pages": [],
+  "replacement_characters": 2,
+  "heading_count": 5,
+  "image_references": 39,
+  "image_files": 39,
+  "latex_math_markers": 0,
+  "chunk_count": 4,
+  "max_chunk_chars": 4736,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

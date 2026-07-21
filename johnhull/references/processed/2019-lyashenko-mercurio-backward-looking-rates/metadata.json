@@ -1,0 +1,34 @@
+{
+  "paper_id": "2019-lyashenko-mercurio-backward-looking-rates",
+  "title": "Looking Forward to Backward-Looking Rates: A Modeling Framework for Term Rates Replacing LIBOR",
+  "authors": "Andrei Lyashenko; Fabio Mercurio",
+  "year": "2019",
+  "source_url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3330240",
+  "source_pdf": "references/papers/2019-lyashenko-mercurio-backward-looking-rates.pdf",
+  "source_sha256": "dbe021f471a592f4521205563053e3baddf44a7f06ac2fe0f357dc2037038abf",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.5",
+    "title": "",
+    "author": "",
+    "subject": "",
+    "keywords": "",
+    "creator": "TeX",
+    "producer": "MiKTeX pdfTeX-1.40.18",
+    "creationDate": "D:20200211164505-05'00'",
+    "modDate": "D:20200211164505-05'00'",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 25
+  }
+}

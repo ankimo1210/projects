@@ -1,0 +1,34 @@
+{
+  "paper_id": "2022-abi-jaber-et-al-quintic-ou",
+  "title": "The Quintic Ornstein-Uhlenbeck Volatility Model That Jointly Calibrates SPX & VIX Smiles",
+  "authors": "Eduardo Abi Jaber; Camille Illand; Shaun Li",
+  "year": "2022",
+  "source_url": "https://arxiv.org/abs/2212.10917",
+  "source_pdf": "references/papers/2022-abi-jaber-et-al-quintic-ou.pdf",
+  "source_sha256": "cd164d8ac33bf6ef7ea5f5cd1c86e7ac2e94a0bca7e014fbb0e27a5ec34ffd8d",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.5",
+    "title": "",
+    "author": "",
+    "subject": "",
+    "keywords": "",
+    "creator": "LaTeX with hyperref",
+    "producer": "pdfTeX-1.40.21",
+    "creationDate": "D:20230510011813Z",
+    "modDate": "D:20230510011813Z",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 14
+  }
+}

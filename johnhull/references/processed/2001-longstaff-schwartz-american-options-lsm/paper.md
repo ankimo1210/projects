@@ -1,0 +1,779 @@
+---
+paper_id: "2001-longstaff-schwartz-american-options-lsm"
+title: "Valuing American Options by Simulation: A Simple Least-Squares Approach"
+authors: "Francis A. Longstaff; Eduardo S. Schwartz"
+year: "2001"
+source_url: "https://escholarship.org/uc/item/43n1k4jb"
+source_pdf: "references/papers/2001-longstaff-schwartz-american-options-lsm.pdf"
+source_sha256: "61d9d3b20400c4c76bc083ba717338ee1a48dc0db11bdfb999203aff1ac34a8b"
+converter: "PyMuPDF4LLM 1.28.0"
+---
+
+<!-- page: 1 -->
+
+# **UCLA Recent Work** 
+
+### **Title** 
+
+Valuing American Options by Simulation: A Simple Least-Squares Approach 
+
+### **Permalink** 
+
+<u>https://escholarship.org/uc/item/43n1k4jb</u> 
+
+### **Authors** 
+
+Longstaff, Francis A Schwartz, Eduardo S 
+
+### **Publication Date** 
+
+2001-05-09
+
+<!-- page: 2 -->
+
+Valuing. American° OptionsLZ by Simulation:e a A Simple Least-Squares Approach Francis A. Longstaff UCLA Eduardo S. Schwartz UCLA This article presents a simple yet powerful new approach for approximating the value of American options by simulation. The key to this approach is the use of least squares to estimate the conditional expected payoff to the optionholder from continuation. This makes this approach readily applicable in path-dependent and multifactor situations where traditional finite difference techniques cannot be used. We illustrate this technique with several realistic examples including valuing an option when the underlying assetstringfollowsmodel ofa jump-diffusionthe term structure.process and valuing an American swaption: in a 20-factor 
+
+One of the most important problems in option pricing theory is the valuation and optimal exercise of derivatives with American-style exercise features. These types of derivatives are found in all major financial markets including the equity, commodity, foreign exchange, insurance, energy, sovereign, agency, municipal, mortgage, credit, real estate, convertible, swap, and emerging markets. Despite recent advances, however, the valuation and optimal exercise of American options remains one of the most challenging problems in derivatives finance, particularly when more than one factor affects the value of the option. This is primarily because finite difference and binomial techniques become impractical in situations where there are multiple factors.’ 
+
+cous w. 
+
+We are grateful for the comments of Yaser Abu-Mostafa, Giovanni Barone-Adesi, Marco Avellaneda, Peter Bossaerts, Peter Carr, Peter DeCrem, Craig Fithian, Bjorn Flesaker, James Gammill, Gordon Gemmill, Robert : Geske, Eric Ghysels, Ravit Efraty Mandell, Soetojo Tanudjaja, John Thornley, Bruce Tuckman, Pedro SantaClara, Pratap Sondhi, Ross Valkariov, and seminar participants at Bear Stearns, the University of British Columbia, the California Institute of Technology, Chase Manhattan Bank, Citibank, the Courant Institute at New York University, Credit Suisse First Boston, Daiwa Securities, Fuji Bank, Goldman Sachs, Greenwich Capital, Morgan Stanley Dean Witter, the Norinchukin Bank, Nikko Securities, the Math Week Risk Magazine Conferences in London and New York, Salomon Smith Barney in London and New York, Simplex Capital, the Sumitomo Bank, UCLA, the 1998 Danish Finance Association meetings, and the 1999 Western Finance : Association meetings. We are particularly grateful for the comments of the editor Ravi Jagannathan and of an anonymous referee who made extensive and insightful suggestions for improving the article. All errors are our responsibility. Address correspondence to Francis A. Longstaff, The Anderson School at UCLA, Box 951481, Los Angeles, CA 90095-1481, or e-mail: francis.longstaff@ anderson.ucla.edu. .) For example, this explains why virtually allWall.Street firms value and exercise American swaptions using a... simple single-factor model despite clear evidence that the term structure is driven by multiple factors. 
+
+The Review of Financial Studies Spring 2001 Vol. 14, No. 1, pp. 113-147 © 2001 The Society for Financial Studies
+
+<!-- page: 3 -->
+
+In this article, we present a simple, yet powerful new approach to approximating the value of American options by simulation. By its nature, simulation is a promising alternative to traditional finite difference and binomial techniques and has many advantages as a framework for valuing, risk managing, and optimally exercising American options. For example, simulation is readily applied when the value of the option depends on multiple factors. Simulation can also be used to value derivatives with both path-dependent and American-exercise features. Simulation allows state variables to follow general stochastic processes such as jump diffusions, as in Merton (1976) and Cox and Ross (1976), non;Markovian processes, as in Heath, Jarrow, and Morton (1992), and even general semimartingales, as in Harrison and Pliska (1981).2 From a practical perspective, simulation is well suited to parallel computing, which allows significant gains in computational speed and efficiency. Finally, simulation techniques are simple, transparent, and flexible. To understand the intuition behind this approach, recall that at any exercise time, the holder of an American option optimally compares the payoff from immediate exercise with the expected payoff from continuation, and then exercises if the immediate payoff is higher. Thus the optimal exercise strategy is fundamentally determined by the conditional expectation of the payoff from continuing to keep the option alive. The key insight underlying our approach is that this conditional expectation can be estimated from the cross-sectional information in the simulation by using least squares. Specifically, we regress the ex post realized payoffs from continuation on functions of the values of the state variables. The fitted value from this regression provides a direct estimate of the conditional expectation function. By estimating the conditional expectation function for each exercise date, we obtain a complete specification of the optimal exercise strategy along each path. With this specification, American options can then be valued accurately by simulation. We refer to this technique as the least squares Monte Carlo (LSM) approach. This approach is easy to implement since nothing more than simple least squares is required. To illustrate this, we present a series of increasingly complex but realistic examples. In the first, we value an American put option in a single-factor setting. In the second, we value an exotic American~Bermuda— Asian option. This option is path dependent and has multifactor features. In the third, we value a cancelable index amortizing swap where the term structure is driven by several factors. This standard fixed-income derivative product has almost pathological path-dependent properties. In each case, the simulation algorithm gives values that are indistinguishable from those given by more computationally intensive finite difference techniques. In the fourth example, we value American options on an asset which follows a jumpdiffusion process. This option cannot be valued using standard finite difference techniques. To illustrate the full generality of this approach, the fifth 
+
+> 2 Semimartingales are essentially the broadest class of processes for which stochastic integrals can be defined and standard option pricing theory applied. TA
+
+<!-- page: 4 -->
+
+example values a deferred American swaption in a 20-factor string model where each point on the interest-rate curve is a separate factor. We also show how the algorithm can be used in a risk-management context by computing the sensitivity of swaption values to each point along the curve. A number of other recent articles also address the pricing of American options by simulation. In an important early contribution to this literature, Bossaerts (1989) solves for the exercise strategy that maximizes the simulated value of the option. Other important examples of this literature include Tilley (1993), Barraquand and Martineau (1995), Averbukh (1997), Broadie and Glasserman (1997a,b,c), Broadie, Glasserman, and Jain (1997), Raymar and Zwecher (1997), Broadie et al. (1998), Carr (1998), Ibanez and Zapatero (1998), and Garcia (1999). These articles use various stratification or parameterization techniques to approximate the transitional density function or the early exercise boundary. This article takes a fundamentally different approach by focusing directly on the conditional expectation function. Several recent articles that use an approach similar to ours include Carriere (1996) and Tsitsiklis and Van Roy (1999). Our work, however, differs in a number of ways. For example, neither of these articles take the approach to the level of practical implementation we do in this article. Furthermore, we include in the regression only paths for which the option is in the money. This significantly increases the efficiency of the algorithm and decreases the computational time. In addition, we demonstrate the application of the methodology to complex derivatives with many underlying factors and evaluate the accuracy of the algorithm by comparing our solutions to finite difference approximations.’ The remainder of this article is organized as follows. Section 1 presents a simple numerical example of the simulation approach. Section 2 describes the underlying theoretical framework. Sections 3-7 provide specific examples of the application of this approach. Section 8 discusses a number of numerical and implementation issues. Section 9 summarizes the results and contains concluding remarks. 
+
+. 
+
+##### 1. A Numerical Example 
+
+At the final exercise date, the optimal exercise strategy for an American option is to exercise the option if it is in the money. Prior to the final date, however, the optimal strategy is to compare the immediate exercise value with the expected cash flows from continuing, and then exercise if immediate exercise is more valuable. Thus, the key to optimally exercising an American option is identifying the conditional expected value of continuation. In this approach, we use the cross-sectional information in the simulated paths to 
+
+. 
+
+> 3 Another related article is Keane and Wolpin (1994), which uses regression in a simulation context to solve discrete choice dynamic programming problems.
+
+<!-- page: 5 -->
+
+identify the conditional expectation function. This is done by regressing the subsequent realized cash flows from continuation on a set of basis functions - of the values of the relevant state variables. The fitted value of this regression is an efficient unbiased estimate of the conditional expectation function and allows us to accurately estimate the optimal stopping rule for the option. Perhaps the best way to convey the intuition of the LSM approach is through a simple numerical example. Consider an American put option on a share of non-dividend-paying stock. The put option is exercisable at a strike price of 1.10 at times 1, 2, and 3, where time three is the final expiration date of the option. The riskless rate is 6%. For simplicity, we illustrate the algorithm using only eight sample paths for the price of the stock. These sample paths are generated under the risk-neutral measure and are shown in the following matrix. 
+
+||Sto<br>|ck price <br>|paths<br>||
+|---|---|---|---|---|
+|Pah|t=O|t=1|¢t=2|1=3|
+|1<br>|1.00<br>|1.09<br>|1.08<br>|1.34<br>|
+|2<br>|1.00<br>|1.16<br>|1.26<br>|1.54<br>|
+|3<br>|1.00<br>|1.22<br>|1.07<br>|1.03<br>|
+|4<br>|100<br>|93<br>|97<br>|92<br>|
+|5<br>|1.00<br>|1.11<br>|1.56<br>|1.52<br>|
+|6<br>|1.00<br>|76<br>|77<br>|90<br>|
+|7<br>|1.00<br>|92<br>|.B4<br>|1.0]<br>|
+|8|1.00|88|1.22|1.34|
+
+
+Our objective is to solve for the stopping rule that maximizes the value of the option at each point along each path. Since the algorithm is recursive, however, we first need to compute a number of intermediate matrices. Conditional on not exercising the option before the final expiration date at time 3, the cash flows realized by the optionholder from following the optimal strategy at time 3 are given below. 
+
+|Cash-flow matrix at|time 3|
+|---|---|
+|Path<br>t=1<br>¢=2|t=3|
+|1<br>—<br>—|.00|
+|2<br>—<br>—|00|
+|3<br>—<br>—|07|
+|4<br>—<br>—_|18|
+|5<br>—<br>——|00|
+|6<br>—<br>——|.20|
+|7<br>—<br>—|.09|
+|8<br>—<br>—|.00|
+
+
+These cash flows are identical to the cash flows that would be received if the option were European rather than American.
+
+<!-- page: 6 -->
+
+If the put is in the money at time 2, the optionholder must then decide whether to exercise the option immediately or continue the option’s life until the final expiration date at time 3. From the stock-price matrix, there are only five paths for which the option is in the money at time 2. Let X denote the stock prices at time 2 for these five paths and Y denote the corresponding discounted cash flows received at time 3 if the put is not exercised at time 2. We use only in-the-money paths since it allows us to better estimate the conditional expectation function in the region where exercise is relevant and significantly improves the efficiency of the algorithm. The vectors X and Y are given by the nondashed entries below. 
+
+|Reg|ression at time|2|
+|---|---|---|
+|Path|Y|x|
+|1|00 x .94176|1.08|
+||2<br>|—<br>_|
+||3<br>.O7 x .94176|1.07|
+|4|18 x 94176|.97|
+|5|—|—_|
+|6|20 x 94176|77|
+|7|09 x .94176|84|
+|g|_|—|
+
+
+. 
+
+To estimate the expected cash flow from continuing the option’s life conditional on the stock price at time 2, we regress ¥ on aconstant, X, and X?. This specification is one of the simplest possible; more general specifications are considered later in the article. The resulting conditional expectation function is E[ Y | X ] = —1.070+ 2.983X — 1.813X?. With this conditional expectation function, we now compare the value of immediate exercise at time 2, given in the first column below, with the value from continuation, given in the second column below. 
+
+|Opti<br>Path|mal early exercise decision at time 2<br>Exercise<br>Continuation|
+|---|---|
+|1|02<br>.0369|
+||2<br>—<br>—|
+||3<br>.03<br>0461|
+|4|13<br>1176|
+||.<br>5<br>—<br>—|
+||6<br>33<br>1520|
+|7<br>|26<br>1565<br><br>|
+|g|_—<br>—|
+
+
+The value of immediate exercise equals the intrinsic value 1.10 — X for the in-the-money paths, while the value from continuation is given by substituting X into the conditional expectation function. This comparison implies that
+
+<!-- page: 7 -->
+
+it is optimal to exercise the option at time 2 for the fourth, sixth, and seventh paths. This leads to the following matrix, which shows the cash flows received by the optionholder conditional on not exercising prior to time 2. 
+
+; 
+
+|Cash-flow matrix at|time 2|
+|---|---|
+|Pah<br>r=]<br>t=2<br><br><br>|t=3<br><br>|
+|tT<br>—<br>oO|00|
+|2<br>—<br>.00|.00|
+|3<br>—<br>00|07|
+|4<br>—<br>13|.00|
+|5<br>—<br>00|00|
+|6<br>—<br>33|.00|
+|7<br>=<br>.26|00|
+|8<br>—<br>.00|.00|
+
+
+Observe that when the option is exercised at time 2, the cash flow in the final column becomes zero. This is because once the option is exercised there are no further cash flows since the option can only be exercised once. 
+
+Proceeding recursively, we next examine whether the option should be exercised at time 1. From the stock price matrix, there are again five paths where the option is in the money at time 1. For these paths, we again define Y as the discounted value of subsequent option cash flows. Note that in defining Y, we use actual realized cash flows along each path; we do not use the conditional expected value of Y estimated at time 2 in defining Y at time 1. As is discussed later, discounting back the conditional expected value rather than actual cash flows can lead to an upward bias in the value of the option. 
+
+Since the option can only be exercised once, future cash flows occur at either time 2 or time 3, but not both. Cash flows received at time 2 are discounted back one period to time 1, and any cash flows received at time 3 are discounted back two periods to time 1. Similarly X represents the stock prices at time | for the paths where the option is in the money. The vectors X and Y are given by the nondashed elements in the following matrix. 
+
+|Regress|ion at time 1|
+|---|---|
+|Path|Y<br>x|
+|1<br>.00 <br>|x .94176<br>1.09<br><br>|
+|2|—_<br>—|
+|3|—<br>_—|
+|4<br>13|x 94176<br>93|
+|6<br>33|x 94176<br>.76|
+|7<br>26|x 94176<br>.92|
+|8<br>00|x.94176<br>88|
+
+<!-- page: 8 -->
+
+The conditional expectation function at time 1 is estimated by again regressing Y on a constant, X and X2. The estimated conditional expectation function is E[ Y | X ] = 2.038 — 3.335X + 1.356X7. Substituting the values of X into this regression gives the estimated conditional expectation function. These estimated continuation values and immediate exercise values at time 1 are given in the first and second columns below. Comparing the two columns shows that exercise at time | is optimal for the fourth, sixth, seventh, and eighth paths. 
+
+|Opt<br>|imalearly<br>|exercisedecisionattime1<br><br>|4<br>|
+|---|---|---|---|
+|Path|<br>Exercis|<br><br>Continuation|i|
+|i|01|0139||
+|||2<br>—<br><br>||
+||AT<br>|4<br>1092<br>|i<br>|
+|6<br>|34<br>|2866<br>|4<br>|
+|7|18|ALIS|iF|
+|fied<br>|theexerci<br>|sestrategyattimes1,2,and3,thestopping<br>|is<br>|
+|<br>  repr<br>|<br>esented b<br>|<br>y thefollowing matrix, where the ones denote<br>|LZ<br>|
+|t whi|ch the op|ion is exercised.|j|
+|||Stopping rule<br><br><br>|:<br>|
+||Pah|t=1<br>¢f=2<br>t=3|a<br>|
+|||1<br>0<br>0<br><br><br><br>||
+|||2<br>0<br>0<br>0||<br>|
+|||3<br>0<br>0<br>||
+|||4<br>1<br>0<br>860<br><br><br>||
+||5|0<br>0<br>0|ij|
+|||6<br>1<br>0<br>0<br><br><br>||
+||8|7<br>1<br>0<br>0<br>1<br>0<br>0|||
+|ecifi<br>he ca<br>|cation of <br>sh flows <br>|the stopping rule, it is now straightforward<br> realized by following this stopping rule. This<br>||<br>A<br>|
+|ply|exercising|theoptionattheexercisedateswherethere|;|
+|<br>heab|ovematr|<br>ix.Thisleadstothefollowingoptioncash|i|
+
+
+_ Having identified the exercise strategy at times 1, 2, and 3, the stopping tule can now be represented by the following matrix, where the ones denote exercise dates at which the option is exercised. 
+
+With this specification of the stopping rule, it is now straightforward to determine the cash flows realized by following this stopping rule. This is done by simply exercising the option at the exercise dates where there is a one in the above matrix. This leads to the following option cash 
+
+
+![](assets/2001-longstaff-schwartz-american-options-lsm.pdf-0008-06.png)
+
+
+<!-- Start of picture text -->
+:<br><!-- End of picture text -->
+
+<!-- page: 9 -->
+
+###### flow matrix. 
+
+|Option cash|flow ma|trix|
+|---|---|---|
+|Pah<br>¢=1|t=2|t=3|
+|1<br>.00|00|.00|
+|2<br>00|00|.00|
+|3<br>.00|.00|.07|
+|4<br>17|.00|.00|
+|5<br>.00|.00|.00|
+|6<br>34|00|00|
+|7<br>18|00|:00|
+|8<br>22|00|00|
+
+
+Having identified the cash flows generated by the American put at each date along each path, the option can now be valued by discounting each cash _ flow in the option cash flow matrix back to time zero, and averaging over all paths. Applying this procedure results in a value of .1144 for the American put. This is roughly twice the value of .0564 for the European put obtained by discounting back the cash flows at time 3 from the first cash flow matrix. 
+
+Although very stylized, this example illustrates how least squares can use the cross-sectional information in the simulated paths to estimate the conditional expectation function. In turn, the conditional expectation function is used to identify the exercise decision that maximizes the value of the option at each date along each path. As shown by this example, the LSM approach is easily implemented since nothing more than simple regression is involved. 
+
+##### 2. The Valuation Algorithm 
+
+In this section we describe the general LSM algorithm. The valuation framework underlying the LSM algorithm is based on the general derivative pricing paradigm of Black and Scholes (1973), Merton (1973), Harrison and Kreps (1979), Harrison and Pliska (1981), Cox, Ingersoll, and Ross (1985), Heath, Jarrow, and Morton (1992), and others. We also present several convergence results for the algorithm. 
+
+###### 2.1 The valuation framework 
+
+We assume an underlying complete probability space (Q, F, P) and finite time horizon [0, 7], where the state space Q is the set of all possible realizations of the stochastic economy between time 0 and T and has typical element w representing a sample path, F is the sigma field of distinguishable events at time T, and P is a probability measure defined on the elements of F. We define F = {F,;t € [0, T]} to be the augmented filtration generated by the relevant price processes for the securities in the economy, and assume that F; = F. Consistent with the no-arbitrage paradigm, we assume the existence of an equivalent martingale measure Q for this economy. 
+
+We are interested in valuing American-style derivative securities with random cash flows which may occur during [0, T]. We restrict our attention to
+
+<!-- page: 10 -->
+
+derivatives with payoffs that are elements of the space of square-integrable or finite-variance functions L?(Q2,F,Q). Standard results such as Bensoussan (1984) and Karatzas (1988) imply that the value of an American option can be represented by the Snell envelope; the value of an American option equals the maximized value of the discounted cash flows from the option, where the maximum is taken over all stopping times with respect to the filtration F. We introduce the notation C(, s; t, T) to denote the path of cash flows generated by the option, conditional on the option not being exercised at or prior to time ¢ and on the optionholder following the optimal stopping strategy for all s,¢ <s < T. This function is analogous to the intermediate cash-flow matrices used in the previous section. The objective of the LSM algorithm is to provide a pathwise approximation to the optimal stopping rule that maximizes the value of the American option. To convey the intuition behind the LSM algorithm, we focus the discussion on the case where the American option can only be exercised at the K discrete titmesO <¢, <h <4 S:::' Sk = T, and consider the optimal stopping policy at each exercise date. In practice, of course, many American options are continuously exercisable; the LSM algorithm can be used to approximate the value of these options by taking K to be sufficiently large. At the final expiration date of the option, the investor exercises the option if it is in the money, or allows it to expire if it is out of the money. At exercise time f, prior to the final expiration date, however, the optionholder must choose whether to exercise immediately or to continue the life of the option and revisit the exercise decision at the next exercise time. The value of the option is maximized pathwise, and hence unconditionally, if the investor exercises as soon as the immediate exercise value is greater than or equal to the value of continuation. 
+
+At time t,, the cash flow from immediate exercise is known to the investor, and the value of immediate exercise simply equals this cash flow. The cash flows from continuation, of course, are not known at time t,. No-arbitrage valuation theory, however, implies that the value of continuation, or equivalently, the value of the option assuming that it cannot be exercised until after t,, is given by taking the expectation of the remaining discounted cash flows C(w, 8; t,, T) with respect to the risk-neutral pricing measure Q. Specifically, at time ¢,, the value of continuation F(w; t,) can be expressed as F(o: t,) = Eo| 3jok+lK exo(— [u t; r(w.s)ds )C. £3 th. T) | |, (1) 
+
+> 4 For a discussion of optimal exercise policies for American options, see Duffie (1996) or Lamberton and Lapeyre (1996). Bossaerts (1989) directly uses this maximization property in developing simulation estimates of American option prices by parameterizing the stopping rule and then solving for the parameters that maximize the value of the option.
+
+<!-- page: 11 -->
+
+where r(w, ft) is the (possibly stochastic) riskless discount rate, and the expectation is taken conditional on the information set F,, at time f,. With this representation, the problem of optimal exercise reduces to comparing the immediate exercise value with this conditional expectation, and then exercising as soon as the immediate exercise value is positive and greater than or equal to the conditional expectation. 
+
+#### 2.2 The LSM algorithm 
+
+The LSM approach uses least squares to approximate the conditional expectation function at fy_j, fy_o,--..,t;. We work backwards since the path of cash flows C(w,s;t, 7) generated by the option is defined recursively; C(@,s;t,, T) can differ from C(, s; t,,,, 7) since it may be optimal to stop at time ¢,,,, thereby changing all subsequent cash flows along a realized path w. Specifically, at time t,_,, we assume that the unknown functional form of F(w; tg_,) in Equation (1) can be represented as a linear combination of a countable set of F,,_-measurable basis functions. This assumption can be formally justified, for example, when the conditional expectation is an element of the L? space of square-integrable functions relative to some measure. Since L? is a Hilbert space, it has a countable orthonormal basis and the conditional expectation can be represented as a linear function of the elements of the basis.> As an example, assume that X is the value of the asset underlying the option and that X follows a Markov process.® One possible choice of basis functions is the set of (weighted) Laguerre polynomials: 
+
+
+![](assets/2001-longstaff-schwartz-american-options-lsm.pdf-0011-04.png)
+
+
+With this specification, F(@; t,_;) can be represented as 
+
+
+![](assets/2001-longstaff-schwartz-american-options-lsm.pdf-0011-06.png)
+
+
+where the a, coefficients are constants. Other types of basis functions include the Hermite, Legendre, Chebyshev, Gegenbauer, and Jacobi polynomials.’ 
+
+> 5 For a discussion of Hilbert space theory and Hilbert space representations of square-integrable functions, see Royden (1968). 
+
+> ® For Markovian problems, only current values of the state variables are necessary. For non-Markovian problems, both current and past realizations of the state variables can be included in the basis functions and the regressions. 
+
+> 7 These functions are described in Chapter 22 of Abramowitz and Stegun (1970).
+
+<!-- page: 12 -->
+
+Numerical tests indicate that Fourier or trigonometric series and even simple powers of the state variables also give accurate results. 
+
+To implement the LSM approach, we approximate F'(@;f,_,) using the first M < oo basis functions, and denote this approximation Fy,(@; tx_;). Once this subset of basis functions has been specified, Fyy(@; fy_,) 18 estimated by projecting or regressing the discounted values of C(w, Ss; fg_1,T) onto the basis functions for the paths where the option is in the money at time ty_,. We use only in-the-money paths in the estimation since the exercise decision is only relevant when the option is in the money. By focusing on the in-the-money paths, we limit the region over which the conditional expectation must be estimated, and far fewer basis functions are needed to obtain an accurate approximation to the conditional expectation function.* Since the values of the basis functions are independently and identically distributed across paths, weak assumptions about the existence of moments allow us to use Theorem 3.5 of White (1984) to show that the fitted value of this regression F,,(w; tg_,) converges in mean square and in probability to Fy,(@; ty_,) as the number N of (in-the-money) paths in the simulation goes to infinity. Furthermore, Theorem 1.2.1 of Amemiya (1985) implies that Fy (@; ty_,) is the best linear unbiased estimator of Fy (@; t,_,;) based on a mean-squared metric. , Once the conditional expectation function at time f,_, is estimated, we can determine whether early exercise at time t,_, is optimal for an in-the-money path w by comparing the immediate exercise value with Fy (o; ty_,), and repeating for each in-the-money path. Once the exercise decision is identified, the option cash flow paths C(w, 5; tg_,, T) can then be approximated. The recursion proceeds by rolling back to time t,_, and repeating the procedure until the exercise decisions at each exercise time along each path have been determined. The American option is then valued by starting at time zero, moving forward along each path until the first stopping time occurs, discounting the resulting cash flow from exercise back to time zero, and then taking the average over all paths w. 
+
+When there are two state variables X and Y, the set of basis functions should include terms in X and in Y, as well as cross-products of these terms. Similarly for higher-dimensional problems. Intuitively this seems to suggest that the number of basis functions needed grows exponentially with the dimensionality of the problem. In actuality, however, there may be reasons why the number of basis functions necessary to obtain a desired level of convergence might grow at a slower rate. As an example, Judd (1998) 
+
+> ® We conducted a variety of numerical experiments which indicated that if all paths are used, more than two or three times as many basis functions may be needed to obtain the same level of accuracy as obtained by the estimator based on in-the-money paths. Intuitively this makes sense since we are interested in estimating the expectation conditional on the current state and the event that the option is in the money. By using all paths, and hence, not conditioning on the event that the option is in the money, we obtain estimates of the conditional expectation function which have larger standard errors than those obtained by using all of the conditioning information. 
+
+
+![](assets/2001-longstaff-schwartz-american-options-lsm.pdf-0012-08.png)
+
+
+<!-- Start of picture text -->
+,<br><!-- End of picture text -->
+
+
+![](assets/2001-longstaff-schwartz-american-options-lsm.pdf-0012-09.png)
+
+
+<!-- Start of picture text -->
+.<br>oy<br>|<br><!-- End of picture text -->
+
+<!-- page: 13 -->
+
+shows that by using sets of complete polynomials, kth degree convergence is obtained asymptotically using a number of terms that grows only polynomially with the dimension of the problem. Similar results are also well known in the neural-network literature; as examples, see Barron (1993) and Refenes, Burgess, and Bentz (1997). In the numerical results given later in the article, we find that the number of basis functions needed to obtain convergence appears to grow much more slowly than exponentially. Our experience suggests that the number of basis functions necessary to approximate the conditional expectation function may be very manageable even for highdimensional problems. 
+
+##### 2.3 Convergence results 
+
+The LSM algorithm provides a simple and elegant way of approximating the optimal early exercise strategy for an American-style option. While the ultimate test of the algorithm is how well it performs using a realistic number of paths and basis functions, it is also useful to examine what can be said about the theoretical convergence of the algorithm to the true value V(X) of the American option. 
+
+. 
+
+The first convergence result addresses the bias of the LSM algorithm and is applicable even when the American option is continuously exercisable. 
+
+Proposition I. For any finite choice of M, K, and vector 6 € RMX(K-D pepresenting the coefficients for the M basis functions at each of the K —1 early exercise dates, let LSM(w; M, K) denote the discounted cash flow resulting from following the LSM rule of exercising when the immediate exercise value is positive and greater than or equal to F;<sup>‘u(@;;t,)asdefinedby0.Thenthe</sup> following inequality holds almost surely, V(X) iT N = jim 2 ESM (a M,K). 
+
+#### Proof. See the appendix. 
+
+## a 
+
+The intuition for this result is easily understood. The LSM algorithm results in a stopping rule for an American-style option. The value of an American-style option, however, is based on the stopping rule that maxi. mizes the value of the option; all other stopping rules, including the stopping rule implied by the LSM algorithm, result in values less than or equal to that implied by the optimal stopping rule. 
+
+This result is particularly useful since it provides an objective criterion for convergence. For example, this criterion provides guidance in determining the number of basis functions needed to obtain an accurate approximation, simply increase M until the value implied by the LSM algorithm no longer
+
+<!-- page: 14 -->
+
+increases. This useful and important property is not shared by algorithms that simply discount back functions based on the estimated continuation value.” By its nature, providing a general convergence result for the LSM algorithm is difficult since we need to consider limits as the number of discretization points K, the number of basis functions M, and the number of paths NV go to infinity. In addition, we need to consider the effects of propagating the estimating stopping rule backwards through time from ty_, to f,. In the case where the American option can only be exercised at K = 2 discrete points in time, however, convergence of the algorithm is more easily demonstrated. As an example, consider the following proposition. 
+
+
+![](assets/2001-longstaff-schwartz-american-options-lsm.pdf-0014-03.png)
+
+
+Intuitively this result means that by selecting M large enough and letting N — oo, the LSM algorithm results in a value for the American option within ¢ of the true value. Thus the LSM algorithm converges to any desired degree of accuracy since € is arbitrary. The key to this result is that the convergence of Fy(w;t,) to F(@; 1) 1s uniform on (0, 00) when the indicated integrability conditions are met. This bounds the maximum error in estimating the conditional expectation, which in turn, bounds the maximum pricing error. An important implication of this result is that the number of basis functions needed to obtain a desired level of accuracy need not go to infinity as N — oo. While this proposition is limited to one-dimensional settings, we conjecture that similar results can be obtained for higher-dimensional problems by finding conditions under which uniform convergence occurs. 
+
+> ° For example, if the American option were valued by taking the maximum of the immediate exercise value and the estimated continuation value, and discounting this value back, the resulting American option value could be severely upward biased. This bias arises since the maximum operator is convex; measurement error : into Peterthe estimatedBossaertscontinuationfor making valuethis point.results in the maximum operator being upward biased. We are indebted 24 
+
+Be
+
+<!-- page: 15 -->
+
+##### 3. Valuing American Put Options 
+
+Earlier we used a stylized example to illustrate how this approach could be applied to the valuation of American put options. In this section we present an in-depth example of the application of the LSM algorithm to American put options 
+
+Assume that we are interested in pricing an American-style put option on a share of stock, where the risk-neutral stock price process follows the stochastic differential equation dS =rSdt+osdZ, (7) 
+
+and where r and o are constants, Z is a standard Brownian motion, and the stock does not pay dividends. Furthermore, assume that the option is excercisable 50 times per year at a strike price of K up to and including the final expiration date 7 of the option. This type of discrete American-style exercise feature is also sometimes termed a Bermuda exercise feature. As the set of basis functions, we use a constant and the first three Laguerre polynomials as given in Equations (2)-(4). Thus we regress discounted realized cash flows on a constant and three nonlinear functions of the stock price. Since we use linear regression to estimate the conditional expectation function, it is straightforward to add additional basis functions as explanatory variables in the regression if needed. Using more than three basis functions, however, does not change the numerical results; three basis functions are sufficient to obtain effective convergence of the algorithm in this example. 
+
+To illustrate the results, Table 1 reports the values of the early exercise option implied by both the finite difference and LSM techniques. The value of the early exercise option is the difference between the American and European put values. The European put value is given by the Black-Scholes formula. In this article we focus primarily on the early exercise value since it is the most difficult component of an American options’s value to determine; the European component of an American option’s value is much easier to identify. 
+
+The finite difference results reported in Table 1 are obtained from an implicit finite difference scheme with 40,000 time steps per year and 1,000 steps for the stock price. The partial differential equation satisfied by the put price P(S, t) is 
+
+
+![](assets/2001-longstaff-schwartz-american-options-lsm.pdf-0015-09.png)
+
+
+; 
+
+subject to the expiration condition P(S, T) = max(0, K — S;). The implicit finite difference results were also compared with the results from an explicit finite difference algorithm; the two finite difference techniques resulted in values that were generally within one cent of each other. The LSM estimates
+
+<!-- page: 16 -->
+
+Table 1 
+
+|Ss|o|T|Finite<br>difference<br>American|Closed<br>form<br>European|Early<br>exercise<br>Value|Simulated<br>American|(s.e.)|Closed<br>form<br>European|Early<br>exercise<br>value|Difference in<br>early exercise<br>value|
+|---|---|---|---|---|---|---|---|---|---|---|
+|36|.20|«1|4.478|3.844|634|4.472|(.010)|3.844|628|.006|
+|36|.20|2|4.840|3.763|1.077|4.821|(.012)|3.763|1.058|019|
+|36<br>|40<br>|1<br>|7.101<br>|6.711<br>|390<br>|7.091<br>|(.020)<br>|6.711<br>|.380<br>|.010<br>|
+|36|40|2|8.508|7.700|808|8.488|(.024)|7.700|,788|.020|
+|38|20|1|3.250|2.852|398|3.244|(.009)|2.852|392|006|
+|38|4.20|2|3.745|2.991|754|3.735|(011)|2.991|744|010|
+|38|40|1|6.148|5.834|314|6.139|(.019)|5.834|305|009|
+|38|40|2|7.670|6.979|691|7.669|(.022)|6.979|690|.0OL|
+|40|20|1|2.314|2.066|248|2.313|(.009)|2.066|247|001|
+|40|20|2|2.885|2.356|529|2.879|(.010)|2.356|.523|006|
+|40|40|1|5.312|5.060|252|5.308|(.018)|5.060|.248|004|
+|40|40|2|6.920|6.326|594|6.921|(.022)|6.326|595|~.001|
+|42|20|1|1.617|1.465|152|1.617|(.007)|1.465|152|.000|
+|42|20|2|2.212|1.841|371|2.206|(.010)|1.841|365|.006|
+|42|40|1|4.582|4.379|-203|4.588|(.017)|4.379|.209|—.006|
+|42|40|2|6.248|5.736|512|6.243|(021)|5.736|507|00S|
+|44|20|1|1.110|1.017|093|1.118|(.007)|1.017|101|—.008|
+|44.|20|2|1.690|1.429|261|1.675|(009)|1,429|246|015|
+|44|40|1|3.948|3.783|165|3.957|(.017)|3.783|174|—.009|
+|44|40|2|5.647|5.202|445|5.622|(.021)|5.202|420|025|
+|Comp<br>a sha<br>Amer<br>the u<br>are a|ariso<br>re of <br>ican <br>nderly<br>s indic|n of <br> stoc<br>and E<br>ing <br>ated|the finite diff<br>k, where the o<br>uropean put va<br> stock price S, <br>. The European|erence and si<br>ption is exerc<br>lues. In this c<br> the volatility <br> option values|mulation valu<br>isable 50 ti<br>omparison, <br> of returns o<br> are based o|es for the ear<br>mes per year. <br>the strike pric<br>, and the num<br>n the closed-|ly, exercise <br> The early <br>e of the put <br>ber of yea<br>form Black-|option in an <br>exercise value <br> is 40, the sho<br>rs until the fi<br>Scholes formu|American-st<br> is the diff<br>rt-term inter<br>nal expiratio<br>la. The simu|yle put option on<br>erence between the<br>est rate is .06, and<br>n of the option T<br>lation is based on|
+|100,<br>areg|000 (5<br>iveni|0,00<br>npar|0 ptus 50,000 a<br>entheses.|ntithetic) path|s for the sto|ck-price proces|s. The sta|ndard errors of|the simulat|ion estimates (s.e.)|
+
+
+are based on 100,000 (50,000 plus 50,000 antithetic) paths using 50 exercise points per year. As shown, the differences between the finite difference and LSM algorithms are typically very small. Of the 20 differences shown in Table 1, 16 are less than or equal to one cent in absolute value. The standard errors for the simulated values range from 0.7 to 2.4 cents, which is well within the market bid-ask spread for these types of options.'° In addition, the differences are both positive and negative. These results suggest that the LSM algorithm is able to approximate closely the finite-difference values. 
+
+| 
+
+Broadie ad Glasserman (1997a,b), Raymar and Zwecher (1997), Garcia (1999), and others suggest an interesting diagnostic test for the convergence of a simulation algorithm. Essentially the stopping rule is estimated from one set of paths and then applied to another set of paths. In our context, this can be implemented by estimating the conditional expectation regressions 
+
+'0 Exchange traded stock option premiums are typically quoted in sixteenths or eighths of a dollar. The bid-ask spread for an at-the-money option would generally be some multiple of these fractions. 
+
+: | q] | |
+
+<!-- page: 17 -->
+
+from one set of paths and then applying the regression functions to an outof-sample set of paths. A successful algorithm should lead to out-of-sample values that closely approximate the in-sample values for the option." 
+
+The results from these diagnostic tests are shown in Table 2. For selected sets of parameters from Table 1, we estimate the regressions in sample, value the option. using the in-sample LSM procedure, and then value the option out of sample using the in-sample regression parameters but different paths. We repeat this process for five different initial seeds of the random number generator; the five rows for each example shown in Table 2 correspond to different initial seeds. As shown, the in-sample and out-of-sample values are virtually identical. The differences between the in-sample and out-ofsample values are virtually identical. The differences between the in-sample and out-of-sample values are both positive and negative and only 5% of the values are larger than two standard errors. This provides strong support for the accuracy of the algorithm. Given these results, we recommend using the LSM algorithm in sample in order to minimize computational time. 
+
+##### 4. Valuing an American—Bermuda—Asian Option 
+
+In this section we apply the LSM algorithm to a more exotic path-dependent option. In particular, we consider a call option on the average price of a stock over some horizon, where the call option can be exercised at any time after some initial lockout period. Thus this option is an Asian option since it is an option on an average, and has both a Bermuda and American exercise feature; an American—Bermuda—Asian option. 
+
+Define the current valuation date as time 0. We assume that the option has a final expiration date of T = 2, and that the option can be exercised at any time after t = .25 by payment of the strike price K. The underlying average A,, .25 < t < T, is the continuous arithmetic average of the underlying stock price during the period three months prior to the valuation date (a three-month lookback) to time ¢. Thus the cash flow from exercising the option at time ¢ is max(0, A, — K). The risk-neutral dynamics for the stock price are the same as in the previous section. 
+
+This option is particularly complex because it not only has an American exercise feature, but the cash flow from exercise is path dependent since A, depends on the path of the stock price over the averaging window. In general, these types of problems are very difficult to solve using finite difference techniques. In this case, we can value the option by finite difference techniques by transforming the problem from a path-dependent one to a Markovian problem. This is done by introducing the average to date as a second state variable 
+
+> '\ We are grateful to the referee for suggesting this diagnostic test and for providing some results about the performance of the LSM algorithm.
+
+<!-- page: 18 -->
+
+Table 2 
+
+||||LSM in|sample|LSM out|of sample||
+|---|---|---|---|---|---|---|---|
+|A)<br>|o<br>|T<br>|Value<br>|(s.**e**)<br>|Value|{s.e.)|Difference|
+|36|.20|1|4.472<br>|(.010)<br>|4.476<br>|(.010)<br>|—.004<br>|
+||||4.463<br>|(.010)<br>|4.474<br>|(010)<br>|—.011<br>|
+||||4.467<br>|(.010)<br>|4.480<br>|(.010)<br>|—.013<br>|
+||||4.480<br>|(.010)<br>|4.476<br>|(.010)<br>|004<br>|
+||||4.468|(.010)|4.469|(.010)|—.001|
+|36|40|1|7.091|(.020)|7.102|(.020)|—.011|
+||||7.095<br>|(.020)<br>|7.094<br>|(.020)<br>|001<br>|
+||||7.087|(.020)|7.087|(.020)|000|
+||||7.097<br>|(.020)<br>|7.095<br>|(.020)<br>|002<br>|
+||||7.097|(.020)|7101|(,020)|—.004|
+|36|.20|2|4.821<br>|(012)<br>|4.818<br>|(012)<br>|.003<br>|
+||||4.819|(012)|4,833|(.012)|—.014|
+||||4.820|(.012)|4.829<br>|(.012)<br>|.009<br>|
+||||4.827|(.012)|4.825|(012)|002|
+||||4.827|(.012)|.<br>4.829|(.012)|—.002|
+|36|40|2|8.488|(.024)|8.487|(.024)|001|
+||||8.485<br>|(024)<br>|8.478<br>|(.024)<br>|.007<br>|
+||||8.483<br>|(.024)<br>|8.483<br>|(.024)<br>|-000<br>|
+||||8.495|(.023)|8.498|(.024)|—.003|
+||||8.493|(.024)|8.491|(.024)|002|
+|Mean|||||||—.002|
+|44|.20|1|1.118<br>|(007)<br>|1.102<br>|(.007)<br>|.016<br>|
+||||1.108<br>|(.007)<br>|1.114<br>|(.007)<br>|—.006<br><br>|
+||||1.115<br>|(.007)<br>|1.099<br>|(.007)<br>|_<br>016<br>|
+||||1.108<br>|(.007)<br>|1.097<br>|(.007)<br>|LL<br>|
+||||1.114|(.007)|1.107|(.007)|007|
+|44|40|1|3.957|(.017)|3,927|(.017)|030|
+||||3.941|(017)|3.976|(017)|—.035|
+||||3.953|(.017)|3.924|(017)|029|
+||||3.939<br>|(.017)<br>|3.924<br>|(.017)<br>|01S<br>|
+||||3.953|(017)|3.945|(.017)|008|
+|44|.20|2|1.675<br>|(.009)<br>|1.691<br>|(.009)<br>|—.016<br>|
+||||1.673|(.009)|1.682|(.009)|—.009|
+||||1.687<br>|(.009)<br>|1.702<br>|(.009)<br>|—.015<br>|
+||||1.671<br>|(.009)<br>|1.674<br>|(.009)<br>|—.003<br>|
+||||1.696|(.009)|1.688|(.009)|008|
+|44|40|2|5.622|(.021)|5.644|(.021)|—.022|
+||||5.637<br>|(.021)<br>|5.637<br>|(.021)<br>|.000<br>|
+||||5.628|(.021)|5.652|(021)|—.024|
+||||5.615|(.021)|5.632|(.021)|—.017|
+||||5.649|(021)|5.628|(.021)|021|
+|Mean<br>|||||||001|
+|ee||||||||
+|Compariso<br>stock, wher<br>interest rat<br>dateofthe|n of the in-sa<br>e the option i<br>e is .06. The u<br>optionTarea|mple and o<br>s exercisabl<br>nderlying s<br>sindicated.|ut-of-sample LS<br>e 50 times per ye<br>tock price S, the <br>TheLSMvaluat|M estimates of th<br>ar. In this compari<br> volatility of retur<br>ionsforeachofth|e value of an Amer<br>son, the strike pri<br>ns o, and the num<br>eindicatedoptions|ican-style put op<br>ce of the put is 40,<br>ber of years until <br>arerepeatedfive|tion on a share of<br> and the short-term<br> the final expiration<br>timeswithdifferent|
+|<br>initial seed<br>in-sample|<br>s for the rand<br>andout-of-sa|<br>om number <br>plecompar|<br> generator; the fi<br>isonsareeachb|<br>ve rows for each <br>asedon100,000|<br> of the options are <br>(50,000plus50,0|<br> based on a differ<br>0antithetic)path|<br>ent seed value. The<br>ofthestock-price|
+|<br>process.Th|<br>estandarderr|<br>orsofthes|<br>imulationestimat|<br>es(s.e.)aregiven|<br>inparentheses.|||
+
+<!-- page: 19 -->
+
+Table 3 
+
+|||Fini|te differen|ce|||Simulation||:||
+|---|---|---|---|---|---|---|---|---|---|---|
+|||||Early<br>|||||Early<br>|Differencein<br>|
+|||||exercise|||||exercise|<br>early exercise|
+|A<br>F<br>|S<br><br>|American <br><br>e<br>|European<br>aepean<br>|value<br>ee<br>|American<br>Eee<br>|(s.e)<br>e<br>|European<br>eee<br>|(s.e)<br>e<br>|value<br>|value<br>|
+|90<br>|80<br>|949<br>|<br>.949<br>|<br>.000<br>|961<br>|(.016)<br>|951<br>|(016) <br>|— 010<br>|—.010<br>|
+|90<br>|90<br>|3.267<br>|3.230<br>|.037<br>|3.309<br>|(.030)<br>|3.233<br>|(030)<br>|=.076<br>|—.039<br>|
+|90<br>|100<br>|7.889<br>|7.569<br>|320<br>|7.886<br>|(046)<br>|7.573<br>|(046)<br>|<br>313<br>|.007<br>|
+|90<br>|110<br>|14,538<br>|13.775<br>|763<br>|14.518<br>|(059)<br>|13.783<br>|(061)<br>|—.735<br>|.028<br>|
+|90|120|22.423|21.196|=1.227|22.378|(.068)|21.201|(071)|<br>1.177|.050°|
+|100<br>|80<br>|1.108<br>|—1.082<br>|<br>.026<br>|1.101<br>|(017)<br>|1.085<br>|(017)<br>|016<br>|.010<br>|
+|100<br>|90<br>|3.710<br>|<br>3.567<br>|143<br>|3.700<br>|(032)<br>|3.570<br>|(032)<br>|—.130<br>|013<br>|
+|100<br>|100<br>|8.658<br>|=8.151<br>|507<br>|8.669<br>|(047)<br>|8.156<br>|(.047)<br>|513<br>|006<br>|
+|<br>100 <br>|<br> 110<br>|15.717<br>|<br>14.558<br>|1.159<br>|15.703<br>|(059)<br>|14.565<br>|(061)<br>|1.138<br>|021<br><br>|
+|100 <br>|120<br>|23.811<br>|22.097<br>|1.714<br>|23.775<br>|(066)<br>|22.101<br>|(072)<br>|1.674<br>|.<br>.040<br>|
+|110<br>|80<br>|=1.288<br>|~——-1.232<br>|.056<br>|1.265<br>|(018)<br>|1.235<br>|(018)<br>|—.030<br>|.026<br>|
+|10<br>|<br>90<br>|<br>4.136<br>|3.933<br>|203<br>|4.186<br>|(.033)<br>|3.936<br>|(033)<br>|<br>—.250<br>|—.047<br>|
+|110 <br>|100<br>|9.821<br>|8.764<br>|1.057<br>|9.830<br>|(.046)<br>|8.768<br>|(.049)<br>|<br>1.062<br>|—.005<br>|
+|110 <br>|110<br>|17.399<br>|15.361<br>|—-2.038<br>|17.362<br>|(.056)<br>|15.368<br>|(.062)<br>|1.994<br>|.044<br>|
+|110 <br>|120<br>|25.453<br>t|23.009<br>h|2.444<br>l|25.406<br>|(.064)|23.013.|(073)|2.393|051|
+|Comp<br>on a <br>Euro<br>the s<br>years<br>date. <br>25,0<br>esti|ariso<br> share <br>pean c<br>tock i<br>. The <br> The o<br>00 anti<br>mates(|<br>n of the finit<br> of stock. Th<br>ounterpart. I<br>s A, the unde<br> average stoc<br>ption is not <br>thetic) paths <br>s.e.)aregive|<br>e difference a<br>e early exer<br>n this exampl<br>rlying stock <br>k ptice is co<br> exercisable u<br> for the stock<br>ninparanthe|nd simulatio<br>cise value is <br>e, the strike<br> price is S, t<br>mputed over <br>ntil three mo<br>-price proces<br>ses.|n values for t<br> the difference<br> price is 100, <br>he volatility o<br> the period be<br>nths after the <br>s with 100 dis|he early e<br> in the <br> the shor<br>f returns <br>ginning <br> valuation<br>cretizatio|xercise opti<br>value of the <br>t-term intere<br> is .20, and t<br>three months<br> date. The s<br>n points per|on in an A<br> American<br>st rate is <br>he final e<br> before t<br>imulation <br> year. The|merican—Be<br>-Bermuda-A<br> .06, the init<br>xpiration of <br>he valuation <br> is based on <br> standard err|rmuda—Asian option<br>sian option and its<br>ial average value of<br> the option is in two<br> date to the exercise<br> 50,000 (25,000 plus<br>ors ofthe simulation|
+
+
+in the problem. Consequently the option price H (S, A,t) is the solution of the following two-dimensional partial differential equation (o 2 S?/2)Hys52 +rSHy + ——(S—i A)H, —rH +H, =0, (9) 254¢ subject to the expiration condition H(S, A, T) = max(0, A; — K). Note that the path dependence of the option payoff does not pose any difficulties to the simulation-based LSM algorithm. Table 3 compares the numerical results from valuing this option by finite difference techniques with those obtained by the LSM approach. In this example, we compute both the value of the American—Bermuda—Asian option and its European counterpart, and focus primarily on the difference which represents the value of the early exercise option. The European counterpart of the American-Bermuda—Asian option is an option on the average stock ptice which can only be exercised at the final option maturity date T = 2. In this example, as well as in later examples in the article, we use the same paths to price the European option that is used to value the American option. The finite difference results are obtained using an alternating directions implicit (ADI) algorithm with 10,000 time steps per year and 200 steps in both the stock price and the average stock price. The results were checked against a standard explicit finite difference scheme with a similar number of
+
+<!-- page: 20 -->
+
+steps for the stock price and the average stock price. The finite difference algorithms result in values that are typically within three cents per $100 notional. The LSM results are based on 50,000 (25,000 plus 25,000 antithetic) paths and use 100 discretization points per year to approximate the continuous exercise feature of the option. As basis functions in the regressions, we use a constant, the first two Laguerre polynomials evaluated at the stock price, the first two Laguerre polynomials evaluated at the average stock price, and the cross products of these Laguerre polynomials up to third-order terms. Thus we use a total of eight basis functions in the regressions.”* As shown in Table 3, the finite difference and LSM results are very similar. The differences in the early exercise values are typically less than two or three cents per $100 notional value. The differences are again both positive and negative; there is no evidence that the LSM algorithm systematically undervalues the early exercise option. The differences in the early exercise values are also small relative to the level of the early exercise value, and very small relative to the level of the American and European option values. These differences would likely be well within the bid-ask spread or other transaction cost bounds. 
+
+#### 5. Valuing Cancelable Index Amortizing Swaps 
+
+This section uses the LSM approach to value a cancelable index amortizing swap in a multifactor term structure model. Index amortizing swaps have been widely used on Wall Street in recent years and are among the most difficult types of structured interest-rate derivative products to value and risk manage. The reason for this is that the notional amount of these swaps declines over time in a complex way. For example, index amortizing swaps often have notional amounts that amortize on the basis of a nonlinear function of a constant maturity Treasury (CMT) or constant maturity swap (CMS) rate. This stochastic amortization property makes these derivatives highly path dependent. These swaps become even more complex when one of the counterparties has the right to cancel the swap at any time; a cancelable index amortizing swap consists of both an index amortizing swap and an American-style cancellation option. Index amortizing swaps are widely used to hedge or mimic the cash flows from mortgages; the amortization feature of an index amortizing swap is typically patterned after a mortgage prepayment model. 
+
+To simplify the example, we focus on a specific cancelable index amortizing swap with a five-year final maturity. We assume that the counterparty with the right to cancel receives a fixed coupon c and pays the floating Libor rate in the swap. We assume that the fixed coupon is received continuously and the floating rate is paid continuously on an actual/actual basis.
+
+<!-- page: 21 -->
+
+; The notional balance on which the fixed and floating cash. flows are based is initially $100, but amortizes continuously on the basis of the 10-year par swap rate, CMS 10. Let /, denote the notional balance of the swap at time f. The dynamics of J, are given by 
+
+> '3 In In practice, index amortizing swaps typically follow the swap swap market convention convention of exchanging exchanging payments on a quarterly or semiannual cycle, where the floating payment is determined at the beginning of the the cycle and paid at the end end of the the cycle. Cancelable index amortizing swaps typically can only be canceled on a coupon coupon payment date, date, and only after exchanging exchanging any accrued fixed or floating payments. ‘4 In In this example, and in the swaption example in Section example in Section in Section Section 8, we make we make make the standard standard simplifying assumption that the swap curve can be modeled swap curve can be modeled curve can be modeled can be modeled modeled as if it were were a risk-free term risk-free term term structure. In reality, Libor rates incorporate some some small default-risk component. default-risk component. component. Since both legs of the swap are discounted using the swap are discounted using swap are discounted using are discounted using discounted using using the same curve, same curve, curve, however, the net effect effect on the value of the swap the swap swap is typically very small.
+
+<!-- page: 22 -->
+
+## where 
+
+
+![](assets/2001-longstaff-schwartz-american-options-lsm.pdf-0022-03.png)
+
+
+![](assets/2001-longstaff-schwartz-american-options-lsm.pdf-0022-04.png)
+
+
+In this model, the value of the cancelable index amortizing swap depends on three state variables; the two factors X and Y as well as the current notional amount J. The swap S(X, Y, 1,1) can be valued by finite difference techniques by solving the following three-dimensional partial differential equation implied by the dynamics for X, Y, and /. 
+
+
+![](assets/2001-longstaff-schwartz-american-options-lsm.pdf-0022-06.png)
+
+
+subject to the conditions S(X, Y, /, 7) = 0 and S(X, Y, 0, t) = 0. Similarly, the swap can also be valued by the LSM algorithm by simulating paths of X and Y and keeping track of the notional balance along each path. The parameter values used in this example are chosen to approximate a current term structure and cap volatility curve." 
+
+Table 4 presents the numerical results from the finite difference and LSM valuation of the cancellation option on the underlying index amortizing swap. The value of the cancellation option is the difference between the value of the cancelable index amortizing swap and the underlying noncancelable index amortizing swap. The table reports the results for a range of different values of the fixed’ coupon paid on the swap. The finite difference methodology is an implementation of a successive overrelaxation technique similar to that described in Press et al. (1992). The finite difference algorithm uses 50 steps for X, 40 steps for Y, and 15 steps for 7. The LSM algorithm is based on 
+
+> 'S The parameter values used in the example are a = .001, B = 1, y = 0525, 7 = 1.00, o = .006951, s = .00867. The initial values of X and Y are .002 and .050. : 199 
+
+. . ; : : |
+
+<!-- page: 23 -->
+
+|i<br>The Review ofFinancial Studies / v 14 n 1 2001<br>:<br>ue<br>gs<br>i<br>Sg<br>|<br>:<br>= E<br>ao &<br>Q-oe<br>ANT AMMM TATA<br>BS<br>esesloseooeseerstas|<br>se<br>eSeo ;SSSESSESESNO**O**<br>O ] BS<br>SeReLSL<br>ERESAaeaes |) BB<br>&<br>o.<br>|<br>Bee<br>a5<br>a8<br>2 a<br>Be<br>es<br>OW<br>63<br>3%<br>g<br>S.2<br>fe}<br>3<br>}<br>SElONDOBMANANNHONOLY|<br>SQ<br>:<br>Seyronryermaonne<br>saa<br>:<br>BHIHAROANTAALCMLN!<br>Fo<br>:<br>o & ee<br>ood<br>.<br>y<br>Oo<br>Be<br>:<br>8s<br>co<br>:<br>i @<br>or)<br>_lannanancenn| 52<br>S|<br>NN ODnaronstna<br>ce<br>GlawmnGmangaraagaggai<br>es<br>spoooosgooococes|<br>ss<br>7 URNO<br>43<br>.<br>s<br>&<br>go<br>|
+|---|
+|Be<br>,<br>=I<br>:<br>a<br>a<br>Ss<br>:<br>i)<br>g<br>38<br>><br>ea<br>Slunmnnnwnnnnnno!]<br>ae<br>:<br>as]<br>8 Me en naMwaAh eo y<br>@&<br>:<br>a<br>| AMAIAMANAAT)<br>ge<br>:<br>&<br>5 renee<br>53<br>a<br>ey;<br>itt<br>o 5<br>is)<br>ss<br>z<br>me<br>3<br>28<br>3 4<br>a<br>Pm oe3<br>ew<br>A<br>ee<br>ee I<br>wTloetnonorweananorlbh<br>gs<br>S1SSseeeeeeusn<br>g<br>A/2GSSSSESESESSEOO]<br>ARG<br><2Lr<br>go 8<br>2¢s<br>Raa<br>$28<br>o<br>678<br>ea)<br>Boa<br>2laomretrr ener)<br>*85<br>SlLBBTSVSE BAAS<br>w Be<br>BISDSAANNTAMeoe!<br>Bo<br>em»<br>a<br>“|<br>888<br>.<br>835<br>gS<br>a<br>gags<br>gs<br>=}<br>ae<br>E<br>§<br>e233<br>:<br>geleenesesense<br>gue<br>SE|SSsyzyenseesn|]<br>sss<br>.<br>BEl|SeSOHENASHMON|<br>SER<br>2 & Aoatdtet ee<br>Aes<br>Q2aa<br>a<br>2<br>.<br>5<br>aad<br>9 64a<br>ao<br>~ 28<br>S<br>me Ou<br>cy<br>eee<br>I<br>2<br>a,8<br>2<br>a}<br>@8&<br>3<br>BSlonnanwantes|<br>232<br>at<br>g RASSSLESSISES<br>séy<br>Es)<br>QlAGSTAACTASCN!<br>S58<br>**e**<br>eee<br>ee<br>|<br>Bey<br>2<br>2) 771<br>288<br>&<br>3<br>BBoo<br>oe)<br>s<br>a<br>20a<br>8 ay<br>o|
+|x<br>ges<br>Blawantansrornn|<br>she<br>Sleaewenttneowee<br>Ee<br>PL<br>OH aANNA**T**MHOWAT<br>2ae<br>DAI<br>OCA<br>TT.<br>Q<br>g<br>“|<br>2§<br>a<br>a<br>5<br>1S)<br>ob<sup>3</sup><br>gus<br>son<br>a FG<br>S2k<br>gE2<br>:<br>’<br>+<br>5<br>B86<br>2<br>Slecoeocoeeooes|<br>487<br>2<br>SI(SAANAMATPHOM<br>OAS<br>EYs<br>|<br>SiAwmwnwnnnwnnounos<br>ons<br>&<br>Bjsesseoooececs<br>023|
+
+<!-- page: 24 -->
+
+Merton (1976) provides a closed-form solution for the value of a European option on the stock when its price follows the jump-to-ruin process in Equation (16). He also shows, however, that the price of an American option is given by a complex mixed differential-difference equation which is difficult to solve.'” To put the results into perspective, we compare the price and early exercise boundary for the American put option for the cases where there is no possibility of a jump A = 00 and when a jump can occur with intensity 1 = .05. Note that when A > 0, the stock price process has a mass point at zero, and the distribution of the stock price is no longer conditionally lognormal. Furthermore, as A increases, the conditional variance of the future stock price increases. Specifically, the variance of the stock price is 
+
+### S*(0) exp(2r)(exp((A +o°)T) —1). (17) 
+
+To make the comparison more meaningful, we adjust the parameters in the two cases so that the means and variances are equal; the two cases differ in the shape of their conditional distributions but not in terms of their first two moments. From Equation (16), the mean of the risk-neutral distribution for the stock price is S(O) exp(’T) and is the same across cases because of the martingale restriction implied by the risk-neutral framework. To equalize variances, we assume that when A = 0, o? = .09. Similarly, when A = .05, o2 = .04. With these parameter values, the two distributions for the stock : price have the same means and variances. We use 26 exercise points per year in the LSM algorithm and use the same basis functions in these examples as in Section 3. We focus on the case T = I. Applying the LSM algorithm, the American put values are 3.80 for the x = .00 case and 3.40 for the 2 = .05 case. The European put values are 3.58 for the 2 = .00 case and 3.23 for the A = .05 case. The early exercise values are .22 and .17, respectively. Thus the values of the options are lower when there is a possibility of a jump, holding fixed the variance across the 2G examples. This is intuitive since the diffusion coefficient in the 7 = 05 : case is only .20, while the diffusion coefficient in the 4 = .00 case is .30. i This means that in the absence of a jump, the option is less likely to be 2 deep in the money in the A = 05 case. If a jump occurs, of course, then the option is much more valuable than it would be otherwise. The results ae indicate, however, that the windfall gain to the optionholder from a jump : does not offset the effects of the lower diffusion coefficient. a Since the value of the early exercise premium is less in the case where . 2. = .05, there is less incentive to keep the option alive. Consequently, it L is not surprising that the optimal early exercise strategy is more aggressive
+
+<!-- page: 25 -->
+
+5,000 (2,500 plus 2,500 antithetic in both X and Y) paths. As basis functions, we use a constant, the first three powers of the value of the underlying noncancelable swap, X, X?, Y, Y’, and XY. This results in a total of nine basis functions.'® As shown in Table 4, the two valuation approaches produce very similar numerical results for the value of the cancellation option; the differences in the value of the cancellation option are uniformly small. In fact, most of the differences are less than one cent per $100 notional amount. The bid-ask spread on these complex derivatives is likely at least an order of magnitude greater than the size of these differences. As before, the differences are both positive and negative in sign. The numerical values of the cancelable and noncancelable swaps do differ slightly between the finite difference and LSM techniques. In general, the values implied by the finite difference algorithm for the cancelable and noncancelable swaps are about four to seven cents higher than the corresponding values implied by the LSM approach. This systematic pattern is due to slight differences in the way that the two techniques discretize the continuous coupon payments and the continuous amortization feature. These differences produce minor differences in the levels of the swap values, but have almost no effect on the value of the cancellation option. 
+
+### 6. Jump-Diffusions and American Option Valuation 
+
+In this section, we illustrate how the LSM approach can be applied to value American options when the underlying asset follows a jump-diffusion process. In particular, we revisit the American put option considered in Section 3. To simplify the illustration, we focus on the basic jump-to-ruin model presented in Merton (1976). In this model, the stock price follows a geometric Brownian motion as in Equation (7) until a Poisson event occurs, at which point the stock price becomes zero. The dynamics for this jump-diffusion process are given by 
+
+## dS =(r +A)Sdt + oSdZ — Sdq, (16) 
+
+where q is an independent Poisson process with intensity 4. When a Poisson event occurs, the value of g jumps from zero to one, implying dq = |, and the stock price jumps downward from S to zero. As in Merton, we assume that jump risk is nonsystematic and unpriced by the market. This assumption could easily be relaxed. Similarly, the LSM approach can be readily applied using much more complex jump-diffusion processes than in this example or the other examples given in Merton. ! 16 Again, adding more basis functions has little effect on the value of the option. This provides numerical : evidence that the number of basis functions needed to obtain effective convergence grows at a much slower rate than exponential as the dimensionality of the problem increases, consistent with Judd (1998).
+
+<!-- page: 26 -->
+
+![](assets/2001-longstaff-schwartz-american-options-lsm.pdf-0026-02.png)
+
+
+<!-- Start of picture text -->
+1.05<br>0.95 |<br>0.9 -<br>0.85 -<br>0.8 -<br>0.75 -<br>0.7 my t T { fi T p + . T T i v . fi T T t v ‘ v t T . 7 i<br>0 10 20 30 40 50<br>WEEKS TO EXPIRATION<br>-— JUMPS -* NO JUMPS<br><!-- End of picture text -->
+
+FigureGraph 1of the early exercise boundary for an American put option The early exercise boundary is shown as a proportion of the exercise price of the option. The jump graph shows the early exercise boundary when the underlying stock price follows a jump diffusion. The no-jump graph shows the early exercise boundary when the underlying stock price follows a pure diffusion process. 
+
+in the case where A == .05 than in the case where 2 = .00. To see this, Figure 1 plots the early exercise boundaries for the two cases. The early exercise boundaries are obtained by solving for the critical stock price at each exercise point at which the estimated conditional expectation function equals the immediate exercise value of the option. As shown, the early exercise boundary for the case where the stock price can jump is significantly higher than for the continuous case. 
+
+#### 7, Valuing Swaptions in a String Model 
+
+To illustrate its generality, we apply the LSM approach to a deferred American swaption in a 20-factor string model. Swaptions are one of the most important and widely used derivatives in fixed-income markets. We focus on a basic swaption where the optionholder has the right to enter into a swap in which the optionholder receives fixed coupons and pays floating coupons on a semiannual cycle. The floating coupon paid at the end of the semiannual cycle is tied to the six-month rate determined at the beginning of the semiannual cycle; the floating leg sets in advance and pays in arrears. Both legs of the swap are paid on an actual/actual basis. The swaption can only be
+
+<!-- page: 27 -->
+
+exercised on semiannual coupon payment dates and only after exchanging the coupons due on the payment date. As is typical, the swaption cannot be exercised until after a specific lockout period. To provide a specific example, we focus on a 10 NC 1 swaption. This notation indicates the underlying swap has a final maturity of 10 years. The NC 1 (noncall 1) feature indicates that the swaption cannot be exercised until one year has elapsed; the swaption cannot be exercised until the second semiannual coupon payment date. Since there are 20 semiannual coupon payment dates during the life of the underlying 10-year swap, there are 18 possible exercise dates for the swaption; the swaption cannot be exercised at the first coupon payment date, and the swaption has no value at the final coupon payment date. String models of the term structure have recently received a significant amount of attention in fixed-income markets. In these models, each point along the term structure is a separate random variable, where the term structure is defined either as a discount function or spot curve as in Ho and Lee (1986), a forward curve as in Heath, Jarrow, and Morton (1992), or as a par curve as in Longstaff, Santa-Clara, and Schwartz (1999). Important examples of string models include the recent articles by Goldstein (1997), Santa-Clara and Sornette (2001), Longstaff, Santa-~Clara, and Schwartz (1999, 2000). 
+
+Since the underlying swap makes coupon payments at 20 different points in time, its value is sensitive to 20 different points along the curve. We implement a simple string model by assuming that each of these 20 points represents a separate but correlated factor, and model the joint dynamics of these 20 factors. Specifically,letD(t, T) denote the value at time ¢ of a zerocoupon bond with final maturity date T, where t < T. Since the expected rate of return on all securities must equal the riskless rate in the no-arbitrage equivalent martingale-measure framework, we can represent the no-arbitrage dynamics of the zero-coupon bond price by the following. dD(t,T) =r(t)DG, T)dt +o(T —1) DE, T)dZr, (18) 
+
+where r(t) is the riskless rate, o(T — t) is a time-homogeneous volatility function, and Z, is a standard Brownian motion specific to the zero-coupon bond with final maturity date T. To operationalize this string model, we assume that the 20 factors are the 20 zero-coupon bond prices with maturities corresponding to the 20 coupon payment dates; specifically, D(¢, .5), D(t, 1.0), D(t, 1.5),.--, D¢t, 10.0). We assume that the volatility function o(T —f) is piecewise constant; o (T —f) is constant over .5(N —1) < T-t < SN, N = 1,2,...,20. For simplicity, we set o(T — ft) = O for values of T —t < .5. The remaining 19 values of o(T — ft) are selected to approximate a cap volatility curve. Similarly, we assume that r(¢) is piecewise constant over six-month intervals;
+
+<!-- page: 28 -->
+
+we set r(f) equal to the six-month rate defined by —2 In(D(t, t+ 1/2)). This discretization results in little loss of accuracy and guarantees that the price of a zero-coupon bond converges to one at its maturity date."® The dynamics of the term ‘structure are simulated by first solving the stochastic differential equation in Equation (18), D(t + 1/2,T) = D(t, T) exp(r(t)/2 — 07 (T — t)/4 +o0(T —1)(Zp(t + 1/2) — Z;W)). (19) 
+
+With this closed-form expression, the evolution of the term structure can be simulated over six-month periods. The only remaining issue is the correlation structure of the fundamental Brownian motions Z;. To model the correlation matrix in a parsimonious way, we assume that the correlation between Z; and Z;,i,j <T 1s given by the function p,; = exp(—« |1—j |), where « = .02. This results in correlations among spot rates similar to those observed empirically. Alternatively, spot-rate correlations could be estimated using historical data and then directly incorporated into the simulation. The simulation consists of paths where at each coupon date, the entire vector of zero-coupon bond prices is specified. From these zero-coupon bonds, the value of the underlying swap at that coupon date is easily computed by discounting the remaining fixed coupon payments; recall that the floating leg of the swap can be assumed to be worth par on coupon payment dates. Given the value of the swap, the basis functions are chosen to be a constant, the first three powers of the value of the underlying swap, and all unmatured discount bond prices with final maturity dates up to and including the final maturity date of the swap. Thus there are up to 22 basis functions in the regression. This specification results in values very similar to those obtained by using additional basis functions. Table 5 reports the estimated values of the deferred American swaption, the corresponding European swaption, and the probabilities of early exercise at each coupon payment date for a variety of fixed coupon rates. AS shown, the deferred American exercise feature has significant value; when the coupon rate is .0575, the deferred American swaption is more than three times as valuable as its European counterpart. This underscores the fact that the deferred American and European swaptions are fundamentally different derivatives despite their superficial similarities. The coupon rate on the fixed leg of the swap also has a major effect on the properties of the swaptions. Clearly, the higher the coupon, the more valuable it is to enter the swap and receive the fixed coupons. For the European swaption, this translates into a higher probability of exercise at the exercise date. 
+
+> 18 The minor discretization error induced by using the six-month rate as a proxy for r(¢) can easily be avoided by using more points along the term structure. For example, we could use daily, monthly, or even quarterly rates. Alternatively, we could simply develop the model in a discrete rather than continuous framework as is commonly done in practice.
+
+<!-- page: 29 -->
+
+. 
+
+|Table 5<br>Exercise type<br>Coupon<br>|European<br>0575<br>|American<br>0575<br>|European<br>0605<br>|American<br>0605<br>|European<br>0635<br>|American<br>0635<br>|
+|---|---|---|---|---|---|---|
+|Value<br>|739<br>|2.577<br>|1.529<br>|3.278<br>|2.711<br>|4.204<br>|
+|Standard error<br>Standarderror|O11<br>M|018<br>E|016|.020|021|022|
+|<br>Ex.prob.1<br>|<br>0.00<br>|0.00<br>|0.00<br>|0.00<br>|0.00<br>|0.00<br><br>|
+|<br>Ex.prob.2<br>|29.77<br>|2.72<br>|49.17<br>|TAT<br>|68.63<br>|17.30<br>|
+|<br>Ex.prob.3<br>|0.00<br>|5.14<br>|0.00<br>|8.10<br>|0.00<br>|9.19<br>|
+|<br>Ex.prob.4<br>|0.00<br>|4.13<br>|0.00<br>|5.94<br>|0.00<br>|6.29<br>|
+|<br>Ex.prob,5<br>|0.00<br>|3.83<br>|0.00<br>|4.85<br>|0.00<br>|551<br>|
+|<br>Ex.prob.6<br>|0.00<br>|2.77<br>|0.00<br>|3.44<br>|0.00<br>|4.17<br>|
+|<br>Ex.prob.7|0.00|3.46|0.00|4.25|0.00|3.49|
+|<br>Ex.prob.8<br>|0.00<br>|2.90<br>|0.00<br>|3.21<br>|0.00<br>|3.34<br>|
+|<br>Ex.prob.9<br>|0.00<br>|3.43<br>|0.00<br>|3.40<br>|0.00<br>|3.45<br>|
+|<br>Ex.prob.10<br>|0.00<br>|3.13<br>|0.00<br>|3.21<br>|0.00<br>|2.86<br>|
+|<br>Ex.prob.11|0.00|3.35|0.00|3.02|0.00|2.66|
+|<br>Ex.prob.12<br>|0.00<br>|3.41<br>|0.00<br>|2.63<br>|0.00<br>|2.26<br>|
+|<br>Ex.prob.13<br>|0.00<br>|3.19<br>|0.00<br>|2.91<br>|0.00<br>|2.61<br>|
+|<br>Ex.prob.14<br>|0.00<br>|3.20<br>|0.00<br>|2.63<br>|0.00<br>|2.00<br>|
+|<br>Ex.prob.15<br>|0.00<br>|3.80<br>|0.00<br>|3.22<br>|0.00<br>|2.92<br>|
+|<br>Ex.prob.16|0.00|3.36|0.00|3.24|0.00|2.58|
+|<br>Ex.prob.17<br>|0.00<br>|4.39<br>|0.00<br>|4.22<br>|0.00<br>|2.79<br>|
+|<br>Ex.prob.18|0.00|5.69|0.00|4.65|0.00|3.75|
+|<br>Ex.prob,19|0.00|8.33|0,00|7.13|0.00|5.45|
+|<br>Ex.prob.20|0.00|0.00|0.00|0.00|0.00|0.00|
+|<br>Total prob.<br>Totalpro<br>|29.77<br>b<br>|69.93<br>|49.17<br>|77.22<br>|68.63<br>|82.62<br>|
+
+
+Estimated values and exercise probabilities for a deferred American swaption implied by the 20-factor string model. This swaption gives the optionholder the right to enter into a swap with a final maturity of 10 years and receive a fixed coupon and pay the six-month rate semiannually. The swaption is not exercisable until one year from the valuation date. The exercise probabilities are shown for each of the 20 semiannual coupon payment dates and represent the percentage of paths for which exercise occurred on that coupon payment date. Values are given per $100 notional amount. The simulation results are based on 20,000 paths. 
+
+In contrast, a higher fixed coupon does not necessarily imply a higher probability of exercise at a specific coupon date for the deferred American swaption. To see this, note that the probability of exercise at the 19th coupon date is 8.33% when the coupon is .0575, but is only 5.45% when the coupon is .0635. The total probability of exercise, however, is monotonic in the coupon rate. These results illustrate that the term structure of exercise probabilities for American options can display very complex patterns in a multifactor framework. 
+
+Since each point on the term structure affects the values of the deferred American and European swaptions, it is also interesting to compare the sensitivities of each swaption to each point on the curve. This is done by varying each of the six-month forward rates implied by the initial zero-coupon curve to express the risk exposures in a forward-space metric. As shown in Table 6, deferred American and European swaptions have major differences in their sensitivities to movements in the term structure. For example, the European swaption has the greatest sensitivity to the third forward. In contrast, the deferred American swaption has its greatest sensitivity to the 20th forward. These results illustrate the importance of incorporating the multifactor nature of the term structure in fixed-income derivative risk management.
+
+<!-- page: 30 -->
+
+Table 6 
+
+|Forward<br>rate|European|American|
+|---|---|---|
+|0-5<br>5-1.0<br>|—.00008<br>—.00008<br>|—.00016<br>—.00016<br>|
+|1.0-1.5<br>1.5-2.0<br>|—.00236<br>—.00230<br>|—,00048<br>—.00077<br>|
+|2.0-2.5<br>|—.00223<br>|00089<br>|
+|2.5-3.0<br>|—.00217<br>|—.00117<br>|
+|3.0-3.5<br>|—.00211<br>|—.00134<br>|
+||||
+|4.0-4.5<br>|—,00199<br>|—.00151<br>|
+|4.5-5.0<br>|—.00193<br>|—.00156<br>|
+|5.0-5.5<br>|—,00188<br>|—.00148<br>|
+||||
+|6.0-6.5<br>|~.00177<br>|—.00176<br>|
+||||
+|7.0-1.5<br>|—.00167<br>|—.00187<br>|
+|7.5-8.0<br>|—.00162<br>|—.00180<br>|
+|8.0-8.5<br>|—.00157<br>|—.00195<br>|
+||||
+|9.0-9.5|—.00148|—.00199|
+|9.5-10.0|~.00144|—.00218|
+|Parallelshift|—.03380|—.02759|
+
+
+Sensitivity of swaption values to individual forward rates in the 20-factor string mode]. These sensitivities are computed by varying the indicated six-month forward rate while holding the others fixed. The American swaption gives the optionholder the right to enter into a swap with a final maturity of 10 years and receive a fixed coupon of .0605 and pay the six-month rate semiannually. The swaption is not exercisable until one year from the valuation date. The European swaption is the counterpart of the American swaption with the restriction that the option can only be exercised one year from the valuation date. The sensitivities shown are with respect to a one-basis point move in the forward per $100 notional amount. The simulation results are based on 20,000 paths. 
+
+##### 8. Numerical and Implementation Issues 
+
+In this section, we discuss a number of numerical and implementation issues associated with the LSM algorithm. These are discussed individually below. 
+
+##### 8.1 Higher-dimensional problems 
+
+The numerical examples in Sections 3-5 benchmark the performance of the LSM algorithm for several low-dimensional problems which can be solved by standard finite difference techniques. As an additional benchmark, we also investigate the performance of the algorithm for a higher dimensional problem studied by Broadie and Glasserman (1997c), the valuation of an American options on the maximum of five risky assets. In their article, Broadie and Glasserman (1997) apply a stochastic mesh approach to place bounds on the value an American call option on the maximum of five assets, where each asset has a return volatility of 20% and each return is independent of the others. The option has a three-year life and is exercisable three times per year. The assets each pay a 10% proportional dividend and the riskless rate is assumed to be 5%. The strike price of the option is 100, and the initial values of all assets are assumed to be the same and equal to either 90, 100, or 110. Using their algorithm, they are able to estimate a 90% confidence band for the value of the option. From Table 6 of
+
+<!-- page: 31 -->
+
+their article, the tightest 90% confidence bands reported are [16.602, 16.710], [26.101, 26.211], and [36.719, 36.842] for the cases where the initial asset values are 90, 100, and 110, respectively. Broadie and Glasserman report that computing these bounds requires slightly more than 20 hours apiece using a 266 MHz Pentium II processor. 
+
+We value this American call option using essentially the same simulation procedure used in Section 3. Specifically, we use 50,000 paths and choose 19 basis functions consisting of a constant, the first five Hermite polynomials in the maximum of the values of the five assets, the four values and squares of the values of the second through fifth highest asset prices, the product of the highest and second highest, second highest and third highest, etc., and finally, the product of all five asset values. The values of the American call option given by the LSM algorithm are 16.657, 26.182, and 36.812 for the cases where the initial asset values are 90, 100, and 110, respectively. In each of these cases, the LSM value is within the tightest bounds given by the Broadie and Glasserman algorithm. We note that computing these values by LSM requires only one to two minutes apiece using a 300 MHz Pentium II processor. 
+
+###### 8.2 Least squares 
+
+In this article, we use ordinary least squares to estimate the conditional expectation function. In some cases, however, it may be more efficient to use other techniques such as weighted least squares, generalized least squares, or even GMM in estimating the conditional expectation function. For example, if the process for the state variables has state dependent volatility, the residuals from the regression may be heteroskedastic and these alternative least squares techniques may have advantages. 
+
+In estimating the least squares regressions, it may be noted that the R’s from the regressions are often somewhat low. The reason for this is simply the volatility of realized cash flows around their conditional expected values. The R? from the regression measures the percentage of the total variation in the ex post cash flows explained by the variation in the conditional expectation function; a low R? simply means that the volatility of unexpected cash flows is large relative to the volatility of expected cash flows. Thus low R? are to be expected when unexpected cash flows are highly volatile. In general, since the LSM algorithm is based on conditional first moments rather than second moments, the R?s from the regression should have little impact on the quality of the LSM approximation to the American option value. 
+
+###### 8.3 Choice of basis functions 
+
+Extensive numerical tests indicate that the results from the LSM algorithm are remarkably robust to the choice of basis functions. For example, we use the first three Laguerre polynomials as basis functions in the American put illustration in Section 3. We obtain results that are virtually identical to those
+
+<!-- page: 32 -->
+
+reported in Table 1 when we use S, S?, and S? as basis functions, when we use the first three Hermite polynomials as basis functions, or when we use three trigonometric functions as basis functions. Similarly for all of the other examples presented in the article. As reported earlier, few basis functions are needed to closely approximate the conditional expectation function over the relevant range where early exercise may be optimal. While the results are robust to the choice of basis functions, it is Important to be aware of the numerical implications of the choice. For example, the weighted Laguerre polynomials used in the American put illustration in Section 3 include an exponential term in the stock price S. In Table 1, however, the stock price ranges from 36 to 44. Thus, directly applying the weighted Laguerre polynomials to the problem could result in computational underflows. To avoid this problem, we renormalized the American put example by dividing all cash flows and prices by the strike price, and estimating the conditional expectation function in the renormalized space; the results reported in Table 1 are based on this renormalization. Note that this is only for numerical convenience; the option value is unaffected since we discount back the unnormalized value of the cash flows along each path to obtain its value.resultingWefromrecommendscaling problems.normalizing appropriately. to avoid numerical errors Finally, the choice of basis functions also has implications for the statistical significance of individual basis functions in the regression. In particular, some choices of basis functions are highly correlated with each other, resulting in estimation difficulties for individual regression coefficients akin to the multicolinearity problem in econometrics. This difficulty does not affect the LSM algorithm since the focus is on the fitted value of the regression rather than on individual coefficients; the fitted value of the regression is unaffected by the degree of correlation among the explanatory variables. However, if the choice of basis functions leads to a cross-moment matrix that is nearly singular, then numerical inaccuracies in some least squares algorithms may affect the functional form of estimated conditional expectation function. To avoid these types of numerical problems, the regressions are estimated using the double-precision DLSBRR algorithm in IMSL which estimates least squares via an iterative-refinement algorithm. We also cross-checked the results by estimating the regressions using a variety of alternative procedures such as Cholesky-decomposition and QR-algorithm least squares techniques.
+
+<!-- page: 33 -->
+
+types of large-scale applications such as valuing large portfolios of fixedincome or mortgage derivatives, the same paths can be used for all options; significant computational efficiencies are obtained by only having to generate paths once. From the perspective of the LSM algorithm, the only constraint on parallel computation is that the regression needs to use the cross-sectional information in the simulation. Given the speed at which regressions can be } estimated, however, this bottleneck involves little loss of computational effi' ciency. Furthermore, there are many ways in which regressions could be i estimated using individual CPUs, and then aggregated across CPUs to form : a composite estimate of the conditional expectation function. Finally, the use of quasi-Monte-Carlo techniques in conjunction with the LSM algorithm may lead to significant improvements in computational speed and efficiency. Important recent examples of the application of quasi-Monte-Carlo techniques include Morokoff and Caflisch (1994, 1995). 9. Conclusion This article presents a simple new technique for approximating the value of American-style American-style options by simulation. This approach is intuitive, accurate, easy to apply, and computationally computationally efficient. We We illustrate this technique using a number of realistic examples, including the valuation of an American put when the underlying stock price follows a jump-diffusion as well as the valuation of a deferred American American swaption in a 20-factor string model of the term structure. : 
+
+This article presents a simple new technique for approximating the value of American-style American-style options by simulation. This approach is intuitive, accurate, easy to apply, and computationally computationally efficient. We We illustrate this technique using - a number of realistic examples, including the valuation of an American put when the underlying stock price follows a jump-diffusion as well as the valuation of a deferred American American swaption in a 20-factor string model of the term structure. 
+
+As a framework for valuing and. risk managing derivatives, simulation has many important advantages. With the ability to value American options, the applicability of simulation techniques becomes much broader and more promising, particularly in markets with multiple factors. Furthermore, simulation techniques make it much easier to implement advanced models such as Heath, Jarrow, and Morton (1992) or Santa-Clara and Sornette (1997) in practice. 
+
+##### Appendix 
+
+Proof of Proposition 1. By definition, the value of the underlying asset X,, is F,, -measurable. Similarly, the immediate exercise value of the option is F,,-measurable. By construction, : F,,(w; t,) is a linear function of F, -measurable functions of X,,, and is therefore F,, -measurable. :: Henceequal totheFy,<sup>(w;</sup> event<sup>,)</sup> that<sup>isin</sup> the<sup>Fis</sup> immediate<sup>andtherefore,</sup> exercise<sup>the</sup> value<sup>LSM</sup> is<sup>rule</sup> greater<sup>toexercise</sup> than zero<sup>when</sup> and<sup>this</sup> greater<sup>event</sup> than<sup>occurs</sup> or q defines a stopping time. Denote the present value of following this stopping rule by E,. Since : V(X) is the supremum of the present values obtained over the set of all stopping times, ‘ V(X) > E,. Since the functional form of Fy,(@; t,) 1s the same across all paths, the discounted cash flows LSM(w,; M, K) are independently and identically distributed, and the strong law of large numbers [Billingsley (1979; Theorem 6.1)] implies that PrimNooo —_N1 SILSMiaN (a; M,K)= 6,| =.
+
+<!-- page: 34 -->
+
+This result, combined with the inequality V(X) > E,, implies the result. 
+
+Proof of Proposition 2, At time t,, the LSM stopping strategy is the same as the optimal strategy; the option is exercised if it is in the money. Under the given assumptions, the conditional expectation function F(w; t,) is a function only of X,,. If F(w; t,) satisfies the indicated conditions, then Theorem IV.9.1 of Sansone (1959) implies that the convergence of Fy (w; ty) to F(w;t,) is uniform in M on the set (0, 00), where the first M Laguerre polynomials are used as the set of basis functions. This implies that for a given ¢, there exists an M such that SUPx,, | F(w;t,) — Fy(@;t,) |< €/2. From the integrability conditions and Theorem 3.5 of White (1984), the fitted value of the LSM regression Fy (@; t,) converges in probability to Fy(w; t,) as N > ©, 
+
+
+![](assets/2001-longstaff-schwartz-american-options-lsm.pdf-0034-04.png)
+
+
+Thus, for any €, there is an M such that N-+00lim Pr[| F(@;t) — Fy (o; t,) |> €| = 0. 
+
+To complete the proof, we partition Q into five sets: 1) the set of paths where the option is exercised at time ¢, under both the optimal and the LSM strategy, 2) the set of paths where the option is not exercised at time f, under either the optimal or LSM strategies, 3) the set of paths where the option is exercised at time ¢, under the LSM strategy but not under the optimal strategy, 4) the set of paths where the option is exercised at time ¢, under the optimal strategy, but not under the LSM strategy, and 5) a Zero-probability set of paths for which the difference between F(w;t,) and Fj,(@;1,) is greater than ¢ as N —> 00. Now consider a portfolio consisting of a long position in an option exercised using the LSM strategy, an investment of € in a money market account, and a short position in an option exercised using the optimal strategy. For paths in set 3), at time f,, use the funds from the money market account and the option exercise to purchase a European option with final maturity date 1. For paths in set 4), at time ¢,, use the funds from the money market account and from shorting a European option with final maturity date t, to fund the cash outflow from the option exercise. It is easily shown that this strategy results in cash flows that are greater than or equal to zero for each path in sets 1), 2), 3), and 4). Since the pathwise cash flows are nonnegative, averages over paths are nonnegative, and the result follows from a standard no-arbitrage argument, the definition of V(X), and the law of large numbers. | 
+
+References Abramowitz, M., and I. A. Stegun, 1970, Handbook ofMathematical Functions, Dover Publications, New York. Amemiya, T., 1985, Advanced Econometrics, Basil Blackwell, London, UK. Averbukh, V., 1997, “Pricing American Options Using Monte Carlo Simulation,” Ph.D. dissertation, Cornell University. Barraquand, J., and D. Martineau, 1995, “Numerical Valuation of High Dimensional Multivariate American Securities,” Journal of Financial and Quantitative Analysis, 30, 383-405. Barron, A., 1993, “Universal Approximation Bounds for Superpositions of a Sigmoidal Function,’ IEEE Transactions, Information Theory, 39, 930-945. Bensoussan, A., 1984, “On the Theory of Option Pricing,’ Acta Applicandae Mathematicae, 2, 139-158.
+
+<!-- page: 35 -->
+
+###### The Review of Financial Studies /v 14 n 1 2001 
+
+Black, F., and M. Scholes, 1973, “The Pricing of Options and Corporate Liabilities,’ Journal of Political Economy, 81, 637-654, 
+
+Bossaerts, P., 1989, “Simulation Estimators of Optimal Early Exercise,’ working paper, Carnegie-Mellon University. 
+
+Broadie, M., J. Detemple, E. Ghysels, and O, Torres, 1998, “American Options with Stochastic Dividends and Volatility: A Nonparametric Investigation,” working paper, Columbia University. 
+
+Broadie, M., and P. Glasserman, 1997a, “Monte Carlo Methods for Pricing High-Dimensional American Options: An Overview,” working paper, Columbia University. 
+
+Broadie, M., and P. Glasserman, 1997b, “Pricing American-Style Securities Using Simulation,’ Journal of Economic Dynamics and Control, 21, 1323-1352. 
+
+Broadie, M., and P. Glasserman, 1997c, “A Stochastic Mesh Method for Pricing High-Dimensional American Options,” working paper, Columbia University. 
+
+Broadie, M., P. Glasserman, and G. Jain, 1997, “Enhanced Monte Carlo Estimates for American Option Prices,” Journal of Derivatives, 5, 25-44. 
+
+Carriere, J., 1996, “Valuation of Early-Exercise Price of Options Using Simulations and Nonparametric Regression,” Insurance: Mathematics and Economics, 19, 19-30. 
+
+Carr, P., 1998, “Randomization and the American Put,” Review of Financial Studies, 11, 597-626. 
+
+Cox, J., J. E. Ingersoll, and S. A. Ross, 1985, “An Intertemporal General Equilibrium Model of Asset Prices,” Econometrica, 53, 363-384. 
+
+Cox, J., and S. A. Ross, 1976, “The Valuation of Options for Alternative Stochastic Processes,” Journal of Financial Economics, 3, 145-166. 
+
+Duffie, D., 1996, Dynamic Asset Pricing Theory, Princeton University Press, Princeton, N.J. 
+
+Garcia, D., 1999, “A Monte Carlo Method for Pricing American Options,” working paper, University of California, Berkeley. . 
+
+Goldstein, R., 1997, “The Term Structure of Interest Rates as a Random Field,’ working paper, Ohio State University. 
+
+Harrison, J. M., and D. M. Kreps, 1979, “Martingales and Arbitrage in Multiperiod Securities Markets,” Journal of Economic Theory, 20, 381-408. 
+
+Harrison, J. M., and S. R. Pliska, 1981, “Martingales and Stochastic Integrals in the Theory of Continuous Trading,” Stochastic Processes and their Applications, 11, 261-271. 
+
+Heath, D., R. Jarrow, and A. Morton, 1992, “Bond Pricing and the Term Structure of Interest Rates,” Econometrica, 60, 77-106. 
+
+Ho, T., and S. Lee, 1986, “Term Structure Movements and Pricing Interest Rate Contingent Claims,” Journal of Finance, 41, 1011-1029. 
+
+Ibanez, A., and F, Zapatero, 1998, “Monte Carlo Valuation of American Options through Computation of the Optimal Exercise Frontier,” working paper, University of Southern California. 
+
+Keane, M., and K. Wolpin, 1994, “The Solution and Estimation of Discrete Choice Dynamic Programming Models by Simulation: Monte Carlo Evidence,” Review of Economics and Statistics, 76, 648-672. 
+
+Judd, K., 1998, Numerical Methods in Economics, MIT Press, Cambridge, Mass. 
+
+Karatzas, I, 1988, “On the Pricing of American Options,” Applied Mathematics and Optimization, 17, 37-60. 
+
+Lamberton, D., and B. Lapeyre, 1996, Stochastic Calculus Applied to Finance, Chapman & Hall, London, UK.
+
+<!-- page: 36 -->
+
+Longstaff, F.,, P. Santa-Clara, and E. Schwartz, 1999, “Throwing Away a Billion Dollars: The Cost of Suboptimal Exercise Strategies in the Swaptions Market,” working paper, University of California, Los Angeles. Longstaff, F., P. Santa-Clara, and E. Schwartz, 2000, “The Relative Valuation of Interest-Rate Caps and Swaptions: Theory and Empirical Evidence,” working paper, University of California, Los Angeles. Merton, R. C., 1973, “The Theory of Rational Option Pricing,” Bell Journal of Economics and Management Science, 4, 141-183. Merton, R. C., 1976, “Option Pricing When Underlying Stock Returns Are Discontinuous,” Journal of Financial Economics, 3, 125-144. Morokoff, W. J., and R. E. Caflisch, 1994, “Quasi-Random Sequences and Their Discrepancies,” SIAM Journal of Computing, 15, 1251-1279. Morokoff, W. J., and R. E. Caflisch, 1995, “Quasi-Monte Carlo Integration,” Journal of Computational Physics, 122, 218-230. Pham, H., 1995, “Optimal Stopping, Free Boundary and American Option in a Jump Diffusion Model,” working paper, Universite Paris (X Dauphine. Press, W. H., S. A. Teukolsky, W. T. Vetterling, and B. P. Flannery, 1992, Numerical Recipes in Fortran, 2nd ed., Cambridge University Press, Cambridge, UK. Raymar, S., and M. Zwecher, 1997, “A Monte Carlo Valuation of American Call Options on the Maximum of Several Stocks,’ Journal of Derivatives, 5, 7-23. 
+
+Refenes, A., A. Burgess, and Y. Bentz, 1997, “Neural Networks in Financial Engineering: A Study in Methodology,” IEEE Transactions, Neural Networks, 8, 1222-1267. Royden, H. L., 1968, Real Analysis, MacMillan, New York., Sansone, G., 1959, Orthogonal Functions, Interscience Publishers, New York. Santa-Clara, P., and D. Sornette, 2001, “The Dynamics of the Forward Interest Rate Curve with Stochastic String Shocks,” The Review of Financial Studies, 14, 149-185. 
+
+Tilley, J. A., 1993, “Valuing American Options in a Path Simulation Model,” Transactions of the Society of Actuaries, 45, 83-104. 
+
+Tsitsiklis, J., and B. Van Roy, 1999, “Optimal Stopping of Markov Processes: Hilbert Space Theory, Approximation Algorithms, and an Application to Pricing High-Dimensional Financial Derivatives,” IEEE Transactions on Automatic Control, 44, 1840-1851. 
+
+Vasicek, O., 1977, “An Equilibrium Characterization of the Term Structure,” Journal of Financial Economics, 5, 177-188. 
+
+White, H., 1984, Asymptotic Theory for Econometricians, Academic Press, New York.

@@ -1,0 +1,34 @@
+{
+  "paper_id": "2026-sakuma-dml-0dte",
+  "title": "Differential Machine Learning for 0DTE Options with Stochastic Volatility and Jumps",
+  "authors": "Takayuki Sakuma",
+  "year": "2026",
+  "source_url": "https://arxiv.org/abs/2603.07600",
+  "source_pdf": "references/papers/2026-sakuma-dml-0dte.pdf",
+  "source_sha256": "449c2d4f7f6bb8ce1b964f2431af1c4155f815dffdcdffdb771d93205a2cd5fa",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.7",
+    "title": "Differential Machine Learning for 0DTE Options with Stochastic Volatility and Jumps",
+    "author": "Takayuki Sakuma",
+    "subject": "",
+    "keywords": "",
+    "creator": "arXiv GenPDF (tex2pdf:8def8d8)",
+    "producer": "pikepdf 8.15.1",
+    "creationDate": "",
+    "modDate": "",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 20
+  }
+}

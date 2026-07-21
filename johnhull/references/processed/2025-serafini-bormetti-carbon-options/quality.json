@@ -1,0 +1,22 @@
+{
+  "paper_id": "2025-serafini-bormetti-carbon-options",
+  "status": "review",
+  "page_count": 49,
+  "total_chars": 78007,
+  "average_chars_per_page": 1592.0,
+  "empty_pages": [],
+  "short_pages": [
+    30
+  ],
+  "replacement_characters": 12,
+  "heading_count": 21,
+  "image_references": 61,
+  "image_files": 61,
+  "latex_math_markers": 0,
+  "chunk_count": 19,
+  "max_chunk_chars": 4787,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

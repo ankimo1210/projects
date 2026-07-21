@@ -1,0 +1,34 @@
+{
+  "paper_id": "2008-fang-oosterlee-cos-method",
+  "title": "A Novel Pricing Method for European Options Based on Fourier-Cosine Series Expansions",
+  "authors": "Fang Fang; Cornelis W. Oosterlee",
+  "year": "2008",
+  "source_url": "https://doi.org/10.1137/080718061",
+  "source_pdf": "references/papers/2008-fang-oosterlee-cos-method.pdf",
+  "source_sha256": "2795f7dc610868a5c58e4fac43d9610526a8d7a0f71f00fc394d9623c749207b",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.6",
+    "title": "P:\\TEX\\SISC\\31-2\\71806\\71806.dvi",
+    "author": "",
+    "subject": "",
+    "keywords": "",
+    "creator": "dvips(k) 5.96dev Copyright 2007 Radical Eye Software",
+    "producer": "Adobe Acrobat Pro (64-bit) 22 Paper Capture Plug-in",
+    "creationDate": "D:20081113090539-05'00'",
+    "modDate": "D:20230130082858+01'00'",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 23
+  }
+}

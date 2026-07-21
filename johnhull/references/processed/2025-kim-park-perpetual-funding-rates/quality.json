@@ -1,0 +1,24 @@
+{
+  "paper_id": "2025-kim-park-perpetual-funding-rates",
+  "status": "review",
+  "page_count": 43,
+  "total_chars": 104489,
+  "average_chars_per_page": 2430.0,
+  "empty_pages": [],
+  "short_pages": [
+    19,
+    37,
+    39
+  ],
+  "replacement_characters": 23,
+  "heading_count": 26,
+  "image_references": 155,
+  "image_files": 155,
+  "latex_math_markers": 0,
+  "chunk_count": 24,
+  "max_chunk_chars": 4790,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

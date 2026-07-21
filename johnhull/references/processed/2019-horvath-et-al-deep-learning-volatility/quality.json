@@ -1,0 +1,20 @@
+{
+  "paper_id": "2019-horvath-et-al-deep-learning-volatility",
+  "status": "review",
+  "page_count": 32,
+  "total_chars": 76309,
+  "average_chars_per_page": 2384.7,
+  "empty_pages": [],
+  "short_pages": [],
+  "replacement_characters": 33,
+  "heading_count": 28,
+  "image_references": 43,
+  "image_files": 43,
+  "latex_math_markers": 0,
+  "chunk_count": 19,
+  "max_chunk_chars": 4767,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

@@ -1,0 +1,20 @@
+{
+  "paper_id": "1979-cox-ross-rubinstein-option-pricing",
+  "status": "review",
+  "page_count": 34,
+  "total_chars": 74644,
+  "average_chars_per_page": 2195.4,
+  "empty_pages": [],
+  "short_pages": [],
+  "replacement_characters": 56,
+  "heading_count": 17,
+  "image_references": 64,
+  "image_files": 64,
+  "latex_math_markers": 0,
+  "chunk_count": 17,
+  "max_chunk_chars": 4788,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

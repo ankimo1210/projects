@@ -1,0 +1,34 @@
+{
+  "paper_id": "2002-hagan-et-al-managing-smile-risk",
+  "title": "Managing Smile Risk",
+  "authors": "Patrick S. Hagan; Deep Kumar; Andrew S. Lesniewski; Diana E. Woodward",
+  "year": "2002",
+  "source_url": "https://www.wilmott.com/managing-smile-risk/",
+  "source_pdf": "references/papers/2002-hagan-et-al-managing-smile-risk.pdf",
+  "source_sha256": "c267782462f7e762455c481cbdd32e41f2f984c74e89708796836d80515aeaca",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.3",
+    "title": "SABR.pdf",
+    "author": "phagan",
+    "subject": "",
+    "keywords": "",
+    "creator": "PScript5.dll Version 5.2",
+    "producer": "Acrobat Distiller 5.0 (Windows)",
+    "creationDate": "D:20020402181941-05'00'",
+    "modDate": "D:20020402181941-05'00'",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 41
+  }
+}

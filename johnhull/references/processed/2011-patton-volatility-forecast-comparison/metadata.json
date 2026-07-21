@@ -1,0 +1,34 @@
+{
+  "paper_id": "2011-patton-volatility-forecast-comparison",
+  "title": "Volatility Forecast Comparison Using Imperfect Volatility Proxies",
+  "authors": "Andrew J. Patton",
+  "year": "2011",
+  "source_url": "https://doi.org/10.1016/j.jeconom.2010.03.034",
+  "source_pdf": "references/papers/2011-patton-volatility-forecast-comparison.pdf",
+  "source_sha256": "2b85bc30f188dc19d0ac7dbfe854929148d27c42e3f73d2b16605558daf60cee",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.4",
+    "title": "Volatility forecast comparison using imperfect volatility proxies",
+    "author": "Andrew J. Patton",
+    "subject": "",
+    "keywords": "",
+    "creator": "Elsevier",
+    "producer": "pdfTeX-1.40.3",
+    "creationDate": "D:20100724111943+05'30'",
+    "modDate": "D:20100726153714-04'00'",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 11
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "paper_id": "2019-lyashenko-mercurio-backward-looking-rates",
+  "status": "review",
+  "page_count": 25,
+  "total_chars": 54837,
+  "average_chars_per_page": 2193.5,
+  "empty_pages": [],
+  "short_pages": [],
+  "replacement_characters": 10,
+  "heading_count": 28,
+  "image_references": 86,
+  "image_files": 86,
+  "latex_math_markers": 0,
+  "chunk_count": 13,
+  "max_chunk_chars": 4797,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

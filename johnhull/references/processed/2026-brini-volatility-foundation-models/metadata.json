@@ -1,0 +1,34 @@
+{
+  "paper_id": "2026-brini-volatility-foundation-models",
+  "title": "Forecasting Realized Volatility with Time Series Foundation Models: A Comparison with Econometric Benchmarks",
+  "authors": "Alessio Brini",
+  "year": "2026",
+  "source_url": "https://arxiv.org/abs/2607.05291",
+  "source_pdf": "references/papers/2026-brini-volatility-foundation-models.pdf",
+  "source_sha256": "1e017652c7f11eb9f5fc4f91f96bc26746425bb59937de333e4bc3aee2e47c1a",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.7",
+    "title": "Forecasting Realized Volatility with Time Series Foundation Models: A Comparison with Econometric Benchmarks",
+    "author": "Alessio Brini",
+    "subject": "",
+    "keywords": "",
+    "creator": "arXiv GenPDF (tex2pdf:a6404ea)",
+    "producer": "pikepdf 8.15.1",
+    "creationDate": "",
+    "modDate": "",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 41
+  }
+}

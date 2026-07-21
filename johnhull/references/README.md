@@ -179,7 +179,8 @@ uv run --no-project --with pymupdf4llm \
 生成物は `references/processed/` に保存されます。各論文には `paper.md`、
 `metadata.json`、`pages.jsonl`、`chunks.jsonl`、`quality.json`、図表画像が含まれ、
 全体には `index.json`、`corpus.jsonl`、`quality_report.md` が生成されます。
-全文の再配布を避けるため、`references/processed/` は Git 管理外です。
+`references/processed/` は検索・引用にすぐ利用できるようGit管理しています。論文本文と
+図表の派生物を含むため、公開・再配布時は各原論文のライセンスを確認してください。
 
 ### 全件変換結果（2026-07-22）
 

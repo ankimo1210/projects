@@ -1,0 +1,22 @@
+{
+  "paper_id": "1973-black-scholes-options-corporate-liabilities",
+  "status": "review",
+  "page_count": 19,
+  "total_chars": 43942,
+  "average_chars_per_page": 2312.7,
+  "empty_pages": [],
+  "short_pages": [
+    1
+  ],
+  "replacement_characters": 0,
+  "heading_count": 14,
+  "image_references": 22,
+  "image_files": 22,
+  "latex_math_markers": 0,
+  "chunk_count": 10,
+  "max_chunk_chars": 4779,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

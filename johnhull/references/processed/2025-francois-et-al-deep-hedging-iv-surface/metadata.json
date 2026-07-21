@@ -1,0 +1,34 @@
+{
+  "paper_id": "2025-francois-et-al-deep-hedging-iv-surface",
+  "title": "Deep Hedging with Options Using the Implied Volatility Surface",
+  "authors": "Pascal François et al.",
+  "year": "2025",
+  "source_url": "https://arxiv.org/abs/2504.06208",
+  "source_pdf": "references/papers/2025-francois-et-al-deep-hedging-iv-surface.pdf",
+  "source_sha256": "3593f33d0226dd25412d4fbd212019c28d6d2570402e5cc978c7ae1eab158d35",
+  "converter": "PyMuPDF4LLM 1.28.0",
+  "conversion_options": {
+    "header": false,
+    "footer": false,
+    "use_ocr": true,
+    "force_ocr": false,
+    "ocr_language": "eng",
+    "write_images": true,
+    "max_chunk_chars": 4800,
+    "overlap_chars": 400
+  },
+  "pdf_metadata": {
+    "format": "PDF 1.5",
+    "title": "Deep Hedging with Options Using the Implied Volatility Surface",
+    "author": "Pascal François; Geneviève Gauthier; Frédéric Godin; Carlos O. Pérez-Mendoza",
+    "subject": "",
+    "keywords": "",
+    "creator": "arXiv GenPDF (tex2pdf:)",
+    "producer": "pikepdf 8.15.1",
+    "creationDate": "",
+    "modDate": "",
+    "trapped": "",
+    "encryption": null,
+    "page_count": 59
+  }
+}

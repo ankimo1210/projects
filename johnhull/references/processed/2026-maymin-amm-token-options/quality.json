@@ -1,0 +1,20 @@
+{
+  "paper_id": "2026-maymin-amm-token-options",
+  "status": "review",
+  "page_count": 33,
+  "total_chars": 74778,
+  "average_chars_per_page": 2266.0,
+  "empty_pages": [],
+  "short_pages": [],
+  "replacement_characters": 6,
+  "heading_count": 39,
+  "image_references": 49,
+  "image_files": 49,
+  "latex_math_markers": 0,
+  "chunk_count": 17,
+  "max_chunk_chars": 4795,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

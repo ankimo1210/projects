@@ -1,0 +1,1058 @@
+[
+  {
+    "paper_id": "1900-bachelier-theorie-de-la-speculation",
+    "status": "review",
+    "page_count": 67,
+    "total_chars": 101647,
+    "average_chars_per_page": 1517.1,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 0,
+    "heading_count": 20,
+    "image_references": 153,
+    "image_files": 153,
+    "latex_math_markers": 1,
+    "chunk_count": 23,
+    "max_chunk_chars": 4800,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "1973-black-scholes-options-corporate-liabilities",
+    "status": "review",
+    "page_count": 19,
+    "total_chars": 43942,
+    "average_chars_per_page": 2312.7,
+    "empty_pages": [],
+    "short_pages": [
+      1
+    ],
+    "replacement_characters": 0,
+    "heading_count": 14,
+    "image_references": 22,
+    "image_files": 22,
+    "latex_math_markers": 0,
+    "chunk_count": 10,
+    "max_chunk_chars": 4779,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "1973-merton-corporate-debt-working-paper",
+    "status": "review",
+    "page_count": 35,
+    "total_chars": 47155,
+    "average_chars_per_page": 1347.3,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 28,
+    "heading_count": 12,
+    "image_references": 76,
+    "image_files": 76,
+    "latex_math_markers": 0,
+    "chunk_count": 11,
+    "max_chunk_chars": 4800,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "1978-margrabe-exchange-option",
+    "status": "pass",
+    "page_count": 11,
+    "total_chars": 28079,
+    "average_chars_per_page": 2552.6,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 0,
+    "heading_count": 17,
+    "image_references": 4,
+    "image_files": 4,
+    "latex_math_markers": 0,
+    "chunk_count": 7,
+    "max_chunk_chars": 4775,
+    "warnings": [],
+    "failures": []
+  },
+  {
+    "paper_id": "1979-cox-ross-rubinstein-option-pricing",
+    "status": "review",
+    "page_count": 34,
+    "total_chars": 74644,
+    "average_chars_per_page": 2195.4,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 56,
+    "heading_count": 17,
+    "image_references": 64,
+    "image_files": 64,
+    "latex_math_markers": 0,
+    "chunk_count": 17,
+    "max_chunk_chars": 4788,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+    "status": "review",
+    "page_count": 20,
+    "total_chars": 26038,
+    "average_chars_per_page": 1301.9,
+    "empty_pages": [],
+    "short_pages": [
+      3
+    ],
+    "replacement_characters": 0,
+    "heading_count": 5,
+    "image_references": 72,
+    "image_files": 72,
+    "latex_math_markers": 0,
+    "chunk_count": 6,
+    "max_chunk_chars": 4756,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "1993-heston-closed-form-stochastic-volatility",
+    "status": "review",
+    "page_count": 17,
+    "total_chars": 17340,
+    "average_chars_per_page": 1020.0,
+    "empty_pages": [],
+    "short_pages": [
+      14
+    ],
+    "replacement_characters": 0,
+    "heading_count": 2,
+    "image_references": 76,
+    "image_files": 76,
+    "latex_math_markers": 0,
+    "chunk_count": 4,
+    "max_chunk_chars": 4774,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "1995-kupiec-var-model-verification",
+    "status": "review",
+    "page_count": 47,
+    "total_chars": 67878,
+    "average_chars_per_page": 1444.2,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 0,
+    "heading_count": 32,
+    "image_references": 13,
+    "image_files": 13,
+    "latex_math_markers": 0,
+    "chunk_count": 17,
+    "max_chunk_chars": 4796,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "1996-broadie-glasserman-security-price-derivatives",
+    "status": "review",
+    "page_count": 28,
+    "total_chars": 67138,
+    "average_chars_per_page": 2397.8,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 5,
+    "heading_count": 20,
+    "image_references": 76,
+    "image_files": 76,
+    "latex_math_markers": 0,
+    "chunk_count": 16,
+    "max_chunk_chars": 4791,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "1999-barone-adesi-giannopoulos-vosper-var-without-correlations",
+    "status": "review",
+    "page_count": 29,
+    "total_chars": 39862,
+    "average_chars_per_page": 1374.6,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 29,
+    "heading_count": 19,
+    "image_references": 40,
+    "image_files": 40,
+    "latex_math_markers": 0,
+    "chunk_count": 10,
+    "max_chunk_chars": 4773,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2000-mcneil-frey-tail-risk-evt",
+    "status": "review",
+    "page_count": 29,
+    "total_chars": 67606,
+    "average_chars_per_page": 2331.2,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 469,
+    "heading_count": 2,
+    "image_references": 26,
+    "image_files": 26,
+    "latex_math_markers": 0,
+    "chunk_count": 19,
+    "max_chunk_chars": 4733,
+    "warnings": [
+      "high replacement-character ratio",
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2001-longstaff-schwartz-american-options-lsm",
+    "status": "review",
+    "page_count": 36,
+    "total_chars": 97541,
+    "average_chars_per_page": 2709.5,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 0,
+    "heading_count": 25,
+    "image_references": 12,
+    "image_files": 12,
+    "latex_math_markers": 0,
+    "chunk_count": 24,
+    "max_chunk_chars": 4795,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2002-alaton-et-al-weather-derivatives",
+    "status": "review",
+    "page_count": 22,
+    "total_chars": 46137,
+    "average_chars_per_page": 2097.1,
+    "empty_pages": [],
+    "short_pages": [
+      16
+    ],
+    "replacement_characters": 0,
+    "heading_count": 28,
+    "image_references": 54,
+    "image_files": 54,
+    "latex_math_markers": 0,
+    "chunk_count": 11,
+    "max_chunk_chars": 4797,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2002-hagan-et-al-managing-smile-risk",
+    "status": "review",
+    "page_count": 41,
+    "total_chars": 92161,
+    "average_chars_per_page": 2247.8,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 0,
+    "heading_count": 9,
+    "image_references": 281,
+    "image_files": 281,
+    "latex_math_markers": 0,
+    "chunk_count": 21,
+    "max_chunk_chars": 4791,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2003-ait-sahalia-duarte-nonparametric-option-pricing",
+    "status": "review",
+    "page_count": 39,
+    "total_chars": 69390,
+    "average_chars_per_page": 1779.2,
+    "empty_pages": [],
+    "short_pages": [
+      31,
+      34
+    ],
+    "replacement_characters": 190,
+    "heading_count": 14,
+    "image_references": 63,
+    "image_files": 63,
+    "latex_math_markers": 0,
+    "chunk_count": 16,
+    "max_chunk_chars": 4799,
+    "warnings": [
+      "high replacement-character ratio",
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2006-giles-glasserman-smoking-adjoints",
+    "status": "review",
+    "page_count": 15,
+    "total_chars": 31337,
+    "average_chars_per_page": 2089.1,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 0,
+    "heading_count": 12,
+    "image_references": 49,
+    "image_files": 49,
+    "latex_math_markers": 0,
+    "chunk_count": 8,
+    "max_chunk_chars": 4789,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2007-albrecher-et-al-little-heston-trap",
+    "status": "review",
+    "page_count": 21,
+    "total_chars": 27231,
+    "average_chars_per_page": 1296.7,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 6,
+    "heading_count": 10,
+    "image_references": 43,
+    "image_files": 43,
+    "latex_math_markers": 0,
+    "chunk_count": 7,
+    "max_chunk_chars": 4738,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2008-fang-oosterlee-cos-method",
+    "status": "review",
+    "page_count": 23,
+    "total_chars": 65246,
+    "average_chars_per_page": 2836.8,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 19,
+    "heading_count": 5,
+    "image_references": 117,
+    "image_files": 117,
+    "latex_math_markers": 0,
+    "chunk_count": 16,
+    "max_chunk_chars": 4799,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2008-tasche-capital-allocation-kernel-estimators",
+    "status": "review",
+    "page_count": 22,
+    "total_chars": 68250,
+    "average_chars_per_page": 3102.3,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 1,
+    "heading_count": 16,
+    "image_references": 57,
+    "image_files": 57,
+    "latex_math_markers": 0,
+    "chunk_count": 16,
+    "max_chunk_chars": 4795,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2009-corsi-har-realized-volatility",
+    "status": "review",
+    "page_count": 23,
+    "total_chars": 57838,
+    "average_chars_per_page": 2514.7,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 7,
+    "heading_count": 15,
+    "image_references": 21,
+    "image_files": 21,
+    "latex_math_markers": 0,
+    "chunk_count": 14,
+    "max_chunk_chars": 4793,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2009-dugas-et-al-functional-knowledge-neural-networks",
+    "status": "review",
+    "page_count": 24,
+    "total_chars": 56116,
+    "average_chars_per_page": 2338.2,
+    "empty_pages": [],
+    "short_pages": [
+      22
+    ],
+    "replacement_characters": 5,
+    "heading_count": 22,
+    "image_references": 59,
+    "image_files": 59,
+    "latex_math_markers": 0,
+    "chunk_count": 13,
+    "max_chunk_chars": 4789,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2010-lord-koekkoek-van-dijk-heston-simulation",
+    "status": "review",
+    "page_count": 32,
+    "total_chars": 88902,
+    "average_chars_per_page": 2778.2,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 7,
+    "heading_count": 29,
+    "image_references": 64,
+    "image_files": 64,
+    "latex_math_markers": 0,
+    "chunk_count": 21,
+    "max_chunk_chars": 4791,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2011-patton-volatility-forecast-comparison",
+    "status": "review",
+    "page_count": 11,
+    "total_chars": 67032,
+    "average_chars_per_page": 6093.8,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 27,
+    "heading_count": 13,
+    "image_references": 38,
+    "image_files": 38,
+    "latex_math_markers": 0,
+    "chunk_count": 16,
+    "max_chunk_chars": 4781,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2014-gatheral-jacquier-arbitrage-free-svi",
+    "status": "review",
+    "page_count": 27,
+    "total_chars": 58344,
+    "average_chars_per_page": 2160.9,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 28,
+    "heading_count": 21,
+    "image_references": 79,
+    "image_files": 79,
+    "latex_math_markers": 0,
+    "chunk_count": 14,
+    "max_chunk_chars": 4798,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2015-antonov-et-al-free-boundary-sabr",
+    "status": "review",
+    "page_count": 7,
+    "total_chars": 26351,
+    "average_chars_per_page": 3764.4,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 118,
+    "heading_count": 15,
+    "image_references": 31,
+    "image_files": 31,
+    "latex_math_markers": 0,
+    "chunk_count": 6,
+    "max_chunk_chars": 4776,
+    "warnings": [
+      "high replacement-character ratio",
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2016-bayer-friz-gatheral-pricing-rough-volatility",
+    "status": "review",
+    "page_count": 38,
+    "total_chars": 42013,
+    "average_chars_per_page": 1105.6,
+    "empty_pages": [],
+    "short_pages": [
+      23,
+      24
+    ],
+    "replacement_characters": 5,
+    "heading_count": 20,
+    "image_references": 63,
+    "image_files": 63,
+    "latex_math_markers": 0,
+    "chunk_count": 10,
+    "max_chunk_chars": 4789,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2017-hagan-lesniewski-bartlett-delta",
+    "status": "review",
+    "page_count": 10,
+    "total_chars": 15958,
+    "average_chars_per_page": 1595.8,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 2,
+    "heading_count": 5,
+    "image_references": 39,
+    "image_files": 39,
+    "latex_math_markers": 0,
+    "chunk_count": 4,
+    "max_chunk_chars": 4736,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2017-han-jentzen-e-deep-bsde",
+    "status": "review",
+    "page_count": 39,
+    "total_chars": 67787,
+    "average_chars_per_page": 1738.1,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 18,
+    "heading_count": 32,
+    "image_references": 70,
+    "image_files": 70,
+    "latex_math_markers": 0,
+    "chunk_count": 17,
+    "max_chunk_chars": 4798,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2018-gatheral-jaisson-rosenbaum-volatility-is-rough",
+    "status": "review",
+    "page_count": 41,
+    "total_chars": 55371,
+    "average_chars_per_page": 1350.5,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 1,
+    "heading_count": 26,
+    "image_references": 67,
+    "image_files": 67,
+    "latex_math_markers": 0,
+    "chunk_count": 13,
+    "max_chunk_chars": 4794,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2019-bayer-et-al-deep-calibration",
+    "status": "review",
+    "page_count": 32,
+    "total_chars": 73303,
+    "average_chars_per_page": 2290.7,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 35,
+    "heading_count": 23,
+    "image_references": 49,
+    "image_files": 49,
+    "latex_math_markers": 0,
+    "chunk_count": 17,
+    "max_chunk_chars": 4790,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2019-buehler-et-al-deep-hedging",
+    "status": "review",
+    "page_count": 32,
+    "total_chars": 89485,
+    "average_chars_per_page": 2796.4,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 11,
+    "heading_count": 9,
+    "image_references": 66,
+    "image_files": 66,
+    "latex_math_markers": 0,
+    "chunk_count": 20,
+    "max_chunk_chars": 4796,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2019-el-euch-rosenbaum-rough-heston-characteristic-function",
+    "status": "review",
+    "page_count": 35,
+    "total_chars": 50281,
+    "average_chars_per_page": 1436.6,
+    "empty_pages": [],
+    "short_pages": [
+      14,
+      15,
+      20,
+      22
+    ],
+    "replacement_characters": 19,
+    "heading_count": 18,
+    "image_references": 106,
+    "image_files": 106,
+    "latex_math_markers": 0,
+    "chunk_count": 12,
+    "max_chunk_chars": 4788,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2019-horvath-et-al-deep-learning-volatility",
+    "status": "review",
+    "page_count": 32,
+    "total_chars": 76309,
+    "average_chars_per_page": 2384.7,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 33,
+    "heading_count": 28,
+    "image_references": 43,
+    "image_files": 43,
+    "latex_math_markers": 0,
+    "chunk_count": 19,
+    "max_chunk_chars": 4767,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2019-jain-wallace-attention-not-explanation",
+    "status": "review",
+    "page_count": 14,
+    "total_chars": 63227,
+    "average_chars_per_page": 4516.2,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 3,
+    "heading_count": 34,
+    "image_references": 13,
+    "image_files": 13,
+    "latex_math_markers": 0,
+    "chunk_count": 15,
+    "max_chunk_chars": 4797,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2019-lyashenko-mercurio-backward-looking-rates",
+    "status": "review",
+    "page_count": 25,
+    "total_chars": 54837,
+    "average_chars_per_page": 2193.5,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 10,
+    "heading_count": 28,
+    "image_references": 86,
+    "image_files": 86,
+    "latex_math_markers": 0,
+    "chunk_count": 13,
+    "max_chunk_chars": 4797,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2020-huge-savine-differential-machine-learning",
+    "status": "review",
+    "page_count": 51,
+    "total_chars": 120789,
+    "average_chars_per_page": 2368.4,
+    "empty_pages": [],
+    "short_pages": [
+      16,
+      36
+    ],
+    "replacement_characters": 18,
+    "heading_count": 77,
+    "image_references": 97,
+    "image_files": 97,
+    "latex_math_markers": 1,
+    "chunk_count": 28,
+    "max_chunk_chars": 4786,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2021-ning-et-al-arbitrage-free-iv-vae",
+    "status": "review",
+    "page_count": 20,
+    "total_chars": 52300,
+    "average_chars_per_page": 2615.0,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 19,
+    "heading_count": 6,
+    "image_references": 31,
+    "image_files": 31,
+    "latex_math_markers": 0,
+    "chunk_count": 13,
+    "max_chunk_chars": 4792,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2022-abi-jaber-et-al-quintic-ou",
+    "status": "review",
+    "page_count": 14,
+    "total_chars": 30604,
+    "average_chars_per_page": 2186.0,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 5,
+    "heading_count": 9,
+    "image_references": 42,
+    "image_files": 42,
+    "latex_math_markers": 1,
+    "chunk_count": 7,
+    "max_chunk_chars": 4766,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2022-milionis-et-al-amm-lvr",
+    "status": "review",
+    "page_count": 63,
+    "total_chars": 140101,
+    "average_chars_per_page": 2223.8,
+    "empty_pages": [],
+    "short_pages": [
+      27
+    ],
+    "replacement_characters": 14,
+    "heading_count": 35,
+    "image_references": 102,
+    "image_files": 102,
+    "latex_math_markers": 0,
+    "chunk_count": 32,
+    "max_chunk_chars": 4786,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2022-reisenhofer-et-al-harnet",
+    "status": "review",
+    "page_count": 22,
+    "total_chars": 69990,
+    "average_chars_per_page": 3181.4,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 6,
+    "heading_count": 19,
+    "image_references": 40,
+    "image_files": 40,
+    "latex_math_markers": 0,
+    "chunk_count": 17,
+    "max_chunk_chars": 4790,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2023-cuchiero-et-al-signature-spx-vix",
+    "status": "review",
+    "page_count": 51,
+    "total_chars": 101948,
+    "average_chars_per_page": 1999.0,
+    "empty_pages": [],
+    "short_pages": [
+      13,
+      17,
+      27,
+      28,
+      29,
+      34
+    ],
+    "replacement_characters": 53,
+    "heading_count": 17,
+    "image_references": 132,
+    "image_files": 132,
+    "latex_math_markers": 0,
+    "chunk_count": 24,
+    "max_chunk_chars": 4791,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2025-alos-et-al-volatility-rough-paths",
+    "status": "review",
+    "page_count": 42,
+    "total_chars": 112199,
+    "average_chars_per_page": 2671.4,
+    "empty_pages": [],
+    "short_pages": [
+      11,
+      12,
+      28
+    ],
+    "replacement_characters": 28,
+    "heading_count": 23,
+    "image_references": 163,
+    "image_files": 163,
+    "latex_math_markers": 0,
+    "chunk_count": 26,
+    "max_chunk_chars": 4791,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2025-francois-et-al-deep-hedging-iv-surface",
+    "status": "review",
+    "page_count": 59,
+    "total_chars": 82794,
+    "average_chars_per_page": 1403.3,
+    "empty_pages": [],
+    "short_pages": [
+      41,
+      42,
+      43,
+      45,
+      46
+    ],
+    "replacement_characters": 2,
+    "heading_count": 35,
+    "image_references": 43,
+    "image_files": 43,
+    "latex_math_markers": 0,
+    "chunk_count": 19,
+    "max_chunk_chars": 4793,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2025-huge-savine-axes-that-matter",
+    "status": "review",
+    "page_count": 15,
+    "total_chars": 40846,
+    "average_chars_per_page": 2723.1,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 61,
+    "heading_count": 12,
+    "image_references": 20,
+    "image_files": 20,
+    "latex_math_markers": 0,
+    "chunk_count": 10,
+    "max_chunk_chars": 4784,
+    "warnings": [
+      "high replacement-character ratio",
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2025-kim-park-perpetual-funding-rates",
+    "status": "review",
+    "page_count": 43,
+    "total_chars": 104489,
+    "average_chars_per_page": 2430.0,
+    "empty_pages": [],
+    "short_pages": [
+      19,
+      37,
+      39
+    ],
+    "replacement_characters": 23,
+    "heading_count": 26,
+    "image_references": 155,
+    "image_files": 155,
+    "latex_math_markers": 0,
+    "chunk_count": 24,
+    "max_chunk_chars": 4790,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2025-serafini-bormetti-carbon-options",
+    "status": "review",
+    "page_count": 49,
+    "total_chars": 78007,
+    "average_chars_per_page": 1592.0,
+    "empty_pages": [],
+    "short_pages": [
+      30
+    ],
+    "replacement_characters": 12,
+    "heading_count": 21,
+    "image_references": 61,
+    "image_files": 61,
+    "latex_math_markers": 0,
+    "chunk_count": 19,
+    "max_chunk_chars": 4787,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2026-brini-volatility-foundation-models",
+    "status": "review",
+    "page_count": 41,
+    "total_chars": 129327,
+    "average_chars_per_page": 3154.3,
+    "empty_pages": [],
+    "short_pages": [
+      20
+    ],
+    "replacement_characters": 19,
+    "heading_count": 28,
+    "image_references": 17,
+    "image_files": 17,
+    "latex_math_markers": 0,
+    "chunk_count": 31,
+    "max_chunk_chars": 4796,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2026-che-et-al-spx-vix-transport",
+    "status": "review",
+    "page_count": 36,
+    "total_chars": 76639,
+    "average_chars_per_page": 2128.9,
+    "empty_pages": [],
+    "short_pages": [
+      6,
+      19
+    ],
+    "replacement_characters": 10,
+    "heading_count": 52,
+    "image_references": 139,
+    "image_files": 139,
+    "latex_math_markers": 0,
+    "chunk_count": 17,
+    "max_chunk_chars": 4790,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2026-maymin-amm-token-options",
+    "status": "review",
+    "page_count": 33,
+    "total_chars": 74778,
+    "average_chars_per_page": 2266.0,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 6,
+    "heading_count": 39,
+    "image_references": 49,
+    "image_files": 49,
+    "latex_math_markers": 0,
+    "chunk_count": 17,
+    "max_chunk_chars": 4795,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  },
+  {
+    "paper_id": "2026-sakuma-dml-0dte",
+    "status": "review",
+    "page_count": 20,
+    "total_chars": 54115,
+    "average_chars_per_page": 2705.8,
+    "empty_pages": [],
+    "short_pages": [],
+    "replacement_characters": 10,
+    "heading_count": 23,
+    "image_references": 47,
+    "image_files": 47,
+    "latex_math_markers": 0,
+    "chunk_count": 13,
+    "max_chunk_chars": 4786,
+    "warnings": [
+      "many visual/equation images are not represented as LaTeX math"
+    ],
+    "failures": []
+  }
+]

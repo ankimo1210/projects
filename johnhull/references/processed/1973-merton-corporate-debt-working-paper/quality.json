@@ -1,0 +1,20 @@
+{
+  "paper_id": "1973-merton-corporate-debt-working-paper",
+  "status": "review",
+  "page_count": 35,
+  "total_chars": 47155,
+  "average_chars_per_page": 1347.3,
+  "empty_pages": [],
+  "short_pages": [],
+  "replacement_characters": 28,
+  "heading_count": 12,
+  "image_references": 76,
+  "image_files": 76,
+  "latex_math_markers": 0,
+  "chunk_count": 11,
+  "max_chunk_chars": 4800,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

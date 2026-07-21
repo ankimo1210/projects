@@ -1,0 +1,20 @@
+{
+  "paper_id": "2017-han-jentzen-e-deep-bsde",
+  "status": "review",
+  "page_count": 39,
+  "total_chars": 67787,
+  "average_chars_per_page": 1738.1,
+  "empty_pages": [],
+  "short_pages": [],
+  "replacement_characters": 18,
+  "heading_count": 32,
+  "image_references": 70,
+  "image_files": 70,
+  "latex_math_markers": 0,
+  "chunk_count": 17,
+  "max_chunk_chars": 4798,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

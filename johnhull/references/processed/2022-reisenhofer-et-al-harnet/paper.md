@@ -1,0 +1,591 @@
+---
+paper_id: "2022-reisenhofer-et-al-harnet"
+title: "HARNet: A Convolutional Neural Network for Realized Volatility Forecasting"
+authors: "Rafael Reisenhofer; Xandro Bayer; Nikolaus Hautsch"
+year: "2022"
+source_url: "https://arxiv.org/abs/2205.07719"
+source_pdf: "references/papers/2022-reisenhofer-et-al-harnet.pdf"
+source_sha256: "ddd9fc3de99c1a274de0b3efb78402e04cba08b9e7cfa9ef89319da1ead7fc02"
+converter: "PyMuPDF4LLM 1.28.0"
+---
+
+<!-- page: 1 -->
+
+# HARNet: A Convolutional Neural Network for Realized Volatility Forecasting 
+
+Rafael Reisenhofer<sup>_†_,</sup><sup>_‡_,*</sup> , Xandro Bayer<sup>_‡_,</sup><sup>_§_,*</sup> , and Nikolaus Hautsch<sup>_‡_,</sup><sup>_§_</sup> 
+
+> _†Faculty of Mathematics, University of Vienna, Oskar-Morgenstern-Platz 1, A-1090 Vienna, Austria_ 
+
+> _‡Research Network Data Science @ Uni Vienna, Kolingasse 14-16, A-1090 Vienna, Austria_ 
+
+> _§Department of Statistics and Operations Research, University of Vienna, Oskar-Morgenstern-Platz 1,_ 
+
+_A-1090 Vienna, Austria_ 
+
+> * _These authors contributed equally_ 
+
+#### **Abstract** 
+
+Despite the impressive success of deep neural networks in many application areas, neural network models have so far not been widely adopted in the context of volatility forecasting. In this work, we aim to bridge the conceptual gap between established time series approaches, such as the Heterogeneous Autoregressive (HAR) model (Corsi, 2009), and state-of-the-art deep neural network models. The newly introduced HARNet is based on a hierarchy of dilated convolutional layers, which facilitates an exponential growth of the receptive field of the model in the number of model parameters. HARNets allow for an explicit initialization scheme such that before optimization, a HARNet yields identical predictions as the respective baseline HAR model. Particularly when considering the QLIKE error as a loss function, we find that this approach significantly stabilizes the optimization of HARNets. We evaluate the performance of HARNets with respect to three different stock market indexes. Based on this evaluation, we formulate clear guidelines for the optimization of HARNets and show that HARNets can substantially improve upon the forecasting accuracy of their respective HAR baseline models. In a qualitative analysis of the filter weights learnt by a HARNet, we report clear patterns regarding the predictive power of past information. Among information from the previous week, yesterday and the day before, yesterday’s volatility makes by far the most contribution to today’s realized volatility forecast. Moroever, within the previous month, the importance of single weeks diminishes almost linearly when moving further into the past. 
+
+## **1 Introduction** 
+
+Volatility is of critical importance in risk management, asset pricing and portfolio construction. Over the past years, extensive research efforts have been devoted to the development and evaluation of volatility forecasting models. A substantial body of research focuses on the construction of estimators for daily volatility exploiting high-frequency information. Seminal contributions (see, e.g., Andersen et al., 2001; Barndorff-Nielsen and Shephard, 2002) provided the foundation for using the realized variance, i.e., the sum of squared intraday returns, as a consistent estimator for the latent integrated variance of an underlying diffusion process. These approaches have been extended and robustified, and built the starting point for an active line of research on the development of high-frequency-based volatility estimators (see, e.g., A¨ıt-Sahalia and Jacod, 2014). At the same time, these developments triggered the need to develop appropriate time series models to predict realized volatility. One of the most popular and empirically successful models is the heterogeneous autoregressive (HAR) model proposed by Corsi (2009), which captures the typically strong persistency of daily realized variances in a simple and efficient way. 
+
+In the past decade, deep neural networks (DNNs) have revolutionized many areas of machine learning such as image classification, machine translation or speech recognition. The most widely 
+
+> Email: rafael.reisenhofer@uni-bremen.de, xandro.bayer@univie.ac.at, nikolaus.hautsch@univie.ac.at
+
+<!-- page: 2 -->
+
+used neural network (NN)-based approaches for forecasting sequential data are recurrent NNs, such as the so-called long short-term memory (LSTM) architecture (Hochreiter and Schmidhuber, 1997). Originally developed for image data sets, NNs with convolutional layers – so-called convolutional neural networks (CNNs) – have more recently been applied with impressive success for time series prediction in the realm of natural language processing (Oord et al., 2016; Kalchbrenner et al., 2016; Dauphin et al., 2017; Gehring et al., 2016; Gehring et al., 2017). In the context of financial time series, Miura, Pichl, and Kaizoji (2019) investigated numerous machine learning approaches, including CNNs, for predicting the realized volatility of Bitcoin returns, while Borovykh, Bohte, and Oosterlee (2017) employed a dilated convolutional network for forecasting stock index returns. A main advantage of dilated convolutional layers is that a linear increase in depth allows for an exponential increase of the considered time horizon. Such architectures should thus be particularly powerful for tasks, where large time horizons are potentially useful, but machine learning models often suffer from overfitting with a growing number of model parameters. 
+
+The applicability of feed-forward and recurrent NN models in the context of realized volatility forecasting has recently been explored by Bucci (2020), Christensen, Siggaard, Veliyev, et al. (2021) and Rahimikia and Poon (2020). The fact that so far, NN-based approaches have not been widely adopted in the area of financial econometrics could be explained by the fact that NN models are often used as off-the-shelve black boxes whose results are typically difficult to interpret, in particular in comparison to a simple and well-understood approach like the HAR model. In this work, we aim to bridge the conceptual gap between established methods such as the HAR model and state-of-the-art deep learning-based approaches by introducing so-called ’HARNets’ as a novel NN model for forecasting realized volatility. 
+
+A HARNet is based on hierarchies of dilated convolutional layers. It is strongly inspired by the well-known HAR model in the sense that each layer of a HARNet computes features with respect to different time horizons, which are comparable to weekly and monthly aggregates as in the original HAR model. In particular, HARNets allow for an explicit initialization scheme for the respective model weights such that before optimization, a HARNet yields identical predictions as the respective baseline HAR model. This approach not only significantly stabilizes the optimization process but also facilitates an in-depth analysis of the performance of HARNets relative to different fits of their respective HAR baselines models. 
+
+We briefly summarize important concepts from realized volatility forecasting and the application of CNNs for time series forecasting in Sections 2 and 3, respectively. 
+
+The HARNet model as well as our approaches to initializing and optimizing the respective model parameters are presented in Section 4. 
+
+In Section 5, we conduct a detailed evaluation of the performance of HARNets relative to their respective baseline HAR models. In particular, we consider three different loss functions, the mean absolute error (MAE), the mean squared error (MSE) and the QLIKE error. Moreover, we evalute three different estimation approaches for fitting the HAR baseline model, namely ordinary least squares (OLS), weighted least squares (WLS) and log-OLS, where the input time series is logarithmized before being processed by the model. Based on our initial findings, we further address questions regarding the stability of the optimization process and the generalization properties of optimized HARNets, and eventually formulate clear guidelines for the optimization of HARNets. In particular, we also conduct a qualitative analysis of the filter weights learnt by HARNets on the different convolutional layers, which is presented in Section 5.4. 
+
+In Section 6, we consider extended HARNets for higher-dimensional input time series, which also contain information regarding the realized semivariance as well as jump variation and again evaluate their performance relative to their extended HAR-like baseline models. 
+
+## **2 Forecasting realized volatility with the HAR model** 
+
+We assume that the dynamics of the log price of a financial asset evolve according to the stochastic differential equation 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0002-09.png)
+
+<!-- page: 3 -->
+
+where the c`adl`ag finite variation process _µ_ ( _t_ ) denotes the drift, _W_ ( _t_ ) is a standard Brownian motion, and _σ_ ( _t_ ) is the spot volatility, which is independent of _W_ ( _t_ ). The daily integrated variance 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0003-01.png)
+
+
+at a day _t_ is unobservable in practice, even ex-post. However, it has been shown that the daily sum of _N_ intraday squared returns 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0003-03.png)
+
+
+where _rt,n_ = _p_ ( _t − n_ ∆) _− p_ ( _t −_ ( _n_ + 1)∆) with ∆= 1 _/N_ , is a consistent estimator for _IVt_ when _N →∞_ (Andersen and Bollerslev, 1998). 
+
+The most popular model for forecasting _RVt_ is the so-called heterogeneous autoregressive model introduced by Corsi (2009). The model has a simple autoregressive structure and includes averages of daily realized variances over different time horizons. For an aggregation period _j ∈_ N, we denote the respective average of daily realized variances by 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0003-06.png)
+
+
+Corsi (2009) proposes using aggregation periods of 1, 5, and 22, corresponding to daily, weekly, and monthly RVs, respectively. The HAR model is then defined as 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0003-08.png)
+
+
+where the parameters _β_ 0 _, . . . , β_ 3, are usually estimated by ordinary least squares (OLS). However, since it is well-known that time series of realized variances exhibit properties such as conditional heteroscedasticity and non-Gaussianity, OLS is not ideal. To overcome this, we follow Patton and Sheppard (2015) and alternatively estimate the HAR model using weighted least squares (WLS) with weights chosen as the inverse of the (OLS) fitted value. Another popular approach to deal with heteroscedasticity and non-Gaussianity is to transform the data logarithmically. For the remainder of this paper, this method will be denoted as log-OLS. 
+
+## **3 Dilated convolutional NNs for time series forecasting** 
+
+In this section, we briefly review the basic concepts and definitions underlying dilated convolutional neural networks (NNs) in the context of time series forecasting. 
+
+Like the majority of popular NN models, dilated convolutional NNs belong to the general class of feedforward NNs. Such networks transform a high-dimensional input vector, also called the _input layer_ , by consecutively applying affine linear mappings and non-linear functions. An affine linear mapping followed by a non-linear function, which acts component-wise on the respective input, is called a _hidden layer_ . The layer that yields the final output of the NN is typically called the _output layer_ . The single entries of the vectors obtained at the different layers of the NN are called _input neurons_ , _hidden neurons_ , and _output neurons_ , respectively. The number of consecutively applied layers defines the _depth_ of the NN, while the number of neurons in a single layer defines the _width_ of the NN. The non-linearity usually remains the same across all hidden layers of the network. The parameters that define the affine mappings can be different from layer to layer and are usually referred to as the _weights_ of the NN. Note that the terms ’parameters’ and ’weights’ both refer to the values that define what a given NN model actually computes and are used interchangeably in the machine learning literature. The weights of a NN are _learnt_ during _training_ in the sense that they are iteratively updated with the goal of minimizing a predefined loss function (cf. Section 4.3). Before training, NN weights are usually initialized randomly. Sometimes it can be helpful to keep certain parameters of a NN model fixed throughout training. In this case, one differentiates between _trainable_ and _non-trainable_ weights. Informally, the extent to which a NN can compute different functions when varying the values of its trainable weights is often called
+
+<!-- page: 4 -->
+
+its _capacity_ , or _expressivity_ . Increasing the depth or the width of a NN model usually also increases its capacity. 
+
+Let _d_ denote the dimension of the input vector _x_ and _L_ the number of layers in a feedforward NN where the _l_ -th layer consists of _Nl_ neurons. Each layer is then defined by an affine linear mapping 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0004-02.png)
+
+
+with _N_ 0 = _d_ , weight matrices _Wl ∈_ R<sup>_Nl−_1</sup><sup>_×Nl_</sup> , and bias vectors _bl ∈_ R<sup>_Nl_</sup> . Let _σ_ denote a realvalued non-linear function that acts component-wise on the input. The respective feedforward NN defines a mapping from R<sup>_d_</sup> _→_ R<sup>_NL_</sup> , namely 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0004-04.png)
+
+
+A convolutional neural network (CNN) is a special case of a feedforward NN where the affine mappings _Al_ are chosen to define convolution operators. The one-dimensional convolution of a sequence _x_ with a filter _h_ is defined as 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0004-06.png)
+
+
+CNNs first rose to prominence when deep CNNs revolutionized the field of image classification by outperforming all previously existing approaches by significant margins (Krizhevsky, Sutskever, and Hinton, 2012). The basic idea behind deep CNNs is that sliding a filter over a given input is a simple means of detecting local features. In the context of image classification, these features are usually certain types of edges or corners in early layers but can become increasingly complex in deeper layers where filters are sensitive to certain geometrical shapes or even objects. A main advantage of CNNs is that only considering convolution operators imposes a strong structural constraint on the respective linear mapping _Al_ , which drastically reduces the number of model parameters when working with high-dimensional input data such as images. 
+
+Deep CNNs have also been widely applied for time series prediction (Oord et al., 2016; Borovykh, Bohte, and Oosterlee, 2017). When working with time series, it is usually required that a filter can only aggregate information from the past and present, but not from the future. This type of convolution is known as _causal_ convolution and can be written as 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0004-09.png)
+
+
+where _h_ denotes a finite filter of length _N_ . 
+
+The _receptive field_ of a model describes the part of an input time series which is actually used by the model to compute a prediction for future values of the time series. That is, the receptive field determines how far a model can see into the past. When only considering convolutions of the form (9), the length of the receptive field can only grow linearly with the number of filter coefficients, that is, the number of trainable parameters in the model. In situations with longrange dependencies, this can lead to inefficient training and overfitting due to the high number of trainable parameters. A possible remedy is to use compositions of _dilated_ convolutions. In a dilated convolution, the inner product with the convolution filter is not based on the consecutive entries of the time series but on entries that are a fixed number of steps apart from each other. Formally, a dilated causal convolution with dilation factor _k_ is defined as 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0004-12.png)
+
+
+where _h_ denotes a finite filter of length _N_ . By composing dilated convolutional layers that have exponentially increasing dilation factors, it is possible to cover receptive fields that grow exponentially with the number of trainable model parameters. All three types of convolutions presented in this section are illustrated in Figure 1. Examples for causal convolutions of an RV time series with different average filters are shown in Figure 2.
+
+<!-- page: 5 -->
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0005-00.png)
+
+
+<!-- Start of picture text -->
+z 4 =  h− 1 x 3 +  h 0 x 4 +  h 1 x 5 z 9 =  h− 1 x 8 +  h 0 x 9 +  h 1 x 10<br>z 0 z 1 z 2 z 3 z 4 z 5 z 6 z 7 z 8 z 9 z 10 z 11<br>z =  x ∗ h<br>h− 1 h 0 h 1 h− 1 h 0 h 1<br>x 0 x 1 x 2 x 3 x 4 x 5 x 6 x 7 x 8 x 9 x 10 x 11<br>(a)<br><!-- End of picture text -->
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0005-01.png)
+
+
+<!-- Start of picture text -->
+z 4 =  h 2 x 2 +  h 1 x 3 +  h 0 x 4 z 9 =  h 2 x 7 +  h 1 x 8 +  h 0 x 9<br>z 0 z 1 z 2 z 3 z 4 z 5 z 6 z 7 z 8 z 9 z 10 z 11<br>z =  x ∗ c h<br>h 2 h 1 h 0 h 2 h 1 h 0<br>x 0 x 1 x 2 x 3 x 4 x 5 x 6 x 7 x 8 x 9 x 10 x 11<br>(b)<br>z 4 =  h 2 x 0 +  h 1 x 2 +  h 0 x 4 z 9 =  h 2 x 5 +  h 1 x 7 +  h 0 x 9<br>z 0 z 1 z 2 z 3 z 4 z 5 z 6 z 7 z 8 z 9 z 10 z 11<br>z =  x ∗ c 2 h<br>h 2 h 1 h 0 h 2 h 1 h 0<br>x 0 x 1 x 2 x 3 x 4 x 5 x 6 x 7 x 8 x 9 x 10 x 11<br>(c)<br><!-- End of picture text -->
+
+Figure 1: Three different types of one-dimensional convolutions. (a) One-dimensional convolution of a time series _x_ with a filter _h_ . (b) Causal convolution of a time series _x_ with a filter _h_ . (c) Dilated causal convolution of a time series _x_ with a _h_ . 
+
+### **3.1 Optimization of NNs** 
+
+Let Φ _θ_ : R<sup>_d_</sup> _→_ R<sup>_NL_</sup> be the function defined by a NN model as in equation (7), where _θ_ denotes the set of all trainable weights. That is, _θ_ contains all parameters of the matrices _Wl_ and bias vectors _bl_ that are learnt during training. Here, we consider the case of _supervised learning_ . This means that the model is optimized such that its output best matches input-output pairs from a carefully annotated and selected _training data set_ . The outputs within the training data set are usually referred to as _labels_ . When training a NN architecture to yield one-day-ahead forecasts for RV, the input _x_ in a single input-label pair from the training set typically consists of the complete training RV time series up to a day _t_ , while the corresponding label _y_ is chosen as the RV on day _t_ + 1, that is, _x_ = ( _. . . , RVt−_ 1 _, RVt_ )<sup>_T_</sup> and _y_ = _RVt_ +1. 
+
+For a sequence _Z_ = � _x_<sup>(</sup><sup>_n_)</sup> _, y_<sup>(</sup><sup>_n_)�</sup><sup>_N_</sup> _n_ =1<sup>of</sup><sup>_N_input-labelpairs,wedefinethe</sup><sup>_empiricalrisk_via</sup> 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0005-06.png)
+
+
+where _ℓ_ is a real-valued loss function. In the context of this work, the labels _y_<sup>(</sup><sup>_n_)</sup> are always the consecutive values of the RV time series _x_<sup>(</sup><sup>_n_)</sup> , which are both taken from a predefined training time series. Φ _θ_ ( _x_<sup>(</sup><sup>_n_)</sup> ) represents the forecast of the model with parameters _θ_ . 
+
+The sequence _Z_ , which can contain the complete training data set, or only selected samples from different parts of the full training time series, is usually referred to as a _batch_ . The length _N_ of the sequence _Z_ is called the _batch size_ . 
+
+The weights _θ_ are updated iteratively via gradient descent. In its most basic form, the gradient
+
+<!-- page: 6 -->
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0006-00.png)
+
+
+<!-- Start of picture text -->
+×10 4<br>1.6<br>time series RV<br>1.4 5-day averages RV c havg(5)<br>22-day averages RV c havg(22)<br>1.2<br>1.0<br>0.8<br>0.6<br>0.4<br>0.2<br>2004-01 2004-02 2004-03 2004-04 2004-05 2004-06 2004-07 2004-08<br>date<br>0.3 5-day average filter havg (5)<br>22-day average filter havg (22)<br>0.2<br>0.1<br>0.0<br>2 1 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24<br>index<br>realized volatility<br>weight<br><!-- End of picture text -->
+
+Figure 2: Causal convolution of a realized volatility time series with 5-day and 22-day average filters. The filters _h_<sup>(5)</sup> avg<sup>and</sup><sup>_h_(22)</sup> avg<sup>aredefinedinequation(14).</sup> 
+
+descent update rule can be written as 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0006-03.png)
+
+
+where _α >_ 0 denotes the learning rate, _Z_<sup>(</sup><sup>_i_)</sup> is the training data batch used for the _i_ -th update of the parameters _θ_ , and the gradient vector is defined as 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0006-05.png)
+
+
+Two of the most popular first-order gradient descent algorithms are ADAM (Kingma and Ba, 2017) and RMSProp (Hinton, Srivastava, and Swersky, 2012), which both implement adaptive schemes for the learning rate _α_ . The gradient vector _∇θJ_ ( _θ_<sup>(</sup><sup>_i_)</sup> _, Z_<sup>(</sup><sup>_i_)</sup> ) is usually obtained via backpropagation (Rumelhart, Hinton, and Williams, 1986). 
+
+In practice, each batch _Z_<sup>(</sup><sup>_i_)</sup> usually contains only a small subset of the complete training data, which is selected randomly for each gradient descent update of the form (12). This approach is known as mini-batch stochastic gradient descent (SGD). When only using a single input-label pair in each gradient descent step, the learning algorithm often has difficulties identifying patterns in the data, in particular when the training data is very noisy. Using the entire training data as a single batch, on the other hand, often leads to overfitting. Mini-batch SGD can be seen as a compromise between these two extremes which has been found to be highly applicable in practice. 
+
+Parameters such as the (initial) learning rate _α_ , the batch size, the stopping criteria for the learning algorithm, but also the width and depth and the NN are called _hyperparameters_ . Hyperparameters define important characteristics of the architecture and the applied learning algorithm which are not changed during training. 
+
+For a more comprehensive overview on deep learning, see for example Goodfellow, Bengio, and Courville (2016).
+
+<!-- page: 7 -->
+
+## **4 Method** 
+
+We aim to exploit the close relationship between the original HAR model (cf. equation (5)) and NN models that are based on layers of dilated causal convolutions of the form (10). In particular, we will consider a NN network model whose weights can be initialized such that, before optimization, it exactly replicates the predictions of a fitted HAR model. This initialization approach significantly stabilizes the optimization process and allows us to perform a rigorous evaluation of the nonlinear NN model relative to the HAR model with respect to different types of data as well as different optimization settings. 
+
+We first note that the HAR model can easily be written in terms of convolutions with average Let 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0007-03.png)
+
+
+denote an average filter of length _j ∈_ N. Then, the averages of daily realized volatility are defined by _RVt_<sup>(</sup><sup>_j_)</sup> = _RV ∗_<sup>c</sup> _h_<sup>(</sup> avg<sup>_j_)andthus,theHARmodel(5)canbewrittenas</sup> � � _t_<sup>,</sup> 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0007-05.png)
+
+
+For the model defined in equation (15), the weights of the filters _h_<sup>(1)</sup> avg<sup>,</sup><sup>_h_(5)</sup> avg<sup>, and</sup><sup>_h_(22)</sup> avg<sup>are fixed to</sup> obtain the respective 1-, 5-, and 22-day averages (cf. Figure 2). A straightforward but impractical approach to define a CNN with learnable filters based on this model would be to consider a network with a single convolutional layer, which consists of three different filters of length 1, 5, and 22, respectively, with trainable weights, and a linear output layer, which aggregates all filter outputs with trainable weights _β_ 0 _, . . . , β_ 3. With the additional non-linearity, which is applied to all filter outputs, and a total number of 32 trainable parameters ( _β_ 0 _, . . . , β_ 3 and the weights of the three filters in the convolutional layer), this model would be significantly more expressive than the HAR model, which has only four parameters. Moreover, such a shallow model with only one hidden layer does not exploit the hierarchical structure of deep CNNs while having the same receptive field as the original HAR model with eight times as many model parameters. As a consequence, this model would be extremely prone to overfitting. 
+
+An approach that keeps the number of model parameters low while also increasing the expressiveness of the HAR model such that meaningful filters for different time horizons can be learnt is to consider dilated convolutions and multiplicatively nested time horizons. The latter means that each aggregation period in a sequence of time horizons is an integer multiple of its predecessor (cf. equation 16). In particular, this approach yields receptive fields that can grow exponentially in the number of model parameters. 
+
+Let ( _j_ 1 _, . . . , jL_ ) be an increasing sequence of _L_ aggregation periods, where each period is an integer multiple of its predecessor, that is, 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0007-09.png)
+
+
+Then, the respective averages of daily RVs can be defined recursively via 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0007-11.png)
+
+
+For the multiplicatively nested sequence of time horizons (1 _,_ 5 _,_ 20), which closely resembles the sequence of time horizons considered in the original HAR model, this approach would yield a hierarchical model of dilated convolutions with three filters of lengths 1, 5, and 4, respectively, where the second filter computes weekly weighted averages and the third filter monthly weighted averages. The respective model, however, would only contain 14 trainable parameters. 
+
+### **4.1 HARNet model** 
+
+The HARNet is based on a hierarchy of dilated causal convolutions and utilizes the recursive relationship defined in equation (17). For a multiplicatively nested sequence (cf. (16)) of _L_ aggregation
+
+<!-- page: 8 -->
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0008-00.png)
+
+
+<!-- Start of picture text -->
+RV � 20<br>RV 0 RV 1 RV 2 RV 3 RV 4 RV 5 RV 6 RV 7 RV 8 RV 9 RV 10 RV 11 RV 12 RV 13 RV 14 RV 15 RV 16 RV 17 RV 18 RV 19<br>(a) Network topology of Φ HAR20 θ with aggregation periods (1 ,  5 ,  20).<br><!-- End of picture text -->
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0008-01.png)
+
+
+<!-- Start of picture text -->
+(b) Network topology of Φ HAR80 θ with aggregation periods (1 ,  5 ,  20 ,  40 ,  80).<br><!-- End of picture text -->
+
+Figure 3: Topologies of the NN models used in our experiments. The blue nodes in the bottom row denote the input time series while the green nodes in the top row denote the respective oneday-ahead predictions. 
+
+periods ( _j_ 1 _, . . . , jL_ ), the HARNet consists of _L_ convolutional layers, where the _l_ -th layer is defined by a finite filter _h_<sup>(</sup><sup>_l_)</sup> and computes 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0008-04.png)
+
+
+where _x ∈_ R<sup>Z</sup> is an input time series and _σ_ denotes the non-linear activation function. Here, we always use the rectified linear unit (ReLU) as an activation function, which is defined as 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0008-06.png)
+
+
+The complete function implemented by a HARNet is then given by 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0008-08.png)
+
+<!-- page: 9 -->
+
+where the set _θ_ of all trainable parameters consists of the weights _β_ 0 _, . . . , βL_ as well as the filters _h_<sup>(1)</sup> _, . . . , h_<sup>(</sup><sup>_L_)</sup> . Note, however, that in the case of _j_ 1 = 1, which is true for all models considered in this work, we will omit the first convolutional layer and simply compute the identity instead. Then, the total number of model parameters can be computed as 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0009-01.png)
+
+
+We will write Φ<sup>HAR20</sup> _θ_ and Φ<sup>HAR80</sup> _θ_ to denote the HARNet models that are based on the aggregation periods (1 _,_ 5 _,_ 20) and (1 _,_ 5 _,_ 20 _,_ 40 _,_ 80), respectively. The corresponding network topologies are shown in Figure 3. The models Φ<sup>HAR20</sup> _θ_ and Φ<sup>HAR80</sup> _θ_ thus contain 13 and 19 trainable parameters, respectively. 
+
+### **4.2 Initialization of model parameters** 
+
+For a HARNet defined by a sequence of _L_ aggregation periods ( _j_ 1 _, . . . , jL_ ), we initialize the parameters _β_ 0 _, . . . , βL_ with the fitted parameters of the HAR model (5), which corresponds to the same sequence of aggregation periods. We consider three different techniques for estimating the baseline HAR model, namely OLS, WLS, and log-OLS (cf. Section 2). 
+
+The convolutional filter in the _l_ -th layer is initialized with the average filter of the corresponding length, that is, 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0009-06.png)
+
+
+With this initialization and the ReLU as an activation function, the function Φ<sup>HAR</sup> _θ_ exactly replicates the predictions of the respective fitted HAR model, given that the input time series does not contain any negative values. 
+
+### **4.3 Loss functions and optimization** 
+
+Fitting the HAR model by OLS or WLS can be done via a closed formula and numerically only requires a single matrix inversion. However, even for linear problems such as the HAR model, this is only possible when considering the (weighted) mean squared error as the objective function. While gradient descent-based optimization is usually much more tedious and in most relevant situations not guaranteed to converge to a global minimum, it comes with the great advantage that it can be performed with arbitrary loss functions. 
+
+Here, we consider three different loss functions during optimization and for evaluating the forecast accuracy of trained models. These are the mean absolute error (MAE), the mean squared error (MSE) and the QLIKE error as proposed by Patton (2011). For an observation _y_ and a 
+
+Table 1: Optimization hyperparameters. Choosing a batch size of 4, and 5 consecutive labels per training sample implies that a single batch contains labels for 20 different one-day-ahead forecasts that are distributed across 4 randomly sampled segments of the complete training time series. For a training time series that spans four years – which roughly corresponds to 1,000 labels – these settings correspond to an approximate number of 200 epochs. 
+
+|Optimizer|ADAM|
+|---|---|
+|Learning rate|1_×_10<sup>_−_4</sup>|
+|Batch size|4|
+|Consecutive labels per training sample|5|
+|Iterations|10,000|
+
+<!-- page: 10 -->
+
+prediction _y_ � produced by the model, these functions are defined by 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0010-01.png)
+
+
+According to Patton (2011), _ℓ_ MAE and _ℓ_ Q belong to a parametric family of robust and homogeneous loss functions for volatility forecasting, i.e., they are robust to noise in the volatility proxy and invariant to the choice of units of measurement. 
+
+For a given time series of daily RVs, HARNets are trained via mini-batch stochastic gradient descent. For each iteration of the gradient descent algorithm, a batch is constructed by randomly sampling a fixed number of training samples that are taken from different regions of the training time series. Each of these training samples is a segment of consecutive observations from the training time series whose length exceeds the length of the receptive field of the model by a fixed number of entries. Each of these additional entries defines an input-observation pair in the sense that the sample contains sufficient data for the model to compute the respective one-dayahead prediction. This format is chosen because predictions for consecutive days can be computed efficiently during training due to the convolutional structure of the architecture. On the other hand, by considering batch sizes that are greater than one, it is also possible to combine samples from completely different parts of the training time series in a single batch. 
+
+In our numerical experiments, we apply 10,000 iterations of the ADAM Kingma and Ba (2017) optimizer with a fixed learning rate of 10<sup>_−_4</sup> . We use a batch size of 4 and consider 5 consecutive labels per training sample. That is, each input sample consists of a time series which exceeds the length of the receptive field of the model by 5 entries, and a single batch thus contains a total of 20 labels that come from 4 different regions of the complete training time series. 
+
+In the subsequently presented results, we usually consider training time series that span four consecutive years, which corresponds to roughly 1,000 one-day-ahead predictions that can be used as labels. This means that with 10,000 iterations of stochastic gradient descent and 20 labels per batch, our optimization algorithm runs for roughly 200 epochs. That is, each label in the complete training time series is used approximately 200 times. All hyperparameters are summarized in Table 1. 
+
+## **5 Results** 
+
+To evaluate the forecast accuracy of the proposed models and optimization techniques, we consider time series of daily RV for three different indexes, namely the S&P500, the FTSE, and the DJI. The data is obtained from Oxford-Man Institutes realised library (Heber et al., 2009), from which we use the 5-min sub-sampled realized variance measure. Each of the three daily RV time series spans more than 19 years, ranging from 2001-08-29 to 2020-12-31. We split each time series into 15 pairs of training and test sets, where each training set spans four consecutive years and the succeeding year is used as a test set. Throughout this section, we will compare different methods with respect to their performance across all 15 pairs of training and test sets for each of the three indexes. 
+
+We evaluate the HARNet models Φ<sup>HAR20</sup> _θ_ and Φ<sup>HAR80</sup> _θ_ by considering three different choices for the HAR baseline fit that is used for initializing the respective model parameters and three different loss functions. The considered loss functions are _ℓ_ MAE, _ℓ_ MSE, and _ℓ_ Q (cf. Section 4.3). The three choices for the HAR baseline fit are OLS, WLS, and log-OLS (cf. Section 2). To ensure that predictions are strictly larger than zero, we clip the predicted value for both models at half of the smallest realized variance in the training set. All input RV time series are scaled linearly before being passed to the model such that 0 is mapped to 0 and 10<sup>_−_3</sup> is mapped to 1. When working with logarithmized time series, _−_ 13 is mapped to 0 and _−_ 2 _._ 5 is mapped to 1. Scaling input features to roughly cover the interval [0 _,_ 1] is common practice in many machine learning applications and often significantly improves gradient descent optimization. 
+
+Note that when using the log-OLS fit of the HAR model as a baseline, the NN model is also optimized for the logarithmized time series. In this case, the model does not predict the realized
+
+<!-- page: 11 -->
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0011-00.png)
+
+
+<!-- Start of picture text -->
+SPX<br>MAE MSE QLIKE<br>1.2 1.2 1.2<br>1.1 1.1 1.1<br>1.0 1.0 1.0<br>0.9 0.9 0.9<br>0.8 0.8 0.8<br>0.7 0.7 0.7<br>0.6 0.6 0.6<br>0.5 0.5 0.5<br>0.4 0.4 0.4<br>0.3 0.3 0.3<br>ols wls log ols wls log ols wls log<br>HAR baseline fit HAR baseline fit HAR baseline fit<br>(a)<br>FTSE<br>MAE MSE QLIKE<br>1.2 1.2 1.2<br>1.1 1.1 1.1<br>1.0 1.0 1.0<br>0.9 0.9 0.9<br>0.8 0.8 0.8<br>0.7 0.7 0.7<br>0.6 0.6 0.6<br>0.5 0.5 0.5<br>0.4 0.4 0.4<br>0.3 0.3 0.3<br>ols wls log ols wls log ols wls log<br>HAR baseline fit HAR baseline fit HAR baseline fit<br>(b)<br>DJI<br>MAE MSE QLIKE<br>1.2 1.2 1.2<br>1.1 1.1 1.1<br>1.0 1.0 1.0<br>0.9 0.9 0.9<br>0.8 0.8 0.8<br>0.7 0.7 0.7<br>0.6 0.6 0.6<br>0.5 0.5 0.5<br>0.4 0.4 0.4<br>0.3<br>0.3 0.3<br>ols wls log ols wls log ols wls log<br>HAR baseline fit HAR baseline fit HAR baseline fit<br>(c)<br>error rel. to baseline<br>error rel. to baseline<br>error rel. to baseline<br><!-- End of picture text -->
+
+Figure 4: Performance of the Φ<sup>HAR20</sup> _θ_ model with aggregation periods (1 _,_ 5 _,_ 20) relative to the respective HAR baseline fit. Each boxplot depicts the distribution of the relative test errror for 15 training set/test set pairs taken from a time series of the respective index that ranges from 2002 to 2020.
+
+<!-- page: 12 -->
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0012-00.png)
+
+
+<!-- Start of picture text -->
+SPX<br>MAE MSE QLIKE<br>1.2 1.2 1.2<br>1.1 1.1 1.1<br>1.0 1.0 1.0<br>0.9 0.9 0.9<br>0.8 0.8 0.8<br>0.7 0.7 0.7<br>0.6 0.6 0.6<br>0.5 0.5 0.5<br>0.4 0.4 0.4<br>0.3<br>0.3 0.3<br>ols wls log ols wls log ols wls log<br>HAR baseline fit HAR baseline fit HAR baseline fit<br>(a)<br>FTSE<br>MAE MSE QLIKE<br>1.2 1.2 1.2<br>1.1 1.1 1.1<br>1.0 1.0 1.0<br>0.9 0.9 0.9<br>0.8 0.8 0.8<br>0.7 0.7 0.7<br>0.6 0.6 0.6<br>0.5 0.5 0.5<br>0.4 0.4 0.4<br>0.3 0.3 0.3<br>ols wls log ols wls log ols wls log<br>HAR baseline fit HAR baseline fit HAR baseline fit<br>(b)<br>DJI<br>MAE MSE QLIKE<br>1.2 1.2 1.2<br>1.1 1.1 1.1<br>1.0 1.0 1.0<br>0.9 0.9 0.9<br>0.8<br>0.8 0.8<br>0.7<br>0.7 0.7<br>0.6<br>0.6 0.6<br>0.5<br>0.5 0.5<br>0.4<br>0.4 0.4<br>0.3<br>0.3 0.3<br>ols wls log ols wls log ols wls log<br>HAR baseline fit HAR baseline fit HAR baseline fit<br>(c)<br>error rel. to baseline<br>error rel. to baseline<br>error rel. to baseline<br><!-- End of picture text -->
+
+Figure 5: Performance of the Φ<sup>HAR80</sup> _θ_ model with aggregation periods (1 _,_ 5 _,_ 20 _,_ 40 _,_ 80) relative to the respective HAR baseline fit. Each boxplot depicts the distribution of the relative test errror for 15 training set/test set pairs taken from a time series of the respective index that ranges from 2002 to 2020.
+
+<!-- page: 13 -->
+
+variance, but the log-realized variance, which needs to be reconverted to the original scale of measurement. Here, we apply the bias correction proposed by Proietti and L¨utkepohl (2013). 
+
+Figure 4 depicts test errors relative to the test error of the respective HAR baseline fit for the Φ<sup>HAR20</sup> _θ_ model after optimization with three different loss functions. In each case, the error on the test set is computed with the same loss function, which was already used during optimization. Note that before optimization, Φ<sup>HAR20</sup> _θ_ and the HAR baseline model yield identical predictions. Our results therefore provide a detailed quantitative analysis as to how the performance of the model changes from the HAR baseline during optimization. Analogous results for the Φ<sup>HAR80</sup> _θ_ model are shown in Figure 5. 
+
+For both models Φ<sup>HAR20</sup> _θ_ and Φ<sup>HAR80</sup> _θ_ , we observe that the largest relative improvement can be achieved when using _ℓ_ MAE as a loss function and the standard OLS approach for fitting the baseline HAR model. In the case of Φ<sup>HAR20</sup> _θ_ , across all indexes, we achieve an average reduction of the median test MAE of about 11.74%. Substantial improvements in terms of the MAE can also be observed when choosing the WLS fit as a starting point. However, when considering logarithmized RV time series, the relative improvement in accuracy is greatly reduced. Using _ℓ_ Q as a loss functions yields slightly reduced but still considerable improvements relative to the HAR baseline fit, in particular when considering the standard OLS approach. In the case of _ℓ_ MSE, however, the test error of the NN model relative to the baseline HAR fit remains almost the same after optimization. 
+
+Based on the results presented in Figures 4 and 5, we believe that the following observations are of significant importance and merit further analysis: 
+
+1. While Rahimikia and Poon (2020) do not recommend using the QLIKE error as an objective function during optimization, we found that this approach can yield consistent and substantial improvements. Can these diverging experimental results be explained by our approach of initializing the parameters of the HARNet model? 
+
+2. The QLIKE error has been described as a superior metric for ranking different volatility forecasting models (Patton and Sheppard, 2009). Does applying _ℓ_ Q as a loss function also yield improvements with respect to other metrics such as the MAE or the MSE and can thus be generally recommended in this setting? 
+
+3. Our method yields substantial improvements relative to the baseline HAR model when considering the standard OLS fit but often little to no improvements when using WLS or log-OLS. This raises the question whether HARNets that used an OLS fit as a starting point also outperform HAR models that were fitted with an WLS or log-OLS approach. 
+
+4. On average, the optimized Φ<sup>HAR20</sup> _θ_ model matches the performance on the test data of the respective baseline HAR fit and often clearly outperforms it. That is, it often generalizes better despite having significantly more model parameters. In particular, Φ<sup>HAR20</sup> _θ_ learns weighted filters for the weekly and monthly aggregation periods, whereas the original HAR model only considers fixed average filters. Can an analysis of the learnt filter weights provide further insights as to which aggregates of past data are of significant importance when forecasting RV? 
+
+In the following subsections, we will perform a detailed analysis of the questions raised above. 
+
+### **5.1 Initialization with a HAR baseline model stabilizes optimization with the QLIKE loss** 
+
+Rahimikia and Poon (2020) report an inferior performance of machine learning models for RV forecasting that were optimized with a QLIKE loss as compared to an MSE loss. They argue that this could be due to the insensitivity of the QLIKE error in cases where the true RV is very high. In practice, such a flat loss function would make it very difficult for the optimizer to overcome large training errors on volatility jump days during optimization. 
+
+We suspect that this issue can at least partially be overcome in our setting due to the proposed initialization approach. After initialization, the HARNet yields identical predictions as the baseline HAR model. Thus, it can produce extreme prediction errors only to the same extent as produced
+
+<!-- page: 14 -->
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0014-00.png)
+
+
+<!-- Start of picture text -->
+SPX 2006 - 2009 FTSE 2013 - 2016 DJI 2003 - 2006<br>run_1<br>run_2<br>run_3<br>run_4<br>101 run_5run_6<br>run_7<br>run_8<br>run_9<br>run_10<br>100 HAR<br>10 1<br>0 5000 10000 0 5000 10000 0 5000 10000<br>iterations iterations iterations<br>(a) Random initialization of weights.<br>SPX 2006 - 2009 FTSE 2013 - 2016 DJI 2003 - 2006<br>0.130<br>run_1<br>0.185<br>0.31 run_2<br>run_3<br>0.180 0.30 0.129 run_4run_5<br>run_6<br>0.175 0.29 run_7<br>0.128 run_8<br>run_9<br>0.170 0.28 run_10<br>HAR<br>0.27 0.127<br>0.165<br>0.26<br>0.160 0.126<br>0 5000 10000 0 5000 10000 0 5000 10000<br>iterations iterations iterations<br>(b) Proposed initialization with the HAR baseline model.<br>SPX 2006 - 2009 FTSE 2013 - 2016 DJI 2003 - 2006<br>QLIKE median mean std median mean std median mean std<br>Random init 5.62038 23.84032 28.00004 27.08056 19.66301 12.34607 1.54270 8.09141 8.76879<br>HAR baseline init 0.16084 0.16083 0.00005 0.25620 0.25621 0.00021 0.12720 0.12722 0.00013<br>(c) Summary of QLIKE training errors after 10,000 iterations.<br>QLIKE<br>QLIKE<br><!-- End of picture text -->
+
+Figure 6: Initialization with a baseline HAR model stabilizes the optimization of a HARNet when using the QLIKE error as a loss function. (a) Optimization curves for ten different optimization runs of the Φ<sup>HAR20</sup> _θ_ model with randomly initialized weights. (b) Optimization curves for ten different optimization runs of the Φ<sup>HAR20</sup> _θ_ model with the proposed initialization with a HAR baseline model. (c) QLIKE training errors after 10,000 iterations of the ADAM algorithm. 
+
+by the baseline model. However, when considering a random initialization of the model weights, this is not the case and extreme prediction errors are very common during early optimization. 
+
+To test this hypothesis experimentally, we compare optimization curves for the model Φ<sup>HAR20</sup> _θ_ when using random initialization techniques and when using an OLS fit of the HAR model as a baseline. For random initialization, we consider the Glorot uniform initializer (Glorot and Bengio, 2010), which is one of the most common initialization methods for NN weights. The Glorot uniform initializer draws samples from a uniform distribution over an interval whose limits depend on the number of input and output units in the weight tensor of a layer. 
+
+Figure 6 contains the results of an experiment where we first randomly selected a time span of four years as a training set for each of the three indexes, and then performed 10 independent optimizations with both initialization methods, respectively. Our results clearly show that the QLIKE training error highly depends on the initialization when considering random initialization. As shown in Figure 6a, random initialization causes a high variation in the final training error
+
+<!-- page: 15 -->
+
+after 10,000 iterations of the ADAM algorithm, while all of the 10 optimization runs yield training errors that are greater than the training error of the fitted HAR model with the same aggregation periods. When considering initialization with a baseline HAR model, on the other hand, all of the 10 optimization curves follow basically the same path and improve upon the QLIKE training error of the baseline model (cf. Figure 6b). 
+
+### **5.2 QLIKE optimization also generalizes with respect to the MAE and MSE test metrics** 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0015-02.png)
+
+
+<!-- Start of picture text -->
+SPX FTSE DJI<br>1.1 1.1 1.1<br>1.0 1.0 1.0<br>0.9 0.9 0.9<br>0.8 0.8 0.8<br>0.7 0.7 0.7<br>0.6 0.6 0.6<br>0.5 0.5 0.5<br>0.4 0.4 0.4<br>0.3 0.3 0.3<br>0.2 0.2 0.2<br>MAE MSE QLIKE MAE MSE QLIKE MAE MSE QLIKE<br>(a) HARNet with aggregation periods (1 ,  5 ,  20).<br>SPX FTSE DJI<br>1.1 1.1 1.1<br>1.0 1.0 1.0<br>0.9 0.9 0.9<br>0.8 0.8 0.8<br>0.7 0.7 0.7<br>0.6 0.6 0.6<br>0.5 0.5 0.5<br>0.4 0.4 0.4<br>0.3 0.3 0.3<br>0.2 0.2 0.2<br>MAE MSE QLIKE MAE MSE QLIKE MAE MSE QLIKE<br>(b) HARNet with aggregation periods (1 ,  5 ,  20 ,  40 ,  80).<br>error rel. to baseline<br>error rel. to baseline<br><!-- End of picture text -->
+
+Figure 7: Performance of the Φ<sup>HAR20</sup> _θ_ and Φ<sup>HAR80</sup> _θ_ models after optimization with the QLIKE loss function in terms of the MAE, MSE, and the QLIKE test error relative to the HAR baseline fit. The baseline fit was obtained by OLS. Each boxplot depicts the distribution of the relative test errror for 15 training set/test set pairs taken from a time series of the respective index that ranges from 2002 to 2020. 
+
+The QLIKE error is often considered to be the preferred evaluation metric in the context of RV forecasting. In our initial results, we found that when using the QLIKE error as a loss function, a HARNet can substantially improve upon the QLIKE test error of a HAR baseline model which was fitted by OLS (cf. Figures 4 and 5). This raises the question whether optimizing with a QLIKE loss function can also improve other test metrics such as the MAE or the MSE. 
+
+Our results compiled in Figure 7 indeed show that HARNets that were optimized with a QLIKE loss not only yield better test errors with respect to the QLIKE metric than the baseline HAR model but also with respect to the MAE and the MSE. While the improvements in terms of the MAE are smaller than when directly optimizing with an MAE loss, we found that this approach leads to consistent albeit small improvements in terms of the MSE test error. This is particularly surprising as in our initial results, we found that using the MSE as a loss function usually fails at
+
+<!-- page: 16 -->
+
+improving the MSE test error of the baseline model. 
+
+### **5.3 HARNets that are initialized with an OLS fit of the HAR baseline model outperform WLS and log-OLS fits of the baseline model** 
+
+Our main results presented in Figures 4 and 5 show that HARNets can substantially improve upon the forecasting accuracy when using an OLS fit of the HAR baseline model. However, this is in general not true when fitting the baseline model by WLS, while using the log-OLS fit of the baseline as a starting point for the HARNet usually yields no significant changes in the accuracy on the test set whatsoever. 
+
+The results presented in Figure 8 show that HARNets that were initialized with the OLS fit of the baseline model also consistently outperform the respective WLS and log-OLS fits of the baseline model in terms of the QLIKE error. We even found that HARNets that were initialized with the OLS fit of the baseline model consistently match the performance of the HAR baseline model which was obtained by the _best_ method for fitting its parameters, i.e., for which the decision whether to use OLS, WLS, or log-OLS was made after knowing the respective test errors. 
+
+In the log-OLS approach, the training time series is logarithmized before solving the linear system. This transformation introduces non-linearity to the forecasting model and implicitly reduces the relative importance of days with a very high RV in the OLS fit. When using WLS, on the other hand, one explicitly defines weights, which usually also reduce the importance of days of RV jumps. Both approaches are explicitly defined schemes that aim to overcome the limitations of simple linear models, such as the HAR model, without adding any complexity to the model itself. We believe that the results presented in this section suggest that, due to the significantly increased expressiveness, the HARNet model is capable of learning similarly effective relationships directly from the data. Explicitly incorporating the WLS or log-OLS fit of the HAR baseline model, however, seems to either cause the HARNet model to get stuck in unfavorable local minima or increase the risk of overfitting. 
+
+In summary, our findings suggest that when used for forecasting of daily RV, HARNets are best optimized with a QLIKE loss function and an initialization scheme which uses the OLS fit of the HAR baseline model as a starting point. 
+
+### **5.4 Interpretability of HARNet filter weights** 
+
+Due to the close relationship to the original HAR model, HARNets allow for a high degree of interpretability when forecasting RV, setting them apart from generic machine learning models which are often treated as black boxes. A particularly interesting property of a HARNet is that the time series corresponding to a certain aggregation period is computed via weighted averages rather than normal averages, as it is the case in the original HAR model. The filter kernels which define the respective weights are learnt during optimization and can thus inform us as to which of the previous days or weeks are in fact significant for RV forecasting within a given training time series. 
+
+Figure 9 depicts the distribution of the weights in the two convolutional layers of a Φ<sup>HAR20</sup> _θ_ model which was initialized with the OLS fit of the HAR baseline model and optimized with a QLIKE loss function for the 15 training sets obtained from the SPX time series. With respect to the first layer, it can be observed that the HARNet strongly focuses on the RV at time points _t −_ 1 and _t −_ 2, while the importance of the other days within the past week gradually diminishes. In particular, the RV at the day before yesterday played a significant role in all fits of the model. A possible explanation for this is that single RV jumps can only be distinguished from periods of generally high RV when at least considering the values at _t −_ 1 and _t −_ 2 in the time series. In the second layer, we can observe an almost linearly diminishing importance of the weeks in the past month. 
+
+## **6 Additional regressors** 
+
+Incorporating additional information contained in the time series of high-frequency returns can significantly improve the accuracy of RV forecasting models. Motivated by Patton and Sheppard
+
+<!-- page: 17 -->
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0017-00.png)
+
+
+<!-- Start of picture text -->
+SPX FTSE DJI<br>1.4 1.4 1.4<br>1.3 1.3 1.3<br>1.2 1.2 1.2<br>1.1 1.1 1.1<br>1.0 1.0 1.0<br>0.9 0.9 0.9<br>0.8 0.8 0.8<br>0.7 0.7 0.7<br>0.6 0.6 0.6<br>0.5 0.5 0.5<br>0.4 0.4 0.4<br>0.3 0.3 0.3<br>ols log wls best ols log wls best ols log wls best<br>HAR baseline fit HAR baseline fit HAR baseline fit<br>(a) HARNet with aggregation periods (1 ,  5 ,  20).<br>SPX FTSE DJI<br>1.4 1.4 1.4<br>1.3 1.3 1.3<br>1.2 1.2 1.2<br>1.1 1.1 1.1<br>1.0 1.0 1.0<br>0.9 0.9 0.9<br>0.8 0.8 0.8<br>0.7 0.7 0.7<br>0.6 0.6 0.6<br>0.5 0.5 0.5<br>0.4 0.4 0.4<br>0.3 0.3 0.3<br>ols log wls best ols log wls best ols log wls best<br>HAR baseline fit HAR baseline fit HAR baseline fit<br>(b) HARNet with aggregation periods (1 ,  5 ,  20 ,  40 ,  80).<br>Train Set 2012-2015 Test Set 2016<br>1.1 1.1<br>HarNet_ols HarNet_ols<br>HAR_ols HAR_ols<br>HAR_wls<br>HAR_log<br>1.0 1.0<br>0.9 0.9<br>0.8 0.8<br>0.7 100 101 102 103 104 0.7 100 101 102 103 104<br>iterations iterations<br>(c) A HARNet model initialized with the OLS fit of the<br>baseline model outperforms the OLS, WLS, and log-OLS<br>fit of the baseline model on the test set after optimization<br>QLIKE rel. to baseline<br>QLIKE rel. to baseline<br>QLIKE<br><!-- End of picture text -->
+
+Figure 8: Performance of the Φ<sup>HAR20</sup> _θ_ and Φ<sup>HAR80</sup> _θ_ models relative to different fits of the HAR baseline model. All HARNets were initialized with the OLS fit of the baseline model and optimized with the QLIKE loss function. The method _best_ means that the decision whether to use the OLS, WLS, or log-OLS approach for fitting the baseline model used in the comparison with the respective HARNet was made _after_ knowing the test errors. Each boxplot depicts the distribution of the relative test errror for 15 training set/test set pairs taken from a time series of the respective index that ranges from the year 2002 until 2020.
+
+<!-- page: 18 -->
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0018-00.png)
+
+
+<!-- Start of picture text -->
+SPX<br>Relative Importance of Previous Days Relative Importance of Previous Weeks<br>0.5 0.5<br>0.4 0.4<br>0.3 0.3<br>0.2 0.2<br>0.1 0.1<br>0.0 0.0<br>t-1 t-2 t-3 t-4 t-5 w-1 w-2 w-3 w-4<br>previous days previous weeks<br>relative weights relative weights<br><!-- End of picture text -->
+
+Figure 9: Distribution of normalized filter weights in the layers of a Φ<sup>HAR20</sup> _θ_ model which was initialized with the OLS fit of the HAR baseline model and optimized with a QLIKE loss function for the 15 training sets obtained from the SPX time series. 
+
+(2015) we consider the negative realized semivariance and the signed jump variation as additional inputs to our models. The ability of neural networks to identify nonlinear relations in the data might prove beneficial in a setting where this type of information is available. In line with BarndorffNielsen, Kinnebrock, and Shephard (2008), the realized semivariance decomposes the realized variance into components associated with positive and negative returns, respectively. Analogously to _RVt_ (cf. equation (3)), these components are defined as 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0018-03.png)
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0018-04.png)
+
+
+where _rt,n_ are the intraday returns and 1 denotes the indicator function. We denote _RSt_<sup>+(</sup><sup>_j_)</sup> and _RSt_<sup>_−_(</sup><sup>_j_)</sup> as the respective _j_ -day averages. The signed jump variation is defined as the difference between _RSt_<sup>+and</sup><sup>_RS_</sup> _t_<sup>_−_,thatis,</sup> 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0018-06.png)
+
+
+Accordingly, we consider the following linear HAR-type baseline model: 
+
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0018-08.png)
+
+
+with parameters _β_ 0 _, . . . , β_ 7 _∈_ R. The corresponding HARNets with aggregation periods (1 _,_ 5 _,_ 20) and (1 _,_ 5 _,_ 20 _,_ 40 _,_ 80) are defined by extending the model such that the input to the first convolutional layer is a two-dimensional time series, consisting of the entries for _RVt_ and _RSt_<sup>_−_,andeachlayer</sup> has two two-dimensional filters with the same length as in equation (18). Using a similar scheme as introduced in the case of a one-dimensional input time series, the model parameters of these extended HARNets can again be initialized such that they exactly reproduce the predictions of the linear baseline model (29). Notice that, when using the log-OLS approach, we cannot directly use signed jump variations as inputs since these are not always positive. In this case, as suggested
+
+<!-- page: 19 -->
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0019-00.png)
+
+
+<!-- Start of picture text -->
+SPX FTSE DJI<br>1.1 1.1 1.1<br>1.0 1.0 1.0<br>0.9 0.9 0.9<br>0.8 0.8 0.8<br>0.7 0.7 0.7<br>0.6 0.6 0.6<br>0.5 0.5 0.5<br>0.4 0.4 0.4<br>0.3 0.3 0.3<br>0.2 0.2 0.2<br>MAE MSE QLIKE MAE MSE QLIKE MAE MSE QLIKE<br>(a) Extended HARNet with aggregation periods (1 ,  5 ,  20).<br>SPX FTSE DJI<br>1.1 1.1 1.1<br>1.0 1.0 1.0<br>0.9 0.9 0.9<br>0.8 0.8 0.8<br>0.7 0.7 0.7<br>0.6 0.6 0.6<br>0.5 0.5 0.5<br>0.4 0.4 0.4<br>0.3 0.3 0.3<br>0.2 0.2 0.2<br>0.1 0.1 0.1<br>0.0 0.0 0.0<br>MAE MSE QLIKE MAE MSE QLIKE MAE MSE QLIKE<br>(b) Extended HARNet with aggregation periods (1 ,  5 ,  20 ,  40 ,  80).<br>error rel. to baseline<br>error rel. to baseline<br><!-- End of picture text -->
+
+Figure 10: Performance of the extended Φ<sup>HAR20</sup> _θ_ and Φ<sup>HAR80</sup> _θ_ models after optimization with the QLIKE loss function in terms of the MAE, MSE, and the QLIKE test error relative to the HAR baseline fit. The baseline fit was obtained by OLS. The input time series additionally contained values for the daily realized semivariance and the signed jump variation. Each boxplot depicts the distribution of the relative test errror for 15 training set/test set pairs taken from a time series of the respective index that ranges from the year 2002 until 2020. 
+
+in the appendix to Patton and Sheppard (2015), we replace ∆ _Jt_<sup>2byapercentagejumpvariation</sup> measure defined as 1 + ∆ _Jt_<sup>2</sup><sup>_/RVt_,priortologarithmizing.</sup> 
+
+Following the recommendations obtained in Section 5, we restrict our numerical experiments in this setting to the case where the QLIKE error is used as a loss function and the NN weights are initialized by the OLS fit of the baseline extended HAR model. Using the same pairs of test and training sets as in Section 5, Figure 10 compares the respectively optimized HARNets to the OLS fit of the baseline HAR model in terms of the MAE, MSE, and QLIKE test error. Again, we find that the extended HARNets can consistently and often substantially improve upon the accuracy of the baseline model with respect to all three test metrics and with larger margins than in our previous results from Section 5.2. 
+
+Figure 11 shows an analysis of the performance of QLIKE optimized HARNets with an OLS baseline fit relative to the OLS, WLS, and log-OLS fits of the respective extended baseline models. Similar to our results in Section 5.3, the extended Φ<sup>HAR20</sup> _θ_ model still outperforms all of the three approaches for fitting the baseline model and matches the performances of the method where the optimal fitting method was selected a-posteriori. However, we also found a slight decrease in the relative performance of the extended Φ<sup>HAR80</sup> _θ_ model, which is slightly outperformed by the log-OLS fit of the HAR baseline model with the same aggregation periods.
+
+<!-- page: 20 -->
+
+![](assets/2022-reisenhofer-et-al-harnet.pdf-0020-00.png)
+
+
+<!-- Start of picture text -->
+SPX FTSE DJI<br>1.95 1.95 1.95<br>1.85 1.85 1.85<br>1.75 1.75 1.75<br>1.65 1.65 1.65<br>1.55 1.55 1.55<br>1.45 1.45 1.45<br>1.35 1.35 1.35<br>1.25 1.25 1.25<br>1.15 1.15 1.15<br>1.05 1.05 1.05<br>0.95 0.95 0.95<br>0.85 0.85 0.85<br>0.75 0.75 0.75<br>0.65 0.65 0.65<br>0.55 0.55 0.55<br>0.45 0.45 0.45<br>0.35 0.35 0.35<br>0.25 0.25 0.25<br>0.15 0.15 0.15<br>ols log wls best ols log wls best ols log wls best<br>HAR baseline fit HAR baseline fit HAR baseline fit<br>(a) Extended HARNet with aggregation periods (1 ,  5 ,  20).<br>SPX FTSE DJI<br>1.9 1.9 1.9<br>1.8 1.8 1.8<br>1.7 1.7 1.7<br>1.6 1.6 1.6<br>1.5 1.5 1.5<br>1.4 1.4 1.4<br>1.3 1.3 1.3<br>1.2 1.2 1.2<br>1.1 1.1 1.1<br>1.0 1.0 1.0<br>0.9 0.9 0.9<br>0.8 0.8 0.8<br>0.7 0.7 0.7<br>0.6 0.6 0.6<br>0.5 0.5 0.5<br>0.4 0.4 0.4<br>0.3 0.3 0.3<br>0.2 0.2 0.2<br>0.1 0.1 0.1<br>0.0 0.0 0.0<br>ols log wls best ols log wls best ols log wls best<br>HAR baseline fit HAR baseline fit HAR baseline fit<br>(b) Extended HARNet with aggregation periods (1 ,  5 ,  20 ,  40 ,  80).<br>QLIKE rel. to baseline<br>QLIKE rel. to baseline<br><!-- End of picture text -->
+
+Figure 11: Performance of the extended Φ<sup>HAR20</sup> _θ_ and Φ<sup>HAR80</sup> _θ_ models relative to different fits of the HAR baseline model. All HARNets were initialized by OLS estimation of the baseline model and optimized with the QLIKE loss function. The method _best_ means that the decision whether to use the OLS, WLS, or log-OLS approach for fitting the baseline model used in the comparison with the respective HARNet was made _after_ knowing the test errors. The input time series additionally contained values for the daily realized semivariance and the signed jump variation. Each boxplot depicts the distribution of the relative test errror for 15 training set/test set pairs taken from a time series of the respective index that ranges from the year 2002 until 2020.. 
+
+## **7 Conclusions** 
+
+We proposed a novel NN model, dubbed HARNet, for the forecasting of RV time series. HARNets are based on hierarchies of dilated causal convolutions. Their close relationship to the well-known linear HAR model allows for an explicit initialization scheme after which the initialized HARNet is computationally equivalent to the fitted HAR baseline model. This approach significantly stabilizes the optimization of HARNets and facilitates a comprehensive evaluation of their performance relative to the respective baseline models. 
+
+We found that HARNets can substantially improve upon the forecasting accuracy of the respective HAR baseline models. In particular, HARNets that are initialized by OLS fit of the HAR baseline model and optimized by a QLIKE loss function outperform OLS, WLS, and log-OLS fits of the HAR baseline model when considering the daily RV time series as the sole input. 
+
+While in practice, NN models are often treated as black boxes, the model parameters of a HARNet can be clearly interpreted. In this respect, we found that the filter weights, which define the features at weekly and monthly time horizons of a HARNet follow a distinct pattern after
+
+<!-- page: 21 -->
+
+optimization. In particular, we found that within the previous week, yesterday and the day before yesterday make by far the most significant contributions to today’s RV forecast. We suspect that this reflects the fact that single jumps can only be discriminated from extended periods of high RV when looking at least two days in the past. Regarding the monthly time horizon, we found that within the previous month, the importance of single weeks for the RV forecast seems to diminish almost linearly when moving further into the past. 
+
+Hierarchies of dilated convolutional layers allow for an exponential growth of the receptive field with the number of model parameters. This suggests that models such as the HARNet should be particularly well-suited for resolving possible long-term dependencies in the data without the necessity of using an overparameterized model. While a HARNet with a receptive field that covers the past four months outperforms the respective HAR baseline model, this advantage disappears when also considering realized semivariances and signed jump variation as additional inputs. In general, our current findings do not suggest that HARNets are consistently better at understanding long-term relationships in a time series than the respective linear baseline models. We think that this issue is a clear candidate for future research and suspect that a well-considered integration of significantly more training data and a diverse set of exogenous input variables could be crucial to succeed in this matter. 
+
+Contrary to previous investigations (Rahimikia and Poon, 2020), the QLIKE loss function turned out to be highly applicable for the optimization of HARNets. We collected strong experimental evidence that this can be explained by a stabilizing effect of our proposed initialization scheme on the optimization process. In general, the idea of initializing a complex non-linear model such that it is computationally equivalent to a linear baseline model before optimization is not restricted to RV forecasting and the proposed scheme could easily be adapted for any autoregression task where linear models already yield competitive results. 
+
+A TensorFlow implementation of the HARNet architecture is available on github at `https: //github.com/mdsunivie/HARNet` . 
+
+## **8 Acknowledgements** 
+
+R.R. gratefully acknowledges support from the Austrian Science Fund (FWF M 2528). The computational results presented have been achieved using the Vienna Scientific Cluster (VSC). 
+
+## **References** 
+
+- A¨ıt-Sahalia, Y. and J. Jacod (2014). _High-frequency financial econometrics_ . Princeton University Press. 
+
+Andersen, T. G. and T. Bollerslev (1998). “Answering the skeptics: Yes, standard volatility models do provide accurate forecasts”. In: _International economic review_ , pp. 885–905. 
+
+- Andersen, T. G. et al. (2001). “The Distribution of Realized Exchange Rate Volatility”. In: _Journal of the American Statistical Association_ 96.453, pp. 42–55. doi: `10.1198/016214501750332965` . eprint: `https://doi.org/10.1198/016214501750332965` . url: `https://doi.org/10.1198/ 016214501750332965` . 
+
+Barndorff-Nielsen, O. E., S. Kinnebrock, and N. Shephard (2008). “Measuring downside riskrealised semivariance”. In: _CREATES Research Paper_ 2008-42. 
+
+Barndorff-Nielsen, O. E. and N. Shephard (2002). “Econometric analysis of realized volatility and its use in estimating stochastic volatility models”. In: _Journal of the Royal Statistical Society: Series B (Statistical Methodology)_ 64.2, pp. 253–280. 
+
+- Borovykh, A., S. Bohte, and C. W. Oosterlee (2017). “Conditional time series forecasting with convolutional neural networks”. In: _arXiv preprint arXiv:1703.04691_ . 
+
+> Bucci, A. (June 1, 2020). “Realized Volatility Forecasting with Neural Networks”. In: _Journal of Financial Econometrics_ 18.3, pp. 502–531. 
+
+> Christensen, K., M. Siggaard, B. Veliyev, et al. (2021). _A machine learning approach to volatility forecasting_ . Vol. 3. Department of Economics and Business Economics, Aarhus University. 
+
+> Corsi, F. (2009). “A simple approximate long-memory model of realized volatility”. In: _Journal of Financial Econometrics_ 7.2, pp. 174–196.
+
+<!-- page: 22 -->
+
+- Dauphin, Y. N. et al. (2017). “Language modeling with gated convolutional networks”. In: _International conference on machine learning_ . PMLR, pp. 933–941. 
+
+- Gehring, J. et al. (2016). “A convolutional encoder model for neural machine translation”. In: _arXiv preprint arXiv:1611.02344_ . 
+
+- Gehring, J. et al. (2017). “Convolutional sequence to sequence learning”. In: _International Conference on Machine Learning_ . PMLR, pp. 1243–1252. 
+
+- Glorot, X. and Y. Bengio (2010). “Understanding the difficulty of training deep feedforward neural networks”. In: _Proceedings of the thirteenth international conference on artificial intelligence and statistics_ . JMLR Workshop and Conference Proceedings, pp. 249–256. 
+
+- Goodfellow, I., Y. Bengio, and A. Courville (2016). _Deep Learning_ . `http://www.deeplearningbook. org` . MIT Press. 
+
+- Heber, G. et al. (2009). _Oxford-Man Institute’s realized library, version 0.3_ . Oxford-Man Institute, University of Oxford. 
+
+- Hinton, G., N. Srivastava, and K. Swersky (2012). “Neural networks for machine learning lecture 6a overview of mini-batch gradient descent”. In: _Cited on_ 14.8, p. 2. 
+
+- Hochreiter, S. and J. Schmidhuber (1997). “Long short-term memory”. In: _Neural computation_ 9.8, pp. 1735–1780. 
+
+- Kalchbrenner, N. et al. (2016). “Neural machine translation in linear time”. In: _arXiv preprint arXiv:1610.10099_ . 
+
+- Kingma, D. P. and J. Ba (2017). _Adam: A Method for Stochastic Optimization_ . arXiv: `1412.6980 [cs.LG]` . 
+
+- Krizhevsky, A., I. Sutskever, and G. E. Hinton (2012). “Imagenet classification with deep convolutional neural networks”. In: _Advances in neural information processing systems_ 25, pp. 1097– 1105. 
+
+- Miura, R., L. Pichl, and T. Kaizoji (2019). “Artificial Neural Networks for Realized Volatility Prediction in Cryptocurrency Time Series”. In: _Advances in Neural Networks – ISNN 2019_ . Ed. by H. Lu, H. Tang, and Z. Wang. Vol. 11554. Series Title: Lecture Notes in Computer Science. Cham: Springer International Publishing, pp. 165–172. 
+
+- Oord, A. v. d. et al. (2016). “Wavenet: A generative model for raw audio”. In: _arXiv preprint arXiv:1609.03499_ . 
+
+- Patton, A. J. (2011). “Volatility forecast comparison using imperfect volatility proxies”. In: _Journal of Econometrics_ 160.1, pp. 246–256. 
+
+- Patton, A. J. and K. Sheppard (July 2015). “Good Volatility, Bad Volatility: Signed Jumps and The Persistence of Volatility”. In: _Review of Economics and Statistics_ 97.3, pp. 683–697. issn: 0034-6535, 1530-9142. 
+
+- Patton, A. J. and K. Sheppard (2009). “Optimal combinations of realised volatility estimators”. In: _International Journal of Forecasting_ 25.2, pp. 218–238. 
+
+- Proietti, T. and H. L¨utkepohl (2013). “Does the Box–Cox transformation help in forecasting macroeconomic time series?” In: _International Journal of Forecasting_ 29.1, pp. 88–99. 
+
+- Rahimikia, E. and S.-H. Poon (2020). “Machine learning for realised volatility forecasting”. In: _Available at SSRN 3707796_ . 
+
+- Rumelhart, D. E., G. E. Hinton, and R. J. Williams (1986). “Learning representations by backpropagating errors”. In: _Nature_ 323.6088, pp. 533–536.

@@ -1,0 +1,22 @@
+{
+  "paper_id": "2022-milionis-et-al-amm-lvr",
+  "status": "review",
+  "page_count": 63,
+  "total_chars": 140101,
+  "average_chars_per_page": 2223.8,
+  "empty_pages": [],
+  "short_pages": [
+    27
+  ],
+  "replacement_characters": 14,
+  "heading_count": 35,
+  "image_references": 102,
+  "image_files": 102,
+  "latex_math_markers": 0,
+  "chunk_count": 32,
+  "max_chunk_chars": 4786,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

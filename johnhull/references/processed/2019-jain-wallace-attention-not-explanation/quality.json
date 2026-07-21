@@ -1,0 +1,20 @@
+{
+  "paper_id": "2019-jain-wallace-attention-not-explanation",
+  "status": "review",
+  "page_count": 14,
+  "total_chars": 63227,
+  "average_chars_per_page": 4516.2,
+  "empty_pages": [],
+  "short_pages": [],
+  "replacement_characters": 3,
+  "heading_count": 34,
+  "image_references": 13,
+  "image_files": 13,
+  "latex_math_markers": 0,
+  "chunk_count": 15,
+  "max_chunk_chars": 4797,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}

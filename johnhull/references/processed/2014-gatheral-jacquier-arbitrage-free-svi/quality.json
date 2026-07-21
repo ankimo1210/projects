@@ -1,0 +1,20 @@
+{
+  "paper_id": "2014-gatheral-jacquier-arbitrage-free-svi",
+  "status": "review",
+  "page_count": 27,
+  "total_chars": 58344,
+  "average_chars_per_page": 2160.9,
+  "empty_pages": [],
+  "short_pages": [],
+  "replacement_characters": 28,
+  "heading_count": 21,
+  "image_references": 79,
+  "image_files": 79,
+  "latex_math_markers": 0,
+  "chunk_count": 14,
+  "max_chunk_chars": 4798,
+  "warnings": [
+    "many visual/equation images are not represented as LaTeX math"
+  ],
+  "failures": []
+}
