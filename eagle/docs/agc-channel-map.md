@@ -72,8 +72,12 @@ bit 10 (the relay word's sign/flag bit); `c`/`d` = digit codes at bits 5-9 /
 Citations: yaDSKY2.cpp:1961 (`case 0x5800: // AAAA=11D`) through
 yaDSKY2.cpp:2030 (`case 0x0800: // AAAA=1`); sign priority logic at
 yaDSKY2.cpp:2047,2049 (`0 != (RSign & 2)` checked before `0 != (RSign & 1)`).
-Row-8/row-3 have no left-digit widget in vendor source (only D is driven),
-matched as-is (C left undecoded for those rows).
+Row 8 has no left-digit widget in vendor source (`case 0x4000: // AAAA=8`,
+yaDSKY2.cpp:1973-1975, sets only `Right = R1D1Digit`) — matched as-is (C
+left undecoded for that row only). Row 3 is not like row 8: it drives both
+digits, spanning two registers (`case 0x1800: // AAAA=3`, yaDSKY2.cpp:2016-
+2019, sets `Left = R2D5Digit` and `Right = R3D1Digit`, with no sign), also
+matched as-is (`self.r2.digits[4] = c; self.r3.digits[0] = d;`).
 
 **Result: no correction needed** — matches the plan's Reference block
 row-by-row.
