@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "paper_id": "ref_passalis_dain_1902.07892",
+  "title": "Deep Adaptive Input Normalization for Time Series Forecasting",
+  "source": {
+    "path": "sources/papers/ref_passalis_dain_1902.07892.pdf",
+    "filename": "ref_passalis_dain_1902.07892.pdf",
+    "sha256": "83338bed88a70332fad68651aacb82b5c4618d196f7d1451c8de21181b14ae21",
+    "bytes": 371152
+  },
+  "conversion": {
+    "tool": "docling",
+    "version": "2.114.0",
+    "generated_at": "2026-07-21T14:03:31.846365+00:00",
+    "device": "auto",
+    "ocr": false,
+    "table_mode": "accurate",
+    "formula_enrichment": false,
+    "chunker": "hybrid",
+    "chunk_max_tokens": 480
+  },
+  "document": {
+    "pages": 7,
+    "text_blocks": 214,
+    "tables": 3,
+    "pictures": 1,
+    "markdown_chars": 39057,
+    "math_blocks": 0,
+    "chunks": 28,
+    "max_chunk_tokens": 483,
+    "pages_in_chunks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  "quality": {
+    "source_text_chars": 37415,
+    "markdown_to_source_text_ratio": 1.0439,
+    "has_abstract": true,
+    "has_references": true
+  }
+}

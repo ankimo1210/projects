@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "paper_id": "ref_kisiel_axial_lob_2212.01807",
+  "title": "Axial-LOB: High-Frequency Trading with Axial Attention",
+  "source": {
+    "path": "sources/papers/ref_kisiel_axial_lob_2212.01807.pdf",
+    "filename": "ref_kisiel_axial_lob_2212.01807.pdf",
+    "sha256": "7cdfeef5c004ba06f7c9b0a2c25da63cfe182eba17d3dc04554d3a0b85e87b01",
+    "bytes": 444509
+  },
+  "conversion": {
+    "tool": "docling",
+    "version": "2.114.0",
+    "generated_at": "2026-07-21T14:03:31.807202+00:00",
+    "device": "auto",
+    "ocr": false,
+    "table_mode": "accurate",
+    "formula_enrichment": false,
+    "chunker": "hybrid",
+    "chunk_max_tokens": 480
+  },
+  "document": {
+    "pages": 7,
+    "text_blocks": 129,
+    "tables": 3,
+    "pictures": 5,
+    "markdown_chars": 38063,
+    "math_blocks": 0,
+    "chunks": 27,
+    "max_chunk_tokens": 490,
+    "pages_in_chunks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  "quality": {
+    "source_text_chars": 33501,
+    "markdown_to_source_text_ratio": 1.1362,
+    "has_abstract": true,
+    "has_references": true
+  }
+}
