@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "paper_id": "ref_cont_de_larrard_markovian_lob_1104.4596",
+  "title": "Price dynamics in a Markovian limit order market",
+  "source": {
+    "path": "sources/papers/ref_cont_de_larrard_markovian_lob_1104.4596.pdf",
+    "filename": "ref_cont_de_larrard_markovian_lob_1104.4596.pdf",
+    "sha256": "9d25a6d69ff1e72722fe744f2975f24013acc66d8518ec90c6e337a83ea137a6",
+    "bytes": 680082
+  },
+  "conversion": {
+    "tool": "docling",
+    "version": "2.114.0",
+    "generated_at": "2026-07-21T13:58:10.181611+00:00",
+    "device": "auto",
+    "ocr": false,
+    "table_mode": "accurate",
+    "formula_enrichment": false,
+    "chunker": "hybrid",
+    "chunk_max_tokens": 480
+  },
+  "document": {
+    "pages": 18,
+    "text_blocks": 311,
+    "tables": 4,
+    "pictures": 5,
+    "markdown_chars": 52528,
+    "math_blocks": 55,
+    "chunks": 47,
+    "max_chunk_tokens": 481,
+    "pages_in_chunks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ]
+  },
+  "quality": {
+    "source_text_chars": 43923,
+    "markdown_to_source_text_ratio": 1.1959,
+    "has_abstract": true,
+    "has_references": true
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "paper_id": "ref_cont_price_impact_1011.6402",
+  "title": "The price impact of order book events",
+  "source": {
+    "path": "sources/papers/ref_cont_price_impact_1011.6402.pdf",
+    "filename": "ref_cont_price_impact_1011.6402.pdf",
+    "sha256": "40d1d5f0baf7944a1b9f4c12d3644038e657acf4a3dfb500b2057c2269edd25f",
+    "bytes": 741640
+  },
+  "conversion": {
+    "tool": "docling",
+    "version": "2.114.0",
+    "generated_at": "2026-07-21T13:58:10.371079+00:00",
+    "device": "auto",
+    "ocr": false,
+    "table_mode": "accurate",
+    "formula_enrichment": false,
+    "chunker": "hybrid",
+    "chunk_max_tokens": 480
+  },
+  "document": {
+    "pages": 26,
+    "text_blocks": 278,
+    "tables": 6,
+    "pictures": 10,
+    "markdown_chars": 164002,
+    "math_blocks": 33,
+    "chunks": 158,
+    "max_chunk_tokens": 491,
+    "pages_in_chunks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26
+    ]
+  },
+  "quality": {
+    "source_text_chars": 71999,
+    "markdown_to_source_text_ratio": 2.2778,
+    "has_abstract": true,
+    "has_references": true
+  }
+}

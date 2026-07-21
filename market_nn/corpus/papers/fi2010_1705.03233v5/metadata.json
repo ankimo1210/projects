@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "paper_id": "fi2010_1705.03233v5",
+  "title": "Benchmark Dataset for Mid-Price Forecasting of Limit Order Book Data with Machine Learning Methods",
+  "source": {
+    "path": "sources/papers/fi2010_1705.03233v5.pdf",
+    "filename": "fi2010_1705.03233v5.pdf",
+    "sha256": "22d856cd9e1d951ddcec917bd7fcaf7e83f233b39c05f6a990617f32d201b31d",
+    "bytes": 1086764
+  },
+  "conversion": {
+    "tool": "docling",
+    "version": "2.114.0",
+    "generated_at": "2026-07-21T13:58:09.999608+00:00",
+    "device": "auto",
+    "ocr": false,
+    "table_mode": "accurate",
+    "formula_enrichment": false,
+    "chunker": "hybrid",
+    "chunk_max_tokens": 480
+  },
+  "document": {
+    "pages": 25,
+    "text_blocks": 265,
+    "tables": 9,
+    "pictures": 3,
+    "markdown_chars": 69243,
+    "math_blocks": 17,
+    "chunks": 62,
+    "max_chunk_tokens": 490,
+    "pages_in_chunks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25
+    ]
+  },
+  "quality": {
+    "source_text_chars": 62614,
+    "markdown_to_source_text_ratio": 1.1059,
+    "has_abstract": true,
+    "has_references": true
+  }
+}
