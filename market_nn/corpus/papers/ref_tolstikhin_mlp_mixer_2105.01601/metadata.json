@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "paper_id": "ref_tolstikhin_mlp_mixer_2105.01601",
+  "title": "MLP-Mixer: An all-MLP Architecture for Vision",
+  "source": {
+    "path": "sources/papers/ref_tolstikhin_mlp_mixer_2105.01601.pdf",
+    "filename": "ref_tolstikhin_mlp_mixer_2105.01601.pdf",
+    "sha256": "e35cd320326cc4d59318edf2f70b23964aca94696693a5ca8bd028d277cb6e47",
+    "bytes": 4430766
+  },
+  "conversion": {
+    "tool": "docling",
+    "version": "2.114.0",
+    "generated_at": "2026-07-21T14:05:34.516694+00:00",
+    "device": "auto",
+    "ocr": false,
+    "table_mode": "accurate",
+    "formula_enrichment": false,
+    "chunker": "hybrid",
+    "chunk_max_tokens": 480
+  },
+  "document": {
+    "pages": 16,
+    "text_blocks": 298,
+    "tables": 4,
+    "pictures": 7,
+    "markdown_chars": 75469,
+    "math_blocks": 0,
+    "chunks": 60,
+    "max_chunk_tokens": 493,
+    "pages_in_chunks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ]
+  },
+  "quality": {
+    "source_text_chars": 55414,
+    "markdown_to_source_text_ratio": 1.3619,
+    "has_abstract": true,
+    "has_references": true
+  }
+}

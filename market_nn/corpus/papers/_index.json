@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-21T14:03:32.050626+00:00",
-  "paper_count": 12,
+  "generated_at": "2026-07-21T14:05:34.645457+00:00",
+  "paper_count": 17,
   "papers": [
     {
       "schema_version": 1,
@@ -752,6 +752,299 @@
       "quality": {
         "source_text_chars": 103360,
         "markdown_to_source_text_ratio": 1.0188,
+        "has_abstract": true,
+        "has_references": true
+      }
+    },
+    {
+      "schema_version": 1,
+      "paper_id": "ref_sirignano_deep_lob_1601.01987",
+      "title": "Deep Learning for Limit Order Books",
+      "source": {
+        "path": "sources/papers/ref_sirignano_deep_lob_1601.01987.pdf",
+        "filename": "ref_sirignano_deep_lob_1601.01987.pdf",
+        "sha256": "a873e04eed3e38d97d0bf3f6253b3d5ad56380aacaa256846ff4daf693798970",
+        "bytes": 583125
+      },
+      "conversion": {
+        "tool": "docling",
+        "version": "2.114.0",
+        "generated_at": "2026-07-21T14:05:34.433727+00:00",
+        "device": "auto",
+        "ocr": false,
+        "table_mode": "accurate",
+        "formula_enrichment": false,
+        "chunker": "hybrid",
+        "chunk_max_tokens": 480
+      },
+      "document": {
+        "pages": 53,
+        "text_blocks": 380,
+        "tables": 17,
+        "pictures": 10,
+        "markdown_chars": 122658,
+        "math_blocks": 0,
+        "chunks": 87,
+        "max_chunk_tokens": 486,
+        "pages_in_chunks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53
+        ]
+      },
+      "quality": {
+        "source_text_chars": 115267,
+        "markdown_to_source_text_ratio": 1.0641,
+        "has_abstract": true,
+        "has_references": true
+      }
+    },
+    {
+      "schema_version": 1,
+      "paper_id": "ref_tolstikhin_mlp_mixer_2105.01601",
+      "title": "MLP-Mixer: An all-MLP Architecture for Vision",
+      "source": {
+        "path": "sources/papers/ref_tolstikhin_mlp_mixer_2105.01601.pdf",
+        "filename": "ref_tolstikhin_mlp_mixer_2105.01601.pdf",
+        "sha256": "e35cd320326cc4d59318edf2f70b23964aca94696693a5ca8bd028d277cb6e47",
+        "bytes": 4430766
+      },
+      "conversion": {
+        "tool": "docling",
+        "version": "2.114.0",
+        "generated_at": "2026-07-21T14:05:34.516694+00:00",
+        "device": "auto",
+        "ocr": false,
+        "table_mode": "accurate",
+        "formula_enrichment": false,
+        "chunker": "hybrid",
+        "chunk_max_tokens": 480
+      },
+      "document": {
+        "pages": 16,
+        "text_blocks": 298,
+        "tables": 4,
+        "pictures": 7,
+        "markdown_chars": 75469,
+        "math_blocks": 0,
+        "chunks": 60,
+        "max_chunk_tokens": 493,
+        "pages_in_chunks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ]
+      },
+      "quality": {
+        "source_text_chars": 55414,
+        "markdown_to_source_text_ratio": 1.3619,
+        "has_abstract": true,
+        "has_references": true
+      }
+    },
+    {
+      "schema_version": 1,
+      "paper_id": "ref_tran_bin_2003.00598",
+      "title": "Data Normalization for Bilinear Structures in High-Frequency Financial Time-series",
+      "source": {
+        "path": "sources/papers/ref_tran_bin_2003.00598.pdf",
+        "filename": "ref_tran_bin_2003.00598.pdf",
+        "sha256": "4418c9af1a2f20b907a886280c5805f9dfe6c6056c281cc17f09fa2a65fa280d",
+        "bytes": 181790
+      },
+      "conversion": {
+        "tool": "docling",
+        "version": "2.114.0",
+        "generated_at": "2026-07-21T14:05:34.554462+00:00",
+        "device": "auto",
+        "ocr": false,
+        "table_mode": "accurate",
+        "formula_enrichment": false,
+        "chunker": "hybrid",
+        "chunk_max_tokens": 480
+      },
+      "document": {
+        "pages": 6,
+        "text_blocks": 104,
+        "tables": 3,
+        "pictures": 1,
+        "markdown_chars": 39956,
+        "math_blocks": 0,
+        "chunks": 31,
+        "max_chunk_tokens": 536,
+        "pages_in_chunks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "quality": {
+        "source_text_chars": 31734,
+        "markdown_to_source_text_ratio": 1.2591,
+        "has_abstract": true,
+        "has_references": true
+      }
+    },
+    {
+      "schema_version": 1,
+      "paper_id": "ref_tran_tabl_1712.00975",
+      "title": "Temporal Attention augmented Bilinear Network for Financial Time-Series Data Analysis",
+      "source": {
+        "path": "sources/papers/ref_tran_tabl_1712.00975.pdf",
+        "filename": "ref_tran_tabl_1712.00975.pdf",
+        "sha256": "0145eceba66ed6ad004ba0bc34393849706252092437ccc4ca9c80aeb0e7897e",
+        "bytes": 356381
+      },
+      "conversion": {
+        "tool": "docling",
+        "version": "2.114.0",
+        "generated_at": "2026-07-21T14:05:34.615827+00:00",
+        "device": "auto",
+        "ocr": false,
+        "table_mode": "accurate",
+        "formula_enrichment": false,
+        "chunker": "hybrid",
+        "chunk_max_tokens": 480
+      },
+      "document": {
+        "pages": 12,
+        "text_blocks": 314,
+        "tables": 3,
+        "pictures": 4,
+        "markdown_chars": 70890,
+        "math_blocks": 0,
+        "chunks": 51,
+        "max_chunk_tokens": 484,
+        "pages_in_chunks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      },
+      "quality": {
+        "source_text_chars": 62183,
+        "markdown_to_source_text_ratio": 1.14,
+        "has_abstract": true,
+        "has_references": true
+      }
+    },
+    {
+      "schema_version": 1,
+      "paper_id": "ref_tsantekidis_cnn_lob_2017",
+      "title": "Forecasting Stock Prices from the Limit Order Book using Convolutional Neural Networks",
+      "source": {
+        "path": "sources/papers/ref_tsantekidis_cnn_lob_2017.pdf",
+        "filename": "ref_tsantekidis_cnn_lob_2017.pdf",
+        "sha256": "667d67c1c294112321b010a493024d92f546be66db97dc9d3eb970da2047b02e",
+        "bytes": 218265
+      },
+      "conversion": {
+        "tool": "docling",
+        "version": "2.114.0",
+        "generated_at": "2026-07-21T14:05:34.644567+00:00",
+        "device": "auto",
+        "ocr": false,
+        "table_mode": "accurate",
+        "formula_enrichment": false,
+        "chunker": "hybrid",
+        "chunk_max_tokens": 480
+      },
+      "document": {
+        "pages": 6,
+        "text_blocks": 174,
+        "tables": 1,
+        "pictures": 3,
+        "markdown_chars": 26807,
+        "math_blocks": 0,
+        "chunks": 20,
+        "max_chunk_tokens": 484,
+        "pages_in_chunks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "quality": {
+        "source_text_chars": 25364,
+        "markdown_to_source_text_ratio": 1.0569,
         "has_abstract": true,
         "has_references": true
       }

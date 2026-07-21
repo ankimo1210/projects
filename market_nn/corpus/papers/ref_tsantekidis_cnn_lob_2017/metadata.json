@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "paper_id": "ref_tsantekidis_cnn_lob_2017",
+  "title": "Forecasting Stock Prices from the Limit Order Book using Convolutional Neural Networks",
+  "source": {
+    "path": "sources/papers/ref_tsantekidis_cnn_lob_2017.pdf",
+    "filename": "ref_tsantekidis_cnn_lob_2017.pdf",
+    "sha256": "667d67c1c294112321b010a493024d92f546be66db97dc9d3eb970da2047b02e",
+    "bytes": 218265
+  },
+  "conversion": {
+    "tool": "docling",
+    "version": "2.114.0",
+    "generated_at": "2026-07-21T14:05:34.644567+00:00",
+    "device": "auto",
+    "ocr": false,
+    "table_mode": "accurate",
+    "formula_enrichment": false,
+    "chunker": "hybrid",
+    "chunk_max_tokens": 480
+  },
+  "document": {
+    "pages": 6,
+    "text_blocks": 174,
+    "tables": 1,
+    "pictures": 3,
+    "markdown_chars": 26807,
+    "math_blocks": 0,
+    "chunks": 20,
+    "max_chunk_tokens": 484,
+    "pages_in_chunks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ]
+  },
+  "quality": {
+    "source_text_chars": 25364,
+    "markdown_to_source_text_ratio": 1.0569,
+    "has_abstract": true,
+    "has_references": true
+  }
+}

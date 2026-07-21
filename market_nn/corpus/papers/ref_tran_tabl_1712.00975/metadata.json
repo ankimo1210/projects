@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "paper_id": "ref_tran_tabl_1712.00975",
+  "title": "Temporal Attention augmented Bilinear Network for Financial Time-Series Data Analysis",
+  "source": {
+    "path": "sources/papers/ref_tran_tabl_1712.00975.pdf",
+    "filename": "ref_tran_tabl_1712.00975.pdf",
+    "sha256": "0145eceba66ed6ad004ba0bc34393849706252092437ccc4ca9c80aeb0e7897e",
+    "bytes": 356381
+  },
+  "conversion": {
+    "tool": "docling",
+    "version": "2.114.0",
+    "generated_at": "2026-07-21T14:05:34.615827+00:00",
+    "device": "auto",
+    "ocr": false,
+    "table_mode": "accurate",
+    "formula_enrichment": false,
+    "chunker": "hybrid",
+    "chunk_max_tokens": 480
+  },
+  "document": {
+    "pages": 12,
+    "text_blocks": 314,
+    "tables": 3,
+    "pictures": 4,
+    "markdown_chars": 70890,
+    "math_blocks": 0,
+    "chunks": 51,
+    "max_chunk_tokens": 484,
+    "pages_in_chunks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ]
+  },
+  "quality": {
+    "source_text_chars": 62183,
+    "markdown_to_source_text_ratio": 1.14,
+    "has_abstract": true,
+    "has_references": true
+  }
+}
