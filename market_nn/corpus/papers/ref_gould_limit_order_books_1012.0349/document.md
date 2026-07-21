@@ -70,11 +70,23 @@ The terms bid price , ask price , mid price , and bid-ask spread are common to m
 
 Definition. The bid price at time t is the highest stated price among active buy orders at time t ,
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0001" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0001](images/formula_0001.png)
+```text
+PDF text layer: b ( t ) := max x ∈B ( t ) p x . (1)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 The ask price at time t is the lowest stated price among active sell orders at time t ,
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0002" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0002](images/formula_0002.png)
+```text
+PDF text layer: a ( t ) := min x ∈A ( t ) p x . (2)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Definition. The bid-ask spread at time t is s ( t ) := a ( t ) -b ( t ) .
 
@@ -92,13 +104,25 @@ It is often desirable to compare orders on the bid side and the ask side of an L
 
 Definition. For a given order x = ( p x , ω x , t x ) , the relative price of the order is
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0003" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0003](images/formula_0003.png)
+```text
+PDF text layer: δ x := { δ b ( p x ) , if the order is a buy order, δ a ( p x ) , if the order is a sell order. (3)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Most traders assess the state of L ( t ) via the depth profile or relative depth profile.
 
 Definition. The bid-side depth available at price p and at time t is
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0004" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0004](images/formula_0004.png)
+```text
+PDF text layer: n b ( p, t ) := ∑ { x ∈B ( t ) | p x = p } ω x . (4)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 The ask-side depth available at price p and at time t , denoted n a ( p, t ) , is defined similarly using A ( t ) .
 
@@ -108,7 +132,13 @@ Definition. The bid-side depth profile at time t is the set of all ordered pairs
 
 Definition. The mean bid-side depth available at price p between times t 1 and t 2 is
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0005" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0005](images/formula_0005.png)
+```text
+PDF text layer: n b ( p, t 1 , t 2 ) := 1 t 2 -t 1 ∫ t 2 t 1 n b ( p, t )d t. (5)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 The mean ask-side depth available at price p between times t 1 and t 2 , denoted n a ( p, t 1 , t 2 ) , is defined similarly using the ask-side depth available.
 
@@ -116,7 +146,13 @@ Because b ( t ) and a ( t ) vary, it is rarely illuminating to consider the dept
 
 Definition. The bid-side depth available at relative price p and at time t is
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0006" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0006](images/formula_0006.png)
+```text
+PDF text layer: N b ( p, t ) := ∑ { x ∈B ( t ) | δ x = p } ω x . (6)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 The ask-side depth available at relative price p and at time t , denoted N a ( p, t ) , is defined similarly using A ( t ) .
 
@@ -128,7 +164,13 @@ Definition. The bid-side relative depth profile at time t is the set of all orde
 
 Definition. The mean bid-side depth available at relative price p between times t 1 and t 2 is
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0007" status="text_layer_fallback" source-page="4" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0007](images/formula_0007.png)
+```text
+PDF text layer: N b ( p, t 1 , t 2 ) := 1 t 2 -t 1 ∫ t 2 t 1 N b ( p, t )d t. (7)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 4. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 The mean ask-side depth available at relative price p between times t 1 and t 2 , denoted N a ( p, t 1 , t 2 ) , is defined similarly using the ask-side relative depth available.
 
@@ -162,11 +204,23 @@ In LOBs, the rules that govern matchings dictate how prices evolve through time.
 - If b ( t ) &lt; p x &lt; a ( t ), then x is a limit order that becomes active upon arrival. It causes b ( t ) to increase (respectively, a ( t ) to decrease) to p x at time t x .
 - If p x ≥ a ( t ) (respectively, p x ≤ b ( t )), then x is a market order that immediately matches to one or more active sell (respectively, buy) orders upon arrival. Whenever such a matching occurs, it does so at the price of the active order, which is not necessarily equal to the price of the incoming order. Whether or not such a matching causes a ( t ) (respectively, b ( t )) to change at time t x depends on n a ( a ( t ) , t ) (respectively, n b ( b ( t ) , t )) and ω x . In particular, the new bid price b ( t x ) immediately after the arrival of a sell market order x is
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0008" status="text_layer_fallback" source-page="5" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0008](images/formula_0008.png)
+```text
+PDF text layer: max( p x , q ) , where q = arg max k ′ b ( t ) ∑ k = k ′ ∣ ∣ n b ( k, t ) ∣ ∣ > ω x . (8)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 5. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Similarly, the new ask price a ( t x ) immediately after the arrival of a buy market order x is
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0009" status="text_layer_fallback" source-page="5" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0009](images/formula_0009.png)
+```text
+PDF text layer: min( p x , q ) , where q = arg min k ′ k ′ ∑ k = a ( t ) n a ( k, t ) > | ω x | . (9)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 5. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Put another way, the incoming order x matches to the highest priority active order y of opposite type. If | ω x | &gt; | ω y | , then any residue size of x is considered for matching to the next highest priority active order of opposite type, and so on until either there are no further active orders with prices that make them eligible for matching, in which case the residue of x becomes active at the price p x , or x is fully matched. The new bid (respectively, ask) price is then equal to the price of the highest priority active buy (respectively, sell) order after the matching occurs.
 
@@ -317,7 +371,13 @@ These factors make modelling of specific matchings and of the evolution of L ( t
 
 Many exchanges suspend standard limit order trading at the beginning and end of the trading day and instead use an auction system to match orders. For example, the LSE's flagship order book SETS (SETS, 2011) has three distinct trading phases in each trading day. Between 08:00 and 16:30, the standard LOB mechanism is used in a period known as continuous trading . Between 07:50 and 08:00, a 10-minute opening auction takes place. Between 16:30 and 16:35, a 5-minute closing auction takes place. During both auctions, all traders can view and place orders as usual, but no orders are matched. Due to the absence of matchings, the highest price among buy orders can exceed the lowest price among sell orders. All orders are stored until the opening auction ends. At this time, for each price p at which there is non-zero depth available, the trade matching algorithm calculates the total volume C p of trades that could occur by matching buy orders with a price greater than or equal to p to sell orders with a price less than or equal to p . It then calculates the uncrossing price
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0010" status="text_layer_fallback" source-page="10" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0010](images/formula_0010.png)
+```text
+PDF text layer: ˆ p = arg max p C p . (10)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 10. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 In contrast to standard LOB trading, all trades take place at the same uncrossing price ˆ p . Given ˆ p , if there is a smaller depth available for sale than there is for purchase (or vice versa), ties are broken using time priority.
 
@@ -351,13 +411,25 @@ One way to define long memory is via the asymptotic behaviour of the autocorrela
 
 Definition. The autocorrelation function A of a time series X is given by
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0011" status="text_layer_fallback" source-page="11" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0011](images/formula_0011.png)
+```text
+PDF text layer: A X ( l ) := 1 k -l k -l ∑ i =1 ( X ( t i ) -〈 X 〉 ) ( X ( t i + l ) -〈 X 〉 ) , (11)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 11. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where 〈 X 〉 = 1 k ∑ k i =1 X ( t i ) is the mean of the series.
 
 Definition. A time series X is said to exhibit long memory if there exists some α ∈ (0 , 1) such that A X decays like a power law,
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0012" status="text_layer_fallback" source-page="11" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0012](images/formula_0012.png)
+```text
+PDF text layer: A X ( l ) ∼ O ( l -α ) , as l →∞ . (12)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 11. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 The exponent α describes the strength of the long memory: the smaller the value of α , the stronger the long-range autocorrelations (Lillo and Farmer, 2004). Because of the slow decay of the autocorrelation function in a long-memory process, present values of the series can have a significant effect on its values in the distant future. It is a recurring mistake in the literature that if X has long memory, its unconditional distribution must exhibit heavy tails. However, Preis et al. (2006, 2007) showed that such an implication does not hold in general.
 
@@ -367,11 +439,23 @@ A key difficulty when using Equation (12) to assess whether a given series has l
 
 An alternative way to characterize long memory is via the diffusion properties (Beran, 1994; Lillo and Farmer, 2004) of the integrated series Y ,
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0013" status="text_layer_fallback" source-page="12" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0013](images/formula_0013.png)
+```text
+PDF text layer: Y ( l ) = l ∑ i =1 X ( t i ) . (13)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 12. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 If X is a long-memory process, then the standard deviation of Y scales as O ( l H ) , with 1 2 &lt; H ≤ 1 (Lillo and Farmer, 2004); if X does not have long memory, then the standard deviation of Y scales as O ( l 1 / 2 ) , (Beran, 1994). The exponent H is called the Hurst exponent, and is related to α by
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0014" status="text_layer_fallback" source-page="12" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0014](images/formula_0014.png)
+```text
+PDF text layer: H = 1 -α 2 . (14)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 12. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Under some assumptions, 12 there are several asymptotically unbiased estimators of H that are more robust to noise in X than is direct estimation of α from the autocorrelation function (Taqqu et al. , 1995). However, the performance of such estimators on empirical data, which might not conform to these assumptions, varies considerably (Rea et al. , 2009; Xu et al. , 2005). Different disciplines tend to favour different estimators, although the choices are often based on historical reasons, not performance. Some of the most commonly used are:
 
@@ -511,11 +595,23 @@ For example, the instantaneous price impact of a market buy order of size 2 σ i
 
 Definition. The instantaneous bid-price impact of a market event at time t ′ is
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0015" status="text_layer_fallback" source-page="18" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0015](images/formula_0015.png)
+```text
+PDF text layer: b ( t ′ ) -lim t ↑ t ′ b ( t ) . (15)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 18. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Definition. The instantaneous bid-price logarithmic return impact of a market event at time t ′ is
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0016" status="text_layer_fallback" source-page="18" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0016](images/formula_0016.png)
+```text
+PDF text layer: log b ( t ′ ) -lim t ↑ t ′ [log b ( t )] . (16)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 18. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Definition. The instantaneous bid-price impact function φ b ( ω x ) outputs the mean instantaneous bid-price impact for a buy market order of size ω x .
 
@@ -525,7 +621,13 @@ Definitions for the ask price, using sell market orders of size ω x (respective
 
 Definition. The instantaneous market impact of a market event at time t ′ is
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0017" status="text_layer_fallback" source-page="18" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0017](images/formula_0017.png)
+```text
+PDF text layer: L ( t ′ ) \ lim t ↑ t ′ L ( t ) , (17)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 18. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where \ denotes the difference of the two sets.
 
@@ -543,13 +645,25 @@ Lillo et al. (2003) studied the stocks of 1000 different companies traded on the
 
 18 This explanation suggests that it is not traders' actions that cause the value of an asset to rise or fall. Instead, such changes in valuation happen exogenously and traders align their actions with them to maximize profits. Bouchaud et al. (2009) did not find evidence that this was a good reflection of reality.
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0018" status="text_layer_fallback" source-page="19" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0018](images/formula_0018.png)
+```text
+PDF text layer: ω ′ x := ω x C η , p ′ := pC γ , (18)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 19. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where C was the mean market capitalization for stocks in the group and η and γ were fitted constants, the Φ m ′ ( | ω ′ x | ) curves for each of the 20 groups collapsed onto a single curve.
 
 Farmer et al. (2005) reported a similar collapse of Φ m onto a single power-law curve Φ m ′ ( | ω ′ x | ) ≈ | ω ′ x | 0 . 25 for 11 stocks traded on the LSE after using the change of variables
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0019" status="text_layer_fallback" source-page="19" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0019](images/formula_0019.png)
+```text
+PDF text layer: ω ′ x := ω x α µ , p ′ := pλ µ , (19)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 19. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where µ , λ , and ν denote the mean arrival rate of market orders, the mean arrival rate of limit orders, and the mean cancellation rate of active orders per unit size σ , respectively.
 
@@ -560,7 +674,13 @@ Using data from the Shenzhen Stock Exchange, Zhou (2012) partitioned incoming or
 
 After applying the change of variables
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0020" status="text_layer_fallback" source-page="19" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0020](images/formula_0020.png)
+```text
+PDF text layer: Φ ′ m ( | ω x | ) := Φ m ( | ω x | ) 〈 Φ m 〉 , ω ′ x := ω x 〈| ω x |〉 , (20)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 19. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 19 Incoming orders that are fully matched upon arrival always have a strictly smaller instantaneous mid-price impact than orders that are not.
 
@@ -640,7 +760,13 @@ Many early perfect-rationality models aimed to address traders' decision-making 
 
 Definition. When choosing between decision D 1 and decision D 2 at time t , an individual employing a cut-off strategy compares the value of a statistic Z ( t ) with a cutoff point z and makes the decision
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0021" status="text_layer_fallback" source-page="23" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0021](images/formula_0021.png)
+```text
+PDF text layer: D 1 , if Z ≤ z, D 2 , otherwise. (21)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 23. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 A cut-off strategy is analogous to a hypothesis test in statistical inference. The statistic Z ( t ) can be any statistic related to L ( t ), current or recent order flow, the actions of other traders, and so on. For example, a trader who wishes to place a buy order at time t might decide to submit a buy market order if s ( t ) is smaller than 5 π or to submit a buy limit order otherwise. Cut-off strategies often appear in perfect-rationality models because they drastically reduce the dimensionality of the decision space available to traders. This is very appealing from the standpoint of tractability.
 
@@ -700,7 +826,13 @@ FIG. 5 An LOB and its corresponding representation as a system of particles on a
 
 Maslov (2000) introduced a model that bore a stronger resemblance to a real LOB than the price diffusion models discussed above. In Maslov's model, a single trader arrived at each discrete time step. With probability 1 / 2, this trader was a buyer; otherwise, he or she was a seller. Independently, with probability 1 -r the trader submitted a market order; otherwise, he or she submitted a limit order x = ( p x , σ, t x ) with
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0022" status="text_layer_fallback" source-page="26" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0022](images/formula_0022.png)
+```text
+PDF text layer: p x = { p ′ -K, if the trader was a buyer, p ′ + K, if the trader was a seller, (22)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 26. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where p ′ was the most recent price at which a matching had occurred and K was a random variable with a specified distribution. No cancellations or modifications to active orders were allowed. Even with only 1000 iterations and in very simple setups (such as r = 1 / 2 and K = 1 with probability 1; or r = 1 / 2 and K ∼
 
@@ -714,7 +846,13 @@ The first zero-intelligence model in continuous time was introduced by Daniels e
 
 Many of the assumptions made by Daniels et al. (2003) and Smith et al. (2003) to maintain analytical tractability provide poor resemblance to some aspects of real LOBs. For example, in the limit π → 0, the only possible numbers of limit orders that can reside at a given price p are 0 and 1. This destroys the notion of limit orders queueing up at given prices and thereby removes a primary consideration for traders: when to submit an order at the back of an existing priority queue versus when to start a new queue at a worse price (see Section III.G). Despite its simplifications, Farmer et al. (2005) reported that the model performed well when tested against some aspects of empirical data. In particular, they made predictions of the mean spread and a measure of price diffusion 25 for 11 stocks traded on the LSE by calibrating the model's parameters using historical data and then compared these predictions to the real data using an ordinary least-squares regression:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0023" status="text_layer_fallback" source-page="27" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0023](images/formula_0023.png)
+```text
+PDF text layer: Z emp ( i ) = zZ mod ( i ) + c, (23)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 27. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where Z emp ( i ) and Z mod ( i ) are the mean empirical and model output values of statistic Z for stock i . Using this setup, z = 1 and c = 0 correspond to a perfect fit of the model to the data. For the mean spread, the ordinary least-squares estimates of the parameters were z ≈ 0 . 99 ± 0 . 10 and c ≈ 0 . 06 ± 0 . 26. For the price diffusion, the ordinary least-squares estimates of the parameters were z = 1 . 33 ± 0 . 10 and c = 0 . 06 ± 0 . 26. Farmer et al. (2005) used bootstrap resampling to estimate the standard errors of the regression coefficients, because serial correlations within the data invalidate the assumptions required to use the standard estimators (see Section III.J.2). However, the distribution of mid-price returns did not display heavy tails, and T´ oth et al. (2011) reported that time series of logarithmic mid-price returns generated by the model had a Hurst exponent H &lt; 1 2 when the model's parameters were chosen to mimic realistic market conditions. Both of these facts are contrary to findings in empirical data (see Section IV.G).
 
@@ -762,7 +900,13 @@ FIG. 6 Approximate total number of days' data per year that has been examined by
 
 ![Image](images/image_000005_fbed3e25724761d774854c08be32c0c1b8e548e0c33135d01e6223fd14c44662.png)
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_gould_limit_order_books_1012.0349:formula:0024" status="text_layer_fallback" source-page="29" -->
+![Source formula ref_gould_limit_order_books_1012.0349:formula:0024](images/formula_0024.png)
+```text
+PDF text layer: δ x ∗ = √ 2 g -1 ( α ) V T 1 2 , (24)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 29. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where g ( α ) describes the agent's risk aversion, T is the agent's maximum time horizon (i.e., the maximum length of time that the agent is willing to wait before performing the trade), and V is the market volatility. He then studied how empirically observed homogeneity in g and T and fluctuations in V affectted the price choices of interacting agents with different risk aversions g and different maximum time horizons T . He concluded that heterogeneity in T was the most likely source of the power-law tails in the distribution of δ x ∗ , and that the homogeneity in g and fluctuations in V that have been observed empirically in a wide range of markets were unlikely to lead to a power-law tail in the distribution of δ x ∗ .
 

@@ -74,7 +74,13 @@ We call our particular attention "Scaled Dot-Product Attention" (Figure 2). The 
 
 In practice, we compute the attention function on a set of queries simultaneously, packed together into a matrix Q . The keys and values are also packed together into matrices K and V . We compute the matrix of outputs as:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_vaswani_attention_1706.03762:formula:0001" status="text_layer_fallback" source-page="4" -->
+![Source formula ref_vaswani_attention_1706.03762:formula:0001](images/formula_0001.png)
+```text
+PDF text layer: Attention( Q,K,V ) = softmax( QK T √ d k ) V (1)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 4. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 The two most commonly used attention functions are additive attention [2], and dot-product (multiplicative) attention. Dot-product attention is identical to our algorithm, except for the scaling factor of 1 √ d k . Additive attention computes the compatibility function using a feed-forward network with a single hidden layer. While the two are similar in theoretical complexity, dot-product attention is much faster and more space-efficient in practice, since it can be implemented using highly optimized matrix multiplication code.
 
@@ -88,7 +94,13 @@ Instead of performing a single attention function with d model-dimensional keys,
 
 Multi-head attention allows the model to jointly attend to information from different representation subspaces at different positions. With a single attention head, averaging inhibits this.
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_vaswani_attention_1706.03762:formula:0002" status="text_layer_fallback" source-page="5" -->
+![Source formula ref_vaswani_attention_1706.03762:formula:0002](images/formula_0002.png)
+```text
+PDF text layer: MultiHead( Q,K,V ) = Concat(head 1 , ..., head h ) W O where head i = Attention( QW Q i , KW K i , V W V i )
+```
+*Formula quality: `text_layer_fallback`; source PDF page 5. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Where the projections are parameter matrices W Q i ∈ R d model × d k , W i K ∈ R d model × d k , W V i ∈ R d model × d v and W O ∈ R hd v × d model .
 
@@ -106,7 +118,13 @@ The Transformer uses multi-head attention in three different ways:
 
 In addition to attention sub-layers, each of the layers in our encoder and decoder contains a fully connected feed-forward network, which is applied to each position separately and identically. This consists of two linear transformations with a ReLU activation in between.
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_vaswani_attention_1706.03762:formula:0003" status="text_layer_fallback" source-page="5" -->
+![Source formula ref_vaswani_attention_1706.03762:formula:0003](images/formula_0003.png)
+```text
+PDF text layer: FFN( x ) = max(0 , xW 1 + b 1 ) W 2 + b 2 (2)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 5. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 While the linear transformations are the same across different positions, they use different parameters from layer to layer. Another way of describing this is as two convolutions with kernel size 1. The dimensionality of input and output is d model = 512 , and the inner-layer has dimensionality d ff = 2048 .
 
@@ -129,7 +147,13 @@ Since our model contains no recurrence and no convolution, in order for the mode
 
 In this work, we use sine and cosine functions of different frequencies:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_vaswani_attention_1706.03762:formula:0004" status="text_layer_fallback" source-page="6" -->
+![Source formula ref_vaswani_attention_1706.03762:formula:0004](images/formula_0004.png)
+```text
+PDF text layer: PE ( pos, 2 i ) = sin ( pos/ 10000 2 i/d model ) PE ( pos, 2 i +1) = cos ( pos/ 10000 2 i/d model )
+```
+*Formula quality: `text_layer_fallback`; source PDF page 6. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 where pos is the position and i is the dimension. That is, each dimension of the positional encoding corresponds to a sinusoid. The wavelengths form a geometric progression from 2 π to 10000 · 2 π . We chose this function because we hypothesized it would allow the model to easily learn to attend by relative positions, since for any fixed offset k , PE pos + k can be represented as a linear function of PE pos .
 
@@ -165,7 +189,13 @@ We trained our models on one machine with 8 NVIDIA P100 GPUs. For our base model
 
 We used the Adam optimizer [20] with β 1 = 0 . 9 , β 2 = 0 . 98 and ϵ = 10 -9 . We varied the learning rate over the course of training, according to the formula:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_vaswani_attention_1706.03762:formula:0005" status="text_layer_fallback" source-page="7" -->
+![Source formula ref_vaswani_attention_1706.03762:formula:0005](images/formula_0005.png)
+```text
+PDF text layer: lrate = d -0 . 5 model · min( step _ num -0 . 5 , step _ num · warmup _ steps -1 . 5 ) (3)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 7. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 This corresponds to increasing the learning rate linearly for the first warmup \_ steps training steps, and decreasing it thereafter proportionally to the inverse square root of the step number. We used warmup \_ steps = 4000 .
 

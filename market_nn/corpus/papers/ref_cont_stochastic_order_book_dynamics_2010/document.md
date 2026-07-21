@@ -62,23 +62,68 @@ We consider a market where limit orders can be placed on a price grid { 1 , . . 
 
 The ask price p A ( t ) at time t is then defined by
 
-$$p _ { A } ( t ) = \inf \{ p = 1 , \dots , n , \ X _ { p } ( t ) > 0 \} \wedge ( n + 1 ) . \\$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0001" status="decoded_unverified" source-page="4" -->
+$$
+p _ { A } ( t ) = \inf \{ p = 1 , \dots , n , \ X _ { p } ( t ) > 0 \} \wedge ( n + 1 ) . \\
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0001](images/formula_0001.png)
+```text
+PDF text layer: p A ( t ) = inf { p =1 , . . . , n, X p ( t ) > 0 }∧ ( n +1) .
+```
+*Formula quality: `decoded_unverified`; source PDF page 4. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Similarly, the bid price p B ( t ) is defined by
 
-$$p _ { B } ( t ) \equiv \sup \{ p = 1 , \dots , n , \ X _ { p } ( t ) < 0 , \ \} \vee 0 \\ \\$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0002" status="decoded_unverified" source-page="4" -->
+$$
+p _ { B } ( t ) \equiv \sup \{ p = 1 , \dots , n , \ X _ { p } ( t ) < 0 , \ \} \vee 0 \\ \\
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0002](images/formula_0002.png)
+```text
+PDF text layer: p B ( t ) ≡ sup { p =1 , . . . , n, X p ( t ) < 0 , }∨ 0
+```
+*Formula quality: `decoded_unverified`; source PDF page 4. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Notice that when there are no ask orders in the book we force an ask price of n +1 and when there are no bid orders in the book we force a bid price of 0. The mid-price p M ( t ) and the bid-ask spread s ( t ) are defined by
 
-$$p _ { M } ( t ) \equiv \frac { p _ { B } ( t ) + p _ { A } ( t ) } { 2 } \quad \text {and} \quad s ( t ) \equiv p _ { A } ( t ) - p _ { B } ( t ) .$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0003" status="decoded_unverified" source-page="4" -->
+$$
+p _ { M } ( t ) \equiv \frac { p _ { B } ( t ) + p _ { A } ( t ) } { 2 } \quad \text {and} \quad s ( t ) \equiv p _ { A } ( t ) - p _ { B } ( t ) .
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0003](images/formula_0003.png)
+```text
+PDF text layer: p M ( t ) ≡ p B ( t ) + p A ( t ) 2 and s ( t ) ≡ p A ( t ) -p B ( t ) .
+```
+*Formula quality: `decoded_unverified`; source PDF page 4. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Since most of the trading activity takes place in the vicinity of the bid and ask prices, it is useful to keep track of the number of outstanding orders at a given distance from the bid/ask. To this end, we define
 
-$$Q _ { i } ^ { B } ( t ) = \begin{cases} X _ { p _ { A } ( t ) - i } ( t ) & 0 < i < p _ { A } ( t ) \\ 0 & p _ { A } ( t ) \leq i < n , \end{cases} \quad ( 1 ) \\ \text {orders at a distance} \, i \, \text { from the ask and}$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0004" status="decoded_unverified" source-page="5" -->
+$$
+Q _ { i } ^ { B } ( t ) = \begin{cases} X _ { p _ { A } ( t ) - i } ( t ) & 0 < i < p _ { A } ( t ) \\ 0 & p _ { A } ( t ) \leq i < n , \end{cases} \quad ( 1 ) \\ \text {orders at a distance} \, i \, \text { from the ask and}
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0004](images/formula_0004.png)
+```text
+PDF text layer: Q B i ( t ) = { X p A ( t ) -i ( t ) 0 <i<p A ( t ) 0 p A ( t ) ≤ i < n, (1)
+```
+*Formula quality: `decoded_unverified`; source PDF page 5. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 the number of buy orders at a distance i from the ask and
 
-$$Q _ { i } ^ { A } ( t ) = \begin{cases} X _ { p _ { B } ( t ) + i } ( t ) & 0 < i < n - p _ { B } ( t ) \\ 0 & n - p _ { B } ( t ) \leq i < n , \end{cases} ( 2 ) \\$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0005" status="decoded_unverified" source-page="5" -->
+$$
+Q _ { i } ^ { A } ( t ) = \begin{cases} X _ { p _ { B } ( t ) + i } ( t ) & 0 < i < n - p _ { B } ( t ) \\ 0 & n - p _ { B } ( t ) \leq i < n , \end{cases} ( 2 ) \\
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0005](images/formula_0005.png)
+```text
+PDF text layer: Q A i ( t ) = { X p B ( t )+ i ( t ) 0 <i<n -p B ( t ) 0 n -p B ( t ) ≤ i < n, (2)
+```
+*Formula quality: `decoded_unverified`; source PDF page 5. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 the number of sell orders at a distance i from the bid. Although X ( t ) and ( p A ( t ) , p B ( t ) , Q A ( t ) , Q B ( t )) contain the same information, the second representation highlights the shape or depth of the book relative to the best quotes.
 
@@ -86,7 +131,16 @@ the number of sell orders at a distance i from the bid. Although X ( t ) and ( p
 
 Let us now describe how the limit order book is updated by the inflow of new orders. For a state x ∈ Z n and 1 ≤ p ≤ n , define
 
-$$x _ { p \pm 1 } & \equiv x \pm ( 0 , \dots , 1 , \dots , 0 ) , \\ + l _ { p } \min i t s = & \quad ( 0 , \dots , 1 , \dots , 0 ) , \\ + l _ { p } ( x ) & = \min i t s + 1 ,$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0006" status="decoded_unverified" source-page="5" -->
+$$
+x _ { p \pm 1 } & \equiv x \pm ( 0 , \dots , 1 , \dots , 0 ) , \\ + l _ { p } \min i t s = & \quad ( 0 , \dots , 1 , \dots , 0 ) , \\ + l _ { p } ( x ) & = \min i t s + 1 ,
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0006](images/formula_0006.png)
+```text
+PDF text layer: x p ± 1 ≡ x ± (0 , . . . , 1 , . . . , 0) ,
+```
+*Formula quality: `decoded_unverified`; source PDF page 5. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where the 1 in the vector on the right-hand side is in the p -th component. Assuming that all orders are of unit size (in empirical examples we will take this unit to be the average size of limit orders observed for the asset),
 
@@ -109,13 +163,31 @@ To capture these empirical features in a model that is analytically tractable an
 
 Typically, the arrival rates λ : { 1 , . . . , n } → [0 , ∞ ) are decreasing functions of the distance to the bid/ask: most orders are placed close to the current price. Empirical studies suggest a power law
 
-$$\lambda ( i ) = \frac { k } { i ^ { \alpha } }$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0007" status="decoded_unverified" source-page="6" -->
+$$
+\lambda ( i ) = \frac { k } { i ^ { \alpha } }
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0007](images/formula_0007.png)
+```text
+PDF text layer: λ ( i ) = k i α
+```
+*Formula quality: `decoded_unverified`; source PDF page 6. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 as a plausible specification (see Zovko and Farmer (2002) or Bouchaud et al. (2002)).
 
 Given the above assumptions, X is a continuous-time Markov chain with state space Z n and transition rates given by
 
-$$x & \to x _ { p - 1 } \quad \text {with rate} \quad \lambda ( p _ { A } ( t ) - p ) \quad \text {for } p < p _ { A } ( t ) , \\ x & \to x _ { p + 1 } \quad \text {with rate} \quad \lambda ( p - p _ { B } ( t ) ) \quad \text {for } p > p _ { B } ( t ) , \\ x & \to x _ { p _ { B } ( t ) + 1 } \quad \text {with rate} \quad \mu \\ x & \to x _ { p _ { A } ( t ) - 1 } \quad \text {with rate} \quad \mu \\ x & \to x _ { p + 1 } \quad \text {with rate} \ \theta ( p _ { A } ( t ) - p ) | x _ { p } | \quad \text {for } p < p _ { A } ( t ) , \\ x & \to x _ { p - 1 } \quad \text {with rate} \ \theta ( p - p _ { B } ( t ) ) | x _ { p } | \quad \text {for } p > p _ { B } ( t ) , \\$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0008" status="decoded_unverified" source-page="6" -->
+$$
+x & \to x _ { p - 1 } \quad \text {with rate} \quad \lambda ( p _ { A } ( t ) - p ) \quad \text {for } p < p _ { A } ( t ) , \\ x & \to x _ { p + 1 } \quad \text {with rate} \quad \lambda ( p - p _ { B } ( t ) ) \quad \text {for } p > p _ { B } ( t ) , \\ x & \to x _ { p _ { B } ( t ) + 1 } \quad \text {with rate} \quad \mu \\ x & \to x _ { p _ { A } ( t ) - 1 } \quad \text {with rate} \quad \mu \\ x & \to x _ { p + 1 } \quad \text {with rate} \ \theta ( p _ { A } ( t ) - p ) | x _ { p } | \quad \text {for } p < p _ { A } ( t ) , \\ x & \to x _ { p - 1 } \quad \text {with rate} \ \theta ( p - p _ { B } ( t ) ) | x _ { p } | \quad \text {for } p > p _ { B } ( t ) , \\
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0008](images/formula_0008.png)
+```text
+PDF text layer: x → x p -1 with rate λ ( p A ( t ) -p ) for p < p A ( t ), x → x p +1 with rate λ ( p -p B ( t )) for p > p B ( t ), x → x p B ( t )+1 with rate μ x → x p A ( t ) -1 with rate μ x → x p +1 with rate θ ( p A ( t ) -p ) | x p | for p < p A ( t ), x → x p -1 with rate θ ( p -p B ( t )) | x p | for p > p B ( t ),
+```
+*Formula quality: `decoded_unverified`; source PDF page 6. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Proposition 1 X is an ergodic Markov process. In particular, X has a proper stationary distribution.
 
@@ -123,9 +195,27 @@ Proof. Define N ≡ ( N ( t ) , t ≥ 0), where N ( t ) ≡ ∑ n i =1 | X i ( t
 
 and
 
-$$\sum _ { i = 1 } ^ { \infty } \frac { \lambda ^ { i } } { \mu _ { 1 } \cdots \mu _ { i } } < \sum _ { i = 1 } ^ { \infty } \frac { 1 } { i ! } \left ( \frac { \lambda } { \theta } \right ) ^ { i } = e ^ { \frac { \lambda } { \theta } } - 1 < \infty ,$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0009" status="decoded_unverified" source-page="6" -->
+$$
+\sum _ { i = 1 } ^ { \infty } \frac { \lambda ^ { i } } { \mu _ { 1 } \cdots \mu _ { i } } < \sum _ { i = 1 } ^ { \infty } \frac { 1 } { i ! } \left ( \frac { \lambda } { \theta } \right ) ^ { i } = e ^ { \frac { \lambda } { \theta } } - 1 < \infty ,
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0009](images/formula_0009.png)
+```text
+PDF text layer: ∞ ∑ i =1 λ i μ 1 · · · μ i < ∞ ∑ i =1 1 i ! ( λ θ ) i = e λ θ -1 < ∞ ,
+```
+*Formula quality: `decoded_unverified`; source PDF page 6. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
-$$\sum _ { i = 1 } ^ { \infty } \frac { \mu _ { 1 } \cdots \mu _ { i } } { \lambda ^ { i } } > \sum _ { i = 1 } ^ { M } \frac { \mu _ { 1 } \cdots \mu _ { i } } { \lambda ^ { i } } + \sum _ { i = M + 1 } ^ { \infty } \left ( \frac { 2 \mu + M \theta } { \lambda } \right ) ^ { i } = \infty , \\ \intertext { s o n e l g r a l e g e n u o g h s o t a t h a t 2 \mu + M \theta > \lambda . T h e r e f o r e , b y ( A s m u s e n 2003 , C }$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0010" status="decoded_unverified" source-page="6" -->
+$$
+\sum _ { i = 1 } ^ { \infty } \frac { \mu _ { 1 } \cdots \mu _ { i } } { \lambda ^ { i } } > \sum _ { i = 1 } ^ { M } \frac { \mu _ { 1 } \cdots \mu _ { i } } { \lambda ^ { i } } + \sum _ { i = M + 1 } ^ { \infty } \left ( \frac { 2 \mu + M \theta } { \lambda } \right ) ^ { i } = \infty , \\ \intertext { s o n e l g r a l e g e n u o g h s o t a t h a t 2 \mu + M \theta > \lambda . T h e r e f o r e , b y ( A s m u s e n 2003 , C }
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0010](images/formula_0010.png)
+```text
+PDF text layer: ∞ ∑ i =1 μ 1 · · · μ i λ i > M ∑ i =1 μ 1 · · · μ i λ i + ∞ ∑ i = M +1 ( 2 μ + Mθ λ ) i = ∞ ,
+```
+*Formula quality: `decoded_unverified`; source PDF page 6. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 for M&gt; 0 chosen large enough so that 2 μ + Mθ&gt;λ . Therefore, by (Asmussen 2003, Corollary 2.5) the birth-death process is ergodic. Since X is clearly irreducible, it follows that X is also ergodic. □
 
@@ -159,21 +249,57 @@ Table 1 A sample of 3 trades and 5 quotes for Sky Perfect Communications
 
 Recall that in our stylized model we assume orders to be of unit size. In the data set, we first compute the average size of market orders S m , of limit orders S l and of canceled orders S c and choose the size unit to be the average size of a limit order S l : a block of orders of size S l is counted as one event. The limit order arrival rate function for 1 ≤ i ≤ 5 can be estimated by
 
-$$\hat { \lambda } ( i ) = \frac { N _ { l } ( i ) } { T } ,$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0011" status="decoded_unverified" source-page="7" -->
+$$
+\hat { \lambda } ( i ) = \frac { N _ { l } ( i ) } { T } ,
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0011](images/formula_0011.png)
+```text
+PDF text layer: ˆ λ ( i ) = N l ( i ) T ,
+```
+*Formula quality: `decoded_unverified`; source PDF page 7. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where N l ( i ) is the total number of limit orders that arrived at a distance i from the opposite best quote. N l ( i ) is obtained by enumerating the number of times that a quote increases in size at a distance of 1 ≤ i ≤ 5 ticks from the opposite best quote. We then extrapolate by fitting a power law function of the form
 
-$$\hat { \lambda } ( i ) = \frac { k } { i ^ { \alpha } }$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0012" status="decoded_unverified" source-page="7" -->
+$$
+\hat { \lambda } ( i ) = \frac { k } { i ^ { \alpha } }
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0012](images/formula_0012.png)
+```text
+PDF text layer: ˆ λ ( i ) = k i α
+```
+*Formula quality: `decoded_unverified`; source PDF page 7. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 (suggested by Zovko and Farmer (2002) or Bouchaud et al. (2002)). The power law parameters k and α are obtained by a least squares fit
 
-$$\min _ { k , \alpha } \sum _ { i = 1 } ^ { 5 } \left ( \hat { \lambda } ( i ) - \frac { k } { i ^ { \alpha } } \right ) ^ { 2 } .$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0013" status="decoded_unverified" source-page="7" -->
+$$
+\min _ { k , \alpha } \sum _ { i = 1 } ^ { 5 } \left ( \hat { \lambda } ( i ) - \frac { k } { i ^ { \alpha } } \right ) ^ { 2 } .
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0013](images/formula_0013.png)
+```text
+PDF text layer: min k,α 5 ∑ i =1 ( ˆ λ ( i ) -k i α ) 2 .
+```
+*Formula quality: `decoded_unverified`; source PDF page 7. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Estimated arrival rates at distances 0 ≤ i ≤ 10 from the opposite best quote are displayed in Figure 1(a).
 
 The arrival rate of market orders is then estimated by
 
-$$\hat { \mu } = \frac { N _ { m } } { T } \frac { S _ { m } } { S _ { l } } ,$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0014" status="decoded_unverified" source-page="7" -->
+$$
+\hat { \mu } = \frac { N _ { m } } { T } \frac { S _ { m } } { S _ { l } } ,
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0014](images/formula_0014.png)
+```text
+PDF text layer: ˆ μ = N m T S m S ,
+```
+*Formula quality: `decoded_unverified`; source PDF page 7. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 l
 
@@ -197,13 +323,31 @@ Estimated parameters: Sky Perfect Communications.
 
 Table 2
 
-$$Q _ { i } ^ { B } = \frac { 1 } { S _ { l } } \frac { 1 } { M } \sum _ { j = 1 } ^ { M } S _ { i } ^ { B } ( j ) \\$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0015" status="decoded_unverified" source-page="8" -->
+$$
+Q _ { i } ^ { B } = \frac { 1 } { S _ { l } } \frac { 1 } { M } \sum _ { j = 1 } ^ { M } S _ { i } ^ { B } ( j ) \\
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0015](images/formula_0015.png)
+```text
+PDF text layer: Q B i = 1 S l 1 M M ∑ j =1 S B i ( j )
+```
+*Formula quality: `decoded_unverified`; source PDF page 8. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 The vector Q A i is obtained analogously and Q i is the average of Q A i and Q B i .
 
 An estimator for the cancellation rate function is then given by
 
-$$\hat { \theta } ( i ) = \frac { N _ { c } ( i ) } { T Q _ { i } } \frac { S _ { c } } { S _ { l } } \quad \text {for} \quad i \leq 5 \quad \text {and} \quad \hat { \theta } ( i ) = \hat { \theta } ( 5 ) \quad \text {for} \quad i > 5 .$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0016" status="decoded_unverified" source-page="8" -->
+$$
+\hat { \theta } ( i ) = \frac { N _ { c } ( i ) } { T Q _ { i } } \frac { S _ { c } } { S _ { l } } \quad \text {for} \quad i \leq 5 \quad \text {and} \quad \hat { \theta } ( i ) = \hat { \theta } ( 5 ) \quad \text {for} \quad i > 5 .
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0016](images/formula_0016.png)
+```text
+PDF text layer: ˆ θ ( i ) = N c ( i ) TQ i S c S l for i ≤ 5 and ˆ θ ( i ) = ˆ θ (5) for i > 5 .
+```
+*Formula quality: `decoded_unverified`; source PDF page 8. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 The fitted values are displayed in Figure 1(b). N c ( i ) is obtained by counting the number of times that a quote decreases in size at a distance of 1 ≤ i ≤ 5 ticks from the opposite best quote, excluding decreases due to market orders.
 
@@ -217,49 +361,139 @@ As noted above, an important motivation for modelling high-frequency dynamics of
 
 We first recall some basic facts about two-sided Laplace transforms and discuss the computation of Laplace transforms for first-passage times of birth-death processes (Abate and Whitt (1999)). Given a function f : R → R , its two-sided Laplace transform is given by
 
-$$\hat { f } ( s ) = \int _ { - \infty } ^ { \infty } e ^ { - s t } f ( t ) d t , \\$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0017" status="decoded_unverified" source-page="9" -->
+$$
+\hat { f } ( s ) = \int _ { - \infty } ^ { \infty } e ^ { - s t } f ( t ) d t , \\
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0017](images/formula_0017.png)
+```text
+PDF text layer: ˆ f ( s ) = ∫ ∞ -∞ e -st f ( t ) dt,
+```
+*Formula quality: `decoded_unverified`; source PDF page 9. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where s is a complex numbers. When f is the probability density function (pdf) of some random variable X , its two-sided Laplace transform can also be written as
 
-$$\hat { f } ( s ) = \mathbb { E } [ e ^ { - s X } ] .$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0018" status="decoded_unverified" source-page="9" -->
+$$
+\hat { f } ( s ) = \mathbb { E } [ e ^ { - s X } ] .
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0018](images/formula_0018.png)
+```text
+PDF text layer: ˆ f ( s ) = E [ e -sX ] .
+```
+*Formula quality: `decoded_unverified`; source PDF page 9. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 In this case, we also say that ˆ f is the two-sided Laplace transform of the random variable itself. We work with two-sided Laplace transforms here because for our purposes the function f will usually correspond to the pdf of a random variable with both positive and negative support. From now on, we drop the prefix 'two-sided' when referring to two-sided Laplace transforms. When we say conditional Laplace-transform of the random variable X conditional on the event A , we mean the Laplace transform of the conditional pdf of X given A .
 
 Recall that if X and Y are independent random variables with well-defined Laplace transforms, then
 
-$$\hat { f } _ { X + Y } ( s ) = \mathbb { E } [ e ^ { - s ( X + Y ) } ] = \mathbb { E } [ e ^ { - s X } ] \mathbb { E } [ e ^ { - s Y } ] = \hat { f } _ { X } ( s ) \hat { f } _ { Y } ( s ) .$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0019" status="decoded_unverified" source-page="9" -->
+$$
+\hat { f } _ { X + Y } ( s ) = \mathbb { E } [ e ^ { - s ( X + Y ) } ] = \mathbb { E } [ e ^ { - s X } ] \mathbb { E } [ e ^ { - s Y } ] = \hat { f } _ { X } ( s ) \hat { f } _ { Y } ( s ) .
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0019](images/formula_0019.png)
+```text
+PDF text layer: ˆ f X + Y ( s ) = E [ e -s ( X + Y ) ] = E [ e -sX ] E [ e -sY ] = ˆ f X ( s ) ˆ f Y ( s ) . (3)
+```
+*Formula quality: `decoded_unverified`; source PDF page 9. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 If for some γ ∈ R we have ∫ ∞ -∞ | ˆ f ( σ + iω ) | dω &lt; ∞ and f ( t ) is continuous at t , then the inverse transform is given by the Bromwich contour integral
 
-$$f ( t ) = \frac { 1 } { 2 \pi i } \int _ { \sigma - i \infty } ^ { \sigma + i \infty } e ^ { t s } \hat { f } ( s ) d s . \\$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0020" status="decoded_unverified" source-page="9" -->
+$$
+f ( t ) = \frac { 1 } { 2 \pi i } \int _ { \sigma - i \infty } ^ { \sigma + i \infty } e ^ { t s } \hat { f } ( s ) d s . \\
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0020](images/formula_0020.png)
+```text
+PDF text layer: f ( t ) = 1 2 πi ∫ σ + i ∞ σ -i ∞ e ts ˆ f ( s ) ds. (4)
+```
+*Formula quality: `decoded_unverified`; source PDF page 9. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 ̸
 
 The continued fraction associated with a sequence { a n , n ≥ 1 } of partial numerators and { b n , n ≥ 1 } of partial denominators, which are complex numbers with a n =0 for all n ≥ 1, is the sequence { w n , n ≥ 1 } , where
 
-$$w _ { n } = t _ { 1 } \circ t _ { 2 } \circ \dots \circ t _ { n } ( 0 ) ,  n \geq 1 , \quad t _ { k } ( u ) = \frac { a _ { k } } { b _ { k } + u } ,  k \geq 1 .$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0021" status="decoded_unverified" source-page="9" -->
+$$
+w _ { n } = t _ { 1 } \circ t _ { 2 } \circ \dots \circ t _ { n } ( 0 ) , n \geq 1 , \quad t _ { k } ( u ) = \frac { a _ { k } } { b _ { k } + u } , k \geq 1 .
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0021](images/formula_0021.png)
+```text
+PDF text layer: w n = t 1 ◦ t 2 ◦··· ◦ t n (0) , n ≥ 1 , t k ( u ) = a k b + u , k ≥ 1 .
+```
+*Formula quality: `decoded_unverified`; source PDF page 9. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 k
 
 If w ≡ lim n →∞ w n , then the continued fraction is said to be convergent and the limit w is said to be the value of the continued fraction (Abate and Whitt (1999)). In this case, we write
 
-$$w \equiv \Phi _ { n = 1 } ^ { \infty } \frac { a _ { n } } { b _ { n } } .$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0022" status="decoded_unverified" source-page="9" -->
+$$
+w \equiv \Phi _ { n = 1 } ^ { \infty } \frac { a _ { n } } { b _ { n } } .
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0022](images/formula_0022.png)
+```text
+PDF text layer: w ≡ Φ ∞ n =1 a n b n .
+```
+*Formula quality: `decoded_unverified`; source PDF page 9. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Consider now a birth-death process with constant birth rate λ and death rates μ i in state i ≥ 1, and let σ b denote the first-passage time of this process to 0 given it begins in state b . Next, notice that we can write σ as the sum
 
-$$\sigma _ { b } = \sigma _ { b , b - 1 } + \sigma _ { b - 1 , b - 2 } + \cdots + \sigma _ { 1 , 0 } ,$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0023" status="decoded_unverified" source-page="10" -->
+$$
+\sigma _ { b } = \sigma _ { b , b - 1 } + \sigma _ { b - 1 , b - 2 } + \cdots + \sigma _ { 1 , 0 } ,
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0023](images/formula_0023.png)
+```text
+PDF text layer: σ b = σ b,b -1 + σ b -1 ,b -2 + · · · + σ 1 , 0 ,
+```
+*Formula quality: `decoded_unverified`; source PDF page 10. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where σ i,i -1 denotes the first-passage time of the birth-death process from the state i to the state i -1, for i =1 , . . . , b , and all terms on the right-hand side are independent. If ˆ f b denotes the Laplace transform of σ b and ˆ f i,i -1 denotes the Laplace transform of σ i,i -1 , for i =1 , . . . , b , then we have by (3),
 
-$$\hat { f } _ { b } ( s ) = \Pi _ { i = 1 } ^ { b } \hat { f } _ { i , i - 1 } ( s ) . & & ( 5 ) \\ \hat { f } _ { b } ( s ) = \Pi _ { i = 1 } ^ { b } \hat { f } _ { i , i - 1 } ( s ) . & & \\ \hat { f } _ { b } ( s ) = \Pi _ { i = 1 } ^ { b } .$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0024" status="decoded_unverified" source-page="10" -->
+$$
+\hat { f } _ { b } ( s ) = \Pi _ { i = 1 } ^ { b } \hat { f } _ { i , i - 1 } ( s ) . & & ( 5 ) \\ \hat { f } _ { b } ( s ) = \Pi _ { i = 1 } ^ { b } \hat { f } _ { i , i - 1 } ( s ) . & & \\ \hat { f } _ { b } ( s ) = \Pi _ { i = 1 } ^ { b } .
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0024](images/formula_0024.png)
+```text
+PDF text layer: ˆ f b ( s ) = Π b i =1 ˆ f i,i -1 ( s ) . (5)
+```
+*Formula quality: `decoded_unverified`; source PDF page 10. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Therefore, in order to compute ˆ f b , it suffices to compute the simpler Laplace transforms ˆ f i,i -1 , for i =1 , . . . , b . By Equation (4.9) of Abate and Whitt (1999), we see that the Laplace transform of ˆ f i,i -1 is given by
 
-$$\hat { f } _ { i , i - 1 } ( s ) = - \frac { 1 } { \lambda } \Phi _ { k = i } ^ { \infty } \frac { - \lambda \mu _ { k } } { \lambda + \mu _ { k } + s } .$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0025" status="decoded_unverified" source-page="10" -->
+$$
+\hat { f } _ { i , i - 1 } ( s ) = - \frac { 1 } { \lambda } \Phi _ { k = i } ^ { \infty } \frac { - \lambda \mu _ { k } } { \lambda + \mu _ { k } + s } .
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0025](images/formula_0025.png)
+```text
+PDF text layer: ˆ f i,i -1 ( s ) = -1 λ Φ ∞ k = i -λμ k λ + μ k + s . (6)
+```
+*Formula quality: `decoded_unverified`; source PDF page 10. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 The computation there is based on a recursive relationship between the ˆ f i,i -1 , i =1 , . . . , b , which is derived by considering the first transition of the birth-death process. Combining (5) and (6), we obtain
 
-$$\hat { f } _ { b } ( s ) = \left ( - \frac { 1 } { \lambda } \right ) ^ { b } \left ( \Pi _ { i = 1 } ^ { b } \Phi _ { k = i } ^ { \infty } \frac { - \lambda \mu _ { k } } { \lambda + \mu _ { k } + s } \right ) . \\ \text {result in all our computations below}$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0026" status="decoded_unverified" source-page="10" -->
+$$
+\hat { f } _ { b } ( s ) = \left ( - \frac { 1 } { \lambda } \right ) ^ { b } \left ( \Pi _ { i = 1 } ^ { b } \Phi _ { k = i } ^ { \infty } \frac { - \lambda \mu _ { k } } { \lambda + \mu _ { k } + s } \right ) . \\ \text {result in all our computations below}
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0026](images/formula_0026.png)
+```text
+PDF text layer: ˆ f b ( s ) = ( -1 λ ) b ( Π b i =1 Φ ∞ k = i -λμ k λ + μ k + s ) . (7)
+```
+*Formula quality: `decoded_unverified`; source PDF page 10. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 We will use this result in all our computations below.
 
@@ -267,13 +501,31 @@ We will use this result in all our computations below.
 
 We now compute the probability that the mid-price increases at its next move. The first move in the mid-price occurs at the first-passage time of the bid or ask queue to zero or, if the bid/ask spread is greater than one, the first time a limit order arrives inside the spread. Throughout this section, let X A ≡ X p A ( · ) ( · ) and X B ≡| X p B ( · ) ( · ) | , and let σ A and σ B be the first-passage times of X A and X B to 0, respectively. Let W B ≡{ W B ( t ) , t ≥ 0 } ( W A ≡{ W A ( t ) , t ≥ 0 } ) denote the number of orders remaining at the bid (ask) at time t of the initial X B (0) ( X A (0)) orders and let ϵ B ( ϵ A ) be the first-passage time of W B ( W A ) to 0. Furthermore, let T be the time of the first change in mid-price:
 
-$$T \equiv \inf \{ t \geq 0 , \, p _ { M } ( t ) \neq p _ { M } ( 0 ) \} . \\$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0027" status="decoded_unverified" source-page="10" -->
+$$
+T \equiv \inf \{ t \geq 0 , \, p _ { M } ( t ) \neq p _ { M } ( 0 ) \} . \\
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0027](images/formula_0027.png)
+```text
+PDF text layer: T ≡ inf { t ≥ 0 , p M ( t ) = p M (0) } .
+```
+*Formula quality: `decoded_unverified`; source PDF page 10. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 ̸
 
 In this subsection, we are interested in computing the conditional probability that the mid-price increases before decreasing:
 
-$$\mathbb { P } [ p _ { M } ( T ) > p _ { M } ( 0 ) | X _ { A } ( 0 ) = a , X _ { B } ( 0 ) = b , s ( 0 ) = S ] ,$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0028" status="decoded_unverified" source-page="10" -->
+$$
+\mathbb { P } [ p _ { M } ( T ) > p _ { M } ( 0 ) | X _ { A } ( 0 ) = a , X _ { B } ( 0 ) = b , s ( 0 ) = S ] ,
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0028](images/formula_0028.png)
+```text
+PDF text layer: P [ p M ( T ) >p M (0) | X A (0) = a, X B (0) = b, s (0) = S ] , (8)
+```
+*Formula quality: `decoded_unverified`; source PDF page 10. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where S &gt; 0. For ease of notation, we will omit the conditioning variables in all proofs below.
 
@@ -290,23 +542,68 @@ The conditional probability (8) can then be computed as follows:
 
 Proposition 3 (Probability of increase in mid-price) Let ˆ f j,S be given by
 
-$$\hat { f } _ { j , S } ( s ) = \left ( - \frac { 1 } { \lambda ( S ) } \right ) ^ { j } \left ( \Pi _ { i = 1 } ^ { b } \Phi _ { k = i } ^ { \infty } \frac { - \lambda ( S ) \left ( \mu + k \theta ( S ) \right ) } { \lambda ( S ) + \mu + k \theta ( S ) + s } \right ) , \\$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0029" status="decoded_unverified" source-page="11" -->
+$$
+\hat { f } _ { j , S } ( s ) = \left ( - \frac { 1 } { \lambda ( S ) } \right ) ^ { j } \left ( \Pi _ { i = 1 } ^ { b } \Phi _ { k = i } ^ { \infty } \frac { - \lambda ( S ) \left ( \mu + k \theta ( S ) \right ) } { \lambda ( S ) + \mu + k \theta ( S ) + s } \right ) , \\
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0029](images/formula_0029.png)
+```text
+PDF text layer: ˆ f j,S ( s ) = ( -1 λ ( S ) ) j ( Π b i =1 Φ ∞ k = i -λ ( S ) ( μ + kθ ( S )) λ ( S ) + μ + kθ ( S ) + s ) , (9)
+```
+*Formula quality: `decoded_unverified`; source PDF page 11. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
-$$& \text {for } j \geq 1 , \text { and } \iota \, \text { } \Lambda _ { s } \equiv \sum _ { i = 1 } ^ { S - 1 } \lambda ( i ) . \text { Then } ( 8 ) \text { is given by the inverse Laplace transform of } \\ & \hat { F } _ { a , b , S } ( s ) = \frac { 1 } { s } \left ( \hat { f } _ { b , S } ( s + \Lambda _ { S } ) + \frac { \Lambda _ { S } } { \Lambda _ { S } + s } ( 1 - \hat { f } _ { b , S } ( s + \Lambda _ { S } ) ) \right ) \left ( \hat { f } _ { a , S } ( \Lambda _ { S } - s ) + \frac { \Lambda _ { S } } { \Lambda _ { S } - s } ( 1 - \hat { f } _ { a , S } ( \Lambda _ { S } - s ) ) \right ) , \\ & \text {evaluated at } 0 , \text { when } S = 1 , \text { (10) } \text { reduces to }$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0030" status="decoded_unverified" source-page="11" -->
+$$
+& \text {for } j \geq 1 , \text { and } \iota \, \text { } \Lambda _ { s } \equiv \sum _ { i = 1 } ^ { S - 1 } \lambda ( i ) . \text { Then } ( 8 ) \text { is given by the inverse Laplace transform of } \\ & \hat { F } _ { a , b , S } ( s ) = \frac { 1 } { s } \left ( \hat { f } _ { b , S } ( s + \Lambda _ { S } ) + \frac { \Lambda _ { S } } { \Lambda _ { S } + s } ( 1 - \hat { f } _ { b , S } ( s + \Lambda _ { S } ) ) \right ) \left ( \hat { f } _ { a , S } ( \Lambda _ { S } - s ) + \frac { \Lambda _ { S } } { \Lambda _ { S } - s } ( 1 - \hat { f } _ { a , S } ( \Lambda _ { S } - s ) ) \right ) , \\ & \text {evaluated at } 0 , \text { when } S = 1 , \text { (10) } \text { reduces to }
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0030](images/formula_0030.png)
+```text
+PDF text layer: for j ≥ 1 , and let Λ S ≡ ∑ S -1 i =1 λ ( i ) . Then (8) is given by the inverse Laplace transform of ˆ F a,b,S ( s ) = 1 s ( ˆ f b,S ( s +Λ S ) + Λ S Λ S + s (1 -ˆ f b,S ( s +Λ S )) )( ˆ f a,S (Λ S -s ) + Λ S Λ S -s (1 -ˆ f a,S (Λ S -s )) ) , (10)
+```
+*Formula quality: `decoded_unverified`; source PDF page 11. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 evaluated at 0. When S =1 , (10) reduces to
 
-$$\hat { F } _ { a , b , 1 } ( s ) = \frac { 1 } { s } \hat { f } _ { a , 1 } ( s ) \hat { f } _ { b , 1 } ( - s ) .$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0031" status="decoded_unverified" source-page="11" -->
+$$
+\hat { F } _ { a , b , 1 } ( s ) = \frac { 1 } { s } \hat { f } _ { a , 1 } ( s ) \hat { f } _ { b , 1 } ( - s ) .
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0031](images/formula_0031.png)
+```text
+PDF text layer: ˆ F a,b, 1 ( s ) = 1 s ˆ f a, 1 ( s ) ˆ f b, 1 ( -s ) . (11)
+```
+*Formula quality: `decoded_unverified`; source PDF page 11. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Proof. We will first focus on the special case when S =1 and then extend the analysis to the case S &gt; 1 using Lemma 4 below. Construct ˜ X A and ˜ X B as in Lemma 2. When S =1, the price changes for the first time exactly when one of the two independent birth-death processes ˜ X A and ˜ X B reaches the state 0 for the first time. Both of these birth-death processes have constant birth rates λ (1) and death rates μ + iθ (1), i ≥ 1. Thus, given our initial conditions, the distribution of T is given by the minimum of the independent first passage times σ A and σ B . Furthermore, the quantity (8) is given by P [ σ A &lt;σ B ]. By (7), the conditional Laplace transform of σ A -σ B given the initial conditions is given by ˆ f a, 1 ( s ) ˆ f b, 1 ( -s ) so that the conditional Laplace transform of the cumulative distribution function (cdf) of σ A -σ B is given by (11). Thus, our desired probability is given by the inverse Laplace transform of (11) evaluated at 0.
 
 We now move on to the case where S &gt; 1. Let σ i A denote the first time an ask order arrives i ticks away from the bid and σ i B denote the first time a bid order arrives i ticks away from the ask, for i =1 , . . . , S -1. The time of the first change in mid-price is now given by
 
-$$T = \sigma _ { A } \wedge \sigma _ { B } \wedge \min \{ \sigma _ { A } ^ { i } , \sigma _ { B } ^ { i } , \, i = 1 , \dots , S - 1 \} . \\ \tilde { \ } r a c { \sigma } { ( i ) } .$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0032" status="decoded_unverified" source-page="11" -->
+$$
+T = \sigma _ { A } \wedge \sigma _ { B } \wedge \min \{ \sigma _ { A } ^ { i } , \sigma _ { B } ^ { i } , \, i = 1 , \dots , S - 1 \} . \\ \tilde { \ } r a c { \sigma } { ( i ) } .
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0032](images/formula_0032.png)
+```text
+PDF text layer: T = σ A ∧ σ B ∧ min { σ i A , σ i B , i =1 , . . . , S -1 } .
+```
+*Formula quality: `decoded_unverified`; source PDF page 11. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Notice that ˜ X A and ˜ X B are independent of the mutually independent arrival times σ i A , σ i B , for i = 1 , . . . , S -1. Also, notice that σ i A and σ i B are exponentially distributed with rates λ ( i ) for i =1 , . . . , S -1. The first change in mid-price is an increase if there is an arrival of a limit bid order within S -1 ticks of the best ask or ˜ X A hits zero, before there is an arrival of a limit ask order within S -1 ticks of the best bid or ˜ X B hits zero. Thus, the quantity (8) can be written as
 
-$$\mathbb { P } [ \sigma _ { A } \wedge \sigma _ { B } ^ { 1 } \wedge \dots \wedge \sigma _ { B } ^ { S - 1 } < \sigma _ { B } \wedge \sigma _ { A } ^ { 1 } \wedge \dots \wedge \sigma _ { A } ^ { S - 1 } ] = \mathbb { P } [ \sigma _ { A } \wedge \sigma _ { B } ^ { \Sigma } < \sigma _ { B } \wedge \sigma _ { A } ^ { \Sigma } ] , \\ \\ \sigma _ { A } \wedge \sigma _ { B } ^ { S } \wedge \dots \wedge \sigma _ { B } ^ { S - 1 } < \sigma _ { B } \wedge \sigma _ { A } ^ { 1 } \wedge \dots \wedge \sigma _ { A } ^ { S - 1 } ] = \mathbb { P } [ \sigma _ { A } \wedge \sigma _ { B } ^ { \Sigma } < \sigma _ { B } \wedge \sigma _ { A } ^ { \Sigma } ] , \\$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0033" status="decoded_unverified" source-page="11" -->
+$$
+\mathbb { P } [ \sigma _ { A } \wedge \sigma _ { B } ^ { 1 } \wedge \dots \wedge \sigma _ { B } ^ { S - 1 } < \sigma _ { B } \wedge \sigma _ { A } ^ { 1 } \wedge \dots \wedge \sigma _ { A } ^ { S - 1 } ] = \mathbb { P } [ \sigma _ { A } \wedge \sigma _ { B } ^ { \Sigma } < \sigma _ { B } \wedge \sigma _ { A } ^ { \Sigma } ] , \\ \\ \sigma _ { A } \wedge \sigma _ { B } ^ { S } \wedge \dots \wedge \sigma _ { B } ^ { S - 1 } < \sigma _ { B } \wedge \sigma _ { A } ^ { 1 } \wedge \dots \wedge \sigma _ { A } ^ { S - 1 } ] = \mathbb { P } [ \sigma _ { A } \wedge \sigma _ { B } ^ { \Sigma } < \sigma _ { B } \wedge \sigma _ { A } ^ { \Sigma } ] , \\
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0033](images/formula_0033.png)
+```text
+PDF text layer: P [ σ A ∧ σ 1 B ∧ . . . ∧ σ S -1 B <σ B ∧ σ 1 A ∧ . . . ∧ σ S -1 A ] = P [ σ A ∧ σ Σ B <σ B ∧ σ Σ A ] , (12)
+```
+*Formula quality: `decoded_unverified`; source PDF page 11. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where σ Σ A and σ Σ B are independent exponential random variables both with rate Λ S . In order to compute (12), we first need to compute the conditional Laplace transform of the minimum σ B ∧ σ Σ A . This is given in Lemma 4, substituting σ Σ A for Z . The conditional Laplace transform of the random variable σ B ∧ σ Σ A -σ A ∧ σ Σ B can then be computed using (3) and the probability (8) can be computed by inverting the conditional Laplace transform of the cdf of this random variable and evaluating at 0 as in the case S =1. □
 
@@ -314,19 +611,55 @@ Lemma 4 Let Z be an exponentially distributed random variable with parameter Λ 
 
 where ˆ f b is given in (9) .
 
-$$\hat { f } _ { b } ( s + \Lambda ) + \frac { \Lambda } { \Lambda + s } ( 1 - \hat { f } _ { b } ( s + \Lambda ) ) ,$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0034" status="decoded_unverified" source-page="11" -->
+$$
+\hat { f } _ { b } ( s + \Lambda ) + \frac { \Lambda } { \Lambda + s } ( 1 - \hat { f } _ { b } ( s + \Lambda ) ) ,
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0034](images/formula_0034.png)
+```text
+PDF text layer: ˆ f b ( s +Λ)+ Λ Λ+ s (1 -ˆ f b ( s +Λ)) ,
+```
+*Formula quality: `decoded_unverified`; source PDF page 11. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Proof. We first compute the density f σ B ∧ Z of the random variable σ B ∧ Z in terms of the density f b of the random variable σ B . Since Z is exponential with rate Λ, we have for all t ≥ 0,
 
-$$\mathbb { P } [ \sigma _ { B } \wedge Z < t ] = 1 - \mathbb { P } [ \sigma _ { B } > t ] \mathbb { P } [ Z > t ] = 1 - ( 1 - F _ { \sigma _ { B } } ( t ) ) e ^ { - \Lambda t } .$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0035" status="decoded_unverified" source-page="12" -->
+$$
+\mathbb { P } [ \sigma _ { B } \wedge Z < t ] = 1 - \mathbb { P } [ \sigma _ { B } > t ] \mathbb { P } [ Z > t ] = 1 - ( 1 - F _ { \sigma _ { B } } ( t ) ) e ^ { - \Lambda t } .
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0035](images/formula_0035.png)
+```text
+PDF text layer: P [ σ B ∧ Z < t ] = 1 -P [ σ B >t ] P [ Z > t ] = 1 -(1 -F σ B ( t )) e -Λ t .
+```
+*Formula quality: `decoded_unverified`; source PDF page 12. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Taking derivatives with respect to t gives
 
-$$f _ { \sigma _ { B } \wedge Z } ( t ) = f _ { b } ( t ) e ^ { - \Lambda t } + \Lambda ( 1 - F _ { b } ( t ) ) e ^ { - \Lambda t } ,$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0036" status="decoded_unverified" source-page="12" -->
+$$
+f _ { \sigma _ { B } \wedge Z } ( t ) = f _ { b } ( t ) e ^ { - \Lambda t } + \Lambda ( 1 - F _ { b } ( t ) ) e ^ { - \Lambda t } ,
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0036](images/formula_0036.png)
+```text
+PDF text layer: f σ B ∧ Z ( t ) = f b ( t ) e -Λ t +Λ(1 -F b ( t )) e -Λ t ,
+```
+*Formula quality: `decoded_unverified`; source PDF page 12. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 for t ≥ 0, where F b ( t ) is the cdf of σ B . Also, f σ B ∧ Z ( t ) = 0 for t &lt; 0. The Laplace transform of σ B ∧ Z is thus given by
 
-$$\text {given by} & & \hat { f } _ { \sigma B \wedge Z } ( s ) = \int _ { - \infty } ^ { \infty } e ^ { - s t } f _ { \sigma _ { B } \wedge \sigma _ { B } ^ { \Sigma } } ( t ) d t \\ & = \int _ { 0 } ^ { \infty } e ^ { - s t } \left ( f _ { b } ( t ) e ^ { - \Lambda t } + \Lambda \left ( 1 - F _ { b } ( t ) \right ) e ^ { - \Lambda t } \right ) d s \\ & = \int _ { 0 } ^ { \infty } e ^ { - t ( s + \Lambda ) } f _ { b } ( t ) d t + \Lambda \int _ { 0 } ^ { \infty } \left ( 1 - F _ { b } ( t ) \right ) e ^ { - t ( s + \Lambda ) } d t \\ & = \hat { f } _ { b } ( s + \Lambda ) + \frac { \Lambda } { \Lambda + s } \left ( 1 - \hat { f } _ { b } ( s + \Lambda ) \right ) , \\ \intertext { l e a s t h e q u a l i y f o w s f r o w } \text {section 3 yields a numerical procedure for computing the probability that the next }$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0037" status="decoded_unverified" source-page="12" -->
+$$
+\text {given by} & & \hat { f } _ { \sigma B \wedge Z } ( s ) = \int _ { - \infty } ^ { \infty } e ^ { - s t } f _ { \sigma _ { B } \wedge \sigma _ { B } ^ { \Sigma } } ( t ) d t \\ & = \int _ { 0 } ^ { \infty } e ^ { - s t } \left ( f _ { b } ( t ) e ^ { - \Lambda t } + \Lambda \left ( 1 - F _ { b } ( t ) \right ) e ^ { - \Lambda t } \right ) d s \\ & = \int _ { 0 } ^ { \infty } e ^ { - t ( s + \Lambda ) } f _ { b } ( t ) d t + \Lambda \int _ { 0 } ^ { \infty } \left ( 1 - F _ { b } ( t ) \right ) e ^ { - t ( s + \Lambda ) } d t \\ & = \hat { f } _ { b } ( s + \Lambda ) + \frac { \Lambda } { \Lambda + s } \left ( 1 - \hat { f } _ { b } ( s + \Lambda ) \right ) , \\ \intertext { l e a s t h e q u a l i y f o w s f r o w } \text {section 3 yields a numerical procedure for computing the probability that the next }
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0037](images/formula_0037.png)
+```text
+PDF text layer: ˆ f σ B ∧ Z ( s ) = ∫ ∞ -∞ e -st f σ B ∧ σ Σ B ( t ) dt = ∫ ∞ 0 e -st ( f b ( t ) e -Λ t +Λ(1 -F b ( t )) e -Λ t ) ds = ∫ ∞ 0 e -t ( s +Λ) f b ( t ) dt +Λ ∫ ∞ 0 (1 -F b ( t )) e -t ( s +Λ) dt = ˆ f b ( s +Λ)+ Λ Λ+ s ( 1 -ˆ f b ( s +Λ) ) ,
+```
+*Formula quality: `decoded_unverified`; source PDF page 12. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where the last equality follows from integration by parts. □
 
@@ -340,19 +673,55 @@ We introduce some new notation, which we will used in this subsection as well as
 
 Then, the probability that an order placed at the bid is executed before the mid-price moves is given by
 
-$$\mathbb { P } [ \epsilon _ { B } < T | X _ { B } ( 0 ) = b , X _ { A } ( 0 ) = a , s ( 0 ) = S , N C _ { b } ] .$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0038" status="decoded_unverified" source-page="12" -->
+$$
+\mathbb { P } [ \epsilon _ { B } < T | X _ { B } ( 0 ) = b , X _ { A } ( 0 ) = a , s ( 0 ) = S , N C _ { b } ] .
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0038](images/formula_0038.png)
+```text
+PDF text layer: P [ ϵ B <T | X B (0) = b, X A (0) = a, s (0) = S,NC b ] . (13)
+```
+*Formula quality: `decoded_unverified`; source PDF page 12. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Proposition 5 (Probability of order execution before mid-price moves) Define ˆ f a,S ( s ) as in (9) and let ˆ g j,S be given by
 
-$$\hat { g } _ { j , S } ( s ) = \Pi _ { i = 1 } ^ { j } \frac { \mu + \theta ( S ) ( i - 1 ) } { \mu + \theta ( S ) ( i - 1 ) + s }$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0039" status="decoded_unverified" source-page="12" -->
+$$
+\hat { g } _ { j , S } ( s ) = \Pi _ { i = 1 } ^ { j } \frac { \mu + \theta ( S ) ( i - 1 ) } { \mu + \theta ( S ) ( i - 1 ) + s }
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0039](images/formula_0039.png)
+```text
+PDF text layer: ˆ g j,S ( s ) = Π j i =1 μ + θ ( S )( i -1) μ + θ ( S )( i -1) + s (14)
+```
+*Formula quality: `decoded_unverified`; source PDF page 12. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 for j ≥ 1 , and let Λ S ≡ ∑ S -1 i =1 λ ( i ) . Then the quantity (13) is given by the inverse Laplace transform of
 
-$$\hat { F } _ { a , b , S } ( s ) & = \frac { 1 } { s } \hat { g } _ { b , S } ( s ) \left ( \hat { f } _ { b , S } ( 2 \Lambda _ { S } - s ) + \frac { 2 \Lambda _ { S } } { 2 \Lambda _ { S } - s } ( 1 - \hat { f } _ { b , S } ( 2 \Lambda _ { S } - s ) ) \right ) , \\ \intertext { v a l u a t e d } \hat { F } _ { a , b , S } ( s ) & = \frac { 1 } { s } \hat { g } _ { b , S } ( s ) \left ( \hat { f } _ { b , S } ( 2 \Lambda _ { S } - s ) + \frac { 2 \Lambda _ { S } } { 2 \Lambda _ { S } - s } ( 1 - \hat { f } _ { b , S } ( 2 \Lambda _ { S } - s ) ) \right ) , \\ \intertext { v a l u a t e d } \intertext { v e c h a l l } \hat { g } _ { a , b , S } ( s ) & = 1 - ( 1 5 ) \ r e d u c e s \ t o$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0040" status="decoded_unverified" source-page="13" -->
+$$
+\hat { F } _ { a , b , S } ( s ) & = \frac { 1 } { s } \hat { g } _ { b , S } ( s ) \left ( \hat { f } _ { b , S } ( 2 \Lambda _ { S } - s ) + \frac { 2 \Lambda _ { S } } { 2 \Lambda _ { S } - s } ( 1 - \hat { f } _ { b , S } ( 2 \Lambda _ { S } - s ) ) \right ) , \\ \intertext { v a l u a t e d } \hat { F } _ { a , b , S } ( s ) & = \frac { 1 } { s } \hat { g } _ { b , S } ( s ) \left ( \hat { f } _ { b , S } ( 2 \Lambda _ { S } - s ) + \frac { 2 \Lambda _ { S } } { 2 \Lambda _ { S } - s } ( 1 - \hat { f } _ { b , S } ( 2 \Lambda _ { S } - s ) ) \right ) , \\ \intertext { v a l u a t e d } \intertext { v e c h a l l } \hat { g } _ { a , b , S } ( s ) & = 1 - ( 1 5 ) \ r e d u c e s \ t o
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0040](images/formula_0040.png)
+```text
+PDF text layer: ˆ F a,b,S ( s ) = 1 s ˆ g b,S ( s ) ( ˆ f b,S (2Λ S -s ) + 2Λ S 2Λ S -s (1 -ˆ f b,S (2Λ S -s )) ) , (15)
+```
+*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 evaluated at 0 . When S =1 , (15) reduces to
 
-$$\hat { F } _ { a , b , 1 } ( s ) = \frac { 1 } { s } \hat { g } _ { b , 1 } ( s ) \hat { f } _ { a , 1 } ( - s ) .$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0041" status="decoded_unverified" source-page="13" -->
+$$
+\hat { F } _ { a , b , 1 } ( s ) = \frac { 1 } { s } \hat { g } _ { b , 1 } ( s ) \hat { f } _ { a , 1 } ( - s ) .
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0041](images/formula_0041.png)
+```text
+PDF text layer: ˆ F a,b, 1 ( s ) = 1 s ˆ g b, 1 ( s ) ˆ f a, 1 ( -s ) . (16)
+```
+*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Proof. Construct ˜ X A and ˜ W B using Lemma 2. Let us first consider the case S =1. Let T ′ ≡ ϵ B ∧ T denote the first time when either the process ˜ W B hits 0 or the mid-price changes. Conditional on an infinitely patient order being placed at the bid price at time 0, T ′ is the first time when either that order gets executed or the mid-price changes. Notice that conditional on our initial conditions, ϵ B is given by a sum of b independent exponentially distributed random variables with parameters μ +( i -1) θ (1), for i =1 , . . . , b , and independent of ˜ X A . Thus, the conditional Laplace transform of ϵ B given our initial conditions is given by (14). Since, in the case S =1 the mid-price can change before time ϵ B if and only if σ A &lt;ϵ B , the quantity (13) can be written simply as P [ ϵ B &lt;σ A ]. Using (3) with the conditional Laplace transforms of ϵ B and σ A , given in (14) and (9) respectively, we obtain (16).
 
@@ -362,43 +731,133 @@ This analysis can be extended to the case where S &gt; 1 just as in the proof of
 
 We now compute the probability that two orders, one placed at the bid price and one placed at the ask price, are both executed before the mid-price moves, given that the orders are not canceled. If the probability of executing both a buy and a sell limit order before the price moves is high, a statistical arbitrage strategy can be designed by submitting limit orders at the bid and the ask and wait for both orders to execute. If both orders execute before the price moves, the strategy has paid off the bid-ask spread: we refer to this situation as 'making the spread'. Otherwise, losses may be minimized by submitting a market order and losing the bid-ask spread. We restrict attention to the case where the initial spread is one tick: S =1. The probability of making the spread can be expressed as
 
-$$\mathbb { P } [ \max \{ \epsilon _ { A } , \epsilon _ { B } \} < T | X _ { B } ( 0 ) = b , X _ { A } ( 0 ) = a , s ( 0 ) = 1 , N C _ { a } , N C _ { b } ] . \\ \\$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0042" status="decoded_unverified" source-page="13" -->
+$$
+\mathbb { P } [ \max \{ \epsilon _ { A } , \epsilon _ { B } \} < T | X _ { B } ( 0 ) = b , X _ { A } ( 0 ) = a , s ( 0 ) = 1 , N C _ { a } , N C _ { b } ] . \\ \\
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0042](images/formula_0042.png)
+```text
+PDF text layer: P [max { ϵ A , ϵ B } <T | X B (0) = b, X A (0) = a, s (0) = 1 , NC a , NC b ] . (17)
+```
+*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 The following result allows to compute this probability using Laplace transform methods:
 
 Proposition 6 The probability (17) of making the spread is given by h a,b + h b,a , where
 
-$$h _ { a , b } = \sum _ { i = 0 } ^ { \infty } \sum _ { j = 1 } ^ { a } \mathbb { P } [ \epsilon _ { j } < \sigma _ { i } ] \int _ { 0 } ^ { \infty } P _ { 0 , i } ^ { X } ( t ) P _ { a , j } ^ { W } ( t ) g _ { b } ( t ) d t ,$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0043" status="decoded_unverified" source-page="13" -->
+$$
+h _ { a , b } = \sum _ { i = 0 } ^ { \infty } \sum _ { j = 1 } ^ { a } \mathbb { P } [ \epsilon _ { j } < \sigma _ { i } ] \int _ { 0 } ^ { \infty } P _ { 0 , i } ^ { X } ( t ) P _ { a , j } ^ { W } ( t ) g _ { b } ( t ) d t ,
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0043](images/formula_0043.png)
+```text
+PDF text layer: h a,b = ∞ ∑ i =0 a ∑ j =1 P [ ϵ j <σ i ] ∫ ∞ 0 P X 0 ,i ( t ) P W a,j ( t ) g b ( t ) dt, (18)
+```
+*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
-$$P _ { 0 , i } ^ { X } ( t ) & = \frac { e ^ { - \lambda ^ { X } ( t ) } \lambda ^ { X } ( t ) ^ { i } } { i ! } , \quad \lambda ^ { X } ( t ) \equiv \frac { \lambda } { \theta } \left ( 1 - e ^ { - \theta t } \right ) \\ P _ { a } ^ { W } ( t ) & \equiv \left ( e ^ { Q _ { a } ^ { W } t } \right ) \quad \equiv \left ( \sum _ { \substack { i = 0 \\ i \neq t } } ^ { \infty } \frac { t ^ { k } } { Q _ { a } ^ { W } ( a ^ { W } ) ^ { k } } \right )$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0044" status="decoded_unverified" source-page="13" -->
+$$
+P _ { 0 , i } ^ { X } ( t ) & = \frac { e ^ { - \lambda ^ { X } ( t ) } \lambda ^ { X } ( t ) ^ { i } } { i ! } , \quad \lambda ^ { X } ( t ) \equiv \frac { \lambda } { \theta } \left ( 1 - e ^ { - \theta t } \right ) \\ P _ { a } ^ { W } ( t ) & \equiv \left ( e ^ { Q _ { a } ^ { W } t } \right ) \quad \equiv \left ( \sum _ { \substack { i = 0 \\ i \neq t } } ^ { \infty } \frac { t ^ { k } } { Q _ { a } ^ { W } ( a ^ { W } ) ^ { k } } \right )
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0044](images/formula_0044.png)
+```text
+PDF text layer: P X 0 ,i ( t ) = e -λ X ( t ) λ X ( t ) i i ! , λ X ( t ) ≡ λ θ ( 1 -e -θt ) (19)
+```
+*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
-$$P _ { a , j } ^ { W } ( t ) \equiv \left ( e ^ { Q _ { a } ^ { W } t } \right ) _ { a , j } \equiv \left ( \sum _ { k = 0 } ^ { \infty } \frac { t ^ { k } } { k ! } ( Q _ { a } ^ { W } ) ^ { k } \right ) _ { a , j }$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0045" status="decoded_unverified" source-page="13" -->
+$$
+P _ { a , j } ^ { W } ( t ) \equiv \left ( e ^ { Q _ { a } ^ { W } t } \right ) _ { a , j } \equiv \left ( \sum _ { k = 0 } ^ { \infty } \frac { t ^ { k } } { k ! } ( Q _ { a } ^ { W } ) ^ { k } \right ) _ { a , j }
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0045](images/formula_0045.png)
+```text
+PDF text layer: P W a,j ( t ) ≡ ( e Q a W t ) a,j ≡ ( ∞ ∑ k =0 t k k ! ( Q W a ) k ) a,j (20)
+```
+*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where
 
-$$Q _ { a } ^ { w } \equiv \begin{bmatrix} 0 & 0 & 0 & \cdots & 0 \\ \mu & - \mu & 0 & \cdots & 0 \\ 0 & \mu + \theta - \mu - \theta & \cdots & 0 & \\ \vdots & \vdots & \ddots & \ddots & \vdots \\ 0 & 0 & \cdots & \mu + ( a - 1 ) \theta - \mu - ( a - 1 ) \theta \\ \end{bmatrix} .$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0046" status="decoded_unverified" source-page="14" -->
+$$
+Q _ { a } ^ { w } \equiv \begin{bmatrix} 0 & 0 & 0 & \cdots & 0 \\ \mu & - \mu & 0 & \cdots & 0 \\ 0 & \mu + \theta - \mu - \theta & \cdots & 0 & \\ \vdots & \vdots & \ddots & \ddots & \vdots \\ 0 & 0 & \cdots & \mu + ( a - 1 ) \theta - \mu - ( a - 1 ) \theta \\ \end{bmatrix} .
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0046](images/formula_0046.png)
+```text
+PDF text layer: Q W a ≡ ⎡ ⎢ ⎢ ⎢ ⎢ ⎢ ⎣ 0 0 0 · · · 0 μ -μ 0 · · · 0 0 μ + θ -μ -θ · · · 0 . . . . . . . . . . . . . . . 0 0 · · · μ +( a -1) θ -μ -( a -1) θ ⎤ ⎥ ⎥ ⎥ ⎥ ⎥ ⎦ . (21)
+```
+*Formula quality: `decoded_unverified`; source PDF page 14. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 and g b is the inverse Laplace transform of ˆ g b, 1 , which is given in (14) .
 
 Proof. Since S =1, T =min { σ A , σ B } , and the quantity (17) can be written as
 
-$$\mathbb { P } [ \max \{ \epsilon _ { B } , \epsilon _ { A } \} < \min \{ \sigma _ { B } , \sigma _ { A } \} ] . \\ \\ \tilde { z }$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0047" status="decoded_unverified" source-page="14" -->
+$$
+\mathbb { P } [ \max \{ \epsilon _ { B } , \epsilon _ { A } \} < \min \{ \sigma _ { B } , \sigma _ { A } \} ] . \\ \\ \tilde { z }
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0047](images/formula_0047.png)
+```text
+PDF text layer: P [max { ϵ B , ϵ A } < min { σ B , σ A } ] . (22)
+```
+*Formula quality: `decoded_unverified`; source PDF page 14. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Construct ˜ X A , ˜ X B , ˜ W A and ˜ W B using Lemma 2. Let T ′ =max { ϵ A , ϵ B } ∧ T denote the first time when either both the processes ˜ W A and ˜ W B have hit 0 or the mid-price has changed. Conditional on infinitely patient orders being placed at the best bid and ask prices at time 0, T ′ is the first time when either both the orders get executed or the mid-price changes. Furthermore, by Lemma 2, ˜ W A and ˜ W B are independent pure death processes with death rate μ + iθ (1) in state i ≥ 1, and ˜ W A ( t ) ≤ ˜ X A ( t ) and ˜ W B ( t ) ≤ ˜ X B ( t ). This implies that ϵ A and ϵ B are independent and σ A and σ B are independent with ϵ A ≤ σ A and ϵ B ≤ σ B . Using these properties we obtain
 
-$$\mathbb { P } [ \max \{ \epsilon _ { B } , \epsilon _ { A } \} < \min \{ \sigma _ { B } , \sigma _ { A } \} ] & = \mathbb { P } [ \epsilon _ { B } < \sigma _ { A } , \epsilon _ { A } < \sigma _ { B } ] \\ & = \mathbb { P } [ \epsilon _ { B } < \sigma _ { A } , \epsilon _ { A } < \sigma _ { B } , \epsilon _ { B } < \epsilon _ { A } ] + \mathbb { P } [ \epsilon _ { B } < \sigma _ { A } , \epsilon _ { A } < \sigma _ { B } , \epsilon _ { A } < \epsilon _ { B } ] \\ & = \mathbb { P } [ \epsilon _ { A } < \sigma _ { B } , \epsilon _ { B } < \epsilon _ { A } ] + \mathbb { P } [ \epsilon _ { B } < \sigma _ { A } , \epsilon _ { A } < \epsilon _ { B } ] \\ & = h _ { a , b } + h _ { b , a }$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0048" status="decoded_unverified" source-page="14" -->
+$$
+\mathbb { P } [ \max \{ \epsilon _ { B } , \epsilon _ { A } \} < \min \{ \sigma _ { B } , \sigma _ { A } \} ] & = \mathbb { P } [ \epsilon _ { B } < \sigma _ { A } , \epsilon _ { A } < \sigma _ { B } ] \\ & = \mathbb { P } [ \epsilon _ { B } < \sigma _ { A } , \epsilon _ { A } < \sigma _ { B } , \epsilon _ { B } < \epsilon _ { A } ] + \mathbb { P } [ \epsilon _ { B } < \sigma _ { A } , \epsilon _ { A } < \sigma _ { B } , \epsilon _ { A } < \epsilon _ { B } ] \\ & = \mathbb { P } [ \epsilon _ { A } < \sigma _ { B } , \epsilon _ { B } < \epsilon _ { A } ] + \mathbb { P } [ \epsilon _ { B } < \sigma _ { A } , \epsilon _ { A } < \epsilon _ { B } ] \\ & = h _ { a , b } + h _ { b , a }
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0048](images/formula_0048.png)
+```text
+PDF text layer: P [max { ϵ B , ϵ A } < min { σ B , σ A } ] = P [ ϵ B <σ A , ϵ A <σ B ] = P [ ϵ B <σ A , ϵ A <σ B , ϵ B <ϵ A ] + P [ ϵ B <σ A , ϵ A <σ B , ϵ A <ϵ B ] = P [ ϵ A <σ B , ϵ B <ϵ A ] + P [ ϵ B <σ A , ϵ A <ϵ B ] = h a,b + h b,a (23)
+```
+*Formula quality: `decoded_unverified`; source PDF page 14. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where we define h a,b = P [ ϵ B &lt;ϵ A &lt;σ B ], the probability that the order placed at the bid is executed before the order placed at the ask and the order at the ask is executed before the bid quote disappears. We now focus on computing h a,b . Conditioning on the value of ϵ B gives
 
-$$h _ { a , b } = \int _ { 0 } ^ { \infty } \mathbb { P } [ \epsilon _ { B } < \epsilon _ { A } < \sigma _ { B } | \epsilon _ { B } = t ] g _ { b } ( t ) d t . \\ \\ C _ { a } \, f _ { a } = \int _ { 0 } ^ { \infty } \mathbb { P } [ \epsilon _ { B } < \epsilon _ { A } < \sigma _ { B } | \epsilon _ { B } = t ] g _ { b } ( t ) d t .$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0049" status="decoded_unverified" source-page="14" -->
+$$
+h _ { a , b } = \int _ { 0 } ^ { \infty } \mathbb { P } [ \epsilon _ { B } < \epsilon _ { A } < \sigma _ { B } | \epsilon _ { B } = t ] g _ { b } ( t ) d t . \\ \\ C _ { a } \, f _ { a } = \int _ { 0 } ^ { \infty } \mathbb { P } [ \epsilon _ { B } < \epsilon _ { A } < \sigma _ { B } | \epsilon _ { B } = t ] g _ { b } ( t ) d t .
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0049](images/formula_0049.png)
+```text
+PDF text layer: h a,b = ∫ ∞ 0 P [ ϵ B <ϵ A <σ B | ϵ B = t ] g b ( t ) dt. (24)
+```
+*Formula quality: `decoded_unverified`; source PDF page 14. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Focusing on the first factor in the integrand in (24) and conditioning on the values of ˜ X B ( t ) and ˜ W A ( t ) gives us
 
-$$W _ { A } ( t ) \text { gives us } & \\ & \mathbb { P } [ t _ { B } < \epsilon _ { A } < \sigma _ { B } | _ { \mathcal { B } } = t ] = \sum _ { i = 0 } ^ { \alpha } \mathbb { P } [ \epsilon _ { B } < \epsilon _ { A } < \sigma _ { B } | _ { \mathcal { B } } = t , \tilde { X } _ { B } ( t ) = i , \tilde { W } _ { A } ( t ) = j ] \mathbb { P } [ \tilde { X } _ { B } ( t ) = i , \tilde { W } _ { A } ( t ) = j | _ { E } = t ] \\ & = \sum _ { i = 0 } ^ { \alpha } \sum _ { 1 } ^ { \ell } \mathbb { P } [ \tilde { \epsilon } _ { j } < \sigma _ { i } ] \mathbb { P } [ \tilde { X } _ { B } ( t ) = i | \epsilon _ { B } = t ] \mathbb { P } [ \tilde { W } _ { A } ( t ) = j | _ { E } = t ] \\ & = \sum _ { i = 0 } ^ { \alpha } \sum _ { 1 } ^ { \ell } \mathbb { P } [ \tilde { \epsilon } _ { j } < \sigma _ { i } ] \mathbb { P } [ \tilde { X } _ { B } ( t ) = i | \epsilon _ { B } = t ] \mathbb { P } [ \tilde { W } _ { A } ( t ) = j ] \\ & = \left ( 2 5 \right ) \\ & \text {Combining the equations (23)-(25) and using Tonelli's theorem to interchange the integral and the} \\$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0050" status="decoded_unverified" source-page="14" -->
+$$
+W _ { A } ( t ) \text { gives us } & \\ & \mathbb { P } [ t _ { B } < \epsilon _ { A } < \sigma _ { B } | _ { \mathcal { B } } = t ] = \sum _ { i = 0 } ^ { \alpha } \mathbb { P } [ \epsilon _ { B } < \epsilon _ { A } < \sigma _ { B } | _ { \mathcal { B } } = t , \tilde { X } _ { B } ( t ) = i , \tilde { W } _ { A } ( t ) = j ] \mathbb { P } [ \tilde { X } _ { B } ( t ) = i , \tilde { W } _ { A } ( t ) = j | _ { E } = t ] \\ & = \sum _ { i = 0 } ^ { \alpha } \sum _ { 1 } ^ { \ell } \mathbb { P } [ \tilde { \epsilon } _ { j } < \sigma _ { i } ] \mathbb { P } [ \tilde { X } _ { B } ( t ) = i | \epsilon _ { B } = t ] \mathbb { P } [ \tilde { W } _ { A } ( t ) = j | _ { E } = t ] \\ & = \sum _ { i = 0 } ^ { \alpha } \sum _ { 1 } ^ { \ell } \mathbb { P } [ \tilde { \epsilon } _ { j } < \sigma _ { i } ] \mathbb { P } [ \tilde { X } _ { B } ( t ) = i | \epsilon _ { B } = t ] \mathbb { P } [ \tilde { W } _ { A } ( t ) = j ] \\ & = \left ( 2 5 \right ) \\ & \text {Combining the equations (23)-(25) and using Tonelli's theorem to interchange the integral and the} \\
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0050](images/formula_0050.png)
+```text
+PDF text layer: P [ ϵ B <ϵ A <σ B | ϵ B = t ] = ∞ ∑ i =0 a ∑ j =0 P [ ϵ B <ϵ A <σ B | ϵ B = t, ˜ X B ( t ) = i, ˜ W A ( t ) = j ] P [ ˜ X B ( t ) = i, ˜ W A ( t ) = j | ϵ B = t ] = ∞ ∑ i =0 a ∑ j =1 P [ ϵ j <σ i ] P [ ˜ X B ( t ) = i | ϵ B = t ] P [ ˜ W A ( t ) = j | ϵ B = t ] = ∞ ∑ i =0 a ∑ j =1 P [ ϵ j <σ i ] P [ ˜ X B ( t ) = i | ϵ B = t ] P [ ˜ W A ( t ) = j ] (25)
+```
+*Formula quality: `decoded_unverified`; source PDF page 14. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Combining the equations (23)-(25) and using Tonelli's theorem to interchange the integral and the summation gives us
 
-$$h _ { a , b } = & \sum _ { i = 0 } ^ { \infty } \sum _ { j = 1 } ^ { a } \mathbb { P } [ \epsilon _ { j } < \sigma _ { i } ] \int _ { 0 } ^ { \infty } \mathbb { P } [ \tilde { X } _ { B } ( t ) = i | \epsilon _ { B } = t ] \mathbb { P } [ \tilde { W } _ { A } ( t ) = j ] g _ { b } ( t ) d t . \\ + \colon & \mathbb { T } [ \tilde { X } _ { B } ( t ) \quad \cdot \quad ] = \L _ { i } \L _ { j } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0051" status="decoded_unverified" source-page="14" -->
+$$
+h _ { a , b } = & \sum _ { i = 0 } ^ { \infty } \sum _ { j = 1 } ^ { a } \mathbb { P } [ \epsilon _ { j } < \sigma _ { i } ] \int _ { 0 } ^ { \infty } \mathbb { P } [ \tilde { X } _ { B } ( t ) = i | \epsilon _ { B } = t ] \mathbb { P } [ \tilde { W } _ { A } ( t ) = j ] g _ { b } ( t ) d t . \\ + \colon & \mathbb { T } [ \tilde { X } _ { B } ( t ) \quad \cdot \quad ] = \L _ { i } \L _ { j } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b } \L _ { t } \L _ { a } \L _ { a } \L _ { b
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0051](images/formula_0051.png)
+```text
+PDF text layer: h a,b = ∞ ∑ i =0 a ∑ j =1 P [ ϵ j <σ i ] ∫ ∞ 0 P [ ˜ X B ( t ) = i | ϵ B = t ] P [ ˜ W A ( t ) = j ] g b ( t ) dt.
+```
+*Formula quality: `decoded_unverified`; source PDF page 14. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 The quantity P [ ˜ X B ( t ) = i | ϵ B = t ] can be computed using an analogy with the M/M/ ∞ queue. The number of orders in the bid queue at the time when the bid order placed at time 0 has executed is simply the number of customers in an initially empty M/M/ ∞ queue with arrival rate λ and service rate θ , which has a Poisson distribution with mean given by (19). This remark leads to ( ?? ).
 
@@ -414,13 +873,31 @@ In § 5.1, we compare empirically observed long-term behavior (e.g. unconditiona
 
 Recent empirical studies on order books Bouchaud et al. (2002, 2008) have mainly focused on average properties of the order book, which, in our context correspond to unconditional expectations of quantities under the stationary measure of X : the steady state shape of the book and the volatility of the mid-price. The ergodicity of the Markov chain X , shown in Proposition 1, implies that such expectations E [ f ( X ∞ )] can be computed in the model by simulating the order book over a large horizon T and averaging f ( X ( t )) over the simulated path:
 
-$$\frac { 1 } { T } \int _ { 0 } ^ { T } f ( X ( t ) ) d t \rightarrow E [ f ( X _ { \infty } ) ] \quad \text {as} \quad T \rightarrow \infty . \\ \text {state shape of the book} \quad \text {We simulate the order book}$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0052" status="decoded_unverified" source-page="15" -->
+$$
+\frac { 1 } { T } \int _ { 0 } ^ { T } f ( X ( t ) ) d t \rightarrow E [ f ( X _ { \infty } ) ] \quad \text {as} \quad T \rightarrow \infty . \\ \text {state shape of the book} \quad \text {We simulate the order book}
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0052](images/formula_0052.png)
+```text
+PDF text layer: 1 T ∫ T 0 f ( X ( t )) dt → E [ f ( X ∞ )] as T →∞ .
+```
+*Formula quality: `decoded_unverified`; source PDF page 15. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 5.1.1. Steady state shape of the book We simulate the order book over a long horizon ( n =10 6 events) and observe the mean number of orders Q i at distances 1 ≤ i ≤ 30 ticks from the opposite best quote. The results are displayed in Figure 2. The steady state profile of the order book describes the average market impact of trades Farmer et al. (2004), Bouchaud et al. (2008). Figure 2 shows that the average profile of the order book displays a hump (in this case, at two ticks from the bid/ask), as observed in empirical studies Bouchaud et al. (2008). Note that this hump feature does not result from any fine-tuning of model parameters or additional ingredients (such as correlation between order flow and past price moves).
 
 5.1.2. Volatility Define the realized volatility of the asset over a day to be given by
 
-$$R V _ { n } = \sqrt { \sum _ { i = 1 } ^ { n } \left ( \log \left ( \frac { P _ { i + 1 } } { P _ { i } } \right ) \right ) ^ { 2 } } , \\ \text {ties in a day and the prices } P _ { i } \, \text { represent}$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0053" status="decoded_unverified" source-page="15" -->
+$$
+R V _ { n } = \sqrt { \sum _ { i = 1 } ^ { n } \left ( \log \left ( \frac { P _ { i + 1 } } { P _ { i } } \right ) \right ) ^ { 2 } } , \\ \text {ties in a day and the prices } P _ { i } \, \text { represent}
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0053](images/formula_0053.png)
+```text
+PDF text layer: RV n = √ √ √ √ n ∑ i =1 ( log ( P i +1 P i )) 2 ,
+```
+*Formula quality: `decoded_unverified`; source PDF page 15. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 where n is the number of quotes in a day and the prices P i represent the mid-price of the stock. In the first day of the sample, we compute a realized volatility of 0 . 0219 after a total of 370 trades. After repeatedly simulating our model for 370 trades (using parameters λ , μ and θ estimated from the order book time series) we obtained a 95% confidence interval for realized volatility of 0 . 0228 ± 0 . 0003. Interestingly, this estimator yields the correct order of magnitude for realized volatility solely based on intensity parameters for the order flow ( λ,μ,θ ).
 
@@ -436,7 +913,16 @@ As discussed in the introduction, conditional distributions are the main quantit
 
 Define T m as the time of the m th event in the order book:
 
-$$T _ { 0 } = 0 , \quad T _ { m + 1 } \equiv \inf \{ t \geq T _ { m } | X ( t ) \neq X ( T _ { m } ) \} .$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0054" status="decoded_unverified" source-page="16" -->
+$$
+T _ { 0 } = 0 , \quad T _ { m + 1 } \equiv \inf \{ t \geq T _ { m } | X ( t ) \neq X ( T _ { m } ) \} .
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0054](images/formula_0054.png)
+```text
+PDF text layer: T 0 =0 , T m +1 ≡ inf { t ≥ T m | X ( t ) = X ( T m ) } . (26)
+```
+*Formula quality: `decoded_unverified`; source PDF page 16. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 ̸
 
@@ -444,13 +930,31 @@ The probability that the number of orders at a distance i from the opposite best
 
 ̸
 
-$$P _ { i } ( n ) & \equiv \mathbb { P } [ Q _ { i } ^ { A } ( T _ { m + 1 } ) = n + 1 \, | \, Q _ { i } ^ { A } ( T _ { m } ) = n , Q _ { i } ^ { A } ( T _ { m + 1 } ) \neq n , s ( T _ { m } ) = 1 ] = \left \{ \frac { \frac { \lambda ( 1 ) } { \lambda ( 1 + \mu + n \theta ( 1 ) } } , \quad i = 1 , \\ \frac { \lambda ( 1 ) + \mu + n \theta ( 1 ) } { \lambda ( i ) + n \theta ( i ) } , \quad i > 1 . \\ \intertext { T o s c h o w h y t h e o w y o r m o c i g n e a i v i c a n d o n t h o s e i n g e i n o r s o n c e }$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0055" status="decoded_unverified" source-page="16" -->
+$$
+P _ { i } ( n ) & \equiv \mathbb { P } [ Q _ { i } ^ { A } ( T _ { m + 1 } ) = n + 1 \, | \, Q _ { i } ^ { A } ( T _ { m } ) = n , Q _ { i } ^ { A } ( T _ { m + 1 } ) \neq n , s ( T _ { m } ) = 1 ] = \left \{ \frac { \frac { \lambda ( 1 ) } { \lambda ( 1 + \mu + n \theta ( 1 ) } } , \quad i = 1 , \\ \frac { \lambda ( 1 ) + \mu + n \theta ( 1 ) } { \lambda ( i ) + n \theta ( i ) } , \quad i > 1 . \\ \intertext { T o s c h o w h y t h e o w y o r m o c i g n e a i v i c a n d o n t h o s e i n g e i n o r s o n c e }
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0055](images/formula_0055.png)
+```text
+PDF text layer: P i ( n ) ≡ P [ Q A i ( T m +1 ) = n +1 | Q A i ( T m ) = n,Q A i ( T m +1 ) = n,s ( T m ) = 1] = { λ (1) λ (1)+ μ + nθ (1) , i =1 , λ ( i ) λ ( i )+ nθ ( i ) , i > 1 . (27)
+```
+*Formula quality: `decoded_unverified`; source PDF page 16. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 To see how the above expression arises, consider the case i =1. The next change in Q A 1 is an increase if an arrival of a limit order at price Q A 1 occurs before any of the limit orders at Q A 1 cancel or a market buy order occurs. But since an arrival of a limit order at price Q A 1 occurs with rate λ (1) and a cancellation or market buy order occurs at rate μ + nθ (1), the probability that an arrival of a limit order occurs first is given by λ (1) / ( λ (1) + μ + nθ (1)).
 
 Denoting empirical quantities with a hat, e.g. ˆ Q B i ( t ) is the empirically observed number of bid orders at a distance of i units from the ask price at time t , an estimator for the above probability is given by
 
-$$\hat { P } _ { i } ( n ) \equiv \frac { \hat { B } _ { u p } + \hat { A } _ { u p } } { \hat { B } _ { c h a n g e } + \hat { A } _ { c h a n g e } } ,$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0056" status="decoded_unverified" source-page="16" -->
+$$
+\hat { P } _ { i } ( n ) \equiv \frac { \hat { B } _ { u p } + \hat { A } _ { u p } } { \hat { B } _ { c h a n g e } + \hat { A } _ { c h a n g e } } ,
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0056](images/formula_0056.png)
+```text
+PDF text layer: ˆ P i ( n ) ≡ ˆ B up + ˆ A up ˆ B change + ˆ A change ,
+```
+*Formula quality: `decoded_unverified`; source PDF page 16. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 Figure 3 Probability of an increase in the number of orders at distance i from the opposite best quote in the next change, for i =1 , . . . , 5.
 
@@ -460,7 +964,16 @@ where
 
 ̸
 
-$$\hat { B } _ { u p } & = \left | \{ m | \hat { Q } _ { i } ^ { B } ( \hat { T } _ { m } ) = n , \, \hat { Q } _ { i } ^ { B } ( \hat { T } _ { m + 1 } ) > n \} \right | \\ \hat { A } _ { u p } & = \left | \{ m | \hat { Q } _ { i } ^ { A } ( \hat { T } _ { m } ) = n , \, \hat { Q } _ { i } ^ { A } ( \hat { T } _ { m + 1 } ) > n \} \right | \\ \hat { B } _ { c h a n g e } & = \left | \{ m | \hat { Q } _ { i } ^ { B } ( \hat { T } _ { m } ) = n , \, \hat { Q } _ { i } ^ { B } ( \hat { T } _ { m + 1 } ) \ne n \} \right | \\ \hat { A } _ { c h a n g e } & = \left | \{ m | \hat { Q } _ { i } ^ { A } ( \hat { T } _ { m } ) = n , \, \hat { Q } _ { i } ^ { A } ( \hat { T } _ { m + 1 } ) \ne n \} \right | \\ \intertext { a n d } \hat { P } _ { i } ( n ) \text { for } 1 \leq i \leq 5 \text { are shown for Sky Perfect Communicacy} . \intertext { a r e a s o n a l b y } \text { close in most cases, indicating that the short }$$
+<!-- formula-start id="ref_cont_stochastic_order_book_dynamics_2010:formula:0057" status="decoded_unverified" source-page="17" -->
+$$
+\hat { B } _ { u p } & = \left | \{ m | \hat { Q } _ { i } ^ { B } ( \hat { T } _ { m } ) = n , \, \hat { Q } _ { i } ^ { B } ( \hat { T } _ { m + 1 } ) > n \} \right | \\ \hat { A } _ { u p } & = \left | \{ m | \hat { Q } _ { i } ^ { A } ( \hat { T } _ { m } ) = n , \, \hat { Q } _ { i } ^ { A } ( \hat { T } _ { m + 1 } ) > n \} \right | \\ \hat { B } _ { c h a n g e } & = \left | \{ m | \hat { Q } _ { i } ^ { B } ( \hat { T } _ { m } ) = n , \, \hat { Q } _ { i } ^ { B } ( \hat { T } _ { m + 1 } ) \ne n \} \right | \\ \hat { A } _ { c h a n g e } & = \left | \{ m | \hat { Q } _ { i } ^ { A } ( \hat { T } _ { m } ) = n , \, \hat { Q } _ { i } ^ { A } ( \hat { T } _ { m + 1 } ) \ne n \} \right | \\ \intertext { a n d } \hat { P } _ { i } ( n ) \text { for } 1 \leq i \leq 5 \text { are shown for Sky Perfect Communicacy} . \intertext { a r e a s o n a l b y } \text { close in most cases, indicating that the short }
+$$
+![Source formula ref_cont_stochastic_order_book_dynamics_2010:formula:0057](images/formula_0057.png)
+```text
+PDF text layer: ˆ B up = ∣ ∣ ∣ { m | ˆ Q B i ( ˆ T m ) = n, ˆ Q B i ( ˆ T m +1 ) >n } ∣ ∣ ∣ ˆ A up = ∣ ∣ ∣ { m | ˆ Q A i ( ˆ T m ) = n, ˆ Q A i ( ˆ T m +1 ) >n } ∣ ∣ ∣ ˆ B change = ∣ ∣ ∣ { m | ˆ Q B i ( ˆ T m ) = n, ˆ Q B i ( ˆ T m +1 ) = n } ∣ ∣ ∣ ˆ A change = ∣ ∣ { m | ˆ Q A i ( ˆ T m ) = n, ˆ Q A i ( ˆ T m +1 ) = n } ∣ ∣
+```
+*Formula quality: `decoded_unverified`; source PDF page 17. Machine-decoded LaTeX; verify against the linked source crop before use.*
+<!-- formula-end -->
 
 ̸
 

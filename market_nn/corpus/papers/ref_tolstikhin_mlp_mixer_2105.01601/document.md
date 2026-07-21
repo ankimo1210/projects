@@ -40,9 +40,21 @@ Modern deep vision architectures consist of layers that mix features (i) at a gi
 
 Mixer takes as input a sequence of S non-overlapping image patches, each one projected to a desired hidden dimension C . This results in a two-dimensional real-valued input table, X ∈ R S × C . If the original input image has resolution ( H,W ) , and each patch has resolution ( P, P ) , then the number of patches is S = HW/P 2 . All patches are linearly projected with the same projection matrix. Mixer consists of multiple layers of identical size, and each layer consists of two MLP blocks. The first one is the token-mixing MLP: it acts on columns of X (i.e. it is applied to a transposed input table X ⊤ ), maps R S ↦→ R S , and is shared across all columns. The second one is the channel-mixing MLP: it acts on rows of X , maps R C ↦→ R C , and is shared across all rows. Each MLP block contains two fully-connected layers and a nonlinearity applied independently to each row of its input data tensor. Mixer layers can be written as follows (omitting layer indices):
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tolstikhin_mlp_mixer_2105.01601:formula:0001" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_tolstikhin_mlp_mixer_2105.01601:formula:0001](images/formula_0001.png)
+```text
+PDF text layer: ( )
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_tolstikhin_mlp_mixer_2105.01601:formula:0002" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_tolstikhin_mlp_mixer_2105.01601:formula:0002](images/formula_0002.png)
+```text
+PDF text layer: U ∗ ,i = X ∗ ,i + W 2 σ W 1 LayerNorm ( X ) ∗ ,i , for i = 1 . . . C, (1) Y j, ∗ = U j, ∗ + W 4 σ ( W 3 LayerNorm ( U ) j, ∗ ) , for j = 1 . . . S.
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Here σ is an element-wise nonlinearity (GELU [16]). D S and D C are tunable hidden widths in the token-mixing and channel-mixing MLPs, respectively. Note that D S is selected independently of the number of input patches. Therefore, the computational complexity of the network is linear in the number of input patches, unlike ViT whose complexity is quadratic. Since D C is independent of the patch size, the overall complexity is linear in the number of pixels in the image, as for a typical CNN.
 

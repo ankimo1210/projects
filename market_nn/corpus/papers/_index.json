@@ -29,7 +29,7 @@
         "text_blocks": 607,
         "tables": 4,
         "pictures": 9,
-        "markdown_chars": 74253,
+        "markdown_chars": 75556,
         "math_blocks": 7,
         "chunks": 56,
         "max_chunk_tokens": 492,
@@ -53,6 +53,18 @@
         "markdown_to_source_text_ratio": 1.139,
         "has_abstract": true,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 7,
+        "docling_decoded": 7,
+        "verified_manual": 7,
+        "manual_corrected": 7,
+        "manual_recovered": 0,
+        "decoded_unverified": 0,
+        "text_layer_fallback": 0,
+        "source_crops": 7,
+        "latex_blocks": 7
       }
     },
     {
@@ -81,7 +93,7 @@
         "text_blocks": 265,
         "tables": 9,
         "pictures": 3,
-        "markdown_chars": 69243,
+        "markdown_chars": 74136,
         "math_blocks": 17,
         "chunks": 62,
         "max_chunk_tokens": 490,
@@ -118,6 +130,18 @@
         "markdown_to_source_text_ratio": 1.1059,
         "has_abstract": true,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 17,
+        "docling_decoded": 17,
+        "verified_manual": 17,
+        "manual_corrected": 17,
+        "manual_recovered": 0,
+        "decoded_unverified": 0,
+        "text_layer_fallback": 0,
+        "source_crops": 17,
+        "latex_blocks": 17
       }
     },
     {
@@ -146,7 +170,7 @@
         "text_blocks": 496,
         "tables": 6,
         "pictures": 7,
-        "markdown_chars": 80976,
+        "markdown_chars": 89030,
         "math_blocks": 20,
         "chunks": 61,
         "max_chunk_tokens": 488,
@@ -188,6 +212,18 @@
         "markdown_to_source_text_ratio": 1.0572,
         "has_abstract": true,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 20,
+        "docling_decoded": 20,
+        "verified_manual": 3,
+        "manual_corrected": 3,
+        "manual_recovered": 0,
+        "decoded_unverified": 17,
+        "text_layer_fallback": 0,
+        "source_crops": 20,
+        "latex_blocks": 20
       }
     },
     {
@@ -216,7 +252,7 @@
         "text_blocks": 311,
         "tables": 4,
         "pictures": 5,
-        "markdown_chars": 52528,
+        "markdown_chars": 79167,
         "math_blocks": 55,
         "chunks": 47,
         "max_chunk_tokens": 481,
@@ -246,6 +282,18 @@
         "markdown_to_source_text_ratio": 1.1959,
         "has_abstract": true,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 55,
+        "docling_decoded": 55,
+        "verified_manual": 0,
+        "manual_corrected": 0,
+        "manual_recovered": 0,
+        "decoded_unverified": 55,
+        "text_layer_fallback": 0,
+        "source_crops": 55,
+        "latex_blocks": 55
       }
     },
     {
@@ -274,7 +322,7 @@
         "text_blocks": 278,
         "tables": 6,
         "pictures": 10,
-        "markdown_chars": 164002,
+        "markdown_chars": 178982,
         "math_blocks": 33,
         "chunks": 158,
         "max_chunk_tokens": 491,
@@ -312,6 +360,18 @@
         "markdown_to_source_text_ratio": 2.2778,
         "has_abstract": true,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 33,
+        "docling_decoded": 33,
+        "verified_manual": 0,
+        "manual_corrected": 0,
+        "manual_recovered": 0,
+        "decoded_unverified": 33,
+        "text_layer_fallback": 0,
+        "source_crops": 33,
+        "latex_blocks": 33
       }
     },
     {
@@ -340,7 +400,7 @@
         "text_blocks": 447,
         "tables": 11,
         "pictures": 3,
-        "markdown_chars": 73089,
+        "markdown_chars": 101912,
         "math_blocks": 57,
         "chunks": 66,
         "max_chunk_tokens": 487,
@@ -373,6 +433,18 @@
         "markdown_to_source_text_ratio": 1.33,
         "has_abstract": false,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 57,
+        "docling_decoded": 57,
+        "verified_manual": 0,
+        "manual_corrected": 0,
+        "manual_recovered": 0,
+        "decoded_unverified": 57,
+        "text_layer_fallback": 0,
+        "source_crops": 57,
+        "latex_blocks": 57
       }
     },
     {
@@ -401,7 +473,7 @@
         "text_blocks": 599,
         "tables": 4,
         "pictures": 10,
-        "markdown_chars": 56967,
+        "markdown_chars": 61900,
         "math_blocks": 11,
         "chunks": 42,
         "max_chunk_tokens": 486,
@@ -433,6 +505,18 @@
         "markdown_to_source_text_ratio": 1.0319,
         "has_abstract": true,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 11,
+        "docling_decoded": 11,
+        "verified_manual": 0,
+        "manual_corrected": 0,
+        "manual_recovered": 0,
+        "decoded_unverified": 11,
+        "text_layer_fallback": 0,
+        "source_crops": 11,
+        "latex_blocks": 11
       }
     },
     {
@@ -461,7 +545,7 @@
         "text_blocks": 780,
         "tables": 7,
         "pictures": 6,
-        "markdown_chars": 235334,
+        "markdown_chars": 245608,
         "math_blocks": 0,
         "chunks": 152,
         "max_chunk_tokens": 487,
@@ -515,6 +599,18 @@
         "markdown_to_source_text_ratio": 1.1672,
         "has_abstract": true,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 24,
+        "docling_decoded": 0,
+        "verified_manual": 0,
+        "manual_corrected": 0,
+        "manual_recovered": 0,
+        "decoded_unverified": 0,
+        "text_layer_fallback": 24,
+        "source_crops": 24,
+        "latex_blocks": 0
       }
     },
     {
@@ -543,7 +639,7 @@
         "text_blocks": 521,
         "tables": 15,
         "pictures": 7,
-        "markdown_chars": 76902,
+        "markdown_chars": 92077,
         "math_blocks": 0,
         "chunks": 62,
         "max_chunk_tokens": 490,
@@ -591,6 +687,18 @@
         "markdown_to_source_text_ratio": 1.1762,
         "has_abstract": true,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 37,
+        "docling_decoded": 0,
+        "verified_manual": 0,
+        "manual_corrected": 0,
+        "manual_recovered": 0,
+        "decoded_unverified": 0,
+        "text_layer_fallback": 37,
+        "source_crops": 37,
+        "latex_blocks": 0
       }
     },
     {
@@ -619,7 +727,7 @@
         "text_blocks": 129,
         "tables": 3,
         "pictures": 5,
-        "markdown_chars": 38063,
+        "markdown_chars": 41878,
         "math_blocks": 0,
         "chunks": 27,
         "max_chunk_tokens": 490,
@@ -638,6 +746,18 @@
         "markdown_to_source_text_ratio": 1.1362,
         "has_abstract": true,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 9,
+        "docling_decoded": 0,
+        "verified_manual": 0,
+        "manual_corrected": 0,
+        "manual_recovered": 0,
+        "decoded_unverified": 0,
+        "text_layer_fallback": 9,
+        "source_crops": 9,
+        "latex_blocks": 0
       }
     },
     {
@@ -666,7 +786,7 @@
         "text_blocks": 214,
         "tables": 3,
         "pictures": 1,
-        "markdown_chars": 39057,
+        "markdown_chars": 43230,
         "math_blocks": 0,
         "chunks": 28,
         "max_chunk_tokens": 483,
@@ -685,6 +805,18 @@
         "markdown_to_source_text_ratio": 1.0439,
         "has_abstract": true,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 10,
+        "docling_decoded": 0,
+        "verified_manual": 0,
+        "manual_corrected": 0,
+        "manual_recovered": 0,
+        "decoded_unverified": 0,
+        "text_layer_fallback": 10,
+        "source_crops": 10,
+        "latex_blocks": 0
       }
     },
     {
@@ -713,7 +845,7 @@
         "text_blocks": 2503,
         "tables": 6,
         "pictures": 12,
-        "markdown_chars": 105302,
+        "markdown_chars": 106218,
         "math_blocks": 0,
         "chunks": 84,
         "max_chunk_tokens": 487,
@@ -754,6 +886,18 @@
         "markdown_to_source_text_ratio": 1.0188,
         "has_abstract": true,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 2,
+        "docling_decoded": 0,
+        "verified_manual": 0,
+        "manual_corrected": 0,
+        "manual_recovered": 0,
+        "decoded_unverified": 0,
+        "text_layer_fallback": 2,
+        "source_crops": 2,
+        "latex_blocks": 0
       }
     },
     {
@@ -782,7 +926,7 @@
         "text_blocks": 380,
         "tables": 17,
         "pictures": 10,
-        "markdown_chars": 122658,
+        "markdown_chars": 135586,
         "math_blocks": 0,
         "chunks": 87,
         "max_chunk_tokens": 486,
@@ -847,6 +991,18 @@
         "markdown_to_source_text_ratio": 1.0641,
         "has_abstract": true,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 27,
+        "docling_decoded": 0,
+        "verified_manual": 0,
+        "manual_corrected": 0,
+        "manual_recovered": 0,
+        "decoded_unverified": 0,
+        "text_layer_fallback": 27,
+        "source_crops": 27,
+        "latex_blocks": 0
       }
     },
     {
@@ -875,7 +1031,7 @@
         "text_blocks": 298,
         "tables": 4,
         "pictures": 7,
-        "markdown_chars": 75469,
+        "markdown_chars": 76361,
         "math_blocks": 0,
         "chunks": 60,
         "max_chunk_tokens": 493,
@@ -903,6 +1059,18 @@
         "markdown_to_source_text_ratio": 1.3619,
         "has_abstract": true,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 2,
+        "docling_decoded": 0,
+        "verified_manual": 0,
+        "manual_corrected": 0,
+        "manual_recovered": 0,
+        "decoded_unverified": 0,
+        "text_layer_fallback": 2,
+        "source_crops": 2,
+        "latex_blocks": 0
       }
     },
     {
@@ -931,7 +1099,7 @@
         "text_blocks": 104,
         "tables": 3,
         "pictures": 1,
-        "markdown_chars": 39956,
+        "markdown_chars": 45503,
         "math_blocks": 0,
         "chunks": 31,
         "max_chunk_tokens": 536,
@@ -949,6 +1117,18 @@
         "markdown_to_source_text_ratio": 1.2591,
         "has_abstract": true,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 13,
+        "docling_decoded": 0,
+        "verified_manual": 0,
+        "manual_corrected": 0,
+        "manual_recovered": 0,
+        "decoded_unverified": 0,
+        "text_layer_fallback": 13,
+        "source_crops": 13,
+        "latex_blocks": 0
       }
     },
     {
@@ -977,7 +1157,7 @@
         "text_blocks": 314,
         "tables": 3,
         "pictures": 4,
-        "markdown_chars": 70890,
+        "markdown_chars": 88419,
         "math_blocks": 0,
         "chunks": 51,
         "max_chunk_tokens": 484,
@@ -1001,6 +1181,18 @@
         "markdown_to_source_text_ratio": 1.14,
         "has_abstract": true,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 43,
+        "docling_decoded": 0,
+        "verified_manual": 0,
+        "manual_corrected": 0,
+        "manual_recovered": 0,
+        "decoded_unverified": 0,
+        "text_layer_fallback": 43,
+        "source_crops": 43,
+        "latex_blocks": 0
       }
     },
     {
@@ -1029,8 +1221,8 @@
         "text_blocks": 174,
         "tables": 1,
         "pictures": 3,
-        "markdown_chars": 26807,
-        "math_blocks": 0,
+        "markdown_chars": 29338,
+        "math_blocks": 7,
         "chunks": 20,
         "max_chunk_tokens": 484,
         "pages_in_chunks": [
@@ -1047,6 +1239,18 @@
         "markdown_to_source_text_ratio": 1.0569,
         "has_abstract": true,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 7,
+        "docling_decoded": 0,
+        "verified_manual": 7,
+        "manual_corrected": 0,
+        "manual_recovered": 7,
+        "decoded_unverified": 0,
+        "text_layer_fallback": 0,
+        "source_crops": 7,
+        "latex_blocks": 7
       }
     },
     {
@@ -1075,7 +1279,7 @@
         "text_blocks": 282,
         "tables": 3,
         "pictures": 4,
-        "markdown_chars": 58651,
+        "markdown_chars": 68165,
         "math_blocks": 0,
         "chunks": 41,
         "max_chunk_tokens": 484,
@@ -1106,6 +1310,18 @@
         "markdown_to_source_text_ratio": 1.1298,
         "has_abstract": true,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 22,
+        "docling_decoded": 0,
+        "verified_manual": 0,
+        "manual_corrected": 0,
+        "manual_recovered": 0,
+        "decoded_unverified": 0,
+        "text_layer_fallback": 22,
+        "source_crops": 22,
+        "latex_blocks": 0
       }
     },
     {
@@ -1134,7 +1350,7 @@
         "text_blocks": 458,
         "tables": 4,
         "pictures": 6,
-        "markdown_chars": 49461,
+        "markdown_chars": 51676,
         "math_blocks": 0,
         "chunks": 44,
         "max_chunk_tokens": 487,
@@ -1161,6 +1377,18 @@
         "markdown_to_source_text_ratio": 1.2391,
         "has_abstract": true,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 5,
+        "docling_decoded": 0,
+        "verified_manual": 0,
+        "manual_corrected": 0,
+        "manual_recovered": 0,
+        "decoded_unverified": 0,
+        "text_layer_fallback": 5,
+        "source_crops": 5,
+        "latex_blocks": 0
       }
     },
     {
@@ -1189,7 +1417,7 @@
         "text_blocks": 498,
         "tables": 7,
         "pictures": 7,
-        "markdown_chars": 78599,
+        "markdown_chars": 82235,
         "math_blocks": 0,
         "chunks": 72,
         "max_chunk_tokens": 492,
@@ -1219,6 +1447,18 @@
         "markdown_to_source_text_ratio": 1.531,
         "has_abstract": true,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 8,
+        "docling_decoded": 0,
+        "verified_manual": 0,
+        "manual_corrected": 0,
+        "manual_recovered": 0,
+        "decoded_unverified": 0,
+        "text_layer_fallback": 8,
+        "source_crops": 8,
+        "latex_blocks": 0
       }
     },
     {
@@ -1247,8 +1487,8 @@
         "text_blocks": 292,
         "tables": 4,
         "pictures": 11,
-        "markdown_chars": 48120,
-        "math_blocks": 0,
+        "markdown_chars": 50065,
+        "math_blocks": 5,
         "chunks": 29,
         "max_chunk_tokens": 472,
         "pages_in_chunks": [
@@ -1279,6 +1519,18 @@
         "markdown_to_source_text_ratio": 1.0389,
         "has_abstract": true,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 5,
+        "docling_decoded": 0,
+        "verified_manual": 5,
+        "manual_corrected": 0,
+        "manual_recovered": 5,
+        "decoded_unverified": 0,
+        "text_layer_fallback": 0,
+        "source_crops": 5,
+        "latex_blocks": 5
       }
     },
     {
@@ -1307,8 +1559,8 @@
         "text_blocks": 176,
         "tables": 10,
         "pictures": 4,
-        "markdown_chars": 58303,
-        "math_blocks": 0,
+        "markdown_chars": 61788,
+        "math_blocks": 10,
         "chunks": 46,
         "max_chunk_tokens": 482,
         "pages_in_chunks": [
@@ -1330,7 +1582,32 @@
         "markdown_to_source_text_ratio": 1.0961,
         "has_abstract": true,
         "has_references": true
+      },
+      "formula_quality": {
+        "overlay": "source-linked-v1",
+        "total": 10,
+        "docling_decoded": 0,
+        "verified_manual": 10,
+        "manual_corrected": 0,
+        "manual_recovered": 10,
+        "decoded_unverified": 0,
+        "text_layer_fallback": 0,
+        "source_crops": 10,
+        "latex_blocks": 10
       }
     }
-  ]
+  ],
+  "formula_quality": {
+    "overlay": "source-linked-v1",
+    "papers": 22,
+    "total": 424,
+    "docling_decoded": 200,
+    "verified_manual": 49,
+    "manual_corrected": 27,
+    "manual_recovered": 22,
+    "decoded_unverified": 173,
+    "text_layer_fallback": 202,
+    "source_crops": 424,
+    "latex_blocks": 222
+  }
 }

@@ -57,11 +57,23 @@ We represent the evolution of a LOB as a time series L , where each L ( t ) ∈ 
 
 Trend Definition We use a ternary classification for trends: U ('upward') if the price trend is increasing; D ('downward') for decreasing prices; and S ('stable') for prices with negligible variations. Thanks to their informativeness, mid-prices are well-suited to drive this classification. Nevertheless, because of the market's inherent fluctuations and shocks, they can exhibit highly volatile trends. For this reason, using a direct comparison of consecutive mid-prices, i.e., m ( t ) and m ( t +1) , for stock price labelling would result in a noisy labelled dataset. As a result, labelling strategies typically employ smoother mid-price functions instead of raw mid-prices. Such functions consider mid-prices over arbitrarily long time intervals, called horizons . Our experiments adopt the labelling proposed in [12] and repurposed in several other state-of-the-art solutions we selected for benchmarking. The adopted labelling strategy compares the current mid-price to the average mid-prices a + ( k, t ) in a future horizon of k time units, formally:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_prata_lob_benchmark_2308.01915:formula:0001" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_prata_lob_benchmark_2308.01915:formula:0001](images/formula_0001.png)
+```text
+PDF text layer: a + ( k, t ) = 1 k k ∑ i =1 m ( t + i ) . (1)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 The average mid-prices are used to define a static threshold θ ∈ (0 , 1) that is used to identify an interval around the current mid-price and define the class of the trend at time t as follows:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_prata_lob_benchmark_2308.01915:formula:0002" status="text_layer_fallback" source-page="3" -->
+![Source formula ref_prata_lob_benchmark_2308.01915:formula:0002](images/formula_0002.png)
+```text
+PDF text layer: U : a + ( k, t ) > m ( t )(1 + θ ) , D : a + ( k, t ) < m ( t )(1 -θ ) , S : a + ( k, t ) ∈ [ m ( t )(1 -θ ) , m ( t )(1 + θ )] . (2)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 With this labelling, we beat the effect of mid-price fluctuations by considering their average over a desired horizon k and considering a trend to be stable when the average mid-price variations do not change significantly, thus avoiding over-fitting. We highlight that time stamps t can come either from a homogeneous or an event-based process. In our experiments, we consider an event-based process.
 

@@ -1,0 +1,162 @@
+{
+  "deeplob_1808.03668v6": {
+    "#/texts/105": {
+      "latex": "p_t = \\frac{p_a^{(1)}(t) + p_b^{(1)}(t)}{2} \\tag{1}"
+    },
+    "#/texts/108": {
+      "latex": "\\begin{aligned} m_-(t) &= \\frac{1}{k}\\sum_{i=0}^{k}p_{t-i} \\\\ m_+(t) &= \\frac{1}{k}\\sum_{i=1}^{k}p_{t+i} \\end{aligned} \\tag{2}"
+    },
+    "#/texts/110": {
+      "latex": "l_t = \\frac{m_+(t)-p_t}{p_t} \\tag{3}"
+    },
+    "#/texts/111": {
+      "latex": "l_t = \\frac{m_+(t)-m_-(t)}{m_-(t)} \\tag{4}"
+    },
+    "#/texts/180": {
+      "latex": "y(n) = \\sum_{k=0}^{M} b_k x(n-k) \\tag{5}"
+    },
+    "#/texts/183": {
+      "latex": "\\left\\{p_a^{(i)}(t),v_a^{(i)}(t),p_b^{(i)}(t),v_b^{(i)}(t)\\right\\}_{i=1}^{n=10} \\tag{6}"
+    },
+    "#/texts/186": {
+      "latex": "\\begin{aligned} p^{\\mathrm{micro\\ price}} &= I p_a^{(1)} + (1-I)p_b^{(1)} \\\\ I &= \\frac{v_b^{(1)}}{v_a^{(1)}+v_b^{(1)}} \\end{aligned} \\tag{7}"
+    }
+  },
+  "fi2010_1705.03233v5": {
+    "#/texts/117": {
+      "latex": "\\mathrm{Accuracy} = \\frac{TP+TN}{TP+TN+FP+FN} \\tag{1}"
+    },
+    "#/texts/118": {
+      "latex": "\\mathrm{Precision} = \\frac{TP}{TP+FP} \\tag{2}"
+    },
+    "#/texts/119": {
+      "latex": "\\mathrm{Recall} = \\frac{TP}{TP+FN} \\tag{3}"
+    },
+    "#/texts/120": {
+      "latex": "F_1 = 2\\times\\frac{\\mathrm{Precision}\\times\\mathrm{Recall}}{\\mathrm{Precision}+\\mathrm{Recall}} \\tag{4}"
+    },
+    "#/texts/128": {
+      "latex": "x_i^{(\\mathrm{Zscore})} = \\frac{x_i-\\frac{1}{N}\\sum_{j=1}^{N}x_j}{\\sqrt{\\frac{1}{N}\\sum_{j=1}^{N}(x_j-\\bar{x})^2}} \\tag{5}"
+    },
+    "#/texts/130": {
+      "latex": "x_i^{(\\mathrm{MM})} = \\frac{x_i-x_{\\min}}{x_{\\max}-x_{\\min}} \\tag{6}"
+    },
+    "#/texts/132": {
+      "latex": "x_i^{(\\mathrm{DP})} = \\frac{x_i}{10^k} \\tag{7}"
+    },
+    "#/texts/137": {
+      "latex": "l_i^{(j)} = \\frac{1}{k}\\sum_{j=i+1}^{i+k}\\frac{m_j-m_i}{m_i} \\tag{8}"
+    },
+    "#/texts/154": {
+      "latex": "W^* = \\operatorname*{arg\\,min}_{W}\\sum_{i=1}^{N}\\lVert W^T x_i-t_i\\rVert_2^2+\\lambda\\lVert W\\rVert_F^2 \\tag{9}"
+    },
+    "#/texts/156": {
+      "latex": "W^* = \\operatorname*{arg\\,min}_{W}\\lVert W^T X-T\\rVert_F^2+\\lambda\\lVert W\\rVert_F^2 \\tag{10}"
+    },
+    "#/texts/159": {
+      "latex": "W = X(X^T X+\\lambda I)^{-1}T^T \\tag{11}"
+    },
+    "#/texts/160": {
+      "latex": "W = (XX^T+\\lambda I)^{-1}XT^T \\tag{12}"
+    },
+    "#/texts/164": {
+      "latex": "l_x = \\operatorname*{arg\\,max}_{k} o_k \\tag{13}"
+    },
+    "#/texts/171": {
+      "latex": "h_{ik}=\\exp\\!\\left(\\frac{\\lVert x_i-v_k\\rVert_2^2}{2\\sigma^2}\\right),\\quad k=1,\\ldots,K \\tag{14}",
+      "note": "Positive exponent retained exactly as printed in the source PDF; this is not silently corrected to the conventional negative RBF exponent."
+    },
+    "#/texts/174": {
+      "latex": "W^* = \\operatorname*{arg\\,min}_{W}\\lVert W^T H-T\\rVert_F^2+\\lambda\\lVert W\\rVert_F^2 \\tag{15}"
+    },
+    "#/texts/176": {
+      "latex": "W = (HH^T+\\lambda I)^{-1}HT^T \\tag{16}"
+    },
+    "#/texts/178": {
+      "latex": "l_x = \\operatorname*{arg\\,max}_{k} o_k \\tag{17}"
+    }
+  },
+  "gould_bonart_1512.03492v1": {
+    "#/texts/113": {
+      "latex": "\\mathcal{T}=\\left\\{t\\mid m(t)\\neq\\lim_{\\epsilon\\downarrow0}m(t-\\epsilon)\\right\\} \\tag{8}"
+    },
+    "#/texts/116": {
+      "latex": "y_i:=\\begin{cases}1,&\\text{if }m(t_i)>m(t_{i-1}),\\\\0,&\\text{if }m(t_i)<m(t_{i-1}).\\end{cases} \\tag{9}"
+    },
+    "#/texts/158": {
+      "latex": "r_i=\\begin{cases}-\\frac{1}{2},&\\text{if }y_i=1,\\\\\\frac{1}{2},&\\text{if }y_i=0.\\end{cases} \\tag{20}"
+    }
+  },
+  "ref_tsantekidis_cnn_lob_2017": {
+    "#/texts/26": {
+      "latex": "x_{\\mathrm{norm}}=\\frac{x-\\bar{x}}{\\sigma_{\\bar{x}}} \\tag{1}"
+    },
+    "#/texts/29": {
+      "latex": "p_t=\\frac{p_a^{(1)}(t)+p_b^{(1)}(t)}{2} \\tag{2}"
+    },
+    "#/texts/32": {
+      "latex": "m_b(t)=\\frac{1}{k}\\sum_{i=0}^{k}p_{t-i} \\tag{3}"
+    },
+    "#/texts/33": {
+      "latex": "m_a(t)=\\frac{1}{k}\\sum_{i=1}^{k}p_{t+i} \\tag{4}"
+    },
+    "#/texts/35": {
+      "latex": "l_t=\\begin{cases}1,&\\text{if }m_b(t)>m_a(t)(1+\\alpha),\\\\-1,&\\text{if }m_b(t)<m_a(t)(1-\\alpha),\\\\0,&\\text{otherwise.}\\end{cases} \\tag{5}"
+    },
+    "#/texts/53": {
+      "latex": "L(W)=-\\sum_{i=1}^{L}y_i\\cdot\\log\\hat{y}_i \\tag{6}"
+    },
+    "#/texts/55": {
+      "latex": "W'=W-\\eta\\frac{\\partial L}{\\partial W} \\tag{7}"
+    }
+  },
+  "sirignano_cont_1803.06917v1": {
+    "#/texts/20": {
+      "latex": "\\mathrm{Price}_i(t+\\Delta t)=F\\!\\left(X^i_{0:t},\\epsilon_t\\mid\\theta_i(t)\\right)"
+    },
+    "#/texts/167": {
+      "latex": "(Y_t,h_t)=f(X_t,h_{t-1};\\theta) \\tag{2.1}"
+    },
+    "#/texts/185": {
+      "latex": "A_i=\\frac{\\text{Number of price changes where model correctly predicts price direction for stock }i}{\\text{Total number of price changes}}\\times100\\%"
+    },
+    "#/texts/200": {
+      "latex": "\\begin{aligned}h_t&=Ah_{t-1}+BX_t,\\\\Y_t&=\\mathbb{P}(\\Delta P_t>0\\mid X_t,h_t)=G(CX_t+Dh_t).\\end{aligned} \\tag{3.-1}"
+    },
+    "#/texts/202": {
+      "latex": "\\mathbb{P}(\\Delta P_t>0\\mid X_t,h_t)=\\operatorname{Softmax}(CX_t+Dh_t)"
+    }
+  },
+  "tlob_2502.15757v3": {
+    "#/texts/25": {
+      "latex": "L(t)=\\left(P^{\\mathrm{ask}}(t),V^{\\mathrm{ask}}(t),P^{\\mathrm{bid}}(t),V^{\\mathrm{bid}}(t)\\right) \\tag{1}"
+    },
+    "#/texts/31": {
+      "latex": "l(t,k)=\\frac{m_+(t,k)-m_-(t,k)}{m_-(t,k)} \\tag{2}"
+    },
+    "#/texts/32": {
+      "latex": "m_+(t,k)=\\frac{1}{k+1}\\sum_{i=0}^{k}p(t+i) \\tag{3}"
+    },
+    "#/texts/33": {
+      "latex": "m_-(t,k)=\\frac{1}{k+1}\\sum_{i=0}^{k}p(t-i) \\tag{4}"
+    },
+    "#/texts/36": {
+      "latex": "w_+(t,h,k)=\\frac{1}{k+1}\\sum_{i=0}^{k}p(t+h-i) \\tag{5}"
+    },
+    "#/texts/37": {
+      "latex": "w_-(t,h,k)=\\frac{1}{k+1}\\sum_{i=0}^{k}p(t-i) \\tag{6}"
+    },
+    "#/texts/39": {
+      "latex": "l(t,h,k)=\\frac{w_+(t,h,k)-w_-(t,h,k)}{w_-(t,h,k)} \\tag{7}"
+    },
+    "#/texts/49": {
+      "latex": "U_{i,*}=\\sigma\\!\\left(\\operatorname{LayerNorm}\\!\\left(\\sigma(X_{i,*}W_1)W_2+X_{i,*}\\right)\\right),\\quad i=1,\\ldots,T \\tag{8}"
+    },
+    "#/texts/52": {
+      "latex": "Z_{*,j}=\\sigma\\!\\left(\\operatorname{LayerNorm}\\!\\left(\\sigma(U_{*,j}W_3)W_4+U_{*,j}\\right)\\right),\\quad j=1,\\ldots,N \\tag{9}"
+    },
+    "#/texts/73": {
+      "latex": "l(t)=\\frac{m_+(t,k)-p(t)}{p(t)} \\tag{10}"
+    }
+  }
+}

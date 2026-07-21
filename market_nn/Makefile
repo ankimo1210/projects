@@ -1,4 +1,4 @@
-.PHONY: verify-provenance test smoke lint paper-corpus paper-corpus-check
+.PHONY: verify-provenance test smoke lint paper-corpus paper-corpus-formulas paper-corpus-check
 
 DOCLING_VERSION := 2.114.0
 PAPER_CORPUS_ARGS ?=
@@ -18,6 +18,9 @@ lint:
 
 paper-corpus:
 	uvx --from docling==$(DOCLING_VERSION) python scripts/build_paper_corpus.py --overwrite $(PAPER_CORPUS_ARGS)
+
+paper-corpus-formulas:
+	uvx --from docling==$(DOCLING_VERSION) python scripts/repair_paper_formulas.py
 
 paper-corpus-check:
 	uvx --from docling==$(DOCLING_VERSION) python scripts/build_paper_corpus.py --check-only

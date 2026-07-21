@@ -84,19 +84,43 @@ Price/$ 20.2 20.25 20.26 20.27 20.28 20.29 20.30 20.24 20.25 20.31 Bid Ask Bid A
 
 We test our model on two datasets: the FI-2010 dataset [1] and one year length of limit order book data from the London Stock Exchange (LSE). The FI-2010 dataset [1] is the first publicly available benchmark dataset of high-frequency limit order data and extracted time series data for five stocks from the Nasdaq Nordic stock market for a time period of 10 consecutive days. Many earlier algorithms are tested on this dataset and we use it to establish a fair comparison to other algorithms. However, 10 days is an insufficient amount of data to fully test the robustness and generalisation ability of an algorithm as the problem of overfitting to backtest data After normalising the limit order data, we use the mid-price
 
-$$p _ { t } = \frac { p _ { a } ^ { ( 1 ) } ( t ) + p _ { b } ^ { ( 1 ) } ( t ) } { 2 } , \quad ( 1 ) \quad \begin{matrix} 2 6 . 3 \\ 2 \end{matrix}$$
+<!-- formula-start id="deeplob_1808.03668v6:formula:0001" status="verified_manual" source-page="4" -->
+$$
+p_t = \frac{p_a^{(1)}(t) + p_b^{(1)}(t)}{2} \tag{1}
+$$
+![Source formula deeplob_1808.03668v6:formula:0001](images/formula_0001.png)
+*Formula quality: `verified_manual`; source PDF page 4. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 to create labels that represent the direction of price changes. Although no order can transact exactly at the mid-price, it expresses a general market value for an asset and it is frequently quoted when we want a single number to represent an asset price.
 
 Because financial data is highly stochastic, if we simply compare p t and p t + k to decide the price movement, the resulting label set will be noisy. In the works of [1] and [26], two smoothing labelling methods are introduced. We briefly recall the two methods here. First, let m -denote the mean of the previous k mid-prices and m + denote the mean of the next k mid-prices:
 
-$$m _ { - } ( t ) & = \frac { 1 } { k } \sum _ { i = 0 } ^ { k } p _ { t - i } & \text {where} \\ m _ { + } ( t ) & = \frac { 1 } { k } \sum _ { i = 1 } ^ { k } p _ { t + i } & \text {auto} \\ \vdots & \vdots & \vdots & \text {nois} \\$$
+<!-- formula-start id="deeplob_1808.03668v6:formula:0002" status="verified_manual" source-page="4" -->
+$$
+\begin{aligned} m_-(t) &= \frac{1}{k}\sum_{i=0}^{k}p_{t-i} \\ m_+(t) &= \frac{1}{k}\sum_{i=1}^{k}p_{t+i} \end{aligned} \tag{2}
+$$
+![Source formula deeplob_1808.03668v6:formula:0002](images/formula_0002.png)
+*Formula quality: `verified_manual`; source PDF page 4. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 where p t is the mid-price defined in Equation (1) and k is the prediction horizon. Both methods use the percentage change ( l t ) of the mid-price to decide directions. We can now define
 
-$$l _ { t } = \frac { m _ { + } ( t ) - p _ { t } } { p _ { t } } & & ( 3 ) & \ t a c i t { t } \\$$
+<!-- formula-start id="deeplob_1808.03668v6:formula:0003" status="verified_manual" source-page="4" -->
+$$
+l_t = \frac{m_+(t)-p_t}{p_t} \tag{3}
+$$
+![Source formula deeplob_1808.03668v6:formula:0003](images/formula_0003.png)
+*Formula quality: `verified_manual`; source PDF page 4. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
-$$l _ { t } = \frac { m _ { + } ( t ) - m _ { - } ( t ) } { m _ { - } ( t ) } \quad  \$$
+<!-- formula-start id="deeplob_1808.03668v6:formula:0004" status="verified_manual" source-page="4" -->
+$$
+l_t = \frac{m_+(t)-m_-(t)}{m_-(t)} \tag{4}
+$$
+![Source formula deeplob_1808.03668v6:formula:0004](images/formula_0004.png)
+*Formula quality: `verified_manual`; source PDF page 4. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 Both are methods to define the direction of price movement at time t , where the former, Equation 3, was used in [1] and the latter, Equation 4, in [26].
 
@@ -172,19 +196,37 @@ Figure 3. Model architecture schematic. Here 1x2@16 represents a convolutional l
 
 signal processing [54]. FIR filters are popular smoothing techniques for denoising target signals and they are simple to implement and work with. We can write any FIR filter in the following form:
 
-$$y ( n ) = \sum _ { k = 0 } ^ { M } b _ { k } x ( n - k ) & & \text {function} & & \quad ( 5 ) & \text {unit} & \\$$
+<!-- formula-start id="deeplob_1808.03668v6:formula:0005" status="verified_manual" source-page="5" -->
+$$
+y(n) = \sum_{k=0}^{M} b_k x(n-k) \tag{5}
+$$
+![Source formula deeplob_1808.03668v6:formula:0005](images/formula_0005.png)
+*Formula quality: `verified_manual`; source PDF page 5. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 where the output signal y ( n ) at any time is a weighted sum of a finite number of past values of the input signal x ( n ) . The filter order is denoted as M and b k is the filter coefficient. In a convolutional neural network, the coefficients of the filter kernel are not obtained via a statistical objective from traditional signal filtration theory, but are left as degrees of freedom which the network infers so as to extremise its value function at output.
 
 The details of the first convolutional layer inevitably need some consideration. As convolutional layers operate a small kernel to 'scan' through input data, the layout of limit order book information is vital. Recall that we take the most 100 recent updates of an order book to form a single input and there are 40 features per time stamp, so the size of a single input is (100 × 40) . We organise the 40 features as following:
 
-$$\{ p _ { a } ^ { ( i ) } ( t ) , v _ { a } ^ { ( i ) } ( t ) , p _ { b } ^ { ( i ) } ( t ) , v _ { b } ^ { ( i ) } ( t ) \} _ { i = 1 } ^ { n = 1 0 } \quad ( 6 ) \quad _ { \text { invariant} } ^ { \text { Modu} }$$
+<!-- formula-start id="deeplob_1808.03668v6:formula:0006" status="verified_manual" source-page="5" -->
+$$
+\left\{p_a^{(i)}(t),v_a^{(i)}(t),p_b^{(i)}(t),v_b^{(i)}(t)\right\}_{i=1}^{n=10} \tag{6}
+$$
+![Source formula deeplob_1808.03668v6:formula:0006](images/formula_0006.png)
+*Formula quality: `verified_manual`; source PDF page 5. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 where i denotes the i -th level of a limit order book. The size of our first convolutional filter is (1 × 2) with stride of (1 × 2) . The first layer essentially summarises information between price and volume { p ( i ) , v ( i ) } at each order book level. The usage of stride is necessary here as an important property of convolutional layers is parameter sharing. This property is attractive as less parameters are estimated, largely avoiding overfitting problems. However, without strides, we would apply same parameters to { p ( i ) , v ( i ) } and { v ( i ) , p ( i +1) } . In other words, p ( i ) and v ( i ) would share same parameters because the kernel filter moves by one step, which is obviously wrong as price and volume form different dynamic behaviors.
 
 Because the first layer only captures information at each order book level, we would expect representative features to be extracted when integrating information across multiple order book levels. We can do this by utilising another convolutional layer with filter size (1 × 2) and stride (1 × 2) . The resulting feature maps actually form the micro-price defined by [55]:
 
-$$p ^ { \text {micro price} } & = I p _ { a } ^ { ( 1 ) } + ( 1 - I ) p _ { b } ^ { ( 1 ) } \\ I & = \frac { v _ { b } ^ { ( 1 ) } } { v _ { a } ^ { ( 1 ) } + v _ { b } ^ { ( 1 ) } } \\ \cdot \, _ { 1 } \cdot \, _ { 2 } \cdot \, _ { 3 } \cdot \, _ { 4 } \cdot \, _ { 5 } \cdot \, _ { 6 } \cdot \, _ { 7 } \cdot \, _ { 8 } \cdot \, _ { 9 } \cdot \, _ { 1 } \cdot \, _ { 2 } \cdot \, _ { 3 } \cdot \, _ { 4 } \cdot \, _ { 5 } \cdot \, _ { 6 } \cdot \, _ { 7 } \cdot \, _ { 8 } \cdot \, _ { 9 } \\$$
+<!-- formula-start id="deeplob_1808.03668v6:formula:0007" status="verified_manual" source-page="5" -->
+$$
+\begin{aligned} p^{\mathrm{micro\ price}} &= I p_a^{(1)} + (1-I)p_b^{(1)} \\ I &= \frac{v_b^{(1)}}{v_a^{(1)}+v_b^{(1)}} \end{aligned} \tag{7}
+$$
+![Source formula deeplob_1808.03668v6:formula:0007](images/formula_0007.png)
+*Formula quality: `verified_manual`; source PDF page 5. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 The weight I is called the imbalance. The micro-price is an important indicator as it considers volumes on bid and ask side, and the imbalance between bid and ask size is a very strong indicator of the next price move. This feature of imbalances has been reported by a variety of researchers [56, 57, 58, 59, 60]. Unlike the micro-price where only the first order book level is considered, we utilise convolutions to form microprices for all levels of a LOB so the resulting features maps are of size (100 , 10) after two layers with strides. Finally, we integrate all information by using a large filter of size (1 × 10) and the dimension of our feature maps before the Inception Module is (100 , 1) .
 

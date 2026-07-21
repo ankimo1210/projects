@@ -40,7 +40,13 @@ The task of accurately modeling the complex data patterns and large volumes link
 
 We represent the evolution of a LOB as a time series L , where each L ( t ) ∈ R 4 L is called a LOB record, for t = 1 , . . . , N , with N being the number of LOB observations and L the number of levels. In particular,
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="tlob_2502.15757v3:formula:0001" status="verified_manual" source-page="2" -->
+$$
+L(t)=\left(P^{\mathrm{ask}}(t),V^{\mathrm{ask}}(t),P^{\mathrm{bid}}(t),V^{\mathrm{bid}}(t)\right) \tag{1}
+$$
+![Source formula tlob_2502.15757v3:formula:0001](images/formula_0001.png)
+*Formula quality: `verified_manual`; source PDF page 2. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 where P ask ( t ) and P bid ( t ) ∈ R L are the prices at levels 1 through L , and V ask ( t ) and V bid ( t ) ∈ R L are the corresponding volumes.
 
@@ -54,23 +60,59 @@ Figure 1 : Comparison of three labeling methods. t is the current timestamp, k i
 
 To mitigate this, many labeling strategies employ smoother mid-price functions, averaging prices over a chosen 'window length' to reduce short-term noise and better reflect persistent directional moves. An example of this approach appears in [29], detailed in Section 6.1. However, as shown by Zhang et al. [45] (Fig. 2), smoothing only the future prices can lead to instability in trading signals. This instability often causes redundant trading actions and higher transaction costs. To address this, Tsantekidis et al. [38] proposed also smoothing past prices. They define:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="tlob_2502.15757v3:formula:0002" status="verified_manual" source-page="3" -->
+$$
+l(t,k)=\frac{m_+(t,k)-m_-(t,k)}{m_-(t,k)} \tag{2}
+$$
+![Source formula tlob_2502.15757v3:formula:0002](images/formula_0002.png)
+*Formula quality: `verified_manual`; source PDF page 3. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="tlob_2502.15757v3:formula:0003" status="verified_manual" source-page="3" -->
+$$
+m_+(t,k)=\frac{1}{k+1}\sum_{i=0}^{k}p(t+i) \tag{3}
+$$
+![Source formula tlob_2502.15757v3:formula:0003](images/formula_0003.png)
+*Formula quality: `verified_manual`; source PDF page 3. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="tlob_2502.15757v3:formula:0004" status="verified_manual" source-page="3" -->
+$$
+m_-(t,k)=\frac{1}{k+1}\sum_{i=0}^{k}p(t-i) \tag{4}
+$$
+![Source formula tlob_2502.15757v3:formula:0004](images/formula_0004.png)
+*Formula quality: `verified_manual`; source PDF page 3. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 noting that i runs from 0 to k , so there are ( k + 1) terms in the sum. A key drawback is that the window length k coincides with the prediction horizon h . This can bias the labels: for instance, a horizon of h = 2 may not provide enough smoothing, whereas a large horizon might over-smooth price moves.
 
 To overcome this, we propose a more general labeling strategy that dissociates k from h . Specifically, we define:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="tlob_2502.15757v3:formula:0005" status="verified_manual" source-page="3" -->
+$$
+w_+(t,h,k)=\frac{1}{k+1}\sum_{i=0}^{k}p(t+h-i) \tag{5}
+$$
+![Source formula tlob_2502.15757v3:formula:0005](images/formula_0005.png)
+*Formula quality: `verified_manual`; source PDF page 3. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="tlob_2502.15757v3:formula:0006" status="verified_manual" source-page="3" -->
+$$
+w_-(t,h,k)=\frac{1}{k+1}\sum_{i=0}^{k}p(t-i) \tag{6}
+$$
+![Source formula tlob_2502.15757v3:formula:0006](images/formula_0006.png)
+*Formula quality: `verified_manual`; source PDF page 3. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 The percentage change is then
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="tlob_2502.15757v3:formula:0007" status="verified_manual" source-page="3" -->
+$$
+l(t,h,k)=\frac{w_+(t,h,k)-w_-(t,h,k)}{w_-(t,h,k)} \tag{7}
+$$
+![Source formula tlob_2502.15757v3:formula:0007](images/formula_0007.png)
+*Formula quality: `verified_manual`; source PDF page 3. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 We classify a trend as upward if l ( t, h, k ) &gt; θ , downward if l ( t, h, k ) &lt; -θ , and stable if -θ ≤ l ( t, h, k ) ≤ θ . The threshold θ is often chosen to balance the three classes rather than to reflect trading costs. We argue, however, that relating θ to transaction costs can better align trend predictions with profitability. Thus, in Section 7.5, we examine setting θ to the average spread (the difference between the best bid and ask prices) as a percentage of the mid-price 2 , since the spread represents the main transaction cost.
 
@@ -90,13 +132,25 @@ Each MLP layer consists of two fully connected layers, mirroring the MLP compone
 
 Feature-Mixing MLPs. We apply a feature-mixing MLP row by row ( i.e. , for each time step i ). Formally,
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="tlob_2502.15757v3:formula:0008" status="verified_manual" source-page="3" -->
+$$
+U_{i,*}=\sigma\!\left(\operatorname{LayerNorm}\!\left(\sigma(X_{i,*}W_1)W_2+X_{i,*}\right)\right),\quad i=1,\ldots,T \tag{8}
+$$
+![Source formula tlob_2502.15757v3:formula:0008](images/formula_0008.png)
+*Formula quality: `verified_manual`; source PDF page 3. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 where σ is the GeLU activation function [19], and LayerNorm denotes layer normalization.
 
 Temporal-Mixing MLPs. Next, we transpose the resulting tensor U and apply a temporal-mixing MLP column by column ( i.e. , for each feature dimension j ):
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="tlob_2502.15757v3:formula:0009" status="verified_manual" source-page="3" -->
+$$
+Z_{*,j}=\sigma\!\left(\operatorname{LayerNorm}\!\left(\sigma(U_{*,j}W_3)W_4+U_{*,j}\right)\right),\quad j=1,\ldots,N \tag{9}
+$$
+![Source formula tlob_2502.15757v3:formula:0009](images/formula_0009.png)
+*Formula quality: `verified_manual`; source PDF page 3. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 Model Simplicity and Isotropic Design. The MLPLOB architecture relies only on matrix multiplications, reshaping operations, and scalar nonlinearities. It also adopts an isotropic design , wherein each block (beyond the initial projection) has a constant dimensionality. This contrasts with the pyramidal layouts found in many CNNs (which reduce spatial resolution while increasing channel depth). Notably, isotropic designs are also common in Transformers and Recurrent Neural Networks (RNNs).
 
@@ -143,7 +197,13 @@ Table 1 : Intel and Tesla main characteristics for January 2015. Average liquidi
 | TSLA    | - 0 . 42 ± 2 . 84  | 23 , 927 , 602 ± 4 , 554 , 884   | 0 . 16        | 3 , 320          |
 | INTC    | - 0 . 44 ± 1 . 66  | 304 , 325 , 400 ± 69 , 340 , 430 | 0 . 01        | 124 , 960        |
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="tlob_2502.15757v3:formula:0010" status="verified_manual" source-page="5" -->
+$$
+l(t)=\frac{m_+(t,k)-p(t)}{p(t)} \tag{10}
+$$
+![Source formula tlob_2502.15757v3:formula:0010](images/formula_0010.png)
+*Formula quality: `verified_manual`; source PDF page 5. Transcribed and checked against the source PDF.*
+<!-- formula-end -->
 
 where p ( t ) is the mid-price and k represents the window length, which in this instance also corresponds to the prediction horizon h . Labels are assigned as explained in 4. The dataset furnishes time series and corresponding class labels for five distinct horizons: h ∈ H = { 10 , 20 , 30 , 50 , 100 } . The dataset's authors employed a uniform threshold θ = 2 × 10 -3 across all horizons. The value is chosen to balance the classes for h = 50 .
 

@@ -53,7 +53,13 @@ The training data is a sequence of prior trials, x (1) , . . . , x ( m ) that ha
 1. Choose a 'feature mapping' φ : R n → H , where H is some higher dimensional Euclidean space (or an infinite dimensional Hilbert space - for simplicity we suppose H is finite dimensional in this paper) called the 'feature space'. For a data instance x ∈ R n , the components of φ ( x ) are the 'features' of the data to be used to determine the correct label to be assigned.
 2. Given the training data x (1) , . . . , x ( m ) , we consider the collection
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0001" status="text_layer_fallback" source-page="4" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0001](images/formula_0001.png)
+```text
+PDF text layer: F = { z ( i ) = φ ( x ( i ) ) : i = 1 , . . . , m } ⊂ H ,
+```
+*Formula quality: `text_layer_fallback`; source PDF page 4. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 and we expect that the feature mapping has been chosen so that the set of points F (+1) of F with label +1 are spatially separated in H from the set of points F ( -1) with label -1. 'Spatially separated' means that there is a separating hyperplane in H such that F (+1) lies entirely on one side and F ( -1) on the other.
 
@@ -66,57 +72,153 @@ A hyperplane in H is described by an equation of the form w T z + b = 0, where w
 
 It is not difficult to show that the distance in H between the feature vector z ( i ) and the plane is
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0002" status="text_layer_fallback" source-page="5" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0002](images/formula_0002.png)
+```text
+PDF text layer: γ i = y ( i ) ( ( w || w || ) T z ( i ) + b || w || ) .
+```
+*Formula quality: `text_layer_fallback`; source PDF page 5. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 We can then define the 'geometric margin' of the plane ( w, b ) with respect to the training set S = { ( z ( i ) , y ( i ) ) , i = 1 , . . . , m } to be the smallest of these individual distances (or 'margins'):
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0003" status="text_layer_fallback" source-page="5" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0003](images/formula_0003.png)
+```text
+PDF text layer: γ = min i =1 ,...,m γ i .
+```
+*Formula quality: `text_layer_fallback`; source PDF page 5. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 The optimal separating hyperplane is then obtained as the solution to the following optimization problem that identifies the hyperplane maximizing the geometric margin:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0004" status="text_layer_fallback" source-page="5" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0004](images/formula_0004.png)
+```text
+PDF text layer: max γ,w,b γ (2.1)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 5. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0005" status="text_layer_fallback" source-page="5" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0005](images/formula_0005.png)
+```text
+PDF text layer: s.t. y ( i ) ( w T z ( i ) + b ) ≥ γ || w || , i = 1 , . . . , m. (2.2)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 5. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 or equivalently, letting ˆ γ = γ || w || ,
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0006" status="text_layer_fallback" source-page="5" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0006](images/formula_0006.png)
+```text
+PDF text layer: max ˆ γ,w,b ˆ γ || w || (2.3)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 5. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0007" status="text_layer_fallback" source-page="5" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0007](images/formula_0007.png)
+```text
+PDF text layer: s.t. y ( i ) ( w T z ( i ) + b ) ≥ ˆ γ, i = 1 , . . . , m. (2.4)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 5. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Abetter equivalent formulation of the problem is obtained when we take account of the fact that the parameters ( w, b ) can be scaled by an arbitrary positive constant without changing the hyperplane they determine, and hence without changing the problem. We therefore select a scaling constraint so that ˆ γ = 1 in the above problem, which is then equivalent to
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0008" status="text_layer_fallback" source-page="5" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0008](images/formula_0008.png)
+```text
+PDF text layer: max w,b 1 || w || (2.5)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 5. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0009" status="text_layer_fallback" source-page="5" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0009](images/formula_0009.png)
+```text
+PDF text layer: s.t. y ( i ) ( w T z ( i ) + b ) ≥ 1 , i = 1 , . . . , m. (2.6)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 5. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 or, equivalently,
 
 and
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0010" status="text_layer_fallback" source-page="6" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0010](images/formula_0010.png)
+```text
+PDF text layer: min w,b 1 2 || w || 2 (2.7)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 6. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0011" status="text_layer_fallback" source-page="6" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0011](images/formula_0011.png)
+```text
+PDF text layer: s.t. y ( i ) ( w T z ( i ) + b ) ≥ 1 , i = 1 , . . . , m, (2.8)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 6. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 which is now in the form of a convex quadratic objective with linear constraints.
 
 While this is a tractable form of the problem, we still have a high dimensional problem (the dimension of H ) and a large number ( m ) of constraints. The SVM approach improves this situation dramatically by considering the corresponding dual optimization problem (see, e.g., [28]):
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0012" status="text_layer_fallback" source-page="6" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0012](images/formula_0012.png)
+```text
+PDF text layer: max α m ∑ i =1 α i -1 2 m ∑ i,j =1 α i α j y ( i ) y ( j ) 〈 z ( i ) , z ( j ) 〉 (2.9)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 6. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0013" status="text_layer_fallback" source-page="6" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0013](images/formula_0013.png)
+```text
+PDF text layer: s.t. α i ≥ 0 , i = 1 , . . . , m (2.10)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 6. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0014" status="text_layer_fallback" source-page="6" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0014](images/formula_0014.png)
+```text
+PDF text layer: m ∑ i =1 α i y ( i ) = 0 . (2.11)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 6. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Since the original (primal) problem 2.7 has a convex objective and convex constraints, the so-called Slater condition says that this dual problem gives the same solution as the primal problem if the constraints are strictly feasible, which will generically be the case if the training data can be separated by any hyperplane. It can be shown that the optimal hyperplane parameters are then given by
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0015" status="text_layer_fallback" source-page="6" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0015](images/formula_0015.png)
+```text
+PDF text layer: w = m ∑ i =1 α i y ( i ) z ( i )
+```
+*Formula quality: `text_layer_fallback`; source PDF page 6. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0016" status="text_layer_fallback" source-page="6" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0016](images/formula_0016.png)
+```text
+PDF text layer: b = -1 2 ( max { i : y ( i ) = -1 } w T z ( i ) + min { i : y ( i ) =1 } w T z ( i ) ) .
+```
+*Formula quality: `text_layer_fallback`; source PDF page 6. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 This dual formulation has the convenient property that the optimal α i 's are all equal to zero except for the feature vectors z ( i ) whose distance to the optimal hyperplane ( w, b ) is exactly equal to the geometric margin - these are called the 'support vectors', giving the SVM approach its name. Once the optimal parameters are found and z is a new feature vector that needs to be classified, we need only compute the sign of
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0017" status="text_layer_fallback" source-page="7" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0017](images/formula_0017.png)
+```text
+PDF text layer: w T z + b = m ∑ i =1 α i y ( i ) 〈 z ( i ) , z 〉 + b.
+```
+*Formula quality: `text_layer_fallback`; source PDF page 7. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Since α i = 0 unless it corresponds to a support vector, many of the terms in this sum are zero and we need only calculate inner products between z and the (typically small number of) support vectors z ( i ) of the optimal hyperplane.
 
@@ -128,31 +230,73 @@ The feature mapping φ : R n → H from the space of data attributes to the feat
 
 As an example, suppose we take n = 3, choose c &gt; 0, and define φ : R 3 → R 13 by
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0018" status="text_layer_fallback" source-page="7" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0018](images/formula_0018.png)
+```text
+PDF text layer: φ ( x 1 , x 2 , x 3 ) = [ x 1 x 1 , x 1 x 2 , x 1 x 3 , x 2 x 1 , . . . , x 3 x 3 , √ 2 cx 1 , √ 2 cx 2 , √ 2 cx 3 , c ] T
+```
+*Formula quality: `text_layer_fallback`; source PDF page 7. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 That is, the features are all monomials in the attributes of degree 2 or less. This feature mapping will be effective if the data can be separated by quadratic functions of the attributes. Here, c is a parameter controlling the relative weighting between the first and second order terms. It is straightforward to verify for general n and for x, ˆ x ∈ R n , that
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0019" status="text_layer_fallback" source-page="7" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0019](images/formula_0019.png)
+```text
+PDF text layer: 〈 φ ( x ) , φ (ˆ x ) 〉 = n ∑ i,j =1 ( x i x j )(ˆ x i ˆ x j ) + n ∑ i =1 ( √ 2 cx i )( √ 2 c ˆ x i ) + c 2 = ( x T ˆ x + c ) 2 .
+```
+*Formula quality: `text_layer_fallback`; source PDF page 7. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 In other words, the inner product of feature vectors z = φ ( x ) can be computed in terms of the much lower dimensional inner product x T ˆ x on R n via the 'kernel function'
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0020" status="text_layer_fallback" source-page="7" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0020](images/formula_0020.png)
+```text
+PDF text layer: K ( x, ˆ x ) = ( x T ˆ x + c ) 2 .
+```
+*Formula quality: `text_layer_fallback`; source PDF page 7. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Similarly, it can be verified that the kernel
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0021" status="text_layer_fallback" source-page="8" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0021](images/formula_0021.png)
+```text
+PDF text layer: K ( x, ˆ x ) = ( x T ˆ x + c ) d
+```
+*Formula quality: `text_layer_fallback`; source PDF page 8. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 corresponds to a feature mapping that includes all monomials up to degree d . In this case, the SVM classifier will be effective if the data can be separated by polynomial hypersurfaces of degree d or less, which is a very general situation.
 
 There is a general fact known as Mercer's Theorem ([26]) stating that whenever K : R n × R n → R is symmetric positive semi-definite, there is a feature mapping φ such that
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0022" status="text_layer_fallback" source-page="8" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0022](images/formula_0022.png)
+```text
+PDF text layer: 〈 z, ˆ z 〉 ≡ 〈 φ ( x ) , φ (ˆ x ) 〉 = K ( x, ˆ x ) .
+```
+*Formula quality: `text_layer_fallback`; source PDF page 8. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 The great advantage of this is that our classification problem now becomes computing the sign of
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0023" status="text_layer_fallback" source-page="8" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0023](images/formula_0023.png)
+```text
+PDF text layer: w T z + b = m ∑ i =1 α i y ( i ) 〈 z ( i ) , z 〉 + b (2.12)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 8. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0024" status="text_layer_fallback" source-page="8" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0024](images/formula_0024.png)
+```text
+PDF text layer: = m ∑ i =1 α i y ( i ) K ( x ( i ) , x ) + b, (2.13)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 8. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 which, for the kernels above, only requires computation of an n -dimensional inner product.
 
@@ -160,33 +304,93 @@ which, for the kernels above, only requires computation of an n -dimensional inn
 
 We may need to take account of a small number of spurious training data instances that are labeled incorrectly, which could have a large unwanted effect on the optimal separating hyperplane. To handle this, the standard method is to relax the constraint and introduce a compensating term in the objective function to penalize data on the wrong side of the hyperplane, leading to this reformulated problem:
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0025" status="text_layer_fallback" source-page="8" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0025](images/formula_0025.png)
+```text
+PDF text layer: min w,b,ξ 1 2 || w || 2 + C m ∑ i =1 ξ i (2.14)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 8. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0026" status="text_layer_fallback" source-page="8" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0026](images/formula_0026.png)
+```text
+PDF text layer: s.t. y ( i ) ( w T z ( i ) + b ) ≥ 1 -ξ i , i = 1 , . . . , m (2.15)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 8. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0027" status="text_layer_fallback" source-page="8" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0027](images/formula_0027.png)
+```text
+PDF text layer: ξ i ≥ 0 , i = 1 , . . . , m. (2.16)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 8. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 The constant C &gt; 0 controls the relative weight between the competing goals of making the total margin large, and ensuring as many examples as possible are on the correct side of the hyperplane.
 
 From this, the dual version can be formulated as
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0028" status="text_layer_fallback" source-page="9" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0028](images/formula_0028.png)
+```text
+PDF text layer: max α m ∑ i =1 α i -1 2 m ∑ i,j =1 α i α j y ( i ) y ( j ) 〈 z ( i ) , z ( j ) 〉 (2.17)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 9. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0029" status="text_layer_fallback" source-page="9" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0029](images/formula_0029.png)
+```text
+PDF text layer: s.t. 0 ≤ α i ≤ C, i = 1 , . . . , m (2.18)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 9. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0030" status="text_layer_fallback" source-page="9" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0030](images/formula_0030.png)
+```text
+PDF text layer: m ∑ i =1 α i y ( i ) = 0 . (2.19)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 9. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 In terms of the quadratic kernel K ( x, ˆ x ) = ( x T ˆ x + c ) 2 described above, we get our final version of the optimization problem 1 :
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0031" status="text_layer_fallback" source-page="9" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0031](images/formula_0031.png)
+```text
+PDF text layer: max α m ∑ i =1 α i -1 2 m ∑ i,j =1 α i α j y ( i ) y ( j ) K ( x ( i ) , x ( j ) ) (2.20)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 9. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0032" status="text_layer_fallback" source-page="9" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0032](images/formula_0032.png)
+```text
+PDF text layer: s.t. 0 ≤ α i ≤ C, i = 1 , . . . , m (2.21)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 9. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0033" status="text_layer_fallback" source-page="9" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0033](images/formula_0033.png)
+```text
+PDF text layer: m ∑ i =1 α i y ( i ) = 0 . (2.22)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 9. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 Using the solutions α i , and letting S = { s 1 , s 2 , . . . } be the set of support vectors (corresponding to α &gt; 0), the label for a new example x is assigned as +1 if
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0034" status="text_layer_fallback" source-page="9" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0034](images/formula_0034.png)
+```text
+PDF text layer: | S | ∑ i =1 α i y i K ( s i , x ) + b (2.23)
+```
+*Formula quality: `text_layer_fallback`; source PDF page 9. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 is positive, and -1 otherwise. The kernel functions used in this paper are the polynomial kernels K ( x i , x j ) = ( x i · x j +1) d with d = 2. (We use the constraint parameter C = 0 . 25, though in experiments this choice does not affect results much.)
 
@@ -289,11 +493,23 @@ Entropy is a measure of uncertainty or unpredictability of a system, which is de
 
 If X is an attribute with values x ∈ X , then the conditional probability p ( y | x ) is defined to be the proportion | T ( x, y ) | / | T ( x ) | of data with label y among all data with attribute x . In this case the conditional entropy of Y , after observing feature X , is defined as
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0035" status="text_layer_fallback" source-page="17" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0035](images/formula_0035.png)
+```text
+PDF text layer: H ( Y | X ) = -∑ x ∈ X p ( x ) ∑ y ∈ Y p ( y | x ) log 2 ( p ( y | x )) .
+```
+*Formula quality: `text_layer_fallback`; source PDF page 17. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 The information gain of Y contributed by X is then defined as
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0036" status="text_layer_fallback" source-page="17" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0036](images/formula_0036.png)
+```text
+PDF text layer: IG ( X ) = H ( Y ) -H ( Y | X ) ,
+```
+*Formula quality: `text_layer_fallback`; source PDF page 17. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 and is a measure of the reduction of uncertainty about Y resulting from knowledge of attribute X . We can then order all the attributes according to their information gain, and select the attributes with the largest IG such that the performance of the model built with these attributes is comparable to that obtained from the full original feature set. (See Appendix.)
 
@@ -415,7 +631,13 @@ For our 10-fold cross-validation, we select 2000 data points from our total samp
 
 The t -test we use is the 'corrected resampled t -test' from [27] to account for the fact that the cross-validation trials are not completely independent. We use
 
-<!-- formula-not-decoded -->
+<!-- formula-start id="ref_kercheval_zhang_svm_2013:formula:0037" status="text_layer_fallback" source-page="25" -->
+![Source formula ref_kercheval_zhang_svm_2013:formula:0037](images/formula_0037.png)
+```text
+PDF text layer: t = µ d s d √ 1 J + n 2 n 1 .
+```
+*Formula quality: `text_layer_fallback`; source PDF page 25. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+<!-- formula-end -->
 
 To reject the null hypothesis at confidence level α , we compute this t -statistic and use p -values for the t ( k ) distribution, with k = 99 degrees of freedom.
 
