@@ -1,7 +1,8 @@
 # AI-readable paper corpus
 
 `sources/papers/*.pdf` の原本を変更せず、Docling で AI が読みやすい派生コーパスへ
-変換する。生成物は `corpus/` に置き、PDF と同様に Git 管理外とする。
+変換する。原本 PDF と生成物は、それぞれ `sources/papers/` と `corpus/` で Git 管理し、
+論文監査を自己完結させる。
 
 ## 出力
 
