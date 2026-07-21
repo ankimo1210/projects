@@ -1,0 +1,94 @@
+paper_id: gould_bonart_2015
+implementation_profile: gould_bonart_2015_paper
+fidelity_class: B_PAPER_EXACT
+paper_version: arXiv:1512.03492v1
+source_code_commit: null
+dataset_profile: queue_imbalance_synthetic_v1
+random_seed: 7
+model:
+  estimator: logistic_and_local_logistic
+  local_kernel: tricube
+  nearest_neighbor_bandwidth: 0.65
+data:
+  sampling_clock: continuous
+  interval: open
+  observations_per_day: 100
+  trading_days: 252
+  response_up: 1
+  response_down: 0
+split:
+  strategy: random
+  train_fraction: 0.8
+evaluation:
+  metrics:
+  - roc_auc
+  - mean_squared_residual
+  null_probability: 0.5
+material_fields:
+- model.estimator
+- model.local_kernel
+- model.nearest_neighbor_bandwidth
+- data.sampling_clock
+- data.interval
+- data.observations_per_day
+- data.trading_days
+- data.response_up
+- data.response_down
+- split.strategy
+- split.train_fraction
+- evaluation.metrics
+- evaluation.null_probability
+provenance:
+  model.estimator:
+    source_type: PAPER
+    locator: p.13-14 Sec.5.3/5.5
+    confidence: verified
+  model.local_kernel:
+    source_type: PAPER
+    locator: p.14 Sec.5.5
+    confidence: verified
+  model.nearest_neighbor_bandwidth:
+    source_type: PAPER
+    locator: p.22 Sec.6.4
+    confidence: verified
+  data.sampling_clock:
+    source_type: PAPER
+    locator: p.11 Eq.10
+    confidence: verified
+  data.interval:
+    source_type: PAPER
+    locator: p.11 Sec.5.1
+    confidence: verified
+  data.observations_per_day:
+    source_type: PAPER
+    locator: p.12 Sec.5.2
+    confidence: verified
+  data.trading_days:
+    source_type: PAPER
+    locator: p.12 Sec.5.2
+    confidence: verified
+  data.response_up:
+    source_type: PAPER
+    locator: p.11 Eq.9
+    confidence: verified
+  data.response_down:
+    source_type: PAPER
+    locator: p.11 Eq.9
+    confidence: verified
+  split.strategy:
+    source_type: PAPER
+    locator: p.12 Sec.5.2
+    confidence: verified
+  split.train_fraction:
+    source_type: PAPER
+    locator: p.12 Sec.5.2
+    confidence: verified
+  evaluation.metrics:
+    source_type: PAPER
+    locator: p.14 Sec.5.4
+    confidence: verified
+  evaluation.null_probability:
+    source_type: PAPER
+    locator: p.14 Eq.18
+    confidence: verified
+unresolved_material_fields: []

@@ -1,0 +1,195 @@
+{
+  "paper_id": "deeplob",
+  "implementation_profile": "deeplob_author_tf2_ff14d7c",
+  "fidelity_class": "A_AUTHOR_CODE_EXACT",
+  "paper_version": "arXiv:1808.03668v6",
+  "source_code_commit": "ff14d7c2fd38bdfc143389786993d0f0236d4eb8",
+  "dataset_profile": "deterministic_synthetic_smoke_v1",
+  "random_seed": {
+    "numpy": 1,
+    "tensorflow": 2
+  },
+  "sources": [
+    {
+      "paper_id": "deeplob",
+      "canonical_title": "DeepLOB: Deep Convolutional Neural Networks for Limit Order Books",
+      "authors": [
+        "Zihao Zhang",
+        "Stefan Zohren",
+        "Stephen Roberts"
+      ],
+      "arxiv_id": "1808.03668",
+      "arxiv_version": "v6",
+      "paper_version": "IEEE Transactions on Signal Processing 67(11), 2019; arXiv v6",
+      "doi": "10.1109/TSP.2019.2907260",
+      "source_url": "https://arxiv.org/pdf/1808.03668v6",
+      "retrieved_at_utc": "2026-07-20T09:11:11Z",
+      "local_path": "sources/papers/deeplob_1808.03668v6.pdf",
+      "sha256": "f50d57a80644ac427433824b540c9bc713ffd2249c2042ba975d986078295913"
+    },
+    {
+      "repository": "zcakhaa/DeepLOB-Deep-Convolutional-Neural-Networks-for-Limit-Order-Books",
+      "repository_url": "https://github.com/zcakhaa/DeepLOB-Deep-Convolutional-Neural-Networks-for-Limit-Order-Books",
+      "commit": "ff14d7c2fd38bdfc143389786993d0f0236d4eb8",
+      "commit_tree": "698a9ccb95bb8d010bad058dba91b8f5f32e7387",
+      "commit_date_utc": "2021-07-15T11:24:33Z",
+      "archive_url": "https://codeload.github.com/zcakhaa/DeepLOB-Deep-Convolutional-Neural-Networks-for-Limit-Order-Books/tar.gz/ff14d7c2fd38bdfc143389786993d0f0236d4eb8",
+      "archive_sha256": "797bc60f912e6eca6d651e5f4c0dc677c4e0f778618b3167f3f20a80005da08a",
+      "retrieved_at_utc": "2026-07-20T09:11:11Z",
+      "local_path": "sources/references/deeplob_ff14d7c",
+      "license_file": null,
+      "license_status": "absent",
+      "vendoring_allowed": false,
+      "files_used_as_evidence": [
+        {
+          "path": "README.md",
+          "sha256": "ab1541a54a60275b7675a2299c173c3ece9f8b59b43665c66acab3ffbffa6074"
+        },
+        {
+          "path": "jupyter_pytorch/run_train_pytorch.ipynb",
+          "sha256": "17ec6a668d3daf562694dcf365041fe6778ac2475db1a701d89c871f6b870cc1"
+        },
+        {
+          "path": "jupyter_tensorflow/run_train_tensorflow-version2.ipynb",
+          "sha256": "5f5bc6b50c74dc1ecc944c730935d4bc1c6c19ef101dd763b9cb0dbd34605940"
+        }
+      ]
+    },
+    {
+      "paper_id": "fi2010",
+      "canonical_title": "Benchmark Dataset for Mid-Price Forecasting of Limit Order Book Data with Machine Learning Methods",
+      "authors": [
+        "Adamantios Ntakaris",
+        "Martin Magris",
+        "Juho Kanniainen",
+        "Moncef Gabbouj",
+        "Alexandros Iosifidis"
+      ],
+      "arxiv_id": "1705.03233",
+      "arxiv_version": "v5",
+      "doi": "10.1002/for.2543",
+      "source_url": "https://arxiv.org/pdf/1705.03233v5",
+      "retrieved_at_utc": "2026-07-20T09:11:11Z",
+      "local_path": "sources/papers/fi2010_1705.03233v5.pdf",
+      "sha256": "22d856cd9e1d951ddcec917bd7fcaf7e83f233b39c05f6a990617f32d201b31d"
+    },
+    {
+      "paper_id": "gould_bonart_2015",
+      "canonical_title": "Queue Imbalance as a One-Tick-Ahead Price Predictor in a Limit Order Book",
+      "authors": [
+        "Martin D. Gould",
+        "Julius Bonart"
+      ],
+      "arxiv_id": "1512.03492",
+      "arxiv_version": "v1",
+      "doi": "10.48550/arXiv.1512.03492",
+      "source_url": "https://arxiv.org/pdf/1512.03492v1",
+      "retrieved_at_utc": "2026-07-20T09:11:11Z",
+      "local_path": "sources/papers/gould_bonart_1512.03492v1.pdf",
+      "sha256": "a5051285adfe2d8a2d7f46a758486f357d556a46a964bc89b245de7e7a0bc338"
+    },
+    {
+      "paper_id": "sirignano_cont_2019",
+      "canonical_title": "Universal features of price formation in financial markets: perspectives from Deep Learning",
+      "authors": [
+        "Justin Sirignano",
+        "Rama Cont"
+      ],
+      "arxiv_id": "1803.06917",
+      "arxiv_version": "v1",
+      "doi": "10.48550/arXiv.1803.06917",
+      "source_url": "https://arxiv.org/pdf/1803.06917v1",
+      "retrieved_at_utc": "2026-07-20T09:11:11Z",
+      "local_path": "sources/papers/sirignano_cont_1803.06917v1.pdf",
+      "sha256": "8ae07ac2ae3bd803210f36acfca5a4ceb298acdd1b8f9a9d44a036822dd964fd"
+    },
+    {
+      "paper_id": "tlob_2025",
+      "canonical_title": "TLOB: A Novel Transformer Model with Dual Attention for Price Trend Prediction with Limit Order Book Data",
+      "authors": [
+        "Leonardo Berti",
+        "Gjergji Kasneci"
+      ],
+      "arxiv_id": "2502.15757",
+      "arxiv_version": "v3",
+      "doi": "10.48550/arXiv.2502.15757",
+      "source_url": "https://arxiv.org/pdf/2502.15757v3",
+      "retrieved_at_utc": "2026-07-20T09:11:11Z",
+      "local_path": "sources/papers/tlob_2502.15757v3.pdf",
+      "sha256": "da90d24cfcc7a0074187fd7d2c6d27c4a7ffbcc86cece5dd4d5ba12901e2e03b"
+    },
+    {
+      "repository": "LeonardoBerti00/TLOB",
+      "repository_url": "https://github.com/LeonardoBerti00/TLOB",
+      "commit": "f1c0af4d81067978914361766db0457a7d8b6a46",
+      "commit_tree": "8e9890f8a00b5764c3edd73448fc1f65ba124447",
+      "commit_date_utc": "2026-02-24T17:41:05Z",
+      "archive_url": "https://codeload.github.com/LeonardoBerti00/TLOB/tar.gz/f1c0af4d81067978914361766db0457a7d8b6a46",
+      "archive_sha256": "8e0c9acc0b2d89b6f36ea7b57a9915a48c4a8112897a7d93c76a26fe3f46d916",
+      "retrieved_at_utc": "2026-07-20T09:11:11Z",
+      "local_path": "sources/references/tlob_f1c0af4",
+      "license_file": "LICENSE",
+      "license_status": "confirmed",
+      "license_spdx": "MIT",
+      "vendoring_allowed": true,
+      "files_used_as_evidence": [
+        {
+          "path": "LICENSE",
+          "sha256": "622476939f6aad03c8c80fcd25a131b7ebaecdf44f23e8ee5423d9494f34f5c3"
+        },
+        {
+          "path": "config/config.py",
+          "sha256": "3b14ee43f6114c01e2f092c474a0107a7ffd2cd5aa5dd3da7f2b116a7f37c110"
+        },
+        {
+          "path": "constants.py",
+          "sha256": "e3a66aa7f65b0f32fa742468911e96190bdd896fbe56a5653cecdc82d8a291ae"
+        },
+        {
+          "path": "main.py",
+          "sha256": "081b15814f2d0a3b45bf07162894a2b782c5462f2418bc79cc88ab963cfb2cb5"
+        },
+        {
+          "path": "run.py",
+          "sha256": "3a7f67431352c73a4cdac2a873b7f671b289d883897d557bb3e5e73b7e871c50"
+        },
+        {
+          "path": "requirements.txt",
+          "sha256": "90385e5692c18ab668292e80e8ee94633bd2408fdd2227fbc9b24b387753bd97"
+        },
+        {
+          "path": "models/bin.py",
+          "sha256": "1efd98dbad2a40612879b3148ef7bf534b2b100ce95d671f13dd3de91684807d"
+        },
+        {
+          "path": "models/engine.py",
+          "sha256": "3ce9779fd0216341d738130ee64896564a079889aa2fcbd448f7f2112ca57c94"
+        },
+        {
+          "path": "models/mlplob.py",
+          "sha256": "dbd518a3757bc56f90de96a0b89ec45e1c2c146de29b813efa784430f212ac61"
+        },
+        {
+          "path": "models/tlob.py",
+          "sha256": "607e69dac8e87f978cbec338db612437ebd3b097e79bca0064fee166d347c55e"
+        },
+        {
+          "path": "preprocessing/fi_2010.py",
+          "sha256": "4d8b55bfb6c29416f1b6a7e9595b0feff9dc967ed67acfab17d5d9d6055ab16e"
+        },
+        {
+          "path": "preprocessing/dataset.py",
+          "sha256": "eadb2dc867e8e739f70a2cbbf65282121082a2bb699d93bd5ee7f979b8a99e38"
+        },
+        {
+          "path": "preprocessing/lobster.py",
+          "sha256": "48a31b7d3726b247260902cda24de5d7f6ade870dfa4107a4a3776c908c780d6"
+        },
+        {
+          "path": "utils/utils_data.py",
+          "sha256": "5161f8a3a5542e27633d85c0fd121bb147ba5f80b6056360b589f9484eca2676"
+        }
+      ]
+    }
+  ]
+}

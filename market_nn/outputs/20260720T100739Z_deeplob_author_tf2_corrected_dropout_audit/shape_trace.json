@@ -1,0 +1,78 @@
+[
+  {
+    "name": "input_BTFC",
+    "shape": [
+      2,
+      100,
+      40,
+      1
+    ]
+  },
+  {
+    "name": "conv_block_1",
+    "shape": [
+      2,
+      100,
+      20,
+      32
+    ]
+  },
+  {
+    "name": "conv_block_2",
+    "shape": [
+      2,
+      100,
+      10,
+      32
+    ]
+  },
+  {
+    "name": "conv_block_3",
+    "shape": [
+      2,
+      100,
+      1,
+      32
+    ]
+  },
+  {
+    "name": "inception_concat_channels",
+    "shape": [
+      2,
+      100,
+      1,
+      192
+    ]
+  },
+  {
+    "name": "named_reshape_spatial_singleton_to_sequence",
+    "shape": [
+      2,
+      100,
+      192
+    ],
+    "permutation": "B,T,1,C -> B,T,C"
+  },
+  {
+    "name": "standard_mode_aware_dropout",
+    "shape": [
+      2,
+      100,
+      192
+    ]
+  },
+  {
+    "name": "lstm_last",
+    "shape": [
+      2,
+      64
+    ]
+  },
+  {
+    "name": "three_class_softmax",
+    "shape": [
+      2,
+      3
+    ]
+  }
+]

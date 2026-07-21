@@ -1,0 +1,14 @@
+[
+  {
+    "code": "SYNTHETIC_ONLY",
+    "message": "Synthetic structure test; paper-reported accuracy/F1 was not attempted."
+  },
+  {
+    "code": "NO_REFERENCE_EXECUTION",
+    "message": "This smoke validates the clean-room target; it did not execute fetched reference code side-by-side."
+  },
+  {
+    "code": "UNRESOLVED_MATERIAL_FIELDS",
+    "message": "Unresolved fields: training.adam_epsilon, training.framework_version"
+  }
+]

@@ -1,0 +1,30 @@
+{
+  "total": 3016782,
+  "trainable": 3016782,
+  "by_parameter_owner": {
+    "final_layers.0": 230640,
+    "final_layers.2": 14460,
+    "final_layers.4": 183,
+    "layers.0": 5800,
+    "layers.2.fc": 6560,
+    "layers.2.fc2": 6440,
+    "layers.2.layer_norm": 80,
+    "layers.3.fc": 591360,
+    "layers.3.fc2": 590208,
+    "layers.3.layer_norm": 768,
+    "layers.4.fc": 6560,
+    "layers.4.fc2": 6440,
+    "layers.4.layer_norm": 80,
+    "layers.5.fc": 591360,
+    "layers.5.fc2": 590208,
+    "layers.5.layer_norm": 768,
+    "layers.6.fc": 3280,
+    "layers.6.fc2": 810,
+    "layers.6.layer_norm": 20,
+    "layers.7.fc": 295680,
+    "layers.7.fc2": 73824,
+    "layers.7.layer_norm": 192,
+    "norm_layer": 1058,
+    "order_type_embedder": 3
+  }
+}

@@ -1,0 +1,86 @@
+paper_id: deeplob
+implementation_profile: deeplob_author_pytorch_ff14d7c
+fidelity_class: A_AUTHOR_CODE_EXACT
+paper_version: arXiv:1808.03668v6
+source_code_commit: ff14d7c2fd38bdfc143389786993d0f0236d4eb8
+dataset_profile: fi2010_noauction_decpre_cf7_8_9
+random_seed: 7
+model:
+  input_layout: BCTF
+  sequence_length: 100
+  raw_features: 40
+  conv_channels: 32
+  inception_branch_channels: 64
+  lstm_hidden: 64
+  temporal_padding: valid
+  block_2_activation: Tanh
+  batch_normalization: true
+  output: softmax_probabilities
+  expected_parameters: 143907
+data:
+  train_fraction: 0.8
+  horizon_index: 4
+  horizon_events: 100
+  class_order:
+  - up
+  - stationary
+  - down
+training:
+  loss: CrossEntropyLoss_on_probabilities
+  optimizer: Adam
+  learning_rate: 0.0001
+  batch_size: 64
+  train_shuffle: true
+material_fields:
+- model.input_layout
+- model.temporal_padding
+- model.block_2_activation
+- model.batch_normalization
+- model.output
+- model.expected_parameters
+- data.horizon_index
+- training.loss
+- training.learning_rate
+- training.batch_size
+provenance:
+  model.input_layout:
+    source_type: AUTHOR_CODE
+    locator: PyTorch notebook Dataset unsqueeze
+    confidence: verified
+  model.temporal_padding:
+    source_type: AUTHOR_CODE
+    locator: PyTorch notebook Conv2d temporal calls omit padding
+    confidence: verified
+  model.block_2_activation:
+    source_type: AUTHOR_CODE
+    locator: PyTorch notebook conv2
+    confidence: verified
+  model.batch_normalization:
+    source_type: AUTHOR_CODE
+    locator: PyTorch notebook conv/inception blocks
+    confidence: verified
+  model.output:
+    source_type: AUTHOR_CODE
+    locator: PyTorch notebook forward torch.softmax
+    confidence: verified
+  model.expected_parameters:
+    source_type: AUTHOR_CODE
+    locator: PyTorch notebook displayed summary
+    confidence: verified
+  data.horizon_index:
+    source_type: AUTHOR_CODE
+    locator: PyTorch notebook Dataset(..., k=4)
+    confidence: verified
+  training.loss:
+    source_type: AUTHOR_CODE
+    locator: PyTorch notebook CrossEntropyLoss with model probabilities
+    confidence: verified
+  training.learning_rate:
+    source_type: AUTHOR_CODE
+    locator: PyTorch notebook Adam lr=.0001
+    confidence: verified
+  training.batch_size:
+    source_type: AUTHOR_CODE
+    locator: PyTorch notebook batch_size=64
+    confidence: verified
+unresolved_material_fields: []

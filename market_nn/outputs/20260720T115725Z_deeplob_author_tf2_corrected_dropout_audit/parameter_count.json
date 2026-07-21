@@ -1,0 +1,14 @@
+{
+  "total": 142435,
+  "trainable": 142435,
+  "by_parameter_owner": {
+    "conv_block_1": 8352,
+    "conv_block_2": 10336,
+    "conv_block_3": 18528,
+    "inception_branch_3": 14464,
+    "inception_branch_5": 22656,
+    "inception_branch_pool": 2112,
+    "lstm": 65792,
+    "dense": 195
+  }
+}

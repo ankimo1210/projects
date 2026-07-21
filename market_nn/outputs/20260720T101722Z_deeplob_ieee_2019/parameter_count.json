@@ -1,0 +1,22 @@
+{
+  "total": 60947,
+  "trainable": 60947,
+  "by_parameter_owner": {
+    "block_1.0": 48,
+    "block_1.2": 1040,
+    "block_1.4": 1040,
+    "block_2.0": 528,
+    "block_2.2": 1040,
+    "block_2.4": 1040,
+    "block_3.0": 2576,
+    "block_3.2": 1040,
+    "block_3.4": 1040,
+    "classifier": 195,
+    "inception.branch_3.0": 544,
+    "inception.branch_3.2": 3104,
+    "inception.branch_5.0": 544,
+    "inception.branch_5.2": 5152,
+    "inception.branch_pool.1": 544,
+    "lstm": 41472
+  }
+}

@@ -1,0 +1,318 @@
+[
+  {
+    "name": "input_BSF",
+    "shape": [
+      2,
+      128,
+      144
+    ]
+  },
+  {
+    "name": "prepared_features",
+    "shape": [
+      2,
+      128,
+      144
+    ]
+  },
+  {
+    "name": "permute_for_BiN",
+    "shape": [
+      2,
+      144,
+      128
+    ],
+    "permutation": "B,S,F -> B,F,S"
+  },
+  {
+    "name": "BiN_then_restore_BSF",
+    "shape": [
+      2,
+      128,
+      144
+    ]
+  },
+  {
+    "name": "feature_projection_plus_position",
+    "shape": [
+      2,
+      128,
+      144
+    ]
+  },
+  {
+    "name": "temporal_attention_layer_0",
+    "shape": [
+      2,
+      128,
+      144
+    ],
+    "input_shape": [
+      2,
+      128,
+      144
+    ],
+    "attention_shape": [
+      2,
+      1,
+      128,
+      128
+    ],
+    "causal_mask": false
+  },
+  {
+    "name": "axis_permutation_after_temporal_0",
+    "shape": [
+      2,
+      144,
+      128
+    ],
+    "permutation": "swap axes 1 and 2"
+  },
+  {
+    "name": "feature_attention_layer_1",
+    "shape": [
+      2,
+      144,
+      128
+    ],
+    "input_shape": [
+      2,
+      144,
+      128
+    ],
+    "attention_shape": [
+      2,
+      1,
+      144,
+      144
+    ],
+    "causal_mask": false
+  },
+  {
+    "name": "axis_permutation_after_feature_1",
+    "shape": [
+      2,
+      128,
+      144
+    ],
+    "permutation": "swap axes 1 and 2"
+  },
+  {
+    "name": "temporal_attention_layer_2",
+    "shape": [
+      2,
+      128,
+      144
+    ],
+    "input_shape": [
+      2,
+      128,
+      144
+    ],
+    "attention_shape": [
+      2,
+      1,
+      128,
+      128
+    ],
+    "causal_mask": false
+  },
+  {
+    "name": "axis_permutation_after_temporal_2",
+    "shape": [
+      2,
+      144,
+      128
+    ],
+    "permutation": "swap axes 1 and 2"
+  },
+  {
+    "name": "feature_attention_layer_3",
+    "shape": [
+      2,
+      144,
+      128
+    ],
+    "input_shape": [
+      2,
+      144,
+      128
+    ],
+    "attention_shape": [
+      2,
+      1,
+      144,
+      144
+    ],
+    "causal_mask": false
+  },
+  {
+    "name": "axis_permutation_after_feature_3",
+    "shape": [
+      2,
+      128,
+      144
+    ],
+    "permutation": "swap axes 1 and 2"
+  },
+  {
+    "name": "temporal_attention_layer_4",
+    "shape": [
+      2,
+      128,
+      144
+    ],
+    "input_shape": [
+      2,
+      128,
+      144
+    ],
+    "attention_shape": [
+      2,
+      1,
+      128,
+      128
+    ],
+    "causal_mask": false
+  },
+  {
+    "name": "axis_permutation_after_temporal_4",
+    "shape": [
+      2,
+      144,
+      128
+    ],
+    "permutation": "swap axes 1 and 2"
+  },
+  {
+    "name": "feature_attention_layer_5",
+    "shape": [
+      2,
+      144,
+      128
+    ],
+    "input_shape": [
+      2,
+      144,
+      128
+    ],
+    "attention_shape": [
+      2,
+      1,
+      144,
+      144
+    ],
+    "causal_mask": false
+  },
+  {
+    "name": "axis_permutation_after_feature_5",
+    "shape": [
+      2,
+      128,
+      144
+    ],
+    "permutation": "swap axes 1 and 2"
+  },
+  {
+    "name": "temporal_attention_layer_6",
+    "shape": [
+      2,
+      128,
+      36
+    ],
+    "input_shape": [
+      2,
+      128,
+      144
+    ],
+    "attention_shape": [
+      2,
+      1,
+      128,
+      128
+    ],
+    "causal_mask": false
+  },
+  {
+    "name": "axis_permutation_after_temporal_6",
+    "shape": [
+      2,
+      36,
+      128
+    ],
+    "permutation": "swap axes 1 and 2"
+  },
+  {
+    "name": "feature_attention_layer_7",
+    "shape": [
+      2,
+      36,
+      32
+    ],
+    "input_shape": [
+      2,
+      36,
+      128
+    ],
+    "attention_shape": [
+      2,
+      1,
+      36,
+      36
+    ],
+    "causal_mask": false
+  },
+  {
+    "name": "axis_permutation_after_feature_7",
+    "shape": [
+      2,
+      32,
+      36
+    ],
+    "permutation": "swap axes 1 and 2"
+  },
+  {
+    "name": "feature_major_flatten",
+    "shape": [
+      2,
+      1152
+    ],
+    "permutation": "B,S,F -> B,F,S -> B,(F*S)"
+  },
+  {
+    "name": "final_0_Linear",
+    "shape": [
+      2,
+      288
+    ]
+  },
+  {
+    "name": "final_1_GELU",
+    "shape": [
+      2,
+      288
+    ]
+  },
+  {
+    "name": "final_2_Linear",
+    "shape": [
+      2,
+      72
+    ]
+  },
+  {
+    "name": "final_3_GELU",
+    "shape": [
+      2,
+      72
+    ]
+  },
+  {
+    "name": "final_4_Linear",
+    "shape": [
+      2,
+      3
+    ]
+  }
+]

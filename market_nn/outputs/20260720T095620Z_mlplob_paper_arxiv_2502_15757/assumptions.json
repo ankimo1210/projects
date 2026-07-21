@@ -1,0 +1,11 @@
+{
+  "profile_assumption_ids": [
+    "MLPLOB-A001",
+    "TLOB-A002"
+  ],
+  "unresolved_material_fields": [
+    "model.hidden_dim",
+    "model.bin_mode"
+  ],
+  "sirignano_cont_catalog": []
+}

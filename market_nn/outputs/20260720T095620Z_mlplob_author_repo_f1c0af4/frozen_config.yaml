@@ -1,0 +1,72 @@
+paper_id: tlob_2025
+implementation_profile: mlplob_author_repo_f1c0af4
+fidelity_class: A_AUTHOR_CODE_EXACT
+paper_version: arXiv:2502.15757v3
+source_code_commit: f1c0af4d81067978914361766db0457a7d8b6a46
+dataset_profile: fi2010_synthetic_v1
+random_seed: 7
+model:
+  sequence_length: 384
+  num_layers: 3
+  hidden_dim: 40
+  bin_mode: reference_compat
+  all_features: true
+  detach_order_type_embedding: true
+data:
+  features: 144
+  horizons:
+  - 10
+  - 20
+  - 50
+  - 100
+  class_order:
+  - up
+  - stationary
+  - down
+  batch_size: 32
+training:
+  loss: CrossEntropyLoss
+  optimizer: Adam
+  learning_rate: 0.0003
+  adam_epsilon: 1.0e-08
+  ema_decay: 0.999
+  validation_under_ema: true
+  metric: macro_f1
+material_fields:
+- model.sequence_length
+- model.num_layers
+- model.hidden_dim
+- model.bin_mode
+- model.detach_order_type_embedding
+- training.learning_rate
+- training.ema_decay
+provenance:
+  model.sequence_length:
+    source_type: AUTHOR_CODE
+    locator: config/config.py:14-18
+    confidence: verified
+  model.num_layers:
+    source_type: AUTHOR_CODE
+    locator: config/config.py:14-18
+    confidence: verified
+  model.hidden_dim:
+    source_type: AUTHOR_CODE
+    locator: config/config.py:14-18
+    confidence: verified
+  model.bin_mode:
+    source_type: AUTHOR_CODE
+    locator: models/bin.py:5-85
+    confidence: verified
+  model.detach_order_type_embedding:
+    source_type: AUTHOR_CODE
+    locator: models/mlplob.py:40-45
+    confidence: verified
+  training.learning_rate:
+    source_type: AUTHOR_CODE
+    locator: config/config.py:14-18
+    confidence: verified
+  training.ema_decay:
+    source_type: AUTHOR_CODE
+    locator: models/engine.py:55
+    confidence: verified
+unresolved_material_fields: []

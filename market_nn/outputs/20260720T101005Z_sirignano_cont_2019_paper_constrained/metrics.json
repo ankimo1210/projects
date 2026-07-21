@@ -1,0 +1,40 @@
+{
+  "architecture_verified": true,
+  "output_rows": 2,
+  "probability_rows_sum_to_one": true,
+  "numerical_benchmark_attempted": false,
+  "runtime": "torch 2.11.0+cu128",
+  "synthetic_protocol_linear": {
+    "asset_specific_linear_accuracy": {
+      "0": 0.925,
+      "1": 0.8916666666666667,
+      "2": 0.9666666666666667,
+      "3": 0.95
+    },
+    "universal_pooled_linear_unseen_accuracy": 0.9116666666666666,
+    "universal_pooled_linear_by_unseen_asset": {
+      "4": 0.9083333333333333,
+      "5": 0.915
+    },
+    "claim_limit": "synthetic protocol test only"
+  },
+  "synthetic_protocol_lstm_scaled": {
+    "asset_specific_lstm_accuracy": {
+      "0": 0.6666666666666666,
+      "1": 0.5,
+      "2": 0.5833333333333334,
+      "3": 0.5
+    },
+    "universal_pooled_lstm_unseen_accuracy": 0.4649122807017544,
+    "universal_pooled_final_training_loss": 0.6873576045036316,
+    "configuration": {
+      "history": 20,
+      "stride": 10,
+      "hidden_units": 6,
+      "epochs": 3,
+      "optimizer": "Adam",
+      "learning_rate": 0.02
+    },
+    "claim_limit": "scaled synthetic LSTM protocol test only"
+  }
+}

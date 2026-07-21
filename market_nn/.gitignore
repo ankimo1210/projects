@@ -12,7 +12,6 @@ build/
 # AI-readable corpus are intentionally tracked for self-contained research.
 sources/references/
 tmp/
-outputs/
 
 # Public benchmark data is never committed by default.
 data/raw/

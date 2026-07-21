@@ -1,0 +1,7 @@
+{
+  "architecture_verified": true,
+  "output_rows": 2,
+  "probability_rows_sum_to_one": true,
+  "numerical_benchmark_attempted": false,
+  "runtime": "analytic TensorFlow specification"
+}

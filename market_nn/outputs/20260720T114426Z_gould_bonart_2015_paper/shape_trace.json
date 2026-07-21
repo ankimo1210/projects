@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Level1EventStream",
+    "shape": [
+      6720,
+      7
+    ]
+  },
+  {
+    "name": "strict_open_interval_samples",
+    "shape": [
+      1200,
+      1
+    ]
+  },
+  {
+    "name": "random_or_chronological_split",
+    "shape": [
+      960,
+      240
+    ]
+  },
+  {
+    "name": "probability_forecasts",
+    "shape": [
+      240,
+      2
+    ]
+  }
+]

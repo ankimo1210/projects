@@ -1,0 +1,78 @@
+{
+  "seed": 7,
+  "claim_limit": "structural fixtures only",
+  "fi2010": {
+    "shape": [
+      149,
+      1800
+    ],
+    "raw_rows": [
+      0,
+      40
+    ],
+    "engineered_rows": [
+      40,
+      144
+    ],
+    "label_rows": {
+      "10": 144,
+      "20": 145,
+      "30": 146,
+      "50": 147,
+      "100": 148
+    },
+    "instrument_order": [
+      "KESBV",
+      "OUT1V",
+      "SAMPO",
+      "RTRKS",
+      "WRT1V"
+    ],
+    "day_boundaries": [
+      180,
+      360,
+      540,
+      720,
+      900,
+      1080,
+      1260,
+      1440,
+      1620
+    ]
+  },
+  "queue": {
+    "days": 4,
+    "observations": 400
+  },
+  "universal": {
+    "universal_mapping": true,
+    "training_assets": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "unseen_assets": [
+      4,
+      5
+    ],
+    "sectors": [
+      0,
+      1,
+      2,
+      0,
+      1,
+      2
+    ],
+    "feature_names": [
+      "queue_imbalance",
+      "order_flow",
+      "spread",
+      "log_depth",
+      "recent_direction",
+      "relative_price",
+      "event_intensity",
+      "stock_specific_state"
+    ]
+  }
+}

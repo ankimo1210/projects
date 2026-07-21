@@ -1,0 +1,111 @@
+paper_id: tlob_2025
+implementation_profile: tlob_author_repo_f1c0af4
+fidelity_class: A_AUTHOR_CODE_EXACT
+paper_version: arXiv:2502.15757v3
+source_code_commit: f1c0af4d81067978914361766db0457a7d8b6a46
+dataset_profile: fi2010_synthetic_v1
+random_seed: 7
+model:
+  sequence_length: 128
+  num_layers: 4
+  hidden_dim: 40
+  num_heads: 1
+  positional_embedding: sinusoidal
+  bin_mode: reference_compat
+  attention_mask: none
+  attention_dropout: 0.0
+  all_features: true
+  detach_order_type_embedding: true
+data:
+  features: 144
+  horizons:
+  - 10
+  - 20
+  - 50
+  - 100
+  class_order:
+  - up
+  - stationary
+  - down
+  batch_size: 32
+training:
+  loss: CrossEntropyLoss
+  optimizer: Adam
+  learning_rate: 0.0001
+  adam_epsilon: 1.0e-08
+  ema_decay: 0.999
+  validation_under_ema: true
+  metric: macro_f1
+material_fields:
+- model.sequence_length
+- model.num_layers
+- model.hidden_dim
+- model.num_heads
+- model.bin_mode
+- model.attention_mask
+- model.attention_dropout
+- model.detach_order_type_embedding
+- data.features
+- data.batch_size
+- training.loss
+- training.learning_rate
+- training.ema_decay
+- training.validation_under_ema
+provenance:
+  model.sequence_length:
+    source_type: AUTHOR_CODE
+    locator: config/config.py:21-24
+    confidence: verified
+  model.num_layers:
+    source_type: AUTHOR_CODE
+    locator: config/config.py:21-24
+    confidence: verified
+  model.hidden_dim:
+    source_type: AUTHOR_CODE
+    locator: config/config.py:21-24
+    confidence: verified
+  model.num_heads:
+    source_type: AUTHOR_CODE
+    locator: config/config.py:21-24
+    confidence: verified
+  model.bin_mode:
+    source_type: AUTHOR_CODE
+    locator: models/bin.py:5-85
+    confidence: verified
+  model.attention_mask:
+    source_type: AUTHOR_CODE
+    locator: models/tlob.py:39-49
+    confidence: verified
+  model.attention_dropout:
+    source_type: AUTHOR_CODE
+    locator: models/tlob.py:35 default
+    confidence: verified
+  model.detach_order_type_embedding:
+    source_type: AUTHOR_CODE
+    locator: models/tlob.py:100-105
+    confidence: verified
+  data.features:
+    source_type: AUTHOR_CODE
+    locator: preprocessing/fi_2010.py:37-44
+    confidence: verified
+  data.batch_size:
+    source_type: AUTHOR_CODE
+    locator: config/config.py:45-49
+    confidence: verified
+  training.loss:
+    source_type: AUTHOR_CODE
+    locator: models/engine.py:55-57
+    confidence: verified
+  training.learning_rate:
+    source_type: AUTHOR_CODE
+    locator: config/config.py:21-24
+    confidence: verified
+  training.ema_decay:
+    source_type: AUTHOR_CODE
+    locator: models/engine.py:55
+    confidence: verified
+  training.validation_under_ema:
+    source_type: AUTHOR_CODE
+    locator: models/engine.py:94-104
+    confidence: verified
+unresolved_material_fields: []
