@@ -1,0 +1,10 @@
+{
+  "virtualagc": {
+    "url": "https://github.com/virtualagc/virtualagc.git",
+    "sha": "912bd4619fae37fe9a850a95bc0028db050e1c56"
+  },
+  "Apollo-11": {
+    "url": "https://github.com/chrislgarry/Apollo-11.git",
+    "sha": "911e5c0283c629c50cb97666f34065e8c07d71a5"
+  }
+}
