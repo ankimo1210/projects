@@ -27,7 +27,7 @@ pub struct Lamps {
     pub prio_disp: bool,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy)]
 pub struct DskyState {
     pub prog: [char; 2],
     pub verb: [char; 2],
@@ -42,10 +42,39 @@ pub struct DskyState {
     pub key_rel: bool,
     pub opr_err: bool,
     pub temp: bool,
-    // internal: sign is driven by two rows (plus-row and minus-row)
+    // internal: sign is driven by two rows (plus-row and minus-row). Not
+    // part of crew-visible state, so deliberately excluded from PartialEq
+    // below (see `apply`'s change-detection contract).
     plus: [bool; 3],
     minus: [bool; 3],
 }
+
+/// Equality (and thus `apply`'s change-detection) is defined over the
+/// crew-visible fields only. `plus`/`minus` are internal per-register sign
+/// bookkeeping: two rows can toggle them without changing the resolved
+/// `sign` (e.g. the `+` row already set, then the `-` row toggles — `+`
+/// keeps priority), and they never appear in any public field. Including
+/// them in equality would make `apply()` report spurious "visible change"
+/// events for state nobody can see.
+impl PartialEq for DskyState {
+    fn eq(&self, other: &Self) -> bool {
+        self.prog == other.prog
+            && self.verb == other.verb
+            && self.noun == other.noun
+            && self.r1 == other.r1
+            && self.r2 == other.r2
+            && self.r3 == other.r3
+            && self.lamps == other.lamps
+            && self.verb_noun_flash == other.verb_noun_flash
+            && self.restart == other.restart
+            && self.standby == other.standby
+            && self.key_rel == other.key_rel
+            && self.opr_err == other.opr_err
+            && self.temp == other.temp
+    }
+}
+
+impl Eq for DskyState {}
 
 impl Default for DskyState {
     fn default() -> Self {
@@ -214,5 +243,21 @@ mod tests {
         let p = relay(10, 0, 0b00011, 0b11100);
         assert!(s.apply(&p));
         assert!(!s.apply(&p)); // same word again: no visible change
+    }
+
+    #[test]
+    fn internal_sign_bookkeeping_change_is_not_visible() {
+        let mut s = DskyState::default();
+        // Row 7 sets the R1 "+" row: resolved sign flips ' ' -> '+', a
+        // visible change.
+        assert!(s.apply(&relay(7, 1, 0, 0)));
+        assert_eq!(s.r1.sign, '+');
+        // Row 6 now sets the R1 "-" row too. This flips the internal
+        // `minus[0]` bookkeeping bit, but `+` keeps priority so the
+        // resolved sign (and every digit) is unchanged: nothing visible
+        // changed, so apply() must report false even though a private
+        // field flipped.
+        assert!(!s.apply(&relay(6, 1, 0, 0)));
+        assert_eq!(s.r1.sign, '+');
     }
 }
