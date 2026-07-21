@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "paper_id": "ref_zhang_multihorizon_2105.10430",
+  "title": "Multi-Horizon Forecasting for Limit Order Books: Novel Deep Learning Approaches and Hardware Acceleration using Intelligent Processing Units",
+  "source": {
+    "path": "sources/papers/ref_zhang_multihorizon_2105.10430.pdf",
+    "filename": "ref_zhang_multihorizon_2105.10430.pdf",
+    "sha256": "f37c600e478d3eb598d98a286b4dcc631c50ef19f2e42d8e3eb33e61f5e6c8f2",
+    "bytes": 509695
+  },
+  "conversion": {
+    "tool": "docling",
+    "version": "2.114.0",
+    "generated_at": "2026-07-21T14:08:42.365382+00:00",
+    "device": "auto",
+    "ocr": false,
+    "table_mode": "accurate",
+    "formula_enrichment": false,
+    "chunker": "hybrid",
+    "chunk_max_tokens": 480
+  },
+  "document": {
+    "pages": 18,
+    "text_blocks": 498,
+    "tables": 7,
+    "pictures": 7,
+    "markdown_chars": 78599,
+    "math_blocks": 0,
+    "chunks": 72,
+    "max_chunk_tokens": 492,
+    "pages_in_chunks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ]
+  },
+  "quality": {
+    "source_text_chars": 51340,
+    "markdown_to_source_text_ratio": 1.531,
+    "has_abstract": true,
+    "has_references": true
+  }
+}

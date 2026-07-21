@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "paper_id": "ref_vaswani_attention_1706.03762",
+  "title": "Attention Is All You Need",
+  "source": {
+    "path": "sources/papers/ref_vaswani_attention_1706.03762.pdf",
+    "filename": "ref_vaswani_attention_1706.03762.pdf",
+    "sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+    "bytes": 2215244
+  },
+  "conversion": {
+    "tool": "docling",
+    "version": "2.114.0",
+    "generated_at": "2026-07-21T14:08:42.265063+00:00",
+    "device": "auto",
+    "ocr": false,
+    "table_mode": "accurate",
+    "formula_enrichment": false,
+    "chunker": "hybrid",
+    "chunk_max_tokens": 480
+  },
+  "document": {
+    "pages": 15,
+    "text_blocks": 458,
+    "tables": 4,
+    "pictures": 6,
+    "markdown_chars": 49461,
+    "math_blocks": 0,
+    "chunks": 44,
+    "max_chunk_tokens": 487,
+    "pages_in_chunks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ]
+  },
+  "quality": {
+    "source_text_chars": 39916,
+    "markdown_to_source_text_ratio": 1.2391,
+    "has_abstract": true,
+    "has_references": true
+  }
+}
