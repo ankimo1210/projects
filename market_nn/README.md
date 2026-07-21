@@ -59,7 +59,8 @@ make -C market_nn paper-corpus
 ## 一次資料とデータ
 
 - 論文・公式コードの版、SHA-256、ライセンス状態は `manifests/sources/` に固定。
-- PDF と取得した公式コードは `sources/` の Git 管理外領域に置く。
+- PDF は自己完結した監査資料として `sources/papers/` で Git 管理する。取得した公式
+  コードは `sources/references/` の Git 管理外領域に置く。
 - FI-2010 の既定テストは `149 x N` の合成 fixture を使う。
 - 公開データ取得は明示的な `--accept-terms` が必要で、raw data は commit しない。
   pinned optional archive は DeepLOB の decimal-precision variant 用であり、TLOB の
@@ -74,7 +75,7 @@ make -C market_nn paper-corpus
 ## AI 向け論文コーパス
 
 `sources/papers/` の PDF は Docling `2.114.0` で Markdown、構造化 JSON、検索用
-JSONL chunk、画像へ変換できる。生成物は Git 管理外の `corpus/papers/` に置き、
+JSONL chunk、画像へ変換できる。生成物は Git 管理対象の `corpus/papers/` に置き、
 各 chunk から原本 PDF、ページ、SHA-256 を追跡できる。生成方法、出力形式、数式補完の
 要件は [docs/paper_corpus.md](docs/paper_corpus.md) を参照。
 

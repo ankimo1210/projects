@@ -8,10 +8,9 @@ dist/
 build/
 *.egg-info/
 
-# Primary-source binaries and separately fetched reference code are local only.
-sources/papers/*.pdf
+# Separately fetched reference code stays local. Paper PDFs and the derived
+# AI-readable corpus are intentionally tracked for self-contained research.
 sources/references/
-corpus/
 tmp/
 outputs/
 

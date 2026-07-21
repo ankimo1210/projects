@@ -67,3 +67,5 @@ Thumbs.db
 # papers/ only — verify the license before adding one.
 *.pdf
 !/papers/**/*.pdf
+# market_nn intentionally versions its audited source-paper corpus.
+!/market_nn/**/*.pdf
