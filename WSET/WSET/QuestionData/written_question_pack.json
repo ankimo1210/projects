@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-19T06:14:38Z",
-  "sourceHash": "9e24f78af3ef368fdadaf122e43d69ef1c4f4b66a46722a2fa5a2c93c545b5af",
+  "generatedAt": "2026-07-20T05:13:51Z",
+  "sourceHash": "bbfb12c9f63dd375ff4534ecc8ff6d310723576b6916a623c9e878cfa17d9bf8",
   "questionCount": 10,
   "source": {
     "file": "QuestionSources/wset_level3_written_questions.json",
     "sha256": "840c798e3c9ba4ff1677d779d2fa654173bc07a8429092d51b1d9d0e448cdc4f"
   },
-  "distributionStatus": "development_only",
+  "distributionStatus": "release",
   "referencePackSourceHash": "53ab8cf5131ffd9572a1a96b8c8be93e100b51288d7b0fb9091df7496b2f2925",
   "candidateQuestionCount": 10,
   "reviewSummary": {

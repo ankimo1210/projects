@@ -31,7 +31,7 @@ struct PaywallView: View {
                     Image(systemName: "graduationcap.fill")
                         .font(.system(size: 48))
                         .foregroundStyle(AppTheme.wine)
-                    Text("WSET学習 Pro")
+                    Text("CruNote Pro")
                         .font(.largeTitle.bold())
                     Text("一度だけの支払いで、収録済みのPro対象機能を解放します。")
                         .multilineTextAlignment(.center)
@@ -70,6 +70,15 @@ struct PaywallView: View {
                 .disabled(isProcessing || entitlementStore.product == nil)
                 .accessibilityIdentifier("paywall.purchase")
 
+                if entitlementStore.product == nil, productLoadFailed {
+                    Button("価格を再読み込み") {
+                        Task { await reloadPrice() }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .disabled(isProcessing)
+                    .accessibilityIdentifier("paywall.reloadPrice")
+                }
+
                 Button("購入を復元") {
                     Task { await restore() }
                 }
@@ -99,7 +108,12 @@ struct PaywallView: View {
         if let price = entitlementStore.displayPrice {
             return "\(price)で買い切り"
         }
+        if productLoadFailed { return "価格を取得できません" }
         return "価格を読み込み中"
+    }
+
+    private var productLoadFailed: Bool {
+        entitlementStore.productLoadStatus == .unavailable
     }
 
     private func featureRow(_ text: String) -> some View {
@@ -119,6 +133,15 @@ struct PaywallView: View {
         } catch {
             message = error.localizedDescription
         }
+    }
+
+    private func reloadPrice() async {
+        isProcessing = true
+        defer { isProcessing = false }
+        await entitlementStore.reloadProduct()
+        message = entitlementStore.product == nil
+            ? "価格を取得できませんでした。しばらくしてからもう一度お試しください。"
+            : nil
     }
 
     private func restore() async {

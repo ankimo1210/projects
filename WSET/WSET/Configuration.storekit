@@ -5,13 +5,13 @@
   ],
   "products" : [
     {
-      "displayPrice" : "1980",
+      "displayPrice" : "1500",
       "familyShareable" : false,
       "internalID" : "9A257119-C52C-483D-BA63-EF4A821C51B4",
       "localizations" : [
         {
           "description" : "重点学習、詳細弱点分析、産地比較、用語SRS、テイスティング記録無制限などのPro対象機能を解放します。",
-          "displayName" : "WSET学習 Pro（買い切り）",
+          "displayName" : "CruNote Pro（買い切り）",
           "locale" : "ja_JP"
         }
       ],

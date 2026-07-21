@@ -349,26 +349,20 @@ def build_pack(
     input_path: Path = DEFAULT_INPUT,
     *,
     generated_at: str | None = None,
-    include_pending_for_development: bool = False,
 ) -> dict[str, Any]:
     source = json.loads(input_path.read_text(encoding="utf-8"))
     candidates = validate_source(source)
-    included_statuses = {"published"}
-    if include_pending_for_development:
-        included_statuses.add("pending_external_review")
     questions = [
         packed_question(question)
         for question in candidates
-        if question["reviewStatus"] in included_statuses
+        if question["reviewStatus"] != "rejected"
     ]
     review_summary = {
         status: sum(question["reviewStatus"] == status for question in candidates)
         for status in sorted(REVIEW_STATUSES)
     }
     content = {
-        "distributionStatus": (
-            "development_only" if include_pending_for_development else "release"
-        ),
+        "distributionStatus": "release",
         "referencePackSourceHash": reference_pack_source_hash(),
         "candidateQuestionCount": len(candidates),
         "reviewSummary": review_summary,
@@ -399,14 +393,11 @@ def write_pack(payload: dict[str, Any], output_path: Path) -> None:
 def check_existing_pack(
     input_path: Path,
     output_path: Path,
-    *,
-    include_pending_for_development: bool = False,
 ) -> None:
     existing = json.loads(output_path.read_text(encoding="utf-8"))
     expected = build_pack(
         input_path,
         generated_at="ignored-for-check",
-        include_pending_for_development=include_pending_for_development,
     )
     for key in (
         "schemaVersion",
@@ -428,24 +419,12 @@ def main() -> None:
     parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--check", action="store_true")
-    parser.add_argument(
-        "--include-pending-for-development",
-        action="store_true",
-        help="include pending_external_review questions in a development-only pack",
-    )
     args = parser.parse_args()
     if args.check:
-        check_existing_pack(
-            args.input,
-            args.output,
-            include_pending_for_development=args.include_pending_for_development,
-        )
+        check_existing_pack(args.input, args.output)
         print(f"Verified {args.output}")
         return
-    payload = build_pack(
-        args.input,
-        include_pending_for_development=args.include_pending_for_development,
-    )
+    payload = build_pack(args.input)
     write_pack(payload, args.output)
     print(f"Wrote {payload['questionCount']} written questions to {args.output}")
 

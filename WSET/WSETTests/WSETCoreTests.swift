@@ -62,11 +62,11 @@ final class WSETCoreTests: XCTestCase {
         )
         XCTAssertEqual(
             QuestionImporterError.developmentContentUnavailable.errorDescription,
-            "公開レビュー済みの問題データがこのビルドに含まれていません。"
+            "Release用の問題データがこのビルドに含まれていません。"
         )
         XCTAssertEqual(
             ReviewNotificationError.permissionDenied.errorDescription,
-            "WSET学習の通知が無効です。復習通知を受け取るにはiOSの設定で通知を許可してください。"
+            "CruNoteの通知が無効です。復習通知を受け取るにはiOSの設定で通知を許可してください。"
         )
         XCTAssertEqual(
             BackupError.unsupportedSchema(2).errorDescription,
@@ -89,7 +89,7 @@ final class WSETCoreTests: XCTestCase {
             }
             XCTAssertEqual(
                 backupError.errorDescription,
-                "選択したファイルはWSET学習のバックアップではありません。"
+                "選択したファイルはCruNoteのバックアップではありません。"
             )
         }
     }
@@ -569,6 +569,38 @@ final class WSETCoreTests: XCTestCase {
         XCTAssertFalse(
             QuestionImporter.shouldImport(pack, allowsDevelopmentContent: false)
         )
+    }
+
+    func testBundledQuestionPacksAreReleaseReadyAndContainAllQuestions() throws {
+        let primaryURL = try XCTUnwrap(
+            Bundle.main.url(forResource: "question_pack", withExtension: "json")
+                ?? Bundle.main.url(
+                    forResource: "question_pack",
+                    withExtension: "json",
+                    subdirectory: "QuestionData"
+                )
+        )
+        let writtenURL = try XCTUnwrap(
+            Bundle.main.url(forResource: "written_question_pack", withExtension: "json")
+                ?? Bundle.main.url(
+                    forResource: "written_question_pack",
+                    withExtension: "json",
+                    subdirectory: "QuestionData"
+                )
+        )
+        let decoder = JSONDecoder()
+        let primary = try decoder.decode(QuestionPack.self, from: Data(contentsOf: primaryURL))
+        let written = try decoder.decode(QuestionPack.self, from: Data(contentsOf: writtenURL))
+
+        XCTAssertEqual(primary.distributionStatus, "release")
+        XCTAssertEqual(primary.questionCount, 1_100)
+        XCTAssertEqual(written.distributionStatus, "release")
+        XCTAssertEqual(written.questionCount, 10)
+        XCTAssertTrue(QuestionImporter.shouldImport(primary, allowsDevelopmentContent: false))
+        XCTAssertTrue(QuestionImporter.shouldImport(written, allowsDevelopmentContent: false))
+
+        let (questions, _) = try QuestionImporter.validateAndCombine([primary, written])
+        XCTAssertEqual(questions.count, 1_110)
     }
 
     func testBackupEncodingAndMergeRestore() throws {

@@ -1,10 +1,10 @@
 {
   "schemaVersion": 2,
-  "sourceHash": "4d68b6638bc4aa1a74722abefc30fb4a27eab086b80036b8e01ff9ea9d3ffac4",
+  "sourceHash": "9b6f80d39ac9407bcbe887e4d39662885df992a9a22fd928d6a0a124173b0a48",
   "questionPackSourceHash": "0ae696ecb3e11f04b33cee1e970b3ef0c99e20ead03fb9903e133f70390cc49f",
   "referencePackSourceHash": "53ab8cf5131ffd9572a1a96b8c8be93e100b51288d7b0fb9091df7496b2f2925",
   "mapCount": 1,
-  "reviewTargetHash": "6aa1ea566412670b8e33595b6839d58a8afd9a4b0156e106bd1863426cfb55e8",
+  "reviewTargetHash": "239a5955a7a490b005afdb7ef0a7fb7bbef3828d4f66d3b8e5eadb9025fc0275",
   "review": {
     "status": "pending_external_review",
     "reviewer": null,
@@ -1648,7 +1648,7 @@
   "sources": [
     {
       "id": "wset_app_schematic_france_2026",
-      "name": "WSET学習アプリ用の自作フランス概略図",
+      "name": "CruNote用の自作フランス概略図",
       "url": null,
       "license": "プロジェクト自作",
       "checkedAt": "2026-07-19",

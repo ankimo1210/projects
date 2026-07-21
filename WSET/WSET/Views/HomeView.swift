@@ -42,9 +42,9 @@ struct HomeView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("WSET Level 3 学習")
+                        Text("WSET Level 3")
                             .font(.title2.bold())
-                        Text("オフライン問題集と学習進捗")
+                        Text("日本語・オフラインで体系的に学習")
                             .foregroundStyle(.secondary)
                     }
 
@@ -83,7 +83,7 @@ struct HomeView: View {
                 .padding()
             }
             .background(Color(.systemGroupedBackground))
-            .navigationTitle("WSET学習")
+            .navigationTitle("CruNote")
         }
     }
 }

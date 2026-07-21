@@ -23,7 +23,7 @@ test-python:
 check-generated:
 	$(PYTHON) scripts/build_question_pack.py --check
 	$(PYTHON) scripts/build_reference_pack.py --check
-	$(PYTHON) scripts/build_written_question_pack.py --check --include-pending-for-development
+	$(PYTHON) scripts/build_written_question_pack.py --check
 	$(PYTHON) scripts/build_region_map_pack.py --check
 	$(PYTHON) scripts/build_content_review_packet.py --check
 	$(PYTHON) scripts/validate_ai_review_fixture.py

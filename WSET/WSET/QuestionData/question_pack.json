@@ -1,9 +1,9 @@
 {
   "schemaVersion": 4,
-  "generatedAt": "2026-07-19T06:14:25Z",
+  "generatedAt": "2026-07-20T05:13:51Z",
   "sourceHash": "0ae696ecb3e11f04b33cee1e970b3ef0c99e20ead03fb9903e133f70390cc49f",
   "questionCount": 1100,
-  "distributionStatus": "development_only",
+  "distributionStatus": "release",
   "source": {
     "id": "wset_level3_original_1100_v7",
     "type": "user_authored_workbook",

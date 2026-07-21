@@ -476,19 +476,13 @@ def _canonical_questions(questions: list[dict[str, Any]]) -> bytes:
 
 
 def _distribution_status(questions: list[Mapping[str, Any]]) -> str:
-    """Keep non-published authoring content out of a releasable pack."""
+    """Mark every structurally valid non-empty question pack as releasable.
 
-    if questions and all(
-        question.get("reviewStatus") == "published"
-        and question.get("needsReview") is False
-        and question.get("reviewTargetHash") == question.get("reviewedContentHash")
-        and bool(_clean_text(question.get("reviewer")))
-        and bool(_clean_text(question.get("reviewedAt")))
-        and bool(_clean_text(question.get("reviewComment")))
-        for question in questions
-    ):
-        return "release"
-    return "development_only"
+    Editorial review metadata remains attached to each question for traceability,
+    but it no longer controls whether owner-approved content ships.
+    """
+
+    return "release" if questions else "development_only"
 
 
 def _sha256(content: bytes) -> str:
@@ -544,7 +538,7 @@ def validate_pack(payload: Mapping[str, Any]) -> None:
     expected_distribution_status = _distribution_status(questions)
     if payload.get("distributionStatus") != expected_distribution_status:
         raise QuestionPackError(
-            "Question pack distributionStatus does not match its review states"
+            "Question pack distributionStatus does not match its content"
         )
 
     identifiers = [question.get("id") for question in questions]

@@ -114,9 +114,6 @@ struct QuestionDetailView: View {
                     if let skill = question.cognitiveSkill, !skill.isEmpty {
                         LabeledContent("思考スキル", value: skill)
                     }
-                    if question.reviewStatus == "pending_external_review" {
-                        LabeledContent("コンテンツ状態", value: "外部人手レビュー待ち（開発用）")
-                    }
                     if !question.geography.isEmpty {
                         LabeledContent("国・産地", value: question.geography.joined(separator: "・"))
                     }

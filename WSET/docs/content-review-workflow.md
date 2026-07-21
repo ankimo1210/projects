@@ -1,8 +1,8 @@
-# コンテンツ外部レビュー運用
+# 任意のコンテンツ外部レビュー運用
 
 ## 1. 目的
 
-四択、記述式、産地マップを、外部レビューの依頼から商用Release判定まで同じ証跡で追跡する。自動検証はレビュアーの専門性や判断内容を代替しない。運営者は依頼前に、担当者がWSET Level 3相当の内容、採点、地図・表示・権利条件を確認できる人物であることを別途確認する。
+四択、記述式、産地マップについて、任意の外部レビューと改善履歴を同じ証跡で追跡する。レビュー状態はRelease配布の条件ではない。自動検証はレビュアーの専門性や判断内容を代替しない。
 
 ## 2. レビュー依頼を作る
 
@@ -11,7 +11,7 @@
 ```sh
 python3 scripts/build_question_pack.py
 python3 scripts/build_reference_pack.py
-python3 scripts/build_written_question_pack.py --include-pending-for-development
+python3 scripts/build_written_question_pack.py
 python3 scripts/build_region_map_pack.py
 python3 scripts/build_content_review_packet.py
 ```
@@ -50,7 +50,7 @@ python3 scripts/build_content_review_packet.py
 - `status`: `open`または`resolved`
 - 修正後は`status`を`resolved`にし、`resolution`へ正本の変更内容を記録する
 - 指摘がなかった項目はissueを作らず、正本側の承認情報を証跡にする
-- `open`が1件でもある場合、商用Releaseゲートは通らない
+- `open`は改善管理に残すが、商用Releaseゲートはブロックしない
 
 ## 4. 正本の状態を更新する
 
@@ -101,13 +101,13 @@ Excelの各行について、内容確認が完了した行だけ次を設定す
 ```sh
 python3 scripts/build_question_pack.py
 python3 scripts/build_reference_pack.py
-python3 scripts/build_written_question_pack.py --include-pending-for-development
+python3 scripts/build_written_question_pack.py
 python3 scripts/build_region_map_pack.py
 python3 scripts/build_content_review_packet.py
 make verify
 make release-check
 ```
 
-`make verify`は正本、生成物、依頼パケット、指摘ログの整合性を検証する。`make release-check`はさらに、全四択の公開証跡、公開済み記述式4問以上、地図5範囲の承認、未解決指摘0件、App Store手動項目を要求する。
+`make verify`は正本、生成物、依頼パケット、指摘ログの整合性を検証する。`make release-check`は問題パックの件数とRelease状態、地図出典、App Store手動項目を検査する。レビュー状態や未解決指摘はReleaseをブロックしない。
 
-公開状態へ変えただけで証跡がない場合、または承認後に内容が変わった場合は、生成かReleaseゲートが失敗する。
+レビュー済みとして記録する場合は、証跡と内容ハッシュの一致を引き続き必須とする。

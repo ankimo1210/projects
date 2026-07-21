@@ -95,11 +95,6 @@ class ReleaseReadinessTests(unittest.TestCase):
                 else "# プライバシーポリシー（公開前ドラフト）\n",
             ),
             "xcode_project_path": self._write(root, "project.pbxproj", "// safe\n"),
-            "review_issues_path": self._write(
-                root,
-                "review-issues.json",
-                {"schemaVersion": 1, "issues": []},
-            ),
         }
 
     def test_ready_fixture_has_no_blockers(self) -> None:
@@ -122,12 +117,50 @@ class ReleaseReadinessTests(unittest.TestCase):
             )
         joined = "\n".join(blockers)
         self.assertIn("四択パックがRelease配布状態ではありません", joined)
-        self.assertIn("四択1問が公開レビュー未完了", joined)
         self.assertIn("記述式パックがRelease配布状態ではありません", joined)
-        self.assertIn("記述式1問に公開状態・担当者・確認日の不足", joined)
         self.assertIn("手動確認未完了", joined)
         self.assertIn("公開前ドラフト", joined)
-        self.assertIn("地図の産地名・位置・比較内容", joined)
+
+    def test_editorial_review_metadata_does_not_block_release(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            paths = self._paths(root, ready=True)
+            paths["question_pack_path"] = self._write(
+                root,
+                "questions-unreviewed.json",
+                {
+                    "questionCount": 1,
+                    "distributionStatus": "release",
+                    "questions": [
+                        {
+                            "id": "MCQ-001",
+                            "reviewStatus": "ai_reviewed_pending_expert",
+                            "needsReview": True,
+                        }
+                    ],
+                },
+            )
+            paths["written_pack_path"] = self._write(
+                root,
+                "written-unreviewed.json",
+                {
+                    "questionCount": 1,
+                    "distributionStatus": "release",
+                    "questions": [
+                        {
+                            "id": "SAQ-001",
+                            "reviewStatus": "pending_external_review",
+                            "needsReview": True,
+                        }
+                    ],
+                },
+            )
+            blockers = collect_blockers(
+                **paths,
+                expected_mcq_count=1,
+                minimum_written_count=1,
+            )
+        self.assertEqual(blockers, [])
 
     def test_map_source_evidence_is_required(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -155,40 +188,6 @@ class ReleaseReadinessTests(unittest.TestCase):
                 minimum_written_count=1,
             )
         self.assertEqual(blockers, ["地図出典の名称・利用条件・確認日が不足しています"])
-
-    def test_open_content_review_issue_blocks_release(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            paths = self._paths(root, ready=True)
-            paths["review_issues_path"] = self._write(
-                root,
-                "open-issues.json",
-                {
-                    "schemaVersion": 1,
-                    "issues": [
-                        {
-                            "id": "CR-0001",
-                            "targetType": "written",
-                            "itemID": "SAQ-001",
-                            "severity": "high",
-                            "status": "open",
-                            "finding": "採点基準の再確認が必要",
-                            "reportedBy": "External reviewer",
-                            "resolution": None,
-                            "updatedAt": "2026-07-19",
-                        }
-                    ],
-                },
-            )
-            blockers = collect_blockers(
-                **paths,
-                expected_mcq_count=1,
-                minimum_written_count=1,
-            )
-        self.assertEqual(
-            blockers,
-            ["未解決のコンテンツレビュー指摘が1件あります (CR-0001)"],
-        )
 
     def test_unreviewed_online_release_configuration_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

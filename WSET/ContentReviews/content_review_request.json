@@ -7787,7 +7787,7 @@
     "regionMap": {
       "source": "ReferenceSources/wset_region_map_master.json",
       "itemCount": 1,
-      "requestHash": "6aa1ea566412670b8e33595b6839d58a8afd9a4b0156e106bd1863426cfb55e8",
+      "requestHash": "239a5955a7a490b005afdb7ef0a7fb7bbef3828d4f66d3b8e5eadb9025fc0275",
       "currentStatus": "pending_external_review",
       "requiredScopes": [
         "regionNamesAndPositions",
