@@ -5,3 +5,6 @@ __pycache__/
 .ipynb_checkpoints/
 .DS_Store
 
+# Local full-text derivatives of referenced papers. These may contain copyrighted
+# article text and are reproducible from the ignored source PDFs.
+references/processed/
