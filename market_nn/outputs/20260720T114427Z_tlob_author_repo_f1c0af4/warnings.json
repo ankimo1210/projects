@@ -1,0 +1,14 @@
+[
+  {
+    "code": "SYNTHETIC_ONLY",
+    "message": "Synthetic structure test; paper-reported accuracy/F1 was not attempted."
+  },
+  {
+    "code": "NO_REFERENCE_EXECUTION",
+    "message": "This smoke validates the clean-room target; it did not execute fetched reference code side-by-side."
+  },
+  {
+    "code": "FRAMEWORK_VERSION_DEVIATION",
+    "message": "Pinned repository specifies torch_2.5.0_cu121; clean-room smoke used torch 2.11.0+cu128."
+  }
+]

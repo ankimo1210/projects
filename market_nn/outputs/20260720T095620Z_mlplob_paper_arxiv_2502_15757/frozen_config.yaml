@@ -1,0 +1,63 @@
+paper_id: tlob_2025
+implementation_profile: mlplob_paper_arxiv_2502_15757
+fidelity_class: C_PAPER_CONSTRAINED
+paper_version: arXiv:2502.15757v3
+source_code_commit: null
+dataset_profile: fi2010_synthetic_v1
+random_seed: 7
+model:
+  sequence_length: 384
+  num_layers: 3
+  hidden_dim: 40
+  bin_mode: corrected_port
+  all_features: true
+data:
+  features: 144
+  horizons:
+  - 10
+  - 20
+  - 50
+  - 100
+  class_order:
+  - up
+  - stationary
+  - down
+training:
+  optimizer: Adam
+  learning_rate: 0.003
+  metric: macro_f1
+material_fields:
+- model.sequence_length
+- model.num_layers
+- model.hidden_dim
+- model.bin_mode
+- training.optimizer
+- training.learning_rate
+provenance:
+  model.sequence_length:
+    source_type: PAPER
+    locator: p.9 Table10
+    confidence: verified
+  model.num_layers:
+    source_type: PAPER
+    locator: p.9 Table10
+    confidence: verified
+  model.hidden_dim:
+    source_type: ASSUMPTION
+    locator: MLPLOB-A001
+    confidence: unresolved
+  model.bin_mode:
+    source_type: ASSUMPTION
+    locator: TLOB-A002
+    confidence: unresolved
+  training.optimizer:
+    source_type: PAPER
+    locator: p.9 Table10
+    confidence: verified
+  training.learning_rate:
+    source_type: PAPER
+    locator: p.9 Table10
+    confidence: verified
+unresolved_material_fields:
+- model.hidden_dim
+- model.bin_mode

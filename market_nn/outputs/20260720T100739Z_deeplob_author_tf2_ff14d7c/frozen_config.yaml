@@ -1,0 +1,229 @@
+paper_id: deeplob
+implementation_profile: deeplob_author_tf2_ff14d7c
+fidelity_class: A_AUTHOR_CODE_EXACT
+paper_version: arXiv:1808.03668v6
+source_code_commit: ff14d7c2fd38bdfc143389786993d0f0236d4eb8
+dataset_profile: fi2010_noauction_decpre_cf7_8_9
+random_seed:
+  numpy: 1
+  tensorflow: 2
+model:
+  input_layout: BTFC
+  sequence_length: 100
+  raw_features: 40
+  conv_channels: 32
+  inception_branch_channels: 64
+  lstm_hidden: 64
+  leaky_relu_slope: 0.01
+  temporal_padding: same
+  batch_normalization: false
+  dropout: 0.2
+  dropout_noise_shape:
+  - null
+  - 1
+  - 192
+  dropout_forced_training: true
+  output: softmax_probabilities
+  expected_parameters: 142435
+data:
+  training_file: Train_Dst_NoAuction_DecPre_CF_7.txt
+  train_fraction: 0.8
+  validation_fraction: 0.2
+  test_files:
+  - Test_Dst_NoAuction_DecPre_CF_7.txt
+  - Test_Dst_NoAuction_DecPre_CF_8.txt
+  - Test_Dst_NoAuction_DecPre_CF_9.txt
+  horizon_index: 4
+  horizon_events: 100
+  class_order:
+  - up
+  - stationary
+  - down
+training:
+  loss: categorical_crossentropy
+  optimizer: Adam
+  learning_rate: 0.0001
+  adam_epsilon: keras_runtime_default
+  initialization: keras_runtime_defaults_after_numpy_1_tensorflow_2
+  framework_version: unpinned_by_repository
+  batch_size: 128
+  train_shuffle: keras_fit_default_true
+  checkpoint_metric: val_loss
+  checkpoint_mode: auto
+  checkpoint_save_best_only: true
+  epochs: 200
+material_fields:
+- random_seed
+- model.input_layout
+- model.sequence_length
+- model.raw_features
+- model.conv_channels
+- model.inception_branch_channels
+- model.lstm_hidden
+- model.leaky_relu_slope
+- model.temporal_padding
+- model.batch_normalization
+- model.dropout
+- model.dropout_noise_shape
+- model.dropout_forced_training
+- model.output
+- model.expected_parameters
+- data.training_file
+- data.train_fraction
+- data.validation_fraction
+- data.test_files
+- data.horizon_index
+- data.horizon_events
+- data.class_order
+- training.loss
+- training.optimizer
+- training.learning_rate
+- training.adam_epsilon
+- training.initialization
+- training.framework_version
+- training.batch_size
+- training.train_shuffle
+- training.checkpoint_metric
+- training.checkpoint_mode
+- training.checkpoint_save_best_only
+- training.epochs
+provenance:
+  random_seed:
+    source_type: AUTHOR_CODE
+    locator: 'TF2 notebook seed cell: NumPy 1 / TensorFlow 2'
+    confidence: verified
+  model.input_layout:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook create_deeplob input/prepare_x_y
+    confidence: verified
+  model.sequence_length:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook prepare_x_y T=100
+    confidence: verified
+  model.raw_features:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook dec_data[:40]
+    confidence: verified
+  model.conv_channels:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook Conv2D code
+    confidence: verified
+  model.inception_branch_channels:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook Inception code
+    confidence: verified
+  model.lstm_hidden:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook n_hiddens=64
+    confidence: verified
+  model.leaky_relu_slope:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook LeakyReLU(alpha=.01)
+    confidence: verified
+  model.temporal_padding:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook temporal Conv2D padding=same
+    confidence: verified
+  model.batch_normalization:
+    source_type: AUTHOR_CODE
+    locator: 'TF2 notebook model: no BatchNormalization layers'
+    confidence: verified
+  model.dropout:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook Dropout call
+    confidence: verified
+  model.dropout_noise_shape:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook Dropout noise_shape=(None,1,192)
+    confidence: verified
+  model.dropout_forced_training:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook Dropout(...)(..., training=True)
+    confidence: verified
+  model.output:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook Dense(3, activation=softmax)
+    confidence: verified
+  model.expected_parameters:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook displayed model.summary
+    confidence: verified
+  data.training_file:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook np.loadtxt Train_Dst_NoAuction_DecPre_CF_7
+    confidence: verified
+  data.train_fraction:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook first 80% slice
+    confidence: verified
+  data.validation_fraction:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook final 20% slice
+    confidence: verified
+  data.test_files:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook CF_7/8/9 test hstack
+    confidence: verified
+  data.horizon_index:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook k=4
+    confidence: verified
+  data.horizon_events:
+    source_type: DATASET_DOC
+    locator: FI-2010 row mapping; k=4 -> 100
+    confidence: verified
+  data.class_order:
+    source_type: AUTHOR_CODE
+    locator: TF2 get_label source labels 1/2/3 -> 0/1/2
+    confidence: verified
+  training.loss:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook model.compile
+    confidence: verified
+  training.optimizer:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook keras.optimizers.Adam
+    confidence: verified
+  training.learning_rate:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook Adam(lr=.0001)
+    confidence: verified
+  training.adam_epsilon:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook omits epsilon; framework version not pinned
+    confidence: unresolved
+  training.initialization:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook uses layer defaults after explicit seeds
+    confidence: verified
+  training.framework_version:
+    source_type: AUTHOR_CODE
+    locator: README says TensorFlow 2; no exact dependency lock found
+    confidence: unresolved
+  training.batch_size:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook fit(batch_size=128)
+    confidence: verified
+  training.train_shuffle:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook fit omits shuffle
+    confidence: verified
+  training.checkpoint_metric:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook ModelCheckpoint monitor=val_loss
+    confidence: verified
+  training.checkpoint_mode:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook ModelCheckpoint mode=auto
+    confidence: verified
+  training.checkpoint_save_best_only:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook ModelCheckpoint save_best_only=True
+    confidence: verified
+  training.epochs:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook fit epochs=200
+    confidence: verified
+unresolved_material_fields:
+- training.adam_epsilon
+- training.framework_version

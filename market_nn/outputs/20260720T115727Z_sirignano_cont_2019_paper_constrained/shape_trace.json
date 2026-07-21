@@ -1,0 +1,49 @@
+[
+  {
+    "name": "input_BTF",
+    "shape": [
+      2,
+      100,
+      8
+    ]
+  },
+  {
+    "name": "hidden_state_policy",
+    "shape": [
+      3,
+      2,
+      50
+    ],
+    "assumption": "SC2019-A001"
+  },
+  {
+    "name": "three_layer_lstm_sequence",
+    "shape": [
+      2,
+      100,
+      50
+    ]
+  },
+  {
+    "name": "feed_forward_relu",
+    "shape": [
+      2,
+      50
+    ]
+  },
+  {
+    "name": "next_move_logits",
+    "shape": [
+      2,
+      2
+    ]
+  },
+  {
+    "name": "lstm_h_n",
+    "shape": [
+      3,
+      2,
+      50
+    ]
+  }
+]

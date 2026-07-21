@@ -1,0 +1,10 @@
+[
+  {
+    "code": "SYNTHETIC_ONLY",
+    "message": "Synthetic structure test; paper-reported accuracy/F1 was not attempted."
+  },
+  {
+    "code": "TF2_ANALYTIC_SPEC",
+    "message": "TensorFlow native execution is optional; this run used the pinned analytic shape/count specification."
+  }
+]

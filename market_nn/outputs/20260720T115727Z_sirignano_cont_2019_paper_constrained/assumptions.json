@@ -1,0 +1,43 @@
+{
+  "profile_assumption_ids": [
+    "SC2019-A001",
+    "SC2019-A002",
+    "SC2019-A003"
+  ],
+  "unresolved_material_fields": [
+    "model.input_features",
+    "training.learning_rate",
+    "training.regularization",
+    "training.tbptt_reset"
+  ],
+  "sirignano_cont_catalog": [
+    {
+      "id": "SC2019-A001",
+      "choice": "reset hidden state at stock/day boundary"
+    },
+    {
+      "id": "SC2019-A002",
+      "choice": "use the fixture's explicit eight-feature state vector"
+    },
+    {
+      "id": "SC2019-A003",
+      "choice": "SGD learning rate 0.01 and L2 coefficient 1e-5"
+    },
+    {
+      "id": "SC2019-A004",
+      "choice": "independent truncated windows by default; carry-detach is an alternate mode"
+    },
+    {
+      "id": "SC2019-A005",
+      "choice": "current PyTorch default initialization"
+    },
+    {
+      "id": "SC2019-A006",
+      "choice": "fixed smoke epochs rather than an undisclosed stopping rule"
+    },
+    {
+      "id": "SC2019-A007",
+      "choice": "uniform pooled-asset sampling"
+    }
+  ]
+}

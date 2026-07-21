@@ -61,11 +61,10 @@ Thumbs.db
 .claude/scheduled_tasks.lock
 .claude/worktrees/
 
-# Large reference docs (textbooks, papers) — keep binaries out of git
-# by default. Redistribution-OK papers (own work, permissive license,
-# open access with a redistribution-friendly license) are allowed under
-# papers/ only — verify the license before adding one.
-*.pdf
-!/papers/**/*.pdf
-# market_nn intentionally versions its audited source-paper corpus.
-!/market_nn/**/*.pdf
+# PDFs and derived paper corpora are intentionally trackable workspace-wide.
+
+# Generated outputs are intentionally trackable workspace-wide, regardless of
+# file-type ignores above. Scratch outputs remain ephemeral.
+!/**/outputs/
+!/**/outputs/**
+/_scratch/outputs/

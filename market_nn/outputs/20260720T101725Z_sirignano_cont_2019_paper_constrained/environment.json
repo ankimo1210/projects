@@ -1,0 +1,12 @@
+{
+  "python": "3.12.3 (main, Jun 19 2026, 12:46:00) [GCC 13.3.0]",
+  "platform": "Linux-6.18.33.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "numpy": "2.4.6",
+  "pandas": "3.0.3",
+  "pyarrow": "24.0.0",
+  "scipy": "1.17.1",
+  "scikit_learn": "1.9.0",
+  "torch": "2.11.0+cu128",
+  "torch_cuda_available": true,
+  "timezone": "UTC"
+}

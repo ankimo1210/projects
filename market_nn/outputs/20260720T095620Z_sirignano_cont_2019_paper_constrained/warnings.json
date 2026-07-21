@@ -1,0 +1,10 @@
+[
+  {
+    "code": "SYNTHETIC_ONLY",
+    "message": "Synthetic structure test; paper-reported accuracy/F1 was not attempted."
+  },
+  {
+    "code": "PAPER_CONSTRAINED",
+    "message": "Unresolved fields: model.input_features, training.learning_rate, training.regularization, training.tbptt_reset"
+  }
+]

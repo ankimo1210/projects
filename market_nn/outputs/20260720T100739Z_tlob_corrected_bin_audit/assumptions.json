@@ -1,0 +1,8 @@
+{
+  "profile_assumption_ids": [
+    "AUDIT-TLOB-BIN-SAFE",
+    "AUDIT-TLOB-TRAINABLE-EMBEDDING"
+  ],
+  "unresolved_material_fields": [],
+  "sirignano_cont_catalog": []
+}

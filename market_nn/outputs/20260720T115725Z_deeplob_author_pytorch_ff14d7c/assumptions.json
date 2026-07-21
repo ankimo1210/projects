@@ -1,0 +1,8 @@
+{
+  "profile_assumption_ids": [],
+  "unresolved_material_fields": [
+    "training.adam_epsilon",
+    "training.framework_version"
+  ],
+  "sirignano_cont_catalog": []
+}

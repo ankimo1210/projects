@@ -1,0 +1,10 @@
+[
+  {
+    "code": "SCALED_SYNTHETIC_FIXTURE",
+    "message": "Uses 12 synthetic days for CPU runtime; paper profile remains 252 days and is not numerically benchmarked."
+  },
+  {
+    "code": "SYNTHETIC_ONLY",
+    "message": "Protocol reproduced on a synthetic fixture; no stock-level empirical conclusion is claimed."
+  }
+]

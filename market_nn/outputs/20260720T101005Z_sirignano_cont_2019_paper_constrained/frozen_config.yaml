@@ -1,0 +1,87 @@
+paper_id: sirignano_cont_2019
+implementation_profile: sirignano_cont_2019_paper_constrained
+fidelity_class: C_PAPER_CONSTRAINED
+paper_version: arXiv:1803.06917v1
+source_code_commit: null
+dataset_profile: universal_multi_asset_synthetic_v1
+random_seed: 7
+model:
+  layers: 3
+  hidden_units: 50
+  relu_units: 50
+  output_classes: 2
+  input_features: 8
+data:
+  history: 100
+  full_long_history: 5000
+  pooled_assets: true
+  unseen_asset_evaluation: true
+  normalize: false
+training:
+  loss: regularized_negative_log_likelihood
+  optimizer: SGD
+  learning_rate: 0.01
+  regularization: 1.0e-05
+  tbptt_reset: stock_day_boundary
+material_fields:
+- model.layers
+- model.hidden_units
+- model.relu_units
+- data.history
+- data.full_long_history
+- data.pooled_assets
+- data.unseen_asset_evaluation
+- model.input_features
+- training.learning_rate
+- training.regularization
+- training.tbptt_reset
+provenance:
+  model.layers:
+    source_type: PAPER
+    locator: p.5-6; p.12 Fig.6
+    confidence: verified
+  model.hidden_units:
+    source_type: PAPER
+    locator: p.12 Fig.6
+    confidence: verified
+  model.relu_units:
+    source_type: PAPER
+    locator: p.12 Fig.6
+    confidence: inferred_from_shape
+  data.history:
+    source_type: PAPER
+    locator: p.16 Fig.12
+    confidence: verified
+  data.full_long_history:
+    source_type: PAPER
+    locator: p.16 Sec.3.4
+    confidence: verified
+  data.pooled_assets:
+    source_type: PAPER
+    locator: p.7-8
+    confidence: verified
+  data.unseen_asset_evaluation:
+    source_type: PAPER
+    locator: p.8; p.13-15
+    confidence: verified
+  model.input_features:
+    source_type: ASSUMPTION
+    locator: SC2019-A002
+    confidence: unresolved
+  training.learning_rate:
+    source_type: ASSUMPTION
+    locator: SC2019-A003
+    confidence: unresolved
+  training.regularization:
+    source_type: ASSUMPTION
+    locator: SC2019-A003
+    confidence: unresolved
+  training.tbptt_reset:
+    source_type: ASSUMPTION
+    locator: SC2019-A001
+    confidence: unresolved
+unresolved_material_fields:
+- model.input_features
+- training.learning_rate
+- training.regularization
+- training.tbptt_reset

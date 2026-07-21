@@ -1,0 +1,227 @@
+[
+  {
+    "name": "input_BSF",
+    "shape": [
+      2,
+      384,
+      144
+    ]
+  },
+  {
+    "name": "prepared_features",
+    "shape": [
+      2,
+      384,
+      144
+    ]
+  },
+  {
+    "name": "permute_for_BiN",
+    "shape": [
+      2,
+      144,
+      384
+    ],
+    "permutation": "B,S,F -> B,F,S"
+  },
+  {
+    "name": "BiN_then_restore_BSF",
+    "shape": [
+      2,
+      384,
+      144
+    ]
+  },
+  {
+    "name": "layer_0_Linear",
+    "shape": [
+      2,
+      384,
+      144
+    ]
+  },
+  {
+    "name": "axis_permutation_after_layer_0",
+    "shape": [
+      2,
+      144,
+      384
+    ],
+    "permutation": "swap axes 1 and 2"
+  },
+  {
+    "name": "layer_1_GELU",
+    "shape": [
+      2,
+      144,
+      384
+    ]
+  },
+  {
+    "name": "axis_permutation_after_layer_1",
+    "shape": [
+      2,
+      384,
+      144
+    ],
+    "permutation": "swap axes 1 and 2"
+  },
+  {
+    "name": "layer_2_MLP",
+    "shape": [
+      2,
+      384,
+      144
+    ]
+  },
+  {
+    "name": "axis_permutation_after_layer_2",
+    "shape": [
+      2,
+      144,
+      384
+    ],
+    "permutation": "swap axes 1 and 2"
+  },
+  {
+    "name": "layer_3_MLP",
+    "shape": [
+      2,
+      144,
+      384
+    ]
+  },
+  {
+    "name": "axis_permutation_after_layer_3",
+    "shape": [
+      2,
+      384,
+      144
+    ],
+    "permutation": "swap axes 1 and 2"
+  },
+  {
+    "name": "layer_4_MLP",
+    "shape": [
+      2,
+      384,
+      144
+    ]
+  },
+  {
+    "name": "axis_permutation_after_layer_4",
+    "shape": [
+      2,
+      144,
+      384
+    ],
+    "permutation": "swap axes 1 and 2"
+  },
+  {
+    "name": "layer_5_MLP",
+    "shape": [
+      2,
+      144,
+      384
+    ]
+  },
+  {
+    "name": "axis_permutation_after_layer_5",
+    "shape": [
+      2,
+      384,
+      144
+    ],
+    "permutation": "swap axes 1 and 2"
+  },
+  {
+    "name": "layer_6_MLP",
+    "shape": [
+      2,
+      384,
+      36
+    ]
+  },
+  {
+    "name": "axis_permutation_after_layer_6",
+    "shape": [
+      2,
+      36,
+      384
+    ],
+    "permutation": "swap axes 1 and 2"
+  },
+  {
+    "name": "layer_7_MLP",
+    "shape": [
+      2,
+      36,
+      96
+    ]
+  },
+  {
+    "name": "axis_permutation_after_layer_7",
+    "shape": [
+      2,
+      96,
+      36
+    ],
+    "permutation": "swap axes 1 and 2"
+  },
+  {
+    "name": "flatten",
+    "shape": [
+      2,
+      3456
+    ]
+  },
+  {
+    "name": "final_0_Linear",
+    "shape": [
+      2,
+      864
+    ]
+  },
+  {
+    "name": "final_1_GELU",
+    "shape": [
+      2,
+      864
+    ]
+  },
+  {
+    "name": "final_2_Linear",
+    "shape": [
+      2,
+      216
+    ]
+  },
+  {
+    "name": "final_3_GELU",
+    "shape": [
+      2,
+      216
+    ]
+  },
+  {
+    "name": "final_4_Linear",
+    "shape": [
+      2,
+      54
+    ]
+  },
+  {
+    "name": "final_5_GELU",
+    "shape": [
+      2,
+      54
+    ]
+  },
+  {
+    "name": "final_6_Linear",
+    "shape": [
+      2,
+      3
+    ]
+  }
+]

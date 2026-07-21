@@ -1,0 +1,9 @@
+{
+  "total": 55452,
+  "trainable": 55452,
+  "by_parameter_owner": {
+    "classifier": 102,
+    "feed_forward": 2550,
+    "lstm": 52800
+  }
+}

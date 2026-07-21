@@ -1,0 +1,96 @@
+paper_id: deeplob
+implementation_profile: deeplob_author_tf2_ff14d7c
+fidelity_class: A_AUTHOR_CODE_EXACT
+paper_version: arXiv:1808.03668v6
+source_code_commit: ff14d7c2fd38bdfc143389786993d0f0236d4eb8
+dataset_profile: fi2010_noauction_decpre_cf7_8_9
+random_seed: 7
+model:
+  input_layout: BTFC
+  sequence_length: 100
+  raw_features: 40
+  conv_channels: 32
+  inception_branch_channels: 64
+  lstm_hidden: 64
+  temporal_padding: same
+  dropout: 0.2
+  dropout_forced_training: true
+  expected_parameters: 142435
+data:
+  training_file: Train_Dst_NoAuction_DecPre_CF_7.txt
+  train_fraction: 0.8
+  test_files:
+  - Test_Dst_NoAuction_DecPre_CF_7.txt
+  - Test_Dst_NoAuction_DecPre_CF_8.txt
+  - Test_Dst_NoAuction_DecPre_CF_9.txt
+  horizon_index: 4
+  horizon_events: 100
+  class_order:
+  - up
+  - stationary
+  - down
+training:
+  loss: categorical_crossentropy
+  optimizer: Adam
+  learning_rate: 0.0001
+  batch_size: 128
+  checkpoint_metric: val_loss
+  epochs: 200
+material_fields:
+- model.input_layout
+- model.conv_channels
+- model.inception_branch_channels
+- model.dropout
+- model.dropout_forced_training
+- model.expected_parameters
+- data.train_fraction
+- data.horizon_index
+- data.horizon_events
+- training.learning_rate
+- training.batch_size
+provenance:
+  model.input_layout:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook create_deeplob input/prepare_x_y
+    confidence: verified
+  model.conv_channels:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook Conv2D code
+    confidence: verified
+  model.inception_branch_channels:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook Inception code
+    confidence: verified
+  model.dropout:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook Dropout call
+    confidence: verified
+  model.dropout_forced_training:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook Dropout(...)(..., training=True)
+    confidence: verified
+  model.expected_parameters:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook displayed model.summary
+    confidence: verified
+  data.train_fraction:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook dec_train/dec_val slicing
+    confidence: verified
+  data.horizon_index:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook k=4
+    confidence: verified
+  data.horizon_events:
+    source_type: DATASET_DOC
+    locator: FI-2010 row mapping; k=4 -> 100
+    confidence: verified
+  training.learning_rate:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook Adam(lr=.0001)
+    confidence: verified
+  training.batch_size:
+    source_type: AUTHOR_CODE
+    locator: TF2 notebook fit(batch_size=128)
+    confidence: verified
+unresolved_material_fields: []

@@ -1,0 +1,100 @@
+[
+  {
+    "name": "input_BCTF",
+    "shape": [
+      2,
+      1,
+      100,
+      40
+    ],
+    "layout": "[batch, channels=1, time=100, features=40]"
+  },
+  {
+    "name": "conv_block_1",
+    "shape": [
+      2,
+      16,
+      100,
+      20
+    ]
+  },
+  {
+    "name": "conv_block_2",
+    "shape": [
+      2,
+      16,
+      100,
+      10
+    ]
+  },
+  {
+    "name": "conv_block_3",
+    "shape": [
+      2,
+      16,
+      100,
+      1
+    ]
+  },
+  {
+    "name": "inception_3",
+    "shape": [
+      2,
+      32,
+      100,
+      1
+    ]
+  },
+  {
+    "name": "inception_5",
+    "shape": [
+      2,
+      32,
+      100,
+      1
+    ]
+  },
+  {
+    "name": "inception_pool",
+    "shape": [
+      2,
+      32,
+      100,
+      1
+    ]
+  },
+  {
+    "name": "inception_concat_channels",
+    "shape": [
+      2,
+      96,
+      100,
+      1
+    ],
+    "concat_axis": 1
+  },
+  {
+    "name": "named_permutation_channels_to_sequence",
+    "shape": [
+      2,
+      100,
+      96
+    ],
+    "permutation": "B,C,T,1 -> B,T,C"
+  },
+  {
+    "name": "lstm_sequence",
+    "shape": [
+      2,
+      100,
+      64
+    ]
+  },
+  {
+    "name": "three_class_logits",
+    "shape": [
+      2,
+      3
+    ]
+  }
+]

@@ -1,0 +1,39 @@
+paper_id: tlob_2025
+implementation_profile: tlob_corrected_bin_audit
+fidelity_class: D_MODERNIZED_AUDIT
+paper_version: arXiv:2502.15757v3
+source_code_commit: f1c0af4d81067978914361766db0457a7d8b6a46
+dataset_profile: fi2010_synthetic_v1
+random_seed: 7
+model:
+  sequence_length: 128
+  num_layers: 4
+  hidden_dim: 40
+  num_heads: 1
+  positional_embedding: sinusoidal
+  bin_mode: corrected_port
+  attention_mask: none
+  detach_order_type_embedding: false
+data:
+  features: 144
+  class_order:
+  - up
+  - stationary
+  - down
+training:
+  optimizer: Adam
+  learning_rate: 0.0001
+  ema_decay: 0.999
+material_fields:
+- model.bin_mode
+- model.detach_order_type_embedding
+provenance:
+  model.bin_mode:
+    source_type: ASSUMPTION
+    locator: AUDIT-TLOB-BIN-SAFE
+    confidence: verified
+  model.detach_order_type_embedding:
+    source_type: ASSUMPTION
+    locator: AUDIT-TLOB-TRAINABLE-EMBEDDING
+    confidence: verified
+unresolved_material_fields: []
