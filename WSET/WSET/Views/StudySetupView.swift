@@ -36,7 +36,7 @@ struct StudySetupView: View {
 
     private var writtenPracticeButtonTitle: String {
         switch writtenQuestions.count {
-        case 0: "公開済みの記述式問題はありません"
+        case 0: "記述式問題はありません"
         case 1: "記述式1問を練習"
         default: "記述式\(writtenQuestions.count)問を練習"
         }
@@ -55,15 +55,8 @@ struct StudySetupView: View {
             && theoryExamWrittenQuestions.count >= TheoryExamBuilder.writtenCount
     }
 
-    private var theoryExamContainsPendingReview: Bool {
-        theoryExamWrittenQuestions.contains {
-            $0.reviewStatus == "pending_external_review"
-        }
-    }
-
     private var theoryExamEntryTitle: String {
         if !canStartTheoryExam { return "理論模擬試験（公開準備中）" }
-        if theoryExamContainsPendingReview { return "理論模擬試験（開発用候補）" }
         return "120分理論模擬試験"
     }
 
@@ -236,14 +229,9 @@ struct StudySetupView: View {
                     Text("記述式練習")
                 } footer: {
                     if writtenQuestions.isEmpty {
-                        Text("人手レビュー済みの問題が公開されるまで、記述式練習は開始できません。")
+                        Text("利用可能な記述式問題がありません。")
                     } else {
                         Text("利用可能な\(writtenQuestions.count)問を、模範解答と採点基準で自己採点します。")
-                    }
-                    if writtenQuestions.contains(where: {
-                        $0.reviewStatus == "pending_external_review"
-                    }) {
-                        Text("開発用の候補問題です。内容と配点は外部人手レビュー待ちです。")
                     }
                 }
 
@@ -366,9 +354,7 @@ struct StudySetupView: View {
                     Text("本番形式")
                 } footer: {
                     if !canStartTheoryExam {
-                        Text("理論模擬試験は、人手レビュー済みの公開問題が四択50問・記述4問揃うまで開始できません。")
-                    } else if theoryExamContainsPendingReview {
-                        Text("理論模擬試験は開発用候補を含み、内容と配点は外部人手レビュー待ちです。")
+                        Text("理論模擬試験は、四択50問・記述4問が利用可能になるまで開始できません。")
                     } else {
                         Text("120分模試は四択50問と記述4問です。")
                     }

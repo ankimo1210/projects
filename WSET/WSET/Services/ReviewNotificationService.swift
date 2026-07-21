@@ -38,7 +38,7 @@ enum ReviewNotificationService {
         center.removePendingNotificationRequests(withIdentifiers: [dailyIdentifier, nextDueIdentifier])
 
         let dailyContent = UNMutableNotificationContent()
-        dailyContent.title = "WSET復習"
+        dailyContent.title = "CruNote"
         dailyContent.body = "期限の来た問題を復習して、学習を続けましょう。"
         dailyContent.sound = .default
         var dailyComponents = DateComponents()
@@ -71,6 +71,6 @@ enum ReviewNotificationError: LocalizedError {
     case permissionDenied
 
     var errorDescription: String? {
-        "WSET学習の通知が無効です。復習通知を受け取るにはiOSの設定で通知を許可してください。"
+        "CruNoteの通知が無効です。復習通知を受け取るにはiOSの設定で通知を許可してください。"
     }
 }

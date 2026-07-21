@@ -505,7 +505,7 @@ enum BackupError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .invalidFile:
-            "選択したファイルはWSET学習のバックアップではありません。"
+            "選択したファイルはCruNoteのバックアップではありません。"
         case let .unsupportedSchema(version):
             "バックアップ形式（バージョン\(version)）には対応していません。"
         }

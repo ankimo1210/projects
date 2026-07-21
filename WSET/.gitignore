@@ -4,3 +4,7 @@
 
 # Conversation deliverables; the canonical workbook lives in QuestionSources/
 outputs/
+
+# Regenerable App Store screenshot test bundles
+AppStoreAssets/Screenshots/*.xcresult/
+AppStoreAssets/Screenshots/**/manifest.json

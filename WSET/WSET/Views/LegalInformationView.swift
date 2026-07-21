@@ -12,7 +12,11 @@ struct PrivacyInformationView: View {
                 Text("購入権利はバックアップに含まれず、App Storeから検証・復元します。")
             }
             Section("任意のオンライン機能") {
-                Text("iCloudへの手動バックアップ転送やAI添削は、対応状況と送信内容を表示し、利用者が明示的に操作・同意した場合だけ使用します。利用できない場合もローカル学習は継続できます。")
+                Text("現在のRelease版は学習データを外部サーバへ送信しません。購入と購入権利の復元はAppleのStoreKitを通じて処理されます。")
+            }
+            Section("公開情報") {
+                Link("プライバシーポリシー", destination: URL(string: "https://ankimo1210.github.io/projects/crunote/privacy.html")!)
+                Link("サポート", destination: URL(string: "https://ankimo1210.github.io/projects/crunote/")!)
             }
         }
         .navigationTitle("プライバシーとデータ")
@@ -27,7 +31,7 @@ struct LegalInformationView: View {
                 Text("本アプリは独立した学習支援アプリであり、WSET（Wine & Spirit Education Trust）と提携・承認された公式アプリではありません。")
             }
             Section("学習内容") {
-                Text("問題、解説、採点基準、地図は独自に作成した学習素材です。自己採点と模擬試験結果は公式の合否や採点結果を保証しません。")
+                Text("問題、解説、採点基準、地図は独自に作成した学習素材です。公式過去問は収録していません。自己採点と模擬試験結果は公式の合否や採点結果を保証しません。")
             }
             Section("購入") {
                 Text("Proは買い切り型の商品です。実際の価格は購入画面にApp Storeから表示される金額が優先されます。購入の復元とデータのバックアップは無料で利用できます。")

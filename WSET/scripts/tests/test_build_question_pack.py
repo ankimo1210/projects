@@ -132,7 +132,7 @@ class QuestionPackBuilderTests(unittest.TestCase):
                 for question in questions
             )
         )
-        self.assertEqual(self.payload["distributionStatus"], "development_only")
+        self.assertEqual(self.payload["distributionStatus"], "release")
         self.assertEqual(
             self.payload["source"]["file"],
             "QuestionSources/wset_level3_original_questions_1100_v7.xlsx",
@@ -210,7 +210,7 @@ class QuestionPackBuilderTests(unittest.TestCase):
         with self.assertRaisesRegex(QuestionPackError, "missing or stale"):
             pack_question(published)
 
-    def test_release_status_requires_every_question_to_be_published(self) -> None:
+    def test_release_status_is_independent_of_editorial_review_metadata(self) -> None:
         published = dict(self.payload["questions"][0])
         published["reviewStatus"] = "published"
         published["needsReview"] = False
@@ -224,10 +224,11 @@ class QuestionPackBuilderTests(unittest.TestCase):
         self.assertEqual(_distribution_status([published]), "release")
         self.assertEqual(
             _distribution_status([published, pending]),
-            "development_only",
+            "release",
         )
         published["needsReview"] = True
-        self.assertEqual(_distribution_status([published]), "development_only")
+        self.assertEqual(_distribution_status([published]), "release")
+        self.assertEqual(_distribution_status([]), "development_only")
 
     def test_written_pack_can_be_checked_against_the_workbook(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

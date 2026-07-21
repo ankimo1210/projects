@@ -124,7 +124,7 @@ final class UITestEntitlementCommerce: EntitlementCommerce {
     }
 
     func loadProduct(id: String) async throws -> StoreProductDetails? {
-        StoreProductDetails(id: id, displayPrice: "¥1,980")
+        StoreProductDetails(id: id, displayPrice: "¥1,500")
     }
 
     func purchase(id: String) async throws -> PurchaseOutcome { purchaseOutcome }

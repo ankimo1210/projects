@@ -100,9 +100,9 @@ final class WSETUITests: XCTestCase {
         XCTAssertTrue(app.tabBars.buttons["学習"].exists)
         XCTAssertTrue(app.tabBars.buttons["問題集"].exists)
         XCTAssertFalse(app.tabBars.buttons["Home"].exists)
-        XCTAssertTrue(app.navigationBars["WSET学習"].exists)
+        XCTAssertTrue(app.navigationBars["CruNote"].exists)
         XCTAssertTrue(app.staticTexts["学習成果別の収録数"].exists)
-        XCTAssertFalse(app.navigationBars["WSET Study"].exists)
+        XCTAssertFalse(app.navigationBars["WSET学習"].exists)
         XCTAssertFalse(app.staticTexts["Coverage"].exists)
 
         app.tabBars.buttons["学習"].tap()

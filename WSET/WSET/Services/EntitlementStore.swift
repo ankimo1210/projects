@@ -16,6 +16,13 @@ enum PurchaseOutcome: Equatable {
     case cancelled
 }
 
+enum ProductLoadStatus: Equatable {
+    case idle
+    case loading
+    case loaded
+    case unavailable
+}
+
 enum EntitlementStoreError: LocalizedError {
     case productUnavailable
     case failedVerification
@@ -37,6 +44,7 @@ final class EntitlementStore {
 
     private(set) var status: EntitlementStatus
     private(set) var product: StoreProductDetails?
+    private(set) var productLoadStatus: ProductLoadStatus = .idle
     private(set) var isPrepared = false
     @ObservationIgnored private var updatesTask: Task<Void, Never>?
     @ObservationIgnored private let commerce: any EntitlementCommerce
@@ -101,6 +109,13 @@ final class EntitlementStore {
         await refreshEntitlement()
     }
 
+    func reloadProduct() async {
+        await loadProduct()
+        if product != nil {
+            await refreshEntitlement()
+        }
+    }
+
     func purchase() async throws -> PurchaseOutcome {
         if product == nil {
             await loadProduct()
@@ -139,13 +154,16 @@ final class EntitlementStore {
     }
 
     private func loadProduct() async {
+        productLoadStatus = .loading
         do {
             product = try await commerce.loadProduct(id: Self.proProductID)
+            productLoadStatus = product == nil ? .unavailable : .loaded
             if product == nil, !hasProAccess {
                 status = .unavailable("商品情報を取得できません。")
             }
         } catch {
             product = nil
+            productLoadStatus = .unavailable
             if !hasProAccess {
                 status = .unavailable("商品情報を取得できません。")
             }

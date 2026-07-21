@@ -17,7 +17,7 @@ final class StoreKitConfigurationTests: XCTestCase {
         XCTAssertEqual(products.count, 1)
         XCTAssertEqual(product["productID"] as? String, EntitlementStore.proProductID)
         XCTAssertEqual(product["type"] as? String, "NonConsumable")
-        XCTAssertEqual(product["displayPrice"] as? String, "1980")
+        XCTAssertEqual(product["displayPrice"] as? String, "1500")
 
         let localizations = try XCTUnwrap(product["localizations"] as? [[String: Any]])
         let japanese = try XCTUnwrap(
@@ -189,11 +189,40 @@ final class StoreKitConfigurationTests: XCTestCase {
         XCTAssertEqual(commerce.loadCallCount, 0)
         XCTAssertEqual(commerce.entitlementCallCount, 0)
     }
+
+    func testProductCanBeReloadedAfterInitialFailure() async {
+        let commerce = MockEntitlementCommerce()
+        commerce.product = nil
+        let store = EntitlementStore(
+            commerce: commerce,
+            cache: MemoryEntitlementCache(),
+            processArguments: []
+        )
+
+        await store.prepare()
+
+        XCTAssertNil(store.product)
+        XCTAssertEqual(store.productLoadStatus, .unavailable)
+
+        commerce.product = StoreProductDetails(
+            id: EntitlementStore.proProductID,
+            displayPrice: "¥1,500"
+        )
+        await store.reloadProduct()
+
+        XCTAssertEqual(store.displayPrice, "¥1,500")
+        XCTAssertEqual(store.productLoadStatus, .loaded)
+        XCTAssertEqual(store.status, .free)
+        XCTAssertEqual(commerce.loadCallCount, 2)
+    }
 }
 
 @MainActor
 private final class MockEntitlementCommerce: EntitlementCommerce {
-    var product = StoreProductDetails(id: EntitlementStore.proProductID, displayPrice: "¥1,980")
+    var product: StoreProductDetails? = StoreProductDetails(
+        id: EntitlementStore.proProductID,
+        displayPrice: "¥1,500"
+    )
     var purchaseOutcome: PurchaseOutcome
     var restoreResult: Bool
     var currentEntitlementResult = false

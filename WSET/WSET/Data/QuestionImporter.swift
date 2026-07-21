@@ -13,7 +13,7 @@ enum QuestionImporterError: LocalizedError {
         case .packMissing:
             "問題データがこのビルドに含まれていません。"
         case .developmentContentUnavailable:
-            "公開レビュー済みの問題データがこのビルドに含まれていません。"
+            "Release用の問題データがこのビルドに含まれていません。"
         case let .unsupportedSchema(version):
             "問題データの形式 v\(version) には対応していません。"
         case let .countMismatch(expected, actual):

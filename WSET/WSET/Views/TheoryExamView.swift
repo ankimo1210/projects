@@ -43,13 +43,6 @@ struct TheoryExamDashboardView: View {
             && writtenCount >= TheoryExamBuilder.writtenCount
     }
 
-    private var containsPendingExternalReviewContent: Bool {
-        theoryCandidateQuestions.contains {
-            $0.studyMode == "written_answer"
-                && $0.reviewStatus == "pending_external_review"
-        }
-    }
-
     var body: some View {
         if !entitlementStore.policy.canAccess(.theoryExam), !completedSessions.isEmpty {
             historyOnlyContent
@@ -90,12 +83,12 @@ struct TheoryExamDashboardView: View {
                     "理論模擬試験は公開準備中です",
                     systemImage: "checkmark.seal",
                     description: Text(
-                        "人手レビュー済みの公開問題が四択50問・記述4問揃うと利用できます。"
+                        "四択50問・記述4問が利用可能になると開始できます。"
                     )
                 )
             }
 
-            Section("現在の公開問題") {
+            Section("現在の問題") {
                 LabeledContent("四択", value: multipleChoiceCount.formatted())
                 LabeledContent("記述式", value: writtenCount.formatted())
             }
@@ -113,15 +106,6 @@ struct TheoryExamDashboardView: View {
                 Text("本番形式")
             } footer: {
                 Text("解答は自動保存され、途中で閉じても再開できます。記述式は提出後に採点基準で自己採点します。")
-            }
-
-            if containsPendingExternalReviewContent {
-                Section("コンテンツ状態") {
-                    Label(
-                        "開発用候補を含みます。内容と配点は外部人手レビュー待ちです。",
-                        systemImage: "exclamationmark.triangle"
-                    )
-                }
             }
 
             if let resumableSession {
@@ -149,12 +133,7 @@ struct TheoryExamDashboardView: View {
                     Button {
                         startExam()
                     } label: {
-                        Label(
-                            containsPendingExternalReviewContent
-                                ? "開発用120分模擬試験を開始"
-                                : "120分模擬試験を開始",
-                            systemImage: "timer"
-                        )
+                        Label("120分模擬試験を開始", systemImage: "timer")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)

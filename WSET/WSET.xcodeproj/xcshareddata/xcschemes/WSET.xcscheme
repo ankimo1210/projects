@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
    LastUpgradeVersion = "2660"
-   version = "1.7">
+   version = "1.8">
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES"
@@ -29,6 +29,15 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       shouldAutocreateTestPlan = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "2F5D888F3002030D00EC9F9C"
+            BuildableName = "WSET.app"
+            BlueprintName = "WSET"
+            ReferencedContainer = "container:WSET.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <Testables>
          <TestableReference
             skipped = "NO"
@@ -42,8 +51,7 @@
             </BuildableReference>
          </TestableReference>
          <TestableReference
-            skipped = "NO"
-            parallelizable = "NO">
+            skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A1000000000000000000000C"
@@ -53,15 +61,6 @@
             </BuildableReference>
          </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2F5D888F3002030D00EC9F9C"
-            BuildableName = "WSET.app"
-            BlueprintName = "WSET"
-            ReferencedContainer = "container:WSET.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <StoreKitConfigurationFileReference
          identifier = "../WSET/Configuration.storekit">
       </StoreKitConfigurationFileReference>

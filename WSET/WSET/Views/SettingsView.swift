@@ -86,9 +86,11 @@ struct SettingsView: View {
                 NavigationLink("プライバシーとデータ") {
                     PrivacyInformationView()
                 }
+#if DEBUG
                 NavigationLink("任意オンライン機能の準備") {
                     R7ReadinessView()
                 }
+#endif
                 NavigationLink("本アプリについて") {
                     LegalInformationView()
                 }
@@ -112,7 +114,7 @@ struct SettingsView: View {
         .fileImporter(isPresented: $showingImporter, allowedContentTypes: [.json]) { result in
             importBackup(result)
         }
-        .alert("WSET学習", isPresented: Binding(
+        .alert("CruNote", isPresented: Binding(
             get: { statusMessage != nil },
             set: { if !$0 { statusMessage = nil } }
         )) {
@@ -138,7 +140,7 @@ struct SettingsView: View {
 
     private var backupFilename: String {
         let date = Date.now.formatted(.iso8601.year().month().day())
-        return "WSET-Study-Backup-\(date)"
+        return "CruNote-Backup-\(date)"
     }
 
     private func updateNotifications(enabled: Bool) {

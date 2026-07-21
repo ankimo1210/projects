@@ -22,7 +22,7 @@ class WrittenQuestionPackBuilderTests(unittest.TestCase):
     def setUp(self) -> None:
         self.source = json.loads(DEFAULT_INPUT.read_text(encoding="utf-8"))
 
-    def test_release_pack_excludes_all_pending_questions(self) -> None:
+    def test_release_pack_includes_all_non_rejected_questions(self) -> None:
         pack = build_pack(generated_at="2026-07-19T00:00:00Z")
         self.assertEqual(pack["schemaVersion"], 1)
         self.assertEqual(pack["distributionStatus"], "release")
@@ -31,22 +31,14 @@ class WrittenQuestionPackBuilderTests(unittest.TestCase):
             pack["referencePackSourceHash"],
             reference_pack["sourceHash"],
         )
-        self.assertEqual(pack["questionCount"], 0)
-        self.assertGreaterEqual(pack["candidateQuestionCount"], 10)
+        self.assertEqual(pack["questionCount"], len(self.source["questions"]))
+        self.assertGreaterEqual(pack["questionCount"], 10)
         self.assertEqual(
             pack["reviewSummary"]["pending_external_review"],
             len(self.source["questions"]),
         )
 
-    def test_development_pack_includes_pending_with_review_metadata(self) -> None:
-        pack = build_pack(
-            generated_at="2026-07-19T00:00:00Z",
-            include_pending_for_development=True,
-        )
-        self.assertEqual(pack["distributionStatus"], "development_only")
         self.assertEqual(len(pack["referencePackSourceHash"]), 64)
-        self.assertEqual(pack["questionCount"], len(self.source["questions"]))
-        self.assertGreaterEqual(pack["questionCount"], 10)
         for question in pack["questions"]:
             self.assertEqual(question["studyMode"], "written_answer")
             self.assertEqual(question["reviewStatus"], "pending_external_review")
@@ -66,15 +58,9 @@ class WrittenQuestionPackBuilderTests(unittest.TestCase):
                 self.assertTrue(item["knowledgeTags"])
                 self.assertTrue(item["relatedTermIDs"])
 
-    def test_release_pack_includes_only_explicitly_published_questions(self) -> None:
+    def test_release_pack_excludes_rejected_questions(self) -> None:
         source = copy.deepcopy(self.source)
-        source["questions"][0]["reviewStatus"] = "published"
-        source["questions"][0]["reviewer"] = "External reviewer"
-        source["questions"][0]["reviewedAt"] = "2026-07-19T09:00:00+09:00"
-        source["questions"][0]["metadata"]["externalReviewRequired"] = False
-        source["questions"][0]["reviewedContentHash"] = review_target_hash(
-            source["questions"][0]
-        )
+        source["questions"][0]["reviewStatus"] = "rejected"
         with tempfile.TemporaryDirectory() as directory:
             input_path = Path(directory) / "source.json"
             input_path.write_text(
@@ -83,42 +69,21 @@ class WrittenQuestionPackBuilderTests(unittest.TestCase):
             )
             pack = build_pack(input_path, generated_at="fixed")
 
-        self.assertEqual(pack["questionCount"], 1)
-        self.assertEqual(pack["questions"][0]["id"], source["questions"][0]["id"])
-        self.assertEqual(pack["questions"][0]["reviewer"], "External reviewer")
-        self.assertEqual(
-            pack["questions"][0]["contentMetadata"],
-            source["questions"][0]["metadata"],
-        )
-        self.assertEqual(
-            pack["questions"][0]["reviewTargetHash"],
-            pack["questions"][0]["reviewedContentHash"],
+        self.assertEqual(pack["questionCount"], len(source["questions"]) - 1)
+        self.assertNotIn(
+            source["questions"][0]["id"],
+            {question["id"] for question in pack["questions"]},
         )
 
     def test_pack_is_deterministic_and_checkable(self) -> None:
-        first = build_pack(
-            generated_at="first",
-            include_pending_for_development=True,
-        )
-        second = build_pack(
-            generated_at="second",
-            include_pending_for_development=True,
-        )
+        first = build_pack(generated_at="first")
+        second = build_pack(generated_at="second")
         self.assertEqual(first["sourceHash"], second["sourceHash"])
         self.assertEqual(first["questions"], second["questions"])
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "written_question_pack.json"
             write_pack(first, output)
-            with self.assertRaisesRegex(
-                WrittenQuestionPackError,
-                "distributionStatus",
-            ):
-                check_existing_pack(DEFAULT_INPUT, output)
-            check_existing_pack(
-                DEFAULT_INPUT,
-                output,
-                include_pending_for_development=True,
-            )
+            check_existing_pack(DEFAULT_INPUT, output)
 
     def test_rejects_duplicate_question_ids(self) -> None:
         source = copy.deepcopy(self.source)
