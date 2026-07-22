@@ -29,6 +29,30 @@ Input ch 015:
 
 PRO/STBY is **not** a keycode: input ch 032 bit 14, inverted (0 = pressed).
 
+### PRO/STBY Wire Protocol (ch 032, bit 14)
+
+Confirmed against `vendor/virtualagc/yaDSKY2/yaDSKY2.cpp`, function
+`MainFrame::OutputPro` (yaDSKY2.cpp:2174-2199), called with `OffOn=0` from
+`on_ProButton_pressed` (yaDSKY2.cpp:762, `// Press.` at :797-798) and with
+`OffOn=1` from `on_ProButton_released` (yaDSKY2.cpp:985-991). Unlike the
+other DSKY keys (a single keycode byte on ch 015), PRO is a discrete bit on
+input channel 032 and yaAGC requires two packets to update it:
+
+1. A **bitmask** packet on ch 032 claiming only bit 14 (`020000` octal =
+   `1 << 13`, yaDSKY2.cpp:2186, `FormIoPacket(0432, 020000, Packet)` — the
+   `0400` added to the channel number is this build's own on-the-wire
+   bitmask-flag convention, decoded here instead via `Packet::bitmask`'s
+   `u` bit per `docs/agc-channel-map.md`'s Packet Layout section).
+2. A **value** packet on ch 032: data `0` while pressed, data `020000`
+   (bit 14 set) once released (yaDSKY2.cpp:2181,2188-2190,
+   `record (032, OffOn ? 020000 : 0)`). I.e. bit 14 is *inverted*: low = PRO
+   held down, high = idle/released.
+
+This matches `keys::pro_key_packets(pressed: bool) -> [Packet; 2]`, which
+emits `[Packet::bitmask(0o32, 1 << 13), Packet::io(0o32, if pressed {0} else {1 << 13})]`.
+
+**Result: no correction needed** — matches the plan's Reference block.
+
 ## Display Relay Word
 
 Output ch 010: `AAAA B CCCCC DDDDD` (row, sign bit, left digit code, right digit code).
