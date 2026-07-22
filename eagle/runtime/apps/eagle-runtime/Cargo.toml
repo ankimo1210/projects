@@ -3,6 +3,10 @@ name = "eagle-runtime"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+name = "eagle_runtime"
+path = "src/lib.rs"
+
 [dependencies]
 eagle-agc-protocol = { path = "../../crates/eagle-agc-protocol" }
 eagle-schema = { path = "../../crates/eagle-schema" }
@@ -15,3 +19,4 @@ futures-util = "0.3"
 
 [dev-dependencies]
 tokio-tungstenite = "0.26"
+serde = { workspace = true }

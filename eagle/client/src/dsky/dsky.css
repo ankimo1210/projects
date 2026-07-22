@@ -1,0 +1,22 @@
+.dsky { background: #1a1a1c; color: #ddd; padding: 1.5rem; width: 420px;
+  font-family: "Segoe UI", sans-serif; border-radius: 8px; }
+.dsky-status { font-size: 0.7rem; color: #888; margin-bottom: 0.5rem; }
+.dsky-lamps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
+  margin-bottom: 1rem; }
+.lamp { background: #2a2a2c; color: #555; font-size: 0.6rem; padding: 6px 4px;
+  text-align: center; border-radius: 2px; }
+.lamp.on { background: #c9a227; color: #111; }
+.dsky-display { background: #0a0f0a; padding: 0.8rem; border-radius: 4px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+  font-family: "Courier New", monospace; }
+.disp-cell label { display: block; font-size: 0.55rem; color: #4a7; }
+.disp-cell span, .disp-reg { color: #39ff6a; font-size: 1.6rem;
+  letter-spacing: 0.2em; white-space: pre; }
+.disp-reg { grid-column: 1 / -1; text-align: right; }
+.disp-cell.flash span { animation: dsky-flash 1.28s step-start infinite; }
+@keyframes dsky-flash { 50% { opacity: 0; } }
+.dsky-keys { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;
+  margin-top: 1rem; }
+.key { background: #333; color: #eee; border: 1px solid #555; padding: 10px 4px;
+  font-size: 0.7rem; border-radius: 4px; cursor: pointer; }
+.key:active { background: #555; }
