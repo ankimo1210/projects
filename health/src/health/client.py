@@ -11,6 +11,7 @@ from `health.endpoints`) because this task's file scope is limited to
 `client.py` / `tests/test_client.py` / `tests/fakes.py`; `endpoints.py` does
 not currently export a base-URL constant.
 """
+
 from __future__ import annotations
 
 import time
@@ -37,8 +38,9 @@ class ApiError(Exception):
     carry Google's `error.code` / `error.status` when the body is a Google
     error envelope; both are None otherwise (e.g. a plain-text 5xx body)."""
 
-    def __init__(self, status_code: int, message: str, code: int | None = None,
-                 status: str | None = None):
+    def __init__(
+        self, status_code: int, message: str, code: int | None = None, status: str | None = None
+    ):
         super().__init__(message)
         self.status_code = status_code
         self.code = code
@@ -50,8 +52,14 @@ class RateLimited(ApiError):  # noqa: N818 -- fixed name from the task interface
     """HTTP 429. `retry_after_s` is parsed from the `Retry-After` header
     (numeric seconds or an HTTP-date), defaulting to 60 when absent."""
 
-    def __init__(self, status_code: int, message: str, retry_after_s: int,
-                 code: int | None = None, status: str | None = None):
+    def __init__(
+        self,
+        status_code: int,
+        message: str,
+        retry_after_s: int,
+        code: int | None = None,
+        status: str | None = None,
+    ):
         super().__init__(status_code, message, code=code, status=status)
         self.retry_after_s = retry_after_s
 
@@ -74,8 +82,7 @@ class RequestBudget:
 
     def consume(self) -> None:
         if self.used >= self.limit:
-            raise RequestCapExceeded(
-                f"request budget exhausted: {self.used}/{self.limit}")
+            raise RequestCapExceeded(f"request budget exhausted: {self.used}/{self.limit}")
         self.used += 1
 
 
@@ -88,8 +95,14 @@ class HealthClient:
     are not.
     """
 
-    def __init__(self, auth: GoogleHealthAuth, session: Any = None,
-                 clock=time.monotonic, wait=time.sleep, min_interval_s: float = 0.5):
+    def __init__(
+        self,
+        auth: GoogleHealthAuth,
+        session: Any = None,
+        clock=time.monotonic,
+        wait=time.sleep,
+        min_interval_s: float = 0.5,
+    ):
         self.auth = auth
         self.session = session or requests.Session()
         self.clock = clock
@@ -97,16 +110,16 @@ class HealthClient:
         self.min_interval_s = min_interval_s
         self._last_sent_at: float | None = None
 
-    def daily_rollup(self, metric: Metric, start: date, end: date,
-                      budget: RequestBudget) -> dict:
+    def daily_rollup(self, metric: Metric, start: date, end: date, budget: RequestBudget) -> dict:
         """POST .../dataTypes/{metric.data_type}/dataPoints:dailyRollUp and
         return the parsed JSON response."""
         url = f"{API}/v4/users/me/dataTypes/{metric.data_type}/dataPoints:dailyRollUp"
         body = daily_rollup_body(start, end)
         return self._request("POST", url, budget, json=body)
 
-    def iter_reconciled(self, metric: Metric, start: date, end: date,
-                         budget: RequestBudget) -> Iterator[dict]:
+    def iter_reconciled(
+        self, metric: Metric, start: date, end: date, budget: RequestBudget
+    ) -> Iterator[dict]:
         """GET .../dataTypes/{metric.data_type}/dataPoints:reconcile, yielding
         each page's parsed JSON. `filter` and `pageSize` stay identical on
         every page; only `pageToken` changes, and only once a page carries
@@ -135,8 +148,7 @@ class HealthClient:
             self.auth.refresh()  # not paced/budgeted: token endpoint, not Health API
             resp = self._dispatch(method, url, budget, **kwargs)
             if resp.status_code == 401:
-                raise AuthError(
-                    "Google Health API returned 401 after a token refresh and retry")
+                raise AuthError("Google Health API returned 401 after a token refresh and retry")
         return self._parse(resp)
 
     def _dispatch(self, method: str, url: str, budget: RequestBudget, **kwargs):
@@ -177,18 +189,25 @@ class HealthClient:
         try:
             return resp.json()
         except ValueError as exc:
-            raise ApiError(resp.status_code,
-                            f"malformed JSON in {resp.status_code} response: {exc}") from exc
+            raise ApiError(
+                resp.status_code, f"malformed JSON in {resp.status_code} response: {exc}"
+            ) from exc
 
     def _api_error(self, resp) -> ApiError:
         code, status, message = self._google_error(resp)
-        return ApiError(resp.status_code, message or self._fallback_message(resp),
-                         code=code, status=status)
+        return ApiError(
+            resp.status_code, message or self._fallback_message(resp), code=code, status=status
+        )
 
     def _rate_limited(self, resp) -> RateLimited:
         code, status, message = self._google_error(resp)
-        return RateLimited(resp.status_code, message or self._fallback_message(resp),
-                            self._retry_after_s(resp.headers), code=code, status=status)
+        return RateLimited(
+            resp.status_code,
+            message or self._fallback_message(resp),
+            self._retry_after_s(resp.headers),
+            code=code,
+            status=status,
+        )
 
     @staticmethod
     def _google_error(resp) -> tuple[int | None, str | None, str | None]:

@@ -1,9 +1,9 @@
 """Shared app context: paths and cached resources."""
+
 from pathlib import Path
 
 import streamlit as st
-
-from health.auth import FitbitAuth
+from health.auth import GoogleHealthAuth
 from health.store import Store
 
 DATA_DIR = Path(__file__).resolve().parents[1] / "data"
@@ -14,5 +14,5 @@ def get_store() -> Store:
     return Store(DATA_DIR / "health.duckdb")
 
 
-def get_auth() -> FitbitAuth:
-    return FitbitAuth.from_env(DATA_DIR)
+def get_auth() -> GoogleHealthAuth:
+    return GoogleHealthAuth.from_env(DATA_DIR)

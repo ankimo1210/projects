@@ -1,135 +1,235 @@
 from datetime import date
 
+import health.sync as sync_module
 import pytest
-
-from health.client import RateLimited
-from health.endpoints import CATALOG, Metric, ParsedRows
+from health.client import RateLimited, RequestCapExceeded
+from health.endpoints import CATALOG, DAILY_ROLLUP, RECONCILE, Metric, ParsedRows
 from health.store import Store
-from health.sync import SyncEngine
+from health.sync import SyncEngine, backfill_start
+
+
+def metric(name="test", method=DAILY_ROLLUP, days=90, full_history=True, parser=None):
+    return Metric(
+        name=name,
+        data_type=name,
+        method=method,
+        max_range_days=days,
+        scope="scope",
+        full_history=full_history,
+        series_names=(name,),
+        parse_pages=parser or (lambda pages: ParsedRows()),
+        filter_path="value.date" if method == RECONCILE else None,
+    )
 
 
 class FakeClient:
-    """Scripted FitbitClient stand-in: returns {} and records paths."""
-
-    def __init__(self, remaining=100, fail_after=None):
+    def __init__(self, pages=None, rate_limit_at=None):
+        self.pages = pages or [{}]
+        self.rate_limit_at = rate_limit_at
         self.calls = []
-        self.remaining = remaining
-        self.reset_s = 1800
-        self.fail_after = fail_after  # raise RateLimited after N calls
 
-    def get(self, path):
-        if self.fail_after is not None and len(self.calls) >= self.fail_after:
-            raise RateLimited(900)
-        self.calls.append(path)
-        if path.endswith("/profile.json"):
-            return {"user": {"memberSince": "2026-05-01"}}
-        return {}
+    def _send(self, method, metric_, start, end, budget, payload):
+        if self.rate_limit_at == len(self.calls):
+            budget.consume()
+            raise RateLimited(429, "slow down", 90)
+        budget.consume()
+        self.calls.append((method, metric_.name, start, end))
+        return payload
 
+    def daily_rollup(self, metric_, start, end, budget):
+        return self._send("rollup", metric_, start, end, budget, self.pages[0])
 
-def steps_only():
-    m = next(m for m in CATALOG if m.name == "steps")
-    return [m]
+    def iter_reconciled(self, metric_, start, end, budget):
+        for page in self.pages:
+            yield self._send("reconcile", metric_, start, end, budget, page)
 
 
 @pytest.fixture
 def store(tmp_path):
-    s = Store(tmp_path / "t.duckdb")
-    yield s
-    s.close()
+    result = Store(tmp_path / "health.duckdb")
+    yield result
+    result.close()
 
 
-def test_backfill_uses_member_since_and_sets_state(store):
+def test_backfill_override_and_validation():
+    today = date(2026, 7, 20)
+    assert backfill_start(today, {"HEALTH_BACKFILL_START": "2024-01-02"}) == date(2024, 1, 2)
+    with pytest.raises(ValueError, match="ISO date"):
+        backfill_start(today, {"HEALTH_BACKFILL_START": "yesterday"})
+    with pytest.raises(ValueError, match="future"):
+        backfill_start(today, {"HEALTH_BACKFILL_START": "2026-07-21"})
+
+
+def test_default_backfill_is_five_calendar_years_and_rounds_leap_day():
+    assert backfill_start(date(2026, 7, 20), {}) == date(2021, 7, 20)
+    assert backfill_start(date(2024, 2, 29), {}) == date(2019, 2, 28)
+
+
+@pytest.mark.parametrize(("days", "expected"), [(14, 3), (90, 1)])
+def test_rollup_chunking(store, days, expected):
     client = FakeClient()
-    engine = SyncEngine(client, store, catalog=steps_only(), today=date(2026, 7, 20))
+    engine = SyncEngine(
+        client,
+        store,
+        [metric(days=days)],
+        today=date(2026, 1, 31),
+        environ={"HEALTH_BACKFILL_START": "2026-01-01"},
+    )
     report = engine.sync_all()
-    assert client.calls[0].endswith("/profile.json")
-    assert "/date/2026-05-01/2026-07-20.json" in client.calls[1]
-    assert store.get_sync_state("steps") == date(2026, 7, 20)
-    assert report.progress[0].done and not report.paused
+    assert len(client.calls) == expected
+    assert report.progress[0].fetched_ranges == expected
 
 
-def test_incremental_refetches_trailing_3_days(store):
-    store.set_sync_state("steps", date(2026, 7, 19))
-    client = FakeClient()
-    engine = SyncEngine(client, store, catalog=steps_only(), today=date(2026, 7, 20),
-                        member_since=date(2026, 5, 1))
-    engine.sync_all()
-    assert "/date/2026-07-17/2026-07-20.json" in client.calls[0]
-
-
-def test_up_to_date_metric_skips_requests(store):
-    # fully synced through today: only the trailing refetch window remains
-    store.set_sync_state("steps", date(2026, 7, 20))
-    client = FakeClient()
-    engine = SyncEngine(client, store, catalog=steps_only(), today=date(2026, 7, 20),
-                        member_since=date(2026, 5, 1))
-    engine.sync_all()
-    assert "/date/2026-07-18/2026-07-20.json" in client.calls[0]
-
-
-def test_trailing_metric_starts_30_days_back(store):
-    m = next(m for m in CATALOG if m.name == "intraday_hr")
-    client = FakeClient()
-    engine = SyncEngine(client, store, catalog=[m], today=date(2026, 7, 20),
-                        member_since=date(2020, 1, 1))
-    engine.sync_all()
-    assert "/date/2026-06-21/1d/1min.json" in client.calls[0]
-    assert len(client.calls) == 30  # one per day
-    assert store.get_sync_state("intraday_hr") == date(2026, 7, 20)
-
-
-def test_budget_exhaustion_pauses_and_resumes(store):
-    client = FakeClient(remaining=3)  # below min_budget after first check
-    engine = SyncEngine(client, store, catalog=steps_only(), today=date(2026, 7, 20),
-                        member_since=date(2026, 5, 1))
-    report = engine.sync_all(min_budget=5)
-    assert report.paused and report.resume_in_s == 1800
-    assert client.calls == []  # stopped before any fetch
-
-
-def test_rate_limited_mid_run_pauses_with_retry_after(store):
-    m = next(m for m in CATALOG if m.name == "intraday_hr")
-    client = FakeClient(fail_after=5)
-    engine = SyncEngine(client, store, catalog=[m], today=date(2026, 7, 20),
-                        member_since=date(2020, 1, 1))
-    report = engine.sync_all()
-    assert report.paused and report.resume_in_s == 900
-    # progress persisted: 5 days done -> resume window starts near there
-    assert store.get_sync_state("intraday_hr") == date(2026, 6, 25)
-
-
-def test_profile_fetch_rate_limited_pauses_without_propagating(store):
-    # resumed backfill: fresh engine (member_since=None) hits the rate limit on
-    # the profile fetch itself — must pause cleanly, not raise into the caller.
-    client = FakeClient(fail_after=0)
-    engine = SyncEngine(client, store, catalog=steps_only(), today=date(2026, 7, 20))
-    report = engine.sync_all()
-    assert report.paused and report.resume_in_s == 900
-    assert client.calls == []
-
-
-def test_budget_exhausted_before_profile_fetch_pauses_without_any_call(store):
-    client = FakeClient(remaining=3)  # below min_budget, member_since not yet known
-    engine = SyncEngine(client, store, catalog=steps_only(), today=date(2026, 7, 20))
-    report = engine.sync_all(min_budget=5)
-    assert report.paused and report.resume_in_s == 1800
-    assert client.calls == []
-
-
-def test_progress_callback_invoked(store):
+def test_reconcile_buffers_all_pages_and_replaces_once(store, monkeypatch):
     seen = []
+    pages = [{"dataPoints": [1]}, {"dataPoints": [2]}]
+    m = metric(
+        method=RECONCILE,
+        parser=lambda received: seen.append(received) or ParsedRows(),
+    )
+    replacements = []
+    monkeypatch.setattr(store, "replace_chunk", lambda *args: replacements.append(args))
+    SyncEngine(
+        FakeClient(pages),
+        store,
+        [m],
+        today=date(2026, 1, 1),
+        environ={"HEALTH_BACKFILL_START": "2026-01-01"},
+    ).sync_all()
+    assert seen == [pages]
+    assert len(replacements) == 1
+    assert replacements[0][3] == pages
+
+
+def test_parser_failure_does_not_replace_or_advance_watermark(store, monkeypatch):
+    def fail(_pages):
+        raise ValueError("bad payload")
+
+    called = False
+
+    def replace(*_args):
+        nonlocal called
+        called = True
+
+    monkeypatch.setattr(store, "replace_chunk", replace)
+    engine = SyncEngine(
+        FakeClient(),
+        store,
+        [metric(parser=fail)],
+        today=date(2026, 1, 1),
+        environ={"HEALTH_BACKFILL_START": "2026-01-01"},
+    )
+    with pytest.raises(ValueError, match="bad payload"):
+        engine.sync_all()
+    assert not called
+    assert store.get_sync_state("test") is None
+
+
+def test_429_keeps_only_completed_chunks(store):
+    client = FakeClient(rate_limit_at=1)
+    m = metric(days=1)
+    report = SyncEngine(
+        client,
+        store,
+        [m],
+        today=date(2026, 1, 2),
+        environ={"HEALTH_BACKFILL_START": "2026-01-01"},
+    ).sync_all()
+    assert report.paused and report.resume_in_s == 90
+    assert report.requests_made == 2
+    assert store.get_sync_state("test") == date(2026, 1, 1)
+    assert len(store.raw_stats()) == 1
+
+
+def test_hard_cap_between_rollup_chunks(store, monkeypatch):
+    monkeypatch.setattr(sync_module, "MAX_REQUESTS_PER_RUN", 1)
+    report = SyncEngine(
+        FakeClient(),
+        store,
+        [metric(days=1)],
+        today=date(2026, 1, 2),
+        environ={"HEALTH_BACKFILL_START": "2026-01-01"},
+    ).sync_all()
+    assert report.stopped_early and report.requests_made == 1
+    assert store.get_sync_state("test") == date(2026, 1, 1)
+
+
+def test_hard_cap_during_paging_does_not_save_partial_chunk(store, monkeypatch):
+    monkeypatch.setattr(sync_module, "MAX_REQUESTS_PER_RUN", 1)
+    report = SyncEngine(
+        FakeClient([{"page": 1}, {"page": 2}]),
+        store,
+        [metric(method=RECONCILE)],
+        today=date(2026, 1, 1),
+        environ={"HEALTH_BACKFILL_START": "2026-01-01"},
+    ).sync_all()
+    assert report.stopped_early and report.requests_made == 1
+    assert store.get_sync_state("test") is None
+    assert store.raw_stats().empty
+
+
+def test_second_run_resumes_at_first_unfinished_chunk(store, monkeypatch):
+    monkeypatch.setattr(sync_module, "MAX_REQUESTS_PER_RUN", 1)
+    kwargs = {
+        "catalog": [metric(days=1)],
+        "today": date(2026, 1, 2),
+        "environ": {"HEALTH_BACKFILL_START": "2026-01-01"},
+    }
+    SyncEngine(FakeClient(), store, **kwargs).sync_all()
+    second = FakeClient()
+    report = SyncEngine(second, store, **kwargs).sync_all()
+    assert second.calls[0][2:] == (date(2026, 1, 2), date(2026, 1, 2))
+    assert report.progress[0].done
+    assert store.get_sync_state("test") == date(2026, 1, 2)
+
+
+def test_completed_metric_refetches_trailing_three_days(store):
+    store.set_sync_state("test", date(2026, 7, 20))
     client = FakeClient()
-    engine = SyncEngine(client, store, catalog=steps_only(), today=date(2026, 7, 20),
-                        member_since=date(2026, 5, 1))
-    engine.sync_all(progress_cb=lambda metric, msg: seen.append((metric, msg)))
-    assert seen and seen[0][0] == "steps"
+    SyncEngine(
+        client,
+        store,
+        [metric()],
+        today=date(2026, 7, 20),
+        environ={"HEALTH_BACKFILL_START": "2026-01-01"},
+    ).sync_all()
+    assert client.calls[0][2:] == (date(2026, 7, 18), date(2026, 7, 20))
 
 
-def test_parsed_rows_are_stored(store):
-    parsed = ParsedRows(daily=[("steps", "2026-07-19", 1.0)])
-    m = Metric("steps", "/1/user/-/activities/steps/date/{start}/{end}.json",
-               "range", 1095, "activity", True, lambda payload: parsed)
-    engine = SyncEngine(FakeClient(), store, catalog=[m], today=date(2026, 7, 20),
-                        member_since=date(2026, 7, 1))
-    engine.sync_all()
-    assert not store.daily_frame(["steps"]).empty
+def test_intraday_initial_sync_is_last_thirty_days(store):
+    client = FakeClient()
+    m = next(item for item in CATALOG if item.name == "intraday_hr")
+    SyncEngine(client, store, [m], today=date(2026, 7, 20), environ={}).sync_all()
+    assert len(client.calls) == 30
+    assert client.calls[0][2] == date(2026, 6, 21)
+    assert client.calls[-1][3] == date(2026, 7, 20)
+
+
+def test_empty_response_replaces_stale_rows_and_advances_watermark(store):
+    m = metric()
+    store.upsert_daily([("test", date(2026, 1, 1), 5.0)])
+    SyncEngine(
+        FakeClient([{}]),
+        store,
+        [m],
+        today=date(2026, 1, 1),
+        environ={"HEALTH_BACKFILL_START": "2026-01-01"},
+    ).sync_all()
+    assert store.daily_frame(["test"]).empty
+    assert store.get_sync_state("test") == date(2026, 1, 1)
+
+
+def test_progress_callback_reports_metric_range_and_request_count(store):
+    seen = []
+    SyncEngine(
+        FakeClient(),
+        store,
+        [metric()],
+        today=date(2026, 1, 1),
+        environ={"HEALTH_BACKFILL_START": "2026-01-01"},
+    ).sync_all(lambda name, message: seen.append((name, message)))
+    assert seen == [("test", "2026-01-01 → 2026-01-01 (1 requests)")]
+
+
+def test_unexpected_request_cap_error_type_is_not_an_api_error():
+    assert not issubclass(RequestCapExceeded, RateLimited)

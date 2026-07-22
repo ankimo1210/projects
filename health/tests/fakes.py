@@ -2,8 +2,9 @@
 
 
 class FakeResponse:
-    def __init__(self, status_code=200, json_data=None, headers=None, text=None,
-                 malformed_json=False):
+    def __init__(
+        self, status_code=200, json_data=None, headers=None, text=None, malformed_json=False
+    ):
         self.status_code = status_code
         self._json = json_data
         self.headers = headers or {}

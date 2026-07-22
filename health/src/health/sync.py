@@ -1,16 +1,44 @@
-"""Resumable backfill/incremental sync over the metric catalog."""
+"""Resumable Google Health synchronization with an atomic chunk boundary."""
+
 from __future__ import annotations
 
-from collections.abc import Callable
+import os
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 from datetime import date, timedelta
 
-from health.client import RateLimited
-from health.endpoints import CATALOG, Metric, chunk_ranges
+from health.client import RateLimited, RequestBudget, RequestCapExceeded
+from health.endpoints import CATALOG, DAILY_ROLLUP, Metric, chunk_ranges
 from health.store import Store
 
-TRAILING_REFETCH_DAYS = 2   # re-fetch last_synced - 2d .. today (3-day window)
-TRAILING_BACKFILL_DAYS = 29  # non-full-history metrics: today - 29d start
+MAX_REQUESTS_PER_RUN = 200
+TRAILING_REFETCH_DAYS = 2
+INTRADAY_LOOKBACK_DAYS = 30
+
+
+def backfill_start(today: date, environ: Mapping[str, str] | None = None) -> date:
+    """Return the configured start date, or the same calendar day five years ago.
+
+    February 29 is rounded down to February 28. Invalid and future overrides
+    fail before a request is made, instead of silently selecting a surprising
+    amount of private health history.
+    """
+
+    environ = os.environ if environ is None else environ
+    configured = environ.get("HEALTH_BACKFILL_START", "").strip()
+    if configured:
+        try:
+            start = date.fromisoformat(configured)
+        except ValueError as exc:
+            raise ValueError("HEALTH_BACKFILL_START must be an ISO date (YYYY-MM-DD)") from exc
+        if start > today:
+            raise ValueError("HEALTH_BACKFILL_START cannot be in the future")
+        return start
+
+    try:
+        return today.replace(year=today.year - 5)
+    except ValueError:  # February 29 -> February 28 in a non-leap year
+        return today.replace(year=today.year - 5, day=28)
 
 
 @dataclass
@@ -25,69 +53,84 @@ class SyncReport:
     progress: list[MetricProgress] = field(default_factory=list)
     paused: bool = False
     resume_in_s: int | None = None
+    stopped_early: bool = False
+    requests_made: int = 0
 
 
 class SyncEngine:
-    def __init__(self, client, store: Store, catalog: list[Metric] = CATALOG,
-                 today: date | None = None, member_since: date | None = None):
+    def __init__(
+        self,
+        client,
+        store: Store,
+        catalog: Sequence[Metric] = CATALOG,
+        today: date | None = None,
+        environ: Mapping[str, str] | None = None,
+    ):
         self.client = client
         self.store = store
         self.catalog = catalog
         self.today = today or date.today()
-        self.member_since = member_since
+        self.environ = environ
 
-    def _fetch_member_since(self) -> date:
-        payload = self.client.get("/1/user/-/profile.json")
-        return date.fromisoformat(payload["user"]["memberSince"])
+    def _initial_start(self, metric: Metric) -> date:
+        if metric.full_history:
+            return backfill_start(self.today, self.environ)
+        return self.today - timedelta(days=INTRADAY_LOOKBACK_DAYS - 1)
 
-    def _start_date(self, m: Metric, member_since: date) -> date:
-        default = member_since if m.full_history else (
-            self.today - timedelta(days=TRAILING_BACKFILL_DAYS))
-        last = self.store.get_sync_state(m.name)
+    def _start_date(self, metric: Metric) -> date:
+        initial = self._initial_start(metric)
+        last = self.store.get_sync_state(metric.name)
         if last is None:
-            return default
-        return max(default, min(last - timedelta(days=TRAILING_REFETCH_DAYS), self.today))
+            return initial
+        if last < self.today:
+            # An earlier run stopped between chunks. Continue at the first
+            # unfinished day; replaying the previous chunk can otherwise make
+            # a small hard cap prevent forward progress forever.
+            return max(initial, last + timedelta(days=1))
+        # A completed metric deliberately re-fetches today and the two prior
+        # days so late-arriving values and upstream deletions are reconciled.
+        return max(initial, self.today - timedelta(days=TRAILING_REFETCH_DAYS))
 
-    def sync_all(self, progress_cb: Callable[[str, str], None] | None = None,
-                 min_budget: int = 5) -> SyncReport:
+    def sync_all(self, progress_cb: Callable[[str, str], None] | None = None) -> SyncReport:
         report = SyncReport()
-        member_since = self.member_since
-        if member_since is None:
-            if self.client.remaining is not None and self.client.remaining < min_budget:
-                report.paused = True
-                report.resume_in_s = self.client.reset_s
-                return report
-            try:
-                member_since = self.member_since = self._fetch_member_since()
-            except RateLimited as exc:
-                report.paused = True
-                report.resume_in_s = exc.retry_after_s
-                return report
-        for m in self.catalog:
-            prog = MetricProgress(metric=m.name)
-            report.progress.append(prog)
-            start = self._start_date(m, member_since)
-            for s, e in chunk_ranges(start, self.today, m.max_range_days):
-                if self.client.remaining is not None and self.client.remaining < min_budget:
-                    report.paused = True
-                    report.resume_in_s = self.client.reset_s
-                    return report
-                path = m.path.format(start=s.isoformat(), end=e.isoformat(),
-                                     date=s.isoformat())
+        budget = RequestBudget(MAX_REQUESTS_PER_RUN)
+
+        for metric in self.catalog:
+            progress = MetricProgress(metric=metric.name)
+            report.progress.append(progress)
+            start = self._start_date(metric)
+
+            for chunk_start, chunk_end in chunk_ranges(start, self.today, metric.max_range_days):
                 try:
-                    payload = self.client.get(path)
+                    if metric.method == DAILY_ROLLUP:
+                        payloads = [
+                            self.client.daily_rollup(metric, chunk_start, chunk_end, budget)
+                        ]
+                    else:
+                        # Buffer every reconcile page. Parsing and replacement
+                        # only begin once the entire chunk is present.
+                        payloads = list(
+                            self.client.iter_reconciled(metric, chunk_start, chunk_end, budget)
+                        )
+                    rows = metric.parse_pages(payloads)
+                    self.store.replace_chunk(metric, chunk_start, chunk_end, payloads, rows)
                 except RateLimited as exc:
                     report.paused = True
                     report.resume_in_s = exc.retry_after_s
+                    report.requests_made = budget.used
                     return report
-                self.store.upsert_raw(m.name, f"{s}_{e}", payload)
-                rows = m.parse(payload)
-                self.store.upsert_daily(rows.daily)
-                self.store.upsert_sleep(rows.sleep)
-                self.store.upsert_intraday(rows.intraday)
-                self.store.set_sync_state(m.name, e)
-                prog.fetched_ranges += 1
+                except RequestCapExceeded:
+                    report.stopped_early = True
+                    report.requests_made = budget.used
+                    return report
+
+                progress.fetched_ranges += 1
                 if progress_cb:
-                    progress_cb(m.name, f"{s} → {e}")
-            prog.done = True
+                    progress_cb(
+                        metric.name,
+                        f"{chunk_start} → {chunk_end} ({budget.used} requests)",
+                    )
+            progress.done = True
+
+        report.requests_made = budget.used
         return report
