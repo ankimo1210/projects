@@ -31,7 +31,7 @@
         "pictures": 9,
         "markdown_chars": 75934,
         "math_blocks": 7,
-        "chunks": 56,
+        "chunks": 52,
         "max_chunk_tokens": 492,
         "pages_in_chunks": [
           1,
@@ -467,7 +467,7 @@
         "pictures": 3,
         "markdown_chars": 86590,
         "math_blocks": 57,
-        "chunks": 66,
+        "chunks": 62,
         "max_chunk_tokens": 487,
         "pages_in_chunks": [
           1,

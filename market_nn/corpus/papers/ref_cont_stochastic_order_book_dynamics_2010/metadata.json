@@ -26,7 +26,7 @@
     "pictures": 3,
     "markdown_chars": 86590,
     "math_blocks": 57,
-    "chunks": 66,
+    "chunks": 62,
     "max_chunk_tokens": 487,
     "pages_in_chunks": [
       1,

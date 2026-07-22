@@ -52,6 +52,7 @@ make -C market_nn test
 make -C market_nn smoke
 make -C market_nn paper-corpus
 make -C market_nn paper-corpus-verify-sources
+make -C market_nn paper-corpus-retrieval-qa
 ```
 
 コマンドの import 時にダウンロードや学習は発生しません。TensorFlow は公式 TF2
@@ -80,7 +81,8 @@ JSONL chunk、画像へ変換できる。生成物は Git 管理対象の `corpu
 各 chunk から原本 PDF、ページ、SHA-256 を追跡できる。生成方法、出力形式、数式補完の
 要件は [docs/paper_corpus.md](docs/paper_corpus.md) を参照。数式は一次資料との一致と、
 文脈・定義・形状制約による意味的復元を別レイヤーで記録し、不確実な候補は元式を
-置換せずnoteへ残す。
+置換せずnoteへ残す。全22論文を式・方法・結果の66問で横断する検索QAは
+`paper-corpus-retrieval-qa` で再実行できる。
 
 ## 主張できること / できないこと
 
