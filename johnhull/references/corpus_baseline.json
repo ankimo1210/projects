@@ -1,6 +1,7 @@
 {
   "corpus_chunk_count": 780,
   "corpus_status_counts": {
+    "None": 3,
     "pass": 1,
     "review": 49
   },
@@ -12,31 +13,43 @@
     "1993-heston-closed-form-stochastic-volatility",
     "2000-mcneil-frey-tail-risk-evt",
     "2002-hagan-et-al-managing-smile-risk",
-    "2019-lyashenko-mercurio-backward-looking-rates"
+    "2003-jarrow-yildirim-inflation-hjm",
+    "2019-lyashenko-mercurio-backward-looking-rates",
+    "2021-mof-jgbi-indexation-notice",
+    "2024-mof-jgbi-bei-guide"
   ],
   "pdf_structure_counts": {
     "clean": 39,
     "error": 1,
-    "warning": 10
+    "warning": 13
   },
   "replacement_characters": 1418,
   "required_semantic_sources": [
     {
-      "reason": "catalogue contains a source link but no permitted local PDF",
       "source_id": "2003-jarrow-yildirim-inflation-hjm",
-      "status": "missing_source",
+      "source_pdf": "references/papers/2003-jarrow-yildirim-inflation-hjm.pdf",
+      "source_sha256": "c3b859d339569b5a7aadc2199acbf9463c68ad22e2ecf8bf4955ebc735f3ffd9",
+      "status": "present",
       "title": "Pricing Treasury Inflation Protected Securities and Related Derivatives Using an HJM Model"
     },
     {
-      "reason": "implementation cites conventions but the paper corpus has no catalogued official source PDF",
-      "source_id": "japan-mof-jgbi-conventions",
-      "status": "missing_source",
-      "title": "Official Japanese inflation-linked government bond conventions"
+      "source_id": "2021-mof-jgbi-indexation-notice",
+      "source_pdf": "references/papers/2021-mof-jgbi-indexation-notice.pdf",
+      "source_sha256": "0b362d7ceaf2d88ef9120c8803a07020719b77d2fd92d8117cd8021a153f02a6",
+      "status": "present",
+      "title": "MOF Notice No. 77: JGBi reference index and indexation coefficient"
+    },
+    {
+      "source_id": "2024-mof-jgbi-bei-guide",
+      "source_pdf": "references/papers/2024-mof-jgbi-bei-guide.pdf",
+      "source_sha256": "d0ff9ee0f9ad6ee4a59b7a0a902604f3670a7b2412b10d2c685ea0d7f71b5a94",
+      "status": "present",
+      "title": "MOF guide to JGBi break-even inflation and the deflation floor"
     }
   ],
-  "source_bytes": 80388984,
-  "source_count": 50,
-  "source_page_count": 1536,
+  "source_bytes": 81884899,
+  "source_count": 53,
+  "source_page_count": 1586,
   "sources": [
     {
       "corpus_chunk_count": 23,
@@ -382,6 +395,29 @@
       "source_page_count": 39,
       "source_pdf": "references/papers/2003-ait-sahalia-duarte-nonparametric-option-pricing.pdf",
       "source_sha256": "77d39d5dc39bb405e1c15f4b845cc94d722ce6c8e50aae761925c509ef9559fd"
+    },
+    {
+      "corpus_chunk_count": null,
+      "corpus_page_count": null,
+      "corpus_present": false,
+      "corpus_quality_status": null,
+      "image_files": null,
+      "latex_math_markers": null,
+      "p0": true,
+      "page_count_matches_corpus": false,
+      "paper_id": "2003-jarrow-yildirim-inflation-hjm",
+      "pdf_structure": {
+        "error_count": 0,
+        "return_code": 3,
+        "status": "warning",
+        "warning_count": 23
+      },
+      "replacement_characters": null,
+      "source_bytes": 745633,
+      "source_hash_matches_metadata": false,
+      "source_page_count": 34,
+      "source_pdf": "references/papers/2003-jarrow-yildirim-inflation-hjm.pdf",
+      "source_sha256": "c3b859d339569b5a7aadc2199acbf9463c68ad22e2ecf8bf4955ebc735f3ffd9"
     },
     {
       "corpus_chunk_count": 8,
@@ -867,6 +903,29 @@
       "source_sha256": "b24f071602743a9ee98a61092a48fc641f50f66acbd5ebdb81f6f44d74bb212d"
     },
     {
+      "corpus_chunk_count": null,
+      "corpus_page_count": null,
+      "corpus_present": false,
+      "corpus_quality_status": null,
+      "image_files": null,
+      "latex_math_markers": null,
+      "p0": true,
+      "page_count_matches_corpus": false,
+      "paper_id": "2021-mof-jgbi-indexation-notice",
+      "pdf_structure": {
+        "error_count": 0,
+        "return_code": 3,
+        "status": "warning",
+        "warning_count": 4
+      },
+      "replacement_characters": null,
+      "source_bytes": 57400,
+      "source_hash_matches_metadata": false,
+      "source_page_count": 6,
+      "source_pdf": "references/papers/2021-mof-jgbi-indexation-notice.pdf",
+      "source_sha256": "0b362d7ceaf2d88ef9120c8803a07020719b77d2fd92d8117cd8021a153f02a6"
+    },
+    {
       "corpus_chunk_count": 13,
       "corpus_page_count": 20,
       "corpus_present": true,
@@ -980,6 +1039,29 @@
       "source_page_count": 51,
       "source_pdf": "references/papers/2023-cuchiero-et-al-signature-spx-vix.pdf",
       "source_sha256": "2fb72aeba6d7a802feaa665f2e1c68cab3d224dbd072178d1859c65c5d0d9000"
+    },
+    {
+      "corpus_chunk_count": null,
+      "corpus_page_count": null,
+      "corpus_present": false,
+      "corpus_quality_status": null,
+      "image_files": null,
+      "latex_math_markers": null,
+      "p0": true,
+      "page_count_matches_corpus": false,
+      "paper_id": "2024-mof-jgbi-bei-guide",
+      "pdf_structure": {
+        "error_count": 0,
+        "return_code": 3,
+        "status": "warning",
+        "warning_count": 14
+      },
+      "replacement_characters": null,
+      "source_bytes": 692882,
+      "source_hash_matches_metadata": false,
+      "source_page_count": 10,
+      "source_pdf": "references/papers/2024-mof-jgbi-bei-guide.pdf",
+      "source_sha256": "d0ff9ee0f9ad6ee4a59b7a0a902604f3670a7b2412b10d2c685ea0d7f71b5a94"
     },
     {
       "corpus_chunk_count": 26,

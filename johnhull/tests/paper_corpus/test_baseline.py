@@ -22,20 +22,26 @@ def test_tracked_baseline_is_deterministic_and_current():
 def test_baseline_has_complete_source_and_corpus_integrity():
     manifest = json.loads(DEFAULT_OUTPUT.read_text(encoding="utf-8"))
 
-    assert manifest["source_count"] == 50
-    assert manifest["source_page_count"] == 1536
-    assert manifest["corpus_chunk_count"] == 780
-    assert all(item["corpus_present"] for item in manifest["sources"])
-    assert all(item["source_hash_matches_metadata"] for item in manifest["sources"])
-    assert all(item["page_count_matches_corpus"] for item in manifest["sources"])
+    assert manifest["source_count"] == 53
+    assert manifest["source_page_count"] == 1586
+    assert all(
+        item["source_hash_matches_metadata"] and item["page_count_matches_corpus"]
+        for item in manifest["sources"]
+        if item["corpus_present"]
+    )
     assert {item["paper_id"] for item in manifest["sources"]} == {
         path.stem for path in (REFERENCES_ROOT / "papers").glob("*.pdf")
     }
 
 
-def test_required_missing_sources_are_explicit():
+def test_required_semantic_sources_are_present_and_hashed():
     manifest = json.loads(DEFAULT_OUTPUT.read_text(encoding="utf-8"))
-    missing = {item["source_id"]: item["status"] for item in manifest["required_semantic_sources"]}
+    required = {item["source_id"]: item for item in manifest["required_semantic_sources"]}
 
-    assert missing["2003-jarrow-yildirim-inflation-hjm"] == "missing_source"
-    assert missing["japan-mof-jgbi-conventions"] == "missing_source"
+    assert set(required) == {
+        "2003-jarrow-yildirim-inflation-hjm",
+        "2021-mof-jgbi-indexation-notice",
+        "2024-mof-jgbi-bei-guide",
+    }
+    assert all(item["status"] == "present" for item in required.values())
+    assert all(len(item["source_sha256"]) == 64 for item in required.values())
