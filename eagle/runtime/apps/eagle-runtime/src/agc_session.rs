@@ -34,7 +34,7 @@ impl AgcSession {
         let core_dir = core_bin.parent()
             .with_context(|| format!("{core_bin:?} has no parent directory"))?;
 
-        let child = Command::new(&yaagc_bin)
+        let mut child = Command::new(&yaagc_bin)
             .arg(format!("--core={}", core_bin.display()))
             .arg(format!("--port={}", cfg.port))
             .current_dir(core_dir)
@@ -45,13 +45,25 @@ impl AgcSession {
             .with_context(|| format!("spawning {:?}", yaagc_bin))?;
 
         let mut stream = None;
+        let mut last_err: Option<std::io::Error> = None;
         for _ in 0..50 {
+            if let Some(status) = child.try_wait()? {
+                anyhow::bail!("yaAGC exited early with {status} before accepting a connection");
+            }
             match TcpStream::connect(("127.0.0.1", cfg.port)).await {
                 Ok(s) => { stream = Some(s); break; }
-                Err(_) => tokio::time::sleep(std::time::Duration::from_millis(100)).await,
+                Err(e) => {
+                    last_err = Some(e);
+                    tokio::time::sleep(std::time::Duration::from_millis(100)).await;
+                }
             }
         }
-        let stream = stream.context("could not connect to yaAGC")?;
+        let stream = stream.with_context(|| {
+            format!(
+                "could not connect to yaAGC on 127.0.0.1:{} (last error: {last_err:?})",
+                cfg.port
+            )
+        })?;
         let (mut rd, mut wr) = stream.into_split();
 
         let (events_tx, events_rx) = mpsc::channel::<Packet>(1024);
