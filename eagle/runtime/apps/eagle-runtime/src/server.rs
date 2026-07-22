@@ -51,11 +51,17 @@ async fn ws_handler(ws: WebSocketUpgrade, State(app): State<AppState>) -> impl I
 
 async fn client_loop(sock: WebSocket, app: AppState) {
     let (mut tx, mut rx) = sock.split();
+    // Subscribe before reading/sending the snapshot: a change landing in the
+    // gap between reading `latest` and starting to receive broadcasts would
+    // otherwise be lost forever for this client. Subscribing first guarantees
+    // at-least-once delivery — the worst case is a duplicate full-state frame
+    // right after connect, which is harmless since every frame is a complete,
+    // idempotent snapshot.
+    let mut updates = app.state_rx.subscribe();
     let snapshot = app.latest.lock().unwrap().clone();
     if !snapshot.is_empty() {
         let _ = tx.send(Message::Text(snapshot.into())).await;
     }
-    let mut updates = app.state_rx.subscribe();
     loop {
         tokio::select! {
             u = updates.recv() => match u {
