@@ -9,7 +9,7 @@
 # `aisan_lbo_case/` uses requirements.txt; `csharp_calc/` is .NET;
 # `rates_volatility_model/`, `notebooks/` have no managed env.
 
-.PHONY: help install sync lint fmt fmt-fix test clean tree report books hull-report hull-book hull-artifacts-check hull-notebooks-check hull-paper-corpus-check hull-paper-corpus-gold-check hull-release-check hull-release rough-vol optimal-execution
+.PHONY: help install sync lint fmt fmt-fix test clean tree report books hull-report hull-book hull-artifacts-check hull-notebooks-check hull-paper-corpus-check hull-paper-corpus-gold-check hull-paper-corpus-v2-check hull-release-check hull-release rough-vol optimal-execution
 
 help:
 	@echo "Workspace targets (run from repo root):"
@@ -29,6 +29,7 @@ help:
 	@echo "  make hull-notebooks-check - fresh-execute vol 18-27 in /tmp"
 	@echo "  make hull-paper-corpus-check - verify PDF sources, page profiles, and corpus tests"
 	@echo "  make hull-paper-corpus-gold-check - verify selected pages and reviewed assertions"
+	@echo "  make hull-paper-corpus-v2-check - verify v2 schemas, conversion, and determinism"
 	@echo "  make hull-release-check - verify the johnhull A5-A8 release candidate contract"
 	@echo "    add HULL_RELEASE_FLAGS=--require-tracked after committing release files"
 	@echo "  make hull-release - fresh project tests/lint/notebooks/report/book/release gate"
@@ -96,6 +97,9 @@ hull-paper-corpus-gold-check:
 	uv run --no-sync python johnhull/scripts/import_paper_gold_layout.py --check
 	uv run --no-sync python johnhull/scripts/build_extractor_benchmark.py --check
 	uv run --no-sync pytest -q -s johnhull/tests/paper_corpus/test_gold.py
+
+hull-paper-corpus-v2-check: hull-paper-corpus-gold-check
+	uv run --no-sync pytest -q -s johnhull/tests/paper_corpus/test_mineru.py
 
 hull-release-check:
 	PYTHONPATH=johnhull/report uv run --no-sync --package hullkit python johnhull/scripts/verify_release.py $(HULL_RELEASE_FLAGS)
