@@ -23,20 +23,23 @@
 ## 現在のコーパス
 
 2026-07-22 時点で22論文・449ページを変換し、1,326 chunks、424式を保存している。
-数式品質オーバーレイにより222式を LaTeX 化し、全424式に原本 crop を付けた。
+数式品質オーバーレイにより305式を LaTeX 化し、全424式に原本 crop を付けた。
 chunk上限は480 tokenを指定しているが、分割できない表を
 含む `ref_tran_bin_2003.00598` の2 chunksは525/536 tokenとなる。実測最大値は各論文の
 `metadata.json` に記録するため、512 tokenを厳密な入力上限とする利用側ではこの2件を
 追加分割する。
 
-数式の品質内訳は次のとおり。`verified_manual` 以外の LaTeX を計算・実装の根拠に
-使う場合は、必ず同じレコードの `source_image` または原本 PDF と照合する。
+数式の品質内訳は次のとおり。検証済みは、著者が公開した正確な版の arXiv TeX と
+対応付けた224式と、原本 PDF を手動確認した49式である。42式は両方で確認しているため、
+重複を除く検証済み総数は231式となる。
 
 | status | count | meaning |
 |---|---:|---|
-| `verified_manual` | 49 | 原本 PDF と照合して手動転記した LaTeX（誤変換修正27、未復元から復旧22） |
-| `decoded_unverified` | 173 | Docling が復元したが式単位の目視確認は未実施 |
-| `text_layer_fallback` | 202 | 信頼できる LaTeX がなく、原式 crop と PDF text layer を保存 |
+| `verified_source` | 182 | 正確な arXiv 版の著者 TeX と対応付けた LaTeX |
+| `verified_source_and_manual` | 42 | 著者 TeX と原本 PDF の両方で確認した手動転記 LaTeX |
+| `verified_manual` | 7 | 原本 PDF と照合したが、利用可能な著者 TeX がない手動転記 LaTeX |
+| `decoded_unverified` | 74 | Docling が復元したが式単位の確認は未実施 |
+| `text_layer_fallback` | 119 | 信頼できる LaTeX がなく、原式 crop と PDF text layer を保存 |
 
 ## 生成と検証
 
@@ -52,6 +55,21 @@ make -C market_nn paper-corpus-check
 ```bash
 make -C market_nn paper-corpus-formulas
 ```
+
+正確な arXiv 版のソースを取得し、SHA-256 を検証して数式を再照合する場合:
+
+```bash
+make -C market_nn paper-corpus-verify-sources
+make -C market_nn paper-corpus-check
+```
+
+`manifests/arxiv_formula_sources.json` は19論文の正確な arXiv version、main TeX、
+source archive SHA-256 と目視確認済み対応を固定する。うち17論文は TeX を含み、2論文の
+source package は PDF wrapper のみである。`manifests/formula_source_matches.json` は
+式ごとの source file/line、原本ページ、類似度、採用方法を保存する。既定の自動採用
+閾値は0.90で、閾値未満の97件は原式 crop を個別に目視確認したものだけを明示的に
+採用する。TeX環境とPDF側の式分割が一致しない、または順序整列が誤った15件は、
+理由付きの拒否リストへ固定して自動採用を防ぐ。
 
 GPU を明示する場合:
 
@@ -81,6 +99,8 @@ page provenance、chunk は生成できる。
 - 各 chunk に `paper_id`、title、page、source PDF、SHA-256、Docling version を付与する。
 - wide equation box 由来の冗長な LaTeX spacing command は後処理で圧縮する。
 - 変換後に `manifests/formula_overrides.json` の検証済み転記を適用する。
+- 利用可能な場合は正確な arXiv 版の著者 TeX を式順序と正規化類似度で対応付け、
+  source archive の版・SHA-256・ファイル・行番号を各式に記録する。
 - 数式ごとに安定した ID と品質状態を付け、原本ページの bbox から crop を生成する。
 - 未復元式を空の placeholder のまま残さず、crop と PDF text layer にフォールバックする。
 - 変換は一時領域で完了させてから `corpus/papers/` を置換し、失敗時は既存 corpus を
@@ -88,8 +108,9 @@ page provenance、chunk は生成できる。
 
 ## 制約
 
-`verified_manual` は表記と構造を原本に照合したもので、論文自体の数式が理論的に正しい
-ことまでは保証しない。たとえば FI-2010 の式 (14) は通常の RBF と異なる正の指数を
-原文どおり保持している。`decoded_unverified`、`text_layer_fallback` と複雑な結合セルは
-完全一致を保証しないため、重要な式・表は `formulas.jsonl` のページ・bbox・crop と
-原本 PDF で照合する。
+`verified_source*` と `verified_manual` は表記と構造を一次資料に照合したもので、論文自体の
+数式が理論的に正しいことまでは保証しない。たとえば FI-2010 の式 (14) は通常の RBF と
+異なる正の指数を原文どおり保持している。arXiv source package が PDF wrapper のみの
+2論文と arXiv TeX を利用できない3論文は、著者 TeX による検証対象外である。
+`decoded_unverified`、`text_layer_fallback` と複雑な結合セルは完全一致を保証しないため、
+重要な式・表は `formulas.jsonl` のページ・bbox・crop と原本 PDF で照合する。

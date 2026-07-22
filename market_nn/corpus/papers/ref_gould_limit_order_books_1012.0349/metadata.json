@@ -24,8 +24,8 @@
     "text_blocks": 780,
     "tables": 7,
     "pictures": 6,
-    "markdown_chars": 245608,
-    "math_blocks": 0,
+    "markdown_chars": 246019,
+    "math_blocks": 24,
     "chunks": 152,
     "max_chunk_tokens": 487,
     "pages_in_chunks": [
@@ -80,15 +80,21 @@
     "has_references": true
   },
   "formula_quality": {
-    "overlay": "source-linked-v1",
+    "overlay": "source-linked-v2",
     "total": 24,
     "docling_decoded": 0,
     "verified_manual": 0,
+    "verified_source": 24,
+    "verified_source_and_manual": 0,
+    "source_verified_total": 24,
+    "manual_verified_total": 0,
     "manual_corrected": 0,
     "manual_recovered": 0,
+    "source_corrected": 0,
+    "source_recovered": 24,
     "decoded_unverified": 0,
-    "text_layer_fallback": 24,
+    "text_layer_fallback": 0,
     "source_crops": 24,
-    "latex_blocks": 0
+    "latex_blocks": 24
   }
 }

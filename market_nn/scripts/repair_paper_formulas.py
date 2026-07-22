@@ -12,6 +12,21 @@ SCHEMA_VERSION = 1
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CORPUS_DIR = PROJECT_ROOT / "corpus" / "papers"
 DEFAULT_OVERRIDES = PROJECT_ROOT / "manifests" / "formula_overrides.json"
+DEFAULT_SOURCE_MATCHES = PROJECT_ROOT / "manifests" / "formula_source_matches.json"
+SOURCE_ALIGNMENT_ENVIRONMENTS = {
+    "align",
+    "align*",
+    "alignat",
+    "alignat*",
+    "flalign",
+    "flalign*",
+    "gather",
+    "gather*",
+    "multline",
+    "multline*",
+    "eqnarray",
+    "eqnarray*",
+}
 
 FORMULA_BLOCK_PATTERN = re.compile(
     r"<!-- formula-start\b[^>]*-->.*?<!-- formula-end -->"
@@ -28,6 +43,16 @@ def load_overrides(path: Path = DEFAULT_OVERRIDES) -> dict[str, dict[str, dict[s
     return overrides
 
 
+def load_source_matches(path: Path = DEFAULT_SOURCE_MATCHES) -> dict[str, dict[str, Any]]:
+    if not path.is_file():
+        return {}
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    matches = manifest.get("matches")
+    if not isinstance(matches, dict):
+        raise TypeError("Formula source matches must contain a matches object")
+    return matches
+
+
 def formula_items(document: Mapping[str, Any]) -> list[Mapping[str, Any]]:
     return [item for item in document.get("texts", []) if item.get("label") == "formula"]
 
@@ -37,19 +62,42 @@ def _clean_latex(latex: str) -> str:
     return re.sub(r"[ \t]{2,}", " ", latex).strip()
 
 
+def portable_source_latex(match: Mapping[str, Any]) -> str:
+    latex = str(match["source_latex"])
+    latex = latex.replace(r"\dmodel", r"d_{\mathrm{model}}")
+    latex = latex.replace(r"\bm", r"\boldsymbol")
+    latex = re.sub(r"\\myvec\s*\{([^{}]*)\}", r"\\mathbf{\1}", latex)
+    latex = latex.replace(r"\vola", r"\nu")
+    latex = latex.replace(r"\upnu", r"\nu")
+    latex = latex.replace(r"\varoslash", r"\oslash")
+    latex = re.sub(
+        r"\\(?:tiny|scriptsize|footnotesize|small|normalsize|large|Large|LARGE|huge|Huge)\b",
+        "",
+        latex,
+    )
+    latex = re.sub(r"\\\\\s*$", "", latex).strip()
+    if match.get("environment") in SOURCE_ALIGNMENT_ENVIRONMENTS:
+        latex = rf"\begin{{aligned}}{latex}\end{{aligned}}"
+    return _clean_latex(latex)
+
+
 def build_formula_records(
     paper_id: str,
     document: Mapping[str, Any],
     *,
     source_pdf: str,
     overrides: Mapping[str, Mapping[str, Mapping[str, str]]],
+    source_matches: Mapping[str, Mapping[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     paper_overrides = overrides.get(paper_id, {})
+    resolved_source_matches = source_matches or {}
     records: list[dict[str, Any]] = []
     used_overrides: set[str] = set()
     for position, item in enumerate(formula_items(document), start=1):
+        formula_id = f"{paper_id}:formula:{position:04d}"
         self_ref = str(item.get("self_ref", ""))
         override = paper_overrides.get(self_ref)
+        source_match = resolved_source_matches.get(formula_id)
         decoded = str(item.get("text", "")).strip()
         provenance = item.get("prov") or []
         primary = provenance[0] if provenance else {}
@@ -70,10 +118,33 @@ def build_formula_records(
             status = "text_layer_fallback"
             note = "No reliable LaTeX decode; use the source crop and PDF text layer together."
 
+        verification_methods = ["manual_pdf"] if override else []
+        if source_match:
+            if source_match.get("document_ref") != self_ref:
+                raise RuntimeError(f"Formula source match document ref drift for {formula_id}")
+            if source_match.get("source_pdf") != source_pdf:
+                raise RuntimeError(f"Formula source match PDF drift for {formula_id}")
+            if source_match.get("base_status") != status:
+                raise RuntimeError(
+                    f"Formula source match base status drift for {formula_id}: "
+                    f"{source_match.get('base_status')} != {status}"
+                )
+            verification_methods.append("arxiv_tex")
+            if override:
+                status = "verified_source_and_manual"
+            else:
+                latex = portable_source_latex(source_match)
+                status = "verified_source"
+            note = (
+                f"Matched to exact arXiv source {source_match['arxiv_version']} at "
+                f"{source_match['source_file']}:{source_match['source_line']} "
+                f"(score={source_match['score']})."
+            )
+
         records.append(
             {
                 "schema_version": SCHEMA_VERSION,
-                "formula_id": f"{paper_id}:formula:{position:04d}",
+                "formula_id": formula_id,
                 "paper_id": paper_id,
                 "position": position,
                 "document_ref": self_ref,
@@ -85,6 +156,8 @@ def build_formula_records(
                 "page": page,
                 "bbox": bbox,
                 "source_image": f"images/formula_{position:04d}.png" if page else None,
+                "verification_methods": verification_methods,
+                "source_verification": source_match,
                 "note": note,
             }
         )
@@ -105,7 +178,7 @@ def formula_markdown(record: Mapping[str, Any]) -> str:
     image = record.get("source_image")
     if image:
         lines.append(f"![Source formula {record['formula_id']}]({image})")
-    if record["status"] != "verified_manual" and record.get("pdf_text"):
+    if record["status"] in {"decoded_unverified", "text_layer_fallback"} and record.get("pdf_text"):
         lines.extend(("```text", f"PDF text layer: {record['pdf_text']}", "```"))
     lines.append(
         f"*Formula quality: `{record['status']}`; source PDF page {record['page']}. "
@@ -239,6 +312,7 @@ def repair_formula_artifacts(
     *,
     source_pdf: str,
     overrides: Mapping[str, Mapping[str, Mapping[str, str]]] | None = None,
+    source_matches: Mapping[str, Mapping[str, Any]] | None = None,
 ) -> dict[str, int]:
     resolved_overrides = overrides if overrides is not None else load_overrides()
     records = build_formula_records(
@@ -246,6 +320,7 @@ def repair_formula_artifacts(
         document,
         source_pdf=source_pdf,
         overrides=resolved_overrides,
+        source_matches=source_matches,
     )
     markdown_path = paper_dir / "document.md"
     markdown = replace_formula_blocks(markdown_path.read_text(encoding="utf-8"), records)
@@ -260,12 +335,30 @@ def repair_formula_artifacts(
         "total": len(records),
         "docling_decoded": sum(bool(record.get("docling_latex")) for record in records),
         "verified_manual": sum(record["status"] == "verified_manual" for record in records),
+        "verified_source": sum(record["status"] == "verified_source" for record in records),
+        "verified_source_and_manual": sum(
+            record["status"] == "verified_source_and_manual" for record in records
+        ),
+        "source_verified_total": sum(
+            "arxiv_tex" in record["verification_methods"] for record in records
+        ),
+        "manual_verified_total": sum(
+            "manual_pdf" in record["verification_methods"] for record in records
+        ),
         "manual_corrected": sum(
-            record["status"] == "verified_manual" and bool(record.get("docling_latex"))
+            "manual_pdf" in record["verification_methods"] and bool(record.get("docling_latex"))
             for record in records
         ),
         "manual_recovered": sum(
-            record["status"] == "verified_manual" and not record.get("docling_latex")
+            "manual_pdf" in record["verification_methods"] and not record.get("docling_latex")
+            for record in records
+        ),
+        "source_corrected": sum(
+            record["status"] == "verified_source" and bool(record.get("docling_latex"))
+            for record in records
+        ),
+        "source_recovered": sum(
+            record["status"] == "verified_source" and not record.get("docling_latex")
             for record in records
         ),
         "decoded_unverified": sum(record["status"] == "decoded_unverified" for record in records),
@@ -278,13 +371,20 @@ def repair_formula_artifacts(
 
 def repair_corpus(corpus_dir: Path) -> dict[str, int]:
     overrides = load_overrides()
+    source_matches = load_source_matches()
     totals = {
         "papers": 0,
         "total": 0,
         "docling_decoded": 0,
         "verified_manual": 0,
+        "verified_source": 0,
+        "verified_source_and_manual": 0,
+        "source_verified_total": 0,
+        "manual_verified_total": 0,
         "manual_corrected": 0,
         "manual_recovered": 0,
+        "source_corrected": 0,
+        "source_recovered": 0,
         "decoded_unverified": 0,
         "text_layer_fallback": 0,
         "source_crops": 0,
@@ -300,13 +400,14 @@ def repair_corpus(corpus_dir: Path) -> dict[str, int]:
             document,
             source_pdf=metadata["source"]["path"],
             overrides=overrides,
+            source_matches=source_matches,
         )
         metadata["document"]["markdown_chars"] = len(
             (paper_dir / "document.md").read_text(encoding="utf-8")
         )
         metadata["document"]["math_blocks"] = stats["latex_blocks"]
         metadata["formula_quality"] = {
-            "overlay": "source-linked-v1",
+            "overlay": "source-linked-v2",
             **stats,
         }
         metadata_path.write_text(
@@ -316,11 +417,16 @@ def repair_corpus(corpus_dir: Path) -> dict[str, int]:
         totals["papers"] += 1
         for key in totals.keys() - {"papers"}:
             totals[key] += stats[key]
+    if totals["source_verified_total"] != len(source_matches):
+        raise RuntimeError(
+            "Formula source match application count mismatch: "
+            f"{totals['source_verified_total']} != {len(source_matches)}"
+        )
 
     index_path = corpus_dir / "_index.json"
     index = json.loads(index_path.read_text(encoding="utf-8"))
     index["papers"] = [metadata_by_id[paper["paper_id"]] for paper in index["papers"]]
-    index["formula_quality"] = {"overlay": "source-linked-v1", **totals}
+    index["formula_quality"] = {"overlay": "source-linked-v2", **totals}
     index_path.write_text(json.dumps(index, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(totals, ensure_ascii=False, indent=2))
     return totals

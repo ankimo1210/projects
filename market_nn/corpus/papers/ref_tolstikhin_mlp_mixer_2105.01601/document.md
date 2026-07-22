@@ -48,12 +48,13 @@ PDF text layer: ( )
 *Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_tolstikhin_mlp_mixer_2105.01601:formula:0002" status="text_layer_fallback" source-page="3" -->
+<!-- formula-start id="ref_tolstikhin_mlp_mixer_2105.01601:formula:0002" status="verified_source" source-page="3" -->
+$$
+\begin{aligned}\mathbf{U}_{*, i} &= \mathbf{X}_{*, i} + \mathbf{W}_2\,\sigma\bigl( \mathbf{W}_1\, \text{LayerNorm}(\mathbf{X})_{*, i} \bigr),\quad\;\text{for }i=1\ldots C,\\
+\mathbf{Y}_{j,*} &= \mathbf{U}_{j,*} + \mathbf{W}_4\,\sigma\bigl( \mathbf{W}_3\, \text{LayerNorm}(\mathbf{U})_{j,*} \bigr),\quad\,\text{for }j=1\ldots S.\end{aligned}
+$$
 ![Source formula ref_tolstikhin_mlp_mixer_2105.01601:formula:0002](images/formula_0002.png)
-```text
-PDF text layer: U ∗ ,i = X ∗ ,i + W 2 σ W 1 LayerNorm ( X ) ∗ ,i , for i = 1 . . . C, (1) Y j, ∗ = U j, ∗ + W 4 σ ( W 3 LayerNorm ( U ) j, ∗ ) , for j = 1 . . . S.
-```
-*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 3. Matched to exact arXiv source 2105.01601v4 at content.tex:74 (score=0.916).*
 <!-- formula-end -->
 
 Here σ is an element-wise nonlinearity (GELU [16]). D S and D C are tunable hidden widths in the token-mixing and channel-mixing MLPs, respectively. Note that D S is selected independently of the number of input patches. Therefore, the computational complexity of the network is linear in the number of input patches, unlike ViT whose complexity is quadratic. Since D C is independent of the patch size, the overall complexity is linear in the number of pixels in the image, as for a typical CNN.

@@ -68,12 +68,12 @@ Based on the aforementioned attention mechanism, [56] proposed to replace Eq. (1
 
 Our work can be seen as direct extension of [46] in which the author proposed a regression model based on the bilinear mapping for the mid-price movement classification problem:
 
-<!-- formula-start id="ref_tran_tabl_1712.00975:formula:0003" status="text_layer_fallback" source-page="3" -->
+<!-- formula-start id="ref_tran_tabl_1712.00975:formula:0003" status="verified_source" source-page="3" -->
+$$
+f(\mathbf{X})=\mathbf{W}_1 \mathbf{X} \mathbf{w}_2
+$$
 ![Source formula ref_tran_tabl_1712.00975:formula:0003](images/formula_0003.png)
-```text
-PDF text layer: f ( X ) = W 1 Xw 2 (3)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 3. Matched to exact arXiv source 1712.00975v1 at Manuscript.tex:107 (score=1.0).*
 <!-- formula-end -->
 
 where X ∈ R D × T is a multivariate time-series containing T temporal steps. W 1 ∈ R 3 × D and w 2 ∈ R T × 1 are the parameters to estimate. By learning two separate mappings that transform the input LOB states to class-membership vector of size 3 × 1 corresponding to 3 types of movements in midprice, the regression model in [46] was shown to outperform other shallow classifiers. Other related works that utilize a bilinear mapping function to construct a neural network layer include [45] and [44]. While [45] attempted to incorporate the bilinear mapping into the recurrent structure by processing a block of temporal instances at each recurrent step, both [45] and [44] focus on medium-scale visual-related tasks such as hand-written digit recognition, image interpolation and reconstruction.
@@ -86,12 +86,12 @@ We start this section by introducing some notations and definitions. Throughout 
 
 Let us denote by X = [ x 1 , . . . , x T l ] ∈ R D × T the input to the Bilinear Layer (BL). The layer transforms an input of size D × T to a matrix of size D ′ × T ′ by applying the following mapping:
 
-<!-- formula-start id="ref_tran_tabl_1712.00975:formula:0004" status="text_layer_fallback" source-page="3" -->
+<!-- formula-start id="ref_tran_tabl_1712.00975:formula:0004" status="verified_source" source-page="3" -->
+$$
+\mathbf{Y}= \phi \big( \mathbf{W}_{1} \mathbf{X} \mathbf{W}_{2} + \mathbf{B} \big)
+$$
 ![Source formula ref_tran_tabl_1712.00975:formula:0004](images/formula_0004.png)
-```text
-PDF text layer: Y = φ ( W 1 XW 2 + B ) (4)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 3. Matched to exact arXiv source 1712.00975v1 at Manuscript.tex:121 (score=1.0).*
 <!-- formula-end -->
 
 Fig. 1. Illustration of the proposed Temporal Attention augmented Bilinear Layer (TABL)
@@ -104,20 +104,24 @@ One of the obvious advantages of the mapping in Eq. (4) is that the number of es
 
 A more important characteristic of the mapping in Eq. (4), when it is applied to time-series data, is that the BL models two dependencies (one for each mode of the input representation), each of which has different semantic meanings. In order to better understand this, denote each column and row of X as x c t ∈ R D , t = 1 , . . . , T and x r d ∈ R T , d = 1 , . . . , D , respectively. Given the input time-series X , the t -th column represents D different features or aspects of the underlying process observed at the time instance t , while the d -th row contains the temporal variations of the d -th feature during the past T steps. Since
 
-<!-- formula-start id="ref_tran_tabl_1712.00975:formula:0005" status="text_layer_fallback" source-page="4" -->
+<!-- formula-start id="ref_tran_tabl_1712.00975:formula:0005" status="verified_source" source-page="4" -->
+$$
+\mathbf{W}_{1} \mathbf{X} = \big[ \mathbf{W}_{1} \mathbf{x}_{c_1}, \dots , \mathbf{W}_{1}\mathbf{x}_{c_{T}} \big]
+$$
 ![Source formula ref_tran_tabl_1712.00975:formula:0005](images/formula_0005.png)
-```text
-PDF text layer: W 1 X = [ W 1 x c 1 , . . . , W 1 x c T ] (5)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 4. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 4. Matched to exact arXiv source 1712.00975v1 at Manuscript.tex:129 (score=0.8667).*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_tran_tabl_1712.00975:formula:0006" status="text_layer_fallback" source-page="4" -->
+<!-- formula-start id="ref_tran_tabl_1712.00975:formula:0006" status="verified_source" source-page="4" -->
+$$
+\mathbf{X} \mathbf{W}_{2} = \begin{bmatrix}
+(\mathbf{x}_{r_1})^{T} \mathbf{W}_{2} \\
+\vdots \\
+(\mathbf{x}_{r_{D}})^{T} \mathbf{W}_{2},
+\end{bmatrix}
+$$
 ![Source formula ref_tran_tabl_1712.00975:formula:0006](images/formula_0006.png)
-```text
-PDF text layer: XW 2 =    ( x r 1 ) T W 2 . . . ( x r D ) T W 2 ,    (6)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 4. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 4. Matched to exact arXiv source 1712.00975v1 at Manuscript.tex:132 (score=0.8571).*
 <!-- formula-end -->
 
 Eq. (5) shows that the interaction between different features/aspects at a time instance t = 1 , . . . , T is captured by W 1 while in Eq. (6), W 2 models the temporal progress of the d -th feature/aspect. For example, given that X contains stock prices of D different LOB levels during the history T , the BL determines how different stock prices interact at a particular time instance by W 1 and how the prices of a particular index progress over time by W 2 . It has been shown in [53] that taking advantage of the spatial structure existing in the LOB yields better joint distribution of the future best bid and ask prices.
@@ -202,12 +206,12 @@ In stock markets, traders buy and sell stocks through an order-driven system tha
 
 The LOB reflects the existing supply and demand for the stock at different price levels. Therefore, based on the availability of LOB data, several analysis and prediction problems can be formulated such as modeling the order flow distribution, the joint distribution of best bid and ask price or casualty analysis of turbulence in price change. The mid-price at a given time instance is a quantity defined as the mean between the best bid price and best ask price:
 
-<!-- formula-start id="ref_tran_tabl_1712.00975:formula:0012" status="text_layer_fallback" source-page="5" -->
+<!-- formula-start id="ref_tran_tabl_1712.00975:formula:0012" status="verified_source" source-page="5" -->
+$$
+p_t = \frac{p_a^1(t) + p_b^1(t)}{2}
+$$
 ![Source formula ref_tran_tabl_1712.00975:formula:0012](images/formula_0012.png)
-```text
-PDF text layer: p t = p 1 a ( t ) + p 1 b ( t ) 2 (12)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 5. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 5. Matched to exact arXiv source 1712.00975v1 at Manuscript.tex:187 (score=0.6923).*
 <!-- formula-end -->
 
 This quantity is a virtual price since no trade can take place at this exact price. Since this quantity lies in the middle of the best bid and best ask price, its movement reflects the dynamics of LOB and the market. Therefore, being able to predict the mid-price changes in the future is of great importance.
@@ -315,12 +319,12 @@ Regarding regularization techniques, we used a combination of dropout and max-no
 
 We followed similar approach proposed in [46] to weight the contribution of each class in the loss function. Since the evaluated network structures output the class-membership probability vector, the weighted entropy loss function was used:
 
-<!-- formula-start id="ref_tran_tabl_1712.00975:formula:0013" status="text_layer_fallback" source-page="7" -->
+<!-- formula-start id="ref_tran_tabl_1712.00975:formula:0013" status="verified_source" source-page="7" -->
+$$
+L=- \sum_{i=1}^{3} \frac{c}{N_i}y_i \log(\tilde{y}_i)
+$$
 ![Source formula ref_tran_tabl_1712.00975:formula:0013](images/formula_0013.png)
-```text
-PDF text layer: L = -3 ∑ i =1 c N i y i log(˜ y i ) (13)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 7. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 7. Matched to exact arXiv source 1712.00975v1 at Manuscript.tex:339 (score=0.7442).*
 <!-- formula-end -->
 
 where N i , y i , ˜ y i are the number of samples, true probability and the predicted probability of the i -th class respectively. c = 1 e 6 is a constant used to ensure numerical stability by avoiding the loss values being too small when dividing by N i .
@@ -366,12 +370,14 @@ In this paper, we proposed a new neural network layer type for multivariate time
 
 In order to calculate the derivatives of TABL, we follow the notation: given X ∈ R I × J and X ∈ R M × N , ∂ Y /∂ X is a matrix of size IJ × MN with element at ( ij, mn ) equal to ∂ Y ij /∂ B mn . Similarly ∂L/∂ X ∈ R 1 × MN with L ∈ R , X ∈ R M × N . Denote I M ∈ R M × M the identity matrix and 1 MN ∈ R M × N a matrix with all elements equal to 1 . In addition, our derivation heavily uses the following formulas:
 
-<!-- formula-start id="ref_tran_tabl_1712.00975:formula:0014" status="text_layer_fallback" source-page="9" -->
+<!-- formula-start id="ref_tran_tabl_1712.00975:formula:0014" status="verified_source" source-page="9" -->
+$$
+\begin{aligned}\frac{\partial (\mathbf{A}\mathbf{X}\mathbf{B})}{\partial \mathbf{X}} & = \mathbf{B}^{T} \otimes \mathbf{A} \\
+\frac{\partial (\mathbf{A} \odot \mathbf{B})}{\partial \mathbf{C}} &= diag \big( vec (\mathbf{A}) \big) \odot \frac{\partial \mathbf{B}}{\partial \mathbf{C}} \\
+& + diag \big( vec (\mathbf{B}) \big) \odot \frac{\partial \mathbf{A}}{\partial \mathbf{C}}\end{aligned}
+$$
 ![Source formula ref_tran_tabl_1712.00975:formula:0014](images/formula_0014.png)
-```text
-PDF text layer: ∂ ( AXB ) ∂ X = B T ⊗ A (14) ∂ ( A ⊙ B ) ∂ C = diag ( vec ( A ) ) ⊙ ∂ B ∂ C + diag ( vec ( B ) ) ⊙ ∂ A ∂ C (15)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 9. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 9. Matched to exact arXiv source 1712.00975v1 at Manuscript.tex:392 (score=0.5122).*
 <!-- formula-end -->
 
 where ⊗ denotes the Kronecker product, vec ( A ) denotes the vectorization operator that concatenates columns of A into one vector and diag ( x ) denotes the diagonal matrix with the diagonal elements taken from x .

@@ -51,6 +51,7 @@ make -C market_nn verify-provenance
 make -C market_nn test
 make -C market_nn smoke
 make -C market_nn paper-corpus
+make -C market_nn paper-corpus-verify-sources
 ```
 
 コマンドの import 時にダウンロードや学習は発生しません。TensorFlow は公式 TF2
