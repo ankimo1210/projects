@@ -372,6 +372,8 @@ def validate_corpus(source_dir: Path, output_dir: Path) -> dict[str, Any]:
     math_blocks = 0
     formula_count = 0
     verified_formula_count = 0
+    semantic_high_confidence_count = 0
+    semantic_not_formula_count = 0
     for pdf in pdfs:
         paper_dir = output_dir / pdf.stem
         required = [
@@ -424,6 +426,18 @@ def validate_corpus(source_dir: Path, output_dir: Path) -> dict[str, Any]:
                 raise RuntimeError(
                     f"Source-verified formula has no provenance: {formula['formula_id']}"
                 )
+            if formula["status"].startswith("semantic_") and not formula.get("semantic_review"):
+                raise RuntimeError(
+                    f"Semantic formula has no review record: {formula['formula_id']}"
+                )
+            if formula["status"] == "semantic_high_confidence" and not formula.get("latex"):
+                raise RuntimeError(
+                    f"High-confidence semantic formula has no LaTeX: {formula['formula_id']}"
+                )
+            if formula["status"] == "semantic_not_formula" and formula.get("latex"):
+                raise RuntimeError(
+                    f"Non-formula semantic record still has LaTeX: {formula['formula_id']}"
+                )
         quality = metadata.get("formula_quality", {})
         if quality.get("total") != len(formulas):
             raise RuntimeError(f"Formula metadata count mismatch for {pdf.stem}")
@@ -433,6 +447,12 @@ def validate_corpus(source_dir: Path, output_dir: Path) -> dict[str, Any]:
         verified_formula_count += sum(
             formula["status"].startswith("verified_") for formula in formulas
         )
+        semantic_high_confidence_count += sum(
+            formula["status"] == "semantic_high_confidence" for formula in formulas
+        )
+        semantic_not_formula_count += sum(
+            formula["status"] == "semantic_not_formula" for formula in formulas
+        )
     summary = {
         "ok": True,
         "paper_count": len(pdfs),
@@ -440,6 +460,8 @@ def validate_corpus(source_dir: Path, output_dir: Path) -> dict[str, Any]:
         "math_blocks": math_blocks,
         "formula_count": formula_count,
         "verified_formula_count": verified_formula_count,
+        "semantic_high_confidence_count": semantic_high_confidence_count,
+        "semantic_not_formula_count": semantic_not_formula_count,
         "output_dir": str(output_dir),
     }
     print(json.dumps(summary, ensure_ascii=False, indent=2))

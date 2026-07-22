@@ -40,12 +40,12 @@ Modern deep vision architectures consist of layers that mix features (i) at a gi
 
 Mixer takes as input a sequence of S non-overlapping image patches, each one projected to a desired hidden dimension C . This results in a two-dimensional real-valued input table, X ∈ R S × C . If the original input image has resolution ( H,W ) , and each patch has resolution ( P, P ) , then the number of patches is S = HW/P 2 . All patches are linearly projected with the same projection matrix. Mixer consists of multiple layers of identical size, and each layer consists of two MLP blocks. The first one is the token-mixing MLP: it acts on columns of X (i.e. it is applied to a transposed input table X ⊤ ), maps R S ↦→ R S , and is shared across all columns. The second one is the channel-mixing MLP: it acts on rows of X , maps R C ↦→ R C , and is shared across all rows. Each MLP block contains two fully-connected layers and a nonlinearity applied independently to each row of its input data tensor. Mixer layers can be written as follows (omitting layer indices):
 
-<!-- formula-start id="ref_tolstikhin_mlp_mixer_2105.01601:formula:0001" status="text_layer_fallback" source-page="3" -->
+<!-- formula-start id="ref_tolstikhin_mlp_mixer_2105.01601:formula:0001" status="semantic_not_formula" source-page="3" -->
 ![Source formula ref_tolstikhin_mlp_mixer_2105.01601:formula:0001](images/formula_0001.png)
 ```text
 PDF text layer: ( )
 ```
-*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `semantic_not_formula`; source PDF page 3. This is an empty-parenthesis layout artifact, not a mathematical formula. It is retained only for provenance and contributes no LaTeX block.*
 <!-- formula-end -->
 
 <!-- formula-start id="ref_tolstikhin_mlp_mixer_2105.01601:formula:0002" status="verified_source" source-page="3" -->

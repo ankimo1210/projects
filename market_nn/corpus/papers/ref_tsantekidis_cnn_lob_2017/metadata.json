@@ -44,7 +44,7 @@
     "has_references": true
   },
   "formula_quality": {
-    "overlay": "source-linked-v2",
+    "overlay": "source-semantic-v3",
     "total": 7,
     "docling_decoded": 0,
     "verified_manual": 7,
@@ -56,6 +56,13 @@
     "manual_recovered": 7,
     "source_corrected": 0,
     "source_recovered": 0,
+    "semantic_reviewed_total": 0,
+    "semantic_high_confidence": 0,
+    "semantic_not_formula": 0,
+    "semantic_ambiguous": 0,
+    "semantic_confirmed": 0,
+    "semantic_reconstructed": 0,
+    "semantic_paper_corrections": 0,
     "decoded_unverified": 0,
     "text_layer_fallback": 0,
     "source_crops": 7,

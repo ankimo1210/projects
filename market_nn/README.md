@@ -78,7 +78,9 @@ make -C market_nn paper-corpus-verify-sources
 `sources/papers/` の PDF は Docling `2.114.0` で Markdown、構造化 JSON、検索用
 JSONL chunk、画像へ変換できる。生成物は Git 管理対象の `corpus/papers/` に置き、
 各 chunk から原本 PDF、ページ、SHA-256 を追跡できる。生成方法、出力形式、数式補完の
-要件は [docs/paper_corpus.md](docs/paper_corpus.md) を参照。
+要件は [docs/paper_corpus.md](docs/paper_corpus.md) を参照。数式は一次資料との一致と、
+文脈・定義・形状制約による意味的復元を別レイヤーで記録し、不確実な候補は元式を
+置換せずnoteへ残す。
 
 ## 主張できること / できないこと
 
