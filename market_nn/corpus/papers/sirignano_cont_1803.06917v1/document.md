@@ -41,12 +41,12 @@ Furthermore, the data used for estimation is often limited to a recent time wind
 
 Due to such considerations, models considered in financial econometrics, trading and risk management applications are asset-specific and their parameters are (re)estimated over time using a time window of recent data. That is, for asset i at time t the model assumes the form
 
-<!-- formula-start id="sirignano_cont_1803.06917v1:formula:0001" status="verified_manual" source-page="3" -->
+<!-- formula-start id="sirignano_cont_1803.06917v1:formula:0001" status="verified_source_and_manual" source-page="3" -->
 $$
 \mathrm{Price}_i(t+\Delta t)=F\!\left(X^i_{0:t},\epsilon_t\mid\theta_i(t)\right)
 $$
 ![Source formula sirignano_cont_1803.06917v1:formula:0001](images/formula_0001.png)
-*Formula quality: `verified_manual`; source PDF page 3. Transcribed and checked against the source PDF.*
+*Formula quality: `verified_source_and_manual`; source PDF page 3. Matched to exact arXiv source 1803.06917v1 at UniversalityOfPriceFormation_arXiv.tex:140 (score=0.9041).*
 <!-- formula-end -->
 
 where the model parameter θ i ( t ) is periodically updated using recent data on price and other state variables related to asset i . As a result, data sets are fragmented across assets and time and, even in the high frequency realm, the size of data sets used for model estimation and training are orders of magnitude smaller than those encountered in other fields where Big Data analytics have been successfully applied. This is one of the reasons why, except in a few instances [8, 15, 26, 29, 30], large-scale learning methods such as Deep Learning [19] have not been deployed for quantitative modeling in finance. In particular, the non-stationarity argument is sometimes invoked to warn against their use.
@@ -89,12 +89,12 @@ Figure 2: Architecture of a recurrent neural network.
 
 We train the network to forecast the next price move from a vector of state variables, which encode the history of the order book over many observation lags. The index t represents the number of price changes. At a high level, the LSTM network is of the form
 
-<!-- formula-start id="sirignano_cont_1803.06917v1:formula:0002" status="verified_manual" source-page="6" -->
+<!-- formula-start id="sirignano_cont_1803.06917v1:formula:0002" status="verified_source_and_manual" source-page="6" -->
 $$
 (Y_t,h_t)=f(X_t,h_{t-1};\theta) \tag{2.1}
 $$
 ![Source formula sirignano_cont_1803.06917v1:formula:0002](images/formula_0002.png)
-*Formula quality: `verified_manual`; source PDF page 6. Transcribed and checked against the source PDF.*
+*Formula quality: `verified_source_and_manual`; source PDF page 6. Matched to exact arXiv source 1803.06917v1 at UniversalityOfPriceFormation_arXiv.tex:253 (score=1.0).*
 <!-- formula-end -->
 
 Y t is the prediction for the next price move, X t is the state of the order book at time t , h t is the internal state of the deep learning model, reprenting information extracted from the history of X up to t , and θ designates the model parameters, which correspond to the weights in the neural network. At each time point t the model uses the current value of state variables X t (i.e. the current order book) and the nonlinear representation of all previous data h t -1 , which summarizes relevant features of the history of order flow, to predict the next price move. In principle, this allows for arbitrary history-dependence: the history of the state variables ( X s , s ≤ t ) may affect the evolution of the system, in particular price dynamics, at all future times T ≥ t in a nonlinear way. Alternative modeling approaches typically do not allow the flexibility of blending nonlinearity and history-dependence in this manner.
@@ -128,12 +128,12 @@ and P [ P τ k +1 -P τ k &lt; 0 | X τ 0: k ] where X t is the state of the lim
 
 We measure the forecast accuracy of a model for a given stock via the proportion of observations for which it correctly predicts the direction of the next price move. This can be estimated using the empirical estimator
 
-<!-- formula-start id="sirignano_cont_1803.06917v1:formula:0003" status="verified_manual" source-page="8" -->
+<!-- formula-start id="sirignano_cont_1803.06917v1:formula:0003" status="verified_source_and_manual" source-page="8" -->
 $$
 A_i=\frac{\text{Number of price changes where model correctly predicts price direction for stock }i}{\text{Total number of price changes}}\times100\%
 $$
 ![Source formula sirignano_cont_1803.06917v1:formula:0003](images/formula_0003.png)
-*Formula quality: `verified_manual`; source PDF page 8. Transcribed and checked against the source PDF.*
+*Formula quality: `verified_source_and_manual`; source PDF page 8. Matched to exact arXiv source 1803.06917v1 at UniversalityOfPriceFormation_arXiv.tex:290 (score=1.0).*
 <!-- formula-end -->
 
 All results are out-of-sample in time . That is, the accuracy is evaluated on time periods outside of the training set. Model accuracy is reported via the cross-sectional distribution of the accuracy score A i across stocks in the testing sample, and models are compared by comparing their accuracy scores.
@@ -159,22 +159,22 @@ The results in Figure 4 show that the deep learning models substantially outperf
 
 The linear (VAR) model may be formulated as follows: at each observation we update a vector of linear features h t and then use a probit model for the conditional probability of an upward price move given the state variables:
 
-<!-- formula-start id="sirignano_cont_1803.06917v1:formula:0004" status="verified_manual" source-page="9" -->
+<!-- formula-start id="sirignano_cont_1803.06917v1:formula:0004" status="verified_source_and_manual" source-page="9" -->
 $$
 \begin{aligned}h_t&=Ah_{t-1}+BX_t,\\Y_t&=\mathbb{P}(\Delta P_t>0\mid X_t,h_t)=G(CX_t+Dh_t).\end{aligned} \tag{3.-1}
 $$
 ![Source formula sirignano_cont_1803.06917v1:formula:0004](images/formula_0004.png)
-*Formula quality: `verified_manual`; source PDF page 9. Transcribed and checked against the source PDF.*
+*Formula quality: `verified_source_and_manual`; source PDF page 9. Matched to exact arXiv source 1803.06917v1 at UniversalityOfPriceFormation_arXiv.tex:323 (score=1.0).*
 <!-- formula-end -->
 
 where G depends on the distributional assumptions on the innovations in the linear model. For example, if we use a logistic distribution for the innovations in the linear model, then the probability distribution of the next price move is given by softmax (logistic) function applied to a linear function of the current order book and linear features:
 
-<!-- formula-start id="sirignano_cont_1803.06917v1:formula:0005" status="verified_manual" source-page="9" -->
+<!-- formula-start id="sirignano_cont_1803.06917v1:formula:0005" status="verified_source_and_manual" source-page="9" -->
 $$
 \mathbb{P}(\Delta P_t>0\mid X_t,h_t)=\operatorname{Softmax}(CX_t+Dh_t)
 $$
 ![Source formula sirignano_cont_1803.06917v1:formula:0005](images/formula_0005.png)
-*Formula quality: `verified_manual`; source PDF page 9. Transcribed and checked against the source PDF.*
+*Formula quality: `verified_source_and_manual`; source PDF page 9. Matched to exact arXiv source 1803.06917v1 at UniversalityOfPriceFormation_arXiv.tex:329 (score=1.0).*
 <!-- formula-end -->
 
 We compare the neural network against a linear model for approximately 500 stocks. To compare models we report the difference in accuracy scores across the same test data set. Let

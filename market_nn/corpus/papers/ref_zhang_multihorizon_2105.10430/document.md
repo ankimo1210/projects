@@ -58,32 +58,32 @@ An encoder steps through the input time steps to extract meaningful features. Th
 
 In this work, we employ the Seq2Seq architecture in Cho et al. (2014) in the context of multi-horizon forecasting models for LOBs. Overall, the encoder contains a recurrent neural network (RNN) that operates on a given input x 1: T = ( x 1 , x 2 , · · · , x T ) . At each time step t of the encoder, the hidden state h t is
 
-<!-- formula-start id="ref_zhang_multihorizon_2105.10430:formula:0001" status="text_layer_fallback" source-page="4" -->
+<!-- formula-start id="ref_zhang_multihorizon_2105.10430:formula:0001" status="verified_source" source-page="4" -->
+$$
+\text{Encoder:} \quad \boldsymbol{h}_t = f(\boldsymbol{h}_{t-1}, x_t),
+$$
 ![Source formula ref_zhang_multihorizon_2105.10430:formula:0001](images/formula_0001.png)
-```text
-PDF text layer: Encoder: h t = f ( h t -1 , x t ) , (1)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 4. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 4. Matched to exact arXiv source 2105.10430v2 at paper.tex:129 (score=0.8824).*
 <!-- formula-end -->
 
 where f is a nonlinear function. The choice of f can vary, ranging from a simple logistic sigmoid function to a more complex LSTM (Hochreiter and Schmidhuber, 1997). The encoder reads through a given input and the last hidden state summarises the whole sequence. The last hidden state c is the 'bridge' between the encoder and decoder, also known as the context vector. At time step t of the decoder, the hidden state h ′ t is
 
-<!-- formula-start id="ref_zhang_multihorizon_2105.10430:formula:0002" status="text_layer_fallback" source-page="5" -->
+<!-- formula-start id="ref_zhang_multihorizon_2105.10430:formula:0002" status="verified_source" source-page="5" -->
+$$
+\text{Decoder:} \quad \boldsymbol{h}'_t = f(\boldsymbol{h}'_{t-1}, y_{t-1}, \boldsymbol{c}),
+$$
 ![Source formula ref_zhang_multihorizon_2105.10430:formula:0002](images/formula_0002.png)
-```text
-PDF text layer: Decoder: h ′ t = f ( h ′ t -1 , y t -1 , c ) , (2)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 5. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 5. Matched to exact arXiv source 2105.10430v2 at paper.tex:133 (score=0.85).*
 <!-- formula-end -->
 
 and the distribution for output y t is
 
-<!-- formula-start id="ref_zhang_multihorizon_2105.10430:formula:0003" status="text_layer_fallback" source-page="5" -->
+<!-- formula-start id="ref_zhang_multihorizon_2105.10430:formula:0003" status="verified_source" source-page="5" -->
+$$
+P(y_{t} | y_{t-1}, y_{t-2}, \cdots, y_{1}, \boldsymbol{c}) = g(\boldsymbol{h}'_{t}, \boldsymbol{c}).
+$$
 ![Source formula ref_zhang_multihorizon_2105.10430:formula:0003](images/formula_0003.png)
-```text
-PDF text layer: P ( y t | y t -1 , y t -2 , · · · , y 1 , c ) = g ( h ′ t , c ) . (3)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 5. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 5. Matched to exact arXiv source 2105.10430v2 at paper.tex:137 (score=0.7442).*
 <!-- formula-end -->
 
 Here f and g are nonlinear functions and g needs to produce valid probabilities, which in our case is done through a softmax activation function. Figure 2 illustrates the structure of a standard Seq2Seq network. Seq2Seq models work well for inputs with small sequences, but suffers when the length of the sequence increases as it is difficult to summarise the entire input into a single hidden state represented by the context vector. Models tend to forget the earlier parts of the input and results often deteriorate as the size of the sequence increases.
@@ -92,42 +92,53 @@ Here f and g are nonlinear functions and g needs to produce valid probabilities,
 
 The Attention model (Luong et al., 2015) is an evolution of the Seq2Seq model, developed in order to deal with inputs of long sequences. The core idea is to allow the decoder to selectively access hidden states of the encoder during decoding. We can build a different context vector for every time step of the decoder as a function of the previous hidden state and of all the hidden states in the encoder. Similar to the Seq2Seq model, the hidden state h t of the encoder is
 
-<!-- formula-start id="ref_zhang_multihorizon_2105.10430:formula:0004" status="text_layer_fallback" source-page="5" -->
+<!-- formula-start id="ref_zhang_multihorizon_2105.10430:formula:0004" status="verified_source" source-page="5" -->
+$$
+\text{Encoder:} \quad \boldsymbol{h}_t = f(\boldsymbol{h}_{t-1}, x_t),
+$$
 ![Source formula ref_zhang_multihorizon_2105.10430:formula:0004](images/formula_0004.png)
-```text
-PDF text layer: Encoder: h t = f ( h t -1 , x t ) , (4)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 5. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 5. Matched to exact arXiv source 2105.10430v2 at paper.tex:147 (score=0.8824).*
 <!-- formula-end -->
 
 where f is a nonlinear function. For the context vector c t at time stamp t of the decoder, one defines
 
-<!-- formula-start id="ref_zhang_multihorizon_2105.10430:formula:0005" status="text_layer_fallback" source-page="5" -->
+<!-- formula-start id="ref_zhang_multihorizon_2105.10430:formula:0005" status="verified_source" source-page="5" -->
+$$
+\begin{alignedat}{2}
+& \text{Context vector:} &&\boldsymbol{c}_t = \sum_{i=1}^{T} \alpha_{t,i} h_i, \\
+& \text{Attention weight:} \quad &&\alpha_{t,i} = \frac{exp(e(\boldsymbol{h}'_{t-1}, \boldsymbol{h}_i))}{\sum_{j=1}^Texp(e(\boldsymbol{h}'_{t-1}, \boldsymbol{h}_j))},
+\end{alignedat}
+$$
 ![Source formula ref_zhang_multihorizon_2105.10430:formula:0005](images/formula_0005.png)
-```text
-PDF text layer: Context vector: c t = T ∑ i =1 α t,i h i , Attention weight: α t,i = exp ( e ( h ′ t -1 , h i )) ∑ T j =1 exp ( e ( h ′ t -1 , h j )) , (5)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 5. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 5. Matched to exact arXiv source 2105.10430v2 at paper.tex:151 (score=0.8862).*
 <!-- formula-end -->
 
 where e ( h ′ t -1 , h i ) is called the score derived from the previous hidden state h ′ t -1 of the decoder and the hidden state h i of the encoder. In Luong et al. (2015), there are three alternatives to calculate the score
 
-<!-- formula-start id="ref_zhang_multihorizon_2105.10430:formula:0006" status="text_layer_fallback" source-page="5" -->
+<!-- formula-start id="ref_zhang_multihorizon_2105.10430:formula:0006" status="verified_source" source-page="5" -->
+$$
+e(\boldsymbol{h}'_{t-1}, \boldsymbol{h}_i) =
+\begin{cases}
+\boldsymbol{h}_i^{\text{T}} \boldsymbol{h}'_{t-1} & \text{dot},\\
+\boldsymbol{h}_i^{\text{T}} \boldsymbol{W}_a \boldsymbol{h}'_{t-1} & \text{general},\\
+tanh(\boldsymbol{W}_a [\boldsymbol{h}_i^{\text{T}} ; \boldsymbol{h}'_{t-1}]) & \text{concatenate}.
+\end{cases}
+$$
 ![Source formula ref_zhang_multihorizon_2105.10430:formula:0006](images/formula_0006.png)
-```text
-PDF text layer: e ( h ′ t -1 , h i ) =    h T i h ′ t -1 dot , h T i W a h ′ t -1 general , tanh ( W a [ h T i ; h ′ t -1 ]) concatenate . (6)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 5. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 5. Matched to exact arXiv source 2105.10430v2 at paper.tex:158 (score=0.7937).*
 <!-- formula-end -->
 
 We can then pass the context vector c t to the decoder to calculate the probability distribution of the next possible output
 
-<!-- formula-start id="ref_zhang_multihorizon_2105.10430:formula:0007" status="text_layer_fallback" source-page="5" -->
+<!-- formula-start id="ref_zhang_multihorizon_2105.10430:formula:0007" status="verified_source" source-page="5" -->
+$$
+\begin{split}
+\text{Decoder:} \quad \boldsymbol{h}'_t &= f(\boldsymbol{h}'_{t-1}, y_{t-1}, \boldsymbol{c}_t), \\
+P(y_{t} | y_{t-1}, y_{t-2}, \cdots, y_{1}, \boldsymbol{c}_t) &= g(\boldsymbol{h}'_{t}, \boldsymbol{c}_t),
+\end{split}
+$$
 ![Source formula ref_zhang_multihorizon_2105.10430:formula:0007](images/formula_0007.png)
-```text
-PDF text layer: Decoder: h ′ t = f ( h ′ t -1 , y t -1 , c t ) , P ( y t | y t -1 , y t -2 , · · · , y 1 , c t ) = g ( h ′ t , c t ) , (7)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 5. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 5. Matched to exact arXiv source 2105.10430v2 at paper.tex:168 (score=0.809).*
 <!-- formula-end -->
 
 where h ′ t is the hidden state of the decoder at time t and g is a softmax activation function. We illustrate the Attention mechanism in Figure 3.
@@ -370,12 +381,16 @@ The authors would like to thank Graphcore for making their hardware available fo
 
 Following the setup in Zhang et al. (2019a, 2021), we predict the future price movements into three classes: the market going up, staying stationary or going down. Mid-prices are used to create labels and we define
 
-<!-- formula-start id="ref_zhang_multihorizon_2105.10430:formula:0008" status="text_layer_fallback" source-page="15" -->
+<!-- formula-start id="ref_zhang_multihorizon_2105.10430:formula:0008" status="verified_source" source-page="15" -->
+$$
+\begin{split}
+&l_t = \frac{m_+(t) - m_-(t)}{m_-(t)}, \\
+&m_-(t) = \frac{1}{k} \sum_{i=0}^{k-1} p_{t-i}, \\
+&m_+(t) = \frac{1}{k} \sum_{i=1}^k p_{t+i},
+\end{split}
+$$
 ![Source formula ref_zhang_multihorizon_2105.10430:formula:0008](images/formula_0008.png)
-```text
-PDF text layer: l t = m + ( t ) -m -( t ) m -( t ) , m -( t ) = 1 k k -1 ∑ i =0 p t -i , m + ( t ) = 1 k k ∑ i =1 p t + i , (8)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 15. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 15. Matched to exact arXiv source 2105.10430v2 at paper.tex:500 (score=0.7805).*
 <!-- formula-end -->
 
 where k is the prediction horizon and p t is the mid-price at time t . We compare l t with a threshold ( α ) to decide on the label, and if l t &gt; α , we label it as up or l t &lt; -α is a down. We label everything else as the stationary class and the choices of k and α are listed in Table 11 for all instruments in consideration. This choice results in roughly balanced classes as shown in Figure 12.

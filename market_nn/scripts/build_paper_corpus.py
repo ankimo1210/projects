@@ -418,13 +418,21 @@ def validate_corpus(source_dir: Path, output_dir: Path) -> dict[str, Any]:
             image = formula.get("source_image")
             if image and not (paper_dir / image).is_file():
                 raise RuntimeError(f"Missing formula source crop for {formula['formula_id']}")
+            if formula["status"].startswith("verified_") and not formula.get("latex"):
+                raise RuntimeError(f"Verified formula has no LaTeX: {formula['formula_id']}")
+            if "source" in formula["status"] and not formula.get("source_verification"):
+                raise RuntimeError(
+                    f"Source-verified formula has no provenance: {formula['formula_id']}"
+                )
         quality = metadata.get("formula_quality", {})
         if quality.get("total") != len(formulas):
             raise RuntimeError(f"Formula metadata count mismatch for {pdf.stem}")
         chunk_count += len(chunks)
         math_blocks += int(metadata["document"]["math_blocks"])
         formula_count += len(formulas)
-        verified_formula_count += int(quality.get("verified_manual", 0))
+        verified_formula_count += sum(
+            formula["status"].startswith("verified_") for formula in formulas
+        )
     summary = {
         "ok": True,
         "paper_count": len(pdfs),

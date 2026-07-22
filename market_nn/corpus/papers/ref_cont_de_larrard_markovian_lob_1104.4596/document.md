@@ -115,28 +115,22 @@ Denoting by ( T a i , i ≥ 1) (resp. T b i ) the times at which the size of ask
 - (ii) ( T b i +1 -T b i ) i ≥ 0 is a sequence of independent random variables with exponential distribution with parameter λ + θ + µ ,
 - (iii) ( V a i ) i ≥ 0 is a sequence of independent random variables with
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0001" status="decoded_unverified" source-page="5" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0001" status="verified_source" source-page="5" -->
 $$
-\mathbb { P } [ V _ { i } ^ { a } = 1 ] = \frac { \lambda } { \lambda + \mu + \theta } a n d \mathbb { P } [ V _ { i } ^ { a } = - 1 ] = \frac { \mu + \theta } { \lambda + \mu + \theta } ,
+\mathbb{P}[V_{i}^{a} = 1] = \dfrac{\lambda}{\lambda + \mu + \theta} and \mathbb{P}[V_{i}^{a} = -1] = \dfrac{\mu + \theta}{\lambda + \mu + \theta},
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0001](images/formula_0001.png)
-```text
-PDF text layer: P [ V a i =1] = λ λ + µ + θ and P [ V a i = -1] = µ + θ λ + µ + θ , (1)
-```
-*Formula quality: `decoded_unverified`; source PDF page 5. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 5. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:347 (score=0.9836).*
 <!-- formula-end -->
 
 - (iv) ( V b i ) i ≥ 0 is a sequence of independent random variables with
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0002" status="decoded_unverified" source-page="5" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0002" status="verified_source" source-page="5" -->
 $$
-\mathbb { P } [ V _ { i } ^ { b } = 1 ] = \frac { \lambda } { \lambda + \mu + \theta } a n d \ \mathbb { P } [ V _ { i } ^ { b } = - 1 ] = \frac { \mu + \theta } { \lambda + \mu + \theta } \quad ( 2 )
+\mathbb{P}[V_{i}^{b} = 1] = \dfrac{\lambda}{\lambda + \mu + \theta} and \mathbb{P}[V_{i}^{b} = -1] = \dfrac{\mu + \theta}{\lambda + \mu + \theta}
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0002](images/formula_0002.png)
-```text
-PDF text layer: P [ V b i =1] = λ λ + µ + θ and P [ V b i = -1] = µ + θ λ + µ + θ (2)
-```
-*Formula quality: `decoded_unverified`; source PDF page 5. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 5. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:349 (score=0.9836).*
 <!-- formula-end -->
 
 - All the previous sequences are independent.
@@ -187,28 +181,22 @@ In summary, the process X t =( s b t , q b t , q a t ) is a continuous-time proc
 
 - If an order or cancelation arrives on the ask side i.e. T ∈{ T a i , i ≥ 1 } :
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0003" status="decoded_unverified" source-page="7" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0003" status="verified_source" source-page="7" -->
 $$
-( s _ { T } ^ { b } , q _ { T } ^ { b } , q _ { T } ^ { a } ) = ( s _ { T - } ^ { b } , q _ { T - } ^ { b } , q _ { T - } ^ { a } + V _ { i } ^ { a } ) 1 _ { q _ { T - } ^ { a } > - V _ { i } ^ { a } } + ( S _ { T - } ^ { b } + \delta , R _ { i } ^ { b } , R _ { i } ^ { a } ) 1 _ { q _ { T - } ^ { a } \leq - V _ { i } ^ { a } } ,
+(s_{T}^{b},q_{T}^{b},q_{T}^{a}) = (s_{T-}^{b},q_{T-}^{b},q_{T-}^{a} + V_{i}^{a}) 1_{q_{T-}^{a} > -V_{i}^{a}} + (S_{T-}^{b}+\delta,R_{i}^{b},R_{i}^{a}) 1_{q_{T-}^{a} \leq -V_{i}^{a}},
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0003](images/formula_0003.png)
-```text
-PDF text layer: ( s b T , q b T , q a T ) = ( s b T -, q b T -, q a T -+ V a i )1 q a T -> -V a i +( S b T -+ δ, R b i , R a i )1 q a T -≤-V a i ,
-```
-*Formula quality: `decoded_unverified`; source PDF page 7. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 7. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:425 (score=1.0).*
 <!-- formula-end -->
 
 - If an order or cancelation arrives on the bid side i.e. T ∈{ T b i , i ≥ 1 } :
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0004" status="decoded_unverified" source-page="7" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0004" status="verified_source" source-page="7" -->
 $$
-( s _ { T } ^ { b } , q _ { T } ^ { b } , q _ { T } ^ { a } ) = ( s _ { T - } ^ { b } , q _ { T - } ^ { b } + V _ { i } ^ { b } , q _ { T - } ^ { a } ) 1 _ { q _ { T - } ^ { b } > - V _ { i } ^ { b } } + ( s _ { T - } ^ { b } - \delta , \tilde { R } _ { i } ^ { b } , \tilde { R } _ { i } ^ { a } ) 1 _ { q _ { T - } ^ { b } \leq - V _ { i } ^ { b } } ,
+(s_{T}^{b},q_{T}^{b},q_{T}^{a}) = (s_{T-}^{b},q_{T-}^{b} + V_{i}^{b},q_{T-}^{a}) 1_{q_{T-}^{b} > -V_{i}^{b}} + (s_{T-}^{b}-\delta,\tilde{R}_{i}^{b},\tilde{R}_{i}^{a}) 1_{q_{T-}^{b} \leq -V_{i}^{b}},
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0004](images/formula_0004.png)
-```text
-PDF text layer: ( s b T , q b T , q a T ) = ( s b T -, q b T -+ V b i , q a T -)1 q b T -> -V b i +( s b T --δ, ˜ R b i , ˜ R a i )1 q b T -≤-V b i ,
-```
-*Formula quality: `decoded_unverified`; source PDF page 7. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 7. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:427 (score=1.0).*
 <!-- formula-end -->
 
 where ( V a i ) i ≥ 1 and ( V b i ) i ≥ 1 are sequences of IID variables with distribution given by (1)-(2), ( R i ) i ≥ 1 = ( R b i , R a i ) i ≥ 1 is a sequence of IID variables with (joint) distribution f , and ( ˜ R i ) i ≥ 1 = ( ˜ R b i , ˜ R a i ) i ≥ 1 is a sequence of IID variables with (joint) distribution ˜ f .
@@ -239,54 +227,44 @@ We consider first the distribution of the duration until the next price change, 
 
 Since the queue sizes are constant between events, one can express these stopping times as:
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0005" status="decoded_unverified" source-page="8" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0005" status="verified_source" source-page="8" -->
 $$
-\sigma ^ { a } = \inf \{ T _ { i } ^ { a } , \ q _ { T _ { i } ^ { a } - } ^ { a } + V _ { i } ^ { a } = 0 \} \quad \sigma ^ { b } = \inf \{ T _ { i } ^ { b } , \ q _ { T _ { i } ^ { b } - } ^ { b } + V _ { i } ^ { b } = 0 \}
+\sigma^{a} = \inf \lbrace T_i^a, \ q_{T_i^a-}^{a}+V^a_i = 0 \rbrace
+\qquad \sigma^{b} = \inf \lbrace T_i^b, \ q_{T_i^b-}^{b}+V^b_i = 0 \rbrace
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0005](images/formula_0005.png)
-```text
-PDF text layer: σ a =inf { T a i , q a T a i -+ V a i =0 } σ b =inf { T b i , q b T b i -+ V b i =0 }
-```
-*Formula quality: `decoded_unverified`; source PDF page 8. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 8. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:467 (score=0.7407).*
 <!-- formula-end -->
 
 The price ( s t , t ≥ 0) moves when the queue q t =( q b t , q a t ) hits one of the axes: the duration until the next price move is thus
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0006" status="decoded_unverified" source-page="8" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0006" status="verified_source" source-page="8" -->
 $$
-\tau = \sigma _ { a } \wedge \sigma _ { b } .
+\tau = \sigma_{a} \wedge \sigma_{b}.
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0006](images/formula_0006.png)
-```text
-PDF text layer: τ = σ a ∧ σ b .
-```
-*Formula quality: `decoded_unverified`; source PDF page 8. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 8. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:470 (score=1.0).*
 <!-- formula-end -->
 
 The following theorem gives the distribution of the duration τ , conditional on the initial queue sizes:
 
 Proposition 1 (Distribution of duration until next price move) . The distribution of τ conditioned on the state of the order book is given by:
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0007" status="decoded_unverified" source-page="8" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0007" status="verified_source" source-page="8" -->
 $$
-\mathbb { P } [ \tau > t | q _ { 0 } ^ { a } = a , \ q _ { 0 } ^ { b } = b ] = \sqrt { ( \frac { \mu + \theta } { \lambda } ) ^ { a + b } \psi _ { a , \lambda , \theta + \mu } ( t ) \psi _ { b , \lambda , \theta + \mu } ( t ) } & & ( 3 )
+\mathbb{P}[\tau >t| q_{0}^{a} = a, \ q_{0}^{b} = b] =
+\sqrt{(\dfrac{\mu + \theta}{\lambda})^{a+b}} \psi_{a,\lambda,\theta+\mu}(t) \psi_{b,\lambda,\theta+\mu}(t)
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0007](images/formula_0007.png)
-```text
-PDF text layer: P [ τ > t | q a 0 = a, q b 0 = b ] = √ ( µ + θ λ ) a + b ψ a,λ,θ + µ ( t ) ψ b,λ,θ + µ ( t ) (3)
-```
-*Formula quality: `decoded_unverified`; source PDF page 8. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 8. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:477 (score=0.9931).*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0008" status="decoded_unverified" source-page="8" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0008" status="verified_source" source-page="8" -->
 $$
-\text {where} \quad \psi _ { n , \lambda , \theta + \mu } ( t ) = \int _ { t } ^ { \infty } \frac { n } { u } I _ { n } ( 2 \sqrt { \lambda ( \theta + \mu ) } u ) e ^ { - u ( \lambda + \theta + \mu ) } d u \quad \\
+{\rm where}\qquad \psi_{n,\lambda,\theta+\mu}(t)=\int_{t}^{\infty} \dfrac{n}{u} I_{n}(2 \sqrt{\lambda (\theta+\mu)} u) e^{-u (\lambda + \theta+\mu)} du
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0008](images/formula_0008.png)
-```text
-PDF text layer: where ψ n,λ,θ + µ ( t ) = ∫ ∞ t n u I n (2 √ λ ( θ + µ ) u ) e -u ( λ + θ + µ ) du (4)
-```
-*Formula quality: `decoded_unverified`; source PDF page 8. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 8. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:481 (score=0.9935).*
 <!-- formula-end -->
 
 and I n is the modified Bessel function of the first kind. The conditional law of τ has a regularly varying tail
@@ -296,54 +274,42 @@ and I n is the modified Bessel function of the first kind. The conditional law o
 
 Proof. Since ( q a t , t ≥ 0) follows a birth and death process with birth rate λ and death rate µ + θ , L ( s, x ) := E [ e -sσ a | q a 0 = x ] satisfies:
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0009" status="decoded_unverified" source-page="8" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0009" status="verified_source" source-page="8" -->
 $$
-\mathcal { L } ( s , x ) = \frac { \lambda \mathcal { L } ( s , x + 1 ) + ( \mu + \theta ) \mathcal { L } ( s , x - 1 ) } { \lambda + \mu + \theta + s } .
+\mathcal{L}(s,x) = \dfrac{\lambda \mathcal{L}(s,x+1) + (\mu + \theta) \mathcal{L}(s, x-1)}{\lambda + \mu + \theta + s} .
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0009](images/formula_0009.png)
-```text
-PDF text layer: L ( s, x ) = λ L ( s, x +1)+( µ + θ ) L ( s, x -1) λ + µ + θ + s .
-```
-*Formula quality: `decoded_unverified`; source PDF page 8. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 8. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:501 (score=0.9882).*
 <!-- formula-end -->
 
 We can find the roots of the polynomial: λX 2 -( λ + µ + θ + s ) X + µ + θ ; one root is &gt; 1, the other is &lt; 1; since L ( s, 0) = 1 and lim x →∞ L ( s, x ) = 0,
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0010" status="decoded_unverified" source-page="8" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0010" status="verified_source" source-page="8" -->
 $$
-\mathcal { L } ( s , x ) = ( \frac { ( \lambda + \mu + \theta + s ) - \sqrt { ( ( \lambda + \mu + \theta + s ) ) ^ { 2 } - 4 \lambda ( \mu + \theta ) } } { 2 \lambda } ) ^ { x } .
+\mathcal{L}(s,x) = (\dfrac{(\lambda + \mu + \theta + s) - \sqrt{((\lambda + \mu + \theta + s))^{2} - 4\lambda (\mu + \theta)}}{2 \lambda})^{x}.
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0010](images/formula_0010.png)
-```text
-PDF text layer: L ( s, x ) = ( ( λ + µ + θ + s ) -√ (( λ + µ + θ + s )) 2 -4 λ ( µ + θ ) 2 λ ) x .
-```
-*Formula quality: `decoded_unverified`; source PDF page 8. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 8. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:503 (score=0.992).*
 <!-- formula-end -->
 
 Moreover if we use the relation P [ τ &gt; t | q a 0 = x,q b 0 = y ] = P [ σ a &gt;t | q a 0 = x ] P [ σ b &gt;t | q b 0 = y ],
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0011" status="decoded_unverified" source-page="8" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0011" status="verified_source" source-page="8" -->
 $$
-\mathbb { P } [ \tau > t | q _ { 0 } ^ { a } = x , q _ { 0 } ^ { b } = y ] = \int _ { t } ^ { \infty } \hat { \mathcal { L } } ( u , x ) d u \int _ { t } ^ { \infty } \hat { \mathcal { L } } ( u , y ) d u .
+\mathbb{P}[\tau >t| q_{0}^{a} = x, q_{0}^{b} = y] = \int_{t}^{\infty} \hat{\mathcal{L}}(u,x) du \int_{t}^{\infty} \hat{\mathcal{L}}(u,y) du .
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0011](images/formula_0011.png)
-```text
-PDF text layer: P [ τ > t | q a 0 = x,q b 0 = y ] = ∫ ∞ t ˆ L ( u,x ) du ∫ ∞ t ˆ L ( u,y ) du.
-```
-*Formula quality: `decoded_unverified`; source PDF page 8. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 8. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:506 (score=1.0).*
 <!-- formula-end -->
 
 This Laplace transform may be inverted (see (Feller 1971, XIV.7)) and the inversion yields
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0012" status="decoded_unverified" source-page="8" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0012" status="verified_source" source-page="8" -->
 $$
-\hat { \mathcal { L } } ( t , x ) = \frac { x } { t } \sqrt { ( \frac { \mu + \theta } { \lambda } ) ^ { x } } \quad I _ { x } ( 2 \sqrt { \lambda ( \theta + \mu ) } t ) e ^ { - t ( \lambda + \theta + \mu ) } ,
+\hat{\mathcal{L}}(t,x) = \dfrac{x}{t} \sqrt{(\dfrac{\mu + \theta}{\lambda})^{x}}\quad I_{x}(2 \sqrt{\lambda(\theta + \mu)} t) e^{-t (\lambda + \theta + \mu)},
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0012](images/formula_0012.png)
-```text
-PDF text layer: ˆ L ( t, x ) = x t √ ( µ + θ λ ) x I x (2 √ λ ( θ + µ ) t ) e -t ( λ + θ + µ ) ,
-```
-*Formula quality: `decoded_unverified`; source PDF page 8. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 8. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:509 (score=0.9859).*
 <!-- formula-end -->
 
 which gives us the expected result.
@@ -352,15 +318,12 @@ which gives us the expected result.
 
 - If λ &lt; µ + θ :
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0013" status="decoded_unverified" source-page="8" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0013" status="verified_source" source-page="8" -->
 $$
-\mathcal { L } ( s , x ) = \alpha ( s ) ^ { x } \underset { s \to 0 } { \sim } 1 - \frac { x ( \lambda + \mu + \theta ) } { 2 \lambda ( \mu + \theta - \lambda ) } s ,
+\mathcal{L}(s,x) = \alpha(s)^{x} \mathop{\sim}_{ s \rightarrow 0} 1 - \dfrac{x(\lambda+ \mu+ \theta)}{2 \lambda(\mu + \theta - \lambda)} s,
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0013](images/formula_0013.png)
-```text
-PDF text layer: L ( s, x ) = α ( s ) x ∼ s → 0 1 -x ( λ + µ + θ ) 2 λ ( µ + θ -λ ) s,
-```
-*Formula quality: `decoded_unverified`; source PDF page 8. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 8. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:516 (score=0.8197).*
 <!-- formula-end -->
 
 Figure 3 Above: P ( τ &gt; t | q a 0 =4 , q b 0 =5) as a function of t for λ =12 , µ + θ =13. Below: same figure in log-log coordinates. Note the Pareto tail which decays as t -2 .
@@ -369,67 +332,52 @@ Figure 3 Above: P ( τ &gt; t | q a 0 =4 , q b 0 =5) as a function of t for λ =
 
 so Karamata's Tauberian theorem (Feller 1971, XIII.5) yields
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0014" status="decoded_unverified" source-page="9" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0014" status="verified_source" source-page="9" -->
 $$
-\mathbb { P } [ \sigma ^ { a } > t | q _ { 0 } ^ { a } = x ] _ { t \to \infty } \, \frac { x ( \lambda + \mu + \theta ) } { 2 \lambda ( \mu + \theta - \lambda ) } \frac { 1 } { t } ;
+\mathbb{P}[\sigma^{a} > t|q_{0}^{a} = x] \mathop{\sim}_{ t \rightarrow \infty} \dfrac{x(\lambda+ \mu+ \theta)}{2 \lambda(\mu + \theta- \lambda)} \dfrac{1}{t};
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0014](images/formula_0014.png)
-```text
-PDF text layer: P [ σ a >t | q a 0 = x ] ∼ t →∞ x ( λ + µ + θ ) 2 λ ( µ + θ -λ ) 1 t ;
-```
-*Formula quality: `decoded_unverified`; source PDF page 9. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 9. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:518 (score=0.8707).*
 <!-- formula-end -->
 
 therefore the conditional law of the duration τ is a regularly varying with tail index 2
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0015" status="decoded_unverified" source-page="10" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0015" status="verified_source" source-page="10" -->
 $$
-\mathbb { P } [ \tau > t | q _ { 0 } ^ { a } = x , q _ { 0 } ^ { b } = y ] _ { t \to \infty } \underset { \lambda ^ { 2 } ( \mu + \theta - \lambda ) ^ { 2 } } { \sim } \frac { x y ( \lambda + \mu + \theta ) ^ { 2 } } { \lambda ^ { 2 } ( \mu + \theta - \lambda ) ^ { 2 } } \frac { 1 } { 4 t ^ { 2 } } .
+\mathbb{P}[\tau > t|q_{0}^{a} = x, q_{0}^{b} = y] \mathop{\sim}_{ t \rightarrow \infty} \dfrac{xy(\lambda+ \mu+ \theta)^{2}}{ \lambda^{2}(\mu + \theta - \lambda)^{2}} \dfrac{1}{4t^2}.
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0015](images/formula_0015.png)
-```text
-PDF text layer: P [ τ > t | q a 0 = x,q b 0 = y ] ∼ t →∞ xy ( λ + µ + θ ) 2 λ 2 ( µ + θ -λ ) 2 1 4 t 2 . (5)
-```
-*Formula quality: `decoded_unverified`; source PDF page 10. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 10. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:521 (score=0.7947).*
 <!-- formula-end -->
 
 - If the order flow is balanced i.e. λ = µ + θ then
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0016" status="decoded_unverified" source-page="10" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0016" status="verified_source" source-page="10" -->
 $$
-\mathcal { L } ( s , x ) = ( \alpha ( s ) ) ^ { x } \sim _ { s \to 0 } 1 - \frac { x } { \sqrt { \lambda } } \sqrt { s } ,
+\mathcal{L}(s,x) =(\alpha(s))^{x} \mathop{\sim}_{ s \rightarrow 0} 1 - \dfrac{x}{\sqrt{\lambda}} \sqrt{s},
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0016](images/formula_0016.png)
-```text
-PDF text layer: L ( s, x ) = ( α ( s )) x ∼ s → 0 1 -x √ λ √ s,
-```
-*Formula quality: `decoded_unverified`; source PDF page 10. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 10. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:523 (score=0.8352).*
 <!-- formula-end -->
 
 the law of σ a is regularly-varying with tail index 1 / 2 and
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0017" status="decoded_unverified" source-page="10" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0017" status="verified_source" source-page="10" -->
 $$
-\mathbb { P } [ \sigma ^ { a } > t | q _ { 0 } ^ { a } = x ] \underset { t \to \infty } { \sim } \frac { x } { \sqrt { \pi \lambda } } \frac { 1 } { \sqrt { t } } .
+\mathbb{P}[\sigma^{a} > t | q_{0}^{a} = x] \mathop{\sim}_{ t \rightarrow \infty} \dfrac{x}{\sqrt{\pi \lambda}} \dfrac{1}{\sqrt{t}}.
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0017](images/formula_0017.png)
-```text
-PDF text layer: P [ σ a >t | q a 0 = x ] ∼ t →∞ x √ πλ 1 √ t .
-```
-*Formula quality: `decoded_unverified`; source PDF page 10. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 10. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:525 (score=0.7581).*
 <!-- formula-end -->
 
 The duration then follows a heavy-tailed distribution with infinite first moment:
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0018" status="decoded_unverified" source-page="10" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0018" status="verified_source" source-page="10" -->
 $$
-\mathbb { P } [ \tau > t | q _ { 0 } ^ { a } = x , q _ { 0 } ^ { b } = y ] _ { t \to \infty } \, \frac { x y } { \pi \lambda } \frac { 1 } { t } ;
+\mathbb{P}[\tau > t| q_{0}^{a} = x, q_{0}^{b} = y] \mathop{\sim}_{ t \rightarrow \infty} \dfrac{xy}{\pi \lambda} \dfrac{1}{t};
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0018](images/formula_0018.png)
-```text
-PDF text layer: P [ τ > t | q a 0 = x,q b 0 = y ] ∼ t →∞ xy πλ 1 t ; (6)
-```
-*Formula quality: `decoded_unverified`; source PDF page 10. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 10. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:527 (score=0.8119).*
 <!-- formula-end -->
 
 The expression given in (3) is easily computed by discretizing the integral in (4). Plotting (3) for a fine grid of values of t typically takes less than a second on a laptop. Figure 3 gives a numerical example, with λ =12 sec -1 , µ + θ =13 sec -1 , q a 0 =4 , q b 0 =5 (queue sizes are given in multiples of average batch size).
@@ -440,106 +388,82 @@ Assume now that λ = µ + θ , i.e. that the flow of limit orders is balanced by
 
 Proposition 2. For ( n,p ) ∈ N 2 , the probability φ ( n,p ) that the next price move is an increase, conditioned on having the n orders on the bid side and p orders on the ask side is:
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0019" status="decoded_unverified" source-page="10" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0019" status="verified_source" source-page="10" -->
 $$
-\phi ( n , p ) = \frac { 1 } { \pi } \int _ { 0 } ^ { \pi } ( 2 - \cos ( t ) - \sqrt { ( 2 - \cos ( t ) ) ^ { 2 } - 1 } ) ^ { p } \frac { \sin ( n t ) \cos ( \frac { t } { 2 } ) } { \sin ( \frac { t } { 2 } ) } d t .
+\phi(n,p) = \dfrac{1}{\pi} \int_{0}^{\pi} (2-\cos(t)-\sqrt{(2-\cos(t))^2-1})^{p} \frac{\sin(nt) \cos(\frac{t}{2})}{\sin(\frac{t}{2})} dt.
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0019](images/formula_0019.png)
-```text
-PDF text layer: φ ( n,p ) = 1 π ∫ π 0 (2 -cos( t ) -√ (2 -cos( t )) 2 -1) p sin( nt ) cos( t 2 ) sin( t 2 ) dt. (7)
-```
-*Formula quality: `decoded_unverified`; source PDF page 10. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 10. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:567 (score=0.9922).*
 <!-- formula-end -->
 
 Proof. The generator of the bivariate random walk ( M n , n ≥ 1) is the discrete Laplacian so φ ( n,p ) = P [ σ a &lt;σ b | q b 0 -= n,q a 0 -= p ] satisfies, for all n ≥ 1 and p ≥ 1,
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0020" status="decoded_unverified" source-page="10" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0020" status="verified_source" source-page="10" -->
 $$
-4 \phi ( n , p ) = \phi ( n + 1 , p ) + \phi ( n - 1 , p ) + \phi ( n , p + 1 ) + \phi ( n , p - 1 ) ,
+4\phi(n,p) = \phi(n+1,p) + \phi(n-1,p) + \phi(n,p+1) + \phi(n,p-1),
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0020](images/formula_0020.png)
-```text
-PDF text layer: 4 φ ( n,p ) = φ ( n +1 , p ) + φ ( n -1 , p ) + φ ( n,p +1)+ φ ( n,p -1) , (8)
-```
-*Formula quality: `decoded_unverified`; source PDF page 10. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 10. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:573 (score=1.0).*
 <!-- formula-end -->
 
 with the boundary conditions: φ (0 , p ) = 0 for all p ≥ 1 and φ ( n, 0) = 1 for all n ≥ 1. This problem is known as the discrete Dirichlet problem; solutions of (8) are called discrete harmonic functions. (Lawler and Limic 2010, Ch. 8) show that for all t ≥ 0, the functions
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0021" status="decoded_unverified" source-page="10" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0021" status="verified_source" source-page="10" -->
 $$
-f _ { t } ( x , y ) = e ^ { x r ( t ) } \sin ( y t ) , \quad \text {and} \quad \tilde { f } _ { t } ( x , y ) = e ^ { - x r ( t ) } \sin ( y t ) \quad \text {with} r ( t ) = \cosh ^ { - 1 } ( 2 - \cos t )
+f_{t}(x,y) = e^{xr(t)} \sin(yt), \qquad {\rm and} \qquad\tilde{f}_{t}(x,y) = e^{-xr(t)} \sin(yt)\qquad{\rm with}\quad r(t) = \cosh^{-1}(2 - \cos t)
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0021](images/formula_0021.png)
-```text
-PDF text layer: f t ( x,y ) = e xr ( t ) sin( yt ) , and ˜ f t ( x,y ) = e -xr ( t ) sin( yt ) with r ( t ) = cosh -1 (2 -cos t )
-```
-*Formula quality: `decoded_unverified`; source PDF page 10. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 10. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:576 (score=1.0).*
 <!-- formula-end -->
 
 are solutions of (8). In (Lawler and Limic 2010, Corollary 8.1.8) it is shown that the probability that a simple random walk ( M k , k ≥ 1) starting at ( n,p ) ∈ Z + × Z + reaches the axes at ( x, 0) is
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0022" status="decoded_unverified" source-page="10" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0022" status="verified_source" source-page="10" -->
 $$
-\frac { 2 } { \pi } \int _ { 0 } ^ { \pi } e ^ { - r ( t ) p } \sin ( n t ) \sin ( t x ) d t ,
+\dfrac{2}{\pi} \int_{0}^{\pi} e^{-r(t) p} \sin(nt) \sin(t x) dt,
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0022](images/formula_0022.png)
-```text
-PDF text layer: 2 π ∫ π 0 e -r ( t ) p sin( nt ) sin( tx ) dt,
-```
-*Formula quality: `decoded_unverified`; source PDF page 10. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 10. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:579 (score=0.9831).*
 <!-- formula-end -->
 
 therefore
 
 Since
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0023" status="decoded_unverified" source-page="11" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0023" status="verified_source" source-page="11" -->
 $$
-\phi ( n , p ) = \sum _ { k = 1 } ^ { \infty } \frac { 2 } { \pi } \int _ { 0 } ^ { \pi } e ^ { - r ( t ) p } \sin ( t n ) \sin ( t k ) d t .
+\phi(n,p) = \sum_{k=1}^{\infty} \dfrac{2}{\pi} \int_{0}^{\pi} e^{-r(t) p} \sin(t n) \sin(t k) dt .
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0023](images/formula_0023.png)
-```text
-PDF text layer: φ ( n,p ) = ∞ ∑ k =1 2 π ∫ π 0 e -r ( t ) p sin( tn ) sin( tk ) dt.
-```
-*Formula quality: `decoded_unverified`; source PDF page 11. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 11. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:581 (score=0.9888).*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0024" status="decoded_unverified" source-page="11" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0024" status="verified_source" source-page="11" -->
 $$
-\sum _ { k = 1 } ^ { m } \sin ( k t ) = \frac { \sin ( \frac { m t } { 2 } ) \sin ( \frac { ( m + 1 ) t } { 2 } ) } { \sin ( t / 2 ) } = \frac { \cos ( \frac { t } { 2 } ) - \cos ( ( m + \frac { 1 } { 2 } ) t ) } { 2 \sin ( t / 2 ) } ,
+\sum_{k=1}^{m} \sin(kt) = \dfrac{\sin(\frac{mt}{2})\sin(\frac{(m+1)t}{2})}{\sin(t/2)}=\dfrac{\cos(\frac{t}{2}) - \cos((m+\frac{1}{2})t)}{2 \sin(t/2)},
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0024](images/formula_0024.png)
-```text
-PDF text layer: m ∑ k =1 sin( kt ) = sin( mt 2 ) sin( ( m +1) t 2 ) sin( t/ 2) = cos( t 2 ) -cos(( m + 1 2 ) t ) 2sin( t/ 2) ,
-```
-*Formula quality: `decoded_unverified`; source PDF page 11. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 11. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:583 (score=0.9861).*
 <!-- formula-end -->
 
 using integration by parts we see that the second term leads to the integral:
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0025" status="decoded_unverified" source-page="11" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0025" status="verified_source" source-page="11" -->
 $$
-\int _ { 0 } ^ { \pi } \underbrace { \frac { e ^ { - r ( t ) p } \sin ( n t ) } { \sin ( t / 2 ) } \cos ( ( m + 1 / 2 ) t ) d t } _ { g ( t ) } = - \frac { 1 } { m + \frac { 1 } { 2 } } \int _ { 0 } ^ { \pi } g ^ { \prime } ( t ) \sin ( ( m + \frac { 1 } { 2 } ) t ) d t \stackrel { \rightarrow } { \rightarrow } 0 .
+\int_{0}^{\pi} \underbrace{\frac{e^{-r(t)p}\sin(nt)}{\sin(t/2)}}_{g(t)}\cos((m+1/2)t) dt= - \frac{1}{m+\frac{1}{2}}\int_{0}^{\pi} g'(t) \sin((m+\frac{1}{2})t) dt \mathop{\to}_{m\to\infty} 0.
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0025](images/formula_0025.png)
-```text
-PDF text layer: ∫ π 0 e -r ( t ) p sin( nt ) sin( t/ 2) ︸ ︷︷ ︸ g ( t ) cos(( m +1 / 2) t ) dt = -1 m + 1 2 ∫ π 0 g ′ ( t ) sin(( m + 1 2 ) t ) dt → m →∞ 0 .
-```
-*Formula quality: `decoded_unverified`; source PDF page 11. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 11. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:585 (score=0.7729).*
 <!-- formula-end -->
 
 since g ′ is bounded. So finally:
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0026" status="decoded_unverified" source-page="11" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0026" status="verified_source" source-page="11" -->
 $$
-\phi ( n , p ) = \frac { 1 } { \pi } \int _ { 0 } ^ { \pi } e ^ { - r ( t ) p } \sin ( t n ) \frac { \cos ( \frac { t } { 2 } ) } { \sin ( \frac { t } { 2 } ) } d t .
+\phi(n,p) = \dfrac{1}{\pi} \int_{0}^{\pi} e^{-r(t) p} \sin(t n) \frac{\cos(\frac{t}{2})}{\sin(\frac{t}{2})} dt .
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0026](images/formula_0026.png)
-```text
-PDF text layer: φ ( n,p ) = 1 π ∫ π 0 e -r ( t ) p sin( tn ) cos( t 2 ) sin( t 2 ) dt.
-```
-*Formula quality: `decoded_unverified`; source PDF page 11. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 11. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:588 (score=0.9903).*
 <!-- formula-end -->
 
 Noting that e -r ( t ) =(2 -cos( t ) -√ (2 -cos( t )) 2 -1) we obtain the result.
@@ -552,28 +476,22 @@ The expression (7) is easily computed numerically: Figure 4 displays the shape o
 
 The high-frequency dynamics of the price in this model is described by a piecewise constant, right continuous process ( s t , t ≥ 0) whose jumps times correspond to times when the order book process ( q t , t ≥ 0) hits one of the axes. Denote by ( τ 1 , τ 2 , ... ) the successive durations between price changes. The number of price changes that occur during [0 , t ] is given by
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0027" status="decoded_unverified" source-page="11" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0027" status="verified_source" source-page="11" -->
 $$
-N _ { t } \colon = \max \{ \ n \geq 0 , \ \tau _ { 1 } + \dots + \tau _ { n } \leq t \ \}
+N_{t} := \max \lbrace \ n \geq 0, \tau_{1} + ...+ \tau_{n} \leq t \ \rbrace
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0027](images/formula_0027.png)
-```text
-PDF text layer: N t := max { n ≥ 0 , τ 1 + ... + τ n ≤ t }
-```
-*Formula quality: `decoded_unverified`; source PDF page 11. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 11. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:615 (score=0.7857).*
 <!-- formula-end -->
 
 At t = τ i , s τ i = s τ i -+1 if q τ a i -= 0 and s τ i = s τ i --1 if q τ b i -= 0. ( X 1 , X 2 , X 3 , ..., X n , ... ) are the successive moves in the price. Note that in general this is not a sequence of independent random variables. We define for n ≥ 1,
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0028" status="decoded_unverified" source-page="11" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0028" status="verified_source" source-page="11" -->
 $$
-Z _ { n } = \sum _ { i = 1 } ^ { n } X _ { i }
+Z_{n} = \sum_{i=1}^{n} X_{i}
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0028](images/formula_0028.png)
-```text
-PDF text layer: Z n = n ∑ i =1 X i
-```
-*Formula quality: `decoded_unverified`; source PDF page 11. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 11. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:617 (score=1.0).*
 <!-- formula-end -->
 
 the value of the price, after n changes. Hence, for all t ≥ 0, s t = Z N t .
@@ -583,15 +501,12 @@ Proposition 3. Let p cont = P [ X 2 = δ | X 1 = δ ] = P [ X 2 = -δ | X 1 = -�
 - ∀ k ≥ 1 , Cov ( X 1 , X k ) = (2 p cont -1) k -1 .
 - Conditional on the current state of the limit order book, the distribution of the n-th subsequent price change X n is:
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0029" status="decoded_unverified" source-page="11" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0029" status="verified_source" source-page="11" -->
 $$
-p _ { n } ( x , y ) \coloneqq \mathbb { P } [ X _ { n } = \delta | q _ { 0 } ^ { a } = x , \ q _ { 0 } ^ { b } = y ] = \frac { 1 + ( 2 p _ { c o n t } - 1 ) ^ { n - 1 } ( 2 p _ { 1 } ( x , y ) - 1 ) } { 2 } ,
+p_{n}(x,y) := \mathbb{P}[X_{n} = \delta| q^{a}_{0} = x, \ q^{b}_{0} = y] = \dfrac{1+(2p_{cont}-1)^{n-1}(2p_{1}(x,y)-1)}{2},
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0029](images/formula_0029.png)
-```text
-PDF text layer: p n ( x,y ) := P [ X n = δ | q a 0 = x, q b 0 = y ] = 1 + (2 p cont -1) n -1 (2 p 1 ( x,y ) -1) 2 ,
-```
-*Formula quality: `decoded_unverified`; source PDF page 11. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 11. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:626 (score=0.9367).*
 <!-- formula-end -->
 
 Figure 4 Above: Conditional probability of a price increase, as a function of the bid and ask queue size. Below: comparison with transition frequencies for CitiGroup tick-by-tick data on June 26, 2008.
@@ -602,65 +517,68 @@ Proof. Let, for ( x,y ) ∈ N 2 , and for all n ≥ 2, p n ( x,y ) the probabili
 
 hence
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0030" status="decoded_unverified" source-page="13" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0030" status="verified_source" source-page="13" -->
 $$
-\begin{pmatrix} p _ { n } \\ 1 - p _ { n } \end{pmatrix} = \begin{pmatrix} p _ { n } \\ 1 - p _ { c o n t } \end{pmatrix} \begin{pmatrix} 1 - p _ { c o n t } \\ p _ { c o n t } \end{pmatrix} \begin{pmatrix} p _ { n - 1 } \\ 1 - p _ { n - 1 } \end{pmatrix} ,
+\begin{pmatrix} p_{n} \\ 1-p_{n} \end{pmatrix} = \begin{pmatrix}
+p_{cont}&1-p_{cont} \\
+1-p_{cont}&p_{cont}
+\end{pmatrix} \begin{pmatrix} p_{n-1} \\ 1-p_{n-1} \end{pmatrix},
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0030](images/formula_0030.png)
-```text
-PDF text layer: ( p n 1 -p n ) = ( p cont 1 -p cont 1 -p cont p cont )( p n -1 1 -p n -1 ) ,
-```
-*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 13. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:631 (score=1.0).*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0031" status="decoded_unverified" source-page="13" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0031" status="verified_source" source-page="13" -->
 $$
-\begin{pmatrix} p _ { n } \\ 1 - p _ { n } \end{pmatrix} = \begin{pmatrix} p _ { c o n t } & 1 - p _ { c o n t } \\ 1 - p _ { c o n t } & p _ { c o n t } \end{pmatrix} ^ { n - 1 } \begin{pmatrix} p _ { 1 } \\ 1 - p _ { 1 } \end{pmatrix} .
+\begin{pmatrix} p_{n} \\ 1-p_{n} \end{pmatrix} = \begin{pmatrix}
+p_{cont}&1-p_{cont} \\
+1-p_{cont}&p_{cont}
+\end{pmatrix} ^{n-1} \begin{pmatrix} p_{1} \\ 1-p_{1} \end{pmatrix}.
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0031](images/formula_0031.png)
-```text
-PDF text layer: ( p n 1 -p n ) = ( p cont 1 -p cont 1 -p cont p cont ) n -1 ( p 1 1 -p 1 ) .
-```
-*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 13. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:636 (score=1.0).*
 <!-- formula-end -->
 
 The eigenvalues of this matrix are 1 and 2 p cont -1:
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0032" status="decoded_unverified" source-page="13" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0032" status="verified_source" source-page="13" -->
 $$
-\begin{pmatrix} p _ { c o n t } & 1 - p _ { c o n t } \\ 1 - p _ { c o n t } & p _ { c o n t } \end{pmatrix} = \begin{pmatrix} 1 & 1 \\ 1 & - 1 \end{pmatrix} \begin{pmatrix} 1 & 0 \\ 0 & 2 p _ { c o n t } - 1 \end{pmatrix} \begin{pmatrix} 1 / 2 & 1 / 2 \\ 1 / 2 & - 1 / 2 \end{pmatrix} .
+\begin{pmatrix}
+p_{cont}&1-p_{cont} \\
+1-p_{cont}&p_{cont}
+\end{pmatrix} = \begin{pmatrix}
+1 & 1 \\
+1 &-1
+\end{pmatrix} \begin{pmatrix}
+1 & 0 \\
+0 & 2 p_{cont}-1
+\end{pmatrix} \begin{pmatrix}
+1/2 & 1/2 \\
+1/2 &-1/2
+\end{pmatrix}.
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0032](images/formula_0032.png)
-```text
-PDF text layer: ( p cont 1 -p cont 1 -p cont p cont ) = ( 1 1 1 -1 )( 1 0 0 2 p cont -1 )( 1 / 2 1 / 2 1 / 2 -1 / 2 ) .
-```
-*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 13. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:643 (score=1.0).*
 <!-- formula-end -->
 
 Therefore
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0033" status="decoded_unverified" source-page="13" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0033" status="verified_source" source-page="13" -->
 $$
-p _ { n } = \frac { 1 + ( 2 p _ { c o n t } - 1 ) ^ { n - 1 } ( 2 p _ { 1 } - 1 ) } { 2 } .
+p_{n} = \dfrac{1 + (2p_{cont} -1)^{n-1} (2 p_{1} -1)}{2} .
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0033](images/formula_0033.png)
-```text
-PDF text layer: p n = 1+(2 p cont -1) n -1 (2 p 1 -1) 2 .
-```
-*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 13. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:657 (score=0.9767).*
 <!-- formula-end -->
 
 Moreover for all n ≥ 2,
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0034" status="decoded_unverified" source-page="13" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0034" status="verified_source" source-page="13" -->
 $$
-C o v ( X _ { 1 } , X _ { n } ) = p _ { 1 } p _ { n } + ( 1 - p _ { n } ) ( 1 - p _ { 1 } ) - p _ { 1 } ( 1 - p _ { n } ) - p _ { n } ( 1 - p _ { 1 } )
+Cov(X_{1},X_{n}) = p_{1}p_{n} + (1-p_{n})(1-p_{1}) -p_{1}(1-p_{n}) - p_{n}(1-p_{1})
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0034](images/formula_0034.png)
-```text
-PDF text layer: Cov ( X 1 , X ) = p 1 p +(1 -p )(1 -p 1 ) -p 1 (1 -p ) -p (1 -p 1 )
-```
-*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 13. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:659 (score=1.0).*
 <!-- formula-end -->
 
 <!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0035" status="decoded_unverified" source-page="13" -->
@@ -676,101 +594,80 @@ PDF text layer: n n n n n Cov ( X 1 , X n ) = (1 + 2 p n p 1 -p n -p 1 ) Cov ( X
 
 Remark 3 (Negative autocorrelation of price changes at first lag). It is empirically observed that high frequency price movements have a negative autocorrelation at the first lag Cont (2001). In our model Cov ( X k , X k +1 ) &lt; 0 if and only if p cont &lt; 1 / 2, which happens when
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0036" status="decoded_unverified" source-page="13" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0036" status="verified_source" source-page="13" -->
 $$
-\sum _ { i = 1 } ^ { \infty } \sum _ { j \geq i } f ( i , j ) > 1 / 2
+\sum_{i=1}^{\infty} \sum_{j\geq i} f(i,j) > 1/2
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0036](images/formula_0036.png)
-```text
-PDF text layer: ∞ ∑ i =1 ∑ j ≥ i f ( i, j ) > 1 / 2
-```
-*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 13. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:665 (score=1.0).*
 <!-- formula-end -->
 
 where f is the joint distribution of queue sizes after a price increase. This condition is verified on all high-frequency data sets we have examined. For example, for CitiGroup stock we find
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0037" status="decoded_unverified" source-page="13" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0037" status="verified_source" source-page="13" -->
 $$
-\sum _ { i = 1 } ^ { \infty } \sum _ { j \geq i } f ( i , j ) > 0 . 7
+\sum_{i=1}^{\infty} \sum_{j\geq i} f(i,j) > 0.7
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0037](images/formula_0037.png)
-```text
-PDF text layer: ∞ ∑ i =1 ∑ j ≥ i f ( i, j ) > 0 . 7
-```
-*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 13. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:668 (score=1.0).*
 <!-- formula-end -->
 
 This asymmetry condition on f corresponds to the fact that, after an upward price move, the new bid queue is generally smaller than the ask queue since the ask queue corresponds to the limit order previously sitting at second best ask level, while the bid queue results from the accumulation of orders over the very short period since the last price move. Under this condition, high frequency increments of the price are negatively correlated: an increase in the price is more likely to be followed by a decrease in the price.
 
 Remark 4. The sequence of price increments ( X 1 , X 2 , ... ) is uncorrelated if and only if p cont =1 / 2 which happens when
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0038" status="decoded_unverified" source-page="13" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0038" status="verified_source" source-page="13" -->
 $$
-\sum _ { i = 1 } ^ { \infty } \sum _ { j \geq i } f ( i , j ) = 1 / 2 .
+\sum_{i=1}^{\infty} \sum_{j\geq i} f(i,j) = 1/2.
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0038](images/formula_0038.png)
-```text
-PDF text layer: ∞ ∑ i =1 ∑ j ≥ i f ( i, j ) = 1 / 2 .
-```
-*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 13. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:677 (score=1.0).*
 <!-- formula-end -->
 
 ## 4. Diffusion limit of the price process
 
 As discussed in Section 3.3, the high frequency dynamics of the price is described by a piecewise constant stochastic process s t = Z N t where
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0039" status="decoded_unverified" source-page="14" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0039" status="verified_source" source-page="14" -->
 $$
-Z _ { n } = X _ { 1 } + \dots + X _ { n } a n d N _ { t } = \sup \{ k ; \ \tau _ { 1 } + \dots + \tau _ { k } \leq t \}
+Z_{n} = X_{1} + ... + X_{n} and N_{t} = \sup \lbrace k; \ \tau_{1} + ... + \tau_{k} \leq t \rbrace
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0039](images/formula_0039.png)
-```text
-PDF text layer: Z n = X 1 + ... + X n and N t =sup { k ; τ 1 + ... + τ k ≤ t }
-```
-*Formula quality: `decoded_unverified`; source PDF page 14. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 14. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:684 (score=0.8182).*
 <!-- formula-end -->
 
 is the number of price moves during [0 , t ].
 
 However, over time scales much larger than the interval between individual order book events, prices are observed to have diffusive dynamics and modeled as such. To establish the link between the high frequency dynamics and the diffusive behavior at longer time scales, we shall consider a time scale t n = tζ ( n ) over which the average number of order book events is of order n and exhibit conditions under which the rescaled price process
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0040" status="decoded_unverified" source-page="14" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0040" status="verified_source" source-page="14" -->
 $$
-( s _ { t } ^ { n } \colon = \frac { s _ { t _ { n } } } { \sqrt { n } } , t \geq 0 ) _ { n \geq 1 }
+(s^{n}_{t} :=\dfrac{s_{t_{n}}}{\sqrt{n}}, t \geq 0)_{n \geq 1}
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0040](images/formula_0040.png)
-```text
-PDF text layer: ( s n t := s t n √ n , t ≥ 0) n ≥ 1
-```
-*Formula quality: `decoded_unverified`; source PDF page 14. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 14. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:688 (score=0.8936).*
 <!-- formula-end -->
 
 verifies a functional central limit theorem i.e. converges in distribution to a non-degenerate process ( p t , t ≥ 0) as n →∞ . The choice of the time scale t n = tζ ( n ) cannot be arbitrary: it is imposed by the distributional properties of the durations which, as observed in Section 3.1, are heavy tailed. More precisely, ζ ( n ) is chosen such that
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0041" status="decoded_unverified" source-page="14" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0041" status="verified_source" source-page="14" -->
 $$
-\frac { \tau _ { 1 } + \dots + \tau _ { n } } { \zeta ( n ) }
+\frac{\tau_1+...+\tau_n}{\zeta(n)}
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0041](images/formula_0041.png)
-```text
-PDF text layer: τ 1 + ... + τ n ζ ( n )
-```
-*Formula quality: `decoded_unverified`; source PDF page 14. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 14. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:690 (score=0.8947).*
 <!-- formula-end -->
 
 has a well-defined limit. In this section, we show that, under a symmetry condition, this limit can be identified as a diffusion process whose diffusion coefficient may be computed from the statistics of the order flow driving the limit order book.
 
 Assume λ + θ ≤ µ and that the joint distribution f of the queue sizes after a price move satisfies:
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0042" status="decoded_unverified" source-page="14" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0042" status="verified_source" source-page="14" -->
 $$
-D ( f ) = \sum _ { i = 1 } ^ { \infty } \sum _ { j = 1 } ^ { \infty } i j f ( i , j ) < \infty
+\begin{aligned}D(f) = \sum_{i=1}^{\infty} \sum_{j=1}^{\infty} ij f(i,j) < \infty\end{aligned}
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0042](images/formula_0042.png)
-```text
-PDF text layer: D ( f ) = ∞ ∑ i =1 ∞ ∑ j =1 ijf ( i, j ) < ∞ (9)
-```
-*Formula quality: `decoded_unverified`; source PDF page 14. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 14. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:698 (score=1.0).*
 <!-- formula-end -->
 
 The quantity D ( f ) represents a measure of market depth: more precisely, √ D ( F ) is the geometric average of the size of the bid queue and the size of the ask queue after a price change.
@@ -785,30 +682,25 @@ We first consider the case of a balanced order flow for which the intensity of m
 
 Theorem 1 If λ = µ + θ ,
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0043" status="decoded_unverified" source-page="14" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0043" status="verified_source" source-page="14" -->
 $$
-\left ( \frac { s _ { n \log n t } } { \sqrt { n } } , t \geq 0 \right ) \stackrel { n \to \infty } { \Rightarrow } \left ( \delta \sqrt { \frac { \pi \lambda } { D ( f ) } } W _ { t } , t \geq 0 \right )
+\left( \dfrac{s_{n\log n t}}{\sqrt{n}}, t \geq 0 \right) \mathop{\Rightarrow}^{n \to \infty} \left( \delta \sqrt{\dfrac{ \pi \lambda}{ D(f)}} W_{t}, t \geq 0 \right)
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0043](images/formula_0043.png)
-```text
-PDF text layer: ( s n log nt √ n , t ≥ 0 ) n →∞ ⇒ ( δ √ πλ D ( f ) W t , t ≥ 0 )
-```
-*Formula quality: `decoded_unverified`; source PDF page 14. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 14. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:719 (score=0.8182).*
 <!-- formula-end -->
 
 where δ is the tick size, D ( f ) is given by (9) and W is a standard Brownian motion.
 
 Proof. For all t ≥ 0 and n ≥ 1, let t n = n log nt and
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0044" status="decoded_unverified" source-page="15" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0044" status="verified_source" source-page="15" -->
 $$
-\frac { s _ { n \log n t } } { \sqrt { n } } = \frac { Z ( t \pi \lambda / D ( f ) ) \delta } { \sqrt { n } } + \left ( \frac { Z ( N _ { t _ { n } } ) \delta } { \sqrt { n } } - \frac { Z ( t \pi \lambda / D ( f ) ) \delta } { \sqrt { n } } \right )
+\dfrac{s_{n\log n t}}{\sqrt{n}} = \dfrac{ Z(t \pi \lambda /D(f)) \delta}{\sqrt{n}} + \left( \dfrac{Z(N_{t_
+{n}})\delta}{\sqrt{n}} - \dfrac{ Z(t \pi \lambda /D(f)) \delta}{\sqrt{n}} \right)
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0044](images/formula_0044.png)
-```text
-PDF text layer: s n log nt √ n = Z ( tπλ/D ( f )) δ √ n + ( Z ( N t n ) δ √ n -Z ( tπλ/D ( f )) δ √ n ) (10)
-```
-*Formula quality: `decoded_unverified`; source PDF page 15. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 15. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:731 (score=0.9773).*
 <!-- formula-end -->
 
 Using Donsker's invariance principle, the sequence of processes ( Z ( tπλn/D ( f )) √ n , t ≥ 0) converges
@@ -839,43 +731,37 @@ PDF text layer: (11)
 *Formula quality: `decoded_unverified`; source PDF page 15. Machine-decoded LaTeX; verify against the linked source crop before use.*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0047" status="decoded_unverified" source-page="15" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0047" status="verified_source" source-page="15" -->
 $$
-& \ 0 , & & \left ( \frac { Z ( N _ { t _ { n } } ) \delta } { \sqrt { n } } - \frac { Z ( t \pi \lambda / D ( f ) ) \delta } { \sqrt { n } } \right ) ^ { n \to \infty } 0
+\left( \dfrac{Z(N_{t_{n}})\delta}{\sqrt{n}} - \dfrac{ Z(t \pi \lambda /D(f)) \delta}{\sqrt{n}} \right) \mathop{\Rightarrow}^{n \to \infty} 0
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0047](images/formula_0047.png)
-```text
-PDF text layer: ( Z ( N t n ) δ √ n -Z ( tπλ/D ( f )) δ √ n ) n →∞ ⇒ 0 (12)
-```
-*Formula quality: `decoded_unverified`; source PDF page 15. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 15. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:748 (score=0.848).*
 <!-- formula-end -->
 
 Therefore the finite dimensional distributions of the sequence of processes ( Z ( N t n ) δ √ n -Z ( tπλ/D ( f )) δ √ n ) t ≥ 0 converge to a point mass at zero . Since this sequence of processes is tight on ( D , J 1 ), it converges weakly to zero on ( D , J 1 ) (see Whitt (2002)). Finally,
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0048" status="decoded_unverified" source-page="15" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0048" status="verified_source" source-page="15" -->
 $$
-\left ( \frac { s _ { n \log n t } } { \sqrt { n } } , t \geq 0 \right ) ^ { n } \stackrel { \rightarrow \infty } { \Rightarrow } \delta \sqrt { \frac { \pi \lambda } { D ( f ) } } W .
+\left(
+\dfrac{s_{n\log n t}}{\sqrt{n}}, t \geq 0 \right)
+\mathop{\Rightarrow}^{n \to \infty} \delta \sqrt{ \dfrac{ \pi
+\lambda}{ D(f)} } W.
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0048](images/formula_0048.png)
-```text
-PDF text layer: ( s n log nt √ n , t ≥ 0 ) n →∞ ⇒ δ √ πλ D ( f ) W.
-```
-*Formula quality: `decoded_unverified`; source PDF page 15. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 15. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:756 (score=0.8133).*
 <!-- formula-end -->
 
 ## 4.2. Empirical test using high-frequency data
 
 Theorem 1 relates the 'coarse-grained' volatility of intraday returns at lower frequencies to the high-frequency arrival rates of orders. Denote by τ 0 =1 /λ the typical time scale separating order book events. Typically τ 0 is of the order of milliseconds. In plain terms, Theorem 1 states that, observed over a time scale τ 2 &gt;&gt;τ 0 (say, 10 minutes), the price has a diffusive behavior with a diffusion coefficient given by
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0049" status="decoded_unverified" source-page="15" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0049" status="verified_source" source-page="15" -->
 $$
-\sigma = \delta \sqrt { \frac { n \pi \lambda } { D ( f ) } }
+\sigma = \delta \sqrt{\frac{n \pi \lambda}{ D(f)}}
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0049](images/formula_0049.png)
-```text
-PDF text layer: σ = δ √ nπλ D ( f ) (13)
-```
-*Formula quality: `decoded_unverified`; source PDF page 15. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 15. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:771 (score=1.0).*
 <!-- formula-end -->
 
 where δ is the tick size, n is an integer verifying n ln n τ 0 = τ 2 which represents the average number of orders during an interval τ 2 and √ D ( F ), the geometric average of the size of the bid queue and the size of the ask queue after a price change, is a measure of market depth.
@@ -898,67 +784,52 @@ We now consider the case in which the flow of market orders and cancellations do
 
 Theorem 2 Let λ &lt; θ + µ and f a probability distribution on N 2 which satisfies
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0050" status="decoded_unverified" source-page="16" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0050" status="verified_source" source-page="16" -->
 $$
-m ( \lambda , \theta + \mu , f ) = \sum _ { i = 1 } ^ { \infty } \sum _ { j = 1 } ^ { \infty } m ( \lambda , \theta + \mu , i , j ) f ( i , j ) < \infty ,
+m(\lambda,\theta + \mu,f) = \sum_{i = 1}^{\infty} \sum_{j=1}^{\infty} m(\lambda,\theta + \mu,i ,j) f(i,j) < \infty,
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0050](images/formula_0050.png)
-```text
-PDF text layer: m ( λ,θ + µ,f ) = ∞ ∑ i =1 ∞ ∑ j =1 m ( λ,θ + µ,i, j ) f ( i, j ) < ∞ ,
-```
-*Formula quality: `decoded_unverified`; source PDF page 16. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 16. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:811 (score=1.0).*
 <!-- formula-end -->
 
 where for all ( x,y ) ∈ ( N ∗ ) 2 ,
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0051" status="decoded_unverified" source-page="16" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0051" status="verified_source" source-page="16" -->
 $$
-m ( \lambda , \theta + \mu , x , y ) = \int _ { 0 } ^ { \infty } d t \int _ { t } ^ { \infty } \psi _ { x , \lambda , \mu + \theta } ( u ) d u \int _ { t } ^ { \infty } \psi _ { y , \lambda , \mu + \theta } ( u ) d u
+m(\lambda,\theta + \mu,x,y) = \int_{0}^{\infty} dt \int_{t}^{\infty} \psi_{x,\lambda,\mu+\theta}(u) du \int_{t}^{\infty} \psi_{y,\lambda,\mu+\theta}(u) du
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0051](images/formula_0051.png)
-```text
-PDF text layer: m ( λ,θ + µ,x,y ) = ∫ ∞ 0 dt ∫ ∞ t ψ x,λ,µ + θ ( u ) du ∫ ∞ t ψ y,λ,µ + θ ( u ) du
-```
-*Formula quality: `decoded_unverified`; source PDF page 16. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 16. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:813 (score=1.0).*
 <!-- formula-end -->
 
 where ψ x,λ,µ + θ is given by (4) . Then
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0052" status="decoded_unverified" source-page="16" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0052" status="verified_source" source-page="16" -->
 $$
-\left ( \frac { s _ { n t } } { \sqrt { n } } , t \geq 0 \right ) \stackrel { n \to \infty } { \Rightarrow } \left ( \sqrt { \frac { 1 } { m ( \lambda , \theta + \mu , f ) } } \delta W _ { t } , t \geq 0 \right )
+\left( \dfrac{s_{nt}}{\sqrt{n}}, t \geq 0 \right) \mathop{\Rightarrow}^{n \to \infty} \left( \sqrt{ \dfrac{1}{m(\lambda, \theta + \mu,f)} }\delta W_{t}, t \geq 0 \right)
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0052](images/formula_0052.png)
-```text
-PDF text layer: ( s nt √ n , t ≥ 0 ) n →∞ ⇒ (√ 1 m ( λ,θ + µ,f ) δW t , t ≥ 0 )
-```
-*Formula quality: `decoded_unverified`; source PDF page 16. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 16. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:815 (score=0.8228).*
 <!-- formula-end -->
 
 where W is a standard Brownian motion.
 
 Proof. The sequence ( τ 2 , τ 3 , ... ) is a sequence of i.i.d random variables with finite mean equal to m ( λ,θ + µ,f ). We apply the law of large numbers:
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0053" status="decoded_unverified" source-page="17" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0053" status="verified_source" source-page="17" -->
 $$
-\frac { \tau _ { 1 } + \tau _ { 2 } + \dots + \tau _ { n } } { n } \stackrel { n \to \infty } { \rightarrow } m ( \lambda , \theta + \mu , f ) .
+\dfrac{ \tau_{1} + \tau_{2} + ... + \tau_{n}}{n} \mathop{\to}^{n \rightarrow \infty} m(\lambda,\theta+\mu,f).
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0053](images/formula_0053.png)
-```text
-PDF text layer: τ 1 + τ 2 + ... + τ n n n →∞ → m ( λ,θ + µ,f ) .
-```
-*Formula quality: `decoded_unverified`; source PDF page 17. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 17. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:820 (score=0.7731).*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0054" status="decoded_unverified" source-page="17" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0054" status="verified_source" source-page="17" -->
 $$
-\forall t \geq 0 , \quad N _ { t } ^ { n } \stackrel { n \to \infty } { \sim } [ \frac { t n } { m ( \lambda , \theta + \mu , f ) } ] .
+\forall t \geq 0,\qquad N^{n}_{t} \mathop{\sim}^{n \to \infty} [\dfrac{t n}{m(\lambda, \theta+\mu,f)}].
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0054](images/formula_0054.png)
-```text
-PDF text layer: ∀ t ≥ 0 , N n t n →∞ ∼ [ tn m ( λ,θ + µ,f ) ] .
-```
-*Formula quality: `decoded_unverified`; source PDF page 17. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 17. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:822 (score=0.8037).*
 <!-- formula-end -->
 
 Therefore,
@@ -967,15 +838,12 @@ The rest of the proof follows the lines of the proof of theorem 1.
 
 Variance of price change at intermediate frequency Similarly to Theorem 1, Theorem 2 leads to an expression of the variance of the price at a time scale τ &gt;&gt; τ 0 , where τ 0 ( ∼ ms) is the average interval between order book events:
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0055" status="decoded_unverified" source-page="17" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0055" status="verified_source" source-page="17" -->
 $$
-\sigma ^ { 2 } = \frac { \tau } { \tau _ { 0 } } \frac { \pi \lambda } { m ( \lambda , \theta + \mu , f ) } \delta ^ { 2 }
+\sigma^{2} = \frac{\tau}{\tau_0} \dfrac{\pi \lambda}{ m(\lambda, \theta+\mu,f) } \delta^{2}
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0055](images/formula_0055.png)
-```text
-PDF text layer: σ 2 = τ τ 0 πλ m ( λ,θ + µ,f ) δ 2 (14)
-```
-*Formula quality: `decoded_unverified`; source PDF page 17. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `verified_source`; source PDF page 17. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:832 (score=0.9901).*
 <!-- formula-end -->
 
 Here, m ( λ,θ + µ,f ) represents the expected hitting time of the axes by the queueing system with parameters ( λ,θ + µ ) and random initial condition with distribution f in the positive orthant.

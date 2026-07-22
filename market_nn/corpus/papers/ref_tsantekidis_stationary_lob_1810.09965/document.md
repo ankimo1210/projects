@@ -68,22 +68,22 @@ Following the notation used in [5], a price grid is defined as { ρ (1) ( t ) , 
 
 The location of the best ask price in the price grid is defined by:
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0001" status="text_layer_fallback" source-page="4" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0001" status="verified_source" source-page="4" -->
+$$
+i_a^{(1)}(t) = \inf\{i = 1, \dots, n\ ;\ v^{(i)}(t)>0 \},
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0001](images/formula_0001.png)
-```text
-PDF text layer: i (1) a ( t ) = inf { i = 1 , . . . , n ; v ( i ) ( t ) > 0 } ,
-```
-*Formula quality: `text_layer_fallback`; source PDF page 4. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 4. Matched to exact arXiv source 1810.09965v1 at conv_lstm_main.tex:113 (score=0.8125).*
 <!-- formula-end -->
 
 and, correspondingly, the location of the best bid price is defined by:
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0002" status="text_layer_fallback" source-page="4" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0002" status="verified_source" source-page="4" -->
+$$
+i_b^{(1)}(t) = \sup\{i = 1, \dots, n\ ;\ v^{(i)}(t)<0 \}.
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0002](images/formula_0002.png)
-```text
-PDF text layer: i (1) b ( t ) = sup { i = 1 , . . . , n ; v ( i ) ( t ) < 0 } .
-```
-*Formula quality: `text_layer_fallback`; source PDF page 4. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 4. Matched to exact arXiv source 1810.09965v1 at conv_lstm_main.tex:117 (score=0.8125).*
 <!-- formula-end -->
 
 For simplicity, we denote the best ask and bid prices as p (1) a ( t ) ≡ ρ ( i (1) a ( t ) ) ( t ) and p (1) b ( t ) ≡ ρ ( i (1) b ( t ) ) ( t ), respectively. Notice that if there are no ask (bid) orders in the book, the ask (bid) price is not defined.
@@ -110,12 +110,13 @@ Simply normalizing all the price values will not resolve the non-stationarity, s
 
 The most common normalization scheme is standardization (z-score):
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0003" status="text_layer_fallback" source-page="6" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0003" status="verified_source" source-page="6" -->
+$$
+x_{\text{norm}} = \dfrac{{x} - \bar{x}}{\sigma_{\bar{x}}}
+,
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0003](images/formula_0003.png)
-```text
-PDF text layer: x norm = x -¯ x σ ¯ x , (1)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 6. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 6. Matched to exact arXiv source 1810.09965v1 at conv_lstm_main.tex:148 (score=0.7027).*
 <!-- formula-end -->
 
 where x is a feature to be normalized, ¯ x is the mean and σ ¯ x is the standard deviation across all samples. Such normalization is separately applied to the order size values and the price values. Using this kind of 'global' normalization allows the preservation of the different scales between prices of different stocks, which we are trying to avoid. The solution presented in [31, 9] is to use zscore to normalize each stock-day worth of data with the means and standard deviations calculated using previous day's data of the same stock. This way a major problem is avoided which is the distribution shift in stock prices, that can be caused by events such as stock splits or the large shifts in price that can happen over longer periods of time.
@@ -124,12 +125,13 @@ Unfortunately this presents another important issue for learning. The difference
 
 The mid-price is defined as the mid-point between the best bid and the best ask prices at time t by
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0004" status="text_layer_fallback" source-page="6" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0004" status="verified_source" source-page="6" -->
+$$
+p_m^{(1)} (t) = \dfrac{p_a^{(1)}(t) + p_b^{(1)}(t)}{2}
+.
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0004](images/formula_0004.png)
-```text
-PDF text layer: p (1) m ( t ) = p (1) a ( t ) + p (1) b ( t ) 2 . (2)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 6. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 6. Matched to exact arXiv source 1810.09965v1 at conv_lstm_main.tex:157 (score=0.4516).*
 <!-- formula-end -->
 
 <!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0005" status="text_layer_fallback" source-page="6" -->
@@ -140,22 +142,22 @@ PDF text layer: p ′ ( i ) a ( t ) = p ( i ) a ( t ) p m ( t ) -1 , (3)
 *Formula quality: `text_layer_fallback`; source PDF page 6. No reliable LaTeX decode; use the source crop and PDF text layer together.*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0006" status="text_layer_fallback" source-page="6" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0006" status="verified_source" source-page="6" -->
+$$
+{p'}^{(i)}(t) = \dfrac{p^{(i)}(t)}{p_m(t)} - 1
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0006](images/formula_0006.png)
-```text
-PDF text layer: p ′ ( i ) b ( t ) = p ( i ) b ( t ) p m ( t ) -1 , (4)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 6. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 6. Matched to exact arXiv source 1810.09965v1 at conv_lstm_main.tex:195 (score=0.7407).*
 <!-- formula-end -->
 
 Let and
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0007" status="text_layer_fallback" source-page="7" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0007" status="verified_source" source-page="7" -->
+$$
+{p'}_m(t) = \dfrac{p_m(t)}{p_m(t-1)} - 1
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0007](images/formula_0007.png)
-```text
-PDF text layer: p ′ m ( t ) = p m ( t ) p m ( t -1) -1 . (5)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 7. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 7. Matched to exact arXiv source 1810.09965v1 at conv_lstm_main.tex:199 (score=0.8148).*
 <!-- formula-end -->
 
 Equations (3) and (4) serve as statistic features that represent the proportional difference between i th price and the mid-price at time t . Equation (2), on the other hand, serves as a dynamic feature that captures the proportional mid-price movement over the time period (that is, it represents asset's return in terms of mid-prices).
@@ -170,12 +172,12 @@ PDF text layer: ν ′ ( k ) a ( t ) = k ∑ i =1 ν ( i ) a ( t ) (6)
 *Formula quality: `text_layer_fallback`; source PDF page 7. No reliable LaTeX decode; use the source crop and PDF text layer together.*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0009" status="text_layer_fallback" source-page="7" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0009" status="verified_source" source-page="7" -->
+$$
+\nu'^{(k)}(t) = \sum_{i=1}^k{\nu^{(i)}(t)}
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0009](images/formula_0009.png)
-```text
-PDF text layer: ν ′ ( k ) b ( t ) = k ∑ i =1 ν ( i ) b ( t ) (7)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 7. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 7. Matched to exact arXiv source 1810.09965v1 at conv_lstm_main.tex:205 (score=0.6).*
 <!-- formula-end -->
 
 where ν ( i ) a ( t ) is number of outstanding limit order at the i th best ask price level and ν ( i ) b ( t ) is number of outstanding limit order at the b th best ask price level.
@@ -216,12 +218,19 @@ PDF text layer: m a ( t ) = 1 k k ∑ i =1 p m ( t + i ) (9)
 
 where p t is the mid price as described in Equation (2). The label l t , that expresses the direction of price movement at time t , is extracted by comparing the previously defined quantities ( m b and m a ). However, using the m b values to create labels for the samples, as in [31, 9], is making the problem significantly easier and predictable due to the slower adaptation of the mean filter values to sudden changes in price. Therefore, in this work we remedy this issue by replacing m b with the mid price. Therefore, the labels are redefined as:
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0012" status="text_layer_fallback" source-page="8" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0012" status="verified_source" source-page="8" -->
+$$
+l_t =
+\begin{cases}
+ 1, & \text{if } \dfrac{m_a(t)}{p_m(t)} > 1 + \alpha
+\vspace{0.2cm}\\
+-1, & \text{if } \dfrac{m_a(t)}{p_m(t)} < 1 - \alpha
+\vspace{0.2cm}\\
+ 0, & \text{otherwise}
+\end{cases}
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0012](images/formula_0012.png)
-```text
-PDF text layer: l t =                1 , if m a ( t ) p m ( t ) > 1 + α -1 , if m a ( t ) p m ( t ) < 1 -α 0 , otherwise (10)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 8. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 8. Matched to exact arXiv source 1810.09965v1 at conv_lstm_main.tex:226 (score=0.7368).*
 <!-- formula-end -->
 
 where α is the threshold that determines how significant a mid price change m a ( t ) must be in order to label the movement as upward or downward. Values that do not satisfy this inequality are considered as insignificant and are labeled as having no price movement, or in other words being 'stationary'. The resulting labels present the trend to be predicted. This process is applied across all time steps of the dataset to produce labels for all the depth samples.
@@ -308,44 +317,44 @@ An LSTM layer is then applied on the time series produced by the CNN, and in tur
 
 The parameters of the models are learned by minimizing the categorical cross entropy loss defined as:
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0019" status="text_layer_fallback" source-page="11" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0019" status="verified_source" source-page="11" -->
+$$
+\mathcal{L}(\mathbf{W}) = -\sum_{i=1}^{L} y_i \cdot \log \hat{y}_i,
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0019](images/formula_0019.png)
-```text
-PDF text layer: L ( W ) = -L ∑ i =1 y i · log ˆ y i , (17)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 11. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 11. Matched to exact arXiv source 1810.09965v1 at conv_lstm_main.tex:289 (score=0.6667).*
 <!-- formula-end -->
 
 where L is the number of different labels and the notation W is used to refer to the parameters of the models. The ground truth vector is denoted by y , while ˆ y is the predicted label distribution. The loss is summed over all samples in each batch. Due to the unavoidable class imbalance of this type of dataset, a weighted loss is employed to improve the mean recall and precision across all classes:
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0020" status="text_layer_fallback" source-page="11" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0020" status="verified_source" source-page="11" -->
+$$
+\mathcal{L}(\mathbf{W}) = -\sum_{i=1}^{L} c_{y_i} \cdot y_i \cdot \log \hat{y}_i,
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0020](images/formula_0020.png)
-```text
-PDF text layer: L ( W ) = -L ∑ i =1 c y i · y i · log ˆ y i , (18)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 11. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 11. Matched to exact arXiv source 1810.09965v1 at conv_lstm_main.tex:293 (score=0.6538).*
 <!-- formula-end -->
 
 where c y i is the assigned weight for the class of y i . The individual weight c i assigned to each class i is calculated as:
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0021" status="text_layer_fallback" source-page="11" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0021" status="verified_source" source-page="11" -->
+$$
+c_i = \dfrac{|\mathcal{D}|}{n \cdot |\mathcal{D}_i|},
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0021](images/formula_0021.png)
-```text
-PDF text layer: c i = |D| n · |D i | , (19)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 11. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 11. Matched to exact arXiv source 1810.09965v1 at conv_lstm_main.tex:298 (score=0.5714).*
 <!-- formula-end -->
 
 where |D| is the total number of samples in our dataset D , n is the total number of classes (which in our case is 3) and D i is set of samples from our dataset that have been labeled to belong in class i .
 
 The most commonly used method to minimize the loss function defined in (18) and learn the parameters W of the model is gradient descent [36]:
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0022" status="text_layer_fallback" source-page="11" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0022" status="verified_source" source-page="11" -->
+$$
+\mathbf{W}' = \mathbf{W} - \eta \cdot \dfrac{\partial \mathcal{L}}{\partial \mathbf{W}}
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0022](images/formula_0022.png)
-```text
-PDF text layer: W ′ = W -η · ∂ L ∂ W (20)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 11. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `verified_source`; source PDF page 11. Matched to exact arXiv source 1810.09965v1 at conv_lstm_main.tex:305 (score=0.2692).*
 <!-- formula-end -->
 
 where W ′ are the parameters of the model after each gradient descent step and η is the learning rate. In this work we utilize the RMSProp optimizer [37], which is an adaptive learning rate method and has been shown to improve the training time and performance of DL models.
