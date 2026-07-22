@@ -1,0 +1,62 @@
+# Paper corpus v2 quality contract
+
+This document is the source of truth for AI-readable paper artifacts under
+`johnhull/references/processed/`.
+
+## Intended use
+
+The corpus supports discovery, page-cited reading, and verification of financial-model
+implementations. It must not turn uncertain OCR, formulas, tables, or summaries into
+apparently authoritative text.
+
+## Trust model
+
+The original PDF is authoritative. Derived records are evidence pointers with an explicit
+verification state:
+
+- `verified`: checked by a deterministic gold assertion or human review.
+- `auto`: generated and passed automated gates, but not manually reviewed.
+- `unverified`: retained for navigation; not safe as an implementation source.
+- `failed`: a known extraction or validation failure.
+- `missing_source`: the cited source is not locally available.
+
+Every derived record must include `paper_id`, `page_number`, `source_pdf_sha256`, and a
+stable record ID. Spatial records also include a PDF-coordinate bounding box. Model-based
+records include extractor name, version, model hash, and confidence when available.
+
+## Component statuses
+
+`quality.json` reports `text_status`, `layout_status`, `formula_status`, `table_status`,
+`claims_status`, `retrieval_status`, and `overall_status`. The overall status is the worst
+component status; it is never inferred from average characters per page.
+
+## Critical-source policy
+
+Formulas, tables, or claims used to justify `hullkit` implementations are P0. They require
+manual verification against the source page even when automated metrics pass. P0 currently
+covers Hull--White, Heston, Jarrow--Yildirim when acquired, Japanese JGBi conventions,
+Hagan et al. SABR, McNeil--Frey VaR/ES, and Lyashenko--Mercurio RFR material.
+
+## Fail-closed rules
+
+1. Unparseable or low-confidence formulas remain source images marked `unverified`.
+2. A table with missing cells, ambiguous structure, or failed numeric validation is not
+   emitted as trusted CSV.
+3. A claim without page/block evidence is rejected.
+4. A numeric claim must reference a verified equation or table cell.
+5. Missing sources are reported and cannot receive a passing semantic status.
+6. Original PDFs are never overwritten by repair or OCR operations.
+7. Remote LLM/API processing is opt-in; the default pipeline is local and auditable.
+
+## Required release evidence
+
+- source and page integrity report;
+- schema and referential-integrity tests;
+- gold-set text, formula, table, and reading-order metrics;
+- P0 manual-review manifest;
+- retrieval evaluation with expected evidence;
+- two-run deterministic rebuild comparison;
+- JohnHull release checks.
+
+The detailed implementation phases and numeric gates are recorded in
+`docs/superpowers/plans/2026-07-22-johnhull-paper-corpus-v2.md`.

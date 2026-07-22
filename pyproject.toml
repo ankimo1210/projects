@@ -143,6 +143,7 @@ testpaths = [
     "akinator/tests",
     "autostock/tests",
     "health/tests",
+    "johnhull/tests",
     "johnhull/hullkit/tests",
     "analytics/linear_algebra/tests",
     "analytics/neural_net/tests",
