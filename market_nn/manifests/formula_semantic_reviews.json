@@ -1,0 +1,257 @@
+{
+  "schema_version": 1,
+  "policy": {
+    "replacement_threshold": 0.9,
+    "rule": "Replace LaTeX only when context, definitions, and structural constraints make the reconstruction high confidence. Preserve the paper-as-printed form for suspected paper errors, and leave ambiguous formulas unchanged with an explicit note."
+  },
+  "reviews": {
+    "ref_cont_de_larrard_markovian_lob_1104.4596:formula:0035": {
+      "review_status": "ambiguous",
+      "action": "flag_only",
+      "confidence": 0.45,
+      "base_status": "decoded_unverified",
+      "document_ref": "#/texts/204",
+      "source_pdf": "sources/papers/ref_cont_de_larrard_markovian_lob_1104.4596.pdf",
+      "source_page": 13,
+      "paper_as_printed_latex": "\\begin{aligned}\\operatorname{Cov}(X_1,X_n)&=p_1p_n+(1-p_n)(1-p_1)-p_1(1-p_n)-p_n(1-p_1),\\\\ \\operatorname{Cov}(X_1,X_n)&=1+2p_np_1-p_n-p_1,\\\\ \\operatorname{Cov}(X_1,X_n)&=(2p_{\\mathrm{cont}}-1)^{n-1}.\\end{aligned}",
+      "evidence": [
+        "The author TeX contains the three displayed lines consecutively at MarkovianOrderBook.tex:660-662.",
+        "Direct algebraic expansion of the first line gives 1+4p_1p_n-2p_1-2p_n, not the second printed line.",
+        "The surrounding Markov-chain argument does not state enough here to justify silently replacing the final covariance expression."
+      ],
+      "assumptions": [],
+      "alternatives": [
+        "Treat the first line as E[X_1X_n] rather than covariance.",
+        "Under an additional zero-mean/stationary initialization, rederive covariance from the transition matrix before replacing the printed result."
+      ],
+      "note": "Semantic review found an internal algebraic inconsistency in the paper's three-line covariance derivation. Confidence is insufficient to choose a corrected covariance without an additional initialization assumption, so the machine-decoded LaTeX is intentionally left unchanged."
+    },
+    "ref_cont_de_larrard_markovian_lob_1104.4596:formula:0045": {
+      "review_status": "high_confidence",
+      "action": "correct_suspected_paper_typo",
+      "confidence": 0.98,
+      "base_status": "decoded_unverified",
+      "document_ref": "#/texts/239",
+      "source_pdf": "sources/papers/ref_cont_de_larrard_markovian_lob_1104.4596.pdf",
+      "source_page": 15,
+      "latex": "\\begin{aligned} \\rho(t)\\log \\rho(t)&=t,\\\\ \\rho(t)&\\mathop{\\sim}_{t\\to\\infty}\\frac{t}{\\log t},\\\\ N_{t_n}&\\mathop{\\sim}_{n\\to\\infty}\\rho\\!\\left(\\frac{\\pi\\lambda t\\zeta(n)}{D(f)}\\right) \\sim \\frac{t\\pi\\lambda\\zeta(n)}{D(f)\\log\\zeta(n)} \\sim \\frac{t\\pi\\lambda n}{D(f)}. \\end{aligned}",
+      "paper_as_printed_latex": "N_{t_n}\\mathop{\\sim}_{n\\to\\infty}\\frac{t\\pi\\lambda}{D(f)}",
+      "evidence": [
+        "The balanced-order-book proof defines t_n=n log(n)t and uses zeta(n)=n log(n).",
+        "Substituting zeta(n)=n log(n) into zeta(n)/log(zeta(n)) is asymptotic to n.",
+        "The immediately preceding Donsker scaling uses Z(t pi lambda n / D(f))/sqrt(n), which requires N_{t_n} to be order n."
+      ],
+      "assumptions": [
+        "The balanced-case time scale zeta(n)=n log(n) established earlier in the proof applies."
+      ],
+      "alternatives": [],
+      "note": "Reconstructed the full asymptotic chain from the proof context. The paper-as-printed final term drops a factor n; the retained correction restores the order-n event count required by the following Donsker limit."
+    },
+    "ref_cont_de_larrard_markovian_lob_1104.4596:formula:0046": {
+      "review_status": "not_formula",
+      "action": "exclude_spurious",
+      "confidence": 1.0,
+      "base_status": "decoded_unverified",
+      "document_ref": "#/texts/241",
+      "source_pdf": "sources/papers/ref_cont_de_larrard_markovian_lob_1104.4596.pdf",
+      "source_page": 15,
+      "evidence": [
+        "The extracted content is only the equation number (11).",
+        "The author TeX assigns that number to the preceding asymptotic display and contains no standalone mathematical expression here.",
+        "The next genuine displayed formula is equation (12)."
+      ],
+      "assumptions": [],
+      "alternatives": [],
+      "note": "This record is a layout-extraction artifact containing only equation number (11), not a mathematical formula. It remains as an auditable record but contributes no LaTeX block."
+    },
+    "ref_cont_price_impact_1011.6402:formula:0012": {
+      "review_status": "high_confidence",
+      "action": "confirm_existing",
+      "confidence": 0.99,
+      "base_status": "decoded_unverified",
+      "document_ref": "#/texts/101",
+      "source_pdf": "sources/papers/ref_cont_price_impact_1011.6402.pdf",
+      "source_page": 11,
+      "latex": "\\begin{aligned} \\Delta P_k &= \\hat{\\alpha}_i + \\hat{\\beta}_i\\,OFI_k + \\hat{\\epsilon}_k,\\\\ \\Delta P_k &= \\hat{\\alpha}_{Q,i} + \\hat{\\beta}_{Q,i}\\,OFI_k + \\hat{\\gamma}_{Q,i}\\,OFI_k|OFI_k| + \\hat{\\epsilon}_{Q,k}. \\end{aligned}",
+      "evidence": [
+        "The following paragraph defines Delta P_k, OFI_k, subsample index i, and observation index k consistently with both regressions.",
+        "The nested model structure distinguishes the linear and quadratic signed-imbalance specifications.",
+        "The exact inline author TeX appears at OrderImbalanceFinal.tex:506-508."
+      ],
+      "assumptions": [],
+      "alternatives": [],
+      "note": "Semantically confirmed and normalized as two nested contemporaneous price-impact regressions; variable roles and indices agree with the following definitions."
+    },
+    "ref_cont_price_impact_1011.6402:formula:0015": {
+      "review_status": "high_confidence",
+      "action": "confirm_existing",
+      "confidence": 0.99,
+      "base_status": "decoded_unverified",
+      "document_ref": "#/texts/113",
+      "source_pdf": "sources/papers/ref_cont_price_impact_1011.6402.pdf",
+      "source_page": 13,
+      "latex": "\\begin{aligned} \\log \\hat{\\beta}_i &= \\hat{\\alpha}_{L,i} - \\hat{\\lambda}\\log AD_i + \\hat{\\epsilon}_{L,i},\\\\ \\hat{\\beta}_i &= \\hat{\\alpha}_{M,i} + \\frac{\\hat{c}}{AD_i^{\\hat{\\lambda}}} + \\hat{\\epsilon}_{M,i}. \\end{aligned}",
+      "evidence": [
+        "The following paragraph identifies beta_i as price impact and AD_i as average market depth.",
+        "The second regression explicitly reuses the exponent estimated by the first log-log regression.",
+        "The exact inline author TeX appears at OrderImbalanceFinal.tex:663-665."
+      ],
+      "assumptions": [],
+      "alternatives": [],
+      "note": "Semantically confirmed and normalized. The inverse-depth power law in the second line is consistent with the log-log specification in the first line and the surrounding regression description."
+    },
+    "ref_cont_price_impact_1011.6402:formula:0033": {
+      "review_status": "high_confidence",
+      "action": "confirm_existing",
+      "confidence": 0.99,
+      "base_status": "decoded_unverified",
+      "document_ref": "#/texts/202",
+      "source_pdf": "sources/papers/ref_cont_price_impact_1011.6402.pdf",
+      "source_page": 22,
+      "latex": "\\begin{aligned} |\\Delta P_k| &= \\hat{\\alpha}_{O,i} + \\hat{\\beta}_{O,i}|OFI_k| + \\hat{\\epsilon}_{O,k},\\\\ |\\Delta P_k| &= \\hat{\\alpha}_{V,i} + \\hat{\\beta}_{V,i}VOL_k^{\\hat{H}_i} + \\hat{\\epsilon}_{V,k},\\\\ |\\Delta P_k| &= \\hat{\\alpha}_{W,i} + \\hat{\\phi}_{O,i}|OFI_k| + \\hat{\\phi}_{V,i}VOL_k^{\\hat{H}_i} + \\hat{\\epsilon}_{W,k}. \\end{aligned}",
+      "evidence": [
+        "The following paragraph defines absolute price change, order-flow imbalance, trade volume, and the pre-estimated exponent H_i.",
+        "The three equations form OFI-only, volume-only, and joint nested comparison models.",
+        "The exact inline author TeX appears at OrderImbalanceFinal.tex:1140-1144."
+      ],
+      "assumptions": [],
+      "alternatives": [],
+      "note": "Semantically confirmed and normalized as the OFI-only, volume-only, and joint absolute-price-impact regressions described immediately below the display."
+    },
+    "ref_tolstikhin_mlp_mixer_2105.01601:formula:0001": {
+      "review_status": "not_formula",
+      "action": "exclude_spurious",
+      "confidence": 1.0,
+      "base_status": "text_layer_fallback",
+      "document_ref": "#/texts/50",
+      "source_pdf": "sources/papers/ref_tolstikhin_mlp_mixer_2105.01601.pdf",
+      "source_page": 3,
+      "evidence": [
+        "The extracted content is only an empty parenthesis pair.",
+        "The author TeX has no display at this location before the Mixer-layer align environment.",
+        "The next corpus formula contains the actual two-line Mixer update."
+      ],
+      "assumptions": [],
+      "alternatives": [],
+      "note": "This is an empty-parenthesis layout artifact, not a mathematical formula. It is retained only for provenance and contributes no LaTeX block."
+    },
+    "ref_tran_bin_2003.00598:formula:0005": {
+      "review_status": "high_confidence",
+      "action": "reconstruct",
+      "confidence": 0.99,
+      "base_status": "text_layer_fallback",
+      "document_ref": "#/texts/35",
+      "source_pdf": "sources/papers/ref_tran_bin_2003.00598.pdf",
+      "source_page": 3,
+      "latex": "\\bar{\\mathbf{x}}_2^{(i)} = \\frac{1}{T}\\sum_{t=1}^{T}\\mathbf{x}_2^{(i)}(t)",
+      "evidence": ["This is the temporal-slice sample mean defined by BiN equation (5a).", "The result has dimension D, matching the neighboring prose and subsequent centering operation.", "The author subequation is at manuscript.tex:105."],
+      "assumptions": [],
+      "alternatives": [],
+      "note": "Reconstructed from the BiN temporal-normalization definition and checked dimensionally: averaging T vectors in R^D yields the mean vector used in equations (5b)-(5d)."
+    },
+    "ref_tran_bin_2003.00598:formula:0006": {
+      "review_status": "high_confidence",
+      "action": "reconstruct",
+      "confidence": 0.99,
+      "base_status": "text_layer_fallback",
+      "document_ref": "#/texts/36",
+      "source_pdf": "sources/papers/ref_tran_bin_2003.00598.pdf",
+      "source_page": 3,
+      "latex": "\\boldsymbol{\\sigma}_2^{(i)} = \\sqrt{\\frac{1}{T}\\sum_{t=1}^{T}\\left(\\mathbf{x}_2^{(i)}(t)-\\bar{\\mathbf{x}}_2^{(i)}\\right)\\odot\\left(\\mathbf{x}_2^{(i)}(t)-\\bar{\\mathbf{x}}_2^{(i)}\\right)}",
+      "evidence": ["This is the componentwise temporal-slice standard deviation in BiN equation (5b).", "The Hadamard square and mean over T preserve dimension D.", "The author subequation is at manuscript.tex:106."],
+      "assumptions": [],
+      "alternatives": [],
+      "note": "Reconstructed as the elementwise standard-deviation vector required to normalize each temporal slice; the Hadamard product and dimensions agree with the subsequent division."
+    },
+    "ref_tran_bin_2003.00598:formula:0007": {
+      "review_status": "high_confidence",
+      "action": "reconstruct",
+      "confidence": 0.99,
+      "base_status": "text_layer_fallback",
+      "document_ref": "#/texts/37",
+      "source_pdf": "sources/papers/ref_tran_bin_2003.00598.pdf",
+      "source_page": 3,
+      "latex": "\\mathbf{Z}_2^{(i)} = \\left(\\mathbf{X}^{(i)}-\\bar{\\mathbf{x}}_2^{(i)}\\mathbf{1}_T^{\\mathrm{T}}\\right)\\oslash\\left(\\boldsymbol{\\sigma}_2^{(i)}\\mathbf{1}_T^{\\mathrm{T}}\\right)",
+      "evidence": ["This standardizes every temporal column using the D-dimensional mean and standard deviation from (5a)-(5b).", "Both broadcast terms have shape D by T, matching X^(i).", "The author subequation is at manuscript.tex:107."],
+      "assumptions": [],
+      "alternatives": [],
+      "note": "Reconstructed as elementwise centering and scaling along the temporal mode. Broadcast shapes on both sides are D by T."
+    },
+    "ref_tran_bin_2003.00598:formula:0008": {
+      "review_status": "high_confidence",
+      "action": "reconstruct",
+      "confidence": 0.99,
+      "base_status": "text_layer_fallback",
+      "document_ref": "#/texts/38",
+      "source_pdf": "sources/papers/ref_tran_bin_2003.00598.pdf",
+      "source_page": 3,
+      "latex": "\\tilde{\\mathbf{X}}_2^{(i)} = \\left(\\boldsymbol{\\gamma}_2\\mathbf{1}_T^{\\mathrm{T}}\\right)\\odot\\mathbf{Z}_2^{(i)}+\\boldsymbol{\\beta}_2\\mathbf{1}_T^{\\mathrm{T}}",
+      "evidence": ["This is the learnable componentwise scale-and-shift step in BiN equation (5d).", "gamma_2 and beta_2 are D-vectors broadcast over T temporal slices.", "The author subequation is at manuscript.tex:108."],
+      "assumptions": [],
+      "alternatives": [],
+      "note": "Reconstructed as the learnable affine transformation following temporal standardization; all operands broadcast to D by T."
+    },
+    "ref_tran_bin_2003.00598:formula:0009": {
+      "review_status": "high_confidence",
+      "action": "reconstruct",
+      "confidence": 0.99,
+      "base_status": "text_layer_fallback",
+      "document_ref": "#/texts/44",
+      "source_pdf": "sources/papers/ref_tran_bin_2003.00598.pdf",
+      "source_page": 3,
+      "latex": "\\bar{\\mathbf{x}}_1^{(i)} = \\frac{1}{D}\\sum_{d=1}^{D}\\mathbf{x}_1^{(i)}(d)",
+      "evidence": ["This is the feature-slice sample mean defined by BiN equation (6a).", "Averaging D row vectors produces a T-vector used in the subsequent feature-mode centering.", "The author subequation is at manuscript.tex:124."],
+      "assumptions": [],
+      "alternatives": [],
+      "note": "Reconstructed from the feature-mode definition: averaging D feature slices in R^T yields the T-dimensional mean used by equations (6b)-(6d)."
+    },
+    "ref_tran_bin_2003.00598:formula:0010": {
+      "review_status": "high_confidence",
+      "action": "reconstruct",
+      "confidence": 0.99,
+      "base_status": "text_layer_fallback",
+      "document_ref": "#/texts/45",
+      "source_pdf": "sources/papers/ref_tran_bin_2003.00598.pdf",
+      "source_page": 3,
+      "latex": "\\boldsymbol{\\sigma}_1^{(i)} = \\sqrt{\\frac{1}{D}\\sum_{d=1}^{D}\\left(\\mathbf{x}_1^{(i)}(d)-\\bar{\\mathbf{x}}_1^{(i)}\\right)\\odot\\left(\\mathbf{x}_1^{(i)}(d)-\\bar{\\mathbf{x}}_1^{(i)}\\right)}",
+      "evidence": ["This is the componentwise feature-slice standard deviation in BiN equation (6b).", "The result is a T-vector, matching the mean in (6a) and required broadcast in (6c).", "The author subequation is at manuscript.tex:125."],
+      "assumptions": [],
+      "alternatives": [],
+      "note": "Reconstructed as the elementwise standard deviation across D feature slices; the resulting T-vector is required by the next normalization step."
+    },
+    "ref_tran_bin_2003.00598:formula:0011": {
+      "review_status": "high_confidence",
+      "action": "correct_suspected_paper_typo",
+      "confidence": 0.995,
+      "base_status": "text_layer_fallback",
+      "document_ref": "#/texts/46",
+      "source_pdf": "sources/papers/ref_tran_bin_2003.00598.pdf",
+      "source_page": 3,
+      "latex": "\\mathbf{Z}_1^{(i)} = \\left(\\mathbf{X}^{(i)}-\\mathbf{1}_D(\\bar{\\mathbf{x}}_1^{(i)})^{\\mathrm{T}}\\right)\\oslash\\left(\\mathbf{1}_D(\\boldsymbol{\\sigma}_1^{(i)})^{\\mathrm{T}}\\right)",
+      "paper_as_printed_latex": "\\mathbf{Z}_1^{(i)} = \\left(\\mathbf{X}^{(i)}-\\mathbf{1}_D(\\bar{\\mathbf{x}}_1^{(i)})^{\\mathrm{T}}\\right)\\oslash\\left(\\mathbf{1}_D(\\boldsymbol{\\sigma}_2^{(i)})^{\\mathrm{T}}\\right)",
+      "evidence": [
+        "Equation (6b) immediately defines sigma_1 as the feature-mode T-dimensional standard deviation.",
+        "Using sigma_1 gives 1_D sigma_1^T shape D by T, matching X^(i).",
+        "The printed sigma_2 is D-dimensional, so 1_D sigma_2^T has shape D by D and cannot normalize a general D by T input.",
+        "The surrounding prose explicitly says equations (6a)-(6d) normalize along the feature dimension."
+      ],
+      "assumptions": ["D and T are not accidentally constrained to the same value."],
+      "alternatives": [],
+      "note": "Corrected a high-confidence paper typo: the denominator must use the feature-mode standard deviation sigma_1, not temporal-mode sigma_2. Only sigma_1 produces the D by T broadcast required by the equation."
+    },
+    "ref_tran_bin_2003.00598:formula:0012": {
+      "review_status": "high_confidence",
+      "action": "reconstruct",
+      "confidence": 0.99,
+      "base_status": "text_layer_fallback",
+      "document_ref": "#/texts/47",
+      "source_pdf": "sources/papers/ref_tran_bin_2003.00598.pdf",
+      "source_page": 3,
+      "latex": "\\tilde{\\mathbf{X}}_1^{(i)} = \\left(\\mathbf{1}_D\\boldsymbol{\\gamma}_1^{\\mathrm{T}}\\right)\\odot\\mathbf{Z}_1^{(i)}+\\mathbf{1}_D\\boldsymbol{\\beta}_1^{\\mathrm{T}}",
+      "evidence": ["This is the learnable componentwise scale-and-shift step in BiN equation (6d).", "gamma_1 and beta_1 are T-vectors broadcast over D feature slices.", "The author subequation is at manuscript.tex:127."],
+      "assumptions": [],
+      "alternatives": [],
+      "note": "Reconstructed as the learnable affine transformation following feature-mode standardization; all operands broadcast to D by T."
+    }
+  }
+}

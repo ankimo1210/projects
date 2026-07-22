@@ -102,36 +102,36 @@ Due to the above property, it is intuitive to shift and scale not only the distr
 
 The normalization along the temporal dimension in BiN is described by the following equations:
 
-<!-- formula-start id="ref_tran_bin_2003.00598:formula:0005" status="text_layer_fallback" source-page="3" -->
+<!-- formula-start id="ref_tran_bin_2003.00598:formula:0005" status="semantic_high_confidence" source-page="3" -->
+$$
+\bar{\mathbf{x}}_2^{(i)} = \frac{1}{T}\sum_{t=1}^{T}\mathbf{x}_2^{(i)}(t)
+$$
 ![Source formula ref_tran_bin_2003.00598:formula:0005](images/formula_0005.png)
-```text
-PDF text layer: ¯ x ( i ) 2 = 1 T T ∑ t =1 x ( i ) 2 ( t ) (5a)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `semantic_high_confidence`; source PDF page 3. Reconstructed from the BiN temporal-normalization definition and checked dimensionally: averaging T vectors in R^D yields the mean vector used in equations (5b)-(5d).*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_tran_bin_2003.00598:formula:0006" status="text_layer_fallback" source-page="3" -->
+<!-- formula-start id="ref_tran_bin_2003.00598:formula:0006" status="semantic_high_confidence" source-page="3" -->
+$$
+\boldsymbol{\sigma}_2^{(i)} = \sqrt{\frac{1}{T}\sum_{t=1}^{T}\left(\mathbf{x}_2^{(i)}(t)-\bar{\mathbf{x}}_2^{(i)}\right)\odot\left(\mathbf{x}_2^{(i)}(t)-\bar{\mathbf{x}}_2^{(i)}\right)}
+$$
 ![Source formula ref_tran_bin_2003.00598:formula:0006](images/formula_0006.png)
-```text
-PDF text layer: σ ( i ) 2 = √ √ √ √ 1 T T ∑ t =1 ( x ( i ) 2 ( t ) -¯ x ( i ) 2 ) ⊙ ( x ( i ) 2 ( t ) -¯ x ( i ) 2 ) (5b)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `semantic_high_confidence`; source PDF page 3. Reconstructed as the elementwise standard-deviation vector required to normalize each temporal slice; the Hadamard product and dimensions agree with the subsequent division.*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_tran_bin_2003.00598:formula:0007" status="text_layer_fallback" source-page="3" -->
+<!-- formula-start id="ref_tran_bin_2003.00598:formula:0007" status="semantic_high_confidence" source-page="3" -->
+$$
+\mathbf{Z}_2^{(i)} = \left(\mathbf{X}^{(i)}-\bar{\mathbf{x}}_2^{(i)}\mathbf{1}_T^{\mathrm{T}}\right)\oslash\left(\boldsymbol{\sigma}_2^{(i)}\mathbf{1}_T^{\mathrm{T}}\right)
+$$
 ![Source formula ref_tran_bin_2003.00598:formula:0007](images/formula_0007.png)
-```text
-PDF text layer: Z ( i ) 2 = ( X ( i ) -¯ x ( i ) 2 1 T T ) varoslash ( σ ( i ) 2 1 T T ) (5c)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `semantic_high_confidence`; source PDF page 3. Reconstructed as elementwise centering and scaling along the temporal mode. Broadcast shapes on both sides are D by T.*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_tran_bin_2003.00598:formula:0008" status="text_layer_fallback" source-page="3" -->
+<!-- formula-start id="ref_tran_bin_2003.00598:formula:0008" status="semantic_high_confidence" source-page="3" -->
+$$
+\tilde{\mathbf{X}}_2^{(i)} = \left(\boldsymbol{\gamma}_2\mathbf{1}_T^{\mathrm{T}}\right)\odot\mathbf{Z}_2^{(i)}+\boldsymbol{\beta}_2\mathbf{1}_T^{\mathrm{T}}
+$$
 ![Source formula ref_tran_bin_2003.00598:formula:0008](images/formula_0008.png)
-```text
-PDF text layer: ˜ X ( i ) 2 = ( γ 2 1 T T ) ⊙ Z ( i ) 2 + β 2 1 T T (5d)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `semantic_high_confidence`; source PDF page 3. Reconstructed as the learnable affine transformation following temporal standardization; all operands broadcast to D by T.*
 <!-- formula-end -->
 
 where γ 2 ∈ R D and β 2 ∈ R D are two learnable weight vectors of BiN. In addition, 1 T ∈ R T is a constant vector having all elements equal to one and 1 T T ∈ R 1 × T is its transpose.
@@ -144,36 +144,36 @@ In order to interpret the effects of Eq. (5), we can view the input series X ( i
 
 While the effect of non-stationarity in the temporal mode are often visible and has been heavily studied, its effects when considered from the feature dimension perspective are less obvious. To see this, let us now view the series X ( i ) as the set D ( i ) of D points (its D feature slices) in a T -dimensional space. Let us also take the previous scenario where two series, X ( i ) and X ( j ) , have T ( i ) and T ( j ) scattered in different regions of a D -dimensional co-ordinate system (viewed under the temporal perspective) before the normalization step in Eq. (5). When T ( i ) and T ( j ) are very far away, being viewed from the feature perspective, these two series are also likely to possess D ( i ) and D ( j ) which are distributed in two different regions of a T -dimensional co-ordinate system, although having very similar arrangement. This scenario also prevents W 1 in TABL networks to effectively capture the prominent linear/nonlinear patterns existing in the feature dimension of all input series. Thus, BiN also normalizes the input series along the feature dimension as follows:
 
-<!-- formula-start id="ref_tran_bin_2003.00598:formula:0009" status="text_layer_fallback" source-page="3" -->
+<!-- formula-start id="ref_tran_bin_2003.00598:formula:0009" status="semantic_high_confidence" source-page="3" -->
+$$
+\bar{\mathbf{x}}_1^{(i)} = \frac{1}{D}\sum_{d=1}^{D}\mathbf{x}_1^{(i)}(d)
+$$
 ![Source formula ref_tran_bin_2003.00598:formula:0009](images/formula_0009.png)
-```text
-PDF text layer: ¯ x ( i ) 1 = 1 D D ∑ d =1 x ( i ) 1 ( d ) (6a)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `semantic_high_confidence`; source PDF page 3. Reconstructed from the feature-mode definition: averaging D feature slices in R^T yields the T-dimensional mean used by equations (6b)-(6d).*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_tran_bin_2003.00598:formula:0010" status="text_layer_fallback" source-page="3" -->
+<!-- formula-start id="ref_tran_bin_2003.00598:formula:0010" status="semantic_high_confidence" source-page="3" -->
+$$
+\boldsymbol{\sigma}_1^{(i)} = \sqrt{\frac{1}{D}\sum_{d=1}^{D}\left(\mathbf{x}_1^{(i)}(d)-\bar{\mathbf{x}}_1^{(i)}\right)\odot\left(\mathbf{x}_1^{(i)}(d)-\bar{\mathbf{x}}_1^{(i)}\right)}
+$$
 ![Source formula ref_tran_bin_2003.00598:formula:0010](images/formula_0010.png)
-```text
-PDF text layer: σ ( i ) 1 = √ √ √ √ 1 D D ∑ d =1 ( x ( i ) 1 ( d ) -¯ x ( i ) 1 ) ⊙ ( x ( i ) 1 ( d ) -¯ x ( i ) 1 ) (6b)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `semantic_high_confidence`; source PDF page 3. Reconstructed as the elementwise standard deviation across D feature slices; the resulting T-vector is required by the next normalization step.*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_tran_bin_2003.00598:formula:0011" status="text_layer_fallback" source-page="3" -->
+<!-- formula-start id="ref_tran_bin_2003.00598:formula:0011" status="semantic_high_confidence" source-page="3" -->
+$$
+\mathbf{Z}_1^{(i)} = \left(\mathbf{X}^{(i)}-\mathbf{1}_D(\bar{\mathbf{x}}_1^{(i)})^{\mathrm{T}}\right)\oslash\left(\mathbf{1}_D(\boldsymbol{\sigma}_1^{(i)})^{\mathrm{T}}\right)
+$$
 ![Source formula ref_tran_bin_2003.00598:formula:0011](images/formula_0011.png)
-```text
-PDF text layer: Z ( i ) 1 = ( X ( i ) -1 D (¯ x ( i ) 1 ) T ) varoslash ( 1 D ( σ ( i ) 2 ) T ) (6c)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `semantic_high_confidence`; source PDF page 3. Corrected a high-confidence paper typo: the denominator must use the feature-mode standard deviation sigma_1, not temporal-mode sigma_2. Only sigma_1 produces the D by T broadcast required by the equation.*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_tran_bin_2003.00598:formula:0012" status="text_layer_fallback" source-page="3" -->
+<!-- formula-start id="ref_tran_bin_2003.00598:formula:0012" status="semantic_high_confidence" source-page="3" -->
+$$
+\tilde{\mathbf{X}}_1^{(i)} = \left(\mathbf{1}_D\boldsymbol{\gamma}_1^{\mathrm{T}}\right)\odot\mathbf{Z}_1^{(i)}+\mathbf{1}_D\boldsymbol{\beta}_1^{\mathrm{T}}
+$$
 ![Source formula ref_tran_bin_2003.00598:formula:0012](images/formula_0012.png)
-```text
-PDF text layer: ˜ X ( i ) 1 = ( 1 D γ T 1 ) ⊙ Z ( i ) 1 + 1 D β T 1 (6d)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 3. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `semantic_high_confidence`; source PDF page 3. Reconstructed as the learnable affine transformation following feature-mode standardization; all operands broadcast to D by T.*
 <!-- formula-end -->
 
 where γ 1 ∈ R T and β 1 ∈ R T are two learnable weights, and the superscript ( . ) T denotes the transpose operator.

@@ -589,7 +589,7 @@ $$
 ```text
 PDF text layer: n n n n n Cov ( X 1 , X n ) = (1 + 2 p n p 1 -p n -p 1 ) Cov ( X 1 , X n ) = (2 p cont -1) n -1 .
 ```
-*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `decoded_unverified`; source PDF page 13. Semantic review found an internal algebraic inconsistency in the paper's three-line covariance derivation. Confidence is insufficient to choose a corrected covariance without an additional initialization assumption, so the machine-decoded LaTeX is intentionally left unchanged.*
 <!-- formula-end -->
 
 Remark 3 (Negative autocorrelation of price changes at first lag). It is empirically observed that high frequency price movements have a negative autocorrelation at the first lag Cont (2001). In our model Cov ( X k , X k +1 ) &lt; 0 if and only if p cont &lt; 1 / 2, which happens when
@@ -707,28 +707,22 @@ Using Donsker's invariance principle, the sequence of processes ( Z ( tπλn/D (
 
 in ( D , J 1 ) to a Brownian motion with volatility δ √ πλ D ( f ) . Let ρ : (1 , ∞ ) ↦→ (1 , ∞ ) be a function satisfying:
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0045" status="decoded_unverified" source-page="15" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0045" status="semantic_high_confidence" source-page="15" -->
 $$
-\ s a t i s f y i n g \colon & & \rho ( t ) \log ( \rho ( t ) ) = t \\ & & \text {Since } \rho ( t ) \sim _ { t \to \infty } \frac { t } { \log ( t ) } , \\ & & N _ { t _ { n } } \sim _ { n \to \infty } \rho ( \frac { \pi \lambda t \zeta ( n ) } { D ( f ) } ) \sim \frac { \pi \lambda \zeta ( n ) } { D ( f ) \log ( \zeta ( n ) ) } , \\ & & N _ { t _ { n } } \sim _ { n \to \infty } \frac { t \pi \lambda } { D ( f ) } . \\ \text {Therefor for all } t \geq 0 ,
+\begin{aligned} \rho(t)\log \rho(t)&=t,\\ \rho(t)&\mathop{\sim}_{t\to\infty}\frac{t}{\log t},\\ N_{t_n}&\mathop{\sim}_{n\to\infty}\rho\!\left(\frac{\pi\lambda t\zeta(n)}{D(f)}\right) \sim \frac{t\pi\lambda\zeta(n)}{D(f)\log\zeta(n)} \sim \frac{t\pi\lambda n}{D(f)}. \end{aligned}
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0045](images/formula_0045.png)
-```text
-PDF text layer: ρ ( t ) log( ρ ( t )) = t Since ρ ( t ) ∼ t →∞ t log( t ) , N t n ∼ n →∞ ρ ( πλtζ ( n ) D ( f ) ) ∼ tπλζ ( n ) D ( f ) log( ζ ( n )) , N t n ∼ n →∞ tπλ D ( f ) .
-```
-*Formula quality: `decoded_unverified`; source PDF page 15. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `semantic_high_confidence`; source PDF page 15. Reconstructed the full asymptotic chain from the proof context. The paper-as-printed final term drops a factor n; the retained correction restores the order-n event count required by the following Donsker limit.*
 <!-- formula-end -->
 
 Therefore for all t ≥ 0,
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0046" status="decoded_unverified" source-page="15" -->
-$$
-( 1 1 )
-$$
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0046" status="semantic_not_formula" source-page="15" -->
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0046](images/formula_0046.png)
 ```text
 PDF text layer: (11)
 ```
-*Formula quality: `decoded_unverified`; source PDF page 15. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `semantic_not_formula`; source PDF page 15. This record is a layout-extraction artifact containing only equation number (11), not a mathematical formula. It remains as an auditable record but contributes no LaTeX block.*
 <!-- formula-end -->
 
 <!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0047" status="verified_source" source-page="15" -->

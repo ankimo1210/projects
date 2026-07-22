@@ -379,15 +379,12 @@ Table 2. Relation between price changes and order flow imbalance.
 
 Table 2 presents a cross-section of results (averaged across time) for the regressions:
 
-<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0012" status="decoded_unverified" source-page="11" -->
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0012" status="semantic_high_confidence" source-page="11" -->
 $$
-\Delta P _ { k } & = \hat { \alpha } _ { i } + \hat { \beta } _ { i } O F I _ { k } + \hat { \epsilon } _ { k } , \\ \Delta P _ { k } & = \hat { \alpha } _ { Q , i } + \hat { \beta } _ { Q , i } O F I _ { k } + \hat { \gamma } _ { Q , i } O F I _ { k } | O F I _ { k } | + \hat { \epsilon } _ { Q , k } ,
+\begin{aligned} \Delta P_k &= \hat{\alpha}_i + \hat{\beta}_i\,OFI_k + \hat{\epsilon}_k,\\ \Delta P_k &= \hat{\alpha}_{Q,i} + \hat{\beta}_{Q,i}\,OFI_k + \hat{\gamma}_{Q,i}\,OFI_k|OFI_k| + \hat{\epsilon}_{Q,k}. \end{aligned}
 $$
 ![Source formula ref_cont_price_impact_1011.6402:formula:0012](images/formula_0012.png)
-```text
-PDF text layer: ∆ P k = ˆ α i + ˆ β i OFI k +ˆ ϵ k , ∆ P k = ˆ α Q,i + ˆ β Q,i OFI k + ˆ γ Q,i OFI k | OFI k | +ˆ ϵ Q,k ,
-```
-*Formula quality: `decoded_unverified`; source PDF page 11. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `semantic_high_confidence`; source PDF page 11. Semantically confirmed and normalized as two nested contemporaneous price-impact regressions; variable roles and indices agree with the following definitions.*
 <!-- formula-end -->
 
 where ∆ P k are the 10-second mid-price changes and OFI k are the contemporaneous order flow imbalances. These regressions were estimated using 273 half-hour subsamples (indexed by i ) for each stock and their outputs were averaged across subsamples. Each subsample typically contains about 180 observations (indexed by k ). The t-statistics were computed using White's standard errors. For brevity, we report the R 2 , the average ˆ α i and the average ˆ β i only for the first regression (with a single OFI k term). There is almost no difference between averages of estimates ˆ β i and ˆ β Qi and the R 2 in two regressions. The last three columns report the percentage of samples where the coefficient(s) passed the z-test at the 5% significance level.
@@ -478,15 +475,12 @@ Table 3. Relation between the price impact coefficient and market depth.
 
 Table 3 presents the results of regressions:
 
-<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0015" status="decoded_unverified" source-page="13" -->
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0015" status="semantic_high_confidence" source-page="13" -->
 $$
-\log \hat { \beta } _ { i } & = \alpha \hat { L } _ { , i } - \hat { \lambda } \log A D _ { i } + \hat { \epsilon } _ { L , i } , \\ \hat { \beta } _ { i } & = \alpha \hat { M } _ { , i } + \frac { \hat { c } } { A D _ { i } ^ { \lambda } } + \hat { \epsilon } _ { M , i } ,
+\begin{aligned} \log \hat{\beta}_i &= \hat{\alpha}_{L,i} - \hat{\lambda}\log AD_i + \hat{\epsilon}_{L,i},\\ \hat{\beta}_i &= \hat{\alpha}_{M,i} + \frac{\hat{c}}{AD_i^{\hat{\lambda}}} + \hat{\epsilon}_{M,i}. \end{aligned}
 $$
 ![Source formula ref_cont_price_impact_1011.6402:formula:0015](images/formula_0015.png)
-```text
-PDF text layer: log ˆ β i = ˆ α L,i -ˆ λ log AD i +ˆ ϵ L,i , ˆ β i = ˆ α M,i + ˆ c AD ˆ λ i +ˆ ϵ M,i ,
-```
-*Formula quality: `decoded_unverified`; source PDF page 13. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `semantic_high_confidence`; source PDF page 13. Semantically confirmed and normalized. The inverse-depth power law in the second line is consistent with the log-log specification in the first line and the surrounding regression description.*
 <!-- formula-end -->
 
 where ˆ β i is the price impact coefficient for the i -th half-hour subsample and AD i is the average market depth for that subsample. These regressions were estimated for each of the 50 stocks, using 273 estimates of ˆ β i for that stock, obtained from (4). The second regression uses estimates ˆ λ obtained from the first regression. The t-statistics and the confidence intervals were computed using Newey-West standard errors. Confidence intervals are built with normal critical values. The last three columns provide three alternative fit measures - the R 2 of the linear regression (5), the squared correlation between ˆ β i and fitted values ˆ ˆ β i = ˆ c AD ˆ λ i and the squared correlation between ˆ β i and ˆ ˆ β ∗ i = ˆ c AD i .
@@ -863,15 +857,12 @@ Table 5. Comparison of traded volume and order flow imbalance.
 
 Table 5 presents the average results of regressions:
 
-<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0033" status="decoded_unverified" source-page="22" -->
+<!-- formula-start id="ref_cont_price_impact_1011.6402:formula:0033" status="semantic_high_confidence" source-page="22" -->
 $$
-| \Delta P _ { k } | & = \hat { \alpha } _ { O , i } + \hat { \beta } _ { O , i } | O F I _ { k } | + \hat { \epsilon } _ { O , k } , \\ | \Delta P _ { k } | & = \hat { \alpha } _ { V , i } + \hat { \beta } _ { V , i } V O L _ { k } ^ { \hat { H } _ { i } } + \hat { \epsilon } _ { V , k } , \\ | \Delta P _ { k } | & = \hat { \alpha } _ { W , i } + \hat { \phi } _ { O , i } | O F I _ { k } | + \hat { \phi } _ { V , i } V O L _ { k } ^ { \hat { H } _ { i } } + \hat { \epsilon } _ { W , k } ,
+\begin{aligned} |\Delta P_k| &= \hat{\alpha}_{O,i} + \hat{\beta}_{O,i}|OFI_k| + \hat{\epsilon}_{O,k},\\ |\Delta P_k| &= \hat{\alpha}_{V,i} + \hat{\beta}_{V,i}VOL_k^{\hat{H}_i} + \hat{\epsilon}_{V,k},\\ |\Delta P_k| &= \hat{\alpha}_{W,i} + \hat{\phi}_{O,i}|OFI_k| + \hat{\phi}_{V,i}VOL_k^{\hat{H}_i} + \hat{\epsilon}_{W,k}. \end{aligned}
 $$
 ![Source formula ref_cont_price_impact_1011.6402:formula:0033](images/formula_0033.png)
-```text
-PDF text layer: | ∆ P k | = ˆ α O,i + ˆ β O,i | OFI k | +ˆ ϵ O,k , | ∆ P k | = ˆ α V,i + ˆ β V,i V OL ˆ H i k +ˆ ϵ V,k , | ∆ P k | = ˆ α W,i + ˆ φ O,i | OFI k | + ˆ φ V,i V OL ˆ H i k +ˆ ϵ W,k ,
-```
-*Formula quality: `decoded_unverified`; source PDF page 22. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `semantic_high_confidence`; source PDF page 22. Semantically confirmed and normalized as the OFI-only, volume-only, and joint absolute-price-impact regressions described immediately below the display.*
 <!-- formula-end -->
 
 where ∆ P k are the 10-second mid-price changes, OFI k are the contemporaneous order flow imbalances and V OL k are the contemporaneous trade volumes. The exponents ˆ H i were estimated in each subsample beforehand using a logarithmic regression: log | ∆ P k | = log ˆ ¯ θ i + ˆ H i log V OL k + log ˆ ξ k . These regressions were estimated using 273 half-hour subsamples (indexed by i ) for each stock and their outputs were averaged across subsamples. Each subsample typically contains about 180 observations (indexed by k ). The t-statistics were computed using White's standard errors. For each of three regressions, Table 5 reports the average R 2 , the average t-statistic of the coefficient(s), the percentage of samples where the coefficient(s) passed the z-sest at the 5% significance level and the F-statistic of the regression.

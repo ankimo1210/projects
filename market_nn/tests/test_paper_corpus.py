@@ -157,6 +157,109 @@ def test_source_match_expands_author_macros_to_portable_latex() -> None:
     assert r"\boldsymbol{\sigma}" in latex
 
 
+def test_semantic_reviews_replace_only_high_confidence_formulas() -> None:
+    document = {
+        "texts": [
+            {
+                "self_ref": f"#/texts/{index}",
+                "label": "formula",
+                "orig": original,
+                "text": decoded,
+                "prov": [{"page_no": 1, "bbox": {"l": 1, "t": 2, "r": 3, "b": 1}}],
+            }
+            for index, original, decoded in (
+                (1, "x equals one", "x = l"),
+                (2, "(11)", ""),
+                (3, "ambiguous covariance", "C o v ( X )"),
+            )
+        ]
+    }
+    common = {
+        "source_pdf": "sources/papers/sample.pdf",
+        "source_page": 1,
+        "evidence": ["Context and dimensions were reviewed."],
+        "assumptions": [],
+        "alternatives": [],
+    }
+    reviews = {
+        "sample:formula:0001": {
+            **common,
+            "review_status": "high_confidence",
+            "action": "reconstruct",
+            "confidence": 0.99,
+            "base_status": "decoded_unverified",
+            "document_ref": "#/texts/1",
+            "latex": "x = 1",
+            "note": "Reconstructed from context.",
+        },
+        "sample:formula:0002": {
+            **common,
+            "review_status": "not_formula",
+            "action": "exclude_spurious",
+            "confidence": 1.0,
+            "base_status": "text_layer_fallback",
+            "document_ref": "#/texts/2",
+            "note": "Equation-number artifact.",
+        },
+        "sample:formula:0003": {
+            **common,
+            "review_status": "ambiguous",
+            "action": "flag_only",
+            "confidence": 0.4,
+            "base_status": "decoded_unverified",
+            "document_ref": "#/texts/3",
+            "note": "Insufficient assumptions to reconstruct.",
+        },
+    }
+
+    records = FORMULA_MODULE.build_formula_records(
+        "sample",
+        document,
+        source_pdf="sources/papers/sample.pdf",
+        overrides={},
+        semantic_reviews=reviews,
+    )
+
+    assert records[0]["status"] == "semantic_high_confidence"
+    assert records[0]["latex"] == "x = 1"
+    assert records[1]["status"] == "semantic_not_formula"
+    assert records[1]["latex"] is None
+    assert records[2]["status"] == "decoded_unverified"
+    assert records[2]["latex"] == "C o v ( X )"
+    assert all("semantic_context_review" in record["verification_methods"] for record in records)
+
+
+def test_semantic_review_manifest_is_explicit_about_uncertainty() -> None:
+    project_root = Path(__file__).parents[1]
+    manifest = json.loads(
+        (project_root / "manifests" / "formula_semantic_reviews.json").read_text(encoding="utf-8")
+    )
+    reviews = manifest["reviews"]
+
+    assert len(reviews) == 15
+    assert sum(review["review_status"] == "high_confidence" for review in reviews.values()) == 12
+    assert sum(review["review_status"] == "not_formula" for review in reviews.values()) == 2
+    assert sum(review["review_status"] == "ambiguous" for review in reviews.values()) == 1
+    assert all(
+        review["confidence"] >= manifest["policy"]["replacement_threshold"]
+        for review in reviews.values()
+        if review["review_status"] == "high_confidence"
+    )
+    assert all(
+        "paper_as_printed_latex" in review
+        for review in reviews.values()
+        if review["action"] == "correct_suspected_paper_typo"
+    )
+
+    quality = json.loads((project_root / "corpus" / "papers" / "_index.json").read_text())[
+        "formula_quality"
+    ]
+    assert quality["semantic_reviewed_total"] == 15
+    assert quality["semantic_high_confidence"] == 12
+    assert quality["semantic_not_formula"] == 2
+    assert quality["semantic_ambiguous"] == 1
+
+
 def test_arxiv_match_manifest_contains_only_reviewed_source_matches() -> None:
     manifest_path = Path(__file__).parents[1] / "manifests" / "formula_source_matches.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))

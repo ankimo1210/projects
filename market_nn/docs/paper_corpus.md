@@ -23,7 +23,7 @@
 ## 現在のコーパス
 
 2026-07-22 時点で22論文・449ページを変換し、1,326 chunks、424式を保存している。
-数式品質オーバーレイにより305式を LaTeX 化し、全424式に原本 crop を付けた。
+数式品質オーバーレイにより312式を LaTeX 化し、全424式に原本 crop を付けた。
 chunk上限は480 tokenを指定しているが、分割できない表を
 含む `ref_tran_bin_2003.00598` の2 chunksは525/536 tokenとなる。実測最大値は各論文の
 `metadata.json` に記録するため、512 tokenを厳密な入力上限とする利用側ではこの2件を
@@ -31,15 +31,23 @@ chunk上限は480 tokenを指定しているが、分割できない表を
 
 数式の品質内訳は次のとおり。検証済みは、著者が公開した正確な版の arXiv TeX と
 対応付けた224式と、原本 PDF を手動確認した49式である。42式は両方で確認しているため、
-重複を除く検証済み総数は231式となる。
+重複を除く一次資料との検証済み総数は231式となる。さらに、式の定義、前後関係、
+行列形状、漸近オーダーを意味的にレビューし、12式を高信頼で確認・復元した。
 
 | status | count | meaning |
 |---|---:|---|
 | `verified_source` | 182 | 正確な arXiv 版の著者 TeX と対応付けた LaTeX |
 | `verified_source_and_manual` | 42 | 著者 TeX と原本 PDF の両方で確認した手動転記 LaTeX |
 | `verified_manual` | 7 | 原本 PDF と照合したが、利用可能な著者 TeX がない手動転記 LaTeX |
-| `decoded_unverified` | 74 | Docling が復元したが式単位の確認は未実施 |
-| `text_layer_fallback` | 119 | 信頼できる LaTeX がなく、原式 crop と PDF text layer を保存 |
+| `semantic_high_confidence` | 12 | 文脈・定義・形状制約から高信頼で確認または復元した LaTeX |
+| `semantic_not_formula` | 2 | 式番号や空括弧を数式として検出したレイアウト由来の誤検出 |
+| `decoded_unverified` | 69 | Docling が復元したが、意味レビューで確定していない LaTeX |
+| `text_layer_fallback` | 110 | 信頼できる LaTeX がなく、原式 crop と PDF text layer を保存 |
+
+`semantic_high_confidence` は原文転記の検証とは区別する。意味レビュー15件のうち、
+既存式の確認3件、復元7件、論文の疑わしい誤植修正2件、非数式2件、曖昧なため未変更1件
+である。曖昧な式は元のstatusを維持し、`semantic_review` と `note` に根拠、仮定、
+代替候補、不確実性を残す。
 
 ## 生成と検証
 
@@ -71,6 +79,11 @@ source package は PDF wrapper のみである。`manifests/formula_source_match
 採用する。TeX環境とPDF側の式分割が一致しない、または順序整列が誤った15件は、
 理由付きの拒否リストへ固定して自動採用を防ぐ。
 
+`manifests/formula_semantic_reviews.json` は意味レビューを一次資料照合とは別レイヤーで
+管理する。LaTeXの置換はconfidence 0.90以上に限定し、`evidence` を必須とする。
+論文自体の誤植を修正する場合は、`paper_as_printed_latex` を保存して原文との差を隠さない。
+confidenceが閾値未満の式は置換せず、`note` に不確実性を明記する。
+
 GPU を明示する場合:
 
 ```bash
@@ -101,6 +114,8 @@ page provenance、chunk は生成できる。
 - 変換後に `manifests/formula_overrides.json` の検証済み転記を適用する。
 - 利用可能な場合は正確な arXiv 版の著者 TeX を式順序と正規化類似度で対応付け、
   source archive の版・SHA-256・ファイル・行番号を各式に記録する。
+- 自動照合で確定できない式は、記号定義、前後の論理、行列形状、単位、漸近オーダー、
+  標準的な恒等式を使って意味レビューし、confidenceと根拠を構造化して記録する。
 - 数式ごとに安定した ID と品質状態を付け、原本ページの bbox から crop を生成する。
 - 未復元式を空の placeholder のまま残さず、crop と PDF text layer にフォールバックする。
 - 変換は一時領域で完了させてから `corpus/papers/` を置換し、失敗時は既存 corpus を
@@ -114,3 +129,6 @@ page provenance、chunk は生成できる。
 2論文と arXiv TeX を利用できない3論文は、著者 TeX による検証対象外である。
 `decoded_unverified`、`text_layer_fallback` と複雑な結合セルは完全一致を保証しないため、
 重要な式・表は `formulas.jsonl` のページ・bbox・crop と原本 PDF で照合する。
+`semantic_high_confidence` は複数の意味的制約から最も妥当な式を復元した状態であり、
+原著者による訂正を意味しない。特に `correct_suspected_paper_typo` は監査上の提案なので、
+引用時には `paper_as_printed_latex` と併記する。
