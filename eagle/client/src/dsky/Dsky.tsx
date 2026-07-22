@@ -1,4 +1,4 @@
-import { useDskySocket } from "./useDskySocket";
+import type { DskyView } from "./types";
 import "./dsky.css";
 
 const KEYS: [label: string, name: string][] = [
@@ -21,8 +21,11 @@ const LAMPS: [label: string, key: string][] = [
   ["NO DAP", "no_dap"], ["PRIO DISP", "prio_disp"],
 ];
 
-export function Dsky() {
-  const [s, sendKey, sendPro] = useDskySocket();
+export function Dsky({ state: s, sendKey, sendPro }: {
+  state: DskyView;
+  sendKey: (key: string) => void;
+  sendPro: (pressed: boolean) => void;
+}) {
   const lampOn = (key: string) =>
     key === "__temp" ? s.temp : key === "__standby" ? s.standby :
     key === "__key_rel" ? s.keyRel : key === "__opr_err" ? s.oprErr :
