@@ -249,6 +249,33 @@ per the boot-flush note above. This is the permitted "loosen milestones"
 step from the golden-test plan; the final-state check (all-8s) was not
 loosened.
 
+### Golden Final-State Semantics
+
+A third flake source, found once milestones and boot-flush were stable:
+the final-state comparison itself raced yaAGC's ch0163 flash modulation.
+`verb_noun_flash`, `key_rel`, and `opr_err` are driven together by the
+lamp-test blink (vendor `agc_engine.c:1727-1744`, `DSKY_FLASH_PERIOD`: a
+1.28 s cycle, 75% duty), oscillating phase-coherently between
+`(false, true, true)` (75% of the cycle) and `(true, false, false)`
+(25%). Whichever phase the 3 s capture happened to end in decided the
+value of all 3 bits, producing a ~1/10 flake in the final-state
+`assert_eq!`.
+
+Fix (user-approved "option (b) strengthened", decided 2026-07-22): those 3
+bits are excluded from the final-state equality check, but the exclusion
+is paired with *stronger* assertions that pin the AGC's real blink
+behavior instead of ignoring it — `tests/golden_v35e.rs` now asserts (in
+both record and verify modes) that every observed
+`(verb_noun_flash, key_rel, opr_err)` triple after the first ch0163
+packet is one of the two phase-coherent states above (phase coherence),
+and that both states are observed at least once within the 3 s capture
+(deterministic, since 3 s covers ≥2 full 1.28 s cycles). Every other
+field — digits, signs, all other lamps (including `temp`, `restart`,
+`standby`), `comp_acty` — remains in strict equality. `comp_acty` (ch011)
+is also environment-modulated in principle but has been stable (`false`)
+across ~15 recorded runs; it is the first suspect if this golden ever
+flakes again.
+
 ## Sources
 
 - https://www.ibiblio.org/apollo/developer.html
