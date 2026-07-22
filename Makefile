@@ -96,6 +96,8 @@ hull-paper-corpus-gold-check:
 	uv run --no-sync python johnhull/scripts/build_paper_gold.py --check
 	uv run --no-sync python johnhull/scripts/import_paper_gold_layout.py --check
 	uv run --no-sync python johnhull/scripts/build_extractor_benchmark.py --check
+	uv run --no-sync python johnhull/scripts/build_paper_table_gold.py --check
+	uv run --no-sync python johnhull/scripts/build_paper_formula_gold.py --check
 	uv run --no-sync pytest -q -s johnhull/tests/paper_corpus/test_gold.py
 
 hull-paper-corpus-v2-check: hull-paper-corpus-gold-check

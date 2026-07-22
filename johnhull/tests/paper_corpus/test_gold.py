@@ -4,6 +4,10 @@ from __future__ import annotations
 
 import json
 
+from johnhull.scripts.paper_corpus.formula_gold import (
+    DEFAULT_FORMULA_METRICS_OUTPUT,
+    validate_formula_metrics,
+)
 from johnhull.scripts.paper_corpus.gold import (
     DEFAULT_ASSERTIONS_OUTPUT,
     DEFAULT_MANIFEST_OUTPUT,
@@ -17,6 +21,11 @@ from johnhull.scripts.paper_corpus.gold_import import (
     validate_layout_labels,
 )
 from johnhull.scripts.paper_corpus.schema import P0_PAPER_IDS
+from johnhull.scripts.paper_corpus.table_gold import (
+    DEFAULT_TABLE_METRICS_OUTPUT,
+    REVIEWED_TABLES,
+    validate_table_metrics,
+)
 
 
 def test_tracked_gold_artifacts_are_current():
@@ -85,3 +94,23 @@ def test_table_cell_counter_preserves_merged_headers_as_single_cells():
     html = "<table><tr><th colspan='2'>Header</th></tr><tr><td>A</td><td>B</td></tr></table>"
 
     assert table_cell_count(html) == 3
+
+
+def test_reviewed_table_metrics_pass_structure_and_numeric_gates():
+    metrics = json.loads(DEFAULT_TABLE_METRICS_OUTPUT.read_text(encoding="utf-8"))
+
+    validate_table_metrics(metrics)
+    assert metrics["table_count"] == len(REVIEWED_TABLES) == 14
+    assert metrics["final_structure_teds"] == 1.0
+    assert metrics["final_numeric_accuracy"] == 1.0
+    assert metrics["p0_final_numeric_accuracy"] == 1.0
+
+
+def test_reviewed_formula_metrics_pass_detection_compile_and_render_gates():
+    metrics = json.loads(DEFAULT_FORMULA_METRICS_OUTPUT.read_text(encoding="utf-8"))
+
+    validate_formula_metrics(metrics)
+    assert metrics["display_recall"] == 1.0
+    assert metrics["inline_recall"] == 1.0
+    assert metrics["latex_compile_rate"] == 1.0
+    assert metrics["verified_render_rate"] == 1.0

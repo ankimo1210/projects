@@ -83,3 +83,21 @@ The adapter fails if source pages are missing, page indices are non-contiguous,
 assets disappear, or a reviewed assertion no longer resolves to its exact
 source region. Japanese reading order is always routed to review. Low text
 coverage versus the source PDF is a text failure rather than an empty success.
+
+## Formula and table gates
+
+Every emitted LaTeX string must compile to well-formed MathML. A failed automatic
+candidate is moved to `latex_candidate` and the equation remains available only as
+its source-image fallback; it is not counted as an emitted LaTeX representation.
+Reviewed formulas additionally render to a deterministic PNG and retain the
+manual source-comparison result. The Gold set currently has 100% display/inline
+detection recall, 100% compile success for emitted LaTeX, and 100% render success
+for reviewed assertions. The three failed Japanese formula candidates remain
+explicit image fallbacks.
+
+All 14 Gold table crops were independently reviewed. Five malformed extractor
+structures have manual structural replacements, while known numeric OCR errors
+retain both `extractor_raw_text` and the reviewed value. The resulting Gold table
+score is 1.0 structural TEDS and 100% numeric accuracy across 427 scalar cells,
+including 176 P0 cells. These scores apply to the reviewed Gold set only; an
+unreviewed table in the full corpus remains `unverified`.

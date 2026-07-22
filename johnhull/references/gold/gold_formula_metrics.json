@@ -1,0 +1,30 @@
+{
+  "audit_basis": "reviewed layout regions plus exact manual LaTeX assertions and source-page comparison",
+  "display_detected": 173,
+  "display_recall": 1.0,
+  "display_target": 173,
+  "fallback_equation_ids": [
+    "2024-mof-jgbi-bei-guide:p0005:equation:0001",
+    "2024-mof-jgbi-bei-guide:p0009:equation:0001",
+    "2024-mof-jgbi-bei-guide:p0009:equation:0002"
+  ],
+  "gold_formula_metrics_version": "1.0.0",
+  "inline_detected": 431,
+  "inline_recall": 1.0,
+  "inline_target": 431,
+  "latex_compile_rate": 1.0,
+  "latex_compiled_count": 606,
+  "latex_representation_count": 606,
+  "source_image_fallback_count": 3,
+  "verified_assertion_ids": [
+    "heston-p5-d",
+    "heston-p5-g",
+    "hw-p6-mean-reversion",
+    "hw-p6-vasicek-b",
+    "mcneil-frey-p14-es"
+  ],
+  "verified_formula_cdm": 100.0,
+  "verified_formula_count": 5,
+  "verified_render_rate": 1.0,
+  "verified_rendered_count": 5
+}

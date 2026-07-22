@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Any
 
 from .baseline import REFERENCES_ROOT, read_json
+from .formula import validate_equation_record
 from .gold import DEFAULT_ASSERTIONS_OUTPUT
 from .schema import (
     BlockRecord,
@@ -28,6 +29,7 @@ from .schema import (
     TableRecord,
     stable_record_id,
 )
+from .table_gold import REVIEWED_BY_KEY
 
 MINERU_VERSION = "3.4.4"
 MINERU_MODEL_REVISION = "ed6b654c018d742e65a17671e379c5e6ecc87ec9"
@@ -496,10 +498,9 @@ def convert_mineru_paper(
                     "source_block_id": block_id,
                     "source_bbox_normalized": [int(value) for value in item["bbox"]],
                     "latex_syntax_status": latex_syntax_status(latex),
-                    "render_validation_status": "not_run",
                 }
             )
-            equations.append(record)
+            equations.append(validate_equation_record(record, output_dir=output_dir))
         elif item_type == "text":
             inline_matches = list(INLINE_MATH_RE.finditer(raw_text))
             if inline_matches:
@@ -511,33 +512,56 @@ def convert_mineru_paper(
                     paper_id, page_number, "equation", ordinals[(page_number, "equation")]
                 )
                 equations.append(
-                    {
-                        **EquationRecord(
-                            equation_id=equation_id,
-                            paper_id=paper_id,
-                            page_number=page_number,
-                            bbox=bbox,
-                            source_asset=asset_path or "",
-                            latex=inline_match.group(1).strip(),
-                            equation_number=None,
-                            verification_status="unverified",
-                            provenance=provenance,
-                        ).to_dict(),
-                        "equation_kind": "inline",
-                        "crop_scope": "containing_block",
-                        "source_block_id": block_id,
-                        "source_bbox_normalized": [int(value) for value in item["bbox"]],
-                        "latex_syntax_status": latex_syntax_status(inline_match.group(1)),
-                        "render_validation_status": "not_run",
-                    }
+                    validate_equation_record(
+                        {
+                            **EquationRecord(
+                                equation_id=equation_id,
+                                paper_id=paper_id,
+                                page_number=page_number,
+                                bbox=bbox,
+                                source_asset=asset_path or "",
+                                latex=inline_match.group(1).strip(),
+                                equation_number=None,
+                                verification_status="unverified",
+                                provenance=provenance,
+                            ).to_dict(),
+                            "equation_kind": "inline",
+                            "crop_scope": "containing_block",
+                            "source_block_id": block_id,
+                            "source_bbox_normalized": [int(value) for value in item["bbox"]],
+                            "latex_syntax_status": latex_syntax_status(inline_match.group(1)),
+                        },
+                        output_dir=output_dir,
+                    )
                 )
         elif item_type == "table":
             ordinals[(page_number, "table")] += 1
             table_id = stable_record_id(
                 paper_id, page_number, "table", ordinals[(page_number, "table")]
             )
-            html_body = str(item.get("table_body") or "")
+            extractor_html = str(item.get("table_body") or "")
+            raw_bbox = tuple(int(value) for value in item["bbox"])
+            reviewed_table = REVIEWED_BY_KEY.get((paper_id, page_number, raw_bbox))
+            html_body = (
+                reviewed_table.replacement_html
+                if reviewed_table and reviewed_table.replacement_html
+                else extractor_html
+            )
             parsed = parse_table_html(html_body)
+            extractor_cells = {
+                (cell.row, cell.column): cell for cell in parse_table_html(extractor_html)
+            }
+            if reviewed_table:
+                actual_rows = max((cell.row for cell in parsed), default=-1) + 1
+                actual_columns = max((cell.column + cell.column_span for cell in parsed), default=0)
+                if (
+                    actual_rows != reviewed_table.expected_rows
+                    or actual_columns != reviewed_table.expected_columns
+                    or len(parsed) != reviewed_table.expected_cell_count
+                ):
+                    raise ValueError(
+                        f"reviewed table structure changed: {paper_id} p{page_number} {raw_bbox}"
+                    )
             cell_records: list[dict[str, Any]] = []
             matching_assertions = [
                 assertion
@@ -549,28 +573,43 @@ def convert_mineru_paper(
                 (int(assertion["row_index"]), int(assertion["column_index"])): assertion
                 for assertion in matching_assertions
             }
+            correction_by_coordinate = {
+                (row, column): (text, numeric)
+                for row, column, text, numeric in (
+                    reviewed_table.corrections if reviewed_table else ()
+                )
+            }
             for cell in parsed:
                 assertion = assertion_by_coordinate.get((cell.row, cell.column))
+                correction = correction_by_coordinate.get((cell.row, cell.column))
+                reviewed_text = correction[0] if correction else cell.text
                 numeric = (
                     float(assertion["expected_numeric"])
                     if assertion is not None
-                    else parse_numeric(cell.text)
+                    else correction[1]
+                    if correction is not None
+                    else parse_numeric(reviewed_text)
                 )
+                extractor_cell = extractor_cells.get((cell.row, cell.column))
                 cell_records.append(
                     {
                         **TableCell(
                             row=cell.row,
                             column=cell.column,
-                            raw_text=cell.text,
-                            normalized_text=cell.text,
+                            raw_text=reviewed_text,
+                            normalized_text=reviewed_text,
                             row_span=cell.row_span,
                             column_span=cell.column_span,
                             numeric_value=numeric,
                         ).to_dict(),
                         "cell_type": "header" if cell.tag == "th" else "data",
-                        "verification_status": "verified" if assertion else "unverified",
+                        "verification_status": "verified" if reviewed_table else "unverified",
                         "assertion_id": assertion["assertion_id"] if assertion else None,
-                        "extractor_numeric_value": parse_numeric(cell.text),
+                        "extractor_raw_text": extractor_cell.text if extractor_cell else None,
+                        "extractor_numeric_value": (
+                            parse_numeric(extractor_cell.text) if extractor_cell else None
+                        ),
+                        "manual_correction": correction is not None or assertion is not None,
                     }
                 )
             json_path, html_path, csv_path = _write_table_exports(
@@ -595,7 +634,7 @@ def convert_mineru_paper(
                     for cell in cell_records
                 ),
                 caption=normalize_text(" ".join(item.get("table_caption") or [])) or None,
-                verification_status="unverified",
+                verification_status="verified" if reviewed_table else "unverified",
                 provenance=provenance,
                 csv_path=csv_path,
                 html_path=html_path,
@@ -604,11 +643,22 @@ def convert_mineru_paper(
                 {
                     "json_path": json_path,
                     "source_block_id": block_id,
-                    "source_bbox_normalized": [int(value) for value in item["bbox"]],
+                    "source_bbox_normalized": list(raw_bbox),
                     "cells": cell_records,
-                    "verified_cell_count": len(matching_assertions),
-                    "numeric_validation_status": ("partial" if matching_assertions else "not_run"),
-                    "render_overlay_status": "not_run",
+                    "verified_cell_count": (
+                        len(cell_records) if reviewed_table else len(matching_assertions)
+                    ),
+                    "numeric_validation_status": "verified" if reviewed_table else "not_run",
+                    "render_overlay_status": (
+                        "manual_review_pass" if reviewed_table else "not_run"
+                    ),
+                    "reviewer": reviewed_table.reviewer if reviewed_table else None,
+                    "extractor_html_sha256": hashlib.sha256(
+                        extractor_html.encode("utf-8")
+                    ).hexdigest(),
+                    "manual_structure_override": bool(
+                        reviewed_table and reviewed_table.replacement_html
+                    ),
                 }
             )
             tables.append(record)
@@ -657,26 +707,28 @@ def convert_mineru_paper(
         asset_path = _copy_asset(source, output_dir, "equations", equation_id)
         latex = str(assertion["expected_latex"])
         equations.append(
-            {
-                **EquationRecord(
-                    equation_id=equation_id,
-                    paper_id=paper_id,
-                    page_number=page_number,
-                    bbox=bbox,
-                    source_asset=asset_path,
-                    latex=latex,
-                    equation_number=assertion.get("equation_number"),
-                    verification_status="verified",
-                    provenance=provenance,
-                ).to_dict(),
-                "equation_kind": "display",
-                "source_bbox_normalized": list(raw_bbox),
-                "latex_syntax_status": latex_syntax_status(latex),
-                "render_validation_status": "not_run",
-                "assertion_id": assertion["assertion_id"],
-                "reviewer": assertion["reviewer"],
-                "override_basis": "independent visual source-page review",
-            }
+            validate_equation_record(
+                {
+                    **EquationRecord(
+                        equation_id=equation_id,
+                        paper_id=paper_id,
+                        page_number=page_number,
+                        bbox=bbox,
+                        source_asset=asset_path,
+                        latex=latex,
+                        equation_number=assertion.get("equation_number"),
+                        verification_status="verified",
+                        provenance=provenance,
+                    ).to_dict(),
+                    "equation_kind": "display",
+                    "source_bbox_normalized": list(raw_bbox),
+                    "latex_syntax_status": latex_syntax_status(latex),
+                    "assertion_id": assertion["assertion_id"],
+                    "reviewer": assertion["reviewer"],
+                    "override_basis": "independent visual source-page review",
+                },
+                output_dir=output_dir,
+            )
         )
 
     page_records = [pages[number] for number in sorted(pages)]
@@ -761,9 +813,24 @@ def convert_mineru_paper(
             else "auto"
         ),
         "formula_status": (
-            "review" if any(eq["verification_status"] != "verified" for eq in equations) else "pass"
+            "fail"
+            if any(
+                eq["verification_status"] == "verified"
+                and (
+                    eq["latex_compile_status"] != "passed"
+                    or eq["render_validation_status"] != "passed"
+                )
+                for eq in equations
+            )
+            else "review"
+            if any(eq["verification_status"] != "verified" for eq in equations)
+            else "pass"
         ),
-        "table_status": "review" if tables else "pass",
+        "table_status": (
+            "pass"
+            if not tables or all(table["verification_status"] == "verified" for table in tables)
+            else "review"
+        ),
         "claims_status": "missing",
         "retrieval_status": "missing",
         "overall_status": "missing",
@@ -773,13 +840,26 @@ def convert_mineru_paper(
             "display_equations": sum(eq["equation_kind"] == "display" for eq in equations),
             "inline_equations": sum(eq["equation_kind"] == "inline" for eq in equations),
             "verified_equations": sum(eq["verification_status"] == "verified" for eq in equations),
+            "latex_equations": sum(eq.get("latex") is not None for eq in equations),
+            "compiled_equations": sum(
+                eq.get("latex") is not None and eq["latex_compile_status"] == "passed"
+                for eq in equations
+            ),
+            "source_image_formula_fallbacks": sum(
+                eq["representation_status"] == "source_image_fallback" for eq in equations
+            ),
+            "rendered_verified_equations": sum(
+                eq["verification_status"] == "verified"
+                and eq["render_validation_status"] == "passed"
+                for eq in equations
+            ),
             "tables": len(tables),
             "verified_table_cells": sum(table["verified_cell_count"] for table in tables),
             "figures": len(figures),
         },
         "low_text_coverage_pages": low_text_pages,
         "exceptions": [
-            "LaTeX render validation has not run.",
+            "Unverified LaTeX compiles to MathML but is not source-verified.",
             "Automatic table cells are unverified except explicit reviewed overrides.",
             "Claims and retrieval artifacts have not been generated.",
         ]
