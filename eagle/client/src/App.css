@@ -44,8 +44,7 @@
   margin-bottom: 0.4rem;
 }
 
-.interp-registers,
-.interp-alerts {
+.interp-registers {
   margin: 0.3rem 0 0;
   padding-left: 1.2em;
 }
@@ -54,8 +53,52 @@
   color: #bbb;
 }
 
-.interp-alerts li {
+.interp-chips {
+  min-height: 1.5rem;
+  margin-top: 0.4rem;
+}
+
+.chip {
+  display: inline-block;
+  background: #2a2a2c;
+  color: #7a9;
+  border-radius: 3px;
+  padding: 1px 8px;
+  margin-right: 5px;
+  font-size: 0.7rem;
+}
+
+.chip-warn {
   color: #c9a227;
+}
+
+.interp-log {
+  max-height: 240px;
+  overflow-y: auto;
+  margin-top: 0.5rem;
+  border-top: 1px solid #2a2a2c;
+  padding-top: 0.4rem;
+  font-size: 0.75rem;
+}
+
+.log-line {
+  padding: 1px 0;
+  color: #bbb;
+}
+
+.log-alert {
+  color: #c9a227;
+}
+
+.log-empty {
+  color: #666;
+}
+
+.log-time {
+  color: #666;
+  font-family: "Courier New", monospace;
+  font-size: 0.7rem;
+  margin-right: 0.3em;
 }
 
 .cheat-table {

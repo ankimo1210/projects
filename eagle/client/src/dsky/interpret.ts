@@ -36,6 +36,37 @@ const PROGRAMS: Record<string, string> = {
 
 const strip = (s: string) => s.replace(/\s/g, "");
 
+/// Blink-invariant view: excludes everything the AGC/yaAGC modulates on a
+/// 1.28 s cycle (VERB/NOUN flash, OPR ERR, KEY REL) plus the fast-flickering
+/// COMP ACTY, so consumers can detect *real* state changes without
+/// re-rendering on every blink phase.
+export interface StableInterpretation {
+  program: string;
+  action: string;
+  registers: string[];
+  steadyAlerts: string[];
+}
+
+export function interpretStable(s: DskyView): StableInterpretation {
+  const full = interpret({
+    ...s,
+    verbNounFlash: false,
+    oprErr: false,
+    keyRel: false,
+    lamps: { ...s.lamps, comp_acty: false },
+  });
+  return {
+    program: full.program,
+    action: full.action,
+    registers: full.registers,
+    steadyAlerts: full.alerts,
+  };
+}
+
+export function stableKey(i: StableInterpretation): string {
+  return JSON.stringify(i);
+}
+
 export function interpret(s: DskyView): Interpretation {
   const v = strip(s.verb);
   const n = strip(s.noun);
