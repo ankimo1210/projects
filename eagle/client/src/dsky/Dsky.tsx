@@ -9,11 +9,16 @@ const KEYS: [label: string, name: string][] = [
   ["ENTR", "ENTR"], ["RSET", "RSET"],
 ];
 
+// Lamp-grid placement below is not authentic AGC panel layout (e.g. on the
+// real DSKY, COMP ACTY is the activity square next to the digits, not part
+// of the lamp grid) -- faithful placement is a Phase 3 refinement.
 const LAMPS: [label: string, key: string][] = [
+  ["COMP ACTY", "comp_acty"],
   ["UPLINK ACTY", "uplink_acty"], ["NO ATT", "no_att"], ["TEMP", "__temp"],
   ["GIMBAL LOCK", "gimbal_lock"], ["PROG", "prog"], ["TRACKER", "tracker"],
   ["ALT", "alt"], ["VEL", "vel"], ["STBY", "__standby"],
   ["KEY REL", "__key_rel"], ["OPR ERR", "__opr_err"], ["RESTART", "__restart"],
+  ["NO DAP", "no_dap"], ["PRIO DISP", "prio_disp"],
 ];
 
 export function Dsky() {
@@ -47,7 +52,11 @@ export function Dsky() {
         {KEYS.map(([label, name]) =>
           name === "PRO" ? (
             <button key={name} className="key"
-              onMouseDown={() => sendPro(true)} onMouseUp={() => sendPro(false)}>
+              onMouseDown={() => sendPro(true)} onMouseUp={() => sendPro(false)}
+              // Dragging off the button before mouseup would otherwise leave PRO
+              // stuck held; sending pressed:false here is idempotent/harmless
+              // even if it wasn't held (server just keeps the bit low).
+              onMouseLeave={() => sendPro(false)}>
               {label}
             </button>
           ) : (
