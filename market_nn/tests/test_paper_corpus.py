@@ -235,10 +235,10 @@ def test_semantic_review_manifest_is_explicit_about_uncertainty() -> None:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     reviews = FORMULA_MODULE.load_semantic_reviews(manifest_path)
 
-    assert len(reviews) == 129
-    assert sum(review["review_status"] == "high_confidence" for review in reviews.values()) == 126
+    assert len(reviews) == 193
+    assert sum(review["review_status"] == "high_confidence" for review in reviews.values()) == 191
     assert sum(review["review_status"] == "not_formula" for review in reviews.values()) == 2
-    assert sum(review["review_status"] == "ambiguous" for review in reviews.values()) == 1
+    assert sum(review["review_status"] == "ambiguous" for review in reviews.values()) == 0
     assert all(
         review["confidence"] >= manifest["policy"]["replacement_threshold"]
         for review in reviews.values()
@@ -253,10 +253,13 @@ def test_semantic_review_manifest_is_explicit_about_uncertainty() -> None:
     quality = json.loads((project_root / "corpus" / "papers" / "_index.json").read_text())[
         "formula_quality"
     ]
-    assert quality["semantic_reviewed_total"] == 129
-    assert quality["semantic_high_confidence"] == 126
+    assert quality["semantic_reviewed_total"] == 193
+    assert quality["semantic_high_confidence"] == 191
     assert quality["semantic_not_formula"] == 2
-    assert quality["semantic_ambiguous"] == 1
+    assert quality["semantic_ambiguous"] == 0
+    assert quality["decoded_unverified"] == 0
+    assert quality["text_layer_fallback"] == 0
+    assert quality["latex_blocks"] == 422
 
 
 def test_arxiv_match_manifest_contains_only_reviewed_source_matches() -> None:

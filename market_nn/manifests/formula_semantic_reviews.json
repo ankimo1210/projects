@@ -6,29 +6,35 @@
   },
   "includes": [
     "formula_semantic_reviews_phase1.json",
-    "formula_semantic_reviews_phase2.json"
+    "formula_semantic_reviews_phase2.json",
+    "formula_semantic_reviews_phase3.json"
   ],
   "reviews": {
     "ref_cont_de_larrard_markovian_lob_1104.4596:formula:0035": {
-      "review_status": "ambiguous",
-      "action": "flag_only",
-      "confidence": 0.45,
+      "review_status": "high_confidence",
+      "action": "correct_suspected_paper_typo",
+      "confidence": 0.98,
       "base_status": "decoded_unverified",
       "document_ref": "#/texts/204",
       "source_pdf": "sources/papers/ref_cont_de_larrard_markovian_lob_1104.4596.pdf",
       "source_page": 13,
+      "latex": "\\begin{aligned}\\mathbb E[X_1X_n\\mid q_0^a=x,q_0^b=y]&=\\delta^2(2p_{\\mathrm{cont}}-1)^{n-1},\\\\ \\operatorname{Cov}(X_1,X_n\\mid q_0^a=x,q_0^b=y)&=4\\delta^2p_1(x,y)(1-p_1(x,y))(2p_{\\mathrm{cont}}-1)^{n-1}.\\end{aligned}",
       "paper_as_printed_latex": "\\begin{aligned}\\operatorname{Cov}(X_1,X_n)&=p_1p_n+(1-p_n)(1-p_1)-p_1(1-p_n)-p_n(1-p_1),\\\\ \\operatorname{Cov}(X_1,X_n)&=1+2p_np_1-p_n-p_1,\\\\ \\operatorname{Cov}(X_1,X_n)&=(2p_{\\mathrm{cont}}-1)^{n-1}.\\end{aligned}",
       "evidence": [
         "The author TeX contains the three displayed lines consecutively at MarkovianOrderBook.tex:660-662.",
-        "Direct algebraic expansion of the first line gives 1+4p_1p_n-2p_1-2p_n, not the second printed line.",
-        "The surrounding Markov-chain argument does not state enough here to justify silently replacing the final covariance expression."
+        "For the symmetric two-state Markov transition, E[X_n given X_1] equals (2 p_cont - 1)^(n-1) X_1, so E[X_1 X_n] equals delta squared times that factor.",
+        "Using E[X_1]=delta(2p_1-1) and E[X_n]=delta(2p_1-1)(2p_cont-1)^(n-1) gives the stated conditional covariance.",
+        "The printed first line factorizes joint probabilities as marginals, its algebra does not equal the second line, and the final line omits the initial-state variance factor."
       ],
-      "assumptions": [],
+      "assumptions": [
+        "Price increments take values plus or minus delta and follow the symmetric two-state Markov transition stated immediately above the derivation.",
+        "The covariance is conditional on the initial queue state, consistently with the paper's definition of p_n(x,y)."
+      ],
       "alternatives": [
-        "Treat the first line as E[X_1X_n] rather than covariance.",
-        "Under an additional zero-mean/stationary initialization, rederive covariance from the transition matrix before replacing the printed result."
+        "Under stationary zero-mean initialization p_1=1/2, the covariance reduces to delta squared times (2p_cont-1)^(n-1).",
+        "If price changes are measured in tick units so delta=1 as implicitly done in the proposition, the delta-squared factor disappears."
       ],
-      "note": "Semantic review found an internal algebraic inconsistency in the paper's three-line covariance derivation. Confidence is insufficient to choose a corrected covariance without an additional initialization assumption, so the machine-decoded LaTeX is intentionally left unchanged."
+      "note": "Corrected the internally inconsistent covariance derivation by separating the lagged product moment from covariance and retaining the initial-state variance. The paper's final expression is recovered only under stationary zero-mean initialization and unit tick scaling."
     },
     "ref_cont_de_larrard_markovian_lob_1104.4596:formula:0045": {
       "review_status": "high_confidence",

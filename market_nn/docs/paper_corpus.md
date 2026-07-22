@@ -23,7 +23,7 @@
 ## 現在のコーパス
 
 2026-07-22 時点で22論文・449ページを変換し、1,326 chunks、424式を保存している。
-数式品質オーバーレイにより358式を LaTeX 化し、全424式に原本 crop を付けた。
+数式品質オーバーレイにより422式を LaTeX 化し、全424式に原本 crop を付けた。
 chunk上限は480 tokenを指定しているが、分割できない表を
 含む `ref_tran_bin_2003.00598` の2 chunksは525/536 tokenとなる。実測最大値は各論文の
 `metadata.json` に記録するため、512 tokenを厳密な入力上限とする利用側ではこの2件を
@@ -33,22 +33,22 @@ chunk上限は480 tokenを指定しているが、分割できない表を
 対応付けた224式と、原本 PDF を手動確認した49式である。42式は両方で確認しているため、
 重複を除く一次資料との検証済み総数は231式となる。さらに、式の定義、前後関係、
 行列形状、確率過程の停止時刻、変換公式、漸近オーダー、ヤコビアン、LSTM の状態更新を
-意味的にレビューし、126式を高信頼で確認・復元した。
+意味的にレビューし、191式を高信頼で確認・復元した。レイアウト由来の非数式2件を
+除く422式は、一次資料との照合または高信頼の意味レビューを完了している。
 
 | status | count | meaning |
 |---|---:|---|
 | `verified_source` | 182 | 正確な arXiv 版の著者 TeX と対応付けた LaTeX |
 | `verified_source_and_manual` | 42 | 著者 TeX と原本 PDF の両方で確認した手動転記 LaTeX |
 | `verified_manual` | 7 | 原本 PDF と照合したが、利用可能な著者 TeX がない手動転記 LaTeX |
-| `semantic_high_confidence` | 126 | 文脈・定義・形状制約から高信頼で確認または復元した LaTeX |
+| `semantic_high_confidence` | 191 | 文脈・定義・形状制約から高信頼で確認または復元した LaTeX |
 | `semantic_not_formula` | 2 | 式番号や空括弧を数式として検出したレイアウト由来の誤検出 |
-| `decoded_unverified` | 1 | Docling が復元したが、意味レビューで確定していない LaTeX |
-| `text_layer_fallback` | 64 | 信頼できる LaTeX がなく、原式 crop と PDF text layer を保存 |
+| `decoded_unverified` | 0 | Docling が復元したが、意味レビューで確定していない LaTeX |
+| `text_layer_fallback` | 0 | 信頼できる LaTeX がなく、原式 crop と PDF text layer を保存 |
 
-`semantic_high_confidence` は原文転記の検証とは区別する。意味レビュー129件のうち、
-既存式の確認43件、復元66件、論文の疑わしい誤植修正17件、非数式2件、曖昧なため未変更1件
-である。曖昧な式は元のstatusを維持し、`semantic_review` と `note` に根拠、仮定、
-代替候補、不確実性を残す。
+`semantic_high_confidence` は原文転記の検証とは区別する。意味レビュー193件のうち、
+既存式の確認43件、復元125件、論文の疑わしい誤植修正23件、非数式2件である。
+誤植修正には原文、根拠、仮定、代替解釈を残し、著者による訂正と区別する。
 
 ## 生成と検証
 
@@ -129,8 +129,9 @@ page provenance、chunk は生成できる。
 数式が理論的に正しいことまでは保証しない。たとえば FI-2010 の式 (14) は通常の RBF と
 異なる正の指数を原文どおり保持している。arXiv source package が PDF wrapper のみの
 2論文と arXiv TeX を利用できない3論文は、著者 TeX による検証対象外である。
-`decoded_unverified`、`text_layer_fallback` と複雑な結合セルは完全一致を保証しないため、
-重要な式・表は `formulas.jsonl` のページ・bbox・crop と原本 PDF で照合する。
+`decoded_unverified` と `text_layer_fallback` は現在0件だが、将来の変換で現れた場合や
+複雑な結合セルは完全一致を保証しない。重要な式・表は `formulas.jsonl` のページ・bbox・
+crop と原本 PDF で照合する。
 `semantic_high_confidence` は複数の意味的制約から最も妥当な式を復元した状態であり、
 原著者による訂正を意味しない。特に `correct_suspected_paper_typo` は監査上の提案なので、
 引用時には `paper_as_printed_latex` と併記する。
