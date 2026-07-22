@@ -23,7 +23,7 @@
 ## 現在のコーパス
 
 2026-07-22 時点で22論文・449ページを変換し、1,326 chunks、424式を保存している。
-数式品質オーバーレイにより312式を LaTeX 化し、全424式に原本 crop を付けた。
+数式品質オーバーレイにより358式を LaTeX 化し、全424式に原本 crop を付けた。
 chunk上限は480 tokenを指定しているが、分割できない表を
 含む `ref_tran_bin_2003.00598` の2 chunksは525/536 tokenとなる。実測最大値は各論文の
 `metadata.json` に記録するため、512 tokenを厳密な入力上限とする利用側ではこの2件を
@@ -32,21 +32,21 @@ chunk上限は480 tokenを指定しているが、分割できない表を
 数式の品質内訳は次のとおり。検証済みは、著者が公開した正確な版の arXiv TeX と
 対応付けた224式と、原本 PDF を手動確認した49式である。42式は両方で確認しているため、
 重複を除く一次資料との検証済み総数は231式となる。さらに、式の定義、前後関係、
-行列形状、確率過程の停止時刻、変換公式、漸近オーダーを意味的にレビューし、80式を
-高信頼で確認・復元した。
+行列形状、確率過程の停止時刻、変換公式、漸近オーダー、ヤコビアン、LSTM の状態更新を
+意味的にレビューし、126式を高信頼で確認・復元した。
 
 | status | count | meaning |
 |---|---:|---|
 | `verified_source` | 182 | 正確な arXiv 版の著者 TeX と対応付けた LaTeX |
 | `verified_source_and_manual` | 42 | 著者 TeX と原本 PDF の両方で確認した手動転記 LaTeX |
 | `verified_manual` | 7 | 原本 PDF と照合したが、利用可能な著者 TeX がない手動転記 LaTeX |
-| `semantic_high_confidence` | 80 | 文脈・定義・形状制約から高信頼で確認または復元した LaTeX |
+| `semantic_high_confidence` | 126 | 文脈・定義・形状制約から高信頼で確認または復元した LaTeX |
 | `semantic_not_formula` | 2 | 式番号や空括弧を数式として検出したレイアウト由来の誤検出 |
 | `decoded_unverified` | 1 | Docling が復元したが、意味レビューで確定していない LaTeX |
-| `text_layer_fallback` | 110 | 信頼できる LaTeX がなく、原式 crop と PDF text layer を保存 |
+| `text_layer_fallback` | 64 | 信頼できる LaTeX がなく、原式 crop と PDF text layer を保存 |
 
-`semantic_high_confidence` は原文転記の検証とは区別する。意味レビュー83件のうち、
-既存式の確認43件、復元29件、論文の疑わしい誤植修正8件、非数式2件、曖昧なため未変更1件
+`semantic_high_confidence` は原文転記の検証とは区別する。意味レビュー129件のうち、
+既存式の確認43件、復元66件、論文の疑わしい誤植修正17件、非数式2件、曖昧なため未変更1件
 である。曖昧な式は元のstatusを維持し、`semantic_review` と `note` に根拠、仮定、
 代替候補、不確実性を残す。
 
