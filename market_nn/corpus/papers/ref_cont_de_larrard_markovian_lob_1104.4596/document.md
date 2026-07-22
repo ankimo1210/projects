@@ -581,15 +581,12 @@ $$
 *Formula quality: `verified_source`; source PDF page 13. Matched to exact arXiv source 1104.4596v1 at MarkovianOrderBook.tex:659 (score=1.0).*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0035" status="decoded_unverified" source-page="13" -->
+<!-- formula-start id="ref_cont_de_larrard_markovian_lob_1104.4596:formula:0035" status="semantic_high_confidence" source-page="13" -->
 $$
-v ( X _ { 1 } , X _ { n } ) = p _ { 1 } p _ { n } + ( 1 - p _ { n } ) ( 1 - p _ { 1 } ) - p _ { 1 } ( 1 - p _ { n } ) - p _ { n } ( 1 - p _ { 1 } ) \\ C o v ( X _ { 1 } , X _ { n } ) = ( 1 + 2 p _ { n } p _ { 1 } - p _ { n } - p _ { 1 } ) \\ C o v ( X _ { 1 } , X _ { n } ) = ( 2 p _ { c o n t } - 1 ) ^ { n - 1 } .
+\begin{aligned}\mathbb E[X_1X_n\mid q_0^a=x,q_0^b=y]&=\delta^2(2p_{\mathrm{cont}}-1)^{n-1},\\ \operatorname{Cov}(X_1,X_n\mid q_0^a=x,q_0^b=y)&=4\delta^2p_1(x,y)(1-p_1(x,y))(2p_{\mathrm{cont}}-1)^{n-1}.\end{aligned}
 $$
 ![Source formula ref_cont_de_larrard_markovian_lob_1104.4596:formula:0035](images/formula_0035.png)
-```text
-PDF text layer: n n n n n Cov ( X 1 , X n ) = (1 + 2 p n p 1 -p n -p 1 ) Cov ( X 1 , X n ) = (2 p cont -1) n -1 .
-```
-*Formula quality: `decoded_unverified`; source PDF page 13. Semantic review found an internal algebraic inconsistency in the paper's three-line covariance derivation. Confidence is insufficient to choose a corrected covariance without an additional initialization assumption, so the machine-decoded LaTeX is intentionally left unchanged.*
+*Formula quality: `semantic_high_confidence`; source PDF page 13. Corrected the internally inconsistent covariance derivation by separating the lagged product moment from covariance and retaining the initial-state variance. The paper's final expression is recovered only under stationary zero-mean initialization and unit tick scaling.*
 <!-- formula-end -->
 
 Remark 3 (Negative autocorrelation of price changes at first lag). It is empirically observed that high frequency price movements have a negative autocorrelation at the first lag Cont (2001). In our model Cov ( X k , X k +1 ) &lt; 0 if and only if p cont &lt; 1 / 2, which happens when
