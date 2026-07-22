@@ -10,13 +10,18 @@ from tests.fakes import FakeResponse, FakeSession
 
 
 def make_auth(tmp_path, session=None, clock=lambda: 1000.0):
-    return GoogleHealthAuth("CID", "SECRET", tmp_path, session=session or FakeSession(),
-                             clock=clock)
+    return GoogleHealthAuth(
+        "CID", "SECRET", tmp_path, session=session or FakeSession(), clock=clock
+    )
 
 
 def token_payload(n=1, **extra):
-    payload = {"access_token": f"AT{n}", "refresh_token": f"RT{n}", "expires_in": 3600,
-               "scope": SCOPES}
+    payload = {
+        "access_token": f"AT{n}",
+        "refresh_token": f"RT{n}",
+        "expires_in": 3600,
+        "scope": SCOPES,
+    }
     payload.update(extra)
     return payload
 
@@ -33,6 +38,7 @@ def complete_with_new_pending(auth, tmp_path, code="C"):
 
 
 # -- authorization URL -------------------------------------------------------
+
 
 def test_begin_auth_builds_google_pkce_url_with_required_params(tmp_path):
     auth = make_auth(tmp_path)
@@ -67,6 +73,7 @@ def test_begin_auth_second_call_reuses_unexpired_pending(tmp_path):
 
 
 # -- pending file storage -----------------------------------------------------
+
 
 def test_begin_auth_persists_pending_state_verifier_created_at_mode_0600(tmp_path):
     now = [500.0]
@@ -108,6 +115,7 @@ def test_begin_auth_discards_corrupt_pending_file(tmp_path):
 
 # -- token exchange ------------------------------------------------------------
 
+
 def test_complete_auth_sends_credentials_in_form_body_not_basic_auth(tmp_path):
     session = FakeSession([FakeResponse(200, token_payload())])
     auth = make_auth(tmp_path, session=session)
@@ -139,6 +147,7 @@ def test_complete_auth_stores_tokens_and_removes_pending(tmp_path):
 
 # -- callback error handling ---------------------------------------------------
 
+
 def test_complete_auth_raises_on_state_mismatch_and_clears_pending(tmp_path):
     auth = make_auth(tmp_path, session=FakeSession())
     auth.begin_auth()
@@ -157,8 +166,9 @@ def test_complete_auth_raises_on_oauth_error_with_description(tmp_path):
     auth = make_auth(tmp_path, session=FakeSession())
     auth.begin_auth()
     with pytest.raises(AuthError, match="user denied access"):
-        auth.complete_auth(None, None, error="access_denied",
-                            error_description="user denied access")
+        auth.complete_auth(
+            None, None, error="access_denied", error_description="user denied access"
+        )
     assert not (tmp_path / "oauth_pending.json").exists()
 
 
@@ -171,8 +181,9 @@ def test_complete_auth_callback_cannot_be_replayed(tmp_path):
 
 
 def test_complete_auth_raises_on_invalid_grant(tmp_path):
-    session = FakeSession([FakeResponse(400, {"error": "invalid_grant",
-                                               "error_description": "Malformed auth code."})])
+    session = FakeSession(
+        [FakeResponse(400, {"error": "invalid_grant", "error_description": "Malformed auth code."})]
+    )
     auth = make_auth(tmp_path, session=session)
     auth.begin_auth()
     pend = pending_state(tmp_path)
@@ -193,10 +204,14 @@ def test_complete_auth_raises_on_network_error(tmp_path):
 
 # -- refresh --------------------------------------------------------------------
 
+
 def test_refresh_preserves_refresh_token_when_response_omits_it(tmp_path):
-    session = FakeSession([FakeResponse(200, token_payload(1)),
-                            FakeResponse(200, {"access_token": "AT2", "expires_in": 3600,
-                                                "scope": SCOPES})])
+    session = FakeSession(
+        [
+            FakeResponse(200, token_payload(1)),
+            FakeResponse(200, {"access_token": "AT2", "expires_in": 3600, "scope": SCOPES}),
+        ]
+    )
     auth = make_auth(tmp_path, session=session)
     complete_with_new_pending(auth, tmp_path)
     auth.refresh()
@@ -212,9 +227,15 @@ def test_refresh_preserves_refresh_token_when_response_omits_it(tmp_path):
 def test_refresh_preserves_refresh_token_when_response_has_explicit_null(tmp_path):
     # Some token endpoints may send the key with a JSON null instead of
     # omitting it; null must behave like "omitted", not like "clear it".
-    session = FakeSession([FakeResponse(200, token_payload(1)),
-                            FakeResponse(200, {"access_token": "AT2", "refresh_token": None,
-                                                "expires_in": 3600, "scope": SCOPES})])
+    session = FakeSession(
+        [
+            FakeResponse(200, token_payload(1)),
+            FakeResponse(
+                200,
+                {"access_token": "AT2", "refresh_token": None, "expires_in": 3600, "scope": SCOPES},
+            ),
+        ]
+    )
     auth = make_auth(tmp_path, session=session)
     complete_with_new_pending(auth, tmp_path)
     auth.refresh()
@@ -224,8 +245,9 @@ def test_refresh_preserves_refresh_token_when_response_has_explicit_null(tmp_pat
 
 
 def test_refresh_adopts_new_refresh_token_when_present(tmp_path):
-    session = FakeSession([FakeResponse(200, token_payload(1)),
-                            FakeResponse(200, token_payload(2))])
+    session = FakeSession(
+        [FakeResponse(200, token_payload(1)), FakeResponse(200, token_payload(2))]
+    )
     auth = make_auth(tmp_path, session=session)
     complete_with_new_pending(auth, tmp_path)
     auth.refresh()
@@ -244,8 +266,12 @@ def test_refresh_token_expires_in_sets_refresh_expires_at(tmp_path):
 
 def test_refresh_preserves_existing_refresh_expires_at_when_response_omits_it(tmp_path):
     now = [1000.0]
-    session = FakeSession([FakeResponse(200, token_payload(1, refresh_token_expires_in=5000.0)),
-                            FakeResponse(200, token_payload(2))])  # no refresh_token_expires_in
+    session = FakeSession(
+        [
+            FakeResponse(200, token_payload(1, refresh_token_expires_in=5000.0)),
+            FakeResponse(200, token_payload(2)),
+        ]
+    )  # no refresh_token_expires_in
     auth = make_auth(tmp_path, session=session, clock=lambda: now[0])
     complete_with_new_pending(auth, tmp_path)
     first_expiry = auth.load_tokens()["refresh_expires_at"]
@@ -262,9 +288,18 @@ def test_refresh_expires_in_days_is_none_when_never_set(tmp_path):
 
 
 def test_refresh_raises_on_invalid_grant(tmp_path):
-    session = FakeSession([FakeResponse(200, token_payload()),
-                            FakeResponse(400, {"error": "invalid_grant",
-                                                "error_description": "Token has been expired or revoked."})])
+    session = FakeSession(
+        [
+            FakeResponse(200, token_payload()),
+            FakeResponse(
+                400,
+                {
+                    "error": "invalid_grant",
+                    "error_description": "Token has been expired or revoked.",
+                },
+            ),
+        ]
+    )
     auth = make_auth(tmp_path, session=session)
     complete_with_new_pending(auth, tmp_path)
     with pytest.raises(AuthError, match="expired or revoked"):
@@ -287,10 +322,12 @@ def test_refresh_without_tokens_raises(tmp_path):
 
 # -- access_token ------------------------------------------------------------
 
+
 def test_access_token_refreshes_within_60s_of_expiry(tmp_path):
     now = [1000.0]
-    session = FakeSession([FakeResponse(200, token_payload(1)),
-                            FakeResponse(200, token_payload(2))])
+    session = FakeSession(
+        [FakeResponse(200, token_payload(1)), FakeResponse(200, token_payload(2))]
+    )
     auth = make_auth(tmp_path, session=session, clock=lambda: now[0])
     complete_with_new_pending(auth, tmp_path)
     assert auth.access_token() == "AT1"
@@ -316,6 +353,7 @@ def test_load_tokens_returns_none_on_corrupt_json(tmp_path):
 
 # -- forget_tokens -------------------------------------------------------------
 
+
 def test_forget_tokens_removes_tokens_and_pending_idempotently(tmp_path):
     session = FakeSession([FakeResponse(200, token_payload())])
     auth = make_auth(tmp_path, session=session)
@@ -330,6 +368,7 @@ def test_forget_tokens_removes_tokens_and_pending_idempotently(tmp_path):
 
 
 # -- from_env -------------------------------------------------------------------
+
 
 def test_from_env_reads_google_credentials(tmp_path, monkeypatch):
     monkeypatch.setenv("GOOGLE_CLIENT_ID", "ENVCID")
