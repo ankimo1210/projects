@@ -11,6 +11,7 @@ agc: agc-tools
 
 test:
 	cd runtime && cargo test
+	cd client && npm test
 
 test-integration: agc
 	cd runtime && cargo test -- --ignored --test-threads=1

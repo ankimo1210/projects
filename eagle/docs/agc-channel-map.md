@@ -155,6 +155,29 @@ Confirmed against two independent vendor sites that agree:
 **Result: no correction needed** — matches the plan's Reference block
 (`comp_acty = b(2)`, `uplink_acty = b(3)`).
 
+### Channel 013 (not decoded — only STBY-related bits, already folded into ch 0163)
+
+Channel 013 is an AGC-internal discrete-input channel; `DskyState::apply`
+(`runtime/crates/eagle-agc-protocol/src/dsky.rs`) only matches
+`0o10`/`0o11`/`0o163`, so ch013 traffic falls through its `_ => {}` arm
+un-decoded. Confirmed against `vendor/virtualagc/yaAGC/agc_engine.c`,
+function `UpdateDSKY` and its callers: the only bits of ch013 consumed
+anywhere in the engine are STBY-related, and both are already re-emitted
+on ch0163's `DSKY_STBY`/`DSKY_RESTART` bits (decoded below), so no direct
+ch013 decode is needed:
+
+- Bit `01000` (octal): "the light test is active" — set during the V35E
+  lamp test; immediately re-emitted as `DSKY_RESTART | DSKY_STBY` on
+  ch0163 (agc_engine.c:1695-1697, `if (State->InputChannel[013] & 01000)
+  ... State->DskyChannel163 |= DSKY_RESTART | DSKY_STBY`).
+- Bit `02000` (octal), combined with `State->SbyPressed`: the PRO-held-down
+  standby-enable timing check, 180° out of phase with the Night Watchman
+  (agc_engine.c:2030-2032, `if (State->SbyPressed && ((State->InputChannel[013]
+  & 002000) || State->Standby))`).
+
+**Result:** no ch013 decode added — its only externally-relevant state
+(STBY) is already covered via ch0163 below.
+
 ### Channel 0163 (yaAGC's synthesized DSKY flash/lamp channel)
 
 Confirmed against `vendor/virtualagc/yaAGC/agc_engine.h:283-290` (`DSKY_*`
