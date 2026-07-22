@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { interpret } from "./interpret";
+import { interpret, interpretStable, stableKey } from "./interpret";
 import { initialDsky } from "./reducer";
 
 const base = { ...initialDsky, connected: true };
@@ -41,5 +41,34 @@ describe("interpret", () => {
   it("shows partial entry while typing", () => {
     const i = interpret({ ...base, verb: "1 " });
     expect(i.action).toContain("入力中");
+  });
+});
+
+describe("interpretStable / stableKey", () => {
+  it("is invariant under blink-cycle toggles", () => {
+    const quiet = { ...base, verb: "16", noun: "36" };
+    const blinking = {
+      ...quiet,
+      verbNounFlash: true,
+      oprErr: true,
+      keyRel: true,
+      lamps: { comp_acty: true },
+    };
+    expect(stableKey(interpretStable(quiet))).toBe(
+      stableKey(interpretStable(blinking)),
+    );
+  });
+
+  it("changes when the action actually changes", () => {
+    const clock = stableKey(interpretStable({ ...base, verb: "16", noun: "36" }));
+    const lamp = stableKey(interpretStable({ ...base, verb: "35" }));
+    expect(clock).not.toBe(lamp);
+  });
+
+  it("keeps steady alerts (restart) but not oscillating ones", () => {
+    const i = interpretStable({ ...base, restart: true, oprErr: true });
+    const joined = i.steadyAlerts.join("/");
+    expect(joined).toContain("RESTART");
+    expect(joined).not.toContain("OPR ERR");
   });
 });
