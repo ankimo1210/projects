@@ -13,6 +13,8 @@ from .preflight import profile_pdf_pages, profile_summary, sha256_file
 DEFAULT_OUTPUT = REFERENCES_ROOT / "corpus_preflight.json"
 LANGUAGE_OVERRIDES = {
     "1900-bachelier-theorie-de-la-speculation": "fra",
+    "2021-mof-jgbi-indexation-notice": "jpn",
+    "2024-mof-jgbi-bei-guide": "jpn",
 }
 
 

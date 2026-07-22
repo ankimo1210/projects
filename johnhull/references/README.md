@@ -13,12 +13,13 @@
 | 区分 | 件数 | 説明 |
 |---|---:|---|
 | 明示引用された論文 | 59 | 実装・教材・設計 spec の引用を重複排除 |
-| 原文 PDF 取得済み | 49 | 著者・機関リポジトリ、出版社の公開コピー、arXiv/SSRN 相当を優先 |
-| 原文リンクのみ | 9 | 公開 PDF を安全に取得できない、または購読・ログインが必要 |
+| 原文 PDF 取得済み | 50 | 著者・機関リポジトリ、出版社の公開コピー、arXiv/SSRN 相当を優先 |
+| 原文リンクのみ | 8 | 公開 PDF を安全に取得できない、または購読・ログインが必要 |
 | 書誌未解決 | 1 | `Andersen et al. (2024)` は記述だけでは一意に特定できない |
 | 関連論文（引用外） | 1 | Bartlett (2006) の後続理論論文を補助資料として保存 |
+| 公的コンベンション資料 | 2 | 財務省の JGBi 告示と BEI／元本保証解説 |
 
-PDF は `papers/` にあります。収録されている50件は、本リポジトリでの公開許可を
+PDF は `papers/` にあります。収録されている53件は、本リポジトリでの公開許可を
 確認済みの資料として Git で追跡しています。PDFを追加・差し替えする場合は、
 公開許可と出典を確認し、このインベントリも同時に更新してください。
 
@@ -54,7 +55,14 @@ PDF は `papers/` にあります。収録されている50件は、本リポジ
 |---:|---|---|---|
 | 2019 | Andrei Lyashenko; Fabio Mercurio | [Looking Forward to Backward-Looking Rates: A Modeling Framework for Term Rates Replacing LIBOR](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3330240) | [PDF](papers/2019-lyashenko-mercurio-backward-looking-rates.pdf) |
 | 1990 | John Hull; Alan White | [Pricing Interest-Rate-Derivative Securities](https://doi.org/10.1093/rfs/3.4.573) | [PDF](papers/1990-hull-white-interest-rate-derivative-securities.pdf) |
-| 2003 | Robert Jarrow; Yildiray Yildirim | [Pricing Treasury Inflation Protected Securities and Related Derivatives Using an HJM Model](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=585828) | **link**; Cornell 公開コピーは現在 DNS 解決不可 |
+| 2003 | Robert Jarrow; Yildiray Yildirim | [Pricing Treasury Inflation Protected Securities and Related Derivatives Using an HJM Model](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=585828) | [PDF](papers/2003-jarrow-yildirim-inflation-hjm.pdf) |
+
+### 公的コンベンション資料（論文件数には含めない）
+
+| 年 | 著者・発行者 | 資料 | 状態 |
+|---:|---|---|---|
+| 2021 | 財務省 | [物価連動国債の想定元金額の算出に関し必要な事項を定める件（財務省告示第77号）](https://www.mof.go.jp/jgbs/reference/laws/KO-20040218-0077-14.pdf) | [PDF](papers/2021-mof-jgbi-indexation-notice.pdf) |
+| 2024 | 服部孝洋（財務省「ファイナンス」） | [ブレーク・イーブン・インフレ率（BEI）入門](https://www.mof.go.jp/public_relations/finance/202402/202402k.pdf) | [PDF](papers/2024-mof-jgbi-bei-guide.pdf) |
 
 ### VaR、ES、信用リスク
 

@@ -14,21 +14,27 @@ P0_PAPER_IDS = (
     "1993-heston-closed-form-stochastic-volatility",
     "2000-mcneil-frey-tail-risk-evt",
     "2002-hagan-et-al-managing-smile-risk",
+    "2003-jarrow-yildirim-inflation-hjm",
     "2019-lyashenko-mercurio-backward-looking-rates",
+    "2021-mof-jgbi-indexation-notice",
+    "2024-mof-jgbi-bei-guide",
 )
 
 REQUIRED_SEMANTIC_SOURCES = (
     {
         "source_id": "2003-jarrow-yildirim-inflation-hjm",
         "title": "Pricing Treasury Inflation Protected Securities and Related Derivatives Using an HJM Model",
-        "status": "missing_source",
-        "reason": "catalogue contains a source link but no permitted local PDF",
+        "source_pdf": "references/papers/2003-jarrow-yildirim-inflation-hjm.pdf",
     },
     {
-        "source_id": "japan-mof-jgbi-conventions",
-        "title": "Official Japanese inflation-linked government bond conventions",
-        "status": "missing_source",
-        "reason": "implementation cites conventions but the paper corpus has no catalogued official source PDF",
+        "source_id": "2021-mof-jgbi-indexation-notice",
+        "title": "MOF Notice No. 77: JGBi reference index and indexation coefficient",
+        "source_pdf": "references/papers/2021-mof-jgbi-indexation-notice.pdf",
+    },
+    {
+        "source_id": "2024-mof-jgbi-bei-guide",
+        "title": "MOF guide to JGBi break-even inflation and the deflation floor",
+        "source_pdf": "references/papers/2024-mof-jgbi-bei-guide.pdf",
     },
 )
 

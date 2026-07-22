@@ -29,6 +29,23 @@ def _metadata_source_hash(processed_root: Path, paper_id: str) -> str | None:
     return str(read_json(path).get("source_sha256") or "") or None
 
 
+def required_source_statuses(references_root: Path) -> list[dict[str, Any]]:
+    """Resolve required semantic sources against the local, hashed PDF inventory."""
+
+    resolved: list[dict[str, Any]] = []
+    for required in REQUIRED_SEMANTIC_SOURCES:
+        item = dict(required)
+        relative_path = Path(str(item["source_pdf"]))
+        if relative_path.parts[:1] == ("references",):
+            path = references_root.parent / relative_path
+        else:
+            path = references_root / relative_path
+        item["status"] = "present" if path.is_file() else "missing_source"
+        item["source_sha256"] = sha256_file(path) if path.is_file() else None
+        resolved.append(item)
+    return resolved
+
+
 def build_baseline(references_root: Path = REFERENCES_ROOT) -> dict[str, Any]:
     """Return a deterministic source/corpus baseline manifest."""
 
@@ -88,7 +105,7 @@ def build_baseline(references_root: Path = REFERENCES_ROOT) -> dict[str, Any]:
         "pdf_structure_counts": dict(sorted(structure_counts.items())),
         "corpus_status_counts": dict(sorted(corpus_status_counts.items())),
         "p0_paper_ids": list(P0_PAPER_IDS),
-        "required_semantic_sources": list(REQUIRED_SEMANTIC_SOURCES),
+        "required_semantic_sources": required_source_statuses(references_root),
         "sources": sources,
     }
 
