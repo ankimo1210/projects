@@ -4,6 +4,7 @@ use eagle_runtime::agc_session::{AgcConfig, AgcSession};
 use eagle_runtime::server::to_msg;
 use eagle_runtime::trace::milestones;
 use eagle_schema::{DskyStateMsg, ServerMsg};
+use std::collections::HashSet;
 use std::path::PathBuf;
 
 fn root() -> PathBuf { PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../..") }
@@ -90,9 +91,58 @@ async fn run_v35e() -> GoldenV35e {
     s.shutdown();
 
     let mut state = DskyState::default();
-    for p in &packets { state.apply(p); }
+    // Track the (verb_noun_flash, key_rel, opr_err) triple after every
+    // applied packet. yaAGC drives these 3 bits via ch0163 flash
+    // modulation (vendor agc_engine.c:1727-1744, DSKY_FLASH_PERIOD: 1.28s
+    // cycle, 75% duty): during the V35 lamp test they oscillate
+    // phase-coherently between (false,true,true) [75% of cycle] and
+    // (true,false,false) [25%]. Recording starts only once the first ch
+    // 0o163 packet has been applied: before that, DskyState::default()'s
+    // (false,false,false) is just the pre-flash-test default, not an
+    // observed flash phase, and would spuriously fail the phase-coherence
+    // assert below.
+    let mut seen_triples: HashSet<(bool, bool, bool)> = HashSet::new();
+    let mut seen_0163 = false;
+    for p in &packets {
+        state.apply(p);
+        if p.channel == 0o163 { seen_0163 = true; }
+        if seen_0163 {
+            seen_triples.insert((state.verb_noun_flash, state.key_rel, state.opr_err));
+        }
+    }
+
+    const FLASH_OFF: (bool, bool, bool) = (false, true, true);
+    const FLASH_ON: (bool, bool, bool) = (true, false, false);
+    for t in &seen_triples {
+        assert!(*t == FLASH_OFF || *t == FLASH_ON,
+            "observed (verb_noun_flash, key_rel, opr_err) triple {t:?} is not one of \
+             the two phase-coherent ch0163 flash states {FLASH_OFF:?} / {FLASH_ON:?} \
+             (agc_engine.c:1727-1744)");
+    }
+    // The 3s capture window is >= 2 full 1.28s DSKY_FLASH_PERIOD cycles, so
+    // both flash phases are deterministically observed regardless of which
+    // phase the capture happened to start in.
+    assert!(seen_triples.contains(&FLASH_OFF) && seen_triples.contains(&FLASH_ON),
+        "expected both flash phases {FLASH_OFF:?} and {FLASH_ON:?} within the 3s \
+         capture (>= 2 DSKY_FLASH_PERIOD cycles); saw {seen_triples:?}");
+
     let ServerMsg::DskyState(final_state) = to_msg(&state);
     GoldenV35e { milestones: milestones(&packets), final_state }
+}
+
+/// Exclude the 3 ch0163 flash-modulated bits (verb_noun_flash/key_rel/
+/// opr_err) from the final-state equality check: their value at the
+/// capture deadline depends on blink phase (agc_engine.c:1727-1744), which
+/// `run_v35e` pins instead via the phase-coherence and both-phases-observed
+/// assertions above. comp_acty (ch011) is also environment-modulated in
+/// principle but has been stable (false) across ~15 recorded runs, so it
+/// stays in strict equality below — first suspect if this golden ever
+/// flakes again.
+fn normalize(mut m: DskyStateMsg) -> DskyStateMsg {
+    m.verb_noun_flash = false;
+    m.key_rel = false;
+    m.opr_err = false;
+    m
 }
 
 #[tokio::test]
@@ -116,6 +166,7 @@ async fn golden_v35e_milestones_and_final_state() {
             .expect("golden file missing — run with GOLDEN_RECORD=1 first"),
     ).unwrap();
     assert_eq!(got.milestones, want.milestones, "V35E display sequence diverged");
-    assert_eq!(got.final_state, want.final_state,
-        "final DSKY state (displays/lamps) diverged from golden");
+    assert_eq!(normalize(got.final_state), normalize(want.final_state),
+        "final DSKY state (displays/lamps) diverged from golden \
+         (verb_noun_flash/key_rel/opr_err excluded — pinned separately above)");
 }
