@@ -15,7 +15,13 @@ fetch() { # name url
   if [[ -f $MANIFEST ]] && command -v jq >/dev/null; then
     want=$(jq -r ".\"$name\".sha // empty" "$MANIFEST")
     if [[ -n $want && $want != "$sha" ]]; then
-      echo "ERROR: $name at $sha, manifest pins $want" >&2; exit 1
+      # Upstream HEAD moved past our pin; try to restore it. GitHub allows
+      # fetching a full SHA directly even when it isn't a branch tip.
+      git -C "$dir" fetch --depth 1 origin "$want" && git -C "$dir" checkout "$want" || true
+      sha=$(git -C "$dir" rev-parse HEAD)
+      if [[ $want != "$sha" ]]; then
+        echo "ERROR: $name at $sha, manifest pins $want" >&2; exit 1
+      fi
     fi
   fi
   echo "$name $sha"

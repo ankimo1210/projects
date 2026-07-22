@@ -44,17 +44,33 @@ async fn main() -> anyhow::Result<()> {
     let mut dsky = DskyState::default();
     loop {
         tokio::select! {
-            Some(pkt) = session.events().recv() => {
-                trace.log("out", &pkt);
-                if dsky.apply(&pkt) {
-                    let json = serde_json::to_string(&to_msg(&dsky))?;
-                    *latest.lock().unwrap() = json.clone();
-                    let _ = state_tx.send(json);
+            pkt = session.events().recv() => {
+                match pkt {
+                    Some(pkt) => {
+                        trace.log("out", &pkt);
+                        if dsky.apply(&pkt) {
+                            let json = serde_json::to_string(&to_msg(&dsky))?;
+                            *latest.lock().unwrap() = json.clone();
+                            let _ = state_tx.send(json);
+                        }
+                    }
+                    None => {
+                        eprintln!("eagle-runtime: AGC event stream closed (yaAGC died?), shutting down");
+                        break;
+                    }
                 }
             }
-            Some(pkt) = agc_rx.recv() => {
-                trace.log("in", &pkt);
-                session.send(pkt)?;
+            pkt = agc_rx.recv() => {
+                match pkt {
+                    Some(pkt) => {
+                        trace.log("in", &pkt);
+                        session.send(pkt)?;
+                    }
+                    None => {
+                        eprintln!("eagle-runtime: AGC command channel closed, shutting down");
+                        break;
+                    }
+                }
             }
             _ = sigterm.recv() => {
                 eprintln!("eagle-runtime: SIGTERM received, shutting down");
