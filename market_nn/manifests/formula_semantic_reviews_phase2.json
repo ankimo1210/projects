@@ -1,0 +1,422 @@
+{
+  "schema_version": 1,
+  "papers": {
+    "ref_tran_tabl_1712.00975": {
+      "defaults": {
+        "review_status": "high_confidence",
+        "confidence": 0.99,
+        "base_status": "text_layer_fallback",
+        "source_pdf": "sources/papers/ref_tran_tabl_1712.00975.pdf",
+        "evidence": [
+          "Reconstructed from the exact arXiv v1 author TeX and checked against the displayed source PDF.",
+          "Matrix dimensions, temporal indices, and dependencies were checked against the TABL forward or backward definition."
+        ],
+        "assumptions": [],
+        "alternatives": []
+      },
+      "reviews": {
+        "formula:0001": {
+          "document_ref": "#/texts/29",
+          "source_page": 3,
+          "action": "reconstruct",
+          "latex": "e_{ij}=\\mathbf v_{\\alpha}^{\\mathrm T}\\tanh(\\mathbf W_{\\alpha}\\mathbf h_{j-1}^{d}+\\mathbf U_{\\alpha}\\mathbf h_i^{e})",
+          "note": "Reconstructed the additive-attention energy from encoder state i and the preceding decoder state."
+        },
+        "formula:0002": {
+          "document_ref": "#/texts/30",
+          "source_page": 3,
+          "action": "reconstruct",
+          "latex": "\\alpha_{ij}=\\frac{\\exp(e_{ij})}{\\sum_{k=1}^{T}\\exp(e_{kj})}",
+          "note": "Reconstructed the attention softmax over the T encoder time indices for decoder step j."
+        },
+        "formula:0007": {
+          "document_ref": "#/texts/51",
+          "source_page": 4,
+          "action": "reconstruct",
+          "latex": "\\bar{\\mathbf X}=\\mathbf W_1\\mathbf X",
+          "note": "Reconstructed TABL step 1, mapping D input features to D-prime latent features while preserving T time positions."
+        },
+        "formula:0008": {
+          "document_ref": "#/texts/52",
+          "source_page": 4,
+          "action": "reconstruct",
+          "latex": "\\mathbf E=\\bar{\\mathbf X}\\mathbf W",
+          "note": "Reconstructed TABL step 2; the T-by-T temporal matrix produces an energy matrix with the same D-prime-by-T shape."
+        },
+        "formula:0009": {
+          "document_ref": "#/texts/53",
+          "source_page": 4,
+          "action": "reconstruct",
+          "latex": "\\alpha_{ij}=\\frac{\\exp(e_{ij})}{\\sum_{k=1}^{T}\\exp(e_{ik})}",
+          "note": "Reconstructed the row-wise temporal softmax, normalizing each latent feature across T positions."
+        },
+        "formula:0010": {
+          "document_ref": "#/texts/54",
+          "source_page": 4,
+          "action": "reconstruct",
+          "latex": "\\widetilde{\\mathbf X}=\\lambda(\\bar{\\mathbf X}\\odot\\mathbf A)+(1-\\lambda)\\bar{\\mathbf X}",
+          "note": "Reconstructed the convex interpolation between attention-weighted and unchanged latent features."
+        },
+        "formula:0011": {
+          "document_ref": "#/texts/55",
+          "source_page": 4,
+          "action": "reconstruct",
+          "latex": "\\mathbf Y=\\phi(\\widetilde{\\mathbf X}\\mathbf W_2+\\mathbf B)",
+          "note": "Reconstructed the final temporal projection, bias, and element-wise activation of TABL."
+        },
+        "formula:0015": {
+          "document_ref": "#/texts/199",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\frac{\\partial\\bar{\\mathbf X}}{\\partial\\mathbf W_1}=\\frac{\\partial(\\mathbf I_{D'}\\mathbf W_1\\mathbf X)}{\\partial\\mathbf W_1}=\\mathbf X^{\\mathrm T}\\otimes\\mathbf I_{D'}",
+          "note": "Reconstructed by vectorizing W1 X; the Jacobian maps vec(W1) to vec(X-bar)."
+        },
+        "formula:0016": {
+          "document_ref": "#/texts/200",
+          "source_page": 10,
+          "action": "correct_suspected_paper_typo",
+          "confidence": 0.995,
+          "latex": "\\frac{\\partial\\bar{\\mathbf X}}{\\partial\\mathbf X}=\\frac{\\partial(\\mathbf W_1\\mathbf X\\mathbf I_T)}{\\partial\\mathbf X}=\\mathbf I_T\\otimes\\mathbf W_1",
+          "paper_as_printed_latex": "\\frac{\\partial\\bar{\\mathbf X}}{\\partial\\mathbf X}=\\frac{\\partial(\\mathbf W_1\\mathbf X\\mathbf I_T)}{\\partial\\mathbf W_1}=\\mathbf I_T\\otimes\\mathbf W_1",
+          "evidence": [
+            "The left side is explicitly the Jacobian with respect to X.",
+            "Applying d vec(W1 X)/d vec(X) gives I_T tensor W1.",
+            "The printed middle denominator W1 conflicts with both the left side and the resulting Jacobian."
+          ],
+          "note": "Corrected the differentiation variable in equation (17) from W1 to X."
+        },
+        "formula:0017": {
+          "document_ref": "#/texts/202",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\frac{\\partial\\mathbf E}{\\partial\\bar{\\mathbf X}}=\\frac{\\partial(\\mathbf I_{D'}\\bar{\\mathbf X}\\mathbf W)}{\\partial\\bar{\\mathbf X}}=\\mathbf W^{\\mathrm T}\\otimes\\mathbf I_{D'}",
+          "note": "Reconstructed by vectorizing E=X-bar W and differentiating with respect to X-bar."
+        },
+        "formula:0018": {
+          "document_ref": "#/texts/203",
+          "source_page": 10,
+          "action": "correct_suspected_paper_typo",
+          "confidence": 0.995,
+          "latex": "\\frac{\\partial\\mathbf E}{\\partial\\mathbf W}=\\frac{\\partial(\\bar{\\mathbf X}\\mathbf W\\mathbf I_T)}{\\partial\\mathbf W}=\\mathbf I_T\\otimes\\bar{\\mathbf X}",
+          "paper_as_printed_latex": "\\frac{\\partial\\mathbf E}{\\partial\\mathbf W}=\\frac{\\partial(\\bar{\\mathbf X}\\mathbf W\\mathbf I_T)}{\\partial\\bar{\\mathbf X}}=\\mathbf I_T\\otimes\\bar{\\mathbf X}",
+          "evidence": [
+            "The left side requests the Jacobian with respect to W.",
+            "Applying d vec(X-bar W)/d vec(W) gives I_T tensor X-bar.",
+            "The printed middle denominator X-bar conflicts with the left side and final result."
+          ],
+          "note": "Corrected the differentiation variable in equation (19) from X-bar to W."
+        },
+        "formula:0019": {
+          "document_ref": "#/texts/205",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\frac{\\partial\\alpha_{ij}}{\\partial e_{ij}}=\\alpha_{ij}-\\alpha_{ij}^2=\\alpha_{ij}(1-\\alpha_{ij}),\\qquad\\forall i,j",
+          "note": "Reconstructed the diagonal derivative of the row-wise softmax."
+        },
+        "formula:0020": {
+          "document_ref": "#/texts/207",
+          "source_page": 10,
+          "action": "correct_suspected_paper_typo",
+          "confidence": 0.995,
+          "latex": "\\frac{\\partial\\alpha_{ij}}{\\partial e_{ip}}=-\\alpha_{ij}\\alpha_{ip},\\qquad p\\ne j",
+          "paper_as_printed_latex": "\\frac{\\partial\\alpha_{ij}}{\\partial e_{ip}}=\\frac{\\alpha_{ij}(1-\\alpha_{ij})}{\\sum_{k\\ne j,p}\\exp(e_{ik})},\\qquad p\\ne j",
+          "evidence": [
+            "Equation (9) defines alpha as a standard softmax across the second index.",
+            "Direct quotient-rule differentiation gives -alpha_ij alpha_ip for distinct coordinates in the same row.",
+            "The printed expression has the wrong sign and can have an empty denominator when T=2."
+          ],
+          "note": "Replaced the printed off-diagonal softmax derivative with the standard negative cross-coordinate derivative."
+        },
+        "formula:0021": {
+          "document_ref": "#/texts/210",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\frac{\\partial\\alpha_{ij}}{\\partial e_{pq}}=0,\\qquad p\\ne i",
+          "note": "Reconstructed the zero derivative between different independently normalized feature rows."
+        },
+        "formula:0022": {
+          "document_ref": "#/texts/212",
+          "source_page": 10,
+          "action": "correct_suspected_paper_typo",
+          "confidence": 0.98,
+          "latex": "\\begin{aligned}\\frac{\\partial\\widetilde{\\mathbf X}}{\\partial\\mathbf A}&=\\lambda\\operatorname{diag}(\\operatorname{vec}(\\bar{\\mathbf X})),\\\\\\frac{\\partial\\widetilde{\\mathbf X}}{\\partial\\bar{\\mathbf X}}&=\\operatorname{diag}(\\operatorname{vec}(\\lambda\\mathbf A+(1-\\lambda)\\mathbf 1_{D'\\times T}))+\\lambda\\operatorname{diag}(\\operatorname{vec}(\\bar{\\mathbf X}))\\frac{\\partial\\mathbf A}{\\partial\\mathbf E}\\frac{\\partial\\mathbf E}{\\partial\\bar{\\mathbf X}}.\\end{aligned}",
+          "paper_as_printed_latex": "\\begin{aligned}\\frac{\\partial\\widetilde{\\mathbf X}}{\\partial\\mathbf A}&=\\lambda\\operatorname{diag}(\\operatorname{vec}(\\bar{\\mathbf X})),\\\\\\frac{\\partial\\widetilde{\\mathbf X}}{\\partial\\bar{\\mathbf X}}&=\\operatorname{diag}(\\operatorname{vec}(\\lambda\\mathbf A+(1-\\lambda)\\mathbf 1_{D'T}))+\\operatorname{diag}(\\operatorname{vec}(\\bar{\\mathbf X}))\\odot\\left(\\frac{\\partial\\mathbf A}{\\partial\\mathbf E}\\frac{\\partial\\mathbf E}{\\partial\\bar{\\mathbf X}}\\right).\\end{aligned}",
+          "evidence": [
+            "Vectorizing an element-wise product gives a diagonal matrix multiplying the other factor's Jacobian by ordinary matrix multiplication.",
+            "Because A is multiplied by lambda in X-tilde, its dependency on X-bar also carries a factor lambda.",
+            "Direct differential expansion of X-tilde confirms both the ordinary Jacobian product and the missing lambda."
+          ],
+          "note": "Corrected equation (24) to use Jacobian matrix multiplication and restored the missing factor lambda in the attention-dependent term."
+        },
+        "formula:0023": {
+          "document_ref": "#/texts/213",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\frac{\\partial\\widetilde{\\mathbf X}}{\\partial\\lambda}=\\bar{\\mathbf X}\\odot\\mathbf A-\\bar{\\mathbf X}",
+          "note": "Reconstructed by differentiating the attention interpolation with A and X-bar held fixed with respect to lambda."
+        },
+        "formula:0024": {
+          "document_ref": "#/texts/215",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\frac{\\partial\\mathbf Y}{\\partial\\widetilde{\\mathbf X}}=\\frac{\\partial\\phi(\\bar{\\mathbf Y})}{\\partial\\bar{\\mathbf Y}}\\left(\\mathbf W_2^{\\mathrm T}\\otimes\\mathbf I_{D'}\\right),\\qquad\\bar{\\mathbf Y}=\\widetilde{\\mathbf X}\\mathbf W_2+\\mathbf B",
+          "note": "Reconstructed the activation Jacobian composed with the vectorized temporal projection."
+        },
+        "formula:0025": {
+          "document_ref": "#/texts/216",
+          "source_page": 10,
+          "action": "correct_suspected_paper_typo",
+          "confidence": 0.99,
+          "latex": "\\frac{\\partial\\mathbf Y}{\\partial\\mathbf B}=\\frac{\\partial\\phi(\\bar{\\mathbf Y})}{\\partial\\bar{\\mathbf Y}}\\left(\\mathbf I_{T'}\\otimes\\mathbf I_{D'}\\right)",
+          "paper_as_printed_latex": "\\frac{\\partial\\mathbf Y}{\\partial\\mathbf B}=\\frac{\\partial\\phi(\\bar{\\mathbf Y})}{\\partial\\bar{\\mathbf Y}}\\left(\\mathbf I_T\\otimes\\mathbf I_{D'}\\right)",
+          "evidence": [
+            "TABL defines Y and B with shape D-prime by T-prime.",
+            "The bias Jacobian is therefore the identity on D-prime times T-prime output coordinates.",
+            "Using I_T is dimensionally invalid whenever the output horizon T-prime differs from the input length T."
+          ],
+          "note": "Corrected the output-time identity from I_T to I_T-prime in the bias Jacobian."
+        },
+        "formula:0026": {
+          "document_ref": "#/texts/217",
+          "source_page": 10,
+          "action": "correct_suspected_paper_typo",
+          "confidence": 0.99,
+          "latex": "\\frac{\\partial\\mathbf Y}{\\partial\\mathbf W_2}=\\frac{\\partial\\phi(\\bar{\\mathbf Y})}{\\partial\\bar{\\mathbf Y}}\\left(\\mathbf I_{T'}\\otimes\\widetilde{\\mathbf X}\\right)",
+          "paper_as_printed_latex": "\\frac{\\partial\\mathbf Y}{\\partial\\mathbf W_2}=\\frac{\\partial\\phi(\\bar{\\mathbf Y})}{\\partial\\bar{\\mathbf Y}}\\left(\\mathbf I_T\\otimes\\widetilde{\\mathbf X}\\right)",
+          "evidence": [
+            "W2 maps T input positions to T-prime output positions and has shape T by T-prime.",
+            "Vectorizing X-tilde W2 yields the Jacobian I_{T-prime} tensor X-tilde.",
+            "The printed I_T only works accidentally when T equals T-prime."
+          ],
+          "note": "Corrected the output-time identity from I_T to I_T-prime in the W2 Jacobian."
+        },
+        "formula:0027": {
+          "document_ref": "#/texts/220",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\frac{\\partial L}{\\partial\\mathbf W_1}=\\frac{\\partial L}{\\partial\\mathbf Y}\\frac{\\partial\\phi(\\bar{\\mathbf Y})}{\\partial\\bar{\\mathbf Y}}\\frac{\\partial\\bar{\\mathbf Y}}{\\partial\\widetilde{\\mathbf X}}\\frac{\\partial\\widetilde{\\mathbf X}}{\\partial\\bar{\\mathbf X}}\\frac{\\partial\\bar{\\mathbf X}}{\\partial\\mathbf W_1}",
+          "note": "Reconstructed the full chain from loss through output, attention interpolation, and the first bilinear projection."
+        },
+        "formula:0028": {
+          "document_ref": "#/texts/221",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\frac{\\partial L}{\\partial\\lambda}=\\frac{\\partial L}{\\partial\\mathbf Y}\\frac{\\partial\\phi(\\bar{\\mathbf Y})}{\\partial\\bar{\\mathbf Y}}\\frac{\\partial\\bar{\\mathbf Y}}{\\partial\\widetilde{\\mathbf X}}\\frac{\\partial\\widetilde{\\mathbf X}}{\\partial\\lambda}",
+          "note": "Reconstructed the chain-rule gradient for the attention interpolation scalar lambda."
+        },
+        "formula:0029": {
+          "document_ref": "#/texts/222",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\frac{\\partial L}{\\partial\\mathbf W}=\\frac{\\partial L}{\\partial\\mathbf Y}\\frac{\\partial\\phi(\\bar{\\mathbf Y})}{\\partial\\bar{\\mathbf Y}}\\frac{\\partial\\bar{\\mathbf Y}}{\\partial\\widetilde{\\mathbf X}}\\frac{\\partial\\widetilde{\\mathbf X}}{\\partial\\mathbf A}\\frac{\\partial\\mathbf A}{\\partial\\mathbf E}\\frac{\\partial\\mathbf E}{\\partial\\mathbf W}",
+          "note": "Reconstructed the chain-rule gradient through the temporal attention matrix W."
+        },
+        "formula:0030": {
+          "document_ref": "#/texts/223",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\frac{\\partial L}{\\partial\\mathbf W_2}=\\frac{\\partial L}{\\partial\\mathbf Y}\\frac{\\partial\\mathbf Y}{\\partial\\mathbf W_2}",
+          "note": "Reconstructed the direct chain-rule gradient for the final temporal projection."
+        },
+        "formula:0031": {
+          "document_ref": "#/texts/224",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\frac{\\partial L}{\\partial\\mathbf B}=\\frac{\\partial L}{\\partial\\mathbf Y}\\frac{\\partial\\mathbf Y}{\\partial\\mathbf B}",
+          "note": "Reconstructed the direct chain-rule gradient for the output bias."
+        },
+        "formula:0032": {
+          "document_ref": "#/texts/228",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\mathbf z_i^e=\\sigma(\\mathbf W_z^e\\mathbf x_i+\\mathbf U_z^e\\mathbf h_{i-1}^e+\\mathbf b_z^e)",
+          "note": "Reconstructed the encoder GRU update gate."
+        },
+        "formula:0033": {
+          "document_ref": "#/texts/229",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\widetilde{\\mathbf h}_i^e=\\tanh(\\mathbf W^e\\mathbf x_i+\\mathbf U^e(\\mathbf r_i^e\\odot\\mathbf h_{i-1}^e)+\\mathbf b^e)",
+          "note": "Reconstructed the encoder GRU candidate state with reset-gated recurrence."
+        },
+        "formula:0034": {
+          "document_ref": "#/texts/230",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\mathbf r_i^e=\\sigma(\\mathbf W_r^e\\mathbf x_i+\\mathbf U_r^e\\mathbf h_{i-1}^e+\\mathbf b_r^e)",
+          "note": "Reconstructed the encoder GRU reset gate."
+        },
+        "formula:0035": {
+          "document_ref": "#/texts/231",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\mathbf h_i^e=(1-\\mathbf z_i^e)\\odot\\mathbf h_{i-1}^e+\\mathbf z_i^e\\odot\\widetilde{\\mathbf h}_i^e",
+          "note": "Reconstructed the encoder GRU interpolation between prior and candidate hidden states."
+        },
+        "formula:0036": {
+          "document_ref": "#/texts/233",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "e_{ij}=\\mathbf v_{\\alpha}^{\\mathrm T}\\tanh(\\mathbf W_{\\alpha}\\mathbf h_{j-1}^d+\\mathbf U_{\\alpha}\\mathbf h_i^e)",
+          "note": "Reconstructed the appendix's additive-attention energy."
+        },
+        "formula:0037": {
+          "document_ref": "#/texts/234",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\alpha_{ij}=\\frac{\\exp(e_{ij})}{\\sum_{k=1}^{T}\\exp(e_{kj})}",
+          "note": "Reconstructed the attention normalization over encoder positions for decoder step j."
+        },
+        "formula:0038": {
+          "document_ref": "#/texts/235",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\mathbf c_j=\\sum_{i=1}^{T}\\alpha_{ij}\\mathbf h_i^e",
+          "note": "Reconstructed the context vector as the attention-weighted sum of encoder states."
+        },
+        "formula:0039": {
+          "document_ref": "#/texts/238",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\mathbf z_j^d=\\sigma(\\mathbf w_z^d y_{j-1}+\\mathbf U_z^d\\mathbf h_{j-1}^d+\\mathbf C_z\\mathbf c_j+\\mathbf b_z^d)",
+          "note": "Reconstructed the decoder GRU update gate including the context-vector contribution."
+        },
+        "formula:0040": {
+          "document_ref": "#/texts/239",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\widetilde{\\mathbf h}_j^d=\\tanh(\\mathbf w^d y_{j-1}+\\mathbf U^d(\\mathbf r_j^d\\odot\\mathbf h_{j-1}^d)+\\mathbf C\\mathbf c_j+\\mathbf b^d)",
+          "note": "Reconstructed the decoder GRU candidate state with reset-gated recurrence and context input."
+        },
+        "formula:0041": {
+          "document_ref": "#/texts/240",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\mathbf r_j^d=\\sigma(\\mathbf w_r^d y_{j-1}+\\mathbf U_r^d\\mathbf h_{j-1}^d+\\mathbf C_r\\mathbf c_j+\\mathbf b_r^d)",
+          "note": "Reconstructed the decoder GRU reset gate including the context-vector contribution."
+        },
+        "formula:0042": {
+          "document_ref": "#/texts/241",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\mathbf h_j^d=(1-\\mathbf z_j^d)\\odot\\mathbf h_{j-1}^d+\\mathbf z_j^d\\odot\\widetilde{\\mathbf h}_j^d",
+          "note": "Reconstructed the decoder GRU interpolation between prior and candidate hidden states."
+        },
+        "formula:0043": {
+          "document_ref": "#/texts/242",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "y_j=\\mathbf w_{out}^{\\mathrm T}\\mathbf h_j^d+b_{out}",
+          "note": "Reconstructed the scalar affine decoder output used for sequence forecasting."
+        }
+      }
+    },
+    "ref_tsantekidis_stationary_lob_1810.09965": {
+      "defaults": {
+        "review_status": "high_confidence",
+        "confidence": 0.99,
+        "base_status": "text_layer_fallback",
+        "source_pdf": "sources/papers/ref_tsantekidis_stationary_lob_1810.09965.pdf",
+        "evidence": [
+          "Reconstructed from the exact arXiv v1 author TeX and checked against the displayed source PDF.",
+          "Feature definitions or recurrent-state dependencies were checked against neighboring equations and stated dimensions."
+        ],
+        "assumptions": [],
+        "alternatives": []
+      },
+      "reviews": {
+        "formula:0005": {
+          "document_ref": "#/texts/60",
+          "source_page": 6,
+          "action": "reconstruct",
+          "latex": "{p'}_a^{(i)}(t)=\\frac{p_a^{(i)}(t)}{p_m(t)}-1",
+          "note": "Reconstructed the stationary ask-price feature as proportional displacement from the contemporaneous midpoint."
+        },
+        "formula:0008": {
+          "document_ref": "#/texts/67",
+          "source_page": 7,
+          "action": "reconstruct",
+          "latex": "{\\nu'}_a^{(k)}(t)=\\sum_{i=1}^{k}\\nu_a^{(i)}(t)",
+          "note": "Reconstructed ask-side total depth as the cumulative volume through level k."
+        },
+        "formula:0010": {
+          "document_ref": "#/texts/77",
+          "source_page": 8,
+          "action": "reconstruct",
+          "latex": "m_b(t)=\\frac{1}{k+1}\\sum_{i=0}^{k}p_m(t-i)",
+          "note": "Reconstructed the backward-looking midpoint average over the current observation and k past observations."
+        },
+        "formula:0011": {
+          "document_ref": "#/texts/78",
+          "source_page": 8,
+          "action": "reconstruct",
+          "latex": "m_a(t)=\\frac{1}{k}\\sum_{i=1}^{k}p_m(t+i)",
+          "note": "Reconstructed the forward-looking average over the next k midpoint observations used to form labels."
+        },
+        "formula:0013": {
+          "document_ref": "#/texts/109",
+          "source_page": 10,
+          "action": "correct_suspected_paper_typo",
+          "confidence": 0.99,
+          "latex": "\\mathbf f_t=\\sigma(\\mathbf W_{xf}\\mathbf x_t+\\mathbf W_{hf}\\mathbf h_{t-1}+\\mathbf b_f)",
+          "paper_as_printed_latex": "\\mathbf f_t=\\sigma(\\mathbf W_{xf}\\mathbf x+\\mathbf W_{hf}\\mathbf h_{t-1}+\\mathbf b_f)",
+          "evidence": [
+            "The equation defines the forget gate at time t and the surrounding prose identifies the current time-step input.",
+            "The candidate-cell equation in the same recurrence explicitly uses x_t.",
+            "Using an unindexed x is inconsistent with the time-indexed LSTM recurrence."
+          ],
+          "note": "Restored the missing time index on the current input to the forget gate."
+        },
+        "formula:0014": {
+          "document_ref": "#/texts/110",
+          "source_page": 10,
+          "action": "correct_suspected_paper_typo",
+          "confidence": 0.99,
+          "latex": "\\mathbf i_t=\\sigma(\\mathbf W_{xi}\\mathbf x_t+\\mathbf W_{hi}\\mathbf h_{t-1}+\\mathbf b_i)",
+          "paper_as_printed_latex": "\\mathbf i_t=\\sigma(\\mathbf W_{xi}\\mathbf x+\\mathbf W_{hi}\\mathbf h_{t-1}+\\mathbf b_i)",
+          "evidence": [
+            "The equation defines the input gate at time t and depends on the current time-step input.",
+            "The neighboring candidate-cell equation explicitly uses x_t.",
+            "Using an unindexed x is inconsistent with the recurrent indexing used throughout the block."
+          ],
+          "note": "Restored the missing time index on the current input to the input gate."
+        },
+        "formula:0015": {
+          "document_ref": "#/texts/111",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\mathbf c'_t=\\tanh(\\mathbf W_{hc}\\mathbf h_{t-1}+\\mathbf W_{xc}\\mathbf x_t+\\mathbf b_c)",
+          "note": "Reconstructed the candidate cell state from the previous hidden state and current input."
+        },
+        "formula:0016": {
+          "document_ref": "#/texts/112",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\mathbf c_t=\\mathbf f_t\\odot\\mathbf c_{t-1}+\\mathbf i_t\\odot\\mathbf c'_t",
+          "note": "Reconstructed the cell-state update and made the element-wise gate products explicit."
+        },
+        "formula:0017": {
+          "document_ref": "#/texts/113",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\mathbf o_t=\\sigma(\\mathbf W_{oc}\\mathbf c_t+\\mathbf W_{oh}\\mathbf h_{t-1}+\\mathbf b_o)",
+          "note": "Reconstructed the paper's peephole-style output gate from the current cell and previous hidden state."
+        },
+        "formula:0018": {
+          "document_ref": "#/texts/114",
+          "source_page": 10,
+          "action": "correct_suspected_paper_typo",
+          "confidence": 0.97,
+          "latex": "\\mathbf h_t=\\mathbf o_t\\odot\\tanh(\\mathbf c_t)",
+          "paper_as_printed_latex": "\\mathbf h_t=\\mathbf o_t\\cdot\\sigma(\\mathbf c_t)",
+          "evidence": [
+            "The same equation block uses sigma for logistic gates and tanh for cell-state content.",
+            "The standard LSTM exposed state gates tanh(c_t), while sigmoid(c_t) would constrain even fully open negative cell states to positive values.",
+            "The vector output gate and cell activation require an element-wise product."
+          ],
+          "note": "Corrected the cell exposure from sigmoid to tanh and made the vector gate product explicit; this is a high-confidence LSTM-formulation correction, not an author-issued erratum."
+        }
+      }
+    }
+  }
+}

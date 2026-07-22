@@ -5,7 +5,8 @@
     "rule": "Replace LaTeX only when context, definitions, and structural constraints make the reconstruction high confidence. Preserve the paper-as-printed form for suspected paper errors, and leave ambiguous formulas unchanged with an explicit note."
   },
   "includes": [
-    "formula_semantic_reviews_phase1.json"
+    "formula_semantic_reviews_phase1.json",
+    "formula_semantic_reviews_phase2.json"
   ],
   "reviews": {
     "ref_cont_de_larrard_markovian_lob_1104.4596:formula:0035": {

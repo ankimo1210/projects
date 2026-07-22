@@ -1352,8 +1352,8 @@
         "text_blocks": 314,
         "tables": 3,
         "pictures": 4,
-        "markdown_chars": 88774,
-        "math_blocks": 7,
+        "markdown_chars": 91295,
+        "math_blocks": 43,
         "chunks": 51,
         "max_chunk_tokens": 484,
         "pages_in_chunks": [
@@ -1390,17 +1390,17 @@
         "manual_recovered": 0,
         "source_corrected": 0,
         "source_recovered": 7,
-        "semantic_reviewed_total": 0,
-        "semantic_high_confidence": 0,
+        "semantic_reviewed_total": 36,
+        "semantic_high_confidence": 36,
         "semantic_not_formula": 0,
         "semantic_ambiguous": 0,
         "semantic_confirmed": 0,
-        "semantic_reconstructed": 0,
-        "semantic_paper_corrections": 0,
+        "semantic_reconstructed": 36,
+        "semantic_paper_corrections": 6,
         "decoded_unverified": 0,
-        "text_layer_fallback": 36,
+        "text_layer_fallback": 0,
         "source_crops": 43,
-        "latex_blocks": 7
+        "latex_blocks": 43
       }
     },
     {
@@ -1500,8 +1500,8 @@
         "text_blocks": 282,
         "tables": 3,
         "pictures": 4,
-        "markdown_chars": 68141,
-        "math_blocks": 12,
+        "markdown_chars": 68456,
+        "math_blocks": 22,
         "chunks": 41,
         "max_chunk_tokens": 484,
         "pages_in_chunks": [
@@ -1545,17 +1545,17 @@
         "manual_recovered": 0,
         "source_corrected": 0,
         "source_recovered": 12,
-        "semantic_reviewed_total": 0,
-        "semantic_high_confidence": 0,
+        "semantic_reviewed_total": 10,
+        "semantic_high_confidence": 10,
         "semantic_not_formula": 0,
         "semantic_ambiguous": 0,
         "semantic_confirmed": 0,
-        "semantic_reconstructed": 0,
-        "semantic_paper_corrections": 0,
+        "semantic_reconstructed": 10,
+        "semantic_paper_corrections": 3,
         "decoded_unverified": 0,
-        "text_layer_fallback": 10,
+        "text_layer_fallback": 0,
         "source_crops": 22,
-        "latex_blocks": 12
+        "latex_blocks": 22
       }
     },
     {
@@ -1897,16 +1897,16 @@
     "manual_recovered": 22,
     "source_corrected": 99,
     "source_recovered": 83,
-    "semantic_reviewed_total": 83,
-    "semantic_high_confidence": 80,
+    "semantic_reviewed_total": 129,
+    "semantic_high_confidence": 126,
     "semantic_not_formula": 2,
     "semantic_ambiguous": 1,
     "semantic_confirmed": 43,
-    "semantic_reconstructed": 37,
-    "semantic_paper_corrections": 8,
+    "semantic_reconstructed": 83,
+    "semantic_paper_corrections": 17,
     "decoded_unverified": 1,
-    "text_layer_fallback": 110,
+    "text_layer_fallback": 64,
     "source_crops": 424,
-    "latex_blocks": 312
+    "latex_blocks": 358
   }
 }
