@@ -32,10 +32,14 @@ def main() -> None:
 
     if auth.load_tokens() is None:
         st.title("Health ダッシュボード")
-        st.markdown(f"[Google Health と接続する]({auth.begin_auth()})")
+        st.markdown("**はじめに** — 2ステップで使い始められます。")
+        st.markdown(
+            "1. 下のリンクから Google Health と接続する\n2. 接続後、管理 > 同期 ページでデータを同期する"
+        )
+        st.markdown(f"### [Google Health と接続する]({auth.begin_auth()})")
         st.caption(
             "Google Cloud の OAuth クライアント ID/Secret を "
-            "health/.env に設定してから接続してください。"
+            "health/.env に設定してから接続してください。手順は health/README.md を参照。"
         )
         st.stop()
 
