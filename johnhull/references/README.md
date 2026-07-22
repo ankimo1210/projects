@@ -228,3 +228,8 @@ uv run --no-sync python johnhull/scripts/build_paper_corpus_v2.py \
 `make hull-paper-corpus-v2-check` は Gold、構造化表、検証済み上書き、原画像参照、
 および 2 回変換のバイト一致を検査します。JGBi 告示の縦書きは現行 MinerU では本文と
 読み順が不十分なため、`fail/review` のまま原 PDF と別の OCR 経路を優先します。
+
+Gold の数式は表示・インラインとも検出 recall 100%、出力した LaTeX は compile 100% です。
+コンパイルできなかった自動候補3件は原画像 fallback に降格しており、正しい数式としては
+公開しません。Gold の14表は原画像を再確認し、427個の scalar 数値セル（P0 は176個）を
+レビュー済みです。構造を誤った5表はレビュー版へ置換し、OCR原値も監査用に保持します。

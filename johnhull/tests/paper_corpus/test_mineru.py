@@ -74,12 +74,22 @@ def test_gold_conversion_applies_only_explicit_verified_overrides(tmp_path):
     )
     assert all(item.get("assertion_id") for item in verified_equations.values())
     assert any(item["verification_status"] == "unverified" for item in equations)
+    assert all(item["latex_compile_status"] == "passed" for item in equations)
+    assert all(
+        item["render_validation_status"] == "passed"
+        and (output / item["render_asset"]).is_file()
+        and item["source_comparison_status"] == "manual_review_pass"
+        for item in verified_equations.values()
+    )
     cells = {item.get("assertion_id"): item for table in tables for item in table["cells"]}
-    assert cells["hw-p17-table3-ext-vas-200-100"]["raw_text"] == "132"
+    assert cells["hw-p17-table3-ext-vas-200-100"]["extractor_raw_text"] == "132"
+    assert cells["hw-p17-table3-ext-vas-200-100"]["raw_text"] == "1.32"
     assert cells["hw-p17-table3-ext-vas-200-100"]["numeric_value"] == 1.32
-    assert cells["hw-p17-table4-cir-200-100"]["raw_text"] == "0.06"
+    assert cells["hw-p17-table4-cir-200-100"]["extractor_raw_text"] == "0.06"
+    assert cells["hw-p17-table4-cir-200-100"]["raw_text"] == "0.86"
     assert cells["hw-p17-table4-cir-200-100"]["numeric_value"] == 0.86
     assert result["quality"]["overall_status"] == "missing"
+    assert result["quality"]["counts"]["compiled_equations"] == len(equations)
     assert all((output / item["source_asset"]).is_file() for item in equations)
 
 
