@@ -231,13 +231,12 @@ def test_semantic_reviews_replace_only_high_confidence_formulas() -> None:
 
 def test_semantic_review_manifest_is_explicit_about_uncertainty() -> None:
     project_root = Path(__file__).parents[1]
-    manifest = json.loads(
-        (project_root / "manifests" / "formula_semantic_reviews.json").read_text(encoding="utf-8")
-    )
-    reviews = manifest["reviews"]
+    manifest_path = project_root / "manifests" / "formula_semantic_reviews.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    reviews = FORMULA_MODULE.load_semantic_reviews(manifest_path)
 
-    assert len(reviews) == 15
-    assert sum(review["review_status"] == "high_confidence" for review in reviews.values()) == 12
+    assert len(reviews) == 83
+    assert sum(review["review_status"] == "high_confidence" for review in reviews.values()) == 80
     assert sum(review["review_status"] == "not_formula" for review in reviews.values()) == 2
     assert sum(review["review_status"] == "ambiguous" for review in reviews.values()) == 1
     assert all(
@@ -254,8 +253,8 @@ def test_semantic_review_manifest_is_explicit_about_uncertainty() -> None:
     quality = json.loads((project_root / "corpus" / "papers" / "_index.json").read_text())[
         "formula_quality"
     ]
-    assert quality["semantic_reviewed_total"] == 15
-    assert quality["semantic_high_confidence"] == 12
+    assert quality["semantic_reviewed_total"] == 83
+    assert quality["semantic_high_confidence"] == 80
     assert quality["semantic_not_formula"] == 2
     assert quality["semantic_ambiguous"] == 1
 
