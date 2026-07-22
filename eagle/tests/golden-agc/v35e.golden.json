@@ -1,0 +1,79 @@
+{
+  "milestones": [
+    [
+      "010",
+      "60674"
+    ],
+    [
+      "010",
+      "51675"
+    ],
+    [
+      "010",
+      "45675"
+    ],
+    [
+      "010",
+      "41675"
+    ],
+    [
+      "010",
+      "37675"
+    ],
+    [
+      "010",
+      "31675"
+    ],
+    [
+      "010",
+      "27675"
+    ],
+    [
+      "010",
+      "21675"
+    ],
+    [
+      "010",
+      "15675"
+    ],
+    [
+      "010",
+      "13675"
+    ],
+    [
+      "010",
+      "05675"
+    ],
+    [
+      "010",
+      "55675"
+    ]
+  ],
+  "final_state": {
+    "schema_version": 1,
+    "prog": "88",
+    "verb": "88",
+    "noun": "88",
+    "r1": "+88888",
+    "r2": "+88888",
+    "r3": "+88888",
+    "lamps": {
+      "alt": true,
+      "comp_acty": false,
+      "gimbal_lock": true,
+      "no_att": true,
+      "no_dap": false,
+      "prio_disp": false,
+      "prog": true,
+      "tracker": true,
+      "uplink_acty": true,
+      "vel": true
+    },
+    "verb_noun_flash": false,
+    "restart": true,
+    "standby": true,
+    "key_rel": true,
+    "opr_err": true,
+    "temp": true
+  }
+}

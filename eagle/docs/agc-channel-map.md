@@ -184,6 +184,48 @@ VERB/NOUN flash, bit 8 = RESTART", 1-indexed) and the implementation's
 `b(6)`/`b(8)` helper both land on `DSKY_VN_FLASH` (32 = bit 5, 0-idx) and
 `DSKY_RESTART` (128 = bit 7, 0-idx) exactly.
 
+## Idle-Traffic Behavior (Test-Harness Note)
+
+yaAGC's simulated environment does **not** go quiet at idle. Confirmed via a
+throwaway diagnostic test against the live AGC (no keys sent, 8 s observed):
+
+- Ch `034` (CDUZ) and ch `035` (OPTY) emit continuously, roughly every
+  16 ms each, indefinitely — not just during boot.
+- Ch `010` itself carries a periodic no-op packet (`AAAA`=0, i.e. row 0,
+  which matches no row in the Relay Word table above and is a no-op for
+  `DskyState`) roughly every 112-123 ms, indefinitely.
+
+Consequence: a "drain until N ms of total silence across every channel"
+loop never terminates, since something arrives on some channel every
+~8-17 ms forever. `tests/golden_v35e.rs`'s `settle_dsky` helper instead
+scopes its quiet check to the DSKY-relevant channels (`010`/`011`/`0163`)
+— the only ones the golden comparison reads — while still draining and
+discarding everything else. Their idle period (~120 ms) is comfortably
+above the 100 ms quiet threshold used, so this terminates reliably
+(observed ~120-200 ms per call across repeated runs, capped with a 5 s
+safety assertion as defense in depth).
+
+### Golden Milestone Flakiness: Pre-ENTR Keystroke Echo
+
+A second, related source of flakiness surfaced once boot-flush hangs were
+fixed: `milestones()` occasionally captured an extra leading entry, e.g.
+ch `010` data `51540` decoding to VERB row `"3 "` — the transient echo of
+typing `3` (verb digit 1 of "35") before `5` completes it. This packet is
+generated *before* ENTR is sent (during the `VERB`/`3`/`5` keystrokes), so
+it is typing noise unrelated to the V35E lamp-test signal proper (which
+starts once ENTR is processed). It was captured intermittently because
+packets generated while the key-send loop sleeps between keystrokes
+accumulate, undrained, in the events channel — whether one is still
+sitting there when the capture loop starts reading is a race against the
+AGC's own redraw-cycle timing.
+
+Fix: `run_v35e()` now calls `settle_dsky` after each of the `VERB`/`3`/`5`
+keystrokes (draining their echoes) but deliberately *not* after `ENTR` —
+settling right after ENTR would race the AGC's immediate response to it,
+per the boot-flush note above. This is the permitted "loosen milestones"
+step from the golden-test plan; the final-state check (all-8s) was not
+loosened.
+
 ## Sources
 
 - https://www.ibiblio.org/apollo/developer.html
