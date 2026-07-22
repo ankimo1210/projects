@@ -1,0 +1,169 @@
+{
+  "bakeoff_version": "1.0.0",
+  "cases": [
+    {
+      "case_id": "hw-p6-vasicek-b",
+      "expected": "B(t,T)=\\frac{1-e^{-a(T-t)}}{a}",
+      "metric": "formula_exact_match",
+      "results": {
+        "docling-2.114.0": "fail",
+        "marker-2.0.0": "missing",
+        "mineru-3.4.4-pipeline": "pass",
+        "pymupdf4llm-1.28.0": "fail"
+      }
+    },
+    {
+      "case_id": "hw-p6-mean-reversion-equation-15",
+      "expected": "a(t)=-\\frac{\\partial^2 B(0,t)/\\partial t^2}{\\partial B(0,t)/\\partial t}",
+      "metric": "formula_exact_match",
+      "results": {
+        "docling-2.114.0": "fail",
+        "marker-2.0.0": "missing",
+        "mineru-3.4.4-pipeline": "fail",
+        "pymupdf4llm-1.28.0": "fail"
+      }
+    },
+    {
+      "case_id": "hw-p17-table4-critical-cells",
+      "expected": {
+        "Ext Vas|1.02": 0.35,
+        "Two-factor CIR|1.02": 0.34
+      },
+      "metric": "numeric_cell_exact_match",
+      "results": {
+        "docling-2.114.0": "fail",
+        "marker-2.0.0": "not_run",
+        "mineru-3.4.4-pipeline": "pass",
+        "pymupdf4llm-1.28.0": "not_run"
+      }
+    },
+    {
+      "case_id": "hw-p17-table3-and-table4-other-cells",
+      "expected": {
+        "Table 3 source value": 1.32,
+        "Table 4 source value": 0.86
+      },
+      "metric": "numeric_cell_exact_match",
+      "results": {
+        "docling-2.114.0": "not_scored",
+        "marker-2.0.0": "not_run",
+        "mineru-3.4.4-pipeline": "fail",
+        "pymupdf4llm-1.28.0": "not_run"
+      }
+    }
+  ],
+  "environment": {
+    "constraint_notes": [
+      "Docker was unavailable to Marker balanced mode.",
+      "Installed CUDA support could not execute MinerU hybrid VLM on SM 12.0."
+    ],
+    "gpu": "NVIDIA GeForce RTX 5080",
+    "platform": "WSL2 Linux"
+  },
+  "extractors": [
+    {
+      "execution_status": "completed",
+      "extractor_id": "pymupdf4llm-1.28.0",
+      "license_gate": {
+        "reason": "PyMuPDF is offered under AGPL or a commercial license.",
+        "status": "review"
+      },
+      "mode": "page_chunks",
+      "name": "PyMuPDF4LLM",
+      "operational_notes": [
+        "Fast baseline; formula transcription was not usable."
+      ],
+      "runtime_seconds_hw_p6": 0.775,
+      "version": "1.28.0"
+    },
+    {
+      "execution_status": "completed",
+      "extractor_id": "docling-2.114.0",
+      "license_gate": {
+        "reason": "MIT-licensed package.",
+        "status": "pass"
+      },
+      "mode": "standard_pipeline",
+      "name": "Docling",
+      "operational_notes": [
+        "Produced structured formulas and tables with semantic and numeric errors."
+      ],
+      "runtime_seconds_hw_p6": null,
+      "version": "2.114.0"
+    },
+    {
+      "execution_status": "partial",
+      "extractor_id": "marker-2.0.0",
+      "license_gate": {
+        "reason": "Code is Apache-2.0; model weights impose additional commercial terms.",
+        "status": "review"
+      },
+      "mode": "balanced_and_fast",
+      "name": "Marker",
+      "operational_notes": [
+        "Balanced mode required Docker through Surya vLLM in this WSL environment.",
+        "CPU LLM mode required an unavailable llama-server.",
+        "Fast mode completed but emitted no equation transcription."
+      ],
+      "runtime_seconds_hw_p6": 0.264,
+      "version": "2.0.0"
+    },
+    {
+      "execution_status": "completed",
+      "extractor_id": "mineru-3.4.4-pipeline",
+      "license_gate": {
+        "reason": "Custom open-source license adds service attribution and commercial-scale thresholds to the Apache-2.0 base.",
+        "status": "review"
+      },
+      "mode": "pipeline",
+      "name": "MinerU",
+      "operational_notes": [
+        "Pipeline mode completed locally on the representative and 88-page gold sets.",
+        "Hybrid VLM was unavailable because the RTX 5080 requires CUDA 12.9 or newer.",
+        "Pipeline output remains auto/unverified until a separate assertion verifies it."
+      ],
+      "runtime_seconds_hw_p6": null,
+      "version": "3.4.4"
+    }
+  ],
+  "gold_scope": {
+    "evidence": "gold_assertions.jsonl and visually reviewed source-page renders",
+    "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+    "source_pages": [
+      6,
+      17
+    ]
+  },
+  "limitations": [
+    "This small bake-off selects a backend; it is not the release quality score.",
+    "Metrics without independent gold labels remain explicitly deferred.",
+    "No aggregate pass is inferred from layout-region counts or extractor agreement."
+  ],
+  "metric_coverage": {
+    "formula_cdm": "deferred_until_rendered_formula_gold",
+    "formula_token_error": "represented_by_exact_match_regressions",
+    "licensing": "recorded_per_extractor",
+    "memory": "not_measured",
+    "numeric_accuracy": "represented_by_independently_verified_cells",
+    "reading_order": "visual_overlay_audit_only",
+    "reproducibility": "versions_and_modes_pinned; full_determinism_gate_pending",
+    "runtime": "partial",
+    "table_teds": "deferred_until_independent_structural_table_gold",
+    "text_edit_distance": "deferred_until_independent_text_transcripts"
+  },
+  "reviewed_at": "2026-07-23",
+  "reviewer": "codex-visual-semantic-audit-2026-07-23",
+  "selection": {
+    "dependency_policy": "optional pinned uvx tool; not a production dependency",
+    "extractor_id": "mineru-3.4.4-pipeline",
+    "reason": "Best available local structured layout, equation, and table candidate output; the benchmark also proves it is not semantically reliable on its own.",
+    "required_controls": [
+      "Retain source crops for every equation, table, and figure.",
+      "Mark extractor output auto or unverified, never verified by extraction alone.",
+      "Apply only independent, reviewed assertions as verified overrides.",
+      "Fail P0 release gates when a required formula or numeric cell is unverified.",
+      "Record extractor version and source PDF SHA-256 in every derived record."
+    ],
+    "status": "accepted_with_controls"
+  }
+}
