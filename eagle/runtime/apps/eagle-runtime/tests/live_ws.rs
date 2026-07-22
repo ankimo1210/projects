@@ -35,7 +35,25 @@ async fn v16n36_shows_running_clock_over_ws() {
             r3_values.insert(v["r3"].as_str().unwrap().to_string());
         }
     }
-    child.kill().await.ok();
+    // Graceful shutdown: SIGTERM the eagle-runtime process so it can reap its
+    // own yaAGC child (see AgcSession::shutdown / main.rs's signal handler).
+    // A bare SIGKILL here would leave yaAGC orphaned, since kill_on_drop only
+    // fires on a Drop path that a killed process never reaches.
+    let _ = std::process::Command::new("kill")
+        .arg(child.id().unwrap().to_string())
+        .status();
+    if tokio::time::timeout(std::time::Duration::from_secs(3), child.wait())
+        .await.is_err() {
+        child.kill().await.ok();
+    }
+
+    let pgrep = std::process::Command::new("pgrep")
+        .arg("-f").arg("yaAGC.*19899")
+        .output().expect("pgrep");
+    assert!(pgrep.stdout.is_empty(),
+        "expected no orphan yaAGC process after shutdown, pgrep found: {}",
+        String::from_utf8_lossy(&pgrep.stdout));
+
     assert!(r3_values.len() >= 2,
         "expected V16N36 R3 (seconds) to tick, got {r3_values:?}");
 }

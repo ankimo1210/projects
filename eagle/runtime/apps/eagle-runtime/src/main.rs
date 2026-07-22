@@ -4,6 +4,7 @@ use eagle_runtime::agc_session::{AgcConfig, AgcSession};
 use eagle_runtime::server::{router, to_msg, AppState};
 use eagle_runtime::trace::TraceWriter;
 use std::path::PathBuf;
+use tokio::signal::unix::{signal, SignalKind};
 use tokio::sync::{broadcast, mpsc};
 
 #[derive(Parser)]
@@ -39,6 +40,7 @@ async fn main() -> anyhow::Result<()> {
     });
     eprintln!("eagle-runtime: ws://127.0.0.1:{}/ws", args.ws_port);
 
+    let mut sigterm = signal(SignalKind::terminate())?;
     let mut dsky = DskyState::default();
     loop {
         tokio::select! {
@@ -54,8 +56,17 @@ async fn main() -> anyhow::Result<()> {
                 trace.log("in", &pkt);
                 session.send(pkt)?;
             }
+            _ = sigterm.recv() => {
+                eprintln!("eagle-runtime: SIGTERM received, shutting down");
+                break;
+            }
+            _ = tokio::signal::ctrl_c() => {
+                eprintln!("eagle-runtime: SIGINT received, shutting down");
+                break;
+            }
             else => break,
         }
     }
+    session.shutdown();
     Ok(())
 }
