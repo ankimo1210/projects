@@ -489,8 +489,14 @@ def parse_sleep_reconcile(pages: Sequence[dict]) -> ParsedRows:
         for e in group:
             e["is_main"] = e is main
 
+    # Daily series alongside the sessions (catalog: sleep -> sleep_minutes +
+    # sleep_sessions): total asleep minutes per wake date, naps included.
+    daily = tuple(
+        ("sleep_minutes", d, float(sum(e["minutes_asleep"] for e in group)))  # type: ignore[misc]
+        for d, group in sorted(by_date.items())
+    )
     rows = tuple({k: e[k] for k in _SLEEP_ROW_KEYS} for e in entries)
-    return ParsedRows(sleep=rows)
+    return ParsedRows(daily=daily, sleep=rows)
 
 
 # -- intraday parsers ---------------------------------------------------------------

@@ -1,7 +1,7 @@
 [project]
 name = "health"
 version = "0.1.0"
-description = "Personal Fitbit dashboard (Streamlit + Plotly + DuckDB)"
+description = "Personal Google Health dashboard (Streamlit + Plotly + DuckDB)"
 requires-python = ">=3.12"
 dependencies = [
     "streamlit>=1.45",

@@ -31,17 +31,23 @@ def by_name(name: str):
     return next(m for m in CATALOG if m.name == name)
 
 
-def make_auth(tmp_path, access_token="AT1", refresh_token="RT1", clock=lambda: 1000.0,
-              session=None):
+def make_auth(
+    tmp_path, access_token="AT1", refresh_token="RT1", clock=lambda: 1000.0, session=None
+):
     """A GoogleHealthAuth with an already-stored, non-expiring token, so
     `access_token()` returns it directly without an HTTP call. `session` is
     the auth's *token-endpoint* session -- separate from the client's API
     session -- and only used when a test drives a 401 refresh."""
-    auth = GoogleHealthAuth("CID", "SECRET", tmp_path, session=session or FakeSession(),
-                             clock=clock)
+    auth = GoogleHealthAuth(
+        "CID", "SECRET", tmp_path, session=session or FakeSession(), clock=clock
+    )
     auth._store_tokens(
-        {"access_token": access_token, "refresh_token": refresh_token, "expires_in": 3600,
-         "scope": "irrelevant"},
+        {
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "expires_in": 3600,
+            "scope": "irrelevant",
+        },
         existing=None,
     )
     return auth
@@ -54,12 +60,14 @@ def _no_wait(_seconds):
     tests focused on what they're actually checking."""
 
 
-def make_client(tmp_path, api_queue, clock=lambda: 0.0, wait=_no_wait,
-                 min_interval_s=0.5, auth=None):
+def make_client(
+    tmp_path, api_queue, clock=lambda: 0.0, wait=_no_wait, min_interval_s=0.5, auth=None
+):
     auth = auth or make_auth(tmp_path)
     session = FakeSession(api_queue)
-    client = HealthClient(auth, session=session, clock=clock, wait=wait,
-                           min_interval_s=min_interval_s)
+    client = HealthClient(
+        auth, session=session, clock=clock, wait=wait, min_interval_s=min_interval_s
+    )
     return client, auth
 
 
@@ -112,11 +120,14 @@ def test_sleep_metric_sends_page_size_25(tmp_path):
 def test_iter_reconciled_follows_next_page_token_through_every_page(tmp_path):
     metric = by_name("resting_hr")
     budget = RequestBudget(5)
-    client, _ = make_client(tmp_path, [
-        FakeResponse(200, {"dataPoints": [{"a": 1}], "nextPageToken": "TOK1"}),
-        FakeResponse(200, {"dataPoints": [{"a": 2}], "nextPageToken": "TOK2"}),
-        FakeResponse(200, {"dataPoints": [{"a": 3}]}),
-    ])
+    client, _ = make_client(
+        tmp_path,
+        [
+            FakeResponse(200, {"dataPoints": [{"a": 1}], "nextPageToken": "TOK1"}),
+            FakeResponse(200, {"dataPoints": [{"a": 2}], "nextPageToken": "TOK2"}),
+            FakeResponse(200, {"dataPoints": [{"a": 3}]}),
+        ],
+    )
     pages = list(client.iter_reconciled(metric, START, END, budget))
     assert len(pages) == 3
     calls = client.session.calls
@@ -135,11 +146,14 @@ def test_iter_reconciled_follows_next_page_token_through_every_page(tmp_path):
 def test_budget_increments_once_per_physical_send_across_pages(tmp_path):
     metric = by_name("resting_hr")
     budget = RequestBudget(10)
-    client, _ = make_client(tmp_path, [
-        FakeResponse(200, {"dataPoints": [], "nextPageToken": "TOK1"}),
-        FakeResponse(200, {"dataPoints": [], "nextPageToken": "TOK2"}),
-        FakeResponse(200, {"dataPoints": []}),
-    ])
+    client, _ = make_client(
+        tmp_path,
+        [
+            FakeResponse(200, {"dataPoints": [], "nextPageToken": "TOK1"}),
+            FakeResponse(200, {"dataPoints": [], "nextPageToken": "TOK2"}),
+            FakeResponse(200, {"dataPoints": []}),
+        ],
+    )
     list(client.iter_reconciled(metric, START, END, budget))
     assert budget.used == 3
 
@@ -156,10 +170,13 @@ def test_request_cap_exceeded_before_any_send(tmp_path):
 def test_request_cap_exceeded_mid_paging_stops_further_sends(tmp_path):
     metric = by_name("resting_hr")
     budget = RequestBudget(1)
-    client, _ = make_client(tmp_path, [
-        FakeResponse(200, {"dataPoints": [], "nextPageToken": "TOK1"}),
-        FakeResponse(200, {"dataPoints": []}),  # never sent: cap already spent
-    ])
+    client, _ = make_client(
+        tmp_path,
+        [
+            FakeResponse(200, {"dataPoints": [], "nextPageToken": "TOK1"}),
+            FakeResponse(200, {"dataPoints": []}),  # never sent: cap already spent
+        ],
+    )
     gen = client.iter_reconciled(metric, START, END, budget)
     next(gen)  # first page: consumes the only budget slot
     with pytest.raises(RequestCapExceeded):
@@ -173,14 +190,23 @@ def test_request_cap_exceeded_mid_paging_stops_further_sends(tmp_path):
 def test_401_refreshes_once_and_retries_counting_two_budget_uses(tmp_path):
     metric = by_name("steps")
     budget = RequestBudget(5)
-    auth_session = FakeSession([FakeResponse(200, {"access_token": "AT2",
-                                                     "refresh_token": "RT2",
-                                                     "expires_in": 3600, "scope": "s"})])
+    auth_session = FakeSession(
+        [
+            FakeResponse(
+                200,
+                {"access_token": "AT2", "refresh_token": "RT2", "expires_in": 3600, "scope": "s"},
+            )
+        ]
+    )
     auth = make_auth(tmp_path, access_token="AT1", session=auth_session)
-    client, _ = make_client(tmp_path, [
-        FakeResponse(401, {}),
-        FakeResponse(200, {"rollupDataPoints": []}),
-    ], auth=auth)
+    client, _ = make_client(
+        tmp_path,
+        [
+            FakeResponse(401, {}),
+            FakeResponse(200, {"rollupDataPoints": []}),
+        ],
+        auth=auth,
+    )
     result = client.daily_rollup(metric, START, END, budget)
     assert result == {"rollupDataPoints": []}
     assert budget.used == 2
@@ -191,14 +217,23 @@ def test_401_refreshes_once_and_retries_counting_two_budget_uses(tmp_path):
 def test_second_401_after_retry_raises_autherror_and_still_counts_two(tmp_path):
     metric = by_name("steps")
     budget = RequestBudget(5)
-    auth_session = FakeSession([FakeResponse(200, {"access_token": "AT2",
-                                                     "refresh_token": "RT2",
-                                                     "expires_in": 3600, "scope": "s"})])
+    auth_session = FakeSession(
+        [
+            FakeResponse(
+                200,
+                {"access_token": "AT2", "refresh_token": "RT2", "expires_in": 3600, "scope": "s"},
+            )
+        ]
+    )
     auth = make_auth(tmp_path, access_token="AT1", session=auth_session)
-    client, _ = make_client(tmp_path, [
-        FakeResponse(401, {}),
-        FakeResponse(401, {}),
-    ], auth=auth)
+    client, _ = make_client(
+        tmp_path,
+        [
+            FakeResponse(401, {}),
+            FakeResponse(401, {}),
+        ],
+        auth=auth,
+    )
     with pytest.raises(AuthError):
         client.daily_rollup(metric, START, END, budget)
     assert budget.used == 2
@@ -211,8 +246,13 @@ def test_second_401_after_retry_raises_autherror_and_still_counts_two(tmp_path):
 def test_403_apierror_preserves_google_error_message(tmp_path):
     metric = by_name("steps")
     budget = RequestBudget(5)
-    payload = {"error": {"code": 403, "status": "PERMISSION_DENIED",
-                          "message": "User does not have sufficient permission."}}
+    payload = {
+        "error": {
+            "code": 403,
+            "status": "PERMISSION_DENIED",
+            "message": "User does not have sufficient permission.",
+        }
+    }
     client, _ = make_client(tmp_path, [FakeResponse(403, payload)])
     with pytest.raises(ApiError) as exc:
         client.daily_rollup(metric, START, END, budget)
@@ -225,8 +265,7 @@ def test_403_keeps_http_status_and_google_code_status_message_separate(tmp_path)
     # Google's canonical error code (7 == PERMISSION_DENIED) intentionally
     # differs from the HTTP status (403) here, to prove the two are stored
     # independently rather than one being derived from the other.
-    payload = {"error": {"code": 7, "status": "PERMISSION_DENIED",
-                          "message": "insufficient scope"}}
+    payload = {"error": {"code": 7, "status": "PERMISSION_DENIED", "message": "insufficient scope"}}
     client, _ = make_client(tmp_path, [FakeResponse(403, payload)])
     with pytest.raises(ApiError) as exc:
         client.daily_rollup(metric, START, END, budget)
@@ -256,9 +295,7 @@ def test_error_without_google_envelope_falls_back_to_response_text(tmp_path):
 def test_429_numeric_retry_after(tmp_path):
     metric = by_name("steps")
     budget = RequestBudget(5)
-    client, _ = make_client(
-        tmp_path, [FakeResponse(429, {}, headers={"Retry-After": "120"})]
-    )
+    client, _ = make_client(tmp_path, [FakeResponse(429, {}, headers={"Retry-After": "120"})])
     with pytest.raises(RateLimited) as exc:
         client.daily_rollup(metric, START, END, budget)
     assert exc.value.status_code == 429
@@ -319,8 +356,9 @@ def test_first_send_never_waits(tmp_path):
     metric = by_name("steps")
     budget = RequestBudget(5)
     clock = FakeClock(start=100.0)
-    client, _ = make_client(tmp_path, [FakeResponse(200, {"rollupDataPoints": []})],
-                             clock=clock.now, wait=clock.sleep)
+    client, _ = make_client(
+        tmp_path, [FakeResponse(200, {"rollupDataPoints": []})], clock=clock.now, wait=clock.sleep
+    )
     client.daily_rollup(metric, START, END, budget)
     assert clock.waits == []
 
@@ -329,10 +367,16 @@ def test_consecutive_sends_are_at_least_min_interval_apart(tmp_path):
     metric = by_name("steps")
     budget = RequestBudget(5)
     clock = FakeClock(start=0.0)
-    client, _ = make_client(tmp_path, [
-        FakeResponse(200, {"rollupDataPoints": []}),
-        FakeResponse(200, {"rollupDataPoints": []}),
-    ], clock=clock.now, wait=clock.sleep, min_interval_s=0.5)
+    client, _ = make_client(
+        tmp_path,
+        [
+            FakeResponse(200, {"rollupDataPoints": []}),
+            FakeResponse(200, {"rollupDataPoints": []}),
+        ],
+        clock=clock.now,
+        wait=clock.sleep,
+        min_interval_s=0.5,
+    )
     client.daily_rollup(metric, START, END, budget)
     assert clock.waits == []  # first send: no wait yet
     client.daily_rollup(metric, START, END, budget)
@@ -346,10 +390,16 @@ def test_pacing_skips_wait_when_interval_already_elapsed(tmp_path):
     metric = by_name("steps")
     budget = RequestBudget(5)
     clock = FakeClock(start=0.0)
-    client, _ = make_client(tmp_path, [
-        FakeResponse(200, {"rollupDataPoints": []}),
-        FakeResponse(200, {"rollupDataPoints": []}),
-    ], clock=clock.now, wait=clock.sleep, min_interval_s=0.5)
+    client, _ = make_client(
+        tmp_path,
+        [
+            FakeResponse(200, {"rollupDataPoints": []}),
+            FakeResponse(200, {"rollupDataPoints": []}),
+        ],
+        clock=clock.now,
+        wait=clock.sleep,
+        min_interval_s=0.5,
+    )
     client.daily_rollup(metric, START, END, budget)
     clock.advance(1.0)  # simulate a full second of real work between sends
     client.daily_rollup(metric, START, END, budget)
@@ -360,11 +410,17 @@ def test_pacing_applies_to_every_reconcile_page(tmp_path):
     metric = by_name("resting_hr")
     budget = RequestBudget(5)
     clock = FakeClock(start=0.0)
-    client, _ = make_client(tmp_path, [
-        FakeResponse(200, {"dataPoints": [], "nextPageToken": "TOK1"}),
-        FakeResponse(200, {"dataPoints": [], "nextPageToken": "TOK2"}),
-        FakeResponse(200, {"dataPoints": []}),
-    ], clock=clock.now, wait=clock.sleep, min_interval_s=0.5)
+    client, _ = make_client(
+        tmp_path,
+        [
+            FakeResponse(200, {"dataPoints": [], "nextPageToken": "TOK1"}),
+            FakeResponse(200, {"dataPoints": [], "nextPageToken": "TOK2"}),
+            FakeResponse(200, {"dataPoints": []}),
+        ],
+        clock=clock.now,
+        wait=clock.sleep,
+        min_interval_s=0.5,
+    )
     list(client.iter_reconciled(metric, START, END, budget))
     assert clock.waits == [0.5, 0.5]  # 3 sends, 2 gaps, no real time elapsed
 
@@ -383,8 +439,7 @@ def test_access_token_failure_leaves_budget_and_session_untouched(tmp_path):
     budget = RequestBudget(5)
     # No tokens ever stored: auth.access_token() raises AuthError immediately,
     # before client._dispatch() would otherwise consume budget/pace/send.
-    auth = GoogleHealthAuth("CID", "SECRET", tmp_path, session=FakeSession(),
-                             clock=lambda: 1000.0)
+    auth = GoogleHealthAuth("CID", "SECRET", tmp_path, session=FakeSession(), clock=lambda: 1000.0)
     client, _ = make_client(tmp_path, [], auth=auth)
     with pytest.raises(AuthError):
         client.daily_rollup(metric, START, END, budget)
@@ -395,11 +450,15 @@ def test_access_token_failure_leaves_budget_and_session_untouched(tmp_path):
 def test_next_send_after_access_token_failure_still_never_waits(tmp_path):
     metric = by_name("steps")
     budget = RequestBudget(5)
-    auth = GoogleHealthAuth("CID", "SECRET", tmp_path, session=FakeSession(),
-                             clock=lambda: 1000.0)
+    auth = GoogleHealthAuth("CID", "SECRET", tmp_path, session=FakeSession(), clock=lambda: 1000.0)
     clock = FakeClock(start=0.0)
-    client, _ = make_client(tmp_path, [FakeResponse(200, {"rollupDataPoints": []})],
-                             clock=clock.now, wait=clock.sleep, auth=auth)
+    client, _ = make_client(
+        tmp_path,
+        [FakeResponse(200, {"rollupDataPoints": []})],
+        clock=clock.now,
+        wait=clock.sleep,
+        auth=auth,
+    )
     with pytest.raises(AuthError):
         client.daily_rollup(metric, START, END, budget)  # phantom attempt: no send
     # simulate completing OAuth after the failed attempt

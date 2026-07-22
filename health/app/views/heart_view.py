@@ -1,56 +1,53 @@
-"""Heart: resting HR / HRV trends, intraday viewer."""
+"""Heart: resting HR / HRV (avg + deep sleep) trends, intraday HR viewer."""
+
 from datetime import date
 
 import plotly.express as px
 import streamlit as st
-
-from common import get_store
-
-# dataviz skill palette (references/palette.md) — one series per chart -> slot 1 (blue).
-SURFACE = "#fcfcfb"
-GRID = "#e1e0d9"
-AXIS_LINE = "#c3c2b7"
-MUTED_TEXT = "#898781"
-ACCENT = "#2a78d6"
-
-
-def _style(fig):
-    fig.update_layout(plot_bgcolor=SURFACE, paper_bgcolor=SURFACE, font_color="#0b0b0b",
-                       margin=dict(t=30, l=10, r=10, b=10), hovermode="x unified")
-    fig.update_xaxes(gridcolor=GRID, linecolor=AXIS_LINE, tickfont_color=MUTED_TEXT, zeroline=False)
-    fig.update_yaxes(gridcolor=GRID, linecolor=AXIS_LINE, tickfont_color=MUTED_TEXT, zeroline=False)
-    return fig
+from common import clip_days, load_daily, load_intraday, period_days
+from theme import palette, style
 
 
 def heart_page() -> None:
     st.title("心拍")
-    store = get_store()
-    df = store.daily_frame(["resting_hr", "hrv_rmssd"])
+    p = palette()
+    df = load_daily(("resting_hr", "hrv_rmssd", "hrv_deep_rmssd"))
     if df.empty:
-        st.info("心拍データがありません。")
+        st.info("心拍データがありません。まず「同期」ページで同期してください。")
         return
+    df = clip_days(df, period_days())
 
-    st.subheader("安静時心拍（長期トレンド）")
-    fig = px.line(df.dropna(subset=["resting_hr"]), x="date", y="resting_hr",
-                 labels={"date": "日付", "resting_hr": "bpm"})
-    fig.update_traces(line_color=ACCENT, line_width=2)
-    st.plotly_chart(_style(fig), use_container_width=True, theme=None)
+    st.subheader("安静時心拍")
+    rh = df.dropna(subset=["resting_hr"])
+    if rh.empty:
+        st.caption("データなし（デバイス非対応の可能性）")
+    else:
+        fig = px.line(rh, x="date", y="resting_hr", labels={"date": "日付", "resting_hr": "bpm"})
+        fig.update_traces(line_color=p["categorical"][0], line_width=2)
+        st.plotly_chart(style(fig, p), use_container_width=True, theme=None)
 
     st.subheader("HRV (RMSSD)")
-    hrv = df.dropna(subset=["hrv_rmssd"])
+    hrv = df.dropna(subset=["hrv_rmssd", "hrv_deep_rmssd"], how="all")
     if hrv.empty:
         st.caption("HRV データなし（デバイス非対応の可能性）")
     else:
-        fig = px.line(hrv, x="date", y="hrv_rmssd", labels={"date": "日付", "hrv_rmssd": "ms"})
-        fig.update_traces(line_color=ACCENT, line_width=2)
-        st.plotly_chart(_style(fig), use_container_width=True, theme=None)
+        renamed = hrv.rename(columns={"hrv_rmssd": "平均", "hrv_deep_rmssd": "深い睡眠時"})
+        fig = px.line(
+            renamed,
+            x="date",
+            y=["平均", "深い睡眠時"],
+            color_discrete_sequence=p["line_safe"],
+            labels={"date": "日付", "value": "ms", "variable": ""},
+        )
+        fig.update_traces(line_width=2)
+        st.plotly_chart(style(fig, p), use_container_width=True, theme=None)
 
     st.subheader("分単位心拍ビューア")
     day = st.date_input("日付", value=date.today(), key="hr_day")
-    intra = store.intraday_frame("hr", day)
+    intra = load_intraday("hr", day)
     if intra.empty:
         st.caption("この日の intraday データはありません（直近30日のみ取得）。")
     else:
         fig = px.line(intra, x="ts", y="value", labels={"value": "bpm", "ts": "時刻"})
-        fig.update_traces(line_color=ACCENT, line_width=2)
-        st.plotly_chart(_style(fig), use_container_width=True, theme=None)
+        fig.update_traces(line_color=p["categorical"][0], line_width=2)
+        st.plotly_chart(style(fig, p), use_container_width=True, theme=None)

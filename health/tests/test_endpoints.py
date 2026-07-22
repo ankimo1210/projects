@@ -926,3 +926,23 @@ def test_parse_intraday_hr_reconcile_missing_sample_time_raises_payload_error():
     with pytest.raises(PayloadError) as exc:
         parse_intraday_hr_reconcile([_reconcile_page([point])])
     assert exc.value.metric == "intraday_hr"
+
+
+def test_sleep_reconcile_emits_daily_sleep_minutes_per_wake_date():
+    pages = [load_fixture("sleep_stages.json"), load_fixture("sleep_classic.json")]
+    parsed = parse_sleep_reconcile(pages)
+    assert parsed.daily == (
+        ("sleep_minutes", date(2026, 7, 2), 420.0),
+        ("sleep_minutes", date(2026, 7, 3), 390.0),
+    )
+
+
+def test_sleep_reconcile_daily_minutes_sum_all_sessions_of_a_date():
+    page = load_fixture("sleep_stages.json")
+    nap = json.loads(json.dumps(page))  # deep copy, same wake date as the main session
+    point = nap["dataPoints"][0]
+    point["dataPointName"] = "users/me/dataTypes/sleep/dataPoints/fake-nap-1"
+    point["sleep"]["summary"]["minutesAsleep"] = "45"
+    point["sleep"]["metadata"] = {"nap": True}
+    parsed = parse_sleep_reconcile([page, nap])
+    assert parsed.daily == (("sleep_minutes", date(2026, 7, 2), 465.0),)

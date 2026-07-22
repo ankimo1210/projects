@@ -1,5 +1,6 @@
 """Google Health API OAuth 2.0 (authorization code + PKCE) with non-rotating
 refresh-token store."""
+
 from __future__ import annotations
 
 import base64
@@ -30,9 +31,15 @@ class AuthError(Exception):
 
 
 class GoogleHealthAuth:
-    def __init__(self, client_id: str, client_secret: str, data_dir: Path,
-                 redirect_uri: str = "http://localhost:8501/",
-                 session: Any = None, clock=time.time):
+    def __init__(
+        self,
+        client_id: str,
+        client_secret: str,
+        data_dir: Path,
+        redirect_uri: str = "http://localhost:8501/",
+        session: Any = None,
+        clock=time.time,
+    ):
         self.client_id = client_id
         self.client_secret = client_secret
         self.data_dir = Path(data_dir)
@@ -55,35 +62,63 @@ class GoogleHealthAuth:
     def begin_auth(self) -> str:
         pend = self._read_pending()
         if pend is None:
-            pend = {"verifier": secrets.token_urlsafe(64),
-                     "state": secrets.token_urlsafe(16),
-                     "created_at": self.clock()}
+            pend = {
+                "verifier": secrets.token_urlsafe(64),
+                "state": secrets.token_urlsafe(16),
+                "created_at": self.clock(),
+            }
             self._write_private(self.pending_path, pend)
-        challenge = base64.urlsafe_b64encode(
-            hashlib.sha256(pend["verifier"].encode()).digest()).rstrip(b"=").decode()
-        return AUTHORIZE_URL + "?" + urlencode({
-            "response_type": "code", "client_id": self.client_id, "scope": SCOPES,
-            "code_challenge": challenge, "code_challenge_method": "S256",
-            "state": pend["state"], "redirect_uri": self.redirect_uri,
-            "access_type": "offline", "prompt": "consent",
-            "include_granted_scopes": "true"})
+        challenge = (
+            base64.urlsafe_b64encode(hashlib.sha256(pend["verifier"].encode()).digest())
+            .rstrip(b"=")
+            .decode()
+        )
+        return (
+            AUTHORIZE_URL
+            + "?"
+            + urlencode(
+                {
+                    "response_type": "code",
+                    "client_id": self.client_id,
+                    "scope": SCOPES,
+                    "code_challenge": challenge,
+                    "code_challenge_method": "S256",
+                    "state": pend["state"],
+                    "redirect_uri": self.redirect_uri,
+                    "access_type": "offline",
+                    "prompt": "consent",
+                    "include_granted_scopes": "true",
+                }
+            )
+        )
 
-    def complete_auth(self, code: str | None, state: str | None,
-                       error: str | None = None,
-                       error_description: str | None = None) -> None:
+    def complete_auth(
+        self,
+        code: str | None,
+        state: str | None,
+        error: str | None = None,
+        error_description: str | None = None,
+    ) -> None:
         pend = self._read_pending()
         try:
             if error:
                 raise AuthError(error_description or error)
             if pend is None:
-                raise AuthError("no pending sign-in (expired or never started); "
-                                 "restart from begin_auth")
+                raise AuthError(
+                    "no pending sign-in (expired or never started); restart from begin_auth"
+                )
             if state != pend["state"]:
                 raise AuthError("OAuth state mismatch")
-            resp = self._post_token({
-                "grant_type": "authorization_code", "client_id": self.client_id,
-                "client_secret": self.client_secret, "code": code,
-                "code_verifier": pend["verifier"], "redirect_uri": self.redirect_uri})
+            resp = self._post_token(
+                {
+                    "grant_type": "authorization_code",
+                    "client_id": self.client_id,
+                    "client_secret": self.client_secret,
+                    "code": code,
+                    "code_verifier": pend["verifier"],
+                    "redirect_uri": self.redirect_uri,
+                }
+            )
             if resp.status_code != 200:
                 raise self._token_error(resp)
             self._store_tokens(resp.json(), existing=None)
@@ -96,10 +131,14 @@ class GoogleHealthAuth:
         tokens = self.load_tokens()
         if tokens is None:
             raise AuthError("no tokens saved; connect Google Health first")
-        resp = self._post_token({"grant_type": "refresh_token",
-                                  "client_id": self.client_id,
-                                  "client_secret": self.client_secret,
-                                  "refresh_token": tokens["refresh_token"]})
+        resp = self._post_token(
+            {
+                "grant_type": "refresh_token",
+                "client_id": self.client_id,
+                "client_secret": self.client_secret,
+                "refresh_token": tokens["refresh_token"],
+            }
+        )
         if resp.status_code != 200:
             raise self._token_error(resp)
         return self._store_tokens(resp.json(), existing=tokens)
@@ -131,8 +170,9 @@ class GoogleHealthAuth:
             payload = resp.json() or {}
         except ValueError:
             payload = {}
-        detail = payload.get("error_description") or payload.get("error") \
-            or f"HTTP {resp.status_code}"
+        detail = (
+            payload.get("error_description") or payload.get("error") or f"HTTP {resp.status_code}"
+        )
         return AuthError(f"token request failed: {detail}")
 
     # -- storage ---------------------------------------------------------------
@@ -151,10 +191,12 @@ class GoogleHealthAuth:
     def _store_tokens(self, payload: dict, existing: dict | None) -> dict:
         existing = existing or {}
         now = self.clock()
-        tokens = {"access_token": payload["access_token"],
-                  "refresh_token": payload.get("refresh_token") or existing.get("refresh_token"),
-                  "expires_at": now + payload.get("expires_in", 3600),
-                  "scope": payload.get("scope", existing.get("scope", ""))}
+        tokens = {
+            "access_token": payload["access_token"],
+            "refresh_token": payload.get("refresh_token") or existing.get("refresh_token"),
+            "expires_at": now + payload.get("expires_in", 3600),
+            "scope": payload.get("scope", existing.get("scope", "")),
+        }
         refresh_expires_in = payload.get("refresh_token_expires_in")
         if refresh_expires_in is not None:
             tokens["refresh_expires_at"] = now + refresh_expires_in
