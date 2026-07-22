@@ -1,7 +1,92 @@
 .page {
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  gap: 1.5rem;
+  padding: 2rem 1rem;
   background: #0d0d0f;
+}
+
+.side {
+  width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.panel {
+  background: #1a1a1c;
+  color: #ddd;
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+.panel h2 {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: #4a7;
+  margin: 0 0 0.6rem;
+  text-transform: none;
+}
+
+.interp-program {
+  color: #888;
+  font-size: 0.75rem;
+  margin-bottom: 0.3rem;
+}
+
+.interp-action {
+  color: #39ff6a;
+  margin-bottom: 0.4rem;
+}
+
+.interp-registers,
+.interp-alerts {
+  margin: 0.3rem 0 0;
+  padding-left: 1.2em;
+}
+
+.interp-registers li {
+  color: #bbb;
+}
+
+.interp-alerts li {
+  color: #c9a227;
+}
+
+.cheat-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cheat-table td {
+  padding: 0.35rem 0.5rem 0.35rem 0;
+  border-top: 1px solid #2a2a2c;
+  vertical-align: top;
+}
+
+.cheat-keys {
+  font-family: "Courier New", monospace;
+  color: #39ff6a;
+  white-space: nowrap;
+  font-size: 0.8rem;
+}
+
+.cheat-name {
+  color: #ddd;
+}
+
+.cheat-expect {
+  color: #888;
+  font-size: 0.75rem;
+}
+
+.cheat-note {
+  color: #888;
+  font-size: 0.72rem;
+  margin: 0.6rem 0 0;
 }
