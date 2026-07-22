@@ -1,0 +1,538 @@
+{
+  "schema_version": 1,
+  "title": "Paper corpus retrieval QA gold set",
+  "intended_use": "Preflight regression test for an AI/RAG reader over the committed LOB paper corpus.",
+  "design": {
+    "unit_of_analysis": "one English question with one target paper and one or more answer-bearing PDF pages",
+    "sampling": "census of all 22 papers, stratified into formula, method, and result questions",
+    "queries_per_paper": 3,
+    "total_queries": 66,
+    "known_limitations": [
+      "The set was curated by one reviewer and does not measure inter-annotator agreement.",
+      "Questions use terminology present in or closely paraphrased from the papers; multilingual and adversarial queries are out of scope.",
+      "A page hit establishes answer-bearing context, not answer synthesis correctness."
+    ]
+  },
+  "adjudication": {
+    "date": "2026-07-23",
+    "procedure": "Draft failures were reviewed against rendered source-PDF pages. Multi-part or corpus-ambiguous questions were rewritten as atomic, paper-identifiable questions without changing their substantive answer targets.",
+    "reviewed_query_ids": [
+      "deeplob-result-fi2010",
+      "queue-imbalance-formula",
+      "queue-imbalance-method-logistic",
+      "price-impact-method-taq",
+      "lob-review-method-description",
+      "tabl-result-fi2010",
+      "cnn-lob-formula-label",
+      "cnn-lob-result-evaluation",
+      "universal-formula-recurrent"
+    ],
+    "draft_metrics_before_adjudication": {
+      "paper_recall_at_3": 0.9091,
+      "page_recall_at_5": 0.8636,
+      "page_mrr": 0.7001
+    }
+  },
+  "retriever": {
+    "name": "field_aware_bm25_phrase_v1",
+    "description": "Deterministic dependency-free BM25 over chunk text with repeated title/heading fields and an exact normalized phrase bonus.",
+    "parameters": {
+      "k1": 1.2,
+      "b": 0.75,
+      "title_weight": 2,
+      "heading_weight": 2
+    }
+  },
+  "thresholds": {
+    "paper_recall_at_3": 0.95,
+    "page_recall_at_5": 0.9,
+    "page_mrr": 0.75
+  },
+  "queries": [
+    {
+      "query_id": "deeplob-formula-microprice",
+      "paper_id": "deeplob_1808.03668v6",
+      "category": "formula",
+      "question": "How is the volume-weighted micro-price defined from best bid and ask prices and queue imbalance?",
+      "expected_pages": [5],
+      "expected_formula_ids": ["deeplob_1808.03668v6:formula:0007"]
+    },
+    {
+      "query_id": "deeplob-method-architecture",
+      "paper_id": "deeplob_1808.03668v6",
+      "category": "method",
+      "question": "How does DeepLOB combine convolutional filters, an Inception module, and an LSTM for limit order book prediction?",
+      "expected_pages": [4, 5, 6]
+    },
+    {
+      "query_id": "deeplob-result-fi2010",
+      "paper_id": "deeplob_1808.03668v6",
+      "category": "result",
+      "question": "In DeepLOB, what accuracy, precision, recall, and F1 results are reported on FI-2010 for prediction horizons k=10, 20, 50, and 100?",
+      "expected_pages": [6, 7]
+    },
+    {
+      "query_id": "fi2010-formula-zscore",
+      "paper_id": "fi2010_1705.03233v5",
+      "category": "formula",
+      "question": "What Z-score normalization equation is specified in the FI-2010 benchmark experimental protocol?",
+      "expected_pages": [13],
+      "expected_formula_ids": ["fi2010_1705.03233v5:formula:0005"]
+    },
+    {
+      "query_id": "fi2010-method-protocol",
+      "paper_id": "fi2010_1705.03233v5",
+      "category": "method",
+      "question": "How are anchored cross-validation, normalization, prediction horizons, and labels organized in the FI-2010 experimental protocol?",
+      "expected_pages": [11, 12, 13, 14]
+    },
+    {
+      "query_id": "fi2010-result-baselines",
+      "paper_id": "fi2010_1705.03233v5",
+      "category": "result",
+      "question": "How do ridge regression and the SLFN nonlinear baseline perform on the benchmark dataset?",
+      "expected_pages": [18, 19, 20]
+    },
+    {
+      "query_id": "queue-imbalance-formula",
+      "paper_id": "gould_bonart_1512.03492v1",
+      "category": "formula",
+      "question": "In the one-tick-ahead queue imbalance predictor, how is I(t) defined from the best bid and best ask queue sizes?",
+      "expected_pages": [7],
+      "expected_formula_ids": ["gould_bonart_1512.03492v1:formula:0007"]
+    },
+    {
+      "query_id": "queue-imbalance-method-logistic",
+      "paper_id": "gould_bonart_1512.03492v1",
+      "category": "method",
+      "question": "How does the one-tick-ahead queue imbalance study construct each sample by choosing a random time between consecutive mid-price changes?",
+      "expected_pages": [11, 12]
+    },
+    {
+      "query_id": "queue-imbalance-result-predictive",
+      "paper_id": "gould_bonart_1512.03492v1",
+      "category": "result",
+      "question": "What predictive power and local logistic regression results are reported for queue imbalance?",
+      "expected_pages": [19, 20, 21, 22, 23, 24]
+    },
+    {
+      "query_id": "markovian-lob-formula-duration",
+      "paper_id": "ref_cont_de_larrard_markovian_lob_1104.4596",
+      "category": "formula",
+      "question": "What is the tail probability of the duration until the next price change when the two queues start at x and y?",
+      "expected_pages": [8, 9, 10],
+      "expected_formula_ids": ["ref_cont_de_larrard_markovian_lob_1104.4596:formula:0015"]
+    },
+    {
+      "query_id": "markovian-lob-method-level1",
+      "paper_id": "ref_cont_de_larrard_markovian_lob_1104.4596",
+      "category": "method",
+      "question": "How does the Markovian level-one order book model represent bid and ask queue dynamics, cancellations, and market orders?",
+      "expected_pages": [3, 4, 5, 6, 7]
+    },
+    {
+      "query_id": "markovian-lob-result-diffusion",
+      "paper_id": "ref_cont_de_larrard_markovian_lob_1104.4596",
+      "category": "result",
+      "question": "What diffusion limit is derived for the price process and how is it tested on high-frequency data?",
+      "expected_pages": [14, 15, 16],
+      "expected_formula_ids": ["ref_cont_de_larrard_markovian_lob_1104.4596:formula:0043"]
+    },
+    {
+      "query_id": "price-impact-formula-ofi",
+      "paper_id": "ref_cont_price_impact_1011.6402",
+      "category": "formula",
+      "question": "How is order flow imbalance OFI aggregated from individual order book events over a time interval?",
+      "expected_pages": [4],
+      "expected_formula_ids": ["ref_cont_price_impact_1011.6402:formula:0002"]
+    },
+    {
+      "query_id": "price-impact-method-taq",
+      "paper_id": "ref_cont_price_impact_1011.6402",
+      "category": "method",
+      "question": "What TAQ sample, 10-second time grid, and half-hour ordinary least squares regressions are used to estimate the order-flow-imbalance price-impact coefficient?",
+      "expected_pages": [8, 9]
+    },
+    {
+      "query_id": "price-impact-result-volume",
+      "paper_id": "ref_cont_price_impact_1011.6402",
+      "category": "result",
+      "question": "Why does order flow imbalance explain price changes better than trade imbalance or total volume, including the square-root volume relation?",
+      "expected_pages": [16, 17, 18, 19, 20]
+    },
+    {
+      "query_id": "stochastic-lob-formula-realized-volatility",
+      "paper_id": "ref_cont_stochastic_order_book_dynamics_2010",
+      "category": "formula",
+      "question": "How is realized volatility computed from successive mid-prices in the stochastic order book model?",
+      "expected_pages": [15],
+      "expected_formula_ids": ["ref_cont_stochastic_order_book_dynamics_2010:formula:0053"]
+    },
+    {
+      "query_id": "stochastic-lob-method-rates",
+      "paper_id": "ref_cont_stochastic_order_book_dynamics_2010",
+      "category": "method",
+      "question": "How are limit order arrival, market order, and cancellation rates specified and estimated in the continuous-time Markov chain order book?",
+      "expected_pages": [5, 6, 7, 8]
+    },
+    {
+      "query_id": "stochastic-lob-result-conditional",
+      "paper_id": "ref_cont_stochastic_order_book_dynamics_2010",
+      "category": "result",
+      "question": "What long-run behavior and conditional price-move and execution probabilities are reported by the stochastic order book model?",
+      "expected_pages": [15, 16, 17, 18]
+    },
+    {
+      "query_id": "dixon-rnn-formula-dropout",
+      "paper_id": "ref_dixon_rnn_lob_1707.05642",
+      "category": "formula",
+      "question": "How is a Bernoulli dropout mask applied to every input in a recurrent limit order book sequence?",
+      "expected_pages": [6],
+      "expected_formula_ids": ["ref_dixon_rnn_lob_1707.05642:formula:0008"]
+    },
+    {
+      "query_id": "dixon-rnn-method-sequence",
+      "paper_id": "ref_dixon_rnn_lob_1707.05642",
+      "category": "method",
+      "question": "How is a fixed-length limit order book sequence classified with a recurrent neural network and predictor selection?",
+      "expected_pages": [4, 5, 6]
+    },
+    {
+      "query_id": "dixon-rnn-result-classification",
+      "paper_id": "ref_dixon_rnn_lob_1707.05642",
+      "category": "result",
+      "question": "What sequence classification results and F1 scores are obtained for next limit order book price movement?",
+      "expected_pages": [10, 11, 12, 13, 14, 15, 16, 17]
+    },
+    {
+      "query_id": "lob-review-formula-long-memory",
+      "paper_id": "ref_gould_limit_order_books_1012.0349",
+      "category": "formula",
+      "question": "What relation connects the Hurst exponent H to the power-law autocorrelation exponent alpha for long-memory order flow?",
+      "expected_pages": [11, 12],
+      "expected_formula_ids": ["ref_gould_limit_order_books_1012.0349:formula:0014"]
+    },
+    {
+      "query_id": "lob-review-method-description",
+      "paper_id": "ref_gould_limit_order_books_1012.0349",
+      "category": "method",
+      "question": "In the Limit order books survey, how are b(t), a(t), bid-relative and ask-relative price, and depth n at price p defined?",
+      "expected_pages": [2, 3, 4]
+    },
+    {
+      "query_id": "lob-review-result-stylized-facts",
+      "paper_id": "ref_gould_limit_order_books_1012.0349",
+      "category": "result",
+      "question": "What empirical stylized facts are documented for order size, relative price, cancellations, impact, heavy tails, and long memory in order flow?",
+      "expected_pages": [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
+    },
+    {
+      "query_id": "svm-formula-polynomial-kernel",
+      "paper_id": "ref_kercheval_zhang_svm_2013",
+      "category": "formula",
+      "question": "What polynomial kernel maps limit order book features into the SVM feature space?",
+      "expected_pages": [7, 8],
+      "expected_formula_ids": ["ref_kercheval_zhang_svm_2013:formula:0020"]
+    },
+    {
+      "query_id": "svm-method-features",
+      "paper_id": "ref_kercheval_zhang_svm_2013",
+      "category": "method",
+      "question": "How are basic, time-insensitive, and time-sensitive limit order book features extracted and used to train the SVM?",
+      "expected_pages": [12, 13, 14, 15, 16, 17, 18, 19]
+    },
+    {
+      "query_id": "svm-result-significance",
+      "paper_id": "ref_kercheval_zhang_svm_2013",
+      "category": "result",
+      "question": "What feature-selection, significance-test, processing-time, and simple trading strategy results are reported for the SVM model?",
+      "expected_pages": [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+    },
+    {
+      "query_id": "axial-lob-formula-attention",
+      "paper_id": "ref_kisiel_axial_lob_2212.01807",
+      "category": "formula",
+      "question": "How is gated axial attention computed using query, key, value, relative positions, and learned gates?",
+      "expected_pages": [3],
+      "expected_formula_ids": ["ref_kisiel_axial_lob_2212.01807:formula:0004"]
+    },
+    {
+      "query_id": "axial-lob-method-architecture",
+      "paper_id": "ref_kisiel_axial_lob_2212.01807",
+      "category": "method",
+      "question": "How does Axial-LOB alternate attention along time and order book feature axes and calibrate the model on FI-2010?",
+      "expected_pages": [3, 4, 5]
+    },
+    {
+      "query_id": "axial-lob-result-permutation",
+      "paper_id": "ref_kisiel_axial_lob_2212.01807",
+      "category": "result",
+      "question": "How does Axial-LOB perform on FI-2010 and under temporal and feature input permutation tests?",
+      "expected_pages": [5, 6]
+    },
+    {
+      "query_id": "dain-formula-gate",
+      "paper_id": "ref_passalis_dain_1902.07892",
+      "category": "formula",
+      "question": "How is the DAIN adaptive gating vector gamma computed with a sigmoid from the normalized sequence mean?",
+      "expected_pages": [3],
+      "expected_formula_ids": ["ref_passalis_dain_1902.07892:formula:0008"]
+    },
+    {
+      "query_id": "dain-method-layers",
+      "paper_id": "ref_passalis_dain_1902.07892",
+      "category": "method",
+      "question": "How do the adaptive shifting, scaling, and gating layers in Deep Adaptive Input Normalization transform each time series?",
+      "expected_pages": [2, 3]
+    },
+    {
+      "query_id": "dain-result-datasets",
+      "paper_id": "ref_passalis_dain_1902.07892",
+      "category": "result",
+      "question": "What forecasting improvements does DAIN report on the energy, air quality, and FI-2010 financial datasets?",
+      "expected_pages": [3, 4, 5, 6]
+    },
+    {
+      "query_id": "lob-benchmark-formula-label",
+      "paper_id": "ref_prata_lob_benchmark_2308.01915",
+      "category": "formula",
+      "question": "How are upward, downward, and stationary stock price trend labels defined using future average mid-price and threshold theta?",
+      "expected_pages": [3],
+      "expected_formula_ids": ["ref_prata_lob_benchmark_2308.01915:formula:0002"]
+    },
+    {
+      "query_id": "lob-benchmark-method-lobcast",
+      "paper_id": "ref_prata_lob_benchmark_2308.01915",
+      "category": "method",
+      "question": "How does the LOBCAST framework benchmark deep learning models across FI-2010 and proprietary stock datasets?",
+      "expected_pages": [4, 5, 6]
+    },
+    {
+      "query_id": "lob-benchmark-result-generalization",
+      "paper_id": "ref_prata_lob_benchmark_2308.01915",
+      "category": "result",
+      "question": "What performance, robustness, and cross-market generalizability findings are reported in the LOB benchmark study?",
+      "expected_pages": [6, 7, 8, 9]
+    },
+    {
+      "query_id": "sirignano-deep-formula-spatial",
+      "paper_id": "ref_sirignano_deep_lob_1601.01987",
+      "category": "formula",
+      "question": "How does the spatial neural network model the conditional probability of an integer-valued price change at location y?",
+      "expected_pages": [22, 23],
+      "expected_formula_ids": ["ref_sirignano_deep_lob_1601.01987:formula:0010"]
+    },
+    {
+      "query_id": "sirignano-deep-method-distribution",
+      "paper_id": "ref_sirignano_deep_lob_1601.01987",
+      "category": "method",
+      "question": "How are spatial neural network architectures constructed to model joint high-dimensional limit order book price distributions?",
+      "expected_pages": [19, 20, 21, 22, 23, 24, 25, 26]
+    },
+    {
+      "query_id": "sirignano-deep-result-out-of-sample",
+      "paper_id": "ref_sirignano_deep_lob_1601.01987",
+      "category": "result",
+      "question": "What out-of-sample likelihood and tail accuracy results are reported for fixed-time and next-price-change horizons?",
+      "expected_pages": [30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42]
+    },
+    {
+      "query_id": "mlp-mixer-formula-block",
+      "paper_id": "ref_tolstikhin_mlp_mixer_2105.01601",
+      "category": "formula",
+      "question": "What equations define token-mixing and channel-mixing MLP blocks with residual connections and LayerNorm?",
+      "expected_pages": [3],
+      "expected_formula_ids": ["ref_tolstikhin_mlp_mixer_2105.01601:formula:0002"]
+    },
+    {
+      "query_id": "mlp-mixer-method-architecture",
+      "paper_id": "ref_tolstikhin_mlp_mixer_2105.01601",
+      "category": "method",
+      "question": "How does MLP-Mixer process image patches using only token-mixing and channel-mixing multilayer perceptrons?",
+      "expected_pages": [2, 3]
+    },
+    {
+      "query_id": "mlp-mixer-result-scale",
+      "paper_id": "ref_tolstikhin_mlp_mixer_2105.01601",
+      "category": "result",
+      "question": "How does MLP-Mixer accuracy change with model scale and pre-training dataset size on ImageNet and JFT?",
+      "expected_pages": [3, 4, 5, 6, 7]
+    },
+    {
+      "query_id": "bin-formula-mixture",
+      "paper_id": "ref_tran_bin_2003.00598",
+      "category": "formula",
+      "question": "How does Bilinear Input Normalization combine row-wise and column-wise normalized matrices with learned lambda weights?",
+      "expected_pages": [3],
+      "expected_formula_ids": ["ref_tran_bin_2003.00598:formula:0013"]
+    },
+    {
+      "query_id": "bin-method-adaptive-normalization",
+      "paper_id": "ref_tran_bin_2003.00598",
+      "category": "method",
+      "question": "How does BiN learn adaptive shifting, scaling, and gating along both dimensions of bilinear financial time series?",
+      "expected_pages": [2, 3]
+    },
+    {
+      "query_id": "bin-result-fi2010",
+      "paper_id": "ref_tran_bin_2003.00598",
+      "category": "result",
+      "question": "What FI-2010 improvements are reported when BiN is applied to TABL and compared with batch normalization?",
+      "expected_pages": [4, 5, 6]
+    },
+    {
+      "query_id": "tabl-formula-attention",
+      "paper_id": "ref_tran_tabl_1712.00975",
+      "category": "formula",
+      "question": "How does TABL compute temporal attention weights and combine the attended bilinear representation through lambda?",
+      "expected_pages": [4],
+      "expected_formula_ids": ["ref_tran_tabl_1712.00975:formula:0009", "ref_tran_tabl_1712.00975:formula:0010"]
+    },
+    {
+      "query_id": "tabl-method-network",
+      "paper_id": "ref_tran_tabl_1712.00975",
+      "category": "method",
+      "question": "How is the Temporal Attention augmented Bilinear network built and configured for high-frequency limit order data?",
+      "expected_pages": [3, 4, 5, 6, 7]
+    },
+    {
+      "query_id": "tabl-result-fi2010",
+      "paper_id": "ref_tran_tabl_1712.00975",
+      "category": "result",
+      "question": "What accuracy, precision, recall, F1, and forward and backward computation times are reported for C(TABL) on FI-2010?",
+      "expected_pages": [7, 8, 9]
+    },
+    {
+      "query_id": "cnn-lob-formula-label",
+      "paper_id": "ref_tsantekidis_cnn_lob_2017",
+      "category": "formula",
+      "question": "In Forecasting Stock Prices from the Limit Order Book using CNNs, how are three movement labels defined from backward and forward average mid-prices?",
+      "expected_pages": [3],
+      "expected_formula_ids": ["ref_tsantekidis_cnn_lob_2017:formula:0005"]
+    },
+    {
+      "query_id": "cnn-lob-method-architecture",
+      "paper_id": "ref_tsantekidis_cnn_lob_2017",
+      "category": "method",
+      "question": "What convolutional neural network architecture and training loss are used to forecast stock prices from limit order book tensors?",
+      "expected_pages": [3, 4]
+    },
+    {
+      "query_id": "cnn-lob-result-evaluation",
+      "paper_id": "ref_tsantekidis_cnn_lob_2017",
+      "category": "result",
+      "question": "In Forecasting Stock Prices from the Limit Order Book using CNNs, what recall, precision, F1, and Cohen kappa results are reported against SVM and MLP baselines?",
+      "expected_pages": [4, 5]
+    },
+    {
+      "query_id": "stationary-lob-formula-features",
+      "paper_id": "ref_tsantekidis_stationary_lob_1810.09965",
+      "category": "formula",
+      "question": "How are stationary relative price and accumulated volume features constructed from limit order book levels?",
+      "expected_pages": [6, 7],
+      "expected_formula_ids": ["ref_tsantekidis_stationary_lob_1810.09965:formula:0006", "ref_tsantekidis_stationary_lob_1810.09965:formula:0009"]
+    },
+    {
+      "query_id": "stationary-lob-method-models",
+      "paper_id": "ref_tsantekidis_stationary_lob_1810.09965",
+      "category": "method",
+      "question": "How are CNN, LSTM, and combined CNN-LSTM models trained on stationary limit order book features?",
+      "expected_pages": [9, 10, 11]
+    },
+    {
+      "query_id": "stationary-lob-result-evaluation",
+      "paper_id": "ref_tsantekidis_stationary_lob_1810.09965",
+      "category": "result",
+      "question": "What experimental results show the effect of stationary features on price prediction across forecasting horizons?",
+      "expected_pages": [11, 12, 13, 14, 15, 16]
+    },
+    {
+      "query_id": "transformer-formula-scaled-attention",
+      "paper_id": "ref_vaswani_attention_1706.03762",
+      "category": "formula",
+      "question": "What is the scaled dot-product attention equation using query, key, value, and square root of key dimension?",
+      "expected_pages": [4],
+      "expected_formula_ids": ["ref_vaswani_attention_1706.03762:formula:0001"]
+    },
+    {
+      "query_id": "transformer-method-architecture",
+      "paper_id": "ref_vaswani_attention_1706.03762",
+      "category": "method",
+      "question": "How are Transformer encoder and decoder stacks built from multi-head self-attention, feed-forward layers, residual connections, and positional encoding?",
+      "expected_pages": [3, 4, 5, 6]
+    },
+    {
+      "query_id": "transformer-result-translation",
+      "paper_id": "ref_vaswani_attention_1706.03762",
+      "category": "result",
+      "question": "What BLEU, training cost, model variation, and constituency parsing results are reported for the Transformer?",
+      "expected_pages": [8, 9, 10]
+    },
+    {
+      "query_id": "multihorizon-formula-attention",
+      "paper_id": "ref_zhang_multihorizon_2105.10430",
+      "category": "formula",
+      "question": "How are the context vector and attention weights computed for multi-horizon sequence-to-sequence limit order book forecasting?",
+      "expected_pages": [5],
+      "expected_formula_ids": ["ref_zhang_multihorizon_2105.10430:formula:0005"]
+    },
+    {
+      "query_id": "multihorizon-method-architecture",
+      "paper_id": "ref_zhang_multihorizon_2105.10430",
+      "category": "method",
+      "question": "How does the encoder-decoder attention architecture jointly forecast multiple limit order book horizons?",
+      "expected_pages": [4, 5, 6]
+    },
+    {
+      "query_id": "multihorizon-result-hardware",
+      "paper_id": "ref_zhang_multihorizon_2105.10430",
+      "category": "result",
+      "question": "What FI-2010, LSE transfer-learning, and IPU versus GPU acceleration results are reported for multi-horizon forecasting?",
+      "expected_pages": [7, 8, 9, 10]
+    },
+    {
+      "query_id": "universal-formula-recurrent",
+      "paper_id": "sirignano_cont_1803.06917v1",
+      "category": "formula",
+      "question": "In Universal features of price formation, what recurrent state equation maps order book input and previous hidden state to next-price-move output?",
+      "expected_pages": [6],
+      "expected_formula_ids": ["sirignano_cont_1803.06917v1:formula:0002"]
+    },
+    {
+      "query_id": "universal-method-cross-asset",
+      "paper_id": "sirignano_cont_1803.06917v1",
+      "category": "method",
+      "question": "How is a deep recurrent model trained on billions of order book observations across hundreds of stocks to learn price formation?",
+      "expected_pages": [4, 5, 6, 7]
+    },
+    {
+      "query_id": "universal-result-universality",
+      "paper_id": "sirignano_cont_1803.06917v1",
+      "category": "result",
+      "question": "What evidence supports universality across assets, stationarity, and path dependence in learned price formation?",
+      "expected_pages": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+    },
+    {
+      "query_id": "tlob-formula-mlplob",
+      "paper_id": "tlob_2502.15757v3",
+      "category": "formula",
+      "question": "What residual row-mixing and column-mixing equations define the MLPLOB block?",
+      "expected_pages": [3],
+      "expected_formula_ids": ["tlob_2502.15757v3:formula:0008", "tlob_2502.15757v3:formula:0009"]
+    },
+    {
+      "query_id": "tlob-method-dual-attention",
+      "paper_id": "tlob_2502.15757v3",
+      "category": "method",
+      "question": "How does TLOB use alternating dual attention across time and feature dimensions after bilinear normalization?",
+      "expected_pages": [3, 4]
+    },
+    {
+      "query_id": "tlob-result-markets",
+      "paper_id": "tlob_2502.15757v3",
+      "category": "result",
+      "question": "What results does TLOB report on FI-2010, Tesla and Intel stocks, Bitcoin, and its ablation study?",
+      "expected_pages": [6, 7]
+    }
+  ]
+}

@@ -88,6 +88,31 @@ def test_formula_overlay_distinguishes_verified_and_fallback_content() -> None:
     assert FORMULA_MODULE.replace_formula_blocks(repaired, records) == repaired
 
 
+def test_repair_chunks_drops_formula_boundary_artifacts(tmp_path: Path) -> None:
+    chunks_path = tmp_path / "chunks.jsonl"
+    chunks = [
+        {"chunk_id": "sample:0001", "text": "Before\n$$x = 1", "raw_text": "Before\n$$x = 1"},
+        {"chunk_id": "sample:0002", "text": "$$", "raw_text": "$$"},
+        {"chunk_id": "sample:0003", "text": "After", "raw_text": "After"},
+    ]
+    chunks_path.write_text("".join(json.dumps(chunk) + "\n" for chunk in chunks), encoding="utf-8")
+    records = [
+        {
+            "formula_id": "sample:formula:0001",
+            "status": "verified_manual",
+            "page": 1,
+            "latex": "x = 1",
+        }
+    ]
+
+    removed = FORMULA_MODULE.repair_chunks(chunks_path, records)
+    repaired = [json.loads(line) for line in chunks_path.read_text().splitlines()]
+
+    assert removed == 1
+    assert [chunk["chunk_id"] for chunk in repaired] == ["sample:0001", "sample:0003"]
+    assert "sample:formula:0001" in repaired[0]["text"]
+
+
 def test_formula_override_manifest_has_expected_reviewed_set() -> None:
     overrides = FORMULA_MODULE.load_overrides()
 

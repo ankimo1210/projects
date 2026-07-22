@@ -22,7 +22,7 @@
 
 ## 現在のコーパス
 
-2026-07-22 時点で22論文・449ページを変換し、1,326 chunks、424式を保存している。
+2026-07-23 時点で22論文・449ページを変換し、1,318 chunks、424式を保存している。
 数式品質オーバーレイにより422式を LaTeX 化し、全424式に原本 crop を付けた。
 chunk上限は480 tokenを指定しているが、分割できない表を
 含む `ref_tran_bin_2003.00598` の2 chunksは525/536 tokenとなる。実測最大値は各論文の
@@ -50,6 +50,9 @@ chunk上限は480 tokenを指定しているが、分割できない表を
 既存式の確認43件、復元125件、論文の疑わしい誤植修正23件、非数式2件である。
 誤植修正には原文、根拠、仮定、代替解釈を残し、著者による訂正と区別する。
 
+数式オーバーレイの境界だけを含んで本文が空になっていた8 chunksは、検索ノイズに
+なるため除外した。生成時にも同じ除外を適用し、検証時は空本文をエラーとする。
+
 ## 生成と検証
 
 通常の変換は隔離した Docling `2.114.0` を使うため、workspace の依存関係を変更しない。
@@ -57,6 +60,7 @@ chunk上限は480 tokenを指定しているが、分割できない表を
 ```bash
 make -C market_nn paper-corpus
 make -C market_nn paper-corpus-check
+make -C market_nn paper-corpus-retrieval-qa
 ```
 
 既存コーパスに数式品質オーバーレイだけを再適用する場合:
@@ -135,3 +139,20 @@ crop と原本 PDF で照合する。
 `semantic_high_confidence` は複数の意味的制約から最も妥当な式を復元した状態であり、
 原著者による訂正を意味しない。特に `correct_suspected_paper_typo` は監査上の提案なので、
 引用時には `paper_as_printed_latex` と併記する。
+
+## 検索QA
+
+`manifests/paper_retrieval_gold.json` は全22論文について、式・方法・結果を1問ずつ、
+計66問の英語質問と正解paper/pageを固定する。式の質問は `formula_id` も検査する。
+依存関係を増やさない決定論的BM25をベースラインとし、次を品質ゲートにしている。
+
+| metric | minimum | current |
+|---|---:|---:|
+| paper Recall@3 | 95% | 100% |
+| answer-page Recall@5 | 90% | 100% |
+| answer-page MRR | 0.75 | 0.7922 |
+
+現行runでは、1,318 chunksがすべて非空でpage provenanceを持ち、424式すべてがchunk内の
+式マーカーから追跡できる。gold setは単一レビュアー作成であり、質問応答の生成精度、
+日本語質問、意図的な言い換え、embedding検索は未評価である。再現可能な詳細結果と
+技術レポートは `reports/paper_retrieval_qa/` に保存する。
