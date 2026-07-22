@@ -204,3 +204,27 @@ McNeil–Frey (2000)、Aït-Sahalia–Duarte (2003)、Antonov et al. (2015)、
 Huge–Savine (2025) は、元PDFの埋め込みフォントに由来する置換文字率が高いため、
 本文を引用する際に原ページ画像との照合が必要です。PyMuPDF4LLMの強制OCRでは改善
 しなかったため、別OCRエンジンによる補正を後続課題とします。
+
+### v2 構造化変換（検証中）
+
+v2 は MinerU 3.4.4 の `pipeline` 出力を入力にし、本文ブロック、数式、表、図を
+別レコードとして保存します。抽出結果は自動では検証済みにせず、Gold assertion と
+原ページの独立レビューを通った項目だけを `verified` とします。特に表は JSON/HTML/CSV
+と原画像を併存させ、OCR の数値とレビュー済み数値を別フィールドに残します。
+
+MinerU は本リポジトリの依存関係には追加しません。隔離環境で全 PDF を先に変換し、
+その中間出力を v2 adapter に渡します。
+
+```bash
+TMPDIR=/tmp/mineru-johnhull uvx --from 'mineru[all]==3.4.4' \
+  mineru -p johnhull/references/papers -o tmp/pdfs/corpus-v2-mineru \
+  -b pipeline -m auto -f true -t true
+
+uv run --no-sync python johnhull/scripts/build_paper_corpus_v2.py \
+  --paper-id 1990-hull-white-interest-rate-derivative-securities \
+  --mineru-root tmp/pdfs/corpus-v2-mineru
+```
+
+`make hull-paper-corpus-v2-check` は Gold、構造化表、検証済み上書き、原画像参照、
+および 2 回変換のバイト一致を検査します。JGBi 告示の縦書きは現行 MinerU では本文と
+読み順が不十分なため、`fail/review` のまま原 PDF と別の OCR 経路を優先します。

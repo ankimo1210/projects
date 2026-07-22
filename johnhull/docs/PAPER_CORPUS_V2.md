@@ -60,3 +60,26 @@ Hagan et al. SABR, McNeil--Frey VaR/ES, and Lyashenko--Mercurio RFR material.
 
 The detailed implementation phases and numeric gates are recorded in
 `docs/superpowers/plans/2026-07-22-johnhull-paper-corpus-v2.md`.
+
+## Extractor boundary
+
+MinerU 3.4.4 `pipeline` is the selected local structured-output backend. It is
+run as an optional pinned tool rather than a workspace dependency. The tracked
+`references/gold/extractor_bakeoff.json` records the comparison, operational
+constraints, and license review. Selection does not imply semantic trust:
+MinerU output starts as `auto` or `unverified`, and only an independently
+reviewed assertion can produce a `verified` formula or table cell.
+
+The v2 adapter consumes MinerU's `*_content_list.json` and emits:
+
+- ordered `blocks.jsonl` with raw/normalized text and PDF-point bounding boxes;
+- `equations.jsonl` with display/inline LaTeX, equation numbers, source crops,
+  syntax status, and reviewed overrides;
+- structural `tables.jsonl` plus per-table JSON, HTML, CSV, and source crops;
+- `figures.jsonl`, `pages.jsonl`, `symbols.json`, `paper.md`, provenance metadata,
+  and component-level `quality.json`.
+
+The adapter fails if source pages are missing, page indices are non-contiguous,
+assets disappear, or a reviewed assertion no longer resolves to its exact
+source region. Japanese reading order is always routed to review. Low text
+coverage versus the source PDF is a text failure rather than an empty success.

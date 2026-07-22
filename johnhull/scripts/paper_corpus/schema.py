@@ -228,6 +228,15 @@ class EquationRecord:
         if self.confidence is not None and not 0 <= self.confidence <= 1:
             raise ValueError("confidence must be between zero and one")
 
+    def to_dict(self) -> dict[str, Any]:
+        """Return a validated JSON-compatible record."""
+
+        self.validate()
+        result = asdict(self)
+        result["bbox"] = self.bbox.to_list()
+        result["provenance"] = self.provenance.to_dict()
+        return result
+
 
 @dataclass(frozen=True)
 class TableCell:
@@ -250,6 +259,12 @@ class TableCell:
             raise ValueError("table-cell spans must be positive")
         if self.numeric_value is not None and not math.isfinite(self.numeric_value):
             raise ValueError("numeric table values must be finite")
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return a validated JSON-compatible record."""
+
+        self.validate()
+        return asdict(self)
 
 
 @dataclass(frozen=True)
@@ -286,6 +301,16 @@ class TableRecord:
         if self.verification_status == "verified" and not (self.csv_path and self.html_path):
             raise ValueError("verified tables require CSV and HTML exports")
 
+    def to_dict(self) -> dict[str, Any]:
+        """Return a validated JSON-compatible record."""
+
+        self.validate()
+        result = asdict(self)
+        result["bbox"] = self.bbox.to_list()
+        result["cells"] = [cell.to_dict() for cell in self.cells]
+        result["provenance"] = self.provenance.to_dict()
+        return result
+
 
 @dataclass(frozen=True)
 class ClaimRecord:
@@ -312,3 +337,9 @@ class ClaimRecord:
             raise ValueError("claim page numbers must be positive")
         if NUMBER_RE.search(self.statement) and not (self.equation_ids or self.table_ids):
             raise ValueError("numeric claims require equation or table evidence")
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return a validated JSON-compatible record."""
+
+        self.validate()
+        return asdict(self)
