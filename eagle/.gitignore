@@ -5,3 +5,6 @@ traces/
 client/node_modules/
 client/dist/
 runtime/target/
+# yaAGC writes its erasable-memory checkpoint to a "core" file in its cwd,
+# which cargo sets to the crate manifest dir for integration tests.
+runtime/apps/eagle-runtime/core

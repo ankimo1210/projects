@@ -21,14 +21,28 @@ pub struct AgcSession {
 
 impl AgcSession {
     pub async fn start(cfg: AgcConfig) -> Result<Self> {
-        let child = Command::new(&cfg.yaagc_bin)
-            .arg(format!("--core={}", cfg.core_bin.display()))
+        // Canonicalize before spawning so relative paths keep resolving from
+        // this process's cwd even though the child's cwd is pinned below to
+        // core_bin's directory (build/agc/, already git-ignored) — that's
+        // where yaAGC writes its "core" erasable-memory checkpoint file, and
+        // without this it lands wherever the child happens to inherit its
+        // cwd from (e.g. the crate manifest dir under `cargo test`).
+        let yaagc_bin = std::fs::canonicalize(&cfg.yaagc_bin)
+            .with_context(|| format!("canonicalizing {:?}", cfg.yaagc_bin))?;
+        let core_bin = std::fs::canonicalize(&cfg.core_bin)
+            .with_context(|| format!("canonicalizing {:?}", cfg.core_bin))?;
+        let core_dir = core_bin.parent()
+            .with_context(|| format!("{core_bin:?} has no parent directory"))?;
+
+        let child = Command::new(&yaagc_bin)
+            .arg(format!("--core={}", core_bin.display()))
             .arg(format!("--port={}", cfg.port))
+            .current_dir(core_dir)
             .stdout(Stdio::null())
             .stderr(Stdio::null())
             .kill_on_drop(true)
             .spawn()
-            .with_context(|| format!("spawning {:?}", cfg.yaagc_bin))?;
+            .with_context(|| format!("spawning {:?}", yaagc_bin))?;
 
         let mut stream = None;
         for _ in 0..50 {
