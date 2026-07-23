@@ -37,7 +37,7 @@ def test_paper_retrieval_gold_set_and_corpus_pass_quality_gates() -> None:
 
     assert corpus_audit["status"] == "pass"
     assert corpus_audit["paper_count"] == 22
-    assert corpus_audit["chunk_count"] == 1318
+    assert corpus_audit["chunk_count"] == 1320
     assert corpus_audit["formula_markers_in_chunks"] == 424
     assert gold_audit == {
         "status": "pass",
@@ -47,6 +47,10 @@ def test_paper_retrieval_gold_set_and_corpus_pass_quality_gates() -> None:
         "errors": [],
     }
     assert len(evaluations) == 66
+    assert all(
+        list(evaluation["formula_ranks"]) == sorted(evaluation["formula_ranks"])
+        for evaluation in evaluations
+    )
     assert MODULE.check_thresholds(metrics, gold["thresholds"]) == []
 
 

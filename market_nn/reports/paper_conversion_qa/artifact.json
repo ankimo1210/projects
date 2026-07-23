@@ -1,0 +1,1262 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "LOB論文コーパス変換・検索頑健性QA",
+    "description": "22論文449ページの変換忠実度と検索頑健性を分離して検証する技術監査",
+    "generatedAt": "2026-07-23T00:00:00+09:00",
+    "cards": [
+      {
+        "id": "median_recall",
+        "description": "全449ページにおける原PDF tokenの再現率中央値。",
+        "dataset": "summary",
+        "sourceId": "conversion_results",
+        "metrics": [
+          {
+            "label": "ページ再現率 中央値",
+            "field": "median_page_recall",
+            "format": "percent"
+          }
+        ]
+      },
+      {
+        "id": "p10_recall",
+        "description": "ページ再現率の下位10%点。",
+        "dataset": "summary",
+        "sourceId": "conversion_results",
+        "metrics": [
+          {
+            "label": "ページ再現率 P10",
+            "field": "p10_page_recall",
+            "format": "percent"
+          }
+        ]
+      },
+      {
+        "id": "canonical_evidence",
+        "description": "正解ページまたは指定formula markerが上位5件に揃ったcanonical質問の割合。",
+        "dataset": "summary",
+        "sourceId": "robustness_results",
+        "metrics": [
+          {
+            "label": "Canonical exact evidence R@5",
+            "field": "canonical_evidence_r5",
+            "format": "percent"
+          }
+        ]
+      },
+      {
+        "id": "paraphrase_recall",
+        "description": "強い英語言い換え66問の正解ページRecall@5。",
+        "dataset": "summary",
+        "sourceId": "robustness_results",
+        "metrics": [
+          {
+            "label": "Paraphrase page R@5",
+            "field": "paraphrase_page_r5",
+            "format": "percent"
+          }
+        ]
+      },
+      {
+        "id": "japanese_recall",
+        "description": "英語コーパスを未翻訳の語彙BM25で検索した日本語66問の診断値。",
+        "dataset": "summary",
+        "sourceId": "robustness_results",
+        "metrics": [
+          {
+            "label": "Japanese page R@5",
+            "field": "japanese_page_r5",
+            "format": "percent"
+          }
+        ]
+      },
+      {
+        "id": "chunk_limit",
+        "description": "修復後の全1,320 chunksにおける最大token数。",
+        "dataset": "summary",
+        "sourceId": "conversion_results",
+        "metrics": [
+          {
+            "label": "最大chunk tokens",
+            "field": "max_chunk_tokens",
+            "format": "number"
+          }
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "query_set_page_recall",
+        "title": "質問形式別の正解ページRecall@5",
+        "subtitle": "各66問。Canonical、強い英語言い換え、日本語の未翻訳語彙検索を比較。0起点。",
+        "type": "bar",
+        "dataset": "query_sets",
+        "sourceId": "robustness_results",
+        "encodings": {
+          "x": {
+            "field": "query_set",
+            "type": "nominal",
+            "label": "質問形式"
+          },
+          "y": {
+            "field": "page_recall_at_5",
+            "type": "quantitative",
+            "label": "正解ページ Recall@5",
+            "format": "percent"
+          }
+        },
+        "yAxisTitle": "正解ページ Recall@5",
+        "valueFormat": "percent",
+        "layout": "full"
+      }
+    ],
+    "tables": [
+      {
+        "id": "query_set_metrics",
+        "title": "質問形式別の検索指標",
+        "subtitle": "各66問。exact evidenceは式指定問では全formula markerの取得を要求。",
+        "dataset": "query_sets",
+        "sourceId": "robustness_results",
+        "columns": [
+          {
+            "field": "query_set",
+            "label": "質問形式",
+            "type": "text"
+          },
+          {
+            "field": "queries",
+            "label": "質問数",
+            "format": "number"
+          },
+          {
+            "field": "paper_recall_at_3",
+            "label": "論文 R@3",
+            "format": "percent"
+          },
+          {
+            "field": "page_recall_at_5",
+            "label": "ページ R@5",
+            "format": "percent"
+          },
+          {
+            "field": "exact_evidence_recall_at_5",
+            "label": "Exact evidence R@5",
+            "format": "percent"
+          },
+          {
+            "field": "page_mrr",
+            "label": "ページ MRR",
+            "format": "number"
+          },
+          {
+            "field": "assessment",
+            "label": "判定",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "conversion_gates",
+        "title": "変換品質ゲート",
+        "subtitle": "原PDF、構造化文書、画像、数式、chunk境界を全件検査。",
+        "dataset": "conversion_gates",
+        "sourceId": "conversion_results",
+        "columns": [
+          {
+            "field": "check",
+            "label": "検査",
+            "type": "text"
+          },
+          {
+            "field": "actual",
+            "label": "実測",
+            "format": "number"
+          },
+          {
+            "field": "threshold",
+            "label": "基準",
+            "type": "text"
+          },
+          {
+            "field": "status",
+            "label": "判定",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "paper_quality",
+        "title": "論文別の変換品質",
+        "subtitle": "22本。ページtoken再現率、構造要素数、最大chunk長。",
+        "dataset": "papers",
+        "sourceId": "conversion_results",
+        "defaultSort": {
+          "field": "token_recall_min",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "paper_id",
+            "label": "論文",
+            "type": "text"
+          },
+          {
+            "field": "page_count",
+            "label": "pages",
+            "format": "number"
+          },
+          {
+            "field": "token_recall_median",
+            "label": "median",
+            "format": "percent"
+          },
+          {
+            "field": "token_recall_p10",
+            "label": "P10",
+            "format": "percent"
+          },
+          {
+            "field": "token_recall_min",
+            "label": "min",
+            "format": "percent"
+          },
+          {
+            "field": "pages_below_0_90",
+            "label": "<90% pages",
+            "format": "number"
+          },
+          {
+            "field": "tables",
+            "label": "tables",
+            "format": "number"
+          },
+          {
+            "field": "pictures",
+            "label": "pictures",
+            "format": "number"
+          },
+          {
+            "field": "formulas",
+            "label": "formulas",
+            "format": "number"
+          },
+          {
+            "field": "chunks",
+            "label": "chunks",
+            "format": "number"
+          },
+          {
+            "field": "max_chunk_tokens",
+            "label": "max tokens",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "low_pages",
+        "title": "token再現率が低いページ",
+        "subtitle": "下位20ページ。数式・複雑表・画像ページが中心。",
+        "dataset": "low_pages",
+        "sourceId": "conversion_results",
+        "defaultSort": {
+          "field": "token_recall",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "paper_id",
+            "label": "論文",
+            "type": "text"
+          },
+          {
+            "field": "page",
+            "label": "page",
+            "format": "number"
+          },
+          {
+            "field": "token_recall",
+            "label": "recall",
+            "format": "percent"
+          },
+          {
+            "field": "token_precision",
+            "label": "precision",
+            "format": "percent"
+          },
+          {
+            "field": "source_token_count",
+            "label": "source tokens",
+            "format": "number"
+          },
+          {
+            "field": "converted_token_count",
+            "label": "converted tokens",
+            "format": "number"
+          },
+          {
+            "field": "table_count",
+            "label": "tables",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "visual_review",
+        "title": "原PDFレンダリングとの目視確認",
+        "subtitle": "自動検査の下位ページ5件と修復対象1件。",
+        "dataset": "visual_checks",
+        "sourceId": "visual_checks",
+        "columns": [
+          {
+            "field": "paper_id",
+            "label": "論文",
+            "type": "text"
+          },
+          {
+            "field": "page",
+            "label": "page",
+            "format": "number"
+          },
+          {
+            "field": "reason",
+            "label": "選定理由",
+            "type": "text"
+          },
+          {
+            "field": "status",
+            "label": "判定",
+            "type": "text"
+          },
+          {
+            "field": "finding",
+            "label": "確認結果",
+            "type": "text"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "conversion_results",
+        "label": "Paper conversion audit results",
+        "path": "reports/paper_conversion_qa/conversion_results.json"
+      },
+      {
+        "id": "robustness_results",
+        "label": "Paper retrieval robustness results",
+        "path": "reports/paper_conversion_qa/robustness_results.json"
+      },
+      {
+        "id": "visual_checks",
+        "label": "Rendered PDF visual checks",
+        "path": "manifests/paper_conversion_visual_checks.json"
+      },
+      {
+        "id": "corpus_index",
+        "label": "Converted paper corpus index",
+        "path": "corpus/papers/_index.json"
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# LOB論文コーパス変換・検索頑健性QA"
+      },
+      {
+        "id": "technical_summary",
+        "type": "markdown",
+        "body": "## 技術サマリー\n\n**変換コーパスはAI読解・検索の基盤として合格。ただし、現行の語彙検索をそのまま本番RAGに使うのは不十分。** 22論文449ページのtoken再現率は中央値98.63%、P10 92.44%で、空ページ、原本hash不一致、512-token超過、欠落画像・数式cropは0。一方、正解ページRecall@5はcanonical質問で100%から強い英語言い換えで71.21%、日本語の未翻訳語彙検索で78.79%へ低下した。"
+      },
+      {
+        "id": "metrics",
+        "type": "metric-strip",
+        "cardIds": [
+          "median_recall",
+          "p10_recall",
+          "canonical_evidence",
+          "paraphrase_recall",
+          "japanese_recall",
+          "chunk_limit"
+        ]
+      },
+      {
+        "id": "conversion_findings",
+        "type": "markdown",
+        "sourceId": "conversion_results",
+        "body": "## 本文・構造・数式の変換は全品質ゲートを通過\n\n全449ページに変換textがあり、ページtoken再現率の平均は97.10%。134表、135図、424 formula recordsを追跡できる。低スコア5ページは数式密集、複雑表、図だけのページで、原PDFレンダリングとの目視確認では欠落ではなく表現形式の差と判断した。"
+      },
+      {
+        "id": "conversion_gate_table",
+        "type": "table",
+        "tableId": "conversion_gates"
+      },
+      {
+        "id": "paper_table",
+        "type": "table",
+        "tableId": "paper_quality"
+      },
+      {
+        "id": "retrieval_findings",
+        "type": "markdown",
+        "sourceId": "robustness_results",
+        "body": "## 強い言い換えで語彙検索の順位品質が崩れる\n\n強い英語言い換え66問では論文Recall@3が74.24%、正解ページRecall@5が71.21%となり、事前基準90%/80%を下回った。日本語66問は英字のモデル名・略語だけで偶発的に検索できるケースを含み、正解ページRecall@5は78.79%。多言語対応を示す値ではない。"
+      },
+      {
+        "id": "query_chart",
+        "type": "chart",
+        "chartId": "query_set_page_recall",
+        "layout": "full"
+      },
+      {
+        "id": "query_table",
+        "type": "table",
+        "tableId": "query_set_metrics"
+      },
+      {
+        "id": "evidence_findings",
+        "type": "markdown",
+        "sourceId": "robustness_results",
+        "body": "## ページhitと回答に必要な正確な式の取得は同じではない\n\nCanonical 66問のexact evidence Recall@5は92.42%。formula IDを指定した23問では、期待する式markerがすべて上位5件に入る割合は78.26%だった。したがって、ページhit 100%だけから生成回答のfaithfulnessを主張してはいけない。"
+      },
+      {
+        "id": "scope",
+        "type": "markdown",
+        "body": "## 対象・データ・指標定義\n\n対象はDocling 2.114.0で変換した全22論文。token再現率は原PDFの埋め込みtext layerをpdftotextでページ単位に抽出し、Unicode正規化・小文字化・行末hyphen結合後のmultiset overlapを測る。検索は1,320 chunksに対する既存のfield-aware BM25。質問集合はcanonical 66問、同じ正解を持つ強い英語言い換え66問、日本語66問である。"
+      },
+      {
+        "id": "methodology",
+        "type": "markdown",
+        "body": "## 方法と検証設計\n\n変換監査はPDF hash・ページ数・JSON構造・ページtext・表・画像・formula crop・chunk token上限を全件検査した。自動検査の下位5ページと、修復前に512 tokenを超えた表ページを原PDFのPNGへrenderして確認した。検索頑健性はcanonical goldを変更せず質問文だけを置換し、paper/page/exact-evidence順位を同じコードで再計算した。"
+      },
+      {
+        "id": "low_page_table",
+        "type": "table",
+        "tableId": "low_pages"
+      },
+      {
+        "id": "visual_table",
+        "type": "table",
+        "tableId": "visual_review"
+      },
+      {
+        "id": "limitations",
+        "type": "markdown",
+        "body": "## 制約・不確実性\n\n- token overlapは語順、意味、表のセル結合、数式記号の等価性を評価しない。\n- 135図は画像として保存されるがmachine annotationは0で、16図はcaptionもない。text-only RAGは曲線上の値を読めない。\n- 191式は一次資料の逐語照合ではなくsemantic high confidence。引用時はformula recordのnoteと原式cropを確認する。\n- 言い換え・日本語variantと目視判定は単一レビュアーで、独立評価ではない。\n- exact evidenceは取得文脈の存在を測り、生成回答そのものの正誤・引用整合性は未評価。"
+      },
+      {
+        "id": "next_steps",
+        "type": "markdown",
+        "body": "## 推奨する次の作業\n\n1. multilingual embeddingとBM25のhybrid retrievalを別holdoutで比較する。\n2. top chunkから隣接chunkと同一ページのformula markerを展開し、exact evidence Recall@5を改善する。\n3. 66問すべてにsource-backed reference answerとclaim-level citation判定を追加する。\n4. captionなし16図と重要plotを優先し、multimodal captionまたは構造化chart dataを追加する。"
+      },
+      {
+        "id": "further_questions",
+        "type": "markdown",
+        "body": "## 追加で答えるべき問い\n\n- hybrid検索の改善は未知の質問にも一般化するか。\n- 同一ページ展開でcontext量が増えたとき、回答のprecisionは落ちないか。\n- 図の数値化はどの論文・図から着手すると回答可能性を最も改善するか。"
+      },
+      {
+        "id": "source_notes",
+        "type": "markdown",
+        "body": "## ソース注記\n\nチャートmap: 検索頑健性セクションで質問形式ごとの正解ページRecall@5を比較する単一系列barを使用。各集合66問で同じ分母を持ち、絶対割合比較なので0起点とした。論文別品質と監査下位ページはexact lookupが目的のためtableを使用した。"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-07-23T00:00:00+09:00",
+    "status": "ready",
+    "datasets": {
+      "summary": [
+        {
+          "median_page_recall": 0.9863,
+          "p10_page_recall": 0.9244,
+          "canonical_evidence_r5": 0.9242,
+          "paraphrase_page_r5": 0.7121,
+          "japanese_page_r5": 0.7879,
+          "max_chunk_tokens": 493
+        }
+      ],
+      "query_sets": [
+        {
+          "query_set": "Canonical English",
+          "queries": 66,
+          "paper_recall_at_3": 1.0,
+          "page_recall_at_5": 1.0,
+          "exact_evidence_recall_at_5": 0.9242,
+          "page_mrr": 0.7922,
+          "assessment": "PASS"
+        },
+        {
+          "query_set": "Strong English paraphrase",
+          "queries": 66,
+          "paper_recall_at_3": 0.7424,
+          "page_recall_at_5": 0.7121,
+          "exact_evidence_recall_at_5": 0.6515,
+          "page_mrr": 0.5251,
+          "assessment": "FAIL"
+        },
+        {
+          "query_set": "Japanese (raw lexical)",
+          "queries": 66,
+          "paper_recall_at_3": 0.8182,
+          "page_recall_at_5": 0.7879,
+          "exact_evidence_recall_at_5": 0.7424,
+          "page_mrr": 0.5919,
+          "assessment": "DIAGNOSTIC"
+        }
+      ],
+      "conversion_gates": [
+        {
+          "check": "Page token recall median",
+          "actual": 0.9863,
+          "threshold": ">= 0.95",
+          "status": "PASS"
+        },
+        {
+          "check": "Page token recall P10",
+          "actual": 0.9244,
+          "threshold": ">= 0.9",
+          "status": "PASS"
+        },
+        {
+          "check": "Page token recall minimum",
+          "actual": 0.6549,
+          "threshold": ">= 0.6",
+          "status": "PASS"
+        },
+        {
+          "check": "PDF page count mismatches",
+          "actual": 0,
+          "threshold": "<= 0",
+          "status": "PASS"
+        },
+        {
+          "check": "Empty converted pages",
+          "actual": 0,
+          "threshold": "<= 0",
+          "status": "PASS"
+        },
+        {
+          "check": "Chunks above 512 tokens",
+          "actual": 0,
+          "threshold": "<= 0",
+          "status": "PASS"
+        },
+        {
+          "check": "Missing picture files",
+          "actual": 0,
+          "threshold": "<= 0",
+          "status": "PASS"
+        },
+        {
+          "check": "Missing formula crops",
+          "actual": 0,
+          "threshold": "<= 0",
+          "status": "PASS"
+        },
+        {
+          "check": "Unverified/fallback formulas",
+          "actual": 0,
+          "threshold": "<= 0",
+          "status": "PASS"
+        }
+      ],
+      "papers": [
+        {
+          "paper_id": "deeplob_1808.03668v6",
+          "title": "DeepLOB: Deep Convolutional Neural Networks for Limit Order Books",
+          "page_count": 12,
+          "token_recall_mean": 0.9761,
+          "token_recall_median": 0.9786,
+          "token_recall_p10": 0.9551,
+          "token_recall_min": 0.9412,
+          "pages_below_0_90": 0,
+          "pages_below_0_80": 0,
+          "empty_converted_pages": 0,
+          "tables": 4,
+          "pictures": 9,
+          "formulas": 7,
+          "chunks": 52,
+          "max_chunk_tokens": 492
+        },
+        {
+          "paper_id": "fi2010_1705.03233v5",
+          "title": "Benchmark Dataset for Mid-Price Forecasting of Limit Order Book Data with Machine Learning Methods",
+          "page_count": 25,
+          "token_recall_mean": 0.9663,
+          "token_recall_median": 0.9856,
+          "token_recall_p10": 0.9158,
+          "token_recall_min": 0.7751,
+          "pages_below_0_90": 3,
+          "pages_below_0_80": 1,
+          "empty_converted_pages": 0,
+          "tables": 9,
+          "pictures": 3,
+          "formulas": 17,
+          "chunks": 62,
+          "max_chunk_tokens": 490
+        },
+        {
+          "paper_id": "gould_bonart_1512.03492v1",
+          "title": "Queue Imbalance as a One-Tick-Ahead Price Predictor in a Limit Order Book",
+          "page_count": 30,
+          "token_recall_mean": 0.9715,
+          "token_recall_median": 0.9867,
+          "token_recall_p10": 0.9369,
+          "token_recall_min": 0.8312,
+          "pages_below_0_90": 1,
+          "pages_below_0_80": 0,
+          "empty_converted_pages": 0,
+          "tables": 6,
+          "pictures": 7,
+          "formulas": 20,
+          "chunks": 61,
+          "max_chunk_tokens": 488
+        },
+        {
+          "paper_id": "ref_cont_de_larrard_markovian_lob_1104.4596",
+          "title": "Price dynamics in a Markovian limit order market",
+          "page_count": 18,
+          "token_recall_mean": 0.92,
+          "token_recall_median": 0.9068,
+          "token_recall_p10": 0.8556,
+          "token_recall_min": 0.7724,
+          "pages_below_0_90": 6,
+          "pages_below_0_80": 1,
+          "empty_converted_pages": 0,
+          "tables": 4,
+          "pictures": 5,
+          "formulas": 55,
+          "chunks": 47,
+          "max_chunk_tokens": 481
+        },
+        {
+          "paper_id": "ref_cont_price_impact_1011.6402",
+          "title": "The price impact of order book events",
+          "page_count": 26,
+          "token_recall_mean": 0.9537,
+          "token_recall_median": 0.966,
+          "token_recall_p10": 0.8889,
+          "token_recall_min": 0.8636,
+          "pages_below_0_90": 4,
+          "pages_below_0_80": 0,
+          "empty_converted_pages": 0,
+          "tables": 6,
+          "pictures": 10,
+          "formulas": 33,
+          "chunks": 158,
+          "max_chunk_tokens": 491
+        },
+        {
+          "paper_id": "ref_cont_stochastic_order_book_dynamics_2010",
+          "title": "A stochastic model for order book dynamics",
+          "page_count": 21,
+          "token_recall_mean": 0.9564,
+          "token_recall_median": 0.9578,
+          "token_recall_p10": 0.893,
+          "token_recall_min": 0.8805,
+          "pages_below_0_90": 4,
+          "pages_below_0_80": 0,
+          "empty_converted_pages": 0,
+          "tables": 11,
+          "pictures": 3,
+          "formulas": 57,
+          "chunks": 62,
+          "max_chunk_tokens": 487
+        },
+        {
+          "paper_id": "ref_dixon_rnn_lob_1707.05642",
+          "title": "Sequence Classification of the Limit Order Book using Recurrent Neural Networks",
+          "page_count": 20,
+          "token_recall_mean": 0.9719,
+          "token_recall_median": 0.9878,
+          "token_recall_p10": 0.9347,
+          "token_recall_min": 0.8444,
+          "pages_below_0_90": 1,
+          "pages_below_0_80": 0,
+          "empty_converted_pages": 0,
+          "tables": 4,
+          "pictures": 10,
+          "formulas": 11,
+          "chunks": 42,
+          "max_chunk_tokens": 486
+        },
+        {
+          "paper_id": "ref_gould_limit_order_books_1012.0349",
+          "title": "Limit order books",
+          "page_count": 42,
+          "token_recall_mean": 0.9815,
+          "token_recall_median": 0.991,
+          "token_recall_p10": 0.9598,
+          "token_recall_min": 0.896,
+          "pages_below_0_90": 1,
+          "pages_below_0_80": 0,
+          "empty_converted_pages": 0,
+          "tables": 7,
+          "pictures": 6,
+          "formulas": 24,
+          "chunks": 152,
+          "max_chunk_tokens": 487
+        },
+        {
+          "paper_id": "ref_kercheval_zhang_svm_2013",
+          "title": "Modeling high-frequency limit order book dynamics with support vector machines",
+          "page_count": 36,
+          "token_recall_mean": 0.9625,
+          "token_recall_median": 0.9808,
+          "token_recall_p10": 0.9257,
+          "token_recall_min": 0.6549,
+          "pages_below_0_90": 3,
+          "pages_below_0_80": 1,
+          "empty_converted_pages": 0,
+          "tables": 15,
+          "pictures": 7,
+          "formulas": 37,
+          "chunks": 62,
+          "max_chunk_tokens": 490
+        },
+        {
+          "paper_id": "ref_kisiel_axial_lob_2212.01807",
+          "title": "Axial-LOB: High-Frequency Trading with Axial Attention",
+          "page_count": 7,
+          "token_recall_mean": 0.9737,
+          "token_recall_median": 0.981,
+          "token_recall_p10": 0.9506,
+          "token_recall_min": 0.9299,
+          "pages_below_0_90": 0,
+          "pages_below_0_80": 0,
+          "empty_converted_pages": 0,
+          "tables": 3,
+          "pictures": 5,
+          "formulas": 9,
+          "chunks": 27,
+          "max_chunk_tokens": 490
+        },
+        {
+          "paper_id": "ref_passalis_dain_1902.07892",
+          "title": "Deep Adaptive Input Normalization for Time Series Forecasting",
+          "page_count": 7,
+          "token_recall_mean": 0.9716,
+          "token_recall_median": 0.9651,
+          "token_recall_p10": 0.9566,
+          "token_recall_min": 0.9543,
+          "pages_below_0_90": 0,
+          "pages_below_0_80": 0,
+          "empty_converted_pages": 0,
+          "tables": 3,
+          "pictures": 1,
+          "formulas": 10,
+          "chunks": 28,
+          "max_chunk_tokens": 483
+        },
+        {
+          "paper_id": "ref_prata_lob_benchmark_2308.01915",
+          "title": "LOB-Based Deep Learning Models for Stock Price Trend Prediction: A Benchmark Study",
+          "page_count": 29,
+          "token_recall_mean": 0.9866,
+          "token_recall_median": 0.9947,
+          "token_recall_p10": 0.9625,
+          "token_recall_min": 0.8909,
+          "pages_below_0_90": 1,
+          "pages_below_0_80": 0,
+          "empty_converted_pages": 0,
+          "tables": 6,
+          "pictures": 12,
+          "formulas": 2,
+          "chunks": 84,
+          "max_chunk_tokens": 487
+        },
+        {
+          "paper_id": "ref_sirignano_deep_lob_1601.01987",
+          "title": "Deep Learning for Limit Order Books",
+          "page_count": 53,
+          "token_recall_mean": 0.9757,
+          "token_recall_median": 0.9915,
+          "token_recall_p10": 0.9218,
+          "token_recall_min": 0.8051,
+          "pages_below_0_90": 3,
+          "pages_below_0_80": 0,
+          "empty_converted_pages": 0,
+          "tables": 17,
+          "pictures": 10,
+          "formulas": 27,
+          "chunks": 87,
+          "max_chunk_tokens": 486
+        },
+        {
+          "paper_id": "ref_tolstikhin_mlp_mixer_2105.01601",
+          "title": "MLP-Mixer: An all-MLP Architecture for Vision",
+          "page_count": 16,
+          "token_recall_mean": 0.9885,
+          "token_recall_median": 0.9911,
+          "token_recall_p10": 0.9666,
+          "token_recall_min": 0.9568,
+          "pages_below_0_90": 0,
+          "pages_below_0_80": 0,
+          "empty_converted_pages": 0,
+          "tables": 4,
+          "pictures": 7,
+          "formulas": 2,
+          "chunks": 60,
+          "max_chunk_tokens": 493
+        },
+        {
+          "paper_id": "ref_tran_bin_2003.00598",
+          "title": "Data Normalization for Bilinear Structures in High-Frequency Financial Time-series",
+          "page_count": 6,
+          "token_recall_mean": 0.9676,
+          "token_recall_median": 0.9708,
+          "token_recall_p10": 0.9371,
+          "token_recall_min": 0.9218,
+          "pages_below_0_90": 0,
+          "pages_below_0_80": 0,
+          "empty_converted_pages": 0,
+          "tables": 3,
+          "pictures": 1,
+          "formulas": 13,
+          "chunks": 33,
+          "max_chunk_tokens": 484
+        },
+        {
+          "paper_id": "ref_tran_tabl_1712.00975",
+          "title": "Temporal Attention augmented Bilinear Network for Financial Time-Series Data Analysis",
+          "page_count": 12,
+          "token_recall_mean": 0.9503,
+          "token_recall_median": 0.968,
+          "token_recall_p10": 0.9405,
+          "token_recall_min": 0.7075,
+          "pages_below_0_90": 1,
+          "pages_below_0_80": 1,
+          "empty_converted_pages": 0,
+          "tables": 3,
+          "pictures": 4,
+          "formulas": 43,
+          "chunks": 51,
+          "max_chunk_tokens": 484
+        },
+        {
+          "paper_id": "ref_tsantekidis_cnn_lob_2017",
+          "title": "Forecasting Stock Prices from the Limit Order Book using Convolutional Neural Networks",
+          "page_count": 6,
+          "token_recall_mean": 0.9779,
+          "token_recall_median": 0.9771,
+          "token_recall_p10": 0.96,
+          "token_recall_min": 0.9523,
+          "pages_below_0_90": 0,
+          "pages_below_0_80": 0,
+          "empty_converted_pages": 0,
+          "tables": 1,
+          "pictures": 3,
+          "formulas": 7,
+          "chunks": 20,
+          "max_chunk_tokens": 484
+        },
+        {
+          "paper_id": "ref_tsantekidis_stationary_lob_1810.09965",
+          "title": "Using Deep Learning for price prediction by exploiting stationary limit order book features",
+          "page_count": 19,
+          "token_recall_mean": 0.9778,
+          "token_recall_median": 0.9865,
+          "token_recall_p10": 0.9488,
+          "token_recall_min": 0.925,
+          "pages_below_0_90": 0,
+          "pages_below_0_80": 0,
+          "empty_converted_pages": 0,
+          "tables": 3,
+          "pictures": 4,
+          "formulas": 22,
+          "chunks": 41,
+          "max_chunk_tokens": 484
+        },
+        {
+          "paper_id": "ref_vaswani_attention_1706.03762",
+          "title": "Attention Is All You Need",
+          "page_count": 15,
+          "token_recall_mean": 0.9802,
+          "token_recall_median": 0.9873,
+          "token_recall_p10": 0.9527,
+          "token_recall_min": 0.9444,
+          "pages_below_0_90": 0,
+          "pages_below_0_80": 0,
+          "empty_converted_pages": 0,
+          "tables": 4,
+          "pictures": 6,
+          "formulas": 5,
+          "chunks": 44,
+          "max_chunk_tokens": 487
+        },
+        {
+          "paper_id": "ref_zhang_multihorizon_2105.10430",
+          "title": "Multi-Horizon Forecasting for Limit Order Books: Novel Deep Learning Approaches and Hardware Acceleration using Intelligent Processing Units",
+          "page_count": 18,
+          "token_recall_mean": 0.9902,
+          "token_recall_median": 1.0,
+          "token_recall_p10": 0.9715,
+          "token_recall_min": 0.9088,
+          "pages_below_0_90": 0,
+          "pages_below_0_80": 0,
+          "empty_converted_pages": 0,
+          "tables": 7,
+          "pictures": 7,
+          "formulas": 8,
+          "chunks": 72,
+          "max_chunk_tokens": 492
+        },
+        {
+          "paper_id": "sirignano_cont_1803.06917v1",
+          "title": "Universal features of price formation in financial markets: perspectives from Deep Learning",
+          "page_count": 20,
+          "token_recall_mean": 0.9829,
+          "token_recall_median": 0.9938,
+          "token_recall_p10": 0.9566,
+          "token_recall_min": 0.9024,
+          "pages_below_0_90": 0,
+          "pages_below_0_80": 0,
+          "empty_converted_pages": 0,
+          "tables": 4,
+          "pictures": 11,
+          "formulas": 5,
+          "chunks": 29,
+          "max_chunk_tokens": 472
+        },
+        {
+          "paper_id": "tlob_2502.15757v3",
+          "title": "TLOB: A Novel Transformer Model with Dual Attention for Price Trend Prediction with Limit Order Book Data",
+          "page_count": 11,
+          "token_recall_mean": 0.9631,
+          "token_recall_median": 0.9858,
+          "token_recall_p10": 0.9601,
+          "token_recall_min": 0.7333,
+          "pages_below_0_90": 1,
+          "pages_below_0_80": 1,
+          "empty_converted_pages": 0,
+          "tables": 10,
+          "pictures": 4,
+          "formulas": 10,
+          "chunks": 46,
+          "max_chunk_tokens": 482
+        }
+      ],
+      "low_pages": [
+        {
+          "paper_id": "ref_kercheval_zhang_svm_2013",
+          "page": 33,
+          "source_token_count": 765,
+          "converted_token_count": 1057,
+          "overlap_token_count": 501,
+          "token_recall": 0.6549,
+          "token_precision": 0.474,
+          "table_count": 2
+        },
+        {
+          "paper_id": "ref_tran_tabl_1712.00975",
+          "page": 10,
+          "source_token_count": 629,
+          "converted_token_count": 826,
+          "overlap_token_count": 445,
+          "token_recall": 0.7075,
+          "token_precision": 0.5387,
+          "table_count": 0
+        },
+        {
+          "paper_id": "tlob_2502.15757v3",
+          "page": 11,
+          "source_token_count": 30,
+          "converted_token_count": 22,
+          "overlap_token_count": 22,
+          "token_recall": 0.7333,
+          "token_precision": 1.0,
+          "table_count": 0
+        },
+        {
+          "paper_id": "ref_cont_de_larrard_markovian_lob_1104.4596",
+          "page": 8,
+          "source_token_count": 435,
+          "converted_token_count": 521,
+          "overlap_token_count": 336,
+          "token_recall": 0.7724,
+          "token_precision": 0.6449,
+          "table_count": 0
+        },
+        {
+          "paper_id": "fi2010_1705.03233v5",
+          "page": 13,
+          "source_token_count": 418,
+          "converted_token_count": 580,
+          "overlap_token_count": 324,
+          "token_recall": 0.7751,
+          "token_precision": 0.5586,
+          "table_count": 1
+        },
+        {
+          "paper_id": "ref_sirignano_deep_lob_1601.01987",
+          "page": 47,
+          "source_token_count": 277,
+          "converted_token_count": 348,
+          "overlap_token_count": 223,
+          "token_recall": 0.8051,
+          "token_precision": 0.6408,
+          "table_count": 0
+        },
+        {
+          "paper_id": "gould_bonart_1512.03492v1",
+          "page": 13,
+          "source_token_count": 314,
+          "converted_token_count": 381,
+          "overlap_token_count": 261,
+          "token_recall": 0.8312,
+          "token_precision": 0.685,
+          "table_count": 0
+        },
+        {
+          "paper_id": "ref_kercheval_zhang_svm_2013",
+          "page": 16,
+          "source_token_count": 427,
+          "converted_token_count": 518,
+          "overlap_token_count": 356,
+          "token_recall": 0.8337,
+          "token_precision": 0.6873,
+          "table_count": 3
+        },
+        {
+          "paper_id": "ref_sirignano_deep_lob_1601.01987",
+          "page": 24,
+          "source_token_count": 383,
+          "converted_token_count": 449,
+          "overlap_token_count": 321,
+          "token_recall": 0.8381,
+          "token_precision": 0.7149,
+          "table_count": 0
+        },
+        {
+          "paper_id": "ref_dixon_rnn_lob_1707.05642",
+          "page": 5,
+          "source_token_count": 392,
+          "converted_token_count": 463,
+          "overlap_token_count": 331,
+          "token_recall": 0.8444,
+          "token_precision": 0.7149,
+          "table_count": 0
+        },
+        {
+          "paper_id": "ref_cont_de_larrard_markovian_lob_1104.4596",
+          "page": 13,
+          "source_token_count": 348,
+          "converted_token_count": 579,
+          "overlap_token_count": 295,
+          "token_recall": 0.8477,
+          "token_precision": 0.5095,
+          "table_count": 0
+        },
+        {
+          "paper_id": "fi2010_1705.03233v5",
+          "page": 17,
+          "source_token_count": 204,
+          "converted_token_count": 273,
+          "overlap_token_count": 173,
+          "token_recall": 0.848,
+          "token_precision": 0.6337,
+          "table_count": 0
+        },
+        {
+          "paper_id": "ref_cont_de_larrard_markovian_lob_1104.4596",
+          "page": 9,
+          "source_token_count": 78,
+          "converted_token_count": 90,
+          "overlap_token_count": 67,
+          "token_recall": 0.859,
+          "token_precision": 0.7444,
+          "table_count": 0
+        },
+        {
+          "paper_id": "ref_cont_de_larrard_markovian_lob_1104.4596",
+          "page": 11,
+          "source_token_count": 453,
+          "converted_token_count": 539,
+          "overlap_token_count": 390,
+          "token_recall": 0.8609,
+          "token_precision": 0.7236,
+          "table_count": 0
+        },
+        {
+          "paper_id": "ref_cont_price_impact_1011.6402",
+          "page": 4,
+          "source_token_count": 484,
+          "converted_token_count": 568,
+          "overlap_token_count": 418,
+          "token_recall": 0.8636,
+          "token_precision": 0.7359,
+          "table_count": 0
+        },
+        {
+          "paper_id": "ref_cont_price_impact_1011.6402",
+          "page": 20,
+          "source_token_count": 474,
+          "converted_token_count": 545,
+          "overlap_token_count": 415,
+          "token_recall": 0.8755,
+          "token_precision": 0.7615,
+          "table_count": 0
+        },
+        {
+          "paper_id": "ref_cont_stochastic_order_book_dynamics_2010",
+          "page": 11,
+          "source_token_count": 661,
+          "converted_token_count": 832,
+          "overlap_token_count": 582,
+          "token_recall": 0.8805,
+          "token_precision": 0.6995,
+          "table_count": 0
+        },
+        {
+          "paper_id": "ref_cont_price_impact_1011.6402",
+          "page": 19,
+          "source_token_count": 460,
+          "converted_token_count": 609,
+          "overlap_token_count": 407,
+          "token_recall": 0.8848,
+          "token_precision": 0.6683,
+          "table_count": 0
+        },
+        {
+          "paper_id": "ref_cont_de_larrard_markovian_lob_1104.4596",
+          "page": 10,
+          "source_token_count": 570,
+          "converted_token_count": 665,
+          "overlap_token_count": 505,
+          "token_recall": 0.886,
+          "token_precision": 0.7594,
+          "table_count": 0
+        },
+        {
+          "paper_id": "ref_cont_stochastic_order_book_dynamics_2010",
+          "page": 12,
+          "source_token_count": 531,
+          "converted_token_count": 649,
+          "overlap_token_count": 471,
+          "token_recall": 0.887,
+          "token_precision": 0.7257,
+          "table_count": 0
+        }
+      ],
+      "visual_checks": [
+        {
+          "paper_id": "ref_kercheval_zhang_svm_2013",
+          "page": 33,
+          "reason": "lowest page-level token recall; two dense mathematical tables",
+          "status": "pass_with_caveat",
+          "finding": "Table structure, labels, attribute indices, and source-page provenance are retained. Formula tokenization and repeated spanning cells explain most overlap loss; dense symbolic table content should still be cited from the PDF."
+        },
+        {
+          "paper_id": "ref_tran_tabl_1712.00975",
+          "page": 10,
+          "reason": "second-lowest token recall; two-column appendix dominated by equations",
+          "status": "pass",
+          "finding": "The rendered page is equation-dense. Formula records, LaTeX overlays, page references, and source crops preserve the content more faithfully than plain token overlap measures."
+        },
+        {
+          "paper_id": "tlob_2502.15757v3",
+          "page": 11,
+          "reason": "low text recall on a page containing only two precision-recall plots",
+          "status": "pass_with_caveat",
+          "finding": "Both plot images and their captions are preserved. Curve pixels are not converted into numeric series, so text-only retrieval cannot recover exact plotted values."
+        },
+        {
+          "paper_id": "ref_cont_de_larrard_markovian_lob_1104.4596",
+          "page": 8,
+          "reason": "low token recall on a proof and equation-heavy page",
+          "status": "pass",
+          "finding": "Definitions, proposition text, formula crops, and reconstructed LaTeX are present with page provenance; symbol-level PDF text extraction accounts for the lower lexical overlap."
+        },
+        {
+          "paper_id": "fi2010_1705.03233v5",
+          "page": 13,
+          "reason": "low token recall on formulas and a compact feature table",
+          "status": "pass",
+          "finding": "Z-score, min-max, decimal-precision, label formulas, and the feature table are present. Formula overlays and table-cell serialization introduce spacing differences but preserve the values."
+        },
+        {
+          "paper_id": "ref_tran_bin_2003.00598",
+          "page": 6,
+          "reason": "only page with chunks above the 512-token hard input boundary before repair",
+          "status": "pass",
+          "finding": "All Table III model names and reported metrics match the rendered PDF. The two oversized table chunks were deterministically split into four chunks below the hard limit without dropping content."
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "conversion_results",
+      "label": "Paper conversion audit results",
+      "path": "reports/paper_conversion_qa/conversion_results.json",
+      "query": {
+        "engine": "duckdb",
+        "language": "sql",
+        "sql": "SELECT * FROM read_json_auto('reports/paper_conversion_qa/conversion_results.json', format = 'auto');",
+        "description": "Compares source-PDF and converted-document tokens on every page and audits structures, hashes, images, formulas, and chunk limits.",
+        "tables_used": [
+          "sources/papers/*.pdf",
+          "corpus/papers/*/document.json",
+          "corpus/papers/*/chunks.jsonl",
+          "corpus/papers/*/formulas.jsonl"
+        ],
+        "metric_definitions": [
+          "Page token recall: multiset overlap between normalized pdftotext tokens and converted page tokens divided by source token count.",
+          "P10: linearly interpolated tenth percentile across all 449 source pages."
+        ]
+      }
+    },
+    {
+      "id": "robustness_results",
+      "label": "Paper retrieval robustness results",
+      "path": "reports/paper_conversion_qa/robustness_results.json",
+      "query": {
+        "engine": "duckdb",
+        "language": "sql",
+        "sql": "SELECT * FROM read_json_auto('reports/paper_conversion_qa/robustness_results.json', format = 'auto');",
+        "description": "Evaluates canonical, strong English paraphrase, and Japanese questions over the committed chunks.",
+        "tables_used": [
+          "corpus/papers/*/chunks.jsonl",
+          "manifests/paper_retrieval_gold.json",
+          "manifests/paper_retrieval_robustness.json"
+        ],
+        "metric_definitions": [
+          "Exact evidence Recall@5: fraction of questions with an answer page in the first five chunks, upgraded to full formula-marker retrieval when formula IDs are specified.",
+          "Full formula Recall@5: fraction of formula-bearing questions for which every expected formula marker appears in the first five chunks."
+        ]
+      }
+    },
+    {
+      "id": "visual_checks",
+      "label": "Rendered PDF visual checks",
+      "path": "manifests/paper_conversion_visual_checks.json",
+      "query": {
+        "engine": "duckdb",
+        "language": "sql",
+        "sql": "SELECT * FROM read_json_auto('manifests/paper_conversion_visual_checks.json', format = 'auto');",
+        "description": "Visual review of all pages below 0.80 token recall and the one page that previously crossed the hard chunk boundary.",
+        "tables_used": [
+          "sources/papers/*.pdf",
+          "corpus/papers/*"
+        ]
+      }
+    },
+    {
+      "id": "corpus_index",
+      "label": "Converted paper corpus index",
+      "path": "corpus/papers/_index.json",
+      "query": {
+        "engine": "duckdb",
+        "language": "sql",
+        "sql": "SELECT * FROM read_json_auto('corpus/papers/_index.json', format = 'auto');",
+        "description": "Versioned corpus inventory and PDF/hash/page/chunk/formula provenance.",
+        "tables_used": [
+          "corpus/papers/_index.json"
+        ]
+      }
+    }
+  ]
+}

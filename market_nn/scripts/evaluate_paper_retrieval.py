@@ -379,6 +379,41 @@ def aggregate_metrics(records: list[dict[str, Any]]) -> dict[str, float | int]:
             / count,
             4,
         )
+    for cutoff in (1, 3, 5):
+        metrics[f"exact_evidence_recall_at_{cutoff}"] = round(
+            sum(hit_at(record["exact_evidence_rank"], cutoff) for record in records) / count,
+            4,
+        )
+        metrics[f"accepted_page_coverage_at_{cutoff}"] = round(
+            sum(record[f"accepted_page_coverage_at_{cutoff}"] for record in records) / count,
+            4,
+        )
+    metrics["exact_evidence_mrr"] = round(
+        sum(
+            1 / record["exact_evidence_rank"] if record["exact_evidence_rank"] else 0
+            for record in records
+        )
+        / count,
+        4,
+    )
+    return metrics
+
+
+def aggregate_formula_evidence(records: list[dict[str, Any]]) -> dict[str, float | int]:
+    formula_records = [record for record in records if record["expected_formula_ids"]]
+    if not formula_records:
+        return {"query_count": 0}
+    count = len(formula_records)
+    metrics: dict[str, float | int] = {"query_count": count}
+    for cutoff in (1, 3, 5, 10):
+        metrics[f"full_formula_recall_at_{cutoff}"] = round(
+            sum(hit_at(record["formula_full_rank"], cutoff) for record in formula_records) / count,
+            4,
+        )
+        metrics[f"formula_marker_recall_at_{cutoff}"] = round(
+            sum(record[f"formula_marker_recall_at_{cutoff}"] for record in formula_records) / count,
+            4,
+        )
     return metrics
 
 
@@ -387,10 +422,44 @@ def evaluate(
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     evaluations: list[dict[str, Any]] = []
     for query in gold["queries"]:
-        results = retriever.search(query["question"], limit=result_limit)
+        try:
+            results = retriever.search(query["question"], limit=result_limit)
+        except ValueError:
+            results = []
         expected_pages = set(query["expected_pages"])
+        expected_formula_ids = set(query.get("expected_formula_ids", []))
         paper_rank = first_rank(results, query["paper_id"])
         page_rank = first_rank(results, query["paper_id"], expected_pages)
+        formula_ranks: dict[str, int] = {}
+        for result in results:
+            markers = set(FORMULA_ID_RE.findall(str(result.chunk.get("text", ""))))
+            for formula_id in sorted(expected_formula_ids.intersection(markers)):
+                formula_ranks.setdefault(formula_id, result.rank)
+        formula_full_rank = (
+            max(formula_ranks.values())
+            if expected_formula_ids and formula_ranks.keys() == expected_formula_ids
+            else None
+        )
+        exact_evidence_rank = formula_full_rank if expected_formula_ids else page_rank
+        accepted_page_coverage: dict[int, float] = {}
+        formula_marker_recall: dict[int, float] = {}
+        for cutoff in (1, 3, 5, 10):
+            retrieved_pages: set[int] = set()
+            retrieved_formulas: set[str] = set()
+            for result in results[:cutoff]:
+                if result.chunk["paper_id"] == query["paper_id"]:
+                    retrieved_pages.update(
+                        expected_pages.intersection(result.chunk["page_numbers"])
+                    )
+                retrieved_formulas.update(
+                    expected_formula_ids.intersection(
+                        FORMULA_ID_RE.findall(str(result.chunk.get("text", "")))
+                    )
+                )
+            accepted_page_coverage[cutoff] = len(retrieved_pages) / len(expected_pages)
+            formula_marker_recall[cutoff] = (
+                len(retrieved_formulas) / len(expected_formula_ids) if expected_formula_ids else 1.0
+            )
         evaluations.append(
             {
                 "query_id": query["query_id"],
@@ -401,6 +470,17 @@ def evaluate(
                 "expected_formula_ids": query.get("expected_formula_ids", []),
                 "paper_rank": paper_rank,
                 "page_rank": page_rank,
+                "formula_ranks": formula_ranks,
+                "formula_full_rank": formula_full_rank,
+                "exact_evidence_rank": exact_evidence_rank,
+                **{
+                    f"accepted_page_coverage_at_{cutoff}": round(value, 4)
+                    for cutoff, value in accepted_page_coverage.items()
+                },
+                **{
+                    f"formula_marker_recall_at_{cutoff}": round(value, 4)
+                    for cutoff, value in formula_marker_recall.items()
+                },
                 "top_results": [
                     {
                         "rank": result.rank,
@@ -409,6 +489,7 @@ def evaluate(
                         "paper_id": result.chunk["paper_id"],
                         "page_numbers": result.chunk["page_numbers"],
                         "headings": result.chunk.get("headings") or [],
+                        "formula_ids": FORMULA_ID_RE.findall(str(result.chunk.get("text", ""))),
                     }
                     for result in results
                 ],
@@ -422,6 +503,7 @@ def evaluate(
         grouped_by_paper[evaluation["paper_id"]].append(evaluation)
     metrics = {
         "overall": aggregate_metrics(evaluations),
+        "formula_evidence": aggregate_formula_evidence(evaluations),
         "by_category": {
             category: aggregate_metrics(records)
             for category, records in sorted(grouped_by_category.items())
