@@ -110,7 +110,7 @@ async fn load_manifest(
     let n = words.iter().filter(|w| w.word != 0).count();
     eprintln!("[probe] loading {n} non-zero words ({} total)", words.len());
     let t0 = std::time::Instant::now();
-    runner::apply_padload(script, &words, verify_every).await?;
+    runner::apply_padload(script, &words, verify_every, runner::ALWAYS_VERIFY_ECADRS).await?;
     eprintln!(
         "[probe] pad-load done in {:.1}s",
         t0.elapsed().as_secs_f64()
