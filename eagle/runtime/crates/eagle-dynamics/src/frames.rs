@@ -24,7 +24,11 @@ impl<F: Frame> V3<F> {
                   self.x * o.y - self.y * o.x)
     }
     pub fn norm(self) -> f64 { self.dot(self).sqrt() }
-    pub fn unit(self) -> Self { self.scale(1.0 / self.norm()) }
+    pub fn unit(self) -> Self {
+        let n = self.norm();
+        assert!(n > 1e-12, "unit() on (near-)zero vector");
+        self.scale(1.0 / n)
+    }
 }
 impl<F: Frame> Add for V3<F> { type Output = Self;
     fn add(self, o: Self) -> Self { Self::new(self.x + o.x, self.y + o.y, self.z + o.z) } }
@@ -157,5 +161,54 @@ mod tests {
         let y = V3::<Body>::new(0.0, 1.0, 0.0);
         let z = x.cross(y);
         assert!(close(z.z, 1.0) && close(x.dot(y), 0.0));
+    }
+
+    #[test]
+    #[should_panic]
+    fn unit_of_zero_vector_panics() {
+        let _ = V3::<Mci>::zero().unit();
+    }
+
+    #[test]
+    fn then_composes_sequential_rotations() {
+        // Rotate 90 deg about z, then 90 deg about x. Composing via
+        // `then` must equal applying the two rotations in sequence.
+        let a: Rot<Mci, Mci> =
+            Rot::from_axis_angle(V3::new(0.0, 0.0, 1.0), std::f64::consts::FRAC_PI_2);
+        let b: Rot<Mci, Mci> =
+            Rot::from_axis_angle(V3::new(1.0, 0.0, 0.0), std::f64::consts::FRAC_PI_2);
+        let v = V3::<Mci>::new(1.0, 0.0, 0.0);
+
+        let sequential = b.apply(a.apply(v));
+        let composed = a.then(b).apply(v);
+
+        assert!(close(composed.x, sequential.x)
+            && close(composed.y, sequential.y)
+            && close(composed.z, sequential.z));
+        // Known result: x -[Rz 90]-> y -[Rx 90]-> z.
+        assert!(close(composed.x, 0.0) && close(composed.y, 0.0) && close(composed.z, 1.0));
+    }
+
+    #[test]
+    fn lsite_enu_equatorial_site_hits_alternate_quaternion_branch() {
+        // (1,0,0) still lands in the same trace<=0 branch as the primary
+        // ENU test above (verified numerically); (0,-1,0) gives trace > 0
+        // and exercises the other branch of the matrix->quaternion
+        // conversion in `mcmf_to_lsite`.
+        let site = V3::<Mcmf>::new(0.0, -1.0, 0.0);
+        let r = mcmf_to_lsite(site);
+        let up = r.apply(site);
+        assert!(close(up.x, 0.0) && close(up.y, 0.0) && close(up.z, 1.0));
+
+        // East/North recomputed independently (mirrors mcmf_to_lsite's own
+        // construction) to confirm the whole triad lands on an
+        // orthonormal LSITE basis, not just the Up direction.
+        let pole = V3::<Mcmf>::new(0.0, 0.0, 1.0);
+        let east = pole.cross(site).unit();
+        let north = site.cross(east);
+        let e = r.apply(east);
+        let n = r.apply(north);
+        assert!(close(e.x, 1.0) && close(e.y, 0.0) && close(e.z, 0.0));
+        assert!(close(n.x, 0.0) && close(n.y, 1.0) && close(n.z, 0.0));
     }
 }
