@@ -14,9 +14,9 @@ from johnhull.scripts.paper_corpus.mineru import (
     parse_table_html,
 )
 
-GOLD_MINERU_ROOT = Path("tmp/pdfs/corpus-v2-gold-mineru")
+GOLD_MINERU_ROOT = Path(__file__).resolve().parents[1] / "fixtures/paper_corpus/mineru"
 HULL_WHITE = "1990-hull-white-interest-rate-derivative-securities"
-HULL_WHITE_GOLD_PAGES = [1, 4, 5, 6, 14, 17, 18, 20]
+HULL_WHITE_GOLD_PAGES = [1, 4, 5, 6, 7, 14, 17, 18, 20]
 MOF_NOTICE = "2021-mof-jgbi-indexation-notice"
 MOF_NOTICE_GOLD_PAGES = [1, 2, 3, 4, 5, 6]
 

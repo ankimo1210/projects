@@ -98,10 +98,13 @@ hull-paper-corpus-gold-check:
 	uv run --no-sync python johnhull/scripts/build_extractor_benchmark.py --check
 	uv run --no-sync python johnhull/scripts/build_paper_table_gold.py --check
 	uv run --no-sync python johnhull/scripts/build_paper_formula_gold.py --check
+	uv run --no-sync python johnhull/scripts/build_paper_semantics.py --check
+	uv run --no-sync python johnhull/scripts/build_paper_retrieval.py --check
+	uv run --no-sync python johnhull/scripts/build_paper_implementation_gold.py --check
 	uv run --no-sync pytest -q -s johnhull/tests/paper_corpus/test_gold.py
 
 hull-paper-corpus-v2-check: hull-paper-corpus-gold-check
-	uv run --no-sync pytest -q -s johnhull/tests/paper_corpus/test_mineru.py
+	uv run --no-sync pytest -q -s johnhull/tests/paper_corpus/test_mineru.py johnhull/tests/paper_corpus/test_semantic.py
 
 hull-release-check:
 	PYTHONPATH=johnhull/report uv run --no-sync --package hullkit python johnhull/scripts/verify_release.py $(HULL_RELEASE_FLAGS)

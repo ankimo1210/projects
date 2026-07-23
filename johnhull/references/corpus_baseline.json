@@ -1,7 +1,7 @@
 {
   "corpus_chunk_count": 780,
   "corpus_status_counts": {
-    "None": 3,
+    "None": 5,
     "pass": 1,
     "review": 49
   },
@@ -14,12 +14,14 @@
     "2000-mcneil-frey-tail-risk-evt",
     "2002-hagan-et-al-managing-smile-risk",
     "2003-jarrow-yildirim-inflation-hjm",
+    "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+    "2013-wu-inflation-rate-derivatives",
     "2019-lyashenko-mercurio-backward-looking-rates",
     "2021-mof-jgbi-indexation-notice",
     "2024-mof-jgbi-bei-guide"
   ],
   "pdf_structure_counts": {
-    "clean": 39,
+    "clean": 41,
     "error": 1,
     "warning": 13
   },
@@ -31,6 +33,20 @@
       "source_sha256": "c3b859d339569b5a7aadc2199acbf9463c68ad22e2ecf8bf4955ebc735f3ffd9",
       "status": "present",
       "title": "Pricing Treasury Inflation Protected Securities and Related Derivatives Using an HJM Model"
+    },
+    {
+      "source_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+      "source_pdf": "references/papers/2009-canty-seasonally-adjusted-inflation-linked-bonds.pdf",
+      "source_sha256": "a4c6c400817df46464222f6cdd31752bd881c68f0501e6b8f9c578e7b14c06a0",
+      "status": "present",
+      "title": "Seasonally Adjusted Prices for Inflation-Linked Bonds"
+    },
+    {
+      "source_id": "2013-wu-inflation-rate-derivatives",
+      "source_pdf": "references/papers/2013-wu-inflation-rate-derivatives.pdf",
+      "source_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601",
+      "status": "present",
+      "title": "Inflation-rate Derivatives: From Market Model to Foreign Currency Analogy"
     },
     {
       "source_id": "2021-mof-jgbi-indexation-notice",
@@ -47,9 +63,9 @@
       "title": "MOF guide to JGBi break-even inflation and the deflation floor"
     }
   ],
-  "source_bytes": 81884899,
-  "source_count": 53,
-  "source_page_count": 1586,
+  "source_bytes": 82457208,
+  "source_count": 55,
+  "source_page_count": 1627,
   "sources": [
     {
       "corpus_chunk_count": 23,
@@ -512,6 +528,29 @@
       "source_sha256": "69f1c9cdbb55e23cd3a07552e62012dbf289d964954cae3a9aab85a5ef540a14"
     },
     {
+      "corpus_chunk_count": null,
+      "corpus_page_count": null,
+      "corpus_present": false,
+      "corpus_quality_status": null,
+      "image_files": null,
+      "latex_math_markers": null,
+      "p0": true,
+      "page_count_matches_corpus": false,
+      "paper_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+      "pdf_structure": {
+        "error_count": 0,
+        "return_code": 0,
+        "status": "clean",
+        "warning_count": 0
+      },
+      "replacement_characters": null,
+      "source_bytes": 233165,
+      "source_hash_matches_metadata": false,
+      "source_page_count": 5,
+      "source_pdf": "references/papers/2009-canty-seasonally-adjusted-inflation-linked-bonds.pdf",
+      "source_sha256": "a4c6c400817df46464222f6cdd31752bd881c68f0501e6b8f9c578e7b14c06a0"
+    },
+    {
       "corpus_chunk_count": 14,
       "corpus_page_count": 23,
       "corpus_present": true,
@@ -602,6 +641,29 @@
       "source_page_count": 11,
       "source_pdf": "references/papers/2011-patton-volatility-forecast-comparison.pdf",
       "source_sha256": "2b85bc30f188dc19d0ac7dbfe854929148d27c42e3f73d2b16605558daf60cee"
+    },
+    {
+      "corpus_chunk_count": null,
+      "corpus_page_count": null,
+      "corpus_present": false,
+      "corpus_quality_status": null,
+      "image_files": null,
+      "latex_math_markers": null,
+      "p0": true,
+      "page_count_matches_corpus": false,
+      "paper_id": "2013-wu-inflation-rate-derivatives",
+      "pdf_structure": {
+        "error_count": 0,
+        "return_code": 0,
+        "status": "clean",
+        "warning_count": 0
+      },
+      "replacement_characters": null,
+      "source_bytes": 339144,
+      "source_hash_matches_metadata": false,
+      "source_page_count": 36,
+      "source_pdf": "references/papers/2013-wu-inflation-rate-derivatives.pdf",
+      "source_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601"
     },
     {
       "corpus_chunk_count": 14,

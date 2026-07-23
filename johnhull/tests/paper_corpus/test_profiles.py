@@ -19,7 +19,7 @@ def test_page_profiles_cover_all_sources_and_flag_known_damage():
     manifest = build_profiles()
     papers = {item["paper_id"]: item for item in manifest["papers"]}
 
-    assert manifest["paper_count"] == 53
-    assert manifest["page_count"] == 1586
+    assert manifest["paper_count"] == 55
+    assert manifest["page_count"] == 1627
     assert papers["1900-bachelier-theorie-de-la-speculation"]["ocr_language"] == "fra"
     assert papers["2000-mcneil-frey-tail-risk-evt"]["summary"]["damaged_pages"] == [5, 14, 24]

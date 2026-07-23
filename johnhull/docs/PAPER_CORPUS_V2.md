@@ -34,7 +34,7 @@ component status; it is never inferred from average characters per page.
 
 Formulas, tables, or claims used to justify `hullkit` implementations are P0. They require
 manual verification against the source page even when automated metrics pass. P0 currently
-covers Hull--White, Heston, Jarrow--Yildirim when acquired, Japanese JGBi conventions,
+covers Hull--White, Heston, Jarrow--Yildirim, Japanese JGBi conventions,
 Hagan et al. SABR, McNeil--Frey VaR/ES, and Lyashenko--Mercurio RFR material.
 
 ## Fail-closed rules
@@ -53,7 +53,7 @@ Hagan et al. SABR, McNeil--Frey VaR/ES, and Lyashenko--Mercurio RFR material.
 - source and page integrity report;
 - schema and referential-integrity tests;
 - gold-set text, formula, table, and reading-order metrics;
-- P0 manual-review manifest;
+- P0 manual-review and implementation-to-evidence manifests;
 - retrieval evaluation with expected evidence;
 - two-run deterministic rebuild comparison;
 - JohnHull release checks.
@@ -92,12 +92,32 @@ its source-image fallback; it is not counted as an emitted LaTeX representation.
 Reviewed formulas additionally render to a deterministic PNG and retain the
 manual source-comparison result. The Gold set currently has 100% display/inline
 detection recall, 100% compile success for emitted LaTeX, and 100% render success
-for reviewed assertions. The three failed Japanese formula candidates remain
-explicit image fallbacks.
+for 31 reviewed formula assertions. The three failed Japanese formula candidates
+remain explicit image fallbacks.
 
-All 14 Gold table crops were independently reviewed. Five malformed extractor
+All 16 Gold table crops were independently reviewed. Five malformed extractor
 structures have manual structural replacements, while known numeric OCR errors
 retain both `extractor_raw_text` and the reviewed value. The resulting Gold table
-score is 1.0 structural TEDS and 100% numeric accuracy across 427 scalar cells,
-including 176 P0 cells. These scores apply to the reviewed Gold set only; an
+score is 1.0 structural TEDS and 100% numeric accuracy across 463 scalar cells,
+including 212 P0 cells. These scores apply to the reviewed Gold set only; an
 unreviewed table in the full corpus remains `unverified`.
+
+## Claim and retrieval gates
+
+The Gold semantic registry contains 75 manually reviewed claims: exactly five for
+each of 15 representative papers. Each claim resolves to source block IDs and retains
+the exact extracted evidence text and its SHA-256; claims using reviewed formulas or
+tables also resolve those record IDs. Evidence coverage and audited accuracy are 100%,
+and all 50 P0 claims have `manual_page_review_pass` with a named reviewer.
+
+Semantic chunks split at headings and discontinuous source pages instead of raw
+character offsets. They retain source blocks plus related equation, table, and claim
+IDs. The deterministic BM25 evaluator supports English tokens and Japanese character
+n-grams. Its fixed 28-question suite covers Hull--White, Heston, inflation/JGBi,
+SABR, RFR, and VaR/ES; Gold Hit@5 and P0 Hit@5 are both 100%.
+
+The P0 implementation manifest resolves 59 public implementation symbols across nine
+components to the reviewed corpus. It covers all 10 P0 papers, all 31 reviewed P0
+formulas, all four reviewed P0 table-cell assertions, and all 50 P0 claims. Undefined
+symbols, unresolved evidence, or an unmapped reviewed P0 formula/table assertion fail
+the release gate.

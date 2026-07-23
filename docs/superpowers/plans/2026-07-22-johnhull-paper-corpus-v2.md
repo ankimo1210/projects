@@ -47,8 +47,8 @@ by the implementation:
 
 1. Hull--White interest-rate derivatives.
 2. Heston stochastic volatility.
-3. Jarrow--Yildirim inflation model once the permitted PDF is available.
-4. Official Japanese JGBi convention sources once catalogued.
+3. Jarrow--Yildirim inflation model.
+4. Official Japanese JGBi convention sources.
 5. Hagan et al. SABR.
 6. McNeil--Frey VaR/ES and EVT.
 7. Lyashenko--Mercurio backward-looking RFRs.
@@ -198,5 +198,21 @@ No aggregate `pass` is allowed when a component gate is `review`, `fail`, or
 
 The work is complete only when all source, schema, formula, table, claim, retrieval,
 determinism, and JohnHull release gates pass, P0 material is manually verified, and no
-required source is silently absent. Until the Jarrow--Yildirim PDF is present it remains
-an explicit `missing_source`; this does not permit claims about that paper to pass.
+required source is silently absent. Jarrow--Yildirim, Wu, Canty, and the official JGBi
+sources are now locally present and hash-accounted; any future missing source must remain
+an explicit `missing_source` and cannot receive a passing semantic status.
+
+## 9. Implementation checkpoint (2026-07-23)
+
+- Phase 0--7 gates are implemented; the Gold set is 106 pages with 248 display
+  equations, 589 inline equations, 16 reviewed tables, and 651 structural cells.
+- Thirty-one implementation-critical formulas have exact reviewed LaTeX, successful
+  independent renders, and manual source-page comparison.
+- Phase 8 has 75 source-backed Gold claims and 100% P0 manual verification.
+- Phase 9 has 225 section-aware Gold chunks and a fixed 28-question suite with 100%
+  Hit@5, including 100% on P0 questions.
+- The P0 implementation evidence gate resolves 59 symbols across nine components to
+  every reviewed P0 formula/table assertion and all 50 P0 claims, with 100% coverage of
+  the 10 P0 papers.
+- Phase 10 full-corpus regeneration, exception closure, two-run byte comparison, atomic
+  migration, and release validation remain required before completion.

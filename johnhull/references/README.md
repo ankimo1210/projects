@@ -12,14 +12,14 @@
 
 | 区分 | 件数 | 説明 |
 |---|---:|---|
-| 明示引用された論文 | 59 | 実装・教材・設計 spec の引用を重複排除 |
-| 原文 PDF 取得済み | 50 | 著者・機関リポジトリ、出版社の公開コピー、arXiv/SSRN 相当を優先 |
+| 明示引用された論文 | 61 | 実装・教材・設計 spec の引用を重複排除 |
+| 原文 PDF 取得済み | 52 | 著者・機関リポジトリ、出版社の公開コピー、arXiv/SSRN 相当を優先 |
 | 原文リンクのみ | 8 | 公開 PDF を安全に取得できない、または購読・ログインが必要 |
 | 書誌未解決 | 1 | `Andersen et al. (2024)` は記述だけでは一意に特定できない |
 | 関連論文（引用外） | 1 | Bartlett (2006) の後続理論論文を補助資料として保存 |
 | 公的コンベンション資料 | 2 | 財務省の JGBi 告示と BEI／元本保証解説 |
 
-PDF は `papers/` にあります。収録されている53件は、本リポジトリでの公開許可を
+PDF は `papers/` にあります。収録されている55件は、本リポジトリでの公開許可を
 確認済みの資料として Git で追跡しています。PDFを追加・差し替えする場合は、
 公開許可と出典を確認し、このインベントリも同時に更新してください。
 
@@ -56,6 +56,8 @@ PDF は `papers/` にあります。収録されている53件は、本リポジ
 | 2019 | Andrei Lyashenko; Fabio Mercurio | [Looking Forward to Backward-Looking Rates: A Modeling Framework for Term Rates Replacing LIBOR](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3330240) | [PDF](papers/2019-lyashenko-mercurio-backward-looking-rates.pdf) |
 | 1990 | John Hull; Alan White | [Pricing Interest-Rate-Derivative Securities](https://doi.org/10.1093/rfs/3.4.573) | [PDF](papers/1990-hull-white-interest-rate-derivative-securities.pdf) |
 | 2003 | Robert Jarrow; Yildiray Yildirim | [Pricing Treasury Inflation Protected Securities and Related Derivatives Using an HJM Model](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=585828) | [PDF](papers/2003-jarrow-yildirim-inflation-hjm.pdf) |
+| 2009 | Paul Canty | [Seasonally Adjusted Prices for Inflation-Linked Bonds](https://www.risk.net/derivatives/1497788/seasonally-adjusted-prices-inflation-linked-bonds) | [PDF](papers/2009-canty-seasonally-adjusted-inflation-linked-bonds.pdf) |
+| 2013 | Lixin Wu | [Inflation-rate Derivatives: From Market Model to Foreign Currency Analogy](https://arxiv.org/abs/1302.0574) | [PDF](papers/2013-wu-inflation-rate-derivatives.pdf) |
 
 ### 公的コンベンション資料（論文件数には含めない）
 
@@ -137,7 +139,7 @@ PDF は `papers/` にあります。収録されている53件は、本リポジ
 
 ## 4. 論文一覧から除外した参考資料
 
-次はレポ内で参照されていますが、学術論文ではないため上の 59 件には含めていません。
+次はレポ内で参照されていますが、学術論文ではないため上の 61 件には含めていません。
 
 - 教科書・専門書: Hull; Glasserman; Gatheral; Bergomi; Benth & Benth;
   McNeil–Frey–Embrechts; López de Prado; Kloeden & Platen; Wilmott; Duffy;
@@ -226,10 +228,18 @@ uv run --no-sync python johnhull/scripts/build_paper_corpus_v2.py \
 ```
 
 `make hull-paper-corpus-v2-check` は Gold、構造化表、検証済み上書き、原画像参照、
-および 2 回変換のバイト一致を検査します。JGBi 告示の縦書きは現行 MinerU では本文と
+根拠付きclaim、固定検索質問、P0実装証跡、および 2 回変換のバイト一致を検査します。JGBi 告示の縦書きは現行 MinerU では本文と
 読み順が不十分なため、`fail/review` のまま原 PDF と別の OCR 経路を優先します。
 
-Gold の数式は表示・インラインとも検出 recall 100%、出力した LaTeX は compile 100% です。
+Gold 106ページの数式は表示248件・インライン589件とも検出 recall 100%、出力した
+LaTeX は compile 100% です。実装直結の31式は原典との手動照合と独立レンダーを通過しています。
 コンパイルできなかった自動候補3件は原画像 fallback に降格しており、正しい数式としては
-公開しません。Gold の14表は原画像を再確認し、427個の scalar 数値セル（P0 は176個）を
+公開しません。Gold の16表は原画像を再確認し、463個の scalar 数値セル（P0 は212個）を
 レビュー済みです。構造を誤った5表はレビュー版へ置換し、OCR原値も監査用に保持します。
+
+Gold 15資料には各5件、合計75件の主要claimを付与しました。128本のblock参照は
+全て解決し、P0の50件は原典ページとの手動照合済みです。section/block単位のsemantic
+chunkは式・表・claim IDを保持します。Hull--White、Heston、インフレーション/JGBi、
+SABR、RFR、VaR/ESを覆う固定28問の検索評価はHit@5 100%（P0も100%）です。
+P0実装証跡は9コンポーネント・59シンボルを、全10 P0資料、全31検証済み式、
+全4検証済み表セル、全50 P0 claimへ解決し、未解決・未マップは0件です。

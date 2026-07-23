@@ -22,8 +22,8 @@ def test_tracked_baseline_is_deterministic_and_current():
 def test_baseline_has_complete_source_and_corpus_integrity():
     manifest = json.loads(DEFAULT_OUTPUT.read_text(encoding="utf-8"))
 
-    assert manifest["source_count"] == 53
-    assert manifest["source_page_count"] == 1586
+    assert manifest["source_count"] == 55
+    assert manifest["source_page_count"] == 1627
     assert all(
         item["source_hash_matches_metadata"] and item["page_count_matches_corpus"]
         for item in manifest["sources"]
@@ -40,6 +40,8 @@ def test_required_semantic_sources_are_present_and_hashed():
 
     assert set(required) == {
         "2003-jarrow-yildirim-inflation-hjm",
+        "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+        "2013-wu-inflation-rate-derivatives",
         "2021-mof-jgbi-indexation-notice",
         "2024-mof-jgbi-bei-guide",
     }

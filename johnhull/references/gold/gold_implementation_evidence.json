@@ -1,0 +1,624 @@
+{
+  "components": [
+    {
+      "claims": [
+        {
+          "claim_id": "1990-hull-white-interest-rate-derivative-securities:claim:curve-fit",
+          "status": "pass"
+        },
+        {
+          "claim_id": "1990-hull-white-interest-rate-derivative-securities:claim:short-rate-dynamics",
+          "status": "pass"
+        },
+        {
+          "claim_id": "1990-hull-white-interest-rate-derivative-securities:claim:bond-loading",
+          "status": "pass"
+        },
+        {
+          "claim_id": "1990-hull-white-interest-rate-derivative-securities:claim:calibration",
+          "status": "pass"
+        }
+      ],
+      "component_id": "hull-white-state-and-curve",
+      "equations": [
+        {
+          "assertion_id": "hw-p4-short-rate-dynamics",
+          "equation_id": "1990-hull-white-interest-rate-derivative-securities:p0004:equation:0014",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "hw-p6-vasicek-b",
+          "equation_id": "1990-hull-white-interest-rate-derivative-securities:p0006:equation:0024",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "hw-p6-mean-reversion",
+          "equation_id": "1990-hull-white-interest-rate-derivative-securities:p0006:equation:0025",
+          "status": "pass"
+        }
+      ],
+      "implementations": [
+        {
+          "missing_symbols": [],
+          "path": "johnhull/hullkit/src/hullkit/hull_white.py",
+          "status": "pass",
+          "symbols": [
+            "hw_b",
+            "hw_phi",
+            "hw_discount_bond",
+            "hw_exact_transition",
+            "simulate_hw_paths",
+            "calibrate_hw1f"
+          ]
+        }
+      ],
+      "status": "pass",
+      "table_cells": []
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "1990-hull-white-interest-rate-derivative-securities:claim:analytic-approximation",
+          "status": "pass"
+        }
+      ],
+      "component_id": "hull-white-bond-options",
+      "equations": [
+        {
+          "assertion_id": "hw-p7-zcb-call",
+          "equation_id": "1990-hull-white-interest-rate-derivative-securities:p0007:equation:0028",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "hw-p7-zcb-call-d1",
+          "equation_id": "1990-hull-white-interest-rate-derivative-securities:p0007:equation:0029",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "hw-p7-zcb-call-total-variance",
+          "equation_id": "1990-hull-white-interest-rate-derivative-securities:p0007:equation:0030",
+          "status": "pass"
+        }
+      ],
+      "implementations": [
+        {
+          "missing_symbols": [],
+          "path": "johnhull/hullkit/src/hullkit/hull_white.py",
+          "status": "pass",
+          "symbols": [
+            "hw_zcb_option",
+            "hw_jamshidian_swaption"
+          ]
+        }
+      ],
+      "status": "pass",
+      "table_cells": [
+        {
+          "assertion_id": "hw-p17-table4-ext-vas-102",
+          "status": "pass",
+          "table_id": "1990-hull-white-interest-rate-derivative-securities:p0017:table:0002"
+        },
+        {
+          "assertion_id": "hw-p17-table4-cir-102",
+          "status": "pass",
+          "table_id": "1990-hull-white-interest-rate-derivative-securities:p0017:table:0002"
+        },
+        {
+          "assertion_id": "hw-p17-table3-ext-vas-200-100",
+          "status": "pass",
+          "table_id": "1990-hull-white-interest-rate-derivative-securities:p0017:table:0001"
+        },
+        {
+          "assertion_id": "hw-p17-table4-cir-200-100",
+          "status": "pass",
+          "table_id": "1990-hull-white-interest-rate-derivative-securities:p0017:table:0002"
+        }
+      ]
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "1993-heston-closed-form-stochastic-volatility:claim:closed-form",
+          "status": "pass"
+        },
+        {
+          "claim_id": "1993-heston-closed-form-stochastic-volatility:claim:variance-process",
+          "status": "pass"
+        },
+        {
+          "claim_id": "1993-heston-closed-form-stochastic-volatility:claim:volatility-risk-premium",
+          "status": "pass"
+        },
+        {
+          "claim_id": "1993-heston-closed-form-stochastic-volatility:claim:characteristic-function",
+          "status": "pass"
+        },
+        {
+          "claim_id": "1993-heston-closed-form-stochastic-volatility:claim:correlation-skew",
+          "status": "pass"
+        }
+      ],
+      "component_id": "heston-pricing",
+      "equations": [
+        {
+          "assertion_id": "heston-p2-asset-dynamics",
+          "equation_id": "1993-heston-closed-form-stochastic-volatility:p0002:equation:0005",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "heston-p3-variance-dynamics",
+          "equation_id": "1993-heston-closed-form-stochastic-volatility:p0003:equation:0015",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "heston-p5-g",
+          "equation_id": "1993-heston-closed-form-stochastic-volatility:p0005:equation:0013",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "heston-p5-d",
+          "equation_id": "1993-heston-closed-form-stochastic-volatility:p0005:equation:0014",
+          "status": "pass"
+        }
+      ],
+      "implementations": [
+        {
+          "missing_symbols": [],
+          "path": "johnhull/hullkit/src/hullkit/heston.py",
+          "status": "pass",
+          "symbols": [
+            "heston_cf",
+            "heston_mc_price"
+          ]
+        }
+      ],
+      "status": "pass",
+      "table_cells": []
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "2000-mcneil-frey-tail-risk-evt:claim:two-stage-method",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2000-mcneil-frey-tail-risk-evt:claim:conditional-risk",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2000-mcneil-frey-tail-risk-evt:claim:es-location-scale",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2000-mcneil-frey-tail-risk-evt:claim:gpd-tail",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2000-mcneil-frey-tail-risk-evt:claim:es-backtest",
+          "status": "pass"
+        }
+      ],
+      "component_id": "evt-var-es",
+      "equations": [
+        {
+          "assertion_id": "mcneil-frey-p8-gpd-quantile",
+          "equation_id": "2000-mcneil-frey-tail-risk-evt:p0008:equation:0025",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "mcneil-frey-p14-es",
+          "equation_id": "2000-mcneil-frey-tail-risk-evt:p0014:equation:0011",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "mcneil-frey-p14-gpd-mean",
+          "equation_id": "2000-mcneil-frey-tail-risk-evt:p0014:equation:0012",
+          "status": "pass"
+        }
+      ],
+      "implementations": [
+        {
+          "missing_symbols": [],
+          "path": "johnhull/hullkit/src/hullkit/tail_risk.py",
+          "status": "pass",
+          "symbols": [
+            "filtered_historical_var_es",
+            "fit_gpd_pot",
+            "evt_var_es",
+            "mean_excess"
+          ]
+        }
+      ],
+      "status": "pass",
+      "table_cells": []
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "2002-hagan-et-al-managing-smile-risk:claim:local-vol-warning",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2002-hagan-et-al-managing-smile-risk:claim:sabr-dynamics",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2002-hagan-et-al-managing-smile-risk:claim:singular-perturbation",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2002-hagan-et-al-managing-smile-risk:claim:calibration",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2002-hagan-et-al-managing-smile-risk:claim:single-expiry-scope",
+          "status": "pass"
+        }
+      ],
+      "component_id": "sabr-smile-and-hedging",
+      "equations": [
+        {
+          "assertion_id": "hagan-p8-sabr-forward-dynamics",
+          "equation_id": "2002-hagan-et-al-managing-smile-risk:p0008:equation:0008",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "hagan-p8-sabr-volatility-dynamics",
+          "equation_id": "2002-hagan-et-al-managing-smile-risk:p0008:equation:0009",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "hagan-p8-sabr-correlation",
+          "equation_id": "2002-hagan-et-al-managing-smile-risk:p0008:equation:0010",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "hagan-p9-sabr-implied-volatility",
+          "equation_id": "2002-hagan-et-al-managing-smile-risk:p0009:equation:0015",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "hagan-p9-sabr-z",
+          "equation_id": "2002-hagan-et-al-managing-smile-risk:p0009:equation:0016",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "hagan-p9-sabr-xz",
+          "equation_id": "2002-hagan-et-al-managing-smile-risk:p0009:equation:0017",
+          "status": "pass"
+        }
+      ],
+      "implementations": [
+        {
+          "missing_symbols": [],
+          "path": "johnhull/hullkit/src/hullkit/sabr.py",
+          "status": "pass",
+          "symbols": [
+            "sabr_implied_vol",
+            "sabr_smile_delta",
+            "sabr_greeks",
+            "calibrate_sabr"
+          ]
+        },
+        {
+          "missing_symbols": [],
+          "path": "johnhull/hullkit/src/hullkit/sabr_normal.py",
+          "status": "pass",
+          "symbols": [
+            "normal_sabr_implied_vol",
+            "shifted_sabr_implied_vol",
+            "bartlett_delta",
+            "hagan_error_diagnostics"
+          ]
+        }
+      ],
+      "status": "pass",
+      "table_cells": []
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "2003-jarrow-yildirim-inflation-hjm:claim:foreign-currency-analogy",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2003-jarrow-yildirim-inflation-hjm:claim:curve-and-factor-fit",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2003-jarrow-yildirim-inflation-hjm:claim:q-martingales",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2003-jarrow-yildirim-inflation-hjm:claim:cpi-q-dynamics",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2003-jarrow-yildirim-inflation-hjm:claim:inflation-risk-premium",
+          "status": "pass"
+        }
+      ],
+      "component_id": "jarrow-yildirim-inflation",
+      "equations": [
+        {
+          "assertion_id": "jy-p7-q-martingales",
+          "equation_id": "2003-jarrow-yildirim-inflation-hjm:p0007:equation:0012",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "jy-p9-cpi-q-dynamics",
+          "equation_id": "2003-jarrow-yildirim-inflation-hjm:p0009:equation:0007",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "jy-p21-cpi-call-payoff",
+          "equation_id": "2003-jarrow-yildirim-inflation-hjm:p0021:equation:0009",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "jy-p21-cpi-call-risk-neutral-value",
+          "equation_id": "2003-jarrow-yildirim-inflation-hjm:p0021:equation:0010",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "jy-p21-cpi-call-closed-form",
+          "equation_id": "2003-jarrow-yildirim-inflation-hjm:p0021:equation:0011",
+          "status": "pass"
+        }
+      ],
+      "implementations": [
+        {
+          "missing_symbols": [],
+          "path": "johnhull/hullkit/src/hullkit/jarrow_yildirim.py",
+          "status": "pass",
+          "symbols": [
+            "jy_correlation_matrix",
+            "jy_cpi_forward",
+            "jy_cpi_log_covariance",
+            "jy_payment_forward_cpi",
+            "jy_expected_cpi_ratio",
+            "jy_cpi_option",
+            "jy_zcis_value",
+            "jy_yoy_value",
+            "simulate_jy_forward_levels",
+            "simulate_jy_paths"
+          ]
+        }
+      ],
+      "status": "pass",
+      "table_cells": []
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds:claim:bei-seasonality-warning",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds:claim:multiplicative-seasonality",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds:claim:seasonally-adjusted-price",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds:claim:repeating-monthly-factors",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds:claim:lagged-interpolation",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2013-wu-inflation-rate-derivatives:claim:market-model",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2013-wu-inflation-rate-derivatives:claim:foreign-currency-analogy",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2013-wu-inflation-rate-derivatives:claim:zciis-payoff",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2013-wu-inflation-rate-derivatives:claim:fisher-relation",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2013-wu-inflation-rate-derivatives:claim:forward-measure",
+          "status": "pass"
+        }
+      ],
+      "component_id": "inflation-swaps-and-seasonality",
+      "equations": [
+        {
+          "assertion_id": "canty-p2-seasonality-decomposition",
+          "equation_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds:p0002:equation:0010",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "wu-p7-zciis-fixed-payoff",
+          "equation_id": "2013-wu-inflation-rate-derivatives:p0007:equation:0009",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "wu-p8-fisher-relation",
+          "equation_id": "2013-wu-inflation-rate-derivatives:p0008:equation:0016",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "wu-p9-yoy-floating-payoff",
+          "equation_id": "2013-wu-inflation-rate-derivatives:p0009:equation:0011",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "wu-p14-forward-measure-density",
+          "equation_id": "2013-wu-inflation-rate-derivatives:p0014:equation:0017",
+          "status": "pass"
+        }
+      ],
+      "implementations": [
+        {
+          "missing_symbols": [],
+          "path": "johnhull/hullkit/src/hullkit/inflation.py",
+          "status": "pass",
+          "symbols": [
+            "MonthlySeasonality",
+            "cpi_observation",
+            "seasonal_forward_index",
+            "zcis_cashflow",
+            "zcis_npv",
+            "zcis_par_rate",
+            "yoy_rate",
+            "yoy_swap_npv"
+          ]
+        }
+      ],
+      "status": "pass",
+      "table_cells": []
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "2019-lyashenko-mercurio-backward-looking-rates:claim:unified-rates",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2019-lyashenko-mercurio-backward-looking-rates:claim:risk-neutral-numeraire",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2019-lyashenko-mercurio-backward-looking-rates:claim:extended-forward-measure",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2019-lyashenko-mercurio-backward-looking-rates:claim:measure-drift-adjustment",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2019-lyashenko-mercurio-backward-looking-rates:claim:analytics-and-implementation",
+          "status": "pass"
+        }
+      ],
+      "component_id": "backward-looking-rfr",
+      "equations": [
+        {
+          "assertion_id": "lyashenko-p4-risk-neutral-bond-price",
+          "equation_id": "2019-lyashenko-mercurio-backward-looking-rates:p0004:equation:0041",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "lyashenko-p4-bond-after-maturity",
+          "equation_id": "2019-lyashenko-mercurio-backward-looking-rates:p0004:equation:0042",
+          "status": "pass"
+        }
+      ],
+      "implementations": [
+        {
+          "missing_symbols": [],
+          "path": "johnhull/hullkit/src/hullkit/rfr.py",
+          "status": "pass",
+          "symbols": [
+            "daily_accrual_schedule",
+            "compounded_rfr",
+            "rfr_coupon",
+            "RfrCurve",
+            "collateralized_present_value"
+          ]
+        }
+      ],
+      "status": "pass",
+      "table_cells": []
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "2021-mof-jgbi-indexation-notice:claim:notional-principal",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2021-mof-jgbi-indexation-notice:claim:coefficient-regime",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2021-mof-jgbi-indexation-notice:claim:cpi-definition",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2021-mof-jgbi-indexation-notice:claim:issue-date-definition",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2021-mof-jgbi-indexation-notice:claim:reopening-rule",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2024-mof-jgbi-bei-guide:claim:bei-definition-bias",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2024-mof-jgbi-bei-guide:claim:principal-floor",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2024-mof-jgbi-bei-guide:claim:floor-coupon-scope",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2024-mof-jgbi-bei-guide:claim:indexation-coefficient",
+          "status": "pass"
+        },
+        {
+          "claim_id": "2024-mof-jgbi-bei-guide:claim:lag-and-interpolation",
+          "status": "pass"
+        }
+      ],
+      "component_id": "jgbi-conventions-and-floor",
+      "equations": [
+        {
+          "assertion_id": "jy-p21-cpi-call-payoff",
+          "equation_id": "2003-jarrow-yildirim-inflation-hjm:p0021:equation:0009",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "jy-p21-cpi-call-risk-neutral-value",
+          "equation_id": "2003-jarrow-yildirim-inflation-hjm:p0021:equation:0010",
+          "status": "pass"
+        },
+        {
+          "assertion_id": "jy-p21-cpi-call-closed-form",
+          "equation_id": "2003-jarrow-yildirim-inflation-hjm:p0021:equation:0011",
+          "status": "pass"
+        }
+      ],
+      "implementations": [
+        {
+          "missing_symbols": [],
+          "path": "johnhull/hullkit/src/hullkit/jgbi.py",
+          "status": "pass",
+          "symbols": [
+            "jgbi_reference_index",
+            "jgbi_indexation_coefficient",
+            "jgbi_cashflows",
+            "jgbi_accrued_interest",
+            "jgbi_real_clean_price",
+            "jgbi_nominal_settlement_amount",
+            "jgbi_real_yield",
+            "jgbi_nominal_present_value",
+            "jgbi_breakeven_inflation",
+            "jgbi_deflation_floor_black",
+            "jgbi_deflation_floor_jy",
+            "jgbi_deflation_floor_jy_mc",
+            "jgbi_floor_adjusted_price",
+            "jgbi_floor_risk"
+          ]
+        }
+      ],
+      "status": "pass",
+      "table_cells": []
+    }
+  ],
+  "gold_implementation_evidence_version": "1.0.0"
+}
