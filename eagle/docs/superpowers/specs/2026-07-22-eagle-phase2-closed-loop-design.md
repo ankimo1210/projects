@@ -23,13 +23,36 @@ v0.1 §5.3–5.4, §6 (authoritative reference for dynamics/sensor/time design)
 
 ## 2. Two implementation waves
 
-- **Wave 1 — plumbing + P66:** dynamics, sensors (IMU/PIPA/CDU), DPS/RCS
-  actuation, scenario loader, telemetry board, and a P66-only closed loop
-  from a low-altitude gate (~150 m, low sink rate). Proves the full
-  sensor→AGC→actuator→physics cycle with the smallest guidance surface.
+**Amended 2026-07-23** after vendor research (agc_engine.c, LM_Simulator,
+Luminary099 source; citations in the Wave 1 plan). Three findings forced a
+restructure, decided with the user (option: "keep P66 in Wave 1"):
+
+1. P66 is **not V37-selectable** — the V37 table lists only P63 among
+   descent programs (`FRESH_START_AND_RESTART.agc:1072-1102`). P66 is
+   reached only via GUILDENSTERN (R13) while SERVICER/AVERAGE-G runs,
+   i.e. after P63/BURNBABY ignition, and requires pad-loaded erasables
+   with no in-rope writer (RODSCALE, TAUROD, LAG/TAU, MIN/MAXFORCE) plus
+   REFSMMAT/state vector/mass.
+2. yaAGC does **not emit the DPS throttle** on the socket (ch 014 bit 4
+   unhandled). The sim must play the throttle-drive electronics: strobe
+   DINC unprogrammed sequences at counter 055 and integrate the returned
+   POUT/MOUT pulses. Grounded in `agc_engine.c` but unproven — needs an
+   early live spike.
+3. The vendor oracle LM_Simulator closes only the **P00 DAP attitude
+   loop** (manual throttle slider, no erasable init) — it validates our
+   sensor/RCS plumbing but not the throttle loop or descent entry.
+
+- **Wave 1 — plumbing + forced-P66 descent:** dynamics, sensors
+  (IMU/PIPA/CDU), DPS/RCS actuation, THRUST DINC-strobe protocol,
+  DSKY-scripted erasable init (V21N01 pad-load harness + discretes +
+  V48 DAP setup), P63 ignition spike, then forced ATT-HOLD → P66 descent
+  from a hover-release gate (~500 m) to touchdown; scenario loader and
+  telemetry board. Risk-first ordering: the ignition/P66/THRUST spike
+  runs against a synthetic hover feed before the full physics lands.
 - **Wave 2 — full descent:** landing radar (beams, gating, quantization,
-  AGC read sequence), pad-load/uplink + resume snapshots, P63/P64 guidance
-  integration, mid-phase acceptance scenario, full-descent manual target.
+  AGC read sequence), digital-uplink pad-load automation + resume
+  snapshots, genuine P63/P64 guidance flight from PDI, mid-phase
+  acceptance scenario, full-descent manual target, trace notebooks.
 
 Each wave gets its own implementation plan (writing-plans → SDD execution).
 
@@ -122,8 +145,9 @@ Documented in `eagle/docs/coordinate-frames.md` (new, with this phase):
 
 | Risk | Mitigation |
 |---|---|
-| P63-entry erasable initialization deeper than expected | Two-mechanism plan (uplink build → resume freeze); Wave 1 closes the loop on P66 alone so this risk is isolated to Wave 2 |
-| Throttle/radar channel semantics misread | LM_Simulator in the vendor tree is a working oracle; mandatory per-task Step-0 verification with citations |
+| P63-entry erasable initialization deeper than expected | **(2026-07-23: risk confirmed — P66 needs P63 ignition + pad load.)** Wave 1 uses DSKY V21N01 scripted loads with V01N01 read-back verification and an alarm-driven iteration protocol; digital uplink + resume snapshots remain Wave 2 |
+| THRUST DINC-strobe protocol unproven (yaAGC never exercised this path in a closed throttle loop) | Dedicated early live spike (synthetic hover feed, before full physics); protocol semantics cited from agc_engine.c |
+| Throttle/radar channel semantics misread | LM_Simulator in the vendor tree is a working oracle for jets/IMU/discretes (NOT throttle); mandatory per-task Step-0 verification with citations |
 | Real-time test duration | Mid-phase acceptance scenarios keep CI ≤ 5 min; full run manual |
 | AGC nav divergence hard to debug | truth-vs-nav error on the telemetry board from day one; drift meter |
 | Noise vs determinism | Error models seeded and OFF by default; acceptance runs errors-OFF |
