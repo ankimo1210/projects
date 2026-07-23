@@ -1,7 +1,7 @@
 {
   "gold_manifest_version": "1.0.0",
-  "page_count": 88,
-  "paper_count": 13,
+  "page_count": 106,
+  "paper_count": 15,
   "selected_pages": [
     {
       "annotation_status": "selected",
@@ -189,6 +189,18 @@
     },
     {
       "annotation_status": "selected",
+      "gold_page_id": "1990-hull-white-interest-rate-derivative-securities:p0007",
+      "p0": true,
+      "page_number": 7,
+      "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+      "selection_reasons": [
+        "hybrid",
+        "math_dense"
+      ],
+      "source_pdf_sha256": "1a9b8fad1135e95315278379e02d7d16d13f125f3fccba3976ed2732dcd8378a"
+    },
+    {
+      "annotation_status": "selected",
       "gold_page_id": "1990-hull-white-interest-rate-derivative-securities:p0014",
       "p0": true,
       "page_number": 14,
@@ -354,6 +366,17 @@
     },
     {
       "annotation_status": "selected",
+      "gold_page_id": "2000-mcneil-frey-tail-risk-evt:p0008",
+      "p0": true,
+      "page_number": 8,
+      "paper_id": "2000-mcneil-frey-tail-risk-evt",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "9ab9f1149fe5acb8e9e6502e245676a855c4c629e3207179d4c0090acc465e03"
+    },
+    {
+      "annotation_status": "selected",
       "gold_page_id": "2000-mcneil-frey-tail-risk-evt:p0014",
       "p0": true,
       "page_number": 14,
@@ -501,6 +524,17 @@
     },
     {
       "annotation_status": "selected",
+      "gold_page_id": "2002-hagan-et-al-managing-smile-risk:p0009",
+      "p0": true,
+      "page_number": 9,
+      "paper_id": "2002-hagan-et-al-managing-smile-risk",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "c267782462f7e762455c481cbdd32e41f2f984c74e89708796836d80515aeaca"
+    },
+    {
+      "annotation_status": "selected",
       "gold_page_id": "2002-hagan-et-al-managing-smile-risk:p0015",
       "p0": true,
       "page_number": 15,
@@ -635,6 +669,63 @@
     },
     {
       "annotation_status": "selected",
+      "gold_page_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds:p0001",
+      "p0": true,
+      "page_number": 1,
+      "paper_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+      "selection_reasons": [
+        "born_digital",
+        "front_matter"
+      ],
+      "source_pdf_sha256": "a4c6c400817df46464222f6cdd31752bd881c68f0501e6b8f9c578e7b14c06a0"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds:p0002",
+      "p0": true,
+      "page_number": 2,
+      "paper_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "a4c6c400817df46464222f6cdd31752bd881c68f0501e6b8f9c578e7b14c06a0"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds:p0003",
+      "p0": true,
+      "page_number": 3,
+      "paper_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "a4c6c400817df46464222f6cdd31752bd881c68f0501e6b8f9c578e7b14c06a0"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds:p0004",
+      "p0": true,
+      "page_number": 4,
+      "paper_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "a4c6c400817df46464222f6cdd31752bd881c68f0501e6b8f9c578e7b14c06a0"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds:p0005",
+      "p0": true,
+      "page_number": 5,
+      "paper_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+      "selection_reasons": [
+        "born_digital",
+        "final_page"
+      ],
+      "source_pdf_sha256": "a4c6c400817df46464222f6cdd31752bd881c68f0501e6b8f9c578e7b14c06a0"
+    },
+    {
+      "annotation_status": "selected",
       "gold_page_id": "2008-fang-oosterlee-cos-method:p0001",
       "p0": false,
       "page_number": 1,
@@ -733,6 +824,116 @@
         "final_page"
       ],
       "source_pdf_sha256": "2795f7dc610868a5c58e4fac43d9610526a8d7a0f71f00fc394d9623c749207b"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2013-wu-inflation-rate-derivatives:p0002",
+      "p0": true,
+      "page_number": 2,
+      "paper_id": "2013-wu-inflation-rate-derivatives",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2013-wu-inflation-rate-derivatives:p0003",
+      "p0": true,
+      "page_number": 3,
+      "paper_id": "2013-wu-inflation-rate-derivatives",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2013-wu-inflation-rate-derivatives:p0007",
+      "p0": true,
+      "page_number": 7,
+      "paper_id": "2013-wu-inflation-rate-derivatives",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2013-wu-inflation-rate-derivatives:p0008",
+      "p0": true,
+      "page_number": 8,
+      "paper_id": "2013-wu-inflation-rate-derivatives",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2013-wu-inflation-rate-derivatives:p0009",
+      "p0": true,
+      "page_number": 9,
+      "paper_id": "2013-wu-inflation-rate-derivatives",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2013-wu-inflation-rate-derivatives:p0013",
+      "p0": true,
+      "page_number": 13,
+      "paper_id": "2013-wu-inflation-rate-derivatives",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2013-wu-inflation-rate-derivatives:p0014",
+      "p0": true,
+      "page_number": 14,
+      "paper_id": "2013-wu-inflation-rate-derivatives",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2013-wu-inflation-rate-derivatives:p0015",
+      "p0": true,
+      "page_number": 15,
+      "paper_id": "2013-wu-inflation-rate-derivatives",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2013-wu-inflation-rate-derivatives:p0016",
+      "p0": true,
+      "page_number": 16,
+      "paper_id": "2013-wu-inflation-rate-derivatives",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2013-wu-inflation-rate-derivatives:p0017",
+      "p0": true,
+      "page_number": 17,
+      "paper_id": "2013-wu-inflation-rate-derivatives",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601"
     },
     {
       "annotation_status": "selected",

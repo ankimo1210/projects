@@ -4,11 +4,11 @@
   "final_structure_teds": 1.0,
   "gold_table_metrics_version": "1.0.0",
   "p0_final_numeric_accuracy": 1.0,
-  "p0_reviewed_numeric_cell_count": 176,
-  "raw_extractor_numeric_accuracy": 0.6861826697892272,
-  "raw_extractor_structure_exact_rate": 0.6428571428571429,
-  "reviewed_numeric_cell_count": 427,
-  "table_count": 14,
+  "p0_reviewed_numeric_cell_count": 212,
+  "raw_extractor_numeric_accuracy": 0.7105831533477321,
+  "raw_extractor_structure_exact_rate": 0.6875,
+  "reviewed_numeric_cell_count": 463,
+  "table_count": 16,
   "tables": [
     {
       "expected_cell_count": 86,
@@ -333,6 +333,56 @@
         636,
         709,
         712
+      ]
+    },
+    {
+      "expected_cell_count": 27,
+      "expected_columns": 2,
+      "expected_rows": 14,
+      "extractor_cell_count": 27,
+      "extractor_columns": 2,
+      "extractor_numeric_cells_correct": 12,
+      "extractor_rows": 14,
+      "extractor_structure_exact": true,
+      "final_numeric_accuracy": 1.0,
+      "final_structure_teds": 1.0,
+      "manual_numeric_corrections": 0,
+      "manual_structure_override": true,
+      "p0": true,
+      "page_number": 2,
+      "paper_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+      "reviewed_numeric_cells": 12,
+      "reviewer": "codex-visual-table-audit-2026-07-23",
+      "source_bbox_normalized": [
+        475,
+        394,
+        854,
+        598
+      ]
+    },
+    {
+      "expected_cell_count": 39,
+      "expected_columns": 3,
+      "expected_rows": 13,
+      "extractor_cell_count": 39,
+      "extractor_columns": 3,
+      "extractor_numeric_cells_correct": 24,
+      "extractor_rows": 13,
+      "extractor_structure_exact": true,
+      "final_numeric_accuracy": 1.0,
+      "final_structure_teds": 1.0,
+      "manual_numeric_corrections": 0,
+      "manual_structure_override": false,
+      "p0": true,
+      "page_number": 5,
+      "paper_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+      "reviewed_numeric_cells": 24,
+      "reviewer": "codex-visual-table-audit-2026-07-23",
+      "source_bbox_normalized": [
+        549,
+        545,
+        911,
+        743
       ]
     },
     {

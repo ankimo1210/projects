@@ -15,6 +15,8 @@ P0_PAPER_IDS = (
     "2000-mcneil-frey-tail-risk-evt",
     "2002-hagan-et-al-managing-smile-risk",
     "2003-jarrow-yildirim-inflation-hjm",
+    "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+    "2013-wu-inflation-rate-derivatives",
     "2019-lyashenko-mercurio-backward-looking-rates",
     "2021-mof-jgbi-indexation-notice",
     "2024-mof-jgbi-bei-guide",
@@ -25,6 +27,18 @@ REQUIRED_SEMANTIC_SOURCES = (
         "source_id": "2003-jarrow-yildirim-inflation-hjm",
         "title": "Pricing Treasury Inflation Protected Securities and Related Derivatives Using an HJM Model",
         "source_pdf": "references/papers/2003-jarrow-yildirim-inflation-hjm.pdf",
+    },
+    {
+        "source_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+        "title": "Seasonally Adjusted Prices for Inflation-Linked Bonds",
+        "source_pdf": (
+            "references/papers/2009-canty-seasonally-adjusted-inflation-linked-bonds.pdf"
+        ),
+    },
+    {
+        "source_id": "2013-wu-inflation-rate-derivatives",
+        "title": "Inflation-rate Derivatives: From Market Model to Foreign Currency Analogy",
+        "source_pdf": "references/papers/2013-wu-inflation-rate-derivatives.pdf",
     },
     {
         "source_id": "2021-mof-jgbi-indexation-notice",
@@ -322,9 +336,15 @@ class ClaimRecord:
     statement: str
     page_numbers: tuple[int, ...]
     evidence_block_ids: tuple[str, ...]
+    source_pdf_sha256: str
     equation_ids: tuple[str, ...] = field(default_factory=tuple)
     table_ids: tuple[str, ...] = field(default_factory=tuple)
     verification_status: VerificationStatus = "unverified"
+    reviewer: str | None = None
+    source_review_status: str = "not_reviewed"
+    source_excerpts: tuple[str, ...] = field(default_factory=tuple)
+    evidence_text_sha256: tuple[str, ...] = field(default_factory=tuple)
+    finance_tags: tuple[str, ...] = field(default_factory=tuple)
 
     def validate(self) -> None:
         """Reject unsupported, unpaged, or numeric-without-source claims."""
@@ -333,10 +353,61 @@ class ClaimRecord:
             raise ValueError("claim id must be paper scoped")
         if not self.statement.strip() or not self.page_numbers or not self.evidence_block_ids:
             raise ValueError("claims require text, pages, and evidence blocks")
+        if not SHA256_RE.fullmatch(self.source_pdf_sha256):
+            raise ValueError("claims require the source PDF SHA-256")
         if any(page < 1 for page in self.page_numbers):
             raise ValueError("claim page numbers must be positive")
         if NUMBER_RE.search(self.statement) and not (self.equation_ids or self.table_ids):
             raise ValueError("numeric claims require equation or table evidence")
+        if len(self.source_excerpts) != len(self.evidence_block_ids):
+            raise ValueError("each evidence block requires a source excerpt")
+        if len(self.evidence_text_sha256) != len(self.evidence_block_ids):
+            raise ValueError("each evidence block requires a text digest")
+        if any(not SHA256_RE.fullmatch(value) for value in self.evidence_text_sha256):
+            raise ValueError("claim evidence digests must be lowercase SHA-256 values")
+        if self.verification_status == "verified" and not (
+            (self.reviewer or "").strip() and self.source_review_status == "manual_page_review_pass"
+        ):
+            raise ValueError("verified claims require a reviewer and passed source review")
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return a validated JSON-compatible record."""
+
+        self.validate()
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class SemanticChunkRecord:
+    """Section-aware retrieval unit retaining all source relationships."""
+
+    chunk_id: str
+    paper_id: str
+    page_numbers: tuple[int, ...]
+    section_title: str | None
+    block_ids: tuple[str, ...]
+    equation_ids: tuple[str, ...]
+    table_ids: tuple[str, ...]
+    claim_ids: tuple[str, ...]
+    text: str
+    retrieval_text: str
+    source_pdf_sha256: str
+    content_sha256: str
+    verification_status: VerificationStatus = "auto"
+
+    def validate(self) -> None:
+        """Reject empty, untraceable, or unstable chunks."""
+
+        if not self.paper_id.strip() or not self.chunk_id.startswith(f"{self.paper_id}:p"):
+            raise ValueError("chunk id must be paper and page scoped")
+        if not self.page_numbers or any(page < 1 for page in self.page_numbers):
+            raise ValueError("chunks require positive page numbers")
+        if not self.block_ids or not self.text.strip() or not self.retrieval_text.strip():
+            raise ValueError("chunks require blocks and non-empty text")
+        if not SHA256_RE.fullmatch(self.source_pdf_sha256):
+            raise ValueError("chunks require the source PDF SHA-256")
+        if not SHA256_RE.fullmatch(self.content_sha256):
+            raise ValueError("chunks require a content SHA-256")
 
     def to_dict(self) -> dict[str, Any]:
         """Return a validated JSON-compatible record."""

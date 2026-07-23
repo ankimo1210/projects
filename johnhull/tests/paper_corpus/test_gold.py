@@ -4,6 +4,11 @@ from __future__ import annotations
 
 import json
 
+from johnhull.scripts.paper_corpus.claim_gold import (
+    DEFAULT_CLAIM_METRICS_OUTPUT,
+    DEFAULT_CLAIM_SPECS_OUTPUT,
+    render_claim_specs,
+)
 from johnhull.scripts.paper_corpus.formula_gold import (
     DEFAULT_FORMULA_METRICS_OUTPUT,
     validate_formula_metrics,
@@ -20,7 +25,19 @@ from johnhull.scripts.paper_corpus.gold_import import (
     table_cell_count,
     validate_layout_labels,
 )
+from johnhull.scripts.paper_corpus.implementation_gold import (
+    DEFAULT_IMPLEMENTATION_EVIDENCE_OUTPUT,
+    DEFAULT_IMPLEMENTATION_METRICS_OUTPUT,
+    validate_implementation_evidence,
+)
+from johnhull.scripts.paper_corpus.retrieval import validate_retrieval_metrics
+from johnhull.scripts.paper_corpus.retrieval_gold import (
+    DEFAULT_RETRIEVAL_METRICS_OUTPUT,
+    DEFAULT_RETRIEVAL_QUERIES_OUTPUT,
+    render_retrieval_queries,
+)
 from johnhull.scripts.paper_corpus.schema import P0_PAPER_IDS
+from johnhull.scripts.paper_corpus.semantic import validate_claim_metrics
 from johnhull.scripts.paper_corpus.table_gold import (
     DEFAULT_TABLE_METRICS_OUTPUT,
     REVIEWED_TABLES,
@@ -82,11 +99,11 @@ def test_reviewed_layout_labels_meet_all_annotation_targets():
 
     validate_layout_labels(labels)
     assert labels["totals"] == {
-        "pages": 88,
-        "display_equations": 173,
-        "inline_equations": 431,
-        "tables": 14,
-        "table_cells": 585,
+        "pages": 106,
+        "display_equations": 248,
+        "inline_equations": 589,
+        "tables": 16,
+        "table_cells": 651,
     }
 
 
@@ -100,7 +117,7 @@ def test_reviewed_table_metrics_pass_structure_and_numeric_gates():
     metrics = json.loads(DEFAULT_TABLE_METRICS_OUTPUT.read_text(encoding="utf-8"))
 
     validate_table_metrics(metrics)
-    assert metrics["table_count"] == len(REVIEWED_TABLES) == 14
+    assert metrics["table_count"] == len(REVIEWED_TABLES) == 16
     assert metrics["final_structure_teds"] == 1.0
     assert metrics["final_numeric_accuracy"] == 1.0
     assert metrics["p0_final_numeric_accuracy"] == 1.0
@@ -114,3 +131,39 @@ def test_reviewed_formula_metrics_pass_detection_compile_and_render_gates():
     assert metrics["inline_recall"] == 1.0
     assert metrics["latex_compile_rate"] == 1.0
     assert metrics["verified_render_rate"] == 1.0
+    assert metrics["verified_formula_count"] == 31
+
+
+def test_p0_implementation_evidence_is_complete():
+    evidence = json.loads(DEFAULT_IMPLEMENTATION_EVIDENCE_OUTPUT.read_text(encoding="utf-8"))
+    metrics = json.loads(DEFAULT_IMPLEMENTATION_METRICS_OUTPUT.read_text(encoding="utf-8"))
+
+    validate_implementation_evidence(evidence, metrics)
+    assert metrics["overall_status"] == "pass"
+    assert metrics["missing_implementation_symbol_count"] == 0
+    assert metrics["mapped_p0_formula_count"] == 31
+    assert metrics["p0_formula_mapping_rate"] == 1.0
+    assert metrics["p0_table_assertion_mapping_rate"] == 1.0
+    assert metrics["p0_paper_coverage_rate"] == 1.0
+
+
+def test_reviewed_claim_specs_and_metrics_meet_evidence_gates():
+    metrics = json.loads(DEFAULT_CLAIM_METRICS_OUTPUT.read_text(encoding="utf-8"))
+
+    assert DEFAULT_CLAIM_SPECS_OUTPUT.read_text(encoding="utf-8") == render_claim_specs()
+    validate_claim_metrics(metrics)
+    assert metrics["claim_count"] == 75
+    assert metrics["evidence_coverage"] == 1.0
+    assert metrics["p0_verified_rate"] == 1.0
+
+
+def test_fixed_retrieval_suite_meets_hit_at_five_gates():
+    metrics = json.loads(DEFAULT_RETRIEVAL_METRICS_OUTPUT.read_text(encoding="utf-8"))
+
+    assert (
+        DEFAULT_RETRIEVAL_QUERIES_OUTPUT.read_text(encoding="utf-8") == render_retrieval_queries()
+    )
+    validate_retrieval_metrics(metrics)
+    assert metrics["query_count"] == 28
+    assert metrics["hit_at_5"] == 1.0
+    assert metrics["p0_hit_at_5"] == 1.0

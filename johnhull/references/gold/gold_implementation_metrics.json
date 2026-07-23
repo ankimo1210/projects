@@ -1,0 +1,23 @@
+{
+  "audit_basis": "AST-resolved implementation symbols plus manually reviewed claim, formula, and table evidence",
+  "component_count": 9,
+  "covered_p0_paper_count": 10,
+  "gold_implementation_metrics_version": "1.0.0",
+  "implementation_symbol_count": 59,
+  "mapped_claim_count": 50,
+  "mapped_p0_formula_count": 31,
+  "mapped_p0_table_assertion_count": 4,
+  "missing_equation_mappings": [],
+  "missing_implementation_symbol_count": 0,
+  "missing_p0_papers": [],
+  "missing_table_mappings": [],
+  "overall_status": "pass",
+  "p0_formula_mapping_rate": 1.0,
+  "p0_paper_count": 10,
+  "p0_paper_coverage_rate": 1.0,
+  "p0_table_assertion_mapping_rate": 1.0,
+  "passing_component_count": 9,
+  "required_p0_formula_count": 31,
+  "required_p0_table_assertion_count": 4,
+  "unresolved_evidence": []
+}

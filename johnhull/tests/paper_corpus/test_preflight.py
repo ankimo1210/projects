@@ -117,6 +117,9 @@ def test_verified_table_rejects_duplicate_cells_and_missing_exports():
 
 
 def test_claims_require_evidence_and_numeric_source():
+    evidence_text = "Reviewed table evidence."
+    evidence_digest = "a" * 64
+    source_digest = "0" * 64
     unsupported = ClaimRecord(
         claim_id=f"{PAPER_ID}:claim:0001",
         paper_id=PAPER_ID,
@@ -124,7 +127,10 @@ def test_claims_require_evidence_and_numeric_source():
         statement="The option value is 0.35.",
         page_numbers=(17,),
         evidence_block_ids=(stable_record_id(PAPER_ID, 17, "block", 1),),
+        source_pdf_sha256=source_digest,
         verification_status="auto",
+        source_excerpts=(evidence_text,),
+        evidence_text_sha256=(evidence_digest,),
     )
 
     with pytest.raises(ValueError, match="numeric claims"):
@@ -137,8 +143,13 @@ def test_claims_require_evidence_and_numeric_source():
         statement="The option value is 0.35.",
         page_numbers=(17,),
         evidence_block_ids=(stable_record_id(PAPER_ID, 17, "block", 1),),
+        source_pdf_sha256=source_digest,
         table_ids=(stable_record_id(PAPER_ID, 17, "table", 1),),
         verification_status="verified",
+        reviewer="manual-reviewer",
+        source_review_status="manual_page_review_pass",
+        source_excerpts=(evidence_text,),
+        evidence_text_sha256=(evidence_digest,),
     )
     supported.validate()
 

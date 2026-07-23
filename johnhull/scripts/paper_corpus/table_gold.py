@@ -163,6 +163,27 @@ def _fang_table_six() -> str:
     )
 
 
+def _canty_component_weights() -> str:
+    return _table(
+        [
+            [("A. Component weights of the eurozone HICP: 2008", 1, 2)],
+            ["Component", "Weight (%)"],
+            ["Food and non-alcoholic beverages", "15.8"],
+            ["Alcohol and tobacco", "3.7"],
+            ["Clothing and footwear", "6.8"],
+            ["Housing and utilities", "15.3"],
+            ["Household furnishings and equipment", "7.0"],
+            ["Health", "4.0"],
+            ["Transport", "15.7"],
+            ["Communications", "3.3"],
+            ["Recreation and culture", "9.7"],
+            ["Education", "1.0"],
+            ["Restaurants and hotels", "9.3"],
+            ["Miscellaneous", "8.4"],
+        ]
+    )
+
+
 REVIEWER = "codex-visual-table-audit-2026-07-23"
 
 REVIEWED_TABLES = (
@@ -271,6 +292,25 @@ REVIEWED_TABLES = (
         38,
         REVIEWER,
         replacement_html=_fang_table_six(),
+    ),
+    ReviewedTable(
+        "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+        2,
+        (475, 394, 854, 598),
+        14,
+        2,
+        27,
+        REVIEWER,
+        replacement_html=_canty_component_weights(),
+    ),
+    ReviewedTable(
+        "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+        5,
+        (549, 545, 911, 743),
+        13,
+        3,
+        39,
+        REVIEWER,
     ),
     ReviewedTable(
         "2024-mof-jgbi-bei-guide",

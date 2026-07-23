@@ -6,6 +6,7 @@ import argparse
 from pathlib import Path
 
 from paper_corpus.baseline import REFERENCES_ROOT
+from paper_corpus.gold import GOLD_PAGE_SELECTIONS
 from paper_corpus.mineru import convert_mineru_paper
 
 
@@ -16,6 +17,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--paper-id", action="append", required=True)
     parser.add_argument("--mineru-root", type=Path, required=True)
     parser.add_argument("--output-root", type=Path, default=REFERENCES_ROOT / "processed-v2")
+    parser.add_argument(
+        "--gold-page-mapping",
+        action="store_true",
+        help="map selected-page MinerU inputs back to their source PDF page numbers",
+    )
     return parser.parse_args()
 
 
@@ -29,6 +35,7 @@ def main() -> int:
             source_pdf=REFERENCES_ROOT / "papers" / f"{paper_id}.pdf",
             mineru_root=args.mineru_root,
             output_dir=args.output_root / paper_id,
+            page_mapping=(list(GOLD_PAGE_SELECTIONS[paper_id]) if args.gold_page_mapping else None),
         )
         counts = result["quality"]["counts"]
         print(

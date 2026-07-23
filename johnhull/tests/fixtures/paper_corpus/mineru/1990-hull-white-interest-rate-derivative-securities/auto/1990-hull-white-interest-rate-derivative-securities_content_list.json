@@ -1,0 +1,1339 @@
+[
+    {
+        "type": "text",
+        "text": "Pricing Interest-Rate-Derivative Securities",
+        "text_level": 1,
+        "bbox": [
+            293,
+            82,
+            704,
+            142
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "John Hull   \nAlan White   \nUniversity of Toronto",
+        "bbox": [
+            290,
+            156,
+            541,
+            216
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "This article shows that the one-state-variable interest-rate models of Vasicek (1977) and Cox, Ingersoll, and Ross (1985b) can be extended so that they are consistent with both the current term structure of interest rates and either the current volatilities of all spot interest rates or the current v o la t i l i t i e s of a l l for ward i n t er e s t ra t e s . Th e extended Vasicek model is shown to be very tractable analytically. The article compares option prices obtained using the extended Vasicek model with those obtained using a number of other models.",
+        "bbox": [
+            293,
+            250,
+            881,
+            456
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "In recent years, interest-rate-contingent claims such as caps, swaptions, bond options, captions, and mortgage-backed securities have become increasingly popular. The valuation of these instruments is now a major concern of both practitioners and academics.",
+        "bbox": [
+            293,
+            490,
+            879,
+            585
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Practitioners have tended to use different models for valuing different interest-rate-derivative securities. For example, when valuing caps, they frequently assume that the forward interest rate is lognormal and use Black’s (1976) model for valuing options on commodity futures, The volatility of the forward rate is assumed to be a decreasing function of the time to maturity of the forward contract. When valuing Eurothat, for this value of b, it is also possible to derive relatively simple analytic solutions for the prices of European call and put options on both discount bonds and coupon-bearing bonds. One drawback of assuming $\\boldsymbol { \\mathsf { b } } = \\boldsymbol { \\mathsf { 0 } }$ is that the short-term interest rate, r, can become negative. CIR consider the alternative $\\mathsf { b } = 0 . 5$ . In this case, r can, in some circumstances, become zero but it can never become negative. CIR derive analytic solutions for the prices of both discount bonds and European call options on discount bonds.",
+        "bbox": [
+            293,
+            583,
+            879,
+            733
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "page_footnote",
+        "text": "This research was funded by the Social Sciences and Humanities Research Council of Canada. We would like to thank Michael Brennan, Emanuel Derman, Farshid Jamshidian, Cal Johnson, Mark Koenigsberg, John Rumsey, Armand Tatevossian, Yisong Tian, Stuart Turnbull, Ken Vetzel, and participants of finance workshops at Duke University, Queens University, and the University of Toronto for helpful comments on an earlier draft of this paper. Address reprint requests to John Hull, Faculty of Management, University of Toronto, 246 Bloor Street West, Toronto, Ontario, Canada M5S 1V4.",
+        "bbox": [
+            290,
+            763,
+            877,
+            868
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "footer",
+        "text": "The Review of Financial Studies 1990 Volume 3, number 4, pp. 573-392 © 1990 The Review of Financial Studies 0893-9454/90/\\$1.50",
+        "bbox": [
+            293,
+            874,
+            858,
+            904
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "",
+        "bbox": [
+            117,
+            84,
+            871,
+            232
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "It is reasonable to conjecture that in some situations the market’s expectations about future interest rates involve time-dependent parameters. In other words, the drift rates and volatility of r may be functions of time as well as being functions of r and other state variables. The time dependence can arise from the cyclical nature of the economy, expectations concerning the future impact of monetary policies, and expected trends in other macroeconomic variables.",
+        "bbox": [
+            119,
+            232,
+            871,
+            362
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "In this article we extend the model in (1) to reflect this time dependence. We add a time-dependent drift, $\\pmb \\theta ( t )$ to the process for r, and allow both the reversion rate, a, and the volatility factor, s, to be functions of time. This leads to the following model for r:",
+        "bbox": [
+            119,
+            362,
+            871,
+            436
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "equation",
+        "img_path": "images/e547a4de6b170c3592d042f0498af663e262f5859f78e2e2eb3ee3ce21ecd115.jpg",
+        "text": "$$\nd r = \\{ \\theta ( t ) + a ( t ) ( b - r ) \\} d t + \\sigma ( t ) r ^ { \\rho } d z .\\tag{2}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            262,
+            446,
+            725,
+            466
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "This can be regarded as a model in which a drift rate, $\\pmb \\theta ( t )$ is imposed on a variable that would otherwise tend to revert to a constant level b. Since (2) can be written as",
+        "bbox": [
+            119,
+            479,
+            868,
+            536
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "equation",
+        "img_path": "images/58bd4802e545c967f0bd408a70f365018062cfce7ebdd56ebcffc82942561877.jpg",
+        "text": "$$\nd r = a ( t ) [ \\theta ( t ) / a ( t ) + b - r ] d t + \\sigma ( { \\dot { t } } ) r ^ { \\beta } d z ,\n$$",
+        "text_format": "latex",
+        "bbox": [
+            245,
+            539,
+            747,
+            567
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "it can also be regarded as a model in which the reversion level is a function, $\\theta ( t ) / a ( \\tilde { t } ) + b ,$ of time. We will examine the situations where $\\boldsymbol { \\mathsf { b } } = 0$ and $\\mathsf { b } = 0 . 5$ . The $\\boldsymbol { \\mathsf { b } } = 0$ case is an extension of Vasicek’s model; the $\\mathsf { b } = 0 . 5$ case is an extension of the CIR model. We will show that when appropriate assumptions are made about the market price of interest-rate risk, the model can be fitted to the term structure of interest rates and the term structure of spot or forward rate volatilities.",
+        "bbox": [
+            119,
+            579,
+            871,
+            707
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "As shown by Dybvig (1988) and Jamshidian (1988), the continuous time equivalent of the Ho and Lee (1986) model is",
+        "bbox": [
+            119,
+            707,
+            868,
+            745
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "equation",
+        "img_path": "images/b4cb2a653d2ae6712aa684dd6301d5467081b38a2e38c483374f6668c8c91561.jpg",
+        "text": "$$\nd r = \\theta ( t ) \\ d t + \\sigma \\ d z .\n$$",
+        "text_format": "latex",
+        "bbox": [
+            379,
+            755,
+            608,
+            775
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "This is the particular case of (2), where ${ \\sf b } = 0 , a ( t ) = 0$ , and $\\textsf { S } \\left( t \\right)$ is constant. If the market price of interest-rate risk is a function of time, $\\theta ( t )$ can be chosen so that the model fits the initial-term structure of interest rates. The model has the disadvantage that it incorporates no mean reversion; the instantaneous standard deviations of all spot and forward rates are the same.",
+        "bbox": [
+            112,
+            788,
+            871,
+            899
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "header",
+        "text": "The Review of Financial Studies / v 3 n 4 1990",
+        "bbox": [
+            119,
+            30,
+            489,
+            46
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "page_number",
+        "text": "576",
+        "bbox": [
+            121,
+            927,
+            173,
+            944
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "The continuous time equivalent of the Black, Derman, and Toy (1990) model can be shown to be",
+        "bbox": [
+            122,
+            85,
+            879,
+            122
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "equation",
+        "img_path": "images/8996b291d556c7ce71166eb107d9bb93b74f61a59e0a51093993a75bacb05d66.jpg",
+        "text": "$$\nd ( \\log { r } ) = [ \\theta ( t ) + ( \\sigma ^ { \\prime } ( t ) / \\sigma ( t ) ) \\log { r } ] d t + \\sigma ( t ) \\ d z .\n$$",
+        "text_format": "latex",
+        "bbox": [
+            222,
+            130,
+            777,
+            151
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "In this model log r is mean reverting. The function s (t) is chosen to make the model consistent with the term structure of spot rate volatilities and may not give reasonable values for the future short rate volatility. The model has the disadvantage that neither bond prices nor European bond option prices can be determined analytically.",
+        "bbox": [
+            120,
+            159,
+            877,
+            253
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "2. The Extended Vasicek Model",
+        "text_level": 2,
+        "bbox": [
+            87,
+            272,
+            477,
+            292
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "Our proposed extension of Vasicek’s model is given by (2) with b ${ \\ o } = 0 ^ { \\cdot }$",
+        "bbox": [
+            120,
+            300,
+            877,
+            337
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "equation",
+        "img_path": "images/4401a96c2a95407de92af4ee6f447e1bfcaccf8fec7c8b77b93a25459082659a.jpg",
+        "text": "$$\nd r = [ \\theta ( t ) + a ( t ) ( b - r ) ] d t + \\sigma ( t ) d z .\\tag{3}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            276,
+            343,
+            721,
+            363
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "We will assume that the market price of interest-rate risk is a function of time, X(t), that is bounded in any interval (0, t).  From Cox, Ingersoll, and Ross (1985a), this means that the price, $f ,$ of any contingent claim dependent on r must satisfy",
+        "bbox": [
+            120,
+            369,
+            877,
+            445
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "equation",
+        "img_path": "images/5d70218f1d3fd4174e8fe56d64fd98246ead50aef37c0301238649a913a49191.jpg",
+        "text": "$$\n\\begin{array} { r } { f _ { t } + [ \\phi ( t ) - a ( t ) r ] f _ { r } + \\frac { 1 } { 2 } \\sigma ( t ) ^ { 2 } f _ { r r } - r f = 0 , } \\end{array}\\tag{4}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            267,
+            459,
+            730,
+            482
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "where",
+        "bbox": [
+            122,
+            486,
+            203,
+            504
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "equation",
+        "img_path": "images/cd47e50ec774f93812aa54df79ec2ebf561c347827ea83127576000a1c59ab01.jpg",
+        "text": "$$\n\\phi ( t ) = a ( t ) b + \\theta ( t ) - \\lambda ( t ) \\sigma ( t ) .\n$$",
+        "text_format": "latex",
+        "bbox": [
+            319,
+            510,
+            678,
+            530
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "The price of a discount bond that pays off \\$1 at time T is the solution to (4) that satisfies the boundary condition $f = 1$ when $t = T .$ . Consider the function",
+        "bbox": [
+            122,
+            552,
+            877,
+            609
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "equation",
+        "img_path": "images/2c0fd6d9fe4dad94fe5df915eb2766f228bbb06a73a7f70517f32cba39924a78.jpg",
+        "text": "$$\nf = A \\left( t , T \\right) e ^ { - B \\left( t , T \\right) r } .\\tag{5}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            387,
+            614,
+            607,
+            634
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "This satisfies (4) and the boundary condition when",
+        "bbox": [
+            120,
+            640,
+            697,
+            660
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "equation",
+        "img_path": "images/f22db919e65a2d29aebe0acf954e7e6659466f684a351cd21f9891d344357e2e.jpg",
+        "text": "$$\nA _ { t } - \\phi ( t ) A B + { \\textstyle { \\frac { 1 } { 2 } } } \\sigma ( t ) ^ { 2 } A B ^ { 2 } = 0\\tag{6}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            330,
+            676,
+            669,
+            698
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "and",
+        "bbox": [
+            122,
+            705,
+            172,
+            722
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "equation",
+        "img_path": "images/8623b5d48667054ae5ee0c6b02a522c147d69209ad357e60b8f2c7b8c2bf7df8.jpg",
+        "text": "$$\nB _ { \\ell } - a ( \\ell ) B + 1 = 0 ,\\tag{7}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            380,
+            732,
+            619,
+            752
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "with",
+        "bbox": [
+            122,
+            761,
+            182,
+            778
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "equation",
+        "img_path": "images/bd5a988f00698f84f75ce597a31fe548e3418e2a5b401728d6d50f1873dd803f.jpg",
+        "text": "$$\nA ( T , T ) = 1 ; B ( T , T ) = 0 .\\tag{8}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            330,
+            787,
+            669,
+            808
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "header",
+        "text": "Pricing Interest-Rate-Derivative Securities",
+        "bbox": [
+            125,
+            32,
+            460,
+            47
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "page_footnote",
+        "text": "<sup>1</sup> This corresponds to the assumption made by Vasicek. In fact, the same final model is obtained if the market price of interest-rate risk is set equal to or even if it is set equal is the market price of risk, Girsanov’s theorem shows that for no arbitrage the condition must hold. Duffie (1988, p. 229) provides a discussion of this. The function presents no problems as far as this condition is concerned if we assume are always bounded in any interval",
+        "bbox": [
+            118,
+            820,
+            879,
+            904
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "page_number",
+        "text": "577",
+        "bbox": [
+            834,
+            933,
+            877,
+            948
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "It follows that if (6) and (7) are solved subject to the boundary conditions in (8), Equation (5) provides the price of a discount bond maturing at time T. Solving (6) and (7) for the situation where $a ( t )$ $\\phi ( t )$ , and $\\sigma ( t )$ are constant leads to the Vasicek bond-pricing formula:",
+        "bbox": [
+            116,
+            86,
+            874,
+            164
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "equation",
+        "img_path": "images/958dbd9b1387f764e95241003396aa1ab876121d0968662d9b0309acdcdb9529.jpg",
+        "text": "$$\n\\begin{array} { l } { { B ( t , T ) = ( 1 - e ^ { - a ( T - t ) } ) / a , } } \\\\ { { A ( t , T ) = \\mathrm { e x p } \\Bigg [ \\frac { ( B ( t , T ) - T + t ) ( a \\phi - \\sigma ^ { 2 } / 2 ) } { 4 a ^ { 2 } } - \\frac { \\sigma ^ { 2 } B ( t , T ) ^ { 2 } } { 4 a } \\Bigg ] . } } \\end{array}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            156,
+            190,
+            838,
+            261
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "The function, s (t), in the extended model should be chosen to reflect the current and future volatilities of the short-term interest rate, r. As will be shown later, $A ( O , \\ T )$ and $B ( O , \\ T )$ are defined by ${ \\textsf { \\textsf { S } } } \\left( 0 \\right)$ , the current term structure of interest rates, and the current term structure of spot or forward interest-rate volatilities. The first step in the analysis is therefore to determine $a ( t ) , \\phi ( t ) , A ( t , T )$ , and $B ( t , T )$ in terms of $A ( O , \\ T )$ $B ( O , \\ T )$ , and s (t).",
+        "bbox": [
+            118,
+            291,
+            876,
+            421
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Differentiating (6) and (7) with respect to T, we obtain",
+        "bbox": [
+            144,
+            421,
+            765,
+            439
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "equation",
+        "img_path": "images/dea35cbe87eba32cb7000511de811e5728c96011e47c75324472a53ffafd83a7.jpg",
+        "text": "$$\nA _ { t T } - \\phi ( t ) [ A _ { T } B + A B _ { T } ] + \\sigma ( t ) ^ { 2 } [ A _ { T } B ^ { 2 } + 2 A B B _ { T } ] / 2 = 0 ,\\tag{9}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            196,
+            445,
+            798,
+            469
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "equation",
+        "img_path": "images/34234dc1571b540aacf2c84142de1d3a7d70011a44084403ea8eecdd2ad4bc6f.jpg",
+        "text": "$$\n\\begin{array} { r } { B _ { t r } - \\dot { a } ( t ) B _ { \\tau } = 0 . } \\end{array}\\tag{10}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            398,
+            475,
+            599,
+            495
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Eliminating $a ( t )$ from (7) and (10) gives",
+        "bbox": [
+            118,
+            503,
+            585,
+            523
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "equation",
+        "img_path": "images/8c377b05298ead8f3dd4e3ef994b9149bc32a514916f22b6a7fe90d499f5ec8e.jpg",
+        "text": "$$\nB , B _ { \\tau } - B B _ { \\tau \\tau } + B _ { \\tau } = 0 .\\tag{11}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            372,
+            530,
+            625,
+            551
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Eliminating $\\phi ( t )$ from (6) and (9) yields",
+        "bbox": [
+            118,
+            558,
+            578,
+            578
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "equation",
+        "img_path": "images/ba3d6fa0fba5bacca4bc7798a9877b6c487a8f1c6e97f29a845e225a7759dc44.jpg",
+        "text": "$$\nA B A _ { t T } - B A _ { t } A _ { T } - A A _ { t } B _ { T } + \\sigma ( t ) ^ { 2 } A ^ { 2 } B ^ { 2 } B _ { T } / 2 = 0 .\\tag{12}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            236,
+            585,
+            758,
+            606
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "The boundary conditions for (11) and (12) are the known values of $A ( O , \\ T )$ and $B ( O , \\ T ) , \\ A ( \\ T , \\ T ) \\ = \\ 1$ , and $B ( T , \\ T ) \\ = \\ 0$ . The solutions to (11) and (12) that satisfy these boundary conditions are",
+        "bbox": [
+            116,
+            614,
+            879,
+            670
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "equation",
+        "img_path": "images/4f90ff747ba2515d7aab8c9ca873aa607452f8c2c00c5a33d56ff82810008076.jpg",
+        "text": "$$\n\\begin{array} { l } { { \\displaystyle { \\cal B } ( t , T ) = \\frac { { \\cal B } ( 0 , T ) - { \\cal B } ( 0 , t ) } { \\displaystyle \\partial { \\cal B } ( 0 , t ) / \\partial t } } , } \\\\ { { \\displaystyle \\hat { \\cal A } ( t , T ) = \\hat { \\cal A } ( 0 , T ) - \\hat { \\cal A } ( 0 , t ) - { \\cal B } ( t , T ) \\frac { \\partial \\hat { \\cal A } ( 0 , t ) } { \\partial t } } } \\\\ { { \\displaystyle ~ - \\frac { 1 } { 2 } \\biggl [ { \\cal B } ( t , T ) \\frac { \\partial { \\cal B } ( 0 , t ) } { \\partial t } \\biggr ] ^ { 2 } \\int _ { 0 } ^ { t } \\biggl [ \\frac { \\sigma ( \\tau ) } { \\partial { \\cal B } ( 0 , \\tau ) / \\partial \\tau } \\biggr ] ^ { 2 } d \\tau , } } \\end{array}\\tag{13}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            194,
+            687,
+            798,
+            831
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "(14)",
+        "bbox": [
+            824,
+            798,
+            874,
+            817
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "where $\\hat { A } ( t , T ) = \\log [ A ( t , T ) ]$ Substituting into (6) and (7), we obtain",
+        "bbox": [
+            118,
+            835,
+            876,
+            859
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "equation",
+        "img_path": "images/b09a4e119fac6b3aaa081a82979e5b15932c7b83853b9a15aaf12a1a08329ab0.jpg",
+        "text": "$$\na ( t ) = - \\frac { \\partial ^ { 2 } B ( 0 , t ) / \\partial t ^ { 2 } } { \\partial \\dot { B } ( 0 , t ) / \\partial t } ,\\tag{1 5}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            258,
+            863,
+            537,
+            905
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "header",
+        "text": "The Review of Financial Studies / v 3 n 4 1990",
+        "bbox": [
+            120,
+            32,
+            492,
+            47
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "page_number",
+        "text": "578",
+        "bbox": [
+            120,
+            933,
+            165,
+            950
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "equation",
+        "img_path": "images/454046fda25d091a280dd0a90b8099b27f043e78d24f91687c00bfc91baeff48.jpg",
+        "text": "$$\n\\begin{array} { l } { \\displaystyle \\phi ( t ) = - \\ a ( t ) \\frac { \\partial \\hat { A } ( 0 , t ) } { \\partial t } - \\frac { \\partial ^ { 2 } \\hat { A } ( 0 , t ) } { \\partial t ^ { 2 } } } \\\\ { \\displaystyle \\ + \\left[ \\frac { \\partial B ( 0 , t ) } { \\partial t } \\right] ^ { 2 } \\int _ { 0 } ^ { t } \\left[ \\frac { \\sigma ( \\tau ) } { \\partial B ( 0 , \\tau ) / \\partial \\tau } \\right] ^ { 2 } d \\tau . } \\end{array}\\tag{16}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            270,
+            83,
+            748,
+            182
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "We now move on to discuss option valuation under the extended Vasicek model. Define $P ( r , \\ t _ { I } , \\ t _ { 2 } )$ as the price at time $t _ { l }$ of a discount bond maturing at time $t _ { 2 } .$ . From the above analysis,",
+        "bbox": [
+            130,
+            198,
+            888,
+            255
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "equation",
+        "img_path": "images/d91ea54f55cb386ea83c265ce3072e9c26e29381a2d5a4e44c5d2e25d3695d41.jpg",
+        "text": "$$\nP ( r , t _ { 1 } , t _ { 2 } ) = A ( t _ { 1 } , t _ { 2 } ) e ^ { - B ( t _ { 1 } , t _ { 2 } ) r } .\n$$",
+        "text_format": "latex",
+        "bbox": [
+            343,
+            261,
+            680,
+            283
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Using $\\mathrm { I t o } ^ { \\prime } \\mathrm { s }$ lemma, the volatility of $P ( r , \\ t _ { I } , \\ t _ { 2 } )$ is $\\textsf { s } ( t I ) B ( t I , \\ t 2 )$ . Since this is independent of $r ,$ the distribution of a bond price at any given time conditional on its price at an earlier time must be lognormal.",
+        "bbox": [
+            132,
+            291,
+            888,
+            348
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Consider a European call option on a discount bond with exercise price X. Suppose that the current time is $t ,$ the option expires at time $T ,$ and the bond expires at time s $( s \\ \\geq T \\geq t )$ . The call option can be regarded as an option to exchange X units of a discount bond maturing at time $T$ for one unit of a discount bond maturing at time $s .$ Define ${ \\pmb { \\alpha } } _ { 1 } ( { \\pmb { \\tau } } )$ and ${ \\pmb { \\alpha } } _ { 2 } ^ { \\prime } ( \\pmb { \\tau } )$ as the volatilities at time $\\pmb { \\tau }$ of the prices of discount bonds maturing at times $T$ and $s ,$ respectively, and $\\pmb { \\rho } ( \\pmb { \\tau } )$ as the instantaneous correlation between the two bond prices. From the lognormal property mentioned above and the results in Merton (1973), it follows that the option price, $C ,$ is given by",
+        "bbox": [
+            130,
+            346,
+            890,
+            534
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "equation",
+        "img_path": "images/02ae7f9962f2507f52ccae84d756581035cd48b318843bba12f6fa596717597f.jpg",
+        "text": "$$\nC = P ( r , \\ t , s ) N ( b ) - X P ( r , \\ t , T ) N ( b - \\sigma _ { P } ) ,\\tag{17}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            267,
+            540,
+            753,
+            560
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "where",
+        "bbox": [
+            130,
+            569,
+            210,
+            586
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "equation",
+        "img_path": "images/7c81caa0685a9fdf05ca7cf2e0bf389845048da9566203188faf77c564799487.jpg",
+        "text": "$$\n\\begin{array} { l } { { b = \\displaystyle \\frac { 1 } { \\sigma _ { P } } \\log \\frac { P ( \\boldsymbol { r } , \\boldsymbol { t } , \\boldsymbol { s } ) } { P ( \\boldsymbol { r } , \\boldsymbol { t } , T ) X } + \\frac { \\sigma _ { P } } { 2 } , } } \\\\ { { \\sigma _ { P } ^ { 2 } = \\displaystyle \\int _ { \\boldsymbol { t } } ^ { T } \\left[ \\alpha _ { 1 } ( \\tau ) ^ { 2 } - 2 \\rho ( \\tau ) \\alpha _ { 1 } ( \\tau ) \\alpha _ { 2 } ( \\tau ) + \\alpha _ { 2 } ( \\tau ) ^ { 2 } \\right] d \\tau , } } \\end{array}\\tag{18}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            236,
+            605,
+            781,
+            701
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "and $\\mathbf { N } ( \\mathbf { \\partial } \\cdot \\mathbf { \\partial } )$ is the cumulative normal distribution function. Since we are using a one-factor model, ${ \\textsf { r } } = 1$ . Furthermore,",
+        "bbox": [
+            130,
+            712,
+            886,
+            750
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "equation",
+        "img_path": "images/278c42911d668ba125f36616e763f73efa96114952f2ac4aef5629c9175ba829.jpg",
+        "text": "$$\n\\begin{array} { r } { \\alpha _ { 1 } ( \\tau ) = \\sigma ( \\tau ) B ( \\tau , s ) , } \\\\ { \\alpha _ { 2 } ( \\tau ) = \\sigma ( \\tau ) B ( \\tau , T ) . } \\end{array}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            383,
+            756,
+            625,
+            804
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Hence,",
+        "bbox": [
+            130,
+            815,
+            215,
+            832
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "equation",
+        "img_path": "images/d9a22c9f4e8aab36d522fe59afc125781b8670a1ddb6f2f2bb1650ef6a374eaa.jpg",
+        "text": "$$\n\\sigma _ { P } ^ { 2 } = \\int _ { t } ^ { T } \\sigma ( \\tau ) ^ { 2 } \\big [ B ( \\tau , s ) - B ( \\tau , T ) \\big ] ^ { 2 } ~ d \\tau .\n$$",
+        "text_format": "latex",
+        "bbox": [
+            289,
+            854,
+            715,
+            900
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "header",
+        "text": "Pricing Interest-Rate-Derivative Securities",
+        "bbox": [
+            135,
+            29,
+            469,
+            43
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "page_number",
+        "text": "579",
+        "bbox": [
+            843,
+            931,
+            886,
+            947
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "table",
+        "img_path": "images/509a8bbb9e3bf795741df51242664049115676d437ef136b1c492b7d4cc7fd0d.jpg",
+        "table_caption": [
+            "Table 1 Prices of call options on a 5-year bond"
+        ],
+        "table_footnote": [
+            "The bond has a face value of \\$100 and a coupon of 10% per annum paid semiannually. Current short-term interest rate is 10% per annum. Interest rates are assumed to follow the original CIR model with $\\sigma = 0 . 0 6 , \\phi = 0 . 0 2 ,$ The extended Vasicek (Ext Vas) model is chosen to lit the initial term structure of Interest rates and the initial term structure of interest-rate volatilities. Numbers in parentheses are the forward bond price volatilities (% per annum) implied from the option prices when Black’s model is used."
+        ],
+        "table_body": "<table><tr><td rowspan=\"2\">Option maturity (years)</td><td rowspan=\"2\">Model</td><td colspan=\"6\">Exercise price</td></tr><tr><td>95.0</td><td>97.5</td><td>100.0</td><td>102.5</td><td></td><td>105.0</td></tr><tr><td rowspan=\"2\">0.5</td><td>Ext Vas</td><td>4.27 (4.50)</td><td>2.30 (4.51)</td><td>0.94 (4.51)</td><td>0.27</td><td>(4.52)</td><td>0.05 (4.52)</td></tr><tr><td>CIR</td><td>4.30 (4.73)</td><td>2.32 (4.63)</td><td>0.94 (4.52)</td><td></td><td>0.25 (4.40)</td><td>0.04 (4.28)</td></tr><tr><td rowspan=\"2\">1.0</td><td>Ext Vas</td><td>4.28 (4.05)</td><td>2.51 (4.05)</td><td>123 (4.05)</td><td>0.50</td><td>(4.06)</td><td>0.16 (4.06)</td></tr><tr><td>CIR</td><td>4.32 (4.27)</td><td>2.54 (4.17)</td><td>1.24 (4.06)</td><td></td><td>0.46 (3.94)</td><td>0.13 (3.82)</td></tr><tr><td rowspan=\"2\">1.5</td><td>Ext Vas</td><td>4.20 (3.59)</td><td>2.54 (3.59)</td><td>1.33 (3.60)</td><td>0.59</td><td>(3.60)</td><td>0.22 (3.60)</td></tr><tr><td>CIR</td><td>4.25 (3.81)</td><td>2.59 (3.71)</td><td>1.33 (3.60)</td><td>0.55</td><td>(3.49)</td><td>0.17 (3.37)</td></tr><tr><td rowspan=\"2\">2.0</td><td>Ext Vas</td><td>4.06(3.13)</td><td>2.48(3.13)</td><td>1:31(3.14)</td><td>0.58</td><td>(3.14)</td><td>0.22 (3.14)</td></tr><tr><td>CIR</td><td>4.12(3.35)</td><td>2.52(3.25)</td><td>1.31 (3.14)</td><td>0.54</td><td>(3.03)</td><td>0.17 (2.91)</td></tr><tr><td rowspan=\"2\">3.0</td><td>Ext Vas</td><td>3.68 (2.18)</td><td>2.16 (2.19)</td><td>1.05 (2.19)</td><td>0.40</td><td>(2.19)</td><td>0.12 (2.19)</td></tr><tr><td>CIR</td><td>3.73 (2.39)</td><td>2.21 (2.20)</td><td>1.05 (2.19)</td><td>0.36</td><td>(2.06)</td><td>0.08 (1.96)</td></tr><tr><td rowspan=\"2\">4.0</td><td>Ext Vas</td><td>3.31 (1.16)</td><td>1.74 (1.16)</td><td>0.59 (1.16)</td><td>0.11</td><td>(1.16)</td><td>0.01 (1.16)</td></tr><tr><td>CIR</td><td>3.32 (1.34)</td><td>1.77 (1.26)</td><td>0.60 (1.16)</td><td></td><td>0.08 (1.05)</td><td>0.00 (0.89)</td></tr></table>",
+        "bbox": [
+            118,
+            114,
+            874,
+            335
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "5.2 Interest-rate caps",
+        "text_level": 2,
+        "bbox": [
+            118,
+            455,
+            379,
+            473
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Consider an option that caps the interest rate on \\$1 at $R _ { x }$ between times $t _ { l }$ and $t _ { 2 } .$ . The payoff from the option at time $t _ { 2 }$ is",
+        "bbox": [
+            116,
+            473,
+            872,
+            512
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "equation",
+        "img_path": "images/eaac16e842e23a674bbe04b505f1dcbf5ea040a791ceba281e050517fde9efb9.jpg",
+        "text": "$$\n\\Delta t \\operatorname* { m a x } ( R \\div R _ { x } , 0 ) ,\n$$",
+        "text_format": "latex",
+        "bbox": [
+            383,
+            518,
+            606,
+            538
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "where $\\Delta t = t _ { 2 } - t _ { 1 }$ and R is the actual interest rate at time $t _ { I }$ for the time period $\\left( t _ { I } , \\ t _ { 2 } \\right)$ . (Both R and $R _ { x }$ are assumed to be compounded once during the time period.)",
+        "bbox": [
+            116,
+            546,
+            872,
+            602
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "The discounted value of this payoff is equivalent to",
+        "bbox": [
+            139,
+            602,
+            718,
+            622
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "equation",
+        "img_path": "images/05cf36821c2cc9a6bff47f1ab494df41f6a96b90ca7d06e5cd16d71cc7c3fcdf.jpg",
+        "text": "$$\n( 1 + R _ { x } \\Delta t ) \\mathrm { m a x } \\Bigg [ \\frac { 1 } { 1 + R _ { x } \\Delta t } - \\frac { 1 } { 1 + R \\Delta t } , 0 \\Bigg ] ,\n$$",
+        "text_format": "latex",
+        "bbox": [
+            255,
+            633,
+            732,
+            681
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "at time $t _ { I } .$ . Since $1 / ( 1 + { \\tt R } { \\sf D } { \\sf t } )$ is the value at time $t _ { I }$ of a bond maturing at time $t _ { 2 } ,$ , this expression shows that the option can be regarded as $1 { \\bf \\alpha } + { \\pmb R } _ { \\pmb { x } } \\Delta { t }$ European puts with exercise price $1 / ( 1 ~ + ~ R _ { x } \\Delta t )$ and expiration date $t _ { I }$ on a \\$1 face value discount bond maturing at time $t _ { 2 } .$ More generally, an interest rate cap is a portfolio of European puts on discount bonds.",
+        "bbox": [
+            116,
+            691,
+            874,
+            803
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "Table 2 shows the prices given by the two models for caps on the risk-free interest rate when the principal is \\$100. Again, we see that the prices are very close for a range of different cap rates and maturities. The percentage differences between the prices are greatest for deep-out-of-the-money caps. CIR gives higher prices than extended technique. Each price was based on a total of 40,000 runs and the maximum standard error was 0.0043.",
+        "bbox": [
+            116,
+            803,
+            876,
+            899
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "header",
+        "text": "The Review of Financial Studies/ v 3 n 4 1990",
+        "bbox": [
+            120,
+            24,
+            492,
+            40
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "page_number",
+        "text": "586",
+        "bbox": [
+            120,
+            925,
+            165,
+            942
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "table",
+        "img_path": "images/b249cfd46dd33887e751e68e75f1b2bdeaa32721d9e3473c84d1becfe95e4af8.jpg",
+        "table_caption": [
+            "Table 3 Values of European call options on a five-year discount bond with a face value of \\$100"
+        ],
+        "table_footnote": [
+            "Interest rates are assumed to follow the two-factor Vasicek model described by Equation (30). The parameter values are $\\phi _ { 1 } = 0 . 0 0 5 , a _ { 1 } = 0 . 1 , \\sigma _ { 1 } = 0 . 0 1 , \\sigma _ { 2 } = 0 . 0 1 , \\phi _ { 2 } = 0 , a _ { 2 } = 0 ,$ and the initial values of both $x _ { I }$ and $x _ { 2 }$ are 0.05. The extended Vasicek (Ext Vas) model is chosen to fit the initial term structure of interest rates and the initial term structure of interest-rate volatilities. The exercise price is expressed as a proportion of the forward bond price."
+        ],
+        "table_body": "<table><tr><td rowspan=\"2\">Option maturity (years)</td><td></td><td colspan=\"5\">Exercise price</td></tr><tr><td>Model</td><td>0.96</td><td>0.98</td><td>1.00</td><td>1.02</td><td>1.04</td></tr><tr><td rowspan=\"2\">1.0</td><td>Ext Vas</td><td>2.80</td><td>1.93</td><td>1.24</td><td>0.74</td><td>0.40</td></tr><tr><td>Two-factor Vas</td><td>2.80</td><td>1.93</td><td>1.24</td><td>0.73</td><td>0.40</td></tr><tr><td rowspan=\"2\">2.0</td><td>Ext Vas</td><td>2.86</td><td>2.00</td><td>132</td><td>0.81</td><td>0.46</td></tr><tr><td>Two-factor Vas</td><td>2.85</td><td>1.99</td><td>1.31</td><td>0.80</td><td>0.46</td></tr><tr><td rowspan=\"2\">3.0</td><td>Ext Vas</td><td>2.69</td><td>1.79</td><td>1.08</td><td>0.59</td><td>0.29</td></tr><tr><td>Two-factor Vas</td><td>2.69</td><td>1.78</td><td>1.07</td><td>0.58</td><td>0.28</td></tr><tr><td rowspan=\"2\">4.0</td><td>Ext Vas</td><td>2.47</td><td>1.41</td><td>0.63</td><td>0.20</td><td>0.04</td></tr><tr><td>Two-factor  $\\mathrm { V a s }$ </td><td>2.47</td><td>1.40</td><td>0.62</td><td>0.20</td><td>0.04</td></tr></table>",
+        "bbox": [
+            112,
+            118,
+            863,
+            287
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "",
+        "bbox": [
+            112,
+            391,
+            863,
+            429
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "The results are shown in Tables 3 and 4. The extended Vasicek model produces prices that are very close to those of the other models. Other tests similar to those reported here have been carried out. In all cases we find that the extended Vasicek model provides a good analytic approximation to other more complicated models.",
+        "bbox": [
+            110,
+            429,
+            865,
+            523
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "7. Conclusions",
+        "text_level": 2,
+        "bbox": [
+            77,
+            547,
+            265,
+            566
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "This paper has shown that the Vasicek and CIR interest-rate models can be extended so that they are consistent with both the currentterm structure of spot or forward interest rates and the current-term structure of interest-rate volatilities. In the case. of the extension to Vasicek’s model, the parameters of the process followed by the shortterm interest rate and European bond option prices can be determined analytically. This makes the model very attractive as a practical tool.",
+        "bbox": [
+            108,
+            575,
+            863,
+            617
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "table",
+        "img_path": "images/7717bcb07d25efbce0cd9552403e846421ed7c5ff79a4c780b3df54f55533ad3.jpg",
+        "table_caption": [
+            "Values of European call options on a five-year discount bond with a face value of \\$100"
+        ],
+        "table_footnote": [
+            "Interest rates are assumed to follow the two-factor CIR model described by Equation (31). The parameter values are $\\phi _ { 1 } = 0 . 0 5 , \\phi _ { 2 } = 0 . 0 5 , \\sigma _ { 1 } = 0 . 0 3 , \\sigma _ { 2 } = 0 . 0 3 , \\psi _ { 1 } = 0 . 1 , \\psi _ { 2 } = 0 . 0 6 1 ,$ and the Initial values of both $\\mathbf { X } _ { \\mathbb { I } }$ and $\\mathbf { X } _ { 2 }$ are 0.05. The extended Vasicek (Ext Vas) model is chosen to fit the initial term structure of interest rates and the initial term structure of interest-rate volatilities. The exercise price is expressed as a proportion of the forward bond price."
+        ],
+        "table_body": "<table><tr><td rowspan=\"2\">Option maturity (years)</td><td rowspan=\"2\">Model</td><td colspan=\"5\">Exercise price</td></tr><tr><td>0.96</td><td>0.98</td><td>1.00</td><td>1.02</td><td>1.04</td></tr><tr><td rowspan=\"2\">1.0</td><td>Ext Vas</td><td>2.54</td><td>1.55</td><td>0.81</td><td>0.35</td><td>0.12</td></tr><tr><td>Two-factor CIR</td><td>2.55</td><td>1.56</td><td>0.81</td><td>0.34</td><td>0.11</td></tr><tr><td rowspan=\"2\">2.0</td><td>Ext Vas</td><td>2.56</td><td>1.60</td><td>0.87</td><td>0.40</td><td>0.15</td></tr><tr><td>Two-factor CIR</td><td>2.58</td><td>1.61</td><td>0.06</td><td>0.38</td><td>0.13</td></tr><tr><td rowspan=\"2\">3.0</td><td>Ext Vas</td><td>2.49</td><td>1.47</td><td>0.71</td><td>0.27</td><td>0.08</td></tr><tr><td>Two-factor CIR</td><td>2.51</td><td>1.48</td><td>0.70</td><td>0.24</td><td>0.06</td></tr><tr><td rowspan=\"2\">4.0</td><td>Ext Vas</td><td>2.43</td><td>1.27</td><td>0.41</td><td>0.06</td><td>0.00</td></tr><tr><td>Two-factor CIR</td><td>2.44</td><td>1.28</td><td>0.40</td><td>0.05</td><td>0.00</td></tr></table>",
+        "bbox": [
+            108,
+            660,
+            861,
+            827
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "header",
+        "text": "Pricing Interest-Rate-Derivative Securities",
+        "bbox": [
+            112,
+            29,
+            444,
+            44
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "page_number",
+        "text": "589",
+        "bbox": [
+            821,
+            929,
+            865,
+            945
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "",
+        "bbox": [
+            120,
+            83,
+            879,
+            193
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "The extended Vasicek model can be compared to another interestrate model by fitting it to the initial term structure of interest rates, the initial term structure of interest-rate volatilities, and the expected future instantaneous standard deviation of short rate volatilities given by the other model, and then testing to see whether the interest-rate option prices it gives are significantly different from those of the other model. We have tested it against a variety of different one- and twofactor models in this way. Our conclusion is that it provides a good analytic approximation to the European option prices given by these other models.",
+        "bbox": [
+            120,
+            193,
+            881,
+            379
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "Appendix",
+        "text_level": 2,
+        "bbox": [
+            130,
+            397,
+            260,
+            417
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "In this appendix we derive the relationship between $B ( t , \\ T )$ and the current-term structure of spot rate and forward rate volatilities. As is the usual convention, the term “volatility” will be used to refer to the standard deviation of proportional changes, not actual changes, in the value of a variable.",
+        "bbox": [
+            127,
+            425,
+            884,
+            518
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "Define",
+        "bbox": [
+            153,
+            518,
+            234,
+            535
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "$P ( r , t , T )$ price at time t of a discount bond maturing at time $T ;$",
+        "bbox": [
+            198,
+            544,
+            884,
+            582
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "$R ( r , t , T )$ continuously compounded interest rate at time t applicable to period $\\mathit { \\Omega } ( t , \\textit { T } )$",
+        "bbox": [
+            196,
+            582,
+            886,
+            620
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "$\\pmb { F } ( \\pmb { r } , \\pmb { t } , \\pmb { T } _ { 1 } , \\pmb { T } _ { 2 } )$ forward rate at time t corresponding at the time period $( T _ { I } , \\ T _ { 2 } ) ;$",
+        "bbox": [
+            156,
+            619,
+            884,
+            657
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "$\\sigma , ( r , t )$ volatility of r at time $t ;$",
+        "bbox": [
+            224,
+            656,
+            591,
+            673
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "$\\sigma _ { R } ( r , t , T )$ volatility of $R ( r , \\ t , \\ T )$",
+        "bbox": [
+            191,
+            674,
+            583,
+            691
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "$\\sigma _ { p } ( r , t , T _ { 1 } , T _ { 2 } )$ volatility of $F ( r , \\ t , \\ T _ { I } , \\ T _ { 2 } )$",
+        "bbox": [
+            148,
+            693,
+            624,
+            712
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "In both models, P has the functional form",
+        "bbox": [
+            151,
+            721,
+            624,
+            739
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "equation",
+        "img_path": "images/340d7c30e0c5958fab5f25d6657804205fa460d0cd736eb8d98a0a600bbf9378.jpg",
+        "text": "$$\nP ( r , \\ t , \\ r ) = A ( t , \\ T ) e ^ { - B ( t , \\ r ) r } .\\tag{A1}\n$$",
+        "text_format": "latex",
+        "bbox": [
+            347,
+            747,
+            661,
+            767
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "Since",
+        "bbox": [
+            125,
+            775,
+            196,
+            792
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "equation",
+        "img_path": "images/df10d0731f56a4cb562f573d7525fe6f31b321d0f2d1fd6334fac6898007ee13.jpg",
+        "text": "$$\nR ( r , t , T ) = - \\frac { 1 } { T - t } \\ln P ( r , t , T ) ,\n$$",
+        "text_format": "latex",
+        "bbox": [
+            314,
+            789,
+            692,
+            826
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "it follows that",
+        "bbox": [
+            125,
+            835,
+            307,
+            852
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "equation",
+        "img_path": "images/4b2f2b8e59088ada82c47b62d20ac084b4c93589f86808b285a95719cb98fd3b.jpg",
+        "text": "$$\nR ( r , t , \\vec { T } ) = - \\frac { 1 } { \\vec { T } - t } \\Big [ \\ln A ( t , T ) - r B ( t , T ) \\Big ]\n$$",
+        "text_format": "latex",
+        "bbox": [
+            260,
+            860,
+            747,
+            899
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "header",
+        "text": "The Review of Financial Studies/ v 3 n 4 1990",
+        "bbox": [
+            127,
+            29,
+            501,
+            44
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "page_number",
+        "text": "590",
+        "bbox": [
+            127,
+            930,
+            172,
+            947
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "list",
+        "sub_type": "ref_text",
+        "list_items": [
+            "Brennan, M. J., and E. S. Schwartz, 1982, “An Equilibrium Model of Bond Pricing and a Test of Market Efficiency,” Journal of Financial and Quantitative Analysis, 17, 301-329.",
+            "Courtadon, G., 1982, “The Pricing of Options on Default-Free Bonds,” Journal of Financial and Quantitative Analysis, 17, 75-100.",
+            "Cox, J. C., J. E. Ingersoll, and S. A. Ross, 1985a, “An Intertemporal General Equilibrium Model of Asset Prices,” Econometrica, 53, 363-384.",
+            "Cox, J. C., J. E. Ingersoll, and S. A. Ross, 1985b, “A Theory of the Term Structure of Interest Rates,” Econometrica, 53, 385-467.",
+            "Dothan, L. U., 1978, “On the Term Structure of Interest Rates,” Journal of Financial Economics, 6, 59-69.",
+            "Duffie, D., 1988, Security Markets: Stochastic Models, Academic, Boston, MA.",
+            "Dybvig, P. H., 1988, “Bond and Bond Option Pricing Based on the Current Term Structure,” working paper, Olin School of Business, University of Washington.",
+            "Heath, D., R. Jarrow, and A. Morton, 1987, “Bond Pricing and the Term Structure of Interest Rates: A New Methodology for Contingent Claims Evaluation,” working paper, Cornell University.",
+            "Ho, T. S. Y., and S.-B. Lee, 1986, ‘Term Structure Movements and Pricing of Interest Rate Claims,” Journal of Finance, 41, 1011-1029.",
+            "Hull, J., and A. White, 1987, “The Pricing of Options on Assets with Stochastic Volatilities,” Journal of Finance, 42, 281-300.",
+            "Hull, J., and A. White, 1990, “Valuing Derivative Securities Using the Explicit Finite Difference Method,” Journal of Financial and Quantitative Analysis, 25, 87-100.",
+            "Jamshidian, F., 1988, “The One-Factor Gaussian Interest Rate Model: Theory and Implementation,” working paper, Financial Strategies Group, Merrill Lynch Capital Markets, New York.",
+            "Jamshidian, F., 1989, “An Exact Bond Option Formula,” Journal of Finance, 44, 205-209.",
+            "Langetieg, T. C., 1980, “A Multivariate Model of the Term Structure,” Journal of Finance, 35, 71-97.",
+            "Longstaff, F. A., 1989, “A Nonlinear General Equilibrium Model of the Term Structure of Interest Rates,” Journal of Financial Economics, 23,195-224.",
+            "Merton, R. C., 1973, “Theory of Rational Option Pricing,” Bell Journal of Economics and Management Science, 4, 141-183.",
+            "Milne, F., and S. Turnbull, 1989, “‘A Simple Approach to Interest Rate Option Pricing,” working paper, Australian National University.",
+            "Richard, S., 1979, “An Arbitrage Model of the Term Structure of Interest Rates,” Journal of Financial Economics, 6, 33-57.",
+            "Vasicek, O. A., 1977, “An Equilibrium Characterization of the Term Structure,” Journal of Financial Economics, 5, 177-188."
+        ],
+        "bbox": [
+            130,
+            85,
+            881,
+            113
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "header",
+        "text": "The Review of Financial Studies / v 3 n 4 1990",
+        "bbox": [
+            130,
+            30,
+            501,
+            44
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "page_number",
+        "text": "592",
+        "bbox": [
+            132,
+            930,
+            179,
+            947
+        ],
+        "page_idx": 8
+    }
+]
