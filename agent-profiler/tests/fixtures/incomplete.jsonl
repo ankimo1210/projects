@@ -1,0 +1,5 @@
+{"type":"thread.started","thread_id":"incomplete-session"}
+{"type":"turn.started"}
+{"type":"item.started","item":{"id":"cmd-open","type":"command_execution","command":"printf fixture","status":"in_progress"}}
+{"type":"broken"
+{"type":"future.schema.event","schema_version":99,"payload":{"new_field":true}}
