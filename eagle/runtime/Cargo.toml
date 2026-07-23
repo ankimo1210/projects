@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["crates/eagle-agc-protocol", "crates/eagle-schema", "apps/eagle-runtime"]
+members = ["crates/eagle-agc-protocol", "crates/eagle-schema", "crates/eagle-dynamics", "apps/eagle-runtime"]
 
 [workspace.dependencies]
 thiserror = "2"
