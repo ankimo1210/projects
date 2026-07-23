@@ -1,23 +1,46 @@
 {
+  "claims_status": "pass",
+  "counts": {
+    "blocks": 332,
+    "claims": 5,
+    "compiled_equations": 258,
+    "display_equations": 79,
+    "figures": 21,
+    "inline_equations": 180,
+    "latex_equations": 258,
+    "pages": 38,
+    "rendered_verified_equations": 0,
+    "semantic_chunks": 53,
+    "source_image_formula_fallbacks": 1,
+    "tables": 1,
+    "verified_claims": 0,
+    "verified_equations": 0,
+    "verified_table_cells": 0
+  },
+  "exceptions": [],
+  "formula_failures": [],
+  "formula_status": "pass",
+  "layout_status": "pass",
+  "low_text_coverage_pages": [],
+  "notes": [
+    "Unverified LaTeX is a candidate representation; every formula retains a source crop.",
+    "Automatic table cells retain unverified record status except explicit reviewed overrides.",
+    "Reviewed low-text exceptions retain complete source-page images."
+  ],
+  "overall_status": "pass",
   "paper_id": "2016-bayer-friz-gatheral-pricing-rough-volatility",
-  "status": "review",
-  "page_count": 38,
-  "total_chars": 42013,
-  "average_chars_per_page": 1105.6,
-  "empty_pages": [],
-  "short_pages": [
-    23,
-    24
-  ],
-  "replacement_characters": 5,
-  "heading_count": 20,
-  "image_references": 63,
-  "image_files": 63,
-  "latex_math_markers": 0,
-  "chunk_count": 10,
-  "max_chunk_chars": 4789,
-  "warnings": [
-    "many visual/equation images are not represented as LaTeX math"
-  ],
-  "failures": []
+  "retrieval_evaluation": {
+    "hit_at_5": 1.0,
+    "p0_hit_at_5": 1.0,
+    "query_count": 28,
+    "retriever": "deterministic-bm25-en-ja-ngrams-v1"
+  },
+  "retrieval_status": "pass",
+  "reviewed_layout_pages": [],
+  "reviewed_low_text_pages": [],
+  "table_failures": [],
+  "table_status": "pass",
+  "text_status": "pass",
+  "unresolved_layout_pages": [],
+  "unresolved_low_text_pages": []
 }

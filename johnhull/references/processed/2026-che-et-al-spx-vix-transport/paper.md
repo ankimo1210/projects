@@ -1,1522 +1,1689 @@
----
-paper_id: "2026-che-et-al-spx-vix-transport"
-title: "SPX-VIX Risk Computations Via Perturbed Optimal Transport"
-authors: "Charlie Che et al."
-year: "2026"
-source_url: "https://arxiv.org/abs/2603.10857"
-source_pdf: "references/papers/2026-che-et-al-spx-vix-transport.pdf"
-source_sha256: "fd1229e982a0b81088ee27b8b0274f4f505691d9c4d7ebebb4f64ecc5c0279ba"
-converter: "PyMuPDF4LLM 1.28.0"
----
+# 2026-che-et-al-spx-vix-transport
 
 <!-- page: 1 -->
 
-# SPX–VIX Risk Computations Via Perturbed Optimal Transport 
+## SPX–VIX Risk Computations Via Perturbed Optimal Transport
 
-Charlie Che<sup>_∗_∗1</sup> , Hanxuan Lin<sup>_∗_†2</sup> , Yudong Yang<sup>_∗_‡1</sup> , Guofan Hu<sup>_∗_§1</sup> , and Lei Fang<sup>_∗_¶1</sup> 
+Charlie Che<sup>∗∗1</sup>, Hanxuan Lin<sup>∗†2</sup>, Yudong Yang<sup>∗‡1</sup>, Guofan Hu<sup>∗§1</sup>, and Lei Fang<sup>∗¶1</sup>
 
-> 1Quantitative Trading & Research, JPMorganChase, New York, NY 10017, USA 
+<sup>1</sup>Quantitative Trading & Research, JPMorganChase, New York, NY 10017, USA <sup>2</sup>Quantitative Research China, JPMorganChase, Beijing, 100033, China
 
-> 2Quantitative Research China, JPMorganChase, Beijing, 100033, China 
+March 20, 2026
 
-March 20, 2026 
+## Abstract
 
-##### **Abstract** 
+We propose a model-independent framework for joint SPX–VIX derivatives risk generation using Perturbed Optimal Transport(POT). The calibrated Gibbs coupling induces an exponential family whose Fisher information governs the response to admissible market shocks. Exploiting this structure, we derive linear-response formulas that compute sensitivities for VIX payofs via a single Fisher-based linear solve, replacing bump-and-recalibrate procedures. To capture VIX smile dynamics, we introduce a linearized Skew Stickiness Ratio (SSR) rule as additional linear constraints within the entropic projection, propagating SPX shocks to VIX implied volatilities in a convex, tractable manner with second-order error control. We also identify a conditional coupling invariance that reduces the perturbed transport on $( S _ { 1 } , V , S _ { 2 } )$ to an exact two-dimensional projection on (S , V), preserving martingality and variance consistency while lowering computational cost. Numerically, both the Fisher-based linear-response and the dimension-reduced method closely match full recalibration for VIX futures and VIX option cross-Greeks, yet are orders of magnitude faster. Hedging backtests show reduced hedged P&L variance versus a stochastic local-volatility benchmark, especially in volatile regimes. These results establish POT, cou pled with linear response and SSR constraints, as a practical, eficient framework for SPX–VIX risk propagation and hedging.
 
-We propose a model-independent framework for joint SPX–VIX derivatives risk generation using Perturbed Optimal Transport(POT). The calibrated Gibbs coupling induces an exponential family whose Fisher information governs the response to admissible market shocks. Exploiting this structure, we derive linear-response formulas that compute sensitivities for VIX payoffs via a single Fisher-based linear solve, replacing bump-and-recalibrate procedures. To capture VIX smile dynamics, we introduce a linearized Skew Stickiness Ratio (SSR) rule as additional linear constraints within the entropic projection, propagating SPX shocks to VIX implied volatilities in a convex, tractable manner with second-order error control. We also identify a conditional coupling invariance that reduces the perturbed transport on ( _S_ 1 _, V, S_ 2) to an exact two-dimensional projection on ( _S_ 1 _, V_ ), preserving martingality and variance consistency while lowering computational cost. Numerically, both the Fisher-based linear-response and the dimension-reduced method closely match full recalibration for VIX futures and VIX option cross-Greeks, yet are orders of magnitude faster. Hedging backtests show reduced hedged P&L variance versus a stochastic local-volatility benchmark, especially in volatile regimes. These results establish POT, coupled with linear response and SSR constraints, as a practical, efficient framework for SPX–VIX risk propagation and hedging. 
+## 1 Introduction
 
-## **1 Introduction** 
+Joint modeling of SPX and VIX derivatives has become a central problem in equity volatility markets. While SPX options encode the distribution of future equity prices, VIX options are derivative contracts written on VIX, the square root of forward variance. Consistency between these two markets is therefore essential for both pricing and risk management of the SPX/VIX derivative family.
 
-Joint modeling of SPX and VIX derivatives has become a central problem in equity volatility markets. While SPX options encode the distribution of future equity prices, VIX options are derivative contracts written on VIX, the square root of forward variance. Consistency between these two markets is therefore essential for both pricing and risk management of the SPX/VIX derivative family. 
+Traditional approaches to the joint SPX–VIX modeling problem rely on parametric stochastic volatility models such as the Heston model, stochastic volatility with jumps, Bergomi model, or rough volatility frameworks Heston (1993); Gatheral (2006); Bergomi (2016); Bayer and Friz (2022). Although these models provide tractable simulation dynamics, they impose structural assumptions on volatility dynamics that are not directly implied by the observed option surfaces.
 
-Traditional approaches to the joint SPX–VIX modeling problem rely on parametric stochastic volatility models such as the Heston model, stochastic volatility with jumps, Bergomi model, or rough volatility frameworks Heston (1993); Gatheral (2006); Bergomi (2016); Bayer and Friz (2022). Although these models provide tractable simulation dynamics, they impose structural assumptions on volatility dynamics that are not directly implied by the observed option surfaces. 
+An alternative model-free approach was proposed by Guyon in Guyon (2020, 2021), who formulated the joint SPX–VIX calibration problem as a martingale optimal transport (MOT) problem. In this framework the calibrated coupling between equity levels and forward variance is obtained by solving a discrete entropic optimal transport problem using Sinkhorn iterations Cuturi (2013); Benamou et al. (2015). The resulting
 
-An alternative model-free approach was proposed by Guyon in Guyon (2020, 2021), who formulated the joint SPX–VIX calibration problem as a martingale optimal transport (MOT) problem. In this framework the calibrated coupling between equity levels and forward variance is obtained by solving a discrete entropic optimal transport problem using Sinkhorn iterations Cuturi (2013); Benamou et al. (2015). The resulting 
+arXiv:2603.10857v2 [q-fin.CP] 19 Mar 2026
 
-> ∗charlie.che@jpmchase.com 
+<sup>∗</sup>charlie.che@jpmchase.com
 
-> †hanxuan.lin@jpmchase.com 
+<sup>†</sup>hanxuan.lin@jpmchase.com
 
-> ‡yudong.yang@jpmchase.com 
+<sup>‡</sup>yudong.yang@jpmchase.com
 
-> §guofan.hu@jpmchase.com 
+<sup>§</sup>guofan.hu@jpmchase.com
 
-> ¶lei.x.fang@jpmchase.com
+<sup>¶</sup>lei.x.fang@jpmchase.com
 
 <!-- page: 2 -->
 
-Gibbs distribution exactly reproduces the observed SPX and VIX option prices while remaining free of parametric volatility assumptions. 
+Gibbs distribution exactly reproduces the observed SPX and VIX option prices while remaining free of parametric volatility assumptions.
 
-While entropic martingale optimal transport provides an exact joint calibration of SPX and VIX smiles, calibration alone does not yield a practical risk framework. In existing implementations, sensitivities are typically obtained by re-running the full calibration after each market perturbation. This bump-and-recalibrate approach is both computationally expensive and obscures the structural relationship between market shocks and model-implied risk. 
+While entropic martingale optimal transport provides an exact joint calibration of SPX and VIX smiles, calibration alone does not yield a practical risk framework. In existing implementations, sensitivities are typically obtained by re-running the full calibration after each market perturbation. This bump-and-recalibrate approach is both computationally expensive and obscures the structural relationship between market shocks and model-implied risk.
 
-The central observation of this paper is that entropic martingale optimal transport naturally defines a statistical manifold whose local geometry determines how the calibrated coupling reacts to marginal perturbations. Because the optimal coupling belongs to an exponential family, its response to marginal shocks can be characterized by the Fisher information matrix of the calibrated Gibbs distribution. 
+The central observation of this paper is that entropic martingale optimal transport naturally defines a statistical manifold whose local geometry determines how the calibrated coupling reacts to marginal perturbations. Because the optimal coupling belongs to an exponential family, its response to marginal shocks can be characterized by the Fisher information matrix of the calibrated Gibbs distribution.
 
-This perspective leads to a new framework, which we term _Perturbed Optimal Transport(POT)_ , for risk generation without recalibration. Within this POT framework, we propose two distinct yet complementary methodologies: one leveraging the local geometry of the calibrated coupling via a Linear Response (LR) system derived from the Fisher information matrix, and another utilizing Dimensional Reduction (DR) to efficiently re-solve a simpler transport problem under specific conditional invariance assumptions. 
+This perspective leads to a new framework, which we term Perturbed Optimal Transport(POT), for risk generation without recalibration. Within this POT framework, we propose two distinct yet complementary methodologies: one leveraging the local geometry of the calibrated coupling via a Linear Response (LR) system derived from the Fisher information matrix, and another utilizing Dimensional Reduction (DR) to eficiently re-solve a simpler transport problem under specific conditional invariance assumptions.
 
-Beyond providing analytic risk formulas, the POT framework also enables incorporating empirical volatility dynamics into the optimal transport formulation. In particular, we embed Skew Stickiness Ratio (SSR) dynamics for the VIX volatility surface as linear constraints in the entropic projection problem. This allows the transport framework to incorporate empirically observed volatility smile dynamics without introducing parametric stochastic volatility models. 
+Beyond providing analytic risk formulas, the POT framework also enables incorporating empirical volatility dynamics into the optimal transport formulation. In particular, we embed Skew Stickiness Ratio (SSR) dynamics for the VIX volatility surface as linear constraints in the entropic projection problem. This allows the transport framework to incorporate empirically observed volatility smile dynamics without introducing parametric stochastic volatility models.
 
-Taken together, these results establish Perturbed Optimal Transport (POT) not only as a powerful calibration tool but as a unified framework for joint calibration and risk propagation in SPX–VIX markets, offering efficient risk generation through both Linear Response and Dimensional Reduction techniques. 
+Taken together, these results establish Perturbed Optimal Transport (POT) not only as a powerful calibration tool but as a unified framework for joint calibration and risk propagation in SPX–VIX markets, ofering eficient risk generation through both Linear Response and Dimensional Reduction techniques.
 
-### **1.1 Related Literature** 
+## 1.1 Related Literature
 
-This work relates to three strands of literature. 
+This work relates to three strands of literature.
 
-#### **SPX–VIX joint modeling.** 
+SPX–VIX joint modeling.
 
-Joint modeling of SPX and VIX derivatives has traditionally relied on stochastic volatility frameworks such as the Heston model and its extensions Heston (1993); Gatheral (2006); Bergomi (2016). These models impose specific assumptions on volatility dynamics and require calibration of multiple parameters to match the observed option surfaces. 
+Joint modeling of SPX and VIX derivatives has traditionally relied on stochastic volatility frameworks such as the Heston model and its extensions Heston (1993); Gatheral (2006); Bergomi (2016). These models impose specific assumptions on volatility dynamics and require calibration of multiple parameters to match the observed option surfaces.
 
-#### **Optimal transport in finance.** 
+## Optimal transport in finance.
 
-Martingale optimal transport has emerged as a powerful model-free approach to derivative pricing and calibration Beiglb¨ock et al. (2013); Henry-Labord`ere (2017). Guyon (2020, 2021) introduced an entropic optimal transport formulation for the joint calibration of SPX and VIX smiles, which can be solved efficiently using Sinkhorn iterations. 
+Martingale optimal transport has emerged as a powerful model-free approach to derivative pricing and calibration Beiglb¨ock et al. (2013); Henry-Labord\`ere (2017). Guyon (2020, 2021) introduced an entropic optimal transport formulation for the joint calibration of SPX and VIX smiles, which can be solved eficiently using Sinkhorn iterations.
 
-#### **Computational optimal transport and entropy regularization.** 
+## Computational optimal transport and entropy regularization.
 
-Entropy-regularized transport problems have become widely used in machine learning and computational optimal transport due to their favorable numerical properties Cuturi (2013); Benamou et al. (2015); Peyr´e and Cuturi (2019). These formulations lead to Gibbs distributions whose structure enables efficient iterative algorithms. 
+Entropy-regularized transport problems have become widely used in machine learning and computational optimal transport due to their favorable numerical properties Cuturi (2013); Benamou et al. (2015); Peyr´e and Cuturi (2019). These formulations lead to Gibbs distributions whose structure enables eficient iterative algorithms.
 
-Our contribution extends this literature by showing that entropic MOT calibration naturally induces a perturbation theory that can be used to generate risk sensitivities without recomputing the transport solution. 
+Our contribution extends this literature by showing that entropic MOT calibration naturally induces a perturbation theory that can be used to generate risk sensitivities without recomputing the transport solution.
 
-### **1.2 Main Contributions** 
+## 1.2 Main Contributions
 
 The contributions of this paper are fivefold.
 
 <!-- page: 3 -->
 
-1. **The Linear Response (LR) System For Perturbed Optimal Transport In SPX–VIX Markets.** 
+## 1. The Linear Response (LR) System For Perturbed Optimal Transport In SPX–VIX Markets.
 
-We develop a perturbation framework for discrete entropic optimal transport under both marginal and financial constraints. Using the implicit function theorem applied to the dual formulation, we show that the calibrated Gibbs coupling depends smoothly on admissible market perturbations. This yields explicit linear-response formulas for sensitivities of arbitrary payoffs, governed by the Fisher information matrix of the calibrated exponential family. 
+We develop a perturbation framework for discrete entropic optimal transport under both marginal and financial constraints. Using the implicit function theorem applied to the dual formulation, we show that the calibrated Gibbs coupling depends smoothly on admissible market perturbations. This yields explicit linear-response formulas for sensitivities of arbitrary payofs, governed by the Fisher information matrix of the calibrated exponential family.
 
-2. **Linearized Skew Stickiness Ratio dynamics for VIX options.** 
+## 2. Linearized Skew Stickiness Ratio dynamics for VIX options.
 
-We introduce a linearization of Skew Stickiness Ratio (SSR) dynamics for VIX implied volatility surfaces and incorporate it as linear constraints within the optimal transport perturbation framework. This formulation provides a model-independent mechanism for propagating SPX perturbations to the VIX volatility smile while preserving convexity and tractability of the entropic projection problem. The SSR linearization is compatible with both the perturbation-based linear-response risk engine and the dimension-reduced transport framework developed later in the paper. 
+We introduce a linearization of Skew Stickiness Ratio (SSR) dynamics for VIX implied volatility surfaces and incorporate it as linear constraints within the optimal transport perturbation framework. This formulation provides a model-independent mechanism for propagating SPX perturbations to the VIX volatility smile while preserving convexity and tractability of the entropic projection problem. The SSR linearization is compatible with both the perturbation-based linear-response risk engine and the dimension-reduced transport framework developed later in the paper.
 
-3. **Dimensional reduction (DR) Within The Perturbed Optimal Transport Framework.** 
+## 3. Dimensional reduction (DR) Within The Perturbed Optimal Transport Framework.
 
-We identify a conditional coupling invariance structure under which the perturbed three-dimensional transport problem on ( _S_ 1 _, V, S_ 2) reduces to a two-dimensional entropic projection on ( _S_ 1 _, V_ ). Under this structure the conditional kernel of _S_ 2 given ( _S_ 1 _, V_ ) remains fixed, so martingality and varianceconsistency constraints are automatically preserved. This reduction dramatically lowers the computational complexity of risk generation while maintaining financial consistency of the model. 
+We identify a conditional coupling invariance structure under which the perturbed three-dimensional transport problem on $( S _ { 1 } , V , S _ { 2 } )$ reduces to a two-dimensional entropic projection on $( S _ { 1 } , V )$ . Under this structure the conditional kernel of $S _ { 2 }$ given $( S _ { 1 } , V )$ remains fixed, so martingality and varianceconsistency constraints are automatically preserved. This reduction dramatically lowers the computational complexity of risk generation while maintaining financial consistency of the model.
 
-4. **Numerical validation of perturbation risk against full recalibration.** 
+## 4. Numerical validation of perturbation risk against full recalibration.
 
-We perform numerical experiments comparing risk sensitivities computed using the perturbation-based linear response system(LR) with those obtained from full recalibration of the SPX–VIX martingale optimal transport model. Across VIX futures and VIX option cross-greeks, the perturbation-based sensitivities closely match those obtained from recalibration while requiring substantially less computation. These results validate the perturbation framework as an accurate and efficient risk-generation method. 
+We perform numerical experiments comparing risk sensitivities computed using the perturbation-based linear response system(LR) with those obtained from full recalibration of the SPX–VIX martingale optimal transport model. Across VIX futures and VIX option cross-greeks, the perturbation-based sensitivities closely match those obtained from recalibration while requiring substantially less computation. These results validate the perturbation framework as an accurate and eficient risk-generation method.
 
-5. **Hedging backtests demonstrating practical effectiveness.** 
+## 5. Hedging backtests demonstrating practical efectiveness.
 
-We further evaluate the framework in a hedging backtest on randomized VIX option portfolios. Using SPX sensitivities generated by the dimension-reduced optimal transport method(DR), we construct dynamic hedges and compare their performance with hedges produced by a benchmark stochastic volatility model. The transport-based hedges consistently achieve lower hedged P&L variance, particularly during volatile market regimes, demonstrating the practical value of the proposed risk-generation framework. 
+We further evaluate the framework in a hedging backtest on randomized VIX option portfolios. Using SPX sensitivities generated by the dimension-reduced optimal transport method(DR), we construct dynamic hedges and compare their performance with hedges produced by a benchmark stochastic volatility model. The transport-based hedges consistently achieve lower hedged P&L variance, particularly during volatile market regimes, demonstrating the practical value of the proposed risk-generation framework.
 
-These contributions show that Perturbed Optimal Transport(POT) serves as a powerful, unified framework for SPX–VIX joint calibration, risk generation (via LR and DR), and hedging. 
+These contributions show that Perturbed Optimal Transport(POT) serves as a powerful, unified framework for SPX–VIX joint calibration, risk generation (via LR and DR), and hedging.
 
-### **1.3 Market Consistency And Risk Propagation** 
+## 1.3 Market Consistency And Risk Propagation
 
-In equity volatility markets the SPX and VIX option surfaces are linked through the forward variance identity 
+In equity volatility markets the SPX and VIX option surfaces are linked through the forward variance identity
 
+$$
+\mathrm { F o r w a r d V a r } = V I X _ { F } ^ { 2 } + 2 \int _ { 0 } ^ { V I X _ { F } } ( K - V I X ) ^ { + } d K + 2 \int _ { V I X _ { F } } ^ { \infty } ( V I X - K ) ^ { + } d K .
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0003-13.png)
-
-
-This relation implies that changes in SPX option prices propagate to the VIX future level through the forward variance term structure. Differentiating the forward variance identity with respect to SPX implied volatility parameters (for example, a parallel shift of a volatility slice) yields
+This relation implies that changes in SPX option prices propagate to the VIX future level through the forward variance term structure. Diferentiating the forward variance identity with respect to SPX implied volatility parameters (for example, a parallel shift of a volatility slice) yields
 
 <!-- page: 4 -->
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0004-00.png)
+$$
+\frac { d V I X _ { F } } { d \sigma _ { S P X } } = \frac { d ( \mathrm { F o r w a r d V a r } ) / d \sigma _ { S P X } } { 2 V I X _ { F } + 2 \int B S _ { \Delta } ( K - V I X ) ^ { + } d K + 2 \int B S _ { \Delta } ( V I X - K ) ^ { + } d K } .
+$$
 
+In traditional stochastic volatility models the sensitivities of exotic derivatives are obtained by applying the chain rule
 
-In traditional stochastic volatility models the sensitivities of exotic derivatives are obtained by applying the chain rule 
+$$
+\frac { d \mathrm { p a y o f } \mathrm { f } } { d \sigma _ { S P X } } = \frac { \partial \mathrm { p a y o f } \mathrm { f } } { \partial V I X _ { F } } \frac { d V I X _ { F } } { d \sigma _ { S P X } } + \frac { \partial \mathrm { p a y o f } \mathrm { f } } { \partial \sigma _ { V I X } } \frac { d \sigma _ { V I X } } { d \sigma _ { S P X } } .
+$$
 
+Capturing these cross-asset sensitivities consistently is one of the central motivations for building a joint SPX–VIX model. In parametric models these sensitivities depend heavily on the assumed volatility dynamics. More fundamentally, parametric stochastic volatility and stochastic local volatility models cannot simultaneously recover both the SPX and VIX marginals observed in the market. As a result, practitioners often decouple the modeling of SPX vanillas, forward variance, and VIX futures from the modeling of VIX options. In practice the latter is frequently handled using Black’s formula applied directly to VIX futures, reflecting the high liquidity of the VIX option market. But such decoupling results in the $\frac { d \sigma _ { V } I X } { d \sigma _ { S } P X }$ not being captured at all.
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0004-02.png)
+In contrast, the optimal transport approach provides a model-free calibration of the joint distribution. The perturbation framework developed in this paper shows that the same transport structure can be used to generate the corresponding risk sensitivities directly from the calibrated coupling. Guyon’s celebrated work in Guyon (2020, 2021) has demonstrated that the OT approach gives perfect statics in that the joint calibration between SPX and VIX is perfect by construction. Our work can be seen as a decisive step forward to demonstrate even the SPX–VIX volatility dynamics can be captured accurately at no additional computational cost.
 
+## 1.4 Martingality And Consistency Conditions
 
-Capturing these cross-asset sensitivities consistently is one of the central motivations for building a joint SPX–VIX model. In parametric models these sensitivities depend heavily on the assumed volatility dynamics. More fundamentally, parametric stochastic volatility and stochastic local volatility models cannot simultaneously recover both the SPX and VIX marginals observed in the market. As a result, practitioners often decouple the modeling of SPX vanillas, forward variance, and VIX futures from the modeling of VIX options. In practice the latter is frequently handled using Black’s formula applied directly to VIX futures, reflecting the high liquidity of the VIX option market. But such decoupling results in the _dσ_<sup>_<u>dσ</u>_</sup> _S_<sup>_<u>V IX</u>_</sup> _P X_<sup>notbeing</sup> captured at all. 
+In the joint SPX–VIX calibration framework, two structural conditions must hold for the calibrated coupling to be financially meaningful. These conditions were emphasized in the joint calibration framework of Guyon (2020, 2021).
 
-In contrast, the optimal transport approach provides a model-free calibration of the joint distribution. The perturbation framework developed in this paper shows that the same transport structure can be used to generate the corresponding risk sensitivities directly from the calibrated coupling. Guyon’s celebrated work in Guyon (2020, 2021) has demonstrated that the OT approach gives perfect statics in that the joint calibration between SPX and VIX is perfect by construction. Our work can be seen as a decisive step forward to demonstrate even the SPX–VIX volatility dynamics can be captured accurately at no additional computational cost. 
+Martingality condition Let $S _ { 1 }$ denote the SPX level at time $T _ { 1 }$ and $S _ { 2 }$ the SPX level at a later maturity $T _ { 2 }$
 
-### **1.4 Martingality And Consistency Conditions** 
+Under the risk-neutral measure, the discounted asset price must be a martingale. Ignoring discounting for notational simplicity, the martingale condition reads
 
-In the joint SPX–VIX calibration framework, two structural conditions must hold for the calibrated coupling to be financially meaningful. These conditions were emphasized in the joint calibration framework of Guyon (2020, 2021). 
+$$
+E [ S _ { 2 } \mid S _ { 1 } , V ] = S _ { 1 } .
+$$
 
-**Martingality condition** Let _S_ 1 denote the SPX level at time _T_ 1 and _S_ 2 the SPX level at a later maturity _T_ 2. 
+Equivalently, for the calibrated coupling µ on $( S _ { 1 } , V , S _ { 2 } )$ 2
 
-Under the risk-neutral measure, the discounted asset price must be a martingale. Ignoring discounting for notational simplicity, the martingale condition reads 
+$$
+\sum _ { s _ { 2 } } s _ { 2 } \mu ( s _ { 1 } , v , s _ { 2 } ) = s _ { 1 } \sum _ { s _ { 2 } } \mu ( s _ { 1 } , v , s _ { 2 } ) .
+$$
 
+This condition ensures that the SPX dynamics implied by the calibrated distribution are arbitrage-free.
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0004-09.png)
+SPX–VIX consistency condition The VIX index represents the square root of the risk-neutral expectation of future variance. In the discrete MOT framework this implies the conditional identity
 
+$$
+\mathbb { E } [ L ( S _ { 2 } / S _ { 1 } ) | S _ { 1 } , V ] = V ^ { 2 } .\tag{1}
+$$
 
-Equivalently, for the calibrated coupling _µ_ on ( _S_ 1 _, V, S_ 2), 
+where $\begin{array} { r } { L : = - \frac { 2 } { \tau } \ln ( x ) , \tau = T _ { 2 } - T _ { 1 } = 3 0 } \end{array}$ . This is the form used in Guyon (2020, 2021). It enforces the forward-variance relation pointwise on the $( S _ { 1 } , V )$ grid and ensures structural consistency between the SPX smile and the VIX future level. The scalar identity
 
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0004-11.png)
-
-
-This condition ensures that the SPX dynamics implied by the calibrated distribution are arbitrage-free. 
-
-**SPX–VIX consistency condition** The VIX index represents the square root of the risk-neutral expectation of future variance. In the discrete MOT framework this implies the conditional identity 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0004-14.png)
-
-
-where _L_ := _− τ_<sup><u>2</u>ln(</sup><sup>_x_)</sup><sup>_,τ_=</sup><sup>_T_2</sup><sup>_−T_1=30.ThisistheformusedinGuyon(2020,2021).Itenforcesthe</sup> forward-variance relation pointwise on the ( _S_ 1 _, V_ ) grid and ensures structural consistency between the SPX smile and the VIX future level. The scalar identity 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0004-16.png)
+$$
+\begin{array} { r } { E _ { \mu } [ V ] = F _ { V } , } \end{array}
+$$
 
 <!-- page: 5 -->
 
-follows from this conditional relation but is strictly weaker and is not sufficient to define a consistent SPX–VIX joint distribution. 
+follows from this conditional relation but is strictly weaker and is not suficient to define a consistent SPX–VIX joint distribution.
 
-**Practical considerations** In real market data the SPX and VIX option surfaces are not perfectly consistent with this theoretical identity. As observed in Guyon (2020, 2021), calibration frameworks typically relax the consistency condition by allowing a basis between the SPX implied forward variance and the traded VIX future. 
+Practical considerations In real market data the SPX and VIX option surfaces are not perfectly consistent with this theoretical identity. As observed in Guyon (2020, 2021), calibration frameworks typically relax the consistency condition by allowing a basis between the SPX implied forward variance and the traded VIX future.
 
-In the experiments reported in Section 9.2, we therefore compute diagnostic plots for both the martingality condition and the SPX–VIX consistency condition in order to assess the quality of the calibrated coupling. 
+In the experiments reported in Section 9.2, we therefore compute diagnostic plots for both the martingality condition and the SPX–VIX consistency condition in order to assess the quality of the calibrated coupling.
 
-## **2 Mathematical Framework For Entropic Projections** 
+## 2 Mathematical Framework For Entropic Projections
 
-### **2.1 Finite Discrete Setup** 
+## 2.1 Finite Discrete Setup
 
-Let 
+Let
 
+$$
+\mathcal S _ { 1 } = \{ s _ { 1 } ^ { 1 } , \ldots , s _ { 1 } ^ { N _ { 1 } } \} , \quad \mathcal S _ { 2 } = \{ s _ { 2 } ^ { 1 } , \ldots , s _ { 2 } ^ { N _ { 2 } } \} , \quad \mathcal V = \{ v ^ { 1 } , \ldots , v ^ { N _ { V } } \}
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0005-06.png)
+be finite state spaces.
 
+Denote
 
-be finite state spaces. Denote 
+$$
+\mathcal { X } : = S _ { 1 } \times \mathcal { V } \times S _ { 2 } .
+$$
 
+Let $\bar { \mu }$ be a strictly positive prior probability on $\mathcal { X } \mathrm { : }$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0005-08.png)
+$$
+{ \bar { \mu } } ( x ) > 0 \quad \forall x \in \mathcal { X } .
+$$
 
+Let prescribed marginals:
 
-Let _µ_ ¯ be a strictly positive prior probability on _X_ : 
+$$
+\mu _ { 1 } \in \Delta ( S _ { 1 } ) , \quad \mu _ { V } \in \Delta ( \mathcal { V } ) , \quad \mu _ { 2 } \in \Delta ( S _ { 2 } ) ,
+$$
 
+where $\Delta ( \cdot )$ denotes the probability simplex.
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0005-10.png)
+Define admissible set:
 
+$$
+\mathcal { P } ( \mu _ { 1 } , \mu _ { V } , \mu _ { 2 } ) = \left\{ \mu \in \Delta ( \mathcal { X } ) : \mu \mathrm { ~ h a s ~ m a r g i n a l s ~ } \mu _ { 1 } , \mu _ { V } , \mu _ { 2 } \right\} .
+$$
 
-Let prescribed marginals: 
+## 2.2 Entropic Optimal Transport
 
+We consider the entropic projection problem:
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0005-12.png)
+$$
+\operatorname* { i n f } _ { \mu \in \mathcal { P } ( \mu _ { 1 } , \mu _ { V } , \mu _ { 2 } ) } D ( \mu \| \bar { \mu } ) ,\tag{2}
+$$
 
+where relative entropy is
 
-where ∆( _·_ ) denotes the probability simplex. Define admissible set: 
+$$
+D ( \mu \| \bar { \mu } ) = \sum _ { x \in \mathcal { X } } \mu ( x ) \ln \frac { \mu ( x ) } { \bar { \mu } ( x ) } .
+$$
 
+Theorem 2.1 (Existence and Uniqueness). Assume $\bar { \mu } ( x ) > 0$ for all x. If $\mathcal { P } ( \mu _ { 1 } , \mu _ { V } , \mu _ { 2 } )$ is nonempty, then problem (2) admits a unique minimizer $\mu ^ { \star }$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0005-14.png)
+Proof. Since X is finite, $\Delta ( \mathcal { X } )$ is compact and convex.
 
+Relative entropy is strictly convex in $\mu$ on the interior of the simplex because the function x 7→ x log x is strictly convex.
 
-### **2.2 Entropic Optimal Transport** 
+The feasible set $\mathcal { P } ( \mu _ { 1 } , \mu _ { V } , \mu _ { 2 } )$ is an afine slice of the simplex, hence convex and compact.
 
-We consider the entropic projection problem: 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0005-17.png)
-
-
-where relative entropy is 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0005-19.png)
-
-
-_Theorem_ 2.1 (Existence and Uniqueness) _._ Assume _µ_ ¯( _x_ ) _>_ 0 for all _x_ . If _P_ ( _µ_ 1 _, µV , µ_ 2) is nonempty, then problem (2) admits a unique minimizer _µ_<sup>_⋆_</sup> . 
-
-_Proof._ Since _X_ is finite, ∆( _X_ ) is compact and convex. 
-
-Relative entropy is strictly convex in _µ_ on the interior of the simplex because the function _x �→ x_ log _x_ is strictly convex. 
-
-The feasible set _P_ ( _µ_ 1 _, µV , µ_ 2) is an affine slice of the simplex, hence convex and compact. 
-
-Strict convexity of _D_ ( _·∥µ_ ¯) on a convex compact set implies existence and uniqueness of the minimizer.
+Strict convexity of $D ( \cdot \| \bar { \mu } )$ on a convex compact set implies existence and uniqueness of the minimizer.
 
 <!-- page: 6 -->
 
-cy 
+Theorem 2.2 (Primal–Dual Equivalence). The optimal value of (2) equals
 
-1
+$$
+\operatorname* { s u p } _ { u _ { 1 } , u _ { V } , u _ { 2 } } \left\{ E _ { \mu _ { 1 } } [ u _ { 1 } ] + E _ { \mu _ { V } } [ u _ { V } ] + E _ { \mu _ { 2 } } [ u _ { 2 } ] - \ln \sum _ { x \in \mathcal { X } } \bar { \mu } ( x ) e ^ { U ( x ) } \right\} .
+$$
+
+Moreover, the supremum is attained.
+
+Proof. For fixed $u ,$ consider
+
+$$
+\operatorname* { i n f } _ { \mu \in \Delta ( \mathcal { X } ) } \left\{ D ( \mu \| \bar { \mu } ) - \sum _ { x } \mu ( x ) U ( x ) \right\} .
+$$
+
+The first-order condition gives
+
+$$
+\mu ( x ) = \bar { \mu } ( x ) e ^ { U ( x ) } / Z ,
+$$
+
+where
+
+$$
+Z = \sum _ { x } \bar { \mu } ( x ) e ^ { U ( x ) } .
+$$
+
+Substitution yields value − ln Z.
+
+Strong duality holds because the feasible set has nonempty interior.
+
+## 2.3 Gauge Fixing And Numerical Stability
+
+The dual potentials $( u _ { 1 } , u _ { V } , u _ { 2 } )$ are not uniquely determined. Indeed, the Gibbs representation
+
+$$
+\mu ( s _ { 1 } , v , s _ { 2 } ) \propto \bar { \mu } ( s _ { 1 } , v , s _ { 2 } ) \exp \bigl ( u _ { 1 } ( s _ { 1 } ) + u _ { V } ( v ) + u _ { 2 } ( s _ { 2 } ) \bigr )
+$$
+
+is invariant under the transformation
+
+$$
+( u _ { 1 } , u _ { V } , u _ { 2 } ) \ \mapsto \ ( u _ { 1 } + c _ { 1 } , \ u _ { V } + c _ { V } , \ u _ { 2 } + c _ { 2 } )
+$$
+
+provided
+
+$$
+c _ { 1 } + c _ { V } + c _ { 2 } = 0 .
+$$
+
+This transformation leaves the Gibbs weights unchanged because the additive constant cancels with the normalization factor. Consequently, the dual parameterization possesses a two–dimensional gauge freedom. The Hessian of the dual objective therefore has a corresponding two–dimensional null space.
+
+To obtain a unique representation of the dual variables we fix the gauge by imposing two independent normalization conditions. A convenient choice is
+
+$$
+\sum _ { s _ { 1 } \in S _ { 1 } } \mu _ { 1 } ( s _ { 1 } ) u _ { 1 } ( s _ { 1 } ) = 0 , \qquad \sum _ { v \in V } \mu _ { V } ( v ) u _ { V } ( v ) = 0 .
+$$
+
+Under these constraints the potentials are uniquely determined up to the remaining normalization constant absorbed by the partition function.
 
 <!-- page: 7 -->
 
-**Log-partition function.** For dual potentials ( _u_ 1 _, uV , u_ 2) define the log-partition function 
+Log-partition function. For dual potentials $( u _ { 1 } , u _ { V } , u _ { 2 } )$ define the log-partition function
 
+$$
+\Lambda ( u ) = \log \sum _ { x \in \mathcal { X } } \bar { \mu } ( x ) \exp \bigl ( u _ { 1 } ( s _ { 1 } ) + u _ { V } ( v ) + u _ { 2 } ( s _ { 2 } ) \bigr ) .
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0007-01.png)
+This function is the cumulant generating function of the exponential family defined by the Gibbs coupling. Under the gauge fixing above, the potentials can be parameterized by the reduced vector $\omega ,$ and we write $\Lambda ( \omega )$ for the same log-partition function expressed in these reduced coordinates. Let
 
+$$
+\omega \in \mathbb { R } ^ { N _ { 1 } + N _ { V } + N _ { 2 } - 2 }
+$$
 
-This function is the cumulant generating function of the exponential family defined by the Gibbs coupling. Under the gauge fixing above, the potentials can be parameterized by the reduced vector _ω_ , and we write Λ( _ω_ ) for the same log-partition function expressed in these reduced coordinates. Let 
+denote the vector of gauge–fixed dual parameters obtained by removing the two redundant degrees of freedom. On this reduced parameter space the Hessian of the dual objective
 
+$$
+H = \nabla _ { \omega } ^ { 2 } \Lambda ( \omega )
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0007-03.png)
+coincides with the Fisher information matrix of the calibrated exponential family. The gauge fixing ensures that H is strictly positive definite on the reduced parameter space.
 
+This property guarantees the invertibility of the Fisher system used later for risk computation.
 
-denote the vector of gauge–fixed dual parameters obtained by removing the two redundant degrees of freedom. On this reduced parameter space the Hessian of the dual objective 
+## 3 Perturbation Theory: General Marginal Shocks
 
-_H_ = _∇_<sup>2</sup> _ω_<sup>Λ(</sup><sup>_ω_)</sup> 
+## 3.1 Admissible Perturbations
 
-coincides with the Fisher information matrix of the calibrated exponential family. The gauge fixing ensures that _H_ is strictly positive definite on the reduced parameter space. 
+Let the base marginals be $( \mu _ { 1 } , \mu _ { V } , \mu _ { 2 } )$ and denote the unique entropic MOT optimizer by $\mu ^ { \star }$
 
-This property guarantees the invertibility of the Fisher system used later for risk computation. 
+A directional perturbation of the marginals is a triple
 
-## **3 Perturbation Theory: General Marginal Shocks** 
+$$
+h : = ( h _ { 1 } , h _ { V } , h _ { 2 } ) , \qquad h _ { 1 } : S _ { 1 } \to \mathbb { R } , \ h _ { V } : \mathcal { V } \to \mathbb { R } , \ h _ { 2 } : S _ { 2 } \to \mathbb { R } ,
+$$
 
-### **3.1 Admissible Perturbations** 
+satisfying the mass-preserving constraints
 
-Let the base marginals be ( _µ_ 1 _, µV , µ_ 2) and denote the unique entropic MOT optimizer by _µ_<sup>_⋆_</sup> . A _directional perturbation_ of the marginals is a triple 
+$$
+\sum _ { s _ { 1 } \in S _ { 1 } } h _ { 1 } ( s _ { 1 } ) = 0 , \quad \sum _ { v \in \mathcal { V } } h _ { V } ( v ) = 0 , \quad \sum _ { s _ { 2 } \in S _ { 2 } } h _ { 2 } ( s _ { 2 } ) = 0 .
+$$
 
+For ε suficiently small, define perturbed marginals
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0007-11.png)
+$$
+\mu _ { 1 } ^ { \varepsilon } = \mu _ { 1 } + \varepsilon h _ { 1 } , \quad \mu _ { V } ^ { \varepsilon } = \mu _ { V } + \varepsilon h _ { V } , \quad \mu _ { 2 } ^ { \varepsilon } = \mu _ { 2 } + \varepsilon h _ { 2 } .
+$$
 
+We assume ε is chosen so that $\mu _ { 1 } ^ { \varepsilon } , \mu _ { V } ^ { \varepsilon } , \mu _ { 2 } ^ { \varepsilon }$ remain strictly positive on their supports (to stay in the interior of the simplices).
 
-satisfying the mass-preserving constraints 
+Define the perturbed feasible set
 
+$$
+\mathcal { P } ^ { \varepsilon } : = \mathcal { P } ( \mu _ { 1 } ^ { \varepsilon } , \mu _ { V } ^ { \varepsilon } , \mu _ { 2 } ^ { \varepsilon } )
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0007-13.png)
+and the perturbed entropic MOT problem
 
+$$
+\operatorname* { i n f } _ { \mu \in \mathcal { P } ^ { \varepsilon } } D ( \mu \| \bar { \mu } ) .\tag{3}
+$$
 
-For _ε_ sufficiently small, define perturbed marginals 
+Denote its unique optimizer by $\mu ^ { \varepsilon }$
 
+Theorem 3.1 (Well-posedness of Entropic Projections). Let A be a linear operator representing a set of K independent linear constraints. Let $\mathcal { P } = \{ \mu \in \mathbb { R } _ { + } ^ { n } : \mathcal { A } \mu = b \}$ . Suppose the base problem (2.2) is feasible with a strictly positive solution $\mu ^ { \star }$ . Then for any perturbation δb in the image of ${ \mathcal { A } } .$ , there exists $\epsilon _ { 0 } > 0$ such that for all $| \epsilon | < \epsilon _ { 0 }$ , the perturbed problem with constraints $b + \epsilon \delta b$ has a unique minimizer $\mu ^ { \epsilon }$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0007-15.png)
-
-
-We assume _ε_ is chosen so that _µ_<sup>_ε_</sup> 1<sup>_, µε_</sup> _V_<sup>_, µ_</sup> 2<sup>_ε_remainstrictlypositiveontheirsupports(tostayintheinteriorof</sup> the simplices). 
-
-Define the perturbed feasible set 
-
-and the perturbed entropic MOT problem 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0007-19.png)
-
-
-Denote its unique optimizer by _µ_<sup>_ε_</sup> . 
-
-_Theorem_ 3.1 (Well-posedness of Entropic Projections) _._ Let _A_ be a linear operator representing a set of _K_ independent linear constraints. Let _P_ = _{µ ∈_ R<sup>_n_</sup> +<sup>:</sup><sup>_Aµ_=</sup><sup>_b}_.Suppose the base problem (2.2) is feasible with</sup> a strictly positive solution _µ_<sup>_⋆_</sup> . Then for any perturbation _δb_ in the image of _A_ , there exists _ϵ_ 0 _>_ 0 such that for all _|ϵ| < ϵ_ 0, the perturbed problem with constraints _b_ + _ϵδb_ has a unique minimizer _µ_<sup>_ϵ_</sup> . 
-
-_Proof._ Since _µ_<sup>_⋆_</sup> _>_ 0, it lies in the relative interior of the simplex. The map _F_ : _µ �→Aµ_ is a linear surjection onto its image. By the Open Mapping Theorem, for a sufficiently small neighborhood _U_ of _µ_<sup>_⋆_</sup> , _F_ ( _U_ ) contains a neighborhood of _b_ . Thus, for small _ϵ_ , the feasible set is non-empty. The strict convexity of the relative entropy ensures uniqueness.
+Proof. Since $\mu ^ { \star } > 0$ , it lies in the relative interior of the simplex. The map $F : \mu \mapsto { \mathcal { A } } \mu$ is a linear surjection onto its image. By the Open Mapping Theorem, for a suficiently small neighborhood U of $\mu ^ { \star } , F ( U )$ contains a neighborhood of b. Thus, for small $\epsilon ,$ the feasible set is non-empty. The strict convexity of the relative entropy ensures uniqueness. □
 
 <!-- page: 8 -->
 
-### **3.2 Dual variables And Sinkhorn Scaling Form** 
+## 3.2 Dual variables And Sinkhorn Scaling Form
 
-The dual representation (Theorem 2.2) implies there exist optimal potentials 
+The dual representation (Theorem 2.2) implies there exist optimal potentials
 
+$$
+u _ { 1 } ^ { \varepsilon } : S _ { 1 } \to \mathbb { R } , \quad u _ { V } ^ { \varepsilon } : \mathcal { V } \to \mathbb { R } , \quad u _ { 2 } ^ { \varepsilon } : S _ { 2 } \to \mathbb { R }
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0008-02.png)
+such that
 
+$$
+\mu ^ { \varepsilon } ( s _ { 1 } , v , s _ { 2 } ) = \frac { 1 } { Z ^ { \varepsilon } } \bar { \mu } ( s _ { 1 } , v , s _ { 2 } ) \mathrm { e x p } \Big ( u _ { 1 } ^ { \varepsilon } ( s _ { 1 } ) + u _ { V } ^ { \varepsilon } ( v ) + u _ { 2 } ^ { \varepsilon } ( s _ { 2 } ) \Big ) ,\tag{4}
+$$
 
-such that 
+with $\begin{array} { r } { Z ^ { \varepsilon } = \sum _ { x } \bar { \mu } ( x ) e ^ { U ^ { \varepsilon } ( x ) } , U ^ { \varepsilon } ( x ) = u _ { 1 } ^ { \varepsilon } ( s _ { 1 } ) + u _ { V } ^ { \varepsilon } ( v ) + u _ { 2 } ^ { \varepsilon } ( s _ { 2 } ) . } \end{array}$
 
+It is convenient to work with scaling variables
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0008-04.png)
+$$
+a ^ { \varepsilon } ( s _ { 1 } ) : = e ^ { u _ { 1 } ^ { \varepsilon } ( s _ { 1 } ) } , \quad b ^ { \varepsilon } ( v ) : = e ^ { u _ { V } ^ { \varepsilon } ( v ) } , \quad c ^ { \varepsilon } ( s _ { 2 } ) : = e ^ { u _ { 2 } ^ { \varepsilon } ( s _ { 2 } ) } ,
+$$
 
+so that (absorbing $Z ^ { \varepsilon }$ into one of the scalings if desired)
 
-with _Z_<sup>_ε_</sup> =<sup>�</sup> _x_<sup>_µ_¯(</sup><sup>_x_)</sup><sup>_eU ε_(</sup><sup>_x_),</sup><sup>_U ε_(</sup><sup>_x_) =</sup><sup>_uε_</sup> 1<sup>(</sup><sup>_s_1) +</sup><sup>_uε_</sup> _V_<sup>(</sup><sup>_v_) +</sup><sup>_u_</sup> 2<sup>_ε_(</sup><sup>_s_2).</sup> It is convenient to work with _scaling variables_ 
+$$
+\mu ^ { \varepsilon } ( s _ { 1 } , v , s _ { 2 } ) \propto \bar { \mu } ( s _ { 1 } , v , s _ { 2 } ) a ^ { \varepsilon } ( s _ { 1 } ) b ^ { \varepsilon } ( v ) c ^ { \varepsilon } ( s _ { 2 } ) .\tag{5}
+$$
 
-so that (absorbing _Z_<sup>_ε_</sup> into one of the scalings if desired) 
+Gauge invariance. Potentials are not unique: adding constants $\kappa _ { 1 } , \kappa _ { V } , \kappa _ { 2 }$ with $\kappa _ { 1 } + \kappa _ { V } + \kappa _ { 2 } = 0$ leaves $\mu ^ { \varepsilon }$ unchanged. We fix a gauge, e.g.
 
+$$
+\sum _ { s _ { 1 } } \mu _ { 1 } ( s _ { 1 } ) u _ { 1 } ^ { \varepsilon } ( s _ { 1 } ) = 0 , \quad \sum _ { v } \mu _ { V } ( v ) u _ { V } ^ { \varepsilon } ( v ) = 0 ,\tag{6}
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0008-07.png)
+which pins down uniqueness of $( u _ { 1 } ^ { \varepsilon } , u _ { V } ^ { \varepsilon } , u _ { 2 } ^ { \varepsilon } )$ locally.
 
+## 3.3 Diferentiability Of The Entropic Projection
 
-**Gauge invariance.** Potentials are not unique: adding constants _κ_ 1 _, κV , κ_ 2 with _κ_ 1 + _κV_ + _κ_ 2 = 0 leaves _µ_<sup>_ε_</sup> unchanged. We fix a gauge, e.g. 
+We now prove that the optimizer $( \mu ^ { \varepsilon } , u ^ { \varepsilon } )$ depends smoothly on $\varepsilon ,$ and derive explicit first-order formulas. Define the constraint maps (marginals) for any $\mu \in \Delta ( \mathcal { X } )$
 
+$$
+( \mathcal M _ { 1 } \mu ) ( s _ { 1 } ) = \sum _ { v , s _ { 2 } } \mu ( s _ { 1 } , v , s _ { 2 } ) , \quad ( \mathcal M _ { V } \mu ) ( v ) = \sum _ { s _ { 1 } , s _ { 2 } } \mu ( s _ { 1 } , v , s _ { 2 } ) , \quad ( \mathcal M _ { 2 } \mu ) ( s _ { 2 } ) = \sum _ { s _ { 1 } , v } \mu ( s _ { 1 } , v , s _ { 2 } ) .
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0008-09.png)
+Stack them as $\mathcal { M } \mu = ( \mathcal { M } _ { 1 } \mu , \mathcal { M } _ { V } \mu , \mathcal { M } _ { 2 } \mu )$
 
+Let $u = ( u _ { 1 } , u _ { V } , u _ { 2 } )$ and define the log-partition function
 
-which pins down uniqueness of ( _u_<sup>_ε_</sup> 1<sup>_, uε_</sup> _V_<sup>_, u_</sup> 2<sup>_ε_)locally.</sup> 
+$$
+\Lambda ( u ) : = \ln \sum _ { x \in \mathcal { X } } \bar { \mu } ( x ) e ^ { U ( x ) } .
+$$
 
-### **3.3 Differentiability Of The Entropic Projection** 
+Then the dual objective for marginals $\left( \nu _ { 1 } , \nu _ { V } , \nu _ { 2 } \right)$ is
 
-We now prove that the optimizer ( _µ_<sup>_ε_</sup> _, u_<sup>_ε_</sup> ) depends smoothly on _ε_ , and derive explicit first-order formulas. Define the constraint maps (marginals) for any _µ ∈_ ∆( _X_ ): 
+$$
+\begin{array} { r } { \mathcal { D } ( u ; \nu ) : = \left. \nu _ { 1 } , u _ { 1 } \right. + \left. \nu _ { V } , u _ { V } \right. + \left. \nu _ { 2 } , u _ { 2 } \right. - \Lambda ( u ) . } \end{array}
+$$
 
+Lemma 3.2 (Strict concavity and smoothness of the dual). $\Lambda ( u )$ is $C ^ { \infty }$ and strictly convex on $\mathbb { R } ^ { N _ { 1 } + N _ { V } + N _ { 2 } }$ (modulo gauge). Hence $\mathcal { D } ( u ; \nu )$ is strictly concave (modulo gauge), and admits a unique maximizer under gauge fixing.
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0008-13.png)
+Proof. Since $\bar { \mu } ( x ) > 0$ and X is finite, Λ is the log-sum-exp of afine functions, hence $C ^ { \infty }$ . Its Hessian is the covariance matrix of the suficient statistics under the Gibbs measure proportional to $\bar { \mu } e ^ { U }$ , which is positive semidefinite and positive definite on the quotient space after fixing gauge (standard exponential family theory). □
 
-
-Stack them as _Mµ_ = ( _M_ 1 _µ, MV µ, M_ 2 _µ_ ). 
-
-Let _u_ = ( _u_ 1 _, uV , u_ 2) and define the log-partition function 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0008-16.png)
-
-
-Then the dual objective for marginals ( _ν_ 1 _, νV , ν_ 2) is 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0008-18.png)
-
-
-_Lemma_ 3.2 (Strict concavity and smoothness of the dual) _._ Λ( _u_ ) is _C_<sup>_∞_</sup> and strictly convex on R<sup>_N_1+</sup><sup>_NV_+</sup><sup>_N_2</sup> (modulo gauge). Hence _D_ ( _u_ ; _ν_ ) is strictly concave (modulo gauge), and admits a unique maximizer under gauge fixing. 
-
-_Proof._ Since _µ_ ¯( _x_ ) _>_ 0 and _X_ is finite, Λ is the log-sum-exp of affine functions, hence _C_<sup>_∞_</sup> . Its Hessian is the covariance matrix of the sufficient statistics under the Gibbs measure proportional to _µe_ ¯<sup>_U_</sup> , which is positive semidefinite and positive definite on the quotient space after fixing gauge (standard exponential family theory). 
-
-_Theorem_ 3.3 (Differentiability of optimal potentials and coupling) _._ Fix a gauge as in (6) and assume base marginals are strictly positive. Then there exists _ε_ 0 _>_ 0 such that on ( _−ε_ 0 _, ε_ 0):
+Theorem 3.3 (Diferentiability of optimal potentials and coupling). Fix a gauge as in (6) and assume base marginals are strictly positive. Then there exists $\varepsilon _ { 0 } > 0$ such that on $\left( - \varepsilon _ { 0 } , \varepsilon _ { 0 } \right)$
 
 <!-- page: 9 -->
 
-1. _ε �→ u_<sup>_ε_</sup> is _C_<sup>1</sup> , 
+1. $\varepsilon \mapsto u ^ { \varepsilon }$ is $C ^ { 1 }$
 
-2. _ε �→ µ_<sup>_ε_</sup> is _C_<sup>1</sup> entrywise, 
+2. $\varepsilon \mapsto \mu ^ { \varepsilon }$ is $C ^ { 1 }$ entrywise,
 
-3. derivatives solve a linear system explicitly characterized by the Fisher information matrix (dual Hessian). 
+3. derivatives solve a linear system explicitly characterized by the Fisher information matrix (dual Hessian).
 
-_Proof._ The first-order optimality condition for the dual reads 
+Proof. The first-order optimality condition for the dual reads
 
+$$
+\nabla _ { u } \Lambda ( u ^ { \varepsilon } ) = \nu ^ { \varepsilon } ,\tag{7}
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0009-04.png)
+where $\nu ^ { \varepsilon }$ denotes the stacked perturbed marginals $( \mu _ { 1 } ^ { \varepsilon } , \mu _ { V } ^ { \varepsilon } , \mu _ { 2 } ^ { \varepsilon } )$ embedded in $\mathbb { R } ^ { N _ { 1 } + N _ { V } + N _ { 2 } }$
 
+Under gauge fixing, Lemma 3.2 implies $\nabla _ { u } \Lambda$ is $C ^ { \infty }$ with Jacobian $H ^ { \varepsilon } : = \nabla _ { u } ^ { 2 } \Lambda ( u ^ { \varepsilon } )$ invertible on the gauge-fixed subspace. Thus, by the implicit function theorem applied to
 
-where _ν_<sup>_ε_</sup> denotes the stacked perturbed marginals ( _µ_<sup>_ε_</sup> 1<sup>_, µε_</sup> _V_<sup>_, µ_</sup> 2<sup>_ε_)embeddedinR</sup><sup>_N_1+</sup><sup>_NV_+</sup><sup>_N_2.</sup> Under gauge fixing, Lemma 3.2 implies _∇u_ Λ is _C_<sup>_∞_</sup> with Jacobian _H_<sup>_ε_</sup> := _∇_<sup>2</sup> _u_<sup>Λ(</sup><sup>_uε_)invertibleonthe</sup> gauge-fixed subspace. Thus, by the implicit function theorem applied to 
+$$
+F ( u , \varepsilon ) : = \nabla _ { u } \Lambda ( u ) - \nu ^ { \varepsilon } ,
+$$
 
+there exists a unique $C ^ { 1 }$ map $\varepsilon \mapsto u ^ { \varepsilon }$ locally satisfying (7).
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0009-06.png)
+Diferentiating (7) gives
 
+$$
+H ^ { \varepsilon } \dot { u } ^ { \varepsilon } = \dot { \nu } ^ { \varepsilon } ,
+$$
 
-there exists a unique _C_<sup>1</sup> map _ε �→ u_<sup>_ε_</sup> locally satisfying (7). Differentiating (7) gives 
+where dots denote d/dε and $\dot { \nu } ^ { \varepsilon } = ( h _ { 1 } , h _ { V } , h _ { 2 } )$ is constant. Hence $\dot { u } ^ { \varepsilon } = ( H ^ { \varepsilon } ) ^ { - 1 } \dot { \nu } ^ { \varepsilon }$ on the gauge-fixed subspace. Finally, $\mu ^ { \varepsilon }$ is given by the smooth Gibbs map (4), so entrywise diferentiability follows by chain rule.
 
+## 3.4 Risk Representation: Gateaux Derivative Of Expectations
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0009-08.png)
+Let $G : { \mathcal { X } } $ R be any payof (bounded is automatic since X finite). Define the model price under calibration $\mu ^ { \varepsilon }$ by
 
+$$
+\Pi ( \varepsilon ) : = \mathbb { E } _ { \mu ^ { \varepsilon } } [ G ] = \sum _ { x \in \mathcal { X } } G ( x ) \mu ^ { \varepsilon } ( x ) .
+$$
 
-- where dots denote _d/dε_ and _ν_ ˙<sup>_ε_</sup> = ( _h_ 1 _, hV , h_ 2) is constant. Hence _u_ ˙<sup>_ε_</sup> = ( _H_<sup>_ε_</sup> )<sup>_−_1</sup> _ν_ ˙<sup>_ε_</sup> on the gauge-fixed subspace. Finally, _µ_<sup>_ε_</sup> is given by the smooth Gibbs map (4), so entrywise differentiability follows by chain rule. 
+Theorem 3.4 (General risk representation). Let $G : \mathcal { X } \mathbb { R }$ be any payof and let
 
-### **3.4 Risk Representation: Gateaux Derivative Of Expectations** 
+$$
+\Pi ( \varepsilon ) = \mathbb { E } _ { \mu ^ { \varepsilon } } [ G ]
+$$
 
-Let _G_ : _X →_ R be any payoff (bounded is automatic since _X_ finite). Define the model price under calibration _µ_<sup>_ε_</sup> by 
+denote its price under the perturbed entropic projection. Under the assumptions of Theorem 3.3, the map $\varepsilon \mapsto \Pi ( \varepsilon )$ is $C ^ { 1 }$ and its first–order variation is
 
+$$
+\Pi ^ { \prime } ( 0 ) = \langle h _ { 1 } , \psi _ { 1 } \rangle + \langle h _ { V } , \psi _ { V } \rangle + \langle h _ { 2 } , \psi _ { 2 } \rangle .\tag{8}
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0009-12.png)
+The vector $\psi = \left( \psi _ { 1 } , \psi _ { V } , \psi _ { 2 } \right)$ is the influence function of the payof G and is given by
 
+$$
+\psi = ( H ^ { 0 } ) ^ { - 1 } g _ { G } ,\tag{9}
+$$
 
-_Theorem_ 3.4 (General risk representation) _._ Let _G_ : _X →_ R be any payoff and let 
+where $H ^ { 0 } = \nabla _ { u } ^ { 2 } \Lambda ( u ^ { 0 } )$ is the Fisher information matrix of the calibrated exponential family, and $g _ { G }$ is the covariance vector
 
+$$
+( g _ { G } ) _ { i } = \mathrm { C o v } _ { \mu ^ { * } } ( G , T _ { i } ) ,
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0009-14.png)
+with $\{ T _ { i } \}$ denoting the suficient statistics associated with the dual potentials $u = ( u _ { 1 } , u _ { V } , u _ { 2 } )$ . Thus, to first order, perturbations of the marginals propagate through the inverse Fisher information and the covariance of G with the suficient statistics.
 
+Proof. Since $\mu ^ { \varepsilon }$ is $C ^ { 1 }$ in ε by Theorem 3.3 and X is finite, the price
 
-denote its price under the perturbed entropic projection. Under the assumptions of Theorem 3.3, the map _ε �→_ Π( _ε_ ) is _C_<sup>1</sup> and its first–order variation is 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0009-16.png)
-
-
-The vector _ψ_ = ( _ψ_ 1 _, ψV , ψ_ 2) is the _influence function_ of the payoff _G_ and is given by 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0009-18.png)
-
-
-where _H_<sup>0</sup> = _∇_<sup>2</sup> _u_<sup>Λ(</sup><sup>_u_0)istheFisherinformationmatrixofthecalibratedexponentialfamily,and</sup><sup>_gG_isthe</sup> covariance vector 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0009-20.png)
-
-
-with _{Ti}_ denoting the sufficient statistics associated with the dual potentials _u_ = ( _u_ 1 _, uV , u_ 2). Thus, to first order, perturbations of the marginals propagate through the inverse Fisher information and the covariance of _G_ with the sufficient statistics. 
-
-_Proof._ Since _µ_<sup>_ε_</sup> is _C_<sup>1</sup> in _ε_ by Theorem 3.3 and _X_ is finite, the price 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0009-23.png)
+$$
+\Pi ( \varepsilon ) = \sum _ { x \in \mathcal { X } } G ( x ) \mu ^ { \varepsilon } ( x )
+$$
 
 <!-- page: 10 -->
 
-is _C_<sup>1</sup> and 
+is $C ^ { 1 }$ and
 
+$$
+\Pi ^ { \prime } ( 0 ) = \sum _ { x } G ( x ) \dot { \mu } ^ { 0 } ( x ) ,
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0010-01.png)
+where $\dot { \mu } ^ { 0 }$ denotes $\textstyle \left. { \frac { d } { d \varepsilon } } \mu ^ { \varepsilon } \right| _ { \varepsilon = 0 } .$
 
+From the Gibbs representation,
 
-where _µ_ ˙<sup>0</sup> denotes _dεd_<sup>_µε_��</sup> _ε_ =0<sup>.</sup> From the Gibbs representation, 
+$$
+\mu ^ { \varepsilon } ( x ) = \exp \bigl ( \log \bar { \mu } ( x ) + U ^ { \varepsilon } ( x ) - \Lambda ( u ^ { \varepsilon } ) \bigr ) ,
+$$
 
+with
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0010-03.png)
+$$
+U ^ { \varepsilon } ( x ) = u _ { 1 } ^ { \varepsilon } ( s _ { 1 } ) + u _ { V } ^ { \varepsilon } ( v ) + u _ { 2 } ^ { \varepsilon } ( s _ { 2 } ) , \qquad \Lambda ( u ) = \log \sum _ { x } \bar { \mu } ( x ) e ^ { U ( x ) } ,
+$$
 
+we obtain the standard exponential-family derivative
 
-with 
+$$
+\frac { \dot { \mu } ^ { 0 } ( x ) } { \mu ^ { * } ( x ) } = \dot { U } ^ { 0 } ( x ) - \mathbb { E } _ { \mu ^ { * } } [ \dot { U } ^ { 0 } ] ,\tag{A}
+$$
 
+where $\mu ^ { * } = \mu ^ { 0 }$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0010-05.png)
+Since $U ^ { \varepsilon }$ is linear in the potentials,
 
+$$
+\dot { U } ^ { 0 } ( s _ { 1 } , v , s _ { 2 } ) = \dot { u } _ { 1 } ^ { 0 } ( s _ { 1 } ) + \dot { u } _ { V } ^ { 0 } ( v ) + \dot { u } _ { 2 } ^ { 0 } ( s _ { 2 } ) = \langle \dot { u } ^ { 0 } , T ( x ) \rangle ,
+$$
 
-we obtain the standard exponential-family derivative 
+where $T ( x )$ is the vector of suficient statistics (indicator functions of $s _ { 1 } , v , s _ { 2 } )$ . Substituting (A) into $\Pi ^ { \prime } ( 0 )$ gives
 
-where _µ_<sup>_∗_</sup> = _µ_<sup>0</sup> . 
+$$
+\Pi ^ { \prime } ( 0 ) = \langle \dot { u } ^ { 0 } , \mathrm { C o v } _ { \mu ^ { * } } ( G , T ) \rangle = \langle \dot { u } ^ { 0 } , g _ { G } \rangle ,\tag{B}
+$$
 
-Since _U_<sup>_ε_</sup> is linear in the potentials, 
+where $g _ { G }$ is the covariance vector
 
+$$
+( g _ { G } ) _ { i } = \mathrm { C o v } _ { \mu ^ { * } } ( G , T _ { i } ) .
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0010-09.png)
+To identify $\dot { u } ^ { 0 }$ , diferentiate the dual KKT condition
 
+$$
+\nabla _ { u } \Lambda ( u ^ { \varepsilon } ) = \nu ^ { \varepsilon }
+$$
 
-where _T_ ( _x_ ) is the vector of sufficient statistics (indicator functions of _s_ 1, _v_ , _s_ 2). Substituting (A) into Π<sup>_′_</sup> (0) gives 
+at $\varepsilon = 0$ . Since $\nabla _ { u } ^ { 2 } \Lambda ( u ^ { 0 } ) = H ^ { 0 }$ is the Fisher information matrix, we obtain the linear system
 
+$$
+H ^ { 0 } { \dot { u } } ^ { 0 } = { \dot { \nu } } ,\tag{C}
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0010-11.png)
+where $\dot { \nu }$ is the perturbation of the marginal constraints, i.e. $\dot { \nu } = ( h _ { 1 } , h _ { V } , h _ { 2 } )$ in the gauge-fixed coordinates. Solving (C) yields
 
+$$
+\dot { u } ^ { 0 } = ( H ^ { 0 } ) ^ { - 1 } \dot { \nu } .
+$$
 
-where _gG_ is the covariance vector 
+Finally, substituting this expression for $\dot { u } ^ { 0 }$ into (B) gives
 
+$$
+\Pi ^ { \prime } ( 0 ) = \langle ( H ^ { 0 } ) ^ { - 1 } \dot { \nu } , g _ { G } \rangle = \langle \dot { \nu } , ( H ^ { 0 } ) ^ { - 1 } g _ { G } \rangle .
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0010-13.png)
+Define the influence function
 
+$$
+\psi : = ( H ^ { 0 } ) ^ { - 1 } g _ { G } ,
+$$
 
-To identify _u_ ˙<sup>0</sup> , differentiate the dual KKT condition 
+so that
 
+$$
+\Pi ^ { \prime } ( 0 ) = \langle h _ { 1 } , \psi _ { 1 } \rangle + \langle h _ { V } , \psi _ { V } \rangle + \langle h _ { 2 } , \psi _ { 2 } \rangle .
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0010-15.png)
+This completes the proof.
 
-
-at _ε_ = 0. Since _∇_<sup>2</sup> _u_<sup>Λ(</sup><sup>_u_0) =</sup><sup>_H_0istheFisherinformationmatrix,weobtainthelinearsystem</sup> 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0010-17.png)
-
-
-where _ν_ ˙ is the perturbation of the marginal constraints, i.e. _ν_ ˙ = ( _h_ 1 _, hV , h_ 2) in the gauge-fixed coordinates. Solving (C) yields 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0010-19.png)
-
-
-Finally, substituting this expression for _u_ ˙<sup>0</sup> into (B) gives 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0010-21.png)
-
-
-Define the influence function 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0010-23.png)
-
-
-so that 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0010-25.png)
-
-
-This completes the proof. 
-
-_Remark_ (Practitioner interpretation) _._ Equation (8) states: to first order, the price sensitivity of any payoff _G_ under marginal shocks is obtained by pairing the marginal shock directions with a set of influence functions computed from the calibrated Gibbs coupling. This converts “bump-and-revalue” into a mathematically controlled linear response.
+Remark (Practitioner interpretation). Equation (8) states: to first order, the price sensitivity of any payof G under marginal shocks is obtained by pairing the marginal shock directions with a set of influence functions computed from the calibrated Gibbs coupling. This converts “bump-and-revalue” into a mathematically controlled linear response.
 
 <!-- page: 11 -->
 
-### **3.5 Second-Order Sensitivity Expansion** 
+## 3.5 Second-Order Sensitivity Expansion
 
-The linear response formula derived in Theorem 3.4 characterizes the first-order sensitivity of model prices under marginal perturbations. We now establish a second-order expansion that quantifies the approximation error of the linear risk formula. 
+The linear response formula derived in Theorem 3.4 characterizes the first-order sensitivity of model prices under marginal perturbations. We now establish a second-order expansion that quantifies the approximation error of the linear risk formula.
 
-_Theorem_ 3.5 (Second-Order Risk Expansion) _._ Assume the conditions of Theorem 3.3. Let _G_ : _X →_ R be any payoff and consider perturbed marginals _νϵ_ = _ν_ + _ϵh_ . 
+Theorem 3.5 (Second-Order Risk Expansion). Assume the conditions of Theorem 3.3. Let $G : X \mathbb { R }$ be any payof and consider perturbed marginals $\nu _ { \epsilon } = \nu + \epsilon h$
 
-Then the price function 
+Then the price function
 
+$$
+\Pi ( \epsilon ) = \mathbb { E } _ { \mu _ { \epsilon } } [ G ]
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0011-04.png)
+admits the expansion
 
+$$
+\Pi ( \epsilon ) = \Pi ( 0 ) + \epsilon \langle h , \psi \rangle + \frac { \epsilon ^ { 2 } } { 2 } h ^ { \top } K _ { G } h + o ( \epsilon ^ { 2 } ) ,
+$$
 
-admits the expansion 
+where $K _ { G }$ is a symmetric matrix depending on the third-order derivatives of the log-partition function $\Lambda ( u )$
 
+Moreover, there exists a constant C such that
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0011-06.png)
+$$
+\begin{array} { r } { | \Pi ( \epsilon ) - \Pi ( 0 ) - \epsilon \langle h , \psi \rangle | \leq C \epsilon ^ { 2 } \| h \| ^ { 2 } . } \end{array}
+$$
 
+Proof. Since the dual potentials $u _ { \epsilon }$ are $C ^ { 2 }$ functions of ϵ by the implicit function theorem and smoothness of $\Lambda ( u )$ , the coupling $\mu _ { \epsilon }$ is twice diferentiable in ϵ.
 
-where _KG_ is a symmetric matrix depending on the third-order derivatives of the log-partition function Λ( _u_ ). 
+Applying a second-order Taylor expansion to
 
-Moreover, there exists a constant _C_ such that 
+$$
+\Pi ( \epsilon ) = \sum _ { x } G ( x ) \mu _ { \epsilon } ( x )
+$$
 
+yields the stated expansion. The quadratic term arises from the second derivative of the dual potentials and the third-order cumulants of the exponential family distribution defined by the Gibbs coupling.
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0011-09.png)
+Boundedness follows from smoothness of Λ and compactness of the simplex.
 
+## 3.6 Stability Bounds
 
-_Proof._ Since the dual potentials _uϵ_ are _C_<sup>2</sup> functions of _ϵ_ by the implicit function theorem and smoothness of Λ( _u_ ), the coupling _µϵ_ is twice differentiable in _ϵ_ . 
+Proposition 3.6 (Lipschitz stability of potentials and couplings). Under the assumptions of Theorem 3.3, there exists $C > 0$ such that for all suficiently small ε:
 
-Applying a second-order Taylor expansion to 
+$$
+\| u ^ { \varepsilon } - u ^ { 0 } \| \leq C | \varepsilon | \| ( h _ { 1 } , h _ { V } , h _ { 2 } ) \| , \qquad \| \mu ^ { \varepsilon } - \mu ^ { \star } \| _ { 1 } \leq C | \varepsilon | \| ( h _ { 1 } , h _ { V } , h _ { 2 } ) \| .
+$$
 
+Proof. From the implicit function theorem, $\dot { u } ^ { \varepsilon } = ( H ^ { \varepsilon } ) ^ { - 1 } \dot { \nu }$ and $H ^ { \varepsilon }$ varies continuously in ε. On a compact neighborhood, the operator norm of $( H ^ { \varepsilon } ) ^ { - 1 }$ is bounded by some $C .$ Integrate $\dot { u } ^ { \varepsilon }$ over ε to get the first bound. The second bound follows from smoothness of the Gibbs map $\mu ^ { \varepsilon } = \mathcal G ( u ^ { \varepsilon } )$ and bounded Jacobian on the same neighborhood. □
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0011-12.png)
+## 3.7 Information-Geometric Interpretation
 
+The perturbation theory derived above admits a natural interpretation in terms of information geometry. The calibrated coupling
 
-yields the stated expansion. The quadratic term arises from the second derivative of the dual potentials and the third-order cumulants of the exponential family distribution defined by the Gibbs coupling. Boundedness follows from smoothness of Λ and compactness of the simplex. 
+$$
+\mu ^ { \star } ( x ) = \bar { \mu } ( x ) \exp ( U ^ { * } ( x ) ) / Z ^ { * }
+$$
 
-### **3.6 Stability Bounds** 
+defines an exponential family distribution with suficient statistics given by the marginal indicator functions.
 
-_Proposition_ 3.6 (Lipschitz stability of potentials and couplings) _._ Under the assumptions of Theorem 3.3, there exists _C >_ 0 such that for all sufficiently small _ε_ : 
+The Hessian of the log-partition function
 
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0011-16.png)
-
-
-˙ ˙ _Proof._ From the implicit function theorem, _u_<sup>_ε_</sup> = ( _H_<sup>_ε_</sup> )<sup>_−_1</sup> _ν_ and _H_<sup>_ε_</sup> varies continuously in _ε_ . On a compact neighborhood, the operator norm of ( _H_<sup>_ε_</sup> )<sup>_−_1</sup> is bounded by some _C_ . Integrate _u_ ˙<sup>_ε_</sup> over _ε_ to get the first bound. The second bound follows from smoothness of the Gibbs map _µ_<sup>_ε_</sup> = _G_ ( _u_<sup>_ε_</sup> ) and bounded Jacobian on the same neighborhood. 
-
-### **3.7 Information-Geometric Interpretation** 
-
-The perturbation theory derived above admits a natural interpretation in terms of information geometry. The calibrated coupling 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0011-20.png)
-
-
-defines an exponential family distribution with sufficient statistics given by the marginal indicator functions. 
-
-The Hessian of the log-partition function 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0011-23.png)
+$$
+H = \nabla ^ { 2 } \Lambda ( u )
+$$
 
 <!-- page: 12 -->
 
-coincides with the Fisher information matrix of this exponential family. Consequently, the linear response system 
+coincides with the Fisher information matrix of this exponential family.
 
+Consequently, the linear response system
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0012-01.png)
+$$
+H \dot { u } = h
+$$
 
+can be interpreted geometrically as projecting marginal perturbations onto the tangent space of the exponential family manifold.
 
-can be interpreted geometrically as projecting marginal perturbations onto the tangent space of the exponential family manifold. 
+The risk representation
 
-The risk representation 
+$$
+\Pi ^ { \prime } ( 0 ) = g ^ { \top } H ^ { - 1 } h
+$$
 
+therefore corresponds to a natural Riemannian metric induced by the Fisher information. In this view, sensitivities arise from the dual afine connections of the exponential family manifold Amari (2016); Peyr´e and Cuturi (2019).
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0012-04.png)
+This geometric interpretation highlights that the entropic MOT calibration defines not only a transport plan but also an intrinsic statistical manifold whose local curvature governs the propagation of market shocks.
 
+Economic interpretation. The perturbation framework can be interpreted as solving a nearby optimal transport problem whose prior is the calibrated coupling $\mu ^ { \star }$ . A marginal perturbation corresponds to a change in market forwards or option prices. The entropic projection identifies the closest joint distribution consistent with the new market information.
 
-therefore corresponds to a natural Riemannian metric induced by the Fisher information. In this view, sensitivities arise from the dual affine connections of the exponential family manifold Amari (2016); Peyr´e and Cuturi (2019). 
+This perspective shows that the risk sensitivities derived in this paper are not tied to any specific stochastic volatility model. Instead they arise from the geometry of the calibrated transport plan. In this sense the risk generation mechanism is largely model independent.
 
-This geometric interpretation highlights that the entropic MOT calibration defines not only a transport plan but also an intrinsic statistical manifold whose local curvature governs the propagation of market shocks. 
+## 4 Martingality And Variance Consistency As Linear Constraints
 
-**Economic interpretation.** The perturbation framework can be interpreted as solving a nearby optimal transport problem whose prior is the calibrated coupling _µ_<sup>_⋆_</sup> . A marginal perturbation corresponds to a change in market forwards or option prices. The entropic projection identifies the closest joint distribution consistent with the new market information. 
+Sections 2 and 3 developed the perturbation theory for the general entropic projection problem with marginal constraints only. In the SPX–VIX joint calibration problem, however, the admissible set must also satisfy the fundamental no–arbitrage relations linking the SPX dynamics and the VIX definition.
 
-This perspective shows that the risk sensitivities derived in this paper are not tied to any specific stochastic volatility model. Instead they arise from the geometry of the calibrated transport plan. In this sense the risk generation mechanism is largely model independent. 
+Accordingly, the feasible set of couplings is obtained by intersecting the marginal constraint set with additional linear constraints enforcing martingality of the SPX process and consistency between the VIX level and the forward variance implied by the SPX distribution.
 
-## **4 Martingality And Variance Consistency As Linear Constraints** 
+Let $A _ { \mathrm { m a r g } }$ denote the operator imposing the marginal constraints and let $A _ { \mathrm { f i n } }$ denote the operator encoding the financial constraints described below. The admissible set therefore takes the form
 
-Sections 2 and 3 developed the perturbation theory for the general entropic projection problem with marginal constraints only. In the SPX–VIX joint calibration problem, however, the admissible set must also satisfy the fundamental no–arbitrage relations linking the SPX dynamics and the VIX definition. 
+$$
+{ \mathcal { P } } = \{ \mu \in \Delta ( X ) : A _ { \mathrm { m a r g } } \mu = \nu , ~ A _ { \mathrm { f i n } } \mu = 0 \} .
+$$
 
-Accordingly, the feasible set of couplings is obtained by intersecting the marginal constraint set with additional linear constraints enforcing martingality of the SPX process and consistency between the VIX level and the forward variance implied by the SPX distribution. 
+This formulation preserves the convex structure of the entropic projection problem because both sets of constraints remain linear in $\mu .$ The perturbation analysis of Section 3 therefore continues to apply once the perturbations are restricted to the tangent subspace compatible with these financial constraints.
 
-Let _A_ marg denote the operator imposing the marginal constraints and let _A_ fin denote the operator encoding the financial constraints described below. The admissible set therefore takes the form 
+## 4.1 Definition Of Financial Constraints
 
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0012-13.png)
-
-
-This formulation preserves the convex structure of the entropic projection problem because both sets of constraints remain linear in _µ_ . The perturbation analysis of Section 3 therefore continues to apply once the perturbations are restricted to the tangent subspace compatible with these financial constraints. 
-
-### **4.1 Definition Of Financial Constraints** 
-
-The financial constraints appearing in the admissible set above are now specified explicitly. They enforce the martingale property of the SPX process and the consistency relation linking the VIX level to the forward variance implied by the SPX distribution. Both constraints are linear in the coupling _µ_ and therefore define components of the operator _A_ fin. 
+The financial constraints appearing in the admissible set above are now specified explicitly. They enforce the martingale property of the SPX process and the consistency relation linking the VIX level to the forward variance implied by the SPX distribution. Both constraints are linear in the coupling $\mu$ and therefore define components of the operator $A _ { \mathrm { f i n } }$
 
 We define the Martingale and Variance Consistency constraints as follows:
 
 <!-- page: 13 -->
 
-- **Martingale Constraint:** For every grid point ( _s_ 1 _,i, vj_ ), the conditional expectation of the terminal spot must equal the forward: 
+• Martingale Constraint: For every grid point $( s _ { 1 , i } , v _ { j } )$ , the conditional expectation of the terminal spot must equal the forward:
 
+$$
+\sum _ { k } \mu ( s _ { 1 , i } , v _ { j } , s _ { 2 , k } ) s _ { 2 , k } = s _ { 1 , i } \cdot \mu ( s _ { 1 , i } , v _ { j } , \cdot )\tag{10}
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0013-01.png)
+• Variance Consistency: The VIX index must represent the fair strike of a log-contract on $S _ { 2 }$
 
+$$
+\sum _ { k } \mu ( s _ { 1 , i } , v _ { j } , s _ { 2 , k } ) \mathcal { L } ( s _ { 2 , k } / s _ { 1 , i } ) = v _ { j } ^ { 2 } \cdot \mu ( s _ { 1 , i } , v _ { j } , \cdot )\tag{11}
+$$
 
-- **Variance Consistency:** The VIX index must represent the fair strike of a log-contract on _S_ 2: 
+## 4.2 The Tangent Subspace Of Risk
 
+Under this framework, the total constraint operator $\mathcal { A }$ is the concatenation of the marginal constraints $\mathcal { A } _ { m a r g }$ and the financial constraints ${ \mathcal { A } } _ { \mathrm { f i n } } .$ i.e.
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0013-03.png)
+$$
+\mathcal { A } = ( \mathcal { A } _ { \mathrm { m a r g } } , \mathcal { A } _ { \mathrm { f i n } } )\tag{12}
+$$
 
+When we compute risk (Greeks), we are interested in perturbations $\delta b$ of the marginals. However, to maintain market consistency, the resulting shift in the measure $\delta \mu$ must satisfy the linearized system:
 
-### **4.2 The Tangent Subspace Of Risk** 
+$$
+\left( \begin{array} { c } { { A _ { m a r g } } } \\ { { A _ { \mathrm { f i n } } } } \end{array} \right) \delta \mu = \left( \begin{array} { c } { { \delta \nu } } \\ { { 0 } } \end{array} \right)\tag{13}
+$$
 
-Under this framework, the total constraint operator _A_ is the concatenation of the marginal constraints _Amarg_ and the financial constraints _A_ fin, i.e. 
+This implies that the risk sensitivities are gradients of the Dual Objective restricted to the tangent subspace defined by the kernel of $\boldsymbol { A } _ { \mathrm { f i n } }$
 
+Remark. The well-posedness argued in Section 3 ensures that as long as the market data ν allows for the existence of any martingale measure (a standard assumption in no-arbitrage theory), our entropic projection will smoothly track the market changes.
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0013-06.png)
+## 5 Financial Perturbations: Spot And Volatility Bumps
 
+## 5.1 SPX Spot Perturbation
 
-When we compute risk (Greeks), we are interested in perturbations _δb_ of the marginals. However, to maintain market consistency, the resulting shift in the measure _δµ_ must satisfy the linearized system: 
+Let the SPX grid at time $T _ { 1 }$ be $S _ { 1 } = \{ s _ { 1 } ^ { i } \}$ . A spot bump corresponds to shifting the forward level:
 
+$$
+S _ { 0 } \mapsto S _ { 0 } + \delta .
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0013-08.png)
+In a discrete marginal representation, this induces a redistribution of mass via interpolation on the $\mathrm { g r i d }$ Formally, define the perturbed margina
 
+$$
+\mu _ { 1 } ^ { \delta } ( s _ { 1 } ^ { i } ) = \mu _ { 1 } ( s _ { 1 } ^ { i } - \delta )
+$$
 
-This implies that the risk sensitivities are gradients of the Dual Objective restricted to the _tangent subspace_ defined by the kernel of _A_ fin. 
+interpreted via linear interpolation.
 
-_Remark._ The well-posedness argued in Section 3 ensures that as long as the market data _ν_ allows for the existence of _any_ martingale measure (a standard assumption in no-arbitrage theory), our entropic projection will smoothly track the market changes. 
+Proposition 5.1 (Admissibility of small spot perturbations). For suficiently small $\delta ,$ the perturbed margina $\mu _ { 1 } ^ { \delta }$ is strictly positive and satisfies
 
-## **5 Financial Perturbations: Spot And Volatility Bumps** 
+$$
+\sum _ { i } \mu _ { 1 } ^ { \delta } ( s _ { 1 } ^ { i } ) = 1 .
+$$
 
-### **5.1 SPX Spot Perturbation** 
+Moreover, the directional derivative
 
-Let the SPX grid at time _T_ 1 be _S_ 1 = _{s_<sup>_i_</sup> 1<sup>_}_.Aspotbumpcorrespondstoshiftingtheforwardlevel:</sup> 
+$$
+h _ { 1 } ( s _ { 1 } ^ { i } ) = \left. { \frac { d } { d \delta } } \mu _ { 1 } ^ { \delta } ( s _ { 1 } ^ { i } ) \right| _ { \delta = 0 }
+$$
 
+satisfies $\begin{array} { r } { \sum _ { i } h _ { 1 } ( s _ { 1 } ^ { i } ) = 0 } \end{array}$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0013-14.png)
-
-
-In a discrete marginal representation, this induces a redistribution of mass via interpolation on the grid. Formally, define the perturbed marginal 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0013-16.png)
-
-
-interpreted via linear interpolation. 
-
-_Proposition_ 5.1 (Admissibility of small spot perturbations) _._ For sufficiently small _δ_ , the perturbed marginal _µ_<sup>_δ_</sup> 1<sup>isstrictlypositiveandsatisfies</sup> 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0013-19.png)
-
-
-Moreover, the directional derivative 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0013-21.png)
-
-
-satisfies<sup>�</sup> _i_<sup>_h_1(</sup><sup>_s_</sup> 1<sup>_i_) = 0.</sup> 
-
-_Proof._ Mass preservation follows from change-of-variable invariance. Differentiating under interpolation preserves zero total mass. 
+Proof. Mass preservation follows from change-of-variable invariance. Diferentiating under interpolation preserves zero total mass. □
 
 Hence spot bump induces admissible perturbation in the sense of Section 4.
 
 <!-- page: 14 -->
 
-### **5.2 SPX Implied Volatility Surface Perturbation** 
+## 5.2 SPX Implied Volatility Surface Perturbation
 
-Consider a parallel implied volatility bump: 
+Consider a parallel implied volatility bump:
 
+$$
+\sigma ( K , T ) \mapsto \sigma ( K , T ) + \delta .
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0014-02.png)
+Through option pricing, this modifies call prices $C ( K )$ . Using Breeden-Litzenberger inversion, the marginal density changes:
 
+$$
+\mu _ { 1 } ^ { \delta } ( s ) = \frac { \partial ^ { 2 } C ^ { \delta } ( K ) } { \partial K ^ { 2 } } \Big | _ { K = s } .
+$$
 
-Through option pricing, this modifies call prices _C_ ( _K_ ). Using Breeden-Litzenberger inversion, the marginal density changes: 
+Proposition 5.2 (Admissibility of small volatility perturbations). For suficiently small $\delta ,$ the perturbed marginal $\mu _ { 1 } ^ { \delta }$ remains strictly positive and defines a valid probability distribution.
 
+Proof. Black-Scholes prices are smooth in $\sigma .$ . For suficiently small perturbations, convexity in strike is preserved, ensuring nonnegative density. Mass preservation follows from boundary behavior. □
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0014-04.png)
+Thus volatility bumps define admissible $h _ { 1 }$ directions.
 
+## 6 SSR Dynamics For VIX And Its Linearization
 
-_Proposition_ 5.2 (Admissibility of small volatility perturbations) _._ For sufficiently small _δ_ , the perturbed marginal _µ_<sup>_δ_</sup> 1<sup>remainsstrictlypositiveanddefinesavalidprobabilitydistribution.</sup> 
+## 6.1 Skew Stickiness Ratio: Bergomi’s Definition And Extension To VIX
 
-_Proof._ Black-Scholes prices are smooth in _σ_ . For sufficiently small perturbations, convexity in strike is preserved, ensuring nonnegative density. Mass preservation follows from boundary behavior. 
+We now give a formal definition of the Skew Stickiness Ratio (SSR) following Bergomi (2016, 2009). Let $\sigma ( K , F )$ denote the implied volatility of an option with strike K and forward level F of the underlying asset. Bergomi models smile dynamics by expressing first–order reactions of the volatility surface to changes in the forward.
 
-Thus volatility bumps define admissible _h_ 1 directions. 
+## 6.1.1 Bergomi’s Definition of Skew Stickiness Ratio
 
-## **6 SSR Dynamics For VIX And Its Linearization** 
+Consider the ATM implied volatility
 
-### **6.1 Skew Stickiness Ratio: Bergomi’s Definition And Extension To VIX** 
+$$
+\sigma _ { \mathrm { A T M } } ( F ) : = \sigma ( F , F ) ,
+$$
 
-We now give a formal definition of the Skew Stickiness Ratio (SSR) following Bergomi (2016, 2009). Let _σ_ ( _K, F_ ) denote the implied volatility of an option with strike _K_ and forward level _F_ of the underlying asset. Bergomi models smile dynamics by expressing first–order reactions of the volatility surface to changes in the forward. 
+and the ATM skew
 
-#### **6.1.1 Bergomi’s Definition of Skew Stickiness Ratio** 
+$$
+\operatorname { S k e w } ( F ) : = \left. { \frac { \partial \sigma ( K , F ) } { \partial K } } \right| _ { K = F } .
+$$
 
-Consider the ATM implied volatility 
+Bergomi introduces a dimensionless parameter SSR through the decomposition
 
+$$
+{ \frac { \partial \sigma ( K , F ) } { \partial F } } = - \mathrm { S S R } \cdot \mathrm { S k e w } ( F ) \qquad { \mathrm { ( B e r g o m i ) } } .\tag{14}
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0014-13.png)
+Thus a perturbation $\delta F$ in the forward produces the leading–order smile shift
 
+$$
+\delta \sigma ( K ) = - \mathrm { S S R } \cdot \mathrm { S k e w } ( F ) \delta F \qquad ( K \mathrm { f i x e d } ) .\tag{15}
+$$
 
-and the ATM skew 
+The limiting cases correspond to standard practitioner regimes:
 
+• SSR = 1: Sticky strike (vol surface fixed in strike space),
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0014-15.png)
+• SSR = 0: Sticky delta,
 
-
-Bergomi introduces a dimensionless parameter SSR through the decomposition 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0014-17.png)
-
-
-Thus a perturbation _δF_ in the forward produces the leading–order smile shift 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0014-19.png)
-
-
-The limiting cases correspond to standard practitioner regimes: 
-
-- SSR = 1: Sticky strike (vol surface fixed in strike space), 
-
-- SSR = 0: Sticky delta, 
-
-- SSR _>_ 1: Super skew.
+• SSR > 1: Super skew.
 
 <!-- page: 15 -->
 
-**6.1.2 Extension to VIX Futures And VIX Options** Let _FV_ denote the VIX future level and let _σV_ ( _K, FV_ ) denote the VIX option implied volatility. Define the VIX skew 
+## 6.1.2 Extension to VIX Futures And VIX Options
 
+Let $F _ { V }$ denote the VIX future level and let $\sigma _ { V } ( K , F _ { V } )$ denote the VIX option implied volatility. Define the VIX skew
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0015-01.png)
+$$
+\operatorname { S k e w } _ { V } ( F _ { V } ) : = \left. \frac { \partial \sigma _ { V } ( K , F _ { V } ) } { \partial K } \right| _ { K = F _ { V } } .
+$$
 
+By analogy with Bergomi’s equity SSR, we define the VIX Skew Stickiness Ratio SSR<sub>V</sub> via
 
-By analogy with Bergomi’s equity SSR, we define the VIX Skew Stickiness Ratio SSR _V_ via 
+$$
+{ \frac { \partial \sigma _ { V } ( K , F _ { V } ) } { \partial F _ { V } } } = - \mathrm { S S R } _ { V } \cdot \mathrm { S k e w } _ { V } ( F _ { V } ) .\tag{16}
+$$
 
+Thus the volatility shift induced by a perturbation $\delta F _ { V }$ in the VIX future is
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0015-03.png)
+$$
+\delta \sigma _ { V } ( K ) = - \operatorname { S S R } _ { V } \cdot \operatorname { S k e w } _ { V } ( F _ { V } ) \delta F _ { V } .\tag{17}
+$$
 
+## 6.2 Linear SSR Approximation And Second–Order Accuracy
 
-Thus the volatility shift induced by a perturbation _δFV_ in the VIX future is 
+We now derive the linear Skew Stickiness Ratio (SSR) approximation used in the perturbed optimal transport framework, and quantify its accuracy in a single, self–contained result.
 
+Let $F _ { V }$ denote the VIX future and $\sigma _ { V } ( K , F _ { V } )$ the VIX implied volatility. Following Bergomi Bergomi (2009), the VIX Skew Stickiness Ratio is defined by
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0015-05.png)
+$$
+{ \frac { \partial \sigma _ { V } ( K , F _ { V } ) } { \partial F _ { V } } } = - \mathrm { S S R } _ { V } \cdot \mathrm { S k e w } _ { V } ( F _ { V } ) ,\tag{18}
+$$
 
+where
 
-**6.2 Linear SSR Approximation And Second–Order Accuracy** We now derive the linear Skew Stickiness Ratio (SSR) approximation used in the perturbed optimal transport framework, and quantify its accuracy in a single, self–contained result. 
+$$
+\mathrm { S k e w } _ { V } ( F _ { V } ) = \left. { \frac { \partial \sigma _ { V } ( K , F _ { V } ) } { \partial K } } \right| _ { K = F _ { V } } , \qquad \mathrm { S S R } _ { V } > 0 .
+$$
 
-Let _FV_ denote the VIX future and _σV_ ( _K, FV_ ) the VIX implied volatility. Following Bergomi Bergomi (2009), the VIX Skew Stickiness Ratio is defined by 
+We now formalize the linearization implicit in (18), and simultaneously provide a quantitative error bound.
 
+Theorem 6.1 (Unified linear SSR expansion with second–order error). Assume $\sigma _ { V } ( K , F _ { V } )$ is $C ^ { 2 }$ in the forward variable $F _ { V }$ in a neighborhood of the base level $F _ { V }$ . Let $F _ { V } ^ { \prime } = F _ { V } + \delta$ . Then the implied volatility satisfies the expansion
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0015-08.png)
+$$
+\sigma _ { V } ( K , F _ { V } ^ { \prime } ) = \sigma _ { V } ( K , F _ { V } ) - \mathrm { S S R } _ { V } \cdot \mathrm { S k e w } _ { V } ( F _ { V } ) \delta + R _ { K } ( \delta ) ,\tag{19}
+$$
 
+where the remainder satisfies the deterministic bound
 
-where 
+$$
+\left| R _ { K } ( \delta ) \right| \leq \frac { 1 } { 2 } \operatorname* { s u p } _ { | u - F _ { V } | \leq | \delta | } \left| \frac { \partial ^ { 2 } \sigma _ { V } ( K , u ) } { \partial F _ { V } ^ { 2 } } \right| \delta ^ { 2 } .\tag{20}
+$$
 
+In particular, the linear SSR approximation
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0015-10.png)
+$$
+\sigma _ { V } ( K , F _ { V } ^ { \prime } ) \approx \sigma _ { V } ( K , F _ { V } ) - { \mathrm { S S R } } _ { V } \cdot { \mathrm { S k e w } } _ { V } ( F _ { V } ) ( F _ { V } ^ { \prime } - F _ { V } )\tag{21}
+$$
 
+is accurate to first order, with an $O ( \delta ^ { 2 } )$ error uniformly controlled by (20).
 
-We now formalize the linearization implicit in (18), and simultaneously provide a quantitative error bound. 
+Proof. Apply Taylor’s theorem to $\sigma _ { V } ( K , F _ { V } ^ { \prime } )$ in the variable $F _ { V }$ :
 
-_Theorem_ 6.1 (Unified linear SSR expansion with second–order error) _._ Assume _σV_ ( _K, FV_ ) is _C_<sup>2</sup> in the forward variable _FV_ in a neighborhood of the base level _FV_ . Let _FV_<sup>_′_=</sup><sup>_FV_+</sup><sup>_δ_.Thentheimpliedvolatilitysatisfies</sup> the expansion 
+$$
+\sigma _ { V } ( K , F _ { V } + \delta ) = \sigma _ { V } ( K , F _ { V } ) + \frac { \partial \sigma _ { V } } { \partial F _ { V } } ( K , F _ { V } ) \delta + \frac { 1 } { 2 } \frac { \partial ^ { 2 } \sigma _ { V } } { \partial F _ { V } ^ { 2 } } ( K , \xi ) \delta ^ { 2 } ,
+$$
 
-_σV_ ( _K, FV_<sup>_′_) =</sup><sup>_σV_(</sup><sup>_K, FV_)</sup><sup>_−_SSR</sup><sup>_V·_Skew</sup><sup>_V_(</sup><sup>_FV_)</sup><sup>_δ_+</sup><sup>_RK_(</sup><sup>_δ_)</sup><sup>_,_</sup> (19) 
+for some ξ between $F _ { V }$ and $F _ { V } + \delta $ . Using the SSR identity
 
-where the remainder satisfies the deterministic bound 
+$$
+{ \frac { \partial \sigma _ { V } } { \partial F _ { V } } } ( K , F _ { V } ) = - \mathrm { S S R } _ { V } \mathrm { S k e w } _ { V } ( F _ { V } )
+$$
 
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0015-15.png)
-
-
-In particular, the linear SSR approximation 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0015-17.png)
-
-
-is accurate to first order, with an _O_ ( _δ_<sup>2</sup> ) error uniformly controlled by (20). 
-
-_Proof._ Apply Taylor’s theorem to _σV_ ( _K, FV_<sup>_′_)inthevariable</sup><sup>_FV_:</sup> 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0015-20.png)
-
-
-for some _ξ_ between _FV_ and _FV_ + _δ_ . Using the SSR identity 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0015-22.png)
-
-
-yields the expression (19), and the bound (20) follows by taking the supremum of the second derivative over the interval.
+yields the expression (19), and the bound (20) follows by taking the supremum of the second derivative over the interval. □
 
 <!-- page: 16 -->
 
-**Interpretation.** The first–order term in (19) gives the SSR–based linear smile reaction used in the perturbed optimal transport constraints. The explicit _O_ ( _δ_<sup>2</sup> ) bound in (20) quantifies the approximation error and shows that the SSR mapping is highly accurate for the small forward perturbations relevant for risk generation. 
+Interpretation. The first–order term in (19) gives the SSR–based linear smile reaction used in the perturbed optimal transport constraints. The explicit $O ( \delta ^ { 2 } )$ bound in (20) quantifies the approximation error and shows that the SSR mapping is highly accurate for the small forward perturbations relevant for risk generation.
 
-### **6.3 Why VIX Dynamics Must Be Introduced** 
+## 6.3 Why VIX Dynamics Must Be Introduced
 
-The entropic martingale optimal transport calibration determines a joint distribution of ( _S_ 1 _, V, S_ 2) that is fully consistent with observed SPX and VIX option prices. However, the resulting calibrated coupling is inherently a _static object_ . In particular, the transport formulation itself does not impose any dynamic rule governing how the VIX smile evolves under perturbations of the SPX surface. 
+The entropic martingale optimal transport calibration determines a joint distribution of $( S _ { 1 } , V , S _ { 2 } )$ that is fully consistent with observed SPX and VIX option prices. However, the resulting calibrated coupling is inherently a static object. In particular, the transport formulation itself does not impose any dynamic rule governing how the VIX smile evolves under perturbations of the SPX surface.
 
-In contrast, risk management in volatility markets requires a specification of how both the VIX future level and the VIX implied volatility smile react to changes in the SPX surface. In traditional stochastic volatility models this dynamic behavior is encoded through the joint dynamics of the spot and variance processes. For example, perturbations of the SPX volatility surface affect both the forward variance level and the volatility-of-volatility parameters, which in turn determine the evolution of VIX option prices. 
+In contrast, risk management in volatility markets requires a specification of how both the VIX future level and the VIX implied volatility smile react to changes in the SPX surface. In traditional stochastic volatility models this dynamic behavior is encoded through the joint dynamics of the spot and variance processes. For example, perturbations of the SPX volatility surface afect both the forward variance level and the volatility-of-volatility parameters, which in turn determine the evolution of VIX option prices.
 
-Within the optimal transport framework, however, the calibration produces only a joint distribution consistent with option prices and martingale constraints. As a consequence, the response of the VIX smile to SPX perturbations is not determined by the model itself. To generate realistic risk sensitivities it is therefore necessary to introduce an empirical rule describing how VIX implied volatility moves when the underlying market changes. 
+Within the optimal transport framework, however, the calibration produces only a joint distribution consistent with option prices and martingale constraints. As a consequence, the response of the VIX smile to SPX perturbations is not determined by the model itself. To generate realistic risk sensitivities it is therefore necessary to introduce an empirical rule describing how VIX implied volatility moves when the underlying market changes.
 
-In equity volatility markets an analogous phenomenon occurs for SPX options, where practitioners often model the movement of the implied volatility smile using the Skew Stickiness Ratio (SSR). The SSR describes how the skew of the volatility smile shifts relative to movements of the underlying spot. Empirical studies suggest that similar behavior is present in VIX options: changes in the VIX future level are typically accompanied by systematic changes in the slope and level of the VIX volatility smile. 
+In equity volatility markets an analogous phenomenon occurs for SPX options, where practitioners often model the movement of the implied volatility smile using the Skew Stickiness Ratio (SSR). The SSR describes how the skew of the volatility smile shifts relative to movements of the underlying spot. Empirical studies suggest that similar behavior is present in VIX options: changes in the VIX future level are typically accompanied by systematic changes in the slope and level of the VIX volatility smile.
 
-Motivated by this empirical observation, we incorporate VIX Skew Stickiness Ratio dynamics into the perturbed optimal transport problem. The idea is to treat the SSR relation as an exogenous constraint that governs how the VIX smile adjusts when the SPX surface is perturbed. In practice, a perturbation of the SPX surface modifies the SPX marginal distributions, which induces a change in the VIX forward level through the forward variance relationship. The SSR rule then determines how the VIX implied volatility levels adjust in response to this shift. 
+Motivated by this empirical observation, we incorporate VIX Skew Stickiness Ratio dynamics into the perturbed optimal transport problem. The idea is to treat the SSR relation as an exogenous constraint that governs how the VIX smile adjusts when the SPX surface is perturbed. In practice, a perturbation of the SPX surface modifies the SPX marginal distributions, which induces a change in the VIX forward level through the forward variance relationship. The SSR rule then determines how the VIX implied volatility levels adjust in response to this shift.
 
-By embedding these SSR constraints into the entropic projection, the perturbed optimal transport problem simultaneously enforces consistency with the SPX surface, the VIX future level, and the empirically observed VIX smile dynamics. This provides a natural mechanism for generating realistic SPX–VIX risk sensitivities within the optimal transport framework. 
+By embedding these SSR constraints into the entropic projection, the perturbed optimal transport problem simultaneously enforces consistency with the SPX surface, the VIX future level, and the empirically observed VIX smile dynamics. This provides a natural mechanism for generating realistic SPX–VIX risk sensitivities within the optimal transport framework.
 
-### **6.4 Empirical Evidence For VIX Skew Stickiness Ratio** 
+## 6.4 Empirical Evidence For VIX Skew Stickiness Ratio
 
-Skew Stickiness Ratio (SSR) is widely used by practitioners to describe how the VIX volatility smile responds to changes in the underlying SPX level. 
+Skew Stickiness Ratio (SSR) is widely used by practitioners to describe how the VIX volatility smile responds to changes in the underlying SPX level.
 
-To estimate SSR empirically we regress daily changes in VIX implied volatility against changes in the VIX future level across different maturities. Figures 1 illustrate the estimated SSR term structure using historical windows of six months and one year.
+To estimate SSR empirically we regress daily changes in VIX implied volatility against changes in the VIX future level across diferent maturities. Figures 1 illustrate the estimated SSR term structure using historical windows of six months and one year.
 
 <!-- page: 17 -->
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0017-00.png)
+![(a) 6m window](assets/figures/2026-che-et-al-spx-vix-transport-p0017-block-0001-66fefcd88cc34e19.jpg)
 
+![(b) 1y window](assets/figures/2026-che-et-al-spx-vix-transport-p0017-block-0002-e43a46914c7d4ab7.jpg)
 
-<!-- Start of picture text -->
-6m<br>18<br>1.6 .<br>1s4<br>12 «<br>0.6<br>o<br><!-- End of picture text -->
+![(c) 2y window](assets/figures/2026-che-et-al-spx-vix-transport-p0017-block-0003-de4162f90908127e.jpg)
 
+![(d) 3y window Figure 1: Estimated VIX SSR term structure across four historical windows.](assets/figures/2026-che-et-al-spx-vix-transport-p0017-block-0004-b925cd5634a68c35.jpg)
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0017-01.png)
+These empirical observations motivate incorporating SSR dynamics into the optimal transport framework as exogenous constraints.
 
+## 6.5 Compatibility With The Optimal Transport Linear Response System
 
-<!-- Start of picture text -->
-2y<br>13<br>1.25<br>1.2 . ° — ° S<br>1.15<br>11<br>1.05 .<br><!-- End of picture text -->
+We now show that the SSR perturbation rule integrates naturally into the linear-response framework derived for entropic martingale optimal transport.
 
+Let $F _ { V }$ denote the VIX future level implied by the calibrated coupling $\mu ^ { \star }$ and let $\delta F _ { V }$ denote the change induced by a perturbation of the SPX marginal distribution.
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0017-02.png)
+Under the SSR dynamics derived above, the corresponding change in VIX implied volatility is
 
+$$
+\delta \sigma _ { V } ( K ) = - \mathrm { S S R } _ { V } \cdot \mathrm { S k e w } _ { V } ( F _ { V } ) \delta F _ { V } .
+$$
 
-<!-- Start of picture text -->
-ly<br>1.35<br>°<br>13<br>°1.25 °<br>12<br>1.15 .<br>1.05<br><!-- End of picture text -->
+Using the first-order Taylor expansion of VIX option prices,
 
+$$
+\delta C _ { V } ^ { K } = \Delta _ { V } ^ { K } \delta F _ { V } + \mathrm { V e g a } _ { V } ^ { K } \delta \sigma _ { V } ( K ) ,
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0017-03.png)
+we obtain
 
+$$
+\delta C _ { V } ^ { K } = \left( \Delta _ { V } ^ { K } - \mathrm { V e g a } _ { V } ^ { K } \mathrm { S S R } _ { V } \mathrm { S k e w } _ { V } ( F _ { V } ) \right) \delta F _ { V } .
+$$
 
-<!-- Start of picture text -->
-3y<br>1.25<br>-<br>1.151.2 - o e ° 2<br>11<br>1.05<br>-<br><!-- End of picture text -->
+Therefore the SSR dynamics define a linear mapping between the SPX perturbation and the VIX option constraints.
+
+In the optimal transport perturbation framework this mapping corresponds to an additional linear constraint of the form
 
 <!-- page: 18 -->
 
-where the perturbation term _b_<sup>˙</sup> _K_ is determined by the SSR relation above. 
+$$
+\Phi _ { K } ( \mu ) = b _ { K } + \dot { b } _ { K }
+$$
 
-Consequently the SSR dynamics enter the linear response system derived in Section 3 through an augmented perturbation vector 
+where the perturbation term $\dot { b } _ { K }$ is determined by the SSR relation above.
 
+Consequently the SSR dynamics enter the linear response system derived in Section 3 through an augmented perturbation vector
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0018-03.png)
+$$
+h = ( h _ { 1 } , h _ { 2 } , \dot { b } _ { K } ) .
+$$
 
+The resulting sensitivity formula
 
-The resulting sensitivity formula 
+$$
+\Pi ^ { \prime } ( 0 ) = g ^ { \top } H ^ { - 1 } h
+$$
 
+remains valid with the augmented constraint vector.
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0018-05.png)
+## 7 Algorithm For SPX–VIX Risk Without Recalibration
 
+## 7.1 Base Calibration
 
-remains valid with the augmented constraint vector. 
+We first compute a base joint coupling between the SPX state $S _ { 1 }$ , the VIX variable $V ,$ and the future SPX state $S _ { 2 }$ . The goal of this calibration step is to construct a probability measure
 
-## **7 Algorithm For SPX–VIX Risk Without Recalibration** 
+$$
+\mu ( s _ { 1 } , v , s _ { 2 } )
+$$
 
-### **7.1 Base Calibration** 
+that matches the prescribed SPX and VIX marginals while simultaneously enforcing the key financial consistency conditions linking SPX and VIX dynamics.
 
-We first compute a base joint coupling between the SPX state _S_ 1, the VIX variable _V_ , and the future SPX state _S_ 2. The goal of this calibration step is to construct a probability measure 
+Specifically, the calibrated coupling must satisfy:
 
+• the marginal constraints
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0018-10.png)
+$$
+M _ { 1 } \mu = \mu _ { 1 } , ~ M _ { V } \mu = \mu _ { V } , ~ M _ { 2 } \mu = \mu _ { 2 } ,
+$$
 
+corresponding to the SPX spot, VIX, and future SPX marginals implied by market prices;
 
-that matches the prescribed SPX and VIX marginals while simultaneously enforcing the key financial consistency conditions linking SPX and VIX dynamics. 
+• the martingale condition
 
-Specifically, the calibrated coupling must satisfy: 
+$$
+\mathbb { E } [ S _ { 2 } \mid S _ { 1 } , V ] = S _ { 1 } ,
+$$
 
-- the marginal constraints 
+• the SPX–VIX variance consistency condition
 
+$$
+\mathbb { E } [ L ( S _ { 2 } / S _ { 1 } ) \mid S _ { 1 } , V ] = V ^ { 2 } ,
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0018-14.png)
+which links the VIX level to the expected forward variance of the SPX.
 
+Numerically, we solve this constrained calibration problem using a nested scheme. An outer Sinkhorn iteration enforces the marginal constraints via multiplicative scaling factors, while an inner Newton (or damped Newton) correction enforces the conditional martingale and variance-consistency conditions at each $( S _ { 1 } , V )$ node.
 
-corresponding to the SPX spot, VIX, and future SPX marginals implied by market prices; 
+This structure closely follows the constrained calibration framework introduced in the SPX–VIX joint calibration methodology of Guyon (2020), where optimal transport techniques are combined with financial consistency constraints to produce arbitrage-consistent joint distributions.
 
-- the martingale condition 
+The resulting calibrated coupling $\mu ^ { \star }$ serves as the base distribution for the subsequent perturbation and risk-generation procedures described in the following sections.
 
+Algorithm 1: Base Calibration Via Sinkhorn With Newton/LM Enforcement
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0018-17.png)
-
-
-- the SPX–VIX variance consistency condition 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0018-19.png)
-
-
-which links the VIX level to the expected forward variance of the SPX. 
-
-Numerically, we solve this constrained calibration problem using a nested scheme. An outer Sinkhorn iteration enforces the marginal constraints via multiplicative scaling factors, while an inner Newton (or damped Newton) correction enforces the conditional martingale and variance-consistency conditions at each ( _S_ 1 _, V_ ) node. 
-
-This structure closely follows the constrained calibration framework introduced in the SPX–VIX joint calibration methodology of Guyon (2020), where optimal transport techniques are combined with financial consistency constraints to produce arbitrage-consistent joint distributions. 
-
-The resulting calibrated coupling _µ_<sup>_⋆_</sup> serves as the base distribution for the subsequent perturbation and risk-generation procedures described in the following sections. 
-
-**Algorithm 1: Base Calibration Via Sinkhorn With Newton/LM Enforcement** 
-
-1. **Inputs.** Discrete grids _S_ 1 _, V, S_ 2; target marginals _µ_ 1 _, µV , µ_ 2; prior _µ_ ¯( _s_ 1 _, v, s_ 2); log-return functional _L_ ( _·_ ); marginal tolerance _ε_ marg; financial tolerance _ε_ fin; Newton damping _λ ≥_ 0.
+1. Inputs. Discrete grids $\begin{array} { r } { S _ { 1 } , \mathcal { V } , S _ { 2 } ; } \end{array}$ target marginals $\mu _ { 1 } , \mu _ { V } , \mu _ { 2 } ;$ prior $\bar { \mu } ( s _ { 1 } , v , s _ { 2 } )$ ; log-return functional $L ( \cdot )$ ; marginal tolerance $\varepsilon _ { \mathrm { m a r g } } ;$ financial tolerance $\varepsilon _ { \mathrm { f i n } } ;$ Newton damping $\lambda \geq 0$
 
 <!-- page: 19 -->
 
-~~oe oeCS~~ 
+2. Outputs. Calibrated coupling $\mu ^ { \star } ( s _ { 1 } , v , s _ { 2 } )$ and Fisher information matrix H.
 
-~~— »~~ ) ( ) ( lone YS )( ) 
+3. Initialize.
 
-~~ae~~
+$$
+a ( s _ { 1 } )  1 , \quad b ( v )  1 , \quad c ( s _ { 2 } )  1 , \qquad \Delta _ { M } ( s _ { 1 } , v )  0 , \quad \Delta _ { C } ( s _ { 1 } , v )  0 .
+$$
+
+Form initial Gibbs coupling
+
+$$
+\mu ( s _ { 1 } , v , s _ { 2 } ) \propto \bar { \mu } ( s _ { 1 } , v , s _ { 2 } ) a ( s _ { 1 } ) b ( v ) c ( s _ { 2 } ) \exp \{ \Delta _ { M } ( s _ { 1 } , v ) ( s _ { 2 } - s _ { 1 } ) + \Delta _ { C } ( s _ { 1 } , v ) ( L ( s _ { 2 } / s _ { 1 } ) - v ^ { 2 } ) \} .
+$$
+
+4. Outer loop: repeat until marginal errors $\leq \varepsilon _ { \mathrm { m a r g } }$ and financial residuals $\leq \varepsilon _ { \mathrm { f i n } }$
+
+(a) Sinkhorn marginal updates: for all grid points update
+
+$$
+a ( s _ { 1 } ) \gets \frac { \mu _ { 1 } ( s _ { 1 } ) } { \sum _ { v , s _ { 2 } } \bar { \mu } ( s _ { 1 } , v , s _ { 2 } ) b ( v ) c ( s _ { 2 } ) e ^ { \Delta _ { M } ( s _ { 1 } , v ) ( s _ { 2 } - s _ { 1 } ) + \Delta _ { C } ( s _ { 1 } , v ) ( L ( s _ { 2 } / s _ { 1 } ) - v ^ { 2 } ) } } ,
+$$
+
+$$
+b ( v )  \frac { \mu _ { V } ( v ) } { \sum _ { s _ { 1 } , s _ { 2 } } \bar { \mu } ( s _ { 1 } , v , s _ { 2 } ) a ( s _ { 1 } ) c ( s _ { 2 } ) e ^ { \Delta _ { M } ( s _ { 1 } , v ) ( s _ { 2 } - s _ { 1 } ) + \Delta _ { C } ( s _ { 1 } , v ) ( L ( s _ { 2 } / s _ { 1 } ) - v ^ { 2 } ) } } ,
+$$
+
+$$
+c ( s _ { 2 } ) \gets \frac { \mu _ { 2 } ( s _ { 2 } ) } { \sum _ { s _ { 1 } , v } \bar { \mu } ( s _ { 1 } , v , s _ { 2 } ) a ( s _ { 1 } ) b ( v ) e ^ { \Delta _ { M } ( s _ { 1 } , v ) ( s _ { 2 } - s _ { 1 } ) + \Delta _ { C } ( s _ { 1 } , v ) ( L ( s _ { 2 } / s _ { 1 } ) - v ^ { 2 } ) } } .
+$$
+
+Refresh $\mu ( s _ { 1 } , v , s _ { 2 } )$ using the Gibbs map above.
+
+(b) Conditional Newton/LM enforcement: for each $( s _ { 1 } , v ) \in S _ { 1 } \times \mathcal { V }$ do
+
+i. repeat up to inner iterations:
+
+$$
+w _ { s _ { 1 } , v } ( s _ { 2 } ) \ = \ \frac { \mu ( s _ { 1 } , v , s _ { 2 } ) } { \sum _ { u \in { \cal S } _ { 2 } } \mu ( s _ { 1 } , v , u ) }
+$$
+
+(conditional law over s<sub>2</sub>), residuals
+
+$$
+r _ { M } ( s _ { 1 } , v ) = \sum _ { s _ { 2 } } w _ { s _ { 1 } , v } ( s _ { 2 } ) ( s _ { 2 } - s _ { 1 } ) , \qquad r ( s _ { 1 } , v ) = \sum _ { s _ { 2 } } w _ { s _ { 1 } , v } ( s _ { 2 } ) \big ( L ( s _ { 2 } / s _ { 1 } ) - v ^ { 2 } \big ) ,
+$$
+
+Jacobian entries
+
+$$
+J _ { 1 1 } = \mathrm { V a r } _ { w } ( s _ { 2 } - s _ { 1 } ) , \quad J _ { 2 2 } = \mathrm { V a r } _ { w } \big ( L ( s _ { 2 } / s _ { 1 } ) - v ^ { 2 } \big ) ,
+$$
+
+$$
+J _ { 1 2 } = J _ { 2 1 } = \mathrm { C o v } _ { w } \big ( s _ { 2 } - s _ { 1 } , L ( s _ { 2 } / s _ { 1 } ) - v ^ { 2 } \big ) ,
+$$
+
+solve damped Newton system
+
+$$
+\binom { J _ { 1 1 } + \lambda } { J _ { 2 1 } } \quad J _ { 2 2 } + \lambda \Biggr ) \binom { \delta _ { M } } { \delta _ { C } } = - \binom { r _ { M } } { r _ { C } } ,
+$$
+
+update multipliers
+
+$$
+\Delta _ { M } ( s _ { 1 } , v )  \Delta _ { M } ( s _ { 1 } , v ) + \delta _ { M } , \qquad \Delta _ { C } ( s _ { 1 } , v )  \Delta _ { C } ( s _ { 1 } , v ) + \delta _ { C } ,
+$$
+
+refresh $\mu ( s _ { 1 } , v , s _ { 2 } )$
+
+ii. until $\sqrt { r _ { M } ( s _ { 1 } , v ) ^ { 2 } + r _ { C } ( s _ { 1 } , v ) ^ { 2 } } \le \varepsilon _ { \mathrm { f n } }$ or inner cap reached.
+
+5. On convergence set $\mu ^ { \star } \mu$
+
+6. Fisher information. With suficient statistics $T _ { i } ( x )$ compute
+
+$$
+H _ { i j } = \sum _ { x } \mu ^ { \star } ( x ) \big ( T _ { i } ( x ) - \mathbb { E } _ { \mu ^ { \star } } [ T _ { i } ] \big ) \big ( T _ { j } ( x ) - \mathbb { E } _ { \mu ^ { \star } } [ T _ { j } ] \big ) , \quad x = ( s _ { 1 } , v , s _ { 2 } ) .
+$$
+
+7. Return: $\mu ^ { \star } , H$
 
 <!-- page: 20 -->
 
-### **7.2 POT Risk Computation: The Linear Response(LR) Approach** 
+## 7.2 POT Risk Computation: The Linear Response(LR) Approach
 
-We compute first–order (Gateaux) price sensitivities under small marginal or constraint perturbations using the Fisher information matrix from the calibrated exponential family. Let _µ_<sup>_⋆_</sup> denote the calibrated coupling and _H_ the Fisher matrix; let _h_ be the stacked perturbation vector of marginal and constraint shocks. The perturbation vector _h_ introduced above represents the first-order change in the calibration constraints. As discussed in Section 6.5, the constraint system is augmented to incorporate the SSR dynamics as additional linear relations linking SPX and VIX perturbations. Consequently, the perturbation vector _h_ is not arbitrary but belongs to the augmented constraint space defined in Section 6.5. 
+We compute first–order (Gateaux) price sensitivities under small marginal or constraint perturbations using the Fisher information matrix from the calibrated exponential family. Let $\mu ^ { \star }$ denote the calibrated coupling and H the Fisher matrix; let h be the stacked perturbation vector of marginal and constraint shocks. The perturbation vector $h$ introduced above represents the first-order change in the calibration constraints. As discussed in Section 6.5, the constraint system is augmented to incorporate the SSR dynamics as additiona linear relations linking SPX and VIX perturbations. Consequently, the perturbation vector h is not arbitrary but belongs to the augmented constraint space defined in Section 6.5.
 
-In addition, the calibrated coupling _µ_<sup>_⋆_</sup> satisfies the financial consistency constraints 
+In addition, the calibrated coupling $\mu ^ { \star }$ satisfies the financial consistency constraints
 
+$$
+A _ { \mathrm { f i n } } \mu ^ { \star } = 0 .
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0020-03.png)
+To preserve these constraints to first order under a perturbation
 
+$$
+\mu ^ { \varepsilon } = \mu ^ { \star } + \varepsilon \delta \mu + o ( \varepsilon ) ,
+$$
 
-To preserve these constraints to first order under a perturbation 
+the admissible perturbation directions must satisfy
 
+$$
+A _ { \mathrm { f i n } } \delta \mu = 0 .
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0020-05.png)
+Equivalently, the perturbation vector h must lie in the tangent space
 
+$$
+h \in \ker ( A _ { \mathrm { f i n } } ) .
+$$
 
-the admissible perturbation directions must satisfy 
+In practice, the perturbation vector constructed from the augmented SSR constraint system of Section 6.5 is projected onto this admissible subspace before the Fisher-information risk formula is applied. Thus the Fisher-based sensitivities are computed along perturbation directions that preserve the martingale and SPX– VIX consistency conditions to first order.
 
+Let the payof be $G : X \mathbb { R }$ with price $\Pi ( \varepsilon ) = \mathbb { E } _ { \mu _ { \varepsilon } } [ G ]$ and baseline $\Pi ( 0 ) = \mathbb { E } _ { \mu ^ { \star } } [ G ]$ . The first–order risk is
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0020-07.png)
+$$
+\Pi ^ { \prime } ( 0 ) \ = \ g ^ { \top } \dot { \theta } ,
+$$
 
+where $\dot { \theta }$ solves the linear response system $H { \dot { \theta } } = h ,$ , and $g$ is the covariance vector of $G$ with the suficient statistics.
 
-Equivalently, the perturbation vector _h_ must lie in the tangent space 
+Inputs. Calibrated coupling $\mu ^ { \star } ;$ ; Fisher matrix $H ;$ perturbation vector $h$ (stacked in the same coordinate system as $H )$ ; payof $G ( x )$ ; optional damping $\lambda \geq 0$ and solver tolerances.
 
+Outputs. First–order risk $\Pi ^ { \prime } ( 0 ) $ ; optionally the dual variation $\dot { \theta }$ (for greeks mapping).
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0020-09.png)
+Algorithm 2: Linear Response(LR) Risk Computation.
 
+1. Solve the linear response system. Compute the dual variation by solving
 
-In practice, the perturbation vector constructed from the augmented SSR constraint system of Section 6.5 is projected onto this admissible subspace before the Fisher-information risk formula is applied. Thus the Fisher-based sensitivities are computed along perturbation directions that preserve the martingale and SPX– VIX consistency conditions to first order. 
+$$
+\left( { \cal H } + \lambda I \right) \dot { \theta } = h ,
+$$
 
-Let the payoff be _G_ : _X →_ R with price Π( _ε_ ) = E _µε_ [ _G_ ] and baseline Π(0) = E _µ⋆_ [ _G_ ]. The first–order risk 
+with $\lambda = 0$ for pure Newton or small $\lambda > 0$ for Levenberg–Marquardt damping if H is ill–conditioned. Use the same gauge as in calibration $( \mathrm { e . g . }$ , fix one potential or project to the gauge–fixed subspace).
 
-is 
+2. Compute the covariance vector $g .$ Let $\{ T _ { i } \}$ be the suficient statistics (coordinates of the dual potentials). Compute
 
+$$
+g _ { i } \ = \ \sum _ { x \in X } \mu ^ { \star } ( x ) \Big ( G ( x ) - \mathbb { E } _ { \mu ^ { \star } } [ G ] \Big ) \Big ( T _ { i } ( x ) - \mathbb { E } _ { \mu ^ { \star } } [ T _ { i } ] \Big ) , \qquad i = 1 , \dots , \dim ( \theta ) .
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0020-13.png)
+3. Evaluate first–order risk.
 
+$$
+\Pi ^ { \prime } ( 0 ) \ : = \ : g ^ { \top } \dot { \theta } .
+$$
 
-where _θ_<sup>˙</sup> solves the linear response system _H θ_<sup>˙</sup> = _h_ , and _g_ is the covariance vector of _G_ with the sufficient statistics. 
-
-**Inputs.** Calibrated coupling _µ_<sup>_⋆_</sup> ; Fisher matrix _H_ ; perturbation vector _h_ (stacked in the same coordinate system as _H_ ); payoff _G_ ( _x_ ); optional damping _λ ≥_ 0 and solver tolerances. 
-
-**Outputs.** First–order risk Π<sup>_′_</sup> (0); optionally the dual variation _θ_<sup>˙</sup> (for greeks mapping). 
-
-#### **Algorithm 2: Linear Response(LR) Risk Computation.** 
-
-1. **Solve the linear response system.** Compute the dual variation by solving 
-
-( _H_ + _λI_ ) _θ_<sup>˙</sup> = _h,_ 
-
-with _λ_ = 0 for pure Newton or small _λ >_ 0 for Levenberg–Marquardt damping if _H_ is ill–conditioned. Use the same gauge as in calibration (e.g., fix one potential or project to the gauge–fixed subspace). 
-
-2. **Compute the covariance vector** _g_ **.** Let _{Ti}_ be the sufficient statistics (coordinates of the dual potentials). Compute 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0020-22.png)
-
-
-3. **Evaluate first–order risk.** 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0020-24.png)
-
-
-Return Π<sup>_′_</sup> (0) (and _θ_<sup>˙</sup> if needed for greeks attribution).
+Return $\Pi ^ { \prime } ( 0 )$ (and $\dot { \theta }$ if needed for greeks attribution).
 
 <!-- page: 21 -->
 
-#### **Notes.** 
+Notes.
 
-- For augmented constraint sets (e.g., SSR–adjusted VIX constraints), _H_ and _h_ are augmented accordingly; the same steps apply with the enlarged system. 
+• For augmented constraint sets $( \mathrm { e . g . }$ , SSR–adjusted VIX constraints), H and h are augmented accordingly; the same steps apply with the enlarged system.
 
-- The covariance step can be reused across multiple payoffs once _µ_<sup>_⋆_</sup> and _{Ti}_ are fixed; only _g_ changes with _G_ . 
+• The covariance step can be reused across multiple payofs once $\mu ^ { \star }$ and $\{ T _ { i } \}$ are fixed; only g changes with G.
 
-## **8 Dimensional Reduction(DR) For POT** 
+## 8 Dimensional Reduction(DR) For POT
 
-An alternative to computing first-order sensitivities via the Fisher information is to exploit the conditional coupling invariance directly and re-solve a reduced entropic projection on ( _S_ 1 _, V_ ). Under a conditional kernel invariance assumption, the perturbed three-dimensional problem is equivalent to a two-dimensional entropic projection for _γ_ on ( _S_ 1 _, V_ ), so one may obtain the exact perturbed coupling in the reduced class by solving a Sinkhorn-type projection that matches the perturbed VIX marginal implied by the SSR propagation of the SPX shock, while remaining close in entropy to the base reduced coupling. This reduced-OT approach retains convexity and numerical stability and unlike the Fisher linearization— captures nonlinear effects for finite (non-infinitesimal) shocks insofar as the dimension reduction assumption remains numerically accurate. Surprisingly, even though the reduced OT recipe involves a mini-recalibration, the algorithm takes only 5-6 steps to converge, hence is computationally efficient. 
+An alternative to computing first-order sensitivities via the Fisher information is to exploit the conditional coupling invariance directly and re-solve a reduced entropic projection on $( S _ { 1 } , V )$ . Under a conditional kerne invariance assumption, the perturbed three-dimensional problem is equivalent to a two-dimensional entropic projection for $\gamma$ on $( S _ { 1 } , V )$ , so one may obtain the exact perturbed coupling in the reduced class by solving a Sinkhorn-type projection that matches the perturbed VIX marginal implied by the SSR propagation of the SPX shock, while remaining close in entropy to the base reduced coupling. This reduced-OT approach retains convexity and numerical stability and unlike the Fisher linearization— captures nonlinear efects for finite (non-infinitesimal) shocks insofar as the dimension reduction assumption remains numerically accurate. Surprisingly, even though the reduced OT recipe involves a mini-recalibration, the algorithm takes only 5-6 steps to converge, hence is computationally eficient.
 
-### **8.1 Base Conditional Structure** 
+## 8.1 Base Conditional Structure
 
-Let _µ_<sup>_⋆_</sup> _∈_ ∆( _X_ ) denote the calibrated optimal coupling, where 
+Let $\mu ^ { \star } \in \Delta ( \mathcal { X } )$ denote the calibrated optimal coupling, where
 
+$$
+\mathcal { X } = S _ { 1 } \times \mathcal { V } \times S _ { 2 } .
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0021-07.png)
+Define the marginal of $\mu ^ { \star }$ over $( S _ { 1 } , V )$
 
+$$
+\mu _ { 1 , V } ^ { \star } ( s _ { 1 } , v ) = \sum _ { s _ { 2 } \in S _ { 2 } } \mu ^ { \star } ( s _ { 1 } , v , s _ { 2 } ) .
+$$
 
-Define the marginal of _µ_<sup>_⋆_</sup> over ( _S_ 1 _, V_ ): 
+Define the conditional kernel of $S _ { 2 }$ given $( S _ { 1 } , V )$ :
 
+$$
+\kappa ^ { * } ( s _ { 2 } \mid s _ { 1 } , v ) = { \frac { \mu ^ { \star } ( s _ { 1 } , v , s _ { 2 } ) } { \mu _ { 1 , V } ^ { \star } ( s _ { 1 } , v ) } } .
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0021-09.png)
+Then the coupling admits the disintegration:
 
+$$
+\mu ^ { \star } ( s _ { 1 } , v , s _ { 2 } ) = \kappa ^ { * } ( s _ { 2 } \mid s _ { 1 } , v ) \mu _ { 1 , V } ^ { \star } ( s _ { 1 } , v ) .
+$$
 
-Define the conditional kernel of _S_ 2 given ( _S_ 1 _, V_ ): 
+## 8.2 Conditional Coupling Invariance Assumption
 
+Assumption 8.1 (Conditional Coupling Invariance). Under suficiently small perturbations of the SPX marginals, the conditional distribution of $S _ { 2 }$ given $( S _ { 1 } , V )$ remains unchanged, i.e.,
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0021-11.png)
+$$
+\kappa ^ { \varepsilon } ( s _ { 2 } \mid s _ { 1 } , v ) = \kappa ^ { * } ( s _ { 2 } \mid s _ { 1 } , v ) \quad { \mathrm { f o r ~ a l l ~ } } ( s _ { 1 } , v , s _ { 2 } ) .
+$$
 
-
-Then the coupling admits the disintegration: 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0021-13.png)
-
-
-### **8.2 Conditional Coupling Invariance Assumption** 
-
-_Assumption_ 8.1 (Conditional Coupling Invariance) _._ Under sufficiently small perturbations of the SPX marginals, the conditional distribution of _S_ 2 given ( _S_ 1 _, V_ ) remains unchanged, i.e., 
-
-_κ_<sup>_ε_</sup> ( _s_ 2 _| s_ 1 _, v_ ) = _κ_<sup>_∗_</sup> ( _s_ 2 _| s_ 1 _, v_ ) for all ( _s_ 1 _, v, s_ 2) _._ 
-
-This assumption reflects that the structural dependence between _S_ 2 and ( _S_ 1 _, V_ ) is stable under small marginal shocks.
+This assumption reflects that the structural dependence between $S _ { 2 }$ and $( S _ { 1 } , V )$ is stable under small marginal shocks.
 
 <!-- page: 22 -->
 
-### **8.3 Exact Dimensional Reduction** 
+## 8.3 Exact Dimensional Reduction
 
-_Theorem_ 8.2 (Exact Reduction to Two-Dimensional Entropic Projection) _._ Assume _µ_<sup>_⋆_</sup> is strictly positive on _X_ and Assumption 8.1 holds. 
+Theorem 8.2 (Exact Reduction to Two-Dimensional Entropic Projection). Assume $\mu ^ { \star }$ is strictly positive on X and Assumption 8.1 holds.
 
-Then the perturbed entropic projection problem 
+Then the perturbed entropic projection problem
 
+$$
+\operatorname* { i n f } _ { \mu \in \mathcal P ^ { \varepsilon } } D ( \mu \| \mu ^ { \star } )
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0022-03.png)
+reduces exactly to the two-dimensional problem
 
+$$
+\operatorname* { i n f } _ { \nu \in \mathcal { Q } ^ { \varepsilon } } D ( \nu \parallel \mu _ { 1 , V } ^ { \star } ) ,
+$$
 
-reduces exactly to the two-dimensional problem 
+where $\nu$ is a probability measure on $ { \boldsymbol { S } } _ { 1 } \times { \boldsymbol { \nu } }$ satisfying the perturbed marginal constraints, and the full three-dimensional coupling is reconstructed by
 
+$$
+\mu ^ { \varepsilon } ( s _ { 1 } , v , s _ { 2 } ) = \kappa ^ { * } ( s _ { 2 } \mid s _ { 1 } , v ) \nu ^ { \varepsilon } ( s _ { 1 } , v ) .
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0022-05.png)
+Proof. Under Assumption 8.1, any admissible perturbed coupling $\mu ^ { \varepsilon }$ must satisfy
 
+$$
+\mu ^ { \varepsilon } ( s _ { 1 } , v , s _ { 2 } ) = \kappa ^ { * } ( s _ { 2 } \mid s _ { 1 } , v ) \nu ( s _ { 1 } , v )
+$$
 
-where _ν_ is a probability measure on _S_ 1 _× V_ satisfying the perturbed marginal constraints, and the full three-dimensional coupling is reconstructed by 
+for some probability measure ν on $\begin{array} { r } { S _ { 1 } \times \mathcal { V } . } \end{array}$
 
+Substitute this representation into the relative entropy:
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0022-07.png)
+$$
+{ \cal D } ( \mu ^ { \varepsilon } \parallel \mu ^ { \star } ) = \sum _ { s _ { 1 } , v , s _ { 2 } } \mu ^ { \varepsilon } ( s _ { 1 } , v , s _ { 2 } ) \ln \frac { \mu ^ { \varepsilon } ( s _ { 1 } , v , s _ { 2 } ) } { \mu ^ { \star } ( s _ { 1 } , v , s _ { 2 } ) } .
+$$
 
+Using the disintegration formulas for $\mu ^ { \varepsilon }$ and $\mu ^ { \star }$ :
 
-_Proof._ Under Assumption 8.1, any admissible perturbed coupling _µ_<sup>_ε_</sup> must satisfy 
+$$
+= \sum _ { s _ { 1 } , v , s _ { 2 } } \kappa ^ { * } ( s _ { 2 } \mid s _ { 1 } , v ) \nu ( s _ { 1 } , v ) \ln \frac { \kappa ^ { * } ( s _ { 2 } \mid s _ { 1 } , v ) \nu ( s _ { 1 } , v ) } { \kappa ^ { * } ( s _ { 2 } \mid s _ { 1 } , v ) \mu _ { 1 , V } ^ { \star } ( s _ { 1 } , v ) } .
+$$
 
+Canceling $\kappa ^ { * } ( s _ { 2 } \mid s _ { 1 } , v )$ inside the logarithm yields
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0022-09.png)
+$$
+= \sum _ { s _ { 1 } , v , s _ { 2 } } \kappa ^ { * } ( s _ { 2 } \mid s _ { 1 } , v ) \nu ( s _ { 1 } , v ) \ln \frac { \nu ( s _ { 1 } , v ) } { \mu _ { 1 , V } ^ { \star } ( s _ { 1 } , v ) } .
+$$
 
+Since for each $( s _ { 1 } , v )$ ，
 
-for some probability measure _ν_ on _S_ 1 _× V_ . Substitute this representation into the relative entropy: 
+$$
+\sum _ { s _ { 2 } } \kappa ^ { * } ( s _ { 2 } \mid s _ { 1 } , v ) = 1 ,
+$$
 
+we obtain
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0022-11.png)
+$$
+D ( { \boldsymbol { \mu } } ^ { \varepsilon } \parallel { \boldsymbol { \mu } } ^ { \star } ) = \sum _ { s _ { 1 } , v } \nu ( s _ { 1 } , v ) \ln { \frac { \nu ( s _ { 1 } , v ) } { \mu _ { 1 , V } ^ { \star } ( s _ { 1 } , v ) } } = D ( \nu \parallel \mu _ { 1 , V } ^ { \star } ) .
+$$
 
+Thus the three-dimensional projection problem is equivalent to the two-dimensional entropic projection. The perturbed marginal constraints reduce correspondingly to constraints on $\nu ,$ and the reconstructed coupling satisfies the reduced constraints and preserves the conditional martingale and variance-consistency relations inherited from the base calibration. □
 
-Using the disintegration formulas for _µ_<sup>_ε_</sup> and _µ_<sup>_⋆_</sup> : 
+The reduction follows from the disintegration of the base coupling
 
+$$
+\mu ^ { \star } ( s _ { 1 } , v , s _ { 2 } ) = \mu ^ { \star } ( s _ { 2 } | s _ { 1 } , v ) \mu ^ { \star } ( s _ { 1 } , v ) .
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0022-13.png)
-
-
-Canceling _κ_<sup>_∗_</sup> ( _s_ 2 _| s_ 1 _, v_ ) inside the logarithm yields 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0022-15.png)
-
-
-Since for each ( _s_ 1 _, v_ ), 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0022-17.png)
-
-
-we obtain 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0022-19.png)
-
-
-Thus the three-dimensional projection problem is equivalent to the two-dimensional entropic projection. The perturbed marginal constraints reduce correspondingly to constraints on _ν_ , and the reconstructed coupling satisfies the reduced constraints and preserves the conditional martingale and variance-consistency relations inherited from the base calibration. 
-
-The reduction follows from the disintegration of the base coupling 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0022-22.png)
-
-
-Fixing the conditional kernel and perturbing only the marginal distribution on ( _S_ 1 _, V_ ) preserves both the martingale and variance consistency constraints, which depend only on conditional expectations of _S_ 2 given ( _S_ 1 _, V_ ).
+Fixing the conditional kernel and perturbing only the marginal distribution on $( S _ { 1 } , V )$ preserves both the martingale and variance consistency constraints, which depend only on conditional expectations of $S _ { 2 }$ given $( S _ { 1 } , V )$
 
 <!-- page: 23 -->
 
-**Computational implication.** The dimensional reduction has an important algorithmic consequence for risk generation. 
+Computational implication. The dimensional reduction has an important algorithmic consequence for risk generation.
 
-In the base calibration, the entropic martingale optimal transport problem must enforce the martingale constraint 
+In the base calibration, the entropic martingale optimal transport problem must enforce the martingale constraint
 
+$$
+E [ S _ { 2 } | S _ { 1 } , V ] = S _ { 1 } ,
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0023-02.png)
+which couples the $( S _ { 1 } , V , S _ { 2 } )$ variables and requires solving the full three–dimensional Sinkhorn calibration.
 
+In contrast, under the conditional coupling invariance assumption the perturbed distribution takes the form
 
-which couples the ( _S_ 1 _, V, S_ 2) variables and requires solving the full three–dimensional Sinkhorn calibration. In contrast, under the conditional coupling invariance assumption the perturbed distribution takes the form 
+$$
+\mu _ { \varepsilon } ( s _ { 1 } , v , s _ { 2 } ) = \kappa ^ { * } ( s _ { 2 } | s _ { 1 } , v ) \nu _ { \varepsilon } ( s _ { 1 } , v ) ,
+$$
 
+so that the martingale and variance constraints remain automatically satisfied by the fixed conditiona kernel $\kappa ^ { * }$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0023-04.png)
+As a result the perturbed optimal transport problem reduces to a two–dimensional entropic projection for $\nu _ { \varepsilon } ( s _ { 1 } , v )$ . Operationally this amounts to running a Sinkhorn-type projection without re-imposing the martingale constraint.
 
+This is the key reason why the proposed risk generation method is computationally eficient: the perturbed problem no longer requires recalibration of the full martingale optimal transport model. In practice the perturbed projection typically converges in only a few Sinkhorn iterations because the solution is close to the base coupling.
 
-so that the martingale and variance constraints remain automatically satisfied by the fixed conditional kernel _κ_<sup>_∗_</sup> . 
+## 8.4 SPX–VIX Family Risk Generation: The Dimensional Reduction(DR) $\mathbf { A p - }$ proach
 
-As a result the perturbed optimal transport problem reduces to a two–dimensional entropic projection for _νε_ ( _s_ 1 _, v_ ). Operationally this amounts to running a Sinkhorn-type projection _without re-imposing the martingale constraint_ . 
+We now describe the practical algorithm used to compute SPX–VIX risk sensitivities under SSR while preserving the structure of the calibrated joint coupling.
 
-This is the key reason why the proposed risk generation method is computationally efficient: the perturbed problem no longer requires recalibration of the full martingale optimal transport model. In practice the perturbed projection typically converges in only a few Sinkhorn iterations because the solution is close to the base coupling. 
+Let
 
-### **8.4 SPX–VIX Family Risk Generation: The Dimensional Reduction(DR) Approach** 
+$$
+\mu ^ { \star } ( s _ { 1 } , v , s _ { 2 } )
+$$
 
-We now describe the practical algorithm used to compute SPX–VIX risk sensitivities under SSR while preserving the structure of the calibrated joint coupling. 
+denote the base calibrated joint coupling obtained from the SPX–VIX martingale optimal transport problem in Section 7.1. By construction, $\mu ^ { \star }$ satisfies the SPX market constraints, the VIX market constraints, the martingale condition, and the SPX–VIX consistency condition.
 
-Let 
+The key point is that, in the risk calculation considered here, the perturbation is not generated by directly changing the SPX marginal inside the transport problem. Rather, one starts from an exogenous SPX market perturbation (for example, a spot bump or an SPX volatility bump), propagates this perturbation through the SSR dynamics, and obtains the corresponding change in VIX option prices. These perturbed VIX option prices determine a new admissible VIX marginal constraint, and hence a new perturbed optimal transport problem.
 
+A full recalibration of the joint coupling would be computationally expensive. Instead, we exploit the dimension reduction result of Section 8, according to which the perturbation can be carried out at the level of the lower-dimensional coupling in $( S _ { 1 } , V )$ while leaving the conditional kernel of $S _ { 2 }$ given $( S _ { 1 } , V )$ unchanged.
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0023-11.png)
+More precisely, write the base calibrated coupling in disintegrated form as
 
+$$
+\mu ^ { \star } ( s _ { 1 } , v , s _ { 2 } ) = \gamma ^ { \star } ( s _ { 1 } , v ) \kappa ^ { \star } ( d s _ { 2 } \mid s _ { 1 } , v ) ,
+$$
 
-denote the base calibrated joint coupling obtained from the SPX–VIX martingale optimal transport problem in Section 7.1. By construction, _µ_<sup>_⋆_</sup> satisfies the SPX market constraints, the VIX market constraints, the martingale condition, and the SPX–VIX consistency condition. 
+where
 
-The key point is that, in the risk calculation considered here, the perturbation is not generated by directly changing the SPX marginal inside the transport problem. Rather, one starts from an exogenous SPX market perturbation (for example, a spot bump or an SPX volatility bump), propagates this perturbation through the SSR dynamics, and obtains the corresponding change in VIX option prices. These perturbed VIX option prices determine a new admissible VIX marginal constraint, and hence a new perturbed optimal transport problem. 
+$$
+\gamma ^ { \star } ( s _ { 1 } , v )
+$$
 
-A full recalibration of the joint coupling would be computationally expensive. Instead, we exploit the dimension reduction result of Section 8, according to which the perturbation can be carried out at the level of the lower-dimensional coupling in ( _S_ 1 _, V_ ) while leaving the conditional kernel of _S_ 2 given ( _S_ 1 _, V_ ) unchanged. More precisely, write the base calibrated coupling in disintegrated form as 
+is the marginal coupling of $( S _ { 1 } , V )$ and
 
+$$
+\kappa ^ { \star } ( d s _ { 2 } \mid s _ { 1 } , v )
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0023-15.png)
+is the conditional kernel of $S _ { 2 }$ given $( S _ { 1 } , V )$ . The dimension reduction theorem implies that the perturbed coupling may be constructed as
 
-
-where 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0023-17.png)
-
-
-is the marginal coupling of ( _S_ 1 _, V_ ) and 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0023-19.png)
-
-
-is the conditional kernel of _S_ 2 given ( _S_ 1 _, V_ ). The dimension reduction theorem implies that the perturbed coupling may be constructed as 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0023-21.png)
+$$
+\mu _ { \varepsilon } ( s _ { 1 } , v , s _ { 2 } ) = \gamma _ { \varepsilon } ( s _ { 1 } , v ) \kappa ^ { \star } ( d s _ { 2 } \mid s _ { 1 } , v ) ,
+$$
 
 <!-- page: 24 -->
 
-that is, only _γε_ is updated from the base reduced coupling _γ_<sup>_⋆_</sup> , while the conditional kernel _κ_<sup>_⋆_</sup> is kept fixed. The VIX marginal is therefore free to adjust through the perturbation of _γ_<sup>_⋆_</sup> ( _s_ 1 _, v_ ), whereas the conditional dependence structure of _S_ 2 given ( _S_ 1 _, V_ ) remains inherited from the base calibration. 
+that is, only $\gamma _ { \varepsilon }$ is updated from the base reduced coupling $\gamma ^ { \star }$ , while the conditional kernel $\kappa ^ { \star }$ is kept fixed. The VIX marginal is therefore free to adjust through the perturbation o $\boldsymbol { \dot { \mathbf { \rho } } } \gamma ^ { \star } ( s _ { 1 } , v )$ , whereas the conditional dependence structure of $S _ { 2 }$ given $( S _ { 1 } , V )$ remains inherited from the base calibration.
 
-#### **Algorithm 3: SSR-Enhanced Dimensional Reduction(DR) For POT Risk Generation** 
+## Algorithm 3: SSR-Enhanced Dimensional Reduction(DR) For POT Risk Generation
 
-#### 1. **Inputs.** 
+1. Inputs.
 
-- Base joint coupling _µ_<sup>_⋆_</sup> ( _s_ 1 _, v, s_ 2) and relevant marginals from Algorithm 1 
+• Base joint coupling $\mu ^ { \star } ( s _ { 1 } , v , s _ { 2 } )$ and relevant marginals from Algorithm 1
 
-- Exogenous SPX perturbation (e.g., spot bump or volatility surface shift) 
+• Exogenous SPX perturbation (e.g., spot bump or volatility surface shift)
 
-- SSR (Skew Stickiness Ratio) parameters for VIX volatility dynamics 
+• SSR (Skew Stickiness Ratio) parameters for VIX volatility dynamics
 
-- Observed SPX and VIX market data 
+• Observed SPX and VIX market data
 
-#### 2. **Outputs.** 
+## 2. Outputs.
 
-- Updated perturbed coupling _µε_ ( _s_ 1 _, v, s_ 2) 
+• Updated perturbed coupling $\mu _ { \varepsilon } ( s _ { 1 } , v , s _ { 2 } )$
 
-- Risk sensitivities under _µε_ 
+• Risk sensitivities under $\mu _ { \varepsilon }$
 
-#### 3. **Base Calibration.** 
+## 3. Base Calibration.
 
-- (a) Disintegrate _µ_<sup>_⋆_</sup> as 
+(a) Disintegrate $\mu ^ { \star }$ as
 
-_µ_<sup>_⋆_</sup> ( _s_ 1 _, v, s_ 2) = _γ_<sup>_⋆_</sup> ( _s_ 1 _, v_ ) _κ_<sup>_⋆_</sup> ( _s_ 2 _| s_ 1 _, v_ ) _,_ 
+$$
+\mu ^ { \star } ( s _ { 1 } , v , s _ { 2 } ) = \gamma ^ { \star } ( s _ { 1 } , v ) \kappa ^ { \star } ( s _ { 2 } \mid s _ { 1 } , v ) ,
+$$
 
-where _γ_<sup>_⋆_</sup> is the ( _S_ 1 _, V_ ) marginal and _κ_<sup>_⋆_</sup> is the conditional kernel. 
+where $\gamma ^ { \star }$ is the $( S _ { 1 } , V )$ marginal and $\kappa ^ { \star }$ is the conditional kernel.
 
-#### 4. **Generate exogenous SPX perturbation.** 
+## 4. Generate exogenous SPX perturbation.
 
-- (a) Apply the prescribed SPX perturbation (e.g., spot or implied volatility shift) to obtain the new SPX marginal and updated SPX implied forward variance _FV_<sup>_′_.</sup> 
+(a) Apply the prescribed SPX perturbation (e.g., spot or implied volatility shift) to obtain the new SPX marginal and updated SPX implied forward variance $F _ { V } ^ { \prime }$
 
-#### 5. **Propagate VIX smile using SSR.** 
+## 5. Propagate VIX smile using SSR.
 
-- (a) Use the SSR rule as in Theorem 6.1 to compute a synthetic perturbed VIX implied volatility surface: 
+(a) Use the SSR rule as in Theorem 6.1 to compute a synthetic perturbed VIX implied volatility surface:
 
+$$
+\sigma _ { \mathrm { V I X } } ^ { \prime } ( K ) = \sigma _ { \mathrm { V I X } } ( K ) - S S R \cdot \left. \frac { \partial \sigma _ { \mathrm { V I X } } } { \partial K } \right| _ { K = F _ { V } } \cdot \Delta F _ { V } .
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0024-18.png)
+(b) Compute the corresponding perturbed VIX option prices from the shifted surface.
 
+## 6. Construct perturbed VIX marginal.
 
-   - (b) Compute the corresponding perturbed VIX option prices from the shifted surface. 
+(a) Infer the new VIX marginal distribution so that, under the VIX variable, the model reproduces the SSR-propagated VIX option prices.
 
-6. **Construct perturbed VIX marginal.** 
+## 7. Dimension-reduced entropic transport update.
 
-   - (a) Infer the new VIX marginal distribution so that, under the VIX variable, the model reproduces the SSR-propagated VIX option prices. 
+(a) Holding $\kappa ^ { \star } ( s _ { 2 } \mid s _ { 1 } , v )$ fixed, solve for the updated $( S _ { 1 } , V )$ coupling $\gamma _ { \varepsilon } ( s _ { 1 } , v )$ that matches the perturbed VIX marginals implied by the SSR propagation of the SPX shock and remains closest in relative entropy to the base reduced coupling $\gamma ^ { \star } ( s _ { 1 } , v )$
 
-7. **Dimension-reduced entropic transport update.** 
+(b) Reconstruct the full perturbed joint coupling as
 
-   - (a) Holding _κ_<sup>_⋆_</sup> ( _s_ 2 _| s_ 1 _, v_ ) fixed, solve for the updated ( _S_ 1 _, V_ ) coupling _γε_ ( _s_ 1 _, v_ ) that matches the perturbed VIX marginals implied by the SSR propagation of the SPX shock and remains closest in relative entropy to the base reduced coupling _γ_<sup>_⋆_</sup> ( _s_ 1 _, v_ ). 
+$$
+\mu _ { \varepsilon } ( s _ { 1 } , v , s _ { 2 } ) = \gamma _ { \varepsilon } ( s _ { 1 } , v ) \kappa ^ { \star } ( s _ { 2 } \mid s _ { 1 } , v ) .
+$$
 
-   - (b) Reconstruct the full perturbed joint coupling as 
-
-_µε_ ( _s_ 1 _, v, s_ 2) = _γε_ ( _s_ 1 _, v_ ) _κ_<sup>_⋆_</sup> ( _s_ 2 _| s_ 1 _, v_ ) _._ 
-
-8. **Risk extraction.**
+## 8. Risk extraction.
 
 <!-- page: 25 -->
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0025-00.png)
+(a) For any payof function G, compute model prices under $\mu ^ { \star }$ and $\mu _ { \varepsilon }$ , and report the sensitivity as
 
+$$
+{ \mathrm { G r e e k } } \approx { \frac { P ( \mu _ { \varepsilon } ) - P ( \mu ^ { \star } ) } { \varepsilon } } ,
+$$
 
-<!-- Start of picture text -->
-:<br>:<br>:<br>Jal A | rer Wis liPa<br>= AP Na er resect gh et Tp Tal doth<br>:<br><!-- End of picture text -->
+where $P ( \mu )$ denotes the portfolio valuation under $\mu .$
+
+This procedure avoids a full recalibration of the original SPX–VIX martingale optimal transport problem. The perturbation is carried only by the reduced coupling in $( S _ { 1 } , V )$ , while the conditional kernel of $S _ { 2 }$ given $( S _ { 1 } , V )$ remains unchanged. In this way, the endogenous adjustment of the VIX marginal is captured through the perturbed reduced coupling, yielding a fast and structurally consistent risk-generation algorithm.
+
+## 9 Experiments: SPX-VIX Risk Generation And Hedging Backtest
+
+## 9.1 SPX–VIX Basis In Market Data
+
+In theory the VIX future level should be consistent with the forward variance implied by the SPX option surface through the well-known replication formula. This is precisely the consistency condition in (1). However, empirical market data shows that this relation does not hold exactly. In practice a persistent basis exists between the SPX implied forward variance and the traded VIX futures.
+
+Figure 2 shows the time series of the SPX–VIX basis for the 1-month tenor over a two-year window. The presence of this basis is well documented in practice and is typically attributed to market segmentation, liquidity efects, and supply–demand imbalances in the VIX futures market.
+
+In our calibration framework we therefore allow a basis adjustment when linking SPX forward variance and the VIX future level.
+
+![Figure 2: SPX–VIX basis time series for the 1-month tenor over a two-year window.](assets/figures/2026-che-et-al-spx-vix-transport-p0025-block-0010-3137f0ae6e0f03a4.jpg)
+
+Despite the presence of this basis, the calibrated optimal transport model still satisfies the martingality condition and approximate consistency constraints, which we verify in Section 9.2.
+
+## 9.2 Base Calibration And Fit Quality
+
+We first assess the quality of the base calibration used throughout the experiments. The joint SPX–VIX coupling $\mu ^ { \star }$ is obtained via entropic projection with Sinkhorn scaling on the discrete grids. After calibration, we compute the suficient statistics and the Fisher information matrix H for subsequent risk analysis. Existence, uniqueness, and the Gibbs form of the optimizer ensure a consistent fit to the prescribed marginals and targets on the grids.
+
+To visualize fit quality, we plot observed market smiles against model-implied values from the calibrated coupling for a representative maturity (e.g., March 18, 2026, two weeks to expiry), consistent with our option risk comparisons. Additionally, we generate the martingality plot and consistency plot. It is worth pointing out, that the consistency condition which should hold in theory, does not in reality. To this end, in order to make use of the SPX–VIX joint calibration, we must relax the consistency condition and incorporate the basis in both the base calibration and the perturbed calibration.
 
 <!-- page: 26 -->
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0026-00.png)
+![(a) SPX T<sub>1</sub> smile fit](assets/figures/2026-che-et-al-spx-vix-transport-p0026-block-0001-cb91d76d936ed9e0.jpg)
 
+![(b) SPX T<sub>2</sub> smile fit Figure 3: SPX smile fit quality (two expiries)](assets/figures/2026-che-et-al-spx-vix-transport-p0026-block-0002-33114b3b4ef89434.jpg)
 
-<!-- Start of picture text -->
-SPX T1 (mkt fwd: 1.0013, model fwd: 1.0013)<br>—— model<br>o8 @ market<br>06<br>04<br>02<br>ee<br>os 06 07 08 09 10 1l<br><!-- End of picture text -->
+![VIX T1 (mkt fwd: 17.9108, model fwd: 17.9119) Figure 4: VIX smile fit: observed vs model-implied](assets/figures/2026-che-et-al-spx-vix-transport-p0026-block-0003-6edb4083c186a2cf.jpg)
 
+![(a) Martingality check](assets/figures/2026-che-et-al-spx-vix-transport-p0026-block-0004-ab42971d9d1f008a.jpg)
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0026-01.png)
+![(b) Consistency condition Figure 5: SPX–VIX calibration theoretical conditions](assets/figures/2026-che-et-al-spx-vix-transport-p0026-block-0005-d6c5f14eeb57db5d.jpg)
 
+## 9.3 Risk Computation Benchmark: Recalibration vs Perturbation
 
-<!-- Start of picture text -->
-SPX T2 (mkt fwd: 1.0044, model fwd: 1.0044)<br>—— model<br>@) market<br>08<br>06<br>04<br>02<br>04 06 08 10 12<br><!-- End of picture text -->
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0026-02.png)
-
-
-<!-- Start of picture text -->
-VIX TL (mkt fwd: 17.9108, model fwd: 17.9119)<br>300<br>250<br>200<br>150<br>100<br>— model<br>® market<br>50)<br>10 20 30 40 50 60 70 80 90<br><!-- End of picture text -->
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0026-03.png)
-
-
-<!-- Start of picture text -->
-Martingale condition<br>0.001<br>0.001 0.00002<br>0.0000.000 o.00001<br>0.0000.000 0.00000<br>bp 0.001 0.001 -0.00001<br>30 -0.00002<br>04 12<br>06 10 Vv<br>08 49 05<br>sl 12 00<br><!-- End of picture text -->
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0026-04.png)
-
-
-<!-- Start of picture text -->
-Consistency condition<br>0.010<br>0.008 0.00002<br>0.001 0.00001<br>«< 00030.001 0.00000<br>0.010 0.00 86 -0.00001<br>30 -0.00002<br>4 12°<br>04 6 10° Vv<br>08 19 05<br>sl 12 on<br><!-- End of picture text -->
+This section evaluates the accuracy and computational eficiency of the perturbation framework developed in Sections 3–7. The objective of this experiment is to evaluate the Linear Response (LR) approach within our Perturbed Optimal Transport (POT) framework. We compare risk sensitivities obtained from the LR system (Fisher-information perturbation method) with those obtained from a full recalibration of the SPX– VIX optimal transport model.
 
 <!-- page: 27 -->
 
-system (Fisher-information perturbation method) with those obtained from a full recalibration of the SPX– VIX optimal transport model. 
+The experiment therefore compares two approaches for computing risk sensitivities under SPX market perturbations.
 
-The experiment therefore compares two approaches for computing risk sensitivities under SPX market perturbations. 
+1. Full recalibration (benchmark). After applying a perturbation to the SPX market, the entire SPX–VIX martingale optimal transport calibration problem is recomputed using Algorithm 1. The resulting joint distribution $\mu _ { \mathrm { r e c a l } } ^ { \varepsilon }$ serves as the benchmark distribution for computing option prices and sensitivities.
 
-1. **Full recalibration (benchmark).** After applying a perturbation to the SPX market, the entire SPX–VIX martingale optimal transport calibration problem is recomputed using Algorithm 1. The resulting joint distribution _µ_<sup>_ε_</sup> recal<sup>serves as the benchmark distribution for computing option prices and</sup> sensitivities. 
+2. Perturbation (LR). Starting from the calibrated base coupling $\mu ^ { \star }$ , we compute the perturbed distribution using the linear response system derived in Sections 3.4–3.5. This method uses the Fisher information matrix of the calibrated exponential family to approximate the perturbed coupling $\mu _ { \mathrm { p e r t } } ^ { \varepsilon }$ without solving the full calibration problem again.
 
-2. **Perturbation (LR).** Starting from the calibrated base coupling _µ_<sup>_⋆_</sup> , we compute the perturbed distribution using the linear response system derived in Sections 3.4–3.5. This method uses the Fisher information matrix of the calibrated exponential family to approximate the perturbed coupling _µ_<sup>_ε_</sup> pert without solving the full calibration problem again. 
+The goal of the experiment is twofold. First, we verify that the perturbation-based sensitivities closely match those obtained from full recalibration. Second, we demonstrate that the perturbation method achieves a substantial computational speedup compared to repeatedly solving the full optimal transport calibration.
 
-The goal of the experiment is twofold. First, we verify that the perturbation-based sensitivities closely match those obtained from full recalibration. Second, we demonstrate that the perturbation method achieves a substantial computational speedup compared to repeatedly solving the full optimal transport calibration. 
+SPX perturbations. In all experiments the perturbation is applied on the SPX side, either as a spot shift or as a parallel shift of the SPX implied volatility surface. These perturbations are mapped to corresponding changes in the forward variance, which acts as the key control variable in the SPX–VIX coupling.
 
-**SPX perturbations.** In all experiments the perturbation is applied on the SPX side, either as a spot shift or as a parallel shift of the SPX implied volatility surface. These perturbations are mapped to corresponding changes in the forward variance, which acts as the key control variable in the SPX–VIX coupling. 
+The perturbations are chosen to remain within a regime where the linear-response approximation is expected to be accurate while still representing realistic market shocks.
 
-The perturbations are chosen to remain within a regime where the linear-response approximation is expected to be accurate while still representing realistic market shocks. 
+Implementation details. Several groups of parameters control the perturbation experiments:
 
-**Implementation details.** Several groups of parameters control the perturbation experiments: 
+• Base OT object. The initial martingale optimal transport calibration provides the reference coupling $\mu ^ { \star }$ and the Fisher information matrix used in the perturbation calculations.
 
-- **Base OT object.** The initial martingale optimal transport calibration provides the reference coupling _µ_<sup>_⋆_</sup> and the Fisher information matrix used in the perturbation calculations. 
+• Bumped SPX information. The perturbed SPX marginal distributions include the shifted spot and the modified implied volatility surface at the relevant maturities. Throughout the experiments we assume a sticky-strike behavior for the SPX volatility surface under spot perturbations.
 
-- **Bumped SPX information.** The perturbed SPX marginal distributions include the shifted spot and the modified implied volatility surface at the relevant maturities. Throughout the experiments we assume a sticky-strike behavior for the SPX volatility surface under spot perturbations. 
+• Perturbation controls. Parameters defining the magnitude and structure of the volatility perturbations, including lower and upper cutofs for invariant volatility regions.
 
-- **Perturbation controls.** Parameters defining the magnitude and structure of the volatility perturbations, including lower and upper cutoffs for invariant volatility regions. 
+• VIX volatility shape controls. Parameters governing the Skew Stickiness Ratio (SSR), skewness, convexity, and the treatment of at-the-money and out-of-the-money VIX option strikes.
 
-- **VIX volatility shape controls.** Parameters governing the Skew Stickiness Ratio (SSR), skewness, convexity, and the treatment of at-the-money and out-of-the-money VIX option strikes. 
+• Basis and numerical controls. Optional parameters allowing forward basis adjustments, regularization parameters, and marking conventions for volatility, skew, SSR, convexity, and VIX marginal constraints.
 
-- **Basis and numerical controls.** Optional parameters allowing forward basis adjustments, regularization parameters, and marking conventions for volatility, skew, SSR, convexity, and VIX marginal constraints. 
+In the following section we use these perturbation scenarios to compare SPX risk sensitivities of VIX derivatives computed using the two methods described above.
 
-In the following section we use these perturbation scenarios to compare SPX risk sensitivities of VIX derivatives computed using the two methods described above. 
+## 9.4 VIX Option Risk And Cross-Greeks
 
-### **9.4 VIX Option Risk And Cross-Greeks** 
+Using the experimental setup described in Section 9.3, we now compare SPX risk sensitivities of VIX derivatives computed using the two methods:
 
-Using the experimental setup described in Section 9.3, we now compare SPX risk sensitivities of VIX derivatives computed using the two methods: 
-
-- **Full recalibration** , where the SPX–VIX martingale optimal transport model is recalibrated after each SPX perturbation.
+• Full recalibration, where the SPX–VIX martingale optimal transport model is recalibrated after each SPX perturbation.
 
 <!-- page: 28 -->
 
-- **Perturbation (linear response)** , where the sensitivities are obtained using the Fisher-information linear response system derived in Sections 3.4–3.5 without recomputing the full calibration. 
+• Perturbation (linear response), where the sensitivities are obtained using the Fisher-information linear response system derived in Sections 3.4–3.5 without recomputing the full calibration.
 
-For each SPX perturbation we compute the corresponding change in the joint SPX–VIX distribution under both approaches and evaluate the resulting price sensitivities of VIX derivatives. 
+For each SPX perturbation we compute the corresponding change in the joint SPX–VIX distribution under both approaches and evaluate the resulting price sensitivities of VIX derivatives.
 
-**VIX future cross-greeks.** We begin by comparing the SPX cross-greeks of the VIX future contract. The sensitivities are computed with respect to SPX spot and SPX implied volatility perturbations. Table 1 reports the SPX delta and SPX vega of the VIX future obtained from the recalibration benchmark and from the perturbation method. 
+VIX future cross-greeks. We begin by comparing the SPX cross-greeks of the VIX future contract. The sensitivities are computed with respect to SPX spot and SPX implied volatility perturbations. Table 1 reports the SPX delta and SPX vega of the VIX future obtained from the recalibration benchmark and from the perturbation method.
 
-Table 1: VIX Future ’s SPX Greeks LR-POT vs Recalibration 
+[Table source crop](assets/tables/2026-che-et-al-spx-vix-transport-p0028-block-0004-09e3fb6bdc8bab53.jpg)
+Table 1: VIX Future ’s SPX Greeks LR-POT vs Recalibration
 
-|**LR-POT. SPX Delta**|**Recalib. SPX Delta**|**LR-POT. SPX Vega**|**Recalib. SPX Vega**|
-|---|---|---|---|
-|VIX Future<br>-8.88339|-8.99380|1043.42832|1071.35419|
+The results show that the perturbation-based sensitivities closely match those obtained from the full recalibration procedure. The diferences remain small relative to the magnitude of the sensitivities, confirming that the linear response(LR) system provides an accurate local approximation of the recalibrated optimal transport model.
 
+VIX option SPX delta. We next compare SPX delta sensitivities for a strip of VIX call options spanning a wide range of strikes. The options correspond to the same expiry used in the calibration experiment and cover both out-of-the-money and near-the-money regions of the VIX smile.
 
-The results show that the perturbation-based sensitivities closely match those obtained from the full recalibration procedure. The differences remain small relative to the magnitude of the sensitivities, confirming that the linear response(LR) system provides an accurate local approximation of the recalibrated optimal transport model. 
-
-**VIX option SPX delta.** We next compare SPX delta sensitivities for a strip of VIX call options spanning a wide range of strikes. The options correspond to the same expiry used in the calibration experiment and cover both out-of-the-money and near-the-money regions of the VIX smile. 
-
-Table 2: VIX Options SPX Delta Comparison (LR-POT vs Recalibration). March 18, 2026, 2w to expiry. 
-
-|Strike|Pert. Delta|Recalib. Delta|
-|---|---|---|
-|16_._9|0_._102|0_._089|
-|17_._6<br>|0_._137<br>|0_._135<br>|
-|18_._2|0_._173|0_._179|
-|18_._7|0_._207|0_._224|
-|19_._2|0_._245|0_._268|
-|19_._7|0_._286|0_._313|
-|20_._3|0_._328|0_._358|
-|20_._9|0_._371|0_._403|
-|21_._6|0_._469|0_._450|
-|22_._5|0_._420|0_._405|
-|23_._5|0_._369|0_._360|
-|24_._7|0_._316|0_._315|
-|26_._3|0_._266|0_._270|
-|28_._5|0_._222|0_._225|
-|31_._4|0_._178|0_._179|
-|35_._8|0_._133|0_._135|
-|44_._0|0_._089|0_._090|
+[Table source crop](assets/tables/2026-che-et-al-spx-vix-transport-p0028-block-0007-7b3390922a0943dd.jpg)
+Table 2: VIX Options SPX Delta Comparison (LR-POT vs Recalibration). March 18, 2026, 2w to expiry.
 
 <!-- page: 29 -->
 
-March 2026 VIX calls 
+![Figure 6: SPX Delta](assets/figures/2026-che-et-al-spx-vix-transport-p0029-block-0001-8a04472b11d92f7a.jpg)
 
+Figure 6 visualizes the same comparison across strikes.
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0029-01.png)
+The perturbation-based deltas closely track the sensitivities obtained from the full recalibration. Small discrepancies appear primarily in the wings of the VIX smile, where nonlinear efects become more pronounced. However, even in these regions the overall shape and magnitude of the sensitivities remain consistent with the recalibration benchmark.
 
+VIX option SPX vega. We perform the same comparison for SPX vega sensitivities of the VIX options. Table 3 reports the SPX vega obtained from both approaches.
 
-<!-- Start of picture text -->
-0.500<br>0.450<br>0.400<br>0.350<br>0.300<br>0.250<br>0.200<br>0.150<br>0.100<br>0.050<br>0.000<br>16.0 21.0 26.0 31.0 36.0 41.0 46.0<br>—e— Pert. SPX Delta = —e—Fecalib. SPX Delta<br><!-- End of picture text -->
+[Table source crop](assets/tables/2026-che-et-al-spx-vix-transport-p0029-block-0005-6698885a1866b469.jpg)
+Table 3: VIX Options SPX Vega Comparison (LR-POT vs Recalibration). March 18, 2026, 2w to expiry.
 
 <!-- page: 30 -->
 
-March 2026 VIX calls 
+![Figure 7: SPX Vega](assets/figures/2026-che-et-al-spx-vix-transport-p0030-block-0001-b510ce059f258c0b.jpg)
 
+As with the delta comparison, the perturbation method reproduces the recalibrated sensitivities with high accuracy. The agreement confirms that the Fisher-information linear response captures the dominant first-order efects of SPX volatility perturbations on VIX option prices.
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0030-01.png)
+Performance comparison. While the recalibration method provides the benchmark sensitivities, it requires solving the full SPX–VIX optimal transport calibration problem after each perturbation. This involves repeated Sinkhorn iterations together with enforcement of the martingale and variance-consistency constraints, making the computation relatively expensive.
 
+[Table source crop](assets/tables/2026-che-et-al-spx-vix-transport-p0030-block-0004-f6a103f8a9d162f6.jpg)
+Table 4: Risk Performance Comparison
 
-<!-- Start of picture text -->
-60.000<br>50.000<br>40.000<br>20.000<br>20.000<br>10.000<br>0.000<br>16.0 21.0 26.0 41.0 36.0 41.0 46.0<br>—e—Pert. SPX Vega = ——Recalib. SPX Vega<br><!-- End of picture text -->
+Table 4 compares the runtime required to compute sensitivities under the three approaches. The results show that the LR method and the DR method both achieve a substantial computational speedup while maintaining accuracy comparable to the recalibration benchmark.
+
+This eficiency gain is the key practical advantage of the perturbation framework: risk sensitivities can be generated quickly without re-running the full martingale optimal transport calibration.
+
+Lastly, we note here that the risk numbers generated by the DR method in 8 are extremely close to those produced by the LR method.
+
+## 9.5 Backtest: Hedging Eficiency Of Optimal Transport Method
+
+We now evaluate whether the SPX sensitivities produced by our model independent risk generation methods lead to more efective hedging than those generated by a benchmark industry standard model, in this case a stochastic local volatility model. In the backtest we perform below, we choose the dimensional reduction(DR) method in 8.4.
+
+The experiment consists of two parts: first hedging backtest in which portfolios of VIX options are hedged using VIX futures; second hedging backtest in which the same option portfolio is hedged using SPX futures and SPX vanillas. The sizing of the VIX futures is determined by matching SPX Vega computed under either the optimal transport method or the stochastic local vol benchmark. The sizing of the SPX futures and SPX vanillas is similarly determined by matching SPX delta and SPX vega between the hedging instruments and the VIX option portfolio for each of the methods. Given that the comparison is between two risk hedging methodologies, and they trade comparable sizes, we have therefore omitted transaction cost.
 
 <!-- page: 31 -->
 
-and SPX vanillas. The sizing of the VIX futures is determined by matching SPX Vega computed under either the optimal transport method or the stochastic local vol benchmark. The sizing of the SPX futures and SPX vanillas is similarly determined by matching SPX delta and SPX vega between the hedging instruments and the VIX option portfolio for each of the methods. Given that the comparison is between two risk hedging methodologies, and they trade comparable sizes, we have therefore omitted transaction cost. 
+Backtest period The backtest runs daily from January 2024 to February 2026. VIX smile dynamics follow the Skew Stickiness Ratio (SSR) rule
 
-**Backtest period** The backtest runs daily from January 2024 to February 2026. VIX smile dynamics follow the Skew Stickiness Ratio (SSR) rule 
+$$
+\Delta \sigma _ { V } ( K ) = - S S R \cdot S k e w _ { V } ( F _ { V } ) \Delta F _ { V } ,
+$$
 
+with $S S R = 1 . 2 .$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0031-02.png)
+Synthetic portfolio generation To test the robustness of the hedging performance we generate 50 randomized VIX option portfolios.
 
+For each trading day t the portfolios are constructed as follows:
 
-with _SSR_ = 1 _._ 2. 
+1. All listed VIX expiries available on day t are included.
 
-**Synthetic portfolio generation** To test the robustness of the hedging performance we generate 50 randomized VIX option portfolios. 
+2. For each expiry we construct a strike grid using call option deltas
 
-For each trading day _t_ the portfolios are constructed as follows: 
+$$
+\Delta \in \{ 1 0 , 1 5 , \ldots , 9 0 \} ,
+$$
 
-1. All listed VIX expiries available on day _t_ are included. 
+resulting in 17 strikes per maturity.
 
-2. For each expiry we construct a strike grid using call option deltas 
+3. Options with $\Delta < 5 0$ are taken as puts while options with $\Delta \geq 5 0$ are taken as calls.
 
+4. Each option i is assigned a random portfolio weight
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0031-08.png)
+$$
+w _ { i , t } \sim \mathrm { U n i f o r m } ( - 1 , 1 ) .
+$$
 
+The resulting portfolio value is
 
-resulting in 17 strikes per maturity. 
+$$
+P _ { t } = \sum _ { i } w _ { i , t } V _ { i , t } .
+$$
 
-3. Options with ∆ _<_ 50 are taken as puts while options with ∆ _≥_ 50 are taken as calls. 
+This procedure produces diversified portfolios spanning a wide range of smile exposures.
 
-4. Each option _i_ is assigned a random portfolio weight 
+Hedging methodology The portfolios are hedged using VIX futures whose expiries match those of the VIX options. The hedge sizes are determined by matching SPX Vega per expiry.
 
+For a given model $M \in \{ \mathrm { S V } , \mathrm { P O T } \}$ we compute
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0031-12.png)
+$$
+G _ { t } ^ { M } = \frac { \partial P _ { t } } { \partial \sigma _ { S P X } } ,
+$$
 
+the SPX sensitivity of the option portfolio, and
 
-The resulting portfolio value is 
+$$
+g _ { j , t } ^ { M } = \frac { \partial F _ { j , t } } { \partial \sigma _ { S P X } } ,
+$$
 
+the SPX sensitivity of each VIX future $F _ { j , t }$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0031-14.png)
+The hedge sizes $\alpha _ { j , t } ^ { M }$ are chosen so that
 
-
-This procedure produces diversified portfolios spanning a wide range of smile exposures. 
-
-**Hedging methodology** The portfolios are hedged using VIX futures whose expiries match those of the VIX options. The hedge sizes are determined by matching SPX Vega per expiry. 
-
-For a given model _M ∈{_ SV _,_ POT _}_ we compute 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0031-18.png)
-
-
-the SPX sensitivity of the option portfolio, and 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0031-20.png)
-
-
-the SPX sensitivity of each VIX future _Fj,t_ . The hedge sizes _αj,t_<sup>_M_arechosensothat</sup> 
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0031-22.png)
+$$
+G _ { t } ^ { M } + \sum _ { j } \alpha _ { j , t } ^ { M } g _ { j , t } ^ { M } = 0 .
+$$
 
 <!-- page: 32 -->
 
-Ss 
+Hedged P&L The daily hedged P&L for model M is
 
+$$
+P \& L _ { t } ^ { M } = \Delta P _ { t } + \sum _ { j } \alpha _ { j , t } ^ { M } \Delta F _ { j , t } .
+$$
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0032-01.png)
+The efectiveness of the hedge is evaluated using the standard deviation of the hedged P&L.
 
+Cross-sectional comparison across portfolios For each of the 50 randomly generated portfolios we compute the standard deviation of the hedged P&L under both hedging strategies.
 
-<!-- Start of picture text -->
-VIX fut hedged mtm pnl std (ot - sv)<br>000<br>—0.01<br>—0.02<br>—0.03<br>0.04<br>—0.05<br>0.06<br>—0.07<br>—0.08<br><!-- End of picture text -->
+Figure 8 plots the diference
 
-SIN MST OT OO OOM TSS SDR AAA AMAR RAR RMS SSS SHS SSS sample _id 
+$$
+\sigma _ { P O T } - \sigma _ { S V }
+$$
 
-~~le~~ e
+for each portfolio, where σ<sub>POT</sub> and $\sigma _ { S V }$ denote the standard deviation of hedged P&L under the POT and SV hedges, respectively.
+
+![Figure 8: Diference in hedged P&L standard deviation between the POT hedge and the SV hedge across 50 randomized VIX option portfolios using VIX futures. Each bar corresponds to one portfolio. Negative values indicate that the POT hedge achieves lower hedging variance than the SV hedge](assets/figures/2026-che-et-al-spx-vix-transport-p0032-block-0008-e882dc56d2923ef1.jpg)
+
+Time-series hedge stability To illustrate the time-series behavior of the hedging error, we select one representative portfolio from the set of 50 portfolios and compute the rolling 20-day standard deviation of hedged P&L.
+
+$$
+\mathrm { R o l l S t d e v } _ { t } ^ { M } ( 2 0 ) = \sqrt { \frac { 1 } { 1 9 } \sum _ { u = t - 1 9 } ^ { t } \left( P \& L _ { u } ^ { M } - \overline { { P \& L } } _ { t , 2 0 } ^ { M } \right) ^ { 2 } } .
+$$
+
+Summary The cross-sectional experiment in Figure 8 shows that the POT VIX future hedge reduces PnL variance for all tested portfolios. In Figure 10, all but 1 of the 50 VIX option portfolios have smaller PnL variance for the POT method when hedged to SPX futures and SPX vanillas. The time-series analysis in both Figure 9 and Figure 11 further demonstrates that the improvement is most pronounced during periods of elevated market volatility.
 
 <!-- page: 33 -->
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0033-00.png)
+![Rolling std of VIX fut hedged pnl (sample\_id=5) Figure 9: 20-day rolling standard deviation of VIX future hedged P&L for a representative portfolio. The POT hedge produces lower hedging variance during volatile periods while remaining comparable to the SV hedge during calm market regimes.](assets/figures/2026-che-et-al-spx-vix-transport-p0033-block-0001-fb229c973541fa77.jpg)
 
-
-<!-- Start of picture text -->
-Rolling std of VIX fut hedged pnl (sample _id=5)<br>175150 ;<br>125<br>100<br>O75<br>050 [a ta<br>ry a by A ) CT<br>0.25 ov a I LF.<br>_na —__ “| a a l —— ’ : 7 .<br>0.00<br>ash asit a38 Pa oPah oPBu oPse sise<br>date<br><!-- End of picture text -->
-
-
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0033-01.png)
-
-
-<!-- Start of picture text -->
-SPX hedged mtm pni std (ot - sv)<br>002<br>—0.04- | | | | | | | | | Ii |<br>—0.06<br>—0.08<br>—0.10<br>SAN SOF OT OANA OSES SAR AAR AR SARA RRA RMR RASS SIGS eS Sees<br>sample_id<br><!-- End of picture text -->
+![Figure 10: Diference in hedged P&L standard deviation between the POT hedge and the SV hedge across 50 randomized VIX option portfolios using SPX futures and SPX vanillas. Each bar corresponds to one portfolio. Negative values indicate that the POT hedge achieves lower hedging variance than the SV hedge.](assets/figures/2026-che-et-al-spx-vix-transport-p0033-block-0002-2003ec060278b961.jpg)
 
 <!-- page: 34 -->
 
-![](assets/2026-che-et-al-spx-vix-transport.pdf-0034-00.png)
+![Rolling std of SPX hedged pnl (sample\_id=5) Figure 11: 20-day rolling standard deviation of SPX future and SPX vanillas hedged P&L for a representative portfolio. The POT hedge produces lower hedging variance during volatile periods while remaining comparable to the SV hedge during calm market regimes.](assets/figures/2026-che-et-al-spx-vix-transport-p0034-block-0001-399f59e19da2d5c1.jpg)
 
-
-<!-- Start of picture text -->
-Rolling std of SPX hedged pnl (sample_id=5)<br>3.0 [<br>25<br>20<br>15<br>‘<br>10<br>05 7 A aL “heMA UrN ofAcs ba, p ay Cy 7<br>= ~ ra Xo ta = =<br>oo<br>we °1 ~% °°+3 en °°‘i rais) ge"ye<br>date<br><!-- End of picture text -->
+Together these results provide empirical evidence that the perturbed optimal transport framework produces more accurate SPX–VIX risk sensitivities than a benchmark stochastic local volatility model.
 
 <!-- page: 35 -->
 
-## **10 Conclusion** 
+## 10 Conclusion
 
-This paper develops a model-independent framework for SPX–VIX risk generation based on entropic martingale optimal transport. Starting from the joint calibration methodology of Guyon, we show that the calibrated Gibbs coupling admits a natural perturbation theory: admissible market shocks propagate through the Fisher information matrix of the calibrated exponential family, yielding explicit linear-response formulas for risk sensitivities. 
+This paper develops a model-independent framework for SPX–VIX risk generation based on entropic martingale optimal transport. Starting from the joint calibration methodology of Guyon, we show that the calibrated Gibbs coupling admits a natural perturbation theory: admissible market shocks propagate through the Fisher information matrix of the calibrated exponential family, yielding explicit linear-response formulas for risk sensitivities.
 
-To incorporate realistic VIX smile dynamics, we introduce a linearized Skew Stickiness Ratio formulation and embed it as linear constraints in the transport perturbation system. This approach allows SPX perturbations to propagate consistently to VIX implied volatility while maintaining the convex structure of the entropic projection problem. 
+To incorporate realistic VIX smile dynamics, we introduce a linearized Skew Stickiness Ratio formulation and embed it as linear constraints in the transport perturbation system. This approach allows SPX perturbations to propagate consistently to VIX implied volatility while maintaining the convex structure of the entropic projection problem.
 
-We further show that the perturbed transport problem admits a structural dimensional reduction under a conditional coupling invariance assumption. In this regime the three-dimensional transport problem collapses to a two-dimensional projection on ( _S_ 1 _, V_ ) while preserving the conditional dependence structure inherited from the base calibration. This explains why risk sensitivities can be generated efficiently without re-solving the full martingale optimal transport calibration. 
+We further show that the perturbed transport problem admits a structural dimensional reduction under a conditional coupling invariance assumption. In this regime the three-dimensional transport problem collapses to a two-dimensional projection on (S , V) while preserving the conditional dependence structure inherited from the base calibration. This explains why risk sensitivities can be generated eficiently without re-solving the full martingale optimal transport calibration.
 
-Two sets of numerical experiments support the theoretical framework. First, we compare perturbationbased risk sensitivities with those obtained from full recalibration of the SPX–VIX transport model. Across VIX futures and VIX option cross-greeks, the perturbation method produces sensitivities that are very close to the recalibration benchmark while achieving significant computational speedups. Second, we conduct hedging backtests on randomized VIX option portfolios. Using SPX sensitivities generated by the dimensionreduced transport method, the resulting hedges consistently outperform those based on a stochastic volatility benchmark in terms of hedged P&L variance. 
+Two sets of numerical experiments support the theoretical framework. First, we compare perturbationbased risk sensitivities with those obtained from full recalibration of the SPX–VIX transport model. Across VIX futures and VIX option cross-greeks, the perturbation method produces sensitivities that are very close to the recalibration benchmark while achieving significant computational speedups. Second, we conduct hedging backtests on randomized VIX option portfolios. Using SPX sensitivities generated by the dimensionreduced transport method, the resulting hedges consistently outperform those based on a stochastic volatility benchmark in terms of hedged P&L variance.
 
-Overall, the results show that entropic martingale optimal transport provides more than a calibration tool. Combined with perturbation theory and dimensional reduction, it yields a practical framework for SPX–VIX risk generation that is financially consistent, computationally efficient, and effective in hedging applications. 
+Overall, the results show that entropic martingale optimal transport provides more than a calibration tool. Combined with perturbation theory and dimensional reduction, it yields a practical framework for SPX–VIX risk generation that is financially consistent, computationally eficient, and efective in hedging applications.
 
-## **Disclaimer** 
+## Disclaimer
 
-This paper was prepared for informational purposes in part by the Quantitative Trading & Research Group of JPMorganChase & Co. This paper is not a product of the Research Department of JPMorganChase & Co. or its affiliates. Neither JPMorganChase & Co. nor any of its affiliates makes any explicit or implied representation or warranty and none of them accept any liability in connection with this paper, including, without limitation, with respect to the completeness, accuracy, or reliability of the information contained herein and the potential legal, compliance, tax, or accounting effects thereof. This document is not intended as investment research or investment advice, or as a recommendation, offer, or solicitation for the purchase or sale of any security, financial instrument, financial product or service, or to be used in any way for evaluating the merits of participating in any transaction.
+This paper was prepared for informational purposes in part by the Quantitative Trading & Research Group of JPMorganChase & Co. This paper is not a product of the Research Department of JPMorganChase & Co. or its afiliates. Neither JPMorganChase & Co. nor any of its afiliates makes any explicit or implied representation or warranty and none of them accept any liability in connection with this paper, including, without limitation, with respect to the completeness, accuracy, or reliability of the information contained herein and the potential legal, compliance, tax, or accounting efects thereof. This document is not intended as investment research or investment advice, or as a recommendation, ofer, or solicitation for the purchase or sale of any security, financial instrument, financial product or service, or to be used in any way for evaluating the merits of participating in any transaction.
 
 <!-- page: 36 -->
 
-## **References** 
+## References
 
-- Amari, S. (2016). _Information Geometry and Its Applications_ . Springer. 
-
-- Bayer, C. and P. K. Friz (2022). _Regularity of Stochastic Volatility Models: Rough and beyond_ . MOS-SIAM Series on Optimization. Society for Industrial and Applied Mathematics. 
-
-- Beiglb¨ock, M., P. Henry-Labord`ere, and F. Penkner (2013). Model-independent bounds for option prices: A mass transport approach. _Finance and Stochastics 17_ (3), 477–501. 
-
-- Benamou, J.-D., G. Carlier, M. Cuturi, L. Nenna, and G. Peyr´e (2015). Iterative bregman projections for regularized transportation problems. _SIAM Journal on Scientific Computing 37_ (2). 
-
-- Bergomi, L. (2009). Smile dynamics II. Fields Institute Seminar, Toronto. 
-
-- Bergomi, L. (2016). _Stochastic Volatility Modeling_ . Boca Raton: CRC Press. 
-
-- Cuturi, M. (2013). Sinkhorn distances: Lightspeed computation of optimal transport. _Advances in Neural Information Processing Systems_ . 
-
-- Gatheral, J. (2006). _The Volatility Surface: A Practitioner’s Guide_ . Hoboken, NJ: John Wiley & Sons. 
-
-- Guyon, J. (2020). The joint S&P 500/VIX smile calibration puzzle solved. _Risk_ . 
-
-- Guyon, J. (2021). Dispersion-constrained martingale schr¨odinger problems and the exact joint S&P 500/VIX smile calibration puzzle. SSRN preprint. 
-
-- Henry-Labord`ere, P. (2017). _Model-Free Hedging: A Martingale Optimal Transport Viewpoint_ . Chapman and Hall/CRC Financial Mathematics Series. Boca Raton: CRC Press. 
-
-- Heston, S. L. (1993). A closed-form solution for options with stochastic volatility with applications to bond and currency options. _The Review of Financial Studies 6_ (2), 327–343. 
-
-- Peyr´e, G. and M. Cuturi (2019). Computational optimal transport. _Foundations and Trends in Machine Learning 11_ (5–6), 355–607.
+Amari, S. (2016). Information Geometry and Its Applications. Springer. Bayer, C. and P. K. Friz (2022). Regularity of Stochastic Volatility Models: Rough and beyond. MOS-SIAM Series on Optimization. Society for Industrial and Applied Mathematics. Beiglb¨ock, M., P. Henry-Labord\`ere, and F. Penkner (2013). Model-independent bounds for option prices: A mass transport approach. Finance and Stochastics 17(3), 477–501. Benamou, J.-D., G. Carlier, M. Cuturi, L. Nenna, and G. Peyr´e (2015). Iterative bregman projections for regularized transportation problems. SIAM Journal on Scientific Computing 37(2). Bergomi, L. (2009). Smile dynamics II. Fields Institute Seminar, Toronto. Bergomi, L. (2016). Stochastic Volatility Modeling. Boca Raton: CRC Press. Cuturi, M. (2013). Sinkhorn distances: Lightspeed computation of optimal transport. Advances in Neural Information Processing Systems. Gatheral, J. (2006). The Volatility Surface: A Practitioner’s Guide. Hoboken, NJ: John Wiley & Sons. Guyon, J. (2020). The joint S&P 500/VIX smile calibration puzzle solved. Risk. Guyon, J. (2021). Dispersion-constrained martingale schr¨odinger problems and the exact joint S&P 500/VIX smile calibration puzzle. SSRN preprint. Henry-Labord\`ere, P. (2017). Model-Free Hedging: A Martingale Optimal Transport Viewpoint. Chapman and Hall/CRC Financial Mathematics Series. Boca Raton: CRC Press. Heston, S. L. (1993). A closed-form solution for options with stochastic volatility with applications to bond and currency options. The Review of Financial Studies 6 (2), 327–343. Peyr´e, G. and M. Cuturi (2019). Computational optimal transport. Foundations and Trends in Machine Learning 11 (5–6), 355–607.

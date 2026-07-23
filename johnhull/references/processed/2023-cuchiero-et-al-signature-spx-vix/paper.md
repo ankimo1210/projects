@@ -1,1485 +1,1571 @@
----
-paper_id: "2023-cuchiero-et-al-signature-spx-vix"
-title: "Joint Calibration to SPX and VIX Options with Signature-Based Models"
-authors: "Christa Cuchiero et al."
-year: "2023"
-source_url: "https://arxiv.org/abs/2301.13235"
-source_pdf: "references/papers/2023-cuchiero-et-al-signature-spx-vix.pdf"
-source_sha256: "2fb72aeba6d7a802feaa665f2e1c68cab3d224dbd072178d1859c65c5d0d9000"
-converter: "PyMuPDF4LLM 1.28.0"
----
+# 2023-cuchiero-et-al-signature-spx-vix
 
 <!-- page: 1 -->
 
-# Joint calibration to SPX and VIX options with signature-based models 
+## Joint calibration to SPX and VIX options with signature-based models
 
-Christa Cuchiero<sup>∗</sup> 
+Christa Cuchiero<sup>∗</sup> Guido Gazzani<sup>†</sup> Janka M¨oller<sup>‡</sup> Sara Svaluto-Ferro<sup>§</sup>
 
-Guido Gazzani<sup>†</sup> Janka M¨oller<sup>‡</sup> Sara Svaluto-Ferro<sup>§</sup> 
+July 24, 2024
 
-July 24, 2024 
+## Abstract
 
-##### **Abstract** 
+We consider a stochastic volatility model where the dynamics of the volatility are described by a linear function of the (time extended) signature of a primary process which is supposed to be a polynomial difusion. We obtain closed form expressions for the VIX squared, exploiting the fact that the truncated signature of a polynomial difusion is again a polynomial difusion. Adding to such a primary process the Brownian motion driving the stock price, allows then to express both the log-price and the VIX squared as linear functions of the signature of the corresponding augmented process. This feature can then be eficiently used for pricing and calibration purposes. Indeed, as the signature samples can be easily precomputed, the calibration task can be split into an ofline sampling and a standard optimization. We also propose a Fourier pricing approach for both VIX and SPX options exploiting that the signature of the augmented primary process is an infinite dimensional afine process. For both the SPX and VIX options we obtain highly accurate calibration results, showing that this model class allows to solve the joint calibration problem without adding jumps or rough volatility.
 
-We consider a stochastic volatility model where the dynamics of the volatility are described by a linear function of the (time extended) signature of a primary process which is supposed to be a polynomial diffusion. We obtain closed form expressions for the VIX squared, exploiting the fact that the truncated signature of a polynomial diffusion is again a polynomial diffusion. Adding to such a primary process the Brownian motion driving the stock price, allows then to express both the log-price and the VIX squared as linear functions of the signature of the corresponding augmented process. This feature can then be efficiently used for pricing and calibration purposes. Indeed, as the signature samples can be easily precomputed, the calibration task can be split into an offline sampling and a standard optimization. We also propose a Fourier pricing approach for both VIX and SPX options exploiting that the signature of the augmented primary process is an infinite dimensional affine process. For both the SPX and VIX options we obtain highly accurate calibration results, showing that this model class allows to solve the joint calibration problem without adding jumps or rough volatility. 
+Keywords: signature methods, calibration of financial models, afine and polynomial processes, S&P 500/VIX joint calibration MSC (2020) Classification: 91B70, 62P05, 65C20.
 
-**Keywords:** signature methods, calibration of financial models, affine and polynomial processes, S&P 500/VIX joint calibration 
+## Contents
 
-**MSC (2020) Classification:** 91B70, 62P05, 65C20. 
+1 Introduction 2 1.1 State of the art . . . 5 3 The model 9 4 Expected signature of polynomial difusion 12 5 VIX options with signatures 16 5.1 Explicit formulas for the VIX 16 5.2 Variance reduction for pricing VIX options 20 5.3 Calibration to VIX options 22 5.3.1 Numerical results . 23 5.4 The case of time-varying parameters 26 6 SPX as a signature-based model 27 6.1 Exploiting the afine nature of the signature: Fourier pricing of SPX and VIX options . 31 6.2 The case of time-varying parameters 33 7 Joint calibration of SPX and VIX options 34 7.1 Numerical results . 35 7.1.1 First approach 36 7.1.2 Second approach . 40 A Numerical results for the Brownian motion case 41 B On the stability of the calibrated parameters 43
 
-## **Contents** 
+arXiv:2301.13235v2 [q-fin.MF] 23 Jul 2024
 
-**1 Introduction 2** 1.1 State of the art . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 **2 Signature: definition and properties 6** 
+<sup>∗</sup>Vienna University, Department of Statistics and Operations Research, Data Science Uni Vienna, Kolingasse 14-16 1, A-1090 Wien, Austria, christa.cuchiero@univie.ac.at
 
-> ∗Vienna University, Department of Statistics and Operations Research, Data Science Uni Vienna, Kolingasse 14-16 1, A-1090 Wien, Austria, christa.cuchiero@univie.ac.at 
+<sup>†</sup>University of Verona, Department of Economics, Via Cantarane 24, 37129 Verona, Italy, guido.gazzani@univr.it
 
-> †University of Verona, Department of Economics, Via Cantarane 24, 37129 Verona, Italy, guido.gazzani@univr.it 
+<sup>‡</sup>Vienna University, Department of Statistics and Operations Research, Kolingasse 14-16 1, A-1090 Wien, Austria, janka.moeller@univie.ac.at
 
-‡Vienna University, Department of Statistics and Operations Research, Kolingasse 14-16 1, A-1090 Wien, Austria, janka.moeller@univie.ac.at 
+<sup>§</sup>University of Verona, Department of Economics, Via Cantarane 24, 37129 Verona, Italy, sara.svalutoferro@univr.it.
 
-> §University of Verona, Department of Economics, Via Cantarane 24, 37129 Verona, Italy, sara.svalutoferro@univr.it. 
-
-The first three authors gratefully acknowledge financial support through grant Y 1235 and grant I 3852 of the Austrian Science Fund. All authors acknowledge financial support through the OEAD WTZ project FR 02/2022. The present work was initiated when the second author was affiliated to the University of Vienna (ISOR)). 
+The first three authors gratefully acknowledge financial support through grant Y 1235 and grant I 3852 of the Austrian Science Fund. All authors acknowledge financial support through the OEAD WTZ project FR 02/2022. The present work was initiated when the second author was afiliated to the University of Vienna (ISOR)).
 
 We also thank the anonymous referees and associated editor for their valuable comments and suggestions.
 
 <!-- page: 2 -->
 
-|**3**|**The model**|**9**|
-|---|---|---|
-|**4**|**Expected signature of polynomial difusion**|**12**|
-|**5**|**VIX options with signatures**|**16**|
-||5.1<br>Explicit formulas for the VIX . . . . . . . . . . . . . . . . . . . . . . . . . .|16|
-||5.2<br>Variance reduction for pricing VIX options<br>. . . . . . . . . . . . . . . . . .|20|
-||5.3<br>Calibration to VIX options<br>. . . . . . . . . . . . . . . . . . . . . . . . . . .|22|
-||5.3.1<br>Numerical results . . . . . . . . . . . . . . . . . . . . . . . . . . . . .|23|
-||5.4<br>The case of time-varying parameters . . . . . . . . . . . . . . . . . . . . . .|26|
-|**6**|**SPX as a signature-based model**|**27**|
-||6.1<br>Exploiting the afne nature of the signature: Fourier pricing of SPX and VIX<br>options. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .|31|
-||6.2<br>The case of time-varying parameters . . . . . . . . . . . . . . . . . . . . . .|33|
-|**7**|**Joint calibration of SPX and VIX options**|**34**|
-||7.1<br>Numerical results . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .|35|
-||7.1.1<br>First approach<br>. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .|36|
-||7.1.2<br>Second approach . . . . . . . . . . . . . . . . . . . . . . . . . . . . .|40|
-|**A **|**Numerical results for the Brownian motion case**|**41**|
-|**B **|**On the stability of the calibrated parameters**|**43**|
+## 1 Introduction
 
+The joint calibration of option pricing models to SPX and $\mathrm { V I X ^ { 1 } }$ options is a problem that has gained a lot of attention in quantitative finance since several years. One main reason for the increased interest is that the VIX index has become an important underlying for many derivatives. In fact, futures and options written on it are extensively used to hedge the volatility exposure of option portfolios, see $\mathrm { e . g . }$ , Rhoads (2011). We address the reader to the oficial website of CBOE<sup>2</sup> for details on the history of the VIX, how it is computed, traded and used as underlying for derivatives, which emphasizes in particular the need to jointly calibrate to both, the prices of options on the S&P 500 index and to prices of VIX derivatives. In this respect the main challenge is to reconcile the large negative skew of SPX options’ implied volatilities with relatively lower implied volatilities arising from the VIX options, especially for short maturities (see e.g., Guyon (2020a).
 
-## **1 Introduction** 
+Inspired by Perez Arribas et al. (2020) and Cuchiero et al. (2023a), we consider here a new type of stochastic volatility model for the discounted, dividend-adjusted price process $S = ( S _ { t } ) _ { t \geq 0 }$ . It is given by
 
-The joint calibration of option pricing models to SPX and VIX<sup>1</sup> options is a problem that has gained a lot of attention in quantitative finance since several years. One main reason for the increased interest is that the VIX index has become an important underlying for many derivatives. In fact, futures and options written on it are extensively used to hedge the volatility exposure of option portfolios, see e.g., Rhoads (2011). We address the reader to the official website of CBOE<sup>2</sup> for details on the history of the VIX, how it is computed, traded and used as underlying for derivatives, which emphasizes in particular the need to jointly calibrate to both, the prices of options on the S&P 500 index and to prices of VIX derivatives. In this respect the main challenge is to reconcile the large negative skew of SPX options’ implied volatilities with relatively lower implied volatilities arising from the VIX options, especially for short maturities (see e.g., Guyon (2020a). 
+$$
+\mathrm { d } S _ { t } ( \ell ) = S _ { t } ( \ell ) \sigma _ { t } ^ { S } ( \ell ) \mathrm { d } B _ { t } ,
+$$
 
-Inspired by Perez Arribas et al. (2020) and Cuchiero et al. (2023a), we consider here a new type of stochastic volatility model for the discounted, dividend-adjusted price process _S_ = ( _St_ ) _t≥_ 0. It is given by 
+for an initial condition $S _ { 0 } \in \mathbb { R } _ { + }$ , a standard Brownian motion $B ,$ and a volatility process $\sigma ^ { S }$ satisfying
 
+$$
+\sigma _ { t } ^ { S } ( \ell ) : = \ell ( \widehat { \mathbb { X } } _ { t } ) ,\tag{1.1}
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0002-04.png)
+<sup>1</sup>With SPX and VIX we refer to the index tickers of the S&P 500 and its volatility index, respectively. In the sequel we will use SPX and S&P 500 interchangeably.
 
-
-for an initial condition _S_ 0 _∈_ R+, a standard Brownian motion _B_ , and a volatility process _σ_<sup>_S_</sup> satisfying 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0002-06.png)
-
-
-> 1With SPX and VIX we refer to the index tickers of the S&P 500 and its volatility index, respectively. In the sequel we will use SPX and S&P 500 interchangeably. 
-
-> 2 www.cboe.com/tradable ~~p~~ roducts/vix/
+<sup>2</sup>www.cboe.com/tradable products/vix/
 
 <!-- page: 3 -->
 
-where _ℓ_ is a linear map of the signature X<sup>�</sup> _t_ of a process _X_<sup>�</sup> . Specifically, the main ingredient in this framework is a _d_ -dimensional polynomial diffusion process _X_ = ( _Xt_<sup>1</sup><sup>_, . . . , X_</sup> _t_<sup>_d_)</sup><sup>_t≥_0(see</sup> Cuchiero et al. (2012); Filipovi´c and Larsson (2016)), which we call here _primary process_ and whose augmentation with time _t_ is denoted by ( _X_<sup>�</sup> _t_ ) _t≥_ 0 = ( _t, Xt_<sup>1</sup><sup>_, . . . , X_</sup> _t_<sup>_d_)</sup><sup>_t≥_0.Bymodeling</sup> _σ_<sup>_S_</sup> via (1.1) we assume that the signature of _X_<sup>�</sup> , denoted by X<sup>�</sup> (and rigorously introduced in Section 2), serves as a linear regression basis for the volatility process, while the parameters of the linear map _ℓ_ have to be learned from (option price) data. Note that the parameters of _X_ are prespecified beforehand and can thus be seen – in analogy to machine learning terminology – as _hyperparameters_ (that of course can be optimized over some validation set). As outlined below this is one of the crucial features that allows for the split of the calibration task into precomputable samples and parameters _ℓ_ to be optimized. 
+where ℓ is a linear map of the signature $\widehat { \mathbb X } _ { t }$ of a process $\widehat { X }$ . Specifically, the main ingredient in this framework is a d-dimensional polynomial difusion process $X = ( X _ { t } ^ { 1 } , \ldots , X _ { t } ^ { d } ) _ { t \geq 0 }$ (see Cuchiero et al. (2012); Filipovi´c and Larsson (2016)), which we call here primary process and whose augmentation with time t is denoted by $( \widehat { X } _ { t } ) _ { t \geq 0 } = ( t , X _ { t } ^ { 1 } , \ldots , X _ { t } ^ { d } ) _ { t \geq 0 }$ . By modeling $\sigma ^ { S }$ via (1.1) we assume that the signature of $\widehat { X }$ , denoted by $\widehat { \mathbb X }$ (and rigorously introduced in Section 2), serves as a linear regression basis for the volatility process, while the parameters of the linear map ℓ have to be learned from (option price) data. Note that the parameters of X are prespecified beforehand and can thus be seen – in analogy to machine learning terminology – as hyperparameters (that of course can be optimized over some validation set). As outlined below this is one of the crucial features that allows for the split of the calibration task into precomputable samples and parameters ℓ to be optimized.
 
-Let us now highlight the implications of this modeling approach and the novelty of the present work. 
+Let us now highlight the implications of this modeling approach and the novelty of the present work.
 
-- The current framework can be seen as _universal_ in a large class of continuous (nonrough) stochastic volatility models in the following sense: for a stochastic volatility model, whose volatility is given by a continuous path-functional depending on a polynomial diffusion ( _Xt_ ) _t≥_ 0, it follows from Proposition 2.3 that this path-functional can be approximated by a linear function of the signature of ( _X_<sup>�</sup> _t_ ) _t≥_ 0. A concrete example for a volatility process of such a form is an Itˆo-diffusion with sufficiently regular coefficients, as in this case, the volatility is indeed given by a continuous path-functional of the time-augmented Brownian motion driving the diffusion. 
+• The current framework can be seen as universal in a large class of continuous (nonrough) stochastic volatility models in the following sense: for a stochastic volatility model, whose volatility is given by a continuous path-functional depending on a polynomial difusion $( X _ { t } ) _ { t \geq 0 }$ , it follows from Proposition 2.3 that this path-functional can be approximated by a linear function of the signature of $( \widehat { X } _ { t } ) _ { t \geq 0 }$ . A concrete example for a volatility process of such a form is an Itˆo-difusion with suficiently regular coefficients, as in this case, the volatility is indeed given by a continuous path-functional of the time-augmented Brownian motion driving the difusion.
 
-- Additionally, our model truly nests several classical models (see Remark 3.4) and for instance also the ‘quintic Ornstein-Uhlenbeck volatility model’, recently proposed by Abi Jaber et al. (2022b), which – with an additional input curve – is shown to fit SPX and VIX smiles well. 
+• Additionally, our model truly nests several classical models (see Remark 3.4) and for instance also the ‘quintic Ornstein-Uhlenbeck volatility model’, recently proposed by Abi Jaber et al. (2022b), which – with an additional input curve – is shown to fit SPX and VIX smiles well.
 
-- By choosing the parameters of _ℓ_ appropriately, the modeling framework incorporates both, Markovian (in ( _S, X_ )) and path-dependent models. 
+• By choosing the parameters of ℓ appropriately, the modeling framework incorporates both, Markovian (in (S, X)) and path-dependent models.
 
-- Up to our knowledge, it is the first signature-based model that is employed for pricing and calibration of VIX options as well as joint calibration, together with SPX options. 
+• Up to our knowledge, it is the first signature-based model that is employed for pricing and calibration of VIX options as well as joint calibration, together with SPX options.
 
-- We illustrate that the joint calibration problem can be solved in this framework without jumps and rough volatility (compare also Rømer (2022); Abi Jaber et al. (2022b); Guyon and Lekeufack (2023)). 
+• We illustrate that the joint calibration problem can be solved in this framework without jumps and rough volatility (compare also Rømer (2022); Abi Jaber et al. (2022b); Guyon and Lekeufack (2023)).
 
-- By using time-varying parameters we can go beyond short maturities both for SPX and VIX options (as classically tackled in the literature) and achieve a joint calibration also for longer maturities. 
+• By using time-varying parameters we can go beyond short maturities both for SPX and VIX options (as classically tackled in the literature) and achieve a joint calibration also for longer maturities.
 
-In order to achieve the highly accurate calibration results, illustrated in Section 5.3 and Section 7, we exploit the following mathematical and numerical properties. 
+In order to achieve the highly accurate calibration results, illustrated in Section 5.3 and Section 7, we exploit the following mathematical and numerical properties.
 
-- Defining _Z_ := ( _X, B_ ), then not only _σ_<sup>_S_</sup> ( _ℓ_ ) but also the log-price log( _S_ ( _ℓ_ )) can be expressed as a linear function of the signature of _Z_<sup>�</sup> . The computational benefit is immediate, since no (Euler) simulation scheme is needed to sample from the marginals of the price process. In terms of the parameters _ℓ_ , log( _S_ ( _ℓ_ )) is the sum of a quadratic function and a linear one, see Proposition 6.4.
+• Defining $Z : = ( X , B )$ , then not only $\sigma ^ { S } ( \ell )$ but also the log-price $\log ( S ( \ell ) )$ can be expressed as a linear function of the signature of $\widehat { Z }$ . The computational benefit is immediate, since no (Euler) simulation scheme is needed to sample from the marginals of the price process. In terms of the parameters $\ell , \log ( S ( \ell ) )$ is the sum of a quadratic function and a linear one, see Proposition 6.4.
 
 <!-- page: 4 -->
 
-- Since _X_<sup>�</sup> is additionally assumed to be a _polynomial diffusion_ (see Cuchiero et al. (2012); Filipovi´c and Larsson (2016)), the VIX under our model can be computed analytically via matrix exponentials. Indeed, in this case the forward variance can be represented by a quadratic form in the parameters _ℓ_ and the corresponding matrix can be computed by polynomial technology, i.e. via matrix exponentials, see Theorem 5.1. This tractability property is a consequence of the fact that _the truncated signature of a polynomial diffusion is again a polynomial diffusion_ (see Section 4). 
+• Since Xb is additionally assumed to be a polynomial difusion (see Cuchiero et al. (2012); Filipovi´c and Larsson (2016)), the VIX under our model can be computed analytically via matrix exponentials. Indeed, in this case the forward variance can be represented by a quadratic form in the parameters ℓ and the corresponding matrix can be computed by polynomial technology, i.e. via matrix exponentials, see Theorem 5.1. This tractability property is a consequence of the fact that the truncated signature of a polynomial difusion is again a polynomial difusion (see Section 4).
 
-- We can efficiently apply a Monte Carlo approach (potentially with variance reduction) for option pricing and calibration, since the signature samples of _Z_<sup>�</sup> can be computed offline and therefore the simulation and optimization step can be completely separated. Indeed, due to the representations of VIX and log( _S_ ( _ℓ_ )) described above, the same samples can be used for _every_ linear map _ℓ_ . Therefore, the calibration task can be split into an offline sampling and a standard optimization, as no simulation is needed during the latter. Moreover, due to the fact that we can obtain a closed-form expression for the VIX (thanks to the polynomial technology) we can avoid a nested Monte Carlo procedure to evaluate the conditional expectation. 
+• We can eficiently apply a Monte Carlo approach (potentially with variance reduction) for option pricing and calibration, since the signature samples of Zb can be computed ofline and therefore the simulation and optimization step can be completely separated. Indeed, due to the representations of VIX and log(S(ℓ)) described above, the same samples can be used for every linear map ℓ. Therefore, the calibration task can be split into an ofline sampling and a standard optimization, as no simulation is needed during the latter. Moreover, due to the fact that we can obtain a closed-form expression for the VIX (thanks to the polynomial technology) we can avoid a nested Monte Carlo procedure to evaluate the conditional expectation.
 
-- Alternatively, a Fourier pricing approach for both VIX and SPX options can be used. Indeed, by building on the fact that the signature of _Z_<sup>�</sup> is an affine process (with values in the extended tensor algebra) as proved in Cuchiero et al. (2023b), its FourierLaplace transform can be computed by solving an (extended tensor algebra valued) Riccati equation, which in turn can be used for Fourier pricing as outlined in Section 6.1. 
+• Alternatively, a Fourier pricing approach for both VIX and SPX options can be used. Indeed, by building on the fact that the signature of Zb is an afine process (with values in the extended tensor algebra) as proved in Cuchiero et al. (2023b), its Fourier-Laplace transform can be computed by solving an (extended tensor algebra valued) Riccati equation, which in turn can be used for Fourier pricing as outlined in Section 6.1.
 
-The remainder of the paper is organized as follows. Section 1.1 gives a review over the different contributions in the literature concerning the joint calibration problem. In Section 2 we introduce the signature in the context of continuous semimartingales, its main properties as well as notation used throughout the paper. Section 3 is dedicated to the introduction of our signature-based model and the connections to classical and also recent stochastic volatility models in the literature. Section 4 is then devoted to the discussion and proof of the matrix exponential formula for the (conditional) truncated expected signature of a polynomial diffusion. This result is at the core of Section 5, where we derive a tractable formula for the VIX, needed for pricing VIX options and VIX futures. Building on these formulas, our calibration results to VIX options are presented in Section 5.3.1. In Section 6, we then prove, similarly as for the VIX, a tractable expression for _S_ . Additionally, we exploit in Section 6.1 the affine nature of the signature process (as proved in Cuchiero et al. (2023b)), to obtain a Fourier pricing approach within our modeling choice for both VIX and SPX options. We finally present the numerical results of the joint calibration problem in Section 7, both in the case of constant parameters and with time-varying parameters, where the latter are introduced in Section 5.4 and Section 6.2. 
+The remainder of the paper is organized as follows. Section 1.1 gives a review over the different contributions in the literature concerning the joint calibration problem. In Section 2 we introduce the signature in the context of continuous semimartingales, its main properties as well as notation used throughout the paper. Section 3 is dedicated to the introduction of our signature-based model and the connections to classical and also recent stochastic volatility models in the literature. Section 4 is then devoted to the discussion and proof of the matrix exponential formula for the (conditional) truncated expected signature of a polynomial difusion. This result is at the core of Section 5, where we derive a tractable formula for the VIX, needed for pricing VIX options and VIX futures. Building on these formulas, our calibration results to VIX options are presented in Section 5.3.1. In Section 6, we then prove, similarly as for the VIX, a tractable expression for S. Additionally, we exploit in Section 6.1 the afine nature of the signature process (as proved in Cuchiero et al. (2023b)), to obtain a Fourier pricing approach within our modeling choice for both VIX and SPX options. We finally present the numerical results of the joint calibration problem in Section 7, both in the case of constant parameters and with time-varying parameters, where the latter are introduced in Section 5.4 and Section 6.2.
 
-The data used in Section 5.3.1 and Section 7.1 were purchased from OptionMetrics<sup>3</sup> . An implementation of the model for the joint calibration can be found in GuidoGazzaniai/jointcalib ~~s~~ igsde or janka-moeller/joint ~~c~~ alib ~~S~~ PX ~~V~~ IX. 
+The data used in Section 5.3.1 and Section 7.1 were purchased from OptionMetrics<sup>3</sup>. An implementation of the model for the joint calibration can be found in GuidoGazzaniai/jointcalib sigsde or janka-moeller/joint calib SPX VIX.
 
-> 3https://optionmetrics.com/
+<sup>3</sup>https://optionmetrics.com/
 
 <!-- page: 5 -->
 
-### **1.1 State of the art** 
+## 1.1 State of the art
 
-This section is primarily dedicated to a literature review on the joint calibration problem and secondly, to a brief overview on signature methods in finance. 
+This section is primarily dedicated to a literature review on the joint calibration problem and secondly, to a brief overview on signature methods in finance.
 
-First attempts to solve the joint calibration problem appear in Gatheral (2008), with a double constant elasticity of variance model (CEV), which despite being rather flexible cannot fit accurately the implied volatilities of SPX and VIX options jointly. Later on, the introduction of models with jumps in the SPX (or additionally also in the volatility) led to different contributions, for instance the forward variance model of Cont and Kokholm (2013) described as an exponential of an affine process with L´evy jumps, the regime-switching enhancement of the classical Heston model by Papanicolaou and Sircar (2014), the 3/2 model with jumps in the asset price of Baldeaux and Badran (2014), in the volatility (Kokholm and Stisen (2015)), or with co-jumps and idiosyncratic jumps in the volatility (Pacati et al. (2018)). 
+First attempts to solve the joint calibration problem appear in Gatheral (2008), with a double constant elasticity of variance model (CEV), which despite being rather flexible cannot fit accurately the implied volatilities of SPX and VIX options jointly. Later on, the introduction of models with jumps in the SPX (or additionally also in the volatility) led to diferent contributions, for instance the forward variance model of Cont and Kokholm (2013) described as an exponential of an afine process with L´evy jumps, the regime-switching enhancement of the classical Heston model by Papanicolaou and Sircar (2014), the 3/2 model with jumps in the asset price of Baldeaux and Badran (2014), in the volatility (Kokholm and Stisen (2015)), or with co-jumps and idiosyncratic jumps in the volatility (Pacati et al. (2018)).
 
-Continuous stochastic volatility models based on Markovian semimartingales have also been employed to solve the joint calibration problem. For instance, in Fouque and Saporito (2018) a Heston model with stochastic vol-of-vol has been calibrated, however only for maturities above 4 months where VIX options are less liquid. More recently, Rømer (2022) considered a model where the volatility is driven by two Ornstein-Uhlenbeck (OU) processes using a non-standard transformation function. This choice of two OU-processes has been an inspiration for our concrete numerical implementations. We also point out that the (nonrough) model introduced in Abi Jaber et al. (2022a,b), where the volatility is described by a polynomial of order five in one single OU-process, falls (apart from the additional input curve) into this class of continuous Markovian models and is a particular instance of our framework. Let us also refer to the paper by Guyon and Mustapha (2023), where a neural SDE model has been successfully jointly calibrated. Within the class of continuous, however not necessarily Markovian models, Guyon and Lekeufack (2023) conduct an empirical and statistical analysis as well as a joint calibration for a family of models where the volatility depends on the paths of the asset. These models can be turned into Markovian ones by using exponential kernels instead of general ones, see also Gazzani and Guyon (2024) for their joint calibration. 
+Continuous stochastic volatility models based on Markovian semimartingales have also been employed to solve the joint calibration problem. For instance, in Fouque and Saporito (2018) a Heston model with stochastic vol-of-vol has been calibrated, however only for maturities above 4 months where VIX options are less liquid. More recently, Rømer (2022) considered a model where the volatility is driven by two Ornstein-Uhlenbeck (OU) processes using a non-standard transformation function. This choice of two OU-processes has been an inspiration for our concrete numerical implementations. We also point out that the (nonrough) model introduced in Abi Jaber et al. (2022a,b), where the volatility is described by a polynomial of order five in one single OU-process, falls (apart from the additional input curve) into this class of continuous Markovian models and is a particular instance of our framework. Let us also refer to the paper by Guyon and Mustapha (2023), where a neural SDE model has been successfully jointly calibrated. Within the class of continuous, however not necessarily Markovian models, Guyon and Lekeufack (2023) conduct an empirical and statistical analysis as well as a joint calibration for a family of models where the volatility depends on the paths of the asset. These models can be turned into Markovian ones by using exponential kernels instead of general ones, see also Gazzani and Guyon (2024) for their joint calibration.
 
-Two further distinct lines of research are worth being mentioned as well: first, martingale optimal transport and second rough volatility. 
+Two further distinct lines of research are worth being mentioned as well: first, martingale optimal transport and second rough volatility.
 
-The martingale optimal transport approach is used to calibrate discrete-time models as proposed in Guyon (2020b, 2023). These models are closely related to Schr¨odinger bridge problems, where the idea is to calibrate only the drift of the volatility while keeping the volatility of volatility unchanged, see e.g. Guo et al. (2022a) as well as the references therein regarding an optimal transport approach. Although the calibration within that setting is accurate, it is also computationally rather expensive and not amenable to calibrate to several maturities jointly. These computational challenges have been tackled recently in Bourgey and Guyon (2022). 
+The martingale optimal transport approach is used to calibrate discrete-time models as proposed in Guyon (2020b, 2023). These models are closely related to Schr¨odinger bridge problems, where the idea is to calibrate only the drift of the volatility while keeping the volatility of volatility unchanged, see e.g. Guo et al. (2022a) as well as the references therein regarding an optimal transport approach. Although the calibration within that setting is accurate, it is also computationally rather expensive and not amenable to calibrate to several maturities jointly. These computational challenges have been tackled recently in Bourgey and Guyon (2022).
 
-In the area of rough volatility modeling, initiated by the seminal paper of Gatheral et al. (2018), the main idea is to replace the standard Brownian motion in the volatility process by a fractional Brownian motion. Even though the roughness of the trajectories found in Gatheral et al. (2018), can also be related to the estimation procedure as discussed e.g. in Cont and Das (2023), the non-Markovianity given by the fractional Brownian motion with Hurst parameter _H <_ 0 _._ 5, is well-suited to reproduce certain stylized facts arising in financial data, e.g. volatility persistence or multiple scales of mean reversion; see Bayer
+In the area of rough volatility modeling, initiated by the seminal paper of Gatheral et al. (2018), the main idea is to replace the standard Brownian motion in the volatility process by a fractional Brownian motion. Even though the roughness of the trajectories found in Gatheral et al. (2018), can also be related to the estimation procedure as discussed e.g. in Cont and Das (2023), the non-Markovianity given by the fractional Brownian motion with Hurst parameter H < 0.5, is well-suited to reproduce certain stylized facts arising in financial data, e.g. volatility persistence or multiple scales of mean reversion; see Bayer et al. (2016). Several classical models have been enhanced with rougher noise, but for simplicity we here only mention those employed in the SPX/VIX calibration. One example is the quadratic rough Heston model introduced in Gatheral et al. (2020), which was in turn calibrated in Rosenbaum and Zhang (2021) by relying on neural networks approaches, also exploited in e.g. Bayer et al. (2019). In Rømer (2022) an exhaustive study of the flexibility of diferent rough and non-rough volatility models for the joint SPX/VIX calibration is carried out, including the rough Bergomi and the rough Heston model. Some of these, for instance the rough Heston model, have an afine structure i.e., can be embedded in the class of afine Volterra processes. In particular they allow for Fourier pricing after solving the related fractional Riccati equations. This underlying structure is the building block of an extension with jumps investigated in Bondi et al. (2024a,b). We refer additionally to Di Nunno et al. (2023); Gazzani and Guyon (2024) for a very recent literature review on volatility modeling.
 
 <!-- page: 6 -->
 
-et al. (2016). Several classical models have been enhanced with rougher noise, but for simplicity we here only mention those employed in the SPX/VIX calibration. One example is the quadratic rough Heston model introduced in Gatheral et al. (2020), which was in turn calibrated in Rosenbaum and Zhang (2021) by relying on neural networks approaches, also exploited in e.g. Bayer et al. (2019). In Rømer (2022) an exhaustive study of the flexibility of different rough and non-rough volatility models for the joint SPX/VIX calibration is carried out, including the rough Bergomi and the rough Heston model. Some of these, for instance the rough Heston model, have an affine structure i.e., can be embedded in the class of affine Volterra processes. In particular they allow for Fourier pricing after solving the related fractional Riccati equations. This underlying structure is the building block of an extension with jumps investigated in Bondi et al. (2024a,b). We refer additionally to Di Nunno et al. (2023); Gazzani and Guyon (2024) for a very recent literature review on volatility modeling. 
+Concerning our framework, signature-based methods provide a generic non-parametric way to extract characteristic features (linearly) and path-dependency from data, which is essential in (machine) learning and calibration tasks in finance. This explains why these techniques become more and more popular in mathematical finance, see e.g., Buehler et al. (2020); Kalsi et al. (2020); Perez Arribas et al. (2020); Lyons et al. (2020); Liao et al. (2023); Bayer et al. (2023); Min and Hu (2021); Cuchiero et al. (2024b); Cuchiero and M¨oller (2023); Akyildirim et al. (2023); Ning et al. (2023); Wiese et al. (2023); Cohen et al. (2023); Lemahieu et al. (2023) and the references therein.
 
-Concerning our framework, signature-based methods provide a generic non-parametric way to extract characteristic features (linearly) and path-dependency from data, which is essential in (machine) learning and calibration tasks in finance. This explains why these techniques become more and more popular in mathematical finance, see e.g., Buehler et al. (2020); Kalsi et al. (2020); Perez Arribas et al. (2020); Lyons et al. (2020); Liao et al. (2023); Bayer et al. (2023); Min and Hu (2021); Cuchiero et al. (2024b); Cuchiero and M¨oller (2023); Akyildirim et al. (2023); Ning et al. (2023); Wiese et al. (2023); Cohen et al. (2023); Lemahieu et al. (2023) and the references therein. 
+## 2 Signature: definition and properties
 
-## **2 Signature: definition and properties** 
+We start by introducing basic notions related to the definition of the signature of an $\mathbb { R } ^ { d _ { - } }$ valued continuous semimartingale. This is similar as in Cuchiero et al. (2023a) or Bayer et al. (2023), but to keep the paper self-contained we recall the essential definitions and properties.
 
-We start by introducing basic notions related to the definition of the signature of an R<sup>_d_</sup> - valued continuous semimartingale. This is similar as in Cuchiero et al. (2023a) or Bayer et al. (2023), but to keep the paper self-contained we recall the essential definitions and properties. 
+For each $n \in { \mathbb { N } } _ { 0 }$ we define recursively the n-fold tensor product of $\mathbb { R } ^ { d }$
 
-For each _n ∈_ N0 we define recursively the _n_ -fold tensor product of R<sup>_d_</sup> , 
+$$
+( \mathbb { R } ^ { d } ) ^ { \otimes 0 } : = \mathbb { R } , \qquad ( \mathbb { R } ^ { d } ) ^ { \otimes n } : = \underbrace { \mathbb { R } ^ { d } \otimes \dots \otimes \mathbb { R } ^ { d } } _ { n } .
+$$
 
+For d $\in \mathbb { N }$ , we define the extended tensor algebra on $\mathbb { R } ^ { d }$ as
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0006-05.png)
+$$
+\begin{array} { r } { T ( ( \mathbb { R } ^ { d } ) ) : = \{ \mathbf { a } : = ( a _ { 0 } , \ldots , a _ { n } , \ldots ) : a _ { n } \in ( \mathbb { R } ^ { d } ) ^ { \otimes n } \} . } \end{array}
+$$
 
+Similarly we introduce the truncated tensor algebra of order $n \in \mathbb { N }$
 
-For _d ∈_ N, we define the extended tensor algebra on R<sup>_d_</sup> as 
+$$
+\begin{array} { r } { T ^ { ( n ) } ( \mathbb { R } ^ { d } ) : = \lbrace \mathbf { a } \in T ( ( \mathbb { R } ^ { d } ) ) : a _ { m } = 0 , \forall m > n \rbrace , } \end{array}
+$$
 
+and the tensor algebra $\begin{array} { r } { T ( \mathbb { R } ^ { d } ) : = \bigcup _ { n \in \mathbb { N } } T ^ { ( n ) } ( \mathbb { R } ^ { d } ) } \end{array}$ . Note that $T ^ { ( n ) } ( \mathbb { R } ^ { d } )$ has dimension
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0006-07.png)
+$$
+d _ { n } : = ( d ^ { n + 1 } - 1 ) / ( d - 1 ) .\tag{2.1}
+$$
 
+For each a, b $\in T ( ( \mathbb { R } ^ { d } ) )$ and $\lambda \in \mathbb { R }$ we set
 
-Similarly we introduce the truncated tensor algebra of order _n ∈_ N 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0006-09.png)
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0006-10.png)
-
-
-For each **a** _,_ **b** _∈ T_ ((R<sup>_d_</sup> )) and _λ ∈_ R we set 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0006-12.png)
+$$
+\begin{array} { r l } & { \mathbf { a } + \mathbf { b } : = ( a _ { 0 } + b _ { 0 } , \ldots , a _ { n } + b _ { n } , \ldots ) , } \\ & { \quad \lambda \cdot \mathbf { a } : = ( \lambda a _ { 0 } , \ldots , \lambda a _ { n } , \ldots ) , } \\ & { \mathbf { a } \otimes \mathbf { b } : = ( c _ { 0 } , \ldots , c _ { n } , \ldots ) , } \end{array}
+$$
 
 <!-- page: 7 -->
 
-where _cn_ :=<sup>�</sup><sup>_n_</sup> _k_ =0<sup>_ak⊗bn−k_.Observethat(</sup><sup>_T_((R</sup><sup>_d_))</sup><sup>_,_+</sup><sup>_, ·, ⊗_)isarealnon-commutative</sup> algebra. 
+where $\begin{array} { r } { c _ { n } : = \sum _ { k = 0 } ^ { n } a _ { k } \otimes b _ { n - k } } \end{array}$ . Observe that $( T ( ( \mathbb { R } ^ { d } ) ) , + , \cdot , \otimes )$ is a real non-commutative algebra.
 
-For a multi-index _I_ := ( _i_ 1 _, . . . , in_ ) we set _|I|_ := _n_ . We also consider the empty index _I_ := _∅_ and set _|I|_ := 0. If _n ≥_ 1 or _n ≥_ 2 we set _I_<sup>_′_</sup> := ( _i_ 1 _, . . . , in−_ 1), and _I_<sup>_′′_</sup> := ( _i_ 1 _, . . . , in−_ 2), respectively. We also use the notation 
+For a multi-index $I : = ( i _ { 1 } , \ldots , i _ { n } )$ we set $| I | : = n$ . We also consider the empty index $I : = \emptyset$ and set $\vert I \vert : = 0$ . If $n \geq 1$ or $n \geq 2$ we set $I ^ { \prime } : = ( i _ { 1 } , \dots , i _ { n - 1 } )$ , and $I ^ { \prime \prime } : = ( i _ { 1 } , \dotsc , i _ { n - 2 } )$ respectively. We also use the notation
 
+$$
+\{ I \colon | I | = n \} : = \{ 1 , \ldots , d \} ^ { n } ,
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0007-02.png)
+omitting the parameter d whenever this does not introduce ambiguity. Observe that multiindices can be identified with words, as it is done for instance in Lyons et al. (2020).
 
+Next, for each $| I | \geq 1$ we set
 
-omitting the parameter _d_ whenever this does not introduce ambiguity. Observe that multiindices can be identified with words, as it is done for instance in Lyons et al. (2020). Next, for each _|I| ≥_ 1 we set 
+$$
+e _ { I } : = e _ { i _ { 1 } } \otimes \cdot \cdot \cdot \otimes e _ { i _ { n } } .
+$$
 
+Observe that the set $\{ e _ { I } \colon | I | = n \}$ is an orthonormal basis of $( \mathbb { R } ^ { d } ) ^ { \otimes n }$ . Denoting by $e _ { \emptyset }$ the basis element corresponding to $( \mathbb { R } ^ { d } ) ^ { \otimes 0 }$ , each element of $\mathbf { a } \in T ( ( \mathbb { R } ^ { d } ) )$ can thus be written as
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0007-04.png)
+$$
+\mathbf { a } = \sum _ { | I | \geq 0 } \mathbf { a } _ { I } e _ { I } ,
+$$
 
+for some ${ \mathbf a } _ { I } \in \mathbb { R }$ . Note that if $a _ { n } \in ( \mathbb { R } ^ { d } ) ^ { \otimes n }$ we use non-bold notation whereas for the components $\mathbf { a } _ { I } \in \mathbb { R }$ we write them bold. Finally, for each $\mathbf { a } \in T ( { \mathbb { R } } ^ { d } )$ and each $ { \mathbf { b } } \in T ( ( { \mathbb { R } } ^ { d } ) )$ 1 we set
 
-Observe that the set _{eI_ : _|I|_ = _n}_ is an orthonormal basis of (R<sup>_d_</sup> )<sup>_⊗n_</sup> . Denoting by _e∅_ the basis element corresponding to (R<sup>_d_</sup> )<sup>_⊗_0</sup> , each element of **a** _∈ T_ ((R<sup>_d_</sup> )) can thus be written as 
+$$
+\langle \mathbf { a } , \mathbf { b } \rangle : = \sum _ { | I | \geq 0 } \langle \mathbf { a } _ { I } , \mathbf { b } _ { I } \rangle .
+$$
 
+Observe in particular that $\mathbf { b } _ { I } = \langle e _ { I } , \mathbf { b } \rangle$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0007-06.png)
+In the present work it will be useful to enumerate the elements of the truncated tensor algebra. To this extent we introduce the isomorphism vec : $T ^ { ( n ) } ( \mathbb { R } ^ { d } ) \mathbb { R } ^ { d _ { n } }$ and an injective labeling function $\mathcal { L } : \{ I : | I | \leq n \} \longrightarrow \{ 1 , \dots , d _ { n } \}$ , such that
 
+$$
+\mathbf { v e c } ( \mathbf { u } ) : = \sum _ { | I | \leq n } e _ { \mathcal { L } ( I ) } \mathbf { u } _ { I } ,\tag{2.2}
+$$
 
-for some **a** _I ∈_ R. Note that if _an ∈_ (R<sup>_d_</sup> )<sup>_⊗n_</sup> we use non-bold notation whereas for the components **a** _I ∈_ R we write them bold. Finally, for each **a** _∈ T_ (R<sup>_d_</sup> ) and each **b** _∈ T_ ((R<sup>_d_</sup> )) we set 
+where $d _ { n }$ is as in (2.1).
 
+Throughout the paper we fix a filtered probability space $( \Omega , \mathcal { F } , ( \mathcal { F } _ { t } ) _ { t \geq 0 } , \mathbb { Q } )$ on which we consider the stochastic processes to be defined. We are now ready to introduce the signature of an $\mathbb { R } ^ { d } .$ -valued continuous semimartingale.
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0007-08.png)
+Definition 2.1. Let X be a continuous $\mathbb { R } ^ { d } .$ -valued semimartingale with $d \geq 1$ . The signature of X is the $T ( ( \mathbb { R } ^ { d } ) )$ )-valued process $( s , t ) \mapsto \mathbb { X } _ { s , t }$ whose components are recursively defined as
 
+$$
+\langle e _ { \emptyset } , { \mathbb X } _ { s , t } \rangle : = 1 , \qquad \langle e _ { I } , { \mathbb X } _ { s , t } \rangle : = \int _ { s } ^ { t } \langle e _ { I ^ { \prime } } , { \mathbb X } _ { s , r } \rangle \circ \mathrm { d } X _ { r } ^ { i _ { n } } ,
+$$
 
-Observe in particular that **b** _I_ = _⟨eI ,_ **b** _⟩_ . 
+for each $I = \left( i _ { 1 } , \ldots , i _ { n } \right) , I ^ { \prime } = \left( i _ { 1 } , \ldots , i _ { n - 1 } \right)$ and $0 \leq s \leq t$ , where ◦ denotes the Stratonovich integral. Its projection $\mathbb { X } ^ { n }$ on $T ^ { ( n ) } ( \mathbb { R } ^ { d } )$ is given by
 
-In the present work it will be useful to enumerate the elements of the truncated tensor algebra. To this extent we introduce the isomorphism **vec** : _T_<sup>(</sup><sup>_n_)</sup> (R<sup>_d_</sup> ) _→_ R<sup>_dn_</sup> and an injective labeling function _L_ : _{I_ : _|I| ≤ n} −→{_ 1 _, . . . , dn}_ , such that 
+$$
+\mathbb { X } _ { s , t } ^ { n } = \sum _ { | I | \leq n } \langle e _ { I } , \mathbb { X } _ { s , t } \rangle e _ { I }
+$$
 
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0007-11.png)
-
-
-where _dn_ is as in (2.1). 
-
-Throughout the paper we fix a filtered probability space (Ω _, F,_ ( _Ft_ ) _t≥_ 0 _,_ Q) on which we consider the stochastic processes to be defined. We are now ready to introduce the signature of an R<sup>_d_</sup> -valued continuous semimartingale. 
-
-**Definition 2.1.** Let _X_ be a continuous R<sup>_d_</sup> -valued semimartingale with _d ≥_ 1. The _signature of X_ is the _T_ ((R<sup>_d_</sup> ))-valued process ( _s, t_ ) _�→_ X _s,t_ whose components are recursively defined as 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0007-15.png)
-
-
-for each _I_ = ( _i_ 1 _, . . . , in_ ) , _I_<sup>_′_</sup> = ( _i_ 1 _, . . . , in−_ 1) and 0 _≤ s ≤ t_ , where _◦_ denotes the Stratonovich integral. Its projection X<sup>_n_</sup> on _T_<sup>(</sup><sup>_n_)</sup> (R<sup>_d_</sup> ) is given by 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0007-17.png)
-
-
-and is called _signature of X truncated at level n_ . If _s_ = 0, we use the notation X _t_ and X<sup>_n_</sup> _t_<sup>,</sup> respectively.
+and is called signature of X truncated at level n. If $s = 0$ , we use the notation $\mathbb { X } _ { t }$ and ${ \mathbb X } _ { t } ^ { n }$ respectively.
 
 <!-- page: 8 -->
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0008-00.png)
+Observe that the signature of X and the signature of $X - c$ coincide for each $c \in \mathbb { R }$ Moreover, with an equivalent notation we can write
 
+$$
+\begin{array} { r l } & { \mathbb { X } _ { t } = \bigg ( 1 , \displaystyle \int _ { 0 } ^ { t } 1 \circ \mathrm { d } X _ { s } ^ { 1 } , \ldots , \displaystyle \int _ { 0 } ^ { t } 1 \circ \mathrm { d } X _ { s } ^ { d } , \displaystyle \int _ { 0 } ^ { t } \left( \displaystyle \int _ { 0 } ^ { s } 1 \circ \mathrm { d } X _ { r } ^ { 1 } \right) \circ \mathrm { d } X _ { s } ^ { 1 } , } \\ & { \qquad \displaystyle \int _ { 0 } ^ { t } \left( \displaystyle \int _ { 0 } ^ { s } 1 \circ \mathrm { d } X _ { r } ^ { 1 } \right) \circ \mathrm { d } X _ { s } ^ { 2 } , \ldots , \displaystyle \int _ { 0 } ^ { t } \left( \displaystyle \int _ { 0 } ^ { s } 1 \circ \mathrm { d } X _ { r } ^ { d } \right) \circ \mathrm { d } X _ { s } ^ { d } , \ldots \bigg ) . } \end{array}
+$$
 
-<!-- Start of picture text -->
-(| J oI)<br>IY) I)<br>Be<br>y<br><!-- End of picture text -->
+A well-known and extremely useful property of the signature is that every polynomial function in the signature has a linear representation. For the precise statement we first need to introduce the following concept (see also Definition 2.4 in Lyons et al. (2020) or Section 2.2. in Bayer et al. (2023)).
+
+Definition 2.2. For every two multi-indices I and J the shufle product is defined recursively as
+
+$$
+e _ { I } \sqcup e _ { J } : = ( e _ { I ^ { \prime } } \sqcup e _ { J } ) \otimes e _ { i _ { | I | } } + ( e _ { I } \sqcup e _ { J ^ { \prime } } ) \otimes e _ { j _ { | J | } } ,
+$$
+
+with $e _ { I } \sqcup e _ { \varnothing } : = e _ { \varnothing } \sqcup e _ { I } = e _ { I }$ . It extends to a, b $\in T ( \mathbb { R } ^ { d } )$ as
+
+$$
+\mathbf { a } \sqcup \mathbf { b } = \sum _ { | I | , | J | \geq 0 } \mathbf { a } _ { I } \mathbf { b } _ { J } ( e _ { I } \sqcup e _ { J } ) .
+$$
+
+Observe that $( T ( \mathbb { R } ^ { d } ) , + , \sqcup )$ is a commutative algebra, which in particular means that the shufle product is associative and commutative.
+
+In the following proposition we summarize some useful properties of the signature. These results have been developed in the rough paths literature (see for instance Ree (1958) or Lyons et al. (2007) for the shufle property, Boedihardjo et al. (2016) for the uniqueness of the signature, and Chen (1957, 1977) for Chen’s identity) and have then been refined in the context of semimartingales (see e.g., Bayer et al. (2023); Cuchiero and M¨oller (2023)). For a more detailed exposition and proofs we refer to Cuchiero et al. (2023a).
+
+Proposition 2.3. Let X and Y be two continuous $\mathbb { R } ^ { d } .$ -valued semimartingales with $X _ { 0 } =$ $Y _ { 0 } = 0$ . Then the following properties hold.
+
+Shufle property For each two multi-indices $I , J$ and each $0 \leq s \leq t$ it holds
+
+$$
+\langle e _ { I } , \mathbb { X } _ { s , t } \rangle \langle e _ { J } , \mathbb { X } _ { s , t } \rangle = \langle e _ { I } \sqcup e _ { J } , \mathbb { X } _ { s , t } \rangle .\tag{2.3}
+$$
+
+Uniqueness of the signature Set $\widehat { X } _ { t } : = ( t , X _ { t } ) , \widehat { Y } _ { t } : = ( t , Y _ { t } )$ and let $\widehat { \mathbb X }$ and $\widehat { \mathbb Y }$ be the corresponding signature processes. Then the signature $\widehat { \mathbb { X } } _ { T } = \widehat { \mathbb { Y } } _ { T }$ if and only if $X _ { t } = Y _ { t }$ for each $t \in [ 0 , T ]$
+
+Chen’s identity For each $0 \leq s \leq u \leq t$ it holds
+
+$$
+{ \mathbb X } _ { s , t } = { \mathbb X } _ { s , u } \otimes { \mathbb X } _ { u , t } .\tag{2.4}
+$$
+
+This can equivalently be written as
+
+$$
+\langle e _ { I } , \mathbb { X } _ { s , t } \rangle = \sum _ { e _ { I _ { 1 } } \otimes e _ { I _ { 2 } } = e _ { I } } \langle e _ { I _ { 1 } } , \mathbb { X } _ { s , u } \rangle \langle e _ { I _ { 2 } } , \mathbb { X } _ { u , t } \rangle ,\tag{2.5}
+$$
+
+for each multi-index I.
 
 <!-- page: 9 -->
 
-**Universal approximation theorem** For each _n ∈_ N consider the sets 
+Universal approximation theorem For each $n \in \mathbb { N }$ consider the sets
 
+$$
+\mathcal { S } ^ { ( n ) } : = \{ ( \widehat { \mathbb { X } } _ { t } ^ { n } ) _ { t \in [ 0 , T ] } ( \omega ) : \omega \in \Omega \}
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0009-01.png)
+and let $S ^ { ( n ) } : S ^ { ( 2 ) } \to S ^ { ( n ) }$ denote the corresponding Lyons lift. Then it holds that $S ^ { ( n ) } ( ( \widehat { \mathbb { X } } _ { t } ^ { 2 } ) _ { t \in [ 0 , T ] } ) \ = \ ( \widehat { \mathbb { X } } _ { t } ^ { n } ) _ { t \in [ 0 , T ] }$ almost surely. Consider then a generic distance $d _ { S ^ { ( 2 ) } }$ on the set of trajectories given by $S ^ { ( 2 ) }$ , with respect to which the map from $S ^ { ( 2 ) }$ to R given by
 
+$$
+\hat { \mathbf { x } } ^ { 2 } \mapsto \langle e _ { I } , S ^ { ( | I | ) } ( \hat { \mathbf { x } } ^ { 2 } ) _ { t } \rangle
+$$
 
-and let _S_<sup>(</sup><sup>_n_)</sup> : _S_<sup>(2)</sup> _→S_<sup>(</sup><sup>_n_)</sup> denote the corresponding Lyons lift. Then it holds that _S_<sup>(</sup><sup>_n_)</sup> ((X<sup>�2</sup> _t_<sup>)</sup> _t∈_ [0 _,T_ ]<sup>)=(X�</sup><sup>_n_</sup> _t_<sup>)</sup> _t∈_ [0 _,T_ ]<sup>almostsurely.</sup> Consider then a generic distance _dS_ (2) on the set of trajectories given by _S_<sup>(2)</sup> , with respect to which the map from _S_<sup>(2)</sup> to R given by 
+is continuous for each multi-index I and every $t \in [ 0 , T ]$ . Let K be a compact subset of $S ^ { ( 2 ) }$ and consider a continuous map $f : K \to \mathbb { R }$ . Then for every $\varepsilon > 0$ there exists some $\ell \in T ( { \mathbb { R } } ^ { d } )$ such that
 
+$$
+\operatorname* { s u p } _ { ( \widehat { \mathbb { X } } _ { t } ^ { 2 } ) _ { t \in [ 0 , T ] } \in K } | f ( ( \widehat { \mathbb { X } } _ { t } ^ { 2 } ) _ { t \in [ 0 , T ] } ) - \langle \ell , \widehat { \mathbb { X } } _ { T } \rangle | < \varepsilon ,
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0009-03.png)
+almost surely.
 
+## 3 The model
 
-is continuous for each multi-index _I_ and every _t ∈_ [0 _, T_ ]. Let _K_ be a compact subset of _S_<sup>(2)</sup> and consider a continuous map _f_ : _K →_ R. Then for every _ε >_ 0 there exists some _ℓ ∈ T_ (R<sup>_d_</sup> ) such that 
+We start by introducing the concept of polynomial difusions (see Cuchiero et al. (2012); Filipovi´c and Larsson (2016)) which will play a key role for the computation of the conditional expected signature. Here we denote by $\sqrt { \cdot }$ the matrix square root.
 
+Definition 3.1. Suppose that an $\mathbb { R } ^ { d } .$ -valued process $X = ( X _ { t } ) _ { t \geq 0 }$ is a weak solution of
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0009-05.png)
+$$
+\mathrm d X _ { t } = b ( X _ { t } ) \mathrm d t + \sqrt { a ( X _ { t } ) } \mathrm d W _ { t } , \qquad X _ { 0 } = x _ { 0 }
+$$
 
+for some d-dimensional Brownian motion W and some maps $a : \mathbb { R } ^ { d } \mathbb { S } _ { + } ^ { d }$ and $b : \mathbb { R } ^ { d } \mathbb { R } ^ { d }$ such that $a _ { i j }$ is a polynomial of degree at most 2 and $b _ { j }$ is a polynomial of degree at most 1 for each $i , j \in \{ 1 , \ldots , d \}$ . Then we call X polynomial difusion.
 
-almost surely. 
+We are now ready to introduce the model $( S _ { t } ) _ { t \geq 0 }$ for the discounted, dividend-adjusted dynamics of the S&P 500 index already outlined in the introduction. Its dynamics under a risk-neutral probability measure $\mathbb { Q }$ are given by
 
-## **3 The model** 
+$$
+\mathrm { d } S _ { t } = S _ { t } \sigma _ { t } ^ { S } \mathrm { d } B _ { t } ,\tag{3.1}
+$$
 
-We start by introducing the concept of polynomial diffusions (see Cuchiero et al. (2012); Filipovi´c and Larsson (2016)) which will play a key role for the computation of the conditional expected signature. Here we denote by<sup>_√_</sup> _<u>·</u>_ the matrix square root. 
+where $S _ { 0 } \in \mathbb { R } ^ { + } , \sigma ^ { S } = ( \sigma _ { t } ^ { S } ) _ { t \geq 0 }$ is the volatility process to be specified and $B = ( B _ { t } ) _ { t \geq 0 }$ is a one-dimensional Brownian motion, correlated with $\sigma ^ { S }$ . We define additionally the instantaneous variance via $V _ { t } : = ( \sigma _ { t } ^ { S } ) ^ { 2 }$ for every $t \geq 0$ . Our modeling choice is to parametrize the volatility process $\sigma ^ { S }$ as a linear function of the time-extended signature of a primary process $X ,$ , namely
 
-**Definition 3.1.** Suppose that an R<sup>_d_</sup> -valued process _X_ = ( _Xt_ ) _t≥_ 0 is a weak solution of 
+$$
+\sigma _ { t } ^ { S } ( \ell ) : = \ell _ { \varnothing } + \sum _ { 0 < | I | \leq n } \ell _ { I } \langle e _ { I } , \widehat { \mathbb { X } } _ { t } \rangle ,\tag{3.2}
+$$
 
+where
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0009-10.png)
+$( X _ { t } ) _ { t \geq 0 }$ and thus also $\widehat { X } = ( t , X _ { t } ) _ { t \geq 0 }$ is a polynomial difusion (with values in $\mathbb { R } ^ { d }$ and $\mathbb { R } ^ { d + 1 }$ respectively) in the sense of Definition 3.1.
 
-
-for some _d_ -dimensional Brownian motion _W_ and some maps _a_ : R<sup>_d_</sup> _→_ S<sup>_d_</sup> +<sup>and</sup><sup>_b_: R</sup><sup>_d→_R</sup><sup>_d_</sup> such that _aij_ is a polynomial of degree at most 2 and _bj_ is a polynomial of degree at most 1 for each _i, j ∈{_ 1 _, . . . , d}_ . Then we call _X polynomial diffusion_ . 
-
-We are now ready to introduce the model ( _St_ ) _t≥_ 0 for the discounted, dividend-adjusted dynamics of the S&P 500 index already outlined in the introduction. Its dynamics under a risk-neutral probability measure Q are given by 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0009-13.png)
-
-
-where _S_ 0 _∈_ R<sup>+</sup> , _σ_<sup>_S_</sup> = ( _σt_<sup>_S_)</sup><sup>_t≥_0isthevolatilityprocesstobespecifiedand</sup><sup>_B_= (</sup><sup>_Bt_)</sup><sup>_t≥_0isa</sup> one-dimensional Brownian motion, correlated with _σ_<sup>_S_</sup> . We define additionally the instantaneous variance via _Vt_ := ( _σt_<sup>_S_)2forevery</sup><sup>_t≥_0.Ourmodelingchoiceistoparametrize</sup> the volatility process _σ_<sup>_S_</sup> as a linear function of the time-extended signature of a primary process _X_ , namely 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0009-15.png)
-
-
-where 
-
-> • ( _Xt_ ) _t≥_ 0 and thus also _X_<sup>�</sup> = ( _t, Xt_ ) _t≥_ 0 is a polynomial diffusion (with values in R<sup>_d_</sup> and R<sup>_d_+1</sup> respectively) in the sense of Definition 3.1. 
-
-- _ℓ_ := _{ℓI ∈_ R : _|I| ≤ n}_ denotes the collection of parameters of the model, i.e., _ℓ ∈_ R<sup>(</sup><sup>_d_+1)</sup><sup>_n_</sup> .
+$\ell : = \{ \ell _ { I } \in \mathbb { R } : | I | \leq n \}$ denotes the collection of parameters of the model, $\mathrm { i . e . }$ $\boldsymbol { \ell } \in \mathbb { R } ^ { ( \bar { d } + 1 ) _ { n } }$
 
 <!-- page: 10 -->
 
-We then denote by _ρ_ the correlation matrix process between the components of _X_ , i.e. 
+We then denote by $\rho$ the correlation matrix process between the components of X, i.e.
 
+$$
+\rho _ { i j } = \frac { [ X ^ { i } , X ^ { j } ] } { \sqrt { [ X ^ { i } ] } \sqrt { [ X ^ { j } ] } } \in [ - 1 , 1 ] ,
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0010-01.png)
+for all $i , j = 1 , \ldots , d ,$ where $[ \cdot , \cdot ]$ denotes the quadratic covariation.
 
+In order to simplify the notation we will drop the dependence on ℓ for the processes $S = ( S _ { t } ) _ { t \geq 0 }$ and $( \sigma _ { t } ^ { S } ) _ { t \geq 0 }$ as in (3.1), whenever this does not cause any confusion.
 
-for all _i, j_ = 1 _, . . . , d_ , where [ _· , ·_ ] denotes the quadratic covariation. 
+Remark 3.2. As an alternative definition for the volatility process $( \sigma _ { t } ^ { S } ) _ { t \geq 0 }$ one can set
 
-In order to simplify the notation we will drop the dependence on _ℓ_ for the processes _S_ = ( _St_ ) _t≥_ 0 and ( _σt_<sup>_S_)</sup><sup>_t≥_0asin(3.1),wheneverthisdoesnotcauseanyconfusion.</sup> 
+$$
+\sigma _ { t } ^ { S } ( \ell ) : = \ell _ { \varnothing } + \sum _ { 0 < | I | \leq n } \ell _ { I } \langle e _ { I } , \widehat { \mathbb { X } } _ { t - \varepsilon , t } \rangle ,
+$$
 
-**Remark 3.2.** As an alternative definition for the volatility process ( _σt_<sup>_S_)</sup><sup>_t≥_0onecanset</sup> 
+for some fixed $\varepsilon > 0$ . In this case the value of the volatility process $\sigma ^ { S }$ at time t does not depend on the whole trajectory of the primary process X, but just on its evolution from $t - \varepsilon$ to t. For an economically reasonable choice for ε the lags used in Section 3.4 of Guyon and Lekeufack (2023) can be adapted to the current setting.
 
+Remark 3.3 (Interest rates and dividends). In the model given by (3.1) we describe the discounted, dividend-adjusted prices and construct the VIX from them, in line with the definition of the CBOE for the computation of the VIX. However, contingent claims are often expressed in terms of undiscounted, unadjusted prices. If the dynamics of the discounted, dividend-adjusted price process are given by (3.1), the undiscounted, unadjusted one is denoted by $\tilde { S }$ and fulfills
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0010-05.png)
+$$
+\mathrm { d } \tilde { S } _ { t } = ( r - q ) \tilde { S } _ { t } \mathrm { d } t + \tilde { S } _ { t } \sigma _ { t } ^ { S } ( \ell ) \mathrm { d } B _ { t } ,
+$$
 
+where here $r , q \in \mathbb { R }$ denote the interest rate and the dividend, respectively. Therefore $\tilde { S } _ { t } ( \ell ) = e ^ { ( r - q ) t } \bar { S } _ { t } ( \ell )$ and the price of a call option on the S&P 500 index under our model, reads
 
-for some fixed _ε >_ 0. In this case the value of the volatility process _σ_<sup>_S_</sup> at time _t_ does not depend on the whole trajectory of the primary process _X_ , but just on its evolution from _t − ε_ to _t_ . For an economically reasonable choice for _ε_ the lags used in Section 3.4 of Guyon and Lekeufack (2023) can be adapted to the current setting. 
+$$
+C ( T , K ) = \mathbb { E } \left[ e ^ { - r T } ( \tilde { S } _ { T } ( \ell ) - K ) ^ { + } \right] = \mathbb { E } [ e ^ { - r T } ( e ^ { ( r - q ) T } S _ { T } ( \ell ) - K ) ^ { + } ]
+$$
 
-**Remark 3.3** (Interest rates and dividends) **.** In the model given by (3.1) we describe the discounted, dividend-adjusted prices and construct the VIX from them, in line with the definition of the CBOE for the computation of the VIX. However, contingent claims are often expressed in terms of undiscounted, unadjusted prices. If the dynamics of the discounted, dividend-adjusted price process are given by (3.1), the undiscounted, unadjusted one is denoted by _S_<sup>˜</sup> and fulfills 
+where $T > 0$ denotes the maturity time and $K \in \mathbb { R }$ the undiscounted strike price.
 
+It is worth mentioning that the pool of eligible primary processes is rather wide, including for example correlated Brownian motions, geometric Brownian motions, OU processes, Cox-Ingersoll-Ross (CIR) processes, Jacobi processes, and all continuous afine processes.
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0010-08.png)
+The reason why we require the primary process to be a polynomial difusion is due to the tractability properties of the truncated signature ${ \widehat { \mathbb { X } } } ^ { n }$ under this assumption. We will indeed see in Section 4 that in this case the (conditional) truncated expected signature of $\widehat { X }$ can be computed by solving a finite-dimensional ODE, i.e., can be written in terms of a matrix exponential.
 
+Remark 3.4. We illustrate here that several classical and also recently considered stochastic volatility models are nested within our modeling choice (3.2).
 
-where˜ here _r, q ∈_ R denote the interest rate and the dividend, respectively. Therefore _St_ ( _ℓ_ ) = _e_<sup>(</sup><sup>_r−q_)</sup><sup>_t_</sup> _St_ ( _ℓ_ ) and the price of a call option on the S&P 500 index under our model, reads 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0010-10.png)
-
-
-where _T >_ 0 denotes the maturity time and _K ∈_ R the undiscounted strike price. 
-
-It is worth mentioning that the pool of eligible primary processes is rather wide, including for example correlated Brownian motions, geometric Brownian motions, OU processes, CoxIngersoll-Ross (CIR) processes, Jacobi processes, and all continuous affine processes. 
-
-The reason why we require the primary process to be a polynomial diffusion is due to the tractability properties of the truncated signature X<sup>�</sup><sup>_n_</sup> under this assumption. We will indeed� see in Section 4 that in this case the (conditional) truncated expected signature of _X_ can be computed by solving a finite-dimensional ODE, i.e., can be written in terms of a matrix exponential. 
-
-**Remark 3.4.** We illustrate here that several classical and also recently considered stochastic volatility models are nested within our modeling choice (3.2). 
-
-- Suppose that ( _Xt_ ) _t≥_ 0 is a 1-dimensional OU process and let the order of the signature be _n_ = 1, with _ℓ∅_ = _ℓ_ (0) = 0 and _ℓ_ (1) = 0. Then the process _S_ = ( _St_ ) _t≥_ 0 coincides with the Stein-Stein model, as introduced in Stein and Stein (1991).
+• Suppose that $( X _ { t } ) _ { t \geq 0 }$ is a 1-dimensional OU process and let the order of the signature be $n = 1$ , with $\ell _ { \varnothing } = \ell _ { ( 0 ) } = 0$ and $\ell _ { ( 1 ) } \neq 0$ . Then the process $S = ( S _ { t } ) _ { t \geq 0 }$ coincides with the Stein-Stein model, as introduced in Stein and Stein (1991).
 
 <!-- page: 11 -->
 
-- Suppose that ( _Xt_ ) _t≥_ 0 is a 1-dimensional geometric Brownian motion without drift and let the order of the signature be _n_ = 1, with _ℓ∅_ = _ℓ_ (0) = 0 and _ℓ_ (1) = 0. Then the process _S_ = ( _St_ ) _t≥_ 0 coincides with the SABR model, as introduced in initially in Hagan et al. (2002) with _β_ = 1. 
+• Suppose that $( X _ { t } ) _ { t \geq 0 }$ is a 1-dimensional geometric Brownian motion without drift and let the order of the signature be $n = 1$ , with $\ell _ { \varnothing } = \ell _ { ( 0 ) } = 0$ and $\ell _ { ( 1 ) } \neq 0$ . Then the process $S = ( S _ { t } ) _ { t \geq 0 }$ coincides with the SABR model, as introduced in initially in Hagan et al. (2002) with $\beta = 1$
 
-- Suppose that ( _Xt_ ) _t≥_ 0 is a 1-dimensional OU process and let the order of the signature be _n_ = 5, with _ℓ∅, ℓ_ (1) _, ℓ_ (1 _,_ 1 _,_ 1) _, ℓ_ (1 _,_ 1 _,_ 1 _,_ 1 _,_ 1) non-zero and _ℓI_ = 0 otherwise. Then the process _S_ = ( _St_ ) _t≥_ 0 coincides with the model considered in Abi Jaber et al. (2022a,b) with an exponential kernel (a part from the deterministic input curve considered there additionally). Going beyond the assumption of _X_<sup>ˆ</sup> being a polynomial diffusion we may allow for ( _Xt_ ) _t≥_ 0 to be a one-dimensional fractional Brownian motion, thus leaving the semimartingale setting. And if we do not consider the time augmentation, we can also include fractional kernels and therefore the whole class of Gaussian polynomial volatility models introduced in Abi Jaber et al. (2022a) within our framework. 
+• Suppose that $( X _ { t } ) _ { t \geq 0 }$ is a 1-dimensional OU process and let the order of the signature be $n = 5 .$ , with $\ell _ { \varnothing } , \ell _ { ( 1 ) } , \ell _ { ( 1 , 1 , 1 ) } , \ell _ { ( 1 , 1 , 1 , 1 , 1 ) }$ non-zero and $\ell _ { I } = 0$ otherwise. Then the process $S = ( S _ { t } ) _ { t \geq 0 }$ coincides with the model considered in Abi Jaber et al. $\mathrm { ( 2 0 2 2 a , b ) }$ with an exponential kernel (a part from the deterministic input curve considered there additionally). Going beyond the assumption of $\hat { X }$ being a polynomial difusion we may allow for $( X _ { t } ) _ { t \geq 0 }$ to be a one-dimensional fractional Brownian motion, thus leaving the semimartingale setting. And if we do not consider the time augmentation, we can also include fractional kernels and therefore the whole class of Gaussian polynomial volatility models introduced in Abi Jaber et al. (2022a) within our framework.
 
-**Remark 3.5.** As indicated in the last point of the previous remark, our framework can be extended beyond the semimartingale case as long as the trajectories of the corresponding process can be enhanced to be almost surely a weakly geometric _p_ -rough path. This holds for instance true for the case of time-augmented multidimensional fractional Brownian motion when _H ∈_ (1 _/_ 4 _,_ 1), since for any _p ∈_ (1 _/H,_ 4) there exists an almost surely weakly geometric _p_ -rough path, such that the projection on the first component coincides with the process’ increments. For this result we refer to Coutin and Qian (2002), Theorem 2. Observe that the case considered in Abi Jaber et al. (2022a) is simpler since it is a one dimensional setting, meaning that the corresponding signature boils down to Taylor polynomials of fractional Brownian motion. 
+Remark 3.5. As indicated in the last point of the previous remark, our framework can be extended beyond the semimartingale case as long as the trajectories of the corresponding process can be enhanced to be almost surely a weakly geometric p-rough path. This holds for instance true for the case of time-augmented multidimensional fractional Brownian motion when $H \in ( 1 / 4 , 1 )$ , since for any $p \in ( 1 / H , 4 )$ there exists an almost surely weakly geometric p-rough path, such that the projection on the first component coincides with the process’ increments. For this result we refer to Coutin and Qian (2002), Theorem 2. Observe that the case considered in Abi Jaber et al. (2022a) is simpler since it is a one dimensional setting, meaning that the corresponding signature boils down to Taylor polynomials of fractional Brownian motion.
 
-Note however, while our framework can be extended beyond the semimartingale case as long as signatures can be defined, our methodology to compute conditional truncated expected signatures via finite dimensional matrix exponentials only works in the polynomial diffusion setting. The same applies to the linear representation of the log-price provided in Section 6. 
+Note however, while our framework can be extended beyond the semimartingale case as long as signatures can be defined, our methodology to compute conditional truncated expected signatures via finite dimensional matrix exponentials only works in the polynomial difusion setting. The same applies to the linear representation of the log-price provided in Section 6.
 
-**Remark 3.6.** Let _X_ be a 1-dimensional OU-process, such that without loss of generality _X_ 0 = 0, i.e., 
+Remark 3.6. Let X be a 1-dimensional OU-process, such that without loss of generality $X _ { 0 } = 0 , { \mathrm { i . e . } }$
 
+$$
+\mathrm { d } X _ { t } = \kappa ( \theta - X _ { t } ) \mathrm { d } t + \sigma \mathrm { d } W _ { t } .
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0011-05.png)
+Then, for $n = 2$ the instantaneous dynamics of the volatility process are given by
 
+$$
+\begin{array} { r l } & { \mathrm { d } \sigma _ { t } = \ell _ { 0 } \mathrm { d } t + \ell _ { 1 } \mathrm { d } X _ { t } + \ell _ { 0 0 } t \mathrm { d } t + \ell _ { 0 1 } t \mathrm { d } X _ { t } + \ell _ { 1 0 } X _ { t } \mathrm { d } t + \ell _ { 1 1 } \mathrm { d } X _ { t } ^ { 2 } } \\ & { \qquad = ( \ell _ { 0 } + \ell _ { 0 0 } t + \ell _ { 1 } \kappa ( \theta - X _ { t } ) + \ell _ { 0 1 } t \kappa ( \theta - X _ { t } ) + \ell _ { 1 0 } X _ { t } + 2 \ell _ { 1 1 } X _ { t } \big ( \kappa ( \theta - X _ { t } ) + \sigma ^ { 2 } \big ) \big ) \mathrm { d } t } \\ & { \qquad + \big ( \ell _ { 1 } \sigma + \ell _ { 0 1 } t \sigma + 2 \ell _ { 1 1 } \sigma X _ { t } \big ) \mathrm { d } W _ { t } , } \end{array}
+$$
 
-Then, for _n_ = 2 the instantaneous dynamics of the volatility process are given by 
+which can be rewritten as
 
+$$
+\mathrm { d } \sigma _ { t } = \bigl ( f _ { 1 } ( t ) + c X _ { t } ( g ( t ) - X _ { t } ) \bigr ) \mathrm { d } t + ( f _ { 2 } ( t ) + \tilde { c } X _ { t } ) \mathrm { d } W _ { t } ,
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0011-07.png)
+where $f _ { 1 } , f _ { 2 } , g$ are afine functions of time and $c , { \tilde { c } } \in \mathbb { R }$ , all depending on the model parameters $\{ \ell _ { I } , | I | \le n \}$ . The previous simple derivation implies:
 
+• If $n = 1$ the instantaneous vol of vol is constant and given by $| \ell _ { 1 } \sigma |$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0011-08.png)
-
-
-which can be rewritten as 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0011-10.png)
-
-
-where _f_ 1 _, f_ 2 _, g_ are affine functions of time and _c,_ ˜ _c ∈_ R, all depending on the model parameters _{ℓI , |I| ≤ n}_ . The previous simple derivation implies: 
-
-- If _n_ = 1 the instantaneous vol of vol is constant and given by _|ℓ_ 1 _σ|_ . 
-
-- If _n ≥_ 2 the instantaneous vol of vol is stochastic, depending explicitly on _Xt_ .
+• If $n \geq 2$ the instantaneous vol of vol is stochastic, depending explicitly on $X _ { t }$ • For $n = 2$ , the instantaneous volatility exhibits a stochastic mean reversion rate given by the term $c X _ { t }$ , with a time-dependent long-run mean by the afine function $g ( t )$ We will see in the subsequent sections that this type of model with a 3-dimensional OU-process is flexible enough to solve the joint calibration problem.
 
 <!-- page: 12 -->
 
-- For _n_ = 2, the instantaneous volatility exhibits a stochastic mean reversion rate given by the term _cXt_ , with a time-dependent long-run mean by the affine function _g_ ( _t_ ). We will see in the subsequent sections that this type of model with a 3-dimensional OU-process is flexible enough to solve the joint calibration problem. 
+• Notice that even for $n = 2$ , the choice $X = W$ , i.e. choosing just a Brownian motion (as for instance in Perez Arribas et al. (2020); Cuchiero et al. (2023a) for the price process), would lead to restrictive dynamics of the instantaneous volatility.
 
-- Notice that even for _n_ = 2, the choice _X_ = _W_ , i.e. choosing just a Brownian motion (as for instance in Perez Arribas et al. (2020); Cuchiero et al. (2023a) for the price process), would lead to restrictive dynamics of the instantaneous volatility. 
+## 4 Expected signature of polynomial difusion
 
-## **4 Expected signature of polynomial diffusion** 
+Let $( Y _ { t } ) _ { t \geq 0 }$ be a polynomial difusion in sense of Definition 3.1 whose dynamics are given by
 
-Let ( _Yt_ ) _t≥_ 0 be a polynomial diffusion in sense of Definition 3.1 whose dynamics are given by 
+$$
+\mathrm { d } Y _ { t } = b ( Y _ { t } ) \mathrm { d } t + \sigma ( Y _ { t } ) \mathrm { d } W _ { t } , \qquad Y _ { 0 } = y _ { 0 } ,\tag{4.1}
+$$
 
+where $\sigma ( Y _ { t } )$ denotes the matrix square root of $a ( Y _ { t } )$ . Recall that in this case the components of $a : \mathbb { R } ^ { d } \mathbb { S } _ { + } ^ { d }$ are polynomials of degree at most 2, the components of $b : \mathbb { R } ^ { d } \mathbb { R } ^ { d }$ are polynomials of degree at most 1, and $W = ( W _ { t } ) _ { t \geq 0 }$ is a d-dimensional Brownian motion. Denote then by Y the corresponding signature.
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0012-04.png)
+We now explain how to employ the polynomial technology to compute the conditional truncated expected signature of $( Y _ { t } ) _ { t \geq 0 }$ . The corresponding code is available at sarasvaluto/AfPolySig. Several representations of related quantities in particular for the Brownian case can be found in the literature, see for instance Fawcett (2003), Lyons and Victoir (2004), Lyons and Ni (2015), Boedihardjo et al. (2021), Cass and Ferrucci (2024). Our approach follows Cuchiero et al. (2023b) and is based on the classical theory of polynomial processes (see Cuchiero et al. (2012) and Filipovi´c and Larsson (2016)). Even though results for the corresponding infinite dimensional stochastic processes (see for instance Cuchiero and Svaluto-Ferro (2021); Cuchiero et al. (2024a)) are needed in the case of general signature SDEs considered in Cuchiero et al. (2023b), the polynomial property of $( Y _ { t } ) _ { t \geq 0 }$ here permits to stay in the finite dimensional setting.
 
+Lemma 4.1. Let $( Y _ { t } ) _ { t \geq 0 }$ be the polynomial difusion given by (4.1) and b and a be the corresponding drift and difusion coeficients. Then
 
-where _σ_ ( _Yt_ ) denotes the matrix square root of _a_ ( _Yt_ ). Recall that in this case the components of _a_ : R<sup>_d_</sup> _→_ S<sup>_d_</sup> +<sup>arepolynomialsofdegreeatmost2,thecomponentsof</sup><sup>_b_:R</sup><sup>_d→_R</sup><sup>_d_are</sup> polynomials of degree at most 1, and _W_ = ( _Wt_ ) _t≥_ 0 is a _d_ -dimensional Brownian motion. Denote then by Y the corresponding signature. 
+$$
+b _ { j } ( y ) = b _ { j } ^ { c } + \sum _ { k = 1 } ^ { d } b _ { j } ^ { k } y _ { k } \qquad { \mathrm { a n d } } \qquad a _ { i j } ( y ) = a _ { i j } ^ { c } + \sum _ { k = 1 } ^ { d } a _ { i j } ^ { k } y _ { k } + \sum _ { k , h = 1 } ^ { d } a _ { i j } ^ { k h } y _ { k } y _ { h } ,
+$$
 
-We now explain how to employ the polynomial technology to compute the conditional truncated expected signature of ( _Yt_ ) _t≥_ 0. The corresponding code is available at sarasvaluto/AffPolySig. Several representations of related quantities in particular for the Brownian case can be found in the literature, see for instance Fawcett (2003), Lyons and Victoir (2004), Lyons and Ni (2015), Boedihardjo et al. (2021), Cass and Ferrucci (2024). Our approach follows Cuchiero et al. (2023b) and is based on the classical theory of polynomial processes (see Cuchiero et al. (2012) and Filipovi´c and Larsson (2016)). Even though results for the corresponding infinite dimensional stochastic processes (see for instance Cuchiero and Svaluto-Ferro (2021); Cuchiero et al. (2024a)) are needed in the case of general signature SDEs considered in Cuchiero et al. (2023b), the polynomial property of ( _Yt_ ) _t≥_ 0 here permits to stay in the finite dimensional setting. 
+for some $b _ { j } ^ { c } , b _ { j } ^ { k } , a _ { i j } ^ { c } , a _ { i j } ^ { k } , a _ { i j } ^ { k h } = a _ { i j } ^ { h k } \in \mathbb { R }$ . Moreover, $b _ { j } ( Y _ { t } ) = \langle \mathbf { b } _ { j } , \mathbb { Y } _ { t } ^ { 1 } \rangle$ and $a _ { i j } ( Y _ { t } ) = \langle \mathbf { a } _ { i j } , \mathbb { Y } _ { t } ^ { 2 } \rangle$ for
 
-**Lemma 4.1.** Let ( _Yt_ ) _t≥_ 0 be the polynomial diffusion given by (4.1) and _b_ and _a_ be the corresponding drift and diffusion coefficients. Then 
+$$
+\begin{array} { l } { { \displaystyle { \bf b } _ { j } = \left( b _ { j } ^ { c } + \sum _ { k = 1 } ^ { d } b _ { j } ^ { k } Y _ { 0 } ^ { k } \right) e _ { \emptyset } + \sum _ { k = 1 } ^ { d } b _ { j } ^ { k } e _ { k } } \qquad \mathrm { a n d } }  \\ { { \displaystyle { \bf a } _ { i j } = \left( a _ { i j } ^ { c } + \sum _ { k = 1 } ^ { d } a _ { i j } ^ { k } Y _ { 0 } ^ { k } + \sum _ { k , h = 1 } ^ { d } a _ { i j } ^ { k h } Y _ { 0 } ^ { k } Y _ { 0 } ^ { h } \right) e _ { \emptyset } + \sum _ { k = 1 } ^ { d } \left( a _ { i j } ^ { k } + 2 \sum _ { h = 1 } ^ { d } a _ { i j } ^ { k h } Y _ { 0 } ^ { h } \right) e _ { k } + \sum _ { k , h = 1 } ^ { d } a _ { i j } ^ { k h } e _ { k } \shuffle { \bf a } _ { k } , } } \end{array}
+$$
 
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0012-08.png)
-
-
-for some _b_<sup>_c_</sup> _j_<sup>,</sup><sup>_bk_</sup> _j_<sup>,</sup><sup>_ac_</sup> _ij_<sup>,</sup><sup>_ak_</sup> _ij_<sup>,</sup><sup>_akh_</sup> _ij_<sup>=</sup><sup>_ahk_</sup> _ij_<sup>_∈_R.Moreover,</sup><sup>_bj_(</sup><sup>_Yt_)=</sup><sup>_⟨_</sup><sup>**b**</sup><sup>_j,_Y1</sup> _t_<sup>_⟩_and</sup><sup>_aij_(</sup><sup>_Yt_)=</sup><sup>_⟨_</sup><sup>**a**</sup><sup>_ij,_Y2</sup> _t_<sup>_⟩_</sup> for 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0012-10.png)
-
-
-Observe that the upper index on _Y_ 0<sup>_k_and</sup><sup>_Y_</sup> 0<sup>_h_refersto</sup><sup>_Y_’scomponentsandnottopowers.</sup>
+Observe that the upper index on $Y _ { 0 } ^ { k }$ and $Y _ { 0 } ^ { h }$ refers to $Y \mathrm { { } s }$ components and not to powers.
 
 <!-- page: 13 -->
 
-/ | 
+Proof. The first part follows by the observation that by definition of polynomial difusion b and a are polynomials of degree at most 1 and 2, respectively. For the second part it then sufices to note that $\left. e _ { \emptyset } , \mathbb { Y } _ { t } ^ { 1 } \right. = \left. e _ { \emptyset } , \mathbb { Y } _ { t } ^ { 2 } \right. = 1 , \ \left. e _ { k } , \mathbb { Y } _ { t } ^ { 1 } \right. = \left. e _ { k } , \mathbb { Y } _ { t } ^ { 2 } \right. = \left( Y _ { t } ^ { k } - Y _ { 0 } ^ { k } \right)$ , and $\langle e _ { k } \downarrow \sqcup e _ { h } , \mathbb { Y } _ { t } ^ { 2 } \rangle = ( Y _ { t } ^ { k } - Y _ { 0 } ^ { k } ) ( Y _ { t } ^ { h } - Y _ { 0 } ^ { h } )$ □
 
-| | ~~-~~ | | ~~||~~ ~~<u>|</u>~~ / ~~|~~ joo / ~~f~~ ou || 
+Lemma 4.2. Let $( Y _ { t } ) _ { t \geq 0 }$ be the polynomial difusion given by (4.1) and let b and a as in Lemma 4.1. The truncated signature $( \mathbb { Y } _ { t } ^ { n } ) _ { t \geq 0 }$ is a polynomial difusion in the sense of Definition 3.1 and for each $| I | \le n$ it holds that
 
-() S 
+$$
+\langle e _ { I } , \mathbb { Y } _ { t } ^ { n } \rangle = \int _ { 0 } ^ { t } \langle L e _ { I } , \mathbb { Y } _ { s } ^ { n } \rangle \mathrm { d } s + \int _ { 0 } ^ { t } \langle e _ { I ^ { \prime } } , \mathbb { Y } _ { s } ^ { n } \rangle { \sigma _ { i _ { | I | } } } ( Y _ { s } ) \mathrm { d } W _ { s } ,
+$$
 
-uw w
+where the operator $L : T ( ( \mathbb { R } ^ { d } ) ) \to T ( ( \mathbb { R } ^ { d } ) )$ satisfies $L ( T ^ { ( n ) } ( \mathbb { R } ^ { d } ) ) \subseteq T ^ { ( n ) } ( \mathbb { R } ^ { d } )$ and is given by
+
+$$
+L e _ { I } = e _ { I ^ { \prime } } \sqcup \mathbf { b } _ { i _ { | I | } } + { \frac { 1 } { 2 } } e _ { I ^ { \prime \prime } } \sqcup \mathbf { a } _ { i _ { | I | - 1 } i _ { | I | } } .\tag{4.2}
+$$
+
+Proof. Let $\sigma _ { j } ( Y _ { t } )$ denote the j-th row of $\sigma ( Y _ { t } )$ . By definition of the signature, Stratonovich integral and by the shufle property we can compute
+
+$$
+\begin{array} { r l } { \langle \epsilon _ { I I } , \Psi _ { i I } ^ { * } \rangle = \int _ { 0 } ^ { t } \langle \epsilon _ { I I } , \Psi _ { i I } \rangle = } & { \int _ { 0 } ^ { t } \langle \epsilon _ { I I } , \Psi _ { i I } \rangle = } \\ & { = \int _ { 0 } ^ { t } \langle \epsilon _ { I I } , \Psi _ { i I } \rangle \mathrm { d } \hat { \epsilon } _ { i I I } \langle \epsilon _ { I I } , \Psi _ { i I } \rangle + \frac { 1 } { 2 } \left[ \langle \epsilon _ { I I } , \Psi _ { i I } \rangle , \langle \epsilon _ { I I } , \Psi _ { i I } , \Psi _ { i I } \rangle \right] , } \\ & { = \int _ { 0 } ^ { t } \langle \epsilon _ { I I } , \Psi _ { i I } \rangle \mathrm { d } \hat { \epsilon } _ { i I I } \langle \epsilon _ { I I } , \Psi _ { i I } \rangle = + \frac { 1 } { 2 } \int _ { 0 } ^ { t } \langle \epsilon _ { I I } , \Psi _ { i I } , \Phi _ { i I } \rangle \mathrm { d } \hat { \epsilon } _ { i I I } \langle \epsilon _ { i I } , \dots , \Psi _ { i I } , \hat { \epsilon } _ { i I I } , \Psi _ { i I } \rangle , } \\ & { = \int _ { 0 } ^ { t } \langle \epsilon _ { I I } , \Psi _ { i I } , \Psi _ { i I } \rangle = \epsilon _ { I I } \int _ { 0 } ^ { t } \langle \epsilon _ { I I } , \Psi _ { i I } \rangle \mathrm { d } \hat { \epsilon } _ { i I I } ( \hat { \epsilon } _ { i I I } , \dots , \Psi _ { i I } ) \mathrm { d } \hat { \epsilon } _ { i I I } \langle \epsilon _ { i I I } , \Psi _ { i I } \rangle , } \\ & { \quad + \frac { 1 } { 2 } \int _ { 0 } ^ { t } \langle \epsilon _ { I I } , \Psi _ { i I } , \Psi _ { i I } \rangle \mathrm { d } \hat { \epsilon } _ { i I I } \dots \mathrm { d } \hat { \epsilon } _ { i I I } \langle \epsilon _ { i I I } , \Psi _ { i I } \rangle = } \\ &  = \int _ { 0 } ^ { t } \langle \epsilon _ { I I }  \end{array}
+$$
+
+for each $| I | \geq 0$ . Since $| I \sqcup J | = | I | + | J |$ it holds that $L ( T ^ { ( n ) } ( \mathbb { R } ^ { d } ) ) \subseteq T ^ { ( n ) } ( \mathbb { R } ^ { d } )$ . For $| I | \le n$ we thus get that the corresponding drift’s components are linear maps in $\mathbb { Y } ^ { n }$ . Similarly, since $\begin{array} { l } { { \bf { a } } _ { i j } = \sum _ { | I | , | J | \leq 1 } \lambda _ { i j } ^ { I J } e _ { I } } \end{array}$  $e _ { J }$ for some $\lambda _ { i j } ^ { I J } \in \mathbb { R }$ and for $| I | \le n$ we can compute
+
+$$
+\begin{array} { r l } { \langle e _ { I ^ { \prime } } , { \mathbb Y } _ { s } \rangle \sigma _ { i _ { | I | } } ( Y _ { t } ) \big ( \langle e _ { J ^ { \prime } } , { \mathbb Y } _ { s } \rangle \sigma _ { i _ { | J | } } ( Y _ { t } ) \big ) ^ { \top } = \langle e _ { I ^ { \prime } } , { \mathbb Y } _ { s } \rangle \langle e _ { J ^ { \prime } } , { \mathbb Y } _ { s } \rangle \langle { \mathbf a } _ { i _ { | I | } j _ { | J | } } , { \mathbb Y } _ { s } \rangle } & { } \\ { = \displaystyle \sum _ { | H _ { 1 } | , | H _ { 2 } | \leq 1 } \lambda _ { i _ { | I | } j _ { | J | } } ^ { H _ { 1 } H _ { 2 } } \langle e _ { I ^ { \prime } } \shuffle e _ { I } , { \mathbb Y } _ { s } \rangle \langle e _ { J ^ { \prime } } \shuffle e _ { H _ { 2 } } , { \mathbb Y } _ { s } \rangle , } & { } \end{array}
+$$
+
+we also have that the components of the corresponding difusion matrix are polynomials of degree 2 in $\mathbb { Y } ^ { n }$ . Lemma 2.2 in Filipovi´c and Larsson (2016) yields the polynomial property.
+
+Since the linear operator $L$ maps the finite dimensional vector space $T ^ { ( n ) } ( \mathbb { R } ^ { d } )$ to itself, it admits a matrix representation.
 
 <!-- page: 14 -->
 
-**Definition 4.3.** We call the operator _L_ defined in (4.2) _dual operator corresponding to_ Y. For each _|I| ≤ n_ set then _ηIJ ∈_ R such that 
+Definition 4.3. We call the operator L defined in (4.2) dual operator corresponding to $\mathbb { Y } .$ For each $\left. I \right. \le n$ set then $\eta _ { I J } \in \mathbb { R }$ such that
 
+$$
+L e _ { I } = \sum _ { | J | \leq n } \eta _ { I J } e _ { J } ,
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0014-01.png)
+and fix a labelling injective function $\mathcal { L } : \{ I \colon | I | \leq n \} \to \{ 1 , \ldots , d _ { n } \}$ as introduced before (2.2). We then call the matrix $G \in \mathbb { R } ^ { d _ { n } \times d _ { n } }$ given by
 
+$$
+G _ { \mathcal { L } ( I ) \mathcal { L } ( J ) } : = \eta _ { I J } ,\tag{4.3}
+$$
 
-and fix a labelling injective function _L_ : _{I_ : _|I| ≤ n} →{_ 1 _, . . . , dn}_ as introduced before (2.2). We then call the matrix _G ∈_ R<sup>_dn×dn_</sup> given by 
+the $d _ { n }$ -dimensional matrix representative of $L$
 
+Observe that using the notation of (2.2), for each $\mathbf { u } \in T ^ { ( n ) } ( \mathbb { R } ^ { d } )$ the matrix representative G of L satisfies
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0014-03.png)
+$$
+\mathbf { v e c } ( L \mathbf { u } ) = G \mathbf { v e c } ( \mathbf { u } ) .
+$$
 
+Theorem 4.4. Let $( Y _ { t } ) _ { t \geq 0 }$ be the polynomial difusion given by (4.1), $( \mathcal { F } _ { t } ) _ { t \geq 0 }$ be the filtration generated by $( Y _ { t } ) _ { t \geq 0 }$ and let G be the $d _ { n }$ -dimensional matrix representative of the dual operator corresponding to Y. Then for each $T , t \geq 0$ and each $| I | \le n$ it holds
 
-the _dn-dimensional matrix representative of L_ . 
+$$
+\mathbb { E } [ \mathbf { v e c } ( \mathbb { Y } _ { T + t } ^ { n } ) | \mathcal { F } _ { T } ] = e ^ { t G ^ { \top } } \mathbf { v e c } ( \mathbb { Y } _ { T } ^ { n } ) ,
+$$
 
-Observe that using the notation of (2.2), for each **u** _∈ T_<sup>(</sup><sup>_n_)</sup> (R<sup>_d_</sup> ) the matrix representative _G_ of _L_ satisfies 
+or equivalently,
 
+$$
+\mathbb { E } [ \langle e _ { I } , \mathbb { Y } _ { T + t } ^ { n } \rangle | \mathcal { F } _ { T } ] = \sum _ { | J | \leq n } ( e ^ { t G ^ { \top } } ) \mathcal { L } ( I ) \mathcal { L } ( J ) \langle e _ { J } , \mathbb { Y } _ { T } ^ { n } \rangle ,
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0014-06.png)
+where $e ^ { ( \cdot ) }$ denotes the matrix exponential.
 
+Proof. By Lemma 4.2 we know that $\mathbf { v e c } ( \mathbb { Y } ^ { n } )$ is a polynomial difusion and Theorem 3.1 in Filipovi´c and Larsson (2016) for polynomials of degree 1 yields the claim. □
 
-**Theorem 4.4.** _Let_ ( _Yt_ ) _t≥_ 0 _be the polynomial diffusion given by_ (4.1) _,_ ( _Ft_ ) _t≥_ 0 _be the filtration generated by_ ( _Yt_ ) _t≥_ 0 _and let G be the dn-dimensional matrix representative of the dual operator corresponding to_ Y _. Then for each T, t ≥_ 0 _and each |I| ≤ n it holds_ 
+Example 4.5. For the present paper a crucial role is played by the polynomial difusion given by time, a d-dimensional OU process, and a Brownian motion. Specifically, we consider the process $\widehat { Z } _ { t } : = ( \widehat { X } _ { t } , B _ { t } )$ where B is a Brownian motion and $\widehat { X } _ { t } = \left( t , X _ { t } \right)$ with
 
+$$
+\mathrm { d } X _ { t } ^ { j } = \kappa ^ { j } ( \theta ^ { j } - X _ { t } ^ { j } ) \mathrm { d } t + \sqrt { a ( X _ { t } ) } \mathrm { d } W _ { t } , \qquad X _ { 0 } = x _ { 0 } ,
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0014-08.png)
+for $a _ { i j } ( X _ { t } ) = \sigma ^ { i } \sigma ^ { j } \rho _ { i j }$ , and W being a d-dimensional Brownian motion. We denote by $\rho _ { j ( d + 1 ) }$ the correlation between $X ^ { j }$ and B. Setting $\kappa ^ { d + 1 } : = 0$ and $\sigma ^ { d + 1 } : = 1$ we can see that $\widehat { Z }$ satisfies (4.1) in $d + 2$ dimensions for
 
+$$
+b _ { j } ( \widehat { Z } _ { t } ) = 1 _ { \{ j = 0 \} } + \kappa ^ { j } ( \theta ^ { j } - \widehat { Z } _ { t } ^ { j } ) 1 _ { \{ j \neq 0 \} } \qquad \mathrm { a n d } \qquad a _ { i j } ( \widehat { Z } _ { t } ) = \sigma ^ { i } \sigma ^ { j } \rho _ { i j } 1 _ { \{ i , j \neq 0 \} } .
+$$
 
-_or equivalently,_ 
+The corresponding b and a are given by $\mathbf { b } _ { j } = e _ { \emptyset } ( 1 _ { \{ j = 0 \} } + \kappa ^ { j } ( \theta ^ { j } - \widehat { Z } _ { 0 } ^ { j } ) 1 _ { \{ j \neq 0 \} } ) - e _ { j } \kappa ^ { j } 1 _ { \{ j \neq 0 \} }$ and $\mathbf { a } _ { i j } = e _ { \emptyset } \sigma ^ { i } \sigma ^ { j } \rho _ { i j } 1 _ { \{ i , j \neq 0 \} }$ and we thus get
 
+$$
+\begin{array} { l } { { L e _ { I } = e _ { I ^ { \prime } } \bigl ( 1 _ { \{ i _ { | I | } = 0 \} } + \kappa ^ { i _ { | I | } } \bigl ( \theta ^ { i _ { | I | } } - \widehat { Z } _ { 0 } ^ { i _ { | I | } } \bigr ) 1 _ { \{ i _ { | I | } \neq 0 \} } \bigr ) - \bigl ( e _ { I ^ { \prime } } \ \{ \amalg \ e _ { i _ { | I | } } \bigr ) \kappa ^ { i _ { | I | } } 1 _ { \{ i _ { | I | } \neq 0 \} } } } \\ { { \qquad + \displaystyle \frac { 1 } { 2 } e _ { I ^ { \prime \prime } } \sigma ^ { i _ { | I | } - 1 } \sigma ^ { i _ { | I | } } \rho _ { i _ { | I | - 1 } i _ { | I | } } 1 _ { \{ i _ { | I | - 1 } , i _ { | I | } \neq 0 \} } . } } \end{array}
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0014-10.png)
-
-
-_where e_<sup>(</sup><sup>_·_)</sup> _denotes the matrix exponential._ 
-
-_Proof._ By Lemma 4.2 we know that **vec** (Y<sup>_n_</sup> ) is a polynomial diffusion and Theorem 3.1 in Filipovi´c and Larsson (2016) for polynomials of degree 1 yields the claim. 
-
-**Example 4.5.** For the present paper a crucial role is played by the polynomial diffusion given by time, a _d_ -dimensional OU process, and a Brownian motion. Specifically, we consider the process _Z_<sup>�</sup> _t_ := ( _X_<sup>�</sup> _t, Bt_ ) where _B_ is a Brownian motion and _X_<sup>�</sup> _t_ = ( _t, Xt_ ) with 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0014-14.png)
-
-
-for _aij_ ( _Xt_ ) = _σ_<sup>_i_</sup> _σ_<sup>_j_</sup> _ρij_ , and _W_ being a _d_ -dimensional Brownian motion. We denote by _ρj_ ( _d_ +1) the correlation between _X_<sup>_j_</sup> and _B_ . Setting _κ_<sup>_d_+1</sup> := 0 and _σ_<sup>_d_+1</sup> := 1 we can see that _Z_<sup>�</sup> satisfies (4.1) in _d_ + 2 dimensions for 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0014-16.png)
-
-
-The corresponding **b** and **a** are given by **b** _j_ = _e∅_ (1 _{j_ =0 _}_ + _κ_<sup>_j_</sup> ( _θ_<sup>_j_</sup> _− Z_<sup>�</sup> 0<sup>_j_)1</sup><sup>_{j_=0</sup><sup>_}_)</sup><sup>_−ejκj_1</sup><sup>_{j_=0</sup><sup>_}_</sup> and **a** _ij_ = _e∅σ_<sup>_i_</sup> _σ_<sup>_j_</sup> _ρij_ 1 _{i,j_ =0 _}_ and we thus get 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0014-18.png)
-
-
-An application of _L_ to the first basis elements yields the following results:
+An application of L to the first basis elements yields the following results:
 
 <!-- page: 15 -->
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0015-00.png)
+$L ( e _ { 1 } ) = e _ { \emptyset } \kappa ^ { 1 } ( \theta ^ { 1 } - X _ { 0 } ^ { 1 } ) - e _ { 1 } \kappa ^ { 1 } \mathrm { , }$
 
+$$
+\begin{array} { r } { \bullet L ( e _ { I } \otimes e _ { 0 } ) = e _ { I } \sqcup \mathbf { b } _ { 0 } + \frac { 1 } { 2 } e _ { I ^ { \prime } } \sqcup \mathbf { a } _ { i _ { | I | } 0 } = e _ { I } ; } \end{array}
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0015-01.png)
+$$
+\begin{array} { r } { \bullet \ L ( e _ { 0 } \otimes e _ { 1 } \otimes e _ { 2 } ) = e _ { 0 } \otimes e _ { 1 } \kappa ^ { 2 } ( \theta ^ { 2 } - X _ { 0 } ^ { 2 } ) - ( e _ { 0 } \otimes e _ { 1 } ) \sqcup e _ { 2 } \kappa ^ { 2 } + \frac { 1 } { 2 } e _ { 0 } \sigma ^ { 1 } \sigma ^ { 2 } \rho _ { 1 2 } . } \end{array}
+$$
 
+Letting $( \mathcal { F } _ { t } ) _ { t \geq 0 }$ be the filtration generated by $( \widehat { Z } _ { t } ) _ { t \geq 0 }$ by Theorem 4.4 we can conclude that
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0015-02.png)
+$$
+\mathbb { E } [ \mathbf { v e c } ( \widehat { \mathbb { Z } } _ { T + t } ^ { n } ) | \mathcal { F } _ { T } ] = e ^ { t G ^ { \top } } \mathbf { v e c } ( \widehat { \mathbb { Z } } _ { T } ^ { n } ) ,\tag{4.4}
+$$
 
+or equivalently,
 
-Letting ( _Ft_ ) _t≥_ 0 be the filtration generated by ( _Z_<sup>�</sup> _t_ ) _t≥_ 0 by Theorem 4.4 we can conclude that 
+$$
+\mathbb { E } [ \langle e _ { I } , \widehat { \mathbb { Z } } _ { T + t } ^ { n } \rangle | \mathcal { F } _ { T } ] = \sum _ { | J | \leq n } ( e ^ { t G ^ { \top } } ) \mathcal { L } ( I ) \mathcal { L } ( J ) \langle e _ { J } , \widehat { \mathbb { Z } } _ { T } ^ { n } \rangle ,\tag{4.5}
+$$
 
+where G denotes the $( d + 2 ) _ { r }$ -dimensional matrix representative of L. In order to work with the VIX it will be convenient to restrict our attention to the signature components of $( \widehat { \mathbb { Z } } _ { t } ) _ { t \geq 0 }$ not involving B. The following remark will be useful.
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0015-04.png)
+Remark 4.6. Observe that given a subset $E \subseteq \{ 0 , \ldots , d + 1 \}$ , setting $\mathcal { T } _ { E } : = \{ I : i _ { j } \in E \}$ it holds $L ( \mathcal { T } _ { E } ) \subseteq \mathcal { T } _ { E }$ . This in particular implies that
 
+$$
+L e _ { I } = \sum _ { I \in \mathcal { I } _ { E } } \eta _ { I J } e _ { J }
+$$
 
-or equivalently, 
+for each $I \in \mathcal { T } _ { E }$ . Choosing $E = \{ 0 , \ldots , d \}$ , letting $\mathcal { L } _ { E } : \mathcal { T } _ { E } \{ 1 , \ldots , ( d + 1 ) _ { n } \}$ be a labelling injective function, and setting $G _ { \mathcal { L } _ { E } ( I ) \mathcal { L } _ { E } ( J ) } ^ { E } : = \eta _ { I J }$ we can see that (4.5) reduces to
 
+$$
+\mathbb { E } [ \langle e _ { I } , \widehat { \mathbb { X } } _ { T + t } ^ { n } \rangle | \mathcal { F } _ { T } ] = \sum _ { | J | \leq n } ( e ^ { t ( G ^ { E } ) ^ { \top } } ) \mathcal { L } _ { E } ( I ) \mathcal { L } _ { E } ( J ) \langle e _ { J } , \widehat { \mathbb { X } } _ { T } ^ { n } \rangle .
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0015-06.png)
+To simplify the notation we often drop the E from $G ^ { E }$ whenever this does not introduce any confusion.
 
+Remark 4.7. Let $( Y _ { t } ) _ { t \geq 0 }$ be a polynomial difusion and let $\mathbb { Y } ^ { - 1 }$ be defined via $e _ { \varnothing } = \mathbb { Y } _ { s } ^ { - 1 } \otimes$ $\mathbb { Y } _ { s } , \mathrm { i . e . ~ } \langle e _ { \varnothing } , \mathbb { Y } _ { s } ^ { - 1 } \rangle = 1$ and
 
-where _G_ denotes the ( _d_ + 2) _n_ -dimensional matrix representative of _L_ . In order to work with the VIX it will be convenient to restrict our attention to the signature components of (Z<sup>�</sup> _t_ ) _t≥_ 0 not involving _B_ . The following remark will be useful. 
+$$
+\sum _ { e _ { I _ { 1 } } \otimes e _ { I _ { 2 } } = e _ { I } } \langle e _ { I _ { 1 } } , \mathbb { Y } _ { s } ^ { - 1 } \rangle \langle e _ { I _ { 2 } } , \mathbb { Y } _ { s } \rangle = 0 ,
+$$
 
-**Remark 4.6.** Observe that given a subset _E ⊆{_ 0 _, . . . , d_ + 1 _}_ , setting _IE_ := _{I_ : _ij ∈ E}_ it holds _L_ ( _IE_ ) _⊆IE_ . This in particular implies that 
+for each $\vert I \vert > 0$ . Observe that it can be defined recursively on $| I |$ and each component of $\mathbb { Y } _ { s } ^ { - 1 }$ corresponds to a linear combination of components of $\mathbb { Y } _ { s }$ of the same length or shorter.
 
+Since by Chen’s identity (see (2.4) or (2.5)) we have $\mathbb { Y } _ { s } \otimes \mathbb { Y } _ { s , t } = \mathbb { Y } _ { t }$ , for each $s \leq u \leq t$ and $| I | \le n$ we then get
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0015-09.png)
+$$
+\begin{array} { l } { \displaystyle \mathbb { E } [ \langle e _ { I } , { \mathbb Y } _ { s , t } \rangle | { \mathcal F } _ { u } ] = \mathbb { E } [ \langle e _ { I } , { \mathbb Y } _ { s } ^ { - 1 } \otimes { \mathbb Y } _ { t } \rangle | { \mathcal F } _ { u } ] = \sum _ { e _ { I _ { 1 } } \otimes e _ { I _ { 2 } } = e _ { I } } \langle e _ { I _ { 1 } } , { \mathbb Y } _ { s } ^ { - 1 } \rangle \mathbb { E } [ \langle e _ { I _ { 2 } } , { \mathbb Y } _ { t } \rangle | { \mathcal F } _ { u } ] } \\ { = \displaystyle \sum _ { e _ { I _ { 1 } } \otimes e _ { I _ { 2 } } = e _ { I } } \langle e _ { I _ { 1 } } , { \mathbb Y } _ { s } ^ { - 1 } \rangle { \mathbf v e c } ( e _ { I _ { 2 } } ) ^ { \top } e ^ { ( t - u ) G ^ { \top } } { \mathbf v e c } ( { \mathbb Y } _ { u } ^ { n } ) , } \end{array}
+$$
 
-
-for each _I ∈IE_ . Choosing _E_ = _{_ 0 _, . . . , d}_ , letting _LE_ : _IE →{_ 1 _, . . . ,_ ( _d_ +1) _n}_ be a labelling injective function, and setting _G_<sup>_E_</sup> _LE_ ( _I_ ) _LE_ ( _J_ )<sup>:=</sup><sup>_ηIJ_wecanseethat(4.5)reducesto</sup> 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0015-11.png)
-
-
-To simplify the notation we often drop the _E_ from _G_<sup>_E_</sup> whenever this does not introduce any confusion. 
-
-**Remark 4.7.** Let ( _Yt_ ) _t≥_ 0 be a polynomial diffusion and let Y<sup>_−_1</sup> be defined via _e∅_ = Y<sup>_−_</sup> _s_<sup>1</sup> _⊗_ Y _s_ , i.e. _⟨e∅,_ Y<sup>_−_</sup> _s_<sup>1</sup><sup>_⟩_= 1and</sup> 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0015-14.png)
-
-
-for each _|I| >_ 0. Observe that it can be defined recursively on _|I|_ and each component of Y<sup>_−_</sup> _s_<sup>1</sup> corresponds to a linear combination of components of Y _s_ of the same length or shorter. Since by Chen’s identity (see (2.4) or (2.5)) we have Y _s ⊗_ Y _s,t_ = Y _t_ , for each _s ≤ u ≤ t_ and _|I| ≤ n_ we then get 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0015-16.png)
-
-
-where _G_ denotes the _dn_ -dimensional matrix representative of the dual operator of Y.
+where $G$ denotes the $d _ { n }$ -dimensional matrix representative of the dual operator of $\mathbb { Y } .$
 
 <!-- page: 16 -->
 
-## **5 VIX options with signatures** 
+## 5 VIX options with signatures
 
-In this section we discuss the implication on pricing VIX options under the model (3.1)-(3.2). The VIX index is a popular measure of the market’s expected volatility of the S&P 500, calculated and published by the Chicago Board Options Exchange (CBOE). The current VIX value quotes the expected annualized change in the S&P 500 over the following 30 days, based on options-based theory and current options-market data. As stylized definition we consider 
+In this section we discuss the implication on pricing VIX options under the model (3.1)-(3.2). The VIX index is a popular measure of the market’s expected volatility of the S&P 500, calculated and published by the Chicago Board Options Exchange (CBOE). The current VIX value quotes the expected annualized change in the S&P 500 over the following 30 days, based on options-based theory and current options-market data. As stylized definition we consider
 
+$$
+\mathrm { V I X } _ { T } ^ { 2 } = \mathrm { P r i c e } _ { T } \left[ - \frac { 2 } { \Delta } \log \left( \frac { S _ { T + \Delta } } { F _ { T } ^ { T + \Delta } } \right) \right] ,\tag{5.1}
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0016-02.png)
+where $\Delta = 3 0$ days, $F _ { T } ^ { T + \Delta }$ denotes the price at time $T$ of the SPX future with maturity $T + \Delta$ and with Price<sub>T</sub> we refer to the market price at time $T$ of the log-contract, i.e. the payof in (5.1). Hence, under a given model we define the VIX,
 
+$$
+\mathrm { V I X } _ { T } = \sqrt { \mathbb { E } \left[ - \frac { 2 } { \Delta } \log \left( \frac { S _ { T + \Delta } } { S _ { T } } \right) | \mathcal { F } _ { T } \right] } ,\tag{5.2}
+$$
 
-where ∆= 30 days, _FT_<sup>_T_+∆</sup> denotes the price at time _T_ of the SPX future with maturity _T_ + ∆and with Price _T_ we refer to the market price at time _T_ of the log-contract, i.e. the payoff in (5.1). Hence, under a given model we define the VIX, 
+where $\Delta = 3 0$ days and $S _ { T }$ denotes the price process at time $T > 0$ . Recall that under a difusion model, the previous expression is equivalent to
 
+$$
+\mathrm { V I X } _ { T } = \sqrt { \frac { 1 } { \Delta } \mathbb { E } \left[ \int _ { T } ^ { T + \Delta } V _ { t } \mathrm { d } t | \mathcal { F } _ { T } \right] } ,\tag{5.3}
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0016-04.png)
+as long as $\begin{array} { r } { { \mathbb E } [ \int _ { 0 } ^ { t } V _ { s } d s ] < \infty } \end{array}$ for all $t \geq 0$ , see e.g. Neuberger (1994); Gatheral (2011). With VIX options we here usually refer to either put or calls written on VIX. In the present work we will consider without loss of generality only call options.
 
+## 5.1 Explicit formulas for the VIX
 
-where ∆= 30 days and _ST_ denotes the price process at time _T >_ 0. Recall that under a diffusion model, the previous expression is equivalent to 
+This section is dedicated to one of the main implication of our modeling framework, namely an explicit formula for the VIX expression (5.2) for S following (3.1)-(3.2). In particular we show in the next theorem that the computation of the VIX squared reduces to a quadratic form in the parameters ℓ. The entries of the corresponding positive semidefinite matrix can be computed by polynomial technology, i.e. by matrix exponential as proved in Section 4.
 
+Theorem 5.1. Let $S = ( S _ { t } ) _ { t \geq 0 }$ be a price process described $b y$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0016-06.png)
+$$
+\mathrm { d } S _ { t } = S _ { t } \sigma _ { t } ^ { S } \mathrm { d } B _ { t } ,
+$$
 
+where $\sigma ^ { S } = ( \sigma _ { t } ^ { S } ) _ { t \geq 0 }$ denotes the volatility process, $B = ( B _ { t } ) _ { t \geq 0 }$ a one-dimensional Brownian motion. Assume that $\sigma ^ { S }$ satisfies (3.2). Following (2.2), fix an injective labeling function $\mathcal { L } : \{ I : | I | \leq n \} \to \{ 1 , \dots , ( d + 1 ) _ { 2 n + 1 } \}$ and let G be the $( d + 1 ) _ { ( 2 n + 1 ) }$ - dimensional matrix representative of the dual operator corresponding to $\widehat { \mathbb X }$ . Then,
 
-_t_ as long as E[�0<sup>_Vsds_]</sup><sup>_<∞_forall</sup><sup>_t≥_0,seee.g.Neuberger(1994);Gatheral(2011).With</sup> VIX options we here usually refer to either put or calls written on VIX. In the present work we will consider without loss of generality only call options. 
+$$
+\mathbb { E } \left[ \int _ { 0 } ^ { t } V _ { s } \mathrm { d } s \right] < \infty\tag{5.4}
+$$
 
-### **5.1 Explicit formulas for the VIX** 
+holds for every $t \geq 0$ and
 
-This section is dedicated to one of the main implication of our modeling framework, namely an explicit formula for the VIX expression (5.2) for _S_ following (3.1)-(3.2). In particular we show in the next theorem that the computation of the VIX squared reduces to a quadratic form in the parameters _ℓ_ . The entries of the corresponding positive semidefinite matrix can be computed by polynomial technology, i.e. by matrix exponential as proved in Section 4. 
-
-**Theorem 5.1.** _Let S_ = ( _St_ ) _t≥_ 0 _be a price process described by_ 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0016-11.png)
-
-
-_where σ_<sup>_S_</sup> = ( _σt_<sup>_S_)</sup><sup>_t≥_0</sup><sup>_denotes the volatility process,B_= (</sup><sup>_Bt_)</sup><sup>_t≥_0</sup><sup>_a one-dimensional Brownian_</sup> _motion. Assume that σ_<sup>_S_</sup> _satisfies_ (3.2) _. Following_ (2.2) _, fix an injective labeling function L_ : _{I_ : _|I| ≤ n} →{_ 1 _, . . . ,_ ( _d_ + 1)2 _n_ +1 _} and let G be the_ ( _d_ + 1)(2 _n_ +1) _- dimensional matrix representative of the dual operator corresponding to_ X<sup>�</sup> _. Then,_ 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0016-13.png)
-
-
-_holds for every t ≥_ 0 _and_ 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0016-15.png)
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0016-16.png)
+$$
+V I X _ { T } ( \ell ) = \sqrt { \frac { 1 } { \Delta } \ell ^ { \top } Q ( T , \Delta ) \ell } ,\tag{5.5}
+$$
 
 <!-- page: 17 -->
 
-Dd : (Xo)Yow e ~~-~~ S [fo wr| Pow fous fer] [ ow 7 [ ow | Lu Lu | 
+where
 
-> / ° uw dL ~ 
+$$
+{ \cal Q } _ { \mathcal { L } ( I ) \mathcal { L } ( J ) } ( T , \Delta ) = \mathbf { v e c } ( ( e _ { I } \sqcup e _ { J } ) \otimes e _ { 0 } ) ^ { \top } ( e ^ { \Delta G ^ { \top } } - \mathrm { I d } ) \mathbf { v e c } ( \widehat { \mathbb { X } } _ { T } ^ { 2 n + 1 } ) ,\tag{5.6}
+$$
 
-° 
+and Id $\in \mathbb { R } ^ { ( d + 1 ) _ { 2 n + 1 } \times ( d + 1 ) _ { 2 n + 1 } }$ denotes the identity matrix. More explicitly without the vectorisation this reads
 
-~
+$$
+Q _ { \mathcal { L } ( I ) , \mathcal { L } ( J ) } ( T , \Delta ) = \sum _ { \substack { e _ { K } = ( e _ { I } \sqcup e _ { J } ) \otimes e _ { 0 } | H | \leq 2 n + 1 } } ( e ^ { \Delta G ^ { \top } } - \operatorname { I d } ) _ { \mathcal { L } ( K ) , \mathcal { L } ( H ) } \langle e _ { H } , \widehat { \mathbb { X } } _ { T } \rangle .
+$$
+
+Proof. Observe that
+
+$$
+V _ { t } ( \ell ) = \bigg ( \sum _ { | I | \le n } \ell _ { I } \langle e _ { I } , \widehat { \mathbb { X } } _ { t } \rangle \bigg ) ^ { 2 } = \sum _ { | I | , | J | \le n } \ell _ { I } \ell _ { J } \langle e _ { I } \shuffle e _ { J } , \widehat { \mathbb { X } } _ { t } \rangle .
+$$
+
+Since continuous polynomial difusions have finite moments of every degree, (5.4) is satisfied due to Lemma 4.2. Under (5.3), the expression for $V _ { t } ( \ell )$ yields then
+
+$$
+\begin{array} { l } { { \mathrm { V I X } _ { T } ^ { 2 } ( \ell ) = \displaystyle \frac { 1 } { \Delta } \sum _ { | I | , | J | \leq n } \ell _ { I } \ell _ { J } \mathbb { E } \biggl [ \int _ { T } ^ { T + \Delta } \langle e _ { I } \shuffle e _ { I } , \widehat { \mathbb { X } } _ { t } \rangle { \mathrm { d } } t | \mathcal { F } _ { T } \biggr ] } } \\ { { \mathrm { ~ } = \displaystyle \frac { 1 } { \Delta } \ell ^ { \top } Q ( T , \Delta ) \ell , } } \end{array}
+$$
+
+where for each $T > 0$ the matrix $Q$ is given by
+
+$$
+\begin{array} { r l } & { \displaystyle Q _ { \mathcal { L } ( I ) \mathcal { L } ( J ) } ( T , \Delta ) : = \mathbb { E } \biggl [ \int _ { T } ^ { T + \Delta } \langle e _ { I } \shuffle e _ { J } , \widehat { \mathbb { X } } _ { t } \rangle \mathrm { d } t \lvert \mathcal { F } _ { T } \biggr ] } \\ & { \qquad = \mathbb { E } \biggl [ \int _ { 0 } ^ { T + \Delta } \langle e _ { I } \shuffle e _ { J } , \widehat { \mathbb { X } } _ { t } \rangle { \mathrm { d } } t - \int _ { 0 } ^ { T } \langle e _ { I } \shuffle e _ { J } , \widehat { \mathbb { X } } _ { t } \rangle { \mathrm { d } } t \lvert \mathcal { F } _ { T } \biggr ] } \\ & { \qquad = \mathbb { E } \bigl [ \langle ( e _ { I } \shuffle e _ { J } ) \otimes e _ { 0 } , \widehat { \mathbb { X } } _ { T + \Delta } \rangle - \langle ( e _ { I } \shuffle e _ { J } ) \otimes e _ { 0 } , \widehat { \mathbb { X } } _ { T } \rangle \lvert \mathcal { F } _ { T } \bigr ] } \\ & { \qquad = \mathbb { E } \bigl [ \langle ( e _ { I } \shuffle e _ { J } ) \otimes e _ { 0 } , \widehat { \mathbb { X } } _ { T + \Delta } \rangle \lvert \mathcal { F } _ { T } \bigr ] - \langle ( e _ { I } \shuffle e _ { J } ) \otimes e _ { 0 } , \widehat { \mathbb { X } } _ { T } \rangle . } \end{array}
+$$
+
+By Theorem 4.4 we can rewrite the matrix $Q$ as
+
+$$
+\begin{array} { r l } & { Q _ { \mathcal { L } ( I ) \mathcal { L } ( J ) } ( T , \Delta ) = \mathbf { v e c } ( ( e _ { I } \sqcup e _ { J } ) \otimes e _ { 0 } ) ^ { \top } e ^ { \Delta G ^ { \top } } \mathbf { v e c } ( \widehat { \mathbb { X } } _ { T } ^ { 2 n + 1 } ) } \\ & { \qquad - \mathbf { v e c } ( ( e _ { I } \sqcup e _ { J } ) \otimes e _ { 0 } ) ^ { \top } \mathbf { v e c } ( \widehat { \mathbb { X } } _ { T } ^ { 2 n + 1 } ) } \\ & { \qquad = \mathbf { v e c } ( ( e _ { I } \sqcup e _ { J } ) \otimes e _ { 0 } ) ^ { \top } ( e ^ { \Delta G ^ { \top } } - \mathrm { I d } ) \mathbf { v e c } ( \widehat { \mathbb { X } } _ { T } ^ { 2 n + 1 } ) , } \end{array}
+$$
+
+and the claim follows.
+
+Remark 5.2. Consider now the model described in Remark 3.2 and set for simplicity $\varepsilon \ge \Delta$ . Then the results of Theorem 5.1 still hold however with
+
+$$
+Q _ { \mathcal { L } ( I ) . \mathcal { L } ( J ) } ( T , \Delta ) = \sum _ { e _ { I _ { 1 } } \otimes e _ { I _ { 2 } } = e _ { I } \sqcup e _ { J } } \int _ { T } ^ { T + \Delta } \langle e _ { I _ { 1 } } , \widehat { \mathbb { X } } _ { t - \varepsilon } ^ { - 1 } \rangle \mathbf { v e c } ( e _ { I _ { 2 } } ) ^ { \top } e ^ { ( t - T ) G ^ { \top } } \mathbf { v e c } ( \widehat { \mathbb { X } } _ { T } ) \mathrm { d } t ,
+$$
+
+where G denotes the $( d + 1 ) _ { 2 n + 1 }$ -dimensional matrix representative of the dual operator corresponding to $\widehat { \mathbb X }$ . To adapt the proof we just need to note that for each $t \in [ T , T + \Delta ]$ Remark 4.7 yields
+
+$$
+\mathbb { E } [ \langle e _ { I } \sqcup e _ { J } , \widehat { \mathbb { X } } _ { t - \varepsilon , t } \rangle | \mathcal { F } _ { T } ] = \sum _ { e _ { I _ { 1 } } \otimes e _ { I _ { 2 } } = e _ { I } \sqcup \mathfrak { e } _ { J } } \langle e _ { I _ { 1 } } , \widehat { \mathbb { X } } _ { t - \varepsilon } ^ { - 1 } \rangle \mathbf { v e c } ( e _ { I _ { 2 } } ) ^ { \top } e ^ { ( t - T ) G ^ { \top } } \mathbf { v e c } ( \widehat { \mathbb { X } } _ { T } ) .
+$$
 
 <!-- page: 18 -->
 
-Note that since the integration’s variable _t_ appears twice in this expression the time integral cannot be incorporated in the signature. 
+Note that since the integration’s variable t appears twice in this expression the time integral cannot be incorporated in the signature.
 
-**Remark 5.3.** Observe that accounting for the scaling factor of 100, conventionally introduced by CBOE, the VIX index squared can equivalently be redefined (see e.g., Rosenbaum and Zhang (2021); Rømer (2022)) as 
+Remark 5.3. Observe that accounting for the scaling factor of 100, conventionally introduced by CBOE, the VIX index squared can equivalently be redefined (see e.g., Rosenbaum and Zhang (2021); Rømer (2022)) as
 
+$$
+\mathrm { V I X } _ { T } ^ { 2 } = \frac { 1 0 0 ^ { 2 } } { \Delta } \mathbb { E } \left[ \int _ { T } ^ { T + \Delta } V _ { t } \mathrm { d } t | \mathcal { F } _ { T } \right] ,\tag{5.7}
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0018-02.png)
+where $T , t > 0$ and $\textstyle \Delta = { \frac { 1 } { 1 2 } } , { \mathrm { i . e . } }$ ., approximately 30 days. Notice that since the expressions (5.3) and (5.7) difer only by a scaling factor, all the theoretical results of the present work hold true disregarding this scaling. For sake of simplicity we will always use (5.3). We address the reader to Chapter 11 in Gatheral (2011) for further details about the conventions of CBOE and its link with (5.2).
 
+We observe that the expression (5.6) is computationally appealing as we can unpack the computation in three parts: compute the coordinate vector vec $( ( e _ { I } \sqcup e _ { J } ) \otimes e _ { 0 } )$ , which depends just on $d > 0$ and $n > 0 .$ , calculate the matrix exponential of $G ^ { \top }$ which depends on the choice of the primary process $X$ , and finally sample $\widehat { \mathbb { X } } _ { T } ^ { 2 n + 1 }$ which is the only part that depends on the chosen maturity time $T .$ In order to compute the matrix exponential we rely on Bader et al. (2019) who developed a Pad´e-insipired approximation to reduce the matrix multiplications, see also Moler and Van Loan (2003) for further possible methods. For the implementation of the signature samples and its computational complexity we refer to Reizenstein and Graham (2018); Kidger and Lyons (2020).
 
-where _T, t >_ 0 and ∆= 121<sup>,i.e.,approximately30days.Noticethatsincetheexpressions</sup> (5.3) and (5.7) differ only by a scaling factor, all the theoretical results of the present work hold true disregarding this scaling. For sake of simplicity we will always use (5.3). We address the reader to Chapter 11 in Gatheral (2011) for further details about the conventions of CBOE and its link with (5.2). 
+Remark 5.4. In general the computation of $G \in \mathbb { R } ^ { ( d + 1 ) _ { 2 n + 1 } \times ( d + 1 ) _ { 2 n + 1 } }$ , even if done only once, can be costly. For this reason it can sometimes be interesting to avoid the last time integral and to consider the following equivalent expression of the matrix Q, for $| I | , | J | \leq n \colon$
 
-We observe that the expression (5.6) is computationally appealing as we can unpack the computation in three parts: compute the coordinate vector **vec** (( _eI_ � _eJ_ ) _⊗ e_ 0), which depends just on _d >_ 0 and _n >_ 0, calculate the matrix exponential of _G_<sup>_⊤_</sup> which depends on the choice of the primary process _X_ , and finally sample X<sup>�2</sup> _T_<sup>_n_+1</sup> which is the only part that depends on the chosen maturity time _T_ . In order to compute the matrix exponential we rely on Bader et al. (2019) who developed a Pad´e-insipired approximation to reduce the matrix multiplications, see also Moler and Van Loan (2003) for further possible methods. For the implementation of the signature samples and its computational complexity we refer to Reizenstein and Graham (2018); Kidger and Lyons (2020). 
+$$
+Q _ { \mathcal { L } ( I ) , \mathcal { L } ( J ) } ( T , \Delta ) = \left( \int _ { T } ^ { T + \Delta } \mathbf { v e c } ( e _ { I } \sqcup e _ { J } ) ^ { \top } e ^ { ( t - T ) G ^ { \top } } \mathrm { d } t \right) \mathbf { v e c } ( \widehat { \mathbb { X } } _ { T } ^ { 2 n } ) ,\tag{5.8}
+$$
 
-**Remark 5.4.** In general the computation of _G ∈_ R<sup>(</sup><sup>_d_+1)2</sup><sup>_n_+1</sup><sup>_×_(</sup><sup>_d_+1)2</sup><sup>_n_+1</sup> , even if done only once, can be costly. For this reason it can sometimes be interesting to avoid the last time integral and to consider the following equivalent expression of the matrix _Q_ , for _|I|, |J| ≤ n_ : 
+where now $G \in \mathbb { R } ^ { ( d + 1 ) _ { 2 n } \times ( d + 1 ) _ { 2 n } }$ and where we use the fact that we can interchange the conditional expectation with the time-integral by dominated convergence. As G is singular, this time integral has to be computed numerically, in general. We propose here two possible methods that can be used in order to compute it eficiently.
 
+(i) Approximation of the time integral: $\mathrm { e . g . }$ , via the trapezoidal rule also applied for $\mathrm { { V I X ^ { 2 } } }$ in Bourgey and De Marco (2022). Hence if we consider the shufled coordinates vec $( e _ { I } \sqcup e _ { J } )$ of the exponential matrix we can use the symmetry of the shufle to reduce the number of integrals to be solved from $( ( d + 1 ) _ { 2 n } ) ^ { 2 } \ \mathrm { t o } \ { \frac { ( d + 1 ) _ { n } ( ( d + 1 ) _ { n } + 1 ) } { 2 } } \cdot ( d + 1 ) _ { 2 n }$ instead of $( d _ { 2 n } ) ^ { 2 }$ . Observe that for our integral the error of such an approximation is given by
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0018-06.png)
+$$
+\mathrm { E r r } ( N ) = - \frac { \Delta ^ { 2 } } { 1 2 N ^ { 2 } } G ^ { \top } ( e ^ { G ^ { \top } \Delta } - I ) + \mathcal { O } ( N ^ { - 3 } ) ,
+$$
 
-
-where now _G ∈_ R<sup>(</sup><sup>_d_+1)2</sup><sup>_n×_(</sup><sup>_d_+1)2</sup><sup>_n_</sup> and where we use the fact that we can interchange the conditional expectation with the time-integral by dominated convergence. As _G_ is singular, this time integral has to be computed numerically, in general. We propose here two possible methods that can be used in order to compute it efficiently. 
-
-- (i) **Approximation of the time integral** : e.g., via the trapezoidal rule also applied for VIX<sup>2</sup> in Bourgey and De Marco (2022). Hence if we consider the shuffled coordinates **vec** ( _eI_ � _eJ_ ) of the exponential matrix we can use the symmetry of the shuffle to reduce the number of integrals to be solved from (( _d_ + 1)2 _n_ )<sup>2</sup> to<sup><u>(</u></sup><sup>_d_</sup><sup><u>+1)</u></sup><sup>_n_</sup><sup><u>((</u></sup><sup>_d_</sup> 2<sup><u>+1)</u></sup><sup>_n_</sup><sup><u>+1)</u></sup> _·_ ( _d_ + 1)2 _n_ , instead of ( _d_ 2 _n_ )<sup>2</sup> . Observe that for our integral the error of such an approximation is given by 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0018-09.png)
-
-
-as _N →_ + _∞_ . As a further dimension reduction one can exploit the polynomial nature of X<sup>�</sup><sup>_n_</sup> to obtain a matrix representation of its second order moments. Without entering into details, the matrix _G_ would then be the matrix corresponding to the linear operator acting on coefficients of polynomials of degree 2 in X<sup>�</sup><sup>_n_</sup> . Its dimension would thus be<sup><u>(</u></sup><sup>_d_</sup><sup><u>+1)</u></sup><sup>_n_</sup><sup><u>((</u></sup><sup>_d_</sup><sup><u>+1)</u></sup><sup>_n_</sup><sup><u>+1)</u></sup> . 2
+as $N \to + \infty$ . As a further dimension reduction one can exploit the polynomial nature of $\mathring { \mathbb { X } } ^ { n }$ to obtain a matrix representation of its second order moments. Without entering into details, the matrix G would then be the matrix corresponding to the linear operator acting on coeficients of polynomials of degree 2 in ${ \widehat { \mathbb { X } } } ^ { n }$ . Its dimension would thus be $\frac { ( d + 1 ) _ { n } ( ( d + 1 ) _ { n } + 1 ) } { 2 }$
 
 <!-- page: 19 -->
 
-- (ii) **Approximation of the matrix exponential** : we can avoid to approximate the integral by approximating the matrix exponential. Assuming that 
+(ii) Approximation of the matrix exponential: we can avoid to approximate the integral by approximating the matrix exponential. Assuming that
 
+$$
+\operatorname* { l i m } _ { N  + \infty } ( G ^ { \top } \Delta ) ^ { N } = 0 ,\tag{5.9}
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0019-01.png)
+this can for instance be done via its Taylor expansion:
 
+$$
+\int _ { T } ^ { T + \Delta } e ^ { t G ^ { \top } } \mathrm { d } t = \Delta \left( I + \frac { G ^ { \top } \Delta } { 2 ! } + \cdot \cdot \cdot + \frac { ( G ^ { \top } \Delta ) ^ { N } } { N + 1 ! } + \mathcal { O } ( ( G ^ { \top } \Delta ) ^ { N + 1 } ) \right) .
+$$
 
-this can for instance be done via its Taylor expansion: 
+Observe that (5.9) holds true whenever the spectral radius, i.e., the maximal eigenvalue in absolute value, of the matrix $G ^ { \top } \Delta$ is less than 1 (see for instance Theorem 1.5 in Quarteroni et al. (2010)). This requirement suggests that for numerical purposes the parameters of the primary process have to be chosen accordingly.
 
+An interesting example is given by the case where X is a d-dimensional correlated Brownian motion, as considered for instance in Cuchiero et al. (2023a). In this case the process has no linear drift and the corresponding matrix G is nilpotent, meaning that $G ^ { n } = 0$ , for each n big enough.
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0019-03.png)
+In general, this Taylor approach permits to avoid a numerical integration and produces an accurate approximation, allocating as few memory as possible.
 
+Remark 5.5. A further step in the direction of a fast evaluation of $\mathrm { V I X } _ { T } ( \ell )$ can be taken by noticing that the matrix $Q$ in (5.6) admits a Cholesky decomposition. Indeed since $Q$ is positive semidefinite and symmetric by the shufle property, we know that there exists an upper triangular matrix $\bar { U _ { T } } \in \mathbb { R } ^ { ( d + 1 ) _ { n } \times ( d + 1 ) _ { r } }$ , with possible zero elements on the diagonal, such that
 
-Observe that (5.9) holds true whenever the spectral radius, i.e., the maximal eigenvalue in absolute value, of the matrix _G_<sup>_⊤_</sup> ∆is less than 1 (see for instance Theorem 1.5 in Quarteroni et al. (2010)). This requirement suggests that for numerical purposes the parameters of the primary process have to be chosen accordingly. 
+$$
+Q ( T , \Delta ) = U _ { T } U _ { T } ^ { \top } ,
+$$
 
-An interesting example is given by the case where _X_ is a _d_ -dimensional correlated Brownian motion, as considered for instance in Cuchiero et al. (2023a). In this case the process has no linear drift and the corresponding matrix _G_ is nilpotent, meaning that _G_<sup>_n_</sup> = 0 _,_ for each _n_ big enough. 
+where for sake of simplicity we drop the dependence on $\Delta$ of $U _ { T }$ . Hence the evaluation of the $\mathrm { V I X } _ { T } ( \ell )$ reduces to
 
-In general, this Taylor approach permits to avoid a numerical integration and produces an accurate approximation, allocating as few memory as possible. 
+$$
+\operatorname { V I X } _ { T } ( \ell ) = \sqrt { \frac { 1 } { \Delta } \ell ^ { \top } U _ { T } U _ { T } ^ { \top } \ell } = \frac { 1 } { \sqrt { \Delta } } \sqrt { ( U _ { T } ^ { \top } \ell ) ^ { 2 } } = \frac { 1 } { \sqrt { \Delta } } \| U _ { T } ^ { \top } \ell \| ,
+$$
 
-**Remark 5.5.** A further step in the direction of a fast evaluation of VIX _T_ ( _ℓ_ ) can be taken by noticing that the matrix _Q_ in (5.6) admits a Cholesky decomposition. Indeed since _Q_ is positive semidefinite and symmetric by the shuffle property, we know that there exists an upper triangular matrix _UT ∈_ R<sup>(</sup><sup>_d_+1)</sup><sup>_n×_(</sup><sup>_d_+1)</sup><sup>_n_</sup> , with possible zero elements on the diagonal, such that 
+where here $\| \cdot \|$ denotes the Euclidean norm. We stress the fact that the Cholesky decomposition can be carried out ofline, and the computational benefit is immediate if several samples of the signature are considered.
 
-_Q_ ( _T,_ ∆) = _UT UT_<sup>_⊤,_</sup> 
+In the following remark we discuss a possible dimension reduction technique from which one can benefit computationally. Inspired by the approach of Cuchiero et al. (2022); Compagnoni et al. (2023), we employ the Johnson-Lindenstrauss Lemma and consider a random projection of the signature. A first way to use this tool is the following.
 
-where for sake of simplicity we drop the dependence on ∆of _UT_ . Hence the evaluation of the VIX _T_ ( _ℓ_ ) reduces to 
+Remark 5.6. Let $d _ { < } \in \mathbb { N }$ be the dimension of the space to which we would like to project the signature of order $n > 0$ , such that $d _ { < } \ll ( d + 1 ) _ { n }$ . Consider $A = ( \alpha _ { i j } ) \in \mathbb { R } ^ { d < \times ( d + 1 ) _ { n } }$ , such that $\alpha _ { i j } \sim \mathcal { N } ( 0 , 1 / d _ { < } )$ . Then a possible way to employ the randomised signature is to parametrize the volatility process as follows,
 
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0019-10.png)
-
-
-where here _∥· ∥_ denotes the Euclidean norm. We stress the fact that the Cholesky decomposition can be carried out offline, and the computational benefit is immediate if several samples of the signature are considered. 
-
-In the following remark we discuss a possible dimension reduction technique from which one can benefit computationally. Inspired by the approach of Cuchiero et al. (2022); Compagnoni et al. (2023), we employ the Johnson-Lindenstrauss Lemma and consider a random projection of the signature. A first way to use this tool is the following. **Remark 5.6.** Let _d< ∈_ N be the dimension of the space to which we would like to project the signature of order _n >_ 0, such that _d< ≪_ ( _d_ + 1) _n_ . Consider _A_ = ( _αij_ ) _∈_ R<sup>_d<×_(</sup><sup>_d_+1)</sup><sup>_n_</sup> , such that _αij ∼N_ (0 _,_ 1 _/d<_ ). Then a possible way to employ the randomised signature is to parametrize the volatility process as follows, 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0019-13.png)
+$$
+\sigma _ { t } ^ { S } ( \ell ) : = \widetilde { \ell } ^ { \top } A \cdot \mathbf { v e c } ( \widehat { \mathbb { X } } _ { t } ^ { n } )
+$$
 
 <!-- page: 20 -->
 
-where with _ℓ_<sup>˜</sup> = _ℓ · A_<sup>_⊤_</sup> _∈_ R<sup>_d<_</sup> we denote the randomised parameters. Due to the linearity of integral and conditional expectation in (5.3) this modeling choice is equivalent to consider the randomised matrix _Q_<sup>�</sup> _∈_ R<sup>_d<×d<_</sup> given by 
+where with $\tilde { \ell } = \ell \cdot A ^ { \top } \in \mathbb { R } ^ { d _ { < } }$ we denote the randomised parameters. Due to the linearity of integral and conditional expectation in (5.3) this modeling choice is equivalent to consider the randomised matrix $\mathcal { \widetilde { Q } } \in \mathbb { R } ^ { d < \times d _ { < } }$ given by
 
+$$
+\widetilde { Q } _ { \mathcal { L } ( I ) \mathcal { L } ( J ) } ( T , \Delta ) : = A Q _ { \mathcal { L } ( I ) \mathcal { L } ( J ) } ( T , \Delta ) A ^ { \top } ,
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0020-01.png)
+which leads to the following representation of $\mathrm { V I X } _ { T } ( \ell )$
 
+$$
+\mathrm { V I X } _ { T } ( \ell ) = \sqrt { \frac { 1 } { \Delta } \tilde { \ell } ^ { \top } \tilde { Q } ( T , \Delta ) \tilde { \ell } } .
+$$
 
-which leads to the following representation of VIX _T_ ( _ℓ_ ): 
+Observe that even if this procedure does not reduce the number iterated integrals to be computed ofline, it reduces the number of parameters to calibrate, yielding in general to a faster evaluation of $\mathrm { V I X } _ { T } ( \ell )$
 
+Remark 5.7 (Options on VIX). Note that VIX options are written on VIX futures. The price process of a VIX future contract with maturity $T > 0$ , is given by
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0020-03.png)
+$$
+F _ { t } ( T ) : = \mathbb { E } \left[ \mathrm { V I X } _ { T } | \mathcal { F } _ { t } \right] ,\tag{5.10}
+$$
 
+and we write in particular $F ( T ) : = F _ { 0 } ( T )$ to simplify notation. We point out that the VIX index does not pay dividends. The correct implied volatility for VIX options can then be obtained by inverting the Black-Scholes formula with interest rate $r > 0$ and $e ^ { - r ( T - t ) } F _ { t } ( T )$ as underlying. When calibrating to VIX options, we stress that we additionally calibrate to VIX futures’ prices, see Section 5.3. This is important since futures prices under the calibrated model are employed to compute its implied volatility surface. Including VIX futures in the calibration leads to a consistent model, both for VIX options and VIX futures, see e.g. Pacati et al. (2018); Guo et al. (2022a); Guyon (2020a, 2023). Using market prices of the VIX futures to invert the implied volatility surface could lead to inconsistencies if one would like to price further derivatives with the calibrated model.
 
-Observe that even if this procedure does not reduce the number iterated integrals to be computed offline, it reduces the number of parameters to calibrate, yielding in general to a faster evaluation of VIX _T_ ( _ℓ_ ). 
+## 5.2 Variance reduction for pricing VIX options
 
-**Remark 5.7** (Options on VIX) **.** Note that VIX options are written on VIX futures. The price process of a VIX future contract with maturity _T >_ 0, is given by 
+We here discuss variance reduction techniques (see e.g. Glasserman (2004)) that can speed up the calibration in the subsequently applied Monte Carlo approach further. The key idea is to introduce a control variate, namely an easy to evaluate random variable $\Phi ^ { c v }$ such that given $T > 0$ and $K > 0$
 
+$$
+\begin{array} { r } { \mathbb { E } [ \Phi ^ { c v } ] = 0 , \mathrm { V a r } \big ( ( \mathrm { V I X } _ { T } ( \ell ) - K ) ^ { + } - \Phi ^ { c v } \big ) < \mathrm { V a r } \big ( ( \mathrm { V I X } _ { T } ( \ell ) - K ) ^ { + } \big ) . } \end{array}
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0020-06.png)
+A well-working example of control variates used for pricing and calibrating neural SDE models can be found in Gierjatowicz et al. (2022), where $\Phi ^ { c v }$ is constructed from hedging strategies.
 
+In the following we describe two possible choices of control variates, which consist of polynomials on VIX futures. We stress the fact that these can be seen as linear functions of the signature of the primary process $\widehat { X }$ , hence they belong to the class of sig-payofs, see Lyons et al. (2020); Perez Arribas et al. (2020) and Section 4.2.2 in Cuchiero et al. (2023a).
 
-and we write in particular _F_ ( _T_ ) := _F_ 0( _T_ ) to simplify notation. We point out that the VIX index does not pay dividends. The correct implied volatility for VIX options can then be obtained by inverting the Black-Scholes formula with interest rate _r >_ 0 and _e_<sup>_−r_(</sup><sup>_T−t_)</sup> _Ft_ ( _T_ ) as underlying. When calibrating to VIX options, we stress that we additionally calibrate to VIX futures’ prices, see Section 5.3. This is important since futures prices under the calibrated model are employed to compute its implied volatility surface. Including VIX futures in the calibration leads to a consistent model, both for VIX options and VIX futures, see e.g. Pacati et al. (2018); Guo et al. (2022a); Guyon (2020a, 2023). Using market prices of the VIX futures to invert the implied volatility surface could lead to inconsistencies if one would like to price further derivatives with the calibrated model. 
-
-### **5.2 Variance reduction for pricing VIX options** 
-
-We here discuss variance reduction techniques (see e.g. Glasserman (2004)) that can speed up the calibration in the subsequently applied Monte Carlo approach further. The key idea is to introduce a control variate, namely an easy to evaluate random variable Φ<sup>_cv_</sup> such that given _T >_ 0 and _K >_ 0, 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0020-10.png)
-
-
-A well-working example of control variates used for pricing and calibrating neural SDE models can be found in Gierjatowicz et al. (2022), where Φ<sup>_cv_</sup> is constructed from hedging strategies. 
-
-In the following we describe two possible choices of control variates, which consist of polynomials on VIX futures. We stress the fact that these can be seen as linear functions of the signature of the primary process _X_<sup>�</sup> , hence they belong to the class of sig-payoffs, see Lyons et al. (2020); Perez Arribas et al. (2020) and Section 4.2.2 in Cuchiero et al. (2023a). 
-
-- The first example is to employ the VIX squared as main ingredient, see for instance Bourgey and De Marco (2022); Guerreiro and Guerra (2023) for a similar choice within
+• The first example is to employ the VIX squared as main ingredient, see for instance Bourgey and De Marco (2022); Guerreiro and Guerra (2023) for a similar choice within a rough Bergomi model for pricing VIX options. This is particularly easy to treat in our set up, as for any given maturity $T > 0$ we have
 
 <!-- page: 21 -->
 
-a rough Bergomi model for pricing VIX options. This is particularly easy to treat in our set up, as for any given maturity _T >_ 0 we have 
+$$
+\mathbb { E } [ \mathrm { V I X } _ { T } ^ { 2 } ( \ell ) ] = \frac { 1 } { \Delta } \ell ^ { \top } Q ^ { c v } ( T , \Delta ) \ell ,
+$$
 
+with $Q ^ { c v } ( T , \Delta ) : = \mathbb { E } [ Q _ { \mathcal { L } ( I ) \mathcal { L } ( J ) } ( T , \Delta ) ]$ . By Theorem 5.1 and Theorem 4.4 we indeed have
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0021-01.png)
+$$
+\begin{array} { r l } & { Q _ { \mathcal { L } ( I ) \mathcal { L } ( J ) } ^ { c v } ( T , \Delta ) = \mathbf { v e c } ( ( e _ { I } \sqcup e _ { J } ) \otimes e _ { 0 } ) ^ { \top } ( e ^ { \Delta G ^ { \top } } - \operatorname { I d } ) \mathbb { E } [ \mathbf { v e c } ( \widehat { \mathbb { X } } _ { T } ^ { 2 n + 1 } ) ] } \\ & { \qquad = \mathbf { v e c } ( ( e _ { I } \operatorname { U d } e _ { J } ) \otimes e _ { 0 } ) ^ { \top } ( e ^ { \Delta G ^ { \top } } - \operatorname { I d } ) e ^ { T G ^ { \top } } \mathbf { v e c } ( \widehat { \mathbb { X } } _ { 0 } ^ { 2 n + 1 } ) } \\ & { \qquad = \mathbf { v e c } ( ( e _ { I } \operatorname { U d } e _ { J } ) \otimes e _ { 0 } ) ^ { \top } ( e ^ { ( T + \Delta ) G ^ { \top } } - e ^ { T G ^ { \top } } ) \mathbf { v e c } ( \widehat { \mathbb { X } } _ { 0 } ^ { 2 n + 1 } ) } \end{array}
+$$
 
+where G denotes the $( d { + } 1 ) _ { 2 n + 1 }$ -dimensional matrix representative of the dual operator corresponding to $\widehat { \mathbb X }$ and vec $( \widehat { \mathbb { X } } _ { 0 } ^ { 2 n + 1 } ) = e _ { \varnothing } \in \mathbb { R } ^ { ( d + 1 ) _ { 2 n + 1 } }$
 
-with _Q_<sup>_cv_</sup> ( _T,_ ∆) := E[ _QL_ ( _I_ ) _L_ ( _J_ )( _T,_ ∆)]. By Theorem 5.1 and Theorem 4.4 we indeed have 
+Observe that $Q ^ { c v }$ can again be computed ofline similarly to the matrix $Q$ . Thus to compute the expectation of $\mathrm { V I X } _ { T } ^ { 2 } ( \ell )$ we only have to evaluate the previous quadratic form. To apply this now for pricing a call option with maturity $T > 0$ and strike $K > 0$ , we set
 
+$$
+\begin{array} { r } { \Phi ^ { c v } ( \ell , T , K ) : = c _ { T , K } ( \Delta \mathrm { V I X } _ { T } ^ { 2 } ( \ell ) - \ell ^ { \top } Q ^ { c v } ( T , \Delta ) \ell ) , } \\ { = c _ { T , K } ( \ell ^ { \top } ( Q ( T , \Delta ) - Q ^ { c v } ( T , \Delta ) ) \ell ) , } \end{array}
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0021-03.png)
+where the constant $c _ { T , K }$ maximizing the variance reduction is given by:
 
+$$
+c _ { T , K } ^ { * } = \frac { \mathrm { C o v } ( ( \mathrm { V I X } _ { T } ( \ell ) - K ) ^ { + } , \ell ^ { \top } Q ( T , \Delta ) \ell ) } { \mathrm { V a r } ( \ell ^ { \top } Q ( T , \Delta ) \ell ) } .
+$$
 
-where _G_ denotes the ( _d_ +1)2 _n_ +1-dimensional matrix representative of the dual operator corresponding to X<sup>�</sup> and **vec** (X<sup>�</sup> 0<sup>2</sup><sup>_n_+1</sup> ) = _e∅ ∈_ R<sup>(</sup><sup>_d_+1)2</sup><sup>_n_+1</sup> . 
+Notice that also in this case both $Q$ and $Q ^ { c v }$ satisfy the condition for applying the Cholesky decomposition, leading to a faster evaluation of the control variate as discussed in Remark 5.5. Note that the Cholesky decomposition cannot be applied to $Q - Q ^ { c v }$ , as this is in general an indefinite matrix.
 
-Observe that _Q_<sup>_cv_</sup> can again be computed offline similarly to the matrix _Q_ . Thus to compute the expectation of VIX<sup>2</sup> _T_<sup>(</sup><sup>_ℓ_)weonlyhavetoevaluatethepreviousquadratic</sup> form. To apply this now for pricing a call option with maturity _T >_ 0 and strike _K >_ 0, we set 
+• As a second example we consider a generic polynomial in $\mathrm { { V I X ^ { 2 } } }$ as control variate by defining
 
+$$
+Y _ { m } ^ { c v } ( \ell , T , K ) = \sum _ { i = 0 } ^ { m } \alpha _ { i } ( T , K ) ( \mathrm { V I X } _ { T } ^ { 2 } ( \ell ) ) ^ { i }\tag{5.11}
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0021-06.png)
+where $\alpha _ { i } ( T , K )$ are chosen to approximate the payof $( \mathrm { V I X } _ { T } - K ) ^ { + }$ with strike price $K$ for some $m \geq 1$ . The corresponding control-variate is then defined as $\Phi ^ { c v } ( \ell , T , K ) : =$ $c _ { T , K } \left( Y _ { m } ^ { c v } ( \ell , T , K ) - \mathbb { E } [ Y _ { m } ^ { c v } ( \ell , T , K ) ] \right)$ . Regarding the computational efort, let us remark the following.
 
+(i) $\mathrm { V I X } _ { T } ^ { 2 }$ is computed anyway for every realisation and is hence already available, therefore the computation of $Y _ { m } ^ { c v } ( \ell , T , K )$ is not expensive.
 
-where the constant _cT,K_ maximizing the variance reduction is given by: 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0021-08.png)
-
-
-Notice that also in this case both _Q_ and _Q_<sup>_cv_</sup> satisfy the condition for applying the Cholesky decomposition, leading to a faster evaluation of the control variate as discussed in Remark 5.5. Note that the Cholesky decomposition cannot be applied to _Q − Q_<sup>_cv_</sup> , as this is in general an indefinite matrix. 
-
-- As a second example we consider a generic polynomial in VIX<sup>2</sup> as control variate by defining 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0021-11.png)
-
-
-where _αi_ ( _T, K_ ) are chosen to approximate the payoff (VIX _T −K_ )<sup>+</sup> with strike price _K_ for some _m ≥_ 1. The corresponding control-variate is then defined as Φ<sup>_cv_</sup> ( _ℓ, T, K_ ) := _cT,K_ ( _Ym_<sup>_cv_(</sup><sup>_ℓ, T, K_)</sup><sup>_−_E[</sup><sup>_Y_</sup> _m_<sup>_cv_(</sup><sup>_ℓ, T, K_)]).Regardingthecomputationaleffort,letusre-</sup> mark the following. 
-
-- (i) VIX<sup>2</sup> _T_<sup>iscomputedanywayforeveryrealisationandishencealreadyavailable,</sup> therefore the computation of _Ym_<sup>_cv_(</sup><sup>_ℓ, T, K_)isnotexpensive.</sup> 
-
-- (ii) It is possible to calculate E[ _Ym_<sup>_cv_(</sup><sup>_ℓ, T, K_)]analyticallyrelyingonthemoment</sup> formula, see Theorem 4.4.
+(ii) It is possible to calculate $\mathbb { E } [ Y _ { m } ^ { c v } ( \ell , T , K ) ]$ analytically relying on the moment formula, see Theorem 4.4.
 
 <!-- page: 22 -->
 
-- (iii) The choice of _cT,K ∈_ R is important and the optimal one, i.e., the one leading the highest variance reduction, is given by the following expression 
+(iii) The choice of $c _ { T , K } \in \mathbb { R }$ is important and the optimal one, i.e., the one leading the highest variance reduction, is given by the following expression
 
+$$
+c _ { T , K } ^ { * } = \frac { \mathrm { C o v } ( ( \mathrm { V I X } _ { T } ( \ell ) - K ) ^ { + } , Y _ { m } ^ { c v } ( \ell , T , K ) ) } { \mathrm { V a r } ( Y _ { m } ^ { c v } ( \ell , T , K ) ) } ,
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0022-01.png)
+see for instance Section 4.1.1 in Glasserman (2004).
 
+We stress the fact that for $m = 1$ the two control variates introduced coincide.
 
-see for instance Section 4.1.1 in Glasserman (2004). 
+## 5.3 Calibration to VIX options
 
-We stress the fact that for _m_ = 1 the two control variates introduced coincide. 
+In this section we focus on the calibration to VIX options only. Let $\tau$ be a set of maturities and K a collection of strikes. Consider the model given by (3.1) and (3.2).
 
-### **5.3 Calibration to VIX options** 
+Using Monte Carlo compute an approximation of option and futures’ prices with $N _ { M C } >$ 0 samples, i.e.
 
-In this section we focus on the calibration to VIX options only. Let _T_ be a set of maturities and _K_ a collection of strikes. Consider the model given by (3.1) and (3.2). 
+$$
+\pi _ { \mathrm { V I X } } ^ { \mathrm { m o d e l } } ( \ell , T , K ) \approx \frac { e ^ { - r T } } { N _ { M C } } \sum _ { i = 1 } ^ { N _ { M C } } \left( \mathrm { V I X } _ { T } ( \ell , \omega _ { i } ) - K \right) ^ { + } , \qquad F _ { \mathrm { V I X } } ^ { \mathrm { m o d e l } } ( \ell , T ) \approx \frac { 1 } { N _ { M C } } \sum _ { i = 1 } ^ { N _ { M C } } \mathrm { V I X } _ { T } ( \ell , \omega _ { i } ) ,\tag{5.12}
+$$
 
-Using Monte Carlo compute an approximation of option and futures’ prices with _NMC >_ 0 samples, i.e. 
+where
 
+$$
+\operatorname { V I X } _ { T } ( \ell , \omega ) = \sqrt { \frac { 1 } { \Delta } \ell ^ { \top } Q ( T , \Delta ) ( \omega ) \ell } = \frac { 1 } { \sqrt { \Delta } } \| U _ { T } ^ { \top } ( \omega ) \ell \| .
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0022-07.png)
+It is crucial to note that in this framework a Monte Carlo approach is tractable since for every ℓ the same samples can be used. This means that we do not need to carry out any simulation during the optimization task. Indeed, the matrix $Q$ can be simulated ofline while only the products with $\boldsymbol { \ell } \in \mathbb { R } ^ { ( d + 1 ) _ { n } }$ enter in the calibration step.
 
+Observe that an auxiliary randomization can be employed in every optimisation step as discussed in Remark 5.6. Moreover, if we want to use control variates to reduce the variance of the Monte Carlo estimator as described in the previous section, we would consider
 
-where 
+$$
+\pi _ { \mathrm { V I X } } ^ { \mathrm { m o d e l } } ( \ell , T , K ) \approx \frac { e ^ { - r T } } { N _ { V R } } \sum _ { i = 1 } ^ { N _ { V R } } ( \mathrm { V I X } _ { T } ( \ell , \omega _ { i } ) - K ) ^ { + } - \Phi ^ { c v } ( \ell , T , K ) ( \omega _ { i } ) .
+$$
 
+Due to the variance reduction the number of samples needed is $N _ { V R } \ll N _ { M C }$ and $\Phi ^ { c v }$ is as in Section 5.2
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0022-09.png)
+The calibration to VIX call options and the corresponding futures on $\tau$ and K consists in minimizing the functional
 
+$$
+L _ { \mathrm { V I X } } ( \ell ) : = \sum _ { T \in { \cal T } , K \in K } \mathcal { L } \left( \pi _ { \mathrm { V I X } } ^ { \mathrm { m o d e l } } ( \ell , T , K ) , \pi _ { \mathrm { V I X } } ^ { b , a } ( T , K ) , \sigma _ { \mathrm { V I X } } ^ { b , a } ( T , K ) , F _ { \mathrm { V I X } } ^ { \mathrm { m o d e l } } ( \ell , T ) , F _ { \mathrm { V I X } } ^ { m k t } ( T ) \right) ,\tag{5.13}
+$$
 
-It is crucial to note that in this framework a Monte Carlo approach is tractable since for _every ℓ_ the same samples can be used. This means that we do not need to carry out any simulation during the optimization task. Indeed, the matrix _Q_ can be simulated offline while only the products with _ℓ ∈_ R<sup>(</sup><sup>_d_+1)</sup><sup>_n_</sup> enter in the calibration step. 
+where L denotes a real-valued loss function, $F _ { \mathrm { V I X } } ^ { m k t } ( T )$ the market’s futures’ prices and
 
-Observe that an auxiliary randomization can be employed in every optimisation step as discussed in Remark 5.6. Moreover, if we want to use control variates to reduce the variance of the Monte Carlo estimator as described in the previous section, we would consider 
+$$
+\pi _ { \mathrm { V I X } } ^ { b , a } ( T , K ) : = \{ \pi _ { \mathrm { V I X } } ^ { m k t , b } ( T , K ) , \pi _ { \mathrm { V I X } } ^ { m k t , a } ( T , K ) \} , \quad \sigma _ { \mathrm { V I X } } ^ { b , a } ( T , K ) : = \{ \sigma _ { \mathrm { V I X } } ^ { m k t , b } ( T , K ) , \sigma _ { \mathrm { V I X } } ^ { m k t , a } ( T , K ) \} ,
+$$
 
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0022-12.png)
-
-
-Due to the variance reduction the number of samples needed is _NV R ≪ NMC_ and Φ<sup>_cv_</sup> is as in Section 5.2 
-
-The calibration to VIX call options and the corresponding futures on _T_ and _K_ consists in minimizing the functional 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0022-15.png)
-
-
-where _L_ denotes a real-valued loss function, _F_ VIX<sup>_mkt_(</sup><sup>_T_)themarket’sfutures’pricesand</sup> _π_ VIX<sup>_b,a_(</sup><sup>_T, K_) :=</sup><sup>_{π_</sup> VIX<sup>_mkt,b_(</sup><sup>_T, K_)</sup><sup>_, π_</sup> VIX<sup>_mkt,a_(</sup><sup>_T, K_)</sup><sup>_},_</sup> _σ_ VIX<sup>_b,a_(</sup><sup>_T, K_) :=</sup><sup>_{σ_</sup> VIX<sup>_mkt,b_(</sup><sup>_T, K_)</sup><sup>_, σ_</sup> VIX<sup>_mkt,a_(</sup><sup>_T, K_)</sup><sup>_},_</sup> 
-
-the market’s option bid/ask prices _π_ VIX<sup>_mkt,b_(</sup><sup>_T, K_)</sup><sup>_, π_</sup> VIX<sup>_mkt,a_(</sup><sup>_T, K_),andbid/askimpliedvolatili-</sup> ties _σ_ VIX<sup>_mkt,b_(</sup><sup>_T, K_)</sup><sup>_, σ_</sup> VIX<sup>_mkt,a_(</sup><sup>_T, K_),respectively.Wewillspecifythechoiceofthefunction</sup><sup>_L_in</sup> Section 5.3.1 and Section 7.1. In both sections we employ the same optimizer, i.e. BFGS with default parameters in `scipy` _._ `optimize` .
+the market’s option bid/ask prices $\pi _ { \mathrm { V I X } } ^ { m k t , b } ( T , K ) , \pi _ { \mathrm { V I X } } ^ { m k t , a } ( T , K )$ , and bid/ask implied volatilities $\sigma _ { \mathrm { V I X } } ^ { m k t , b } ( T , K ) , \sigma _ { \mathrm { V I X } } ^ { m k t , a } ( T , K )$ , respectively. We will specify the choice of the function $\mathcal { L }$ in Section 5.3.1 and Section 7.1. In both sections we employ the same optimizer, i.e. BFGS with default parameters in scipy.optimize.
 
 <!-- page: 23 -->
 
-**Remark 5.8** (Initial guess search) **.** Since within our model choice we are given a quadratic function in _ℓ_ to be minimized, a stochastic optimization with an initial guess is employed. In order to achieve faster convergence we consider an hyperparameter search to choose the starting parameters. The steps are outlined as follows. 
+Remark 5.8 (Initial guess search). Since within our model choice we are $\mathrm { g i }$ ven a quadratic function in ℓ to be minimized, a stochastic optimization with an initial guess is employed. In order to achieve faster convergence we consider an hyperparameter search to choose the starting parameters. The steps are outlined as follows.
 
-- Find the magnitude of the coefficients returning Monte Carlo prices of the VIX options _close_ to the one observable on the market. To this extent we sample _Nℓ >_ 0 times parameters _ℓ ∈ Ji_ = [ _−_ 10<sup>_−i_</sup> _,_ 10<sup>_−i_</sup> ]<sup>(</sup><sup>_d_+1)</sup><sup>_n_</sup> , for _i_ = 1 _, . . . , m_ with _m >_ 0. 
+• Find the magnitude of the coeficients returning Monte Carlo prices of the VIX options close to the one observable on the market. To this extent we sample $N _ { \ell } > 0$ times parameters $\ell \in J _ { i } = [ - 1 0 ^ { - i } , 1 0 ^ { - i } ] ^ { ( d + 1 ) _ { n } }$ , for $i = 1 , \dots$ , m with $m > 0$
 
-- Select _J_<sup>_∗_</sup> _∈_ ( _Ji_ )<sup>_m_</sup> _i_ =1<sup>suchthat</sup> 
+• Select $J ^ { * } \in ( J _ { i } ) _ { i = 1 } ^ { m }$ such that
 
+$$
+\begin{array} { r } { J ^ { * } \in \mathrm { a r g m i n } _ { i : \ell \in J _ { i } } L _ { \mathrm { V I X } } ( \ell ) . } \end{array}
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0023-03.png)
+• Choose the initial guess to be
 
+$$
+\begin{array} { r } { \ell _ { \mathrm { i n i t i a l } } \in \mathrm { a r g m i n } _ { \ell \in J ^ { * } } L _ { \mathrm { V I X } } ( \ell ) . } \end{array}
+$$
 
-- Choose the initial guess to be 
+## 5.3.1 Numerical results
 
+In the present section we report the results of the calibration to VIX options only. Here we consider call options written on the VIX on the trading day $0 2 / 0 6 / 2 0 2 1$ , the same as in Guyon and Lekeufack (2023). We stress that for such recent dates the bid-ask spreads for VIX options are rather tight with respect to older dated options as considered for instance in Gatheral et al. (2020); Bondi et al. (2024b). The maturities are reported in the following table with the corresponding range of strikes (in percentage) with respect to the market’s futures prices.
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0023-05.png)
-
-
-#### **5.3.1 Numerical results** 
-
-In the present section we report the results of the calibration to VIX options only. Here we consider call options written on the VIX on the trading day 02/06/2021, the same as in Guyon and Lekeufack (2023). We stress that for such recent dates the bid-ask spreads for VIX options are rather tight with respect to older dated options as considered for instance in Gatheral et al. (2020); Bondi et al. (2024b). The maturities are reported in the following table with the corresponding range of strikes (in percentage) with respect to the market’s futures prices. 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0023-08.png)
-
-
-We underline that the shortest maturity considered is 14 days. Regarding our modeling choice we fix _d_ = 2, _n_ = 3, which means to calibrate 40 parameters. For _X_ we choose a 2-dimensional Ornstein-Uhlenbeck processes, see Example 4.5, with the following (hyperparameter) configuration: 
+[Table source crop](assets/tables/2023-cuchiero-et-al-signature-spx-vix-p0023-block-0009-1b481f2e6dd71339.jpg)
 
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0023-10.png)
+We underline that the shortest maturity considered is 14 days. Regarding our modeling choice we fix $d = 2 , n = 3$ , which means to calibrate 40 parameters. For X we choose a 2-dimensional Ornstein-Uhlenbeck processes, see Example 4.5, with the following (hyperparameter) configuration:
 
+$$
+\kappa = ( 0 . 1 , 2 5 ) ^ { \top } , \qquad \theta = ( 0 . 1 , 4 ) ^ { \top } , \qquad \sigma = ( 0 . 7 , 1 0 ) ^ { \top } , \qquad \rho = \left( { \begin{array} { r r r } { 1 } & { - 0 . 5 7 7 } & { 0 . 3 } \\ { . } & { - 0 . 6 } \\ { . } & { . } & { 1 } \end{array} } \right) ,
+$$
 
-where we slightly abuse notation and denote by _ρ_ the correlation matrix of ( _X, B_ ). This implies that its last column describes the correlations of _X_ with the Brownian motion _B_ driving the price process _S_ . 
+where we slightly abuse notation and denote by $\rho$ the correlation matrix of $( X , B )$ . This implies that its last column describes the correlations of X with the Brownian motion B driving the price process S.
 
-These hyperparameters are chosen randomly. Indeed, in spirit of reservoir computing, the idea is to view the OU-process’ signature as (randomly chosen) reservoir, while a simple readout mechanism is trained, i.e. the linear function defined by _{ℓI_ : _|I| ≤ n}_ , to map the state of the reservoir to the desired output (in our case instantaneous volatilities). However, it is of course possible to perform a hyperparameter optimization or to add expert knowledge, e.g. that a high mean reversion rate is important. We tried the latter by mimicking a rough or strong mean-reverting model as suggested in Rogers (2023); Rømer (2022).
+These hyperparameters are chosen randomly. Indeed, in spirit of reservoir computing, the idea is to view the OU-process’ signature as (randomly chosen) reservoir, while a simple readout mechanism is trained, i.e. the linear function defined by $\left\{ \ell _ { I } : | I | \leq n \right\}$ , to map the state of the reservoir to the desired output (in our case instantaneous volatilities). However, it is of course possible to perform a hyperparameter optimization or to add expert knowledge, e.g. that a high mean reversion rate is important. We tried the latter by mimicking a rough or strong mean-reverting model as suggested in Rogers (2023); Rømer (2022).
 
 <!-- page: 24 -->
 
-We also refer to Appendix A for numerical results where we use only a correlated 2- dimensional Brownian motion as primary process, which yields significantly worse results. Note that the second simplest choice after Brownian motion within the family of polynomial diffusions (also with exact simulation) is the Ornstein-Uhlenbeck process which we thus applied. 
+We also refer to Appendix A for numerical results where we use only a correlated 2- dimensional Brownian motion as primary process, which yields significantly worse results. Note that the second simplest choice after Brownian motion within the family of polynomial difusions (also with exact simulation) is the Ornstein-Uhlenbeck process which we thus applied.
 
-Before stating the loss function _L_ that we employed in the calibration task, let us make the following remark. 
+Before stating the loss function L that we employed in the calibration task, let us make the following remark.
 
-**Remark 5.9.** Let _f_ : R<sup>+</sup> _×_ R<sup>+</sup> _→_ R<sup>+</sup> be the call pricing functional in the Black-Scholes model, depending on the volatility _σ_<sup>BS</sup> and the spot price _ξ_ , i.e., _f_ : ( _σ_<sup>BS</sup> _, ξ_ ) _�→ f_ ( _σ_<sup>BS</sup> _, ξ_ ). By Taylor expansion in an appropriate neighbourhood of ( _σ_<sup>_mkt_</sup> _, ξ_<sup>_mkt_</sup> ) we obtain 
+Remark 5.9. Let $f : \mathbb { R } ^ { + } \times \mathbb { R } ^ { + } \to \mathbb { R } ^ { + }$ be the call pricing functional in the Black-Scholes model, depending on the volatility $\sigma ^ { \mathrm { B S } }$ and the spot price $\xi , \mathrm { i . e . , } f : ( \sigma ^ { \mathrm { B S } } , \xi ) \mapsto f ( \sigma ^ { \mathrm { B S } } , \xi )$ By Taylor expansion in an appropriate neighbourhood of $( \sigma ^ { m k t } , \xi ^ { m k t } )$ we obtain
 
+$$
+f ( \sigma ^ { \mathrm { B S } } , \xi ) \approx f ( \sigma ^ { m k t } , \xi ^ { m k t } ) + \frac { \partial f } { \partial \sigma } ( \sigma ^ { m k t } , \xi ^ { m k t } ) ( \sigma ^ { \mathrm { B S } } - \sigma ^ { m k t } ) + \frac { \partial f } { \partial \xi } ( \sigma ^ { m k t } , \xi ^ { m k t } ) ( \xi - \xi ^ { m k t } ) ,
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0024-03.png)
+which equivalently gives
 
+$$
+( \sigma ^ { \mathrm { B S } } - \sigma ^ { m k t } ) \approx \frac { 1 } { \frac { \partial f } { \partial \sigma } ( \sigma ^ { m k t } , \xi ^ { m k t } ) } \big ( f ( \sigma ^ { \mathrm { B S } } , \xi ) - f ( \sigma ^ { m k t } , \xi ^ { m k t } ) \big ) - \frac { \frac { \partial f } { \partial \xi } ( \sigma ^ { m k t } , \xi ^ { m k t } ) } { \frac { \partial f } { \partial \sigma } ( \sigma ^ { m k t } , \xi ^ { m k t } ) } ( \xi - \xi ^ { m k t } ) ,\tag{5.14}
+$$
 
-which equivalently gives 
+where we recognize for the derivatives with respect to $\sigma$ and $\xi ,$ the Greeks Vega and Delta, respectively.
 
+Motivated by Remark 5.9 we propose, for a fixed maturity and strike price, the following loss-function for $\beta \in \{ 0 , 1 \}$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0024-05.png)
+$$
+\begin{array} { r l r } {  { \mathcal { L } ^ { \beta } ( \pi , \pi ^ { m k t , b , a } , \sigma ^ { m k t , b , a } , F , F ^ { m k t } ) = } } & { ( 5 . 1 5 ) } \\ & { } & { ( \frac { ( \beta \tilde { 1 } _ { \{ \pi \notin [ \pi ^ { m k t , b } , \pi ^ { m k t , a } ] \} } + ( 1 - \beta ) ) | \pi - ( \pi ^ { m k t , a } + \pi ^ { m k t , b } ) / 2 | + | \delta ^ { m k t } e ^ { - r T } ( F - F ^ { m k t } ) | } { { v ^ { m k t } ( \sigma ^ { m k t , a } - \sigma ^ { m k t , b } ) } } ) ^ { 2 } , } \end{array}
+$$
 
+where
 
-where we recognize for the derivatives with respect to _σ_ and _ξ_ , the Greeks Vega and Delta, respectively. 
+$\upsilon ^ { m k t }$ and $\delta ^ { m k t }$ denote the Vega and Delta of the option under the Black-Scholes model which depend on the maturity and on the strike price;
 
-Motivated by Remark 5.9 we propose, for a fixed maturity and strike price, the following loss-function for _β ∈{_ 0 _,_ 1 _}_ 
+$F$ and $F ^ { m k t }$ denote futures with maturity $T$ such that the variables $\xi , \xi ^ { m k t }$ appearing in Remark 5.9 are $\xi = e ^ { - r T } F$ and $\xi ^ { m k t } = e ^ { - r T } F ^ { m k t }$ , respectively;
 
+$\begin{array} { r } { \widetilde { 1 } _ { \{ x \notin [ y ^ { b } , y ^ { a } ] \} } : = s ( y ^ { b } - x ) + s ( x - y ^ { a } ) \mathrm { ~ f o r ~ } s ( x ) : = \frac { 1 } { 2 } \operatorname { t a n h } ( 1 0 0 x ) + \frac { 1 } { 2 } } \end{array}$ a smooth version of the indicator function.
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0024-08.png)
+Remark 5.10. (i) We observe that by Remark 5.9 minimizing $\mathcal { L } ^ { 0 }$ is equivalent to minimizing an upper bound of the square of the right-hand side of (5.14) normalized by the bid-ask spread of the implied volatilities. Note that we slightly abused notation, since $\boldsymbol { v } ^ { m k t }$ and $\delta ^ { m k t }$ of course depend on the strike and the maturity.
 
-
-where 
-
-- _υ_<sup>_mkt_</sup> and _δ_<sup>_mkt_</sup> denote the Vega and Delta of the option under the Black-Scholes model which depend on the maturity and on the strike price; 
-
-- _F_ and _F_<sup>_mkt_</sup> denote futures with maturity _T_ such that the variables _ξ, ξ_<sup>_mkt_</sup> appearing in Remark 5.9 are _ξ_ = _e_<sup>_−rT_</sup> _F_ and _ξ_<sup>_mkt_</sup> = _e_<sup>_−rT_</sup> _F_<sup>_mkt_</sup> , respectively; 
-
-- <sup>˜</sup> 1 _{x/∈_ [ _yb,ya_ ] _}_ := _s_ ( _y_<sup>_b_</sup> _− x_ ) + _s_ ( _x − y_<sup>_a_</sup> ) for _s_ ( _x_ ) := 2<sup><u>1</u>tanh(100</sup><sup>_x_) +</sup><sup><u>1</u></sup> 2<sup>asmoothversionof</sup> the indicator function. 
-
-- **Remark 5.10.** (i) We observe that by Remark 5.9 minimizing _L_<sup>0</sup> is equivalent to minimizing an upper bound of the square of the right-hand side of (5.14) normalized by the bid-ask spread of the implied volatilities. Note that we slightly abused notation, since _υ_<sup>_mkt_</sup> and _δ_<sup>_mkt_</sup> of course depend on the strike and the maturity. 
-
-- <u>1</u> 
-
-- (ii) Note that as _ℓ �→_ VIX _T_ ( _ℓ, ω_ ) = _~~√~~_ ∆<sup>_∥U_</sup> _T_<sup>_⊤ℓ∥_isconvexandthecallpayoffisconvexand</sup> increasing, the model option and futures prices are convex in _ℓ_ . If _β_ = 0 and the initialization of _ℓ_ is such that both the model and futures prices are higher than the market ones, then we actually deal with a convex optimization problem.
+(ii) Note that as $\begin{array} { r } { \ell \mapsto \mathrm { V I X } _ { T } ( \ell , \omega ) = \frac { 1 } { \sqrt { \Delta } } \| U _ { T } ^ { \top } \ell \| } \end{array}$ is convex and the call payof is convex and increasing, the model option and futures prices are convex in ℓ. If $\beta = 0$ and the initialization of ℓ is such that both the model and futures prices are higher than the market ones, then we actually deal with a convex optimization problem.
 
 <!-- page: 25 -->
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0025-01.png)
+(iii) If our aim does not consist in calibrating to the mid-price or mid-implied-volatility precisely, but we merely want to be within the bid-ask spreads we can set $\beta = 1$
+
+For the next calibration result we minimize $\mathcal { L } ^ { 1 }$ as introduced above with $N _ { M C } = 8 0 0 0 0$ Monte Carlo samples for the previous maturities and strikes.
+
+![Implied Volatilities VIX 02-06-2021 Figure 1: The red crosses denote the bid-ask spreads (of the implied volatilities) for each maturity, while the azure dots denote the calibrated implied volatilities of the model. On the x-axis we find the strikes and on the y-axis we find the maturities.](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0025-block-0003-51fd87a8fc589a58.jpg)
+
+We observe that the calibrated VIX smiles fall systematically in the bid-ask interval for all the maturities considered. We report additionally in the next tables the relative error between the market futures prices and the calibrated ones for each maturity, i.e.,
+
+$$
+\varepsilon _ { T } : = \frac { | F ^ { m k t } ( T ) - F _ { \mathrm { V I X } } ^ { \mathrm { m o d e l } } ( \ell ^ { * } , T ) | } { F ^ { m k t } ( T ) } ,\tag{5.16}
+$$
+
+where $\ell ^ { * } \in \mathbb { R } ^ { 4 0 }$ denotes the calibrated parameters and here $F _ { \mathrm { V I X } } ^ { \mathrm { m o d e l } } ( \ell ^ { * } , T )$ stands for the calibrated future model price. In Figure 2 we can find an illustration of the calibrated and the market futures’ term structure.
+
+[Table source crop](assets/tables/2023-cuchiero-et-al-signature-spx-vix-p0025-block-0007-10ac387044cb4228.jpg)
 
 
-<!-- Start of picture text -->
-++<br>tty 2.50<br>+94+ 2.25<br>4 os. ooe, + t,% 1.752.00<br>tt, tie 7 IV<br>tz +h * 1.50<br>Fs *, ay"ey eh, 7+<br>+e, és % % 1.25<br>r #9) 4% Sy<br>tly ? J<br>_, *e, *h, * 2 1.00<br>Pe ry lp + hy5 #<br>fey tt, oe, ; t %|+ * 0.75<br>+He ™ +ci 0.05<br>tex 0.10<br>Ta 0.15<br>9° 80 “ty*, 0.250.20os66<br>70 Stri60kes Gy 40 30 * 0.350.30 yr<br>20 0.40<br><!-- End of picture text -->
+[Table source crop](assets/tables/2023-cuchiero-et-al-signature-spx-vix-p0025-block-0008-ca2e2f99033cd8da.jpg)
+
 
 <!-- page: 26 -->
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0026-00.png)
+![Figure 2: The blue circles denote the calibrated futures prices and the red crosses the futures prices on the market, in between a linear interpolation is reported.](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0026-block-0001-52d96dde6a97aa8e.jpg)
 
+## 5.4 The case of time-varying parameters
 
-<!-- Start of picture text -->
-Futures' Term Structure<br>Calibrated *<br>Market<br>23 m<br>22 *<br>og<br>21 x<br>%<br>20<br>19}<br>0.05 0.10 0.15 0.20 0.25 0.30 0.35 0.40<br>T<br><!-- End of picture text -->
+We now consider the case of maturity dependent parameters as for instance employed in Gierjatowicz et al. (2022); Cuchiero et al. (2023a). Since it will be important later on to distinguish maturities of options written on the VIX index from maturities of options written on the SPX index, we introduce the two sets $\mathcal { T } ^ { \mathrm { V I X } }$ and $\tau ^ { \mathrm { S P X } }$ . Let us fix here $\mathcal { T } ^ { \mathrm { V I X } } = \{ T _ { 1 } , \dots , T _ { N } \}$ , where $T _ { i } < T _ { i + 1 }$ for any in $i = 1 , \ldots , N - 1$ and denote by $\ell ( T _ { i } ) \in \mathbb { R } ^ { d _ { n } }$ the parameters depending on the maturity $T _ { i } > 0$ . We set $T _ { 0 } = 0$ and $T _ { N + 1 } = + \infty$ . Then, we consider for any $t \geq 0$ the volatility process to be
 
-»— »— 
+$$
+\sigma _ { t } ^ { S } ( \ell ) = \sum _ { i = 0 } ^ { N } \sum _ { | I | \leq n } \ell _ { I } ( T _ { i } ) 1 _ { [ T _ { i } , T _ { i + 1 } ) } ( t ) \langle e _ { I } , \widehat { \mathbb { X } } _ { t } \rangle .\tag{5.17}
+$$
 
-- 
+Therefore the variance process reads as follows,
 
-A
+$$
+V _ { t } ( \ell ) = \sum _ { i = 0 } ^ { N } \sum _ { | J | , | I | \leq n } \ell _ { I } ( T _ { i } ) \ell _ { J } ( T _ { i } ) 1 _ { [ T _ { i } , T _ { i + 1 } ) } ( t ) \langle e _ { I } \shuffle e _ { J } , \widehat { \mathbb { X } } _ { t } \rangle .\tag{5.18}
+$$
+
+Assumption 5.11. Assume that for a set of maturities $\tau ^ { V I X }$ it holds that $| T _ { i } - T _ { j } | \geq \Delta$ for all $i \neq j$
+
+Proposition 5.12. Let $\mathcal { T } ^ { \mathrm { V I X } }$ be a set of maturities on the VIX index and let $Q ( T , \tau )$ be the matrix as defined in (5.6) (here for general $\tau > 0$ instead of $\Delta )$ . Then, under (5.18) the VIX squared at time $T _ { i } \in \mathcal { T } ^ { \mathrm { V I X } }$ is given by
+
+$$
+\mathrm { V I X } _ { T _ { i } } ^ { 2 } ( \ell ) = \frac { 1 } { \Delta } \Big ( \sum _ { j = i } ^ { N } \ell ( T _ { j } ) ^ { \top } \left( Q ( T _ { i } , ( T _ { j + 1 } - T _ { i } ) \wedge \Delta ) - Q ( T _ { i } , ( T _ { j } - T _ { i } ) \wedge \Delta ) \right) \ell ( T _ { j } ) \Big ) .
+$$
+
+Note that, if $T _ { i + 1 } - T _ { i } > \Delta$ (which is in particular holds under Assumption 5.11) then,
+
+$$
+\mathrm { V I X } _ { T _ { i } } ^ { 2 } ( \ell ) = \frac { 1 } { \Delta } \ell ( T _ { i } ) ^ { \top } Q ( T _ { i } , \Delta ) \ell ( T _ { i } ) .
+$$
 
 <!-- page: 27 -->
 
-[| xs wo | xy / wo| xy ( {/ wo| an) 
+Proof. By the definition of the VIX, it holds that
 
-= 
+$$
+\begin{array} { r l } {  { \mathrm { V I X } _ { T _ { i } } ^ { 2 } ( \ell ) - \frac { 1 } { \Delta } \mathbb { E } \Bigg [ \int _ { T _ { i } } ^ { T _ { i } + \Delta } \sum _ { j = i } ^ { N } \underset { | j | , | I | \leq n } { \sum } \ell _ { I } ( T _ { j } ) \ell _ { J } ( T _ { j } ) 1 _ { | I | , | X _ { j + 1 } | } ( t ) \langle e _ { I } \shuffle e _ { j } , \widehat { \mathbb { X } } _ { \ell } \rangle \mathrm { d } t \Bigg | \mathcal { F } _ { T _ { i } } \Bigg ] } \Bigg | } \\ & { = - \frac { 1 } { \Delta } \sum _ { j = i } ^ { N } \underset { | J | , | I | \leq n } { \sum } \ \epsilon _ { I } ( T _ { j } ) \ell _ { J } ( T _ { j } ) \mathbb { E } \Bigg [ \int _ { T _ { j } \land ( T _ { i } + \Delta ) } ^ { T _ { j + 1 } \land ( T _ { i } + \Delta ) } \langle e _ { I } \shuffle e _ { j } , \widehat { \mathbb { X } } _ { \ell } \rangle \mathrm { d } t \Bigg | \mathcal { F } _ { T _ { i } } \Bigg ] } \\ & { = \frac { 1 } { \Delta } \sum _ { j = i } ^ { N } \underset { | J | , | I | \leq n } { \sum } \ \ell _ { I } ( T _ { j } ) \ell _ { J } ( T _ { j } ) \Bigg ( \mathbb { E } \Bigg [ \int _ { T _ { i } } ^ { T _ { j + 1 } \land ( T _ { i } + \Delta ) } \langle e _ { I } \shuffle e _ { j } , \widehat { \mathbb { X } } _ { \ell } \rangle \mathrm { d } t \Bigg | \mathcal { F } _ { T _ { i } } \Bigg ] } \\ & { \qquad - \mathbb { E } \Bigg [ \int _ { T _ { j } } ^ { T _ { j } \land ( T _ { j } + \Delta ) } \langle e _ { I } \shuffle e _ { j } , \widehat { \mathbb { X } } _ { \ell } \rangle \mathrm { d } t \Bigg | \mathcal { F } _ { T _ { i } } \Bigg ] \Bigg ) } \end{array}
+$$
 
-(f ) 
+and hence the first statement follows by the definition of $Q$ in (5.6).
 
-f 
+Notice that also in the case of Proposition 5.12, Remark 5.5 applies.
 
-(f ) 
+## 6 SPX as a signature-based model
 
-{ ~~/~~ 
+The goal of this section is to express the discounted, dividend-adjusted price of the SPX, modeled via (3.1)-(3.2)
 
-3
+$$
+\mathrm { d } S _ { t } ( \ell ) = S _ { t } ( \ell ) \sigma _ { t } ^ { S } ( \ell ) \mathrm { d } B _ { t } ,
+$$
+
+in terms of the signature of $( t , X _ { t } , B _ { t } ) _ { t \geq 0 }$ , allowing again to precompute its samples and use the same ones for every ℓ. This is in the same spirit as in Cuchiero et al. (2023a), even though there the asset price was directly modeled as linear function of the signature of some primary process.
+
+Recall that by (3.2) $\sigma ^ { S }$ is parametrized as follows
+
+$$
+\sigma _ { t } ^ { S } ( \ell ) : = \ell _ { \varnothing } + \sum _ { 0 < | I | \leq n } \ell _ { I } \langle e _ { I } , \widehat { \mathbb { X } } _ { t } \rangle ,
+$$
+
+where $\widehat { X } _ { t } = \left( t , X _ { t } \right)$ with X a d-dimensional polynomial difusion X in the sense of Definition 3.1. Before addressing a more tractable expression for S, that allows to avoid (Euler) simulation schemes, we recall the following well-known integrability result.
+
+Lemma 6.1. Assume that $\mathbb { E } [ S _ { 0 } ] < \infty$ . Then, the process $( S _ { t } ) _ { t \geq 0 }$ is a (non-negative) supermartingale and in particular $\mathbb { E } [ S _ { t } ] <$ ∞ for each $t \geq 0$
+
+Proof. Note that $\begin{array} { r } { S _ { t } = S _ { 0 } \mathcal { E } \left( \int _ { 0 } ^ { \cdot } \sigma _ { s } ^ { S } \mathrm { d } B _ { s } \right) } \end{array}$  for all $t \geq 0$ . Moreover $\textstyle { \bigl ( } \int _ { 0 } ^ { t } \sigma _ { s } ^ { S } \mathrm { d } B _ { s } { \bigr ) } _ { t \geq 0 }$ is a local martingale and hence, by the properties of the stochastic exponential, $S _ { t }$ is a non-negative local martingale. It follows from Fatou’s Lemma that non-negative local martingales are supermartingales. □
+
+In the following we suppose without loss of generality that $S _ { 0 } = 1$
+
+Remark 6.2. Recall that if Novikov’s condition is satisfied, then a stochastic exponential of the form $\begin{array} { r } { S _ { t } = \mathcal { E } \left( \int _ { 0 } ^ { \cdot } \sigma _ { s } ^ { S } \mathrm { d } B _ { s } \right) } \end{array}$ for $t \in [ 0 , T ]$ is a true martingale. For $\sigma _ { s } ^ { S }$ as in (3.2), such t condition reads
+
+$$
+\mathbb { E } \left[ \exp \left\{ \frac { 1 } { 2 } \int _ { 0 } ^ { T } V _ { t } ( \ell ) \mathrm { d } t \right\} \right] < + \infty .
+$$
 
 <!-- page: 28 -->
 
-t ~~h~~ Wh ~~e~~ feo} ~~co~~ ) 
+Observe that
 
-~~tf Per~~ E ~~F~~ d ~~el~~ 
+$$
+\begin{array} { r l } { \mathbb { E } \left[ \exp \left\{ \displaystyle \frac { 1 } { 2 } \int _ { 0 } ^ { T } V _ { t } ( \ell ) \mathrm { d } t \right\} \right] } & { = \mathbb { E } \left[ \exp \left\{ \displaystyle \frac { 1 } { 2 } \sum _ { | I | , | J | \leq n } \ell _ { I } \ell _ { J } \int _ { 0 } ^ { T } \langle e _ { I } \shuffle e _ { J } , \widehat { \mathbb { X } } _ { t } \rangle \mathrm { d } t \right\} \right] } \\ & { = \mathbb { E } \left[ \exp \left\{ \displaystyle \frac { 1 } { 2 } \ell ^ { \top } Q ^ { 0 } ( T ) \ell \right\} \right] , } \end{array}\tag{6.1}
+$$
 
-—
+where for $\mathcal { L } : \{ I : | I | \leq n \} \to \{ 1 , \ldots , ( d + 1 ) _ { n } \}$ 2
+
+$$
+Q _ { \mathcal { L } ( I ) \mathcal { L } ( J ) } ^ { 0 } ( T ) : = \langle ( e _ { I } \sqcup e _ { J } ) \otimes e _ { 0 } , \widehat { \mathbb { X } } _ { T } \rangle .
+$$
+
+We point out that the previous condition is not necessarily satisfied for all $\ell \in \mathbb { R } ^ { ( d + 1 ) n }$ Indeed, let us consider $X$ to be a one-dimensional Brownian motion and choose ℓ such that the only non trivial component is the last one, i.e.,
+
+$$
+\ell _ { I } : = \left\{ \begin{array} { l l } { { c \in \mathbb { R } , } } & { { \mathrm { i f ~ } I = ( 1 , \ldots , 1 ) , ~ | I | = n , } } \\ { { 0 , } } & { { \mathrm { o t h e r w i s e } . } } \end{array} \right.\tag{6.2}
+$$
+
+Then, (6.1) translates into
+
+$$
+\mathbb { E } \biggl [ \exp \biggl \{ \frac { c ^ { 2 } } { 2 } \int _ { 0 } ^ { T } \frac { 2 n \mathrm { ! } } { n \mathrm { ! } n \mathrm { ! } } \frac { X _ { t } ^ { 2 n } } { 2 n \mathrm { ! } } \mathrm { d } t \biggr \} \biggr ] = \mathbb { E } \biggl [ \exp \biggl \{ \frac { c ^ { 2 } } { 2 ( n \mathrm { ! } ) ^ { 2 } } \int _ { 0 } ^ { T } X _ { t } ^ { 2 n } \mathrm { d } t \biggr \} \biggr ] ,
+$$
+
+which is not finite in general, e.g. if $n = 2 , c = \sqrt { 2 } ( n ! )$ then by Jensen’s inequality it follows
+
+$$
+\mathbb { E } \bigg [ \exp \bigg \{ \int _ { 0 } ^ { T } X _ { t } ^ { 4 } \mathrm { d } t \bigg \} \bigg ] \geq \mathbb { E } \bigg [ \frac { 1 } { T } \int _ { 0 } ^ { T } e ^ { T X _ { t } ^ { 4 } } \mathrm { d } t \bigg ] = \frac { 1 } { T } \int _ { 0 } ^ { T } \mathbb { E } [ e ^ { T X _ { t } ^ { 4 } } ] \mathrm { d } t = + \infty .
+$$
+
+Remark 6.3. As well known from the results of Delbaen and Schachermayer (1994) the existence of an equivalent local martingale measure is suficient for NFLVR, and risk neutral pricing works, too. This is important when the process $S ( \ell )$ is a non-negative true local martingale such that E $[ S _ { T } ( \ell ) ] < S _ { 0 }$ . If one could go short in the asset, and thus gets $S _ { 0 } ( \ell )$ 2 and long in the ‘call option with strike $0 ^ { \prime }$ (corresponding to the payof $S _ { T } ( \ell ) )$ with price $\mathbb { E } [ S _ { T } ( \ell ) ] < S _ { 0 } ( \ell )$ , an arbitrage would be created. But the latter is simply not allowed as trading strategy under NFLVR. We address the reader to Kardaras et al. (2015) for further details.
+
+The key idea is to rewrite (3.1) as a type of signature-based model in sense of Cuchiero et al. (2023a) including $B = ( B _ { t } ) _ { t \geq 0 }$ as part of the primary process. This is possible since Itˆo integrals with respect to primary process’ components can be rewritten as linear functions of the signature of the primary process itself. Before stating the result we need to introduce some auxiliary notation. We denote by $( Z _ { t } ) _ { t \geq 0 }$ the $( d + 1 )$ -dimensional process given by
+
+$$
+Z _ { t } = ( X _ { t } , B _ { t } ) ,\tag{6.3}
+$$
+
+by $( \widehat { Z } _ { t } ) _ { t \geq 0 }$ its time extension, and by $( \widehat { \mathbb { Z } } _ { t } ) _ { t \geq 0 }$ the signature of $( \widehat { Z } _ { t } ) _ { t \geq 0 }$ . With a slight abuse of notation we again denote by $\rho$ the correlation matrix process between the components of $Z .$ . Observe that $\rho$ encodes in particular the correlation between X and B. Finally, we let $a _ { i j } ^ { J } \in \mathbb { R }$ denote the coeficients satisfying
+
+$$
+\mathrm { d } [ Z ^ { i } , Z ^ { j } ] _ { t } = \sum _ { | J | \leq 2 } a _ { i j } ^ { J } \langle e _ { J } , \widehat { \mathbb { Z } } _ { t } \rangle \mathrm { d } t ,
+$$
+
+for each $i , j \in \{ 1 , \ldots , d + 1 \}$
 
 <!-- page: 29 -->
 
-~~_~~ So 
+Proposition 6.4. Let $S = ( S _ { t } ) _ { t \geq 0 }$ satisfy (3.1) with $S _ { 0 } = 1$ , and $\sigma ^ { S } = ( \sigma _ { t } ^ { S } ) _ { t \geq 0 }$ satisfy (3.2). Then,
 
-Ss) ~~—~~ ou 
+$$
+\log ( S _ { t } ( \ell ) ) = - \frac { 1 } { 2 } \ell ^ { \top } Q ^ { 0 } ( t ) \ell + \sum _ { | I | \leq n } \ell _ { I } \langle \widetilde { e } _ { I } ^ { B } , \widehat { \mathbb { Z } } _ { t } \rangle ,\tag{6.4}
+$$
 
-ff ~ furyf - ~~=~~ » Se ~~_~~ So Jo : 
+where
 
-~~O~~ 
+$$
+\tilde { e } _ { \emptyset } ^ { B } : = e _ { d + 1 } , \qquad \tilde { e } _ { I } ^ { B } : = e _ { I } \otimes e _ { d + 1 } - \sum _ { | J | \leq 2 } \frac { a _ { i _ { | I | } ( d + 1 ) } ^ { J } } { 2 } ( e _ { I ^ { \prime } } \sqcup e _ { J } ) \otimes e _ { 0 } ,
+$$
 
-_ 
+for each $| I | > 0$ , and the components of the matrix $Q ^ { 0 } ( t ) \in \mathbb { R } ^ { ( d + 1 ) _ { n } \times ( d + 1 ) _ { n } }$ are given by
 
-fou . 
+$$
+\begin{array} { r } { Q _ { \mathcal { L } ( I ) \mathcal { L } ( J ) } ^ { 0 } ( t ) = \langle ( e _ { I } \sqcup e _ { J } ) \otimes e _ { 0 } , \widehat { \mathbb { X } } _ { t } \rangle , } \end{array}
+$$
 
-~~_~~ So
+for a labeling function $\mathcal { L } : \{ I : | I | \leq n \} \to \{ 1 , \ldots , ( d + 1 ) _ { n } \}$
+
+Proof. We can compute
+
+$$
+\begin{array} { r l } { \log ( S _ { t } ( \ell ) ) = - \displaystyle \frac { 1 } { 2 } \int _ { 0 } ^ { t } V _ { s } ( \ell ) \mathrm { d } s + \int _ { 0 } ^ { t } \sigma _ { s } ^ { S } ( \ell ) \mathrm { d } B _ { s } } & { } \\ { = - \displaystyle \frac { 1 } { 2 } \sum _ { | I | , | J | \leq n } \ell _ { I } \ell _ { J } \int _ { 0 } ^ { t } \langle e _ { I } \shuffle e _ { J } , \widehat { \mathbb { X } } _ { s } \rangle \mathrm { d } s + \displaystyle \sum _ { | I | \leq n } \ell _ { I } \int _ { 0 } ^ { t } \langle e _ { I } , \widehat { \mathbb { X } } _ { s } \rangle \mathrm { d } B _ { s } } & { } \\ { \displaystyle \stackrel { ( * ) } { = } - \displaystyle \frac { 1 } { 2 } \sum _ { | I | , | J | \leq n } \ell _ { I } \ell _ { J } \langle ( e _ { I } \shuffle e _ { J } ) \otimes e _ { 0 } , \widehat { \mathbb { X } } _ { t } \rangle + \displaystyle \sum _ { | I | \leq n } \ell _ { I } \langle \tilde { e } _ { I } ^ { B } , \widehat { \mathbb { Z } } _ { t } \rangle } & { } \\ { = - \displaystyle \frac { 1 } { 2 } \ell ^ { 7 } Q ^ { 0 } ( t ) \ell + \displaystyle \sum _ { | I | < n } \ell _ { I } \langle \tilde { e } _ { I } ^ { B } , \widehat { \mathbb { Z } } _ { t } \rangle , } & { } \end{array}
+$$
+
+where for (∗) we used that $\begin{array} { r } { \int _ { 0 } ^ { t } \langle e _ { I } , \widehat { \mathbb { X } } _ { s } \rangle \mathrm { d } B _ { s } = \langle \widetilde { e } _ { I } ^ { B } , \widehat { \mathbb { Z } } _ { t } \rangle } \end{array}$ by Lemma 3.10 in Cuchiero et al. (2023a). □
+
+Remark 6.5. Consider again the model described in Remark 3.2. Then the results of Proposition 6.4 still hold with
+
+$$
+Q _ { \mathcal { L } ( I ) \mathcal { L } ( J ) } ^ { 0 } ( t ) : = \int _ { 0 } ^ { t } \langle e _ { I } \shuffle e _ { J } , \widehat { \mathbb { X } } _ { s - \varepsilon , s } \rangle { \mathrm { d } } s ,
+$$
+
+and $\begin{array} { r } { \int _ { 0 } ^ { t } \langle e _ { I } , \widehat { \mathbb { X } } _ { s - \varepsilon , s } \rangle \mathrm { d } B _ { s } } \end{array}$ instead of $\langle \tilde { e } _ { I } ^ { B } , \widehat { \mathbb { Z } } _ { t } \rangle$ . Since the proof follows closely the proof of the original result, we omit it.
+
+Remark 6.6. • Observe that since the matrix $( \langle e _ { I } \sqcup e _ { J } , \widehat { \mathbb { X } } _ { t } \rangle ) _ { | I | , | J | \leq n }$ is positive semidefinite, by monotonicity of the time integral on [0, t] for some $t > 0$ , we also have
+
+$$
+\ell ^ { \top } Q ^ { 0 } ( t ) \ell \geq 0 ,
+$$
+
+for all $\boldsymbol { \ell } \in \mathbb { R } ^ { ( d + 1 ) _ { n } }$ . This means that for any $t > 0$ , we can rewrite the log-price as
+
+$$
+\log ( S _ { t } ) = - \frac { 1 } { 2 } \| ( U _ { t } ^ { 0 } ) ^ { \top } \ell \| ^ { 2 } + \sum _ { | I | \leq n } \ell _ { I } \langle \widetilde { e } _ { I } ^ { B } , \widehat { \mathbb { Z } } _ { t } \rangle ,
+$$
+
+where $U _ { t } ^ { 0 }$ is the upper-triangular matrix of the Cholesky decomposition of $Q ^ { 0 } ( t )$
 
 <!-- page: 30 -->
 
-- Notice that the log-price model in (6.4), it is not exactly a signature-based model in the sense of Cuchiero et al. (2023a), as here it is given by a linear part in the parameters _ℓ_ and an additional quadratic part. It can also be rewritten as 
+• Notice that the log-price model in (6.4), it is not exactly a signature-based model in the sense of Cuchiero et al. (2023a), as here it is given by a linear part in the parameters ℓ and an additional quadratic part. It can also be rewritten as
 
+$$
+\mathrm { d } \log ( S _ { t } ) = - \frac { 1 } { 2 } \ell ^ { \top } \tilde { Q } ( t ) \ell \mathrm { d } t + \ell ^ { \top } { \mathbf { v e c } ( \widehat { \mathbb { X } } _ { t } ^ { n } ) } \mathrm { d } B _ { t } ,
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0030-01.png)
+where $\tilde { Q }$ is given by
 
+$$
+\tilde { Q } _ { \mathcal { L } ( I ) \mathcal { L } ( J ) } ( t ) : = \langle e _ { I } \shuffle \sqcup e _ { J } , \widehat { \mathbb { X } } _ { t } \rangle .
+$$
 
-where _Q_<sup>˜</sup> is given by 
+Hence, the relevant factors entering in the dynamics of log S and $\sigma ^ { S }$ are the components of ${ \widehat { \mathbb { X } } } ^ { 2 n }$ . Note also that $( \log S , \widehat { \mathbb { X } } ^ { 2 n } )$ is a $1 + ( d + 1 ) _ { 2 n }$ dimensional polynomial diffusion (see (2.1)), whence in particular Markovian. This is in spirit of path-dependent factor model, for instance also considered in Guyon and Lekeufack (2023), with the additional tractability feature that $( \log S , \widehat { \mathbb { X } } ^ { 2 n } )$ is a polynomial difusion. Therefore all techniques for polynomial processes in view of pricing and hedging can be applied.
 
+• In order to sample the log-price at maturity, consistently with the VIX, we follow the following road map. We simulate $\widehat { \mathbb { Z } }$ and compute $\langle \tilde { e } _ { I } ^ { B } , \widehat { \mathbb { Z } } \rangle$ for each I as specified above. Next, we drop from the samples of $\widehat { \mathbb { Z } }$ the terms where B appears, i.e. the components corresponding to indices containing the letter d + 1. The result coincides with a sampling of $\widehat { \mathbb X }$ and is then used to work with both $Q$ and $Q ^ { 0 }$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0030-03.png)
+This is equivalent to sampling $\widehat { \mathbb X }$ for the variance process and to compute an additional Itˆo integral as in (3.1).
 
+In the following corollary we state the form of $\tilde { e } _ { I } ^ { B }$ when X is d-dimensional OU-process. We omit the proof for sake of brevity.
 
-Hence, the relevant factors entering in the dynamics of log _S_ and _σ_<sup>_S_</sup> are the components of X<sup>�2</sup><sup>_n_</sup> . Note also that (log _S,_ X<sup>�2</sup><sup>_n_</sup> ) is a 1+( _d_ +1)2 _n_ dimensional polynomial diffusion (see (2.1)), whence in particular Markovian. This is in spirit of path-dependent factor model, for instance also considered in Guyon and Lekeufack (2023), with the additional tractability feature that (log _S,_ X<sup>�2</sup><sup>_n_</sup> ) is a polynomial diffusion. Therefore all techniques for polynomial processes in view of pricing and hedging can be applied. 
+Corollary 6.7. Let X be a d-dimensional OU-process as in Example 4.5 driven by a ddimensional Brownian motion with correlation matrix $\rho .$ Then $\tilde { e } _ { I } ^ { B }$ is given by
 
-- In order to sample the log-price at maturity, consistently with the VIX, we follow ˜ 
+$$
+\tilde { e } _ { I } ^ { B } = e _ { I } \otimes e _ { d + 1 } - \frac { 1 } { 2 } 1 _ { \{ i _ { | I | } \neq 0 \} } \big ( \sigma ^ { i _ { | I | } } \rho _ { i _ { | I | } d + 1 } \big ) e _ { I ^ { \prime } } \otimes e _ { 0 } ,
+$$
 
-- the following road map. We simulate Z<sup>�</sup> and compute _⟨e_<sup>_B_</sup> _I_<sup>_,_�Z</sup><sup>_⟩_foreach</sup><sup>_I_asspecified</sup> above. Next, we drop from the samples of Z<sup>�</sup> the terms where _B_ appears, i.e. the components corresponding to indices containing the letter _d_ + 1. The result coincides with a sampling of X<sup>�</sup> and is then used to work with both _Q_ and _Q_<sup>0</sup> . 
+for any multi-index $I \neq \emptyset$
 
-This is equivalent to sampling X<sup>�</sup> for the variance process and to compute an additional Itˆo integral as in (3.1). 
+Remark 6.8 (Variance reduction for pricing SPX options). Observe that a possible control variate for reducing the variance of the Monte Carlo estimator for pricing SPX options is the value at maturity of the log-price process. This means,
 
-In the following corollary we state the form of _e_ ˜<sup>_B_</sup> _I_<sup>when</sup><sup>_X_is</sup><sup>_d_-dimensionalOU-process.</sup> We omit the proof for sake of brevity. 
+$$
+\Phi ^ { c v } ( \ell , T , K ) : = c _ { T , K } \Big ( \log ( S _ { T } ( \ell ) ) + \frac { 1 } { 2 } \ell ^ { \top } Q ^ { 0 , c v } ( T ) \ell \Big ) ,
+$$
 
-**Corollary 6.7.** _Let X be a d-dimensional OU-process as in Example 4.5 driven by a d-_ ˜ _dimensional Brownian motion with correlation matrix ρ. Then e_<sup>_B_</sup> _I_<sup>_isgivenby_</sup> 
+where, using that the linear part (in ℓ) of $\log ( S _ { T } ( \ell ) )$ vanishes under the risk-neutral expectation, we have
 
+$$
+\begin{array} { r } { Q _ { \mathcal { L } ( I ) \mathcal { L } ( J ) } ^ { 0 , c v } ( T ) = \mathbf { v e c } ( ( e _ { I } \sqcup e _ { J } ) \otimes e _ { 0 } ) ^ { \top } e ^ { T G ^ { \top } } \mathbf { v e c } ( \widehat { \mathbb { X } } _ { 0 } ^ { 2 n + 1 } ) , } \end{array}
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0030-09.png)
+for $G \in \mathbb { R } ^ { ( d + 1 ) _ { 2 n + 1 } \times ( d + 1 ) _ { 2 n + 1 } }$ denoting the $( d + 1 ) _ { 2 n + 1 }$ -dimensional matrix representative of the dual operator corresponding to $\succnapprox$ . We choose the optimal $c _ { T , K } ^ { * } \in \mathbb { R }$ as
 
-
-_for any multi-index I_ = _∅._ 
-
-**Remark 6.8** (Variance reduction for pricing SPX options) **.** Observe that a possible control variate for reducing the variance of the Monte Carlo estimator for pricing SPX options is the value at maturity of the log-price process. This means, 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0030-12.png)
-
-
-where, using that the linear part (in _ℓ_ ) of log( _ST_ ( _ℓ_ )) vanishes under the risk-neutral expectation, we have 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0030-14.png)
-
-
-for _G ∈_ R<sup>(</sup><sup>_d_+1)2</sup><sup>_n_+1</sup><sup>_×_(</sup><sup>_d_+1)2</sup><sup>_n_+1</sup> denoting the ( _d_ + 1)2 _n_ +1-dimensional matrix representative of the dual operator corresponding to X<sup>�</sup> . We choose the optimal _c_<sup>_∗_</sup> _T,K_<sup>_∈_Ras</sup> 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0030-16.png)
+$$
+c _ { T , K } ^ { * } = \frac { \mathrm { C o v } ( ( S _ { T } ( \ell ) - K ) ^ { + } , \log ( S _ { T } ( \ell ) ) ) } { \mathrm { V a r } ( \log ( S _ { T } ( \ell ) ) ) } .
+$$
 
 <!-- page: 31 -->
 
-### **6.1 Exploiting the affine nature of the signature: Fourier pricing of SPX and VIX options** 
+## 6.1 Exploiting the afine nature of the signature: Fourier pricing of SPX and VIX options
 
-This section is dedicated to outline how the linear parametrizations of the log-price and the volatility process in Z<sup>�</sup> can be used for Fourier pricing. Assume that 
+This section is dedicated to outline how the linear parametrizations of the log-price and the volatility process in $\widehat { \mathbb { Z } }$ can be used for Fourier pricing. Assume that
 
+$$
+\mathrm { d } Z _ { t } ^ { j } = \kappa ^ { j } ( \theta ^ { j } - Z _ { t } ^ { j } ) \mathrm { d } t + \sigma ^ { j } \mathrm { d } W _ { t } ^ { j } , \qquad Z _ { 0 } ^ { j } = 0 ,
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0031-02.png)
+for each $j = 1 , \ldots , d + 1$ , where W denotes a $( d + 1 )$ -dimensional Brownian motion with $W ^ { d + 1 } = B$ . All parameters $\kappa ^ { j } , \theta ^ { j } , \sigma ^ { j }$ are in R with $\kappa ^ { \dot { d } + 1 } = \theta ^ { d + 1 } = 0$ and $\sigma ^ { d + 1 } = 1$ so that $\begin{array} { r } { Z ^ { d + 1 } = W ^ { d + 1 } = B } \end{array}$ . Note that we do not account for correlations.
 
+We illustrate now how to apply the results of Cuchiero et al. (2023b) in the present setting. Since $( \widehat { Z } _ { t } ) _ { t > 0 }$ is a polynomial difusion, by Lemma 4.1 there are b $\in ( T ( ( \mathbb { R } ^ { d + 2 } ) ) ) ^ { d + 2 }$ and $\mathbf { a } \in ( T ( ( \mathbb { R } ^ { d + 2 } ) ) ) ^ { \overline { { ( d + 2 ) \times ( d + 2 ) } } }$ such that
 
-for each _j_ = 1 _, . . . , d_ + 1, where _W_ denotes a ( _d_ + 1)-dimensional Brownian motion with _W_<sup>_d_+1</sup> = _B_ . All parameters _κ_<sup>_j_</sup> _, θ_<sup>_j_</sup> _, σ_<sup>_j_</sup> are in R with _κ_<sup>_d_+1</sup> = _θ_<sup>_d_+1</sup> = 0 and _σ_<sup>_d_+1</sup> = 1 so that _Z_<sup>_d_+1</sup> = _W_<sup>_d_+1</sup> = _B_ . Note that we do not account for correlations. 
+$$
+\mathrm { d } \widehat { Z } _ { t } ^ { j } = \langle \mathbf { b } _ { j } , \widehat { \mathbb { Z } } _ { t } \rangle \mathrm { d } t + \sqrt { \langle \mathbf { a } _ { j j } , \widehat { \mathbb { Z } } _ { t } \rangle } \mathrm { d } W _ { t } ^ { j } ,
+$$
 
-We illustrate now how to apply the results of Cuchiero et al. (2023b) in the present setting. Since ( _Z_<sup>�</sup> _t_ ) _t≥_ 0 is a polynomial diffusion, by Lemma 4.1 there are **b** _∈_ ( _T_ ((R<sup>_d_+2</sup> )))<sup>_d_+2</sup> and **a** _∈_ ( _T_ ((R<sup>_d_+2</sup> )))<sup>(</sup><sup>_d_+2)</sup><sup>_×_(</sup><sup>_d_+2)</sup> such that 
+where ${ \bf b } _ { j } = \kappa ^ { j } \theta ^ { j } e _ { \varnothing } - \kappa _ { j } e _ { j }$ and ${ \bf a } _ { j j } = ( \sigma ^ { j } ) ^ { 2 } e _ { \emptyset }$ , using that (with a small abuse of notation) $\kappa ^ { 0 } \theta ^ { 0 } : = \bar { 1 } , \kappa ^ { j } : = 0$ and $\sigma ^ { 0 } : = 0$ . Consider then the Riccati operator R given by
 
+$$
+\mathcal { R } ( \mathbf { u } ) = \sum _ { j = 0 } ^ { d + 1 } \sum _ { | I | \geq 0 } \Big ( \kappa ^ { j } \theta ^ { j } \mathbf { u } _ { ( I j ) } e _ { I } + \kappa ^ { j } \mathbf { u } _ { ( I j ) } e _ { j } \operatorname { l d } e _ { I } + \frac { 1 } { 2 } ( \sigma ^ { j } ) ^ { 2 } \big ( \mathbf { u } _ { ( I j j ) } e _ { I } + \mathbf { u } _ { ( I j ) } ^ { 2 } e _ { I } \operatorname { l d } e _ { I } \big ) \Big ) .
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0031-05.png)
+By Theorem 4.23 in Cuchiero et al. (2023b), we expect that
 
+$$
+\mathbb { E } [ \exp ( \langle \mathbf { u } , \widehat { \mathbb { Z } } _ { T } \rangle ) ] = \exp ( \psi ( T ) _ { \emptyset } ) ,
+$$
 
-where **b** _j_ = _κ_<sup>_j_</sup> _θ_<sup>_j_</sup> _e∅ − κjej_ and **a** _jj_ = ( _σ_<sup>_j_</sup> )<sup>2</sup> _e∅_ , using that (with a small abuse of notation) _κ_<sup>0</sup> _θ_<sup>0</sup> := 1, _κ_<sup>_j_</sup> := 0 and _σ_<sup>0</sup> := 0. Consider then the Riccati operator _R_ given by 
+where $\psi$ is a solution of the extended tensor algebra valued Riccati equation<sup>4</sup>
 
+$$
+\partial _ { t } \boldsymbol { \psi } ( t ) = \mathcal { R } ( \boldsymbol { \psi } ( t ) ) , \quad \boldsymbol { \psi } ( 0 ) = { \bf u } .\tag{6.5}
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0031-07.png)
+Choosing u as
 
+$$
+\mathbf { u } ( \ell ) : = - \frac 1 2 ( \ell \sqcup \ell ) \otimes e _ { 0 } + \tilde { \ell }
+$$
 
-By Theorem 4.23 in Cuchiero et al. (2023b), we expect that 
+where $\begin{array} { r } { \tilde { \ell } : = \sum _ { | I | \leq n } \ell _ { I } \tilde { e } _ { I } ^ { B } } \end{array}$ , by Proposition 6.4 we get
 
+$$
+\log ( S _ { t } ( \ell ) ) = \langle \mathbf { u } ( \ell ) , \widehat { \mathbb { Z } } _ { t } \rangle .
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0031-09.png)
+The representation of the Fourier-Laplace transform described above can then be used for Fourier pricing. We dedicate the remaining part of this section to illustrate how this can be done.
 
+From Fourier analysis we know that for $K > 0$ and $C < 0$ it holds
 
-where **_ψ_** is a solution of the extended tensor algebra valued Riccati equation<sup>4</sup> 
+$$
+( K - e ^ { y } ) ^ { + } = \frac { 1 } { 2 \pi } \int _ { \mathbb { R } } e ^ { ( i \lambda + C ) y } \frac { K ^ { - C + 1 - i \lambda } } { ( i \lambda + C ) ( i \lambda + C - 1 ) } \mathrm { d } \lambda .
+$$
 
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0031-11.png)
-
-
-Choosing **u** as 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0031-13.png)
-
-
-where _ℓ_<sup>˜</sup> :=<sup>�byProposition6.4weget</sup> _|I|≤n_<sup>_ℓIe_˜</sup><sup>_B_</sup> _I_<sup>,</sup> 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0031-15.png)
-
-
-The representation of the Fourier-Laplace transform described above can then be used for Fourier pricing. We dedicate the remaining part of this section to illustrate how this can be done. 
-
-From Fourier analysis we know that for _K >_ 0 and _C <_ 0 it holds 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0031-18.png)
-
-
-> 4We refer to Cuchiero et al. (2023b) for the appropriate solution concept and to a numerical treatment in the one dimensional case where (6.5) reduces to a sequence-valued Riccati equation.
+<sup>4</sup>We refer to Cuchiero et al. (2023b) for the appropriate solution concept and to a numerical treatment in the one dimensional case where (6.5) reduces to a sequence-valued Riccati equation.
 
 <!-- page: 32 -->
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0032-00.png)
+This in particular implies that
 
+$$
+\begin{array} { l } { \displaystyle \mathbb { E } [ ( K - S _ { T } ( \ell ) ) ^ { + } ] = \frac { 1 } { 2 \pi } \int _ { \mathbb { R } } \mathbb { E } [ e ^ { ( i \lambda + C ) \log ( S _ { T } ( \ell ) ) } ] \frac { K ^ { - C + 1 - i \lambda } } { ( i \lambda + C ) ( i \lambda + C - 1 ) } \mathrm { d } \lambda } \\ { \displaystyle \qquad = \frac { 1 } { 2 \pi } \int _ { \mathbb { R } } \mathbb { E } [ e ^ { \langle \mathbf { u } _ { \lambda } , \widehat { \mathbb { Z } } _ { T } \rangle } ] \frac { K ^ { - C + 1 - i \lambda } } { ( i \lambda + C ) ( i \lambda + C - 1 ) } \mathrm { d } \lambda } \\ { \displaystyle \qquad = \frac { 1 } { 2 \pi } \int _ { \mathbb { R } } e ^ { \psi _ { \lambda } ( T ) _ { \varnothing } } \frac { K ^ { - C + 1 - i \lambda } } { ( i \lambda + C ) ( i \lambda + C - 1 ) } \mathrm { d } \lambda , } \end{array}
+$$
 
-<!-- Start of picture text -->
-— | a<br>— | ee<br>— | a<br><!-- End of picture text -->
+where $\mathbf { u } _ { \lambda } : = ( i \lambda + C ) \mathbf { u } ( \ell )$ and $\psi _ { \lambda }$ is a solution of the Riccati equation with initial condition $\psi _ { \lambda } ( 0 ) = { \bf u } _ { \lambda }$
 
-i 
+Let us now consider the case of VIX options where Fourier pricing can be applied by computing the Fourier-Laplace transform of VIX squared, see also Sepp (2008); Papanicolaou and Sircar (2014); Bondi et al. (2024b) and references therein for a Fourier-based approach to pricing VIX options. Fix a labelling injective function $\mathcal { L } : \{ I \colon | I | \leq n \} \to$ $\left\{ 1 , \ldots , ( d + 1 ) _ { ( 2 n + 1 ) } \right\}$ as introduced before (2.2) and recall that by Theorem 5.1 it holds
 
+$$
+\mathrm { V I X } _ { T } ^ { 2 } ( \ell ) = \frac { 1 } { \Delta } \ell ^ { \top } Q ( T , \Delta ) \ell
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0032-02.png)
+for
 
+$$
+Q _ { \mathcal { L } ( I ) \mathcal { L } ( J ) } ( T , \Delta ) = \sum _ { e _ { K } = ( e _ { I } \sqcup e _ { J } ) \otimes e _ { 0 } } \sum _ { | H | \leq 2 n + 1 } ( e ^ { \Delta G ^ { \top } } - \operatorname { I d } ) _ { \mathcal { L } ( K ) \mathcal { L } ( H ) } \langle e _ { H } , \widehat { \mathbb { X } } _ { T } \rangle .
+$$
 
-<!-- Start of picture text -->
-yy<br>»<br>> Ss » :<br>_ S° LU ~<br>—_ f Jo yo<br>- | Vv - | Vv<br><!-- End of picture text -->
+where G denotes the $( d + 1 ) _ { ( 2 n + 1 ) }$ -dimensional matrix representative of the dual operator corresponding to $\widehat { \mathbb X }$
+
+Setting for $| I | , | J | \leq n$
+
+$$
+I ( \Delta ) \mathbf { u } : = \sum _ { | K | , | H | \leq 2 n + 1 } ( e ^ { \Delta G ^ { \top } } - \operatorname { I d } ) \mathcal { L } ( K ) \mathcal { L } ( H ) \mathbf { u } _ { K } e _ { H }
+$$
+
+we can write
+
+$$
+\begin{array} { r l } & { \mathrm { V I X } _ { T } ^ { 2 } ( \ell ) = \displaystyle \frac { 1 } { \Delta } \sum _ { | I | , | J | \leq n } \ell _ { I } \ell _ { J } \sum _ { \substack { e _ { K } = ( e _ { I } \sqcup | e _ { J } ) \otimes e _ { 0 } | H | \leq 2 n + 1 } } ( e ^ { \Delta G ^ { \top } } - \mathrm { I d } ) _ { \mathscr { L } ( K ) \mathscr { L } ( H ) } \langle e _ { H } , \widehat { \mathbb { X } } _ { T } \rangle } \\ & { \quad \quad \quad = \displaystyle \frac { 1 } { \Delta } \sum _ { | K | , | H | \leq 2 n + 1 } ( e ^ { \Delta G ^ { \top } } - \mathrm { I d } ) _ { \mathscr { L } ( K ) \mathscr { L } ( H ) } \langle e _ { K } , ( \ell \sqcup \ell ) \otimes e _ { 0 } \rangle \langle e _ { H } , \widehat { \mathbb { X } } _ { t } \rangle } \\ & { \quad \quad \quad = \displaystyle \frac { 1 } { \Delta } \langle I ( \Delta ) ( ( \ell \sqcup \ell ) \otimes e _ { 0 } ) , \widehat { \mathbb { X } } _ { T } \rangle . } \end{array}
+$$
+
+Also in this case since $\begin{array} { r } { \frac { 1 } { \sqrt { 2 \pi } } \int _ { \mathbb { R } } e ^ { i \lambda y } ( K - \sqrt { | y | } ) ^ { + } \mathrm { d } y = \frac { \sqrt { \frac { 2 } { \pi } } F _ { S } ( K \sqrt { | \lambda | } ) } { | \lambda | ^ { 3 / 2 } } } \end{array}$ is integrable for $F _ { S } ( u ) =$ $\begin{array} { r } { \int _ { 0 } ^ { u } \sin ( z ^ { 2 } ) \mathrm { d } z } \end{array}$ , Fourier analysis yields
+
+$$
+( K - \sqrt { y } ) ^ { + } = \frac { 1 } { \pi } \int _ { \mathbb { R } } e ^ { - i \lambda y } \frac { F _ { S } ( K \sqrt { | \lambda | } ) } { | \lambda | ^ { 3 / 2 } } \mathrm { d } \lambda ,
+$$
+
+for each $y \geq 0$ . This in particular implies that
+
+$$
+\mathbb { E } [ ( K - \mathrm { V I X } _ { T } ( \ell ) ) ^ { + } ] = \frac { 1 } { \pi } \int _ { \mathbb { R } } \mathbb { E } [ e ^ { - i \lambda \mathrm { V I X } _ { T } ^ { 2 } ( \ell ) } ] \frac { F _ { S } ( K \sqrt { | \lambda | } ) } { | \lambda | ^ { 3 / 2 } } \mathrm { d } \lambda = \frac { 1 } { \pi } \int _ { \mathbb { R } } e ^ { \psi _ { \lambda } ( T ) _ { \mathfrak { g } } } \frac { F _ { S } ( K \sqrt { | \lambda | } ) } { | \lambda | ^ { 3 / 2 } } \mathrm { d } \lambda ,
+$$
 
 <!-- page: 33 -->
 
-where **_ψ_** _λ_ is a solution of the Riccati equation with initial condition **_ψ_** _λ_ (0) = _−iλ_ **v** ( _ℓ_ ) for **v** ( _ℓ_ ) := ∆<sup><u>1</u></sup><sup>_I_(∆)((</sup><sup>_ℓ_�</sup><sup>_ℓ_)</sup><sup>_⊗e_0).</sup> 
+where $\psi _ { \lambda }$ is a solution of the Riccati equation with initial condition $\psi _ { \lambda } ( 0 ) = - i \lambda \mathbf { v } ( \boldsymbol { \ell } )$ for $\mathbf { v } ( \ell ) : = { \frac { 1 } { \Delta } } I ( \Delta ) ( ( \ell \sqcup \ell ) \otimes e _ { 0 } )$
 
-Analogous formulations in terms of the error function are also possible, see for instance Bondi et al. (2024b). In the same spirit one can also obtain a representation of futures prices. We here do not provide an implementation of this Fourier pricing approach but numerical experiments can be found in Cuchiero et al. (2023b). 
+Analogous formulations in terms of the error function are also possible, see for instance Bondi et al. (2024b). In the same spirit one can also obtain a representation of futures prices. We here do not provide an implementation of this Fourier pricing approach but numerical experiments can be found in Cuchiero et al. (2023b).
 
-### **6.2 The case of time-varying parameters** 
+## 6.2 The case of time-varying parameters
 
-Analogously to Section 5.4, we now further enhance Proposition 6.4 by allowing the parameters _ℓ_ to depend on the maturity. 
+Analogously to Section 5.4, we now further enhance Proposition 6.4 by allowing the parameters ℓ to depend on the maturity.
 
-**Proposition 6.9.** Let _S_ = ( _St_ ) _t≥_ 0 satisfy (3.1) with _S_ 0 = 1, and ( _σt_<sup>_S_)</sup><sup>_t≥_0satisfy(5.17)for</sup> a set of maturities _T_<sup>VIX</sup> = _{T_ 1 _, . . . , TN }_ . Recall that in this case _V_ = ( _Vt_ ) _t≥_ 0 satisfy 
+Proposition 6.9. Let $S = ( S _ { t } ) _ { t \geq 0 }$ satisfy (3.1) with $S _ { 0 } = 1$ , and $( \sigma _ { t } ^ { S } ) _ { t \geq 0 }$ satisfy (5.17) for a set of maturities $\mathcal { T } ^ { \mathrm { V I X } } = \{ T _ { 1 } , \ldots , T _ { N } \}$ . Recall that in this case $V = ( V _ { t } ) _ { t \geq 0 }$ satisfy
 
+$$
+V _ { t } ( \ell ) = \sum _ { i = 0 } ^ { N } \sum _ { | J | , | I | \leq n } \ell _ { I } ( T _ { i } ) \ell _ { J } ( T _ { i } ) 1 _ { [ T _ { i } , T _ { i + 1 } ) } ( t ) \langle e _ { I } \shuffle e _ { J } , \widehat { \mathbb { X } } _ { t } \rangle .
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0033-05.png)
+Then, with the notation of Proposition 6.4 we write the following recursion for the log-price process
 
+$$
+\begin{array} { l } { { \displaystyle \log \bigl ( S _ { t } ( { \ell ^ { < m + 1 } } ) \bigr ) = \sum _ { i = 0 } ^ { N } \bigg [ - \frac { 1 } { 2 } \ell ( T _ { i } ) ^ { \top } \bigl ( Q ^ { 0 } ( t \wedge T _ { i + 1 } ) - Q ^ { 0 } ( t \wedge T _ { i } ) \bigr ) \ell ( T _ { i } ) } } \\ { { \displaystyle \qquad + \sum _ { | I | \leq n } \ell _ { I } ( T _ { i } ) \langle \tilde { e } _ { I } ^ { B } , \widehat { \mathbb { Z } } _ { t \wedge T _ { i + 1 } } - \widehat { \mathbb { Z } } _ { t \wedge T _ { i } } \rangle \bigg ] } } \end{array}
+$$
 
-Then, with the notation of Proposition 6.4 we write the following recursion for the log-price process 
+for each $t \geq 0$ , where $T _ { 0 } : = 0 , \ell ^ { < m + 1 } : = \{ \ell ( 0 ) , \ldots , \ell ( T _ { m } ) \} , m = \operatorname* { m a x } \{ j : T _ { j } < t \}$ , and
 
+$$
+\begin{array} { r } { Q _ { \mathcal { L } ( I ) \mathcal { L } ( J ) } ^ { 0 } ( t ) = \langle ( e _ { I } \sqcup e _ { J } ) \otimes e _ { 0 } , \widehat { \mathbb { X } } _ { t } \rangle , } \end{array}
+$$
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0033-07.png)
+for a labeling function $\mathcal { L } : \{ I : | I | \leq n \} \to \{ 1 , \dots , ( d + 1 ) _ { 2 n + 1 } \}$
 
+Proof. We know that
 
-for each _t ≥_ 0, where _T_ 0 := 0, _ℓ_<sup>_<m_+1</sup> := _{ℓ_ (0) _, . . . , ℓ_ ( _Tm_ ) _}_ , _m_ = max _{j_ : _Tj < t}_ , and 
-
-_Q_<sup>0</sup> _L_ ( _I_ ) _L_ ( _J_ )<sup>(</sup><sup>_t_) =</sup><sup>_⟨_(</sup><sup>_eI_�</sup><sup>_eJ_)</sup><sup>_⊗e_0</sup><sup>_,_�X</sup><sup>_t⟩,_</sup> 
-
-for a labeling function _L_ : _{I_ : _|I| ≤ n} →{_ 1 _, . . . ,_ ( _d_ + 1)2 _n_ +1 _}_ . _Proof._ We know that 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0033-11.png)
+$$
+\log ( S _ { t } ( \ell ) ) = - \frac { 1 } { 2 } \int _ { 0 } ^ { t } V _ { s } ( \ell ) \mathrm { d } s + \int _ { 0 } ^ { t } \sigma _ { s } ^ { S } ( \ell ) \mathrm { d } B _ { s }
+$$
 
 <!-- page: 34 -->
 
-/ /x> 
+and we will calculate each integral separately. We start with the first one.
 
-/x> wo >> fou ps ow fw) > yd (4 © wo) 
+$$
+\begin{array} { r l } { \displaystyle \int _ { 0 } ^ { t } V _ { \alpha } ( \hat { \varepsilon } ) \mathrm { d } s = \int _ { 0 } ^ { t } \displaystyle \sum _ { i = 0 } ^ { N } \displaystyle \sum _ { \lbrace i , j \geq 1 } \sum _ { \ell = 1 } ^ { N } \xi _ { \ell } ( T _ { i } ) \ell _ { \ell } ( T _ { i } ) { \mathrm { l } _ { \ell } } _ { \ell } \chi _ { \ell + 1 } ( \hat { \varepsilon } _ { f } ) { \mathrm { l } _ { \ell } } _ { \ell } \chi _ { \ell + 1 } ( e _ { f } , \hat { \mathbb { Z } } _ { \varepsilon } ) \mathrm { d } s } \\ { \displaystyle } & { = \displaystyle \sum _ { i = 0 } ^ { N } \displaystyle \sum _ { \lbrace i , j \geq 1 } \xi _ { \ell } ( T _ { i } ) \ell _ { f } ( T _ { i } ) \int _ { \ell \in \Omega _ { f } } ^ { t \wedge T _ { i - 1 } } \{ { \ell _ { f } \mathrm { d } \mathrm { i n } \ell _ { f } , \hat { \mathbb { Z } } _ { \varepsilon } } \} \mathrm { d } s } \\ { \displaystyle } & { = \displaystyle \sum _ { i = 0 } ^ { N } \displaystyle \sum _ { \lbrace i , j \geq 1 , \ell \rbrace \in T _ { i } }  f _ { i } ( T _ { i } ) \ell _ { f } ( T _ { i } ) ( \int _ { 0 } ^ { t \wedge T _ { i - 1 } } \{ { \ell _ { f } \mathrm { l } _ { i } \mathrm { L } \ell _ { f } , \hat { \mathbb { Z } } _ { \varepsilon } } \} \mathrm { d } s - \int _ { 0 } ^ { t \wedge T _ { i } } \{ { \ell _ { f } \mathrm { l } _ { i } \mathrm { L } \ell _ { f } , \hat { \mathbb { Z } } _ { \varepsilon } } \} \mathrm { d } s ) } \\ { \displaystyle } &  = \displaystyle \sum _ { i = 0 } ^ { N } \sum _ { \lbrace i , j \geq 1 , \ell \rbrace \in T _ { i } } \xi _ { \ell } ( T _ { i } ) \ell _ { f } ( T _ { i } ) ( \{  \ell _ { f } \end{array}
+$$
 
-~{ 6 
+Using similar arguments and Lemma 3.10 in Cuchiero et al. (2023a), the second integral yields
 
-) | 
+$$
+\begin{array} { r l } { \displaystyle \int _ { 0 } ^ { t } \sigma _ { s } ^ { S } ( \boldsymbol { \ell } ) \mathrm { d } B _ { s } = \int _ { 0 } ^ { t } \sum _ { i = 0 } ^ { N } \sum _ { | I | \le n } \ell _ { i } ( T _ { i } ) ^ { 1 } | T _ { i } , T _ { i + 1 } \rangle \langle e _ { I } , \widehat { \mathbb { X } } _ { s } \rangle \mathrm { d } B _ { s } } & { } \\ { \displaystyle } & { - \sum _ { s = 0 } ^ { N } \sum _ { | I | \le n } \xi _ { I } ( T _ { i } ) \int _ { t , N _ { i } ^ { 1 } } ^ { t \wedge T _ { i + 1 } } \langle e _ { I } , \widehat { \mathbb { X } } _ { s } \rangle \mathrm { d } B _ { s } } \\ { \displaystyle } & { = \sum _ { i = 0 } ^ { N } \sum _ { | I | \le n } \ell _ { I } ( T _ { i } ) \left( \int _ { 0 } ^ { t \wedge T _ { i + 1 } } \langle e _ { I } , \widehat { \mathbb { X } } _ { s } \rangle \mathrm { d } B _ { s } - \int _ { 0 } ^ { t \wedge T _ { i } } \langle e _ { I } , \widehat { \mathbb { X } } _ { s } \rangle \mathrm { d } B _ { s } \right) } \\ { \displaystyle } & { - \sum _ { s = 0 } ^ { N } \sum _ { | I | \le n } \xi _ { I } ( T _ { i } ) \langle \widetilde { e } _ { I } ^ { B } , \widehat { \mathbb { Z } } _ { t \wedge T _ { i + 1 } } - \widehat { \mathbb { Z } } _ { t \wedge T _ { i } } \rangle , } \end{array}
+$$
 
-/ [xz : sy fo re FG 7 f 7) yy ~
+and the claim follows.
+
+## 7 Joint calibration of SPX and VIX options
+
+We here consider again the model introduced in (3.1)-(3.2). Note that we just work with call options, but the setup can easily be extended also to other liquid options on the market. Again we denote by $\mathcal { T } ^ { \mathrm { V I X } }$ and $\mathcal { T } ^ { \mathrm { S P X } }$ the maturities set for options written on VIX and SPX, respectively. Similarly we use the notation ${ \cal K } ^ { \mathrm { V I X } }$ and ${ \mathcal { K } } ^ { \mathrm { S P \bar { X } } }$ for the corresponding strikes. The functional to be minimized in order to achieve a joint calibration of the SPX/VIX options reads as follows:
+
+$$
+\begin{array} { r } { L _ { \mathrm { j o i n t } } ( \ell , \lambda ) : = \lambda L _ { \mathrm { S P X } } ( \ell ) + ( 1 - \lambda ) L _ { \mathrm { V I X } } ( \ell ) , } \end{array}\tag{7.1}
+$$
+
+where $\lambda \in ( 0 , 1 )$ and
 
 <!-- page: 35 -->
 
-- _L_ VIX( _ℓ_ ) is as in (5.13), i.e. 
+$L _ { \mathrm { V I X } } ( \ell )$ is as in (5.13), i.e.
+
+$$
+\sum _ { T \in T ^ { \mathrm { V I X } } , K \in K ^ { \mathrm { V I X } } } \mathcal { L } \left( \pi _ { \mathrm { V I X } } ^ { \mathrm { m o d e l } } ( \ell , T , K ) , \pi _ { \mathrm { V I X } } ^ { b , a } ( T , K ) , \sigma _ { \mathrm { V I X } } ^ { b , a } ( T , K ) , F _ { \mathrm { V I X } } ^ { \mathrm { m o d e l } } ( \ell , T ) , F _ { \mathrm { V I X } } ^ { m k t } ( T ) \right) ,
+$$
+
+with $\pi _ { \mathrm { V I X } } ^ { m o d e l }$ and $F _ { \mathrm { V I X } } ^ { m o d e l }$ as in (5.12) for $\mathrm { V I X } _ { T } ( \boldsymbol { \ell } , \omega _ { i } )$ defined as in (5.5);
+
+$L _ { \mathrm { S P X } } ( \ell )$ is the SPX loss function given by
+
+$$
+L _ { \mathrm { S P X } } ( \ell ) : = \sum _ { T \in { \cal T } ^ { \mathrm { S P X } } , { \cal K } \in { \cal K } ^ { \mathrm { S P X } } } \mathcal { L } ( \pi _ { \mathrm { S P X } } ^ { \mathrm { m o d e l } } ( \ell , T , K ) , \pi _ { \mathrm { S P X } } ^ { b , a } ( T , K ) , \sigma _ { \mathrm { S P X } } ^ { b , a } ( T , K ) ) ,
+$$
+
+for a real-valued function $\mathcal { L } .$ Observe that with a slight abuse of notation we denote this function as the one for L<sub>VIX</sub>, but for SPX options we do not have to calibrate to futures, hence the last term of (5.15) vanishes.
+
+By Proposition 6.4 the SPX call option payof with maturity $T > 0$ and a strike price $K > 0$ reads in our model as follows
+
+$$
+e ^ { - r T } ( \tilde { S } _ { T } ( \ell ) - K ) ^ { + } = e ^ { - r T } \biggl ( \exp \biggl \{ ( r - q ) T - \frac { 1 } { 2 } \ell ^ { \top } Q ^ { 0 } ( t ) \ell + \sum _ { | I | \leq n } \ell _ { I } \langle \tilde { e } _ { I } ^ { B } , \widehat { \mathbb { Z } } _ { T } \rangle \biggr \} - K \biggr ) ^ { + } ,
+$$
+
+where $\tilde { S }$ denotes the undiscounted, unadjusted process as discussed in Remark 3.3 and $r , q > 0$ the interest rate and the dividends, respectively. Recall also that the call option payof written on the VIX is given by
+
+$$
+e ^ { - r T } ( \mathrm { V I X } _ { T } ( \ell ) - K ) ^ { + } = e ^ { - r T } \bigg ( \sqrt { \frac { 1 } { \Delta } \ell ^ { \top } Q ( T , \Delta ) \ell } - K \bigg ) ^ { + } = e ^ { - r T } \left( \frac { 1 } { \sqrt { \Delta } } \| U _ { T } ^ { \top } \ell \| - K \right) ^ { + } ,
+$$
+
+where $U _ { T }$ denotes the upper-triangular matrix of the Cholesky decomposition of the symmetric positive semidefinite matrix $Q ( T , \Delta )$
+
+Remark 7.1. We report in the table below the (average over $1 0 ^ { 3 }$ trials) timings of evaluating $\mathrm { V I X } _ { T } ( \ell )$ and $S _ { T } ( \ell )$ for $\ell \in \mathbb { R } ^ { 8 5 }$ , a fixed $T > 0$ and $N _ { M C } = 8 \cdot 1 0 ^ { 5 }$ samples on both CPU (on the left) and GPU (on the right) with $\mathrm { P y }$ Torch, respectively:
+
+[Table source crop](assets/tables/2023-cuchiero-et-al-signature-spx-vix-p0035-block-0013-f3dbdf70c6cc95fd.jpg)
 
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0035-01.png)
+This evaluations are the relevant operations in the Monte Carlo pricing and in turn in the calibration procedure. Note again that both the sampling of the signature components and the matrix exponential, are achieved ofline, as they do not depend on $\ell .$
 
+## 7.1 Numerical results
 
-with _π_ VIX<sup>_model_</sup> and _F_ VIX<sup>_model_</sup> as in (5.12) for VIX _T_ ( _ℓ, ωi_ ) defined as in (5.5); 
+Before presenting our numerical results, let us discuss two diferent ways of approaching the joint calibration problem that can be found in the recent literature.
 
-- _L_ SPX( _ℓ_ ) is the SPX loss function given by 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0035-04.png)
-
-
-for a real-valued function _L_ . Observe that with a slight abuse of notation we denote this function as the one for _L_ VIX, but for SPX options we do not have to calibrate to futures, hence the last term of (5.15) vanishes. 
-
-By Proposition 6.4 the SPX call option payoff with maturity _T >_ 0 and a strike price _K >_ 0 reads in our model as follows 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0035-07.png)
-
-
-where _S_<sup>˜</sup> denotes the undiscounted, unadjusted process as discussed in Remark 3.3 and _r, q >_ 0 the interest rate and the dividends, respectively. Recall also that the call option payoff written on the VIX is given by 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0035-09.png)
-
-
-where _UT_ denotes the upper-triangular matrix of the Cholesky decomposition of the symmetric positive semidefinite matrix _Q_ ( _T,_ ∆). 
-
-**Remark 7.1.** We report in the table below the (average over 10<sup>3</sup> trials) timings of evaluating VIX _T_ ( _ℓ_ ) and _ST_ ( _ℓ_ ) for _ℓ ∈_ R<sup>85</sup> , a fixed _T >_ 0 and _NMC_ = 8 _·_ 10<sup>5</sup> samples on both CPU (on the left) and GPU (on the right) with PyTorch, respectively: 
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0035-12.png)
-
-
-This evaluations are the relevant operations in the Monte Carlo pricing and in turn in the calibration procedure. Note again that both the sampling of the signature components and the matrix exponential, are achieved offline, as they do not depend on _ℓ_ . 
-
-### **7.1 Numerical results** 
-
-Before presenting our numerical results, let us discuss two different ways of approaching the joint calibration problem that can be found in the recent literature. 
-
-> (i) The first approach consists in choosing for instance the first maturity of SPX and VIX to coincide (or differ up to two days), i.e., _T_ 1<sup>SPX</sup> = _T_ 1<sup>VIX</sup> and then for _j ≥_ 2, _Tj_<sup>SPX</sup> = _Tj_<sup>VIX</sup> _−_ 1<sup>+ ∆,seeforinstanceGuyon(2023);Guoetal.(2022b);Guyonand</sup> Lekeufack (2023).
+(i) The first approach consists in choosing for instance the first maturity of SPX and VIX to coincide (or difer up to two days), i.e., $T _ { 1 } ^ { \mathrm { S P X } } = T _ { 1 } ^ { \mathrm { V I X } }$ and then for $j \geq 2$ $T _ { j } ^ { \mathrm { S P X } } = T _ { j - 1 } ^ { \mathrm { V I X } } + \dot { \Delta }$ , see for instance Guyon (2023); Guo et al. (2022b); Guyon and Lekeufack (2023).
 
 <!-- page: 36 -->
 
-- (ii) The second approach is to consider _T_<sup>SPX</sup> = _T_<sup>VIX</sup> , i.e., to choose the same (or close together) maturities both for SPX and VIX options. This perspective has been adopted for instance by Gatheral et al. (2018); Rosenbaum and Zhang (2021); Grzelak (2022); Bondi et al. (2024b). 
+(ii) The second approach is to consider $\mathcal { T } ^ { \mathrm { S P X } } = \mathcal { T } ^ { \mathrm { V I X } }$ , i.e., to choose the same (or close together) maturities both for SPX and VIX options. This perspective has been adopted for instance by Gatheral et al. (2018); Rosenbaum and Zhang (2021); Grzelak (2022); Bondi et al. (2024b).
+
+![](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0036-block-0002-b3a63aa75536f5af.jpg)
+
+![Figure 3: The blue lines denote the time interval where the dynamics of the variance process influence the SPX option up to the maturity time. For instance the shortest blue line denotes the time interval where the dynamics of the variance process enter up to maturity $T _ { 1 }$ . Similarly the red lines denote the corresponding ones for the VIX, as for instance the variance process enters here in the time integral on $[ T _ { 1 } , T _ { 1 } + \Delta ]$ , see (5.3). On the upper graph a representation of the joint calibration approach (i) is given where we notice that the maturities of the VIX are chosen so that there is a maximal overlap with the ones of the SPX. On the lower graph a representation of approach (ii) is given where the maturities $\mathcal { T } = \{ T _ { 1 } , T _ { 2 } , T _ { 3 } \}$ are considered. We observe that there is less overlap between the maturities of the SPX and VIX than in approach (i).](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0036-block-0003-65f6b0051842fa61.jpg)
+
+Both approaches deal with the joint modeling of SPX and VIX options and in order to be consistent with both viewpoints taken in the literature, we show how our signature-based model solves the joint calibration within both settings. For this reason we split the rest of the section in two subsection and discuss them separately.
+
+## 7.1.1 First approach
+
+Here we consider call options for both indices on the trading day $0 2 / 0 6 / 2 0 2 1$ , as in Guyon and Lekeufack (2023). Maturities are reported in the following tables with the corresponding range of strikes (in percentage) with respect to the spot and the market’s futures prices.
+
+[Table source crop](assets/tables/2023-cuchiero-et-al-signature-spx-vix-p0036-block-0007-a0e48b2949d6ad7e.jpg)
 
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0036-01.png)
+[Table source crop](assets/tables/2023-cuchiero-et-al-signature-spx-vix-p0036-block-0008-5aedfedda96e1037.jpg)
 
-
-<!-- Start of picture text -->
-0 T 1 T 2 T 1 + ∆ T 2 + ∆<br>0 T 1 T 2 T 3 T 1 + ∆ T 2 + ∆ T 3 + ∆<br><!-- End of picture text -->
-
-Figure 3: The blue lines denote the time interval where the dynamics of the variance process influence the SPX option up to the maturity time. For instance the shortest blue line denotes the time interval where the dynamics of the variance process enter up to maturity _T_ 1. Similarly the red lines denote the corresponding ones for the VIX, as for instance the variance process enters here in the time integral on [ _T_ 1 _, T_ 1 + ∆], see (5.3). On the upper graph a representation of the joint calibration approach (i) is given where we notice that the maturities of the VIX are chosen so that there is a maximal overlap with the ones of the SPX. On the lower graph a representation of approach (ii) is given where the maturities _T_ = _{T_ 1 _, T_ 2 _, T_ 3 _}_ are considered. We observe that there is less overlap between the maturities of the SPX and VIX than in approach (i). 
-
-Both approaches deal with the joint modeling of SPX and VIX options and in order to be consistent with both viewpoints taken in the literature, we show how our signature-based model solves the joint calibration within both settings. For this reason we split the rest of the section in two subsection and discuss them separately. 
-
-#### **7.1.1 First approach** 
-
-Here we consider call options for both indices on the trading day 02/06/2021, as in Guyon and Lekeufack (2023). Maturities are reported in the following tables with the corresponding range of strikes (in percentage) with respect to the spot and the market’s futures prices. 
-
-|_T_ <sup>VIX</sup><br>1<br>=|0_._0383|_T_ <sup>VIX</sup><br>2<br>=|0_._0767||
-|---|---|---|---|---|
-|(90%,|220%)|(90%,|220%)||
-|_T_ <sup>SPX</sup><br>1<br>= 0_._0383|_T_ <sup>SPX</sup><br>2<br>=|0_._1205|_T_ <sup>SPX</sup><br>3<br>=|0_._1588|
-|(92%,105%)|(70%,|105%)|(80%,|120%)|
 
 <!-- page: 37 -->
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0037-00.png)
+We stress that the shortest maturity considered is of 14 days for both SPX and VIX, then the second and third maturity of the SPX are 44 days and 58 days, respectively, and the second one for the VIX is 28 days. Moreover, we consider a high moneyness level (up to 220%) for VIX options, usually rather dificult to fit. Regarding our modeling choice we fix $d = 3 , n = 3$ and choose the primary process $X$ to be a three dimensional Ornstein-Uhlenbeck process (see Example 4.5) with parameters
 
+$$
+\begin{array} { r l } & { \kappa = ( 0 . 1 , 2 5 , 1 0 ) ^ { \top } , \qquad \theta = ( 0 . 1 , 4 , 0 . 0 8 ) ^ { \top } , \qquad \sigma = ( 0 . 7 , 1 0 , 5 ) ^ { \top } , } \\ & { } \\ & { \rho = \left( \begin{array} { c c c } { 1 } & { 0 . 2 1 3 } & { - 0 . 5 7 6 } & { 0 . 3 2 9 } \\ { . } & { 1 } & { - 0 . 0 4 4 } & { - 0 . 5 4 9 } \\ { . } & { . } & { 1 } & { - 0 . 5 3 9 } \\ { . } & { . } & { . } & { 1 } \end{array} \right) , \qquad X _ { 0 } = ( 1 , 0 . 0 8 , 2 ) ^ { \top } . } \end{array}
+$$
 
-<!-- Start of picture text -->
-SPX T=0.0383 VIX T=0.0383 SPX T=0.1205<br>+ 24 -<br>0.2504 ° © Calibrated | +t os? + © Calibrated<br>: + Bid/Ask 224 | + é aan + Bid/Ask<br>0.225 cs+ 2.0 || . $ as t 04 a + +et,et6 . +<br>0.200 : 184 | set t +ooy<br>> . t+ +. | gor? + Ss<br>= + 216 ra 203 +? $<br>0.1750.150 ,* 14: || 4? by , +% t *<br>& | 7 7 °<br>+ | # © Calibrated 0.2 ry<br>;<br>0.125 *, 121 16 + Bid/Ask *,<br>+, Fa —-- Market future e<br>0.100 . ry e + 1.05 +4e --- Model future 01 %s +<br>0.92 0.94 0.96 0.98 1.00 1.02 1.04 20 25 30 35 40 45 0.70 0.75 0.80 0.85 0.90 0.95 1.00 1.05<br>Moneyness Strike Moneyness<br><!-- End of picture text -->
+Note that with this configuration we need to calibrate 85 parameters, i.e., $\ell \in \mathbb { R } ^ { 8 5 }$ . Concerning the calibration task, we solve (7.1) with $\lambda = 0 . 3 5$ with $N _ { M C } = 8 0 0 0 0$ Monte Carlo samples for the previous maturities and strikes. Furthermore we specify the loss function $\mathcal { L }$ as in (5.15) for $\beta = 1$ both for SPX and VIX.
 
+![](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0037-block-0004-8a8e8adce117970c.jpg)
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0037-01.png)
+![](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0037-block-0005-e1e51d3da23ac27f.jpg)
 
+![](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0037-block-0006-fed9ba2e689b832e.jpg)
 
-<!-- Start of picture text -->
-SPX T=0.1588 VIX T=0.0767<br>0.35 + e Calibrated + +<br>o +° + Bid/Ask 18 _t .°<br>0.30 *$ | + + g ‘<br>0.25 +t+i, 16 || +t?+7 . @<br>> + La | tet<br>ry 2 | seh"<br>0.20 *. | 34<br>* 12 |, e+<br>e at @ Calibrated<br>on *, « + e| + Bid/Ask<br>*eege . 107 4 7 | —:-- - M odelarketfuture future<br>0.8 0.9 1.0 11 1.2 20 25 30 35 40 45<br>Moneyness Strike<br><!-- End of picture text -->
+![](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0037-block-0007-ff46104e366ae76e.jpg)
+
+![Figure 4: In blue the calibrated implied volatility smiles from top-left at maturities $T _ { 1 } ^ { \mathrm { S P X } } , T _ { 1 } ^ { \mathrm { V I X } } , T _ { 2 } ^ { \mathrm { S P X } } , T _ { 3 } ^ { \mathrm { S P X } } , T _ { 2 } ^ { \mathrm { V I X } }$ . In red the corresponding bid-ask spreads. In the graphs of the VIX smiles the red dashed line indicates the market future price at maturity and the blue dashed line the calibrated one.](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0037-block-0008-745ba2fccf992fd1.jpg)
+
+We report also the relative error between the market futures prices and the calibrated ones as defined in (5.16):
 
 <!-- page: 38 -->
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0038-00.png)
+[Table source crop](assets/tables/2023-cuchiero-et-al-signature-spx-vix-p0038-block-0001-69fbd7ad9b734189.jpg)
 
 
-<!-- Start of picture text -->
-28 1.005<br>26 1.000<br>24 0.995<br>~ 22 0.990 —<br>= Ss<br>S 20 0.985 4<br>18 0.980<br>16 0.975<br>14 0.970<br>0 10 20 30 40 50 60<br>Days<br>0.06<br>0.05<br>0.04<br>0.03 =S<br>0.02<br>0.01<br>0.00<br>0 10 20 30 40 50 60<br>Days<br><!-- End of picture text -->
+Simulation of time-series of SPX and VIX Let $\ell ^ { \star } \in \mathbb { R } ^ { 8 5 }$ be the calibrated parameters already used for Figure 4. We then fix $T = 6 0$ days the longest considered maturity for the SPX and sample a trajectory for $( V _ { t } ( \ell ^ { \star } ) ) _ { t \in [ 0 , T ] } , \ ( \mathrm { V I X } _ { t } ( \ell ^ { \star } ) ) _ { t \in [ 0 , T ] } , \ ( S _ { t } ( \ell ^ { \star } ) ) _ { t \in [ 0 , T ] }$ . Precisely, we sample 12 grid points per day, i.e. we consider a 2 hours sampling per calendar day, for a total of $N = 7 2 0$ grid points. The results of this simulation are reported in Figure 5.
+
+![](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0038-block-0003-b129f9634bbe02ba.jpg)
+
+![Figure 5: On the top: one realization of the calibrated model $S ( \ell ^ { \star } )$ for the SPX (in blue) and the corresponding calibrated VIX (in red). On the bottom: the corresponding realization of the calibrated variance process $V ( \ell ^ { \star } )$](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0038-block-0004-646253a57ea4fb05.jpg)
+
+Observe that even though $\ell ^ { * }$ was only calibrated to option prices, the trajectories produced by the model are economically reasonable and also in line with several stylized facts, such as negative correlation between SPX and VIX or volatility clustering. To obtain the dynamics under the physical measure, these trajectories could still be adjusted by an appropriate market price of risk, but the quantities which are invariant under equivalent measure changes like the volatility of volatility or the correlation stay the same.
 
 <!-- page: 39 -->
 
-**The case of time-varying parameters** Next, we consider again the case of time-varying parameters as introduced in Section 5.4 and Section 6.2 for VIX and SPX, respectively. Although the joint calibration is mainly considered for short-dated options in the literature as VIX options are then more liquid, it is even more challenging to provide an accurate fit for both, short and long maturities. Allowing the parameters _ℓ_ of our model to depend on time, in particular on the maturities, we are able to calibrate additionally to longer maturities than the ones considered in Figure 4. We consider for the choice of the primary process the same configuration as we used for Figure 4. The procedure of our time-varying calibration routine is as follows: 
+The case of time-varying parameters Next, we consider again the case of time-varying parameters as introduced in Section 5.4 and Section 6.2 for VIX and SPX, respectively. Although the joint calibration is mainly considered for short-dated options in the literature as VIX options are then more liquid, it is even more challenging to provide an accurate fit for both, short and long maturities. Allowing the parameters ℓ of our model to depend on time, in particular on the maturities, we are able to calibrate additionally to longer maturities than the ones considered in Figure 4. We consider for the choice of the primary process the same configuration as we used for Figure 4. The procedure of our time-varying calibration routine is as follows:
+
+1. Calibrate jointly $T _ { 1 } ^ { \mathrm { S P X } } , T _ { 1 } ^ { \mathrm { V I X } }$ and $T _ { 2 } ^ { \mathrm { S P X } }$
+
+2. Use the parameters from the calibration of $T _ { j } ^ { \mathrm { S P X } }$ and $T _ { j - 1 } ^ { \mathrm { V I X } }$ to fit jointly the maturities $T _ { j + 1 } ^ { \mathrm { S P X } }$ and $T _ { j } ^ { \mathrm { V I X } }$ for $j = 2 , \dots , J$
+
+We consider $J = 4 ,$ where the last maturity for the SPX is 170 days, and the last maturity for the VIX is 77 days. For the first two maturities of the SPX and the first of the VIX we consider the same moneyness ranges as in Figure 4, hence we specify here only the ranges for the longer maturities:
+
+[Table source crop](assets/tables/2023-cuchiero-et-al-signature-spx-vix-p0039-block-0005-b3c7f07c5fb78ba5.jpg)
 
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0039-01.png)
-
-
-2. Use the parameters from the calibration of _Tj_<sup>SPX</sup> and _Tj_<sup>VIX</sup> _−_ 1<sup>to fit jointly the maturities</sup> _Tj_<sup>SPX</sup> +1<sup>and</sup><sup>_T_VIX</sup> _j_ for _j_ = 2 _, . . . , J_ . 
-
-We consider _J_ = 4, where the last maturity for the SPX is 170 days, and the last maturity for the VIX is 77 days. For the first two maturities of the SPX and the first of the VIX we consider the same moneyness ranges as in Figure 4, hence we specify here only the ranges for the longer maturities: 
-
-|_T_ <sup>VIX</sup><br>2<br>= 0_._1342|_T_ <sup>VIX</sup><br>3<br>= 0_._2875|_T_ <sup>VIX</sup><br>4<br>= 0_._3833|
-|---|---|---|
-|(90%,330%)|(78%,395%)|(80%,405%)|
-|_T_ <sup>SPX</sup><br>3<br>= 0_._2163|_T_ <sup>SPX</sup><br>4<br>= 0_._3696|_T_ <sup>SPX</sup><br>5<br>= 0_._4654|
-|(75%,125%)|(60%,135%)|(50%,145%)|
-
-
-We observe that for this choice of maturities Assumption 5.11 is satisfied. Hence the second expression for the time-varying VIX is used from Proposition (5.12). On the other hand in order to compute the price of the SPX options in the time-varying case we use the representation of the log-price provided in Proposition 6.9. In (7.1), we employ _λ_ = 0 _._ 25 for each calibration within the rolling procedure and we consider always as loss function _L_<sup>_β_</sup> as introduced in (5.15) for _β_ = 0. It is worth mentioning that the initial parameter search discussed in Remark 5.8, has been employed for calibrating jointly _T_ 1<sup>SPX</sup> _, T_ 1<sup>VIX</sup> and _T_ 2<sup>SPX</sup> , whereas for the next slices we have considered the previously calibrated parameters as starting point of the optimization.
+We observe that for this choice of maturities Assumption 5.11 is satisfied. Hence the second expression for the time-varying VIX is used from Proposition (5.12). On the other hand in order to compute the price of the SPX options in the time-varying case we use the representation of the log-price provided in Proposition 6.9. In (7.1), we employ $\lambda = 0 . 2 5$ for each calibration within the rolling procedure and we consider always as loss function $\mathcal { L } ^ { \beta }$ as introduced in (5.15) for $\beta = 0$ . It is worth mentioning that the initial parameter search discussed in Remark 5.8, has been employed for calibrating jointly $T _ { 1 } ^ { \mathrm { S P X } } , T _ { 1 } ^ { \mathrm { V I X } }$ and $T _ { 2 } ^ { \mathrm { S P X } }$ , whereas for the next slices we have considered the previously calibrated parameters as starting point of the optimization.
 
 <!-- page: 40 -->
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0040-02.png)
+![](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0040-block-0001-fb753432a4aebdca.jpg)
+
+![Figure 6: On the left-hand side: SPX smiles, in blue the calibrated implied volatilities and in red the bid-ask spreads. On the right-hand side: VIX smiles, in blue the calibrated implied volatilities and in red the bid-ask spreads.](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0040-block-0002-e3b1e179e4ab7f9c.jpg)
+
+[Table source crop](assets/tables/2023-cuchiero-et-al-signature-spx-vix-p0040-block-0003-c430cad7a5fe2ddf.jpg)
+Finally we report the absolute relative error on the VIX futures’ prices:
+
+## 7.1.2 Second approach
+
+Let us now consider the second approach described at the beginning of Section 7.1. Specifically, we consider a unique set of maturities for both SPX and VIX on the trading day of $0 2 / 0 6 / 2 0 2 1$ . For this study, we do not consider time-varying parameters. In the following table we report the moneyness ranges for SPX options in the second row and on the last row the ones for VIX options:
+
+[Table source crop](assets/tables/2023-cuchiero-et-al-signature-spx-vix-p0040-block-0006-001312cf256586ef.jpg)
 
 
-<!-- Start of picture text -->
-2.25<br>0.5 +<br>+ + 2.00 +<br>ftEY oe ee +,<br>0.4 “Hy, ye A 1.75 ; fo | He<br>v ty ety Let?) a4 ‘ et Calibrated<br>0.3 Mag Se $ W150 er | 48 4 tiles<br>My, 2 %, a a 4h af ra<br>ty ie 1.25 we e - ¢<br>0.2 J+t,% tt,%. 44 +#+t ;# ¥¥<br>> % 1.00 Fi<br>Fee thnn“tpt F *i<br>0.1 ; +<br>12713 0.40 £ i 90<br>04 1 5“0,30 2 70 80<br>0.3 09 1.0 oe? 0.25 50 6<br>Maturting 0.2 og |ee) wore “aturitie,0.20 0.15 40 xx<br>0.1 0.7 0.10 30<br>0.6 0.05 20<br><!-- End of picture text -->
+We consider $\lambda = 0 . 5$ and as loss function L we employ (5.15) with $\beta = 1$ for VIX options and the same (without futures) for SPX options.
 
 <!-- page: 41 -->
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0041-02.png)
+![](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0041-block-0001-0f945c6e5775b112.jpg)
 
+![Figure 7: On the left-hand side: SPX smiles, in blue the calibrated implied volatilities and in red the bid-ask spreads. On the right-hand side: VIX smiles, in blue the calibrated implied volatilities and in red the bid-ask spreads.](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0041-block-0002-cfbc2cd16d9a7b2e.jpg)
 
-<!-- Start of picture text -->
-0.35 + 2.75<br>0.30, “oeot,++ et 2.50 sstw ° + lo¢ =<br>thetthet + 2.25: +_*+, \¢ +e°+2 s+ °<br>0.25 teuv, +fof + o 2.00 ,i?ta ® reot+ >a ‘ . +e $<br>\v * ad " oy 4% ¢ > et e Calibrated<br>0.20 +, eh e IV 175 < a © + Bid/Ask<br>ls ey st #,<br>+44 %, +t 1.50 rg ee<br>0.15 ee * at rs ci<br>> FY ‘ 1.25 # £ Fy =<br>v° 1 ‘3 ¢ Fj be?<br>0.10 ‘ 00 bi 2. *<br>A ¢ ES<br>0.75 + é #<br>0.07 1.05 1.10 0.07 Fo+ £= 50 60<br>0.06 0.05 0.95 _1.00ye 0.06 0.05 ++ 40yee<br>Maturigities 0.04 0.90 “pores Maturig‘ties 0.04 30 ox<br>0.03 : 0.03 20<br>0.02 0.85 0.02<br><!-- End of picture text -->
+[Table source crop](assets/tables/2023-cuchiero-et-al-signature-spx-vix-p0041-block-0003-b7cf052951cf08bb.jpg)
+We additionally report the relative error of the calibrated VIX futures:
+
+## A Numerical results for the Brownian motion case
+
+This appendix is dedicated to the calibration to VIX options only, similarly as in Section 5.3.1, however with the primary process $( X _ { t } ) _ { t \geq 0 }$ being simply correlated Brownian motions (similarly as in Cuchiero et al. (2023a)) instead of OU-processes.
+
+To be precise, we here model given by (3.1)-(3.2), where $( X _ { t } ) _ { t \geq 0 }$ is 2-dimensional Brownian motion. The correlation matrix of $Z = ( X , B )$ is specified, as in Section 5.3.1, namely by
+
+$$
+\rho = \left( \begin{array} { c c c } { { 1 } } & { { - 0 . 5 7 7 } } & { { 0 . 3 } } \\ { { . } } & { { 1 } } & { { - 0 . 6 } } \\ { { . } } & { { . } } & { { 1 } } \end{array} \right) .
+$$
+
+For the other parameters we consider a truncation’s level $n = 3$ , we sample $N _ { M C } = 8 0 0 0 0$ trajectories for Monte Carlo pricing, and we minimize the loss function (5.15) with $\beta = 1$ to fit the same data-set as in Section 5.3.1.
 
 <!-- page: 42 -->
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0042-01.png)
+![Figure 8: The red crosses denote the bid-ask spreads (of the implied volatilities) for each maturity, while the azure dots denote the calibrated implied volatilities of the model.](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0042-block-0001-9ac91649aa537255.jpg)
+
+We observe that with this specification the model is neither able to calibrate to all future market prices (see Figure 9 below) nor to fit the market implied volatilites accurately. One can indeed see that the model implied volatilities often do not lie within the bid-ask spreads, in particular for high strikes and short maturities.
+
+[Table source crop](assets/tables/2023-cuchiero-et-al-signature-spx-vix-p0042-block-0003-9deabc0fb0ebdded.jpg)
 
 
-<!-- Start of picture text -->
-++<br>yet, 2.50<br>+<br>Fat+ 2.25<br>+ ty, 2.00<br>+<br>i+| bt,+tat.+ “4a &‘ 1.501.75 y<br>| . ¢ The|*2%— a5y #re pED! 1.001.25<br>a ra th 3<br>f Fog" he, 3 0.75<br>Pte “ty, + 0.05<br>se, be 0.10<br>90 yeee“* t 0.200.1566<br>80 40 ihig 0.25 wsRee<br>60 we<br>Stri 50 0.30<br>kes 40 30 0.35<br>20 0.40<br>Futures' Term Structure<br>Calibrated R<br>x Market<br>23 *<br>22 *<br>oyY<br>= 21 Pi<br>x<br>20<br>194<br>0.05 0.10 0.15 0.20 0.25 0.30 0.35 0.40<br>T<br><!-- End of picture text -->
+![Figure 9: The blue circles denote the calibrated futures prices and the red crosses the market futures prices, in between a linear interpolation is applied.](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0042-block-0004-059de14caa86ff85.jpg)
 
 <!-- page: 43 -->
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0043-00.png)
+## B On the stability of the calibrated parameters
 
+We report here an analysis of the stability of the calibrated parameters, which is for example essential for hedging since unstable parameters can lead to oscillating hedge ratios and high transaction cost.
 
-<!-- Start of picture text -->
-Calibrated parameters |<br>a —@ 2021-06-02<br>15<br>| —+——*— 2021-06-162021-06-09<br>> 2021-06-23<br>&- 2021-06-30<br>10 --- y=0<br>5<br>2 VAN ' la YZb<br>— - NH<br>" |<br>5 ‘ ;<br>QAMNW QLMD LOOPSP _ DPDOSDWOWOIHKYSKYVUVUYADM AWIN VD DWODONDBVOYD eoDYDDoO oyWO<br>SES eee<br><!-- End of picture text -->
+For this purpose we have considered call options with the same time to maturity every trading week in the month of June 2021, i.e. we take the following five dates: June 2, 2021; June 9, 2021; June 16, 2021; June 23, 2021 and June 30, 2021. The times to maturity are on one hand $T _ { 1 } ^ { \mathrm { S P X } } = 1 4$ days and $T _ { 2 } ^ { \mathrm { S P X } } = 4 4 ~ \mathrm { d a y s }$ for SPX options and on the other hand $T _ { 1 } ^ { \mathrm { V I X } } { = } 1 4$ days for VIX (weekly) options. We employ the same primary process as of Section 7.1.1 for all 5 trading days. The goodness of fit of the respective implied volatilities is reported in Figures 13–16, omitting June 2, 2021 as it is already presented in Section 7.1. The obtained parameters are reported in Figures 10–12. The labels of the x-axis refer to the signature’s index I and on the y-axis we have the corresponding coeficients $\ell _ { I }$
+
+Although no regularization on the model parameters has been enforced during the calibration, we observe from Figures 10–12 that most of the parameters which are close to zero in the first trading day, are kept in a neighbourhood of zero in the subsequent trading days. Likewise the more relevant parameters are mostly stable over the trading days or just slightly and continuously adjusted to fit the corresponding smiles, leading to an inherently stable calibration procedure. This experiment also indicates that – even though we consider on purpose an overparametrized model – it does not sufer from overfitting (which would be the case if the parameters were highly oscillatory).
+
+![Figure 10: First subset of calibrated parameters $\ell _ { I } .$](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0043-block-0005-2fc36832bfa538ea.jpg)
 
 <!-- page: 44 -->
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0044-00.png)
+![Figure 11: Second subset of calibrated parameters $\ell _ { I }$](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0044-block-0001-38ac81f79cff1b91.jpg)
 
-
-<!-- Start of picture text -->
-Calibrated parameters II<br>25 | —@- 2021-06-02 ]<br>—*— 2021-06-09 q<br>—+— 2021-06-16<br>20 | ~® 2021-06-23<br>@- 2021-06-30<br>--- y=0<br>15<br>10<br>5<br>. , 4 i B '<br>0 +-- See/  ane mag PNe S ~~4 --<br>AP Sf °<br>-5 -<br>RORDRIWWDDADIWIDVDAOWDSIDNS HON OV ONODAAEODSODAE SESEDMWBODSDAWAVWAS AY A He BE BEDAWABOD OVOYD<br>SSSI SSS S KK YY SKY YYSKKYYYTYTSKYUIUY<br><!-- End of picture text -->
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0044-01.png)
-
-
-<!-- Start of picture text -->
-Calibrated parameters III<br>a —@ 2021-06-02<br>6 —*— 2021-06-09<br>—+— 2021-06-16<br>© 2021-06-23<br>4 &- 2021-06-30<br>--- y=0<br>2<br>/ \<br>Or--- = <== - IS = a wy, ---§ --<br>/S NY YJ A NW,<br>, .<br>YJ “ WV A<br>\/be f<br>My}<br>-4<br>-6<br>SSNSDYDD VDAOWDIDAMDODSDWV VV BBMDADODMDOV OOOOWAMSSDBAWOWINDMW®OWDSW VV VO MBDD<br>RUIN AIAN CAI C IAI CAIRO CAO COE COE COI CHIE CONE COIR COICO COCO COI CONCOCOECO<br><!-- End of picture text -->
+![Figure 12: Third subset of calibrated parameters $\ell _ { I }$](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0044-block-0002-72746b8345b8a415.jpg)
 
 <!-- page: 45 -->
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0045-00.png)
+![](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0045-block-0001-eb0246b0ad1526d8.jpg)
 
+![](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0045-block-0002-3bbe3a732ae49a7d.jpg)
 
-<!-- Start of picture text -->
-T= 14 days<br>* —e- Calibrated<br>0.30 * « Bid/Ask<br>eX<br>0.25<br>*<br>0.20<br>0.15<br>0.10<br>092 094 096 098 100 102 1.04<br><!-- End of picture text -->
+![Figure 13: Implied volatilities as of June 9, 2021. In blue the calibrated implied volatility smiles from top-left at maturities $T _ { 1 } ^ { \mathrm { S P X } } , T _ { 1 } ^ { \mathrm { V I X } } , T _ { 2 } ^ { \mathrm { S P X } }$ . In red the corresponding bid-ask spreads. In the graphs of the VIX smile the red dashed line indicates the market future price at maturity and the blue dashed line the calibrated one.](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0045-block-0003-c670e77035fb3929.jpg)
 
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0045-01.png)
-
-
-<!-- Start of picture text -->
-T= 14 days<br>| —7<br>2.2 I|| + + f +<br>2.0 I <i<br>| es<br>18 | wim<br>16 ||| Pe 4 ”xx ail<br>| al<br>141212 | Aisivisiviv<br>Pe —e- Calibrated<br>0.8104 ++ r | —--====== MarketModelBid/Ask futurefutureModelBid/Ask futurefutureBid/Ask futurefuture futurefuture<br>20 25 30 35 40<br><!-- End of picture text -->
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0045-02.png)
-
-
-<!-- Start of picture text -->
-T= 14 days T= 14 days<br>* —e- Calibrated | —7<br>0.30 « Bid/Ask 2.2 + + +<br>* I|| f<br>eX 2.0 I <i<br>0.25 | es<br>* 18 | wim<br>16 ||| Pe 4 ”xx ail<br>0.20 | al<br>141212 | Aisivisiviv<br>0.15 Pe —e- Calibrated<br>104 r future<br>0.8104 ++ | —--====== MarketModelBid/Ask futurefutureModelBid/Ask futurefutureBid/Ask futurefuture futurefuture<br>0.10<br>092 094 096 098 100 102 1.04 20 25 30 35 40<br>T= 44 days<br>+ —e- Calibrated<br>Bid/Ask<br>0s<br>*<br>0.4<br>m<br>03<br>0.2<br>o.1<br>0.70 075 080 085 090 095 100 105<br>T= 14 days T= 14 days<br>0.30 * * « —e- Bid/AskCalibrated 2 422 | * +<br>4 2.0 | = + +<br>0254-4,0.200.20 * * 18tsts |||||| aeeeGeawe«ee*eeGeawe«ee*Geawe«ee*awe«ee*«ee** ayeaa oe<br>14 affefe<br>0.15 12 *<br>0.10 ost10 .44 , ||| —e-—-----—-------- MarketModelBid/AskCalibratedfuture futureModelBid/AskCalibratedfuture futureBid/AskCalibratedfuture futureCalibratedfuture futurefuture future<br>092 094 096 098 100 102 1.04 20 25 30 35 40<br>T= 44 days<br>06 + —e- CalibratedBid/AskBid/Ask<br>05 *<br>* "<br>04 x * *<br>¥ * a**<br>0.3 oNORS*ORS** *<br>0.2<br>Ol<br>0.70 075 080 085 0.90 0.95 100 1.05<br><!-- End of picture text -->
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0045-03.png)
-
-
-<!-- Start of picture text -->
-T= 14 days<br>0.30 * * « —e- CalibratedBid/AskCalibrated<br>4<br>* *<br>0254-4,0.200.20<br>0.15<br>0.10<br>092 094 096 098 100 102 1.04<br><!-- End of picture text -->
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0045-04.png)
-
-
-<!-- Start of picture text -->
-T= 14 days<br>2 422 | * +<br>2.0 | = + +<br>ayeaa oe<br>18tsts<br>|||||| aeeeGeawe«ee*eeGeawe«ee*Geawe«ee*awe«ee*«ee**<br>14 affefe<br>12 *<br>10 ,  future<br>ost10 .44 ||| —e-—-----—-------- MarketModelBid/AskCalibratedfuture futureModelBid/AskCalibratedfuture futureBid/AskCalibratedfuture futureCalibratedfuture futurefuture future<br>20 25 30 35 40<br><!-- End of picture text -->
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0045-05.png)
-
-
-<!-- Start of picture text -->
-T= 44 days<br>06 + —e- CalibratedBid/AskBid/Ask<br>05 *<br>* "<br>04 x * *<br>¥ * a**<br>0.3 oNORS*ORS** *<br>0.2<br>Ol<br>0.70 075 080 085 0.90 0.95 100 1.05<br><!-- End of picture text -->
+![Figure 14: Implied volatilities as of June 16, 2021](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0045-block-0004-54b17ad502b9cc1a.jpg)
 
 <!-- page: 46 -->
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0046-00.png)
+![](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0046-block-0001-e3bf187de138c5a8.jpg)
 
+![](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0046-block-0002-d35d7293ca1e1c40.jpg)
 
-<!-- Start of picture text -->
-T= 14 days<br>0275 + * —e- Calibrated<br>Bid/Ask<br>0.2507<br>0.225 * ok**<br>0.2000.1750.175 ads** *<br>0.150<br>0.125<br>0.100<br>0.075<br>092 094 096 098 100 102 104<br><!-- End of picture text -->
+![Figure 15: Implied volatilities as of June 23, 2021](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0046-block-0003-ece7b0e6834a08ac.jpg)
 
+![](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0046-block-0004-1df1c0962708139b.jpg)
 
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0046-01.png)
+![](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0046-block-0005-6bed0f473fa0e14c.jpg)
 
+![Figure 16: Implied volatilities as of June 30, 2021](assets/figures/2023-cuchiero-et-al-signature-spx-vix-p0046-block-0006-88d0982b52d286ac.jpg)
 
-<!-- Start of picture text -->
-T= 14 days<br>| _ +<br>2.0 | Es<br>| * +<br>18 || ** _ * as<br>161414 |||||| MeOfcoy+ ana<br>| ge<br>1210.10.. t Z ¥ii foeLalLal —e Calibrated<br>08 ¥| —-- Market future<br># | --- ModelBid/Ask futureBid/Ask future future<br>0.6<br>20 25 30 35 40<br><!-- End of picture text -->
+## References
 
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0046-02.png)
-
-
-<!-- Start of picture text -->
-T= 14 days T= 14 days<br>0275 + * —e- Calibrated | _ +<br>Bid/Ask 2.0 | Es<br>0.2507 | * +<br>0.225 * ok** 18 ||| ** _ * as<br>ads** * Ofcoy+oy++ ana<br>0.2000.1750.175 161414 |||||| MeOfcoy+<br>| ge<br>0.150 Z foeLalLal<br>0.125 1210.10.. t ¥ii —e Calibrated<br>0.100 08 ¥| —-- Market future<br># | --- ModelBid/Ask futureBid/Ask future future<br>0.075 0.6<br>092 094 096 098 100 102 104 20 25 30 35 40<br>T= 44 days<br>06 7 —e— Calibrated<br>Bid/Ask<br>05<br>oe<br>04 s ™<br>_<br>0.3 *<br>* *¥<br>0.2<br>1<br>0.70 075 080 085 0.90 095 100 105<br>T= 14 days T= 14 days<br>0.304% —e Calibrated 22 ; +<br>s * Bid/Ask 2.0 || — + *<br>0.25 ™. " * 18 |I aa 1 . + —<br>0.20} * « 16 |I 7 aia ‘i<br>x . | ree<br>yy. .*"*14 || we a<br>0.15 +#—\* 12 be» *<br>“NX al<br>NS 10 hy” —e- Calibrated<br>10.. ® “S os ¥wr«| —----- MarketModelBid/Ask futurefuture<br>092 094 096 098 100 102 104 15 20 25 30 35 40<br>0.6 T= 44 days<br>* —e- Calibrated<br>Bid/Ask<br>05 x<br>"<br>0.4 * ”<br>+ * "<br>0.3 * Ta<br>+N<br>+e<br>0.2 £<br>1<br>0.70 075 0.80 085 0.90 0.95 100 1.05<br><!-- End of picture text -->
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0046-03.png)
-
-
-<!-- Start of picture text -->
-T= 14 days<br>0.304% —e Calibrated<br>s * Bid/Ask<br>0.25 ™. " *<br>«<br>0.20} *<br>x .<br>yy.<br>0.15 +#—\*<br>“NX<br>NS<br>10.. ® “S<br>092 094 096 098 100 102 104<br><!-- End of picture text -->
-
-
-![](assets/2023-cuchiero-et-al-signature-spx-vix.pdf-0046-04.png)
-
-
-<!-- Start of picture text -->
-0.6 T= 44 days<br>* —e- Calibrated<br>Bid/Ask<br>05 x<br>"<br>0.4 * ”<br>+ * "<br>0.3 * Ta<br>+N<br>+e<br>0.2 £<br>1<br>0.70 075 0.80 085 0.90 0.95 100 1.05<br><!-- End of picture text -->
+E. Abi Jaber, C. Illand, and S. Li. Joint SPX-VIX calibration with Gaussian polynomial volatility models: deep pricing with quantization hints. Preprint arXiv:2212.08297, 2022a. E. Abi Jaber, C. Illand, and S. Li. The quintic Ornstein-Uhlenbeck volatility model that jointly calibrates SPX & VIX smiles. Preprint arXiv:2212.10917, 2022b.
 
 <!-- page: 47 -->
 
-- E. Akyildirim, M. Gambara, J. Teichmann, and S. Zhou. Randomized signature methods in optimal portfolio selection. _Preprint arXiv:2312.16448_ , 2023. 
-
-- P. Bader, S. Blanes, and F. Casas. Computing the matrix exponential with an optimized taylor polynomial approximation. _Mathematics_ , 7(12):1174, 2019. 
-
-- J. Baldeaux and A. Badran. Consistent modelling of VIX and equity derivatives using a 3/2 plus jumps model. _Applied Mathematical Finance_ , 21(4):299–312, 2014. 
-
-- C. Bayer, P. Friz, and J. Gatheral. Pricing under rough volatility. _Quantitative Finance_ , 16(6):887–904, 2016. 
-
-- C. Bayer, B. Horvath, A. Muguruza, B. Stemper, and M. Tomas. On deep calibration of (rough) stochastic volatility models. _Preprint arXiv:1908.08806_ , 2019. 
-
-- C. Bayer, P. P. Hager, S. Riedel, and J. Schoenmakers. Optimal stopping with signatures. _The Annals of Applied Probability_ , 33(1):238–273, 2023. 
-
-- H. Boedihardjo, X. Geng, T. Lyons, and D. Yang. The signature of a rough path: uniqueness. _Advances in Mathematics_ , 293:720–737, 2016. 
-
-- H. Boedihardjo, J. Diehl, M. Mezzarobba, and H. Ni. The expected signature of Brownian motion stopped on the boundary of a circle has finite radius of convergence. _Bulletin of the London Mathematical Society_ , 53(1):285–299, 2021. 
-
-- A. Bondi, G. Livieri, and S. Pulido. Affine volterra processes with jumps. _Stochastic Processes and their Applications_ , 168:104264, 2024a. 
-
-- A. Bondi, S. Pulido, and S. Scotti. The rough Hawkes Heston stochastic volatility model. _Mathematical Finance_ , 1–45, 2024b. 
-
-- F. Bourgey and S. De Marco. Multilevel Monte Carlo simulation for VIX options in the rough Bergomi model. _Journal of Computational Finance_ , 26(2):53–82, 2022. 
-
-- H. Buehler, B. Horvath, T. Lyons, I. Perez Arribas, and B. Wood. A data-driven market simulator for small data environments. _Preprint arXiv:2006.14498_ , 2020. 
-
-- T. Cass and E. Ferrucci. On the Wiener chaos expansion of the signature of a Gaussian process. _Probability Theory and Related Fields_ , 189:909-947, 2024. 
-
-- K. T. Chen. Integration of paths, geometric invariants and a generalized Baker-Hausdorff formula. _Annals of Mathematics_ , 65(1):163–178, 1957. 
-
-- K. T. Chen. Iterated path integrals. _Bulletin of the American Mathematical Society_ , 83: 831-879, 1977. 
-
-- S. N. Cohen, S. Lui, W. Malpass, G. Mantoan, L. Nesheim, A. de Paula, A. Reeves, C. Scott, E. Small, and L. Yang. Nowcasting with signature methods. _Preprint arXiv:2305.10256_ , 2023. 
-
-- E. M. Compagnoni, A. Scampicchio, L. Biggio, A. Orvieto, T. Hofmann, and J. Teichmann. On the effectiveness of Randomized Signatures as Reservoir for Learning Rough Dynamics. In _2023 International Joint Conference on Neural Networks (IJCNN)_ , 1–8, 2023. doi: 10.1109/IJCNN54540.2023.10191624.
+E. Akyildirim, M. Gambara, J. Teichmann, and S. Zhou. Randomized signature methods in optimal portfolio selection. Preprint arXiv:2312.16448, 2023. P. Bader, S. Blanes, and F. Casas. Computing the matrix exponential with an optimized taylor polynomial approximation. Mathematics, 7(12):1174, 2019. J. Baldeaux and A. Badran. Consistent modelling of VIX and equity derivatives using a 3/2 plus jumps model. Applied Mathematical Finance, 21(4):299–312, 2014. C. Bayer, P. Friz, and J. Gatheral. Pricing under rough volatility. Quantitative Finance, 16(6):887–904, 2016. C. Bayer, B. Horvath, A. Muguruza, B. Stemper, and M. Tomas. On deep calibration of (rough) stochastic volatility models. Preprint arXiv:1908.08806, 2019. C. Bayer, P. P. Hager, S. Riedel, and J. Schoenmakers. Optimal stopping with signatures. The Annals of Applied Probability, 33(1):238–273, 2023. H. Boedihardjo, X. Geng, T. Lyons, and D. Yang. The signature of a rough path: uniqueness. Advances in Mathematics, 293:720–737, 2016. H. Boedihardjo, J. Diehl, M. Mezzarobba, and H. Ni. The expected signature of Brownian motion stopped on the boundary of a circle has finite radius of convergence. Bulletin of the London Mathematical Society, 53(1):285–299, 2021. A. Bondi, G. Livieri, and S. Pulido. Afine volterra processes with jumps. Stochastic Processes and their Applications, 168:104264, 2024a. A. Bondi, S. Pulido, and S. Scotti. The rough Hawkes Heston stochastic volatility model. Mathematical Finance, 1–45, 2024b. F. Bourgey and S. De Marco. Multilevel Monte Carlo simulation for VIX options in the rough Bergomi model. Journal of Computational Finance, 26(2):53–82, 2022. H. Buehler, B. Horvath, T. Lyons, I. Perez Arribas, and B. Wood. A data-driven market simulator for small data environments. Preprint arXiv:2006.14498, 2020. T. Cass and E. Ferrucci. On the Wiener chaos expansion of the signature of a Gaussian process. Probability Theory and Related Fields, 189:909-947, 2024. K. T. Chen. Integration of paths, geometric invariants and a generalized Baker-Hausdorf formula. Annals of Mathematics, 65(1):163–178, 1957. K. T. Chen. Iterated path integrals. Bulletin of the American Mathematical Society, 83: 831-879, 1977. S. N. Cohen, S. Lui, W. Malpass, G. Mantoan, L. Nesheim, A. de Paula, A. Reeves, C. Scott, E. Small, and L. Yang. Nowcasting with signature methods. Preprint arXiv:2305.10256, 2023. E. M. Compagnoni, A. Scampicchio, L. Biggio, A. Orvieto, T. Hofmann, and J. Teichmann. On the efectiveness of Randomized Signatures as Reservoir for Learning Rough Dynamics. In 2023 International Joint Conference on Neural Networks (IJCNN), 1–8, 2023. doi: 10.1109/IJCNN54540.2023.10191624.
 
 <!-- page: 48 -->
 
-- R. Cont and P. Das. Quadratic variation and quadratic roughness. _Bernoulli_ , 29(1):496–522, 2023. 
-
-- R. Cont and T. Kokholm. A consistent pricing model for index options and volatility derivatives. _Mathematical Finance_ , 23(2):248–274, 2013. 
-
-- L. Coutin and Z. Qian. Stochastic analysis, rough path analysis and fractional brownian motions. _Probability theory and related fields_ , 122(1):108–140, 2002. 
-
-- C. Cuchiero and J. M¨oller. Signature Methods in Stochastic Portfolio Theory. _Preprint arXiv:2310.02322_ , 2023. 
-
-- C. Cuchiero and S. Svaluto-Ferro. Infinite-dimensional polynomial processes. _Finance and Stochastics_ , 25(2):383–426, 2021. 
-
-- C. Cuchiero, M. Keller-Ressel, and J. Teichmann. Polynomial processes and their applications to mathematical finance. _Finance and Stochastics_ , 16:711–740, 2012. 
-
-- C. Cuchiero, L. Gonon, L. Grigoryeva, J.-P. Ortega, and J. Teichmann. Discrete-time signatures and randomness in reservoir computing. _IEEE Transactions on Neural Networks and Learning Systems_ , 33(11):6321–6330, 2022. 
-
-- C. Cuchiero, G. Gazzani, and S. Svaluto-Ferro. Signature-based models: Theory and calibration. _SIAM Journal on Financial Mathematics_ , 14(3):910–957, 2023a. 
-
-- C. Cuchiero, S. Svaluto-Ferro, and J. Teichmann. Signature SDEs from an affine and polynomial perspective. _Preprint arXiv:2302.01362_ , 2023b. 
-
-- C. Cuchiero, L. Di Persio, F. Guida, and S. Svaluto-Ferro. Measure-valued affine and polynomial diffusions. _Stochastic Processes and their Applications_ , page 104392, 2024a. 
-
-- C. Cuchiero, F. Primavera, and S. Svaluto-Ferro. Universal approximation theorems for continuous functions of c`adl`ag paths and L´evy-type signature models. _Forthcoming in Finance and Stochastics_ , 2024b. 
-
-- F. Delbaen and W. Schachermayer. A general version of the fundamental theorem of asset pricing. _Mathematische annalen_ , 300(1):463–520, 1994. 
-
-- G. Di Nunno, K. Kubilius, Y. Mishura, and A. Yurchenko-Tytarenko. From constant to rough: A survey of continuous volatility modeling. _Mathematics_ , 11(19):4201, 2023. 
-
-- T. Fawcett. Problems in stochastic analysis. Connections between rough paths and noncommutative harmonic analysis. _PhD Thesis, Univ. Oxford_ , 2003. 
-
-- D. Filipovi´c and M. Larsson. Polynomial diffusions and applications in finance. _Finance and Stochastics_ , 20(4):931–972, 2016. 
-
-- J.-P. Fouque and Y. Saporito. Heston stochastic vol-of-vol model for joint calibration of VIX and S&P 500 options. _Quantitative Finance_ , 18(6):1003–1016, 2018. 
-
-- J. Gatheral. Consistent modeling of SPX and VIX options. _Bachelier Congress_ , 2008. 
-
-- J. Gatheral. _The volatility surface: a practitioner’s guide_ . John Wiley & Sons, 2011.
+R. Cont and P. Das. Quadratic variation and quadratic roughness. Bernoulli, 29(1):496–522, 2023. R. Cont and T. Kokholm. A consistent pricing model for index options and volatility derivatives. Mathematical Finance, 23(2):248–274, 2013. L. Coutin and Z. Qian. Stochastic analysis, rough path analysis and fractional brownian motions. Probability theory and related fields, 122(1):108–140, 2002. C. Cuchiero and J. M¨oller. Signature Methods in Stochastic Portfolio Theory. Preprint arXiv:2310.02322, 2023. C. Cuchiero and S. Svaluto-Ferro. Infinite-dimensional polynomial processes. Finance and Stochastics, 25(2):383–426, 2021. C. Cuchiero, M. Keller-Ressel, and J. Teichmann. Polynomial processes and their applications to mathematical finance. Finance and Stochastics, 16:711–740, 2012. C. Cuchiero, L. Gonon, L. Grigoryeva, J.-P. Ortega, and J. Teichmann. Discrete-time signatures and randomness in reservoir computing. IEEE Transactions on Neural Networks and Learning Systems, 33(11):6321–6330, 2022. C. Cuchiero, G. Gazzani, and S. Svaluto-Ferro. Signature-based models: Theory and calibration. SIAM Journal on Financial Mathematics, 14(3):910–957, 2023a. C. Cuchiero, S. Svaluto-Ferro, and J. Teichmann. Signature SDEs from an afine and polynomial perspective. Preprint arXiv:2302.01362, 2023b. C. Cuchiero, L. Di Persio, F. Guida, and S. Svaluto-Ferro. Measure-valued afine and polynomial difusions. Stochastic Processes and their Applications, page 104392, 2024a. C. Cuchiero, F. Primavera, and S. Svaluto-Ferro. Universal approximation theorems for continuous functions of c\`adl\`ag paths and L´evy-type signature models. Forthcoming in Finance and Stochastics, 2024b. F. Delbaen and W. Schachermayer. A general version of the fundamental theorem of asset pricing. Mathematische annalen, 300(1):463–520, 1994. G. Di Nunno, K. Kubilius, Y. Mishura, and A. Yurchenko-Tytarenko. From constant to rough: A survey of continuous volatility modeling. Mathematics, 11(19):4201, 2023. T. Fawcett. Problems in stochastic analysis. Connections between rough paths and noncommutative harmonic analysis. PhD Thesis, Univ. Oxford, 2003. D. Filipovi´c and M. Larsson. Polynomial difusions and applications in finance. Finance and Stochastics, 20(4):931–972, 2016. J.-P. Fouque and Y. Saporito. Heston stochastic vol-of-vol model for joint calibration of VIX and S&P 500 options. Quantitative Finance, 18(6):1003–1016, 2018. J. Gatheral. Consistent modeling of SPX and VIX options. Bachelier Congress, 2008. J. Gatheral. The volatility surface: a practitioner’s guide. John Wiley & Sons, 2011.
 
 <!-- page: 49 -->
 
-- J. Gatheral, T. Jaisson, and M. Rosenbaum. Volatility is rough. _Quantitative Finance_ , 18 (6):933–949, 2018. 
-
-- J. Gatheral, P. Jusselin, and M. Rosenbaum. The quadratic rough Heston model and the joint S&P 500/VIX smile calibration problem. _Risk, May_ 2020. 
-
-- G. Gazzani and J. Guyon. Pricing and calibration in the 4-factor path-dependent volatility model. _Preprint arXiv:2406.02319_ , 2024. 
-
-- P. Gierjatowicz, M. Sabate-Vidales, D. Siska, L. Szpruch, and Z. Zuric. Robust pricing and hedging via neural SDEs. _Journal of Computational Finance_ , 26(3):1–32, 2023. 
-
-- P. Glasserman. _Monte Carlo methods in financial engineering_ , volume 53. Springer, 2004. 
-
-- L. A. Grzelak. On Randomization of Affine Diffusion Processes with Application to Pricing of Options on VIX and S&P 500. _Preprint arXiv:2208.12518_ , 2022. 
-
-- H. Guerreiro and J. Guerra. VIX pricing in the rBergomi model under a regime switching change of measure. _Quantitative Finance_ , 23(5):721–738, 2023. 
-
-- I. Guo, G. Loeper, J. Ob�l´oj, and S. Wang. Joint modeling and calibration of SPX and VIX by optimal transport. _SIAM Journal on Financial Mathematics_ , 13(1):1–31, 2022a. 
-
-- I. Guo, G. Loeper, and S. Wang. Calibration of local-stochastic volatility models by optimal transport. _Mathematical Finance_ , 32(1):46–77, 2022b. 
-
-- J. Guyon. Inversion of convex ordering in the VIX market. _Quantitative Finance_ , 20(10): 1597–1623, 2020a. 
-
-- J. Guyon. The joint S&P 500/VIX smile calibration puzzle solved. _Risk, April_ , 2020b. 
-
-- J. Guyon. Dispersion-constrained martingale Schr¨odinger problems and the exact joint S&P 500/VIX smile calibration puzzle. _Finance and Stochastics_ , 28:27-79, 2023. 
-
-- F. Bourgey and J. Guyon. Fast exact joint S&P 500/VIX smile calibration in discrete and continuous time. _Risk, February_ , 2024. 
-
-- J. Guyon and J. Lekeufack. Volatility is (mostly) path-dependent. _Quantitative Finance_ , pages 1–38, 2023. 
-
-- J. Guyon and S. Mustapha. Neural joint S&P 500/VIX smile calibration. _Risk, December_ , 2023. 
-
-- P. S. Hagan, D. Kumar, A. S. Lesniewski, and D. Woodward. Managing smile risk. _The Best of Wilmott_ , 1:249–296, 2002. 
-
-- J. Kalsi, T. Lyons, and P.-A. I. Optimal execution with rough path signatures. _SIAM Journal on Financial Mathematics_ , 11(2):470–493, 2020. 
-
-- C. Kardaras, D. Kreher, and A. Nikeghbali. Strict local martingales and bubbles. _The Annals of Applied Probability_ , 25(4):1827–1867, 2015. 
-
-- P. Kidger and T. Lyons. Signatory: differentiable computations of the signature and logsignature transforms, on both CPU and GPU. In _International Conference on Learning Representations_ , 2020.
+J. Gatheral, T. Jaisson, and M. Rosenbaum. Volatility is rough. Quantitative Finance, 18 (6):933–949, 2018. J. Gatheral, P. Jusselin, and M. Rosenbaum. The quadratic rough Heston model and the joint S&P 500/VIX smile calibration problem. Risk, May 2020. G. Gazzani and J. Guyon. Pricing and calibration in the 4-factor path-dependent volatility model. Preprint arXiv:2406.02319, 2024. P. Gierjatowicz, M. Sabate-Vidales, D. Siska, L. Szpruch, and Z. Zuric. Robust pricing and hedging via neural SDEs. Journal of Computational Finance, 26(3):1–32, 2023. P. Glasserman. Monte Carlo methods in financial engineering, volume 53. Springer, 2004. L. A. Grzelak. On Randomization of Afine Difusion Processes with Application to Pricing of Options on VIX and S&P 500. Preprint arXiv:2208.12518, 2022. H. Guerreiro and J. Guerra. VIX pricing in the rBergomi model under a regime switching change of measure. Quantitative Finance, 23(5):721–738, 2023. I. Guo, G. Loeper, J. Ob l´oj, and S. Wang. Joint modeling and calibration of SPX and VIX by optimal transport. SIAM Journal on Financial Mathematics, 13(1):1–31, 2022a. I. Guo, G. Loeper, and S. Wang. Calibration of local-stochastic volatility models by optimal transport. Mathematical Finance, 32(1):46–77, 2022b. J. Guyon. Inversion of convex ordering in the VIX market. Quantitative Finance, 20(10): 1597–1623, 2020a. J. Guyon. The joint S&P 500/VIX smile calibration puzzle solved. Risk, April, 2020b. J. Guyon. Dispersion-constrained martingale Schr¨odinger problems and the exact joint S&P 500/VIX smile calibration puzzle. Finance and Stochastics, 28:27-79, 2023. F. Bourgey and J. Guyon. Fast exact joint S&P 500/VIX smile calibration in discrete and continuous time. Risk, February, 2024. J. Guyon and J. Lekeufack. Volatility is (mostly) path-dependent. Quantitative Finance, pages 1–38, 2023. J. Guyon and S. Mustapha. Neural joint S&P 500/VIX smile calibration. Risk, December, 2023. P. S. Hagan, D. Kumar, A. S. Lesniewski, and D. Woodward. Managing smile risk. The Best of Wilmott, 1:249–296, 2002. J. Kalsi, T. Lyons, and P.-A. I. Optimal execution with rough path signatures. SIAM Journal on Financial Mathematics, 11(2):470–493, 2020. C. Kardaras, D. Kreher, and A. Nikeghbali. Strict local martingales and bubbles. The Annals of Applied Probability, 25(4):1827–1867, 2015. P. Kidger and T. Lyons. Signatory: diferentiable computations of the signature and logsignature transforms, on both CPU and GPU. In International Conference on Learning Representations, 2020.
 
 <!-- page: 50 -->
 
-- T. Kokholm and M. Stisen. Joint pricing of VIX and SPX options with stochastic volatility and jump models. _The Journal of Risk Finance_ , 16(1):27-48, 2015. 
-
-- E. Lemahieu, K. Boudt, and M. Wyns. Generating drawdown-realistic financial price paths using path signatures. _Preprint arXiv:2309.04507_ , 2023. 
-
-- T. Lyons and H. Ni. Expected signature of Brownian motion up to the first exit time from a bounded domain. _The Annals of Probability_ , 43(5):2729–2762, 2015. 
-
-- T. Lyons and N. Victoir. Cubature on Wiener space. _Proceedings of the Royal Society of London. Series A: Mathematical, Physical and Engineering Sciences_ , 460(2041):169–198, 2004. 
-
-- T. Lyons, M. Caruana, and T. L´evy. _Differential equations driven by rough paths_ . Springer, 2007. 
-
-- T. Lyons, S. Nejad, and I. Perez Arribas. Non-parametric pricing and hedging of exotic derivatives. _Applied Mathematical Finance_ , 27(6):457–494, 2020. 
-
-- M. Min and R. Hu. Signatured deep fictitious play for mean field games with common noise. In _International Conference on Machine Learning_ , pages 7736–7747. PMLR, 2021. 
-
-- C. Moler and C. Van Loan. Nineteen dubious ways to compute the exponential of a matrix, twenty-five years later. _SIAM review_ , 45(1):3–49, 2003. 
-
-- A. Neuberger. The log contract. _Journal of portfolio management_ , 20:74–74, 1994. 
-
-- S. Liao, H. Ni, M. Sabate-Vidales, L. Szpruch, M. Wiese, and B. Xiao. Sig-Wasserstein GANs for conditional time series generation. _Mathematical Finance, Special Issue on Machine Learning in Finance_ , 34(2):622–670, 2023. 
-
-- B. Ning, P. Chakraborty, and K. Lee. Optimal Entry and Exit with Signature in Statistical Arbitrage. _Preprint arXiv:2309.16008_ , 2023. 
-
-- C. Pacati, G. Pompa, and R. Ren`o. Smiling twice: the Heston++ model. _Journal of Banking & Finance_ , 96:185–206, 2018. 
-
-- A. Papanicolaou and R. Sircar. A regime-switching Heston model for VIX and S&P 500 implied volatilities. _Quantitative Finance_ , 14(10):1811–1827, 2014. 
-
-- I. Perez Arribas, C. Salvi, and L. Szpruch. Sig-SDEs model for quantitative finance. In _Proceedings of the First ACM International Conference on AI in Finance_ , pages 1–8, 2020. 
-
-- A. Quarteroni, R. Sacco, and F. Saleri. _Numerical mathematics_ , volume 37. Springer Science & Business Media, 2010. 
-
-- R. Ree. Lie elements and an algebra associated with shuffles. _Annals of Mathematics_ , 68 (2):210-220, 1958. 
-
-- J. Reizenstein and B. Graham. The iisignature library: efficient calculation of iteratedintegral signatures and log signatures. _Preprint arXiv:2006.00218_ , 2018.
+T. Kokholm and M. Stisen. Joint pricing of VIX and SPX options with stochastic volatility and jump models. The Journal of Risk Finance, 16(1):27-48, 2015. E. Lemahieu, K. Boudt, and M. Wyns. Generating drawdown-realistic financial price paths using path signatures. Preprint arXiv:2309.04507, 2023. T. Lyons and H. Ni. Expected signature of Brownian motion up to the first exit time from a bounded domain. The Annals of Probability, 43(5):2729–2762, 2015. T. Lyons and N. Victoir. Cubature on Wiener space. Proceedings of the Royal Society of London. Series A: Mathematical, Physical and Engineering Sciences, 460(2041):169–198, 2004. T. Lyons, M. Caruana, and T. L´evy. Diferential equations driven by rough paths. Springer, 2007. T. Lyons, S. Nejad, and I. Perez Arribas. Non-parametric pricing and hedging of exotic derivatives. Applied Mathematical Finance, 27(6):457–494, 2020. M. Min and R. Hu. Signatured deep fictitious play for mean field games with common noise. In International Conference on Machine Learning, pages 7736–7747. PMLR, 2021. C. Moler and C. Van Loan. Nineteen dubious ways to compute the exponential of a matrix, twenty-five years later. SIAM review, 45(1):3–49, 2003. A. Neuberger. The log contract. Journal of portfolio management, 20:74–74, 1994. S. Liao, H. Ni, M. Sabate-Vidales, L. Szpruch, M. Wiese, and B. Xiao. Sig-Wasserstein GANs for conditional time series generation. Mathematical Finance, Special Issue on Machine Learning in Finance, 34(2):622–670, 2023. B. Ning, P. Chakraborty, and K. Lee. Optimal Entry and Exit with Signature in Statistical Arbitrage. Preprint arXiv:2309.16008, 2023. C. Pacati, G. Pompa, and R. Ren\`o. Smiling twice: the Heston++ model. Journal of Banking & Finance, 96:185–206, 2018. A. Papanicolaou and R. Sircar. A regime-switching Heston model for VIX and S&P 500 implied volatilities. Quantitative Finance, 14(10):1811–1827, 2014. I. Perez Arribas, C. Salvi, and L. Szpruch. Sig-SDEs model for quantitative finance. In Proceedings of the First ACM International Conference on AI in Finance, pages 1–8, 2020. A. Quarteroni, R. Sacco, and F. Saleri. Numerical mathematics, volume 37. Springer Science & Business Media, 2010. R. Ree. Lie elements and an algebra associated with shufles. Annals of Mathematics, 68 (2):210-220, 1958. J. Reizenstein and B. Graham. The iisignature library: eficient calculation of iteratedintegral signatures and log signatures. Preprint arXiv:2006.00218, 2018.
 
 <!-- page: 51 -->
 
-- R. Rhoads. _Trading VIX derivatives: trading and hedging strategies using VIX futures, options, and exchange-traded notes_ , volume 503. John Wiley & Sons, 2011. 
-
-- L. Rogers. Things we think we know. In _Options — 45 Years since the Publication of the Black–Scholes–Merton Model_ , chapter 9, pages 173–184. 2023. 
-
-- S. Rømer. Empirical analysis of rough and classical stochastic volatility models to the SPX and VIX markets. _Quantitative Finance_ , 22(10):1805-1838, 2022. 
-
-- M. Rosenbaum and J. Zhang. Deep calibration of the quadratic rough Heston model. _Risk, September_ , 2022. 
-
-- A. Sepp. VIX option pricing in a jump-diffusion model. _Risk, April_ , 2008. 
-
-- E. M. Stein and J. C. Stein. Stock price distributions with stochastic volatility: an analytic approach. _The review of financial studies_ , 4(4):727–752, 1991. 
-
-- M. Wiese, P. Murray, and R. Korn. Sig-Splines: universal approximation and convex calibration of time series generative models. _Preprint arXiv:2307.09767_ , 2023.
+R. Rhoads. Trading VIX derivatives: trading and hedging strategies using VIX futures, options, and exchange-traded notes, volume 503. John Wiley & Sons, 2011. L. Rogers. Things we think we know. In Options — 45 Years since the Publication of the Black–Scholes–Merton Model, chapter 9, pages 173–184. 2023. S. Rømer. Empirical analysis of rough and classical stochastic volatility models to the SPX and VIX markets. Quantitative Finance, 22(10):1805-1838, 2022. M. Rosenbaum and J. Zhang. Deep calibration of the quadratic rough Heston model. Risk, September, 2022. A. Sepp. VIX option pricing in a jump-difusion model. Risk, April, 2008. E. M. Stein and J. C. Stein. Stock price distributions with stochastic volatility: an analytic approach. The review of financial studies, 4(4):727–752, 1991. M. Wiese, P. Murray, and R. Korn. Sig-Splines: universal approximation and convex calibration of time series generative models. Preprint arXiv:2307.09767, 2023.

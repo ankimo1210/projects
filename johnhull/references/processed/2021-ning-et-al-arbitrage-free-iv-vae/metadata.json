@@ -1,34 +1,36 @@
 {
-  "paper_id": "2021-ning-et-al-arbitrage-free-iv-vae",
-  "title": "Arbitrage-Free Implied Volatility Surface Generation with Variational Autoencoders",
-  "authors": "Brian Ning et al.",
-  "year": "2021",
-  "source_url": "https://arxiv.org/abs/2108.04941",
-  "source_pdf": "references/papers/2021-ning-et-al-arbitrage-free-iv-vae.pdf",
-  "source_sha256": "d0cef1f9407dbe2bfe109bf1ef3776b9009afd390c9ecccd7a3dbfd5ee3515ce",
-  "converter": "PyMuPDF4LLM 1.28.0",
-  "conversion_options": {
-    "header": false,
-    "footer": false,
-    "use_ocr": true,
-    "force_ocr": false,
-    "ocr_language": "eng",
-    "write_images": true,
-    "max_chunk_chars": 4800,
-    "overlap_chars": 400
+  "converted_page_numbers": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ],
+  "extractor": {
+    "extractor_name": "MinerU pipeline",
+    "extractor_version": "3.4.4",
+    "model_hash": "ed6b654c018d742e65a17671e379c5e6ecc87ec9",
+    "source_pdf_sha256": "d0cef1f9407dbe2bfe109bf1ef3776b9009afd390c9ecccd7a3dbfd5ee3515ce"
   },
-  "pdf_metadata": {
-    "format": "PDF 1.5",
-    "title": "",
-    "author": "",
-    "subject": "",
-    "keywords": "",
-    "creator": "LaTeX with hyperref",
-    "producer": "pdfTeX-1.40.21",
-    "creationDate": "D:20220131014831Z",
-    "modDate": "D:20220131014831Z",
-    "trapped": "",
-    "encryption": null,
-    "page_count": 20
-  }
+  "input_content_list_sha256": "55a101abf6921edef5dfb9993bddb004223bfaab512c5c4261f21a4f4d8a5058",
+  "paper_id": "2021-ning-et-al-arbitrage-free-iv-vae",
+  "schema_version": "2.0.0",
+  "source_page_count": 20,
+  "source_pdf": "/home/kazumasa/projects-johnhull-corpus-v2/johnhull/references/papers/2021-ning-et-al-arbitrage-free-iv-vae.pdf",
+  "source_pdf_sha256": "d0cef1f9407dbe2bfe109bf1ef3776b9009afd390c9ecccd7a3dbfd5ee3515ce"
 }

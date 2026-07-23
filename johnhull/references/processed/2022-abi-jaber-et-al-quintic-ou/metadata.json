@@ -1,34 +1,30 @@
 {
-  "paper_id": "2022-abi-jaber-et-al-quintic-ou",
-  "title": "The Quintic Ornstein-Uhlenbeck Volatility Model That Jointly Calibrates SPX & VIX Smiles",
-  "authors": "Eduardo Abi Jaber; Camille Illand; Shaun Li",
-  "year": "2022",
-  "source_url": "https://arxiv.org/abs/2212.10917",
-  "source_pdf": "references/papers/2022-abi-jaber-et-al-quintic-ou.pdf",
-  "source_sha256": "cd164d8ac33bf6ef7ea5f5cd1c86e7ac2e94a0bca7e014fbb0e27a5ec34ffd8d",
-  "converter": "PyMuPDF4LLM 1.28.0",
-  "conversion_options": {
-    "header": false,
-    "footer": false,
-    "use_ocr": true,
-    "force_ocr": false,
-    "ocr_language": "eng",
-    "write_images": true,
-    "max_chunk_chars": 4800,
-    "overlap_chars": 400
+  "converted_page_numbers": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "extractor": {
+    "extractor_name": "MinerU pipeline",
+    "extractor_version": "3.4.4",
+    "model_hash": "ed6b654c018d742e65a17671e379c5e6ecc87ec9",
+    "source_pdf_sha256": "cd164d8ac33bf6ef7ea5f5cd1c86e7ac2e94a0bca7e014fbb0e27a5ec34ffd8d"
   },
-  "pdf_metadata": {
-    "format": "PDF 1.5",
-    "title": "",
-    "author": "",
-    "subject": "",
-    "keywords": "",
-    "creator": "LaTeX with hyperref",
-    "producer": "pdfTeX-1.40.21",
-    "creationDate": "D:20230510011813Z",
-    "modDate": "D:20230510011813Z",
-    "trapped": "",
-    "encryption": null,
-    "page_count": 14
-  }
+  "input_content_list_sha256": "c26565d19a136f5ccb6dfc87e424ed5181b30486ea82892817a448fa16f721eb",
+  "paper_id": "2022-abi-jaber-et-al-quintic-ou",
+  "schema_version": "2.0.0",
+  "source_page_count": 14,
+  "source_pdf": "/home/kazumasa/projects-johnhull-corpus-v2/johnhull/references/papers/2022-abi-jaber-et-al-quintic-ou.pdf",
+  "source_pdf_sha256": "cd164d8ac33bf6ef7ea5f5cd1c86e7ac2e94a0bca7e014fbb0e27a5ec34ffd8d"
 }
