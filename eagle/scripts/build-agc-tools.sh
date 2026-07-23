@@ -5,6 +5,20 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 mkdir -p build/agc
 
+# The socket API updates NAVKEYIN for channel 016 but, unlike channel 015,
+# does not request the matching KEYRUPT2 interrupt. Apply the tracked patch
+# that lets Luminary's MARKRUPT/DESCBITS observe LM rate-of-descent clicks.
+# Accept an already-patched checkout so repeated builds stay idempotent.
+AGC_PATCH_PATH="$(pwd)/scripts/patches/virtualagc-ch016-keyrupt2.patch"
+if git -C vendor/virtualagc apply --check "$AGC_PATCH_PATH" >/dev/null 2>&1; then
+  git -C vendor/virtualagc apply "$AGC_PATCH_PATH"
+elif git -C vendor/virtualagc apply --reverse --check "$AGC_PATCH_PATH" >/dev/null 2>&1; then
+  echo "virtualagc ch016 KEYRUPT2 patch already applied"
+else
+  echo "ERROR: virtualagc ch016 KEYRUPT2 patch does not match pinned source" >&2
+  exit 1
+fi
+
 # --- Deviations from the brief's literal script (documented per the brief's
 #     own escape hatch: "keep the fix in the script") ---
 #
