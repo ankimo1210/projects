@@ -1047,7 +1047,8 @@ def convert_mineru_paper(
     (output_dir / "figures.jsonl").write_text(_jsonl(figures), encoding="utf-8")
     (output_dir / "symbols.json").write_text(_json(symbols), encoding="utf-8")
     (output_dir / "paper.md").write_text(
-        "\n".join(markdown_parts).rstrip() + "\n", encoding="utf-8"
+        "\n".join(line.rstrip() for line in markdown_parts).rstrip() + "\n",
+        encoding="utf-8",
     )
     (output_dir / "quality.json").write_text(_json(quality), encoding="utf-8")
     return {"metadata": metadata, "quality": quality}
