@@ -241,6 +241,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "eagle-dynamics"
+version = "0.1.0"
+
+[[package]]
 name = "eagle-runtime"
 version = "0.1.0"
 dependencies = [
