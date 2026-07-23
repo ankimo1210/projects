@@ -79,6 +79,7 @@ def test_gold_conversion_applies_only_explicit_verified_overrides(tmp_path):
         item["render_validation_status"] == "passed"
         and (output / item["render_asset"]).is_file()
         and item["source_comparison_status"] == "manual_review_pass"
+        and item["source_region_match_status"] == "exact_bbox_and_source_pdf"
         for item in verified_equations.values()
     )
     cells = {item.get("assertion_id"): item for table in tables for item in table["cells"]}
@@ -89,11 +90,15 @@ def test_gold_conversion_applies_only_explicit_verified_overrides(tmp_path):
     assert cells["hw-p17-table4-cir-200-100"]["raw_text"] == "0.86"
     assert cells["hw-p17-table4-cir-200-100"]["numeric_value"] == 0.86
     assert result["quality"]["overall_status"] == "missing"
+    assert result["quality"]["text_status"] == "pass"
+    assert result["quality"]["layout_status"] == "pass"
+    assert result["quality"]["formula_status"] == "pass"
+    assert result["quality"]["table_status"] == "pass"
     assert result["quality"]["counts"]["compiled_equations"] == len(equations)
     assert all((output / item["source_asset"]).is_file() for item in equations)
 
 
-def test_japanese_vertical_notice_fails_closed_on_text_and_reading_order(tmp_path):
+def test_japanese_vertical_notice_uses_reviewed_source_page_exceptions(tmp_path):
     output = tmp_path / MOF_NOTICE
 
     result = convert_mineru_paper(
@@ -104,11 +109,33 @@ def test_japanese_vertical_notice_fails_closed_on_text_and_reading_order(tmp_pat
         page_mapping=MOF_NOTICE_GOLD_PAGES,
     )
     pages = _read_jsonl(output / "pages.jsonl")
+    equations = _read_jsonl(output / "equations.jsonl")
 
-    assert result["quality"]["text_status"] == "fail"
-    assert result["quality"]["layout_status"] == "review"
+    assert result["quality"]["text_status"] == "pass"
+    assert result["quality"]["layout_status"] == "pass"
     assert result["quality"]["low_text_coverage_pages"] == [2, 6]
-    assert all(page["reading_order_status"] == "review" for page in pages)
+    assert result["quality"]["unresolved_low_text_pages"] == []
+    assert result["quality"]["unresolved_layout_pages"] == []
+    assert [item["page_number"] for item in result["quality"]["reviewed_low_text_pages"]] == [
+        2,
+        6,
+    ]
+    assert all(page["reading_order_status"] == "reviewed" for page in pages)
+    assert all(
+        (output / page["layout_quality_review"]["source_page_asset"]).is_file() for page in pages
+    )
+    reviewed = {item["assertion_id"]: item for item in equations}
+    assert reviewed["jgbi-p1-notional-principal"]["latex"] == r"N_t=F\,C_t"
+    assert reviewed["jgbi-p5-reference-index-on-tenth"]["latex"] == (r"I_{m,10}=\mathrm{CPI}_{m-3}")
+    assert reviewed["jgbi-p5-reference-index-after-tenth"]["latex"].endswith(r",\quad n>10")
+    assert reviewed["jgbi-p6-reference-index-before-tenth"]["latex"].endswith(r",\quad n<10")
+    assert all(
+        item["verification_status"] == "verified"
+        and item["latex_compile_status"] == "passed"
+        and item["render_validation_status"] == "passed"
+        and item["source_region_match_status"] == "exact_pdf_bbox_and_source_pdf"
+        for item in equations
+    )
 
 
 def test_conversion_is_byte_deterministic(tmp_path):

@@ -67,13 +67,14 @@ references/processed/{paper_id}/
 ├── blocks.jsonl
 ├── equations.jsonl
 ├── tables.jsonl
+├── figures.jsonl
 ├── claims.jsonl
-├── symbols.jsonl
+├── symbols.json
 ├── chunks.jsonl
 ├── paper.md
 ├── quality.json
-├── assets/{equations,tables,figures}/
-└── tables/{table_id}.{csv,html}
+├── assets/{equations,tables,figures,formula-renders,source-pages}/
+└── tables/{table_id}.{json,csv,html}
 ```
 
 Every derived record carries the source PDF SHA-256, page number, bounding box,
@@ -206,7 +207,7 @@ an explicit `missing_source` and cannot receive a passing semantic status.
 
 - Phase 0--7 gates are implemented; the Gold set is 106 pages with 248 display
   equations, 589 inline equations, 16 reviewed tables, and 651 structural cells.
-- Thirty-one implementation-critical formulas have exact reviewed LaTeX, successful
+- Thirty-five implementation-critical formulas have exact reviewed LaTeX, successful
   independent renders, and manual source-page comparison.
 - Phase 8 has 75 source-backed Gold claims and 100% P0 manual verification.
 - Phase 9 has 225 section-aware Gold chunks and a fixed 28-question suite with 100%
@@ -214,5 +215,7 @@ an explicit `missing_source` and cannot receive a passing semantic status.
 - The P0 implementation evidence gate resolves 59 symbols across nine components to
   every reviewed P0 formula/table assertion and all 50 P0 claims, with 100% coverage of
   the 10 P0 papers.
-- Phase 10 full-corpus regeneration, exception closure, two-run byte comparison, atomic
-  migration, and release validation remain required before completion.
+- Phase 10 is complete: 55 papers and all 1,627 pages were regenerated twice; all 55
+  quality records pass every component gate with zero unresolved exceptions; 11,092
+  relative files are byte-identical; v1 was atomically replaced by v2; and the corpus
+  gate is integrated into `hull-release`.

@@ -23,17 +23,38 @@
       "equations": [
         {
           "assertion_id": "hw-p4-short-rate-dynamics",
-          "equation_id": "1990-hull-white-interest-rate-derivative-securities:p0004:equation:0014",
+          "page_number": 4,
+          "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+          "source_bbox_normalized": [
+            262,
+            446,
+            725,
+            466
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "hw-p6-vasicek-b",
-          "equation_id": "1990-hull-white-interest-rate-derivative-securities:p0006:equation:0024",
+          "page_number": 6,
+          "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+          "source_bbox_normalized": [
+            156,
+            190,
+            838,
+            261
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "hw-p6-mean-reversion",
-          "equation_id": "1990-hull-white-interest-rate-derivative-securities:p0006:equation:0025",
+          "page_number": 6,
+          "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+          "source_bbox_normalized": [
+            258,
+            863,
+            537,
+            905
+          ],
           "status": "pass"
         }
       ],
@@ -66,17 +87,38 @@
       "equations": [
         {
           "assertion_id": "hw-p7-zcb-call",
-          "equation_id": "1990-hull-white-interest-rate-derivative-securities:p0007:equation:0028",
+          "page_number": 7,
+          "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+          "source_bbox_normalized": [
+            267,
+            540,
+            753,
+            560
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "hw-p7-zcb-call-d1",
-          "equation_id": "1990-hull-white-interest-rate-derivative-securities:p0007:equation:0029",
+          "page_number": 7,
+          "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+          "source_bbox_normalized": [
+            236,
+            605,
+            781,
+            701
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "hw-p7-zcb-call-total-variance",
-          "equation_id": "1990-hull-white-interest-rate-derivative-securities:p0007:equation:0030",
+          "page_number": 7,
+          "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+          "source_bbox_normalized": [
+            289,
+            854,
+            715,
+            900
+          ],
           "status": "pass"
         }
       ],
@@ -95,23 +137,51 @@
       "table_cells": [
         {
           "assertion_id": "hw-p17-table4-ext-vas-102",
-          "status": "pass",
-          "table_id": "1990-hull-white-interest-rate-derivative-securities:p0017:table:0002"
+          "page_number": 17,
+          "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+          "source_bbox_normalized": [
+            108,
+            660,
+            861,
+            827
+          ],
+          "status": "pass"
         },
         {
           "assertion_id": "hw-p17-table4-cir-102",
-          "status": "pass",
-          "table_id": "1990-hull-white-interest-rate-derivative-securities:p0017:table:0002"
+          "page_number": 17,
+          "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+          "source_bbox_normalized": [
+            108,
+            660,
+            861,
+            827
+          ],
+          "status": "pass"
         },
         {
           "assertion_id": "hw-p17-table3-ext-vas-200-100",
-          "status": "pass",
-          "table_id": "1990-hull-white-interest-rate-derivative-securities:p0017:table:0001"
+          "page_number": 17,
+          "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+          "source_bbox_normalized": [
+            112,
+            118,
+            863,
+            287
+          ],
+          "status": "pass"
         },
         {
           "assertion_id": "hw-p17-table4-cir-200-100",
-          "status": "pass",
-          "table_id": "1990-hull-white-interest-rate-derivative-securities:p0017:table:0002"
+          "page_number": 17,
+          "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+          "source_bbox_normalized": [
+            108,
+            660,
+            861,
+            827
+          ],
+          "status": "pass"
         }
       ]
     },
@@ -142,22 +212,50 @@
       "equations": [
         {
           "assertion_id": "heston-p2-asset-dynamics",
-          "equation_id": "1993-heston-closed-form-stochastic-volatility:p0002:equation:0005",
+          "page_number": 2,
+          "paper_id": "1993-heston-closed-form-stochastic-volatility",
+          "source_bbox_normalized": [
+            316,
+            753,
+            664,
+            773
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "heston-p3-variance-dynamics",
-          "equation_id": "1993-heston-closed-form-stochastic-volatility:p0003:equation:0015",
+          "page_number": 3,
+          "paper_id": "1993-heston-closed-form-stochastic-volatility",
+          "source_bbox_normalized": [
+            291,
+            150,
+            729,
+            174
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "heston-p5-g",
-          "equation_id": "1993-heston-closed-form-stochastic-volatility:p0005:equation:0013",
+          "page_number": 5,
+          "paper_id": "1993-heston-closed-form-stochastic-volatility",
+          "source_bbox_normalized": [
+            293,
+            534,
+            720,
+            606
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "heston-p5-d",
-          "equation_id": "1993-heston-closed-form-stochastic-volatility:p0005:equation:0014",
+          "page_number": 5,
+          "paper_id": "1993-heston-closed-form-stochastic-volatility",
+          "source_bbox_normalized": [
+            293,
+            534,
+            720,
+            606
+          ],
           "status": "pass"
         }
       ],
@@ -202,17 +300,38 @@
       "equations": [
         {
           "assertion_id": "mcneil-frey-p8-gpd-quantile",
-          "equation_id": "2000-mcneil-frey-tail-risk-evt:p0008:equation:0025",
+          "page_number": 8,
+          "paper_id": "2000-mcneil-frey-tail-risk-evt",
+          "source_bbox_normalized": [
+            328,
+            540,
+            666,
+            587
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "mcneil-frey-p14-es",
-          "equation_id": "2000-mcneil-frey-tail-risk-evt:p0014:equation:0011",
+          "page_number": 14,
+          "paper_id": "2000-mcneil-frey-tail-risk-evt",
+          "source_bbox_normalized": [
+            372,
+            69,
+            627,
+            90
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "mcneil-frey-p14-gpd-mean",
-          "equation_id": "2000-mcneil-frey-tail-risk-evt:p0014:equation:0012",
+          "page_number": 14,
+          "paper_id": "2000-mcneil-frey-tail-risk-evt",
+          "source_bbox_normalized": [
+            398,
+            164,
+            599,
+            199
+          ],
           "status": "pass"
         }
       ],
@@ -259,32 +378,74 @@
       "equations": [
         {
           "assertion_id": "hagan-p8-sabr-forward-dynamics",
-          "equation_id": "2002-hagan-et-al-managing-smile-risk:p0008:equation:0008",
+          "page_number": 8,
+          "paper_id": "2002-hagan-et-al-managing-smile-risk",
+          "source_bbox_normalized": [
+            385,
+            563,
+            611,
+            582
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "hagan-p8-sabr-volatility-dynamics",
-          "equation_id": "2002-hagan-et-al-managing-smile-risk:p0008:equation:0009",
+          "page_number": 8,
+          "paper_id": "2002-hagan-et-al-managing-smile-risk",
+          "source_bbox_normalized": [
+            395,
+            604,
+            601,
+            621
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "hagan-p8-sabr-correlation",
-          "equation_id": "2002-hagan-et-al-managing-smile-risk:p0008:equation:0010",
+          "page_number": 8,
+          "paper_id": "2002-hagan-et-al-managing-smile-risk",
+          "source_bbox_normalized": [
+            436,
+            659,
+            558,
+            674
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "hagan-p9-sabr-implied-volatility",
-          "equation_id": "2002-hagan-et-al-managing-smile-risk:p0009:equation:0015",
+          "page_number": 9,
+          "paper_id": "2002-hagan-et-al-managing-smile-risk",
+          "source_bbox_normalized": [
+            196,
+            425,
+            794,
+            503
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "hagan-p9-sabr-z",
-          "equation_id": "2002-hagan-et-al-managing-smile-risk:p0009:equation:0016",
+          "page_number": 9,
+          "paper_id": "2002-hagan-et-al-managing-smile-risk",
+          "source_bbox_normalized": [
+            397,
+            535,
+            598,
+            561
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "hagan-p9-sabr-xz",
-          "equation_id": "2002-hagan-et-al-managing-smile-risk:p0009:equation:0017",
+          "page_number": 9,
+          "paper_id": "2002-hagan-et-al-managing-smile-risk",
+          "source_bbox_normalized": [
+            356,
+            597,
+            637,
+            637
+          ],
           "status": "pass"
         }
       ],
@@ -342,27 +503,62 @@
       "equations": [
         {
           "assertion_id": "jy-p7-q-martingales",
-          "equation_id": "2003-jarrow-yildirim-inflation-hjm:p0007:equation:0012",
+          "page_number": 7,
+          "paper_id": "2003-jarrow-yildirim-inflation-hjm",
+          "source_bbox_normalized": [
+            290,
+            410,
+            700,
+            449
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "jy-p9-cpi-q-dynamics",
-          "equation_id": "2003-jarrow-yildirim-inflation-hjm:p0009:equation:0007",
+          "page_number": 9,
+          "paper_id": "2003-jarrow-yildirim-inflation-hjm",
+          "source_bbox_normalized": [
+            233,
+            203,
+            522,
+            246
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "jy-p21-cpi-call-payoff",
-          "equation_id": "2003-jarrow-yildirim-inflation-hjm:p0021:equation:0009",
+          "page_number": 21,
+          "paper_id": "2003-jarrow-yildirim-inflation-hjm",
+          "source_bbox_normalized": [
+            349,
+            155,
+            532,
+            172
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "jy-p21-cpi-call-risk-neutral-value",
-          "equation_id": "2003-jarrow-yildirim-inflation-hjm:p0021:equation:0010",
+          "page_number": 21,
+          "paper_id": "2003-jarrow-yildirim-inflation-hjm",
+          "source_bbox_normalized": [
+            290,
+            223,
+            573,
+            280
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "jy-p21-cpi-call-closed-form",
-          "equation_id": "2003-jarrow-yildirim-inflation-hjm:p0021:equation:0011",
+          "page_number": 21,
+          "paper_id": "2003-jarrow-yildirim-inflation-hjm",
+          "source_bbox_normalized": [
+            150,
+            401,
+            879,
+            489
+          ],
           "status": "pass"
         }
       ],
@@ -435,27 +631,62 @@
       "equations": [
         {
           "assertion_id": "canty-p2-seasonality-decomposition",
-          "equation_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds:p0002:equation:0010",
+          "page_number": 2,
+          "paper_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+          "source_bbox_normalized": [
+            635,
+            862,
+            689,
+            876
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "wu-p7-zciis-fixed-payoff",
-          "equation_id": "2013-wu-inflation-rate-derivatives:p0007:equation:0009",
+          "page_number": 7,
+          "paper_id": "2013-wu-inflation-rate-derivatives",
+          "source_bbox_normalized": [
+            364,
+            816,
+            629,
+            838
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "wu-p8-fisher-relation",
-          "equation_id": "2013-wu-inflation-rate-derivatives:p0008:equation:0016",
+          "page_number": 8,
+          "paper_id": "2013-wu-inflation-rate-derivatives",
+          "source_bbox_normalized": [
+            416,
+            696,
+            575,
+            715
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "wu-p9-yoy-floating-payoff",
-          "equation_id": "2013-wu-inflation-rate-derivatives:p0009:equation:0011",
+          "page_number": 9,
+          "paper_id": "2013-wu-inflation-rate-derivatives",
+          "source_bbox_normalized": [
+            403,
+            425,
+            588,
+            467
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "wu-p14-forward-measure-density",
-          "equation_id": "2013-wu-inflation-rate-derivatives:p0014:equation:0017",
+          "page_number": 14,
+          "paper_id": "2013-wu-inflation-rate-derivatives",
+          "source_bbox_normalized": [
+            397,
+            364,
+            599,
+            406
+          ],
           "status": "pass"
         }
       ],
@@ -506,12 +737,26 @@
       "equations": [
         {
           "assertion_id": "lyashenko-p4-risk-neutral-bond-price",
-          "equation_id": "2019-lyashenko-mercurio-backward-looking-rates:p0004:equation:0041",
+          "page_number": 4,
+          "paper_id": "2019-lyashenko-mercurio-backward-looking-rates",
+          "source_bbox_normalized": [
+            372,
+            237,
+            609,
+            268
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "lyashenko-p4-bond-after-maturity",
-          "equation_id": "2019-lyashenko-mercurio-backward-looking-rates:p0004:equation:0042",
+          "page_number": 4,
+          "paper_id": "2019-lyashenko-mercurio-backward-looking-rates",
+          "source_bbox_normalized": [
+            294,
+            343,
+            687,
+            382
+          ],
           "status": "pass"
         }
       ],
@@ -578,18 +823,87 @@
       "component_id": "jgbi-conventions-and-floor",
       "equations": [
         {
+          "assertion_id": "jgbi-p1-notional-principal",
+          "page_number": 1,
+          "paper_id": "2021-mof-jgbi-indexation-notice",
+          "source_bbox_normalized": [
+            0,
+            0,
+            1000,
+            1000
+          ],
+          "status": "pass"
+        },
+        {
+          "assertion_id": "jgbi-p5-reference-index-on-tenth",
+          "page_number": 5,
+          "paper_id": "2021-mof-jgbi-indexation-notice",
+          "source_bbox_normalized": [
+            0,
+            0,
+            1000,
+            1000
+          ],
+          "status": "pass"
+        },
+        {
+          "assertion_id": "jgbi-p5-reference-index-after-tenth",
+          "page_number": 5,
+          "paper_id": "2021-mof-jgbi-indexation-notice",
+          "source_bbox_normalized": [
+            0,
+            0,
+            1000,
+            1000
+          ],
+          "status": "pass"
+        },
+        {
+          "assertion_id": "jgbi-p6-reference-index-before-tenth",
+          "page_number": 6,
+          "paper_id": "2021-mof-jgbi-indexation-notice",
+          "source_bbox_normalized": [
+            0,
+            0,
+            1000,
+            1000
+          ],
+          "status": "pass"
+        },
+        {
           "assertion_id": "jy-p21-cpi-call-payoff",
-          "equation_id": "2003-jarrow-yildirim-inflation-hjm:p0021:equation:0009",
+          "page_number": 21,
+          "paper_id": "2003-jarrow-yildirim-inflation-hjm",
+          "source_bbox_normalized": [
+            349,
+            155,
+            532,
+            172
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "jy-p21-cpi-call-risk-neutral-value",
-          "equation_id": "2003-jarrow-yildirim-inflation-hjm:p0021:equation:0010",
+          "page_number": 21,
+          "paper_id": "2003-jarrow-yildirim-inflation-hjm",
+          "source_bbox_normalized": [
+            290,
+            223,
+            573,
+            280
+          ],
           "status": "pass"
         },
         {
           "assertion_id": "jy-p21-cpi-call-closed-form",
-          "equation_id": "2003-jarrow-yildirim-inflation-hjm:p0021:equation:0011",
+          "page_number": 21,
+          "paper_id": "2003-jarrow-yildirim-inflation-hjm",
+          "source_bbox_normalized": [
+            150,
+            401,
+            879,
+            489
+          ],
           "status": "pass"
         }
       ],
@@ -620,5 +934,5 @@
       "table_cells": []
     }
   ],
-  "gold_implementation_evidence_version": "1.0.0"
+  "gold_implementation_evidence_version": "1.1.0"
 }

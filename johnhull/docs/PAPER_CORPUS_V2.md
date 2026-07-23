@@ -80,9 +80,14 @@ The v2 adapter consumes MinerU's `*_content_list.json` and emits:
   and component-level `quality.json`.
 
 The adapter fails if source pages are missing, page indices are non-contiguous,
-assets disappear, or a reviewed assertion no longer resolves to its exact
-source region. Japanese reading order is always routed to review. Low text
-coverage versus the source PDF is a text failure rather than an empty success.
+assets disappear, or a reviewed assertion no longer resolves to its exact source
+page and bounding box. JPEG crop hashes from selected-page and full-PDF MinerU runs
+are recorded separately because equivalent rendering containers need not be
+byte-identical. Japanese pages remain unresolved unless a named source-page visual
+review exists. Low text coverage versus the source PDF fails unless the missing body
+is recovered deterministically or a reviewed figure/table/vertical-layout exception
+retains the complete source-page image. A component-level `pass` never changes an
+automatic equation or table record from `unverified` to `verified`.
 
 ## Formula and table gates
 
@@ -92,8 +97,11 @@ its source-image fallback; it is not counted as an emitted LaTeX representation.
 Reviewed formulas additionally render to a deterministic PNG and retain the
 manual source-comparison result. The Gold set currently has 100% display/inline
 detection recall, 100% compile success for emitted LaTeX, and 100% render success
-for 31 reviewed formula assertions. The three failed Japanese formula candidates
-remain explicit image fallbacks.
+for 35 reviewed formula assertions. Four failed automatic formula candidates remain
+explicit image fallbacks in Gold. The official JGBi notice contributes four direct
+PDF-region assertions for notional principal and the reference-index interpolation
+before, on, and after the tenth; their normalized notation and exact Japanese source
+text are stored together.
 
 All 16 Gold table crops were independently reviewed. Five malformed extractor
 structures have manual structural replacements, while known numeric OCR errors
@@ -117,7 +125,18 @@ n-grams. Its fixed 28-question suite covers Hull--White, Heston, inflation/JGBi,
 SABR, RFR, and VaR/ES; Gold Hit@5 and P0 Hit@5 are both 100%.
 
 The P0 implementation manifest resolves 59 public implementation symbols across nine
-components to the reviewed corpus. It covers all 10 P0 papers, all 31 reviewed P0
+components to the reviewed corpus. It covers all 10 P0 papers, all 35 reviewed P0
 formulas, all four reviewed P0 table-cell assertions, and all 50 P0 claims. Undefined
 symbols, unresolved evidence, or an unmapped reviewed P0 formula/table assertion fail
 the release gate.
+
+## Full-corpus release result
+
+The released v2 corpus contains 55 papers and all 1,627 source pages. It emits 18,747
+blocks, 17,288 equations, 224 tables, 644 figures, 275 claims, and 3,295 semantic chunks.
+All 55 paper quality records pass every component gate with zero unresolved exceptions;
+75 claims and 35 implementation-critical formulas are manually reviewed. The fixed
+28-query retrieval suite has Hit@5 of 1.000 overall and for P0. Two clean builds produced
+the same 11,092 relative files byte-for-byte. `quality_report.json`, `index.json`, and
+`determinism_report.json` under `references/processed/` are the machine-readable release
+evidence.

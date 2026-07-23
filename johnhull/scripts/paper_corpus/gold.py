@@ -545,6 +545,78 @@ VERIFIED_ASSERTIONS = (
         "verification_status": "verified",
         "reviewer": "codex-visual-audit-2026-07-23",
     },
+    {
+        "assertion_id": "jgbi-p1-notional-principal",
+        "paper_id": "2021-mof-jgbi-indexation-notice",
+        "page_number": 1,
+        "kind": "display_formula",
+        "equation_number": None,
+        "expected_latex": r"N_t=F\,C_t",
+        "expected_text": "各日における想定元金額＝額面金額×各日における連動係数",
+        "normalization_note": "N_t is notional principal, F is face amount, and C_t is the indexation coefficient.",
+        "source_bbox_normalized": [0, 0, 1000, 1000],
+        "source_kind": "pdf_region",
+        "source_asset_name": None,
+        "verification_status": "verified",
+        "reviewer": "codex-source-page-visual-audit-2026-07-23",
+    },
+    {
+        "assertion_id": "jgbi-p5-reference-index-on-tenth",
+        "paper_id": "2021-mof-jgbi-indexation-notice",
+        "page_number": 5,
+        "kind": "display_formula",
+        "equation_number": None,
+        "expected_latex": r"I_{m,10}=\mathrm{CPI}_{m-3}",
+        "expected_text": "n＝10の場合、(m－3)月の消費者物価指数",
+        "normalization_note": "I_{m,n} denotes the reference index applied on day n of month m.",
+        "source_bbox_normalized": [0, 0, 1000, 1000],
+        "source_kind": "pdf_region",
+        "source_asset_name": None,
+        "verification_status": "verified",
+        "reviewer": "codex-source-page-visual-audit-2026-07-23",
+    },
+    {
+        "assertion_id": "jgbi-p5-reference-index-after-tenth",
+        "paper_id": "2021-mof-jgbi-indexation-notice",
+        "page_number": 5,
+        "kind": "display_formula",
+        "equation_number": None,
+        "expected_latex": (
+            r"I_{m,n}=I_{m,10}+(I_{m+1,10}-I_{m,10})"
+            r"\frac{n-10}{d_{m,11:m+1,10}},\quad n>10"
+        ),
+        "expected_text": (
+            "n＞10の場合、m月10日に適用される消費者物価指数に、翌月10日との差と"
+            "n－10を当該補間期間の日数で除した割合との積を加える。"
+        ),
+        "normalization_note": "d_{a:b} is the inclusive number of calendar days in the source formula.",
+        "source_bbox_normalized": [0, 0, 1000, 1000],
+        "source_kind": "pdf_region",
+        "source_asset_name": None,
+        "verification_status": "verified",
+        "reviewer": "codex-source-page-visual-audit-2026-07-23",
+    },
+    {
+        "assertion_id": "jgbi-p6-reference-index-before-tenth",
+        "paper_id": "2021-mof-jgbi-indexation-notice",
+        "page_number": 6,
+        "kind": "display_formula",
+        "equation_number": None,
+        "expected_latex": (
+            r"I_{m,n}=I_{m-1,10}+(I_{m,10}-I_{m-1,10})"
+            r"\frac{d_{m-1,11:m,n}}{d_{m-1,11:m,10}},\quad n<10"
+        ),
+        "expected_text": (
+            "n＜10の場合、前月10日に適用される消費者物価指数に、当月10日との差と"
+            "前月11日から当日までの日数割合との積を加える。"
+        ),
+        "normalization_note": "d_{a:b} is the inclusive number of calendar days in the source formula.",
+        "source_bbox_normalized": [0, 0, 1000, 1000],
+        "source_kind": "pdf_region",
+        "source_asset_name": None,
+        "verification_status": "verified",
+        "reviewer": "codex-source-page-visual-audit-2026-07-23",
+    },
 )
 
 

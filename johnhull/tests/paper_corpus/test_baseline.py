@@ -8,15 +8,16 @@ from pathlib import Path
 from johnhull.scripts.paper_corpus.baseline import (
     DEFAULT_OUTPUT,
     REFERENCES_ROOT,
-    build_baseline,
     render_baseline,
+    validate_frozen_baseline,
 )
 
 
-def test_tracked_baseline_is_deterministic_and_current():
-    expected = render_baseline(build_baseline(REFERENCES_ROOT))
+def test_tracked_migration_baseline_is_canonical_and_source_current():
+    manifest = json.loads(DEFAULT_OUTPUT.read_text(encoding="utf-8"))
 
-    assert DEFAULT_OUTPUT.read_text(encoding="utf-8") == expected
+    validate_frozen_baseline(manifest, REFERENCES_ROOT)
+    assert DEFAULT_OUTPUT.read_text(encoding="utf-8") == render_baseline(manifest)
 
 
 def test_baseline_has_complete_source_and_corpus_integrity():
