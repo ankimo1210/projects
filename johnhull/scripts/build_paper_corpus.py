@@ -194,7 +194,9 @@ def normalize_markdown(text: str, assets_dir: Path) -> str:
     return text.strip()
 
 
-def page_records(page_chunks: list[dict[str, Any]], paper_id: str, assets_dir: Path) -> list[dict[str, Any]]:
+def page_records(
+    page_chunks: list[dict[str, Any]], paper_id: str, assets_dir: Path
+) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     for index, chunk in enumerate(page_chunks, start=1):
         metadata = dict(chunk.get("metadata") or {})
@@ -640,7 +642,11 @@ def main() -> int:
     corpus: list[dict[str, Any]] = []
     qualities: list[dict[str, Any]] = []
     for pdf_path in pdfs:
-        cached = load_cached_output(converter, pdf_path, output_root, catalog, args) if args.resume else None
+        cached = (
+            load_cached_output(converter, pdf_path, output_root, catalog, args)
+            if args.resume
+            else None
+        )
         if cached is None:
             index_entry, chunks, quality = convert_pdf(
                 converter, pdf_path, output_root, catalog, args

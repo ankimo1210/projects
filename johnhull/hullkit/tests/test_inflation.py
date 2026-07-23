@@ -51,9 +51,7 @@ def test_zcis_par_value_and_quote_curve_round_trip() -> None:
     nominal_curve = ((0.0, 1.0, 5.0, 10.0), (0.01, 0.012, 0.018, 0.02))
     start_index, end_index, years = 108.5, 121.0, 5.0
     par = inflation.zcis_par_rate(start_index, end_index, years)
-    pv = inflation.zcis_npv(
-        100_000_000.0, start_index, end_index, par, years, years, nominal_curve
-    )
+    pv = inflation.zcis_npv(100_000_000.0, start_index, end_index, par, years, years, nominal_curve)
     assert pv == pytest.approx(0.0, abs=1e-10)
 
     quotes = (0.009, 0.012, 0.015)
@@ -95,6 +93,4 @@ def test_invalid_inflation_inputs_are_rejected() -> None:
     with pytest.raises(ValueError, match="first-of-month"):
         inflation.monthly_cpi_value(date(2026, 1, 2), {date(2026, 1, 1): 100.0})
     with pytest.raises(ValueError, match="strictly increasing"):
-        inflation.bootstrap_zc_inflation_curve(
-            date(2026, 1, 1), 100.0, (2.0, 1.0), (0.01, 0.02)
-        )
+        inflation.bootstrap_zc_inflation_curve(date(2026, 1, 1), 100.0, (2.0, 1.0), (0.01, 0.02))

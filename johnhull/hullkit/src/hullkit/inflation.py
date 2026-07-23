@@ -225,9 +225,7 @@ def zcis_npv(
     pay_fixed: bool = True,
 ) -> float:
     """Discount a ZCIS using a nominal curve and explicit expected end index."""
-    cashflow = zcis_cashflow(
-        notional, start_index, expected_end_index, fixed_rate, accrual_years
-    )
+    cashflow = zcis_cashflow(notional, start_index, expected_end_index, fixed_rate, accrual_years)
     direction = 1.0 if pay_fixed else -1.0
     return float(direction * discount_factor(payment_time, nominal_curve) * cashflow)
 

@@ -188,7 +188,9 @@ def fit_gpd_pot(losses, threshold, min_exceedances=30):
 
     xi_hat, beta_hat = (float(v) for v in res.x)
     if not (math.isfinite(xi_hat) and math.isfinite(beta_hat)):
-        raise ValueError(f"fit_gpd_pot produced non-finite parameters: xi={xi_hat}, beta={beta_hat}")
+        raise ValueError(
+            f"fit_gpd_pot produced non-finite parameters: xi={xi_hat}, beta={beta_hat}"
+        )
     if beta_hat <= 0.0:
         raise ValueError(f"fit_gpd_pot produced a non-positive scale: beta={beta_hat}")
     if xi_hat < 0.0 and np.any(1.0 + xi_hat * y / beta_hat <= 0.0):
@@ -233,8 +235,7 @@ def evt_var_es(fit: GPDFit, alpha: float = 0.99) -> tuple[float, float]:
         raise ValueError(f"evt_var_es: fit.n_exceedances must be positive, got {n_exceedances}")
     if n_exceedances > n_total:
         raise ValueError(
-            f"evt_var_es: fit.n_exceedances ({n_exceedances}) cannot exceed "
-            f"fit.n_total ({n_total})"
+            f"evt_var_es: fit.n_exceedances ({n_exceedances}) cannot exceed fit.n_total ({n_total})"
         )
     if fit.xi >= 1.0:
         raise ValueError(

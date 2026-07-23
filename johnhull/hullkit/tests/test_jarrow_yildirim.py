@@ -24,19 +24,15 @@ def _params(*, scale: float = 1.0) -> jarrow_yildirim.JarrowYildirimParams:
 def test_correlation_matrix_rejects_non_psd_inputs() -> None:
     valid = jarrow_yildirim.jy_correlation_matrix(_params())
     np.testing.assert_allclose(np.diag(valid), 1.0)
-    invalid = jarrow_yildirim.JarrowYildirimParams(
-        0.1, 0.01, 0.1, 0.01, 0.02, 0.9, 0.9, -0.9
-    )
+    invalid = jarrow_yildirim.JarrowYildirimParams(0.1, 0.01, 0.1, 0.01, 0.02, 0.9, 0.9, -0.9)
     with pytest.raises(ValueError, match="positive semidefinite"):
         jarrow_yildirim.jy_correlation_matrix(invalid)
 
 
 def test_cpi_forward_is_real_discount_over_nominal_discount() -> None:
-    forward = jarrow_yildirim.jy_cpi_forward(
-        0.0, 5.0, 100.0, NOMINAL_CURVE, REAL_CURVE
-    )
-    expected = 100.0 * rates.discount_factor(5.0, REAL_CURVE) / rates.discount_factor(
-        5.0, NOMINAL_CURVE
+    forward = jarrow_yildirim.jy_cpi_forward(0.0, 5.0, 100.0, NOMINAL_CURVE, REAL_CURVE)
+    expected = (
+        100.0 * rates.discount_factor(5.0, REAL_CURVE) / rates.discount_factor(5.0, NOMINAL_CURVE)
     )
     assert forward == pytest.approx(expected, abs=1e-12)
 
@@ -97,9 +93,7 @@ def test_cpi_option_matches_forward_measure_monte_carlo() -> None:
 
 def test_zero_volatility_recovers_deterministic_prices_and_no_yoy_convexity() -> None:
     params = _params(scale=0.0)
-    forward = jarrow_yildirim.jy_cpi_forward(
-        0.0, 2.0, 100.0, NOMINAL_CURVE, REAL_CURVE
-    )
+    forward = jarrow_yildirim.jy_cpi_forward(0.0, 2.0, 100.0, NOMINAL_CURVE, REAL_CURVE)
     option = jarrow_yildirim.jy_cpi_option(
         2.0,
         101.0,
@@ -133,8 +127,7 @@ def test_nominal_measure_simulation_preserves_numeraire_martingales() -> None:
         seed=29,
     )
     terminal_density = 1.0 / (
-        simulation.nominal_bank_accounts[:, -1]
-        * rates.discount_factor(2.0, NOMINAL_CURVE)
+        simulation.nominal_bank_accounts[:, -1] * rates.discount_factor(2.0, NOMINAL_CURVE)
     )
     density_error = terminal_density.std(ddof=1) / np.sqrt(len(terminal_density))
     assert abs(terminal_density.mean() - 1.0) < 4.0 * density_error
@@ -145,9 +138,7 @@ def test_nominal_measure_simulation_preserves_numeraire_martingales() -> None:
     assert abs(real_zcb.mean() - expected_real_zcb) < 4.0 * real_error
 
     index = len(grid) // 2
-    hw_params = hull_white.HullWhiteParams(
-        params.nominal_mean_reversion, params.nominal_volatility
-    )
+    hw_params = hull_white.HullWhiteParams(params.nominal_mean_reversion, params.nominal_volatility)
     bond_values = np.asarray(
         [
             hull_white.hw_discount_bond(grid[index], 2.0, state, NOMINAL_CURVE, hw_params)

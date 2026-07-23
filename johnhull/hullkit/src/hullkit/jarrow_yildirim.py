@@ -55,9 +55,7 @@ class JarrowYildirimParams:
             raise ValueError("Jarrow-Yildirim parameters must be finite")
         if self.nominal_mean_reversion <= 0.0 or self.real_mean_reversion <= 0.0:
             raise ValueError("nominal and real mean reversions must be positive")
-        if min(
-            self.nominal_volatility, self.real_volatility, self.inflation_volatility
-        ) < 0.0:
+        if min(self.nominal_volatility, self.real_volatility, self.inflation_volatility) < 0.0:
             raise ValueError("Jarrow-Yildirim volatilities cannot be negative")
         correlations = (
             self.rho_nominal_real,
@@ -112,8 +110,7 @@ def _validate_times(t: float, observation: float, payment: float) -> tuple[float
 def _cpi_kernel(time: float, observation: float, params: JarrowYildirimParams) -> FloatArray:
     return np.asarray(
         [
-            params.nominal_volatility
-            * hw_b(time, observation, params.nominal_mean_reversion),
+            params.nominal_volatility * hw_b(time, observation, params.nominal_mean_reversion),
             -params.real_volatility * hw_b(time, observation, params.real_mean_reversion),
             params.inflation_volatility,
         ]
@@ -225,9 +222,7 @@ def jy_payment_forward_cpi(
     """Return expected observed CPI under the nominal payment-date forward measure."""
     t, observation, payment = _validate_times(t, observation, payment)
     params.validate()
-    observation_forward = jy_cpi_forward(
-        t, observation, spot_cpi, nominal_curve, real_curve
-    )
+    observation_forward = jy_cpi_forward(t, observation, spot_cpi, nominal_curve, real_curve)
     adjustment = _payment_measure_adjustment(t, observation, payment, params)
     return float(observation_forward * math.exp(adjustment))
 
@@ -295,10 +290,7 @@ def jy_cpi_option(
         notional
         * discount
         * direction
-        * (
-            forward * ndtr(direction * d1)
-            - strike_index * ndtr(direction * d2)
-        )
+        * (forward * ndtr(direction * d1) - strike_index * ndtr(direction * d2))
     )
 
 
@@ -321,9 +313,7 @@ def jy_zcis_value(
     expected_end = jy_payment_forward_cpi(
         t, observation, payment, spot_cpi, nominal_curve, real_curve, params
     )
-    cashflow = zcis_cashflow(
-        notional, start_index, expected_end, fixed_rate, accrual_years
-    )
+    cashflow = zcis_cashflow(notional, start_index, expected_end, fixed_rate, accrual_years)
     direction = 1.0 if pay_fixed else -1.0
     return float(direction * forward_discount(t, payment, nominal_curve) * cashflow)
 
@@ -418,11 +408,7 @@ def _step_covariance(dt: float, params: JarrowYildirimParams) -> FloatArray:
         [
             [
                 sn**2 * -math.expm1(-2.0 * an * dt) / (2.0 * an),
-                params.rho_nominal_real
-                * sn
-                * sr
-                * -math.expm1(-(an + ar) * dt)
-                / (an + ar),
+                params.rho_nominal_real * sn * sr * -math.expm1(-(an + ar) * dt) / (an + ar),
                 params.rho_nominal_inflation * sn * -math.expm1(-an * dt) / an,
             ],
             [
@@ -473,14 +459,10 @@ def simulate_jy_paths(
     nominal_bank = np.ones(shape)
     real_bank = np.ones(shape)
     rng = np.random.default_rng(seed)
-    nominal_hw = HullWhiteParams(
-        params.nominal_mean_reversion, params.nominal_volatility
-    )
+    nominal_hw = HullWhiteParams(params.nominal_mean_reversion, params.nominal_volatility)
     real_hw = HullWhiteParams(params.real_mean_reversion, params.real_volatility)
     real_quanto_drift = (
-        -params.rho_real_inflation
-        * params.real_volatility
-        * params.inflation_volatility
+        -params.rho_real_inflation * params.real_volatility * params.inflation_volatility
     )
 
     for index in range(1, len(grid)):

@@ -62,9 +62,7 @@ def test_floor_is_non_negative_and_increases_with_inflation_volatility() -> None
 
 def test_zero_volatility_floor_equals_discounted_intrinsic_value() -> None:
     base_index = 108.0
-    forward_index = jarrow_yildirim.jy_cpi_forward(
-        0.0, 5.0, 100.0, NOMINAL_CURVE, REAL_CURVE
-    )
+    forward_index = jarrow_yildirim.jy_cpi_forward(0.0, 5.0, 100.0, NOMINAL_CURVE, REAL_CURVE)
     expected = (
         100.0
         * rates.discount_factor(5.0, NOMINAL_CURVE)
