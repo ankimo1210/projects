@@ -14,8 +14,8 @@
   "inline_recall": 1.0,
   "inline_target": 589,
   "latex_compile_rate": 1.0,
-  "latex_compiled_count": 864,
-  "latex_representation_count": 864,
+  "latex_compiled_count": 868,
+  "latex_representation_count": 868,
   "source_image_fallback_count": 4,
   "verified_assertion_ids": [
     "canty-p2-seasonality-decomposition",
@@ -35,6 +35,10 @@
     "hw-p7-zcb-call",
     "hw-p7-zcb-call-d1",
     "hw-p7-zcb-call-total-variance",
+    "jgbi-p1-notional-principal",
+    "jgbi-p5-reference-index-after-tenth",
+    "jgbi-p5-reference-index-on-tenth",
+    "jgbi-p6-reference-index-before-tenth",
     "jy-p21-cpi-call-closed-form",
     "jy-p21-cpi-call-payoff",
     "jy-p21-cpi-call-risk-neutral-value",
@@ -51,7 +55,7 @@
     "wu-p9-yoy-floating-payoff"
   ],
   "verified_formula_cdm": 100.0,
-  "verified_formula_count": 31,
+  "verified_formula_count": 35,
   "verified_render_rate": 1.0,
-  "verified_rendered_count": 31
+  "verified_rendered_count": 35
 }

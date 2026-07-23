@@ -25,6 +25,12 @@ def parse_args() -> argparse.Namespace:
     action.add_argument("--write", action="store_true")
     action.add_argument("--check", action="store_true")
     parser.add_argument("--corpus-root", type=Path)
+    parser.add_argument(
+        "--metrics-output",
+        type=Path,
+        default=DEFAULT_CLAIM_METRICS_OUTPUT,
+        help="claim metrics destination; use a corpus-local path for full-corpus audits",
+    )
     return parser.parse_args()
 
 
@@ -47,8 +53,8 @@ def main() -> int:
             )
         metrics = build_claim_metrics(args.corpus_root)
         validate_claim_metrics(metrics)
-        DEFAULT_CLAIM_METRICS_OUTPUT.write_text(render_claim_metrics(metrics), encoding="utf-8")
-        print(DEFAULT_CLAIM_METRICS_OUTPUT)
+        args.metrics_output.write_text(render_claim_metrics(metrics), encoding="utf-8")
+        print(args.metrics_output)
         return 0
     if not DEFAULT_CLAIM_SPECS_OUTPUT.is_file() or not DEFAULT_CLAIM_METRICS_OUTPUT.is_file():
         print("Gold claim specifications or metrics are missing")

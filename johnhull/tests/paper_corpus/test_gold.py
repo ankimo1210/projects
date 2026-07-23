@@ -131,7 +131,7 @@ def test_reviewed_formula_metrics_pass_detection_compile_and_render_gates():
     assert metrics["inline_recall"] == 1.0
     assert metrics["latex_compile_rate"] == 1.0
     assert metrics["verified_render_rate"] == 1.0
-    assert metrics["verified_formula_count"] == 31
+    assert metrics["verified_formula_count"] == 35
 
 
 def test_p0_implementation_evidence_is_complete():
@@ -141,7 +141,7 @@ def test_p0_implementation_evidence_is_complete():
     validate_implementation_evidence(evidence, metrics)
     assert metrics["overall_status"] == "pass"
     assert metrics["missing_implementation_symbol_count"] == 0
-    assert metrics["mapped_p0_formula_count"] == 31
+    assert metrics["mapped_p0_formula_count"] == 35
     assert metrics["p0_formula_mapping_rate"] == 1.0
     assert metrics["p0_table_assertion_mapping_rate"] == 1.0
     assert metrics["p0_paper_coverage_rate"] == 1.0

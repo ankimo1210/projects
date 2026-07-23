@@ -5,7 +5,7 @@
   "gold_implementation_metrics_version": "1.0.0",
   "implementation_symbol_count": 59,
   "mapped_claim_count": 50,
-  "mapped_p0_formula_count": 31,
+  "mapped_p0_formula_count": 35,
   "mapped_p0_table_assertion_count": 4,
   "missing_equation_mappings": [],
   "missing_implementation_symbol_count": 0,
@@ -17,7 +17,7 @@
   "p0_paper_coverage_rate": 1.0,
   "p0_table_assertion_mapping_rate": 1.0,
   "passing_component_count": 9,
-  "required_p0_formula_count": 31,
+  "required_p0_formula_count": 35,
   "required_p0_table_assertion_count": 4,
   "unresolved_evidence": []
 }

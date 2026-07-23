@@ -274,6 +274,10 @@ IMPLEMENTATION_COMPONENTS: tuple[dict[str, Any], ...] = (
             "2024-mof-jgbi-bei-guide:claim:lag-and-interpolation",
         ),
         "equation_assertion_ids": (
+            "jgbi-p1-notional-principal",
+            "jgbi-p5-reference-index-on-tenth",
+            "jgbi-p5-reference-index-after-tenth",
+            "jgbi-p6-reference-index-before-tenth",
             "jy-p21-cpi-call-payoff",
             "jy-p21-cpi-call-risk-neutral-value",
             "jy-p21-cpi-call-closed-form",
@@ -395,7 +399,11 @@ def build_implementation_evidence(corpus_root: Path) -> tuple[dict[str, Any], di
             resolved_equations.append(
                 {
                     "assertion_id": assertion_id,
-                    "equation_id": equation.get("equation_id") if equation else None,
+                    "paper_id": assertion.get("paper_id") if assertion else None,
+                    "page_number": assertion.get("page_number") if assertion else None,
+                    "source_bbox_normalized": (
+                        assertion.get("source_bbox_normalized") if assertion else None
+                    ),
                     "status": status,
                 }
             )
@@ -420,7 +428,11 @@ def build_implementation_evidence(corpus_root: Path) -> tuple[dict[str, Any], di
             resolved_tables.append(
                 {
                     "assertion_id": assertion_id,
-                    "table_id": resolved[0] if resolved else None,
+                    "paper_id": assertion.get("paper_id") if assertion else None,
+                    "page_number": assertion.get("page_number") if assertion else None,
+                    "source_bbox_normalized": (
+                        assertion.get("source_bbox_normalized") if assertion else None
+                    ),
                     "status": status,
                 }
             )
@@ -496,7 +508,7 @@ def build_implementation_evidence(corpus_root: Path) -> tuple[dict[str, Any], di
         ),
     }
     evidence = {
-        "gold_implementation_evidence_version": "1.0.0",
+        "gold_implementation_evidence_version": "1.1.0",
         "components": components,
     }
     return evidence, metrics

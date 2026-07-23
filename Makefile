@@ -89,7 +89,7 @@ hull-artifacts-check:
 	uv run --no-sync --package hullkit python johnhull/scripts/verify_frontier_artifacts.py
 
 hull-paper-corpus-check:
-	uv run --no-sync python johnhull/scripts/audit_paper_corpus.py --check --include-page-profiles
+	uv run --no-sync python johnhull/scripts/build_paper_corpus_release.py --check --corpus-root johnhull/references/processed
 	uv run --no-sync pytest -q -s johnhull/tests/paper_corpus
 
 hull-paper-corpus-gold-check:
@@ -104,7 +104,8 @@ hull-paper-corpus-gold-check:
 	uv run --no-sync pytest -q -s johnhull/tests/paper_corpus/test_gold.py
 
 hull-paper-corpus-v2-check: hull-paper-corpus-gold-check
-	uv run --no-sync pytest -q -s johnhull/tests/paper_corpus/test_mineru.py johnhull/tests/paper_corpus/test_semantic.py
+	uv run --no-sync python johnhull/scripts/build_paper_corpus_release.py --check --corpus-root johnhull/references/processed
+	uv run --no-sync pytest -q -s johnhull/tests/paper_corpus/test_mineru.py johnhull/tests/paper_corpus/test_semantic.py johnhull/tests/paper_corpus/test_release.py
 
 hull-release-check:
 	PYTHONPATH=johnhull/report uv run --no-sync --package hullkit python johnhull/scripts/verify_release.py $(HULL_RELEASE_FLAGS)
@@ -116,6 +117,7 @@ hull-release:
 	uv run --no-sync ruff format --check deep_hedge_price/src deep_hedge_price/tests deep_hedge_price/scripts deep_hedge_price/notebooks/02_neural_pricing_surrogate.ipynb johnhull/hullkit/src johnhull/hullkit/tests johnhull/scripts johnhull/report/report_builder johnhull/report/tests
 	$(MAKE) hull-artifacts-check
 	$(MAKE) hull-notebooks-check
+	$(MAKE) hull-paper-corpus-v2-check
 	$(MAKE) hull-report
 	$(MAKE) hull-book
 	$(MAKE) hull-release-check

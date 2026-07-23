@@ -53,6 +53,11 @@ def build_baseline(references_root: Path = REFERENCES_ROOT) -> dict[str, Any]:
     processed_root = references_root / "processed"
     qualities = read_json(processed_root / "quality_report.json")
     index = read_json(processed_root / "index.json")
+    if not isinstance(qualities, list):
+        raise ValueError(
+            "v1 baseline generation requires a legacy processed tree; "
+            "validate the tracked frozen baseline after v2 migration"
+        )
     quality_by_id = {str(item["paper_id"]): item for item in qualities}
     index_by_id = {str(item["paper_id"]): item for item in index}
 
@@ -114,6 +119,38 @@ def render_baseline(manifest: dict[str, Any]) -> str:
     """Serialize a baseline manifest in stable repository format."""
 
     return json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+
+
+def validate_frozen_baseline(
+    manifest: dict[str, Any],
+    references_root: Path = REFERENCES_ROOT,
+) -> None:
+    """Validate the frozen migration baseline against authoritative source PDFs.
+
+    Corpus statistics in this manifest intentionally describe v1.  After atomic v2
+    migration, only its source inventory, hashes, page counts, and required-source
+    entries are expected to remain current.
+    """
+
+    papers_root = references_root / "papers"
+    source_paths = sorted(papers_root.glob("*.pdf"))
+    sources = sorted(manifest["sources"], key=lambda item: str(item["paper_id"]))
+    if int(manifest["source_count"]) != len(sources) or len(sources) != len(source_paths):
+        raise ValueError("frozen baseline source count differs from tracked PDFs")
+    if [str(item["paper_id"]) for item in sources] != [path.stem for path in source_paths]:
+        raise ValueError("frozen baseline source IDs differ from tracked PDFs")
+    for item, path in zip(sources, source_paths, strict=True):
+        if item["source_sha256"] != sha256_file(path):
+            raise ValueError(f"source hash differs from frozen baseline: {path.name}")
+        if int(item["source_page_count"]) != pdf_page_count(path):
+            raise ValueError(f"source page count differs from frozen baseline: {path.name}")
+    if int(manifest["source_page_count"]) != sum(
+        int(item["source_page_count"]) for item in sources
+    ):
+        raise ValueError("frozen baseline aggregate page count is inconsistent")
+    expected_required = required_source_statuses(references_root)
+    if manifest["required_semantic_sources"] != expected_required:
+        raise ValueError("required semantic source inventory differs from frozen baseline")
 
 
 def write_baseline(

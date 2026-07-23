@@ -14,9 +14,15 @@ def parse_args() -> argparse.Namespace:
     """Parse conversion arguments."""
 
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--paper-id", action="append", required=True)
+    selection = parser.add_mutually_exclusive_group(required=True)
+    selection.add_argument("--paper-id", action="append")
+    selection.add_argument(
+        "--all",
+        action="store_true",
+        help="convert every tracked source PDF in deterministic filename order",
+    )
     parser.add_argument("--mineru-root", type=Path, required=True)
-    parser.add_argument("--output-root", type=Path, default=REFERENCES_ROOT / "processed-v2")
+    parser.add_argument("--output-root", type=Path, default=REFERENCES_ROOT / "processed")
     parser.add_argument(
         "--gold-page-mapping",
         action="store_true",
@@ -29,7 +35,12 @@ def main() -> int:
     """Convert selected full-PDF MinerU outputs."""
 
     args = parse_args()
-    for paper_id in args.paper_id:
+    paper_ids = (
+        sorted(path.stem for path in (REFERENCES_ROOT / "papers").glob("*.pdf"))
+        if args.all
+        else args.paper_id
+    )
+    for paper_id in paper_ids:
         result = convert_mineru_paper(
             paper_id=paper_id,
             source_pdf=REFERENCES_ROOT / "papers" / f"{paper_id}.pdf",

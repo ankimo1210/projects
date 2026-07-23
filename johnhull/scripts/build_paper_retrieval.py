@@ -25,6 +25,12 @@ def parse_args() -> argparse.Namespace:
     action.add_argument("--write", action="store_true")
     action.add_argument("--check", action="store_true")
     parser.add_argument("--corpus-root", type=Path)
+    parser.add_argument(
+        "--metrics-output",
+        type=Path,
+        default=DEFAULT_RETRIEVAL_METRICS_OUTPUT,
+        help="metrics destination; use a corpus-local path for full-corpus audits",
+    )
     return parser.parse_args()
 
 
@@ -38,7 +44,7 @@ def main() -> int:
         metrics = evaluate_retrieval(args.corpus_root)
         validate_retrieval_metrics(metrics)
         rendered = render_retrieval_metrics(metrics)
-        DEFAULT_RETRIEVAL_METRICS_OUTPUT.write_text(rendered, encoding="utf-8")
+        args.metrics_output.write_text(rendered, encoding="utf-8")
         (args.corpus_root / "retrieval_evaluation.json").write_text(rendered, encoding="utf-8")
         attach_retrieval_status(args.corpus_root, metrics)
         print(

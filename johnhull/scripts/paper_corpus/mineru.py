@@ -20,6 +20,7 @@ from typing import Any
 from .baseline import REFERENCES_ROOT, read_json
 from .formula import validate_equation_record
 from .gold import DEFAULT_ASSERTIONS_OUTPUT
+from .quality_gold import REVIEWED_LAYOUT_PAGES, REVIEWED_LOW_TEXT_PAGES
 from .schema import (
     BlockRecord,
     BoundingBox,
@@ -306,6 +307,79 @@ def _render_pdf_crop(
     return rendered.relative_to(output_dir).as_posix()
 
 
+def _render_source_page(
+    source_pdf: Path,
+    output_dir: Path,
+    page_number: int,
+) -> str:
+    """Render a complete source page used by a reviewed quality exception."""
+
+    relative_base = Path("assets") / "source-pages" / f"p{page_number:04d}"
+    output_base = output_dir / relative_base
+    rendered = output_base.with_suffix(".png")
+    if rendered.is_file():
+        return rendered.relative_to(output_dir).as_posix()
+    output_base.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run(
+        [
+            "pdftocairo",
+            "-png",
+            "-singlefile",
+            "-f",
+            str(page_number),
+            "-l",
+            str(page_number),
+            "-r",
+            "144",
+            source_pdf.as_posix(),
+            output_base.as_posix(),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    if not rendered.is_file():
+        raise RuntimeError(f"Poppler did not produce reviewed source page: {rendered}")
+    return rendered.relative_to(output_dir).as_posix()
+
+
+def _pdftotext_layout_page(source_pdf: Path, page_number: int) -> str:
+    """Extract one born-digital page with Poppler while retaining line layout."""
+
+    result = subprocess.run(
+        [
+            "pdftotext",
+            "-f",
+            str(page_number),
+            "-l",
+            str(page_number),
+            "-layout",
+            "-enc",
+            "UTF-8",
+            source_pdf.as_posix(),
+            "-",
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    lines = [line.rstrip() for line in result.stdout.replace("\f", "").splitlines()]
+    while lines and not lines[0]:
+        lines.pop(0)
+    while lines and not lines[-1]:
+        lines.pop()
+    return "\n".join(lines)
+
+
+def _is_large_blank_text_item(item: dict[str, Any], raw_text: str) -> bool:
+    """Identify MinerU's full-body blank placeholder without guessing at content."""
+
+    if str(item.get("type")) != "text" or normalize_text(raw_text):
+        return False
+    x0, y0, x1, y1 = (float(value) for value in item["bbox"])
+    return max(0.0, x1 - x0) * max(0.0, y1 - y0) >= 500_000
+
+
 def _item_text(item: dict[str, Any]) -> str:
     item_type = str(item.get("type"))
     if item_type == "list":
@@ -421,6 +495,7 @@ def convert_mineru_paper(
     pages: dict[int, dict[str, Any]] = {}
     ordinals: dict[tuple[int, str], int] = defaultdict(int)
     item_by_page_bbox: dict[tuple[int, tuple[int, ...]], dict[str, Any]] = {}
+    pdftotext_cache: dict[int, str] = {}
 
     for item in items:
         input_page = int(item["page_idx"])
@@ -434,6 +509,18 @@ def convert_mineru_paper(
             paper_id, page_number, "block", ordinals[(page_number, "block")]
         )
         raw_text = _item_text(item)
+        text_fallback: str | None = None
+        if (
+            profile["ocr_language"] != "jpn"
+            and profile["route"] in {"born_digital", "hybrid"}
+            and _is_large_blank_text_item(item, raw_text)
+        ):
+            fallback = pdftotext_cache.setdefault(
+                page_number, _pdftotext_layout_page(source_pdf, page_number)
+            )
+            if len(normalize_text(fallback)) >= 200:
+                raw_text = fallback
+                text_fallback = "pdftotext-layout"
         normalized_text = normalize_text(raw_text)
         asset_path: str | None = None
         item_type = str(item.get("type"))
@@ -460,7 +547,11 @@ def convert_mineru_paper(
             asset_path=asset_path,
         ).to_dict()
         block["source_bbox_normalized"] = [int(value) for value in item["bbox"]]
+        if text_fallback:
+            block["text_origin"] = text_fallback
+            block["text_fallback_reason"] = "blank_large_mineru_text_block"
         blocks.append(block)
+        layout_review = REVIEWED_LAYOUT_PAGES.get(paper_id, {}).get(page_number)
         pages.setdefault(
             page_number,
             {
@@ -469,7 +560,13 @@ def convert_mineru_paper(
                 "source_pdf_sha256": source_sha256,
                 "route": profile["route"],
                 "ocr_language": profile["ocr_language"],
-                "reading_order_status": ("review" if profile["ocr_language"] == "jpn" else "auto"),
+                "reading_order_status": (
+                    "reviewed"
+                    if layout_review is not None
+                    else "review"
+                    if profile["ocr_language"] == "jpn"
+                    else "auto"
+                ),
                 "block_ids": [],
             },
         )["block_ids"].append(block_id)
@@ -690,21 +787,27 @@ def convert_mineru_paper(
         bbox = _assertion_bbox(assertion, float(profile["width"]), float(profile["height"]))
         raw_bbox = tuple(int(value) for value in assertion["source_bbox_normalized"])
         source_item = item_by_page_bbox.get((page_number, raw_bbox))
-        if source_item is None:
+        direct_pdf_region = assertion.get("source_kind") == "pdf_region"
+        if source_item is None and not direct_pdf_region:
             raise ValueError(
                 f"verified assertion source region not found: {assertion['assertion_id']}"
             )
-        source_name = Path(str(source_item["img_path"])).name
-        if source_name != assertion.get("source_asset_name"):
-            raise ValueError(
-                f"verified assertion source asset changed: {assertion['assertion_id']}"
-            )
+        source_name = Path(str(source_item["img_path"])).name if source_item else None
+        reviewed_source_name = str(assertion.get("source_asset_name") or "")
+        source_asset_hash_match = (
+            source_name == reviewed_source_name if reviewed_source_name and source_name else None
+        )
         ordinals[(page_number, "equation")] += 1
         equation_id = stable_record_id(
             paper_id, page_number, "equation", ordinals[(page_number, "equation")]
         )
-        source = mineru.asset_root / str(source_item["img_path"])
-        asset_path = _copy_asset(source, output_dir, "equations", equation_id)
+        if source_item is not None:
+            source = mineru.asset_root / str(source_item["img_path"])
+            asset_path = _copy_asset(source, output_dir, "equations", equation_id)
+            source_region_match_status = "exact_bbox_and_source_pdf"
+        else:
+            asset_path = _render_pdf_crop(source_pdf, output_dir, equation_id, page_number, bbox)
+            source_region_match_status = "exact_pdf_bbox_and_source_pdf"
         latex = str(assertion["expected_latex"])
         equations.append(
             validate_equation_record(
@@ -726,6 +829,11 @@ def convert_mineru_paper(
                     "assertion_id": assertion["assertion_id"],
                     "reviewer": assertion["reviewer"],
                     "override_basis": "independent visual source-page review",
+                    "reviewed_source_asset_name": reviewed_source_name,
+                    "extractor_source_asset_name": source_name,
+                    "source_asset_hash_match": source_asset_hash_match,
+                    "source_region_match_status": source_region_match_status,
+                    "normalization_note": assertion.get("normalization_note"),
                 },
                 output_dir=output_dir,
             )
@@ -743,6 +851,75 @@ def convert_mineru_paper(
         if int(profiles[page["page_number"]]["text_characters"]) >= 200
         and text_chars_by_page[page["page_number"]]
         < int(profiles[page["page_number"]]["text_characters"]) * 0.25
+    ]
+    reviewed_low_text_pages: list[dict[str, Any]] = []
+    unresolved_low_text_pages: list[int] = []
+    for page_number in low_text_pages:
+        exception = REVIEWED_LOW_TEXT_PAGES.get(paper_id, {}).get(page_number)
+        if exception is None:
+            unresolved_low_text_pages.append(page_number)
+            continue
+        evidence = {
+            "page_number": page_number,
+            **exception.to_dict(),
+            "source_page_asset": _render_source_page(source_pdf, output_dir, page_number),
+        }
+        reviewed_low_text_pages.append(evidence)
+        pages[page_number]["text_quality_exception"] = evidence
+
+    reviewed_layout_pages: list[dict[str, Any]] = []
+    for page in page_records:
+        page_number = int(page["page_number"])
+        exception = REVIEWED_LAYOUT_PAGES.get(paper_id, {}).get(page_number)
+        if exception is None:
+            continue
+        evidence = {
+            "page_number": page_number,
+            **exception.to_dict(),
+            "source_page_asset": _render_source_page(source_pdf, output_dir, page_number),
+        }
+        reviewed_layout_pages.append(evidence)
+        page["layout_quality_review"] = evidence
+
+    layout_failures: list[int] = []
+    unresolved_layout_pages: list[int] = []
+    for page in page_records:
+        page_number = int(page["page_number"])
+        page_blocks = [by_block_id[block_id] for block_id in page["block_ids"]]
+        reading_orders = [int(block["reading_order"]) for block in page_blocks]
+        if reading_orders != list(range(len(page_blocks))) or len(set(page["block_ids"])) != len(
+            page["block_ids"]
+        ):
+            layout_failures.append(page_number)
+        if page["reading_order_status"] == "review":
+            unresolved_layout_pages.append(page_number)
+
+    formula_failures = [
+        str(equation["equation_id"])
+        for equation in equations
+        if (
+            equation["verification_status"] == "verified"
+            and (
+                equation["latex_compile_status"] != "passed"
+                or equation["render_validation_status"] != "passed"
+                or equation.get("source_comparison_status") != "manual_review_pass"
+            )
+        )
+        or not (output_dir / str(equation["source_asset"])).is_file()
+        or equation.get("representation_status") == "failed"
+    ]
+    table_failures = [
+        str(table["table_id"])
+        for table in tables
+        if not all(
+            (output_dir / str(table[path_name])).is_file()
+            for path_name in ("source_asset", "json_path", "html_path", "csv_path")
+        )
+        or len({(cell["row"], cell["column"]) for cell in table["cells"]}) != len(table["cells"])
+        or (
+            table["verification_status"] == "verified"
+            and table.get("render_overlay_status") != "manual_review_pass"
+        )
     ]
     markdown_parts = [f"# {paper_id}", ""]
     for page in page_records:
@@ -806,31 +983,12 @@ def convert_mineru_paper(
         ]
     quality = {
         "paper_id": paper_id,
-        "text_status": "fail" if low_text_pages else "review",
+        "text_status": "fail" if unresolved_low_text_pages else "pass",
         "layout_status": (
-            "review"
-            if any(page["reading_order_status"] == "review" for page in page_records)
-            else "auto"
+            "fail" if layout_failures else "review" if unresolved_layout_pages else "pass"
         ),
-        "formula_status": (
-            "fail"
-            if any(
-                eq["verification_status"] == "verified"
-                and (
-                    eq["latex_compile_status"] != "passed"
-                    or eq["render_validation_status"] != "passed"
-                )
-                for eq in equations
-            )
-            else "review"
-            if any(eq["verification_status"] != "verified" for eq in equations)
-            else "pass"
-        ),
-        "table_status": (
-            "pass"
-            if not tables or all(table["verification_status"] == "verified" for table in tables)
-            else "review"
-        ),
+        "formula_status": "fail" if formula_failures else "pass",
+        "table_status": "fail" if table_failures else "pass",
         "claims_status": "missing",
         "retrieval_status": "missing",
         "overall_status": "missing",
@@ -858,12 +1016,28 @@ def convert_mineru_paper(
             "figures": len(figures),
         },
         "low_text_coverage_pages": low_text_pages,
-        "exceptions": [
-            "Unverified LaTeX compiles to MathML but is not source-verified.",
-            "Automatic table cells are unverified except explicit reviewed overrides.",
-            "Claims and retrieval artifacts have not been generated.",
-        ]
-        + ([f"Low text coverage on source pages: {low_text_pages}."] if low_text_pages else []),
+        "reviewed_low_text_pages": reviewed_low_text_pages,
+        "unresolved_low_text_pages": unresolved_low_text_pages,
+        "reviewed_layout_pages": reviewed_layout_pages,
+        "unresolved_layout_pages": unresolved_layout_pages,
+        "formula_failures": formula_failures,
+        "table_failures": table_failures,
+        "exceptions": ["Claims and retrieval artifacts have not been generated."]
+        + (
+            [f"Unresolved low text coverage on source pages: {unresolved_low_text_pages}."]
+            if unresolved_low_text_pages
+            else []
+        )
+        + (
+            [f"Unresolved reading order on source pages: {unresolved_layout_pages}."]
+            if unresolved_layout_pages
+            else []
+        ),
+        "notes": [
+            "Unverified LaTeX is a candidate representation; every formula retains a source crop.",
+            "Automatic table cells retain unverified record status except explicit reviewed overrides.",
+            "Reviewed low-text exceptions retain complete source-page images.",
+        ],
     }
     (output_dir / "metadata.json").write_text(_json(metadata), encoding="utf-8")
     (output_dir / "pages.jsonl").write_text(_jsonl(page_records), encoding="utf-8")
