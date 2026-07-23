@@ -59,7 +59,7 @@ impl DskyScript {
         loop {
             {
                 let d = self.rx.borrow();
-                if pred(&d) { return Ok(d.clone()); }
+                if pred(&d) { return Ok(*d); }
             }
             tokio::select! {
                 r = self.rx.changed() => { r.context("dsky watch closed")?; }

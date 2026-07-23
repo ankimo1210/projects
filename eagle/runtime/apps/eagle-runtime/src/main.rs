@@ -54,7 +54,7 @@ async fn main() -> anyhow::Result<()> {
                     Some(pkt) => {
                         trace.log("out", &pkt);
                         if dsky.apply(&pkt) {
-                            let _ = dsky_tx.send(dsky.clone());
+                            let _ = dsky_tx.send(dsky);
                             let json = serde_json::to_string(&to_msg(&dsky))?;
                             *latest.lock().unwrap() = json.clone();
                             let _ = state_tx.send(json);
