@@ -276,12 +276,132 @@ is also environment-modulated in principle but has been stable (`false`)
 across ~15 recorded runs; it is the first suspect if this golden ever
 flakes again.
 
+## Counters and Autopilot Outputs (Phase 2)
+
+### Counter Registers and Increment Types
+
+Confirmed against `vendor/virtualagc/yaAGC/agc_engine.c:1570-1623`
+(`UnprogrammedIncrement` function) and `vendor/virtualagc/yaAGC/SocketAPI.c:219-231`
+(counter channel = 0x80 | address, data field = IncType). Counter packets encode
+the AGC's erasable-memory increments with address in the channel field (bits
+0-6) and increment type in the data field.
+
+| IncType | Name | Semantics | Channels |
+|---------|------|-----------|----------|
+| 0 | `INC_PINC` | Positive increment (PIPA) | 0o37, 0o40, 0o41 (X, Y, Z) |
+| 1 | `INC_PCDU` | Positive CDU command | 0o32, 0o33, 0o34 (X, Y, Z) |
+| 2 | `INC_MINC` | Negative increment (PIPA) | 0o37, 0o40, 0o41 (X, Y, Z) |
+| 3 | `INC_MCDU` | Negative CDU command | 0o32, 0o33, 0o34 (X, Y, Z) |
+| 4 | `INC_DINC` | Thrust drive increment (DINC) | 0o55 |
+| 0o21 | `INC_PCDU_FAST` | Fast positive CDU | 0o32, 0o33, 0o34 (X, Y, Z) |
+| 0o23 | `INC_MCDU_FAST` | Fast negative CDU | 0o32, 0o33, 0o34 (X, Y, Z) |
+
+PIPA registers (0o37=PIPAX, 0o40=PIPAY, 0o41=PIPAZ) accumulate accelerometer
+pulses; CDU registers (0o32=CDUX, 0o33=CDUY, 0o34=CDUZ) track gyro-derived
+gimbal angles; thrust register (0o55=THRUST) drives descent-engine throttle.
+
+### Thrust Pulse Emissions
+
+Confirmed against `vendor/virtualagc/yaAGC/agc_engine.c:1278-1305`
+(`CounterDINC` function). When the thrust counter's sign changes, the AGC
+emits a pulse on counter address 0o55 with data = IncType:
+
+| IncType (data) | Emission | Semantics |
+|--|--|--|
+| 0o15 | POUT (Positive Out) | Positive value → decrement by 1 |
+| 0o16 | MOUT (Minus Out) | Negative value → increment by 1 |
+| 0o17 | ZOUT (Zero Out) | Counter crossed zero |
+
+These are received as counter packets on ch 0o55 and decoded as `ThrustPulse`
+enum variants to synchronize throttle setpoint with the autopilot.
+
+### Coarse-Align CDU Outputs
+
+Confirmed against `vendor/virtualagc/yaAGC/agc_engine.c:1630-1681`
+(`BurstOutput` function) and the direction-flag encoding at line 1652-1663.
+Coarse-alignment (gimbal alignment) outputs are emitted as IO packets on
+channels 0o174 (X), 0o175 (Y), 0o176 (Z) with data = direction flag | pulse count:
+
+| Channel | Axis | Register | Bits for Pulse Count |
+|---------|------|----------|---------------------|
+| 0o174 | X (CDUXCMD) | RegCDUXCMD | bits 0-12 (0o37777 mask) |
+| 0o175 | Y (CDUYCMD) | RegCDUYCMD | bits 0-12 (0o37777 mask) |
+| 0o176 | Z (CDUZCMD) | RegCDUZCMD | bits 0-12 (0o37777 mask) |
+
+The direction flag (bit 0o40000, i.e. bit 15) is set (=1) for *negative*
+direction (slew negative) and clear (=0) for *positive* direction per
+agc_engine.c:1652-1663: `Direction = (040000 & DriveCount)` at line 1652,
+then when `DriveCountSaved < 0` (negative demand), `Direction = 040000` at
+line 1663, else `Direction = 0`. The pulse count remains in the lower 12 bits.
+
+### Autopilot Discrete Outputs
+
+Confirmed against `vendor/virtualagc/Luminary099/INPUT_OUTPUT_CHANNEL_BIT_DESCRIPTIONS.agc:59-94`
+and `vendor/virtualagc/Contributed/LM_Simulator/lm_simulator.tcl:814-818`.
+
+#### RCS Jets (Channels 5 and 6)
+
+| Channel | Subsystem | Bits | Jet Assignments |
+|---------|-----------|------|-----------------|
+| 0o5 | Pitch RCS jets | 1-8 | Q4U, Q4D, Q3U, Q3D, Q2U, Q2D, Q1U, Q1D |
+| 0o6 | Roll RCS jets | 1-8 | Q3A, Q4F, Q1F, Q2A, Q2L, Q3R, Q4R, Q1L |
+
+Each bit (1-8) drives one jet on-off; bit masks are extracted directly from
+the lower 8 bits of the IO packet data.
+
+#### Descent Engine (Channel 11, 0o11)
+
+- Bit 13 (1-indexed, = 1 << 12): Engine ON command
+- Bit 14 (1-indexed, = 1 << 13): Engine OFF command
+
+Both bits can be set simultaneously; the AGC uses them for cross-coupled
+command logic.
+
+#### Gimbal Trim (Channel 12, 0o12)
+
+- Bit 9 (1-indexed, = 1 << 8): −Pitch gimbal trim (bell motion)
+- Bit 10 (1-indexed, = 1 << 9): +Pitch gimbal trim (bell motion)
+- Bit 11 (1-indexed, = 1 << 10): −Roll gimbal trim (bell motion)
+- Bit 12 (1-indexed, = 1 << 11): +Roll gimbal trim (bell motion)
+
+Each bit drives a trim solenoid; multiple bits can be active simultaneously.
+
+#### Thrust Drive Enable (Channel 14, 0o14)
+
+- Bit 4 (1-indexed, = 1 << 3): Thrust drive enable (1 = drive active)
+
+#### Rod Switch Click (Channel 16, 0o16)
+
+- Bit 6 (1-indexed, = 1 << 5): +1 click (slow descent)
+- Bit 7 (1-indexed, = 1 << 6): −1 click
+
+Emitted as discrete (IO) packets. Caller must send a press packet followed
+by a release packet (data = 0) at least one tick later to allow the AGC's
+MARKRUPT interrupt to latch the descent-rate change.
+
+#### Gyro Torque Output (Channel 0o177)
+
+Confirmed against `vendor/virtualagc/yaAGC/agc_engine.c:2354-2390` (`Gyro`
+section of `ExecuteCycle`). The raw gyro torque count is emitted directly
+as an IO packet on ch 0o177, data bits 0-11 carrying the pulse count and
+bits 12-14 (shifted 6 places from input channel 014 bits 6-8) carrying
+the axis-select bits. In Wave 1, this is decoded as a raw `u16` value
+(see `AgcOutput::Gyro { raw: u16 }`); full interpretation of the axis and
+rate-gyro feedback loop is deferred to Phase 3.
+
+#### Downlink (Channels 34 and 35, 0o34 and 0o35)
+
+These channels are synthesized uplink/downlink registers. They are identified
+by the decoder as the `AgcOutput::Downlink` variant (no data extraction needed
+for Phase 2).
+
 ## Sources
 
 - https://www.ibiblio.org/apollo/developer.html
 - vendor/virtualagc/yaAGC/SocketAPI.c
 - vendor/virtualagc/yaAGC/agc_engine.h (DSKY_* channel-0163 bit `#define`s)
-- vendor/virtualagc/yaAGC/agc_engine.c (`UpdateDSKY`, channel-0163 synthesis)
+- vendor/virtualagc/yaAGC/agc_engine.c (`UpdateDSKY`, channel-0163 synthesis; `CounterDINC` thrust pulses; `BurstOutput` coarse-align)
 - vendor/virtualagc/yaDSKY2/yaDSKY2.h (`Ind_t` struct definition)
-- vendor/virtualagc/yaDSKY2/yaDSKY2.cpp (`Inds[]` table, `ActOnIncomingIO`
-  relay-row and channel-011 decode logic)
+- vendor/virtualagc/yaDSKY2/yaDSKY2.cpp (`Inds[]` table, `ActOnIncomingIO` relay-row and channel-011 decode logic)
+- vendor/virtualagc/Luminary099/INPUT_OUTPUT_CHANNEL_BIT_DESCRIPTIONS.agc (engine, trim, jets, rod switch)
+- vendor/virtualagc/Contributed/LM_Simulator/lm_simulator.tcl (RCS jet bit mapping)
