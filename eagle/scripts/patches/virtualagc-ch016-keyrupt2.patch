@@ -1,0 +1,18 @@
+diff --git a/yaAGC/SocketAPI.c b/yaAGC/SocketAPI.c
+index 8920edd..63405f8 100644
+--- a/yaAGC/SocketAPI.c
++++ b/yaAGC/SocketAPI.c
+@@ -239,6 +239,13 @@ ChannelInput (agc_t *State)
+ 			// If this is a keystroke from the DSKY, generate an interrupt req.
+ 			if (Channel == 015)
+ 			  State->InterruptRequests[5] = 1;
++			// Channel 016 carries the LM rate-of-descent switch (and the
++			// CM optics mark keys).  Like channel 015, it is interrupt
++			// driven: KEYRUPT2 enters MARKRUPT, which dispatches bits 6/7
++			// to DESCBITS.  A plain socket write otherwise updates
++			// NAVKEYIN without ever letting Luminary observe the click.
++			else if (Channel == 016)
++			  State->InterruptRequests[6] = 1;
+ 			// If this is on fictitious input channel 0173, then the data
+ 			// should be placed in the INLINK counter register, and an
+ 			// UPRUPT interrupt request should be set.
