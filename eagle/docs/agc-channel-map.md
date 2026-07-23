@@ -401,6 +401,81 @@ These channels are synthesized uplink/downlink registers. They are identified
 by the decoder as the `AgcOutput::Downlink` variant (no data extraction needed
 for Phase 2).
 
+## Symbol Table / ECADR Notation (Pad-Load, Task 5)
+
+### Where the listing lives
+
+`scripts/assemble-luminary.sh` already redirects yaYUL's stdout (which is
+the full assembly listing, symbol table included — "The assembly listing,
+including symbol table and any error messages appear on the standard
+output", `yaYUL --help`) to `build/agc/Luminary099.log` /
+`build/agc/Luminary099-apollo11.log`. No script change was needed to
+preserve the listing; it was already captured, just not under a `.lst`
+name. `build/agc/*.symtab` is a *different*, binary (non-text) yaYUL
+artifact — not human-readable, not the listing.
+
+### Line format
+
+Every listing line (data, comment, or blank) is prefixed
+`%06d,%06d: ` — **these two numbers are a running line counter and a
+per-file line counter, not addresses** (confirmed at
+`vendor/virtualagc/yaYUL/Pass.c:1744` and `:2577`:
+`printf("%06d,%06d: %s", CurrentLineAll, CurrentLineInFile, s);`). Do not
+parse them as ECADRs.
+
+A symbol-table *definition* line (from an `ERASE` or `EQUALS` pseudo-op)
+carries the address immediately before the symbol name, one column for
+`ERASE`, two for `EQUALS` (the first of the two is just the current,
+unrelated erasable location counter — see `RODSCALE`/`TAUROD` below,
+which share an identical first column because no `ERASE` has advanced the
+counter since):
+
+```
+004605,001043: E4,1422                        RLS                ERASE    +5                            	# I(6) LANDING SITE VECTOR -MOON REF
+004969,001407: E5,1642  E5,1537               RODSCALE           EQUALS   LRWVFF     +1                 	# I(1) CLICK SCALE FACTOR FOR ROD
+    0366                        RESTREG            ERASE                                  	# B(1)PRM FOR DISPLAY RESTARTS
+```
+
+yaYUL's own address-formatting code (`vendor/virtualagc/yaYUL/Pass.c:1362-1382`)
+prints exactly three address shapes:
+
+- Switched erasable (banks E0–E7): `printf("E%1o,%04o  ", Address->EB, Address->SReg)` → `E<bank>,<offset>`, offset always in `1400`–`1777` (octal), the shared bank-switched CPU address window (`Pass.c:1372`).
+- Unswitched erasable (banks E0–E2, address 0000–1377 octal, always directly addressable): `printf("   %04o  ", Address->SReg)` → plain 4-digit octal, no `E` prefix, no comma (`Pass.c:1364`).
+- Fixed-bank references print `%02o,%04o` (bank,offset) and numeric constants print `%07o` — neither is a pad-loadable erasable address and both are ignored by the symtab parser.
+
+### ECADR conversion rule
+
+```
+switched (E0-E7, offset 1400-1777 octal): ecadr = bank*0o400 + (offset - 0o1400)
+unswitched (plain octal 0000-1377):        ecadr = offset            (as-is)
+```
+
+**Hand-verified against `vendor/virtualagc/Luminary099/ERASABLE_ASSIGNMENTS.agc`**
+(the shipped/virtualagc source — `build/agc/manifest.json`'s recorded
+binary is built from this tree): `EBANK-4 ASSIGNMENTS` opens with
+`SETLOC 2000` (`ERASABLE_ASSIGNMENTS.agc:1008`) — i.e. yaYUL's *own*
+internal erasable location counter for bank E4 starts at octal `2000`,
+which is exactly `4 * 0o400`, confirming the bank-base term of the
+formula independently of the listing's `E4,nnnn` notation. Counting
+`ERASE` words forward from `WRENDPOS` (`:1016`, at `2000`) through
+`WRENDVEL, WSHAFT, WTRUN, RMAX, VMAX` (`:1017-1021`, 1 word each →
+`2001`–`2005`), `WSURFPOS, WSURFVEL` (`:1025-1026` → `2006`-`2007`),
+`SHAFTVAR, TRUNVAR` (`:1030-1031` → `2010`-`2011`), `504LM ERASE +5`
+(`:1035`, 6 words → `2012`-`2017`), `AGSK ERASE +1` (`:1039`, 2 words →
+`2020`-`2021`) lands exactly on `RLS ERASE +5` (`:1043`) at **`2022`**
+octal — matching the formula applied to the listing's own
+`RLS ... E4,1422` entry (`build/agc/Luminary099.log:4504`):
+`ecadr = 4*0o400 + (0o1422 - 0o1400) = 0o2000 + 0o22 = 0o2022`. Two
+independent derivations agree; this is the value asserted by hand in
+`padload.rs`'s `symtab_parses_fixture` test.
+
+### Sources (this section)
+
+- `vendor/virtualagc/yaYUL/Pass.c:1362-1382` (address-format `printf`s: unbanked, banked-erasable, banked-fixed)
+- `vendor/virtualagc/yaYUL/Pass.c:1744`, `:2577` (`%06d,%06d:` line-counter prefix, not an address)
+- `vendor/virtualagc/Luminary099/ERASABLE_ASSIGNMENTS.agc:1006-1043` (`EBANK-4 ASSIGNMENTS`, `SETLOC 2000`, manual word count to `RLS`)
+- `build/agc/Luminary099.log` (yaYUL listing stdout, preserved by the existing `scripts/assemble-luminary.sh` redirect — regenerate via `make agc`)
+
 ## Sources
 
 - https://www.ibiblio.org/apollo/developer.html
