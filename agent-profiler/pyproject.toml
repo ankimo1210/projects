@@ -1,0 +1,53 @@
+[project]
+name = "agent-profiler"
+version = "0.1.0"
+description = "Local real-time profiler and TUI for Codex CLI and Claude Code"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [{ name = "Agent Profiler contributors" }]
+dependencies = [
+    "platformdirs>=4.3",
+    "textual>=2.1",
+]
+
+[project.scripts]
+agenttop = "agent_profiler.cli_top:main"
+agent-profiler = "agent_profiler.cli_profiler:main"
+
+[build-system]
+requires = ["uv_build>=0.11.0,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "hypothesis>=6.100",
+    "mypy>=1.15",
+    "pytest>=8.0",
+    "pytest-asyncio>=1.0",
+    "ruff>=0.11",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --import-mode=importlib"
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "RUF"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unused_ignores = true
+packages = ["agent_profiler"]
+
+[tool.coverage.run]
+source = ["agent_profiler"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
