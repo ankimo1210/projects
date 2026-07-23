@@ -57,11 +57,52 @@ def load_source_matches(path: Path = DEFAULT_SOURCE_MATCHES) -> dict[str, dict[s
 def load_semantic_reviews(path: Path = DEFAULT_SEMANTIC_REVIEWS) -> dict[str, dict[str, Any]]:
     if not path.is_file():
         return {}
-    manifest = json.loads(path.read_text(encoding="utf-8"))
-    reviews = manifest.get("reviews")
-    if not isinstance(reviews, dict):
-        raise TypeError("Formula semantic reviews must contain a reviews object")
-    threshold = (manifest.get("policy") or {}).get("replacement_threshold")
+    root_manifest = json.loads(path.read_text(encoding="utf-8"))
+    reviews: dict[str, dict[str, Any]] = {}
+    visited: set[Path] = set()
+
+    def merge_manifest(manifest_path: Path, manifest: Mapping[str, Any]) -> None:
+        resolved_path = manifest_path.resolve()
+        if resolved_path in visited:
+            raise RuntimeError(f"Cyclic semantic review include: {manifest_path}")
+        visited.add(resolved_path)
+
+        direct_reviews = manifest.get("reviews", {})
+        if not isinstance(direct_reviews, dict):
+            raise TypeError("Formula semantic reviews must contain a reviews object")
+        expanded_reviews = dict(direct_reviews)
+
+        paper_bundles = manifest.get("papers", {})
+        if not isinstance(paper_bundles, dict):
+            raise TypeError("Formula semantic review papers must be an object")
+        for paper_id, bundle in paper_bundles.items():
+            if not isinstance(bundle, dict):
+                raise TypeError(f"Invalid semantic review paper bundle: {paper_id}")
+            defaults = bundle.get("defaults", {})
+            paper_reviews = bundle.get("reviews", {})
+            if not isinstance(defaults, dict) or not isinstance(paper_reviews, dict):
+                raise TypeError(f"Invalid semantic review defaults or reviews: {paper_id}")
+            for local_id, review in paper_reviews.items():
+                if not isinstance(review, dict):
+                    raise TypeError(f"Invalid semantic review entry: {paper_id}:{local_id}")
+                formula_id = f"{paper_id}:{local_id}"
+                expanded_reviews[formula_id] = {**defaults, **review}
+
+        overlap = set(reviews) & set(expanded_reviews)
+        if overlap:
+            raise RuntimeError(f"Duplicate formula semantic reviews: {sorted(overlap)}")
+        reviews.update(expanded_reviews)
+
+        includes = manifest.get("includes", [])
+        if not isinstance(includes, list) or not all(isinstance(item, str) for item in includes):
+            raise TypeError("Formula semantic review includes must be a string list")
+        for include in includes:
+            include_path = manifest_path.parent / include
+            included_manifest = json.loads(include_path.read_text(encoding="utf-8"))
+            merge_manifest(include_path, included_manifest)
+
+    merge_manifest(path, root_manifest)
+    threshold = (root_manifest.get("policy") or {}).get("replacement_threshold")
     if (
         isinstance(threshold, bool)
         or not isinstance(threshold, (int, float))
@@ -348,14 +389,17 @@ def _repair_chunk_field(
             chunk[field] = value
 
 
-def repair_chunks(path: Path, records: list[Mapping[str, Any]]) -> None:
+def repair_chunks(path: Path, records: list[Mapping[str, Any]]) -> int:
     chunks = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
     for field in ("text", "raw_text"):
         _repair_chunk_field(chunks, field, records)
+    original_count = len(chunks)
+    chunks = [chunk for chunk in chunks if str(chunk.get("text", "")).strip()]
     path.write_text(
         "".join(json.dumps(chunk, ensure_ascii=False) + "\n" for chunk in chunks),
         encoding="utf-8",
     )
+    return original_count - len(chunks)
 
 
 def crop_formula_images(
@@ -538,6 +582,17 @@ def repair_corpus(corpus_dir: Path) -> dict[str, int]:
             (paper_dir / "document.md").read_text(encoding="utf-8")
         )
         metadata["document"]["math_blocks"] = stats["latex_blocks"]
+        chunks = [
+            json.loads(line)
+            for line in (paper_dir / "chunks.jsonl").read_text(encoding="utf-8").splitlines()
+        ]
+        metadata["document"]["chunks"] = len(chunks)
+        metadata["document"]["max_chunk_tokens"] = max(
+            (int(chunk.get("num_tokens", 0)) for chunk in chunks), default=0
+        )
+        metadata["document"]["pages_in_chunks"] = sorted(
+            {int(page) for chunk in chunks for page in chunk.get("page_numbers", [])}
+        )
         metadata["formula_quality"] = {
             "overlay": "source-semantic-v3",
             **stats,

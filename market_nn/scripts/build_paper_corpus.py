@@ -395,6 +395,10 @@ def validate_corpus(source_dir: Path, output_dir: Path) -> dict[str, Any]:
             chunks = [json.loads(line) for line in handle]
         if not chunks or any(chunk["paper_id"] != pdf.stem for chunk in chunks):
             raise RuntimeError(f"Invalid chunks for {pdf.stem}")
+        if any(not str(chunk.get("text", "")).strip() for chunk in chunks):
+            raise RuntimeError(f"Empty retrieval chunk for {pdf.stem}")
+        if metadata["document"]["chunks"] != len(chunks):
+            raise RuntimeError(f"Chunk metadata count mismatch for {pdf.stem}")
         with formula_manifest.open(encoding="utf-8") as handle:
             formulas = [json.loads(line) for line in handle]
         if any(formula["paper_id"] != pdf.stem for formula in formulas):

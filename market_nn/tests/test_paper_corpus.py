@@ -88,6 +88,31 @@ def test_formula_overlay_distinguishes_verified_and_fallback_content() -> None:
     assert FORMULA_MODULE.replace_formula_blocks(repaired, records) == repaired
 
 
+def test_repair_chunks_drops_formula_boundary_artifacts(tmp_path: Path) -> None:
+    chunks_path = tmp_path / "chunks.jsonl"
+    chunks = [
+        {"chunk_id": "sample:0001", "text": "Before\n$$x = 1", "raw_text": "Before\n$$x = 1"},
+        {"chunk_id": "sample:0002", "text": "$$", "raw_text": "$$"},
+        {"chunk_id": "sample:0003", "text": "After", "raw_text": "After"},
+    ]
+    chunks_path.write_text("".join(json.dumps(chunk) + "\n" for chunk in chunks), encoding="utf-8")
+    records = [
+        {
+            "formula_id": "sample:formula:0001",
+            "status": "verified_manual",
+            "page": 1,
+            "latex": "x = 1",
+        }
+    ]
+
+    removed = FORMULA_MODULE.repair_chunks(chunks_path, records)
+    repaired = [json.loads(line) for line in chunks_path.read_text().splitlines()]
+
+    assert removed == 1
+    assert [chunk["chunk_id"] for chunk in repaired] == ["sample:0001", "sample:0003"]
+    assert "sample:formula:0001" in repaired[0]["text"]
+
+
 def test_formula_override_manifest_has_expected_reviewed_set() -> None:
     overrides = FORMULA_MODULE.load_overrides()
 
@@ -231,15 +256,14 @@ def test_semantic_reviews_replace_only_high_confidence_formulas() -> None:
 
 def test_semantic_review_manifest_is_explicit_about_uncertainty() -> None:
     project_root = Path(__file__).parents[1]
-    manifest = json.loads(
-        (project_root / "manifests" / "formula_semantic_reviews.json").read_text(encoding="utf-8")
-    )
-    reviews = manifest["reviews"]
+    manifest_path = project_root / "manifests" / "formula_semantic_reviews.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    reviews = FORMULA_MODULE.load_semantic_reviews(manifest_path)
 
-    assert len(reviews) == 15
-    assert sum(review["review_status"] == "high_confidence" for review in reviews.values()) == 12
+    assert len(reviews) == 193
+    assert sum(review["review_status"] == "high_confidence" for review in reviews.values()) == 191
     assert sum(review["review_status"] == "not_formula" for review in reviews.values()) == 2
-    assert sum(review["review_status"] == "ambiguous" for review in reviews.values()) == 1
+    assert sum(review["review_status"] == "ambiguous" for review in reviews.values()) == 0
     assert all(
         review["confidence"] >= manifest["policy"]["replacement_threshold"]
         for review in reviews.values()
@@ -254,10 +278,13 @@ def test_semantic_review_manifest_is_explicit_about_uncertainty() -> None:
     quality = json.loads((project_root / "corpus" / "papers" / "_index.json").read_text())[
         "formula_quality"
     ]
-    assert quality["semantic_reviewed_total"] == 15
-    assert quality["semantic_high_confidence"] == 12
+    assert quality["semantic_reviewed_total"] == 193
+    assert quality["semantic_high_confidence"] == 191
     assert quality["semantic_not_formula"] == 2
-    assert quality["semantic_ambiguous"] == 1
+    assert quality["semantic_ambiguous"] == 0
+    assert quality["decoded_unverified"] == 0
+    assert quality["text_layer_fallback"] == 0
+    assert quality["latex_blocks"] == 422
 
 
 def test_arxiv_match_manifest_contains_only_reviewed_source_matches() -> None:

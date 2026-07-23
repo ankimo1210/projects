@@ -134,12 +134,12 @@ $$
 *Formula quality: `verified_source`; source PDF page 6. Matched to exact arXiv source 1810.09965v1 at conv_lstm_main.tex:157 (score=0.4516).*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0005" status="text_layer_fallback" source-page="6" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0005" status="semantic_high_confidence" source-page="6" -->
+$$
+{p'}_a^{(i)}(t)=\frac{p_a^{(i)}(t)}{p_m(t)}-1
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0005](images/formula_0005.png)
-```text
-PDF text layer: p ′ ( i ) a ( t ) = p ( i ) a ( t ) p m ( t ) -1 , (3)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 6. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `semantic_high_confidence`; source PDF page 6. Reconstructed the stationary ask-price feature as proportional displacement from the contemporaneous midpoint.*
 <!-- formula-end -->
 
 <!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0006" status="verified_source" source-page="6" -->
@@ -164,12 +164,12 @@ Equations (3) and (4) serve as statistic features that represent the proportiona
 
 We also use the cumulative sum of the sizes of the price levels as a feature, also know as Total Depth:
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0008" status="text_layer_fallback" source-page="7" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0008" status="semantic_high_confidence" source-page="7" -->
+$$
+{\nu'}_a^{(k)}(t)=\sum_{i=1}^{k}\nu_a^{(i)}(t)
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0008](images/formula_0008.png)
-```text
-PDF text layer: ν ′ ( k ) a ( t ) = k ∑ i =1 ν ( i ) a ( t ) (6)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 7. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `semantic_high_confidence`; source PDF page 7. Reconstructed ask-side total depth as the cumulative volume through level k.*
 <!-- formula-end -->
 
 <!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0009" status="verified_source" source-page="7" -->
@@ -200,20 +200,20 @@ Table 1: Brief description of each proposed stationary feature
 | Mid price change       | The change of the current mid price to the mid price of the previous time step, see Eq. (5) p ′ m ( t ) = p m ( t ) p m ( t - 1) - 1 |
 | Depth size cumsum      | Total depth at each price level, see Eq. (6), (7) ν ′ ( k ) ( t ) = k ∑ i =1 ν ( i ) ( t )                                           |
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0010" status="text_layer_fallback" source-page="8" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0010" status="semantic_high_confidence" source-page="8" -->
+$$
+m_b(t)=\frac{1}{k+1}\sum_{i=0}^{k}p_m(t-i)
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0010](images/formula_0010.png)
-```text
-PDF text layer: m b ( t ) = 1 k +1 k ∑ i =0 p m ( t -i ) (8)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 8. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `semantic_high_confidence`; source PDF page 8. Reconstructed the backward-looking midpoint average over the current observation and k past observations.*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0011" status="text_layer_fallback" source-page="8" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0011" status="semantic_high_confidence" source-page="8" -->
+$$
+m_a(t)=\frac{1}{k}\sum_{i=1}^{k}p_m(t+i)
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0011](images/formula_0011.png)
-```text
-PDF text layer: m a ( t ) = 1 k k ∑ i =1 p m ( t + i ) (9)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 8. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `semantic_high_confidence`; source PDF page 8. Reconstructed the forward-looking average over the next k midpoint observations used to form labels.*
 <!-- formula-end -->
 
 where p t is the mid price as described in Equation (2). The label l t , that expresses the direction of price movement at time t , is extracted by comparing the previously defined quantities ( m b and m a ). However, using the m b values to create labels for the samples, as in [31, 9], is making the problem significantly easier and predictable due to the slower adaptation of the mean filter values to sudden changes in price. Therefore, in this work we remedy this issue by replacing m b with the mid price. Therefore, the labels are redefined as:
@@ -257,52 +257,52 @@ Since we are using causal convolutions with 'full' padding, all the convolutiona
 
 One of the most appropriate Neural Network architectures to apply on time series is the Recurrent Neural Network (RNN) architecture. Although powerful in theory, this type of network suffers from the vanishing gradient problem, which makes the gradient propagation through a large number of steps impossible. An architecture that was introduced to solve this problem is the Long Short Term Memory (LSTM) networks [25]. This architecture protects its hidden activation from the decay of unrelated inputs and gradients by using gated functions between its 'transaction' points. The protected hidden activation is the 'cell state' which is regulated by said gates in the following manner:
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0013" status="text_layer_fallback" source-page="10" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0013" status="semantic_high_confidence" source-page="10" -->
+$$
+\mathbf f_t=\sigma(\mathbf W_{xf}\mathbf x_t+\mathbf W_{hf}\mathbf h_{t-1}+\mathbf b_f)
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0013](images/formula_0013.png)
-```text
-PDF text layer: f t = σ ( W xf · x + W hf · h t -1 + b f ) (11)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 10. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `semantic_high_confidence`; source PDF page 10. Restored the missing time index on the current input to the forget gate.*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0014" status="text_layer_fallback" source-page="10" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0014" status="semantic_high_confidence" source-page="10" -->
+$$
+\mathbf i_t=\sigma(\mathbf W_{xi}\mathbf x_t+\mathbf W_{hi}\mathbf h_{t-1}+\mathbf b_i)
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0014](images/formula_0014.png)
-```text
-PDF text layer: i t = σ ( W xi · x + W hi · h t -1 + b i ) (12)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 10. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `semantic_high_confidence`; source PDF page 10. Restored the missing time index on the current input to the input gate.*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0015" status="text_layer_fallback" source-page="10" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0015" status="semantic_high_confidence" source-page="10" -->
+$$
+\mathbf c'_t=\tanh(\mathbf W_{hc}\mathbf h_{t-1}+\mathbf W_{xc}\mathbf x_t+\mathbf b_c)
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0015](images/formula_0015.png)
-```text
-PDF text layer: c ′ t = tanh ( W hc · h t -1 + W xc · x t + b c ) (13)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 10. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `semantic_high_confidence`; source PDF page 10. Reconstructed the candidate cell state from the previous hidden state and current input.*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0016" status="text_layer_fallback" source-page="10" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0016" status="semantic_high_confidence" source-page="10" -->
+$$
+\mathbf c_t=\mathbf f_t\odot\mathbf c_{t-1}+\mathbf i_t\odot\mathbf c'_t
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0016](images/formula_0016.png)
-```text
-PDF text layer: c t = f t · c t -1 + i t · c ′ t (14)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 10. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `semantic_high_confidence`; source PDF page 10. Reconstructed the cell-state update and made the element-wise gate products explicit.*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0017" status="text_layer_fallback" source-page="10" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0017" status="semantic_high_confidence" source-page="10" -->
+$$
+\mathbf o_t=\sigma(\mathbf W_{oc}\mathbf c_t+\mathbf W_{oh}\mathbf h_{t-1}+\mathbf b_o)
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0017](images/formula_0017.png)
-```text
-PDF text layer: o t = σ ( W oc · c t + W oh · h t -1 + b o ) (15)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 10. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `semantic_high_confidence`; source PDF page 10. Reconstructed the paper's peephole-style output gate from the current cell and previous hidden state.*
 <!-- formula-end -->
 
-<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0018" status="text_layer_fallback" source-page="10" -->
+<!-- formula-start id="ref_tsantekidis_stationary_lob_1810.09965:formula:0018" status="semantic_high_confidence" source-page="10" -->
+$$
+\mathbf h_t=\mathbf o_t\odot\tanh(\mathbf c_t)
+$$
 ![Source formula ref_tsantekidis_stationary_lob_1810.09965:formula:0018](images/formula_0018.png)
-```text
-PDF text layer: h t = o t · σ ( c t ) (16)
-```
-*Formula quality: `text_layer_fallback`; source PDF page 10. No reliable LaTeX decode; use the source crop and PDF text layer together.*
+*Formula quality: `semantic_high_confidence`; source PDF page 10. Corrected the cell exposure from sigmoid to tanh and made the vector gate product explicit; this is a high-confidence LSTM-formulation correction, not an author-issued erratum.*
 <!-- formula-end -->
 
 where f t , i t and o t are the activations of the input, forget and output gates at time-step t , which control how much of the input and the previous state will be considered and how much of the cell state will be included in the hidden activation of the network. The protected cell activation at time-step t is denoted by c t , whereas h t is the activation that will be given to other components of the model. The matrices W xf , W hf , W xi , W hi , W hc , W xc , W oc , W oh are used to denote the weights connecting each of the activations with the current time step inputs and the previous time step activations.
