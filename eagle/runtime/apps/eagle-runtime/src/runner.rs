@@ -7,13 +7,17 @@
 use crate::padload::PadWord;
 use crate::script::DskyScript;
 use anyhow::{bail, ensure, Context, Result};
-use eagle_agc_protocol::agc_io::{decode_output, discrete_write, pipa_pulse, AgcOutput, PipaAxis};
+use eagle_agc_protocol::agc_io::{
+    decode_output, discrete_write, pipa_pulse, thrust_dinc, AgcOutput, PipaAxis, ThrustPulse,
+};
 use eagle_agc_protocol::dsky::DskyState;
 use eagle_agc_protocol::words::octal5;
 use eagle_agc_protocol::Packet;
-use eagle_dynamics::constants::PIPA_INCR;
+use eagle_dynamics::constants::{
+    DINC_MAX_PER_TICK, DPS_MAX_N, DPS_MIN_N, DPS_VE, DT, PIPA_INCR, THRUST_N_PER_PULSE,
+};
 use std::time::Duration;
-use tokio::sync::{broadcast, mpsc};
+use tokio::sync::{broadcast, mpsc, watch};
 
 // ---------------------------------------------------------------------
 // Boot discretes.
@@ -96,6 +100,9 @@ pub const TIME1_ECADR: u16 = 0o25;
 ///
 /// Task 16 imports this list; grow it only with a diagnosed, cited entry.
 pub const SPIKE_A_ALARM_WHITELIST: &[u16] = &[];
+/// Spike B starts from Spike A's clean alarm set. Add a code only after a
+/// live P66 run diagnoses it and records why the no-radar spike tolerates it.
+pub const SPIKE_B_ALARM_WHITELIST: &[u16] = SPIKE_A_ALARM_WHITELIST;
 
 /// Handles produced by `pump` for one live AGC, bundled for the descent
 /// choreography (Tasks 7/14/16 consume this shape).
@@ -124,6 +131,15 @@ pub async fn init_discretes(tx: &mpsc::UnboundedSender<Packet>) -> Result<()> {
     for p in discrete_write(0o30, 0, CH30_BIT14_ISS_REQ) {
         tx.send(p).context("agc tx closed")?;
     }
+    Ok(())
+}
+
+/// Select ATT HOLD by writing the complete channel-031 word. GUILDENSTERN
+/// reads bit 13 as an inverted discrete and changes an active landing program
+/// to P66 (`LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:203-217`).
+pub async fn att_hold(tx: &mpsc::UnboundedSender<Packet>) -> Result<()> {
+    tx.send(Packet::io(0o31, CH31_ATT_HOLD).context("ATT HOLD packet")?)
+        .context("agc tx closed")?;
     Ok(())
 }
 
@@ -545,18 +561,147 @@ pub async fn measure_downlink_rate(
 }
 
 // ---------------------------------------------------------------------
-// Synthetic hover PIPA feeder (v1).
+// Synthetic hover PIPA feeder and Spike-B 1-D closed loop.
 // ---------------------------------------------------------------------
+
+/// Accumulates the AGC's THRUST-counter output. A ch014 drive-enable arms
+/// DINC strobes; each returned POUT/MOUT changes the persistent commanded
+/// pulse count, and ZOUT ends that drive burst. The semantics are the direct
+/// external-hardware counterpart of yaAGC `CounterDINC`
+/// (`agc_engine.c:1278-1308,1570-1606`).
+///
+/// The physical throttle actuator is a bounded position, not an unbounded
+/// signed accumulator. Luminary deliberately emits −4096 pulses while the
+/// engine is off (`P40-P47.agc:490-494`) to seek the zero stop, then +4096
+/// for FLATOUT. Pulses beyond either stop therefore leave the position at
+/// that stop.
+pub const THRUST_CMD_MAX_PULSES: i64 = 4096;
+
+#[derive(Debug, Default)]
+pub struct ThrustResponder {
+    pub cmd_pulses: i64,
+    armed: bool,
+    outstanding: u32,
+}
+
+impl ThrustResponder {
+    pub fn on_output(&mut self, out: &AgcOutput) {
+        match out {
+            AgcOutput::ThrustDrive(true) => self.armed = true,
+            AgcOutput::ThrustPulse(ThrustPulse::Pout) => {
+                self.outstanding = self.outstanding.saturating_sub(1);
+                self.cmd_pulses = (self.cmd_pulses + 1).min(THRUST_CMD_MAX_PULSES);
+            }
+            AgcOutput::ThrustPulse(ThrustPulse::Mout) => {
+                self.outstanding = self.outstanding.saturating_sub(1);
+                self.cmd_pulses = (self.cmd_pulses - 1).max(0);
+            }
+            AgcOutput::ThrustPulse(ThrustPulse::Zout) => {
+                self.outstanding = self.outstanding.saturating_sub(1);
+                self.armed = false;
+            }
+            _ => {}
+        }
+    }
+
+    pub fn tick_packets(&mut self) -> Vec<Packet> {
+        if !self.armed {
+            return Vec::new();
+        }
+        // Bound requests that have not yet produced POUT/MOUT/ZOUT. Without
+        // this credit window, a busy socket pump can queue thousands of
+        // DINC strobes before the first ZOUT reaches this task.
+        let count = DINC_MAX_PER_TICK.saturating_sub(self.outstanding);
+        self.outstanding += count;
+        (0..count).map(|_| thrust_dinc()).collect()
+    }
+}
+
+/// Observable state of the Spike-B one-dimensional truth model.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct HoverTruth {
+    pub alt_m: f64,
+    pub vz_ms: f64,
+    pub mass_kg: f64,
+    pub cmd_pulses: i64,
+    pub thrust_n: f64,
+    pub engine_on: bool,
+}
+
+/// Deterministic 10-ms vertical model used before the full six-DoF dynamics
+/// crate exists. Positive vertical velocity is up; PIPAX sees positive
+/// specific force from the DPS, not gravity.
+#[derive(Debug)]
+pub struct SyntheticHoverModel {
+    truth: HoverTruth,
+    pipa_remainder: f64,
+}
+
+impl SyntheticHoverModel {
+    pub fn new(alt_m: f64, vz_ms: f64, mass_kg: f64) -> Self {
+        assert!(mass_kg > 0.0, "synthetic-hover mass must be positive");
+        Self {
+            truth: HoverTruth {
+                alt_m,
+                vz_ms,
+                mass_kg,
+                cmd_pulses: 0,
+                thrust_n: 0.0,
+                engine_on: false,
+            },
+            pipa_remainder: 0.0,
+        }
+    }
+
+    pub fn truth(&self) -> HoverTruth {
+        self.truth
+    }
+
+    /// Advance one fixed 10-ms tick and return the resulting PIPAX pulses.
+    pub fn step(&mut self, cmd_pulses: i64, engine_on: bool) -> Vec<Packet> {
+        // The Spike-B gate begins at ignition. Before ENGINE ON we only
+        // accumulate THRUST POUT/MOUT in the responder; the v1 feeder remains
+        // the sole PIPA source and this local vertical state stays parked.
+        if !engine_on {
+            self.truth.cmd_pulses = cmd_pulses;
+            self.truth.thrust_n = 0.0;
+            self.truth.engine_on = false;
+            return Vec::new();
+        }
+        let raw_thrust = (cmd_pulses.max(0) as f64) * THRUST_N_PER_PULSE;
+        let thrust_n = if raw_thrust == 0.0 {
+            0.0
+        } else {
+            raw_thrust.clamp(DPS_MIN_N, DPS_MAX_N)
+        };
+        let specific_force = thrust_n / self.truth.mass_kg;
+        let az_ms2 = specific_force - HOVER_ACCEL_MS2;
+
+        self.truth.vz_ms += az_ms2 * DT;
+        self.truth.alt_m += self.truth.vz_ms * DT;
+        self.truth.mass_kg = (self.truth.mass_kg - thrust_n / DPS_VE * DT).max(1.0);
+        self.truth.cmd_pulses = cmd_pulses;
+        self.truth.thrust_n = thrust_n;
+        self.truth.engine_on = engine_on;
+
+        self.pipa_remainder += specific_force * DT / PIPA_INCR;
+        let pulse_count = self.pipa_remainder.floor() as usize;
+        self.pipa_remainder -= pulse_count as f64;
+        (0..pulse_count)
+            .map(|_| pipa_pulse(PipaAxis::X, true))
+            .collect()
+    }
+}
 
 /// v1 synthetic PIPA feed: constant specific force of +1.62 m/s² along
 /// SM +X (lunar-surface hover), emitted as PINC pulses to PIPAX every
 /// 10 ms with a carry-forward accumulator: 1.62 / PIPA_INCR ≈ 27.7
 /// pulses/s. No CDU pulses (attitude static, gimbals parked at zero).
 /// Runs from boot so AVERAGE-G (PREREAD at TIG-30) sees a live
-/// accelerometer; v2 (Task 7) replaces this with the closed dynamics
-/// loop.
+/// accelerometer. `spawn_closed_loop` replaces this feeder after ENGINE ON.
 pub struct SyntheticHover {
     handle: tokio::task::JoinHandle<()>,
+    truth_rx: Option<watch::Receiver<HoverTruth>>,
 }
 
 /// Hover specific force, m/s² (lunar surface gravity).
@@ -584,7 +729,72 @@ impl SyntheticHover {
                 }
             }
         });
-        Self { handle }
+        Self {
+            handle,
+            truth_rx: None,
+        }
+    }
+
+    /// Spawn the Spike-B THRUST/DINC + vertical-truth loop. The caller should
+    /// stop the v1 feeder first so PIPAX has exactly one producer.
+    pub fn spawn_closed_loop(
+        tx: mpsc::UnboundedSender<Packet>,
+        mut packets: broadcast::Receiver<Packet>,
+        initial: HoverTruth,
+    ) -> Self {
+        let (truth_tx, truth_rx) = watch::channel(initial);
+        let handle = tokio::spawn(async move {
+            let mut tick = tokio::time::interval(Duration::from_millis(10));
+            tick.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
+            let mut model =
+                SyntheticHoverModel::new(initial.alt_m, initial.vz_ms, initial.mass_kg);
+            let mut responder = ThrustResponder::default();
+            let mut engine_on = initial.engine_on;
+
+            loop {
+                tick.tick().await;
+                loop {
+                    match packets.try_recv() {
+                        Ok(packet) => {
+                            let out = decode_output(&packet);
+                            responder.on_output(&out);
+                            if let AgcOutput::Engine { on, off } = out {
+                                match (on, off) {
+                                    (true, false) => engine_on = true,
+                                    (false, true) => engine_on = false,
+                                    _ => {}
+                                }
+                            }
+                        }
+                        Err(broadcast::error::TryRecvError::Lagged(_)) => continue,
+                        Err(broadcast::error::TryRecvError::Empty) => break,
+                        Err(broadcast::error::TryRecvError::Closed) => return,
+                    }
+                }
+
+                for packet in responder.tick_packets() {
+                    if tx.send(packet).is_err() {
+                        return;
+                    }
+                }
+                for packet in model.step(responder.cmd_pulses, engine_on) {
+                    if tx.send(packet).is_err() {
+                        return;
+                    }
+                }
+                if truth_tx.send(model.truth()).is_err() {
+                    return;
+                }
+            }
+        });
+        Self {
+            handle,
+            truth_rx: Some(truth_rx),
+        }
+    }
+
+    pub fn truth(&self) -> Option<watch::Receiver<HoverTruth>> {
+        self.truth_rx.clone()
     }
 
     pub fn stop(&self) {
@@ -634,6 +844,72 @@ mod tests {
         assert_eq!(classify_flash("50", "18", " 00000", 1), Entr);
         assert_eq!(classify_flash("99", "62", " 00000", 0), ProAndDone);
         assert_eq!(classify_flash("16", "36", " 00000", 0), Unknown);
+    }
+
+    #[test]
+    fn thrust_responder_arms_counts_and_disarms() {
+        use eagle_agc_protocol::agc_io::ThrustPulse;
+
+        let mut responder = ThrustResponder::default();
+        assert!(responder.tick_packets().is_empty());
+
+        responder.on_output(&AgcOutput::ThrustDrive(true));
+        let strobes = responder.tick_packets();
+        assert_eq!(strobes.len(), DINC_MAX_PER_TICK as usize);
+        assert!(strobes.iter().all(|p| *p == thrust_dinc()));
+
+        responder.on_output(&AgcOutput::ThrustPulse(ThrustPulse::Pout));
+        responder.on_output(&AgcOutput::ThrustPulse(ThrustPulse::Pout));
+        responder.on_output(&AgcOutput::ThrustPulse(ThrustPulse::Mout));
+        assert_eq!(responder.cmd_pulses, 1);
+        assert_eq!(responder.tick_packets().len(), 3);
+
+        responder.on_output(&AgcOutput::ThrustPulse(ThrustPulse::Zout));
+        assert!(!responder.armed);
+        assert!(responder.tick_packets().is_empty());
+
+        let mut bounded = ThrustResponder::default();
+        bounded.on_output(&AgcOutput::ThrustPulse(ThrustPulse::Mout));
+        assert_eq!(bounded.cmd_pulses, 0);
+        bounded.cmd_pulses = THRUST_CMD_MAX_PULSES;
+        bounded.on_output(&AgcOutput::ThrustPulse(ThrustPulse::Pout));
+        assert_eq!(bounded.cmd_pulses, THRUST_CMD_MAX_PULSES);
+    }
+
+    #[test]
+    fn synthetic_hover_tracks_hover_equilibrium_for_sixty_seconds() {
+        let mut model = SyntheticHoverModel::new(500.0, 0.0, 15_195.0);
+        for _ in 0..6_000 {
+            let cmd_pulses =
+                (model.truth().mass_kg * HOVER_ACCEL_MS2 / THRUST_N_PER_PULSE).round() as i64;
+            let _pipa = model.step(cmd_pulses, true);
+        }
+        assert!(
+            model.truth().vz_ms.abs() <= 0.05,
+            "hover drifted to {} m/s",
+            model.truth().vz_ms
+        );
+    }
+
+    #[test]
+    fn synthetic_hover_gate_is_frozen_before_engine_on() {
+        let mut model = SyntheticHoverModel::new(500.0, -2.0, 15_195.0);
+        assert!(model.step(4_096, false).is_empty());
+        assert_eq!(model.truth().alt_m, 500.0);
+        assert_eq!(model.truth().vz_ms, -2.0);
+        assert_eq!(model.truth().mass_kg, 15_195.0);
+        assert_eq!(model.truth().cmd_pulses, 4_096);
+        assert_eq!(model.truth().thrust_n, 0.0);
+    }
+
+    #[tokio::test]
+    async fn att_hold_writes_full_channel_word() {
+        let (tx, mut rx) = tokio::sync::mpsc::unbounded_channel();
+        att_hold(&tx).await.unwrap();
+        assert_eq!(
+            rx.recv().await.unwrap(),
+            Packet::io(0o31, CH31_ATT_HOLD).unwrap()
+        );
     }
 
     /// Key-count fixture: a raw (unverified) V21N01 load is 19 keys
