@@ -24,7 +24,7 @@ def heart_page() -> None:
     else:
         fig = px.line(rh, x="date", y="resting_hr", labels={"date": "日付", "resting_hr": "bpm"})
         fig.update_traces(line_color=p["categorical"][0], line_width=2)
-        st.plotly_chart(style(fig, p), use_container_width=True, theme=None)
+        st.plotly_chart(style(fig, p), width="stretch", theme=None)
 
     st.subheader("HRV (RMSSD)")
     hrv = df.dropna(subset=["hrv_rmssd", "hrv_deep_rmssd"], how="all")
@@ -40,7 +40,7 @@ def heart_page() -> None:
             labels={"date": "日付", "value": "ms", "variable": ""},
         )
         fig.update_traces(line_width=2)
-        st.plotly_chart(style(fig, p), use_container_width=True, theme=None)
+        st.plotly_chart(style(fig, p), width="stretch", theme=None)
 
     st.subheader("分単位心拍ビューア")
     day = st.date_input("日付", value=date.today(), key="hr_day")
@@ -50,4 +50,4 @@ def heart_page() -> None:
     else:
         fig = px.line(intra, x="ts", y="value", labels={"value": "bpm", "ts": "時刻"})
         fig.update_traces(line_color=p["categorical"][0], line_width=2)
-        st.plotly_chart(style(fig, p), use_container_width=True, theme=None)
+        st.plotly_chart(style(fig, p), width="stretch", theme=None)

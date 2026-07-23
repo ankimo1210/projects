@@ -5,7 +5,7 @@ from datetime import date
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-from common import clip_days, load_daily, load_intraday, period_days
+from common import calendar_rolling_mean, clip_days, load_daily, load_intraday, period_days
 from theme import palette, style
 
 INTENSITIES = [
@@ -36,7 +36,7 @@ def activity_page() -> None:
     df = clip_days(df, period_days()).copy()
 
     st.subheader("歩数（7日移動平均つき）")
-    df["ma7"] = df["steps"].rolling(7).mean()
+    df["ma7"] = calendar_rolling_mean(df, "steps")
     fig = px.bar(df, x="date", y="steps", labels={"date": "日付", "steps": "歩数"})
     fig.update_traces(marker_color=p["categorical"][0], name="歩数", showlegend=True)
     fig.add_scatter(
@@ -46,7 +46,7 @@ def activity_page() -> None:
         name="7日平均",
         line=dict(color=p["categorical"][1], width=2),
     )
-    st.plotly_chart(style(fig, p), use_container_width=True, theme=None)
+    st.plotly_chart(style(fig, p), width="stretch", theme=None)
 
     st.subheader("活動強度の内訳（分）")
     intensity_columns = [c for c, _ in INTENSITIES]
@@ -66,19 +66,19 @@ def activity_page() -> None:
             labels={"date": "日付", "minutes": "分", "intensity": "強度"},
         )
         fig.update_traces(marker_line_color=p["surface"], marker_line_width=1)
-        st.plotly_chart(style(fig, p), use_container_width=True, theme=None)
+        st.plotly_chart(style(fig, p), width="stretch", theme=None)
 
     # Two measures of different scale (kcal vs km) never share one axis
     # (dataviz anti-pattern: mismatched-scale series flattens the smaller one).
     st.subheader("距離 (km)")
     fig = px.line(df, x="date", y="distance_km", labels={"date": "日付", "distance_km": "km"})
     fig.update_traces(line_color=p["categorical"][0], line_width=2)
-    st.plotly_chart(style(fig, p), use_container_width=True, theme=None)
+    st.plotly_chart(style(fig, p), width="stretch", theme=None)
 
     st.subheader("消費カロリー")
     fig = px.line(df, x="date", y="calories", labels={"date": "日付", "calories": "kcal"})
     fig.update_traces(line_color=p["categorical"][0], line_width=2)
-    st.plotly_chart(style(fig, p), use_container_width=True, theme=None)
+    st.plotly_chart(style(fig, p), width="stretch", theme=None)
 
     st.subheader("週間ヒートマップ（歩数）")
     hm = df.copy()
@@ -102,7 +102,7 @@ def activity_page() -> None:
         font_color=p["ink"],
         margin=dict(t=30, l=10, r=10, b=10),
     )
-    st.plotly_chart(fig, use_container_width=True, theme=None)
+    st.plotly_chart(fig, width="stretch", theme=None)
 
     st.subheader("日内歩数ビューア")
     day = st.date_input("日付", value=date.today(), key="act_day")
@@ -112,4 +112,4 @@ def activity_page() -> None:
     else:
         fig = px.bar(intra, x="ts", y="value", labels={"value": "歩数", "ts": "時刻"})
         fig.update_traces(marker_color=p["categorical"][0])
-        st.plotly_chart(style(fig, p), use_container_width=True, theme=None)
+        st.plotly_chart(style(fig, p), width="stretch", theme=None)

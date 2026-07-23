@@ -12,6 +12,9 @@ import pandas as pd
 
 from health.endpoints import Metric, ParsedRows
 
+SYNC_OK = "ok"
+SYNC_IN_PROGRESS = "in_progress"
+
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS raw_json(
     metric VARCHAR, range_start DATE, range_end DATE, page_index INTEGER,
@@ -87,7 +90,14 @@ class Store:
 
     # -- transactional chunk replacement --------------------------------------
     def replace_chunk(
-        self, metric: Metric, start: date, end: date, payloads: Sequence[dict], rows: ParsedRows
+        self,
+        metric: Metric,
+        start: date,
+        end: date,
+        payloads: Sequence[dict],
+        rows: ParsedRows,
+        *,
+        status: str = SYNC_OK,
     ) -> None:
         """Atomically replace one (metric, start, end) chunk: old raw pages,
         old typed rows in range, and the watermark all move together so a
@@ -146,10 +156,10 @@ class Store:
                     )
             # 6. advance the watermark
             con.execute(
-                "INSERT INTO sync_state VALUES (?, ?, 'ok', now()) "
+                "INSERT INTO sync_state VALUES (?, ?, ?, now()) "
                 "ON CONFLICT DO UPDATE SET last_synced_date = excluded.last_synced_date, "
                 "status = excluded.status, updated_at = excluded.updated_at",
-                [metric.name, end],
+                [metric.name, end, status],
             )
             con.execute("COMMIT")
         except Exception:
@@ -158,12 +168,16 @@ class Store:
 
     # -- sync state --------------------------------------------------------
     def get_sync_state(self, metric: str) -> date | None:
-        row = self.con.execute(
-            "SELECT last_synced_date FROM sync_state WHERE metric = ?", [metric]
-        ).fetchone()
-        return row[0] if row else None
+        checkpoint = self.get_sync_checkpoint(metric)
+        return checkpoint[0] if checkpoint else None
 
-    def set_sync_state(self, metric: str, last_synced: date, status: str = "ok") -> None:
+    def get_sync_checkpoint(self, metric: str) -> tuple[date, str] | None:
+        row = self.con.execute(
+            "SELECT last_synced_date, status FROM sync_state WHERE metric = ?", [metric]
+        ).fetchone()
+        return (row[0], row[1]) if row else None
+
+    def set_sync_state(self, metric: str, last_synced: date, status: str = SYNC_OK) -> None:
         self.con.execute(
             "INSERT OR REPLACE INTO sync_state VALUES (?, ?, ?, now())",
             [metric, last_synced, status],

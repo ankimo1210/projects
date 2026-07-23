@@ -3,7 +3,7 @@ from datetime import date, datetime
 import duckdb
 import pytest
 from health.endpoints import CATALOG, Metric, ParsedRows
-from health.store import Store
+from health.store import SYNC_IN_PROGRESS, SYNC_OK, Store
 
 
 def by_name(name: str) -> Metric:
@@ -93,11 +93,29 @@ def test_intraday_roundtrip(store):
 
 def test_sync_state_roundtrip(store):
     assert store.get_sync_state("steps") is None
-    store.set_sync_state("steps", date(2026, 7, 1))
+    assert store.get_sync_checkpoint("steps") is None
+    store.set_sync_state("steps", date(2026, 7, 1), SYNC_IN_PROGRESS)
     store.set_sync_state("steps", date(2026, 7, 5))
     assert store.get_sync_state("steps") == date(2026, 7, 5)
+    assert store.get_sync_checkpoint("steps") == (date(2026, 7, 5), SYNC_OK)
     states = store.sync_states()
     assert list(states["metric"]) == ["steps"] and list(states["status"]) == ["ok"]
+
+
+def test_replace_chunk_stores_checkpoint_status_atomically(store):
+    metric = by_name("steps")
+    store.replace_chunk(
+        metric,
+        date(2026, 7, 1),
+        date(2026, 7, 3),
+        [{"p": 0}],
+        ParsedRows(),
+        status=SYNC_IN_PROGRESS,
+    )
+    assert store.get_sync_checkpoint("steps") == (
+        date(2026, 7, 3),
+        SYNC_IN_PROGRESS,
+    )
 
 
 def test_series_stats(store):

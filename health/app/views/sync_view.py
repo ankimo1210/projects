@@ -71,7 +71,6 @@ def _run_sync(auth) -> None:
             "このchunkは保存せず、既存データを維持して停止しました。"
         )
     else:
-        st.cache_data.clear()  # cached loaders must observe the fresh rows
         st.session_state["last_sync_report"] = {
             "paused": report.paused,
             "resume_in_s": report.resume_in_s,
@@ -79,6 +78,11 @@ def _run_sync(auth) -> None:
             "requests_made": report.requests_made,
         }
         st.rerun()
+    finally:
+        # The engine commits one completed chunk at a time. A later API or
+        # payload error can therefore follow real DB changes, so invalidate
+        # cached frames on every outcome once a sync attempt has started.
+        st.cache_data.clear()
 
 
 def sync_page() -> None:
@@ -92,10 +96,12 @@ def sync_page() -> None:
 
     states = get_store().sync_states()
     if not states.empty:
+        states = states.copy()
+        states["status"] = states["status"].replace({"ok": "完了", "in_progress": "途中"})
         st.subheader("メトリクス別の同期状態")
         st.dataframe(
             states,
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
             column_config={
                 "metric": st.column_config.TextColumn("メトリクス"),
