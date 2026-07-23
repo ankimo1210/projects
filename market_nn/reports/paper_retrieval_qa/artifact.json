@@ -1,0 +1,605 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "LOB論文コーパス検索QA",
+    "description": "22本の論文を横断する検索可能性とprovenanceの技術監査",
+    "generatedAt": "2026-07-23T00:00:00+09:00",
+    "cards": [
+      {
+        "id": "paper_recall",
+        "description": "正解論文を上位3 chunks以内に取得できた質問の割合。",
+        "dataset": "summary",
+        "sourceId": "retrieval_results",
+        "metrics": [
+          {
+            "label": "論文 Recall@3",
+            "field": "paper_recall_at_3",
+            "format": "percent"
+          }
+        ]
+      },
+      {
+        "id": "page_recall",
+        "description": "正解論文かつ正解ページのchunkを上位5件以内に取得できた質問の割合。",
+        "dataset": "summary",
+        "sourceId": "retrieval_results",
+        "metrics": [
+          {
+            "label": "正解ページ Recall@5",
+            "field": "page_recall_at_5",
+            "format": "percent"
+          }
+        ]
+      },
+      {
+        "id": "page_mrr",
+        "description": "最初の正解ページchunkの逆順位を66問で平均。",
+        "dataset": "summary",
+        "sourceId": "retrieval_results",
+        "metrics": [
+          {
+            "label": "正解ページ MRR",
+            "field": "page_mrr",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "empty_chunks",
+        "description": "検索対象に残った空本文chunk数。",
+        "dataset": "summary",
+        "sourceId": "retrieval_results",
+        "metrics": [
+          {
+            "label": "空chunk",
+            "field": "empty_chunks",
+            "format": "number"
+          }
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "category_page_mrr",
+        "title": "質問カテゴリ別の正解ページMRR",
+        "subtitle": "formula・method・result各22問。0から1の尺度。",
+        "type": "bar",
+        "dataset": "categories",
+        "sourceId": "retrieval_results",
+        "encodings": {
+          "x": {
+            "field": "category",
+            "type": "nominal",
+            "label": "カテゴリ"
+          },
+          "y": {
+            "field": "page_mrr",
+            "type": "quantitative",
+            "label": "正解ページ MRR",
+            "format": "number"
+          }
+        },
+        "yAxisTitle": "正解ページ MRR",
+        "valueFormat": "number",
+        "layout": "full"
+      }
+    ],
+    "tables": [
+      {
+        "id": "category_metrics",
+        "title": "質問カテゴリ別の検索指標",
+        "subtitle": "各カテゴリ22問。順位は全1,318 chunksに対するもの。",
+        "dataset": "categories",
+        "sourceId": "retrieval_results",
+        "columns": [
+          {
+            "field": "category",
+            "label": "カテゴリ",
+            "type": "text"
+          },
+          {
+            "field": "queries",
+            "label": "質問数",
+            "format": "number"
+          },
+          {
+            "field": "paper_recall_at_3",
+            "label": "論文 R@3",
+            "format": "percent"
+          },
+          {
+            "field": "page_recall_at_5",
+            "label": "ページ R@5",
+            "format": "percent"
+          },
+          {
+            "field": "page_mrr",
+            "label": "ページ MRR",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "integrity_checks",
+        "title": "データ品質・整合性チェック",
+        "dataset": "integrity",
+        "sourceId": "retrieval_results",
+        "columns": [
+          {
+            "field": "check",
+            "label": "検査",
+            "type": "text"
+          },
+          {
+            "field": "evidence",
+            "label": "証拠",
+            "type": "text"
+          },
+          {
+            "field": "status",
+            "label": "判定",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "paper_metrics",
+        "title": "論文別の正解ページ順位",
+        "subtitle": "式・方法・結果の各1問。値が小さいほど上位で、全件5位以内。",
+        "dataset": "papers",
+        "sourceId": "retrieval_results",
+        "columns": [
+          {
+            "field": "paper",
+            "label": "論文",
+            "type": "text"
+          },
+          {
+            "field": "formula_rank",
+            "label": "式",
+            "format": "number"
+          },
+          {
+            "field": "method_rank",
+            "label": "方法",
+            "format": "number"
+          },
+          {
+            "field": "result_rank",
+            "label": "結果",
+            "format": "number"
+          },
+          {
+            "field": "page_recall_at_5",
+            "label": "ページ R@5",
+            "format": "percent"
+          },
+          {
+            "field": "page_mrr",
+            "label": "ページ MRR",
+            "format": "number"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "retrieval_results",
+        "label": "Paper retrieval QA results",
+        "path": "reports/paper_retrieval_qa/results.json"
+      },
+      {
+        "id": "retrieval_gold",
+        "label": "Paper retrieval gold set",
+        "path": "manifests/paper_retrieval_gold.json"
+      },
+      {
+        "id": "corpus_index",
+        "label": "Converted paper corpus index",
+        "path": "corpus/papers/_index.json"
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# LOB論文コーパス検索QA"
+      },
+      {
+        "id": "technical_summary",
+        "type": "markdown",
+        "sourceId": "retrieval_results",
+        "body": "## 技術サマリー\n\n**現コーパスは、明示的に対象論文を識別できる質問に対する検索回帰テストとして利用可能。** 全66問で論文 Recall@3 は 100%、正解ページ Recall@5 は 100%、正解ページ MRR は 0.7922。設定した3品質ゲートをすべて通過した。"
+      },
+      {
+        "id": "metrics",
+        "type": "metric-strip",
+        "cardIds": [
+          "paper_recall",
+          "page_recall",
+          "page_mrr",
+          "empty_chunks"
+        ]
+      },
+      {
+        "id": "key_findings",
+        "type": "markdown",
+        "sourceId": "retrieval_results",
+        "body": "## 主要な検証結果\n\n- **網羅性:** formula・method・resultを各22問評価し、全カテゴリで正解ページ Recall@5 は100%。\n- **順位品質:** result質問のページMRRが最も高く、formulaとmethodは同義の式や手法を扱う論文間で順位が割れやすい。\n- **構造品質:** 空本文chunkとpage provenance欠落はともに0。424式は全件、chunk内マーカーとformula recordを1対1で追跡できる。"
+      },
+      {
+        "id": "category_chart",
+        "type": "chart",
+        "chartId": "category_page_mrr",
+        "layout": "full"
+      },
+      {
+        "id": "category_table",
+        "type": "table",
+        "tableId": "category_metrics"
+      },
+      {
+        "id": "scope",
+        "type": "markdown",
+        "sourceId": "retrieval_gold",
+        "body": "## 対象・データ・指標定義\n\n対象はコミット済みの22論文すべて。分析単位は英語質問1件で、各質問に正解論文、回答を含む原PDFページ、式質問にはformula_idを持たせた。Recallは指定順位以内に正解が存在する割合、MRRは最初の正解ページの逆順位平均である。"
+      },
+      {
+        "id": "integrity_table",
+        "type": "table",
+        "tableId": "integrity_checks"
+      },
+      {
+        "id": "methodology",
+        "type": "markdown",
+        "sourceId": "retrieval_gold",
+        "body": "## 方法\n\n依存関係のない決定論的BM25を使用し、chunk本文に加えて論文タイトルと見出しを重み付けした。モデル学習や外部APIは使わない。gold setは各論文から式・方法・結果を1問ずつ採る層化全数設計で、paper rankとanswer-page rankを分けて計算した。"
+      },
+      {
+        "id": "adjudication",
+        "type": "markdown",
+        "sourceId": "retrieval_gold",
+        "body": "## gold setの再確認\n\n初稿は複数論点を一文に含む質問と、同じラベル式を持つ複数論文を識別できない質問を含み、paper Recall@3 90.91%、ページ Recall@5 86.36%、ページMRR 0.7001だった。失敗9問を原PDFのレンダリング画像と照合し、回答内容や正解ページを都合よく変更せず、質問を1論点かつ論文識別可能な形へ修正した。履歴はgold manifestに固定した。"
+      },
+      {
+        "id": "paper_table",
+        "type": "table",
+        "tableId": "paper_metrics"
+      },
+      {
+        "id": "limitations",
+        "type": "markdown",
+        "sourceId": "retrieval_gold",
+        "body": "## 制約・不確実性・頑健性\n\n- gold setは単一レビュアー作成で、inter-annotator agreementは未測定。\n- 質問は英語かつ論文中の用語に近い。日本語、強い言い換え、曖昧な探索質問には一般化できない。\n- ページhitは回答可能な文脈の取得を示すだけで、生成回答の正確性は評価しない。\n- lexical baselineなので、記号だけの質問や概念的な同義語にはembedding/rerankerより弱い可能性がある。"
+      },
+      {
+        "id": "next_steps",
+        "type": "markdown",
+        "body": "## 推奨する次の作業\n\n1. 同じ66問をembedding検索とhybrid rerankerにも流し、BM25との差分を固定する。\n2. 各questionに短い根拠回答を追加し、retrievalだけでなくanswer faithfulnessを採点する。\n3. 日本語質問と強い言い換えを別holdout setとして追加し、現goldをチューニング用に流用しない。"
+      },
+      {
+        "id": "further_questions",
+        "type": "markdown",
+        "body": "## 追加で答えるべき問い\n\n- 1 chunkでは式と定義が分離する質問に、隣接chunk展開は必要か。\n- formula cropを視覚モデルへ渡すと、記号中心の質問の順位と回答精度は改善するか。\n- 新しい論文を追加した際、既存66問の順位低下をどこまで許容するか。"
+      },
+      {
+        "id": "source_notes",
+        "type": "markdown",
+        "body": "## ソース注記\n\nカテゴリ間の順位品質は単一系列の棒グラフで比較し、0起点の尺度を使った。論文別順位は正確な値の参照が主目的なのでtableで示した。"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-07-23T00:00:00+09:00",
+    "status": "ready",
+    "datasets": {
+      "summary": [
+        {
+          "paper_recall_at_3": 1.0,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 0.7922,
+          "empty_chunks": 0
+        }
+      ],
+      "categories": [
+        {
+          "category": "formula",
+          "queries": 22,
+          "paper_recall_at_3": 1.0,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 0.7629
+        },
+        {
+          "category": "method",
+          "queries": 22,
+          "paper_recall_at_3": 1.0,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 0.7727
+        },
+        {
+          "category": "result",
+          "queries": 22,
+          "paper_recall_at_3": 1.0,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 0.8409
+        }
+      ],
+      "integrity": [
+        {
+          "check": "Completeness",
+          "evidence": "22 papers / 66 questions",
+          "status": "PASS"
+        },
+        {
+          "check": "Chunk uniqueness",
+          "evidence": "1318 unique / 1318 total",
+          "status": "PASS"
+        },
+        {
+          "check": "Retrieval validity",
+          "evidence": "0 empty chunks; 0 without page provenance",
+          "status": "PASS"
+        },
+        {
+          "check": "Formula integrity",
+          "evidence": "424 chunk markers / 424 formula records",
+          "status": "PASS"
+        },
+        {
+          "check": "Quality thresholds",
+          "evidence": "paper_recall_at_3 ≥ 0.95; page_recall_at_5 ≥ 0.9; page_mrr ≥ 0.75",
+          "status": "PASS"
+        }
+      ],
+      "papers": [
+        {
+          "paper": "DeepLOB: Deep Convolutional Neural Networks for Limit Order Books",
+          "paper_id": "deeplob_1808.03668v6",
+          "formula_rank": 1,
+          "method_rank": 1,
+          "result_rank": 1,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 1.0
+        },
+        {
+          "paper": "Benchmark Dataset for Mid-Price Forecasting of Limit Order Book Data with Machine Learning Methods",
+          "paper_id": "fi2010_1705.03233v5",
+          "formula_rank": 2,
+          "method_rank": 1,
+          "result_rank": 4,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 0.5833
+        },
+        {
+          "paper": "Queue Imbalance as a One-Tick-Ahead Price Predictor in a Limit Order Book",
+          "paper_id": "gould_bonart_1512.03492v1",
+          "formula_rank": 2,
+          "method_rank": 1,
+          "result_rank": 1,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 0.8333
+        },
+        {
+          "paper": "Price dynamics in a Markovian limit order market",
+          "paper_id": "ref_cont_de_larrard_markovian_lob_1104.4596",
+          "formula_rank": 1,
+          "method_rank": 1,
+          "result_rank": 3,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 0.7778
+        },
+        {
+          "paper": "The price impact of order book events",
+          "paper_id": "ref_cont_price_impact_1011.6402",
+          "formula_rank": 2,
+          "method_rank": 1,
+          "result_rank": 4,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 0.5833
+        },
+        {
+          "paper": "A stochastic model for order book dynamics",
+          "paper_id": "ref_cont_stochastic_order_book_dynamics_2010",
+          "formula_rank": 1,
+          "method_rank": 1,
+          "result_rank": 1,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 1.0
+        },
+        {
+          "paper": "Sequence Classification of the Limit Order Book using Recurrent Neural Networks",
+          "paper_id": "ref_dixon_rnn_lob_1707.05642",
+          "formula_rank": 1,
+          "method_rank": 2,
+          "result_rank": 1,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 0.8333
+        },
+        {
+          "paper": "Limit order books",
+          "paper_id": "ref_gould_limit_order_books_1012.0349",
+          "formula_rank": 1,
+          "method_rank": 1,
+          "result_rank": 3,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 0.7778
+        },
+        {
+          "paper": "Modeling high-frequency limit order book dynamics with support vector machines",
+          "paper_id": "ref_kercheval_zhang_svm_2013",
+          "formula_rank": 1,
+          "method_rank": 2,
+          "result_rank": 1,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 0.8333
+        },
+        {
+          "paper": "Axial-LOB: High-Frequency Trading with Axial Attention",
+          "paper_id": "ref_kisiel_axial_lob_2212.01807",
+          "formula_rank": 1,
+          "method_rank": 3,
+          "result_rank": 1,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 0.7778
+        },
+        {
+          "paper": "Deep Adaptive Input Normalization for Time Series Forecasting",
+          "paper_id": "ref_passalis_dain_1902.07892",
+          "formula_rank": 4,
+          "method_rank": 2,
+          "result_rank": 1,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 0.5833
+        },
+        {
+          "paper": "LOB-Based Deep Learning Models for Stock Price Trend Prediction: A Benchmark Study",
+          "paper_id": "ref_prata_lob_benchmark_2308.01915",
+          "formula_rank": 1,
+          "method_rank": 3,
+          "result_rank": 1,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 0.7778
+        },
+        {
+          "paper": "Deep Learning for Limit Order Books",
+          "paper_id": "ref_sirignano_deep_lob_1601.01987",
+          "formula_rank": 5,
+          "method_rank": 3,
+          "result_rank": 1,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 0.5111
+        },
+        {
+          "paper": "MLP-Mixer: An all-MLP Architecture for Vision",
+          "paper_id": "ref_tolstikhin_mlp_mixer_2105.01601",
+          "formula_rank": 1,
+          "method_rank": 1,
+          "result_rank": 1,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 1.0
+        },
+        {
+          "paper": "Data Normalization for Bilinear Structures in High-Frequency Financial Time-series",
+          "paper_id": "ref_tran_bin_2003.00598",
+          "formula_rank": 1,
+          "method_rank": 2,
+          "result_rank": 1,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 0.8333
+        },
+        {
+          "paper": "Temporal Attention augmented Bilinear Network for Financial Time-Series Data Analysis",
+          "paper_id": "ref_tran_tabl_1712.00975",
+          "formula_rank": 1,
+          "method_rank": 2,
+          "result_rank": 3,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 0.6111
+        },
+        {
+          "paper": "Forecasting Stock Prices from the Limit Order Book using Convolutional Neural Networks",
+          "paper_id": "ref_tsantekidis_cnn_lob_2017",
+          "formula_rank": 2,
+          "method_rank": 1,
+          "result_rank": 1,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 0.8333
+        },
+        {
+          "paper": "Using Deep Learning for price prediction by exploiting stationary limit order book features",
+          "paper_id": "ref_tsantekidis_stationary_lob_1810.09965",
+          "formula_rank": 3,
+          "method_rank": 1,
+          "result_rank": 1,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 0.7778
+        },
+        {
+          "paper": "Attention Is All You Need",
+          "paper_id": "ref_vaswani_attention_1706.03762",
+          "formula_rank": 1,
+          "method_rank": 1,
+          "result_rank": 1,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 1.0
+        },
+        {
+          "paper": "Multi-Horizon Forecasting for Limit Order Books: Novel Deep Learning Approaches and Hardware Acceleration using Intelligent Processing Units",
+          "paper_id": "ref_zhang_multihorizon_2105.10430",
+          "formula_rank": 2,
+          "method_rank": 2,
+          "result_rank": 1,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 0.6667
+        },
+        {
+          "paper": "Universal features of price formation in financial markets: perspectives from Deep Learning",
+          "paper_id": "sirignano_cont_1803.06917v1",
+          "formula_rank": 2,
+          "method_rank": 1,
+          "result_rank": 1,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 0.8333
+        },
+        {
+          "paper": "TLOB: A Novel Transformer Model with Dual Attention for Price Trend Prediction with Limit Order Book Data",
+          "paper_id": "tlob_2502.15757v3",
+          "formula_rank": 1,
+          "method_rank": 1,
+          "result_rank": 1,
+          "page_recall_at_5": 1.0,
+          "page_mrr": 1.0
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "retrieval_results",
+      "label": "Paper retrieval QA results",
+      "path": "reports/paper_retrieval_qa/results.json",
+      "query": {
+        "engine": "duckdb",
+        "language": "sql",
+        "sql": "SELECT * FROM read_json_auto('reports/paper_retrieval_qa/results.json', format = 'auto');",
+        "description": "Loads the complete committed evaluator output. The report generator selects the reviewed nested metric, audit, category, paper, and query-rank fields from this record.",
+        "tables_used": [
+          "corpus/papers/*/chunks.jsonl",
+          "manifests/paper_retrieval_gold.json"
+        ],
+        "metric_definitions": [
+          "Paper Recall@k: fraction of questions whose target paper appears in the first k chunks.",
+          "Answer-page Recall@k: fraction of questions with a first-k target-paper chunk whose page provenance overlaps an accepted answer page.",
+          "Answer-page MRR: mean reciprocal rank of the first target-paper chunk overlapping an accepted answer page; missing ranks contribute zero."
+        ]
+      }
+    },
+    {
+      "id": "retrieval_gold",
+      "label": "Paper retrieval gold set",
+      "path": "manifests/paper_retrieval_gold.json",
+      "query": {
+        "engine": "manual_review",
+        "description": "Census-stratified questions and answer pages, including PDF adjudication notes and quality thresholds.",
+        "tables_used": [
+          "sources/papers/*.pdf"
+        ]
+      }
+    },
+    {
+      "id": "corpus_index",
+      "label": "Converted paper corpus index",
+      "path": "corpus/papers/_index.json",
+      "query": {
+        "engine": "docling",
+        "description": "Corpus inventory and PDF/hash/page/chunk/formula provenance for all converted papers.",
+        "tables_used": [
+          "corpus/papers/_index.json"
+        ]
+      }
+    }
+  ]
+}

@@ -44,43 +44,34 @@ The remainder of the paper is outlined as follows. Section 2 provides an introdu
 
 Machine learning addresses a fundamental prediction problem: Construct a nonlinear predictor, ˆ Y ( X ), of an output, Y , given a high dimensional input matrix X = ( X (1) , . . . , X ( P ) ) of P variables. Machine learning can be simply viewed as the study and construction of an input-output map of the form
 
-<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0001" status="decoded_unverified" source-page="4" -->
+<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0001" status="semantic_high_confidence" source-page="4" -->
 $$
-Y = F ( X ) \ \text {where} \ X = ( X ^ { ( 1 ) } , \dots , X ^ { ( P ) } ) .
+Y=F(X),\qquad X=(X^{(1)},\ldots,X^{(P)})
 $$
 ![Source formula ref_dixon_rnn_lob_1707.05642:formula:0001](images/formula_0001.png)
-```text
-PDF text layer: Y = F ( X ) where X = ( X (1) , . . . , X ( P ) ) .
-```
-*Formula quality: `decoded_unverified`; source PDF page 4. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `semantic_high_confidence`; source PDF page 4. Confirmed as the generic nonlinear input-output map over P predictors.*
 <!-- formula-end -->
 
 The output variable, Y , can be continuous, discrete or mixed. For example, in a classification problem, F : X → Y where Y ∈ { 1 , . . . , K } and K is the number of categories. When Y is a continuous vector and f is a semi-affine function, then we recover the linear model
 
-<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0002" status="decoded_unverified" source-page="4" -->
+<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0002" status="semantic_high_confidence" source-page="4" -->
 $$
-Y = A X + b .
+Y=AX+b
 $$
 ![Source formula ref_dixon_rnn_lob_1707.05642:formula:0002](images/formula_0002.png)
-```text
-PDF text layer: Y = AX + b.
-```
-*Formula quality: `decoded_unverified`; source PDF page 4. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `semantic_high_confidence`; source PDF page 4. Confirmed as the semi-affine special case of the preceding input-output map.*
 <!-- formula-end -->
 
 ## 2.1 Sequence Learning
 
 If the input-output pairs D = { X t , Y t } N t =1 are auto-correlated observations of X and Y at times t = 1 , . . . , N , then the fundamental prediction problem can be expressed as a sequence prediction problem: construct a nonlinear times series predictor, ˆ Y ( X ), of an output, Y , using a high dimensional input matrix of T length sub-sequences X :
 
-<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0003" status="decoded_unverified" source-page="4" -->
+<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0003" status="semantic_high_confidence" source-page="4" -->
 $$
-y = F ( \mathcal { X } ) \text { where } \mathcal { X } _ { t } = s e q _ { T } ( X _ { t } ) = ( X _ { t - T + 1 } , \dots , X _ { t } )
+y=F(\mathcal X),\qquad\mathcal X_t=\operatorname{seq}_T(X_t)=(X_{t-T+1},\ldots,X_t)
 $$
 ![Source formula ref_dixon_rnn_lob_1707.05642:formula:0003](images/formula_0003.png)
-```text
-PDF text layer: y = F ( X ) where X t = seq T ( X t ) = ( X t -T +1 , . . . , X t )
-```
-*Formula quality: `decoded_unverified`; source PDF page 4. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `semantic_high_confidence`; source PDF page 4. Normalized the OCR-split seq operator and confirmed the T-observation window ending at time t.*
 <!-- formula-end -->
 
 where X t -j is a j th lagged observation of X t , X t -j = L j [ X j ], for j = 0 , . . . , T -1. Sequence learning, then, is just a composition of a non-linear map and a vectorization of the lagged input variables. If the data is i.i.d., then no sequence is needed (i.e. T = 1), and we recover the standard prediction problem.
@@ -91,15 +82,12 @@ RNNs are sequence learners which have achieved much success in applications such
 
 A simple RNN is formed by a repeated application of a function F h to the input sequence X t = ( X 1 , . . . , X T ). For each time step t = 1 , . . . , T , the function generates a hidden state h t from the current input X t and the previous output h t -1 :
 
-<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0004" status="decoded_unverified" source-page="4" -->
+<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0004" status="semantic_high_confidence" source-page="4" -->
 $$
-h _ { t } = F _ { h } ( X _ { t } , h _ { t _ { 1 } } ) = \sigma ( W _ { h } X _ { t } + U _ { h } h _ { t _ { 1 } } + b _ { h } ) ,
+h_t=F_h(X_t,h_{t-1})=\sigma(W_hX_t+U_hh_{t-1}+b_h)
 $$
 ![Source formula ref_dixon_rnn_lob_1707.05642:formula:0004](images/formula_0004.png)
-```text
-PDF text layer: h t = F h ( X t , h t 1 ) = σ ( W h X t + U h h t 1 + b h ) , (1)
-```
-*Formula quality: `decoded_unverified`; source PDF page 4. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `semantic_high_confidence`; source PDF page 4. Corrected the OCR loss of the minus sign in t-1; the recurrence and surrounding prose require the previous hidden state.*
 <!-- formula-end -->
 
 for some non-linear activation function σ ( x ). As illustrated in Figure 1, this simple RNN is an unfolding of a single hidden layer neural network (a.k.a. Elman network (Elman, 1991)) over all time steps.
@@ -112,28 +100,22 @@ Figure 1: An illustrative example of a recurrent neural network with one hidden 
 
 When the output is continuous, the model output from the final hidden state, Y = F y ( h T ), is given by the semi-affine function:
 
-<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0005" status="decoded_unverified" source-page="5" -->
+<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0005" status="semantic_high_confidence" source-page="5" -->
 $$
-Y = F _ { y } ( h _ { T } ) = W _ { y } h _ { T } + b _ { y } ,
+Y=F_y(h_T)=W_yh_T+b_y
 $$
 ![Source formula ref_dixon_rnn_lob_1707.05642:formula:0005](images/formula_0005.png)
-```text
-PDF text layer: Y = F y ( h T ) = W y h T + b y , (2)
-```
-*Formula quality: `decoded_unverified`; source PDF page 5. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `semantic_high_confidence`; source PDF page 5. Confirmed as the continuous-output affine readout from the final hidden state.*
 <!-- formula-end -->
 
 and when the output is categorical, the output is given by
 
-<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0006" status="decoded_unverified" source-page="5" -->
+<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0006" status="semantic_high_confidence" source-page="5" -->
 $$
-Y = F _ { y } ( h _ { T } ) = \text {softmax} ( F _ { y } ( h _ { T } ) ) ,
+Y=\operatorname{softmax}(F_y(h_T))=\operatorname{softmax}(W_yh_T+b_y)
 $$
 ![Source formula ref_dixon_rnn_lob_1707.05642:formula:0006](images/formula_0006.png)
-```text
-PDF text layer: Y = F y ( h T ) = softmax( F y ( h T )) , (3)
-```
-*Formula quality: `decoded_unverified`; source PDF page 5. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `semantic_high_confidence`; source PDF page 5. Corrected a high-confidence paper notation error by applying softmax to the affine readout without equating logits and probabilities.*
 <!-- formula-end -->
 
 where Y has a 'one-hot' encoding - a K-vector of zeros with 1 at a single position. Here W = ( W h , U h , W y ) and b = ( b h , b y ) are weight matrices and offsets respectively. W h ∈ R H × P denotes the weights of non-recurrent connections between the input X t and the H hidden units. The weights of the recurrence connections between the hidden units is denoted by the recurrent weight matrix U h ∈ R H × H . Without such a matrix, the architecture is simply an unfolded single layer feed-forward network without memory and each observation X t is treated as an independent observation.
@@ -150,15 +132,12 @@ In its simplest form, we then solve an optimization problem
 
 The goal is to find the machine sequence learner Y = F ( X ), where we have a loss function L ( Y, ˆ Y ) for a predictor, ˆ Y , of the output signal, Y . In many cases, there's an underlying probability model, p ( Y | ˆ Y ), then the loss function is the negative log probability L ( Y, ˆ Y ) = -log p ( Y | ˆ Y ). For example, under a Gaussian model L ( Y, ˆ Y ) = || Y -ˆ Y || 2 is a L 2 norm, for binary classification, L ( Y, ˆ Y ) = -Y log ˆ Y is the negative cross-entropy.
 
-<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0007" status="decoded_unverified" source-page="6" -->
+<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0007" status="semantic_high_confidence" source-page="6" -->
 $$
-\min _ { W , b } & \quad f ( W , b ) + \lambda \phi ( W , b ) \\ f ( W , b ) & = \frac { 1 } { N } \sum _ { t = 1 } ^ { N } \mathcal { L } ( Y _ { t } , \hat { Y } ( \mathcal { X } _ { t } ) ) \\
+\begin{aligned}\min_{W,b}\quad&f(W,b)+\lambda\phi(W,b),\\f(W,b)&=\frac{1}{N}\sum_{t=1}^{N}\mathcal L(Y_t,\widehat Y(\mathcal X_t)).\end{aligned}
 $$
 ![Source formula ref_dixon_rnn_lob_1707.05642:formula:0007](images/formula_0007.png)
-```text
-PDF text layer: minimize W,b f ( W,b ) + λφ ( W,b ) f ( W,b ) = 1 N N ∑ t =1 L ( Y t , ˆ Y ( X t ))
-```
-*Formula quality: `decoded_unverified`; source PDF page 6. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `semantic_high_confidence`; source PDF page 6. Normalized the optimization display and confirmed the empirical loss plus regularization objective.*
 <!-- formula-end -->
 
 with a regularization penalty, φ ( W,b ).
@@ -171,15 +150,12 @@ A significant factor raising the appeal of recurrent neural networks to practiti
 
 Dropout is a model or variable selection technique. The input space X , needs dimension reduction techniques which are designed to avoid over-fitting in the training process. Dropout works by removing input variables in X t randomly with a given probability θ . The probability, θ , can be viewed as a further hyper-parameter (like λ ) which can be tuned via cross-validation. Heuristically, if there are P = 100 variables in X t , then a choice of θ = 0 . 1 will result in a search for models with 10 variables. The dropout architecture with stochastic search for the predictors can be used
 
-<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0008" status="decoded_unverified" source-page="6" -->
+<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0008" status="semantic_high_confidence" source-page="6" -->
 $$
-D _ { i } & \sim B e r ( \theta ) , \\ \tilde { X } _ { t } & = D * X _ { t } , \ t = 1 , \dots , T , \\ h _ { t } & = F _ { h } \left ( W _ { h } \tilde { X } _ { t } + U _ { h } h _ { t - 1 } + b _ { h } \right ) . \\ \intertext { i n p u t } X _ { t } \, b y \, D * X _ { t } , \, w h e r e \, * \, d e n o tes \, the e l e n
+\begin{aligned}D_i&\sim\operatorname{Ber}(\theta),\\\widetilde X_t&=D\star X_t,\quad t=1,\ldots,T,\\h_t&=F_h(W_h\widetilde X_t+U_hh_{t-1}+b_h).\end{aligned}
 $$
 ![Source formula ref_dixon_rnn_lob_1707.05642:formula:0008](images/formula_0008.png)
-```text
-PDF text layer: D i ∼ Ber( θ ) , ˜ X t = D⋆X t , t = 1 , . . . , T, h t = F h ( W h ˜ X t + U h h t -1 + b h ) .
-```
-*Formula quality: `decoded_unverified`; source PDF page 6. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `semantic_high_confidence`; source PDF page 6. Removed OCR prose spillover and reconstructed input dropout followed by the recurrent state update; the mask is shared across the displayed sequence.*
 <!-- formula-end -->
 
 Effectively, this replaces the input X t by D⋆X t , where ⋆ denotes the element-wise product and D is a 'drop-out operator' - a vector of independent Bernoulli, Ber( θ ), distributed random variables. The overall objective function is closely related to ridge regression with a g-prior (Heaton et al., 2017). Note that drop-out is not applied to the recurrent connections, only the non-recurrent connections. Graves (2013) provides evidence of the success in RNNs by applying drop-out only to the nonrecurrent connections in a LSTM.
@@ -218,15 +194,12 @@ Figure 3: This figure illustrates a typical mechanism resulting in mid-price mov
 
 Table 1 shows the limit order book before and after the arrival of the sell aggressor. The response is mid-price movement, in units of ticks, over the subsequent interval. p b i,t and d b i,t denote the level i quoted bid price and depth of the limit order book at time t . p a i,t and d a i,t denote the corresponding level i quoted ask price and depth. Level i = 1 corresponds to the best ask and bid prices. The mid-price at time t is denoted by
 
-<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0009" status="decoded_unverified" source-page="9" -->
+<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0009" status="semantic_high_confidence" source-page="9" -->
 $$
-p _ { t } = \frac { p _ { 1 , t } ^ { a } + p _ { 1 , t } ^ { b } } { 2 } .
+p_t=\frac{p_{1,t}^{a}+p_{1,t}^{b}}{2}
 $$
 ![Source formula ref_dixon_rnn_lob_1707.05642:formula:0009](images/formula_0009.png)
-```text
-PDF text layer: p t = p a 1 ,t + p b 1 ,t 2 . (4)
-```
-*Formula quality: `decoded_unverified`; source PDF page 9. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `semantic_high_confidence`; source PDF page 9. Confirmed as the midpoint of the level-one best ask and bid prices.*
 <!-- formula-end -->
 
 This mid-price can evolve in minimum increments of half a tick but almost always is observed to move at increments of a tick over time intervals of a milli-second or less.
@@ -252,15 +225,12 @@ Partially following Kercheval and Zhang (2015), we compose our feature set of fi
 
 The exact architecture and weight matrix sizes of our recurrent neural network are given by
 
-<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0010" status="decoded_unverified" source-page="10" -->
+<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0010" status="semantic_high_confidence" source-page="10" -->
 $$
-\text {output} \colon Y ^ { k } = \text {softmax} ( F _ { y } ^ { k } ( h _ { T } ) ) = \frac { \exp ( F _ { y } ^ { k } ( h _ { T } ) ) } { \sum _ { j = 1 } ^ { K } \exp ( F _ { y } ^ { j } ( h _ { T } ) ) } , \\ \text {hidden states} \colon \, h _ { t } = \max \left ( W _ { h } X _ { t } + U _ { h } h _ { t - 1 } + b _ { h } , 0 \right ) , t = 1 , \dots , T ,
+\begin{aligned}Y^k&=\operatorname{softmax}(F_y^k(h_T))=\frac{\exp(F_y^k(h_T))}{\sum_{j=1}^{K}\exp(F_y^j(h_T))},\\h_t&=\max(W_hX_t+U_hh_{t-1}+b_h,0),\quad t=1,\ldots,T.\end{aligned}
 $$
 ![Source formula ref_dixon_rnn_lob_1707.05642:formula:0010](images/formula_0010.png)
-```text
-PDF text layer: output : Y k = softmax( F k y ( h T )) = exp( F k y ( h T )) ∑ K j =1 exp( F j y ( h T )) , hidden states : h t = max( W h X t + U h h t -1 + b h , 0) , t = 1 , . . . , T,
-```
-*Formula quality: `decoded_unverified`; source PDF page 10. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `semantic_high_confidence`; source PDF page 10. Normalized the architecture display and confirmed the K-class softmax readout and ReLU recurrent state equation.*
 <!-- formula-end -->
 
 Table 2: This table summarizes the performance of the RNN over a 20 trading day test period. The RNN classifier is used to predict the categories: { Y = -1 , Y = 0 , Y = 1 } . The mean and standard deviation of the daily precision, recall and f1 scores of each model are shown together with the average and standard deviation of the training set sizes.
@@ -277,15 +247,12 @@ Times series cross-validation is performed over 20 consecutive trading days. Tra
 
 Table 2 summarizes the performance of the RNN over 20 trading days. To reliably measure performance on the unbalanced test set, we compute the F 1 score - the geometric mean of the precision and recall:
 
-<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0011" status="decoded_unverified" source-page="11" -->
+<!-- formula-start id="ref_dixon_rnn_lob_1707.05642:formula:0011" status="semantic_high_confidence" source-page="11" -->
 $$
-F 1 = 2 \frac { \text {precision} \cdot \text {recall} } { \text {precision} + \text {recall} } .
+F_1=2\frac{\operatorname{precision}\cdot\operatorname{recall}}{\operatorname{precision}+\operatorname{recall}}
 $$
 ![Source formula ref_dixon_rnn_lob_1707.05642:formula:0011](images/formula_0011.png)
-```text
-PDF text layer: F 1 = 2 precision · recall precision + recall .
-```
-*Formula quality: `decoded_unverified`; source PDF page 11. Machine-decoded LaTeX; verify against the linked source crop before use.*
+*Formula quality: `semantic_high_confidence`; source PDF page 11. Confirmed the standard harmonic-mean F1 formula. The paper's nearby prose calls it a geometric mean, but the displayed equation itself is correct.*
 <!-- formula-end -->
 
 The F 1 score is designed for binary classification problems. When the data has more than two classes, the F 1 score is provided for each class k by setting Y = k to the positive and all remain classes to the negative label. The score is highest for the zero label corresponding to a prediction of a stationary mid-price over the next interval. The F 1 scores for a predicted up-tick F 1(1) and down-tick F 1( -1) are also shown. We observe that the performance of the RNN when Y = -1 and when Y = 1 are the positive labels is comparable. As expected, the RNN can predict these classes with comparable recall but drastically less precision than for the Y = 0 positive label model. The average and standard deviation of the size of balanced training sets are shown by the size column.

@@ -1,4 +1,4 @@
-.PHONY: verify-provenance test smoke lint paper-corpus paper-corpus-formulas paper-corpus-verify-sources paper-corpus-check
+.PHONY: verify-provenance test smoke lint paper-corpus paper-corpus-formulas paper-corpus-verify-sources paper-corpus-check paper-corpus-retrieval-qa
 
 DOCLING_VERSION := 2.114.0
 PAPER_CORPUS_ARGS ?=
@@ -31,3 +31,8 @@ paper-corpus-verify-sources:
 
 paper-corpus-check:
 	uvx --from docling==$(DOCLING_VERSION) python scripts/build_paper_corpus.py --check-only
+
+paper-corpus-retrieval-qa:
+	uv run --directory .. --no-sync python market_nn/scripts/evaluate_paper_retrieval.py \
+		--output market_nn/reports/paper_retrieval_qa/results.json
+	uv run --directory .. --no-sync python market_nn/scripts/build_paper_retrieval_report.py

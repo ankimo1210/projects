@@ -1,0 +1,555 @@
+{
+  "schema_version": 1,
+  "papers": {
+    "ref_cont_stochastic_order_book_dynamics_2010": {
+      "defaults": {
+        "review_status": "high_confidence",
+        "confidence": 0.99,
+        "base_status": "decoded_unverified",
+        "source_pdf": "sources/papers/ref_cont_stochastic_order_book_dynamics_2010.pdf",
+        "evidence": [
+          "Reviewed the displayed equation together with its definitions and derivation in the source PDF.",
+          "Symbols, indices, domains, and dependencies were checked against neighboring equations and prose."
+        ],
+        "assumptions": [],
+        "alternatives": []
+      },
+      "reviews": {
+        "formula:0001": {
+          "document_ref": "#/texts/26",
+          "source_page": 4,
+          "action": "confirm_existing",
+          "latex": "p_A(t)=\\inf\\{p\\in\\{1,\\ldots,n\\}:X_p(t)>0\\}\\wedge(n+1)",
+          "note": "Confirmed as the best-ask definition, with n+1 as the empty-ask sentinel."
+        },
+        "formula:0002": {
+          "document_ref": "#/texts/28",
+          "source_page": 4,
+          "action": "confirm_existing",
+          "latex": "p_B(t)=\\sup\\{p\\in\\{1,\\ldots,n\\}:X_p(t)<0\\}\\vee 0",
+          "note": "Confirmed as the best-bid definition, with zero as the empty-bid sentinel."
+        },
+        "formula:0003": {
+          "document_ref": "#/texts/30",
+          "source_page": 4,
+          "action": "confirm_existing",
+          "latex": "p_M(t)=\\frac{p_B(t)+p_A(t)}{2},\\qquad s(t)=p_A(t)-p_B(t)",
+          "note": "Confirmed from the preceding best-quote definitions: the midpoint is their average and the spread their difference."
+        },
+        "formula:0004": {
+          "document_ref": "#/texts/34",
+          "source_page": 5,
+          "action": "correct_suspected_paper_typo",
+          "confidence": 0.995,
+          "latex": "Q_i^B(t)=\\begin{cases}-X_{p_A(t)-i}(t),&0<i<p_A(t),\\\\0,&p_A(t)\\le i<n.\\end{cases}",
+          "paper_as_printed_latex": "Q_i^B(t)=\\begin{cases}X_{p_A(t)-i}(t),&0<i<p_A(t),\\\\0,&p_A(t)\\le i<n.\\end{cases}",
+          "evidence": [
+            "The paper defines X_p(t)<0 for bid orders and says -X_p(t) is the number of bid orders.",
+            "Q_i^B is explicitly introduced as the number of buy orders and is used as a nonnegative queue size later.",
+            "The printed expression omits the minus sign and would make every nonempty bid queue negative."
+          ],
+          "note": "Corrected a high-confidence sign typo: bid depth must be -X at the corresponding price because bid states are negative by definition."
+        },
+        "formula:0005": {
+          "document_ref": "#/texts/36",
+          "source_page": 5,
+          "action": "confirm_existing",
+          "latex": "Q_i^A(t)=\\begin{cases}X_{p_B(t)+i}(t),&0<i<n-p_B(t),\\\\0,&n-p_B(t)\\le i<n.\\end{cases}",
+          "note": "Confirmed as the nonnegative ask-depth definition at distance i from the bid."
+        },
+        "formula:0006": {
+          "document_ref": "#/texts/40",
+          "source_page": 5,
+          "action": "reconstruct",
+          "latex": "x_{p\\pm1}=x\\pm(0,\\ldots,0,1,0,\\ldots,0)",
+          "note": "Removed OCR spillover and reconstructed the state update with the unit entry in component p."
+        },
+        "formula:0007": {
+          "document_ref": "#/texts/57",
+          "source_page": 6,
+          "action": "confirm_existing",
+          "latex": "\\lambda(i)=\\frac{k}{i^{\\alpha}}",
+          "note": "Confirmed as the power-law specification for limit-order arrival intensity versus quote distance."
+        },
+        "formula:0008": {
+          "document_ref": "#/texts/60",
+          "source_page": 6,
+          "action": "confirm_existing",
+          "latex": "\\begin{aligned}x&\\to x_{p-1}&&\\text{at rate }\\lambda(p_A(t)-p),&&p<p_A(t),\\\\x&\\to x_{p+1}&&\\text{at rate }\\lambda(p-p_B(t)),&&p>p_B(t),\\\\x&\\to x_{p_B(t)+1}&&\\text{at rate }\\mu,\\\\x&\\to x_{p_A(t)-1}&&\\text{at rate }\\mu,\\\\x&\\to x_{p+1}&&\\text{at rate }\\theta(p_A(t)-p)|x_p|,&&p<p_A(t),\\\\x&\\to x_{p-1}&&\\text{at rate }\\theta(p-p_B(t))|x_p|,&&p>p_B(t).\\end{aligned}",
+          "note": "Confirmed all six Markov-chain transitions against the sign convention for bid and ask inventory and the stated event intensities."
+        },
+        "formula:0009": {
+          "document_ref": "#/texts/64",
+          "source_page": 6,
+          "action": "confirm_existing",
+          "latex": "\\sum_{i=1}^{\\infty}\\frac{\\lambda^i}{\\mu_1\\cdots\\mu_i}<\\sum_{i=1}^{\\infty}\\frac{1}{i!}\\left(\\frac{\\lambda}{\\theta}\\right)^i=e^{\\lambda/\\theta}-1<\\infty",
+          "note": "Confirmed as the convergent birth-death recurrence-series bound using mu_i at least i theta."
+        },
+        "formula:0010": {
+          "document_ref": "#/texts/65",
+          "source_page": 6,
+          "action": "reconstruct",
+          "latex": "\\sum_{i=1}^{\\infty}\\frac{\\mu_1\\cdots\\mu_i}{\\lambda^i}>\\sum_{i=1}^{M}\\frac{\\mu_1\\cdots\\mu_i}{\\lambda^i}+\\sum_{i=M+1}^{\\infty}\\left(\\frac{2\\mu+M\\theta}{\\lambda}\\right)^i=\\infty",
+          "note": "Removed OCR prose contamination and restored the divergent lower bound used in the ergodicity criterion."
+        },
+        "formula:0011": {
+          "document_ref": "#/texts/77",
+          "source_page": 7,
+          "action": "confirm_existing",
+          "latex": "\\widehat{\\lambda}(i)=\\frac{N_l(i)}{T}",
+          "note": "Confirmed as the observed limit-order count per sample duration."
+        },
+        "formula:0012": {
+          "document_ref": "#/texts/79",
+          "source_page": 7,
+          "action": "confirm_existing",
+          "latex": "\\widehat{\\lambda}(i)=\\frac{k}{i^{\\alpha}}",
+          "note": "Confirmed as the fitted extrapolation of the empirical arrival-rate curve."
+        },
+        "formula:0013": {
+          "document_ref": "#/texts/81",
+          "source_page": 7,
+          "action": "confirm_existing",
+          "latex": "\\min_{k,\\alpha}\\sum_{i=1}^{5}\\left(\\widehat{\\lambda}(i)-\\frac{k}{i^{\\alpha}}\\right)^2",
+          "note": "Confirmed as the least-squares objective used to estimate the power-law parameters."
+        },
+        "formula:0014": {
+          "document_ref": "#/texts/84",
+          "source_page": 7,
+          "action": "confirm_existing",
+          "latex": "\\widehat{\\mu}=\\frac{N_m}{T}\\frac{S_m}{S_l}",
+          "note": "Confirmed dimensionally as market-order arrivals per time rescaled from average market-order size to the model's limit-order unit."
+        },
+        "formula:0015": {
+          "document_ref": "#/texts/143",
+          "source_page": 8,
+          "action": "confirm_existing",
+          "latex": "Q_i^B=\\frac{1}{S_l}\\frac{1}{M}\\sum_{j=1}^{M}S_i^B(j)",
+          "note": "Confirmed as average empirical bid depth measured in average-limit-order units."
+        },
+        "formula:0016": {
+          "document_ref": "#/texts/146",
+          "source_page": 8,
+          "action": "confirm_existing",
+          "latex": "\\widehat{\\theta}(i)=\\frac{N_c(i)}{TQ_i}\\frac{S_c}{S_l}\\quad(i\\le5),\\qquad\\widehat{\\theta}(i)=\\widehat{\\theta}(5)\\quad(i>5)",
+          "note": "Confirmed as cancellations per unit time and standing depth, with size rescaling and a flat tail beyond five ticks."
+        },
+        "formula:0017": {
+          "document_ref": "#/texts/155",
+          "source_page": 9,
+          "action": "confirm_existing",
+          "latex": "\\widehat f(s)=\\int_{-\\infty}^{\\infty}e^{-st}f(t)\\,dt",
+          "note": "Confirmed as the paper's two-sided Laplace-transform convention."
+        },
+        "formula:0018": {
+          "document_ref": "#/texts/157",
+          "source_page": 9,
+          "action": "confirm_existing",
+          "latex": "\\widehat f(s)=\\mathbb E[e^{-sX}]",
+          "note": "Confirmed as the expectation form of the transform for a random variable X."
+        },
+        "formula:0019": {
+          "document_ref": "#/texts/160",
+          "source_page": 9,
+          "action": "confirm_existing",
+          "latex": "\\widehat f_{X+Y}(s)=\\mathbb E[e^{-s(X+Y)}]=\\mathbb E[e^{-sX}]\\mathbb E[e^{-sY}]=\\widehat f_X(s)\\widehat f_Y(s)",
+          "note": "Confirmed from independence as the product rule for the transform of X+Y."
+        },
+        "formula:0020": {
+          "document_ref": "#/texts/162",
+          "source_page": 9,
+          "action": "confirm_existing",
+          "latex": "f(t)=\\frac{1}{2\\pi i}\\int_{\\sigma-i\\infty}^{\\sigma+i\\infty}e^{ts}\\widehat f(s)\\,ds",
+          "note": "Confirmed as the Bromwich inversion integral under the stated integrability condition."
+        },
+        "formula:0021": {
+          "document_ref": "#/texts/165",
+          "source_page": 9,
+          "action": "confirm_existing",
+          "latex": "w_n=t_1\\circ t_2\\circ\\cdots\\circ t_n(0),\\quad n\\ge1,\\qquad t_k(u)=\\frac{a_k}{b_k+u},\\quad k\\ge1",
+          "note": "Confirmed as the composition definition of the continued-fraction convergents."
+        },
+        "formula:0022": {
+          "document_ref": "#/texts/168",
+          "source_page": 9,
+          "action": "confirm_existing",
+          "latex": "w=\\mathop{\\Phi}_{n=1}^{\\infty}\\frac{a_n}{b_n}",
+          "note": "Confirmed as the paper's notation for the limiting continued fraction."
+        },
+        "formula:0023": {
+          "document_ref": "#/texts/172",
+          "source_page": 10,
+          "action": "confirm_existing",
+          "latex": "\\sigma_b=\\sigma_{b,b-1}+\\sigma_{b-1,b-2}+\\cdots+\\sigma_{1,0}",
+          "note": "Confirmed by the strong Markov decomposition of the passage from b to zero into successive one-level passage times."
+        },
+        "formula:0024": {
+          "document_ref": "#/texts/174",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\widehat f_b(s)=\\prod_{i=1}^{b}\\widehat f_{i,i-1}(s)",
+          "note": "Removed duplicated OCR fragments and retained the transform product implied by independence of the passage-time increments."
+        },
+        "formula:0025": {
+          "document_ref": "#/texts/176",
+          "source_page": 10,
+          "action": "confirm_existing",
+          "latex": "\\widehat f_{i,i-1}(s)=-\\frac{1}{\\lambda}\\mathop{\\Phi}_{k=i}^{\\infty}\\frac{-\\lambda\\mu_k}{\\lambda+\\mu_k+s}",
+          "note": "Confirmed as the continued-fraction representation for a one-level birth-death first-passage transform."
+        },
+        "formula:0026": {
+          "document_ref": "#/texts/178",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\widehat f_b(s)=\\left(-\\frac{1}{\\lambda}\\right)^b\\prod_{i=1}^{b}\\left(\\mathop{\\Phi}_{k=i}^{\\infty}\\frac{-\\lambda\\mu_k}{\\lambda+\\mu_k+s}\\right)",
+          "note": "Removed OCR prose spillover and combined the preceding product and continued-fraction formulas."
+        },
+        "formula:0027": {
+          "document_ref": "#/texts/182",
+          "source_page": 10,
+          "action": "confirm_existing",
+          "latex": "T=\\inf\\{t\\ge0:p_M(t)\\ne p_M(0)\\}",
+          "note": "Confirmed as the first time at which the mid-price differs from its initial value."
+        },
+        "formula:0028": {
+          "document_ref": "#/texts/185",
+          "source_page": 10,
+          "action": "confirm_existing",
+          "latex": "\\mathbb P[p_M(T)>p_M(0)\\mid X_A(0)=a,X_B(0)=b,s(0)=S]",
+          "note": "Confirmed as the conditional probability of an upward first mid-price move."
+        },
+        "formula:0029": {
+          "document_ref": "#/texts/196",
+          "source_page": 11,
+          "action": "correct_suspected_paper_typo",
+          "confidence": 0.99,
+          "latex": "\\widehat f_{j,S}(s)=\\left(-\\frac{1}{\\lambda(S)}\\right)^j\\prod_{i=1}^{j}\\left(\\mathop{\\Phi}_{k=i}^{\\infty}\\frac{-\\lambda(S)(\\mu+k\\theta(S))}{\\lambda(S)+\\mu+k\\theta(S)+s}\\right),\\qquad j\\ge1",
+          "paper_as_printed_latex": "\\widehat f_{j,S}(s)=\\left(-\\frac{1}{\\lambda(S)}\\right)^j\\prod_{i=1}^{b}\\left(\\mathop{\\Phi}_{k=i}^{\\infty}\\frac{-\\lambda(S)(\\mu+k\\theta(S))}{\\lambda(S)+\\mu+k\\theta(S)+s}\\right)",
+          "evidence": [
+            "The function is indexed by the initial queue size j and the prefactor has exponent j.",
+            "Equation (7), from which this specialization is taken, has the same initial-state value as the upper product limit.",
+            "The symbol b is not bound in the proposition's definition of f_{j,S}."
+          ],
+          "note": "Corrected the printed upper product limit b to j so the transform depends consistently on its declared initial queue size."
+        },
+        "formula:0030": {
+          "document_ref": "#/texts/197",
+          "source_page": 11,
+          "action": "correct_suspected_paper_typo",
+          "confidence": 0.98,
+          "latex": "\\begin{aligned}\\Lambda_S&=\\sum_{i=1}^{S-1}\\lambda(i),\\\\\\widehat F_{a,b,S}(s)&=\\frac{1}{s}\\left(\\widehat f_{a,S}(s+\\Lambda_S)+\\frac{\\Lambda_S}{\\Lambda_S+s}(1-\\widehat f_{a,S}(s+\\Lambda_S))\\right)\\left(\\widehat f_{b,S}(\\Lambda_S-s)+\\frac{\\Lambda_S}{\\Lambda_S-s}(1-\\widehat f_{b,S}(\\Lambda_S-s))\\right).\\end{aligned}",
+          "paper_as_printed_latex": "\\widehat F_{a,b,S}(s)=\\frac{1}{s}\\left(\\widehat f_{b,S}(s+\\Lambda_S)+\\frac{\\Lambda_S}{\\Lambda_S+s}(1-\\widehat f_{b,S}(s+\\Lambda_S))\\right)\\left(\\widehat f_{a,S}(\\Lambda_S-s)+\\frac{\\Lambda_S}{\\Lambda_S-s}(1-\\widehat f_{a,S}(\\Lambda_S-s))\\right)",
+          "evidence": [
+            "An upward move is the event that the ask-side stopping time, initialized at a, precedes the bid-side stopping time initialized at b.",
+            "The transform of U-V must use the a transform at s and the b transform at -s.",
+            "The paper's immediately following S=1 reduction uses f_{a,1}(s)f_{b,1}(-s), contradicting the printed order in equation (10)."
+          ],
+          "note": "Corrected a high-confidence a/b swap in equation (10); the ordering now agrees with the event definition, transform sign, and equation (11)."
+        },
+        "formula:0031": {
+          "document_ref": "#/texts/199",
+          "source_page": 11,
+          "action": "reconstruct",
+          "latex": "\\widehat F_{a,b,1}(s)=\\frac{1}{s}\\widehat f_{a,1}(s)\\widehat f_{b,1}(-s)",
+          "note": "Restored the a-then-b ordering visible in equation (11), consistent with the transform of the ask-minus-bid passage-time difference."
+        },
+        "formula:0032": {
+          "document_ref": "#/texts/202",
+          "source_page": 11,
+          "action": "reconstruct",
+          "latex": "T=\\sigma_A\\wedge\\sigma_B\\wedge\\min\\{\\sigma_A^i,\\sigma_B^i:i=1,\\ldots,S-1\\}",
+          "note": "Removed OCR debris and reconstructed the minimum over queue-depletion and inside-spread arrival times."
+        },
+        "formula:0033": {
+          "document_ref": "#/texts/204",
+          "source_page": 11,
+          "action": "reconstruct",
+          "latex": "\\mathbb P[\\sigma_A\\wedge\\sigma_B^1\\wedge\\cdots\\wedge\\sigma_B^{S-1}<\\sigma_B\\wedge\\sigma_A^1\\wedge\\cdots\\wedge\\sigma_A^{S-1}]=\\mathbb P[\\sigma_A\\wedge\\sigma_B^{\\Sigma}<\\sigma_B\\wedge\\sigma_A^{\\Sigma}]",
+          "note": "Removed a duplicated OCR line and retained the equivalent minimum-event representation for an upward move."
+        },
+        "formula:0034": {
+          "document_ref": "#/texts/208",
+          "source_page": 11,
+          "action": "confirm_existing",
+          "latex": "\\widehat f_b(s+\\Lambda)+\\frac{\\Lambda}{\\Lambda+s}\\left(1-\\widehat f_b(s+\\Lambda)\\right)",
+          "note": "Confirmed as the Laplace transform of the minimum between the passage time sigma_B and an independent exponential clock."
+        },
+        "formula:0035": {
+          "document_ref": "#/texts/212",
+          "source_page": 12,
+          "action": "confirm_existing",
+          "latex": "\\mathbb P[\\sigma_B\\wedge Z<t]=1-\\mathbb P[\\sigma_B>t]\\mathbb P[Z>t]=1-(1-F_{\\sigma_B}(t))e^{-\\Lambda t}",
+          "note": "Confirmed from independence and the exponential survival function."
+        },
+        "formula:0036": {
+          "document_ref": "#/texts/214",
+          "source_page": 12,
+          "action": "confirm_existing",
+          "latex": "f_{\\sigma_B\\wedge Z}(t)=f_b(t)e^{-\\Lambda t}+\\Lambda(1-F_b(t))e^{-\\Lambda t}",
+          "note": "Confirmed by differentiating the preceding cdf of the minimum."
+        },
+        "formula:0037": {
+          "document_ref": "#/texts/216",
+          "source_page": 12,
+          "action": "correct_suspected_paper_typo",
+          "confidence": 0.995,
+          "latex": "\\begin{aligned}\\widehat f_{\\sigma_B\\wedge Z}(s)&=\\int_{-\\infty}^{\\infty}e^{-st}f_{\\sigma_B\\wedge Z}(t)\\,dt\\\\&=\\int_0^{\\infty}e^{-st}\\left(f_b(t)e^{-\\Lambda t}+\\Lambda(1-F_b(t))e^{-\\Lambda t}\\right)\\,dt\\\\&=\\int_0^{\\infty}e^{-t(s+\\Lambda)}f_b(t)\\,dt+\\Lambda\\int_0^{\\infty}(1-F_b(t))e^{-t(s+\\Lambda)}\\,dt\\\\&=\\widehat f_b(s+\\Lambda)+\\frac{\\Lambda}{\\Lambda+s}\\left(1-\\widehat f_b(s+\\Lambda)\\right).\\end{aligned}",
+          "paper_as_printed_latex": "\\begin{aligned}\\widehat f_{\\sigma_B\\wedge Z}(s)&=\\int_{-\\infty}^{\\infty}e^{-st}f_{\\sigma_B\\wedge\\sigma_B^{\\Sigma}}(t)\\,dt\\\\&=\\int_0^{\\infty}e^{-st}\\left(f_b(t)e^{-\\Lambda t}+\\Lambda(1-F_b(t))e^{-\\Lambda t}\\right)\\,ds\\\\&=\\int_0^{\\infty}e^{-t(s+\\Lambda)}f_b(t)\\,dt+\\Lambda\\int_0^{\\infty}(1-F_b(t))e^{-t(s+\\Lambda)}\\,dt.\\end{aligned}",
+          "evidence": [
+            "Lemma 4 defines the random variable as sigma_B wedge Z, so its density must carry the same subscript.",
+            "Every integral is over t and the integrands are functions of t; the printed ds in the second line is inconsistent.",
+            "The corrected integral evaluates by integration by parts to the transform stated in the lemma."
+          ],
+          "note": "Corrected two high-confidence notation typos in the derivation: the density is for sigma_B wedge Z and the integration variable is dt."
+        },
+        "formula:0038": {
+          "document_ref": "#/texts/223",
+          "source_page": 12,
+          "action": "confirm_existing",
+          "latex": "\\mathbb P[\\epsilon_B<T\\mid X_B(0)=b,X_A(0)=a,s(0)=S,NC_b]",
+          "note": "Confirmed as the probability that a noncanceling bid order executes before the first mid-price move."
+        },
+        "formula:0039": {
+          "document_ref": "#/texts/225",
+          "source_page": 12,
+          "action": "confirm_existing",
+          "latex": "\\widehat g_{j,S}(s)=\\prod_{i=1}^{j}\\frac{\\mu+\\theta(S)(i-1)}{\\mu+\\theta(S)(i-1)+s}",
+          "note": "Confirmed as the transform of a sum of j independent exponential service times with the stated state-dependent rates."
+        },
+        "formula:0040": {
+          "document_ref": "#/texts/229",
+          "source_page": 13,
+          "action": "correct_suspected_paper_typo",
+          "confidence": 0.99,
+          "latex": "\\widehat F_{a,b,S}(s)=\\frac{1}{s}\\widehat g_{b,S}(s)\\left(\\widehat f_{a,S}(2\\Lambda_S-s)+\\frac{2\\Lambda_S}{2\\Lambda_S-s}\\left(1-\\widehat f_{a,S}(2\\Lambda_S-s)\\right)\\right)",
+          "paper_as_printed_latex": "\\widehat F_{a,b,S}(s)=\\frac{1}{s}\\widehat g_{b,S}(s)\\left(\\widehat f_{b,S}(2\\Lambda_S-s)+\\frac{2\\Lambda_S}{2\\Lambda_S-s}\\left(1-\\widehat f_{b,S}(2\\Lambda_S-s)\\right)\\right)",
+          "evidence": [
+            "The execution time epsilon_B starts from bid size b and is represented by g_{b,S}.",
+            "Its competing ask-depletion time sigma_A starts from ask size a and therefore requires f_{a,S}.",
+            "The paper's S=1 reduction in equation (16) uses g_{b,1}(s)f_{a,1}(-s), confirming the a subscript."
+          ],
+          "note": "Corrected the competing passage-time transform from f_b to f_a so equation (15) agrees with its event definition and equation (16)."
+        },
+        "formula:0041": {
+          "document_ref": "#/texts/231",
+          "source_page": 13,
+          "action": "confirm_existing",
+          "latex": "\\widehat F_{a,b,1}(s)=\\frac{1}{s}\\widehat g_{b,1}(s)\\widehat f_{a,1}(-s)",
+          "note": "Confirmed as the unit-spread reduction combining bid execution time with the competing ask-queue passage time."
+        },
+        "formula:0042": {
+          "document_ref": "#/texts/236",
+          "source_page": 13,
+          "action": "confirm_existing",
+          "latex": "\\mathbb P[\\max\\{\\epsilon_A,\\epsilon_B\\}<T\\mid X_B(0)=b,X_A(0)=a,s(0)=1,NC_a,NC_b]",
+          "note": "Confirmed as the conditional probability that both noncanceling orders execute before the mid-price changes."
+        },
+        "formula:0043": {
+          "document_ref": "#/texts/239",
+          "source_page": 13,
+          "action": "confirm_existing",
+          "latex": "h_{a,b}=\\sum_{i=0}^{\\infty}\\sum_{j=1}^{a}\\mathbb P[\\epsilon_j<\\sigma_i]\\int_0^{\\infty}P_{0,i}^{X}(t)P_{a,j}^{W}(t)g_b(t)\\,dt",
+          "note": "Confirmed as the decomposition over residual queue states and the bid-order execution time."
+        },
+        "formula:0044": {
+          "document_ref": "#/texts/240",
+          "source_page": 13,
+          "action": "reconstruct",
+          "latex": "P_{0,i}^{X}(t)=\\frac{e^{-\\lambda^X(t)}(\\lambda^X(t))^i}{i!},\\qquad\\lambda^X(t)=\\frac{\\lambda}{\\theta}(1-e^{-\\theta t})",
+          "note": "Separated equation (19) from OCR spillover belonging to equation (20) and retained the Poisson transition probability and its mean."
+        },
+        "formula:0045": {
+          "document_ref": "#/texts/241",
+          "source_page": 13,
+          "action": "confirm_existing",
+          "latex": "P_{a,j}^{W}(t)=\\left(e^{Q_a^Wt}\\right)_{a,j}=\\left(\\sum_{k=0}^{\\infty}\\frac{t^k}{k!}(Q_a^W)^k\\right)_{a,j}",
+          "note": "Confirmed as the pure-death chain transition probability obtained from the matrix exponential."
+        },
+        "formula:0046": {
+          "document_ref": "#/texts/245",
+          "source_page": 14,
+          "action": "reconstruct",
+          "latex": "Q_a^W=\\begin{bmatrix}0&0&0&\\cdots&0\\\\\\mu&-\\mu&0&\\cdots&0\\\\0&\\mu+\\theta&-\\mu-\\theta&\\cdots&0\\\\\\vdots&\\vdots&\\ddots&\\ddots&\\vdots\\\\0&0&\\cdots&\\mu+(a-1)\\theta&-\\mu-(a-1)\\theta\\end{bmatrix}",
+          "note": "Restored the separate subdiagonal and diagonal entries of the pure-death generator; OCR had merged adjacent matrix columns."
+        },
+        "formula:0047": {
+          "document_ref": "#/texts/248",
+          "source_page": 14,
+          "action": "reconstruct",
+          "latex": "\\mathbb P[\\max\\{\\epsilon_B,\\epsilon_A\\}<\\min\\{\\sigma_B,\\sigma_A\\}]",
+          "note": "Removed OCR debris and retained the equivalent unit-spread event that both orders execute before either quote depletes."
+        },
+        "formula:0048": {
+          "document_ref": "#/texts/250",
+          "source_page": 14,
+          "action": "confirm_existing",
+          "latex": "\\begin{aligned}\\mathbb P[\\max\\{\\epsilon_B,\\epsilon_A\\}<\\min\\{\\sigma_B,\\sigma_A\\}]&=\\mathbb P[\\epsilon_B<\\sigma_A,\\epsilon_A<\\sigma_B]\\\\&=\\mathbb P[\\epsilon_B<\\sigma_A,\\epsilon_A<\\sigma_B,\\epsilon_B<\\epsilon_A]+\\mathbb P[\\epsilon_B<\\sigma_A,\\epsilon_A<\\sigma_B,\\epsilon_A<\\epsilon_B]\\\\&=\\mathbb P[\\epsilon_A<\\sigma_B,\\epsilon_B<\\epsilon_A]+\\mathbb P[\\epsilon_B<\\sigma_A,\\epsilon_A<\\epsilon_B]\\\\&=h_{a,b}+h_{b,a}.\\end{aligned}",
+          "note": "Confirmed by partitioning the joint execution event according to which order executes first and using the queue-dominance relations from Lemma 2."
+        },
+        "formula:0049": {
+          "document_ref": "#/texts/252",
+          "source_page": 14,
+          "action": "reconstruct",
+          "latex": "h_{a,b}=\\int_0^{\\infty}\\mathbb P[\\epsilon_B<\\epsilon_A<\\sigma_B\\mid\\epsilon_B=t]g_b(t)\\,dt",
+          "note": "Removed a duplicated OCR fragment and retained the conditioning integral over the bid-order execution time."
+        },
+        "formula:0050": {
+          "document_ref": "#/texts/254",
+          "source_page": 14,
+          "action": "reconstruct",
+          "latex": "\\begin{aligned}\\mathbb P[\\epsilon_B<\\epsilon_A<\\sigma_B\\mid\\epsilon_B=t]&=\\sum_{i=0}^{\\infty}\\sum_{j=0}^{a}\\mathbb P[\\epsilon_B<\\epsilon_A<\\sigma_B\\mid\\epsilon_B=t,\\widetilde X_B(t)=i,\\widetilde W_A(t)=j]\\,\\mathbb P[\\widetilde X_B(t)=i,\\widetilde W_A(t)=j\\mid\\epsilon_B=t]\\\\&=\\sum_{i=0}^{\\infty}\\sum_{j=1}^{a}\\mathbb P[\\epsilon_j<\\sigma_i]\\,\\mathbb P[\\widetilde X_B(t)=i\\mid\\epsilon_B=t]\\,\\mathbb P[\\widetilde W_A(t)=j\\mid\\epsilon_B=t]\\\\&=\\sum_{i=0}^{\\infty}\\sum_{j=1}^{a}\\mathbb P[\\epsilon_j<\\sigma_i]\\,\\mathbb P[\\widetilde X_B(t)=i\\mid\\epsilon_B=t]\\,\\mathbb P[\\widetilde W_A(t)=j].\\end{aligned}",
+          "note": "Reconstructed equation (25) from the conditioning argument; the final equality uses independence of the ask pure-death process from epsilon_B."
+        },
+        "formula:0051": {
+          "document_ref": "#/texts/256",
+          "source_page": 14,
+          "action": "reconstruct",
+          "latex": "h_{a,b}=\\sum_{i=0}^{\\infty}\\sum_{j=1}^{a}\\mathbb P[\\epsilon_j<\\sigma_i]\\int_0^{\\infty}\\mathbb P[\\widetilde X_B(t)=i\\mid\\epsilon_B=t]\\mathbb P[\\widetilde W_A(t)=j]g_b(t)\\,dt",
+          "note": "Removed severe OCR repetition and restored the Tonelli-interchanged sum and integral derived from equations (23)-(25)."
+        },
+        "formula:0052": {
+          "document_ref": "#/texts/266",
+          "source_page": 15,
+          "action": "reconstruct",
+          "latex": "\\frac{1}{T}\\int_0^T f(X(t))\\,dt\\longrightarrow\\mathbb E[f(X_{\\infty})]\\qquad\\text{as }T\\to\\infty",
+          "note": "Removed section-heading spillover and retained the ergodic time-average limit used for stationary expectations."
+        },
+        "formula:0053": {
+          "document_ref": "#/texts/269",
+          "source_page": 15,
+          "action": "reconstruct",
+          "latex": "RV_n=\\sqrt{\\sum_{i=1}^{n}\\left(\\log\\frac{P_{i+1}}{P_i}\\right)^2}",
+          "note": "Removed OCR prose spillover and restored the realized-volatility definition from successive mid-price log returns."
+        },
+        "formula:0054": {
+          "document_ref": "#/texts/294",
+          "source_page": 16,
+          "action": "confirm_existing",
+          "latex": "T_0=0,\\qquad T_{m+1}=\\inf\\{t\\ge T_m:X(t)\\ne X(T_m)\\}",
+          "note": "Confirmed as the recursive event-time definition; the inequality is required for the next state change."
+        },
+        "formula:0055": {
+          "document_ref": "#/texts/298",
+          "source_page": 16,
+          "action": "reconstruct",
+          "latex": "\\begin{aligned}P_i(n)&=\\mathbb P[Q_i^A(T_{m+1})=n+1\\mid Q_i^A(T_m)=n,Q_i^A(T_{m+1})\\ne n,s(T_m)=1]\\\\&=\\begin{cases}\\dfrac{\\lambda(1)}{\\lambda(1)+\\mu+n\\theta(1)},&i=1,\\\\\\dfrac{\\lambda(i)}{\\lambda(i)+n\\theta(i)},&i>1.\\end{cases}\\end{aligned}",
+          "note": "Reconstructed equation (27): each branch is the arrival intensity divided by the total intensity of the next change at that queue."
+        },
+        "formula:0056": {
+          "document_ref": "#/texts/301",
+          "source_page": 16,
+          "action": "confirm_existing",
+          "latex": "\\widehat P_i(n)=\\frac{\\widehat B_{up}+\\widehat A_{up}}{\\widehat B_{change}+\\widehat A_{change}}",
+          "note": "Confirmed as the pooled empirical frequency of upward queue-size changes conditional on a change."
+        },
+        "formula:0057": {
+          "document_ref": "#/texts/387",
+          "source_page": 17,
+          "action": "reconstruct",
+          "latex": "\\begin{aligned}\\widehat B_{up}&=\\left|\\{m:\\widehat Q_i^B(\\widehat T_m)=n,\\ \\widehat Q_i^B(\\widehat T_{m+1})>n\\}\\right|,\\\\\\widehat A_{up}&=\\left|\\{m:\\widehat Q_i^A(\\widehat T_m)=n,\\ \\widehat Q_i^A(\\widehat T_{m+1})>n\\}\\right|,\\\\\\widehat B_{change}&=\\left|\\{m:\\widehat Q_i^B(\\widehat T_m)=n,\\ \\widehat Q_i^B(\\widehat T_{m+1})\\ne n\\}\\right|,\\\\\\widehat A_{change}&=\\left|\\{m:\\widehat Q_i^A(\\widehat T_m)=n,\\ \\widehat Q_i^A(\\widehat T_{m+1})\\ne n\\}\\right|.\\end{aligned}",
+          "note": "Removed OCR prose and restored the four empirical event-count definitions; change counts use non-equality, not equality."
+        }
+      }
+    },
+    "ref_dixon_rnn_lob_1707.05642": {
+      "defaults": {
+        "review_status": "high_confidence",
+        "confidence": 0.99,
+        "base_status": "decoded_unverified",
+        "source_pdf": "sources/papers/ref_dixon_rnn_lob_1707.05642.pdf",
+        "evidence": [
+          "Reviewed the displayed equation with the surrounding model definition in the source PDF.",
+          "Indices and matrix roles were checked against the stated RNN architecture and dimensions."
+        ],
+        "assumptions": [],
+        "alternatives": []
+      },
+      "reviews": {
+        "formula:0001": {
+          "document_ref": "#/texts/27",
+          "source_page": 4,
+          "action": "confirm_existing",
+          "latex": "Y=F(X),\\qquad X=(X^{(1)},\\ldots,X^{(P)})",
+          "note": "Confirmed as the generic nonlinear input-output map over P predictors."
+        },
+        "formula:0002": {
+          "document_ref": "#/texts/29",
+          "source_page": 4,
+          "action": "confirm_existing",
+          "latex": "Y=AX+b",
+          "note": "Confirmed as the semi-affine special case of the preceding input-output map."
+        },
+        "formula:0003": {
+          "document_ref": "#/texts/32",
+          "source_page": 4,
+          "action": "reconstruct",
+          "latex": "y=F(\\mathcal X),\\qquad\\mathcal X_t=\\operatorname{seq}_T(X_t)=(X_{t-T+1},\\ldots,X_t)",
+          "note": "Normalized the OCR-split seq operator and confirmed the T-observation window ending at time t."
+        },
+        "formula:0004": {
+          "document_ref": "#/texts/37",
+          "source_page": 4,
+          "action": "reconstruct",
+          "latex": "h_t=F_h(X_t,h_{t-1})=\\sigma(W_hX_t+U_hh_{t-1}+b_h)",
+          "note": "Corrected the OCR loss of the minus sign in t-1; the recurrence and surrounding prose require the previous hidden state."
+        },
+        "formula:0005": {
+          "document_ref": "#/texts/152",
+          "source_page": 5,
+          "action": "confirm_existing",
+          "latex": "Y=F_y(h_T)=W_yh_T+b_y",
+          "note": "Confirmed as the continuous-output affine readout from the final hidden state."
+        },
+        "formula:0006": {
+          "document_ref": "#/texts/154",
+          "source_page": 5,
+          "action": "correct_suspected_paper_typo",
+          "confidence": 0.98,
+          "latex": "Y=\\operatorname{softmax}(F_y(h_T))=\\operatorname{softmax}(W_yh_T+b_y)",
+          "paper_as_printed_latex": "Y=F_y(h_T)=\\operatorname{softmax}(F_y(h_T))",
+          "evidence": [
+            "Equation (2) defines F_y(h_T)=W_yh_T+b_y as the affine logits/readout.",
+            "For a categorical output, probabilities are obtained by applying softmax to those logits.",
+            "The printed chained equality identifies the affine logits with their softmax and is not generally true."
+          ],
+          "note": "Corrected a high-confidence paper notation error by applying softmax to the affine readout without equating logits and probabilities."
+        },
+        "formula:0007": {
+          "document_ref": "#/texts/163",
+          "source_page": 6,
+          "action": "reconstruct",
+          "latex": "\\begin{aligned}\\min_{W,b}\\quad&f(W,b)+\\lambda\\phi(W,b),\\\\f(W,b)&=\\frac{1}{N}\\sum_{t=1}^{N}\\mathcal L(Y_t,\\widehat Y(\\mathcal X_t)).\\end{aligned}",
+          "note": "Normalized the optimization display and confirmed the empirical loss plus regularization objective."
+        },
+        "formula:0008": {
+          "document_ref": "#/texts/169",
+          "source_page": 6,
+          "action": "reconstruct",
+          "latex": "\\begin{aligned}D_i&\\sim\\operatorname{Ber}(\\theta),\\\\\\widetilde X_t&=D\\star X_t,\\quad t=1,\\ldots,T,\\\\h_t&=F_h(W_h\\widetilde X_t+U_hh_{t-1}+b_h).\\end{aligned}",
+          "note": "Removed OCR prose spillover and reconstructed input dropout followed by the recurrent state update; the mask is shared across the displayed sequence."
+        },
+        "formula:0009": {
+          "document_ref": "#/texts/266",
+          "source_page": 9,
+          "action": "confirm_existing",
+          "latex": "p_t=\\frac{p_{1,t}^{a}+p_{1,t}^{b}}{2}",
+          "note": "Confirmed as the midpoint of the level-one best ask and bid prices."
+        },
+        "formula:0010": {
+          "document_ref": "#/texts/295",
+          "source_page": 10,
+          "action": "reconstruct",
+          "latex": "\\begin{aligned}Y^k&=\\operatorname{softmax}(F_y^k(h_T))=\\frac{\\exp(F_y^k(h_T))}{\\sum_{j=1}^{K}\\exp(F_y^j(h_T))},\\\\h_t&=\\max(W_hX_t+U_hh_{t-1}+b_h,0),\\quad t=1,\\ldots,T.\\end{aligned}",
+          "note": "Normalized the architecture display and confirmed the K-class softmax readout and ReLU recurrent state equation."
+        },
+        "formula:0011": {
+          "document_ref": "#/texts/301",
+          "source_page": 11,
+          "action": "confirm_existing",
+          "latex": "F_1=2\\frac{\\operatorname{precision}\\cdot\\operatorname{recall}}{\\operatorname{precision}+\\operatorname{recall}}",
+          "note": "Confirmed the standard harmonic-mean F1 formula. The paper's nearby prose calls it a geometric mean, but the displayed equation itself is correct."
+        }
+      }
+    }
+  }
+}
