@@ -115,6 +115,7 @@ pub struct ManifestWord {
 }
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Physical {
     pub value: f64,
     pub b: i32,
@@ -361,7 +362,8 @@ pub fn check_bscales(allow_unverified: bool) -> Result<()> {
     if !unverified.is_empty() && !allow_unverified {
         bail!(
             "padload_gen: UNVERIFIED b-scale hypotheses for [{}] -- pass --allow-unverified \
-             to generate anyway (see P66_BSCALE_TABLE / docs/superpowers/sdd/task-5-report.md)",
+             to generate anyway (see the P66_BSCALE_TABLE doc comments in \
+             runtime/apps/eagle-runtime/src/padload.rs for the in-rope usage notes)",
             unverified.join(", ")
         );
     }
@@ -627,6 +629,26 @@ mod tests {
     }
 
     #[test]
+    fn physical_rejects_unknown_fields() {
+        // deny_unknown_fields must hold on every struct, not just the two
+        // outer ones -- an unrecognized key nested inside `physical = {...}`
+        // (e.g. a typo'd `bb` instead of `b`) should fail to parse rather
+        // than silently ignoring it.
+        let toml_text = r#"
+            [[word]]
+            addr = "00001"
+            physical = { value = 1.0, b = 7, dp = false, bb = 99 }
+            provenance = "assumed"
+        "#;
+        let err = toml::from_str::<PadloadManifest>(toml_text).unwrap_err();
+        let msg = err.to_string();
+        assert!(
+            msg.contains("bb") || msg.to_lowercase().contains("unknown"),
+            "expected an unknown-field error, got: {msg}"
+        );
+    }
+
+    #[test]
     fn manifest_dp_emits_two_consecutive_words() {
         let toml_text = r#"
             [[word]]
@@ -641,6 +663,31 @@ mod tests {
         assert_eq!((w[0].ecadr, w[1].ecadr), (0o2000, 0o2001));
         let pulses = eagle_agc_protocol::words::dp_decode([w[0].word, w[1].word]);
         assert_eq!(pulses, 2_000_000);
+    }
+
+    #[test]
+    fn manifest_octal_wins_when_both_octal_and_physical_are_set() {
+        // Same entry sets BOTH `octal` and `physical`; the physical value
+        // (b=27 dp, 1_000_000.0) would decode to a completely different,
+        // two-word DP pair if it were used, so this pins that `octal` (a
+        // single word, 0o00042) wins outright, per the manifest contract.
+        let toml_text = r#"
+            [[word]]
+            addr = "02000"
+            octal = "00042"
+            physical = { value = 1000000.0, b = 27, dp = true }
+            provenance = "derived"
+        "#;
+        let m: PadloadManifest = toml::from_str(toml_text).unwrap();
+        let st = SymTab::from_listing("").unwrap();
+        let words = m.resolve(&st).unwrap();
+        assert_eq!(
+            words,
+            vec![PadWord {
+                ecadr: 0o2000,
+                word: 0o42
+            }]
+        );
     }
 
     #[test]
@@ -770,6 +817,65 @@ mod tests {
             "RLS[0] should be R_SITE at lat=lon=0: {}",
             p.value
         );
+    }
+
+    #[test]
+    fn generate_p66_manifest_refsmmat_row0_is_sm_x_axis_up_in_mci() {
+        // Pins the row-major convention v_SM = REFSMMAT * v_MCI, row 0 =
+        // SM's +X axis (== "up" at the site, per docs/coordinate-frames.md
+        // and the task brief's "body +X = up at site"), expressed in MCI.
+        // The expected "up" vector is computed here with plain trig (NOT
+        // via eagle_dynamics::frames), and epoch_cs=0 makes MCI and MCMF
+        // coincide (mci_to_mcmf(0) is the identity rotation), so this is
+        // an independent check: a row/column transposition bug in the
+        // generator (e.g. writing east/north into row 0 instead of up, or
+        // emitting column-major instead of row-major) would fail this.
+        let (lat_deg, lon_deg) = (12.0, -34.0);
+        let inp = P66ScenarioInputs {
+            site_lat_deg: lat_deg,
+            site_lon_deg: lon_deg,
+            alt_m: 500.0,
+            vz_ms: 0.0,
+            epoch_cs: 0.0,
+        };
+        let (lat, lon) = (lat_deg.to_radians(), lon_deg.to_radians());
+        let expected_up = [lat.cos() * lon.cos(), lat.cos() * lon.sin(), lat.sin()];
+
+        let m = generate_p66_manifest(&inp);
+        let words = m.resolve(&SymTab::default()).unwrap();
+        let word_at = |ecadr: u16| -> u16 { words.iter().find(|w| w.ecadr == ecadr).unwrap().word };
+
+        for (col, expected) in expected_up.iter().enumerate() {
+            let addr = REFSMMAT_ECADR + (2 * col) as u16;
+            let pulses = eagle_agc_protocol::words::dp_decode([word_at(addr), word_at(addr + 1)]);
+            // b=1 DP: value = pulses * 2^(1-28).
+            let decoded = pulses as f64 * 2f64.powi(1 - 28);
+            assert!(
+                (decoded - expected).abs() < 1e-6,
+                "REFSMMAT[0][{col}] decoded to {decoded}, expected up-vector component {expected} \
+                 (within DP quantization ~2^-27 ~= 7.5e-9)"
+            );
+        }
+    }
+
+    #[test]
+    fn generate_p66_manifest_tland_equals_epoch_plus_120s_exact_pulses() {
+        let epoch_cs = 4321.0;
+        let inp = P66ScenarioInputs {
+            site_lat_deg: 0.674,
+            site_lon_deg: 23.473,
+            alt_m: 500.0,
+            vz_ms: 0.0,
+            epoch_cs,
+        };
+        let m = generate_p66_manifest(&inp);
+        let words = m.resolve(&SymTab::default()).unwrap();
+        let word_at = |ecadr: u16| -> u16 { words.iter().find(|w| w.ecadr == ecadr).unwrap().word };
+        let pulses =
+            eagle_agc_protocol::words::dp_decode([word_at(TLAND_ECADR), word_at(TLAND_ECADR + 1)]);
+        // b=28 DP: 1 pulse = 1 centisecond exactly, so TLAND's pulses must
+        // equal epoch_cs + 12000 (120 s) exactly, not just "close".
+        assert_eq!(pulses, (epoch_cs + 12000.0) as i64);
     }
 
     #[test]
