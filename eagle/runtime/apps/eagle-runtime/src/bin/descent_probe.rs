@@ -23,19 +23,21 @@
 //!   n43             key V06N43E (lat/long/alt sanity display)
 //!   p63             enter_p63 responder (V37E63E ... V99 PRO)
 //!   engine [secs]   wait for ENGINE ON on the packet stream
-//!   hover on|off    synthetic hover PIPA feeder
+//!   hover on|closed|off
+//!                   v1 fixed PIPA / Spike-B THRUST loop / stop
 //!   att-hold        ch31 := CH31_ATT_HOLD (GUILDENSTERN → P66)
-//!   auto            run the whole spike choreography end to end
+//!   rod +|-         one slow/faster-descent ROD click
+//!   truth           print the current Spike-B 1-D truth
+//!   auto            run through ENGINE ON, ATT-HOLD, and MM66
 //!   quit
 use anyhow::{Context, Result};
 use clap::Parser;
-use eagle_agc_protocol::agc_io::{decode_output, AgcOutput};
+use eagle_agc_protocol::agc_io::{decode_output, rod_click, AgcOutput, ThrustPulse};
 use eagle_agc_protocol::dsky::DskyState;
-use eagle_agc_protocol::Packet;
 use eagle_runtime::agc_session::{AgcConfig, AgcSession};
 use eagle_runtime::padload::{generate_state, PadloadManifest, StateCfg, SymTab};
 use eagle_runtime::runner::{
-    self, DescentInit, SyntheticHover, CH31_ATT_HOLD, FLAGWRD3_ECADR, FLAGWRD8_ECADR,
+    self, DescentInit, HoverTruth, SyntheticHover, FLAGWRD3_ECADR, FLAGWRD8_ECADR,
     FLAGWRD8_MOON_BITS, REFSMBIT,
 };
 use eagle_runtime::script::{pump, DskyScript};
@@ -100,6 +102,17 @@ fn dsky_line(d: &DskyState) -> String {
     )
 }
 
+fn spike_b_initial_truth() -> HoverTruth {
+    HoverTruth {
+        alt_m: 500.0,
+        vz_ms: 0.0,
+        mass_kg: 15_195.0,
+        cmd_pulses: 0,
+        thrust_n: 0.0,
+        engine_on: false,
+    }
+}
+
 async fn load_manifest(
     script: &mut DskyScript,
     manifest: &PadloadManifest,
@@ -133,6 +146,13 @@ async fn run_auto(
 
     eprintln!("[auto] hover feeder + discretes (ISS turn-on request)");
     *hover = Some(SyntheticHover::spawn(init.agc_tx.clone()));
+    // Arm the THRUST responder now, not after ENGINE ON: P63's FLATOUT
+    // command (the initial +4096 POUT burst) occurs before ignition.
+    let closed = SyntheticHover::spawn_closed_loop(
+        init.agc_tx.clone(),
+        init.packets.resubscribe(),
+        spike_b_initial_truth(),
+    );
     runner::init_discretes(&init.agc_tx).await?;
 
     eprintln!("[auto] V48 DAP init");
@@ -144,7 +164,9 @@ async fn run_auto(
     let state = PadloadManifest {
         word: generate_state(&StateCfg {
             epoch_now_cs: epoch_cs,
-            burn_lead_cs: 36_000.0, // ISS-wait remainder + pad-load + margin
+            // Covers the remaining ISS wait, both pad-loads, and more than
+            // two minutes of P63 setup while keeping live iterations bounded.
+            burn_lead_cs: 30_000.0,
             ..StateCfg::default()
         }),
     };
@@ -178,6 +200,51 @@ async fn run_auto(
     eprintln!("[auto] awaiting ENGINE ON");
     let rate = runner::wait_engine_on(&mut init.packets, Duration::from_secs(180)).await?;
     eprintln!("[auto] *** ENGINE ON *** (downlink {rate:.1} pkt/s)");
+
+    if let Some(v1) = hover.take() {
+        v1.stop();
+    }
+    let mut truth = closed.truth().context("closed-loop truth watch")?;
+    tokio::spawn(async move {
+        let mut last = tokio::time::Instant::now() - Duration::from_secs(1);
+        while truth.changed().await.is_ok() {
+            if last.elapsed() >= Duration::from_secs(1) {
+                let s = *truth.borrow();
+                eprintln!(
+                    "[{}][truth] alt={:.2}m vz={:+.3}m/s mass={:.1}kg cmd={} thrust={:.0}N engine={}",
+                    ts(),
+                    s.alt_m,
+                    s.vz_ms,
+                    s.mass_kg,
+                    s.cmd_pulses,
+                    s.thrust_n,
+                    s.engine_on
+                );
+                last = tokio::time::Instant::now();
+            }
+        }
+    });
+    *hover = Some(closed);
+
+    eprintln!("[auto] ENGINE ON +2s: ATT HOLD");
+    tokio::time::sleep(Duration::from_secs(2)).await;
+    runner::att_hold(&init.agc_tx).await?;
+    // In this rope, ATT HOLD alone leaves P63 running when RODCOUNT is zero
+    // (`LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:203-217`). A ROD click is the
+    // event that takes STARTP66; STARTP66 then seeds VDGVERT from HDOTDISP.
+    let (press, release) = rod_click(false);
+    init.agc_tx
+        .send(press)
+        .map_err(|_| anyhow::anyhow!("agc tx closed"))?;
+    tokio::time::sleep(Duration::from_millis(100)).await;
+    init.agc_tx
+        .send(release)
+        .map_err(|_| anyhow::anyhow!("agc tx closed"))?;
+    init.script
+        .wait_prog("66")
+        .await
+        .context("GUILDENSTERN did not reach MM66")?;
+    eprintln!("[auto] *** MM66 ***; use `rod -` / `rod +` to calibrate");
     Ok(())
 }
 
@@ -213,14 +280,32 @@ async fn main() -> Result<()> {
     // Printer: every DSKY change.
     let mut dsky_watch = dsky_rx.clone();
     tokio::spawn(async move {
+        let mut last_line = String::new();
         while dsky_watch.changed().await.is_ok() {
+            // One DSKY word is assembled over several relay writes. Let the
+            // burst settle and print the latest coherent snapshot instead of
+            // tens of transient half-register frames per key.
+            tokio::time::sleep(Duration::from_millis(500)).await;
             let line = dsky_line(&dsky_watch.borrow());
-            eprintln!("[{}][dsky] {line}", ts());
+            if line != last_line {
+                eprintln!("[{}][dsky] {line}", ts());
+                last_line = line;
+            }
         }
     });
-    // Printer: every decoded non-Downlink, non-DSKY output.
+    // Printer: decoded non-Downlink, non-DSKY output. Individual THRUST
+    // pulses are intentionally suppressed; the 1-Hz truth line reports the
+    // accumulated command without flooding stdout at up to 3200 pulses/s.
     let mut pkt_watch = pkt_rx;
     tokio::spawn(async move {
+        let mut jets5 = None;
+        let mut jets6 = None;
+        let mut engine = None;
+        let mut trim = None;
+        let mut thrust_drive = None;
+        let mut thrust_pout = 0u32;
+        let mut thrust_mout = 0u32;
+        let mut thrust_position = 0i64;
         loop {
             match pkt_watch.recv().await {
                 Ok(p) => {
@@ -229,7 +314,72 @@ async fn main() -> Result<()> {
                     }
                     match decode_output(&p) {
                         AgcOutput::Downlink => {}
-                        AgcOutput::Other(p) if matches!(p.channel, 0o10 | 0o163 | 0o13 | 0o12) => {}
+                        AgcOutput::ThrustPulse(ThrustPulse::Pout) => {
+                            thrust_pout += 1;
+                            thrust_position =
+                                (thrust_position + 1).min(runner::THRUST_CMD_MAX_PULSES);
+                        }
+                        AgcOutput::ThrustPulse(ThrustPulse::Mout) => {
+                            thrust_mout += 1;
+                            thrust_position = (thrust_position - 1).max(0);
+                        }
+                        AgcOutput::ThrustPulse(ThrustPulse::Zout) => {
+                            if thrust_pout != 0 || thrust_mout != 0 {
+                                eprintln!(
+                                    "[{}][thrust] burst POUT={} MOUT={} delta={:+} position={}",
+                                    ts(),
+                                    thrust_pout,
+                                    thrust_mout,
+                                    i64::from(thrust_pout) - i64::from(thrust_mout),
+                                    thrust_position
+                                );
+                            }
+                            thrust_pout = 0;
+                            thrust_mout = 0;
+                        }
+                        AgcOutput::Jets5 { mask } if jets5 == Some(mask) => {}
+                        AgcOutput::Jets5 { mask } => {
+                            jets5 = Some(mask);
+                            eprintln!("[{}][agc] Jets5 {{ mask: {mask:#010b} }}", ts());
+                        }
+                        AgcOutput::Jets6 { mask } if jets6 == Some(mask) => {}
+                        AgcOutput::Jets6 { mask } => {
+                            jets6 = Some(mask);
+                            eprintln!("[{}][agc] Jets6 {{ mask: {mask:#010b} }}", ts());
+                        }
+                        AgcOutput::Engine { on, off } if engine == Some((on, off)) => {}
+                        AgcOutput::Engine { on, off } => {
+                            engine = Some((on, off));
+                            eprintln!("[{}][agc] Engine {{ on: {on}, off: {off} }}", ts());
+                        }
+                        AgcOutput::Trim {
+                            minus_pitch,
+                            plus_pitch,
+                            minus_roll,
+                            plus_roll,
+                        } if trim == Some((minus_pitch, plus_pitch, minus_roll, plus_roll)) => {}
+                        AgcOutput::Trim {
+                            minus_pitch,
+                            plus_pitch,
+                            minus_roll,
+                            plus_roll,
+                        } => {
+                            trim = Some((minus_pitch, plus_pitch, minus_roll, plus_roll));
+                            eprintln!(
+                                "[{}][agc] Trim {{ -P:{minus_pitch} +P:{plus_pitch} -R:{minus_roll} +R:{plus_roll} }}",
+                                ts()
+                            );
+                        }
+                        AgcOutput::ThrustDrive(active) if thrust_drive == Some(active) => {}
+                        AgcOutput::ThrustDrive(active) => {
+                            thrust_drive = Some(active);
+                            eprintln!("[{}][agc] ThrustDrive({active})", ts());
+                        }
+                        AgcOutput::Other(p)
+                            if matches!(
+                                p.channel,
+                                0o10 | 0o12 | 0o13 | 0o30 | 0o31 | 0o32 | 0o33 | 0o163
+                            ) => {}
                         out => eprintln!("[{}][agc] {out:?}", ts()),
                     }
                 }
@@ -356,20 +506,54 @@ async fn main() -> Result<()> {
                         hover = Some(SyntheticHover::spawn(init.agc_tx.clone()));
                         eprintln!("[probe] hover feeder on");
                     }
+                    Some("closed") => {
+                        if let Some(h) = hover.take() {
+                            h.stop();
+                        }
+                        hover = Some(SyntheticHover::spawn_closed_loop(
+                            init.agc_tx.clone(),
+                            init.packets.resubscribe(),
+                            HoverTruth {
+                                engine_on: true,
+                                ..spike_b_initial_truth()
+                            },
+                        ));
+                        eprintln!("[probe] Spike-B closed-loop feeder on");
+                    }
                     Some("off") => {
                         if let Some(h) = hover.take() {
                             h.stop();
                         }
                         eprintln!("[probe] hover feeder off");
                     }
-                    _ => eprintln!("usage: hover on|off"),
+                    _ => eprintln!("usage: hover on|closed|off"),
                 }
                 Ok(())
             }
-            "att-hold" => init
-                .agc_tx
-                .send(Packet::io(0o31, CH31_ATT_HOLD)?)
-                .map_err(|_| anyhow::anyhow!("agc tx closed")),
+            "att-hold" => runner::att_hold(&init.agc_tx).await,
+            "rod" => match arg1 {
+                Some(direction @ ("+" | "-")) => {
+                    let (press, release) = rod_click(direction == "+");
+                    init.agc_tx
+                        .send(press)
+                        .map_err(|_| anyhow::anyhow!("agc tx closed"))?;
+                    tokio::time::sleep(Duration::from_millis(100)).await;
+                    init.agc_tx
+                        .send(release)
+                        .map_err(|_| anyhow::anyhow!("agc tx closed"))
+                }
+                _ => {
+                    eprintln!("usage: rod +|-");
+                    Ok(())
+                }
+            },
+            "truth" => {
+                match hover.as_ref().and_then(SyntheticHover::truth) {
+                    Some(truth) => eprintln!("[probe] truth: {:?}", *truth.borrow()),
+                    None => eprintln!("[probe] closed-loop hover is not running"),
+                }
+                Ok(())
+            }
             "auto" => run_auto(&mut init, &symtab, &manifest, &mut hover).await,
             other => {
                 eprintln!("[probe] unknown command {other:?}");
