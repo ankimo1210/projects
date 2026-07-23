@@ -37,6 +37,14 @@ impl AgcSession {
         let mut child = Command::new(&yaagc_bin)
             .arg(format!("--core={}", core_bin.display()))
             .arg(format!("--port={}", cfg.port))
+            // Cold boot, always: without this yaAGC silently RESUMES
+            // erasable (clock, flags, half-loaded pad-loads...) from the
+            // periodic "core" checkpoint file in its cwd
+            // (agc_simulator.c:88, SimManageCoreDump:235), which leaks
+            // state between test runs (spike-A iter 5: the AGC clock grew
+            // across separate boots by exactly the cumulative run time,
+            // and a stale-state POODOO aborted P00).
+            .arg("--no-resume")
             .current_dir(core_dir)
             .stdout(Stdio::null())
             .stderr(Stdio::null())

@@ -159,9 +159,25 @@ impl ManifestWord {
 
     fn resolve(&self, symtab: &SymTab) -> Result<Vec<PadWord>> {
         let ecadr = match (&self.symbol, &self.addr) {
-            (Some(s), None) => symtab
-                .ecadr(s)
-                .ok_or_else(|| anyhow!("symbol {s:?} not found in symbol table"))?,
+            // `symbol` accepts an optional "+N" suffix (N DECIMAL, matching
+            // the listing's "+17D" idiom minus the D): "REFSMMAT+4" is the
+            // word at REFSMMAT's ECADR + 4. Used by `generate_state` to
+            // address components of multi-word erasables.
+            (Some(s), None) => {
+                let (base, offset) = match s.split_once('+') {
+                    Some((base, off)) => (
+                        base.trim(),
+                        off.trim()
+                            .parse::<u16>()
+                            .with_context(|| format!("bad decimal offset in symbol {s:?}"))?,
+                    ),
+                    None => (s.as_str(), 0),
+                };
+                symtab
+                    .ecadr(base)
+                    .ok_or_else(|| anyhow!("symbol {base:?} not found in symbol table"))?
+                    + offset
+            }
             (None, Some(a)) => u16::from_str_radix(a, 8)
                 .with_context(|| format!("addr {a:?} is not a valid octal ECADR"))?,
             (Some(_), Some(_)) => {
@@ -549,6 +565,315 @@ pub fn generate_p66_manifest(inp: &P66ScenarioInputs) -> PadloadManifest {
     PadloadManifest { word: words }
 }
 
+// ---------------------------------------------------------------------
+// Spike A (Task 6): live state-vector generation.
+//
+// P63's ignition algorithm (THE_LUNAR_LANDING.agc, IGNALG) does NOT read
+// RN/VN/PIPTIME — it calls LEMPREC, which integrates the PERMANENT LM
+// state vector (RRECTLEM/VRECTLEM/TETLEM..., ERASABLE_ASSIGNMENTS.agc:945-955),
+// and BURNBABY additionally integrates the PERMANENT CSM state via
+// CSMPREC because P63's FLAGORGY sets MUNFLAG
+// (BURN,_BABY,_BURN_--_MASTER_IGNITION_ROUTINE.agc:196-201). RN/VN/PIPTIME
+// are *outputs* of MIDTOAV at TIG-30. So `generate_state` emits the
+// permanent state vectors (both vehicles), plus the three other
+// time-dependent quantities: RLS (moon-fixed, via the AGC's own MOONMX
+// model), REFSMMAT, and TLAND.
+// ---------------------------------------------------------------------
+
+/// GUIDDURN, the nominal guidance duration P63 subtracts from TLAND to
+/// seed its ignition-time iteration: `2DEC +66440` centiseconds = 664.40 s
+/// (THE_LUNAR_LANDING.agc:277, "GUIDDURN +6.64400314 E+2").
+pub const GUIDDURN_CS: f64 = 66440.0;
+
+/// ZOOMTIME, the throttle-up delay BURNBABY subtracts from the converged
+/// ignition-point time to get TIG (DDUMGOOD, THE_LUNAR_LANDING.agc:186-192):
+/// 26 s = 2600 cs (P40-P47.agc `ZOOMTIME DEC 2600`).
+pub const ZOOMTIME_CS: f64 = 2600.0;
+
+/// Luminary's lunar orientation model, MOONMX
+/// (PLANETARY_INERTIAL_ORIENTATION.agc:145-262): computes M(t) such that
+/// RP = M(t)·R maps the basic reference (MCI) into the moon-fixed frame.
+/// RP-TO-R applies the transpose: R = Mᵀ(t)·(RP + L×RP); we take the
+/// libration vector L (padload 504LM, |L| ~ 1e-4 rad) as zero.
+///
+/// Angle polynomials X = X0 + Ẋ·t are evaluated with TEPHEM = 0 (our
+/// padload leaves it zero), so t is the raw AGC clock. Constants from
+/// CONTROLLED_CONSTANTS.agc:552-561 (rad / rad/s values from the source
+/// comments; the octal words encode the same values):
+///   COSI/SINI: I = 5521.5″ = 1°32′01.5″ (mean lunar equator vs ecliptic)
+///   NODIO = 6.19653663041 rad, NODDOT = -1.07047011e-8 rad/s
+///   FSUBO = 5.20932947829 rad, FDOT   =  2.67240410e-6 rad/s
+///   BSUBO = 0.40916190299 rad, BDOT   = -7.19757301e-14 rad/s
+/// Matrix assembly (MOONMX/MOONMXA, PLANETARY_INERTIAL_ORIENTATION.agc:229-262):
+///   A = ( cosN, cosB·sinN, sinB·sinN )
+///   B = (-sinN, cosB·cosN, sinB·cosN )
+///   C = ( 0,        -sinB,      cosB )
+///   M2 = B·sinI + C·cosI          (row 2)
+///   D  = B·cosI - C·sinI
+///   M1 = A·sinF - D·cosF          (row 1)
+///   M0 = -(A·cosF + D·sinF)       (row 0)
+pub fn moon_mx(t_cs: f64) -> [[f64; 3]; 3] {
+    const COSI: f64 = 0.99964173;
+    const SINI: f64 = 0.02676579;
+    const NODIO: f64 = 6.19653663041;
+    const NODDOT: f64 = -1.07047011e-8;
+    const FSUBO: f64 = 5.20932947829;
+    const FDOT: f64 = 2.67240410e-6;
+    const BSUBO: f64 = 0.40916190299;
+    const BDOT: f64 = -7.19757301e-14;
+
+    let t_s = t_cs / 100.0;
+    let node = NODIO + NODDOT * t_s;
+    let f = FSUBO + FDOT * t_s;
+    let b = BSUBO + BDOT * t_s;
+    let (sn, cn) = node.sin_cos();
+    let (sf, cf) = f.sin_cos();
+    let (sb, cb) = b.sin_cos();
+
+    let av = [cn, cb * sn, sb * sn];
+    let bv = [-sn, cb * cn, sb * cn];
+    let cv = [0.0, -sb, cb];
+    let m2 = [
+        bv[0] * SINI + cv[0] * COSI,
+        bv[1] * SINI + cv[1] * COSI,
+        bv[2] * SINI + cv[2] * COSI,
+    ];
+    let dv = [
+        bv[0] * COSI - cv[0] * SINI,
+        bv[1] * COSI - cv[1] * SINI,
+        bv[2] * COSI - cv[2] * SINI,
+    ];
+    let m1 = [
+        av[0] * sf - dv[0] * cf,
+        av[1] * sf - dv[1] * cf,
+        av[2] * sf - dv[2] * cf,
+    ];
+    let m0 = [
+        -(av[0] * cf + dv[0] * sf),
+        -(av[1] * cf + dv[1] * sf),
+        -(av[2] * cf + dv[2] * sf),
+    ];
+    [m0, m1, m2]
+}
+
+/// Scenario inputs for `generate_state` (Spike A live regeneration from
+/// the measured AGC clock).
+///
+/// Geometry: the landing site is placed on the MCI +X axis (its
+/// moon-fixed RLS is derived from that via `moon_mx(tland)`), the orbit
+/// plane is the MCI XY plane with the LM travelling toward +Y ("east").
+/// The LM permanent state is time-tagged at the *geometric ignition
+/// point*: `tet = epoch_now + burn_lead`, positioned uprange of the site
+/// by exactly the padloaded ignition-target geometry
+/// (rign_x/rign_z/v_ign below, which must match the RIGNX/RIGNZ/VIGN
+/// words in the static manifest), so that P63's first TDEC1 guess
+/// (TLAND - GUIDDURN = tet) lands on a state already satisfying the DDUM
+/// criterion and the Newton iteration converges immediately
+/// (THE_LUNAR_LANDING.agc, DDUMCALC). TIG then comes out at
+/// tet - ZOOMTIME ≈ epoch_now + burn_lead - 26 s.
+#[derive(Debug, Clone, Copy)]
+pub struct StateCfg {
+    /// AGC clock (TIME2:TIME1) measured just before generation, cs.
+    pub epoch_now_cs: f64,
+    /// Time from `epoch_now_cs` to the geometric ignition point, cs.
+    /// Budget everything that still has to happen before BURNBABY's
+    /// TIG-35 gate here (remaining pad-load, flag set, V37E63E, IGNALG,
+    /// dialog responses) plus the >=45 s pre-TIG check margin
+    /// (BURN,_BABY,_BURN:64). A too-small value is survivable: BURNBABY
+    /// slips TIG to integration-time + 29.9 s (CALLT-35 slip path).
+    pub burn_lead_cs: f64,
+    /// Desired ignition-point 'altitude' component, m (pad RIGNX,
+    /// LUM69R2/PADLOADS.agc:473: -4.09432231e4).
+    pub rign_x_m: f64,
+    /// Desired ignition-point ground-range component, m (pad RIGNZ,
+    /// LUM69R2/PADLOADS.agc:480: -4.40014934e5).
+    pub rign_z_m: f64,
+    /// Desired ignition speed, m/s (pad VIGN, LUM69R2/PADLOADS.agc:468:
+    /// 16.9952182 m/cs = 1699.52 m/s).
+    pub v_ign_ms: f64,
+    /// CSM circular-orbit altitude above R_SITE, m (~111 km nominal).
+    pub csm_alt_m: f64,
+}
+
+impl Default for StateCfg {
+    fn default() -> Self {
+        StateCfg {
+            epoch_now_cs: 0.0,
+            burn_lead_cs: 24_000.0,
+            rign_x_m: -4.09432231e4,
+            rign_z_m: -4.40014934e5,
+            v_ign_ms: 1699.52182,
+            csm_alt_m: 111_000.0,
+        }
+    }
+}
+
+fn sym_dp(symbol: &str, value: f64, b: i32, comment: impl Into<String>) -> ManifestWord {
+    ManifestWord {
+        symbol: Some(symbol.to_string()),
+        addr: None,
+        octal: None,
+        physical: Some(Physical { value, b, dp: true }),
+        provenance: "derived".to_string(),
+        comment: Some(comment.into()),
+    }
+}
+
+/// Generate the time-dependent pad-load words for a P63 ignition run:
+/// permanent LM + CSM state vectors, RLS, REFSMMAT, TLAND. All entries
+/// are symbol-based (resolved against the live `SymTab` by the caller).
+///
+/// Scalings (all DP): moon-centered position m b=27 (RP-TO-R "METERS
+/// B-27 FOR MOON"), **velocity m/cs b=5** — NOT the b=7 of the SERVICER
+/// RN/VN state. Pinned two ways (spike-A iters 16-17): statically, the
+/// interpreter scale chain VGU@2^10 ← ANGTERM@2^9 (VSR2) ← V@2^7 ←
+/// (VSR1·MXV REFSMMAT) ← VATT1@2^5 (LUNAR_LANDING_GUIDANCE_EQUATIONS.agc
+/// :429-470, CALCRGVG/RGVGCALC); empirically, b=7 encoding made the AGC
+/// read v/4 (425 m/s) — a plunge orbit with 58 km perilune radius and
+/// 1223 s half-period that exactly reproduced the RGU/TPIP forensics of
+/// iter 16. Time cs b=28; REFSMMAT rows b=1.
+pub fn generate_state(cfg: &StateCfg) -> Vec<ManifestWord> {
+    let tland_cs = cfg.epoch_now_cs + cfg.burn_lead_cs + GUIDDURN_CS;
+    let tet_cs = tland_cs - GUIDDURN_CS; // == epoch_now + burn_lead
+
+    // Ignition-point geometry in the orbit plane (see StateCfg docs):
+    // radial component r·cosθ = R_SITE + rign_x (rign_x < 0), downrange
+    // arc r·sinθ = |rign_z|. With the LUM69R2 targets this lands at
+    // θ ≈ 0.2539 rad, r ≈ 1752.6 km — h ≈ 15.2 km, the historical PDI
+    // altitude.
+    let a = R_SITE + cfg.rign_x_m;
+    let b = -cfg.rign_z_m; // rign_z < 0 => LM is uprange (short of site)
+    let theta = b.atan2(a);
+    let r_orb = a.hypot(b);
+    let (st, ct) = theta.sin_cos();
+
+    // LM at tet: site direction is +X, LM is θ uprange; travelling +Y.
+    //
+    // Speed: VIGN is compared against |VGU|, the SURFACE-RELATIVE velocity
+    // (VGU = CG·(V - WM×R), LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:433), so
+    // the generated INERTIAL speed must be VIGN + ω·r (eastward equatorial
+    // orbit: WM×R is exactly eastward, ω·r ≈ 4.67 m/s). Without this the
+    // ignition criterion has no root — the orbit starts at perilune, so
+    // |VGU| < VIGN everywhere and IGNALG's DDUM Newton iteration marches
+    // TDEC1 forward forever (spike-A iter 16: TPIP/PIPTIME1 ran away
+    // +20 min, RGU showed the state integrated far past the site).
+    let r_lm = [r_orb * ct, -r_orb * st, 0.0];
+    let omega_r = eagle_dynamics::constants::OMEGA_MOON * r_orb;
+    let v_ign_mcs = (cfg.v_ign_ms + omega_r) / 100.0; // m/cs, inertial
+    let v_lm = [v_ign_mcs * st, v_ign_mcs * ct, 0.0];
+
+    // CSM: circular orbit, same plane, directly over the site at tet.
+    let r_csm_mag = R_SITE + cfg.csm_alt_m;
+    let v_csm_mcs = (eagle_dynamics::constants::MU_MOON / r_csm_mag).sqrt() / 100.0;
+    let r_csm = [r_csm_mag, 0.0, 0.0];
+    let v_csm = [0.0, v_csm_mcs, 0.0];
+
+    // REFSMMAT rows = SM axes in MCI, chosen to COINCIDE with the descent
+    // guidance frame: X = up at the landing site, Y = -orbit normal,
+    // Z = downrange (CGCALC erects exactly this frame from LAND and R:
+    // row1 = unit((LAND-R)×LAND), LUNAR_LANDING_GUIDANCE_EQUATIONS.agc
+    // :678-690). This is not a nicety: IGNALG's FIRST guidance pass runs
+    // RGVGCALC/TTF-8CL with CG = identity (initialized UNITX/UNITY/UNITZ,
+    // THE_LUNAR_LANDING.agc:102-108; CGCALC only erects CG at the END of
+    // a pass), so RGU/VGU land in SM axes — with any other REFSMMAT the
+    // TTF cubic sees radial data where it expects downrange and ROOTPSRS
+    // aborts 1406 (spike-A iter 14, FAILREG=01406 1.2 s after P63 entry).
+    // The historical descent REFSMMAT is the same "landing site" frame.
+    let sm_x = [1.0, 0.0, 0.0];
+    let sm_y = [0.0, 0.0, -1.0];
+    let sm_z = [0.0, 1.0, 0.0];
+
+    // RLS: moon-fixed site vector such that the AGC's own RP-TO-R at
+    // TLAND reproduces "site on MCI +X": RLS = M(TLAND)·(R_SITE·x̂) =
+    // R_SITE · column 0 of M.
+    let m = moon_mx(tland_cs);
+    let rls = [m[0][0] * R_SITE, m[1][0] * R_SITE, m[2][0] * R_SITE];
+
+    let mut w = Vec::new();
+    // A DP vector symbol resolves to its base ECADR; component i lives at
+    // base + 2i, addressed with resolve()'s "SYM+N" decimal-offset form.
+    let vec_dp = |w: &mut Vec<ManifestWord>, sym: &str, v: [f64; 3], b: i32, what: &str| {
+        for (i, val) in v.into_iter().enumerate() {
+            w.push(sym_dp(
+                &format!("{sym}+{}", 2 * i),
+                val,
+                b,
+                format!("{what}[{i}]"),
+            ));
+        }
+    };
+
+    vec_dp(&mut w, "RRECTLEM", r_lm, 27, "LM permanent position, MCI m");
+    vec_dp(
+        &mut w,
+        "VRECTLEM",
+        v_lm,
+        5,
+        "LM permanent velocity, MCI m/cs (b=5!)",
+    );
+    w.push(sym_dp(
+        "TETLEM",
+        tet_cs,
+        28,
+        "LM state epoch, cs (= epoch_now + burn_lead)",
+    ));
+    vec_dp(
+        &mut w,
+        "RCVLEM",
+        r_lm,
+        27,
+        "LM conic position = RRECTLEM (just-rectified)",
+    );
+    vec_dp(
+        &mut w,
+        "VCVLEM",
+        v_lm,
+        5,
+        "LM conic velocity = VRECTLEM (just-rectified)",
+    );
+
+    vec_dp(
+        &mut w,
+        "RRECTCSM",
+        r_csm,
+        27,
+        "CSM permanent position, MCI m",
+    );
+    vec_dp(
+        &mut w,
+        "VRECTCSM",
+        v_csm,
+        5,
+        "CSM permanent velocity, MCI m/cs (b=5!)",
+    );
+    w.push(sym_dp("TETCSM", tet_cs, 28, "CSM state epoch, cs"));
+    vec_dp(&mut w, "RCVCSM", r_csm, 27, "CSM conic position = RRECTCSM");
+    vec_dp(&mut w, "VCVCSM", v_csm, 5, "CSM conic velocity = VRECTCSM");
+
+    vec_dp(
+        &mut w,
+        "RLS",
+        rls,
+        27,
+        "landing site, moon-fixed m (M(TLAND)·R_SITE·x̂)",
+    );
+    for (r, (name, row)) in [("row0/X", sm_x), ("row1/Y", sm_y), ("row2/Z", sm_z)]
+        .into_iter()
+        .enumerate()
+    {
+        for (c, val) in row.into_iter().enumerate() {
+            w.push(sym_dp(
+                &format!("REFSMMAT+{}", 2 * (3 * r + c)),
+                val,
+                1,
+                format!("REFSMMAT {name}[{c}] (SM axis in MCI)"),
+            ));
+        }
+    }
+    w.push(sym_dp("TLAND", tland_cs, 28, "nominal landing time, cs"));
+    w
+}
+
 /// Render a manifest to TOML text with a b-scale-verification-status
 /// header comment (not part of the serde shape -- prepended as plain
 /// text so the file is self-documenting without a hand round-trip
@@ -876,6 +1201,187 @@ mod tests {
         // b=28 DP: 1 pulse = 1 centisecond exactly, so TLAND's pulses must
         // equal epoch_cs + 12000 (120 s) exactly, not just "close".
         assert_eq!(pulses, (epoch_cs + 12000.0) as i64);
+    }
+
+    /// Real yaYUL listing, if the AGC artifacts have been built (`make
+    /// agc`); `None` skips listing-dependent assertions in fast runs.
+    fn real_symtab() -> Option<SymTab> {
+        let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../build/agc/Luminary099.log");
+        let text = std::fs::read_to_string(path).ok()?;
+        Some(SymTab::from_listing(&text).unwrap())
+    }
+
+    #[test]
+    fn moon_mx_is_orthonormal_and_rotates_at_lunar_rate() {
+        for t_cs in [0.0, 1.0e6, 5.0e8] {
+            let m = moon_mx(t_cs);
+            for i in 0..3 {
+                for j in 0..3 {
+                    let dot: f64 = (0..3).map(|k| m[i][k] * m[j][k]).sum();
+                    let expect = if i == j { 1.0 } else { 0.0 };
+                    // Tolerance 1e-7, not 1e-12: Luminary's COSI/SINI are
+                    // rounded to 8 decimals (COSI²+SINI² ≈ 1 - 3e-9), and
+                    // we reproduce the AGC's constants, not ideal ones.
+                    assert!(
+                        (dot - expect).abs() < 1e-7,
+                        "row{i}·row{j} = {dot} at t={t_cs}"
+                    );
+                }
+            }
+        }
+        // A moon-fixed equatorial direction should sweep at roughly the
+        // lunar sidereal rate (F-dot ≈ 2.672e-6 rad/s dominates; node and
+        // B rates are 1e-8 and 1e-14).
+        let dt_s = 1000.0;
+        let (m0, m1) = (moon_mx(0.0), moon_mx(dt_s * 100.0));
+        // Transport the MCI +X direction into moon-fixed at both times;
+        // the angle between the images is the rotation swept.
+        let v0 = [m0[0][0], m0[1][0], m0[2][0]];
+        let v1 = [m1[0][0], m1[1][0], m1[2][0]];
+        let dot: f64 = (0..3).map(|k| v0[k] * v1[k]).sum();
+        let angle = dot.clamp(-1.0, 1.0).acos();
+        let rate = angle / dt_s;
+        assert!(
+            (rate - 2.6724e-6).abs() < 2e-7,
+            "swept rate {rate} rad/s vs FDOT 2.672e-6"
+        );
+    }
+
+    #[test]
+    fn generate_state_geometry_and_scaling() {
+        let cfg = StateCfg {
+            epoch_now_cs: 100_000.0,
+            ..StateCfg::default()
+        };
+        let words = generate_state(&cfg);
+        let Some(st) = real_symtab() else {
+            eprintln!("skipping listing-dependent assertions (run `make agc`)");
+            return;
+        };
+        let m = PadloadManifest { word: words };
+        let resolved = m.resolve(&st).unwrap();
+
+        let word_at = |sym: &str, off: u16| -> [u16; 2] {
+            let base = st.ecadr(sym).unwrap() + off;
+            [
+                resolved.iter().find(|w| w.ecadr == base).unwrap().word,
+                resolved.iter().find(|w| w.ecadr == base + 1).unwrap().word,
+            ]
+        };
+        let dp_val = |sym: &str, off: u16, b: i32| -> f64 {
+            eagle_agc_protocol::words::dp_decode(word_at(sym, off)) as f64 * 2f64.powi(b - 28)
+        };
+
+        // TETLEM decodes to exactly epoch + burn_lead centiseconds.
+        assert_eq!(
+            eagle_agc_protocol::words::dp_decode(word_at("TETLEM", 0)),
+            (cfg.epoch_now_cs + cfg.burn_lead_cs) as i64
+        );
+        // TLAND = TET + GUIDDURN.
+        assert_eq!(
+            eagle_agc_protocol::words::dp_decode(word_at("TLAND", 0)),
+            (cfg.epoch_now_cs + cfg.burn_lead_cs + GUIDDURN_CS) as i64
+        );
+
+        // |RRECTLEM| reproduces the ignition-point radius (~1752.6 km)
+        // and |VRECTLEM| the ignition speed, through the b=27 / b=7
+        // encodings.
+        let r: f64 = (0..3)
+            .map(|i| dp_val("RRECTLEM", 2 * i as u16, 27).powi(2))
+            .sum::<f64>()
+            .sqrt();
+        let a = R_SITE + cfg.rign_x_m;
+        let expect_r = a.hypot(cfg.rign_z_m);
+        assert!((r - expect_r).abs() < 1.0, "r = {r}, expect {expect_r}");
+        let v: f64 = (0..3)
+            .map(|i| dp_val("VRECTLEM", 2 * i as u16, 5).powi(2))
+            .sum::<f64>()
+            .sqrt();
+        // Inertial speed = VIGN + ω·r (surface-relative VIGN compensation).
+        let expect_v = cfg.v_ign_ms + eagle_dynamics::constants::OMEGA_MOON * expect_r;
+        assert!(
+            (v * 100.0 - expect_v).abs() < 0.01,
+            "v = {} m/s vs {}",
+            v * 100.0,
+            expect_v
+        );
+
+        // RLS: moon-fixed, magnitude R_SITE (rotation preserves length).
+        let rls: f64 = (0..3)
+            .map(|i| dp_val("RLS", 2 * i as u16, 27).powi(2))
+            .sum::<f64>()
+            .sqrt();
+        assert!((rls - R_SITE).abs() < 1.0, "|RLS| = {rls}");
+
+        // REFSMMAT rows orthonormal after encode/decode (b=1).
+        for row in 0..3u16 {
+            let n: f64 = (0..3)
+                .map(|c| dp_val("REFSMMAT", 2 * (3 * row + c), 1).powi(2))
+                .sum::<f64>()
+                .sqrt();
+            assert!((n - 1.0).abs() < 1e-6, "REFSMMAT row {row} norm {n}");
+        }
+
+        // Permanent-state conic copies match the rectification state.
+        assert_eq!(word_at("RCVLEM", 0), word_at("RRECTLEM", 0));
+        assert_eq!(word_at("VCVLEM", 4), word_at("VRECTLEM", 4));
+
+        // No two words share an ECADR.
+        let mut ecadrs: Vec<u16> = resolved.iter().map(|w| w.ecadr).collect();
+        let n_before = ecadrs.len();
+        ecadrs.sort_unstable();
+        ecadrs.dedup();
+        assert_eq!(ecadrs.len(), n_before);
+    }
+
+    #[test]
+    fn static_p66_manifest_resolves_against_real_listing() {
+        let Some(st) = real_symtab() else {
+            eprintln!("skipping listing-dependent assertions (run `make agc`)");
+            return;
+        };
+        let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../scenarios/p66-padload.toml");
+        let m = PadloadManifest::load(&path).unwrap();
+        let words = m.resolve(&st).unwrap();
+
+        // E5 overlay layout spot checks (ERASABLE_ASSIGNMENTS.agc:1360-1411,
+        // TLAND = E5,1400 -> 0o2400): RBRFG = TLAND+2, RODSCALE = 0o2537.
+        assert_eq!(st.ecadr("RBRFG"), Some(0o2402));
+        assert_eq!(st.ecadr("VIGN"), Some(0o2472));
+        assert_eq!(st.ecadr("RODSCALE"), Some(0o2537));
+        assert_eq!(st.ecadr("MAXFORCE"), Some(0o2546));
+        assert!(words.iter().any(|w| w.ecadr == 0o2402));
+
+        // VIGN encodes 16.9952182 m/cs at b=10: hand value check.
+        let vign = [
+            words.iter().find(|w| w.ecadr == 0o2472).unwrap().word,
+            words.iter().find(|w| w.ecadr == 0o2473).unwrap().word,
+        ];
+        let decoded = eagle_agc_protocol::words::dp_decode(vign) as f64 * 2f64.powi(10 - 28);
+        assert!((decoded - 16.9952182).abs() < 1e-4, "VIGN {decoded}");
+    }
+
+    #[test]
+    fn symbol_plus_offset_resolution() {
+        let toml_text = r#"
+            [[word]]
+            symbol = "RLS+4"
+            octal = "00042"
+            provenance = "assumed"
+        "#;
+        let m: PadloadManifest = toml::from_str(toml_text).unwrap();
+        let st =
+            SymTab::from_listing(include_str!("../tests/fixtures/symtab_excerpt.txt")).unwrap();
+        let words = m.resolve(&st).unwrap();
+        assert_eq!(
+            words,
+            vec![PadWord {
+                ecadr: 0o2022 + 4,
+                word: 0o42
+            }]
+        );
     }
 
     #[test]

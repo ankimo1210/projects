@@ -41,7 +41,7 @@ async fn dsky_script_drives_lamp_test_and_reads_erasables() {
         port: 19901,
     }).await.unwrap();
 
-    let (dsky_rx, cmd_tx, _pump_handle) = pump(session);
+    let (dsky_rx, cmd_tx, _pkt_rx, _pump_handle) = pump(session);
     let mut settle_rx = dsky_rx.clone();
     let mut script = DskyScript::new(cmd_tx, dsky_rx);
     script.set_key_delay(Duration::from_millis(80));
