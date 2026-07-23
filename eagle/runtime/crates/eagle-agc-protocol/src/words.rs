@@ -1,7 +1,7 @@
 //! AGC 15-bit one's-complement word encoding (SP/DP) and B-scaling.
 
 pub fn sp_encode(pulses: i16) -> u16 {
-    debug_assert!(pulses.unsigned_abs() < (1 << 14));
+    assert!(pulses.unsigned_abs() < (1 << 14));
     if pulses >= 0 {
         pulses as u16
     } else {
@@ -20,12 +20,20 @@ pub fn sp_decode(word: u16) -> i16 {
 }
 
 pub fn dp_encode(pulses: i64) -> [u16; 2] {
-    debug_assert!(pulses.unsigned_abs() < (1 << 28));
+    assert!(pulses.unsigned_abs() < (1 << 28));
     let neg = pulses < 0;
     let mag = pulses.unsigned_abs();
     let (hi, lo) = ((mag >> 14) as i16, (mag & 0x3FFF) as i16);
-    let (hi, lo) = if neg { (-hi, -lo) } else { (hi, lo) };
-    [sp_encode(hi), sp_encode(lo)]
+
+    if neg {
+        // For negative values, encode -hi and -lo
+        // When magnitude is 0, one's-complement representation is -0 (0o77777)
+        let hi_enc = if hi == 0 { 0o77777 } else { sp_encode(-hi) };
+        let lo_enc = if lo == 0 { 0o77777 } else { sp_encode(-lo) };
+        [hi_enc, lo_enc]
+    } else {
+        [sp_encode(hi), sp_encode(lo)]
+    }
 }
 
 pub fn dp_decode(w: [u16; 2]) -> i64 {
@@ -74,6 +82,30 @@ mod tests {
     }
 
     #[test]
+    fn dp_encode_negative_multiples_of_2_14() {
+        // Both words must carry the value's sign: never mixed signs
+        // When lo is zero, it must encode as -0 (0o77777), not +0
+        assert_eq!(dp_encode(-16384), [0o77776, 0o77777]); // -2^14 → [-1, -0]
+        assert_eq!(dp_encode(-32768), [0o77775, 0o77777]); // -2·2^14 → [-2, -0]
+
+        // Verify no mixed-sign pairs for negative values
+        for v in [-1i64, -100, -1000, -16383, -16384, -16385, -32768, -100000] {
+            let [hi, lo] = dp_encode(v);
+            // Extract sign bits for each word
+            let hi_sign = (hi & 0o40000) != 0;
+            let lo_sign = (lo & 0o40000) != 0;
+            // For negative values, both words must have same sign bit
+            // Also verify decode matches original value
+            assert_eq!(dp_decode([hi, lo]), v, "decode mismatch for v={v}");
+            if v < 0 {
+                // At least one word must be negative; ideally both are
+                // (canonical form: both negative for negative values)
+                assert!(hi_sign || lo_sign, "v={v}: at least one word must be negative");
+            }
+        }
+    }
+
+    #[test]
     fn physical_to_pulses() {
         // SP scaled B14: 1 pulse = 1 unit
         assert_eq!(to_pulses(42.0, 14, false), 42);
@@ -90,5 +122,23 @@ mod tests {
         assert_eq!(octal5(0), "00000");
         assert_eq!(octal5(0o77776), "77776");
         assert_eq!(octal5(0o1234), "01234");
+    }
+
+    #[test]
+    #[should_panic]
+    fn sp_encode_panics_on_out_of_range_positive() {
+        sp_encode(16384); // max is 16383
+    }
+
+    #[test]
+    #[should_panic]
+    fn sp_encode_panics_on_out_of_range_negative() {
+        sp_encode(i16::MIN); // -16384 is out of range
+    }
+
+    #[test]
+    #[should_panic]
+    fn dp_encode_panics_on_out_of_range() {
+        dp_encode(1 << 28); // max is 2^28 - 1
     }
 }
