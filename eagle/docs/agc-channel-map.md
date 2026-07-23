@@ -281,8 +281,9 @@ flakes again.
 ### Counter Registers and Increment Types
 
 Confirmed against `vendor/virtualagc/yaAGC/agc_engine.c:1570-1623`
-(`UnprogrammedIncrement` function) and `vendor/virtualagc/yaAGC/SocketAPI.c:219-231`
-(counter channel = 0x80 | address, data field = IncType). Counter packets encode
+(`UnprogrammedIncrement` function) and `vendor/virtualagc/yaAGC/SocketAPI.c:219-231`,
+`vendor/virtualagc/yaAGC/agc_utilities.c:144-147` (counter channel = 0x80 | address,
+data field = IncType). Counter packets encode
 the AGC's erasable-memory increments with address in the channel field (bits
 0-6) and increment type in the data field.
 
@@ -317,16 +318,17 @@ enum variants to synchronize throttle setpoint with the autopilot.
 
 ### Coarse-Align CDU Outputs
 
-Confirmed against `vendor/virtualagc/yaAGC/agc_engine.c:1630-1681`
-(`BurstOutput` function) and the direction-flag encoding at line 1652-1663.
-Coarse-alignment (gimbal alignment) outputs are emitted as IO packets on
-channels 0o174 (X), 0o175 (Y), 0o176 (Z) with data = direction flag | pulse count:
+Confirmed against `vendor/virtualagc/yaAGC/agc_engine.c:1630-1681` (`BurstOutput`
+function), the direction-flag encoding at lines 1652–1663, and the channel
+assignments at `agc_engine.c:2405-2422` (BurstOutput call sites). Coarse-alignment
+(gimbal alignment) outputs are emitted as IO packets on channels 0o174 (X),
+0o175 (Y), 0o176 (Z) with data = direction flag | pulse count:
 
 | Channel | Axis | Register | Bits for Pulse Count |
 |---------|------|----------|---------------------|
-| 0o174 | X (CDUXCMD) | RegCDUXCMD | bits 0-12 (0o37777 mask) |
-| 0o175 | Y (CDUYCMD) | RegCDUYCMD | bits 0-12 (0o37777 mask) |
-| 0o176 | Z (CDUZCMD) | RegCDUZCMD | bits 0-12 (0o37777 mask) |
+| 0o174 | X (CDUXCMD) | RegCDUXCMD | bits 0-13 (14 bits, 0o37777 mask) |
+| 0o175 | Y (CDUYCMD) | RegCDUYCMD | bits 0-13 (14 bits, 0o37777 mask) |
+| 0o176 | Z (CDUZCMD) | RegCDUZCMD | bits 0-13 (14 bits, 0o37777 mask) |
 
 The direction flag (bit 0o40000, i.e. bit 15) is set (=1) for *negative*
 direction (slew negative) and clear (=0) for *positive* direction per
@@ -368,9 +370,13 @@ Each bit drives a trim solenoid; multiple bits can be active simultaneously.
 
 #### Thrust Drive Enable (Channel 14, 0o14)
 
+Confirmed against `vendor/virtualagc/Luminary099/INPUT_OUTPUT_CHANNEL_BIT_DESCRIPTIONS.agc:115-120`.
+
 - Bit 4 (1-indexed, = 1 << 3): Thrust drive enable (1 = drive active)
 
 #### Rod Switch Click (Channel 16, 0o16)
+
+Confirmed against `vendor/virtualagc/Luminary099/INPUT_OUTPUT_CHANNEL_BIT_DESCRIPTIONS.agc:137-143`.
 
 - Bit 6 (1-indexed, = 1 << 5): +1 click (slow descent)
 - Bit 7 (1-indexed, = 1 << 6): −1 click
