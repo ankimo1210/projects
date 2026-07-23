@@ -121,9 +121,7 @@ def test_price_broadcasts_spot_strike_and_maturity():
     assert surface.shape == (2, 3)
     for i, spot in enumerate([90.0, 110.0]):
         for j, maturity in enumerate(maturities):
-            assert surface[i, j] == pytest.approx(
-                bsm.call_price(spot, 100.0, 0.03, 0.25, maturity)
-            )
+            assert surface[i, j] == pytest.approx(bsm.call_price(spot, 100.0, 0.03, 0.25, maturity))
 
 
 def test_mixed_boundary_put_call_parity_in_diffusive_region():

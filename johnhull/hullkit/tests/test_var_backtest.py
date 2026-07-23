@@ -193,9 +193,7 @@ def test_basel_traffic_light_standard_table(x, expected_zone, expected_multiplie
     result = var_backtest.basel_traffic_light(x, n_obs=250, alpha=0.99)
     assert result.zone == expected_zone
     assert result.multiplier == pytest.approx(expected_multiplier)
-    assert result.cumulative_probability == pytest.approx(
-        float(binom.cdf(x, 250, 0.01)), abs=1e-12
-    )
+    assert result.cumulative_probability == pytest.approx(float(binom.cdf(x, 250, 0.01)), abs=1e-12)
 
 
 def test_basel_traffic_light_invalid_inputs_raise():

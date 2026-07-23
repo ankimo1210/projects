@@ -97,9 +97,7 @@ def exceedance_series(pnl, var_forecasts) -> np.ndarray:
     if not np.all(np.isfinite(var_arr)):
         raise ValueError("var_forecasts must be finite; a missing VaR cannot be classified")
     if np.any(var_arr < 0.0):
-        raise ValueError(
-            f"var_forecasts must be non-negative, got minimum {float(var_arr.min())}"
-        )
+        raise ValueError(f"var_forecasts must be non-negative, got minimum {float(var_arr.min())}")
     return (-pnl_arr > var_arr).astype(int)
 
 
@@ -155,12 +153,7 @@ def christoffersen_independence(exceedances) -> tuple[float, float]:
     pi_bar = (n01 + n11) / n_trans
 
     log_num = xlogy(n00 + n10, 1.0 - pi_bar) + xlogy(n01 + n11, pi_bar)
-    log_den = (
-        xlogy(n00, 1.0 - pi01)
-        + xlogy(n01, pi01)
-        + xlogy(n10, 1.0 - pi11)
-        + xlogy(n11, pi11)
-    )
+    log_den = xlogy(n00, 1.0 - pi01) + xlogy(n01, pi01) + xlogy(n10, 1.0 - pi11) + xlogy(n11, pi11)
     lr = -2.0 * (log_num - log_den)
     p_value = float(chi2.sf(lr, df=1))
     return float(lr), p_value
@@ -223,4 +216,6 @@ def basel_traffic_light(n_exceedances: int, n_obs: int = 250, alpha: float = 0.9
         zone = "red"
         multiplier = 4.00
 
-    return BaselZone(zone=zone, cumulative_probability=cumulative_probability, multiplier=multiplier)
+    return BaselZone(
+        zone=zone, cumulative_probability=cumulative_probability, multiplier=multiplier
+    )

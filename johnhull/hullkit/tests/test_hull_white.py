@@ -41,8 +41,10 @@ def test_exact_transition_moments_and_seed_reproducibility():
         repeated,
         hw.simulate_hw_paths([0.0, end], 0.0, PARAMS, n_paths=20, seed=7),
     )
-    variance = PARAMS.volatility**2 * (1.0 - math.exp(-2 * PARAMS.mean_reversion * end)) / (
-        2 * PARAMS.mean_reversion
+    variance = (
+        PARAMS.volatility**2
+        * (1.0 - math.exp(-2 * PARAMS.mean_reversion * end))
+        / (2 * PARAMS.mean_reversion)
     )
     standard_error_mean = math.sqrt(variance / paths.shape[0])
     standard_error_variance = variance * math.sqrt(2.0 / (paths.shape[0] - 1))
@@ -69,14 +71,11 @@ def test_zcb_option_put_call_parity_and_zero_vol_limit():
 @pytest.mark.parametrize("option_type", ["receiver", "payer"])
 def test_jamshidian_matches_direct_forward_measure_quadrature(option_type):
     spec = _receiver_spec(1.5, 6.5)
-    spec = hw.HullWhiteSwaption(
-        spec.expiry, spec.payment_times, spec.fixed_cashflows, option_type
-    )
+    spec = hw.HullWhiteSwaption(spec.expiry, spec.payment_times, spec.fixed_cashflows, option_type)
     analytic = hw.hw_jamshidian_swaption(spec, CURVE, PARAMS)
     p_expiry = rates.discount_factor(spec.expiry, CURVE)
     variance_scale = PARAMS.volatility * math.sqrt(
-        (1.0 - math.exp(-2.0 * PARAMS.mean_reversion * spec.expiry))
-        / (2.0 * PARAMS.mean_reversion)
+        (1.0 - math.exp(-2.0 * PARAMS.mean_reversion * spec.expiry)) / (2.0 * PARAMS.mean_reversion)
     )
     forwards = np.asarray(
         [rates.discount_factor(time, CURVE) / p_expiry for time in spec.payment_times]
