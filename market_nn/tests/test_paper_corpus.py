@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
 from pathlib import Path
 
 SCRIPT_PATH = Path(__file__).parents[1] / "scripts" / "build_paper_corpus.py"
@@ -111,6 +112,42 @@ def test_repair_chunks_drops_formula_boundary_artifacts(tmp_path: Path) -> None:
     assert removed == 1
     assert [chunk["chunk_id"] for chunk in repaired] == ["sample:0001", "sample:0003"]
     assert "sample:formula:0001" in repaired[0]["text"]
+
+
+def test_split_oversized_chunks_preserves_text_and_reindexes() -> None:
+    first_text = "Heading\n\n" + "Sentence one. " * 180
+    chunks = [
+        {
+            "chunk_id": "sample:0001",
+            "chunk_index": 0,
+            "paper_id": "sample",
+            "text": first_text,
+            "raw_text": first_text,
+            "num_tokens": 536,
+        },
+        {
+            "chunk_id": "sample:0002",
+            "chunk_index": 1,
+            "paper_id": "sample",
+            "text": "Tail",
+            "raw_text": "Tail",
+            "num_tokens": 1,
+        },
+    ]
+
+    split = FORMULA_MODULE.split_oversized_chunks(chunks)
+
+    assert len(split) == 3
+    assert [chunk["chunk_id"] for chunk in split] == [
+        "sample:0001",
+        "sample:0002",
+        "sample:0003",
+    ]
+    assert [chunk["chunk_index"] for chunk in split] == [0, 1, 2]
+    assert max(chunk["num_tokens"] for chunk in split) <= 512
+    assert re.sub(r"\s+", "", split[0]["text"] + split[1]["text"]) == re.sub(r"\s+", "", first_text)
+    assert split[0]["split_piece_count"] == 2
+    assert split[1]["split_piece"] == 2
 
 
 def test_formula_override_manifest_has_expected_reviewed_set() -> None:

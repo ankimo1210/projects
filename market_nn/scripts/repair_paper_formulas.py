@@ -35,6 +35,8 @@ FORMULA_BLOCK_PATTERN = re.compile(
     r"|<!-- formula-not-decoded -->",
     flags=re.DOTALL,
 )
+HARD_CHUNK_MAX_TOKENS = 512
+CHUNK_SPLIT_TARGET_TOKENS = 480
 
 
 def load_overrides(path: Path = DEFAULT_OVERRIDES) -> dict[str, dict[str, dict[str, str]]]:
@@ -389,12 +391,102 @@ def _repair_chunk_field(
             chunk[field] = value
 
 
+def _split_text_at_boundaries(text: str, piece_count: int) -> list[str]:
+    """Split text near balanced semantic boundaries without dropping content."""
+
+    if piece_count <= 1:
+        return [text]
+    boundaries = [match.end() for match in re.finditer(r"\n{2,}|(?<=[.!?])\s+", text)]
+    pieces: list[str] = []
+    start = 0
+    for remaining_pieces in range(piece_count, 1, -1):
+        target = start + (len(text) - start) / remaining_pieces
+        candidates = [position for position in boundaries if start < position < len(text)]
+        if candidates:
+            split_at = min(candidates, key=lambda position: (abs(position - target), position))
+        else:
+            whitespace = [
+                match.start() for match in re.finditer(r"\s+", text[start:]) if match.start() > 0
+            ]
+            if not whitespace:
+                split_at = round(target)
+            else:
+                split_at = start + min(
+                    whitespace,
+                    key=lambda position: (abs(start + position - target), position),
+                )
+        pieces.append(text[start:split_at].strip())
+        start = split_at
+        boundaries = [position for position in boundaries if position > start]
+    pieces.append(text[start:].strip())
+    normalized_original = re.sub(r"\s+", "", text)
+    normalized_pieces = re.sub(r"\s+", "", "".join(pieces))
+    if any(not piece for piece in pieces) or normalized_original != normalized_pieces:
+        raise RuntimeError("Chunk split changed text content")
+    return pieces
+
+
+def split_oversized_chunks(
+    chunks: list[dict[str, Any]],
+    *,
+    hard_limit: int = HARD_CHUNK_MAX_TOKENS,
+    target: int = CHUNK_SPLIT_TARGET_TOKENS,
+) -> list[dict[str, Any]]:
+    """Split oversized non-formula chunks and assign stable sequential IDs."""
+
+    split_chunks: list[dict[str, Any]] = []
+    did_split = False
+    for chunk in chunks:
+        token_count = int(chunk.get("num_tokens", 0))
+        if token_count <= hard_limit:
+            split_chunks.append(chunk)
+            continue
+        if FORMULA_BLOCK_PATTERN.search(str(chunk.get("text", ""))):
+            raise RuntimeError(f"Cannot safely split formula chunk {chunk.get('chunk_id')}")
+        did_split = True
+
+        piece_count = max(2, math.ceil(token_count / target))
+        field_pieces = {
+            field: _split_text_at_boundaries(str(chunk.get(field, "")), piece_count)
+            for field in ("text", "raw_text")
+            if isinstance(chunk.get(field), str)
+        }
+        text_pieces = field_pieces.get("text")
+        if text_pieces is None:
+            raise RuntimeError(f"Oversized chunk has no text: {chunk.get('chunk_id')}")
+        weights = [max(len(piece), 1) for piece in text_pieces]
+        allocated = [round(token_count * weight / sum(weights)) for weight in weights]
+        allocated[-1] += token_count - sum(allocated)
+        if max(allocated) > hard_limit:
+            raise RuntimeError(f"Unable to split chunk below hard limit: {chunk.get('chunk_id')}")
+
+        for piece_index in range(piece_count):
+            piece = dict(chunk)
+            for field, values in field_pieces.items():
+                piece[field] = values[piece_index]
+            piece["num_tokens"] = allocated[piece_index]
+            piece["split_from_chunk_id"] = chunk.get("chunk_id")
+            piece["split_piece"] = piece_index + 1
+            piece["split_piece_count"] = piece_count
+            split_chunks.append(piece)
+
+    if not did_split:
+        return split_chunks
+    for index, chunk in enumerate(split_chunks):
+        paper_id = str(chunk.get("paper_id") or str(chunk["chunk_id"]).rsplit(":", 1)[0])
+        chunk["paper_id"] = paper_id
+        chunk["chunk_index"] = index
+        chunk["chunk_id"] = f"{paper_id}:{index + 1:04d}"
+    return split_chunks
+
+
 def repair_chunks(path: Path, records: list[Mapping[str, Any]]) -> int:
     chunks = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
     for field in ("text", "raw_text"):
         _repair_chunk_field(chunks, field, records)
     original_count = len(chunks)
     chunks = [chunk for chunk in chunks if str(chunk.get("text", "")).strip()]
+    chunks = split_oversized_chunks(chunks)
     path.write_text(
         "".join(json.dumps(chunk, ensure_ascii=False) + "\n" for chunk in chunks),
         encoding="utf-8",
