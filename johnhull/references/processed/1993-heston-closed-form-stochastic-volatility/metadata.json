@@ -1,34 +1,33 @@
 {
-  "paper_id": "1993-heston-closed-form-stochastic-volatility",
-  "title": "A Closed-Form Solution for Options with Stochastic Volatility with Applications to Bond and Currency Options",
-  "authors": "Steven L. Heston",
-  "year": "1993",
-  "source_url": "https://doi.org/10.1093/rfs/6.2.327",
-  "source_pdf": "references/papers/1993-heston-closed-form-stochastic-volatility.pdf",
-  "source_sha256": "4f1331c37be25045e2b60e5aa969ff5917a488e43c24abad0f99a55641c2b3a3",
-  "converter": "PyMuPDF4LLM 1.28.0",
-  "conversion_options": {
-    "header": false,
-    "footer": false,
-    "use_ocr": true,
-    "force_ocr": false,
-    "ocr_language": "eng",
-    "write_images": true,
-    "max_chunk_chars": 4800,
-    "overlap_chars": 400
+  "converted_page_numbers": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ],
+  "extractor": {
+    "extractor_name": "MinerU pipeline",
+    "extractor_version": "3.4.4",
+    "model_hash": "ed6b654c018d742e65a17671e379c5e6ecc87ec9",
+    "source_pdf_sha256": "4f1331c37be25045e2b60e5aa969ff5917a488e43c24abad0f99a55641c2b3a3"
   },
-  "pdf_metadata": {
-    "format": "PDF 1.4",
-    "title": "A Closed-Form Solution for Options with Stochastic Volatility with Applications to Bond and Currency Options",
-    "author": "Steven L. Heston",
-    "subject": " ",
-    "keywords": " ",
-    "creator": "Capture Reviewer 2.01",
-    "producer": "Acrobat PDFWriter 3.03 for Windows",
-    "creationDate": "D:00000101000000Z",
-    "modDate": "D:20031104204249+05'30'",
-    "trapped": "",
-    "encryption": null,
-    "page_count": 17
-  }
+  "input_content_list_sha256": "de6b558c7f066da138f48a494c958bcd58ba3da53e609f4ce0a232e4303e3687",
+  "paper_id": "1993-heston-closed-form-stochastic-volatility",
+  "schema_version": "2.0.0",
+  "source_page_count": 17,
+  "source_pdf": "/home/kazumasa/projects-johnhull-corpus-v2/johnhull/references/papers/1993-heston-closed-form-stochastic-volatility.pdf",
+  "source_pdf_sha256": "4f1331c37be25045e2b60e5aa969ff5917a488e43c24abad0f99a55641c2b3a3"
 }

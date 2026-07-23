@@ -1,0 +1,22 @@
+{
+  "converted_page_numbers": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "extractor": {
+    "extractor_name": "MinerU pipeline",
+    "extractor_version": "3.4.4",
+    "model_hash": "ed6b654c018d742e65a17671e379c5e6ecc87ec9",
+    "source_pdf_sha256": "0b362d7ceaf2d88ef9120c8803a07020719b77d2fd92d8117cd8021a153f02a6"
+  },
+  "input_content_list_sha256": "18b61c43cfee95aff6fc030d1e964804c48ccbc6256fe9a8e63ee771ecad1985",
+  "paper_id": "2021-mof-jgbi-indexation-notice",
+  "schema_version": "2.0.0",
+  "source_page_count": 6,
+  "source_pdf": "/home/kazumasa/projects-johnhull-corpus-v2/johnhull/references/papers/2021-mof-jgbi-indexation-notice.pdf",
+  "source_pdf_sha256": "0b362d7ceaf2d88ef9120c8803a07020719b77d2fd92d8117cd8021a153f02a6"
+}

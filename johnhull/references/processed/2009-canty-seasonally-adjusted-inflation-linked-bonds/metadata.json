@@ -1,0 +1,21 @@
+{
+  "converted_page_numbers": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "extractor": {
+    "extractor_name": "MinerU pipeline",
+    "extractor_version": "3.4.4",
+    "model_hash": "ed6b654c018d742e65a17671e379c5e6ecc87ec9",
+    "source_pdf_sha256": "a4c6c400817df46464222f6cdd31752bd881c68f0501e6b8f9c578e7b14c06a0"
+  },
+  "input_content_list_sha256": "b751981f5ab6d599b7fb609239333d3e146d15307e802f5d22c8558de2197a6c",
+  "paper_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+  "schema_version": "2.0.0",
+  "source_page_count": 5,
+  "source_pdf": "/home/kazumasa/projects-johnhull-corpus-v2/johnhull/references/papers/2009-canty-seasonally-adjusted-inflation-linked-bonds.pdf",
+  "source_pdf_sha256": "a4c6c400817df46464222f6cdd31752bd881c68f0501e6b8f9c578e7b14c06a0"
+}

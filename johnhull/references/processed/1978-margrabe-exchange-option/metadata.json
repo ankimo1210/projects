@@ -1,34 +1,27 @@
 {
-  "paper_id": "1978-margrabe-exchange-option",
-  "title": "The Value of an Option to Exchange One Asset for Another",
-  "authors": "William Margrabe",
-  "year": "1978",
-  "source_url": "https://doi.org/10.1111/j.1540-6261.1978.tb03386.x",
-  "source_pdf": "references/papers/1978-margrabe-exchange-option.pdf",
-  "source_sha256": "008bdc45e63cabc192d03297fdfe3418d78406834022622340d16169b1044846",
-  "converter": "PyMuPDF4LLM 1.28.0",
-  "conversion_options": {
-    "header": false,
-    "footer": false,
-    "use_ocr": true,
-    "force_ocr": false,
-    "ocr_language": "eng",
-    "write_images": true,
-    "max_chunk_chars": 4800,
-    "overlap_chars": 400
+  "converted_page_numbers": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "extractor": {
+    "extractor_name": "MinerU pipeline",
+    "extractor_version": "3.4.4",
+    "model_hash": "ed6b654c018d742e65a17671e379c5e6ecc87ec9",
+    "source_pdf_sha256": "008bdc45e63cabc192d03297fdfe3418d78406834022622340d16169b1044846"
   },
-  "pdf_metadata": {
-    "format": "PDF 1.2",
-    "title": "",
-    "author": "",
-    "subject": "",
-    "keywords": "",
-    "creator": "",
-    "producer": "",
-    "creationDate": "",
-    "modDate": "",
-    "trapped": "",
-    "encryption": null,
-    "page_count": 11
-  }
+  "input_content_list_sha256": "d00460840dbe76a493363a95a8789d0595dafa4e74707bea141c9bad289bacd8",
+  "paper_id": "1978-margrabe-exchange-option",
+  "schema_version": "2.0.0",
+  "source_page_count": 11,
+  "source_pdf": "/home/kazumasa/projects-johnhull-corpus-v2/johnhull/references/papers/1978-margrabe-exchange-option.pdf",
+  "source_pdf_sha256": "008bdc45e63cabc192d03297fdfe3418d78406834022622340d16169b1044846"
 }

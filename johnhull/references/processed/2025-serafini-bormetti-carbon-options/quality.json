@@ -1,22 +1,75 @@
 {
+  "claims_status": "pass",
+  "counts": {
+    "blocks": 319,
+    "claims": 5,
+    "compiled_equations": 299,
+    "display_equations": 74,
+    "figures": 7,
+    "inline_equations": 226,
+    "latex_equations": 299,
+    "pages": 49,
+    "rendered_verified_equations": 0,
+    "semantic_chunks": 72,
+    "source_image_formula_fallbacks": 1,
+    "tables": 12,
+    "verified_claims": 0,
+    "verified_equations": 0,
+    "verified_table_cells": 0
+  },
+  "exceptions": [],
+  "formula_failures": [],
+  "formula_status": "pass",
+  "layout_status": "pass",
+  "low_text_coverage_pages": [
+    11,
+    18,
+    32
+  ],
+  "notes": [
+    "Unverified LaTeX is a candidate representation; every formula retains a source crop.",
+    "Automatic table cells retain unverified record status except explicit reviewed overrides.",
+    "Reviewed low-text exceptions retain complete source-page images."
+  ],
+  "overall_status": "pass",
   "paper_id": "2025-serafini-bormetti-carbon-options",
-  "status": "review",
-  "page_count": 49,
-  "total_chars": 78007,
-  "average_chars_per_page": 1592.0,
-  "empty_pages": [],
-  "short_pages": [
-    30
+  "retrieval_evaluation": {
+    "hit_at_5": 1.0,
+    "p0_hit_at_5": 1.0,
+    "query_count": 28,
+    "retriever": "deterministic-bm25-en-ja-ngrams-v1"
+  },
+  "retrieval_status": "pass",
+  "reviewed_layout_pages": [],
+  "reviewed_low_text_pages": [
+    {
+      "coverage_scope": "full source page plus retained table/figure assets",
+      "page_number": 11,
+      "reason": "asset_dominant_source_page",
+      "reviewed_excerpt": null,
+      "reviewer": "codex-source-page-visual-audit-2026-07-23",
+      "source_page_asset": "assets/source-pages/p0011.png"
+    },
+    {
+      "coverage_scope": "full source page plus retained table/figure assets",
+      "page_number": 18,
+      "reason": "asset_dominant_source_page",
+      "reviewed_excerpt": null,
+      "reviewer": "codex-source-page-visual-audit-2026-07-23",
+      "source_page_asset": "assets/source-pages/p0018.png"
+    },
+    {
+      "coverage_scope": "full source page plus retained table/figure assets",
+      "page_number": 32,
+      "reason": "asset_dominant_source_page",
+      "reviewed_excerpt": null,
+      "reviewer": "codex-source-page-visual-audit-2026-07-23",
+      "source_page_asset": "assets/source-pages/p0032.png"
+    }
   ],
-  "replacement_characters": 12,
-  "heading_count": 21,
-  "image_references": 61,
-  "image_files": 61,
-  "latex_math_markers": 0,
-  "chunk_count": 19,
-  "max_chunk_chars": 4787,
-  "warnings": [
-    "many visual/equation images are not represented as LaTeX math"
-  ],
-  "failures": []
+  "table_failures": [],
+  "table_status": "pass",
+  "text_status": "pass",
+  "unresolved_layout_pages": [],
+  "unresolved_low_text_pages": []
 }
