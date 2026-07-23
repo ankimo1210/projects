@@ -14,6 +14,19 @@
 > demo seed, onboarding copy. Final state: 187 tests, ruff clean, all 7 pages
 > render via streamlit AppTest against seeded data.
 
+> **Post-review corrections (2026-07-23):** The completed implementation keeps
+> the existing `environ` keyword and the two DataFrame inventory builders
+> (`build_inventory` / `build_series_inventory`) instead of the draft
+> `env`/`Inventory` interfaces shown later in this historical plan. Follow-up
+> fixes add injectable `max_requests`, distinguish `ok` from `in_progress`
+> checkpoints so completed metrics always receive a trailing refetch, clear UI
+> caches after partial-error outcomes, use calendar-based seven-day averages,
+> migrate Streamlit sizing to `width="stretch"`, and preserve the seven-page
+> AppTest smoke as a regression test.
+> Follow-up validation: 196 tests passed, ruff and format checks were clean,
+> imports succeeded, and seeded AppTest covered all seven pages plus the main
+> app before and after connection without touching `health/data/`.
+
 **Goal:** Finish the Fitbit→Google Health API v4 migration (sync engine, inventory, app layer) and overhaul the Streamlit UI (dark mode, shared period selector, richer views, sync UX).
 
 **Architecture:** Core layers `auth/client/endpoints/store` are already migrated (commits 2ba05744..e8be4339). This plan rewrites `sync.py` + `inventory.py` against the new `HealthClient`/`RequestBudget`/`replace_chunk` interfaces, fixes the app layer imports and OAuth callback handling, then rebuilds the views on a new shared `app/theme.py` (dataviz palette, light+dark) and `app/common.py` (cached loaders, calendar-day period selector).
@@ -1962,7 +1975,8 @@ Expected: all tests pass (≈180), ruff clean, `imports ok`.
 
 ```bash
 SMOKE=$(mktemp -d /tmp/health-smoke-XXXX)
-ENVP uv run --no-sync python health/scripts/seed_demo.py "$SMOKE"
+ENVP uv run --no-sync python health/scripts/seed_demo.py \
+  --db-path "$SMOKE/health.duckdb"
 python3 - "$SMOKE" <<'EOF'
 import json, sys, time
 json.dump({"access_token": "x", "refresh_token": "y",
@@ -2009,5 +2023,5 @@ uv run --no-sync pytest health/tests -q   # post-merge verification from main ch
 ## Self-Review Notes
 
 - Spec coverage: sync engine (§Sync engine → Task 2), inventory (§Inventory → Tasks 3/10), UI changes (§UI changes → Tasks 5–10: provider wording, OAuth denial, refresh expiry display, reconnect, spo2 lower/upper, classic-sleep notice, cap/429 display), probe (§Probe → Task 11), sleep_minutes series (catalog table → Task 1), docs (Task 12). Review items: A1–A5 (Tasks 2–5, 11), B1–B5 (Tasks 1, 5, 9, 12), C1–C4 (Tasks 6–8), D items (Tasks 4–10).
-- Type consistency: `SyncEngine(client, store, catalog, today, env, max_requests)` matches all test call sites; `Inventory.published/series/raw` match inventory_view; `palette()["categorical"]` / `style(fig, p)` consumed identically in all views; `load_daily(tuple)` everywhere (never list — cache hashing).
+- Final type consistency (see post-review correction above): `SyncEngine(client, store, catalog, today, environ, max_requests)` matches all call sites; `build_inventory()` and `build_series_inventory()` each return the DataFrame consumed by `inventory_view`; `palette()["categorical"]` / `style(fig, p)` are consumed identically in all views; `load_daily(tuple)` is used everywhere (never list — cache hashing).
 - Known deviation from plan-a: progress_cb keeps the `(metric, msg)` 2-arg shape (request count folded into msg) so `st.status` wiring stays one line.

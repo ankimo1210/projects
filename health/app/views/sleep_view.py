@@ -3,7 +3,7 @@
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-from common import clip_days, load_sleep, period_days
+from common import calendar_rolling_mean, clip_days, load_sleep, period_days
 from theme import palette, style
 
 STAGES = [
@@ -47,13 +47,13 @@ def _stage_bar(sf: pd.DataFrame, p: dict) -> None:
     )
     # surface gap between stacked segments (mark spec) instead of a border stroke
     fig.update_traces(marker_line_color=p["surface"], marker_line_width=2)
-    st.plotly_chart(style(fig, p), use_container_width=True, theme=None)
+    st.plotly_chart(style(fig, p), width="stretch", theme=None)
 
 
 def _trends(sf: pd.DataFrame, p: dict) -> None:
     st.subheader("睡眠時間トレンド（7日移動平均つき）")
     trend = sf[["date", "minutes_asleep"]].copy()
-    trend["ma7"] = trend["minutes_asleep"].rolling(7).mean()
+    trend["ma7"] = calendar_rolling_mean(trend, "minutes_asleep")
     trend = trend.rename(columns={"minutes_asleep": "実績", "ma7": "7日移動平均"})
     fig = px.line(
         trend,
@@ -63,12 +63,12 @@ def _trends(sf: pd.DataFrame, p: dict) -> None:
         labels={"date": "日付", "value": "分", "variable": ""},
     )
     fig.update_traces(line_width=2)
-    st.plotly_chart(style(fig, p), use_container_width=True, theme=None)
+    st.plotly_chart(style(fig, p), width="stretch", theme=None)
 
     st.subheader("睡眠効率")
     fig = px.line(sf, x="date", y="efficiency", labels={"date": "日付", "efficiency": "%"})
     fig.update_traces(line_color=p["categorical"][0], line_width=2)
-    st.plotly_chart(style(fig, p), use_container_width=True, theme=None)
+    st.plotly_chart(style(fig, p), width="stretch", theme=None)
 
 
 def _night_gantt(sf: pd.DataFrame, p: dict) -> None:
@@ -107,7 +107,7 @@ def _night_gantt(sf: pd.DataFrame, p: dict) -> None:
         ticktext=[f"{(12 + h) % 24}:00" for h in ticks],
     )
     fig.update_layout(height=max(300, min(900, 12 * len(gd) + 80)))
-    st.plotly_chart(style(fig, p), use_container_width=True, theme=None)
+    st.plotly_chart(style(fig, p), width="stretch", theme=None)
 
 
 def _weekday_pattern(sf: pd.DataFrame, p: dict) -> None:
@@ -124,7 +124,7 @@ def _weekday_pattern(sf: pd.DataFrame, p: dict) -> None:
         labels={"weekday": "曜日", "minutes_asleep": "平均睡眠時間（分）"},
     )
     fig.update_traces(marker_color=p["categorical"][0])
-    st.plotly_chart(style(fig, p), use_container_width=True, theme=None)
+    st.plotly_chart(style(fig, p), width="stretch", theme=None)
 
 
 def sleep_page() -> None:

@@ -11,7 +11,9 @@ Google Health APIを使う個人向けダッシュボード。応答は日本語
 - raw pages、typed rows、watermarkは`Store.replace_chunk()`でchunk単位に原子的置換する。
   upstream deletionやempty responseでも、成功したchunkは古い行を正しく消す。
 - sync runはHealth APIへの物理sendを最大200件に制限する。429とhard capでは完了chunk
-  だけを残して再開可能にする。engineへsleep/自動retryを追加しない（paceと401 retryはclient責務）。
+  だけを残して再開可能にする。非最終chunkの`sync_state.status`は`in_progress`、最終chunkは
+  `ok`。`in_progress`は次chunkから再開し、`ok`はwatermarkの2日前から再取得する。
+  engineへsleep/自動retryを追加しない（paceと401 retryはclient責務）。
 - testsはfake HTTPとcommitted fixtureだけを使う。live Google Health APIを自動テストで
   呼ばず、実アカウント確認は`health/scripts/probe_datatypes.py`で行う。
 - `data/`と`.env`はprivateかつgitignored。token、probe payload、実健康データをcommitしない。

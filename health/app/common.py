@@ -50,3 +50,31 @@ def clip_days(df: pd.DataFrame, days: int | None, date_col: str = "date") -> pd.
         return df
     dates = pd.to_datetime(df[date_col])
     return df[dates >= dates.max() - pd.Timedelta(days=days - 1)]
+
+
+def calendar_rolling_mean(
+    df: pd.DataFrame,
+    value_col: str,
+    days: int = 7,
+    date_col: str = "date",
+) -> pd.Series:
+    """Average observations in the trailing calendar window, preserving row order.
+
+    Missing dates are not treated as zero. They simply contribute no
+    observation, which is appropriate for device data that was not recorded.
+    """
+    if days < 1:
+        raise ValueError("days must be positive")
+    if df.empty:
+        return pd.Series(index=df.index, dtype=float, name=f"{value_col}_ma{days}")
+
+    work = pd.DataFrame(
+        {
+            "_date": pd.to_datetime(df[date_col]),
+            "_value": df[value_col].to_numpy(),
+            "_position": range(len(df)),
+        }
+    ).sort_values(["_date", "_position"])
+    work["_mean"] = work.rolling(f"{days}D", on="_date", min_periods=1)["_value"].mean()
+    values = work.sort_values("_position")["_mean"].to_numpy()
+    return pd.Series(values, index=df.index, name=f"{value_col}_ma{days}")

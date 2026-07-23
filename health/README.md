@@ -49,7 +49,8 @@ uv run --no-sync streamlit run health/app/main.py
 「管理 > 同期」で同期します。1回の同期はHealth APIへの物理requestを最大200件に
 制限します。上限で止まった場合は、もう一度押すと未完了chunkから再開します。
 HTTP 429の場合は表示された時間を待って再開してください。完了したchunkだけが保存され、
-途中pageやparser errorでは既存データとwatermarkを変更しません。
+途中pageやparser errorでは既存データとwatermarkを変更しません。全期間を取得済みのmetricは、
+次回同期時に前回watermarkの2日前から再取得し、遅れて反映された値や削除も取り込みます。
 
 認可をやり直すときは同期画面の「Google Health を再接続」を押します。保存tokenと
 未完了OAuth状態を破棄したうえで、明示的に再認可できます。
@@ -93,3 +94,7 @@ uv run --no-sync pytest health/tests -q
 uv run --no-sync ruff check health/src health/app health/scripts health/tests
 uv run --no-sync ruff format --check health/src health/app health/scripts health/tests
 ```
+
+## Development notes
+
+- [2026-07-23 Google Health post-review fixes](docs/2026-07-23-post-review-fixes.md)

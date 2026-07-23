@@ -1,10 +1,9 @@
 from datetime import date
 
-import health.sync as sync_module
 import pytest
 from health.client import RateLimited, RequestCapExceeded
 from health.endpoints import CATALOG, DAILY_ROLLUP, RECONCILE, Metric, ParsedRows
-from health.store import Store
+from health.store import SYNC_IN_PROGRESS, SYNC_OK, Store
 from health.sync import SyncEngine, backfill_start
 
 
@@ -88,7 +87,9 @@ def test_reconcile_buffers_all_pages_and_replaces_once(store, monkeypatch):
         parser=lambda received: seen.append(received) or ParsedRows(),
     )
     replacements = []
-    monkeypatch.setattr(store, "replace_chunk", lambda *args: replacements.append(args))
+    monkeypatch.setattr(
+        store, "replace_chunk", lambda *args, **kwargs: replacements.append((args, kwargs))
+    )
     SyncEngine(
         FakeClient(pages),
         store,
@@ -98,7 +99,8 @@ def test_reconcile_buffers_all_pages_and_replaces_once(store, monkeypatch):
     ).sync_all()
     assert seen == [pages]
     assert len(replacements) == 1
-    assert replacements[0][3] == pages
+    assert replacements[0][0][3] == pages
+    assert replacements[0][1]["status"] == SYNC_OK
 
 
 def test_parser_failure_does_not_replace_or_advance_watermark(store, monkeypatch):
@@ -138,42 +140,44 @@ def test_429_keeps_only_completed_chunks(store):
     assert report.paused and report.resume_in_s == 90
     assert report.requests_made == 2
     assert store.get_sync_state("test") == date(2026, 1, 1)
+    assert store.get_sync_checkpoint("test")[1] == SYNC_IN_PROGRESS
     assert len(store.raw_stats()) == 1
 
 
-def test_hard_cap_between_rollup_chunks(store, monkeypatch):
-    monkeypatch.setattr(sync_module, "MAX_REQUESTS_PER_RUN", 1)
+def test_hard_cap_between_rollup_chunks(store):
     report = SyncEngine(
         FakeClient(),
         store,
         [metric(days=1)],
         today=date(2026, 1, 2),
         environ={"HEALTH_BACKFILL_START": "2026-01-01"},
+        max_requests=1,
     ).sync_all()
     assert report.stopped_early and report.requests_made == 1
     assert store.get_sync_state("test") == date(2026, 1, 1)
+    assert store.get_sync_checkpoint("test")[1] == SYNC_IN_PROGRESS
 
 
-def test_hard_cap_during_paging_does_not_save_partial_chunk(store, monkeypatch):
-    monkeypatch.setattr(sync_module, "MAX_REQUESTS_PER_RUN", 1)
+def test_hard_cap_during_paging_does_not_save_partial_chunk(store):
     report = SyncEngine(
         FakeClient([{"page": 1}, {"page": 2}]),
         store,
         [metric(method=RECONCILE)],
         today=date(2026, 1, 1),
         environ={"HEALTH_BACKFILL_START": "2026-01-01"},
+        max_requests=1,
     ).sync_all()
     assert report.stopped_early and report.requests_made == 1
     assert store.get_sync_state("test") is None
     assert store.raw_stats().empty
 
 
-def test_second_run_resumes_at_first_unfinished_chunk(store, monkeypatch):
-    monkeypatch.setattr(sync_module, "MAX_REQUESTS_PER_RUN", 1)
+def test_second_run_resumes_at_first_unfinished_chunk(store):
     kwargs = {
         "catalog": [metric(days=1)],
         "today": date(2026, 1, 2),
         "environ": {"HEALTH_BACKFILL_START": "2026-01-01"},
+        "max_requests": 1,
     }
     SyncEngine(FakeClient(), store, **kwargs).sync_all()
     second = FakeClient()
@@ -181,6 +185,7 @@ def test_second_run_resumes_at_first_unfinished_chunk(store, monkeypatch):
     assert second.calls[0][2:] == (date(2026, 1, 2), date(2026, 1, 2))
     assert report.progress[0].done
     assert store.get_sync_state("test") == date(2026, 1, 2)
+    assert store.get_sync_checkpoint("test")[1] == SYNC_OK
 
 
 def test_completed_metric_refetches_trailing_three_days(store):
@@ -194,6 +199,46 @@ def test_completed_metric_refetches_trailing_three_days(store):
         environ={"HEALTH_BACKFILL_START": "2026-01-01"},
     ).sync_all()
     assert client.calls[0][2:] == (date(2026, 7, 18), date(2026, 7, 20))
+
+
+def test_completed_metric_refetches_from_previous_watermark_on_next_day(store):
+    store.set_sync_state("test", date(2026, 7, 19), SYNC_OK)
+    client = FakeClient()
+    SyncEngine(
+        client,
+        store,
+        [metric()],
+        today=date(2026, 7, 20),
+        environ={"HEALTH_BACKFILL_START": "2026-01-01"},
+    ).sync_all()
+    assert client.calls[0][2:] == (date(2026, 7, 17), date(2026, 7, 20))
+
+
+def test_legacy_ok_checkpoint_becomes_resumable_after_first_overlap_chunk(store):
+    store.set_sync_state("test", date(2026, 1, 2), SYNC_OK)
+    first = FakeClient()
+    report = SyncEngine(
+        first,
+        store,
+        [metric(days=1)],
+        today=date(2026, 1, 4),
+        environ={"HEALTH_BACKFILL_START": "2026-01-01"},
+        max_requests=1,
+    ).sync_all()
+    assert report.stopped_early
+    assert first.calls[0][2:] == (date(2026, 1, 1), date(2026, 1, 1))
+    assert store.get_sync_checkpoint("test") == (date(2026, 1, 1), SYNC_IN_PROGRESS)
+
+    second = FakeClient()
+    SyncEngine(
+        second,
+        store,
+        [metric(days=1)],
+        today=date(2026, 1, 4),
+        environ={"HEALTH_BACKFILL_START": "2026-01-01"},
+        max_requests=1,
+    ).sync_all()
+    assert second.calls[0][2:] == (date(2026, 1, 2), date(2026, 1, 2))
 
 
 def test_intraday_initial_sync_is_last_thirty_days(store):

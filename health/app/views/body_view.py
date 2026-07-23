@@ -57,4 +57,4 @@ def body_page() -> None:
                 labels={"date": "日付", "value": "%", "variable": ""},
             )
             fig.update_traces(line_width=2)
-        st.plotly_chart(style(fig, p), use_container_width=True, theme=None)
+        st.plotly_chart(style(fig, p), width="stretch", theme=None)

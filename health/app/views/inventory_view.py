@@ -12,7 +12,7 @@ def inventory_page() -> None:
     st.caption("Google Health が公開するデータ型と、このアプリの実装状況")
     st.dataframe(
         build_inventory(store),
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
         height=420,
         column_config={
@@ -26,9 +26,11 @@ def inventory_page() -> None:
     )
     st.subheader("保存系列")
     st.caption("DuckDB の typed series / sleep sessions / raw page の件数と期間")
+    series = build_series_inventory(store)
+    series["status"] = series["status"].replace({"ok": "完了", "in_progress": "途中"})
     st.dataframe(
-        build_series_inventory(store),
-        use_container_width=True,
+        series,
+        width="stretch",
         hide_index=True,
         height=600,
         column_config={

@@ -9,7 +9,7 @@ from datetime import date, timedelta
 
 from health.client import RateLimited, RequestBudget, RequestCapExceeded
 from health.endpoints import CATALOG, DAILY_ROLLUP, Metric, chunk_ranges
-from health.store import Store
+from health.store import SYNC_IN_PROGRESS, SYNC_OK, Store
 
 MAX_REQUESTS_PER_RUN = 200
 TRAILING_REFETCH_DAYS = 2
@@ -65,12 +65,14 @@ class SyncEngine:
         catalog: Sequence[Metric] = CATALOG,
         today: date | None = None,
         environ: Mapping[str, str] | None = None,
+        max_requests: int = MAX_REQUESTS_PER_RUN,
     ):
         self.client = client
         self.store = store
         self.catalog = catalog
         self.today = today or date.today()
         self.environ = environ
+        self.max_requests = max_requests
 
     def _initial_start(self, metric: Metric) -> date:
         if metric.full_history:
@@ -79,21 +81,22 @@ class SyncEngine:
 
     def _start_date(self, metric: Metric) -> date:
         initial = self._initial_start(metric)
-        last = self.store.get_sync_state(metric.name)
-        if last is None:
+        checkpoint = self.store.get_sync_checkpoint(metric.name)
+        if checkpoint is None:
             return initial
-        if last < self.today:
-            # An earlier run stopped between chunks. Continue at the first
-            # unfinished day; replaying the previous chunk can otherwise make
-            # a small hard cap prevent forward progress forever.
+        last, status = checkpoint
+        if status == SYNC_IN_PROGRESS:
+            # A request cap or error stopped between chunks. Continue at the
+            # first unfinished day so even a very small cap makes progress.
             return max(initial, last + timedelta(days=1))
-        # A completed metric deliberately re-fetches today and the two prior
-        # days so late-arriving values and upstream deletions are reconciled.
-        return max(initial, self.today - timedelta(days=TRAILING_REFETCH_DAYS))
+        # A completed metric deliberately overlaps the previous watermark so
+        # late-arriving values and upstream deletions are reconciled, including
+        # on the first sync of a later calendar day.
+        return max(initial, last - timedelta(days=TRAILING_REFETCH_DAYS))
 
     def sync_all(self, progress_cb: Callable[[str, str], None] | None = None) -> SyncReport:
         report = SyncReport()
-        budget = RequestBudget(MAX_REQUESTS_PER_RUN)
+        budget = RequestBudget(self.max_requests)
 
         for metric in self.catalog:
             progress = MetricProgress(metric=metric.name)
@@ -113,7 +116,15 @@ class SyncEngine:
                             self.client.iter_reconciled(metric, chunk_start, chunk_end, budget)
                         )
                     rows = metric.parse_pages(payloads)
-                    self.store.replace_chunk(metric, chunk_start, chunk_end, payloads, rows)
+                    status = SYNC_OK if chunk_end == self.today else SYNC_IN_PROGRESS
+                    self.store.replace_chunk(
+                        metric,
+                        chunk_start,
+                        chunk_end,
+                        payloads,
+                        rows,
+                        status=status,
+                    )
                 except RateLimited as exc:
                     report.paused = True
                     report.resume_in_s = exc.retry_after_s

@@ -56,4 +56,4 @@ def overview_page() -> None:
                 plot_bgcolor="rgba(0,0,0,0)",
                 hovermode="x",
             )
-            st.plotly_chart(fig, use_container_width=True, key=f"spark_{metric}", theme=None)
+            st.plotly_chart(fig, width="stretch", key=f"spark_{metric}", theme=None)

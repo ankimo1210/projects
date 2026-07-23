@@ -1923,7 +1923,7 @@ requires-dist = [
     { name = "plotly", specifier = ">=6.0" },
     { name = "python-dotenv", specifier = ">=1.0" },
     { name = "requests", specifier = ">=2.32" },
-    { name = "streamlit", specifier = ">=1.45" },
+    { name = "streamlit", specifier = ">=1.51" },
 ]
 
 [package.metadata.requires-dev]
