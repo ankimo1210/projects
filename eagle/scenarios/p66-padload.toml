@@ -1,0 +1,294 @@
+# Spike A (Task 6) static pad-load: everything P63 -> ignition needs that
+# is NOT time-dependent. Time-dependent words (permanent LM/CSM state
+# vectors, RLS, REFSMMAT, TLAND) are regenerated live from the measured
+# AGC clock by `eagle_runtime::padload::generate_state` and loaded on top.
+#
+# Symbols resolve against build/agc/Luminary099.log (SymTab). The whole
+# descent-target block is the EBANK-5 W-matrix overlay starting at TLAND =
+# E5,1400 (ERASABLE_ASSIGNMENTS.agc:1360-1411).
+#
+# Value provenance: LUM69R2/PADLOADS.agc (reconstructed flown Apollo 10 LM
+# erasable load) — the closest real padload in the vendor tree. Luminary
+# 99 flew slightly different numbers, but these are mutually consistent
+# and the geometry generator (StateCfg) is derived from THESE RIGNX/RIGNZ/
+# VIGN values, so the set is self-consistent by construction. yaYUL "B-n"
+# literals map to our physical b = n (DP pulses = value * 2^(28-b)); "B+m"
+# maps to b = -m; a bare 2DEC fraction maps to b = 0.
+#
+# Deliberately omitted:
+# - GAINBRAK/GAINAPPR: value unknown (not in any vendored padload; new in
+#   Luminary 99). Left at cold-boot zero — with TTF/8 = 0 at IGNALG start
+#   the GAINBRAK term of CGCALC's row-1 vector vanishes anyway.
+# - LR position/weight block (LRALPHA..LRWVFF), V2FG, TAUVERT, DELQFIX
+#   companions: landing radar stays silent in Spike A (no LR data-good
+#   discretes), P65 is out of scope.
+# - LEMMASS/CSMMASS: loaded through V48/N47 (R03 also derives MASS).
+# - FLAGWRD8 moon bits, REFSMFLG: set via read-modify-write in the
+#   choreography (a blunt manifest write would clobber live flag bits).
+
+# ---- Braking-phase (high gate) targets --------------------------------
+
+[[word]]
+symbol = "RBRFG+0"
+physical = { value = 2923.62643, b = 24, dp = true }
+provenance = "LUM69R2/PADLOADS.agc:395-400"
+comment = "R-OFG x, m (B-24)"
+
+[[word]]
+symbol = "RBRFG+4"
+physical = { value = -10083.9629, b = 24, dp = true }
+provenance = "LUM69R2/PADLOADS.agc:395-400"
+comment = "R-OFG z, m (y = 0 skipped)"
+
+[[word]]
+symbol = "VBRFG+0"
+physical = { value = -0.483907728, b = 10, dp = true }
+provenance = "LUM69R2/PADLOADS.agc:402-407"
+comment = "V-OFG x, m/cs (B-10)"
+
+[[word]]
+symbol = "VBRFG+4"
+physical = { value = 1.71785605, b = 10, dp = true }
+provenance = "LUM69R2/PADLOADS.agc:402-407"
+comment = "V-OFG z, m/cs"
+
+[[word]]
+symbol = "ABRFG+0"
+physical = { value = -5.22722473e-5, b = -4, dp = true }
+provenance = "LUM69R2/PADLOADS.agc:409-414"
+comment = "A-OFG x, m/cs^2 (B+04)"
+
+[[word]]
+symbol = "ABRFG+4"
+physical = { value = -2.86621213e-4, b = -4, dp = true }
+provenance = "LUM69R2/PADLOADS.agc:409-414"
+comment = "A-OFG z, m/cs^2"
+
+[[word]]
+symbol = "VBRFG*"
+physical = { value = 3.86517612, b = 10, dp = true }
+provenance = "LUM69R2/PADLOADS.agc:416-419"
+comment = "velocity scalar, high gate, m/cs"
+
+[[word]]
+symbol = "ABRFG*"
+physical = { value = -1.71972727e-3, b = -4, dp = true }
+provenance = "LUM69R2/PADLOADS.agc:421-424"
+comment = "acceleration scalar, high gate, m/cs^2"
+
+[[word]]
+symbol = "JBRFG*"
+physical = { value = -2.90216724e-8, b = -18, dp = true }
+provenance = "LUM69R2/PADLOADS.agc:427-430 (B+18)"
+comment = "jerk scalar, high gate, m/cs^3"
+
+# ---- Approach-phase (low gate) targets --------------------------------
+
+[[word]]
+symbol = "RAPFG+0"
+physical = { value = 23.5092239, b = 24, dp = true }
+provenance = "LUM69R2/PADLOADS.agc (RAPFG)"
+comment = "R-1FG x, m"
+
+[[word]]
+symbol = "RAPFG+4"
+physical = { value = -0.528319999, b = 24, dp = true }
+provenance = "LUM69R2/PADLOADS.agc (RAPFG)"
+comment = "R-1FG z, m"
+
+[[word]]
+symbol = "VAPFG+0"
+physical = { value = -9.44879999e-3, b = 10, dp = true }
+provenance = "LUM69R2/PADLOADS.agc (VAPFG)"
+comment = "V-1FG x, m/cs"
+
+[[word]]
+symbol = "VAPFG+4"
+physical = { value = 3.96239999e-3, b = 10, dp = true }
+provenance = "LUM69R2/PADLOADS.agc (VAPFG)"
+comment = "V-1FG z, m/cs"
+
+[[word]]
+symbol = "AAPFG+0"
+physical = { value = 1.52399999e-6, b = -4, dp = true }
+provenance = "LUM69R2/PADLOADS.agc (AAPFG)"
+comment = "A-1FG x, m/cs^2"
+
+[[word]]
+symbol = "AAPFG+4"
+physical = { value = -1.98119999e-5, b = -4, dp = true }
+provenance = "LUM69R2/PADLOADS.agc (AAPFG)"
+comment = "A-1FG z, m/cs^2"
+
+[[word]]
+symbol = "VAPFG*"
+physical = { value = 8.91539999e-3, b = 10, dp = true }
+provenance = "LUM69R2/PADLOADS.agc (VAPFG*)"
+comment = "velocity scalar, low gate, m/cs"
+
+[[word]]
+symbol = "AAPFG*"
+physical = { value = -1.18871999e-4, b = -4, dp = true }
+provenance = "LUM69R2/PADLOADS.agc (AAPFG*)"
+comment = "acceleration scalar, low gate, m/cs^2"
+
+[[word]]
+symbol = "JAPFG*"
+physical = { value = 8.37249023e-8, b = -18, dp = true }
+provenance = "LUM69R2/PADLOADS.agc (JAPFG*)"
+comment = "jerk scalar, low gate, m/cs^3"
+
+# ---- CG-update window criteria ---------------------------------------
+# CGCALC (LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:651-698) updates the
+# guidance frame only while TCGF + TTF/8 < 0 < TCGI + TTF/8. Real
+# Apollo 11 values are not in the vendor tree; -1 / +max holds the window
+# open for the whole descent, which is what the ignition algorithm needs
+# (CG must erect on the first pass, else RGU stays in SM axes and DDUM
+# diverges). ASSUMED — revisit if P64+ phase switching ever misbehaves.
+
+[[word]]
+symbol = "TCGFBRAK"
+octal = "77776"
+provenance = "assumed"
+comment = "-1: never freeze the guidance frame (braking)"
+
+[[word]]
+symbol = "TCGIBRAK"
+octal = "37777"
+provenance = "assumed"
+comment = "+max: window open from TTF/8 = 0 (braking)"
+
+[[word]]
+symbol = "TCGFAPPR"
+octal = "77776"
+provenance = "assumed"
+comment = "-1: never freeze the guidance frame (approach)"
+
+[[word]]
+symbol = "TCGIAPPR"
+octal = "37777"
+provenance = "assumed"
+comment = "+max: window open (approach)"
+
+# ---- Ignition algorithm targets --------------------------------------
+
+[[word]]
+symbol = "VIGN"
+physical = { value = 16.9952182, b = 10, dp = true }
+provenance = "LUM69R2/PADLOADS.agc:468-471"
+comment = "desired ignition speed, m/cs (= 1699.52 m/s)"
+
+[[word]]
+symbol = "RIGNX"
+physical = { value = -40943.2231, b = 24, dp = true }
+provenance = "LUM69R2/PADLOADS.agc:473-478"
+comment = "ignition 'altitude' component, m (site-radial, negative)"
+
+[[word]]
+symbol = "RIGNZ"
+physical = { value = -440014.934, b = 24, dp = true }
+provenance = "LUM69R2/PADLOADS.agc:480-484"
+comment = "ignition ground range, m (uprange = negative)"
+
+[[word]]
+symbol = "KIGNX/B4"
+physical = { value = -0.022499999, b = 0, dp = true }
+provenance = "LUM69R2/PADLOADS.agc:486-489"
+comment = "ignition sensitivity K-X (bare DP fraction)"
+
+[[word]]
+symbol = "KIGNY/B8"
+physical = { value = -0.174716605, b = 0, dp = true }
+provenance = "LUM69R2/PADLOADS.agc:491-494"
+comment = "ignition sensitivity K-Y"
+
+[[word]]
+symbol = "KIGNV/B4"
+physical = { value = -0.165939331, b = 0, dp = true }
+provenance = "LUM69R2/PADLOADS.agc:496-499"
+comment = "ignition sensitivity K-V"
+
+[[word]]
+symbol = "LOWCRIT"
+octal = "04251"
+provenance = "LUM69R2/PADLOADS.agc:501-505"
+comment = "throttle-down criterion, 57% FTP (2.7 lbf/bit)"
+
+[[word]]
+symbol = "HIGHCRIT"
+octal = "04622"
+provenance = "LUM69R2/PADLOADS.agc:507-511"
+comment = "throttle-up criterion, 63% FTP"
+
+# ---- DPS throttle-up delay -------------------------------------------
+# ZOOMTIME is PAD-LOADED (B(1)PL, ERASABLE_ASSIGNMENTS.agc:2109), not the
+# fixed constant the comments elsewhere suggest. Left at zero, TIG-0's
+# `CA ZOOMTIME / TC WAITLIST / 2CADR P63ZOOM` (BURN,_BABY,_BURN 36,2411)
+# POODOOs 01204 (zero-dt waitlist) ONE INSTRUCTION before IGNITION writes
+# ENGINE ON — pinned live via ALMCADR=36,2413 (spike-A iters 18-19).
+# 2600 cs = the historical 26 s DPS trim-phase before throttle-up
+# (matches GUIDDURN/DDUMGOOD's TIG = ignition-point - ZOOMTIME).
+
+[[word]]
+symbol = "ZOOMTIME"
+octal = "05050"
+provenance = "derived: 26 s = 2600 cs; caller BURN,_BABY,_BURN TIG-0 + DDUMGOOD"
+comment = "DPS throttle-up delay, SP cs (2600 = 0o5050)"
+
+# ---- Phase-switch time criteria --------------------------------------
+
+[[word]]
+symbol = "TENDBRAK"
+physical = { value = 2000.0, b = 17, dp = false }
+provenance = "LUM69R2/PADLOADS.agc:519-524 (two-phase value)"
+comment = "switch to approach phase when TTF > -20 s (cs at B-17)"
+
+[[word]]
+symbol = "TENDAPPR"
+physical = { value = 1000.0, b = 17, dp = false }
+provenance = "LUM69R2/PADLOADS.agc:513-517"
+comment = "leave approach-phase quadratic guidance at TTF > -10 s"
+
+# ---- P66 rate-of-descent cluster --------------------------------------
+# b-scales below are derived from the guidance-equation scale chain
+# (Spike A step 0/iter 14 analysis): velocities in this file are at
+# 2^10 m/cs (VIGN literal, DDUM denominator comment), accelerations at
+# 2^-4 m/cs^2 (ABRFG "B+04"), MASS at 2^16 kg (HIASCENT "5050 B-16").
+# Interpreter DDV/DMP keep fraction arithmetic, so:
+#   TAUROD  = vel/acc     -> fraction = tau_cs / 2^14      (b=14, CENTISECONDS)
+#   LAG/TAU = ratio       -> fraction = ratio              (b=0, dimensionless)
+#   FORCE   = MASS * acc  -> fraction = F[kg*m/cs^2]/2^12  (b=12, kg*m/cs^2 = 1e4 N)
+# None of these is exercised before ENGINE ON; Spike B (P66 live) is the
+# empirical authority. RODSCALE's scale did NOT close under this chain
+# (1 ft/s is sub-pulse at both 2^10 and 2^7 m/cs SP) -- task-5 value kept,
+# flagged for Spike B.
+
+[[word]]
+symbol = "RODSCALE"
+physical = { value = -0.3048, b = 7, dp = false }
+provenance = "task-5 hypothesis (1 ft/s per click)"
+comment = "ROD click scale, m/s SP b=7 -- UNVERIFIED; scale chain did not close, Spike B must pin"
+
+[[word]]
+symbol = "TAUROD"
+physical = { value = 150.0, b = 14, dp = true }
+provenance = "derived (scale chain); value 1.5 s = 150 cs"
+comment = "ROD time constant, cs at b=14 -- UNVERIFIED live until Spike B"
+
+[[word]]
+symbol = "LAG/TAU"
+physical = { value = 0.1333, b = 0, dp = true }
+provenance = "derived (scale chain); lag 0.2 s / tau 1.5 s"
+comment = "lag/TAUROD dimensionless fraction at b=0 -- UNVERIFIED live until Spike B"
+
+[[word]]
+symbol = "MINFORCE"
+physical = { value = 0.456, b = 12, dp = true }
+provenance = "derived (scale chain); 4560 N = 0.456 kg*m/cs^2 (DPS_MIN_N)"
+comment = "min P66 force, kg*m/cs^2 at b=12 -- UNVERIFIED live until Spike B"
+
+[[word]]
+symbol = "MAXFORCE"
+physical = { value = 4.25, b = 12, dp = true }
+provenance = "derived (scale chain); 42500 N = 4.25 kg*m/cs^2 (DPS_FTP_N)"
+comment = "max P66 force, kg*m/cs^2 at b=12 -- UNVERIFIED live until Spike B"
