@@ -93,6 +93,7 @@ pub const TIME1_ECADR: u16 = 0o25;
 ///   frame (IGNALG pass 1 runs with CG = identity).
 /// - 00213/00220 (IMU turn-on/alignment) never fired: ch30 bit9+bit14 are
 ///   asserted together at init and REFSMFLG is verified before V37E63E.
+///
 /// Task 16 imports this list; grow it only with a diagnosed, cited entry.
 pub const SPIKE_A_ALARM_WHITELIST: &[u16] = &[];
 
@@ -222,22 +223,36 @@ pub async fn dap_init(
     Ok(())
 }
 
+/// ECADRs that `apply_padload` read-back-verifies REGARDLESS of the
+/// sparse stride ("every 8th word + all words the spike ever saw fail",
+/// per the brief). No word ever failed a live read-back during the spike
+/// (0 drops in ~20 runs at 30 ms key delay), so the seed is the one word
+/// whose *absence* cost the most: ZOOMTIME (E7,1422 = 0o3422) — zero
+/// there POODOOs 01204 at TIG-0, one instruction before ENGINE ON
+/// (spike-A iters 18-19). A stride of 8 over the static manifest happens
+/// to skip it, which is exactly why the always-set exists.
+pub const ALWAYS_VERIFY_ECADRS: &[u16] = &[0o3422];
+
 /// Uplink a resolved pad-load via V21N01, verifying every `verify_every`-th
-/// word with a V01N01 read-back (0 = verify nothing; 1 = verify all).
+/// word with a V01N01 read-back (0 = stride verifies nothing; 1 = every
+/// word). Words whose ECADR is in `always_verify` are read-back-verified
+/// even when the stride would skip them (pass `ALWAYS_VERIFY_ECADRS`).
 /// Zero words are skipped outright: yaAGC cold-boots with zeroed
-/// erasable, so they are no-ops — this only holds on a fresh boot, which
-/// is the only mode the spike test runs in.
+/// erasable (`--no-resume`), so they are no-ops — this only holds on a
+/// fresh boot, which is the only mode the spike test runs in.
 pub async fn apply_padload(
     script: &mut DskyScript,
     words: &[PadWord],
     verify_every: usize,
+    always_verify: &[u16],
 ) -> Result<()> {
     let mut loaded = 0usize;
     for w in words {
         if w.word == 0 {
             continue;
         }
-        let verify = verify_every > 0 && loaded.is_multiple_of(verify_every);
+        let verify = (verify_every > 0 && loaded.is_multiple_of(verify_every))
+            || always_verify.contains(&w.ecadr);
         if verify {
             script
                 .load_erasable(w.ecadr, w.word)
@@ -339,11 +354,18 @@ fn vn_strings(d: &DskyState) -> (String, String) {
 }
 
 /// V37E63E, then run the flash responder until the V99 engine-enable
-/// request has been answered with PRO (or fail on PROG alarm / timeout /
-/// dialog loop). Engine-on itself is asserted by the caller on the raw
-/// packet stream (ch 011 bit13) — it arrives at TIG-0, after this
+/// request has been answered with PRO (or fail on non-whitelisted PROG
+/// alarm / timeout / dialog loop). A PROG alarm whose FAILREG codes are
+/// all in `SPIKE_A_ALARM_WHITELIST` (∪ {0}) is acknowledged with RSET +
+/// KEY REL and the dialog continues; any other code aborts with the
+/// codes in the error. Engine-on itself is asserted by the caller on the
+/// raw packet stream (ch 011 bit13) — it arrives at TIG-0, after this
 /// function returns.
 pub async fn enter_p63(script: &mut DskyScript) -> Result<()> {
+    // Budget: the frozen choreography reaches ENGINE ON ~174 s after
+    // V37E63E (IGNALG ~5 s + dialog + burn_lead countdown); 600 s ≈ 3.4×
+    // margin also covers BURNBABY's TIG-slip path (+30 s) and a slow
+    // IGNALG without masking a genuine hang for the whole test timeout.
     const TIMEOUT: Duration = Duration::from_secs(600);
     script.keys("V37E63E").await?;
     script
@@ -370,12 +392,23 @@ pub async fn enter_p63(script: &mut DskyScript) -> Result<()> {
             .context("waiting for P63 dialog")?;
         if d.lamps.prog_alarm {
             let codes = script.alarm_codes().await.unwrap_or([0; 3]);
-            bail!(
-                "PROG alarm during P63 entry: FAILREG = {:05o} {:05o} {:05o}",
-                codes[0],
-                codes[1],
-                codes[2]
-            );
+            let whitelisted = codes
+                .iter()
+                .all(|c| *c == 0 || SPIKE_A_ALARM_WHITELIST.contains(c));
+            if !whitelisted {
+                bail!(
+                    "PROG alarm during P63 entry: FAILREG = {:05o} {:05o} {:05o}",
+                    codes[0],
+                    codes[1],
+                    codes[2]
+                );
+            }
+            // Whitelisted: acknowledge like the crew would (RSET clears
+            // the lamp — sanctioned for whitelisted codes only), release
+            // the display back to the flashing program, and continue.
+            script.keys("R").await?;
+            script.keys("K").await?;
+            continue;
         }
         // Debounce: let the display settle, then re-read.
         tokio::time::sleep(Duration::from_secs(1)).await;
@@ -533,6 +566,10 @@ impl SyntheticHover {
     pub fn spawn(tx: mpsc::UnboundedSender<Packet>) -> Self {
         let handle = tokio::spawn(async move {
             let mut tick = tokio::time::interval(Duration::from_millis(10));
+            // Delay (not Burst): missed ticks under contention UNDER-credit
+            // ΔV rather than bursting pulses. Acceptable for v1, whose only
+            // job is AVERAGE-G liveness (a live accelerometer signal);
+            // Spike B's v2 feeds real dynamics with proper bookkeeping.
             tick.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
             let pulses_per_tick = HOVER_ACCEL_MS2 / PIPA_INCR * 0.010;
             let mut acc = 0.0f64;
@@ -599,43 +636,93 @@ mod tests {
         assert_eq!(classify_flash("16", "36", " 00000", 0), Unknown);
     }
 
-    #[tokio::test]
-    async fn apply_padload_verification_cadence() {
-        // Scripted fake: capture the key packets apply_padload emits for a
-        // 3-word load with verify_every = 2 and a zero word in the middle.
-        // Word 0 verifies (V01N01 read-back would hang without an AGC, so
-        // verify_every=0 path only here); this test pins the *skip-zero*
-        // and raw-keys shape, the pure parts.
-        let (tx, mut rx) = tokio::sync::mpsc::unbounded_channel();
-        let (_wtx, wrx) = tokio::sync::watch::channel(Default::default());
+    /// Key-count fixture: a raw (unverified) V21N01 load is 19 keys
+    /// (V21N01E + 5 addr + E + 5 data + E); a verified load adds the
+    /// V01N01 read-back's 13 keys (V01N01E + 5 addr + E) = 32.
+    const RAW_KEYS: usize = 19;
+    const VERIFIED_KEYS: usize = 19 + 13;
+
+    fn seeded_script() -> (
+        DskyScript,
+        tokio::sync::mpsc::UnboundedReceiver<Packet>,
+        tokio::sync::watch::Sender<DskyState>,
+    ) {
+        // Scripted fake AGC: the watch channel is pre-seeded with a DSKY
+        // whose R1 already reads " 05050" (the wait_resolves_... pattern),
+        // so load_erasable's V01N01 read-back parses immediately and
+        // matches every verified word's value (verified words below are
+        // deliberately 0o5050).
+        let (tx, rx) = tokio::sync::mpsc::unbounded_channel();
+        let mut seeded = DskyState::default();
+        // Set R1 digits via the relay rows (fields are private): row 8
+        // drives R1D1, row 7 R1D2/D3, row 6 R1D4/D5. '0'=0b10101,'5'=0b11110.
+        for pkt in [
+            Packet::io(0o10, (8 << 11) | 0b10101).unwrap(),
+            Packet::io(0o10, (7 << 11) | (0b11110 << 5) | 0b10101).unwrap(),
+            Packet::io(0o10, (6 << 11) | (0b11110 << 5) | 0b10101).unwrap(),
+        ] {
+            seeded.apply(&pkt);
+        }
+        let (wtx, wrx) = tokio::sync::watch::channel(seeded);
         let mut script = DskyScript::new(tx, wrx);
         script.set_key_delay(Duration::ZERO);
+        (script, rx, wtx)
+    }
+
+    #[tokio::test]
+    async fn apply_padload_verification_cadence_and_always_set() {
+        let (mut script, mut rx, _wtx) = seeded_script();
         let words = [
-            PadWord {
-                ecadr: 0o2400,
-                word: 0o1234,
-            },
-            PadWord {
-                ecadr: 0o2401,
-                word: 0,
-            }, // skipped: cold-boot zero
-            PadWord {
-                ecadr: 0o2402,
-                word: 0o7,
-            },
+            // loaded index 0: stride-verified (0 % 3 == 0).
+            PadWord { ecadr: 0o2400, word: 0o5050 },
+            // zero word: skipped entirely (cold-boot erasable is zero).
+            PadWord { ecadr: 0o2401, word: 0 },
+            // loaded index 1: raw keys, no read-back.
+            PadWord { ecadr: 0o2402, word: 0o7 },
+            // loaded index 2: the stride (every 3rd) would SKIP this one --
+            // the always-verify set must force the read-back anyway. This
+            // is ZOOMTIME's ECADR, the exact word the review flagged.
+            PadWord { ecadr: 0o3422, word: 0o5050 },
         ];
-        apply_padload(&mut script, &words, 0).await.unwrap();
+        assert!(ALWAYS_VERIFY_ECADRS.contains(&0o3422));
+        apply_padload(&mut script, &words, 3, ALWAYS_VERIFY_ECADRS)
+            .await
+            .unwrap();
         drop(script);
         let mut keys = Vec::new();
         while let Some(p) = rx.recv().await {
             keys.push(p);
         }
-        // 2 loaded words * 19 keys each (V21N01E + 5addr + E + 5data + E),
-        // zero word skipped entirely.
-        assert_eq!(keys.len(), 2 * 19);
-        // First key of each word is VERB (code 0o21 on ch 015).
+        // verified + raw + always-verified; the zero word contributes 0.
+        assert_eq!(keys.len(), VERIFIED_KEYS + RAW_KEYS + VERIFIED_KEYS);
+        // First key of the sequence is VERB (code 0o21 on ch 015).
         assert_eq!(keys[0].data, 0o21);
-        assert_eq!(keys[19].data, 0o21);
+        // The always-verify word's read-back is present: the LAST 13 keys
+        // are V01N01E + its address; V01's "0","1" digits follow VERB.
+        let tail = &keys[keys.len() - 13..];
+        assert_eq!(tail[0].data, 0o21); // VERB
+        assert_eq!(tail[1].data, 0o20); // 0
+        assert_eq!(tail[2].data, 0o1); // 1
+    }
+
+    #[tokio::test]
+    async fn apply_padload_stride_skips_readback_without_always_set() {
+        // Same shape, empty always-set: the 0o3422 word must NOT be
+        // verified (stride 3 skips loaded-index 2) -- pins that the
+        // always-set is what forces the read-back in the test above.
+        let (mut script, mut rx, _wtx) = seeded_script();
+        let words = [
+            PadWord { ecadr: 0o2400, word: 0o5050 },
+            PadWord { ecadr: 0o2402, word: 0o7 },
+            PadWord { ecadr: 0o3422, word: 0o5050 },
+        ];
+        apply_padload(&mut script, &words, 3, &[]).await.unwrap();
+        drop(script);
+        let mut n = 0;
+        while rx.recv().await.is_some() {
+            n += 1;
+        }
+        assert_eq!(n, VERIFIED_KEYS + RAW_KEYS + RAW_KEYS);
     }
 
     #[test]

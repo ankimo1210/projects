@@ -86,20 +86,20 @@ async fn boot_padload_p63_ignition() {
         .expect("NO ATT out after ISS turn-on");
 
     // --- Pad-load: static targets + generated state ----------------------
-    // Sparse verification (every 8th word) fits the time budget; the
-    // words the spike saw fail live are all in the state manifest, which
-    // uses the same cadence plus load_erasable's own read-back on the
-    // verified samples.
+    // Sparse verification (every 8th word) fits the time budget;
+    // ALWAYS_VERIFY_ECADRS forces read-back on the words the stride would
+    // skip but the spike proved critical (ZOOMTIME — its absence POODOOs
+    // 01204 at TIG-0). No word ever failed a live read-back at 30 ms keys.
     let words = static_manifest
         .resolve(&symtab)
         .expect("static manifest resolves");
-    runner::apply_padload(&mut init.script, &words, 8)
+    runner::apply_padload(&mut init.script, &words, 8, runner::ALWAYS_VERIFY_ECADRS)
         .await
         .expect("static pad-load");
     let words = state_manifest
         .resolve(&symtab)
         .expect("state manifest resolves");
-    runner::apply_padload(&mut init.script, &words, 8)
+    runner::apply_padload(&mut init.script, &words, 8, runner::ALWAYS_VERIFY_ECADRS)
         .await
         .expect("state pad-load");
 
