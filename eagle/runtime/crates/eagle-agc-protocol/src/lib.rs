@@ -7,3 +7,4 @@ pub use agc_io::{PipaAxis, CduAxis, ThrustPulse, AgcOutput, pipa_pulse, cdu_puls
 pub use dsky::{DskyState, Lamps, RegisterDisplay};
 pub use keys::{DskyKey, pro_key_packets};
 pub use packet::{Packet, PacketKind, PacketError, StreamDecoder, PING};
+pub use words::{dp_decode, dp_encode, octal5, sp_decode, sp_encode, to_pulses};
