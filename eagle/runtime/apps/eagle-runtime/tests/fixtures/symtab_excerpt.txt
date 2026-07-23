@@ -1,0 +1,7 @@
+003996,000434:    0366                        RESTREG            ERASE                                  	# B(1)PRM FOR DISPLAY RESTARTS
+004092,000530:    1013                        REQRET             ERASE                                  	# RETURN REGISTER FOR LOAD
+004605,001043: E4,1422                        RLS                ERASE    +5                            	# I(6) LANDING SITE VECTOR -MOON REF
+004921,001359: E5,1642  E5,1400               TLAND              EQUALS   W                             	# I(2)  NOMINAL TIME OF LANDING
+004922,001360: E5,1642  E5,1402               RBRFG              EQUALS   TLAND      +2                 	# I(6) BRAKING
+004969,001407: E5,1642  E5,1537               RODSCALE           EQUALS   LRWVFF     +1                 	# I(1) CLICK SCALE FACTOR FOR ROD
+004970,001408: E5,1642  E5,1540               TAUROD             EQUALS   RODSCALE   +1                 	# I(2) TIME CONSTANT FOR R.O.D.
