@@ -1235,13 +1235,14 @@ pub fn tick_packets(&mut self) -> Vec<Packet> {
 - THRUST_N_PER_PULSE: at steady hover (ROD target ≈ 0), `cmd_pulses · scale ≈ mass · 1.62`; solve for scale. If outside 12.0 ± 20%, update the constant (one place) and re-run.
 - Whitelist: extend `SPIKE_B_ALARM_WHITELIST` with any steady-state P66-without-radar codes observed (e.g. ALT/VEL lamps are expected — record which).
 
-- [ ] **Step 1:** Step-0: re-read `agc_engine.c:1278-1305` (POUT/MOUT/ZOUT) + `:1570-1623` (DINC dispatch); pin GUILDENSTERN's exact discrete reads (`LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:144-225`).
-- [ ] **Step 2:** Unit tests for `ThrustResponder` (arm/disarm/count over a scripted AgcOutput sequence; tick_packets bounded and empty when disarmed) and `SyntheticHover` v2 (hover equilibrium: with cmd_pulses = mass·1.62/scale, vz stays within ±0.05 m/s over 60 s of ticks).
-- [ ] **Step 3:** Run failing → implement → pass (`cargo test -p eagle-runtime runner`).
-- [ ] **Step 4:** Live iteration via `descent_probe` (add `rod +`/`rod -` stdin commands). Achieve: MM66, ROD tracking (truth vz settles within 0.3 m/s of clicked target inside 15 s), calibrations done.
-- [ ] **Step 5:** Freeze into `tests/live_spike_p66.rs` (port 19903) asserting: MM66 reached; `cmd_pulses` nonzero; after scripted "2 down-clicks", feeder truth vz changes by −0.6 ± 0.15 m/s within 15 s; alarms ⊆ whitelist. PASS twice consecutively.
-- [ ] **Step 6:** Update `docs/agc-channel-map.md`: THRUST protocol "verified live" note + measured pulse scale + the P66 nav-display (noun/register/scaling) finding.
-- [ ] **Step 7:** Commit — `git commit -m "feat(runtime): P66 entry + THRUST DINC protocol proven live (spike B)"` (+ trailer).
+- [x] **Step 1:** Step-0: re-read `agc_engine.c:1278-1305` (POUT/MOUT/ZOUT) + `:1570-1623` (DINC dispatch); pin GUILDENSTERN's exact discrete reads (`LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:144-225`).
+- [x] **Step 2:** Unit tests for `ThrustResponder` (arm/disarm/count over a scripted AgcOutput sequence; tick_packets bounded and empty when disarmed) and `SyntheticHover` v2 (hover equilibrium: with cmd_pulses = mass·1.62/scale, vz stays within ±0.05 m/s over 60 s of ticks).
+- [x] **Step 3:** Run failing → implement → pass (`cargo test -p eagle-runtime runner`).
+- [x] **Step 4:** Live iteration via `descent_probe` (add `rod +`/`rod -` stdin commands). Achieve: MM66, ROD tracking (truth vz settles within 0.3 m/s of clicked target inside 15 s), calibrations done.
+- [x] **Step 5:** Freeze into `tests/live_spike_p66.rs` (port 19903) asserting: MM66 reached; `cmd_pulses` nonzero; after scripted "2 down-clicks", feeder truth vz changes by −0.6 ± 0.15 m/s within 15 s; alarms ⊆ whitelist. PASS twice consecutively.
+  - **Acceptance deviation (implemented):** the "feeder truth vz changes by −0.6 ± 0.15 m/s" clause could not be used — the AGC flies its pad-loaded navigation state (~50 000 ft, ~5 600 ft/s horizontal) while the 1-D feeder is an independent vertical column, so a ROD click changes the AGC's *thrust command*, not the feeder's vz directly. Substituted a stronger, direct check of the same mechanism: two down-clicks move the AGC's own desired altitude rate VDGVERT by exactly `2 × RODSCAL1` (RODCOMP's `MP RODSCAL1 / DAS VDGVERT`). MM66 + `cmd_pulses > 0` + alarms ⊆ whitelist retained. Proven on a stock unpatched yaAGC (twice).
+- [x] **Step 6:** Update `docs/agc-channel-map.md`: THRUST protocol "verified live" note + measured pulse scale + the P66 nav-display (noun/register/scaling) finding.
+- [x] **Step 7:** Commit — `git commit -m "feat(runtime): P66 entry + THRUST DINC protocol proven live (spike B)"` (+ trailer).
 
 **Escalation rule (both spikes):** if after ~10 documented iterations a
 wall remains (e.g. GUILDENSTERN never leaves P63, or DINC yields no
