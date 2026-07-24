@@ -41,15 +41,28 @@ impl<F: Frame> Neg for V3<F> { type Output = Self;
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Rot<A: Frame, B: Frame> { q: [f64; 4], _f: PhantomData<(A, B)> }
 
-fn qmul(a: [f64; 4], b: [f64; 4]) -> [f64; 4] {
+pub(crate) fn qmul(a: [f64; 4], b: [f64; 4]) -> [f64; 4] {
     [a[0]*b[0] - a[1]*b[1] - a[2]*b[2] - a[3]*b[3],
      a[0]*b[1] + a[1]*b[0] + a[2]*b[3] - a[3]*b[2],
      a[0]*b[2] - a[1]*b[3] + a[2]*b[0] + a[3]*b[1],
      a[0]*b[3] + a[1]*b[2] - a[2]*b[1] + a[3]*b[0]]
 }
 
+/// Quaternion kinematics: q̇ = ½ q ⊗ [0, ω_body] for a Body→Mci attitude q
+/// with body angular velocity ω. Returns the raw derivative components;
+/// RK4 sums these linearly and normalizes once per step (see `rk4.rs`).
+pub(crate) fn qdot(q: [f64; 4], w: V3<Body>) -> [f64; 4] {
+    let omega = [0.0, w.x, w.y, w.z];
+    let p = qmul(q, omega);
+    [0.5 * p[0], 0.5 * p[1], 0.5 * p[2], 0.5 * p[3]]
+}
+
 impl<A: Frame, B: Frame> Rot<A, B> {
     pub fn from_raw(q: [f64; 4]) -> Self { Self { q, _f: PhantomData }.normalize() }
+    /// Build a rotation from raw components WITHOUT normalizing — only for
+    /// RK4's intermediate stages, where the attitude is summed linearly and
+    /// normalized once at the end of the step.
+    pub(crate) fn from_raw_unnormalized(q: [f64; 4]) -> Self { Self { q, _f: PhantomData } }
     pub fn raw(&self) -> [f64; 4] { self.q }
     pub fn identity() -> Self { Self { q: [1.0, 0.0, 0.0, 0.0], _f: PhantomData } }
     pub fn normalize(mut self) -> Self {
