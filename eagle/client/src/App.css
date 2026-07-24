@@ -133,3 +133,40 @@
   font-size: 0.72rem;
   margin: 0.6rem 0 0;
 }
+
+/* ---- Engineer telemetry board (Task 15) ---- */
+.app { display: flex; flex-direction: column; min-height: 100vh; }
+.tabs { display: flex; gap: 0.5rem; padding: 0.5rem 1rem; background: #12151c; border-bottom: 1px solid #2a2f3a; }
+.tabs button {
+  background: #1b1f28; color: #9aa; border: 1px solid #2a2f3a;
+  padding: 0.35rem 1.1rem; border-radius: 4px; cursor: pointer;
+  font: inherit; letter-spacing: 0.05em;
+}
+.tabs button.active { background: #243044; color: #cfe3ff; border-color: #3a5a8a; }
+
+.engr { display: flex; gap: 1rem; padding: 1rem; align-items: flex-start; flex-wrap: wrap; }
+.engr-charts { flex: 1 1 640px; min-width: 320px; display: flex; flex-direction: column; gap: 0.75rem; }
+.engr-side { flex: 0 0 280px; display: flex; flex-direction: column; gap: 1rem; }
+.engr-nums table { width: 100%; border-collapse: collapse; }
+.engr-nums td { padding: 0.15rem 0.4rem; font-size: 0.82rem; }
+.engr-nums td.k { color: #8a93a6; }
+.engr-nums td.v { color: #dfe6f0; text-align: right; font-variant-numeric: tabular-nums; }
+.engr-nums .muted { color: #667; }
+.engr h2 { font-size: 0.8rem; color: #9aa; text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 0.4rem; }
+
+.td-badge { margin-top: 0.6rem; padding: 0.4rem 0.6rem; border-radius: 4px; text-align: center; font-weight: 600; }
+.td-nominal { background: #14361f; color: #7fe0a0; }
+.td-hard { background: #3a3212; color: #e6d060; }
+.td-crash { background: #3a1414; color: #f08080; }
+
+.engr-rod button {
+  display: block; width: 100%; margin: 0.3rem 0; padding: 0.5rem;
+  background: #1b1f28; color: #cfe3ff; border: 1px solid #3a5a8a;
+  border-radius: 4px; cursor: pointer; font: inherit;
+}
+.engr-rod button:hover { background: #243044; }
+
+.engr-phases ul { list-style: none; margin: 0; padding: 0; max-height: 220px; overflow-y: auto; }
+.engr-phases li { display: flex; justify-content: space-between; padding: 0.2rem 0.3rem; font-size: 0.82rem; border-bottom: 1px solid #1c2029; }
+.ph-mm { color: #cfe3ff; }
+.ph-t { color: #8a93a6; font-variant-numeric: tabular-nums; }
