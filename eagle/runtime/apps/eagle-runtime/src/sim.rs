@@ -442,7 +442,7 @@ pub struct SimHandle {
 }
 
 /// Outcome once the sim thread exits.
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct SimResult {
     pub touchdown: Option<(Touchdown, f64, f64, f64)>,
 }
@@ -628,11 +628,7 @@ mod tests {
         core.ingest(SimIn::Agc(AgcOutput::ThrustDrive(true)));
         for _ in 0..50 {
             let out = core.tick();
-            let pipa = out
-                .to_agc
-                .iter()
-                .filter(|p| matches!(decode_pipa(p), Some(_)))
-                .count();
+            let pipa = out.to_agc.iter().filter(|p| is_pipa(p)).count();
             assert!(pipa <= 10, "pipa flood: {pipa}");
             assert!(out.to_agc.len() <= 192 + 32 + 10, "packet flood");
         }
@@ -697,13 +693,9 @@ mod tests {
         assert!(again.is_none(), "touchdown fired twice");
     }
 
-    fn decode_pipa(p: &Packet) -> Option<()> {
+    fn is_pipa(p: &Packet) -> bool {
         // PIPA counter packets are on 037/040/041.
-        if matches!(p.channel, 0o37 | 0o40 | 0o41) {
-            Some(())
-        } else {
-            None
-        }
+        matches!(p.channel, 0o37..=0o41)
     }
 
     #[test]

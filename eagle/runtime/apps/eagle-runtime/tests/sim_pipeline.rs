@@ -53,15 +53,12 @@ async fn sim_pipeline_with_stub_agc_streams_telemetry() {
         tokio::time::sleep(Duration::from_millis(200)).await;
         feed(Packet::io(0o11, 1 << 12).unwrap(), &mut dsky); // ENGINE ON
         // Then keep answering DINC strobes with POUT so thrust holds.
-        loop {
-            match tokio::time::timeout(Duration::from_millis(500), agc_rx.recv()).await {
-                Ok(Some(p)) => {
-                    // A DINC strobe is a counter write to 055; answer POUT.
-                    if p.channel == 0o55 {
-                        feed(Packet::counter(0o55, 0o15).unwrap(), &mut dsky);
-                    }
-                }
-                _ => break,
+        while let Ok(Some(p)) =
+            tokio::time::timeout(Duration::from_millis(500), agc_rx.recv()).await
+        {
+            // A DINC strobe is a counter write to 055; answer POUT.
+            if p.channel == 0o55 {
+                feed(Packet::counter(0o55, 0o15).unwrap(), &mut dsky);
             }
         }
     });
@@ -70,9 +67,8 @@ async fn sim_pipeline_with_stub_agc_streams_telemetry() {
     let mut frames: Vec<String> = Vec::new();
     let deadline = tokio::time::Instant::now() + Duration::from_millis(1000);
     while tokio::time::Instant::now() < deadline {
-        match tokio::time::timeout(Duration::from_millis(200), telem_rx.recv()).await {
-            Ok(Ok(f)) => frames.push(f),
-            _ => {}
+        if let Ok(Ok(f)) = tokio::time::timeout(Duration::from_millis(200), telem_rx.recv()).await {
+            frames.push(f);
         }
     }
 

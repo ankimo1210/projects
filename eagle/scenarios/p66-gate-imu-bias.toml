@@ -1,0 +1,40 @@
+# Same gate as p66-gate.toml but with a mild seeded IMU accelerometer bias.
+# Spec §8 "graceful behavior only": the closed loop must still reach
+# touchdown (any classification) without panicking or raising a
+# non-whitelisted alarm — accuracy is NOT asserted under errors.
+schema = 1
+name = "p66-gate-imu-bias"
+
+[site]
+lat_deg = 0.674          # historical
+lon_deg = 23.473         # historical
+radius_m = 1737400.0     # assumed
+
+[gate]
+alt_m = 500.0            # assumed
+vz_ms = 0.0
+mass_dry_kg = 7009.0
+fuel_dps_kg = 2000.0
+fuel_rcs_kg = 150.0
+inertia_kgm2 = [12000.0, 13500.0, 13000.0]
+
+[agc]
+padload = "scenarios/p66-padload.toml"
+lm_weight_lbs = 20200.0
+tland_offset_cs = 12000
+flip_atthold_after_engine_on_s = 2.0
+
+[rod]
+steps = [[400.0, -3.0], [150.0, -1.5], [30.0, -1.0]]
+
+[errors.imu]
+accel_bias_mps2 = [0.0005, 0.0002, 0.0]   # derived, mild
+accel_scale_ppm = [0.0, 0.0, 0.0]
+accel_noise_sigma_mps2 = 0.0
+seed = 42
+
+[acceptance]
+v_vert_max = 3.0
+v_horiz_max = 1.5
+tilt_max_deg = 12.0
+timeout_s = 300.0
