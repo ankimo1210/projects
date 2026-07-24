@@ -1505,7 +1505,7 @@ diagonal inertia. `touchdown.rs`: threshold ladder. Trim angle integration
 which gimbal and the angle sequence; cite the lines in `imu.rs`. Pin the
 gyro-word packing from `agc_engine.c:2354-2390` for `apply_gyro`.
 
-- [ ] **Step 1: Failing tests:**
+- [x] **Step 1: Failing tests:**
 
 ```rust
 #[test]
@@ -1566,7 +1566,7 @@ fn coarse_align_shifts_gimbal_reference() {
 }
 ```
 
-- [ ] **Step 2: FAIL** → **Step 3: implement**. `Pipa`: per-axis f64
+- [x] **Step 2: FAIL** → **Step 3: implement**. `Pipa`: per-axis f64
 residual accumulator, truncate-toward-zero to pulses (LM_Simulator
 algorithm, `AGC_IMU.tcl:635-653`). `Imu`: store `sm_to_mci` + gimbal
 offsets; `gimbals_deg` computes `Rot<Sm, Body> = sm_to_mci.then(att.inverse())`,
@@ -1574,7 +1574,7 @@ extracts the tcl's gimbal sequence angles, adds offsets. `Cdu`: per-axis
 emitted-pulse i64, target = round(angle/CDU_INCR_DEG), delta capped ±64,
 `cdu_pulse(axis, positive, /*fast=*/true)` repeated |delta| times.
 
-- [ ] **Step 4: PASS** (`cargo test -p eagle-sensors`) → **Step 5: Commit** — `"feat(sensors): PIPA quantizer, IMU gimbal model, CDU pulse feed"` (+ trailer).
+- [x] **Step 4: PASS** (`cargo test -p eagle-sensors`) → **Step 5: Commit** — `"feat(sensors): PIPA quantizer, IMU gimbal model, CDU pulse feed"` (+ trailer).
 
 ---
 
