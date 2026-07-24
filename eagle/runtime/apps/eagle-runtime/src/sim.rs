@@ -12,7 +12,7 @@
 //! tokio side turns it into `runner::rod_load`. (The plan predates the
 //! Spike-B RODCOUNT finding and specified ch016 press/release packets.)
 use crate::scenario::Scenario;
-use eagle_agc_protocol::agc_io::{pipa_pulse, AgcOutput, PipaAxis};
+use eagle_agc_protocol::agc_io::{decode_output, pipa_pulse, AgcOutput, PipaAxis};
 use eagle_agc_protocol::dsky::DskyState;
 use eagle_agc_protocol::Packet;
 use eagle_dynamics::constants::{DT, THRUST_N_PER_PULSE, TRIM_MAX_DEG, TRIM_RATE_DEG_S};
@@ -81,6 +81,17 @@ fn parse_decimal_register(reg: &eagle_agc_protocol::dsky::RegisterDisplay) -> Op
 pub enum SimIn {
     Agc(AgcOutput),
     Dsky(DskyStateSnapshot),
+}
+
+/// Turn one raw AGC packet into sim events: always its decoded autopilot
+/// output, plus a fresh DSKY snapshot when the packet changed the display.
+/// `dsky` is the caller's running display state (applied in place).
+pub fn agc_packet_to_simin(p: &Packet, dsky: &mut DskyState) -> Vec<SimIn> {
+    let mut evs = vec![SimIn::Agc(decode_output(p))];
+    if dsky.apply(p) {
+        evs.push(SimIn::Dsky(DskyStateSnapshot::from_dsky(dsky)));
+    }
+    evs
 }
 
 /// Result of one 10 ms tick.
@@ -445,6 +456,7 @@ pub fn spawn_sim(
     in_rx: std::sync::mpsc::Receiver<SimIn>,
     agc_tx: tokio::sync::mpsc::UnboundedSender<Packet>,
     telem_tx: tokio::sync::broadcast::Sender<String>,
+    rod_tx: tokio::sync::mpsc::UnboundedSender<i32>,
 ) -> SimHandle {
     let (stop_tx, stop_rx) = std::sync::mpsc::channel::<()>();
     let join = std::thread::spawn(move || {
@@ -478,6 +490,9 @@ pub fn spawn_sim(
                 if let Ok(j) = serde_json::to_string(&eagle_schema::ServerMsg::Telemetry(t)) {
                     let _ = telem_tx.send(j);
                 }
+            }
+            if out.rod_clicks != 0 {
+                let _ = rod_tx.send(out.rod_clicks);
             }
             if let Some(td) = out.touchdown {
                 let (vv, vh, tilt) = core.landing_kinematics();
@@ -528,6 +543,25 @@ mod tests {
             on: true,
             off: false,
         }));
+    }
+
+    #[test]
+    fn agc_packet_decodes_to_simin_events() {
+        let mut dsky = DskyState::default();
+        // An engine-on IO write decodes to Engine{on} and does not touch the
+        // relay-driven DSKY display, so no Dsky snapshot.
+        let evs = agc_packet_to_simin(&Packet::io(0o11, 1 << 12).unwrap(), &mut dsky);
+        assert_eq!(evs.len(), 1);
+        assert!(matches!(
+            evs[0],
+            SimIn::Agc(AgcOutput::Engine { on: true, .. })
+        ));
+        // A relay write (ch010) updates the display → a Dsky snapshot too.
+        let relay = Packet::io(0o10, (10 << 11) | (0b10101 << 5) | 0b00011).unwrap();
+        let evs = agc_packet_to_simin(&relay, &mut dsky);
+        assert!(evs
+            .iter()
+            .any(|e| matches!(e, SimIn::Dsky(_))));
     }
 
     #[test]
@@ -679,7 +713,8 @@ mod tests {
         let (_in_tx, in_rx) = std::sync::mpsc::channel::<SimIn>();
         let (agc_tx, _agc_rx) = tokio::sync::mpsc::unbounded_channel::<Packet>();
         let (telem_tx, mut telem_rx) = tokio::sync::broadcast::channel::<String>(256);
-        let handle = spawn_sim(core, in_rx, agc_tx, telem_tx);
+        let (rod_tx, _rod_rx) = tokio::sync::mpsc::unbounded_channel::<i32>();
+        let handle = spawn_sim(core, in_rx, agc_tx, telem_tx, rod_tx);
         // ~150 ms of 10 ms ticks → ≥ 10 ticks → ≥ 1 telemetry frame.
         std::thread::sleep(std::time::Duration::from_millis(150));
         handle.stop.send(()).unwrap();
