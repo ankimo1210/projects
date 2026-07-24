@@ -1639,9 +1639,9 @@ timeout_s = 300.0
 
 `[errors]` optionally contains `[errors.imu]` mapping 1:1 onto `ImuErrorCfg` (Task 11). `pub fn load(path: &Path) -> Result<Scenario>`; helper `pub fn site_unit_mcmf(&self) -> V3<Mcmf>` (from lat/lon); `pub fn initial_state(&self, epoch_s: f64) -> LmState` (site + alt·up in MCI at epoch, velocity vz·up, attitude body+X = up, omega 0).
 
-- [ ] **Step 1: Failing tests:** parse the committed file (`include_str!` relative to the repo — use a path constant + `CARGO_MANIFEST_DIR`); unknown field anywhere → error (fixture string with a typo field); `[errors]` empty → `None`/default OFF; `initial_state` altitude: `pos.norm() == radius_m + alt_m` ±1e-6, velocity vertical, `att.apply(body_x)` parallel to `pos.unit()`.
-- [ ] **Step 2: FAIL** → **Step 3: implement** (plain serde structs + the two geometry helpers via `eagle-dynamics::frames`).
-- [ ] **Step 4: PASS** → **Step 5: Commit** — `"feat(runtime): TOML scenario loader + p66-gate scenario"` (+ trailer).
+- [x] **Step 1: Failing tests:** parse the committed file (`include_str!` relative to the repo — use a path constant + `CARGO_MANIFEST_DIR`); unknown field anywhere → error (fixture string with a typo field); `[errors]` empty → `None`/default OFF; `initial_state` altitude: `pos.norm() == radius_m + alt_m` ±1e-6, velocity vertical, `att.apply(body_x)` parallel to `pos.unit()`.
+- [x] **Step 2: FAIL** → **Step 3: implement** (plain serde structs + the two geometry helpers via `eagle-dynamics::frames`).
+- [x] **Step 4: PASS** → **Step 5: Commit** — `"feat(runtime): TOML scenario loader + p66-gate scenario"` (+ trailer).
 
 ---
 
