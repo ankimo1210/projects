@@ -1264,7 +1264,7 @@ A of the 2026-07-23 decision) is the human's call, not the implementer's.
   - `pub fn gravity(pos: V3<Mci>) -> V3<Mci>` — point mass: `-pos.unit().scale(MU_MOON / r²)`
   - `pub fn step_rk4(s: &LmState, f: &impl Fn(&LmState) -> Derivs, dt: f64) -> LmState` — classic RK4, FIXED evaluation order k1..k4, quaternion components integrated linearly then `normalize()`d once at the end; fuel fields clamped ≥ 0 after the step.
 
-- [ ] **Step 1: Failing tests** (`state.rs`/`rk4.rs` cfg(test)):
+- [x] **Step 1: Failing tests** (`state.rs`/`rk4.rs` cfg(test)):
 
 ```rust
 #[test]
@@ -1333,7 +1333,7 @@ fn determinism_bit_exact() {
 
 `hover_state()` test helper: 500 m above R_SITE on the x-axis, zero velocity, identity attitude, mass 9159/fuel 2000/150. Define it once in `lib.rs` as `#[cfg(test)] pub(crate) mod testutil { pub fn hover_state() -> crate::state::LmState { … } }` so Task 9's tests reuse it (`use crate::testutil::hover_state;`).
 
-- [ ] **Step 2: FAIL** → **Step 3: implement**:
+- [x] **Step 2: FAIL** → **Step 3: implement**:
 
 ```rust
 // state.rs
@@ -1363,8 +1363,8 @@ where `eval` packs `(vel, acc, qdot, alpha, mdots)` — `qdot = ½ q ⊗ [0, ω_
 weighted sums (attitude components summed linearly; single normalize at the
 end of `step_rk4` only). Keep all three helpers private to `rk4.rs`.
 
-- [ ] **Step 4: PASS** — `cargo test -p eagle-dynamics`.
-- [ ] **Step 5: Commit** — `"feat(dynamics): rigid-body state, lunar gravity, fixed-step RK4"` (+ trailer).
+- [x] **Step 4: PASS** — `cargo test -p eagle-dynamics`.
+- [x] **Step 5: Commit** — `"feat(dynamics): rigid-body state, lunar gravity, fixed-step RK4"` (+ trailer).
 
 ---
 
