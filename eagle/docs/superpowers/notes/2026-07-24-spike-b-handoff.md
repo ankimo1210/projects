@@ -1,5 +1,15 @@
 # Spike B handoff — 2026-07-24
 
+> **Superseded (2026-07-24, later same day).** Task 7 was completed without
+> the vendor patch this note describes. The "yaAGC boundary fix" below was
+> retired: instead of patching channel 016 to raise KEYRUPT2, the ROD click
+> is issued as a direct RODCOUNT erasable load (`runner::rod_load`), which
+> is behaviourally identical and keeps `vendor/` READ-ONLY. The tracked
+> patch and its build-script hook were removed. See
+> `docs/agc-channel-map.md` ("Rod Switch Click") and
+> `runtime/apps/eagle-runtime/tests/live_spike_p66.rs`. The rest of this
+> note is kept as an accurate record of the paused state it was written in.
+
 Task 7 is paused before live acceptance. Commit `39f874d8` contains the
 closed-loop descent probe, THRUST responder, bounded one-dimensional hover
 model, ATT-HOLD/ROD controls, and diagnostics.

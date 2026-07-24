@@ -5,19 +5,13 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 mkdir -p build/agc
 
-# The socket API updates NAVKEYIN for channel 016 but, unlike channel 015,
-# does not request the matching KEYRUPT2 interrupt. Apply the tracked patch
-# that lets Luminary's MARKRUPT/DESCBITS observe LM rate-of-descent clicks.
-# Accept an already-patched checkout so repeated builds stay idempotent.
-AGC_PATCH_PATH="$(pwd)/scripts/patches/virtualagc-ch016-keyrupt2.patch"
-if git -C vendor/virtualagc apply --check "$AGC_PATCH_PATH" >/dev/null 2>&1; then
-  git -C vendor/virtualagc apply "$AGC_PATCH_PATH"
-elif git -C vendor/virtualagc apply --reverse --check "$AGC_PATCH_PATH" >/dev/null 2>&1; then
-  echo "virtualagc ch016 KEYRUPT2 patch already applied"
-else
-  echo "ERROR: virtualagc ch016 KEYRUPT2 patch does not match pinned source" >&2
-  exit 1
-fi
+# vendor/ stays READ-ONLY (spec Global Constraints): we build stock yaAGC.
+# The socket API never requests KEYRUPT2 for a channel-016 write, so the LM
+# ROD switch discrete is invisible to Luminary — but we do not need it. The
+# ROD "click" is issued as a direct RODCOUNT erasable load over V21N01
+# (runner::rod_load), which is behaviourally identical to the interrupt
+# path (DESCBITS is just `ADS RODCOUNT`) and is proven live against this
+# unpatched build. See docs/agc-channel-map.md ("Rod Switch Click").
 
 # --- Deviations from the brief's literal script (documented per the brief's
 #     own escape hatch: "keep the fix in the script") ---
