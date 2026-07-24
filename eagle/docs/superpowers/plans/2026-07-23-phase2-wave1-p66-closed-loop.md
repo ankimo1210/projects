@@ -1727,10 +1727,10 @@ pub enum ClientMsg { Key { key: String }, Pro { pressed: bool }, Rod { up: bool 
 - `main.rs`: `--scenario <path>` arg (optional). When present: load scenario + symtab + pad-load; construct `pump`-style plumbing; spawn sim thread; spawn `runner::run_scenario(script, scenario, sim_in_tx)` (the productized Task 6+7 choreography: discretes → clock read → generate_state → pad-load → dap_init → V37E63E → responder → att_hold at +`flip_atthold_after_engine_on_s`); forward every AGC packet to: trace, DSKY apply (→ watch + JSON broadcast), `decode_output` → `SimIn::Agc` (and DSKY changes → `SimIn::Dsky`). Without `--scenario`, behavior is exactly Phase 1 (DSKY-only) — `make test-integration`'s Phase 1 tests must stay green.
 - Schema-version bump ripples: `DskyStateMsg.schema_version` now 2 — update the Phase 1 tests' expected value and the client reducer's tolerance (client accepts both 1 and 2 during this wave; log-warn on mismatch instead of dropping).
 
-- [ ] **Step 1:** schema tests (serde shape of `ServerMsg::Telemetry` → `{"type":"telemetry", …}`, `ClientMsg::Rod` parse) — FAIL → implement → PASS.
-- [ ] **Step 2:** `sim_pipeline.rs` (fast, not `#[ignore]`): spawn the full plumbing with a **stub AGC** (a tokio task that: emits `Engine{on}` after 200 ms, then answers every DINC burst with hover-consistent Pout counts, echoes nothing else). Assert: ≥ 8 telemetry JSON frames per second arrive on the broadcast; frames parse as `ServerMsg::Telemetry`; `frozen` flips false after the stub engine-on; clean shutdown.
-- [ ] **Step 3:** run `make test` + Phase 1 `make test-integration` → all green.
-- [ ] **Step 4: Commit** — `"feat(runtime): schema v2 telemetry, ROD client input, --scenario mode"` (+ trailer).
+- [x] **Step 1:** schema tests (serde shape of `ServerMsg::Telemetry` → `{"type":"telemetry", …}`, `ClientMsg::Rod` parse) — FAIL → implement → PASS.
+- [x] **Step 2:** `sim_pipeline.rs` (fast, not `#[ignore]`): spawn the full plumbing with a **stub AGC** (a tokio task that: emits `Engine{on}` after 200 ms, then answers every DINC burst with hover-consistent Pout counts, echoes nothing else). Assert: ≥ 8 telemetry JSON frames per second arrive on the broadcast; frames parse as `ServerMsg::Telemetry`; `frozen` flips false after the stub engine-on; clean shutdown.
+- [x] **Step 3:** run `make test` + Phase 1 `make test-integration` → all green.
+- [x] **Step 4: Commit** — `"feat(runtime): schema v2 telemetry, ROD client input, --scenario mode"` (+ trailer).
 
 ---
 
