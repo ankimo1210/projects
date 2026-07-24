@@ -21,10 +21,40 @@ pub struct DskyStateMsg {
     pub temp: bool,
 }
 
+/// One engineer-telemetry frame from the sim thread (spec §6). Truth state
+/// plus the AGC's own nav readout and their difference. Serialized to the
+/// existing tagged-JSON broadcast.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct TelemetryMsg {
+    pub schema_version: u32,
+    pub t_s: f64,
+    pub frozen: bool,
+    pub alt_m: f64,
+    pub vz_ms: f64,
+    pub v_horiz_ms: f64,
+    pub tilt_deg: f64,
+    pub mass_kg: f64,
+    pub fuel_dps_kg: f64,
+    pub fuel_rcs_kg: f64,
+    pub thrust_n: f64,
+    pub throttle_cmd_pulses: i64,
+    pub jets: u16,
+    pub mm: String,
+    pub agc_alt_m: Option<f64>,
+    pub agc_hdot_ms: Option<f64>,
+    pub nav_err_alt_m: Option<f64>,
+    pub nav_err_hdot_ms: Option<f64>,
+    pub drift_ms: f64,
+    pub downlink_wps: f64,
+    pub ingest_drops: u64,
+    pub touchdown: Option<String>,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum ServerMsg {
     DskyState(DskyStateMsg),
+    Telemetry(TelemetryMsg),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -32,6 +62,7 @@ pub enum ServerMsg {
 pub enum ClientMsg {
     Key { key: String },
     Pro { pressed: bool },
+    Rod { up: bool },
 }
 
 #[cfg(test)]

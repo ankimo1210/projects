@@ -114,32 +114,50 @@ fn thrust_dir(pitch: f64, roll: f64) -> V3<Body> {
     V3::new(cp * cr, cp * sr, -sp)
 }
 
+/// Net non-gravitational force on the vehicle (BODY, N): DPS thrust along
+/// the trimmed +X plus every firing RCS jet. This is what a PIPA senses
+/// (divided by mass gives specific force); `forces` reuses it.
+pub fn body_thrust_force(a: &Actuators) -> V3<Body> {
+    let mut force = V3::<Body>::zero();
+    if a.engine_on && a.thrust_n > 0.0 {
+        force = force + thrust_dir(a.trim_pitch_rad, a.trim_roll_rad).scale(a.thrust_n);
+    }
+    for (i, jet) in JET_TABLE.iter().enumerate() {
+        if a.jets & (1 << i) != 0 {
+            force = force + jet.dir.body().scale(RCS_THRUST_N);
+        }
+    }
+    force
+}
+
+/// Number of RCS jets currently firing.
+pub fn jets_firing(a: &Actuators) -> u32 {
+    a.jets.count_ones()
+}
+
 /// Net force/torque on the vehicle from the DPS and every firing RCS jet,
 /// plus lunar gravity, as state derivatives. `inertia0` is the diagonal
 /// body inertia (kg·m²) at `mass0_kg`; the inertia used scales linearly
 /// with the current mass (Wave 1 model, provenance assumed).
 pub fn forces(s: &LmState, a: &Actuators, inertia0: V3Raw, mass0_kg: f64) -> Derivs {
-    let mut force = V3::<Body>::zero();
+    let force = body_thrust_force(a);
     let mut torque = V3::<Body>::zero();
 
-    // DPS: thrust along the trimmed +X, applied at the gimbal mount.
+    // DPS torque: thrust at the gimbal mount.
     if a.engine_on && a.thrust_n > 0.0 {
         let f = thrust_dir(a.trim_pitch_rad, a.trim_roll_rad).scale(a.thrust_n);
         let mount = V3::<Body>::new(ENGINE_MOUNT_M, 0.0, 0.0);
-        force = force + f;
         torque = torque + mount.cross(f);
     }
 
-    // RCS: each firing jet's force at its mount.
-    let mut jets_firing = 0u32;
+    // RCS torque: each firing jet's force at its mount.
     for (i, jet) in JET_TABLE.iter().enumerate() {
         if a.jets & (1 << i) != 0 {
-            jets_firing += 1;
             let f = jet.dir.body().scale(RCS_THRUST_N);
-            force = force + f;
             torque = torque + jet.pos.body().cross(f);
         }
     }
+    let jets_firing = jets_firing(a);
 
     // Linear acceleration: body force → MCI, over mass, plus gravity.
     let acc = s.att.apply(force).scale(1.0 / s.mass_kg) + crate::state::gravity(s.pos);
