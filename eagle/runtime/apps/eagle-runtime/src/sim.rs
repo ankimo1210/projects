@@ -304,6 +304,10 @@ impl SimCore {
     // 4/5. Freeze until first ENGINE ON; then integrate the rigid body.
     fn phase4_5_dynamics(&mut self) {
         if self.frozen {
+            // Advance the clock even while pinned, so telemetry rates
+            // (downlink_wps, drift) don't divide accumulated counts by a
+            // near-zero t_s at engine-on.
+            self.st.t += DT;
             self.sf_body = V3::new(HOVER_ACCEL_MS2, 0.0, 0.0);
             return;
         }
@@ -389,8 +393,10 @@ impl SimCore {
         let up = self.st.pos.unit();
         let vz = self.st.vel.dot(up);
         let t = self.st.t;
+        // ch034 + ch035 are the low/high halves of each downlink word, so
+        // two packets per word.
         let downlink_wps = if t > 0.0 {
-            self.downlink_words as f64 / t
+            self.downlink_words as f64 / 2.0 / t
         } else {
             0.0
         };

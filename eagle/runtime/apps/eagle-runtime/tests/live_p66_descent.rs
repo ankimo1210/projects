@@ -60,6 +60,12 @@ async fn p66_soft_landing_closed_loop() {
     .expect("closed loop exceeded the wall-time budget")
     .expect("closed loop returned an error");
 
+    eprintln!(
+        "[accept] MM {:?}\n[accept] touchdown {:?} descent {:?}s drift {:.0}ms downlink {:.1}wps",
+        result.mm_sequence, result.sim.touchdown, result.descent_s, result.drift_ms,
+        result.mid_downlink_wps
+    );
+
     // MM sequence contains 63 then 66 (intervening modes allowed).
     let i63 = result.mm_sequence.iter().position(|m| m == "63");
     let i66 = result.mm_sequence.iter().position(|m| m == "66");
