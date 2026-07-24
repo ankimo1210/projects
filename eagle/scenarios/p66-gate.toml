@@ -1,0 +1,32 @@
+schema = 1
+name = "p66-gate"
+
+[site]
+lat_deg = 0.674          # Tranquility Base; historical
+lon_deg = 23.473         # historical
+radius_m = 1737400.0     # assumed (mean lunar radius)
+
+[gate]
+alt_m = 500.0            # assumed
+vz_ms = 0.0              # hover release (freeze-until-engine-on)
+mass_dry_kg = 7009.0     # derived: descent dry 2339 + ascent stage wet 4670 (LM_Simulator masses)
+fuel_dps_kg = 2000.0     # derived (partial descent load at the gate)
+fuel_rcs_kg = 150.0      # derived
+inertia_kgm2 = [12000.0, 13500.0, 13000.0]  # assumed (order-of-magnitude from LM_Sim alpha model)
+
+[agc]
+padload = "scenarios/p66-padload.toml"
+lm_weight_lbs = 20200.0            # derived: (7009+2000+150) kg ≈ 20190 lbs → V48/N47
+tland_offset_cs = 12000            # TIG target ≈ boot+120 s; spike-A calibrated
+flip_atthold_after_engine_on_s = 2.0   # spike-B calibrated
+
+[rod]
+steps = [[400.0, -3.0], [150.0, -1.5], [30.0, -1.0]]  # alt_m → target sink rate m/s
+
+[errors]                 # empty table = all OFF (acceptance runs use this)
+
+[acceptance]
+v_vert_max = 3.0
+v_horiz_max = 1.5
+tilt_max_deg = 12.0
+timeout_s = 300.0
