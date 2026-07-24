@@ -890,6 +890,86 @@ impl Drop for SyntheticHover {
     }
 }
 
+// ---------------------------------------------------------------------
+// Productized scenario choreography (Task 14): the Spike A+B dialog driven
+// from a Scenario, up to and including P66 entry. The sim thread + a packet
+// forwarder run alongside; after this returns, the descent ROD schedule is
+// delivered by the caller draining the sim's `rod_clicks`.
+// ---------------------------------------------------------------------
+
+/// Boot → discretes/ISS → V48 → pad-load (static + generated state) →
+/// REFSMFLG → V37E63E → ENGINE ON → ATT HOLD + selection ROD click → MM66.
+/// `packets` is a broadcast receiver of every AGC packet (for the ignition
+/// responder and the engine-on wait). Returns once GUILDENSTERN reaches P66.
+pub async fn run_scenario(
+    script: &mut DskyScript,
+    sc: &crate::scenario::Scenario,
+    symtab: &crate::padload::SymTab,
+    static_manifest: &crate::padload::PadloadManifest,
+    agc_tx: &mpsc::UnboundedSender<Packet>,
+    packets: &mut broadcast::Receiver<Packet>,
+) -> Result<()> {
+    use crate::padload::{generate_state, PadloadManifest, StateCfg};
+
+    // Fresh-start dance.
+    tokio::time::sleep(Duration::from_secs(2)).await;
+    script.keys("R").await?;
+    script.keys("V37E00E").await?;
+    script.wait_prog("00").await.context("P00 after V37E00E")?;
+
+    init_discretes(agc_tx).await?;
+    dap_init(script, sc.agc.lm_weight_lbs.round() as u32, 0)
+        .await
+        .context("V48 DAP init")?;
+
+    let epoch_cs = read_clock_cs(script).await.context("clock read")?;
+    let state = PadloadManifest {
+        word: generate_state(&StateCfg {
+            epoch_now_cs: epoch_cs,
+            burn_lead_cs: 36_000.0,
+            ..StateCfg::default()
+        }),
+    };
+
+    wait_iss_turnon(packets, agc_tx, Duration::from_secs(150))
+        .await
+        .context("ISS turn-on delay complete")?;
+    let _ = script
+        .wait(Duration::from_secs(30), |d| !d.lamps.no_att)
+        .await;
+
+    let words = static_manifest.resolve(symtab).context("static manifest")?;
+    apply_padload(script, &words, 8, ALWAYS_VERIFY_ECADRS)
+        .await
+        .context("static pad-load")?;
+    let words = state.resolve(symtab).context("state manifest")?;
+    apply_padload(script, &words, 8, ALWAYS_VERIFY_ECADRS)
+        .await
+        .context("state pad-load")?;
+
+    set_flag_bits(script, FLAGWRD8_ECADR, FLAGWRD8_MOON_BITS)
+        .await
+        .context("FLAGWRD8 moon bits")?;
+    set_flag_bits(script, FLAGWRD3_ECADR, REFSMBIT)
+        .await
+        .context("REFSMFLG")?;
+
+    enter_p63(script).await.context("P63 dialog")?;
+    wait_engine_on(packets, Duration::from_secs(180))
+        .await
+        .context("ENGINE ON")?;
+
+    // Enter P66: ATT HOLD, then the selection ROD click as a RODCOUNT load.
+    tokio::time::sleep(Duration::from_secs_f64(
+        sc.agc.flip_atthold_after_engine_on_s,
+    ))
+    .await;
+    att_hold(agc_tx).await.context("ATT HOLD")?;
+    rod_load(script, -1).await.context("selection ROD click")?;
+    script.wait_prog("66").await.context("reach MM66")?;
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
