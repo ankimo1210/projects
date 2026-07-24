@@ -316,6 +316,55 @@ emits a pulse on counter address 0o55 with data = IncType:
 These are received as counter packets on ch 0o55 and decoded as `ThrustPulse`
 enum variants to synchronize throttle setpoint with the autopilot.
 
+**Verified live (Spike B).** The strobe protocol closes a real vertical
+channel: after P66 entry the accumulated command ran 0 → 1808 → 3430 within
+three seconds and held around 2400, i.e. 29-41 kN against a 15 t vehicle
+whose weight is 24.6 kN, and the vertical truth stopped falling. Two
+properties of the real actuator had to be modelled to get there:
+
+- **The command is a bounded position, not a signed accumulator.** P63
+  deliberately drives MOUT 4096 while the engine is off to seek the zero
+  stop, then FLATOUT drives POUT 4096 (`P40-P47.agc:490-494`). Pulses past
+  either end leave the position at that stop; an unbounded accumulator
+  reads −4096 and never recovers.
+- **Outstanding DINC strobes must be credit-limited.** Requesting a fresh
+  burst every tick before the previous burst's POUT/MOUT/ZOUT have arrived
+  queues thousands of strobes and drowns the loop in ZOUT chatter. Cap the
+  in-flight count at `DINC_MAX_PER_TICK`.
+
+The engine's idle stop is ~10 % thrust, not zero: Luminary leaves the
+throttle parked there for the whole ZOOMTIME trim phase (~26 s) after
+ignition, so a model that maps command 0 to zero thrust free-falls through
+the burn-in.
+
+### P66 Vertical Displays and Erasables (Spike B)
+
+P66's display is `VERTDISP` → **V06N60** (`LUNAR_LANDING_GUIDANCE_EQUATIONS
+.agc:898`); the braking/approach phases show N63. N60's registers are
+VHORIZ, HDOTDISP, HCALC (`PINBALL_NOUN_TABLES.agc:724-726`), N63's R2 is
+also HDOTDISP.
+
+| Symbol | ECADR | Form | Role |
+|--|--|--|--|
+| HDOTDISP | 0o3473 | DP b=7 m/cs | altitude rate; seeds VDGVERT at STARTP66 |
+| VDGVERT | 0o3644 | DP b=7 m/cs | desired altitude rate; only RODCOMP writes it in P66 |
+| RODSCAL1 | 0o3756 | SP | working copy of the RODSCALE pad word |
+| RODCOUNT | 0o3746 | SP | ROD click accumulator |
+
+**Scale, measured live:** HDOTDISP read back as hi = 0o36 (491520 DP
+pulses) while N63 R2 displayed `+00756` = 75.6 ft/s. 491520 × 2⁻²¹ m/cs =
+0.2344 m/cs = 76.9 ft/s, a 1.7 % match — so the DP LSB is 2⁻²¹ m/cs
+(4.77e-5 m/s) and these words are b=7 in m/cs. Since RODCOMP adds
+`RODCOUNT × RODSCAL1` straight into VDGVERT's pulses, one ft/s per click is
+0.003048 m/cs = **6392 pulses**, positive (a down-click loads RODCOUNT −1).
+
+**The flight display owns the DSKY.** VERTDISP repaints every guidance
+pass, so an in-flight V01N01/V21N01 entry has to be preceded by KEY REL and
+retried (RSET + KEY REL) when it is swallowed — and a read must confirm the
+frame really is V01N01 showing the requested address before trusting R1.
+P66's N63 R1 (`+56077`) is five octal-legal digits and was silently
+returned as erasable data before that check existed.
+
 ### Coarse-Align CDU Outputs
 
 Confirmed against `vendor/virtualagc/yaAGC/agc_engine.c:1630-1681` (`BurstOutput`
@@ -384,6 +433,27 @@ Confirmed against `vendor/virtualagc/Luminary099/INPUT_OUTPUT_CHANNEL_BIT_DESCRI
 Emitted as discrete (IO) packets. Caller must send a press packet followed
 by a release packet (data = 0) at least one tick later to allow the AGC's
 MARKRUPT interrupt to latch the descent-rate change.
+
+**yaAGC never raises that interrupt — use RODCOUNT instead (Spike B).**
+`SocketAPI.c:239-249` sets `InterruptRequests[5]` (KEYRUPT1) for a
+channel-015 write, but `InterruptRequests[6]` is not assigned anywhere in
+the emulator. A socket write to channel 016 therefore updates NAVKEYIN and
+stops there: KEYRUPT2 → MARKRUPT (`INTERRUPT_LEAD_INS.agc:65,68`) never
+runs, so `DESCBITS` never runs and RODCOUNT never moves. GUILDENSTERN
+enters P66 only on "ATT HOLD *and* RODCOUNT ≠ 0"
+(`LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:203-217`), which the switch discrete
+alone can never satisfy in this emulator.
+
+We click the switch by loading RODCOUNT directly instead — V21N01 at ECADR
+`0o3746` (`E7,1746`, `Luminary099.log:6033`), see `runner::rod_load`. This
+is equivalent rather than an approximation: `DESCBITS`' entire body is
+`ADS RODCOUNT` with ±1 (`LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:1233-1238`),
+and `RODCOMP` consumes the accumulator with `CAF ZERO / XCH RODCOUNT` once
+per P66 pass (`:958-963`). Verified live: MM66 reached against an unpatched
+yaAGC. No vendor source is patched.
+
+The load is deliberately *not* read-back verified — RODCOMP zeroes the word
+within one P66 pass, so a V01N01 verify would race the rope.
 
 #### Gyro Torque Output (Channel 0o177)
 

@@ -45,7 +45,17 @@ pub const TRIM_MAX_DEG: f64 = 6.0;
 /// DPS thrust per THRUST-counter pulse, N. Provenance: assumed (≈2.7 lbf);
 /// Spike B (Task 7) calibrates — update here if measurement disagrees.
 pub const THRUST_N_PER_PULSE: f64 = 12.0;
-/// Max DINC strobes per 10 ms tick (3200 pps nominal).
-pub const DINC_MAX_PER_TICK: u32 = 32;
+/// Max DINC strobes per 10 ms tick.
+///
+/// The real throttle-drive electronics run 3200 pps (32 per tick), but on
+/// this rig every strobe is a socket packet and a counter interrupt, not an
+/// electrical pulse. At 32/tick the interrupt load starves the Servicer and
+/// Luminary POODOOs 01202 (EXECUTIVE OVERFLOW — NO VAC AREAS) once P66 is
+/// commanding throttle every pass — the same mechanism as Apollo 11's own
+/// 1202, where the rendezvous radar's CDU counters stole the AGC's time.
+/// 800 pps still slews the actuator's full 0-4096 stroke in ~5 s, well
+/// inside the ZOOMTIME trim phase and P66's 1-2 s command cadence.
+/// Measured: spike-B iters 10-11.
+pub const DINC_MAX_PER_TICK: u32 = 8;
 /// Physics step, seconds (spec: RK4 fixed 10 ms).
 pub const DT: f64 = 0.010;

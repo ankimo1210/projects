@@ -337,7 +337,13 @@ pub const P66_BSCALE_TABLE: &[BScaleEntry] = &[
     BScaleEntry {
         symbol: "RODSCALE",
         status: BScaleStatus::Verified,
-        note: "b=7 SP, -0.3048 m/s per click (task spec working hypothesis).",
+        note: "Live (spike B): the word IS the per-click VDGVERT increment in DP pulses -- RODCOMP does \
+               \"MP RODSCAL1 / DAS VDGVERT\" (LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:958-963), and an SP \
+               integer times an SP fraction lands in VDGVERT's own LSB. VDGVERT/HDOTDISP are DP b=7 in \
+               m/cs: HDOTDISP read back as hi=0o36 (491520 pulses; 491520 * 2^-21 m/cs = 23.4 m/s = \
+               76.9 ft/s) while N63 R2 displayed +00756 = 75.6 ft/s. One ft/s per click is therefore \
+               0.003048 m/cs = 6392 pulses = value 0.003048 at b=-7 SP. Sign: a down-click loads \
+               RODCOUNT -1 and must lower VDGVERT, so the scale is positive.",
     },
     BScaleEntry {
         symbol: "TAUROD",
@@ -1382,6 +1388,32 @@ mod tests {
                 word: 0o42
             }]
         );
+    }
+
+    #[test]
+    fn committed_rodscale_encodes_one_foot_per_second_per_click() {
+        // Guards the spike-B calibration: RODCOMP adds RODCOUNT * RODSCAL1
+        // straight into VDGVERT's DP pulses, and VDGVERT is b=7 m/cs, so
+        // one click of 1 ft/s = 0.003048 m/cs must come out as
+        // round(0.003048 * 2^21) = 6392.
+        let manifest = PadloadManifest::load(
+            &std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+                .join("../../../scenarios/p66-padload.toml"),
+        )
+        .unwrap();
+        let symtab =
+            SymTab::from_listing(include_str!("../tests/fixtures/symtab_excerpt.txt")).unwrap();
+        // Resolve just this entry: the fixture symtab is an excerpt and does
+        // not carry every symbol the full manifest names.
+        let entry = manifest
+            .word
+            .iter()
+            .find(|w| w.symbol.as_deref() == Some("RODSCALE"))
+            .expect("RODSCALE is in the committed manifest")
+            .clone();
+        let words = PadloadManifest { word: vec![entry] }.resolve(&symtab).unwrap();
+        assert_eq!(words[0].ecadr, symtab.ecadr("RODSCALE").unwrap());
+        assert_eq!(eagle_agc_protocol::words::sp_decode(words[0].word), 6392);
     }
 
     #[test]

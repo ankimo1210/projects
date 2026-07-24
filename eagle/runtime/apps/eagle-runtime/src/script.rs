@@ -8,6 +8,11 @@ use eagle_agc_protocol::Packet;
 use std::time::Duration;
 use tokio::sync::{broadcast, mpsc, watch};
 
+/// How many times `read_erasable` types its entry before giving up. Three
+/// covers the observed P66 repaint collisions without stretching a failed
+/// read past ~8 s.
+const READ_ATTEMPTS: u32 = 3;
+
 pub struct DskyScript {
     tx: mpsc::UnboundedSender<Packet>,
     rx: watch::Receiver<DskyState>,
@@ -140,19 +145,98 @@ impl DskyScript {
     }
 
     /// V01N01: display octal contents of an erasable; parse R1.
+    /// V01N01: read one erasable word, retrying if the rope repaints over
+    /// the entry.
+    ///
+    /// P66's VERTDISP rewrites the DSKY every guidance pass, and an entry
+    /// that collides with it dies half-typed: OPR ERR lights, KEY REL
+    /// lights, and no V01N01 frame ever appears (spike-B iters 7-9). Each
+    /// attempt leads with KEY REL and the next one usually lands in the gap
+    /// between repaints.
+    ///
+    /// Deliberately no RSET in the retry path: RSET clears FAILREG, and a
+    /// read that quietly wipes the alarm history before the spike checks it
+    /// would turn every run green.
     pub async fn read_erasable(&mut self, ecadr: u16) -> Result<u16> {
+        let mut last = None;
+        for attempt in 0..READ_ATTEMPTS {
+            if attempt > 0 {
+                tokio::time::sleep(Duration::from_millis(600)).await;
+            }
+            match self.read_erasable_once(ecadr).await {
+                Ok(word) => return Ok(word),
+                Err(e) => last = Some(e),
+            }
+        }
+        Err(last.expect("at least one attempt").context(format!(
+            "V01N01 read of {:05o} failed {READ_ATTEMPTS} times",
+            ecadr
+        )))
+    }
+
+    /// Take the DSKY back from a flight display before typing an entry:
+    /// KEY REL to release it, then wait for the repaint burst KEY REL
+    /// itself triggers to subside. Every in-flight entry (reads, alarm
+    /// polls, ROD loads) must do this first or P66's VERTDISP swallows it.
+    pub async fn grab_dsky(&mut self) -> Result<()> {
+        self.keys("K").await?;
+        self.wait_for_display_gap().await;
+        Ok(())
+    }
+
+    /// Park until the rope's own display has been quiet for 250 ms, giving
+    /// up after 1.2 s.
+    ///
+    /// P66 repaints the whole DSKY in a short burst once per guidance pass
+    /// (~2 s apart). An entry typed into the middle of a burst loses its
+    /// VERB/NOUN — spike-B iter 12 saw all three attempts die with the
+    /// address safely in R3 but VERB/NOUN overwritten. Starting just after
+    /// a burst hands us the rest of the pass.
+    ///
+    /// The bail-out matters as much as the wait: a display that updates
+    /// every second (P63's TIG countdown) never goes quiet, and waiting it
+    /// out delayed the ignition responder far enough to overflow the
+    /// descent guidance (01410, spike-B iter 13).
+    async fn wait_for_display_gap(&mut self) {
+        let deadline = tokio::time::Instant::now() + Duration::from_millis(1200);
+        while tokio::time::Instant::now() < deadline {
+            match tokio::time::timeout(Duration::from_millis(250), self.rx.changed()).await {
+                Err(_) => return,       // quiet: the burst is over
+                Ok(Err(_)) => return,   // publisher gone
+                Ok(Ok(())) => continue, // still repainting
+            }
+        }
+    }
+
+    async fn read_erasable_once(&mut self, ecadr: u16) -> Result<u16> {
         use eagle_agc_protocol::words::octal5;
+        let addr = octal5(ecadr);
+        // Take the display first: KEY REL hands the rope back and triggers
+        // the very repaint we must not type into, so we release, wait for
+        // that burst to subside, then type (spike-B iter 15).
+        self.grab_dsky().await?;
         self.keys("V01N01E").await?;
-        self.keys(&octal5(ecadr)).await?;
+        self.keys(&addr).await?;
         self.keys("E").await?;
         // R1 may still hold a *previous* parseable value when the final
         // ENTR lands (spike-A iter 1: TIME2/TIME1 reads returned stale
         // frames); give PINBALL a beat to rewrite the register before
         // sampling. 300 ms >> the ~120 ms DSKY relay update cadence.
         tokio::time::sleep(Duration::from_millis(300)).await;
+        let want_addr = addr.clone();
         let d = self
-            .wait(Duration::from_secs(5), |d| {
-                parse_octal_register(&reg_string(&d.r1)).is_some()
+            // Short: a swallowed entry never produces the frame no matter
+            // how long we wait, so failing fast and retrying beats waiting.
+            .wait(Duration::from_millis(2500), move |d| {
+                // Accept only a settled V01N01 frame that is showing the
+                // address we asked for. A bare "does R1 parse?" test reads
+                // whatever a flight display happens to be painting: P66's
+                // V06N63 R1 = +56077 is five octal-legal digits, and
+                // spike-B iter 8 returned it as VDGVERT's high word.
+                d.verb.iter().collect::<String>() == "01"
+                    && d.noun.iter().collect::<String>() == "01"
+                    && reg_string(&d.r3).trim_start_matches([' ', '+', '-']) == want_addr
+                    && parse_octal_register(&reg_string(&d.r1)).is_some()
             })
             .await?;
         parse_octal_register(&reg_string(&d.r1))
@@ -166,15 +250,40 @@ impl DskyScript {
     /// sampled mid-rewrite as a phantom "00014" while clearing "+67214"
     /// to "00000"). Sample until two reads 250 ms apart agree and all
     /// three registers parse.
+    /// Retries and the KEY REL lead-in mirror `read_erasable`: in P66 the
+    /// flight display swallows entries, and the registers of a V06N60/N63
+    /// frame parse as octal just as happily as V05N09's do.
     pub async fn alarm_codes(&mut self) -> Result<[u16; 3]> {
+        let mut last = None;
+        for attempt in 0..READ_ATTEMPTS {
+            if attempt > 0 {
+                tokio::time::sleep(Duration::from_millis(600)).await;
+            }
+            match self.alarm_codes_once().await {
+                Ok(codes) => return Ok(codes),
+                Err(e) => last = Some(e),
+            }
+        }
+        Err(last
+            .expect("at least one attempt")
+            .context(format!("V05N09 read failed {READ_ATTEMPTS} times")))
+    }
+
+    async fn alarm_codes_once(&mut self) -> Result<[u16; 3]> {
+        // Same release-then-wait order as `read_erasable_once`. Safe for
+        // `enter_p63`'s responder: it only reaches here once the PROG lamp
+        // is already lit, not on every poll.
+        self.grab_dsky().await?;
         self.keys("V05N09E").await?;
         tokio::time::sleep(Duration::from_millis(300)).await;
         let deadline = tokio::time::Instant::now() + Duration::from_secs(6);
         let mut last: Option<[u16; 3]> = None;
         loop {
             let d = self
-                .wait(Duration::from_secs(5), |d| {
-                    parse_octal_register(&reg_string(&d.r1)).is_some()
+                .wait(Duration::from_millis(2500), |d| {
+                    d.verb.iter().collect::<String>() == "05"
+                        && d.noun.iter().collect::<String>() == "09"
+                        && parse_octal_register(&reg_string(&d.r1)).is_some()
                         && parse_octal_register(&reg_string(&d.r2)).is_some()
                         && parse_octal_register(&reg_string(&d.r3)).is_some()
                 })
@@ -296,6 +405,105 @@ mod tests {
                 .packet();
             assert_eq!(rx_pkts.recv().await.unwrap(), expect);
         }
+    }
+
+    /// Relay word helper mirroring `dsky.rs`: AAAA B CCCCC DDDDD.
+    fn relay(row: u16, b: u16, c: u16, d: u16) -> eagle_agc_protocol::Packet {
+        eagle_agc_protocol::Packet::io(0o10, (row << 11) | (b << 10) | (c << 5) | d).unwrap()
+    }
+    fn code(ch: char) -> u16 {
+        match ch {
+            '0' => 0b10101,
+            '1' => 0b00011,
+            '2' => 0b11001,
+            '3' => 0b11011,
+            '4' => 0b01111,
+            '5' => 0b11110,
+            '6' => 0b11100,
+            '7' => 0b10011,
+            '8' => 0b11101,
+            '9' => 0b11111,
+            _ => 0,
+        }
+    }
+
+    // Runs the full 5 s read timeout: tokio's `start_paused` needs the
+    // test-util feature, which this crate does not pull in.
+    #[tokio::test]
+    async fn read_erasable_rejects_a_flight_display_that_parses_as_octal() {
+        // P66's VERTDISP repaints the DSKY every guidance pass. Its R1 can
+        // hold five octal-legal digits (+56077 observed live), which a
+        // "does R1 parse?" predicate happily returns as erasable contents —
+        // spike-B iter 8 read −9152 that way and called it VDGVERT.
+        let (tx, _rx) = tokio::sync::mpsc::unbounded_channel();
+        let mut flight = DskyState::default();
+        for pkt in [
+            relay(10, 0, code('0'), code('6')), // VERB 06
+            relay(9, 0, code('6'), code('3')),  // NOUN 63
+            relay(8, 0, 0, code('5')),          // R1 = 56077
+            relay(7, 1, code('6'), code('0')),
+            relay(6, 0, code('7'), code('7')),
+        ] {
+            flight.apply(&pkt);
+        }
+        let (_wtx, wrx) = tokio::sync::watch::channel(flight);
+        let mut s = DskyScript::new(tx, wrx);
+        s.set_key_delay(Duration::ZERO);
+        assert!(
+            s.read_erasable(0o3644).await.is_err(),
+            "a V06N63 frame must never be accepted as a V01N01 read-back"
+        );
+    }
+
+    #[tokio::test]
+    async fn display_gap_waits_out_a_repaint_burst() {
+        // P66 repaints in bursts; typing into one loses the VERB/NOUN.
+        let (tx, _rx) = tokio::sync::mpsc::unbounded_channel();
+        let (wtx, wrx) = tokio::sync::watch::channel(DskyState::default());
+        let mut s = DskyScript::new(tx, wrx);
+        tokio::spawn(async move {
+            for i in 0..5u32 {
+                let mut d = DskyState::default();
+                d.apply(&relay(8, 0, 0, code(char::from(b'0' + (i % 10) as u8))));
+                let _ = wtx.send(d);
+                tokio::time::sleep(Duration::from_millis(100)).await;
+            }
+        });
+        let start = tokio::time::Instant::now();
+        s.wait_for_display_gap().await;
+        assert!(
+            start.elapsed() >= Duration::from_millis(400),
+            "returned in the middle of the burst after {:?}",
+            start.elapsed()
+        );
+    }
+
+    #[tokio::test]
+    async fn read_erasable_resets_and_retries_when_the_display_swallows_the_entry() {
+        // Same stuck flight display: every attempt must be preceded by
+        // KEY REL, and every attempt after the first by RSET + KEY REL.
+        let (tx, mut rx) = tokio::sync::mpsc::unbounded_channel();
+        let (_wtx, wrx) = tokio::sync::watch::channel(DskyState::default());
+        let mut s = DskyScript::new(tx, wrx);
+        s.set_key_delay(Duration::ZERO);
+        let _ = s.read_erasable(0o3644).await;
+        drop(s);
+
+        let mut keys = Vec::new();
+        while let Ok(p) = rx.try_recv() {
+            keys.push(p);
+        }
+        let count = |name: &str| {
+            let want = DskyKey::from_name(name).unwrap().packet();
+            keys.iter().filter(|p| **p == want).count()
+        };
+        assert_eq!(count("VERB"), READ_ATTEMPTS as usize, "one entry per attempt");
+        assert_eq!(count("KEY_REL"), READ_ATTEMPTS as usize, "KEY REL leads each");
+        assert_eq!(
+            count("RSET"),
+            0,
+            "RSET clears FAILREG — a read must never wipe the alarm history"
+        );
     }
 
     #[tokio::test]
