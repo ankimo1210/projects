@@ -1396,7 +1396,7 @@ F/A/L/R jets: horizontal, tangential. The unit tests below are written
 against the tcl outcomes — if your azimuth guess breaks them, fix the
 table, not the tests, and cite the tcl lines.
 
-- [ ] **Step 1: Failing tests:**
+- [x] **Step 1: Failing tests:**
 
 ```rust
 #[test]
@@ -1474,7 +1474,7 @@ fn touchdown_classification() {
 }
 ```
 
-- [ ] **Step 2: FAIL** → **Step 3: implement** `forces.rs`: build the jet
+- [x] **Step 2: FAIL** → **Step 3: implement** `forces.rs`: build the jet
 table per the geometry rule; `forces()` sums DPS force (thrust · trimmed
 +X dir, applied at `(ENGINE_MOUNT_M, 0, 0)` → torque via cross), each
 firing jet's force/torque, rotates net body force into MCI via `s.att`,
@@ -1483,7 +1483,7 @@ diagonal inertia. `touchdown.rs`: threshold ladder. Trim angle integration
 (`TRIM_RATE` under ch012 bits, clamp ±TRIM_MAX) lives in Task 13's SimCore
 (discrete actuator, not part of `forces`).
 
-- [ ] **Step 4: PASS** → **Step 5: Commit** — `"feat(dynamics): DPS/RCS force model, jet table, touchdown classifier"` (+ trailer).
+- [x] **Step 4: PASS** → **Step 5: Commit** — `"feat(dynamics): DPS/RCS force model, jet table, touchdown classifier"` (+ trailer).
 
 ---
 
