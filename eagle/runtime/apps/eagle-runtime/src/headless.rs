@@ -104,10 +104,18 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
     let mut telem_rx = cfg.telem_tx.subscribe();
     let sum = summary.clone();
     let collector = tokio::spawn(async move {
+        // Optional per-frame telemetry dump for descent-profile debugging.
+        let mut dump = std::env::var("EAGLE_TELEM_OUT")
+            .ok()
+            .and_then(|p| std::fs::File::create(p).ok());
         while let Ok(json) = telem_rx.recv().await {
             let Ok(eagle_schema::ServerMsg::Telemetry(t)) = serde_json::from_str(&json) else {
                 continue; // DSKY frames ride the same broadcast
             };
+            if let Some(f) = dump.as_mut() {
+                use std::io::Write;
+                let _ = writeln!(f, "{json}");
+            }
             let mut s = sum.lock().unwrap();
             if t.mm != s.last_mm && !t.mm.is_empty() {
                 s.mm_sequence.push(t.mm.clone());
