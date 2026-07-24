@@ -1753,12 +1753,12 @@ pub enum ClientMsg { Key { key: String }, Pro { pressed: bool }, Rod { up: bool 
 - phase timeline: `PhaseChange` list (newest first, like the interpreter log)
 - ROD buttons: `ROD −1 ft/s` / `ROD +1 ft/s` → `sendRod(false/true)` (labels: − = descend faster; pin the mapping to ch016 bit semantics from Task 1 and say it in a tooltip)
 
-- [ ] **Step 1: vitest first** (`useTelemetryBuffer.test.ts`): push 3100 frames → length capped 3000, oldest dropped; `latest` tracks; `phases` records mm transitions only (63→63 no entry, 63→66 one entry); version increments per push. Also a dispatch test for the socket hook refactor: fabricated `MessageEvent` with a telemetry frame reaches the callback and does NOT disturb DSKY state; unknown type is silently ignored (guard `JSON.parse` in try/catch while here — it is the pending Phase 1 minor).
-- [ ] **Step 2: FAIL** (`cd client && npm test`) → **Step 3: implement** buffer + dispatch refactor.
-- [ ] **Step 4:** `npm install uplot` (lockfile committed); implement `StripChart.tsx` (thin uPlot wrapper: props `{ title, series: {label, get: (f)=>number|null, color}[], frames }`, `setData` on version change, `overflow-x` safe, dark background consistent with App.css palette) and `TelemetryPage.tsx`; tab state in `App.tsx` (`useState<"dsky"|"engr">`, plain buttons styled like `.panel h2`).
-- [ ] **Step 5:** `npm test` PASS + `npm run build` clean (type errors are failures).
-- [ ] **Step 6:** Manual check (documented in the task report, needs Task 14 running with `--scenario` or the stub pipeline): both tabs render, charts scroll, ROD buttons emit WS messages (browser devtools).
-- [ ] **Step 7: Commit** — `"feat(client): engineer telemetry board with strip charts and ROD input"` (+ trailer).
+- [x] **Step 1: vitest first** (`useTelemetryBuffer.test.ts`): push 3100 frames → length capped 3000, oldest dropped; `latest` tracks; `phases` records mm transitions only (63→63 no entry, 63→66 one entry); version increments per push. Also a dispatch test for the socket hook refactor: fabricated `MessageEvent` with a telemetry frame reaches the callback and does NOT disturb DSKY state; unknown type is silently ignored (guard `JSON.parse` in try/catch while here — it is the pending Phase 1 minor).
+- [x] **Step 2: FAIL** (`cd client && npm test`) → **Step 3: implement** buffer + dispatch refactor.
+- [x] **Step 4:** `npm install uplot` (lockfile committed); implement `StripChart.tsx` (thin uPlot wrapper: props `{ title, series: {label, get: (f)=>number|null, color}[], frames }`, `setData` on version change, `overflow-x` safe, dark background consistent with App.css palette) and `TelemetryPage.tsx`; tab state in `App.tsx` (`useState<"dsky"|"engr">`, plain buttons styled like `.panel h2`).
+- [x] **Step 5:** `npm test` PASS + `npm run build` clean (type errors are failures).
+- [ ] **Step 6 (deferred to Task 16 live run):** Manual check (documented in the task report, needs Task 14 running with `--scenario` or the stub pipeline): both tabs render, charts scroll, ROD buttons emit WS messages (browser devtools).
+- [x] **Step 7: Commit** — `"feat(client): engineer telemetry board with strip charts and ROD input"` (+ trailer).
 
 ---
 
