@@ -1671,7 +1671,7 @@ timeout_s = 300.0
 9. drift: downlink events counted; `drift_ms = (downlink_words/2/50 − t_sim)·1000`.
 10. every 10th tick → TelemetryMsg; touchdown check (alt_agl ≤ 0 → classify from LSITE velocity + tilt, then hold state).
 
-- [ ] **Step 1: Failing tests** (pure, no AGC, no threads — drive `SimCore` directly):
+- [x] **Step 1: Failing tests** (pure, no AGC, no threads — drive `SimCore` directly):
 
 ```rust
 #[test] fn frozen_until_engine_on_then_falls() { /* 100 ticks: pos unchanged, PIPA≈hover
@@ -1689,9 +1689,9 @@ timeout_s = 300.0
     Crash/Hard depending on impact speed; SimTickOut.touchdown set once */ }
 ```
 
-- [ ] **Step 2: FAIL** → **Step 3: implement `SimCore`** exactly in the tick order above (each numbered phase = one private method, called in sequence from `tick` — the order is load-bearing for determinism).
-- [ ] **Step 4:** thread-shell test: `spawn_sim` against dummy channels for ~50 real ms → ≥ 3 ticks happened, stop() joins cleanly within 100 ms.
-- [ ] **Step 5: PASS all** → **Step 6: Commit** — `"feat(runtime): SimCore 100 Hz closed-loop core + sim thread shell"` (+ trailer).
+- [x] **Step 2: FAIL** → **Step 3: implement `SimCore`** exactly in the tick order above (each numbered phase = one private method, called in sequence from `tick` — the order is load-bearing for determinism).
+- [x] **Step 4:** thread-shell test: `spawn_sim` against dummy channels for ~50 real ms → ≥ 3 ticks happened, stop() joins cleanly within 100 ms.
+- [x] **Step 5: PASS all** → **Step 6: Commit** — `"feat(runtime): SimCore 100 Hz closed-loop core + sim thread shell"` (+ trailer).
 
 ---
 
