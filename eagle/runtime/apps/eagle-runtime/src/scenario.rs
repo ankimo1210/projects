@@ -205,6 +205,17 @@ mod tests {
     }
 
     #[test]
+    fn imu_bias_scenario_populates_error_cfg() {
+        let s = Scenario::load(&repo().join("scenarios/p66-gate-imu-bias.toml")).unwrap();
+        let imu = s.errors.imu.expect("[errors.imu] present");
+        assert_eq!(imu.accel_bias_mps2, [0.0005, 0.0002, 0.0]);
+        assert_eq!(imu.seed, 42);
+        // Converts 1:1 into the sensors ImuErrorCfg.
+        let cfg: eagle_sensors::errors::ImuErrorCfg = (&imu).into();
+        assert_eq!(cfg.accel_bias_mps2, [0.0005, 0.0002, 0.0]);
+    }
+
+    #[test]
     fn initial_state_geometry() {
         let s = Scenario::load(&repo().join("scenarios/p66-gate.toml")).unwrap();
         let st = s.initial_state(1234.0);
