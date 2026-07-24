@@ -83,6 +83,23 @@ async fn client_loop(sock: WebSocket, app: AppState) {
                                     let _ = app.agc_tx.send(p);
                                 }
                             }
+                            ClientMsg::Rod { up } => {
+                                // ROD switch: press now, release after 100 ms.
+                                // NOTE: stock yaAGC raises no interrupt for
+                                // ch016, so this discrete is observed only on
+                                // a patched build; the closed-loop path uses
+                                // runner::rod_load (RODCOUNT) instead. Kept
+                                // for a hardware-faithful manual button.
+                                let (press, release) =
+                                    eagle_agc_protocol::agc_io::rod_click(up);
+                                let _ = app.agc_tx.send(press);
+                                let tx = app.agc_tx.clone();
+                                tokio::spawn(async move {
+                                    tokio::time::sleep(std::time::Duration::from_millis(100))
+                                        .await;
+                                    let _ = tx.send(release);
+                                });
+                            }
                         }
                     }
                 }
