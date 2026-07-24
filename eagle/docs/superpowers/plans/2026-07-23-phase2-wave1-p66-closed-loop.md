@@ -1588,9 +1588,9 @@ emitted-pulse i64, target = round(angle/CDU_INCR_DEG), delta capped ±64,
   - `#[derive(serde? no — plain)] pub struct ImuErrorCfg { pub accel_bias_mps2: [f64; 3], pub accel_scale_ppm: [f64; 3], pub accel_noise_sigma_mps2: f64, pub seed: u64 }` with `Default` = all zeros (OFF)
   - `pub struct ImuErrors { … }` — `pub fn new(cfg: ImuErrorCfg) -> Self`; `pub fn corrupt(&mut self, dv_sm: V3<Sm>, dt: f64) -> V3<Sm>`
 
-- [ ] **Step 1: Failing tests:** OFF config is bit-exact identity (`corrupt(v, dt) == v` for a range of inputs); same seed → identical sequences across two instances; bias integrates: with bias = 0.01 m/s² on X and 1000 × 10 ms ticks of zero true ΔV, accumulated ΔV ≈ 0.1 m/s ± 1e-9; noise with sigma > 0 changes outputs but stays zero-mean-ish over 10⁴ samples (|mean| < 5 sigma/√n).
-- [ ] **Step 2: FAIL** → **Step 3: implement** (`ChaCha8Rng::seed_from_u64`; `corrupt = (dv + bias·dt) ∘ (1 + scale·1e-6) + N(0, sigma·√dt)` per axis; the OFF path must short-circuit before touching the RNG so it is bit-exact and RNG-state-free).
-- [ ] **Step 4: PASS** → **Step 5: Commit** — `"feat(sensors): seeded IMU error models, default off"` (+ trailer).
+- [x] **Step 1: Failing tests:** OFF config is bit-exact identity (`corrupt(v, dt) == v` for a range of inputs); same seed → identical sequences across two instances; bias integrates: with bias = 0.01 m/s² on X and 1000 × 10 ms ticks of zero true ΔV, accumulated ΔV ≈ 0.1 m/s ± 1e-9; noise with sigma > 0 changes outputs but stays zero-mean-ish over 10⁴ samples (|mean| < 5 sigma/√n).
+- [x] **Step 2: FAIL** → **Step 3: implement** (`ChaCha8Rng::seed_from_u64`; `corrupt = (dv + bias·dt) ∘ (1 + scale·1e-6) + N(0, sigma·√dt)` per axis; the OFF path must short-circuit before touching the RNG so it is bit-exact and RNG-state-free).
+- [x] **Step 4: PASS** → **Step 5: Commit** — `"feat(sensors): seeded IMU error models, default off"` (+ trailer).
 
 ---
 
