@@ -259,15 +259,25 @@ comment = "leave approach-phase quadratic guidance at TTF > -10 s"
 #   LAG/TAU = ratio       -> fraction = ratio              (b=0, dimensionless)
 #   FORCE   = MASS * acc  -> fraction = F[kg*m/cs^2]/2^12  (b=12, kg*m/cs^2 = 1e4 N)
 # None of these is exercised before ENGINE ON; Spike B (P66 live) is the
-# empirical authority. RODSCALE's scale did NOT close under this chain
-# (1 ft/s is sub-pulse at both 2^10 and 2^7 m/cs SP) -- task-5 value kept,
-# flagged for Spike B.
+# empirical authority. RODSCALE is now pinned live (below); TAUROD,
+# LAG/TAU, MINFORCE and MAXFORCE remain scale-chain hypotheses.
+#
+# RODSCALE, measured live (spike B): RODCOMP does "MP RODSCAL1 / DAS
+# VDGVERT" (LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:958-963), so the word is
+# the per-click VDGVERT increment expressed in VDGVERT's own DP pulses.
+# VDGVERT and HDOTDISP are DP b=7 in m/cs: HDOTDISP read back as hi=0o36
+# = 491520 pulses while N63 R2 displayed +00756 (75.6 ft/s), and
+# 491520 * 2^-21 m/cs = 0.2344 m/cs = 76.9 ft/s -- a 1.7 % match, i.e. the
+# LSB is 2^-21 m/cs. One ft/s per click is therefore 0.003048 m/cs =
+# 6392 pulses, entered here as value 0.003048 at b=-7 SP. The scale is
+# POSITIVE: a down-click loads RODCOUNT = -1, and -1 * RODSCAL1 must lower
+# VDGVERT (faster descent).
 
 [[word]]
 symbol = "RODSCALE"
-physical = { value = -0.3048, b = 7, dp = false }
-provenance = "task-5 hypothesis (1 ft/s per click)"
-comment = "ROD click scale, m/s SP b=7 -- UNVERIFIED; scale chain did not close, Spike B must pin"
+physical = { value = 0.003048, b = -7, dp = false }
+provenance = "spike-B live calibration (HDOTDISP raw vs N63 R2 display)"
+comment = "ROD click scale = 6392 DP pulses of VDGVERT per click = 1 ft/s"
 
 [[word]]
 symbol = "TAUROD"

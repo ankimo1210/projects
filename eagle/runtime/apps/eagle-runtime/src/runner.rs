@@ -143,6 +143,88 @@ pub async fn att_hold(tx: &mpsc::UnboundedSender<Packet>) -> Result<()> {
     Ok(())
 }
 
+/// RODCOUNT, the rate-of-descent click accumulator (Luminary099.log:6033:
+/// `E7,1745  E7,1746  RODCOUNT  EQUALS  RUNIT +3` → ECADR 0o3746).
+pub const RODCOUNT_ECADR: u16 = 0o3746;
+/// HDOTDISP (E7,1473), the altitude rate P66 displays as N60's R2 and
+/// seeds VDGVERT from at STARTP66 (LLGE:156-157). DP.
+pub const HDOTDISP_ECADR: u16 = 0o3473;
+/// VDGVERT (E7,1644), P65/P66's desired altitude rate — the value ROD
+/// clicks move (`MP RODSCAL1 / DAS VDGVERT`, LLGE:958-963). DP.
+pub const VDGVERT_ECADR: u16 = 0o3644;
+/// RODSCAL1 (E7,1756), the working copy of the RODSCALE pad word taken at
+/// STRTP66A (LLGE:170-172). SP.
+pub const RODSCAL1_ECADR: u16 = 0o3756;
+
+/// Read a double-precision erasable (two consecutive words, high then low)
+/// over V01N01 and decode it to signed pulses, confirming the value with a
+/// second full read.
+///
+/// `read_erasable` handles the P66 repaint collision (KEY REL, gap-wait,
+/// retry), but a flight-display frame can still slip past its V01N01 guard
+/// on rare occasions, and a corrupt high word turns a 12784-pulse ROD
+/// delta into a 26-million-pulse one (spike-B iters 8, 17). VDGVERT and
+/// HDOTDISP change only on ROD clicks, so a value read identically twice
+/// in a row is trustworthy; a flicker forces another pair of reads.
+const DP_READ_ATTEMPTS: u32 = 4;
+
+pub async fn read_dp(script: &mut DskyScript, ecadr: u16) -> Result<i64> {
+    let mut last: Option<i64> = None;
+    for _ in 0..DP_READ_ATTEMPTS {
+        let hi = script.read_erasable(ecadr).await?;
+        let lo = script.read_erasable(ecadr + 1).await?;
+        let value = eagle_agc_protocol::words::dp_decode([hi, lo]);
+        if last == Some(value) {
+            return Ok(value);
+        }
+        last = Some(value);
+    }
+    bail!(
+        "DP read of {:05o} never repeated a value in {DP_READ_ATTEMPTS} reads",
+        ecadr
+    )
+}
+
+/// Click the ROD switch `clicks` times (negative = descend faster, the
+/// bit-7 direction) by writing RODCOUNT over V21N01.
+///
+/// Why not the switch discrete: vendored yaAGC's `SocketAPI.c:239-249`
+/// raises KEYRUPT1 for a channel-015 write but no interrupt at all for
+/// channel 016 — `InterruptRequests[6]` is never assigned anywhere in the
+/// emulator — so MARKRUPT → DESCBITS never runs and a socket-written
+/// click only updates NAVKEYIN, unobserved. DESCBITS' entire effect is
+/// `ADS RODCOUNT` with ±1 (LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:1233-1238)
+/// and RODCOMP consumes the accumulator with `CAF ZERO / XCH RODCOUNT`
+/// each P66 pass (:958-963), so loading the count directly is equivalent
+/// to the interrupt path and needs no vendor patch. GUILDENSTERN's P66
+/// entry test is the same non-zero RODCOUNT read (:214-217).
+///
+/// Deliberately unverified: a V01N01 read-back would race RODCOMP, which
+/// zeroes the word within one 1-second P66 pass.
+///
+/// `grab_dsky` is not cosmetic. Once P66 is running, VERTDISP repaints
+/// V06N60 every guidance pass (LLGE:898); a load typed into that stream is
+/// rejected mid-sequence with OPR ERR and the KEY REL lamp lit, leaving
+/// RODCOUNT unwritten and VDGVERT unmoved (spike-B iter 18 — the same
+/// swallow that broke the in-flight reads). Releasing the display and
+/// waiting for its repaint burst to subside first is what makes the load
+/// land.
+pub async fn rod_load(script: &mut DskyScript, clicks: i16) -> Result<()> {
+    let word = eagle_agc_protocol::words::sp_encode(clicks);
+    script
+        .grab_dsky()
+        .await
+        .with_context(|| format!("ROD load {clicks:+} clicks: grab DSKY"))?;
+    script
+        .keys(&format!(
+            "V21N01E{}E{}E",
+            octal5(RODCOUNT_ECADR),
+            octal5(word)
+        ))
+        .await
+        .with_context(|| format!("ROD load {clicks:+} clicks"))
+}
+
 /// Wait for the AGC's ISS turn-on delay complete (ch 012 bit15, ~90 s
 /// after `init_discretes`), then drop the turn-on request like the real
 /// ISS would. Returns the elapsed wait.
@@ -668,12 +750,12 @@ impl SyntheticHoverModel {
             self.truth.engine_on = false;
             return Vec::new();
         }
-        let raw_thrust = (cmd_pulses.max(0) as f64) * THRUST_N_PER_PULSE;
-        let thrust_n = if raw_thrust == 0.0 {
-            0.0
-        } else {
-            raw_thrust.clamp(DPS_MIN_N, DPS_MAX_N)
-        };
+        // A lit DPS never produces zero thrust: the throttle actuator's
+        // zero stop is the engine's ~10 % idle, and Luminary leaves the
+        // throttle parked there for the whole ZOOMTIME trim phase after
+        // ignition before FLATOUT drives it up.
+        let thrust_n =
+            ((cmd_pulses.max(0) as f64) * THRUST_N_PER_PULSE).clamp(DPS_MIN_N, DPS_MAX_N);
         let specific_force = thrust_n / self.truth.mass_kg;
         let az_ms2 = specific_force - HOVER_ACCEL_MS2;
 
@@ -892,6 +974,17 @@ mod tests {
     }
 
     #[test]
+    fn ignition_at_zero_command_holds_minimum_dps_thrust() {
+        // The DPS lights at its idle stop: from ENGINE ON until the
+        // ZOOMTIME trim phase ends (~26 s) Luminary commands no throttle
+        // increase at all, and a zero-thrust model free-falls through the
+        // whole burn-in (spike-B iter 6: −42 m/s by MM66).
+        let mut model = SyntheticHoverModel::new(500.0, 0.0, 15_195.0);
+        model.step(0, true);
+        assert_eq!(model.truth().thrust_n, DPS_MIN_N);
+    }
+
+    #[test]
     fn synthetic_hover_gate_is_frozen_before_engine_on() {
         let mut model = SyntheticHoverModel::new(500.0, -2.0, 15_195.0);
         assert!(model.step(4_096, false).is_empty());
@@ -912,37 +1005,191 @@ mod tests {
         );
     }
 
+    #[test]
+    fn rodcount_ecadr_matches_assembly_listing() {
+        let symtab = crate::padload::SymTab::from_listing(include_str!(
+            "../tests/fixtures/symtab_excerpt.txt"
+        ))
+        .unwrap();
+        assert_eq!(symtab.ecadr("RODCOUNT"), Some(RODCOUNT_ECADR));
+    }
+
+    #[tokio::test]
+    async fn read_dp_combines_the_two_erasable_words() {
+        let (mut script, _rx, _wtx) = seeded_script();
+        // The fake DSKY answers every V01N01 read-back with R1 = 05050.
+        let got = read_dp(&mut script, VDGVERT_ECADR).await.unwrap();
+        assert_eq!(got, eagle_agc_protocol::words::dp_decode([0o5050, 0o5050]));
+    }
+
+    #[tokio::test]
+    async fn read_dp_confirms_the_value_with_a_second_read() {
+        // VDGVERT is static except for ROD clicks, so a single flicker in
+        // one word (a flight-display frame slipping past the V01N01 guard,
+        // spike-B iter 17) shows up as a huge bogus delta. read_dp must
+        // read the whole DP twice and only trust a value it saw twice —
+        // here that is two full DP reads = four V01N01 entries.
+        let (mut script, mut rx, _wtx) = seeded_script();
+        read_dp(&mut script, VDGVERT_ECADR).await.unwrap();
+        drop(script);
+        let verb = eagle_agc_protocol::keys::DskyKey::from_name("VERB")
+            .unwrap()
+            .packet();
+        let mut verbs = 0;
+        while let Ok(p) = rx.try_recv() {
+            if p == verb {
+                verbs += 1;
+            }
+        }
+        assert_eq!(verbs, 4, "read_dp must issue two full DP reads");
+    }
+
+    #[test]
+    fn p66_calibration_ecadrs_match_assembly_listing() {
+        let symtab = crate::padload::SymTab::from_listing(include_str!(
+            "../tests/fixtures/symtab_excerpt.txt"
+        ))
+        .unwrap();
+        assert_eq!(symtab.ecadr("HDOTDISP"), Some(HDOTDISP_ECADR));
+        assert_eq!(symtab.ecadr("RODSCAL1"), Some(RODSCAL1_ECADR));
+        // VDGVERT is defined with `=` rather than EQUALS, so the listing's
+        // symbol column never carries it; NEWVEL shares its cell (both are
+        // E7,1644 — VDGVERT = ELIDUMMY = TTF/8 +2).
+        assert_eq!(symtab.ecadr("NEWVEL"), Some(VDGVERT_ECADR));
+    }
+
+    #[tokio::test]
+    async fn rod_load_types_signed_click_count_into_rodcount() {
+        let (tx, mut rx) = tokio::sync::mpsc::unbounded_channel();
+        let (_wtx, wrx) = tokio::sync::watch::channel(DskyState::default());
+        let mut script = DskyScript::new(tx, wrx);
+        script.set_key_delay(Duration::ZERO);
+
+        // Two down-clicks = RODCOUNT −2 = 0o77775 in one's complement.
+        rod_load(&mut script, -2).await.unwrap();
+
+        let expected = [
+            "KEY_REL", // release the P66 flight display first
+            "VERB", "2", "1", "NOUN", "0", "1", "ENTR", // V21N01E
+            "0", "3", "7", "4", "6", "ENTR", // RODCOUNT ECADR
+            "7", "7", "7", "7", "5", "ENTR", // −2
+        ];
+        for name in expected {
+            let want = eagle_agc_protocol::keys::DskyKey::from_name(name)
+                .unwrap()
+                .packet();
+            assert_eq!(rx.recv().await.unwrap(), want, "key {name}");
+        }
+        // No V01N01 read-back: RODCOMP consumes RODCOUNT with XCH, so a
+        // verify would race the AGC and spuriously fail.
+        assert!(rx.try_recv().is_err());
+    }
+
     /// Key-count fixture: a raw (unverified) V21N01 load is 19 keys
     /// (V21N01E + 5 addr + E + 5 data + E); a verified load adds the
-    /// V01N01 read-back's 13 keys (V01N01E + 5 addr + E) = 32.
+    /// V01N01 read-back's 14 keys (KEY REL + V01N01E + 5 addr + E) = 33.
     const RAW_KEYS: usize = 19;
-    const VERIFIED_KEYS: usize = 19 + 13;
+    const VERIFIED_KEYS: usize = 19 + 14;
 
+    /// Relay word: AAAA B CCCCC DDDDD (see `dsky.rs`).
+    fn relay(row: u16, c: u16, d: u16) -> Packet {
+        Packet::io(0o10, (row << 11) | (c << 5) | d).unwrap()
+    }
+    fn code(ch: char) -> u16 {
+        match ch {
+            '0' => 0b10101,
+            '1' => 0b00011,
+            '2' => 0b11001,
+            '3' => 0b11011,
+            '4' => 0b01111,
+            '5' => 0b11110,
+            '6' => 0b11100,
+            '7' => 0b10011,
+            '8' => 0b11101,
+            '9' => 0b11111,
+            _ => 0,
+        }
+    }
+
+    /// A settled V01N01 frame: R1 = 05050 (every verified word below is
+    /// deliberately 0o5050) and R3 showing `addr`, which is what PINBALL
+    /// paints and what `read_erasable` requires before trusting R1.
+    fn display_frame(addr: &str) -> DskyState {
+        let a: Vec<char> = addr.chars().collect();
+        let mut d = DskyState::default();
+        for pkt in [
+            relay(10, code('0'), code('1')), // VERB 01
+            relay(9, code('0'), code('1')),  // NOUN 01
+            relay(8, 0, code('0')),          // R1 = 05050
+            relay(7, code('5'), code('0')),
+            relay(6, code('5'), code('0')),
+            relay(3, 0, code(a[0])), // R3 = addr
+            relay(2, code(a[1]), code(a[2])),
+            relay(1, code(a[3]), code(a[4])),
+        ] {
+            d.apply(&pkt);
+        }
+        d
+    }
+
+    fn key_char(p: &Packet) -> Option<char> {
+        use eagle_agc_protocol::keys::DskyKey;
+        [
+            ("0", '0'),
+            ("1", '1'),
+            ("2", '2'),
+            ("3", '3'),
+            ("4", '4'),
+            ("5", '5'),
+            ("6", '6'),
+            ("7", '7'),
+            ("8", '8'),
+            ("9", '9'),
+            ("ENTR", 'E'),
+        ]
+        .into_iter()
+        .find(|(name, _)| DskyKey::from_name(name).map(|k| k.packet()) == Some(*p))
+        .map(|(_, ch)| ch)
+    }
+
+    /// Scripted fake PINBALL: watches the key stream and, on every ENTR
+    /// that follows five digits, republishes a V01N01 frame whose R3 is
+    /// those digits. That is enough for both the V21N01 load path and its
+    /// V01N01 read-back to resolve. Keys are forwarded so tests can still
+    /// count them.
     fn seeded_script() -> (
         DskyScript,
         tokio::sync::mpsc::UnboundedReceiver<Packet>,
         tokio::sync::watch::Sender<DskyState>,
     ) {
-        // Scripted fake AGC: the watch channel is pre-seeded with a DSKY
-        // whose R1 already reads " 05050" (the wait_resolves_... pattern),
-        // so load_erasable's V01N01 read-back parses immediately and
-        // matches every verified word's value (verified words below are
-        // deliberately 0o5050).
-        let (tx, rx) = tokio::sync::mpsc::unbounded_channel();
-        let mut seeded = DskyState::default();
-        // Set R1 digits via the relay rows (fields are private): row 8
-        // drives R1D1, row 7 R1D2/D3, row 6 R1D4/D5. '0'=0b10101,'5'=0b11110.
-        for pkt in [
-            Packet::io(0o10, (8 << 11) | 0b10101).unwrap(),
-            Packet::io(0o10, (7 << 11) | (0b11110 << 5) | 0b10101).unwrap(),
-            Packet::io(0o10, (6 << 11) | (0b11110 << 5) | 0b10101).unwrap(),
-        ] {
-            seeded.apply(&pkt);
-        }
-        let (wtx, wrx) = tokio::sync::watch::channel(seeded);
+        let (tx, mut raw_rx) = tokio::sync::mpsc::unbounded_channel::<Packet>();
+        let (fwd_tx, fwd_rx) = tokio::sync::mpsc::unbounded_channel::<Packet>();
+        let (wtx, wrx) = tokio::sync::watch::channel(display_frame("00000"));
+        let wtx_task = wtx.clone();
+        tokio::spawn(async move {
+            let mut digits = String::new();
+            while let Some(p) = raw_rx.recv().await {
+                match key_char(&p) {
+                    Some(c) if c.is_ascii_digit() => {
+                        digits.push(c);
+                        if digits.len() > 5 {
+                            digits.remove(0);
+                        }
+                    }
+                    Some('E') => {
+                        if digits.len() == 5 {
+                            let _ = wtx_task.send(display_frame(&digits));
+                        }
+                        digits.clear();
+                    }
+                    _ => digits.clear(),
+                }
+                let _ = fwd_tx.send(p);
+            }
+        });
         let mut script = DskyScript::new(tx, wrx);
         script.set_key_delay(Duration::ZERO);
-        (script, rx, wtx)
+        (script, fwd_rx, wtx)
     }
 
     #[tokio::test]
@@ -973,12 +1220,19 @@ mod tests {
         assert_eq!(keys.len(), VERIFIED_KEYS + RAW_KEYS + VERIFIED_KEYS);
         // First key of the sequence is VERB (code 0o21 on ch 015).
         assert_eq!(keys[0].data, 0o21);
-        // The always-verify word's read-back is present: the LAST 13 keys
-        // are V01N01E + its address; V01's "0","1" digits follow VERB.
-        let tail = &keys[keys.len() - 13..];
-        assert_eq!(tail[0].data, 0o21); // VERB
-        assert_eq!(tail[1].data, 0o20); // 0
-        assert_eq!(tail[2].data, 0o1); // 1
+        // The always-verify word's read-back is present: the LAST 14 keys
+        // are KEY REL + V01N01E + its address; V01's "0","1" digits follow
+        // VERB.
+        let tail = &keys[keys.len() - 14..];
+        assert_eq!(
+            tail[0],
+            eagle_agc_protocol::keys::DskyKey::from_name("KEY_REL")
+                .unwrap()
+                .packet()
+        );
+        assert_eq!(tail[1].data, 0o21); // VERB
+        assert_eq!(tail[2].data, 0o20); // 0
+        assert_eq!(tail[3].data, 0o1); // 1
     }
 
     #[tokio::test]

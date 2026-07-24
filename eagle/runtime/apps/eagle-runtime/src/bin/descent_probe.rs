@@ -34,6 +34,7 @@ use anyhow::{Context, Result};
 use clap::Parser;
 use eagle_agc_protocol::agc_io::{decode_output, rod_click, AgcOutput, ThrustPulse};
 use eagle_agc_protocol::dsky::DskyState;
+use eagle_agc_protocol::words::sp_decode;
 use eagle_runtime::agc_session::{AgcConfig, AgcSession};
 use eagle_runtime::padload::{generate_state, PadloadManifest, StateCfg, SymTab};
 use eagle_runtime::runner::{
@@ -104,7 +105,12 @@ fn dsky_line(d: &DskyState) -> String {
 
 fn spike_b_initial_truth() -> HoverTruth {
     HoverTruth {
-        alt_m: 500.0,
+        // High enough to survive the ZOOMTIME trim phase: Luminary parks
+        // the throttle at its idle stop for ~26 s after ENGINE ON (and
+        // GUILDENSTERN only reaches P66 once that phase ends), which costs
+        // ~450 m at 4560 N against 15 195 kg. 500 m put the truth
+        // underground before MM66 (spike-B iter 6).
+        alt_m: 3_000.0,
         vz_ms: 0.0,
         mass_kg: 15_195.0,
         cmd_pulses: 0,
@@ -164,9 +170,12 @@ async fn run_auto(
     let state = PadloadManifest {
         word: generate_state(&StateCfg {
             epoch_now_cs: epoch_cs,
-            // Covers the remaining ISS wait, both pad-loads, and more than
-            // two minutes of P63 setup while keeping live iterations bounded.
-            burn_lead_cs: 30_000.0,
+            // Covers the remaining ISS wait, both pad-loads, and the P63
+            // setup dialog. 30_000 (300 s) is NOT enough: spike-B iter 5
+            // reached V37E63E at t≈250 s and IGNALG then crossed TIG−45 s
+            // mid-dialog → alarm 01703 (IGNITION TIME SLIPPED,
+            // P40-P47.agc:101). 36_000 is spike A's frozen-test value.
+            burn_lead_cs: 36_000.0,
             ..StateCfg::default()
         }),
     };
@@ -224,6 +233,7 @@ async fn run_auto(
             }
         }
     });
+    let closed_truth = closed.truth();
     *hover = Some(closed);
 
     eprintln!("[auto] ENGINE ON +2s: ATT HOLD");
@@ -232,19 +242,70 @@ async fn run_auto(
     // In this rope, ATT HOLD alone leaves P63 running when RODCOUNT is zero
     // (`LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:203-217`). A ROD click is the
     // event that takes STARTP66; STARTP66 then seeds VDGVERT from HDOTDISP.
-    let (press, release) = rod_click(false);
-    init.agc_tx
-        .send(press)
-        .map_err(|_| anyhow::anyhow!("agc tx closed"))?;
-    tokio::time::sleep(Duration::from_millis(100)).await;
-    init.agc_tx
-        .send(release)
-        .map_err(|_| anyhow::anyhow!("agc tx closed"))?;
+    // The click goes in as a direct RODCOUNT load, not as the ch016 switch
+    // discrete: yaAGC never raises KEYRUPT2 for ch016, so DESCBITS never
+    // runs (see `runner::rod_load`). `rod -` still drives the raw discrete
+    // for A/B comparison.
+    runner::rod_load(&mut init.script, -1).await?;
     init.script
         .wait_prog("66")
         .await
         .context("GUILDENSTERN did not reach MM66")?;
-    eprintln!("[auto] *** MM66 ***; use `rod -` / `rod +` to calibrate");
+    eprintln!("[auto] *** MM66 ***");
+
+    // --- P66 calibration pass ------------------------------------------
+    // RODCOMP adds RODCOUNT * RODSCAL1 to VDGVERT as a DP product
+    // (LLGE:958-963), so ΔVDGVERT per click IS the RODSCAL1 word in DP
+    // pulses — one live pass solves the RODSCALE pad value. VDGVERT only
+    // ever moves via RODCOMP once P66 is running, so the ~3 s of V01N01
+    // key-punching between samples cannot perturb it.
+    // Every read here is diagnostic: log failures and keep going, so one
+    // rejected DSKY entry cannot cost a 6-minute run.
+    eprintln!("[cal] letting P66 settle for 30 s");
+    tokio::time::sleep(Duration::from_secs(30)).await;
+
+    let truth_watch = closed_truth.clone();
+    let vz = || truth_watch.as_ref().map(|t| t.borrow().vz_ms);
+    let cmd = || truth_watch.as_ref().map(|t| t.borrow().cmd_pulses);
+
+    init.script.keys("K").await.ok(); // release the V06N60 flight display
+    let rodscal1 = init.script.read_erasable(runner::RODSCAL1_ECADR).await;
+    match rodscal1 {
+        Ok(w) => eprintln!("[cal] RODSCAL1 = {w:05o} (= {} pulses)", sp_decode(w)),
+        Err(ref e) => eprintln!("[cal] RODSCAL1 read failed: {e:#}"),
+    }
+    let vdg0 = runner::read_dp(&mut init.script, runner::VDGVERT_ECADR).await;
+    let hdot0 = runner::read_dp(&mut init.script, runner::HDOTDISP_ECADR).await;
+    eprintln!("[cal] VDGVERT={vdg0:?} HDOTDISP={hdot0:?} vz={:?} cmd={:?}", vz(), cmd());
+
+    eprintln!("[cal] two down-clicks");
+    let (vz_before, cmd_before) = (vz(), cmd());
+    if let Err(e) = runner::rod_load(&mut init.script, -2).await {
+        eprintln!("[cal] ROD load failed: {e:#}");
+    }
+    tokio::time::sleep(Duration::from_secs(3)).await;
+    let vdg1 = runner::read_dp(&mut init.script, runner::VDGVERT_ECADR).await;
+    match (&vdg0, &vdg1, &rodscal1) {
+        (Ok(a), Ok(b), Ok(s)) => eprintln!(
+            "[cal] delta VDGVERT = {} over 2 clicks; 2 x RODSCAL1 = {}",
+            b - a,
+            2 * sp_decode(*s) as i64
+        ),
+        _ => eprintln!("[cal] delta VDGVERT unavailable ({vdg0:?} -> {vdg1:?})"),
+    }
+
+    eprintln!("[cal] 15 s of ROD response");
+    tokio::time::sleep(Duration::from_secs(15)).await;
+    let hdot1 = runner::read_dp(&mut init.script, runner::HDOTDISP_ECADR).await;
+    eprintln!(
+        "[cal] +15 s: HDOTDISP {hdot0:?} -> {hdot1:?}; vz {vz_before:?} -> {:?}; cmd {cmd_before:?} -> {:?}",
+        vz(),
+        cmd()
+    );
+    match init.script.alarm_codes().await {
+        Ok(c) => eprintln!("[cal] FAILREG = {:05o} {:05o} {:05o}", c[0], c[1], c[2]),
+        Err(e) => eprintln!("[cal] alarm read failed: {e:#}"),
+    }
     Ok(())
 }
 
@@ -531,6 +592,16 @@ async fn main() -> Result<()> {
                 Ok(())
             }
             "att-hold" => runner::att_hold(&init.agc_tx).await,
+            // ROD clicks the way Luminary actually observes them: a direct
+            // RODCOUNT load. `rod` below drives the raw ch016 discrete,
+            // which this emulator never turns into a MARKRUPT.
+            "rodw" => match arg1.and_then(|s| s.parse::<i16>().ok()) {
+                Some(clicks) => runner::rod_load(&mut init.script, clicks).await,
+                None => {
+                    eprintln!("usage: rodw <clicks>  (negative = descend faster)");
+                    Ok(())
+                }
+            },
             "rod" => match arg1 {
                 Some(direction @ ("+" | "-")) => {
                     let (press, release) = rod_click(direction == "+");
