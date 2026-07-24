@@ -1,0 +1,8 @@
+[package]
+name = "eagle-sensors"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+eagle-dynamics = { path = "../eagle-dynamics" }
+eagle-agc-protocol = { path = "../eagle-agc-protocol" }
