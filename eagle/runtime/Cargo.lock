@@ -254,6 +254,7 @@ dependencies = [
  "eagle-agc-protocol",
  "eagle-dynamics",
  "eagle-schema",
+ "eagle-sensors",
  "futures-util",
  "serde",
  "serde_json",

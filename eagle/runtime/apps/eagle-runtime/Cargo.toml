@@ -11,6 +11,7 @@ path = "src/lib.rs"
 eagle-agc-protocol = { path = "../../crates/eagle-agc-protocol" }
 eagle-schema = { path = "../../crates/eagle-schema" }
 eagle-dynamics = { path = "../../crates/eagle-dynamics" }
+eagle-sensors = { path = "../../crates/eagle-sensors" }
 tokio = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
