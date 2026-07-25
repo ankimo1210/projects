@@ -7,13 +7,23 @@ from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 from datetime import date, timedelta
 
-from health.client import RateLimited, RequestBudget, RequestCapExceeded
-from health.endpoints import CATALOG, DAILY_ROLLUP, Metric, chunk_ranges
+from health.client import ApiError, RateLimited, RequestBudget, RequestCapExceeded
+from health.endpoints import CATALOG, DAILY_ROLLUP, Metric, PayloadError, chunk_ranges
 from health.store import SYNC_IN_PROGRESS, SYNC_OK, Store
 
 MAX_REQUESTS_PER_RUN = 200
 TRAILING_REFETCH_DAYS = 2
 INTRADAY_LOOKBACK_DAYS = 30
+
+
+@dataclass(frozen=True)
+class MetricFailure:
+    """One metric gave up for this run; the run continued with the others."""
+
+    metric: str
+    kind: str  # "api" or "payload"
+    status_code: int | None
+    message: str
 
 
 def backfill_start(today: date, environ: Mapping[str, str] | None = None) -> date:
@@ -51,6 +61,7 @@ class MetricProgress:
 @dataclass
 class SyncReport:
     progress: list[MetricProgress] = field(default_factory=list)
+    failures: list[MetricFailure] = field(default_factory=list)
     paused: bool = False
     resume_in_s: int | None = None
     stopped_early: bool = False
@@ -134,6 +145,18 @@ class SyncEngine:
                     report.stopped_early = True
                     report.requests_made = budget.used
                     return report
+                except ApiError as exc:
+                    # One data type can be unavailable (403 for a scope never
+                    # granted, 404 for a device that produces nothing) without
+                    # saying anything about the next metric -- same isolation
+                    # rule probe.py already uses.
+                    report.failures.append(
+                        MetricFailure(metric.name, "api", exc.status_code, exc.message)
+                    )
+                    break
+                except PayloadError as exc:
+                    report.failures.append(MetricFailure(metric.name, "payload", None, exc.detail))
+                    break
 
                 progress.fetched_ranges += 1
                 if progress_cb:
