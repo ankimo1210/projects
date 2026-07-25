@@ -78,8 +78,8 @@ rollupは7日、日次reconcileは30日、intradayは1日だけ取得します�
 - `health/data/oauth_pending.json`: PKCE/stateの一時情報（mode 600、10分で失効）
 - `health/data/probe/`: acceptance probeのprivate raw JSON
 
-UI開発用の架空DBは任意pathへ生成できます。実データを誤って上書きしないよう、一時pathを
-指定してください。
+UI開発用の架空DBは任意pathへ生成できます。`--db-path`は必須で、既存ファイルがある場合は
+`--force`を付けない限り上書きしません。実データ（`health/data/health.duckdb`）を指定しないでください。
 
 ```bash
 uv run --no-sync python health/scripts/seed_demo.py --db-path /tmp/health-demo.duckdb
