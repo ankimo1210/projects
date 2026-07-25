@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import sys
+from datetime import date, timedelta
 from pathlib import Path
 
 import pytest
 from health.auth import GoogleHealthAuth
+from health.store import Store
 from streamlit.testing.v1 import AppTest
 
 HEALTH_DIR = Path(__file__).resolve().parents[1]
@@ -59,6 +61,66 @@ def test_all_seeded_pages_render_without_exception(seeded_data_dir):
 
         assert not app.exception, function
         assert [item.value for item in app.title] == [title]
+
+
+def test_insights_page_degrades_gracefully_on_thin_data(tmp_path):
+    """First-week-of-use regression guard for the three insights degrade paths.
+
+    A user's first few days of data trip all three: too few daily
+    observations for a baseline z-score, too few date-matched pairs for a
+    lagged correlation, and fewer than two weekend nights of sleep for
+    social jetlag. Each must render as a caption, not raise -- the 90-day
+    seeded demo database never exercises any of these branches.
+    """
+    store = Store(tmp_path / "health.duckdb")
+    try:
+        days = [date(2026, 6, 1) + timedelta(days=i) for i in range(4)]  # Mon-Thu: no weekend
+        daily = []
+        for i, day in enumerate(days):
+            day_text = day.isoformat()
+            daily += [
+                ("steps", day_text, 5000.0 + i),
+                ("resting_hr", day_text, 60.0 + i),
+                ("hrv_rmssd", day_text, 40.0 + i),
+                ("sleep_minutes", day_text, 400.0 + i),
+                ("temp_skin_relative", day_text, 0.1 + i * 0.01),
+            ]
+        store.upsert_daily(daily)
+        store.upsert_sleep(
+            [
+                {
+                    "provider_id": f"thin-{i}",
+                    "date": day.isoformat(),
+                    "start_ts": f"{(day - timedelta(days=1)).isoformat()} 23:00:00",
+                    "end_ts": f"{day.isoformat()} 07:00:00",
+                    "minutes_asleep": 400,
+                    "minutes_deep": 72,
+                    "minutes_light": 220,
+                    "minutes_rem": 88,
+                    "minutes_wake": 20,
+                    "efficiency": 90,
+                    "is_main": True,
+                }
+                for i, day in enumerate(days)
+            ]
+        )
+    finally:
+        store.close()
+
+    source = app_source(
+        tmp_path,
+        "from views.insights_view import insights_page\ninsights_page()",
+    )
+
+    app = AppTest.from_string(source, default_timeout=20).run()
+
+    assert not app.exception
+    captions = [item.value for item in app.caption]
+    assert any("判定に必要な履歴が不足しています" in c for c in captions), captions
+    assert any("日数が20未満の組み合わせは相関を計算せず空欄になります。" in c for c in captions), (
+        captions
+    )
+    assert any("平日・休日それぞれ2晩以上の記録が必要です。" in c for c in captions), captions
 
 
 def test_main_renders_before_and_after_connection(tmp_path):
