@@ -16,6 +16,8 @@ from urllib.parse import urlencode
 import requests
 from dotenv import load_dotenv
 
+from health.privacy import ensure_private_dir
+
 AUTHORIZE_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
 SCOPES = (
@@ -48,6 +50,7 @@ class GoogleHealthAuth:
         self.clock = clock
         self.tokens_path = self.data_dir / "tokens.json"
         self.pending_path = self.data_dir / "oauth_pending.json"
+        self._tokens: dict | None = None
 
     @classmethod
     def from_env(cls, data_dir: Path, env_path: Path | None = None) -> GoogleHealthAuth:
@@ -177,14 +180,20 @@ class GoogleHealthAuth:
 
     # -- storage ---------------------------------------------------------------
     def load_tokens(self) -> dict | None:
+        # One Streamlit process owns this file; re-reading it before every one
+        # of a run's ~200 sends buys nothing.
+        if self._tokens is not None:
+            return self._tokens
         if not self.tokens_path.exists():
             return None
         try:
-            return json.loads(self.tokens_path.read_text())
+            self._tokens = json.loads(self.tokens_path.read_text())
         except json.JSONDecodeError:
             return None  # corrupt token file: behave like "not connected"
+        return self._tokens
 
     def forget_tokens(self) -> None:
+        self._tokens = None
         self.tokens_path.unlink(missing_ok=True)
         self.pending_path.unlink(missing_ok=True)
 
@@ -203,6 +212,7 @@ class GoogleHealthAuth:
         elif "refresh_expires_at" in existing:
             tokens["refresh_expires_at"] = existing["refresh_expires_at"]
         self._write_private(self.tokens_path, tokens)
+        self._tokens = tokens
         return tokens
 
     # -- pending state -----------------------------------------------------------
@@ -218,8 +228,11 @@ class GoogleHealthAuth:
         return pend
 
     def _write_private(self, path: Path, obj: dict) -> None:
-        self.data_dir.mkdir(parents=True, exist_ok=True)
+        ensure_private_dir(self.data_dir)
         tmp = path.with_suffix(".tmp")
-        tmp.write_text(json.dumps(obj))
-        os.chmod(tmp, 0o600)
+        # Created 0600 by os.open rather than chmod-ed afterwards: a token must
+        # never exist, even briefly, under a permissive umask.
+        handle = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+        with os.fdopen(handle, "w") as stream:
+            json.dump(obj, stream)
         os.replace(tmp, path)  # atomic: never leave a half-written token/pending file

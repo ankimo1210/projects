@@ -46,11 +46,25 @@ uv run --no-sync streamlit run health/app/main.py
 ```
 
 最初の画面で「Google Health と接続する」を選び、Googleの同意画面から戻ったら、
-「管理 > 同期」で同期します。1回の同期はHealth APIへの物理requestを最大200件に
-制限します。上限で止まった場合は、もう一度押すと未完了chunkから再開します。
+「管理 > 同期」で同期します。1回の同期はまず全メトリクスの直近7日を取得し、残りの
+request予算で古い期間へ遡ります。したがって**新規インストールでは1回目の同期でも
+全ページが表示できます**。1回の上限は同期画面で 200 / 500 / 1000 requests から
+選べます（既定200）。
+
+このrecent-first順は新規データベース限定です。それより前のバージョンで作られた
+既存データベースは、まず旧方式（5年前から前方へ1chunkずつ）のbackfillを完了させてから
+recent-firstが効きます。14 metric構成では前方backfillが1回の同期上限（200 requests）を
+超えるため、アップグレード後の最初の同期では後半のmetricがまだ空のページのままになる
+ことがあります。詳細は
+[2026-07-25 review fixes](docs/2026-07-25-review-fixes.md)を参照してください。
+
+履歴が残っている場合は同期後に残りchunk数が表示されます。もう一度押すと続きから遡ります。
 HTTP 429の場合は表示された時間を待って再開してください。完了したchunkだけが保存され、
-途中pageやparser errorでは既存データとwatermarkを変更しません。全期間を取得済みのmetricは、
-次回同期時に前回watermarkの2日前から再取得し、遅れて反映された値や削除も取り込みます。
+途中pageやparser errorでは既存データとwatermarkを変更しません。取得済みの期間は次回同期時に
+前回watermarkの2日前から再取得し、遅れて反映された値や削除も取り込みます。
+
+1つのメトリクスが403などで失敗しても、他のメトリクスの同期は継続します。失敗したメトリクスは
+同期後に警告として一覧表示されます。
 
 認可をやり直すときは同期画面の「Google Health を再接続」を押します。保存tokenと
 未完了OAuth状態を破棄したうえで、明示的に再認可できます。
@@ -78,12 +92,21 @@ rollupは7日、日次reconcileは30日、intradayは1日だけ取得します�
 - `health/data/oauth_pending.json`: PKCE/stateの一時情報（mode 600、10分で失効）
 - `health/data/probe/`: acceptance probeのprivate raw JSON
 
-UI開発用の架空DBは任意pathへ生成できます。実データを誤って上書きしないよう、一時pathを
-指定してください。
+UI開発用の架空DBは任意pathへ生成できます。`--db-path`は必須で、既存ファイルがある場合は
+`--force`を付けない限り上書きしません。実データ（`health/data/health.duckdb`）を指定しないでください。
 
 ```bash
 uv run --no-sync python health/scripts/seed_demo.py --db-path /tmp/health-demo.duckdb
 ```
+
+DuckDBの中身をファイルへ書き出すこともできます。出力先は`0700`、ファイルは`0600`で作成されます。
+
+```bash
+uv run --no-sync python health/scripts/export_data.py \
+  --db-path health/data/health.duckdb --out-dir /tmp/health-export --format parquet
+```
+
+**出力は実際のprivate health dataです。共有・commitしないでください。**
 
 ## 自動テスト
 
@@ -98,3 +121,4 @@ uv run --no-sync ruff format --check health/src health/app health/scripts health
 ## Development notes
 
 - [2026-07-23 Google Health post-review fixes](docs/2026-07-23-post-review-fixes.md)
+- [2026-07-25 Google Health review fixes](docs/2026-07-25-review-fixes.md)

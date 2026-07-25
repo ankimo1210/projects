@@ -9,6 +9,8 @@ from health.client import ApiError, HealthClient
 from health.endpoints import PayloadError
 from health.sync import MAX_REQUESTS_PER_RUN, SyncEngine
 
+_FAILURE_KIND_LABELS = {"api": "API エラー", "payload": "データ解析エラー"}
+
 
 def _show_last_report() -> None:
     last = st.session_state.pop("last_sync_report", None)
@@ -23,12 +25,33 @@ def _show_last_report() -> None:
             f"{resume_at} 頃（約 {minutes} 分後）にもう一度同期してください。"
         )
     elif last["stopped_early"]:
+        # `max_requests` reflects the cap the user actually selected for this
+        # run; `.get` falls back to the module default so a report dict from
+        # an older session shape (before this field existed) cannot raise.
+        cap = last.get("max_requests", MAX_REQUESTS_PER_RUN)
         st.warning(
-            f"1回の実行上限（{MAX_REQUESTS_PER_RUN} requests）に達したため停止しました。"
+            f"1回の実行上限（{cap} requests）に達したため停止しました。"
             "完了chunkは保存済みです。もう一度同期すると未完了chunkから再開します。"
         )
     else:
         st.success(f"同期が完了しました（{last['requests_made']} requests）")
+
+    remaining = last.get("history_remaining", 0)
+    if remaining:
+        st.info(
+            f"履歴の残りは約 {remaining} chunk です。もう一度同期すると古い期間へ遡ります。"
+            "直近のデータは全メトリクスで取得済みです。"
+        )
+    for failure in last.get("failures", []):
+        kind_label = _FAILURE_KIND_LABELS.get(failure["kind"], failure["kind"])
+        detail_parts = [kind_label]
+        if failure["status_code"]:
+            detail_parts.append(f"HTTP {failure['status_code']}")
+        detail_parts.append(failure["message"])
+        st.warning(
+            f"{failure['metric']}: 取得できませんでした（{' '.join(detail_parts)}）。"
+            "他のメトリクスは同期済みです。"
+        )
 
 
 def _token_panel(auth) -> None:
@@ -49,15 +72,26 @@ def _token_panel(auth) -> None:
     st.caption(f"認可スコープ: {tokens.get('scope', '-')}")
 
 
-def _run_sync(auth) -> None:
+CAP_OPTIONS = {"200 requests（既定）": 200, "500 requests": 500, "1000 requests": 1000}
+
+
+def _run_sync(auth, max_requests: int) -> None:
     try:
-        engine = SyncEngine(HealthClient(auth), get_store())
+        engine = SyncEngine(HealthClient(auth), get_store(), max_requests=max_requests)
         with st.status("同期中...", expanded=True) as status:
             report = engine.sync_all(
                 progress_cb=lambda metric, message: status.write(f"{metric}: {message}")
             )
     except AuthError as exc:
         st.error(f"Google Health の認証が失効しています: {exc}。再接続してください。")
+    # ApiError / PayloadError are unreachable through this call today:
+    # SyncEngine._guarded() catches both per metric and records them in
+    # SyncReport.failures (rendered by _show_last_report below), letting the
+    # run continue with the remaining metrics instead of raising. These two
+    # handlers are kept as defence in depth in case a future code path calls
+    # into the engine below _guarded (e.g. a direct chunk fetch), so the copy
+    # must stay accurate for that case rather than describing today's
+    # per-metric isolation, which never reaches here.
     except ApiError as exc:
         st.error(f"Google Health API エラー（HTTP {exc.status_code}）: {exc.message}")
         if exc.status_code == 403:
@@ -68,7 +102,7 @@ def _run_sync(auth) -> None:
     except PayloadError as exc:
         st.error(
             f"{exc.metric} の応答を解釈できません: {exc.detail}。"
-            "このchunkは保存せず、既存データを維持して停止しました。"
+            "ここまでに完了したchunkは保存済みです。もう一度同期してください。"
         )
     else:
         st.session_state["last_sync_report"] = {
@@ -76,6 +110,17 @@ def _run_sync(auth) -> None:
             "resume_in_s": report.resume_in_s,
             "stopped_early": report.stopped_early,
             "requests_made": report.requests_made,
+            "max_requests": max_requests,
+            "history_remaining": sum(report.history_remaining.values()),
+            "failures": [
+                {
+                    "metric": f.metric,
+                    "kind": f.kind,
+                    "status_code": f.status_code,
+                    "message": f.message,
+                }
+                for f in report.failures
+            ],
         }
         st.rerun()
     finally:
@@ -83,6 +128,7 @@ def _run_sync(auth) -> None:
         # payload error can therefore follow real DB changes, so invalidate
         # cached frames on every outcome once a sync attempt has started.
         st.cache_data.clear()
+        get_store().checkpoint()
 
 
 def sync_page() -> None:
@@ -91,8 +137,9 @@ def sync_page() -> None:
     _show_last_report()
     _token_panel(auth)
 
+    label = st.selectbox("1回の同期の上限", list(CAP_OPTIONS), index=0)
     if st.button("Google Health からデータを同期", type="primary"):
-        _run_sync(auth)
+        _run_sync(auth, CAP_OPTIONS[label])
 
     states = get_store().sync_states()
     if not states.empty:
@@ -107,11 +154,12 @@ def sync_page() -> None:
                 "metric": st.column_config.TextColumn("メトリクス"),
                 "last_synced_date": st.column_config.DateColumn("最終同期日"),
                 "status": st.column_config.TextColumn("状態"),
+                "backfilled_from": st.column_config.DateColumn("履歴開始日"),
             },
         )
 
     st.divider()
-    if st.button("接続解除（トークンを削除。次回は再認可が必要です）"):
+    if st.button("Google Health を再接続（保存トークンを破棄して再認可）"):
         auth.forget_tokens()
         st.cache_data.clear()
         st.rerun()

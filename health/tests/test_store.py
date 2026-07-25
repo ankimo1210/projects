@@ -1,3 +1,5 @@
+import os
+import stat
 from datetime import date, datetime
 
 import duckdb
@@ -97,7 +99,9 @@ def test_sync_state_roundtrip(store):
     store.set_sync_state("steps", date(2026, 7, 1), SYNC_IN_PROGRESS)
     store.set_sync_state("steps", date(2026, 7, 5))
     assert store.get_sync_state("steps") == date(2026, 7, 5)
-    assert store.get_sync_checkpoint("steps") == (date(2026, 7, 5), SYNC_OK)
+    checkpoint = store.get_sync_checkpoint("steps")
+    assert checkpoint.last_synced == date(2026, 7, 5)
+    assert checkpoint.status == SYNC_OK
     states = store.sync_states()
     assert list(states["metric"]) == ["steps"] and list(states["status"]) == ["ok"]
 
@@ -112,10 +116,9 @@ def test_replace_chunk_stores_checkpoint_status_atomically(store):
         ParsedRows(),
         status=SYNC_IN_PROGRESS,
     )
-    assert store.get_sync_checkpoint("steps") == (
-        date(2026, 7, 3),
-        SYNC_IN_PROGRESS,
-    )
+    checkpoint = store.get_sync_checkpoint("steps")
+    assert checkpoint.last_synced == date(2026, 7, 3)
+    assert checkpoint.status == SYNC_IN_PROGRESS
 
 
 def test_series_stats(store):
@@ -261,6 +264,40 @@ def test_replace_chunk_sleep_removes_upstream_deleted_sessions(store):
     assert list(df["provider_id"]) == ["uuid-2"]
 
 
+def test_replace_chunk_covered_range_narrower_than_chunk_key_preserves_rows_outside_it(store):
+    # The chunk key (start/end) can be wider than the days actually re-fetched
+    # (an aligned chunk clipped to [floor, today]); typed-row deletes must
+    # follow the covered range, not the chunk key, or days outside the
+    # request silently lose their rows with nothing to restore them.
+    metric = by_name("steps")
+    store.upsert_daily(
+        [
+            ("steps", "2026-07-01", 100.0),  # inside chunk key, outside covered range -> survives
+            ("steps", "2026-07-05", 200.0),  # inside covered range -> replaced
+        ]
+    )
+    rows = ParsedRows(daily=(("steps", date(2026, 7, 5), 999.0),))
+    store.replace_chunk(
+        metric,
+        date(2026, 7, 1),
+        date(2026, 7, 10),
+        [{"p": 0}],
+        rows,
+        covered_start=date(2026, 7, 4),
+        covered_end=date(2026, 7, 10),
+    )
+    got = set(store.con.execute("SELECT metric, date, value FROM daily_series").fetchall())
+    assert got == {
+        ("steps", date(2026, 7, 1), 100.0),
+        ("steps", date(2026, 7, 5), 999.0),
+    }
+    # the raw chunk identity is unaffected by covered_start/covered_end
+    raw_range = store.con.execute(
+        "SELECT range_start, range_end FROM raw_json WHERE metric = ?", [metric.name]
+    ).fetchone()
+    assert raw_range == (date(2026, 7, 1), date(2026, 7, 10))
+
+
 def test_replace_chunk_intraday_replaces_only_target_days(store):
     metric = by_name("intraday_hr")  # series_names == ("hr",)
     store.upsert_intraday(
@@ -380,3 +417,128 @@ def test_replace_chunk_rolls_back_raw_typed_and_watermark_on_failure(store):
     df = store.daily_frame(["steps"])
     assert len(df) == 1 and df.loc[0, "steps"] == 500.0
     assert store.get_sync_state(metric.name) == date(2026, 6, 1)
+
+
+def test_database_and_data_dir_are_private(tmp_path):
+    data_dir = tmp_path / "data"
+    db_path = data_dir / "health.duckdb"
+
+    created = Store(db_path)
+    try:
+        assert stat.S_IMODE(db_path.stat().st_mode) == 0o600
+        assert stat.S_IMODE(data_dir.stat().st_mode) == 0o700
+    finally:
+        created.close()
+
+
+def test_store_does_not_reperm_a_preexisting_parent_directory(tmp_path):
+    """A directory the app does not own -- /tmp for a demo DB, a user's home
+    directory -- must never be re-permissioned just because Store happened to
+    be pointed inside it. Regression guard for the unconditional
+    `os.chmod(path.parent, 0o700)` this replaced, which also raised
+    PermissionError outright on a sticky directory like /tmp."""
+    data_dir = tmp_path / "not-owned-by-the-app"
+    data_dir.mkdir(mode=0o755)
+    os.chmod(data_dir, 0o755)  # mkdir's mode is filtered by umask; force it
+    db_path = data_dir / "health.duckdb"
+
+    created = Store(db_path)
+    try:
+        assert stat.S_IMODE(data_dir.stat().st_mode) == 0o755
+        assert stat.S_IMODE(db_path.stat().st_mode) == 0o600
+    finally:
+        created.close()
+
+
+def test_checkpoint_folds_the_wal_into_the_database(tmp_path):
+    db_path = tmp_path / "health.duckdb"
+    created = Store(db_path)
+    try:
+        created.upsert_daily([("steps", date(2026, 1, d + 1), float(d)) for d in range(31)])
+        wal = db_path.with_name(db_path.name + ".wal")
+        assert wal.exists()
+
+        created.checkpoint()
+
+        assert not wal.exists()
+    finally:
+        created.close()
+
+
+# -- sync_state.backfilled_from + SyncCheckpoint -------------------------------
+
+
+def test_checkpoint_exposes_both_ends_of_the_covered_range(store):
+    m = by_name("steps")
+    store.replace_chunk(
+        m,
+        date(2026, 6, 1),
+        date(2026, 8, 29),
+        [],
+        ParsedRows(),
+        status=SYNC_OK,
+        watermark=date(2026, 7, 25),
+        backfill_from=date(2026, 6, 1),
+    )
+
+    checkpoint = store.get_sync_checkpoint("steps")
+
+    assert checkpoint.last_synced == date(2026, 7, 25)
+    assert checkpoint.status == SYNC_OK
+    assert checkpoint.backfilled_from == date(2026, 6, 1)
+
+
+def test_backward_chunk_lowers_backfill_without_touching_watermark_or_status(store):
+    m = by_name("steps")
+    store.replace_chunk(
+        m,
+        date(2026, 6, 1),
+        date(2026, 8, 29),
+        [],
+        ParsedRows(),
+        status=SYNC_OK,
+        watermark=date(2026, 7, 25),
+        backfill_from=date(2026, 6, 1),
+    )
+
+    store.replace_chunk(
+        m,
+        date(2026, 3, 3),
+        date(2026, 5, 31),
+        [],
+        ParsedRows(),
+        status=None,
+        watermark=None,
+        backfill_from=date(2026, 3, 3),
+    )
+
+    checkpoint = store.get_sync_checkpoint("steps")
+    assert checkpoint.last_synced == date(2026, 7, 25)  # unchanged
+    assert checkpoint.status == SYNC_OK  # unchanged
+    assert checkpoint.backfilled_from == date(2026, 3, 3)  # extended backwards
+
+
+def test_legacy_database_without_backfilled_from_is_migrated(tmp_path):
+    db_path = tmp_path / "legacy.duckdb"
+    legacy = duckdb.connect(str(db_path))
+    legacy.execute(
+        "CREATE TABLE sync_state(metric VARCHAR PRIMARY KEY, last_synced_date DATE, "
+        "status VARCHAR, updated_at TIMESTAMP)"
+    )
+    legacy.execute("INSERT INTO sync_state VALUES ('steps', DATE '2026-07-25', 'ok', now())")
+    legacy.execute(
+        "CREATE TABLE raw_json(metric VARCHAR, range_start DATE, range_end DATE, "
+        "page_index INTEGER, fetched_at TIMESTAMP, payload JSON, "
+        "PRIMARY KEY(metric, range_start, range_end, page_index))"
+    )
+    legacy.execute(
+        "INSERT INTO raw_json VALUES ('steps', DATE '2021-07-25', DATE '2021-10-22', 0, now(), '{}')"
+    )
+    legacy.close()
+
+    migrated = Store(db_path)
+    try:
+        # The oldest raw chunk ever fetched is exactly how far back history goes.
+        assert migrated.get_sync_checkpoint("steps").backfilled_from == date(2021, 7, 25)
+    finally:
+        migrated.close()
