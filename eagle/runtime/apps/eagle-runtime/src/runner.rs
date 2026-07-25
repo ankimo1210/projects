@@ -451,6 +451,43 @@ fn vn_strings(d: &DskyState) -> (String, String) {
     (d.verb.iter().collect(), d.noun.iter().collect())
 }
 
+/// One PROG-alarm EPISODE observed by the P63 responder: the FAILREG
+/// triple read at the moment the lamp was seen, plus whether the responder
+/// swallowed it (RSET + KEY REL, whitelisted) or aborted the run.
+///
+/// Episodes are counted, not filtered. A lamp that lights with an
+/// all-zero FAILREG is still an episode — the AGC raised an alarm and the
+/// responder RSET it away, which is exactly the event the acceptance run
+/// must not be blind to. Filtering by "non-zero code" is what made the
+/// old `Vec<u16>` return structurally empty (and its assertion
+/// tautological) once the whitelists were locked to the empty set.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct AlarmEpisode {
+    /// FAILREG 1/2/3 as read over V05N09 while the lamp was lit.
+    pub codes: [u16; 3],
+    /// True: every non-zero code was whitelisted, so the responder RSET
+    /// the lamp and carried on. False: the run aborted on this episode.
+    pub acknowledged: bool,
+}
+
+/// True when every code in the triple is either zero or on `whitelist`.
+/// With an empty whitelist this is "FAILREG is all zeros" — which is why
+/// it decides only whether the responder may CONTINUE, never whether the
+/// episode is recorded.
+pub fn alarm_is_whitelisted(codes: &[u16; 3], whitelist: &[u16]) -> bool {
+    codes.iter().all(|c| *c == 0 || whitelist.contains(c))
+}
+
+impl AlarmEpisode {
+    /// Record a lamp-lit episode against a whitelist.
+    pub fn new(codes: [u16; 3], whitelist: &[u16]) -> Self {
+        Self {
+            acknowledged: alarm_is_whitelisted(&codes, whitelist),
+            codes,
+        }
+    }
+}
+
 /// V37E63E, then run the flash responder until the V99 engine-enable
 /// request has been answered with PRO (or fail on non-whitelisted PROG
 /// alarm / timeout / dialog loop). A PROG alarm whose FAILREG codes are
@@ -460,15 +497,19 @@ fn vn_strings(d: &DskyState) -> (String, String) {
 /// raw packet stream (ch 011 bit13) — it arrives at TIG-0, after this
 /// function returns.
 ///
-/// Returns every non-zero FAILREG code it acknowledged, so the caller can
-/// assert on what the run OBSERVED instead of on the whitelist constant.
-pub async fn enter_p63_with_alarms(script: &mut DskyScript) -> Result<Vec<u16>> {
+/// Returns one `AlarmEpisode` per PROG-alarm lamp it handled — swallowed
+/// or not — so the caller asserts on what the run OBSERVED rather than on
+/// the whitelist constant. A FAILREG read that fails is a hard error, NOT
+/// a silent `[0; 3]`: the old fallback made "V05N09 unreadable" look
+/// exactly like "no alarm", so a real PROG alarm could be RSET away
+/// unrecorded and still pass.
+pub async fn enter_p63_with_alarms(script: &mut DskyScript) -> Result<Vec<AlarmEpisode>> {
     // Budget: the frozen choreography reaches ENGINE ON ~174 s after
     // V37E63E (IGNALG ~5 s + dialog + burn_lead countdown); 600 s ≈ 3.4×
     // margin also covers BURNBABY's TIG-slip path (+30 s) and a slow
     // IGNALG without masking a genuine hang for the whole test timeout.
     const TIMEOUT: Duration = Duration::from_secs(600);
-    let mut acknowledged: Vec<u16> = Vec::new();
+    let mut episodes: Vec<AlarmEpisode> = Vec::new();
     script.keys("V37E63E").await?;
     script
         .wait_prog("63")
@@ -493,13 +534,20 @@ pub async fn enter_p63_with_alarms(script: &mut DskyScript) -> Result<Vec<u16>> 
             .await
             .context("waiting for P63 dialog")?;
         if d.lamps.prog_alarm {
-            let codes = script.alarm_codes().await.unwrap_or([0; 3]);
-            let whitelisted = codes
-                .iter()
-                .all(|c| *c == 0 || SPIKE_A_ALARM_WHITELIST.contains(c));
-            if !whitelisted {
+            // A FAILREG read failure is fatal, never `[0; 3]`: an alarm we
+            // cannot identify is an alarm we must not RSET away silently.
+            let codes = script
+                .alarm_codes()
+                .await
+                .context("PROG alarm lamp lit but FAILREG (V05N09) could not be read")?;
+            // Record the episode BEFORE deciding what to do with it, so
+            // the abort path carries its codes too.
+            let episode = AlarmEpisode::new(codes, SPIKE_A_ALARM_WHITELIST);
+            episodes.push(episode);
+            if !episode.acknowledged {
                 bail!(
-                    "PROG alarm during P63 entry: FAILREG = {:05o} {:05o} {:05o}",
+                    "PROG alarm during P63 entry: FAILREG = {:05o} {:05o} {:05o} \
+                     (episodes so far: {episodes:?})",
                     codes[0],
                     codes[1],
                     codes[2]
@@ -507,10 +555,9 @@ pub async fn enter_p63_with_alarms(script: &mut DskyScript) -> Result<Vec<u16>> 
             }
             // Whitelisted: acknowledge like the crew would (RSET clears
             // the lamp — sanctioned for whitelisted codes only), release
-            // the display back to the flashing program, and continue.
-            // Record what was swallowed; the acceptance run asserts the
-            // list is empty.
-            acknowledged.extend(codes.iter().copied().filter(|c| *c != 0));
+            // the display back to the flashing program, and continue. The
+            // acceptance run asserts the episode list is empty, so the
+            // swallow cannot go unreported.
             script.keys("R").await?;
             script.keys("K").await?;
             continue;
@@ -557,7 +604,7 @@ pub async fn enter_p63_with_alarms(script: &mut DskyScript) -> Result<Vec<u16>> 
             }
             FlashAction::ProAndDone => {
                 script.pro().await?;
-                return Ok(acknowledged);
+                return Ok(episodes);
             }
             FlashAction::Unknown => {
                 // Brief default: PRO on any unrecognized flash (after the
@@ -912,10 +959,10 @@ impl Drop for SyntheticHover {
 /// What the choreography observed, for the acceptance run to assert on.
 #[derive(Debug, Default, Clone)]
 pub struct ScenarioReport {
-    /// Whitelisted FAILREG codes acknowledged during P63 entry (a
-    /// non-whitelisted code aborts instead of landing here). Empty in a
-    /// clean run — the wave locked the whitelists to the empty set.
-    pub alarms: Vec<u16>,
+    /// Every PROG-alarm episode the P63 responder handled (a
+    /// non-whitelisted code aborts instead of landing here, so these were
+    /// all swallowed). Empty only if the lamp never lit.
+    pub alarms: Vec<AlarmEpisode>,
 }
 
 /// Boot → discretes/ISS → V48 → pad-load (static + generated state) →
@@ -1382,5 +1429,42 @@ mod tests {
         for &code in SPIKE_A_ALARM_WHITELIST {
             assert!(code <= 0o77777);
         }
+    }
+
+    #[test]
+    fn a_lit_lamp_is_an_episode_even_with_an_all_zero_failreg() {
+        // The tautology this replaces: the old return filtered out zero
+        // codes, so with an empty whitelist the ONLY triple that could
+        // survive the whitelist check (all zeros) contributed nothing, and
+        // `assert!(alarms.is_empty())` could never fail. Recording the
+        // EPISODE keeps the assertion falsifiable: the responder RSET a
+        // lamp, and the run must say so.
+        let ep = AlarmEpisode::new([0; 3], SPIKE_A_ALARM_WHITELIST);
+        assert!(ep.acknowledged, "an all-zero FAILREG is swallowed…");
+        assert_eq!(ep.codes, [0; 3]);
+        // …and is still a reportable episode, i.e. the acceptance assert
+        // `alarms.is_empty()` has a way to fire.
+        assert!(![ep].is_empty());
+    }
+
+    #[test]
+    fn episode_acknowledgement_follows_the_whitelist() {
+        // 01406 = ROOTPSRS TTF abort; 01204 = zero-dt WAITLIST POODOO.
+        let unknown = AlarmEpisode::new([0o1406, 0, 0], SPIKE_A_ALARM_WHITELIST);
+        assert!(!unknown.acknowledged, "a non-whitelisted code must abort");
+        let listed = AlarmEpisode::new([0o1406, 0, 0], &[0o1406]);
+        assert!(listed.acknowledged);
+        // Every non-zero code must be listed, not just the first.
+        let partly = AlarmEpisode::new([0o1406, 0o1204, 0], &[0o1406]);
+        assert!(!partly.acknowledged);
+        let both = AlarmEpisode::new([0o1406, 0o1204, 0], &[0o1406, 0o1204]);
+        assert!(both.acknowledged);
+    }
+
+    #[test]
+    fn whitelist_predicate_ignores_zero_padding() {
+        assert!(alarm_is_whitelisted(&[0, 0, 0], &[]));
+        assert!(alarm_is_whitelisted(&[0, 0o1204, 0], &[0o1204]));
+        assert!(!alarm_is_whitelisted(&[0, 0, 0o1204], &[]));
     }
 }

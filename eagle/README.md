@@ -4,7 +4,9 @@ EAGLE is a browser-based simulator of the Apollo 11 lunar descent phase, running
 
 As of Phase 2 Wave 1 the loop is closed end to end — PIPA/CDU sensors feed the AGC, and its autopilot outputs (RCS jets, descent engine, THRUST DINC throttle) drive a 6-DoF rigid-body model whose telemetry an engineer board plots in real time. A run boots the AGC, uplinks the pad load, enters P63, reaches ENGINE ON, flips to ATT HOLD, and flies to ground contact.
 
-> **Wave 1 acceptance is RED — the landing is not soft, and P66 is not reached.**
+> **Wave 1 acceptance is RED — the landing is not soft, and P66 never flew.**
+> MM66 does light (the measured mode sequence is `["00","63","66"]`), but only
+> 0.6-1.8 s *after* ground contact, so it controlled nothing.
 > The last measured run (2026-07-25) crashes at 41.5 m/s vertical / 10.7 m/s
 > horizontal after 26.0 s, and the AGC only leaves P63 for MM66 at TIG+26.6 s
 > — *after* ground contact — because P63's `AVEGEXIT` vector points at
@@ -47,7 +49,10 @@ Browse to `http://localhost:5173` to interact with the DSKY.
 make descent-p66
 
 # Same loop with a 1 min shorter TIG lead, for debug iteration only
-# (scenarios/p66-gate-fast.toml — NOT the acceptance gate)
+# (scenarios/p66-gate-fast.toml — NOT the acceptance gate). UNTESTED LIVE:
+# the next shorter lead (24000 cs) was measured too tight and aborts in P63
+# entry with FAILREG 01703 "IGNITION TIME SLIPPED". If 01703 reappears here,
+# fall back to 36000 cs, i.e. use `make descent-p66`.
 make descent-p66-fast
 
 # Instrument either run:
