@@ -459,12 +459,16 @@ fn vn_strings(d: &DskyState) -> (String, String) {
 /// codes in the error. Engine-on itself is asserted by the caller on the
 /// raw packet stream (ch 011 bit13) — it arrives at TIG-0, after this
 /// function returns.
-pub async fn enter_p63(script: &mut DskyScript) -> Result<()> {
+///
+/// Returns every non-zero FAILREG code it acknowledged, so the caller can
+/// assert on what the run OBSERVED instead of on the whitelist constant.
+pub async fn enter_p63_with_alarms(script: &mut DskyScript) -> Result<Vec<u16>> {
     // Budget: the frozen choreography reaches ENGINE ON ~174 s after
     // V37E63E (IGNALG ~5 s + dialog + burn_lead countdown); 600 s ≈ 3.4×
     // margin also covers BURNBABY's TIG-slip path (+30 s) and a slow
     // IGNALG without masking a genuine hang for the whole test timeout.
     const TIMEOUT: Duration = Duration::from_secs(600);
+    let mut acknowledged: Vec<u16> = Vec::new();
     script.keys("V37E63E").await?;
     script
         .wait_prog("63")
@@ -504,6 +508,9 @@ pub async fn enter_p63(script: &mut DskyScript) -> Result<()> {
             // Whitelisted: acknowledge like the crew would (RSET clears
             // the lamp — sanctioned for whitelisted codes only), release
             // the display back to the flashing program, and continue.
+            // Record what was swallowed; the acceptance run asserts the
+            // list is empty.
+            acknowledged.extend(codes.iter().copied().filter(|c| *c != 0));
             script.keys("R").await?;
             script.keys("K").await?;
             continue;
@@ -550,7 +557,7 @@ pub async fn enter_p63(script: &mut DskyScript) -> Result<()> {
             }
             FlashAction::ProAndDone => {
                 script.pro().await?;
-                return Ok(());
+                return Ok(acknowledged);
             }
             FlashAction::Unknown => {
                 // Brief default: PRO on any unrecognized flash (after the
@@ -568,6 +575,12 @@ pub async fn enter_p63(script: &mut DskyScript) -> Result<()> {
             })
             .await;
     }
+}
+
+/// Back-compat wrapper for callers that only care whether the dialog
+/// completed (`descent_probe`, the two live spikes).
+pub async fn enter_p63(script: &mut DskyScript) -> Result<()> {
+    enter_p63_with_alarms(script).await.map(|_| ())
 }
 
 /// Wait for ENGINE ON (ch 011 bit13 → `AgcOutput::Engine { on: true }`)
@@ -896,6 +909,15 @@ impl Drop for SyntheticHover {
 // delivered by the caller draining the sim's `rod_clicks`.
 // ---------------------------------------------------------------------
 
+/// What the choreography observed, for the acceptance run to assert on.
+#[derive(Debug, Default, Clone)]
+pub struct ScenarioReport {
+    /// Whitelisted FAILREG codes acknowledged during P63 entry (a
+    /// non-whitelisted code aborts instead of landing here). Empty in a
+    /// clean run — the wave locked the whitelists to the empty set.
+    pub alarms: Vec<u16>,
+}
+
 /// Boot → discretes/ISS → V48 → pad-load (static + generated state) →
 /// REFSMFLG → V37E63E → ENGINE ON → ATT HOLD + selection ROD click → MM66.
 /// `packets` is a broadcast receiver of every AGC packet (for the ignition
@@ -907,7 +929,7 @@ pub async fn run_scenario(
     static_manifest: &crate::padload::PadloadManifest,
     agc_tx: &mpsc::UnboundedSender<Packet>,
     packets: &mut broadcast::Receiver<Packet>,
-) -> Result<()> {
+) -> Result<ScenarioReport> {
     use crate::padload::{generate_state, PadloadManifest, StateCfg};
 
     // Fresh-start dance.
@@ -953,7 +975,7 @@ pub async fn run_scenario(
         .await
         .context("REFSMFLG")?;
 
-    enter_p63(script).await.context("P63 dialog")?;
+    let alarms = enter_p63_with_alarms(script).await.context("P63 dialog")?;
     wait_engine_on(packets, Duration::from_secs(180))
         .await
         .context("ENGINE ON")?;
@@ -966,7 +988,7 @@ pub async fn run_scenario(
     att_hold(agc_tx).await.context("ATT HOLD")?;
     rod_load(script, -1).await.context("selection ROD click")?;
     script.wait_prog("66").await.context("reach MM66")?;
-    Ok(())
+    Ok(ScenarioReport { alarms })
 }
 
 #[cfg(test)]

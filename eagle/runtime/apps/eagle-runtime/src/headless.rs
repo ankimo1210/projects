@@ -48,10 +48,19 @@ pub struct HeadlessResult {
     pub mm_sequence: Vec<String>,
     /// `drift_ms` from the final telemetry frame.
     pub drift_ms: f64,
+    /// `t_s` from the same (final) telemetry frame as `drift_ms` — the sim
+    /// seconds `drift_ms` accumulated over, so a caller can turn the
+    /// accumulated offset into a scale-free clock RATE.
+    pub final_t_s: f64,
     /// A `downlink_wps` sample taken mid-run (post engine-on, pre-touchdown).
     pub mid_downlink_wps: f64,
     /// Seconds of sim time from ENGINE ON (frozen→false) to touchdown.
     pub descent_s: Option<f64>,
+    /// Non-zero FAILREG codes the P63 dialog acknowledged (whitelisted
+    /// ones only — anything else aborts the run).
+    pub alarms: Vec<u16>,
+    /// DSKY frames with the PROG alarm lamp lit after ENGINE ON.
+    pub prog_lamp_frames: u64,
 }
 
 #[derive(Default)]
@@ -59,9 +68,44 @@ struct Summary {
     mm_sequence: Vec<String>,
     last_mm: String,
     drift_ms: f64,
+    last_t_s: f64,
     downlink_samples: Vec<f64>,
     engine_on_t: Option<f64>,
     touchdown_t: Option<f64>,
+    prog_lamp_frames: u64,
+}
+
+impl Summary {
+    fn note(&mut self, msg: &eagle_schema::ServerMsg) {
+        match msg {
+            eagle_schema::ServerMsg::Telemetry(t) => {
+                if t.mm != self.last_mm && !t.mm.is_empty() {
+                    self.mm_sequence.push(t.mm.clone());
+                    self.last_mm = t.mm.clone();
+                }
+                self.drift_ms = t.drift_ms;
+                self.last_t_s = t.t_s;
+                if !t.frozen {
+                    if self.engine_on_t.is_none() {
+                        self.engine_on_t = Some(t.t_s);
+                    }
+                    if t.touchdown.is_none() {
+                        self.downlink_samples.push(t.downlink_wps);
+                    } else if self.touchdown_t.is_none() {
+                        self.touchdown_t = Some(t.t_s);
+                    }
+                }
+            }
+            eagle_schema::ServerMsg::DskyState(d) => {
+                // enter_p63 handles pre-ignition alarms (bails on
+                // non-whitelisted). Post-engine-on, nobody else watches
+                // the lamp — count lit frames here.
+                if self.engine_on_t.is_some() && d.lamps.get("prog").copied().unwrap_or(false) {
+                    self.prog_lamp_frames += 1;
+                }
+            }
+        }
+    }
 }
 
 /// Run the full closed loop to touchdown (or until the sim thread exits).
@@ -140,29 +184,18 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
             .ok()
             .and_then(|p| std::fs::File::create(p).ok());
         while let Ok(json) = telem_rx.recv().await {
-            let Ok(eagle_schema::ServerMsg::Telemetry(t)) = serde_json::from_str(&json) else {
-                continue; // DSKY frames ride the same broadcast
+            // DSKY-state frames ride the same broadcast; both are noted,
+            // only telemetry is dumped.
+            let Ok(msg) = serde_json::from_str::<eagle_schema::ServerMsg>(&json) else {
+                continue;
             };
-            if let Some(f) = dump.as_mut() {
-                use std::io::Write;
-                let _ = writeln!(f, "{json}");
-            }
-            let mut s = sum.lock().unwrap();
-            if t.mm != s.last_mm && !t.mm.is_empty() {
-                s.mm_sequence.push(t.mm.clone());
-                s.last_mm = t.mm.clone();
-            }
-            s.drift_ms = t.drift_ms;
-            if !t.frozen {
-                if s.engine_on_t.is_none() {
-                    s.engine_on_t = Some(t.t_s);
-                }
-                if t.touchdown.is_none() {
-                    s.downlink_samples.push(t.downlink_wps);
-                } else if s.touchdown_t.is_none() {
-                    s.touchdown_t = Some(t.t_s);
+            if matches!(msg, eagle_schema::ServerMsg::Telemetry(_)) {
+                if let Some(f) = dump.as_mut() {
+                    use std::io::Write;
+                    let _ = writeln!(f, "{json}");
                 }
             }
+            sum.lock().unwrap().note(&msg);
         }
     });
 
@@ -181,7 +214,19 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
     )
     .await;
     script_busy.store(false, Ordering::SeqCst);
-    choreography.context("scenario choreography")?;
+    // A failed choreography must not leak the sim thread: stop it and join
+    // before propagating, or the caller (a test binary) returns with a
+    // 100 Hz thread still pumping packets at a dead AGC.
+    let report = match choreography.context("scenario choreography") {
+        Ok(r) => r,
+        Err(e) => {
+            let _ = sim.stop.send(());
+            drop(sim_in_tx);
+            let _ = tokio::task::spawn_blocking(move || sim.join.join()).await;
+            collector.abort();
+            return Err(e);
+        }
+    };
 
     // Deliver ROD clicks from both sources through the one DskyScript.
     // `next_rod_click` biases toward the SIM channel, so it returns `None`
@@ -221,8 +266,11 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
         sim: sim_result,
         mm_sequence: s.mm_sequence.clone(),
         drift_ms: s.drift_ms,
+        final_t_s: s.last_t_s,
         mid_downlink_wps: mid,
         descent_s,
+        alarms: report.alarms,
+        prog_lamp_frames: s.prog_lamp_frames,
     })
 }
 
@@ -287,7 +335,72 @@ async fn next_rod_click(
 mod tests {
     use super::*;
     use eagle_agc_protocol::Packet;
+    use eagle_schema::{DskyStateMsg, ServerMsg, TelemetryMsg, SCHEMA_VERSION};
     use tokio::sync::mpsc;
+
+    fn telem(t_s: f64, mm: &str, frozen: bool) -> ServerMsg {
+        ServerMsg::Telemetry(TelemetryMsg {
+            schema_version: SCHEMA_VERSION,
+            t_s,
+            frozen,
+            alt_m: 100.0,
+            vz_ms: -1.0,
+            v_horiz_ms: 0.0,
+            tilt_deg: 0.0,
+            mass_kg: 9000.0,
+            fuel_dps_kg: 1000.0,
+            fuel_rcs_kg: 100.0,
+            thrust_n: 0.0,
+            throttle_cmd_pulses: 0,
+            jets: 0,
+            mm: mm.into(),
+            agc_alt_m: None,
+            agc_hdot_ms: None,
+            nav_err_alt_m: None,
+            nav_err_hdot_ms: None,
+            drift_ms: 0.0,
+            downlink_wps: 50.0,
+            ingest_drops: 0,
+            touchdown: None,
+        })
+    }
+
+    fn dsky(prog_lamp: bool) -> ServerMsg {
+        let mut m = DskyStateMsg::default();
+        m.lamps.insert("prog".into(), prog_lamp);
+        ServerMsg::DskyState(m)
+    }
+
+    #[test]
+    fn summary_tracks_mm_engine_on_and_prog_lamp() {
+        let mut s = Summary::default();
+        s.note(&telem(1.0, "63", true));
+        s.note(&telem(2.0, "63", true));
+        s.note(&dsky(true)); // pre-engine-on lamp: enter_p63 handles it
+        assert_eq!(s.prog_lamp_frames, 0);
+        s.note(&telem(3.0, "63", false)); // engine on
+        assert_eq!(s.engine_on_t, Some(3.0));
+        s.note(&telem(4.0, "66", false));
+        assert_eq!(s.mm_sequence, vec!["63".to_string(), "66".to_string()]);
+        s.note(&dsky(true)); // descent-phase PROG lamp must be counted
+        s.note(&dsky(false));
+        assert_eq!(s.prog_lamp_frames, 1);
+    }
+
+    #[test]
+    fn summary_pairs_the_final_drift_with_the_final_clock() {
+        // The acceptance gate divides `drift_ms` by the sim seconds it
+        // accumulated over, so both must come from the SAME (last) frame.
+        let mut s = Summary::default();
+        s.note(&telem(1.0, "63", true));
+        let ServerMsg::Telemetry(mut t) = telem(410.5, "66", false) else {
+            unreachable!()
+        };
+        t.drift_ms = -17_900.0;
+        s.note(&ServerMsg::Telemetry(t));
+        assert_eq!(s.drift_ms, -17_900.0);
+        assert_eq!(s.last_t_s, 410.5);
+    }
 
     #[tokio::test]
     async fn forward_client_keys_forwards_when_not_busy() {
