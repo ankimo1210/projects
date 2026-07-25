@@ -12,7 +12,8 @@
 use anyhow::{anyhow, bail, Context, Result};
 use eagle_agc_protocol::words::{dp_encode, sp_encode, to_pulses};
 use eagle_dynamics::constants::{DPS_FTP_N, DPS_MIN_N, R_SITE};
-use eagle_dynamics::frames::{mci_to_mcmf, Mci, Mcmf, V3};
+use eagle_dynamics::frames::{mci_to_mcmf, retag, Body, Mci, Mcmf, Rot, V3};
+use eagle_dynamics::state::LmState;
 use std::collections::HashMap;
 use std::path::Path;
 
@@ -725,6 +726,38 @@ fn sym_dp(symbol: &str, value: f64, b: i32, comment: impl Into<String>) -> Manif
     }
 }
 
+/// The ignition-point geometry both the AGC pad-load AND the sim truth
+/// derive from. Single source: cause C of the Wave 1 RED acceptance was
+/// these two describing different vehicles (re-flight note 2026-07-25).
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct IgnitionGeometry {
+    /// Uprange angle from the site radial, rad.
+    pub theta_rad: f64,
+    /// Orbit radius at ignition, m.
+    pub r_orb_m: f64,
+    /// INERTIAL speed at ignition, m/s: VIGN (surface-relative, the
+    /// quantity IGNALG compares against |VGU|) plus the eastward
+    /// co-rotation ω·r (see generate_state's VGU citation).
+    pub v_inertial_ms: f64,
+}
+
+/// Ignition-point geometry in the orbit plane (see `StateCfg` docs):
+/// radial component r·cosθ = R_SITE + rign_x (rign_x < 0), downrange arc
+/// r·sinθ = |rign_z|. With the LUM69R2 targets this lands at θ ≈ 0.2539
+/// rad, r ≈ 1752.6 km — h ≈ 15.2 km, the historical PDI altitude.
+pub fn ignition_geometry(cfg: &StateCfg) -> IgnitionGeometry {
+    let a = R_SITE + cfg.rign_x_m;
+    let b = -cfg.rign_z_m; // rign_z < 0 => LM is uprange (short of site)
+    let theta_rad = b.atan2(a);
+    let r_orb_m = a.hypot(b);
+    let v_inertial_ms = cfg.v_ign_ms + eagle_dynamics::constants::OMEGA_MOON * r_orb_m;
+    IgnitionGeometry {
+        theta_rad,
+        r_orb_m,
+        v_inertial_ms,
+    }
+}
+
 /// Generate the time-dependent pad-load words for a P63 ignition run:
 /// permanent LM + CSM state vectors, RLS, REFSMMAT, TLAND. All entries
 /// are symbol-based (resolved against the live `SymTab` by the caller).
@@ -742,16 +775,10 @@ pub fn generate_state(cfg: &StateCfg) -> Vec<ManifestWord> {
     let tland_cs = cfg.epoch_now_cs + cfg.burn_lead_cs + GUIDDURN_CS;
     let tet_cs = tland_cs - GUIDDURN_CS; // == epoch_now + burn_lead
 
-    // Ignition-point geometry in the orbit plane (see StateCfg docs):
-    // radial component r·cosθ = R_SITE + rign_x (rign_x < 0), downrange
-    // arc r·sinθ = |rign_z|. With the LUM69R2 targets this lands at
-    // θ ≈ 0.2539 rad, r ≈ 1752.6 km — h ≈ 15.2 km, the historical PDI
-    // altitude.
-    let a = R_SITE + cfg.rign_x_m;
-    let b = -cfg.rign_z_m; // rign_z < 0 => LM is uprange (short of site)
-    let theta = b.atan2(a);
-    let r_orb = a.hypot(b);
-    let (st, ct) = theta.sin_cos();
+    // Ignition-point geometry: single-sourced with the sim truth state via
+    // `ignition_geometry` (see its doc comment).
+    let g = ignition_geometry(cfg);
+    let (st, ct) = g.theta_rad.sin_cos();
 
     // LM at tet: site direction is +X, LM is θ uprange; travelling +Y.
     //
@@ -763,9 +790,8 @@ pub fn generate_state(cfg: &StateCfg) -> Vec<ManifestWord> {
     // |VGU| < VIGN everywhere and IGNALG's DDUM Newton iteration marches
     // TDEC1 forward forever (spike-A iter 16: TPIP/PIPTIME1 ran away
     // +20 min, RGU showed the state integrated far past the site).
-    let r_lm = [r_orb * ct, -r_orb * st, 0.0];
-    let omega_r = eagle_dynamics::constants::OMEGA_MOON * r_orb;
-    let v_ign_mcs = (cfg.v_ign_ms + omega_r) / 100.0; // m/cs, inertial
+    let r_lm = [g.r_orb_m * ct, -g.r_orb_m * st, 0.0];
+    let v_ign_mcs = g.v_inertial_ms / 100.0; // m/cs, inertial
     let v_lm = [v_ign_mcs * st, v_ign_mcs * ct, 0.0];
 
     // CSM: circular orbit, same plane, directly over the site at tet.
@@ -878,6 +904,41 @@ pub fn generate_state(cfg: &StateCfg) -> Vec<ManifestWord> {
     }
     w.push(sym_dp("TLAND", tland_cs, 28, "nominal landing time, cs"));
     w
+}
+
+/// Mass properties for the PDI truth state (scenario-supplied).
+#[derive(Debug, Clone, Copy)]
+pub struct PdiMasses {
+    pub dry_kg: f64,
+    pub dps_kg: f64,
+    pub rcs_kg: f64,
+}
+
+/// Sim truth at the PDI ignition point, in the pad-load's MCI frame
+/// (site radial = +X at TLAND, orbit plane = XY, motion +Y eastward).
+/// The freeze releases on ENGINE ON ≈ TIG-0, at which moment the AGC's
+/// own nav — integrating the SAME pad-loaded orbit — arrives at this
+/// point by construction (design doc §3 M1; release-trigger note in the
+/// M1 plan header). Attitude = the pad-loaded REFSMMAT frame exactly
+/// (body X→MCI x̂, Y→−ẑ, Z→ŷ = Rx(−90°)), so SM ≡ initial body attitude
+/// makes the REFSMMAT claim true and the CDUs correctly read zero.
+pub fn pdi_truth_state(cfg: &StateCfg, m: &PdiMasses, epoch_s: f64) -> LmState {
+    let g = ignition_geometry(cfg);
+    let (s, c) = g.theta_rad.sin_cos();
+    let att: Rot<Body, Mci> = retag(Rot::from_axis_angle(
+        V3::<Mci>::new(1.0, 0.0, 0.0),
+        -std::f64::consts::FRAC_PI_2,
+    ));
+    LmState {
+        t: epoch_s,
+        pos: V3::new(g.r_orb_m * c, -g.r_orb_m * s, 0.0),
+        vel: V3::new(g.v_inertial_ms * s, g.v_inertial_ms * c, 0.0),
+        att,
+        omega: V3::zero(),
+        mass_kg: m.dry_kg + m.dps_kg + m.rcs_kg,
+        fuel_dps_kg: m.dps_kg,
+        fuel_rcs_kg: m.rcs_kg,
+    }
 }
 
 /// Render a manifest to TOML text with a b-scale-verification-status
@@ -1339,6 +1400,66 @@ mod tests {
         ecadrs.sort_unstable();
         ecadrs.dedup();
         assert_eq!(ecadrs.len(), n_before);
+    }
+
+    #[test]
+    fn ignition_geometry_matches_the_lum69r2_pdi_point() {
+        let g = ignition_geometry(&StateCfg::default());
+        // Values the generate_state comment block already documents:
+        // θ ≈ 0.2539 rad, r ≈ 1752.6 km (h ≈ 15.2 km), v = VIGN + ω·r.
+        assert!((g.theta_rad - 0.2539).abs() < 1e-3, "theta {}", g.theta_rad);
+        assert!((g.r_orb_m - 1_752_600.0).abs() < 1_000.0, "r {}", g.r_orb_m);
+        let expect_v = 1699.52182 + eagle_dynamics::constants::OMEGA_MOON * g.r_orb_m;
+        assert!(
+            (g.v_inertial_ms - expect_v).abs() < 1e-6,
+            "v {}",
+            g.v_inertial_ms
+        );
+    }
+
+    #[test]
+    fn generate_state_and_truth_state_share_the_geometry() {
+        // The single-source property: the RN/VN words and the truth state must
+        // come from the same θ/r/v. generate_state's own scaling test pins the
+        // words; here we pin the truth state against ignition_geometry.
+        let cfg = StateCfg::default();
+        let g = ignition_geometry(&cfg);
+        let m = PdiMasses {
+            dry_kg: 7009.0,
+            dps_kg: 7950.0,
+            rcs_kg: 250.0,
+        };
+        let st = pdi_truth_state(&cfg, &m, 0.0);
+        let (s, c) = g.theta_rad.sin_cos();
+        let expect_pos = V3::<Mci>::new(g.r_orb_m * c, -g.r_orb_m * s, 0.0);
+        assert!((st.pos - expect_pos).norm() < 1e-6, "pos {:?}", st.pos);
+        let expect_vel = V3::<Mci>::new(g.v_inertial_ms * s, g.v_inertial_ms * c, 0.0);
+        assert!((st.vel - expect_vel).norm() < 1e-6, "vel {:?}", st.vel);
+        assert!((st.mass_kg - (7009.0 + 7950.0 + 250.0)).abs() < 1e-9);
+        assert_eq!(st.fuel_dps_kg, 7950.0);
+        assert_eq!(st.t, 0.0);
+    }
+
+    #[test]
+    fn pdi_truth_attitude_is_the_padloaded_refsmmat_frame() {
+        // generate_state pad-loads REFSMMAT rows: SM X=(1,0,0), Y=(0,0,-1),
+        // Z=(0,1,0) in MCI. sim::sm_from_initial defines SM ≡ initial BODY
+        // attitude, so the truth's initial body axes must BE that frame — this
+        // is what makes the REFSMMAT claim true instead of approximately true.
+        let cfg = StateCfg::default();
+        let m = PdiMasses {
+            dry_kg: 7009.0,
+            dps_kg: 7950.0,
+            rcs_kg: 250.0,
+        };
+        let st = pdi_truth_state(&cfg, &m, 0.0);
+        let bx = st.att.apply(V3::<Body>::new(1.0, 0.0, 0.0));
+        let by = st.att.apply(V3::<Body>::new(0.0, 1.0, 0.0));
+        let bz = st.att.apply(V3::<Body>::new(0.0, 0.0, 1.0));
+        assert!((bx - V3::<Mci>::new(1.0, 0.0, 0.0)).norm() < 1e-12);
+        assert!((by - V3::<Mci>::new(0.0, 0.0, -1.0)).norm() < 1e-12);
+        assert!((bz - V3::<Mci>::new(0.0, 1.0, 0.0)).norm() < 1e-12);
+        assert_eq!(st.omega, V3::<Body>::zero());
     }
 
     #[test]
