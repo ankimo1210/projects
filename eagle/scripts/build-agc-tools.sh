@@ -5,6 +5,14 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 mkdir -p build/agc
 
+# vendor/ stays READ-ONLY (spec Global Constraints): we build stock yaAGC.
+# The socket API never requests KEYRUPT2 for a channel-016 write, so the LM
+# ROD switch discrete is invisible to Luminary — but we do not need it. The
+# ROD "click" is issued as a direct RODCOUNT erasable load over V21N01
+# (runner::rod_load), which is behaviourally identical to the interrupt
+# path (DESCBITS is just `ADS RODCOUNT`) and is proven live against this
+# unpatched build. See docs/agc-channel-map.md ("Rod Switch Click").
+
 # --- Deviations from the brief's literal script (documented per the brief's
 #     own escape hatch: "keep the fix in the script") ---
 #

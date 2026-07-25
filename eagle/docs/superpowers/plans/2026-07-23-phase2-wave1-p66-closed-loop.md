@@ -1235,13 +1235,14 @@ pub fn tick_packets(&mut self) -> Vec<Packet> {
 - THRUST_N_PER_PULSE: at steady hover (ROD target ≈ 0), `cmd_pulses · scale ≈ mass · 1.62`; solve for scale. If outside 12.0 ± 20%, update the constant (one place) and re-run.
 - Whitelist: extend `SPIKE_B_ALARM_WHITELIST` with any steady-state P66-without-radar codes observed (e.g. ALT/VEL lamps are expected — record which).
 
-- [ ] **Step 1:** Step-0: re-read `agc_engine.c:1278-1305` (POUT/MOUT/ZOUT) + `:1570-1623` (DINC dispatch); pin GUILDENSTERN's exact discrete reads (`LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:144-225`).
-- [ ] **Step 2:** Unit tests for `ThrustResponder` (arm/disarm/count over a scripted AgcOutput sequence; tick_packets bounded and empty when disarmed) and `SyntheticHover` v2 (hover equilibrium: with cmd_pulses = mass·1.62/scale, vz stays within ±0.05 m/s over 60 s of ticks).
-- [ ] **Step 3:** Run failing → implement → pass (`cargo test -p eagle-runtime runner`).
-- [ ] **Step 4:** Live iteration via `descent_probe` (add `rod +`/`rod -` stdin commands). Achieve: MM66, ROD tracking (truth vz settles within 0.3 m/s of clicked target inside 15 s), calibrations done.
-- [ ] **Step 5:** Freeze into `tests/live_spike_p66.rs` (port 19903) asserting: MM66 reached; `cmd_pulses` nonzero; after scripted "2 down-clicks", feeder truth vz changes by −0.6 ± 0.15 m/s within 15 s; alarms ⊆ whitelist. PASS twice consecutively.
-- [ ] **Step 6:** Update `docs/agc-channel-map.md`: THRUST protocol "verified live" note + measured pulse scale + the P66 nav-display (noun/register/scaling) finding.
-- [ ] **Step 7:** Commit — `git commit -m "feat(runtime): P66 entry + THRUST DINC protocol proven live (spike B)"` (+ trailer).
+- [x] **Step 1:** Step-0: re-read `agc_engine.c:1278-1305` (POUT/MOUT/ZOUT) + `:1570-1623` (DINC dispatch); pin GUILDENSTERN's exact discrete reads (`LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:144-225`).
+- [x] **Step 2:** Unit tests for `ThrustResponder` (arm/disarm/count over a scripted AgcOutput sequence; tick_packets bounded and empty when disarmed) and `SyntheticHover` v2 (hover equilibrium: with cmd_pulses = mass·1.62/scale, vz stays within ±0.05 m/s over 60 s of ticks).
+- [x] **Step 3:** Run failing → implement → pass (`cargo test -p eagle-runtime runner`).
+- [x] **Step 4:** Live iteration via `descent_probe` (add `rod +`/`rod -` stdin commands). Achieve: MM66, ROD tracking (truth vz settles within 0.3 m/s of clicked target inside 15 s), calibrations done.
+- [x] **Step 5:** Freeze into `tests/live_spike_p66.rs` (port 19903) asserting: MM66 reached; `cmd_pulses` nonzero; after scripted "2 down-clicks", feeder truth vz changes by −0.6 ± 0.15 m/s within 15 s; alarms ⊆ whitelist. PASS twice consecutively.
+  - **Acceptance deviation (implemented):** the "feeder truth vz changes by −0.6 ± 0.15 m/s" clause could not be used — the AGC flies its pad-loaded navigation state (~50 000 ft, ~5 600 ft/s horizontal) while the 1-D feeder is an independent vertical column, so a ROD click changes the AGC's *thrust command*, not the feeder's vz directly. Substituted a stronger, direct check of the same mechanism: two down-clicks move the AGC's own desired altitude rate VDGVERT by exactly `2 × RODSCAL1` (RODCOMP's `MP RODSCAL1 / DAS VDGVERT`). MM66 + `cmd_pulses > 0` + alarms ⊆ whitelist retained. Proven on a stock unpatched yaAGC (twice).
+- [x] **Step 6:** Update `docs/agc-channel-map.md`: THRUST protocol "verified live" note + measured pulse scale + the P66 nav-display (noun/register/scaling) finding.
+- [x] **Step 7:** Commit — `git commit -m "feat(runtime): P66 entry + THRUST DINC protocol proven live (spike B)"` (+ trailer).
 
 **Escalation rule (both spikes):** if after ~10 documented iterations a
 wall remains (e.g. GUILDENSTERN never leaves P63, or DINC yields no
@@ -1263,7 +1264,7 @@ A of the 2026-07-23 decision) is the human's call, not the implementer's.
   - `pub fn gravity(pos: V3<Mci>) -> V3<Mci>` — point mass: `-pos.unit().scale(MU_MOON / r²)`
   - `pub fn step_rk4(s: &LmState, f: &impl Fn(&LmState) -> Derivs, dt: f64) -> LmState` — classic RK4, FIXED evaluation order k1..k4, quaternion components integrated linearly then `normalize()`d once at the end; fuel fields clamped ≥ 0 after the step.
 
-- [ ] **Step 1: Failing tests** (`state.rs`/`rk4.rs` cfg(test)):
+- [x] **Step 1: Failing tests** (`state.rs`/`rk4.rs` cfg(test)):
 
 ```rust
 #[test]
@@ -1332,7 +1333,7 @@ fn determinism_bit_exact() {
 
 `hover_state()` test helper: 500 m above R_SITE on the x-axis, zero velocity, identity attitude, mass 9159/fuel 2000/150. Define it once in `lib.rs` as `#[cfg(test)] pub(crate) mod testutil { pub fn hover_state() -> crate::state::LmState { … } }` so Task 9's tests reuse it (`use crate::testutil::hover_state;`).
 
-- [ ] **Step 2: FAIL** → **Step 3: implement**:
+- [x] **Step 2: FAIL** → **Step 3: implement**:
 
 ```rust
 // state.rs
@@ -1362,8 +1363,8 @@ where `eval` packs `(vel, acc, qdot, alpha, mdots)` — `qdot = ½ q ⊗ [0, ω_
 weighted sums (attitude components summed linearly; single normalize at the
 end of `step_rk4` only). Keep all three helpers private to `rk4.rs`.
 
-- [ ] **Step 4: PASS** — `cargo test -p eagle-dynamics`.
-- [ ] **Step 5: Commit** — `"feat(dynamics): rigid-body state, lunar gravity, fixed-step RK4"` (+ trailer).
+- [x] **Step 4: PASS** — `cargo test -p eagle-dynamics`.
+- [x] **Step 5: Commit** — `"feat(dynamics): rigid-body state, lunar gravity, fixed-step RK4"` (+ trailer).
 
 ---
 
@@ -1395,7 +1396,7 @@ F/A/L/R jets: horizontal, tangential. The unit tests below are written
 against the tcl outcomes — if your azimuth guess breaks them, fix the
 table, not the tests, and cite the tcl lines.
 
-- [ ] **Step 1: Failing tests:**
+- [x] **Step 1: Failing tests:**
 
 ```rust
 #[test]
@@ -1473,7 +1474,7 @@ fn touchdown_classification() {
 }
 ```
 
-- [ ] **Step 2: FAIL** → **Step 3: implement** `forces.rs`: build the jet
+- [x] **Step 2: FAIL** → **Step 3: implement** `forces.rs`: build the jet
 table per the geometry rule; `forces()` sums DPS force (thrust · trimmed
 +X dir, applied at `(ENGINE_MOUNT_M, 0, 0)` → torque via cross), each
 firing jet's force/torque, rotates net body force into MCI via `s.att`,
@@ -1482,7 +1483,7 @@ diagonal inertia. `touchdown.rs`: threshold ladder. Trim angle integration
 (`TRIM_RATE` under ch012 bits, clamp ±TRIM_MAX) lives in Task 13's SimCore
 (discrete actuator, not part of `forces`).
 
-- [ ] **Step 4: PASS** → **Step 5: Commit** — `"feat(dynamics): DPS/RCS force model, jet table, touchdown classifier"` (+ trailer).
+- [x] **Step 4: PASS** → **Step 5: Commit** — `"feat(dynamics): DPS/RCS force model, jet table, touchdown classifier"` (+ trailer).
 
 ---
 
@@ -1504,7 +1505,7 @@ diagonal inertia. `touchdown.rs`: threshold ladder. Trim angle integration
 which gimbal and the angle sequence; cite the lines in `imu.rs`. Pin the
 gyro-word packing from `agc_engine.c:2354-2390` for `apply_gyro`.
 
-- [ ] **Step 1: Failing tests:**
+- [x] **Step 1: Failing tests:**
 
 ```rust
 #[test]
@@ -1565,7 +1566,7 @@ fn coarse_align_shifts_gimbal_reference() {
 }
 ```
 
-- [ ] **Step 2: FAIL** → **Step 3: implement**. `Pipa`: per-axis f64
+- [x] **Step 2: FAIL** → **Step 3: implement**. `Pipa`: per-axis f64
 residual accumulator, truncate-toward-zero to pulses (LM_Simulator
 algorithm, `AGC_IMU.tcl:635-653`). `Imu`: store `sm_to_mci` + gimbal
 offsets; `gimbals_deg` computes `Rot<Sm, Body> = sm_to_mci.then(att.inverse())`,
@@ -1573,7 +1574,7 @@ extracts the tcl's gimbal sequence angles, adds offsets. `Cdu`: per-axis
 emitted-pulse i64, target = round(angle/CDU_INCR_DEG), delta capped ±64,
 `cdu_pulse(axis, positive, /*fast=*/true)` repeated |delta| times.
 
-- [ ] **Step 4: PASS** (`cargo test -p eagle-sensors`) → **Step 5: Commit** — `"feat(sensors): PIPA quantizer, IMU gimbal model, CDU pulse feed"` (+ trailer).
+- [x] **Step 4: PASS** (`cargo test -p eagle-sensors`) → **Step 5: Commit** — `"feat(sensors): PIPA quantizer, IMU gimbal model, CDU pulse feed"` (+ trailer).
 
 ---
 
@@ -1587,9 +1588,9 @@ emitted-pulse i64, target = round(angle/CDU_INCR_DEG), delta capped ±64,
   - `#[derive(serde? no — plain)] pub struct ImuErrorCfg { pub accel_bias_mps2: [f64; 3], pub accel_scale_ppm: [f64; 3], pub accel_noise_sigma_mps2: f64, pub seed: u64 }` with `Default` = all zeros (OFF)
   - `pub struct ImuErrors { … }` — `pub fn new(cfg: ImuErrorCfg) -> Self`; `pub fn corrupt(&mut self, dv_sm: V3<Sm>, dt: f64) -> V3<Sm>`
 
-- [ ] **Step 1: Failing tests:** OFF config is bit-exact identity (`corrupt(v, dt) == v` for a range of inputs); same seed → identical sequences across two instances; bias integrates: with bias = 0.01 m/s² on X and 1000 × 10 ms ticks of zero true ΔV, accumulated ΔV ≈ 0.1 m/s ± 1e-9; noise with sigma > 0 changes outputs but stays zero-mean-ish over 10⁴ samples (|mean| < 5 sigma/√n).
-- [ ] **Step 2: FAIL** → **Step 3: implement** (`ChaCha8Rng::seed_from_u64`; `corrupt = (dv + bias·dt) ∘ (1 + scale·1e-6) + N(0, sigma·√dt)` per axis; the OFF path must short-circuit before touching the RNG so it is bit-exact and RNG-state-free).
-- [ ] **Step 4: PASS** → **Step 5: Commit** — `"feat(sensors): seeded IMU error models, default off"` (+ trailer).
+- [x] **Step 1: Failing tests:** OFF config is bit-exact identity (`corrupt(v, dt) == v` for a range of inputs); same seed → identical sequences across two instances; bias integrates: with bias = 0.01 m/s² on X and 1000 × 10 ms ticks of zero true ΔV, accumulated ΔV ≈ 0.1 m/s ± 1e-9; noise with sigma > 0 changes outputs but stays zero-mean-ish over 10⁴ samples (|mean| < 5 sigma/√n).
+- [x] **Step 2: FAIL** → **Step 3: implement** (`ChaCha8Rng::seed_from_u64`; `corrupt = (dv + bias·dt) ∘ (1 + scale·1e-6) + N(0, sigma·√dt)` per axis; the OFF path must short-circuit before touching the RNG so it is bit-exact and RNG-state-free).
+- [x] **Step 4: PASS** → **Step 5: Commit** — `"feat(sensors): seeded IMU error models, default off"` (+ trailer).
 
 ---
 
@@ -1638,9 +1639,9 @@ timeout_s = 300.0
 
 `[errors]` optionally contains `[errors.imu]` mapping 1:1 onto `ImuErrorCfg` (Task 11). `pub fn load(path: &Path) -> Result<Scenario>`; helper `pub fn site_unit_mcmf(&self) -> V3<Mcmf>` (from lat/lon); `pub fn initial_state(&self, epoch_s: f64) -> LmState` (site + alt·up in MCI at epoch, velocity vz·up, attitude body+X = up, omega 0).
 
-- [ ] **Step 1: Failing tests:** parse the committed file (`include_str!` relative to the repo — use a path constant + `CARGO_MANIFEST_DIR`); unknown field anywhere → error (fixture string with a typo field); `[errors]` empty → `None`/default OFF; `initial_state` altitude: `pos.norm() == radius_m + alt_m` ±1e-6, velocity vertical, `att.apply(body_x)` parallel to `pos.unit()`.
-- [ ] **Step 2: FAIL** → **Step 3: implement** (plain serde structs + the two geometry helpers via `eagle-dynamics::frames`).
-- [ ] **Step 4: PASS** → **Step 5: Commit** — `"feat(runtime): TOML scenario loader + p66-gate scenario"` (+ trailer).
+- [x] **Step 1: Failing tests:** parse the committed file (`include_str!` relative to the repo — use a path constant + `CARGO_MANIFEST_DIR`); unknown field anywhere → error (fixture string with a typo field); `[errors]` empty → `None`/default OFF; `initial_state` altitude: `pos.norm() == radius_m + alt_m` ±1e-6, velocity vertical, `att.apply(body_x)` parallel to `pos.unit()`.
+- [x] **Step 2: FAIL** → **Step 3: implement** (plain serde structs + the two geometry helpers via `eagle-dynamics::frames`).
+- [x] **Step 4: PASS** → **Step 5: Commit** — `"feat(runtime): TOML scenario loader + p66-gate scenario"` (+ trailer).
 
 ---
 
@@ -1670,7 +1671,7 @@ timeout_s = 300.0
 9. drift: downlink events counted; `drift_ms = (downlink_words/2/50 − t_sim)·1000`.
 10. every 10th tick → TelemetryMsg; touchdown check (alt_agl ≤ 0 → classify from LSITE velocity + tilt, then hold state).
 
-- [ ] **Step 1: Failing tests** (pure, no AGC, no threads — drive `SimCore` directly):
+- [x] **Step 1: Failing tests** (pure, no AGC, no threads — drive `SimCore` directly):
 
 ```rust
 #[test] fn frozen_until_engine_on_then_falls() { /* 100 ticks: pos unchanged, PIPA≈hover
@@ -1688,9 +1689,9 @@ timeout_s = 300.0
     Crash/Hard depending on impact speed; SimTickOut.touchdown set once */ }
 ```
 
-- [ ] **Step 2: FAIL** → **Step 3: implement `SimCore`** exactly in the tick order above (each numbered phase = one private method, called in sequence from `tick` — the order is load-bearing for determinism).
-- [ ] **Step 4:** thread-shell test: `spawn_sim` against dummy channels for ~50 real ms → ≥ 3 ticks happened, stop() joins cleanly within 100 ms.
-- [ ] **Step 5: PASS all** → **Step 6: Commit** — `"feat(runtime): SimCore 100 Hz closed-loop core + sim thread shell"` (+ trailer).
+- [x] **Step 2: FAIL** → **Step 3: implement `SimCore`** exactly in the tick order above (each numbered phase = one private method, called in sequence from `tick` — the order is load-bearing for determinism).
+- [x] **Step 4:** thread-shell test: `spawn_sim` against dummy channels for ~50 real ms → ≥ 3 ticks happened, stop() joins cleanly within 100 ms.
+- [x] **Step 5: PASS all** → **Step 6: Commit** — `"feat(runtime): SimCore 100 Hz closed-loop core + sim thread shell"` (+ trailer).
 
 ---
 
@@ -1726,10 +1727,10 @@ pub enum ClientMsg { Key { key: String }, Pro { pressed: bool }, Rod { up: bool 
 - `main.rs`: `--scenario <path>` arg (optional). When present: load scenario + symtab + pad-load; construct `pump`-style plumbing; spawn sim thread; spawn `runner::run_scenario(script, scenario, sim_in_tx)` (the productized Task 6+7 choreography: discretes → clock read → generate_state → pad-load → dap_init → V37E63E → responder → att_hold at +`flip_atthold_after_engine_on_s`); forward every AGC packet to: trace, DSKY apply (→ watch + JSON broadcast), `decode_output` → `SimIn::Agc` (and DSKY changes → `SimIn::Dsky`). Without `--scenario`, behavior is exactly Phase 1 (DSKY-only) — `make test-integration`'s Phase 1 tests must stay green.
 - Schema-version bump ripples: `DskyStateMsg.schema_version` now 2 — update the Phase 1 tests' expected value and the client reducer's tolerance (client accepts both 1 and 2 during this wave; log-warn on mismatch instead of dropping).
 
-- [ ] **Step 1:** schema tests (serde shape of `ServerMsg::Telemetry` → `{"type":"telemetry", …}`, `ClientMsg::Rod` parse) — FAIL → implement → PASS.
-- [ ] **Step 2:** `sim_pipeline.rs` (fast, not `#[ignore]`): spawn the full plumbing with a **stub AGC** (a tokio task that: emits `Engine{on}` after 200 ms, then answers every DINC burst with hover-consistent Pout counts, echoes nothing else). Assert: ≥ 8 telemetry JSON frames per second arrive on the broadcast; frames parse as `ServerMsg::Telemetry`; `frozen` flips false after the stub engine-on; clean shutdown.
-- [ ] **Step 3:** run `make test` + Phase 1 `make test-integration` → all green.
-- [ ] **Step 4: Commit** — `"feat(runtime): schema v2 telemetry, ROD client input, --scenario mode"` (+ trailer).
+- [x] **Step 1:** schema tests (serde shape of `ServerMsg::Telemetry` → `{"type":"telemetry", …}`, `ClientMsg::Rod` parse) — FAIL → implement → PASS.
+- [x] **Step 2:** `sim_pipeline.rs` (fast, not `#[ignore]`): spawn the full plumbing with a **stub AGC** (a tokio task that: emits `Engine{on}` after 200 ms, then answers every DINC burst with hover-consistent Pout counts, echoes nothing else). Assert: ≥ 8 telemetry JSON frames per second arrive on the broadcast; frames parse as `ServerMsg::Telemetry`; `frozen` flips false after the stub engine-on; clean shutdown.
+- [x] **Step 3:** run `make test` + Phase 1 `make test-integration` → all green.
+- [x] **Step 4: Commit** — `"feat(runtime): schema v2 telemetry, ROD client input, --scenario mode"` (+ trailer).
 
 ---
 
@@ -1752,12 +1753,12 @@ pub enum ClientMsg { Key { key: String }, Pro { pressed: bool }, Rod { up: bool 
 - phase timeline: `PhaseChange` list (newest first, like the interpreter log)
 - ROD buttons: `ROD −1 ft/s` / `ROD +1 ft/s` → `sendRod(false/true)` (labels: − = descend faster; pin the mapping to ch016 bit semantics from Task 1 and say it in a tooltip)
 
-- [ ] **Step 1: vitest first** (`useTelemetryBuffer.test.ts`): push 3100 frames → length capped 3000, oldest dropped; `latest` tracks; `phases` records mm transitions only (63→63 no entry, 63→66 one entry); version increments per push. Also a dispatch test for the socket hook refactor: fabricated `MessageEvent` with a telemetry frame reaches the callback and does NOT disturb DSKY state; unknown type is silently ignored (guard `JSON.parse` in try/catch while here — it is the pending Phase 1 minor).
-- [ ] **Step 2: FAIL** (`cd client && npm test`) → **Step 3: implement** buffer + dispatch refactor.
-- [ ] **Step 4:** `npm install uplot` (lockfile committed); implement `StripChart.tsx` (thin uPlot wrapper: props `{ title, series: {label, get: (f)=>number|null, color}[], frames }`, `setData` on version change, `overflow-x` safe, dark background consistent with App.css palette) and `TelemetryPage.tsx`; tab state in `App.tsx` (`useState<"dsky"|"engr">`, plain buttons styled like `.panel h2`).
-- [ ] **Step 5:** `npm test` PASS + `npm run build` clean (type errors are failures).
-- [ ] **Step 6:** Manual check (documented in the task report, needs Task 14 running with `--scenario` or the stub pipeline): both tabs render, charts scroll, ROD buttons emit WS messages (browser devtools).
-- [ ] **Step 7: Commit** — `"feat(client): engineer telemetry board with strip charts and ROD input"` (+ trailer).
+- [x] **Step 1: vitest first** (`useTelemetryBuffer.test.ts`): push 3100 frames → length capped 3000, oldest dropped; `latest` tracks; `phases` records mm transitions only (63→63 no entry, 63→66 one entry); version increments per push. Also a dispatch test for the socket hook refactor: fabricated `MessageEvent` with a telemetry frame reaches the callback and does NOT disturb DSKY state; unknown type is silently ignored (guard `JSON.parse` in try/catch while here — it is the pending Phase 1 minor).
+- [x] **Step 2: FAIL** (`cd client && npm test`) → **Step 3: implement** buffer + dispatch refactor.
+- [x] **Step 4:** `npm install uplot` (lockfile committed); implement `StripChart.tsx` (thin uPlot wrapper: props `{ title, series: {label, get: (f)=>number|null, color}[], frames }`, `setData` on version change, `overflow-x` safe, dark background consistent with App.css palette) and `TelemetryPage.tsx`; tab state in `App.tsx` (`useState<"dsky"|"engr">`, plain buttons styled like `.panel h2`).
+- [x] **Step 5:** `npm test` PASS + `npm run build` clean (type errors are failures).
+- [ ] **Step 6 (deferred to Task 16 live run):** Manual check (documented in the task report, needs Task 14 running with `--scenario` or the stub pipeline): both tabs render, charts scroll, ROD buttons emit WS messages (browser devtools).
+- [x] **Step 7: Commit** — `"feat(client): engineer telemetry board with strip charts and ROD input"` (+ trailer).
 
 ---
 
