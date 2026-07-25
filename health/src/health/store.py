@@ -13,6 +13,7 @@ import duckdb
 import pandas as pd
 
 from health.endpoints import Metric, ParsedRows
+from health.privacy import ensure_private_dir
 
 SYNC_OK = "ok"
 SYNC_IN_PROGRESS = "in_progress"
@@ -75,8 +76,7 @@ _SLEEP_COLS = [
 class Store:
     def __init__(self, db_path: str | Path):
         path = Path(db_path)
-        path.parent.mkdir(parents=True, exist_ok=True)
-        os.chmod(path.parent, 0o700)
+        ensure_private_dir(path.parent)
         self.path = path
         self.con = duckdb.connect(str(path))
         for stmt in _SCHEMA.strip().split(";"):

@@ -16,6 +16,8 @@ from urllib.parse import urlencode
 import requests
 from dotenv import load_dotenv
 
+from health.privacy import ensure_private_dir
+
 AUTHORIZE_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
 SCOPES = (
@@ -226,8 +228,7 @@ class GoogleHealthAuth:
         return pend
 
     def _write_private(self, path: Path, obj: dict) -> None:
-        self.data_dir.mkdir(parents=True, exist_ok=True)
-        os.chmod(self.data_dir, 0o700)
+        ensure_private_dir(self.data_dir)
         tmp = path.with_suffix(".tmp")
         # Created 0600 by os.open rather than chmod-ed afterwards: a token must
         # never exist, even briefly, under a permissive umask.
