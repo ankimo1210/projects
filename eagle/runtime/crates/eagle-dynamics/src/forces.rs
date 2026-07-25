@@ -47,14 +47,15 @@ pub struct Jet {
 }
 
 // Quad mount positions in the Y-Z plane at 45° azimuths, radius RCS_LEVER_M
-// (`lm_simulator.tcl`; azimuths chosen so the couple/yaw torque signs below
-// reproduce LM_Simulator's axis mapping, AGC_Simulation_Monitor_Control.tcl
-// :231-305). L = RCS_LEVER_M, s = L/√2.
-//   Q1 = (0, +s, +s)  Q2 = (0, −s, +s)  Q3 = (0, −s, −s)  Q4 = (0, +s, −s)
-// U jets push −X (nozzle up), D jets push +X. Tangential jets lie in the
-// Y-Z plane; the "+yaw" quartet {Q1F,Q2L,Q3A,Q4R} is the CCW tangent
-// (0,−z,y)/L at each quad (all give +X torque), the "−yaw" quartet
-// {Q1L,Q2A,Q3R,Q4F} the CW tangent.
+// (`lm_simulator.tcl`). The azimuth assignment reproduces LM_Simulator's
+// SIGNED torque convention (AGC_Simulation_Monitor_Control.tcl:293-295):
+//   Ω_Yaw ∝ np, Ω_Pitch ∝ (nu−nv), Ω_Roll ∝ (nu+nv)
+// with the gimbal chain (AGC_IMU.tcl:660 called with Yaw/Pitch/Roll) pinning
+// Yaw=body-X (OGA), Pitch=body-Y (IGA), Roll=body-Z (MGA). Getting the SIGN
+// right is what makes the AGC's attitude-hold negative feedback rather than
+// a tumble — the magnitude-only geometry was off by a 90° rotation about X
+// (couples torqued Z where the DAP expected Y). L = RCS_LEVER_M, s = L/√2.
+// U jets push −X (nozzle up), D jets push +X.
 const S: f64 = std::f64::consts::FRAC_1_SQRT_2; // 1/√2, so |(±s,±s)| = 1·L
 const L: f64 = RCS_LEVER_M;
 
@@ -62,23 +63,23 @@ const L: f64 = RCS_LEVER_M;
 /// ch006 bits 1-8 → 8-15). Order pinned by the Task 1 channel-map doc.
 pub const JET_TABLE: [Jet; 16] = [
     // ch005 (PYJETS) bits 1-8: Q4U,Q4D,Q3U,Q3D,Q2U,Q2D,Q1U,Q1D
-    Jet { name: "Q4U", pos: V3Raw(0.0, L * S, -L * S), dir: V3Raw(-1.0, 0.0, 0.0) },
-    Jet { name: "Q4D", pos: V3Raw(0.0, L * S, -L * S), dir: V3Raw(1.0, 0.0, 0.0) },
-    Jet { name: "Q3U", pos: V3Raw(0.0, -L * S, -L * S), dir: V3Raw(-1.0, 0.0, 0.0) },
-    Jet { name: "Q3D", pos: V3Raw(0.0, -L * S, -L * S), dir: V3Raw(1.0, 0.0, 0.0) },
-    Jet { name: "Q2U", pos: V3Raw(0.0, -L * S, L * S), dir: V3Raw(-1.0, 0.0, 0.0) },
-    Jet { name: "Q2D", pos: V3Raw(0.0, -L * S, L * S), dir: V3Raw(1.0, 0.0, 0.0) },
-    Jet { name: "Q1U", pos: V3Raw(0.0, L * S, L * S), dir: V3Raw(-1.0, 0.0, 0.0) },
-    Jet { name: "Q1D", pos: V3Raw(0.0, L * S, L * S), dir: V3Raw(1.0, 0.0, 0.0) },
+    Jet { name: "Q4U", pos: V3Raw(0.0, L * S, L * S), dir: V3Raw(-1.0, 0.0, 0.0) },
+    Jet { name: "Q4D", pos: V3Raw(0.0, L * S, L * S), dir: V3Raw(1.0, 0.0, 0.0) },
+    Jet { name: "Q3U", pos: V3Raw(0.0, L * S, -L * S), dir: V3Raw(-1.0, 0.0, 0.0) },
+    Jet { name: "Q3D", pos: V3Raw(0.0, L * S, -L * S), dir: V3Raw(1.0, 0.0, 0.0) },
+    Jet { name: "Q2U", pos: V3Raw(0.0, -L * S, -L * S), dir: V3Raw(-1.0, 0.0, 0.0) },
+    Jet { name: "Q2D", pos: V3Raw(0.0, -L * S, -L * S), dir: V3Raw(1.0, 0.0, 0.0) },
+    Jet { name: "Q1U", pos: V3Raw(0.0, -L * S, L * S), dir: V3Raw(-1.0, 0.0, 0.0) },
+    Jet { name: "Q1D", pos: V3Raw(0.0, -L * S, L * S), dir: V3Raw(1.0, 0.0, 0.0) },
     // ch006 (ROLLJETS) bits 1-8: Q3A,Q4F,Q1F,Q2A,Q2L,Q3R,Q4R,Q1L
-    Jet { name: "Q3A", pos: V3Raw(0.0, -L * S, -L * S), dir: V3Raw(0.0, S, -S) },
-    Jet { name: "Q4F", pos: V3Raw(0.0, L * S, -L * S), dir: V3Raw(0.0, -S, -S) },
-    Jet { name: "Q1F", pos: V3Raw(0.0, L * S, L * S), dir: V3Raw(0.0, -S, S) },
-    Jet { name: "Q2A", pos: V3Raw(0.0, -L * S, L * S), dir: V3Raw(0.0, S, S) },
-    Jet { name: "Q2L", pos: V3Raw(0.0, -L * S, L * S), dir: V3Raw(0.0, -S, -S) },
-    Jet { name: "Q3R", pos: V3Raw(0.0, -L * S, -L * S), dir: V3Raw(0.0, -S, S) },
-    Jet { name: "Q4R", pos: V3Raw(0.0, L * S, -L * S), dir: V3Raw(0.0, S, S) },
-    Jet { name: "Q1L", pos: V3Raw(0.0, L * S, L * S), dir: V3Raw(0.0, S, -S) },
+    Jet { name: "Q3A", pos: V3Raw(0.0, L * S, -L * S), dir: V3Raw(0.0, S, S) },
+    Jet { name: "Q4F", pos: V3Raw(0.0, L * S, L * S), dir: V3Raw(0.0, S, -S) },
+    Jet { name: "Q1F", pos: V3Raw(0.0, -L * S, L * S), dir: V3Raw(0.0, -S, -S) },
+    Jet { name: "Q2A", pos: V3Raw(0.0, -L * S, -L * S), dir: V3Raw(0.0, -S, S) },
+    Jet { name: "Q2L", pos: V3Raw(0.0, -L * S, -L * S), dir: V3Raw(0.0, S, -S) },
+    Jet { name: "Q3R", pos: V3Raw(0.0, L * S, -L * S), dir: V3Raw(0.0, -S, -S) },
+    Jet { name: "Q4R", pos: V3Raw(0.0, L * S, L * S), dir: V3Raw(0.0, -S, S) },
+    Jet { name: "Q1L", pos: V3Raw(0.0, -L * S, L * S), dir: V3Raw(0.0, S, S) },
 ];
 
 /// DPS throttle envelope: no thrust below MIN; linear through the
@@ -133,6 +134,19 @@ pub fn body_thrust_force(a: &Actuators) -> V3<Body> {
 /// Number of RCS jets currently firing.
 pub fn jets_firing(a: &Actuators) -> u32 {
     a.jets.count_ones()
+}
+
+/// Net body-frame torque (N·m) from the currently-firing RCS jets — the
+/// attitude-control torque, for diagnostics.
+pub fn jet_torque(jets: u16) -> V3<Body> {
+    let mut torque = V3::<Body>::zero();
+    for (i, jet) in JET_TABLE.iter().enumerate() {
+        if jets & (1 << i) != 0 {
+            let f = jet.dir.body().scale(RCS_THRUST_N);
+            torque = torque + jet.pos.body().cross(f);
+        }
+    }
+    torque
 }
 
 /// Net force/torque on the vehicle from the DPS and every firing RCS jet,
@@ -267,6 +281,41 @@ mod tests {
             .fold(0, |m, n| m | 1 << jet(n));
         let d = forces(&s, &a, V3Raw(12_000.0, 13_500.0, 13_000.0), 9159.0);
         assert!(d.alpha.x.abs() > 0.0 && d.alpha.y.abs() < 1e-9 && d.alpha.z.abs() < 1e-9);
+    }
+
+    #[test]
+    fn rcs_couple_signs_match_lm_simulator_axes() {
+        // The DAP fires jets expecting LM_Simulator's torque convention
+        // (AGC_Simulation_Monitor_Control.tcl:293-295): Pitch ∝ (nu−nv),
+        // Roll ∝ (nu+nv), where the gimbal chain pins Pitch=body-Y (IGA),
+        // Roll=body-Z (MGA). So the SIGNED axes must be:
+        //   nv couple (Q2D+Q4U): Pitch −, Roll + → (αy<0, αz>0)
+        //   nu couple (Q1D+Q3U): Pitch +, Roll + → (αy>0, αz>0)
+        // Magnitude-only checks (rcs_axis_mapping_...) pass either way; this
+        // pins the sign so the attitude loop is negative feedback.
+        let s = hover_state();
+        let inertia = V3Raw(12_000.0, 13_000.0, 13_000.0); // symmetric Y/Z
+        let base = Actuators {
+            engine_on: false,
+            throttle_cmd_n: 0.0,
+            thrust_n: 0.0,
+            trim_pitch_rad: 0.0,
+            trim_roll_rad: 0.0,
+            jets: 0,
+        };
+        let jet = |name: &str| JET_TABLE.iter().position(|j| j.name == name).unwrap();
+        let fire = |names: &[&str]| {
+            let mut a = base.clone();
+            a.jets = names.iter().fold(0u16, |m, n| m | 1 << jet(n));
+            forces(&s, &a, inertia, 9159.0)
+        };
+        let nv = fire(&["Q2D", "Q4U"]);
+        assert!(nv.alpha.y < 0.0 && nv.alpha.z > 0.0, "nv axes: {nv:?}");
+        let nu = fire(&["Q1D", "Q3U"]);
+        assert!(nu.alpha.y > 0.0 && nu.alpha.z > 0.0, "nu axes: {nu:?}");
+        // Yaw quartet: pure +X (body-X = Yaw = OGA).
+        let np = fire(&["Q1F", "Q2L", "Q3A", "Q4R"]);
+        assert!(np.alpha.x > 0.0, "yaw not +X: {np:?}");
     }
 
     #[test]
