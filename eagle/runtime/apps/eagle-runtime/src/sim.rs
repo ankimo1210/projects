@@ -434,6 +434,15 @@ impl SimCore {
     }
 
     /// Great-circle distance from the scenario landing site, m.
+    ///
+    /// NOT a guidance-error metric today. `phase4_5_dynamics` pins the truth
+    /// position in MCI for the whole pre-ignition freeze while the clock —
+    /// and therefore MCMF — keeps turning, so this arc includes
+    /// ω·R·cos φ × (freeze duration) of pure bookkeeping: a live acceptance
+    /// run measured 1585.2 m over a 342.8 s freeze, which is the artifact
+    /// alone to within a metre — the descent contributed nothing visible.
+    /// Report it; do not gate on it until the freeze phase co-rotates
+    /// (docs/coordinate-frames.md "Truth co-rotation").
     fn miss_distance_m(&self) -> f64 {
         let pos_mcmf = mci_to_mcmf(self.st.t).apply(self.st.pos);
         let c = pos_mcmf.unit().dot(self.site_unit_mcmf).clamp(-1.0, 1.0);
@@ -505,7 +514,10 @@ pub struct TouchdownReport {
     pub v_vert_ms: f64,
     pub v_horiz_ms: f64,
     pub tilt_deg: f64,
-    /// Great-circle distance from the scenario landing site, m.
+    /// Great-circle distance from the scenario landing site, m. Dominated
+    /// by the pre-ignition freeze artifact (ω·R·cos φ × freeze duration;
+    /// measured 1585.2 m for a 342.8 s freeze), so it is NOT a
+    /// guidance-error metric — see `SimCore::miss_distance_m`.
     pub miss_m: f64,
 }
 
@@ -764,6 +776,15 @@ mod tests {
         assert!(
             core.miss_distance_m() < 1.0,
             "start is directly above the site"
+        );
+        // Same at a nonzero epoch, where mci_to_mcmf is NOT the identity:
+        // catches a miss distance computed off the wrong clock, which epoch
+        // 0.0 alone cannot see.
+        let off_epoch = SimCore::new(&sc, 1234.0);
+        assert!(
+            off_epoch.miss_distance_m() < 1.0,
+            "site datum must track the epoch: {}",
+            off_epoch.miss_distance_m()
         );
         // Rotate the truth 1 mrad about an axis ⊥ site: expected arc = r·1e-3.
         let site = sc.site_unit_mcmf();

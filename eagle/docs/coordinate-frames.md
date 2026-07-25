@@ -91,8 +91,18 @@ great-circle arc from the scenario site, computed in MCMF at touchdown time.
 Caveat, freeze phase: `sim.rs` pins the MCI position (not just the velocity)
 until the first ENGINE ON, while the clock — and therefore MCMF — keeps
 turning. So the truth slides west over the ground at ω·r·cos φ ≈ 4.63 m/s
-for the whole pre-ignition hold, and a live run's reported miss distance
-carries ≈ 1.6 km of that freeze-phase ground track (~350 s to ENGINE ON)
-before the descent contributes anything. This is why miss distance is
-reported and not gated in Wave 1: gate it only after the freeze is made
-co-rotating, or after a measured run establishes the baseline.
+for the whole pre-ignition hold. **Measured**: a live acceptance run
+reported `miss_m` = 1585.2 m after a 342.8 s freeze, which is
+ω·R·cos φ × 342.8 s to within a metre — the artifact accounts for the whole
+number and the descent contributed nothing visible. Miss distance is
+therefore reported and never gated: a threshold taken from a run today
+would enshrine ~1.6 km of bookkeeping as an acceptance criterion.
+
+Making the freeze co-rotate is not a one-line position update. A hold that
+tracks the ground has to carry the ATTITUDE with it too — body +X must stay
+on the (rotating) local vertical, so `st.att` needs the same ω ẑ sweep, and
+that attitude feeds the CDU counters the AGC is watching during its
+pre-ignition alignment. Position alone would leave the vehicle over the site
+but tilted by ω·t relative to local vertical. Deferred as a deliberate
+model change, not a patch; re-measure `miss_m` once it lands, and set the
+threshold from that run.
