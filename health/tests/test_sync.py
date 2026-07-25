@@ -375,6 +375,61 @@ def test_payload_error_isolates_one_metric_and_continues(store):
     assert report.progress[1].done is True
 
 
+class FailingAfterNCallsClient(FakeClient):
+    """Succeeds on a metric's first `succeed_calls` sends, then fails every
+    later send for that metric with `error`. Other metrics are unaffected.
+    Models a metric whose recency window spans more than one aligned chunk
+    and starts failing partway through it."""
+
+    def __init__(self, failing_metric, error, succeed_calls):
+        super().__init__()
+        self.failing_metric = failing_metric
+        self.error = error
+        self.succeed_calls = succeed_calls
+        self._failing_metric_calls = 0
+
+    def _send(self, method, metric_, start, end, budget, payload):
+        if metric_.name == self.failing_metric:
+            self._failing_metric_calls += 1
+            if self._failing_metric_calls > self.succeed_calls:
+                budget.consume()
+                raise self.error
+        return super()._send(method, metric_, start, end, budget, payload)
+
+
+def test_metric_abandoned_mid_recency_pass_is_not_retried_in_history_pass(store):
+    """A metric that fails on a later recency chunk -- after an earlier one
+    already gave it a usable backfilled_from -- must stay abandoned for the
+    rest of the run. Before the fix, `_history_pass` only checked whether a
+    checkpoint/backfilled_from existed, so it retried (and re-failed) this
+    same metric a moment later, producing a duplicate MetricFailure and a
+    wasted request."""
+    client = FailingAfterNCallsClient("flaky", ApiError(500, "boom", code=500), succeed_calls=1)
+    catalog = [metric(name="flaky", days=1), metric(name="healthy", days=1)]
+
+    report = SyncEngine(
+        client,
+        store,
+        catalog,
+        today=date(2026, 7, 20),
+        environ={"HEALTH_BACKFILL_START": "2026-06-01"},
+        max_requests=60,
+    ).sync_all()
+
+    # At most one failure for "flaky" this run -- not one per pass.
+    assert [f.metric for f in report.failures] == ["flaky"]
+
+    flaky_calls = [call for call in client.calls if call[1] == "flaky"]
+    assert len(flaky_calls) == 1  # only the one recency chunk that succeeded
+    assert not any(p.metric == "flaky" and p.done for p in report.progress)
+
+    # The healthy metric is unaffected: it finishes its recency pass and
+    # still walks history in the same run.
+    healthy_calls = [call for call in client.calls if call[1] == "healthy"]
+    assert len(healthy_calls) > 7  # more than the 7-day recency window alone
+    assert any(p.metric == "healthy" and p.done for p in report.progress)
+
+
 def test_auth_error_stops_the_whole_run(store):
     client = FailingClient("first", AuthError("token revoked"))
 
