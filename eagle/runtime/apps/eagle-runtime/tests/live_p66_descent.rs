@@ -143,19 +143,37 @@ async fn p66_soft_landing_closed_loop() {
 
     // Clock health: gate the AGC clock RATE, never the accumulated offset.
     // `drift_ms` is the observed downlink-word clock (words / 2 / 50 wps)
-    // minus the sim clock, i.e.
-    //     drift_ms = t_s · 1000 · (downlink_wps / 50 − 1),
-    // so ANY steady rate difference makes it grow without bound over a
-    // ~600 s run — no fixed millisecond bound is a property of the run.
-    // MEASURED ON THIS HOST (two full acceptance runs, this branch and its
-    // parent): drift = −17 900 ms at 47.6 wps ⇒ the downlink delivers
-    // 47.6/50 = 95.2 % of the nominal cadence, a steady −4.8 % offset, not
-    // jitter (yaAGC pacing slower than real time under WSL2, plus any
-    // ingest losses — telemetry's `ingest_drops` separates them). A 500 ms
-    // gate was 36× under that on a healthy emulator. ±10 % leaves ~2×
-    // margin on the measured host while still failing a stalled counter
-    // (rate → 0), a runaway one, or any ≥15 % clock break. Re-measure if
-    // the downlink cadence or the pacing loop changes.
+    // minus the sim TICK clock, which works out to
+    //     drift_ms = t_s · 1000 · (downlink_wps / 50 − 1)
+    //                + (epoch_s + DT) · 1000
+    // — the constant is one tick, because `telemetry()` runs after the
+    // state advance but before `tick_index` increments (so +10 ms at
+    // epoch 0, negligible against the tolerance below). The t_s term is
+    // the point: any steady rate difference grows without bound over a
+    // ~600 s run, so no fixed millisecond bound is a property of the run.
+    //
+    // MEASURED ON THIS HOST — two full acceptance runs (this branch and
+    // its parent): drift = −17 900 ms with mid_downlink_wps = 47.6, i.e.
+    // 95.2 % of the nominal 50 wps. PROVISIONAL: 47.6 is the cumulative
+    // average at mid-descent, NOT the final-frame quantity this assert
+    // reads — `final_t_s` did not exist for those runs, so the gated
+    // number has never actually been recorded. Confirm ±10 % against the
+    // `[accept] AGC clock ...` line the next live run prints, and retune
+    // then if it disagrees.
+    //
+    // What the deficit IS remains under-determined. A slow AGC, a downlink
+    // start dead-time D (which depresses a cumulative average
+    // permanently), and downlink packets dropped by our own fan-out
+    // (`headless.rs`'s packet forwarder does `RecvError::Lagged(_) =>
+    // continue`, silently discarding them — indistinguishable here from a
+    // slow AGC) all look identical in this number. A single sample only
+    // constrains (D − sim pacing loss) ≈ 17.9 s; the `pacing lost` figure
+    // printed below is what will separate them on the next run.
+    //
+    // ±10 % leaves ~2× margin on the measured deficit while still failing
+    // a stalled counter (rate → 0), a runaway one, or any ≥15 % break; the
+    // old 500 ms gate was 36× under the measured value on a healthy
+    // emulator.
     const AGC_RATE_TOL: f64 = 0.10;
     assert!(
         result.final_t_s > 0.0,
@@ -173,11 +191,13 @@ async fn p66_soft_landing_closed_loop() {
         result.drift_ms,
         result.final_t_s
     );
-    // Same counter, earlier window, looser bound: `mid_downlink_wps` is
-    // the cumulative rate at the MIDDLE of the descent, so it reports the
-    // first half on its own, whereas the rate above is the whole-run
-    // average. Kept as a cross-check with a coarser tolerance; the gate
-    // that actually bounds clock health is the ±10 % one above.
+    // Same counter, earlier cutoff, looser bound. NOT a windowed rate:
+    // `sim.rs` computes `downlink_wps` as a CUMULATIVE average from t = 0
+    // (the whole pre-ignition freeze included), so this and the rate above
+    // are the same running average read at two different cutoffs — one at
+    // a mid-descent frame, one at the last frame — not two independent
+    // windows. Kept as a coarse cross-check; the ±10 % gate above is the
+    // one that bounds clock health.
     assert!(
         (40.0..=60.0).contains(&result.mid_downlink_wps),
         "downlink {} wps outside [40,60]",
