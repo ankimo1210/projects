@@ -122,6 +122,11 @@ def main(argv: Sequence[str] | None = None) -> None:
         raise SystemExit(f"refusing to overwrite an existing database: {args.db_path} (--force)")
     if args.db_path.exists():
         args.db_path.unlink()
+        # A leftover .wal beside the old database would otherwise be replayed
+        # by DuckDB into the freshly seeded one, resurrecting data --force was
+        # meant to discard.
+        wal_path = args.db_path.with_name(args.db_path.name + ".wal")
+        wal_path.unlink(missing_ok=True)
     seed(args.db_path)
     print(f"seeded: {args.db_path}")
 

@@ -35,3 +35,17 @@ def test_force_allows_overwriting(tmp_path):
 
     assert target.stat().st_size > 0
     assert target.read_bytes() != b"pretend this is real health data"
+
+
+def test_force_also_removes_a_stale_wal_file(tmp_path):
+    """A leftover .wal beside the old database must not survive --force:
+    DuckDB replays a .wal into whatever database file it finds next to it, so
+    a stale one would resurrect data --force was meant to discard."""
+    target = tmp_path / "health.duckdb"
+    target.write_bytes(b"pretend this is real health data")
+    stale_wal = target.with_name(target.name + ".wal")
+    stale_wal.write_bytes(b"pretend this is a stale write-ahead log")
+
+    main(["--db-path", str(target), "--force"])
+
+    assert not stale_wal.exists()
