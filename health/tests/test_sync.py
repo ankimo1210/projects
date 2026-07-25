@@ -312,6 +312,8 @@ def test_api_error_isolates_one_metric_and_continues(store):
     assert [call[1] for call in client.calls] == ["second"]
     assert store.get_sync_state("second") == date(2026, 1, 1)
     assert store.get_sync_state("first") is None
+    assert report.progress[0].done is False
+    assert report.progress[1].done is True
 
 
 def test_payload_error_isolates_one_metric_and_continues(store):
@@ -329,6 +331,9 @@ def test_payload_error_isolates_one_metric_and_continues(store):
     assert [f.metric for f in report.failures] == ["first"]
     assert report.failures[0].kind == "payload"
     assert store.get_sync_state("second") == date(2026, 1, 1)
+    assert store.get_sync_state("first") is None
+    assert report.progress[0].done is False
+    assert report.progress[1].done is True
 
 
 def test_auth_error_stops_the_whole_run(store):
