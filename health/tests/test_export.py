@@ -1,3 +1,4 @@
+import os
 import stat
 from datetime import date
 
@@ -55,6 +56,21 @@ def test_exported_files_are_private(store, tmp_path):
     written = export_tables(store, out_dir, "csv")
 
     assert stat.S_IMODE(out_dir.stat().st_mode) == 0o700
+    for path in written:
+        assert stat.S_IMODE(path.stat().st_mode) == 0o600
+
+
+def test_export_does_not_reperm_a_preexisting_out_dir(store, tmp_path):
+    """A caller-chosen `--out-dir` that already exists (and is not owned by
+    this app) must not be silently re-permissioned. Regression guard for the
+    unconditional `os.chmod(out_dir, 0o700)` this replaced."""
+    out_dir = tmp_path / "not-owned-by-the-app"
+    out_dir.mkdir(mode=0o755)
+    os.chmod(out_dir, 0o755)  # mkdir's mode is filtered by umask; force it
+
+    written = export_tables(store, out_dir, "csv")
+
+    assert stat.S_IMODE(out_dir.stat().st_mode) == 0o755
     for path in written:
         assert stat.S_IMODE(path.stat().st_mode) == 0o600
 

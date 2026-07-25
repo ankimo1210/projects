@@ -1,3 +1,4 @@
+import os
 import stat
 from datetime import date, datetime
 
@@ -426,6 +427,25 @@ def test_database_and_data_dir_are_private(tmp_path):
     try:
         assert stat.S_IMODE(db_path.stat().st_mode) == 0o600
         assert stat.S_IMODE(data_dir.stat().st_mode) == 0o700
+    finally:
+        created.close()
+
+
+def test_store_does_not_reperm_a_preexisting_parent_directory(tmp_path):
+    """A directory the app does not own -- /tmp for a demo DB, a user's home
+    directory -- must never be re-permissioned just because Store happened to
+    be pointed inside it. Regression guard for the unconditional
+    `os.chmod(path.parent, 0o700)` this replaced, which also raised
+    PermissionError outright on a sticky directory like /tmp."""
+    data_dir = tmp_path / "not-owned-by-the-app"
+    data_dir.mkdir(mode=0o755)
+    os.chmod(data_dir, 0o755)  # mkdir's mode is filtered by umask; force it
+    db_path = data_dir / "health.duckdb"
+
+    created = Store(db_path)
+    try:
+        assert stat.S_IMODE(data_dir.stat().st_mode) == 0o755
+        assert stat.S_IMODE(db_path.stat().st_mode) == 0o600
     finally:
         created.close()
 

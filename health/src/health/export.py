@@ -5,6 +5,8 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+from health.privacy import ensure_private_dir
+
 EXPORT_TABLES: tuple[str, ...] = ("daily_series", "sleep_sessions", "intraday", "sync_state")
 _FORMATS = {"parquet": "PARQUET", "csv": "CSV"}
 
@@ -19,8 +21,7 @@ def export_tables(store, out_dir: Path, fmt: str = "parquet") -> list[Path]:
     if fmt not in _FORMATS:
         raise ValueError(f"unsupported export format: {fmt!r} (parquet or csv)")
     out_dir = Path(out_dir)
-    out_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
-    os.chmod(out_dir, 0o700)
+    ensure_private_dir(out_dir)
     written: list[Path] = []
     for table in EXPORT_TABLES:
         path = out_dir / f"{table}.{fmt}"
