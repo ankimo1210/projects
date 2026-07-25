@@ -44,9 +44,9 @@ async fn main() -> anyhow::Result<()> {
     let (agc_tx, mut agc_rx) = mpsc::unbounded_channel();
     let latest = std::sync::Arc::new(std::sync::Mutex::new(String::new()));
     let (dsky_tx, dsky_rx) = watch::channel(DskyState::default());
-    // Kept alive so `dsky_tx.send` below has a live receiver; Task 14 will
-    // consume `dsky_rx` (e.g. hand it to a `DskyScript`) instead of this
-    // placeholder binding.
+    // Kept alive so `dsky_tx.send` below always has a live receiver (watch
+    // send fails with no receivers). Only the Phase-1 DSKY-only loop below
+    // uses this channel; scenario mode gets its DSKY watch from `pump`.
     let _keep = dsky_rx;
     let mut trace = TraceWriter::open(args.trace_out.clone())?;
 
