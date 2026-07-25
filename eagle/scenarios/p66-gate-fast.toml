@@ -19,7 +19,15 @@ inertia_kgm2 = [12000.0, 13500.0, 13000.0]  # assumed (order-of-magnitude from L
 [agc]
 padload = "scenarios/p66-padload.toml"
 lm_weight_lbs = 20200.0            # derived: (7009+2000+150) kg ≈ 20190 lbs → V48/N47
-tland_offset_cs = 24000            # assumed: StateCfg default burn lead; if too tight BURNBABY slips TIG (+29.9 s, BURN,_BABY,_BURN:64) — debug only
+# measured 2026-07-25: 24000 (the StateCfg default) is TOO TIGHT on this
+# host — the pad-load + flag-set + P63 dialog leave less than the 45 s
+# pre-TIG margin BURNBABY requires, and the run aborts with FAILREG 01703
+# ("IGNITION TIME SLIPPED", P40-P47.agc:101) during P63 entry, before
+# ENGINE ON. 36000 (the acceptance gate) completes with room to spare, so
+# 30000 keeps ~60 s of the debug-iteration saving while staying ~105 s
+# clear of the observed failure point. See
+# docs/superpowers/notes/2026-07-25-wave1-reflight.md (run 2).
+tland_offset_cs = 30000            # derived from the 01703 measurement above — debug only
 flip_atthold_after_engine_on_s = 2.0   # spike-B calibrated
 
 [rod]

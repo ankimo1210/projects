@@ -2,6 +2,14 @@
 name = "eagle-runtime"
 version = "0.1.0"
 edition = "2021"
+# The package auto-discovers three binaries (src/main.rs plus src/bin/
+# descent_probe.rs and padload_gen.rs), so a bare `cargo run -p
+# eagle-runtime` is ambiguous and errors 101. Every Makefile run target
+# (`dev-runtime`, `descent-p66`, `descent-p66-fast`) used that bare form
+# and was therefore broken from the moment the second binary landed;
+# pinning the default here fixes all of them without changing the
+# documented commands. Found by the 2026-07-25 re-flight.
+default-run = "eagle-runtime"
 
 [lib]
 name = "eagle_runtime"
