@@ -10,10 +10,9 @@ use crate::padload::{PadloadManifest, SymTab};
 use crate::scenario::Scenario;
 use crate::script::{pump, DskyScript};
 use crate::server::to_msg;
-use crate::sim::{spawn_sim, DskyStateSnapshot, SimCore, SimIn, SimResult};
+use crate::sim::{spawn_sim, SimCore, SimIn, SimResult};
 use crate::{runner, trace::TraceWriter};
 use anyhow::{Context, Result};
-use eagle_agc_protocol::agc_io::decode_output;
 use eagle_agc_protocol::dsky::DskyState;
 use eagle_dynamics::touchdown::Touchdown;
 use std::path::PathBuf;
@@ -88,14 +87,16 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
                     if let Some(t) = trace.as_mut() {
                         t.log("out", &pkt);
                     }
-                    let _ = fwd_in.send(SimIn::Agc(decode_output(&pkt)));
-                    if dsky.apply(&pkt) {
-                        let _ = fwd_in.send(SimIn::Dsky(DskyStateSnapshot::from_dsky(&dsky)));
-                        if let Ok(json) = serde_json::to_string(&to_msg(&dsky)) {
-                            if let Some(l) = &latest {
-                                *l.lock().unwrap() = json.clone();
+                    for ev in crate::sim::agc_packet_to_simin(&pkt, &mut dsky) {
+                        let dsky_changed = matches!(ev, SimIn::Dsky(_));
+                        let _ = fwd_in.send(ev);
+                        if dsky_changed {
+                            if let Ok(json) = serde_json::to_string(&to_msg(&dsky)) {
+                                if let Some(l) = &latest {
+                                    *l.lock().unwrap() = json.clone();
+                                }
+                                let _ = telem_tx.send(json);
                             }
-                            let _ = telem_tx.send(json);
                         }
                     }
                 }
