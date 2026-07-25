@@ -262,6 +262,40 @@ def test_replace_chunk_sleep_removes_upstream_deleted_sessions(store):
     assert list(df["provider_id"]) == ["uuid-2"]
 
 
+def test_replace_chunk_covered_range_narrower_than_chunk_key_preserves_rows_outside_it(store):
+    # The chunk key (start/end) can be wider than the days actually re-fetched
+    # (an aligned chunk clipped to [floor, today]); typed-row deletes must
+    # follow the covered range, not the chunk key, or days outside the
+    # request silently lose their rows with nothing to restore them.
+    metric = by_name("steps")
+    store.upsert_daily(
+        [
+            ("steps", "2026-07-01", 100.0),  # inside chunk key, outside covered range -> survives
+            ("steps", "2026-07-05", 200.0),  # inside covered range -> replaced
+        ]
+    )
+    rows = ParsedRows(daily=(("steps", date(2026, 7, 5), 999.0),))
+    store.replace_chunk(
+        metric,
+        date(2026, 7, 1),
+        date(2026, 7, 10),
+        [{"p": 0}],
+        rows,
+        covered_start=date(2026, 7, 4),
+        covered_end=date(2026, 7, 10),
+    )
+    got = set(store.con.execute("SELECT metric, date, value FROM daily_series").fetchall())
+    assert got == {
+        ("steps", date(2026, 7, 1), 100.0),
+        ("steps", date(2026, 7, 5), 999.0),
+    }
+    # the raw chunk identity is unaffected by covered_start/covered_end
+    raw_range = store.con.execute(
+        "SELECT range_start, range_end FROM raw_json WHERE metric = ?", [metric.name]
+    ).fetchone()
+    assert raw_range == (date(2026, 7, 1), date(2026, 7, 10))
+
+
 def test_replace_chunk_intraday_replaces_only_target_days(store):
     metric = by_name("intraday_hr")  # series_names == ("hr",)
     store.upsert_intraday(

@@ -120,11 +120,26 @@ class Store:
         *,
         status: str = SYNC_OK,
         watermark: date | None = None,
+        covered_start: date | None = None,
+        covered_end: date | None = None,
     ) -> None:
         """Atomically replace one (metric, start, end) chunk: old raw pages,
-        old typed rows in range, and the watermark all move together so a
-        stale page, an upstream deletion, or a mid-parse failure never leaves
-        raw/typed/watermark inconsistent with each other."""
+        old typed rows in the covered range, and the watermark all move
+        together so a stale page, an upstream deletion, or a mid-parse
+        failure never leaves raw/typed/watermark inconsistent with each
+        other.
+
+        `start`/`end` are the chunk key: raw_json's identity, and what makes
+        a re-fetch of the same calendar days replace the same row instead of
+        adding an overlapping one. `covered_start`/`covered_end` (default:
+        same as `start`/`end`) are the days this call actually re-fetched --
+        an aligned chunk key can span more days than the clipped request
+        range -- and bound the typed-row deletes: rows for chunk-key days
+        outside the covered range must survive, because nothing in this call
+        fetched them and would restore them.
+        """
+        covered_start = start if covered_start is None else covered_start
+        covered_end = end if covered_end is None else covered_end
         series = list(metric.series_names)
         series_ph = ", ".join("?" * len(series))
         con = self.con
@@ -154,17 +169,20 @@ class Store:
                 con.execute(
                     f"DELETE FROM daily_series WHERE metric IN ({series_ph}) "
                     "AND date BETWEEN ? AND ?",
-                    [*series, start, end],
+                    [*series, covered_start, covered_end],
                 )
             else:
                 con.execute(
                     f"DELETE FROM intraday WHERE metric IN ({series_ph}) "
                     "AND CAST(ts AS DATE) BETWEEN ? AND ?",
-                    [*series, start, end],
+                    [*series, covered_start, covered_end],
                 )
             # 4. sleep sessions are keyed by wake date, not series name
             if metric.name == "sleep":
-                con.execute("DELETE FROM sleep_sessions WHERE date BETWEEN ? AND ?", [start, end])
+                con.execute(
+                    "DELETE FROM sleep_sessions WHERE date BETWEEN ? AND ?",
+                    [covered_start, covered_end],
+                )
             # 5. insert the freshly parsed typed rows, same table restriction as above
             if metric.full_history and rows.daily:
                 con.executemany("INSERT INTO daily_series VALUES (?, ?, ?)", list(rows.daily))

@@ -372,6 +372,57 @@ def test_daily_syncs_reuse_one_raw_chunk_key(store):
     assert len(ranges) == 1
 
 
+def test_typed_rows_outside_a_narrowed_refetch_survive_inside_the_same_chunk(store):
+    """Reviewer's reproduction: a floor that advances forward (either via
+    HEALTH_BACKFILL_START or the default "five years ago today" rolling
+    forward one day per run) narrows the request on the next sync, but stays
+    inside the same aligned 90-day chunk. Days no longer covered by the
+    request must not lose their previously-synced typed rows."""
+
+    class DateEchoClient(FakeClient):
+        def daily_rollup(self, metric_, start, end, budget):
+            payload = {"start": start.isoformat(), "end": end.isoformat()}
+            return self._send("rollup", metric_, start, end, budget, payload)
+
+    def one_row_per_requested_day(pages):
+        payload = pages[0]
+        start = date.fromisoformat(payload["start"])
+        end = date.fromisoformat(payload["end"])
+        out = []
+        d = start
+        while d <= end:
+            out.append(("test", d, 1.0))
+            d += timedelta(days=1)
+        return ParsedRows(daily=tuple(out))
+
+    m = metric(days=90, parser=one_row_per_requested_day)
+
+    SyncEngine(
+        DateEchoClient(),
+        store,
+        [m],
+        today=date(2025, 1, 20),
+        environ={"HEALTH_BACKFILL_START": "2025-01-01"},
+    ).sync_all()
+
+    SyncEngine(
+        DateEchoClient(),
+        store,
+        [m],
+        today=date(2025, 1, 21),
+        environ={"HEALTH_BACKFILL_START": "2025-01-10"},
+    ).sync_all()
+
+    dates = {
+        row[0]
+        for row in store.con.execute(
+            "SELECT date FROM daily_series WHERE metric = 'test'"
+        ).fetchall()
+    }
+    for day in range(1, 10):
+        assert date(2025, 1, day) in dates
+
+
 def test_request_range_is_clipped_to_floor_and_today(store):
     client = FakeClient()
     SyncEngine(
