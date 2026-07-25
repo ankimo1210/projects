@@ -5,13 +5,12 @@ from __future__ import annotations
 import argparse
 import math
 import random
+from collections.abc import Sequence
 from datetime import date, timedelta
 from pathlib import Path
 
 from health.endpoints import CATALOG
 from health.store import Store
-
-DEFAULT_DB = Path(__file__).resolve().parents[1] / "data" / "health.duckdb"
 
 
 def seed(db_path: Path, today: date | None = None) -> None:
@@ -97,10 +96,32 @@ def seed(db_path: Path, today: date | None = None) -> None:
         store.close()
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--db-path", type=Path, default=DEFAULT_DB)
-    args = parser.parse_args()
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Seed a DuckDB database with plausible fake Google Health data."
+    )
+    parser.add_argument(
+        "--db-path",
+        type=Path,
+        required=True,
+        help="target DuckDB path; use a temporary path, never health/data/health.duckdb",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="overwrite the target if it already exists",
+    )
+    return parser
+
+
+def main(argv: Sequence[str] | None = None) -> None:
+    args = build_parser().parse_args(argv)
+    # No default path and no silent overwrite: the only database this script is
+    # ever pointed at by accident is the one holding real health history.
+    if args.db_path.exists() and not args.force:
+        raise SystemExit(f"refusing to overwrite an existing database: {args.db_path} (--force)")
+    if args.db_path.exists():
+        args.db_path.unlink()
     seed(args.db_path)
     print(f"seeded: {args.db_path}")
 
