@@ -35,13 +35,11 @@ STORED_COLUMNS = [
 
 
 def build_inventory(
-    store: Store,
     catalog: Sequence[Metric] = CATALOG,
     known_data_types: dict[str, tuple[str, str]] = KNOWN_DATA_TYPES,
 ) -> pd.DataFrame:
     """Return every published data type, whether or not the app implements it."""
 
-    del store  # kept in the interface so both inventory builders share a caller
     by_type: dict[str, list[Metric]] = {}
     for metric in catalog:
         by_type.setdefault(metric.data_type, []).append(metric)

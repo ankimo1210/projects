@@ -11,7 +11,7 @@ def inventory_page() -> None:
     st.subheader("公開データ型")
     st.caption("Google Health が公開するデータ型と、このアプリの実装状況")
     st.dataframe(
-        build_inventory(store),
+        build_inventory(),
         width="stretch",
         hide_index=True,
         height=420,
