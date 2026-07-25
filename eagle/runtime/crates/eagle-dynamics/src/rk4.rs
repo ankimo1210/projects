@@ -75,9 +75,19 @@ fn combine(s: &LmState, k: &[Rates; 4], dt: f64) -> LmState {
         omega: s.omega + bsum(&|r| r.domega).scale(w),
         mass_kg: s.mass_kg + w * sum(k[0].dmass, k[1].dmass, k[2].dmass, k[3].dmass),
         fuel_dps_kg: s.fuel_dps_kg
-            + w * sum(k[0].dfuel_dps, k[1].dfuel_dps, k[2].dfuel_dps, k[3].dfuel_dps),
+            + w * sum(
+                k[0].dfuel_dps,
+                k[1].dfuel_dps,
+                k[2].dfuel_dps,
+                k[3].dfuel_dps,
+            ),
         fuel_rcs_kg: s.fuel_rcs_kg
-            + w * sum(k[0].dfuel_rcs, k[1].dfuel_rcs, k[2].dfuel_rcs, k[3].dfuel_rcs),
+            + w * sum(
+                k[0].dfuel_rcs,
+                k[1].dfuel_rcs,
+                k[2].dfuel_rcs,
+                k[3].dfuel_rcs,
+            ),
     }
 }
 

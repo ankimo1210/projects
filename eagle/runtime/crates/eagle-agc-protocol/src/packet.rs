@@ -3,7 +3,11 @@
 //! u = bitmask flag, t = counter flag, p = 7-bit channel, d = 15-bit data.
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum PacketKind { Io, Counter, Bitmask }
+pub enum PacketKind {
+    Io,
+    Counter,
+    Bitmask,
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Packet {
@@ -26,9 +30,17 @@ pub enum PacketError {
 
 impl Packet {
     fn new(kind: PacketKind, channel: u8, data: u16) -> Result<Self, PacketError> {
-        if channel > 0x7F { return Err(PacketError::ChannelRange(channel)); }
-        if data > 0x7FFF { return Err(PacketError::DataRange(data)); }
-        Ok(Self { kind, channel, data })
+        if channel > 0x7F {
+            return Err(PacketError::ChannelRange(channel));
+        }
+        if data > 0x7FFF {
+            return Err(PacketError::DataRange(data));
+        }
+        Ok(Self {
+            kind,
+            channel,
+            data,
+        })
     }
     pub fn io(channel: u8, data: u16) -> Result<Self, PacketError> {
         Self::new(PacketKind::Io, channel, data)
@@ -53,8 +65,7 @@ impl Packet {
     }
 
     pub fn decode(b: [u8; 4]) -> Result<Self, PacketError> {
-        if b[0] >> 6 != 0b00 || b[1] >> 6 != 0b01
-            || b[2] >> 6 != 0b10 || b[3] >> 6 != 0b11 {
+        if b[0] >> 6 != 0b00 || b[1] >> 6 != 0b01 || b[2] >> 6 != 0b10 || b[3] >> 6 != 0b11 {
             return Err(PacketError::BadSignature(b));
         }
         let kind = match ((b[0] >> 5) & 1, (b[0] >> 4) & 1) {
@@ -66,17 +77,25 @@ impl Packet {
         let data = (((b[1] & 0b111) as u16) << 12)
             | (((b[2] & 0x3F) as u16) << 6)
             | ((b[3] & 0x3F) as u16);
-        Ok(Self { kind, channel, data })
+        Ok(Self {
+            kind,
+            channel,
+            data,
+        })
     }
 }
 
 /// Incremental decoder over a TCP byte stream: aligns on signature bits,
 /// resyncs by shifting one byte on mismatch, drops ping packets.
 #[derive(Default)]
-pub struct StreamDecoder { buf: Vec<u8> }
+pub struct StreamDecoder {
+    buf: Vec<u8>,
+}
 
 impl StreamDecoder {
-    pub fn new() -> Self { Self::default() }
+    pub fn new() -> Self {
+        Self::default()
+    }
 
     pub fn push(&mut self, bytes: &[u8]) -> Vec<Packet> {
         self.buf.extend_from_slice(bytes);

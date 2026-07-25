@@ -31,7 +31,8 @@ impl AgcSession {
             .with_context(|| format!("canonicalizing {:?}", cfg.yaagc_bin))?;
         let core_bin = std::fs::canonicalize(&cfg.core_bin)
             .with_context(|| format!("canonicalizing {:?}", cfg.core_bin))?;
-        let core_dir = core_bin.parent()
+        let core_dir = core_bin
+            .parent()
             .with_context(|| format!("{core_bin:?} has no parent directory"))?;
 
         let mut child = Command::new(&yaagc_bin)
@@ -59,7 +60,10 @@ impl AgcSession {
                 anyhow::bail!("yaAGC exited early with {status} before accepting a connection");
             }
             match TcpStream::connect(("127.0.0.1", cfg.port)).await {
-                Ok(s) => { stream = Some(s); break; }
+                Ok(s) => {
+                    stream = Some(s);
+                    break;
+                }
                 Err(e) => {
                     last_err = Some(e);
                     tokio::time::sleep(std::time::Duration::from_millis(100)).await;
@@ -85,7 +89,9 @@ impl AgcSession {
                     Ok(0) | Err(_) => break,
                     Ok(n) => {
                         for p in dec.push(&buf[..n]) {
-                            if events_tx.send(p).await.is_err() { return; }
+                            if events_tx.send(p).await.is_err() {
+                                return;
+                            }
                         }
                     }
                 }
@@ -93,17 +99,27 @@ impl AgcSession {
         });
         tokio::spawn(async move {
             while let Some(p) = cmd_rx.recv().await {
-                if wr.write_all(&p.encode()).await.is_err() { break; }
+                if wr.write_all(&p.encode()).await.is_err() {
+                    break;
+                }
             }
         });
 
-        Ok(Self { child, events_rx, cmd_tx })
+        Ok(Self {
+            child,
+            events_rx,
+            cmd_tx,
+        })
     }
 
-    pub fn events(&mut self) -> &mut mpsc::Receiver<Packet> { &mut self.events_rx }
+    pub fn events(&mut self) -> &mut mpsc::Receiver<Packet> {
+        &mut self.events_rx
+    }
 
     pub fn send(&self, p: Packet) -> Result<()> {
-        self.cmd_tx.send(p).map_err(|_| anyhow::anyhow!("agc writer gone"))
+        self.cmd_tx
+            .send(p)
+            .map_err(|_| anyhow::anyhow!("agc writer gone"))
     }
 
     pub fn shutdown(mut self) {

@@ -16,20 +16,33 @@ pub fn to_msg(s: &DskyState) -> ServerMsg {
     };
     let mut lamps = std::collections::BTreeMap::new();
     for (name, v) in [
-        ("comp_acty", s.lamps.comp_acty), ("uplink_acty", s.lamps.uplink_acty),
-        ("no_att", s.lamps.no_att), ("gimbal_lock", s.lamps.gimbal_lock),
-        ("prog", s.lamps.prog_alarm), ("tracker", s.lamps.tracker),
-        ("alt", s.lamps.alt), ("vel", s.lamps.vel),
-        ("no_dap", s.lamps.no_dap), ("prio_disp", s.lamps.prio_disp),
-    ] { lamps.insert(name.to_string(), v); }
+        ("comp_acty", s.lamps.comp_acty),
+        ("uplink_acty", s.lamps.uplink_acty),
+        ("no_att", s.lamps.no_att),
+        ("gimbal_lock", s.lamps.gimbal_lock),
+        ("prog", s.lamps.prog_alarm),
+        ("tracker", s.lamps.tracker),
+        ("alt", s.lamps.alt),
+        ("vel", s.lamps.vel),
+        ("no_dap", s.lamps.no_dap),
+        ("prio_disp", s.lamps.prio_disp),
+    ] {
+        lamps.insert(name.to_string(), v);
+    }
     ServerMsg::DskyState(DskyStateMsg {
         schema_version: SCHEMA_VERSION,
-        prog: s.prog.iter().collect(), verb: s.verb.iter().collect(),
+        prog: s.prog.iter().collect(),
+        verb: s.verb.iter().collect(),
         noun: s.noun.iter().collect(),
-        r1: reg(&s.r1), r2: reg(&s.r2), r3: reg(&s.r3),
+        r1: reg(&s.r1),
+        r2: reg(&s.r2),
+        r3: reg(&s.r3),
         lamps,
-        verb_noun_flash: s.verb_noun_flash, restart: s.restart,
-        standby: s.standby, key_rel: s.key_rel, opr_err: s.opr_err,
+        verb_noun_flash: s.verb_noun_flash,
+        restart: s.restart,
+        standby: s.standby,
+        key_rel: s.key_rel,
+        opr_err: s.opr_err,
         temp: s.temp,
     })
 }

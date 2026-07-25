@@ -5,7 +5,7 @@
 //! whole tick, so jet timing is quantized to ~10 ms worst case — accepted
 //! for Wave 1.
 use crate::constants::{
-    DPS_FTP_N, DPS_MAX_N, DPS_MIN_N, DPS_TAU, DPS_VE, RCS_THRUST_N, RCS_VE, RCS_LEVER_M,
+    DPS_FTP_N, DPS_MAX_N, DPS_MIN_N, DPS_TAU, DPS_VE, RCS_LEVER_M, RCS_THRUST_N, RCS_VE,
 };
 use crate::frames::{Body, V3};
 use crate::state::{Derivs, LmState};
@@ -63,23 +63,87 @@ const L: f64 = RCS_LEVER_M;
 /// ch006 bits 1-8 → 8-15). Order pinned by the Task 1 channel-map doc.
 pub const JET_TABLE: [Jet; 16] = [
     // ch005 (PYJETS) bits 1-8: Q4U,Q4D,Q3U,Q3D,Q2U,Q2D,Q1U,Q1D
-    Jet { name: "Q4U", pos: V3Raw(0.0, L * S, L * S), dir: V3Raw(-1.0, 0.0, 0.0) },
-    Jet { name: "Q4D", pos: V3Raw(0.0, L * S, L * S), dir: V3Raw(1.0, 0.0, 0.0) },
-    Jet { name: "Q3U", pos: V3Raw(0.0, L * S, -L * S), dir: V3Raw(-1.0, 0.0, 0.0) },
-    Jet { name: "Q3D", pos: V3Raw(0.0, L * S, -L * S), dir: V3Raw(1.0, 0.0, 0.0) },
-    Jet { name: "Q2U", pos: V3Raw(0.0, -L * S, -L * S), dir: V3Raw(-1.0, 0.0, 0.0) },
-    Jet { name: "Q2D", pos: V3Raw(0.0, -L * S, -L * S), dir: V3Raw(1.0, 0.0, 0.0) },
-    Jet { name: "Q1U", pos: V3Raw(0.0, -L * S, L * S), dir: V3Raw(-1.0, 0.0, 0.0) },
-    Jet { name: "Q1D", pos: V3Raw(0.0, -L * S, L * S), dir: V3Raw(1.0, 0.0, 0.0) },
+    Jet {
+        name: "Q4U",
+        pos: V3Raw(0.0, L * S, L * S),
+        dir: V3Raw(-1.0, 0.0, 0.0),
+    },
+    Jet {
+        name: "Q4D",
+        pos: V3Raw(0.0, L * S, L * S),
+        dir: V3Raw(1.0, 0.0, 0.0),
+    },
+    Jet {
+        name: "Q3U",
+        pos: V3Raw(0.0, L * S, -L * S),
+        dir: V3Raw(-1.0, 0.0, 0.0),
+    },
+    Jet {
+        name: "Q3D",
+        pos: V3Raw(0.0, L * S, -L * S),
+        dir: V3Raw(1.0, 0.0, 0.0),
+    },
+    Jet {
+        name: "Q2U",
+        pos: V3Raw(0.0, -L * S, -L * S),
+        dir: V3Raw(-1.0, 0.0, 0.0),
+    },
+    Jet {
+        name: "Q2D",
+        pos: V3Raw(0.0, -L * S, -L * S),
+        dir: V3Raw(1.0, 0.0, 0.0),
+    },
+    Jet {
+        name: "Q1U",
+        pos: V3Raw(0.0, -L * S, L * S),
+        dir: V3Raw(-1.0, 0.0, 0.0),
+    },
+    Jet {
+        name: "Q1D",
+        pos: V3Raw(0.0, -L * S, L * S),
+        dir: V3Raw(1.0, 0.0, 0.0),
+    },
     // ch006 (ROLLJETS) bits 1-8: Q3A,Q4F,Q1F,Q2A,Q2L,Q3R,Q4R,Q1L
-    Jet { name: "Q3A", pos: V3Raw(0.0, L * S, -L * S), dir: V3Raw(0.0, S, S) },
-    Jet { name: "Q4F", pos: V3Raw(0.0, L * S, L * S), dir: V3Raw(0.0, S, -S) },
-    Jet { name: "Q1F", pos: V3Raw(0.0, -L * S, L * S), dir: V3Raw(0.0, -S, -S) },
-    Jet { name: "Q2A", pos: V3Raw(0.0, -L * S, -L * S), dir: V3Raw(0.0, -S, S) },
-    Jet { name: "Q2L", pos: V3Raw(0.0, -L * S, -L * S), dir: V3Raw(0.0, S, -S) },
-    Jet { name: "Q3R", pos: V3Raw(0.0, L * S, -L * S), dir: V3Raw(0.0, -S, -S) },
-    Jet { name: "Q4R", pos: V3Raw(0.0, L * S, L * S), dir: V3Raw(0.0, -S, S) },
-    Jet { name: "Q1L", pos: V3Raw(0.0, -L * S, L * S), dir: V3Raw(0.0, S, S) },
+    Jet {
+        name: "Q3A",
+        pos: V3Raw(0.0, L * S, -L * S),
+        dir: V3Raw(0.0, S, S),
+    },
+    Jet {
+        name: "Q4F",
+        pos: V3Raw(0.0, L * S, L * S),
+        dir: V3Raw(0.0, S, -S),
+    },
+    Jet {
+        name: "Q1F",
+        pos: V3Raw(0.0, -L * S, L * S),
+        dir: V3Raw(0.0, -S, -S),
+    },
+    Jet {
+        name: "Q2A",
+        pos: V3Raw(0.0, -L * S, -L * S),
+        dir: V3Raw(0.0, -S, S),
+    },
+    Jet {
+        name: "Q2L",
+        pos: V3Raw(0.0, -L * S, -L * S),
+        dir: V3Raw(0.0, S, -S),
+    },
+    Jet {
+        name: "Q3R",
+        pos: V3Raw(0.0, L * S, -L * S),
+        dir: V3Raw(0.0, -S, -S),
+    },
+    Jet {
+        name: "Q4R",
+        pos: V3Raw(0.0, L * S, L * S),
+        dir: V3Raw(0.0, -S, S),
+    },
+    Jet {
+        name: "Q1L",
+        pos: V3Raw(0.0, -L * S, L * S),
+        dir: V3Raw(0.0, S, S),
+    },
 ];
 
 /// DPS throttle envelope: no thrust below MIN; linear through the
@@ -192,7 +256,11 @@ pub fn forces(s: &LmState, a: &Actuators, inertia0: V3Raw, mass0_kg: f64) -> Der
         (torque.z - gyro.z) / inertia.z,
     );
 
-    let mdot_dps = if a.engine_on { -a.thrust_n / DPS_VE } else { 0.0 };
+    let mdot_dps = if a.engine_on {
+        -a.thrust_n / DPS_VE
+    } else {
+        0.0
+    };
     let mdot_rcs = -(jets_firing as f64) * RCS_THRUST_N / RCS_VE;
 
     Derivs {

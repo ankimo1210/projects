@@ -52,7 +52,7 @@ async fn sim_pipeline_with_stub_agc_streams_telemetry() {
         // Engine on after 200 ms (frozen must flip false only now).
         tokio::time::sleep(Duration::from_millis(200)).await;
         feed(Packet::io(0o11, 1 << 12).unwrap(), &mut dsky); // ENGINE ON
-        // Then keep answering DINC strobes with POUT so thrust holds.
+                                                             // Then keep answering DINC strobes with POUT so thrust holds.
         while let Ok(Some(p)) =
             tokio::time::timeout(Duration::from_millis(500), agc_rx.recv()).await
         {
@@ -73,7 +73,11 @@ async fn sim_pipeline_with_stub_agc_streams_telemetry() {
     }
 
     // ~10 telemetry frames/s (every 10th of 100 ticks/s); require >= 8.
-    assert!(frames.len() >= 8, "telemetry too slow: {} frames", frames.len());
+    assert!(
+        frames.len() >= 8,
+        "telemetry too slow: {} frames",
+        frames.len()
+    );
 
     // Every frame is a well-formed Telemetry message.
     let parsed: Vec<eagle_schema::TelemetryMsg> = frames

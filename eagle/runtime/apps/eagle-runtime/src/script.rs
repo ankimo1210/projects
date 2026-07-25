@@ -497,8 +497,16 @@ mod tests {
             let want = DskyKey::from_name(name).unwrap().packet();
             keys.iter().filter(|p| **p == want).count()
         };
-        assert_eq!(count("VERB"), READ_ATTEMPTS as usize, "one entry per attempt");
-        assert_eq!(count("KEY_REL"), READ_ATTEMPTS as usize, "KEY REL leads each");
+        assert_eq!(
+            count("VERB"),
+            READ_ATTEMPTS as usize,
+            "one entry per attempt"
+        );
+        assert_eq!(
+            count("KEY_REL"),
+            READ_ATTEMPTS as usize,
+            "KEY REL leads each"
+        );
         assert_eq!(
             count("RSET"),
             0,

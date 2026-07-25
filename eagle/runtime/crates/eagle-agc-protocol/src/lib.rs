@@ -3,8 +3,11 @@ pub mod dsky;
 pub mod keys;
 pub mod packet;
 pub mod words;
-pub use agc_io::{PipaAxis, CduAxis, ThrustPulse, AgcOutput, pipa_pulse, cdu_pulse, thrust_dinc, rod_click, discrete_write, decode_output};
+pub use agc_io::{
+    cdu_pulse, decode_output, discrete_write, pipa_pulse, rod_click, thrust_dinc, AgcOutput,
+    CduAxis, PipaAxis, ThrustPulse,
+};
 pub use dsky::{DskyState, Lamps, RegisterDisplay};
-pub use keys::{DskyKey, pro_key_packets};
-pub use packet::{Packet, PacketKind, PacketError, StreamDecoder, PING};
+pub use keys::{pro_key_packets, DskyKey};
+pub use packet::{Packet, PacketError, PacketKind, StreamDecoder, PING};
 pub use words::{dp_decode, dp_encode, octal5, sp_decode, sp_encode, to_pulses};

@@ -7,12 +7,12 @@
 //! `cargo test -p eagle-runtime --test live_spike_p66 -- --ignored --test-threads=1`
 //! Budget: ~8-11 minutes (same real-time TIG countdown as Spike A, plus
 //! the ZOOMTIME trim phase that must elapse before GUILDENSTERN runs).
+use eagle_runtime::agc_session::{AgcConfig, AgcSession};
 use eagle_runtime::padload::{generate_state, PadloadManifest, StateCfg, SymTab};
 use eagle_runtime::runner::{
     self, DescentInit, HoverTruth, SyntheticHover, FLAGWRD3_ECADR, FLAGWRD8_ECADR,
     FLAGWRD8_MOON_BITS, REFSMBIT, SPIKE_B_ALARM_WHITELIST,
 };
-use eagle_runtime::agc_session::{AgcConfig, AgcSession};
 use eagle_runtime::script::{pump, DskyScript};
 use std::path::PathBuf;
 use std::time::Duration;
@@ -65,7 +65,10 @@ async fn att_hold_rod_click_enters_p66_and_closes_the_thrust_loop() {
     tokio::time::sleep(Duration::from_secs(2)).await;
     init.script.keys("R").await.unwrap();
     init.script.keys("V37E00E").await.unwrap();
-    init.script.wait_prog("00").await.expect("P00 after V37E00E");
+    init.script
+        .wait_prog("00")
+        .await
+        .expect("P00 after V37E00E");
 
     // v1 feeder holds the hover PIPA stream until ignition; the closed loop
     // arms the THRUST responder now because P63's first throttle

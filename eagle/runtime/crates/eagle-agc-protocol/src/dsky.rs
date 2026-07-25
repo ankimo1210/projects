@@ -10,7 +10,12 @@ pub struct RegisterDisplay {
 }
 
 impl Default for RegisterDisplay {
-    fn default() -> Self { Self { sign: ' ', digits: [' '; 5] } }
+    fn default() -> Self {
+        Self {
+            sign: ' ',
+            digits: [' '; 5],
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
@@ -79,12 +84,21 @@ impl Eq for DskyState {}
 impl Default for DskyState {
     fn default() -> Self {
         Self {
-            prog: [' '; 2], verb: [' '; 2], noun: [' '; 2],
-            r1: Default::default(), r2: Default::default(), r3: Default::default(),
+            prog: [' '; 2],
+            verb: [' '; 2],
+            noun: [' '; 2],
+            r1: Default::default(),
+            r2: Default::default(),
+            r3: Default::default(),
             lamps: Default::default(),
-            verb_noun_flash: false, restart: false, standby: false,
-            key_rel: false, opr_err: false, temp: false,
-            plus: [false; 3], minus: [false; 3],
+            verb_noun_flash: false,
+            restart: false,
+            standby: false,
+            key_rel: false,
+            opr_err: false,
+            temp: false,
+            plus: [false; 3],
+            minus: [false; 3],
         }
     }
 }
@@ -92,9 +106,16 @@ impl Default for DskyState {
 fn digit(code: u16) -> char {
     match code {
         0 => ' ',
-        0b10101 => '0', 0b00011 => '1', 0b11001 => '2', 0b11011 => '3',
-        0b01111 => '4', 0b11110 => '5', 0b11100 => '6', 0b10011 => '7',
-        0b11101 => '8', 0b11111 => '9',
+        0b10101 => '0',
+        0b00011 => '1',
+        0b11001 => '2',
+        0b11011 => '3',
+        0b01111 => '4',
+        0b11110 => '5',
+        0b11100 => '6',
+        0b10011 => '7',
+        0b11101 => '8',
+        0b11111 => '9',
         _ => '?',
     }
 }
@@ -133,7 +154,11 @@ impl DskyState {
                 (false, true) => '-',
                 _ => ' ',
             };
-            match i { 0 => self.r1.sign = sign, 1 => self.r2.sign = sign, _ => self.r3.sign = sign }
+            match i {
+                0 => self.r1.sign = sign,
+                1 => self.r2.sign = sign,
+                _ => self.r3.sign = sign,
+            }
         }
         *self != before
     }
@@ -144,17 +169,52 @@ impl DskyState {
         let c = digit((data >> 5) & 0x1F);
         let d = digit(data & 0x1F);
         match row {
-            11 => { self.prog = [c, d]; }
-            10 => { self.verb = [c, d]; }
-            9 => { self.noun = [c, d]; }
-            8 => { self.r1.digits[0] = d; }
-            7 => { self.plus[0] = b; self.r1.digits[1] = c; self.r1.digits[2] = d; }
-            6 => { self.minus[0] = b; self.r1.digits[3] = c; self.r1.digits[4] = d; }
-            5 => { self.plus[1] = b; self.r2.digits[0] = c; self.r2.digits[1] = d; }
-            4 => { self.minus[1] = b; self.r2.digits[2] = c; self.r2.digits[3] = d; }
-            3 => { self.r2.digits[4] = c; self.r3.digits[0] = d; }
-            2 => { self.plus[2] = b; self.r3.digits[1] = c; self.r3.digits[2] = d; }
-            1 => { self.minus[2] = b; self.r3.digits[3] = c; self.r3.digits[4] = d; }
+            11 => {
+                self.prog = [c, d];
+            }
+            10 => {
+                self.verb = [c, d];
+            }
+            9 => {
+                self.noun = [c, d];
+            }
+            8 => {
+                self.r1.digits[0] = d;
+            }
+            7 => {
+                self.plus[0] = b;
+                self.r1.digits[1] = c;
+                self.r1.digits[2] = d;
+            }
+            6 => {
+                self.minus[0] = b;
+                self.r1.digits[3] = c;
+                self.r1.digits[4] = d;
+            }
+            5 => {
+                self.plus[1] = b;
+                self.r2.digits[0] = c;
+                self.r2.digits[1] = d;
+            }
+            4 => {
+                self.minus[1] = b;
+                self.r2.digits[2] = c;
+                self.r2.digits[3] = d;
+            }
+            3 => {
+                self.r2.digits[4] = c;
+                self.r3.digits[0] = d;
+            }
+            2 => {
+                self.plus[2] = b;
+                self.r3.digits[1] = c;
+                self.r3.digits[2] = d;
+            }
+            1 => {
+                self.minus[2] = b;
+                self.r3.digits[3] = c;
+                self.r3.digits[4] = d;
+            }
             12 => {
                 // row 12 lamps: yaDSKY2.cpp:181-207 Inds[] table, Latched=1,
                 // RowMask=074000, Row=060000 (row 12); Bitmask field gives
@@ -204,7 +264,7 @@ mod tests {
     #[test]
     fn decodes_r1_with_sign() {
         let mut s = DskyState::default();
-        s.apply(&relay(8, 0, 0, 0b10101));       // R1D1 = '0'
+        s.apply(&relay(8, 0, 0, 0b10101)); // R1D1 = '0'
         s.apply(&relay(7, 1, 0b10101, 0b10101)); // +sign, R1D2, R1D3
         s.apply(&relay(6, 0, 0b11011, 0b00011)); // no -sign, R1D4='3', R1D5='1'
         assert_eq!(s.r1.sign, '+');
@@ -215,7 +275,7 @@ mod tests {
     fn blank_code_blanks_digit() {
         let mut s = DskyState::default();
         s.apply(&relay(11, 0, 0b11101, 0b11101)); // "88"
-        s.apply(&relay(11, 0, 0, 0));             // blank both
+        s.apply(&relay(11, 0, 0, 0)); // blank both
         assert_eq!(s.prog, [' ', ' ']);
     }
 

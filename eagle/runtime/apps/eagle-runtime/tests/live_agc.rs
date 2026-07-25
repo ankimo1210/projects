@@ -18,7 +18,9 @@ async fn boots_and_produces_packets_after_rset() {
     let mut s = AgcSession::start(cfg(19897)).await.unwrap();
     s.send(Packet::io(0o15, 0o22).unwrap()).unwrap(); // RSET
     let p = tokio::time::timeout(std::time::Duration::from_secs(5), s.events().recv())
-        .await.expect("timed out").expect("channel closed");
+        .await
+        .expect("timed out")
+        .expect("channel closed");
     assert!(p.channel <= 0o177);
     s.shutdown();
 }
@@ -40,8 +42,8 @@ async fn v35e_lights_all_eights() {
         match tokio::time::timeout(timeout, s.events().recv()).await {
             Ok(Some(p)) => {
                 state.apply(&p);
-                if state.verb == ['8', '8'] && state.noun == ['8', '8']
-                    && state.prog == ['8', '8'] {
+                if state.verb == ['8', '8'] && state.noun == ['8', '8'] && state.prog == ['8', '8']
+                {
                     s.shutdown();
                     return; // lamp test confirmed
                 }

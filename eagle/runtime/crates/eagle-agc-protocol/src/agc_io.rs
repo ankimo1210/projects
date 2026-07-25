@@ -3,11 +3,23 @@
 use crate::packet::{Packet, PacketKind};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum PipaAxis { X, Y, Z }
+pub enum PipaAxis {
+    X,
+    Y,
+    Z,
+}
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum CduAxis { X, Y, Z }
+pub enum CduAxis {
+    X,
+    Y,
+    Z,
+}
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum ThrustPulse { Pout, Mout, Zout }
+pub enum ThrustPulse {
+    Pout,
+    Mout,
+    Zout,
+}
 
 pub const INC_PINC: u16 = 0;
 pub const INC_PCDU: u16 = 1;
@@ -45,7 +57,10 @@ pub fn thrust_dinc() -> Packet {
 /// channel-change interrupt (MARKRUPT→DESCBITS) latches the click.
 pub fn rod_click(up: bool) -> (Packet, Packet) {
     let bit = if up { 1 << 5 } else { 1 << 6 };
-    (Packet::io(0o16, bit).expect("static"), Packet::io(0o16, 0).expect("static"))
+    (
+        Packet::io(0o16, bit).expect("static"),
+        Packet::io(0o16, 0).expect("static"),
+    )
 }
 
 /// Bitmask-then-value pair for (possibly inverted) discrete channels.
@@ -60,14 +75,32 @@ pub fn discrete_write(channel: u8, bits_high: u16, bits_low: u16) -> [Packet; 2]
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum AgcOutput {
-    Jets5 { mask: u8 },
-    Jets6 { mask: u8 },
-    Engine { on: bool, off: bool },
-    Trim { minus_pitch: bool, plus_pitch: bool, minus_roll: bool, plus_roll: bool },
+    Jets5 {
+        mask: u8,
+    },
+    Jets6 {
+        mask: u8,
+    },
+    Engine {
+        on: bool,
+        off: bool,
+    },
+    Trim {
+        minus_pitch: bool,
+        plus_pitch: bool,
+        minus_roll: bool,
+        plus_roll: bool,
+    },
     ThrustDrive(bool),
     ThrustPulse(ThrustPulse),
-    CoarseAlign { axis: CduAxis, positive: bool, pulses: u16 },
-    Gyro { raw: u16 },
+    CoarseAlign {
+        axis: CduAxis,
+        positive: bool,
+        pulses: u16,
+    },
+    Gyro {
+        raw: u16,
+    },
     Downlink,
     Other(Packet),
 }
@@ -82,8 +115,12 @@ pub fn decode_output(p: &Packet) -> AgcOutput {
         };
     }
     match p.channel {
-        0o5 => AgcOutput::Jets5 { mask: (p.data & 0xFF) as u8 },
-        0o6 => AgcOutput::Jets6 { mask: (p.data & 0xFF) as u8 },
+        0o5 => AgcOutput::Jets5 {
+            mask: (p.data & 0xFF) as u8,
+        },
+        0o6 => AgcOutput::Jets6 {
+            mask: (p.data & 0xFF) as u8,
+        },
         0o11 => AgcOutput::Engine {
             on: p.data & (1 << 12) != 0,
             off: p.data & (1 << 13) != 0,
@@ -96,7 +133,11 @@ pub fn decode_output(p: &Packet) -> AgcOutput {
         },
         0o14 => AgcOutput::ThrustDrive(p.data & (1 << 3) != 0),
         0o174..=0o176 => AgcOutput::CoarseAlign {
-            axis: match p.channel { 0o174 => CduAxis::X, 0o175 => CduAxis::Y, _ => CduAxis::Z },
+            axis: match p.channel {
+                0o174 => CduAxis::X,
+                0o175 => CduAxis::Y,
+                _ => CduAxis::Z,
+            },
             positive: p.data & 0o40000 == 0,
             pulses: p.data & 0o37777,
         },
@@ -113,19 +154,35 @@ mod tests {
     #[test]
     fn pipa_pulse_packets() {
         // PINC to PIPAX (037): counter packet, channel field = octal address, data = IncType 0
-        assert_eq!(pipa_pulse(PipaAxis::X, true),
-                   Packet::counter(0o37, 0).unwrap());
+        assert_eq!(
+            pipa_pulse(PipaAxis::X, true),
+            Packet::counter(0o37, 0).unwrap()
+        );
         // MINC to PIPAZ (041): IncType 2
-        assert_eq!(pipa_pulse(PipaAxis::Z, false),
-                   Packet::counter(0o41, 2).unwrap());
+        assert_eq!(
+            pipa_pulse(PipaAxis::Z, false),
+            Packet::counter(0o41, 2).unwrap()
+        );
     }
 
     #[test]
     fn cdu_pulse_packets() {
-        assert_eq!(cdu_pulse(CduAxis::X, true, false), Packet::counter(0o32, 1).unwrap());
-        assert_eq!(cdu_pulse(CduAxis::Y, false, false), Packet::counter(0o33, 3).unwrap());
-        assert_eq!(cdu_pulse(CduAxis::Z, true, true), Packet::counter(0o34, 0o21).unwrap());
-        assert_eq!(cdu_pulse(CduAxis::Z, false, true), Packet::counter(0o34, 0o23).unwrap());
+        assert_eq!(
+            cdu_pulse(CduAxis::X, true, false),
+            Packet::counter(0o32, 1).unwrap()
+        );
+        assert_eq!(
+            cdu_pulse(CduAxis::Y, false, false),
+            Packet::counter(0o33, 3).unwrap()
+        );
+        assert_eq!(
+            cdu_pulse(CduAxis::Z, true, true),
+            Packet::counter(0o34, 0o21).unwrap()
+        );
+        assert_eq!(
+            cdu_pulse(CduAxis::Z, false, true),
+            Packet::counter(0o34, 0o23).unwrap()
+        );
     }
 
     #[test]
@@ -135,10 +192,10 @@ mod tests {
 
     #[test]
     fn rod_click_press_release() {
-        let (press, release) = rod_click(true);   // bit 6 = +1 click (slow descent)
+        let (press, release) = rod_click(true); // bit 6 = +1 click (slow descent)
         assert_eq!(press, Packet::io(0o16, 1 << 5).unwrap());
         assert_eq!(release, Packet::io(0o16, 0).unwrap());
-        let (press, _) = rod_click(false);        // bit 7 = −1 click
+        let (press, _) = rod_click(false); // bit 7 = −1 click
         assert_eq!(press, Packet::io(0o16, 1 << 6).unwrap());
     }
 
@@ -152,32 +209,79 @@ mod tests {
 
     #[test]
     fn decode_autopilot_outputs() {
-        assert!(matches!(decode_output(&Packet::io(0o5, 0b1010_0001).unwrap()),
-            AgcOutput::Jets5 { mask: 0b1010_0001 }));
-        assert!(matches!(decode_output(&Packet::io(0o6, 0b0101_0101).unwrap()),
-            AgcOutput::Jets6 { mask: 0b0101_0101 }));
-        assert!(matches!(decode_output(&Packet::io(0o11, 1 << 12).unwrap()),
-            AgcOutput::Engine { on: true, off: false }));
-        assert!(matches!(decode_output(&Packet::io(0o12, 1 << 9).unwrap()),
-            AgcOutput::Trim { plus_pitch: true, minus_pitch: false, minus_roll: false, plus_roll: false }));
-        assert!(matches!(decode_output(&Packet::io(0o14, 1 << 3).unwrap()),
-            AgcOutput::ThrustDrive(true)));
-        assert!(matches!(decode_output(&Packet::counter(0o55, 0o15).unwrap()),
-            AgcOutput::ThrustPulse(ThrustPulse::Pout)));
-        assert!(matches!(decode_output(&Packet::counter(0o55, 0o16).unwrap()),
-            AgcOutput::ThrustPulse(ThrustPulse::Mout)));
-        assert!(matches!(decode_output(&Packet::counter(0o55, 0o17).unwrap()),
-            AgcOutput::ThrustPulse(ThrustPulse::Zout)));
+        assert!(matches!(
+            decode_output(&Packet::io(0o5, 0b1010_0001).unwrap()),
+            AgcOutput::Jets5 { mask: 0b1010_0001 }
+        ));
+        assert!(matches!(
+            decode_output(&Packet::io(0o6, 0b0101_0101).unwrap()),
+            AgcOutput::Jets6 { mask: 0b0101_0101 }
+        ));
+        assert!(matches!(
+            decode_output(&Packet::io(0o11, 1 << 12).unwrap()),
+            AgcOutput::Engine {
+                on: true,
+                off: false
+            }
+        ));
+        assert!(matches!(
+            decode_output(&Packet::io(0o12, 1 << 9).unwrap()),
+            AgcOutput::Trim {
+                plus_pitch: true,
+                minus_pitch: false,
+                minus_roll: false,
+                plus_roll: false
+            }
+        ));
+        assert!(matches!(
+            decode_output(&Packet::io(0o14, 1 << 3).unwrap()),
+            AgcOutput::ThrustDrive(true)
+        ));
+        assert!(matches!(
+            decode_output(&Packet::counter(0o55, 0o15).unwrap()),
+            AgcOutput::ThrustPulse(ThrustPulse::Pout)
+        ));
+        assert!(matches!(
+            decode_output(&Packet::counter(0o55, 0o16).unwrap()),
+            AgcOutput::ThrustPulse(ThrustPulse::Mout)
+        ));
+        assert!(matches!(
+            decode_output(&Packet::counter(0o55, 0o17).unwrap()),
+            AgcOutput::ThrustPulse(ThrustPulse::Zout)
+        ));
         // coarse align X: positive direction (0o40000 bit clear), 24 pulses
-        assert!(matches!(decode_output(&Packet::io(0o174, 24).unwrap()),
-            AgcOutput::CoarseAlign { axis: CduAxis::X, positive: true, pulses: 24 }));
+        assert!(matches!(
+            decode_output(&Packet::io(0o174, 24).unwrap()),
+            AgcOutput::CoarseAlign {
+                axis: CduAxis::X,
+                positive: true,
+                pulses: 24
+            }
+        ));
         // coarse align X: negative direction (0o40000 bit set), 24 pulses
-        assert!(matches!(decode_output(&Packet::io(0o174, 0o40000 | 24).unwrap()),
-            AgcOutput::CoarseAlign { axis: CduAxis::X, positive: false, pulses: 24 }));
-        assert!(matches!(decode_output(&Packet::io(0o177, 0o1234).unwrap()),
-            AgcOutput::Gyro { raw: 0o1234 }));
-        assert!(matches!(decode_output(&Packet::io(0o34, 0).unwrap()), AgcOutput::Downlink));
-        assert!(matches!(decode_output(&Packet::io(0o35, 0).unwrap()), AgcOutput::Downlink));
-        assert!(matches!(decode_output(&Packet::io(0o10, 0).unwrap()), AgcOutput::Other(_)));
+        assert!(matches!(
+            decode_output(&Packet::io(0o174, 0o40000 | 24).unwrap()),
+            AgcOutput::CoarseAlign {
+                axis: CduAxis::X,
+                positive: false,
+                pulses: 24
+            }
+        ));
+        assert!(matches!(
+            decode_output(&Packet::io(0o177, 0o1234).unwrap()),
+            AgcOutput::Gyro { raw: 0o1234 }
+        ));
+        assert!(matches!(
+            decode_output(&Packet::io(0o34, 0).unwrap()),
+            AgcOutput::Downlink
+        ));
+        assert!(matches!(
+            decode_output(&Packet::io(0o35, 0).unwrap()),
+            AgcOutput::Downlink
+        ));
+        assert!(matches!(
+            decode_output(&Packet::io(0o10, 0).unwrap()),
+            AgcOutput::Other(_)
+        ));
     }
 }

@@ -828,8 +828,7 @@ impl SyntheticHover {
         let handle = tokio::spawn(async move {
             let mut tick = tokio::time::interval(Duration::from_millis(10));
             tick.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
-            let mut model =
-                SyntheticHoverModel::new(initial.alt_m, initial.vz_ms, initial.mass_kg);
+            let mut model = SyntheticHoverModel::new(initial.alt_m, initial.vz_ms, initial.mass_kg);
             let mut responder = ThrustResponder::default();
             let mut engine_on = initial.engine_on;
 
@@ -1277,15 +1276,27 @@ mod tests {
         let (mut script, mut rx, _wtx) = seeded_script();
         let words = [
             // loaded index 0: stride-verified (0 % 3 == 0).
-            PadWord { ecadr: 0o2400, word: 0o5050 },
+            PadWord {
+                ecadr: 0o2400,
+                word: 0o5050,
+            },
             // zero word: skipped entirely (cold-boot erasable is zero).
-            PadWord { ecadr: 0o2401, word: 0 },
+            PadWord {
+                ecadr: 0o2401,
+                word: 0,
+            },
             // loaded index 1: raw keys, no read-back.
-            PadWord { ecadr: 0o2402, word: 0o7 },
+            PadWord {
+                ecadr: 0o2402,
+                word: 0o7,
+            },
             // loaded index 2: the stride (every 3rd) would SKIP this one --
             // the always-verify set must force the read-back anyway. This
             // is ZOOMTIME's ECADR, the exact word the review flagged.
-            PadWord { ecadr: 0o3422, word: 0o5050 },
+            PadWord {
+                ecadr: 0o3422,
+                word: 0o5050,
+            },
         ];
         assert!(ALWAYS_VERIFY_ECADRS.contains(&0o3422));
         apply_padload(&mut script, &words, 3, ALWAYS_VERIFY_ECADRS)
@@ -1322,9 +1333,18 @@ mod tests {
         // always-set is what forces the read-back in the test above.
         let (mut script, mut rx, _wtx) = seeded_script();
         let words = [
-            PadWord { ecadr: 0o2400, word: 0o5050 },
-            PadWord { ecadr: 0o2402, word: 0o7 },
-            PadWord { ecadr: 0o3422, word: 0o5050 },
+            PadWord {
+                ecadr: 0o2400,
+                word: 0o5050,
+            },
+            PadWord {
+                ecadr: 0o2402,
+                word: 0o7,
+            },
+            PadWord {
+                ecadr: 0o3422,
+                word: 0o5050,
+            },
         ];
         apply_padload(&mut script, &words, 3, &[]).await.unwrap();
         drop(script);
