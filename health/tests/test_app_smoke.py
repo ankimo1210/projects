@@ -47,6 +47,7 @@ def test_all_seeded_pages_render_without_exception(seeded_data_dir):
         ("body_view", "body_page", "身体"),
         ("sync_view", "sync_page", "同期"),
         ("inventory_view", "inventory_page", "データ棚卸し"),
+        ("insights_view", "insights_page", "気づき"),
     ]
     for module, function, title in pages:
         source = app_source(
