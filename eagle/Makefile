@@ -1,4 +1,4 @@
-.PHONY: vendor agc-tools agc test test-integration dev
+.PHONY: vendor agc-tools agc test test-integration dev descent-p66
 
 vendor:
 	bash scripts/fetch-vendor.sh
@@ -25,3 +25,10 @@ dev-runtime: agc
 
 dev-client:
 	cd client && npm run dev
+
+# Closed-loop P66 descent: real Luminary099 flies to soft touchdown against
+# our 6-DoF physics. Open the ENGR tab in the client to watch telemetry.
+descent-p66: agc
+	cd runtime && cargo run -p eagle-runtime -- \
+	  --yaagc ../build/agc/yaAGC --core ../build/agc/Luminary099.bin \
+	  --scenario ../scenarios/p66-gate.toml --root ..

@@ -1,0 +1,10 @@
+{"type":"thread.started","thread_id":"codex-fixture-session"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"msg-1","type":"agent_message","text":"I will inspect the tests."}}
+{"type":"item.started","item":{"id":"cmd-1","type":"command_execution","command":"/bin/bash -lc 'rg failing_test tests'","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"cmd-1","type":"command_execution","command":"/bin/bash -lc 'rg failing_test tests'","aggregated_output":"tests/test_sample.py:10:def failing_test():\n","exit_code":0,"status":"completed"}}
+{"type":"item.started","item":{"id":"cmd-2","type":"command_execution","command":"/bin/bash -lc 'uv run pytest tests/test_sample.py'","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"cmd-2","type":"command_execution","command":"/bin/bash -lc 'uv run pytest tests/test_sample.py'","aggregated_output":"1 passed in 0.12s\n","exit_code":0,"status":"completed"}}
+{"type":"item.completed","item":{"id":"edit-1","type":"file_change","changes":[{"path":"src/sample.py","kind":"update"}],"status":"completed"}}
+{"type":"item.completed","item":{"id":"msg-2","type":"agent_message","text":"Done."}}
+{"type":"turn.completed","usage":{"input_tokens":1200,"cached_input_tokens":800,"cache_write_input_tokens":0,"output_tokens":120,"reasoning_output_tokens":40}}

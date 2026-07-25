@@ -5,7 +5,9 @@ use eagle_runtime::server::{router, to_msg, AppState};
 use eagle_runtime::trace::TraceWriter;
 use std::path::PathBuf;
 use tokio::signal::unix::{signal, SignalKind};
-use tokio::sync::{broadcast, mpsc};
+use tokio::sync::{broadcast, mpsc, watch};
+
+mod scenario_mode;
 
 #[derive(Parser)]
 struct Args {
@@ -19,6 +21,13 @@ struct Args {
     ws_port: u16,
     #[arg(long)]
     trace_out: Option<PathBuf>,
+    /// Closed-loop mode: run this scenario (path to a p66-gate-style TOML)
+    /// end to end. Without it, behavior is exactly Phase 1 (DSKY only).
+    #[arg(long)]
+    scenario: Option<PathBuf>,
+    /// Repo root for `build/agc/Luminary099.log` symtab (scenario mode).
+    #[arg(long, default_value = ".")]
+    root: PathBuf,
 }
 
 #[tokio::main]
@@ -31,14 +40,33 @@ async fn main() -> anyhow::Result<()> {
     let (state_tx, _) = broadcast::channel::<String>(256);
     let (agc_tx, mut agc_rx) = mpsc::unbounded_channel();
     let latest = std::sync::Arc::new(std::sync::Mutex::new(String::new()));
-    let mut trace = TraceWriter::open(args.trace_out)?;
+    let (dsky_tx, dsky_rx) = watch::channel(DskyState::default());
+    // Kept alive so `dsky_tx.send` below has a live receiver; Task 14 will
+    // consume `dsky_rx` (e.g. hand it to a `DskyScript`) instead of this
+    // placeholder binding.
+    let _keep = dsky_rx;
+    let mut trace = TraceWriter::open(args.trace_out.clone())?;
 
-    let app = AppState { state_rx: state_tx.clone(), agc_tx, latest: latest.clone() };
+    let app = AppState { state_rx: state_tx.clone(), agc_tx: agc_tx.clone(), latest: latest.clone() };
     let listener = tokio::net::TcpListener::bind(("127.0.0.1", args.ws_port)).await?;
     tokio::spawn(async move {
         axum::serve(listener, router(app)).await.unwrap();
     });
     eprintln!("eagle-runtime: ws://127.0.0.1:{}/ws", args.ws_port);
+
+    // Closed-loop mode: hand off to the scenario driver (it owns the socket
+    // via `pump`, spawns the sim thread, and runs the choreography).
+    if let Some(path) = args.scenario.clone() {
+        return scenario_mode::run(scenario_mode::Cfg {
+            session,
+            scenario: path,
+            root: args.root.clone(),
+            state_tx: state_tx.clone(),
+            latest: latest.clone(),
+            trace_out: args.trace_out.clone(),
+        })
+        .await;
+    }
 
     let mut sigterm = signal(SignalKind::terminate())?;
     let mut dsky = DskyState::default();
@@ -49,6 +77,7 @@ async fn main() -> anyhow::Result<()> {
                     Some(pkt) => {
                         trace.log("out", &pkt);
                         if dsky.apply(&pkt) {
+                            let _ = dsky_tx.send(dsky);
                             let json = serde_json::to_string(&to_msg(&dsky))?;
                             *latest.lock().unwrap() = json.clone();
                             let _ = state_tx.send(json);

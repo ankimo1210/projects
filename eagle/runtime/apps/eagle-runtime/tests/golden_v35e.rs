@@ -126,7 +126,9 @@ async fn run_v35e() -> GoldenV35e {
         "expected both flash phases {FLASH_OFF:?} and {FLASH_ON:?} within the 3s \
          capture (>= 2 DSKY_FLASH_PERIOD cycles); saw {seen_triples:?}");
 
-    let ServerMsg::DskyState(final_state) = to_msg(&state);
+    let ServerMsg::DskyState(final_state) = to_msg(&state) else {
+        panic!("expected a DskyState message");
+    };
     GoldenV35e { milestones: milestones(&packets), final_state }
 }
 
