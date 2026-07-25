@@ -228,7 +228,7 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
 
 /// The touchdown classification from a finished run, if any.
 pub fn touchdown_class(r: &HeadlessResult) -> Option<Touchdown> {
-    r.sim.touchdown.map(|(t, _, _, _)| t)
+    r.sim.touchdown.map(|t| t.class)
 }
 
 /// Forward client → AGC packets (web DSKY key/PRO presses) into `tx`,

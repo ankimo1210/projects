@@ -78,3 +78,21 @@ calibration, or a direct `LM_Simulator` file:line citation):
 
 No other module performs an AGC-unit conversion; if a future module needs
 one, it should call into the codec rather than hardcoding a scale factor.
+
+## Truth co-rotation (Wave 1 review fix, 2026-07-25)
+
+The scenario gate is a hover: stationary relative to the SURFACE. The truth
+initial MCI velocity is therefore `vz·up + ω ẑ × r` (state::surface_velocity),
+matching the ω·r term the AGC pad-load state already carries
+(padload.rs generate_state). Touchdown kinematics (v_vert, v_horiz) and the
+telemetry vz/v_horiz are measured surface-relative; miss distance is the
+great-circle arc from the scenario site, computed in MCMF at touchdown time.
+
+Caveat, freeze phase: `sim.rs` pins the MCI position (not just the velocity)
+until the first ENGINE ON, while the clock — and therefore MCMF — keeps
+turning. So the truth slides west over the ground at ω·r·cos φ ≈ 4.63 m/s
+for the whole pre-ignition hold, and a live run's reported miss distance
+carries ≈ 1.6 km of that freeze-phase ground track (~350 s to ENGINE ON)
+before the descent contributes anything. This is why miss distance is
+reported and not gated in Wave 1: gate it only after the freeze is made
+co-rotating, or after a measured run establishes the baseline.

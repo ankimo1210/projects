@@ -44,6 +44,15 @@ pub fn gravity(pos: V3<Mci>) -> V3<Mci> {
     pos.unit().scale(-crate::constants::MU_MOON / r2)
 }
 
+/// Inertial (MCI) velocity of the co-rotating lunar surface point at
+/// `pos`: ω ẑ × pos (MCI z = lunar pole, docs/coordinate-frames.md). A
+/// vehicle hovering — stationary relative to the ground — carries exactly
+/// this velocity.
+pub fn surface_velocity(pos: V3<Mci>) -> V3<Mci> {
+    let w = crate::constants::OMEGA_MOON;
+    V3::new(-w * pos.y, w * pos.x, 0.0)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -56,5 +65,20 @@ mod tests {
         // points toward the centre (−x here)
         assert!(g.x < 0.0 && g.y == 0.0 && g.z == 0.0);
         assert!((g.norm() - MU_MOON / (r * r)).abs() < 1e-9);
+    }
+
+    #[test]
+    fn surface_velocity_is_eastward_and_horizontal() {
+        use crate::constants::OMEGA_MOON;
+        let r = R_SITE;
+        let v = surface_velocity(V3::<Mci>::new(r, 0.0, 0.0));
+        assert!(v.x == 0.0 && v.z == 0.0);
+        assert!(
+            (v.y - OMEGA_MOON * r).abs() < 1e-12,
+            "eastward ω·r at the equator"
+        );
+        // Perpendicular to the radial everywhere.
+        let p = V3::<Mci>::new(0.3 * r, -0.5 * r, 0.8 * r);
+        assert!(surface_velocity(p).dot(p).abs() < 1e-6);
     }
 }

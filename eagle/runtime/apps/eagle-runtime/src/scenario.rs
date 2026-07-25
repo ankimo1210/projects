@@ -115,13 +115,16 @@ impl Scenario {
     }
 
     /// Initial LM state at `epoch_s`: on the site radial at gate altitude,
-    /// velocity purely vertical, body +X pointing up (radially out), no
-    /// spin. Mass is dry + both propellants.
+    /// body +X pointing up (radially out), no spin. Mass is dry + both
+    /// propellants. The gate is a HOVER — stationary relative to the
+    /// rotating surface — so the inertial velocity is `vz·up` plus the
+    /// co-rotation term ω ẑ × r (the same ω·r the AGC pad-load state
+    /// carries; see `padload::generate_state`).
     pub fn initial_state(&self, epoch_s: f64) -> LmState {
         let mcmf_to_mci = mci_to_mcmf(epoch_s).inverse();
         let up_mci = mcmf_to_mci.apply(self.site_unit_mcmf()).unit();
         let pos = up_mci.scale(self.site.radius_m + self.gate.alt_m);
-        let vel = up_mci.scale(self.gate.vz_ms);
+        let vel = up_mci.scale(self.gate.vz_ms) + eagle_dynamics::state::surface_velocity(pos);
         let att = body_x_to(up_mci);
         LmState {
             t: epoch_s,
@@ -225,5 +228,9 @@ mod tests {
         let bx = st.att.apply(V3::<Body>::new(1.0, 0.0, 0.0));
         let up = st.pos.unit();
         assert!((bx.dot(up) - 1.0).abs() < 1e-9, "body x not radial: {bx:?}");
+        // Hover gate = stationary relative to the surface (vz_ms = 0 here):
+        // inertial velocity must be exactly the co-rotation term.
+        let v_rel = st.vel - eagle_dynamics::state::surface_velocity(st.pos);
+        assert!(v_rel.norm() < 1e-9, "gate not co-rotating: {v_rel:?}");
     }
 }
