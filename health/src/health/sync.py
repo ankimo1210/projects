@@ -164,7 +164,8 @@ class SyncEngine:
                         metric.name,
                         f"{chunk_start} → {chunk_end} ({budget.used} requests)",
                     )
-            progress.done = True
+            else:
+                progress.done = True
 
         report.requests_made = budget.used
         return report
