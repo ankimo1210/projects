@@ -212,8 +212,45 @@ impl SimCore {
         self.phase7_thrust(&mut out);
         self.phase8_rod(&mut out);
         self.phase10_telemetry_and_touchdown(&mut out);
+        self.debug_attitude_loop();
         self.tick_index += 1;
         out
+    }
+
+    /// Diagnostic: log the attitude-control loop signals (gimbals we send,
+    /// jets the AGC fired, torque we produce) when EAGLE_ATT_DEBUG is set.
+    /// One line per 10 ticks post-freeze — enough to read the sign chain.
+    fn debug_attitude_loop(&self) {
+        if self.frozen || !self.tick_index.is_multiple_of(10) {
+            return;
+        }
+        thread_local! {
+            static DBG: std::cell::RefCell<Option<std::fs::File>> =
+                const { std::cell::RefCell::new(None) };
+            static INIT: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
+        }
+        INIT.with(|i| {
+            if !i.get() {
+                i.set(true);
+                if let Ok(p) = std::env::var("EAGLE_ATT_DEBUG") {
+                    DBG.with(|d| *d.borrow_mut() = std::fs::File::create(p).ok());
+                }
+            }
+        });
+        DBG.with(|d| {
+            if let Some(f) = d.borrow_mut().as_mut() {
+                use std::io::Write;
+                let g = self.imu.gimbals_deg(&self.st.att);
+                let tau = eagle_dynamics::forces::jet_torque(self.act.jets);
+                let w = self.st.omega;
+                let _ = writeln!(
+                    f,
+                    "t={:.2} jets={} gimbal=[{:.2},{:.2},{:.2}] omega=[{:.4},{:.4},{:.4}] torque=[{:.1},{:.1},{:.1}]",
+                    self.st.t, self.act.jets, g[0], g[1], g[2],
+                    w.x, w.y, w.z, tau.x, tau.y, tau.z
+                );
+            }
+        });
     }
 
     // 1. Apply queued discrete actuator changes from ingested events.
