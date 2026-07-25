@@ -1,8 +1,9 @@
 from datetime import date
 
 import pytest
-from health.client import RateLimited, RequestCapExceeded
-from health.endpoints import CATALOG, DAILY_ROLLUP, RECONCILE, Metric, ParsedRows
+from health.auth import AuthError
+from health.client import ApiError, RateLimited, RequestCapExceeded
+from health.endpoints import CATALOG, DAILY_ROLLUP, RECONCILE, Metric, ParsedRows, PayloadError
 from health.store import SYNC_IN_PROGRESS, SYNC_OK, Store
 from health.sync import SyncEngine, backfill_start
 
@@ -278,3 +279,68 @@ def test_progress_callback_reports_metric_range_and_request_count(store):
 
 def test_unexpected_request_cap_error_type_is_not_an_api_error():
     assert not issubclass(RequestCapExceeded, RateLimited)
+
+
+class FailingClient(FakeClient):
+    """Fails every send for one metric, succeeds for the others."""
+
+    def __init__(self, failing_metric, error):
+        super().__init__()
+        self.failing_metric = failing_metric
+        self.error = error
+
+    def _send(self, method, metric_, start, end, budget, payload):
+        if metric_.name == self.failing_metric:
+            budget.consume()
+            raise self.error
+        return super()._send(method, metric_, start, end, budget, payload)
+
+
+def test_api_error_isolates_one_metric_and_continues(store):
+    client = FailingClient("first", ApiError(403, "insufficient scope", code=403))
+    report = SyncEngine(
+        client,
+        store,
+        [metric(name="first"), metric(name="second")],
+        today=date(2026, 1, 1),
+        environ={"HEALTH_BACKFILL_START": "2026-01-01"},
+    ).sync_all()
+
+    assert [f.metric for f in report.failures] == ["first"]
+    assert report.failures[0].kind == "api"
+    assert report.failures[0].status_code == 403
+    assert [call[1] for call in client.calls] == ["second"]
+    assert store.get_sync_state("second") == date(2026, 1, 1)
+    assert store.get_sync_state("first") is None
+
+
+def test_payload_error_isolates_one_metric_and_continues(store):
+    def explode(_pages):
+        raise PayloadError("first", "rollupDataPoint missing civilStartTime.date")
+
+    report = SyncEngine(
+        FakeClient(),
+        store,
+        [metric(name="first", parser=explode), metric(name="second")],
+        today=date(2026, 1, 1),
+        environ={"HEALTH_BACKFILL_START": "2026-01-01"},
+    ).sync_all()
+
+    assert [f.metric for f in report.failures] == ["first"]
+    assert report.failures[0].kind == "payload"
+    assert store.get_sync_state("second") == date(2026, 1, 1)
+
+
+def test_auth_error_stops_the_whole_run(store):
+    client = FailingClient("first", AuthError("token revoked"))
+
+    with pytest.raises(AuthError):
+        SyncEngine(
+            client,
+            store,
+            [metric(name="first"), metric(name="second")],
+            today=date(2026, 1, 1),
+            environ={"HEALTH_BACKFILL_START": "2026-01-01"},
+        ).sync_all()
+
+    assert store.get_sync_state("second") is None
