@@ -3,7 +3,8 @@
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-from common import calendar_rolling_mean, clip_days, load_sleep, period_days
+from common import clip_days, load_sleep, period_days
+from health.analytics import calendar_rolling_mean
 from theme import palette, style
 
 STAGES = [
