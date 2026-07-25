@@ -9,11 +9,24 @@ Google Health APIを使う個人向けダッシュボード。応答は日本語
 - `dailyRollUp`は1 payload、`reconcile`は全pageを取得してからparseする。途中pageを
   保存済みとして扱わない。
 - raw pages、typed rows、watermarkは`Store.replace_chunk()`でchunk単位に原子的置換する。
-  upstream deletionやempty responseでも、成功したchunkは古い行を正しく消す。
-- sync runはHealth APIへの物理sendを最大200件に制限する。429とhard capでは完了chunk
-  だけを残して再開可能にする。非最終chunkの`sync_state.status`は`in_progress`、最終chunkは
-  `ok`。`in_progress`は次chunkから再開し、`ok`はwatermarkの2日前から再取得する。
-  engineへsleep/自動retryを追加しない（paceと401 retryはclient責務）。
+  chunk境界は`CHUNK_EPOCH`と`max_range_days`だけで決まるカレンダー整列（`aligned_chunk`）。
+  同じ暦日は常に同じchunk keyになるので、再取得はraw pageを置換し重複を残さない。
+  `start`/`end`は整列chunk key（raw_jsonの同一性）、`covered_start`/`covered_end`は
+  `[floor, today]`へクリップした後に実際に再取得した範囲で、両者はしばしば異なる。
+  raw_json以外の3つのtyped-row DELETE（daily_series/intraday/sleep_sessions）は必ず
+  `covered_start`/`covered_end`を使うこと――chunk keyまで広げると、そのchunkでは
+  取得していない既同期日を消してしまう（実装中に発見・修正した不具合なので徹底する）。
+- sync runはまず全metricの直近`RECENT_WINDOW_DAYS`を取得し（forward pass）、残予算で
+  `backfilled_from`から古い方向へ1 chunkずつラウンドロビンする（history pass）。
+  `sync_state`は`last_synced_date`（前方）と`backfilled_from`（後方）の両端を持つ。
+  `replace_chunk()`の`status`/`watermark`/`backfill_from`は`None`なら「そのcolumnは変更
+  しない」という意味。forward chunkは常に実際に到達した日を書くので、中断したrunは
+  取りこぼしなくそこから再開する。history chunkはstatus/watermarkに`None`を渡し、
+  `backfilled_from`だけを後方へ伸ばす。物理sendは最大200件（UIで可変）。
+  ApiError/PayloadErrorはmetric単位で隔離し`SyncReport.failures`へ記録して続行するが、
+  そのmetricはhistory passも含めrun全体から除外される（失敗したpassの残りchunkだけでは
+  ない）。AuthError/429/hard capはrun全体を止める。engineへsleep/自動retryを追加しない
+  （paceと401 retryはclient責務）。
 - testsはfake HTTPとcommitted fixtureだけを使う。live Google Health APIを自動テストで
   呼ばず、実アカウント確認は`health/scripts/probe_datatypes.py`で行う。
 - `data/`と`.env`はprivateかつgitignored。token、probe payload、実健康データをcommitしない。
