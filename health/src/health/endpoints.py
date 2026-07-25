@@ -199,13 +199,18 @@ def _local_datetime(
     raise PayloadError(metric_name, f"missing {field} (no civil time, no physical time/offset)")
 
 
+_CATALOG_BY_NAME: dict[str, Metric] = {}
+
+
 def _metric(name: str) -> Metric:
     """Look up this module's own CATALOG entry by name. Parsers use this to
-    get the Metric object response_points() needs (.method / .name); resolved
-    lazily at call time -- CATALOG is only fully built after this module's
+    get the Metric object response_points() needs (.method / .name); the index
+    is built on first use -- CATALOG is only fully built after this module's
     top-level code finishes running, which is always true by the time any
     parser is actually invoked."""
-    return next(m for m in CATALOG if m.name == name)
+    if not _CATALOG_BY_NAME:
+        _CATALOG_BY_NAME.update({item.name: item for item in CATALOG})
+    return _CATALOG_BY_NAME[name]
 
 
 # -- rollup parsers -------------------------------------------------------------

@@ -23,14 +23,14 @@ def catalog_metric(name):
 
 
 def test_inventory_lists_every_published_type_with_implemented_flag(store):
-    inventory = build_inventory(store)
+    inventory = build_inventory()
     assert list(inventory.columns) == PUBLISHED_COLUMNS
     assert set(inventory["data_type"]) == set(KNOWN_DATA_TYPES)
     assert inventory["implemented"].dtype == bool
 
 
 def test_only_catalog_data_types_are_implemented(store):
-    inventory = build_inventory(store).set_index("data_type")
+    inventory = build_inventory().set_index("data_type")
     implemented = {metric.data_type for metric in CATALOG}
     assert set(inventory.index[inventory["implemented"]]) == implemented
     assert not inventory.loc["blood-glucose", "implemented"]
@@ -97,10 +97,17 @@ def test_daily_sleep_intraday_and_raw_stats(store):
 
 
 def test_empty_inventory_has_stable_columns_and_zero_counts(store):
-    published = build_inventory(store)
+    published = build_inventory()
     stored = build_series_inventory(store)
     assert list(published.columns) == PUBLISHED_COLUMNS
     assert list(stored.columns) == STORED_COLUMNS
     assert not published.empty and not stored.empty
     assert (stored["n"] == 0).all()
     assert (stored["n_raw_pages"] == 0).all()
+
+
+def test_build_inventory_needs_no_store():
+    frame = build_inventory()
+
+    assert not frame.empty
+    assert set(frame.columns) == set(PUBLISHED_COLUMNS)
