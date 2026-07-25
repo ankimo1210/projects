@@ -2,7 +2,14 @@ from datetime import date, timedelta
 
 import pandas as pd
 import pytest
-from health.analytics import calendar_rolling_mean, lagged_correlation, rolling_baseline_z
+from health.analytics import (
+    calendar_rolling_mean,
+    coverage_calendar,
+    lagged_correlation,
+    rolling_baseline_z,
+    sleep_midpoints,
+    social_jetlag_hours,
+)
 
 
 def _daily(values, start=date(2026, 1, 1)):
@@ -116,3 +123,62 @@ def test_calendar_rolling_mean_preserves_original_row_order():
 def test_calendar_rolling_mean_rejects_non_positive_window():
     with pytest.raises(ValueError, match="positive"):
         calendar_rolling_mean(pd.DataFrame(), "steps", days=0)
+
+
+def _sleep(date_value, start, end, is_main=True):
+    return {
+        "date": date_value,
+        "start_ts": start,
+        "end_ts": end,
+        "is_main": is_main,
+        "minutes_asleep": 400,
+    }
+
+
+def test_midpoint_is_measured_from_the_noon_before_the_wake_date():
+    df = pd.DataFrame([_sleep(date(2026, 1, 6), "2026-01-05 23:00:00", "2026-01-06 07:00:00")])
+
+    out = sleep_midpoints(df)
+
+    # midnight+3h = 15 hours after the previous noon
+    assert out.iloc[0]["midpoint_hours_after_noon"] == pytest.approx(15.0)
+
+
+def test_social_jetlag_is_free_day_minus_work_day_midpoint():
+    rows = []
+    for day in range(5):  # Mon 2026-01-05 .. Fri 2026-01-09
+        rows.append(
+            _sleep(
+                date(2026, 1, 5) + timedelta(days=day),
+                f"2026-01-{4 + day:02d} 23:00:00",
+                f"2026-01-{5 + day:02d} 07:00:00",
+            )
+        )
+    for day in (10, 11):  # Sat, Sun: same duration, two hours later
+        rows.append(
+            _sleep(date(2026, 1, day), f"2026-01-{day:02d} 01:00:00", f"2026-01-{day:02d} 09:00:00")
+        )
+
+    jetlag = social_jetlag_hours(pd.DataFrame(rows))
+
+    assert jetlag == pytest.approx(2.0, abs=0.01)
+
+
+def test_social_jetlag_needs_both_kinds_of_day():
+    rows = [
+        _sleep(date(2026, 1, 5), "2026-01-04 23:00:00", "2026-01-05 07:00:00"),
+        _sleep(date(2026, 1, 6), "2026-01-05 23:00:00", "2026-01-06 07:00:00"),
+    ]
+
+    assert social_jetlag_hours(pd.DataFrame(rows)) is None
+
+
+def test_coverage_calendar_marks_every_day_in_the_span():
+    df = pd.DataFrame(
+        {"date": [date(2026, 1, 1), date(2026, 1, 3)], "steps": [100.0, float("nan")]}
+    )
+
+    out = coverage_calendar(df, "steps", date(2026, 1, 1), date(2026, 1, 4))
+
+    assert len(out) == 4
+    assert out["has_data"].tolist() == [True, False, False, False]
