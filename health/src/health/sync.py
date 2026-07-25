@@ -141,6 +141,8 @@ class SyncEngine:
                         rows,
                         status=status,
                         watermark=request_end,
+                        covered_start=request_start,
+                        covered_end=request_end,
                     )
                 except RateLimited as exc:
                     report.paused = True
