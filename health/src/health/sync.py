@@ -95,15 +95,14 @@ class SyncEngine:
         checkpoint = self.store.get_sync_checkpoint(metric.name)
         if checkpoint is None:
             return initial
-        last, status = checkpoint
-        if status == SYNC_IN_PROGRESS:
+        if checkpoint.status == SYNC_IN_PROGRESS:
             # A request cap or error stopped between chunks. Continue at the
             # first unfinished day so even a very small cap makes progress.
-            return max(initial, last + timedelta(days=1))
+            return max(initial, checkpoint.last_synced + timedelta(days=1))
         # A completed metric deliberately overlaps the previous watermark so
         # late-arriving values and upstream deletions are reconciled, including
         # on the first sync of a later calendar day.
-        return max(initial, last - timedelta(days=TRAILING_REFETCH_DAYS))
+        return max(initial, checkpoint.last_synced - timedelta(days=TRAILING_REFETCH_DAYS))
 
     def sync_all(self, progress_cb: Callable[[str, str], None] | None = None) -> SyncReport:
         report = SyncReport()

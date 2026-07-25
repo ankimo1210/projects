@@ -141,7 +141,7 @@ def test_429_keeps_only_completed_chunks(store):
     assert report.paused and report.resume_in_s == 90
     assert report.requests_made == 2
     assert store.get_sync_state("test") == date(2026, 1, 1)
-    assert store.get_sync_checkpoint("test")[1] == SYNC_IN_PROGRESS
+    assert store.get_sync_checkpoint("test").status == SYNC_IN_PROGRESS
     assert len(store.raw_stats()) == 1
 
 
@@ -156,7 +156,7 @@ def test_hard_cap_between_rollup_chunks(store):
     ).sync_all()
     assert report.stopped_early and report.requests_made == 1
     assert store.get_sync_state("test") == date(2026, 1, 1)
-    assert store.get_sync_checkpoint("test")[1] == SYNC_IN_PROGRESS
+    assert store.get_sync_checkpoint("test").status == SYNC_IN_PROGRESS
 
 
 def test_hard_cap_during_paging_does_not_save_partial_chunk(store):
@@ -186,7 +186,7 @@ def test_second_run_resumes_at_first_unfinished_chunk(store):
     assert second.calls[0][2:] == (date(2026, 1, 2), date(2026, 1, 2))
     assert report.progress[0].done
     assert store.get_sync_state("test") == date(2026, 1, 2)
-    assert store.get_sync_checkpoint("test")[1] == SYNC_OK
+    assert store.get_sync_checkpoint("test").status == SYNC_OK
 
 
 def test_completed_metric_refetches_trailing_three_days(store):
@@ -231,7 +231,12 @@ def test_legacy_ok_checkpoint_becomes_resumable_after_first_overlap_chunk(store)
     ).sync_all()
     assert report.stopped_early
     assert first.calls[0][2:] == (date(2026, 1, 1), date(2026, 1, 1))
-    assert store.get_sync_checkpoint("test") == (date(2026, 1, 1), SYNC_IN_PROGRESS)
+    checkpoint = store.get_sync_checkpoint("test")
+    # last_synced_date never regresses: this in-progress chunk only
+    # re-verified an earlier trailing-overlap day, so the watermark stays at
+    # the previous run's Jan 2, even though the chunk itself covered Jan 1.
+    assert checkpoint.last_synced == date(2026, 1, 2)
+    assert checkpoint.status == SYNC_IN_PROGRESS
 
     second = FakeClient()
     SyncEngine(
@@ -242,7 +247,9 @@ def test_legacy_ok_checkpoint_becomes_resumable_after_first_overlap_chunk(store)
         environ={"HEALTH_BACKFILL_START": "2026-01-01"},
         max_requests=1,
     ).sync_all()
-    assert second.calls[0][2:] == (date(2026, 1, 2), date(2026, 1, 2))
+    # Resumes right after the (unregressed) watermark, not at the day
+    # following the chunk that happened to run last.
+    assert second.calls[0][2:] == (date(2026, 1, 3), date(2026, 1, 3))
 
 
 def test_intraday_initial_sync_is_last_thirty_days(store):

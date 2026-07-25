@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 from collections.abc import Sequence
+from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
@@ -31,8 +32,30 @@ CREATE TABLE IF NOT EXISTS intraday(
     metric VARCHAR, ts TIMESTAMP, value DOUBLE, PRIMARY KEY(metric, ts));
 CREATE TABLE IF NOT EXISTS sync_state(
     metric VARCHAR PRIMARY KEY, last_synced_date DATE, status VARCHAR,
-    updated_at TIMESTAMP);
+    updated_at TIMESTAMP, backfilled_from DATE);
 """
+
+# Applied after _SCHEMA on every open. Each statement must be idempotent: an
+# existing database predates the column, a fresh one already has it.
+_MIGRATIONS = [
+    "ALTER TABLE sync_state ADD COLUMN IF NOT EXISTS backfilled_from DATE",
+]
+
+_SEED_BACKFILL_FROM_RAW = """
+UPDATE sync_state SET backfilled_from = (
+    SELECT min(range_start) FROM raw_json WHERE raw_json.metric = sync_state.metric)
+WHERE backfilled_from IS NULL
+"""
+
+
+@dataclass(frozen=True)
+class SyncCheckpoint:
+    """Both ends of what a metric has covered, plus the forward-pass status."""
+
+    last_synced: date
+    status: str
+    backfilled_from: date | None
+
 
 _SLEEP_COLS = [
     "provider_id",
@@ -59,6 +82,9 @@ class Store:
         for stmt in _SCHEMA.strip().split(";"):
             if stmt.strip():
                 self.con.execute(stmt)
+        for stmt in _MIGRATIONS:
+            self.con.execute(stmt)
+        self.con.execute(_SEED_BACKFILL_FROM_RAW)
         self._restrict_permissions(path)
 
     @staticmethod
@@ -118,10 +144,11 @@ class Store:
         payloads: Sequence[dict],
         rows: ParsedRows,
         *,
-        status: str = SYNC_OK,
+        status: str | None = SYNC_OK,
         watermark: date | None = None,
         covered_start: date | None = None,
         covered_end: date | None = None,
+        backfill_from: date | None = None,
     ) -> None:
         """Atomically replace one (metric, start, end) chunk: old raw pages,
         old typed rows in the covered range, and the watermark all move
@@ -194,14 +221,27 @@ class Store:
                         f"INSERT INTO sleep_sessions VALUES ({', '.join('?' * len(_SLEEP_COLS))})",
                         [r[c] for c in _SLEEP_COLS],
                     )
-            # 6. advance the watermark. `watermark` is the last day actually
-            # requested: an aligned chunk key can extend past today, and a
-            # future watermark would make the next run skip real days.
+            # 6. move the covered range. greatest/least keep the pair monotone:
+            # a backward history chunk lowers backfilled_from and leaves the
+            # forward watermark and status alone (its parameters are None),
+            # while a stale forward chunk can never pull the watermark back.
             con.execute(
-                "INSERT INTO sync_state VALUES (?, ?, ?, now()) "
-                "ON CONFLICT DO UPDATE SET last_synced_date = excluded.last_synced_date, "
-                "status = excluded.status, updated_at = excluded.updated_at",
-                [metric.name, end if watermark is None else watermark, status],
+                "INSERT INTO sync_state (metric, last_synced_date, status, updated_at, "
+                "backfilled_from) VALUES (?, ?, ?, now(), ?) "
+                "ON CONFLICT DO UPDATE SET last_synced_date = greatest("
+                "  sync_state.last_synced_date, "
+                "  coalesce(excluded.last_synced_date, sync_state.last_synced_date)), "
+                "status = coalesce(excluded.status, sync_state.status), "
+                "updated_at = excluded.updated_at, "
+                "backfilled_from = least("
+                "  coalesce(sync_state.backfilled_from, excluded.backfilled_from), "
+                "  coalesce(excluded.backfilled_from, sync_state.backfilled_from))",
+                [
+                    metric.name,
+                    end if watermark is None else watermark,
+                    status,
+                    start if backfill_from is None else backfill_from,
+                ],
             )
             con.execute("COMMIT")
         except Exception:
@@ -211,23 +251,26 @@ class Store:
     # -- sync state --------------------------------------------------------
     def get_sync_state(self, metric: str) -> date | None:
         checkpoint = self.get_sync_checkpoint(metric)
-        return checkpoint[0] if checkpoint else None
+        return checkpoint.last_synced if checkpoint else None
 
-    def get_sync_checkpoint(self, metric: str) -> tuple[date, str] | None:
+    def get_sync_checkpoint(self, metric: str) -> SyncCheckpoint | None:
         row = self.con.execute(
-            "SELECT last_synced_date, status FROM sync_state WHERE metric = ?", [metric]
+            "SELECT last_synced_date, status, backfilled_from FROM sync_state WHERE metric = ?",
+            [metric],
         ).fetchone()
-        return (row[0], row[1]) if row else None
+        return SyncCheckpoint(row[0], row[1], row[2]) if row else None
 
     def set_sync_state(self, metric: str, last_synced: date, status: str = SYNC_OK) -> None:
         self.con.execute(
-            "INSERT OR REPLACE INTO sync_state VALUES (?, ?, ?, now())",
+            "INSERT OR REPLACE INTO sync_state (metric, last_synced_date, status, updated_at) "
+            "VALUES (?, ?, ?, now())",
             [metric, last_synced, status],
         )
 
     def sync_states(self) -> pd.DataFrame:
         return self.con.execute(
-            "SELECT metric, last_synced_date, status FROM sync_state ORDER BY metric"
+            "SELECT metric, last_synced_date, status, backfilled_from FROM sync_state "
+            "ORDER BY metric"
         ).df()
 
     # -- reads -------------------------------------------------------------

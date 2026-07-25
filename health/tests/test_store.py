@@ -98,7 +98,9 @@ def test_sync_state_roundtrip(store):
     store.set_sync_state("steps", date(2026, 7, 1), SYNC_IN_PROGRESS)
     store.set_sync_state("steps", date(2026, 7, 5))
     assert store.get_sync_state("steps") == date(2026, 7, 5)
-    assert store.get_sync_checkpoint("steps") == (date(2026, 7, 5), SYNC_OK)
+    checkpoint = store.get_sync_checkpoint("steps")
+    assert checkpoint.last_synced == date(2026, 7, 5)
+    assert checkpoint.status == SYNC_OK
     states = store.sync_states()
     assert list(states["metric"]) == ["steps"] and list(states["status"]) == ["ok"]
 
@@ -113,10 +115,9 @@ def test_replace_chunk_stores_checkpoint_status_atomically(store):
         ParsedRows(),
         status=SYNC_IN_PROGRESS,
     )
-    assert store.get_sync_checkpoint("steps") == (
-        date(2026, 7, 3),
-        SYNC_IN_PROGRESS,
-    )
+    checkpoint = store.get_sync_checkpoint("steps")
+    assert checkpoint.last_synced == date(2026, 7, 3)
+    assert checkpoint.status == SYNC_IN_PROGRESS
 
 
 def test_series_stats(store):
@@ -442,3 +443,82 @@ def test_checkpoint_folds_the_wal_into_the_database(tmp_path):
         assert not wal.exists()
     finally:
         created.close()
+
+
+# -- sync_state.backfilled_from + SyncCheckpoint -------------------------------
+
+
+def test_checkpoint_exposes_both_ends_of_the_covered_range(store):
+    m = by_name("steps")
+    store.replace_chunk(
+        m,
+        date(2026, 6, 1),
+        date(2026, 8, 29),
+        [],
+        ParsedRows(),
+        status=SYNC_OK,
+        watermark=date(2026, 7, 25),
+        backfill_from=date(2026, 6, 1),
+    )
+
+    checkpoint = store.get_sync_checkpoint("steps")
+
+    assert checkpoint.last_synced == date(2026, 7, 25)
+    assert checkpoint.status == SYNC_OK
+    assert checkpoint.backfilled_from == date(2026, 6, 1)
+
+
+def test_backward_chunk_lowers_backfill_without_touching_watermark_or_status(store):
+    m = by_name("steps")
+    store.replace_chunk(
+        m,
+        date(2026, 6, 1),
+        date(2026, 8, 29),
+        [],
+        ParsedRows(),
+        status=SYNC_OK,
+        watermark=date(2026, 7, 25),
+        backfill_from=date(2026, 6, 1),
+    )
+
+    store.replace_chunk(
+        m,
+        date(2026, 3, 3),
+        date(2026, 5, 31),
+        [],
+        ParsedRows(),
+        status=None,
+        watermark=None,
+        backfill_from=date(2026, 3, 3),
+    )
+
+    checkpoint = store.get_sync_checkpoint("steps")
+    assert checkpoint.last_synced == date(2026, 7, 25)  # unchanged
+    assert checkpoint.status == SYNC_OK  # unchanged
+    assert checkpoint.backfilled_from == date(2026, 3, 3)  # extended backwards
+
+
+def test_legacy_database_without_backfilled_from_is_migrated(tmp_path):
+    db_path = tmp_path / "legacy.duckdb"
+    legacy = duckdb.connect(str(db_path))
+    legacy.execute(
+        "CREATE TABLE sync_state(metric VARCHAR PRIMARY KEY, last_synced_date DATE, "
+        "status VARCHAR, updated_at TIMESTAMP)"
+    )
+    legacy.execute("INSERT INTO sync_state VALUES ('steps', DATE '2026-07-25', 'ok', now())")
+    legacy.execute(
+        "CREATE TABLE raw_json(metric VARCHAR, range_start DATE, range_end DATE, "
+        "page_index INTEGER, fetched_at TIMESTAMP, payload JSON, "
+        "PRIMARY KEY(metric, range_start, range_end, page_index))"
+    )
+    legacy.execute(
+        "INSERT INTO raw_json VALUES ('steps', DATE '2021-07-25', DATE '2021-10-22', 0, now(), '{}')"
+    )
+    legacy.close()
+
+    migrated = Store(db_path)
+    try:
+        # The oldest raw chunk ever fetched is exactly how far back history goes.
+        assert migrated.get_sync_checkpoint("steps").backfilled_from == date(2021, 7, 25)
+    finally:
+        migrated.close()
