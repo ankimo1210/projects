@@ -111,3 +111,61 @@ def lagged_correlation(
         )
         rows.append({"lag": lag, "n": pairs, "spearman": rho})
     return pd.DataFrame(rows)
+
+
+def sleep_midpoints(sleep_df: pd.DataFrame) -> pd.DataFrame:
+    """Sleep midpoint per wake date, in hours after the noon before it.
+
+    The noon anchor is the same one the nightly gantt uses: it keeps bedtimes
+    that cross midnight on a continuous scale instead of wrapping to 0.
+    """
+    columns = ["date", "midpoint_hours_after_noon", "is_free_day"]
+    if sleep_df.empty:
+        return pd.DataFrame(columns=columns)
+    work = sleep_df[sleep_df["is_main"]].copy() if "is_main" in sleep_df else sleep_df.copy()
+    if work.empty:
+        return pd.DataFrame(columns=columns)
+    work["date"] = pd.to_datetime(work["date"])
+    start = pd.to_datetime(work["start_ts"])
+    end = pd.to_datetime(work["end_ts"])
+    anchor = work["date"] - pd.Timedelta(hours=12)
+    midpoint = start + (end - start) / 2
+    work["midpoint_hours_after_noon"] = (midpoint - anchor).dt.total_seconds() / 3600
+    work["is_free_day"] = work["date"].dt.weekday >= 5
+    return work[columns].reset_index(drop=True)
+
+
+def social_jetlag_hours(sleep_df: pd.DataFrame) -> float | None:
+    """Free-day minus work-day mean sleep midpoint, in hours.
+
+    None when either kind of day has fewer than two nights -- a single night
+    is not a rhythm.
+    """
+    midpoints = sleep_midpoints(sleep_df)
+    if midpoints.empty:
+        return None
+    free = midpoints[midpoints["is_free_day"]]["midpoint_hours_after_noon"]
+    work_days = midpoints[~midpoints["is_free_day"]]["midpoint_hours_after_noon"]
+    if len(free) < 2 or len(work_days) < 2:
+        return None
+    return float(free.mean() - work_days.mean())
+
+
+def coverage_calendar(
+    daily_df: pd.DataFrame,
+    value_col: str,
+    start,
+    end,
+    date_col: str = "date",
+) -> pd.DataFrame:
+    """One row per calendar day in [start, end] and whether a value exists.
+
+    Distinguishes "the device recorded nothing" from "we never synced that
+    day" only in combination with the sync watermark; on its own it shows the
+    gaps a line chart hides by connecting across them.
+    """
+    days = pd.date_range(start, end, freq="D")
+    if daily_df.empty or value_col not in daily_df:
+        return pd.DataFrame({"date": days, "has_data": [False] * len(days)})
+    present = set(pd.to_datetime(daily_df.dropna(subset=[value_col])[date_col]))
+    return pd.DataFrame({"date": days, "has_data": [day in present for day in days]})
