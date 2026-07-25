@@ -1,5 +1,6 @@
 """Shared app context: paths, cached resources, cached frames, period selector."""
 
+import atexit
 from datetime import date
 from pathlib import Path
 
@@ -15,7 +16,9 @@ PERIOD_OPTIONS = {"30日": 30, "90日": 90, "180日": 180, "1年": 365, "全期�
 
 @st.cache_resource
 def get_store() -> Store:
-    return Store(DATA_DIR / "health.duckdb")
+    store = Store(DATA_DIR / "health.duckdb")
+    atexit.register(store.close)
+    return store
 
 
 def get_auth() -> GoogleHealthAuth:

@@ -393,3 +393,18 @@ def test_database_and_data_dir_are_private(tmp_path):
         assert stat.S_IMODE(data_dir.stat().st_mode) == 0o700
     finally:
         created.close()
+
+
+def test_checkpoint_folds_the_wal_into_the_database(tmp_path):
+    db_path = tmp_path / "health.duckdb"
+    created = Store(db_path)
+    try:
+        created.upsert_daily([("steps", date(2026, 1, d + 1), float(d)) for d in range(31)])
+        wal = db_path.with_name(db_path.name + ".wal")
+        assert wal.exists()
+
+        created.checkpoint()
+
+        assert not wal.exists()
+    finally:
+        created.close()
