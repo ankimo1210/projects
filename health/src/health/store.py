@@ -164,6 +164,25 @@ class Store:
         range -- and bound the typed-row deletes: rows for chunk-key days
         outside the covered range must survive, because nothing in this call
         fetched them and would restore them.
+
+        `status` and `watermark` default to "leave this column unchanged" via
+        `None`, which is how a backward history chunk (`SyncEngine._history_pass`
+        passes `status=None, watermark=None`) advances `backfilled_from`
+        without moving the forward watermark or its status -- a history chunk
+        says nothing about how current the metric is. `backfill_from` is not
+        part of that None-means-unchanged contract: it only ever extends
+        `backfilled_from` backwards (`least(existing, backfill_from)`), so
+        passing `None` there falls back to `start`, not to "unchanged".
+
+        Caution: `None` for `watermark` only means "unchanged" when a row for
+        this metric already exists. The very first write for a metric has
+        nothing for `coalesce()` to fall back to, so the INSERT's VALUES()
+        slot uses `end` instead -- a first-ever call with `watermark=None`
+        would fabricate a forward watermark from wherever the chunk happens
+        to end, even for a chunk meant to move `backfilled_from` only. This is
+        why `SyncEngine._next_history_chunk` returns `None` (no chunk to fetch)
+        until a checkpoint already exists for the metric: the history pass
+        must never be a metric's first `replace_chunk` call.
         """
         covered_start = start if covered_start is None else covered_start
         covered_end = end if covered_end is None else covered_end
