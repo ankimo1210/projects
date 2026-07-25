@@ -219,7 +219,11 @@ class GoogleHealthAuth:
 
     def _write_private(self, path: Path, obj: dict) -> None:
         self.data_dir.mkdir(parents=True, exist_ok=True)
+        os.chmod(self.data_dir, 0o700)
         tmp = path.with_suffix(".tmp")
-        tmp.write_text(json.dumps(obj))
-        os.chmod(tmp, 0o600)
+        # Created 0600 by os.open rather than chmod-ed afterwards: a token must
+        # never exist, even briefly, under a permissive umask.
+        handle = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+        with os.fdopen(handle, "w") as stream:
+            json.dump(obj, stream)
         os.replace(tmp, path)  # atomic: never leave a half-written token/pending file

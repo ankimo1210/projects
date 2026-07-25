@@ -1,3 +1,4 @@
+import stat
 from datetime import date, datetime
 
 import duckdb
@@ -380,3 +381,15 @@ def test_replace_chunk_rolls_back_raw_typed_and_watermark_on_failure(store):
     df = store.daily_frame(["steps"])
     assert len(df) == 1 and df.loc[0, "steps"] == 500.0
     assert store.get_sync_state(metric.name) == date(2026, 6, 1)
+
+
+def test_database_and_data_dir_are_private(tmp_path):
+    data_dir = tmp_path / "data"
+    db_path = data_dir / "health.duckdb"
+
+    created = Store(db_path)
+    try:
+        assert stat.S_IMODE(db_path.stat().st_mode) == 0o600
+        assert stat.S_IMODE(data_dir.stat().st_mode) == 0o700
+    finally:
+        created.close()
