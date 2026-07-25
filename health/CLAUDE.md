@@ -19,10 +19,12 @@ Google Health APIを使う個人向けダッシュボード。応答は日本語
 - sync runはまず全metricの直近`RECENT_WINDOW_DAYS`を取得し（forward pass）、残予算で
   `backfilled_from`から古い方向へ1 chunkずつラウンドロビンする（history pass）。
   `sync_state`は`last_synced_date`（前方）と`backfilled_from`（後方）の両端を持つ。
-  `replace_chunk()`の`status`/`watermark`/`backfill_from`は`None`なら「そのcolumnは変更
-  しない」という意味。forward chunkは常に実際に到達した日を書くので、中断したrunは
-  取りこぼしなくそこから再開する。history chunkはstatus/watermarkに`None`を渡し、
-  `backfilled_from`だけを後方へ伸ばす。物理sendは最大200件（UIで可変）。
+  `replace_chunk()`の`status`/`watermark`は`None`なら「そのcolumnは変更しない」という
+  意味（SQL上は真のNULLになり`coalesce()`が既存値を残す）。forward chunkは常に実際に
+  到達した日を書くので、中断したrunは取りこぼしなくそこから再開する。history chunkは
+  status/watermarkに`None`を渡してこの2列を保つ。`backfill_from`はこの規則の対象外――
+  `None`は`start`に置き換わったうえで`least(既存値, start)`により`backfilled_from`へ
+  反映されるので、無変更ではなく常に後方へだけ伸びる。物理sendは最大200件（UIで可変）。
   ApiError/PayloadErrorはmetric単位で隔離し`SyncReport.failures`へ記録して続行するが、
   そのmetricはhistory passも含めrun全体から除外される（失敗したpassの残りchunkだけでは
   ない）。AuthError/429/hard capはrun全体を止める。engineへsleep/自動retryを追加しない
