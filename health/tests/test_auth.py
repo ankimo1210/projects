@@ -415,3 +415,39 @@ def test_write_private_result_is_0600_under_a_permissive_umask(tmp_path):
 
     assert stat.S_IMODE(target.stat().st_mode) == 0o600
     assert stat.S_IMODE(tmp_path.stat().st_mode) == 0o700
+
+
+def test_load_tokens_reads_the_file_once_per_instance(tmp_path, monkeypatch):
+    from pathlib import Path
+
+    auth = make_auth(tmp_path)
+    auth._store_tokens(
+        {"access_token": "a", "refresh_token": "r", "expires_in": 3600}, existing=None
+    )
+    reads = 0
+    real_read_text = Path.read_text
+
+    def counting_read_text(self, *args, **kwargs):
+        nonlocal reads
+        if self.name == "tokens.json":
+            reads += 1
+        return real_read_text(self, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", counting_read_text)
+
+    for _ in range(5):
+        assert auth.load_tokens()["access_token"] == "a"
+
+    assert reads <= 1
+
+
+def test_forget_tokens_invalidates_the_cache(tmp_path):
+    auth = make_auth(tmp_path)
+    auth._store_tokens(
+        {"access_token": "a", "refresh_token": "r", "expires_in": 3600}, existing=None
+    )
+    assert auth.load_tokens() is not None
+
+    auth.forget_tokens()
+
+    assert auth.load_tokens() is None
