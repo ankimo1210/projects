@@ -84,6 +84,14 @@ def _run_sync(auth, max_requests: int) -> None:
             )
     except AuthError as exc:
         st.error(f"Google Health の認証が失効しています: {exc}。再接続してください。")
+    # ApiError / PayloadError are unreachable through this call today:
+    # SyncEngine._guarded() catches both per metric and records them in
+    # SyncReport.failures (rendered by _show_last_report below), letting the
+    # run continue with the remaining metrics instead of raising. These two
+    # handlers are kept as defence in depth in case a future code path calls
+    # into the engine below _guarded (e.g. a direct chunk fetch), so the copy
+    # must stay accurate for that case rather than describing today's
+    # per-metric isolation, which never reaches here.
     except ApiError as exc:
         st.error(f"Google Health API エラー（HTTP {exc.status_code}）: {exc.message}")
         if exc.status_code == 403:
@@ -94,7 +102,7 @@ def _run_sync(auth, max_requests: int) -> None:
     except PayloadError as exc:
         st.error(
             f"{exc.metric} の応答を解釈できません: {exc.detail}。"
-            "このchunkは保存せず、既存データを維持して停止しました。"
+            "ここまでに完了したchunkは保存済みです。もう一度同期してください。"
         )
     else:
         st.session_state["last_sync_report"] = {
@@ -146,6 +154,7 @@ def sync_page() -> None:
                 "metric": st.column_config.TextColumn("メトリクス"),
                 "last_synced_date": st.column_config.DateColumn("最終同期日"),
                 "status": st.column_config.TextColumn("状態"),
+                "backfilled_from": st.column_config.DateColumn("履歴開始日"),
             },
         )
 
