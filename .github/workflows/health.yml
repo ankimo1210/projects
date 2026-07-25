@@ -1,0 +1,41 @@
+# Test + lint gate for the health package (Streamlit dashboard over the
+# Google Health API). No live API call runs here: the suite is fixtures and
+# fake HTTP only.
+name: health
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "health/**"
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/health.yml"
+  pull_request:
+    paths:
+      - "health/**"
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/health.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install
+        run: uv sync --package health
+
+      - name: Test
+        run: uv run --no-sync pytest health/tests -q
+
+      - name: Lint
+        run: uv run --no-sync ruff check health/src health/app health/scripts health/tests
+
+      - name: Format check
+        run: uv run --no-sync ruff format --check health/src health/app health/scripts health/tests
