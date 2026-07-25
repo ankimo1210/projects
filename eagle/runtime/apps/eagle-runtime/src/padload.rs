@@ -1411,7 +1411,9 @@ mod tests {
             .find(|w| w.symbol.as_deref() == Some("RODSCALE"))
             .expect("RODSCALE is in the committed manifest")
             .clone();
-        let words = PadloadManifest { word: vec![entry] }.resolve(&symtab).unwrap();
+        let words = PadloadManifest { word: vec![entry] }
+            .resolve(&symtab)
+            .unwrap();
         assert_eq!(words[0].ecadr, symtab.ecadr("RODSCALE").unwrap());
         assert_eq!(eagle_agc_protocol::words::sp_decode(words[0].word), 6392);
     }

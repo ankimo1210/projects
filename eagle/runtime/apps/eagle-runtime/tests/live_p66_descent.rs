@@ -8,12 +8,12 @@
 //! the scenario `timeout_s` is measured from ENGINE ON, not from boot. The
 //! wall-time guard is set accordingly (the plan's 300 s predated the live
 //! choreography timing).
+use eagle_dynamics::touchdown::Touchdown;
 use eagle_runtime::agc_session::{AgcConfig, AgcSession};
 use eagle_runtime::headless::{run_headless, touchdown_class, HeadlessCfg};
 use eagle_runtime::padload::{PadloadManifest, SymTab};
 use eagle_runtime::runner::{SPIKE_A_ALARM_WHITELIST, SPIKE_B_ALARM_WHITELIST};
 use eagle_runtime::scenario::Scenario;
-use eagle_dynamics::touchdown::Touchdown;
 use std::path::PathBuf;
 use std::time::{Duration, Instant};
 
@@ -62,7 +62,10 @@ async fn p66_soft_landing_closed_loop() {
 
     eprintln!(
         "[accept] MM {:?}\n[accept] touchdown {:?} descent {:?}s drift {:.0}ms downlink {:.1}wps",
-        result.mm_sequence, result.sim.touchdown, result.descent_s, result.drift_ms,
+        result.mm_sequence,
+        result.sim.touchdown,
+        result.descent_s,
+        result.drift_ms,
         result.mid_downlink_wps
     );
 
@@ -84,8 +87,16 @@ async fn p66_soft_landing_closed_loop() {
         acceptance.timeout_s
     );
     assert_eq!(td, Touchdown::Nominal, "not a nominal landing: {td:?}");
-    assert!(vv < acceptance.v_vert_max, "v_vert {vv} >= {}", acceptance.v_vert_max);
-    assert!(vh < acceptance.v_horiz_max, "v_horiz {vh} >= {}", acceptance.v_horiz_max);
+    assert!(
+        vv < acceptance.v_vert_max,
+        "v_vert {vv} >= {}",
+        acceptance.v_vert_max
+    );
+    assert!(
+        vh < acceptance.v_horiz_max,
+        "v_horiz {vh} >= {}",
+        acceptance.v_horiz_max
+    );
     assert!(
         tilt < acceptance.tilt_max_deg,
         "tilt {tilt} >= {}",
@@ -101,7 +112,11 @@ async fn p66_soft_landing_closed_loop() {
     );
 
     // Drift and downlink health.
-    assert!(result.drift_ms.abs() < 500.0, "drift {} ms", result.drift_ms);
+    assert!(
+        result.drift_ms.abs() < 500.0,
+        "drift {} ms",
+        result.drift_ms
+    );
     assert!(
         (40.0..=60.0).contains(&result.mid_downlink_wps),
         "downlink {} wps outside [40,60]",

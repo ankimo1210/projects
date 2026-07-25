@@ -16,9 +16,7 @@ use eagle_agc_protocol::agc_io::{decode_output, pipa_pulse, AgcOutput, PipaAxis}
 use eagle_agc_protocol::dsky::DskyState;
 use eagle_agc_protocol::Packet;
 use eagle_dynamics::constants::{DT, THRUST_N_PER_PULSE, TRIM_MAX_DEG, TRIM_RATE_DEG_S};
-use eagle_dynamics::forces::{
-    actuator_step, body_thrust_force, forces, Actuators, V3Raw,
-};
+use eagle_dynamics::forces::{actuator_step, body_thrust_force, forces, Actuators, V3Raw};
 use eagle_dynamics::frames::{Body, Mci, Sm, V3};
 use eagle_dynamics::rk4::step_rk4;
 use eagle_dynamics::state::LmState;
@@ -147,11 +145,7 @@ impl SimCore {
         let mass0_kg = st.mass_kg;
         let imu = eagle_sensors::imu::Imu::new(sm_from_initial(&st));
         let errors = eagle_sensors::errors::ImuErrors::new(
-            sc.errors
-                .imu
-                .as_ref()
-                .map(Into::into)
-                .unwrap_or_default(),
+            sc.errors.imu.as_ref().map(Into::into).unwrap_or_default(),
         );
         Self {
             st,
@@ -294,7 +288,11 @@ impl SimCore {
                         positive,
                         pulses,
                     } => {
-                        let signed = if positive { pulses as i32 } else { -(pulses as i32) };
+                        let signed = if positive {
+                            pulses as i32
+                        } else {
+                            -(pulses as i32)
+                        };
                         self.imu.apply_coarse(axis, signed);
                     }
                     AgcOutput::Gyro { raw } => self.imu.apply_gyro(raw),
@@ -437,8 +435,8 @@ impl SimCore {
         } else {
             0.0
         };
-        let drift_ms = (self.downlink_words as f64 / 2.0 / 50.0 - self.tick_index as f64 * DT)
-            * 1000.0;
+        let drift_ms =
+            (self.downlink_words as f64 / 2.0 / 50.0 - self.tick_index as f64 * DT) * 1000.0;
         let agc_alt_m = self.agc_nav.and_then(|n| n.alt_m);
         let agc_hdot_ms = self.agc_nav.and_then(|n| n.hdot_ms);
         TelemetryMsg {
@@ -575,8 +573,7 @@ mod tests {
 
     fn scenario() -> Scenario {
         Scenario::load(
-            &PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-                .join("../../../scenarios/p66-gate.toml"),
+            &PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../../scenarios/p66-gate.toml"),
         )
         .unwrap()
     }
@@ -602,9 +599,7 @@ mod tests {
         // A relay write (ch010) updates the display → a Dsky snapshot too.
         let relay = Packet::io(0o10, (10 << 11) | (0b10101 << 5) | 0b00011).unwrap();
         let evs = agc_packet_to_simin(&relay, &mut dsky);
-        assert!(evs
-            .iter()
-            .any(|e| matches!(e, SimIn::Dsky(_))));
+        assert!(evs.iter().any(|e| matches!(e, SimIn::Dsky(_))));
     }
 
     #[test]
@@ -621,7 +616,10 @@ mod tests {
             core.tick();
         }
         let up = core.st.pos.unit();
-        assert!(core.st.vel.dot(up) < 0.0, "should be falling after engine on");
+        assert!(
+            core.st.vel.dot(up) < 0.0,
+            "should be falling after engine on"
+        );
     }
 
     #[test]

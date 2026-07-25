@@ -72,7 +72,7 @@ mod tests {
     fn dp_split_and_sign() {
         assert_eq!(dp_encode(0), [0, 0]);
         assert_eq!(dp_encode(1), [0, 1]);
-        assert_eq!(dp_encode(16384), [1, 0]);            // 2^14
+        assert_eq!(dp_encode(16384), [1, 0]); // 2^14
         assert_eq!(dp_encode(16385), [1, 1]);
         assert_eq!(dp_encode(-16385), [0o77776, 0o77776]); // both words negative
         let max = (1i64 << 28) - 1;
@@ -100,7 +100,10 @@ mod tests {
             if v < 0 {
                 // At least one word must be negative; ideally both are
                 // (canonical form: both negative for negative values)
-                assert!(hi_sign || lo_sign, "v={v}: at least one word must be negative");
+                assert!(
+                    hi_sign || lo_sign,
+                    "v={v}: at least one word must be negative"
+                );
             }
         }
     }

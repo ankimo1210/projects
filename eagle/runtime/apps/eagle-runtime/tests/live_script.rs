@@ -10,7 +10,9 @@ use std::path::PathBuf;
 use std::time::Duration;
 use tokio::sync::watch;
 
-fn root() -> PathBuf { PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../..") }
+fn root() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../..")
+}
 
 /// Quiet-check analog of `golden_v35e.rs`'s `settle_dsky`, adapted to the
 /// `DskyScript`/`pump()` layer: we no longer have raw packet access (pump()
@@ -23,12 +25,14 @@ async fn settle_dsky(rx: &mut watch::Receiver<DskyState>) {
     let start = tokio::time::Instant::now();
     loop {
         match tokio::time::timeout(Duration::from_millis(100), rx.changed()).await {
-            Ok(Ok(())) => {} // saw a visible change; keep waiting for quiet
+            Ok(Ok(())) => {}     // saw a visible change; keep waiting for quiet
             Ok(Err(_)) => break, // pump's sender side is gone
             Err(_) => break,     // 100 ms elapsed with no change => quiet
         }
-        assert!(start.elapsed() < Duration::from_secs(5),
-            "settle_dsky did not settle within 5s safety cap");
+        assert!(
+            start.elapsed() < Duration::from_secs(5),
+            "settle_dsky did not settle within 5s safety cap"
+        );
     }
 }
 
@@ -39,7 +43,9 @@ async fn dsky_script_drives_lamp_test_and_reads_erasables() {
         yaagc_bin: root().join("build/agc/yaAGC"),
         core_bin: root().join("build/agc/Luminary099.bin"),
         port: 19901,
-    }).await.unwrap();
+    })
+    .await
+    .unwrap();
 
     let (dsky_rx, cmd_tx, _pkt_rx, _pump_handle) = pump(session);
     let mut settle_rx = dsky_rx.clone();
@@ -54,18 +60,27 @@ async fn dsky_script_drives_lamp_test_and_reads_erasables() {
     // 1) V35E lamp test observed end to end through keys() — proves the
     //    keys() -> pump() -> live AGC -> watch<DskyState> path works.
     script.keys("V35E").await.unwrap();
-    let lamp = script.wait(Duration::from_secs(5), |d| {
-        d.verb == ['8', '8'] && d.noun == ['8', '8'] && d.prog == ['8', '8']
-    }).await.unwrap();
-    assert_eq!((lamp.verb, lamp.noun, lamp.prog), (['8', '8'], ['8', '8'], ['8', '8']));
+    let lamp = script
+        .wait(Duration::from_secs(5), |d| {
+            d.verb == ['8', '8'] && d.noun == ['8', '8'] && d.prog == ['8', '8']
+        })
+        .await
+        .unwrap();
+    assert_eq!(
+        (lamp.verb, lamp.noun, lamp.prog),
+        (['8', '8'], ['8', '8'], ['8', '8'])
+    );
 
     // The V35 lamp test auto-reverts ~5s after ENTR (agc_engine.c
     // DSKY_FLASH_PERIOD teardown, cross-checked in golden_v35e.rs). Wait for
     // that before issuing further V/N entries so they land in a clean idle
     // state rather than racing the lamp test's own teardown.
-    script.wait(Duration::from_secs(8), |d| {
-        d.verb != ['8', '8'] || d.noun != ['8', '8'] || d.prog != ['8', '8']
-    }).await.unwrap();
+    script
+        .wait(Duration::from_secs(8), |d| {
+            d.verb != ['8', '8'] || d.noun != ['8', '8'] || d.prog != ['8', '8']
+        })
+        .await
+        .unwrap();
 
     // 2) read_erasable(0o0) parses (register A, value arbitrary — this is a
     //    read-only smoke check, not a specific-value assertion).

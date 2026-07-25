@@ -276,7 +276,11 @@ async fn run_auto(
     }
     let vdg0 = runner::read_dp(&mut init.script, runner::VDGVERT_ECADR).await;
     let hdot0 = runner::read_dp(&mut init.script, runner::HDOTDISP_ECADR).await;
-    eprintln!("[cal] VDGVERT={vdg0:?} HDOTDISP={hdot0:?} vz={:?} cmd={:?}", vz(), cmd());
+    eprintln!(
+        "[cal] VDGVERT={vdg0:?} HDOTDISP={hdot0:?} vz={:?} cmd={:?}",
+        vz(),
+        cmd()
+    );
 
     eprintln!("[cal] two down-clicks");
     let (vz_before, cmd_before) = (vz(), cmd());

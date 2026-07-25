@@ -7,7 +7,9 @@ use eagle_schema::{DskyStateMsg, ServerMsg};
 use std::collections::HashSet;
 use std::path::PathBuf;
 
-fn root() -> PathBuf { PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../..") }
+fn root() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../..")
+}
 
 /// Drain and discard events until the DSKY-relevant channels (010 display
 /// relay / 011 lamps / 0163 flash-lamp — the only ones the golden
@@ -26,8 +28,7 @@ async fn settle_dsky(s: &mut AgcSession) {
     let start = tokio::time::Instant::now();
     let mut last_relevant = tokio::time::Instant::now();
     loop {
-        match tokio::time::timeout(
-            std::time::Duration::from_millis(20), s.events().recv()).await {
+        match tokio::time::timeout(std::time::Duration::from_millis(20), s.events().recv()).await {
             Ok(Some(p)) if matches!(p.channel, 0o10 | 0o11 | 0o163) => {
                 last_relevant = tokio::time::Instant::now();
             }
@@ -35,11 +36,15 @@ async fn settle_dsky(s: &mut AgcSession) {
             Ok(None) => break,
             Err(_) => {}
         }
-        if last_relevant.elapsed() >= std::time::Duration::from_millis(100) { break; }
+        if last_relevant.elapsed() >= std::time::Duration::from_millis(100) {
+            break;
+        }
         // Defense in depth: never hang forever even if boot/echo behavior
         // changes (e.g. a different core image with denser DSKY traffic).
-        assert!(start.elapsed() < std::time::Duration::from_secs(5),
-            "settle_dsky did not settle within 5s safety cap");
+        assert!(
+            start.elapsed() < std::time::Duration::from_secs(5),
+            "settle_dsky did not settle within 5s safety cap"
+        );
     }
 }
 
@@ -54,7 +59,9 @@ async fn run_v35e() -> GoldenV35e {
         yaagc_bin: root().join("build/agc/yaAGC"),
         core_bin: root().join("build/agc/Luminary099.bin"),
         port: 19900,
-    }).await.unwrap();
+    })
+    .await
+    .unwrap();
     tokio::time::sleep(std::time::Duration::from_secs(2)).await;
 
     // Flush boot-time traffic so the capture starts at the keying point.
@@ -77,14 +84,17 @@ async fn run_v35e() -> GoldenV35e {
         // to 13 milestones across otherwise-identical replays. Stop one
         // key short of the end: settling right after ENTR would race the
         // AGC's immediate response to it, per the flush note above.
-        if i != last { settle_dsky(&mut s).await; }
+        if i != last {
+            settle_dsky(&mut s).await;
+        }
     }
     // Capture 3 s only: the V35 lamp test auto-reverts after ~5 s, and the
     // final-state check must land inside the all-8s window deterministically.
     let deadline = tokio::time::Instant::now() + std::time::Duration::from_secs(3);
     while tokio::time::Instant::now() < deadline {
-        if let Ok(Some(p)) = tokio::time::timeout(
-            std::time::Duration::from_millis(500), s.events().recv()).await {
+        if let Ok(Some(p)) =
+            tokio::time::timeout(std::time::Duration::from_millis(500), s.events().recv()).await
+        {
             packets.push(p);
         }
     }
@@ -105,7 +115,9 @@ async fn run_v35e() -> GoldenV35e {
     let mut seen_0163 = false;
     for p in &packets {
         state.apply(p);
-        if p.channel == 0o163 { seen_0163 = true; }
+        if p.channel == 0o163 {
+            seen_0163 = true;
+        }
         if seen_0163 {
             seen_triples.insert((state.verb_noun_flash, state.key_rel, state.opr_err));
         }
@@ -114,22 +126,29 @@ async fn run_v35e() -> GoldenV35e {
     const FLASH_OFF: (bool, bool, bool) = (false, true, true);
     const FLASH_ON: (bool, bool, bool) = (true, false, false);
     for t in &seen_triples {
-        assert!(*t == FLASH_OFF || *t == FLASH_ON,
+        assert!(
+            *t == FLASH_OFF || *t == FLASH_ON,
             "observed (verb_noun_flash, key_rel, opr_err) triple {t:?} is not one of \
              the two phase-coherent ch0163 flash states {FLASH_OFF:?} / {FLASH_ON:?} \
-             (agc_engine.c:1727-1744)");
+             (agc_engine.c:1727-1744)"
+        );
     }
     // The 3s capture window is >= 2 full 1.28s DSKY_FLASH_PERIOD cycles, so
     // both flash phases are deterministically observed regardless of which
     // phase the capture happened to start in.
-    assert!(seen_triples.contains(&FLASH_OFF) && seen_triples.contains(&FLASH_ON),
+    assert!(
+        seen_triples.contains(&FLASH_OFF) && seen_triples.contains(&FLASH_ON),
         "expected both flash phases {FLASH_OFF:?} and {FLASH_ON:?} within the 3s \
-         capture (>= 2 DSKY_FLASH_PERIOD cycles); saw {seen_triples:?}");
+         capture (>= 2 DSKY_FLASH_PERIOD cycles); saw {seen_triples:?}"
+    );
 
     let ServerMsg::DskyState(final_state) = to_msg(&state) else {
         panic!("expected a DskyState message");
     };
-    GoldenV35e { milestones: milestones(&packets), final_state }
+    GoldenV35e {
+        milestones: milestones(&packets),
+        final_state,
+    }
 }
 
 /// Exclude the 3 ch0163 flash-modulated bits (verb_noun_flash/key_rel/
@@ -158,17 +177,23 @@ async fn golden_v35e_milestones_and_final_state() {
     assert_eq!(got.final_state.noun, "88");
     assert_eq!(got.final_state.prog, "88");
     if std::env::var("GOLDEN_RECORD").is_ok() {
-        std::fs::write(&golden_path,
-            serde_json::to_string_pretty(&got).unwrap()).unwrap();
+        std::fs::write(&golden_path, serde_json::to_string_pretty(&got).unwrap()).unwrap();
         eprintln!("recorded golden to {golden_path:?}");
         return;
     }
     let want: GoldenV35e = serde_json::from_str(
         &std::fs::read_to_string(&golden_path)
             .expect("golden file missing — run with GOLDEN_RECORD=1 first"),
-    ).unwrap();
-    assert_eq!(got.milestones, want.milestones, "V35E display sequence diverged");
-    assert_eq!(normalize(got.final_state), normalize(want.final_state),
+    )
+    .unwrap();
+    assert_eq!(
+        got.milestones, want.milestones,
+        "V35E display sequence diverged"
+    );
+    assert_eq!(
+        normalize(got.final_state),
+        normalize(want.final_state),
         "final DSKY state (displays/lamps) diverged from golden \
-         (verb_noun_flash/key_rel/opr_err excluded — pinned separately above)");
+         (verb_noun_flash/key_rel/opr_err excluded — pinned separately above)"
+    );
 }

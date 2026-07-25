@@ -2,18 +2,48 @@ use crate::{Packet, PacketError};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DskyKey {
-    D0, D1, D2, D3, D4, D5, D6, D7, D8, D9,
-    Verb, Noun, Rset, KeyRel, Plus, Minus, Entr, Clr,
+    D0,
+    D1,
+    D2,
+    D3,
+    D4,
+    D5,
+    D6,
+    D7,
+    D8,
+    D9,
+    Verb,
+    Noun,
+    Rset,
+    KeyRel,
+    Plus,
+    Minus,
+    Entr,
+    Clr,
 }
 
 impl DskyKey {
     pub fn code(self) -> u16 {
         use DskyKey::*;
         match self {
-            D1 => 0o1, D2 => 0o2, D3 => 0o3, D4 => 0o4, D5 => 0o5,
-            D6 => 0o6, D7 => 0o7, D8 => 0o10, D9 => 0o11, D0 => 0o20,
-            Verb => 0o21, Rset => 0o22, KeyRel => 0o31, Plus => 0o32,
-            Minus => 0o33, Entr => 0o34, Clr => 0o36, Noun => 0o37,
+            D1 => 0o1,
+            D2 => 0o2,
+            D3 => 0o3,
+            D4 => 0o4,
+            D5 => 0o5,
+            D6 => 0o6,
+            D7 => 0o7,
+            D8 => 0o10,
+            D9 => 0o11,
+            D0 => 0o20,
+            Verb => 0o21,
+            Rset => 0o22,
+            KeyRel => 0o31,
+            Plus => 0o32,
+            Minus => 0o33,
+            Entr => 0o34,
+            Clr => 0o36,
+            Noun => 0o37,
         }
     }
     pub fn packet(self) -> Packet {
@@ -22,10 +52,24 @@ impl DskyKey {
     pub fn from_name(name: &str) -> Option<Self> {
         use DskyKey::*;
         Some(match name {
-            "0" => D0, "1" => D1, "2" => D2, "3" => D3, "4" => D4,
-            "5" => D5, "6" => D6, "7" => D7, "8" => D8, "9" => D9,
-            "VERB" => Verb, "NOUN" => Noun, "RSET" => Rset, "KEY_REL" => KeyRel,
-            "PLUS" => Plus, "MINUS" => Minus, "ENTR" => Entr, "CLR" => Clr,
+            "0" => D0,
+            "1" => D1,
+            "2" => D2,
+            "3" => D3,
+            "4" => D4,
+            "5" => D5,
+            "6" => D6,
+            "7" => D7,
+            "8" => D8,
+            "9" => D9,
+            "VERB" => Verb,
+            "NOUN" => Noun,
+            "RSET" => Rset,
+            "KEY_REL" => KeyRel,
+            "PLUS" => Plus,
+            "MINUS" => Minus,
+            "ENTR" => Entr,
+            "CLR" => Clr,
             _ => return None,
         })
     }

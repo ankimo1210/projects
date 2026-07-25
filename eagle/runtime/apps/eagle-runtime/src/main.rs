@@ -34,8 +34,11 @@ struct Args {
 async fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     let mut session = AgcSession::start(AgcConfig {
-        yaagc_bin: args.yaagc, core_bin: args.core, port: args.agc_port,
-    }).await?;
+        yaagc_bin: args.yaagc,
+        core_bin: args.core,
+        port: args.agc_port,
+    })
+    .await?;
 
     let (state_tx, _) = broadcast::channel::<String>(256);
     let (agc_tx, mut agc_rx) = mpsc::unbounded_channel();
@@ -47,7 +50,11 @@ async fn main() -> anyhow::Result<()> {
     let _keep = dsky_rx;
     let mut trace = TraceWriter::open(args.trace_out.clone())?;
 
-    let app = AppState { state_rx: state_tx.clone(), agc_tx: agc_tx.clone(), latest: latest.clone() };
+    let app = AppState {
+        state_rx: state_tx.clone(),
+        agc_tx: agc_tx.clone(),
+        latest: latest.clone(),
+    };
     let listener = tokio::net::TcpListener::bind(("127.0.0.1", args.ws_port)).await?;
     tokio::spawn(async move {
         axum::serve(listener, router(app)).await.unwrap();

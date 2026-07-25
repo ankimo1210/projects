@@ -11,41 +11,80 @@ macro_rules! frame { ($($n:ident),*) => { $(
 frame!(Mci, Mcmf, Lsite, Body, Sm);
 
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub struct V3<F: Frame> { pub x: f64, pub y: f64, pub z: f64, _f: PhantomData<F> }
+pub struct V3<F: Frame> {
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
+    _f: PhantomData<F>,
+}
 
 impl<F: Frame> V3<F> {
-    pub fn new(x: f64, y: f64, z: f64) -> Self { Self { x, y, z, _f: PhantomData } }
-    pub fn zero() -> Self { Self::new(0.0, 0.0, 0.0) }
-    pub fn scale(self, k: f64) -> Self { Self::new(self.x * k, self.y * k, self.z * k) }
-    pub fn dot(self, o: Self) -> f64 { self.x * o.x + self.y * o.y + self.z * o.z }
-    pub fn cross(self, o: Self) -> Self {
-        Self::new(self.y * o.z - self.z * o.y,
-                  self.z * o.x - self.x * o.z,
-                  self.x * o.y - self.y * o.x)
+    pub fn new(x: f64, y: f64, z: f64) -> Self {
+        Self {
+            x,
+            y,
+            z,
+            _f: PhantomData,
+        }
     }
-    pub fn norm(self) -> f64 { self.dot(self).sqrt() }
+    pub fn zero() -> Self {
+        Self::new(0.0, 0.0, 0.0)
+    }
+    pub fn scale(self, k: f64) -> Self {
+        Self::new(self.x * k, self.y * k, self.z * k)
+    }
+    pub fn dot(self, o: Self) -> f64 {
+        self.x * o.x + self.y * o.y + self.z * o.z
+    }
+    pub fn cross(self, o: Self) -> Self {
+        Self::new(
+            self.y * o.z - self.z * o.y,
+            self.z * o.x - self.x * o.z,
+            self.x * o.y - self.y * o.x,
+        )
+    }
+    pub fn norm(self) -> f64 {
+        self.dot(self).sqrt()
+    }
     pub fn unit(self) -> Self {
         let n = self.norm();
         assert!(n > 1e-12, "unit() on (near-)zero vector");
         self.scale(1.0 / n)
     }
 }
-impl<F: Frame> Add for V3<F> { type Output = Self;
-    fn add(self, o: Self) -> Self { Self::new(self.x + o.x, self.y + o.y, self.z + o.z) } }
-impl<F: Frame> Sub for V3<F> { type Output = Self;
-    fn sub(self, o: Self) -> Self { Self::new(self.x - o.x, self.y - o.y, self.z - o.z) } }
-impl<F: Frame> Neg for V3<F> { type Output = Self;
-    fn neg(self) -> Self { self.scale(-1.0) } }
+impl<F: Frame> Add for V3<F> {
+    type Output = Self;
+    fn add(self, o: Self) -> Self {
+        Self::new(self.x + o.x, self.y + o.y, self.z + o.z)
+    }
+}
+impl<F: Frame> Sub for V3<F> {
+    type Output = Self;
+    fn sub(self, o: Self) -> Self {
+        Self::new(self.x - o.x, self.y - o.y, self.z - o.z)
+    }
+}
+impl<F: Frame> Neg for V3<F> {
+    type Output = Self;
+    fn neg(self) -> Self {
+        self.scale(-1.0)
+    }
+}
 
 /// Unit quaternion [w, x, y, z] taking A-frame coordinates to B-frame.
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub struct Rot<A: Frame, B: Frame> { q: [f64; 4], _f: PhantomData<(A, B)> }
+pub struct Rot<A: Frame, B: Frame> {
+    q: [f64; 4],
+    _f: PhantomData<(A, B)>,
+}
 
 pub(crate) fn qmul(a: [f64; 4], b: [f64; 4]) -> [f64; 4] {
-    [a[0]*b[0] - a[1]*b[1] - a[2]*b[2] - a[3]*b[3],
-     a[0]*b[1] + a[1]*b[0] + a[2]*b[3] - a[3]*b[2],
-     a[0]*b[2] - a[1]*b[3] + a[2]*b[0] + a[3]*b[1],
-     a[0]*b[3] + a[1]*b[2] - a[2]*b[1] + a[3]*b[0]]
+    [
+        a[0] * b[0] - a[1] * b[1] - a[2] * b[2] - a[3] * b[3],
+        a[0] * b[1] + a[1] * b[0] + a[2] * b[3] - a[3] * b[2],
+        a[0] * b[2] - a[1] * b[3] + a[2] * b[0] + a[3] * b[1],
+        a[0] * b[3] + a[1] * b[2] - a[2] * b[1] + a[3] * b[0],
+    ]
 }
 
 /// Quaternion kinematics: q̇ = ½ q ⊗ [0, ω_body] for a Body→Mci attitude q
@@ -58,16 +97,29 @@ pub(crate) fn qdot(q: [f64; 4], w: V3<Body>) -> [f64; 4] {
 }
 
 impl<A: Frame, B: Frame> Rot<A, B> {
-    pub fn from_raw(q: [f64; 4]) -> Self { Self { q, _f: PhantomData }.normalize() }
+    pub fn from_raw(q: [f64; 4]) -> Self {
+        Self { q, _f: PhantomData }.normalize()
+    }
     /// Build a rotation from raw components WITHOUT normalizing — only for
     /// RK4's intermediate stages, where the attitude is summed linearly and
     /// normalized once at the end of the step.
-    pub(crate) fn from_raw_unnormalized(q: [f64; 4]) -> Self { Self { q, _f: PhantomData } }
-    pub fn raw(&self) -> [f64; 4] { self.q }
-    pub fn identity() -> Self { Self { q: [1.0, 0.0, 0.0, 0.0], _f: PhantomData } }
+    pub(crate) fn from_raw_unnormalized(q: [f64; 4]) -> Self {
+        Self { q, _f: PhantomData }
+    }
+    pub fn raw(&self) -> [f64; 4] {
+        self.q
+    }
+    pub fn identity() -> Self {
+        Self {
+            q: [1.0, 0.0, 0.0, 0.0],
+            _f: PhantomData,
+        }
+    }
     pub fn normalize(mut self) -> Self {
         let n = self.q.iter().map(|v| v * v).sum::<f64>().sqrt();
-        for v in &mut self.q { *v /= n; }
+        for v in &mut self.q {
+            *v /= n;
+        }
         self
     }
     pub fn apply(&self, v: V3<A>) -> V3<B> {
@@ -77,10 +129,17 @@ impl<A: Frame, B: Frame> Rot<A, B> {
         V3::new(r[1], r[2], r[3])
     }
     pub fn inverse(&self) -> Rot<B, A> {
-        Rot { q: [self.q[0], -self.q[1], -self.q[2], -self.q[3]], _f: PhantomData }
+        Rot {
+            q: [self.q[0], -self.q[1], -self.q[2], -self.q[3]],
+            _f: PhantomData,
+        }
     }
     pub fn then<C: Frame>(&self, next: Rot<B, C>) -> Rot<A, C> {
-        Rot { q: qmul(next.q, self.q), _f: PhantomData }.normalize()
+        Rot {
+            q: qmul(next.q, self.q),
+            _f: PhantomData,
+        }
+        .normalize()
     }
 }
 
@@ -88,14 +147,20 @@ impl<A: Frame> Rot<A, A> {
     pub fn from_axis_angle(axis: V3<A>, rad: f64) -> Self {
         let u = axis.unit();
         let (s, c) = (rad / 2.0).sin_cos();
-        Self { q: [c, u.x * s, u.y * s, u.z * s], _f: PhantomData }
+        Self {
+            q: [c, u.x * s, u.y * s, u.z * s],
+            _f: PhantomData,
+        }
     }
 }
 
 /// Retag an A→A rotation as A→B. Only for frame constructors in this module
 /// and in eagle-sensors' REFSMMAT code — never in application logic.
 pub fn retag<A: Frame, B: Frame, C: Frame, D: Frame>(r: Rot<A, B>) -> Rot<C, D> {
-    Rot { q: r.q, _f: PhantomData }
+    Rot {
+        q: r.q,
+        _f: PhantomData,
+    }
 }
 
 pub fn mci_to_mcmf(t_s: f64) -> Rot<Mci, Mcmf> {
@@ -111,20 +176,44 @@ pub fn mcmf_to_lsite(site_unit_mcmf: V3<Mcmf>) -> Rot<Mcmf, Lsite> {
     let east = pole.cross(up).unit();
     let north = up.cross(east);
     // rotation matrix with rows east/north/up → quaternion (standard conversion)
-    let m = [[east.x, east.y, east.z], [north.x, north.y, north.z], [up.x, up.y, up.z]];
+    let m = [
+        [east.x, east.y, east.z],
+        [north.x, north.y, north.z],
+        [up.x, up.y, up.z],
+    ];
     let tr = m[0][0] + m[1][1] + m[2][2];
     let q = if tr > 0.0 {
         let s = (tr + 1.0).sqrt() * 2.0;
-        [0.25 * s, (m[2][1] - m[1][2]) / s, (m[0][2] - m[2][0]) / s, (m[1][0] - m[0][1]) / s]
+        [
+            0.25 * s,
+            (m[2][1] - m[1][2]) / s,
+            (m[0][2] - m[2][0]) / s,
+            (m[1][0] - m[0][1]) / s,
+        ]
     } else if m[0][0] > m[1][1] && m[0][0] > m[2][2] {
         let s = (1.0 + m[0][0] - m[1][1] - m[2][2]).sqrt() * 2.0;
-        [(m[2][1] - m[1][2]) / s, 0.25 * s, (m[0][1] + m[1][0]) / s, (m[0][2] + m[2][0]) / s]
+        [
+            (m[2][1] - m[1][2]) / s,
+            0.25 * s,
+            (m[0][1] + m[1][0]) / s,
+            (m[0][2] + m[2][0]) / s,
+        ]
     } else if m[1][1] > m[2][2] {
         let s = (1.0 + m[1][1] - m[0][0] - m[2][2]).sqrt() * 2.0;
-        [(m[0][2] - m[2][0]) / s, (m[0][1] + m[1][0]) / s, 0.25 * s, (m[1][2] + m[2][1]) / s]
+        [
+            (m[0][2] - m[2][0]) / s,
+            (m[0][1] + m[1][0]) / s,
+            0.25 * s,
+            (m[1][2] + m[2][1]) / s,
+        ]
     } else {
         let s = (1.0 + m[2][2] - m[0][0] - m[1][1]).sqrt() * 2.0;
-        [(m[1][0] - m[0][1]) / s, (m[0][2] + m[2][0]) / s, (m[1][2] + m[2][1]) / s, 0.25 * s]
+        [
+            (m[1][0] - m[0][1]) / s,
+            (m[0][2] + m[2][0]) / s,
+            (m[1][2] + m[2][1]) / s,
+            0.25 * s,
+        ]
     };
     Rot::from_raw(q)
 }
@@ -132,7 +221,9 @@ pub fn mcmf_to_lsite(site_unit_mcmf: V3<Mcmf>) -> Rot<Mcmf, Lsite> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    fn close(a: f64, b: f64) -> bool { (a - b).abs() < 1e-12 }
+    fn close(a: f64, b: f64) -> bool {
+        (a - b).abs() < 1e-12
+    }
 
     #[test]
     fn rotation_about_z_maps_x_to_y() {
@@ -144,8 +235,7 @@ mod tests {
 
     #[test]
     fn compose_and_inverse_round_trip() {
-        let a: Rot<Mci, Mci> =
-            Rot::from_axis_angle(V3::new(0.0, 1.0, 0.0), 0.7);
+        let a: Rot<Mci, Mci> = Rot::from_axis_angle(V3::new(0.0, 1.0, 0.0), 0.7);
         let v = V3::<Mci>::new(1.0, 2.0, 3.0);
         let w = a.inverse().apply(a.apply(v));
         assert!(close(w.x, 1.0) && close(w.y, 2.0) && close(w.z, 3.0));
@@ -195,9 +285,11 @@ mod tests {
         let sequential = b.apply(a.apply(v));
         let composed = a.then(b).apply(v);
 
-        assert!(close(composed.x, sequential.x)
-            && close(composed.y, sequential.y)
-            && close(composed.z, sequential.z));
+        assert!(
+            close(composed.x, sequential.x)
+                && close(composed.y, sequential.y)
+                && close(composed.z, sequential.z)
+        );
         // Known result: x -[Rz 90]-> y -[Rx 90]-> z.
         assert!(close(composed.x, 0.0) && close(composed.y, 0.0) && close(composed.z, 1.0));
     }

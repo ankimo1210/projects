@@ -65,7 +65,13 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
     let core = SimCore::new(&cfg.scenario, 0.0);
     let (sim_in_tx, sim_in_rx) = std::sync::mpsc::channel::<SimIn>();
     let (rod_tx, mut rod_rx) = tokio::sync::mpsc::unbounded_channel::<i32>();
-    let sim = spawn_sim(core, sim_in_rx, cmd_tx.clone(), cfg.telem_tx.clone(), rod_tx);
+    let sim = spawn_sim(
+        core,
+        sim_in_rx,
+        cmd_tx.clone(),
+        cfg.telem_tx.clone(),
+        rod_tx,
+    );
 
     // Packet forwarder: trace, decode → SimIn, and DSKY-state JSON broadcast.
     let mut fwd = pkt_rx.resubscribe();

@@ -73,11 +73,19 @@ mod tests {
     fn server_msg_json_shape() {
         let msg = ServerMsg::DskyState(DskyStateMsg {
             schema_version: 1,
-            prog: "63".into(), verb: "16".into(), noun: "36".into(),
-            r1: "+00031".into(), r2: "      ".into(), r3: "      ".into(),
+            prog: "63".into(),
+            verb: "16".into(),
+            noun: "36".into(),
+            r1: "+00031".into(),
+            r2: "      ".into(),
+            r3: "      ".into(),
             lamps: Default::default(),
-            verb_noun_flash: false, restart: false, standby: false,
-            key_rel: false, opr_err: false, temp: false,
+            verb_noun_flash: false,
+            restart: false,
+            standby: false,
+            key_rel: false,
+            opr_err: false,
+            temp: false,
         });
         let j: serde_json::Value = serde_json::to_value(&msg).unwrap();
         assert_eq!(j["type"], "dsky_state");
