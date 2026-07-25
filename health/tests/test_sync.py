@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 
 import pytest
 from health.auth import AuthError
@@ -199,7 +199,9 @@ def test_completed_metric_refetches_trailing_three_days(store):
         today=date(2026, 7, 20),
         environ={"HEALTH_BACKFILL_START": "2026-01-01"},
     ).sync_all()
-    assert client.calls[0][2:] == (date(2026, 7, 18), date(2026, 7, 20))
+    # 2026-07-18 falls in the aligned 90-day chunk 2026-05-14..2026-08-11,
+    # requested clipped to [chunk start, today].
+    assert client.calls[0][2:] == (date(2026, 5, 14), date(2026, 7, 20))
 
 
 def test_completed_metric_refetches_from_previous_watermark_on_next_day(store):
@@ -212,7 +214,8 @@ def test_completed_metric_refetches_from_previous_watermark_on_next_day(store):
         today=date(2026, 7, 20),
         environ={"HEALTH_BACKFILL_START": "2026-01-01"},
     ).sync_all()
-    assert client.calls[0][2:] == (date(2026, 7, 17), date(2026, 7, 20))
+    # 2026-07-17 falls in the same aligned chunk as 2026-07-18.
+    assert client.calls[0][2:] == (date(2026, 5, 14), date(2026, 7, 20))
 
 
 def test_legacy_ok_checkpoint_becomes_resumable_after_first_overlap_chunk(store):
@@ -349,3 +352,37 @@ def test_auth_error_stops_the_whole_run(store):
         ).sync_all()
 
     assert store.get_sync_state("second") is None
+
+
+def test_daily_syncs_reuse_one_raw_chunk_key(store):
+    """The review's finding: five daily syncs used to leave six raw rows."""
+    m = metric(days=90)
+    for offset in range(5):
+        SyncEngine(
+            FakeClient(),
+            store,
+            [m],
+            today=date(2026, 7, 20) + timedelta(days=offset),
+            environ={"HEALTH_BACKFILL_START": "2026-07-01"},
+        ).sync_all()
+
+    ranges = store.con.execute(
+        "SELECT DISTINCT range_start, range_end FROM raw_json WHERE metric = 'test'"
+    ).fetchall()
+    assert len(ranges) == 1
+
+
+def test_request_range_is_clipped_to_floor_and_today(store):
+    client = FakeClient()
+    SyncEngine(
+        client,
+        store,
+        [metric(days=90)],
+        today=date(2026, 7, 20),
+        environ={"HEALTH_BACKFILL_START": "2026-07-01"},
+    ).sync_all()
+
+    _, _, request_start, request_end = client.calls[0]
+    assert request_start == date(2026, 7, 1)  # never older than the floor
+    assert request_end == date(2026, 7, 20)  # never in the future
+    assert store.get_sync_state("test") == date(2026, 7, 20)  # watermark is the clipped end
