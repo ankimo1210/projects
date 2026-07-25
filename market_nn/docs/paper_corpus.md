@@ -22,12 +22,11 @@
 
 ## 現在のコーパス
 
-2026-07-23 時点で22論文・449ページを変換し、1,318 chunks、424式を保存している。
+2026-07-23 時点で22論文・449ページを変換し、1,320 chunks、424式を保存している。
 数式品質オーバーレイにより422式を LaTeX 化し、全424式に原本 crop を付けた。
-chunk上限は480 tokenを指定しているが、分割できない表を
-含む `ref_tran_bin_2003.00598` の2 chunksは525/536 tokenとなる。実測最大値は各論文の
-`metadata.json` に記録するため、512 tokenを厳密な入力上限とする利用側ではこの2件を
-追加分割する。
+chunk上限は480 tokenを目標とし、512 tokenをhard limitとして検証する。
+`ref_tran_bin_2003.00598` の表から生成された525/536-token chunksは、内容を落とさず
+4 chunksへ決定論的に分割した。現在の実測最大値は493 tokenである。
 
 数式の品質内訳は次のとおり。検証済みは、著者が公開した正確な版の arXiv TeX と
 対応付けた224式と、原本 PDF を手動確認した49式である。42式は両方で確認しているため、
@@ -61,6 +60,7 @@ chunk上限は480 tokenを指定しているが、分割できない表を
 make -C market_nn paper-corpus
 make -C market_nn paper-corpus-check
 make -C market_nn paper-corpus-retrieval-qa
+make -C market_nn paper-corpus-deep-qa
 ```
 
 既存コーパスに数式品質オーバーレイだけを再適用する場合:
@@ -152,7 +152,27 @@ crop と原本 PDF で照合する。
 | answer-page Recall@5 | 90% | 100% |
 | answer-page MRR | 0.75 | 0.7922 |
 
-現行runでは、1,318 chunksがすべて非空でpage provenanceを持ち、424式すべてがchunk内の
+現行runでは、1,320 chunksがすべて非空でpage provenanceを持ち、424式すべてがchunk内の
 式マーカーから追跡できる。gold setは単一レビュアー作成であり、質問応答の生成精度、
-日本語質問、意図的な言い換え、embedding検索は未評価である。再現可能な詳細結果と
+embedding検索は未評価である。再現可能な詳細結果と
 技術レポートは `reports/paper_retrieval_qa/` に保存する。
+
+## 追加変換QA
+
+`paper-corpus-deep-qa` は原PDFの埋め込みtext layerと `document.json` を全449ページで
+照合し、Unicode正規化後のmultiset token recallを計算する。現在の中央値は98.63%、
+P10は92.44%、最小値は65.49%である。0.80未満の5ページと、修復前に512-tokenを
+超えた表ページを原PDFのレンダリング画像で目視確認した。低値は数式密集ページ、
+複雑表、図だけのページに集中し、空変換ページ、PDFページ数不一致、原本hash不一致、
+欠落picture、欠落formula crop、512-token超過は0である。
+
+135図はすべて画像として保存され、119図にcaptionがある。machine annotationは0のため、
+text-only RAGはplotの曲線やcaptionのない16図を意味的・数値的には読めない。
+
+同じ正解を持つ強い英語言い換え66問と日本語66問も別holdoutとして固定した。既存の
+語彙BM25では正解ページ Recall@5 がcanonical 100%に対し、英語言い換え71.21%、
+日本語78.79%まで低下する。日本語値は質問中の英字モデル名・略語による一致を含み、
+多言語対応を意味しない。canonical質問でも正解ページまたは必要formula markerが
+上位5件に揃うexact evidence Recall@5は92.42%、formula IDを持つ23問のfull formula
+Recall@5は78.26%である。これらは変換品質ではなくlexical retrievalの限界として扱う。
+詳細は `reports/paper_conversion_qa/` に保存する。

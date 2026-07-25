@@ -20,6 +20,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SOURCE_DIR = PROJECT_ROOT / "sources" / "papers"
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "corpus" / "papers"
 DEFAULT_TMP_DIR = PROJECT_ROOT / "tmp" / "pdfs"
+HARD_CHUNK_MAX_TOKENS = 512
 
 
 def sha256_file(path: Path, chunk_size: int = 1024 * 1024) -> str:
@@ -399,6 +400,14 @@ def validate_corpus(source_dir: Path, output_dir: Path) -> dict[str, Any]:
             raise RuntimeError(f"Empty retrieval chunk for {pdf.stem}")
         if metadata["document"]["chunks"] != len(chunks):
             raise RuntimeError(f"Chunk metadata count mismatch for {pdf.stem}")
+        oversized_chunks = [
+            chunk for chunk in chunks if int(chunk.get("num_tokens", 0)) > HARD_CHUNK_MAX_TOKENS
+        ]
+        if oversized_chunks:
+            raise RuntimeError(
+                f"Chunks exceed {HARD_CHUNK_MAX_TOKENS} tokens for {pdf.stem}: "
+                f"{[chunk['chunk_id'] for chunk in oversized_chunks]}"
+            )
         with formula_manifest.open(encoding="utf-8") as handle:
             formulas = [json.loads(line) for line in handle]
         if any(formula["paper_id"] != pdf.stem for formula in formulas):
