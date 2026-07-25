@@ -54,6 +54,8 @@ async fn p66_soft_landing_closed_loop() {
             telem_tx,
             latest: None,
             trace_out: Some(root().join("build/traces/p66-acceptance.jsonl")),
+            client_rx: None,
+            client_rod_rx: None,
         }),
     )
     .await
@@ -166,6 +168,8 @@ async fn p66_landing_degrades_gracefully_under_imu_bias() {
             telem_tx,
             latest: None,
             trace_out: None,
+            client_rx: None,
+            client_rod_rx: None,
         }),
     )
     .await

@@ -52,6 +52,12 @@ pub struct AppState {
     pub state_rx: broadcast::Sender<String>, // serialized ServerMsg JSON
     pub agc_tx: mpsc::UnboundedSender<Packet>,
     pub latest: std::sync::Arc<std::sync::Mutex<String>>,
+    /// Scenario mode: ROD clicks route here (+1 = slow descent 1 ft/s) and
+    /// become `runner::rod_load` RODCOUNT loads. `None` in Phase-1
+    /// DSKY-only mode → hardware-faithful ch016 discrete (a documented
+    /// no-op on stock yaAGC — see docs/agc-channel-map.md "Rod Switch
+    /// Click").
+    pub rod_click_tx: Option<mpsc::UnboundedSender<i32>>,
 }
 
 pub fn router(app: AppState) -> Router {
@@ -60,6 +66,42 @@ pub fn router(app: AppState) -> Router {
 
 async fn ws_handler(ws: WebSocketUpgrade, State(app): State<AppState>) -> impl IntoResponse {
     ws.on_upgrade(move |sock| client_loop(sock, app))
+}
+
+/// Route one parsed client message. Pure channel-pushes so it is unit
+/// testable; the ws loop just parses JSON and delegates here.
+pub fn route_client_msg(msg: ClientMsg, app: &AppState) {
+    match msg {
+        ClientMsg::Key { key } => {
+            if let Some(k) = DskyKey::from_name(&key) {
+                let _ = app.agc_tx.send(k.packet());
+            }
+        }
+        ClientMsg::Pro { pressed } => {
+            for p in pro_key_packets(pressed) {
+                let _ = app.agc_tx.send(p);
+            }
+        }
+        ClientMsg::Rod { up } => match &app.rod_click_tx {
+            Some(tx) => {
+                let _ = tx.send(if up { 1 } else { -1 });
+            }
+            None => {
+                // Phase-1: press now, release after 100 ms (ch016).
+                // NOTE: stock yaAGC raises no interrupt for ch016, so this
+                // discrete is observed only on a patched build; the
+                // closed-loop path uses runner::rod_load (RODCOUNT)
+                // instead. Kept for a hardware-faithful manual button.
+                let (press, release) = eagle_agc_protocol::agc_io::rod_click(up);
+                let _ = app.agc_tx.send(press);
+                let tx = app.agc_tx.clone();
+                tokio::spawn(async move {
+                    tokio::time::sleep(std::time::Duration::from_millis(100)).await;
+                    let _ = tx.send(release);
+                });
+            }
+        },
+    }
 }
 
 async fn client_loop(sock: WebSocket, app: AppState) {
@@ -85,40 +127,65 @@ async fn client_loop(sock: WebSocket, app: AppState) {
             m = rx.next() => match m {
                 Some(Ok(Message::Text(text))) => {
                     if let Ok(msg) = serde_json::from_str::<ClientMsg>(&text) {
-                        match msg {
-                            ClientMsg::Key { key } => {
-                                if let Some(k) = DskyKey::from_name(&key) {
-                                    let _ = app.agc_tx.send(k.packet());
-                                }
-                            }
-                            ClientMsg::Pro { pressed } => {
-                                for p in pro_key_packets(pressed) {
-                                    let _ = app.agc_tx.send(p);
-                                }
-                            }
-                            ClientMsg::Rod { up } => {
-                                // ROD switch: press now, release after 100 ms.
-                                // NOTE: stock yaAGC raises no interrupt for
-                                // ch016, so this discrete is observed only on
-                                // a patched build; the closed-loop path uses
-                                // runner::rod_load (RODCOUNT) instead. Kept
-                                // for a hardware-faithful manual button.
-                                let (press, release) =
-                                    eagle_agc_protocol::agc_io::rod_click(up);
-                                let _ = app.agc_tx.send(press);
-                                let tx = app.agc_tx.clone();
-                                tokio::spawn(async move {
-                                    tokio::time::sleep(std::time::Duration::from_millis(100))
-                                        .await;
-                                    let _ = tx.send(release);
-                                });
-                            }
-                        }
+                        route_client_msg(msg, &app);
                     }
                 }
                 Some(Ok(_)) => continue,
                 _ => break,
             },
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use eagle_schema::ClientMsg;
+    use tokio::sync::{broadcast, mpsc};
+
+    fn app(rod: Option<mpsc::UnboundedSender<i32>>) -> (AppState, mpsc::UnboundedReceiver<Packet>) {
+        let (state_rx, _) = broadcast::channel(8);
+        let (agc_tx, agc_rx) = mpsc::unbounded_channel();
+        (
+            AppState {
+                state_rx,
+                agc_tx,
+                latest: Default::default(),
+                rod_click_tx: rod,
+            },
+            agc_rx,
+        )
+    }
+
+    #[tokio::test]
+    async fn key_routes_to_agc_channel() {
+        let (app, mut agc_rx) = app(None);
+        route_client_msg(ClientMsg::Key { key: "VERB".into() }, &app);
+        assert!(agc_rx.try_recv().is_ok(), "VERB key must produce a packet");
+    }
+
+    #[tokio::test]
+    async fn rod_routes_to_click_channel_in_scenario_mode() {
+        let (rod_tx, mut rod_rx) = mpsc::unbounded_channel();
+        let (app, mut agc_rx) = app(Some(rod_tx));
+        route_client_msg(ClientMsg::Rod { up: false }, &app);
+        route_client_msg(ClientMsg::Rod { up: true }, &app);
+        assert_eq!(rod_rx.recv().await, Some(-1));
+        assert_eq!(rod_rx.recv().await, Some(1));
+        assert!(
+            agc_rx.try_recv().is_err(),
+            "no ch016 packets in scenario mode"
+        );
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn rod_falls_back_to_ch016_press_release_in_dsky_mode() {
+        let (app, mut agc_rx) = app(None);
+        route_client_msg(ClientMsg::Rod { up: true }, &app);
+        let press = agc_rx.recv().await.unwrap();
+        assert_eq!((press.channel, press.data), (0o16, 1 << 5));
+        tokio::time::sleep(std::time::Duration::from_millis(150)).await;
+        let release = agc_rx.recv().await.unwrap();
+        assert_eq!((release.channel, release.data), (0o16, 0));
     }
 }

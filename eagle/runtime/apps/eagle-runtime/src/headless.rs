@@ -31,6 +31,12 @@ pub struct HeadlessCfg {
     /// Last-frame cache for late subscribers (the server), if any.
     pub latest: Option<Arc<Mutex<String>>>,
     pub trace_out: Option<PathBuf>,
+    /// Client → AGC packets from the WebSocket server (scenario mode);
+    /// forwarded into the pump so web DSKY keys work mid-run.
+    pub client_rx: Option<tokio::sync::mpsc::UnboundedReceiver<eagle_agc_protocol::Packet>>,
+    /// Client ROD clicks (+1 = slow descent); merged with the sim's
+    /// scheduled clicks into the same RODCOUNT loader.
+    pub client_rod_rx: Option<tokio::sync::mpsc::UnboundedReceiver<i32>>,
 }
 
 /// What the acceptance test asserts on.
@@ -60,6 +66,20 @@ struct Summary {
 /// Run the full closed loop to touchdown (or until the sim thread exits).
 pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
     let (dsky_rx, cmd_tx, pkt_rx, _pump) = pump(cfg.session);
+
+    // Client → AGC packets from the WebSocket server (scenario mode): the
+    // fix for silently-dropped web DSKY key presses — forward them into the
+    // same pump `cmd_tx` the DSKY choreography uses.
+    if let Some(mut rx) = cfg.client_rx {
+        let tx = cmd_tx.clone();
+        tokio::spawn(async move {
+            while let Some(pkt) = rx.recv().await {
+                if tx.send(pkt).is_err() {
+                    break;
+                }
+            }
+        });
+    }
 
     let core = SimCore::new(&cfg.scenario, 0.0);
     let (sim_in_tx, sim_in_rx) = std::sync::mpsc::channel::<SimIn>();
@@ -157,7 +177,29 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
     .await
     .context("scenario choreography")?;
 
-    while let Some(n) = rod_rx.recv().await {
+    // Deliver ROD clicks from both sources through the one DskyScript.
+    // Exit when the SIM's rod channel closes (sim thread exited on
+    // touchdown + 2 s); the client channel closing just stops that source.
+    let mut client_rod_rx = cfg.client_rod_rx;
+    loop {
+        let n = tokio::select! {
+            n = rod_rx.recv() => match n {
+                Some(n) => n,
+                None => break,
+            },
+            n = async {
+                match client_rod_rx.as_mut() {
+                    Some(rx) => rx.recv().await,
+                    None => std::future::pending().await,
+                }
+            } => match n {
+                Some(n) => n,
+                None => {
+                    client_rod_rx = None;
+                    continue;
+                }
+            },
+        };
         if let Err(e) = runner::rod_load(&mut script, n as i16).await {
             eprintln!("headless: ROD load failed: {e:#}");
         }
