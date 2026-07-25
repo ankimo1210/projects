@@ -81,20 +81,8 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
     // fix for silently-dropped web DSKY key presses — forward them into the
     // same pump `cmd_tx` the DSKY choreography uses, unless the script is
     // mid-sequence.
-    if let Some(mut rx) = cfg.client_rx {
-        let tx = cmd_tx.clone();
-        let busy = script_busy.clone();
-        tokio::spawn(async move {
-            while let Some(pkt) = rx.recv().await {
-                if busy.load(Ordering::SeqCst) {
-                    eprintln!("headless: client key dropped (script busy)");
-                    continue;
-                }
-                if tx.send(pkt).is_err() {
-                    break;
-                }
-            }
-        });
+    if let Some(rx) = cfg.client_rx {
+        tokio::spawn(forward_client_keys(rx, cmd_tx.clone(), script_busy.clone()));
     }
 
     let core = SimCore::new(&cfg.scenario, 0.0);
@@ -243,6 +231,28 @@ pub fn touchdown_class(r: &HeadlessResult) -> Option<Touchdown> {
     r.sim.touchdown.map(|(t, _, _, _)| t)
 }
 
+/// Forward client → AGC packets (web DSKY key/PRO presses) into `tx`,
+/// dropping them while `busy` is set — a client keystroke landing between
+/// a script's own terminal-key sends (choreography, or a `rod_load`
+/// erasable write) would interleave with it and corrupt e.g. RODCOUNT.
+/// Exits when `rx` closes (the WebSocket server task ended) or `tx`'s
+/// receiver is gone (the pump exited).
+async fn forward_client_keys(
+    mut rx: tokio::sync::mpsc::UnboundedReceiver<eagle_agc_protocol::Packet>,
+    tx: tokio::sync::mpsc::UnboundedSender<eagle_agc_protocol::Packet>,
+    busy: Arc<AtomicBool>,
+) {
+    while let Some(pkt) = rx.recv().await {
+        if busy.load(Ordering::SeqCst) {
+            eprintln!("headless: client key dropped (script busy)");
+            continue;
+        }
+        if tx.send(pkt).is_err() {
+            break;
+        }
+    }
+}
+
 /// Merge sim-scheduled and client ROD clicks into one stream. Biased
 /// toward the SIM channel, so it always wins a race against a backlog of
 /// pending client clicks — a closing sim (touchdown + 2 s) must end the
@@ -276,7 +286,55 @@ async fn next_rod_click(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use eagle_agc_protocol::Packet;
     use tokio::sync::mpsc;
+
+    #[tokio::test]
+    async fn forward_client_keys_forwards_when_not_busy() {
+        let (client_tx, client_rx) = mpsc::unbounded_channel::<Packet>();
+        let (out_tx, mut out_rx) = mpsc::unbounded_channel::<Packet>();
+        let busy = Arc::new(AtomicBool::new(false));
+        tokio::spawn(forward_client_keys(client_rx, out_tx, busy));
+
+        let pkt = Packet::io(0o15, 1).unwrap();
+        client_tx.send(pkt).unwrap();
+        assert_eq!(out_rx.recv().await, Some(pkt));
+    }
+
+    #[tokio::test]
+    async fn forward_client_keys_drops_when_busy() {
+        let (client_tx, client_rx) = mpsc::unbounded_channel::<Packet>();
+        let (out_tx, mut out_rx) = mpsc::unbounded_channel::<Packet>();
+        let busy = Arc::new(AtomicBool::new(true));
+        tokio::spawn(forward_client_keys(client_rx, out_tx, busy));
+
+        client_tx.send(Packet::io(0o15, 1).unwrap()).unwrap();
+        // Give the forwarder task a chance to run and drop the key.
+        tokio::task::yield_now().await;
+        assert!(
+            out_rx.try_recv().is_err(),
+            "a busy forwarder must drop the key, not forward it"
+        );
+    }
+
+    #[tokio::test]
+    async fn forward_client_keys_resumes_once_busy_clears() {
+        let (client_tx, client_rx) = mpsc::unbounded_channel::<Packet>();
+        let (out_tx, mut out_rx) = mpsc::unbounded_channel::<Packet>();
+        let busy = Arc::new(AtomicBool::new(true));
+        tokio::spawn(forward_client_keys(client_rx, out_tx, busy.clone()));
+
+        // Dropped while busy.
+        client_tx.send(Packet::io(0o15, 1).unwrap()).unwrap();
+        tokio::task::yield_now().await;
+        assert!(out_rx.try_recv().is_err());
+
+        // Forwarded once the gate opens.
+        busy.store(false, Ordering::SeqCst);
+        let resumed = Packet::io(0o15, 2).unwrap();
+        client_tx.send(resumed).unwrap();
+        assert_eq!(out_rx.recv().await, Some(resumed));
+    }
 
     #[tokio::test]
     async fn next_rod_click_delivers_from_both_sources() {
