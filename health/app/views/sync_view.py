@@ -30,6 +30,19 @@ def _show_last_report() -> None:
     else:
         st.success(f"同期が完了しました（{last['requests_made']} requests）")
 
+    remaining = last.get("history_remaining", 0)
+    if remaining:
+        st.info(
+            f"履歴の残りは約 {remaining} chunk です。もう一度同期すると古い期間へ遡ります。"
+            "直近のデータは全メトリクスで取得済みです。"
+        )
+    for failure in last.get("failures", []):
+        st.warning(
+            f"{failure['metric']}: 取得できませんでした"
+            f"（{failure['kind']} {failure['status_code'] or ''} {failure['message']}）。"
+            "他のメトリクスは同期済みです。"
+        )
+
 
 def _token_panel(auth) -> None:
     tokens = auth.load_tokens()
@@ -49,9 +62,12 @@ def _token_panel(auth) -> None:
     st.caption(f"認可スコープ: {tokens.get('scope', '-')}")
 
 
-def _run_sync(auth) -> None:
+CAP_OPTIONS = {"200 requests（既定）": 200, "500 requests": 500, "1000 requests": 1000}
+
+
+def _run_sync(auth, max_requests: int) -> None:
     try:
-        engine = SyncEngine(HealthClient(auth), get_store())
+        engine = SyncEngine(HealthClient(auth), get_store(), max_requests=max_requests)
         with st.status("同期中...", expanded=True) as status:
             report = engine.sync_all(
                 progress_cb=lambda metric, message: status.write(f"{metric}: {message}")
@@ -76,6 +92,16 @@ def _run_sync(auth) -> None:
             "resume_in_s": report.resume_in_s,
             "stopped_early": report.stopped_early,
             "requests_made": report.requests_made,
+            "history_remaining": sum(report.history_remaining.values()),
+            "failures": [
+                {
+                    "metric": f.metric,
+                    "kind": f.kind,
+                    "status_code": f.status_code,
+                    "message": f.message,
+                }
+                for f in report.failures
+            ],
         }
         st.rerun()
     finally:
@@ -83,6 +109,7 @@ def _run_sync(auth) -> None:
         # payload error can therefore follow real DB changes, so invalidate
         # cached frames on every outcome once a sync attempt has started.
         st.cache_data.clear()
+        get_store().checkpoint()
 
 
 def sync_page() -> None:
@@ -91,8 +118,9 @@ def sync_page() -> None:
     _show_last_report()
     _token_panel(auth)
 
+    label = st.selectbox("1回の同期の上限", list(CAP_OPTIONS), index=0)
     if st.button("Google Health からデータを同期", type="primary"):
-        _run_sync(auth)
+        _run_sync(auth, CAP_OPTIONS[label])
 
     states = get_store().sync_states()
     if not states.empty:

@@ -93,6 +93,7 @@ def test_daily_sleep_intraday_and_raw_stats(store):
     assert rows.loc[("sleep", "sleep_minutes"), "n_raw_pages"] == 2
     assert rows.loc[("sleep", "sleep_minutes"), "raw_first_range"].date() == day
     assert rows.loc[("sleep", "sleep_minutes"), "raw_last_range"].date() == day
+    assert rows.loc[("sleep", "sleep_minutes"), "backfilled_from"].date() == day
 
 
 def test_empty_inventory_has_stable_columns_and_zero_counts(store):

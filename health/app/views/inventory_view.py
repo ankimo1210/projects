@@ -43,6 +43,7 @@ def inventory_page() -> None:
             "last_date": st.column_config.DateColumn("最終日"),
             "last_synced": st.column_config.DateColumn("最終同期日"),
             "status": st.column_config.TextColumn("状態"),
+            "backfilled_from": st.column_config.DateColumn("履歴開始日"),
             "n_raw_pages": st.column_config.NumberColumn("rawページ数"),
             "raw_first_range": st.column_config.DateColumn("raw範囲開始"),
             "raw_last_range": st.column_config.DateColumn("raw範囲終了"),
