@@ -1,4 +1,4 @@
-.PHONY: vendor agc-tools agc test test-integration dev descent-p66
+.PHONY: vendor agc-tools agc test test-integration dev descent-p66 lint
 
 vendor:
 	bash scripts/fetch-vendor.sh
@@ -32,3 +32,8 @@ descent-p66: agc
 	cd runtime && cargo run -p eagle-runtime -- \
 	  --yaagc ../build/agc/yaAGC --core ../build/agc/Luminary099.bin \
 	  --scenario ../scenarios/p66-gate.toml --root ..
+
+lint:
+	cd runtime && cargo clippy --workspace --all-targets -- -D warnings
+	cd runtime && cargo fmt --all --check
+	cd client && npm run lint
