@@ -9,6 +9,8 @@ from health.client import ApiError, HealthClient
 from health.endpoints import PayloadError
 from health.sync import MAX_REQUESTS_PER_RUN, SyncEngine
 
+_FAILURE_KIND_LABELS = {"api": "API エラー", "payload": "データ解析エラー"}
+
 
 def _show_last_report() -> None:
     last = st.session_state.pop("last_sync_report", None)
@@ -23,8 +25,12 @@ def _show_last_report() -> None:
             f"{resume_at} 頃（約 {minutes} 分後）にもう一度同期してください。"
         )
     elif last["stopped_early"]:
+        # `max_requests` reflects the cap the user actually selected for this
+        # run; `.get` falls back to the module default so a report dict from
+        # an older session shape (before this field existed) cannot raise.
+        cap = last.get("max_requests", MAX_REQUESTS_PER_RUN)
         st.warning(
-            f"1回の実行上限（{MAX_REQUESTS_PER_RUN} requests）に達したため停止しました。"
+            f"1回の実行上限（{cap} requests）に達したため停止しました。"
             "完了chunkは保存済みです。もう一度同期すると未完了chunkから再開します。"
         )
     else:
@@ -37,9 +43,13 @@ def _show_last_report() -> None:
             "直近のデータは全メトリクスで取得済みです。"
         )
     for failure in last.get("failures", []):
+        kind_label = _FAILURE_KIND_LABELS.get(failure["kind"], failure["kind"])
+        detail_parts = [kind_label]
+        if failure["status_code"]:
+            detail_parts.append(f"HTTP {failure['status_code']}")
+        detail_parts.append(failure["message"])
         st.warning(
-            f"{failure['metric']}: 取得できませんでした"
-            f"（{failure['kind']} {failure['status_code'] or ''} {failure['message']}）。"
+            f"{failure['metric']}: 取得できませんでした（{' '.join(detail_parts)}）。"
             "他のメトリクスは同期済みです。"
         )
 
@@ -92,6 +102,7 @@ def _run_sync(auth, max_requests: int) -> None:
             "resume_in_s": report.resume_in_s,
             "stopped_early": report.stopped_early,
             "requests_made": report.requests_made,
+            "max_requests": max_requests,
             "history_remaining": sum(report.history_remaining.values()),
             "failures": [
                 {
