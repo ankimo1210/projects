@@ -119,6 +119,7 @@ class Store:
         rows: ParsedRows,
         *,
         status: str = SYNC_OK,
+        watermark: date | None = None,
     ) -> None:
         """Atomically replace one (metric, start, end) chunk: old raw pages,
         old typed rows in range, and the watermark all move together so a
@@ -175,12 +176,14 @@ class Store:
                         f"INSERT INTO sleep_sessions VALUES ({', '.join('?' * len(_SLEEP_COLS))})",
                         [r[c] for c in _SLEEP_COLS],
                     )
-            # 6. advance the watermark
+            # 6. advance the watermark. `watermark` is the last day actually
+            # requested: an aligned chunk key can extend past today, and a
+            # future watermark would make the next run skip real days.
             con.execute(
                 "INSERT INTO sync_state VALUES (?, ?, ?, now()) "
                 "ON CONFLICT DO UPDATE SET last_synced_date = excluded.last_synced_date, "
                 "status = excluded.status, updated_at = excluded.updated_at",
-                [metric.name, end, status],
+                [metric.name, end if watermark is None else watermark, status],
             )
             con.execute("COMMIT")
         except Exception:

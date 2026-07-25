@@ -113,21 +113,26 @@ class SyncEngine:
             progress = MetricProgress(metric=metric.name)
             report.progress.append(progress)
             start = self._start_date(metric)
+            floor = self._initial_start(metric)
 
             for chunk_start, chunk_end in chunk_ranges(start, self.today, metric.max_range_days):
+                # The chunk key is the aligned range; the request is clipped so
+                # we never ask for days before the configured floor or after today.
+                request_start = max(chunk_start, floor)
+                request_end = min(chunk_end, self.today)
                 try:
                     if metric.method == DAILY_ROLLUP:
                         payloads = [
-                            self.client.daily_rollup(metric, chunk_start, chunk_end, budget)
+                            self.client.daily_rollup(metric, request_start, request_end, budget)
                         ]
                     else:
                         # Buffer every reconcile page. Parsing and replacement
                         # only begin once the entire chunk is present.
                         payloads = list(
-                            self.client.iter_reconciled(metric, chunk_start, chunk_end, budget)
+                            self.client.iter_reconciled(metric, request_start, request_end, budget)
                         )
                     rows = metric.parse_pages(payloads)
-                    status = SYNC_OK if chunk_end == self.today else SYNC_IN_PROGRESS
+                    status = SYNC_OK if chunk_end >= self.today else SYNC_IN_PROGRESS
                     self.store.replace_chunk(
                         metric,
                         chunk_start,
@@ -135,6 +140,7 @@ class SyncEngine:
                         payloads,
                         rows,
                         status=status,
+                        watermark=request_end,
                     )
                 except RateLimited as exc:
                     report.paused = True
@@ -162,7 +168,7 @@ class SyncEngine:
                 if progress_cb:
                     progress_cb(
                         metric.name,
-                        f"{chunk_start} → {chunk_end} ({budget.used} requests)",
+                        f"{request_start} → {request_end} ({budget.used} requests)",
                     )
             else:
                 progress.done = True

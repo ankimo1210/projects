@@ -81,15 +81,38 @@ def closed_open_filter(path: str, start: date, end: date) -> str:
     return f'{path} >= "{start}" AND {path} < "{stop}"'
 
 
-def chunk_ranges(start: date, end: date, max_days: int) -> list[tuple[date, date]]:
-    """Split [start, end] into contiguous, non-overlapping <= max_days chunks."""
+CHUNK_EPOCH = date(2000, 1, 1)
+
+
+def aligned_chunk(day: date, max_days: int) -> tuple[date, date]:
+    """The fixed calendar chunk containing `day`.
+
+    Boundaries depend only on CHUNK_EPOCH and max_days -- never on where a
+    sync happens to start -- so the same calendar days always map to the same
+    (range_start, range_end) key. That is what lets a re-fetch replace its
+    predecessor in raw_json instead of adding an overlapping row.
+    """
     if max_days < 1:
         raise ValueError(f"max_days must be >= 1, got {max_days}")
-    out, cur = [], start
+    index = (day - CHUNK_EPOCH).days // max_days
+    start = CHUNK_EPOCH + timedelta(days=index * max_days)
+    return start, start + timedelta(days=max_days - 1)
+
+
+def chunk_ranges(start: date, end: date, max_days: int) -> list[tuple[date, date]]:
+    """Aligned chunks covering [start, end], contiguous and non-overlapping.
+
+    The first chunk may begin before `start` and the last may end after `end`;
+    callers clip their actual request range and keep the chunk key intact.
+    """
+    if max_days < 1:
+        raise ValueError(f"max_days must be >= 1, got {max_days}")
+    out: list[tuple[date, date]] = []
+    cur = aligned_chunk(start, max_days)[0]
     while cur <= end:
-        stop = min(cur + timedelta(days=max_days - 1), end)
-        out.append((cur, stop))
-        cur = stop + timedelta(days=1)
+        chunk_start, chunk_end = aligned_chunk(cur, max_days)
+        out.append((chunk_start, chunk_end))
+        cur = chunk_end + timedelta(days=1)
     return out
 
 
