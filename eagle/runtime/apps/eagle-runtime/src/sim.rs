@@ -525,6 +525,11 @@ pub struct TouchdownReport {
 #[derive(Debug, Default, Clone)]
 pub struct SimResult {
     pub touchdown: Option<TouchdownReport>,
+    /// Wall time the pacing loop fell behind and then DISCARDED by
+    /// resetting its cadence, summed over the run (ms). It is the sim-side
+    /// component of telemetry `drift_ms`: without it, an overrun is
+    /// indistinguishable from an AGC clock that runs slow.
+    pub pacing_lost_ms: f64,
 }
 
 /// Spawn the sim on its own std thread, wall-paced at 10 ms with no drift
@@ -599,6 +604,10 @@ pub fn spawn_sim(
             if next > now {
                 std::thread::sleep(next - now);
             } else {
+                // Falling behind: reset the cadence but RECORD the
+                // discarded time — it is the sim-side component of
+                // telemetry drift_ms.
+                result.pacing_lost_ms += (now - next).as_secs_f64() * 1000.0;
                 next = now;
             }
         }
