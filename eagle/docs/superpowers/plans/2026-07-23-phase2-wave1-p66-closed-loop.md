@@ -172,7 +172,7 @@ docs/coordinate-frames.md          NEW
 - Coarse-align data layout `0o40000 | delta`: `agc_engine.c:2405-2422`. Gyro packing: `agc_engine.c:2354-2390` (decode as raw u16 in Wave 1).
 - Jet bit maps: `Contributed/LM_Simulator/lm_simulator.tcl:814-818`. Engine/trim bits: `Luminary099/INPUT_OUTPUT_CHANNEL_BIT_DESCRIPTIONS.agc:59-94`.
 
-- [ ] **Step 1: Write failing tests** in `agc_io.rs` `#[cfg(test)]`:
+- [x] **Step 1: Write failing tests** in `agc_io.rs` `#[cfg(test)]`:
 
 ```rust
 #[test]
@@ -239,9 +239,9 @@ fn decode_autopilot_outputs() {
 }
 ```
 
-- [ ] **Step 2: Run tests, verify failure** — `cd runtime && cargo test -p eagle-agc-protocol agc_io` → FAIL (module missing).
+- [x] **Step 2: Run tests, verify failure** — `cd runtime && cargo test -p eagle-agc-protocol agc_io` → FAIL (module missing).
 
-- [ ] **Step 3: Implement `agc_io.rs`:**
+- [x] **Step 3: Implement `agc_io.rs`:**
 
 ```rust
 //! LM autopilot I/O: counter builders, output decoding, discrete writes.
@@ -355,11 +355,11 @@ pub fn decode_output(p: &Packet) -> AgcOutput {
 
 Note on `CoarseAlign.positive`: the direction encoding of bit 0o40000 (set = negative vs positive) must be pinned in Step 0 from `agc_engine.c:1667-1674` (`BurstOutput` Direction handling); fix the test to whatever the vendor source says and cite it in the commit.
 
-- [ ] **Step 4: Run tests, verify pass** — `cargo test -p eagle-agc-protocol` → all PASS (existing packet tests still green).
+- [x] **Step 4: Run tests, verify pass** — `cargo test -p eagle-agc-protocol` → all PASS (existing packet tests still green).
 
-- [ ] **Step 5: Update `docs/agc-channel-map.md`** — append a "Counters and autopilot outputs (Phase 2)" section: the two reference tables from this plan's header (counter registers, output channels, THRUST protocol), with the vendor citations. Keep octal formatting.
+- [x] **Step 5: Update `docs/agc-channel-map.md`** — append a "Counters and autopilot outputs (Phase 2)" section: the two reference tables from this plan's header (counter registers, output channels, THRUST protocol), with the vendor citations. Keep octal formatting.
 
-- [ ] **Step 6: Commit** — `git add runtime/crates/eagle-agc-protocol docs/agc-channel-map.md && git commit -m "feat(protocol): LM counter builders, autopilot output decoder, discrete writes"` (+ trailer).
+- [x] **Step 6: Commit** — `git add runtime/crates/eagle-agc-protocol docs/agc-channel-map.md && git commit -m "feat(protocol): LM counter builders, autopilot output decoder, discrete writes"` (+ trailer).
 
 ---
 
@@ -383,7 +383,7 @@ complement. SP range ±(2^14−1). A variable "scaled B_n" stores
 words: value = hi·2^14 + lo with both words carrying the value's sign
 (canonical form; mixed signs are legal in the AGC but we never emit them).
 
-- [ ] **Step 1: Write failing tests** (`#[cfg(test)]` in `words.rs`):
+- [x] **Step 1: Write failing tests** (`#[cfg(test)]` in `words.rs`):
 
 ```rust
 #[test]
@@ -432,9 +432,9 @@ fn octal_formatting() {
 }
 ```
 
-- [ ] **Step 2: Run, verify FAIL** — `cargo test -p eagle-agc-protocol words` → module missing.
+- [x] **Step 2: Run, verify FAIL** — `cargo test -p eagle-agc-protocol words` → module missing.
 
-- [ ] **Step 3: Implement:**
+- [x] **Step 3: Implement:**
 
 ```rust
 //! AGC 15-bit one's-complement word encoding (SP/DP) and B-scaling.
@@ -478,9 +478,9 @@ pub fn octal5(word: u16) -> String { format!("{:05o}", word & 0o77777) }
 
 Note: `(lsb_exp as f64).exp2()` — use `f64::powi(2.0, lsb_exp)` if exp2 reads awkwardly; either is fine, keep one.
 
-- [ ] **Step 4: Run, verify PASS** — `cargo test -p eagle-agc-protocol` → PASS.
+- [x] **Step 4: Run, verify PASS** — `cargo test -p eagle-agc-protocol` → PASS.
 
-- [ ] **Step 5: Commit** — `git commit -m "feat(protocol): AGC one's-complement SP/DP words and B-scaling"` (+ trailer).
+- [x] **Step 5: Commit** — `git commit -m "feat(protocol): AGC one's-complement SP/DP words and B-scaling"` (+ trailer).
 
 ---
 
@@ -502,7 +502,7 @@ Note: `(lsb_exp as f64).exp2()` — use `f64::powi(2.0, lsb_exp)` if exp2 reads 
 
 Design rule (spec §3): no anonymous `[f64; 3]` vectors cross a function boundary in any crate; frames are enforced at compile time. Internal quaternion storage is a private `[f64; 4]`.
 
-- [ ] **Step 1: Crate skeleton.** `runtime/crates/eagle-dynamics/Cargo.toml`:
+- [x] **Step 1: Crate skeleton.** `runtime/crates/eagle-dynamics/Cargo.toml`:
 
 ```toml
 [package]
@@ -515,7 +515,7 @@ edition = "2021"
 
 Add to workspace members. `src/lib.rs`: `pub mod frames; pub mod constants;` (later tasks append modules).
 
-- [ ] **Step 2: Write failing tests** in `frames.rs`:
+- [x] **Step 2: Write failing tests** in `frames.rs`:
 
 ```rust
 #[cfg(test)]
@@ -567,9 +567,9 @@ mod tests {
 }
 ```
 
-- [ ] **Step 3: Run, verify FAIL** — `cargo test -p eagle-dynamics` → compile error.
+- [x] **Step 3: Run, verify FAIL** — `cargo test -p eagle-dynamics` → compile error.
 
-- [ ] **Step 4: Implement `frames.rs`** (complete):
+- [x] **Step 4: Implement `frames.rs`** (complete):
 
 ```rust
 //! Typed coordinate frames (spec §3). A `V3<F>` is a vector expressed in
@@ -689,7 +689,7 @@ pub fn mcmf_to_lsite(site_unit_mcmf: V3<Mcmf>) -> Rot<Mcmf, Lsite> {
 
 Caveat for the implementer: the ENU test asserts `apply(site) == +z`; if your matrix→quaternion convention lands transposed, the test catches it — fix the convention, not the test.
 
-- [ ] **Step 5: `constants.rs`** — transcribe the plan-header constants table verbatim, e.g.:
+- [x] **Step 5: `constants.rs`** — transcribe the plan-header constants table verbatim, e.g.:
 
 ```rust
 /// Lunar gravitational parameter, m^3/s^2. Provenance: historical.
@@ -729,11 +729,11 @@ pub const DINC_MAX_PER_TICK: u32 = 32;
 pub const DT: f64 = 0.010;
 ```
 
-- [ ] **Step 6: Run, verify PASS** — `cargo test -p eagle-dynamics` → PASS.
+- [x] **Step 6: Run, verify PASS** — `cargo test -p eagle-dynamics` → PASS.
 
-- [ ] **Step 7: Write `docs/coordinate-frames.md`** — the spec §3 frame table (MCI/MCMF/LSITE/BODY/SM roles), the conventions fixed here: MCI z = lunar pole; MCMF = MCI rotated by OMEGA_MOON·t; LSITE = ENU (x East, y North, z Up); BODY: +X = thrust axis (up through the overhead hatch), +Z forward out the windows, +Y completes right-handed; SM = stable member, defined at scenario start ≡ initial BODY attitude (so gimbal angles and yaAGC's zeroed CDU counters agree at t0); AGC-unit conversions happen only at the counter codec (PIPA/CDU/THRUST scale constants, cited).
+- [x] **Step 7: Write `docs/coordinate-frames.md`** — the spec §3 frame table (MCI/MCMF/LSITE/BODY/SM roles), the conventions fixed here: MCI z = lunar pole; MCMF = MCI rotated by OMEGA_MOON·t; LSITE = ENU (x East, y North, z Up); BODY: +X = thrust axis (up through the overhead hatch), +Z forward out the windows, +Y completes right-handed; SM = stable member, defined at scenario start ≡ initial BODY attitude (so gimbal angles and yaAGC's zeroed CDU counters agree at t0); AGC-unit conversions happen only at the counter codec (PIPA/CDU/THRUST scale constants, cited).
 
-- [ ] **Step 8: Commit** — `git commit -m "feat(dynamics): typed frames, vectors, rotations, physical constants"` (+ trailer).
+- [x] **Step 8: Commit** — `git commit -m "feat(dynamics): typed frames, vectors, rotations, physical constants"` (+ trailer).
 
 ---
 
@@ -759,7 +759,7 @@ pub const DT: f64 = 0.010;
   - `pub fn parse_octal_register(display: &str) -> Option<u16>` (pure helper)
   - `pub fn pump(session: AgcSession) -> (watch::Receiver<DskyState>, mpsc::UnboundedSender<Packet>, tokio::task::JoinHandle<()>)` — test/runner helper: owns the session, applies packets to a `DskyState`, publishes watch updates, forwards commands.
 
-- [ ] **Step 1: Unit tests first** (in `script.rs`; no live AGC — fabricate watch updates):
+- [x] **Step 1: Unit tests first** (in `script.rs`; no live AGC — fabricate watch updates):
 
 ```rust
 #[cfg(test)]
@@ -807,9 +807,9 @@ mod tests {
 
 (Adjust the `prog` field type to the real `DskyState` — Phase 1 stores display chars; read `dsky.rs` first and use its actual representation. The test intent is binding, the field spelling follows the code.)
 
-- [ ] **Step 2: Run, verify FAIL.** `cargo test -p eagle-runtime script` → module missing.
+- [x] **Step 2: Run, verify FAIL.** `cargo test -p eagle-runtime script` → module missing.
 
-- [ ] **Step 3: Implement `script.rs`:**
+- [x] **Step 3: Implement `script.rs`:**
 
 ```rust
 //! Scripted DSKY choreography over the live AGC: key sequences, display
@@ -945,11 +945,11 @@ pub fn parse_octal_register(display: &str) -> Option<u16> {
 
 `pump()` (same file): spawn a task that loops `session.events().recv()`, applies to a local `DskyState`, and `watch::Sender::send_replace`s a clone on every visible change; forward an `mpsc::UnboundedReceiver<Packet>` into `session.send`. Return `(watch_rx, cmd_tx, join_handle)`. Reuse the loop shape from `main.rs` (events + commands select).
 
-- [ ] **Step 4: Refactor `main.rs`** to use the same watch publication: add `let (dsky_tx, dsky_rx) = watch::channel(DskyState::default());` beside `latest`; in the `dsky.apply(&pkt)` branch also `let _ = dsky_tx.send(dsky.clone());`. Keep `dsky_rx` alive in scope (`let _keep = dsky_rx;` until Task 14 consumes it) — do not break existing behavior; `make test` must stay green.
+- [x] **Step 4: Refactor `main.rs`** to use the same watch publication: add `let (dsky_tx, dsky_rx) = watch::channel(DskyState::default());` beside `latest`; in the `dsky.apply(&pkt)` branch also `let _ = dsky_tx.send(dsky.clone());`. Keep `dsky_rx` alive in scope (`let _keep = dsky_rx;` until Task 14 consumes it) — do not break existing behavior; `make test` must stay green.
 
-- [ ] **Step 5: Run unit tests, verify PASS** — `cargo test -p eagle-runtime`.
+- [x] **Step 5: Run unit tests, verify PASS** — `cargo test -p eagle-runtime`.
 
-- [ ] **Step 6: Live smoke test** `tests/live_script.rs` (pattern-match Phase 1 `live_agc.rs` for AGC boot + paths; port **19901**; `#[ignore]`):
+- [x] **Step 6: Live smoke test** `tests/live_script.rs` (pattern-match Phase 1 `live_agc.rs` for AGC boot + paths; port **19901**; `#[ignore]`):
 
 ```rust
 // boot yaAGC, pump(), settle, then:
@@ -960,7 +960,7 @@ pub fn parse_octal_register(display: &str) -> Option<u16> {
 
 Copy the `settle_dsky` helper approach from `tests/golden_v35e.rs` (quiet-check scoped to {0o10, 0o11, 0o163}). Run: `cargo test -p eagle-runtime --test live_script -- --ignored --test-threads=1` → PASS.
 
-- [ ] **Step 7: Commit** — `git commit -m "feat(runtime): scripted DSKY harness with erasable load/read-back"` (+ trailer).
+- [x] **Step 7: Commit** — `git commit -m "feat(runtime): scripted DSKY harness with erasable load/read-back"` (+ trailer).
 
 ---
 
@@ -983,7 +983,7 @@ Copy the `settle_dsky` helper approach from `tests/golden_v35e.rs` (quiet-check 
 2. Extract 5-10 real symbol-table lines (must include RODSCALE, TLAND or RLS, and one unswitched-erasable symbol) into the fixture file, verbatim.
 3. Pin the erasable-address notation: yaYUL prints banked erasable as `E<bank>,<offset>` (offset 1400-1777) and unswitched as plain octal. ECADR for V21N01 = `bank*0o400 + (offset − 0o1400)` for switched banks (E0-E7), plain address for unswitched (0000-1377). Verify against `Luminary099/ERASABLE_ASSIGNMENTS.agc` bank comments and record the rule + citation in `docs/agc-channel-map.md`.
 
-- [ ] **Step 1: Failing tests** (against the real fixture lines — exact strings come from Step 0; shape:)
+- [x] **Step 1: Failing tests** (against the real fixture lines — exact strings come from Step 0; shape:)
 
 ```rust
 #[test]
@@ -1036,9 +1036,9 @@ fn manifest_dp_emits_two_consecutive_words() {
 }
 ```
 
-- [ ] **Step 2: Run, verify FAIL.**
+- [x] **Step 2: Run, verify FAIL.**
 
-- [ ] **Step 3: Implement `padload.rs`** — `SymTab`: line-parser for the fixture format (regex-free: split_whitespace, detect `E<d>,<offset>` vs plain octal; store map name→ecadr). `PadloadManifest`:
+- [x] **Step 3: Implement `padload.rs`** — `SymTab`: line-parser for the fixture format (regex-free: split_whitespace, detect `E<d>,<offset>` vs plain octal; store map name→ecadr). `PadloadManifest`:
 
 ```rust
 #[derive(serde::Deserialize)]
@@ -1062,9 +1062,9 @@ pub struct Physical { pub value: f64, pub b: i32, pub dp: bool }
 
 `resolve`: for each word: ecadr from `symbol` (symtab lookup) or `addr` (octal parse) — exactly one must be present; word(s) from `octal` (parse) or `physical` (`to_pulses` → `sp_encode`/`dp_encode`); DP pushes `[ecadr, ecadr+1]`. Errors name the entry.
 
-- [ ] **Step 4: Run, verify PASS.**
+- [x] **Step 4: Run, verify PASS.**
 
-- [ ] **Step 5: `padload_gen.rs` CLI** — generates the scenario pad-load manifest from first principles (all math via `eagle-dynamics`):
+- [x] **Step 5: `padload_gen.rs` CLI** — generates the scenario pad-load manifest from first principles (all math via `eagle-dynamics`):
 
 ```
 cargo run -p eagle-runtime --bin padload_gen -- \
@@ -1083,9 +1083,9 @@ The CLI hard-fails if any b-scale is marked `UNVERIFIED` in its table AND `--all
 
 **The b-scale guesses above are working hypotheses, not facts.** The empirical validation loop (display read-back, alarm-driven iteration) in Spike A is the authority; this task only has to produce plausible first-cut TOML + the machinery.
 
-- [ ] **Step 6: Run full fast suite** — `cd runtime && cargo test` → PASS; `make test` → PASS.
+- [x] **Step 6: Run full fast suite** — `cd runtime && cargo test` → PASS; `make test` → PASS.
 
-- [ ] **Step 7: Commit** — `git commit -m "feat(runtime): yaYUL symtab parsing, pad-load manifest, generator CLI"` (+ trailer).
+- [x] **Step 7: Commit** — `git commit -m "feat(runtime): yaYUL symtab parsing, pad-load manifest, generator CLI"` (+ trailer).
 
 ---
 
@@ -1178,13 +1178,13 @@ fixes any arithmetic slip — the binary strings are the source of truth.)
   PINBALL_NOUN_TABLES in Step 0). Iterate RN/VN b-scales until sane.
 - Every iteration → one ledger line: `spike-A iter N: <alarm/observation> → <change>`.
 
-- [ ] **Step 1:** Step-0 verifications listed above (N47/N43 noun scaling, REFSMBIT, discrete conversions, ECADR rule already pinned in Task 5).
-- [ ] **Step 2:** Implement `runner.rs` pieces + `SyntheticHover` v1 + `descent_probe` bin (stdin commands: `pro`, `alarm`, `keys <SEQ>`, `att-hold`, `quit`; prints every decoded `AgcOutput` ≠ Downlink and every DSKY change line — reuse Phase 1 interpret vocabulary freely).
-- [ ] **Step 3:** Unit-test the pure parts (no AGC): discrete constants round-trip the binary strings; `apply_padload` verification cadence logic against a scripted fake; PRO-on-flash responder classification table.
-- [ ] **Step 4:** Iterate live with `descent_probe` until choreography completes. Record everything in the ledger; grow `scenarios/p66-padload.toml`.
-- [ ] **Step 5:** Freeze the working choreography into `tests/live_spike_p63.rs` (port 19902): boots, runs init + pad-load + P63, asserts ENGINE ON within 180 s and alarms ⊆ `runner::SPIKE_A_ALARM_WHITELIST: &[u16]` (pub const in runner.rs — Task 16 imports it too — committed with a citation/justification comment per entry).
-- [ ] **Step 6:** `cargo test -p eagle-runtime --test live_spike_p63 -- --ignored --test-threads=1` → PASS twice consecutively (flake check).
-- [ ] **Step 7:** Commit (code + manifest + ledger) — `git commit -m "feat(runtime): scripted pad-load + P63 ignition spike (live)"` (+ trailer).
+- [x] **Step 1:** Step-0 verifications listed above (N47/N43 noun scaling, REFSMBIT, discrete conversions, ECADR rule already pinned in Task 5).
+- [x] **Step 2:** Implement `runner.rs` pieces + `SyntheticHover` v1 + `descent_probe` bin (stdin commands: `pro`, `alarm`, `keys <SEQ>`, `att-hold`, `quit`; prints every decoded `AgcOutput` ≠ Downlink and every DSKY change line — reuse Phase 1 interpret vocabulary freely).
+- [x] **Step 3:** Unit-test the pure parts (no AGC): discrete constants round-trip the binary strings; `apply_padload` verification cadence logic against a scripted fake; PRO-on-flash responder classification table.
+- [x] **Step 4:** Iterate live with `descent_probe` until choreography completes. Record everything in the ledger; grow `scenarios/p66-padload.toml`.
+- [x] **Step 5:** Freeze the working choreography into `tests/live_spike_p63.rs` (port 19902): boots, runs init + pad-load + P63, asserts ENGINE ON within 180 s and alarms ⊆ `runner::SPIKE_A_ALARM_WHITELIST: &[u16]` (pub const in runner.rs — Task 16 imports it too — committed with a citation/justification comment per entry).
+- [x] **Step 6:** `cargo test -p eagle-runtime --test live_spike_p63 -- --ignored --test-threads=1` → PASS twice consecutively (flake check).
+- [x] **Step 7:** Commit (code + manifest + ledger) — `git commit -m "feat(runtime): scripted pad-load + P63 ignition spike (live)"` (+ trailer).
 
 ---
 
@@ -1757,7 +1757,7 @@ pub enum ClientMsg { Key { key: String }, Pro { pressed: bool }, Rod { up: bool 
 - [x] **Step 2: FAIL** (`cd client && npm test`) → **Step 3: implement** buffer + dispatch refactor.
 - [x] **Step 4:** `npm install uplot` (lockfile committed); implement `StripChart.tsx` (thin uPlot wrapper: props `{ title, series: {label, get: (f)=>number|null, color}[], frames }`, `setData` on version change, `overflow-x` safe, dark background consistent with App.css palette) and `TelemetryPage.tsx`; tab state in `App.tsx` (`useState<"dsky"|"engr">`, plain buttons styled like `.panel h2`).
 - [x] **Step 5:** `npm test` PASS + `npm run build` clean (type errors are failures).
-- [ ] **Step 6 (deferred to Task 16 live run):** Manual check (documented in the task report, needs Task 14 running with `--scenario` or the stub pipeline): both tabs render, charts scroll, ROD buttons emit WS messages (browser devtools).
+- [ ] **Step 6 (deferred to Task 16 live run):** Manual check (documented in the task report, needs Task 14 running with `--scenario` or the stub pipeline): both tabs render, charts scroll, ROD buttons emit WS messages (browser devtools). — *Still open after the 2026-07-25 re-flight: no browser available in that session, and the ROD half of the check is unobservable until a run reaches P66 (it does not — see Task 16's note).*
 - [x] **Step 7: Commit** — `"feat(client): engineer telemetry board with strip charts and ROD input"` (+ trailer).
 
 ---
@@ -1787,8 +1787,18 @@ must complete without panic, without non-whitelisted alarms, and reach
 touchdown (any classification — graceful degradation, not accuracy). Not
 part of default `make test-integration` (CI budget); documented in CLAUDE.md.
 
-- [ ] **Step 1:** implement `run_headless` refactor + the test; run `cargo test -p eagle-runtime --test live_p66_descent -- --ignored --test-threads=1` until green **3 consecutive times** (this is the flake bar for the wave's flagship test).
-- [ ] **Step 2:** Makefile:
+> **Measured outcome, 2026-07-25 re-flight — this task is NOT done.** The
+> `run_headless` refactor and the acceptance test exist and run, but the
+> acceptance has never been green: three full live runs (`34a7bec4`,
+> `fd39a65a`, `ff71ff3b`) all return `Crash`, v_vert ≈ 40.3 m/s, tilt ≈
+> 108.2°, descent 24.8 s — free fall from the 500 m gate. P66 is not
+> reached before ground contact (MM66 at TIG+26.6 s vs touchdown at
+> TIG+24.8 s), and the AGC's pad-loaded state vector is the 15 km / 1700 m/s
+> PDI point, so the navigation loop never closes. Full evidence:
+> `docs/superpowers/notes/2026-07-25-wave1-reflight.md`.
+
+- [ ] **Step 1:** implement `run_headless` refactor + the test; run `cargo test -p eagle-runtime --test live_p66_descent -- --ignored --test-threads=1` until green **3 consecutive times** (this is the flake bar for the wave's flagship test). — *Test implemented and running; 0 of 3 green. Unmet.*
+- [x] **Step 2:** Makefile:
 
 ```make
 descent-p66: agc
@@ -1798,9 +1808,9 @@ descent-p66: agc
 ```
 
 (`test-integration` needs no change — it already sweeps `--ignored` serially; confirm the new tests are included and the TOTAL integration wall time stays ≤ 10 min; if over, gate the two spike tests behind `EAGLE_SPIKES=1` env and document.)
-- [ ] **Step 3:** Docs: CLAUDE.md run/verify additions (`make descent-p66`, scenario/pad-load file locations, spike env var if introduced); `docs/agc-channel-map.md` final pass (every channel/counter this wave touched, with citations and "verified live" markers); README quickstart (play: dev-runtime with --scenario + dev-client, ENGR tab, ROD buttons).
-- [ ] **Step 4:** Full DoD run: `make test` AND `make test-integration` both green, recorded in the task report.
-- [ ] **Step 5: Commit** — `"feat(eagle): wave 1 acceptance — Luminary099 P66 soft landing closed loop"` (+ trailer).
+- [x] **Step 3:** Docs: CLAUDE.md run/verify additions (`make descent-p66`, scenario/pad-load file locations, spike env var if introduced); `docs/agc-channel-map.md` final pass (every channel/counter this wave touched, with citations and "verified live" markers); README quickstart (play: dev-runtime with --scenario + dev-client, ENGR tab, ROD buttons). — *Done 2026-07-25, stating the RED status rather than a soft-landing claim.*
+- [ ] **Step 4:** Full DoD run: `make test` AND `make test-integration` both green, recorded in the task report. — `make test` green; `make test-integration` RED on `live_p66_descent`. Unmet.
+- [x] **Step 5: Commit** — `"feat(eagle): wave 1 acceptance — Luminary099 P66 soft landing closed loop"` (+ trailer). — *Committed as `b33cb822`; the message overstates the result (see Step 1's note).*
 
 ---
 

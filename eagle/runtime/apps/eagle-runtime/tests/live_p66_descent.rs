@@ -152,14 +152,17 @@ async fn p66_soft_landing_closed_loop() {
     // the point: any steady rate difference grows without bound over a
     // ~600 s run, so no fixed millisecond bound is a property of the run.
     //
-    // MEASURED ON THIS HOST — two full acceptance runs (this branch and
-    // its parent): drift = −17 900 ms with mid_downlink_wps = 47.6, i.e.
-    // 95.2 % of the nominal 50 wps. PROVISIONAL: 47.6 is the cumulative
-    // average at mid-descent, NOT the final-frame quantity this assert
-    // reads — `final_t_s` did not exist for those runs, so the gated
-    // number has never actually been recorded. Confirm ±10 % against the
-    // `[accept] AGC clock ...` line the next live run prints, and retune
-    // then if it disagrees.
+    // MEASURED ON THIS HOST — three full acceptance runs (this branch, its
+    // parent, and the 2026-07-25 re-flight): drift = −17 900 ms with
+    // mid_downlink_wps = 47.6. The re-flight also recorded the quantity
+    // this assert actually gates, read off the FINAL telemetry frame:
+    //     drift −17 900 ms over t_s = 369.61 s  ⇒  agc_rate = 0.952
+    // (docs/superpowers/notes/2026-07-25-wave1-reflight.md, run 1). So the
+    // gated number is 4.8 % low and the ±10 % bound below keeps ~2× margin
+    // — no longer provisional. (The `[accept] AGC clock ...` line still has
+    // not printed on a live run: the touchdown-class assert above fails
+    // first, so the value was recomputed from the `EAGLE_TELEM_OUT` dump
+    // by the same formula this code uses.)
     //
     // What the deficit IS remains under-determined. A slow AGC, a downlink
     // start dead-time D (which depresses a cumulative average
