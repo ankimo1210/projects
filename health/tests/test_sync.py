@@ -430,6 +430,33 @@ def test_metric_abandoned_mid_recency_pass_is_not_retried_in_history_pass(store)
     assert any(p.metric == "healthy" and p.done for p in report.progress)
 
 
+def test_history_remaining_excludes_a_metric_abandoned_this_run(store):
+    """A metric that already has a real backfilled_from (from an earlier
+    successful chunk this run) but then fails still has chunks left in the
+    database. Before the fix, those chunks were counted in
+    `report.history_remaining`, so the sync page kept telling the user
+    "sync again to reach further back" for a metric that fails every run
+    (e.g. a scope never granted) and never actually progresses."""
+    client = FailingAfterNCallsClient("flaky", ApiError(403, "no scope", code=403), succeed_calls=1)
+    catalog = [metric(name="flaky", days=1), metric(name="healthy", days=1)]
+
+    report = SyncEngine(
+        client,
+        store,
+        catalog,
+        today=date(2026, 7, 20),
+        environ={"HEALTH_BACKFILL_START": "2026-06-01"},
+        max_requests=60,
+    ).sync_all()
+
+    assert [f.metric for f in report.failures] == ["flaky"]
+    # The database really does have remaining history for "flaky" ...
+    assert store.get_sync_checkpoint("flaky").backfilled_from is not None
+    # ... but the report must not promise progress on a metric that just failed.
+    assert "flaky" not in report.history_remaining
+    assert report.history_remaining["healthy"] >= 0
+
+
 def test_auth_error_stops_the_whole_run(store):
     client = FailingClient("first", AuthError("token revoked"))
 

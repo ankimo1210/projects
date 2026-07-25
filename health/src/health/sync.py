@@ -204,7 +204,14 @@ class SyncEngine:
         except _RunFinished:
             pass
         report.requests_made = state.budget.used
-        report.history_remaining = {m.name: self.history_remaining(m) for m in self.catalog}
+        # A metric abandoned this run (recorded in report.failures) is excluded
+        # from the totals: the UI reads history_remaining to promise "sync
+        # again and this will progress," which is not true for a metric that
+        # fails every run (e.g. a scope never granted).
+        failed = {f.metric for f in report.failures}
+        report.history_remaining = {
+            m.name: self.history_remaining(m) for m in self.catalog if m.name not in failed
+        }
         return report
 
     def _recent_pass(self, state: _RunState) -> None:
