@@ -144,6 +144,22 @@ def test_midpoint_is_measured_from_the_noon_before_the_wake_date():
     assert out.iloc[0]["midpoint_hours_after_noon"] == pytest.approx(15.0)
 
 
+def test_sleep_midpoints_excludes_naps_sharing_a_date_with_a_main_session():
+    df = pd.DataFrame(
+        [
+            _sleep(date(2026, 1, 6), "2026-01-05 23:00:00", "2026-01-06 07:00:00", is_main=True),
+            # A same-day nap far from the main session: if it were not
+            # excluded it would pull the midpoint well away from 15.0.
+            _sleep(date(2026, 1, 6), "2026-01-06 13:00:00", "2026-01-06 13:30:00", is_main=False),
+        ]
+    )
+
+    out = sleep_midpoints(df)
+
+    assert len(out) == 1  # the nap contributes no row of its own
+    assert out.iloc[0]["midpoint_hours_after_noon"] == pytest.approx(15.0)
+
+
 def test_social_jetlag_is_free_day_minus_work_day_midpoint():
     rows = []
     for day in range(5):  # Mon 2026-01-05 .. Fri 2026-01-09
