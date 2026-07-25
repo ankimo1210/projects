@@ -221,16 +221,29 @@ class Store:
                         f"INSERT INTO sleep_sessions VALUES ({', '.join('?' * len(_SLEEP_COLS))})",
                         [r[c] for c in _SLEEP_COLS],
                     )
-            # 6. move the covered range. greatest/least keep the pair monotone:
-            # a backward history chunk lowers backfilled_from and leaves the
-            # forward watermark and status alone (its parameters are None),
-            # while a stale forward chunk can never pull the watermark back.
+            # 6. move the covered range. A None watermark or status means
+            # "leave unchanged", which is how a backward history chunk keeps
+            # the forward watermark and status intact (Task 7 passes
+            # watermark=None for those). A forward chunk always writes the
+            # day it actually reached, so an interrupted run resumes exactly
+            # where it stopped rather than skipping the days it had not
+            # reached. backfilled_from only ever extends backwards.
+            #
+            # last_synced_date needs two different bound values: the VALUES()
+            # slot (also read back as `excluded.last_synced_date`) falls back
+            # to `end` so a brand-new row -- one with no existing watermark
+            # for `coalesce` to fall back to -- still gets a real date; the
+            # dedicated raw parameter in the UPDATE clause carries `watermark`
+            # untouched, so an existing row sees a genuine SQL NULL (not
+            # `end`) when the caller means "leave it alone", instead of
+            # relying on a value comparison (greatest()) that would also
+            # block a legitimate trailing-refetch chunk from moving the
+            # watermark backward through the overlap window it is re-walking.
             con.execute(
                 "INSERT INTO sync_state (metric, last_synced_date, status, updated_at, "
                 "backfilled_from) VALUES (?, ?, ?, now(), ?) "
-                "ON CONFLICT DO UPDATE SET last_synced_date = greatest("
-                "  sync_state.last_synced_date, "
-                "  coalesce(excluded.last_synced_date, sync_state.last_synced_date)), "
+                "ON CONFLICT DO UPDATE SET last_synced_date = "
+                "  coalesce(?, sync_state.last_synced_date), "
                 "status = coalesce(excluded.status, sync_state.status), "
                 "updated_at = excluded.updated_at, "
                 "backfilled_from = least("
@@ -241,6 +254,7 @@ class Store:
                     end if watermark is None else watermark,
                     status,
                     start if backfill_from is None else backfill_from,
+                    watermark,
                 ],
             )
             con.execute("COMMIT")

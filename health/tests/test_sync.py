@@ -232,10 +232,7 @@ def test_legacy_ok_checkpoint_becomes_resumable_after_first_overlap_chunk(store)
     assert report.stopped_early
     assert first.calls[0][2:] == (date(2026, 1, 1), date(2026, 1, 1))
     checkpoint = store.get_sync_checkpoint("test")
-    # last_synced_date never regresses: this in-progress chunk only
-    # re-verified an earlier trailing-overlap day, so the watermark stays at
-    # the previous run's Jan 2, even though the chunk itself covered Jan 1.
-    assert checkpoint.last_synced == date(2026, 1, 2)
+    assert checkpoint.last_synced == date(2026, 1, 1)
     assert checkpoint.status == SYNC_IN_PROGRESS
 
     second = FakeClient()
@@ -247,9 +244,38 @@ def test_legacy_ok_checkpoint_becomes_resumable_after_first_overlap_chunk(store)
         environ={"HEALTH_BACKFILL_START": "2026-01-01"},
         max_requests=1,
     ).sync_all()
-    # Resumes right after the (unregressed) watermark, not at the day
-    # following the chunk that happened to run last.
-    assert second.calls[0][2:] == (date(2026, 1, 3), date(2026, 1, 3))
+    # An interrupted overlap window resumes at the day after the chunk it
+    # actually completed, so it re-fetches every day in the window instead
+    # of skipping the ones it had not reached yet.
+    assert second.calls[0][2:] == (date(2026, 1, 2), date(2026, 1, 2))
+
+
+def test_interrupted_trailing_overlap_refetches_every_day_in_the_window(store):
+    """A `greatest()` watermark would let the resumed run skip past days the
+    interrupted overlap pass never reached; the trailing-refetch window
+    exists precisely to reconcile late-arriving values and upstream
+    deletions in those days, so every one of them must be requested again
+    across the resumed runs."""
+    store.set_sync_state("test", date(2026, 1, 2), SYNC_OK)
+    today = date(2026, 1, 10)
+    client = FakeClient()
+
+    for _ in range(20):  # generous cap; each capped run advances one day
+        SyncEngine(
+            client,
+            store,
+            [metric(days=1)],
+            today=today,
+            environ={"HEALTH_BACKFILL_START": "2026-01-01"},
+            max_requests=1,
+        ).sync_all()
+        if store.get_sync_checkpoint("test").status == SYNC_OK:
+            break
+    else:
+        pytest.fail("sync never reached SYNC_OK within the iteration budget")
+
+    requested_days = {d for call in client.calls for d in call[2:4]}
+    assert date(2026, 1, 2) in requested_days
 
 
 def test_intraday_initial_sync_is_last_thirty_days(store):
