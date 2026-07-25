@@ -1,6 +1,7 @@
 import json
 import os
 import stat
+from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 import pytest
@@ -418,12 +419,14 @@ def test_write_private_result_is_0600_under_a_permissive_umask(tmp_path):
 
 
 def test_load_tokens_reads_the_file_once_per_instance(tmp_path, monkeypatch):
-    from pathlib import Path
-
-    auth = make_auth(tmp_path)
-    auth._store_tokens(
+    # Prime the token file with one auth instance.
+    auth1 = make_auth(tmp_path)
+    auth1._store_tokens(
         {"access_token": "a", "refresh_token": "r", "expires_in": 3600}, existing=None
     )
+
+    # Construct a second auth instance: _tokens is None, must read from disk.
+    auth2 = make_auth(tmp_path)
     reads = 0
     real_read_text = Path.read_text
 
@@ -435,10 +438,13 @@ def test_load_tokens_reads_the_file_once_per_instance(tmp_path, monkeypatch):
 
     monkeypatch.setattr(Path, "read_text", counting_read_text)
 
+    # Call load_tokens() 5 times on the cold instance.
     for _ in range(5):
-        assert auth.load_tokens()["access_token"] == "a"
+        tokens = auth2.load_tokens()
+        assert tokens["access_token"] == "a"
 
-    assert reads <= 1
+    # Exactly one read (first call), then cached.
+    assert reads == 1
 
 
 def test_forget_tokens_invalidates_the_cache(tmp_path):
