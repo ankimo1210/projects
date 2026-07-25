@@ -278,13 +278,16 @@ def test_interrupted_trailing_overlap_refetches_every_day_in_the_window(store):
     assert date(2026, 1, 2) in requested_days
 
 
-def test_intraday_initial_sync_is_last_thirty_days(store):
+def test_intraday_first_run_takes_the_recent_window_then_backfills(store):
     client = FakeClient()
     m = next(item for item in CATALOG if item.name == "intraday_hr")
-    SyncEngine(client, store, [m], today=date(2026, 7, 20), environ={}).sync_all()
+
+    SyncEngine(client, store, [m], today=date(2026, 7, 20), environ={}, max_requests=50).sync_all()
+
     assert len(client.calls) == 30
-    assert client.calls[0][2] == date(2026, 6, 21)
-    assert client.calls[-1][3] == date(2026, 7, 20)
+    assert client.calls[0][2] == date(2026, 7, 14)  # recency pass runs first
+    assert min(call[2] for call in client.calls) == date(2026, 6, 21)  # floor still reached
+    assert store.get_sync_state("intraday_hr") == date(2026, 7, 20)
 
 
 def test_empty_response_replaces_stale_rows_and_advances_watermark(store):
@@ -454,6 +457,81 @@ def test_typed_rows_outside_a_narrowed_refetch_survive_inside_the_same_chunk(sto
     }
     for day in range(1, 10):
         assert date(2025, 1, day) in dates
+
+
+def test_first_run_covers_every_metric_before_any_history(store):
+    catalog = [metric(name=f"m{i}", days=90) for i in range(4)]
+    client = FakeClient()
+
+    SyncEngine(
+        client,
+        store,
+        catalog,
+        today=date(2026, 7, 20),
+        environ={"HEALTH_BACKFILL_START": "2021-07-20"},
+        max_requests=4,
+    ).sync_all()
+
+    # With a budget of exactly one request per metric, every metric gets its
+    # recent window; none of it is spent on one metric's history.
+    assert [call[1] for call in client.calls] == ["m0", "m1", "m2", "m3"]
+    for item in catalog:
+        assert store.get_sync_state(item.name) == date(2026, 7, 20)
+
+
+def test_history_walks_backward_round_robin_after_the_recent_pass(store):
+    catalog = [metric(name="a", days=90), metric(name="b", days=90)]
+    client = FakeClient()
+
+    SyncEngine(
+        client,
+        store,
+        catalog,
+        today=date(2026, 7, 20),
+        environ={"HEALTH_BACKFILL_START": "2021-07-20"},
+        max_requests=6,
+    ).sync_all()
+
+    names = [call[1] for call in client.calls]
+    assert names[:2] == ["a", "b"]  # recency pass
+    assert names[2:] == ["a", "b", "a", "b"]  # history, one chunk each per round
+    # Two history rounds walk 2026-05-14 back through 2026-02-13 to 2025-11-15.
+    assert store.get_sync_checkpoint("a").backfilled_from == date(2025, 11, 15)
+    assert store.get_sync_state("a") == date(2026, 7, 20)  # watermark not dragged back
+
+
+def test_history_stops_at_the_configured_floor(store):
+    client = FakeClient()
+    engine = SyncEngine(
+        client,
+        store,
+        [metric(days=90)],
+        today=date(2026, 7, 20),
+        environ={"HEALTH_BACKFILL_START": "2026-06-01"},
+        max_requests=50,
+    )
+
+    report = engine.sync_all()
+
+    assert report.history_remaining == {"test": 0}
+    # The aligned chunk holding today (2026-05-14..2026-08-11) already starts
+    # before the floor, so there is no history left to walk.
+    assert store.get_sync_checkpoint("test").backfilled_from <= date(2026, 6, 1)
+    assert len(client.calls) == 1
+
+
+def test_report_counts_remaining_history_chunks(store):
+    report = SyncEngine(
+        FakeClient(),
+        store,
+        [metric(days=90)],
+        today=date(2026, 7, 20),
+        environ={"HEALTH_BACKFILL_START": "2021-07-20"},
+        max_requests=1,
+    ).sync_all()
+
+    # 2021-07-20..2026-05-18 still missing, in 90-day aligned chunks.
+    assert report.history_remaining["test"] == 20
 
 
 def test_request_range_is_clipped_to_floor_and_today(store):
