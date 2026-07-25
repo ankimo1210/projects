@@ -166,6 +166,14 @@ pub const JET_TABLE: [Jet; 16] = [
 /// (`DPS_MIN_N`, lm_simulator.tcl:187) + the cited Luminary behaviour.
 /// See docs/superpowers/notes/2026-07-25-wave1-reflight.md.
 ///
+/// V97 qualifier, so it is not over-read: **it still fires after this
+/// fix.** Re-flight run 3 (idle stop live, 4560 N from ignition) raises
+/// V97 at TIG+11.3 s and cycles it 19 times before contact — DVMON's
+/// threshold sits above the specific force an *idling* DPS produces. So
+/// V97 evidences too LITTLE thrust, not ZERO thrust: it corroborates the
+/// diagnosis but does not by itself make it. The 310-pulse ch055 count
+/// and `thrust_n == 0` are what pin the zero.
+///
 /// Engine-off and out-of-fuel are handled by the caller
 /// (`actuator_step` / `SimCore::phase3_throttle`), which zeroes thrust
 /// outright — this branch only ever applies to a burning engine.

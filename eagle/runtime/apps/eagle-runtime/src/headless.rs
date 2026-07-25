@@ -56,9 +56,10 @@ pub struct HeadlessResult {
     pub mid_downlink_wps: f64,
     /// Seconds of sim time from ENGINE ON (frozen→false) to touchdown.
     pub descent_s: Option<f64>,
-    /// Non-zero FAILREG codes the P63 dialog acknowledged (whitelisted
-    /// ones only — anything else aborts the run).
-    pub alarms: Vec<u16>,
+    /// PROG-alarm episodes the P63 dialog handled (whitelisted ones only
+    /// — anything else aborts the run). One entry per lamp, codes
+    /// included; see `runner::AlarmEpisode`.
+    pub alarms: Vec<runner::AlarmEpisode>,
     /// DSKY frames with the PROG alarm lamp lit after ENGINE ON.
     pub prog_lamp_frames: u64,
 }
@@ -79,7 +80,9 @@ impl Summary {
     fn note(&mut self, msg: &eagle_schema::ServerMsg) {
         match msg {
             eagle_schema::ServerMsg::Telemetry(t) => {
-                if t.mm != self.last_mm && !t.mm.is_empty() {
+                // `trim()`: the DSKY paints a BLANK major mode ("  ") on a
+                // fresh boot, which is not a mode transition.
+                if t.mm != self.last_mm && !t.mm.trim().is_empty() {
                     self.mm_sequence.push(t.mm.clone());
                     self.last_mm = t.mm.clone();
                 }
@@ -176,28 +179,7 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
 
     // Telemetry collector: MM transitions, drift, downlink, engine-on/touchdown.
     let summary = Arc::new(Mutex::new(Summary::default()));
-    let mut telem_rx = cfg.telem_tx.subscribe();
-    let sum = summary.clone();
-    let collector = tokio::spawn(async move {
-        // Optional per-frame telemetry dump for descent-profile debugging.
-        let mut dump = std::env::var("EAGLE_TELEM_OUT")
-            .ok()
-            .and_then(|p| std::fs::File::create(p).ok());
-        while let Ok(json) = telem_rx.recv().await {
-            // DSKY-state frames ride the same broadcast; both are noted,
-            // only telemetry is dumped.
-            let Ok(msg) = serde_json::from_str::<eagle_schema::ServerMsg>(&json) else {
-                continue;
-            };
-            if matches!(msg, eagle_schema::ServerMsg::Telemetry(_)) {
-                if let Some(f) = dump.as_mut() {
-                    use std::io::Write;
-                    let _ = writeln!(f, "{json}");
-                }
-            }
-            sum.lock().unwrap().note(&msg);
-        }
-    });
+    let collector = tokio::spawn(collect_telemetry(cfg.telem_tx.subscribe(), summary.clone()));
 
     // Choreography to MM66, then deliver the descent ROD schedule.
     let mut script = DskyScript::new(cmd_tx.clone(), dsky_rx);
@@ -272,6 +254,44 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
         alarms: report.alarms,
         prog_lamp_frames: s.prog_lamp_frames,
     })
+}
+
+/// Fold every broadcast frame into `sum` until the channel closes.
+///
+/// `Lagged` must NOT end this loop. It is a normal event on a 256-slot
+/// broadcast (scenario mode, `main.rs:43`) whenever the sim outruns this
+/// task for a moment, and returning on it freezes mm_sequence / drift_ms /
+/// final_t_s / descent_s / prog_lamp_frames at whatever they last were —
+/// after which every acceptance assert passes on stale data instead of
+/// failing. The packet forwarder in `run_headless` already does the same
+/// `continue`.
+async fn collect_telemetry(mut telem_rx: broadcast::Receiver<String>, sum: Arc<Mutex<Summary>>) {
+    // Optional per-frame telemetry dump for descent-profile debugging.
+    let mut dump = std::env::var("EAGLE_TELEM_OUT")
+        .ok()
+        .and_then(|p| std::fs::File::create(p).ok());
+    loop {
+        let json = match telem_rx.recv().await {
+            Ok(json) => json,
+            Err(broadcast::error::RecvError::Lagged(n)) => {
+                eprintln!("headless: telemetry collector lagged, {n} frame(s) dropped");
+                continue;
+            }
+            Err(broadcast::error::RecvError::Closed) => break,
+        };
+        // DSKY-state frames ride the same broadcast; both are noted,
+        // only telemetry is dumped.
+        let Ok(msg) = serde_json::from_str::<eagle_schema::ServerMsg>(&json) else {
+            continue;
+        };
+        if matches!(msg, eagle_schema::ServerMsg::Telemetry(_)) {
+            if let Some(f) = dump.as_mut() {
+                use std::io::Write;
+                let _ = writeln!(f, "{json}");
+            }
+        }
+        sum.lock().unwrap().note(&msg);
+    }
 }
 
 /// The touchdown classification from a finished run, if any.
@@ -385,6 +405,50 @@ mod tests {
         s.note(&dsky(true)); // descent-phase PROG lamp must be counted
         s.note(&dsky(false));
         assert_eq!(s.prog_lamp_frames, 1);
+    }
+
+    #[test]
+    fn summary_ignores_the_blank_major_mode() {
+        // The DSKY paints "  " before the first V37, which is not a mode.
+        let mut s = Summary::default();
+        s.note(&telem(1.0, "  ", true));
+        assert!(s.mm_sequence.is_empty(), "blank MM is not a transition");
+        s.note(&telem(2.0, "00", true));
+        assert_eq!(s.mm_sequence, vec!["00".to_string()]);
+    }
+
+    #[tokio::test]
+    async fn collector_keeps_collecting_after_broadcast_lag() {
+        // A single `RecvError::Lagged` used to end the collector for good,
+        // freezing the summary while the acceptance asserts read on. Fill
+        // a small channel past its capacity BEFORE the collector polls,
+        // then check that a later frame still lands in the summary.
+        let (tx, rx) = broadcast::channel::<String>(2);
+        for t in 1..=6 {
+            tx.send(serde_json::to_string(&telem(f64::from(t), "63", true)).unwrap())
+                .unwrap();
+        }
+        let sum = Arc::new(Mutex::new(Summary::default()));
+        let handle = tokio::spawn(collect_telemetry(rx, sum.clone()));
+
+        tx.send(serde_json::to_string(&telem(99.0, "66", false)).unwrap())
+            .unwrap();
+        // Poll rather than sleep a fixed time: the collector must merely
+        // get there, and the lagged frames are dropped by the channel.
+        for _ in 0..400 {
+            if sum.lock().unwrap().last_t_s == 99.0 {
+                break;
+            }
+            tokio::time::sleep(Duration::from_millis(5)).await;
+        }
+        let s = sum.lock().unwrap();
+        assert_eq!(
+            s.last_t_s, 99.0,
+            "collector died on Lagged and froze the summary"
+        );
+        assert_eq!(s.last_mm, "66");
+        drop(s);
+        handle.abort();
     }
 
     #[test]

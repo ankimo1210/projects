@@ -36,6 +36,11 @@ descent-p66: agc
 	  --scenario ../scenarios/p66-gate.toml --root ..
 
 # Debug iteration: same closed loop, 60 s shorter TIG lead (30000 cs).
+# UNTESTED LIVE: 24000 cs was measured too tight on this host and aborts in
+# P63 entry with FAILREG 01703 ("IGNITION TIME SLIPPED"); 30000 splits the
+# difference against the acceptance gate's 36000. If 01703 reappears, fall
+# back to 36000 (i.e. use `descent-p66`). Debug only — NOT the acceptance
+# gate. See scenarios/p66-gate-fast.toml.
 descent-p66-fast: agc
 	cd runtime && cargo run -p eagle-runtime -- \
 	  --yaagc ../build/agc/yaAGC --core ../build/agc/Luminary099.bin \

@@ -6,9 +6,12 @@ as of Phase 2 Wave 1 — flying a closed loop against our own 6-DoF physics
 `eagle-runtime::sim`): boot → pad load → P63 → ENGINE ON → ATT HOLD →
 ground contact.
 
-**Wave 1 acceptance is RED.** The landing is not soft and P66 is never
-reached: the last measured run (2026-07-25) crashes at 41.5 m/s vertical /
-10.7 m/s horizontal after 26.0 s, while MM66 first appears at TIG+26.6 s:
+**Wave 1 acceptance is RED.** The landing is not soft and **P66 never
+flew**: MM66 does light — the MM assert passes on the measured sequence
+`["00","63","66"]` — but only 0.6-1.8 s AFTER ground contact, so it
+controlled nothing. The last measured run (2026-07-25) crashes at 41.5 m/s
+vertical / 10.7 m/s horizontal after 26.0 s, with MM66 first appearing at
+TIG+26.6 s:
 P63's `AVEGEXIT` points at `SERVEXIT` until `P63ZOOM` swaps it to
 `LUNLAND` at the end of the 26 s ZOOMTIME, and GUILDENSTERN (R13, the only
 path to P66) sits behind that swap. The attitude loop is fine. Two
@@ -37,7 +40,9 @@ measured. Evidence, numbers and next steps:
   physics, to ground contact); `make descent-p66-fast` for debug iteration
   (same loop, TIG lead 30000 cs instead of 36000 — `p66-gate-fast.toml`,
   debug only, NOT the acceptance gate; 24000 was measured too tight and
-  aborts with FAILREG 01703 "IGNITION TIME SLIPPED"). Watch either live with
+  aborts with FAILREG 01703 "IGNITION TIME SLIPPED"). **30000 is untested
+  live** — if 01703 reappears, fall back to 36000 (`make descent-p66`).
+  Watch either live with
   `make dev-client` → ENGR tab (strip charts + ROD −/+ buttons)
 - Debug env vars for a live run: `EAGLE_ATT_DEBUG=<path>` (attitude
   sign-chain trace: t, jet bitmask, gimbals, omega, torque — one line per

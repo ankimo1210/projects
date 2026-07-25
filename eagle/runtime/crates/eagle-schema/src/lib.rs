@@ -30,7 +30,21 @@ pub struct TelemetryMsg {
     pub t_s: f64,
     pub frozen: bool,
     pub alt_m: f64,
+    /// Vertical rate, m/s, positive up, **SURFACE-RELATIVE**. Phase 2
+    /// Wave 1 changed both this and `v_horiz_ms` from inertial (MCI) to
+    /// surface-relative (co-rotating): the truth velocity now carries the
+    /// ω ẑ × r term, and `sim.rs::rel_velocity` subtracts it back out for
+    /// telemetry. DO NOT silently compare a dump from before that change
+    /// with one from after — the co-rotation term is ω·r·cos φ ≈ 4.63 m/s
+    /// at the gate latitude, which lands almost entirely in `v_horiz_ms`
+    /// (it is horizontal/eastward) and leaves `vz_ms` nearly unmoved, so
+    /// the two fields shifted by very different amounts. The wire SHAPE is
+    /// unchanged, so `SCHEMA_VERSION` stays 2 — only the reference frame
+    /// moved. See docs/coordinate-frames.md ("Truth co-rotation").
     pub vz_ms: f64,
+    /// Horizontal speed, m/s, **SURFACE-RELATIVE** — the field that
+    /// carries the full ~4.63 m/s of the Wave 1 frame change described on
+    /// `vz_ms` above.
     pub v_horiz_ms: f64,
     pub tilt_deg: f64,
     pub mass_kg: f64,

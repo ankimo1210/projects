@@ -65,13 +65,55 @@ async fn p66_soft_landing_closed_loop() {
     .expect("closed loop exceeded the wall-time budget")
     .expect("closed loop returned an error");
 
+    // ---------------------------------------------------------------
+    // DIAGNOSTICS FIRST — every measured number this run produced, printed
+    // BEFORE any assert. A failing assert unwinds the test, so a
+    // diagnostic below one never prints on the very run that needed it:
+    // the 2026-07-25 re-flight had to hand-compute agc_rate out of the
+    // EAGLE_TELEM_OUT JSONL and recorded "pacing lost not printed",
+    // because the touchdown-class assert fired first. Keep every
+    // `eprintln!` in this block; put nothing but asserts below it.
+    // ---------------------------------------------------------------
     eprintln!(
-        "[accept] MM {:?}\n[accept] touchdown {:?} descent {:?}s drift {:.0}ms downlink {:.1}wps",
+        "[accept] MM {:?}\n[accept] class {:?} touchdown {:?} descent {:?}s \
+         drift {:.0}ms downlink {:.1}wps",
         result.mm_sequence,
+        touchdown_class(&result),
         result.sim.touchdown,
         result.descent_s,
         result.drift_ms,
         result.mid_downlink_wps
+    );
+    // Miss distance is REPORTED, not gated. DO NOT turn this number into a
+    // threshold: it is currently ~100 % freeze artifact, not guidance
+    // error. The sim pins the truth position in MCI through the whole
+    // pre-ignition hold while MCMF keeps turning, so the arc is
+    // ω·R·cos φ × (freeze duration) — a measured run returned 1585.2 m for
+    // a 342.8 s freeze, which that product accounts for entirely; the
+    // descent contributed nothing visible. Gating this today would bake
+    // ~1.6 km of bookkeeping into the acceptance criteria. A threshold
+    // becomes meaningful only after the freeze phase co-rotates (see
+    // docs/coordinate-frames.md "Truth co-rotation"); re-measure then and
+    // take the provenance from that run.
+    if let Some(td) = result.sim.touchdown {
+        eprintln!("[accept] miss distance {:.1} m", td.miss_m);
+    }
+    // Alarms, as OBSERVED by this run: one entry per PROG-alarm lamp the
+    // P63 responder handled (a non-whitelisted code aborts the run before
+    // it gets here, so anything printed was swallowed with RSET).
+    eprintln!(
+        "[accept] alarm episodes {:?}; PROG lamp frames after ignition {}",
+        result.alarms, result.prog_lamp_frames
+    );
+    // `agc_rate` is the quantity the clock gate below asserts on; see the
+    // provenance block there. Printed here so it survives an earlier
+    // failure — with `sim pacing lost`, which is what separates a slow AGC
+    // from a downlink dead-time (both look identical in `drift_ms`).
+    let agc_rate = 1.0 + result.drift_ms / 1000.0 / result.final_t_s;
+    eprintln!(
+        "[accept] AGC clock {:.3}x real time (drift {:.0} ms over {:.1} s sim); \
+         sim pacing lost {:.0} ms",
+        agc_rate, result.drift_ms, result.final_t_s, result.sim.pacing_lost_ms
     );
 
     // MM sequence contains 63 then 66 (intervening modes allowed).
@@ -117,25 +159,13 @@ async fn p66_soft_landing_closed_loop() {
         td.tilt_deg,
         acceptance.tilt_max_deg
     );
-    // Miss distance is REPORTED, not gated. DO NOT turn the number printed
-    // below into a threshold: it is currently ~100 % freeze artifact, not
-    // guidance error. The sim pins the truth position in MCI through the
-    // whole pre-ignition hold while MCMF keeps turning, so the arc is
-    // ω·R·cos φ × (freeze duration) — a measured run returned 1585.2 m for
-    // a 342.8 s freeze, which that product accounts for entirely; the
-    // descent contributed nothing visible. Gating this today would bake
-    // ~1.6 km of bookkeeping into the acceptance criteria. A threshold
-    // becomes meaningful only after the freeze phase co-rotates (see
-    // docs/coordinate-frames.md "Truth co-rotation"); re-measure then and
-    // take the provenance from that run.
-    eprintln!("[accept] miss distance {:.1} m", td.miss_m);
-
-    // Alarms, as OBSERVED by this run: `enter_p63` aborts on a
-    // non-whitelisted code, so anything reaching here was whitelisted and
-    // silently acknowledged — the acceptance run tolerates none of it.
+    // Alarms, as OBSERVED by this run (printed above): the acceptance run
+    // tolerates no swallowed PROG alarm at all — not even one whose
+    // FAILREG read back all zeros, which is still the AGC raising an alarm
+    // and the responder RSETting it away.
     assert!(
         result.alarms.is_empty(),
-        "alarms acknowledged during entry: {:?}",
+        "PROG alarm episodes during entry: {:?}",
         result.alarms
     );
     // And after MM66 the P63 responder is gone, so the descent's PROG lamp
@@ -163,10 +193,11 @@ async fn p66_soft_landing_closed_loop() {
     //     drift −17 900 ms over t_s = 369.61 s  ⇒  agc_rate = 0.952
     // (docs/superpowers/notes/2026-07-25-wave1-reflight.md, run 1). So the
     // gated number is 4.8 % low and the ±10 % bound below keeps ~2× margin
-    // — no longer provisional. (The `[accept] AGC clock ...` line still has
-    // not printed on a live run: the touchdown-class assert above fails
-    // first, so the value was recomputed from the `EAGLE_TELEM_OUT` dump
-    // by the same formula this code uses.)
+    // — no longer provisional. (The re-flight value was recomputed from
+    // the `EAGLE_TELEM_OUT` dump by the same formula this code uses,
+    // because the `[accept] AGC clock ...` line then sat below the
+    // touchdown-class assert and never printed. It now prints in the
+    // diagnostics block at the top of this test, before any assert.)
     //
     // What the deficit IS remains under-determined. A slow AGC, a downlink
     // start dead-time D (which depresses a cumulative average
@@ -174,8 +205,9 @@ async fn p66_soft_landing_closed_loop() {
     // (`headless.rs`'s packet forwarder does `RecvError::Lagged(_) =>
     // continue`, silently discarding them — indistinguishable here from a
     // slow AGC) all look identical in this number. A single sample only
-    // constrains (D − sim pacing loss) ≈ 17.9 s; the `pacing lost` figure
-    // printed below is what will separate them on the next run.
+    // constrains (D − sim pacing loss) ≈ 17.9 s; the `sim pacing lost`
+    // figure in that same diagnostics block is what will separate them on
+    // the next run.
     //
     // ±10 % leaves ~2× margin on the measured deficit while still failing
     // a stalled counter (rate → 0), a runaway one, or any ≥15 % break; the
@@ -185,12 +217,6 @@ async fn p66_soft_landing_closed_loop() {
     assert!(
         result.final_t_s > 0.0,
         "no telemetry frames: cannot rate-check the AGC clock"
-    );
-    let agc_rate = 1.0 + result.drift_ms / 1000.0 / result.final_t_s;
-    eprintln!(
-        "[accept] AGC clock {:.3}x real time (drift {:.0} ms over {:.1} s sim); \
-         sim pacing lost {:.0} ms",
-        agc_rate, result.drift_ms, result.final_t_s, result.sim.pacing_lost_ms
     );
     assert!(
         (agc_rate - 1.0).abs() < AGC_RATE_TOL,
@@ -215,7 +241,6 @@ async fn p66_soft_landing_closed_loop() {
         start.elapsed() < Duration::from_secs(WALL_BUDGET_S),
         "wall time budget exceeded"
     );
-    touchdown_class(&result);
 }
 
 /// Error-model run (spec §8, graceful behavior only): the same gate with a

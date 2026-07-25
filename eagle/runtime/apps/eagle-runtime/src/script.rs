@@ -427,9 +427,12 @@ mod tests {
         }
     }
 
-    // Runs the full 5 s read timeout: tokio's `start_paused` needs the
-    // test-util feature, which this crate does not pull in.
-    #[tokio::test]
+    // `start_paused`: this test spends its whole life waiting out timeouts
+    // that can never be satisfied (READ_ATTEMPTS × the 2.5 s frame wait +
+    // the 600 ms retry backoff ≈ 10 s of wall clock). Nothing here drives
+    // the watch channel, so the runtime is always idle at a timer and
+    // tokio auto-advances straight through them.
+    #[tokio::test(start_paused = true)]
     async fn read_erasable_rejects_a_flight_display_that_parses_as_octal() {
         // P66's VERTDISP repaints the DSKY every guidance pass. Its R1 can
         // hold five octal-legal digits (+56077 observed live), which a
