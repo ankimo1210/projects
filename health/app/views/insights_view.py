@@ -26,14 +26,28 @@ PAIRS = [
 ALERT_Z = 2.0
 
 
-def _deviation_section(df: pd.DataFrame, p: dict) -> None:
+def _clipped_baseline(df: pd.DataFrame, metric: str, days: int | None) -> pd.DataFrame:
+    """Baseline z-scores over the *full* history, trimmed to the display
+    window only afterward.
+
+    Computing on the already-clipped frame instead starves
+    `rolling_baseline_z`'s 30-day window of real prior history whenever the
+    display period is itself close to 30 days -- selecting 「30日」 would
+    leave most of the window's own days without the 10 prior observations
+    they need, even though that history exists just outside the display
+    window.
+    """
+    scored = rolling_baseline_z(df[["date", metric]], metric).dropna(subset=["z"])
+    return clip_days(scored, days)
+
+
+def _deviation_section(df: pd.DataFrame, days: int | None, p: dict) -> None:
     st.subheader("ベースラインからの逸脱")
     st.caption("直近30日の自分の平均と比べた標準化スコア。|z| >= 2 を注目日として扱います。")
     for metric, label, unit in DEVIATION_METRICS:
         if metric not in df:
             continue
-        scored = rolling_baseline_z(df[["date", metric]], metric)
-        scored = scored.dropna(subset=["z"])
+        scored = _clipped_baseline(df, metric, days)
         if scored.empty:
             st.caption(f"{label}: 判定に必要な履歴が不足しています（30日で10日以上必要）")
             continue
@@ -118,9 +132,13 @@ def insights_page() -> None:
     if df.empty:
         st.info("データがありません。まず「同期」ページで同期してください。")
         return
-    df = clip_days(df, period_days()).copy()
+    df = df.copy()
     df["date"] = pd.to_datetime(df["date"])
-    _deviation_section(df, p)
-    _relationship_section(df, p)
+    days = period_days()
+    clipped = clip_days(df, days)
+    # The deviation section gets the unclipped frame (see _clipped_baseline):
+    # its baseline window must see history outside the display period.
+    _deviation_section(df, days, p)
+    _relationship_section(clipped, p)
     _rhythm_section(load_sleep())
-    _coverage_section(df, p)
+    _coverage_section(clipped, p)
