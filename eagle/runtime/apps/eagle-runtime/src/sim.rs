@@ -17,9 +17,9 @@ use eagle_agc_protocol::dsky::DskyState;
 use eagle_agc_protocol::Packet;
 use eagle_dynamics::constants::{DT, THRUST_N_PER_PULSE, TRIM_MAX_DEG, TRIM_RATE_DEG_S};
 use eagle_dynamics::forces::{actuator_step, body_thrust_force, forces, Actuators, V3Raw};
-use eagle_dynamics::frames::{Body, Mci, Sm, V3};
+use eagle_dynamics::frames::{mci_to_mcmf, Body, Mci, Mcmf, Sm, V3};
 use eagle_dynamics::rk4::step_rk4;
-use eagle_dynamics::state::LmState;
+use eagle_dynamics::state::{surface_velocity, LmState};
 use eagle_dynamics::touchdown::{classify_touchdown, Touchdown};
 use eagle_schema::{TelemetryMsg, SCHEMA_VERSION};
 
@@ -125,6 +125,8 @@ pub struct SimCore {
     inertia0: V3Raw,
     mass0_kg: f64,
     radius_m: f64,
+    /// Landing-site radial unit vector, moon-fixed — the miss-distance datum.
+    site_unit_mcmf: V3<Mcmf>,
     rod_steps: Vec<[f64; 2]>,
     rod_target_ms: f64,
     rod_step_idx: usize,
@@ -171,6 +173,7 @@ impl SimCore {
             ),
             mass0_kg,
             radius_m: sc.site.radius_m,
+            site_unit_mcmf: sc.site_unit_mcmf(),
             rod_steps: sc.rod.steps.clone(),
             rod_target_ms: 0.0,
             rod_step_idx: 0,
@@ -413,20 +416,33 @@ impl SimCore {
         self.st.pos.norm() - self.radius_m
     }
 
-    /// (vertical speed, horizontal speed, tilt°) at the current state.
-    fn landing_kinematics(&self) -> (f64, f64, f64) {
+    /// Surface-relative velocity split: (signed vertical, horizontal speed).
+    fn rel_velocity(&self) -> (f64, f64) {
         let up = self.st.pos.unit();
-        let vz = self.st.vel.dot(up);
-        let v_h = (self.st.vel - up.scale(vz)).norm();
+        let v_rel = self.st.vel - surface_velocity(self.st.pos);
+        let vz = v_rel.dot(up);
+        (vz, (v_rel - up.scale(vz)).norm())
+    }
+
+    /// (|vertical speed|, horizontal speed, tilt°), surface-relative.
+    fn landing_kinematics(&self) -> (f64, f64, f64) {
+        let (vz, v_h) = self.rel_velocity();
+        let up = self.st.pos.unit();
         let body_x = self.st.att.apply(V3::<Body>::new(1.0, 0.0, 0.0));
         let tilt = body_x.dot(up).clamp(-1.0, 1.0).acos().to_degrees();
         (vz.abs(), v_h, tilt)
     }
 
+    /// Great-circle distance from the scenario landing site, m.
+    fn miss_distance_m(&self) -> f64 {
+        let pos_mcmf = mci_to_mcmf(self.st.t).apply(self.st.pos);
+        let c = pos_mcmf.unit().dot(self.site_unit_mcmf).clamp(-1.0, 1.0);
+        self.radius_m * c.acos()
+    }
+
     fn telemetry(&self) -> TelemetryMsg {
-        let (_vv, v_h, tilt) = self.landing_kinematics();
-        let up = self.st.pos.unit();
-        let vz = self.st.vel.dot(up);
+        let (_vv, _vh, tilt) = self.landing_kinematics();
+        let (vz, v_h) = self.rel_velocity();
         let t = self.st.t;
         // ch034 + ch035 are the low/high halves of each downlink word, so
         // two packets per word.
@@ -482,10 +498,21 @@ pub struct SimHandle {
     pub stop: std::sync::mpsc::Sender<()>,
 }
 
+/// Touchdown summary measured at the latch instant, surface-relative.
+#[derive(Debug, Clone, Copy)]
+pub struct TouchdownReport {
+    pub class: Touchdown,
+    pub v_vert_ms: f64,
+    pub v_horiz_ms: f64,
+    pub tilt_deg: f64,
+    /// Great-circle distance from the scenario landing site, m.
+    pub miss_m: f64,
+}
+
 /// Outcome once the sim thread exits.
 #[derive(Debug, Default, Clone)]
 pub struct SimResult {
-    pub touchdown: Option<(Touchdown, f64, f64, f64)>,
+    pub touchdown: Option<TouchdownReport>,
 }
 
 /// Spawn the sim on its own std thread, wall-paced at 10 ms with no drift
@@ -537,7 +564,13 @@ pub fn spawn_sim(
             }
             if let Some(td) = out.touchdown {
                 let (vv, vh, tilt) = core.landing_kinematics();
-                result.touchdown = Some((td, vv, vh, tilt));
+                result.touchdown = Some(TouchdownReport {
+                    class: td,
+                    v_vert_ms: vv,
+                    v_horiz_ms: vh,
+                    tilt_deg: tilt,
+                    miss_m: core.miss_distance_m(),
+                });
                 touchdown_at = Some(std::time::Instant::now());
             }
             if closed {
@@ -712,6 +745,34 @@ mod tests {
         let b = run();
         assert_eq!(a.len(), 50, "one frame per 10 ticks over 500 ticks");
         assert_eq!(a, b, "telemetry must be deterministic");
+    }
+
+    #[test]
+    fn hover_gate_is_surface_stationary() {
+        let sc = scenario();
+        let core = SimCore::new(&sc, 0.0);
+        let (vv, vh, _tilt) = core.landing_kinematics();
+        assert!(vv < 1e-9, "vertical: {vv}");
+        assert!(vh < 1e-9, "surface-relative horizontal must be ~0: {vh}");
+    }
+
+    #[test]
+    fn miss_distance_zero_above_site_and_tracks_offset() {
+        use eagle_dynamics::frames::Rot;
+        let sc = scenario();
+        let mut core = SimCore::new(&sc, 0.0);
+        assert!(
+            core.miss_distance_m() < 1.0,
+            "start is directly above the site"
+        );
+        // Rotate the truth 1 mrad about an axis ⊥ site: expected arc = r·1e-3.
+        let site = sc.site_unit_mcmf();
+        let axis = site.cross(V3::<Mcmf>::new(0.0, 0.0, 1.0)).unit();
+        let rot: Rot<Mcmf, Mcmf> = Rot::from_axis_angle(axis, 1e-3);
+        let pos_mcmf = rot.apply(site).scale(sc.site.radius_m);
+        core.st.pos = mci_to_mcmf(core.st.t).inverse().apply(pos_mcmf);
+        let m = core.miss_distance_m();
+        assert!((m - sc.site.radius_m * 1e-3).abs() < 1.0, "miss {m}");
     }
 
     #[test]

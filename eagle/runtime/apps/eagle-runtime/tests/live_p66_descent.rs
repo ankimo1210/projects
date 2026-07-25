@@ -80,30 +80,44 @@ async fn p66_soft_landing_closed_loop() {
         result.mm_sequence
     );
 
-    // Touchdown before timeout, Nominal by the scenario thresholds.
-    let (td, vv, vh, tilt) = result.sim.touchdown.expect("no touchdown");
+    // Touchdown before timeout, Nominal by the scenario thresholds. All
+    // velocities are surface-relative (the gate co-rotates; see
+    // docs/coordinate-frames.md "Truth co-rotation").
+    let td = result.sim.touchdown.expect("no touchdown");
     let descent = result.descent_s.expect("no descent-time measurement");
     assert!(
         descent <= acceptance.timeout_s,
         "touchdown at {descent:.0} s exceeds timeout {}",
         acceptance.timeout_s
     );
-    assert_eq!(td, Touchdown::Nominal, "not a nominal landing: {td:?}");
+    assert_eq!(
+        td.class,
+        Touchdown::Nominal,
+        "not a nominal landing: {:?}",
+        td.class
+    );
     assert!(
-        vv < acceptance.v_vert_max,
-        "v_vert {vv} >= {}",
+        td.v_vert_ms < acceptance.v_vert_max,
+        "v_vert {} >= {}",
+        td.v_vert_ms,
         acceptance.v_vert_max
     );
     assert!(
-        vh < acceptance.v_horiz_max,
-        "v_horiz {vh} >= {}",
+        td.v_horiz_ms < acceptance.v_horiz_max,
+        "v_horiz {} >= {}",
+        td.v_horiz_ms,
         acceptance.v_horiz_max
     );
     assert!(
-        tilt < acceptance.tilt_max_deg,
-        "tilt {tilt} >= {}",
+        td.tilt_deg < acceptance.tilt_max_deg,
+        "tilt {} >= {}",
+        td.tilt_deg,
         acceptance.tilt_max_deg
     );
+    // Miss distance is REPORTED, not gated, in this wave: no live run has
+    // measured it yet. Take one measured run first, then add a threshold
+    // here with that measurement as its provenance.
+    eprintln!("[accept] miss distance {:.1} m", td.miss_m);
 
     // Alarms: run_headless returns Ok only if every alarm episode was
     // whitelisted (enter_p63 bails otherwise), so reaching here proves it;
