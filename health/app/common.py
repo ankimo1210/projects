@@ -6,7 +6,6 @@ from pathlib import Path
 
 import pandas as pd
 import streamlit as st
-from health.analytics import calendar_rolling_mean  # noqa: F401  (re-exported for views)
 from health.auth import GoogleHealthAuth
 from health.store import Store
 
