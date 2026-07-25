@@ -80,7 +80,7 @@ mod tests {
     fn off_config_is_bit_exact_identity() {
         let mut e = ImuErrors::new(ImuErrorCfg::default());
         for k in 0..50 {
-            let v = V3::<Sm>::new(0.001 * k as f64, -0.02, 3.14);
+            let v = V3::<Sm>::new(0.001 * k as f64, -0.02, 3.5);
             assert_eq!(e.corrupt(v, 0.01), v);
         }
     }

@@ -95,7 +95,7 @@ pub fn decode_output(p: &Packet) -> AgcOutput {
             plus_roll: p.data & (1 << 11) != 0,
         },
         0o14 => AgcOutput::ThrustDrive(p.data & (1 << 3) != 0),
-        0o174 | 0o175 | 0o176 => AgcOutput::CoarseAlign {
+        0o174..=0o176 => AgcOutput::CoarseAlign {
             axis: match p.channel { 0o174 => CduAxis::X, 0o175 => CduAxis::Y, _ => CduAxis::Z },
             positive: p.data & 0o40000 == 0,
             pulses: p.data & 0o37777,
