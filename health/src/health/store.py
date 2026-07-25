@@ -70,7 +70,14 @@ class Store:
             if candidate.exists():
                 os.chmod(candidate, 0o600)
 
+    def checkpoint(self) -> None:
+        """Fold the write-ahead log back into the database file. Streamlit keeps
+        one cached connection for the whole process, so without an explicit
+        checkpoint a killed app leaves the entire recent history in a .wal."""
+        self.con.execute("CHECKPOINT")
+
     def close(self) -> None:
+        self.checkpoint()
         self.con.close()
 
     # -- low-level writes (seed script / legacy tests; sync engine uses
