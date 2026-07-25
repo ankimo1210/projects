@@ -17,6 +17,12 @@ def main(argv: Sequence[str] | None = None) -> None:
     parser.add_argument("--format", choices=("parquet", "csv"), default="parquet")
     args = parser.parse_args(argv)
 
+    # Store() creates a fresh, empty database if --db-path does not exist, so a
+    # typo'd path would otherwise export four empty files while reporting
+    # success -- exactly the failure mode this check exists to catch.
+    if not args.db_path.exists():
+        raise SystemExit(f"no database at {args.db_path}")
+
     store = Store(args.db_path)
     try:
         written = export_tables(store, args.out_dir, args.format)
