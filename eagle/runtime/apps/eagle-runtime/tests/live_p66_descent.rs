@@ -114,9 +114,17 @@ async fn p66_soft_landing_closed_loop() {
         td.tilt_deg,
         acceptance.tilt_max_deg
     );
-    // Miss distance is REPORTED, not gated, in this wave: no live run has
-    // measured it yet. Take one measured run first, then add a threshold
-    // here with that measurement as its provenance.
+    // Miss distance is REPORTED, not gated. DO NOT turn the number printed
+    // below into a threshold: it is currently ~100 % freeze artifact, not
+    // guidance error. The sim pins the truth position in MCI through the
+    // whole pre-ignition hold while MCMF keeps turning, so the arc is
+    // ω·R·cos φ × (freeze duration) — a measured run returned 1585.2 m for
+    // a 342.8 s freeze, which that product accounts for entirely; the
+    // descent contributed nothing visible. Gating this today would bake
+    // ~1.6 km of bookkeeping into the acceptance criteria. A threshold
+    // becomes meaningful only after the freeze phase co-rotates (see
+    // docs/coordinate-frames.md "Truth co-rotation"); re-measure then and
+    // take the provenance from that run.
     eprintln!("[accept] miss distance {:.1} m", td.miss_m);
 
     // Alarms: run_headless returns Ok only if every alarm episode was
