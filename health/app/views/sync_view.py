@@ -150,7 +150,7 @@ def sync_page() -> None:
         )
 
     st.divider()
-    if st.button("接続解除（トークンを削除。次回は再認可が必要です）"):
+    if st.button("Google Health を再接続（保存トークンを破棄して再認可）"):
         auth.forget_tokens()
         st.cache_data.clear()
         st.rerun()
