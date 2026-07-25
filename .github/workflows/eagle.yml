@@ -1,0 +1,54 @@
+# Fast-lane CI for eagle: Rust unit tests + client vitest/build/lint.
+# Live AGC integration tests need `make agc` artifacts and are NOT run here.
+name: eagle
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "eagle/runtime/**"
+      - "eagle/client/**"
+      - "eagle/scenarios/**"
+      - "eagle/Makefile"
+      - ".github/workflows/eagle.yml"
+  pull_request:
+    paths:
+      - "eagle/runtime/**"
+      - "eagle/client/**"
+      - "eagle/scenarios/**"
+      - "eagle/Makefile"
+      - ".github/workflows/eagle.yml"
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: eagle/runtime
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test
+        run: cargo test --workspace
+      - name: Clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
+      - name: Format
+        run: cargo fmt --all --check
+
+  client:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: eagle/client
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Test
+        run: npm test
+      - name: Build (tsc + vite)
+        run: npm run build
