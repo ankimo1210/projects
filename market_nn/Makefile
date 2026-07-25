@@ -1,4 +1,4 @@
-.PHONY: verify-provenance test smoke lint paper-corpus paper-corpus-formulas paper-corpus-verify-sources paper-corpus-check paper-corpus-retrieval-qa
+.PHONY: verify-provenance test smoke lint paper-corpus paper-corpus-formulas paper-corpus-verify-sources paper-corpus-check paper-corpus-retrieval-qa paper-corpus-deep-qa
 
 DOCLING_VERSION := 2.114.0
 PAPER_CORPUS_ARGS ?=
@@ -36,3 +36,11 @@ paper-corpus-retrieval-qa:
 	uv run --directory .. --no-sync python market_nn/scripts/evaluate_paper_retrieval.py \
 		--output market_nn/reports/paper_retrieval_qa/results.json
 	uv run --directory .. --no-sync python market_nn/scripts/build_paper_retrieval_report.py
+
+paper-corpus-deep-qa: paper-corpus-check paper-corpus-retrieval-qa
+	uv run --directory .. --no-sync python market_nn/scripts/audit_paper_conversion.py \
+		--output market_nn/reports/paper_conversion_qa/conversion_results.json
+	uv run --directory .. --no-sync python market_nn/scripts/evaluate_paper_retrieval_robustness.py \
+		--allow-threshold-failures \
+		--output market_nn/reports/paper_conversion_qa/robustness_results.json
+	uv run --directory .. --no-sync python market_nn/scripts/build_paper_conversion_qa_report.py

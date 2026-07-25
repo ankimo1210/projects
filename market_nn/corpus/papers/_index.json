@@ -1283,8 +1283,8 @@
         "pictures": 1,
         "markdown_chars": 47013,
         "math_blocks": 13,
-        "chunks": 31,
-        "max_chunk_tokens": 536,
+        "chunks": 33,
+        "max_chunk_tokens": 484,
         "pages_in_chunks": [
           1,
           2,

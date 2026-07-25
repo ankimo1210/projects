@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "reviewer": "AI-assisted visual inspection against rendered source PDF pages",
+  "reviewed_at": "2026-07-23",
+  "sampling": "All five pages below 0.80 token recall plus the only source page that produced chunks above 512 tokens before repair.",
+  "checks": [
+    {
+      "paper_id": "ref_kercheval_zhang_svm_2013",
+      "page": 33,
+      "reason": "lowest page-level token recall; two dense mathematical tables",
+      "status": "pass_with_caveat",
+      "finding": "Table structure, labels, attribute indices, and source-page provenance are retained. Formula tokenization and repeated spanning cells explain most overlap loss; dense symbolic table content should still be cited from the PDF."
+    },
+    {
+      "paper_id": "ref_tran_tabl_1712.00975",
+      "page": 10,
+      "reason": "second-lowest token recall; two-column appendix dominated by equations",
+      "status": "pass",
+      "finding": "The rendered page is equation-dense. Formula records, LaTeX overlays, page references, and source crops preserve the content more faithfully than plain token overlap measures."
+    },
+    {
+      "paper_id": "tlob_2502.15757v3",
+      "page": 11,
+      "reason": "low text recall on a page containing only two precision-recall plots",
+      "status": "pass_with_caveat",
+      "finding": "Both plot images and their captions are preserved. Curve pixels are not converted into numeric series, so text-only retrieval cannot recover exact plotted values."
+    },
+    {
+      "paper_id": "ref_cont_de_larrard_markovian_lob_1104.4596",
+      "page": 8,
+      "reason": "low token recall on a proof and equation-heavy page",
+      "status": "pass",
+      "finding": "Definitions, proposition text, formula crops, and reconstructed LaTeX are present with page provenance; symbol-level PDF text extraction accounts for the lower lexical overlap."
+    },
+    {
+      "paper_id": "fi2010_1705.03233v5",
+      "page": 13,
+      "reason": "low token recall on formulas and a compact feature table",
+      "status": "pass",
+      "finding": "Z-score, min-max, decimal-precision, label formulas, and the feature table are present. Formula overlays and table-cell serialization introduce spacing differences but preserve the values."
+    },
+    {
+      "paper_id": "ref_tran_bin_2003.00598",
+      "page": 6,
+      "reason": "only page with chunks above the 512-token hard input boundary before repair",
+      "status": "pass",
+      "finding": "All Table III model names and reported metrics match the rendered PDF. The two oversized table chunks were deterministically split into four chunks below the hard limit without dropping content."
+    }
+  ]
+}

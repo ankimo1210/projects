@@ -217,7 +217,7 @@ def build_artifact(
                 {
                     "id": "category_metrics",
                     "title": "質問カテゴリ別の検索指標",
-                    "subtitle": "各カテゴリ22問。順位は全1,318 chunksに対するもの。",
+                    "subtitle": "各カテゴリ22問。順位は全1,320 chunksに対するもの。",
                     "dataset": "categories",
                     "sourceId": "retrieval_results",
                     "columns": [
@@ -353,7 +353,7 @@ def build_artifact(
                     "body": (
                         "## 制約・不確実性・頑健性\n\n"
                         "- gold setは単一レビュアー作成で、inter-annotator agreementは未測定。\n"
-                        "- 質問は英語かつ論文中の用語に近い。日本語、強い言い換え、曖昧な探索質問には一般化できない。\n"
+                        "- 強い英語言い換えと日本語は追加holdoutで評価し、語彙BM25の低下を別レポートに記録した。\n"
                         "- ページhitは回答可能な文脈の取得を示すだけで、生成回答の正確性は評価しない。\n"
                         "- lexical baselineなので、記号だけの質問や概念的な同義語にはembedding/rerankerより弱い可能性がある。"
                     ),
@@ -365,7 +365,7 @@ def build_artifact(
                         "## 推奨する次の作業\n\n"
                         "1. 同じ66問をembedding検索とhybrid rerankerにも流し、BM25との差分を固定する。\n"
                         "2. 各questionに短い根拠回答を追加し、retrievalだけでなくanswer faithfulnessを採点する。\n"
-                        "3. 日本語質問と強い言い換えを別holdout setとして追加し、現goldをチューニング用に流用しない。"
+                        "3. 日本語・言い換えholdoutを維持し、現goldをretrieverのチューニング用に流用しない。"
                     ),
                 },
                 {

@@ -1,0 +1,355 @@
+{
+  "schema_version": 1,
+  "design": {
+    "unit_of_analysis": "one manually rewritten variant of each of the 66 canonical retrieval questions",
+    "variants_per_query": 2,
+    "total_variants": 132,
+    "variant_types": [
+      "strong_english_paraphrase",
+      "japanese"
+    ],
+    "known_limitations": [
+      "Variants were written by one reviewer and do not measure inter-annotator agreement.",
+      "Japanese is evaluated against an English corpus with an unmodified lexical BM25 retriever; this diagnoses cross-lingual retrieval support rather than conversion fidelity.",
+      "A retrieval hit establishes evidence availability, not correctness of a generated natural-language answer."
+    ]
+  },
+  "thresholds": {
+    "strong_english_paraphrase": {
+      "paper_recall_at_3": 0.9,
+      "page_recall_at_5": 0.8
+    }
+  },
+  "variants": [
+    {
+      "source_query_id": "deeplob-formula-microprice",
+      "strong_english_paraphrase": "Give the microprice formula that weights the inside quotes by opposite-side depth through imbalance.",
+      "japanese": "最良気配の売買価格とキュー不均衡から出来高加重マイクロプライスをどう定義するか。"
+    },
+    {
+      "source_query_id": "deeplob-method-architecture",
+      "strong_english_paraphrase": "Describe the DeepLOB pipeline from local convolutional feature extraction through the multi-scale branch block to the recurrent classifier.",
+      "japanese": "DeepLOBは畳み込み、Inceptionモジュール、LSTMをどう接続してLOBを予測するか。"
+    },
+    {
+      "source_query_id": "deeplob-result-fi2010",
+      "strong_english_paraphrase": "List DeepLOB's four classification metrics at each FI-2010 horizon from 10 through 100 events.",
+      "japanese": "DeepLOBのFI-2010におけるk=10、20、50、100のaccuracy、precision、recall、F1はいくつか。"
+    },
+    {
+      "source_query_id": "fi2010-formula-zscore",
+      "strong_english_paraphrase": "Write the standardization rule used by the benchmark to center every feature and divide it by its sample deviation.",
+      "japanese": "FI-2010ベンチマークで各特徴量を平均と標準偏差により標準化するZ-score式は何か。"
+    },
+    {
+      "source_query_id": "fi2010-method-protocol",
+      "strong_english_paraphrase": "Explain the FI-2010 evaluation setup, including rolling anchored folds, scaling, forecast offsets, and target construction.",
+      "japanese": "FI-2010のanchored cross-validation、正規化、予測ホライズン、ラベル生成はどう構成されるか。"
+    },
+    {
+      "source_query_id": "fi2010-result-baselines",
+      "strong_english_paraphrase": "Compare the benchmark scores of the linear ridge learner with the nonlinear single-hidden-layer feedforward network.",
+      "japanese": "FI-2010でridge regressionとSLFNのベースライン性能を比較するとどうなるか。"
+    },
+    {
+      "source_query_id": "queue-imbalance-formula",
+      "strong_english_paraphrase": "Express the imbalance statistic I(t) as a function of the two queues at the inside market.",
+      "japanese": "1ティック先予測に使うI(t)を最良買いキューと最良売りキューからどう計算するか。"
+    },
+    {
+      "source_query_id": "queue-imbalance-method-logistic",
+      "strong_english_paraphrase": "How are observations sampled inside intervals bounded by successive changes of the midpoint for the imbalance classifier?",
+      "japanese": "キュー不均衡研究では連続するmid-price変化の間からランダム時刻を選び標本をどう作るか。"
+    },
+    {
+      "source_query_id": "queue-imbalance-result-predictive",
+      "strong_english_paraphrase": "Summarize the out-of-sample discrimination and nonlinear local-logit findings attributable to inside-queue imbalance.",
+      "japanese": "queue imbalanceの予測力とlocal logistic regressionの結果は何か。"
+    },
+    {
+      "source_query_id": "markovian-lob-formula-duration",
+      "strong_english_paraphrase": "State the survival function for the waiting time to a quote move given initial bid and ask depths x and y.",
+      "japanese": "初期キューサイズがxとyのとき次の価格変化までの待ち時間の裾確率は何か。"
+    },
+    {
+      "source_query_id": "markovian-lob-method-level1",
+      "strong_english_paraphrase": "Describe the two-queue state process at the best quotes and the event intensities that add or remove depth.",
+      "japanese": "Markovian level-one order bookはbid・askキュー、キャンセル、成行注文をどう表現するか。"
+    },
+    {
+      "source_query_id": "markovian-lob-result-diffusion",
+      "strong_english_paraphrase": "What Brownian scaling limit is obtained for transaction prices, and what empirical checks support it?",
+      "japanese": "価格過程について導出されるdiffusion limitと高頻度データによる検証内容は何か。"
+    },
+    {
+      "source_query_id": "price-impact-formula-ofi",
+      "strong_english_paraphrase": "Form the interval-level OFI by summing signed contributions from quote updates and executions.",
+      "japanese": "個々の板イベントの符号付き寄与を時間区間内で集計するOFIの式は何か。"
+    },
+    {
+      "source_query_id": "price-impact-method-taq",
+      "strong_english_paraphrase": "Detail the TAQ universe, ten-second aggregation, and intraday OLS estimation used for the impact slope.",
+      "japanese": "TAQ標本、10秒グリッド、30分ごとのOLS回帰でorder-flow-imbalanceの価格インパクト係数をどう推定するか。"
+    },
+    {
+      "source_query_id": "price-impact-result-volume",
+      "strong_english_paraphrase": "Explain why signed book-event flow dominates trades and raw volume in explaining returns, and connect this to the square-root law.",
+      "japanese": "なぜorder flow imbalanceはtrade imbalanceや総出来高より価格変化を説明し、平方根出来高則とどう関係するか。"
+    },
+    {
+      "source_query_id": "stochastic-lob-formula-realized-volatility",
+      "strong_english_paraphrase": "Provide the realized-volatility statistic built from consecutive simulated midquote changes.",
+      "japanese": "確率的order bookモデルで連続するmid-priceからrealized volatilityをどう計算するか。"
+    },
+    {
+      "source_query_id": "stochastic-lob-method-rates",
+      "strong_english_paraphrase": "Specify and calibrate the state-dependent intensities for submissions, marketable orders, and cancellations in the book Markov chain.",
+      "japanese": "連続時間Markov chainの板モデルで指値到着、成行、キャンセルのrateをどう定義し推定するか。"
+    },
+    {
+      "source_query_id": "stochastic-lob-result-conditional",
+      "strong_english_paraphrase": "Report the stationary behavior and the model-implied chances of a directional move or fill conditional on the book state.",
+      "japanese": "確率的板モデルが示す長期挙動、条件付き価格変化確率、約定確率は何か。"
+    },
+    {
+      "source_query_id": "dixon-rnn-formula-dropout",
+      "strong_english_paraphrase": "Show how one sampled binary mask multiplies each time-step input of the recurrent book sequence.",
+      "japanese": "RNNのLOB系列で同じBernoulli dropout maskを各時点の入力へどう適用するか。"
+    },
+    {
+      "source_query_id": "dixon-rnn-method-sequence",
+      "strong_english_paraphrase": "Explain the recurrent fixed-window classifier and the procedure for choosing among candidate predictors of the next move.",
+      "japanese": "固定長LOB系列をRNNで分類し、次の価格変化のpredictorをどう選択するか。"
+    },
+    {
+      "source_query_id": "dixon-rnn-result-classification",
+      "strong_english_paraphrase": "What next-move sequence-classification performance, especially classwise and aggregate F1, does the recurrent model achieve?",
+      "japanese": "RNNによる次のLOB価格変化分類ではどのようなclassification結果とF1が得られたか。"
+    },
+    {
+      "source_query_id": "lob-review-formula-long-memory",
+      "strong_english_paraphrase": "Relate the persistence parameter H to the decay exponent of the order-sign autocorrelation function.",
+      "japanese": "注文フローのlong memoryでHurst exponent Hと自己相関のpower-law exponent alphaはどう関係するか。"
+    },
+    {
+      "source_query_id": "lob-review-method-description",
+      "strong_english_paraphrase": "Define the best bid and offer processes, quote-relative coordinates, and queue depth at an arbitrary price in the LOB survey notation.",
+      "japanese": "Limit order booksのsurveyでb(t)、a(t)、bid/ask相対価格、価格pのdepth nをどう定義するか。"
+    },
+    {
+      "source_query_id": "lob-review-result-stylized-facts",
+      "strong_english_paraphrase": "Catalog the survey's empirical regularities for submission size and location, deletion, impact, tail behavior, and persistent order signs.",
+      "japanese": "注文サイズ、相対価格、キャンセル、price impact、heavy tail、order flowのlong memoryについてどんなstylized factsがあるか。"
+    },
+    {
+      "source_query_id": "svm-formula-polynomial-kernel",
+      "strong_english_paraphrase": "Write the polynomial similarity function used to lift engineered book variables into the support-vector feature space.",
+      "japanese": "LOB特徴量をSVMのfeature spaceへ写像するpolynomial kernelは何か。"
+    },
+    {
+      "source_query_id": "svm-method-features",
+      "strong_english_paraphrase": "How are raw, snapshot-invariant, and history-dependent book descriptors assembled before fitting the support-vector classifier?",
+      "japanese": "basic、time-insensitive、time-sensitiveなLOB特徴量をどう抽出しSVM学習に使うか。"
+    },
+    {
+      "source_query_id": "svm-result-significance",
+      "strong_english_paraphrase": "Summarize selected variables, hypothesis tests, runtime, and simulated trading outcomes for the book SVM.",
+      "japanese": "SVMモデルのfeature selection、significance test、処理時間、単純売買戦略の結果は何か。"
+    },
+    {
+      "source_query_id": "axial-lob-formula-attention",
+      "strong_english_paraphrase": "Give the gated axial-attention expression, including content projections, relative offsets, and learned gate coefficients.",
+      "japanese": "query、key、value、relative position、learned gateを使うgated axial attentionの式は何か。"
+    },
+    {
+      "source_query_id": "axial-lob-method-architecture",
+      "strong_english_paraphrase": "Describe the network that alternates attention over event time and book coordinates and its FI-2010 calibration procedure.",
+      "japanese": "Axial-LOBは時間軸と板特徴軸のattentionをどう交互に行いFI-2010で調整するか。"
+    },
+    {
+      "source_query_id": "axial-lob-result-permutation",
+      "strong_english_paraphrase": "Report benchmark accuracy and the degradation caused by shuffling the temporal or feature axes of Axial-LOB inputs.",
+      "japanese": "Axial-LOBのFI-2010性能と時間・特徴量を入れ替えるpermutation testの結果は何か。"
+    },
+    {
+      "source_query_id": "dain-formula-gate",
+      "strong_english_paraphrase": "Express DAIN's elementwise gate as a logistic transform of a learned projection of the standardized sequence average.",
+      "japanese": "DAINで正規化系列の平均からsigmoidを通してadaptive gating vector gammaをどう計算するか。"
+    },
+    {
+      "source_query_id": "dain-method-layers",
+      "strong_english_paraphrase": "Trace a sample through DAIN's learned centering, rescaling, and feature-suppression stages.",
+      "japanese": "Deep Adaptive Input Normalizationのshifting、scaling、gating層は時系列をどう変換するか。"
+    },
+    {
+      "source_query_id": "dain-result-datasets",
+      "strong_english_paraphrase": "Quantify the gains from adaptive input normalization on electricity, pollution, and financial order-book forecasting tasks.",
+      "japanese": "DAINはenergy、air quality、FI-2010の予測でどの程度改善したか。"
+    },
+    {
+      "source_query_id": "lob-benchmark-formula-label",
+      "strong_english_paraphrase": "State the three-class target rule based on a future midpoint average relative to the current midpoint and cutoff theta.",
+      "japanese": "将来平均mid-priceとthreshold thetaから上昇・下降・横ばいラベルをどう定義するか。"
+    },
+    {
+      "source_query_id": "lob-benchmark-method-lobcast",
+      "strong_english_paraphrase": "Explain how LOBCAST standardizes comparisons of neural architectures across the public FI-2010 data and private equities.",
+      "japanese": "LOBCASTはFI-2010と独自株式データでdeep learningモデルをどうbenchmarkするか。"
+    },
+    {
+      "source_query_id": "lob-benchmark-result-generalization",
+      "strong_english_paraphrase": "What does the benchmark conclude about predictive scores, perturbation stability, and transfer between trading venues?",
+      "japanese": "LOB benchmark研究のperformance、robustness、cross-market generalizationの結論は何か。"
+    },
+    {
+      "source_query_id": "sirignano-deep-formula-spatial",
+      "strong_english_paraphrase": "Specify the spatial network probability mass assigned to an integer tick change y conditional on the current book.",
+      "japanese": "spatial neural networkは整数値価格変化yの条件付き確率をどうモデル化するか。"
+    },
+    {
+      "source_query_id": "sirignano-deep-method-distribution",
+      "strong_english_paraphrase": "How is spatial structure built into deep networks for the joint distribution of many order-book price coordinates?",
+      "japanese": "高次元LOB価格のjoint distributionを表すspatial neural network architectureはどう構築されるか。"
+    },
+    {
+      "source_query_id": "sirignano-deep-result-out-of-sample",
+      "strong_english_paraphrase": "Report held-out log-likelihood and extreme-move classification performance at clock-time and price-event horizons.",
+      "japanese": "fixed-timeとnext-price-change horizonにおけるout-of-sample likelihoodとtail accuracyは何か。"
+    },
+    {
+      "source_query_id": "mlp-mixer-formula-block",
+      "strong_english_paraphrase": "Write both residual MLP transformations, one across patches and one across channels, with normalization.",
+      "japanese": "MLP-Mixerのtoken-mixingとchannel-mixingをLayerNormとresidual connection込みで表す式は何か。"
+    },
+    {
+      "source_query_id": "mlp-mixer-method-architecture",
+      "strong_english_paraphrase": "Describe how an image becomes patch tokens that are alternately mixed across position and feature dimensions without convolution or attention.",
+      "japanese": "MLP-Mixerは画像patchをtoken方向とchannel方向のMLPだけでどう処理するか。"
+    },
+    {
+      "source_query_id": "mlp-mixer-result-scale",
+      "strong_english_paraphrase": "How do Mixer variants benefit from increased capacity and larger ImageNet or JFT pretraining corpora?",
+      "japanese": "MLP-Mixerのaccuracyはmodel scaleとImageNet/JFTのpre-training規模でどう変化するか。"
+    },
+    {
+      "source_query_id": "bin-formula-mixture",
+      "strong_english_paraphrase": "Form the BiN output as a learned weighted sum of independently standardized row and column views.",
+      "japanese": "Bilinear Input Normalizationは行方向・列方向の正規化行列をlearned lambdaでどう合成するか。"
+    },
+    {
+      "source_query_id": "bin-method-adaptive-normalization",
+      "strong_english_paraphrase": "Explain bidimensional learned centering, variance normalization, and weighting for nonstationary financial matrices.",
+      "japanese": "BiNはbilinear金融時系列の両次元でadaptive shifting、scaling、gatingをどう学習するか。"
+    },
+    {
+      "source_query_id": "bin-result-fi2010",
+      "strong_english_paraphrase": "Compare TABL results after BiN preprocessing with the corresponding batch-normalized configurations on FI-2010.",
+      "japanese": "FI-2010でTABLにBiNを適用した改善とbatch normalizationとの比較結果は何か。"
+    },
+    {
+      "source_query_id": "tabl-formula-attention",
+      "strong_english_paraphrase": "Derive TABL's normalized temporal score matrix and the lambda interpolation between attended and original bilinear features.",
+      "japanese": "TABLのtemporal attention weightとlambdaによるattended bilinear representationの合成式は何か。"
+    },
+    {
+      "source_query_id": "tabl-method-network",
+      "strong_english_paraphrase": "Describe the layer stack and hyperparameter setup of the temporal-attention bilinear classifier for high-frequency books.",
+      "japanese": "高頻度LOB向けTemporal Attention augmented Bilinear networkの構造と設定は何か。"
+    },
+    {
+      "source_query_id": "tabl-result-fi2010",
+      "strong_english_paraphrase": "Give C(TABL)'s FI-2010 classification metrics together with inference and gradient-pass timing.",
+      "japanese": "FI-2010でC(TABL)のaccuracy、precision、recall、F1、forward/backward計算時間はいくつか。"
+    },
+    {
+      "source_query_id": "cnn-lob-formula-label",
+      "strong_english_paraphrase": "Define the down, flat, and up targets by comparing trailing and leading midpoint averages in the CNN study.",
+      "japanese": "CNNによる株価予測論文で過去・将来平均mid-priceから3つのmovement labelをどう定義するか。"
+    },
+    {
+      "source_query_id": "cnn-lob-method-architecture",
+      "strong_english_paraphrase": "Describe the convolutional stack, tensor layout, output classifier, and optimization loss used for book-based price forecasting.",
+      "japanese": "LOB tensorから株価を予測するCNN architectureとtraining lossは何か。"
+    },
+    {
+      "source_query_id": "cnn-lob-result-evaluation",
+      "strong_english_paraphrase": "Compare the CNN's recall, precision, F-score, and agreement statistic with support-vector and perceptron baselines.",
+      "japanese": "CNN論文でSVM・MLPと比較したrecall、precision、F1、Cohen kappaの結果は何か。"
+    },
+    {
+      "source_query_id": "stationary-lob-formula-features",
+      "strong_english_paraphrase": "Construct translation-invariant price offsets and cumulative depth variables from successive book levels.",
+      "japanese": "LOB各levelからstationaryなrelative priceとaccumulated volume featureをどう作るか。"
+    },
+    {
+      "source_query_id": "stationary-lob-method-models",
+      "strong_english_paraphrase": "Explain the training setups for convolutional, recurrent, and hybrid networks fed with stationary book representations.",
+      "japanese": "stationary LOB featuresでCNN、LSTM、CNN-LSTMをどう学習するか。"
+    },
+    {
+      "source_query_id": "stationary-lob-result-evaluation",
+      "strong_english_paraphrase": "How does replacing raw book levels with stationary variables alter predictive metrics across forecast offsets?",
+      "japanese": "stationary featuresは複数のforecast horizonで価格予測結果をどう変えるか。"
+    },
+    {
+      "source_query_id": "transformer-formula-scaled-attention",
+      "strong_english_paraphrase": "Write attention as softmax of query-key scores divided by the key-width scale, applied to values.",
+      "japanese": "query-key内積をkey dimensionの平方根でscaleしvalueへ適用するattention式は何か。"
+    },
+    {
+      "source_query_id": "transformer-method-architecture",
+      "strong_english_paraphrase": "Trace the Transformer encoder-decoder composition of self/cross attention, positionwise networks, skip paths, normalization, and position signals.",
+      "japanese": "Transformerのencoder/decoder stackはmulti-head attention、feed-forward、residual、positional encodingでどう作られるか。"
+    },
+    {
+      "source_query_id": "transformer-result-translation",
+      "strong_english_paraphrase": "Summarize translation quality, compute budget, ablations, and syntactic parsing performance of the attention-only model.",
+      "japanese": "TransformerのBLEU、training cost、model variation、constituency parsingの結果は何か。"
+    },
+    {
+      "source_query_id": "multihorizon-formula-attention",
+      "strong_english_paraphrase": "Define decoder alignment probabilities and the resulting encoder-state context used for joint horizon prediction.",
+      "japanese": "multi-horizon seq2seq LOB予測でattention weightとcontext vectorをどう計算するか。"
+    },
+    {
+      "source_query_id": "multihorizon-method-architecture",
+      "strong_english_paraphrase": "Explain how one attention-based encoder-decoder emits predictions for several future book horizons together.",
+      "japanese": "encoder-decoder attentionは複数のLOB horizonを同時にどう予測するか。"
+    },
+    {
+      "source_query_id": "multihorizon-result-hardware",
+      "strong_english_paraphrase": "Report benchmark and transfer results plus the training-speed comparison between an IPU and a GPU.",
+      "japanese": "multi-horizon予測のFI-2010、LSE transfer learning、IPU対GPU accelerationの結果は何か。"
+    },
+    {
+      "source_query_id": "universal-formula-recurrent",
+      "strong_english_paraphrase": "Write the recurrent transition that combines a book snapshot with lagged hidden state to predict the next direction.",
+      "japanese": "Universal features of price formationでLOB入力と前hidden stateから次価格変化を出すrecurrent式は何か。"
+    },
+    {
+      "source_query_id": "universal-method-cross-asset",
+      "strong_english_paraphrase": "Describe the pooled recurrent training design spanning billions of events and hundreds of securities.",
+      "japanese": "数百銘柄・数十億LOB観測を使うdeep recurrent modelは価格形成をどう学習するか。"
+    },
+    {
+      "source_query_id": "universal-result-universality",
+      "strong_english_paraphrase": "What cross-security tests establish a common stationary mapping with dependence on recent book history?",
+      "japanese": "学習された価格形成のasset間universality、stationarity、path dependenceを示す証拠は何か。"
+    },
+    {
+      "source_query_id": "tlob-formula-mlplob",
+      "strong_english_paraphrase": "Write the two residual mixer updates operating first over rows and then over columns in MLPLOB.",
+      "japanese": "MLPLOB blockのresidual row-mixing式とcolumn-mixing式は何か。"
+    },
+    {
+      "source_query_id": "tlob-method-dual-attention",
+      "strong_english_paraphrase": "Describe TLOB's repeated normalization and alternating self-attention over the temporal and feature axes.",
+      "japanese": "TLOBはBilinear Normalization後に時間軸と特徴軸のdual attentionをどう交互適用するか。"
+    },
+    {
+      "source_query_id": "tlob-result-markets",
+      "strong_english_paraphrase": "Summarize TLOB performance on the public benchmark, two US equities, cryptocurrency, and component-removal experiments.",
+      "japanese": "TLOBのFI-2010、Tesla、Intel、Bitcoin、ablation studyの結果は何か。"
+    }
+  ]
+}
