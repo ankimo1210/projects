@@ -47,8 +47,16 @@ uv run --no-sync streamlit run health/app/main.py
 
 最初の画面で「Google Health と接続する」を選び、Googleの同意画面から戻ったら、
 「管理 > 同期」で同期します。1回の同期はまず全メトリクスの直近7日を取得し、残りの
-request予算で古い期間へ遡ります。したがって**1回目の同期でも全ページが表示できます**。
-1回の上限は同期画面で 200 / 500 / 1000 requests から選べます（既定200）。
+request予算で古い期間へ遡ります。したがって**新規インストールでは1回目の同期でも
+全ページが表示できます**。1回の上限は同期画面で 200 / 500 / 1000 requests から
+選べます（既定200）。
+
+このrecent-first順は新規データベース限定です。それより前のバージョンで作られた
+既存データベースは、まず旧方式（5年前から前方へ1chunkずつ）のbackfillを完了させてから
+recent-firstが効きます。14 metric構成では前方backfillが1回の同期上限（200 requests）を
+超えるため、アップグレード後の最初の同期では後半のmetricがまだ空のページのままになる
+ことがあります。詳細は
+[2026-07-25 review fixes](docs/2026-07-25-review-fixes.md)を参照してください。
 
 履歴が残っている場合は同期後に残りchunk数が表示されます。もう一度押すと続きから遡ります。
 HTTP 429の場合は表示された時間を待って再開してください。完了したchunkだけが保存され、
@@ -113,3 +121,4 @@ uv run --no-sync ruff format --check health/src health/app health/scripts health
 ## Development notes
 
 - [2026-07-23 Google Health post-review fixes](docs/2026-07-23-post-review-fixes.md)
+- [2026-07-25 Google Health review fixes](docs/2026-07-25-review-fixes.md)
