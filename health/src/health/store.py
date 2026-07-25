@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from collections.abc import Sequence
 from datetime import date
 from pathlib import Path
@@ -50,11 +51,24 @@ _SLEEP_COLS = [
 
 class Store:
     def __init__(self, db_path: str | Path):
-        Path(db_path).parent.mkdir(parents=True, exist_ok=True)
-        self.con = duckdb.connect(str(db_path))
+        path = Path(db_path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        os.chmod(path.parent, 0o700)
+        self.path = path
+        self.con = duckdb.connect(str(path))
         for stmt in _SCHEMA.strip().split(";"):
             if stmt.strip():
                 self.con.execute(stmt)
+        self._restrict_permissions(path)
+
+    @staticmethod
+    def _restrict_permissions(path: Path) -> None:
+        """DuckDB creates its files with the process umask (0644 in practice).
+        The database and its write-ahead log hold the health history itself, so
+        both are narrowed to owner-only as soon as they exist."""
+        for candidate in (path, path.with_name(path.name + ".wal")):
+            if candidate.exists():
+                os.chmod(candidate, 0o600)
 
     def close(self) -> None:
         self.con.close()

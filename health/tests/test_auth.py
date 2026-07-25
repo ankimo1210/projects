@@ -1,4 +1,5 @@
 import json
+import os
 import stat
 from urllib.parse import parse_qs, urlparse
 
@@ -383,3 +384,34 @@ def test_from_env_raises_when_credentials_missing(tmp_path, monkeypatch):
     monkeypatch.delenv("GOOGLE_CLIENT_SECRET", raising=False)
     with pytest.raises(AuthError):
         GoogleHealthAuth.from_env(tmp_path / "data", env_path=tmp_path / "missing.env")
+
+
+def test_write_private_creates_the_temp_file_already_restricted(tmp_path, monkeypatch):
+    modes: list[int] = []
+    real_open = os.open
+
+    def spy(path, flags, mode=0o777, *args, **kwargs):
+        modes.append(mode)
+        return real_open(path, flags, mode, *args, **kwargs)
+
+    monkeypatch.setattr(os, "open", spy)
+    auth = GoogleHealthAuth("id", "secret", tmp_path)
+
+    auth._write_private(tmp_path / "secret.json", {"token": "x"})
+
+    # The file must be born 0600 -- chmod-after-write leaves a window where the
+    # token is readable under a permissive umask.
+    assert 0o600 in modes
+
+
+def test_write_private_result_is_0600_under_a_permissive_umask(tmp_path):
+    auth = GoogleHealthAuth("id", "secret", tmp_path)
+    target = tmp_path / "secret.json"
+    previous = os.umask(0o000)
+    try:
+        auth._write_private(target, {"token": "x"})
+    finally:
+        os.umask(previous)
+
+    assert stat.S_IMODE(target.stat().st_mode) == 0o600
+    assert stat.S_IMODE(tmp_path.stat().st_mode) == 0o700
