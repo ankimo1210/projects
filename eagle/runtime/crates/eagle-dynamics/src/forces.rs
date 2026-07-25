@@ -146,12 +146,32 @@ pub const JET_TABLE: [Jet; 16] = [
     },
 ];
 
-/// DPS throttle envelope: no thrust below MIN; linear through the
-/// throttleable band up to 0.6·MAX; above that it snaps to the fixed
-/// throttle point (FTP).
+/// DPS throttle envelope: a burning engine idles at the MIN stop, is
+/// linear through the throttleable band up to 0.6·MAX, and snaps to the
+/// fixed throttle point (FTP) above that.
+///
+/// The lower branch is the engine's IDLE STOP, not zero. The actuator's
+/// zero position is ~10 % thrust, and Luminary parks it there deliberately:
+/// `ENGINOF3` drives the THRUST counter to the zero stop as its
+/// pre-engine-arm step (`P40-P47.agc:490-494`), and the landing-guidance
+/// group stays suspended for the whole ZOOMTIME trim phase (2600 cs =
+/// 26 s, `P63ZOOM`/`P40ZOOMA` `PHASCHNG OCT 3`), so the first ~26 s of
+/// every ignition run at minimum throttle with no further POUT traffic.
+/// `docs/agc-channel-map.md` ("Thrust Pulse Emissions") states the same
+/// thing: "a model that maps command 0 to zero thrust free-falls through
+/// the burn-in". It did — the 2026-07-25 re-flight measured exactly
+/// 310 THRUST pulses (~3.7 kN, below `DPS_MIN_N`) held for the whole
+/// descent while this function returned 0 N, and Luminary's own DVMON
+/// flashed V97 (engine fail) from TIG+11 s. Provenance: derived
+/// (`DPS_MIN_N`, lm_simulator.tcl:187) + the cited Luminary behaviour.
+/// See docs/superpowers/notes/2026-07-25-wave1-reflight.md.
+///
+/// Engine-off and out-of-fuel are handled by the caller
+/// (`actuator_step` / `SimCore::phase3_throttle`), which zeroes thrust
+/// outright — this branch only ever applies to a burning engine.
 pub fn dps_envelope(cmd_n: f64) -> f64 {
     if cmd_n < DPS_MIN_N {
-        0.0
+        DPS_MIN_N
     } else if cmd_n <= 0.6 * DPS_MAX_N {
         cmd_n
     } else {
@@ -279,8 +299,12 @@ mod tests {
 
     #[test]
     fn envelope_clamps_and_ftp_snaps() {
-        assert_eq!(dps_envelope(0.0), 0.0);
-        assert_eq!(dps_envelope(3000.0), 0.0); // below MIN → no thrust band
+        // Below the throttleable band the burning engine sits on its IDLE
+        // STOP (~10 % thrust), NOT at zero — Luminary parks the actuator
+        // there for the whole 26 s ZOOMTIME trim phase, so a zero here
+        // free-falls through the burn-in (see `dps_envelope` docs).
+        assert_eq!(dps_envelope(0.0), DPS_MIN_N);
+        assert_eq!(dps_envelope(3000.0), DPS_MIN_N);
         assert_eq!(dps_envelope(10_000.0), 10_000.0); // throttleable band
         assert_eq!(dps_envelope(0.6 * DPS_MAX_N), 0.6 * DPS_MAX_N);
         assert_eq!(dps_envelope(0.61 * DPS_MAX_N), DPS_FTP_N); // FTP snap
