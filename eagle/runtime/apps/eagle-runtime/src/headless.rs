@@ -16,6 +16,7 @@ use anyhow::{Context, Result};
 use eagle_agc_protocol::dsky::DskyState;
 use eagle_dynamics::touchdown::Touchdown;
 use std::path::PathBuf;
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use tokio::sync::broadcast;
@@ -67,13 +68,28 @@ struct Summary {
 pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
     let (dsky_rx, cmd_tx, pkt_rx, _pump) = pump(cfg.session);
 
+    // Gate: true while `script` (the choreography, or a rod_load call) is
+    // mid-sequence. A client keystroke landing between a script's own
+    // terminal-key sends (e.g. rod_load's V21N01E…E…E erasable write)
+    // would interleave with it and corrupt e.g. RODCOUNT, so the
+    // client-key forwarder below drops packets while this is set. ROD
+    // clicks are unaffected — they already serialize through the merged
+    // loop further down.
+    let script_busy = Arc::new(AtomicBool::new(false));
+
     // Client → AGC packets from the WebSocket server (scenario mode): the
     // fix for silently-dropped web DSKY key presses — forward them into the
-    // same pump `cmd_tx` the DSKY choreography uses.
+    // same pump `cmd_tx` the DSKY choreography uses, unless the script is
+    // mid-sequence.
     if let Some(mut rx) = cfg.client_rx {
         let tx = cmd_tx.clone();
+        let busy = script_busy.clone();
         tokio::spawn(async move {
             while let Some(pkt) = rx.recv().await {
+                if busy.load(Ordering::SeqCst) {
+                    eprintln!("headless: client key dropped (script busy)");
+                    continue;
+                }
                 if tx.send(pkt).is_err() {
                     break;
                 }
@@ -166,7 +182,8 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
     let mut script = DskyScript::new(cmd_tx.clone(), dsky_rx);
     script.set_key_delay(Duration::from_millis(30));
     let mut responder = pkt_rx.resubscribe();
-    runner::run_scenario(
+    script_busy.store(true, Ordering::SeqCst);
+    let choreography = runner::run_scenario(
         &mut script,
         &cfg.scenario,
         &cfg.symtab,
@@ -174,33 +191,23 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
         &cmd_tx,
         &mut responder,
     )
-    .await
-    .context("scenario choreography")?;
+    .await;
+    script_busy.store(false, Ordering::SeqCst);
+    choreography.context("scenario choreography")?;
 
     // Deliver ROD clicks from both sources through the one DskyScript.
-    // Exit when the SIM's rod channel closes (sim thread exited on
-    // touchdown + 2 s); the client channel closing just stops that source.
+    // `next_rod_click` biases toward the SIM channel, so it returns `None`
+    // only when the SIM channel closes (sim thread exited on touchdown +
+    // 2 s); a closed client channel just stops that source. Each
+    // `rod_load` call gates the client-key forwarder above, since it does
+    // its own terminal-key sequence (V21N01E…E…E) that a stray client key
+    // must not interleave with.
     let mut client_rod_rx = cfg.client_rod_rx;
-    loop {
-        let n = tokio::select! {
-            n = rod_rx.recv() => match n {
-                Some(n) => n,
-                None => break,
-            },
-            n = async {
-                match client_rod_rx.as_mut() {
-                    Some(rx) => rx.recv().await,
-                    None => std::future::pending().await,
-                }
-            } => match n {
-                Some(n) => n,
-                None => {
-                    client_rod_rx = None;
-                    continue;
-                }
-            },
-        };
-        if let Err(e) = runner::rod_load(&mut script, n as i16).await {
+    while let Some(n) = next_rod_click(&mut rod_rx, &mut client_rod_rx).await {
+        script_busy.store(true, Ordering::SeqCst);
+        let result = runner::rod_load(&mut script, n as i16).await;
+        script_busy.store(false, Ordering::SeqCst);
+        if let Err(e) = result {
             eprintln!("headless: ROD load failed: {e:#}");
         }
     }
@@ -234,4 +241,91 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
 /// The touchdown classification from a finished run, if any.
 pub fn touchdown_class(r: &HeadlessResult) -> Option<Touchdown> {
     r.sim.touchdown.map(|(t, _, _, _)| t)
+}
+
+/// Merge sim-scheduled and client ROD clicks into one stream. Biased
+/// toward the SIM channel, so it always wins a race against a backlog of
+/// pending client clicks — a closing sim (touchdown + 2 s) must end the
+/// loop promptly, not dawdle on client input. Returns `None` only when the
+/// SIM channel closes; a closed client channel just clears `client` and
+/// keeps serving the sim side.
+async fn next_rod_click(
+    rod_rx: &mut tokio::sync::mpsc::UnboundedReceiver<i32>,
+    client: &mut Option<tokio::sync::mpsc::UnboundedReceiver<i32>>,
+) -> Option<i32> {
+    loop {
+        tokio::select! {
+            biased;
+            n = rod_rx.recv() => return n,
+            n = async {
+                match client.as_mut() {
+                    Some(rx) => rx.recv().await,
+                    None => std::future::pending().await,
+                }
+            } => match n {
+                Some(n) => return Some(n),
+                None => {
+                    *client = None;
+                    continue;
+                }
+            },
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tokio::sync::mpsc;
+
+    #[tokio::test]
+    async fn next_rod_click_delivers_from_both_sources() {
+        let (rod_tx, mut rod_rx) = mpsc::unbounded_channel::<i32>();
+        let (client_tx, client_rx) = mpsc::unbounded_channel::<i32>();
+        let mut client = Some(client_rx);
+
+        rod_tx.send(1).unwrap();
+        client_tx.send(2).unwrap();
+
+        // biased: the sim value is checked (and returned) first even
+        // though both are ready.
+        assert_eq!(next_rod_click(&mut rod_rx, &mut client).await, Some(1));
+        assert_eq!(next_rod_click(&mut rod_rx, &mut client).await, Some(2));
+    }
+
+    #[tokio::test]
+    async fn next_rod_click_keeps_serving_sim_after_client_closes() {
+        let (rod_tx, mut rod_rx) = mpsc::unbounded_channel::<i32>();
+        let (client_tx, client_rx) = mpsc::unbounded_channel::<i32>();
+        let mut client = Some(client_rx);
+        drop(client_tx); // client channel closes with nothing pending
+
+        let sender = tokio::spawn(async move {
+            // Let next_rod_click observe the closed client channel and
+            // clear it before the sim value shows up.
+            tokio::task::yield_now().await;
+            rod_tx.send(7).unwrap();
+        });
+
+        assert_eq!(next_rod_click(&mut rod_rx, &mut client).await, Some(7));
+        assert!(
+            client.is_none(),
+            "closed client receiver must be cleared internally"
+        );
+        sender.await.unwrap();
+    }
+
+    #[tokio::test]
+    async fn next_rod_click_ends_on_sim_close_even_with_client_pending() {
+        let (rod_tx, mut rod_rx) = mpsc::unbounded_channel::<i32>();
+        let (client_tx, client_rx) = mpsc::unbounded_channel::<i32>();
+        let mut client = Some(client_rx);
+
+        client_tx.send(9).unwrap(); // a client click is waiting…
+        drop(rod_tx); // …but the sim channel closes with nothing buffered
+
+        // biased must prefer the (closed) sim arm, so the loop ends with
+        // None instead of returning the pending client click.
+        assert_eq!(next_rod_click(&mut rod_rx, &mut client).await, None);
+    }
 }
