@@ -51,13 +51,24 @@ impl DskyStateSnapshot {
     }
 }
 
-/// Parse the P66 flight display (V06N60): R2 = HDOTDISP, shown in 0.1 ft/s
-/// units (Spike B: R2 "+00756" = 75.6 ft/s). Altitude is not exposed by
-/// N60 in a pinned scaling, so `alt_m` stays `None` in Wave 1.
+/// Parse the AGC flight display: R2 = HDOTDISP, shown in 0.1 ft/s units
+/// (Spike B: R2 "+00756" = 75.6 ft/s). Altitude is not exposed in a pinned
+/// scaling by either noun, so `alt_m` stays `None` in Wave 1.
+///
+/// BOTH V06N60 and V06N63 are accepted. N60 is P66's own `VERTDISP`
+/// display; N63 is what the braking/approach phases show, and **its R2 is
+/// the same HDOTDISP word** (`docs/agc-channel-map.md`, "P66 Vertical
+/// Displays and Erasables"; `PINBALL_NOUN_TABLES.agc:724-726`). Accepting
+/// only N60 meant `agc_hdot_ms` / `nav_err_hdot_ms` were `null` in every
+/// frame of both 2026-07-25 re-flight telemetry dumps — the run never
+/// leaves P63 before ground contact, so the display never reaches N60 —
+/// and the AGC-vs-truth navigation error (the run's headline finding) had
+/// to be recovered by hand-decoding the ch010 relay stream after the fact.
+/// See docs/superpowers/notes/2026-07-25-wave1-reflight.md.
 pub fn parse_agc_nav(d: &DskyState) -> Option<AgcNav> {
     let verb: String = d.verb.iter().collect();
     let noun: String = d.noun.iter().collect();
-    if verb != "06" || noun != "60" {
+    if verb != "06" || !matches!(noun.as_str(), "60" | "63") {
         return None;
     }
     let hdot_ms = parse_decimal_register(&d.r2).map(|v| v as f64 * 0.1 * 0.3048);
@@ -637,6 +648,38 @@ mod tests {
             on: true,
             off: false,
         }));
+    }
+
+    #[test]
+    fn agc_nav_parses_hdot_from_both_n60_and_n63() {
+        // R2 is HDOTDISP on BOTH nouns, in 0.1 ft/s. The 2026-07-25
+        // re-flight never left P63 (so never reached N60) and lost the
+        // AGC-vs-truth rate error from every telemetry frame because this
+        // accepted only N60.
+        let dsky = |noun: [char; 2], sign: char, digits: [char; 5]| {
+            let mut d = DskyState::default();
+            d.verb = ['0', '6'];
+            d.noun = noun;
+            d.r2 = eagle_agc_protocol::dsky::RegisterDisplay { sign, digits };
+            d
+        };
+        // Spike B's live sample: "+00756" = 75.6 ft/s = 23.04 m/s.
+        let want = 756.0 * 0.1 * 0.3048;
+        for noun in [['6', '0'], ['6', '3']] {
+            let nav = parse_agc_nav(&dsky(noun, '+', ['0', '0', '7', '5', '6']))
+                .unwrap_or_else(|| panic!("N{noun:?} must parse"));
+            assert!((nav.hdot_ms.unwrap() - want).abs() < 1e-9, "{noun:?}");
+            assert_eq!(nav.alt_m, None, "altitude has no pinned scaling");
+        }
+        // Sign is honoured: the re-flight's AGC read POSITIVE (climbing)
+        // while the truth was falling — a sign drop would have hidden it.
+        let neg = parse_agc_nav(&dsky(['6', '3'], '-', ['0', '0', '2', '1', '3'])).unwrap();
+        assert!(neg.hdot_ms.unwrap() < 0.0);
+        // Any other display is not a nav frame.
+        assert!(parse_agc_nav(&dsky(['6', '2'], '+', ['0', '0', '0', '0', '1'])).is_none());
+        let mut wrong_verb = dsky(['6', '0'], '+', ['0', '0', '7', '5', '6']);
+        wrong_verb.verb = ['1', '6'];
+        assert!(parse_agc_nav(&wrong_verb).is_none());
     }
 
     #[test]

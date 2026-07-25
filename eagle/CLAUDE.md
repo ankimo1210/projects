@@ -8,13 +8,18 @@ ground contact.
 
 **Wave 1 acceptance is RED.** The landing is not soft and P66 is never
 reached: the last measured run (2026-07-25) crashes at 41.5 m/s vertical /
-10.7 m/s horizontal after 26.0 s, while MM66 first appears at TIG+26.6 s
-(Luminary suspends the landing-guidance group for the 26 s ZOOMTIME
-burn-in). The attitude loop is fine — the blockers
-are the 500 m gate geometry and the pad-loaded AGC state vector (the
-historical 15 km / 1700 m/s PDI point, not the sim's hover gate), so there
-is no navigation loop closure. Do not restate "soft touchdown" anywhere
-until it is measured. Evidence, numbers and next steps:
+10.7 m/s horizontal after 26.0 s, while MM66 first appears at TIG+26.6 s:
+P63's `AVEGEXIT` points at `SERVEXIT` until `P63ZOOM` swaps it to
+`LUNLAND` at the end of the 26 s ZOOMTIME, and GUILDENSTERN (R13, the only
+path to P66) sits behind that swap. The attitude loop is fine. Two
+blockers: (1) the 500 m gate is too low to survive the burn-in at the DPS
+idle stop — a scenario fix, `live_spike_p66.rs` already starts at 3000 m
+for exactly this reason; (2) the pad-loaded AGC state vector is the
+historical 15 km / 1700 m/s PDI point, not the sim's hover gate, so the
+vehicle would enter P66 holding the braking attitude IGNALG computed for a
+1700 m/s burn (measured 107-108° tilt) — and P66 holds attitude, it does
+not re-orient. Do not restate "soft touchdown" anywhere until it is
+measured. Evidence, numbers and next steps:
 `docs/superpowers/notes/2026-07-25-wave1-reflight.md`.
 
 - Specs: docs/superpowers/specs/2026-07-21-eagle-roadmap-design.md,

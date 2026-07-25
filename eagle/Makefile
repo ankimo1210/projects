@@ -26,14 +26,16 @@ dev-runtime: agc
 dev-client:
 	cd client && npm run dev
 
-# Closed-loop P66 descent: real Luminary099 flies to soft touchdown against
-# our 6-DoF physics. Open the ENGR tab in the client to watch telemetry.
+# Closed-loop descent: real Luminary099 against our 6-DoF physics, boot →
+# P63 → ENGINE ON → ATT HOLD → ground contact. NOT a soft landing today —
+# see docs/superpowers/notes/2026-07-25-wave1-reflight.md. Open the ENGR
+# tab in the client to watch telemetry.
 descent-p66: agc
 	cd runtime && cargo run -p eagle-runtime -- \
 	  --yaagc ../build/agc/yaAGC --core ../build/agc/Luminary099.bin \
 	  --scenario ../scenarios/p66-gate.toml --root ..
 
-# Debug iteration: same closed loop, ~2 min shorter TIG lead.
+# Debug iteration: same closed loop, 60 s shorter TIG lead (30000 cs).
 descent-p66-fast: agc
 	cd runtime && cargo run -p eagle-runtime -- \
 	  --yaagc ../build/agc/yaAGC --core ../build/agc/Luminary099.bin \

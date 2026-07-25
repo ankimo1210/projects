@@ -1,5 +1,9 @@
-//! Wave 1 acceptance (Task 16): the full Luminary099 closed loop flies a
-//! P66 rate-of-descent landing to soft touchdown against our 6-DoF physics.
+//! Wave 1 acceptance (Task 16): the full Luminary099 closed loop against
+//! our 6-DoF physics, asserting a P66 rate-of-descent landing to soft
+//! touchdown. **This assertion does not hold today** — the run reaches
+//! ground contact before P66 starts and classifies `Crash`; see
+//! docs/superpowers/notes/2026-07-25-wave1-reflight.md for the measured
+//! numbers and the two blockers.
 //! Errors OFF. Live: needs `make agc`; run with
 //! `cargo test -p eagle-runtime --test live_p66_descent -- --ignored --test-threads=1`.
 //!

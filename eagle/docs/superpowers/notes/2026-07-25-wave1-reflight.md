@@ -8,8 +8,11 @@ instrumentation.
 **Status: RED.** The acceptance does not pass, and the failure is not the
 attitude-loop sign error everyone (including this task's brief) assumed. The
 diagnosis below is supported by packet-level and DSKY-level evidence from a
-full instrumented run. Two of the three fatal causes are design-level and
-cannot be fixed by tuning a constant.
+full instrumented run. Of the three causes, two are cheap (a model constant
+— fixed here — and a scenario constant) and the third is design-level:
+the AGC's pad-loaded state vector and the sim truth describe different
+vehicles, so P66 would hold the wrong rate at the wrong attitude no matter
+how the other two are tuned.
 
 ## Runs
 
@@ -66,14 +69,16 @@ Read the sign chain end to end: IGA starts at **−16.8°**, the DAP fires the
 quad producing **+2114.5 N·m about body Y**, ω_y builds to +0.19 rad/s (the
 DAP's rate limit), the gimbal slews monotonically −16.8° → +108.4° at
 ≈9.6°/s, and at t = 356.2 s ω_y collapses to +0.003 rad/s and the DAP
-**captures and holds 108.4° ± 0.5° for the remaining 13 s** in a normal
+**captures and holds 107.35° ± 1.7° for the remaining 13 s** in a normal
 deadband limit cycle (alternating `jets=105` / `jets=0`, torque −2114.5 /
-0). Every firing opposes the standing gimbal error.
+0). Every firing opposes the standing gimbal error. (Band measured, not
+eyeballed: the 137 samples at t ≥ 356 span 105.69°–109.02°.)
 
 That is textbook negative feedback. All three suspects in the brief's list —
 jet min-impulse quantization, `inertia_kgm2` / `RCS_LEVER_M` magnitudes,
 trim-gimbal drive signs — are **exonerated**: a loop with the wrong sign
-cannot capture, and one with the wrong plant gain cannot hold ±0.5°. (The
+cannot capture, and one with the wrong plant gain cannot hold a bounded
+3.3° limit cycle for 13 s. (The
 trim bits are moot anyway: ch012 bits 9-12 were written exactly once, at
 t = 179 ms, all zero — Luminary never drove the trim gimbal in this run.)
 
@@ -107,31 +112,65 @@ thrust free-falls through the burn-in."* It did.
 Luminary itself noticed. Decoding the ch010 relay stream shows the DSKY
 alternating **V06N63 ↔ V97** from t = 354.06 s (TIG+11 s) to touchdown —
 V97 is DVMON's engine-fail annunciation. The AGC was telling us the engine
-had failed for the last 14 seconds of the fall and nothing was watching.
+was not performing for the last 14 seconds of the fall and nothing was
+watching.
+
+Qualifier, so this is not over-read: **V97 still fires after the fix.**
+Run 3 (idle stop live, 4560 N from ignition) raises it at TIG+11.3 s and
+cycles it 19 times before contact — the same behaviour. DVMON's threshold
+sits above the specific force an idling DPS produces, so V97 is evidence of
+**too little thrust**, not of *zero* thrust. It corroborates cause A, it
+does not by itself diagnose it; the 310-pulse ch055 count and
+`thrust_n == 0` do.
 
 **Fix applied (attempt 1):** `dps_envelope` now returns `DPS_MIN_N` below the
 throttleable band instead of 0. Engine-off / out-of-fuel are unaffected —
 `actuator_step` and `SimCore::phase3_throttle` zero the thrust outright, so
 this branch only ever applies to a burning engine.
 
-### 3. Fatal cause B — the gate is below Luminary's own burn-in.
+This was an *inconsistency between two models in this repo*, not a new
+assumption: `runner.rs`'s `SyntheticHoverModel` (the Spike-B 1-D truth) has
+always clamped to `DPS_MIN_N` at zero command, with a test named
+`ignition_at_zero_command_holds_minimum_dps_thrust` whose comment cites the
+same free-fall-through-the-burn-in failure (*"spike-B iter 6: −42 m/s by
+MM66"*). The 6-DoF `forces.rs` model simply never got the same treatment.
+
+### 3. Cause B — the gate is below Luminary's own burn-in. (Tunable.)
 
 MM stayed **`63` for the entire descent**. `66` first appears at
 t = 369.41 s = **TIG + 26.6 s**, i.e. 1.8 s *after* the vehicle had already
-hit the ground at TIG + 24.8 s.
+hit the ground at TIG + 24.8 s (0.6 s after, in run 3).
 
-This is not slow scripting. `P63ZOOM`/`P40ZOOMA` issue `PHASCHNG OCT 3`,
-killing guidance group 3 for the whole ZOOMTIME delay (`ZOOMTIME = 2600 cs
-= 26 s`, `P40-P47.agc`), so GUILDENSTERN — the only thing that can move an
-active landing program to P66 — cannot run until TIG+26 s no matter when we
-flip ATT HOLD. The choreography flips it at TIG+2 s and then simply waits.
+This is not slow scripting, and the mechanism is **`AVEGEXIT`, not
+`PHASCHNG`**. P63TABLE's `AVEGEXIT` entry is `2CADR SERVEXIT`
+(`BURN,_BABY,_BURN:143-144`); only `P63ZOOM` swaps it to `LUNLAND`
+(`:573-575`, via `LUNLANAD`) at the end of the ZOOMTIME delay
+(`ZOOMTIME = 2600 cs = 26 s`). GUILDENSTERN is R13, sitting immediately
+after `LUNLAND` (`LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:127-144`), so the
+only thing that can move an active landing program to P66 cannot run until
+that swap happens. The choreography flips ATT HOLD at TIG+2 s and then
+simply waits.
+
+(`P40ZOOMA`'s `PHASCHNG OCT 3` is restart-table bookkeeping that tears down
+the ZOOM restart entry at the *end* of `P63ZOOM`; `LUNLAND` immediately
+re-establishes group 3 with `PHASCHNG OCT 05023`. An earlier draft of this
+note blamed it. It is not the gate.)
 
 Consequence: **P66 never flew.** Every "closed-loop P66 landing" claim in
-the repo describes a phase the acceptance run has never reached. A 500 m
-gate gives 24.8 s of free fall, or ~29.8 s at the (now correct) 10 % idle
-stop — either way less than the 26 s burn-in plus any useful P66 time.
+the repo describes a phase the acceptance run has never reached.
 
-### 4. Fatal cause C — there is no navigation loop closure.
+**This one is a scenario fix, not a redesign.** The repo already knew:
+`tests/live_spike_p66.rs:23-26` starts its truth at **3000 m** with the
+comment *"High enough to survive the ~26 s ZOOMTIME trim phase at the DPS
+idle stop (~450 m of altitude) before P66 can take over."* The acceptance
+scenario's `alt_m = 500.0` simply ignored that known reason. Arithmetic at
+9159 kg: idle net accel = 4560/9159 − 1.62 = **−1.12 m/s²**, so the burn-in
+costs **379 m** and gains **29 m/s**, and arresting 29 m/s at FTP
+(42 500 N ⇒ +3.02 m/s² net) needs a further **~140 m**. A gate around
+**1000 m** clears B with margin; 3000 m clears it comfortably. One line in
+`scenarios/p66-gate.toml`.
+
+### 4. Cause C — no navigation loop closure. (The real blocker.)
 
 `padload::generate_state` pad-loads the **historical PDI state**: r ≈
 1752.6 km (15.2 km altitude), |v| = 1699.5 m/s. That is required for
@@ -154,6 +193,15 @@ altitude rate (`VDGVERT` is seeded from `HDOTDISP` at `STARTP66`, and ROD
 clicks move it from there), so even a perfect actuator model and an
 arbitrarily high gate cannot produce a soft landing while the pad-loaded
 state vector describes a different vehicle 15 km away doing 1700 m/s.
+
+And the attitude compounds it. **P66 holds attitude; it does not
+re-orient.** Whatever the vehicle is pointing at when GUILDENSTERN switches
+it is what it keeps pointing at. What it is pointing at is the ignition
+attitude `IGNALG` computed for a 1700 m/s braking burn — measured at
+**107-108° from local vertical** in both runs, i.e. the DPS aimed almost
+horizontally, with a *downward* thrust component. Raising the gate buys
+time to arrive in P66 sideways. That, not gate altitude, is why no tuning
+saves the acceptance.
 
 ## Fix attempts
 
@@ -178,9 +226,13 @@ nothing more:
 
 - Thrust is now live from ignition: 1293 N on the first frame (the `DPS_TAU`
   ramp), then a flat **4560 N = `DPS_MIN_N`** for the whole descent.
-- `ch055` POUT rose 310 → **751**: with a real acceleration to measure, the
-  AGC's `FP`/`PIF` loop now actually trims the actuator instead of sitting
-  at a dead stop.
+- `ch055` POUT rose 310 → 751 — **but do not read that as the AGC trimming
+  against a real acceleration.** Every one of run 3's POUTs arrives at
+  t ≥ 368.799 s = TIG+26.0 s, i.e. at `FLATOUT` when ZOOMTIME ends, which
+  is *at/after ground contact*; the sim only keeps running for the
+  touchdown + 2 s tail. The difference between 310 and 751 is a longer
+  trace, not better control. (An earlier draft of this note claimed
+  otherwise.)
 - Descent stretched 24.80 s → **26.00 s**, and MM66 still lands at
   **TIG+26.6 s** — the vehicle now misses P66 by 0.6 s instead of 1.8 s.
 - `v_horiz` jumped 0.003 → **10.74 m/s** and `v_vert` rose 40.30 → 41.52.
@@ -196,9 +248,12 @@ acceptance green on its own: causes B and C are untouched and both are fatal
 by themselves.
 
 **Attempt 2 — none.** Stopped deliberately, short of the 3-attempt budget.
-Causes B and C are not tunable constants; see "For the next engineer". A
-third live shot in the dark would have cost 7 minutes and told us nothing
-the V06N63 readout above has not already settled.
+Cause C is not a tunable constant and cause B, though it *is* a one-line
+scenario change (raise `alt_m`), only buys the run enough life to arrive in
+P66 sideways at the wrong rate — so no combination available in the
+remaining budget could have turned the acceptance green, and each attempt
+cost 7 minutes of flight. See "For the next engineer" for the order to do
+them in.
 
 ## Incidental finding: `p66-gate-fast` could not ignite
 
@@ -216,8 +271,9 @@ AWAY*; set by `INTEGRATION_INITIALIZATION.agc:1029`). The scenario's
 `tland_offset_cs = 24000` (240 s) does not leave BURNBABY its 45 s pre-TIG
 margin once the pad-load, flag-set and P63 dialog have run on this host —
 the very risk its own comment flagged. Raised to **30000** (300 s), which
-keeps most of the debug-iteration saving against the acceptance gate's
-36000 and stays ~105 s clear of the failure point. The debug loop is only
+splits the two measured points evenly: 60 s saved against the acceptance
+gate's 36000 (known good), 60 s of clearance above 24000 (known bad). Not
+flown — if 01703 reappears, fall back to 36000. The debug loop is only
 useful if it ignites.
 
 ## Incidental bug found and fixed
@@ -232,9 +288,27 @@ error: `cargo run` could not determine which binary to run.
 ```
 
 Fixed by adding `default-run = "eagle-runtime"` to
-`runtime/apps/eagle-runtime/Cargo.toml`. This has been broken since
-`descent_probe` landed (Task 7), which means the "run it and watch the ENGR
-tab" workflow in README/CLAUDE.md has never worked as written.
+`runtime/apps/eagle-runtime/Cargo.toml`. Broken since the SECOND binary
+landed, which was `padload_gen` in `ef728d99` (Wave-1 **Task 5**) — not
+`descent_probe` (`7a01841b`, Task 6), as an earlier draft of this note
+said. Either way the "run it and watch the ENGR tab" workflow in
+README/CLAUDE.md has never worked as written.
+
+## Incidental fix: the telemetry could not see cause C
+
+`sim.rs`'s `parse_agc_nav` accepted **only V06N60**. N60 is P66's own
+display, and this run never reaches P66 — so `agc_hdot_ms` and
+`nav_err_hdot_ms` were `null` in **every frame of both telemetry dumps**,
+and the single most important measurement in this whole investigation (the
+AGC believing it was climbing) had to be recovered by hand-decoding the
+ch010 relay stream after the fact.
+
+N63's R2 is the same HDOTDISP word — `docs/agc-channel-map.md` says so
+explicitly ("N63's R2 is also HDOTDISP", `PINBALL_NOUN_TABLES.agc:724-726`)
+— so `parse_agc_nav` now accepts N60 **and** N63, with a unit test
+(`agc_nav_parses_hdot_from_both_n60_and_n63`) pinning the scaling, the sign
+and the rejection of other displays. The next live run measures cause C
+automatically, in `nav_err_hdot_ms`, without a decoder.
 
 ## ENGR manual check (Wave-1 Task 15 Step 6)
 
@@ -248,9 +322,24 @@ Step 6 is deliberately left unchecked.
 
 ## For the next engineer
 
-The premise of the Wave 1 gate — *pad-load the historical PDI state so
-BURNBABY ignites, then jump straight to P66 at a 500 m hover* — is
-unsound, for the two independent reasons above. Ranked options:
+**Cause B is cheap; cause C is the one that needs design work.** An earlier
+draft of this note called both design-level. That was wrong about B: raise
+`alt_m` in `scenarios/p66-gate.toml` from 500 to ~1000-3000 m and the
+vehicle survives the burn-in (see cause B's arithmetic, and
+`live_spike_p66.rs`, which already does exactly this at 3000 m). Do that
+first — it is one line and it makes every subsequent run actually reach
+P66, which is the only way to observe C directly.
+
+Then C bites, in two ways at once, and neither is tunable:
+
+- **Rate.** P66 holds the AGC's believed `HDOTDISP`, which is +7 m/s
+  climbing against a truth that is falling.
+- **Attitude.** P66 holds attitude and does not re-orient, so the vehicle
+  enters P66 carrying `IGNALG`'s 1700 m/s braking attitude — 107-108° from
+  vertical, DPS pointed sideways and slightly down.
+
+Both follow from the same root: the pad-loaded state vector and the sim
+truth describe different vehicles. Ranked options for fixing that:
 
 1. **Fly the real descent.** Initialise the sim truth to the same PDI state
    `generate_state` pad-loads (15.2 km, 1699.5 m/s) and let P63 → P64 → P66
@@ -264,9 +353,11 @@ unsound, for the two independent reasons above. Ranked options:
    need `IGNALG` to converge on an orbital ignition point. Cheaper, but it
    means the run no longer exercises the historical P63 entry, and
    GUILDENSTERN still only switches an *active* landing program.
-3. **Whatever the choice, the gate must clear the 26 s ZOOMTIME burn-in**
-   with margin: at the 10 % idle stop the vehicle loses ≈382 m and gains
-   ≈29 m/s before the first guidance pass can possibly run.
+3. **Independently of the choice, raise the gate** so it clears the 26 s
+   ZOOMTIME burn-in with margin: at the idle stop the vehicle loses ≈379 m
+   and gains ≈29 m/s before the first guidance pass can run, plus ≈140 m to
+   arrest that at FTP. Do this one first; it is free and it unblocks
+   measurement of everything else.
 
 Do not spend more time on the attitude loop. It works.
 
