@@ -91,6 +91,15 @@ UI開発用の架空DBは任意pathへ生成できます。`--db-path`は必須�
 uv run --no-sync python health/scripts/seed_demo.py --db-path /tmp/health-demo.duckdb
 ```
 
+DuckDBの中身をファイルへ書き出すこともできます。出力先は`0700`、ファイルは`0600`で作成されます。
+
+```bash
+uv run --no-sync python health/scripts/export_data.py \
+  --db-path health/data/health.duckdb --out-dir /tmp/health-export --format parquet
+```
+
+**出力は実際のprivate health dataです。共有・commitしないでください。**
+
 ## 自動テスト
 
 live APIを呼ばず、fixtureとfake HTTPだけで検証します。
