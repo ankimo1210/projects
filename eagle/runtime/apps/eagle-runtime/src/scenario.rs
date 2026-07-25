@@ -219,6 +219,16 @@ mod tests {
     }
 
     #[test]
+    fn loads_fast_debug_scenario() {
+        let s = Scenario::load(&repo().join("scenarios/p66-gate-fast.toml")).unwrap();
+        assert_eq!(s.name, "p66-gate-fast");
+        assert!(
+            s.agc.tland_offset_cs < 36_000,
+            "fast scenario must shorten the TIG lead"
+        );
+    }
+
+    #[test]
     fn initial_state_geometry() {
         let s = Scenario::load(&repo().join("scenarios/p66-gate.toml")).unwrap();
         let st = s.initial_state(1234.0);

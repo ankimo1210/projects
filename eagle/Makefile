@@ -1,4 +1,4 @@
-.PHONY: vendor agc-tools agc test test-integration dev descent-p66 lint
+.PHONY: vendor agc-tools agc test test-integration dev descent-p66 descent-p66-fast lint
 
 vendor:
 	bash scripts/fetch-vendor.sh
@@ -32,6 +32,12 @@ descent-p66: agc
 	cd runtime && cargo run -p eagle-runtime -- \
 	  --yaagc ../build/agc/yaAGC --core ../build/agc/Luminary099.bin \
 	  --scenario ../scenarios/p66-gate.toml --root ..
+
+# Debug iteration: same closed loop, ~2 min shorter TIG lead.
+descent-p66-fast: agc
+	cd runtime && cargo run -p eagle-runtime -- \
+	  --yaagc ../build/agc/yaAGC --core ../build/agc/Luminary099.bin \
+	  --scenario ../scenarios/p66-gate-fast.toml --root ..
 
 lint:
 	cd runtime && cargo clippy --workspace --all-targets -- -D warnings

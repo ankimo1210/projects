@@ -947,7 +947,7 @@ pub async fn run_scenario(
     let state = PadloadManifest {
         word: generate_state(&StateCfg {
             epoch_now_cs: epoch_cs,
-            burn_lead_cs: 36_000.0,
+            burn_lead_cs: sc.agc.tland_offset_cs as f64,
             ..StateCfg::default()
         }),
     };

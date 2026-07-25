@@ -21,7 +21,7 @@ inertia_kgm2 = [12000.0, 13500.0, 13000.0]
 [agc]
 padload = "scenarios/p66-padload.toml"
 lm_weight_lbs = 20200.0
-tland_offset_cs = 12000
+tland_offset_cs = 36000            # derived: matches the burn lead run_scenario previously hardcoded (TIG ≈ clock-read + 360 s; ENGINE ON ~350 s after boot)
 flip_atthold_after_engine_on_s = 2.0
 
 [rod]

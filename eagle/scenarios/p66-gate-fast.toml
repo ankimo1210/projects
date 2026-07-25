@@ -1,5 +1,7 @@
 schema = 1
-name = "p66-gate"
+name = "p66-gate-fast"
+# Debug-iteration variant of p66-gate: shorter TIG lead only. NOT the
+# acceptance gate — use p66-gate.toml for acceptance runs.
 
 [site]
 lat_deg = 0.674          # Tranquility Base; historical
@@ -17,7 +19,7 @@ inertia_kgm2 = [12000.0, 13500.0, 13000.0]  # assumed (order-of-magnitude from L
 [agc]
 padload = "scenarios/p66-padload.toml"
 lm_weight_lbs = 20200.0            # derived: (7009+2000+150) kg ≈ 20190 lbs → V48/N47
-tland_offset_cs = 36000            # derived: matches the burn lead run_scenario previously hardcoded (TIG ≈ clock-read + 360 s; ENGINE ON ~350 s after boot)
+tland_offset_cs = 24000            # assumed: StateCfg default burn lead; if too tight BURNBABY slips TIG (+29.9 s, BURN,_BABY,_BURN:64) — debug only
 flip_atthold_after_engine_on_s = 2.0   # spike-B calibrated
 
 [rod]
