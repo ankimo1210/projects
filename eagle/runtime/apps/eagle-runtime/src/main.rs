@@ -50,10 +50,12 @@ async fn main() -> anyhow::Result<()> {
     let _keep = dsky_rx;
     let mut trace = TraceWriter::open(args.trace_out.clone())?;
 
+    let (rod_click_tx, rod_click_rx) = mpsc::unbounded_channel::<i32>();
     let app = AppState {
         state_rx: state_tx.clone(),
         agc_tx: agc_tx.clone(),
         latest: latest.clone(),
+        rod_click_tx: args.scenario.is_some().then_some(rod_click_tx),
     };
     let listener = tokio::net::TcpListener::bind(("127.0.0.1", args.ws_port)).await?;
     tokio::spawn(async move {
@@ -71,9 +73,14 @@ async fn main() -> anyhow::Result<()> {
             state_tx: state_tx.clone(),
             latest: latest.clone(),
             trace_out: args.trace_out.clone(),
+            client_rx: agc_rx,
+            client_rod_rx: rod_click_rx,
         })
         .await;
     }
+    // Phase-1 DSKY-only loop below: `agc_rx` wasn't moved (the scenario arm
+    // above returned first), and this loop has no client ROD-click source.
+    let _ = rod_click_rx;
 
     let mut sigterm = signal(SignalKind::terminate())?;
     let mut dsky = DskyState::default();

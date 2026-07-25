@@ -2,6 +2,7 @@
 //! `headless::run_headless` that also feeds the WebSocket server's
 //! broadcast (telemetry + DSKY JSON already ride `state_tx`).
 use anyhow::{Context, Result};
+use eagle_agc_protocol::Packet;
 use eagle_runtime::agc_session::AgcSession;
 use eagle_runtime::headless::{run_headless, touchdown_class, HeadlessCfg};
 use eagle_runtime::padload::{PadloadManifest, SymTab};
@@ -18,6 +19,10 @@ pub struct Cfg {
     pub state_tx: broadcast::Sender<String>,
     pub latest: Arc<Mutex<String>>,
     pub trace_out: Option<PathBuf>,
+    /// Client → AGC packets from the WebSocket server (web DSKY key presses).
+    pub client_rx: tokio::sync::mpsc::UnboundedReceiver<Packet>,
+    /// Client ROD clicks (+1 = slow descent) from the ENGR tab.
+    pub client_rod_rx: tokio::sync::mpsc::UnboundedReceiver<i32>,
 }
 
 pub async fn run(cfg: Cfg) -> Result<()> {
@@ -37,6 +42,8 @@ pub async fn run(cfg: Cfg) -> Result<()> {
         telem_tx: cfg.state_tx,
         latest: Some(cfg.latest),
         trace_out: cfg.trace_out,
+        client_rx: Some(cfg.client_rx),
+        client_rod_rx: Some(cfg.client_rod_rx),
     })
     .await?;
 
