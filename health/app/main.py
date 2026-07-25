@@ -46,6 +46,7 @@ def main() -> None:
     from views.activity_view import activity_page
     from views.body_view import body_page
     from views.heart_view import heart_page
+    from views.insights_view import insights_page
     from views.inventory_view import inventory_page
     from views.overview_view import overview_page
     from views.sleep_view import sleep_page
@@ -55,6 +56,7 @@ def main() -> None:
         {
             "ダッシュボード": [
                 st.Page(overview_page, title="概要", icon="🏠", default=True),
+                st.Page(insights_page, title="気づき", icon="💡"),
                 st.Page(sleep_page, title="睡眠", icon="😴"),
                 st.Page(activity_page, title="活動", icon="👟"),
                 st.Page(heart_page, title="心拍", icon="❤️"),

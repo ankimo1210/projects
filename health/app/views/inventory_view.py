@@ -11,7 +11,7 @@ def inventory_page() -> None:
     st.subheader("公開データ型")
     st.caption("Google Health が公開するデータ型と、このアプリの実装状況")
     st.dataframe(
-        build_inventory(store),
+        build_inventory(),
         width="stretch",
         hide_index=True,
         height=420,
@@ -43,8 +43,17 @@ def inventory_page() -> None:
             "last_date": st.column_config.DateColumn("最終日"),
             "last_synced": st.column_config.DateColumn("最終同期日"),
             "status": st.column_config.TextColumn("状態"),
+            "backfilled_from": st.column_config.DateColumn("履歴開始日"),
             "n_raw_pages": st.column_config.NumberColumn("rawページ数"),
             "raw_first_range": st.column_config.DateColumn("raw範囲開始"),
             "raw_last_range": st.column_config.DateColumn("raw範囲終了"),
         },
+    )
+    st.subheader("エクスポート")
+    st.caption("表示中の棚卸し表をCSVとして保存します（実データを含みます。取り扱いに注意）。")
+    st.download_button(
+        "保存系列をCSVでダウンロード",
+        series.to_csv(index=False).encode("utf-8-sig"),
+        file_name="health_series_inventory.csv",
+        mime="text/csv",
     )

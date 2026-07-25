@@ -27,6 +27,7 @@ STORED_COLUMNS = [
     "last_date",
     "last_synced",
     "status",
+    "backfilled_from",
     "n_raw_pages",
     "raw_first_range",
     "raw_last_range",
@@ -34,13 +35,11 @@ STORED_COLUMNS = [
 
 
 def build_inventory(
-    store: Store,
     catalog: Sequence[Metric] = CATALOG,
     known_data_types: dict[str, tuple[str, str]] = KNOWN_DATA_TYPES,
 ) -> pd.DataFrame:
     """Return every published data type, whether or not the app implements it."""
 
-    del store  # kept in the interface so both inventory builders share a caller
     by_type: dict[str, list[Metric]] = {}
     for metric in catalog:
         by_type.setdefault(metric.data_type, []).append(metric)
@@ -112,6 +111,7 @@ def _series_row(metric, series, storage, stats, raw, states):
         "last_date": _value(stats, series, "last_date"),
         "last_synced": _value(states, metric.name, "last_synced_date"),
         "status": _value(states, metric.name, "status"),
+        "backfilled_from": _value(states, metric.name, "backfilled_from"),
         "n_raw_pages": int(_value(raw, metric.name, "n_pages", 0)),
         "raw_first_range": _value(raw, metric.name, "first_range_start"),
         "raw_last_range": _value(raw, metric.name, "last_range_end"),

@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
+import os
 from collections.abc import Sequence
+from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
@@ -11,6 +13,7 @@ import duckdb
 import pandas as pd
 
 from health.endpoints import Metric, ParsedRows
+from health.privacy import ensure_private_dir
 
 SYNC_OK = "ok"
 SYNC_IN_PROGRESS = "in_progress"
@@ -30,8 +33,30 @@ CREATE TABLE IF NOT EXISTS intraday(
     metric VARCHAR, ts TIMESTAMP, value DOUBLE, PRIMARY KEY(metric, ts));
 CREATE TABLE IF NOT EXISTS sync_state(
     metric VARCHAR PRIMARY KEY, last_synced_date DATE, status VARCHAR,
-    updated_at TIMESTAMP);
+    updated_at TIMESTAMP, backfilled_from DATE);
 """
+
+# Applied after _SCHEMA on every open. Each statement must be idempotent: an
+# existing database predates the column, a fresh one already has it.
+_MIGRATIONS = [
+    "ALTER TABLE sync_state ADD COLUMN IF NOT EXISTS backfilled_from DATE",
+]
+
+_SEED_BACKFILL_FROM_RAW = """
+UPDATE sync_state SET backfilled_from = (
+    SELECT min(range_start) FROM raw_json WHERE raw_json.metric = sync_state.metric)
+WHERE backfilled_from IS NULL
+"""
+
+
+@dataclass(frozen=True)
+class SyncCheckpoint:
+    """Both ends of what a metric has covered, plus the forward-pass status."""
+
+    last_synced: date
+    status: str
+    backfilled_from: date | None
+
 
 _SLEEP_COLS = [
     "provider_id",
@@ -50,13 +75,35 @@ _SLEEP_COLS = [
 
 class Store:
     def __init__(self, db_path: str | Path):
-        Path(db_path).parent.mkdir(parents=True, exist_ok=True)
-        self.con = duckdb.connect(str(db_path))
+        path = Path(db_path)
+        ensure_private_dir(path.parent)
+        self.path = path
+        self.con = duckdb.connect(str(path))
         for stmt in _SCHEMA.strip().split(";"):
             if stmt.strip():
                 self.con.execute(stmt)
+        for stmt in _MIGRATIONS:
+            self.con.execute(stmt)
+        self.con.execute(_SEED_BACKFILL_FROM_RAW)
+        self._restrict_permissions(path)
+
+    @staticmethod
+    def _restrict_permissions(path: Path) -> None:
+        """DuckDB creates its files with the process umask (0644 in practice).
+        The database and its write-ahead log hold the health history itself, so
+        both are narrowed to owner-only as soon as they exist."""
+        for candidate in (path, path.with_name(path.name + ".wal")):
+            if candidate.exists():
+                os.chmod(candidate, 0o600)
+
+    def checkpoint(self) -> None:
+        """Fold the write-ahead log back into the database file. Streamlit keeps
+        one cached connection for the whole process, so without an explicit
+        checkpoint a killed app leaves the entire recent history in a .wal."""
+        self.con.execute("CHECKPOINT")
 
     def close(self) -> None:
+        self.checkpoint()
         self.con.close()
 
     # -- low-level writes (seed script / legacy tests; sync engine uses
@@ -97,12 +144,48 @@ class Store:
         payloads: Sequence[dict],
         rows: ParsedRows,
         *,
-        status: str = SYNC_OK,
+        status: str | None = SYNC_OK,
+        watermark: date | None = None,
+        covered_start: date | None = None,
+        covered_end: date | None = None,
+        backfill_from: date | None = None,
     ) -> None:
         """Atomically replace one (metric, start, end) chunk: old raw pages,
-        old typed rows in range, and the watermark all move together so a
-        stale page, an upstream deletion, or a mid-parse failure never leaves
-        raw/typed/watermark inconsistent with each other."""
+        old typed rows in the covered range, and the watermark all move
+        together so a stale page, an upstream deletion, or a mid-parse
+        failure never leaves raw/typed/watermark inconsistent with each
+        other.
+
+        `start`/`end` are the chunk key: raw_json's identity, and what makes
+        a re-fetch of the same calendar days replace the same row instead of
+        adding an overlapping one. `covered_start`/`covered_end` (default:
+        same as `start`/`end`) are the days this call actually re-fetched --
+        an aligned chunk key can span more days than the clipped request
+        range -- and bound the typed-row deletes: rows for chunk-key days
+        outside the covered range must survive, because nothing in this call
+        fetched them and would restore them.
+
+        `status` and `watermark` default to "leave this column unchanged" via
+        `None`, which is how a backward history chunk (`SyncEngine._history_pass`
+        passes `status=None, watermark=None`) advances `backfilled_from`
+        without moving the forward watermark or its status -- a history chunk
+        says nothing about how current the metric is. `backfill_from` is not
+        part of that None-means-unchanged contract: it only ever extends
+        `backfilled_from` backwards (`least(existing, backfill_from)`), so
+        passing `None` there falls back to `start`, not to "unchanged".
+
+        Caution: `None` for `watermark` only means "unchanged" when a row for
+        this metric already exists. The very first write for a metric has
+        nothing for `coalesce()` to fall back to, so the INSERT's VALUES()
+        slot uses `end` instead -- a first-ever call with `watermark=None`
+        would fabricate a forward watermark from wherever the chunk happens
+        to end, even for a chunk meant to move `backfilled_from` only. This is
+        why `SyncEngine._next_history_chunk` returns `None` (no chunk to fetch)
+        until a checkpoint already exists for the metric: the history pass
+        must never be a metric's first `replace_chunk` call.
+        """
+        covered_start = start if covered_start is None else covered_start
+        covered_end = end if covered_end is None else covered_end
         series = list(metric.series_names)
         series_ph = ", ".join("?" * len(series))
         con = self.con
@@ -132,17 +215,20 @@ class Store:
                 con.execute(
                     f"DELETE FROM daily_series WHERE metric IN ({series_ph}) "
                     "AND date BETWEEN ? AND ?",
-                    [*series, start, end],
+                    [*series, covered_start, covered_end],
                 )
             else:
                 con.execute(
                     f"DELETE FROM intraday WHERE metric IN ({series_ph}) "
                     "AND CAST(ts AS DATE) BETWEEN ? AND ?",
-                    [*series, start, end],
+                    [*series, covered_start, covered_end],
                 )
             # 4. sleep sessions are keyed by wake date, not series name
             if metric.name == "sleep":
-                con.execute("DELETE FROM sleep_sessions WHERE date BETWEEN ? AND ?", [start, end])
+                con.execute(
+                    "DELETE FROM sleep_sessions WHERE date BETWEEN ? AND ?",
+                    [covered_start, covered_end],
+                )
             # 5. insert the freshly parsed typed rows, same table restriction as above
             if metric.full_history and rows.daily:
                 con.executemany("INSERT INTO daily_series VALUES (?, ?, ?)", list(rows.daily))
@@ -154,12 +240,41 @@ class Store:
                         f"INSERT INTO sleep_sessions VALUES ({', '.join('?' * len(_SLEEP_COLS))})",
                         [r[c] for c in _SLEEP_COLS],
                     )
-            # 6. advance the watermark
+            # 6. move the covered range. A None watermark or status means
+            # "leave unchanged", which is how a backward history chunk keeps
+            # the forward watermark and status intact (Task 7 passes
+            # watermark=None for those). A forward chunk always writes the
+            # day it actually reached, so an interrupted run resumes exactly
+            # where it stopped rather than skipping the days it had not
+            # reached. backfilled_from only ever extends backwards.
+            #
+            # last_synced_date needs two different bound values: the VALUES()
+            # slot (also read back as `excluded.last_synced_date`) falls back
+            # to `end` so a brand-new row -- one with no existing watermark
+            # for `coalesce` to fall back to -- still gets a real date; the
+            # dedicated raw parameter in the UPDATE clause carries `watermark`
+            # untouched, so an existing row sees a genuine SQL NULL (not
+            # `end`) when the caller means "leave it alone", instead of
+            # relying on a value comparison (greatest()) that would also
+            # block a legitimate trailing-refetch chunk from moving the
+            # watermark backward through the overlap window it is re-walking.
             con.execute(
-                "INSERT INTO sync_state VALUES (?, ?, ?, now()) "
-                "ON CONFLICT DO UPDATE SET last_synced_date = excluded.last_synced_date, "
-                "status = excluded.status, updated_at = excluded.updated_at",
-                [metric.name, end, status],
+                "INSERT INTO sync_state (metric, last_synced_date, status, updated_at, "
+                "backfilled_from) VALUES (?, ?, ?, now(), ?) "
+                "ON CONFLICT DO UPDATE SET last_synced_date = "
+                "  coalesce(?, sync_state.last_synced_date), "
+                "status = coalesce(excluded.status, sync_state.status), "
+                "updated_at = excluded.updated_at, "
+                "backfilled_from = least("
+                "  coalesce(sync_state.backfilled_from, excluded.backfilled_from), "
+                "  coalesce(excluded.backfilled_from, sync_state.backfilled_from))",
+                [
+                    metric.name,
+                    end if watermark is None else watermark,
+                    status,
+                    start if backfill_from is None else backfill_from,
+                    watermark,
+                ],
             )
             con.execute("COMMIT")
         except Exception:
@@ -169,23 +284,26 @@ class Store:
     # -- sync state --------------------------------------------------------
     def get_sync_state(self, metric: str) -> date | None:
         checkpoint = self.get_sync_checkpoint(metric)
-        return checkpoint[0] if checkpoint else None
+        return checkpoint.last_synced if checkpoint else None
 
-    def get_sync_checkpoint(self, metric: str) -> tuple[date, str] | None:
+    def get_sync_checkpoint(self, metric: str) -> SyncCheckpoint | None:
         row = self.con.execute(
-            "SELECT last_synced_date, status FROM sync_state WHERE metric = ?", [metric]
+            "SELECT last_synced_date, status, backfilled_from FROM sync_state WHERE metric = ?",
+            [metric],
         ).fetchone()
-        return (row[0], row[1]) if row else None
+        return SyncCheckpoint(row[0], row[1], row[2]) if row else None
 
     def set_sync_state(self, metric: str, last_synced: date, status: str = SYNC_OK) -> None:
         self.con.execute(
-            "INSERT OR REPLACE INTO sync_state VALUES (?, ?, ?, now())",
+            "INSERT OR REPLACE INTO sync_state (metric, last_synced_date, status, updated_at) "
+            "VALUES (?, ?, ?, now())",
             [metric, last_synced, status],
         )
 
     def sync_states(self) -> pd.DataFrame:
         return self.con.execute(
-            "SELECT metric, last_synced_date, status FROM sync_state ORDER BY metric"
+            "SELECT metric, last_synced_date, status, backfilled_from FROM sync_state "
+            "ORDER BY metric"
         ).df()
 
     # -- reads -------------------------------------------------------------

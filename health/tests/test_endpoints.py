@@ -3,7 +3,7 @@ Google Health catalog, and the typed parsers for all 14 catalog entries
 (Task 5)."""
 
 import json
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from itertools import pairwise
 from pathlib import Path
 
@@ -16,6 +16,7 @@ from health.endpoints import (
     Metric,
     ParsedRows,
     PayloadError,
+    aligned_chunk,
     chunk_ranges,
     civil_midnight,
     closed_open_filter,
@@ -93,28 +94,49 @@ def test_closed_open_filter_single_day():
 # -- chunk_ranges ---------------------------------------------------------------
 
 
-def test_chunk_ranges_no_gap_or_overlap():
+def test_chunk_ranges_are_calendar_aligned_regardless_of_start():
+    # Both spans touch the same calendar days, so they must produce the same keys.
+    from_first = chunk_ranges(date(2026, 1, 1), date(2026, 1, 10), 4)
+    from_middle = chunk_ranges(date(2026, 1, 3), date(2026, 1, 10), 4)
+    assert from_first == from_middle
+    for start, end in from_first:
+        assert (end - start).days == 3
+
+
+def test_chunk_ranges_cover_the_span_without_gap_or_overlap():
     out = chunk_ranges(date(2026, 1, 1), date(2026, 1, 10), 4)
-    assert out == [
-        (date(2026, 1, 1), date(2026, 1, 4)),
-        (date(2026, 1, 5), date(2026, 1, 8)),
-        (date(2026, 1, 9), date(2026, 1, 10)),
-    ]
-    # contiguous: each chunk's start is the day after the previous chunk's end
+    assert out[0][0] <= date(2026, 1, 1)
+    assert out[-1][1] >= date(2026, 1, 10)
     for (_, prev_end), (next_start, _) in pairwise(out):
         assert next_start == date.fromordinal(prev_end.toordinal() + 1)
 
 
-def test_chunk_ranges_single_day():
-    assert chunk_ranges(date(2026, 1, 1), date(2026, 1, 1), 30) == [
-        (date(2026, 1, 1), date(2026, 1, 1))
-    ]
+def test_aligned_chunk_is_identical_for_every_day_inside_it():
+    start, end = aligned_chunk(date(2026, 1, 1), 90)
+    assert start <= date(2026, 1, 1) <= end
+    assert (end - start).days == 89
+    day = start
+    while day <= end:
+        assert aligned_chunk(day, 90) == (start, end)
+        day += timedelta(days=1)
+
+
+def test_chunk_ranges_single_day_returns_the_containing_chunk():
+    out = chunk_ranges(date(2026, 1, 1), date(2026, 1, 1), 30)
+    assert len(out) == 1
+    assert out[0][0] <= date(2026, 1, 1) <= out[0][1]
 
 
 @pytest.mark.parametrize("max_days", [0, -1])
 def test_chunk_ranges_invalid_max_days_raises(max_days):
     with pytest.raises(ValueError):
         chunk_ranges(date(2026, 1, 1), date(2026, 1, 10), max_days)
+
+
+@pytest.mark.parametrize("max_days", [0, -1])
+def test_aligned_chunk_invalid_max_days_raises(max_days):
+    with pytest.raises(ValueError):
+        aligned_chunk(date(2026, 1, 1), max_days)
 
 
 # -- response_points ------------------------------------------------------------
