@@ -24,8 +24,9 @@ lm_weight_lbs = 20200.0            # derived: (7009+2000+150) kg ≈ 20190 lbs �
 # pre-TIG margin BURNBABY requires, and the run aborts with FAILREG 01703
 # ("IGNITION TIME SLIPPED", P40-P47.agc:101) during P63 entry, before
 # ENGINE ON. 36000 (the acceptance gate) completes with room to spare, so
-# 30000 keeps ~60 s of the debug-iteration saving while staying ~105 s
-# clear of the observed failure point. See
+# 30000 splits the difference: 60 s saved against the acceptance gate,
+# 60 s of clearance above the measured 24000 failure. Untested live — if
+# 01703 reappears, fall back to 36000. See
 # docs/superpowers/notes/2026-07-25-wave1-reflight.md (run 2).
 tland_offset_cs = 30000            # derived from the 01703 measurement above — debug only
 flip_atthold_after_engine_on_s = 2.0   # spike-B calibrated

@@ -153,10 +153,10 @@ pub const JET_TABLE: [Jet; 16] = [
 /// The lower branch is the engine's IDLE STOP, not zero. The actuator's
 /// zero position is ~10 % thrust, and Luminary parks it there deliberately:
 /// `ENGINOF3` drives the THRUST counter to the zero stop as its
-/// pre-engine-arm step (`P40-P47.agc:490-494`), and the landing-guidance
-/// group stays suspended for the whole ZOOMTIME trim phase (2600 cs =
-/// 26 s, `P63ZOOM`/`P40ZOOMA` `PHASCHNG OCT 3`), so the first ~26 s of
-/// every ignition run at minimum throttle with no further POUT traffic.
+/// pre-engine-arm step (`P40-P47.agc:490-494`), and nothing throttles up
+/// until `P63ZOOM` runs `FLATOUT` at the end of the ZOOMTIME trim phase
+/// (2600 cs = 26 s), so the first ~26 s of every ignition run sits at
+/// minimum throttle with no POUT traffic at all.
 /// `docs/agc-channel-map.md` ("Thrust Pulse Emissions") states the same
 /// thing: "a model that maps command 0 to zero thrust free-falls through
 /// the burn-in". It did — the 2026-07-25 re-flight measured exactly

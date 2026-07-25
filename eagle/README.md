@@ -7,11 +7,14 @@ As of Phase 2 Wave 1 the loop is closed end to end — PIPA/CDU sensors feed the
 > **Wave 1 acceptance is RED — the landing is not soft, and P66 is not reached.**
 > The last measured run (2026-07-25) crashes at 41.5 m/s vertical / 10.7 m/s
 > horizontal after 26.0 s, and the AGC only leaves P63 for MM66 at TIG+26.6 s
-> — *after* ground contact — because Luminary suspends the landing-guidance
-> group for the 26 s ZOOMTIME burn-in. The attitude loop is healthy (it slews
-> and captures cleanly); the blockers are the gate geometry and the fact that
-> the pad-loaded AGC state vector is the historical 15 km / 1700 m/s PDI point
-> rather than the sim's 500 m hover, so nothing closes the navigation loop.
+> — *after* ground contact — because P63's `AVEGEXIT` vector points at
+> `SERVEXIT` until `P63ZOOM` swaps it to `LUNLAND` at the end of the 26 s
+> ZOOMTIME, and GUILDENSTERN (the only path to P66) sits behind that swap.
+> The attitude loop is healthy (it slews and captures cleanly). Two blockers:
+> the 500 m gate is too low to survive the burn-in (a scenario fix), and the
+> vehicle would arrive in P66 carrying the braking attitude IGNALG computed
+> for a 1700 m/s burn, because the pad-loaded AGC state vector is the
+> historical 15 km / 1700 m/s PDI point rather than the sim's hover gate.
 > Full evidence, numbers and next steps:
 > [docs/superpowers/notes/2026-07-25-wave1-reflight.md](docs/superpowers/notes/2026-07-25-wave1-reflight.md).
 
