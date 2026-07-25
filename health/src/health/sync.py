@@ -81,6 +81,24 @@ class _RunFinished(Exception):  # noqa: N818 -- fixed name from the task interfa
     """Internal: the budget ran out or Google asked us to pause."""
 
 
+@dataclass
+class _RunState:
+    """Everything one `sync_all()` call threads through both passes.
+
+    `abandoned` is the set of metric names that already recorded a
+    `MetricFailure` earlier in this same run (recency pass or history pass).
+    `_history_pass` excludes them so a metric that failed on, say, its
+    second recency chunk -- which already left it a usable `backfilled_from`
+    -- is not attempted again in the history pass of the same run.
+    """
+
+    report: SyncReport
+    budget: RequestBudget
+    progress: dict[str, MetricProgress]
+    progress_cb: Callable[[str, str], None] | None
+    abandoned: set[str] = field(default_factory=set)
+
+
 class SyncEngine:
     def __init__(
         self,
@@ -172,29 +190,31 @@ class SyncEngine:
 
     def sync_all(self, progress_cb: Callable[[str, str], None] | None = None) -> SyncReport:
         report = SyncReport()
-        budget = RequestBudget(self.max_requests)
         progress = {m.name: MetricProgress(metric=m.name) for m in self.catalog}
         report.progress = list(progress.values())
+        state = _RunState(
+            report=report,
+            budget=RequestBudget(self.max_requests),
+            progress=progress,
+            progress_cb=progress_cb,
+        )
         try:
-            self._recent_pass(report, budget, progress, progress_cb)
-            self._history_pass(report, budget, progress, progress_cb)
+            self._recent_pass(state)
+            self._history_pass(state)
         except _RunFinished:
             pass
-        report.requests_made = budget.used
+        report.requests_made = state.budget.used
         report.history_remaining = {m.name: self.history_remaining(m) for m in self.catalog}
         return report
 
-    def _recent_pass(self, report, budget, progress, progress_cb) -> None:
+    def _recent_pass(self, state: _RunState) -> None:
         for metric in self.catalog:
             start = self._recent_start(metric)
             for chunk_start, chunk_end in chunk_ranges(start, self.today, metric.max_range_days):
                 status = SYNC_OK if chunk_end >= self.today else SYNC_IN_PROGRESS
                 if not self._guarded(
-                    report,
+                    state,
                     metric,
-                    budget,
-                    progress,
-                    progress_cb,
                     chunk_start,
                     chunk_end,
                     status=status,
@@ -202,10 +222,18 @@ class SyncEngine:
                 ):
                     break
             else:
-                progress[metric.name].done = True
+                state.progress[metric.name].done = True
 
-    def _history_pass(self, report, budget, progress, progress_cb) -> None:
-        pending = [m for m in self.catalog if self._next_history_chunk(m) is not None]
+    def _history_pass(self, state: _RunState) -> None:
+        # A metric already abandoned in the recency pass of this run (e.g. it
+        # failed on its second recency chunk, after the first already left it
+        # a usable backfilled_from) must not be retried here -- one failure
+        # abandons the metric for the whole run, not just the pass it failed in.
+        pending = [
+            m
+            for m in self.catalog
+            if m.name not in state.abandoned and self._next_history_chunk(m) is not None
+        ]
         while pending:
             next_round = []
             for metric in pending:
@@ -214,59 +242,46 @@ class SyncEngine:
                     continue
                 # status/watermark stay None: a history chunk says nothing about
                 # how current the metric is.
-                if not self._guarded(
-                    report,
-                    metric,
-                    budget,
-                    progress,
-                    progress_cb,
-                    *chunk,
-                    status=None,
-                    watermark=None,
-                ):
+                if not self._guarded(state, metric, *chunk, status=None, watermark=None):
                     continue
                 if self._next_history_chunk(metric) is not None:
                     next_round.append(metric)
             pending = next_round
 
     def _guarded(
-        self,
-        report,
-        metric,
-        budget,
-        progress,
-        progress_cb,
-        chunk_start,
-        chunk_end,
-        *,
-        status,
-        watermark,
+        self, state: _RunState, metric, chunk_start, chunk_end, *, status, watermark
     ) -> bool:
         """Fetch one chunk, translating each error into this run's policy.
         Returns False when this metric should stop; raises _RunFinished when
         the whole run should stop."""
         try:
             request_start, request_end = self._fetch_chunk(
-                metric, chunk_start, chunk_end, budget, status=status, watermark=watermark
+                metric, chunk_start, chunk_end, state.budget, status=status, watermark=watermark
             )
         except RateLimited as exc:
-            report.paused = True
-            report.resume_in_s = exc.retry_after_s
+            state.report.paused = True
+            state.report.resume_in_s = exc.retry_after_s
             raise _RunFinished from exc
         except RequestCapExceeded as exc:
-            report.stopped_early = True
+            state.report.stopped_early = True
             raise _RunFinished from exc
         except ApiError as exc:
             # One data type can be unavailable (403 for a scope never
             # granted, 404 for a device that produces nothing) without
             # saying anything about the next metric -- same isolation
             # rule probe.py already uses.
-            report.failures.append(MetricFailure(metric.name, "api", exc.status_code, exc.message))
+            state.report.failures.append(
+                MetricFailure(metric.name, "api", exc.status_code, exc.message)
+            )
+            state.abandoned.add(metric.name)
             return False
         except PayloadError as exc:
-            report.failures.append(MetricFailure(metric.name, "payload", None, exc.detail))
+            state.report.failures.append(MetricFailure(metric.name, "payload", None, exc.detail))
+            state.abandoned.add(metric.name)
             return False
-        progress[metric.name].fetched_ranges += 1
-        if progress_cb:
-            progress_cb(metric.name, f"{request_start} → {request_end} ({budget.used} requests)")
+        state.progress[metric.name].fetched_ranges += 1
+        if state.progress_cb:
+            state.progress_cb(
+                metric.name, f"{request_start} → {request_end} ({state.budget.used} requests)"
+            )
         return True
