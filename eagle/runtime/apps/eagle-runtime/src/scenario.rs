@@ -300,12 +300,23 @@ mod tests {
         let st = s.initial_state(0.0);
         // PDI point = TIG, NOT the geometric ignition point: pdi_truth_state
         // back-propagates the geometric FLATOUT state by ZOOMTIME (26 s)
-        // under gravity alone (THE_LUNAR_LANDING.agc:193-198,
-        // `TIG = TDEC1 - ZOOMTIME`), landing ~44.31 km uprange of it. Energy
-        // is conserved along that coast, so altitude/speed barely move from
-        // the geometric point's ~15.2 km / ~1704 m/s despite the along-track
-        // shift. Measured (this test, `StateCfg::default()` + these masses,
-        // epoch_s=0.0): alt = 15212.600731466664 m, speed =
+        // under gravity alone
+        // (vendor/virtualagc/Luminary099/THE_LUNAR_LANDING.agc:193-198,
+        // `TIG = TDEC1 - ZOOMTIME`), landing ~44.31 km uprange of it.
+        // Why altitude/speed barely move despite that along-track shift:
+        // `ignition_geometry`'s position/velocity are built radial vs.
+        // purely tangential, so pos·vel = 0 exactly at the geometric point
+        // — it IS the periapsis of the (Keplerian, gravity-only) coast
+        // orbit (a ≈ 1,822,155 m, e ≈ 0.0382, period ≈ 6980 s). Near
+        // periapsis the radius is second-order in the swept true anomaly ν:
+        // r(ν) ≈ r_p·(1 + e/(2(1+e))·ν²). Solving Kepler's equation for
+        // ν at 26 s before periapsis gives ν ≈ 0.02528 rad, predicting
+        // Δr ≈ 20.60 m — matching the measured 15212.600731 m (TIG, below)
+        // minus the geometric point's own ≈15192.006 m. Vis-viva then gives
+        // the speed delta from that same Δr: dv = (μ/(r²v))·Δr ≈ 0.0193 m/s,
+        // matching the geometric point's ≈1704.1867 m/s minus the measured
+        // TIG speed below. Measured (this test, `StateCfg::default()` +
+        // these masses, epoch_s=0.0): alt = 15212.600731466664 m, speed =
         // 1704.167404345077 m/s. Attitude is translation-invariant, so the
         // REFSMMAT-frame check below is exact, not measured.
         let alt = st.pos.norm() - s.site.radius_m;
