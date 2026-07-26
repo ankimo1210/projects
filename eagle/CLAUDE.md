@@ -31,21 +31,42 @@ not reproduce**; the conclusions stand, the numbers do not.
 **Wave 2 M1 (`scenarios/pdi-descent.toml`, `make descent-full`) flies the
 real profile and does not land yet.** Six instrumented flights on
 2026-07-26; **the last three** fly PDI → P63 → P64 → P66 with the radar
-bypassed in-rope and **zero PROG alarm episodes** (runs 1-3 did not reach
-that sequence), AGC-vs-truth altitude-rate error a median 0.4 m/s through
-the braking phase (p90 1.1 m/s — not "under 1 m/s"), MM64 at TIG+488.6 s
-and the sim-driven handover at 250 m. Run 5 counted 21 PROG-lamp frames,
-all after ground contact — unexplained, ledger "Open" 2a. Touchdown is still a crash: P66's rate loop limit-cycles (throttle
+bypassed in-rope (runs 1-3 did not reach that sequence), AGC-vs-truth
+altitude-rate error a median 0.4 m/s through the braking phase (p90
+1.1 m/s — not "under 1 m/s"), MM64 at TIG+488.6 s and the sim-driven
+handover at 250 m. **That closes cause C**, the Wave 1 blocker: the
+pad-loaded AGC state vector and the sim truth described different
+vehicles. M1 starts truth at the pad's own TIG state, so navigation and
+truth agree by construction — the thing Wave 2 existed to decide.
+
+`alarm episodes []` on all six runs carries almost no information:
+`HeadlessResult.alarms` only ever receives `enter_p63_with_alarms`'s
+return value, and in PDI mode `run_scenario` returns right after
+`wait_engine_on` (`runner.rs:1113-1115`), so nothing can add to it after
+ignition — run 3 counted 794 PROG-lamp frames and still reported zero
+episodes. Quote the metric only with its window: **no alarm episodes in
+the pre-ignition P63 dialog**. The post-ignition signal is
+`prog_lamp_frames`: 0 on runs 4 and 6, 21 on run 5 — all after ground
+contact, unexplained, ledger "Open" 2a.
+
+Touchdown is still a crash: P66's rate loop limit-cycles (throttle
 slamming idle ↔ full) and nothing flies the attitude, so v_horiz runs
-away. **Every physical constant in the accelerometer and propulsion chain
-is now the flown rope's own number**, four of them corrected by flying:
-`PIPA_INCR` 0.0585 → **0.01** m/s/pulse (Luminary's KPIP — 0.0585 is the
-*command module* quantum, `Comanche055/SERVICER207.agc:790`),
+away. **The throttle-command and accelerometer chain is now the flown
+rope's own numbers**, four constants corrected by flying: `PIPA_INCR`
+0.0585 → **0.01** m/s/pulse (Luminary's KPIP — 0.0585 is the *command
+module* quantum, `vendor/virtualagc/Comanche055/SERVICER207.agc:790`),
 `THRUST_N_PER_PULSE` 12.0 → **12.5319585** N/bit, DPS full throttle
 42 500 → **48 145.4** N, `DPS_TAU` 0.3 → **0.2** s — the last three from
-`CONTROLLED_CONSTANTS.agc:132-135`. Flight 6 proved the remaining
-braking-gate error (911 m / 47 m/s) is *not* thrust. Numbers, citations
-and the open blockers:
+`vendor/virtualagc/Luminary099/CONTROLLED_CONSTANTS.agc:132-135`.
+**The DPS/RCS force magnitudes are NOT.** `DPS_MIN_N` 4560.0, `DPS_VE`
+3050.0, `RCS_THRUST_N` 445.0 and `RCS_VE` 2840.0 are still
+`lm_simulator.tcl` numbers (`constants.rs:104,112,125,127`) — the same
+file that carried a Command Module PIPA quantum into an LM simulator.
+`DPS_MIN_N` is load-bearing: it is the lower stop of the very limit
+cycle ledger "Open" 1 is chasing, and the low end of `dps_envelope`'s
+19.26 kN discontinuity. Do not strike it off the suspect list. Flight 6
+proved the remaining braking-gate error (911 m / 47 m/s) is *not*
+thrust. Numbers, citations and the open blockers:
 `docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`.
 
 **The M1 acceptance (`tests/live_pdi_descent.rs`) is frozen and has never

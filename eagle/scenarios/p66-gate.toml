@@ -21,7 +21,15 @@ tland_offset_cs = 36000            # derived: matches the burn lead run_scenario
 flip_atthold_after_engine_on_s = 2.0   # spike-B calibrated
 
 [rod]
-steps = [[400.0, -3.0], [150.0, -1.5], [30.0, -1.0]]  # alt_m → target sink rate m/s
+# alt_m → VDGVERT DELTA (m/s) from the P66-entry rate, NOT an absolute sink
+# rate: STARTP66 copies VDGVERT ← HDOTDISP (vendor/virtualagc/Luminary099/
+# LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:155-157) while SimCore::phase8_rod
+# starts its bookkeeping at 0, so -3.0 commands 3.0 m/s MORE descent than
+# whatever rate the AGC held at entry. Same in pdi mode. These three values
+# were written under the old "target sink rate" reading and have never been
+# re-derived — Wave 1 never reached P66 before ground contact, so no run has
+# measured what they actually command.
+steps = [[400.0, -3.0], [150.0, -1.5], [30.0, -1.0]]
 
 [errors]                 # empty table = all OFF (acceptance runs use this)
 

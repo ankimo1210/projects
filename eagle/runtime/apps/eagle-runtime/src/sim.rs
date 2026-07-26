@@ -263,8 +263,12 @@ impl SimCore {
             touchdown: None,
             sf_body: V3::zero(),
             pdi: sc.gate.mode == GateMode::Pdi,
-            // Hover mode stays bit-identical to Wave 1: no sim-driven
-            // handover there, whatever the file says.
+            // Hover mode's CODE PATH is unchanged from Wave 1: no
+            // sim-driven handover there, whatever the file says. Its
+            // PHYSICS is not — `PIPA_INCR` (x5.85), `THRUST_N_PER_PULSE`,
+            // `DPS_MAX_N`/`DPS_FTP_N` and `DPS_TAU` were all corrected
+            // against the flown rope on 2026-07-26 and are shared by both
+            // modes, so Wave 1's measured numbers will not reproduce.
             handover_alt_m: match sc.gate.mode {
                 GateMode::Pdi => sc.handover.as_ref().map(|h| h.alt_m),
                 GateMode::Hover => None,
@@ -813,12 +817,14 @@ mod tests {
     #[test]
     fn agc_nav_parses_hdot_from_n60_n63_and_n64() {
         // R2 is HDOTDISP on ALL THREE landing-guidance nouns, in 0.1 ft/s
-        // (PINBALL_NOUN_TABLES.agc:724-726 / :733-735 / :736-738; only R1
-        // differs). The 2026-07-25 re-flight never left P63 (so never
-        // reached N60) and lost the AGC-vs-truth rate error from every
-        // telemetry frame because this accepted only N60. N64 is the same
-        // hole one phase later: P64 displays it for the whole approach
-        // (LLGE:875, :895), which is the window the handover fires in.
+        // (vendor/virtualagc/Luminary099/PINBALL_NOUN_TABLES.agc:724-726 /
+        // :733-735 / :736-738; only R1 differs). The 2026-07-25 re-flight
+        // never left P63 (so never reached N60) and lost the AGC-vs-truth
+        // rate error from every telemetry frame because this accepted only
+        // N60. N64 is the same hole one phase later: P64 displays it for
+        // the whole approach (vendor/virtualagc/Luminary099/
+        // LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:875, :895), which is the
+        // window the handover fires in.
         let dsky = |noun: [char; 2], sign: char, digits: [char; 5]| {
             let mut d = DskyState::default();
             d.verb = ['0', '6'];
@@ -837,7 +843,8 @@ mod tests {
             assert_eq!(nav.alt_m, None, "blank R3 is not 0 ft");
         }
         // R3 = COMPUTED ALTITUDE in WHOLE FEET
-        // (PINBALL_NOUN_TABLES.agc:118, the SF-code legend), on all three
+        // (vendor/virtualagc/Luminary099/PINBALL_NOUN_TABLES.agc:118, the
+        // SF-code legend), on all three
         // nouns. 49911 ft = 15212.6 m — the PDI ignition altitude, i.e.
         // exactly what the AGC should be showing at ENGINE ON in M1.
         for noun in [['6', '0'], ['6', '3'], ['6', '4']] {
@@ -935,7 +942,10 @@ mod tests {
 
     #[test]
     fn hover_freeze_still_feeds_hover_support() {
-        // Regression guard: hover mode is bit-identical to Wave 1.
+        // Regression guard: hover mode's freeze path is unchanged from
+        // Wave 1 (the branch, not the numbers — the four vehicle constants
+        // corrected on 2026-07-26 are shared, so Wave 1's measured
+        // trajectory does not reproduce).
         let sc = scenario();
         let mut core = SimCore::new(&sc, 0.0);
         let mut pipa = 0usize;

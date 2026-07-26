@@ -83,7 +83,22 @@ pub struct Handover {
 #[derive(Debug, Clone, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Rod {
-    /// `[alt_m, target_sink_rate_ms]` breakpoints (descending altitude).
+    /// `[alt_m, vdgvert_delta_ms]` breakpoints (descending altitude).
+    ///
+    /// The second value is **NOT an absolute sink rate**, despite the
+    /// field name. It is a delta on `VDGVERT` measured from the rate the
+    /// AGC held at P66 entry: `STARTP66` DP-copies VDGVERT <- HDOTDISP
+    /// (`vendor/virtualagc/Luminary099/
+    /// LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:155-157`, `DCA HDOTDISP` /
+    /// `DXCH VDGVERT`, "SET DESIRED ALTITUDE RATE = CURRENT ALTITUDE
+    /// RATE"), while `SimCore::phase8_rod` starts its own bookkeeping at
+    /// 0 and emits `(new - previous) / ROD_CLICK_MS` clicks. So a step of
+    /// `-5.3` commands 5.3 m/s MORE descent than P66 entry, not 5.3 m/s
+    /// absolute. True in BOTH gate modes — the rope does the same copy
+    /// whichever way P66 was entered.
+    ///
+    /// The field name is left alone deliberately: renaming it is a code
+    /// change and would break every committed scenario file.
     pub steps: Vec<[f64; 2]>,
 }
 

@@ -27,14 +27,23 @@ As of Phase 2 Wave 1 the loop is closed end to end — PIPA/CDU sensors feed the
 > flights on 2026-07-26 (`make descent-full`, `scenarios/pdi-descent.toml`)
 > start the truth state at the pad-loaded PDI ignition point, and **the
 > last three** fly `MM ["00","63","64","66"]` — PDI → P63 braking → P64
-> approach → crew-takeover P66, landing radar bypassed in-rope — with
-> **zero PROG alarm episodes** and the AGC's own altitude rate tracking
-> truth to a median 0.4 m/s (90 % of frames under 1.1 m/s) through the
-> braking phase. That is the thing Wave 2 existed to decide: the nav/truth
-> split that made Wave 1 unfixable is closed. (Runs 1-3 got progressively
-> further — run 1 diverged 193 m/s and never left P63; runs 2 and 3 went
-> through P65, which raised an alarm and stopped the guidance modulating
-> the throttle.)
+> approach → crew-takeover P66, landing radar bypassed in-rope — with the
+> AGC's own altitude rate tracking truth to a median 0.4 m/s (90 % of
+> frames under 1.1 m/s) through the braking phase. That is the thing
+> Wave 2 existed to decide: the nav/truth split that made Wave 1
+> unfixable (cause C) is closed. (Runs 1-3 got progressively further —
+> run 1 diverged 193 m/s and never left P63; runs 2 and 3 went through
+> P65, which raised an alarm and stopped the guidance modulating the
+> throttle.)
+>
+> All six runs also reported **zero PROG alarm episodes**, and that
+> metric is structurally always zero here: `HeadlessResult.alarms` only
+> ever receives `enter_p63_with_alarms`'s return value, and in PDI mode
+> `run_scenario` returns right after `wait_engine_on`
+> (`runner.rs:1113-1115`), so nothing can add to it after ignition. Run 3
+> counted 794 PROG-lamp frames and still reported zero episodes. Read it
+> as **"no alarm episodes in the pre-ignition P63 dialog"** and nothing
+> more; the post-ignition signal is `prog_lamp_frames`.
 >
 > Touchdown is still a **crash**. P66's rate loop limit-cycles — run 6 ran
 > the throttle stop-to-stop (0 → 48 132 N) for 218 s with the sink rate

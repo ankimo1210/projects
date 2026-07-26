@@ -765,7 +765,8 @@ pub async fn measure_downlink_rate(
 /// as `CAF BIT13  # 4096 PULSES`).
 /// Note it is a DRIVE-PAST value, 51 330.9 N of command against the
 /// 48 145.4 N stop the same block calls full throttle (`FSAT`,
-/// `CONTROLLED_CONSTANTS.agc:132`) — `dps_envelope` is what models the
+/// `vendor/virtualagc/Luminary099/CONTROLLED_CONSTANTS.agc:132`) —
+/// `dps_envelope` is what models the
 /// stop, not this bound.
 pub const THRUST_CMD_MAX_PULSES: i64 = 4096;
 

@@ -15,7 +15,14 @@
 //!   in runs 4, 5 and 6 — the LAST THREE of the six — PDI → braking →
 //!   approach → crew-takeover ROD, with P65 never entered and the radar
 //!   bypassed in-rope. Runs 1-3 did not fly that sequence.
-//! - `alarms.is_empty()` PASSES on all three: 0 episodes.
+//! - `alarms.is_empty()` PASSES on all three: 0 episodes. **This assert is
+//!   nearly information-free in PDI mode and must not be read as "no
+//!   alarms during the descent."** `HeadlessResult.alarms` only ever
+//!   receives `enter_p63_with_alarms`'s return value, and PDI
+//!   `run_scenario` returns right after `wait_engine_on`
+//!   (`runner.rs:1113-1115`), so nothing can append to it after ignition.
+//!   Run 3 reported 0 episodes alongside 794 PROG-lamp frames. Its window
+//!   is the PRE-IGNITION P63 dialog.
 //! - `prog_lamp_frames == 0` passes on runs 4 and 6 and **FAILS on run 5**,
 //!   which counted 21 — every one of them raised AFTER ground contact
 //!   (lamp lights at t = 1192.62 s, contact at 1192.21 s), because this
@@ -23,6 +30,16 @@
 //!   Whether the gate should stop at contact is open and deliberately not
 //!   answered by loosening it here (ledger "Open" item 2a). Run 3, which
 //!   did enter P65, counted 794.
+//!
+//!   **KNOWN FALSE NEGATIVE — read this before debugging a red run.** That
+//!   same ~2 s tail runs after a SOFT landing too, so ONE alarm raised
+//!   inside it fails this gate on a flight that deserved to pass. If this
+//!   assert is the only thing red and the touchdown block is green, check
+//!   the lamp timestamps against `result.sim.touchdown` before changing
+//!   anything. The gate is left wide on purpose: narrowing it to
+//!   pre-contact frames would discard the only evidence this project has
+//!   that the alarm exists, and its code is still unknown because nothing
+//!   reads FAILREG after ENGINE ON in PDI mode.
 //! - The clock gate PASSES: the AGC ran 0.944× real time on all three runs
 //!   (0.949× on run 1), inside the ±10 % bound.
 //! - **The touchdown block FAILS.** P66's rate loop limit-cycles — run 6
@@ -184,19 +201,38 @@ async fn pdi_full_descent_closed_loop() {
         td.tilt_deg,
         acceptance.tilt_max_deg
     );
-    // Miss distance is REPORTED, never gated. PDI mode has no pre-ignition
-    // freeze, so it no longer carries Wave 1's ω·R·cosφ × freeze artifact —
-    // but it still carries the frame/time-base caveat written at the top of
+    // Miss distance is REPORTED, never gated.
+    //
+    // PDI mode DOES have a pre-ignition freeze — the design doc's "runs
+    // free from t=0" was overridden by the M1 plan, which governs, and
+    // `SimCore::phase4_5_dynamics` pins truth position in BOTH gate modes
+    // (only the freeze-phase PIPA feed differs: PDI = 0, hover = support).
+    // So this still carries Wave 1's ω·R·cosφ × freeze artifact, unreduced:
+    // run 6 froze for 3436 frames, t = 0.01 -> 343.51 s with `alt_m`
+    // constant to the last digit, i.e. 1588.5 m of bookkeeping against
+    // Wave 1's measured 1585.2 m.
+    //
+    // It also carries the frame/time-base caveat written at the top of
     // `scenarios/pdi-descent.toml` (in pdi mode the site is MCI +X at
-    // TLAND, not the [site] lat/lon), and the flights that reported it were
-    // all crashes off the nominal trajectory (run 3: 11.2 km). A threshold
-    // needs provenance from a run that actually flew the profile to
-    // contact, which has not happened.
+    // TLAND, not the [site] lat/lon), and every flight that reported it was
+    // a crash far off the nominal trajectory (runs 5/6: 12.2 / 12.1 km,
+    // which swamps the artifact rather than removing it).
+    //
+    // A threshold therefore needs (a) the freeze phase to co-rotate and
+    // (b) SEVERAL runs that flew the profile to contact — one flight fixes
+    // no spread, so do not set a bound off the first green run either.
     eprintln!("[accept] miss distance {:.1} m", td.miss_m);
 
     // Alarms as OBSERVED by this run (printed above): no swallowed PROG
     // alarm is tolerated, not even one whose FAILREG read back zeros.
     // MEASURED PASSING in runs 4/5/6 — 0 episodes on all three.
+    //
+    // WINDOW: pre-ignition P63 dialog ONLY. `result.alarms` is exactly
+    // `enter_p63_with_alarms`'s return value, and PDI `run_scenario`
+    // returns right after `wait_engine_on` (`runner.rs:1113-1115`), so
+    // nothing appends to it once the engine lights. Run 3 passed this
+    // assert while counting 794 PROG-lamp frames. Green here says nothing
+    // about the descent; `prog_lamp_frames` below is what covers that.
     assert!(
         result.alarms.is_empty(),
         "PROG alarm episodes during the descent: {:?}",
@@ -223,10 +259,14 @@ async fn pdi_full_descent_closed_loop() {
     //
     // MEASURED ON THIS HOST — every M1 flight: 0.949× (run 1), 0.946×
     // (run 2), 0.945× (run 3), 0.944× (runs 4, 5 and 6), read off each
-    // run's own `[accept]` line; Wave 1's acceptance measured 0.952×
-    // (docs/superpowers/notes/2026-07-26-m1-pdi-flight.md). ±10 % keeps
-    // ~2× margin on the measured 5-6 % deficit while still failing a
-    // stalled counter (rate → 0), a runaway one, or any ≥15 % break.
+    // run's own `[accept]` line; Wave 1's re-flight measured 0.952×
+    // (docs/superpowers/notes/2026-07-25-wave1-reflight.md:56,258 —
+    // recomputed there from the final telemetry frame, since the
+    // touchdown-class assert fired before the `[accept]` line printed).
+    //
+    // ±10 % keeps ~2× margin on the measured 5-6 % deficit while still
+    // failing a stalled counter (rate → 0), a runaway one, or any ≥15 %
+    // break.
     const AGC_RATE_TOL: f64 = 0.10;
     assert!(
         result.final_t_s > 0.0,
