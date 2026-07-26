@@ -83,8 +83,10 @@ entry.)
 This also resolves a contradiction between the design doc (§3 M1: "PDI mode
 runs free from t=0", i.e. no freeze) and this plan (freeze released on
 ENGINE ON). **The plan governs**: the freeze is kept, because it is what
-makes the AGC's ~4.8 % clock-rate offset harmless — truth cannot drift from
-nav during a boot phase neither side is integrating.
+makes the AGC's ~4.8 % clock-rate offset harmless: nav advances on the AGC's
+own clock while truth stays pinned at the TIG state, so whenever ENGINE ON
+actually arrives the two agree regardless of how far the clocks have drifted
+apart.
 
 **LRBYPASS consequence:** M1 does not SET the flag — fresh start already
 does. `lrbypass = true` in the scenario means "verify the flag is set after
@@ -111,8 +113,19 @@ init and abort if not" (a regression guard; M3 will *clear* it).
 **Files:**
 - Modify: `runtime/apps/eagle-runtime/src/padload.rs` (around `generate_state`, line ~741)
 
+> **SUPERSEDED SKETCH — read the plan header's corrected release-trigger
+> note first.** This task shipped as commits `bb3499f4` + `b5899404`. The
+> code and test snippets below are the pre-fix draft: they place truth AT
+> the geometric ignition point, which the Task 1 review disproved
+> (`TIG = TDEC1 − ZOOMTIME`, so ENGINE ON is ≈44.31 km uprange of it). The
+> shipped `pdi_truth_state` back-propagates by ZOOMTIME and returns the
+> TIG-time state, and `generate_state_and_truth_state_share_the_geometry`
+> became a forward round-trip against the geometric point plus a 40-50 km
+> along-track magnitude guard. **The committed source is authoritative;
+> this section is kept only as the record of what was originally asked.**
+
 **Interfaces:**
-- Consumes: `StateCfg` (exists), `eagle_dynamics::{state::LmState, state::gravity, rk4::step_rk4, frames::{Rot, V3, Mci, Body}, constants::{R_SITE, OMEGA_MOON, DT}}`.
+- Consumes: `StateCfg` (exists), `eagle_dynamics::{state::LmState, state::gravity, rk4::step_rk4, frames::{Rot, V3, Mci, Body}, constants::{R_SITE, OMEGA_MOON, DT, ZOOMTIME_CS via padload}}`.
 - Produces:
   - `pub struct IgnitionGeometry { pub theta_rad: f64, pub r_orb_m: f64, pub v_inertial_ms: f64 }`
   - `pub fn ignition_geometry(cfg: &StateCfg) -> IgnitionGeometry`
