@@ -46,14 +46,23 @@ yaAGC socket protocol, existing DSKY script harness.
 
 ## Verified vendor facts (checked while planning — implementers re-verify in Step 0 of the task that uses them)
 
-| Fact | Source |
+> **Cite the `vendor/virtualagc/` tree, always, with the path prefix.** The
+> two vendored transcriptions diverge by proofreading drift and **the
+> shipped `Luminary099.bin` is virtualagc's assembly** (CLAUDE.md vendor
+> pins). The line numbers below were re-verified against virtualagc on
+> 2026-07-26 after a Task 2 review caught an Apollo-11-tree line number
+> (`FRESH_START…:614`) that points at a different flag in virtualagc.
+
+| Fact | Source (virtualagc tree) |
 |---|---|
 | `FLGWRD11 = STATE +11D`, ECADR **`0o107`** | `build/agc/Luminary099.log:3262` (`26,2022 0107 FLGWRD11 = STATE +11D`) |
-| `LRBYPASS` = FLAGWRD11 **BIT 15** (`0o40000`): "BYPASS ALL LANDING RADAR UPDATES" | `FLAGWORD_ASSIGNMENTS.agc:1051-1052` |
-| **Fresh start SETS LRBYPASS** — `SWINIT`'s FLGWRD11 word is `OCT 40000  # BIT 15 = LRBYPASS.` | `FRESH_START_AND_RESTART.agc:614` |
-| Ullage fires at **TIG−7.5 s** (DPS) | `BURN_BABY_BURN--MASTER_IGNITION_ROUTINE.agc:347` (`ULLGTASK … THIS COMES AT TIG-7.5 OR TIG-3.5`) |
-| GUILDENSTERN's P66 switch checks only "already MM66?" + ATT-HOLD + RODCOUNT ≠ 0 — it does not require MM63, so it works from P64 | `LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:194-217` (`STABL?`/`P66NOW?`) |
-| N64 is a `FUNNYDSP` (mixed-format) noun — its register layout is NOT the simple HDOTDISP R2 of N60/N63. Do not extend `parse_agc_nav` to N64 without reading the FUNNYDSP decode first | `PINBALL_NOUN_TABLES.agc:726` |
+| `LRBYPASS` = FLAGWRD11 **BIT 15** (`0o40000`): "BYPASS ALL LANDING RADAR UPDATES" | `vendor/virtualagc/Luminary099/FLAGWORD_ASSIGNMENTS.agc:1040-1041` |
+| **Fresh start SETS LRBYPASS** — `SWINIT`'s FLGWRD11 word is `OCT 40000  # BIT 15 = LRBYPASS.` | `vendor/virtualagc/Luminary099/FRESH_START_AND_RESTART.agc:623` |
+| Ullage fires at **TIG−7.5 s** (DPS) | `vendor/virtualagc/Luminary099/BURN,_BABY,_BURN_--_MASTER_IGNITION_ROUTINE.agc:356` (`ULLGTASK … THIS COMES AT TIG-7.5 OR TIG-3.5`) |
+| `TIG = TDEC1 − ZOOMTIME` (the pad's geometric point is where nav sits at FLATOUT, not at ENGINE ON) | `vendor/virtualagc/Luminary099/THE_LUNAR_LANDING.agc:193-198` (`DDUMGOOD`) |
+| `P63TABLE`'s AVEGEXIT is `2CADR SERVEXIT` until `P63ZOOM` swaps it to `LUNLAND` — no landing-guidance pass, so no P66, before TIG+ZOOMTIME | `vendor/virtualagc/Luminary099/BURN,_BABY,_BURN_--_MASTER_IGNITION_ROUTINE.agc:144,574,593` |
+| GUILDENSTERN's P66 switch checks only "already MM66?" + ATT-HOLD + RODCOUNT ≠ 0 — it does not require MM63, so it works from P64 | `vendor/virtualagc/Luminary099/LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:203-217` (`STABL?`/`P66NOW?`) |
+| N64 is a `FUNNYDSP` (mixed-format) noun — its register layout is NOT the simple HDOTDISP R2 of N60/N63. Do not extend `parse_agc_nav` to N64 without reading the FUNNYDSP decode first | `vendor/virtualagc/Luminary099/PINBALL_NOUN_TABLES.agc:736` |
 | Wave 1 measured: the DAP recovers a ~125° attitude error in ~13 s after release, and Luminary throttles up at `FLATOUT` = TIG+26 s — so an attitude slew commanded against frozen truth resolves before throttle-up | re-flight note + `docs/superpowers/notes/2026-07-25-wave1-reflight.md` |
 
 **Design consequence (release trigger) — CORRECTED 2026-07-26 after the
