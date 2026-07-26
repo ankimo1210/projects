@@ -70,8 +70,17 @@ pub struct TelemetryMsg {
     /// ends of the wire are built from this repo in lockstep, and every
     /// consumer ignores unknown keys (serde by default; TS structurally),
     /// so a v2 parser survives a frame carrying it. Bump the version when
-    /// a field is removed, renamed, retyped, or its meaning changes under
-    /// a stable name — none of which this is.
+    /// a field is removed, renamed, or retyped — a change that makes an
+    /// existing parser wrong rather than merely incomplete.
+    ///
+    /// A meaning change under a stable name is the ambiguous case and this
+    /// project has NOT bumped for it: `vz_ms`/`v_horiz_ms` went from
+    /// inertial to surface-relative in Wave 1 and stayed at 2, on the
+    /// grounds that the parser still parses correctly and the shift is
+    /// documented on the fields (see `vz_ms` above). That precedent binds
+    /// the version field to WIRE compatibility only — which is exactly why
+    /// a semantic change has to be written down where the reader will hit
+    /// it, since the version number will not warn them.
     pub handover: bool,
 }
 

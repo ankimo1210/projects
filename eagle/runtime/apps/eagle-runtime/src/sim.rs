@@ -58,7 +58,9 @@ impl DskyStateSnapshot {
 /// BOTH V06N60 and V06N63 are accepted. N60 is P66's own `VERTDISP`
 /// display; N63 is what the braking/approach phases show, and **its R2 is
 /// the same HDOTDISP word** (`docs/agc-channel-map.md`, "P66 Vertical
-/// Displays and Erasables"; `PINBALL_NOUN_TABLES.agc:724-726`). Accepting
+/// Displays and Erasables"; the noun ECADR table lists N60's registers at
+/// `vendor/virtualagc/Luminary099/PINBALL_NOUN_TABLES.agc:724-726` and
+/// N63's at `:733-735`, with `HDOTDISP` as R2 in both). Accepting
 /// only N60 meant `agc_hdot_ms` / `nav_err_hdot_ms` were `null` in every
 /// frame of both 2026-07-25 re-flight telemetry dumps — the run never
 /// leaves P63 before ground contact, so the display never reaches N60 —
