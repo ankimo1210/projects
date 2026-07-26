@@ -27,7 +27,7 @@ lm_weight_lbs = 33530.0            # derived: (7009+7950+250) kg = 15209 kg → 
 tland_offset_cs = 36000            # derived: proven burn lead from Wave 1 acceptance
 flip_atthold_after_engine_on_s = 2.0   # unused in pdi mode (handover is sim-driven)
 lrbypass = true                    # verify-only: fresh start already sets FLAGWRD11 bit15
-                                   # (FRESH_START_AND_RESTART.agc:614); abort if missing
+                                   # (vendor/virtualagc/Luminary099/FRESH_START_AND_RESTART.agc:623); abort if missing
 
 [handover]
 alt_m = 150.0            # historical: crew takeover near 500 ft during P64
