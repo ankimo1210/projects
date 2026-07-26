@@ -56,15 +56,35 @@ yaAGC socket protocol, existing DSKY script harness.
 | N64 is a `FUNNYDSP` (mixed-format) noun — its register layout is NOT the simple HDOTDISP R2 of N60/N63. Do not extend `parse_agc_nav` to N64 without reading the FUNNYDSP decode first | `PINBALL_NOUN_TABLES.agc:726` |
 | Wave 1 measured: the DAP recovers a ~125° attitude error in ~13 s after release, and Luminary throttles up at `FLATOUT` = TIG+26 s — so an attitude slew commanded against frozen truth resolves before throttle-up | re-flight note + `docs/superpowers/notes/2026-07-25-wave1-reflight.md` |
 
-**Design consequence (release trigger):** the ignition-attitude maneuver
-(IGNALG, ~TIG−276 s) fires RCS jets long before ullage, so "first jet
-command" cannot distinguish ullage. The freeze therefore releases on
-**ENGINE ON (ch 011 bit 13), exactly as in Wave 1**, with frozen truth = the
-ignition point itself. At that moment the AGC's nav — which integrated the
-same pad-loaded orbit to TIG — is at the same point by construction. Ullage
-Δv (~0.9 m/s) is consistently absent from both sides (frozen truth moves
-nothing; zero PIPA feed means nav sees nothing). No ullage-lead constant is
-needed.
+**Design consequence (release trigger) — CORRECTED 2026-07-26 after the
+Task 1 review; the original text below the correction was wrong.** The
+freeze releases on **ENGINE ON (ch 011 bit 13), exactly as in Wave 1**
+(the ignition-attitude maneuver fires RCS jets ~TIG−276 s, long before
+ullage, so "first jet command" cannot identify ullage). Ullage Δv
+(~0.9 m/s at TIG−7.5 s, `BURN_BABY_BURN--MASTER_IGNITION_ROUTINE.agc:347`)
+falls inside the frozen window and is therefore consistently absent from
+both sides — frozen truth does not move, and a zero PIPA feed means nav
+sees nothing.
+
+**But frozen truth is NOT the pad's geometric ignition point.** `DDUMGOOD`
+computes `TIG = TDEC1 − ZOOMTIME`
+(`THE_LUNAR_LANDING.agc:193-198`; this repo already states it at
+`padload.rs:680`, "TIG then comes out at tet − ZOOMTIME"). The geometric
+point is where the AGC's integrated nav sits at **FLATOUT = TIG+ZOOMTIME**,
+not at ENGINE ON. At ENGINE ON the AGC believes it is **≈44.31 km uprange**
+(along-track), Δr +20.6 m, radial rate −1.58 m/s. So `pdi_truth_state`
+**back-propagates the ignition point by ZOOMTIME under gravity** and
+returns the TIG-time state; releasing the freeze at ENGINE ON then lands
+truth exactly where nav is. (User ruling, 2026-07-26, over the two
+alternatives: releasing at FLATOUT would freeze truth through the 26 s
+idle burn, and shifting the pad's `tet` would disturb the proven P63
+entry.)
+
+This also resolves a contradiction between the design doc (§3 M1: "PDI mode
+runs free from t=0", i.e. no freeze) and this plan (freeze released on
+ENGINE ON). **The plan governs**: the freeze is kept, because it is what
+makes the AGC's ~4.8 % clock-rate offset harmless — truth cannot drift from
+nav during a boot phase neither side is integrating.
 
 **LRBYPASS consequence:** M1 does not SET the flag — fresh start already
 does. `lrbypass = true` in the scenario means "verify the flag is set after
