@@ -79,7 +79,8 @@ pub const GYRO_FINE_INCR_DEG: f64 = 0.617981 / 3600.0;
 ///
 /// Supersedes two earlier provenances, both wrong for this rope:
 /// LM_Simulator's `lm_simulator.tcl:186` (45 040 N), and — 2026-07-26,
-/// review round 1 — 46 706 N derived from `LUM69R2/PADLOADS.agc:501-511`'s
+/// review round 1 — 46 706 N derived from
+/// `vendor/virtualagc/LUM69R2/PADLOADS.agc:501-511`'s
 /// "57 %/63 % NOMINAL MAX THRUST" annotation at *that* rope's 2.7 lbs/bit.
 /// LUM69R2 and Luminary099 have different `SCALEFAC`s (12.0325 vs
 /// 12.5320 N/bit, 4.16 % apart), so mixing LUM69R2's bit scale with
@@ -89,7 +90,8 @@ pub const GYRO_FINE_INCR_DEG: f64 = 0.617981 / 3600.0;
 /// briefly written here as if they were. Read as fractions they imply a
 /// full-throttle bit count of 2217/0.57 = 3889.5 and 2450/0.63 = 3888.9,
 /// which is neither Luminary099's FMAXODD (3841, ~1.2 % below that) nor
-/// LUM69R2's own (3866, `LUM69R2/CONTROLLED_CONSTANTS.agc:129`, ~0.6 %
+/// LUM69R2's own (3866,
+/// `vendor/virtualagc/LUM69R2/CONTROLLED_CONSTANTS.agc:129`, ~0.6 %
 /// below). They are round percentages in a pad-load annotation of a
 /// different rope — mild counter-evidence at best, and the citation above
 /// does not need them: FSAT stands on `CONTROLLED_CONSTANTS.agc:132` plus
@@ -100,7 +102,20 @@ pub const GYRO_FINE_INCR_DEG: f64 = 0.617981 / 3600.0;
 /// 46 706 N, 3832 m / 218 m/s. See
 /// `docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`.
 pub const DPS_MAX_N: f64 = 48145.4413;
-/// DPS minimum throttle thrust, N. Provenance: lm_simulator.tcl:187.
+/// DPS minimum throttle thrust, N. Provenance: `lm_simulator.tcl:187` —
+/// **NOT the flown rope's own number**, unlike `DPS_MAX_N`, `DPS_TAU` and
+/// `THRUST_N_PER_PULSE` above. LM_Simulator is the same source that
+/// carried a *command module* PIPA quantum into an LM simulator (see
+/// `PIPA_INCR`), and it never closed a navigation loop, so nothing there
+/// was ever tested against Luminary099.
+///
+/// This one is load-bearing and still open. `dps_envelope`
+/// (`forces.rs:180-188`) uses it as the idle stop, so it IS the lower end
+/// of the stop-to-stop stroke the P66 limit cycle runs
+/// (`docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`, "Open" item 1),
+/// and it sets the low side of that item's second candidate — the
+/// ~19.26 kN jump from `0.6 * DPS_MAX_N` (28 887 N) to `DPS_FTP_N`
+/// (48 145 N). Do not treat it as cited.
 pub const DPS_MIN_N: f64 = 4560.0;
 /// Fixed throttle point: commands above 60 % snap here. Luminary's own
 /// throttle law never *rests* between LOWCRIT and HIGHCRIT — it goes
@@ -108,7 +123,8 @@ pub const DPS_MIN_N: f64 = 4560.0;
 /// (`THROTTLE_CONTROL_ROUTINES.agc:88-107`) — and full throttle is FSAT,
 /// so this is `DPS_MAX_N`, not a lower fixed point.
 pub const DPS_FTP_N: f64 = DPS_MAX_N;
-/// DPS effective exhaust velocity, m/s. Provenance: lm_simulator.tcl:188.
+/// DPS effective exhaust velocity, m/s. Provenance: `lm_simulator.tcl:188`
+/// — LM_Simulator, not the rope; see the caveat on `DPS_MIN_N`.
 pub const DPS_VE: f64 = 3050.0;
 /// DPS first-order throttle lag, s. Provenance: **the rope's own engine
 /// response lag** — `vendor/virtualagc/Luminary099/
@@ -121,9 +137,11 @@ pub const DPS_VE: f64 = 3050.0;
 /// slower than the AGC assumes, i.e. a standing phase-margin loss in every
 /// throttle loop, P66's included.
 pub const DPS_TAU: f64 = 0.2;
-/// RCS thruster nominal thrust, N. Provenance: lm_simulator.tcl:182.
+/// RCS thruster nominal thrust, N. Provenance: `lm_simulator.tcl:182` —
+/// LM_Simulator, not the rope; see the caveat on `DPS_MIN_N`.
 pub const RCS_THRUST_N: f64 = 445.0;
-/// RCS effective exhaust velocity, m/s. Provenance: lm_simulator.tcl:183.
+/// RCS effective exhaust velocity, m/s. Provenance: `lm_simulator.tcl:183`
+/// — LM_Simulator, not the rope; see the caveat on `DPS_MIN_N`.
 pub const RCS_VE: f64 = 2840.0;
 /// RCS torque lever arm, m. Provenance: derived from LM_Simulator.
 pub const RCS_LEVER_M: f64 = 1.68;
@@ -159,7 +177,8 @@ pub const TRIM_MAX_DEG: f64 = 6.0;
 /// the cross-check.
 ///
 /// Was `assumed = 12.0`, then briefly mis-cited (2026-07-26) to
-/// `LUM69R2/PADLOADS.agc:501`'s "2.7 LBS/BIT" = 12.0325 N/bit as if that
+/// `vendor/virtualagc/LUM69R2/PADLOADS.agc:501`'s "2.7 LBS/BIT" =
+/// 12.0325 N/bit as if that
 /// justified it. It does not: LUM69R2 is a different rope with a different
 /// SCALEFAC, and 12.0 was 4.25 % low against the rope we actually fly.
 ///

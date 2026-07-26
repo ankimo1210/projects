@@ -32,9 +32,30 @@ The same seam produced three more (found in review, flown as flight 6):
 `THRUST_N_PER_PULSE` 12.0 → **12.5319585** N/bit (flight 6 flew 12.531966,
 a slipped 7th figure corrected afterwards — see "Fix round 1"), DPS full throttle
 46 706 → **48 145.4** N, `DPS_TAU` 0.3 → **0.2** s, all from four
-consecutive lines of `CONTROLLED_CONSTANTS.agc`. **Every physical constant
-in the propulsion and accelerometer chain is now the flown rope's own
-number.** See "Fix round 1".
+consecutive lines of `CONTROLLED_CONSTANTS.agc`. **The throttle-command
+and PIPA chain is now the flown rope's own numbers** — the AGC's
+counter-to-newton scale (`SCALEFAC`), its full-throttle stop (`FSAT`), its
+own engine-response lag (`THROTLAG`) and the PIPA quantum (`KPIP`). See
+"Fix round 1".
+
+**Four force constants are NOT, and this matters for the open blocker.**
+The DPS/RCS *magnitudes* below the throttle stop are still LM_Simulator
+values — the very file that carried a Command Module PIPA quantum into an
+LM simulator:
+
+| constant | value | source |
+|---|---|---|
+| `DPS_MIN_N` | 4560.0 N | `lm_simulator.tcl:187` (`constants.rs:104`) |
+| `DPS_VE` | 3050.0 m/s | `lm_simulator.tcl:188` (`constants.rs:112`) |
+| `RCS_THRUST_N` | 445.0 N | `lm_simulator.tcl:182` (`constants.rs:125`) |
+| `RCS_VE` | 2840.0 m/s | `lm_simulator.tcl:183` (`constants.rs:127`) |
+
+`DPS_MIN_N` is load-bearing twice over: `dps_envelope`
+(`forces.rs:180-188`) uses it as the idle stop, so it **is** the lower end
+of the stop-to-stop stroke Open item 1 is chasing, and it is the low end of
+the 19.26 kN discontinuity (0.6·`DPS_MAX_N` = 28 887 N → `DPS_FTP_N`
+= 48 145 N) named as that item's second candidate. Do not read the
+paragraph above as clearing it.
 
 ## Runs
 
@@ -63,6 +84,18 @@ run's own `[accept]` block in `build/traces/m1-runN.out`:
 `sim pacing lost` was 0 ms and `alarm episodes` was `[]` on all six. Runs
 2 and 3's lamp frames are the P65 alarm (item 2 under "Open"); run 5's 21
 are post-contact and are item 2a.
+
+**`alarm episodes []` is structurally always empty in PDI mode — never
+quote it without that window.** `HeadlessResult.alarms` only ever receives
+the return value of `enter_p63_with_alarms`, and PDI `run_scenario`
+returns immediately after `wait_engine_on`
+(`runtime/apps/eagle-runtime/src/runner.rs:1113-1115`), so no code path
+can append to it after ignition. Run 3 is the proof: 794 PROG-lamp frames
+and `alarm episodes []` in the same `[accept]` block. The metric means
+**"no alarm episodes in the pre-ignition P63 dialog"** and nothing more.
+`prog_lamp_frames` is the only post-ignition alarm evidence these flights
+carry, which is exactly why item 2 (nothing reads FAILREG after ENGINE ON)
+is open.
 
 
 ## Flight 1 — the nav divergence, measured
@@ -158,34 +191,83 @@ on the same trajectory one flight earlier.
 The sampled table below is what was written up first, and it under-states
 the spread. Re-measured over all 4078 post-ignition MM63 frames of
 `build/traces/telem-m1-run2.jsonl` (Task 6 review): median 0.43 m/s, p90
-1.37 m/s, p99 4.82 m/s, and 16 % of frames above 1 m/s. The tail is not
-noise — 5-8 m/s sustained through the last ~7 s of P63, which is this
-flight arriving hot and low at a gate its engine could not make (below).
-The earlier "within 0.6 m/s" claim was read off the 60 s-spaced samples
-and does not survive the full record; the *conclusion* it supported — a
-closed loop, ~450× tighter than flight 1's 193 m/s — does.
+1.37 m/s, p99 4.82 m/s, and 16 % of frames above 1 m/s. The earlier
+"within 0.6 m/s" claim was read off the 60 s-spaced samples and does not
+survive the full record; the *conclusion* it supported — a closed loop,
+~450× tighter than flight 1's 193 m/s — does.
+
+**Correction (final review): the 5-8 m/s tail through the last ~7 s of
+P63 is display latency, not navigation error.** This ledger originally
+called it "this flight arriving hot and low at a gate its engine could not
+make". Its own trace refutes that. `agc_hdot_ms` in that window is a clean
+sawtooth, and it is the *same* mechanism this ledger correctly diagnoses
+for P66 under flight 4:
+
+- HDOTDISP repaints on a ~2 s cadence. Over the whole MM63 window there
+  are 264 distinct values with a **median gap of 1.90 s** (p90 2.10 s).
+- At each repaint the error **resets** — over the last 10 s the clean
+  repaints land at 1.99, 2.22, 2.25, 3.10 and 3.64 m/s — and then climbs
+  monotonically to 6.7-8.2 m/s before the next one.
+- Truth is accelerating at **−2.23 m/s²** over t = 742-752 s (linear fit
+  to `vz_ms`). That number reproduces the sawtooth on its own: ~1 s of
+  value age at the paint instant × 2.23 = the ~2.2 m/s floor, plus
+  1.90 s of hold × 2.23 = the ~4.2 m/s of climb, giving the ~6.4-8.2 m/s
+  peaks observed.
+- The whole-phase statistic says the same thing from the other side: at
+  the repaint frame the AGC agrees with truth to a **median 0.35 m/s**
+  (p90 0.99); one frame before the next repaint the median is 0.57 and
+  the p90 is 1.98. The error is a function of how long the display has
+  been held and how hard the vehicle is accelerating — not of the
+  navigation.
+
+So the late-P63 tail says nothing about nav quality, and nothing about
+whether flight 2 arrived hot at the gate. That it *did* arrive hot and low
+is established separately and independently, by the truth state at the
+MM64 switch (table below) — that evidence stands; only the causal reading
+of `nav_err_hdot_ms` is withdrawn.
 
 The same measurement over every flight that closed the loop, so that any
 claim about nav quality has one place to come from. All figures are
 `|nav_err_hdot_ms|` over the post-ignition MM63 frames of that run's
 `telem-m1-runN.jsonl`, one frame per 100 ms:
 
-| run | frames | median | p90 | p99 | worst sustained | >1 m/s |
+| run | frames | median | p90 | p99 | worst excl. single-frame tears | >1 m/s |
 |---|---|---|---|---|---|---|
-| 2 | 4078 | 0.43 | 1.37 | 4.82 | 4.98 | 16 % |
+| 2 | 4078 | 0.43 | 1.37 | 4.82 | **30.99** (see below) | 16 % |
 | 4 | 4799 | 0.46 | 1.07 | 2.13 | 3.06 | 12 % |
 | 5 | 4799 | 0.46 | 1.07 | 2.12 | 2.74 | 12 % |
 | 6 | 4878 | 0.37 | 1.04 | 2.04 | 2.78 | 11 % |
 
-"Worst sustained" excludes single-frame DSKY tears: run 6's largest raw
-sample is −60.899 m/s at t = 785.01 s, sitting between neighbours of
-−30.419 and −30.663 — the display caught mid-repaint, reading one register
-twice, in exactly one frame out of 4878. Run 2 has two such frames and, in
-addition, a genuine 5-8 m/s excursion through the last ~7 s of P63.
+The last column excludes single-frame DSKY tears — a frame whose
+`agc_hdot_ms` differs from *both* neighbours by more than 5 m/s, i.e. the
+display caught mid-repaint reading one register twice. Run 6 has exactly
+one, at t = 785.01 s: **HDOTDISP reads −60.899 m/s** there, between
+neighbours of −30.419 and −30.663, which makes that frame's
+`nav_err_hdot_ms` −30.434. (Those three figures were previously written up
+as if they were nav error; they are the displayed rate.)
+
+Run 2 needs three corrections to what this table used to say. Its old
+"worst sustained 4.98" is **not reproducible** by any rule that reproduces
+runs 4/5/6, so it is withdrawn:
+
+- It has exactly **two** single-frame tears, and this ledger named
+  neither: t = 440.91 s (HDOTDISP −60.594 against a truth of −31.007) and
+  t = 748.91 s (−88.331 against −64.842). The old "Run 2 has two such
+  frames" was counting the t = 721 s event, which is not one of them.
+- The largest excursion, `|nav_err|` = **30.99 m/s at t = 721.01 and
+  721.11**, is a tear spanning **two consecutive frames** (HDOTDISP holds
+  −0.884 across both, between neighbours of ≈−31.8). Two frames does not
+  meet this ledger's own single-frame exclusion rule, so under the stated
+  rule run 2's worst is 30.99, not 4.98.
+- Excluding that two-frame tear as well, run 2's worst is **8.22 m/s**
+  (t = 750.91 s), and the largest error held for ≥ 0.5 s (5 consecutive
+  frames) is **7.07 m/s**. Both are sawtooth peaks of the display-latency
+  mechanism above, not navigation.
 
 So the defensible statement about the braking phase is **"median ~0.4 m/s,
 90 % of frames under ~1.1 m/s"**, not "under 1 m/s" — about one frame in
-eight is above 1 m/s on every run.
+eight is above 1 m/s on every run — and the tail above ~2 m/s is a
+display-cadence artefact wherever the vehicle is accelerating hard.
 
 | TIG+ | truth alt | truth vz | `nav_err_alt_m` | `nav_err_hdot_ms` |
 |---|---|---|---|---|
@@ -622,7 +704,7 @@ Against the flights above, assertion by assertion:
 | assertion | on runs 4/5/6 | |
 |---|---|---|
 | MM contains 63 → 64 → 66 | `["00","63","64","66"]` | would PASS |
-| `alarms.is_empty()` | 0 episodes / 0 / 0 | would PASS |
+| `alarms.is_empty()` | 0 episodes / 0 / 0 | would PASS — but see the window caveat under "Runs": in PDI mode this vector can only ever hold pre-ignition P63-dialog episodes, so passing it is not evidence about the descent |
 | `prog_lamp_frames == 0` | 0 / **21** / 0 frames | runs 4, 6 PASS; **run 5 FAILS** (all 21 frames are post-contact — see "Open" item 2a) |
 | AGC clock rate within ±10 % | 0.944× / 0.944× / 0.944× | would PASS |
 | `descent_s <= 800 s` | 866.9 / 848.6 / 865.1 s | would FAIL |
@@ -631,12 +713,25 @@ Against the flights above, assertion by assertion:
 | `v_horiz < 1.5` | 59.81 / 66.91 / 60.04 m/s | would FAIL |
 | `tilt < 12.0°` | 11.2° / 12.0° / 12.8° | run 6 FAILS; run 5 sits ON the bar (recorded to 1 dp, so the strict `<` is undecided) |
 
-`miss_m` is printed, never gated: PDI mode removed Wave 1's freeze
-artefact, but the frame/time-base caveat at the top of
-`scenarios/pdi-descent.toml` stands and no run flew the profile to contact.
-The thresholds are the scenario's design limits and were deliberately not
-relaxed to what was measured — that is what would turn this open blocker
-into a passing gate.
+`miss_m` is printed, never gated, and **PDI mode did not remove Wave 1's
+freeze artefact.** The design doc's "PDI mode runs free from t=0" (§3 M1)
+was overridden by the M1 plan before implementation and the plan governs
+(`docs/superpowers/plans/2026-07-26-eagle-wave2-m1-pdi-descent.md:94-100`);
+as built, `SimCore::phase4_5_dynamics` pins truth position in **both** gate
+modes and only the freeze-phase PIPA feed differs (PDI = 0 = coast, hover
+= 1.62 m/s² support). Measured on run 6's own telemetry: **3436 frozen
+frames, t = 0.01 → 343.51 s, `alt_m` constant to the last digit**, so the
+arc is ω·R × 343.51 s = **1588.5 m** of pure bookkeeping against Wave 1's
+1585.2 m over a 342.8 s freeze — the same artefact to 0.2 %. It is simply
+invisible in these runs because every one of them crashed far off the
+nominal track (run 5 reported miss 12 184.4 m, run 6 12 080.0 m). On top of
+that the frame/time-base caveat at the top of `scenarios/pdi-descent.toml`
+stands, and no run flew the profile to contact. Setting a `miss_m`
+threshold needs the freeze phase to co-rotate first, and then more than one
+clean flight — a single run cannot establish a bound's spread.
+The touchdown thresholds are the scenario's design limits and were
+deliberately not relaxed to what was measured — that is what would turn
+this open blocker into a passing gate.
 
 ## Open, in the order the next engineer should take them
 
@@ -685,6 +780,20 @@ into a passing gate.
    loosening the gate in this task: run 5 is a crash either way, and
    narrowing an acceptance to make a crash pass part of it is exactly the
    move this project's docs rule forbids.
+
+   **This leaves a KNOWN FALSE NEGATIVE in the frozen acceptance, and it
+   is the reason to fix the gate rather than leave it forever.** The
+   counter runs through the same ~2 s post-touchdown tail on *every*
+   flight, including a future SOFT one. So a single alarm raised in that
+   tail — after a landing the vehicle already survived, by an AGC still
+   flying a vehicle the sim has latched as landed — would fail
+   `live_pdi_descent.rs`'s `prog_lamp_frames == 0` and red a run that
+   deserved to pass. Keeping the gate wide is still the right call while
+   the alarm's code is unknown: filtering to pre-contact frames would
+   discard the only evidence this project has that the alarm exists at
+   all. But whoever first sees this test go red on an otherwise good
+   landing should check the lamp timestamps against `touchdown` before
+   touching anything else. Recorded in the test's own header too.
 3. **The −190 m altitude nav drift through P64.** Recorded, not
    diagnosed; the `UNIT(R)·V` geometry argument in the flight-3 section is
    a hypothesis. It costs the AGC its altitude margin before the terminal
