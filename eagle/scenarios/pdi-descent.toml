@@ -1,0 +1,44 @@
+schema = 1
+name = "pdi-descent"
+# Wave 2 M1: the real descent. Truth starts AT the pad-loaded PDI ignition
+# point (padload::pdi_truth_state — single source with generate_state), in
+# the pad-load's MCI frame: site radial = +X at TLAND, orbit plane = XY.
+# [site] lat/lon are therefore NOT used for geometry in pdi mode; the site
+# is MCI +X. miss_m carries a documented few-km frame/time-base caveat
+# until measured (M1 plan Task 5).
+
+[site]
+lat_deg = 0.0            # unused in pdi mode (site ≡ MCI +X at TLAND)
+lon_deg = 0.0            # unused in pdi mode
+radius_m = 1737400.0     # assumed (mean lunar radius; same as p66-gate)
+
+[gate]
+mode = "pdi"
+alt_m = 0.0              # unused in pdi mode (state comes from StateCfg)
+vz_ms = 0.0              # unused in pdi mode
+mass_dry_kg = 7009.0     # derived: descent dry 2339 + ascent stage wet 4670 (Wave 1)
+fuel_dps_kg = 7950.0     # derived: LM-5 total at PDI ≈ 15.2 t minus dry+RCS
+fuel_rcs_kg = 250.0      # derived: ~287 kg loaded minus separation/DOI usage
+inertia_kgm2 = [23000.0, 25000.0, 24000.0]  # assumed (full LM order-of-magnitude; M1 measures)
+
+[agc]
+padload = "scenarios/p66-padload.toml"
+lm_weight_lbs = 33530.0            # derived: (7009+7950+250) kg = 15209 kg → V48/N47
+tland_offset_cs = 36000            # derived: proven burn lead from Wave 1 acceptance
+flip_atthold_after_engine_on_s = 2.0   # unused in pdi mode (handover is sim-driven)
+lrbypass = true                    # verify-only: fresh start already sets FLAGWRD11 bit15
+                                   # (FRESH_START_AND_RESTART.agc:614); abort if missing
+
+[handover]
+alt_m = 150.0            # historical: crew takeover near 500 ft during P64
+
+[rod]
+steps = []               # set from Task 5's measured P66-entry sink rate — do not guess
+
+[errors]                 # empty = all OFF (acceptance runs use this)
+
+[acceptance]             # placeholders = Wave 1 values; Task 5 re-measures
+v_vert_max = 3.0
+v_horiz_max = 1.5
+tilt_max_deg = 12.0
+timeout_s = 800.0        # from ENGINE ON; P63 burn ~510 s + P64 + P66 + margin

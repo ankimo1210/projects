@@ -21,6 +21,8 @@ pub struct Scenario {
     #[serde(default)]
     pub errors: Errors,
     pub acceptance: Acceptance,
+    #[serde(default)]
+    pub handover: Option<Handover>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -34,12 +36,25 @@ pub struct Site {
 #[derive(Debug, Clone, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Gate {
+    #[serde(default)]
+    pub mode: GateMode,
     pub alt_m: f64,
     pub vz_ms: f64,
     pub mass_dry_kg: f64,
     pub fuel_dps_kg: f64,
     pub fuel_rcs_kg: f64,
     pub inertia_kgm2: [f64; 3],
+}
+
+/// How `Scenario::initial_state` seeds sim truth: `Hover` (Wave 1, the
+/// existing 500 m stationary-relative-to-surface gate) or `Pdi` (Wave 2 M1,
+/// truth starts at the real PDI ignition point — see `padload::pdi_truth_state`).
+#[derive(Debug, Clone, Copy, Default, Deserialize, PartialEq)]
+#[serde(rename_all = "lowercase")]
+pub enum GateMode {
+    #[default]
+    Hover,
+    Pdi,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -49,6 +64,20 @@ pub struct Agc {
     pub lm_weight_lbs: f64,
     pub tland_offset_cs: i64,
     pub flip_atthold_after_engine_on_s: f64,
+    #[serde(default)]
+    pub lrbypass: bool,
+}
+
+/// Sim-driven attitude/mode-control handover point (Wave 2 M1): once MM64
+/// has been observed, the sim commands ATT HOLD + the selection ROD click
+/// into P66 at this altitude.
+#[derive(Debug, Clone, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Handover {
+    /// Altitude (m AGL) at which, once MM64 has been observed, the sim
+    /// commands ATT HOLD + the selection ROD click into P66. historical:
+    /// the crew took over near 500 ft.
+    pub alt_m: f64,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -114,13 +143,31 @@ impl Scenario {
         V3::new(phi.cos() * lam.cos(), phi.cos() * lam.sin(), phi.sin())
     }
 
+    /// Initial LM state at `epoch_s`, dispatched on `gate.mode`: `Hover`
+    /// uses the Wave 1 stationary-gate geometry; `Pdi` starts sim truth at
+    /// the real PDI ignition point (`padload::pdi_truth_state`).
+    pub fn initial_state(&self, epoch_s: f64) -> LmState {
+        match self.gate.mode {
+            GateMode::Hover => self.hover_initial_state(epoch_s),
+            GateMode::Pdi => crate::padload::pdi_truth_state(
+                &crate::padload::StateCfg::default(),
+                &crate::padload::PdiMasses {
+                    dry_kg: self.gate.mass_dry_kg,
+                    dps_kg: self.gate.fuel_dps_kg,
+                    rcs_kg: self.gate.fuel_rcs_kg,
+                },
+                epoch_s,
+            ),
+        }
+    }
+
     /// Initial LM state at `epoch_s`: on the site radial at gate altitude,
     /// body +X pointing up (radially out), no spin. Mass is dry + both
     /// propellants. The gate is a HOVER — stationary relative to the
     /// rotating surface — so the inertial velocity is `vz·up` plus the
     /// co-rotation term ω ẑ × r (the same ω·r the AGC pad-load state
     /// carries; see `padload::generate_state`).
-    pub fn initial_state(&self, epoch_s: f64) -> LmState {
+    fn hover_initial_state(&self, epoch_s: f64) -> LmState {
         let mcmf_to_mci = mci_to_mcmf(epoch_s).inverse();
         let up_mci = mcmf_to_mci.apply(self.site_unit_mcmf()).unit();
         let pos = up_mci.scale(self.site.radius_m + self.gate.alt_m);
@@ -242,5 +289,42 @@ mod tests {
         // inertial velocity must be exactly the co-rotation term.
         let v_rel = st.vel - eagle_dynamics::state::surface_velocity(st.pos);
         assert!(v_rel.norm() < 1e-9, "gate not co-rotating: {v_rel:?}");
+    }
+
+    #[test]
+    fn loads_pdi_descent_scenario() {
+        let s = Scenario::load(&repo().join("scenarios/pdi-descent.toml")).unwrap();
+        assert!(matches!(s.gate.mode, GateMode::Pdi));
+        assert!(s.agc.lrbypass);
+        assert!((s.handover.as_ref().unwrap().alt_m - 150.0).abs() < 1e-9);
+        let st = s.initial_state(0.0);
+        // PDI point = TIG, NOT the geometric ignition point: pdi_truth_state
+        // back-propagates the geometric FLATOUT state by ZOOMTIME (26 s)
+        // under gravity alone (THE_LUNAR_LANDING.agc:193-198,
+        // `TIG = TDEC1 - ZOOMTIME`), landing ~44.31 km uprange of it. Energy
+        // is conserved along that coast, so altitude/speed barely move from
+        // the geometric point's ~15.2 km / ~1704 m/s despite the along-track
+        // shift. Measured (this test, `StateCfg::default()` + these masses,
+        // epoch_s=0.0): alt = 15212.600731466664 m, speed =
+        // 1704.167404345077 m/s. Attitude is translation-invariant, so the
+        // REFSMMAT-frame check below is exact, not measured.
+        let alt = st.pos.norm() - s.site.radius_m;
+        assert!((alt - 15212.600731466664).abs() < 0.5, "alt {alt}");
+        assert!(
+            (st.vel.norm() - 1704.167404345077).abs() < 0.01,
+            "v {}",
+            st.vel.norm()
+        );
+        let bx = st.att.apply(V3::<Body>::new(1.0, 0.0, 0.0));
+        assert!((bx - V3::<Mci>::new(1.0, 0.0, 0.0)).norm() < 1e-9);
+    }
+
+    #[test]
+    fn hover_scenarios_do_not_need_the_new_fields() {
+        // Back-compat: the committed Wave 1 files carry no mode/handover/lrbypass.
+        let s = Scenario::load(&repo().join("scenarios/p66-gate.toml")).unwrap();
+        assert!(matches!(s.gate.mode, GateMode::Hover));
+        assert!(s.handover.is_none());
+        assert!(!s.agc.lrbypass);
     }
 }
