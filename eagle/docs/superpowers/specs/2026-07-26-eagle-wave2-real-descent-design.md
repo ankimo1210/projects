@@ -88,18 +88,25 @@ landing radar bypassed in-rope.
 
 > **STATUS 2026-07-26 — M1 implemented and flown; acceptance NOT met.**
 > Plan `docs/superpowers/plans/2026-07-26-eagle-wave2-m1-pdi-descent.md`,
-> Tasks 1-6 done; ledger
+> Tasks 1-6 executed — with two steps deliberately unmet and marked so in
+> the plan: Task 5 Step 5 (no nominal-profile flight completed inside the
+> 6-flight budget) and Task 6 Step 3 (the acceptance was never run); ledger
 > `docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`; acceptance test
 > `runtime/apps/eagle-runtime/tests/live_pdi_descent.rs` (frozen, port
 > 19905, **never run** — the 6-flight budget was spent before it existed).
 >
 > **The question this milestone was ordered first to answer is answered
-> YES.** Six instrumented flights fly `MM ["00","63","64","66"]` — PDI →
-> P63 braking → P64 approach → sim-driven handover into P66, radar
-> bypassed in-rope — with zero PROG alarm episodes, zero PROG-lamp frames,
-> and the AGC's own altitude rate within 1 m/s of truth through the whole
-> braking phase. P63 guidance converges from a PDI truth state (the risk
-> table's "redesign the wave" branch is closed), and cause C is fixed.
+> YES.** Six instrumented flights were flown and **the last three** fly
+> `MM ["00","63","64","66"]` — PDI → P63 braking → P64 approach →
+> sim-driven handover into P66, radar bypassed in-rope — with zero PROG
+> alarm episodes and the AGC's own altitude rate tracking truth to a
+> median 0.4 m/s (p90 1.1 m/s) through the braking phase. P63 guidance
+> converges from a PDI truth state (the risk table's "redesign the wave"
+> branch is closed), and cause C is fixed. Runs 1-3 are not part of that
+> claim: run 1 diverged 193 m/s and never left P63, runs 2 and 3 went
+> through P65 and raised its alarm (48 and 794 PROG-lamp frames). Of the
+> last three, runs 4 and 6 counted zero lamp frames and run 5 counted 21,
+> all raised after ground contact.
 >
 > **It does not land.** P66's rate loop limit-cycles (run 6: throttle
 > 0 → 48 132 N stop-to-stop for 218 s, sink rate −34.1 to +16.2 m/s) and
@@ -118,8 +125,11 @@ landing radar bypassed in-rope.
 > missed by 911 m / 47 m/s and flight 6 proved that is **not** thrust —
 > look at the targeting and the state it targets from; (2) a reproducible
 > PROG alarm at the MM64→MM65 transition whose code is unknown because
-> nothing reads FAILREG after ENGINE ON in PDI mode; (3) a −190 m altitude
-> nav drift through P64, recorded not diagnosed.
+> nothing reads FAILREG after ENGINE ON in PDI mode; (2a) run 5's 21
+> post-contact PROG-lamp frames, same unknown code, which also fail the
+> acceptance's `prog_lamp_frames == 0` gate because that counter runs
+> through the sim's ~2 s post-touchdown tail; (3) a −190 m altitude nav
+> drift through P64, recorded not diagnosed.
 >
 > **Consequence for the rest of the wave:** M2's value proposition assumed
 > a green M1 (snapshots shorten a working descent's debug loop). With M1

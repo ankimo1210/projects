@@ -3,7 +3,7 @@
 > **STALE NUMBERS (added 2026-07-26).** Every measurement below was taken
 > against vehicle constants that have since been corrected against the
 > rope: `PIPA_INCR` 0.0585 → 0.01 m/s per pulse, `THRUST_N_PER_PULSE`
-> 12.0 → 12.531966 N/bit, DPS full throttle 42 500 → 48 145.4 N, and
+> 12.0 → 12.5319585 N/bit, DPS full throttle 42 500 → 48 145.4 N, and
 > `DPS_TAU` 0.3 → 0.2 s. The reasoning (and the live evidence that found
 > the first two) is in
 > `docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`. **These runs will

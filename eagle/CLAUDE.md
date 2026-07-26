@@ -30,10 +30,12 @@ not reproduce**; the conclusions stand, the numbers do not.
 
 **Wave 2 M1 (`scenarios/pdi-descent.toml`, `make descent-full`) flies the
 real profile and does not land yet.** Six instrumented flights on
-2026-07-26 fly PDI → P63 → P64 → P66 with the radar bypassed in-rope and
-**zero PROG alarms**, AGC-vs-truth altitude-rate error under 1 m/s for the
-whole braking phase, MM64 at TIG+488.6 s and the sim-driven handover at
-250 m. Touchdown is still a crash: P66's rate loop limit-cycles (throttle
+2026-07-26; **the last three** fly PDI → P63 → P64 → P66 with the radar
+bypassed in-rope and **zero PROG alarm episodes** (runs 1-3 did not reach
+that sequence), AGC-vs-truth altitude-rate error a median 0.4 m/s through
+the braking phase (p90 1.1 m/s — not "under 1 m/s"), MM64 at TIG+488.6 s
+and the sim-driven handover at 250 m. Run 5 counted 21 PROG-lamp frames,
+all after ground contact — unexplained, ledger "Open" 2a. Touchdown is still a crash: P66's rate loop limit-cycles (throttle
 slamming idle ↔ full) and nothing flies the attitude, so v_horiz runs
 away. **Every physical constant in the accelerometer and propulsion chain
 is now the flown rope's own number**, four of them corrected by flying:
@@ -48,8 +50,9 @@ and the open blockers:
 
 **The M1 acceptance (`tests/live_pdi_descent.rs`) is frozen and has never
 been run.** It was written after the 6-flight budget was spent, so it is a
-target, not a result: on the measured flights its mode, alarm and AGC-clock
-blocks would pass and its touchdown block would fail. Do not relax its
+target, not a result: on the last three flights its mode, alarm-episode and
+AGC-clock blocks would pass, its touchdown block would fail, and its
+`prog_lamp_frames == 0` gate would fail on run 5. Do not relax its
 thresholds (they are the scenario's design limits) and do not describe M1
 as landing anything until that test is the thing that measured it.
 

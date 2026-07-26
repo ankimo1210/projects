@@ -12,13 +12,19 @@
 //! (`docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`):
 //!
 //! - The mode assert PASSES on the measured sequence: `["00","63","64","66"]`
-//!   in runs 4, 5 and 6 — PDI → braking → approach → crew-takeover ROD, with
-//!   P65 never entered and the radar bypassed in-rope.
-//! - The alarm asserts PASS on the same runs: 0 episodes, 0 PROG-lamp
-//!   frames after ignition (against 794 lamp frames in run 3, which did go
-//!   through P65).
-//! - The clock gate PASSES: the AGC ran 0.944-0.952× real time on this
-//!   host, inside the ±10 % bound.
+//!   in runs 4, 5 and 6 — the LAST THREE of the six — PDI → braking →
+//!   approach → crew-takeover ROD, with P65 never entered and the radar
+//!   bypassed in-rope. Runs 1-3 did not fly that sequence.
+//! - `alarms.is_empty()` PASSES on all three: 0 episodes.
+//! - `prog_lamp_frames == 0` passes on runs 4 and 6 and **FAILS on run 5**,
+//!   which counted 21 — every one of them raised AFTER ground contact
+//!   (lamp lights at t = 1192.62 s, contact at 1192.21 s), because this
+//!   counter keeps running through the sim's ~2 s post-touchdown tail.
+//!   Whether the gate should stop at contact is open and deliberately not
+//!   answered by loosening it here (ledger "Open" item 2a). Run 3, which
+//!   did enter P65, counted 794.
+//! - The clock gate PASSES: the AGC ran 0.944× real time on all three runs
+//!   (0.949× on run 1), inside the ±10 % bound.
 //! - **The touchdown block FAILS.** P66's rate loop limit-cycles — run 6
 //!   ran the throttle stop-to-stop (0 → 48 132 N) for 218 s with the sink
 //!   rate spanning −34.1 to +16.2 m/s — and nothing flies the attitude in
@@ -133,7 +139,7 @@ async fn pdi_full_descent_closed_loop() {
     }
 
     // Mode order: 63 then 64 then 66 (intervening modes allowed).
-    // MEASURED PASSING in runs 4/5/6 (2026-07-26).
+    // MEASURED PASSING in runs 4/5/6, the last three of six (2026-07-26).
     let idx = |mm: &str| result.mm_sequence.iter().position(|m| m == mm);
     let (i63, i64_, i66) = (idx("63"), idx("64"), idx("66"));
     assert!(
@@ -190,12 +196,19 @@ async fn pdi_full_descent_closed_loop() {
 
     // Alarms as OBSERVED by this run (printed above): no swallowed PROG
     // alarm is tolerated, not even one whose FAILREG read back zeros.
-    // MEASURED PASSING in runs 4/5/6 — 0 episodes, 0 lamp frames.
+    // MEASURED PASSING in runs 4/5/6 — 0 episodes on all three.
     assert!(
         result.alarms.is_empty(),
         "PROG alarm episodes during the descent: {:?}",
         result.alarms
     );
+    // Lamp frames: 0 in runs 4 and 6, but 21 in run 5 — all of them AFTER
+    // ground contact (the counter runs through the sim's ~2 s
+    // post-touchdown tail; ledger "Open" item 2a). So this assert is the
+    // one non-touchdown gate the measured flights do NOT unanimously meet,
+    // and it is left strict on purpose: narrowing it to pre-contact frames
+    // would make part of a crash pass, and nobody has yet named the code
+    // (nothing reads FAILREG after ENGINE ON in PDI mode).
     assert_eq!(
         result.prog_lamp_frames, 0,
         "PROG alarm lamp lit during descent"
@@ -208,8 +221,9 @@ async fn pdi_full_descent_closed_loop() {
     // derivation and the "what the deficit IS" caveat are in
     // `live_p66_descent.rs`, which gates the same quantity.
     //
-    // MEASURED ON THIS HOST — Wave 1 acceptance runs 0.952×; M1 flights 1
-    // and 4 measured 0.949× and 0.944× over ~1000 s of PDI descent
+    // MEASURED ON THIS HOST — every M1 flight: 0.949× (run 1), 0.946×
+    // (run 2), 0.945× (run 3), 0.944× (runs 4, 5 and 6), read off each
+    // run's own `[accept]` line; Wave 1's acceptance measured 0.952×
     // (docs/superpowers/notes/2026-07-26-m1-pdi-flight.md). ±10 % keeps
     // ~2× margin on the measured 5-6 % deficit while still failing a
     // stalled counter (rate → 0), a runaway one, or any ≥15 % break.
