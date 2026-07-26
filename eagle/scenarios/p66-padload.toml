@@ -300,5 +300,18 @@ comment = "min P66 force, kg*m/cs^2 at b=12 -- UNVERIFIED live until Spike B"
 [[word]]
 symbol = "MAXFORCE"
 physical = { value = 4.25, b = 12, dp = true }
-provenance = "derived (scale chain); 42500 N = 4.25 kg*m/cs^2 (DPS_FTP_N)"
+provenance = "derived (scale chain); 42500 N = 4.25 kg*m/cs^2"
+# DELIBERATELY LEFT AT 42500 N on 2026-07-26 when DPS_FTP_N moved to FSAT
+# (48145.4 N). Three reasons, in order:
+#  1. This word's b-scale is still UNVERIFIED (padload::P66_BSCALE_TABLE),
+#     so the newtons it actually lands on in the AGC are a hypothesis. A
+#     verified engine constant must not be laundered into an unverified
+#     pad word and then read back as if it were confirmed.
+#  2. It is not binding on the flight this task measures: P66 hovers the
+#     measured ~7.8 t vehicle at ~12.6 kN, and even the run-4/5 limit
+#     cycle peaked at 26.8 kN, both far under 42.5 kN.
+#  3. One variable per flight. The M1 flight budget is testing the three
+#     engine constants; moving a pad word in the same run would confound
+#     the attribution.
+# Next task owns the decision: pin the b-scale, then set this from FSAT.
 comment = "max P66 force, kg*m/cs^2 at b=12 -- UNVERIFIED live until Spike B"

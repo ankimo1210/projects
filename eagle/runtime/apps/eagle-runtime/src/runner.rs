@@ -758,6 +758,15 @@ pub async fn measure_downlink_rate(
 /// seek the zero stop, then +4096
 /// for FLATOUT. Pulses beyond either stop therefore leave the position at
 /// that stop.
+///
+/// 4096 is the rope's own `FEXTRA = BIT13`
+/// (`vendor/virtualagc/Luminary099/THROTTLE_CONTROL_ROUTINES.agc:226`,
+/// `# FEXT +5.13309020 E+4`; loaded at `:107`, and by `FLATOUT` at `:197`
+/// as `CAF BIT13  # 4096 PULSES`).
+/// Note it is a DRIVE-PAST value, 51 330.9 N of command against the
+/// 48 145.4 N stop the same block calls full throttle (`FSAT`,
+/// `CONTROLLED_CONSTANTS.agc:132`) — `dps_envelope` is what models the
+/// stop, not this bound.
 pub const THRUST_CMD_MAX_PULSES: i64 = 4096;
 
 #[derive(Debug, Default)]

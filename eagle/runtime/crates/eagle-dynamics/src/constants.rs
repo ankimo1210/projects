@@ -51,42 +51,68 @@ pub const CDU_INCR_DEG: f64 = 360.0 / 32768.0;
 pub const COARSE_INCR_DEG: f64 = 0.043948;
 /// Gyro fine-align pulse, degrees. Provenance: lm_simulator.tcl:144.
 pub const GYRO_FINE_INCR_DEG: f64 = 0.617981 / 3600.0;
-/// DPS nominal maximum thrust, N = 10 500 lbf. Provenance: **derived from
-/// the rope's own pad-load**, cross-checked against a live descent.
+/// DPS full-throttle (saturation) thrust, N. Provenance: **the flown
+/// rope's own throttle constants, in SI, on one line**.
 ///
-/// `vendor/virtualagc/LUM69R2/PADLOADS.agc:501-511` documents the two
-/// throttle-region criteria with both their bit scale and what fraction of
-/// maximum thrust they represent:
+/// `vendor/virtualagc/Luminary099/CONTROLLED_CONSTANTS.agc:132` —
+/// `FMAXODD DEC +3841   # FSAT +4.81454413 E+4`. `THROTTLE_CONTROL_
+/// ROUTINES.agc:114-118` (NOTE 2) says what that bit count is in as many
+/// words: *"the NUMBER OF BITS CORRESPONDING TO FULL THROTTLE
+/// (FMAXODD)"*. So full throttle = **48 145.4 N**.
 ///
-/// * `LOWCRIT  1OCT 04251` = 2217 bits, "(2.7 LBS/BIT) (57% NOMINAL MAX
-///   THRUST)" → 2217 × 2.7 / 0.57 = 10 502 lbf
-/// * `HIGHCRIT 1OCT 04622` = 2450 bits, "63% NOMINAL MAX THRUST"
-///   → 2450 × 2.7 / 0.63 = 10 500 lbf
+/// The counter is deliberately driven PAST it: `FLATOUT` and the
+/// throttle-up branch both load `FEXTRA = BIT13 = 4096` bits
+/// (`THROTTLE_CONTROL_ROUTINES.agc:107,226`, commented
+/// `# FEXT +5.13309020 E+4`), i.e. 51 330.9 N of command against a
+/// 48 145.4 N stop — the same drive-past-the-stop idiom Luminary uses at
+/// the zero end. `dps_envelope` models the stop, so the extra 255 bits do
+/// nothing, which is correct.
 ///
-/// Two independent pad words agreeing to 0.02 % on **10 500 lbf =
-/// 46 706 N**. (Both words are carried in `scenarios/p66-padload.toml`, so
-/// the AGC we fly is loaded with exactly these criteria.)
+/// The rope's third force constant is NOT this one:
+/// `CONTROLLED_CONSTANTS.agc:133`, `FMAXPOS DEC +3467  # FMAX
+/// +4.34546769 E+4`, is what the AGC writes into FCODD as its own
+/// bookkeeping estimate after a throttle-up
+/// (`THROTTLE_CONTROL_ROUTINES.agc:105-106`) — 90.3 % of FSAT. It is the
+/// AGC's belief about the thrust, not the thrust; the PIPAs correct it.
+/// Modelling it as the delivered thrust would under-power the vehicle by
+/// 9.7 %.
 ///
-/// Supersedes LM_Simulator's `lm_simulator.tcl:186` (45 040 N), which is
-/// 3.6 % lower and was this repo's original provenance. Measured live
-/// (2026-07-26 M1 flight 2): at 42 500 N the braking phase ran out of
-/// capability and reached HIGATE at 4052 m / 435 m/s against the
-/// pad-loaded RBRFG/VBRFG target of 2924 m / 172 m/s — the AGC flew its
-/// guidance correctly into an engine that could not deliver the profile.
-/// See `docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`.
-pub const DPS_MAX_N: f64 = 46706.0;
+/// Supersedes two earlier provenances, both wrong for this rope:
+/// LM_Simulator's `lm_simulator.tcl:186` (45 040 N), and — 2026-07-26,
+/// review round 1 — 46 706 N derived from `LUM69R2/PADLOADS.agc:501-511`'s
+/// "57 %/63 % NOMINAL MAX THRUST" annotation at *that* rope's 2.7 lbs/bit.
+/// LUM69R2 and Luminary099 have different `SCALEFAC`s (12.0325 vs
+/// 12.5320 N/bit, 4.16 % apart), so mixing LUM69R2's bit scale with
+/// Luminary099's criteria mis-scaled the answer. Against FSAT the same
+/// criteria land where they should: LOWCRIT 2217 bits = 57.7 % of 3841,
+/// HIGHCRIT 2450 bits = 63.8 %.
+///
+/// Measured live (2026-07-26 M1): at 42 500 N the braking phase reached
+/// HIGATE at 4052 m / 435 m/s against a 2924 m / 172 m/s target; at
+/// 46 706 N, 3832 m / 218 m/s. See
+/// `docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`.
+pub const DPS_MAX_N: f64 = 48145.4413;
 /// DPS minimum throttle thrust, N. Provenance: lm_simulator.tcl:187.
 pub const DPS_MIN_N: f64 = 4560.0;
-/// Fixed throttle point: commands above 60 % snap here — and per
-/// `LUM69R2/PADLOADS.agc:501-511` ("THROTTLE SET TO EITHER MAXIMUM OR TRUE
-/// VALUE" outside the 57-63 % band) the AGC's "maximum" IS nominal max
-/// thrust, so this is `DPS_MAX_N`, not a lower fixed point. Provenance:
-/// derived, same two pad words.
+/// Fixed throttle point: commands above 60 % snap here. Luminary's own
+/// throttle law never *rests* between LOWCRIT and HIGHCRIT — it goes
+/// either back into the throttleable region or to full throttle
+/// (`THROTTLE_CONTROL_ROUTINES.agc:88-107`) — and full throttle is FSAT,
+/// so this is `DPS_MAX_N`, not a lower fixed point.
 pub const DPS_FTP_N: f64 = DPS_MAX_N;
 /// DPS effective exhaust velocity, m/s. Provenance: lm_simulator.tcl:188.
 pub const DPS_VE: f64 = 3050.0;
-/// DPS first-order throttle lag, s. Provenance: assumed.
-pub const DPS_TAU: f64 = 0.3;
+/// DPS first-order throttle lag, s. Provenance: **the rope's own engine
+/// response lag** — `vendor/virtualagc/Luminary099/
+/// CONTROLLED_CONSTANTS.agc:134`, `THROTLAG DEC +20  # TAU (TH)
+/// +1.99999999 E-1`, i.e. 20 centiseconds. This is not decoration: the AGC
+/// actively compensates its thrust estimate for it
+/// (`THROTTLE_CONTROL_ROUTINES.agc:172`, `AD THROTLAG  # COMPENSATE FOR
+/// ENGINE RESPONSE LAG`), so a plant slower than THROTLAG is a plant the
+/// compensator is systematically wrong about. Was `assumed = 0.3` — 50 %
+/// slower than the AGC assumes, i.e. a standing phase-margin loss in every
+/// throttle loop, P66's included.
+pub const DPS_TAU: f64 = 0.2;
 /// RCS thruster nominal thrust, N. Provenance: lm_simulator.tcl:182.
 pub const RCS_THRUST_N: f64 = 445.0;
 /// RCS effective exhaust velocity, m/s. Provenance: lm_simulator.tcl:183.
@@ -101,13 +127,30 @@ pub const TRIM_RATE_DEG_S: f64 = 0.2;
 /// in vendored lm_simulator.tcl; consistent with historical LM DPS ±6°
 /// pitch/roll trim range).
 pub const TRIM_MAX_DEG: f64 = 6.0;
-/// DPS thrust per THRUST-counter pulse, N. Provenance: derived —
-/// `vendor/virtualagc/LUM69R2/PADLOADS.agc:501` states the throttle-counter
-/// scale outright, "(2.7 LBS/BIT)", = 12.010 N/bit. Kept at 12.0 (0.08 %
-/// low) because that is the value every live spike was calibrated against;
-/// the citation replaces the previous "assumed" tag, it does not move the
-/// number.
-pub const THRUST_N_PER_PULSE: f64 = 12.0;
+/// DPS thrust per THRUST-counter bit, N. Provenance: **the flown rope
+/// publishes it**, as the reciprocal —
+/// `vendor/virtualagc/Luminary099/CONTROLLED_CONSTANTS.agc:135`,
+/// `SCALEFAC 2DEC* +7.97959872 E+2 B-16*  # BITPERF +7.97959872 E-2`,
+/// bits per newton, so 1 / 0.0797959872 = **12.531966 N/bit**.
+///
+/// This is the conversion the AGC itself uses in both directions, which is
+/// why it has to be exact rather than close: `MASSMULT` turns a desired
+/// acceleration into counter bits through `SCALEFAC`
+/// (`THROTTLE_CONTROL_ROUTINES.agc:206-214`), and P66's force law divides
+/// by it again (`LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:1074-1076`). Any
+/// error here is a proportional thrust error across the whole modulated
+/// band — the AGC asks for N and gets 0.9575·N.
+///
+/// Cross-checked three further ways against the same block, all agreeing
+/// to 0.03 %: FEXTRA 51 330.9 N / 4096 bits = 12.5320
+/// (`THROTTLE_CONTROL_ROUTINES.agc:226`), FSAT 48 145.4 / 3841 = 12.5346,
+/// FMAX 43 454.7 / 3467 = 12.5338 (`CONTROLLED_CONSTANTS.agc:132-133`).
+///
+/// Was `assumed = 12.0`, then briefly mis-cited (2026-07-26) to
+/// `LUM69R2/PADLOADS.agc:501`'s "2.7 LBS/BIT" = 12.0325 N/bit as if that
+/// justified it. It does not: LUM69R2 is a different rope with a different
+/// SCALEFAC, and 12.0 was 4.25 % low against the rope we actually fly.
+pub const THRUST_N_PER_PULSE: f64 = 12.531966;
 /// Max DINC strobes per 10 ms tick.
 ///
 /// The real throttle-drive electronics run 3200 pps (32 per tick), but on

@@ -376,7 +376,10 @@ pub const P66_BSCALE_TABLE: &[BScaleEntry] = &[
         status: BScaleStatus::Unverified,
         note: "vendor/virtualagc/Luminary099/LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:1086-1088 \
                (\"PDDL DDV / MAXFORCE / MASS\"), same \
-               MASS-scale ambiguity as MINFORCE. Value 42500 N matches eagle_dynamics::constants::DPS_FTP_N.",
+               MASS-scale ambiguity as MINFORCE. The generator emits DPS_FTP_N here, but the \
+               COMMITTED scenarios/p66-padload.toml carries a static 42500 N at a different b -- \
+               see that file's MAXFORCE comment for why it was deliberately left there when \
+               DPS_FTP_N moved to FSAT (2026-07-26).",
     },
 ];
 
@@ -571,8 +574,8 @@ pub fn generate_p66_manifest(inp: &P66ScenarioInputs) -> PadloadManifest {
         DPS_FTP_N,
         21,
         "MAXFORCE: maximum P66 commanded force, Newtons (eagle_dynamics::constants::DPS_FTP_N). \
-         b=21 is a PLACEHOLDER (chosen only to keep ~42500 N in DP range with headroom) -- \
-         UNVERIFIED, see P66_BSCALE_TABLE (Luminary099.log:4863, E5,1546)",
+         b=21 is a PLACEHOLDER (chosen only to keep a full-throttle-sized force in DP range \
+         with headroom) -- UNVERIFIED, see P66_BSCALE_TABLE (Luminary099.log:4863, E5,1546)",
     ));
 
     PadloadManifest { word: words }

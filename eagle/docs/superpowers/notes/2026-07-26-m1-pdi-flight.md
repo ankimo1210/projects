@@ -22,6 +22,13 @@ handover, the ROD schedule — could work until that was fixed, and no
 static test in this repo could have caught it: it only exists at the
 seam between our physics and the rope's own scaling constants.
 
+The same seam produced three more (found in review, flown as flight 6):
+`THRUST_N_PER_PULSE` 12.0 → **12.531966** N/bit, DPS full throttle
+46 706 → **48 145.4** N, `DPS_TAU` 0.3 → **0.2** s, all from four
+consecutive lines of `CONTROLLED_CONSTANTS.agc`. **Every physical constant
+in the propulsion and accelerometer chain is now the flown rope's own
+number.** See "Fix round 1".
+
 ## Runs
 
 | # | Build | ENGINE ON | MM seen | Outcome | v_vert | v_horiz | tilt | descent |
@@ -33,9 +40,10 @@ seam between our physics and the rope's own scaling constants.
 | 4 | + handover 250 m, rod `[[245,-5.3],[50,-0.3],[12,0.7]]` | t=343.6 s | **`00`,`63`,`64`,`66`** | **Crash** (P66 rate loop bang-bang → climb-away → tank dry) | 44.09 m/s | 59.81 m/s | 11.2° | 866.9 s |
 | 5 | + rod `[[240,-1.5],[40,0.2],[10,0.8]]` (gentler steps) | t=343.6 s | **`00`,`63`,`64`,`66`** | **Crash** (same limit cycle, smaller amplitude) | 13.58 m/s | 66.91 m/s | 12.0° | 848.6 s |
 
-**Flights used: 5 of the 6-flight budget** (plus one cancelled diagnostic
-re-fly that produced no data). Stopped there deliberately: the remaining
-blocker is a pad-load scale factor that this task is not allowed to guess.
+| 6 | + `THRUST_N_PER_PULSE = 12.531966`, `DPS_MAX_N/FTP = 48145.4`, `DPS_TAU = 0.2` (review round 1) | t=343.6 s | **`00`,`63`,`64`,`66`** | **Crash** (limit cycle survives) | 30.86 m/s | 60.04 m/s | 12.8° | 865.1 s |
+
+**Flights used: 6 of 6** (plus one cancelled diagnostic re-fly that
+produced no data). Budget exhausted.
 
 
 ## Flight 1 — the nav divergence, measured
@@ -333,6 +341,11 @@ throttle slams between the idle stop and full thrust with the sink rate
 swinging −9.5 to +7.4 m/s about a −7.3 m/s command, and the vehicle
 porpoises 245 → 7 → 580 m until the tank runs dry at TIG+840.
 
+That 5 s sample under-reports the swing. Over the whole P66 segment run 4's
+thrust ranges **0 N to 46 706 N** — the full stop-to-stop stroke — with the
+sink rate spanning −47.3 to +26.0 m/s; run 5's, on the gentler schedule,
+ranges 0 to 46 448 N and −16.8 to +10.2 m/s.
+
 Not the actuator: between TIG+650 and +655 the throttle counter moved
 678 → 2331 bits, i.e. 331 bits/s, comfortably under the 800 bits/s that
 `DINC_MAX_PER_TICK = 8` allows. Nothing was rate-limited.
@@ -388,7 +401,7 @@ instead of run 4's single −8-click jump to −7.3 m/s.
 |---|---|---|
 | MM sequence | `00`,`63`,`64`,`66` | `00`,`63`,`64`,`66` |
 | MM64 | TIG+480.6 s, 3820.1 m, 218.2 m/s | TIG+480.6 s, 3817.2 m, 218.2 m/s |
-| handover | TIG+637.7 s, 249.9 m, v_h 6.07 m/s | TIG+636.0 s, 249.9 m, v_h 6.68 m/s |
+| handover | TIG+637.7 s, 249.9 m, v_h 6.07 m/s, tilt 12.2° | TIG+636.0 s, 249.9 m, v_h 6.68 m/s, tilt 14.4° |
 | MM66 / P66-entry rate | TIG+640.5 s, −1.40 m/s | TIG+638.6 s, −1.67 m/s |
 | touchdown v_vert | 44.09 m/s | **13.58 m/s** |
 | touchdown v_horiz | 59.81 m/s | **66.91 m/s** |
@@ -408,13 +421,140 @@ That is where the flight budget stopped. The next change needed is a
 number — TAUROD's scale — and this task's rule is that numbers are
 measured or cited, never guessed.
 
+## Fix round 1 (review) — three more constants the rope publishes itself
+
+Review found that the DPS side had the *same* class of error as
+`PIPA_INCR`, and in the same place: **`vendor/virtualagc/Luminary099/
+CONTROLLED_CONSTANTS.agc:132-135` publishes the flown rope's own force
+constants, in SI, on four consecutive lines**, and this task had gone to
+LUM69R2's pad-load annotation instead.
+
+```
+FMAXODD   DEC  +3841                   # FSAT     +4.81454413 E+4
+FMAXPOS   DEC  +3467                   # FMAX     +4.34546769 E+4
+THROTLAG  DEC  +20                     # TAU (TH) +1.99999999 E-1
+SCALEFAC  2DEC* +7.97959872 E+2 B-16*  # BITPERF  +7.97959872 E-2
+```
+
+Also, review strengthened the PIPA finding rather than weakening it:
+`vendor/virtualagc/Comanche055/SERVICER207.agc:790` reads
+`KPIP1 2DEC 0.074880  # 207 DELV SCALING.  1 PULSE = 5.85 CM/SEC.` —
+5.85 cm/s is the **command module** quantum, and running the same
+derivation on the CM constant reproduces the CM rope's own words exactly
+(`0.074880 · 2⁷ / 2¹⁴ = 5.85e-4 m/cs`). LM_Simulator transcribed a CM
+value into an LM simulator. The method is validated on two ropes.
+
+Corrections applied:
+
+| constant | was | now | source |
+|---|---|---|---|
+| `THRUST_N_PER_PULSE` | 12.0 (4.25 % low) | **12.531966 N/bit** | `SCALEFAC`/BITPERF, `:135`; = 1/0.0797959872 |
+| `DPS_MAX_N` / `DPS_FTP_N` | 46 706 N | **48 145.4413 N** | `FMAXODD`/FSAT, `:132` |
+| `DPS_TAU` | 0.3 s (assumed) | **0.2 s** | `THROTLAG`, `:134` |
+
+The bit scale cross-checks four ways to within 0.03 %: BITPERF 12.5320,
+FEXTRA 51 330.9/4096 = 12.5320
+(`THROTTLE_CONTROL_ROUTINES.agc:226`), FSAT 48 145.4/3841 = 12.5346, FMAX
+43 454.7/3467 = 12.5338. It matters in both directions because the AGC
+converts desired thrust to bits through `SCALEFAC` (`MASSMULT`,
+`THROTTLE_CONTROL_ROUTINES.agc:206-214`) and P66's force law divides by it
+again (`LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:1074-1076`) — at 12.0 the AGC
+asked for N and got 0.9575·N across the whole modulated band.
+
+Why the earlier 46 706 N was wrong even though its arithmetic was right:
+LUM69R2's "(2.7 LBS/BIT)" is *that* rope's SCALEFAC (12.0325 N/bit), and
+the two ropes differ by 4.16 %. Mixing LUM69R2's bit scale with
+Luminary099's LOWCRIT/HIGHCRIT criteria mis-scaled the answer. Against
+FSAT those same criteria land where they should: LOWCRIT 2217 bits =
+57.7 % of 3841, HIGHCRIT 2450 = 63.8 %, matching the annotation's
+"57 %/63 % NOMINAL MAX THRUST".
+
+`FMAX` (43 454.7 N) is deliberately **not** the delivered thrust: it is
+what the AGC writes into FCODD as its own estimate after a throttle-up
+(`THROTTLE_CONTROL_ROUTINES.agc:105-106`), 90.3 % of FSAT. NOTE 2 at
+`:114-118` names FMAXODD as *"the NUMBER OF BITS CORRESPONDING TO FULL
+THROTTLE"*, so FSAT is the stop and FEXTRA's 4096 bits (51 330.9 N) is
+drive-past, exactly like the zero-stop idiom at the other end.
+
+### Flight 6 — the constants are right, and the limit cycle survives
+
+| | run 3 (46 706 N, 12.0 N/bit, τ 0.3) | run 6 (48 145 N, 12.532 N/bit, τ 0.2) |
+|---|---|---|
+| time at full throttle | 333 s | **287 s** |
+| MM64 | TIG+480.6 s | TIG+488.6 s |
+| altitude at gate | 3832.1 m | 3835.0 m (target 2923.6) |
+| horizontal at gate | 217.6 m/s | 219.3 m/s (target 171.8) |
+| DPS at gate | 1861 kg | 1843 kg |
+| handover | — | TIG+647.1 s, 249.9 m, v_h 5.66 m/s, tilt 11.7°, DPS 809 kg |
+| MM66 / P66-entry rate | — | TIG+648.8 s, 247.3 m, **−1.42 m/s** |
+| P66 duration / thrust span | (2 s, engine dead) | 218 s, **0 → 48 132 N** |
+| P66 sink-rate span | — | −34.1 to +16.2 m/s |
+| alarms | 794 lamp frames (P65) | **0 episodes, 0 lamp frames** |
+| touchdown | 83.99 / 38.77 m/s | 30.86 / 60.04 m/s, tilt 12.8° |
+
+Two things this settles.
+
+**1. The braking-gate residual is NOT a thrust deficit.** The prediction
+going in was that +3 % would close the remaining 900 m / 47 m/s. It did
+not move it at all — the gate is within 3 m and 1.7 m/s of run 3's. What
+did change is that the engine stopped being the constraint: 46 s less time
+at full throttle, and the AGC now modulates in the throttleable band
+(26-27 kN) through the second half of P63 instead of sitting on the stop.
+At 42 500 N the engine was saturated and the gate was missed by 1128 m /
+264 m/s; at 48 145 N there is margin and the gate is still missed by
+911 m / 47 m/s. So whatever sets the residual is in the guidance's own
+targeting or in the state it is targeting from — the same place the
+−190 m altitude drift lives — not in the engine.
+
+**2. The P66 limit cycle is not caused by any of the three constants.**
+The corrected plant is 4.25 % stronger per bit, 3 % stronger at the stop,
+and 50 % faster in response — every change in the direction that should
+buy phase margin — and P66 still runs the throttle stop-to-stop
+(0 → 48 132 N) with the sink rate spanning −34 to +16 m/s for 218 s. The
+amplitude is smaller than run 4's (−47.3 to +26.0) and the vehicle
+survived longer, but it is the same oscillation. `v_vert` at contact went
+44.09 → 13.58 (run 5, gentler steps) → 30.86; `v_horiz` is 60 m/s and is
+the un-flown attitude, not the loop.
+
+The two candidate mechanisms both survive flight 6, and neither was
+tested by it:
+
+- **TAUROD's b-scale.** Still `Unverified`. Review points out it is
+  statically derivable without flying: `STARTP66` DP-copies
+  VDGVERT ← HDOTDISP (`LLGE:155-157`), fixing them to one scale, and
+  `:1050`'s `DAD` forces `(VDGVERT − HDOTDISP)/TAUROD` to the same scale
+  as `ABVAL(GDT/2)/GSCALE >> 2` with `GSCALE = 100 B-11` pinned at
+  `LLGE:1477`. That is the next thing to do, and it costs no flights.
+  (Circumstantial support that the current value is not the intended one:
+  `scenarios/p66-padload.toml`'s `LAG/TAU` is derived as "lag 0.2 s /
+  tau 1.5 s" — and 0.2 s is exactly THROTLAG, so whoever wrote it already
+  had the right lag and a 1.5 s TAUROD in mind.)
+- **`dps_envelope`'s discontinuity.** `forces.rs:180-188` jumps from
+  0.6·MAX (28.9 kN) straight to full throttle with no hysteresis, so the
+  plant has a ~19 kN step in the middle of the actuator's slew path. The
+  rope's own throttle law never *rests* in the 57-63 % band
+  (`THROTTLE_CONTROL_ROUTINES.agc:88-107`) but it does slew through it,
+  and a real engine's thrust is continuous in actuator position. Changing
+  the envelope shape needs a citation for what the engine actually does
+  between 60 % and full; it was not attempted here because it is a plant
+  change, not a constant, and there was one flight left.
+
 ## Open, in the order the next engineer should take them
 
 1. **P66's rate loop (blocker 3).** Pin TAUROD / LAG/TAU / MINFORCE /
    MAXFORCE against the rope instead of the scale-chain hypotheses in
-   `padload::P66_BSCALE_TABLE`, then re-fly. Everything else in the loop
-   already checks out live, and the AGC's rate reading is good to under
-   1 m/s, so this is a scaling question, not a navigation one.
+   `padload::P66_BSCALE_TABLE`, then re-fly. TAUROD is derivable
+   statically — see the route in "Fix round 1" — so this costs no flights
+   to attempt. Everything else in the loop already checks out live, the
+   three engine constants are now the rope's own, and the AGC's rate
+   reading is good to under 1 m/s: this is a scaling question, not a
+   navigation one. Second candidate, needing a citation before it is
+   touched: `dps_envelope`'s 19 kN discontinuity at 0.6·MAX.
+1a. **The braking-gate residual (new, flight 6).** The gate is 911 m high
+   and 47 m/s fast against RBRFG/VBRFG, and flight 6 proved that is *not*
+   thrust — the engine now has margin and the number did not move. Look at
+   the targeting and at the state it targets from; it is probably the same
+   root as item 3.
 2. **The P65 PROG alarm.** Reproducible at the MM64→MM65 transition in
    both flights that reached it, with ALT and VEL lamps alongside, and it
    stops the guidance modulating the throttle. Its code is unknown because
