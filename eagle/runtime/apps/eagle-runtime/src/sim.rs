@@ -391,11 +391,12 @@ impl SimCore {
     //   engine at the gate.
     // * PDI: ZERO. The pre-ignition arc is a free coast, and truth is
     //   pinned, so nav must see nothing accelerate — anything else is a
-    //   pure nav error injected before the burn even starts. Ullage
-    //   (~0.9 m/s at TIG−7.5 s,
-    //   vendor/virtualagc/Luminary099/BURN,_BABY,_BURN_--_MASTER_IGNITION_ROUTINE.agc:356)
-    //   falls inside this window and is therefore consistently absent from
-    //   both sides.
+    //   pure nav error injected before the burn even starts. Ullage starts
+    //   at TIG−7.5 s (ULLGTASK,
+    //   vendor/virtualagc/Luminary099/BURN,_BABY,_BURN_--_MASTER_IGNITION_ROUTINE.agc:356),
+    //   so it falls inside this window and is therefore consistently
+    //   absent from both sides. Its ΔV is ~0.9 m/s — derived, not
+    //   measured: 4 jets × ~445 N × 7.5 s / 15.2 t = 0.88 m/s.
     //
     // Releasing at ENGINE ON ≈ TIG−0 is what makes truth and nav agree:
     // `DDUMGOOD` computes TIG = TDEC1 − ZOOMTIME
@@ -484,6 +485,15 @@ impl SimCore {
     // MM64 arm. Altitude alone would fire during the braking phase, while
     // the vehicle is still below the gate on the way down from PDI.
     // `handover_alt_m` is `None` in hover mode, so this is inert there.
+    //
+    // The freeze and touchdown guards close the two windows where the
+    // altitude test is trivially true and the handover is meaningless:
+    // during the freeze truth is pinned (a scenario pinned below the gate
+    // would fire before ENGINE ON), and after contact `alt_agl() <= 0`
+    // holds forever while `spawn_sim` keeps ticking for 2 s — with Wave 1
+    // measuring MM66, and so a late MM64, arriving 0.6-1.8 s AFTER contact
+    // (docs/superpowers/notes/2026-07-25-wave1-reflight.md). Either would
+    // flip ATT HOLD and load RODCOUNT into a vehicle that is not flying.
     fn phase9_handover(&mut self, out: &mut SimTickOut) {
         let Some(alt_gate) = self.handover_alt_m else {
             return;
@@ -491,7 +501,12 @@ impl SimCore {
         if self.mm == "64" {
             self.handover_armed = true;
         }
-        if self.handover_armed && !self.handover_fired && self.alt_agl() <= alt_gate {
+        if self.handover_armed
+            && !self.handover_fired
+            && !self.frozen
+            && self.touchdown.is_none()
+            && self.alt_agl() <= alt_gate
+        {
             self.handover_fired = true;
             out.handover = true;
         }
@@ -586,6 +601,7 @@ impl SimCore {
             downlink_wps,
             ingest_drops: self.ingest_drops,
             touchdown: self.touchdown.map(|t| format!("{t:?}")),
+            handover: self.handover_fired,
         }
     }
 }
@@ -870,6 +886,57 @@ mod tests {
         }));
         assert!(core.tick().handover, "armed + below altitude => fire");
         assert!(!core.tick().handover, "fires once");
+    }
+
+    #[test]
+    fn handover_never_fires_after_touchdown() {
+        // `alt_agl() <= 0 <= handover_alt_m` holds forever once the vehicle
+        // is down, and `spawn_sim` keeps ticking for 2 s past contact —
+        // while Wave 1 measured MM66 (and therefore a late MM64) lighting
+        // 0.6-1.8 s AFTER contact. Arming post-touchdown must not flip ATT
+        // HOLD and load RODCOUNT into a landed vehicle.
+        let sc = pdi_scenario();
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+        core.st.pos = core.st.pos.unit().scale(sc.site.radius_m - 1.0);
+        assert!(core.tick().touchdown.is_some(), "touchdown must latch");
+        core.ingest(SimIn::Dsky(DskyStateSnapshot {
+            mm: "64".into(),
+            nav: None,
+        }));
+        assert!(!core.tick().handover, "handover fired after touchdown");
+    }
+
+    #[test]
+    fn handover_never_fires_while_frozen() {
+        // The freeze pins truth at the PDI point, but nothing structurally
+        // stops a scenario whose pinned altitude is already below the gate
+        // from firing a handover before ENGINE ON.
+        let sc = pdi_scenario();
+        let mut core = SimCore::new(&sc, 0.0);
+        core.st.pos = core.st.pos.unit().scale(sc.site.radius_m + 10.0);
+        core.ingest(SimIn::Dsky(DskyStateSnapshot {
+            mm: "64".into(),
+            nav: None,
+        }));
+        assert!(!core.tick().handover, "handover fired during the freeze");
+    }
+
+    #[test]
+    fn telemetry_reports_the_handover_latch() {
+        // Wave 1 lost an investigation to an unobservable value; the
+        // handover must be visible in the telemetry stream.
+        let sc = pdi_scenario();
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+        core.st.pos = core.st.pos.unit().scale(sc.site.radius_m + 100.0);
+        core.ingest(SimIn::Dsky(DskyStateSnapshot {
+            mm: "64".into(),
+            nav: None,
+        }));
+        assert!(!core.telemetry().handover, "not fired yet");
+        assert!(core.tick().handover);
+        assert!(core.telemetry().handover, "latch must reach telemetry");
     }
 
     #[test]

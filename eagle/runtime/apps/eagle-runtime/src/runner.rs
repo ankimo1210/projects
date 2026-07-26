@@ -79,6 +79,19 @@ pub const REFSMBIT: u16 = 0o10000;
 pub const FLAGWRD8_ECADR: u16 = 0o104;
 /// CMOONFLG | LMOONFLG.
 pub const FLAGWRD8_MOON_BITS: u16 = 0o4000 | 0o2000;
+/// FLGWRD11 = STATE +11D, unswitched ECADR 0o107 (`Luminary099.log:3262`:
+/// `26,2022  0107  FLGWRD11 = STATE +11D`). LRBYPASS is its BIT15
+/// (`vendor/virtualagc/Luminary099/FLAGWORD_ASSIGNMENTS.agc:1040-1041`).
+pub const FLGWRD11_ECADR: u16 = 0o107;
+/// LRBYBIT = BIT15 — set means "bypass ALL landing-radar updates". Fresh
+/// start already sets it: the SWINIT table's 12th word is `OCT 40000` with
+/// the comment `BIT 15 = LRBYPASS`
+/// (`vendor/virtualagc/Luminary099/FRESH_START_AND_RESTART.agc:623`;
+/// SWINIT begins at :611, so word 11 lands on :623). We fly with no
+/// landing radar, so `run_scenario` VERIFIES this rather than writing it —
+/// a cleared bit means R12 would read our nonexistent radar and the whole
+/// descent premise is broken.
+pub const LRBYBIT: u16 = 0o40000;
 
 /// TIME2/TIME1 master clock, unswitched 0o24/0o25; TIME2 counts TIME1
 /// overflows (2^14 cs each).
@@ -965,10 +978,18 @@ pub struct ScenarioReport {
     pub alarms: Vec<AlarmEpisode>,
 }
 
-/// Boot → discretes/ISS → V48 → pad-load (static + generated state) →
-/// REFSMFLG → V37E63E → ENGINE ON → ATT HOLD + selection ROD click → MM66.
+/// Boot → discretes/ISS → V48 → LRBYPASS verify → pad-load (static +
+/// generated state) → REFSMFLG → V37E63E → ENGINE ON, then the tail
+/// depends on `gate.mode`:
+///
+/// * `Hover` (Wave 1, unchanged): sleep `flip_atthold_after_engine_on_s`,
+///   ATT HOLD + selection ROD click, return once GUILDENSTERN reaches P66.
+/// * `Pdi`: return at ENGINE ON. P63 braking, P64 approach and the
+///   P64→P66 handover all run afterwards, driven by the sim through
+///   `SimEvent` — nothing here may force a mode.
+///
 /// `packets` is a broadcast receiver of every AGC packet (for the ignition
-/// responder and the engine-on wait). Returns once GUILDENSTERN reaches P66.
+/// responder and the engine-on wait).
 pub async fn run_scenario(
     script: &mut DskyScript,
     sc: &crate::scenario::Scenario,
@@ -989,6 +1010,26 @@ pub async fn run_scenario(
     dap_init(script, sc.agc.lm_weight_lbs.round() as u32, 0)
         .await
         .context("V48 DAP init")?;
+
+    // Landing-radar bypass. We model no landing radar, so R12 must never
+    // try to incorporate one; fresh start sets LRBYPASS for us
+    // (vendor/virtualagc/Luminary099/FRESH_START_AND_RESTART.agc:623),
+    // which makes this a read-back
+    // VERIFY, not a write — if the assumption ever stops holding we want
+    // the run to stop here, not to discover it in the descent data.
+    if sc.agc.lrbypass {
+        let word = script
+            .read_erasable(FLGWRD11_ECADR)
+            .await
+            .context("read FLGWRD11")?;
+        ensure!(
+            word & LRBYBIT != 0,
+            "LRBYPASS not set after fresh start — radar-bypass precondition broken \
+             (FLGWRD11 @{:05o} = {:05o})",
+            FLGWRD11_ECADR,
+            word
+        );
+    }
 
     let epoch_cs = read_clock_cs(script).await.context("clock read")?;
     let state = PadloadManifest {
@@ -1027,6 +1068,15 @@ pub async fn run_scenario(
         .await
         .context("ENGINE ON")?;
 
+    // PDI mode ends here: the P64→P66 handover is SIM-driven (armed by
+    // MM64, fired at `[handover] alt_m`), delivered by the headless event
+    // loop. Running the hover block below would flip ATT HOLD at TIG+2 s —
+    // ~15 km up, still in P63 braking — and then block forever on a MM66
+    // that the braking phase will never paint.
+    if sc.gate.mode == crate::scenario::GateMode::Pdi {
+        return Ok(ScenarioReport { alarms });
+    }
+
     // Enter P66: ATT HOLD, then the selection ROD click as a RODCOUNT load.
     tokio::time::sleep(Duration::from_secs_f64(
         sc.agc.flip_atthold_after_engine_on_s,
@@ -1060,6 +1110,14 @@ mod tests {
         assert_eq!(ch31 & !0o20000, INIT_CH31);
         // ATT HOLD: bit13 asserted, bit14 released:
         assert_eq!((ch31 & !0o10000), CH31_ATT_HOLD);
+    }
+
+    #[test]
+    fn flgwrd11_constants() {
+        // STATE = 0o74 (FLAGWRD3 = STATE +3 = 0o77 is already pinned above);
+        // STATE + 11D = 0o74 + 11 = 0o107.
+        assert_eq!(FLGWRD11_ECADR, 0o74 + 11);
+        assert_eq!(LRBYBIT, 1 << 14); // BIT 15 in AGC 1-based numbering
     }
 
     #[test]

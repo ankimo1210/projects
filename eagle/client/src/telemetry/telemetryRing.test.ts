@@ -26,6 +26,7 @@ function frame(t: number, mm: string): TelemetryFrame {
     downlink_wps: 50,
     ingest_drops: 0,
     touchdown: null,
+    handover: false,
   };
 }
 

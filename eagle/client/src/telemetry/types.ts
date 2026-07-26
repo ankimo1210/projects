@@ -22,6 +22,8 @@ export interface TelemetryFrame {
   downlink_wps: number;
   ingest_drops: number;
   touchdown: string | null;
+  /** Sim-driven P64→P66 handover has fired (latched). Always false in hover mode. */
+  handover: boolean;
 }
 
 export interface PhaseChange {

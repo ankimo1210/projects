@@ -78,6 +78,7 @@ export function TelemetryPage({ buffer, sendRod }: Props) {
                 <Row k="drift" v={latest.drift_ms.toFixed(0) + " ms"} />
                 <Row k="downlink" v={latest.downlink_wps.toFixed(0) + " wps"} />
                 <Row k="ingest drops" v={String(latest.ingest_drops)} />
+                <Row k="handover" v={latest.handover ? "FIRED" : "—"} />
               </tbody>
             </table>
           ) : (
