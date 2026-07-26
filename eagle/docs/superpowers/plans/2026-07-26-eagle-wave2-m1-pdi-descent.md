@@ -735,7 +735,16 @@ yet the frozen 2×-consecutive bar — that is Task 6's).
 - Consumes: measured values from Task 5; `run_headless`, `HeadlessResult`
   (alarms, prog_lamp_frames, drift/final_t_s, mm_sequence), `TouchdownReport`.
 
-- [ ] **Step 1: Write the test** (pattern: `live_p66_descent.rs`, updated):
+> **Outcome, 2026-07-26 — test frozen, acceptance NOT met, Step 3 not run.**
+> Task 5 hit its stop rule (6 of 6 flights, no stable profile), so this task
+> took the branch Step 3 names: the test is written and compiles, the docs
+> record the measured status, and **the acceptance has never been run —
+> not once, green or red.** On the six measured flights its mode-sequence,
+> alarm and AGC-clock assertions would pass and its touchdown assertions
+> would fail (run 6: 30.86 / 60.04 m/s, 12.8° tilt, `Crash`). Blockers and
+> next steps: `docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`.
+
+- [x] **Step 1: Write the test** (pattern: `live_p66_descent.rs`, updated):
 
 ```rust
 //! Wave 2 M1 acceptance: the real Luminary099 flies PDI → P63 → P64 → P66
@@ -838,9 +847,9 @@ async fn pdi_full_descent_closed_loop() {
 (Adjust field names against the real `HeadlessResult` — Wave 1's final fix
 wave added `alarms`, `prog_lamp_frames`, `final_t_s`, `pacing_lost_ms`.)
 
-- [ ] **Step 2: Compile gate** — `cargo test -p eagle-runtime --test live_pdi_descent --no-run`.
+- [x] **Step 2: Compile gate** — `cargo test -p eagle-runtime --test live_pdi_descent --no-run`. — *Builds clean; `make lint` (clippy `-D warnings` over `--all-targets`) covers it too.*
 
-- [ ] **Step 3: Run live until green 2× consecutively** (the M1 bar; each run ~18-19 min):
+- [ ] **Step 3: Run live until green 2× consecutively** (the M1 bar; each run ~18-19 min): — **NOT RUN.** The flight budget was exhausted in Task 5 and the acceptance does not pass; running it would spend wall clock to re-measure a known-red result. The test stays as the target.
 
 ```bash
 cargo test -p eagle-runtime --test live_pdi_descent -- --ignored --test-threads=1
@@ -850,15 +859,15 @@ Record both runs' `[accept]` blocks in the Task 5 ledger note. If Task 5
 ended without a stable profile (stop rule), this task instead records the
 honest status and the test stays as the target.
 
-- [ ] **Step 4: Docs truth pass.** `CLAUDE.md` + `README.md`: describe M1
+- [x] **Step 4: Docs truth pass.** `CLAUDE.md` + `README.md`: describe M1
 per the measured outcome (never "soft touchdown" unless the acceptance is
 the thing that measured it); add `make descent-full` and the pdi scenario
 to the run docs; update the Wave 2 spec with an M1 status note (green date
 + commit, or the blocker). Update `make test-integration` docs if the new
 test joins it (it does — it is `#[ignore]`d and serial like the others).
 
-- [ ] **Step 5: Full fast gate + commit** —
-`git commit -m "feat(eagle): M1 acceptance — real PDI descent to landing (radar bypassed)"` (+ trailers).
+- [x] **Step 5: Full fast gate + commit** —
+`git commit -m "feat(eagle): M1 acceptance — real PDI descent to landing (radar bypassed)"` (+ trailers). — *Committed with a message that states the measured status instead: the planned one claims a landing that was not measured.*
 
 ---
 

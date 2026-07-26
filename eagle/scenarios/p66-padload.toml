@@ -307,9 +307,16 @@ provenance = "derived (scale chain); 42500 N = 4.25 kg*m/cs^2"
 #     so the newtons it actually lands on in the AGC are a hypothesis. A
 #     verified engine constant must not be laundered into an unverified
 #     pad word and then read back as if it were confirmed.
-#  2. It is not binding on the flight this task measures: P66 hovers the
-#     measured ~7.8 t vehicle at ~12.6 kN, and even the run-4/5 limit
-#     cycle peaked at 26.8 kN, both far under 42.5 kN.
+#  2. Nothing measured so far says which way this word should move. The
+#     "26.8 kN peak" written here first was wrong -- it came from a
+#     5-second telemetry sample, and the same commit's ledger note
+#     retracted it: the full-rate trace has run 4's P66 thrust stroking
+#     0 -> 46706 N, and run 6's 0 -> 48132 N, i.e. the limit cycle does
+#     drive the plant to its stop. Those peaks are the PLANT's
+#     full-throttle snap (dps_envelope sends any command above 0.6*MAX to
+#     FTP), so they do not read back the AGC's own force clamp -- but they
+#     do mean this word cannot be assumed slack. What IS known is only that
+#     hovering the measured ~7.8 t vehicle needs ~12.6 kN.
 #  3. One variable per flight. The M1 flight budget is testing the three
 #     engine constants; moving a pad word in the same run would confound
 #     the attribution.
