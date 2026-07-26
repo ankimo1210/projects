@@ -77,12 +77,15 @@ steps = [[240.0, -1.5], [40.0, 0.2], [10.0, 0.8]]
 # would turn a known-open blocker into a passing gate.
 v_vert_max = 3.0
 v_horiz_max = 1.5
-# measured: runs 4 and 5 contacted at 11.2 deg and 12.0 deg of tilt. P66
-# holds attitude and does not re-orient, so whatever P64 leaves behind is
-# what lands: 12.2-14.4 deg at the measured handover point. A 12.0 bar is
-# therefore unreachable by construction in this profile; 15.0 clears the
-# measured hold with margin without hiding a tip-over.
-tilt_max_deg = 15.0
+# measured: runs 4 and 5 contacted at 11.2 deg and 12.0 deg of tilt, i.e.
+# BOTH met the Wave 1 bar of 12.0 (run 5 only just). This was briefly
+# relaxed to 15.0 and is put back: relaxing the one limit the flights
+# happened to meet, while correctly refusing to relax v_vert/v_horiz, was
+# inconsistent. P66 holds attitude and does not re-orient, so whatever P64
+# leaves behind is what lands (12.2 deg at run 4's handover, 14.4 deg at
+# run 5's) -- that is a reason to expect this bar to be tight, not a
+# reason to move it.
+tilt_max_deg = 12.0
 # measured: from ENGINE ON. Runs 3-5 all reached MM64 at TIG+480.6 s and
 # runs 4/5 reached MM66 (the handover) at TIG+640.5 / +638.6 s. A stable
 # P66 from the measured 245 m entry at ~3 m/s adds ~85 s, i.e. ~725 s

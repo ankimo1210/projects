@@ -23,19 +23,27 @@ vehicle would enter P66 holding the braking attitude IGNALG computed for a
 1700 m/s burn (measured 107-108° tilt) — and P66 holds attitude, it does
 not re-orient. Do not restate "soft touchdown" anywhere until it is
 measured. Evidence, numbers and next steps:
-`docs/superpowers/notes/2026-07-25-wave1-reflight.md`.
+`docs/superpowers/notes/2026-07-25-wave1-reflight.md` — **whose
+measurements predate the 2026-07-26 vehicle-constant corrections
+(`PIPA_INCR`, `THRUST_N_PER_PULSE`, DPS full throttle, `DPS_TAU`) and will
+not reproduce**; the conclusions stand, the numbers do not.
 
 **Wave 2 M1 (`scenarios/pdi-descent.toml`, `make descent-full`) flies the
-real profile and does not land yet.** Five instrumented flights on
+real profile and does not land yet.** Six instrumented flights on
 2026-07-26 fly PDI → P63 → P64 → P66 with the radar bypassed in-rope and
 **zero PROG alarms**, AGC-vs-truth altitude-rate error under 1 m/s for the
-whole braking phase, MM64 at TIG+480.6 s and the sim-driven handover at
+whole braking phase, MM64 at TIG+488.6 s and the sim-driven handover at
 250 m. Touchdown is still a crash: P66's rate loop limit-cycles (throttle
 slamming idle ↔ full) and nothing flies the attitude, so v_horiz runs
-away. Two model bugs were found by flying and fixed with rope citations —
-`PIPA_INCR` 0.0585 → **0.01** m/s/pulse (Luminary's own KPIP constants)
-and DPS thrust 42 500 → **46 706** N (LUM69R2's LOWCRIT/HIGHCRIT
-annotation). Numbers, citations and the open blockers:
+away. **Every physical constant in the accelerometer and propulsion chain
+is now the flown rope's own number**, four of them corrected by flying:
+`PIPA_INCR` 0.0585 → **0.01** m/s/pulse (Luminary's KPIP — 0.0585 is the
+*command module* quantum, `Comanche055/SERVICER207.agc:790`),
+`THRUST_N_PER_PULSE` 12.0 → **12.531966** N/bit, DPS full throttle
+42 500 → **48 145.4** N, `DPS_TAU` 0.3 → **0.2** s — the last three from
+`CONTROLLED_CONSTANTS.agc:132-135`. Flight 6 proved the remaining
+braking-gate error (911 m / 47 m/s) is *not* thrust. Numbers, citations
+and the open blockers:
 `docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`.
 
 - Specs: docs/superpowers/specs/2026-07-21-eagle-roadmap-design.md,
@@ -59,7 +67,7 @@ annotation). Numbers, citations and the open blockers:
   `make dev-client` → ENGR tab (strip charts + ROD −/+ buttons)
 - Wave 2 M1 descent: `make descent-full` (PDI → P63 → P64 → P66, radar
   bypassed). ~20 min wall: boot ~5.7 min, ENGINE ON at t ≈ 344 s, MM64 at
-  TIG+481 s, handover at TIG+637 s. Not in CI.
+  TIG+489 s, handover at TIG+647 s. Not in CI.
 - Debug env vars for a live run: `EAGLE_ATT_DEBUG=<path>` (attitude
   sign-chain trace: t, jet bitmask, gimbals, omega, torque — one line per
   10 ticks post-freeze), `EAGLE_TELEM_OUT=<path>` (per-frame telemetry
