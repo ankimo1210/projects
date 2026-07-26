@@ -210,25 +210,34 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
         }
     };
 
-    // Deliver ROD clicks from both sources through the one DskyScript.
-    // `next_rod_click` biases toward the SIM channel, so it returns `None`
-    // only when the SIM channel closes (sim thread exited on touchdown +
-    // 2 s); a closed client channel just stops that source. Each
-    // `rod_load` call gates the client-key forwarder above, since it does
-    // its own terminal-key sequence (V21N01E…E…E) that a stray client key
-    // must not interleave with.
+    // Deliver sim events (ROD clicks from both sources, and the P64→P66
+    // handover) through the one DskyScript. `next_sim_event` biases toward
+    // the SIM channel, so it returns `None` only when the SIM channel
+    // closes (sim thread exited on touchdown + 2 s); a closed client
+    // channel just stops that source. Every action here gates the
+    // client-key forwarder above, since each does its own terminal-key
+    // sequence (V21N01E…E…E) that a stray client key must not interleave
+    // with.
     let mut client_rod_rx = cfg.client_rod_rx;
-    while let Some(ev) = next_rod_click(&mut event_rx, &mut client_rod_rx).await {
-        let n = match ev {
-            SimEvent::RodClicks(n) => n,
-            // Task 4 wires this (ATT HOLD discrete + selection ROD click).
-            SimEvent::Handover => continue,
-        };
+    while let Some(ev) = next_sim_event(&mut event_rx, &mut client_rod_rx).await {
         script_busy.store(true, Ordering::SeqCst);
-        let result = runner::rod_load(&mut script, n as i16).await;
+        let r = match ev {
+            SimEvent::RodClicks(n) => runner::rod_load(&mut script, n as i16).await,
+            SimEvent::Handover => {
+                // ATT HOLD flips GUILDENSTERN's mode check (STABL?, the
+                // un-attitude-hold discrete); the selection click gives it
+                // the nonzero RODCOUNT that sends it to STARTP66
+                // (vendor/virtualagc/Luminary099/
+                // LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:203-217).
+                match runner::att_hold(&cmd_tx).await {
+                    Ok(()) => runner::rod_load(&mut script, -1).await,
+                    Err(e) => Err(e),
+                }
+            }
+        };
         script_busy.store(false, Ordering::SeqCst);
-        if let Err(e) = result {
-            eprintln!("headless: ROD load failed: {e:#}");
+        if let Err(e) = r {
+            eprintln!("headless: sim event failed: {e:#}");
         }
     }
     // event_rx closed ⇒ the sim thread exited (touchdown + 2 s or channel close).
@@ -330,9 +339,10 @@ async fn forward_client_keys(
 /// arrives as `SimEvent::RodClicks`). Biased toward the SIM channel, so it
 /// always wins a race against a backlog of pending client clicks — a
 /// closing sim (touchdown + 2 s) must end the loop promptly, not dawdle on
-/// client input. Returns `None` only when the SIM channel closes; a closed
-/// client channel just clears `client` and keeps serving the sim side.
-async fn next_rod_click(
+/// client input, and a handover must not queue behind stale clicks.
+/// Returns `None` only when the SIM channel closes; a closed client
+/// channel just clears `client` and keeps serving the sim side.
+async fn next_sim_event(
     event_rx: &mut tokio::sync::mpsc::UnboundedReceiver<SimEvent>,
     client: &mut Option<tokio::sync::mpsc::UnboundedReceiver<i32>>,
 ) -> Option<SimEvent> {
@@ -387,6 +397,7 @@ mod tests {
             downlink_wps: 50.0,
             ingest_drops: 0,
             touchdown: None,
+            handover: false,
         })
     }
 
@@ -519,7 +530,23 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn next_rod_click_delivers_from_both_sources() {
+    async fn handover_event_passes_through_and_sim_close_still_terminates() {
+        // The Task-3 shim dropped `Handover` on the floor; the merged loop
+        // must deliver it like any other sim event, and closing the sim
+        // channel must still end the loop.
+        let (sim_tx, mut sim_rx_holder) = tokio::sync::mpsc::unbounded_channel();
+        let mut client: Option<tokio::sync::mpsc::UnboundedReceiver<i32>> = None;
+        sim_tx.send(SimEvent::Handover).unwrap();
+        assert_eq!(
+            next_sim_event(&mut sim_rx_holder, &mut client).await,
+            Some(SimEvent::Handover)
+        );
+        drop(sim_tx);
+        assert_eq!(next_sim_event(&mut sim_rx_holder, &mut client).await, None);
+    }
+
+    #[tokio::test]
+    async fn next_sim_event_delivers_from_both_sources() {
         let (sim_tx, mut sim_rx) = mpsc::unbounded_channel::<SimEvent>();
         let (client_tx, client_rx) = mpsc::unbounded_channel::<i32>();
         let mut client = Some(client_rx);
@@ -530,31 +557,31 @@ mod tests {
         // biased: the sim value is checked (and returned) first even
         // though both are ready.
         assert_eq!(
-            next_rod_click(&mut sim_rx, &mut client).await,
+            next_sim_event(&mut sim_rx, &mut client).await,
             Some(SimEvent::RodClicks(1))
         );
         assert_eq!(
-            next_rod_click(&mut sim_rx, &mut client).await,
+            next_sim_event(&mut sim_rx, &mut client).await,
             Some(SimEvent::RodClicks(2))
         );
     }
 
     #[tokio::test]
-    async fn next_rod_click_keeps_serving_sim_after_client_closes() {
+    async fn next_sim_event_keeps_serving_sim_after_client_closes() {
         let (sim_tx, mut sim_rx) = mpsc::unbounded_channel::<SimEvent>();
         let (client_tx, client_rx) = mpsc::unbounded_channel::<i32>();
         let mut client = Some(client_rx);
         drop(client_tx); // client channel closes with nothing pending
 
         let sender = tokio::spawn(async move {
-            // Let next_rod_click observe the closed client channel and
+            // Let next_sim_event observe the closed client channel and
             // clear it before the sim value shows up.
             tokio::task::yield_now().await;
             sim_tx.send(SimEvent::RodClicks(7)).unwrap();
         });
 
         assert_eq!(
-            next_rod_click(&mut sim_rx, &mut client).await,
+            next_sim_event(&mut sim_rx, &mut client).await,
             Some(SimEvent::RodClicks(7))
         );
         assert!(
@@ -565,7 +592,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn next_rod_click_ends_on_sim_close_even_with_client_pending() {
+    async fn next_sim_event_ends_on_sim_close_even_with_client_pending() {
         let (sim_tx, mut sim_rx) = mpsc::unbounded_channel::<SimEvent>();
         let (client_tx, client_rx) = mpsc::unbounded_channel::<i32>();
         let mut client = Some(client_rx);
@@ -575,6 +602,6 @@ mod tests {
 
         // biased must prefer the (closed) sim arm, so the loop ends with
         // None instead of returning the pending client click.
-        assert_eq!(next_rod_click(&mut sim_rx, &mut client).await, None);
+        assert_eq!(next_sim_event(&mut sim_rx, &mut client).await, None);
     }
 }

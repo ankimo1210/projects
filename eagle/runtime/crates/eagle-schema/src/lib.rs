@@ -62,6 +62,17 @@ pub struct TelemetryMsg {
     pub downlink_wps: f64,
     pub ingest_drops: u64,
     pub touchdown: Option<String>,
+    /// The sim-driven P64→P66 handover (ATT HOLD + selection ROD click)
+    /// has fired. Latched true for the rest of the run; always false in
+    /// hover mode, which flips ATT HOLD on a wall clock instead.
+    ///
+    /// `SCHEMA_VERSION` stays 2: this is a purely ADDITIVE field. Both
+    /// ends of the wire are built from this repo in lockstep, and every
+    /// consumer ignores unknown keys (serde by default; TS structurally),
+    /// so a v2 parser survives a frame carrying it. Bump the version when
+    /// a field is removed, renamed, retyped, or its meaning changes under
+    /// a stable name — none of which this is.
+    pub handover: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -139,12 +150,14 @@ mod tests {
             downlink_wps: 50.0,
             ingest_drops: 0,
             touchdown: None,
+            handover: true,
         });
         let j: serde_json::Value = serde_json::to_value(&msg).unwrap();
         assert_eq!(j["type"], "telemetry");
         assert_eq!(j["mm"], "66");
         assert_eq!(j["schema_version"], 2);
         assert_eq!(j["agc_alt_m"], serde_json::Value::Null);
+        assert_eq!(j["handover"], true);
     }
 
     #[test]
