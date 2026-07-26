@@ -53,24 +53,39 @@ impl DskyStateSnapshot {
 
 /// Parse the AGC flight display: R2 = HDOTDISP, shown in 0.1 ft/s units
 /// (Spike B: R2 "+00756" = 75.6 ft/s). Altitude is not exposed in a pinned
-/// scaling by either noun, so `alt_m` stays `None` in Wave 1.
+/// scaling by any of these nouns, so `alt_m` stays `None` — see below.
 ///
-/// BOTH V06N60 and V06N63 are accepted. N60 is P66's own `VERTDISP`
-/// display; N63 is what the braking/approach phases show, and **its R2 is
-/// the same HDOTDISP word** (`docs/agc-channel-map.md`, "P66 Vertical
-/// Displays and Erasables"; the noun ECADR table lists N60's registers at
-/// `vendor/virtualagc/Luminary099/PINBALL_NOUN_TABLES.agc:724-726` and
-/// N63's at `:733-735`, with `HDOTDISP` as R2 in both). Accepting
-/// only N60 meant `agc_hdot_ms` / `nav_err_hdot_ms` were `null` in every
-/// frame of both 2026-07-25 re-flight telemetry dumps — the run never
-/// leaves P63 before ground contact, so the display never reaches N60 —
-/// and the AGC-vs-truth navigation error (the run's headline finding) had
-/// to be recovered by hand-decoding the ch010 relay stream after the fact.
+/// V06N60, V06N63 AND V06N64 are all accepted, because those three ARE the
+/// landing guidance flight displays, one per phase
+/// (`vendor/virtualagc/Luminary099/LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:1467-1469`:
+/// `V06N63 # P63`, `V06N64 # P64`, `V06N60 # P65, P66, P67`). P64 puts
+/// N64 up for the whole approach — `:875` (flashing, redesignation
+/// available) and `:895` (`REDES-OK`) — which is precisely the window the
+/// sim-driven P64→P66 handover fires in.
+///
+/// **R2 is the same HDOTDISP word in all three**
+/// (`vendor/virtualagc/Luminary099/PINBALL_NOUN_TABLES.agc:724-726` for
+/// N60, `:733-735` for N63, `:736-738` for N64). Only R1 differs: N64
+/// shows FUNNYDSP as a `2INT` pair where N60/N63 show a `VEL3`, which the
+/// noun format words state exactly — `:473` and `:479` are both `OCT
+/// 60512` (N60, N63) against `:481`'s `OCT 60500` (N64), i.e. identical
+/// R2/R3 fields with only the R1 field cleared. R3 is `HCALC`/`HCALC1`
+/// under the shared `COMP ALT` format code in all three, so a scaling
+/// pinned for one would unlock `alt_m` for all of them at once; none is
+/// pinned here, and it is not guessed.
+///
+/// Accepting only N60 meant `agc_hdot_ms` / `nav_err_hdot_ms` were `null`
+/// in every frame of both 2026-07-25 re-flight telemetry dumps — the run
+/// never leaves P63 before ground contact, so the display never reaches
+/// N60 — and the AGC-vs-truth navigation error (the run's headline
+/// finding) had to be recovered by hand-decoding the ch010 relay stream
+/// after the fact. Adding N63 fixed that for P63; N64 closes the same hole
+/// for P64, which no run had reached until Wave 2 M1.
 /// See docs/superpowers/notes/2026-07-25-wave1-reflight.md.
 pub fn parse_agc_nav(d: &DskyState) -> Option<AgcNav> {
     let verb: String = d.verb.iter().collect();
     let noun: String = d.noun.iter().collect();
-    if verb != "06" || !matches!(noun.as_str(), "60" | "63") {
+    if verb != "06" || !matches!(noun.as_str(), "60" | "63" | "64") {
         return None;
     }
     let hdot_ms = parse_decimal_register(&d.r2).map(|v| v as f64 * 0.1 * 0.3048);
@@ -767,11 +782,14 @@ mod tests {
     }
 
     #[test]
-    fn agc_nav_parses_hdot_from_both_n60_and_n63() {
-        // R2 is HDOTDISP on BOTH nouns, in 0.1 ft/s. The 2026-07-25
-        // re-flight never left P63 (so never reached N60) and lost the
-        // AGC-vs-truth rate error from every telemetry frame because this
-        // accepted only N60.
+    fn agc_nav_parses_hdot_from_n60_n63_and_n64() {
+        // R2 is HDOTDISP on ALL THREE landing-guidance nouns, in 0.1 ft/s
+        // (PINBALL_NOUN_TABLES.agc:724-726 / :733-735 / :736-738; only R1
+        // differs). The 2026-07-25 re-flight never left P63 (so never
+        // reached N60) and lost the AGC-vs-truth rate error from every
+        // telemetry frame because this accepted only N60. N64 is the same
+        // hole one phase later: P64 displays it for the whole approach
+        // (LLGE:875, :895), which is the window the handover fires in.
         let dsky = |noun: [char; 2], sign: char, digits: [char; 5]| {
             let mut d = DskyState::default();
             d.verb = ['0', '6'];
@@ -781,12 +799,22 @@ mod tests {
         };
         // Spike B's live sample: "+00756" = 75.6 ft/s = 23.04 m/s.
         let want = 756.0 * 0.1 * 0.3048;
-        for noun in [['6', '0'], ['6', '3']] {
+        for noun in [['6', '0'], ['6', '3'], ['6', '4']] {
             let nav = parse_agc_nav(&dsky(noun, '+', ['0', '0', '7', '5', '6']))
                 .unwrap_or_else(|| panic!("N{noun:?} must parse"));
             assert!((nav.hdot_ms.unwrap() - want).abs() < 1e-9, "{noun:?}");
             assert_eq!(nav.alt_m, None, "altitude has no pinned scaling");
         }
+        // N64's R1 is a 2INT pair where N60/N63 carry a VEL3 — irrelevant
+        // to us, since only R2 is read, but pin that it does not disturb
+        // the parse.
+        let mut n64 = dsky(['6', '4'], '+', ['0', '0', '7', '5', '6']);
+        n64.r1 = eagle_agc_protocol::dsky::RegisterDisplay {
+            sign: ' ',
+            digits: ['1', '2', '3', '4', '5'],
+        };
+        let nav = parse_agc_nav(&n64).expect("N64 must parse regardless of R1");
+        assert!((nav.hdot_ms.unwrap() - want).abs() < 1e-9);
         // Sign is honoured: the re-flight's AGC read POSITIVE (climbing)
         // while the truth was falling — a sign drop would have hidden it.
         let neg = parse_agc_nav(&dsky(['6', '3'], '-', ['0', '0', '2', '1', '3'])).unwrap();
