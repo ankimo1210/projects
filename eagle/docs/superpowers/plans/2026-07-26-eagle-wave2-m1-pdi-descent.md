@@ -12,8 +12,9 @@ shares the ignition-point geometry `generate_state` already computes. The
 scenario schema gains a `mode = "pdi"` gate, a `[handover]` altitude and an
 `lrbypass` marker. `SimCore` keeps the freeze-until-ENGINE-ON mechanism
 (it is what makes the AGC's clock-rate offset harmless) but in PDI mode the
-frozen truth IS the ignition point and the freeze-phase PIPA feed is zero
-(coast), not hover support. P64→P66 handover is sim-driven: `SimCore` arms
+frozen truth is the TIG state (`pdi_truth_state` back-propagates the pad's
+geometric ignition point by ZOOMTIME — see the release-trigger note below)
+and the freeze-phase PIPA feed is zero (coast), not hover support. P64→P66 handover is sim-driven: `SimCore` arms
 on MM64, fires on an altitude crossing, and the headless loop performs
 ATT HOLD + the selection ROD click.
 
@@ -60,7 +61,7 @@ yaAGC socket protocol, existing DSKY script harness.
 | **Fresh start SETS LRBYPASS** — `SWINIT`'s FLGWRD11 word is `OCT 40000  # BIT 15 = LRBYPASS.` | `vendor/virtualagc/Luminary099/FRESH_START_AND_RESTART.agc:623` |
 | Ullage fires at **TIG−7.5 s** (DPS) | `vendor/virtualagc/Luminary099/BURN,_BABY,_BURN_--_MASTER_IGNITION_ROUTINE.agc:356` (`ULLGTASK … THIS COMES AT TIG-7.5 OR TIG-3.5`) |
 | `TIG = TDEC1 − ZOOMTIME` (the pad's geometric point is where nav sits at FLATOUT, not at ENGINE ON) | `vendor/virtualagc/Luminary099/THE_LUNAR_LANDING.agc:193-198` (`DDUMGOOD`) |
-| `P63TABLE`'s AVEGEXIT is `2CADR SERVEXIT` until `P63ZOOM` swaps it to `LUNLAND` — no landing-guidance pass, so no P66, before TIG+ZOOMTIME | `vendor/virtualagc/Luminary099/BURN,_BABY,_BURN_--_MASTER_IGNITION_ROUTINE.agc:144,574,593` |
+| `P63TABLE`'s AVEGEXIT is `2CADR SERVEXIT` until `P63ZOOM` swaps it to `LUNLAND` — no landing-guidance pass, so no P66, before TIG+ZOOMTIME | `vendor/virtualagc/Luminary099/BURN,_BABY,_BURN_--_MASTER_IGNITION_ROUTINE.agc:144,575,593` |
 | GUILDENSTERN's P66 switch checks only "already MM66?" + ATT-HOLD + RODCOUNT ≠ 0 — it does not require MM63, so it works from P64 | `vendor/virtualagc/Luminary099/LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:203-217` (`STABL?`/`P66NOW?`) |
 | N64 is a `FUNNYDSP` (mixed-format) noun — its register layout is NOT the simple HDOTDISP R2 of N60/N63. Do not extend `parse_agc_nav` to N64 without reading the FUNNYDSP decode first | `vendor/virtualagc/Luminary099/PINBALL_NOUN_TABLES.agc:736` |
 | Wave 1 measured: the DAP recovers a ~125° attitude error in ~13 s after release, and Luminary throttles up at `FLATOUT` = TIG+26 s — so an attitude slew commanded against frozen truth resolves before throttle-up | re-flight note + `docs/superpowers/notes/2026-07-25-wave1-reflight.md` |
@@ -70,14 +71,15 @@ Task 1 review; the original text below the correction was wrong.** The
 freeze releases on **ENGINE ON (ch 011 bit 13), exactly as in Wave 1**
 (the ignition-attitude maneuver fires RCS jets ~TIG−276 s, long before
 ullage, so "first jet command" cannot identify ullage). Ullage Δv
-(~0.9 m/s at TIG−7.5 s, `BURN_BABY_BURN--MASTER_IGNITION_ROUTINE.agc:347`)
+(~0.9 m/s at TIG−7.5 s, `vendor/virtualagc/Luminary099/BURN,_BABY,_BURN_--_MASTER_IGNITION_ROUTINE.agc:356`)
 falls inside the frozen window and is therefore consistently absent from
 both sides — frozen truth does not move, and a zero PIPA feed means nav
 sees nothing.
 
 **But frozen truth is NOT the pad's geometric ignition point.** `DDUMGOOD`
 computes `TIG = TDEC1 − ZOOMTIME`
-(`THE_LUNAR_LANDING.agc:193-198`; this repo already states it at
+(`vendor/virtualagc/Luminary099/THE_LUNAR_LANDING.agc:193-198`; this repo
+already states it at
 `padload.rs:680`, "TIG then comes out at tet − ZOOMTIME"). The geometric
 point is where the AGC's integrated nav sits at **FLATOUT = TIG+ZOOMTIME**,
 not at ENGINE ON. At ENGINE ON the AGC believes it is **≈44.31 km uprange**
@@ -398,7 +400,7 @@ lm_weight_lbs = 33530.0            # derived: (7009+7950+250) kg = 15209 kg → 
 tland_offset_cs = 36000            # derived: proven burn lead from Wave 1 acceptance
 flip_atthold_after_engine_on_s = 2.0   # unused in pdi mode (handover is sim-driven)
 lrbypass = true                    # verify-only: fresh start already sets FLAGWRD11 bit15
-                                   # (FRESH_START_AND_RESTART.agc:614); abort if missing
+                                   # (vendor/virtualagc/…/FRESH_START_AND_RESTART.agc:623); abort if missing
 
 [handover]
 alt_m = 150.0            # historical: crew takeover near 500 ft during P64
@@ -565,7 +567,7 @@ test accordingly.
   new reader).
 - Produces:
   - `pub const FLGWRD11_ECADR: u16 = 0o107;` (citation: `Luminary099.log:3262`, `26,2022 0107 FLGWRD11 = STATE +11D`)
-  - `pub const LRBYBIT: u16 = 0o40000;` (citation: `FLAGWORD_ASSIGNMENTS.agc:1051-1052`; default-set at fresh start per `FRESH_START_AND_RESTART.agc:614`)
+  - `pub const LRBYBIT: u16 = 0o40000;` (citation: `vendor/virtualagc/Luminary099/FLAGWORD_ASSIGNMENTS.agc:1040-1041`; default-set at fresh start per `vendor/virtualagc/Luminary099/FRESH_START_AND_RESTART.agc:623`)
   - `run_scenario` in PDI mode: verifies LRBYPASS after `init_discretes`/`dap_init`, skips the forced ATT-HOLD block, returns after `wait_engine_on`.
   - headless event loop: `RodClicks(n)` → `rod_load`; `Handover` → `att_hold(&cmd_tx)` then `rod_load(script, -1)`.
 
@@ -877,7 +879,7 @@ test joins it (it does — it is `#[ignore]`d and serial like the others).
   schema mode/handover/lrbypass → Task 2; freeze semantics + PDI PIPA →
   Task 3; sim-driven handover → Tasks 3+4; LRBYPASS handling → Task 4
   (verify-only per the fresh-start finding — a deviation from the spec's
-  "set_flag_bits" wording, justified by `FRESH_START_AND_RESTART.agc:614`
+  "set_flag_bits" wording, justified by `vendor/virtualagc/Luminary099/FRESH_START_AND_RESTART.agc:623`
   and recorded here); ROD-schedule-from-measurement → Task 5; MM65
   finding-not-assert → Task 6; miss-distance caveat → Tasks 2/6.
 - **Deviation from spec worth flagging:** the spec sketches
