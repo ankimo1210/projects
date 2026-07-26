@@ -83,9 +83,17 @@ pub const GYRO_FINE_INCR_DEG: f64 = 0.617981 / 3600.0;
 /// "57 %/63 % NOMINAL MAX THRUST" annotation at *that* rope's 2.7 lbs/bit.
 /// LUM69R2 and Luminary099 have different `SCALEFAC`s (12.0325 vs
 /// 12.5320 N/bit, 4.16 % apart), so mixing LUM69R2's bit scale with
-/// Luminary099's criteria mis-scaled the answer. Against FSAT the same
-/// criteria land where they should: LOWCRIT 2217 bits = 57.7 % of 3841,
-/// HIGHCRIT 2450 bits = 63.8 %.
+/// Luminary099's criteria mis-scaled the answer.
+///
+/// Those LOWCRIT/HIGHCRIT percentages are NOT evidence for FSAT, and were
+/// briefly written here as if they were. Read as fractions they imply a
+/// full-throttle bit count of 2217/0.57 = 3889.5 and 2450/0.63 = 3888.9,
+/// which is neither Luminary099's FMAXODD (3841, ~1.2 % below that) nor
+/// LUM69R2's own (3866, `LUM69R2/CONTROLLED_CONSTANTS.agc:129`, ~0.6 %
+/// below). They are round percentages in a pad-load annotation of a
+/// different rope — mild counter-evidence at best, and the citation above
+/// does not need them: FSAT stands on `CONTROLLED_CONSTANTS.agc:132` plus
+/// NOTE 2 at `THROTTLE_CONTROL_ROUTINES.agc:114-118`.
 ///
 /// Measured live (2026-07-26 M1): at 42 500 N the braking phase reached
 /// HIGATE at 4052 m / 435 m/s against a 2924 m / 172 m/s target; at
@@ -131,7 +139,7 @@ pub const TRIM_MAX_DEG: f64 = 6.0;
 /// publishes it**, as the reciprocal —
 /// `vendor/virtualagc/Luminary099/CONTROLLED_CONSTANTS.agc:135`,
 /// `SCALEFAC 2DEC* +7.97959872 E+2 B-16*  # BITPERF +7.97959872 E-2`,
-/// bits per newton, so 1 / 0.0797959872 = **12.531966 N/bit**.
+/// bits per newton, so 1 / 0.0797959872 = **12.5319585 N/bit**.
 ///
 /// This is the conversion the AGC itself uses in both directions, which is
 /// why it has to be exact rather than close: `MASSMULT` turns a desired
@@ -141,16 +149,25 @@ pub const TRIM_MAX_DEG: f64 = 6.0;
 /// error here is a proportional thrust error across the whole modulated
 /// band — the AGC asks for N and gets 0.9575·N.
 ///
-/// Cross-checked three further ways against the same block, all agreeing
-/// to 0.03 %: FEXTRA 51 330.9 N / 4096 bits = 12.5320
-/// (`THROTTLE_CONTROL_ROUTINES.agc:226`), FSAT 48 145.4 / 3841 = 12.5346,
-/// FMAX 43 454.7 / 3467 = 12.5338 (`CONTROLLED_CONSTANTS.agc:132-133`).
+/// Cross-checked three further ways against the same block: FEXTRA
+/// 51 330.9020 N / 4096 bits = 12.5319585 to nine figures
+/// (`THROTTLE_CONTROL_ROUTINES.agc:226`) — the same reciprocal, not an
+/// independent one — and then FSAT 48 145.4413 / 3841 = 12.5346 and FMAX
+/// 43 454.6769 / 3467 = 12.5338 (`CONTROLLED_CONSTANTS.agc:132-133`),
+/// which agree to 0.02 %. The two bit counts are integers, so they can
+/// only land on the exact scale by luck; that they land within 0.02 % is
+/// the cross-check.
 ///
 /// Was `assumed = 12.0`, then briefly mis-cited (2026-07-26) to
 /// `LUM69R2/PADLOADS.agc:501`'s "2.7 LBS/BIT" = 12.0325 N/bit as if that
 /// justified it. It does not: LUM69R2 is a different rope with a different
 /// SCALEFAC, and 12.0 was 4.25 % low against the rope we actually fly.
-pub const THRUST_N_PER_PULSE: f64 = 12.531966;
+///
+/// Flight 6 flew **12.531966** — the same derivation transcribed with a
+/// slipped 7th figure (0.06 ppm high, i.e. 7.5e-6 N/bit). Corrected here to
+/// the value the reciprocal actually gives; nothing measured changes at
+/// that size, so flight 6's numbers stand as recorded.
+pub const THRUST_N_PER_PULSE: f64 = 12.5319585;
 /// Max DINC strobes per 10 ms tick.
 ///
 /// The real throttle-drive electronics run 3200 pps (32 per tick), but on

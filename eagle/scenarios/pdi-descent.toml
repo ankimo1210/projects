@@ -61,9 +61,18 @@ alt_m = 250.0
 # until the vehicle climbed away and ran the tank dry: v_vert 44.09 m/s.
 # These smaller steps (<=6 clicks) halved that — run 5 measured v_vert
 # 13.58 m/s — but the limit cycle survives, so the schedule is a starting
-# point, not a tuned answer. Suspect: TAUROD/LAG-TAU/MINFORCE/MAXFORCE are
+# point, not a tuned answer. Run 6 flew this same schedule on the corrected
+# engine constants (12.532 N/bit, FSAT 48145.4 N, tau 0.2 s) and the loop
+# still ran the throttle stop-to-stop, 0 -> 48132 N for 218 s with the sink
+# rate spanning -34.1 to +16.2 m/s: v_vert 30.86 m/s. So the oscillation is
+# neither a step-size nor an engine-constant artefact.
+# Suspect: TAUROD/LAG-TAU/MINFORCE/MAXFORCE are
 # the only UNVERIFIED scale-chain pad words left (padload::P66_BSCALE_TABLE)
-# and they are exactly the P66 force law's gain and limits. See the ledger.
+# and they are exactly the P66 force law's gain and limits; TAUROD's scale
+# is derivable statically (LLGE:155-157 + :1050 + GSCALE at :1477), costing
+# no flights. Second suspect, needing a citation first: dps_envelope's
+# 19.26 kN discontinuity at 0.6*MAX with no hysteresis (forces.rs). See the
+# ledger.
 steps = [[240.0, -1.5], [40.0, 0.2], [10.0, 0.8]]
 
 [errors]                 # empty = all OFF (acceptance runs use this)
@@ -71,24 +80,28 @@ steps = [[240.0, -1.5], [40.0, 0.2], [10.0, 0.8]]
 [acceptance]
 # v_vert_max / v_horiz_max: LM touchdown design limits, carried over from
 # Wave 1. **NOT YET MET, and deliberately not relaxed to what was
-# measured** — the best M1 flight (run 5) hit at v_vert 13.58 m/s and
-# v_horiz 66.91 m/s, both of which are the P66 rate-loop oscillation and
-# the un-flown attitude, not a landing. Writing those numbers in here
-# would turn a known-open blocker into a passing gate.
+# measured** — the best M1 flights hit at v_vert 13.58 m/s (run 5) and
+# v_horiz 60.04 m/s (run 6), both of which are the P66 rate-loop
+# oscillation and the un-flown attitude, not a landing. Writing those
+# numbers in here would turn a known-open blocker into a passing gate.
 v_vert_max = 3.0
 v_horiz_max = 1.5
 # measured: runs 4 and 5 contacted at 11.2 deg and 12.0 deg of tilt, i.e.
-# BOTH met the Wave 1 bar of 12.0 (run 5 only just). This was briefly
-# relaxed to 15.0 and is put back: relaxing the one limit the flights
-# happened to meet, while correctly refusing to relax v_vert/v_horiz, was
-# inconsistent. P66 holds attitude and does not re-orient, so whatever P64
-# leaves behind is what lands (12.2 deg at run 4's handover, 14.4 deg at
-# run 5's) -- that is a reason to expect this bar to be tight, not a
-# reason to move it.
+# BOTH met the Wave 1 bar of 12.0 (run 5 only just) -- and run 6, on the
+# corrected engine constants, contacted at 12.8 deg and MISSED it. This was
+# briefly relaxed to 15.0 and is put back: relaxing the one limit some
+# flights happened to meet, while correctly refusing to relax
+# v_vert/v_horiz, was inconsistent, and run 6 shows the margin was never
+# there. P66 holds attitude and does not re-orient, so whatever P64 leaves
+# behind is what lands (12.2 deg at run 4's handover, 14.4 deg at run 5's,
+# 11.7 deg at run 6's) -- that is a reason to expect this bar to be tight,
+# not a reason to move it.
 tilt_max_deg = 12.0
 # measured: from ENGINE ON. Runs 3-5 all reached MM64 at TIG+480.6 s and
-# runs 4/5 reached MM66 (the handover) at TIG+640.5 / +638.6 s. A stable
-# P66 from the measured 245 m entry at ~3 m/s adds ~85 s, i.e. ~725 s
-# total; 800 s keeps ~10% margin. (Runs 4/5 ran 866.9 s / 848.6 s, but
-# both were the P66 limit cycle porpoising, not descending.)
+# runs 4/5 reached MM66 (the handover) at TIG+640.5 / +638.6 s; run 6, on
+# the corrected engine constants, reached MM64 at TIG+488.6 s and handed
+# over at TIG+647.1 s. A stable P66 from the measured ~247 m entry at
+# ~3 m/s adds ~85 s, i.e. ~735 s total; 800 s keeps ~9% margin. (Runs 4-6
+# ran 866.9 / 848.6 / 865.1 s, but all three were the P66 limit cycle
+# porpoising, not descending.)
 timeout_s = 800.0

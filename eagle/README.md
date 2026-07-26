@@ -18,7 +18,36 @@ As of Phase 2 Wave 1 the loop is closed end to end — PIPA/CDU sensors feed the
 > for a 1700 m/s burn, because the pad-loaded AGC state vector is the
 > historical 15 km / 1700 m/s PDI point rather than the sim's hover gate.
 > Full evidence, numbers and next steps:
-> [docs/superpowers/notes/2026-07-25-wave1-reflight.md](docs/superpowers/notes/2026-07-25-wave1-reflight.md).
+> [docs/superpowers/notes/2026-07-25-wave1-reflight.md](docs/superpowers/notes/2026-07-25-wave1-reflight.md)
+> — whose measured numbers predate the 2026-07-26 vehicle-constant
+> corrections and will not reproduce; the conclusions stand, the numbers do
+> not.
+
+> **Wave 2 M1 flies the real descent, and does not land.** Six instrumented
+> flights on 2026-07-26 (`make descent-full`, `scenarios/pdi-descent.toml`)
+> start the truth state at the pad-loaded PDI ignition point and fly
+> `MM ["00","63","64","66"]` — PDI → P63 braking → P64 approach →
+> crew-takeover P66, landing radar bypassed in-rope — with **zero PROG
+> alarms and zero PROG-lamp frames**, and the AGC's own altitude rate
+> within 1 m/s of truth through the whole braking phase. That is the thing
+> Wave 2 existed to decide: the nav/truth split that made Wave 1
+> unfixable is closed.
+>
+> Touchdown is still a **crash**. P66's rate loop limit-cycles — run 6 ran
+> the throttle stop-to-stop (0 → 48 132 N) for 218 s with the sink rate
+> spanning −34.1 to +16.2 m/s — and a crewless P66 holds attitude with
+> nobody on the hand controller, so the ~12° tilt P64 leaves behind flies
+> the vehicle sideways: contact at 30.86 m/s vertical, 60.04 m/s
+> horizontal, 12.8° of tilt. Four vehicle constants were corrected against
+> the flown rope's own SI values along the way (`PIPA_INCR` 0.0585 → 0.01
+> m/s/pulse, `THRUST_N_PER_PULSE` → 12.5319585 N/bit, DPS full throttle →
+> 48 145.4 N, `DPS_TAU` → 0.2 s) and none of them cured it.
+>
+> The acceptance test (`tests/live_pdi_descent.rs`) is frozen and **has
+> never been run**: it was written after the flight budget was spent, so it
+> records the target, not a result. Measured numbers, citations and the
+> four open items:
+> [docs/superpowers/notes/2026-07-26-m1-pdi-flight.md](docs/superpowers/notes/2026-07-26-m1-pdi-flight.md).
 
 ## Prerequisites
 
@@ -55,7 +84,14 @@ make descent-p66
 # fall back to 36000 cs, i.e. use `make descent-p66`.
 make descent-p66-fast
 
-# Instrument either run:
+# Wave 2 M1: the real descent — truth starts at the pad-loaded PDI ignition
+# point and the AGC flies PDI → P63 → P64 → P66 with the landing radar
+# bypassed in-rope (scenarios/pdi-descent.toml). ~20 min wall. It does NOT
+# land — see the M1 status block above. Prints the same `[accept]`
+# diagnostics block as the acceptance test, so the run records itself.
+make descent-full
+
+# Instrument any of these runs:
 #   EAGLE_ATT_DEBUG=<path>  attitude sign-chain trace (jets, gimbals, omega, torque)
 #   EAGLE_TELEM_OUT=<path>  per-frame telemetry JSONL
 
@@ -73,8 +109,9 @@ What the ROD buttons actually do:
   server → headless wiring, merged with the scenario's own ROD schedule.
   Stock yaAGC raises no interrupt for channel 016, so the switch discrete
   would be ignored — see `docs/agc-channel-map.md` ("Rod Switch Click").
-  A click only changes anything once the AGC is in P66, which the current
-  acceptance run does not reach before ground contact.
+  A click only changes anything once the AGC is in P66: the Wave 1 gate
+  never gets there before ground contact, while `make descent-full` does
+  (~TIG+649 s, measured).
 - **Phase-1 DSKY-only mode** (`make dev-runtime`): the click emits the ch016
   discrete, which stock yaAGC ignores. It is a no-op.
 
@@ -92,11 +129,24 @@ make lint              # clippy -D warnings, cargo fmt --check, client oxlint
 make test-integration  # live AGC tests (golden + closed-loop; run `make agc` first)
 ```
 
-The Wave 1 flagship is the closed-loop acceptance
-(`tests/live_p66_descent.rs`): boot → P63 ignition → ENGINE ON → touchdown,
-asserting a *nominal* landing. It runs ~8-11 minutes because the TIG
-countdown is real-time, and it currently **fails** on the touchdown class —
-see the re-flight ledger linked above.
+`make test-integration` runs every `#[ignore]`d test serially, which since
+2026-07-26 includes the M1 acceptance — ~35 minutes end to end, and it goes
+red there. Run one binary at a time with
+`cargo test -p eagle-runtime --test <name> -- --ignored --test-threads=1`.
+
+Two live acceptance tests, both currently **red**, for different reasons:
+
+- **Wave 1** — `tests/live_p66_descent.rs` (port 19904, ~8-11 min): boot →
+  P63 ignition → ENGINE ON → touchdown from a hover gate, asserting a
+  *nominal* landing. Fails on the touchdown class; P66 never flies (see the
+  re-flight ledger linked above).
+- **Wave 2 M1** — `tests/live_pdi_descent.rs` (port 19905, ~20 min): the
+  real profile from the PDI ignition point, radar bypassed. **Never run** —
+  frozen after the flight budget was spent. On the six measured flights its
+  mode-sequence, alarm and AGC-clock assertions would pass and its
+  touchdown assertions would fail; the file's own header says which is
+  which. Its thresholds are the scenario's design limits and are
+  deliberately not relaxed to what was measured.
 
 ## Specification
 

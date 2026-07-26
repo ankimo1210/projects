@@ -448,9 +448,15 @@ Corrections applied:
 
 | constant | was | now | source |
 |---|---|---|---|
-| `THRUST_N_PER_PULSE` | 12.0 (4.25 % low) | **12.531966 N/bit** | `SCALEFAC`/BITPERF, `:135`; = 1/0.0797959872 |
+| `THRUST_N_PER_PULSE` | 12.0 (4.25 % low) | **12.531966 N/bit** (flight 6; see below) | `SCALEFAC`/BITPERF, `:135`; = 1/0.0797959872 |
 | `DPS_MAX_N` / `DPS_FTP_N` | 46 706 N | **48 145.4413 N** | `FMAXODD`/FSAT, `:132` |
 | `DPS_TAU` | 0.3 s (assumed) | **0.2 s** | `THROTLAG`, `:134` |
+
+(Post-flight correction, Task 6: `1 / 0.0797959872 = 12.5319585`, not
+12.531966 — the constant carried a slipped 7th figure, 0.06 ppm high. The
+committed constant is now 12.5319585; flight 6 flew 12.531966 and the
+difference, 7.5e-6 N/bit, is far below anything these flights measured, so
+every number in this ledger stands as recorded.)
 
 The bit scale cross-checks four ways to within 0.03 %: BITPERF 12.5320,
 FEXTRA 51 330.9/4096 = 12.5320
@@ -538,6 +544,34 @@ tested by it:
   the envelope shape needs a citation for what the engine actually does
   between 60 % and full; it was not attempted here because it is a plant
   change, not a constant, and there was one flight left.
+
+## The frozen acceptance (Task 6) — written, never run
+
+`runtime/apps/eagle-runtime/tests/live_pdi_descent.rs` (port 19905, ~20 min)
+was written after this budget was spent, so **it has never been run — not
+green, not red, not at all.** It compiles (`cargo test -p eagle-runtime
+--test live_pdi_descent --no-run`) and is the M1 target, not a result.
+
+Against the flights above, assertion by assertion:
+
+| assertion | on runs 4/5/6 | |
+|---|---|---|
+| MM contains 63 → 64 → 66 | `["00","63","64","66"]` | would PASS |
+| `alarms.is_empty()` | 0 episodes | would PASS |
+| `prog_lamp_frames == 0` | 0 frames | would PASS |
+| AGC clock rate within ±10 % | 0.944-0.952× | would PASS |
+| `descent_s <= 800 s` | 866.9 / 848.6 / 865.1 s | would FAIL |
+| `class == Nominal` | `Crash` | would FAIL |
+| `v_vert < 3.0` | 44.09 / 13.58 / 30.86 m/s | would FAIL |
+| `v_horiz < 1.5` | 59.81 / 66.91 / 60.04 m/s | would FAIL |
+| `tilt < 12.0°` | 11.2° / 12.0° / 12.8° | run 6 FAILS; run 5 sits ON the bar (recorded to 1 dp, so the strict `<` is undecided) |
+
+`miss_m` is printed, never gated: PDI mode removed Wave 1's freeze
+artefact, but the frame/time-base caveat at the top of
+`scenarios/pdi-descent.toml` stands and no run flew the profile to contact.
+The thresholds are the scenario's design limits and were deliberately not
+relaxed to what was measured — that is what would turn this open blocker
+into a passing gate.
 
 ## Open, in the order the next engineer should take them
 

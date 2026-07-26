@@ -87,6 +87,18 @@ Every implementer MUST re-verify the rows they use (Step-0) against the cited ve
 
 ### Physical constants (single source of truth: `eagle-dynamics/src/constants.rs`)
 
+> **Five rows of this table are SUPERSEDED (2026-07-26, Wave 2 M1 flights).**
+> The table records what Wave 1 planned with; the constants file is the
+> source of truth and now carries the flown rope's own SI values:
+> `PIPA_INCR` 0.0585 → **0.01** m/s/pulse (0.0585 is the *Command Module*
+> quantum, `vendor/virtualagc/Comanche055/SERVICER207.agc:790`, transcribed
+> into an LM simulator), `THRUST_N_PER_PULSE` 12.0 → **12.5319585** N/bit,
+> `DPS_MAX_N` 45040 and `DPS_FTP_N` 42500 → **48145.4413** N (FSAT), and
+> `DPS_TAU` 0.3 → **0.2** s — the last three from
+> `vendor/virtualagc/Luminary099/CONTROLLED_CONSTANTS.agc:132-135`. The
+> first was the root cause of Wave 1's un-closable navigation loop. See
+> `docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`.
+
 | Const | Value | Provenance |
 |---|---|---|
 | MU_MOON | 4.9028e12 m³/s² | historical |
@@ -1796,6 +1808,22 @@ part of default `make test-integration` (CI budget); documented in CLAUDE.md.
 > TIG+24.8 s), and the AGC's pad-loaded state vector is the 15 km / 1700 m/s
 > PDI point, so the navigation loop never closes. Full evidence:
 > `docs/superpowers/notes/2026-07-25-wave1-reflight.md`.
+>
+> **Wave 2 M1 status, 2026-07-26 — this task stays NOT done, and its
+> numbers no longer reproduce.** M1
+> (`docs/superpowers/plans/2026-07-26-eagle-wave2-m1-pdi-descent.md`,
+> ledger `docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`) flew the
+> descent from the PDI truth state and root-caused the failure this note
+> describes: `PIPA_INCR` was a Command Module quantum, so the AGC was
+> integrating 1/5.85 of the ΔV the sim delivered and no Wave 1 tuning could
+> ever have closed the loop. With that and three DPS constants corrected,
+> the real profile flies — `MM ["00","63","64","66"]`, zero PROG alarms —
+> but P66's rate loop limit-cycles and M1's own acceptance
+> (`tests/live_pdi_descent.rs`, frozen and never run) is not met either.
+> Every measured number in this block predates those corrections. A
+> re-flight of `p66-gate.toml` would produce different numbers; nobody has
+> flown one, and Wave 1's two blockers (gate altitude, pad-loaded attitude)
+> are unaddressed on that scenario.
 
 - [ ] **Step 1:** implement `run_headless` refactor + the test; run `cargo test -p eagle-runtime --test live_p66_descent -- --ignored --test-threads=1` until green **3 consecutive times** (this is the flake bar for the wave's flagship test). — *Test implemented and running; 0 of 3 green. Unmet.*
 - [x] **Step 2:** Makefile:

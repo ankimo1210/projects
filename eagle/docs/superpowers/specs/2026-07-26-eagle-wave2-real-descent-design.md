@@ -86,6 +86,46 @@ The wave runs in three milestones. The ordering was chosen over
 Fly P63 → P64 → P66 to touchdown on pure inertial navigation, with the
 landing radar bypassed in-rope.
 
+> **STATUS 2026-07-26 — M1 implemented and flown; acceptance NOT met.**
+> Plan `docs/superpowers/plans/2026-07-26-eagle-wave2-m1-pdi-descent.md`,
+> Tasks 1-6 done; ledger
+> `docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`; acceptance test
+> `runtime/apps/eagle-runtime/tests/live_pdi_descent.rs` (frozen, port
+> 19905, **never run** — the 6-flight budget was spent before it existed).
+>
+> **The question this milestone was ordered first to answer is answered
+> YES.** Six instrumented flights fly `MM ["00","63","64","66"]` — PDI →
+> P63 braking → P64 approach → sim-driven handover into P66, radar
+> bypassed in-rope — with zero PROG alarm episodes, zero PROG-lamp frames,
+> and the AGC's own altitude rate within 1 m/s of truth through the whole
+> braking phase. P63 guidance converges from a PDI truth state (the risk
+> table's "redesign the wave" branch is closed), and cause C is fixed.
+>
+> **It does not land.** P66's rate loop limit-cycles (run 6: throttle
+> 0 → 48 132 N stop-to-stop for 218 s, sink rate −34.1 to +16.2 m/s) and
+> nothing flies the attitude in a crewless P66, so contact is at 30.86 m/s
+> vertical / 60.04 m/s horizontal / 12.8° tilt — `Crash`. Four vehicle
+> constants were corrected against the flown rope's own SI values while
+> flying (`PIPA_INCR` 0.0585 → 0.01 m/s/pulse — a Command Module quantum
+> in an LM simulator, `THRUST_N_PER_PULSE` → 12.5319585 N/bit, DPS full
+> throttle → 48 145.4 N (FSAT), `DPS_TAU` → 0.2 s) and none cured it.
+>
+> Open, in order (full detail in the ledger's "Open"): (1) the P66 limit
+> cycle — candidates are the four still-`Unverified` pad-word b-scales
+> (TAUROD / LAG-TAU / MINFORCE / MAXFORCE, and TAUROD's is derivable
+> statically, no flights needed) and `dps_envelope`'s 19.26 kN
+> discontinuity at 0.6·MAX with no hysteresis; (1a) the braking gate is
+> missed by 911 m / 47 m/s and flight 6 proved that is **not** thrust —
+> look at the targeting and the state it targets from; (2) a reproducible
+> PROG alarm at the MM64→MM65 transition whose code is unknown because
+> nothing reads FAILREG after ENGINE ON in PDI mode; (3) a −190 m altitude
+> nav drift through P64, recorded not diagnosed.
+>
+> **Consequence for the rest of the wave:** M2's value proposition assumed
+> a green M1 (snapshots shorten a working descent's debug loop). With M1
+> red, the wave pauses here for an M2/M3 reassessment — that reassessment
+> is not made by this note.
+
 **Single source for the state.** Today `Scenario::initial_state` builds a
 hover over the site while `padload::generate_state` independently computes
 the LUM69R2 PDI point. Those two describing different vehicles *is* cause C.
@@ -231,6 +271,14 @@ scale-free AGC clock-rate gate.
 100 % freeze artifact (1585 m ≈ ω·R·cosφ × 343 s of pinned position). PDI
 mode has no freeze, so after one measured run a threshold with real
 provenance can be set — the step Wave 1 explicitly deferred.
+
+> **Status 2026-07-26: still deferred.** M1's flights removed the freeze
+> artifact but every one of them ended off the nominal trajectory (run 3
+> reported 11.2 km), and `pdi-descent.toml` documents a further frame /
+> time-base caveat: in pdi mode the site is MCI +X at TLAND, not the
+> `[site]` lat/lon. `live_pdi_descent.rs` therefore prints `miss_m` and
+> gates nothing. A threshold needs a run that flew the profile to contact.
+> M1's live acceptance also costs ~20 min, not the 17-18 min budgeted here.
 
 ## 5. Risks
 
