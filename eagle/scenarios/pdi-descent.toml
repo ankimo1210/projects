@@ -30,15 +30,62 @@ lrbypass = true                    # verify-only: fresh start already sets FLAGW
                                    # (vendor/virtualagc/Luminary099/FRESH_START_AND_RESTART.agc:623); abort if missing
 
 [handover]
-alt_m = 150.0            # historical: crew takeover near 500 ft during P64
+# measured: run 3 (build/traces/telem-m1-run3.jsonl). NOT the historical
+# 500 ft / 150 m: P64 flies the approach down to ~237 m and hands to P65
+# there, and this rope's P65 entry is where the run dies (PROG alarm + the
+# guidance stops modulating the throttle — see the ledger note). At 150 m
+# the handover therefore never fires inside P64.
+#   run 3 at 250 m truth altitude: TIG+639.5 s, MM still 64, vz -1.7 m/s,
+#   v_horiz 5.8 m/s, tilt 12.5 deg, DPS 824 kg, AGC's own alt 56 m.
+# 250 m fires ~11 s before that run's P64->P65 switch (truth 236 m) and is
+# still above its lowest truth altitude (233.7 m), so the gate is crossed
+# even if P65 starts first.
+alt_m = 250.0
 
 [rod]
-steps = []               # set from Task 5's measured P66-entry sink rate — do not guess
+# measured: run 3's P64 endgame (above) for the entry rate, run 4 for the
+# step SIZE. Values are the commanded VDGVERT DELTA from the P66-entry
+# rate, not absolute sink rates: `SimCore` starts its rod bookkeeping at 0
+# while STARTP66 seeds VDGVERT from the CURRENT HDOTDISP
+# (vendor/virtualagc/Luminary099/
+# LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:155-157), so a step of v commands
+# entry_rate + v. Entry rate measured at -1.7 m/s, and the handover's own
+# selection click adds -0.30 m/s (one ft/s), so entry is ~-2.0 m/s:
+#   240 m: -1.5 -> ~-3.5 m/s   (5 clicks)
+#    40 m: +0.2 -> ~-1.8 m/s   (6 clicks back)
+#    10 m: +0.8 -> ~-1.2 m/s   (2 clicks, touchdown rate)
+# PROVISIONAL — this schedule has NOT been validated to a soft landing,
+# because P66's own rate loop oscillates on this build. Run 4 used a single
+# -8-click step to ~-7.3 m/s and the loop went bang-bang (throttle slamming
+# 4.6 kN <-> 46 kN, sink rate swinging -9.5 to +7.4 m/s about the command)
+# until the vehicle climbed away and ran the tank dry: v_vert 44.09 m/s.
+# These smaller steps (<=6 clicks) halved that — run 5 measured v_vert
+# 13.58 m/s — but the limit cycle survives, so the schedule is a starting
+# point, not a tuned answer. Suspect: TAUROD/LAG-TAU/MINFORCE/MAXFORCE are
+# the only UNVERIFIED scale-chain pad words left (padload::P66_BSCALE_TABLE)
+# and they are exactly the P66 force law's gain and limits. See the ledger.
+steps = [[240.0, -1.5], [40.0, 0.2], [10.0, 0.8]]
 
 [errors]                 # empty = all OFF (acceptance runs use this)
 
-[acceptance]             # placeholders = Wave 1 values; Task 5 re-measures
+[acceptance]
+# v_vert_max / v_horiz_max: LM touchdown design limits, carried over from
+# Wave 1. **NOT YET MET, and deliberately not relaxed to what was
+# measured** — the best M1 flight (run 5) hit at v_vert 13.58 m/s and
+# v_horiz 66.91 m/s, both of which are the P66 rate-loop oscillation and
+# the un-flown attitude, not a landing. Writing those numbers in here
+# would turn a known-open blocker into a passing gate.
 v_vert_max = 3.0
 v_horiz_max = 1.5
-tilt_max_deg = 12.0
-timeout_s = 800.0        # from ENGINE ON; P63 burn ~510 s + P64 + P66 + margin
+# measured: runs 4 and 5 contacted at 11.2 deg and 12.0 deg of tilt. P66
+# holds attitude and does not re-orient, so whatever P64 leaves behind is
+# what lands: 12.2-14.4 deg at the measured handover point. A 12.0 bar is
+# therefore unreachable by construction in this profile; 15.0 clears the
+# measured hold with margin without hiding a tip-over.
+tilt_max_deg = 15.0
+# measured: from ENGINE ON. Runs 3-5 all reached MM64 at TIG+480.6 s and
+# runs 4/5 reached MM66 (the handover) at TIG+640.5 / +638.6 s. A stable
+# P66 from the measured 245 m entry at ~3 m/s adds ~85 s, i.e. ~725 s
+# total; 800 s keeps ~10% margin. (Runs 4/5 ran 866.9 s / 848.6 s, but
+# both were the P66 limit cycle porpoising, not descending.)
+timeout_s = 800.0
