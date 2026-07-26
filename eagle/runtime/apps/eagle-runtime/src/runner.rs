@@ -30,8 +30,10 @@ use tokio::sync::{broadcast, mpsc, watch};
 //   wdata(33) = 101 111 111 111 110₂ = 0o57776
 // For P63/P66 we additionally assert AUTO THROTTLE (ch30 bit5, value
 // 0o20): 0o36331 & !0o20 = 0o36311 — GUILDENSTERN selects P67 whenever
-// the un-auto-throttle discrete appears (LUNAR_LANDING_GUIDANCE_EQUATIONS
-// .agc:139-146), and P40AUTO checks it pre-ignition (BURN,_BABY,_BURN:923).
+// the un-auto-throttle discrete appears (vendor/virtualagc/Luminary099/
+// LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:140-148), and P40AUTO checks it
+// pre-ignition (vendor/virtualagc/Luminary099/
+// BURN,_BABY,_BURN_--_MASTER_IGNITION_ROUTINE.agc:921-925).
 // ---------------------------------------------------------------------
 
 /// ch 030 init: ENGINE ARMED (bit3), AUTO THROTTLE (bit5), IMU OPERATE
@@ -52,7 +54,9 @@ pub const INIT_CH33: u16 = 0o57776;
 /// clear — the mode transition that triggers GUILDENSTERN → P66.
 pub const CH31_ATT_HOLD: u16 = 0o67777;
 
-/// ch 030 bit9 IMU OPERATE (INPUT_OUTPUT_CHANNEL_BIT_DESCRIPTIONS.agc).
+/// ch 030 bit9 IMU OPERATE ("IMU OPERATE WITH NO MALFUNCTION",
+/// `vendor/virtualagc/Luminary099/INPUT_OUTPUT_CHANNEL_BIT_DESCRIPTIONS.agc:162`;
+/// the CHANNEL 30 block starts at :151).
 pub const CH30_BIT9_IMU_OPERATE: u16 = 1 << 8;
 /// ch 030 bit14 ISS TURN-ON REQUEST: asserted (low) together with IMU
 /// OPERATE at power-up; the AGC answers ~90 s later with ch 012 bit15
@@ -63,19 +67,25 @@ pub const CH30_BIT14_ISS_REQ: u16 = 1 << 13;
 /// ch 012 bit15 ISS TURN-ON DELAY COMPLETE (AGC output).
 pub const CH12_BIT15_ISS_DELAY_DONE: u16 = 1 << 14;
 /// ch 033 bit6 LR ANTENNA IN POSITION 1 (P63SPOT3 reads it via
-/// `CA BIT6, RAND CHAN33`, THE_LUNAR_LANDING.agc:243-247).
+/// `CA BIT6, RAND CHAN33`,
+/// vendor/virtualagc/Luminary099/THE_LUNAR_LANDING.agc:245-247).
 pub const CH33_BIT6_LR_POS1: u16 = 1 << 5;
 
 /// FLAGWRD3 = STATE +3, unswitched ECADR 0o77 (Luminary099.log:2703:
 /// `26,2022  0077  FLAGWRD3 = STATE +3`; STATE = 0o74). REFSMFLG is its
-/// BIT13 (FLAGWORD_ASSIGNMENTS.agc:475-476).
+/// BIT13 (vendor/virtualagc/Luminary099/FLAGWORD_ASSIGNMENTS.agc:475-476).
 pub const FLAGWRD3_ECADR: u16 = 0o77;
-/// REFSMBIT = BIT13 (FLAGWORD_ASSIGNMENTS.agc:476).
+/// REFSMBIT = BIT13
+/// (vendor/virtualagc/Luminary099/FLAGWORD_ASSIGNMENTS.agc:476).
 pub const REFSMBIT: u16 = 0o10000;
 /// FLAGWRD8 = STATE +8, ECADR 0o104 (Luminary099.log:3065). CMOONFLG =
-/// BIT12, LMOONFLG = BIT11 (FLAGWORD_ASSIGNMENTS.agc:853,857): the
+/// BIT12, LMOONFLG = BIT11 (vendor/virtualagc/Luminary099/
+/// FLAGWORD_ASSIGNMENTS.agc:853-854,857-858 — the flag numbers are on the
+/// first line of each pair, CMOONBIT/LMOONBIT on the second): the
 /// permanent CSM/LM state vectors are moon-centered. Deliberately NOT
-/// initialized by fresh start (LUM69R2/PADLOADS.agc:72-76) — pad-loaded.
+/// initialized by fresh start (vendor/virtualagc/LUM69R2/PADLOADS.agc:70-73,
+/// the FLAGWRD8 pad entry: "CMOON, LMOON, & SURFFLAG ARE NOT INITIALIZED BY
+/// FRESH START AS OTHER BITS ARE.") — pad-loaded.
 pub const FLAGWRD8_ECADR: u16 = 0o104;
 /// CMOONFLG | LMOONFLG.
 pub const FLAGWRD8_MOON_BITS: u16 = 0o4000 | 0o2000;
@@ -149,7 +159,8 @@ pub async fn init_discretes(tx: &mpsc::UnboundedSender<Packet>) -> Result<()> {
 
 /// Select ATT HOLD by writing the complete channel-031 word. GUILDENSTERN
 /// reads bit 13 as an inverted discrete and changes an active landing program
-/// to P66 (`LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:203-217`).
+/// to P66 (`vendor/virtualagc/Luminary099/
+/// LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:203-217`).
 pub async fn att_hold(tx: &mpsc::UnboundedSender<Packet>) -> Result<()> {
     tx.send(Packet::io(0o31, CH31_ATT_HOLD).context("ATT HOLD packet")?)
         .context("agc tx closed")?;
@@ -160,13 +171,18 @@ pub async fn att_hold(tx: &mpsc::UnboundedSender<Packet>) -> Result<()> {
 /// `E7,1745  E7,1746  RODCOUNT  EQUALS  RUNIT +3` → ECADR 0o3746).
 pub const RODCOUNT_ECADR: u16 = 0o3746;
 /// HDOTDISP (E7,1473), the altitude rate P66 displays as N60's R2 and
-/// seeds VDGVERT from at STARTP66 (LLGE:156-157). DP.
+/// seeds VDGVERT from at STARTP66 (vendor/virtualagc/Luminary099/
+/// LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:156-157). DP.
 pub const HDOTDISP_ECADR: u16 = 0o3473;
 /// VDGVERT (E7,1644), P65/P66's desired altitude rate — the value ROD
-/// clicks move (`MP RODSCAL1 / DAS VDGVERT`, LLGE:958-963). DP.
+/// clicks move (`MP RODSCAL1 / DAS VDGVERT`,
+/// vendor/virtualagc/Luminary099/
+/// LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:958-963). DP.
 pub const VDGVERT_ECADR: u16 = 0o3644;
 /// RODSCAL1 (E7,1756), the working copy of the RODSCALE pad word taken at
-/// STRTP66A (LLGE:170-172). SP.
+/// STRTP66A (`STODL DELVROD / RODSCALE / STODL RODSCAL1`,
+/// vendor/virtualagc/Luminary099/
+/// LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:173-175). SP.
 pub const RODSCAL1_ECADR: u16 = 0o3756;
 
 /// Read a double-precision erasable (two consecutive words, high then low)
@@ -201,12 +217,14 @@ pub async fn read_dp(script: &mut DskyScript, ecadr: u16) -> Result<i64> {
 /// Click the ROD switch `clicks` times (negative = descend faster, the
 /// bit-7 direction) by writing RODCOUNT over V21N01.
 ///
-/// Why not the switch discrete: vendored yaAGC's `SocketAPI.c:239-249`
+/// Why not the switch discrete: vendored yaAGC's
+/// `vendor/virtualagc/yaAGC/SocketAPI.c:239-249`
 /// raises KEYRUPT1 for a channel-015 write but no interrupt at all for
 /// channel 016 — `InterruptRequests[6]` is never assigned anywhere in the
 /// emulator — so MARKRUPT → DESCBITS never runs and a socket-written
 /// click only updates NAVKEYIN, unobserved. DESCBITS' entire effect is
-/// `ADS RODCOUNT` with ±1 (LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:1233-1238)
+/// `ADS RODCOUNT` with ±1 (vendor/virtualagc/Luminary099/
+/// LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:1233-1238)
 /// and RODCOMP consumes the accumulator with `CAF ZERO / XCH RODCOUNT`
 /// each P66 pass (:958-963), so loading the count directly is equivalent
 /// to the interrupt path and needs no vendor patch. GUILDENSTERN's P66
@@ -216,7 +234,9 @@ pub async fn read_dp(script: &mut DskyScript, ecadr: u16) -> Result<i64> {
 /// zeroes the word within one 1-second P66 pass.
 ///
 /// `grab_dsky` is not cosmetic. Once P66 is running, VERTDISP repaints
-/// V06N60 every guidance pass (LLGE:898); a load typed into that stream is
+/// V06N60 every guidance pass (VERTDISP, vendor/virtualagc/Luminary099/
+/// LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:899-900); a load typed into that
+/// stream is
 /// rejected mid-sequence with OPR ERR and the KEY REL lamp lit, leaving
 /// RODCOUNT unwritten and VDGVERT unmoved (spike-B iter 18 — the same
 /// swallow that broke the in-flight reads). Releasing the display and
@@ -286,15 +306,18 @@ pub async fn read_clock_cs(script: &mut DskyScript) -> Result<f64> {
 /// V48E → FL **V01N46** (octal DAPDATR1, fresh-start default 21112 =
 /// ascent+descent config; the LM_Simulator tutorial's "V04N46" applies
 /// to a different rope) → PRO → FL V06N47 (R1/R2 = LM/CSM weight in
-/// whole pounds — WEIGHT2 "XXXXX. LBS", PINBALL_NOUN_TABLES.agc:88,450;
+/// whole pounds — WEIGHT2 "XXXXX. LBS",
+/// vendor/virtualagc/Luminary099/PINBALL_NOUN_TABLES.agc:88,450;
 /// confirmed live by the AGC redisplaying 33500 as +33502 after its
 /// lbs→kg→lbs round-trip) → V24E loads both → PRO (DAPDAT2 sets MASS,
 /// deadband, moments of inertia) → FL V06N48 (gimbal trim) →
 /// **V34E TERMINATE**, deliberately NOT PRO: PRO starts the TRIMGIMB
-/// gimbal-centering drive (EXTENDED_VERBS.agc DPDAT3 → WAITLIST →
+/// gimbal-centering drive (DPDAT3, vendor/virtualagc/Luminary099/
+/// EXTENDED_VERBS.agc:1470 → WAITLIST → vendor/virtualagc/Luminary099/
 /// P40-P47.agc:1384), which FIXDELAYs 60 s at full +pitch/+roll and then
 /// calls TWIDDLE/VARDELAY with PITTIME/ROLLTIME — zero on a cold AGC —
-/// and a zero-dt waitlist call POODOOs 01204 (WAITPOOH, WAITLIST.agc:574)
+/// and a zero-dt waitlist call POODOOs 01204 (WAITPOOH,
+/// vendor/virtualagc/Luminary099/WAITLIST.agc:574-576)
 /// exactly 60 s after the PRO (spike-A iters 10-13, reproduced 3x with
 /// FAILREG=01204). Everything the descent needs from R03 is already set
 /// by the N47 step; the trim drive only centers physical gimbal hardware
@@ -423,17 +446,21 @@ pub enum FlashAction {
 /// Dialog table for the P63 → ignition sequence, from the vendor flow
 /// pinned in Step 0 and confirmed live (see task-6 report):
 ///
-/// - FL V06N61 (TTG/±xx display via ASTNCLOK, THE_LUNAR_LANDING.agc:214-218)
+/// - FL V06N61 (TTG/±xx display via ASTNCLOK,
+///   vendor/virtualagc/Luminary099/THE_LUNAR_LANDING.agc:213-216)
 ///   → PRO ("proceed" hands off to R51P63 via ASTNRETN).
-/// - FL V50N25 R1=00014 (R51P63 fine-align offer, P51-P53.agc:724-731) →
+/// - FL V50N25 R1=00014 (R51P63 fine-align offer,
+///   vendor/virtualagc/Luminary099/P51-P53.agc:724-731) →
 ///   ENTR: "ENTER will return to P63SPOT2" — PRO here would start a fine
 ///   alignment we neither need nor can complete.
 /// - FL V50N18 (R60 attitude maneuver request) → PRO the first time (auto
 ///   maneuver; our REFSMMAT puts the burn attitude at our parked CDUs so
 ///   it is near-null), ENTR on a repeat (accept attitude, exit R60).
 /// - FL V50N25 R1=00500 ("PLEASE CRANK THE SILLY THING AROUND",
-///   THE_LUNAR_LANDING.agc:249-253) → assert ch33 bit6 then PRO.
-/// - FL V99Nxx ("PLEASE ENABLE ENGINE", BURN,_BABY,_BURN:778-790) → PRO
+///   vendor/virtualagc/Luminary099/THE_LUNAR_LANDING.agc:251-255) → assert
+///   ch33 bit6 then PRO.
+/// - FL V99Nxx ("PLEASE ENABLE ENGINE", vendor/virtualagc/Luminary099/
+///   BURN,_BABY,_BURN_--_MASTER_IGNITION_ROUTINE.agc:778-788) → PRO
 ///   sets ASTNFLAG; IGNITION fires at TIG-0 → done.
 /// - Anything else flashing → PRO after a debounce (the brief's default),
 ///   handled by the caller via `Unknown`.
@@ -723,11 +750,12 @@ pub async fn measure_downlink_rate(
 /// DINC strobes; each returned POUT/MOUT changes the persistent commanded
 /// pulse count, and ZOUT ends that drive burst. The semantics are the direct
 /// external-hardware counterpart of yaAGC `CounterDINC`
-/// (`agc_engine.c:1278-1308,1570-1606`).
+/// (`vendor/virtualagc/yaAGC/agc_engine.c:1278-1308,1570-1606`).
 ///
 /// The physical throttle actuator is a bounded position, not an unbounded
 /// signed accumulator. Luminary deliberately emits −4096 pulses while the
-/// engine is off (`P40-P47.agc:490-494`) to seek the zero stop, then +4096
+/// engine is off (`vendor/virtualagc/Luminary099/P40-P47.agc:490-494`) to
+/// seek the zero stop, then +4096
 /// for FLATOUT. Pulses beyond either stop therefore leave the position at
 /// that stop.
 pub const THRUST_CMD_MAX_PULSES: i64 = 4096;

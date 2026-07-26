@@ -181,7 +181,10 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
     let summary = Arc::new(Mutex::new(Summary::default()));
     let collector = tokio::spawn(collect_telemetry(cfg.telem_tx.subscribe(), summary.clone()));
 
-    // Choreography to MM66, then deliver the descent ROD schedule.
+    // Choreography, then serve the sim's events. Where the choreography
+    // ends is mode-dependent (`runner::run_scenario`): hover mode carries
+    // it all the way to MM66, PDI mode stops at ENGINE ON and leaves the
+    // P64→P66 handover to the event loop below.
     let mut script = DskyScript::new(cmd_tx.clone(), dsky_rx);
     script.set_key_delay(Duration::from_millis(30));
     let mut responder = pkt_rx.resubscribe();
