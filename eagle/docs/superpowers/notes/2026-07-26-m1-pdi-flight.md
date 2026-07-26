@@ -9,9 +9,15 @@ Every run instrumented (`EAGLE_ATT_DEBUG`, `EAGLE_TELEM_OUT`, stdout tee'd,
 per-run filenames).
 
 **Headline: M1 flies the real profile — PDI to P66 with the radar bypassed
-and no alarms — and does not yet land. Two blockers were found and fixed
-by flying, both unit/scale errors in our own vehicle model against the
-rope; a third (P66's rate loop) is open and named.**
+and no in-flight alarms — and does not yet land. Two blockers were found
+and fixed by flying, both unit/scale errors in our own vehicle model
+against the rope; a third (P66's rate loop) is open and named.**
+
+"No in-flight alarms" is the last three flights, and it is exact: runs 4
+and 6 counted zero PROG-lamp frames from ignition to the end of the run,
+and run 5 counted 21 — all of them raised *after* ground contact (item 2a
+under "Open"). Runs 1-3 are not covered by that claim: run 2 counted 48
+lamp frames and run 3 counted 794, both in P65.
 
 The first was a unit error in our own accelerometer model, and only a live
 descent could have exposed it. `PIPA_INCR` was 0.0585 m/s per
@@ -23,7 +29,8 @@ static test in this repo could have caught it: it only exists at the
 seam between our physics and the rope's own scaling constants.
 
 The same seam produced three more (found in review, flown as flight 6):
-`THRUST_N_PER_PULSE` 12.0 → **12.531966** N/bit, DPS full throttle
+`THRUST_N_PER_PULSE` 12.0 → **12.5319585** N/bit (flight 6 flew 12.531966,
+a slipped 7th figure corrected afterwards — see "Fix round 1"), DPS full throttle
 46 706 → **48 145.4** N, `DPS_TAU` 0.3 → **0.2** s, all from four
 consecutive lines of `CONTROLLED_CONSTANTS.agc`. **Every physical constant
 in the propulsion and accelerometer chain is now the flown rope's own
@@ -44,6 +51,18 @@ number.** See "Fix round 1".
 
 **Flights used: 6 of 6** (plus one cancelled diagnostic re-fly that
 produced no data). Budget exhausted.
+
+Two per-run numbers the table above does not carry, both read off each
+run's own `[accept]` block in `build/traces/m1-runN.out`:
+
+| run | 1 | 2 | 3 | 4 | 5 | 6 |
+|---|---|---|---|---|---|---|
+| AGC clock (× real time) | 0.949 | 0.946 | 0.945 | 0.944 | 0.944 | 0.944 |
+| PROG-lamp frames after ignition | 0 | 48 | 794 | 0 | **21** | 0 |
+
+`sim pacing lost` was 0 ms and `alarm episodes` was `[]` on all six. Runs
+2 and 3's lamp frames are the P65 alarm (item 2 under "Open"); run 5's 21
+are post-contact and are item 2a.
 
 
 ## Flight 1 — the nav divergence, measured
@@ -130,11 +149,43 @@ deleted. `cargo test --workspace` green (32+21+90+1+4+10).
 
 ## Flight 2 — the nav loop closes, and a second blocker appears
 
-With `PIPA_INCR = 0.01` the AGC and the truth flew the same vehicle. For
-the whole braking phase the AGC's own displayed altitude rate stayed
-within **0.6 m/s** of truth and its displayed altitude within ~100 m of
-15 km — a nav loop that is genuinely closed, against 193 m/s of divergence
-on the same trajectory one flight earlier:
+With `PIPA_INCR = 0.01` the AGC and the truth flew the same vehicle: the
+displayed altitude stayed within ~100 m of 15 km and the displayed
+altitude rate tracked truth to a **median 0.43 m/s** through the braking
+phase — a nav loop that is genuinely closed, against 193 m/s of divergence
+on the same trajectory one flight earlier.
+
+The sampled table below is what was written up first, and it under-states
+the spread. Re-measured over all 4078 post-ignition MM63 frames of
+`build/traces/telem-m1-run2.jsonl` (Task 6 review): median 0.43 m/s, p90
+1.37 m/s, p99 4.82 m/s, and 16 % of frames above 1 m/s. The tail is not
+noise — 5-8 m/s sustained through the last ~7 s of P63, which is this
+flight arriving hot and low at a gate its engine could not make (below).
+The earlier "within 0.6 m/s" claim was read off the 60 s-spaced samples
+and does not survive the full record; the *conclusion* it supported — a
+closed loop, ~450× tighter than flight 1's 193 m/s — does.
+
+The same measurement over every flight that closed the loop, so that any
+claim about nav quality has one place to come from. All figures are
+`|nav_err_hdot_ms|` over the post-ignition MM63 frames of that run's
+`telem-m1-runN.jsonl`, one frame per 100 ms:
+
+| run | frames | median | p90 | p99 | worst sustained | >1 m/s |
+|---|---|---|---|---|---|---|
+| 2 | 4078 | 0.43 | 1.37 | 4.82 | 4.98 | 16 % |
+| 4 | 4799 | 0.46 | 1.07 | 2.13 | 3.06 | 12 % |
+| 5 | 4799 | 0.46 | 1.07 | 2.12 | 2.74 | 12 % |
+| 6 | 4878 | 0.37 | 1.04 | 2.04 | 2.78 | 11 % |
+
+"Worst sustained" excludes single-frame DSKY tears: run 6's largest raw
+sample is −60.899 m/s at t = 785.01 s, sitting between neighbours of
+−30.419 and −30.663 — the display caught mid-repaint, reading one register
+twice, in exactly one frame out of 4878. Run 2 has two such frames and, in
+addition, a genuine 5-8 m/s excursion through the last ~7 s of P63.
+
+So the defensible statement about the braking phase is **"median ~0.4 m/s,
+90 % of frames under ~1.1 m/s"**, not "under 1 m/s" — about one frame in
+eight is above 1 m/s on every run.
 
 | TIG+ | truth alt | truth vz | `nav_err_alt_m` | `nav_err_hdot_ms` |
 |---|---|---|---|---|
@@ -334,9 +385,22 @@ every 5 s from `build/traces/telem-m1-run4.jsonl`):
 | 665 s | 198.4 m | +7.38 m/s | +7.44 m/s | 6 594 N |
 | 670 s | 222.9 m | +2.28 m/s | +2.29 m/s | 4 560 N (idle) |
 
-Note what is **not** wrong: the AGC's own rate reading tracks the truth to
-well under 1 m/s all through P66 (−9.07/−9.17, +5.25/+3.90, +2.28/+2.29).
-The navigation is fine. It is the *control* that is unstable — the
+Note what is **not** wrong: the AGC's own rate reading sits on top of the
+truth at each of those samples (−9.07/−9.17, +5.25/+3.90, +2.28/+2.29).
+
+Do not over-read that. Re-measured per frame (Task 6 review), run 4's P66
+`|nav_err_hdot_ms|` has a median of **5.24 m/s** and a p90 of 25.4 m/s —
+because HDOTDISP repaints only about **once a second** (median gap 0.90 s,
+measured over the 134 updates in this run's P66) while the limit cycle
+slews the true rate by tens of m/s *per second*. A ~1 s-old display
+against a rate moving that fast differs from it by tens of m/s no matter
+how good the navigation is, so in P66 this signal cannot separate
+navigation error from display latency. Where the amplitude is smaller the
+number collapses back: runs 5 and 6 measure a median 0.70 m/s (p90 2.3 and
+2.6). The claim that survives is the braking-phase one measured above, plus
+the observation that nothing about P66 looks like a nav divergence.
+
+It is the *control* that is unstable — the
 throttle slams between the idle stop and full thrust with the sink rate
 swinging −9.5 to +7.4 m/s about a −7.3 m/s command, and the vehicle
 porpoises 245 → 7 → 580 m until the tank runs dry at TIG+840.
@@ -411,8 +475,9 @@ instead of run 4's single −8-click jump to −7.3 m/s.
 The braking and approach phases repeat to within a few metres across runs
 3, 4 and 5 — this profile is reproducible. Smaller steps did halve the
 vertical impact, but the loop still limit-cycles with a ~10 s period
-(sink rate −5.6 to +9.2 m/s about a −3.5 m/s command, throttle
-4.6 ↔ 26.7 kN), so **the oscillation is a property of the loop, not of the
+(5 s-sampled: sink rate −5.6 to +9.2 m/s about a −3.5 m/s command,
+throttle 4.6 ↔ 26.7 kN; at full rate, 0 → 46 448 N and −16.8 to
++10.2 m/s), so **the oscillation is a property of the loop, not of the
 step size**, and no ROD schedule fixes it. Horizontal velocity got worse
 precisely because the gentler profile keeps the vehicle in P66 longer, at
 the ~12° tilt nothing is flying.
@@ -453,8 +518,8 @@ Corrections applied:
 | `DPS_TAU` | 0.3 s (assumed) | **0.2 s** | `THROTLAG`, `:134` |
 
 (Post-flight correction, Task 6: `1 / 0.0797959872 = 12.5319585`, not
-12.531966 — the constant carried a slipped 7th figure, 0.06 ppm high. The
-committed constant is now 12.5319585; flight 6 flew 12.531966 and the
+12.531966 — the constant carried a slipped 7th figure, **0.60 ppm** high.
+The committed constant is now 12.5319585; flight 6 flew 12.531966 and the
 difference, 7.5e-6 N/bit, is far below anything these flights measured, so
 every number in this ledger stands as recorded.)
 
@@ -557,9 +622,9 @@ Against the flights above, assertion by assertion:
 | assertion | on runs 4/5/6 | |
 |---|---|---|
 | MM contains 63 → 64 → 66 | `["00","63","64","66"]` | would PASS |
-| `alarms.is_empty()` | 0 episodes | would PASS |
-| `prog_lamp_frames == 0` | 0 frames | would PASS |
-| AGC clock rate within ±10 % | 0.944-0.952× | would PASS |
+| `alarms.is_empty()` | 0 episodes / 0 / 0 | would PASS |
+| `prog_lamp_frames == 0` | 0 / **21** / 0 frames | runs 4, 6 PASS; **run 5 FAILS** (all 21 frames are post-contact — see "Open" item 2a) |
+| AGC clock rate within ±10 % | 0.944× / 0.944× / 0.944× | would PASS |
 | `descent_s <= 800 s` | 866.9 / 848.6 / 865.1 s | would FAIL |
 | `class == Nominal` | `Crash` | would FAIL |
 | `v_vert < 3.0` | 44.09 / 13.58 / 30.86 m/s | would FAIL |
@@ -581,9 +646,13 @@ into a passing gate.
    statically — see the route in "Fix round 1" — so this costs no flights
    to attempt. Everything else in the loop already checks out live, the
    three engine constants are now the rope's own, and the AGC's rate
-   reading is good to under 1 m/s: this is a scaling question, not a
-   navigation one. Second candidate, needing a citation before it is
-   touched: `dps_envelope`'s 19 kN discontinuity at 0.6·MAX.
+   reading through the braking phase is good to a median 0.4 m/s (table
+   above): this is a scaling question, not a navigation one. (In P66
+   itself the per-frame comparison is dominated by the ~1 s HDOTDISP
+   repaint against a fast-slewing rate — see flight 4 — so it neither
+   supports nor refutes a nav problem there.) Second candidate, needing a
+   citation before it is touched: `dps_envelope`'s 19 kN discontinuity at
+   0.6·MAX.
 1a. **The braking-gate residual (new, flight 6).** The gate is 911 m high
    and 47 m/s fast against RBRFG/VBRFG, and flight 6 proved that is *not*
    thrust — the engine now has margin and the number did not move. Look at
@@ -597,6 +666,25 @@ into a passing gate.
    flight display owns the DSKY — would name it in one flight. Until then
    the handover must fire inside P64, which is why `[handover] alt_m` is
    250 m and not the historical 150.
+2a. **Run 5's 21 PROG-lamp frames (new, found in Task 6 review).** Runs 4
+   and 6 counted 0; run 5 counted 21, and this was recorded in one table
+   cell and never explained. Measured offline from
+   `build/traces/pkt-m1-run5.jsonl` (channel 010, relay row 12, bit 8 —
+   `eagle-agc-protocol/src/dsky.rs:218-231`): the lamp is dark for the
+   whole flight and lights **once, at t = 1192.62 s, with relay word
+   `0o60424`** — PROG + ALT + VEL, the same trio flights 2 and 3 raised.
+   Run 5's ground contact was at t = 1192.21 s
+   (`telem-m1-run5.jsonl`) and the sim exits ~2 s later, so **every one of
+   the 21 frames is post-contact**: the AGC is still flying a vehicle the
+   sim has already latched as landed. Two consequences, neither resolved
+   here: (a) the code is unknown for the same reason as item 2 — nothing
+   reads FAILREG after ENGINE ON; (b) `prog_lamp_frames` keeps counting for
+   the sim's ~2 s post-touchdown tail, so a post-contact alarm fails the
+   acceptance's `prog_lamp_frames == 0` gate. Whether that gate should stop
+   at contact is a real design question. It was **not** answered by
+   loosening the gate in this task: run 5 is a crash either way, and
+   narrowing an acceptance to make a crash pass part of it is exactly the
+   move this project's docs rule forbids.
 3. **The −190 m altitude nav drift through P64.** Recorded, not
    diagnosed; the `UNIT(R)·V` geometry argument in the flight-3 section is
    a hypothesis. It costs the AGC its altitude margin before the terminal

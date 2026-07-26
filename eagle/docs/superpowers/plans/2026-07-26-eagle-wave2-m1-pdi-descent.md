@@ -143,7 +143,7 @@ init and abort if not" (a regression guard; M3 will *clear* it).
   - `pub struct PdiMasses { pub dry_kg: f64, pub dps_kg: f64, pub rcs_kg: f64 }`
   - `pub fn pdi_truth_state(cfg: &StateCfg, m: &PdiMasses, epoch_s: f64) -> LmState`
 
-- [ ] **Step 1: Write failing tests** in `padload.rs` `#[cfg(test)]`:
+- [x] **Step 1: Write failing tests** in `padload.rs` `#[cfg(test)]`:
 
 ```rust
 #[test]
@@ -195,9 +195,9 @@ fn pdi_truth_attitude_is_the_padloaded_refsmmat_frame() {
 }
 ```
 
-- [ ] **Step 2: Run, verify FAIL** — `cd runtime && cargo test -p eagle-runtime padload::` → compile errors (types missing).
+- [x] **Step 2: Run, verify FAIL** — `cd runtime && cargo test -p eagle-runtime padload::` → compile errors (types missing).
 
-- [ ] **Step 3: Implement.**
+- [x] **Step 3: Implement.**
 
 Extract the geometry block that `generate_state` computes inline
 (padload.rs ~750-768) into:
@@ -274,9 +274,9 @@ pub fn pdi_truth_state(cfg: &StateCfg, m: &PdiMasses, epoch_s: f64) -> LmState {
 (Adjust the `Rot`/`retag` construction to the real frames.rs API — the
 axis-angle-then-retag pattern is exactly what `scenario::body_x_to` uses.)
 
-- [ ] **Step 4: Run, verify PASS** — `cargo test -p eagle-runtime padload::` and the full `cargo test`.
+- [x] **Step 4: Run, verify PASS** — `cargo test -p eagle-runtime padload::` and the full `cargo test`.
 
-- [ ] **Step 5: Commit** — `git commit -m "feat(runtime): single-source ignition geometry + PDI truth state"` (+ trailers).
+- [x] **Step 5: Commit** — `git commit -m "feat(runtime): single-source ignition geometry + PDI truth state"` (+ trailers).
 
 ---
 
@@ -294,7 +294,7 @@ axis-angle-then-retag pattern is exactly what `scenario::body_x_to` uses.)
   - `Agc.lrbypass: bool` (`#[serde(default)]` → false)
   - `Scenario::initial_state` returns the PDI state when `mode = "pdi"`.
 
-- [ ] **Step 1: Write failing tests** in `scenario.rs` tests:
+- [x] **Step 1: Write failing tests** in `scenario.rs` tests:
 
 ```rust
 #[test]
@@ -322,9 +322,9 @@ fn hover_scenarios_do_not_need_the_new_fields() {
 }
 ```
 
-- [ ] **Step 2: Run, verify FAIL** — types/fields/file missing.
+- [x] **Step 2: Run, verify FAIL** — types/fields/file missing.
 
-- [ ] **Step 3: Implement.** Schema additions (all `deny_unknown_fields`-safe
+- [x] **Step 3: Implement.** Schema additions (all `deny_unknown_fields`-safe
 because they are new named fields with defaults):
 
 ```rust
@@ -417,9 +417,9 @@ tilt_max_deg = 12.0
 timeout_s = 800.0        # from ENGINE ON; P63 burn ~510 s + P64 + P66 + margin
 ```
 
-- [ ] **Step 4: Run, verify PASS** — `cargo test -p eagle-runtime scenario::` then full `make test && make lint`.
+- [x] **Step 4: Run, verify PASS** — `cargo test -p eagle-runtime scenario::` then full `make test && make lint`.
 
-- [ ] **Step 5: Commit** — `git commit -m "feat(runtime): PDI gate mode, handover altitude, lrbypass marker + pdi-descent scenario"` (+ trailers).
+- [x] **Step 5: Commit** — `git commit -m "feat(runtime): PDI gate mode, handover altitude, lrbypass marker + pdi-descent scenario"` (+ trailers).
 
 ---
 
@@ -438,7 +438,7 @@ timeout_s = 800.0        # from ENGINE ON; P63 burn ~510 s + P64 + P66 + margin
   - PDI freeze: `sf_body = 0` while frozen (coast), release on ENGINE ON
     (mechanism unchanged).
 
-- [ ] **Step 1: Write failing tests** in `sim.rs` tests:
+- [x] **Step 1: Write failing tests** in `sim.rs` tests:
 
 ```rust
 fn pdi_scenario() -> Scenario {
@@ -505,9 +505,9 @@ fn handover_never_fires_in_hover_mode() {
 }
 ```
 
-- [ ] **Step 2: Run, verify FAIL** — `handover` field missing, PDI PIPA test fails on hover-support pulses.
+- [x] **Step 2: Run, verify FAIL** — `handover` field missing, PDI PIPA test fails on hover-support pulses.
 
-- [ ] **Step 3: Implement.**
+- [x] **Step 3: Implement.**
 
 `SimCore` gains fields set in `new` from the scenario:
 
@@ -547,9 +547,9 @@ pub enum SimEvent {
 `SimEvent::Handover` on the renamed `event_tx`. Update the thread-shell
 test accordingly.
 
-- [ ] **Step 4: Run, verify PASS** — `cargo test -p eagle-runtime sim::` then full suite (headless will not compile until Task 4 — do Tasks 3+4 on one branch state if needed, but keep the commits separate; it is acceptable for this task's commit to come after Task 4's compile fix ONLY if the suite cannot be made green here. Preferred: change `spawn_sim`'s signature and `headless.rs`'s call site minimally in this task (type rename only, mapping `SimEvent::RodClicks` to the existing behavior and ignoring `Handover` with a `// Task 4` comment), so `make test` is green at this commit.)
+- [x] **Step 4: Run, verify PASS** — `cargo test -p eagle-runtime sim::` then full suite (headless will not compile until Task 4 — do Tasks 3+4 on one branch state if needed, but keep the commits separate; it is acceptable for this task's commit to come after Task 4's compile fix ONLY if the suite cannot be made green here. Preferred: change `spawn_sim`'s signature and `headless.rs`'s call site minimally in this task (type rename only, mapping `SimEvent::RodClicks` to the existing behavior and ignoring `Handover` with a `// Task 4` comment), so `make test` is green at this commit.)
 
-- [ ] **Step 5: Commit** — `git commit -m "feat(runtime): PDI coast freeze, sim-driven P64 handover, SimEvent channel"` (+ trailers).
+- [x] **Step 5: Commit** — `git commit -m "feat(runtime): PDI coast freeze, sim-driven P64 handover, SimEvent channel"` (+ trailers).
 
 ---
 
@@ -571,7 +571,7 @@ test accordingly.
   - `run_scenario` in PDI mode: verifies LRBYPASS after `init_discretes`/`dap_init`, skips the forced ATT-HOLD block, returns after `wait_engine_on`.
   - headless event loop: `RodClicks(n)` → `rod_load`; `Handover` → `att_hold(&cmd_tx)` then `rod_load(script, -1)`.
 
-- [ ] **Step 1: Write failing tests.** Fast-testable pieces only (the
+- [x] **Step 1: Write failing tests.** Fast-testable pieces only (the
 choreography itself is live):
 
 ```rust
@@ -605,9 +605,9 @@ async fn handover_event_passes_through_and_sim_close_still_terminates() {
 }
 ```
 
-- [ ] **Step 2: Run, verify FAIL.**
+- [x] **Step 2: Run, verify FAIL.**
 
-- [ ] **Step 3: Implement.**
+- [x] **Step 3: Implement.**
 
 `runner.rs`:
 - Add the two constants with citations (Step 0: re-verify both against
@@ -643,12 +643,12 @@ while let Some(ev) = next_sim_event(&mut event_rx, &mut client_rod_rx).await {
 }
 ```
 
-- [ ] **Step 4: Run, verify PASS** — full `make test && make lint`; also
+- [x] **Step 4: Run, verify PASS** — full `make test && make lint`; also
 `cargo test -p eagle-runtime --test live_p66_descent --no-run` and
 `--test live_spike_p66 --no-run` (hover path must still compile and its
 behavior is untouched).
 
-- [ ] **Step 5: Commit** — `git commit -m "feat(runtime): PDI choreography branch, LRBYPASS verify, handover action"` (+ trailers).
+- [x] **Step 5: Commit** — `git commit -m "feat(runtime): PDI choreography branch, LRBYPASS verify, handover action"` (+ trailers).
 
 ---
 
@@ -665,7 +665,7 @@ behavior is untouched).
 - Produces: measured numbers later tasks assert on. **Numeric findings are
   recorded, not guessed** (Wave 1 spike rule).
 
-- [ ] **Step 1: Makefile target.**
+- [x] **Step 1: Makefile target.**
 
 ```make
 # Wave 2 M1: the real descent — PDI → P63 → P64 → P66, radar bypassed.
@@ -679,7 +679,7 @@ descent-full: agc
 
 (add to `.PHONY`.)
 
-- [ ] **Step 2: First instrumented flight.**
+- [x] **Step 2: First instrumented flight.**
 
 ```bash
 cd runtime
@@ -700,7 +700,7 @@ pacing lines, fuel remaining. Also record what P64 actually displays
 extend `parse_agc_nav` unless the recorded data plus
 `PINBALL_NOUN_TABLES.agc` decode confirm R2 = HDOTDISP.
 
-- [ ] **Step 3: Diagnose and iterate.** Expected first-flight risk points, in
+- [x] **Step 3: Diagnose and iterate.** Expected first-flight risk points, in
 order: (a) IGNALG rejects or slips TIG (FAILREG 01703/00404/01301 — same
 alarm vocabulary as Wave 1 spike A); (b) P63 guidance diverges — check
 `nav_err_hdot_ms` (now measurable via N63) and the attitude trace;
@@ -710,16 +710,21 @@ Fix loop per the global rule: after 3 failed fix attempts on any one
 blocker, STOP and write up. Hard budget for the task: **6 flights** (~2 h
 wall) — if not stable by then, stop and summarize regardless.
 
-- [ ] **Step 4: Tune the scenario from measurements.** Set `[rod] steps`
+- [x] **Step 4: Tune the scenario from measurements.** Set `[rod] steps`
 (breakpoints below the measured handover-entry altitude/rate),
 `[acceptance]` values and `timeout_s` from the successful profile, each
 with `measured:` provenance comments naming the run. Update
 `docs/agc-channel-map.md` with the FLGWRD11/LRBYPASS rows (octal, cited).
 
 - [ ] **Step 5: Repeat until one full nominal-profile flight completes** (not
-yet the frozen 2×-consecutive bar — that is Task 6's).
+yet the frozen 2×-consecutive bar — that is Task 6's). — **NOT MET.** The
+6-flight budget was spent (runs 1-6, 2026-07-26); the profile flies
+PDI → P63 → P64 → P66 reproducibly on the last three, but every run ends in
+`Crash` and no nominal-profile flight completed. Step 3's stop rule
+applies: stopped and written up
+(`docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`).
 
-- [ ] **Step 6: Commit** — code/scenario/docs + ledger note:
+- [x] **Step 6: Commit** — code/scenario/docs + ledger note:
 `git commit -m "feat(runtime): M1 PDI descent flies live; measured rod schedule + acceptance values"` (+ trailers).
 
 ---

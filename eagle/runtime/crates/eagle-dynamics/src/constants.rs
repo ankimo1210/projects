@@ -164,7 +164,7 @@ pub const TRIM_MAX_DEG: f64 = 6.0;
 /// SCALEFAC, and 12.0 was 4.25 % low against the rope we actually fly.
 ///
 /// Flight 6 flew **12.531966** — the same derivation transcribed with a
-/// slipped 7th figure (0.06 ppm high, i.e. 7.5e-6 N/bit). Corrected here to
+/// slipped 7th figure (0.60 ppm high, i.e. 7.5e-6 N/bit). Corrected here to
 /// the value the reciprocal actually gives; nothing measured changes at
 /// that size, so flight 6's numbers stand as recorded.
 pub const THRUST_N_PER_PULSE: f64 = 12.5319585;

@@ -25,13 +25,16 @@ As of Phase 2 Wave 1 the loop is closed end to end — PIPA/CDU sensors feed the
 
 > **Wave 2 M1 flies the real descent, and does not land.** Six instrumented
 > flights on 2026-07-26 (`make descent-full`, `scenarios/pdi-descent.toml`)
-> start the truth state at the pad-loaded PDI ignition point and fly
-> `MM ["00","63","64","66"]` — PDI → P63 braking → P64 approach →
-> crew-takeover P66, landing radar bypassed in-rope — with **zero PROG
-> alarms and zero PROG-lamp frames**, and the AGC's own altitude rate
-> within 1 m/s of truth through the whole braking phase. That is the thing
-> Wave 2 existed to decide: the nav/truth split that made Wave 1
-> unfixable is closed.
+> start the truth state at the pad-loaded PDI ignition point, and **the
+> last three** fly `MM ["00","63","64","66"]` — PDI → P63 braking → P64
+> approach → crew-takeover P66, landing radar bypassed in-rope — with
+> **zero PROG alarm episodes** and the AGC's own altitude rate tracking
+> truth to a median 0.4 m/s (90 % of frames under 1.1 m/s) through the
+> braking phase. That is the thing Wave 2 existed to decide: the nav/truth
+> split that made Wave 1 unfixable is closed. (Runs 1-3 got progressively
+> further — run 1 diverged 193 m/s and never left P63; runs 2 and 3 went
+> through P65, which raised an alarm and stopped the guidance modulating
+> the throttle.)
 >
 > Touchdown is still a **crash**. P66's rate loop limit-cycles — run 6 ran
 > the throttle stop-to-stop (0 → 48 132 N) for 218 s with the sink rate
@@ -45,8 +48,11 @@ As of Phase 2 Wave 1 the loop is closed end to end — PIPA/CDU sensors feed the
 >
 > The acceptance test (`tests/live_pdi_descent.rs`) is frozen and **has
 > never been run**: it was written after the flight budget was spent, so it
-> records the target, not a result. Measured numbers, citations and the
-> four open items:
+> records the target, not a result. On the last three flights its mode,
+> alarm-episode and AGC-clock assertions would pass, its touchdown block
+> would fail, and its `prog_lamp_frames == 0` gate would fail on run 5 —
+> which counted 21 lamp frames, all raised *after* ground contact.
+> Measured numbers, citations and the open items:
 > [docs/superpowers/notes/2026-07-26-m1-pdi-flight.md](docs/superpowers/notes/2026-07-26-m1-pdi-flight.md).
 
 ## Prerequisites

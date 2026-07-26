@@ -56,9 +56,13 @@ alt_m = 250.0
 #    10 m: +0.8 -> ~-1.2 m/s   (2 clicks, touchdown rate)
 # PROVISIONAL — this schedule has NOT been validated to a soft landing,
 # because P66's own rate loop oscillates on this build. Run 4 used a single
-# -8-click step to ~-7.3 m/s and the loop went bang-bang (throttle slamming
-# 4.6 kN <-> 46 kN, sink rate swinging -9.5 to +7.4 m/s about the command)
-# until the vehicle climbed away and ran the tank dry: v_vert 44.09 m/s.
+# -8-click step to ~-7.3 m/s and the loop went bang-bang -- over the whole
+# P66 segment the throttle stroked 0 -> 46706 N, the full stop-to-stop
+# range, with the sink rate spanning -47.3 to +26.0 m/s about the command
+# (the smaller "4.6 <-> 26.8 kN / -9.5 to +7.4 m/s" figures first written
+# here were a 5-second telemetry sample and under-report the swing; see the
+# ledger) -- until the vehicle climbed away and ran the tank dry: v_vert
+# 44.09 m/s.
 # These smaller steps (<=6 clicks) halved that — run 5 measured v_vert
 # 13.58 m/s — but the limit cycle survives, so the schedule is a starting
 # point, not a tuned answer. Run 6 flew this same schedule on the corrected
