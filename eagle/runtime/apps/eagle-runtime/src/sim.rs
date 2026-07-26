@@ -11,7 +11,7 @@
 //! schedule emits a signed click COUNT in `SimTickOut::rod_clicks`; the
 //! tokio side turns it into `runner::rod_load`. (The plan predates the
 //! Spike-B RODCOUNT finding and specified ch016 press/release packets.)
-use crate::scenario::Scenario;
+use crate::scenario::{GateMode, Scenario};
 use eagle_agc_protocol::agc_io::{decode_output, pipa_pulse, AgcOutput, PipaAxis};
 use eagle_agc_protocol::dsky::DskyState;
 use eagle_agc_protocol::Packet;
@@ -111,6 +111,18 @@ pub struct SimTickOut {
     pub touchdown: Option<Touchdown>,
     /// Signed ROD clicks to deliver via RODCOUNT this tick (see module doc).
     pub rod_clicks: i32,
+    /// Fires on exactly one tick: the P64→P66 handover point was reached.
+    pub handover: bool,
+}
+
+/// Sim → headless events that need the DSKY script or discrete writes.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum SimEvent {
+    /// Signed ROD clicks to deliver via RODCOUNT (schedule + handover click
+    /// are separate: the handover click is part of Handover).
+    RodClicks(i32),
+    /// P64→P66 handover: ATT HOLD discrete + the selection ROD click.
+    Handover,
 }
 
 /// Latched trim-gimbal drive bits (ch012).
@@ -149,6 +161,15 @@ pub struct SimCore {
     touchdown: Option<Touchdown>,
     /// Body-frame specific force this tick (for the PIPA feed).
     sf_body: V3<Body>,
+    /// `gate.mode == Pdi`: the freeze is a free coast, not a hover.
+    pdi: bool,
+    /// Altitude (m AGL) at which the P64→P66 handover fires once armed.
+    /// `None` in hover mode — Wave 1 flips ATT HOLD on a wall clock instead.
+    handover_alt_m: Option<f64>,
+    /// MM64 has been observed at least once (arms the handover).
+    handover_armed: bool,
+    /// The handover has already fired (it is a one-shot).
+    handover_fired: bool,
     queue: Vec<SimIn>,
 }
 
@@ -195,6 +216,15 @@ impl SimCore {
             tick_index: 0,
             touchdown: None,
             sf_body: V3::zero(),
+            pdi: sc.gate.mode == GateMode::Pdi,
+            // Hover mode stays bit-identical to Wave 1: no sim-driven
+            // handover there, whatever the file says.
+            handover_alt_m: match sc.gate.mode {
+                GateMode::Pdi => sc.handover.as_ref().map(|h| h.alt_m),
+                GateMode::Hover => None,
+            },
+            handover_armed: false,
+            handover_fired: false,
             queue: Vec::new(),
         }
     }
@@ -219,6 +249,7 @@ impl SimCore {
         self.phase6_sensors(&mut out);
         self.phase7_thrust(&mut out);
         self.phase8_rod(&mut out);
+        self.phase9_handover(&mut out);
         self.phase10_telemetry_and_touchdown(&mut out);
         self.debug_attitude_loop();
         self.tick_index += 1;
@@ -351,13 +382,48 @@ impl SimCore {
     }
 
     // 4/5. Freeze until first ENGINE ON; then integrate the rigid body.
+    //
+    // The release trigger is ENGINE ON (ch 011 bit 13) in BOTH modes — the
+    // Wave 1 mechanism, unchanged. What differs is the frozen specific
+    // force fed to the PIPAs:
+    //
+    // * Hover: 1.62 m/s² support, so nav sees the vehicle standing on its
+    //   engine at the gate.
+    // * PDI: ZERO. The pre-ignition arc is a free coast, and truth is
+    //   pinned, so nav must see nothing accelerate — anything else is a
+    //   pure nav error injected before the burn even starts. Ullage
+    //   (~0.9 m/s at TIG−7.5 s,
+    //   vendor/virtualagc/Luminary099/BURN,_BABY,_BURN_--_MASTER_IGNITION_ROUTINE.agc:356)
+    //   falls inside this window and is therefore consistently absent from
+    //   both sides.
+    //
+    // Releasing at ENGINE ON ≈ TIG−0 is what makes truth and nav agree:
+    // `DDUMGOOD` computes TIG = TDEC1 − ZOOMTIME
+    // (vendor/virtualagc/Luminary099/THE_LUNAR_LANDING.agc:193-198), so the
+    // pad load's geometric ignition point is where the AGC's nav sits at
+    // FLATOUT = TIG+ZOOMTIME, NOT at ENGINE ON (≈44.31 km uprange of it).
+    // `padload::pdi_truth_state` therefore back-propagates that point by
+    // ZOOMTIME under gravity and hands us the TIG-time state, which this
+    // release then unpins exactly where nav believes it is. The freeze also
+    // absorbs the AGC's ~4.8 % clock-rate offset: nav advances on the AGC's
+    // own clock while truth waits, so the two meet whenever ENGINE ON
+    // actually arrives.
+    //
+    // Commanding an attitude against frozen truth is safe: Wave 1 measured
+    // the DAP recovering a ~125° error in ~13 s after release, well before
+    // Luminary throttles up at FLATOUT = TIG+26 s
+    // (docs/superpowers/notes/2026-07-25-wave1-reflight.md).
     fn phase4_5_dynamics(&mut self) {
         if self.frozen {
             // Advance the clock even while pinned, so telemetry rates
             // (downlink_wps, drift) don't divide accumulated counts by a
             // near-zero t_s at engine-on.
             self.st.t += DT;
-            self.sf_body = V3::new(HOVER_ACCEL_MS2, 0.0, 0.0);
+            self.sf_body = if self.pdi {
+                V3::zero()
+            } else {
+                V3::new(HOVER_ACCEL_MS2, 0.0, 0.0)
+            };
             return;
         }
         self.sf_body = body_thrust_force(&self.act).scale(1.0 / self.st.mass_kg);
@@ -406,6 +472,28 @@ impl SimCore {
             out.rod_clicks += (delta / ROD_CLICK_MS).round() as i32;
             self.rod_target_ms = new_target;
             self.rod_step_idx += 1;
+        }
+    }
+
+    // 9. P64→P66 handover: a one-shot, armed by MM64 and fired by altitude.
+    //
+    // Both conditions are load-bearing. GUILDENSTERN's P66 switch does not
+    // require MM63, so it works from P64
+    // (vendor/virtualagc/Luminary099/LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:203-217),
+    // but it is only reached once landing guidance is running — hence the
+    // MM64 arm. Altitude alone would fire during the braking phase, while
+    // the vehicle is still below the gate on the way down from PDI.
+    // `handover_alt_m` is `None` in hover mode, so this is inert there.
+    fn phase9_handover(&mut self, out: &mut SimTickOut) {
+        let Some(alt_gate) = self.handover_alt_m else {
+            return;
+        };
+        if self.mm == "64" {
+            self.handover_armed = true;
+        }
+        if self.handover_armed && !self.handover_fired && self.alt_agl() <= alt_gate {
+            self.handover_fired = true;
+            out.handover = true;
         }
     }
 
@@ -552,7 +640,7 @@ pub fn spawn_sim(
     in_rx: std::sync::mpsc::Receiver<SimIn>,
     agc_tx: tokio::sync::mpsc::UnboundedSender<Packet>,
     telem_tx: tokio::sync::broadcast::Sender<String>,
-    rod_tx: tokio::sync::mpsc::UnboundedSender<i32>,
+    event_tx: tokio::sync::mpsc::UnboundedSender<SimEvent>,
 ) -> SimHandle {
     let (stop_tx, stop_rx) = std::sync::mpsc::channel::<()>();
     let join = std::thread::spawn(move || {
@@ -588,7 +676,10 @@ pub fn spawn_sim(
                 }
             }
             if out.rod_clicks != 0 {
-                let _ = rod_tx.send(out.rod_clicks);
+                let _ = event_tx.send(SimEvent::RodClicks(out.rod_clicks));
+            }
+            if out.handover {
+                let _ = event_tx.send(SimEvent::Handover);
             }
             if let Some(td) = out.touchdown {
                 let (vv, vh, tilt) = core.landing_kinematics();
@@ -639,6 +730,13 @@ mod tests {
     fn scenario() -> Scenario {
         Scenario::load(
             &PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../../scenarios/p66-gate.toml"),
+        )
+        .unwrap()
+    }
+
+    fn pdi_scenario() -> Scenario {
+        Scenario::load(
+            &PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../../scenarios/pdi-descent.toml"),
         )
         .unwrap()
     }
@@ -717,6 +815,74 @@ mod tests {
             core.st.vel.dot(up) < 0.0,
             "should be falling after engine on"
         );
+    }
+
+    #[test]
+    fn pdi_freeze_feeds_zero_pipa_and_releases_on_engine_on() {
+        let sc = pdi_scenario();
+        let mut core = SimCore::new(&sc, 0.0);
+        let pos0 = core.st.pos;
+        let mut pipa_packets = 0usize;
+        for _ in 0..200 {
+            let out = core.tick();
+            pipa_packets += out.to_agc.iter().filter(|p| is_pipa(p)).count();
+        }
+        assert_eq!(core.st.pos, pos0, "frozen state must not move");
+        assert_eq!(
+            pipa_packets, 0,
+            "coast freeze must feed ZERO specific force"
+        );
+        engine_on(&mut core);
+        for _ in 0..100 {
+            core.tick();
+        }
+        assert_ne!(core.st.pos, pos0, "dynamics must run after ENGINE ON");
+    }
+
+    #[test]
+    fn hover_freeze_still_feeds_hover_support() {
+        // Regression guard: hover mode is bit-identical to Wave 1.
+        let sc = scenario();
+        let mut core = SimCore::new(&sc, 0.0);
+        let mut pipa = 0usize;
+        for _ in 0..200 {
+            pipa += core.tick().to_agc.iter().filter(|p| is_pipa(p)).count();
+        }
+        assert!(pipa > 0, "hover freeze feeds 1.62 m/s^2 support");
+    }
+
+    #[test]
+    fn handover_arms_on_mm64_and_fires_once_below_altitude() {
+        let sc = pdi_scenario();
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+        // Below the handover altitude but MM is still 63: must NOT fire.
+        core.st.pos = core.st.pos.unit().scale(sc.site.radius_m + 100.0);
+        core.ingest(SimIn::Dsky(DskyStateSnapshot {
+            mm: "63".into(),
+            nav: None,
+        }));
+        assert!(!core.tick().handover, "not armed before MM64");
+        // MM64 appears while below threshold: fires exactly once.
+        core.ingest(SimIn::Dsky(DskyStateSnapshot {
+            mm: "64".into(),
+            nav: None,
+        }));
+        assert!(core.tick().handover, "armed + below altitude => fire");
+        assert!(!core.tick().handover, "fires once");
+    }
+
+    #[test]
+    fn handover_never_fires_in_hover_mode() {
+        let sc = scenario();
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+        core.st.pos = core.st.pos.unit().scale(sc.site.radius_m + 10.0);
+        core.ingest(SimIn::Dsky(DskyStateSnapshot {
+            mm: "64".into(),
+            nav: None,
+        }));
+        assert!(!core.tick().handover);
     }
 
     #[test]
@@ -880,8 +1046,8 @@ mod tests {
         let (_in_tx, in_rx) = std::sync::mpsc::channel::<SimIn>();
         let (agc_tx, _agc_rx) = tokio::sync::mpsc::unbounded_channel::<Packet>();
         let (telem_tx, mut telem_rx) = tokio::sync::broadcast::channel::<String>(256);
-        let (rod_tx, _rod_rx) = tokio::sync::mpsc::unbounded_channel::<i32>();
-        let handle = spawn_sim(core, in_rx, agc_tx, telem_tx, rod_tx);
+        let (event_tx, _event_rx) = tokio::sync::mpsc::unbounded_channel::<SimEvent>();
+        let handle = spawn_sim(core, in_rx, agc_tx, telem_tx, event_tx);
         // ~150 ms of 10 ms ticks → ≥ 10 ticks → ≥ 1 telemetry frame.
         std::thread::sleep(std::time::Duration::from_millis(150));
         handle.stop.send(()).unwrap();
