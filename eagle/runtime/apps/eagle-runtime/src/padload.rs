@@ -742,9 +742,12 @@ pub struct IgnitionGeometry {
 }
 
 /// Ignition-point geometry in the orbit plane (see `StateCfg` docs):
-/// radial component r·cosθ = R_SITE + rign_x (rign_x < 0), downrange arc
-/// r·sinθ = |rign_z|. With the LUM69R2 targets this lands at θ ≈ 0.2539
-/// rad, r ≈ 1752.6 km — h ≈ 15.2 km, the historical PDI altitude.
+/// radial component r·cosθ = R_SITE + rign_x (rign_x < 0), downrange
+/// (cross-radial) component r·sinθ = |rign_z| — a straight-line chord,
+/// NOT the along-orbit arc r·θ (which differs: 444.77 km vs |rign_z| =
+/// 440.01 km for the LUM69R2 targets). With the LUM69R2 targets this
+/// lands at θ ≈ 0.2539 rad, r ≈ 1752.6 km — h ≈ 15.2 km, the historical
+/// PDI altitude.
 pub fn ignition_geometry(cfg: &StateCfg) -> IgnitionGeometry {
     let a = R_SITE + cfg.rign_x_m;
     let b = -cfg.rign_z_m; // rign_z < 0 => LM is uprange (short of site)
@@ -906,22 +909,51 @@ pub fn generate_state(cfg: &StateCfg) -> Vec<ManifestWord> {
     w
 }
 
-/// Mass properties for the PDI truth state (scenario-supplied).
+/// Mass properties for the PDI truth state. Provenance: assumed —
+/// supplied by the calling scenario (its `[gate]`-style mass block, not
+/// derived or measured here); `pdi_truth_state` only combines them.
 #[derive(Debug, Clone, Copy)]
 pub struct PdiMasses {
+    /// Dry (unfueled) vehicle mass, kg.
     pub dry_kg: f64,
+    /// Remaining DPS (descent engine) propellant, kg.
     pub dps_kg: f64,
+    /// Remaining RCS propellant, kg.
     pub rcs_kg: f64,
 }
 
-/// Sim truth at the PDI ignition point, in the pad-load's MCI frame
-/// (site radial = +X at TLAND, orbit plane = XY, motion +Y eastward).
-/// The freeze releases on ENGINE ON ≈ TIG-0, at which moment the AGC's
-/// own nav — integrating the SAME pad-loaded orbit — arrives at this
-/// point by construction (design doc §3 M1; release-trigger note in the
-/// M1 plan header). Attitude = the pad-loaded REFSMMAT frame exactly
-/// (body X→MCI x̂, Y→−ẑ, Z→ŷ = Rx(−90°)), so SM ≡ initial body attitude
-/// makes the REFSMMAT claim true and the CDUs correctly read zero.
+/// Sim truth at TIG (engine ignition), in the pad-load's MCI frame (site
+/// radial = +X at TLAND, orbit plane = XY, motion +Y eastward).
+///
+/// `generate_state` time-tags the permanent LM state vector at the
+/// *geometric* ignition point from `ignition_geometry` — the point where
+/// P63's DDUM Newton iteration on TDEC1 converges (IGNALG). But that
+/// converged point is FLATOUT/TDEC1, not TIG: DDUMGOOD computes
+/// `TIG = TDEC1 - ZOOMTIME` (THE_LUNAR_LANDING.agc:193-198; ZOOMTIME =
+/// `ZOOMTIME_CS`, 26 s). The sim's freeze releases on ENGINE ON, i.e. at
+/// TIG — by which time the AGC's own nav, integrating the SAME
+/// pad-loaded orbit under gravity alone (a coast — DPS is not yet lit),
+/// has moved `ZOOMTIME` further along that orbit from the geometric
+/// point. So the truth handed to the sim at ENGINE ON must be the
+/// geometric-point state propagated BACKWARD by `ZOOMTIME_CS` under
+/// gravity, landing exactly where the AGC's integrated nav actually is
+/// at TIG: about 44 km uprange (along-track) of the geometric point.
+/// (Ullage, at TIG-7.5s per
+/// BURN,_BABY,_BURN_--_MASTER_IGNITION_ROUTINE.agc:347, falls inside this
+/// same frozen coast window, so its ~0.9 m/s delta-v is consistently
+/// absent from both this truth state and the AGC's nav — neither side
+/// needs to model it.)
+///
+/// Attitude = the pad-loaded REFSMMAT frame exactly (body X→MCI x̂,
+/// Y→−ẑ, Z→ŷ = Rx(−90°)), so SM ≡ initial body attitude makes the
+/// REFSMMAT claim true and the CDUs correctly read zero. Attitude,
+/// angular rate and mass/fuel are untouched by the (translation-only)
+/// back-propagation.
+///
+/// `epoch_s` is stamped onto the returned state's `t` field as given —
+/// it does not have to be TIG's own AGC-clock value; aligning this
+/// state's time base with the caller's clock is the caller's
+/// responsibility, not this function's.
 pub fn pdi_truth_state(cfg: &StateCfg, m: &PdiMasses, epoch_s: f64) -> LmState {
     let g = ignition_geometry(cfg);
     let (s, c) = g.theta_rad.sin_cos();
@@ -929,8 +961,8 @@ pub fn pdi_truth_state(cfg: &StateCfg, m: &PdiMasses, epoch_s: f64) -> LmState {
         V3::<Mci>::new(1.0, 0.0, 0.0),
         -std::f64::consts::FRAC_PI_2,
     ));
-    LmState {
-        t: epoch_s,
+    let geometric = LmState {
+        t: 0.0,
         pos: V3::new(g.r_orb_m * c, -g.r_orb_m * s, 0.0),
         vel: V3::new(g.v_inertial_ms * s, g.v_inertial_ms * c, 0.0),
         att,
@@ -938,7 +970,28 @@ pub fn pdi_truth_state(cfg: &StateCfg, m: &PdiMasses, epoch_s: f64) -> LmState {
         mass_kg: m.dry_kg + m.dps_kg + m.rcs_kg,
         fuel_dps_kg: m.dps_kg,
         fuel_rcs_kg: m.rcs_kg,
+    };
+
+    // Back-propagate FLATOUT -> TIG, ZOOMTIME_CS seconds earlier, under
+    // gravity alone: fixed-step RK4 with negative dt. The dynamics are
+    // autonomous (acceleration depends only on position, not time), so
+    // reversing the step sign reverses the trajectory exactly; stepping
+    // in DT increments (rather than one large jump) matches the sim's
+    // own fixed-step integrator.
+    let gravity_only = |st: &LmState| eagle_dynamics::state::Derivs {
+        acc: eagle_dynamics::state::gravity(st.pos),
+        alpha: V3::zero(),
+        mdot_total: 0.0,
+        mdot_dps: 0.0,
+        mdot_rcs: 0.0,
+    };
+    let n = (ZOOMTIME_CS / 100.0 / eagle_dynamics::constants::DT).round() as usize;
+    let mut tig = geometric;
+    for _ in 0..n {
+        tig = eagle_dynamics::rk4::step_rk4(&tig, &gravity_only, -eagle_dynamics::constants::DT);
     }
+    tig.t = epoch_s;
+    tig
 }
 
 /// Render a manifest to TOML text with a b-scale-verification-status
@@ -1421,7 +1474,11 @@ mod tests {
     fn generate_state_and_truth_state_share_the_geometry() {
         // The single-source property: the RN/VN words and the truth state must
         // come from the same θ/r/v. generate_state's own scaling test pins the
-        // words; here we pin the truth state against ignition_geometry.
+        // words; here we pin the truth state (at TIG) against ignition_geometry
+        // by forward-propagating it back up to the geometric ignition point
+        // under the same gravity-only model `pdi_truth_state` used to
+        // back-propagate -- the round trip is the assertion, so a sign error
+        // in the back-propagation cannot pass.
         let cfg = StateCfg::default();
         let g = ignition_geometry(&cfg);
         let m = PdiMasses {
@@ -1430,13 +1487,53 @@ mod tests {
             rcs_kg: 250.0,
         };
         let st = pdi_truth_state(&cfg, &m, 0.0);
+
         let (s, c) = g.theta_rad.sin_cos();
-        let expect_pos = V3::<Mci>::new(g.r_orb_m * c, -g.r_orb_m * s, 0.0);
-        assert!((st.pos - expect_pos).norm() < 1e-6, "pos {:?}", st.pos);
-        let expect_vel = V3::<Mci>::new(g.v_inertial_ms * s, g.v_inertial_ms * c, 0.0);
-        assert!((st.vel - expect_vel).norm() < 1e-6, "vel {:?}", st.vel);
+        let expect_ignition_pos = V3::<Mci>::new(g.r_orb_m * c, -g.r_orb_m * s, 0.0);
+        let expect_ignition_vel = V3::<Mci>::new(g.v_inertial_ms * s, g.v_inertial_ms * c, 0.0);
+
+        let gravity_only = |s: &LmState| eagle_dynamics::state::Derivs {
+            acc: eagle_dynamics::state::gravity(s.pos),
+            alpha: V3::zero(),
+            mdot_total: 0.0,
+            mdot_dps: 0.0,
+            mdot_rcs: 0.0,
+        };
+        let dt = eagle_dynamics::constants::DT;
+        let n = (ZOOMTIME_CS / 100.0 / dt).round() as usize;
+        let mut fwd = st.clone();
+        for _ in 0..n {
+            fwd = eagle_dynamics::rk4::step_rk4(&fwd, &gravity_only, dt);
+        }
+        assert!(
+            (fwd.pos - expect_ignition_pos).norm() < 1e-6,
+            "round-trip pos {:?} vs ignition {:?}",
+            fwd.pos,
+            expect_ignition_pos
+        );
+        assert!(
+            (fwd.vel - expect_ignition_vel).norm() < 1e-9,
+            "round-trip vel {:?} vs ignition {:?}",
+            fwd.vel,
+            expect_ignition_vel
+        );
+
+        // Order-of-magnitude guard: ZOOMTIME (26 s) at ~1704 m/s inertial
+        // should displace the vehicle roughly 44 km along-track between TIG
+        // and the geometric ignition point; this fails loudly if ZOOMTIME
+        // is ever misread (e.g. a cs/s mixup, or 26 vs 2600).
+        let displacement = (expect_ignition_pos - st.pos).norm();
+        assert!(
+            (40_000.0..50_000.0).contains(&displacement),
+            "TIG-to-ignition displacement {displacement} m is not order-44 km"
+        );
+
+        // Attitude, angular rate and mass/fuel are untouched by the
+        // (translation-only) back-propagation.
         assert!((st.mass_kg - (7009.0 + 7950.0 + 250.0)).abs() < 1e-9);
         assert_eq!(st.fuel_dps_kg, 7950.0);
+        assert_eq!(st.fuel_rcs_kg, 250.0);
+        assert_eq!(st.omega, V3::<Body>::zero());
         assert_eq!(st.t, 0.0);
     }
 
