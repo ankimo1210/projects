@@ -296,7 +296,25 @@ mod tests {
         let s = Scenario::load(&repo().join("scenarios/pdi-descent.toml")).unwrap();
         assert!(matches!(s.gate.mode, GateMode::Pdi));
         assert!(s.agc.lrbypass);
-        assert!((s.handover.as_ref().unwrap().alt_m - 150.0).abs() < 1e-9);
+        // 250 m, not the historical 500 ft / 150 m: P64 flies the approach
+        // down to ~237 m and hands to P65 there, and P65 is where the live
+        // runs die (PROG alarm + the guidance stops modulating the
+        // throttle), so at 150 m the handover never fires inside P64.
+        // Measured, 2026-07-26 M1 flights 3-5 — see
+        // docs/superpowers/notes/2026-07-26-m1-pdi-flight.md.
+        assert!((s.handover.as_ref().unwrap().alt_m - 250.0).abs() < 1e-9);
+        // The ROD schedule must be populated (Task 5 measured it) and must
+        // descend: each breakpoint below the last.
+        assert_eq!(s.rod.steps.len(), 3);
+        assert!(
+            s.rod.steps.windows(2).all(|w| w[1][0] < w[0][0]),
+            "rod steps must be in descending altitude order: {:?}",
+            s.rod.steps
+        );
+        assert!(
+            s.rod.steps[0][0] < s.handover.as_ref().unwrap().alt_m,
+            "the first rod step must sit below the handover altitude"
+        );
         let st = s.initial_state(0.0);
         // PDI point = TIG, NOT the geometric ignition point: pdi_truth_state
         // back-propagates the geometric FLATOUT state by ZOOMTIME (26 s)

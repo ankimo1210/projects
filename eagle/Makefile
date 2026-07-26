@@ -1,4 +1,4 @@
-.PHONY: vendor agc-tools agc test test-integration dev descent-p66 descent-p66-fast lint
+.PHONY: vendor agc-tools agc test test-integration dev descent-p66 descent-p66-fast descent-full lint
 
 vendor:
 	bash scripts/fetch-vendor.sh
@@ -45,6 +45,14 @@ descent-p66-fast: agc
 	cd runtime && cargo run -p eagle-runtime -- \
 	  --yaagc ../build/agc/yaAGC --core ../build/agc/Luminary099.bin \
 	  --scenario ../scenarios/p66-gate-fast.toml --root ..
+
+# Wave 2 M1: the real descent — PDI → P63 → P64 → P66, radar bypassed.
+# ~18-19 min wall (boot ~6 min + P63 burn ~8.5 min + P64/P66; the AGC clock
+# runs ~95.2% of real time on this host). Not in CI.
+descent-full: agc
+	cd runtime && cargo run -p eagle-runtime -- \
+	  --yaagc ../build/agc/yaAGC --core ../build/agc/Luminary099.bin \
+	  --scenario ../scenarios/pdi-descent.toml --root ..
 
 lint:
 	cd runtime && cargo clippy --workspace --all-targets -- -D warnings

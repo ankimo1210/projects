@@ -54,5 +54,39 @@ pub async fn run(cfg: Cfg) -> Result<()> {
         result.descent_s,
         result.drift_ms
     );
+    // Same diagnostics block the acceptance test prints, so an interactive
+    // flight (`make descent-full`) records the run WITHOUT having to
+    // re-derive the numbers from the telemetry dump afterwards. The Wave 1
+    // re-flight had to hand-compute `agc_rate` out of the EAGLE_TELEM_OUT
+    // JSONL for exactly this reason
+    // (docs/superpowers/notes/2026-07-25-wave1-reflight.md).
+    if let Some(td) = result.sim.touchdown {
+        eprintln!(
+            "[accept] class {:?} v_vert {:.2} m/s v_horiz {:.2} m/s tilt {:.1} deg \
+             miss {:.1} m",
+            td.class, td.v_vert_ms, td.v_horiz_ms, td.tilt_deg, td.miss_m
+        );
+    }
+    eprintln!(
+        "[accept] alarm episodes {:?}; PROG lamp frames after ignition {}",
+        result.alarms, result.prog_lamp_frames
+    );
+    // `agc_rate` — the AGC clock rate the acceptance gate asserts on —
+    // alongside `sim pacing lost`, which is what separates a slow AGC from
+    // our own scheduling overrun (both look identical in `drift_ms`).
+    let agc_rate = if result.final_t_s > 0.0 {
+        1.0 + result.drift_ms / 1000.0 / result.final_t_s
+    } else {
+        f64::NAN
+    };
+    eprintln!(
+        "[accept] AGC clock {:.3}x real time (drift {:.0} ms over {:.1} s sim); \
+         sim pacing lost {:.0} ms; downlink {:.1} wps",
+        agc_rate,
+        result.drift_ms,
+        result.final_t_s,
+        result.sim.pacing_lost_ms,
+        result.mid_downlink_wps
+    );
     Ok(())
 }

@@ -25,6 +25,19 @@ not re-orient. Do not restate "soft touchdown" anywhere until it is
 measured. Evidence, numbers and next steps:
 `docs/superpowers/notes/2026-07-25-wave1-reflight.md`.
 
+**Wave 2 M1 (`scenarios/pdi-descent.toml`, `make descent-full`) flies the
+real profile and does not land yet.** Five instrumented flights on
+2026-07-26 fly PDI → P63 → P64 → P66 with the radar bypassed in-rope and
+**zero PROG alarms**, AGC-vs-truth altitude-rate error under 1 m/s for the
+whole braking phase, MM64 at TIG+480.6 s and the sim-driven handover at
+250 m. Touchdown is still a crash: P66's rate loop limit-cycles (throttle
+slamming idle ↔ full) and nothing flies the attitude, so v_horiz runs
+away. Two model bugs were found by flying and fixed with rope citations —
+`PIPA_INCR` 0.0585 → **0.01** m/s/pulse (Luminary's own KPIP constants)
+and DPS thrust 42 500 → **46 706** N (LUM69R2's LOWCRIT/HIGHCRIT
+annotation). Numbers, citations and the open blockers:
+`docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`.
+
 - Specs: docs/superpowers/specs/2026-07-21-eagle-roadmap-design.md,
   docs/superpowers/specs/2026-07-22-eagle-phase2-closed-loop-design.md
 - Channel semantics: docs/agc-channel-map.md (octal; update with citations)
@@ -44,6 +57,9 @@ measured. Evidence, numbers and next steps:
   live** — if 01703 reappears, fall back to 36000 (`make descent-p66`).
   Watch either live with
   `make dev-client` → ENGR tab (strip charts + ROD −/+ buttons)
+- Wave 2 M1 descent: `make descent-full` (PDI → P63 → P64 → P66, radar
+  bypassed). ~20 min wall: boot ~5.7 min, ENGINE ON at t ≈ 344 s, MM64 at
+  TIG+481 s, handover at TIG+637 s. Not in CI.
 - Debug env vars for a live run: `EAGLE_ATT_DEBUG=<path>` (attitude
   sign-chain trace: t, jet bitmask, gimbals, omega, torque — one line per
   10 ticks post-freeze), `EAGLE_TELEM_OUT=<path>` (per-frame telemetry

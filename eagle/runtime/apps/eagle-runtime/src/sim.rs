@@ -51,9 +51,8 @@ impl DskyStateSnapshot {
     }
 }
 
-/// Parse the AGC flight display: R2 = HDOTDISP, shown in 0.1 ft/s units
-/// (Spike B: R2 "+00756" = 75.6 ft/s). Altitude is not exposed in a pinned
-/// scaling by any of these nouns, so `alt_m` stays `None` — see below.
+/// Parse the AGC flight display: R2 = HDOTDISP in 0.1 ft/s and R3 =
+/// HCALC/HCALC1 in whole feet.
 ///
 /// V06N60, V06N63 AND V06N64 are all accepted, because those three ARE the
 /// landing guidance flight displays, one per phase
@@ -63,16 +62,48 @@ impl DskyStateSnapshot {
 /// available) and `:895` (`REDES-OK`) — which is precisely the window the
 /// sim-driven P64→P66 handover fires in.
 ///
-/// **R2 is the same HDOTDISP word in all three**
+/// **R2 and R3 are the same words in all three**
 /// (`vendor/virtualagc/Luminary099/PINBALL_NOUN_TABLES.agc:724-726` for
-/// N60, `:733-735` for N63, `:736-738` for N64). Only R1 differs: N64
-/// shows FUNNYDSP as a `2INT` pair where N60/N63 show a `VEL3`, which the
-/// noun format words state exactly — `:473` and `:479` are both `OCT
-/// 60512` (N60, N63) against `:481`'s `OCT 60500` (N64), i.e. identical
-/// R2/R3 fields with only the R1 field cleared. R3 is `HCALC`/`HCALC1`
-/// under the shared `COMP ALT` format code in all three, so a scaling
-/// pinned for one would unlock `alt_m` for all of them at once; none is
-/// pinned here, and it is not guessed.
+/// N60, `:733-735` for N63, `:736-738` for N64): R2 = HDOTDISP under the
+/// `VEL3` scale-factor code, R3 = HCALC (N60/N64) or HCALC1 (N63) under
+/// `COMP ALT`. Only R1 differs: N64 shows FUNNYDSP as a `2INT` pair where
+/// N60/N63 show a `VEL3`, which the noun format words state exactly —
+/// `:473` and `:479` are both `OCT 60512` (N60, N63) against `:481`'s
+/// `OCT 60500` (N64), i.e. identical R2/R3 fields with only the R1 field
+/// cleared.
+///
+/// **Both display scales come from the rope's own scale-factor legend**
+/// (`vendor/virtualagc/Luminary099/PINBALL_NOUN_TABLES.agc:86-120`), which
+/// lists each 5-bit SF code with the units it displays. The three 5-bit
+/// fields of a `3COMP` format word are R3|R2|R1 from the top — provable
+/// from the pair above, since N64 differs from N60/N63 only in the LOW
+/// field (`0o12` → `0o00`) and only in R1. So:
+///
+/// * R2 field `01010` = `VELOCITY3 (XXXX.X FT/SEC)` (`:95`) → the display
+///   integer is TENTHS of a foot per second. Independently confirmed live
+///   in Spike B: R2 `+00756` against HDOTDISP = 0.2344 m/cs = 76.9 ft/s.
+/// * R3 field `11000` = `COMPUTED ALTITUDE (XXXXX. FEET)` (`:118`) → the
+///   display integer is WHOLE FEET.
+///
+/// The R3 datum is the same one `alt_agl()` uses: SERVICER computes
+/// `HCALC = ABVAL(R) - /LAND/` — vehicle radius minus landing-site radius
+/// — and stores it to both HCALC and HCALC1
+/// (`vendor/virtualagc/Luminary099/SERVICER.agc:822-827`, `# NEW
+/// HCALC*2(24)M.`). So `nav_err_alt_m` is a like-for-like AGC-vs-truth
+/// comparison, not a datum difference.
+///
+/// (Cross-check of the legend, since the whole altitude nav-error signal
+/// rests on it: `SFOUTAB`'s `COMPUTED ALTITUDE` constant is the DP pair
+/// `OCT 01046` / `OCT 15700` (`:650-651`) = 0.033595327, the display
+/// routine for an `ARITHDP1` noun is `DP1OUTSF`, which scales by that
+/// constant and then by 2¹⁴
+/// (`vendor/virtualagc/Luminary099/PINBALL_GAME__BUTTONS_AND_LIGHTS.agc:1488-1492`),
+/// and a 5-digit decimal display is the result × 10⁵. With HCALC at
+/// 2²⁴ m that gives `alt_m × 0.033595327 × 2¹⁴ × 10⁵ / 2²⁴ =
+/// alt_m × 3.280839` — feet, to seven figures. The same arithmetic run on
+/// `WEIGHT2` (`OCT 00001`/`OCT 16170`, N47's "XXXXX. LBS") returns
+/// kg × 2.2046, which is why the convention is trusted rather than
+/// assumed.)
 ///
 /// Accepting only N60 meant `agc_hdot_ms` / `nav_err_hdot_ms` were `null`
 /// in every frame of both 2026-07-25 re-flight telemetry dumps — the run
@@ -89,10 +120,8 @@ pub fn parse_agc_nav(d: &DskyState) -> Option<AgcNav> {
         return None;
     }
     let hdot_ms = parse_decimal_register(&d.r2).map(|v| v as f64 * 0.1 * 0.3048);
-    Some(AgcNav {
-        alt_m: None,
-        hdot_ms,
-    })
+    let alt_m = parse_decimal_register(&d.r3).map(|v| v as f64 * 0.3048);
+    Some(AgcNav { alt_m, hdot_ms })
 }
 
 /// Parse a DSKY register (sign + 5 digits) as a signed decimal integer.
@@ -803,7 +832,26 @@ mod tests {
             let nav = parse_agc_nav(&dsky(noun, '+', ['0', '0', '7', '5', '6']))
                 .unwrap_or_else(|| panic!("N{noun:?} must parse"));
             assert!((nav.hdot_ms.unwrap() - want).abs() < 1e-9, "{noun:?}");
-            assert_eq!(nav.alt_m, None, "altitude has no pinned scaling");
+            // A blank R3 (the DSKY paints nothing there before the first
+            // repaint) must not decode as an altitude of zero.
+            assert_eq!(nav.alt_m, None, "blank R3 is not 0 ft");
+        }
+        // R3 = COMPUTED ALTITUDE in WHOLE FEET
+        // (PINBALL_NOUN_TABLES.agc:118, the SF-code legend), on all three
+        // nouns. 49911 ft = 15212.6 m — the PDI ignition altitude, i.e.
+        // exactly what the AGC should be showing at ENGINE ON in M1.
+        for noun in [['6', '0'], ['6', '3'], ['6', '4']] {
+            let mut d = dsky(noun, '-', ['0', '0', '2', '1', '3']);
+            d.r3 = eagle_agc_protocol::dsky::RegisterDisplay {
+                sign: '+',
+                digits: ['4', '9', '9', '1', '1'],
+            };
+            let nav = parse_agc_nav(&d).unwrap();
+            assert!(
+                (nav.alt_m.unwrap() - 49911.0 * 0.3048).abs() < 1e-9,
+                "N{noun:?} altitude: {:?}",
+                nav.alt_m
+            );
         }
         // N64's R1 is a 2INT pair where N60/N63 carry a VEL3 — irrelevant
         // to us, since only R2 is read, but pin that it does not disturb
