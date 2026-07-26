@@ -8,7 +8,7 @@
 use eagle_agc_protocol::dsky::DskyState;
 use eagle_agc_protocol::Packet;
 use eagle_runtime::scenario::Scenario;
-use eagle_runtime::sim::{agc_packet_to_simin, spawn_sim, SimCore, SimIn};
+use eagle_runtime::sim::{agc_packet_to_simin, spawn_sim, SimCore, SimEvent, SimIn};
 use eagle_schema::ServerMsg;
 use std::path::PathBuf;
 use std::time::Duration;
@@ -30,9 +30,9 @@ async fn sim_pipeline_with_stub_agc_streams_telemetry() {
     // sim → AGC (to_agc packets: PIPA/CDU/DINC)
     let (agc_tx, mut agc_rx) = tokio::sync::mpsc::unbounded_channel::<Packet>();
     let (telem_tx, mut telem_rx) = tokio::sync::broadcast::channel::<String>(1024);
-    let (rod_tx, _rod_rx) = tokio::sync::mpsc::unbounded_channel::<i32>();
+    let (event_tx, _event_rx) = tokio::sync::mpsc::unbounded_channel::<SimEvent>();
 
-    let handle = spawn_sim(core, sim_in_rx, agc_tx, telem_tx, rod_tx);
+    let handle = spawn_sim(core, sim_in_rx, agc_tx, telem_tx, event_tx);
 
     // --- Stub AGC ------------------------------------------------------
     // Forwards its "outputs" to the sim through the real decode path.
