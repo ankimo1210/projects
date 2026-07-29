@@ -161,45 +161,42 @@ PDF は `papers/` にあります。収録されている55件は、本リポジ
 
 ## 6. AI向け変換
 
-代表的な5論文を Markdown、ページ単位 JSONL、検索用チャンクへ変換するには、
-workspace root で次を実行します。PyMuPDF4LLM は一時依存として実行され、
-`pyproject.toml` や lockfile は変更しません。
+現行のコーパスは後述の **v2**（MinerU）です。`references/processed/` は v2 の成果物
+なので、v1 スクリプト `build_paper_corpus.py` はそこへの書き込みを拒否します。v1 の
+出力は同名ファイルで v2 の検証済みレコードを上書きしてしまうためです。v1 を再実行して
+比較したい場合は `--output-dir` で別ディレクトリを指定してください。
+
+以下は v1 パイプラインの手順です。PyMuPDF4LLM は一時依存として実行され、
+`pyproject.toml` や lockfile は変更しません。代表的な5論文を Markdown、ページ単位
+JSONL、検索用チャンクへ変換するには workspace root で次を実行します。
 
 ```bash
 uv run --no-project --with pymupdf4llm \
-  python johnhull/scripts/build_paper_corpus.py --sample
+  python johnhull/scripts/build_paper_corpus.py --sample --output-dir tmp/corpus-v1
 ```
 
 品質レポートを確認してから全PDFを変換します。
 
 ```bash
 uv run --no-project --with pymupdf4llm \
-  python johnhull/scripts/build_paper_corpus.py --all
+  python johnhull/scripts/build_paper_corpus.py --all --output-dir tmp/corpus-v1
 ```
 
 中断後の再開や書誌情報だけを更新した場合は、検証済みの個別成果物を再利用して
 全体インデックスを再構築できます。元PDF、変換器バージョン、変換条件、書誌情報の
-いずれかが変わった論文だけが再変換されます。
+いずれかが変わった論文だけが再変換されます。`--pdf` や `--sample` のような部分実行でも、
+全体インデックスは変換対象外の論文を既存成果物から引き継いで再構築するため、コーパス
+全体が縮むことはありません。元PDFを削除して再実行すると、その論文はインデックスから
+外れます（出力側のディレクトリは削除せず警告のみ出します）。
 
 ```bash
 uv run --no-project --with pymupdf4llm \
-  python johnhull/scripts/build_paper_corpus.py --all --resume
+  python johnhull/scripts/build_paper_corpus.py --all --resume --output-dir tmp/corpus-v1
 ```
 
-1本だけ変換し直したい場合は `--pdf` を使います。`--pdf` や `--sample` のような部分
-実行でも、全体インデックスは変換対象外の論文を既存成果物から引き継いで再構築するため、
-コーパス全体が縮むことはありません。元PDFを削除して再実行すると、その論文は
-インデックスから外れます（`processed/` 側のディレクトリは削除せず警告のみ出します）。
-
-```bash
-uv run --no-project --with pymupdf4llm \
-  python johnhull/scripts/build_paper_corpus.py --pdf references/papers/<name>.pdf
-```
-
-生成物は `references/processed/` に保存されます。各論文には `paper.md`、
-`metadata.json`、`pages.jsonl`、`chunks.jsonl`、`quality.json`、図表画像が含まれ、
-全体には `index.json`、`corpus.jsonl`、`quality_report.json`、`quality_report.md` が
-生成されます。
+v1 の生成物は、各論文が `paper.md`、`metadata.json`、`pages.jsonl`、`chunks.jsonl`、
+`quality.json`、図表画像で、全体が `index.json`、`corpus.jsonl`、`quality_report.json`、
+`quality_report.md` です。
 `references/processed/` は検索・引用にすぐ利用できるようGit管理しています。論文本文と
 図表の派生物を含むため、公開・再配布時は各原論文のライセンスを確認してください。
 

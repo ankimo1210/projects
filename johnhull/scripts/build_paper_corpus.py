@@ -1,8 +1,10 @@
 """Convert local reference PDFs into an AI-friendly, page-citable corpus.
 
-The generated full text is written to ``references/processed/`` and is tracked by
-Git, so a run produces a reviewable diff. PyMuPDF4LLM is intentionally an
-ephemeral tool dependency; run this from the workspace root with::
+This is the v1 pipeline. ``references/processed/`` now holds the corpus-v2
+release built by ``build_paper_corpus_v2.py``, so this script refuses to write
+there and needs ``--output-dir``. Its output is tracked by Git, so a run
+produces a reviewable diff. PyMuPDF4LLM is intentionally an ephemeral tool
+dependency; run this from the workspace root with::
 
     uv run --no-project --with pymupdf4llm \
         python johnhull/scripts/build_paper_corpus.py --sample
@@ -627,6 +629,33 @@ def convert_pdf(
     return index_entry, chunks, quality
 
 
+def ensure_v1_output_root(output_root: Path) -> None:
+    """Refuse to write into a corpus another pipeline owns.
+
+    ``references/processed/`` now holds the corpus-v2 (MinerU) release, whose
+    per-paper files use the same names this script writes, so converting into it
+    would replace verified v2 records with v1 ones. A v1 index entry always
+    carries ``paper_markdown``; anything else means the tree is not ours.
+    """
+    index_path = output_root / "index.json"
+    if not index_path.is_file():
+        return
+    try:
+        entries = json.loads(index_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return
+    if not isinstance(entries, list) or not entries:
+        return
+    if all(isinstance(entry, dict) and "paper_markdown" in entry for entry in entries):
+        return
+    raise SystemExit(
+        f"{index_path} was not written by this script.\n"
+        "references/processed/ holds the corpus-v2 release; rebuild it with\n"
+        "  johnhull/scripts/build_paper_corpus_v2.py\n"
+        "or pass --output-dir to build the v1 corpus somewhere else."
+    )
+
+
 def previously_built_papers(
     output_root: Path, selected_ids: set[str]
 ) -> list[tuple[dict[str, Any], list[dict[str, Any]], dict[str, Any]]]:
@@ -700,6 +729,7 @@ def main() -> int:
     converter = import_converter()
     pdfs = select_pdfs(args)
     output_root = args.output_dir.resolve()
+    ensure_v1_output_root(output_root)
     output_root.mkdir(parents=True, exist_ok=True)
     catalog = load_catalog(args.catalog.resolve())
 
