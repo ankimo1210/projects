@@ -14,6 +14,15 @@
 
 `StoreKitTest`による実取引自動化は、Xcode 26.6・iOS 26.5 Simulatorで`SKInternalErrorDomain Code=3`が発生するため未完了。実機Sandboxテストで代替する。
 
+2026-07-29の再検証で、原因が`SKTestSession`単体ではなくSimulatorのStoreKitテスト基盤全体であることを確認した。`xcodebuild test`経路では、schemeの`StoreKitConfigurationFileReference`が適用されない。
+
+- `SKTestSession`は生成できるが、`resetToDefaultState`・`clearTransactions`・`disableDialogs`がすべて`SKInternalErrorDomain Code=3`（`Error saving configuration file`）で失敗する。schemeのTestActionからStoreKit参照を外しても同じ。
+- Paywallが読み込む価格は`Configuration.storekit`の値（¥1,500）ではなく既定スタブの`$9.99`になる。価格だけを`¥4,321`へ変えた複製設定を指すschemeで実行しても`$9.99`のままで、設定ファイルが一切読まれていない。
+- その状態で購入すると、StoreKitのテストシートではなくSpringBoardの「Apple Accountにサインイン」ダイアログが出る。実App Storeへ流れており、Simulatorでは購入の成功・キャンセル・保留・復元を検証できない。
+- `xcrun simctl`にStoreKit設定を注入するサブコマンドはなく、CLIからの回避手段はない。
+
+したがって上記4項目はSimulatorでは消化できず、実機での確認が必要。Xcode GUIからのRun（LaunchAction）経路は未検証で、GUIなら設定が適用される可能性は残る。
+
 - [ ] StoreKit Configurationで成功、キャンセル、保留、復元を確認
 - [ ] Sandboxで購入、返金・取消後の権利、再インストール後の復元を確認
 - [ ] オフライン起動時に検証済み買い切り権利が保持されることを確認
