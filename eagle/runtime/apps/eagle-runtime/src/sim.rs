@@ -11,7 +11,7 @@
 //! schedule emits a signed click COUNT in `SimTickOut::rod_clicks`; the
 //! tokio side turns it into `runner::rod_load`. (The plan predates the
 //! Spike-B RODCOUNT finding and specified ch016 press/release packets.)
-use crate::scenario::Scenario;
+use crate::scenario::{GateMode, Scenario};
 use eagle_agc_protocol::agc_io::{decode_output, pipa_pulse, AgcOutput, PipaAxis};
 use eagle_agc_protocol::dsky::DskyState;
 use eagle_agc_protocol::Packet;
@@ -51,31 +51,77 @@ impl DskyStateSnapshot {
     }
 }
 
-/// Parse the AGC flight display: R2 = HDOTDISP, shown in 0.1 ft/s units
-/// (Spike B: R2 "+00756" = 75.6 ft/s). Altitude is not exposed in a pinned
-/// scaling by either noun, so `alt_m` stays `None` in Wave 1.
+/// Parse the AGC flight display: R2 = HDOTDISP in 0.1 ft/s and R3 =
+/// HCALC/HCALC1 in whole feet.
 ///
-/// BOTH V06N60 and V06N63 are accepted. N60 is P66's own `VERTDISP`
-/// display; N63 is what the braking/approach phases show, and **its R2 is
-/// the same HDOTDISP word** (`docs/agc-channel-map.md`, "P66 Vertical
-/// Displays and Erasables"; `PINBALL_NOUN_TABLES.agc:724-726`). Accepting
-/// only N60 meant `agc_hdot_ms` / `nav_err_hdot_ms` were `null` in every
-/// frame of both 2026-07-25 re-flight telemetry dumps — the run never
-/// leaves P63 before ground contact, so the display never reaches N60 —
-/// and the AGC-vs-truth navigation error (the run's headline finding) had
-/// to be recovered by hand-decoding the ch010 relay stream after the fact.
+/// V06N60, V06N63 AND V06N64 are all accepted, because those three ARE the
+/// landing guidance flight displays, one per phase
+/// (`vendor/virtualagc/Luminary099/LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:1467-1469`:
+/// `V06N63 # P63`, `V06N64 # P64`, `V06N60 # P65, P66, P67`). P64 puts
+/// N64 up for the whole approach — `:875` (flashing, redesignation
+/// available) and `:895` (`REDES-OK`) — which is precisely the window the
+/// sim-driven P64→P66 handover fires in.
+///
+/// **R2 and R3 are the same words in all three**
+/// (`vendor/virtualagc/Luminary099/PINBALL_NOUN_TABLES.agc:724-726` for
+/// N60, `:733-735` for N63, `:736-738` for N64): R2 = HDOTDISP under the
+/// `VEL3` scale-factor code, R3 = HCALC (N60/N64) or HCALC1 (N63) under
+/// `COMP ALT`. Only R1 differs: N64 shows FUNNYDSP as a `2INT` pair where
+/// N60/N63 show a `VEL3`, which the noun format words state exactly —
+/// `:473` and `:479` are both `OCT 60512` (N60, N63) against `:481`'s
+/// `OCT 60500` (N64), i.e. identical R2/R3 fields with only the R1 field
+/// cleared.
+///
+/// **Both display scales come from the rope's own scale-factor legend**
+/// (`vendor/virtualagc/Luminary099/PINBALL_NOUN_TABLES.agc:86-120`), which
+/// lists each 5-bit SF code with the units it displays. The three 5-bit
+/// fields of a `3COMP` format word are R3|R2|R1 from the top — provable
+/// from the pair above, since N64 differs from N60/N63 only in the LOW
+/// field (`0o12` → `0o00`) and only in R1. So:
+///
+/// * R2 field `01010` = `VELOCITY3 (XXXX.X FT/SEC)` (`:95`) → the display
+///   integer is TENTHS of a foot per second. Independently confirmed live
+///   in Spike B: R2 `+00756` against HDOTDISP = 0.2344 m/cs = 76.9 ft/s.
+/// * R3 field `11000` = `COMPUTED ALTITUDE (XXXXX. FEET)` (`:118`) → the
+///   display integer is WHOLE FEET.
+///
+/// The R3 datum is the same one `alt_agl()` uses: SERVICER computes
+/// `HCALC = ABVAL(R) - /LAND/` — vehicle radius minus landing-site radius
+/// — and stores it to both HCALC and HCALC1
+/// (`vendor/virtualagc/Luminary099/SERVICER.agc:822-827`, `# NEW
+/// HCALC*2(24)M.`). So `nav_err_alt_m` is a like-for-like AGC-vs-truth
+/// comparison, not a datum difference.
+///
+/// (Cross-check of the legend, since the whole altitude nav-error signal
+/// rests on it: `SFOUTAB`'s `COMPUTED ALTITUDE` constant is the DP pair
+/// `OCT 01046` / `OCT 15700` (`:650-651`) = 0.033595327, the display
+/// routine for an `ARITHDP1` noun is `DP1OUTSF`, which scales by that
+/// constant and then by 2¹⁴
+/// (`vendor/virtualagc/Luminary099/PINBALL_GAME__BUTTONS_AND_LIGHTS.agc:1488-1492`),
+/// and a 5-digit decimal display is the result × 10⁵. With HCALC at
+/// 2²⁴ m that gives `alt_m × 0.033595327 × 2¹⁴ × 10⁵ / 2²⁴ =
+/// alt_m × 3.280839` — feet, to seven figures. The same arithmetic run on
+/// `WEIGHT2` (`OCT 00001`/`OCT 16170`, N47's "XXXXX. LBS") returns
+/// kg × 2.2046, which is why the convention is trusted rather than
+/// assumed.)
+///
+/// Accepting only N60 meant `agc_hdot_ms` / `nav_err_hdot_ms` were `null`
+/// in every frame of both 2026-07-25 re-flight telemetry dumps — the run
+/// never leaves P63 before ground contact, so the display never reaches
+/// N60 — and the AGC-vs-truth navigation error (the run's headline
+/// finding) had to be recovered by hand-decoding the ch010 relay stream
+/// after the fact. Adding N63 fixed that for P63; N64 closes the same hole
+/// for P64, which no run had reached until Wave 2 M1.
 /// See docs/superpowers/notes/2026-07-25-wave1-reflight.md.
 pub fn parse_agc_nav(d: &DskyState) -> Option<AgcNav> {
     let verb: String = d.verb.iter().collect();
     let noun: String = d.noun.iter().collect();
-    if verb != "06" || !matches!(noun.as_str(), "60" | "63") {
+    if verb != "06" || !matches!(noun.as_str(), "60" | "63" | "64") {
         return None;
     }
     let hdot_ms = parse_decimal_register(&d.r2).map(|v| v as f64 * 0.1 * 0.3048);
-    Some(AgcNav {
-        alt_m: None,
-        hdot_ms,
-    })
+    let alt_m = parse_decimal_register(&d.r3).map(|v| v as f64 * 0.3048);
+    Some(AgcNav { alt_m, hdot_ms })
 }
 
 /// Parse a DSKY register (sign + 5 digits) as a signed decimal integer.
@@ -111,6 +157,18 @@ pub struct SimTickOut {
     pub touchdown: Option<Touchdown>,
     /// Signed ROD clicks to deliver via RODCOUNT this tick (see module doc).
     pub rod_clicks: i32,
+    /// Fires on exactly one tick: the P64→P66 handover point was reached.
+    pub handover: bool,
+}
+
+/// Sim → headless events that need the DSKY script or discrete writes.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum SimEvent {
+    /// Signed ROD clicks to deliver via RODCOUNT (schedule + handover click
+    /// are separate: the handover click is part of Handover).
+    RodClicks(i32),
+    /// P64→P66 handover: ATT HOLD discrete + the selection ROD click.
+    Handover,
 }
 
 /// Latched trim-gimbal drive bits (ch012).
@@ -149,6 +207,15 @@ pub struct SimCore {
     touchdown: Option<Touchdown>,
     /// Body-frame specific force this tick (for the PIPA feed).
     sf_body: V3<Body>,
+    /// `gate.mode == Pdi`: the freeze is a free coast, not a hover.
+    pdi: bool,
+    /// Altitude (m AGL) at which the P64→P66 handover fires once armed.
+    /// `None` in hover mode — Wave 1 flips ATT HOLD on a wall clock instead.
+    handover_alt_m: Option<f64>,
+    /// MM64 has been observed at least once (arms the handover).
+    handover_armed: bool,
+    /// The handover has already fired (it is a one-shot).
+    handover_fired: bool,
     queue: Vec<SimIn>,
 }
 
@@ -195,6 +262,19 @@ impl SimCore {
             tick_index: 0,
             touchdown: None,
             sf_body: V3::zero(),
+            pdi: sc.gate.mode == GateMode::Pdi,
+            // Hover mode's CODE PATH is unchanged from Wave 1: no
+            // sim-driven handover there, whatever the file says. Its
+            // PHYSICS is not — `PIPA_INCR` (x5.85), `THRUST_N_PER_PULSE`,
+            // `DPS_MAX_N`/`DPS_FTP_N` and `DPS_TAU` were all corrected
+            // against the flown rope on 2026-07-26 and are shared by both
+            // modes, so Wave 1's measured numbers will not reproduce.
+            handover_alt_m: match sc.gate.mode {
+                GateMode::Pdi => sc.handover.as_ref().map(|h| h.alt_m),
+                GateMode::Hover => None,
+            },
+            handover_armed: false,
+            handover_fired: false,
             queue: Vec::new(),
         }
     }
@@ -219,6 +299,7 @@ impl SimCore {
         self.phase6_sensors(&mut out);
         self.phase7_thrust(&mut out);
         self.phase8_rod(&mut out);
+        self.phase9_handover(&mut out);
         self.phase10_telemetry_and_touchdown(&mut out);
         self.debug_attitude_loop();
         self.tick_index += 1;
@@ -351,13 +432,49 @@ impl SimCore {
     }
 
     // 4/5. Freeze until first ENGINE ON; then integrate the rigid body.
+    //
+    // The release trigger is ENGINE ON (ch 011 bit 13) in BOTH modes — the
+    // Wave 1 mechanism, unchanged. What differs is the frozen specific
+    // force fed to the PIPAs:
+    //
+    // * Hover: 1.62 m/s² support, so nav sees the vehicle standing on its
+    //   engine at the gate.
+    // * PDI: ZERO. The pre-ignition arc is a free coast, and truth is
+    //   pinned, so nav must see nothing accelerate — anything else is a
+    //   pure nav error injected before the burn even starts. Ullage starts
+    //   at TIG−7.5 s (ULLGTASK,
+    //   vendor/virtualagc/Luminary099/BURN,_BABY,_BURN_--_MASTER_IGNITION_ROUTINE.agc:356),
+    //   so it falls inside this window and is therefore consistently
+    //   absent from both sides. Its ΔV is ~0.9 m/s — derived, not
+    //   measured: 4 jets × ~445 N × 7.5 s / 15.2 t = 0.88 m/s.
+    //
+    // Releasing at ENGINE ON ≈ TIG−0 is what makes truth and nav agree:
+    // `DDUMGOOD` computes TIG = TDEC1 − ZOOMTIME
+    // (vendor/virtualagc/Luminary099/THE_LUNAR_LANDING.agc:193-198), so the
+    // pad load's geometric ignition point is where the AGC's nav sits at
+    // FLATOUT = TIG+ZOOMTIME, NOT at ENGINE ON (≈44.31 km uprange of it).
+    // `padload::pdi_truth_state` therefore back-propagates that point by
+    // ZOOMTIME under gravity and hands us the TIG-time state, which this
+    // release then unpins exactly where nav believes it is. The freeze also
+    // absorbs the AGC's ~4.8 % clock-rate offset: nav advances on the AGC's
+    // own clock while truth waits, so the two meet whenever ENGINE ON
+    // actually arrives.
+    //
+    // Commanding an attitude against frozen truth is safe: Wave 1 measured
+    // the DAP recovering a ~125° error in ~13 s after release, well before
+    // Luminary throttles up at FLATOUT = TIG+26 s
+    // (docs/superpowers/notes/2026-07-25-wave1-reflight.md).
     fn phase4_5_dynamics(&mut self) {
         if self.frozen {
             // Advance the clock even while pinned, so telemetry rates
             // (downlink_wps, drift) don't divide accumulated counts by a
             // near-zero t_s at engine-on.
             self.st.t += DT;
-            self.sf_body = V3::new(HOVER_ACCEL_MS2, 0.0, 0.0);
+            self.sf_body = if self.pdi {
+                V3::zero()
+            } else {
+                V3::new(HOVER_ACCEL_MS2, 0.0, 0.0)
+            };
             return;
         }
         self.sf_body = body_thrust_force(&self.act).scale(1.0 / self.st.mass_kg);
@@ -406,6 +523,42 @@ impl SimCore {
             out.rod_clicks += (delta / ROD_CLICK_MS).round() as i32;
             self.rod_target_ms = new_target;
             self.rod_step_idx += 1;
+        }
+    }
+
+    // 9. P64→P66 handover: a one-shot, armed by MM64 and fired by altitude.
+    //
+    // Both conditions are load-bearing. GUILDENSTERN's P66 switch does not
+    // require MM63, so it works from P64
+    // (vendor/virtualagc/Luminary099/LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:203-217),
+    // but it is only reached once landing guidance is running — hence the
+    // MM64 arm. Altitude alone would fire during the braking phase, while
+    // the vehicle is still below the gate on the way down from PDI.
+    // `handover_alt_m` is `None` in hover mode, so this is inert there.
+    //
+    // The freeze and touchdown guards close the two windows where the
+    // altitude test is trivially true and the handover is meaningless:
+    // during the freeze truth is pinned (a scenario pinned below the gate
+    // would fire before ENGINE ON), and after contact `alt_agl() <= 0`
+    // holds forever while `spawn_sim` keeps ticking for 2 s — with Wave 1
+    // measuring MM66, and so a late MM64, arriving 0.6-1.8 s AFTER contact
+    // (docs/superpowers/notes/2026-07-25-wave1-reflight.md). Either would
+    // flip ATT HOLD and load RODCOUNT into a vehicle that is not flying.
+    fn phase9_handover(&mut self, out: &mut SimTickOut) {
+        let Some(alt_gate) = self.handover_alt_m else {
+            return;
+        };
+        if self.mm == "64" {
+            self.handover_armed = true;
+        }
+        if self.handover_armed
+            && !self.handover_fired
+            && !self.frozen
+            && self.touchdown.is_none()
+            && self.alt_agl() <= alt_gate
+        {
+            self.handover_fired = true;
+            out.handover = true;
         }
     }
 
@@ -498,6 +651,7 @@ impl SimCore {
             downlink_wps,
             ingest_drops: self.ingest_drops,
             touchdown: self.touchdown.map(|t| format!("{t:?}")),
+            handover: self.handover_fired,
         }
     }
 }
@@ -552,7 +706,7 @@ pub fn spawn_sim(
     in_rx: std::sync::mpsc::Receiver<SimIn>,
     agc_tx: tokio::sync::mpsc::UnboundedSender<Packet>,
     telem_tx: tokio::sync::broadcast::Sender<String>,
-    rod_tx: tokio::sync::mpsc::UnboundedSender<i32>,
+    event_tx: tokio::sync::mpsc::UnboundedSender<SimEvent>,
 ) -> SimHandle {
     let (stop_tx, stop_rx) = std::sync::mpsc::channel::<()>();
     let join = std::thread::spawn(move || {
@@ -588,7 +742,10 @@ pub fn spawn_sim(
                 }
             }
             if out.rod_clicks != 0 {
-                let _ = rod_tx.send(out.rod_clicks);
+                let _ = event_tx.send(SimEvent::RodClicks(out.rod_clicks));
+            }
+            if out.handover {
+                let _ = event_tx.send(SimEvent::Handover);
             }
             if let Some(td) = out.touchdown {
                 let (vv, vh, tilt) = core.landing_kinematics();
@@ -643,6 +800,13 @@ mod tests {
         .unwrap()
     }
 
+    fn pdi_scenario() -> Scenario {
+        Scenario::load(
+            &PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../../scenarios/pdi-descent.toml"),
+        )
+        .unwrap()
+    }
+
     fn engine_on(core: &mut SimCore) {
         core.ingest(SimIn::Agc(AgcOutput::Engine {
             on: true,
@@ -651,11 +815,16 @@ mod tests {
     }
 
     #[test]
-    fn agc_nav_parses_hdot_from_both_n60_and_n63() {
-        // R2 is HDOTDISP on BOTH nouns, in 0.1 ft/s. The 2026-07-25
-        // re-flight never left P63 (so never reached N60) and lost the
-        // AGC-vs-truth rate error from every telemetry frame because this
-        // accepted only N60.
+    fn agc_nav_parses_hdot_from_n60_n63_and_n64() {
+        // R2 is HDOTDISP on ALL THREE landing-guidance nouns, in 0.1 ft/s
+        // (vendor/virtualagc/Luminary099/PINBALL_NOUN_TABLES.agc:724-726 /
+        // :733-735 / :736-738; only R1 differs). The 2026-07-25 re-flight
+        // never left P63 (so never reached N60) and lost the AGC-vs-truth
+        // rate error from every telemetry frame because this accepted only
+        // N60. N64 is the same hole one phase later: P64 displays it for
+        // the whole approach (vendor/virtualagc/Luminary099/
+        // LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:875, :895), which is the
+        // window the handover fires in.
         let dsky = |noun: [char; 2], sign: char, digits: [char; 5]| {
             let mut d = DskyState::default();
             d.verb = ['0', '6'];
@@ -665,12 +834,42 @@ mod tests {
         };
         // Spike B's live sample: "+00756" = 75.6 ft/s = 23.04 m/s.
         let want = 756.0 * 0.1 * 0.3048;
-        for noun in [['6', '0'], ['6', '3']] {
+        for noun in [['6', '0'], ['6', '3'], ['6', '4']] {
             let nav = parse_agc_nav(&dsky(noun, '+', ['0', '0', '7', '5', '6']))
                 .unwrap_or_else(|| panic!("N{noun:?} must parse"));
             assert!((nav.hdot_ms.unwrap() - want).abs() < 1e-9, "{noun:?}");
-            assert_eq!(nav.alt_m, None, "altitude has no pinned scaling");
+            // A blank R3 (the DSKY paints nothing there before the first
+            // repaint) must not decode as an altitude of zero.
+            assert_eq!(nav.alt_m, None, "blank R3 is not 0 ft");
         }
+        // R3 = COMPUTED ALTITUDE in WHOLE FEET
+        // (vendor/virtualagc/Luminary099/PINBALL_NOUN_TABLES.agc:118, the
+        // SF-code legend), on all three
+        // nouns. 49911 ft = 15212.6 m — the PDI ignition altitude, i.e.
+        // exactly what the AGC should be showing at ENGINE ON in M1.
+        for noun in [['6', '0'], ['6', '3'], ['6', '4']] {
+            let mut d = dsky(noun, '-', ['0', '0', '2', '1', '3']);
+            d.r3 = eagle_agc_protocol::dsky::RegisterDisplay {
+                sign: '+',
+                digits: ['4', '9', '9', '1', '1'],
+            };
+            let nav = parse_agc_nav(&d).unwrap();
+            assert!(
+                (nav.alt_m.unwrap() - 49911.0 * 0.3048).abs() < 1e-9,
+                "N{noun:?} altitude: {:?}",
+                nav.alt_m
+            );
+        }
+        // N64's R1 is a 2INT pair where N60/N63 carry a VEL3 — irrelevant
+        // to us, since only R2 is read, but pin that it does not disturb
+        // the parse.
+        let mut n64 = dsky(['6', '4'], '+', ['0', '0', '7', '5', '6']);
+        n64.r1 = eagle_agc_protocol::dsky::RegisterDisplay {
+            sign: ' ',
+            digits: ['1', '2', '3', '4', '5'],
+        };
+        let nav = parse_agc_nav(&n64).expect("N64 must parse regardless of R1");
+        assert!((nav.hdot_ms.unwrap() - want).abs() < 1e-9);
         // Sign is honoured: the re-flight's AGC read POSITIVE (climbing)
         // while the truth was falling — a sign drop would have hidden it.
         let neg = parse_agc_nav(&dsky(['6', '3'], '-', ['0', '0', '2', '1', '3'])).unwrap();
@@ -717,6 +916,128 @@ mod tests {
             core.st.vel.dot(up) < 0.0,
             "should be falling after engine on"
         );
+    }
+
+    #[test]
+    fn pdi_freeze_feeds_zero_pipa_and_releases_on_engine_on() {
+        let sc = pdi_scenario();
+        let mut core = SimCore::new(&sc, 0.0);
+        let pos0 = core.st.pos;
+        let mut pipa_packets = 0usize;
+        for _ in 0..200 {
+            let out = core.tick();
+            pipa_packets += out.to_agc.iter().filter(|p| is_pipa(p)).count();
+        }
+        assert_eq!(core.st.pos, pos0, "frozen state must not move");
+        assert_eq!(
+            pipa_packets, 0,
+            "coast freeze must feed ZERO specific force"
+        );
+        engine_on(&mut core);
+        for _ in 0..100 {
+            core.tick();
+        }
+        assert_ne!(core.st.pos, pos0, "dynamics must run after ENGINE ON");
+    }
+
+    #[test]
+    fn hover_freeze_still_feeds_hover_support() {
+        // Regression guard: hover mode's freeze path is unchanged from
+        // Wave 1 (the branch, not the numbers — the four vehicle constants
+        // corrected on 2026-07-26 are shared, so Wave 1's measured
+        // trajectory does not reproduce).
+        let sc = scenario();
+        let mut core = SimCore::new(&sc, 0.0);
+        let mut pipa = 0usize;
+        for _ in 0..200 {
+            pipa += core.tick().to_agc.iter().filter(|p| is_pipa(p)).count();
+        }
+        assert!(pipa > 0, "hover freeze feeds 1.62 m/s^2 support");
+    }
+
+    #[test]
+    fn handover_arms_on_mm64_and_fires_once_below_altitude() {
+        let sc = pdi_scenario();
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+        // Below the handover altitude but MM is still 63: must NOT fire.
+        core.st.pos = core.st.pos.unit().scale(sc.site.radius_m + 100.0);
+        core.ingest(SimIn::Dsky(DskyStateSnapshot {
+            mm: "63".into(),
+            nav: None,
+        }));
+        assert!(!core.tick().handover, "not armed before MM64");
+        // MM64 appears while below threshold: fires exactly once.
+        core.ingest(SimIn::Dsky(DskyStateSnapshot {
+            mm: "64".into(),
+            nav: None,
+        }));
+        assert!(core.tick().handover, "armed + below altitude => fire");
+        assert!(!core.tick().handover, "fires once");
+    }
+
+    #[test]
+    fn handover_never_fires_after_touchdown() {
+        // `alt_agl() <= 0 <= handover_alt_m` holds forever once the vehicle
+        // is down, and `spawn_sim` keeps ticking for 2 s past contact —
+        // while Wave 1 measured MM66 (and therefore a late MM64) lighting
+        // 0.6-1.8 s AFTER contact. Arming post-touchdown must not flip ATT
+        // HOLD and load RODCOUNT into a landed vehicle.
+        let sc = pdi_scenario();
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+        core.st.pos = core.st.pos.unit().scale(sc.site.radius_m - 1.0);
+        assert!(core.tick().touchdown.is_some(), "touchdown must latch");
+        core.ingest(SimIn::Dsky(DskyStateSnapshot {
+            mm: "64".into(),
+            nav: None,
+        }));
+        assert!(!core.tick().handover, "handover fired after touchdown");
+    }
+
+    #[test]
+    fn handover_never_fires_while_frozen() {
+        // The freeze pins truth at the PDI point, but nothing structurally
+        // stops a scenario whose pinned altitude is already below the gate
+        // from firing a handover before ENGINE ON.
+        let sc = pdi_scenario();
+        let mut core = SimCore::new(&sc, 0.0);
+        core.st.pos = core.st.pos.unit().scale(sc.site.radius_m + 10.0);
+        core.ingest(SimIn::Dsky(DskyStateSnapshot {
+            mm: "64".into(),
+            nav: None,
+        }));
+        assert!(!core.tick().handover, "handover fired during the freeze");
+    }
+
+    #[test]
+    fn telemetry_reports_the_handover_latch() {
+        // Wave 1 lost an investigation to an unobservable value; the
+        // handover must be visible in the telemetry stream.
+        let sc = pdi_scenario();
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+        core.st.pos = core.st.pos.unit().scale(sc.site.radius_m + 100.0);
+        core.ingest(SimIn::Dsky(DskyStateSnapshot {
+            mm: "64".into(),
+            nav: None,
+        }));
+        assert!(!core.telemetry().handover, "not fired yet");
+        assert!(core.tick().handover);
+        assert!(core.telemetry().handover, "latch must reach telemetry");
+    }
+
+    #[test]
+    fn handover_never_fires_in_hover_mode() {
+        let sc = scenario();
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+        core.st.pos = core.st.pos.unit().scale(sc.site.radius_m + 10.0);
+        core.ingest(SimIn::Dsky(DskyStateSnapshot {
+            mm: "64".into(),
+            nav: None,
+        }));
+        assert!(!core.tick().handover);
     }
 
     #[test]
@@ -880,8 +1201,8 @@ mod tests {
         let (_in_tx, in_rx) = std::sync::mpsc::channel::<SimIn>();
         let (agc_tx, _agc_rx) = tokio::sync::mpsc::unbounded_channel::<Packet>();
         let (telem_tx, mut telem_rx) = tokio::sync::broadcast::channel::<String>(256);
-        let (rod_tx, _rod_rx) = tokio::sync::mpsc::unbounded_channel::<i32>();
-        let handle = spawn_sim(core, in_rx, agc_tx, telem_tx, rod_tx);
+        let (event_tx, _event_rx) = tokio::sync::mpsc::unbounded_channel::<SimEvent>();
+        let handle = spawn_sim(core, in_rx, agc_tx, telem_tx, event_tx);
         // ~150 ms of 10 ms ticks → ≥ 10 ticks → ≥ 1 telemetry frame.
         std::thread::sleep(std::time::Duration::from_millis(150));
         handle.stop.send(()).unwrap();

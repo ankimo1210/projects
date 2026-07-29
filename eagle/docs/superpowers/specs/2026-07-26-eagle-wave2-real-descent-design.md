@@ -86,6 +86,66 @@ The wave runs in three milestones. The ordering was chosen over
 Fly P63 → P64 → P66 to touchdown on pure inertial navigation, with the
 landing radar bypassed in-rope.
 
+> **STATUS 2026-07-26 — M1 implemented and flown; acceptance NOT met.**
+> Plan `docs/superpowers/plans/2026-07-26-eagle-wave2-m1-pdi-descent.md`,
+> Tasks 1-6 executed — with two steps deliberately unmet and marked so in
+> the plan: Task 5 Step 5 (no nominal-profile flight completed inside the
+> 6-flight budget) and Task 6 Step 3 (the acceptance was never run); ledger
+> `docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`; acceptance test
+> `runtime/apps/eagle-runtime/tests/live_pdi_descent.rs` (frozen, port
+> 19905, **never run** — the 6-flight budget was spent before it existed).
+>
+> **The question this milestone was ordered first to answer is answered
+> YES.** Six instrumented flights were flown and **the last three** fly
+> `MM ["00","63","64","66"]` — PDI → P63 braking → P64 approach →
+> sim-driven handover into P66, radar bypassed in-rope — with the AGC's
+> own altitude rate tracking truth to a median 0.4 m/s (p90 1.1 m/s)
+> through the braking phase. P63 guidance converges from a PDI truth
+> state (the risk table's "redesign the wave" branch is closed), and
+> cause C is fixed. Runs 1-3 are not part of that claim: run 1 diverged
+> 193 m/s and never left P63, runs 2 and 3 went through P65 and raised
+> its alarm (48 and 794 PROG-lamp frames). Of the last three, runs 4 and
+> 6 counted zero lamp frames and run 5 counted 21, all raised after
+> ground contact.
+>
+> Every run also reported **zero PROG alarm episodes**, which is a
+> structurally empty statement in PDI mode and must always be quoted with
+> its window: `HeadlessResult.alarms` only ever receives
+> `enter_p63_with_alarms`'s return value, and PDI `run_scenario` returns
+> right after `wait_engine_on` (`runner.rs:1113-1115`), so nothing can
+> add to it after ignition. Run 3 reported zero episodes alongside 794
+> PROG-lamp frames. The claim it supports is **"no alarm episodes in the
+> pre-ignition P63 dialog"**; the post-ignition evidence is
+> `prog_lamp_frames`.
+>
+> **It does not land.** P66's rate loop limit-cycles (run 6: throttle
+> 0 → 48 132 N stop-to-stop for 218 s, sink rate −34.1 to +16.2 m/s) and
+> nothing flies the attitude in a crewless P66, so contact is at 30.86 m/s
+> vertical / 60.04 m/s horizontal / 12.8° tilt — `Crash`. Four vehicle
+> constants were corrected against the flown rope's own SI values while
+> flying (`PIPA_INCR` 0.0585 → 0.01 m/s/pulse — a Command Module quantum
+> in an LM simulator, `THRUST_N_PER_PULSE` → 12.5319585 N/bit, DPS full
+> throttle → 48 145.4 N (FSAT), `DPS_TAU` → 0.2 s) and none cured it.
+>
+> Open, in order (full detail in the ledger's "Open"): (1) the P66 limit
+> cycle — candidates are the four still-`Unverified` pad-word b-scales
+> (TAUROD / LAG-TAU / MINFORCE / MAXFORCE, and TAUROD's is derivable
+> statically, no flights needed) and `dps_envelope`'s 19.26 kN
+> discontinuity at 0.6·MAX with no hysteresis; (1a) the braking gate is
+> missed by 911 m / 47 m/s and flight 6 proved that is **not** thrust —
+> look at the targeting and the state it targets from; (2) a reproducible
+> PROG alarm at the MM64→MM65 transition whose code is unknown because
+> nothing reads FAILREG after ENGINE ON in PDI mode; (2a) run 5's 21
+> post-contact PROG-lamp frames, same unknown code, which also fail the
+> acceptance's `prog_lamp_frames == 0` gate because that counter runs
+> through the sim's ~2 s post-touchdown tail; (3) a −190 m altitude nav
+> drift through P64, recorded not diagnosed.
+>
+> **Consequence for the rest of the wave:** M2's value proposition assumed
+> a green M1 (snapshots shorten a working descent's debug loop). With M1
+> red, the wave pauses here for an M2/M3 reassessment — that reassessment
+> is not made by this note.
+
 **Single source for the state.** Today `Scenario::initial_state` builds a
 hover over the site while `padload::generate_state` independently computes
 the LUM69R2 PDI point. Those two describing different vehicles *is* cause C.
@@ -125,13 +185,31 @@ an explicit addition:
   than silently handing over from a different mode — P65 is out of scope
   and its appearance means the handover altitude needs revisiting.
 
-**Freeze is disabled in PDI mode.** `SimCore`'s freeze-until-engine-on
-existed to keep AVERAGE-G consistent with a hover start. With truth already
+~~**Freeze is disabled in PDI mode.**~~ `SimCore`'s freeze-until-engine-on
+existed to keep AVERAGE-G consistent with a hover start. ~~With truth already
 on a correct orbital trajectory the freeze is not merely unnecessary but
 wrong: a pinned position diverges from the AGC's integrating navigation
-before ignition. PDI mode runs free from t=0. This also removes, on the PDI
+before ignition. PDI mode runs free from t=0.~~
+
+> **SUPERSEDED — the freeze is KEPT in PDI mode.** The M1 plan overrode
+> this paragraph before implementation and governs
+> (`docs/superpowers/plans/2026-07-26-eagle-wave2-m1-pdi-descent.md:94-100`,
+> user ruling 2026-07-26): frozen truth is the pad's own TIG state, so
+> releasing on ENGINE ON lands truth exactly where the AGC's navigation is,
+> and the AGC's ~4.8 % clock-rate offset becomes harmless — nav advances on
+> the AGC's clock while truth waits. As built,
+> `SimCore::phase4_5_dynamics` pins truth in **both** gate modes; the only
+> PDI difference is the freeze-phase PIPA feed (zero = coast, instead of
+> hover support). Measured, run 6: 3436 frozen frames, t = 0.01 → 343.51 s,
+> `alt_m` constant to the last digit. Consequences for `miss_m` in §4.
+>
+> The struck-out claim below it falls with it: because the freeze is kept,
+> the Wave 1 inconsistency where a pinned attitude coexists with flowing
+> CDU pulses is **not** removed on the PDI path.
+
+~~This also removes, on the PDI
 path, the Wave 1 inconsistency where the freeze pinned attitude while CDU
-pulses kept flowing.
+pulses kept flowing.~~
 
 **ROD schedule.** The committed `[[400,-3],[150,-1.5],[30,-1]]` assumes a
 500 m gate. PDI mode hands over near 150 m, so the breakpoints move into the
@@ -227,10 +305,43 @@ review branch: `Touchdown::Nominal`, surface-relative v_vert / v_horiz /
 tilt, observed alarm episodes empty, `prog_lamp_frames == 0`, and the
 scale-free AGC clock-rate gate.
 
+> **Two caveats on those, both recorded 2026-07-26 and both in
+> `live_pdi_descent.rs`'s header.** (1) "Alarm episodes empty" covers only
+> the pre-ignition P63 dialog in PDI mode — see the status block in §1;
+> passing it is not evidence about the descent. (2) `prog_lamp_frames == 0`
+> counts through the sim's ~2 s post-touchdown tail, which a *soft* landing
+> also runs, so a single alarm raised in that tail is a known false
+> negative: it would red a flight that deserved to pass. The gate is left
+> wide anyway while the alarm's code is unknown (ledger "Open" item 2a),
+> because filtering to pre-contact frames would discard the only evidence
+> the alarm exists.
+
 **Miss distance becomes meaningful here.** In Wave 1 the reported figure was
-100 % freeze artifact (1585 m ≈ ω·R·cosφ × 343 s of pinned position). PDI
-mode has no freeze, so after one measured run a threshold with real
+100 % freeze artifact (1585 m ≈ ω·R·cosφ × 343 s of pinned position). ~~PDI
+mode has no freeze, so~~ after one measured run a threshold with real
 provenance can be set — the step Wave 1 explicitly deferred.
+
+> **Correction 2026-07-26: PDI mode DOES freeze, and the miss artifact is
+> unchanged.** The struck-out clause above was written before the M1 plan,
+> which explicitly kept the freeze and governs
+> (`docs/superpowers/plans/2026-07-26-eagle-wave2-m1-pdi-descent.md:94-100`
+> — the freeze is what makes the AGC's ~4.8 % clock-rate offset harmless).
+> `SimCore::phase4_5_dynamics` pins truth position in **both** gate modes;
+> the only PDI difference is that the freeze-phase PIPA feed is zero
+> (coast) instead of 1.62 m/s² hover support. Measured on run 6's own
+> telemetry: 3436 frozen frames, t = 0.01 → 343.51 s, `alt_m` constant to
+> the last digit, i.e. ω·R × 343.51 s = **1588.5 m** of pure bookkeeping —
+> Wave 1's artifact was 1585.2 m over a 342.8 s freeze. It is not reduced.
+>
+> **Status 2026-07-26: still deferred.** The artifact stands, every M1
+> flight ended off the nominal trajectory (runs 5 and 6 reported 12.2 and
+> 12.1 km, which swamps it), and `pdi-descent.toml` documents a further
+> frame / time-base caveat: in pdi mode the site is MCI +X at TLAND, not
+> the `[site]` lat/lon. `live_pdi_descent.rs` therefore prints `miss_m` and
+> gates nothing. A threshold needs the freeze phase to co-rotate AND a run
+> that flew the profile to contact; neither exists, and one flight would
+> not be enough to set one. M1's live acceptance also costs ~20 min, not
+> the 17-18 min budgeted here.
 
 ## 5. Risks
 

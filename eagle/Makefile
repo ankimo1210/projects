@@ -1,4 +1,4 @@
-.PHONY: vendor agc-tools agc test test-integration dev descent-p66 descent-p66-fast lint
+.PHONY: vendor agc-tools agc test test-integration dev descent-p66 descent-p66-fast descent-full lint
 
 vendor:
 	bash scripts/fetch-vendor.sh
@@ -45,6 +45,17 @@ descent-p66-fast: agc
 	cd runtime && cargo run -p eagle-runtime -- \
 	  --yaagc ../build/agc/yaAGC --core ../build/agc/Luminary099.bin \
 	  --scenario ../scenarios/p66-gate-fast.toml --root ..
+
+# Wave 2 M1: the real descent — PDI → P63 → P64 → P66, radar bypassed.
+# ~20 min wall, measured (boot ~5.7 min to ENGINE ON at t ≈ 344 s, then
+# ~865 s of descent, plus teardown; the AGC clock ran 0.944x real time on
+# every M1 flight). Not in CI. Does NOT land — see the M1 status block in
+# README.md. The earlier "~18-19 min / ~95.2%" here was the Wave 1 budget
+# and Wave 1's clock figure, neither measured on this target.
+descent-full: agc
+	cd runtime && cargo run -p eagle-runtime -- \
+	  --yaagc ../build/agc/yaAGC --core ../build/agc/Luminary099.bin \
+	  --scenario ../scenarios/pdi-descent.toml --root ..
 
 lint:
 	cd runtime && cargo clippy --workspace --all-targets -- -D warnings
