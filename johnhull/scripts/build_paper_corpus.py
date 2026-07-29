@@ -1,8 +1,8 @@
 """Convert local reference PDFs into an AI-friendly, page-citable corpus.
 
-The generated full text stays under ``references/processed/``, which is ignored
-by Git. PyMuPDF4LLM is intentionally an ephemeral tool dependency; run this from
-the workspace root with::
+The generated full text is written to ``references/processed/`` and is tracked by
+Git, so a run produces a reviewable diff. PyMuPDF4LLM is intentionally an
+ephemeral tool dependency; run this from the workspace root with::
 
     uv run --no-project --with pymupdf4llm \
         python johnhull/scripts/build_paper_corpus.py --sample
@@ -18,6 +18,7 @@ import hashlib
 import json
 import math
 import re
+import shutil
 import sys
 import unicodedata
 from dataclasses import dataclass
@@ -168,6 +169,19 @@ def select_pdfs(args: argparse.Namespace) -> list[Path]:
         raise SystemExit("Missing PDF(s):\n  " + "\n  ".join(missing))
     if not paths:
         raise SystemExit(f"No PDFs found in {input_dir}")
+    by_paper_id: dict[str, list[Path]] = {}
+    for path in paths:
+        by_paper_id.setdefault(path.stem, []).append(path)
+    clashes = [
+        f"{paper_id}: " + ", ".join(str(path) for path in sources)
+        for paper_id, sources in by_paper_id.items()
+        if len(sources) > 1
+    ]
+    if clashes:
+        raise SystemExit(
+            "Each selected PDF must map to a unique paper id (the file stem).\n  "
+            + "\n  ".join(clashes)
+        )
     return paths
 
 
@@ -557,6 +571,9 @@ def convert_pdf(
     paper_dir = output_root / paper_id
     assets_dir = paper_dir / "assets"
     paper_dir.mkdir(parents=True, exist_ok=True)
+    # A conversion re-extracts every image, so anything left from an earlier run is
+    # an orphan that no Markdown links to.
+    shutil.rmtree(assets_dir, ignore_errors=True)
     if args.write_images:
         assets_dir.mkdir(parents=True, exist_ok=True)
 
@@ -610,6 +627,54 @@ def convert_pdf(
     return index_entry, chunks, quality
 
 
+def previously_built_papers(
+    output_root: Path, selected_ids: set[str]
+) -> list[tuple[dict[str, Any], list[dict[str, Any]], dict[str, Any]]]:
+    """Reload papers an earlier run built so a partial run keeps the whole corpus.
+
+    ``index.json``, ``corpus.jsonl`` and the quality reports describe every paper
+    under ``output_root``, not just the current selection, so converting one PDF
+    must not shrink them. A paper is carried forward only while its source PDF is
+    still on disk; deleting a PDF and rebuilding therefore drops it as expected.
+    """
+    index_path = output_root / "index.json"
+    if not index_path.is_file():
+        return []
+    try:
+        previous = json.loads(index_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        print(f"Ignoring unreadable {index_path}: {exc}", file=sys.stderr, flush=True)
+        return []
+    if not isinstance(previous, list):
+        print(f"Ignoring {index_path}: expected a JSON array", file=sys.stderr, flush=True)
+        return []
+
+    carried: list[tuple[dict[str, Any], list[dict[str, Any]], dict[str, Any]]] = []
+    for entry in previous:
+        paper_id = str(entry.get("paper_id", "")) if isinstance(entry, dict) else ""
+        if not paper_id or paper_id in selected_ids:
+            continue
+        paper_dir = output_root / paper_id
+        try:
+            metadata = read_json(paper_dir / "metadata.json")
+            pages = read_jsonl(paper_dir / "pages.jsonl")
+            chunks = read_jsonl(paper_dir / "chunks.jsonl")
+            quality = read_json(paper_dir / "quality.json")
+            source_pdf = PROJECT_ROOT / str(metadata["source_pdf"])
+        except (OSError, json.JSONDecodeError, KeyError, TypeError) as exc:
+            print(f"Dropping {paper_id} from the index: {exc}", file=sys.stderr, flush=True)
+            continue
+        if not source_pdf.is_file():
+            print(
+                f"Dropping {paper_id} from the index: {source_pdf} no longer exists",
+                file=sys.stderr,
+                flush=True,
+            )
+            continue
+        carried.append((make_index_entry(metadata, pages, chunks, quality), chunks, quality))
+    return carried
+
+
 def quality_report_markdown(qualities: list[dict[str, Any]]) -> str:
     lines = [
         "# Paper corpus quality report",
@@ -638,9 +703,7 @@ def main() -> int:
     output_root.mkdir(parents=True, exist_ok=True)
     catalog = load_catalog(args.catalog.resolve())
 
-    index: list[dict[str, Any]] = []
-    corpus: list[dict[str, Any]] = []
-    qualities: list[dict[str, Any]] = []
+    papers: list[tuple[dict[str, Any], list[dict[str, Any]], dict[str, Any]]] = []
     for pdf_path in pdfs:
         cached = (
             load_cached_output(converter, pdf_path, output_root, catalog, args)
@@ -648,14 +711,29 @@ def main() -> int:
             else None
         )
         if cached is None:
-            index_entry, chunks, quality = convert_pdf(
-                converter, pdf_path, output_root, catalog, args
-            )
+            papers.append(convert_pdf(converter, pdf_path, output_root, catalog, args))
         else:
-            index_entry, chunks, quality = cached
-        index.append(index_entry)
-        corpus.extend(chunks)
-        qualities.append(quality)
+            papers.append(cached)
+
+    papers.extend(previously_built_papers(output_root, {path.stem for path in pdfs}))
+    # Order the corpus by source filename, so it does not depend on the selection.
+    papers.sort(key=lambda paper: f"{paper[0]['paper_id']}.pdf")
+    index = [entry for entry, _, _ in papers]
+    corpus = [chunk for _, chunks, _ in papers for chunk in chunks]
+    qualities = [quality for _, _, quality in papers]
+
+    indexed_ids = {str(entry["paper_id"]) for entry in index}
+    orphans = sorted(
+        path.name
+        for path in output_root.iterdir()
+        if path.is_dir() and path.name not in indexed_ids
+    )
+    if orphans:
+        print(
+            "Output directories no longer in the index: " + ", ".join(orphans),
+            file=sys.stderr,
+            flush=True,
+        )
 
     write_json(output_root / "index.json", index)
     write_jsonl(output_root / "corpus.jsonl", corpus)
@@ -667,7 +745,7 @@ def main() -> int:
     for quality in qualities:
         counts[str(quality["status"])] += 1
     print(
-        f"Converted {len(index)} paper(s), {len(corpus)} chunk(s): "
+        f"Indexed {len(index)} paper(s) ({len(pdfs)} selected this run), {len(corpus)} chunk(s): "
         f"pass={counts['pass']} review={counts['review']} fail={counts['fail']}",
         file=sys.stderr,
     )

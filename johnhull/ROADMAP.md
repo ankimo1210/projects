@@ -73,9 +73,11 @@ separate. No production dependency was added for G0/G1 core implementation.
 各巻に validation report、fingerprinted JSON/NPZ、artifact-only notebook、book
 symlinkがあり、各巻の `integration_and_reproducibility` gate は PASS。これは
 **model performance の承認ではない**。`release_manifest.json` の現行契約は portal
-**78 図/12 テーマ**、Jupyter Book 30 ページ。G8 で fresh artifact/notebook/
+**78 図/12 テーマ**（Jupyter Book は `book/_toc.yml` の 30 ページで、ページ数自体は
+manifest の契約値ではなく `book_name` の掲載のみが検証される）。G8 で fresh artifact/notebook/
 report/book/test/lint を再検証し、最終結果と model risk を `johnhull/VALIDATION.md`
-に固定した。strict tracked gate と専用 branch への remote push も完了した。
+に固定した。strict tracked gate と専用 branch への remote push も完了し、その branch は
+`main` へ merge 済み（release 履歴は `VALIDATION.md` の Release decision 表）。
 research track は既定無効・core gate 非依存のままとする。
 
 ## Inflation-linked rates and JGBi — Phase 1–7 (2026-07-19)
@@ -119,7 +121,9 @@ Design plan: `docs/superpowers/plans/2026-07-20-johnhull-27-risk-desk.md`
 | 6 | Portal `risk_management` page, Jupyter Book page, full tracked release | done |
 
 Phase 5 の `done` は synthetic-offline の integration/reproducibility gate（`_volume27`
-の 11 恒等式チェックと byte 再現性）を表し、市場較正・model performance の承認ではない。
+の 13 恒等式チェックと byte 再現性）を表し、市場較正・model performance の承認ではない。
+恒等式チェックは当初 11 個で、2026-07-20 の review-fix 運用で
+`christoffersen_pvalue_matches_recomputation` と `cross_asset_factor_mapping` を追加した。
 Phase 6 の portal 図（`var_traffic_light`・`fhs_vs_hs_coverage`・`gpd_tail_fit`・
 `risk_allocation_bars`）、`risk_management` book page、Jupyter Book 登録、full tracked
 release はすべて完了した（commit 691877f, 63f83ce）。
