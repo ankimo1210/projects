@@ -1,34 +1,31 @@
 {
-  "paper_id": "2025-huge-savine-axes-that-matter",
-  "title": "Axes That Matter: PCA with a Difference",
-  "authors": "Brian Huge; Antoine Savine",
-  "year": "2025",
-  "source_url": "https://arxiv.org/abs/2503.06707",
-  "source_pdf": "references/papers/2025-huge-savine-axes-that-matter.pdf",
-  "source_sha256": "7774189ee0469ad0fb6d880c286801414a095de010b61fcf9fc52b3c7bd885f3",
-  "converter": "PyMuPDF4LLM 1.28.0",
-  "conversion_options": {
-    "header": false,
-    "footer": false,
-    "use_ocr": true,
-    "force_ocr": false,
-    "ocr_language": "eng",
-    "write_images": true,
-    "max_chunk_chars": 4800,
-    "overlap_chars": 400
+  "converted_page_numbers": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "extractor": {
+    "extractor_name": "MinerU pipeline",
+    "extractor_version": "3.4.4",
+    "model_hash": "ed6b654c018d742e65a17671e379c5e6ecc87ec9",
+    "source_pdf_sha256": "7774189ee0469ad0fb6d880c286801414a095de010b61fcf9fc52b3c7bd885f3"
   },
-  "pdf_metadata": {
-    "format": "PDF 1.5",
-    "title": "",
-    "author": "",
-    "subject": "",
-    "keywords": "",
-    "creator": "LaTeX with hyperref",
-    "producer": "pdfTeX-1.40.25",
-    "creationDate": "D:20250319003250Z",
-    "modDate": "D:20250319003250Z",
-    "trapped": "",
-    "encryption": null,
-    "page_count": 15
-  }
+  "input_content_list_sha256": "4ba1307f773501708d98ee4b2e4886ce0e7a50d6ac5025aae862c55251a2ad00",
+  "paper_id": "2025-huge-savine-axes-that-matter",
+  "schema_version": "2.0.0",
+  "source_page_count": 15,
+  "source_pdf": "/home/kazumasa/projects-johnhull-corpus-v2/johnhull/references/papers/2025-huge-savine-axes-that-matter.pdf",
+  "source_pdf_sha256": "7774189ee0469ad0fb6d880c286801414a095de010b61fcf9fc52b3c7bd885f3"
 }

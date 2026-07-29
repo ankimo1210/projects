@@ -2220,9 +2220,7 @@ def volume27_reference(*, seed: int = 20260745) -> FrontierReference:
     def _swap_value(shift: float) -> float:
         """Receive-fixed IRS value under a parallel zero-rate shift (in absolute rate)."""
         curve = (swap_curve_times, swap_curve_zeros + shift)
-        return float(
-            swaps.irs_value_fras(swap_notional, swap_fixed_rate, swap_pay_times, curve)
-        )
+        return float(swaps.irs_value_fras(swap_notional, swap_fixed_rate, swap_pay_times, curve))
 
     swap_base_value = _swap_value(0.0)
     swap_up = _swap_value(rate_bump)

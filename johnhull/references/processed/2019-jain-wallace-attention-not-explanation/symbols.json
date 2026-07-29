@@ -1,0 +1,422 @@
+[
+  {
+    "definition": null,
+    "occurrence_count": 7,
+    "symbol": "D",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 1,
+    "symbol": "E",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 3,
+    "symbol": "J",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 2,
+    "symbol": "K",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 2,
+    "symbol": "L",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 1,
+    "symbol": "N",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 6,
+    "symbol": "Q",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 6,
+    "symbol": "R",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 3,
+    "symbol": "S",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 13,
+    "symbol": "T",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 8,
+    "symbol": "V",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 4,
+    "symbol": "W",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 4,
+    "symbol": "\\Delta",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 31,
+    "symbol": "\\alpha",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 2,
+    "symbol": "\\bar",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 5,
+    "symbol": "\\begin",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 2,
+    "symbol": "\\bf",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 8,
+    "symbol": "\\boldsymbol",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 2,
+    "symbol": "\\cdot",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 1,
+    "symbol": "\\ell",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 5,
+    "symbol": "\\end",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 3,
+    "symbol": "\\epsilon",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 1,
+    "symbol": "\\forall",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 8,
+    "symbol": "\\frac",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 25,
+    "symbol": "\\hat",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 6,
+    "symbol": "\\in",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 2,
+    "symbol": "\\lambda",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 1,
+    "symbol": "\\ldots",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 1,
+    "symbol": "\\leq",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 6,
+    "symbol": "\\mathbb",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 27,
+    "symbol": "\\mathbf",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 4,
+    "symbol": "\\mathcal",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 9,
+    "symbol": "\\mathrm",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 1,
+    "symbol": "\\mu",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 1,
+    "symbol": "\\operatorname",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 3,
+    "symbol": "\\phi",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 1,
+    "symbol": "\\pmb",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 3,
+    "symbol": "\\sigma",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 1,
+    "symbol": "\\sqrt",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 5,
+    "symbol": "\\sum",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 2,
+    "symbol": "\\tag",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 5,
+    "symbol": "\\tau",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 1,
+    "symbol": "\\textbf",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 1,
+    "symbol": "\\textstyle",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 1,
+    "symbol": "\\theta",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 3,
+    "symbol": "\\times",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 1,
+    "symbol": "\\underset",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 4,
+    "symbol": "a",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 1,
+    "symbol": "b",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 2,
+    "symbol": "c",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 4,
+    "symbol": "d",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 6,
+    "symbol": "e",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 3,
+    "symbol": "f",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 3,
+    "symbol": "g",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 11,
+    "symbol": "h",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 22,
+    "symbol": "i",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 3,
+    "symbol": "j",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 10,
+    "symbol": "k",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 4,
+    "symbol": "l",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 8,
+    "symbol": "m",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 2,
+    "symbol": "n",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 5,
+    "symbol": "o",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 6,
+    "symbol": "r",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 1,
+    "symbol": "s",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 9,
+    "symbol": "t",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 1,
+    "symbol": "u",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 3,
+    "symbol": "v",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 9,
+    "symbol": "x",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 19,
+    "symbol": "y",
+    "verification_status": "unverified"
+  },
+  {
+    "definition": null,
+    "occurrence_count": 1,
+    "symbol": "z",
+    "verification_status": "unverified"
+  }
+]

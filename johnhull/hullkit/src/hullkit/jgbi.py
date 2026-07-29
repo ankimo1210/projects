@@ -143,9 +143,7 @@ def jgbi_reference_index(
 def jgbi_indexation_coefficient(day: date, terms: JGBITerms, monthly_cpi: CPISource) -> float:
     """Return the rounded reference-index ratio to the explicit bond base date."""
     terms.validate()
-    reference = jgbi_reference_index(
-        day, monthly_cpi, decimals=terms.reference_index_decimals
-    )
+    reference = jgbi_reference_index(day, monthly_cpi, decimals=terms.reference_index_decimals)
     base = jgbi_reference_index(
         terms.base_reference_date,
         monthly_cpi,
@@ -241,6 +239,7 @@ def jgbi_real_yield(
         raise ValueError("real_clean_price must be positive and finite")
     if lower <= -2.0 or upper <= lower:
         raise ValueError("yield bracket must satisfy -2 < lower < upper")
+
     def _objective(value: float) -> float:
         return jgbi_real_clean_price(value, settlement, terms) - real_clean_price
 
@@ -307,11 +306,7 @@ def jgbi_deflation_floor_black(
     total_volatility = np.sqrt(total_variance)
     d1 = np.log(forward_index_ratio / strike_ratio) / total_volatility + 0.5 * total_volatility
     d2 = d1 - total_volatility
-    return float(
-        notional
-        * discount
-        * (strike_ratio * ndtr(-d2) - forward_index_ratio * ndtr(-d1))
-    )
+    return float(notional * discount * (strike_ratio * ndtr(-d2) - forward_index_ratio * ndtr(-d1)))
 
 
 def jgbi_deflation_floor_jy(
@@ -432,9 +427,7 @@ def jgbi_floor_risk(
     delta = (_value(spot_cpi + cpi_bump, params) - _value(spot_cpi - cpi_bump, params)) / (
         2.0 * cpi_bump
     )
-    bumped_up = replace(
-        params, inflation_volatility=params.inflation_volatility + volatility_bump
-    )
+    bumped_up = replace(params, inflation_volatility=params.inflation_volatility + volatility_bump)
     if params.inflation_volatility >= volatility_bump:
         bumped_down = replace(
             params, inflation_volatility=params.inflation_volatility - volatility_bump

@@ -1,0 +1,26 @@
+{
+  "converted_page_numbers": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "extractor": {
+    "extractor_name": "MinerU pipeline",
+    "extractor_version": "3.4.4",
+    "model_hash": "ed6b654c018d742e65a17671e379c5e6ecc87ec9",
+    "source_pdf_sha256": "d0ff9ee0f9ad6ee4a59b7a0a902604f3670a7b2412b10d2c685ea0d7f71b5a94"
+  },
+  "input_content_list_sha256": "37543e8b50e8ec2077a8ab5d4ebae50b0d1752e8aeb26b8658d1cded8d0ea1c5",
+  "paper_id": "2024-mof-jgbi-bei-guide",
+  "schema_version": "2.0.0",
+  "source_page_count": 10,
+  "source_pdf": "/home/kazumasa/projects-johnhull-corpus-v2/johnhull/references/papers/2024-mof-jgbi-bei-guide.pdf",
+  "source_pdf_sha256": "d0ff9ee0f9ad6ee4a59b7a0a902604f3670a7b2412b10d2c685ea0d7f71b5a94"
+}

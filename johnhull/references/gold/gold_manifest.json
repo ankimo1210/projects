@@ -1,0 +1,1217 @@
+{
+  "gold_manifest_version": "1.0.0",
+  "page_count": 106,
+  "paper_count": 15,
+  "selected_pages": [
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1900-bachelier-theorie-de-la-speculation:p0001",
+      "p0": false,
+      "page_number": 1,
+      "paper_id": "1900-bachelier-theorie-de-la-speculation",
+      "selection_reasons": [
+        "born_digital",
+        "front_matter"
+      ],
+      "source_pdf_sha256": "03f1b9542d2c374d61a276fd6c52d8936e1298bfaafd8efdc74b8b27e38faffd"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1900-bachelier-theorie-de-la-speculation:p0006",
+      "p0": false,
+      "page_number": 6,
+      "paper_id": "1900-bachelier-theorie-de-la-speculation",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "03f1b9542d2c374d61a276fd6c52d8936e1298bfaafd8efdc74b8b27e38faffd"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1900-bachelier-theorie-de-la-speculation:p0011",
+      "p0": false,
+      "page_number": 11,
+      "paper_id": "1900-bachelier-theorie-de-la-speculation",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "03f1b9542d2c374d61a276fd6c52d8936e1298bfaafd8efdc74b8b27e38faffd"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1900-bachelier-theorie-de-la-speculation:p0016",
+      "p0": false,
+      "page_number": 16,
+      "paper_id": "1900-bachelier-theorie-de-la-speculation",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "03f1b9542d2c374d61a276fd6c52d8936e1298bfaafd8efdc74b8b27e38faffd"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1900-bachelier-theorie-de-la-speculation:p0023",
+      "p0": false,
+      "page_number": 23,
+      "paper_id": "1900-bachelier-theorie-de-la-speculation",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "03f1b9542d2c374d61a276fd6c52d8936e1298bfaafd8efdc74b8b27e38faffd"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1900-bachelier-theorie-de-la-speculation:p0067",
+      "p0": false,
+      "page_number": 67,
+      "paper_id": "1900-bachelier-theorie-de-la-speculation",
+      "selection_reasons": [
+        "hybrid",
+        "final_page"
+      ],
+      "source_pdf_sha256": "03f1b9542d2c374d61a276fd6c52d8936e1298bfaafd8efdc74b8b27e38faffd"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1973-black-scholes-options-corporate-liabilities:p0001",
+      "p0": false,
+      "page_number": 1,
+      "paper_id": "1973-black-scholes-options-corporate-liabilities",
+      "selection_reasons": [
+        "hybrid",
+        "front_matter"
+      ],
+      "source_pdf_sha256": "5d7fff3799e94a563edd232d4678f898703176d408d213ec4f2984b009c46157"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1973-black-scholes-options-corporate-liabilities:p0002",
+      "p0": false,
+      "page_number": 2,
+      "paper_id": "1973-black-scholes-options-corporate-liabilities",
+      "selection_reasons": [
+        "scan"
+      ],
+      "source_pdf_sha256": "5d7fff3799e94a563edd232d4678f898703176d408d213ec4f2984b009c46157"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1973-black-scholes-options-corporate-liabilities:p0004",
+      "p0": false,
+      "page_number": 4,
+      "paper_id": "1973-black-scholes-options-corporate-liabilities",
+      "selection_reasons": [
+        "scan"
+      ],
+      "source_pdf_sha256": "5d7fff3799e94a563edd232d4678f898703176d408d213ec4f2984b009c46157"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1973-black-scholes-options-corporate-liabilities:p0005",
+      "p0": false,
+      "page_number": 5,
+      "paper_id": "1973-black-scholes-options-corporate-liabilities",
+      "selection_reasons": [
+        "scan"
+      ],
+      "source_pdf_sha256": "5d7fff3799e94a563edd232d4678f898703176d408d213ec4f2984b009c46157"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1973-black-scholes-options-corporate-liabilities:p0008",
+      "p0": false,
+      "page_number": 8,
+      "paper_id": "1973-black-scholes-options-corporate-liabilities",
+      "selection_reasons": [
+        "scan"
+      ],
+      "source_pdf_sha256": "5d7fff3799e94a563edd232d4678f898703176d408d213ec4f2984b009c46157"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1973-black-scholes-options-corporate-liabilities:p0019",
+      "p0": false,
+      "page_number": 19,
+      "paper_id": "1973-black-scholes-options-corporate-liabilities",
+      "selection_reasons": [
+        "scan",
+        "final_page"
+      ],
+      "source_pdf_sha256": "5d7fff3799e94a563edd232d4678f898703176d408d213ec4f2984b009c46157"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1990-hull-white-interest-rate-derivative-securities:p0001",
+      "p0": true,
+      "page_number": 1,
+      "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+      "selection_reasons": [
+        "born_digital",
+        "front_matter"
+      ],
+      "source_pdf_sha256": "1a9b8fad1135e95315278379e02d7d16d13f125f3fccba3976ed2732dcd8378a"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1990-hull-white-interest-rate-derivative-securities:p0004",
+      "p0": true,
+      "page_number": 4,
+      "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+      "selection_reasons": [
+        "hybrid",
+        "math_dense"
+      ],
+      "source_pdf_sha256": "1a9b8fad1135e95315278379e02d7d16d13f125f3fccba3976ed2732dcd8378a"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1990-hull-white-interest-rate-derivative-securities:p0005",
+      "p0": true,
+      "page_number": 5,
+      "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+      "selection_reasons": [
+        "hybrid",
+        "math_dense"
+      ],
+      "source_pdf_sha256": "1a9b8fad1135e95315278379e02d7d16d13f125f3fccba3976ed2732dcd8378a"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1990-hull-white-interest-rate-derivative-securities:p0006",
+      "p0": true,
+      "page_number": 6,
+      "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+      "selection_reasons": [
+        "hybrid",
+        "math_dense"
+      ],
+      "source_pdf_sha256": "1a9b8fad1135e95315278379e02d7d16d13f125f3fccba3976ed2732dcd8378a"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1990-hull-white-interest-rate-derivative-securities:p0007",
+      "p0": true,
+      "page_number": 7,
+      "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+      "selection_reasons": [
+        "hybrid",
+        "math_dense"
+      ],
+      "source_pdf_sha256": "1a9b8fad1135e95315278379e02d7d16d13f125f3fccba3976ed2732dcd8378a"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1990-hull-white-interest-rate-derivative-securities:p0014",
+      "p0": true,
+      "page_number": 14,
+      "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+      "selection_reasons": [
+        "hybrid",
+        "math_dense"
+      ],
+      "source_pdf_sha256": "1a9b8fad1135e95315278379e02d7d16d13f125f3fccba3976ed2732dcd8378a"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1990-hull-white-interest-rate-derivative-securities:p0017",
+      "p0": true,
+      "page_number": 17,
+      "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "1a9b8fad1135e95315278379e02d7d16d13f125f3fccba3976ed2732dcd8378a"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1990-hull-white-interest-rate-derivative-securities:p0018",
+      "p0": true,
+      "page_number": 18,
+      "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+      "selection_reasons": [
+        "hybrid",
+        "math_dense"
+      ],
+      "source_pdf_sha256": "1a9b8fad1135e95315278379e02d7d16d13f125f3fccba3976ed2732dcd8378a"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1990-hull-white-interest-rate-derivative-securities:p0020",
+      "p0": true,
+      "page_number": 20,
+      "paper_id": "1990-hull-white-interest-rate-derivative-securities",
+      "selection_reasons": [
+        "born_digital",
+        "final_page"
+      ],
+      "source_pdf_sha256": "1a9b8fad1135e95315278379e02d7d16d13f125f3fccba3976ed2732dcd8378a"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1993-heston-closed-form-stochastic-volatility:p0001",
+      "p0": true,
+      "page_number": 1,
+      "paper_id": "1993-heston-closed-form-stochastic-volatility",
+      "selection_reasons": [
+        "born_digital",
+        "front_matter"
+      ],
+      "source_pdf_sha256": "4f1331c37be25045e2b60e5aa969ff5917a488e43c24abad0f99a55641c2b3a3"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1993-heston-closed-form-stochastic-volatility:p0002",
+      "p0": true,
+      "page_number": 2,
+      "paper_id": "1993-heston-closed-form-stochastic-volatility",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "4f1331c37be25045e2b60e5aa969ff5917a488e43c24abad0f99a55641c2b3a3"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1993-heston-closed-form-stochastic-volatility:p0003",
+      "p0": true,
+      "page_number": 3,
+      "paper_id": "1993-heston-closed-form-stochastic-volatility",
+      "selection_reasons": [
+        "hybrid",
+        "math_dense"
+      ],
+      "source_pdf_sha256": "4f1331c37be25045e2b60e5aa969ff5917a488e43c24abad0f99a55641c2b3a3"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1993-heston-closed-form-stochastic-volatility:p0005",
+      "p0": true,
+      "page_number": 5,
+      "paper_id": "1993-heston-closed-form-stochastic-volatility",
+      "selection_reasons": [
+        "hybrid",
+        "math_dense"
+      ],
+      "source_pdf_sha256": "4f1331c37be25045e2b60e5aa969ff5917a488e43c24abad0f99a55641c2b3a3"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1993-heston-closed-form-stochastic-volatility:p0006",
+      "p0": true,
+      "page_number": 6,
+      "paper_id": "1993-heston-closed-form-stochastic-volatility",
+      "selection_reasons": [
+        "hybrid",
+        "math_dense"
+      ],
+      "source_pdf_sha256": "4f1331c37be25045e2b60e5aa969ff5917a488e43c24abad0f99a55641c2b3a3"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1993-heston-closed-form-stochastic-volatility:p0008",
+      "p0": true,
+      "page_number": 8,
+      "paper_id": "1993-heston-closed-form-stochastic-volatility",
+      "selection_reasons": [
+        "hybrid",
+        "math_dense"
+      ],
+      "source_pdf_sha256": "4f1331c37be25045e2b60e5aa969ff5917a488e43c24abad0f99a55641c2b3a3"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1993-heston-closed-form-stochastic-volatility:p0016",
+      "p0": true,
+      "page_number": 16,
+      "paper_id": "1993-heston-closed-form-stochastic-volatility",
+      "selection_reasons": [
+        "hybrid",
+        "math_dense"
+      ],
+      "source_pdf_sha256": "4f1331c37be25045e2b60e5aa969ff5917a488e43c24abad0f99a55641c2b3a3"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "1993-heston-closed-form-stochastic-volatility:p0017",
+      "p0": true,
+      "page_number": 17,
+      "paper_id": "1993-heston-closed-form-stochastic-volatility",
+      "selection_reasons": [
+        "born_digital",
+        "final_page"
+      ],
+      "source_pdf_sha256": "4f1331c37be25045e2b60e5aa969ff5917a488e43c24abad0f99a55641c2b3a3"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2000-mcneil-frey-tail-risk-evt:p0001",
+      "p0": true,
+      "page_number": 1,
+      "paper_id": "2000-mcneil-frey-tail-risk-evt",
+      "selection_reasons": [
+        "hybrid",
+        "front_matter"
+      ],
+      "source_pdf_sha256": "9ab9f1149fe5acb8e9e6502e245676a855c4c629e3207179d4c0090acc465e03"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2000-mcneil-frey-tail-risk-evt:p0005",
+      "p0": true,
+      "page_number": 5,
+      "paper_id": "2000-mcneil-frey-tail-risk-evt",
+      "selection_reasons": [
+        "damaged"
+      ],
+      "source_pdf_sha256": "9ab9f1149fe5acb8e9e6502e245676a855c4c629e3207179d4c0090acc465e03"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2000-mcneil-frey-tail-risk-evt:p0008",
+      "p0": true,
+      "page_number": 8,
+      "paper_id": "2000-mcneil-frey-tail-risk-evt",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "9ab9f1149fe5acb8e9e6502e245676a855c4c629e3207179d4c0090acc465e03"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2000-mcneil-frey-tail-risk-evt:p0014",
+      "p0": true,
+      "page_number": 14,
+      "paper_id": "2000-mcneil-frey-tail-risk-evt",
+      "selection_reasons": [
+        "damaged"
+      ],
+      "source_pdf_sha256": "9ab9f1149fe5acb8e9e6502e245676a855c4c629e3207179d4c0090acc465e03"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2000-mcneil-frey-tail-risk-evt:p0015",
+      "p0": true,
+      "page_number": 15,
+      "paper_id": "2000-mcneil-frey-tail-risk-evt",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "9ab9f1149fe5acb8e9e6502e245676a855c4c629e3207179d4c0090acc465e03"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2000-mcneil-frey-tail-risk-evt:p0024",
+      "p0": true,
+      "page_number": 24,
+      "paper_id": "2000-mcneil-frey-tail-risk-evt",
+      "selection_reasons": [
+        "damaged"
+      ],
+      "source_pdf_sha256": "9ab9f1149fe5acb8e9e6502e245676a855c4c629e3207179d4c0090acc465e03"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2000-mcneil-frey-tail-risk-evt:p0029",
+      "p0": true,
+      "page_number": 29,
+      "paper_id": "2000-mcneil-frey-tail-risk-evt",
+      "selection_reasons": [
+        "born_digital",
+        "final_page"
+      ],
+      "source_pdf_sha256": "9ab9f1149fe5acb8e9e6502e245676a855c4c629e3207179d4c0090acc465e03"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2001-longstaff-schwartz-american-options-lsm:p0001",
+      "p0": false,
+      "page_number": 1,
+      "paper_id": "2001-longstaff-schwartz-american-options-lsm",
+      "selection_reasons": [
+        "born_digital",
+        "front_matter"
+      ],
+      "source_pdf_sha256": "61d9d3b20400c4c76bc083ba717338ee1a48dc0db11bdfb999203aff1ac34a8b"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2001-longstaff-schwartz-american-options-lsm:p0005",
+      "p0": false,
+      "page_number": 5,
+      "paper_id": "2001-longstaff-schwartz-american-options-lsm",
+      "selection_reasons": [
+        "scan"
+      ],
+      "source_pdf_sha256": "61d9d3b20400c4c76bc083ba717338ee1a48dc0db11bdfb999203aff1ac34a8b"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2001-longstaff-schwartz-american-options-lsm:p0010",
+      "p0": false,
+      "page_number": 10,
+      "paper_id": "2001-longstaff-schwartz-american-options-lsm",
+      "selection_reasons": [
+        "scan"
+      ],
+      "source_pdf_sha256": "61d9d3b20400c4c76bc083ba717338ee1a48dc0db11bdfb999203aff1ac34a8b"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2001-longstaff-schwartz-american-options-lsm:p0020",
+      "p0": false,
+      "page_number": 20,
+      "paper_id": "2001-longstaff-schwartz-american-options-lsm",
+      "selection_reasons": [
+        "scan"
+      ],
+      "source_pdf_sha256": "61d9d3b20400c4c76bc083ba717338ee1a48dc0db11bdfb999203aff1ac34a8b"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2001-longstaff-schwartz-american-options-lsm:p0030",
+      "p0": false,
+      "page_number": 30,
+      "paper_id": "2001-longstaff-schwartz-american-options-lsm",
+      "selection_reasons": [
+        "scan"
+      ],
+      "source_pdf_sha256": "61d9d3b20400c4c76bc083ba717338ee1a48dc0db11bdfb999203aff1ac34a8b"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2001-longstaff-schwartz-american-options-lsm:p0036",
+      "p0": false,
+      "page_number": 36,
+      "paper_id": "2001-longstaff-schwartz-american-options-lsm",
+      "selection_reasons": [
+        "scan",
+        "final_page"
+      ],
+      "source_pdf_sha256": "61d9d3b20400c4c76bc083ba717338ee1a48dc0db11bdfb999203aff1ac34a8b"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2002-hagan-et-al-managing-smile-risk:p0001",
+      "p0": true,
+      "page_number": 1,
+      "paper_id": "2002-hagan-et-al-managing-smile-risk",
+      "selection_reasons": [
+        "born_digital",
+        "front_matter"
+      ],
+      "source_pdf_sha256": "c267782462f7e762455c481cbdd32e41f2f984c74e89708796836d80515aeaca"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2002-hagan-et-al-managing-smile-risk:p0004",
+      "p0": true,
+      "page_number": 4,
+      "paper_id": "2002-hagan-et-al-managing-smile-risk",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "c267782462f7e762455c481cbdd32e41f2f984c74e89708796836d80515aeaca"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2002-hagan-et-al-managing-smile-risk:p0008",
+      "p0": true,
+      "page_number": 8,
+      "paper_id": "2002-hagan-et-al-managing-smile-risk",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "c267782462f7e762455c481cbdd32e41f2f984c74e89708796836d80515aeaca"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2002-hagan-et-al-managing-smile-risk:p0009",
+      "p0": true,
+      "page_number": 9,
+      "paper_id": "2002-hagan-et-al-managing-smile-risk",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "c267782462f7e762455c481cbdd32e41f2f984c74e89708796836d80515aeaca"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2002-hagan-et-al-managing-smile-risk:p0015",
+      "p0": true,
+      "page_number": 15,
+      "paper_id": "2002-hagan-et-al-managing-smile-risk",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "c267782462f7e762455c481cbdd32e41f2f984c74e89708796836d80515aeaca"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2002-hagan-et-al-managing-smile-risk:p0025",
+      "p0": true,
+      "page_number": 25,
+      "paper_id": "2002-hagan-et-al-managing-smile-risk",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "c267782462f7e762455c481cbdd32e41f2f984c74e89708796836d80515aeaca"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2002-hagan-et-al-managing-smile-risk:p0041",
+      "p0": true,
+      "page_number": 41,
+      "paper_id": "2002-hagan-et-al-managing-smile-risk",
+      "selection_reasons": [
+        "born_digital",
+        "final_page"
+      ],
+      "source_pdf_sha256": "c267782462f7e762455c481cbdd32e41f2f984c74e89708796836d80515aeaca"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2003-jarrow-yildirim-inflation-hjm:p0001",
+      "p0": true,
+      "page_number": 1,
+      "paper_id": "2003-jarrow-yildirim-inflation-hjm",
+      "selection_reasons": [
+        "born_digital",
+        "front_matter"
+      ],
+      "source_pdf_sha256": "c3b859d339569b5a7aadc2199acbf9463c68ad22e2ecf8bf4955ebc735f3ffd9"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2003-jarrow-yildirim-inflation-hjm:p0003",
+      "p0": true,
+      "page_number": 3,
+      "paper_id": "2003-jarrow-yildirim-inflation-hjm",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "c3b859d339569b5a7aadc2199acbf9463c68ad22e2ecf8bf4955ebc735f3ffd9"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2003-jarrow-yildirim-inflation-hjm:p0005",
+      "p0": true,
+      "page_number": 5,
+      "paper_id": "2003-jarrow-yildirim-inflation-hjm",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "c3b859d339569b5a7aadc2199acbf9463c68ad22e2ecf8bf4955ebc735f3ffd9"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2003-jarrow-yildirim-inflation-hjm:p0007",
+      "p0": true,
+      "page_number": 7,
+      "paper_id": "2003-jarrow-yildirim-inflation-hjm",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "c3b859d339569b5a7aadc2199acbf9463c68ad22e2ecf8bf4955ebc735f3ffd9"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2003-jarrow-yildirim-inflation-hjm:p0008",
+      "p0": true,
+      "page_number": 8,
+      "paper_id": "2003-jarrow-yildirim-inflation-hjm",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "c3b859d339569b5a7aadc2199acbf9463c68ad22e2ecf8bf4955ebc735f3ffd9"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2003-jarrow-yildirim-inflation-hjm:p0009",
+      "p0": true,
+      "page_number": 9,
+      "paper_id": "2003-jarrow-yildirim-inflation-hjm",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "c3b859d339569b5a7aadc2199acbf9463c68ad22e2ecf8bf4955ebc735f3ffd9"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2003-jarrow-yildirim-inflation-hjm:p0020",
+      "p0": true,
+      "page_number": 20,
+      "paper_id": "2003-jarrow-yildirim-inflation-hjm",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "c3b859d339569b5a7aadc2199acbf9463c68ad22e2ecf8bf4955ebc735f3ffd9"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2003-jarrow-yildirim-inflation-hjm:p0021",
+      "p0": true,
+      "page_number": 21,
+      "paper_id": "2003-jarrow-yildirim-inflation-hjm",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "c3b859d339569b5a7aadc2199acbf9463c68ad22e2ecf8bf4955ebc735f3ffd9"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2003-jarrow-yildirim-inflation-hjm:p0022",
+      "p0": true,
+      "page_number": 22,
+      "paper_id": "2003-jarrow-yildirim-inflation-hjm",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "c3b859d339569b5a7aadc2199acbf9463c68ad22e2ecf8bf4955ebc735f3ffd9"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds:p0001",
+      "p0": true,
+      "page_number": 1,
+      "paper_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+      "selection_reasons": [
+        "born_digital",
+        "front_matter"
+      ],
+      "source_pdf_sha256": "a4c6c400817df46464222f6cdd31752bd881c68f0501e6b8f9c578e7b14c06a0"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds:p0002",
+      "p0": true,
+      "page_number": 2,
+      "paper_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "a4c6c400817df46464222f6cdd31752bd881c68f0501e6b8f9c578e7b14c06a0"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds:p0003",
+      "p0": true,
+      "page_number": 3,
+      "paper_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "a4c6c400817df46464222f6cdd31752bd881c68f0501e6b8f9c578e7b14c06a0"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds:p0004",
+      "p0": true,
+      "page_number": 4,
+      "paper_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "a4c6c400817df46464222f6cdd31752bd881c68f0501e6b8f9c578e7b14c06a0"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds:p0005",
+      "p0": true,
+      "page_number": 5,
+      "paper_id": "2009-canty-seasonally-adjusted-inflation-linked-bonds",
+      "selection_reasons": [
+        "born_digital",
+        "final_page"
+      ],
+      "source_pdf_sha256": "a4c6c400817df46464222f6cdd31752bd881c68f0501e6b8f9c578e7b14c06a0"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2008-fang-oosterlee-cos-method:p0001",
+      "p0": false,
+      "page_number": 1,
+      "paper_id": "2008-fang-oosterlee-cos-method",
+      "selection_reasons": [
+        "hybrid",
+        "front_matter"
+      ],
+      "source_pdf_sha256": "2795f7dc610868a5c58e4fac43d9610526a8d7a0f71f00fc394d9623c749207b"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2008-fang-oosterlee-cos-method:p0003",
+      "p0": false,
+      "page_number": 3,
+      "paper_id": "2008-fang-oosterlee-cos-method",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "2795f7dc610868a5c58e4fac43d9610526a8d7a0f71f00fc394d9623c749207b"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2008-fang-oosterlee-cos-method:p0005",
+      "p0": false,
+      "page_number": 5,
+      "paper_id": "2008-fang-oosterlee-cos-method",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "2795f7dc610868a5c58e4fac43d9610526a8d7a0f71f00fc394d9623c749207b"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2008-fang-oosterlee-cos-method:p0010",
+      "p0": false,
+      "page_number": 10,
+      "paper_id": "2008-fang-oosterlee-cos-method",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "2795f7dc610868a5c58e4fac43d9610526a8d7a0f71f00fc394d9623c749207b"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2008-fang-oosterlee-cos-method:p0015",
+      "p0": false,
+      "page_number": 15,
+      "paper_id": "2008-fang-oosterlee-cos-method",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "2795f7dc610868a5c58e4fac43d9610526a8d7a0f71f00fc394d9623c749207b"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2008-fang-oosterlee-cos-method:p0016",
+      "p0": false,
+      "page_number": 16,
+      "paper_id": "2008-fang-oosterlee-cos-method",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "2795f7dc610868a5c58e4fac43d9610526a8d7a0f71f00fc394d9623c749207b"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2008-fang-oosterlee-cos-method:p0017",
+      "p0": false,
+      "page_number": 17,
+      "paper_id": "2008-fang-oosterlee-cos-method",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "2795f7dc610868a5c58e4fac43d9610526a8d7a0f71f00fc394d9623c749207b"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2008-fang-oosterlee-cos-method:p0018",
+      "p0": false,
+      "page_number": 18,
+      "paper_id": "2008-fang-oosterlee-cos-method",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "2795f7dc610868a5c58e4fac43d9610526a8d7a0f71f00fc394d9623c749207b"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2008-fang-oosterlee-cos-method:p0023",
+      "p0": false,
+      "page_number": 23,
+      "paper_id": "2008-fang-oosterlee-cos-method",
+      "selection_reasons": [
+        "hybrid",
+        "final_page"
+      ],
+      "source_pdf_sha256": "2795f7dc610868a5c58e4fac43d9610526a8d7a0f71f00fc394d9623c749207b"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2013-wu-inflation-rate-derivatives:p0002",
+      "p0": true,
+      "page_number": 2,
+      "paper_id": "2013-wu-inflation-rate-derivatives",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2013-wu-inflation-rate-derivatives:p0003",
+      "p0": true,
+      "page_number": 3,
+      "paper_id": "2013-wu-inflation-rate-derivatives",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2013-wu-inflation-rate-derivatives:p0007",
+      "p0": true,
+      "page_number": 7,
+      "paper_id": "2013-wu-inflation-rate-derivatives",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2013-wu-inflation-rate-derivatives:p0008",
+      "p0": true,
+      "page_number": 8,
+      "paper_id": "2013-wu-inflation-rate-derivatives",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2013-wu-inflation-rate-derivatives:p0009",
+      "p0": true,
+      "page_number": 9,
+      "paper_id": "2013-wu-inflation-rate-derivatives",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2013-wu-inflation-rate-derivatives:p0013",
+      "p0": true,
+      "page_number": 13,
+      "paper_id": "2013-wu-inflation-rate-derivatives",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2013-wu-inflation-rate-derivatives:p0014",
+      "p0": true,
+      "page_number": 14,
+      "paper_id": "2013-wu-inflation-rate-derivatives",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2013-wu-inflation-rate-derivatives:p0015",
+      "p0": true,
+      "page_number": 15,
+      "paper_id": "2013-wu-inflation-rate-derivatives",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2013-wu-inflation-rate-derivatives:p0016",
+      "p0": true,
+      "page_number": 16,
+      "paper_id": "2013-wu-inflation-rate-derivatives",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2013-wu-inflation-rate-derivatives:p0017",
+      "p0": true,
+      "page_number": 17,
+      "paper_id": "2013-wu-inflation-rate-derivatives",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "4f389560af872310fc2d860ee080ad9cb6d30263d6d69d5be0725f774f70a601"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2019-lyashenko-mercurio-backward-looking-rates:p0001",
+      "p0": true,
+      "page_number": 1,
+      "paper_id": "2019-lyashenko-mercurio-backward-looking-rates",
+      "selection_reasons": [
+        "born_digital",
+        "front_matter"
+      ],
+      "source_pdf_sha256": "dbe021f471a592f4521205563053e3baddf44a7f06ac2fe0f357dc2037038abf"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2019-lyashenko-mercurio-backward-looking-rates:p0004",
+      "p0": true,
+      "page_number": 4,
+      "paper_id": "2019-lyashenko-mercurio-backward-looking-rates",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "dbe021f471a592f4521205563053e3baddf44a7f06ac2fe0f357dc2037038abf"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2019-lyashenko-mercurio-backward-looking-rates:p0008",
+      "p0": true,
+      "page_number": 8,
+      "paper_id": "2019-lyashenko-mercurio-backward-looking-rates",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "dbe021f471a592f4521205563053e3baddf44a7f06ac2fe0f357dc2037038abf"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2019-lyashenko-mercurio-backward-looking-rates:p0012",
+      "p0": true,
+      "page_number": 12,
+      "paper_id": "2019-lyashenko-mercurio-backward-looking-rates",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "dbe021f471a592f4521205563053e3baddf44a7f06ac2fe0f357dc2037038abf"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2019-lyashenko-mercurio-backward-looking-rates:p0020",
+      "p0": true,
+      "page_number": 20,
+      "paper_id": "2019-lyashenko-mercurio-backward-looking-rates",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "dbe021f471a592f4521205563053e3baddf44a7f06ac2fe0f357dc2037038abf"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2019-lyashenko-mercurio-backward-looking-rates:p0025",
+      "p0": true,
+      "page_number": 25,
+      "paper_id": "2019-lyashenko-mercurio-backward-looking-rates",
+      "selection_reasons": [
+        "born_digital",
+        "final_page"
+      ],
+      "source_pdf_sha256": "dbe021f471a592f4521205563053e3baddf44a7f06ac2fe0f357dc2037038abf"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2020-huge-savine-differential-machine-learning:p0001",
+      "p0": false,
+      "page_number": 1,
+      "paper_id": "2020-huge-savine-differential-machine-learning",
+      "selection_reasons": [
+        "born_digital",
+        "front_matter"
+      ],
+      "source_pdf_sha256": "b24f071602743a9ee98a61092a48fc641f50f66acbd5ebdb81f6f44d74bb212d"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2020-huge-savine-differential-machine-learning:p0005",
+      "p0": false,
+      "page_number": 5,
+      "paper_id": "2020-huge-savine-differential-machine-learning",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "b24f071602743a9ee98a61092a48fc641f50f66acbd5ebdb81f6f44d74bb212d"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2020-huge-savine-differential-machine-learning:p0010",
+      "p0": false,
+      "page_number": 10,
+      "paper_id": "2020-huge-savine-differential-machine-learning",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "b24f071602743a9ee98a61092a48fc641f50f66acbd5ebdb81f6f44d74bb212d"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2020-huge-savine-differential-machine-learning:p0020",
+      "p0": false,
+      "page_number": 20,
+      "paper_id": "2020-huge-savine-differential-machine-learning",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "b24f071602743a9ee98a61092a48fc641f50f66acbd5ebdb81f6f44d74bb212d"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2020-huge-savine-differential-machine-learning:p0035",
+      "p0": false,
+      "page_number": 35,
+      "paper_id": "2020-huge-savine-differential-machine-learning",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "b24f071602743a9ee98a61092a48fc641f50f66acbd5ebdb81f6f44d74bb212d"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2020-huge-savine-differential-machine-learning:p0051",
+      "p0": false,
+      "page_number": 51,
+      "paper_id": "2020-huge-savine-differential-machine-learning",
+      "selection_reasons": [
+        "born_digital",
+        "final_page"
+      ],
+      "source_pdf_sha256": "b24f071602743a9ee98a61092a48fc641f50f66acbd5ebdb81f6f44d74bb212d"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2021-mof-jgbi-indexation-notice:p0001",
+      "p0": true,
+      "page_number": 1,
+      "paper_id": "2021-mof-jgbi-indexation-notice",
+      "selection_reasons": [
+        "born_digital",
+        "front_matter"
+      ],
+      "source_pdf_sha256": "0b362d7ceaf2d88ef9120c8803a07020719b77d2fd92d8117cd8021a153f02a6"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2021-mof-jgbi-indexation-notice:p0002",
+      "p0": true,
+      "page_number": 2,
+      "paper_id": "2021-mof-jgbi-indexation-notice",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "0b362d7ceaf2d88ef9120c8803a07020719b77d2fd92d8117cd8021a153f02a6"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2021-mof-jgbi-indexation-notice:p0003",
+      "p0": true,
+      "page_number": 3,
+      "paper_id": "2021-mof-jgbi-indexation-notice",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "0b362d7ceaf2d88ef9120c8803a07020719b77d2fd92d8117cd8021a153f02a6"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2021-mof-jgbi-indexation-notice:p0004",
+      "p0": true,
+      "page_number": 4,
+      "paper_id": "2021-mof-jgbi-indexation-notice",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "0b362d7ceaf2d88ef9120c8803a07020719b77d2fd92d8117cd8021a153f02a6"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2021-mof-jgbi-indexation-notice:p0005",
+      "p0": true,
+      "page_number": 5,
+      "paper_id": "2021-mof-jgbi-indexation-notice",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "0b362d7ceaf2d88ef9120c8803a07020719b77d2fd92d8117cd8021a153f02a6"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2021-mof-jgbi-indexation-notice:p0006",
+      "p0": true,
+      "page_number": 6,
+      "paper_id": "2021-mof-jgbi-indexation-notice",
+      "selection_reasons": [
+        "born_digital",
+        "final_page"
+      ],
+      "source_pdf_sha256": "0b362d7ceaf2d88ef9120c8803a07020719b77d2fd92d8117cd8021a153f02a6"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2024-mof-jgbi-bei-guide:p0001",
+      "p0": true,
+      "page_number": 1,
+      "paper_id": "2024-mof-jgbi-bei-guide",
+      "selection_reasons": [
+        "hybrid",
+        "front_matter"
+      ],
+      "source_pdf_sha256": "d0ff9ee0f9ad6ee4a59b7a0a902604f3670a7b2412b10d2c685ea0d7f71b5a94"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2024-mof-jgbi-bei-guide:p0002",
+      "p0": true,
+      "page_number": 2,
+      "paper_id": "2024-mof-jgbi-bei-guide",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "d0ff9ee0f9ad6ee4a59b7a0a902604f3670a7b2412b10d2c685ea0d7f71b5a94"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2024-mof-jgbi-bei-guide:p0005",
+      "p0": true,
+      "page_number": 5,
+      "paper_id": "2024-mof-jgbi-bei-guide",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "d0ff9ee0f9ad6ee4a59b7a0a902604f3670a7b2412b10d2c685ea0d7f71b5a94"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2024-mof-jgbi-bei-guide:p0007",
+      "p0": true,
+      "page_number": 7,
+      "paper_id": "2024-mof-jgbi-bei-guide",
+      "selection_reasons": [
+        "hybrid"
+      ],
+      "source_pdf_sha256": "d0ff9ee0f9ad6ee4a59b7a0a902604f3670a7b2412b10d2c685ea0d7f71b5a94"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2024-mof-jgbi-bei-guide:p0008",
+      "p0": true,
+      "page_number": 8,
+      "paper_id": "2024-mof-jgbi-bei-guide",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "d0ff9ee0f9ad6ee4a59b7a0a902604f3670a7b2412b10d2c685ea0d7f71b5a94"
+    },
+    {
+      "annotation_status": "selected",
+      "gold_page_id": "2024-mof-jgbi-bei-guide:p0009",
+      "p0": true,
+      "page_number": 9,
+      "paper_id": "2024-mof-jgbi-bei-guide",
+      "selection_reasons": [
+        "born_digital"
+      ],
+      "source_pdf_sha256": "d0ff9ee0f9ad6ee4a59b7a0a902604f3670a7b2412b10d2c685ea0d7f71b5a94"
+    }
+  ],
+  "targets": {
+    "minimum_claims_per_paper": 5,
+    "minimum_display_equations": 150,
+    "minimum_inline_equations": 200,
+    "minimum_pages": 60,
+    "minimum_table_cells": 500
+  }
+}

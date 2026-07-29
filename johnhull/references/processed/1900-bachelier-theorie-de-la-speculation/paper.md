@@ -1,2225 +1,2360 @@
----
-paper_id: "1900-bachelier-theorie-de-la-speculation"
-title: "Théorie de la spéculation"
-authors: "Louis Bachelier"
-year: "1900"
-source_url: "https://archive.numdam.org/articles/10.24033/asens.476/"
-source_pdf: "references/papers/1900-bachelier-theorie-de-la-speculation.pdf"
-source_sha256: "03f1b9542d2c374d61a276fd6c52d8936e1298bfaafd8efdc74b8b27e38faffd"
-converter: "PyMuPDF4LLM 1.28.0"
----
+# 1900-bachelier-theorie-de-la-speculation
 
 <!-- page: 1 -->
 
-# ANNALES DE L’É.N.S. SCIENTIFIQUES 
+## ANNALES SCIENTIFIQUES DE L’É.N.S.
 
-### L. BACHELIER 
+L.BACHELIER
 
-##### **Théorie de la spéculation** 
+Théorie de la spéculation
 
-_Annales scientifiques de l’É.N.S. 3_<sup>_e_</sup> _série_ , tome 17 (1900), p. 21-86 
+Annales scientifiques de l’É.N.S. 3e série, tome 17 (1900), p. 21-86
 
-<http://www.numdam.org/item?id=ASENS_1900_3_17__21_0> 
+<http://www.numdam.org/item?id=ASENS\_1900\_3\_17\_\_21\_0>
 
-© Gauthier-Villars (Éditions scientifiques et médicales Elsevier), 1900, tous droits réservés. 
+© Gauthier-Villars (Éditions scientifiques et médicales Elsevier), 1900, tous droits réservés.
 
-L’accès aux archives de la revue « Annales scientifiques de l’É.N.S. » (http://www. elsevier.com/locate/ansens) implique l’accord avec les conditions générales d’utilisation (http://www.numdam.org/conditions). Toute utilisation commerciale ou impression systématique est constitutive d’une infraction pénale. Toute copie ou impression de ce fichier doit contenir la présente mention de copyright.
+L'accès aux archives de la revue « Annales scientifiques de l'É.N.S. » (http://www. elsevier.com/locate/ansens) implique l’accord avec les conditions générales d’utilisation (http://www.numdam.org/conditions). Toute utilisation commerciale ou impression systé- matique est constitutive d’une infraction pénale. Toute copie ou impression de ce fichier doit contenir la présente mention de copyright.
 
 <!-- page: 2 -->
 
-#### **THEORIE** 
+THÉORIE
 
-**I)K** 
+DE
 
-## **LA S P É C U L A T I O N ,** 
+## LA SPÉCULATION,
 
-###### Ï^K M. L. BACHELIER. 
+PAR M. L. BACHELIER.
 
-###### **Ï N T B O D U C T I O N .** 
+INTRODUCTION.
 
-Les influences qui déterminent les mouvements de la Bourse sont innombrables, des événements passés, actuels ou même escomptables, ne présentant souvent aucun rapport apparent avec ses variations, se répercutent sur son cours. 
+Les influences qui déterminent les mouvements de la Boursc sont innombrables, des événements passés, actuels ou même escomptables, ne présentant souvent aucun rapport apparent avec ses variations, se répercutent sur son cours.
 
-A côté des causes en quelque sorte naturelles des variations, interviennent aussi des causes factices : la Bourse agit sur elle-même et le mouvement actuel est fonction, non seulement des mouvements antérieurs, mais aussi de la position de place. 
+A côté des causes en quelque sorte naturelles des variations, interviennent aussi des causes factices : la Bourse agit sur elle-même et le mouvement actuel est fonction, non seulement des mouvements anté- ricurs, mais aussi de la position de place
 
-La détermination de ces mouvements se subordonne à un nombre infini de facteurs : il est des lors impossible d'en espérer la prévision mathématique. Les opinions contradictoires relatives à ces variations se partagent si bien qu'au même instant les acheteurs croient à, la hausse et les vendeurs à la baisse. 
+La détermination de ces mouvements se subordonne à un nombre infini de facteurs : il est dès lors impossible d'en espérer la prévision mathématique. Les opinions contradictoires relatives à ces variations se partagent si bien qu'au même instant les acheteurs croient à la hausse et les vendeurs à la baisse.
 
-Le Calcul des probabilités ne pourra sans doute jamais s'appliquer aux mouvements de la cote et la dynamique de la Bourse ne sera ! jamais une science exacte. 
+Le Calcul des probabilités ne pourra sans doute jamais s’appliquer aux mouvements de la cote et la dynamique de la Bourse ne sera jamais une science exacte.
 
-Mais il est possible d'étudier mathématiquement l'état statique du marché à un instant donné/c'est-à-dire d'établir la loi de probabilité des variations de cours qu'admet à cet instant le marché. Si le marché, en effet, ne prévoit pas les mouvements, il les considère comme étant
+Mais il est possible d'étudier mathématiquement l'état statique du marché à un instant donné, c'est-à-dire d'établir la loi de probabilité des variations de cours qu'admet à cet instant le marché. Si le marché, en effet, ne prévoit pas les mouvements, il les considère comme étant plus ou moins probables, et cette probabilité peut s’évaluer mathé- matiquement.
 
 <!-- page: 3 -->
 
-plus ou moins probables, et celle probabilité [Nuit n'évaluer malbéinatiquement 
+La recherche d’une formule qui l'exprime ne paraît pas jusquà ce jour avoir été publiée; elle sera l’objet de ce travail.
 
-La recherche d'une formule qui l'exprime ne paraît pas Jusqu'à ce jour avoir été publiée; elle sera Fohjet (le ce travail. 
+J’ai cru nécessaire de rappeler d’abord quelques notions théoriques relatives aux opérations de bourse en y joignant certains aperçus nouveaux indispensables à nos recherches ultérieures.
 
-J'ai cru nécessaire de rappeler d'abord quelques notions théoriques - relatives aux,opérations de bourse en y joignant œr(ams aperçus non" veaux indispensables à nos recherches ultérieures. 
+## LES OPÉRATIONS DE BOURSE.
 
-###### LES OPÉKATIOMS DE BOUBSE. 
+## Opérations de bourse. - Il y a deux sortes d'opérations à terme :
 
-1 1 Opérations de bourse. — II y a deux sortes d'opôrat loïw à terme : Les opérations fermes; Les opérations à prime. 
+Les opérations fermes;
 
-Ces opérations peuvent se combiner à rînfini, d'autaol. que l'on {.mte souvent plusieurs sortes de primes. 
+Les opérations à prime.
 
-Opérations fermes. — Les opérations a terme fermes sont ab^otîirîHm) analogues à celles du comptant, mais on r<^kî seulement des difIÏ*rences à une époque fixée d'avance et appelée _/iffifit/cuinn._ Hih* a lien le dernier jour de chaque mois, 
+Ces opérations peuvent se combiner à l’infini, d’autant que l'on traite souvent plusieurs sortes de primes.
 
-Le cours établi le jour de la liquidation ot auquel on nîppwle (mil^ les opérations du mois est le, _cwr^ de compmsalùm._ 1, L'acheteur ferme ne limite ni son gain ni ga perU% il gagne _h_ di(K" rence entre le prix d'achat et le prix de vente, si la vente esî jaiie midessus du prix d'achat, il 'perd la difÏerence si ia veîîle est, (aidî audessous. 1 II ya perte pour le vendeur ferme qui rachète plus liant -qîut mi primitivement vendu, il y a gain dans le cas contraire, ^ 
+Opérations fermes. — Les opérations à terme fermes sont absolument analogues à celles du comptant, mais on règle seulement des diflé- rences à une époque fixée d’avance et appelée liquidation. Elle a lieu le dernier jour de chaque mois.
 
-Reports. - L'acheteur au comptant touche ses coupons c-j pn»f nni. server indéfiniment ses'titres. Une opération a terme (npirant a 'h liquidation, 1-acheteur à terme doit, pour conserver Ha _mmtum m^_ qu'a la liquidation suivante, payer au vendear mw mdcrrmhé <lil^ _report_ (<sup>1</sup> ). 
+Le cours établi le jour de la liquidation et auquel on rapporte toutes les opérations du mois est le cours de compensation.
 
-(^),Pour la définition 'complète dos report Jô nmvoie mix _ihmu^ ^hu^_
+L’acheteur ferme ne limite ni son gain ni sa perte, il gagne la diffé- rence entre le prix d’achat et le prix de vente, si la vente est faite audessus du prix d’achat, il perd la différence si la vente est faite audessous.
+
+Il y a perte pour le vendeur ferme qui rachète plus haut qu'il n’a primitivement vendu, il y a gain dans le cas contraire.
+
+Reports. — L’acheteur au comptant touche ses coupons et peut conserver indéfiniment ses titres. Une opération à terme expirant à la liquidation, l'acheteur à terme doit, pour conserver sa position jusqu'à la liquidation suivante, payer au vendeur une indemnité dite report (1).
+
+(1). Pour la définition complète des reports, je renvoie aux Ouvrages spéciaux.
 
 <!-- page: 4 -->
 
-Le report varie à chaque liquidation; sur la rente il est en moyenne de 0^,18 par _3^,_ mais il peut être plus élevé ou nul; il peut même être négatif, on l'appelle alors _déport;_ dans ce cas, le vendeur indemnise l'acheteur. 
+Le report varie à chaque liquidation; sur la rente il est en moyenne de $\boldsymbol { \mathbf { \ell } } _ { 0 } ^ { \mathrm { f r } } , \mathrm { ~ } \mathrm { ~ } \boldsymbol { \mathbf { \ell } } _ { } 8$ par $3 ^ { \mathrm { f r } }$ , mais il peut être plus élevé ou nul; il peut même être négatif, on l’appelle alors déport; dans ce cas, le vendeur indemnise l'acheteur.
 
-Le jour du détachement du coupon, l'acheteur à terme reçoit du vendeur le montant de ce coupon. En même temps, le cours baisse d'une somme égale; acheteur et vendeur se trouvent donc immédiatement après le détachement du coupon dans la même position relative qu'avant cette opération. 
+Le jour du détachement du coupon, l’acheteur à terme reçoit du vendeur le montant de cc coupon. En même temps, le cours baisse d'une somme égale; acheteur et vendeur se trouvent donc immédiatement après le détachement du coupon dans la mêmc position relative qu'avant cette opération.
 
-On voit que si. l'acheteur a l'avantage de toucher les coupons, par contre, il doit en général payer des reports. Le vendeur, au contraire, touche les reports, mais il paye les coupons. 
+On voit que si l’acheteur a l'avantage de toucher les coupons, par contre, il doit en général payer des reports. Le vendeur, au contraire, touche les reports, mais il paye les coupons.
 
-Rentes reportables. — Sur la rente, le coupon de o^.'p par trimestre '<sup>11</sup> représente o<sup>11</sup> ^,^ par mois, alors que le report est presque toujours inférieur à o^, 20* La différence est donc à l'avantage de l'acheteur; de là est venue l'idée d'acheter des rentes pour les faire reporter indéfiniment- 
+Rentes reportables. - Sur la rente, le coupon de $( ) ^ { \uparrow \uparrow } , 7 ^ { \mathrm { 5 } }$ par trimestre représente ${ \mathfrak { o } } ^ { \mathrm { f r } } , { \mathfrak { z } } . 5$ par mois, alors que le report est presque toujours inférieur à $\mathrm { O } ^ { \mathrm { f r } }$ , 2o. La différence est donc à l’avantage de l’achetcur; de là est venue l’idée d’acheter des rentes pour les faire reporter indéfiniment.
 
-Cette opération est dite de la _renie reportable;_ nous étudierons plus loin ses prohabilités de réussite. 
+Cette opération est dite de la rente reportable; nous étudierons plus loin ses probabilités de réussite.
 
-Cours équivalents, — Pour bien nous rendre compte du mécanisme des coupons et des reports, faisons abstraction de toutes les autres causes de variation des cours. 
+Cours équivalents. — Pour bien nous rendre compte du mécanisme des coupons et des reports, faisons abstraction de toutes les autres causes de variation des cours.
 
-Puisque tous les trois mois sur la rente au comptant est détaché un coupon de 0^,75 représentant l'intérêt de l'argent de racheteur, la rente au comptant doit logiquement monter chaque mois de 0^,2,5. Au cours actuellement coté correspond un cours qui, dans trente jours, serait plus élevé de 0^,25, dans quinze jours de 0^,12,5, etc. Tous ces cours peuvent être considérés comme _éc/uwale/us._ 
+Puisque tous les trois mois sur la rente au comptant est détaché un coupon de $0 ^ { \mathrm { f r } } , 7 ^ { 5 }$ représentant l'intérêt de l’argent de l'acheteur, la rente au comptant doit logiquement monter chaque mois de ${ \mathfrak { O } } ^ { { \mathfrak { f } } { \mathfrak { r } } }$ , 25. Au cours actuellement coté correspond un cours qui, dans trente jours, serait plus élevé de ${ \mathfrak { o } } ^ { \mathrm { f r } } , { \bf { 2 } } . 5$ , dans quinze jours de $0 ^ { \mathrm { f r } } , \mathrm { ~ } \mathbf { \mathrm { f } } \ 2 \mathrm { : / \Omega }$ , etc.
 
-La considération des cours équivalents est beaucoup plus compliquée lorsqu'il s'agit d'opérations à terme- II est d'abord évident que si le report est nul, le terroe doit se comporter comme le comptant et que le cours doit logiquement monter de 0^,25 par mois. Considérons maintenant le cas où le report serait de 0^,25. Prenons
+Tous ces cours peuvent être considérés comme équivalents.
+
+La considération des cours équivalents est beaucoup plus compliquée lorsqu'il s’agit d’opérations à terme. Il est d'abord évident que si le report est nul, le terme doit se comporter comme le comptant et gue le cours doit logiquement monter de $\mathrm { o } ^ { \mathrm { f r } } , 2 5$ par mois.
+
+Considérons maintenant le cas où le report serait de ${ \mathrm { 0 } } ^ { \mathrm { f r } } , { \mathrm { 2 } } 5$ . Prenons l’axe des x pour représenter les temps $( \hat { J } _ { \mathrm { ~ { ~ \scriptsize ~ G ~ } ~ } } ^ { \prime \prime } , \mathrm { ~ \boldsymbol ~ I ~ } )$ , la longueur OA repré- sente un mois compris entre deux liquidations dont l’une correspond au point O et l'autre au point A.
 
 <!-- page: 5 -->
 
-l'axe des _x_ pour représenter les temps _{fig._ î)> la longueur OA représente un mois compris entre deux liquidations dont Fane correspond au point 0 et Fautre au point A. 
+![](assets/figures/1900-bachelier-theorie-de-la-speculation-p0005-block-0002-f31d4002ce131e3d.jpg)
 
-Kig, ï. 
+Les ordonnées représentent les cours.
 
-Les ordonnées représentent les cours. Si AB équivaut ào^'^^, la marche logique do la rente uu comptant, sera représentée par la li^'ne droite QBE (<sup>(</sup> ), 
+Si AB équivaut à $( ) ^ { \mathrm { f r } } , 2 5$ , la marche logique de la rente au comptant sera représentée par la ligne droite OBE (').
 
-Considérons maintenant le cas où le report serait de 0^2;^ Un pmi avant la liquidation, le comptant et le ferme seront au même cours 0: puis, l'acheteur à terme devant payer o^sn de report, le cours<sup>1</sup> du ferme sautera brusquement de 0 en G et suivra pendant tout lu mob la ligne horizontale CB. En B, il se (confondra dc 1 nouveau _ww_ 'h cours du comptant pour augmenter tout à coup de o^a^ en I11), etc. Dans le cas ou le report est une quantité donnée corrHspondani à la longueur 0F, le cours devrait suivre la ligne FB, puig GE, et _mim_ d<* suite. La rente à terme doit donc logiquement dans ce1 cag, d'urii* liquidation à l'autre, monter d'une quantité représenlée par FC qu'on pourrait appeler le _complément du report_ Tous les cours de F à B de la ligne FB sont _equimim^_ pour leg di»^ rentes époques auxquelles ils correspondent, 
+Considérons maintenant le cas où le report serait de $( ) ^ { \uparrow \uparrow } , 2 , ^ { \prime } \rangle$ . Un peu avant la liquidation, le comptant et le terme seront au même cours O; puis, l'acheteur à terme devant payer $( \cdot ) ^ { \Gamma ( r } , 2 \cdot ) ^ { \prime }$ de report, le cours du terme sautera brusquement de O en C et suivra pendant tout le mois la ligne horizontale CB. En B, il se confondra de nouveau avec le cours du comptant pour augmenter tout à coup de ${ \mathfrak { o } } ^ { { \mathfrak { f } } { \mathfrak { r } } }$ , 25 en D, etc.
 
-En réalité, Fécarl entre le terme et le comptant ne se détend _n^_ d-une façon absolument régulière et FB n^st pas une droite main la construction qui vient d'être faite au début du niojg peut _^_ répéter _H_ une époque quelconque, représentée par,le point N. 
+Dans le cas où le report est une quantité donnée correspondant à la longueur OF, le cours devrait suivre la ligne FB, puis GE, et ainsi de suite. La rente à terme doit donc logiquement dans ce cas, d'une liquidation à l’autre, monter d’une quantité représentée par FC qu'on pourrait appeler le complément du report.
 
-'OOn suppose,qu'il n'y a pas de détachomelU do _^m_ daiw _Ym^m^ iwwW_ co qui d adieurs ne changeraU rien à la dànoritollon. ' ! ' " 1 ! ! ! • l l •• l l ( * < l l l i ï J ;
+Tous les cours de F à B de la ligne FB sont équivalents pour les diffé- rentes époques auxquelles ils correspondent.
+
+En réalité, l'écart entre le terme et le comptant ne se détend pas d’une façon absolument régulière et FB n’est pas une droite, mais la construction qui vient d’être faite au début du mois peut se répéter à une époque quelconque représentée par le point. N.
+
+(1) On suppose qu’il n'y a pas de détachement de coupon dans l'intervalle considéré, ce qui d’ailleurs ne changerait rien à la démonstration.
 
 <!-- page: 6 -->
 
-Soit NA le temps qui. s'écoulera entre l'époque N considérée et la liquidation représentée par le point A. 
+Soit NA le temps qui s’écoulera entre l’époque N considérée et la liquidation représentée par le point A.
 
+![](assets/figures/1900-bachelier-theorie-de-la-speculation-p0006-block-0002-fddab504b59543b0.jpg)
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0006-02.png)
+Pendant le temps NA, la rente au comptant doit logiquement monter de AB, proportionnel à NA. Soit NF l'écart entre le comptant et le terme, tous les cours correspondant à la ligne FB sont équivalents.
 
+Cours vrais. - Nous appellerons cours vrai correspondant à une époque le cours équivalent correspondant à cette époque.
 
-<!-- Start of picture text -->
-Fis. a<br><!-- End of picture text -->
+La connaissance du cours vrai a une très grande importance, je vais étudier comment on le détermine.
 
-Pendant le temps NA, la rente au comptant doit logiquement monter de AB, proportionnel à NA. Soit N'F l'écart entre le comptani et le terme, tous les cours correspondant à la ligne FB sont _équiçalents._ 
+Désignons par b la quantité dont doit logiquement monter la rente dans l'intervalle d'une journée. Le coefficient b varie généralement peu, sa valeur chaque jour peut être exactement déterminée.
 
-Cours vrais. — Nous appellerons _cours vrai_ correspondant à une époque le cours équivalent correspondant à cette époque. 
+Supposons que n jours nous séparent de la liquidation, et soit C l'écart du terme au comptant.
 
-La connaissance du cours vrai a une très grande importance, je vais étudier comment on le détermine* 
+En n jours, le comptant doit monter de $\frac { 2 5 \ : n } { 3 0 }$ centimes, le terme étant plus élevé de la quantité C ne doit monter pendant ces n jours que de la quantité ${ \frac { 2 ^ { 5 } n } { 3 \infty } } \ n \mathrm { ~ . ~ } \ \mathrm { ~ c ~ } ,$ c’est-à-dire pendant un jour de
 
-Désignons par _b_ la quantité dont doit logiquement monter la rente dans l'intervalle d'une journée. Le coefficient _b_ varie généralement peu, sa valeur chaque jour peut être exactement déterminée. 
+$$
+\frac { 1 } { n } \left( \frac { 2 5 n } { 3 0 } - \mathrm { C } \right) = \frac { 1 } { 6 n } ( 5 n - 6 \mathrm { C } ) .
+$$
 
-Supposons que _n_ jours nous séparent de la liquidation, et soit C l'écart du terme au, comptant. 
+On a donc
 
-t5n _n_ jours, le comptant doit monter de ^—^ centimes, le terme étant plus élevé de la quantité C ne doit monter pendant ces _n_ jours que de la quantité — — C, c'est-à-dire pendant un jour de 
+$$
+b = { \frac { \mathrm { I } } { 6 n } } ( 5 n - 6 \mathrm { C } ) .
+$$
 
-On a donc 
+La moyenne des cinq dernières années donne
 
+$$
+b \approx \mathrm { o } ^ { \mathrm { e } } , 2 6 4 .
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0006-10.png)
-
-
-_l/à._ moyenne des cinq dernières années donne 
-
-^==0^264. 
-
-_Ami. de /.* Kc« jNormalc._ 3^ Séné» Tome XVIL — JANVIJKII 1900»
+Ann. de l'Ée, Normale. 3° Série. Tome XVI1. — JAnviER 19oo.
 
 <!-- page: 7 -->
 
-Le cours vrai correspondant à w jours sera égal au cours cote actuellement, augmenté de la quantité _ynl^_ 
+Le cours vrai correspondant à m jours sera égal au cours coté actuellement, augmenté de la quantité mb.
 
-Représentation géométrique des opérations fermes» — Une opération peut se représenter gôornétriquement d'une façon ires simple, Faxe des _x_ représentant les différents cours et taxe des _y_ les bénétiees correspondants. 
+Représentation géométrique des opérations fermes. Une opération peut se représenter géométriquement d'une façon très simple, l'axe des x représentant les différents cours et l’axe des y les bénéfices correspondants.
 
-Je suppose que j'aie fait un achat ferme au cours représenté pur 0. que je prends pour origine. Au cours _x_ =: ()A, l'opération donne pour 
+Je suppose que j’aie fait un achat ferme au cours représenté par O, que je prends pour origine. Au cours $x = \left( \right) \Lambda$ , l’opération donne pour
 
-Fig. _3._ , 
+![](assets/figures/1900-bachelier-theorie-de-la-speculation-p0007-block-0004-1d17213ba116acc5.jpg)
 
-bénéfice ,r; et comme, foi'donnée correspondante doil, aire égale au bénéfice, AB == OA; l'achat fcrijfjio est donc représeiité par la ligîîe Olî inclinée à 45° sur la ligne des cours. 
+bénéfice $x ;$ et comme, l’ordonnée correspondante doit étre égale au bénéfice, $\mathrm { A B } = \mathrm { O A }$ ; l’achat ferme est donc représenté par la ligne OB inclinée à $4 5 ^ { \circ }$ sur la ligne des cours.
 
-Une vente ferme se représenterait d^ine façoiî inverstL 
+Une vente ferme se représenterait d'une façon inverse.
 
-1 Primes. — Dans l'achat ou la •vente fermer acheté» rn et. veîideïirs s'exposent à une perte théoriquement illimitée. l)a«H le marché à prime, l'acheteur paye le litre plus cher que dai-fô le ea^ du marché ferme, mais sa perte eu baisse est limitée d'avance _h_ une eertaiîîe somme qui est le montant'de la prime, 
+Primes. - Dans l'achat ou la vente ferme, acheteurs et vendeurs s'exposent à une perte théoriquement illimitée. Dans le marché à prime, l’acheteur paye le titre plus cher que dans le cas du marché ferme, mais sa perte en baisse est limitée d'avance à une certaine somme qui est le montant de la prime.
 
-Le vendeur de prime a l'avantage de vendre plus clier, _mm_ il ite peut avoir pour bénéfice que le montant de la prime» 
+Le vendeur de prime a l’avantage de vendre plus cher, mais il ne peut avoir pour bénéfice que le montant de la prime.
 
-On'fait 1 aussi, des'primes à la baisse qui limiiterïi la perte du mi^ deur; dans ce cas, l'opération se fait à îin coi,ïfôinferie«r if celui (lu farme. 
+On fait aussi des primes à la baisse qui limitent la perte du vendeur; dans ce cas, l’opération se fait à un cours inférieur à celui du ferme.
 
-On ne traite'ces primes à la baisse que dana la spéeuliitiolt mir _\m_ marchandises; dans la spéculation .sur _ICB_ valeur^ 011 obtient _ww_ prime à la baisse en vendant ferme et en achetant ^imultaîiémerîl à
+On ne traite ces primes à la baisse que dans la spéculation sur les marchandises; dans la spéculation sur les valeurs, on obtient une prime à la baisse en vendant ferme et en achetant simultanément à prime. Pour fixer les idées, je ne m'occuperai que des primes à la hausse.
 
 <!-- page: 8 -->
 
-THÉORIE Ï)E LA SPÉCULATION. _^_ 
+Supposons, par exemple, que le $3 \%$ cote $\mathbf { I o } \mathcal { G } ^ { \mathrm { f r } }$ au début du mois; si nous en achetons 3ooo ferme, nous nous exposons à une perte qui peut devenir considérable s’il se produit une forte baisse.
 
-prime. Pour fixer les idées, je ne m'occuperai que des primes à la hausse. 
+Pour éviter ce risque, nous pouvons acheter une prime dont 5oc (') en payant, non plus $\tau \mathrm { o } \mathcal { f } ^ { \mathrm { f r } }$ , mais ${ \mathrm { I O } } { \mathit { G } } ^ { \mathrm { f r } } , { \mathrm { I } } { \mathit { 5 } }$ , par exemple; notre cours d’achat est plus élevé, il est vrai, mais notre perte reste limitée quelle que soit la baisse à 5oc par $3 ^ { \mathfrak { r } }$ , c’est-à-dire à 50of.
 
-Supposons, par exemple, que le 3 °/o <^te _10^_ au début du mois; si nous en achetons 3ooo ferme, nous nous exposons a une perte qui peut devenir considérable s'il se produit une forte baisse. 
+L'opération est la même que si nous avions acheté du ferme à 1o4f,15, ce ferme ne pouvant baisser de plus de $5 \mathrm { o ^ { c } }$ , c'est-à-dire descendre au-dessous de 1o3f,65.
 
-Pour éviter ce risque, nous pouvons acheter une prime dont 50<sup>e</sup> (<sup>1</sup> ) 1111 en payant, non plus ïo/j. » mais _10^,1_ 5, par exemple; notre cours d'achat est plus élevé, il est vrai, mais notre perte reste limitée quelle que soit la baisse à So<sup>0</sup> par 3^, c'est-à-dire à Soo^'. L'opération est la même que si. nous avions acheté du ferme à ïo/i.^îSy ce ferme ne pouvant baisser de plus de 50<sup>e</sup> , c'est-à-dire descendre au-dessous de loS^Ôô. 
+Le cours de 1o3,65, dans le cas actuel, est le pied de la prime.
 
-Le cours de 103^,65, dans le cas actuel, est le _pied de la prime. On_ voit que le cours du pied de la prime est égal au cours auquel elle est négociée, diminué du montant de la prime. 
+On voit que le cours du pied de la prime est égal au cours auquel elle est négociée, diminué du montant de la prime.
 
-Réponse des primes. ~~ La veille de la liquidation, c'est-à-dire F avantdernier jour du mois, a lieu la _réponse des primes._ Reprenons l'exemple précédent et supposons qu'à cet instant de la réponsele cours de la rente soit inférieur à 103^,65, nous _abandonnerons_ notre prime, qui, sera le bénéfice de notre vendeur. 
+Réponse des primes. — La veille de la liquidation, c’est-à-dire l’avantdernier jour du mois, a lieu la réponse des primes. Reprenons l’exemple précédent et supposons qu'à cet instant de la réponse le cours de la rente soit inférieur à ro3f,65, nous abandonnerons notre prime, qui sera le bénéfice de notre vendeur.
 
-Si, au contraire, le cours de la réponse est supérieur à 103^,65, notre opération sera transformée en opération ferme; on dit dans ce cas que la prime est _levée._ 
+Si, au contraire, le cours de la réponse est supérieur à 1o3f,65, notre opération sera transformée en opération ferme; on dit dans ce cas que la prime est levée.
 
-En résumé, une prime est levée ou abandonnée suivant que le cours de la réponse est inférieur ou supérieur au pied, de la prime. On voit que les opérations à prime ne courent pas jusqu'à la liquidation; si la prime est levée à la réponse, elle devient du ferme et se liquide le lendemain. 
+En résumé, une prime est levée ou abandonnée suivant que le cours de la réponse est inférieur ou supérieur au pied de la prime.
 
-Dans tout ce qui suivra, nous supposerons que le cours de compensation se confond avec le cours de la réponse des primes; cette hypothèse est justifiable, car rien n'empêche de liquider ses opérations à la réponse des primes, 
+On voit que les opérations à prime ne courent pas jusqu’à la liquidation; si la prime est levée à la réponse, elle devient du ferme et se liquide le lendemain.
 
-_(_<sup>_i_</sup> _)_ On dit _une prime clûnt_ pour _une prirms de_ oi _Von_ emploie la nôtaiicm ï(>4,i5/5o pour désigner une opéraîJon faite nu cours de jo/î<sup>1</sup> '''',^ dont 50<sup>e</sup> ,
+Dans tout ce qui suivra, nous supposerons que le cours de compensation se confond avec le cours de la réponse des primes; cette hypothèse est justifiable, car rien n’empêche de liquider ses opérations à la réponse des primes.
+
+(1) On dit une prime dont pour une prime de et l’on emploie la notation 1o4,15/5o pour désigner une opération faite au cours de 1o4t,15 dont 5o\*.
 
 <!-- page: 9 -->
 
-Écart des prîmes. — ï/écart entre le cours du ferme et échu d*une prime dépend d'un ^rand nombre de facteurs et varie sans cesse. 
+Écart des primes. - L’'écart entre le cours du ferme et celui d'une prime dépend d’un grand nombre de facteurs et. varie sans cesse.
 
-Au même instant, l'écart est d'autant plus grandi que la prime est plus faible; par exemple,. la. prime dont M^' est évidemment meilleur marché que la prime dont 2-5^ 
+Au même instant, l’écart est d’autant plus grand que la prime est plus faible; par exemple, la prime dont 5o" est évidemment meilleur marché que la prime dont 25°.
 
-I/écart d'une prime décroît plus ou moin^ regulier(*îîïent de(>nis le 1 commencement du mois juaqu^àlâ veille de la réponse» liionienlou eel • éôart.devient<sup>1</sup> très faible, 
+L’écart d’une prime décroît plus ou moins régulièrement depuis le commencement du mois jusqu'à la veille de la réponse, moment ou cet écart devient très faible.
 
-Mais, suivant les circonstance^ il peut _w_ détendre tre^ irrégulièrement et se trouver plus grand quelques jours avant la réponHe qiuui commencement du moiâ, 
+Mais, suivant les circonstances, il peut se détendre très irrégulièrement et se trouver plus grand quelques jours avant la réponse qu’au commencement du mois.
 
-Primes pour fin prochain. — On traite de^ primea non seixlernerït pour fin courant, mais aussi pour fin proc'haîrL î/écart (le celles-ci CHt nécessairement plus grand que celui den primeB fin courant, mab jî est plus faible qu'on ne le croirait _m_ fai%mt la difïérenee entî*e le cours de la prime et celui du. ferme; il faut en efÏel (iédtlire (Je cet écart apparent rirnporfance dïî repori fin coîiranl. 
+Primes pour fin prochain. - On traite des primes non seulement pour fin courant, mais aussi pour fin prochain. L’écart de celles-ci est nécessairement plus grand que celui des primes fin courant, mais il est plus faible qu’on ne le croirait en faisant la différence entre le cours de la prime et celui du ferme; il faut en effet déduire de cet écart apparent l’importance du report fin courant.
 
-Par exemple, l'écart moyen de la prime/^'it /p jotirs de Ja réjïonse est en moyenne de 7^; mais, comme te repor! inoyeîî _wi_ de 17% l'écart n'est en réalité que de 5^", Le détachement d'utn coupon fa}t.haig8cr lecoure de la1 prime cl'iiiîe valeur égale à limportânee du coupon. Si, par exemple, 'j'achète, le a septembre, une prime /25*1 à ic^Sû fin w lira rît, te émirs de riîa prime sera devenu _îoy^^_ le _1_ 6 septembre après le détadielîîerît _du_ coupon* 
+Par exemple, l’écart moyen de la prime /25° à 45 jours de la réponse est en moyenne de 72"; mais, comme le report moyen est de 17', l’écart n’est en réalité que de 55°.
 
-Le cours du'pied de la prime sera xoS^So. 
+Le détachement d’un coupon fait baisser le cours de la prime d’une valeur égale à l'importance du coupon. Si, par exemple, j'achète, le 2 septembre, une prime $\mathrm { / 2 5 ^ { c } }$ à 1o4",5o fin courant, le cours de ma prime sera devenu 103",75 le 16 septembre après le détachement du coupon.
 
-1 Primes pour 1e lendemain. — On traite, surtout en codhse, den •• primesdont 5<sup>e</sup> et quelquefois dont lo^ pour le lendemain. La réponse pour<sup>1</sup> ces petites primes a lien tous les JOUTH à 2^ 
+Le cours du pied de la prime sera 1o3º, 5o.
 
-1 Les primes en général. - Dans un marché à prime pour îîrse éetîéariee donnée, il y a deux facteurs à considérer : l'importance de _h_ prime et son écart du ferme.
+Primes pour le lendemain. - On traite, surtout en coulisse, des primes dont 5º et quelquefois dont 1oº pour le lendemain.
+
+La réponse pour ces petites primes a lieu tous les jours à 2h.
+
+Les primes en général. — Dans un marché à prime pour une échéance donnée, il y a deux facteurs à considérer : l’importance de la prime et son écart du ferme.
 
 <!-- page: 10 -->
 
-II est bien évident que pi as une prime est forte, plus son écart est petiL 
+Il est bien évident que plus une prime est forte, plus son écart est petit.
 
-Pour simplifier la négociation des primes, on les a ramenées à trois types en faisant sur l'importance de la prime et sur son écart les trois hypothèses les plus simples : 
+Pour simplifier la négociation des primes, on les a ramenées à trois types en faisant sur l’importance de la prime et sur son écart les trois hypothèses les plus simples :
 
-T° L'importance de la prime est constante et son écart est variable; c'est cette sorte de prime qui se négocie sur les valeurs; par exemple, sur le 3 °/o on traite des primes /50<sup>e</sup> , /25<sup>e</sup> et /xo<sup>0</sup> . 
+1° L’importance de la prime est constante et son écart est variable; c’est cette sorte de prime qui se négocie sur les valeurs; par exemple, sur le $3 \ \%$ on traite des primes $/ 5 0 ^ { \mathrm { c } } , / 2 5 ^ { \mathrm { c } }$ et $\int \mathbf { I } ~ 0 ^ { \mathrm { c } }$
 
-2° L'écart de la prime est constant et son importance est variable; c'est ce qui a lieu pour les primes à la baisse sur les valeurs (c'està-dire la vente ferme contre achat à prime). 
+2° L’écart de la prime est constant et son importance est variable; c’est ce qui a lieu pour les primes à la baisse sur les valeurs (c’està-dire la vente ferme contre achat à prime).
 
-3° L'écart delà prime est variable ainsi que son, importance, mais ces deux quantités sont toujours égales. C'est ainsi que l'on traite les primes sur les marchandises. Il, est évident qu'en employant ce dernier système on ne peut traiter à un moment donné qu'une seule prime pour la même échéance. 
+3° L’écart de la prime est variable ainsi que son importance, mais ces deux quantités sont toujours égales. C’est ainsi que l'on traite les primes sur les marchandises. Il est évident qu'en employant ce dernier système on ne peut traiter à un moment donné qu'une seule prime pour la même échéance.
 
-Remarque sur les primes. — Nous examinerons quelle est la loi qui régit les écarts des primes; cependant nous pouvons, des maintenant, faire une remarque assez curieuse : 
+Remarque sur les primes. - Nous examinerons quelle est la loi qui régit les écarts des primes; cependant nous pouvons, dès maintenant, faire une remarque assez curieuse :
 
-Une prime doit être d'autant plus forte que son écart est plus faible. Ce fait évident ne suffit pas pour montrer que l'usage des primes soit rationnel. 
+Une prime doit être d’autant plus forte que son écart est plus faible. Ce fait évident ne suffit pas pour montrer que l’usage des primes soit rationnel.
 
-J'ai en effet reconnu, il y a plusieurs années, qu'il, était possible en l'admettant d'imaginer des opérations où l'un des contractants gagnerait à tous les cours. 
+J'ai en effet reconnu, il y a plusieurs années, qu'il était possible en l’admettant d’imaginer des opérations où l’un des contractants gagnerait à tous les cours.
 
-Sans reproduire les calculs, élémentaires mais assez pénibles, je me contente de présenter un exemple. 
+Sans reproduire les calculs, élémentaires mais assez pénibles, je me contente de présenter un exemple.
 
-L'opération suivante : 
+L'opération suivante :
 
-A.chât d'une unité /ï^, Vente de quatre unités /50<sup>e</sup> , Achat de trois unités /25<sup>e</sup> , 
+$$
+\begin{array} { l } { \mathrm { { A c h a t ~ d ' u n e ~ u n i t \acute { e } } ~ } } { \mathrm { / { r } } } ,  \\ { \mathrm { { V e n t e ~ d e ~ q u a t r e ~ u n i t e s ~ \rlap / / 5 o ^ { c } , } } } \\ { \mathrm { { A c h a t ~ d e ~ t r o i s ~ u n i t e s ~ \jmath / 2 5 \mathrm { { ^ { \mit \cdot } } s } } , } } \end{array}
+$$
 
-donnerait un bénéfice à tons les cours pourvu que l'écart du, /25<sup>e</sup> au /50<sup>e</sup> soi!, au plus le tiers de l'écart _dû /5<^_ au /ï^.
+donnerait un bénéfice à tous les cours pourvu que l’écart du $/ 2 5 ^ { \mathrm { { r } } }$ au $/ 5 0 ^ { \mathrm { { c } } }$ soit au plus le tiers de l’écart du $/ 5 0 ^ { \mathrm { { * } } }$ au $/ \uparrow ^ { \mathrm { f r } }$
 
 <!-- page: 11 -->
 
-Nous verrons que des écarts semblables ne se ïTmumircmtjm'îuus dans la pratique, 
+Nous verrons que des écarts semblables ne se rencontrent jamais dans la pratique.
 
-Représentation géométrique des opérations à prime. •— Proposonsnous<sup>1</sup> de représenter géométriquement un achat à primer 
+Représentation géométrigue des opérations à prime. Proposonsnous de représenter géométriquement un achat à primes.
 
-Prenons, par exemple, pour origine le cours du ferme _w_ monMmt où la prime dontA a été traitée; soîtEite cours relîitifde celte prime on son écart* 
+Prenons, par exemple, pour origine le cours du ferme au moment où la prime dont h a été traitée; soit $\mathbb { K } _ { 1 }$ le cours relatif de cette prime ou son écart.
 
-Athdessus du pied de la prime, c^t-à-dire an cour^fl^ — _h)_ représenté par le point A, l'opération est assimilable à une opération ferme traitée air cours E< ; elle est donc représentée par la ligne CBF, Audessous du cours EI "— A, la perte est constante et^ par milite» l'opération est représentée par la ligne brisée DGF. 
+Au-dessus du pied de la prime, c’est-à-dire au cours $( \mathbb { R } , \mathbb { \sim } h )$ repré- senté par le point A, l’opération est assimilable à une opération ferme traitée au cours $\operatorname { E } _ { s }$ ; elle est donc représentée par la ligne CBF. Audessous du cours $\operatorname { E } _ { 1 } - h .$ , la perte est constante et, par suite, l'opération est représentée par la ligne brisée DCF.
 
+![La vente à prime se représenterait d'une façon inverse.](assets/figures/1900-bachelier-theorie-de-la-speculation-p0011-block-0005-f981c92ac5594eba.jpg)
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0011-06.png)
+Écarts vrais. - Jusqu'à présent nous n’avons parlé que des écarts cotés, les seuls dont on s’occupe ordinairement; ce ne sont cependant pas eux qui s’introduiront dans notre théorie, mais bien les écarts vrais, c’est-à-dire les écarts entre les cours des primes et les cours vrais correspondant à la réponse des primes. Le cours dont il s’agit étant supérieur au cours coté (à moins que le report soit supéricur a $2 5 ^ { \mathrm { { c } } }$ , ce qui est rare), il en résulte que l’écart vrai d'une prime est inférieur à son écart coté.
 
+L’écart vrai d’une prime traitée n jours avant la réponse sera égal à son écart diminué de la quantité $^ { n \mathrm { / / } }$
 
-<!-- Start of picture text -->
-Fi g* 4,<br>o A<br>—0 .„.....,.-,.....,...,...„.,......„..  ............. ^...............y 1' C<br><!-- End of picture text -->
-
-La vente<sup>1</sup> à prime ^e représenterait d^uino façon inverse. 
-
-Écarts vrais. — Jusqu'à présent nous n^mmn parlé <jiie des écartH cotés, les seuls dont on s'occupe ordinîrirement; ce neKorït cep(»ïîdanl 11 pas eux qui ^'introduiront dans notre théorie, maia bien je» _àmrîfî imis^_ c'est-à-dire les écarts entre les cours _ûw_ priiïieg et Je» eoiirH vrais^ correspondant à la réponse des primeg* Le cours dont, if s^gil étant supérieur au cours coté (à moins que le report soit _m^mew_ à 25<sup>e</sup> , ce qui est rare),, il en résulte que Fécm vrai d'rme prime (*Nt inférieur à son écart coté. 
-
-L'écart vrai d'une prime traitée _n_ jours avant _'h_ réponHe nera égal li1 son ^ écart diminué de la quantité _nh._ 
-
-L'écart<sup>1</sup> vrai d'une prime, pour fin prochain sera égal à son écart coté diminué de la, quantité [25 '-h _{n '-"_ 3o)6'L
+L’écart vrai d’une prime pour fin prochain sera égal à son écart coté diminué de la quantité $[ . 2 5 + ( n - 3 0 ) b ]$
 
 <!-- page: 12 -->
 
-Options. — On traite sur certains marchés des opérations en quelque sorte intermédiaires entre les opérations fermes et les opérations à prime, ce sont les options. 
+Options. — On traite sur certains marchés des opérations en quelque sorte intermédiaires entre les opérations fermes et les opérations à prime, ce sont les options.
 
-Supposons que So<sup>111</sup> soient le cours d'une marchandise. Au lieu d'acheter une unité au cours de 30^ pour une échéance donnée, nous pouvons acheter une option du double pour la même échéance à Sa1"1', par exemple. Il faut entendre par là que pour toute différence au-des'<sup>1</sup> sous du cours de S^<sup>1</sup> ', nous ne perdons que sur une unité, alors que pour toute différence au-dessus, nous gagnons sur deux unités. 
+Supposons que 3o" soient le cours d’une marchandise. Au lieu d’acheter une unité au cours de 3of pour une échéance donnée, nous pouvons acheter une option du double pour la même échéance à 32f, par exemple. Il faut entendre par là que pour toute différence au-dessous du cours de 32", nous ne perdons que sur une unité, alors que pour toute différence au-dessus, nous gagnons sur deux unités.
 
-Nous aurions pu acheter une option du triple à _33^,_ par .exemple, c'est-à-dire que, pour toute différence au-dessous du cours de 33^ nous perdons sur une unité, alors que pour toute différence au-dessus de ce cours nous gagnons sur trois unités. On peut imaginer des options d'un ordre multiple, la représentation géométrique de ces ope" rations ne présente aucune difficulté. 
+Nous aurions pu acheter une option du triple à 33rr, par exemple, c'est-à-dire que, pour toute différence au-dessous du cours de 33fr nous perdons sur une unité, alors que pour toute différence au-dessus de ce cours nous gagnons sur trois unités. On peut imaginer des options d'un ordre multiple, la représentation géométrique de ces opé- rations ne présente aucune difficulté.
 
-On traite aussi des options à la baisse^ nécessairement au même écart que les options à la hausse du. même ordre de multiplicité. 
+On traite aussi des options à la baisse, nécessairement au même écart que les options à la hausse du même ordre de multiplicité.
 
-###### LES PBOBABILITÉS BANS LES OPÉRATIONS DE BOURSE, 
+## LES PROBABILITÉS DANS LES OPÉRATIONS DE BOURSE.
 
-Probabilités ! dans les opérations de bourse, ,— On peut considérer deux sortes de probabilités : 1° La probabilité que l'on pourrait appeler _maîMmatique,_ c'est celle que l'on peut déterminer _a priori;_ celle que l'on étudie dans les jeux de hasard. 
+Probabilités dans les opérations de bourse. On peut considérer deux sortes de probabilités :
 
-2° La probabilité dépendant de faits à venir et, par conséquent, impossible à prévoir d'une façon mathématique*. 
+1° La probabilité que l’on pourrait appeler mathématigue, c'est celle quc l’on peut déterminer a priori; celle que l’on étudie dans les jeux de hasard.
 
-C'est cette dernière probabilité que cherche a prévoir le spéculateur, il, analyse les raisons qui peuvent influer sur la hausse ou sur la baisse et sur l'amplitude des mouvcffîfônts* Ses inductions sont absolument personnelles, puisque sa contre-partie a nécessairement l'opinion inverse. 
+2° La probabilité dépendant de faits à venir et, par conséquent, impossible à prévoir d'une façon mathématique.
 
-11 semble que le marché^ c'est-à-dire Fenseœble des spéculateurs, lie doit croire _à un instant donné_ ni à la hausse, ni à la .baisse?
+C'est cette dernière probabilité que cherche a prévoir le spéculateur, il analyse les raisons qui peuvent influer sur la hausse ou sur la baisse et sur l'amplitude des mouvements. Ses inductions sont absolument personnelles, puisque sa contre-partie a nécessairemènt l'opinion inverse.
+
+Il semble que le marché, c'est-à-dire l’ensemble des spéculateurs, ne doit croire à un instant donné ni à la hausse, ni à la baisse, puisque, pour chaque cours coté, il y a autant d’acheteurs que de vendeurs.
 
 <!-- page: 13 -->
 
-L. BACiïELIEH. 
+En réalité, le marché croit à la hausse provenant de la différence entre les coupons et les reports; les vendeurs font un léger sacrifice qu’ils considèrent comme compensé.
 
-puisque, pour chaque cours coté, il y a autant d'acheteurs que de vendeurs. 
+On peut ne pas tenir compte de cette diférence, à la condition de considérer les cours vrais correspondant à la liquidation, mais les opérations se réglant sur les cours cotés, le vendeur paye la différence.
 
-En réalité, le marché croit à la hausse provenant de la différence entre les coupons, et les reports; les "vendeurs font un léger sacrifice qu'ils considèrent comme compensé. 
+Par la considération des cours vrais on peut dire :
 
-On peut ne pas tenir compte de cette différence, à la condition de considérer les cours vrais correspondant à la liquidation, main le^ opérations se réglant sur les cours cotés, le vendeur paye la différence. 
+Le marché ne croit, à un instant donne, ni à la hausse, ni à la baisse du cours vrai.
 
-Par la considération des cours vrais on peut dire : 
+Mais, si le marché ne croit ni à la hausse, ni à la baisse du cours vrai, il peut supposer plus ou moins probables des mouvements d’une certaine amplitude.
 
-_Le marché ne croit, à un instant donne, ni à la hausse, ni à la baù^ du cours vrai._ 
+La détermination de la loi de probabilité qu'admet le marché à un instant donné sera l’objet de cette étude
 
-Mais, si le marché ne croit ni à la hausse» ni à la babge du COUI'H vrai, î,l peut supposer plus ou moins probables des mouvemontH d'une certaine amplitude. 
+L’espérance mathématique. On appelle espérance mathématique d’un bénéfice éventuel le produit de ce bénéfice par la probabilité correspondante.
 
-La détermination de la loi de probabilité qu'admet le mardié à _un_ instant donné sera l'objet de cette élude, 
+L’espérance mathématique totale d’un joueur sera la somme des produits des bénéfices éventuels par les probabilités correspondantes.
 
-L'espérance mathématique. — On appelle _^pémncc mûthémulqw_ d'un bénéfice éventuel<sup>1</sup> le1 produit de ce bénéfice par la probabilité correspondante. 
+Il est évident qu’un joueur ne sera ni avantagé, ni lésé si son espé- rance mathématique totale est nulle.
 
-_Uespérance mathématique totale_ d'un joueur sera, la somme den produits des bénéfices éventuels par les probabilités correHporîdarxtes, 
+On dit alors que le jeu est équitable.
 
-Ïl est évident qu'un joueur ne sera ni avantagé, ni lé^é si _mm_ espérance mathématique totale est nulle* 
+On sait que les jeux de courses et tous ceux qui sont pratiqués dans les maisons de jeu ne sont pas équitables : la maison de jeu ou le donneur s’il s’agit de paris aux courses, jouent avec une espérance positive, et les pontes avec une espérance négative.
 
-On dit alors que le jeu est _équitable._ 
-
-On sait que les jeux de courses et tous ceux qui sont pratiquég _ihm_ les maisons de jeu ne sont pas équitables ; la maison de jeu on le donneur s^il s'agit de ^ paris aux courses, jouent avec une eHperance po' sitive, et les pontes avec une espérance négative. ^ Dans ces sortes de jeux les pontes n'ont pas le choix entra l'opération qu'ils font etsa contrepartie; comme il n'en est paa de même _k_ la Bourse, il peut sembler curieux que ceg jeux ne _mimi_ ps^ équitables, le vendeur acceptant _a prwri m_ désavantage si les reporte Hôot inférieurs aux coupons* 1
+Dans ces sortes de jeux les pontes n’ont pas le choix entre l’opération qu’ils font et sa contre-partie; comme il n’en est pas de même à la Bourse, il peut sembler curieux que ces jeux ne soient pas équitables, le vendeur acceptant a priori un désavantage si les reports sont inférieurs aux coupons.
 
 <!-- page: 14 -->
 
-L'existence d'une seconde sorte de probabilités explique ce fait qui peut sembler paradoxal. 
+L’existence d’une seconde sorte de probabilités explique ce fait qui peut sembler paradoxal.
 
-L'avantage inathématiqne. — L'espérance mathématique nous indique si un jeu est avantageux ou non : elle nous apprend de plus ce que le jeu doit logiquement faire gagner ou faire perdre; mais elle ne donne pas un coefficient représentant, en quelque sorte, la valeur i ntri nsequ e du j eu. 
+L'avantage mathématique. — L'espérance mathématique nous indique si un jeu est avantageux ou non : elle nous apprend de plus ce que le jeu doit logiquement faire gagner ou faire perdre; mais elle ne donne pas un coefficient représentant, en quelque sorte, la valeur intrinsèque du jeu.
 
-Ceci va nous amener à introduire une nouvelle notion : celle de l'avantage mathématique» 
+Ceci va nous amener à introduire une nouvelle notion : celle de l'avantage mathématique.
 
-Nous appellerons _avantage mathématique_ d'un joueur le rapport de son espérance positive à la somme arithmétique de ses espérances positive et négative. 
+Nous appellerons avantage mathématique d’un joueur le rapport de son espérance positive à la somme arithmétique de ses espérances positive et négative.
 
-L'avantage mathématique varie comme la probabilité de zéro à un, il est égal à ^ quand le jeu est équitable. 
+L’avantage mathématique varie comme la probabilité de zéro à un, il est égal à ↓ quand le jeu est équitable.
 
-Principe de l'espérance mathématique» — On peut assimiler Fâcheteur au comptant à un joueur; en effet, si le titre peut monter après l'achat, la baisse est également possible. Les causes de cette hausse ou de cette baisse rentrent dans la seconde catégorie de probabilités. D'après la première le titre (<sup>i</sup> ) doit monter d^une valeur égale à l'importance de ses coupons; il en résulte qu'au point de vue de cette première classe de probabilités : 
+Principe de l'espérance mathématique. — On peut assimiler l'acheteur au comptant à un joueur; en effet, si le titre peut monter après l’achat, la baisse est également possible. Les causes de cette hausse ou de cette baisse rentrent dans la seconde catégorie de probabilités.
 
-L'espérance mathématique de l'acheteur au comptant est positive. Il est évident qu'il en sera de même de l'espérance mathématique de l'acheteur à terme si le report est nul, car son opération sera assimilable à celle de l'acheteur au comptant. 
+D'après la première le titre (') doit monter d’une valeur égale à l’importance de ses coupons; il en résulte qu’au point de vue de cette première classe de probabilités :
 
-Si le report sur la rente était de _2^\_ l'acheteur ne serait pas plus avantagé que le vendeur. 
+L’espérance mathématique de l'acheteur au comptant est positive.
 
-On peut donc dire : 
+Il est évident qu'il en sera de même de l'espérance mathématique de l'acheteur à terme si le report est nul, car son opération sera assimilable à celle de l'acheteur au comptant
 
-Les espérances mathématiques de l'acheteur et du vendeur sont milles quand le report est de _2^\_ 
+Si le report sur la rente était de 25c, l’acheteur ne serait pas plus avantagé que le vendeur.
 
-Quand le report est inférieur à 2^, ce qui est Je cas ordinaire : 
+On peut donc dire :
 
-> _(_<sup>_l i_</sup> _)_ Je considère le cas le plus nimpio d'un titre à revenu, fixe, sinon ranimer» talion du rovônu Hormi 000 probabilité do la seconde classe. _Ànn. <'/(* i' Kc. Normale, 3_<sup>_e_</sup> Scric, T<')m<* 'XVH. "•11- jANVtlt';H ïcjoo, 5
+Les espérances mathématiques de l’acheteur et du vendeur sont nulles quand le report est de 25e.
+
+Quand le report est inférieur à 25c, ce qui est le cas ordinaire :
+
+(1) Je considère le cas le plus simple d’un titre à revenu fixe, sinon l'augmentation du revenu serait une probabilité do la seconde classe.
+
+Ann. de l'Ée. Normale. 3° Série. Tome XVII. -- JAsviER 19oo.
 
 <!-- page: 15 -->
 
-L^espérance mathématique (le rachel<mr est positive, celle du vendeur est négative. Il faut toujours remarquer (|'si'il ^agît uniquement de la première sorte de probabilités. 
+L'espérance mathématique de l'acheteur est positive, celle du vendeur est négative.
 
-D'après ce qui, a été vu précédelinjiioul, ou peut toujours considérer le report comme étant de ^ à la condition de remphicer h* coiirK coté par le cours _vrai_ correspondant à la liquidation; ^i doiic» ou cou-sidère,ces cours vrais ou peut dire que : 
+Il faut toujours remarquer qu'il s’agit uniquement de la première sorte de probabilités.
 
-Les espérances mathématiques de niclîeleiir et du vendeur Bout nulles. 
+D’après ce qui a été vu précédemment, on peut toujours considérer le report comme étant de $\mathbf { 2 } / 5 ^ { \mathrm { c } }$ à la condition de remplacer Ie cours coté par le cours vrai correspondant à la liquidation; si donc, on considère ces cours vrais on peut dire que :
 
-An point de vue des reporte ou peut considérer _h_ réponni* des primes comme se confondant avec la liquidation^ donc _î_ 
+Les espérances mathématiques de l'acheteur et du vendeur sont nulles.
 
-Les espérances mathématiques de l'aclieteur et du vmuîmir de» primés sont nulles. 
+Au point de vue des reports on peut considérer la réponse des primes comme se confondant avec la liquidation; donc :
 
-En résumé, la considération des cours vrais periîîot d'énoucer _w_ principe fondamental : 
+Les espérances mathématiques de l'acheteur et du vendeur de primès sont nulles.
 
-_L'espérance ma/Jt-ema'lù/ue du spéculateur est nulles_ 
+En résumé, la considération des cours vrais permet d'énoncer ce principe fondamental :
 
-II faut bien se rendre con'ipte do la ^énénifité de _w_ prim'ipfï : II signifie que le marché, à on inslaut donné, cmisidi'n* cornnn» îiy^nt _uw_ espérance nulle non seulement ICH opérations tr^itîtbieg _wimUmïmïi,_ mais encore^ celles qui seraient banéeg _wr un_ rîîoiivelîiarït iiltérJeur des cours. 
+L’espérance mathématique du spéculateur est nulle.
 
-Par exemple, j'achète de la rente avec rintenlicm de ta reyendre lorsqu'elle aura monté do 50<sup>e</sup> ", l'eHpéniuco de cette opération complexe est nulle absolument comme ^i j'avais rinteutîon de» î^veridî^^ ma rente en liquidation ou à un moment queIcorKiue, 
+Il faut bien se rendre compte de la généralité de ce principe : il signifie que le marché, à un instant donné, considère comme ayant une espérance nulle non seulement les opérations traitables actuellement. mais encore celles qui seraient basées sur un mouvement ultérieur des cours.
 
-L'espérance d'une opération .ne peut être positive ou rïégatmujiic s^il se produit un mo-uveTOent deg courg, _aprwndh mt_ rîtille. 
+Par exemple, j'’achète de la rente avec l'intention de la revendre lorsqu’elle aura monté de 5oc, l’espérance de cette opération complexe est nulle absolument comme si j’avais l'intention de revendre ma rente en liquidation ou à un moment quelconque.
 
-Forme générale de la courbe de prohabilité. — La prdmhîjité (NMir que le cours y soit coté à une. époque donnée csl<sup>1</sup> une fonction de y. On pourra représenter cette proimbîlité par J'ordonrîécHl'une _(mirb^_ dont les abscisses correspondront ^uïx.difÏmmts _wur^._ 
+L’espérance d’une opération ne peut être positive ou négative que s’il se produit un mouvement des cours, a priorí elle est nulle.
 
-Il est évident qiio' le cour» considéré p^r le rnarclîé _wîïww_ le pîtfô probable est le cours vrai aciuci : ni (e .mareliû eu jugeait _uuiwnmîi,_ il coterait non pas ce cours, mais _m_ autre plug (H| _nmm_ élevé.
+Forme générale de la courbe de probabilité. La probabilité pour que le cours y soit coté à une époque donnée est une fonction de y.
+
+On pourra représenter cette probabilité par l’ordonnée d’une courbe dont les abscisses correspondront aux différents cours.
+
+Il est évident que le cours considéré par le marché comme le plus probable est le cours vrai actuel : si le marché en jugeait autrement, il coterait non pas ce cours, mais un autre plus ou moins élevé.
 
 <!-- page: 16 -->
 
-Dans la suite de cette étude, nous prendrons pour origine des coordonnées le cours vrai correspondant à l'époque donnée. Le cours pourra varier entre — _x^_ et 4- œ; _x^_ étant le cours absolu actuel. Nous supposerons qu'il puisse varier entre — co et + oo; la probabilité d'un écart plus grand que _oc^_ étant considérée _a priori_ comme tout à fait négligeable. 
+Dans la suite de cette étude, nous prendrons pour origine des coordonnées le cours vrai correspondant à l'époque donnée. Le cours pourra varier entre $- \mathbf { \nabla } x _ { 0 }$ et $+ \infty ; x _ { 0 }$ étant le cours absolu actuel.
 
-Dans ces conditions, on peut admettre que la probabilité d'un écart à partir du cours vrai est indépendante de la valeur absolue de ce cours, et que la courbe des probabilités est symétrique par rapport au cours vrai. 
+Nous supposerons qu’il puisse varier entre $- \infty$ et +∞; la probabilité d’un écart plus grand que $x _ { \mathfrak { g } }$ étant considérée a priori comme tout à fait négligeable.
 
-Dans ce qui suivra, il ne sera question que du cours relatif, l'origine des coordonnées correspondra toujours au cours vrai actuel. 
+Dans ces conditions, on peut admettre que la probabilité d’un écart à partir du cours vrai est indépendante de la valeur absolue de ce cours, et que la courbe des probabilités est symétrique par rapport au cours vrai.
 
-La loi de probabilité. — La loi, (le probabilité peut se déterminer par le principe de la probabilité composée» 
+Dans ce qui suivra, il ne sera question que du cours relatif, l’origine des coordonnées correspondra toujours au cours vrai actuel.
 
-Désignons parj^^, la probabilité pour que, à l'époque _t,_ le cours se trouve compris dans rintervalle élémentaire ^ _ûc •+- dx._ 
+La loi de probabilité. — La loi de probabilité peut se déterminer par le principe de la probabilité composée.
 
-Cherchons la probabilité pour que le cours _z_ soit coté à l'époque /,, 4- _1^_ le cours _oc_ ayant été coté à l'époque _t^_ 
+Désignons par $p _ { x , t } d x _ { \mathrm { ~ ~ ~ } }$ , la probabilité pour que, à l’époque $t ,$ le cours se trouve compris dans l’intervalle élémentaire $x , x + d , x$
 
-En vertu du principe de la probabilité composée, la probabilité cherchée sera égale au produit de la probabilité pour que le cours _oc_ soit coté à l'époque ^, c'est-à-dire _py^^dx^_ multipliée parla probabilité pour que, le cours _x_ étant coté à l'époque _t^_ le cours _z_ soit coté à l/époque z.i +- /a, c'est-à-dirCy multipliée parj^_,^,, _dz._ 
+Cherchons la probabilité pour que le cours z soit coté à l'époque ${ \boldsymbol { l } } _ { 1 } + { \boldsymbol { l } } _ { 2 } ,$ , le cours x ayant été coté à l’époque $t _ { i }$
 
-La probabilité cherchée est donc 
+En vertu du principe de la probabilité composée, la probabilité cherchée sera égale au produit de la probabilité pour que le cours x soit coté à l'époque $\ell _ { \ell }$ , c'est-à-dire $p _ { x , t , } d x$ , multipliée par la probabilité pour que, le cours x étant coté à l’époque $\ell _ { \pmb { \imath } }$ , le cours z soit coté à l'époque $\ell _ { 1 } + \ell _ { 2 }$ , c'est-à-dire, multipliée par $\smash { l ^ { \prime } = - \kappa ^ { \prime } , l _ { \perp } } ^ { \prime \prime }$
 
+La probabilité cherchéc est donc
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0016-09.png)
+$$
+p _ { \cdot r , \cdot _ { 1 } } p _ { \cdot - x , \cdot _ { 4 } } d x d z .
+$$
 
+Le cours pouvant se trouver à l'époque $\ell _ { \uparrow }$ dans tous les intervalles dx compris entre $- \infty \mathrm { e t } + \infty ,$ la probabilité pour que le cours z soit coté à l’époque ${ \boldsymbol { \ell } } _ { 1 } + { \boldsymbol { \ell } } _ { 2 }$ sera
 
-Le cours pouvant se trouver à l'époque ^ dans tous les intervalles _dx_ compris entre —00 et 4-^ la probabilité pour que le cours _s_ soit coté à l'époque ^ + ta sera 
+$$
+\int _ { - \infty } ^ { + \infty } p _ { \cdot } r _ { \cdot } \iota _ { 1 } p _ { z - x ; \iota _ { 2 } } d x \iota _ { 2 } s .
+$$
 
+La probabilité de ce cours $z ,$ à l'époque $\ell _ { 1 } \to \ell _ { \ge }$ , a aussi pour expression $p _ { { \tilde { \rho } } , t _ { 1 } \cdot t } , :$ on a donc
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0016-11.png)
-
-
-La probabilité de ce cours ^ à l'époque ^ •+"^y a aussi pour ex" pression /^/,.K,; on a donc 
-
-^-^ 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0016-14.png)
+$$
+\rho _ { z , \iota _ { 1 } \cdots \iota _ { 2 } } d z = \int _ { - \infty } ^ { + \infty } p _ { x , \iota _ { 1 } } p _ { z - x ; \iota _ { 2 } } d x d z
+$$
 
 <!-- page: 17 -->
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0017-00.png)
+ou
 
+$$
+P _ { \therefore , t _ { 1 } + \cdots t _ { 2 } } = \int _ { \cdots , \infty } ^ { \cdots + \infty } p _ { \cdots , t _ { 1 } } p _ { \cdots , t _ { 1 } } d x ,
+$$
 
-telle est l'équation de condition à laquelle doit satisfaire la ûnictiori _p ._ 
+telle est l’équation de condition à laquelle doit satisfaire la fonction $\begin{array} { r } { { \cal J } ^ { \prime \prime } . } \end{array}$
 
-Cette équation estvériflée^ comme nous aîloriH _U_ voir, par la (onction _p^k(r^\_ 
+Cette équation est vérifiée, comme nous allons le voir, par la fonction
 
-Remarquons des main tenant que l'on doit avoir 
+$$
+p = \mathbf { A } e ^ { - \mathbf { B } \cdot \mathbf { r } ^ { 2 } } \circ
+$$
 
+Remarquons dès maintenant que l'on doit avoir
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0017-04.png)
+$$
+\int _ { - \infty } ^ { + \infty } p d x = \Lambda \int _ { - \infty } ^ { + \infty } e ^ { - \mathrm { i } B x \cdot x ^ { 2 } } d x = - 1 .
+$$
 
+L’intégrale classique qui figure dans le premier terme a pour valeur $\frac { \sqrt { \pi } } { \mathrm { B } } ,$ on a donc $\mathrm { B } = \mathrm { A } \sqrt { \pi }$ et, par suite
 
-L'intégrale classique qui figure dans le premier'ternie<sup>1</sup> a pour valeur ^—j» on a donc B _=_ A^TC et, par suite 
+$$
+p \cong \Lambda e ^ { - \pi \Lambda ^ { \circ } , \iota \cdot \tilde { \varepsilon } } ,
+$$
 
-_p^Ae^^._ 
+En posant $\mathscr { x } = 0$ , on obtient $\Lambda \cong p _ { \ u { v } }$ , c’est-à-dire : A égale la probabilité du cours coté actuellement.
 
-En posant _x^_ o, on obtient A s^^^ c'est-à-dire : A <*ga.h lîi proliîibilité du cours coté actuellorïKînt, 
+Il faut done établir que la fonction
 
-II faut donc établir que la fonction 
+$$
+I ^ { \prime } = I ^ { j _ { 0 } / \cdots } = I ^ { s }
+$$
 
+où $p _ { \mathfrak { d } }$ dépend du temps, satisfait bien à l'équation de condition cidessus.
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0017-09.png)
+Soient P, et p₂ les quantités correspondant à Po et relatives aux $p _ { \ast }$ $p _ { 2 }$ $p _ { \mathfrak { g } }$ temps $\ell _ { 4 }$ et $\ell _ { \mathbf { \ 3 } }$ , il faut prouver que l’expression
 
+$$
+\int _ { - \infty } ^ { + \infty } p _ { 1 } e ^ { - \pi p _ { 1 } ^ { \prime } , v _ { 2 } ^ { * } } \times p _ { 2 } e ^ { - \pi p _ { 1 } ^ { \prime } ( v - v ) ^ { 2 } } e l , v
+$$
 
-où _p^_ dépend du temps, satisfait bien à l'ôquatio.iî de (umdition cidessus. 
+peut se mettre sous la forme $\Delta \mathcal { C } ^ { \mathrm { ~ t ~ } 3 , 3 }$ ; A et B ne dépendant que du temps.
 
-Soient _p^_ et, _p^_ les quantités correspondant à _p^_ et î^lative^ _mm_ temps ^ et^^, il faut prouver que l'oxpression 
+Cette intégrale devient, en remarquant que z est une constante,
 
+$$
+p _ { 1 } p _ { 2 } e ^ { - \pi / \frac { \pi } { 2 } z ^ { 2 } } \int _ { - \infty } ^ { + \infty } e ^ { - \pi ( p _ { 1 } ^ { 2 } + p _ { 1 } ^ { 2 } ) \cdot p ^ { 2 } + 2 \pi / \frac { \pi } { 2 } z , r } d z
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0017-12.png)
+ou
 
-
-peut se .mettre sous la forme A^r-^; A oi B ne dépendant que d» temps. 
-
-Cette intégrale devient, en remarquant qui» _z_ eM iine <;(HîMlaiîte, 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0017-15.png)
+$$
+p _ { 1 } p _ { 2 } e ^ { - \pi p _ { 2 } ^ { \pi } z ^ { 2 } \cdot + \frac { \pi p _ { 1 } ^ { \pi } z ^ { 2 } } { p _ { 1 } ^ { \pi } + p _ { 2 } ^ { \pi } } } \int _ { - \infty } ^ { + \infty } e ^ { - \pi \left( r \cdot \sqrt { p _ { 1 } ^ { \pi } + p _ { 1 } ^ { \pi } } - \frac { t _ { 2 } ^ { \pi } z } { \sqrt { p _ { 1 } ^ { \pi } + p _ { 2 } ^ { \pi } } } \right) } d x ;
+$$
 
 <!-- page: 18 -->
 
-THÉOB.ÏE DE LA SPÉCULATION. 
+posons
 
-posons 
+$$
+x \sqrt { p _ { 1 } ^ { 2 } + p _ { 2 } ^ { 2 } } - \frac { p _ { 2 } ^ { 2 } z } { \sqrt { p _ { 1 } ^ { 2 } + p _ { 2 } ^ { 2 } } } = u ;
+$$
 
-nous aurons alors 
+nous aurons alors
 
+$$
+\frac { p _ { 1 } p _ { 2 } e ^ { - \pi p _ { 2 } ^ { \circ } z ^ { \circ } } { \overline { { p _ { 1 } ^ { \circ } } } } ^ { \prime } { \overline { { p _ { 2 } ^ { \circ } } } } } { \sqrt { p _ { 1 } ^ { \circ } + p _ { 2 } ^ { \circ } } } { \int _ { - \infty } ^ { + \infty } e ^ { - \pi u ^ { \circ } } d u } .
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0018-04.png)
+L'intégrale ayant pour valeur 1, nous obtenons finalement
 
+$$
+\frac { p _ { 1 } p _ { 2 } } { \sqrt { p _ { 1 } ^ { 2 } + p _ { 2 } ^ { 2 } } } e ^ { - \pi \frac { / \eta _ { 1 } ^ { 2 } p _ { 2 } ^ { 2 } } { p _ { 1 } ^ { 2 } + p _ { 2 } ^ { 2 } } z ^ { 2 } } .
+$$
 
-<!-- Start of picture text -->
-^^"^'--T^ 1 ^-^;<br>VPÎ-+-PÏ<br>-^I^ÏZl^<br>,.,„.. _.^ r-.-,-^,<br>V^-^ J^<br><!-- End of picture text -->
+Cette expression ayant la forme désirée, on doit en conclure que la probabilité s’exprime bien par la formule
 
-L'intégrale ayant pour valeur ï, nous obtenons finalement 
+$$
+p = p _ { 0 } e ^ { - \pi p _ { 0 } ^ { \ast } x ^ { \ast } } ,
+$$
 
+dans laquelle $p _ { 0 }$ dépend du temps.
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0018-06.png)
+On voit que la probabilité est régie par la loi de Gauss déjà célèbre dans le Calcul des probabilités.
 
+Probabilité en fonction du temps. — La formule antéprécédente nous montre que les paramètres $p _ { \mathrm { 0 } } = f ( t )$ satisfont à la relation fonctionnelle
 
-Cette expression ayant la forme désirée, on doit en, conclure que la probabilité s'exprime bien par la formule 
+$$
+f ^ { 2 } ( l _ { 1 } { + } l _ { 2 } ) = \frac { f ^ { 2 } ( l _ { 1 } ) f ^ { 2 } ( l _ { 2 } ) } { f ^ { 2 } ( l _ { 1 } ) + f ^ { 2 } ( l _ { 2 } ) } ;
+$$
 
-,„. _ y. ^-""TC/^.r/ 0<sup>3</sup> _P — P Q ^_ , 
+différentions par rapport à $\ell _ { 4 } ,$ puis par rapport à $t _ { \geq }$ . Le premier membre ayant la même forme dans les deux cas, nous obtenons
 
-dans laquelle^o dépend du, temps. 
+$$
+\frac { f ^ { \prime } \left( t _ { 1 } \right) } { f ^ { 3 } \left( t _ { 1 } \right) } = \frac { f ^ { \prime \prime } \left( t _ { 2 } \right) } { f ^ { 3 } \left( t _ { 2 } \right) } .
+$$
 
-On voit que la probabilité est régie par la loi de G-auss déjà célèbre dans le Calcul des probabilités., 
+Cette relation ayant lieu, quels que soient $t _ { \iota }$ et $t _ { 2 } ,$ la valeur commune des deux rapports est constante, et l’on a
 
-Probabilité en fonction du temps. •— La formule antéprécédente nous montre que les paramètres _p^f(l)_ satisfont à la relation fonctionnelle ^ ./ (^+^)^^^^^^^ ,^^ _rwrw_ . 
+$$
+\begin{array} { r } { f ^ { \prime } ( t ) = \mathbb { C } f ^ { 3 } ( \ t ) , } \end{array}
+$$
 
-différcntions par rapport à _l^_ puis par rapport à _t^._ Le premier membre ayant la même forme dans les deux cas, nous obtenons 
+d’où
 
+$$
+f ( t ) = p _ { 0 } = \frac { \mathtt { H } } { \sqrt { \hat { t } } } ,
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0018-13.png)
-
-
-Cette relation ayant lieu, quels que soient ^ et ^3, la valeur commune des deux rapports est constante, et l'on a 
-
-_f'W^Cf^k},_ 
-
-d/où 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0018-17.png)
-
-
-H, désignant une constante-
+H désignant une constante.
 
 <!-- page: 19 -->
 
-IJ" 
+Nous avons donc pour expression de la probabilité
 
-L. UACllELIUK. 
+$$
+\boldsymbol { p } = \frac { \mathrm { H } } { \sqrt { t } } \boldsymbol { e } ^ { - \frac { \pi \mathrm { H } ^ { 9 } \lambda ^ { 9 } } { \hat { t } } } ,
+$$
 
-Nous avons donc pour expression de la probabilité 
+Espérance mathématique. - L'espérance correspondant au cours :x a pour valeur
 
+$$
+\frac { \mathrm { H } \cdot x } { \sqrt { \overline { { t } } } } \stackrel { \_ \pi \mathrm { H } ^ { 1 / 1 } \cdot x ^ { 1 } } { \epsilon } .
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0019-03.png)
+L’espérance positive totale est donc
 
+$$
+\int _ { 0 } ^ { \infty } { \frac { \operatorname { H } x } { \sqrt { \hat { t } } } } e ^ { - { \frac { \pi \operatorname { H } x ^ { \star } } { t } } } d x = { \frac { \sqrt { \hat { t } } } { 2 \pi \operatorname { H } } } \cdot
+$$
 
-Espérance mathématique. - L'espérance comîspondîtnf, ;m cours _;v_ a poup valeur 
+Nous prendrons pour constante, dans notre étude, l'espérance mathématique k correspondant à $t = \pmb { \mathbb { I } } \ ;$ ; nous aurons donc
 
-**H,» ^-î.";'*;8** **_^e_** 
+$$
+k = { \frac { 1 } { 2 \pi \mathbf { H } } } \qquad \mathrm { o u } \qquad \mathbf { H } = { \frac { 1 } { 2 \pi \lambda } } \cdot
+$$
 
-L'espérance positive totale est donc 
+L’expression définitive de la probabilité est done
 
+$$
+\rho = \operatorname* { \rho } _ { 2 \pi k ^ { \prime } \sqrt { t } } \bar { e ^ { - i \pi k ^ { 3 } t } } .
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0019-07.png)
+L’espérance mathématique
 
+$$
+\int _ { 0 } ^ { \infty } p x d x = k \sqrt { l }
+$$
 
-Nous prendrons pour constante, dans notre étude, l'cspcrancfî mathématique ^-correspondant à _t_ === ï; nous aurons donc 
+est proportionnelle à la racine carrée du temps.
 
+Nouvelle détermination de la loi de probabilité. L'expression de la fonction p peut s’obtenir en suivant une voie différente de celle que $p$ nous avons employée.
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0019-09.png)
+Je suppose que deux événements contraires A et B aient pour probabilités respectives $p$ ct ${ \boldsymbol { g } } = \mathbf { I } \cdots { \boldsymbol { p } }$ . La probabilité pour que, sur mévénements, il s’en produise α égaux à A et $\boldsymbol { \Lambda }$ $m \textrm { \ -- } \alpha$ égaux à B a pour expression
 
-
-_L'expression définitive de la. prohabilil.é csl dow_ 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0019-11.png)
-
-
-_L'espérance mathématique_ 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0019-13.png)
-
-
-_est proportionnelle à la racine carrée du temps._ 
-
-Nouvelle détermination de la loi de probabilité. -.. L'expression de h fonct,on^ peut s'obtenir en suivant une voie diHcrJ, d ; , nous avons employée. "'-'-»-"(• (JIH, 
-
-Je suppose que deux événements contraires A <.t H ;,;<,„(, pour pro habilites respect vos _p_ et _a_ == T • _n_ P» „,, l rr.- •"""«"""P<sup>10</sup> - •<sup>l</sup> Z•/:<sup>)</sup> :<sup>h</sup> :^ ^^.,u.4,...i,..L<sup>l</sup> 1 1 1 1 m î .-........,..,,,„.,,,.,,.,,,,,,,,,,,_ ^ l ( n ^ — a ) ^ ffÀ^m»»^'_<sup>_F_</sup> _î_
+$$
+\frac { m ! } { a ! ( m - \alpha ) ! } p ^ { \alpha } q ^ { m - x } .
+$$
 
 <!-- page: 20 -->
 
-C'est un des termes du développement de _(p_ 4- y)^. La plus grande de ces probabilités à lieu pour 
+C’est un des termes du développement de $( p + q ) ^ { m }$
 
+La plus grande de ces probabilités a lieu pour
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0020-03.png)
+$$
+\alpha = m p \qquad { \mathrm { e t } } \qquad ( m - \alpha ) = m q .
+$$
 
+Considérons le terme dont l’exposant de $p$ est $m p + h$ , la probabilité correspondante est
 
-Considérons le terme dont l'exposant _âepestmp^/t,_ la probabilité correspondante est 
+$$
+\frac { m ! } { ( m p + h ) ! ( m q - h ) ! } p ^ { m p + h } q ^ { m q - h } .
+$$
 
+La quantité h est appelée l’écart.
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0020-05.png)
+Cherchons quelle serait l’espérance mathématique d’un joueur qui toucherait une somme égale à l'écart quand cet écart serait positif.
 
+Nous venons de voir que la probabilité d’un écart $\textit { h }$ est le terme du développement de $( p + q ) ^ { m }$ dans lequel l’exposant de $P$ est $m p + h$ et celui de $q ,$ $m q - h$ . Pour obtenir l'espérance mathématique correspondant à ce terme, il faudra wultiplier cette probabilité par $\hbar$ ; or
 
-La quantité À est appelée _V écart._ 
+$$
+h = q \left( m p + h \right) - p ( m q - h ) ,
+$$
 
-Cherchons quelle serait Fespérance mathématique d'un joueur qui toucherait une somme égale à Fécart quand, cet écart serait positif. 
+mp $+ h$ et $m q - h$ sont les exposants de $p$ et de $q$ dans le terme de $( p + q ) ^ { m }$ . Multiplier un terme
 
-Nous venons de voir que la probabilité d'un écart _h_ est le terme du développement de _(p_ 4- _qY_<sup>_1_</sup> dans lequel l'exposant de _p_ est _mp_ 4" À et celui de _q, mq —_ À. Pour obtenir l'espérance mathématique correspondant à ce terme, il faudra wultiplier cette probabilité r>ar À; or 
+$$
+q ^ { \flat } p ^ { \flat }
+$$
 
-_h_ •= _q ( mp_ -h A ) — _p( mq — h)y_ 
+par
 
-_mp_ 4"" _h_ et _mq — h_ sont les exposants de _p_ et de _q_ dans le terme de _{'P_<sup>4</sup> " y)<sup>7</sup> ^ Multiplier un terme 
+$$
+\nu q - \mu . p = p q \Big ( \frac { \upsilon } { p } - \frac { \mu . } { q } \Big ) ,
+$$
 
-###### r/iy 
+c’est prendre la dérivée par rapport à $p _ { \langle }$ en retrancher la dérivée par rapport à $\cdot \mathbf { \nabla } _ { \mathbf { \lambda } }$ et multiplier la différence par $p q$
 
-###### par 
+Pour obtenir l'espérance mathématique totale, nous devons donc prendre les termes du développement de $( p + q ) ^ { \dprime \prime }$ pour lesquels $\boldsymbol { h }$ est positif, c'est-à-dire
 
+$$
+p ^ { m } + m p ^ { m - 1 } q + \frac { m ( \frac { m - 1 } { \cdot \cdot 3 } ) } { 1 \cdot 3 } p ^ { m - 2 } q ^ { 2 } + \cdot \cdot \cdot + \frac { m ! } { m p ! m q ! } p ^ { m p } q ^ { m q } ,
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0020-13.png)
+et retrancher la dérivée par rapport à $q$ de la dérivée par rapport à $p ,$ pour multiplier ensuite le résultat par $p q$
 
-
-c'est prendre la dérivée par rapport _h p.,_ en retrancher la dérivée par rapport à y, et multiplier la difterence par py. 
-
-Poor obtenir l'espérance mathématique totale, nous devons donc prendre les termes du développement de _(p_ 4"^)^ pour lesquels _h_ est positif, c'est-à-dire 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0020-16.png)
-
-
-et retrancher la dérivée par rapport à y de la dérivée par rapport àjr?, pour multiplier ensuite le résultat par/?<7. 
-
-La dérivée du second terme par rapport à _q_ est égale à la dérivée d'à premier par rapport à _p,_ la dérivée du troisième par rapport à _q_ est là dérivée du second par rapport _hp,_ et ainsi de suite. Les termes se dé-
+La dérivée du second terme par rapport à $q$ est égale à la dérivée du premier par rapport à $p _ { - }$ , la dérivée du troisième par rapport à $q$ est la dérivée du second par rapport à $p _ { \ast }$ et ainsi de suite. Les termes se dé-
 
 <!-- page: 21 -->
 
-^.O L, BACÎÎ'EUBÎÎ. truisent donc deux à deux et il ne reste» que la dérivée du dernier par rapport àp 
+truisent donc deux à deux et il ne reste que la dérivée du dernier par rapport à $p$
 
-> .,.._/^.,^...,-.- _m.p \ n'y'i p w p l ' q^^i_ * _mrnî._ *<sup>/</sup> 
+$$
+\frac { m ! } { m p ! m q ! } \ : p ^ { m p } \ : q ^ { m } \prime \ : m p \prime \ :
+$$
 
-La valeur moyenne de l'écart _h_ serait égale an double de celte quantité. 
+La valeur moyenne de l'écart h serait égale au double de cette quantité.
 
-Lorsque le nombre m est suffisamment grand, on peut simplifier les expressions précédentes en faisant usage de la formule aHjrnptotiqiic* de Stirling ^ 
+Lorsque le nombre m est suffisamment grand, on peut simplifier les expressions précédentes en faisant usage de la formule asymptotique de Stirling
 
-, , _n_ î "•= _y^n^^^Ttfi._ 
+$$
+n ! = e ^ { - n } n ^ { n } { \sqrt { 2 \pi n } } .
+$$
 
-On obtient ainsi pour l'espérance mathén'xatiqiie la valeur 
+On obtient ainsi pour l’espérance mathématique la valeur
 
+$$
+{ \frac { \sqrt { m p q } } { \sqrt { 2 \pi } } } .
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0021-06.png)
+La probabilité pour que l’écart h soit compris entre h et $\therefore x -$ aura pour expression
 
+$$
+\frac { d h } { \sqrt { 2 \pi m / 1 } } < e ^ { - \frac { h ^ { 3 } } { 2 m / 1 } } .
+$$
 
-La probabilité pour que l'écart _h_ solt<ïooipris entre A et _li_ •"-•+- _dhw^'à_ pour expression 
+Nous pouvons appliquer la théorie qui précède à notre étude. On peut supposer le temps divisé en intervalles très petits $\Delta t$ ; de sorte que $\iota = m \Delta \iota ;$ pendant le temps $\Delta t$ le cours variera probablement très peu.
 
+Formons la somme des produits des écarts qui peuvent exister à l’époque ∆t par les probabilités correspondantes; c'est-à-dire $\int _ { \psi } ^ { * } p \ d x d x ,$ p étant la probabilité de l'écart x.
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0021-08.png)
+Cette intégrale doit être finie, car, par suite de la petitesse supposée de∆t, les écarts considérables ont une probabilité évanouissante. Cette intégrale exprime du reste une espérance mathématique, qui ne peut être finie si elle correspond à un intervalle de temps très petit
 
+Désignons par ∆x le double de la valeur de l’intégrale ci-dessus: ∆x sera la moyenne des écarts ou l’écart moyen pendant le temps Δt.
 
-Nous pouvons appliquer la théorie qui précède îi notre étude. _On_ peut supposer le ternp^ divisé en intervalles très petite _àli_ de ^orte que ^ === mA^; pendant le temps _à'i_ le courB variera probal)lc*rïNmt tri*H jN.ni. 
-
-Formons la somme des produits des écarts qui peuvent exister il l'époque1 ' A^ par les probabilités1 correspondantes<sup>1</sup> ; c'eHt-à-dire _f_ * ( l t _p^d^^ p_ étant la probabilité de„ l'écart, , _x._ Cette<sup>1</sup> intégrale doit être finie, car, par suite de la petitesse Hupposée de A^ les écarts considérables ont une probabilité évanouira nie. Cotte intégrale exprime du reste une espérance rïîatlîériiatiqtîe, qui ne peut être finie si elle correspond à un intervalle de temps treN petit,* Désignons par _^œ_ le double de la, valeur de 1 Intégrale d-de^itô^ Ao? sera la moyenne des écarts ou l'écart moyen, peîïdaiît le teînpB _Al._ Si le nombre _m_ desépre-uves est très grand et HÎ la proltabilité mfce la'même<sup>1</sup> à chaque épreuve^nous pourrons supposer qtAe le cour» varie
+Si le nombre m des épreuves est très grand et si la probabilité reste la même à chaque épreuve, nous pourrons supposer que le cours varie pendant chacune des épreuves $\Delta t$ de l’écart moyen $\Delta { . } x ;$ la hausse ∆x aura pour probabilité ${ \frac { \mathrm { ~ I ~ } } { 2 } } ,$ comme aussi la baisse $- \Delta x$
 
 <!-- page: 22 -->
 
-pendant chacune des épreuves _Al_ de Fécart moyen A.r; la hausse A<^ aura pour probabilité ;•? comme aussi la baisse — A;r. 
+La formule qui précède donnera donc, en y faisant $\begin{array} { r } { p = q = \frac { \mathtt { j } } { 2 } . } \end{array}$ la probabilité pour que, à l’époque $t ,$ le cours soit compris entre x et $x + d x$ , ce sera
 
-La formule qui précède donnera donc, en y faisant _p ^. (j •==. -^_ la probabilité pour que, à l'époque _ty_ le cours soit compris entre _x_ et _x_ -i- _dx,_ ce sera 
+$$
+\frac { _ { 2 } d x \sqrt { \Delta t } } { \sqrt { 2 \pi } \sqrt { t } } e ^ { - \frac { 2 . x ^ { 2 } \Delta t } { t } } ,
+$$
 
+ou, en posant H $\begin{array} { r } { = \frac { \gamma } { \sqrt { 2 \pi } } \sqrt { \Delta t } , } \end{array}$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0022-03.png)
+$$
+\frac { \mathrm { ~ H ~ } d x } { \sqrt { t } } \ : e ^ { - \frac { \pi \mathrm { ~ H ~ } ^ { 2 } \ : \gamma ^ { 2 } } { t } } .
+$$
 
+L’espérance mathématique aura pour expression
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0022-04.png)
+$$
+\frac { \sqrt { \hat { t } } } { 2 \sqrt { 2 \pi } \sqrt { \Delta \hat { t } } } = \frac { \sqrt { \hat { t } } } { 2 \pi \mathbf { H } } .
+$$
 
+Si nous prenons pour constante l’espérance mathématique $\pmb { \mathit { k } }$ correspondant à $\scriptstyle { \boldsymbol { t } } = { \boldsymbol { \mathrm { I } } }$ , nous trouvons, comme précédemment,
 
-L'espérance mathématique aura pour expression 
+$$
+\begin{array} { r } { p = \frac { \mathrm {  ~ f ~ } } { 2 \pi \mathit { k } \sqrt { \mathit { t } } } e ^ { - \frac { \cdot \mathit { x } ^ { 2 } } { \mathit { t } \pi \mathit { k } ^ { 2 } \mathit { t } } } . } \end{array}
+$$
 
+Les formules précédentes donnent $\begin{array}{c} \Delta \ell = \frac { \mathrm { ~ I ~ } } { 8 \pi } \vec { k } ^ { 2 } \end{array}$ la variation moyenne pendant cet intervalle de temps est
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0022-06.png)
+$$
+\Delta x = { \frac { \sqrt { 2 } } { 2 { \sqrt { \pi } } } } \cdotp
+$$
 
+Si nous posons $x = n \Delta x$ , la probabilité aura pour expression
 
-Si nous prenons pour constante l'espérance mathématique _k_ correspondant à _t= l,_ nous trouvons, comme précédemment, 
+$$
+p = { \frac { \sqrt { 2 } } { \sqrt { \pi } \sqrt { m } } } e ^ { - { \frac { n ^ { 2 } } { \pi \prime n } } } .
+$$
 
+Courbe des probabilités. — La fonction
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0022-08.png)
+$$
+p = p _ { 0 } c ^ { - \pi } p _ { * } ^ { * , x ^ { 2 } }
+$$
 
-
-Les formules précédentes donnent A^ ==== y—^; la variation moyenne pendant cet intervalle de temps est 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0022-10.png)
-
-
-Si nous posons _a;_ === /zA^, la probabilité aura pour expression 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0022-12.png)
-
-
-Courbe des probabilités. — La fonction 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0022-14.png)
-
-
-peut se représenter par une courbe dont l'ordonnée est maxirna à _Arm. de l'Éc. Nûr/nale. 3_<sup>_e_</sup> Sério. Tome XVIÎ. —- JÂMViEft IQOO. ^
+peut se représenter par une courbe dont l'ordonnée est maxima à Ann. de l'Éc. Normale. 3° Série. Tome XVII. — JANviER 19oo. 6
 
 <!-- page: 23 -->
 
-/p L< I5A<;1JEL11-11. 
+l’origine et qui présente deux points d’inflexion pour
 
-l'origine et qui présente deux points d'inflexion pour 
+$$
+x = \pm \frac { 1 } { p _ { 0 } \sqrt { 2 \pi } } \stackrel { \longleftarrow + } { = } \sqrt { 2 \pi } k \sqrt { \ell } .
+$$
 
+Ces mêmes valeurs de x sont aussi les abscisses des maxima et minima des courbes d'espérance mathématique, dont l'équation est
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0023-02.png)
+$$
+y ^ { \prime } = \pm p x .
+$$
 
+La probabilité du cours x est une fonction de t; elle croit jusqu'à une certaine époque et décroit ensuite. La dérivée $\frac { d / p } { d t } = 0$ lorsque $t = { \frac { . x ^ { 2 } } { 2 \pi k ^ { 2 } } }$ . La probabilité du cours x est done maxima quand ce cours correspond au point d’inflexion de la courbe des probabilités.
 
-Ces mêmes valeurs de _x_ sont aussi lea abscisses dos rrumma et minima des courbes d'espérance mathématique, dont l'équation est 
+Probabilité dans un intervalle donné. L'intégrale
 
+$$
+\frac { 1 } { 2 \pi k \sqrt { i } } \int _ { 0 } ^ { x ^ { \prime } } e ^ { - \frac { x ^ { \prime } } { 4 \pi k ^ { 2 } i } } d x = \frac { c } { \sqrt { \pi } } \int _ { 0 } ^ { x ^ { \prime } } e ^ { - c ^ { 3 } , x ^ { \prime } } d , x
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0023-04.png)
+n’est pas exprimable en termes finis, mais on peut donner son développement en série
 
+$$
+\begin{array} { r } { \frac { \mathrm { I } } { \sqrt { \pi } } \displaystyle \Bigg [ c x - \frac { \frac { \mathrm { I } } { 3 } ( c . x ) ^ { 3 } } { \mathrm { I } } + \frac { \frac { \mathrm { I } } { 5 } ( c . x ) ^ { 5 } } { \mathrm { I } \cdot 2 } - \frac { \frac { \mathrm { I } } { 7 } ( c . x ) ^ { 7 } } { \mathrm { I } \cdot 2 \cdot 3 } + . . . \Bigg ] . } \end{array}
+$$
 
-La probabilité du cours _x_ est une fonction de _£;_ elle croît jnsqmt une certaine époque et décroît ensuite. La dérivée<sup>_ff/)_</sup> _- ^_ a lomjiîe /•% _t^:_ ^.^. ]^ probabilité du course eatdone maxima quand ce cours correspond au point d'inflexion de la courbe des probabilités 
+Cette série converge assez lentement pour les valeurs très fortes de cx. Laplace a donné pour ce cas l’intégrale définie sous la forme d’une fraction continue fort aisée à calculer
 
+$$
+\frac { 1 } { 2 } - \cdots \frac { e ^ { - c ^ { 2 } x ^ { 2 } } } { 2 c x \sqrt { \pi } } \frac { 1 } { 1 + \displaystyle \frac { a } { 1 + \displaystyle \frac { 3 a } { 1 + \displaystyle \frac { 3 a } { 1 + \displaystyle \frac { 3 a } { 1 + \displaystyle \frac { 1 } { 1 + \displaystyle \frac { 3 a } { 1 + \displaystyle \frac { 1 } { 1 + \displaystyle \frac { 3 a } { 1 + \displaystyle \ddots } } } } } } } } } ,
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0023-06.png)
-
-
-n'est pas exprimable en termes finis, mais on peut donner _wn_ développement en série 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0023-08.png)
-
-
-Cette série converge assez lentement pour les Vîtîcurs trcs forfcH de ca^LapIace a donne pour ce cas l'iutégrale défime sous la forme d'une fraction continue fort aisée à calculer 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0023-10.png)
-
-
-danslaquelle1 a^ —1- < ac^
+dans laquelle $a = \frac { \textbf { J } } { 2 c ^ { 2 } \boldsymbol { \mathscr { x } } ^ { 2 } } ,$
 
 <!-- page: 24 -->
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0024-00.png)
+Les réduites successives sont
 
+$$
+\frac { 1 } { 1 + \alpha } , \frac { 1 + 2 \alpha } { 1 + 3 \alpha } , \frac { 1 + 5 \alpha } { 1 + 6 \alpha + 3 \alpha ^ { 2 } } , \frac { 1 + 9 \alpha + 8 \alpha ^ { 2 } } { 1 + 1 0 \alpha + 1 5 \alpha ^ { 2 } } .
+$$
 
-Les induites successives sont 
+Il existe un autre procédé permettant de calculer l’intégrale ci-dessus quand x est un grand nombre.
 
-II existe an autre procédé permettant de calculer l'intégrale ci-dessus quand _x_ est un grand nombre. 
+On a
 
-On a 
+$$
+\int _ { x } ^ { \infty } e ^ { - x \cdot ^ { \cdot } } d x = \int _ { x } ^ { \infty } { \frac { 1 } { 2 x } } e ^ { - x \cdot ^ { \cdot } } 2 x d x ;
+$$
 
+en intégrant par parties, on obtient alors
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0024-04.png)
+$$
+\begin{array} { r l } { \int _ { x } ^ { \infty } e ^ { - x ^ { * } } d x = \frac { e ^ { - x ^ { * } } } { 2 x } - \int _ { x } ^ { \infty } e ^ { - x ^ { * } } \frac { d x } { 2 x ^ { 2 } } ~ } & { } \\ { = \frac { e ^ { - x ^ { * } } } { 2 x } - \frac { e ^ { - x ^ { * } } } { 4 x ^ { 3 } } + \int _ { x } ^ { \infty } e ^ { - x ^ { * } } \frac { \Gamma \cdot 3 } { \Gamma \cdot 3 ^ { * } } d x ~ } & { } \\ { = \frac { e ^ { - x ^ { * } } } { 2 x } - \frac { e ^ { - x ^ { * } } } { 4 x ^ { 3 } } - \frac { e ^ { - x ^ { * } } \Gamma \cdot 3 } { 8 x ^ { 6 } } - \int _ { x } ^ { \infty } e ^ { - x ^ { * } } \frac { \Gamma \cdot 3 \cdot 5 } { 8 x ^ { 6 } } d x . } \end{array}
+$$
 
+Le terme général de la série a pour expression
 
-en intégrant par parties, on obtient alors 
+$$
+\frac { \texttt { I . 3 . 5 . . ( 2 n -- I ) } } { 2 ^ { 2 n - 1 } \mathcal { X } ^ { 2 n + 1 } } \epsilon ^ { - , x ^ { * } } .
+$$
 
-Le terme général de la série a pour expression 
+Le rapport d'un terme au précédent dépasseI l'unité lorsque $\bf { 2 } n + \bf { I } > \mathrm { 4 } x ^ { 2 }$ . La série diverge donc à partir d'un certain terme. On peut obtenir une limite supérieure de l’intégrale qui sert de reste.
 
-Le rapport d'un terme au précédent dépasse] l'unité lorsque _in_ 4- î >4^'<sup>2</sup> - La série diverge donc à partir d'un certain terme. On peut obtenir une limite supérieure de l'intégrale qui sert de reste. On a, en effets 
+On a, en effet,
 
+$$
+\begin{array} { r l } & { \frac { \texttt { r . 3 . 5 . . ( 2 n + 1 ) } } { 2 ^ { 2 n - 1 } } \int _ { x } ^ { \infty } \frac { e ^ { - x ^ { 2 } } } { x ^ { 9 n + 2 } } d x < \frac { \texttt { r . 3 . 5 . ( 2 n + 1 ) } } { 2 ^ { 2 n - 1 } } e ^ { - x ^ { 2 } } \int _ { x } ^ { \infty } \frac { d x } { x ^ { 2 n + 2 } } } \\ & { \quad = \frac { \texttt { r . 3 . 5 . ( 2 n - 1 ) } } { 2 ^ { 2 n - 1 } x ^ { 2 n + 1 } } e ^ { - x ^ { 2 } } . } \end{array}
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0024-08.png)
+Or cette dernière quantité est le terme qui précédait l'intégrale. Le terme complémentaire est donc toujours plus petit que celui qui le précède.
 
+On a édité des tables donnant les valeurs de l’intégrale
 
-Or cette dernière 'quantité est le terme qui précédait l'intégrale. Le terme complémentaire est donc toujours plus petit que celui, qui le précède. 
-
-On, a édité des tables donnant les valeurs de l'intégrale
+$$
+\Theta \left( y \right) = \frac { 2 } { \sqrt { \pi } } \int _ { 0 } ^ { y } c ^ { - y ^ { \prime } } d y .
+$$
 
 <!-- page: 25 -->
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0025-00.png)
+On aura évidemment
 
+$$
+\int _ { 0 } ^ { x } p d x = { \frac { 1 } { 2 } } \Theta \left( { \frac { x } { \gamma _ { i } \sqrt { \pi } \sqrt { t } } } \right) \cdotp
+$$
 
-pour que le cours _x_ soit atteint ou, dépassé à l'époque ^ croît, constamment avec le temps. Si _t_ était infinie elle seraît éga'le îi •l^ résultat évident. 
+La probabilité
 
-La probabilité 
+$$
+\mathfrak { P } = \int _ { x } ^ { \infty } p d x = \frac { 1 } { 2 } - \frac { 1 } { 2 } \frac { 2 } { \sqrt { \pi } } \int _ { 0 } ^ { \frac { x } { 2 \sqrt { \pi k } \sqrt { \dot { \gamma } } } } e ^ { - \dot { \gamma } \cdot \frac { 3 } { 2 } } d \dot { \gamma } ,
+$$
 
+pour que le cours x soit atteint ou dépassé à l’époque t, croit con- $_ { \alpha }$ stamment avec le temps. Si t était infini, ellc serait égale à 1, résultat ${ \bf { \chi } } _ { \bf { \psi } \psi _ { \bf { \psi } } } ^ { 1 } ,$ évident.
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0025-03.png)
+La probabilité
 
+$$
+\int _ { x _ { 1 } } ^ { x _ { 2 } } p d x = { \frac { 1 } { \sqrt { \pi } } } { \int _ { \frac { x _ { 1 } } { 2 \sqrt { \pi } k \sqrt { \ell } } } ^ { \frac { x _ { 2 } } { 2 \sqrt { \pi } k \sqrt { \ell } } } e ^ { - \dot { \gamma } _ { 2 } \tau } d \lambda }
+$$
 
-pour que le cours se trouve compris _h_ répoque /, <lan^ rinl^mllo fini <r^ _x^_ est nulle pour / :-: o (*t pour _i^.^,_ Kllc est niîixiîîiîi lorsque 
+pour que le cours se trouve compris à l'époque t, dans l'intervalle ni $x _ { \because } , \ x _ { \uparrow }$ , est nulle pour $\ell : = \dots + \ell ( )$ et pour $l = r$ . Elle est maxima lorsque
 
+$$
+\ell \equiv \frac { \ : \ : _ { \parallel } } { \ : \overline { { \ell _ { \ell } } } \ : _ { \ell } ^ { \prime \prime } } \ : \frac { \ : \chi _ { \ell } ^ { \star } \ : _ { \ell + \ell } ^ { \star } \ : _ { 1 } ^ { \star } } { \ : \displaystyle \log \displaystyle \frac { \ : \chi _ { \ell } ^ { \star } } { \ : \ : _ { r _ { 1 } } ^ { \star } } } ,
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0025-05.png)
+Si nous supposons l'intervalle $x _ { 2 } , \ x _ { 1 }$ très petit, nous retrouvons pour époque de la probabilité maxima
 
+$$
+\ell \stackrel { \ldots } { \ldots } \mathstrut _ { \mathrm { ~ \tiny ~ \mathfrak ~ { ~ \mathfrak { ~ 2 ~ } ~ } ~ } \pi / \mathrm { ~ \tiny ~ \mathfrak ~ { ~ 2 ~ } ~ } } ^ { \mathrm { ~ \tiny ~ \mathfrak ~ { ~ r ~ 2 ~ } ~ } } .
+$$
 
-Si nous supposons l'intervalle _x^ x^_ très petite ïiou^ retrouvaîi» pour époque de la probabilité ïnaxiroa 
+Écart probable. — Nous appellerons ainsi l'intervalle $\therefore f c$ tel que, au bout du temps t, le cours ait autant de chances de rester compris dans cet intervalle que de chances de le dépasser.
 
+La quantité a se détermine par l’équation
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0025-07.png)
+$$
+\int _ { 0 } ^ { \cdot ^ { \chi } } p d \prime x = \frac { 1 } { 4 }
+$$
 
+ou
 
-Écart probable. — Nous appelleronH _ïûnm_ l'iritcrvallo ri:: a tel qiie, au bout du, temps /,1e cours ait autant de chances de reMer co.rnprh dans cet intervalle que de chances de _h_ déparer- 
-
-La quantité a se détermine par l'équation 
-
-ou 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0025-11.png)
+$$
+( - ) \left( \ - \frac { a } { 2 k \sqrt { \pi } \sqrt { i } } \right) = \frac { 1 } { 2 } ,
+$$
 
 <!-- page: 26 -->
 
-###### c'est-à-dire 
+c'’est-à-dire
 
-0^:2 xo, 47^9 ^^^==1^88^^; 
+$$
+\alpha = 2 \times { \circ , \ 4 } 7 6 9 \ : \ : k \sqrt { \pi } \sqrt { \bar { t } } = \mathrm { { r } } , 6 8 8 \mathrm { { / } } \sqrt { \bar { t } } ;
+$$
 
-cet intervalle est proportionnel à la racine carrée du temps. 
+cet intervalle est proportionnel à la racine carrée du temps.
 
-Plus généralement, considérons l'intervalle ± j3 tel que la probabilité pour que, à l'époque _t,_ le cours soit compris dans cet intervalle soit égale à _Uy_ nous aurons 
+Plus généralement, considérons l’intervalle $\pm \beta$ tel que la probabilité pour que, à l’époque t, le cours soit compris dans cet intervalle soit égale à $u ,$ nous aurons
 
+$$
+\int _ { 0 } ^ { \beta } p d x = { \frac { u } { 2 } }
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0026-06.png)
+ou
 
+$$
+\Theta \left( \frac { \beta } { 2 k \sqrt { \pi } \sqrt { t } } \right) = u .
+$$
 
-OU 
+Nous voyons que cet intervalle est proportionnel à la racine carrée du temps.
 
+Rayonnement de la probabilité. — Je vais chercher directement l’expression de la probabilité • pour que le cours $_ x$ soit atteint ou dépassé à l'époque t. Nous avons vu précédemment qu'en divisant le temps en intervalles très petits $\Delta t ,$ on pouvait considérer, pendant un intervalle $\Delta t ,$ le cours comme variant de la quantité fixe et très petite $\Delta x$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0026-08.png)
+Je suppose que, à l’époque $t ,$ les cours $x _ { n - 2 } , x _ { n - 1 } , x _ { n } , x _ { n + 1 } , x _ { n + 2 } , . . .$ différant entre eux de la quantité $\Delta x$ , aient pour probabilités respectives : $p _ { n - 2 } , p _ { n - 1 } , p _ { n } , p _ { n + 1 } , p _ { n + 2 } , . . . .$ De la connaissance de la distribution des probabilités à l’époque $\iota ,$ on déduit aisément la distribution des probabilités à l’époque $t + \Delta t .$ Supposons, par exemple, que le cours $x _ { n }$ soit coté à l'époque t; à l'époque $t + \Delta t$ seront cotés les cours $x _ { n + 1 }$ ou $x _ { n - 1 }$ . La probabilité $p _ { n } ,$ pour que le cours $\scriptstyle { \mathcal { x } } _ { n }$ soit coté à l'époque $t ,$ se décomposera en deux probabilités à l'époque $\pmb { t } \mathrm { \Delta } t$ ; le cours $x _ { n - 1 }$ aura de ce fait pour probabilité $\frac { p _ { n } } { \mathbf { \varepsilon _ { 2 } } }$ , et le cours $x _ { n + 1 }$ aura du même fait pour probabilité $\underset { ? } { \underbrace { p _ { n } } }$
 
-
-Nous voyons que cet intervalle est proportionnel à la racine carrée du temps. 
-
-Rayonnement de la probabilité. — Je vais chercher directement l'expression de la probabilité _<S_ pour que le cours _x_ soit atteint ou dépassé à l'époque _t._ Nous avons vu précédemment qu'en divisant le temps en intervalles très petits A^, on pouvait considérer, pendant un intervalle A^ le cours comme variant de la quantité fixe et très petite A;r, 
-
-Je suppose que, à l'époque _t,_ les cours _x,^ x^,_ , _x^ x^,x^_ ... différant entre eux de la quantité A^, aient pour probabilités respectives : _pn^, pn^i^ pn, pn+^ pn+^,_ .-• De la connaissance de la distribution des probabilités à l'époque _t,_ on déduit aisément la distribution des probabilités à l'époque _1_ 4- A^ Supposons, par exemple, que le cours _x^_ soit coté à l'époque _l;_ à l'époque _t_ 4-A^ seront cotés les cours _x^^_ ou ^«,. La probabilité^, pour que le cours _Xy,_ soit coté à l'époque _t,_ se décomposera en deux probabilités à l'époque _l+àl;_ le cours <r^ aura de ce fait pour probabilité 4^ <ït le cours _x^_ aura du même fait pour probabilité<sup>_PJt_</sup> _-_ 
-
-_^t_ 
-
-Si le cours _x^^_ est coté à l'époque _t_ + A/y c'est que, à l'époque _ty_ les cours ^^ ou _x^_ ont été cotés; la probabilité du cours _x^_ à
+Si le cours $x _ { n - 1 }$ est coté à l’époque $\ell + \Delta \ell$ , c’est que, à l’époque $\boldsymbol { t } ,$ les cours $x _ { n - 2 }$ ou $\scriptstyle { \mathcal { X } } _ { n }$ ont été cotés; la probabilité du cours $\scriptstyle { \mathcal { X } } _ { n - 1 }$ à l’époque $t + \Delta t$ est donc $\stackrel { { \cal P } n - 2 } { \mathrm { ~ \lambda ~ } _ { \mathrm { 2 } } } + \stackrel { { \cal P } n } { \mathrm { ~ \lambda ~ } _ { \mathrm { { \small ~ \alpha ~ } } } } ;$ ; celle du cours $x _ { n }$ est, à la même époque, $\frac { p _ { n - 1 } + p _ { n + 1 } } { 2 }$ , celle du cours $x _ { n + 1 }$ est $\begin{array} { c } { { I ^ { \prime } n ^ { - 1 - 1 } } } \\ { { \ldots } } \\ { { \ldots } } \end{array}$ , etc.
 
 <!-- page: 27 -->
 
-l'époque ^ + _\t_ est donc ^^^t^; celle _Un_ cours ^ est, à la même époque, ^l^^:<sup>1</sup> , celle du cours _^,,,_ est /^•B41^/^•.•1:1^ été, Pendant le temps A(Î, le cours ^ a, on quoique sorte, énm vers le course,., la probabilité _•_ «»<sup>_p n_</sup> _;_ le cours ^^ a, émÎB vers le cour^ ^/,, la probabilité ^<sup>1</sup> - Si ^ est plus grand que /^,,» réchange de probabilité est ^=^±1 de ^ vers /r^,. 
+Pendant le temps $\Delta t ,$ le cours $x _ { n } \mathrm { ~ a ~ }$ , en quelque sorte, émis vers le cours $x _ { n + 1 }$ la probabilité $\frac { p _ { n } } { 2 }$ ; le cours $x _ { n + 1 } : 1$ , émis vers le cours $x _ { n }$ , la probabilité $\boldsymbol { \underline { { { p _ { n + 1 } } } } }$ . Si $p _ { \pmb { \mathscr { z } } }$ est plus grand que $\smash { p _ { n + 1 } }$ , l’échange de probabilité est $\underline { { { p _ { n } } } } - \underline { { { p _ { n + 1 } } } }$ de ${ \boldsymbol { \mathscr { x } } } _ { n }$ vers $x _ { n + 1 }$
 
-On peut donc dire : 
+On peut donc dire :
 
-_Chaque cours oc rayonne pendant l'élément de temps wr$ le (mm mùw une quantùédeprobabtiàéproporlwnnelle à la d'i/erenae de Iwn probes bilùe's,_ 
+Chaque cours x rayonne pendant l’élément de temps vers le cours voisin une quantité de probabilité proportionnelle à la différence de leurs probabilités.
 
-Je dis proportionnelle, car on doit tenir compte du rapport de _à;v_ à A/, La loi qui précède peut, par analogie avec certaine» théories physiques, être appelée la _loi du rayonnement_ ou de diffusion de la prohabilité. 
+Je dis proportionnelle, car on doit tenir compte du rapport de $\Delta x :$ $\Delta t .$ La loi qui précède peut, par analogie avec certaines théories physiques, être appelée la loi du rayonnement ou de diffusion de la probabilité.
 
-Je considère la probabilité (P pour que le eour^ .r se troim<sup>11</sup> à l'époque / dans rintewille _x, ce_ et j'évalue l^aceroisseinexit de .cotte probabilité pendant le tenips A/'. 
+Je considère la probabilité ${ \mathfrak { L } }$ pour que le cours $_ x$ se trouve à l’époque t dans l'intervalle $x ,$ et j’évalue l’accroissement de cette probabilité pendant le temps $\Delta t .$
 
-Soit _p_ la probabilité du cours _x_ à l'époque ^ _p ^ -^_<sup>_r/_</sup> _^_ Évaluons î,i probabilité qui, pendant le temps A^ passe, en quelque^orte, à traverH le cours ^; c'est, d'après ce qui vient d'être dit, - 
+Soit $\boldsymbol { l } ^ { p }$ la probabilité du cours æ à l’époque $t , \iota \equiv \ldots \stackrel { \ r { d } \mathcal { Q } } { } _ { \iota , \bar { \iota } }$ • Évaluons la probabilité qui, pendant le temps $\Delta t ,$ passe, en quelque sorte, à travers le cours x; c’est, d’après ce qui vient d’être dit,
 
+$$
+\begin{array} { r } { \frac { \textbf { r } } { c ^ { 2 } } \left( p - \frac { d p } { d x } - p \right) \Delta \ell = - \frac { \textbf { r } } { c ^ { 2 } } \frac { d p } { d x } \Delta \ell = \frac { \textbf { r } } { c ^ { 2 } } \frac { d ^ { 2 } } { d x ^ { 2 } } \Delta \ell , } \end{array}
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0027-07.png)
+c désignant une constante.
 
+Cet accroissement de probabilité a aussi pour expression $\mathbf { \Pi } _ { \prime } ^ { \prime \prime \prime } \Delta t .$ On a donc
 
-_c_ désignant une constante. 
+$$
+c ^ { 2 } \frac { \partial \stackrel { ( j ) } { \cdot } } { \partial \stackrel { \cdot } { \prime } } - \frac { \partial ^ { 2 } \stackrel { ( j ) } { \cdot } } { \partial x ^ { 2 } } \stackrel { \cdot \cdot } { \cdots } 0 .
+$$
 
-Cet accroissement de probabilité a aussi pour expression -^'A/. On a donc 
+C’est une équation de Fourier.
 
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0027-10.png)
-
-
-C'est une équation de Fourier. 
-
-La théorie qui précède suppose les variations de cour» discontinueson peut arriver à l'équation de Fourier sans faire cette hypothèse, en
+Lathéorie qui précède suppose les variations de cours discontinues; on peut arriver à l’équation de Fourier sans faire cette hypothèse, en
 
 <!-- page: 28 -->
 
-remarquant que dans un intervalle de temps très petit A^, le cours varie d'une façon continue, mais d'une quantité très petite inférieure à £, par exemple. 
+remarquant que dans un intervalle de temps très petit $\Delta t ,$ le cours varie d'une façon continue, mais d'une quantité très petite inférieure à ε, par exemple.
 
-Nous désignerons par _TS_ la probabilité correspondant à _j)_ et relative à A^. 
+Nous désignerons par α la probabilité correspondant à p et relative à ∆t.
 
-D'après notre hypothèse, le cours ne pourra varier qu'à l'intérieur des limites _±_ c dans le temps A^ et l'on aura par suite 
+D'après notre hypothèse, le cours ne pourra varier qu'à l'intérieur des limites $\pm \textit { \Xi }$ dans le temps $\Delta t$ et l’on aura par suite
 
+$$
+\int _ { - a } ^ { + b } \varpi d x = I .
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0028-04.png)
+Le cours peut être $x - m$ à l’époque t; m étant positif et plus petit que ε; la probabilité de cette éventualité est $p _ { x - m } .$
 
+La probabilité pour que le cours x soit dépassé à l’époque $\ell + \Delta t$ ayant été égal à $x - m$ à l'époque $\iota ,$ aura pour valeur, en vertu du principe de la probabilité composée,
 
-Le cours peut être _x — m_ à l'époque _t\ m_ étant positif et plus petit que s; la probabilité de cette éventualité estp^.^. 
+$$
+\left. l ^ { s _ { x - \mu } } \int _ { s - \mu } ^ { s } \overleftarrow { \mathbf { \sigma } } \right.
+$$
 
-La probabilité pour que le cours _x_ soit dépassé à l'époque / -j~A^, ayant été égal à _x — m_ à l'époque _l,_ aura pour valeur, en vertu du principe dô la probabilité composée, 
+Le cours peut être $x + m$ , à l’époque t; la probabilité de cette éventualité est $p _ { x + m } .$
 
+La probabilité pour que le cours soit inférieur à x à l’époque $\pmb { t } + \Delta \pmb { t } ,$ ayant été égal à $x + m$ à l'époque t, aura pour valeur, en vertu du principe précédemment invoqué,
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0028-07.png)
+$$
+\left. l ^ { \circ _ { x + \mu } } \right. _ { \tt S - m } ^ { \tt S } \varpi d x .
+$$
 
+L'accroissement de la probabilité ${ \mathfrak { L } } ,$ dans l’intervalle de temps $\Delta t ,$ sera égal à la somme des expressions telles que
 
-Le cours peut être cZ'+w, à répoque /; la probabilité de cette éventualité est/^+^. 
+$$
+( p _ { x - m } - p _ { x + \cdots } ) \int \limits _ { \frac { c } { c } - 1 / 2 } ^ { \frac { c } { c } } \varpi d x
+$$
 
-La probabilité pour que le cours soit inférieur à _oc_ à l'époque / 4- A^, ayant été égal à _x_ -h- _m_ à l'époque _t,_ aura pour valeur, en vertu du principe précédemment invoqué, 
+pour toutes les valeurs de m depuis zéro jusqu’à ε.
 
+Développons les expressions de $p _ { x - m }$ et $p _ { x + \eta \mathfrak { z } }$ en négligeant les termes qui contiennent $\eta 2 ^ { \mathbf { 2 } }$ , nous aurons
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0028-10.png)
+$$
+p _ { x - \eta } = \rho _ { x } - m \frac { i l / p _ { x } } { d x } ,
+$$
 
-
-L'accroissement de la probabilité $, dans l'intervalle de temps A^ sera égal à la somme des expressions telles que 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0028-12.png)
-
-
-pour toutes les valeurs de _m_ depuis zéro jusqu'à e. 
-
-Développons les expressions de^.^ et _p^z_ en négligeant les termes qui contiennent _m_<sup>_3_</sup> , nous aurons , , '
+$$
+p _ { \alpha + / \mu } + / p _ { \alpha } + \cdot m \frac { d / p _ { \alpha } } { d x } .
+$$
 
 <!-- page: 29 -->
 
-L'expression ci-dessus devient alors 
+L’expression ci-dessus devient alors
 
+$$
+- { \frac { d J } { d x } } \int _ { z = m } ^ { \circ } { \mathrm { ? } } m \sigma { \mathrm { ? } } d x .
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0029-02.png)
+L’accroissement cherché a donc pour valeur
 
+$$
+- \frac { d p } { d x } \int _ { 0 } ^ { z } \int _ { z - m } ^ { z } 2 m \varpi d x d m .
+$$
 
-L'accroissement clierché a donc pour valeur 
+L’intégrale ne dépend pas de $x ,$ de t ou de $\boldsymbol { p } ,$ c’est une constante. L’accroissement de la probabilité α a donc bien pour expression
 
+$$
+\frac { \texttt { r } } { c ^ { 2 } } \frac { d J } { d x } .
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0029-04.png)
+L’équation de Fourier a pour intégrale
 
+$$
+{ \mathfrak { P } } = \int _ { 0 } ^ { \infty } f \left( \iota - { \frac { c ^ { 2 } \cdot { \mathcal { X } } ^ { 2 } } { 2 a ^ { 2 } } } \right) e ^ { - { \frac { \alpha ^ { 2 } } { 2 } } } d \alpha .
+$$
 
-L'intégrale ne dépend pas de _x,_ de _t_ ou de _p,_ c'est une consiante. L'accroissement de la probabilité $ a donc bien, pour expression 
+La fonction arbitraire f se détermine par les considérations suivantes :
 
+On doit avoir ${ \mathfrak { L } } = { \frac { \mathfrak { r } } { 2 } }$ si $\textstyle x = - 0$ , t ayant une valeur positive quelconque; et $\mathbb { Q } \simeq { \mathfrak { o } }$ lorsque t est négatif.
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0029-06.png)
+En posant $x = 0$ dans l’intégrale ci-dessus, on a
 
+$$
+{ \mathfrak { P } } = f ( \ell ) \int _ { 0 } ^ { \infty } e ^ { - { \frac { \chi ^ { 2 } } { 2 } } } d \alpha = { \frac { \sqrt { \pi } } { \sqrt { 2 } } } f ( \ell ) ,
+$$
 
-L'équation de Fourier a pour intégrale 
+c'est-à-dire
 
+$$
+\begin{array} { l l } { f ( t ) = \frac { \Upsilon } { \sqrt { 2 } \sqrt { \pi } } } & { \mathrm { p o u r } \ t \gg \mathrm { o } , } \\ { f ( t ) = \mathrm { o } } & { \mathrm { p o u r } \ t < \mathrm { o } . } \end{array}
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0029-08.png)
-
-
-La fonction'arbitraire /se détermine par les'considérations suivantes : 
-
-On doit avoir _Q_ == - si .y==ô, _l_ ayant une valeur positive mielconque ; et _<S_ == o lorsque _t_ est négatif. 
-
-En posant _x_ == o dans l'intégrale ci-dessua, on a 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0029-12.png)
-
-
-c'est-à-dire 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0029-14.png)
-
-
-Cette dernière égalité nous montre que l'intégrale t aura ses éléments /•it2 y» 2 'nuls tant que _t— ^_ sera plus petit que zéro, c'est-à-dire tant que , ^•* -y* a sera'plus petit que _-—^;_ on doit doneprenidre pour limite inférieure
+Cette dernière égalité nous montre que l’intégrale α aura ses éléments nuls tant que $t - \frac { c ^ { 2 } \cdot x ^ { 2 } } { 2 a ^ { 2 } }$ sera plus petit que zéro, c’est-à-dire tant que α sera plus petit que $\frac { c . x } { \sqrt { 2 } \sqrt { \ell } } ;$ on doit donc prendre pour limite inférieure
 
 <!-- page: 30 -->
 
-THÉOIUF. DÎ5 LA SPÉCULATION. 
+dans l’intégrale &, la quantité $\frac { c x } { { \sqrt { 2 } } { \sqrt { t } } }$ et l'on a
 
+$$
+\begin{array} { r l } & { \Phi = \frac { \mathrm { I } } { \sqrt { 2 } \sqrt { \pi } } \displaystyle \int _ { \frac { c . x } { \sqrt { 2 } \sqrt { \bar { \sqrt { \ell } } } } } ^ { \infty } e ^ { - \frac { x ^ { 2 } } { 2 } } d \alpha = \frac { \mathrm { I } } { \sqrt { \pi } } \displaystyle \int _ { \frac { c . x } { 2 \sqrt { \bar { \ell } } } } ^ { \infty } e ^ { - \lambda ^ { 2 } } d \lambda , } \end{array}
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0030-02.png)
+ou, en remplaçant $\int _ { \frac { c . x } { 2 { \sqrt { \ell } } } } ^ { \infty } \int _ { } ^ { \infty } $ par $\int _ { 0 } ^ { \infty } - \int _ { 0 } ^ { \frac { c \cdot x } { 2 \sqrt { t } } } ,$
 
+$$
+\begin{array} { r } { \mathfrak { L } = \frac { 1 } { 2 } - \frac { 1 } { 2 } \frac { 2 } { \sqrt { \pi } } \int _ { 0 } ^ { \frac { c . x } { 2 \sqrt { \dot { \iota } } } } e ^ { - \dot { \iota } . 2 } d \lambda , } \end{array}
+$$
 
-formule précédemment trouvée, 
+formule précédemment trouvée.
 
-Loi des écarts de primes. — Pour connaître la loi qui régit le rapport de l'importance des primes et leurs écarts, nous appliquerons a l'acheteur de prime le principe de l'espérance mathém.atiquc : 
+Loi des écarts de primes. — Pour connaître la loi qui régit le rapport de l’importance des primes et leurs écarts, nous appliquerons à l'acheteur de prime le principe de l’espérance mathématique :
 
-_L'espérance mathématique de l'acheteur de prime est nulle._ 
+L’espérance mathématique de l’acheteur de prime est $n u l / e$
 
-Prenons pour origine le cours vrai. du ferme _Çfîg._ 5)* _SoHp_ la probabilité au cours _±_ ,'y, c'est-à-dire dans le cas actuel la probabilité pour que la réponse des primes ait lieu au cours :±: «r. Soit _m,_ + _h_ l'écart vrai de la prime dont _h._ Exprimons que l'espérance mathématique totale est nulle. 
+Prenons pour origine le cours vrai du ferme $( \it { \sqrt { 6 9 } } . 5 )$
 
+Soit p la probabilité au cours $\pm = x ,$ c’est-à-dire dans le cas actuel la probabilité pour que la réponse des primes ait lieu au cours $\pm \ v { x }$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0030-07.png)
+Soit $m + h$ l’écart vrai de la prime dont ½.
 
+Exprimons que l'espérance mathématique totale est nulle.
 
-<!-- Start of picture text -->
-Fi^. 5.<br><!-- End of picture text -->
+![](assets/figures/1900-bachelier-theorie-de-la-speculation-p0030-block-0012-0fdc2d2843979617.jpg)
 
+Nous évaluerons cette espérance :
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0030-08.png)
+${ \bar { \mathbf { I } } } ^ { 0 }$ Pour les cours compris entre -- ∞ et $m ,$
 
+${ \mathfrak { z } } ^ { 0 }$ )) )) m et $m + h ,$ $3 ^ { \mathrm { o } }$ )) ) $m + \not { h } { \mathrm { ~ e t ~ } } + \infty .$
 
-<!-- Start of picture text -->
-OL  rw<br><!-- End of picture text -->
-
-Nous évaluerons cette espérance : x° Pour les cours compris entre -- co et _rny_ 2° » » : _m_ et _m + h^_ 3° » » _m_ •4- A et +• co. _Ânn. de l'Èc» Normale, 3^_ Série. Tome XVII,— FÉVÏUJKR 1900.
+Ann. de l'Éc. Normale. 3° Série. Tome XVII. — FévRiER 1goo.
 
 <!-- page: 31 -->
 
-L. BÀCHEtjr.n. 
+${ \bf \cal I } ^ { \mathrm { ~ o ~ } }$ Pour tous les cours compris entre $+ \infty$ et $m _ { i }$ , la prime est abandonnée, c'est-à-dire que l'acheteur subit une perte $\lambda .$ Son espérance mathématique pour un cours compris dans l’intervalle donné est done $\cdots { p h }$ et pour tout l’intervalle
 
+$$
+\cdots h \int \limits _ { \cdots } ^ { \prime \prime } p d x .
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0031-02.png)
+$2 ^ { \circ }$ Pour un cours x compris entre m et $m + h$ , la perte de l’acheteur sera $m + \lambda - x$ ; l’espérance mathématique correspondante sera $- p ( m + h - x )$ et pour l’intervalle entier
 
+$$
+- \int _ { m } ^ { m + h } p ( m + h - x ) d x .
+$$
 
-2° Pour un cours _x_ compris entre _m_ et W-+-Â» la perle de racbeteur sera _m_ -+- _h_ — _x\_ l'espérance mathématique correspondante sera _—p(m_ 4-À — _oc)_ et pour l'intervalle entier 
+$3 ^ { \circ }$ Pour un cours x compris entre $m + h$ et ${ \mathfrak { o o } } ,$ le bénéfice de l'acheteur sera $x - m \mathrm { \ldots } h$ ; l’espérance mathématique correspondante sera $p ( x - m - h )$ et pour tout l'intervalle
 
+$$
+\int _ { m + h } ^ { \infty } p \left( x - m \ldots h \right) d x .
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0031-04.png)
+Le principe de l'espérance totale donnera donc
 
+$$
+\int _ { m + h } ^ { \infty } p ( x - m - h ) d x - \int _ { m } ^ { m + h } p ( m + h \cdots , x ) d x - h \int _ { - \infty } ^ { m } p d x = 0
+$$
 
-3° Pour un cour§ _oo_ compriB- entre _m_ + _h_ et co, le bénéfice de l'acheteur sera _œ — m —_ À; l'espérance mathématique correspondante sera/?(^ — _m_ — //.) et pour toutTintmaIlo 
+ou, en faisant les réductions,
 
+$$
+h + m \int _ { \cdot n } ^ { \cdot \infty } I ^ { \prime } d x = \int _ { m } ^ { \cdot \infty } p \cdot x d x .
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0031-06.png)
+Telle est l’équation aux intégrales définies qui établit une relation entre les probabilités, les écarts de prime et leur importance.
 
+Dans le cas où le pied de la prime tomberait du côté des x négatifs, comme le montre la ${ \mathcal { A } } g .$ $\mathrm { 6 , }$ m serait négatif et l’on arriverait à la relation
 
-Le principe de l'espérance totale donnera dono 
+$$
+\frac { \ d _ { 2 } h + m } { \ d z ^ { 2 } } + \ d z m \int _ { 0 } ^ { \cdots } \ d z p d x = \int _ { - m } ^ { \infty } p \ d x d x ,
+$$
 
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0031-08.png)
-
-
-ou, en faisant les réductions, 
-
-Telle est l'équation aux intégrales définies qui établit ime relation entre les probabilités,, les écarts de prime et leur importance. 
-
-Dans le cas où le pied de la prime tomberait du côté de^ _x_ négatifs, comme le montre la _fig._ 6, _m_ serait négatif et l'on arriverait à la relation 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0031-12.png)
-
-
-Par suite de la symétrie des probabilités, la fonction _p_ devant être
+Par suite de la symétrie des probabilités, la fonction p devant être
 
 <!-- page: 32 -->
 
-paire, il en résulte que les deux équations ci-dessus n'en forment qu'une. 
+paire, il en résulte que les deux équations ci-dessus n'en forment qu’une.
 
+![](assets/figures/1900-bachelier-theorie-de-la-speculation-p0032-block-0002-35452dc920bcd531.jpg)
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0032-02.png)
+En différentiant, on obtient l'équation différentielle des écarts de prime
 
+$$
+{ \frac { c l ^ { 2 } h } { d m ^ { 2 } } } = = p _ { \ m } ,
+$$
 
-<!-- Start of picture text -->
-Fi<ï. 6,<br><!-- End of picture text -->
+$p _ { m }$ étant l'expression de la probabilité dans laquelle on a remplacé x par m.
 
-En difïerentiant, on obtient l'équation différentielle des écarts de prime 
+Prime simple. — Le cas le plus simple des équations ci-dessus est celui où $m = 0$ , c’est-à-dire celui où l’importance de la prime est égale à son écart. On appelle prime simple cette sorte de prime, la seule que l'on traite dans la spéculation sur les marchandises.
 
+Les équations ci-dessus deviennent, en posant $m = 0$ et en désignant par a la valeur de la prime simple,
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0032-04.png)
+$$
+a = \int _ { 0 } ^ { \infty } p x d x = \int _ { 0 } ^ { \infty } \frac { x } { 2 \pi k \sqrt { \bar { \ell } } } e ^ { - \frac { \bar { \nu } ^ { 2 } } { 4 \pi k ^ { \prime } \bar { \ell } } } d x = k \sqrt { \bar { \ell } } .
+$$
 
+L’égalité $a = = \int _ { 0 } ^ { \infty } l$ ox dx montre que la prime simple est égale à l’espérance positive de l'acheteur ferme; ce fait est évident, puisque le preneur de prime verse la somme a au donneur pour jouir des avantages de l’acheteur ferme, c’est-à-dire pour avoir son espérance positive sans encourir ses risques.
 
-fêtant l'expression de la probabilité dans laquelle on a remplacée par/??. 
+De la formule
 
-Prime simple, — Le c^ le plus sjpple des équations ci-dessus est celui où m == o, c'est-à-dire celui où l'importance de la prime est é^ale à son écart. On appelle _prime simple_ cette sorte de prime, la seule que l'on traite dans la spéculation sur les marchandises. 
-
-Les équations ci-dessus deviennent, en posant _m =_ o et en dési^ gnant par _a_ la valeur de la prime simple, 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0032-08.png)
-
-
-_f'^_ 
-
-L'égalité _a ^ j_ 0 _p x d x_ montre que la prime simple est égale à l'espérance positive de l'acheteur ferme; ce fait est évident, puisque le preneur de prime verse la somme _a_ au donneur pour jouir des avantages de l'acheteur ferme, c'est-à-dire pour avoir son espérance positive sans encourir ses risques. 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0032-11.png)
+$$
+a = \int ^ { \infty } p x d x = k \sqrt { l } ,
+$$
 
 <!-- page: 33 -->
 
-02 
+nous déduisons le principe suivant, un des plus importants de notre étude :
 
-ï- îîAr-iirjJKK. 
+La valeur de la prime simple doit être proportionnelle à la racine carree du temps.
 
-.nous déduisons le principe suivant, ini des plus importants de» noire étude : 
+Nous avons vu précédemment que l'écart probable était donné par la formule
 
-_La valeur de la prime simple doit être proporlwnndk à la moine carrée du temps._ 
+$$
+\alpha { = } \mathrm { { r } } , 6 8 8 \mathrm { { \mathit { k } } } \sqrt { t } { = } \mathrm { ~ } \mathrm { { \mathit { r } } } , 6 8 8 \mathrm { { \mathit { a } } } .
+$$
 
-Nous avons vu précédemment que l'écart probable était donné par la formule 
+L'écart probable s'obtient donc en multipliant la prime moyenne par le nombre constant 1,688; il est donc très facile à calculer quand il s’agit de spéculations sur les marchandises puisque, dans ce cas, la quantité a est connue.
 
+La formule suivante donne l’expression de la probabilité en fonction dc a
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0033-05.png)
+$$
+p = { \frac { 1 } { 2 \pi a } } c ^ { - { \frac { x ^ { 2 } } { 6 \pi a ^ { 2 } } } } .
+$$
 
+La probabilité dans un intervalle donné aura pour expression l’intégrale
 
-L'écart probable s'obtient donc en multipliant la prinw moyenne par le'nombre constant ï,688; il est donc très facile à calculer quand il s'agit de spéculations sur les marchandises puisque, dan^ ce cas» la quantité _a_ est connue. 
+$$
+\frac { \pi } { 2 \pi a } \int _ { 0 } ^ { \pi } e ^ { - \frac { x ^ { n } } { 4 \pi a ^ { n } } } d . x
+$$
 
-La formule suivante donne FexpresBion de la probabilité en fonction de _a_ 
+ou
 
+$$
+\frac { 1 } { 2 \pi a } \biggl ( u - \frac { u ^ { 3 } } { 1 2 \pi a ^ { 2 } } + \frac { u ^ { 3 } } { 1 6 0 \pi ^ { 2 } a ^ { 4 } } - \frac { u ^ { 7 } } { 2 ( 3 7 8 \pi ^ { 3 } a ^ { 4 } } + \cdot \cdot \cdot \biggr ) .
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0033-08.png)
+Cette probabilité est indépendante de a et, par suite, du temps, si u $u ,$ au lieu d’être un nombre donné, est un paramètre de la forme $\pmb { u } = l , \boldsymbol { u }$ par exemple, si $u = a ,$
 
+$$
+\begin{array} { r } { \int _ { 0 } ^ { \prime \prime } p d x = \frac { 1 } { 2 \pi } - \frac { 1 } { 2 4 \pi ^ { 2 } } + \frac { 1 } { 3 2 0 \pi ^ { 3 } } - \ldots = 0 , 1 5 5 . } \end{array}
+$$
 
-La probabilité dans un intervalle donné aura pour expre^ion rhi" tégrale 
+L’intégrale f p dx représente la probabilité de réussite du preneur $\int _ { \pi } ^ { \infty } p$ de prime simple. Or
 
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0033-10.png)
-
-
-ou 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0033-12.png)
-
-
-Cette probabilité est indépendante de _a_ et, par suite, (lu lempg» _m u,_ au lieu d'être un nombre donné, est un paramètre de la forme _u^ba;_ par exemple, si _u_ =""" _a_ , 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0033-14.png)
+$$
+\begin{array} { r } { \int _ { a } ^ { \infty } p d x = \frac { \eta } { 2 } - \int _ { 0 } ^ { \epsilon t } p d x = \mathrm { o } , 3 4 5 . } \end{array}
+$$
 
 <!-- page: 34 -->
 
-Donc : 
+Donc :
 
-£a _proba/nhié de réussite du preneur de prime simple est indépendante de F époque de l'échéance; elle a pour valeur_ 
+La probabilité de réussite du preneur de prime simple est indépendante de l’époque de l’échéance; elle a pour valeur
 
+$$
+\mathrm { { o , 3 / 5 } . }
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0034-04.png)
+L’espérance positive de la prime simple a pour expression
 
+$$
+\int _ { x } ^ { \infty } p ( x - a ) d x = \mathrm { o } , 5 8 \alpha .
+$$
 
-1/espérance positive de la prime simple a pour expression 
+Double prime. - Le stellage ou double prime est formé de l'achat simultané d’une prime à la hausse et à la baisse (primes simples). Il est facile de voir que le donneur de stellage est en bénéfice dans l’intervalle $\ldots _ { 2 a } , \ldots _ { 2 a } ,$ sa probabilité de réussite est donc
 
+$$
+^ { 2 } \int _ { 0 } ^ { \infty } p d x = { \frac { 3 } { \pi } } - { \frac { 2 } { 3 \pi ^ { 2 } } } \cdots { \frac { 2 } { 1 0 \pi ^ { 3 } } } - \cdot \cdot = \mathrm { o } , 5 6 .
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0034-06.png)
+La probabilité du preneur de stellage est $\mathbf { 0 } , \langle \mathbf { \hat { J } } | \langle \mathbf { \hat { J } } |$
 
+Espérance positive du stellage
 
-Double prime. — Le _stellage_ on _double prime_ est tonné de l'achat simultané d/une prune a la hausse et à la baisse (primes simples). Il est facile de voir que le donneur de stellage est en bénéfice dans l'in1 tervalle •••-— 20, 4' - 2a; sa probabilité de réussite est donc 
+$$
+{ } ^ { 2 } \int _ { \psi _ { d } } ^ { \varphi } p \left( x \cdots 3 a \right) d x = 0 , 5 5 \alpha .
+$$
 
+Coefficient d'instabilité. — Le cocfficient k, précédemment introduit, est le coefficient d’instabilité ou de nervosité de la valeur, c’est lui qui mesure son état statique. Sa tension indique un état d’inquiétude; sa faiblesse, au contraire, est l’indice d'un état de calme.
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0034-08.png)
+Ce coefficient est donné directement dans la spéculation sur les marchandises par la formule
 
+$$
+a \equiv { \mathit { k } } \sqrt { t } ,
+$$
 
-_La probabilité du preneur de stellage est_ ûy44* 
+mais dans la spéculation sur les valeurs on ne peut le calculer que par approximation, comme nous allons le voir.
 
-Espérance positive du stellage 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0034-11.png)
-
-
-, Coefficieîi.t d^Bstabilité. — Le coefïîcient^, précédemment introduit, 1 _1_ est 1e _coeffifiient d' instabilité_ ou de nervosité de la valeur^ c'est lui qui mesure son état statique. Sa tension indique _wi_ état d'inquiétude; sa faiblesse, au contraire, est l'indice.d'un état de calmeCe coetïîcient est donné directement dans la spéculation sur les marchandises par la formule 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0034-13.png)
-
-
-mais dans là spéculation sur les valeurs on ne peut le calculer que par approximation, comme nous allons le voir* 
-
-Série des écarts de prime. — I/équation aux intégrales définies des écarts do prime n^est pas exprimable'en termes finis quand la quan-
+Série des écarts de prime. — L'équation aux intégrales définies des écarts de prime n'est pas exprimable en termes finis quand la quan-
 
 <!-- page: 35 -->
 
-54 î- BA(U1ELÎEH. tité _m,_ différence entre l'écart de la prime et son importance À, n'est pas nulle, 
+tité ${ \boldsymbol { n 2 } } _ { \mathrm { { i } } }$ , différence entre l’écart de la prime et son importance $h ,$ n’est pas nulle.
 
-Cette équation conduit à la série 
+Cette équation conduit à la série
 
-_m_ w<sup>2</sup> _ni' rn^ 1 ^_ 2 ' _l\7i:a_ 96 T:2 a'4 ï 920 TÎ:" «<sup>tt</sup> ' ' * " 1 ' 
+$$
+h - \alpha + \frac { m } { 2 } - \frac { m ^ { 2 } } { 4 \pi \alpha } + \frac { m ^ { 4 } } { 9 6 \pi ^ { 2 } \alpha ^ { 3 } } - \frac { m ^ { 6 } } { 1 9 2 0 \pi ^ { 3 } \alpha ^ { 3 } } \cdots = \dots = 0 .
+$$
 
-Cette relation, dans laquelle la quantité a désigne l'importance de la prime simple, permet de calculer la valeur de _a_ quand on connaît celle de m, ou inversement. 
+Cette relation, dans laquelle la quantité a désigne l’importance de la prime simple, permet de calculer la valeur de a quand on connait celle de $m ,$ ou inversement.
 
-Loi approximative des écarts de prime- — La série qui précède peut s'écrire 
+Loi approximative des écarts de prime. - La série qui précède peut s'écrire
 
-_h_ ==.; _û_ —/(m). 
+$$
+h = a \cdots f ( m ) .
+$$
 
-Considérons le produit de la prime _h_ par son écart (m 4- A) î 
+Considérons le produit de la prime $\boldsymbol { h }$ par son écart $( m + h )$
 
-_h(în_ 4- _h}_ == _[a_ ""-/( _m)] [m_ "•{•" a —"/( /^)] ; 
+$$
+h ( m + h ) = [ a - f ( m ) ] [ m + a - f ( m ) ] ;
+$$
 
-dérivons-en _m,_ nous aurons 
+dérivons-en m, nous aurons
 
-^[/< (m + _h)]_ "= A^ ) _[m_ •4-" ^ -/(m)] 4- [^ -/(^)J ^ -/'(^J» 
+$$
+\frac { d } { d m } [ h ( m + h ) ] = f ^ { \prime } ( m ) \left[ m + \alpha - f ( m ) \right] + [ \alpha - f ( m ) ] \left[ 1 \cdots f ^ { \prime } ( m ) \right] .
+$$
 
-^ Si nous posons _m_ = o, d^où /(w) ^ o^ /'(^) ^<sup>1</sup> <^îtte dérivée s'annule; nous devons en conclure que : 
+Si nous posons $m = 0 ,$ d'où $\begin{array} { r } { f ( m ) = 0 , f ^ { \prime } ( m ) = \frac { 1 } { 2 } , } \end{array}$ , cette dérivée s’annule; nous devons en conclure que :
 
-_Le produit d'une prime par •§ûn écart est mwimuyn yua/ïd Ici facteurs de ce produit sont égauy s cest le ca$ de la primé simple._ 
+Le produit d’une prime par son écart est maximum quand les deux facteurs de ce produit sont égaux : c’est le cas de la prime simple.
 
-Dans les environs de son maximum, le produit (m question doit peu varier. C'est ce qui permet souvent de détermiïier apprôximâtivemexit a parla formule 
+Dans les environs de son maximum, le produit en question doit peu varier. C’est ce qui permet souvent de déterminer approximativement a par la formule
 
-_h(m+h)ï=:a^_ 
+$$
+\begin{array} { r } { h \left( m + \boldsymbol { J } _ { l } \right) = a ^ { 2 } , } \end{array}
+$$
 
-elle donne pour a une valeur trop faible. 
+elle donne pour a une valeur trop faible.
 
-En ne<sup>1</sup> considérant'que les trois premiers termes dô la^érie^ _m_ obtient 
+En ne considérant que les trois premiers termes de la ${ \mathrm { s e r i e } } ,$ on obtient
 
+$$
+\hbar ( h + m ) = a ^ { 2 } - \frac { m ^ { 2 } } { 4 } ,
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0035-16.png)
-
-
-qui donne pour a mie valeur trop forte,
+qui donne pour a une valeur trop forte.
 
 <!-- page: 36 -->
 
-Dans la plupart des cas, en prenant les quatre premiers termes de la série, on obtiendra une approximation très suffisante; on aura ainsi 
+Dans la plupart des cas, en prenant les quatre premiers termes de la série, on obtiendra une approximation très suffisante; on aura ainsi
 
- 7:_ ( _^h_ -+-jw) _^^^r^^j^.^^^ ~ '_ 4 " T r 
+$$
+\alpha = \frac { \pi ( 2 h + m ) \pm \sqrt { \pi ^ { 2 } ( 2 h + m ) ^ { 2 } - 4 \pi m ^ { 2 } } } { 4 \pi } .
+$$
 
-Avec cette même approximation on aura pour valeur de _m_ en fonction de _a_ 
+Avec cette même approximation on aura pour valeur de m en fonction de a
 
-2 2 _m_ = 71: _a_ ±: i/TT a — ^^'^^^ ^ 
+$$
+\begin{array} { r } { m = \pi a \pm \sqrt { \pi ^ { 2 } a ^ { 2 } - 4 \pi a ( a - h ) } . } \end{array}
+$$
 
-Admettons pour un instant la formule simplifiée 
+Admettons pour un instant la formule simplifiée
 
-_h {m_ -h _h) ^c^-^I^t._ 
+$$
+\lambda ( m + h ) = a ^ { 2 } = \lambda ^ { 2 } \ell .
+$$
 
-Dans la spéculation sur les valeurs les primes à la hausse ont une importance _h_ constante^ l'écart _m_ + _h_ est donc proportionnel au temps. 
+Dans la spéculation sur les valeurs les primes à la hausse ont une importance h constante, l'écart $m + h$ est donc proportionnel au temps.
 
-_V écart des primes à la hausse, dans la spéculation sur les valeurs y est sensiblement proportionnel'à la dwée de leur échéance et au carré de Vin» stabiMtê^_ 
+L’écart des primes à la hausse, dans la spéculation sur les valeurs, est sensiblement proportionnel à la durée de leur échéance et au carré de l’instabilité.
 
-Les primes à la baisse, sur les valeurs (c'est-à-dire, la vente ferme contre achat à prime) ont un écartA constant et une importance _m_ 4- A variable. Donc : 
+Les primes à la baisse, sur les valeurs (c'est-à-dire, la vente ferme contre achat à prime) ont un écart h constant et une importance $m + h$ variable. Donc :
 
-_•î^ importance des primes à la baisse, dans la spéculation sur les valeurs^ est se'n$iblern€nt proportionnelle à la durée de leur échéance et au carré de l^instabilité,_ 
+L’importance des primes à la baisse, dans la spéculation sur les valeurs, est sensiblement proportionnelle à la durée de leur échéance et au carré de l’instabilité.
 
-Les deux lois qui précèdent ne sont qu'approchées, 
+Les deux lois qui précèdent ne sont qu’approchées.
 
-Options. — Appliquons le principe de l'espérance mathématique à l'achat d'une option d'ordre _n_ traitée à l'écart r. 
+Options. - Appliquons le principe de l'espérance mathématique à l'achat d'une option d’ordre n traitée à l'écart r.
 
-L'option d'ordre _n_ peut. être considérée comme se composant de deux opérations : . ^ , 1 ! x° Un achat ferme d'une unité au cours r$ 
+L'option d'ordre n peut être considérée comme se composant de deux opérations :
 
-a° IJa achat ferme de _(n_ — ï) unités au cours TV cet achat n'étant à considérer que dans l'intervalle r, 30-
+$\textbf { I } ^ { \mathbf { o } }$ Un achat ferme d’une unité au cours r;
+
+${ \bf { \vec { 2 } } } ^ { 0 }$ Un achat ferme de $( n \mathrm { ~ - ~ } \mathtt { i } )$ unités au cours $r ,$ cet achat n'étant à considérer que dans l’intervalle $r , \infty .$
 
 <!-- page: 37 -->
 
-56 • L. BACHELmi. 1 La première opération a pour espérance rnîitliéTnati.cjlît — /-, la, seconde a pour espérance 
+La première opération a pour espérance mathématique $\cdots r .$ la seconde a pour espérance
 
-On doit donc avoir 
+$$
+{ \left( { n \mathrm { \ : - \ : 1 } } \right) } \int _ { r } ^ { \infty } p \left( { x \mathrm { : } { x \mathrm { : } { r \mathrm { : } { r } } } } \right) d x .
+$$
 
+On doit donc avoir
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0037-02.png)
+$$
+r = ( n - 1 ) \int _ { \nu } ^ { \infty } p \left( x \cdots r \right) d x \cdot
+$$
 
+ou, en remplaçant p par sa valeur, $p$
 
-ou, en remplaçant _p_ par sa valeur, 
+$$
+p = \frac { { \mathbf { r } } } { 2 \pi a } \widetilde { c } ^ { - \frac { x } { 4 \pi a ^ { 2 } } } ,
+$$
 
+$\operatorname { e t } ,$ en développant en série,
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0037-04.png)
+$$
+2 \pi \alpha ^ { 2 } - \pi \dot { \alpha } \frac { n + 1 } { n - 1 } r + \frac { r ^ { 2 } } { 2 } - \frac { r ^ { 4 } } { 4 8 \pi a ^ { 2 } } + \ldots = 0 ,
+$$
 
+En ne conservant que les trois premiers termes, on obtient
 
-et, en développant en série, 
+$$
+r = a \bigg [ \frac { n + 1 } { n - 1 } \pi - \sqrt { \Big ( \frac { n + 1 } { n - 1 } \pi \Big ) ^ { 2 } - 4 \pi } \bigg ] .
+$$
 
+Si $n = 2 ,$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0037-06.png)
+$$
+r = \ldots 0 , \ell 8 a .
+$$
 
+L’écart de l’option du double doit être environ les deux tiers de la valeur de la prime simple.
 
-En ne conservant que les trois premiers termes on obtient 
+Si $n = 3 .$
 
-Si _n_ == _2,_ 
+$$
+r \simeq { \mathfrak { r } } , { \mathfrak { o g } } { \mathfrak { d } } ,
+$$
 
-_r^:QMa._ 
+L’écart de l’option du triple doit être supéricur de un dixième environ à la valeur de la prime simple.
 
-_L'écart de l'option dit double doU être environ les deu^ iim de la valeur de la prime simple._ 
+Nous venons de voir que les écarts des options sont approximativement proportionnels à la quantité a.
 
+Il en résulte que la probabilité de réussite de ces opérations est indépendante de la durée de l’échéance.
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0037-11.png)
-
-
-_L'écart de l'option du triple doit éire supérieur de un dixième wwn à la valeur de /a prime simple»_ 
-
-Nous venons de voir que les écarts des options sont appimbiativement proportionnels à la quaniiié a. 
-
-Il en résulte que la probabilité de réussite de ces opérations ert indépendante de la durée de réchéance. 
-
-_La probabilité de réamte de l'optùm du double est_ 0,394, _l'opéfndon réussit quatre fois sur dix._
+La probabilite de réussite de l’option du double est $\mathrm { o , 3 9 4 }$ , l’opération réussit quatre fois sur dix.
 
 <!-- page: 38 -->
 
-THÉOHÏE DE LA SPÉCULATION. _^_ 
+La probabilité de l’option du triple est o,33, l’opération réussit une foιs sur trois.
 
-_La probabilité de l'option du triple est_ o,33, _l'opération réussit une fois nur trois._ 
+L’espérance positive de l’option d’ordre n est
 
-L'espérance positive de l'option d'ordre _n_ est 
+$$
+n \int _ { r } ^ { \infty } p ( x \gets r ) d x ,
+$$
 
-et comme 
+et comme
 
+$$
+\frac { \prime } { n - 1 } = \int _ { r } ^ { \infty } p \left( x - r \right) d x ,
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0038-04.png)
+l’espérance cherchée a pour valeur ${ \underset { n \ldots n } { \underbrace { n } } } r ,$ c’est-à-dire 1,36a pour l’option du double et t,64a pour l’option du triple.
 
+En vendant ferme et en achetant simultanément une option du double, on obtient une prime dont l’importance est $r = \cdot \mathrm { _ { 0 } } , 6 8$ a et dont l'écart est le double de $r _ { \ast }$
 
-l'espérance cherchée a pour valeur --^-r, c'est-à-dire i.,36a pour l'option du doul)le et 1,64^ |)our l'option du triple. 
+La probabilité de réussite de l’opération est $\mathbf { o } , 3 \mathbf { \mathfrak { c } }$
 
-En vendant ferme et en achetant simultanément une option dn double, on obtient une prime dont l'importance est / == o,68a et dont l'écart est le double de r. 
+Par analogie avec les opérations à prime, nous appellerons optionstellage d’ordre n, l’opération résultant de deux options d’ordre n, à la hausse et à la baisse.
 
-La probabilité de réussite de l'opération est o,3o. 
+L’option stellage du second ordre est une opération fort curieuse; entre les cours ± rla perte est constante et égale à 2r. La perte diminue ensuite progressivement jusqu’aux cours $\mathrel { \mathop : } \mathrel { \mathop : } 3 r ,$ où elle s’annule.
 
-Par analogie avec les opérations à prime, nous appellerons _opium» stellage_ d'ordre _n,_ l'opération résultant, de deux options d'ordre _n,_ à la hausse et à la baisse, 
+Il y a bénéfice en dehors de l’intervalle $\yen 3r$
 
-L'option stellage du second ordre est une opération fort curieuse; entre les cours :±rla perte est constante et é^ale à ar. La perte diminue ensuite progressivement jusqu'aux cours _± 3r,_ où, elle s'annule, 
+La probabilité est ${ \bf ( ) , / _ { \ell } } \mathrm { { ^ { } } }$
 
-11 y a bénéfice en dehors de l'intervalle ::fc _3r\_ La<sup>1</sup> probabilité est o,/p. 
+## OPÉRATIONS FERMES.
 
-###### **OPÉRATIONS** FERMES. 
+Maintenant que nous avons achevé l’étude générale des probabilités nous allons l’appliquer à la recherche des probabilités des principales opérations de bourse en commençant par les plus simples, les opérations fermes et les opérations à prime, et nous terminerons par l’étude des combinaisons de ces opérations.
 
-Maintenant que nous avons achevé l'étude générale des probabilités nous allons l'appliquera la recherche des probabilités des principales opérations débourse en commençant par les plus simples, les opérations fermes et les opérations à prime, et nous terminerons par l'étude des combinaisons de ces opérations. 
+La théorie de la spéculation sur les marchandises, beaucoup plus simple que celle des valeurs, a déjà été traitée; nous avons, en effet,
 
-La théorie de la spéculation sur les marchandises, beaucoup plus simple que celle des valeurs, a déjà-été traitée; nous avons, en effet, _Aun, clé V_ '.A'r» _Nor'maie,_ 3* Sér:î<1! Toxtte XVU* <•—«• F&vaiKii ïç^oo. 8
+Ann, de l'Ée, Normale. 3° Série Tome XVII. - FévRiR 'Goo.
 
 <!-- page: 39 -->
 
-.58 L. (îAaiS^LÏEH. calculé la probabilité et l'espérance des primes simples des stellages et des options. 
+[Table source crop](assets/tables/1900-bachelier-theorie-de-la-speculation-p0039-block-0001-0bfa2f1f0c324fae.jpg)
 
-La théorie des opérations de bourse dépend, de deux coefficients : _b_ et _k._ 
 
-Leur valeur, à un instant donné, peut se déduire facilement de l'écart du terme au comptant et de l'écart d'une prime quelconque. 
+calculé la probabilité et l’espérance des primes simples des stellages et des options.
 
-Dans l'étude qui va suivre, nous ne nous occuperons que de la rente 3 °/(p qui estj^une des valeurs sur laquelle on traite régulièrement des primes. 
+La théorie des opérations de bourse dépend de deux coefficients : b et $k .$ T
 
-Nous prendrons pour valeurs de _h_ et _k_ leurs valeurs moyennes pour les cinq dernières années (ï8()4 à 1898), c'est-à-dire 
+Leur valeur, à un instant donné, peut se déduire facilement de l’écart du terme au comptant et de l’écart d’une prime quelconque.
 
-_b_ —: 0,264, _k_ :•.:-•-, f> 
+Dans l’étude qui va suivre, nous ne nous occuperons que de la rente $3 \ \%$ , qui est une des valeurs sur laquelle on traite régulièrement des primes.
 
-('le temps est exprimé en jours et l'unité de variation est le centime). Nous entendrons par valeurs _calculéea_ celles qui sont déduites des formules de la théorie avec les valeurs ci-dessus données aux constantes _h_ et /'. 
+Nous prendrons pour valeurs de b et k leurs valeurs moyennes pour les cinq dernières années (1894 à 1898), c'est-à-dire
 
-Les valeurs _observées_ sont celles que l'on déduit directement de ta compilation des cotes durant, ce même espace de temps de 3iH()4 ii ï8c)8 (<sup>r</sup> ). 
+$$
+\begin{array} { l } { { b = \mathrm { ~ o ~ } , 2 6 4 , } } \\ { { \mathit { k } : \dots \mathrm { ~ f } _ { 5 } ^ { * } } } \end{array}
+$$
 
-Dans les Chapitres qui vont suivre nous aurons constammeril à connaître les valeurs moyennes de la quantité _a_ à différentes époques: la formule 
+(le temps est exprimé en jours et l’unité de variation est le centime).
 
-_a-: ^\/1._ 
+Nous entendrons par valeurs calculées celles qui sont déduites des formules de la théorie avec les valeurs ci-dessus données aux constantes b et k.
 
-###### donne 
+Les valeurs obsercées sont celles que l’on déduit directement de la compilation des cotes durant ce même espace de temps de i894 à 1898 (').
 
-Pour 45 Jou rs . . . . . . . . . . . . . . . . . . . . . . . . _a_ -::: 33,54 " 3o » .....,.,.....,...,,..... _' a_ ;— %7 5 _3H_ ?» _w_ »» ........................ _(t_ s"1"1 _•r^y 31)_ » i (> '/ ,,....-.........,...,.,. _a —_ i f»,ï 'î 
+Dans les Chapitres qui vont suivre nous aurons constamment à connaître les valeurs moyennes de la quantité aà différentes époques : la formule
 
-Pour un jour, il semble que l'on devrait avoir a ^5; maiH dans tous les calculs de probabilités où il s'agit de:' moyennes on ne peiït poser _t_ == ï pour un jour. 
+donne
 
-(<sup>1</sup> ) TouLes les observations soîii oxinHUîS (!o la _Cote de la /Swrse.et d<î la Bwiffïw._
+$$
+a \cdots 5 \sqrt { \ell }
+$$
+
+Pour un jour, il semble que l'on devrait avoir $a = 5$ ; mais dans tous les calculs de probabilités où il s’agit de moyennes on ne peut poser t = 1 pour un jour.
+
+(1) Toutes les observations sont extraites de la Cote de la Bourse et de la Banque.
 
 <!-- page: 40 -->
 
-En effet, il y a 365 jours dans l'année, mais seulement 807 jours de,' **r) /•>** •-• bourse. Le _jour moyen_ de la bourse est donc _t_ =-= ^; il donne o0"7 
+En effet, il y a 365 jours dans l’année, mais seulement 3o7 jours de: bourse. Le jour moyen de la bourse est donc $\ell = \frac { 3 6 5 } { 3 0 7 } .$ il donne
 
-^=f>,45. 
+$$
+a \equiv 5 , 4 5 .
+$$
 
-On peut taire la même remarque pour le coefficient &. Dans tous les calculs relatifs à un jour de bourse on doit remplacer, _b_ par _h_ / == _—^h_ 36J, :,;.,., <:>3ï3.,„ ., _wj_ 
+On peut faire la même remarque pour le coefficient b. Dans tous les calculs relatifs à un jour de bourse on doit remplacer b par ${ \boldsymbol { b } } _ { \mathfrak { i } } = { \frac { 3 6 5 } { 3 0 7 } } { \boldsymbol { b } } = { \mathfrak { o } } , { \mathfrak { 3 } } { \mathfrak { i } } ^ { \ 3 }$
 
-Écart probable. — Chercbons l'intervalle de cours ( — a , +-a) tel que, au boutd'nn mois, la rente ait autant de chances de se trouver dans cet intervalle que de chances de se trouver en dehors. On devra avoir 
+Écart probable. — Cherchons l'intervalle de cours $( - a , + a )$ tel que, au bout d’un mois, la rente ait autant de chances de se trouver dans cet intervalle que de chances de se trouver en dehors.
 
+On devra avoir
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0040-05.png)
+$$
+\int \limits _ { 0 } ^ { \cdot \alpha } p d x = \frac { 1 } { 4 } ,
+$$
 
+d’où
 
-<!-- Start of picture text -->
-f pela':^ y )<br>»/(><br><!-- End of picture text -->
+$$
+a = \cdots \pm 1 = 4 6 .
+$$
 
-d/ou 
+Pendant les 6o derniers mois, 33 fois la variation a été circonscrite entre ces limites et 27 fois elle les a dépassées.
 
-os=:±/i6. 
+On peut chercher de même l’intervalle relatif à un jour; on a ainsi
 
-Pendant les (k) derniers mois, 33 (bis la variation a été circonscrite entre ces limites et 27 (bis elle les a dépassées. 
+$$
+a : \cdots : f ( f ) .
+$$
 
-On peut chercher de môme l'intervalle relatif a un jour; on a ainsi, 
+Sur $\mathbf { I } \left. \mathcal { \tilde { \mathbf { I } } } \right. \mathcal { \tilde { \mathbf { \Lambda } } }$ 2 observations, 815 fois la variation a été inférieure à $9 ^ { \mathfrak { N } }$
 
+Dans la question qui précède, nous avons supposé que le cours coté se confondait avec le cours vrai; dans ces conditions, la probabilité et l’espérance mathématique de l’acheteur et du vendeur sont les mêmes. En réalité, le cours coté est inférieur au cours vrai de la quantité ${ \mathit { n l } } .$ , si n est le nombre de jours séparant de l’échéance.
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0040-10.png)
+L’écart probable de $\langle { j } ( \flat ^ { \prime \prime } ) ^ { \prime } | \flat ^ { \prime \prime } \rangle$ de part et d’autre du cours vrai correspond à l’intervalle compris entre $5 \% ^ { e }$ en hausse au-dessus du cours coté et $3 8 ^ { \mathfrak { c } }$ en baisse au-dessous de ce cours.
 
-
-Sar x45,2 observations, 8ï5 fois la variation a été inférieure à 9*', 
-
-Dans la question qui précède, nous avons supposé que le cours coté se confondait avec le cours vrai ; dans ces conditions, la probabilité et l'espérance mathéinalique de l'aclieteur et du vendeur sont les mêmes. En réalité, le cours coté est inférieur au cours vrai de la quantité/^, si _n_ est le nombre de jours séparant de l'échéance. L'écart probable de 4^' d^ part et d'antre du cours vrai correspond à <1> l'intervalle compris entre 54 en hausse au-dessus du cours coté et 38^ en baisse au-dessous de ce cours. 
-
-Formule de la probabilité dans le cas général. — Pour trouver la probabilité de la hausse pour une période de _n_ jours, il faut connaître
+Formule de la probabilité dans le cas général. - Pour trouver la probabilité de la hausse pour une période de n jours, il faut connaître l’écart nb du cours vrai au cours coté; la probabilité est alors égale à
 
 <!-- page: 41 -->
 
-GO L. BACHKLÎKÏi. 
+$$
+\int _ { - n \mu } ^ { + \infty } p \ d \boldsymbol { x } .
+$$
 
-l'écart _nb_ du cours vrai au cours coté; la probabilité est dors é^ale à 
+La probabilité de la baisse sera égale à l’unité diminuée de la probabilité de la hausse.
 
+Probabilité de l'achat au comptant. Cherchons la probabilité de réussite d’un achat au comptant destiné à ètre revendu dans 3o jours.
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0041-02.png)
+On doit remplacer dans la formule précédente la quantité nb par 25. La probabilité est alors égale à o,64 :
 
+L’opération a deux chances sur trois de réussir.
 
-La probabilité de la baisse sera égale à l'unité diminuée de la probabilité de la hausse, 
+Si l'on veut avoir la probabilité pour un an, on doit remplacer la quantité nb par 3oo. La formule $a = k \sqrt { t }$ donne
 
-Probabilité de l'achat an comptant. Cherchons la probabilité de réussite d'un achat au comptant destiné à être revendu dans 3o jours, 
+$$
+( \mathcal { t } \cong 9 ^ { 5 } , 5 .
+$$
 
-On doit remplacer dans la formule précédente la quantité _nb_ par 25. La probabilité est alors égale à 0,64 : L'opération a deux chances sur trois de réussir, 
+On trouve que la probabilité est
 
-Si Pon veut avoir la probabilité pour un an, on doit remplacer la quantité _nb_ par 3oo. La formule _a_ -= _/c\/t_ donne 
+$$
+{ \mathrm { o } } , 8 { \mathfrak { g } } .
+$$
 
-^::r:95,5. 
+Neuf fois sur dix un achat de rente au comptant produit un bénéfice au bout d’un an.
 
-On trouve que la probabilité est 
+Probabilité de l'achat ferme. Cherchons la probabilité de réussite d'un achat ferme effectué au début du mois.
 
+On a
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0041-09.png)
+$$
+n \not = 7 , 9 1 , \qquad n = 2 7 , 3 8 .
+$$
 
+On en déduit que :
 
-_Neuf/où $ur dix un achat de renie au comptant produit un béné/tw au bout d'un an._ 
+$$
+\begin{array} { r l r } { \mathrm { { I . a ~ p r o b a b i l i t 4 ~ d o ~ l a ~ h a u n s s e ~ c s t } ~ } , } & { { } \ldots \ldots \ldots \ldots } & { \ldots } & { \mathrm { ~ o , ~ } \hat { \mathfrak { h } } ^ { \prime } } \\ { \mathfrak { n } } & { { } } & { { \mathrm { b a i s s s t } } } & { { } \ldots \ldots \ldots \ldots } & { \ldots } & { \mathrm { ~ o , ~ } \hat { \mathfrak { h } } ^ { \prime } } \end{array}
+$$
 
-'Probabilité de l'achat ferme. — Cherchons la probabilité de réussite d'un achat ferme ellectué au début du mois. 
+La probabilité de l’achat croît avec le temps; pour un an, on a
 
-On a 
+$$
+n = 3 6 5 , \qquad n b = 9 6 , 3 6 , \qquad a = 9 5 , 5 .
+$$
 
-_nh_ "';.;; 7 ? 91, ^ =- a"7,3K» que : : La probabilité do la hminse o a t . . . . . . . , . . , , , , o, •')•) » baiseo " .. ^ . . . , . . . , , . o,/;,^ 
+La probabilité a alors pour valeur o,65.
 
-On en déduit que : : 
-
-La probabilité de Fâchât croît avec le temps; pour un an, on a _n •—_ 365, _nb —_ 96,36, _a -_ 9^, 5, 
-
-La probabilité a tflors pour valeur o,6S- 
-
-Quand, on effectue un achat ferme pour le revendre au bout d'un an, on a deux chances sur trois de réussir»
+Quand on effectue un achat ferme pour le revendre au bout d'un an, on a deux chances sur trois de réussir.
 
 <!-- page: 42 -->
 
-II est évident que si le report mensuel était de 25<sup>e</sup> la probabilité de l'achat serait o,5o. 
+Il est évident que si le report mensuel était de $2 5 ^ { \mathrm { c } }$ la probabilité de l'achat serait $\mathbf { 0 } , 5 \mathbf { 0 }$
 
-Avantage mathématique des opérations fermes. —- II me paraît indispensable, comme je l'ai déjà fait remarquer, d'étudier l'avantage mathématique d'un jeu dès qu'il n'est pas équitable, et c'est le cas des opérations fermes. 
+Avantage mathématique des opérations fermes. — Il me paraît indispensable, comme je l’ai déjà fait remarquer, d’étudier l’avantage mathématique d’un jeu dès qu’il n’est pas équitable, et c’est le cas des opérations fermes.
 
-Si nous supposons _h_ == o, l'espérance mathématique de l'achat ferme est a — a = = o . L'avantage de l'opération est _— = -_ comme d'ailleurs dans tout jeu équitable. 
+Si nous supposons $b = 0$ , l'espérance mathématique de l'achat ferme est $a - a = 0$ . L'avantage de l'opération est $\begin{array} { r } { \frac { a } { 2 a } = \frac { 1 } { 2 } } \end{array}$ comme d’ailleurs dans tout jeu équitable.
 
-Cherchons l'avantage mathématique d'un achat ferme de _n_ jours en supposant _b_ > o. L'acheteur aura, pendant cette période, touché la somme _nb_ provenant de la différence entre les coupons et les reports, et son espérance s e r a a — a + / ^ ; son avantage mathématique sera donc 
+Cherchons l’avantage mathématique d’un achat ferme de n jours en supposant $b > 0$ . L'acheteur aura, pendant cette période, touché la somme nb provenant de la différence entre les coupons et les reports, et son espérance sera $a \dots a \dots n b$ ; son avantage mathématique sera donc
 
+$$
+\begin{array} { c } { { a + n b } } \\ { { \geq a + n b } } \end{array} .
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0042-05.png)
+L’avantage du vendeur serait
 
+$$
+\frac { a } { 2 a + n b } .
+$$
 
-L'avantage du vendeur serait 
+Occupons-nous spécialement du cas de l’acheteur.
 
+Quand $b > 0$ son avantage mathématique croît de plus en plus avec n; il est constamment supérieur à la probabilité.
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0042-07.png)
+Pour un mois, l'avantage de l'acheteur est o,563 et sa probabilité o,55. Pour un an, son avantage est o,667 et sa probabilité $_ { 0 , 6 5 }$
 
+On peut donc dire que :
 
-Occupons-nous spécialement du cas de l'acheteur. • 
+L’avantage d’une opération ferme est à peu près égal à sa probabilité.
 
-Quand ^^>o son avantage mathématique croît de plus en plus avec _n;_ il est constamment supérieur à la prohabilité. 
+## OPÉRATIONS A PRIME.
 
-Pour'un mois, l'avantage de l'acheteur est o,563 et sa probabilité o,55. Pour un an, son avantage est 0,667 et sa probabilité o,65. On peut donc dire que ; 
+Écart des primes. Connaissant la valeur de a pour une époque donnée, on calcule facilement l'écart vrai par la formule
 
-_l^amntage (F une opération fe'nne est à peu près égal à sa probabilité._ 
-
-###### OPÉBATIONS A PKIME. 
-
-Écart dess primes. — Connaissant la valeur<sup>11</sup> de a j'pour une époque donnée, on calcule facilement l'écart vrai. par la formule 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0042-14.png)
+$$
+m = \pi a \pm \sqrt { \pi ^ { 2 } \alpha ^ { 2 } - 4 \pi a ( a - h ) } .
+$$
 
 <!-- page: 43 -->
 
-Connaissant l'écart vrai on obtient l'écart coté en ajoutant la quantité _nb_ à l'écart vrai; _n_ est le nombre de jours qui séparent de la réponse. 
+Connaissant l'écart vrai on obtient l'écart coté en ajoutant la quantité $n b$ à l’écart vrai; n est le nombre de jours qui séparent de la ré- ponse.
 
-Dans le cas d'une prime fin prochain, on ajoute la quantité [25+(/À--3o)//]. 
+Dans le cas d'une prime fin prochain, on ajoute la quantité $[ 2 5 + ( n - 3 0 ) b ]$
 
-On arrive ainsi aux résultats suivants : 
+On arrive ainsi aux résultats suivants :
 
-|_Prirnc^ _|_dont_'"»(>.<br>(•akmli^|'l^carleoto<br>ohHcl'vd.|
-|---|---|---|
-|A45jours..............|50,01|5^,0^<br>|
-|3o<br>»..............|<br>^-0,69<br>|9.1/Ày,|
-|%o<br>_»_. . . . . . . . . . . . . .|<br>!ï3,^3|ï.j,71|
+[Table source crop](assets/tables/1900-bachelier-theorie-de-la-speculation-p0043-block-0004-05230f3c0b916ba5.jpg)
+Primes dont 50.
 
+[Table source crop](assets/tables/1900-bachelier-theorie-de-la-speculation-p0043-block-0005-127cb8cad6f993a2.jpg)
+Primes dont 25.
 
-_Primes do fit_ '25. 
+[Table source crop](assets/tables/1900-bachelier-theorie-de-la-speculation-p0043-block-0006-820a22f2b0d801ab.jpg)
+Primes dout 1o.
 
-||Ecart(îûi<5<br>(.'aïeule.<br>oî»Hôrv^.|
-|---|---|
-|A_^_<br>_r)_|jours..............<br>7^,70<br>7',^Ko|
-|3o|»..............<br>37,7H<br>:î7,H.1|
-|ao<br>|"..............<br>ft'ï,17<br>'^r^<br> <br>|
-|10|^. . . . . . . . . . . . . .<br>iy,y^4<br>17,4°|
+Dans le cas de la prime dont 5º pour le lendemain nous avons
 
+$$
+h \equiv 5 , \qquad a \equiv 5 , 4 5
+$$
 
-_PfnHfîyi dotit_ 10* 
+d’où
 
-||ECUricoto|
-|---|---|
-||(•îilc^î^.<br>î^hftt.ii'vcî»|
-|A3o|jours..............<br>f»6,19<br>^<.M^|
-|^o|>'..............<br>48,o^<br>,<br>40,43|
-|îo|y..............<br>^6,<)i<br>3'^,H<)|
+$$
+I { \boldsymbol { \eta } } \mathrel { \mathop { : - } } \mathrel {  {  { / { \vphantom { | { \boldsymbol { \zeta } } | } }  \kern - delimiterspace } 2 }  \kern - delimiterspace } 2
+$$
 
-
-Dans le cas de la prime dont _^'_ pour le lendemain nous avons 
-
-**d'où** d'où 
-
-_h_ ':::" 3, zy 1:1::;:: 5,4^ /// .'--'.-• 0,81 ; 
-
-l'écart vrai est donc 5,8i ; en y ajoutant ^ ^ ^A ^ o,3x _on_ obtient l'écart calculé (>,ï2. 
+l’écart vrai est donc 5,81 ; en y ajoutant $b _ { 1 } = \frac { 3 6 5 } { 3 0 7 } b = 0 ,$ 31 on obtient l’écart calculé 6,12.
 
 La moyenne des cinq dernières années donne 7,36.
 
 <!-- page: 44 -->
 
-Les chiffres observés 'et calculés concordent dans leur ensemble, mais ils présentent certaines divergences qu'il est indispensable d'expliquer. 
+Les chiffres observés et calculés concordent dans leur ensemble, mais ils présentent certaines divergences qu’il est indispensable d’expliquer.
 
-Ainsi l'écart observé de la prime dont 10 à Séjours est trop faible; il est facile d'en comprendre la raison : Dans les périodes très mouvementées, alors que la prime dont 10 serait à un très fort écart, on ne cote pas celle prime ; la moyenne observée se trouve donc diminuée de ce lait. 
+Ainsi l’écart observé de la prime dont 1o à 3o jours est trop faible; il est facile d’en comprendre la raison : Dans les périodes très mouvementées, alors que la prime dont to serait à un très fort écart, on ne cote pas cette prime ; la moyenne observée se trouve done diminuée de ce fait.
 
-D'autre part, il n'est pas niable que le marché ait eu, pendant plusieurs années, une tendance à coter à de trop forts écarts les primes à courtes échéances; il se rend d'autant moins compte de la juste proportion des écarts que ceux-ci sont plus petits et que l'échéance est plus proche* 
+D'autre part, il n’est pas niable que le marché ait eu, pendant plusicurs années, une tendance à coter à de trop forts écarts les primes à courtes échéances; il se rend d’autant moins compte de la juste proportion des écarts que ceux-ci sont plus petits et que l’échéance est plus proche.
 
-II faut cependant ajouter qu'il semble s'être aperçu de son erreur, car en î8<)8 il a paru exagérer dans le sens inverse. 
+Il faut cependant ajouter qu’il semble s’être aperçu de son erreur, car en 1898 il a paru exagérer dans le sens inverse.
 
-Probabilité de levée des primes, — Pour qu'une prime soit levée, il faut que le cours de la réponse des primes soit supérieur au cours du pied de la prime; la probabilité de levée est donc exprimée par l'intégrale 
+Probabilité de levée des primes. — Pour qu'une prime soit levée, il faut que le cours de la réponse des primes soit supérieur au cours du pied de la prime; la probabilité de levée est donc exprimée par l’intégrale
 
+$$
+\int _ { \mathbb { z } } ^ { \infty } p d x ,
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0044-07.png)
+ε étant le cours vrai du pied de la prime.
 
+Cette intégrale est facile à calculer, comme on l'a vu précédemment; elle conduit aux résultats suivants :
 
-8 étant le cours vrai du pied de la prime. 
-
-Cette intégrale est facile à calculer, comme on l'a vu précédemment; elle conduit aux résulta IH suivants : 
-
-_Probabilité dfs leçée (les prime ff dont_ 5o. 
-
-|||Caleil1_6(i_.||Observ^e.|
-|---|---|---|---|---|
-|À4^|journ... . . * . * . . . , . .|o,63||0,59|
-|,'k>|>». . . . < . . . . . . . . .|o,7<|1|0,75|
-|_w_|_»_...,..,.,....*|<br>0,77||o,7G|
-||_Probabilité de levée _|_deK prunes _|_dont_|9,5,|
-|||CdÏeul^*.||Observée.|
-|A45|jours.. . , . . . . < * . . . .<br>|o,4ï||0,40|
-|Sa|»<sup>1 </sup>. . , . . . - . . . . . , .|0,47||^ô|
-|uo|_ft_^ , , , . . . , . . » . .|o,53|,<br>1|o,53|
-|io|». , . . . . . , - . , , . .|,o,65||o,6^|
+[Table source crop](assets/tables/1900-bachelier-theorie-de-la-speculation-p0044-block-0009-98461628415bf520.jpg)
+Probabilité de levée des primes dont 5o.
 
 <!-- page: 45 -->
 
-_Probabilité de levée dcff prirnev dont_ (o. 
+Probabilité de levée des primes dont to.
 
-||Calculée.|Ohsm'vée.|
-|---|---|---|
-|A3o|jours... . . . . . . . . . . .<br>0/21|0/21|
-|ao|_)i_.............<br>o/^K|o^'r>|
-|**ïô**|'»..............<br>o,3(>|0,'îîS|
+[Table source crop](assets/tables/1900-bachelier-theorie-de-la-speculation-p0045-block-0002-98581805c93f6241.jpg)
 
 
-On peut dire que les primes /5o sont levées trois fois sur quatre, les prîmes /2$ deux fois sur quatre et les primes /K) une Ibis sur quatreLa probabilité de levée de la prime dont 5<sup>e</sup> pour le lendemain est, d'après le calcul : o,48; le résultat de _if^6_ observations donne 671 primes certainement levées et 76 dont la levée est douteuse; en comptant ces 76 dernières primes la probabilité serait Oy5î, en ne les comptant pas elle serait 0,46, soit en moyenne o,43 comme Findique là théorie. 
+On peut dire que les primes $/ 5 \sigma$ sont levées trois fois sur quatre, les primes $/ 2 5$ deux fois sur quatre et les primes $/$ to une fois sur quatre.
 
-Probabilité de bénéfice des primes. — Pour qu'une prime donne du bénéfice à son acheteur, il faut que la réponse des prîmes se tasse à un cours supérieur à celui de la. prime. La probabilité de bénétice est donc exprimée par l'intégrale 
+La probabilité de levée de la prime dont $5 "$ pour le lendemain est, d'après le calcul : $_ { ( ) , \ / \ / 8 }$ ; le résultat de $\mathfrak { r } / \mathfrak { j } ^ { \mapsto } \mathcal { G }$ observations donne $6 { \scriptstyle 7 ^ { \mathtt { I } } }$ primes certainement levées et $\boldsymbol { \mathrm { 7 6 } }$ dont la levée est douteuse; en comptant ces $7 ^ { 6 }$ dernières primes la probabilité serait $( ) , 5 , 1$ , en ne les comptant pas elle serait $_ { 0 , \ell \ell }$ , soit en moyenne $_ { ( ) , / \ell } 8$ comme l’indique la théorie.
 
+Probabilité de bénéfice des primes. - Pour qu'une prime donne du bénéfice à son acheteur, il faut que la réponse des primes se fasse à un cours supérieur à celui de la prime. La probabilité de bénéfice est donc exprimée par l’intégrale
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0045-06.png)
+$$
+\int _ { \tilde { c } _ { 1 } } ^ { \infty } p d \tilde { c } r ,
+$$
 
+$\varepsilon _ { \pmb { \imath } }$ étant le cours de la prime.
 
-###### **£^ étant** le cours de la prime. 
+Cette intégrale conduit aux résultats ci-après :
 
-Cette intégrale conduit aux résultats ci-après : 
+[Table source crop](assets/tables/1900-bachelier-theorie-de-la-speculation-p0045-block-0009-cad7e05c924fb85e.jpg)
+Probabilité de bénéfice des primes dont 50.
 
-|_P_|_robabilité de bénéfice _|_dea primes dont_|5o»|
-|---|---|---|---|
-|||Calculée.|Observée,|
-|A4^' <br>|jours.* * . * . , . . . . . . *|o^o<br>|^^(j<br>|
-|3o<br>|»...,...,..,...<br>|_Oy/i'i_<br>|o^4î<br><sup>0</sup>|
-|20|»..,..........*|<.»544|o^|
-|_P_|_robabilité_**_de_**_bénéfice _|_des prunes dont_|^5.|
-|||Calculée|Ob»yrv«^,|
-|A45 <br>|jours.-......,.,,..|o,,3o<br>|o,â7<br>|
-|3o<br>|»..............|o,33<br>|_Oy3t_<br>|
-|20<br>|»..........,.,,|o^SB<br>|_' Gy3o_<br>|
-|ïô|».............|o,4t|0^4,0|
+Probabilité de bénéfice des primes dont 25. $^ { \cdot \ j \uparrow }$
+
+[Table source crop](assets/tables/1900-bachelier-theorie-de-la-speculation-p0045-block-0011-c390987cd9d86eaa.jpg)
+
 
 <!-- page: 46 -->
 
-||**THI^OHU: Î)E L**|**À S**|**S'K<;liL,\T10IN.**||**65**|
-|---|---|---|---|---|---|
-|_Pr_|_ofnthllitc de b^né_|_fic.c _|_dav primer dout_|10.||
-||||**Cale il 1 ée.**<br>|**Observée.**||
-|A3oj|ours,...........|..|o,%o<br>|o,t6||
-|**'20**<br>|**»»**<br>**. . . . . . . . . . . .**<br>|**. .**<br>|**0****_y9,'À_**<br>|**0, l3**<br>||
-|10|".............|..|0/^,7|o,a5||
+Probabilité de béuéfice des primes dout 1o.
+
+[Table source crop](assets/tables/1900-bachelier-theorie-de-la-speculation-p0046-block-0002-224c7cc8f7359e85.jpg)
 
 
-On voit, qu'entre les limites (ordinaires de la pratique, .la prohabilite de réossile de Fâchai, (l'une prime varie peu,. L'achat /5o réussit <.)i.îaire lois sur dix, radial, /^ trois fois sur di'x et Fâchât /îo deux "(ois sur dix. 
+On voit qu’entre les limites ordinaires de la pratique, la probabilité de réussite de l'achat d'une prime varie peu. L’achat $\tilde { / 5 } 0$ réussit quatre fois sur dix, l'achat $/ { : : } \tilde { . }$ trois fois sur dix et l’achat $/ \mathrm { ~ r ~ o ~ }$ deux fois sur dix.
 
-.D'après le calcul, racheteur de prime dont 5'' pour le lendeuiaiu a uue ()rol)alHlile de reussUe de (»,34» l.<sup>î</sup> ol<sup>l</sup> )servat,ion de L^5G cotes rnonti^» que _/i_ ro primes auraieul cerlaiueuieut donne des béneiiees et que 80 autres donneut un résullai donttîux, la, prohahilité observée est donc o.iî. 
+D’après le calcul, l’acheteur de prime dont $5 \mathrm { e }$ pour le lendemain a une probabilité de réussite de $( 1 , 3 / 1$ , l'observation de $\iota / \vert \tilde { \cdot } \rangle \ell \rangle$ cotes montre que /1o primes auraient certainement donné des bénéfices et que 8o autres donnent un résultat douteux, la probabilité observée est donc $( ) , 3 1$
 
-###### OPÉRATIONS COMPLEXES. 
+## OPÉRATIONS COMPLEXES.
 
-Classification des opérationa complexes, — Comme on Irait-e du ferme et souveut jusqu'à trois primes pour la même éolléance, on pourrait entreprendre en même temps des opérations [riplos et même quadruples. 
+Classification des opérations complexes. — Comme on traite du ferme et souvent jusqu'à trois primes pour la même échéance, on pourrait entreprendre en mème temps des opérations triples et même quadruples.
 
-Les opérations triples sortent déjà dn nombre de celles que l'on peut considérer comme classiques, leur élude est triîs intéressante, mais trop longue pour pouvoir être exposée ici. Nous nous bornerons donc aux opéra fions doubles, 
+Les opérations triples sortent déjà du nombre de celles que l’on peut considérer comme classiques, leur étude est très intéressante, mais trop longue pour pouvoir ètre exposée ici. Nous nous bornerons done aux opérations doubles.
 
-On peut les diviser en deux groupes suivant qu'elles contiennent on non du ferme» 
+On peut les diviser en deux groupes suivant qu’elles contiennent ou non du ferme.
 
-Les opérations contenant du ferme se co m poseront, d'un achat terme ^td^ine venleà prime, ou inversement. Les opérations à prime contre prime consistent dans la veule d'une grosse prime suivie de fâchai d'une petite, ou inversement. La proportion des achats et des ventes peut d'ailleurs varier à l'infin L Pour mmplifîer la question, ^'H^ n'étudierons que deux proportions très simplea ï 
+Les opérations contenant du ferme se composeront d’un achat ferme et d’une vente à prime, ou inversement.
 
-ï<sup>0</sup> La seconde opération porte _aw_ le même chiffre que la première. _Afïtî» da l ' È e , Normale,_ H* Série- Tome XVII* «""• (^VHïKn t^oô9
+Les opérations à primne contre prime consistent dans la vente d’une grosse prime suivie de l’achat d’une petite, ou inversement.
+
+La proportion des achats et des ventes peut d’ailleurs varier à l’infini. Pour simplifier la question, nous n’étudierons que deux proportions très simples :
+
+${ \mathfrak { t } } ^ { 0 }$ La seconde opération porte sur le même chiffre que la première. Ann. do $\iota ^ { \prime } \not { F } e .$ Normale. 3\* Série. Tome XVII. - Fevrien 1goo. 9
 
 <!-- page: 47 -->
 
-###### 66 
+$\mathbf { \underline { { \sigma } } } ^ { 0 }$ Elle porte sur un chiffre double.
 
-###### L. TîACHRURn* 
+Pour fixer les idées, nous supposerons que l’on opère au début du mois et nous prendrons pour écarts vrais les écarts moyens depuis cinq ans $\mathbf { : } ~ 1 2 , \bar { 7 } 8 / 5 0 , ~ 2 9 , 8 7 / 2 5$ et $^ { \mathrm { 5 8 , 2 8 / \mathfrak { n } 0 } }$
 
-2° Elle porte sur un chiffre double. 
+Nous remarquerons aussi que pour les opérations à un mois le cours vrai est plus élevé que le cours coté, de la quantité $7 \vartheta \vartheta \stackrel { \cdot \cdot \cdot } { \longrightarrow } \stackrel { \cdot \rangle \ j _ { 0 } \bar { \psi } } { \longrightarrow } \vartheta$
 
-Pour fixer les idées, nous supposerons que l'on opère au début du mois et nous prendrons pour écarts vrais les écarts moyens depuis cinq ans : ï2,78/5o, 29,87/2;") et 58,28/110. 
+Achat ferme contre vente à prime. On achète en réalité du ferme au cours $- 3 \mathrm { o } b = - 7 , \Game$ : et l'on vend à prime $\big / \mathfrak { R } \overset { \ ! } { \underset { } { \mathrm { ! } } }$ au cours $- \boldsymbol { \downarrow } , \boldsymbol { \rangle } , \boldsymbol { \ S } ,$
 
-Nous remarquerons aussi que pour les opérations _h_ un mois le cours vrai est plus élevé que le cours coté, de la quantité 7,91 :-^ _3oh._ 
+Il est facile de représenter l’opération par une construction géomé- trique $( \mathrm { \it { / } f g } . \mathrm { \it { ~ 7 } ) }$ : l'achat ferme est représenté par la droite AMB:
 
-Achat ferme contre vente à prime. — On acheté en réalité du ierme au cours —3o6 == -— 7,91 et _Von_ vend. a prime /^ au cours 4- ^9,87» II est facile de représenter l'opération par une construction géométrique _( fig^_ 7) : l'achat ferme est représenté par la droite AMB: 
+![](assets/figures/1900-bachelier-theorie-de-la-speculation-p0047-block-0006-27df713aaa7385f5.jpg)
 
+$\mathbf { M } ( ) = 3 \mathbf { \Lambda } _ { 0 } \mathbf { \Lambda } _ { b }$ . La vente à prime est représentée par la ligne brisée CDE, l’opération résultante sera représentée par la ligne brisée HNKL, l’abscisse du point N sera
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0047-06.png)
+$$
+\ldots ( 2 5 \div 3 0 \mathit { l } ) .
+$$
 
+On voit que l’opération donne un bénéfice limité égal à l'écart coté de la prime; à la baisse, le risque est illimité.
 
-<!-- Start of picture text -->
-Fjg. 7.<br>/B<br>/ /  0 • 1 1 , , ^<br>H/ A " " • ^<br><!-- End of picture text -->
+La probabilité de réussite de l’opération est exprimée par l’intégrale
 
-MO == _3oh._ La vente a prime est représentée par la ligne brisée CDE» l'opération résultante sera représentée par la ligne brisée HNKL, l'abscisse du point N sera 
+$$
+\int _ { - \infty } ^ { + \infty } \ d t + \infty \int _ { - \infty } ^ { + \infty } \ d t + \infty , \beta \in
+$$
 
-_•l•iii-- (_ %3 - i 1 - 3o//). 
+Si l'on avait vendu une prime /5o 1 $/ \mathrm { \tilde { / } { 0 } }$ la probabilité de réussite aurait $\acute { \varrho } \ell \mathrm { : } \doteq \mathrm { o } , 8 \mathrm { o }$
 
-On voit que l'opération donne un bénéfice limité é^al à l'écart coté de la prime; à la baisse, le risque est illimité. 
-
-La prohabilité de réussite de l'opération est expi*imée par l'intégrale 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0047-11.png)
-
-
-Si ron, avait vendu une prime /5o la probabilité de réussite aurait été ; 0,80. 
-
-11 est intéressant de connaître la probabilité dans le cas d'un report:, de 25<sup>e</sup> _( b_ === o).
+Il est intéressant de connaître la probabilité dans le cas d’un report de $2 5 ^ { \circ } \left( { \mathit { b } } = { \mathfrak { o } } \right)$ •
 
 <!-- page: 48 -->
 
-Celle probabilité est 0,64 en vendant /25 et 0,76 en vendant /5o. 
+67
 
-Si l'on revend une prime sur un achat au comptant, la probabilité est 0,76 (in revendant /^5 et 0,86 en revendant/3o. 
+Cette probabilité est $_ { 0 , 6 \mathsection }$ en vendant $/ 2 5$ et $^ { \mathrm { o } , 7 ^ { \mathrm { 6 } } }$ en vendant $/ 5 \mathrm { o }$
 
-Vente ferme contre achat à prime. — Celte opération est inverse delà précédente; elle donne a la hausse une perte limitée é t a l a baisse un bénéfice illimité. C'est, par conséquent, une prime à la baisse, prime dont Fécart est constant et l'importance variable, a l'inverse des primes à la hausse. 
+Si l'on revend une prime sur un achat au comptant, la probabilité est ${ \bf \omega } ( ) , { \bf \gamma } _ { 7 } ( \} )$ en revendant $/ { \boldsymbol { \mathrm { 2 5 } } }$ et $_ { 0 , 8 6 }$ en revendant $/ 5 0$
 
-Achat ferme contre vente du double à prime. — On achète ferme au, cours vrai •— 3o& et l'on vend le double au cours 2("),87/25. 
+Vente ferme contre achat à prime. — Cette opération est inverse de la précédente; elle donne à la hausse une perte limitée et à la baisse un bénéfice illimité. C’est, par conséquent, une prime à la baisse, prime dont l’écart est constant et l’importance variable, à l’inverse des primes à la hausse.
 
-La _J'ig._ <S représente géométriquement l'oj)ération ; elle montre que le risque est, iilhnité a. la hausse comme à la baisse. 
+Achat ferme contre vente du double à prime. On achète ferme au cours vrai $\ldots \ldots ( 3 1 ) \ell$ et l’on vend le double au cours ${ \it 2 3 5 , } 8 7 / 2 . 5$
 
+La $\displaystyle \ddot { } \dot { } \xi ^ { r } .$ ,8 représente géométriquement l’opération; elle montre que le risque est illimité à la hausse comme à la baisse.
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0048-06.png)
+![](assets/figures/1900-bachelier-theorie-de-la-speculation-p0048-block-0007-c989b89fc7ea86d8.jpg)
 
+On gagne entre les cours $\ldots \to ( \tilde { \langle \rangle } ( ) \not { \Uparrow } ( ) , \tilde { \rangle } _ { ( ) } / )$ et $5 ( \mathfrak { z } , \triangledown 4 + \mathfrak { z } ) 0 \bar { b }$ . La probabilité de réussite
 
-<!-- Start of picture text -->
-yig. K.<br><!-- End of picture text -->
+$$
+\int \iota ^ { \prime } d x = \alpha , 6 4 .
+$$
 
-^ On ga^ne entre les cours — ("5o -+" _3oh)_ et 5(),74 + ^<sup>0</sup> La probabilité de réussite 
+En vendant $/ 5 0$ la probabilité serait $_ { 0 , } \{ \} _ { 2 } ^ { \cdot }$ et en vendant /1o on aurait pour probabilité $_ { ( ) , ( ) 2 }$
 
+Si l’on avait acheté 2 unités ferme pour en vendre $3 / 5 \mathrm { o }$ , la probabilité aurait été $_ { ( ) , } \{ \} \{ \}$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0048-08.png)
-
-
-.En vendant /Ôo la probabilité sérail 0,62 et en vendant _/ s o_ on aurait pour probabilité 0,6^, 
-
-Si l'on avait acheté _2_ unités ferme pour en vendre 3/5o, la probabilité aurait été o^KL 
-
-Vê»te ferme contre achat du double à _prime._ — C'est l'opération in-
+Vente ferme contre achat du double à prime. — C'est l'opération in-
 
 <!-- page: 49 -->
 
-(;<S 
+verse de la précédente; elle donne des bénéfices dans le cas d’une forte hausse et dans celui d’une forte baisse.
 
-L. IS.\(niKLH':K. 
+Sa probabilité est : 0,27.
 
-verse de la précédente; elle donne des bénéfices dans le cas d'une (brie hausse et dans celui d'une forte baisse. 
+Achat d'une grosse prime contre vente d'une petite. Je suppose: qu’on ait fait simultanément les deux opérations suivantes :
 
-Sa probabilité est. : 0,27. 
+Acheté à..12,78/50 Vendu à ..... 29,87/25
 
-Achat d'une grosse prime contre vente d'une petite. - Je suppose qu'on ait (ail simultanément, les deux opérations suivantes : 
+Au-dessous du pied de la grosse prime $( \longrightarrow 3 7 , \sl { : } 2 \sl { : } 2 )$ , les deux primes sont abandonnées et l’on perd 25°.
 
-Acheté à . . . . . . . . . . . . . . . . . . . . . . . ...... i^,7<sup>8</sup> /"»<sup>0</sup> Vendu a . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ^9, ^P^<sup>5</sup> 
+Λ partir du cours $- 3 7$ , 22 on est acheteur, et au cours de 12,22 l’opération est nulle. On gagne ensuite jusqu’à ce que le pied de la prime /25, c’est-à-dire le cours -+ 4,87 soit atteint.
 
-Au-dessous du pied de la grosse prime ("— 37,22), les deux primes sont abandonnées et l'on perd 25<sup>e</sup> . 
+Alors on est liquidé et l’on gagne l’écart. En baisse on perd done 25°, c’est le risque maximum; en hausse on gagne l’écart.
 
-A partir du cours —37,22 on est acheteur, et au cours de 1— i ^,22 l'opération est nulle. On ^a^ne ensuite jusqu'à ce que le pied de la prime /2;5, c'est-à-dire le cours 4 ,4,87 • s011 atteint. 
+Le risque est limité, le bénéfice l’est également.
 
-Alors on est liquidé et l'on }<a^ne Fécarf. En baisse on perd donc 2,5<sup>e</sup> , c'est le risque maximum; en hausse on ^a^'ne l'écart» Le risque est limité, le bénéfice l'tîsl également» La _Jlg._ () représente géométriquement l'opération» 
+La ${ \bf \nabla } \mathcal { j } _ { \bf \dot { \delta } } \mathrm { \nabla } \beta ^ { \mathrm { * } } \mathrm { \nabla }$ 9 représente géométriquement l’opération.
 
+![](assets/figures/1900-bachelier-theorie-de-la-speculation-p0049-block-0010-cca931096f0fdbf8.jpg)
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0049-09.png)
+La probabilité de réussite est donnée par l’intégrale
 
+$$
+\int _ { - 1 2 , 2 2 } ^ { 1 9 } p \ d x = 0 , 5 9 .
+$$
 
-<!-- Start of picture text -->
-Pig. <..).<br><!-- End of picture text -->
+En achetant $/ 2 \tilde { \cdot } \tilde { ) }$ pour vendre $/ \left[ 1 0 \right]$ , la probabilité de réussite serait o,38.
 
-La probabilité de réussite est donnée par t'intégrale 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0049-11.png)
-
-
-En achetant /2^ pour vendre /ro, la probabilité de réussite serait o,38. 
-
-Vente d'une grosse prime contre achat d'une petite. — Cette opération, qui est la contre-partie de la précédente^ se discute sans difficulté; en
+Vente d'une grosse prime contre achat d’une petite. Cette opération, qui est la contre-partie de la précédente, se discute sans difficulté; en
 
 <!-- page: 50 -->
 
-baisse on gagne la différence du. montant des primes, en hausse on perd leur écart. 
+69
 
-Achat d'une grosse prime contre vente d'une petite en quantité double. Je suppose qu'on ait; f a i t l'opération suivante : 
+baisse on gagne la différence du montant des primes, en hausse on perd leur écart.
 
-Achat ii............................... j _'ï_ ,78/50 Venio du double. ...................... ^(),87/y/> 
+Achat d'une grosse prime contre vente d’une petite en quantité double. Je suppose qu’on ait fait l’opération suivante :
 
-En forte baisse, les primes sont abandonnées, elles se compensent; c'est, une opération _en blanc._ Au pied de la grosse prime, c'est-à-dire au cours — 37,22, on devient acheteur et l'on ^a^ne progressivement jusqu'au pied de la petite ("4- 4,87^. 
+12,78/50 Vente du double...................... 29,87/25
 
-A ce moment, le bénéfice est maximum (42,09 centimes) et l'on devient vendeur. On reperd progressivement le bénéfice et au, cours de 4'^î)^ ^° bénéfice est nul. 
+En forte baisse, les primes sont abandonnées, elles se compensent; c’est une opération en blanc. Au pied de la grosse prime, c’est-à-dire au cours — 37, 22, on devient acheteur et l’on gagne progressivement jusqu’au pied de la petite $i + 4 , 8 7 ,$ 1
 
-Au delà on perd proportionnellernent à la hausse. 
+A ce moment, le bénéfice est maximum (42,o9 centimes) et l'on devient vendeur. On reperd progressivement le bénéfice et au cours de $/ _ { 1 } \tilde { . ) } , 9 ^ { ( \mathrm { j } ) }$ ce bénéfice est nul.
 
-En résumée l'opération donne un bénéfice limité, un risque noi a la baisse et illimité à la hausse» 
+Au delà on perd proportionnellement à la hausse.
 
-La _//fi._ 10 représente géométriqiiernent l'opération, 
+En résumé, l’opération donne un bénéfice limité, un risque nul à la baisse et illimité à la hausse.
 
-Fig. i f » . 
+La $/ \xi$ . 1o représente géométriquement l’opération.
 
-Probabilité de l'opération en blanc........... o?3<> » de bénéfice. . * . * . . . . . . . . . • . • • • • • • ^^ _»_ do porte . . , * . . . . . . . . . . . . . . • . • • • • o ? ^ 
+![](assets/figures/1900-bachelier-theorie-de-la-speculation-p0050-block-0010-31a81c36174d6558.jpg)
 
-**Vente d'une grosse prime contre achat d'une petite en quantité double.** — Lîi discussion et _h_ représentation géométrique, de cette opération, inverse de la précédente, ne présentent aucune difficulté. Il est inutile de nous y arrêter.
+Probabilité de l'opération en blanc........... $_ { 0 , 3 0 }$ de bénéfice............... $\mathbf { o } , \mathbf { \mathcal { G } } ^ { 5 }$ " de perte..... $\mathbf { o } , \mathbf { 2 } 5$
+
+Vente d'une grosse prime contre achat d'une petite en quantité double. La discussion et la représentation géométrique de cette opération, inverse de la précédente, ne présentent aucune difficulté. Il est inutile de nous y arrêter.
 
 <!-- page: 51 -->
 
-Classification pratique des opérations de bourse. — Au point _de_ vue 
+Classification pratique des opérations de bourse. Au point de vue pratique, on peut diviser les opérations de bourse en quatre classes :
 
-- pratique, on peut diviser les opérations de bourse en quatre classes; Les opérations à la hausse. 
+Les opérations à la hausse.
 
-   - Les opérations à la baisse. 
+Les opérations à la baisse.
 
-Les opérations en prévision d'un ^rand mouvement dans un sens quelconque. 
+Les opérations en prévision d’un grand mouvement dans un sens quelconque.
 
-Les opérations en prévision des petits mouvements. 
+Les opérations en prévision des petits mouvements.
 
-Le Tableau suivant résume les principales opérations à la hausse: 
+Le Tableau suivant résume les principales opérations à la hausse :
 
-||Pï|'ohahiîitumoye|nne.|
-|---|---|---|---|
-||(reportnul),|(roporiînoycu).|(reporte^al<br> auxcotiponM).|
-|Achat/ 1 o . . . . . . . . . . . . . . . . . . .|. . . . . .<br>o,'20|o,ysû|o,'>,o|
-|Achat/ % 5 . . . . . . . . . . . . . . . . . . .<br>|. . . . . .<br>o,33<br>|o,'.H|o,33|
-|Achat/'ÀÔGvcmto/io.,.....|......<br>o,3H|<>,3H|o,3H|
-|Achat/ 5 o . . . . . . . . . . . . . . . . . . .|. . . . . .<br>0^43|o,,1'î|o^(3|
-|Achatferme................|......<br>0,64|o,5.^|o,5<>|
-|Achat/5oCvente_1^5_........|......<br>o,''x')|0,'*>()|<»,^j|
-|AeliatformeGvente/^î......|......<br>o,7<>|o,r>H|0,64|
-|»<br>>•'<br>/5o.. . . . . .|< . . . .<br>o,K(»|<,)^o|0,76|
+[Table source crop](assets/tables/1900-bachelier-theorie-de-la-speculation-p0051-block-0007-375dd82e41bc4322.jpg)
 
 
-II suffit d'inverser ce Tableau pour obtenir réchelle des opérations à la baisse. 
+Il suffit d’inverser ce Tableau pour obtenir l’échelle des opérations à la baisse.
 
-###### **PROBABILITÉ POUB QU^UM** COU.BS SOIT ATTEINT **DANS** UN **INTEBVALLE** DE TEMPS DONNÉ. 
+## PROBABILITÉ POUR QU'UN COURS SOIT ATTEINT DANS UN INTERVALLE DE TEMPS DONNÉ.
 
-Cherchons la probabilité P pour qu'un cours donné _c_ soit atteint ou dépassé dans un intervalle de temps /, 
+Cherchons la probabilité P pour qu’un cours donné c soit atteint ou dépassé dans un intervalle de temps t.
 
-Supposons d'abord, pour simplifier, que le temps soit décomposé en deux unités, que _t_ égale deux jours par exemple. 
+Supposons d’abord, pour simplifier, que le temps soit décomposé en deux unités, que t égale deux jours par exemple.
 
-Soit _x_ le cours coté le premier jour et soitj le cours du second jour relativement à celui du premier. 
+Soit x le cours coté le premier jour et soit y le cours du second jour relativement à celui du premier.
 
-Pour que Je course-soit atteint ou dépassé, îl faut que le premier jour le cours soit compris entre _c_ et w ou que, le second Jour, il, soit compris entre _c_ — _x_ et oo,
+Pour que le cours c soit atteint ou dépassé, il faut que le premier jour le cours soit compris entre c et œ ou que, le second jour, il soit compris entre c — x et ∞,
 
 <!-- page: 52 -->
 
-Dans la question actuelle, il faut distinguer quatre cas : 
+Dans la question actuelle, il faut distinguer quatre cas :
 
-|i"*'jour.|||:>"JOUI".|
-|---|---|---|---|
-|./'comprisciifci'o;||_y_co|mprisentre:|
-|-•x'<br>et|_c_|...„'„,^|_Q[_<br>_c_—,y;|
-|_~ ^_<br>01.|<"|<"—-./;|eL<br>-•';-so|
-|_(;_<br>et|_yj_|-""-o|et<br><?—.^'|
-|_C_<br>('t|co|6'—<br>1-,z*|eL<br>-4"î0|
+[Table source crop](assets/tables/1900-bachelier-theorie-de-la-speculation-p0052-block-0002-b0fd42de2b57ac7b.jpg)
 
 
-Suit* ces quatre cas, les trois derniers sont favorables. 
+Sur ces quatre cas, les trois derniers sont favorables.
 
-La probabilité, pour que le cours se trouve compris dans l'intervalle _dx_ le prernier jour et dans l'intervalle _dy_ le second jour, sera _p ^ p y d x d y ^_ 
+La probabilité, pour que le cours se trouve compris dans l’intervalle dx le premier jour et dans l’intervalle dy le second jour, sera $\rho _ { x } p _ { y }$ dx dy.
 
-La prohabilite P, étant par définition le rapport du nombre des cas favorables a, celui des cas possibles, aura pour expression 
+La probabilité P, étant par définition le rapport du nombre des cas favorables à celui des cas possibles, aura pour expression
 
+$$
+\mathbf { p } = { \frac { \int _ { - \infty } ^ { c } \int _ { c - x } ^ { \infty } + \int _ { c } ^ { \infty } \int _ { - \infty } ^ { c - x } + \int _ { c } ^ { \infty } \int _ { c - x } ^ { \infty } } { \int _ { - \infty } ^ { c } \int _ { - \infty } ^ { c - x } + \int _ { c - x } ^ { c } \int _ { c - x } ^ { \infty } + \int _ { c } ^ { \infty } \int _ { c - x } ^ { \infty } } }
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0052-07.png)
+(l’élément est $p _ { x } p _ { y }$ dx $d \gamma )$
 
+Les quatre intégrales du dénominateur représentent les quatre cas possibles; les trois intégrales du numérateur représentent les trois cas favorables. On peut simplifier et écrire, le dénominateur étant égal à un,
 
-f I' é 1 é ÎTI e n t e s t ^^. ^y Ar? r/y). 
+$$
+\begin{array} { r } { \mathbf { P } \mathop { = } \int _ { - \infty } ^ { c ^ { * } } \int _ { c - x } ^ { \infty } p _ { x x } p _ { y } d x d y + \int _ { c } ^ { * } \int _ { - \infty } ^ { \infty } p _ { x } p _ { y } d x d y . } \end{array}
+$$
 
-Les quatre intégrales du dénominateur représentent les quatre cas possibles; les trois intégrales du. numérateur représentent les trois cas favorables. On peut simplifier et écrire, le dénominateur étant égal à un, 
+On pourrait appliquer le même raisonnement en supposant que l’on ait à considérer trois jours consécutifs, puis quatre, ete.
 
+Cette méthode conduirait à des expressions de plus en plus compliquées, car le nombre des cas favorables irait sans cesse en augmentant. Il est beaucoup plus simple d'étudier la probabilité ι — P pour que le cours c ne soit jamais atteint.
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0052-10.png)
-
-
-On pourrait appliquer le même raisonnement en supposant que l'on ait a. considérer trois jours consécutifs, puis quatre, etc- 
-
-Cetfe méthode conduiraità des expressions de plus en plus compliquées, car le nombre des cas favorables irait sans cesse en augmentant. Il est beaucoup plus simple d'étudier la probabilité T — P pour que le cours _c_ ne soit jamais atteint. 
-
-Il n'y a plus alors qu'un seul cas favorable quel que soit le nombre de jours, c'est celui où le cours n'est atteint à aucun des jours considérés.
+Il n'y a plus alors qu'un seul cas favorable quel que soit le nombre de jours, $\mathrm { c } '$ est celui où le cours n’est atteint à aucun des jours considérés.
 
 <!-- page: 53 -->
 
-_n'1 L._ BACUELŒH. La probabilité ï — P a pour expression 
+La probabilité 1 — P a pour expression
 
+$$
+\mathbf { \Phi } _ { \Gamma \longrightarrow } \dot { \mathbf { P } } = \int _ { - \infty } ^ { c } \int _ { - \infty } ^ { c - x _ { 1 } } \int _ { - \infty } ^ { c - x _ { , - } - x _ { 2 } } \cdot \cdot \cdot \int _ { - \infty } ^ { c - x _ { 1 } \dots - x _ { n - 1 } } p _ { x _ { 1 } } \cdot \cdot \cdot p _ { x _ { n } } d x _ { 1 } \cdot \cdot \cdot d x _ { n } ,
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0053-01.png)
+$x _ { \uparrow }$ est le cours du premier jour;
 
+$x _ { \mathrm { { 2 } } }$ est le cours du second jour relativement à celui du premier;
 
-^ est le cours du premier jour; 
+$x _ { 3 }$ est le cours relatif du troisième jour, etc.
 
-_x^_ est le cours du second jour relativement à celui, du premier:; _x^_ est le cours relatif du troisiesne jour, etc. 
+La détermination de cette intégrale paraissant difficile, nous résoudrons la question en employant une méthode d’approximation.
 
-La détermination de cette intégrale paraissant difficile, nous résoudrons la question en employant une méthode d'appimimation. 
+On peut considérer le temps t comme divisé en petits intervalles ∆t de telle sorte que $t = m \Delta t .$ Pendant l’unité de temps $\Delta t$ , le cours ne variera que de la quantité ± ∆x, écart moyen relatif à cette unité de temps.
 
-On peut considérer le temps _t_ comme divisé en petits intervalles A/ de telle sorte que _t_ == _mAt._ Pendant l'unité de temps _ai,_ le cours ne variera que de la quantité _±_ A^r, écart moyen relatif à cette unité d'e temps. 
+Chacun des écarts ± ∆x aura pour probabilité ${ \bf \Xi } _ { ; } ^ { \dag } ,$
 
-Chacun des écarts _±àsc_ aura pour probabilité ^, 
+Supposons que $c = \pi \Delta x$ et cherchons la probabilité pour que le cours c soit atteint précisément à l’époque $\iota ;$ c’est-à-dire pour que ce cours soit atteint à cette époque t, sans l’avoir jamais été antérieurement. Si, pendant les m unités de temps, le cours a varié de la quantité n∆x, c’est qu'il y a eu $\operatorname* { m } _ { m \infty } ^ { m + n }$ variations en hausse et $\begin{array}{c} \begin{array} { c } { { \prime \prime \prime } } \\ { { \cdots } } \\ { { \gamma } } \end{array} , \begin{array} { c } { { / { \ell } } } \\ { { \cdots } } \\ { { \Gamma } } \end{array} \\ { { \langle } } \end{array}$ variations en baisse.
 
-Supposons que _c^n^oc_ et cherchons la. probabilité pour que le cours _c_ soit atteint précisément à. l'époque /; c'est-à-dire pour que ce cours soit atteint a cette époque /, sans l'avoir jamais été antérieurement. Si, pendant les _m_ unités de temps, le cours a varié de la quantité _nAx',_ c'est qu'il y a eu<sup>_m_</sup> _—_ ^<sup>_n_</sup> variations en hausse et<sup>/</sup> ^-'<sup>i</sup> """'%<sup>t</sup> ." variations en baisse. 
+La probabilité pour que, sur m variations, il $\mathrm { y }$ en ait eu $\stackrel { \prime \prime \prime } { \dots } { } _ { \stackrel { \scriptstyle \cdots } { \ddots } } + \stackrel { \scriptscriptstyle \cdots } { \dots } { \dots }$ favorables est
 
-La probabilité pour que, sur _m_ variations, il y en ait eu<sup>/</sup> ^-'<sup>ill</sup> l^ **favorables est** 
+$$
+\frac { m ! } { \frac { m - n } { 2 } ! \frac { m + n } { 2 } ! } ( \frac { 1 } { 2 } ) ^ { m }
+$$
 
+Ce n’est pas cette probabilité que nous cherchons, mais le produit de cette probabilité par le rapport du nombre des cas où le cours n ∆x est atteint à l’époque m ∆t, ne l’ayant pas été précédemment, au $\Delta t$ nombre total des cas où il est atteint à l’époque m ∆t.
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0053-09.png)
+Nous allons calculer ce rapport.
 
-
-Ce n'est pas cette probabilité que nous cherchons, mais le produit de cette prohabilité par le rapport du nombre des cas ou le cours _nàx_ est atteint à l'époque _mal,_ ne l'ayant pas été précédemment, au nombre total des cas on il est atteint à l'époque _mât._ 
-
-Nous allons calculer ce rapport. 
-
-**—;—** **_ÎH_** "4-" Pendant _'fl_ **variations** . les . _m_ **en** unités **hausse** , de **et—-—** temps m —,.... **_fi_** que **variations** nous considérons, **en baisse.** il v * 1 1 a _m_
+Pendant les m unités de temps que nous considérons, il y a cu $\frac { m + n } { 2 }$ variations en hausse et $\underset { 2 } { m \cdots } { \pi }$ variations en baisse.
 
 <!-- page: 54 -->
 
-Nous pouvons représenter une des combinaisons donnant une hausse de nA»r en _m_ unités de temps par le symbole 
+Nous pouvons représenter une des combinaisons donnant une hausse de n∆x en m unités de temps par le symbole
 
+$$
+\mathrm { B } _ { 1 } \mathrm { H } _ { 1 } \mathrm { H } _ { 2 } \dots \dots \mathrm { B } _ { \frac { m - n } { 2 } } \dots \mathrm { H } _ { \frac { m + n } { 2 } } ,
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0054-02.png)
+B, indique que, pendant la première unité de temps, il y a eu baisse; $\Pi _ { t }$ , qui vient ensuite, indique qu'il y a cu hausse pendant la seconde unité de temps, etc.
 
+Pour qu'une combinaison soit favorable, il faut que, en la lisant de droite à gauche, le nombre des H soit constamment supérieur à celui des B. Nous sommes ramenés, comme on voit, au problème suivant :
 
-B^ indique que, pendant la première unité de temps, il y a eu baisse; IL, qui. vient ensuite, indique qu'il y a eu hausse pendant la seconde unité de temps, elc< 
+Sur n lettres il y a $\frac { m + n } { 2 }$ lettres H et $\underset { 2 } { \overset { m \dots n } { } }$ lettres B; quelle est la probabilité pour que, en écrivant ces lettres au hasard et en les lisant dans un sens déterminé, le nombre des H soit, durant toute la lecture, toujours supérieur à celui des B?
 
-Pour qu'une combinaison soit favorable, il faut que, en la lisant de droite à gauche, le nombre des H soit constamment supérieur à celui des B* Nous sommes ramenés, comme on voit, au problème suivant : 
+La solution de ce problème, présenté sous une forme un peu diffé- rente, a été donnée par M. André. La probabilité cherchée est égale à $\overset { n } { \underset { m } { \longrightarrow } }$
 
-_Sur n lettres il y a_<sup>m</sup> "—^ _lettres_ H, et<sup>_m_</sup> _—_<sup>_n_</sup> _lettres_ B ; _quelle est la probabilité pour que, en écrivant ces lettres au hasard et en les lisant dans un sens déterminé, le nombre des_ H _soùy durant toute la lecture, toujours supérieur à celui des_ B ? 
+La probabilité pour que le cours n ∆x soit atteint précisément au bout de m unités de temps est donc
 
-La solution de ce problème, présenté sous une forme un peu différente, a été donnée par M. André. La probabilité cherchée est égale Î^L _m_ 
+$$
+\frac { n } { m } \underbrace { m - n } _ { 2 } \underbrace { m + n } _ { 2 } .
+$$
 
-La probabilité pour que le cours _n^x_ soit atteint précisément au bout de _m_ unités de temps est donc 
+Cette formule est approximative; nous obtiendrons une expression plus exacte en remplaçant la quantité qui multiplie $\frac { n } { m }$ par la valeur exacte de la probabilité à l’époque t, c'est-à-dire par
 
+$$
+{ \frac { \sqrt { 2 } } { \sqrt { m } \sqrt { \pi } } } e ^ { - { \frac { n ^ { 2 } } { \pi m } } } .
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0054-08.png)
+La probabilité que nous cherchons est donc
 
+$$
+{ \frac { n \ V _ { 2 } ^ { \prime \prime } } { m \sqrt { m } \sqrt \pi } } e ^ { - { \frac { n ^ { 2 } } { \pi m } } } ,
+$$
 
-Cette formula est approximative; nous obtiendrons une expression plus exacte en remplaçant, la quantité qui multiplie — par la valeur exacte de la probabilité à l'époque _t,_ c'est-à-dire par 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0054-10.png)
-
-
-La probabilité que nous cherchons est donc 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0054-12.png)
+Ann. de l'Éc. Normale. 3º Série. Tome XVIl. — FévRiεR 19oo.
 
 <!-- page: 55 -->
 
-7/i .L. BACHELIER. 
+ou, en remplaçant n par $\frac { 2 c { \sqrt { \pi } } } { \sqrt { 2 } }$ et m par $8 \pi k ^ { 2 } /$
 
-ou, en remplaçant _n_ par ^<sup>T7r</sup> et m par SirA<sup>2</sup> /, Va „^V<sup>/a</sup> ..... ^' îw^ 2 _\JT:kt^'"t_ 
+$$
+\frac { d t c \sqrt { 2 } } { 2 \sqrt { \pi } k t \sqrt { t } } e ^ { - \frac { c ^ { 2 } } { t \pi \hbar ^ { 2 } t } } .
+$$
 
-Telle est F expression de la probabilité pour que le cours _a_ soit atteint à l'époque _dt,_ ne l'ayant pas été antéricuremient. 
+Telle est l’expression de la probabilité pour que le cours e soit atteint à l'époque $d \boldsymbol { t } ,$ ne l’ayant pas été antérieurement.
 
-La probabilité pour que le cours _c_ ne soit pas atteint avant l'époque _t_ aura pour valeur 
+La probabilité pour que le cours c ne soit pas atteint avant l’époque t aura pour valeur
 
+$$
+\displaystyle \mathfrak { r } \longrightarrow \mathbb { P } = \Lambda \int _ { \ell } ^ { \infty } \frac { c \sqrt { 2 } } { 2 \sqrt { \pi } \mathit { k } \ell \sqrt { \ell } } e ^ { - \frac { c ^ { 2 } } { 4 \pi \lambda ^ { 2 } \mathit { t } } } d \ell .
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0055-04.png)
+J'ai multiplié l'intégrale par une constante à déterminer A, parce que le cours ne peut être atteint que si la quantité désignée par m est paire.
 
+En posant
 
-J'ai multiplié l'intégrale par une constante ,rt,lAlil.,5 à Cl déterminer LHJU.5A **I A A I** 1 1 ^ 1 A, ^ »,. » parce pcll^t' que le cours ne peut être atteint que si la quantité désignée •''tft, par t'^.l»» _m_ »W est paire. 
+$$
+\lambda ^ { 2 } = \frac { c ^ { 2 } } { \operatorname { \it / 1 } \pi k ^ { 2 } \operatorname { \it / 2 } } ,
+$$
 
-En posant 
+on a
 
+$$
+\mathbf { \lambda } _ { 1 } - \mathbf { P } = 2 \sqrt { 2 } \mathbf { \lambda } \int _ { 0 } ^ { \frac { c } { 2 \sqrt { \pi } k \sqrt { \hat { \tau } } } } e ^ { - \lambda ^ { 2 } } d \lambda .
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0055-07.png)
+Pour déterminer A, posons $c = \infty ,$ alors $\mathrm { \bf ~ P } \equiv \langle \boldsymbol { \mathrm { \bf ~ \sigma ~ } } ( )$ et
 
+$$
+\begin{array} { r } { \mathbf { \eta } _ { \mathbf { J } } = 2 \sqrt { 2 } \mathbf { A } \displaystyle \int _ { 0 } ^ { \infty } e ^ { - \dot { \kappa } ^ { 2 } } d \widehat { \lambda } = \sqrt { 2 } \sqrt { \pi } \mathbf { A } ; } \end{array}
+$$
 
-on a 
+donc
 
+$$
+\begin{array} { r } { \Lambda = \frac { \mathbb { I } } { \sqrt { 2 } \sqrt { \pi } } , } \end{array}
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0055-09.png)
+alors
 
+$$
+1 - \operatorname { I p } = { \frac { 2 } { \sqrt { \pi } \int _ { 0 } ^ { 2 } { \sqrt { \pi } k \sqrt { \ell } } } } e ^ { - \lambda \cdot \theta } d \lambda .
+$$
 
-Pour déterminer Ay posons _c_ == co, alors P ^ o et 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0055-11.png)
-
-
-donc 
-
-alors 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0055-14.png)
-
-
-**_La probabilité, pour que le cours x sou atteint ou dépassé pendant l'in-_**
+La probabılité, pour que le cours x soit atteint ou dépassé pendant $\vec { \ell ^ { \mathrm { ? } } i n } \cdot$
 
 <!-- page: 56 -->
 
-_tervalle (le temps t a donc pour expression_ 
+tervalle de temps t a donc pour expression
 
+$$
+\mathbf { P } = 1 - \frac { 2 } { \sqrt { \pi } } \int _ { 0 } ^ { \frac { x } { 2 \sqrt { \pi } k \sqrt { t } } } e ^ { - \lambda ^ { 2 } } d \lambda .
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0056-03.png)
+La probabilité pour que le cours x soit atteint ou dépassé à l’époque t a pour expression, comme nous l'avons vu,
 
+$$
+\Phi = { \textstyle \frac { 1 } { 2 } } - { \frac { 1 } { 2 } } { \frac { 2 } { \sqrt { \pi } } } \int _ { 0 } ^ { \frac { x } { 2 { \sqrt { \pi } } k { \sqrt { \ell } } } } e ^ { - \lambda \cdot } d \lambda .
+$$
 
-La probabilité pour que le course soit atteint ou dépassé _à l'époque t_ a pour expression, comme nous l'avons vu, 
+On voit que & est la moitié de P.
 
+La probabilité pour qu'un cours soit atteint ou dépassé à l’époque t est la moitié de la probabilité pour que ce cours soit atteint ou dépassé dans l’intervalle de temps t.
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0056-05.png)
+La démonstration directe de ce résultat est très simple : Le cours ne peut être dépassé à l'époque t sans l’avoir été antérieurement. La probabilité est donc égale à la probabilité P, multipliée par la probabilité pour que, le cours étant coté à une époque antérieure à t, soit dépassé à l'époque t; c'est-à-dire, multipliée par $\frac { \mathtt { I } } { 2 } \cdot$ On a donc
 
+$$
+\Psi = { \bf \small \frac { P } { 2 } } \cdot
+$$
 
-On voit que $ est la moitié (le P* 
+On peut remarquer que l’intégrale multiple qui exprime la probabilité r - P et qui semble réfractaire aux procédés ordinaires de calcul se trouve déterminée par un raisonnement très simple grâce au calcul des probabilités.
 
-_La probabilité pour qu'un cours soit atteint ou dépassé à l_<sup>_9_</sup> _époque t est la moitié de la probabilité pour que ce cours soit atteint ou dépassé dans l'intervalle de temps t._ 
+Applications. — Les Tables de la fonction Θ permettent de calculer très facilement la probabilité
 
-La démonstration directe de ce résultat est très simple : Le cours ne peut être dépassé à l'époque _t_ sans l'avoir été antérieurement.'La probabilité $ est donc égale à la probabilité P, multipliée par la prohabilité pour que, le cours étant coté à une époque antérieure à _t,_ soit dépassé à l'époque _l;_ c'est-à-dire, multipliée par^- On a donc 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0056-09.png)
-
-
-On peut remarquer que l'intégrale multiple qui exprime la probabilité î — P et qui semble réfractaire aux procédés ordinaires de calcul se trouve déterminée par un raisonnement très simple grâce au calcul des<sup>1</sup> probabilités. 
-
-Applications. — Les Tables de la fonction 8 permettent de calculer très facilement la probabilité 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0056-12.png)
+$$
+\mathbf { p } { \mathop { = } } 1 { - } \Theta \left( { \frac { x } { 2 { \sqrt { \pi } } k { \sqrt { \ell } } } } \right) .
+$$
 
 <!-- page: 57 -->
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0057-00.png)
+La formule
 
+$$
+\mathbf { P } = \mathbf { r } - { \frac { 2 } { \sqrt { \pi } } } { \int _ { 0 } ^ { \frac { x } { 2 } { \sqrt { \pi } } k { \sqrt { \tilde { \ell } } } } e ^ { - \lambda ^ { 2 } } d \lambda }
+$$
 
-montre que la probabilité est constante, quand l'écart _x_ est proportionnel à la racine carrée du temps; c'est-à-dire, quand il a une expression de la forme _x '-=- ma._ Nous allons étudier les probabilités correspondant à certains écarts intéressants. 
+montre que la probabilité est constante, quand l'écart x est proportionnel à la racine carrée du temps; c'est-à-dire, quand il a une expression de la forme $x = m a$ . Nous allons étudier les probabilités correspondant à certains écarts intéressants.
 
-Supposons d'abord que _x_ —: _a_ =•:= _k\/i',_ la probabilité P est alors égale à 0,69. Quand l'écart _a_ est atteint, on peut, sans perte, revendre du ferme sur la prime simple a. Donc : 
+Supposons d’abord que $x = a = - k \sqrt { l }$ ; la probabilité P est alors égale à $_ { 0 , 6 9 }$ . Quand l'’écart a est atteint, on peut, sans perte, revendre du ferme sur la prime simple a. Donc :
 
-_11 y a deux chances sur irois pour que V on puisse, sans perte, revendre du ferme sur une prime simple._ 
+ll y a deux chances sur trois pour que l’on puisse, sans perte, revendre du ferme sur une prime simple.
 
-Particularisons la question en l'appliquant à la rente 3 pour îoo; sur une période de 60 mois, 38 fois, on a pu revendre à l'écart a; ce qui correspond à une probabilité de o,63. 
+Particularisons la question en l’appliquant à la rente 3 pour ioo; sur une période de 6o mois, 38 fois, on a pu revendre à l'écart a; ce qui correspond à une probabilité de $_ { 0 , 6 3 }$
 
-Etudions maintenant le cas où, _x ^_ 20. 
+Étudions maintenant le cas où x $\because a$
 
-La formule précédente donne pour probabilité o,43. 
+La formule précédente donne pour probabilité $_ { 0 , \mathrm { 4 3 } }$
 
-Quand l'écart _20_ est atteint, on peut revendre sans perte du ferme sur une prime double.; ainsi ; 
+Quand l'écart 2a est atteint, on peut revendre sans perte du ferme sur une prime double; ainsi :
 
-_II y a quatre chances sur diûo pour r/ue l'on puisse^ mns perte, revendre du ferme sur une prime double._ 
+Il y a quatre chances sur dix pour que l’on puisse, sans perte, revendre du ferme sur une prime double.
 
-Sur une période de 60 liquidations, la rente 3 pour 300 a atteint a3 fois l'écart 20, ce qui donne pour probabilité Oy38, 
+Sur une période de 6o liquidations, la rente 3 pour ioo a atteint 23 fois l’écart 2a, ce qui donne pour probabilité o,38.
 
-L'écart 0,70 est celui de l'option du double? la probabilité eorre^ pondante est 0,78. 
+L’écart $\mathbf { 0 } , \mathbf { 7 } { a }$ est celui de l’option du double; la probabilité correspondante est $\phantom { - } 0 , 7 8$
 
-_On a trois chances sur quatre de pouvoir^ sans perte, revendre du/erme sur une option du double._ 
+On a trois chances sur quatre de pouvoir, sans perte, revendre du ferme sur une option du double.
 
-L'option du triple doit se traiter à un écart _1,1 a_ auquel correspond la probabilité 0366.
+L’option du triple doit se traiter à un écart 1,1a auquel correspond la probabilité $_ { 0 , 6 6 }$
 
 <!-- page: 58 -->
 
-_On a deux chances sur trois de pouvoir, sans perle, revendre du ferme sur une option du triple._ 
+On a deux chances sur trois de pouvoir, sans perte, revendre du ferme sur une option du triple.
 
-Citons, enfin, comme écarts remarquables l'écart 1,70 qui correspond à une probabilité dû ~ et l'écart 2,90 qui correspond à une probabilité de y _L\_ 
+Citons, enfin, comme écarts remarquables l'écart ${ \bf \delta I } , 7 ^ { a }$ qui correspond à une probabilité de $\frac { \texttt { I } } { 2 }$ et l’écart 2,9a qui correspond à une probabilité de $\frac { \texttt { i } } { \texttt { i } }$
 
-Espérance mathématique apparente. — L'espérance mathématique 
+Espérance mathématique apparente. — L'espérance mathématique
 
+$$
+\varepsilon _ { 1 } { \mathrm { : } } \quad \operatorname { P } x = x - { \frac { 2 x } { \sqrt { \pi } } } \int _ { 0 } ^ { \frac { x } { 2 { \sqrt { \pi } } k { \sqrt { \tau } } } } e ^ { - \gamma _ { 1 } } d \lambda
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0058-04.png)
+est une fonction de $_ x$ et de $\iota ;$ différentions-la par rapport à $x ,$ nous aurons
 
+$$
+\stackrel { \partial \bar { \cup } _ { 1 } } { \partial x } = 1 - \frac { 2 } { \sqrt { \pi } } \int _ { 0 } ^ { \frac { x } { 2 \sqrt { \pi } k \sqrt { i } } } e ^ { - \lambda _ { 1 } ^ { 3 } } d \lambda - \frac { x e ^ { - \frac { x ^ { \ast 2 } } { 4 \pi \lambda ^ { 2 } i } } } { \pi k \sqrt { i } } \cdot
+$$
 
-est une fonction de _x_ et de _l;_ dUlérentions-la par rapport à _x,_ nous aurons 
+Si l'on considère une époque déterminée $\iota ,$ cette espérance sera maxima lorsque
 
+$$
+\frac { \partial \mathcal { E } _ { 1 } } { \partial x } = \mathrm { o } ,
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0058-06.png)
+c’est-à-dire, quand $x = \pm 2 a ,$ environ.
 
+Espérance totale apparente. $\cdots \mathrm { ~ L ~ } ^ { \prime }$ espérance totale correspondant au temps t sera l’intégrale
 
-Si l'on considère une époque déterminée /, cette espérance sera maxima lorsque 
+$$
+\int _ { 0 } ^ { \infty } \operatorname { I } ^ { } \alpha d x .
+$$
 
+Posons
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0058-08.png)
+$$
+f ( a ) = \int _ { 0 } ^ { \infty } \left( x - \frac { 2 x } { \sqrt { \pi } } \int _ { 0 } ^ { \frac { x } { 2 \sqrt { \pi } u } } e ^ { - \lambda \cdot 2 } \varDelta \lambda \right) d x .
+$$
 
+Différentions en $^ { a , }$ nous aurons
 
-c^êst"à"dire, quand ,^== aa, environ- 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0058-10.png)
-
-
-Differentions en a, nous aurons 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0058-12.png)
+$$
+f ^ { \prime } ( a ) = { \frac { 1 } { \pi a ^ { 2 } } } \int _ { 0 } ^ { \infty } x ^ { 2 } e ^ { - { \frac { x ^ { 3 } } { 4 \pi a ^ { 2 } } } } d x ,
+$$
 
 <!-- page: 59 -->
 
-ou/^a) == 2ïca. On a donc 
+ou $f ^ { \prime } ( a ) = 2 \pi a$ .On a donc
 
-/(a) r-rTTa^Tr/^L 
+$$
+f ( a ) = \pi a ^ { 2 } = \pi k ^ { 2 } t .
+$$
 
-L^espérance totale est proportionnelle au temps. 
+L’espérance totale est proportionnelle au temps.
 
-Époque de la pins grande probabilité. — La prohabilité 
+Époque de la plus grande probabilité. — La probabilité
 
+$$
+\mathbf { P } = \mathbf { r } - { \frac { 2 } { \sqrt { \pi } } } { \int _ { 0 } ^ { \frac { x ^ { * } } { 2 \sqrt { \pi k \sqrt { \ell } } } } e ^ { - \overset { x ^ { * } } { \dots } } d \lambda }
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0059-05.png)
+est une fonction de x et de t.
 
+L'étude de sa variation, en considérant x comme variable, ne pré- sente aucune particularité; la fonction décroit constamment quand x croît.
 
-est une fonction de _x_ et de ^ 
+Supposons maintenant que x soit constant et étudions la variation de la fonction en considérantt comme variable, nous aurons en diffé- rentiant
 
-L'étude de sa variation, en considérante comme variable, no présente aucune particularité; la fonction décroît constamment quand _x_ croît. 
+$$
+{ \frac { \partial \mathrm { P } } { \partial { \boldsymbol { \ell } } } } = { \frac { x e ^ { - { \frac { x ^ { 3 } } { 4 \pi k ^ { 2 } { \boldsymbol { \ell } } } } { \boldsymbol { \ell } } } } { 2 \pi t { \sqrt { \boldsymbol { \ell } } } } } .
+$$
 
-Supposons maintenant que _x_ soit constant et étudions la variation de la fonction en considérante comme variable, nous aurons en diileren liant 
+Nous déterminerons l’époque de la probabilité maxima en annulant la dérivée
 
+$$
+\frac { \partial ^ { 2 } \mathrm { P } } { \partial t ^ { 2 } } = \frac { x e ^ { - \frac { x ^ { 2 } } { 4 \pi k ^ { 2 } l } } } { 2 \pi k t \sqrt { l } } \biggl ( \frac { x ^ { 2 } } { l \pi k ^ { 2 } t } - \frac { 3 } { 2 } \biggr ) ;
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0059-09.png)
+on a alors
 
+$$
+\ell = \frac { x ^ { 2 } } { 6 \pi k ^ { 2 } } .
+$$
 
-Nous déterminerons l/époque de la probabilité maxima en annulant la dérivée 
+Supposons, par exemple, que $x = k \sqrt { t _ { i } }$ , nous aurons $\ell = \frac { l _ { 1 } } { \ell \pi } .$
 
-on a alors 
+L’époque la plus probable à laquelle on peut sans perte revendre du ferme sur une prime simple est située au dix-huitième de la durée de l’échéance.
 
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0059-12.png)
-
-
-Supposons, par exemple, que _x_ = _kJÏ\,_ nous aurons _i — 4_<sup>_L_</sup> y Tt 
-
-_L'époque la plus probable à laquelle on peut sans perle revendre du ferme sur une prime simple est située au dix-huitième dé la durée de l'échéance._ 
-
-^ ! Si nous supposons maintenant que _X^^Î€\IT^_ nous obtenons _t^^i._ / 1 STT
+Si nous supposons maintenant que $x = { \mathrm { z } } { \bar { k } } \sqrt { { t _ { \mathrm { * } } } }$ , nous obtenons $\begin{array} { r } { t = \frac { 2 t _ { 1 } } { 3 \pi } } \end{array}$
 
 <!-- page: 60 -->
 
-_TJ époque la plu$ probable à laquelle on peut sans perte revendre du ferme sur une prime double est sidiée au cinquième de la durée de l'échéance._ 
+L’époque la plus probable à laquelle on peut sans perte revendre du ferme sur une prime double est située au cinquième de la durée de l’échéance.
 
-La probabilité P correspondant à l'époque _t_ =- _——_ a pour valeur ,-e(^)^. 
+La probabilité P correspondant à l’époque $\iota = \frac { x ^ { 2 } } { 6 \pi k ^ { 2 } }$ a pour valeur $\begin{array} { r } { \mathrm { \ i } - \Theta \Big ( \frac { \sqrt { 6 } } { 2 } \Big ) = \mathrm { 0 } , \mathrm { 0 8 } . } \end{array}$
 
-Époque moyenne. ~ Lorsqu'un événement peut se produire à différentes époques, on appelle époque moyenne de l'arrivée de l'événement la somme des produits des probabilités correspondant aux époques données par leurs durées respectives. 
+Époque moyenne. - Lorsqu'un événement peut se produire à diffé- rentes époques, on appelle époque moyenne de l'arrivée de l’événement la somme des produits des probabilités correspondant aux époques données par leurs durées respectives.
 
-La durée moyenne est égale à la somme des espérances de durée. L^époque moyenne à laquelle le cours _x_ sera. dépassé est donc exprimée par l'intégrale 
+La durée moyenne est égale à la somme des espérances de durée.
 
+L’époque moyenne à laquelle le cours x sera dépassé est donc exprimée par l’intégrale
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0060-05.png)
+$$
+\int _ { 0 } ^ { \infty } \iota \frac { d \mathrm { P } } { d \iota } d \iota = \int _ { 0 } ^ { \infty } \frac { x } { 2 \pi k \sqrt { \iota } } e ^ { - \frac { \iota \cdot \iota } { 4 \pi k ^ { 2 } \iota } } d \iota ;
+$$
 
+en posant $\frac { x ^ { 2 } } { 1 \pi / k ^ { 2 } t } = y ^ { 2 }$ , elle devient
 
-_T^_ en posant y.^,^^ ^y<sup>2</sup> , elle devient 
+$$
+\frac { x ^ { 2 } } { 2 \pi { \sqrt { \pi } } k ^ { 2 } } \int _ { 0 } ^ { \infty } \frac { e ^ { - y ^ { 2 } } } { y ^ { 2 } } d y .
+$$
 
+Cette intégrale est infinie.
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0060-07.png)
+L’époque moyenne est donc infinie.
 
+Époque probable absolue. Ce scra l’époque pour laquelle on aura $\begin{array} { r } { \mathrm { \bf ~ p } = { \frac { \mathrm { \bf ~ I } } { 2 } } , } \end{array}$ ou
 
-. Cette intégrale est indnie* 
+$$
+\Theta \left( { \frac { x } { 2 { \sqrt { \pi } } k { \sqrt { \ell } } } } \right) = { \frac { 1 } { 2 } } ;
+$$
 
-L^époque moyenne est donc infinie. 
+on en déduit
 
-Époque probable absolue. Ce sera l'époque pour laquelle on aura 
+$$
+\ell = { \frac { \cdot x ^ { 2 } } { 2 , 8 9 k ^ { 2 } } } .
+$$
 
-P = "!" ou 
-
-###### on en déduit 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0060-13.png)
-
-
-L'épo<('ue probable<sup>1</sup> absolue varie, de même que l'époque la plus probable, proportionnellement au carré de la .quantité <r, et elle est environ six fois supérieure à l'époque la, plus probable,
+L'époque probable absolue varie, de même que l’époque la plus probable, proportionnellement au carré de la quantité $x ,$ et elle est environ six fois supérieure à l’époque la plus probable.
 
 <!-- page: 61 -->
 
-Époque probable relative — II est intéressant de connaître, non seulement la probabilité pour qu'un cours <r soif coté dans un intervalle de temps _t,_ mais encore l'époque probable T à laquelle ce cours doit être atteint; cette époque est évidemment différente de celle dont nous venons de nous occuper. 
+Époque probable relative. - Il est intéressant de connaître, non seulement la probabilité pour qu'un cours x soit coté dans un intervalle de temps t, mais encore l’époque probable T à laquelle ce cours doit être atteint; cette époque est évidemment différente de celle dont nous venons de nous occuper.
 
-L'intervalle de temps T sera tel qu'il y aura autant de chances pour que le cours soit atteint avant l'époque T que de chances pour qu'il soit coté dans la suite, c'est-à-dire dans l'inlervalle de temps T,^, T sera donné par la formule 
+L’intervalle de temps T sera tel qu’il y aura autant de chances pour que le cours soit atteint avant l’époque T quc de chances pour $\dot { \mathfrak { q u } } \widetilde { \mathfrak { i } } \widetilde { \mathfrak { l } }$ soit coté dans la suite, c’est-à-dire dans l’intervalle de temps T,t.
 
-ou 
+T sera donné par la formule
 
+$$
+\int _ { 0 } ^ { \cdot \mathrm { { T } } } \frac { \partial \mathrm { { P } } } { \partial \ell } d \ell = \frac { \imath } { 2 } \int _ { 0 } ^ { \cdot } \frac { \partial \mathrm { { P } } } { \partial \ell } d \ell
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0061-05.png)
+ou
 
+$$
+{ \bf \Pi } _ { \mathrm { I } } \longrightarrow { \bf \Pi } _ { 2 } \Theta \left( \frac { x } { 2 \sqrt { \pi } k \sqrt { \Gamma } } \right) \quad \ldots \quad \Theta \left( \frac { x } { 2 \sqrt { \pi } k \sqrt { \ell } } \right) \cdot
+$$
 
-Comme application, supposons que _x ^ k \ [ i ^_ la formule donne T ==: 0,18^; donc 
+Comme application, supposons que $x = k \sqrt { \iota }$ ; la formule donne $\mathbf { T } = \ b _ { 0 } , \ b _ { 1 } \otimes \ b _ { \ell }$ ; donc
 
-_On a autant de chances de powoir sans perte revendre du forme sur âne prime simple pendant le premier cm^/luc/ne de la dwee de rengagement que pendant les quatre autres cinquièmes._ 
+On a autant de chances de pouvoir sans perte revendre du ferme sur une prime simple pendant le premier cinquième de la durée de l’engagement que pendant les quatre autres cinquièmes.
 
-Pour traiter un exemple particulier, supposons qu'il s'agisse de la rente et que _t_ == 3o Jours, alors T sera égal à /> Jours. Il _y_ a donc autant de chances, nous apprend la formule, pour que l'on puisse revendre la rente avec l'écart a (28° en moyenne) pendant les cinq premiers jours, que de chances pour qu'on puisse les revendre dans les vingt-cinq jours qui suivent* Parmi les 60 liquidations sur lesquelles portent nos observations, 38 fois l'écart a été atteint; ï H (bis pendant les quatre premiers jours, 2 fois pendant le cinquième et ï8 fois au delà du cinquième jour* 
+Pour traiter un exemple particulier, supposons qu'il s’agisse de la rente et que t = 3o jours, alors T sera égal à 5 jours. Il y a donc autant de chances, nous apprend la formule, pour que l'on puisse revendre la rente avec l'écart a ${ \bf \left( 2 8 ^ { \mathrm { o } } \right. }$ en moyenne) pendant les cinq premiers jours, que de chances pour qu'on puisse les revendre dans les vingt-cinq jours qui suivent. Parmi les 6o liquidations sur lesquelles portent nos observations, 38 fois l’écart a été atteint: 18 fois pendant les quatre premiers jours, 2 fois pendant le cinquième et 18 fois au delà du cinquième jour.
 
-L'observation est donc d'accord avec la théorie. 
+L'observation est donc d’accord avec la théorie.
 
-' Supposons maintenant que «r :=- _^/c\/i,_ nous trouvons ï _^_ o,4^î or la quantité _2/c\/l_ est l'écart de la prime double, on peut donc dire : 
+Supposons maintenant que $x = 2 k \sqrt { { \mathit { l } } }$ , nous trouvons ${ \bf T } \equiv { \bf o } , \emptyset \ r _ { 2 } \iota ;$ or la quantité $_ { 2 } \tilde { k } \tilde { \sqrt { \ell } }$ est l’écart de la prime double, on peut donc dire :
 
-_II y a autant de chances pour que V on puùs-e sans perte revendre du._
+Il y a autant de chances pour que l’on puisse sans perte revendre du ferme sur une prime double pendant les quatre premiers dixièmes de la durée de l’engagement que pendant les six autres dixièmes.
 
 <!-- page: 62 -->
 
-_ferme sur une prime double pendant les quatre premiers dixièmes de la durée de l'en gaiement, ûue pendant les six cintres dixièmes._ 
+Occupons-nous encore de la rente : nos observations précédentes nous ont montré que, dans 23 cas sur 6o liquidations, l’écart 2a (56° en moyenne) avait été atteint; sur ces 23 cas, l'écart a été atteint 11 fois avant le 14 du mois et 12 fois après cette époque.
 
-Occupons-nous encore de la rente : nos observations précédentes nous ont montré que, dans 23 cas sur 60 liquidations, l'écart _'ia_ (56° en moyenne) avait été atteint; sur ces 28 cas, l'écart a été atteint ï î fois avant le ï4 du mois et 12 fois après cette époque. 
+L’époque probable serait o,1 1t pour l'option du double et o,21t pour l’option du triple.
 
-(/époque probable serait 0 , 1 1 ^ pour l'option du double et o , 2 ï / pour l'option du triple. 
+Enfin, l’époque probable serait la moitié de l'époque totale si x était égal à $; ; \zeta _ { \ell } \sqrt { \ell }$
 
-.Enfin, l'époque probable serait la moitié de l'époque totale si vêtait égalà^,^V^ 
+Distribution de la probabilité. — Nous avons jusqu'à présent résolu deux problèmes :
 
-Distribution de la probabilité. — Nous avons jusqu'à présent résolu. deux problèmes ; 
+La recherche de la probabilité à l’époque t.
 
-La recherche de la probabilité a, l'époque _t._ 
+La recherche de la probabilité pour qu’un cours soit atteint dans un intervalle de temps t.
 
-La recherche de la probabilité pour qu'un cours soit atteint dans un intervalle de temps _t._ 
+Nous allons résoudre ce dernier problème d’une façon complète; il ne suffit pas de connaître la probabilité peur que le cours soit atteint avant l’époque t; il faut aussi connaître la loi de probabilité à l’époquet dans le cas où le cours n’est pas atteint.
 
-Nous allons résoudre ce dernier problème d'une façon complète; il ne suffit pas de connaître la probabilité peur que le cours soit atteint avant Fépoque^; il fautaussi connaître la loi de prohabilité à l'époque/ dans le cas ou le cours n'est pas atteint. 
+Je suppose, par exemple, que nous achetions de la rente pour la revendre avec un bénéfice c. Si à l'époque t la revente n'a pu être effectuée, quelle sera, à cette époquc, la loi de probabilité de notre opération ?
 
-Je suppose, par exemple, que nous achetions de la rente pour la revendre avec un bénéfice _e._ Si a l'époque _t_ la revente n'a pu être effectuée, quelle sera, a cette époque, la. loi de probabilité de notre opération? 
+Si le cours c n’a pas été atteint, cela provient de ce que la variation maxima à la hausse a été inféricure à c, alors que la baisse a pu être indéfinic; il y a donc dissymétrie évidente de la courbe des probabilités à l'époque z.
 
-Si le course n'a pas été atteint, cela provient do ce que la variation maxima à Ia1 hausse a été inférieure à _c,_ alors que la baisse a pu être indéfinie; il y a donc dissymétrie évidente de la courbe des probabi" lités à l'époque /. 
+Cherchons quelle sera la forme de cette courbe.
 
-Cherchons quelle sera la forme de cette courbe. 
+Soit ABCEG la courbe des probabilités à l'époque t, en supposant que l’opération dût subsister jusqu'à cette époque (Sig. 11)
 
-Soit ABCEG la courbe des probabilités à. l'époque _t,_ en supposant que l'opération dût subsister jusqu'à cette époque _(fig,_ u). La probabilité pour que, a l'époque /, le course soit dépassé est représentée par l'aire DCEG qui, évidemment, ne fera plus partie de la courbe des. probabilités dans le cas de la revente possible." 
+La probabilité pour que, à l’époque t, le cours e soit dépassé est représentée par l’aire DCEG qui, évidemment, ne fera plus partie de la courbe des probabilités dans le cas de la revente possible.
 
-_An.n,d€ l'Éc. Normale. ^_ Série. Torrift XVIL •••- FÉvrmm i<)ôo. i î
+Ann. de l'Éc. Normale. 3º Série. Tome XVII. — FévniEn 1goo.
 
 <!-- page: 63 -->
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0063-01.png)
+Nous pouvons même affirmer a priori que l’aire de la courbe des probabilités devra encore, dans ce cas, être diminuée d'une quantité égale à DCEG, puisque la probabilité P est le double de la probabilité représentée par DCEG.
 
+![](assets/figures/1900-bachelier-theorie-de-la-speculation-p0063-block-0002-7da07a54fa2a6ca7.jpg)
 
-Nous pouvons même affirmer a _priori_ que l'aire de la courbe des probabilités devra, encore, dans ce cas, aire diminuée d'une quantité égale à DCEG-, puisque la probabilité F est le double de la probabilité représentée par DCECx. 
+Si le cours c est atteint à l’époque $\ell _ { 4 }$ , le cours H aura, à cet instant, la même probabilité que le cours H' symétrique.
 
+La possibilité de la revente au cours c supprimne donc, en méme temps que la probabilité en H, une probabilité égale en H', et pour avoir la probabilité à l’époque l, nous devons retrancher des ordonnées de la courbe ABC celles de la courbe G’E'C', symétrique de GEC. La courbe de probabilité cherchée sera donc la courbe DKM.
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0063-03.png)
+Cette courbe a pour équation
 
+$$
+\begin{array} { r } { I ^ { \prime } = \frac { 1 } { 2 \pi \bar { h } \bar { \sqrt { \bar { t } } } } \left[ e ^ { - \frac { \bar { x } ^ { \bar { \eta } } } { 4 \pi \bar { h } ^ { 2 } \bar { t } } } \dots e ^ { - \frac { ( 2 \bar { \eta } - \bar { \eta } ) ^ { 2 } } { 4 \pi \bar { h } ^ { 4 } \bar { t } } } \right] . } \end{array}
+$$
 
-<!-- Start of picture text -->
-Fig. n.<br><!-- End of picture text -->
+Cours de probabilité maxima. — Pour obtenir le cours dont la probabilité est la plus grande, dans le cas où le cours c n’a pas été atteint, il suffit de poser ${ \frac { d \rho } { d , x } } = 0 ;$ on obtient ainsi
 
+$$
+{ \frac { x } { 2 c - x } } + c ^ { - { \frac { c ( c - x ) } { \pi h ^ { 3 } l } } } = 0 ,
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0063-04.png)
+Si l’on suppose $c = a = k \sqrt { t } .$ , on obtient
 
+$$
+x _ { \prime \prime } = \dots , \bar { \cdot } ( \iota , \bar { \iota } ^ { * } ) ,
+$$
 
-<!-- Start of picture text -->
-W<br><!-- End of picture text -->
+si l’on suppose $c = 2 a$ , on obtient
 
-Si le cours _c_ est atteint a l'époque _l^_ le cours H aura, à cet, instant, la même probabilité que le cours II' symétrique. 
-
-La possibilité de la revente au cours _c_ supprime donc, en même temps que la probabilité en 'II, une probabilité égale en IF, et pour avoir la probabilité à l'époque /, nous devons retrancher des ordonnées de la courbe ABC celles de la courbe G'E'CV, symétrique de <îIÎ<L La courbe de probabilité cherchée sera donc la courbe Î)KM. 
-
-Cette courbe a pour équation 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0063-08.png)
-
-
-_COUTS_ de probabilité maxima. — Pour obtenir le cours dont la probabilité est la plus grande, dans le cas où. le cours _c_ n'a pas été atteint, il suffit de poser ^ =r o; on obtient ainsi _ci_ «',x* 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0063-10.png)
-
-
-Si l'on suppose _c_ = _a ^ /c\/l,_ on obtient 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0063-12.png)
-
-
-si l'on suppose _c^ 20,_ on obtient 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0063-14.png)
+$$
+x _ { m } = \ldots ( 0 , / \ell .
+$$
 
 <!-- page: 64 -->
 
-Enfin, on ob tiendra il 
+Enfin, on obtiendrait
 
+$$
+x _ { \prime \eta } = - c ,
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0064-03.png)
+si c était égal à 1,33a.
 
+Cours probable. - Cherchons l'expression de la probabilité dans l’intervalle zéro, u; ce sera
 
-si c était égal a i,33^. 
+$$
+\frac { 1 } { 2 \pi \operatorname { \mathcal { A } } \sqrt { \mathscr { L } } } \int _ { 0 } ^ { \pi } \sigma ^ { - \frac { x ^ { 2 } } { \sqrt { \pi \sqrt { \lambda ^ { 2 } } \iota } } } d x - \frac { 1 } { 2 \pi \operatorname { \mathcal { A } } \sqrt { \iota } \sqrt { \mathscr { L } } } \int _ { 0 } ^ { \pi } e ^ { - \frac { ( 2 \sigma - x ) ^ { 2 } } { \iota \pi \sqrt { \lambda ^ { 2 } } \iota } } d x .
+$$
 
-Cours probable. •-" Cherchons l'expression de la probabilité dans r intervalle zéro, _u;_ ce sera 
+Le premier terme a pour valeur
 
+$$
+\mathop { : } \atop { \gamma , } \Theta \left( \mathop { : } \atop { \gamma , \sqrt { \pi } / \bar { \sqrt { \ell } } } \right) .
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0064-06.png)
+Dans le second, posons
 
+$$
+{ \mathfrak { P } } \{ { \mathfrak { k } } \{ { \mathfrak { k } } \} ; { \mathfrak { k } } = { \mathfrak { k } } { \mathfrak { c } } - { \mathfrak { v } } ;
+$$
 
-Le premier terme a pour valeur 
+ce terme deviendra
 
+$$
+\begin{array} { r } { \begin{array} { r } { \cdots \displaystyle \frac { 1 } { 3 } \displaystyle \frac { 3 } { \sqrt { \pi } } \int _ { 0 } ^ { \frac { 9 \pi k \sqrt { \prime } } { 2 \sqrt { \pi k ^ { \prime } / } } } e ^ { - \lambda ^ { 2 } } d \lambda + \displaystyle \frac { 1 } { 3 } \displaystyle \frac { 2 } { \sqrt { \pi } } \int _ { 0 } ^ { \frac { 9 \pi k \sqrt { \prime } } { 2 } } e ^ { - \lambda ^ { 2 } } d \lambda . } \end{array} } \end{array}
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0064-08.png)
+L’expression cherchée de la probabilité est donc
 
+$$
+\frac { 1 } { 2 } ~ \Theta \bigg ( \frac { \pi } { 2 \sqrt { \pi } \hbar \sqrt { \ell } } \bigg ) - \frac { 1 } { 2 } ~ \Theta \bigg ( \frac { 3 c } { 2 \sqrt { \pi } \hbar \sqrt { \ell } } \bigg ) + \frac { 1 } { 2 } ~ \Theta \bigg ( \frac { 2 c - \ell \ell } { 2 \sqrt { \pi } \hbar \sqrt { \ell } } \bigg ) .
+$$
 
-Dans le second, posons 
+Il est intéressant d'étudier le cas où $u = c$ pour connaître la probabilité de bénéfice d'un achat ferme lorsque le cours de revente $\boldsymbol { \mathrm { n } } _ { \mathrm { } , \mathrm { } } ^ { \prime } \mathrm { } i$ pu être atteint.
 
+La formule ci-dessus devient dans l’hypothèse $u = \pmb { C }$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0064-10.png)
+$$
+\Theta ( \frac { c } { \sqrt [ 3 ] { \pi } \hbar \sqrt { l } } ) \cdots \stackrel { 1 } { \underset { \Im } {  } } \Theta ( \begin{array} { c } { 2 c } \\ { \cdots } \\ { \Im \sqrt { \pi } \hbar \sqrt { l } } \end{array} ) .
+$$
 
+Supposons que $c = c _ { i }$ , la probabilité est alors $_ { 0 , 0 , 3 }$
 
-ce terme deviendra 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0064-12.png)
-
-
-J/ex[)res^ion clierchée de la probabilité est donc 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0064-14.png)
-
-
-Il est intéressant d'étudier le cas où _u_ == _c_ pour connaître la probabilité de bénéfice d'un achat ferme lorsque le cours de revente n^a pu être atteint. 
-
-La formule ci-dessus devient dans l'bypotbese _u ^ c_ 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0064-17.png)
-
-
-Supposons que c==<7^ la probabilité est alors o,o3. Si l'écart a n'a jamais été atteint dans l'intervalle /, il n'y a que
+Si l'écart a n'a jamais été atteint dans l'intervalle t, il n'y a que trois chances sur cent pour que, à l’époque t, le cours se trouve compris entre zéro et a.
 
 <!-- page: 65 -->
 
-84 trois chances sur cent pour que, à l'époque /, le cours se trouve compris entre zéro et _ci._ 
+On peut acheter une prime simple avec l'idée préconçue de revendre du ferme sur cette prime dès que son écart sera atteint.
 
-On peut* acheter une prime simple avec l'idée préconçue de revendre du ferme sur cette prime des que son écart sera atteint. .La probabilité de la revente est, comme nous l'avons vu, 0,69. La probabilité pour que la revente n'ait pas lieu et qu'il y ait bénétîce est o,o3 et la probabilité de perte est 0,28. 
+La probabilité de la revente est, comme nous l'avons vu, ${ \mathrm { o } , 6 } \mathfrak { g }$ . La probabilité pour que la revente n'ait pas lieu et qu'il y ait bénéfice est $_ { 0 , 0 } 3$ et la probabilité de perte est $_ { ( ) , 2 } 8$
 
-Supposons que _c_ == _201,_ la probabilité est alors o, i3. 
+Supposons que $c = 2 a$ , la probabilité est alors $( ) , 1 3$
 
-Si l'écart sa n'a jamais été atteint dans l'intervalle /, il y a treize cliances sur cent pour que, à l'époque _l,_ le cours se trouve compris entre zéro et 20. 
+Si l'écart 2a n'a jamais été atteint dans l'intervalle t, il y a treize chances sur cent pour que, à l’époque t, le cours se trouve compris entre zéro et 2a.
 
-Le cours probable est celui dont l'ordonnée divise en deux parties égales l'aire de la courbe des probabilités. Il r^est pas possible d'exprimer sa valeur en termes finis. 
+Le cours probable est cclui dont l’ordonnée divise en deux parties égales l’aire de la courbe des probabilités. Il n’est pas possible d’exprimer sa valeur en termes finis.
 
-Espérance réelle. — L'espérance mathématique _k ^/£_ •== _a_ exprime l'espérance d'une opération qui doit durer jusqu'à répoque /* 
+Espérance réelle. — L'cspérance mathématique $k \sqrt { \ell } = a$ exprime l’espérance d’une opération qui doit durer jusqu’à l’époque t.
 
-Si. l'on se propose de réaliser l'opération dans le cas ou un certain écart serait atteint avant l'époque _( ,_ l'espérance inathéinatique a une valeur toute différente, variant évidemment entre zéro et _k\ft_ quand l'écart choisi varie entre zéro et l'infini. 
+Si l'on se propose de réaliser l’opération dans le cas où un certain écart serait atteint avant l’époque t, l’espérance mathématique a une valeur toute différente, variant évidemment entre zéro et $k \sqrt { \ell }$ quand l'écart choisi varie entre zéro et l'infini.
 
-Soitc le cours de réalisation d'an achat, par exemple; pour obtenir l'espérance positive réelle, de l'opération, on doit ajouter a. Fespérancc de revente cP l'espérance positive correspondant au cas ou la revente n'a pas lieu, c'es-t-à-dire la quantité 
+Soit c le cours de réalisation d’un achat, par exemple; pour obtenir l’espérance positive réelle de l'opération, on doit ajouter à l'espé- rance de revente cP l’espérance positive correspondant au cas où la revente n'a pas lieu, c'est-à-dire la quantité
 
+$$
+\int _ { 0 } ^ { c } \frac { x } { 2 \pi k \sqrt { \ell } } \Big [ c ^ { - \frac { \nu ^ { 2 } } { 4 \pi k ^ { 2 } \ell } } - e ^ { - \frac { ( 2 \ell - \nu ) ^ { 2 } } { 4 \pi k ^ { 2 } \ell } } \Big ] d x .
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0065-09.png)
+Si l’on effectue l’intégration du premier terme et si l'on ajoute l’intégrale entière à l’espérance de revente
 
-
-Si l'on effectue l'intégra tion,du premier terme et si _Von_ ajoute l'intégrale entière à l'espérance de revente 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0065-11.png)
+$$
+c \mathbf { I } = c - c { \frac { 2 } { \sqrt { \pi } } } { \int _ { 0 } ^ { \frac { c } { 2 } { \sqrt { \pi } } k { \sqrt { \ell } } } } e ^ { - { \dot { \gamma } } _ { 2 } } d { \hat { \mu } } ,
+$$
 
 <!-- page: 66 -->
 
-TÎÎÉOîUK DE U SPÉCULATION. 
+on obtient pour expression de l’espérance réelle
 
-on obtient pour expression de l'espérance réelle 
+$$
+\begin{array} { r l } & { \underline { { \mathcal { S } } } = c + { \cal I } \cdot \sqrt { \hat { \iota } } \big ( _ { 1 } - e ^ { - \frac { c ^ { 2 } } { \pi { \hbar } ^ { 3 } \hat { \iota } } } \big ) - c \frac { 2 } { \sqrt { \pi } } \int _ { 0 } ^ { \frac { c } { \sqrt { \pi } ^ { \hbar } \sqrt { \hat { \iota } } } } e ^ { - \hat { \iota } , 2 } d \hat { \lambda } , } \end{array}
+$$
 
+ou
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0066-03.png)
+$$
+\mathcal { E } = c + \lambda \sqrt { \tilde { \iota } } \Big ( \mathfrak { r } - e ^ { - \frac { c ^ { \ast } } { \pi \tilde { \iota } ^ { \ast } \tilde { \iota } } } \Big ) - c \Theta \Big ( \frac { c } { \sqrt { \tilde { \tau } } k \sqrt { \tilde { \iota } } } \Big ) \cdot
+$$
 
+Si l’on suppose que $c = \infty$ , on retrouve bien $\begin{array} { r } { \dot { \mathcal { \xi } } = \mathcal { k } \sqrt { \ell } , } \end{array}$ On pourrait facilement développer $\mathcal { \dot { L } }$ en série; mais la formule qui précède est plus avantageuse, elle se calcule avec les Tables de logarithmes et avec celles de la fonction Θ.
 
-OU 
+Pour $c = a$ , on obtient
 
+$$
+\mathcal { S } , = 0 , 7 1 \mathscr { n } ;
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0066-05.png)
+on a de même pour $c = 2 a$
 
+$$
+\mathcal { S } , = \mathrm { { o } , \ j ^ { 5 } \ d { u } . }
+$$
 
-Si Fon suppose quec==x;, on reirouve bien _r = A \ / t ,_ On pourrait facilement développer ^ en série; maift la formule qui précède est plus a van lagon se» elle se calcule avec les Tables de logarithmes et avec celles de la. (onction 0. 
+Les espérances de revente étaient, pour ces mêmes écarts, o,6ga et. ${ ( ) , 8 6 } \dot { ( ) } \dot { \alpha }$
 
-Pour _c ^ a,_ on obtient 
+L’écart moyen en baisse, lorsque le cours c n’est pas atteint, a pour valeur
 
+$$
+\frac { \int _ { - \infty } ^ { 0 } p x d x } { \int _ { - \infty } ^ { 0 } p d x } = \frac { \mathcal { L } } { 1 - \mathbb { P } - \mathbb { P } _ { 1 } } ,
+$$
 
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0066-08.png)
+${ \mathrm { I } ^ { \prime } } _ { \mathrm { ~ ; ~ } }$ désignant la quantité $\int _ { 0 } ^ { \cdot ^ { c } } p d x .$
 
+L'écart moyen a donc pour valeur 2,54a lorsque $c = \simeq a$ et 2,16a lorsque $c \mapsto \colon a$
 
-on a de nié me pour _û_ =s 20 
+Si l'on suppose $c = 0$ , on voit que l’écart moyen est égal à 2a, ré- sultat déjà obtenu.
 
-^=0,9.')^. 
-
-(.es espérances de revente étaient pour ces mêmes écarts, 0,690 et 0,8 6^. 
-
-
-![](assets/1900-bachelier-theorie-de-la-speculation.pdf-0066-12.png)
-
-
-_^._ PI désignant la quantité _j pdx.. ^0_ 
-
-1/écart moYen a donc pour valeur 2,54^ lorsque c=a et _2,160_ lorsque r?^: _^a._ 
-
-Si l'on suppose _a_ = ^, on voit que l'écart moyen est égal à _ici,_ résullat déjà obtenu, 
-
-livrerions/à litre d'exemple, le problème général relatif à l'écart a- J'achète ferme avec l'idée préconçue de revendre avec l'écart
+Reprenons, à titre d’exemple, le problème général relatif à l’écart a. J'achète ferme avec l'idée préconçue de revendre avec l'écart $a = k \sqrt { t } .$ Si à l’époque t la vente n'a pu être effectuée, je vendrai quel que soit le cours.
 
 <!-- page: 67 -->
 
-^•<sup>)</sup> î- ï î A C î i E L Î E I l . —— THÉOlUri»S-; LA, SPB^Cl'LATION. 
+Quels sont les principaux résultats que fournit le Calcul des probabilités sur cette opération?
 
-_a_ ==/î-v/. Si à l'époque _t_ la vente n'a pu être effectuée, je vendrai quel que soit le cours. 
+L’espérance réelle positive de l’opération est $( ) , 7 ^ { 1 ~ ( \ell ) }$
 
-Quels sont les principaux résultats que fournit le Calcul des proba" 
+La probabilité de la revente est o,69.
 
-b i 1 i _t_ é s sur cet t e o p é ra t. i o n ? 
+L’époque la plus probable de la revente est $\underbrace { \boldsymbol { \ell } } _ { \mathrm { ~ I ~ S ~ } } .$
 
-L'espérance réelle positive de Popération est, 0,71 _a._ 
+L’époque probable de la revente est $\boldsymbol { \underline { { \underline { { \ell } } } } }$
 
-- La prohabilité de la revente est O,(.K). 
+Si Ia revente n’a pas licu, la probabilité de réussite est $( ) , ( ) ^ { ? ) }$ , la probabilité de perte o,28, l’espérance positive o,o2a, l’espérance négative o,71 a; la perte moyenne ${ \mathrm { 2 } } , 5 { \mathrm { / } } a .$
 
-L'époque la plus probable de la revente est •^,- 
+La probabilité totale de réussite est $^ { ( ) , 7 2 }$
 
-I 0 
+Je ne erois pas nécessaire de présenter d’autres exemples; on voit que la théorie actuelle résout par le Calcul des probabilités la plupart des problèmes auxquels conduit l’étude de la spéculation.
 
-•L'époque probable de la revente est, ^ * 
-
-Si la revente n'a pas lieu, la probabilité de réussite est. o,o'-i, la probabilité de perte o,a8, l'espérance positive 0,0-2^, respérance négative o,7ï:r/; la perte moyenne 2,5/ia, 
-
-La probabilité totale de réussite est o,""2. 
-
-Je ne crois pas nécessaire de présenter d'autres exemples; on voh que la théorie actuelle résout par le Calcul des probabilités la plupart des problèmes auxquels conduit l'étude de la spéculation, 
-
-Une dornière remarque ne sera peut-être pas i n u t i l e . Si, a Fé^ml de plusieurs questions traitées dans cette étude, j'ai comparé les résultats de l'observation à ceux delà, théorie, ce n'élait pas pour vérifier des formules établies par les méthodes mathématiques, mais pour-montrer seulement que le marché, à son insu, obéit à une loi qui le domine ; la loi de la probabilité.
+Une dernière remarque ne sera peut-être pas inutile. Si, à l’égard de plusieurs questions traitées dans cette étude, j’ai comparé les résultats de l’observation à ceux de la théorie, ce n’était pas pour vérifier des formules établies par les méthodes mathématiques, mais pour montrer seulement que le marché, à son insu, obéit à une loi qui le domine : la loi de la probabilité.

@@ -56,12 +56,7 @@ class HullWhiteSwaption:
             raise ValueError("swaption expiry must be finite and non-negative")
         times = np.asarray(self.payment_times, dtype=float)
         cashflows = np.asarray(self.fixed_cashflows, dtype=float)
-        if (
-            times.ndim != 1
-            or cashflows.ndim != 1
-            or not times.size
-            or times.size != cashflows.size
-        ):
+        if times.ndim != 1 or cashflows.ndim != 1 or not times.size or times.size != cashflows.size:
             raise ValueError("payment_times and fixed_cashflows must be equal non-empty vectors")
         if not np.all(np.isfinite(times)) or not np.all(np.isfinite(cashflows)):
             raise ValueError("swaption times and cash flows must be finite")
@@ -121,9 +116,7 @@ def hw_discount_bond(t, maturity, state, curve, params):
     sigma = params.volatility
     b = hw_b(t, maturity, a)
     variance_adjustment = sigma**2 * (-math.expm1(-2.0 * a * t)) * b**2 / (4.0 * a)
-    return rates.forward_discount(t, maturity, curve) * math.exp(
-        -b * state - variance_adjustment
-    )
+    return rates.forward_discount(t, maturity, curve) * math.exp(-b * state - variance_adjustment)
 
 
 def hw_exact_transition(state, start, end, params, *, normal=0.0):
@@ -209,8 +202,7 @@ def hw_zcb_option(expiry, bond_maturity, strike, curve, params, *, option_type="
     d1 = math.log(p_maturity / (strike * p_expiry)) / volatility + 0.5 * volatility
     d2 = d1 - volatility
     return direction * (
-        p_maturity * float(ndtr(direction * d1))
-        - strike * p_expiry * float(ndtr(direction * d2))
+        p_maturity * float(ndtr(direction * d1)) - strike * p_expiry * float(ndtr(direction * d2))
     )
 
 

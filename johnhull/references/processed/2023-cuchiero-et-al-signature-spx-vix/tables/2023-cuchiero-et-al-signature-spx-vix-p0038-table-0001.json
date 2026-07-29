@@ -1,0 +1,64 @@
+{
+  "cells": [
+    {
+      "assertion_id": null,
+      "cell_type": "data",
+      "column": 0,
+      "column_span": 1,
+      "extractor_numeric_value": null,
+      "extractor_raw_text": "TVIX = 0.0383",
+      "manual_correction": false,
+      "normalized_text": "TVIX = 0.0383",
+      "numeric_value": null,
+      "raw_text": "TVIX = 0.0383",
+      "row": 0,
+      "row_span": 1,
+      "verification_status": "unverified"
+    },
+    {
+      "assertion_id": null,
+      "cell_type": "data",
+      "column": 1,
+      "column_span": 1,
+      "extractor_numeric_value": null,
+      "extractor_raw_text": "T2 IX = 0.0767",
+      "manual_correction": false,
+      "normalized_text": "T2 IX = 0.0767",
+      "numeric_value": null,
+      "raw_text": "T2 IX = 0.0767",
+      "row": 0,
+      "row_span": 1,
+      "verification_status": "unverified"
+    },
+    {
+      "assertion_id": null,
+      "cell_type": "data",
+      "column": 0,
+      "column_span": 1,
+      "extractor_numeric_value": null,
+      "extractor_raw_text": "εTVIx = 9.8 · 10−6",
+      "manual_correction": false,
+      "normalized_text": "εTVIx = 9.8 · 10−6",
+      "numeric_value": null,
+      "raw_text": "εTVIx = 9.8 · 10−6",
+      "row": 1,
+      "row_span": 1,
+      "verification_status": "unverified"
+    },
+    {
+      "assertion_id": null,
+      "cell_type": "data",
+      "column": 1,
+      "column_span": 1,
+      "extractor_numeric_value": null,
+      "extractor_raw_text": "εTVIx = 6.6 · 10−8",
+      "manual_correction": false,
+      "normalized_text": "εTVIx = 6.6 · 10−8",
+      "numeric_value": null,
+      "raw_text": "εTVIx = 6.6 · 10−8",
+      "row": 1,
+      "row_span": 1,
+      "verification_status": "unverified"
+    }
+  ]
+}

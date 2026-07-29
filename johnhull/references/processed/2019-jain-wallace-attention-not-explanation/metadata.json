@@ -1,34 +1,30 @@
 {
-  "paper_id": "2019-jain-wallace-attention-not-explanation",
-  "title": "Attention Is Not Explanation",
-  "authors": "Sarthak Jain; Byron C. Wallace",
-  "year": "2019",
-  "source_url": "https://aclanthology.org/N19-1357/",
-  "source_pdf": "references/papers/2019-jain-wallace-attention-not-explanation.pdf",
-  "source_sha256": "3750735a8bfd5f7d960a7cdb1bbdf6e16ac34cf0d449cf5c4bc45e3c3549e607",
-  "converter": "PyMuPDF4LLM 1.28.0",
-  "conversion_options": {
-    "header": false,
-    "footer": false,
-    "use_ocr": true,
-    "force_ocr": false,
-    "ocr_language": "eng",
-    "write_images": true,
-    "max_chunk_chars": 4800,
-    "overlap_chars": 400
+  "converted_page_numbers": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "extractor": {
+    "extractor_name": "MinerU pipeline",
+    "extractor_version": "3.4.4",
+    "model_hash": "ed6b654c018d742e65a17671e379c5e6ecc87ec9",
+    "source_pdf_sha256": "3750735a8bfd5f7d960a7cdb1bbdf6e16ac34cf0d449cf5c4bc45e3c3549e607"
   },
-  "pdf_metadata": {
-    "format": "PDF 1.3",
-    "title": "Attention is not Explanation",
-    "author": "Sarthak Jain ; Byron C. Wallace",
-    "subject": "N19-1 2019",
-    "keywords": "",
-    "creator": "LaTeX with hyperref package",
-    "producer": "pdfTeX-1.40.18",
-    "creationDate": "D:20190506160121Z",
-    "modDate": "D:20190506160121Z",
-    "trapped": "",
-    "encryption": null,
-    "page_count": 14
-  }
+  "input_content_list_sha256": "2f57a8154bbc6ea502f865d501201fb1611a5bc7facf21bb10c14107b72b83e1",
+  "paper_id": "2019-jain-wallace-attention-not-explanation",
+  "schema_version": "2.0.0",
+  "source_page_count": 14,
+  "source_pdf": "/home/kazumasa/projects-johnhull-corpus-v2/johnhull/references/papers/2019-jain-wallace-attention-not-explanation.pdf",
+  "source_pdf_sha256": "3750735a8bfd5f7d960a7cdb1bbdf6e16ac34cf0d449cf5c4bc45e3c3549e607"
 }

@@ -50,9 +50,7 @@ def _price_mixed_boundaries(S, K, r, sigma, T, q, *, is_call):
     machinery here would shift results by ~1 ulp -- enough for a downstream
     calibration optimizer to land elsewhere and break artifact reproducibility.
     """
-    broadcast = np.broadcast_arrays(
-        *(np.asarray(v, dtype=float) for v in (S, K, r, sigma, T, q))
-    )
+    broadcast = np.broadcast_arrays(*(np.asarray(v, dtype=float) for v in (S, K, r, sigma, T, q)))
     shape = broadcast[0].shape
     s, k, r_b, sigma_b, t, q_b = (np.atleast_1d(a) for a in broadcast)
 
@@ -70,9 +68,7 @@ def _price_mixed_boundaries(S, K, r, sigma, T, q, *, is_call):
     out[zero_vol] = np.maximum(forward if is_call else -forward, 0.0)
 
     if np.any(diffusive):
-        s_d, k_d, r_d, sigma_d, t_d, q_d = (
-            a[diffusive] for a in (s, k, r_b, sigma_b, t, q_b)
-        )
+        s_d, k_d, r_d, sigma_d, t_d, q_d = (a[diffusive] for a in (s, k, r_b, sigma_b, t, q_b))
         vol_time = sigma_d * np.sqrt(t_d)
         d_1 = (np.log(s_d / k_d) + (r_d - q_d + 0.5 * sigma_d**2) * t_d) / vol_time
         d_2 = d_1 - vol_time
