@@ -17,6 +17,7 @@
 | [`pokemon/`](pokemon/) | Quokka Wilds: オリジナル 3D モンスター収集ゲーム | Vite / React Three Fiber |
 | [`EitanQuest/`](EitanQuest/) | えいたんクエスト: iPhone 向け英単語 4 択クイズアプリ（オフライン完結 MVP） | Swift / SwiftUI / SwiftData |
 | [`NeonThread/`](NeonThread/) | 発光ラインを操作して隙間をくぐる iOS 無限ランゲーム | Swift / SwiftUI + SpriteKit |
+| [`genequest/`](genequest/) | Genequest 健康リスク・体質・母系祖先結果のローカル保存と検証（機微データは Git 管理外） | CSV / JSON / Markdown / Python |
 | [`shortest_path/`](shortest_path/) | ダイクストラ法・A*・双方向探索の実装と可視化ラボ | Python / Jupyter / HTML |
 | [`cpp_algo_lab/`](cpp_algo_lab/) | C++学習ラボ：ソート/文字列検索/CPU・GPU並列化の実装と計測（Phase 1: ソート10種+評価4軸） | C++20 / make / doctest |
 | [`analytics/`](analytics/) | 体験型インタラクティブ教科書シリーズ（線形代数・NN・ベイズ・フーリエ・ラプラス・微分方程式・機械学習）+ 統合オフラインポータル。索引: [`analytics/README.md`](analytics/README.md) | Python / Jupyter Book / Plotly |
