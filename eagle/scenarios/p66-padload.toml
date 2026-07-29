@@ -300,5 +300,25 @@ comment = "min P66 force, kg*m/cs^2 at b=12 -- UNVERIFIED live until Spike B"
 [[word]]
 symbol = "MAXFORCE"
 physical = { value = 4.25, b = 12, dp = true }
-provenance = "derived (scale chain); 42500 N = 4.25 kg*m/cs^2 (DPS_FTP_N)"
+provenance = "derived (scale chain); 42500 N = 4.25 kg*m/cs^2"
+# DELIBERATELY LEFT AT 42500 N on 2026-07-26 when DPS_FTP_N moved to FSAT
+# (48145.4 N). Three reasons, in order:
+#  1. This word's b-scale is still UNVERIFIED (padload::P66_BSCALE_TABLE),
+#     so the newtons it actually lands on in the AGC are a hypothesis. A
+#     verified engine constant must not be laundered into an unverified
+#     pad word and then read back as if it were confirmed.
+#  2. Nothing measured so far says which way this word should move. The
+#     "26.8 kN peak" written here first was wrong -- it came from a
+#     5-second telemetry sample, and the same commit's ledger note
+#     retracted it: the full-rate trace has run 4's P66 thrust stroking
+#     0 -> 46706 N, and run 6's 0 -> 48132 N, i.e. the limit cycle does
+#     drive the plant to its stop. Those peaks are the PLANT's
+#     full-throttle snap (dps_envelope sends any command above 0.6*MAX to
+#     FTP), so they do not read back the AGC's own force clamp -- but they
+#     do mean this word cannot be assumed slack. What IS known is only that
+#     hovering the measured ~7.8 t vehicle needs ~12.6 kN.
+#  3. One variable per flight. The M1 flight budget is testing the three
+#     engine constants; moving a pad word in the same run would confound
+#     the attribution.
+# Next task owns the decision: pin the b-scale, then set this from FSAT.
 comment = "max P66 force, kg*m/cs^2 at b=12 -- UNVERIFIED live until Spike B"

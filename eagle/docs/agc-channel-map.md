@@ -301,6 +301,36 @@ PIPA registers (0o37=PIPAX, 0o40=PIPAY, 0o41=PIPAZ) accumulate accelerometer
 pulses; CDU registers (0o32=CDUX, 0o33=CDUY, 0o34=CDUZ) track gyro-derived
 gimbal angles; thrust register (0o55=THRUST) drives descent-engine throttle.
 
+#### PIPA Pulse Scale: 1 cm/s (the rope decides, not the vehicle model)
+
+**One PIPA pulse = 0.01 m/s in Luminary099.** This is not a modelling
+choice: it is the constant the rope multiplies the counters by, so a
+sim that emits pulses in any other unit hands the AGC a silently wrong ΔV.
+
+- `vendor/virtualagc/Luminary099/SERVICER.agc:570-580` (PIPASR, REPIP1 /
+  REPIP3): the raw PIPAX/PIPAY/PIPAZ counter readings go straight into the
+  **high** words of `DELVX/DELVY/DELVZ`, so `DELV` as a DP fraction is
+  `count · 2⁻¹⁴`. `IMU_COMPENSATION_PACKAGE.agc:58,65` states the same
+  scaling in words ("(PP) X 2(+14)", "FRACTIONAL PIPA PULSES SCALED
+  2(+14)").
+- `vendor/virtualagc/Luminary099/CONTROLLED_CONSTANTS.agc:178-180`:
+  `KPIP = .0512` ("SCALES DELV TO UNITS OF 2(5) M/CS"),
+  `KPIP1 = .0128` (2(7) M/CS), `KPIP2 = .0064` (2(8) M/CS). All three
+  reduce to the same physical value:
+  `count · 2⁻¹⁴ · 0.0128 · 2⁷ = count · 1.0e-4 m/cs = count · 0.01 m/s`.
+
+`vendor/virtualagc/Contributed/LM_Simulator/lm_simulator.tcl:145` sets
+`PIPA_INCR 0.0585` (metres — `modules/AGC_IMU.tcl:293-297` displays the
+integrated velocity both raw and × `MeterToFeet`), and that was this
+repo's original provenance for `eagle_dynamics::constants::PIPA_INCR`. It
+is **5.85× too coarse for this rope**: LM_Simulator drives a DSKY, never a
+closed navigation loop, so nothing there ever noticed. Measured live in M1
+flight 1 (2026-07-26): over a 198 s powered descent the AGC's own V06N63
+R2 rate matched a model in which it integrated k = 0.159 of the ΔV we
+delivered (rms 0.46 m/s; k = 1 gives rms 92.9 m/s), against the predicted
+0.01/0.0585 = 0.171. See
+`docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`.
+
 ### Thrust Pulse Emissions
 
 Confirmed against `vendor/virtualagc/yaAGC/agc_engine.c:1278-1305`
@@ -364,6 +394,38 @@ retried (RSET + KEY REL) when it is swallowed — and a read must confirm the
 frame really is V01N01 showing the requested address before trusting R1.
 P66's N63 R1 (`+56077`) is five octal-legal digits and was silently
 returned as erasable data before that check existed.
+
+### Landing-Radar Bypass (FLGWRD11 / LRBYPASS, Wave 2 M1)
+
+We model no landing radar, so R12 must never try to incorporate one. The
+switch is a single erasable flag bit, and **fresh start already sets it** —
+`run_scenario` therefore READS IT BACK and aborts if it is clear, rather
+than writing it (`runner::run_scenario`, gated on `[agc] lrbypass`).
+
+| Symbol | ECADR | Bit | Meaning when SET |
+|--|--|--|--|
+| FLGWRD11 | 0o107 | — | flag word 11 (`STATE +11D`, `STATE` = 0o74) |
+| LRBYPASS | 0o107 | BIT15 = 0o40000 | bypass ALL landing-radar updates |
+
+Citations, all verified against the shipped tree (`vendor/virtualagc/`, the
+assembly the binary is built from):
+
+- `vendor/virtualagc/Luminary099/FLAGWORD_ASSIGNMENTS.agc:1035` —
+  `FLGWRD11 = STATE +11D`; `:1040-1041` — `LRBYPASS = 165D` /
+  `LRBYBIT = BIT15`, commented *"BYPASS ALL LANDING RADAR UPDATES"* vs
+  *"DO NOT BYPASS LR UPDATES"*.
+- `build/agc/Luminary099.log:3262` — `26,2022  0107  FLGWRD11 = STATE +11D`,
+  which is where the octal ECADR 0o107 comes from.
+- `vendor/virtualagc/Luminary099/FRESH_START_AND_RESTART.agc:623` —
+  `OCT 40000  # BIT 15 = LRBYPASS.`, the 12th word (index 11) of the
+  `SWINIT` fresh-start flag-word table that begins at `:611`. Note the blank
+  line at `:619`: the 12 words occupy `:611-618` and `:620-623`, so the
+  index-11 word is at `:623` and not at `:622`.
+
+**Confirmed live**, 2026-07-26 M1 flight 1: the read-back of 0o107 after
+`dap_init` on a fresh `--no-resume` boot returned BIT15 set, and every M1
+descent since has flown with the radar bypassed in-rope — the descent is
+purely inertial. See `docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`.
 
 ### Coarse-Align CDU Outputs
 

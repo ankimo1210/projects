@@ -1,5 +1,19 @@
 # Wave 1 re-flight — 2026-07-25
 
+> **STALE NUMBERS (added 2026-07-26).** Every measurement below was taken
+> against vehicle constants that have since been corrected against the
+> rope: `PIPA_INCR` 0.0585 → 0.01 m/s per pulse, `THRUST_N_PER_PULSE`
+> 12.0 → 12.5319585 N/bit, DPS full throttle 42 500 → 48 145.4 N, and
+> `DPS_TAU` 0.3 → 0.2 s. The reasoning (and the live evidence that found
+> the first two) is in
+> `docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`. **These runs will
+> not reproduce.** The *conclusions* here still stand — the attitude loop
+> is healthy, the DPS idle stop is real, P66 was never reached — but do
+> not treat any figure below as a current baseline, and in particular note
+> that cause C (the pad-loaded state vector and the sim truth describing
+> different vehicles) was fixed by Wave 2 M1's PDI gate, not by anything
+> in this note.
+
 Live re-flight of the Phase 2 Wave 1 closed-loop acceptance
 (`tests/live_p66_descent.rs::p66_soft_landing_closed_loop`) on branch
 `eagle/wave1-review-fixes`, with `EAGLE_ATT_DEBUG` / `EAGLE_TELEM_OUT`

@@ -12,8 +12,9 @@ shares the ignition-point geometry `generate_state` already computes. The
 scenario schema gains a `mode = "pdi"` gate, a `[handover]` altitude and an
 `lrbypass` marker. `SimCore` keeps the freeze-until-ENGINE-ON mechanism
 (it is what makes the AGC's clock-rate offset harmless) but in PDI mode the
-frozen truth IS the ignition point and the freeze-phase PIPA feed is zero
-(coast), not hover support. P64→P66 handover is sim-driven: `SimCore` arms
+frozen truth is the TIG state (`pdi_truth_state` back-propagates the pad's
+geometric ignition point by ZOOMTIME — see the release-trigger note below)
+and the freeze-phase PIPA feed is zero (coast), not hover support. P64→P66 handover is sim-driven: `SimCore` arms
 on MM64, fires on an altitude crossing, and the headless loop performs
 ATT HOLD + the selection ROD click.
 
@@ -46,25 +47,57 @@ yaAGC socket protocol, existing DSKY script harness.
 
 ## Verified vendor facts (checked while planning — implementers re-verify in Step 0 of the task that uses them)
 
-| Fact | Source |
+> **Cite the `vendor/virtualagc/` tree, always, with the path prefix.** The
+> two vendored transcriptions diverge by proofreading drift and **the
+> shipped `Luminary099.bin` is virtualagc's assembly** (CLAUDE.md vendor
+> pins). The line numbers below were re-verified against virtualagc on
+> 2026-07-26 after a Task 2 review caught an Apollo-11-tree line number
+> (`FRESH_START…:614`) that points at a different flag in virtualagc.
+
+| Fact | Source (virtualagc tree) |
 |---|---|
 | `FLGWRD11 = STATE +11D`, ECADR **`0o107`** | `build/agc/Luminary099.log:3262` (`26,2022 0107 FLGWRD11 = STATE +11D`) |
-| `LRBYPASS` = FLAGWRD11 **BIT 15** (`0o40000`): "BYPASS ALL LANDING RADAR UPDATES" | `FLAGWORD_ASSIGNMENTS.agc:1051-1052` |
-| **Fresh start SETS LRBYPASS** — `SWINIT`'s FLGWRD11 word is `OCT 40000  # BIT 15 = LRBYPASS.` | `FRESH_START_AND_RESTART.agc:614` |
-| Ullage fires at **TIG−7.5 s** (DPS) | `BURN_BABY_BURN--MASTER_IGNITION_ROUTINE.agc:347` (`ULLGTASK … THIS COMES AT TIG-7.5 OR TIG-3.5`) |
-| GUILDENSTERN's P66 switch checks only "already MM66?" + ATT-HOLD + RODCOUNT ≠ 0 — it does not require MM63, so it works from P64 | `LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:194-217` (`STABL?`/`P66NOW?`) |
-| N64 is a `FUNNYDSP` (mixed-format) noun — its register layout is NOT the simple HDOTDISP R2 of N60/N63. Do not extend `parse_agc_nav` to N64 without reading the FUNNYDSP decode first | `PINBALL_NOUN_TABLES.agc:726` |
+| `LRBYPASS` = FLAGWRD11 **BIT 15** (`0o40000`): "BYPASS ALL LANDING RADAR UPDATES" | `vendor/virtualagc/Luminary099/FLAGWORD_ASSIGNMENTS.agc:1040-1041` |
+| **Fresh start SETS LRBYPASS** — `SWINIT`'s FLGWRD11 word is `OCT 40000  # BIT 15 = LRBYPASS.` | `vendor/virtualagc/Luminary099/FRESH_START_AND_RESTART.agc:623` |
+| Ullage fires at **TIG−7.5 s** (DPS) | `vendor/virtualagc/Luminary099/BURN,_BABY,_BURN_--_MASTER_IGNITION_ROUTINE.agc:356` (`ULLGTASK … THIS COMES AT TIG-7.5 OR TIG-3.5`) |
+| `TIG = TDEC1 − ZOOMTIME` (the pad's geometric point is where nav sits at FLATOUT, not at ENGINE ON) | `vendor/virtualagc/Luminary099/THE_LUNAR_LANDING.agc:193-198` (`DDUMGOOD`) |
+| `P63TABLE`'s AVEGEXIT is `2CADR SERVEXIT` until `P63ZOOM` swaps it to `LUNLAND` — no landing-guidance pass, so no P66, before TIG+ZOOMTIME | `vendor/virtualagc/Luminary099/BURN,_BABY,_BURN_--_MASTER_IGNITION_ROUTINE.agc:144,575,593` |
+| GUILDENSTERN's P66 switch checks only "already MM66?" + ATT-HOLD + RODCOUNT ≠ 0 — it does not require MM63, so it works from P64 | `vendor/virtualagc/Luminary099/LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:203-217` (`STABL?`/`P66NOW?`) |
+| **N64's R2 IS `HDOTDISP`, same `VEL3 DP3` format as N60 and N63** — only R1 is the mixed `FUNNYDSP`. P64 displays V06N64 (`LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:875,895`), so `parse_agc_nav` MUST accept noun 64 or `agc_hdot_ms` goes null for the whole approach phase — including the handover. (An earlier draft of this table warned the opposite; it read only the R1 row.) | `vendor/virtualagc/Luminary099/PINBALL_NOUN_TABLES.agc:736-738` |
 | Wave 1 measured: the DAP recovers a ~125° attitude error in ~13 s after release, and Luminary throttles up at `FLATOUT` = TIG+26 s — so an attitude slew commanded against frozen truth resolves before throttle-up | re-flight note + `docs/superpowers/notes/2026-07-25-wave1-reflight.md` |
 
-**Design consequence (release trigger):** the ignition-attitude maneuver
-(IGNALG, ~TIG−276 s) fires RCS jets long before ullage, so "first jet
-command" cannot distinguish ullage. The freeze therefore releases on
-**ENGINE ON (ch 011 bit 13), exactly as in Wave 1**, with frozen truth = the
-ignition point itself. At that moment the AGC's nav — which integrated the
-same pad-loaded orbit to TIG — is at the same point by construction. Ullage
-Δv (~0.9 m/s) is consistently absent from both sides (frozen truth moves
-nothing; zero PIPA feed means nav sees nothing). No ullage-lead constant is
-needed.
+**Design consequence (release trigger) — CORRECTED 2026-07-26 after the
+Task 1 review; the original text below the correction was wrong.** The
+freeze releases on **ENGINE ON (ch 011 bit 13), exactly as in Wave 1**
+(the ignition-attitude maneuver fires RCS jets ~TIG−276 s, long before
+ullage, so "first jet command" cannot identify ullage). Ullage Δv
+(~0.9 m/s at TIG−7.5 s, `vendor/virtualagc/Luminary099/BURN,_BABY,_BURN_--_MASTER_IGNITION_ROUTINE.agc:356`)
+falls inside the frozen window and is therefore consistently absent from
+both sides — frozen truth does not move, and a zero PIPA feed means nav
+sees nothing.
+
+**But frozen truth is NOT the pad's geometric ignition point.** `DDUMGOOD`
+computes `TIG = TDEC1 − ZOOMTIME`
+(`vendor/virtualagc/Luminary099/THE_LUNAR_LANDING.agc:193-198`; this repo
+already states it at
+`padload.rs:680`, "TIG then comes out at tet − ZOOMTIME"). The geometric
+point is where the AGC's integrated nav sits at **FLATOUT = TIG+ZOOMTIME**,
+not at ENGINE ON. At ENGINE ON the AGC believes it is **≈44.31 km uprange**
+(along-track), Δr +20.6 m, radial rate −1.58 m/s. So `pdi_truth_state`
+**back-propagates the ignition point by ZOOMTIME under gravity** and
+returns the TIG-time state; releasing the freeze at ENGINE ON then lands
+truth exactly where nav is. (User ruling, 2026-07-26, over the two
+alternatives: releasing at FLATOUT would freeze truth through the 26 s
+idle burn, and shifting the pad's `tet` would disturb the proven P63
+entry.)
+
+This also resolves a contradiction between the design doc (§3 M1: "PDI mode
+runs free from t=0", i.e. no freeze) and this plan (freeze released on
+ENGINE ON). **The plan governs**: the freeze is kept, because it is what
+makes the AGC's ~4.8 % clock-rate offset harmless: nav advances on the AGC's
+own clock while truth stays pinned at the TIG state, so whenever ENGINE ON
+actually arrives the two agree regardless of how far the clocks have drifted
+apart.
 
 **LRBYPASS consequence:** M1 does not SET the flag — fresh start already
 does. `lrbypass = true` in the scenario means "verify the flag is set after
@@ -91,15 +124,26 @@ init and abort if not" (a regression guard; M3 will *clear* it).
 **Files:**
 - Modify: `runtime/apps/eagle-runtime/src/padload.rs` (around `generate_state`, line ~741)
 
+> **SUPERSEDED SKETCH — read the plan header's corrected release-trigger
+> note first.** This task shipped as commits `bb3499f4` + `b5899404`. The
+> code and test snippets below are the pre-fix draft: they place truth AT
+> the geometric ignition point, which the Task 1 review disproved
+> (`TIG = TDEC1 − ZOOMTIME`, so ENGINE ON is ≈44.31 km uprange of it). The
+> shipped `pdi_truth_state` back-propagates by ZOOMTIME and returns the
+> TIG-time state, and `generate_state_and_truth_state_share_the_geometry`
+> became a forward round-trip against the geometric point plus a 40-50 km
+> along-track magnitude guard. **The committed source is authoritative;
+> this section is kept only as the record of what was originally asked.**
+
 **Interfaces:**
-- Consumes: `StateCfg` (exists), `eagle_dynamics::{state::LmState, state::gravity, rk4::step_rk4, frames::{Rot, V3, Mci, Body}, constants::{R_SITE, OMEGA_MOON, DT}}`.
+- Consumes: `StateCfg` (exists), `eagle_dynamics::{state::LmState, state::gravity, rk4::step_rk4, frames::{Rot, V3, Mci, Body}, constants::{R_SITE, OMEGA_MOON, DT, ZOOMTIME_CS via padload}}`.
 - Produces:
   - `pub struct IgnitionGeometry { pub theta_rad: f64, pub r_orb_m: f64, pub v_inertial_ms: f64 }`
   - `pub fn ignition_geometry(cfg: &StateCfg) -> IgnitionGeometry`
   - `pub struct PdiMasses { pub dry_kg: f64, pub dps_kg: f64, pub rcs_kg: f64 }`
   - `pub fn pdi_truth_state(cfg: &StateCfg, m: &PdiMasses, epoch_s: f64) -> LmState`
 
-- [ ] **Step 1: Write failing tests** in `padload.rs` `#[cfg(test)]`:
+- [x] **Step 1: Write failing tests** in `padload.rs` `#[cfg(test)]`:
 
 ```rust
 #[test]
@@ -151,9 +195,9 @@ fn pdi_truth_attitude_is_the_padloaded_refsmmat_frame() {
 }
 ```
 
-- [ ] **Step 2: Run, verify FAIL** — `cd runtime && cargo test -p eagle-runtime padload::` → compile errors (types missing).
+- [x] **Step 2: Run, verify FAIL** — `cd runtime && cargo test -p eagle-runtime padload::` → compile errors (types missing).
 
-- [ ] **Step 3: Implement.**
+- [x] **Step 3: Implement.**
 
 Extract the geometry block that `generate_state` computes inline
 (padload.rs ~750-768) into:
@@ -230,9 +274,9 @@ pub fn pdi_truth_state(cfg: &StateCfg, m: &PdiMasses, epoch_s: f64) -> LmState {
 (Adjust the `Rot`/`retag` construction to the real frames.rs API — the
 axis-angle-then-retag pattern is exactly what `scenario::body_x_to` uses.)
 
-- [ ] **Step 4: Run, verify PASS** — `cargo test -p eagle-runtime padload::` and the full `cargo test`.
+- [x] **Step 4: Run, verify PASS** — `cargo test -p eagle-runtime padload::` and the full `cargo test`.
 
-- [ ] **Step 5: Commit** — `git commit -m "feat(runtime): single-source ignition geometry + PDI truth state"` (+ trailers).
+- [x] **Step 5: Commit** — `git commit -m "feat(runtime): single-source ignition geometry + PDI truth state"` (+ trailers).
 
 ---
 
@@ -250,7 +294,7 @@ axis-angle-then-retag pattern is exactly what `scenario::body_x_to` uses.)
   - `Agc.lrbypass: bool` (`#[serde(default)]` → false)
   - `Scenario::initial_state` returns the PDI state when `mode = "pdi"`.
 
-- [ ] **Step 1: Write failing tests** in `scenario.rs` tests:
+- [x] **Step 1: Write failing tests** in `scenario.rs` tests:
 
 ```rust
 #[test]
@@ -278,9 +322,9 @@ fn hover_scenarios_do_not_need_the_new_fields() {
 }
 ```
 
-- [ ] **Step 2: Run, verify FAIL** — types/fields/file missing.
+- [x] **Step 2: Run, verify FAIL** — types/fields/file missing.
 
-- [ ] **Step 3: Implement.** Schema additions (all `deny_unknown_fields`-safe
+- [x] **Step 3: Implement.** Schema additions (all `deny_unknown_fields`-safe
 because they are new named fields with defaults):
 
 ```rust
@@ -356,7 +400,7 @@ lm_weight_lbs = 33530.0            # derived: (7009+7950+250) kg = 15209 kg → 
 tland_offset_cs = 36000            # derived: proven burn lead from Wave 1 acceptance
 flip_atthold_after_engine_on_s = 2.0   # unused in pdi mode (handover is sim-driven)
 lrbypass = true                    # verify-only: fresh start already sets FLAGWRD11 bit15
-                                   # (FRESH_START_AND_RESTART.agc:614); abort if missing
+                                   # (vendor/virtualagc/…/FRESH_START_AND_RESTART.agc:623); abort if missing
 
 [handover]
 alt_m = 150.0            # historical: crew takeover near 500 ft during P64
@@ -373,9 +417,9 @@ tilt_max_deg = 12.0
 timeout_s = 800.0        # from ENGINE ON; P63 burn ~510 s + P64 + P66 + margin
 ```
 
-- [ ] **Step 4: Run, verify PASS** — `cargo test -p eagle-runtime scenario::` then full `make test && make lint`.
+- [x] **Step 4: Run, verify PASS** — `cargo test -p eagle-runtime scenario::` then full `make test && make lint`.
 
-- [ ] **Step 5: Commit** — `git commit -m "feat(runtime): PDI gate mode, handover altitude, lrbypass marker + pdi-descent scenario"` (+ trailers).
+- [x] **Step 5: Commit** — `git commit -m "feat(runtime): PDI gate mode, handover altitude, lrbypass marker + pdi-descent scenario"` (+ trailers).
 
 ---
 
@@ -394,7 +438,7 @@ timeout_s = 800.0        # from ENGINE ON; P63 burn ~510 s + P64 + P66 + margin
   - PDI freeze: `sf_body = 0` while frozen (coast), release on ENGINE ON
     (mechanism unchanged).
 
-- [ ] **Step 1: Write failing tests** in `sim.rs` tests:
+- [x] **Step 1: Write failing tests** in `sim.rs` tests:
 
 ```rust
 fn pdi_scenario() -> Scenario {
@@ -461,9 +505,9 @@ fn handover_never_fires_in_hover_mode() {
 }
 ```
 
-- [ ] **Step 2: Run, verify FAIL** — `handover` field missing, PDI PIPA test fails on hover-support pulses.
+- [x] **Step 2: Run, verify FAIL** — `handover` field missing, PDI PIPA test fails on hover-support pulses.
 
-- [ ] **Step 3: Implement.**
+- [x] **Step 3: Implement.**
 
 `SimCore` gains fields set in `new` from the scenario:
 
@@ -503,9 +547,9 @@ pub enum SimEvent {
 `SimEvent::Handover` on the renamed `event_tx`. Update the thread-shell
 test accordingly.
 
-- [ ] **Step 4: Run, verify PASS** — `cargo test -p eagle-runtime sim::` then full suite (headless will not compile until Task 4 — do Tasks 3+4 on one branch state if needed, but keep the commits separate; it is acceptable for this task's commit to come after Task 4's compile fix ONLY if the suite cannot be made green here. Preferred: change `spawn_sim`'s signature and `headless.rs`'s call site minimally in this task (type rename only, mapping `SimEvent::RodClicks` to the existing behavior and ignoring `Handover` with a `// Task 4` comment), so `make test` is green at this commit.)
+- [x] **Step 4: Run, verify PASS** — `cargo test -p eagle-runtime sim::` then full suite (headless will not compile until Task 4 — do Tasks 3+4 on one branch state if needed, but keep the commits separate; it is acceptable for this task's commit to come after Task 4's compile fix ONLY if the suite cannot be made green here. Preferred: change `spawn_sim`'s signature and `headless.rs`'s call site minimally in this task (type rename only, mapping `SimEvent::RodClicks` to the existing behavior and ignoring `Handover` with a `// Task 4` comment), so `make test` is green at this commit.)
 
-- [ ] **Step 5: Commit** — `git commit -m "feat(runtime): PDI coast freeze, sim-driven P64 handover, SimEvent channel"` (+ trailers).
+- [x] **Step 5: Commit** — `git commit -m "feat(runtime): PDI coast freeze, sim-driven P64 handover, SimEvent channel"` (+ trailers).
 
 ---
 
@@ -523,11 +567,11 @@ test accordingly.
   new reader).
 - Produces:
   - `pub const FLGWRD11_ECADR: u16 = 0o107;` (citation: `Luminary099.log:3262`, `26,2022 0107 FLGWRD11 = STATE +11D`)
-  - `pub const LRBYBIT: u16 = 0o40000;` (citation: `FLAGWORD_ASSIGNMENTS.agc:1051-1052`; default-set at fresh start per `FRESH_START_AND_RESTART.agc:614`)
+  - `pub const LRBYBIT: u16 = 0o40000;` (citation: `vendor/virtualagc/Luminary099/FLAGWORD_ASSIGNMENTS.agc:1040-1041`; default-set at fresh start per `vendor/virtualagc/Luminary099/FRESH_START_AND_RESTART.agc:623`)
   - `run_scenario` in PDI mode: verifies LRBYPASS after `init_discretes`/`dap_init`, skips the forced ATT-HOLD block, returns after `wait_engine_on`.
   - headless event loop: `RodClicks(n)` → `rod_load`; `Handover` → `att_hold(&cmd_tx)` then `rod_load(script, -1)`.
 
-- [ ] **Step 1: Write failing tests.** Fast-testable pieces only (the
+- [x] **Step 1: Write failing tests.** Fast-testable pieces only (the
 choreography itself is live):
 
 ```rust
@@ -561,9 +605,9 @@ async fn handover_event_passes_through_and_sim_close_still_terminates() {
 }
 ```
 
-- [ ] **Step 2: Run, verify FAIL.**
+- [x] **Step 2: Run, verify FAIL.**
 
-- [ ] **Step 3: Implement.**
+- [x] **Step 3: Implement.**
 
 `runner.rs`:
 - Add the two constants with citations (Step 0: re-verify both against
@@ -599,12 +643,12 @@ while let Some(ev) = next_sim_event(&mut event_rx, &mut client_rod_rx).await {
 }
 ```
 
-- [ ] **Step 4: Run, verify PASS** — full `make test && make lint`; also
+- [x] **Step 4: Run, verify PASS** — full `make test && make lint`; also
 `cargo test -p eagle-runtime --test live_p66_descent --no-run` and
 `--test live_spike_p66 --no-run` (hover path must still compile and its
 behavior is untouched).
 
-- [ ] **Step 5: Commit** — `git commit -m "feat(runtime): PDI choreography branch, LRBYPASS verify, handover action"` (+ trailers).
+- [x] **Step 5: Commit** — `git commit -m "feat(runtime): PDI choreography branch, LRBYPASS verify, handover action"` (+ trailers).
 
 ---
 
@@ -621,7 +665,7 @@ behavior is untouched).
 - Produces: measured numbers later tasks assert on. **Numeric findings are
   recorded, not guessed** (Wave 1 spike rule).
 
-- [ ] **Step 1: Makefile target.**
+- [x] **Step 1: Makefile target.**
 
 ```make
 # Wave 2 M1: the real descent — PDI → P63 → P64 → P66, radar bypassed.
@@ -635,7 +679,7 @@ descent-full: agc
 
 (add to `.PHONY`.)
 
-- [ ] **Step 2: First instrumented flight.**
+- [x] **Step 2: First instrumented flight.**
 
 ```bash
 cd runtime
@@ -656,7 +700,7 @@ pacing lines, fuel remaining. Also record what P64 actually displays
 extend `parse_agc_nav` unless the recorded data plus
 `PINBALL_NOUN_TABLES.agc` decode confirm R2 = HDOTDISP.
 
-- [ ] **Step 3: Diagnose and iterate.** Expected first-flight risk points, in
+- [x] **Step 3: Diagnose and iterate.** Expected first-flight risk points, in
 order: (a) IGNALG rejects or slips TIG (FAILREG 01703/00404/01301 — same
 alarm vocabulary as Wave 1 spike A); (b) P63 guidance diverges — check
 `nav_err_hdot_ms` (now measurable via N63) and the attitude trace;
@@ -666,16 +710,21 @@ Fix loop per the global rule: after 3 failed fix attempts on any one
 blocker, STOP and write up. Hard budget for the task: **6 flights** (~2 h
 wall) — if not stable by then, stop and summarize regardless.
 
-- [ ] **Step 4: Tune the scenario from measurements.** Set `[rod] steps`
+- [x] **Step 4: Tune the scenario from measurements.** Set `[rod] steps`
 (breakpoints below the measured handover-entry altitude/rate),
 `[acceptance]` values and `timeout_s` from the successful profile, each
 with `measured:` provenance comments naming the run. Update
 `docs/agc-channel-map.md` with the FLGWRD11/LRBYPASS rows (octal, cited).
 
 - [ ] **Step 5: Repeat until one full nominal-profile flight completes** (not
-yet the frozen 2×-consecutive bar — that is Task 6's).
+yet the frozen 2×-consecutive bar — that is Task 6's). — **NOT MET.** The
+6-flight budget was spent (runs 1-6, 2026-07-26); the profile flies
+PDI → P63 → P64 → P66 reproducibly on the last three, but every run ends in
+`Crash` and no nominal-profile flight completed. Step 3's stop rule
+applies: stopped and written up
+(`docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`).
 
-- [ ] **Step 6: Commit** — code/scenario/docs + ledger note:
+- [x] **Step 6: Commit** — code/scenario/docs + ledger note:
 `git commit -m "feat(runtime): M1 PDI descent flies live; measured rod schedule + acceptance values"` (+ trailers).
 
 ---
@@ -691,7 +740,16 @@ yet the frozen 2×-consecutive bar — that is Task 6's).
 - Consumes: measured values from Task 5; `run_headless`, `HeadlessResult`
   (alarms, prog_lamp_frames, drift/final_t_s, mm_sequence), `TouchdownReport`.
 
-- [ ] **Step 1: Write the test** (pattern: `live_p66_descent.rs`, updated):
+> **Outcome, 2026-07-26 — test frozen, acceptance NOT met, Step 3 not run.**
+> Task 5 hit its stop rule (6 of 6 flights, no stable profile), so this task
+> took the branch Step 3 names: the test is written and compiles, the docs
+> record the measured status, and **the acceptance has never been run —
+> not once, green or red.** On the six measured flights its mode-sequence,
+> alarm and AGC-clock assertions would pass and its touchdown assertions
+> would fail (run 6: 30.86 / 60.04 m/s, 12.8° tilt, `Crash`). Blockers and
+> next steps: `docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`.
+
+- [x] **Step 1: Write the test** (pattern: `live_p66_descent.rs`, updated):
 
 ```rust
 //! Wave 2 M1 acceptance: the real Luminary099 flies PDI → P63 → P64 → P66
@@ -794,9 +852,9 @@ async fn pdi_full_descent_closed_loop() {
 (Adjust field names against the real `HeadlessResult` — Wave 1's final fix
 wave added `alarms`, `prog_lamp_frames`, `final_t_s`, `pacing_lost_ms`.)
 
-- [ ] **Step 2: Compile gate** — `cargo test -p eagle-runtime --test live_pdi_descent --no-run`.
+- [x] **Step 2: Compile gate** — `cargo test -p eagle-runtime --test live_pdi_descent --no-run`. — *Builds clean; `make lint` (clippy `-D warnings` over `--all-targets`) covers it too.*
 
-- [ ] **Step 3: Run live until green 2× consecutively** (the M1 bar; each run ~18-19 min):
+- [ ] **Step 3: Run live until green 2× consecutively** (the M1 bar; each run ~18-19 min): — **NOT RUN.** The flight budget was exhausted in Task 5 and the acceptance does not pass; running it would spend wall clock to re-measure a known-red result. The test stays as the target.
 
 ```bash
 cargo test -p eagle-runtime --test live_pdi_descent -- --ignored --test-threads=1
@@ -806,15 +864,15 @@ Record both runs' `[accept]` blocks in the Task 5 ledger note. If Task 5
 ended without a stable profile (stop rule), this task instead records the
 honest status and the test stays as the target.
 
-- [ ] **Step 4: Docs truth pass.** `CLAUDE.md` + `README.md`: describe M1
+- [x] **Step 4: Docs truth pass.** `CLAUDE.md` + `README.md`: describe M1
 per the measured outcome (never "soft touchdown" unless the acceptance is
 the thing that measured it); add `make descent-full` and the pdi scenario
 to the run docs; update the Wave 2 spec with an M1 status note (green date
 + commit, or the blocker). Update `make test-integration` docs if the new
 test joins it (it does — it is `#[ignore]`d and serial like the others).
 
-- [ ] **Step 5: Full fast gate + commit** —
-`git commit -m "feat(eagle): M1 acceptance — real PDI descent to landing (radar bypassed)"` (+ trailers).
+- [x] **Step 5: Full fast gate + commit** —
+`git commit -m "feat(eagle): M1 acceptance — real PDI descent to landing (radar bypassed)"` (+ trailers). — *Committed with a message that states the measured status instead: the planned one claims a landing that was not measured.*
 
 ---
 
@@ -835,7 +893,7 @@ test joins it (it does — it is `#[ignore]`d and serial like the others).
   schema mode/handover/lrbypass → Task 2; freeze semantics + PDI PIPA →
   Task 3; sim-driven handover → Tasks 3+4; LRBYPASS handling → Task 4
   (verify-only per the fresh-start finding — a deviation from the spec's
-  "set_flag_bits" wording, justified by `FRESH_START_AND_RESTART.agc:614`
+  "set_flag_bits" wording, justified by `vendor/virtualagc/Luminary099/FRESH_START_AND_RESTART.agc:623`
   and recorded here); ROD-schedule-from-measurement → Task 5; MM65
   finding-not-assert → Task 6; miss-distance caveat → Tasks 2/6.
 - **Deviation from spec worth flagging:** the spec sketches

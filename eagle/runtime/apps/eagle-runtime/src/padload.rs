@@ -12,7 +12,8 @@
 use anyhow::{anyhow, bail, Context, Result};
 use eagle_agc_protocol::words::{dp_encode, sp_encode, to_pulses};
 use eagle_dynamics::constants::{DPS_FTP_N, DPS_MIN_N, R_SITE};
-use eagle_dynamics::frames::{mci_to_mcmf, Mci, Mcmf, V3};
+use eagle_dynamics::frames::{mci_to_mcmf, retag, Body, Mci, Mcmf, Rot, V3};
+use eagle_dynamics::state::LmState;
 use std::collections::HashMap;
 use std::path::Path;
 
@@ -338,8 +339,10 @@ pub const P66_BSCALE_TABLE: &[BScaleEntry] = &[
         symbol: "RODSCALE",
         status: BScaleStatus::Verified,
         note: "Live (spike B): the word IS the per-click VDGVERT increment in DP pulses -- RODCOMP does \
-               \"MP RODSCAL1 / DAS VDGVERT\" (LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:958-963), and an SP \
-               integer times an SP fraction lands in VDGVERT's own LSB. VDGVERT/HDOTDISP are DP b=7 in \
+               \"MP RODSCAL1 / DAS VDGVERT\" \
+               (vendor/virtualagc/Luminary099/LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:958-963), \
+               and an SP integer times an SP fraction lands in VDGVERT's own LSB. \
+               VDGVERT/HDOTDISP are DP b=7 in \
                m/cs: HDOTDISP read back as hi=0o36 (491520 pulses; 491520 * 2^-21 m/cs = 23.4 m/s = \
                76.9 ft/s) while N63 R2 displayed +00756 = 75.6 ft/s. One ft/s per click is therefore \
                0.003048 m/cs = 6392 pulses = value 0.003048 at b=-7 SP. Sign: a down-click loads \
@@ -348,28 +351,35 @@ pub const P66_BSCALE_TABLE: &[BScaleEntry] = &[
     BScaleEntry {
         symbol: "TAUROD",
         status: BScaleStatus::Unverified,
-        note: "LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:1042-1044 (\"BDSU DDV / VDGVERT / TAUROD\") divides \
+        note: "vendor/virtualagc/Luminary099/LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:1042-1044 \
+               (\"BDSU DDV / VDGVERT / TAUROD\") divides \
                a VDGVERT-derived quantity by TAUROD; VDGVERT's own b-scale is not established in the \
                cited excerpt, so TAUROD's can't be pinned in isolation.",
     },
     BScaleEntry {
         symbol: "LAG/TAU",
         status: BScaleStatus::Unverified,
-        note: "LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:1083-1085 (\"DMP DAD / LAG/TAU / /AFC/\") multiplies \
+        note: "vendor/virtualagc/Luminary099/LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:1083-1085 \
+               (\"DMP DAD / LAG/TAU / /AFC/\") multiplies \
                LAG/TAU by /AFC/; /AFC/'s b-scale is not established in the cited excerpt.",
     },
     BScaleEntry {
         symbol: "MINFORCE",
         status: BScaleStatus::Unverified,
-        note: "LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:1089-1091 (\"PDDL DDV / MINFORCE / MASS\") divides \
+        note: "vendor/virtualagc/Luminary099/LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:1089-1091 \
+               (\"PDDL DDV / MINFORCE / MASS\") divides \
                MINFORCE by MASS to bound /AFC/; MASS's b-scale is not established in the cited excerpt. \
                Value 4560 N matches eagle_dynamics::constants::DPS_MIN_N.",
     },
     BScaleEntry {
         symbol: "MAXFORCE",
         status: BScaleStatus::Unverified,
-        note: "LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:1086-1088 (\"PDDL DDV / MAXFORCE / MASS\"), same \
-               MASS-scale ambiguity as MINFORCE. Value 42500 N matches eagle_dynamics::constants::DPS_FTP_N.",
+        note: "vendor/virtualagc/Luminary099/LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:1086-1088 \
+               (\"PDDL DDV / MAXFORCE / MASS\"), same \
+               MASS-scale ambiguity as MINFORCE. The generator emits DPS_FTP_N here, but the \
+               COMMITTED scenarios/p66-padload.toml carries a static 42500 N at a different b -- \
+               see that file's MAXFORCE comment for why it was deliberately left there when \
+               DPS_FTP_N moved to FSAT (2026-07-26).",
     },
 ];
 
@@ -564,8 +574,8 @@ pub fn generate_p66_manifest(inp: &P66ScenarioInputs) -> PadloadManifest {
         DPS_FTP_N,
         21,
         "MAXFORCE: maximum P66 commanded force, Newtons (eagle_dynamics::constants::DPS_FTP_N). \
-         b=21 is a PLACEHOLDER (chosen only to keep ~42500 N in DP range with headroom) -- \
-         UNVERIFIED, see P66_BSCALE_TABLE (Luminary099.log:4863, E5,1546)",
+         b=21 is a PLACEHOLDER (chosen only to keep a full-throttle-sized force in DP range \
+         with headroom) -- UNVERIFIED, see P66_BSCALE_TABLE (Luminary099.log:4863, E5,1546)",
     ));
 
     PadloadManifest { word: words }
@@ -574,13 +584,17 @@ pub fn generate_p66_manifest(inp: &P66ScenarioInputs) -> PadloadManifest {
 // ---------------------------------------------------------------------
 // Spike A (Task 6): live state-vector generation.
 //
-// P63's ignition algorithm (THE_LUNAR_LANDING.agc, IGNALG) does NOT read
+// P63's ignition algorithm (IGNALG,
+// vendor/virtualagc/Luminary099/THE_LUNAR_LANDING.agc:84) does NOT read
 // RN/VN/PIPTIME — it calls LEMPREC, which integrates the PERMANENT LM
-// state vector (RRECTLEM/VRECTLEM/TETLEM..., ERASABLE_ASSIGNMENTS.agc:945-955),
+// state vector (RRECTLEM/VRECTLEM/TETLEM...,
+// vendor/virtualagc/Luminary099/ERASABLE_ASSIGNMENTS.agc:945-955),
 // and BURNBABY additionally integrates the PERMANENT CSM state via
 // CSMPREC because P63's FLAGORGY sets MUNFLAG
-// (BURN,_BABY,_BURN_--_MASTER_IGNITION_ROUTINE.agc:196-201). RN/VN/PIPTIME
-// are *outputs* of MIDTOAV at TIG-30. So `generate_state` emits the
+// (vendor/virtualagc/Luminary099/
+// BURN,_BABY,_BURN_--_MASTER_IGNITION_ROUTINE.agc:203-206, "BOFF CALL /
+// MUNFLAG / GOMIDAV / CSMPREC"). RN/VN/PIPTIME are *outputs* of MIDTOAV
+// at TIG-30. So `generate_state` emits the
 // permanent state vectors (both vehicles), plus the three other
 // time-dependent quantities: RLS (moon-fixed, via the AGC's own MOONMX
 // model), REFSMMAT, and TLAND.
@@ -588,29 +602,37 @@ pub fn generate_p66_manifest(inp: &P66ScenarioInputs) -> PadloadManifest {
 
 /// GUIDDURN, the nominal guidance duration P63 subtracts from TLAND to
 /// seed its ignition-time iteration: `2DEC +66440` centiseconds = 664.40 s
-/// (THE_LUNAR_LANDING.agc:277, "GUIDDURN +6.64400314 E+2").
+/// (vendor/virtualagc/Luminary099/THE_LUNAR_LANDING.agc:275, "GUIDDURN
+/// +6.64400314 E+2").
 pub const GUIDDURN_CS: f64 = 66440.0;
 
 /// ZOOMTIME, the throttle-up delay BURNBABY subtracts from the converged
-/// ignition-point time to get TIG (DDUMGOOD, THE_LUNAR_LANDING.agc:186-192):
-/// 26 s = 2600 cs (P40-P47.agc `ZOOMTIME DEC 2600`).
+/// ignition-point time to get TIG (DDUMGOOD,
+/// vendor/virtualagc/Luminary099/THE_LUNAR_LANDING.agc:193-198). ZOOMTIME
+/// is a PAD-LOADED erasable, not a rope constant
+/// (vendor/virtualagc/Luminary099/ERASABLE_ASSIGNMENTS.agc:2109,
+/// "B(1)PL TIME OF DPS THROTTLE-UP COMMAND"); the flown value is 26 s =
+/// 2600 cs (vendor/virtualagc/LUM69R2/PADLOADS.agc:155, "( 26 SEC )").
 pub const ZOOMTIME_CS: f64 = 2600.0;
 
 /// Luminary's lunar orientation model, MOONMX
-/// (PLANETARY_INERTIAL_ORIENTATION.agc:145-262): computes M(t) such that
-/// RP = M(t)·R maps the basic reference (MCI) into the moon-fixed frame.
+/// (vendor/virtualagc/Luminary099/PLANETARY_INERTIAL_ORIENTATION.agc:145-262):
+/// computes M(t) such that RP = M(t)·R maps the basic reference (MCI) into
+/// the moon-fixed frame.
 /// RP-TO-R applies the transpose: R = Mᵀ(t)·(RP + L×RP); we take the
 /// libration vector L (padload 504LM, |L| ~ 1e-4 rad) as zero.
 ///
 /// Angle polynomials X = X0 + Ẋ·t are evaluated with TEPHEM = 0 (our
 /// padload leaves it zero), so t is the raw AGC clock. Constants from
-/// CONTROLLED_CONSTANTS.agc:552-561 (rad / rad/s values from the source
-/// comments; the octal words encode the same values):
+/// vendor/virtualagc/Luminary099/CONTROLLED_CONSTANTS.agc:552-561 (rad /
+/// rad/s values from the source comments; the octal words encode the same
+/// values):
 ///   COSI/SINI: I = 5521.5″ = 1°32′01.5″ (mean lunar equator vs ecliptic)
 ///   NODIO = 6.19653663041 rad, NODDOT = -1.07047011e-8 rad/s
 ///   FSUBO = 5.20932947829 rad, FDOT   =  2.67240410e-6 rad/s
 ///   BSUBO = 0.40916190299 rad, BDOT   = -7.19757301e-14 rad/s
-/// Matrix assembly (MOONMX/MOONMXA, PLANETARY_INERTIAL_ORIENTATION.agc:229-262):
+/// Matrix assembly (MOONMX/MOONMXA,
+/// vendor/virtualagc/Luminary099/PLANETARY_INERTIAL_ORIENTATION.agc:221-262):
 ///   A = ( cosN, cosB·sinN, sinB·sinN )
 ///   B = (-sinN, cosB·cosN, sinB·cosN )
 ///   C = ( 0,        -sinB,      cosB )
@@ -675,8 +697,8 @@ pub fn moon_mx(t_cs: f64) -> [[f64; 3]; 3] {
 /// words in the static manifest), so that P63's first TDEC1 guess
 /// (TLAND - GUIDDURN = tet) lands on a state already satisfying the DDUM
 /// criterion and the Newton iteration converges immediately
-/// (THE_LUNAR_LANDING.agc, DDUMCALC). TIG then comes out at
-/// tet - ZOOMTIME ≈ epoch_now + burn_lead - 26 s.
+/// (DDUMCALC, vendor/virtualagc/Luminary099/THE_LUNAR_LANDING.agc:141). TIG
+/// then comes out at tet - ZOOMTIME ≈ epoch_now + burn_lead - 26 s.
 #[derive(Debug, Clone, Copy)]
 pub struct StateCfg {
     /// AGC clock (TIME2:TIME1) measured just before generation, cs.
@@ -685,16 +707,18 @@ pub struct StateCfg {
     /// Budget everything that still has to happen before BURNBABY's
     /// TIG-35 gate here (remaining pad-load, flag set, V37E63E, IGNALG,
     /// dialog responses) plus the >=45 s pre-TIG check margin
-    /// (BURN,_BABY,_BURN:64). A too-small value is survivable: BURNBABY
-    /// slips TIG to integration-time + 29.9 s (CALLT-35 slip path).
+    /// (vendor/virtualagc/Luminary099/
+    /// BURN,_BABY,_BURN_--_MASTER_IGNITION_ROUTINE.agc:64). A too-small value
+    /// is survivable: BURNBABY slips TIG to integration-time + 29.9 s
+    /// (CALLT-35 slip path).
     pub burn_lead_cs: f64,
     /// Desired ignition-point 'altitude' component, m (pad RIGNX,
-    /// LUM69R2/PADLOADS.agc:473: -4.09432231e4).
+    /// vendor/virtualagc/LUM69R2/PADLOADS.agc:473: -4.09432231e4).
     pub rign_x_m: f64,
     /// Desired ignition-point ground-range component, m (pad RIGNZ,
-    /// LUM69R2/PADLOADS.agc:480: -4.40014934e5).
+    /// vendor/virtualagc/LUM69R2/PADLOADS.agc:480: -4.40014934e5).
     pub rign_z_m: f64,
-    /// Desired ignition speed, m/s (pad VIGN, LUM69R2/PADLOADS.agc:468:
+    /// Desired ignition speed, m/s (pad VIGN, vendor/virtualagc/LUM69R2/PADLOADS.agc:468:
     /// 16.9952182 m/cs = 1699.52 m/s).
     pub v_ign_ms: f64,
     /// CSM circular-orbit altitude above R_SITE, m (~111 km nominal).
@@ -725,6 +749,41 @@ fn sym_dp(symbol: &str, value: f64, b: i32, comment: impl Into<String>) -> Manif
     }
 }
 
+/// The ignition-point geometry both the AGC pad-load AND the sim truth
+/// derive from. Single source: cause C of the Wave 1 RED acceptance was
+/// these two describing different vehicles (re-flight note 2026-07-25).
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct IgnitionGeometry {
+    /// Uprange angle from the site radial, rad.
+    pub theta_rad: f64,
+    /// Orbit radius at ignition, m.
+    pub r_orb_m: f64,
+    /// INERTIAL speed at ignition, m/s: VIGN (surface-relative, the
+    /// quantity IGNALG compares against |VGU|) plus the eastward
+    /// co-rotation ω·r (see generate_state's VGU citation).
+    pub v_inertial_ms: f64,
+}
+
+/// Ignition-point geometry in the orbit plane (see `StateCfg` docs):
+/// radial component r·cosθ = R_SITE + rign_x (rign_x < 0), downrange
+/// (cross-radial) component r·sinθ = |rign_z| — a straight-line chord,
+/// NOT the along-orbit arc r·θ (which differs: 444.77 km vs |rign_z| =
+/// 440.01 km for the LUM69R2 targets). With the LUM69R2 targets this
+/// lands at θ ≈ 0.2539 rad, r ≈ 1752.6 km — h ≈ 15.2 km, the historical
+/// PDI altitude.
+pub fn ignition_geometry(cfg: &StateCfg) -> IgnitionGeometry {
+    let a = R_SITE + cfg.rign_x_m;
+    let b = -cfg.rign_z_m; // rign_z < 0 => LM is uprange (short of site)
+    let theta_rad = b.atan2(a);
+    let r_orb_m = a.hypot(b);
+    let v_inertial_ms = cfg.v_ign_ms + eagle_dynamics::constants::OMEGA_MOON * r_orb_m;
+    IgnitionGeometry {
+        theta_rad,
+        r_orb_m,
+        v_inertial_ms,
+    }
+}
+
 /// Generate the time-dependent pad-load words for a P63 ignition run:
 /// permanent LM + CSM state vectors, RLS, REFSMMAT, TLAND. All entries
 /// are symbol-based (resolved against the live `SymTab` by the caller).
@@ -733,39 +792,33 @@ fn sym_dp(symbol: &str, value: f64, b: i32, comment: impl Into<String>) -> Manif
 /// B-27 FOR MOON"), **velocity m/cs b=5** — NOT the b=7 of the SERVICER
 /// RN/VN state. Pinned two ways (spike-A iters 16-17): statically, the
 /// interpreter scale chain VGU@2^10 ← ANGTERM@2^9 (VSR2) ← V@2^7 ←
-/// (VSR1·MXV REFSMMAT) ← VATT1@2^5 (LUNAR_LANDING_GUIDANCE_EQUATIONS.agc
-/// :429-470, CALCRGVG/RGVGCALC); empirically, b=7 encoding made the AGC
-/// read v/4 (425 m/s) — a plunge orbit with 58 km perilune radius and
-/// 1223 s half-period that exactly reproduced the RGU/TPIP forensics of
-/// iter 16. Time cs b=28; REFSMMAT rows b=1.
+/// (VSR1·MXV REFSMMAT) ← VATT1@2^5 (CALCRGVG/RGVGCALC,
+/// vendor/virtualagc/Luminary099/LUNAR_LANDING_GUIDANCE_EQUATIONS.agc
+/// :429-470); empirically, b=7 encoding made the AGC read v/4 (425 m/s) —
+/// a plunge orbit with 58 km perilune radius and 1223 s half-period that
+/// exactly reproduced the RGU/TPIP forensics of iter 16. Time cs b=28; REFSMMAT rows b=1.
 pub fn generate_state(cfg: &StateCfg) -> Vec<ManifestWord> {
     let tland_cs = cfg.epoch_now_cs + cfg.burn_lead_cs + GUIDDURN_CS;
     let tet_cs = tland_cs - GUIDDURN_CS; // == epoch_now + burn_lead
 
-    // Ignition-point geometry in the orbit plane (see StateCfg docs):
-    // radial component r·cosθ = R_SITE + rign_x (rign_x < 0), downrange
-    // arc r·sinθ = |rign_z|. With the LUM69R2 targets this lands at
-    // θ ≈ 0.2539 rad, r ≈ 1752.6 km — h ≈ 15.2 km, the historical PDI
-    // altitude.
-    let a = R_SITE + cfg.rign_x_m;
-    let b = -cfg.rign_z_m; // rign_z < 0 => LM is uprange (short of site)
-    let theta = b.atan2(a);
-    let r_orb = a.hypot(b);
-    let (st, ct) = theta.sin_cos();
+    // Ignition-point geometry: single-sourced with the sim truth state via
+    // `ignition_geometry` (see its doc comment).
+    let g = ignition_geometry(cfg);
+    let (st, ct) = g.theta_rad.sin_cos();
 
     // LM at tet: site direction is +X, LM is θ uprange; travelling +Y.
     //
     // Speed: VIGN is compared against |VGU|, the SURFACE-RELATIVE velocity
-    // (VGU = CG·(V - WM×R), LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:433), so
+    // (VGU = CG·(V - WM×R),
+    // vendor/virtualagc/Luminary099/LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:433), so
     // the generated INERTIAL speed must be VIGN + ω·r (eastward equatorial
     // orbit: WM×R is exactly eastward, ω·r ≈ 4.67 m/s). Without this the
     // ignition criterion has no root — the orbit starts at perilune, so
     // |VGU| < VIGN everywhere and IGNALG's DDUM Newton iteration marches
     // TDEC1 forward forever (spike-A iter 16: TPIP/PIPTIME1 ran away
     // +20 min, RGU showed the state integrated far past the site).
-    let r_lm = [r_orb * ct, -r_orb * st, 0.0];
-    let omega_r = eagle_dynamics::constants::OMEGA_MOON * r_orb;
-    let v_ign_mcs = (cfg.v_ign_ms + omega_r) / 100.0; // m/cs, inertial
+    let r_lm = [g.r_orb_m * ct, -g.r_orb_m * st, 0.0];
+    let v_ign_mcs = g.v_inertial_ms / 100.0; // m/cs, inertial
     let v_lm = [v_ign_mcs * st, v_ign_mcs * ct, 0.0];
 
     // CSM: circular orbit, same plane, directly over the site at tet.
@@ -777,12 +830,14 @@ pub fn generate_state(cfg: &StateCfg) -> Vec<ManifestWord> {
     // REFSMMAT rows = SM axes in MCI, chosen to COINCIDE with the descent
     // guidance frame: X = up at the landing site, Y = -orbit normal,
     // Z = downrange (CGCALC erects exactly this frame from LAND and R:
-    // row1 = unit((LAND-R)×LAND), LUNAR_LANDING_GUIDANCE_EQUATIONS.agc
-    // :678-690). This is not a nicety: IGNALG's FIRST guidance pass runs
+    // row1 = unit(LAND), vendor/virtualagc/Luminary099/
+    // LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:671-673; rows 2/3 follow at
+    // :674-691). This is not a nicety: IGNALG's FIRST guidance pass runs
     // RGVGCALC/TTF-8CL with CG = identity (initialized UNITX/UNITY/UNITZ,
-    // THE_LUNAR_LANDING.agc:102-108; CGCALC only erects CG at the END of
-    // a pass), so RGU/VGU land in SM axes — with any other REFSMMAT the
-    // TTF cubic sees radial data where it expects downrange and ROOTPSRS
+    // vendor/virtualagc/Luminary099/THE_LUNAR_LANDING.agc:104-109; CGCALC
+    // only erects CG at the END of a pass), so RGU/VGU land in SM axes —
+    // with any other REFSMMAT the TTF cubic sees radial data where it
+    // expects downrange and ROOTPSRS
     // aborts 1406 (spike-A iter 14, FAILREG=01406 1.2 s after P63 entry).
     // The historical descent REFSMMAT is the same "landing site" frame.
     let sm_x = [1.0, 0.0, 0.0];
@@ -880,6 +935,93 @@ pub fn generate_state(cfg: &StateCfg) -> Vec<ManifestWord> {
     w
 }
 
+/// Mass properties for the PDI truth state. Provenance: assumed —
+/// supplied by the calling scenario (its `[gate]`-style mass block, not
+/// derived or measured here); `pdi_truth_state` only combines them.
+#[derive(Debug, Clone, Copy)]
+pub struct PdiMasses {
+    /// Dry (unfueled) vehicle mass, kg.
+    pub dry_kg: f64,
+    /// Remaining DPS (descent engine) propellant, kg.
+    pub dps_kg: f64,
+    /// Remaining RCS propellant, kg.
+    pub rcs_kg: f64,
+}
+
+/// Sim truth at TIG (engine ignition), in the pad-load's MCI frame (site
+/// radial = +X at TLAND, orbit plane = XY, motion +Y eastward).
+///
+/// `generate_state` time-tags the permanent LM state vector at the
+/// *geometric* ignition point from `ignition_geometry` — the point where
+/// P63's DDUM Newton iteration on TDEC1 converges (IGNALG). But that
+/// converged point is FLATOUT/TDEC1, not TIG: DDUMGOOD computes
+/// `TIG = TDEC1 - ZOOMTIME`
+/// (vendor/virtualagc/Luminary099/THE_LUNAR_LANDING.agc:193-198; ZOOMTIME =
+/// `ZOOMTIME_CS`, 26 s). The sim's freeze releases on ENGINE ON, i.e. at
+/// TIG — by which time the AGC's own nav, integrating the SAME
+/// pad-loaded orbit under gravity alone (a coast — DPS is not yet lit),
+/// has moved `ZOOMTIME` further along that orbit from the geometric
+/// point. So the truth handed to the sim at ENGINE ON must be the
+/// geometric-point state propagated BACKWARD by `ZOOMTIME_CS` under
+/// gravity, landing exactly where the AGC's integrated nav actually is
+/// at TIG: about 44 km uprange (along-track) of the geometric point.
+/// (Ullage, at TIG-7.5s per
+/// vendor/virtualagc/Luminary099/
+/// BURN,_BABY,_BURN_--_MASTER_IGNITION_ROUTINE.agc:356 (ULLGTASK), falls
+/// inside this same frozen coast window, so its ~0.9 m/s delta-v is consistently
+/// absent from both this truth state and the AGC's nav — neither side
+/// needs to model it.)
+///
+/// Attitude = the pad-loaded REFSMMAT frame exactly (body X→MCI x̂,
+/// Y→−ẑ, Z→ŷ = Rx(−90°)), so SM ≡ initial body attitude makes the
+/// REFSMMAT claim true and the CDUs correctly read zero. Attitude,
+/// angular rate and mass/fuel are untouched by the (translation-only)
+/// back-propagation.
+///
+/// `epoch_s` is stamped onto the returned state's `t` field as given —
+/// it does not have to be TIG's own AGC-clock value; aligning this
+/// state's time base with the caller's clock is the caller's
+/// responsibility, not this function's.
+pub fn pdi_truth_state(cfg: &StateCfg, m: &PdiMasses, epoch_s: f64) -> LmState {
+    let g = ignition_geometry(cfg);
+    let (s, c) = g.theta_rad.sin_cos();
+    let att: Rot<Body, Mci> = retag(Rot::from_axis_angle(
+        V3::<Mci>::new(1.0, 0.0, 0.0),
+        -std::f64::consts::FRAC_PI_2,
+    ));
+    let geometric = LmState {
+        t: 0.0,
+        pos: V3::new(g.r_orb_m * c, -g.r_orb_m * s, 0.0),
+        vel: V3::new(g.v_inertial_ms * s, g.v_inertial_ms * c, 0.0),
+        att,
+        omega: V3::zero(),
+        mass_kg: m.dry_kg + m.dps_kg + m.rcs_kg,
+        fuel_dps_kg: m.dps_kg,
+        fuel_rcs_kg: m.rcs_kg,
+    };
+
+    // Back-propagate FLATOUT -> TIG, ZOOMTIME_CS seconds earlier, under
+    // gravity alone: fixed-step RK4 with negative dt. The dynamics are
+    // autonomous (acceleration depends only on position, not time), so
+    // reversing the step sign reverses the trajectory exactly; stepping
+    // in DT increments (rather than one large jump) matches the sim's
+    // own fixed-step integrator.
+    let gravity_only = |st: &LmState| eagle_dynamics::state::Derivs {
+        acc: eagle_dynamics::state::gravity(st.pos),
+        alpha: V3::zero(),
+        mdot_total: 0.0,
+        mdot_dps: 0.0,
+        mdot_rcs: 0.0,
+    };
+    let n = (ZOOMTIME_CS / 100.0 / eagle_dynamics::constants::DT).round() as usize;
+    let mut tig = geometric;
+    for _ in 0..n {
+        tig = eagle_dynamics::rk4::step_rk4(&tig, &gravity_only, -eagle_dynamics::constants::DT);
+    }
+    tig.t = epoch_s;
+    tig
+}
+
 /// Render a manifest to TOML text with a b-scale-verification-status
 /// header comment (not part of the serde shape -- prepended as plain
 /// text so the file is self-documenting without a hand round-trip
@@ -925,7 +1067,8 @@ mod tests {
         // RLS: bank=4, offset=0o1422 -> ecadr = 4*0o400 + (0o1422-0o1400)
         //                                     = 0o2000 + 0o22 = 0o2022.
         // Independently cross-checked by hand-counting ERASE words from
-        // EBANK-4's `SETLOC 2000` (ERASABLE_ASSIGNMENTS.agc:1008) forward
+        // EBANK-4's `SETLOC 2000`
+        // (vendor/virtualagc/Luminary099/ERASABLE_ASSIGNMENTS.agc:1008) forward
         // to RLS (:1043) — see docs/agc-channel-map.md for the full count.
         let rls = st.ecadr("RLS").unwrap();
         assert_eq!(rls, 0o2022, "RLS ECADR hand-computed from E4,1422");
@@ -1342,6 +1485,110 @@ mod tests {
     }
 
     #[test]
+    fn ignition_geometry_matches_the_lum69r2_pdi_point() {
+        let g = ignition_geometry(&StateCfg::default());
+        // Values the generate_state comment block already documents:
+        // θ ≈ 0.2539 rad, r ≈ 1752.6 km (h ≈ 15.2 km), v = VIGN + ω·r.
+        assert!((g.theta_rad - 0.2539).abs() < 1e-3, "theta {}", g.theta_rad);
+        assert!((g.r_orb_m - 1_752_600.0).abs() < 1_000.0, "r {}", g.r_orb_m);
+        let expect_v = 1699.52182 + eagle_dynamics::constants::OMEGA_MOON * g.r_orb_m;
+        assert!(
+            (g.v_inertial_ms - expect_v).abs() < 1e-6,
+            "v {}",
+            g.v_inertial_ms
+        );
+    }
+
+    #[test]
+    fn generate_state_and_truth_state_share_the_geometry() {
+        // The single-source property: the RN/VN words and the truth state must
+        // come from the same θ/r/v. generate_state's own scaling test pins the
+        // words; here we pin the truth state (at TIG) against ignition_geometry
+        // by forward-propagating it back up to the geometric ignition point
+        // under the same gravity-only model `pdi_truth_state` used to
+        // back-propagate -- the round trip is the assertion, so a sign error
+        // in the back-propagation cannot pass.
+        let cfg = StateCfg::default();
+        let g = ignition_geometry(&cfg);
+        let m = PdiMasses {
+            dry_kg: 7009.0,
+            dps_kg: 7950.0,
+            rcs_kg: 250.0,
+        };
+        let st = pdi_truth_state(&cfg, &m, 0.0);
+
+        let (s, c) = g.theta_rad.sin_cos();
+        let expect_ignition_pos = V3::<Mci>::new(g.r_orb_m * c, -g.r_orb_m * s, 0.0);
+        let expect_ignition_vel = V3::<Mci>::new(g.v_inertial_ms * s, g.v_inertial_ms * c, 0.0);
+
+        let gravity_only = |s: &LmState| eagle_dynamics::state::Derivs {
+            acc: eagle_dynamics::state::gravity(s.pos),
+            alpha: V3::zero(),
+            mdot_total: 0.0,
+            mdot_dps: 0.0,
+            mdot_rcs: 0.0,
+        };
+        let dt = eagle_dynamics::constants::DT;
+        let n = (ZOOMTIME_CS / 100.0 / dt).round() as usize;
+        let mut fwd = st.clone();
+        for _ in 0..n {
+            fwd = eagle_dynamics::rk4::step_rk4(&fwd, &gravity_only, dt);
+        }
+        assert!(
+            (fwd.pos - expect_ignition_pos).norm() < 1e-6,
+            "round-trip pos {:?} vs ignition {:?}",
+            fwd.pos,
+            expect_ignition_pos
+        );
+        assert!(
+            (fwd.vel - expect_ignition_vel).norm() < 1e-9,
+            "round-trip vel {:?} vs ignition {:?}",
+            fwd.vel,
+            expect_ignition_vel
+        );
+
+        // Order-of-magnitude guard: ZOOMTIME (26 s) at ~1704 m/s inertial
+        // should displace the vehicle roughly 44 km along-track between TIG
+        // and the geometric ignition point; this fails loudly if ZOOMTIME
+        // is ever misread (e.g. a cs/s mixup, or 26 vs 2600).
+        let displacement = (expect_ignition_pos - st.pos).norm();
+        assert!(
+            (40_000.0..50_000.0).contains(&displacement),
+            "TIG-to-ignition displacement {displacement} m is not order-44 km"
+        );
+
+        // Attitude, angular rate and mass/fuel are untouched by the
+        // (translation-only) back-propagation.
+        assert!((st.mass_kg - (7009.0 + 7950.0 + 250.0)).abs() < 1e-9);
+        assert_eq!(st.fuel_dps_kg, 7950.0);
+        assert_eq!(st.fuel_rcs_kg, 250.0);
+        assert_eq!(st.omega, V3::<Body>::zero());
+        assert_eq!(st.t, 0.0);
+    }
+
+    #[test]
+    fn pdi_truth_attitude_is_the_padloaded_refsmmat_frame() {
+        // generate_state pad-loads REFSMMAT rows: SM X=(1,0,0), Y=(0,0,-1),
+        // Z=(0,1,0) in MCI. sim::sm_from_initial defines SM ≡ initial BODY
+        // attitude, so the truth's initial body axes must BE that frame — this
+        // is what makes the REFSMMAT claim true instead of approximately true.
+        let cfg = StateCfg::default();
+        let m = PdiMasses {
+            dry_kg: 7009.0,
+            dps_kg: 7950.0,
+            rcs_kg: 250.0,
+        };
+        let st = pdi_truth_state(&cfg, &m, 0.0);
+        let bx = st.att.apply(V3::<Body>::new(1.0, 0.0, 0.0));
+        let by = st.att.apply(V3::<Body>::new(0.0, 1.0, 0.0));
+        let bz = st.att.apply(V3::<Body>::new(0.0, 0.0, 1.0));
+        assert!((bx - V3::<Mci>::new(1.0, 0.0, 0.0)).norm() < 1e-12);
+        assert!((by - V3::<Mci>::new(0.0, 0.0, -1.0)).norm() < 1e-12);
+        assert!((bz - V3::<Mci>::new(0.0, 1.0, 0.0)).norm() < 1e-12);
+        assert_eq!(st.omega, V3::<Body>::zero());
+    }
+
+    #[test]
     fn static_p66_manifest_resolves_against_real_listing() {
         let Some(st) = real_symtab() else {
             eprintln!("skipping listing-dependent assertions (run `make agc`)");
@@ -1352,7 +1599,8 @@ mod tests {
         let m = PadloadManifest::load(&path).unwrap();
         let words = m.resolve(&st).unwrap();
 
-        // E5 overlay layout spot checks (ERASABLE_ASSIGNMENTS.agc:1360-1411,
+        // E5 overlay layout spot checks (vendor/virtualagc/Luminary099/
+        // ERASABLE_ASSIGNMENTS.agc:1360-1411,
         // TLAND = E5,1400 -> 0o2400): RBRFG = TLAND+2, RODSCALE = 0o2537.
         assert_eq!(st.ecadr("RBRFG"), Some(0o2402));
         assert_eq!(st.ecadr("VIGN"), Some(0o2472));

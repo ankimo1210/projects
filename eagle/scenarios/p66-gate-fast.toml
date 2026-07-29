@@ -32,7 +32,9 @@ tland_offset_cs = 30000            # derived from the 01703 measurement above �
 flip_atthold_after_engine_on_s = 2.0   # spike-B calibrated
 
 [rod]
-steps = [[400.0, -3.0], [150.0, -1.5], [30.0, -1.0]]  # alt_m → target sink rate m/s
+# alt_m → VDGVERT DELTA (m/s) from the P66-entry rate, NOT an absolute sink
+# rate — see the same block in p66-gate.toml for the citation.
+steps = [[400.0, -3.0], [150.0, -1.5], [30.0, -1.0]]
 
 [errors]                 # empty table = all OFF (acceptance runs use this)
 
