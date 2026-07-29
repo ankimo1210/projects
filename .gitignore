@@ -19,9 +19,9 @@ venv/
 # workspace-level generated data
 _data/
 _logs/
-_archive/tmp/
 _scratch/outputs/
-_scratch/tmp/
+# scratch dirs at any depth (mineru corpus output, market_nn reports, ...)
+tmp/
 
 # heavy local data
 *.duckdb
