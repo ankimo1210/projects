@@ -1,0 +1,7 @@
+# Personal genetic and health-risk snapshots
+data/*
+!data/.gitkeep
+
+# Reports derived from personal genetic data
+report/*
+!report/.gitkeep
