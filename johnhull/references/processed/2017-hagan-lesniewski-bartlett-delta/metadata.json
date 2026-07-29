@@ -1,34 +1,26 @@
 {
-  "paper_id": "2017-hagan-lesniewski-bartlett-delta",
-  "title": "Bartlett's Delta in the SABR Model",
-  "authors": "Patrick S. Hagan; Andrew Lesniewski",
-  "year": "2017",
-  "source_url": "https://arxiv.org/abs/1704.03110",
-  "source_pdf": "references/papers/2017-hagan-lesniewski-bartlett-delta.pdf",
-  "source_sha256": "517c175aac797309d620b765eb50e9416a420cc39bff2773ecc5b2281f566b9c",
-  "converter": "PyMuPDF4LLM 1.28.0",
-  "conversion_options": {
-    "header": false,
-    "footer": false,
-    "use_ocr": true,
-    "force_ocr": false,
-    "ocr_language": "eng",
-    "write_images": true,
-    "max_chunk_chars": 4800,
-    "overlap_chars": 400
+  "converted_page_numbers": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "extractor": {
+    "extractor_name": "MinerU pipeline",
+    "extractor_version": "3.4.4",
+    "model_hash": "ed6b654c018d742e65a17671e379c5e6ecc87ec9",
+    "source_pdf_sha256": "517c175aac797309d620b765eb50e9416a420cc39bff2773ecc5b2281f566b9c"
   },
-  "pdf_metadata": {
-    "format": "PDF 1.5",
-    "title": "",
-    "author": "",
-    "subject": "",
-    "keywords": "",
-    "creator": "LaTeX with hyperref package",
-    "producer": "pdfTeX-1.40.17",
-    "creationDate": "D:20200506010553Z",
-    "modDate": "D:20200506010553Z",
-    "trapped": "",
-    "encryption": null,
-    "page_count": 10
-  }
+  "input_content_list_sha256": "6edb2b817b10252bfa502fde4799d5b5fd334619dcd7c7bc842fb091dc4b1144",
+  "paper_id": "2017-hagan-lesniewski-bartlett-delta",
+  "schema_version": "2.0.0",
+  "source_page_count": 10,
+  "source_pdf": "/home/kazumasa/projects-johnhull-corpus-v2/johnhull/references/papers/2017-hagan-lesniewski-bartlett-delta.pdf",
+  "source_pdf_sha256": "517c175aac797309d620b765eb50e9416a420cc39bff2773ecc5b2281f566b9c"
 }

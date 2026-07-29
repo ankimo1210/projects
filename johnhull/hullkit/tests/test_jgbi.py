@@ -42,13 +42,9 @@ def test_reference_index_before_on_and_after_tenth_matches_hand_calculation() ->
     }
     before = 100.0 + (103.1 - 100.0) * 25.0 / 30.0
     after = 103.1 + (104.8 - 103.1) * 10.0 / 31.0
-    assert jgbi.jgbi_reference_index(date(2026, 7, 5), fixings) == pytest.approx(
-        round(before, 3)
-    )
+    assert jgbi.jgbi_reference_index(date(2026, 7, 5), fixings) == pytest.approx(round(before, 3))
     assert jgbi.jgbi_reference_index(date(2026, 7, 10), fixings) == 103.1
-    assert jgbi.jgbi_reference_index(date(2026, 7, 20), fixings) == pytest.approx(
-        round(after, 3)
-    )
+    assert jgbi.jgbi_reference_index(date(2026, 7, 20), fixings) == pytest.approx(round(after, 3))
 
 
 def test_index_ratio_rounds_only_after_reference_indices() -> None:
@@ -57,9 +53,9 @@ def test_index_ratio_rounds_only_after_reference_indices() -> None:
     reference = jgbi.jgbi_reference_index(date(2027, 2, 17), fixings)
     base = jgbi.jgbi_reference_index(terms.base_reference_date, fixings)
     expected = round(reference / base, 5)
-    assert jgbi.jgbi_indexation_coefficient(
-        date(2027, 2, 17), terms, fixings
-    ) == pytest.approx(expected)
+    assert jgbi.jgbi_indexation_coefficient(date(2027, 2, 17), terms, fixings) == pytest.approx(
+        expected
+    )
 
 
 def test_reopened_issue_uses_explicit_original_base_reference_date() -> None:
@@ -79,9 +75,7 @@ def test_principal_floor_changes_redemption_only_and_never_coupons() -> None:
     assert [row.coupon for row in floored] == pytest.approx([row.coupon for row in unfloored])
     assert floored[-1].index_ratio < 1.0
     assert floored[-1].principal == _terms().face_value
-    assert unfloored[-1].principal == pytest.approx(
-        _terms().face_value * unfloored[-1].index_ratio
-    )
+    assert unfloored[-1].principal == pytest.approx(_terms().face_value * unfloored[-1].index_ratio)
     assert floored[-1].principal > unfloored[-1].principal
 
 
@@ -107,9 +101,7 @@ def test_deterministic_nominal_present_value_and_exact_breakeven() -> None:
     cashflows = jgbi.jgbi_cashflows(terms, fixings)
     undiscounted = sum(row.total for row in cashflows)
     assert jgbi.jgbi_nominal_present_value(valuation, terms, fixings, curve) < undiscounted
-    assert jgbi.jgbi_breakeven_inflation(0.015, 0.005) == pytest.approx(
-        1.015 / 1.005 - 1.0
-    )
+    assert jgbi.jgbi_breakeven_inflation(0.015, 0.005) == pytest.approx(1.015 / 1.005 - 1.0)
 
 
 def test_invalid_jgbi_terms_are_rejected() -> None:

@@ -1348,7 +1348,9 @@ def _volume27(
         """(delta-only, delta-gamma-vega) Taylor P&L for a scaled factor move."""
         moves = scale * factor_moves
         delta_only = float(book_delta @ moves)
-        dgv = delta_only + 0.5 * float(book_gamma @ moves**2) + float(book_vega @ (scale * vol_moves))
+        dgv = (
+            delta_only + 0.5 * float(book_gamma @ moves**2) + float(book_vega @ (scale * vol_moves))
+        )
         return delta_only, dgv
 
     # Full revaluation is the sum of the committed per-position P&L, not a stored scalar.

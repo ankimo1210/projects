@@ -1,25 +1,46 @@
 {
+  "claims_status": "pass",
+  "counts": {
+    "blocks": 642,
+    "claims": 5,
+    "compiled_equations": 631,
+    "display_equations": 242,
+    "figures": 1,
+    "inline_equations": 389,
+    "latex_equations": 631,
+    "pages": 35,
+    "rendered_verified_equations": 0,
+    "semantic_chunks": 84,
+    "source_image_formula_fallbacks": 0,
+    "tables": 0,
+    "verified_claims": 0,
+    "verified_equations": 0,
+    "verified_table_cells": 0
+  },
+  "exceptions": [],
+  "formula_failures": [],
+  "formula_status": "pass",
+  "layout_status": "pass",
+  "low_text_coverage_pages": [],
+  "notes": [
+    "Unverified LaTeX is a candidate representation; every formula retains a source crop.",
+    "Automatic table cells retain unverified record status except explicit reviewed overrides.",
+    "Reviewed low-text exceptions retain complete source-page images."
+  ],
+  "overall_status": "pass",
   "paper_id": "2019-el-euch-rosenbaum-rough-heston-characteristic-function",
-  "status": "review",
-  "page_count": 35,
-  "total_chars": 50281,
-  "average_chars_per_page": 1436.6,
-  "empty_pages": [],
-  "short_pages": [
-    14,
-    15,
-    20,
-    22
-  ],
-  "replacement_characters": 19,
-  "heading_count": 18,
-  "image_references": 106,
-  "image_files": 106,
-  "latex_math_markers": 0,
-  "chunk_count": 12,
-  "max_chunk_chars": 4788,
-  "warnings": [
-    "many visual/equation images are not represented as LaTeX math"
-  ],
-  "failures": []
+  "retrieval_evaluation": {
+    "hit_at_5": 1.0,
+    "p0_hit_at_5": 1.0,
+    "query_count": 28,
+    "retriever": "deterministic-bm25-en-ja-ngrams-v1"
+  },
+  "retrieval_status": "pass",
+  "reviewed_layout_pages": [],
+  "reviewed_low_text_pages": [],
+  "table_failures": [],
+  "table_status": "pass",
+  "text_status": "pass",
+  "unresolved_layout_pages": [],
+  "unresolved_low_text_pages": []
 }

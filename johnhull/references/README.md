@@ -12,13 +12,14 @@
 
 | 区分 | 件数 | 説明 |
 |---|---:|---|
-| 明示引用された論文 | 59 | 実装・教材・設計 spec の引用を重複排除 |
-| 原文 PDF 取得済み | 49 | 著者・機関リポジトリ、出版社の公開コピー、arXiv/SSRN 相当を優先 |
-| 原文リンクのみ | 9 | 公開 PDF を安全に取得できない、または購読・ログインが必要 |
+| 明示引用された論文 | 61 | 実装・教材・設計 spec の引用を重複排除 |
+| 原文 PDF 取得済み | 52 | 著者・機関リポジトリ、出版社の公開コピー、arXiv/SSRN 相当を優先 |
+| 原文リンクのみ | 8 | 公開 PDF を安全に取得できない、または購読・ログインが必要 |
 | 書誌未解決 | 1 | `Andersen et al. (2024)` は記述だけでは一意に特定できない |
 | 関連論文（引用外） | 1 | Bartlett (2006) の後続理論論文を補助資料として保存 |
+| 公的コンベンション資料 | 2 | 財務省の JGBi 告示と BEI／元本保証解説 |
 
-PDF は `papers/` にあります。収録されている50件は、本リポジトリでの公開許可を
+PDF は `papers/` にあります。収録されている55件は、本リポジトリでの公開許可を
 確認済みの資料として Git で追跡しています。PDFを追加・差し替えする場合は、
 公開許可と出典を確認し、このインベントリも同時に更新してください。
 
@@ -54,7 +55,16 @@ PDF は `papers/` にあります。収録されている50件は、本リポジ
 |---:|---|---|---|
 | 2019 | Andrei Lyashenko; Fabio Mercurio | [Looking Forward to Backward-Looking Rates: A Modeling Framework for Term Rates Replacing LIBOR](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3330240) | [PDF](papers/2019-lyashenko-mercurio-backward-looking-rates.pdf) |
 | 1990 | John Hull; Alan White | [Pricing Interest-Rate-Derivative Securities](https://doi.org/10.1093/rfs/3.4.573) | [PDF](papers/1990-hull-white-interest-rate-derivative-securities.pdf) |
-| 2003 | Robert Jarrow; Yildiray Yildirim | [Pricing Treasury Inflation Protected Securities and Related Derivatives Using an HJM Model](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=585828) | **link**; Cornell 公開コピーは現在 DNS 解決不可 |
+| 2003 | Robert Jarrow; Yildiray Yildirim | [Pricing Treasury Inflation Protected Securities and Related Derivatives Using an HJM Model](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=585828) | [PDF](papers/2003-jarrow-yildirim-inflation-hjm.pdf) |
+| 2009 | Paul Canty | [Seasonally Adjusted Prices for Inflation-Linked Bonds](https://www.risk.net/derivatives/1497788/seasonally-adjusted-prices-inflation-linked-bonds) | [PDF](papers/2009-canty-seasonally-adjusted-inflation-linked-bonds.pdf) |
+| 2013 | Lixin Wu | [Inflation-rate Derivatives: From Market Model to Foreign Currency Analogy](https://arxiv.org/abs/1302.0574) | [PDF](papers/2013-wu-inflation-rate-derivatives.pdf) |
+
+### 公的コンベンション資料（論文件数には含めない）
+
+| 年 | 著者・発行者 | 資料 | 状態 |
+|---:|---|---|---|
+| 2021 | 財務省 | [物価連動国債の想定元金額の算出に関し必要な事項を定める件（財務省告示第77号）](https://www.mof.go.jp/jgbs/reference/laws/KO-20040218-0077-14.pdf) | [PDF](papers/2021-mof-jgbi-indexation-notice.pdf) |
+| 2024 | 服部孝洋（財務省「ファイナンス」） | [ブレーク・イーブン・インフレ率（BEI）入門](https://www.mof.go.jp/public_relations/finance/202402/202402k.pdf) | [PDF](papers/2024-mof-jgbi-bei-guide.pdf) |
 
 ### VaR、ES、信用リスク
 
@@ -129,7 +139,7 @@ PDF は `papers/` にあります。収録されている50件は、本リポジ
 
 ## 4. 論文一覧から除外した参考資料
 
-次はレポ内で参照されていますが、学術論文ではないため上の 59 件には含めていません。
+次はレポ内で参照されていますが、学術論文ではないため上の 61 件には含めていません。
 
 - 教科書・専門書: Hull; Glasserman; Gatheral; Bergomi; Benth & Benth;
   McNeil–Frey–Embrechts; López de Prado; Kloeden & Platen; Wilmott; Duffy;
@@ -182,7 +192,7 @@ uv run --no-project --with pymupdf4llm \
 `references/processed/` は検索・引用にすぐ利用できるようGit管理しています。論文本文と
 図表の派生物を含むため、公開・再配布時は各原論文のライセンスを確認してください。
 
-### 全件変換結果（2026-07-22）
+### v1 全件変換結果（2026-07-22、v2へ移行済み）
 
 ローカル保存済みの50 PDFを全件変換し、1,536ページ、780検索用チャンクを生成しました。
 元PDFと抽出ページ数は全件一致し、空ページ、変換失敗、重複チャンクIDはありません。
@@ -192,7 +202,53 @@ LaTeXではなく参照可能な画像として抽出されることです。本
 できますが、数式を厳密に扱う場合は画像を読めるマルチモーダルモデルを使用するか、
 Marker等による数式OCRを追加してください。
 
+以下は移行前の基準値として `corpus_baseline.json` に保存されています。現行の
+`references/processed/` は後述のv2成果物です。
+
 McNeil–Frey (2000)、Aït-Sahalia–Duarte (2003)、Antonov et al. (2015)、
 Huge–Savine (2025) は、元PDFの埋め込みフォントに由来する置換文字率が高いため、
 本文を引用する際に原ページ画像との照合が必要です。PyMuPDF4LLMの強制OCRでは改善
 しなかったため、別OCRエンジンによる補正を後続課題とします。
+
+### v2 構造化変換（リリース済み）
+
+v2 は MinerU 3.4.4 の `pipeline` 出力を入力にし、本文ブロック、数式、表、図を
+別レコードとして保存します。抽出結果は自動では検証済みにせず、Gold assertion と
+原ページの独立レビューを通った項目だけを `verified` とします。特に表は JSON/HTML/CSV
+と原画像を併存させ、OCR の数値とレビュー済み数値を別フィールドに残します。
+
+MinerU は本リポジトリの依存関係には追加しません。隔離環境で全 PDF を先に変換し、
+その中間出力を v2 adapter に渡します。
+
+```bash
+TMPDIR=/tmp/mineru-johnhull uvx --from 'mineru[all]==3.4.4' \
+  mineru -p johnhull/references/papers -o tmp/pdfs/corpus-v2-mineru \
+  -b pipeline -m auto -f true -t true
+
+uv run --no-sync python johnhull/scripts/build_paper_corpus_v2.py \
+  --paper-id 1990-hull-white-interest-rate-derivative-securities \
+  --mineru-root tmp/pdfs/corpus-v2-mineru
+```
+
+`make hull-paper-corpus-v2-check` は Gold、構造化表、検証済み上書き、原画像参照、
+根拠付きclaim、固定検索質問、P0実装証跡、および全件リリース証拠を検査します。
+JGBi告示の縦書きはOCR結果を正解扱いせず、レビュー済みページ画像と原文抜粋を保持します。
+想定元金額と10日前後の指数補間4式は、元PDF領域から直接生成した検証済み数式です。
+
+Gold 106ページの数式は表示248件・インライン589件とも検出 recall 100%、出力した
+LaTeX は compile 100% です。実装直結の35式は原典との手動照合と独立レンダーを通過しています。
+コンパイルできなかった自動候補4件は原画像 fallback に降格しており、正しい数式としては
+公開しません。Gold の16表は原画像を再確認し、463個の scalar 数値セル（P0 は212個）を
+レビュー済みです。構造を誤った5表はレビュー版へ置換し、OCR原値も監査用に保持します。
+
+Gold 15資料には各5件、合計75件の主要claimを付与しました。128本のblock参照は
+全て解決し、P0の50件は原典ページとの手動照合済みです。section/block単位のsemantic
+chunkは式・表・claim IDを保持します。Hull--White、Heston、インフレーション/JGBi、
+SABR、RFR、VaR/ESを覆う固定28問の検索評価はHit@5 100%（P0も100%）です。
+P0実装証跡は9コンポーネント・59シンボルを、全10 P0資料、全35検証済み式、
+全4検証済み表セル、全50 P0 claimへ解決し、未解決・未マップは0件です。
+
+現行v2は55 PDF・1,627ページを全件収録し、55件すべての本文、レイアウト、数式、表、
+claim、検索、総合ステータスが `pass`、未解決例外は0件です。2回の独立ビルドで11,092
+ファイルがバイト一致しました。集計値は `processed/quality_report.json`、再現性証拠は
+`processed/determinism_report.json` を参照してください。

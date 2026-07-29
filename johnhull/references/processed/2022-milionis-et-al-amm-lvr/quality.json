@@ -1,22 +1,46 @@
 {
+  "claims_status": "pass",
+  "counts": {
+    "blocks": 534,
+    "claims": 5,
+    "compiled_equations": 441,
+    "display_equations": 107,
+    "figures": 12,
+    "inline_equations": 334,
+    "latex_equations": 441,
+    "pages": 63,
+    "rendered_verified_equations": 0,
+    "semantic_chunks": 117,
+    "source_image_formula_fallbacks": 0,
+    "tables": 1,
+    "verified_claims": 0,
+    "verified_equations": 0,
+    "verified_table_cells": 0
+  },
+  "exceptions": [],
+  "formula_failures": [],
+  "formula_status": "pass",
+  "layout_status": "pass",
+  "low_text_coverage_pages": [],
+  "notes": [
+    "Unverified LaTeX is a candidate representation; every formula retains a source crop.",
+    "Automatic table cells retain unverified record status except explicit reviewed overrides.",
+    "Reviewed low-text exceptions retain complete source-page images."
+  ],
+  "overall_status": "pass",
   "paper_id": "2022-milionis-et-al-amm-lvr",
-  "status": "review",
-  "page_count": 63,
-  "total_chars": 140101,
-  "average_chars_per_page": 2223.8,
-  "empty_pages": [],
-  "short_pages": [
-    27
-  ],
-  "replacement_characters": 14,
-  "heading_count": 35,
-  "image_references": 102,
-  "image_files": 102,
-  "latex_math_markers": 0,
-  "chunk_count": 32,
-  "max_chunk_chars": 4786,
-  "warnings": [
-    "many visual/equation images are not represented as LaTeX math"
-  ],
-  "failures": []
+  "retrieval_evaluation": {
+    "hit_at_5": 1.0,
+    "p0_hit_at_5": 1.0,
+    "query_count": 28,
+    "retriever": "deterministic-bm25-en-ja-ngrams-v1"
+  },
+  "retrieval_status": "pass",
+  "reviewed_layout_pages": [],
+  "reviewed_low_text_pages": [],
+  "table_failures": [],
+  "table_status": "pass",
+  "text_status": "pass",
+  "unresolved_layout_pages": [],
+  "unresolved_low_text_pages": []
 }

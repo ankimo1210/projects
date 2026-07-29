@@ -1,20 +1,57 @@
 {
-  "paper_id": "1979-cox-ross-rubinstein-option-pricing",
-  "status": "review",
-  "page_count": 34,
-  "total_chars": 74644,
-  "average_chars_per_page": 2195.4,
-  "empty_pages": [],
-  "short_pages": [],
-  "replacement_characters": 56,
-  "heading_count": 17,
-  "image_references": 64,
-  "image_files": 64,
-  "latex_math_markers": 0,
-  "chunk_count": 17,
-  "max_chunk_chars": 4788,
-  "warnings": [
-    "many visual/equation images are not represented as LaTeX math"
+  "claims_status": "pass",
+  "counts": {
+    "blocks": 381,
+    "claims": 5,
+    "compiled_equations": 380,
+    "display_equations": 77,
+    "figures": 6,
+    "inline_equations": 303,
+    "latex_equations": 380,
+    "pages": 34,
+    "rendered_verified_equations": 0,
+    "semantic_chunks": 57,
+    "source_image_formula_fallbacks": 0,
+    "tables": 2,
+    "verified_claims": 0,
+    "verified_equations": 0,
+    "verified_table_cells": 0
+  },
+  "exceptions": [],
+  "formula_failures": [],
+  "formula_status": "pass",
+  "layout_status": "pass",
+  "low_text_coverage_pages": [
+    30
   ],
-  "failures": []
+  "notes": [
+    "Unverified LaTeX is a candidate representation; every formula retains a source crop.",
+    "Automatic table cells retain unverified record status except explicit reviewed overrides.",
+    "Reviewed low-text exceptions retain complete source-page images."
+  ],
+  "overall_status": "pass",
+  "paper_id": "1979-cox-ross-rubinstein-option-pricing",
+  "retrieval_evaluation": {
+    "hit_at_5": 1.0,
+    "p0_hit_at_5": 1.0,
+    "query_count": 28,
+    "retriever": "deterministic-bm25-en-ja-ngrams-v1"
+  },
+  "retrieval_status": "pass",
+  "reviewed_layout_pages": [],
+  "reviewed_low_text_pages": [
+    {
+      "coverage_scope": "full source page plus retained table/figure assets",
+      "page_number": 30,
+      "reason": "asset_dominant_source_page",
+      "reviewed_excerpt": null,
+      "reviewer": "codex-source-page-visual-audit-2026-07-23",
+      "source_page_asset": "assets/source-pages/p0030.png"
+    }
+  ],
+  "table_failures": [],
+  "table_status": "pass",
+  "text_status": "pass",
+  "unresolved_layout_pages": [],
+  "unresolved_low_text_pages": []
 }

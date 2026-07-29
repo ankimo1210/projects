@@ -620,7 +620,11 @@ def test_volume27_swap_sensitivities_match_an_independent_bump(
     curve_zeros = np.asarray([0.018, 0.019, 0.021, 0.023, 0.024, 0.026])
 
     def value(shift: float) -> float:
-        return float(swaps.irs_value_fras(notional, fixed_rate, pay_times, (curve_times, curve_zeros + shift)))
+        return float(
+            swaps.irs_value_fras(
+                notional, fixed_rate, pay_times, (curve_times, curve_zeros + shift)
+            )
+        )
 
     base, up, down = value(0.0), value(bump), value(-bump)
     expected_delta = (up - down) / (2.0 * bump)
