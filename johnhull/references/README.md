@@ -186,9 +186,20 @@ uv run --no-project --with pymupdf4llm \
   python johnhull/scripts/build_paper_corpus.py --all --resume
 ```
 
+1本だけ変換し直したい場合は `--pdf` を使います。`--pdf` や `--sample` のような部分
+実行でも、全体インデックスは変換対象外の論文を既存成果物から引き継いで再構築するため、
+コーパス全体が縮むことはありません。元PDFを削除して再実行すると、その論文は
+インデックスから外れます（`processed/` 側のディレクトリは削除せず警告のみ出します）。
+
+```bash
+uv run --no-project --with pymupdf4llm \
+  python johnhull/scripts/build_paper_corpus.py --pdf references/papers/<name>.pdf
+```
+
 生成物は `references/processed/` に保存されます。各論文には `paper.md`、
 `metadata.json`、`pages.jsonl`、`chunks.jsonl`、`quality.json`、図表画像が含まれ、
-全体には `index.json`、`corpus.jsonl`、`quality_report.md` が生成されます。
+全体には `index.json`、`corpus.jsonl`、`quality_report.json`、`quality_report.md` が
+生成されます。
 `references/processed/` は検索・引用にすぐ利用できるようGit管理しています。論文本文と
 図表の派生物を含むため、公開・再配布時は各原論文のライセンスを確認してください。
 
