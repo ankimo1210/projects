@@ -257,6 +257,12 @@ describing something other than the force law and its τ is void.
 
 Gated on Task 1' Step 6 naming a b-scale. Otherwise this task does not run.
 
+**Edit `scenarios/p66-padload.toml` DIRECTLY. Do not regenerate it.**
+`scenarios/pdi-descent.toml:25` points the flight at that committed file,
+and `padload_gen` is a first-cut generator whose output was hand-curated
+into it — regenerating would clobber every provenance comment, including
+the spike-B calibration that this whole investigation rests on.
+
 - [ ] **Step 1:** Set `TAUROD`'s `b =` in `scenarios/p66-padload.toml` to
       the measured value; provenance = "measured, flight 7, rod_fit".
 - [ ] **Step 2:** Replace the stale derivation block at `:252-263` (the
@@ -274,6 +280,11 @@ Gated on Task 1' Step 6 naming a b-scale. Otherwise this task does not run.
 - [ ] **Step 5:** `make test && make lint`, commit.
 - [ ] **Step 6:** Re-fly (flight 8) and re-fit. τ must now read ≈1.5 s —
       that is the check that the correction reached the AGC.
+- [ ] **Step 7:** Update `scenarios/pdi-descent.toml:73-79`, which still
+      asserts "TAUROD's scale is derivable statically (LLGE:155-157 +
+      :1050 + GSCALE at :1477), costing no flights". That route is the one
+      this plan took, and it has two unpinned one-power-of-two shifts in
+      it (§2 of the ledger note) — say what actually settled the scale.
 
 ---
 
