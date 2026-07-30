@@ -52,6 +52,19 @@ pub struct TelemetryMsg {
     pub fuel_rcs_kg: f64,
     pub thrust_n: f64,
     pub throttle_cmd_pulses: i64,
+    /// Signed ROD clicks issued since t0 (schedule + the handover's
+    /// selection click), cumulative.
+    ///
+    /// This exists so `VDGVERT` — the commanded descent rate, and the one
+    /// term of P66's force law that nothing else observes — can be
+    /// reconstructed offline: RODCOMP adds `RODCOUNT * RODSCAL1` to
+    /// VDGVERT at a live-verified 1 ft/s per click. Without it the flown
+    /// ROD time constant cannot be fitted out of a run; measured
+    /// 2026-07-31, r2 = 0.15/0.05/0.04 on the M1 runs 4-6 for exactly
+    /// this reason. See `src/bin/rod_fit.rs`.
+    ///
+    /// `SCHEMA_VERSION` stays 2: purely ADDITIVE, like `handover` below.
+    pub rod_clicks_cum: i64,
     pub jets: u16,
     pub mm: String,
     pub agc_alt_m: Option<f64>,
@@ -149,6 +162,7 @@ mod tests {
             fuel_rcs_kg: 148.0,
             thrust_n: 14800.0,
             throttle_cmd_pulses: 1234,
+            rod_clicks_cum: -7,
             jets: 0b0000_0001,
             mm: "66".into(),
             agc_alt_m: None,
