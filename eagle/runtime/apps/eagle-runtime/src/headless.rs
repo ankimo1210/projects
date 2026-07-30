@@ -390,6 +390,7 @@ mod tests {
             fuel_rcs_kg: 100.0,
             thrust_n: 0.0,
             throttle_cmd_pulses: 0,
+            rod_clicks_cum: 0,
             jets: 0,
             mm: mm.into(),
             agc_alt_m: None,

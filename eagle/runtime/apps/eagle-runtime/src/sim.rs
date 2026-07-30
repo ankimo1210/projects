@@ -199,6 +199,12 @@ pub struct SimCore {
     rod_steps: Vec<[f64; 2]>,
     rod_target_ms: f64,
     rod_step_idx: usize,
+    /// Signed ROD clicks issued since t0, schedule plus the handover's
+    /// selection click. RODCOMP adds `RODCOUNT * RODSCAL1` to VDGVERT
+    /// (`vendor/virtualagc/Luminary099/LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:958-963`)
+    /// at a live-verified 1 ft/s per click, so this total reconstructs
+    /// VDGVERT — the one term of the P66 force law nothing else observes.
+    rod_clicks_cum: i64,
     downlink_words: u64,
     mm: String,
     agc_nav: Option<AgcNav>,
@@ -255,6 +261,7 @@ impl SimCore {
             rod_steps: sc.rod.steps.clone(),
             rod_target_ms: 0.0,
             rod_step_idx: 0,
+            rod_clicks_cum: 0,
             downlink_words: 0,
             mm: String::new(),
             agc_nav: None,
@@ -300,6 +307,16 @@ impl SimCore {
         self.phase7_thrust(&mut out);
         self.phase8_rod(&mut out);
         self.phase9_handover(&mut out);
+        // Book the clicks BEFORE telemetry so a frame reports the total
+        // including its own. The handover's selection click is issued by
+        // `headless.rs` (`SimEvent::Handover` → `runner::rod_load(-1)`),
+        // not by `phase8_rod`, so it is counted here from the same latch
+        // that triggers it — otherwise the total would silently drift by
+        // one from the moment of handover onward.
+        self.rod_clicks_cum += i64::from(out.rod_clicks);
+        if out.handover {
+            self.rod_clicks_cum -= 1;
+        }
         self.phase10_telemetry_and_touchdown(&mut out);
         self.debug_attitude_loop();
         self.tick_index += 1;
@@ -641,6 +658,7 @@ impl SimCore {
             fuel_rcs_kg: self.st.fuel_rcs_kg,
             thrust_n: self.act.thrust_n,
             throttle_cmd_pulses: self.thrust.cmd_pulses,
+            rod_clicks_cum: self.rod_clicks_cum,
             jets: self.act.jets,
             mm: self.mm.clone(),
             agc_alt_m,
@@ -1110,6 +1128,41 @@ mod tests {
         }
         // 0 → −3 m/s target: round(−3 / 0.3048) = −10 clicks.
         assert_eq!(clicks, -10);
+    }
+
+    #[test]
+    fn telemetry_carries_the_cumulative_rod_click_count() {
+        // VDGVERT is the one term of the P66 force law that is not
+        // telemetered, and without it the flown TAUROD cannot be fitted
+        // out of a run (measured 2026-07-31: r2 = 0.15/0.05/0.04 on
+        // runs 4-6, because the ROD schedule clicks VDGVERT throughout).
+        // The sim issues every click, so it can report the running total
+        // and let the analysis reconstruct VDGVERT exactly.
+        let sc = scenario();
+        let mut core = SimCore::new(&sc, 0.0);
+        core.st.pos = core.st.pos.unit().scale(sc.site.radius_m + 402.0);
+        engine_on(&mut core);
+        let mut clicks = 0i64;
+        let mut last_telem = None;
+        for _ in 0..4000 {
+            let out = core.tick();
+            clicks += i64::from(out.rod_clicks);
+            if let Some(t) = out.telemetry {
+                assert_eq!(
+                    t.rod_clicks_cum, clicks,
+                    "telemetry must carry the running click total"
+                );
+                last_telem = Some(t.rod_clicks_cum);
+            }
+            if core.rod_step_idx >= 1 && last_telem == Some(clicks) {
+                break;
+            }
+        }
+        assert_eq!(
+            last_telem,
+            Some(-10),
+            "the schedule's first step is -10 clicks"
+        );
     }
 
     #[test]
