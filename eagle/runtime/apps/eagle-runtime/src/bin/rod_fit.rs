@@ -38,7 +38,7 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 use anyhow::{bail, Context, Result};
-use eagle_dynamics::constants::{DPS_MIN_N, THRUST_N_PER_PULSE};
+use eagle_dynamics::constants::THRUST_N_PER_PULSE;
 
 /// One repaint-instant observation.
 #[derive(Debug, Clone, Copy)]
@@ -118,6 +118,12 @@ pub fn fit_tau(samples: &[Sample]) -> Option<Fit> {
     })
 }
 
+/// `FEXTRA` = `BIT13` = 4096 pulses, the rope's full-throttle drive-past
+/// (`vendor/virtualagc/Luminary099/THROTTLE_CONTROL_ROUTINES.agc:226`).
+/// M1 runs 4 and 6 land on it exactly, which is also what validates the
+/// bit->newton mapping end to end.
+const FEXTRA_PULSES: i64 = 4096;
+
 /// One ROD click moves VDGVERT by 1 ft/s — live-verified in spike B and
 /// carried as `RODSCALE` in `scenarios/p66-padload.toml`.
 const ROD_CLICK_MS: f64 = 0.3048;
@@ -192,10 +198,10 @@ pub fn fit_tau_with_clicks(samples: &[Sample]) -> Option<Fit> {
     })
 }
 
-/// Pull the P66 segment out of a telemetry JSONL, keeping only frames
-/// where the throttle is off both stops (the law is linear only there) and
-/// only the first frame after each `HDOTDISP` change (a repaint).
-fn load(path: &str, max_force_n: f64) -> Result<Vec<Sample>> {
+/// Pull the P66 segment out of a telemetry JSONL, keeping the first frame
+/// after each `HDOTDISP` change (a repaint) and dropping only frames at
+/// the rope's full-throttle drive-past, where the command is clipped.
+fn load(path: &str) -> Result<Vec<Sample>> {
     let file = File::open(path).with_context(|| format!("open {path}"))?;
     let mut out = Vec::new();
     let mut last_hdot: Option<f64> = None;
@@ -228,9 +234,20 @@ fn load(path: &str, max_force_n: f64) -> Result<Vec<Sample>> {
         }
         last_hdot = Some(hdot);
         let force_n = pulses as f64 * THRUST_N_PER_PULSE;
-        // Off both stops: at either stop the command is clipped and the
-        // slope carries no information about tau.
-        if force_n <= DPS_MIN_N * 1.02 || force_n >= max_force_n * 0.98 {
+        // Drop only PROVABLY saturated frames. `FEXTRA` (BIT13 = 4096
+        // pulses, `THROTTLE_CONTROL_ROUTINES.agc:226`) is the rope's
+        // full-throttle drive-past — M1 runs 4 and 6 land on it exactly —
+        // and a clipped command carries no slope information.
+        //
+        // The LOW end deliberately has no cut. An earlier version dropped
+        // everything at or below `DPS_MIN_N`, on the assumption that
+        // MINFORCE clamps there. It does not: histogramming M1 run 4's low
+        // tail shows a smooth spread, ~10 frames (one guidance cycle at
+        // 10 Hz) at each of ~40 consecutive bit values from 178 up, with
+        // no mode anywhere — a controller sweeping a range, not a clamp.
+        // Cutting at `DPS_MIN_N` discarded most of the linear region and
+        // left a biased subset. See the 2026-07-31 M1b ledger, §3b.
+        if pulses >= FEXTRA_PULSES {
             continue;
         }
         if mass <= 0.0 {
@@ -252,11 +269,8 @@ fn main() -> Result<()> {
     if args.is_empty() {
         bail!("usage: rod_fit <telem.jsonl>...");
     }
-    // MAXFORCE as the runs actually flew it: the committed pad load's
-    // 42500 N (scenarios/p66-padload.toml MAXFORCE), not DPS_FTP_N.
-    const FLOWN_MAXFORCE_N: f64 = 42_500.0;
     for path in &args {
-        let samples = load(path, FLOWN_MAXFORCE_N)?;
+        let samples = load(path)?;
         println!("{path}: {} unsaturated P66 repaints", samples.len());
         // Name the actual reason. "no fit" alone reads as "the field is
         // missing" when the real cause is often "this run never reached
