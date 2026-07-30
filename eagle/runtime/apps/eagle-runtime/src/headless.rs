@@ -284,9 +284,23 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
 /// `continue`.
 async fn collect_telemetry(mut telem_rx: broadcast::Receiver<String>, sum: Arc<Mutex<Summary>>) {
     // Optional per-frame telemetry dump for descent-profile debugging.
-    let mut dump = std::env::var("EAGLE_TELEM_OUT")
-        .ok()
-        .and_then(|p| std::fs::File::create(p).ok());
+    // Fail LOUDLY if the dump cannot be opened. This used to be
+    // `.and_then(|p| File::create(p).ok())`, which silently disabled the
+    // instrumentation — and since the runtime's cwd is `runtime/` (the
+    // Makefile does `cd runtime && cargo run`), the natural
+    // `EAGLE_TELEM_OUT=build/traces/x.jsonl` from the repo root resolves
+    // to a directory that does not exist and lands in exactly that hole.
+    // It cost a full 20-minute descent on 2026-07-31.
+    let mut dump = match std::env::var("EAGLE_TELEM_OUT") {
+        Ok(path) => Some(std::fs::File::create(&path).unwrap_or_else(|e| {
+            panic!(
+                "EAGLE_TELEM_OUT={path}: cannot create ({e}). The runtime's cwd \
+                 is `runtime/`, so a RELATIVE path resolves under it — pass an \
+                 absolute path. Refusing to fly with instrumentation off."
+            )
+        })),
+        Err(_) => None,
+    };
     loop {
         let json = match telem_rx.recv().await {
             Ok(json) => json,

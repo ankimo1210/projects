@@ -338,8 +338,17 @@ impl SimCore {
         INIT.with(|i| {
             if !i.get() {
                 i.set(true);
+                // Loud on failure, for the same reason as EAGLE_TELEM_OUT
+                // in headless.rs: the cwd is `runtime/`, so a relative
+                // path from the repo root silently opens nothing.
                 if let Ok(p) = std::env::var("EAGLE_ATT_DEBUG") {
-                    DBG.with(|d| *d.borrow_mut() = std::fs::File::create(p).ok());
+                    let f = std::fs::File::create(&p).unwrap_or_else(|e| {
+                        panic!(
+                            "EAGLE_ATT_DEBUG={p}: cannot create ({e}). The \
+                             runtime's cwd is `runtime/` — pass an absolute path."
+                        )
+                    });
+                    DBG.with(|d| *d.borrow_mut() = Some(f));
                 }
             }
         });
