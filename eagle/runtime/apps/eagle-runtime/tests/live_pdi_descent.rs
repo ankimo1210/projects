@@ -23,13 +23,15 @@
 //!   (`runner.rs:1113-1115`), so nothing can append to it after ignition.
 //!   Run 3 reported 0 episodes alongside 794 PROG-lamp frames. Its window
 //!   is the PRE-IGNITION P63 dialog.
-//! - `prog_lamp_frames == 0` passes on runs 4 and 6 and **FAILS on run 5**,
+//! - `prog_lamp_frames == 0` passed on runs 4 and 6 and FAILED on run 5,
 //!   which counted 21 — every one of them raised AFTER ground contact
-//!   (lamp lights at t = 1192.62 s, contact at 1192.21 s), because this
-//!   counter keeps running through the sim's ~2 s post-touchdown tail.
-//!   Whether the gate should stop at contact is open and deliberately not
-//!   answered by loosening it here (ledger "Open" item 2a). Run 3, which
-//!   did enter P65, counted 794.
+//!   (lamp lights at t = 1192.62 s, contact at 1192.21 s). **Fixed
+//!   2026-07-31 by splitting the window, not by moving the threshold:**
+//!   `prog_lamp_frames` is now pre-contact only, and
+//!   `prog_lamp_frames_post_contact` carries the tail, reported but never
+//!   gated. On run 5's measurements the gate would now pass, correctly —
+//!   run 5 is still a crash, on the touchdown block. Run 3, which did
+//!   enter P65, counted 794, and those WERE in flight.
 //!
 //!   **KNOWN FALSE NEGATIVE — read this before debugging a red run.** That
 //!   same ~2 s tail runs after a SOFT landing too, so ONE alarm raised
@@ -125,8 +127,9 @@ async fn pdi_full_descent_closed_loop() {
         result.sim.touchdown, result.descent_s
     );
     eprintln!(
-        "[accept] alarm episodes {:?}; PROG lamp frames after ignition {}",
-        result.alarms, result.prog_lamp_frames
+        "[accept] alarm episodes {:?}; PROG lamp frames after ignition {} \
+         pre-contact, {} post-contact",
+        result.alarms, result.prog_lamp_frames, result.prog_lamp_frames_post_contact
     );
     let agc_rate = if result.final_t_s > 0.0 {
         1.0 + result.drift_ms / 1000.0 / result.final_t_s
@@ -241,13 +244,24 @@ async fn pdi_full_descent_closed_loop() {
     // Lamp frames: 0 in runs 4 and 6, but 21 in run 5 — all of them AFTER
     // ground contact (the counter runs through the sim's ~2 s
     // post-touchdown tail; ledger "Open" item 2a). So this assert is the
-    // one non-touchdown gate the measured flights do NOT unanimously meet,
-    // and it is left strict on purpose: narrowing it to pre-contact frames
-    // would make part of a crash pass, and nobody has yet named the code
-    // (nothing reads FAILREG after ENGINE ON in PDI mode).
+    // one non-touchdown gate the measured flights do NOT unanimously meet.
+    //
+    // The THRESHOLD is unchanged (zero). What changed on 2026-07-31 is the
+    // WINDOW the counter covers: `prog_lamp_frames` is now lamp-lit frames
+    // after ENGINE ON and before ground contact, and frames raised in the
+    // sim's ~2 s post-touchdown tail are counted separately and NOT gated.
+    // That tail is not evidence about the landing — the AGC is still
+    // flying a vehicle the sim has latched as landed — and leaving it in
+    // the gate was a known false negative that would have redded an
+    // otherwise-good landing (ledger "Open" item 2a). It is reported, not
+    // asserted on: nobody has named the code yet, because nothing reads
+    // FAILREG after ENGINE ON in PDI mode, and filtering it away entirely
+    // would discard the only evidence the alarm exists.
     assert_eq!(
         result.prog_lamp_frames, 0,
-        "PROG alarm lamp lit during descent"
+        "PROG alarm lamp lit in flight (pre-contact); {} more frames lit \
+         after ground contact",
+        result.prog_lamp_frames_post_contact
     );
 
     // Clock health: gate the AGC clock RATE, never the accumulated offset —

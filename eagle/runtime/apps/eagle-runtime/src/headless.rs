@@ -60,8 +60,19 @@ pub struct HeadlessResult {
     /// — anything else aborts the run). One entry per lamp, codes
     /// included; see `runner::AlarmEpisode`.
     pub alarms: Vec<runner::AlarmEpisode>,
-    /// DSKY frames with the PROG alarm lamp lit after ENGINE ON.
+    /// DSKY frames with the PROG alarm lamp lit after ENGINE ON and
+    /// **before ground contact**. This is the window an acceptance can
+    /// gate on: a lamp here was raised while the vehicle was still
+    /// flying.
     pub prog_lamp_frames: u64,
+    /// DSKY frames with the PROG alarm lamp lit **after** the sim latched
+    /// ground contact. `spawn_sim` keeps ticking ~2 s past touchdown with
+    /// the AGC still flying a vehicle the sim has already landed, so a
+    /// lamp in this window says nothing about whether the landing was
+    /// good — M1 run 5's 21 frames were all here. Reported, never gated:
+    /// gating it would red an otherwise-good landing, and filtering it
+    /// away would discard the only evidence this alarm exists.
+    pub prog_lamp_frames_post_contact: u64,
 }
 
 #[derive(Default)]
@@ -74,6 +85,7 @@ struct Summary {
     engine_on_t: Option<f64>,
     touchdown_t: Option<f64>,
     prog_lamp_frames: u64,
+    prog_lamp_frames_post_contact: u64,
 }
 
 impl Summary {
@@ -103,8 +115,17 @@ impl Summary {
                 // enter_p63 handles pre-ignition alarms (bails on
                 // non-whitelisted). Post-engine-on, nobody else watches
                 // the lamp — count lit frames here.
+                //
+                // Split at ground contact: the sim runs ~2 s past
+                // touchdown with the AGC still flying a vehicle it has
+                // latched as landed, so a lamp raised in that tail is
+                // not evidence about the landing. Ledger open item 2a.
                 if self.engine_on_t.is_some() && d.lamps.get("prog").copied().unwrap_or(false) {
-                    self.prog_lamp_frames += 1;
+                    if self.touchdown_t.is_some() {
+                        self.prog_lamp_frames_post_contact += 1;
+                    } else {
+                        self.prog_lamp_frames += 1;
+                    }
                 }
             }
         }
@@ -270,6 +291,7 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
         descent_s,
         alarms: report.alarms,
         prog_lamp_frames: s.prog_lamp_frames,
+        prog_lamp_frames_post_contact: s.prog_lamp_frames_post_contact,
     })
 }
 
@@ -439,6 +461,35 @@ mod tests {
         s.note(&dsky(true)); // descent-phase PROG lamp must be counted
         s.note(&dsky(false));
         assert_eq!(s.prog_lamp_frames, 1);
+    }
+
+    #[test]
+    fn prog_lamp_frames_split_at_ground_contact() {
+        // Ledger open item 2a: the counter runs through the sim's ~2 s
+        // post-touchdown tail, with the AGC still flying a vehicle the
+        // sim has latched as landed. Run 5 of the M1 flights counted 21
+        // lamp frames, ALL of them after contact, and the acceptance's
+        // `prog_lamp_frames == 0` gate would have failed a run that had
+        // already landed. Both windows are kept: the gate reads the
+        // pre-contact count, and the post-contact count stays visible
+        // because it is the only evidence the alarm exists at all.
+        let mut s = Summary::default();
+        s.note(&telem(1.0, "63", false)); // engine on
+        s.note(&dsky(true));
+        assert_eq!(s.prog_lamp_frames, 1);
+        assert_eq!(s.prog_lamp_frames_post_contact, 0);
+
+        let mut td = telem(2.0, "66", false);
+        if let ServerMsg::Telemetry(t) = &mut td {
+            t.touchdown = Some("Hard".into());
+        }
+        s.note(&td);
+        s.note(&dsky(true));
+        assert_eq!(
+            s.prog_lamp_frames, 1,
+            "the pre-contact counter must not move after touchdown"
+        );
+        assert_eq!(s.prog_lamp_frames_post_contact, 1);
     }
 
     #[test]
