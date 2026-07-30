@@ -258,15 +258,26 @@ fn main() -> Result<()> {
     for path in &args {
         let samples = load(path, FLOWN_MAXFORCE_N)?;
         println!("{path}: {} unsaturated P66 repaints", samples.len());
+        // Name the actual reason. "no fit" alone reads as "the field is
+        // missing" when the real cause is often "this run never reached
+        // P66", and the two call for completely different responses.
+        if samples.is_empty() {
+            println!("  no P66 samples — did the run reach MM66?");
+            continue;
+        }
+        if samples[0].rod_clicks_cum.is_none() {
+            println!(
+                "  no rod_clicks_cum — trace predates 2026-07-31; only the \
+                 differencing cross-check is available, and it does not \
+                 resolve a scheduled-ROD run (see the module doc)"
+            );
+        }
         match fit_tau_with_clicks(&samples) {
             Some(f) => println!(
                 "  clicks (PRIMARY): tau = {:.4} s   r2 {:.3}, n {}",
                 f.tau_s, f.r2, f.n
             ),
-            None => println!(
-                "  clicks (PRIMARY): no fit -- needs rod_clicks_cum, \
-                 absent from traces written before 2026-07-31"
-            ),
+            None => println!("  clicks (PRIMARY): no fit"),
         }
         match fit_tau(&samples) {
             Some(f) => println!(
