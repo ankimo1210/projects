@@ -49,6 +49,9 @@ pub struct Sample {
     pub a_cmd_cos: f64,
     /// The AGC's own displayed altitude rate, m/s.
     pub hdot_ms: f64,
+    /// Cumulative signed ROD clicks at this frame. `None` on traces
+    /// written before the field existed (M1 runs 1-6).
+    pub rod_clicks_cum: Option<i64>,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -115,6 +118,80 @@ pub fn fit_tau(samples: &[Sample]) -> Option<Fit> {
     })
 }
 
+/// One ROD click moves VDGVERT by 1 ft/s — live-verified in spike B and
+/// carried as `RODSCALE` in `scenarios/p66-padload.toml`.
+const ROD_CLICK_MS: f64 = 0.3048;
+
+/// Fit tau with VDGVERT reconstructed from the click count.
+///
+/// This is the PRIMARY method and it needs `rod_clicks_cum`. Writing
+/// `VDGVERT(t) = VDGVERT_0 + k·(clicks(t) - clicks_0)`, the rope's law
+///
+/// ```text
+///   a_cmd·cosθ = (VDGVERT - HDOTDISP)/tau + g
+/// ```
+///
+/// becomes a straight line in the fully-observed regressor
+/// `x = k·Δclicks - HDOTDISP`:
+///
+/// ```text
+///   y = x/tau + (VDGVERT_0/tau + g)
+/// ```
+///
+/// so `tau = 1/slope`, and the intercept recovers VDGVERT_0 as a
+/// consistency check (it must land near the AGC's rate at P66 entry).
+/// Unlike `fit_tau` this needs no segment of constant VDGVERT, which is
+/// what made the differencing method unusable on the M1 runs.
+pub fn fit_tau_with_clicks(samples: &[Sample]) -> Option<Fit> {
+    let clicks0 = samples.first()?.rod_clicks_cum?;
+    let pts: Vec<(f64, f64)> = samples
+        .iter()
+        .filter_map(|s| {
+            let c = s.rod_clicks_cum?;
+            let x = ROD_CLICK_MS * (c - clicks0) as f64 - s.hdot_ms;
+            Some((x, s.a_cmd_cos))
+        })
+        .collect();
+    if pts.len() < 8 {
+        return None;
+    }
+    let n = pts.len() as f64;
+    let mx = pts.iter().map(|p| p.0).sum::<f64>() / n;
+    let my = pts.iter().map(|p| p.1).sum::<f64>() / n;
+    let sxx: f64 = pts.iter().map(|p| (p.0 - mx) * (p.0 - mx)).sum();
+    let sxy: f64 = pts.iter().map(|p| (p.0 - mx) * (p.1 - my)).sum();
+    if sxx <= 0.0 {
+        return None;
+    }
+    let slope = sxy / sxx;
+    if slope <= 0.0 {
+        // More thrust must follow a larger (commanded - actual) rate
+        // error. A non-positive slope means the model does not describe
+        // this data, and a "tau" from it would be meaningless.
+        return None;
+    }
+    let intercept = my - slope * mx;
+    let ss_tot: f64 = pts.iter().map(|p| (p.1 - my) * (p.1 - my)).sum();
+    let ss_res: f64 = pts
+        .iter()
+        .map(|p| {
+            let e = p.1 - (slope * p.0 + intercept);
+            e * e
+        })
+        .sum();
+    let r2 = if ss_tot > 0.0 {
+        1.0 - ss_res / ss_tot
+    } else {
+        0.0
+    };
+    Some(Fit {
+        tau_s: 1.0 / slope,
+        slope,
+        r2,
+        n: pts.len(),
+    })
+}
+
 /// Pull the P66 segment out of a telemetry JSONL, keeping only frames
 /// where the throttle is off both stops (the law is linear only there) and
 /// only the first frame after each `HDOTDISP` change (a repaint).
@@ -164,6 +241,7 @@ fn load(path: &str, max_force_n: f64) -> Result<Vec<Sample>> {
             t_s: v.get("t_s").and_then(|x| x.as_f64()).unwrap_or(0.0),
             a_cmd_cos: force_n / mass * cos,
             hdot_ms: hdot,
+            rod_clicks_cum: v.get("rod_clicks_cum").and_then(|x| x.as_i64()),
         });
     }
     Ok(out)
@@ -179,17 +257,23 @@ fn main() -> Result<()> {
     const FLOWN_MAXFORCE_N: f64 = 42_500.0;
     for path in &args {
         let samples = load(path, FLOWN_MAXFORCE_N)?;
+        println!("{path}: {} unsaturated P66 repaints", samples.len());
+        match fit_tau_with_clicks(&samples) {
+            Some(f) => println!(
+                "  clicks (PRIMARY): tau = {:.4} s   r2 {:.3}, n {}",
+                f.tau_s, f.r2, f.n
+            ),
+            None => println!(
+                "  clicks (PRIMARY): no fit -- needs rod_clicks_cum, \
+                 absent from traces written before 2026-07-31"
+            ),
+        }
         match fit_tau(&samples) {
             Some(f) => println!(
-                "{path}: tau = {:.4} s  (slope {:.4} 1/s, r2 {:.3}, n {}, \
-                 {} unsaturated repaints)",
-                f.tau_s,
-                f.slope,
-                f.r2,
-                f.n,
-                samples.len()
+                "  differencing (cross-check): tau = {:.4} s   r2 {:.3}, n {}",
+                f.tau_s, f.r2, f.n
             ),
-            None => println!("{path}: no fit ({} usable samples)", samples.len()),
+            None => println!("  differencing (cross-check): no fit"),
         }
     }
     Ok(())
@@ -208,13 +292,16 @@ mod tests {
             let t_s = i as f64 * 0.9;
             // A limit-cycle-ish rate history: swings tens of m/s.
             let hdot_ms = -7.0 + 12.0 * (t_s * 0.6).sin();
-            // VDGVERT steps once, at the halfway point.
-            let vdg = if i < 30 { -3.0 } else { -4.0 };
+            // VDGVERT steps once, at the halfway point: -3.0 m/s, then
+            // one click's worth (1 ft/s) lower.
+            let clicks: i64 = if i < 30 { 0 } else { -1 };
+            let vdg = -3.0 + 0.3048 * clicks as f64;
             let a_cmd_cos = (vdg - hdot_ms) / tau_s + G;
             out.push(Sample {
                 t_s,
                 a_cmd_cos,
                 hdot_ms,
+                rod_clicks_cum: Some(clicks),
             });
         }
         out
@@ -246,5 +333,33 @@ mod tests {
     #[test]
     fn fit_needs_samples() {
         assert!(fit_tau(&[]).is_none());
+        assert!(fit_tau_with_clicks(&[]).is_none());
+    }
+
+    #[test]
+    fn click_fit_recovers_tau_through_a_vdgvert_change() {
+        // The case that defeats `fit_tau`: VDGVERT moves inside the
+        // window. Reconstructing it from the click count makes the same
+        // data a clean straight line.
+        for want in [0.1875, 0.375, 1.5] {
+            let fit = fit_tau_with_clicks(&synth(want)).expect("enough samples");
+            assert!(
+                (fit.tau_s - want).abs() < 0.01,
+                "recovered {} for a synthetic {want} s loop",
+                fit.tau_s
+            );
+            assert!(fit.r2 > 0.99, "r2 {} at tau {want}", fit.r2);
+        }
+    }
+
+    #[test]
+    fn click_fit_declines_traces_without_the_field() {
+        // M1 runs 1-6 predate `rod_clicks_cum`; the fitter must say so
+        // rather than silently fall back to a biased answer.
+        let mut old_trace = synth(1.5);
+        for s in &mut old_trace {
+            s.rod_clicks_cum = None;
+        }
+        assert!(fit_tau_with_clicks(&old_trace).is_none());
     }
 }
