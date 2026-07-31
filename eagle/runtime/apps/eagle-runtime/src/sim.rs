@@ -1140,6 +1140,161 @@ mod tests {
         assert_eq!(clicks, -10);
     }
 
+    /// Sum the PIPA pulses in a tick's packet list into SM-frame ΔV.
+    fn pipa_dv(out: &SimTickOut) -> V3<Sm> {
+        let mut d = [0.0f64; 3];
+        for p in &out.to_agc {
+            if p.kind != eagle_agc_protocol::PacketKind::Counter {
+                continue;
+            }
+            let axis = match p.channel {
+                0o37 => 0,
+                0o40 => 1,
+                0o41 => 2,
+                _ => continue,
+            };
+            // INC_PINC = 0, INC_MINC = 2 (agc_io.rs).
+            match p.data {
+                0 => d[axis] += eagle_dynamics::constants::PIPA_INCR,
+                2 => d[axis] -= eagle_dynamics::constants::PIPA_INCR,
+                _ => {}
+            }
+        }
+        V3::new(d[0], d[1], d[2])
+    }
+
+    /// Fly `ticks` of powered descent and return
+    /// (ΔV the PIPAs reported, ΔV the truth state actually gained), both
+    /// MCI and both non-gravitational — i.e. what the AGC's navigation
+    /// integrates versus what really happened.
+    fn pipa_vs_truth(core: &mut SimCore, ticks: usize) -> (V3<Mci>, V3<Mci>) {
+        let v0 = core.st.vel;
+        let mut dv_sm = V3::<Sm>::zero();
+        let mut grav = V3::<Mci>::zero();
+        for _ in 0..ticks {
+            // Trapezoidal gravity over the tick, to the same order the
+            // comparison needs — this is the part navigation adds back.
+            let g0 = eagle_dynamics::state::gravity(core.st.pos);
+            let out = core.tick();
+            let g1 = eagle_dynamics::state::gravity(core.st.pos);
+            grav = grav + (g0 + g1).scale(0.5 * DT);
+            dv_sm = dv_sm + pipa_dv(&out);
+        }
+        let reported: V3<Mci> = core.imu.sm_to_mci().apply(dv_sm);
+        let actual = core.st.vel - v0 - grav;
+        (reported, actual)
+    }
+
+    #[test]
+    fn pipa_matches_truth_while_holding_attitude() {
+        // Baseline: with the vehicle not rotating, the accelerometers must
+        // report the ΔV the vehicle actually gained, to quantization.
+        let sc = pdi_scenario();
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+        // Drive the throttle through the responder — `phase3_throttle`
+        // recomputes `act.thrust_n` from `cmd_pulses` every tick, so
+        // setting `thrust_n` directly is silently overwritten (that is
+        // how the first version of this test passed vacuously at the DPS
+        // idle stop).
+        core.thrust.cmd_pulses = 2400; // ~30.1 kN
+        core.st.omega = V3::zero();
+        for _ in 0..100 {
+            core.tick(); // let the first-order actuator lag settle
+        }
+        let (reported, actual) = pipa_vs_truth(&mut core, 400); // 4 s
+                                                                // Non-vacuous: the vehicle must actually have been accelerating,
+                                                                // or "PIPA agrees with truth" is the trivial 0 == 0.
+        assert!(
+            actual.norm() > 5.0,
+            "test is vacuous — truth gained only {} m/s",
+            actual.norm()
+        );
+        let err = (reported - actual).norm();
+        // Measured: 0.0052 m/s over 4 s — PIPA quantization (0.01 m/s per
+        // pulse), nothing systematic.
+        assert!(
+            err < 0.02,
+            "holding attitude: PIPA reported {reported:?} against truth {actual:?} (err {err} m/s)"
+        );
+    }
+
+    #[test]
+    fn pipa_matches_truth_through_a_pitchover() {
+        // The seam Task 2B is chasing. Flight 9 acquired a 1.4 m/s
+        // radial-rate error over the ~12 s of P64's pitchover — about
+        // 0.117 m/s^2 of spurious acceleration against a 2.9 m/s^2
+        // specific force, i.e. a 2.3 % projection error present ONLY
+        // while the vehicle is slewing. If the sim's accelerometer model
+        // disagrees with its own dynamics during rotation, it shows up
+        // here, with no AGC in the loop.
+        //
+        // 3 deg/s is the rate measured across MM64 (tilt 66.4 -> 54.4 in
+        // 4 s, run 9 telemetry).
+        let sc = pdi_scenario();
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+        core.thrust.cmd_pulses = 2400; // ~30.1 kN
+        for _ in 0..100 {
+            core.tick();
+        }
+        core.st.omega = V3::new(0.0, 3.0_f64.to_radians(), 0.0);
+        let (reported, actual) = pipa_vs_truth(&mut core, 1200); // 12 s
+        assert!(
+            actual.norm() > 20.0,
+            "test is vacuous — truth gained only {} m/s",
+            actual.norm()
+        );
+        let err = (reported - actual).norm();
+        // Measured: 0.0109 m/s over 12 s = 0.00091 m/s^2 — **128x smaller**
+        // than the 0.117 m/s^2 seam flight 9 acquired. The sim's
+        // accelerometer chain is therefore NOT the seam, measured rather
+        // than argued.
+        assert!(
+            err < 0.05,
+            "pitchover at 3 deg/s: PIPA reported {reported:?} against truth {actual:?} \
+             (err {err} m/s over 12 s = {} m/s^2)",
+            err / 12.0
+        );
+    }
+
+    #[test]
+    fn pipa_matches_truth_through_an_rcs_driven_pitchover() {
+        // The previous test rotates the vehicle kinematically, with no
+        // jets firing — but a real pitchover is RCS-driven, and RCS is
+        // the one force in the right magnitude band: 445 N per jet at
+        // ~15 t is 0.03 m/s^2, so a four-jet couple is 0.12 m/s^2 against
+        // the 0.117 m/s^2 seam. If the jets' translational force reached
+        // truth without reaching the accelerometers (or vice versa), this
+        // is where it shows.
+        let sc = pdi_scenario();
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+        core.thrust.cmd_pulses = 2400;
+        for _ in 0..100 {
+            core.tick();
+        }
+        // A pitch couple, held for the whole window.
+        core.ingest(SimIn::Agc(AgcOutput::Jets5 { mask: 0b0000_1111 }));
+        let (reported, actual) = pipa_vs_truth(&mut core, 1200); // 12 s
+        assert!(
+            actual.norm() > 20.0,
+            "test is vacuous — truth gained only {} m/s",
+            actual.norm()
+        );
+        assert!(
+            core.act.jets != 0,
+            "no jets latched — the test would not exercise the RCS path"
+        );
+        let err = (reported - actual).norm();
+        assert!(
+            err < 0.05,
+            "RCS-driven pitchover: PIPA reported {reported:?} against truth {actual:?} \
+             (err {err} m/s over 12 s = {} m/s^2)",
+            err / 12.0
+        );
+    }
+
     #[test]
     fn telemetry_counts_only_rod_clicks_the_agc_accepted() {
         // VDGVERT is the one term of the P66 force law nothing observes,
