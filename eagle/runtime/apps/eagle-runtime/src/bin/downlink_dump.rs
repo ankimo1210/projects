@@ -306,7 +306,7 @@ mod tests {
     fn synth(vz: f64, vh: f64, wall_s: f64) -> Vec<Pair> {
         let t_ms = (wall_s * 1000.0) as i64;
         let mut v = vec![pair(0.0, B_LAND, t_ms); 26];
-        let mut put = |v: &mut Vec<Pair>, off: i64, value: f64, b: i32| {
+        let put = |v: &mut Vec<Pair>, off: i64, value: f64, b: i32| {
             v[(22 + off) as usize] = pair(value, b, t_ms);
         };
         put(&mut v, 0, R_SITE, B_LAND);
