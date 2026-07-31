@@ -1,19 +1,20 @@
-# A5–A8 Data Provenance and Licensing
+# Beyond-Hull (vol 18–27) Data Provenance and Licensing
 
 ## Release policy
 
-vol 18–25 の committed reference artifact は、リポジトリ内の数式・数値モデルから固定seedで生成した
+vol 18–27 の committed reference artifact は、リポジトリ内の数式・数値モデルから固定seedで生成した
 小型の **synthetic data** だけである。市場データ、取引所データ、顧客データ、checkpoint、生のMonte Carlo
-pathは含めない。vol 18–25 のnotebook実行、book build、新規volume page、portalはnetwork accessを
+pathは含めない。vol 18–27 のnotebook実行、book build、新規volume page、portalはnetwork accessを
 必要としない。A1–A4で使うRequireJSもMITライセンスの固定版を`book/_static/`へ同梱した。
 同梱版はRequireJS 2.3.4で、原文licenseとSHA-256は`release_manifest.json`に固定している。
 
 既存vol 1–17の数式pageは、従来からJupyter Book既定のMathJax CDNを閲覧時に使う。このlegacy依存は
-`release_manifest.json`で明示的にallowlistし、vol 18–25へ新しいremote runtime依存を持ち込まない。
+`release_manifest.json`で明示的にallowlistし、vol 18–27へ新しいremote runtime依存を持ち込まない。
 したがって「全legacy pageを完全offlineで数式描画できる」という主張はしない。
 
 各reference JSONは `data_policy: synthetic-offline`、generator名、schema version、対応NPZのSHA-256を持つ。
 数値は教育・再現性検証用であり、収益性、市場予測力、production readinessの根拠にはしない。
+後段の Volume 26・27 の節は、この Release policy を前提とした追加の provenance 記述である。
 
 ## Optional market-data track
 

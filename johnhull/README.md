@@ -19,12 +19,10 @@ the release-candidate status and `VALIDATION.md` for the final gate evidence.
 The beyond-Hull notebooks read versioned, fingerprinted JSON/NPZ references only;
 they do not train models, download data, or detect GPUs.  PyTorch pricing lives
 in the separate `deep_hedge_price` workspace project, while `hullkit` remains
-torch-free.  Volumes 18–25 and the G8 release are complete: fresh validation,
-the strict tracked-file gate, and publication on
-`codex/johnhull-beyond-hull-g8` are recorded in `VALIDATION.md`. Volumes 26 and
-27 are complete through their artifact/notebook gates, the portal pages
-(`rates_swaps` and `risk_management` themes), the Jupyter Book pages, and the
-full tracked release.
+torch-free.  Volumes 18–27 are complete and released on `main`: fresh
+validation, the strict tracked-file gate, the portal pages, the Jupyter Book
+pages, and the release branches they landed through are recorded in
+`VALIDATION.md`.
 
 Run release checks from the workspace root:
 
