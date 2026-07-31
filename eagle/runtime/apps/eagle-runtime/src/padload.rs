@@ -44,12 +44,21 @@ impl SymTab {
     pub fn from_listing(text: &str) -> Result<SymTab> {
         let mut by_name = HashMap::new();
         for line in text.lines() {
-            // The trailing `\t# comment` column never contains ERASE/EQUALS
-            // for a real definition line; drop it before tokenizing so
-            // comment text can't be mistaken for a code token.
+            // The trailing `\t# comment` column never contains a definition
+            // keyword for a real definition line; drop it before tokenizing
+            // so comment text can't be mistaken for a code token.
             let code = line.split('\t').next().unwrap_or(line);
             let tokens: Vec<&str> = code.split_whitespace().collect();
-            let Some(kw_idx) = tokens.iter().position(|t| *t == "ERASE" || *t == "EQUALS") else {
+            // `=` is yaYUL's synonym for `EQUALS` and the listing uses both:
+            // `TAUROD EQUALS RODSCALE +1` but `VGU = TPIP +2`
+            // (ERASABLE_ASSIGNMENTS.agc:1408 vs :2536). Missing `=` left
+            // LAND, VGU, VDGVERT and every other `=`-defined erasable
+            // unresolvable — harmless for the pad load, which never asked
+            // for one, but it blocked reading them out of a core dump.
+            let Some(kw_idx) = tokens
+                .iter()
+                .position(|t| *t == "ERASE" || *t == "EQUALS" || *t == "=")
+            else {
                 continue;
             };
             if kw_idx < 2 {
@@ -1062,6 +1071,24 @@ pub fn render_manifest_toml(m: &PadloadManifest, allow_unverified: bool) -> Resu
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn symtab_resolves_equals_sign_definitions() {
+        // yaYUL accepts `=` as a synonym for EQUALS and the real listing
+        // uses both forms; only handling EQUALS made LAND/VGU/VDGVERT
+        // invisible.
+        let text = concat!(
+            "005961,002536: E7,1745  E7,1626               VGU                =        TPIP       +2\n",
+            "004860,001408: E5,1642  E5,1540               TAUROD             EQUALS   RODSCALE   +1\n",
+        );
+        let st = SymTab::from_listing(text).unwrap();
+        assert_eq!(st.ecadr("TAUROD"), Some(0o2540));
+        assert_eq!(
+            st.ecadr("VGU"),
+            Some(0o3626),
+            "E7,1626 -> 7*0o400 + (0o1626-0o1400)"
+        );
+    }
 
     #[test]
     fn symtab_parses_fixture() {
