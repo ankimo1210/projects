@@ -5,7 +5,7 @@
 //! starting points that the live runs validated or corrected.
 
 use crate::padload::PadWord;
-use crate::script::DskyScript;
+use crate::script::{DskyScript, EntryStatus};
 use anyhow::{bail, ensure, Context, Result};
 use eagle_agc_protocol::agc_io::{
     decode_output, discrete_write, pipa_pulse, thrust_dinc, AgcOutput, PipaAxis, ThrustPulse,
@@ -242,7 +242,7 @@ pub async fn read_dp(script: &mut DskyScript, ecadr: u16) -> Result<i64> {
 /// swallow that broke the in-flight reads). Releasing the display and
 /// waiting for its repaint burst to subside first is what makes the load
 /// land.
-pub async fn rod_load(script: &mut DskyScript, clicks: i16) -> Result<()> {
+pub async fn rod_load(script: &mut DskyScript, clicks: i16) -> Result<EntryStatus> {
     let word = eagle_agc_protocol::words::sp_encode(clicks);
     script
         .grab_dsky()
@@ -255,8 +255,26 @@ pub async fn rod_load(script: &mut DskyScript, clicks: i16) -> Result<()> {
             octal5(word)
         ))
         .await
-        .with_context(|| format!("ROD load {clicks:+} clicks"))
+        .with_context(|| format!("ROD load {clicks:+} clicks"))?;
+    // Let the AGC answer before sampling its lamps. 300 ms is the settle
+    // this file already uses for a register rewrite, and >> the ~120 ms
+    // DSKY relay cadence.
+    tokio::time::sleep(Duration::from_millis(ROD_SETTLE_MS)).await;
+    let status = script.entry_status();
+    // Hand the display back whether or not the entry was accepted. A
+    // latched KEY REL suppresses P66's VERTDISP for the REST OF THE RUN,
+    // which is how flight 7 (2026-07-31) came back with 6 distinct
+    // HDOTDISP values in 222 s of P66 and no measurement.
+    script
+        .release_dsky()
+        .await
+        .with_context(|| format!("ROD load {clicks:+} clicks: release DSKY"))?;
+    Ok(status)
 }
+
+/// Settle time between the ROD load's last ENTR and sampling the AGC's
+/// rejection lamps.
+const ROD_SETTLE_MS: u64 = 300;
 
 /// Wait for the AGC's ISS turn-on delay complete (ch 012 bit15, ~90 s
 /// after `init_discretes`), then drop the turn-on request like the real
@@ -1316,7 +1334,8 @@ mod tests {
             "KEY_REL", // release the P66 flight display first
             "VERB", "2", "1", "NOUN", "0", "1", "ENTR", // V21N01E
             "0", "3", "7", "4", "6", "ENTR", // RODCOUNT ECADR
-            "7", "7", "7", "7", "5", "ENTR", // −2
+            "7", "7", "7", "7", "5", "ENTR",    // −2
+            "KEY_REL", // hand the flight display back so VERTDISP repaints
         ];
         for name in expected {
             let want = eagle_agc_protocol::keys::DskyKey::from_name(name)
@@ -1325,8 +1344,39 @@ mod tests {
             assert_eq!(rx.recv().await.unwrap(), want, "key {name}");
         }
         // No V01N01 read-back: RODCOMP consumes RODCOUNT with XCH, so a
-        // verify would race the AGC and spuriously fail.
+        // verify would race the AGC and spuriously fail. Acceptance is
+        // checked PASSIVELY instead, off the KEY REL / OPR ERR lamps.
+        // Nothing after the release — in particular no RSET, which would
+        // clear FAILREG along with the lamp.
         assert!(rx.try_recv().is_err());
+    }
+
+    #[tokio::test]
+    async fn rod_load_reports_a_rejected_entry() {
+        // ch0163 KEY REL = 020: the AGC refused the entry, so RODCOUNT is
+        // unwritten and VDGVERT did not move. Flight 7 (2026-07-31) shows
+        // what silence costs — a refused load froze the flight display for
+        // the remaining 216 s of P66.
+        let (tx, _rx) = tokio::sync::mpsc::unbounded_channel();
+        let mut rejected = DskyState::default();
+        rejected.apply(&Packet::io(0o163, 0o20).unwrap());
+        let (_wtx, wrx) = tokio::sync::watch::channel(rejected);
+        let mut script = DskyScript::new(tx, wrx);
+        script.set_key_delay(Duration::ZERO);
+
+        let status = rod_load(&mut script, -2).await.unwrap();
+        assert!(status.rejected(), "{status:?}");
+        assert!(status.key_rel);
+        assert!(!status.opr_err);
+    }
+
+    #[tokio::test]
+    async fn rod_load_reports_a_clean_entry() {
+        let (tx, _rx) = tokio::sync::mpsc::unbounded_channel();
+        let (_wtx, wrx) = tokio::sync::watch::channel(DskyState::default());
+        let mut script = DskyScript::new(tx, wrx);
+        script.set_key_delay(Duration::ZERO);
+        assert!(!rod_load(&mut script, -2).await.unwrap().rejected());
     }
 
     /// Key-count fixture: a raw (unverified) V21N01 load is 19 keys
