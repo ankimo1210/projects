@@ -20,7 +20,18 @@
 //!
 //! So identify the loop the way spike B pinned `RODSCALE`: a controlled
 //! live step, on the 1-D `SyntheticHover` model where there is no tilt, no
-//! horizontal channel and no attitude coupling to confound it.
+//! horizontal channel and no attitude coupling to confound it — and with
+//! the **plant frozen** (`SyntheticHover::spawn_frozen_plant`), so the
+//! AGC's own altitude rate is constant by construction.
+//!
+//! Freezing is not a convenience, it is the whole method. Attempt 1 used
+//! the live plant and was meaningless: P63 parks the throttle at the DPS
+//! idle stop for the entire ZOOMTIME phase, so the vehicle free-fell to
+//! −47 m/s before P66 could take over, and `dHDOT` (−21.4 m/s over the
+//! step window) swamped `dVDGVERT` (−0.30 m/s) by 70×. Waiting for a
+//! quiescent window instead is circular — P66 limit-cycles precisely
+//! because the constant being measured is wrong. See
+//! `docs/superpowers/notes/2026-07-31-m1b-rod-loop.md` §7a.
 //!
 //! # The measurement
 //!
@@ -34,15 +45,16 @@
 //! side is either measured or cancels:
 //!
 //! ```text
-//!   TAUROD = (dVDGVERT - dHDOT) / d(a_cmd)
+//!   TAUROD = (dVDGVERT - dHDOT) / d(a_cmd),   and dHDOT ≡ 0 here
 //! ```
 //!
 //! `dVDGVERT` is the click count times `RODSCALE` — 1 ft/s per click,
 //! the one entry in `padload::P66_BSCALE_TABLE` marked `Verified` by live
 //! measurement — and confirmed here by reading `VDGVERT` before and after.
-//! `dHDOT` is the truth rate change over the same window, from the hover
-//! model rather than the ~1 s-stale flight display. `d(a_cmd)` is the
-//! change in commanded thrust over mass.
+//! `dHDOT` is zero because the frozen plant feeds a constant lunar-g
+//! specific force, so the AGC integrates a vehicle whose rate never
+//! changes; it is still computed and asserted small rather than assumed.
+//! `d(a_cmd)` is the change in commanded thrust over mass.
 //!
 //! One down-click is chosen so the step lands inside the throttle band on
 //! every candidate: at the spike's ~15 200 kg it moves roughly 1970 bits
@@ -160,6 +172,13 @@ async fn measure_step(
 
     let d_vdg_ms = f64::from(clicks) * ROD_CLICK_MS;
     let d_hdot_ms = after.vz_ms - before.vz_ms;
+    // The frozen plant's contract. If this ever moves, the measurement is
+    // back to attempt 1's failure mode and the number below is not a time
+    // constant.
+    assert!(
+        d_hdot_ms.abs() < 0.01,
+        "the plant is supposed to be frozen but the rate moved {d_hdot_ms} m/s —          dVDGVERT is {d_vdg_ms} m/s, so the step no longer dominates"
+    );
     let d_accel_ms2 =
         (commanded_n(after.cmd_pulses) - commanded_n(before.cmd_pulses)) / before.mass_kg;
 
@@ -233,7 +252,7 @@ async fn rod_step_measures_the_p66_time_constant() {
         .expect("P00 after V37E00E");
 
     let v1 = SyntheticHover::spawn(init.agc_tx.clone());
-    let closed = SyntheticHover::spawn_closed_loop(
+    let closed = SyntheticHover::spawn_frozen_plant(
         init.agc_tx.clone(),
         init.packets.resubscribe(),
         initial_truth(),
@@ -304,6 +323,7 @@ async fn rod_step_measures_the_p66_time_constant() {
     let truth = closed.truth().expect("closed-loop truth watch");
 
     // Let P66 take the throttle and reach a working point off the stops.
+    // The vehicle cannot move, so this settles on the AGC's own terms.
     let (settled, lo, hi) = observe(&truth, 10.0).await;
     eprintln!(
         "[step] P66 working point: cmd {} bits (range {}..{} over 10 s), \
