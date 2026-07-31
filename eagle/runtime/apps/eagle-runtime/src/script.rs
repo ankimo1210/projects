@@ -13,6 +13,24 @@ use tokio::sync::{broadcast, mpsc, watch};
 /// read past ~8 s.
 const READ_ATTEMPTS: u32 = 3;
 
+/// The AGC's two "your entry was not accepted" signals.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub struct EntryStatus {
+    /// KEY REL lamp: the rope wants the display handed back. Latched, and
+    /// while it is latched the flight display does not repaint.
+    pub key_rel: bool,
+    /// OPR ERR lamp: the entry was malformed or arrived at a bad moment.
+    /// Cleared only by RSET, which this code deliberately never sends.
+    pub opr_err: bool,
+}
+
+impl EntryStatus {
+    /// True when the AGC signalled a problem with the entry just typed.
+    pub fn rejected(self) -> bool {
+        self.key_rel || self.opr_err
+    }
+}
+
 pub struct DskyScript {
     tx: mpsc::UnboundedSender<Packet>,
     rx: watch::Receiver<DskyState>,
@@ -172,6 +190,38 @@ impl DskyScript {
             "V01N01 read of {:05o} failed {READ_ATTEMPTS} times",
             ecadr
         )))
+    }
+
+    /// Whether the AGC is signalling that it rejected the last entry.
+    ///
+    /// `key_rel` and `opr_err` are channel-0163 bits 5 and 7 (DSKY_*
+    /// masks 020 and 0100, `eagle-agc-protocol/src/dsky.rs:137-145`), so
+    /// this is a PASSIVE
+    /// read of state we already receive — no keys typed, nothing to race.
+    /// That matters: the obvious alternative, reading RODCOUNT back, races
+    /// RODCOMP, which zeroes the word within one 1-second P66 pass.
+    pub fn entry_status(&self) -> EntryStatus {
+        let d = self.rx.borrow();
+        EntryStatus {
+            key_rel: d.key_rel,
+            opr_err: d.opr_err,
+        }
+    }
+
+    /// Hand the DSKY back to the rope's own flight display after an entry.
+    ///
+    /// KEY REL, never RSET. RSET would also clear a latched OPR ERR, but it
+    /// clears FAILREG with it — see `read_erasable`'s note, and the P65
+    /// alarm whose code is still unknown precisely because nothing may wipe
+    /// that history.
+    ///
+    /// Without this, an entry that leaves KEY REL latched suppresses P66's
+    /// VERTDISP for the rest of the run: flight 7 (2026-07-31) froze
+    /// `HDOTDISP` 1.6 s into P66 and painted 6 distinct values in 222 s,
+    /// against 110/206/228 on runs 4/5/6, blinding every downstream
+    /// measurement.
+    pub async fn release_dsky(&mut self) -> Result<()> {
+        self.keys("K").await
     }
 
     /// Take the DSKY back from a flight display before typing an entry:
@@ -456,6 +506,58 @@ mod tests {
             s.read_erasable(0o3644).await.is_err(),
             "a V06N63 frame must never be accepted as a V01N01 read-back"
         );
+    }
+
+    /// ch0163 KEY REL = 020 (bit 5), OPR ERR = 0100 (bit 7) — the
+    /// agc_engine.h DSKY_* masks (dsky.rs:137-145).
+    fn ch163(bits: u16) -> eagle_agc_protocol::Packet {
+        eagle_agc_protocol::Packet::io(0o163, bits).unwrap()
+    }
+
+    #[tokio::test]
+    async fn entry_status_reads_the_rejection_lamps() {
+        let (tx, _rx) = tokio::sync::mpsc::unbounded_channel();
+        let (wtx, wrx) = tokio::sync::watch::channel(DskyState::default());
+        let s = DskyScript::new(tx, wrx);
+        assert!(!s.entry_status().rejected(), "a clean DSKY is not rejected");
+
+        let mut d = DskyState::default();
+        d.apply(&ch163(0o20));
+        wtx.send(d).unwrap();
+        assert_eq!(
+            s.entry_status(),
+            EntryStatus {
+                key_rel: true,
+                opr_err: false
+            }
+        );
+        assert!(s.entry_status().rejected());
+
+        let mut d = DskyState::default();
+        d.apply(&ch163(0o100));
+        wtx.send(d).unwrap();
+        assert!(s.entry_status().opr_err);
+        assert!(s.entry_status().rejected());
+    }
+
+    #[tokio::test]
+    async fn release_dsky_sends_key_rel_and_never_rset() {
+        // RSET would clear a latched OPR ERR, but it clears FAILREG with
+        // it — the alarm history the P65 investigation still needs.
+        let (tx, mut rx) = tokio::sync::mpsc::unbounded_channel();
+        let (_wtx, wrx) = tokio::sync::watch::channel(DskyState::default());
+        let mut s = DskyScript::new(tx, wrx);
+        s.set_key_delay(Duration::ZERO);
+        s.release_dsky().await.unwrap();
+        drop(s);
+
+        let mut keys = Vec::new();
+        while let Ok(p) = rx.try_recv() {
+            keys.push(p);
+        }
+        let is = |name: &str| DskyKey::from_name(name).unwrap().packet();
+        assert_eq!(keys, vec![is("KEY_REL")], "exactly one KEY REL");
+        assert!(!keys.contains(&is("RSET")), "RSET must never be sent");
     }
 
     #[tokio::test]

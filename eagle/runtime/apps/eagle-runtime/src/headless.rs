@@ -246,7 +246,7 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
     while let Some(ev) = next_sim_event(&mut event_rx, &mut client_rod_rx).await {
         script_busy.store(true, Ordering::SeqCst);
         let r = match ev {
-            SimEvent::RodClicks(n) => runner::rod_load(&mut script, n as i16).await,
+            SimEvent::RodClicks(n) => rod_load_verified(&mut script, n as i16, &sim_in_tx).await,
             SimEvent::Handover => {
                 // ATT HOLD flips GUILDENSTERN's mode check (STABL?, the
                 // un-attitude-hold discrete); the selection click gives it
@@ -254,7 +254,7 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
                 // (vendor/virtualagc/Luminary099/
                 // LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:203-217).
                 match runner::att_hold(&cmd_tx).await {
-                    Ok(()) => runner::rod_load(&mut script, -1).await,
+                    Ok(()) => rod_load_verified(&mut script, -1, &sim_in_tx).await,
                     Err(e) => Err(e),
                 }
             }
@@ -302,6 +302,47 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
 /// task for a moment, and returning on it freezes mm_sequence / drift_ms /
 /// final_t_s / descent_s / prog_lamp_frames at whatever they last were —
 /// after which every acceptance assert passes on stale data instead of
+/// ROD loads the AGC has been checked to accept, reporting the applied
+/// click count back to the sim.
+///
+/// The AGC can silently refuse a load: an entry typed into P66's VERTDISP
+/// repaint stream is rejected with OPR ERR and KEY REL lit, leaving
+/// RODCOUNT unwritten and VDGVERT unmoved (`runner::rod_load`'s note,
+/// spike-B iter 18). Before 2026-07-31 nothing noticed, so a refused click
+/// vanished: the vehicle flew a commanded rate nobody had asked for, and
+/// `rod_clicks_cum` counted it anyway.
+///
+/// One retry, then give up loudly. `grab_dsky` already waits for a repaint
+/// gap, so a retry lands in a different part of the guidance pass than the
+/// attempt that failed; retrying forever would just type into a display
+/// that is not going to yield.
+async fn rod_load_verified(
+    script: &mut DskyScript,
+    clicks: i16,
+    sim_in_tx: &std::sync::mpsc::Sender<SimIn>,
+) -> Result<()> {
+    const ATTEMPTS: u32 = 2;
+    for attempt in 1..=ATTEMPTS {
+        let status = runner::rod_load(script, clicks).await?;
+        if !status.rejected() {
+            // Only clicks the AGC took are clicks VDGVERT moved by.
+            let _ = sim_in_tx.send(SimIn::RodApplied(i32::from(clicks)));
+            return Ok(());
+        }
+        eprintln!(
+            "headless: ROD load {clicks:+} REJECTED by the AGC              (key_rel={} opr_err={}), attempt {attempt}/{ATTEMPTS}",
+            status.key_rel, status.opr_err
+        );
+    }
+    // Not an error: the descent continues, and the run is still worth
+    // flying. But the commanded rate is now NOT what the schedule asked
+    // for, and every later analysis has to know that.
+    eprintln!(
+        "headless: ROD load {clicks:+} GAVE UP after {ATTEMPTS} attempts —          VDGVERT did not move; rod_clicks_cum excludes these clicks"
+    );
+    Ok(())
+}
+
 /// failing. The packet forwarder in `run_headless` already does the same
 /// `continue`.
 async fn collect_telemetry(mut telem_rx: broadcast::Receiver<String>, sum: Arc<Mutex<Summary>>) {
