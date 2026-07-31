@@ -72,11 +72,24 @@ alt_m = 250.0
 # neither a step-size nor an engine-constant artefact.
 # Suspect: TAUROD/LAG-TAU/MINFORCE/MAXFORCE are
 # the only UNVERIFIED scale-chain pad words left (padload::P66_BSCALE_TABLE)
-# and they are exactly the P66 force law's gain and limits; TAUROD's scale
-# is derivable statically (LLGE:155-157 + :1050 + GSCALE at :1477), costing
-# no flights. Second suspect, needing a citation first: dps_envelope's
-# 19.26 kN discontinuity at 0.6*MAX with no hysteresis (forces.rs). See the
-# ledger.
+# and they are exactly the P66 force law's gain and limits.
+#
+# 2026-07-31: TAUROD is now the PRIME suspect, and the claim that once
+# stood here -- "TAUROD's scale is derivable statically (LLGE:155-157 +
+# :1050 + GSCALE at :1477), costing no flights" -- did NOT hold. That
+# route was taken and it stops one power of two short: the chain runs
+# through the BDDV by the DOT-built direction cosine (LLGE:1051-1058) and
+# the SR2 on the gravity path (:1047), neither of which is pinned, and
+# they are exactly the difference between b=11 (0.1875 s) and b=12
+# (0.375 s). What IS established is that the shipped b=14 rests on a
+# velocity scale the repo's own spike-B measurement contradicts, so the
+# loop is 4x or 8x too fast against THROTLAG's 0.2 s. Do not change the
+# pad load until the scale is measured -- and it cannot be measured from
+# a descent (a saturated limit cycle carries almost no information about
+# the gain inside it; three estimators failed, the most convincing one by
+# fitting the cycle's own quarter period). Second suspect, needing a
+# citation first: dps_envelope's 19.26 kN discontinuity at 0.6*MAX with no
+# hysteresis (forces.rs). See docs/superpowers/notes/2026-07-31-m1b-rod-loop.md.
 steps = [[240.0, -1.5], [40.0, 0.2], [10.0, 0.8]]
 
 [errors]                 # empty = all OFF (acceptance runs use this)
