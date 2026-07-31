@@ -1259,6 +1259,38 @@ mod tests {
     }
 
     #[test]
+    fn pipa_has_no_accumulating_bias_against_truth() {
+        // The 2026-07-31 core-dump analysis measured the AGC losing
+        // ~5e-4 of its accumulated delta-V over a 600 s burn, which
+        // integrates to the -190 m altitude error. The earlier
+        // pipa_matches_truth_* tests DID see this ratio (0.0052 m/s on
+        // 12.7 m/s = 4.1e-4) and it was misread as quantization noise
+        // because it was being compared against an inflated target.
+        //
+        // Quantization is BOUNDED (one pulse, 0.01 m/s); a scale error
+        // GROWS with delta-V. Flying long enough separates them.
+        let sc = pdi_scenario();
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+        core.thrust.cmd_pulses = 2400;
+        for _ in 0..100 {
+            core.tick();
+        }
+        let (reported, actual) = pipa_vs_truth(&mut core, 30_000); // 300 s
+        let dv = actual.norm();
+        assert!(dv > 500.0, "test is vacuous — only {dv} m/s of delta-V");
+        let err = (reported - actual).norm();
+        let ratio = err / dv;
+        assert!(
+            ratio < 2e-5,
+            "PIPA lost {err} m/s of {dv} m/s = {ratio:e} relative. Quantization \
+             is bounded at one pulse (0.01 m/s); a ratio this size over this \
+             much delta-V is a SCALE error, and it integrates into the AGC's \
+             altitude."
+        );
+    }
+
+    #[test]
     fn pipa_matches_truth_through_an_rcs_driven_pitchover() {
         // The previous test rotates the vehicle kinematically, with no
         // jets firing — but a real pitchover is RCS-driven, and RCS is
