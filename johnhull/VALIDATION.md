@@ -1,6 +1,6 @@
-# johnhull Beyond-Hull A5–A8 — Final Validation
+# johnhull Beyond-Hull vol 18–27 — Final Validation
 
-- Date: 2026-07-18
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -23,6 +23,11 @@ integration gate を満たすことだけを表す。実市場での予測力、
 | G6 / vol 24 | perpetual payoff/funding、margin/liquidation waterfall、oracle、CPMM/LVR identities | PASS |
 | G7 / vol 25 | carbon model ladder、risk premia、OU/fOU weather basis、PPA CFaR/CVaR sensitivity | PASS |
 | G8 | artifact/notebook/report/book/release integration and isolated full-workspace audit | PASS (tracked release) |
+| vol 26 | Hull–White 1F curve fit、CPI lag/seasonality、ZCIS/YoY、JGBi tenth-day reference index、Jarrow–Yildirim measures、redemption-only deflation floor | PASS (tracked release) |
+| vol 27 | Kupiec/Christoffersen/Basel backtests、FHS、EVT/GPD tail、Euler risk decomposition、P&L explain、cross-asset capstone | PASS (tracked release) |
+
+vol 26 と 27 は G0–G8 とは別の Phase 計画（`docs/superpowers/plans/`）で実装したため
+G 番号を持たないが、gate の内容と PASS の意味は同じである。
 
 Canonical reference acceptance is recomputed from the committed arrays by
 `johnhull/scripts/frontier_acceptance.py`; it is not trusted as a copied JSON flag.
@@ -37,6 +42,8 @@ Canonical reference acceptance is recomputed from the committed arrays by
 | 23 | 9 | PASS | NO |
 | 24 | 10 | PASS | NO |
 | 25 | 9 | PASS | NO |
+| 26 | 11 | PASS | NO |
+| 27 | 13 | PASS | NO |
 
 ## Numerical evidence
 
@@ -65,6 +72,20 @@ Canonical reference acceptance is recomputed from the committed arrays by
 - vol 25: Black-76/GBM/Heston/SV+jump prices and MC standard errors are aligned;
   fractional-OU lag-1 autocorrelation exceeds OU in the fixed fixture; weather basis
   and PPA risk sensitivities are finite.
+- vol 26: Hull–White initial-curve and ZCIS repricing errors are `0.0`; annual
+  seasonality normalization is `1.734723475976807e-18`; the Jarrow–Yildirim
+  payment-forward and JGBi-floor analytic/MC comparisons peak at z-scores
+  `1.4888912714624325` and `1.1974973083142517`; the floor payoff decomposition and the
+  redemption-only principal check are exact, and raw vs floor-adjusted BEI differ by
+  `2.785788824835045e-4`.
+- vol 27: FHS constant-volatility identity, EVT VaR/ES identity, Euler normal
+  additivity, and simulated Euler ES additivity are all `0.0`; marginal-VaR
+  finite-difference agreement is `1.027118008182688e-9`; GPD parameter recovery is
+  `4.567805084324694e-2`; the clustered Christoffersen p-value is
+  `1.6575957546647315e-3` and matches its recomputation to `1.5178830414797062e-18`;
+  the delta-gamma-vega P&L residual `0.11443482486811263` is far below the delta-only
+  residual `16.597194327066063`, leaving an unexplained share of
+  `2.6301205095678685e-5`.
 
 ## Fresh validation record
 
@@ -177,6 +198,16 @@ synthetic data. Nothing here approves model performance or market predictive pow
 - vol 25: weather and PPA values depend on the selected premium principle because the
   market is incomplete. Real-market calibration, out-of-sample tests, and storage real
   options remain outside the core gate.
+- vol 26: all curves, CPI fixings, option quotes, and hedge ratios are synthetic rather
+  than market calibrated. The v1 model uses deterministic seasonality and one-factor
+  nominal/real Gaussian rates; production ISDA disruption fallbacks and live JGBi
+  settlement operations are out of scope.
+- vol 27: all P&L, exceedance, and tail samples are synthetic fixed-seed draws. FHS uses
+  the committed EWMA conditional-volatility path with no live calibration, and its
+  default rescaling target is the last observed conditional volatility rather than a
+  post-shock next-day forecast. The Basel multiplier schedule is the documented 250-day
+  BCBS table, not a re-derivation. Cross-gamma, vanna, and vomma P&L-explain terms are
+  out of scope.
 
 Foundation models, diffusion/VAE/flow/SBI, signature/POT, and other cited frontier work
 remain optional research tracks. Preprints are identified as such in the design/spec and
@@ -185,7 +216,17 @@ cannot fail or silently substitute for the core reference implementation.
 ## Release decision
 
 The implementation and integration evidence are complete, with the workspace-wide
-exceptions isolated above. After explicit authorization, the release files were committed,
-the strict tracked-file release check passed, and branch
-`codex/johnhull-beyond-hull-g8` was published. `PASS` denotes the tracked integration and
-reproducibility release; it does not approve model performance or production readiness.
+exceptions isolated above. After explicit authorization, the release files were committed
+and the strict tracked-file release check passed.
+
+| Release | Branch | Landed on `main` |
+|---|---|---|
+| vol 18–25 (G8) | `codex/johnhull-beyond-hull-g8` | merge `c4cfa7e4` |
+| vol 26 inflation/JGBi + vol 27 risk desk | `codex/johnhull-inflation-jgbi` | merge `66e5f355`（portal/book 収録は `691877f`・`63f83ce`） |
+| vol 27 review fixes | `codex/johnhull-vol27-review-fixes` | merge `eaa5a9a9` |
+
+The release branches other than `codex/johnhull-inflation-jgbi` have been deleted after
+merging, so `main` — not the branch refs — is the reproducible record.
+
+`PASS` denotes the tracked integration and reproducibility release; it does not approve
+model performance or production readiness.
