@@ -350,11 +350,21 @@ pub const P66_BSCALE_TABLE: &[BScaleEntry] = &[
     },
     BScaleEntry {
         symbol: "TAUROD",
-        status: BScaleStatus::Unverified,
-        note: "vendor/virtualagc/Luminary099/LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:1042-1044 \
-               (\"BDSU DDV / VDGVERT / TAUROD\") divides \
-               a VDGVERT-derived quantity by TAUROD; VDGVERT's own b-scale is not established in the \
-               cited excerpt, so TAUROD's can't be pinned in isolation.",
+        status: BScaleStatus::Verified,
+        note: "b=11, CENTISECONDS. MEASURED live 2026-07-31 by an open-loop step test on a frozen \
+               plant (tests/live_rod_step.rs): STARTP66 sets VDGVERT from the current altitude rate \
+               (LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:157), so after the -1 selection click the rate \
+               error is exactly -0.3048 m/s and a_cmd = g - 0.3048/TAUROD with every other term \
+               known. At 15195 kg the candidates predict 1718 bits (b=14), 979 (b=12) or the zero \
+               stop (b=11); the AGC drove to the ZERO STOP, requiring tau <= 0.3048/1.62 = 0.1881 s \
+               against b=11's 0.1875 s -- a 0.3% match. The measurement is one-sided; the \
+               derivation bounds the candidate set to {11,12} (b = b(VDGVERT) - b(accel) = 7 - b_acc, \
+               b_acc either -4 per THROTTLE_CONTROL_ROUTINES.agc:206 or -5 if the BDDV by the \
+               DOT-built cosine at :1051-1058 shifts one power of two), and the measurement excludes \
+               12. SUPERSEDES b=14, which came from the VBRFG/VIGN velocity scale (b=10) -- not the \
+               scale of the two words this divide actually uses. At b=14 the AGC read the committed \
+               150 cs word as 18.75 cs = 0.1875 s, an 8x too-fast rate loop against THROTLAG's \
+               0.2 s. See docs/superpowers/notes/2026-07-31-m1b-rod-loop.md.",
     },
     BScaleEntry {
         symbol: "LAG/TAU",
@@ -1233,8 +1243,16 @@ mod tests {
         let err = check_bscales(false).unwrap_err();
         let msg = format!("{err:#}");
         assert!(
-            msg.contains("TAUROD"),
+            msg.contains("MINFORCE"),
             "should name unverified entries: {msg}"
+        );
+        // TAUROD was measured live on 2026-07-31 (see its table entry) and
+        // must no longer appear here. Nothing in that work pinned the
+        // other three, and the discarded command-floor inference is
+        // exactly why they stay Unverified.
+        assert!(
+            !msg.contains("TAUROD"),
+            "TAUROD is measured and must not be listed as unverified: {msg}"
         );
         assert!(check_bscales(true).is_ok());
     }

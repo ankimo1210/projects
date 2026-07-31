@@ -250,12 +250,15 @@ provenance = "LUM69R2/PADLOADS.agc:513-517"
 comment = "leave approach-phase quadratic guidance at TTF > -10 s"
 
 # ---- P66 rate-of-descent cluster --------------------------------------
-# b-scales below are derived from the guidance-equation scale chain
-# (Spike A step 0/iter 14 analysis): velocities in this file are at
-# 2^10 m/cs (VIGN literal, DDUM denominator comment), accelerations at
+# b-scales below. NOTE the premise that once stood here -- "velocities in
+# this file are at 2^10 m/cs" -- is TRUE for VBRFG/VIGN but FALSE for the
+# two words P66's force law actually divides: spike B measured VDGVERT and
+# HDOTDISP at b=7 m/cs (below). TAUROD was derived from the wrong one and
+# carried b=14 until 2026-07-31.
+# Anchors: VDGVERT/HDOTDISP b=7 m/cs (spike B, live), accelerations at
 # 2^-4 m/cs^2 (ABRFG "B+04"), MASS at 2^16 kg (HIASCENT "5050 B-16").
 # Interpreter DDV/DMP keep fraction arithmetic, so:
-#   TAUROD  = vel/acc     -> fraction = tau_cs / 2^14      (b=14, CENTISECONDS)
+#   TAUROD  = vel/acc     -> b = 7 - (-4) = 11, CENTISECONDS  [MEASURED]
 #   LAG/TAU = ratio       -> fraction = ratio              (b=0, dimensionless)
 #   FORCE   = MASS * acc  -> fraction = F[kg*m/cs^2]/2^12  (b=12, kg*m/cs^2 = 1e4 N)
 # None of these is exercised before ENGINE ON; Spike B (P66 live) is the
@@ -281,9 +284,9 @@ comment = "ROD click scale = 6392 DP pulses of VDGVERT per click = 1 ft/s"
 
 [[word]]
 symbol = "TAUROD"
-physical = { value = 150.0, b = 14, dp = true }
-provenance = "derived (scale chain); value 1.5 s = 150 cs"
-comment = "ROD time constant, cs at b=14 -- UNVERIFIED live until Spike B"
+physical = { value = 150.0, b = 11, dp = true }
+provenance = "MEASURED live 2026-07-31 (open-loop step test, tests/live_rod_step.rs)"
+comment = "ROD time constant, 150 cs = 1.5 s, CENTISECONDS at b=11. Was b=14 until 2026-07-31, which the AGC decoded as 18.75 cs = 0.1875 s -- an 8x too-fast rate loop against THROTLAG's 0.2 s, i.e. the P66 limit cycle."
 
 [[word]]
 symbol = "LAG/TAU"
