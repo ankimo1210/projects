@@ -950,8 +950,48 @@ impl SyntheticHover {
     /// stop the v1 feeder first so PIPAX has exactly one producer.
     pub fn spawn_closed_loop(
         tx: mpsc::UnboundedSender<Packet>,
+        packets: broadcast::Receiver<Packet>,
+        initial: HoverTruth,
+    ) -> Self {
+        Self::spawn_loop(tx, packets, initial, false)
+    }
+
+    /// Spawn the same THRUST/DINC loop with the **plant frozen**: the AGC's
+    /// throttle commands are tracked, so `cmd_pulses` is live, but they do
+    /// not move the vehicle. PIPAX gets a constant lunar-g specific force,
+    /// exactly like the v1 feeder, so **the AGC's own altitude rate is
+    /// constant by construction**.
+    ///
+    /// This is what makes an open-loop step test of P66's force law
+    /// possible. With `dHDOT` identically zero, stepping `VDGVERT` by a
+    /// known amount gives
+    ///
+    /// ```text
+    ///   TAUROD = dVDGVERT / d(a_cmd)
+    /// ```
+    ///
+    /// with no transient to dominate the step and no dependence on the
+    /// AGC's navigation agreeing with truth. Both of those sank the first
+    /// attempt, which used the live plant: the vehicle free-fell to
+    /// −47 m/s during the ZOOMTIME idle phase, and `dHDOT` swamped
+    /// `dVDGVERT` 70× (see
+    /// `docs/superpowers/notes/2026-07-31-m1b-rod-loop.md` §7a).
+    ///
+    /// Like the live loop, this stays silent until ENGINE ON so it can be
+    /// spawned alongside the v1 feeder without two producers on PIPAX.
+    pub fn spawn_frozen_plant(
+        tx: mpsc::UnboundedSender<Packet>,
+        packets: broadcast::Receiver<Packet>,
+        initial: HoverTruth,
+    ) -> Self {
+        Self::spawn_loop(tx, packets, initial, true)
+    }
+
+    fn spawn_loop(
+        tx: mpsc::UnboundedSender<Packet>,
         mut packets: broadcast::Receiver<Packet>,
         initial: HoverTruth,
+        frozen: bool,
     ) -> Self {
         let (truth_tx, truth_rx) = watch::channel(initial);
         let handle = tokio::spawn(async move {
@@ -960,6 +1000,7 @@ impl SyntheticHover {
             let mut model = SyntheticHoverModel::new(initial.alt_m, initial.vz_ms, initial.mass_kg);
             let mut responder = ThrustResponder::default();
             let mut engine_on = initial.engine_on;
+            let mut frozen_pipa = 0.0f64;
 
             loop {
                 tick.tick().await;
@@ -987,13 +1028,39 @@ impl SyntheticHover {
                         return;
                     }
                 }
-                for packet in model.step(responder.cmd_pulses, engine_on) {
-                    if tx.send(packet).is_err() {
+                if frozen {
+                    // Constant lunar-g specific force: the same stream the
+                    // v1 feeder emits, so the AGC integrates a vehicle
+                    // whose altitude rate never changes. Silent before
+                    // ENGINE ON, so the v1 feeder stays the only producer
+                    // until the caller stops it.
+                    if engine_on {
+                        frozen_pipa += HOVER_ACCEL_MS2 / PIPA_INCR * DT;
+                        while frozen_pipa >= 1.0 {
+                            frozen_pipa -= 1.0;
+                            if tx.send(pipa_pulse(PipaAxis::X, true)).is_err() {
+                                return;
+                            }
+                        }
+                    }
+                    // Report the live command against the pinned vehicle,
+                    // which is what a step measurement reads.
+                    let mut truth = initial;
+                    truth.cmd_pulses = responder.cmd_pulses;
+                    truth.thrust_n = (responder.cmd_pulses.max(0) as f64) * THRUST_N_PER_PULSE;
+                    truth.engine_on = engine_on;
+                    if truth_tx.send(truth).is_err() {
                         return;
                     }
-                }
-                if truth_tx.send(model.truth()).is_err() {
-                    return;
+                } else {
+                    for packet in model.step(responder.cmd_pulses, engine_on) {
+                        if tx.send(packet).is_err() {
+                            return;
+                        }
+                    }
+                    if truth_tx.send(model.truth()).is_err() {
+                        return;
+                    }
                 }
             }
         });
@@ -1349,6 +1416,51 @@ mod tests {
         // Nothing after the release — in particular no RSET, which would
         // clear FAILREG along with the lamp.
         assert!(rx.try_recv().is_err());
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn frozen_plant_holds_the_vehicle_and_still_tracks_the_command() {
+        // The whole point: dHDOT must be identically zero so a VDGVERT
+        // step is the only thing moving, while cmd_pulses stays live.
+        let (tx, mut rx) = tokio::sync::mpsc::unbounded_channel();
+        let (pkt_tx, pkt_rx) = tokio::sync::broadcast::channel(256);
+        let initial = HoverTruth {
+            alt_m: 3_000.0,
+            vz_ms: -1.5,
+            mass_kg: 15_000.0,
+            cmd_pulses: 0,
+            thrust_n: 0.0,
+            engine_on: true,
+        };
+        let hover = SyntheticHover::spawn_frozen_plant(tx, pkt_rx, initial);
+        let truth = hover.truth().expect("frozen plant publishes truth");
+
+        // Arm the responder, then drive the throttle up: POUT counter
+        // packets are what CounterDINC produces (agc_io.rs:108-115).
+        pkt_tx.send(Packet::io(0o14, 1 << 3).unwrap()).unwrap();
+        for _ in 0..400 {
+            pkt_tx.send(Packet::counter(0o55, 0o15).unwrap()).unwrap();
+        }
+        tokio::time::sleep(Duration::from_millis(500)).await;
+
+        let t = *truth.borrow();
+        assert_eq!(t.alt_m, initial.alt_m, "altitude must not move");
+        assert_eq!(t.vz_ms, initial.vz_ms, "the rate must not move — dHDOT ≡ 0");
+        assert_eq!(t.mass_kg, initial.mass_kg, "no propellant burn");
+        assert!(
+            t.cmd_pulses > 0,
+            "the command must still be tracked, got {}",
+            t.cmd_pulses
+        );
+
+        // And PIPAX is fed: a constant lunar-g stream, so the AGC's own
+        // altitude rate is constant rather than absent.
+        let mut pipa = 0;
+        while rx.try_recv().is_ok() {
+            pipa += 1;
+        }
+        assert!(pipa > 0, "frozen plant must still feed PIPAX");
+        hover.stop();
     }
 
     #[tokio::test]
