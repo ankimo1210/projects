@@ -468,6 +468,7 @@ mod tests {
             thrust_n: 0.0,
             throttle_cmd_pulses: 0,
             rod_clicks_cum: 0,
+            pipa_pulses_cum: [0; 3],
             jets: 0,
             mm: mm.into(),
             agc_alt_m: None,
