@@ -225,11 +225,8 @@ struct LrState {
     /// Which quantity `RNRAD` currently holds, so a switch between
     /// quantities is driven from the right starting value.
     rnrad_holds: usize,
-    /// The channel-33 word as last presented. The LR position is a
-    /// STANDING discrete the rope polls continuously (`LRPOSCHK`,
-    /// `POS2CHK`), not a reply — flight 14 died at P63 on `LRPOSALM`
-    /// because this responder only wrote ch33 when answering a read.
-    ch33: u16,
+    /// Whether the POS2 discrete has been asserted (one-shot).
+    pos2_asserted: bool,
     /// Seeded error injector; default config is OFF and RNG-free.
     errors: eagle_sensors::lr::LrErrors,
 }
@@ -240,7 +237,7 @@ impl Default for LrState {
             last_ch13: 0,
             rnrad: [0; 4],
             rnrad_holds: 0,
-            ch33: crate::runner::INIT_CH33,
+            pos2_asserted: false,
             errors: eagle_sensors::lr::LrErrors::new(Default::default()),
         }
     }
@@ -708,12 +705,20 @@ impl SimCore {
         // through the descent -- and flight 14 died in the P63 dialog on
         // LRPOSALM (0522) because it was only asserted while answering a
         // read. Present it every tick, before any select is considered.
-        let want = eagle_sensors::lr::apply_lr_bits(lr.ch33, false, false, true);
-        if want != lr.ch33 {
-            lr.ch33 = want;
-            if let Ok(p) = Packet::io(0o33, want) {
-                out.to_agc.push(p);
-            }
+        // Partial write, never a whole word. A local copy of ch33 cannot
+        // work: `runner` mutates the AGC's ch33 independently (it clears
+        // BIT6 for the P63SPOT3 handshake, runner.rs:657) and a cached
+        // copy re-asserts the stale value on the next tick. Flights 14-16
+        // all died at P63 that way. `discrete_write` sends a bitmask, so
+        // only the named bits move.
+        if !lr.pos2_asserted {
+            lr.pos2_asserted = true;
+            out.to_agc
+                .extend(eagle_agc_protocol::agc_io::discrete_write(
+                    0o33,
+                    0,
+                    eagle_sensors::lr::CH33_LR_POS2,
+                ));
         }
 
         let rising = eagle_sensors::lr::decode_ch13(ch13).is_some()
@@ -763,10 +768,12 @@ impl SimCore {
                 }
             }
             // Velocity data good; range not being read this pass.
-            lr.ch33 = eagle_sensors::lr::apply_lr_bits(lr.ch33, false, true, true);
-            if let Ok(p) = Packet::io(0o33, lr.ch33) {
-                out.to_agc.push(p);
-            }
+            out.to_agc
+                .extend(eagle_agc_protocol::agc_io::discrete_write(
+                    0o33,
+                    0,
+                    eagle_sensors::lr::CH33_LR_VEL_DATA_GOOD,
+                ));
             return;
         }
         if alt <= 0.0 {
@@ -777,10 +784,12 @@ impl SimCore {
         // ground. RNRAD is left untouched so the AGC keeps its last good
         // count rather than being handed a fabricated one.
         let Some(measured) = lr.errors.corrupt_range(alt) else {
-            lr.ch33 = eagle_sensors::lr::apply_lr_bits(lr.ch33, false, false, true);
-            if let Ok(p) = Packet::io(0o33, lr.ch33) {
-                out.to_agc.push(p);
-            }
+            out.to_agc
+                .extend(eagle_agc_protocol::agc_io::discrete_write(
+                    0o33,
+                    eagle_sensors::lr::CH33_LR_RANGE_DATA_GOOD,
+                    0,
+                ));
             return;
         };
         let counts = eagle_sensors::lr::alt_counts(measured);
@@ -792,10 +801,12 @@ impl SimCore {
         // SKALSKAL, extends this; that path is not pinned, so the
         // conservative bound is used.)
         if counts.unsigned_abs() > 16_383 {
-            lr.ch33 = eagle_sensors::lr::apply_lr_bits(lr.ch33, false, false, true);
-            if let Ok(p) = Packet::io(0o33, lr.ch33) {
-                out.to_agc.push(p);
-            }
+            out.to_agc
+                .extend(eagle_agc_protocol::agc_io::discrete_write(
+                    0o33,
+                    eagle_sensors::lr::CH33_LR_RANGE_DATA_GOOD,
+                    0,
+                ));
             return;
         }
         // Drive from whatever RNRAD actually holds now, not from this
@@ -811,10 +822,12 @@ impl SimCore {
         }
         // Data good, and the antenna in position 2 — asserted by CLEARING
         // the bits (see eagle_sensors::lr).
-        lr.ch33 = eagle_sensors::lr::apply_lr_bits(lr.ch33, true, false, true);
-        if let Ok(p) = Packet::io(0o33, lr.ch33) {
-            out.to_agc.push(p);
-        }
+        out.to_agc
+            .extend(eagle_agc_protocol::agc_io::discrete_write(
+                0o33,
+                0,
+                eagle_sensors::lr::CH33_LR_RANGE_DATA_GOOD,
+            ));
     }
 
     // 7. THRUST DINC strobe.
@@ -1593,13 +1606,13 @@ mod tests {
         // Data good and in position 2 are asserted by CLEARING the bits.
         // The LAST ch33 write of the tick: the standing position discrete
         // is emitted first, then the read's data-good update.
-        let ch33 = out
-            .to_agc
-            .iter()
-            .rfind(|p| p.channel == 0o33)
-            .expect("ch33 written");
-        assert_eq!(ch33.data & 0o20, 0, "LR range data good => bit clear");
-        assert_eq!(ch33.data & 0o100, 0, "in position 2 => bit clear");
+        // discrete_write emits a bitmask packet then a value packet; the
+        // value carries only the bits being SET, so "good" (a cleared bit)
+        // shows as the bit absent from the value.
+        let ch33: Vec<_> = out.to_agc.iter().filter(|p| p.channel == 0o33).collect();
+        assert!(!ch33.is_empty(), "ch33 written");
+        let value = ch33.last().unwrap();
+        assert_eq!(value.data & 0o20, 0, "LR range data good => bit not set");
 
         // A second tick with the activity bit still up is NOT a new read;
         // the rope clears and re-sets it for each one.
@@ -1625,16 +1638,12 @@ mod tests {
             out.to_agc.iter().any(|p| p.channel == 0o46),
             "a velocity select must be answered"
         );
-        let ch33 = out
-            .to_agc
-            .iter()
-            .rfind(|p| p.channel == 0o33)
-            .expect("ch33 written");
-        assert_eq!(ch33.data & 0o200, 0, "LR VEL data good => bit clear");
-        assert_ne!(
-            ch33.data & 0o20,
+        let ch33: Vec<_> = out.to_agc.iter().filter(|p| p.channel == 0o33).collect();
+        assert!(!ch33.is_empty(), "ch33 written");
+        assert_eq!(
+            ch33.last().unwrap().data & 0o200,
             0,
-            "range is NOT being read this pass, so its bit stays set"
+            "LR VEL data good => bit not set in the value word"
         );
 
         // A rendezvous-radar select must be refused outright -- the LR is
@@ -1701,18 +1710,19 @@ mod tests {
         // No radar select at all.
         core.ch13 = 0;
         let out = core.tick();
-        let ch33 = out
-            .to_agc
-            .iter()
-            .find(|p| p.channel == 0o33)
-            .expect("position must be presented without any read");
-        assert_eq!(ch33.data & 0o100, 0, "in position 2 => BIT7 clear");
-        // Everything init_discretes owns survives.
-        let mask = eagle_sensors::lr::CH33_LR_MASK;
+        let ch33: Vec<_> = out.to_agc.iter().filter(|p| p.channel == 0o33).collect();
+        assert_eq!(ch33.len(), 2, "discrete_write is a bitmask + a value");
+        // The mask names ONLY POS2, so nothing else in ch33 can move --
+        // this is what stops the responder clobbering runner's BIT6.
         assert_eq!(
-            ch33.data & !mask,
-            crate::runner::INIT_CH33 & !mask,
-            "non-LR bits must be preserved"
+            ch33[0].data,
+            eagle_sensors::lr::CH33_LR_POS2,
+            "the write must be masked to POS2 alone"
+        );
+        assert_eq!(
+            ch33[1].data & eagle_sensors::lr::CH33_LR_POS2,
+            0,
+            "POS2 asserted (clear)"
         );
         // And it is not re-sent every tick once it is already correct.
         let again = core.tick();
@@ -1735,7 +1745,7 @@ mod tests {
             last_ch13: 0,
             rnrad: [0; 4],
             rnrad_holds: 0,
-            ch33: crate::runner::INIT_CH33,
+            pos2_asserted: false,
             errors: eagle_sensors::lr::LrErrors::new(eagle_sensors::lr::LrErrorCfg {
                 dropout_probability: 1.0,
                 seed: 5,
@@ -1749,15 +1759,12 @@ mod tests {
             !out.to_agc.iter().any(|p| p.channel == 0o46),
             "a dropout must not drive RNRAD at all"
         );
-        let ch33 = out
-            .to_agc
-            .iter()
-            .rfind(|p| p.channel == 0o33)
-            .expect("ch33 written even on a dropout");
+        let ch33: Vec<_> = out.to_agc.iter().filter(|p| p.channel == 0o33).collect();
+        assert!(!ch33.is_empty(), "ch33 written even on a dropout");
         assert_ne!(
-            ch33.data & 0o20,
+            ch33.last().unwrap().data & 0o20,
             0,
-            "LR range data NOT good => the bit stays SET (active low)"
+            "LR range data NOT good => the bit is SET (active low)"
         );
         assert_eq!(
             core.lr.as_ref().unwrap().rnrad,
