@@ -29,6 +29,7 @@ NOTEBOOKS = [
     ("build_nb04", "04_limit_theorems"),
     ("build_nb05", "05_stochastic_processes"),
     ("build_nb06", "06_estimation_mle"),
+    ("build_nb07", "07_confidence_intervals_bootstrap"),
 ]
 
 
