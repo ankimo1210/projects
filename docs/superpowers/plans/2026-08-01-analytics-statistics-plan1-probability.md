@@ -19,7 +19,7 @@
 - モジュール依存は**一方向**。逆参照を作らない
 - ノートブックの JSON は**手編集しない**。`tools/build_nbNN.py` が唯一の正本
 - ノートブックは**出力込みでコミット**。Jupyter Book ビルド時は再実行しない（`execute_notebooks: "off"`）
-- MyST admonition 内で**約物（「」（）等）に隣接する太字を書かない**（CJK 約物地雷）
+- ~~MyST admonition 内で約物に隣接する太字を書かない~~ — **撤回済み（Task 8 で実測）**。markdown-it は該当する綴りをすべて `<strong>` として描画し、既存 3 書の admonition 56 行が同じ形を使って正常にビルドされている。`nbkit` の `check_typography` は撤去した
 - 全 14 章の再実行が合計 **5 分以内**（Plan 1 の範囲では NB 00–05 で 2 分以内）
 - コールアウトは 💡 **核心**（class: tip）と 🌍 **実社会**（class: note）の 2 種、章あたり各 1–2 個
 - 新規依存は `statsmodels>=0.14` のみ（宣言は Task 1、使用は Plan 2 の M5）
