@@ -11,3 +11,4 @@ chapters:
   - file: notebooks/05_stochastic_processes
   - file: notebooks/06_estimation_mle
   - file: notebooks/07_confidence_intervals_bootstrap
+  - file: notebooks/08_hypothesis_testing
