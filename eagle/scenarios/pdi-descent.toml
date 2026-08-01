@@ -26,10 +26,14 @@ padload = "scenarios/p66-padload.toml"
 lm_weight_lbs = 33530.0            # derived: (7009+7950+250) kg = 15209 kg → V48/N47
 tland_offset_cs = 36000            # derived: proven burn lead from Wave 1 acceptance
 flip_atthold_after_engine_on_s = 2.0   # unused in pdi mode (handover is sim-driven)
-# REVERTED after flight 16 (2026-08-01), same FAILREG = 00522. Defect 7:
-# the responder cached a local copy of ch33 and wrote it whole, so it
-# re-asserted a stale BIT6 over runner's P63SPOT3 handshake every tick.
-# Now fixed with discrete_write (bitmask) -- untested in flight.
+# Flight 17 (2026-08-01): testing defect 7 -- ch33 is now written with a
+# bitmask (discrete_write) instead of a cached whole word, so the
+# responder can no longer clobber runner P63SPOT3 handshake.
+# REVERTED after flight 17 (2026-08-01). Defect 7 IS fixed -- the run
+# cleared P63 for the first time with the radar live -- but it then flew
+# AWAY: vz positive from ignition, altitude to 2496 km, nav_err diverging
+# monotonically to -90 km. The AGC believes it is far too low and thrusts
+# continuously. See defect 8 in sim.rs.
 lrbypass = true
                                    # (vendor/virtualagc/Luminary099/FRESH_START_AND_RESTART.agc:623); abort if missing
 

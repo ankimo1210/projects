@@ -705,6 +705,26 @@ impl SimCore {
         // through the descent -- and flight 14 died in the P63 dialog on
         // LRPOSALM (0522) because it was only asserted while answering a
         // read. Present it every tick, before any select is considered.
+        // DEFECT 8 (flight 17, OPEN): with defects 1-7 fixed the run
+        // cleared P63 for the first time with the radar live -- and then
+        // flew away. vz went POSITIVE at ignition and the vehicle climbed
+        // to 2496 km, nav_err_alt diverging monotonically to -90 km: the
+        // AGC believes it is far too low and thrusts continuously.
+        //
+        // A monotone, one-signed divergence from the FIRST reading is the
+        // signature of a SCALE or SIGN error in the altitude word, not of
+        // timing or handshaking. Candidates, likeliest last:
+        //   * `HSCAL` is negative (-0.3288792) and `alt_counts` uses the
+        //     magnitude.
+        //   * The counter-range gate refuses everything above ~5.4 km, so
+        //     the AGC's first reading arrives abruptly mid-descent instead
+        //     of being tracked in.
+        //   * `RNRAD`'s sign convention: `RADAREAD` takes the magnitude
+        //     through `MASK POSMAX` and the sign bit SEPARATELY via
+        //     `DOUBLE / MASK BIT1` (P20-P25.agc:2882-2884), while this
+        //     responder drives a plain signed counter and never sets that
+        //     bit. Checkable offline.
+        //
         // Partial write, never a whole word. A local copy of ch33 cannot
         // work: `runner` mutates the AGC's ch33 independently (it clears
         // BIT6 for the P63SPOT3 handshake, runner.rs:657) and a cached
