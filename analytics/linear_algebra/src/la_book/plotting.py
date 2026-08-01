@@ -12,6 +12,36 @@ import numpy as np
 VEC_COLORS = ["#d62728", "#1f77b4", "#2ca02c", "#9467bd", "#ff7f0e", "#8c564b"]
 
 
+def _square_box(points, pad: float = 0.12, include_origin: bool = False):
+    """Equal-aspect axis ranges that frame ``points`` (shape (n, 2)) snugly.
+
+    Plotly figures here pin ``scaleanchor`` so x and y share a scale; a range
+    picked from unrelated quantities (eigenvalues, a fixed constant) either
+    clips the drawing or leaves it in a corner of a mostly empty canvas. This
+    returns (x_range, y_range) of equal width centred on the data, so every
+    frame's content is both fully visible and reasonably large.
+    """
+    p = np.asarray(points, dtype=float).reshape(-1, 2)
+    lo, hi = p.min(axis=0), p.max(axis=0)
+    if include_origin:
+        lo, hi = np.minimum(lo, 0.0), np.maximum(hi, 0.0)
+    center = 0.5 * (lo + hi)
+    half = max(0.5 * float(np.max(hi - lo)), 1e-9) * (1.0 + pad)
+    return (
+        [float(center[0] - half), float(center[0] + half)],
+        [float(center[1] - half), float(center[1] + half)],
+    )
+
+
+def _f(a, decimals: int = 4):
+    """Round coordinates before they are embedded in the notebook JSON.
+
+    Slider figures repeat their traces once per frame, so full float64 repr
+    dominates the committed ``.ipynb`` size while adding no visible precision.
+    """
+    return np.round(np.asarray(a, dtype=float), decimals).tolist()
+
+
 def _setup_ax(ax, lim: float, title: str | None = None):
     ax.axhline(0, color="gray", lw=0.8)
     ax.axvline(0, color="gray", lw=0.8)
@@ -290,8 +320,14 @@ def plotly_eigen_sweep(A, n_angles: int = 49, title=None):
 
     A = np.asarray(A, dtype=float)
     w, V = np.linalg.eig(A)
-    lim = 1.3 * max(1.0, float(np.abs(np.linalg.eigvals(A)).max()))
     thetas = np.linspace(0, np.pi, n_angles)
+    # Frame from what is actually drawn: for a non-normal A (a shear, say)
+    # ||Au|| can exceed max|lambda|, so sizing the axes from the eigenvalues
+    # alone would push the red arrow off-screen.
+    us = np.stack([np.cos(thetas), np.sin(thetas)], axis=1)
+    swept = np.vstack([us, us @ A.T, -us, -(us @ A.T)])
+    x_range, y_range = _square_box(swept, include_origin=True)
+    lim = float(x_range[1])
 
     def eig_lines():
         lines = []
@@ -351,8 +387,8 @@ def plotly_eigen_sweep(A, n_angles: int = 49, title=None):
         width=560,
         height=560,
         title=title,
-        xaxis={"range": [-lim, lim], "scaleanchor": "y", "zeroline": True},
-        yaxis={"range": [-lim, lim], "zeroline": True},
+        xaxis={"range": x_range, "scaleanchor": "y", "zeroline": True},
+        yaxis={"range": y_range, "zeroline": True},
         margin={"l": 30, "r": 30, "t": 50, "b": 30},
     )
     return fig
@@ -517,6 +553,14 @@ def plotly_grid_transform(matrices, labels, lim: float = 2.0, title=None):
 
     ticks = np.arange(-lim, lim + 0.25, 0.5)
     t = np.linspace(-lim, lim, 21)
+    mats = [np.asarray(M, dtype=float) for M in matrices]
+    # The grid fills the square [-lim, lim]^2, so its image under M is the
+    # parallelogram spanned by the mapped corners. Framing on those keeps every
+    # matrix in view — a fixed range clipped the strongly shearing ones.
+    box_corners = np.array([[lim, lim, -lim, -lim], [lim, -lim, lim, -lim]])
+    x_range, y_range = _square_box(
+        np.hstack([M @ box_corners for M in mats]).T, include_origin=True
+    )
 
     def grid_traces(A):
         A = np.asarray(A, dtype=float)
@@ -526,8 +570,8 @@ def plotly_grid_transform(matrices, labels, lim: float = 2.0, title=None):
                 out = A @ seg
                 traces.append(
                     go.Scatter(
-                        x=out[0],
-                        y=out[1],
+                        x=_f(out[0]),
+                        y=_f(out[1]),
                         mode="lines",
                         line={"color": "#1f77b4", "width": 1},
                         showlegend=False,
@@ -537,10 +581,9 @@ def plotly_grid_transform(matrices, labels, lim: float = 2.0, title=None):
         return traces
 
     frames = [
-        go.Frame(data=grid_traces(M), name=str(lab))
-        for M, lab in zip(matrices, labels, strict=True)
+        go.Frame(data=grid_traces(M), name=str(lab)) for M, lab in zip(mats, labels, strict=True)
     ]
-    fig = go.Figure(data=grid_traces(matrices[0]), frames=frames)
+    fig = go.Figure(data=grid_traces(mats[0]), frames=frames)
     steps = [
         {
             "args": [[str(lab)], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
@@ -554,8 +597,8 @@ def plotly_grid_transform(matrices, labels, lim: float = 2.0, title=None):
         width=560,
         height=560,
         title=title,
-        xaxis={"range": [-2 * lim, 2 * lim], "scaleanchor": "y", "zeroline": True},
-        yaxis={"range": [-2 * lim, 2 * lim], "zeroline": True},
+        xaxis={"range": x_range, "scaleanchor": "y", "zeroline": True},
+        yaxis={"range": y_range, "zeroline": True},
         margin={"l": 30, "r": 30, "t": 50, "b": 30},
     )
     return fig
@@ -608,15 +651,15 @@ def plotly_image_ranks(img, ks):
     from .decompositions import compression_ratio, svd_lowrank
 
     img = np.asarray(img, dtype=float)
-    approx = {k: svd_lowrank(img, k) for k in ks}
+    # 3 decimals is finer than the 256 grey levels a screen can show, and keeps
+    # each 128x128 frame from writing ~19 characters per pixel into the .ipynb.
+    approx = {k: _f(svd_lowrank(img, k)[::-1], 3) for k in ks}
     frames = [
-        go.Frame(
-            data=[go.Heatmap(z=approx[k][::-1], colorscale="gray", showscale=False)], name=str(k)
-        )
+        go.Frame(data=[go.Heatmap(z=approx[k], colorscale="gray", showscale=False)], name=str(k))
         for k in ks
     ]
     fig = go.Figure(
-        data=[go.Heatmap(z=approx[ks[0]][::-1], colorscale="gray", showscale=False)], frames=frames
+        data=[go.Heatmap(z=approx[ks[0]], colorscale="gray", showscale=False)], frames=frames
     )
     steps = [
         {
@@ -655,27 +698,27 @@ def plotly_svd_spectrum(A, max_k=None, title="Singular value spectrum & cumulati
     share = energy / energy.sum()
     cum = np.cumsum(share)
     idx = np.arange(1, r + 1)
+    # Real spectra decay fast (an image puts ~89% in sigma_1), so on a linear
+    # axis every bar past the third is a flat line at zero — exactly the part
+    # the figure is meant to show. Log scale keeps the whole tail readable.
+    positive = share[share > 0]
+    floor = max(float(positive.min()) if positive.size else 1e-12, float(share.max()) * 1e-6)
+    # One frame per rank is wasteful for a 128-column matrix; sample the slider.
+    ks = idx if r <= 24 else np.unique(np.linspace(1, r, 24).astype(int))
 
-    def traces(k):
-        colors = ["#d62728" if i < k else "#c7c7c7" for i in range(r)]
+    def moving_traces(k):
+        """Only these change with k, so only these travel in each frame."""
         return [
             go.Bar(
-                x=list(idx),
+                x=[int(i) for i in idx],
+                # Not rounded: shares reach 1e-9 and the log axis needs them.
                 y=list(share),
-                marker={"color": colors},
+                marker={"color": ["#d62728" if i < k else "#c7c7c7" for i in range(r)]},
                 name="energy share",
                 showlegend=False,
             ),
             go.Scatter(
-                x=list(idx),
-                y=list(cum),
-                mode="lines",
-                name="cumulative energy",
-                line={"color": "#1f77b4"},
-                yaxis="y2",
-            ),
-            go.Scatter(
-                x=[k],
+                x=[int(k)],
                 y=[float(cum[k - 1])],
                 mode="markers+text",
                 marker={"color": "#1f77b4", "size": 12, "symbol": "circle-open"},
@@ -686,9 +729,23 @@ def plotly_svd_spectrum(A, max_k=None, title="Singular value spectrum & cumulati
             ),
         ]
 
+    cumulative = go.Scatter(
+        x=[int(i) for i in idx],
+        y=_f(cum, 6),
+        mode="lines",
+        name="cumulative energy",
+        line={"color": "#1f77b4"},
+        yaxis="y2",
+    )
+    first = moving_traces(int(ks[0]))
     fig = go.Figure(
-        data=traces(1),
-        frames=[go.Frame(data=traces(int(k)), name=str(int(k))) for k in idx],
+        data=[first[0], cumulative, first[1]],
+        frames=[
+            # traces=[0, 2] pins the static cumulative curve in place instead of
+            # re-sending it with every frame.
+            go.Frame(data=moving_traces(int(k)), traces=[0, 2], name=str(int(k)))
+            for k in ks
+        ],
     )
     steps = [
         {
@@ -699,7 +756,7 @@ def plotly_svd_spectrum(A, max_k=None, title="Singular value spectrum & cumulati
             "label": str(int(k)),
             "method": "animate",
         }
-        for k in idx
+        for k in ks
     ]
     fig.update_layout(
         sliders=[{"steps": steps, "currentvalue": {"prefix": "rank k = "}}],
@@ -707,7 +764,11 @@ def plotly_svd_spectrum(A, max_k=None, title="Singular value spectrum & cumulati
         height=450,
         title=title,
         xaxis={"title": "singular value index"},
-        yaxis={"title": "energy share", "rangemode": "tozero"},
+        yaxis={
+            "title": "energy share (log)",
+            "type": "log",
+            "range": [float(np.log10(floor * 0.5)), float(np.log10(1.5))],
+        },
         yaxis2={
             "title": "cumulative energy",
             "overlaying": "y",
@@ -770,13 +831,23 @@ def plotly_pca_loadings(
 
 
 def plotly_iterative_convergence(
-    A=None, b=None, n_iter: int = 40, title="Iterative solvers: residual vs iteration"
+    A=None,
+    b=None,
+    n_iter: int = 40,
+    title="Iterative solvers: residual vs iteration",
+    precondition: bool = False,
 ):
     """Residual norm per iteration for Jacobi / Gauss-Seidel / Conjugate Gradient.
 
     Reuses :func:`algebra.jacobi`, :func:`algebra.gauss_seidel`,
     :func:`algebra.conjugate_gradient`. Default system is the 1-D Laplacian
     (SPD), where CG converges in far fewer steps than the splitting methods.
+
+    With ``precondition=True`` the default system is instead a *badly scaled*
+    SPD matrix (row scales spanning four orders of magnitude) and a fourth curve
+    shows Jacobi-preconditioned CG. That is the ch.09 story — preconditioning,
+    not the solver, is what buys the iterations — so the appendix gets its own
+    figure rather than repeating the ch.06 one.
     """
     import plotly.graph_objects as go
 
@@ -784,16 +855,30 @@ def plotly_iterative_convergence(
 
     if A is None:
         n = 20
-        A = 2 * np.eye(n) - np.eye(n, k=1) - np.eye(n, k=-1)
+        lap = 2 * np.eye(n) - np.eye(n, k=1) - np.eye(n, k=-1)
+        if precondition:
+            # D^(1/2) L D^(1/2): same sparsity, wildly uneven diagonal, so the
+            # trivial diagonal preconditioner has something real to fix.
+            scale = np.logspace(0.0, 2.0, n)
+            A = (scale[:, None] * lap) * scale[None, :]
+        else:
+            A = lap
     A = np.asarray(A, dtype=float)
     b = np.ones(A.shape[0]) if b is None else np.asarray(b, dtype=float)
     _, rj = jacobi(A, b, n_iter=n_iter, return_history=True)
     _, rg = gauss_seidel(A, b, n_iter=n_iter, return_history=True)
     _, rc = conjugate_gradient(A, b, max_iter=n_iter)
+    curves = [("Jacobi", rj), ("Gauss-Seidel", rg), ("Conjugate Gradient", rc)]
+    if precondition:
+        d = np.diag(A)
+        _, rp = conjugate_gradient(A, b, max_iter=n_iter, M_inv=lambda v, d=d: v / d)
+        curves.append(("CG + Jacobi preconditioner", rp))
     fig = go.Figure()
-    for name, res in [("Jacobi", rj), ("Gauss-Seidel", rg), ("Conjugate Gradient", rc)]:
+    for name, res in curves:
         res = np.clip(np.asarray(res, dtype=float), 1e-16, None)
         fig.add_trace(
+            # Not rounded: residuals span many decades and need relative, not
+            # absolute, precision to stay meaningful on a log axis.
             go.Scatter(x=list(range(len(res))), y=list(res), mode="lines+markers", name=name)
         )
     fig.update_layout(
@@ -857,53 +942,68 @@ def plotly_pagerank(names=None, adj=None, damping: float = 0.85, title="PageRank
 def plotly_gradient_descent_quadratic(
     A=None,
     b=None,
-    lr: float = 0.12,
+    lr: float | None = None,
     n_iter: int = 30,
-    x0=(-2.6, 2.6),
+    x0=(-1.5, 2.5),
     title="Gradient descent on a quadratic bowl",
 ):
     """Contour of f(x) = 0.5 xᵀA x − bᵀx with the GD path revealed by a slider.
 
-    Reuses :func:`algebra.gradient_descent_quadratic`. The anisotropic bowl
-    (unequal eigenvalues) makes the descent zig-zag toward the minimum.
+    Reuses :func:`algebra.gradient_descent_quadratic`. The default is the same
+    ill-conditioned bowl as the static figure in ch.06 (kappa = 30, step
+    1.9 / lambda_max) so that the promised zig-zag actually happens: a mild bowl
+    with a small step gives a smooth monotone curve and quietly contradicts the
+    surrounding text. ``lr=None`` picks 1.9 / lambda_max for whatever ``A`` is
+    passed, keeping any custom bowl just inside the stability limit 2 / lambda_max.
     """
     import plotly.graph_objects as go
 
     from .algebra import gradient_descent_quadratic
 
     if A is None:
-        A = np.array([[3.0, 0.0], [0.0, 1.0]])
+        A = np.array([[30.0, 0.0], [0.0, 1.0]])
+        if b is None:
+            b = np.array([30.0, 1.0])  # minimum at (1, 1)
     A = np.asarray(A, dtype=float)
     b = np.zeros(A.shape[0]) if b is None else np.asarray(b, dtype=float)
+    if lr is None:
+        lr = 1.9 / float(np.linalg.eigvalsh(0.5 * (A + A.T)).max())
     path = gradient_descent_quadratic(A, b, lr=lr, n_iter=n_iter, x0=np.array(x0, dtype=float))
-    span = 3.0
-    g = np.linspace(-span, span, 60)
-    XX, YY = np.meshgrid(g, g)
+    x_range, y_range = _square_box(
+        np.vstack([path, np.linalg.solve(A, b)[None, :]]), pad=0.18
+    )
+    gx = np.linspace(x_range[0], x_range[1], 70)
+    gy = np.linspace(y_range[0], y_range[1], 70)
+    XX, YY = np.meshgrid(gx, gy)
     Z = 0.5 * (A[0, 0] * XX**2 + (A[0, 1] + A[1, 0]) * XX * YY + A[1, 1] * YY**2) - (
         b[0] * XX + b[1] * YY
     )
 
-    def traces(k):
-        return [
-            go.Contour(
-                x=g,
-                y=g,
-                z=Z,
-                showscale=False,
-                contours_coloring="lines",
-                line_width=1,
-                colorscale="Greys",
-            ),
-            go.Scatter(
-                x=list(path[: k + 1, 0]),
-                y=list(path[: k + 1, 1]),
-                mode="lines+markers",
-                name="GD path",
-            ),
-        ]
+    def path_trace(k):
+        return go.Scatter(
+            x=_f(path[: k + 1, 0]),
+            y=_f(path[: k + 1, 1]),
+            mode="lines+markers",
+            line={"color": "#d62728"},
+            name="GD path",
+        )
 
-    frames = [go.Frame(data=traces(k), name=str(k)) for k in range(len(path))]
-    fig = go.Figure(data=traces(0), frames=frames)
+    contour = go.Contour(
+        x=_f(gx),
+        y=_f(gy),
+        z=_f(Z, 3),
+        showscale=False,
+        contours_coloring="lines",
+        line_width=1,
+        colorscale="Greys",
+        hoverinfo="skip",
+    )
+    # The contour never changes; re-sending it in all 31 frames used to make this
+    # single figure ~2.8 MB inside the notebook. traces=[1] updates only the path.
+    frames = [
+        go.Frame(data=[path_trace(k)], traces=[1], name=str(k)) for k in range(len(path))
+    ]
+    fig = go.Figure(data=[contour, path_trace(0)], frames=frames)
     steps = [
         {
             "args": [[str(k)], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
@@ -912,6 +1012,15 @@ def plotly_gradient_descent_quadratic(
         }
         for k in range(len(path))
     ]
+    fig.add_trace(
+        go.Scatter(
+            x=_f([np.linalg.solve(A, b)[0]]),
+            y=_f([np.linalg.solve(A, b)[1]]),
+            mode="markers",
+            marker={"color": "#2ca02c", "size": 14, "symbol": "star"},
+            name="minimum",
+        )
+    )
     fig.update_layout(
         sliders=[{"steps": steps, "currentvalue": {"prefix": "step = "}}],
         xaxis_title="x1",
@@ -920,6 +1029,8 @@ def plotly_gradient_descent_quadratic(
         height=540,
         title=title,
         margin={"l": 50, "r": 20, "t": 50, "b": 40},
+        xaxis={"range": x_range},
+        yaxis={"range": y_range},
     )
     fig.update_yaxes(scaleanchor="x")
     return fig
@@ -1138,14 +1249,17 @@ def plotly_complex_orbit(A, x0=(1.0, 0.0), n_steps: int = 24, title=None):
     for _ in range(n_steps):
         pts.append(A @ pts[-1])
     pts = np.array(pts)
-    lim = 1.2 * max(1.0, float(np.abs(pts).max()))
+    # Frame the orbit itself. Orbits that converge to a fixed point far from the
+    # origin (the 03 migration example lives around (67, 33)) would otherwise sit
+    # in one corner of a huge origin-centred square.
+    x_range, y_range = _square_box(pts, pad=0.15)
 
     def traces(k):
         return [
-            go.Scatter(x=list(pts[: k + 1, 0]), y=list(pts[: k + 1, 1]),
+            go.Scatter(x=_f(pts[: k + 1, 0]), y=_f(pts[: k + 1, 1]),
                        mode="lines+markers", line={"color": "#1f77b4", "width": 1.5},
                        marker={"size": 5}, name="orbit"),
-            go.Scatter(x=[pts[k, 0]], y=[pts[k, 1]], mode="markers",
+            go.Scatter(x=_f([pts[k, 0]]), y=_f([pts[k, 1]]), mode="markers",
                        marker={"color": "#d62728", "size": 12}, name=f"x_{k}"),
         ]
 
@@ -1164,8 +1278,8 @@ def plotly_complex_orbit(A, x0=(1.0, 0.0), n_steps: int = 24, title=None):
         width=560,
         height=560,
         title=title or "軌道 x, Ax, A²x, … （複素固有値なら螺旋）",
-        xaxis={"range": [-lim, lim], "scaleanchor": "y", "zeroline": True},
-        yaxis={"range": [-lim, lim], "zeroline": True},
+        xaxis={"range": x_range, "scaleanchor": "y", "zeroline": True},
+        yaxis={"range": y_range, "zeroline": True},
         margin={"l": 40, "r": 20, "t": 50, "b": 30},
     )
     return fig

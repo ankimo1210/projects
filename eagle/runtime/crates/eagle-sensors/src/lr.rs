@@ -273,6 +273,80 @@ pub fn ch33_bits(range_good: bool, vel_good: bool, in_position_2: bool) -> u16 {
     w
 }
 
+/// Seeded landing-radar error model. `Default` (all zeros) means OFF.
+///
+/// Follows `ImuErrorCfg`'s contract exactly, and for the same reason: an
+/// all-zero config returns the input untouched **without drawing from the
+/// RNG**, so an acceptance run with errors off is deterministic and
+/// RNG-free. A model that drew and discarded would make the acceptance
+/// depend on the seed.
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct LrErrorCfg {
+    /// Range bias, metres. Constant offset on every altitude reading.
+    pub range_bias_m: f64,
+    /// Range scale-factor error, parts per million.
+    pub range_scale_ppm: f64,
+    /// Range white-noise standard deviation, metres.
+    pub range_noise_sigma_m: f64,
+    /// Probability in [0,1] that a reading drops out entirely — the
+    /// radar's real failure mode over broken terrain, and the one the
+    /// AGC's data-good discrete exists to signal.
+    pub dropout_probability: f64,
+    /// RNG seed (ChaCha8), for reproducible sequences.
+    pub seed: u64,
+}
+
+impl LrErrorCfg {
+    fn is_off(&self) -> bool {
+        self.range_bias_m == 0.0
+            && self.range_scale_ppm == 0.0
+            && self.range_noise_sigma_m == 0.0
+            && self.dropout_probability == 0.0
+    }
+}
+
+/// Stateful LR error injector.
+pub struct LrErrors {
+    cfg: LrErrorCfg,
+    off: bool,
+    rng: rand_chacha::ChaCha8Rng,
+}
+
+impl LrErrors {
+    pub fn new(cfg: LrErrorCfg) -> Self {
+        use rand::SeedableRng;
+        let off = cfg.is_off();
+        let rng = rand_chacha::ChaCha8Rng::seed_from_u64(cfg.seed);
+        Self { cfg, off, rng }
+    }
+
+    /// Corrupt one altitude reading. `None` is a dropout, which the caller
+    /// must turn into "data NOT good" rather than into a zero range —
+    /// a zero would read as "on the surface".
+    pub fn corrupt_range(&mut self, range_m: f64) -> Option<f64> {
+        use rand::Rng;
+        if self.off {
+            return Some(range_m);
+        }
+        if self.cfg.dropout_probability > 0.0
+            && self.rng.gen::<f64>() < self.cfg.dropout_probability
+        {
+            return None;
+        }
+        let noise = if self.cfg.range_noise_sigma_m > 0.0 {
+            // Box-Muller, so the sigma means what it says.
+            let (u1, u2): (f64, f64) = (self.rng.gen(), self.rng.gen());
+            let u1 = u1.max(1e-12);
+            self.cfg.range_noise_sigma_m
+                * (-2.0 * u1.ln()).sqrt()
+                * (std::f64::consts::TAU * u2).cos()
+        } else {
+            0.0
+        };
+        Some(range_m * (1.0 + self.cfg.range_scale_ppm * 1e-6) + self.cfg.range_bias_m + noise)
+    }
+}
+
 /// The moon-fixed radius the beams intersect. Kept as a parameter rather
 /// than a constant so a test can use a unit sphere.
 pub type Surface = Mcmf;
@@ -425,6 +499,62 @@ mod tests {
             0o230,
             "DGBITS (P20-P25.agc:2803)"
         );
+    }
+
+    #[test]
+    fn errors_off_is_identity_and_never_touches_the_rng() {
+        // The acceptance runs with errors off and must not depend on the
+        // seed. Two injectors with DIFFERENT seeds must agree exactly.
+        let mut a = LrErrors::new(LrErrorCfg {
+            seed: 1,
+            ..Default::default()
+        });
+        let mut b = LrErrors::new(LrErrorCfg {
+            seed: 999,
+            ..Default::default()
+        });
+        for h in [15_000.0, 250.0, 3.0] {
+            assert_eq!(a.corrupt_range(h), Some(h));
+            assert_eq!(a.corrupt_range(h), b.corrupt_range(h));
+        }
+    }
+
+    #[test]
+    fn a_dropout_is_none_not_a_zero_range() {
+        // A zero would read as "on the surface" and fly the vehicle into
+        // the ground; the caller must turn None into data-NOT-good.
+        let mut e = LrErrors::new(LrErrorCfg {
+            dropout_probability: 1.0,
+            seed: 7,
+            ..Default::default()
+        });
+        assert_eq!(e.corrupt_range(1000.0), None);
+    }
+
+    #[test]
+    fn bias_and_scale_apply_as_documented() {
+        let mut e = LrErrors::new(LrErrorCfg {
+            range_bias_m: 5.0,
+            range_scale_ppm: 1000.0, // 0.1 %
+            seed: 3,
+            ..Default::default()
+        });
+        let got = e.corrupt_range(1000.0).unwrap();
+        assert!((got - (1000.0 * 1.001 + 5.0)).abs() < 1e-9, "{got}");
+    }
+
+    #[test]
+    fn the_same_seed_reproduces_the_same_sequence() {
+        let cfg = LrErrorCfg {
+            range_noise_sigma_m: 2.0,
+            seed: 42,
+            ..Default::default()
+        };
+        let mut a = LrErrors::new(cfg.clone());
+        let mut b = LrErrors::new(cfg);
+        for _ in 0..20 {
+            assert_eq!(a.corrupt_range(500.0), b.corrupt_range(500.0));
+        }
     }
 
     #[test]
