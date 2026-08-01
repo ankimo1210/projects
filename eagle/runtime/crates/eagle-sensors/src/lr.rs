@@ -199,6 +199,80 @@ pub fn alt_counts(range_m: f64) -> i32 {
     (range_m / LR_ALT_M_PER_COUNT).trunc() as i32
 }
 
+/// Which quantity the AGC has selected on channel 13.
+///
+/// Bit 4 is RADAR ACTIVITY and bits 1-3 are the A,B,C select; the rope
+/// writes activity+select together (`P20-P25.agc:2738-2755`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RadarSelect {
+    LrAlt,
+    LrVelX,
+    LrVelY,
+    LrVelZ,
+    /// A rendezvous-radar quantity: the LR must not answer it.
+    Rendezvous,
+}
+
+/// Channel 13's radar field: bit 4 activity, bits 1-3 select.
+const CH13_ACTIVITY: u16 = 0o10;
+const CH13_SELECT: u16 = 0o7;
+
+/// Decode a channel-13 value into the selected quantity, or `None` when
+/// no read is in progress.
+///
+/// `None` for a cleared activity bit is not an error: the rope clears all
+/// radar bits with `CS ALLREAD / WAND CHAN13` before setting the new
+/// select (`P20-P25.agc:2785-2792`), and yaAGC itself clears bit 4 when
+/// the gate completes (`agc_engine.c:2232`).
+pub fn decode_ch13(ch13: u16) -> Option<RadarSelect> {
+    if ch13 & CH13_ACTIVITY == 0 {
+        return None;
+    }
+    match ch13 & CH13_SELECT {
+        7 => Some(RadarSelect::LrAlt),
+        4 => Some(RadarSelect::LrVelX),
+        5 => Some(RadarSelect::LrVelY),
+        6 => Some(RadarSelect::LrVelZ),
+        1 | 2 => Some(RadarSelect::Rendezvous),
+        _ => None,
+    }
+}
+
+/// Channel 33's data-good bits, **active low**.
+///
+/// `DGBITS OCT 230` (`P20-P25.agc:2803`) = bit 4 RR + bit 5 LR range +
+/// bit 8 LR velocity. The rope reads them with `RAND CHAN33` and treats
+/// ZERO as good, so "data is good" means the bit is CLEAR — see this
+/// module's header for the `SERVICER.agc:749` proof.
+pub const CH33_RR_DATA_GOOD: u16 = 0o10;
+pub const CH33_LR_RANGE_DATA_GOOD: u16 = 0o20;
+pub const CH33_LR_POS1: u16 = 0o40;
+pub const CH33_LR_POS2: u16 = 0o100;
+pub const CH33_LR_VEL_DATA_GOOD: u16 = 0o200;
+
+/// Build the channel-33 word the LR should be presenting.
+///
+/// Every bit here is asserted by CLEARING it, so this starts from
+/// all-set and clears what is true. Getting this backwards makes the
+/// radar either invisible or permanently alarmed (`LRPOSALM`, 0522).
+pub fn ch33_bits(range_good: bool, vel_good: bool, in_position_2: bool) -> u16 {
+    let mut w = CH33_RR_DATA_GOOD
+        | CH33_LR_RANGE_DATA_GOOD
+        | CH33_LR_POS1
+        | CH33_LR_POS2
+        | CH33_LR_VEL_DATA_GOOD;
+    if range_good {
+        w &= !CH33_LR_RANGE_DATA_GOOD;
+    }
+    if vel_good {
+        w &= !CH33_LR_VEL_DATA_GOOD;
+    }
+    if in_position_2 {
+        w &= !CH33_LR_POS2;
+    }
+    w
+}
+
 /// The moon-fixed radius the beams intersect. Kept as a parameter rather
 /// than a constant so a test can use a unit sphere.
 pub type Surface = Mcmf;
@@ -299,6 +373,58 @@ mod tests {
         // so half a quantum must not become a whole one.
         assert_eq!(alt_counts(LR_ALT_M_PER_COUNT * 1.9), 1);
         assert_eq!(alt_counts(LR_ALT_M_PER_COUNT * 0.9), 0);
+    }
+
+    #[test]
+    fn ch13_decodes_the_ropes_own_select_codes() {
+        // The exact octals the lead-in routines write (P20-P25.agc:2739-2755).
+        assert_eq!(decode_ch13(0o17), Some(RadarSelect::LrAlt));
+        assert_eq!(decode_ch13(0o16), Some(RadarSelect::LrVelZ));
+        assert_eq!(decode_ch13(0o15), Some(RadarSelect::LrVelY));
+        assert_eq!(decode_ch13(0o14), Some(RadarSelect::LrVelX));
+        assert_eq!(decode_ch13(0o12), Some(RadarSelect::Rendezvous));
+        assert_eq!(decode_ch13(0o11), Some(RadarSelect::Rendezvous));
+    }
+
+    #[test]
+    fn ch13_without_the_activity_bit_is_not_a_read() {
+        // The rope clears all radar bits before setting a new select, and
+        // yaAGC clears bit 4 when the gate completes. Neither is an error.
+        for sel in 0..8u16 {
+            assert_eq!(decode_ch13(sel), None, "select {sel} without activity");
+        }
+        // Unrelated channel-13 traffic must not look like a radar read.
+        assert_eq!(decode_ch13(0o400), None); // RHC counter enable, bit 8
+    }
+
+    #[test]
+    fn data_good_is_asserted_by_clearing_the_bit() {
+        // The trap this module exists to document. "Good" is a ZERO bit.
+        let good = ch33_bits(true, true, true);
+        assert_eq!(good & CH33_LR_RANGE_DATA_GOOD, 0, "range good => bit clear");
+        assert_eq!(good & CH33_LR_VEL_DATA_GOOD, 0, "vel good => bit clear");
+        assert_eq!(good & CH33_LR_POS2, 0, "in position 2 => bit clear");
+
+        let bad = ch33_bits(false, false, false);
+        assert_ne!(bad & CH33_LR_RANGE_DATA_GOOD, 0);
+        assert_ne!(bad & CH33_LR_VEL_DATA_GOOD, 0);
+        assert_ne!(bad & CH33_LR_POS2, 0);
+    }
+
+    #[test]
+    fn the_rope_sees_our_bits_the_way_servicer_tests_them() {
+        // SERVICER.agc:749  CAF BIT7 / RAND CHAN33 / BZF UPDATCHK
+        // i.e. "in position 2" iff (ch33 & BIT7) == 0.
+        let in_pos2 = ch33_bits(true, true, true);
+        assert_eq!(in_pos2 & 0o100, 0, "BZF would branch: LR is in POS2");
+        let not_pos2 = ch33_bits(true, true, false);
+        assert_ne!(not_pos2 & 0o100, 0, "BZF would not branch: LRPOSALM");
+        // And DGBITS masks exactly the three data-good bits.
+        assert_eq!(
+            CH33_RR_DATA_GOOD | CH33_LR_RANGE_DATA_GOOD | CH33_LR_VEL_DATA_GOOD,
+            0o230,
+            "DGBITS (P20-P25.agc:2803)"
+        );
     }
 
     #[test]
