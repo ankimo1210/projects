@@ -47,6 +47,14 @@ The root `conftest.py` imports same-named packages explicitly so that a
 full-workspace `pytest` run does not break them via namespace packages
 (pytest 9 behavior); keep it when touching test config.
 
+`make lint` and the full-workspace `pytest` are green as of 2026-08-01, so a red
+result means the change under test broke something — diagnose it rather than
+assuming it predates you. Every member declares what it imports, including
+indirect (`health` declares `scipy` for `pandas.corr(method="spearman")`) and
+dev tooling its own CI invokes; the shared `.venv` hides omissions that
+`uv sync --package <member>` exposes. See
+`docs/decisions/0002-workspace-green-and-declared-dependencies.md`.
+
 ## Docs & knowledge layers (ADR 0001)
 
 See `docs/decisions/0001-workspace-docs-and-knowledge-layers.md`.
