@@ -195,6 +195,21 @@ pub const LR_ALT_M_PER_COUNT: f64 = 0.328_879_2;
 /// Truncation, not rounding: a counter accumulates whole pulses, and the
 /// residual belongs to the caller so successive readings do not lose it —
 /// the same carry-forward the PIPA model uses.
+/// The largest altitude the `RNRAD` counter can carry on the AGC's HIGH
+/// altitude scale: 16383 counts x `LR_ALT_M_PER_COUNT`.
+///
+/// `RNRAD` is a 15-bit counter, and `HSCAL` is 1.079 ft/bit
+/// (`CONTROLLED_CONSTANTS.agc:168`), so the high scale tops out here and
+/// the low scale (x `SKALSKAL`, .2 nominal) at a fifth of it. Flight 18
+/// asked it to carry 15 213 m = 46 257 counts. Altitude data-good must
+/// not be asserted above this — see the ledger's defect 9.
+pub const LR_ALT_MAX_M: f64 = 16_383.0 * LR_ALT_M_PER_COUNT;
+
+/// Whether the LR can report this altitude at all on the high scale.
+pub fn alt_in_counter_range(range_m: f64) -> bool {
+    range_m.abs() <= LR_ALT_MAX_M
+}
+
 pub fn alt_counts(range_m: f64) -> i32 {
     // NEGATED, because `HSCAL` is negative (-0.3288792) and the AGC
     // multiplies the reading by it (`SERVICER.agc:1144-1147`,
@@ -1045,5 +1060,34 @@ mod tests {
             };
             assert!((r - altitude(pos, R)).abs() < 1e-6, "h={h}");
         }
+    }
+}
+
+#[cfg(test)]
+mod defect9_tests {
+    use super::*;
+
+    #[test]
+    fn the_counter_cannot_carry_the_braking_phase() {
+        // Flight 18's ignition altitude. The point of the constant is that
+        // this is OUT of range, not in it.
+        assert!(!alt_in_counter_range(15_213.0));
+        assert!(alt_counts(15_213.0).unsigned_abs() > 16_383);
+    }
+
+    #[test]
+    fn the_counter_covers_the_approach_and_the_handover() {
+        // The gate the scenario hands over at, and P64's own altitudes.
+        assert!(alt_in_counter_range(250.0));
+        assert!(alt_in_counter_range(1_500.0));
+        assert!(alt_in_counter_range(5_000.0));
+    }
+
+    #[test]
+    fn the_range_limit_is_the_counter_times_the_quantum() {
+        assert!((LR_ALT_MAX_M - 5387.4).abs() < 1.0, "{LR_ALT_MAX_M}");
+        // Exactly at the edge is representable; one quantum past is not.
+        assert!(alt_in_counter_range(LR_ALT_MAX_M));
+        assert!(!alt_in_counter_range(LR_ALT_MAX_M + LR_ALT_M_PER_COUNT));
     }
 }

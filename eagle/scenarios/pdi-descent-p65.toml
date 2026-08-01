@@ -1,5 +1,10 @@
 schema = 1
-name = "pdi-descent"
+name = "pdi-descent-p65"
+# Wave 2 M1, P65 variant: identical to `pdi-descent.toml` except that the
+# sim-driven P64->P66 handover is REMOVED, so the rope flies its own
+# automatic landing (P64 -> P65) instead. Diagnostic scenario for ledger
+# items 2 and 4 -- NOT the acceptance gate.
+#
 # Wave 2 M1: the real descent. Truth starts AT the pad-loaded PDI ignition
 # point (padload::pdi_truth_state — single source with generate_state), in
 # the pad-load's MCI frame: site radial = +X at TLAND, orbit plane = XY.
@@ -34,29 +39,34 @@ flip_atthold_after_engine_on_s = 2.0   # unused in pdi mode (handover is sim-dri
 # AWAY: vz positive from ignition, altitude to 2496 km, nav_err diverging
 # monotonically to -90 km. The AGC believes it is far too low and thrusts
 # continuously. See defect 8 in sim.rs.
-# Flight 18 (2026-08-01): defect 8 IS fixed. Negating the altitude count
-# stopped the runaway -- the vehicle braked normally from 15.2 km at
-# -28 m/s where flight 17 had climbed to 2496 km. REVERTED again because
-# the flight still crashed (119.6 / 770.0 m/s): the AGC's altitude now
-# oscillates +-3 km instead of diverging, which is DEFECT 9 -- the LR
-# pad-load block was never loaded and nothing declares the altitude scale.
-# See sim.rs and the ledger's section 12.
-lrbypass = true
+# Flight 18 (2026-08-01): testing defect 8 -- the altitude count is now
+# NEGATED, because HSCAL is negative and the AGC multiplies by it. Flight
+# 17 sent positive counts, so the AGC read a negative altitude and flew
+# away.
+lrbypass = false
                                    # (vendor/virtualagc/Luminary099/FRESH_START_AND_RESTART.agc:623); abort if missing
 
-[handover]
-# measured: run 3 (build/traces/telem-m1-run3.jsonl). NOT the historical
-# 500 ft / 150 m: P64 flies the approach down to ~237 m and hands to P65
-# there, and this rope's P65 entry is where the run dies (PROG alarm + the
-# guidance stops modulating the throttle — see the ledger note). At 150 m
-# the handover therefore never fires inside P64.
-#   run 3 at 250 m truth altitude: TIG+639.5 s, MM still 64, vz -1.7 m/s,
-#   v_horiz 5.8 m/s, tilt 12.5 deg, DPS 824 kg, AGC's own alt 56 m.
-# 250 m fires ~11 s before that run's P64->P65 switch (truth 236 m) and is
-# still above its lowest truth altitude (233.7 m), so the gate is crossed
-# even if P65 starts first.
-alt_m = 250.0
-
+# NO [handover] BLOCK -- that is the whole point of this scenario.
+#
+# `pdi-descent.toml` hands the rope from P64 to P66 at 250 m to jump over
+# P65, because P65 entry is where earlier runs died with a PROG alarm
+# (ledger item 2, code never read). The cost of that jump is item 4:
+# P66's law is scalar and vertical (`P66VERTA`/`RODCOMP`), so nothing
+# nulls horizontal velocity, and the handover state measured 5.8 m/s of
+# it against an acceptance limit of 1.5.
+#
+# P65's law IS the vector one:
+#
+#     ACG = (V2FG - VGU) / TAUVERT
+#
+# (`LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:911-922`.) Nulling horizontal
+# velocity is structurally P65's job. `phase9_handover` returns
+# immediately when `handover_alt_m` is None (`sim.rs:895`), so omitting
+# the block simply lets the rope fly its own P64 -> P65 sequence.
+#
+# The `[rod]` schedule below is inert here: RODCOUNT is only read by
+# P66's RODCOMP. It is left in place so this file differs from the
+# acceptance scenario in exactly one thing.
 [rod]
 # measured: run 3's P64 endgame (above) for the entry rate, run 4 for the
 # step SIZE. Values are the commanded VDGVERT DELTA from the P66-entry
