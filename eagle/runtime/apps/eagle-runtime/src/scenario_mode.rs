@@ -68,8 +68,9 @@ pub async fn run(cfg: Cfg) -> Result<()> {
         );
     }
     eprintln!(
-        "[accept] alarm episodes {:?}; PROG lamp frames after ignition {}",
-        result.alarms, result.prog_lamp_frames
+        "[accept] alarm episodes {:?}; PROG lamp frames after ignition {} \
+         pre-contact, {} post-contact",
+        result.alarms, result.prog_lamp_frames, result.prog_lamp_frames_post_contact
     );
     // `agc_rate` — the AGC clock rate the acceptance gate asserts on —
     // alongside `sim pacing lost`, which is what separates a slow AGC from

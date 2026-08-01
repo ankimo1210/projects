@@ -15,7 +15,15 @@ from src.parse.parse_shareholders import main as parse_shareholders
 from src.report.charts import build_chart_data
 from src.report.tables import format_case_summary, records
 from src.utils.formatting import fmt_jpy_bn, fmt_jpy_mn, fmt_multiple, fmt_pct
-from src.utils.sources import CONFIG_DIR, OUTPUT_DIR, PROJECT_ROOT, load_sources, load_yaml, now_jst_iso, write_sources_bibliography
+from src.utils.sources import (
+    CONFIG_DIR,
+    OUTPUT_DIR,
+    PROJECT_ROOT,
+    load_sources,
+    load_yaml,
+    now_jst_iso,
+    write_sources_bibliography,
+)
 
 
 def ensure_base_outputs() -> None:

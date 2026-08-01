@@ -1,9 +1,8 @@
 import math
 
 import pandas as pd
-import pytest
-
 import prepare
+import pytest
 
 
 def test_sharpe_known_value():
@@ -32,6 +31,6 @@ def test_load_prices_missing_raises(monkeypatch, tmp_path):
     monkeypatch.setattr(prepare, "PRICES_PATH", str(tmp_path / "nope.parquet"))
     try:
         prepare.load_prices()
-        assert False, "expected FileNotFoundError"
+        raise AssertionError("expected FileNotFoundError")
     except FileNotFoundError as e:
         assert "prepare.py" in str(e)

@@ -18,8 +18,8 @@ import json
 from pathlib import Path
 
 from gto.trainer.preflop_data import (
-    RANKS,
     FACING_RANGES,
+    RANKS,
     RFI_BY_POS,
     VS_3BET_RANGES,
 )

@@ -5,7 +5,7 @@
 //! starting points that the live runs validated or corrected.
 
 use crate::padload::PadWord;
-use crate::script::DskyScript;
+use crate::script::{DskyScript, EntryStatus};
 use anyhow::{bail, ensure, Context, Result};
 use eagle_agc_protocol::agc_io::{
     decode_output, discrete_write, pipa_pulse, thrust_dinc, AgcOutput, PipaAxis, ThrustPulse,
@@ -89,6 +89,34 @@ pub const REFSMBIT: u16 = 0o10000;
 pub const FLAGWRD8_ECADR: u16 = 0o104;
 /// CMOONFLG | LMOONFLG.
 pub const FLAGWRD8_MOON_BITS: u16 = 0o4000 | 0o2000;
+
+/// `FLGWRD12` = `RADMODES` = `STATE +12D`, ECADR 0o110
+/// (`FLAGWORD_ASSIGNMENTS.agc:1110-1112`; the listing resolves `RADMODES`
+/// to 0110, and 0o104 = `STATE +8` fixes `STATE` = 0o74).
+pub const FLGWRD12_ECADR: u16 = 0o110;
+
+/// `ALTSCBIT` = BIT9 (`FLAGWORD_ASSIGNMENTS.agc:1147`), the LR altitude
+/// scale factor: **set = high scale, clear = low scale**.
+///
+/// **Nothing in the rope ever writes this bit.** `SERVICER.agc:1137` is
+/// its only reference in Luminary099, and the same holds in Luminary131
+/// and Luminary210 — it is external state the landing radar supplies, so
+/// in this architecture we are the only thing that can supply it.
+///
+/// Leaving it clear is not neutral. Fresh start zeroes the flagwords, so
+/// the low-scale branch runs and the AGC multiplies the reading by
+/// `SKALSKAL` — a pad load (`ERASABLE_ASSIGNMENTS.agc:813`, ".2 NOM")
+/// that `scenarios/p66-padload.toml` does not load, i.e. **zero**. The
+/// slant range collapses and `DELTAH = 0 - HCALC` drags the AGC's own
+/// altitude toward the surface on every update.
+///
+/// High scale is the right declaration and not merely the convenient one:
+/// it uses `HSCAL` alone, so it needs no `SKALSKAL` at all, and its
+/// quantum is the one `eagle_sensors::lr::LR_ALT_M_PER_COUNT` already
+/// encodes. Setting it read-modify-write matters — `RADMODES` carries
+/// live radar bits, and a blunt manifest write would clobber them, the
+/// hazard `p66-padload.toml` already documents for `FLAGWRD8`.
+pub const ALTSCBIT: u16 = 0o400;
 /// FLGWRD11 = STATE +11D, unswitched ECADR 0o107 (`Luminary099.log:3262`:
 /// `26,2022  0107  FLGWRD11 = STATE +11D`). LRBYPASS is its BIT15
 /// (`vendor/virtualagc/Luminary099/FLAGWORD_ASSIGNMENTS.agc:1040-1041`).
@@ -242,7 +270,7 @@ pub async fn read_dp(script: &mut DskyScript, ecadr: u16) -> Result<i64> {
 /// swallow that broke the in-flight reads). Releasing the display and
 /// waiting for its repaint burst to subside first is what makes the load
 /// land.
-pub async fn rod_load(script: &mut DskyScript, clicks: i16) -> Result<()> {
+pub async fn rod_load(script: &mut DskyScript, clicks: i16) -> Result<EntryStatus> {
     let word = eagle_agc_protocol::words::sp_encode(clicks);
     script
         .grab_dsky()
@@ -255,8 +283,26 @@ pub async fn rod_load(script: &mut DskyScript, clicks: i16) -> Result<()> {
             octal5(word)
         ))
         .await
-        .with_context(|| format!("ROD load {clicks:+} clicks"))
+        .with_context(|| format!("ROD load {clicks:+} clicks"))?;
+    // Let the AGC answer before sampling its lamps. 300 ms is the settle
+    // this file already uses for a register rewrite, and >> the ~120 ms
+    // DSKY relay cadence.
+    tokio::time::sleep(Duration::from_millis(ROD_SETTLE_MS)).await;
+    let status = script.entry_status();
+    // Hand the display back whether or not the entry was accepted. A
+    // latched KEY REL suppresses P66's VERTDISP for the REST OF THE RUN,
+    // which is how flight 7 (2026-07-31) came back with 6 distinct
+    // HDOTDISP values in 222 s of P66 and no measurement.
+    script
+        .release_dsky()
+        .await
+        .with_context(|| format!("ROD load {clicks:+} clicks: release DSKY"))?;
+    Ok(status)
 }
+
+/// Settle time between the ROD load's last ENTR and sampling the AGC's
+/// rejection lamps.
+const ROD_SETTLE_MS: u64 = 300;
 
 /// Wait for the AGC's ISS turn-on delay complete (ch 012 bit15, ~90 s
 /// after `init_discretes`), then drop the turn-on request like the real
@@ -932,8 +978,48 @@ impl SyntheticHover {
     /// stop the v1 feeder first so PIPAX has exactly one producer.
     pub fn spawn_closed_loop(
         tx: mpsc::UnboundedSender<Packet>,
+        packets: broadcast::Receiver<Packet>,
+        initial: HoverTruth,
+    ) -> Self {
+        Self::spawn_loop(tx, packets, initial, false)
+    }
+
+    /// Spawn the same THRUST/DINC loop with the **plant frozen**: the AGC's
+    /// throttle commands are tracked, so `cmd_pulses` is live, but they do
+    /// not move the vehicle. PIPAX gets a constant lunar-g specific force,
+    /// exactly like the v1 feeder, so **the AGC's own altitude rate is
+    /// constant by construction**.
+    ///
+    /// This is what makes an open-loop step test of P66's force law
+    /// possible. With `dHDOT` identically zero, stepping `VDGVERT` by a
+    /// known amount gives
+    ///
+    /// ```text
+    ///   TAUROD = dVDGVERT / d(a_cmd)
+    /// ```
+    ///
+    /// with no transient to dominate the step and no dependence on the
+    /// AGC's navigation agreeing with truth. Both of those sank the first
+    /// attempt, which used the live plant: the vehicle free-fell to
+    /// −47 m/s during the ZOOMTIME idle phase, and `dHDOT` swamped
+    /// `dVDGVERT` 70× (see
+    /// `docs/superpowers/notes/2026-07-31-m1b-rod-loop.md` §7a).
+    ///
+    /// Like the live loop, this stays silent until ENGINE ON so it can be
+    /// spawned alongside the v1 feeder without two producers on PIPAX.
+    pub fn spawn_frozen_plant(
+        tx: mpsc::UnboundedSender<Packet>,
+        packets: broadcast::Receiver<Packet>,
+        initial: HoverTruth,
+    ) -> Self {
+        Self::spawn_loop(tx, packets, initial, true)
+    }
+
+    fn spawn_loop(
+        tx: mpsc::UnboundedSender<Packet>,
         mut packets: broadcast::Receiver<Packet>,
         initial: HoverTruth,
+        frozen: bool,
     ) -> Self {
         let (truth_tx, truth_rx) = watch::channel(initial);
         let handle = tokio::spawn(async move {
@@ -942,6 +1028,7 @@ impl SyntheticHover {
             let mut model = SyntheticHoverModel::new(initial.alt_m, initial.vz_ms, initial.mass_kg);
             let mut responder = ThrustResponder::default();
             let mut engine_on = initial.engine_on;
+            let mut frozen_pipa = 0.0f64;
 
             loop {
                 tick.tick().await;
@@ -969,13 +1056,39 @@ impl SyntheticHover {
                         return;
                     }
                 }
-                for packet in model.step(responder.cmd_pulses, engine_on) {
-                    if tx.send(packet).is_err() {
+                if frozen {
+                    // Constant lunar-g specific force: the same stream the
+                    // v1 feeder emits, so the AGC integrates a vehicle
+                    // whose altitude rate never changes. Silent before
+                    // ENGINE ON, so the v1 feeder stays the only producer
+                    // until the caller stops it.
+                    if engine_on {
+                        frozen_pipa += HOVER_ACCEL_MS2 / PIPA_INCR * DT;
+                        while frozen_pipa >= 1.0 {
+                            frozen_pipa -= 1.0;
+                            if tx.send(pipa_pulse(PipaAxis::X, true)).is_err() {
+                                return;
+                            }
+                        }
+                    }
+                    // Report the live command against the pinned vehicle,
+                    // which is what a step measurement reads.
+                    let mut truth = initial;
+                    truth.cmd_pulses = responder.cmd_pulses;
+                    truth.thrust_n = (responder.cmd_pulses.max(0) as f64) * THRUST_N_PER_PULSE;
+                    truth.engine_on = engine_on;
+                    if truth_tx.send(truth).is_err() {
                         return;
                     }
-                }
-                if truth_tx.send(model.truth()).is_err() {
-                    return;
+                } else {
+                    for packet in model.step(responder.cmd_pulses, engine_on) {
+                        if tx.send(packet).is_err() {
+                            return;
+                        }
+                    }
+                    if truth_tx.send(model.truth()).is_err() {
+                        return;
+                    }
                 }
             }
         });
@@ -1100,6 +1213,9 @@ pub async fn run_scenario(
     set_flag_bits(script, FLAGWRD3_ECADR, REFSMBIT)
         .await
         .context("REFSMFLG")?;
+    set_flag_bits(script, FLGWRD12_ECADR, ALTSCBIT)
+        .await
+        .context("LR altitude scale (ALTSCBIT)")?;
 
     let alarms = enter_p63_with_alarms(script).await.context("P63 dialog")?;
     wait_engine_on(packets, Duration::from_secs(180))
@@ -1316,7 +1432,8 @@ mod tests {
             "KEY_REL", // release the P66 flight display first
             "VERB", "2", "1", "NOUN", "0", "1", "ENTR", // V21N01E
             "0", "3", "7", "4", "6", "ENTR", // RODCOUNT ECADR
-            "7", "7", "7", "7", "5", "ENTR", // −2
+            "7", "7", "7", "7", "5", "ENTR",    // −2
+            "KEY_REL", // hand the flight display back so VERTDISP repaints
         ];
         for name in expected {
             let want = eagle_agc_protocol::keys::DskyKey::from_name(name)
@@ -1325,8 +1442,84 @@ mod tests {
             assert_eq!(rx.recv().await.unwrap(), want, "key {name}");
         }
         // No V01N01 read-back: RODCOMP consumes RODCOUNT with XCH, so a
-        // verify would race the AGC and spuriously fail.
+        // verify would race the AGC and spuriously fail. Acceptance is
+        // checked PASSIVELY instead, off the KEY REL / OPR ERR lamps.
+        // Nothing after the release — in particular no RSET, which would
+        // clear FAILREG along with the lamp.
         assert!(rx.try_recv().is_err());
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn frozen_plant_holds_the_vehicle_and_still_tracks_the_command() {
+        // The whole point: dHDOT must be identically zero so a VDGVERT
+        // step is the only thing moving, while cmd_pulses stays live.
+        let (tx, mut rx) = tokio::sync::mpsc::unbounded_channel();
+        let (pkt_tx, pkt_rx) = tokio::sync::broadcast::channel(256);
+        let initial = HoverTruth {
+            alt_m: 3_000.0,
+            vz_ms: -1.5,
+            mass_kg: 15_000.0,
+            cmd_pulses: 0,
+            thrust_n: 0.0,
+            engine_on: true,
+        };
+        let hover = SyntheticHover::spawn_frozen_plant(tx, pkt_rx, initial);
+        let truth = hover.truth().expect("frozen plant publishes truth");
+
+        // Arm the responder, then drive the throttle up: POUT counter
+        // packets are what CounterDINC produces (agc_io.rs:108-115).
+        pkt_tx.send(Packet::io(0o14, 1 << 3).unwrap()).unwrap();
+        for _ in 0..400 {
+            pkt_tx.send(Packet::counter(0o55, 0o15).unwrap()).unwrap();
+        }
+        tokio::time::sleep(Duration::from_millis(500)).await;
+
+        let t = *truth.borrow();
+        assert_eq!(t.alt_m, initial.alt_m, "altitude must not move");
+        assert_eq!(t.vz_ms, initial.vz_ms, "the rate must not move — dHDOT ≡ 0");
+        assert_eq!(t.mass_kg, initial.mass_kg, "no propellant burn");
+        assert!(
+            t.cmd_pulses > 0,
+            "the command must still be tracked, got {}",
+            t.cmd_pulses
+        );
+
+        // And PIPAX is fed: a constant lunar-g stream, so the AGC's own
+        // altitude rate is constant rather than absent.
+        let mut pipa = 0;
+        while rx.try_recv().is_ok() {
+            pipa += 1;
+        }
+        assert!(pipa > 0, "frozen plant must still feed PIPAX");
+        hover.stop();
+    }
+
+    #[tokio::test]
+    async fn rod_load_reports_a_rejected_entry() {
+        // ch0163 KEY REL = 020: the AGC refused the entry, so RODCOUNT is
+        // unwritten and VDGVERT did not move. Flight 7 (2026-07-31) shows
+        // what silence costs — a refused load froze the flight display for
+        // the remaining 216 s of P66.
+        let (tx, _rx) = tokio::sync::mpsc::unbounded_channel();
+        let mut rejected = DskyState::default();
+        rejected.apply(&Packet::io(0o163, 0o20).unwrap());
+        let (_wtx, wrx) = tokio::sync::watch::channel(rejected);
+        let mut script = DskyScript::new(tx, wrx);
+        script.set_key_delay(Duration::ZERO);
+
+        let status = rod_load(&mut script, -2).await.unwrap();
+        assert!(status.rejected(), "{status:?}");
+        assert!(status.key_rel);
+        assert!(!status.opr_err);
+    }
+
+    #[tokio::test]
+    async fn rod_load_reports_a_clean_entry() {
+        let (tx, _rx) = tokio::sync::mpsc::unbounded_channel();
+        let (_wtx, wrx) = tokio::sync::watch::channel(DskyState::default());
+        let mut script = DskyScript::new(tx, wrx);
+        script.set_key_delay(Duration::ZERO);
+        assert!(!rod_load(&mut script, -2).await.unwrap().rejected());
     }
 
     /// Key-count fixture: a raw (unverified) V21N01 load is 19 keys

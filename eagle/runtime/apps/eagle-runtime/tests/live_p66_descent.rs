@@ -102,8 +102,9 @@ async fn p66_soft_landing_closed_loop() {
     // P63 responder handled (a non-whitelisted code aborts the run before
     // it gets here, so anything printed was swallowed with RSET).
     eprintln!(
-        "[accept] alarm episodes {:?}; PROG lamp frames after ignition {}",
-        result.alarms, result.prog_lamp_frames
+        "[accept] alarm episodes {:?}; PROG lamp frames after ignition {} \
+         pre-contact, {} post-contact",
+        result.alarms, result.prog_lamp_frames, result.prog_lamp_frames_post_contact
     );
     // `agc_rate` is the quantity the clock gate below asserts on; see the
     // provenance block there. Printed here so it survives an earlier

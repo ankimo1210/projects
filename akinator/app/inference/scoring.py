@@ -12,7 +12,8 @@ from enum import Enum
 from app.models import Answer, Entity, Question
 
 
-class MatchResult(str, Enum):
+# See app/models.py: str+Enum is kept on purpose over StrEnum.
+class MatchResult(str, Enum):  # noqa: UP042
     MATCH = "match"
     MISMATCH = "mismatch"
     MISSING = "missing"

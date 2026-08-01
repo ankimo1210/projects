@@ -8,6 +8,11 @@ dependencies = [
     "plotly>=6.0",
     "duckdb>=1.1",
     "pandas>=2.2",
+    # pandas dispatches .corr(method="spearman") to scipy.stats.spearmanr,
+    # so analytics.lagged_correlation needs scipy even though nothing
+    # imports it directly. Without it `uv sync --package health` gives a
+    # working-looking install that raises ModuleNotFoundError at runtime.
+    "scipy>=1.11",
     "requests>=2.32",
     "python-dotenv>=1.0",
 ]
@@ -20,7 +25,10 @@ build-backend = "hatchling.build"
 packages = ["src/health"]
 
 [dependency-groups]
-dev = ["pytest>=8.0"]
+# The workflow runs `uv sync --package health` and then calls ruff, so ruff
+# has to be in *this* package's dev group -- the workspace-root dev group is
+# not installed by a --package sync.
+dev = ["pytest>=8.0", "ruff>=0.6"]
 
 [tool.pytest.ini_options]
 addopts = "-ra --import-mode=importlib"

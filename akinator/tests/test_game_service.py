@@ -1,4 +1,6 @@
+from app.models import Answer
 from app.services.entity_service import EntityService
+from app.services.game_service import GameService, GameState
 
 
 def test_entity_service_lookup(small_pool, small_questions):
@@ -9,8 +11,6 @@ def test_entity_service_lookup(small_pool, small_questions):
     assert len(svc.questions) == 4
 
 
-from app.models import Answer
-from app.services.game_service import GameService, GameState
 
 
 def test_initial_scores_zero_and_first_question(small_pool, small_questions):

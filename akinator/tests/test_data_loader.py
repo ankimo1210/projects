@@ -1,3 +1,11 @@
+import json
+
+from app.data_loader import (
+    dump_entities,
+    dump_questions,
+    load_entities,
+    load_questions,
+)
 from app.models import Answer, Entity, Question
 
 
@@ -34,11 +42,6 @@ def test_answer_enum_values():
         "yes", "no", "probably_yes", "probably_no", "unknown",
     }
 
-
-import json
-from app.data_loader import (
-    dump_entities, dump_questions, load_entities, load_questions,
-)
 
 
 def test_entities_roundtrip(tmp_path):

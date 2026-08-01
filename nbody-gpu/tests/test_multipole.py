@@ -74,10 +74,10 @@ def test_every_internal_node_combines_children(cupy_available):
 
     for k in range(n - 1):
         gid = n + k
-        l, r = left[k], right[k]
-        m = nm[l] + nm[r]
+        li, ri = left[k], right[k]
+        m = nm[li] + nm[ri]
         assert abs(nm[gid] - m) <= 1e-3 * max(m, 1e-6), f"node {k}: mass {nm[gid]} != {m}"
-        expected_com = (nm[l] * nc[l] + nm[r] * nc[r]) / max(m, 1e-30)
+        expected_com = (nm[li] * nc[li] + nm[ri] * nc[ri]) / max(m, 1e-30)
         assert np.allclose(nc[gid], expected_com, atol=1e-4), (
             f"node {k}: com {nc[gid]} != {expected_com}"
         )

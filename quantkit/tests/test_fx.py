@@ -5,6 +5,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
+
 from quantkit.data import fx_adjusted_returns, invert_quote, to_base_currency
 
 

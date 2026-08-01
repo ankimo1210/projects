@@ -75,6 +75,9 @@ def test_plotly_bandit_regret_thompson_wins():
 def test_plotly_gibbs_path_reveals():
     fig = viz.plotly_gibbs_path(rho=0.8, n_steps=60, n_frames=10)
     assert len(fig.frames) >= 2
-    # contour + chain per frame; chain grows over frames.
-    assert len(fig.frames[-1].data) == 2
-    assert len(fig.frames[-1].data[1].x) > len(fig.frames[0].data[1].x)
+    # The target density is static, so it stays in fig.data (trace 0) and a
+    # frame carries only the growing chain (trace 1).
+    assert len(fig.data) == 2  # density contour + chain
+    assert len(fig.frames[-1].data) == 1
+    assert tuple(fig.frames[-1].traces) == (1,)
+    assert len(fig.frames[-1].data[0].x) > len(fig.frames[0].data[0].x)

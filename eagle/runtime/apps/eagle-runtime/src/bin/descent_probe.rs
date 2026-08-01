@@ -600,7 +600,18 @@ async fn main() -> Result<()> {
             // RODCOUNT load. `rod` below drives the raw ch016 discrete,
             // which this emulator never turns into a MARKRUPT.
             "rodw" => match arg1.and_then(|s| s.parse::<i16>().ok()) {
-                Some(clicks) => runner::rod_load(&mut init.script, clicks).await,
+                Some(clicks) => match runner::rod_load(&mut init.script, clicks).await {
+                    Ok(status) if status.rejected() => {
+                        eprintln!(
+                            "rodw {clicks:+}: AGC REJECTED the load (key_rel={} opr_err={}) \
+                             — RODCOUNT unwritten, VDGVERT unmoved",
+                            status.key_rel, status.opr_err
+                        );
+                        Ok(())
+                    }
+                    Ok(_) => Ok(()),
+                    Err(e) => Err(e),
+                },
                 None => {
                     eprintln!("usage: rodw <clicks>  (negative = descend faster)");
                     Ok(())

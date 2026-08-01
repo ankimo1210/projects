@@ -44,12 +44,21 @@ impl SymTab {
     pub fn from_listing(text: &str) -> Result<SymTab> {
         let mut by_name = HashMap::new();
         for line in text.lines() {
-            // The trailing `\t# comment` column never contains ERASE/EQUALS
-            // for a real definition line; drop it before tokenizing so
-            // comment text can't be mistaken for a code token.
+            // The trailing `\t# comment` column never contains a definition
+            // keyword for a real definition line; drop it before tokenizing
+            // so comment text can't be mistaken for a code token.
             let code = line.split('\t').next().unwrap_or(line);
             let tokens: Vec<&str> = code.split_whitespace().collect();
-            let Some(kw_idx) = tokens.iter().position(|t| *t == "ERASE" || *t == "EQUALS") else {
+            // `=` is yaYUL's synonym for `EQUALS` and the listing uses both:
+            // `TAUROD EQUALS RODSCALE +1` but `VGU = TPIP +2`
+            // (ERASABLE_ASSIGNMENTS.agc:1408 vs :2536). Missing `=` left
+            // LAND, VGU, VDGVERT and every other `=`-defined erasable
+            // unresolvable — harmless for the pad load, which never asked
+            // for one, but it blocked reading them out of a core dump.
+            let Some(kw_idx) = tokens
+                .iter()
+                .position(|t| *t == "ERASE" || *t == "EQUALS" || *t == "=")
+            else {
                 continue;
             };
             if kw_idx < 2 {
@@ -350,11 +359,21 @@ pub const P66_BSCALE_TABLE: &[BScaleEntry] = &[
     },
     BScaleEntry {
         symbol: "TAUROD",
-        status: BScaleStatus::Unverified,
-        note: "vendor/virtualagc/Luminary099/LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:1042-1044 \
-               (\"BDSU DDV / VDGVERT / TAUROD\") divides \
-               a VDGVERT-derived quantity by TAUROD; VDGVERT's own b-scale is not established in the \
-               cited excerpt, so TAUROD's can't be pinned in isolation.",
+        status: BScaleStatus::Verified,
+        note: "b=11, CENTISECONDS. MEASURED live 2026-07-31 by an open-loop step test on a frozen \
+               plant (tests/live_rod_step.rs): STARTP66 sets VDGVERT from the current altitude rate \
+               (LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:157), so after the -1 selection click the rate \
+               error is exactly -0.3048 m/s and a_cmd = g - 0.3048/TAUROD with every other term \
+               known. At 15195 kg the candidates predict 1718 bits (b=14), 979 (b=12) or the zero \
+               stop (b=11); the AGC drove to the ZERO STOP, requiring tau <= 0.3048/1.62 = 0.1881 s \
+               against b=11's 0.1875 s -- a 0.3% match. The measurement is one-sided; the \
+               derivation bounds the candidate set to {11,12} (b = b(VDGVERT) - b(accel) = 7 - b_acc, \
+               b_acc either -4 per THROTTLE_CONTROL_ROUTINES.agc:206 or -5 if the BDDV by the \
+               DOT-built cosine at :1051-1058 shifts one power of two), and the measurement excludes \
+               12. SUPERSEDES b=14, which came from the VBRFG/VIGN velocity scale (b=10) -- not the \
+               scale of the two words this divide actually uses. At b=14 the AGC read the committed \
+               150 cs word as 18.75 cs = 0.1875 s, an 8x too-fast rate loop against THROTLAG's \
+               0.2 s. See docs/superpowers/notes/2026-07-31-m1b-rod-loop.md.",
     },
     BScaleEntry {
         symbol: "LAG/TAU",
@@ -1054,6 +1073,24 @@ mod tests {
     use super::*;
 
     #[test]
+    fn symtab_resolves_equals_sign_definitions() {
+        // yaYUL accepts `=` as a synonym for EQUALS and the real listing
+        // uses both forms; only handling EQUALS made LAND/VGU/VDGVERT
+        // invisible.
+        let text = concat!(
+            "005961,002536: E7,1745  E7,1626               VGU                =        TPIP       +2\n",
+            "004860,001408: E5,1642  E5,1540               TAUROD             EQUALS   RODSCALE   +1\n",
+        );
+        let st = SymTab::from_listing(text).unwrap();
+        assert_eq!(st.ecadr("TAUROD"), Some(0o2540));
+        assert_eq!(
+            st.ecadr("VGU"),
+            Some(0o3626),
+            "E7,1626 -> 7*0o400 + (0o1626-0o1400)"
+        );
+    }
+
+    #[test]
     fn symtab_parses_fixture() {
         let text = include_str!("../tests/fixtures/symtab_excerpt.txt");
         let st = SymTab::from_listing(text).unwrap();
@@ -1233,8 +1270,16 @@ mod tests {
         let err = check_bscales(false).unwrap_err();
         let msg = format!("{err:#}");
         assert!(
-            msg.contains("TAUROD"),
+            msg.contains("MINFORCE"),
             "should name unverified entries: {msg}"
+        );
+        // TAUROD was measured live on 2026-07-31 (see its table entry) and
+        // must no longer appear here. Nothing in that work pinned the
+        // other three, and the discarded command-floor inference is
+        // exactly why they stay Unverified.
+        assert!(
+            !msg.contains("TAUROD"),
+            "TAUROD is measured and must not be listed as unverified: {msg}"
         );
         assert!(check_bscales(true).is_ok());
     }

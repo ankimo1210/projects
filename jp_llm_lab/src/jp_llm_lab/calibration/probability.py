@@ -18,6 +18,7 @@ calibration is NOT the same as factual correctness / hallucination rate.
 from __future__ import annotations
 
 import math
+from itertools import pairwise
 
 import torch
 import torch.nn.functional as F
@@ -61,7 +62,7 @@ def collect_logits(model, tokens: torch.Tensor, n_batches: int, batch_size: int,
 
 def _bin_stats(conf: torch.Tensor, correct: torch.Tensor, edges: torch.Tensor) -> list[dict]:
     bins = []
-    for lo, hi in zip(edges[:-1], edges[1:], strict=True):
+    for lo, hi in pairwise(edges):
         mask = (conf > lo) & (conf <= hi)
         n = int(mask.sum())
         if n == 0:

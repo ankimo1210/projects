@@ -52,10 +52,19 @@ descent-p66-fast: agc
 # every M1 flight). Not in CI. Does NOT land — see the M1 status block in
 # README.md. The earlier "~18-19 min / ~95.2%" here was the Wave 1 budget
 # and Wave 1's clock figure, neither measured on this target.
+#
+# Always captures the raw packet trace. Flight 7 (2026-07-31) did not, and
+# so the KEY REL / OPR ERR lamp state that would have confirmed a refused
+# ROD load outright was unrecoverable after the fact — a 20-minute flight
+# short of one answer for want of a flag. EAGLE_TELEM_OUT and
+# EAGLE_ATT_DEBUG stay opt-in, but they need ABSOLUTE paths: the runtime's
+# cwd is runtime/, and a relative path from here lands somewhere else.
 descent-full: agc
+	mkdir -p build/traces
 	cd runtime && cargo run -p eagle-runtime -- \
 	  --yaagc ../build/agc/yaAGC --core ../build/agc/Luminary099.bin \
-	  --scenario ../scenarios/pdi-descent.toml --root ..
+	  --scenario ../scenarios/pdi-descent.toml --root .. \
+	  --trace-out ../build/traces/pkt-descent-full.jsonl
 
 lint:
 	cd runtime && cargo clippy --workspace --all-targets -- -D warnings

@@ -9,11 +9,13 @@ All operate on a list of generated token-id sequences (or a single one):
 
 from __future__ import annotations
 
+from itertools import pairwise
+
 
 def repetition_rate(ids: list[int]) -> float:
     if len(ids) < 2:
         return 0.0
-    return sum(1 for a, b in zip(ids, ids[1:], strict=False) if a == b) / (len(ids) - 1)
+    return sum(1 for a, b in pairwise(ids) if a == b) / (len(ids) - 1)
 
 
 def distinct_n(ids: list[int], n: int) -> float:

@@ -1,5 +1,5 @@
-from app.question_gen import generate_questions
 from app.models import Entity
+from app.question_gen import generate_questions
 
 
 def _pool():
