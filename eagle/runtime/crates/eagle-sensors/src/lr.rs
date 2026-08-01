@@ -485,6 +485,31 @@ pub const CDUSPOT_ORDER: [&str; 3] = ["Y (LRBETA)", "Z (zero)", "X (LRALPHA)"];
 /// reverse.
 pub const SMNB_ROTATION_ORDER: [&str; 3] = ["X (alpha)", "Z (zero)", "Y (beta)"];
 
+/// Metres per second per count, for the three LR velocity beams.
+///
+/// `CONTROLLED_CONSTANTS.agc:172-174`, under a banner reading
+/// "***** THE SEQUENCE OF THE FOLLOWING CONSTANTS MUST BE PRESERVED *****":
+///
+/// ```text
+///   VZSCAL  2DEC  +.5410829105   # SCALES .8668 FT/SEC/BIT TO 2(18) M/CS.
+///   VYSCAL  2DEC  +.7565672446   # SCALES 1.212 FT/SEC/BIT TO 2(18) M/CS.
+///   VXSCAL  2DEC  -.4020043770   # SCALES -.644 FT/SEC/BIT TO 2(18) M/CS.
+/// ```
+///
+/// **The three beams have DIFFERENT quanta, and X's is NEGATIVE** — a
+/// sign asymmetry that is easy to miss and would invert one axis of every
+/// velocity update.
+///
+/// Each constant is its stated ft/s quantum times exactly **2.048**,
+/// which holds for all three to five digits (see the test). That is the
+/// b=18 m/cs encoding, and it is what makes these derived rather than
+/// transcribed.
+pub const LR_VEL_MS_PER_COUNT: [f64; 3] = [
+    -0.644 * 0.3048, // X
+    1.212 * 0.3048,  // Y
+    0.8668 * 0.3048, // Z
+];
+
 /// Transform a vector from LR ANTENNA axes to the navigation base.
 ///
 /// # Derivation, from the live-verified CDU convention
@@ -858,6 +883,35 @@ mod tests {
             (n - 1.0).abs() < 1e-4,
             "unit to HBEAMANT's own precision: {n}"
         );
+    }
+
+    #[test]
+    fn the_velocity_quanta_match_the_ropes_own_constants() {
+        // Same "derived, not transcribed" guard as the altitude quantum.
+        // Each VxSCAL is its stated ft/s quantum times exactly 2.048 --
+        // the b=18 m/cs encoding.
+        for (constant, ft_per_s) in [
+            (0.541_082_910_5_f64, 0.8668_f64),
+            (0.756_567_244_6, 1.212),
+            (-0.402_004_377_0, -0.644),
+        ] {
+            let ms = ft_per_s * 0.3048;
+            assert!(
+                (constant / ms - 2.048).abs() < 1e-4,
+                "{constant} / {ms} = {}, expected 2.048",
+                constant / ms
+            );
+        }
+        // And the exported quanta are those ft/s figures in metres.
+        assert!((LR_VEL_MS_PER_COUNT[2] - 0.8668 * 0.3048).abs() < 1e-12);
+        // X is NEGATIVE. Losing this inverts one axis of every update.
+        // (Read through a binding so clippy sees a runtime assertion, not
+        // a const-folded one -- the point is to fail if the TABLE changes.)
+        let q = LR_VEL_MS_PER_COUNT;
+        assert!(q[0] < 0.0, "VXSCAL's sign is negative: {q:?}");
+        assert!(q[1] > 0.0 && q[2] > 0.0, "{q:?}");
+        // All three differ -- one shared quantum would be wrong.
+        assert!((q[1] - q[2]).abs() > 0.1, "{q:?}");
     }
 
     #[test]
