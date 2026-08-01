@@ -510,6 +510,25 @@ pub const LR_VEL_MS_PER_COUNT: [f64; 3] = [
     0.8668 * 0.3048, // Z
 ];
 
+/// The LR velocity zero offset, in counts.
+///
+/// `CONTROLLED_CONSTANTS.agc:150`:
+/// `LVELBIAS  DEC  -12288   # LANDING RADAR BIAS FOR 153.6 KC.`
+///
+/// The radar's velocity beams are frequency-modulated about a carrier, so
+/// zero velocity is a non-zero count; the AGC removes the offset with
+/// `AD LVELBIAS` on the raw word (`P20-P25.agc:2880`). Since the AGC
+/// ADDS -12288, a simulator driving the counter must place the reading at
+/// `count + 12288` — i.e. SUBTRACT the (negative) bias — or every
+/// velocity beam is offset by 12288 counts.
+pub const LVELBIAS_COUNTS: i32 = -12288;
+
+/// Convert a beam velocity to the raw count the AGC expects to read,
+/// including the carrier offset.
+pub fn vel_raw_counts(along_ms: f64, ms_per_count: f64) -> i32 {
+    (along_ms / ms_per_count).trunc() as i32 - LVELBIAS_COUNTS
+}
+
 /// Transform a vector from LR ANTENNA axes to the navigation base.
 ///
 /// # Derivation, from the live-verified CDU convention
@@ -912,6 +931,22 @@ mod tests {
         assert!(q[1] > 0.0 && q[2] > 0.0, "{q:?}");
         // All three differ -- one shared quantum would be wrong.
         assert!((q[1] - q[2]).abs() > 0.1, "{q:?}");
+    }
+
+    #[test]
+    fn the_velocity_bias_round_trips_the_way_the_agc_removes_it() {
+        // The AGC does `AD LVELBIAS` on the raw word, so raw + (-12288)
+        // must recover the count. Getting the sign backwards offsets every
+        // beam by 24576 counts, which is worse than not applying it.
+        let q = LR_VEL_MS_PER_COUNT[2];
+        for v in [0.0_f64, 5.0, -5.0, 40.0] {
+            let raw = vel_raw_counts(v, q);
+            let recovered = raw + LVELBIAS_COUNTS;
+            let expect = (v / q).trunc() as i32;
+            assert_eq!(recovered, expect, "v = {v}");
+        }
+        // Zero velocity is NOT a zero count -- that is the whole point.
+        assert_eq!(vel_raw_counts(0.0, q), 12288);
     }
 
     #[test]

@@ -188,9 +188,9 @@ struct LrState {
     ///   MASK BIT1         # sign/overflow bit read separately
     /// ```
     ///
-    /// Fixed by tracking the driven count per quantity (below). Still
-    /// outstanding: `LVELBIAS` is not applied to the velocity beams, so
-    /// even a correct count is offset by that bias.
+    /// Fixed by tracking the driven count per quantity (below), and the
+    /// velocity beams now carry the `LVELBIAS` carrier offset the AGC
+    /// removes with `AD LVELBIAS`.
     /// Counts already driven into `RNRAD`, **per quantity**: altitude,
     /// then the three velocity beams. Four independent readings share one
     /// counter in the AGC, so the responder must know what it last left
@@ -684,7 +684,9 @@ impl SimCore {
         };
         if let Some(i) = idx {
             let (along, quantum) = vel_beam(i);
-            let counts = (along / quantum).trunc() as i32;
+            // Includes the carrier offset the AGC removes with
+            // `AD LVELBIAS`; zero velocity is NOT a zero count.
+            let counts = eagle_sensors::lr::vel_raw_counts(along, quantum);
             let delta = counts - lr.rnrad[lr.rnrad_holds];
             lr.rnrad[i + 1] = counts;
             lr.rnrad_holds = i + 1;
