@@ -35,6 +35,17 @@ impl AgcSession {
             .parent()
             .with_context(|| format!("{core_bin:?} has no parent directory"))?;
 
+        // `EAGLE_DUMP_TIME` shortens yaAGC's erasable-checkpoint interval
+        // from the default 10 s (agc_cli.c:188) so a forensic run can
+        // capture every 2 s servicer pass instead of one in five.
+        //
+        // OFF BY DEFAULT, and it must stay that way: the dump is a
+        // synchronous ~18 KB write in yaAGC's main loop, and at 1 s it
+        // delayed the AGC enough to blow the pad-load read-back
+        // (`V01N01 read of 02027 failed 3 times`) — flight 12 died before
+        // ignition. Raise it only for a run whose purpose is the dump,
+        // and expect the boot choreography to be the thing at risk.
+        let dump_time = std::env::var("EAGLE_DUMP_TIME").ok();
         let mut child = Command::new(&yaagc_bin)
             .arg(format!("--core={}", core_bin.display()))
             .arg(format!("--port={}", cfg.port))
@@ -46,14 +57,7 @@ impl AgcSession {
             // across separate boots by exactly the cumulative run time,
             // and a stale-state POODOO aborted P00).
             .arg("--no-resume")
-            // Dump erasable every second instead of the default 10
-            // (agc_cli.c:188). The servicer runs a 2 s pass, so this
-            // captures EVERY pass's DELV rather than one in five, which
-            // is what a sent-versus-received check on the accelerometer
-            // path needs: at ~430 passes the standard error drops below
-            // the 5e-4 effect being measured. Sampling one pass in five
-            // resolved only 2.7e-3 (2026-07-31 ledger, 9j).
-            .arg("--dump-time=1")
+            .args(dump_time.iter().map(|d| format!("--dump-time={d}")))
             .current_dir(core_dir)
             .stdout(Stdio::null())
             .stderr(Stdio::null())
