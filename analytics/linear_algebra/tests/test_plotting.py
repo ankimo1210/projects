@@ -228,3 +228,102 @@ def test_plotly_iterative_convergence_preconditioned_variant():
     assert "CG + Jacobi preconditioner" in by_name
     # On the badly scaled system, preconditioning beats plain CG.
     assert by_name["CG + Jacobi preconditioner"].min() < by_name["Conjugate Gradient"].min()
+
+
+# --- new interactive 3-D / graph / step-replay figures -----------------------
+
+
+def test_plotly_rank_collapse_3d_shows_one_axis_per_surviving_dimension():
+    rng = np.random.default_rng(0)
+    cloud = rng.standard_normal((80, 3))
+    mats = [
+        np.eye(3),
+        np.array([[1.0, 0, 1], [0, 1, 1], [1, 1, 2]]),  # rank 2
+        np.outer([1.0, 0.5, 0.2], [1.0, 1.0, 1.0]),  # rank 1
+    ]
+    fig = viz.plotly_rank_collapse_3d(cloud, mats, ["rank 3", "rank 2", "rank 1"])
+    assert len(fig.frames) == 3
+    # The basis trace draws one segment (3 points incl. the None break) per axis.
+    for frame, expected in zip(fig.frames, [3, 2, 1], strict=True):
+        assert len(frame.data[1].x) == 3 * expected
+    # A cube aspect keeps a flattened cloud from being autoscaled back to a blob.
+    assert fig.layout.scene.aspectmode == "cube"
+
+
+def test_plotly_least_squares_3d_minimises_at_the_projection():
+    fig = viz.plotly_least_squares_3d(n_steps=21)
+    dists = [float(s.label.split("=")[-1].rstrip(")")) for s in fig.layout.sliders[0].steps]
+    # The sweep passes through the foot of the perpendicular: the minimum is
+    # interior, and it is the projection distance.
+    assert 0 < int(np.argmin(dists)) < len(dists) - 1
+    A = np.array([[1.0, 0.0], [0.6, 1.0], [0.0, 0.4]])
+    b = np.array([0.6, 0.4, 1.6])
+    p = A @ np.linalg.solve(A.T @ A, A.T @ b)
+    np.testing.assert_allclose(min(dists), np.linalg.norm(b - p), atol=5e-3)
+
+
+def test_plotly_graph_draws_every_edge_and_scales_nodes_by_value():
+    from la_book.algebra import page_rank
+    from la_book.datasets import make_web_graph
+
+    names, adj = make_web_graph()
+    ranks = page_rank(adj)
+    fig = viz.plotly_graph(adj, names, node_value=ranks, directed=True)
+    # Directed: one arrow annotation per link, and x/y carry 3 entries per edge.
+    n_edges = int(adj.sum())
+    assert len(fig.layout.annotations) == n_edges
+    assert len(fig.data[0].x) == 3 * n_edges
+    sizes = np.asarray(fig.data[1].marker.size, dtype=float)
+    assert np.argmax(sizes) == int(np.argmax(ranks))  # the hub is the biggest node
+
+
+def test_spring_layout_is_deterministic_and_bounded():
+    from la_book.datasets import make_two_cluster_graph
+
+    adj, _ = make_two_cluster_graph(n_per=8, seed=1)
+    p1 = viz._spring_layout(adj, seed=3)
+    p2 = viz._spring_layout(adj, seed=3)
+    np.testing.assert_allclose(p1, p2)
+    assert np.isfinite(p1).all() and np.abs(p1).max() <= 1.0 + 1e-9
+
+
+def test_plotly_rref_steps_replays_every_row_operation():
+    from la_book.algebra import rref, rref_steps
+
+    Ab = np.array([[2.0, 1.0, 8.0], [1.0, 3.0, 9.0]])
+    R, piv, steps = rref_steps(Ab)
+    R_ref, piv_ref = rref(Ab)
+    np.testing.assert_allclose(R, R_ref, atol=1e-12)
+    assert piv == piv_ref
+    fig = viz.plotly_rref_steps(Ab)
+    # Frame 0 is the starting matrix, then one frame per recorded operation.
+    assert len(fig.frames) == len(steps) + 1
+    assert fig.frames[0].name.startswith("0.")
+    # The last frame shows the RREF itself.
+    np.testing.assert_allclose(np.asarray(fig.frames[-1].data[0].z)[::-1], R, atol=1e-9)
+
+
+def test_plotly_char_poly_collapses_the_square_at_an_eigenvalue():
+    A = np.array([[2.0, 1.0], [1.0, 2.0]])  # eigenvalues 1 and 3
+    fig = viz.plotly_char_poly(A, n_steps=41)
+    dets = [float(s.label.split("det=")[1].rstrip(")")) for s in fig.layout.sliders[0].steps]
+    lams = [float(s.label.split("λ=")[1].split()[0]) for s in fig.layout.sliders[0].steps]
+    # det(A - lambda I) really is what the label claims, and it changes sign
+    # between the two eigenvalues.
+    for lam, det in zip(lams, dets, strict=True):
+        np.testing.assert_allclose(np.linalg.det(A - lam * np.eye(2)), det, atol=5e-3)
+    assert min(dets) < 0 < max(dets)
+
+
+def test_plotly_svd_rank_explorer_links_image_and_spectrum():
+    img = make_test_image(48)
+    fig = viz.plotly_svd_rank_explorer(img, ks=[1, 5, 20])
+    assert len(fig.frames) == 3
+    # Every frame updates both panels from the same k.
+    for frame in fig.frames:
+        assert tuple(frame.traces) == (0, 1)
+        assert len(frame.data) == 2
+    # Higher k retains more energy, and the label says so.
+    pct = [float(s.label.split("説明 ")[1].split("%")[0]) for s in fig.layout.sliders[0].steps]
+    assert pct == sorted(pct)
+    assert fig.layout.yaxis2.type == "log"

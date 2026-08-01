@@ -41,6 +41,69 @@ def rank(A, tol: float = 1e-10) -> int:
     return len(rref(A, tol=tol)[1])
 
 
+def rref_steps(A, tol: float = 1e-10):
+    """RREF with the elimination recorded, one row operation at a time.
+
+    Gauss-Jordan is a *procedure*, but :func:`rref` only ever shows its result.
+    This returns (R, pivot_cols, steps) where ``steps`` is a list of dicts::
+
+        {"matrix": ndarray,      # state AFTER the operation
+         "kind": "swap" | "scale" | "eliminate",
+         "rows": (i, j) | "row": i | ("target", "source"),
+         "factor": float,        # for scale / eliminate
+         "pivot": (row, col)}    # pivot the operation is working on
+
+    The op is described structurally rather than as a sentence so the caller
+    picks the wording (the notebooks label them in Japanese).
+    """
+    R = np.array(A, dtype=float)
+    n_rows, n_cols = R.shape
+    pivots: list[int] = []
+    steps: list[dict] = []
+    row = 0
+    for col in range(n_cols):
+        if row >= n_rows:
+            break
+        p = row + int(np.argmax(np.abs(R[row:, col])))
+        if abs(R[p, col]) < tol:
+            continue
+        if p != row:
+            R[[row, p]] = R[[p, row]]
+            steps.append(
+                {"matrix": R.copy(), "kind": "swap", "rows": (row, p), "pivot": (row, col)}
+            )
+        if not np.isclose(R[row, col], 1.0):
+            factor = 1.0 / R[row, col]
+            R[row] = R[row] * factor
+            steps.append(
+                {
+                    "matrix": R.copy(),
+                    "kind": "scale",
+                    "row": row,
+                    "factor": float(factor),
+                    "pivot": (row, col),
+                }
+            )
+        for r in range(n_rows):
+            if r != row and abs(R[r, col]) > tol:
+                factor = -R[r, col]
+                R[r] = R[r] + factor * R[row]
+                steps.append(
+                    {
+                        "matrix": R.copy(),
+                        "kind": "eliminate",
+                        "target": r,
+                        "source": row,
+                        "factor": float(factor),
+                        "pivot": (row, col),
+                    }
+                )
+        pivots.append(col)
+        row += 1
+    R[np.abs(R) < tol] = 0.0
+    return R, pivots, steps
+
+
 def gram_schmidt(V, tol: float = 1e-12):
     """Orthonormalize the columns of V (classical Gram-Schmidt).
 

@@ -383,7 +383,7 @@ def plotly_eigen_sweep(A, n_angles: int = 49, title=None):
         for th in thetas
     ]
     fig.update_layout(
-        sliders=[{"steps": steps, "currentvalue": {"prefix": "angle (deg) = "}}],
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "角度（度） = "}}],
         width=560,
         height=560,
         title=title,
@@ -670,10 +670,10 @@ def plotly_image_ranks(img, ks):
         for k in ks
     ]
     fig.update_layout(
-        sliders=[{"steps": steps, "currentvalue": {"prefix": "rank = "}}],
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "ランク = "}}],
         width=460,
         height=500,
-        title="low-rank image approximation",
+        title="低ランク近似（ランク k を動かす）",
         xaxis={"visible": False},
         yaxis={"visible": False, "scaleanchor": "x"},
         margin={"l": 20, "r": 20, "t": 50, "b": 20},
@@ -714,7 +714,7 @@ def plotly_svd_spectrum(A, max_k=None, title="Singular value spectrum & cumulati
                 # Not rounded: shares reach 1e-9 and the log axis needs them.
                 y=list(share),
                 marker={"color": ["#d62728" if i < k else "#c7c7c7" for i in range(r)]},
-                name="energy share",
+                name="エネルギー比",
                 showlegend=False,
             ),
             go.Scatter(
@@ -733,7 +733,7 @@ def plotly_svd_spectrum(A, max_k=None, title="Singular value spectrum & cumulati
         x=[int(i) for i in idx],
         y=_f(cum, 6),
         mode="lines",
-        name="cumulative energy",
+        name="累積エネルギー",
         line={"color": "#1f77b4"},
         yaxis="y2",
     )
@@ -759,18 +759,18 @@ def plotly_svd_spectrum(A, max_k=None, title="Singular value spectrum & cumulati
         for k in ks
     ]
     fig.update_layout(
-        sliders=[{"steps": steps, "currentvalue": {"prefix": "rank k = "}}],
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "ランク k = "}}],
         width=720,
         height=450,
         title=title,
-        xaxis={"title": "singular value index"},
+        xaxis={"title": "特異値の番号"},
         yaxis={
-            "title": "energy share (log)",
+            "title": "エネルギー比（対数）",
             "type": "log",
             "range": [float(np.log10(floor * 0.5)), float(np.log10(1.5))],
         },
         yaxis2={
-            "title": "cumulative energy",
+            "title": "累積エネルギー",
             "overlaying": "y",
             "side": "right",
             "range": [0, 1.02],
@@ -801,8 +801,8 @@ def plotly_yield_curves(maturities, curves, every: int = 25):
             )
         )
     fig.update_layout(
-        xaxis_title="maturity (years)",
-        yaxis_title="yield (%)",
+        xaxis_title="満期（年）",
+        yaxis_title="利回り（%）",
         width=720,
         height=420,
         margin={"l": 60, "r": 20, "t": 30, "b": 50},
@@ -821,8 +821,8 @@ def plotly_pca_loadings(
         fig.add_trace(go.Scatter(x=list(maturities), y=comp, mode="lines+markers", name=name))
     fig.add_hline(y=0, line={"color": "gray", "width": 1})
     fig.update_layout(
-        xaxis_title="maturity (years)",
-        yaxis_title="loading",
+        xaxis_title="満期（年）",
+        yaxis_title="ローディング",
         width=720,
         height=420,
         margin={"l": 60, "r": 20, "t": 30, "b": 50},
@@ -882,8 +882,8 @@ def plotly_iterative_convergence(
             go.Scatter(x=list(range(len(res))), y=list(res), mode="lines+markers", name=name)
         )
     fig.update_layout(
-        xaxis_title="iteration",
-        yaxis_title="residual norm",
+        xaxis_title="反復回数",
+        yaxis_title="残差ノルム",
         width=720,
         height=440,
         title=title,
@@ -927,8 +927,8 @@ def plotly_pagerank(names=None, adj=None, damping: float = 0.85, title="PageRank
         for lab in labels
     ]
     fig.update_layout(
-        sliders=[{"steps": steps, "currentvalue": {"prefix": "iteration = "}}],
-        xaxis_title="page",
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "反復 = "}}],
+        xaxis_title="ページ",
         yaxis_title="PageRank",
         width=680,
         height=440,
@@ -1022,7 +1022,7 @@ def plotly_gradient_descent_quadratic(
         )
     )
     fig.update_layout(
-        sliders=[{"steps": steps, "currentvalue": {"prefix": "step = "}}],
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "ステップ = "}}],
         xaxis_title="x1",
         yaxis_title="x2",
         width=560,
@@ -1173,7 +1173,7 @@ def plotly_projection_sweep(a=(2.0, 1.0), r: float = 2.2, n_angles: int = 37, ti
         for lab in labels
     ]
     fig.update_layout(
-        sliders=[{"steps": steps, "currentvalue": {"prefix": "angle = "}}],
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "角度 = "}}],
         width=560,
         height=560,
         title=title or "b を回すと影（射影）と残差が動く",
@@ -1274,7 +1274,7 @@ def plotly_complex_orbit(A, x0=(1.0, 0.0), n_steps: int = 24, title=None):
         for k in range(len(pts))
     ]
     fig.update_layout(
-        sliders=[{"steps": steps, "currentvalue": {"prefix": "step k = "}}],
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "ステップ k = "}}],
         width=560,
         height=560,
         title=title or "軌道 x, Ax, A²x, … （複素固有値なら螺旋）",
@@ -1329,7 +1329,7 @@ def plotly_kron_blocks(A, B, title=None):
         for lab in labels
     ]
     fig.update_layout(
-        sliders=[{"steps": steps, "currentvalue": {"prefix": "block "}}],
+        sliders=[{"steps": steps, "currentvalue": {"prefix": "ブロック "}}],
         width=560,
         height=520,
         title=title or "クロネッカー積 A⊗B：各ブロックは a_ij·B",
@@ -1337,4 +1337,540 @@ def plotly_kron_blocks(A, B, title=None):
         yaxis={"visible": False, "autorange": "reversed", "scaleanchor": "x"},
         margin={"l": 20, "r": 20, "t": 50, "b": 20},
     )
+    return fig
+
+
+# ---------------------------------------------------------------------------
+# Interactive 3-D and graph figures
+#
+# The pictures in this section are the ones that a static image cannot carry:
+# a cloud collapsing onto a plane reads as "a cloud" until you rotate it, and a
+# network's community structure is invisible in an adjacency heatmap.
+# ---------------------------------------------------------------------------
+
+
+def _slider_steps(labels, prefix=""):
+    """Plotly slider steps for a list of frame names."""
+    return [
+        {
+            "args": [[str(lab)], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            "label": str(lab),
+            "method": "animate",
+        }
+        for lab in labels
+    ]
+
+
+def plotly_rank_collapse_3d(cloud, matrices, labels, title=None):
+    """Slider over matrices of decreasing rank, applied to a 3-D point cloud.
+
+    Rank loss is the moment information dies, and in 3-D that is literally
+    visible: the cloud goes from a blob to a pancake to a needle. A static
+    projection hides it (a flat cloud seen edge-on still looks like a cloud), so
+    this one is worth rotating with the mouse. Alongside the points, the axes of
+    ``Im(A)`` are drawn — count them and you have read the rank off the picture.
+    """
+    import plotly.graph_objects as go
+
+    cloud = np.asarray(cloud, dtype=float)
+    mats = [np.asarray(M, dtype=float) for M in matrices]
+    images = [cloud @ M.T for M in mats]
+    lim = 1.15 * float(max(np.abs(im).max() for im in images))
+
+    def basis_trace(M, scale):
+        """Line segments through the origin along an orthonormal basis of Im(M)."""
+        U, s, _ = np.linalg.svd(M)
+        r = int((s > 1e-9 * max(s[0], 1e-30)).sum())
+        xs, ys, zs = [], [], []
+        for i in range(r):
+            u = U[:, i] * scale
+            xs += [-u[0], u[0], None]
+            ys += [-u[1], u[1], None]
+            zs += [-u[2], u[2], None]
+        return go.Scatter3d(
+            x=xs, y=ys, z=zs, mode="lines",
+            line={"color": "#d62728", "width": 6},
+            name=f"Im(A) の軸 ({r} 本)",
+        )
+
+    def traces(M, im):
+        return [
+            go.Scatter3d(
+                x=_f(im[:, 0], 3), y=_f(im[:, 1], 3), z=_f(im[:, 2], 3),
+                mode="markers",
+                marker={"size": 2.5, "color": "#1f77b4", "opacity": 0.55},
+                name="変換後の点群",
+            ),
+            basis_trace(M, 0.9 * lim),
+        ]
+
+    frames = [
+        go.Frame(data=traces(M, im), name=str(lab))
+        for M, im, lab in zip(mats, images, labels, strict=True)
+    ]
+    fig = go.Figure(data=traces(mats[0], images[0]), frames=frames)
+    axis = {"range": [-lim, lim], "zeroline": True, "showbackground": True}
+    fig.update_layout(
+        sliders=[{"steps": _slider_steps(labels), "currentvalue": {"prefix": ""}}],
+        width=640,
+        height=600,
+        title=title or "ランクが落ちると点群がつぶれる（ドラッグで回せます）",
+        scene={
+            "xaxis": {**axis, "title": "x"},
+            "yaxis": {**axis, "title": "y"},
+            "zaxis": {**axis, "title": "z"},
+            # A cube keeps a flattened cloud from being stretched back out by
+            # autoscaling, which would hide the very thing being shown.
+            "aspectmode": "cube",
+        },
+        margin={"l": 0, "r": 0, "t": 50, "b": 0},
+    )
+    return fig
+
+
+def plotly_least_squares_3d(A=None, b=None, n_steps: int = 25, title=None):
+    """The least-squares picture in 3-D: a plane, a point off it, and the foot.
+
+    Slide ``t`` to walk a candidate point along ``col(A)``. The dashed segment to
+    ``b`` is what least squares minimises, and its length (shown in the slider
+    label) bottoms out exactly where the segment meets the plane at a right
+    angle. That is the whole content of the normal equations, as a picture.
+    """
+    import plotly.graph_objects as go
+
+    A = np.array([[1.0, 0.0], [0.6, 1.0], [0.0, 0.4]] if A is None else A, dtype=float)
+    b = np.array([0.6, 0.4, 1.6] if b is None else b, dtype=float)
+    a1, a2 = A[:, 0], A[:, 1]
+    x_hat = np.linalg.solve(A.T @ A, A.T @ b)
+    p = A @ x_hat
+    # Walk along the plane through p, in the direction of col(A) that is most
+    # spread out, so the sweep visibly passes through the foot.
+    q_dir = a1 / np.linalg.norm(a1)
+    ts = np.linspace(-1.4, 1.4, n_steps)
+    pts = np.array([p + t * q_dir for t in ts])
+    span = 1.25 * float(np.abs(np.vstack([pts, b[None, :], p[None, :], A.T])).max())
+
+    grid = np.linspace(-1.6, 1.6, 12)
+    S, T = np.meshgrid(grid, grid)
+    plane = S[..., None] * a1 + T[..., None] * a2
+
+    static = [
+        go.Surface(
+            x=_f(plane[..., 0], 3), y=_f(plane[..., 1], 3), z=_f(plane[..., 2], 3),
+            showscale=False, opacity=0.32, colorscale=[[0, "#9ecae1"], [1, "#9ecae1"]],
+            name="col(A)", hoverinfo="skip",
+        ),
+        go.Scatter3d(
+            x=[0, b[0]], y=[0, b[1]], z=[0, b[2]], mode="lines+markers",
+            line={"color": "#1f77b4", "width": 6}, marker={"size": 4}, name="b",
+        ),
+        go.Scatter3d(
+            x=[0, p[0]], y=[0, p[1]], z=[0, p[2]], mode="lines+markers",
+            line={"color": "#d62728", "width": 6}, marker={"size": 4},
+            name="p = 正射影（最小点）",
+        ),
+        go.Scatter3d(
+            x=[b[0], p[0]], y=[b[1], p[1]], z=[b[2], p[2]], mode="lines",
+            line={"color": "#d62728", "width": 3, "dash": "dash"},
+            name="残差 r = b - p", hoverinfo="skip",
+        ),
+    ]
+
+    def moving(q):
+        return [
+            go.Scatter3d(
+                x=[q[0]], y=[q[1]], z=[q[2]], mode="markers",
+                marker={"size": 7, "color": "#2ca02c"}, name="平面上の候補点 q",
+            ),
+            go.Scatter3d(
+                x=[b[0], q[0]], y=[b[1], q[1]], z=[b[2], q[2]], mode="lines",
+                line={"color": "#2ca02c", "width": 4}, name="‖b - q‖", hoverinfo="skip",
+            ),
+        ]
+
+    labels = [f"t={t:+.2f}  (‖b-q‖={np.linalg.norm(b - q):.3f})" for t, q in zip(ts, pts, strict=True)]
+    n_static = len(static)
+    frames = [
+        go.Frame(data=moving(q), traces=[n_static, n_static + 1], name=lab)
+        for q, lab in zip(pts, labels, strict=True)
+    ]
+    fig = go.Figure(data=[*static, *moving(pts[0])], frames=frames)
+    axis = {"range": [-span, span], "zeroline": True}
+    fig.update_layout(
+        sliders=[{"steps": _slider_steps(labels), "currentvalue": {"prefix": ""}}],
+        width=680,
+        height=620,
+        title=title or "最小二乗＝col(A) の中で b に一番近い点（ドラッグで回せます）",
+        scene={
+            "xaxis": {**axis, "title": "x"},
+            "yaxis": {**axis, "title": "y"},
+            "zaxis": {**axis, "title": "z"},
+            "aspectmode": "cube",
+        },
+        margin={"l": 0, "r": 0, "t": 50, "b": 0},
+    )
+    return fig
+
+
+def _spring_layout(adj, seed: int = 0, iterations: int = 300):
+    """Deterministic Fruchterman-Reingold layout (no networkx dependency)."""
+    A = np.asarray(adj, dtype=float)
+    A = ((A + A.T) > 0).astype(float)
+    np.fill_diagonal(A, 0.0)  # self-loops would pull a node against itself
+    n = A.shape[0]
+    rng = np.random.default_rng(seed)
+    pos = rng.uniform(-1.0, 1.0, (n, 2))
+    k = 1.0 / np.sqrt(n)
+    temp = 0.15
+    for _ in range(iterations):
+        delta = pos[:, None, :] - pos[None, :, :]
+        dist = np.linalg.norm(delta, axis=-1)
+        # A large finite diagonal keeps self-pairs inert without inf * 0 = nan.
+        np.fill_diagonal(dist, 1e9)
+        repel = (k**2 / dist**2)[..., None] * delta
+        attract = (dist / k)[..., None] * delta * A[..., None]
+        disp = (repel - attract).sum(axis=1)
+        norm = np.linalg.norm(disp, axis=1, keepdims=True)
+        pos = pos + disp / np.maximum(norm, 1e-12) * np.minimum(norm, temp)
+        temp *= 0.99
+    pos = pos - pos.mean(axis=0)
+    return pos / max(float(np.abs(pos).max()), 1e-12)
+
+
+def plotly_graph(
+    adj,
+    names=None,
+    pos=None,
+    node_value=None,
+    node_color=None,
+    directed: bool = False,
+    title=None,
+    value_name: str = "value",
+    colorbar_title=None,
+    seed: int = 0,
+):
+    """Draw the graph itself — nodes and edges, not an adjacency heatmap.
+
+    Chapter 07 computes PageRank and a Fiedler split but only ever shows bar
+    charts and matrix images, where the structure being discussed is invisible.
+    ``node_value`` scales the markers (PageRank) and ``node_color`` colours them
+    (Fiedler sign), so the eigenvector is read off the network directly.
+    """
+    import plotly.graph_objects as go
+
+    A = np.asarray(adj, dtype=float)
+    n = A.shape[0]
+    names = [str(i) for i in range(n)] if names is None else list(names)
+    pos = _spring_layout(A, seed=seed) if pos is None else np.asarray(pos, dtype=float)
+
+    edges = [(i, j) for i in range(n) for j in range(n) if A[i, j] and (directed or i < j)]
+    ex, ey = [], []
+    for i, j in edges:
+        ex += [pos[i, 0], pos[j, 0], None]
+        ey += [pos[i, 1], pos[j, 1], None]
+
+    if node_value is None:
+        sizes = np.full(n, 18.0)
+    else:
+        v = np.asarray(node_value, dtype=float)
+        sizes = 14.0 + 46.0 * (v - v.min()) / max(float(v.max() - v.min()), 1e-12)
+
+    marker = {"size": sizes, "line": {"color": "#333333", "width": 1}}
+    if node_color is None:
+        marker["color"] = "#1f77b4"
+    else:
+        marker.update(
+            color=list(np.asarray(node_color, dtype=float)),
+            colorscale="RdBu",
+            cmid=0.0,
+            showscale=True,
+            colorbar={"title": colorbar_title or "", "thickness": 14},
+        )
+
+    hover = (
+        [f"{nm}" for nm in names]
+        if node_value is None
+        else [f"{nm}<br>{value_name} = {v:.3f}" for nm, v in zip(names, node_value, strict=True)]
+    )
+    fig = go.Figure(
+        [
+            go.Scatter(
+                x=[None if v is None else round(float(v), 4) for v in ex],
+                y=[None if v is None else round(float(v), 4) for v in ey],
+                mode="lines",
+                line={"color": "rgba(120,120,120,0.55)", "width": 1.4},
+                hoverinfo="skip",
+                showlegend=False,
+                name="edges",
+            ),
+            go.Scatter(
+                x=_f(pos[:, 0]),
+                y=_f(pos[:, 1]),
+                mode="markers+text",
+                marker=marker,
+                text=names,
+                textposition="middle center",
+                textfont={"size": 10, "color": "#ffffff"},
+                hovertext=hover,
+                hoverinfo="text",
+                showlegend=False,
+                name="nodes",
+            ),
+        ]
+    )
+    if directed:
+        # Arrowheads carry the link direction, which PageRank depends on.
+        fig.update_layout(
+            annotations=[
+                {
+                    "x": pos[j, 0], "y": pos[j, 1], "ax": pos[i, 0], "ay": pos[i, 1],
+                    "xref": "x", "yref": "y", "axref": "x", "ayref": "y",
+                    "showarrow": True, "arrowhead": 3, "arrowsize": 1.1,
+                    "arrowwidth": 1.2, "arrowcolor": "rgba(120,120,120,0.85)",
+                    "standoff": 14, "startstandoff": 12, "text": "",
+                }
+                for i, j in edges
+            ]
+        )
+    fig.update_layout(
+        width=620,
+        height=560,
+        title=title,
+        xaxis={"visible": False, "range": [-1.25, 1.25], "scaleanchor": "y"},
+        yaxis={"visible": False, "range": [-1.25, 1.25]},
+        margin={"l": 20, "r": 20, "t": 50, "b": 20},
+        plot_bgcolor="white",
+    )
+    return fig
+
+
+def _rref_step_label(step, n_cols_aug: int | None = None) -> str:
+    """Japanese description of one recorded row operation."""
+    kind = step["kind"]
+    if kind == "swap":
+        i, j = step["rows"]
+        return f"行 {i + 1} ↔ 行 {j + 1} を入れ替え"
+    if kind == "scale":
+        return f"行 {step['row'] + 1} を {step['factor']:.3g} 倍"
+    return f"行 {step['target'] + 1} に 行 {step['source'] + 1} の {step['factor']:.3g} 倍を加える"
+
+
+def plotly_rref_steps(Ab, augmented: bool = True, title=None):
+    """Replay Gauss-Jordan elimination one row operation at a time.
+
+    The chapter defines elimination as a *procedure* — three row operations,
+    applied until the matrix is in reduced row echelon form — and then only ever
+    prints the final answer. This steps through the actual operations, showing
+    the matrix after each one and naming the operation in the slider label. The
+    pivot being worked on is outlined; the augmented column is separated by a
+    dashed rule.
+    """
+    import plotly.graph_objects as go
+
+    from .algebra import rref_steps
+
+    M0 = np.asarray(Ab, dtype=float)
+    _R, _piv, steps = rref_steps(M0)
+    n_rows, n_cols = M0.shape
+    states = [{"matrix": M0.copy(), "label": "開始（拡大係数行列）", "pivot": None}]
+    for s in steps:
+        states.append({"matrix": s["matrix"], "label": _rref_step_label(s), "pivot": s["pivot"]})
+
+    scale = float(np.abs(M0).max()) or 1.0
+
+    def heat(M):
+        # Rows are drawn top-down, so flip for the heatmap's bottom-up y axis.
+        z = M[::-1]
+        return go.Heatmap(
+            z=_f(z, 4),
+            text=[[f"{v:g}" for v in row] for row in np.round(z, 4)],
+            texttemplate="%{text}",
+            textfont={"size": 14},
+            colorscale="RdBu",
+            zmid=0.0,
+            zmin=-scale,
+            zmax=scale,
+            showscale=False,
+            hoverinfo="skip",
+        )
+
+    def pivot_box(pivot):
+        if pivot is None:
+            return go.Scatter(x=[], y=[], mode="lines", showlegend=False, hoverinfo="skip")
+        r, c = pivot
+        y = n_rows - 1 - r
+        return go.Scatter(
+            x=[c - 0.5, c + 0.5, c + 0.5, c - 0.5, c - 0.5],
+            y=[y - 0.5, y - 0.5, y + 0.5, y + 0.5, y - 0.5],
+            mode="lines",
+            line={"color": "#2ca02c", "width": 4},
+            name="pivot",
+            showlegend=False,
+            hoverinfo="skip",
+        )
+
+    labels = [f"{i}. {st['label']}" for i, st in enumerate(states)]
+    frames = [
+        go.Frame(data=[heat(st["matrix"]), pivot_box(st["pivot"])], name=lab)
+        for st, lab in zip(states, labels, strict=True)
+    ]
+    fig = go.Figure(data=[heat(states[0]["matrix"]), pivot_box(None)], frames=frames)
+    if augmented and n_cols >= 2:
+        fig.add_vline(x=n_cols - 1.5, line={"color": "#333333", "width": 2, "dash": "dash"})
+    fig.update_layout(
+        sliders=[{"steps": _slider_steps(labels), "currentvalue": {"prefix": "手順 "}}],
+        width=680,
+        height=420,
+        title=title or "掃き出し法：行基本変形を 1 手ずつ",
+        xaxis={"visible": False, "range": [-0.5, n_cols - 0.5]},
+        yaxis={"visible": False, "range": [-0.5, n_rows - 0.5], "scaleanchor": "x"},
+        margin={"l": 20, "r": 20, "t": 50, "b": 20},
+    )
+    return fig
+
+
+def plotly_char_poly(A, lam_range=None, n_steps: int = 41, title=None):
+    """Sweep lambda: the graph of det(A - lambda I) beside the square it squashes.
+
+    The characteristic equation is introduced as "det(A - lambda I) = 0" with no
+    picture of why a determinant should vanish. Here the left panel plots that
+    determinant and the right panel shows what (A - lambda I) does to the unit
+    square. Drag lambda onto a root and watch the square flatten to a segment at
+    the exact moment the curve crosses zero — the eigenvalue *is* the collapse.
+    """
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+
+    A = np.asarray(A, dtype=float)
+    eig = np.linalg.eigvals(A)
+    real_eig = np.real(eig[np.isreal(eig)])
+    if lam_range is None:
+        if real_eig.size:
+            lo, hi = float(real_eig.min()), float(real_eig.max())
+            pad = max(1.0, 0.6 * (hi - lo))
+            lam_range = (lo - pad, hi + pad)
+        else:
+            lam_range = (-2.0, 2.0)
+    lams = np.linspace(lam_range[0], lam_range[1], n_steps)
+    curve_x = np.linspace(lam_range[0], lam_range[1], 241)
+    curve_y = np.array([np.linalg.det(A - t * np.eye(2)) for t in curve_x])
+    square = np.array([[0, 1, 1, 0, 0], [0, 0, 1, 1, 0]], dtype=float)
+    images = [(A - t * np.eye(2)) @ square for t in lams]
+    lim = 1.2 * float(max(np.abs(im).max() for im in images) or 1.0)
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=("det(A - λI)", "単位正方形の像（面積 = |det|）"),
+        horizontal_spacing=0.12,
+    )
+    fig.add_trace(
+        go.Scatter(x=_f(curve_x), y=_f(curve_y), mode="lines",
+                   line={"color": "#1f77b4", "width": 2}, name="det(A - λI)"),
+        row=1, col=1,
+    )
+    fig.add_hline(y=0, line={"color": "#999999", "width": 1}, row=1, col=1)
+    for lam in real_eig:
+        fig.add_vline(x=float(lam), line={"color": "#2ca02c", "width": 1, "dash": "dot"},
+                      row=1, col=1)
+
+    def moving(lam, im):
+        return [
+            go.Scatter(x=[float(lam)], y=[float(np.linalg.det(A - lam * np.eye(2)))],
+                       mode="markers", marker={"color": "#d62728", "size": 12},
+                       name="いまの λ"),
+            go.Scatter(x=_f(im[0]), y=_f(im[1]), fill="toself",
+                       fillcolor="rgba(214,39,40,0.25)",
+                       line={"color": "#d62728", "width": 2}, name="像"),
+        ]
+
+    first = moving(lams[0], images[0])
+    fig.add_trace(first[0], row=1, col=1)
+    fig.add_trace(first[1], row=1, col=2)
+    labels = [
+        f"λ={lam:+.2f}  (det={np.linalg.det(A - lam * np.eye(2)):+.3f})" for lam in lams
+    ]
+    frames = [
+        # Traces 1 and 2 move; the curve (0) and the eigen-lines stay put.
+        go.Frame(data=moving(lam, im), traces=[1, 2], name=lab)
+        for lam, im, lab in zip(lams, images, labels, strict=True)
+    ]
+    fig.frames = frames
+    fig.update_layout(
+        sliders=[{"steps": _slider_steps(labels), "currentvalue": {"prefix": ""}}],
+        width=880,
+        height=440,
+        title=title or "固有値とは「det(A - λI) が 0 になる λ」＝正方形がつぶれる瞬間",
+        showlegend=False,
+        margin={"l": 50, "r": 20, "t": 70, "b": 40},
+    )
+    fig.update_xaxes(title_text="λ", row=1, col=1)
+    fig.update_xaxes(range=[-lim, lim], row=1, col=2)
+    fig.update_yaxes(range=[-lim, lim], scaleanchor="x2", row=1, col=2)
+    return fig
+
+
+def plotly_svd_rank_explorer(img, ks=None, title=None):
+    """One slider driving both the rank-k image and the spectrum behind it.
+
+    Previously these were two figures, so the reader had to move two sliders and
+    pair up the numbers mentally. Here rank k picks the picture on the left and
+    lights up the singular values paying for it on the right, with the retained
+    energy and the storage cost in the label.
+    """
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+
+    from .decompositions import compression_ratio, svd_lowrank
+
+    img = np.asarray(img, dtype=float)
+    s = np.linalg.svd(img, compute_uv=False)
+    share = s**2 / (s**2).sum()
+    cum = np.cumsum(share)
+    r = len(s)
+    if ks is None:
+        # Few enough frames that the embedded images stay a sane size.
+        ks = [1, 2, 3, 5, 10, 20, 40]
+    ks = [k for k in ks if 1 <= k <= r]
+    idx = np.arange(1, r + 1)
+    floor = max(float(share[share > 0].min()), float(share.max()) * 1e-6)
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=("ランク k 近似の見た目", "特異値のエネルギー比（対数）"),
+        horizontal_spacing=0.1,
+        column_widths=[0.45, 0.55],
+    )
+
+    def moving(k):
+        return [
+            go.Heatmap(z=_f(svd_lowrank(img, k)[::-1], 3), colorscale="gray",
+                       showscale=False, hoverinfo="skip"),
+            go.Bar(x=[int(i) for i in idx], y=list(share),
+                   marker={"color": ["#d62728" if i < k else "#c7c7c7" for i in range(r)]},
+                   name="エネルギー比"),
+        ]
+
+    first = moving(ks[0])
+    fig.add_trace(first[0], row=1, col=1)
+    fig.add_trace(first[1], row=1, col=2)
+    labels = [
+        f"k={k}  (説明 {cum[k - 1]:.1%} / 記憶 {compression_ratio(img.shape, k):.0%})" for k in ks
+    ]
+    fig.frames = [
+        go.Frame(data=moving(k), traces=[0, 1], name=lab)
+        for k, lab in zip(ks, labels, strict=True)
+    ]
+    fig.update_layout(
+        sliders=[{"steps": _slider_steps(labels), "currentvalue": {"prefix": "ランク "}}],
+        width=940,
+        height=470,
+        title=title or "ランク k を動かす：画像とスペクトルが連動する",
+        showlegend=False,
+        margin={"l": 40, "r": 30, "t": 70, "b": 40},
+    )
+    fig.update_xaxes(visible=False, row=1, col=1)
+    fig.update_yaxes(visible=False, scaleanchor="x", row=1, col=1)
+    fig.update_xaxes(title_text="特異値の番号", row=1, col=2)
+    fig.update_yaxes(type="log", range=[float(np.log10(floor * 0.5)), float(np.log10(1.5))],
+                     title_text="エネルギー比", row=1, col=2)
     return fig
