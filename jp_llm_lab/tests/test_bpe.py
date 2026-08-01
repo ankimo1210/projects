@@ -3,6 +3,12 @@ import itertools
 import pytest
 from jp_llm_lab.tokenization.base import BOS_ID, EOS_ID, SPECIAL_TOKENS, UNK_ID
 from jp_llm_lab.tokenization.bpe_tokenizer import BPETokenizer, segment_text
+
+# hf_bpe imports the HuggingFace `tokenizers` extension at module level. It is a
+# declared dependency, but a --no-sync environment may not have it, and a bare
+# ImportError here aborts collection for the entire workspace suite.
+pytest.importorskip("tokenizers", reason="tokenizers not installed")
+
 from jp_llm_lab.tokenization.hf_bpe import HFBpeTokenizer
 
 TEXT = (
