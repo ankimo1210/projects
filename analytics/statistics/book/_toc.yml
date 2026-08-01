@@ -8,3 +8,4 @@ chapters:
   - file: notebooks/02_random_variables_expectation
   - file: notebooks/03_distributions_zoo
   - file: notebooks/04_limit_theorems
+  - file: notebooks/05_stochastic_processes
