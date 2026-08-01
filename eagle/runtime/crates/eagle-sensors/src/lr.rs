@@ -205,6 +205,33 @@ pub const LR_ALT_M_PER_COUNT: f64 = 0.328_879_2;
 /// not be asserted above this — see the ledger's defect 9.
 pub const LR_ALT_MAX_M: f64 = 16_383.0 * LR_ALT_M_PER_COUNT;
 
+/// The along-beam velocity a beam can report, given `LVELBIAS_COUNTS` and
+/// the 15-bit counter.
+///
+/// The count is `trunc(v/q) - LVELBIAS_COUNTS`, so the representable
+/// window is `[0, 16383]` counts mapped back through that beam's own
+/// quantum — which differs per beam and is NEGATIVE on X. The window is
+/// therefore asymmetric and beam-specific, not a single speed limit.
+///
+/// This matters because it is the velocity twin of defect 9's altitude
+/// problem: at PDI the vehicle is doing 1700 m/s surface-relative, far
+/// outside what some beams can carry, and asserting velocity-data-good
+/// there hands the AGC a wrapped count as if it were a measurement. The
+/// real LR does not report velocity good at PDI either.
+pub fn vel_beam_window(ms_per_count: f64) -> (f64, f64) {
+    // count = trunc(v/q) - LVELBIAS, so count in [0, 16383] inverts to
+    // v/q in [LVELBIAS, 16383 + LVELBIAS] -- the bias ADDS back here.
+    let a = LVELBIAS_COUNTS as f64 * ms_per_count;
+    let b = (16_383 + LVELBIAS_COUNTS) as f64 * ms_per_count;
+    (a.min(b), a.max(b))
+}
+
+/// Whether this beam can report this along-beam velocity at all.
+pub fn vel_in_counter_range(along_ms: f64, ms_per_count: f64) -> bool {
+    let (lo, hi) = vel_beam_window(ms_per_count);
+    along_ms >= lo && along_ms <= hi
+}
+
 /// Whether the LR can report this altitude at all on the high scale.
 pub fn alt_in_counter_range(range_m: f64) -> bool {
     range_m.abs() <= LR_ALT_MAX_M
@@ -1081,6 +1108,27 @@ mod defect9_tests {
         assert!(alt_in_counter_range(250.0));
         assert!(alt_in_counter_range(1_500.0));
         assert!(alt_in_counter_range(5_000.0));
+    }
+
+    #[test]
+    fn a_beam_cannot_carry_pdi_speeds() {
+        // Surface-relative speed at PDI. Beam 2's window tops out near
+        // 1082 m/s, so this is exactly the case that must be refused.
+        assert!(!vel_in_counter_range(1699.5, LR_VEL_MS_PER_COUNT[2]));
+        // ... and the approach phase, which it must accept.
+        assert!(vel_in_counter_range(-30.0, LR_VEL_MS_PER_COUNT[2]));
+        assert!(vel_in_counter_range(0.0, LR_VEL_MS_PER_COUNT[2]));
+    }
+
+    #[test]
+    fn the_window_is_asymmetric_and_per_beam() {
+        // X's quantum is negative, so its window is NOT the others'.
+        let (xlo, xhi) = vel_beam_window(LR_VEL_MS_PER_COUNT[0]);
+        let (zlo, zhi) = vel_beam_window(LR_VEL_MS_PER_COUNT[2]);
+        assert!(xlo < 0.0 && xhi > 0.0 && zlo < 0.0 && zhi > 0.0);
+        assert!((xhi - zhi).abs() > 100.0, "{xhi} vs {zhi}");
+        // A count at the bias reads as zero velocity.
+        assert!(vel_in_counter_range(0.0, LR_VEL_MS_PER_COUNT[0]));
     }
 
     #[test]

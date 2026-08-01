@@ -775,6 +775,25 @@ impl SimCore {
         };
         if let Some(i) = idx {
             let (along, quantum) = vel_beam(i);
+            // The velocity twin of the altitude gate below: `LVELBIAS` and
+            // the 15-bit counter give each beam its own asymmetric window
+            // (`lr::vel_beam_window`), and at PDI the vehicle is doing
+            // 1700 m/s surface-relative -- outside it. Asserting
+            // velocity-data-good there hands the AGC a wrapped count as
+            // though it were a measurement, and the real LR does not
+            // report velocity good at PDI either. Flights 11 and 18 flew
+            // identically to TIG+300 s and then split (tilt 62.1 -> 39.7
+            // deg, v_horiz turning back UP), which is the rope acting on
+            // exactly such a reading.
+            if !eagle_sensors::lr::vel_in_counter_range(along, quantum) {
+                out.to_agc
+                    .extend(eagle_agc_protocol::agc_io::discrete_write(
+                        0o33,
+                        eagle_sensors::lr::CH33_LR_VEL_DATA_GOOD,
+                        0,
+                    ));
+                return;
+            }
             // Includes the carrier offset the AGC removes with
             // `AD LVELBIAS`; zero velocity is NOT a zero count.
             let counts = eagle_sensors::lr::vel_raw_counts(along, quantum);
