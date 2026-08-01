@@ -25,6 +25,7 @@ NOTEBOOKS = [
     ("build_nb00", "00_overview"),
     ("build_nb01", "01_probability_foundations"),
     ("build_nb02", "02_random_variables_expectation"),
+    ("build_nb03", "03_distributions_zoo"),
 ]
 
 
