@@ -14,7 +14,7 @@ from pathlib import Path
 import httpx
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from app import config  # noqa: E402
+from app import config
 
 WDQS = "https://query.wikidata.org/sparql"
 USER_AGENT = "akinator-mvp/0.1 (local hobby project; https://github.com/ankimo1210)"

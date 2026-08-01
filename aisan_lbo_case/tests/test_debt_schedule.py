@@ -1,5 +1,4 @@
 import pandas as pd
-
 from src.model.debt_schedule import build_debt_schedule
 
 
