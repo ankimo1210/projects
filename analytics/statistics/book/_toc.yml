@@ -3,3 +3,5 @@
 # content below the book root).
 format: jb-book
 root: notebooks/00_overview
+chapters:
+  - file: notebooks/01_probability_foundations
