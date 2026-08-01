@@ -41,6 +41,22 @@ flip_atthold_after_engine_on_s = 2.0   # unused in pdi mode (handover is sim-dri
 # oscillates +-3 km instead of diverging, which is DEFECT 9 -- the LR
 # pad-load block was never loaded and nothing declares the altitude scale.
 # See sim.rs and the ledger's section 12.
+#
+# Flight 19 (2026-08-01): two provable defect-9 fixes.
+#  1. ALTSCBIT (FLGWRD12 bit 9) is now DECLARED, read-modify-write, in the
+#     pad-load choreography. Nothing in the rope writes it; leaving it
+#     clear selected the low scale and multiplied every reading by an
+#     unloaded SKALSKAL = 0.
+#  2. Velocity data-good is now gated on the counter's own window, the
+#     same rule the altitude path already used. Flights 11 and 18 flew
+#     IDENTICALLY to TIG+300 s and then split -- the rope acting on a
+#     wrapped velocity count.
+# Decision rule, fixed before the result: track flight 11 (the healthy
+# bypassed run) past TIG+360 s => both fixes hold; split at the same place
+# => velocity was not the whole story and the next cut is LR velocity off
+# entirely, altitude only.
+# RESULT: it split at the SAME place and WORSE (tilt 112.5 deg vs 62.1;
+# MM64 never reached at all). Reverted -- see the ledger's section 13.
 lrbypass = true
                                    # (vendor/virtualagc/Luminary099/FRESH_START_AND_RESTART.agc:623); abort if missing
 

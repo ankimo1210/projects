@@ -89,6 +89,34 @@ pub const REFSMBIT: u16 = 0o10000;
 pub const FLAGWRD8_ECADR: u16 = 0o104;
 /// CMOONFLG | LMOONFLG.
 pub const FLAGWRD8_MOON_BITS: u16 = 0o4000 | 0o2000;
+
+/// `FLGWRD12` = `RADMODES` = `STATE +12D`, ECADR 0o110
+/// (`FLAGWORD_ASSIGNMENTS.agc:1110-1112`; the listing resolves `RADMODES`
+/// to 0110, and 0o104 = `STATE +8` fixes `STATE` = 0o74).
+pub const FLGWRD12_ECADR: u16 = 0o110;
+
+/// `ALTSCBIT` = BIT9 (`FLAGWORD_ASSIGNMENTS.agc:1147`), the LR altitude
+/// scale factor: **set = high scale, clear = low scale**.
+///
+/// **Nothing in the rope ever writes this bit.** `SERVICER.agc:1137` is
+/// its only reference in Luminary099, and the same holds in Luminary131
+/// and Luminary210 — it is external state the landing radar supplies, so
+/// in this architecture we are the only thing that can supply it.
+///
+/// Leaving it clear is not neutral. Fresh start zeroes the flagwords, so
+/// the low-scale branch runs and the AGC multiplies the reading by
+/// `SKALSKAL` — a pad load (`ERASABLE_ASSIGNMENTS.agc:813`, ".2 NOM")
+/// that `scenarios/p66-padload.toml` does not load, i.e. **zero**. The
+/// slant range collapses and `DELTAH = 0 - HCALC` drags the AGC's own
+/// altitude toward the surface on every update.
+///
+/// High scale is the right declaration and not merely the convenient one:
+/// it uses `HSCAL` alone, so it needs no `SKALSKAL` at all, and its
+/// quantum is the one `eagle_sensors::lr::LR_ALT_M_PER_COUNT` already
+/// encodes. Setting it read-modify-write matters — `RADMODES` carries
+/// live radar bits, and a blunt manifest write would clobber them, the
+/// hazard `p66-padload.toml` already documents for `FLAGWRD8`.
+pub const ALTSCBIT: u16 = 0o400;
 /// FLGWRD11 = STATE +11D, unswitched ECADR 0o107 (`Luminary099.log:3262`:
 /// `26,2022  0107  FLGWRD11 = STATE +11D`). LRBYPASS is its BIT15
 /// (`vendor/virtualagc/Luminary099/FLAGWORD_ASSIGNMENTS.agc:1040-1041`).
@@ -1185,6 +1213,9 @@ pub async fn run_scenario(
     set_flag_bits(script, FLAGWRD3_ECADR, REFSMBIT)
         .await
         .context("REFSMFLG")?;
+    set_flag_bits(script, FLGWRD12_ECADR, ALTSCBIT)
+        .await
+        .context("LR altitude scale (ALTSCBIT)")?;
 
     let alarms = enter_p63_with_alarms(script).await.context("P63 dialog")?;
     wait_engine_on(packets, Duration::from_secs(180))
