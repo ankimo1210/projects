@@ -165,9 +165,17 @@ def clt_convergence(
     renders as nothing at all inside the window rather than as something
     wide. With a common grid it shows up as the low flat block it is, and
     the share of its mass that fell off-screen is named in the legend.
+
+    Bins are computed here and drawn as bars rather than handed to
+    ``go.Histogram``. A Histogram serialises every observation into the
+    notebook -- 4 samplers x 6 frames x 4000 reps pushed the executed
+    notebook to 2.8 MB. The counts are 60 numbers per trace and look
+    identical.
     """
     lo, hi = VIEW
-    xbins = {"start": lo, "end": hi, "size": (hi - lo) / 60}
+    edges = np.linspace(lo, hi, 61)
+    centres = 0.5 * (edges[:-1] + edges[1:])
+    width = edges[1] - edges[0]
     frames = []
     for n in ns:
         traces = []
@@ -181,16 +189,9 @@ def clt_convergence(
             scaled = means * np.sqrt(n)
             outside = float(np.mean((scaled < lo) | (scaled > hi)))
             label = name if outside < 0.005 else f"{name}（枠外 {outside:.0%}）"
-            traces.append(
-                go.Histogram(
-                    x=scaled,
-                    name=label,
-                    opacity=0.55,
-                    xbins=xbins,
-                    autobinx=False,
-                    histnorm="probability density",
-                )
-            )
+            counts, _ = np.histogram(scaled, bins=edges)
+            density = counts / (scaled.size * width)
+            traces.append(go.Bar(x=centres, y=density, name=label, opacity=0.55, width=width))
         frames.append(go.Frame(data=traces, name=str(n)))
     fig = frame_slider(frames, "n")
     fig.update_layout(barmode="overlay", xaxis_range=list(VIEW))
