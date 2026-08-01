@@ -625,10 +625,44 @@ impl SimCore {
         let Some(sel) = eagle_sensors::lr::decode_ch13(ch13) else {
             return;
         };
-        // Altitude only for now; the velocity beams need the antenna
-        // geometry this model does not yet carry, and answering them with
-        // a guess would be worse than not answering.
-        if sel != eagle_sensors::lr::RadarSelect::LrAlt {
+        // Velocity beams: project the surface-relative velocity onto the
+        // beam and quantize with THAT beam's own quantum -- the three
+        // differ and X's is negative (eagle_sensors::lr).
+        let vel_beam = |idx: usize| -> (f64, f64) {
+            let beams = eagle_sensors::lr::velocity_beams_nb(
+                eagle_sensors::lr::LR_ANTENNA_POS2_DEG.0,
+                eagle_sensors::lr::LR_ANTENNA_POS2_DEG.1,
+            );
+            let b = beams[idx];
+            // Surface-relative velocity in body axes.
+            let v_rel = self.st.vel - surface_velocity(self.st.pos);
+            let v_body = self.st.att.inverse().apply(v_rel);
+            let along = v_body.x * b[0] + v_body.y * b[1] + v_body.z * b[2];
+            (along, eagle_sensors::lr::LR_VEL_MS_PER_COUNT[idx])
+        };
+        let idx = match sel {
+            eagle_sensors::lr::RadarSelect::LrAlt => None,
+            eagle_sensors::lr::RadarSelect::LrVelX => Some(0),
+            eagle_sensors::lr::RadarSelect::LrVelY => Some(1),
+            eagle_sensors::lr::RadarSelect::LrVelZ => Some(2),
+            // The LR must not answer a rendezvous-radar select.
+            eagle_sensors::lr::RadarSelect::Rendezvous => return,
+        };
+        if let Some(i) = idx {
+            let (along, quantum) = vel_beam(i);
+            let counts = (along / quantum).trunc() as i32;
+            let delta = counts - lr.rnrad;
+            lr.rnrad = counts;
+            for _ in 0..delta.unsigned_abs().min(16_384) {
+                let inc = if delta > 0 { 0 } else { 2 };
+                if let Ok(p) = Packet::counter(RNRAD_ADDR, inc) {
+                    out.to_agc.push(p);
+                }
+            }
+            // Velocity data good; range not being read this pass.
+            if let Ok(p) = Packet::io(0o33, eagle_sensors::lr::ch33_bits(false, true, true)) {
+                out.to_agc.push(p);
+            }
             return;
         }
         if alt <= 0.0 {
@@ -1445,6 +1479,45 @@ mod tests {
         assert!(
             !again.to_agc.iter().any(|p| p.channel == 0o46),
             "only the rising edge triggers a read"
+        );
+    }
+
+    #[test]
+    fn the_radar_answers_a_velocity_select_and_refuses_a_rendezvous_one() {
+        let mut sc = pdi_scenario();
+        sc.agc.lrbypass = false;
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+        // Give the vehicle a real surface-relative velocity to project.
+        core.st.vel = core.st.vel + V3::new(0.0, 0.0, -40.0);
+
+        core.ch13 = 0o14; // activity + LRVELX
+        let out = core.tick();
+        assert!(
+            out.to_agc.iter().any(|p| p.channel == 0o46),
+            "a velocity select must be answered"
+        );
+        let ch33 = out
+            .to_agc
+            .iter()
+            .find(|p| p.channel == 0o33)
+            .expect("ch33 written");
+        assert_eq!(ch33.data & 0o200, 0, "LR VEL data good => bit clear");
+        assert_ne!(
+            ch33.data & 0o20,
+            0,
+            "range is NOT being read this pass, so its bit stays set"
+        );
+
+        // A rendezvous-radar select must be refused outright -- the LR is
+        // not the RR, and answering would feed the AGC a fabricated range.
+        core.ch13 = 0; // drop activity so the next set is a rising edge
+        core.tick();
+        core.ch13 = 0o11; // RRRANGE
+        let rr = core.tick();
+        assert!(
+            !rr.to_agc.iter().any(|p| p.channel == 0o46),
+            "the LR must not answer a rendezvous-radar select"
         );
     }
 
