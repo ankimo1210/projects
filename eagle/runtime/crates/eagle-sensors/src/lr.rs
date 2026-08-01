@@ -347,6 +347,43 @@ impl LrErrors {
     }
 }
 
+/// LR antenna orientation, per position: (alpha about X, beta about Y),
+/// degrees.
+///
+/// `SERVICER.agc:1685-1720` (`SETPOS`/`SETPOS2`) loads `LRALPHA`/`LRBETA`
+/// into `CDUSPOT` as rotations about X and Y (Z is zeroed), builds the
+/// antenna-to-navigation-base transform, and derives the beams:
+/// `VYBEAMNB = UNITY(antenna)`, `VXBEAMNB = UNITX(antenna)`,
+/// `VZBEAMNB = X x Y`, and the altitude beam from `HBEAMANT`.
+///
+/// Values from the flown reference pad load
+/// (`vendor/virtualagc/LUM69R2/PADLOADS.agc:542-559`), whose comments
+/// give both the octal word and the intended angle:
+///
+/// | word | octal | angle |
+/// |---|---|---|
+/// | `LRALPHA`  (pos 1, X) | `01042` | 6° |
+/// | `LRBETA1`  (pos 1, Y) | `04210` | 24° |
+/// | `LRALPHA2` (pos 2, X) | `01042` | 6° |
+/// | `LRBETA2`  (pos 2, Y) | `00000` | 0° |
+///
+/// **These are not in this project's pad load.** `scenarios/p66-padload.toml`
+/// omits the `LRALPHA..LRWVFF` block deliberately, because every flight so
+/// far has run `lrbypass = true`. Enabling the radar means pad-loading
+/// them first — the velocity beams cannot be built without them.
+pub const LR_ANTENNA_POS1_DEG: (f64, f64) = (6.0, 24.0);
+pub const LR_ANTENNA_POS2_DEG: (f64, f64) = (6.0, 0.0);
+
+/// Decode a pad-loaded LR antenna angle: the word is a fraction of a
+/// half-revolution, so `degrees = word / 2^14 * 180`.
+///
+/// Verified against the reference pad load's own comments — `01042`
+/// decodes to 5.999° against a documented 6°, and `04210` to 23.99°
+/// against 24°.
+pub fn antenna_angle_deg(word: u16) -> f64 {
+    f64::from(word) / 16384.0 * 180.0
+}
+
 /// The moon-fixed radius the beams intersect. Kept as a parameter rather
 /// than a constant so a test can use a unit sphere.
 pub type Surface = Mcmf;
@@ -555,6 +592,28 @@ mod tests {
         for _ in 0..20 {
             assert_eq!(a.corrupt_range(500.0), b.corrupt_range(500.0));
         }
+    }
+
+    #[test]
+    fn the_antenna_angles_decode_to_the_pad_loads_documented_degrees() {
+        // Same "derived, not transcribed" check as the altitude quantum:
+        // the reference pad load gives both the octal and the angle, and
+        // they must agree, or the scaling is wrong.
+        assert!(
+            (antenna_angle_deg(0o01042) - 6.0).abs() < 0.01,
+            "{}",
+            antenna_angle_deg(0o01042)
+        );
+        assert!(
+            (antenna_angle_deg(0o04210) - 24.0).abs() < 0.01,
+            "{}",
+            antenna_angle_deg(0o04210)
+        );
+        assert_eq!(antenna_angle_deg(0o00000), 0.0);
+        // And the constants match what those words decode to.
+        assert!((LR_ANTENNA_POS1_DEG.0 - antenna_angle_deg(0o01042)).abs() < 0.01);
+        assert!((LR_ANTENNA_POS1_DEG.1 - antenna_angle_deg(0o04210)).abs() < 0.01);
+        assert_eq!(LR_ANTENNA_POS2_DEG.1, 0.0);
     }
 
     #[test]
