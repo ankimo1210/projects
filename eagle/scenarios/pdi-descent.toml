@@ -26,10 +26,10 @@ padload = "scenarios/p66-padload.toml"
 lm_weight_lbs = 33530.0            # derived: (7009+7950+250) kg = 15209 kg → V48/N47
 tland_offset_cs = 36000            # derived: proven burn lead from Wave 1 acceptance
 flip_atthold_after_engine_on_s = 2.0   # unused in pdi mode (handover is sim-driven)
-# REVERTED after flight 15 (2026-08-01), same FAILREG = 00522 as 14.
-# Defect 6: LRPOSCHK tests (RADMODES XOR ch33) & BIT6 -- POS1 -- and the
-# responder only ever touches BIT7 (POS2), leaving BIT6 set. It must
-# MATCH RADMODES, which means tracking the position the AGC has selected.
+# REVERTED after flight 16 (2026-08-01), same FAILREG = 00522. Defect 7:
+# the responder cached a local copy of ch33 and wrote it whole, so it
+# re-asserted a stale BIT6 over runner's P63SPOT3 handshake every tick.
+# Now fixed with discrete_write (bitmask) -- untested in flight.
 lrbypass = true
                                    # (vendor/virtualagc/Luminary099/FRESH_START_AND_RESTART.agc:623); abort if missing
 
