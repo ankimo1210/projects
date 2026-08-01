@@ -194,7 +194,15 @@ struct LrState {
     ///    to an absolute value each read.
     /// 2. Apply `LVELBIAS` to the velocity beams. The responder currently
     ///    does not, so even a correct count would be offset.
-    rnrad: i32,
+    /// Counts already driven into `RNRAD`, **per quantity**: altitude,
+    /// then the three velocity beams. Four independent readings share one
+    /// counter in the AGC, so the responder must know what it last left
+    /// there for each — a single shared total made flight 13 drive the
+    /// difference between an altitude and a velocity (see above).
+    rnrad: [i32; 4],
+    /// Which quantity `RNRAD` currently holds, so a switch between
+    /// quantities is driven from the right starting value.
+    rnrad_holds: usize,
     /// Seeded error injector; default config is OFF and RNG-free.
     errors: eagle_sensors::lr::LrErrors,
 }
@@ -203,7 +211,8 @@ impl Default for LrState {
     fn default() -> Self {
         Self {
             last_ch13: 0,
-            rnrad: 0,
+            rnrad: [0; 4],
+            rnrad_holds: 0,
             errors: eagle_sensors::lr::LrErrors::new(Default::default()),
         }
     }
@@ -679,8 +688,9 @@ impl SimCore {
         if let Some(i) = idx {
             let (along, quantum) = vel_beam(i);
             let counts = (along / quantum).trunc() as i32;
-            let delta = counts - lr.rnrad;
-            lr.rnrad = counts;
+            let delta = counts - lr.rnrad[lr.rnrad_holds];
+            lr.rnrad[i + 1] = counts;
+            lr.rnrad_holds = i + 1;
             for _ in 0..delta.unsigned_abs().min(16_384) {
                 let inc = if delta > 0 { 0 } else { 2 };
                 if let Ok(p) = Packet::counter(RNRAD_ADDR, inc) {
@@ -707,8 +717,24 @@ impl SimCore {
             return;
         };
         let counts = eagle_sensors::lr::alt_counts(measured);
-        let delta = counts - lr.rnrad;
-        lr.rnrad = counts;
+        // The AGC reads RNRAD's magnitude through `MASK POSMAX`
+        // (P20-P25.agc:2878), so a count above 16383 cannot be
+        // represented — at the high-scale quantum that is ~5.4 km. Above
+        // it the radar has no usable reading and must say so, not hand
+        // over a truncated one. (The rope's low scale, ALTSCBIT with
+        // SKALSKAL, extends this; that path is not pinned, so the
+        // conservative bound is used.)
+        if counts.unsigned_abs() > 16_383 {
+            if let Ok(p) = Packet::io(0o33, eagle_sensors::lr::ch33_bits(false, false, true)) {
+                out.to_agc.push(p);
+            }
+            return;
+        }
+        // Drive from whatever RNRAD actually holds now, not from this
+        // quantity's own last value: the AGC's counter is shared.
+        let delta = counts - lr.rnrad[lr.rnrad_holds];
+        lr.rnrad[0] = counts;
+        lr.rnrad_holds = 0;
         for _ in 0..delta.unsigned_abs().min(16_384) {
             let inc = if delta > 0 { 0 } else { 2 }; // PINC / MINC
             if let Ok(p) = Packet::counter(RNRAD_ADDR, inc) {
@@ -1550,6 +1576,44 @@ mod tests {
     }
 
     #[test]
+    fn switching_quantities_drives_rnrad_from_what_it_actually_holds() {
+        // Flight 13's bug: one shared counter meant a read of LRVELX
+        // after LRALT drove the DIFFERENCE between an altitude count and
+        // a velocity count into RNRAD -- neither reading. The AGC's
+        // counter is shared, so the responder must drive from what it
+        // last left there, whatever quantity that was.
+        let mut sc = pdi_scenario();
+        sc.agc.lrbypass = false;
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+
+        // Drop to an altitude the radar can actually represent (a 15 km
+        // PDI start exceeds the AGC counter's 16383-count magnitude).
+        core.st.pos = core.st.pos.unit().scale(sc.site.radius_m + 3_000.0);
+        core.ch13 = 0o17; // LRALT
+        let a = core.tick();
+        let alt_pulses = a.to_agc.iter().filter(|p| p.channel == 0o46).count() as i32;
+        let held = core.lr.as_ref().unwrap().rnrad[0];
+        assert_eq!(alt_pulses, held.abs(), "altitude drove its own count");
+        assert_eq!(core.lr.as_ref().unwrap().rnrad_holds, 0);
+
+        core.ch13 = 0; // release, so the next set is a rising edge
+        core.tick();
+        core.ch13 = 0o14; // LRVELX
+        let v = core.tick();
+        let vel_pulses = v.to_agc.iter().filter(|p| p.channel == 0o46).count() as i32;
+        let lr = core.lr.as_ref().unwrap();
+        assert_eq!(lr.rnrad_holds, 1, "RNRAD now holds the X beam");
+        // The pulses sent must be the step FROM the altitude count TO the
+        // velocity count -- that is what leaves RNRAD holding the reading.
+        assert_eq!(
+            vel_pulses,
+            (lr.rnrad[1] - held).abs(),
+            "driven from what RNRAD held, not from this beam's own last value"
+        );
+    }
+
+    #[test]
     fn a_radar_dropout_reports_data_not_good_and_leaves_rnrad_alone() {
         // The failure mode that matters: a dropout must NOT become a zero
         // range. Zero reads as "on the surface". The AGC keeps its last
@@ -1560,7 +1624,8 @@ mod tests {
         engine_on(&mut core);
         core.lr = Some(LrState {
             last_ch13: 0,
-            rnrad: 0,
+            rnrad: [0; 4],
+            rnrad_holds: 0,
             errors: eagle_sensors::lr::LrErrors::new(eagle_sensors::lr::LrErrorCfg {
                 dropout_probability: 1.0,
                 seed: 5,
@@ -1586,7 +1651,7 @@ mod tests {
         );
         assert_eq!(
             core.lr.as_ref().unwrap().rnrad,
-            0,
+            [0; 4],
             "RNRAD bookkeeping untouched by a dropout"
         );
     }
