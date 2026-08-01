@@ -167,20 +167,33 @@ struct LrState {
     /// Counts already driven into RNRAD, so the responder sends the
     /// difference rather than an absolute value — RNRAD is a counter.
     ///
-    /// **This is the prime suspect for flight 13's failure and is NOT
-    /// settled.** That run (2026-08-01, the first with the radar live)
-    /// proved the AGC sees the radar — P65 appeared for the first time in
-    /// this project — but its altitude diverged to +11 963 m in P65 and it
-    /// raised 4228 PROG lamp frames against 0 on flights 8-11.
+    /// **SETTLED, and this single field is flight 13's bug.** One counter
+    /// is tracked for ALL quantities, so when the AGC reads `LRALT` and
+    /// then `LRVELX`, the responder computes the delta from an ALTITUDE
+    /// count to a VELOCITY count and drives that difference into `RNRAD`.
+    /// The result is neither reading. Flight 13 (2026-08-01, the first
+    /// with the radar live) diverged to +11 963 m in P65 and raised 4228
+    /// PROG lamp frames.
     ///
-    /// The likely cause: `RADAREAD` does a plain `CA RNRAD`
-    /// (`P20-P25.agc:2820`), reading it as the value for THAT sample. If
-    /// the AGC (or the hardware it models) zeroes or consumes the counter
-    /// between reads, then sending only the delta leaves RNRAD carrying a
-    /// running total that grows without bound — which is exactly the shape
-    /// of a 12 km altitude runaway. Settle it by reading how `SAMPLSUM`
-    /// and `TRYCOUNT` (`:2823-2828`) treat successive samples before
-    /// changing anything.
+    /// The rope reads `RNRAD` as an ABSOLUTE data word, not a running
+    /// total (`P20-P25.agc:2878-2885`):
+    ///
+    /// ```text
+    ///   CAF  POSMAX
+    ///   MASK RNRAD        # 14-bit magnitude
+    ///   AD   LVELBIAS     # ... plus a BIAS, for velocity
+    ///   TS   L
+    ///   CAE  RNRAD
+    ///   DOUBLE
+    ///   MASK BIT1         # sign/overflow bit read separately
+    /// ```
+    ///
+    /// Two fixes follow, neither yet made:
+    /// 1. Track the driven count **per quantity** (altitude and the three
+    ///    velocity beams are four independent readings), or drive `RNRAD`
+    ///    to an absolute value each read.
+    /// 2. Apply `LVELBIAS` to the velocity beams. The responder currently
+    ///    does not, so even a correct count would be offset.
     rnrad: i32,
     /// Seeded error injector; default config is OFF and RNG-free.
     errors: eagle_sensors::lr::LrErrors,
