@@ -188,12 +188,9 @@ struct LrState {
     ///   MASK BIT1         # sign/overflow bit read separately
     /// ```
     ///
-    /// Two fixes follow, neither yet made:
-    /// 1. Track the driven count **per quantity** (altitude and the three
-    ///    velocity beams are four independent readings), or drive `RNRAD`
-    ///    to an absolute value each read.
-    /// 2. Apply `LVELBIAS` to the velocity beams. The responder currently
-    ///    does not, so even a correct count would be offset.
+    /// Fixed by tracking the driven count per quantity (below). Still
+    /// outstanding: `LVELBIAS` is not applied to the velocity beams, so
+    /// even a correct count is offset by that bias.
     /// Counts already driven into `RNRAD`, **per quantity**: altitude,
     /// then the three velocity beams. Four independent readings share one
     /// counter in the AGC, so the responder must know what it last left
@@ -1500,6 +1497,10 @@ mod tests {
         sc.agc.lrbypass = false;
         let mut core = SimCore::new(&sc, 0.0);
         engine_on(&mut core);
+        // Below the AGC counter's 16383-count ceiling (~5.4 km at the
+        // high-scale quantum); the 15.2 km PDI start is out of range and
+        // correctly refused.
+        core.st.pos = core.st.pos.unit().scale(sc.site.radius_m + 3_000.0);
         let alt = core.alt_agl();
         assert!(alt > 1000.0, "fixture should start high, got {alt}");
 
