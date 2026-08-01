@@ -74,3 +74,26 @@ def test_build_prepends_the_import_preamble(tmp_path):
     nb = nbformat.read(path, as_version=4)
     assert len(nb.cells) == 2
     assert "stats_textbook" in nb.cells[0].source
+
+
+def test_builder_can_target_a_single_chapter():
+    """Regenerating one chapter must not touch the others.
+
+    Writing a notebook strips its outputs. Rebuilding all nine to change one
+    of them wiped the other eight once; the selector is what keeps that
+    obligation proportional to the edit.
+    """
+    import build_notebooks as bn
+
+    assert bn._select(["08"]) == [("build_nb08", "08_hypothesis_testing")]
+    assert bn._select(["8"]) == [("build_nb08", "08_hypothesis_testing")]
+    assert len(bn._select(["06", "07"])) == 2
+    assert bn._select([]) == bn.NOTEBOOKS, "no arguments still means everything"
+    assert bn._select(["--check"]) == bn.NOTEBOOKS, "flags are not chapter names"
+
+
+def test_builder_rejects_an_unknown_chapter():
+    import build_notebooks as bn
+
+    with pytest.raises(SystemExit, match="no chapter matches"):
+        bn._select(["42"])
