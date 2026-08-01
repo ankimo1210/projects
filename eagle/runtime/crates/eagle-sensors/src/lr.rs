@@ -172,6 +172,33 @@ pub fn altitude<F: Frame>(pos: V3<F>, r_surface: f64) -> f64 {
     pos.norm() - r_surface
 }
 
+/// Metres per LR altitude count, high scale.
+///
+/// `CONTROLLED_CONSTANTS.agc:168`:
+/// `HSCAL  2DEC  -.3288792   # SCALES 1.079 FT/BIT TO 2(22)M.`
+///
+/// The comment names the quantum in feet and the constant is that same
+/// quantum in metres: 1.079 ft x 0.3048 = 0.32887920 m, matching all
+/// eight digits. `HSCAL` is negative because the AGC's slant range closes
+/// as the vehicle descends; the magnitude is the quantum.
+///
+/// Low scale is selected by `ALTSCBIT` (`FLAGWORD_ASSIGNMENTS.agc:1147`,
+/// `BIT9` of FLGWRD12), which is the flag counterpart of channel 33's
+/// bit 9 "LR RANGE LOW SCALE", and rescaled through `SKALSKAL`
+/// (`ERASABLE_ASSIGNMENTS.agc:813`, "LR ALT SCALE FACTOR RATIO: .2 NOM").
+/// Only the high scale is pinned here; the low-scale path is not yet
+/// verified and must not be guessed.
+pub const LR_ALT_M_PER_COUNT: f64 = 0.328_879_2;
+
+/// Quantize a slant range to LR altitude counts, high scale.
+///
+/// Truncation, not rounding: a counter accumulates whole pulses, and the
+/// residual belongs to the caller so successive readings do not lose it —
+/// the same carry-forward the PIPA model uses.
+pub fn alt_counts(range_m: f64) -> i32 {
+    (range_m / LR_ALT_M_PER_COUNT).trunc() as i32
+}
+
 /// The moon-fixed radius the beams intersect. Kept as a parameter rather
 /// than a constant so a test can use a unit sphere.
 pub type Surface = Mcmf;
@@ -240,6 +267,38 @@ mod tests {
         // Climbing opens the range, so the sign flips.
         let up_vel = V3::<Body>::new(30.0, 0.0, 0.0);
         assert!((beam_velocity(up_vel, down) + 30.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn the_altitude_quantum_is_the_ropes_own_1_079_ft() {
+        // HSCAL's comment gives the quantum in feet and its value gives
+        // the same quantum in metres; they must agree, or the constant
+        // has been transcribed rather than derived.
+        let from_feet = 1.079 * 0.3048;
+        assert!(
+            (LR_ALT_M_PER_COUNT - from_feet).abs() < 1e-9,
+            "{LR_ALT_M_PER_COUNT} vs {from_feet}"
+        );
+    }
+
+    #[test]
+    fn altitude_counts_round_trip_at_descent_altitudes() {
+        for h in [15_000.0, 3_000.0, 250.0, 40.0, 3.0] {
+            let n = alt_counts(h);
+            let back = f64::from(n) * LR_ALT_M_PER_COUNT;
+            assert!(
+                (h - back) < LR_ALT_M_PER_COUNT && h - back >= 0.0,
+                "h={h} -> {n} counts -> {back}"
+            );
+        }
+    }
+
+    #[test]
+    fn altitude_counts_truncate_rather_than_round() {
+        // A counter carries whole pulses; the residual is the caller's,
+        // so half a quantum must not become a whole one.
+        assert_eq!(alt_counts(LR_ALT_M_PER_COUNT * 1.9), 1);
+        assert_eq!(alt_counts(LR_ALT_M_PER_COUNT * 0.9), 0);
     }
 
     #[test]
