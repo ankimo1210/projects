@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import threading
 from typing import Any
 
 TOOL_DEFINITIONS = [
@@ -123,7 +124,6 @@ TOOL_DEFINITIONS = [
 ]
 
 
-import threading
 
 _thread_local = threading.local()
 

@@ -1,0 +1,16 @@
+# Table of contents for jupyter-book.
+# `notebooks/` here is a symlink to ../notebooks (Jupyter Book requires all
+# content below the book root).
+format: jb-book
+root: notebooks/00_overview
+chapters:
+  - file: notebooks/01_probability_foundations
+  - file: notebooks/02_random_variables_expectation
+  - file: notebooks/03_distributions_zoo
+  - file: notebooks/04_limit_theorems
+  - file: notebooks/05_stochastic_processes
+  - file: notebooks/06_estimation_mle
+  - file: notebooks/07_confidence_intervals_bootstrap
+  - file: notebooks/08_hypothesis_testing
+  - file: notebooks/09_regression_inference
+  - file: notebooks/10_glm

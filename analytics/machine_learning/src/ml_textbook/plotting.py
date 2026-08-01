@@ -368,6 +368,21 @@ def plot_drift_simulation(x, scores, drift_at=None, ax=None, metric_name: str = 
 # ---------------------------------------------------------------------------
 
 
+def _f(a, decimals: int = 4):
+    """Round a numeric payload before it is embedded in the notebook JSON.
+
+    Slider figures repeat their traces once per frame, so full float64 repr
+    dominates the committed ``.ipynb`` while adding no visible precision.
+    Integral arrays (class labels from a classifier's ``predict``) are emitted
+    as ints: rounding them to float would write "0.0" where "0" would do and
+    make the payload *larger* than before rounding.
+    """
+    arr = np.round(np.asarray(a, dtype=float), decimals)
+    if np.all(arr == np.trunc(arr)) and np.abs(arr).max(initial=0.0) < 2**31:
+        return arr.astype(np.int64).tolist()
+    return arr.tolist()
+
+
 def plotly_model_complexity(x, y, degrees=range(1, 13), test_size: float = 0.3, seed: int = 0):
     """Slider over polynomial degree showing fit + train/test error.
 
@@ -386,43 +401,43 @@ def plotly_model_complexity(x, y, degrees=range(1, 13), test_size: float = 0.3, 
     xtr, xte, ytr, yte = train_test_split(x, y, test_size=test_size, random_state=seed)
     grid = np.linspace(x.min(), x.max(), 300)[:, None]
 
-    frames, titles = [], {}
+    scatters = [
+        go.Scatter(
+            x=_f(xtr.ravel()),
+            y=_f(ytr),
+            mode="markers",
+            name="train",
+            marker={"color": "#1f77b4", "size": 7},
+        ),
+        go.Scatter(
+            x=_f(xte.ravel()),
+            y=_f(yte),
+            mode="markers",
+            name="test",
+            marker={"color": "#d62728", "size": 7, "symbol": "triangle-up"},
+        ),
+    ]
+    frames, titles, first_fit = [], {}, None
     for d in degrees:
         model = make_pipeline(PolynomialFeatures(d), LinearRegression()).fit(xtr, ytr)
         tr_rmse = float(np.sqrt(np.mean((model.predict(xtr) - ytr) ** 2)))
         te_rmse = float(np.sqrt(np.mean((model.predict(xte) - yte) ** 2)))
         titles[str(d)] = f"degree {d}  —  train RMSE {tr_rmse:.2f}, test RMSE {te_rmse:.2f}"
-        frames.append(
-            go.Frame(
-                name=str(d),
-                data=[
-                    go.Scatter(
-                        x=list(xtr.ravel()),
-                        y=list(ytr),
-                        mode="markers",
-                        name="train",
-                        marker={"color": "#1f77b4", "size": 7},
-                    ),
-                    go.Scatter(
-                        x=list(xte.ravel()),
-                        y=list(yte),
-                        mode="markers",
-                        name="test",
-                        marker={"color": "#d62728", "size": 7, "symbol": "triangle-up"},
-                    ),
-                    go.Scatter(
-                        x=list(grid.ravel()),
-                        y=list(model.predict(grid)),
-                        mode="lines",
-                        name="fit",
-                        line={"color": "black"},
-                    ),
-                ],
-                layout={"title": titles[str(d)]},
-            )
+        fit = go.Scatter(
+            x=_f(grid.ravel()),
+            y=_f(model.predict(grid)),
+            mode="lines",
+            name="fit",
+            line={"color": "black"},
         )
-    first = list(degrees)[0]
-    fig = go.Figure(data=frames[0].data, frames=frames)
+        if first_fit is None:
+            first_fit = fit
+        # The data points do not depend on the degree, so only trace 2 travels.
+        frames.append(
+            go.Frame(name=str(d), data=[fit], traces=[2], layout={"title": titles[str(d)]})
+        )
+    first = next(iter(degrees))
+    fig = go.Figure(data=[*scatters, first_fit], frames=frames)
     steps = [
         {
             "args": [[str(d)], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
@@ -497,6 +512,94 @@ def plotly_threshold_explorer(y_true, y_score, n_thresholds: int = 19):
         yaxis={"range": [0, 1.05], "title": "metric value"},
         width=640,
         height=460,
+        margin={"l": 50, "r": 20, "t": 60, "b": 40},
+    )
+    return fig
+
+
+def plotly_decision_surface_slider(
+    X,
+    y,
+    surface_fn,
+    values,
+    label_fn=None,
+    title=None,
+    slider_prefix="",
+    grid_steps: int = 100,
+    pad: float = 0.5,
+    colorscale: str = "RdBu",
+    zmid=None,
+    opacity: float = 0.8,
+    width: int = 620,
+    height: int = 560,
+):
+    """Slider over a hyper-parameter, redrawing only the decision surface.
+
+    ``surface_fn(grid, value)`` returns the surface values on ``grid`` (an
+    (n, 2) array of points) for one setting; ``label_fn(value)`` names the frame.
+
+    Several notebooks built this by hand and each re-sent the training scatter
+    plus a full-precision 120x120 grid in every frame -- one of them was the
+    single largest output in the book. Here the scatter is static and the
+    surface is rounded, which is invisible on screen and much smaller on disk.
+    """
+    import plotly.graph_objects as go
+
+    X = np.asarray(X, dtype=float)
+    y = np.asarray(y)
+    xs = np.linspace(X[:, 0].min() - pad, X[:, 0].max() + pad, grid_steps)
+    ys = np.linspace(X[:, 1].min() - pad, X[:, 1].max() + pad, grid_steps)
+    xx, yy = np.meshgrid(xs, ys)
+    grid = np.c_[xx.ravel(), yy.ravel()]
+
+    values = list(values)
+    labels = [str(v) if label_fn is None else label_fn(v) for v in values]
+
+    def surface(v):
+        z = np.asarray(surface_fn(grid, v), dtype=float).reshape(xx.shape)
+        return go.Heatmap(
+            x=_f(xs),
+            y=_f(ys),
+            z=_f(z, 2),
+            colorscale=colorscale,
+            zmid=zmid,
+            showscale=False,
+            opacity=opacity,
+            hoverinfo="skip",
+        )
+
+    points = go.Scatter(
+        x=_f(X[:, 0]),
+        y=_f(X[:, 1]),
+        mode="markers",
+        marker={
+            "color": [int(v) for v in y],
+            "colorscale": colorscale,
+            "line": {"color": "black", "width": 0.5},
+            "size": 7,
+        },
+        showlegend=False,
+    )
+    frames = [
+        go.Frame(name=lab, data=[surface(v)], traces=[0])
+        for v, lab in zip(values, labels, strict=True)
+    ]
+    fig = go.Figure(data=[surface(values[0]), points], frames=frames)
+    steps = [
+        {
+            "args": [[lab], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            "label": lab,
+            "method": "animate",
+        }
+        for lab in labels
+    ]
+    fig.update_layout(
+        sliders=[{"steps": steps, "currentvalue": {"prefix": slider_prefix}}],
+        title=title,
+        width=width,
+        height=height,
+        xaxis={"title": "x1"},
+        yaxis={"title": "x2", "scaleanchor": "x"},
         margin={"l": 50, "r": 20, "t": 60, "b": 40},
     )
     return fig

@@ -18,6 +18,7 @@ dependencies = [
     "scikit-learn>=1.5",
     "scipy>=1.14",
     "torch>=2.5",
+    "pillow>=10.0",
 ]
 
 [project.optional-dependencies]

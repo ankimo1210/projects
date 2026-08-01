@@ -8,8 +8,12 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
-from src.utils.sources import CONFIG_DIR, PROJECT_ROOT, load_sources, now_jst_iso, write_sources_bibliography
-
+from src.utils.sources import (
+    PROJECT_ROOT,
+    load_sources,
+    now_jst_iso,
+    write_sources_bibliography,
+)
 
 RAW_DIR = PROJECT_ROOT / "data" / "raw" / "company_ir"
 INTERIM_DIR = PROJECT_ROOT / "data" / "interim"
@@ -60,7 +64,7 @@ def fetch_url(source_id: str, url: str) -> dict[str, str]:
             path.write_bytes(response.content)
         else:
             path.write_text(response.text, encoding=response.encoding or "utf-8")
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         row["error"] = repr(exc)
         placeholder = path.with_suffix(path.suffix + ".fetch_error.txt")
         placeholder.write_text(f"Fetch failed for {url}\n{row['retrieved_at']}\n{exc!r}\n", encoding="utf-8")

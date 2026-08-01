@@ -31,6 +31,7 @@ members = [
     "analytics/differential_equation/ode-book",
     "analytics/differential_equation/pde-book",
     "analytics/machine_learning",
+    "analytics/statistics",
     "quantkit",
     "deep_hedge_price",
     "optimal_execution",
@@ -110,7 +111,23 @@ ignore = [
 # jp_llm_lab: tensor-shape notation (B, T, D, H, V) follows the LLM literature.
 "jp_llm_lab/**/*.py" = ["N803", "N806", "N812", "N816", "E741"]
 "analytics/**/*.py" = ["N802", "N803", "N806", "N812", "N816", "E741"]
-"notebooks/**/*.py" = ["E402", "F401", "F841", "N803", "N806"]
+# Same reason as the block above: X / X_train / y_pred is the universal spelling
+# in DS and finance code, and renaming it to satisfy PEP-8 would make these
+# harder to read, not easier.
+"kaggle/**/*.py" = ["N803", "N806", "N812", "N816", "E741"]
+"aisan_lbo_case/**/*.py" = ["N803", "N806", "N816", "E741"]
+"models/**/*.py" = ["N803", "N806", "N816", "E741"]
+"deep_hedge_price/**/*.py" = ["N803", "N806", "N816", "E741"]
+# stockkit: h / l / c is the universal OHLC spelling in market data code.
+"stock/**/*.py" = ["N803", "N806", "N816", "E741"]
+# The SPARQL bodies are full of literal { } braces, so %-format is the one
+# style that does not need every brace escaped.
+"akinator/scripts/fetch_wikidata_entities.py" = ["UP031"]
+# Notebook code is exploratory: imports get pulled in ahead of use and scratch
+# variables outlive their cell. This used to match only the top-level
+# notebooks/ directory, so per-project notebooks were held to library
+# standards by accident.
+"**/notebooks/**/*.py" = ["E402", "F401", "F841", "N803", "N806"]
 # Tests can have unused variables / imports for fixture-driven patterns.
 "**/tests/**/*.py" = ["F841", "F401"]
 # Entry-point scripts often need path / env setup before imports.
@@ -155,6 +172,7 @@ testpaths = [
     "analytics/differential_equation/ode-book/tests",
     "analytics/differential_equation/pde-book/tests",
     "analytics/machine_learning/tests",
+    "analytics/statistics/tests",
     "quantkit/tests",
     "optimal_execution/tests",
     "rough_volatility/tests",

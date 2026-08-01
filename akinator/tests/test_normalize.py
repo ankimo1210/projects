@@ -1,5 +1,5 @@
-from app.normalize import normalize_binding
 from app.models import Entity
+from app.normalize import normalize_binding
 
 
 def _raw_einstein():

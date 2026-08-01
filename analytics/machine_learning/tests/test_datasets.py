@@ -95,7 +95,7 @@ def test_anomaly_dataset():
 def test_train_validation_test_split_partition():
     X = np.arange(1000).reshape(-1, 1)
     y = np.arange(1000) % 2
-    Xtr, Xval, Xte, ytr, yval, yte = datasets.train_validation_test_split(
+    Xtr, Xval, Xte, _ytr, _yval, _yte = datasets.train_validation_test_split(
         X, y, val_size=0.2, test_size=0.2, stratify=True, seed=0
     )
     assert len(Xte) == 200

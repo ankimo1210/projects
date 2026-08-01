@@ -1,4 +1,5 @@
 pub mod agc_session;
+pub mod coredump;
 pub mod headless;
 pub mod padload;
 pub mod runner;

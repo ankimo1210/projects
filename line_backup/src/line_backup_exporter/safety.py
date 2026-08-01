@@ -36,7 +36,10 @@ def ensure_within_directory(base: Path, target: Path) -> Path:
     try:
         resolved_target.relative_to(resolved_base)
     except ValueError:
-        raise ValueError(f"Path traversal detected: {target!r} is outside {base!r}")
+        # relative_to's own ValueError is an implementation detail here.
+        raise ValueError(
+            f"Path traversal detected: {target!r} is outside {base!r}"
+        ) from None
     return resolved_target
 
 

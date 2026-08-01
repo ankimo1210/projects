@@ -7,7 +7,6 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from src.report.build_context import build_context
 from src.utils.sources import OUTPUT_DIR, PROJECT_ROOT
 
-
 TEMPLATE_DIR = PROJECT_ROOT / "src" / "templates"
 
 

@@ -74,6 +74,7 @@ books:
 	uv run --no-sync jupyter-book build analytics/differential_equation/ode-book/book/
 	uv run --no-sync jupyter-book build analytics/differential_equation/pde-book/book/
 	uv run --no-sync jupyter-book build analytics/machine_learning/book/
+	uv run --no-sync jupyter-book build analytics/statistics/book/
 
 hull-report:
 	PYTHONPATH=johnhull/report uv run --no-sync python -m report_builder.build

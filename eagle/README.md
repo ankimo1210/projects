@@ -64,6 +64,28 @@ As of Phase 2 Wave 1 the loop is closed end to end — PIPA/CDU sensors feed the
 > Measured numbers, citations and the open items:
 > [docs/superpowers/notes/2026-07-26-m1-pdi-flight.md](docs/superpowers/notes/2026-07-26-m1-pdi-flight.md).
 
+> **2026-07-31 (M1b) — flights 7 and 8 still crash, and the prime suspect
+> is named.** 29.23/72.04 m/s and 36.81/64.18 m/s: the loop's gain was
+> deliberately not changed. `TAUROD`'s b-scale is derived in
+> `scenarios/p66-padload.toml` from a premise the repo's own spike-B
+> measurement contradicts, so the AGC has been flying a rate loop **4× or
+> 8× too fast** against the rope's 0.2 s `THROTLAG`. The direction is
+> certain, the factor is **not** — two unpinned one-power-of-two shifts
+> remain in the chain — so the pad load is deliberately unchanged.
+>
+> τ **cannot** be measured from a descent: a saturated relay limit cycle
+> carries almost no information about the gain inside it. Three estimators
+> gave r² = 0.088 / 0.042 / 0.63, and the last is a trap that fits the
+> cycle's own quarter period (peak at 5.0 s lag against a 19.4 s period).
+> The experiment that works is an open-loop step test.
+>
+> Fixed along the way: a refused ROD load was silent and blinded the whole
+> run (flight 7 painted 6 `HDOTDISP` values in 222 s of P66 and raised 41
+> PROG frames; flight 8, after the fix, painted 231 and raised 0), and
+> `EAGLE_TELEM_OUT` swallowed a bad path silently — it needs an ABSOLUTE
+> path, and now panics rather than costing a flight.
+> [docs/superpowers/notes/2026-07-31-m1b-rod-loop.md](docs/superpowers/notes/2026-07-31-m1b-rod-loop.md).
+
 ## Prerequisites
 
 - `jq`, `gcc`, `make` — vendor fetch/build (`make agc`)

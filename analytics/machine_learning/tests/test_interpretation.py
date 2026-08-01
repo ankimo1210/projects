@@ -36,7 +36,7 @@ def test_partial_dependence_and_ice():
     model = RandomForestRegressor(n_estimators=20, random_state=0).fit(X, y)
     grid, avg = interpretation.partial_dependence_values(model, X, 0, grid_resolution=20)
     assert grid.shape == avg.shape == (20,)
-    grid2, ice = interpretation.ice_curves(model, X, 0, grid_resolution=20)
+    _grid2, ice = interpretation.ice_curves(model, X, 0, grid_resolution=20)
     assert ice.shape == (200, 20)
 
 

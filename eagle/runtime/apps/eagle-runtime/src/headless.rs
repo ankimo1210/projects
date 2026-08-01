@@ -60,8 +60,19 @@ pub struct HeadlessResult {
     /// — anything else aborts the run). One entry per lamp, codes
     /// included; see `runner::AlarmEpisode`.
     pub alarms: Vec<runner::AlarmEpisode>,
-    /// DSKY frames with the PROG alarm lamp lit after ENGINE ON.
+    /// DSKY frames with the PROG alarm lamp lit after ENGINE ON and
+    /// **before ground contact**. This is the window an acceptance can
+    /// gate on: a lamp here was raised while the vehicle was still
+    /// flying.
     pub prog_lamp_frames: u64,
+    /// DSKY frames with the PROG alarm lamp lit **after** the sim latched
+    /// ground contact. `spawn_sim` keeps ticking ~2 s past touchdown with
+    /// the AGC still flying a vehicle the sim has already landed, so a
+    /// lamp in this window says nothing about whether the landing was
+    /// good — M1 run 5's 21 frames were all here. Reported, never gated:
+    /// gating it would red an otherwise-good landing, and filtering it
+    /// away would discard the only evidence this alarm exists.
+    pub prog_lamp_frames_post_contact: u64,
 }
 
 #[derive(Default)]
@@ -74,6 +85,7 @@ struct Summary {
     engine_on_t: Option<f64>,
     touchdown_t: Option<f64>,
     prog_lamp_frames: u64,
+    prog_lamp_frames_post_contact: u64,
 }
 
 impl Summary {
@@ -103,8 +115,17 @@ impl Summary {
                 // enter_p63 handles pre-ignition alarms (bails on
                 // non-whitelisted). Post-engine-on, nobody else watches
                 // the lamp — count lit frames here.
+                //
+                // Split at ground contact: the sim runs ~2 s past
+                // touchdown with the AGC still flying a vehicle it has
+                // latched as landed, so a lamp raised in that tail is
+                // not evidence about the landing. Ledger open item 2a.
                 if self.engine_on_t.is_some() && d.lamps.get("prog").copied().unwrap_or(false) {
-                    self.prog_lamp_frames += 1;
+                    if self.touchdown_t.is_some() {
+                        self.prog_lamp_frames_post_contact += 1;
+                    } else {
+                        self.prog_lamp_frames += 1;
+                    }
                 }
             }
         }
@@ -225,7 +246,7 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
     while let Some(ev) = next_sim_event(&mut event_rx, &mut client_rod_rx).await {
         script_busy.store(true, Ordering::SeqCst);
         let r = match ev {
-            SimEvent::RodClicks(n) => runner::rod_load(&mut script, n as i16).await,
+            SimEvent::RodClicks(n) => rod_load_verified(&mut script, n as i16, &sim_in_tx).await,
             SimEvent::Handover => {
                 // ATT HOLD flips GUILDENSTERN's mode check (STABL?, the
                 // un-attitude-hold discrete); the selection click gives it
@@ -233,7 +254,7 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
                 // (vendor/virtualagc/Luminary099/
                 // LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:203-217).
                 match runner::att_hold(&cmd_tx).await {
-                    Ok(()) => runner::rod_load(&mut script, -1).await,
+                    Ok(()) => rod_load_verified(&mut script, -1, &sim_in_tx).await,
                     Err(e) => Err(e),
                 }
             }
@@ -270,6 +291,7 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
         descent_s,
         alarms: report.alarms,
         prog_lamp_frames: s.prog_lamp_frames,
+        prog_lamp_frames_post_contact: s.prog_lamp_frames_post_contact,
     })
 }
 
@@ -280,13 +302,68 @@ pub async fn run_headless(cfg: HeadlessCfg) -> Result<HeadlessResult> {
 /// task for a moment, and returning on it freezes mm_sequence / drift_ms /
 /// final_t_s / descent_s / prog_lamp_frames at whatever they last were —
 /// after which every acceptance assert passes on stale data instead of
+/// ROD loads the AGC has been checked to accept, reporting the applied
+/// click count back to the sim.
+///
+/// The AGC can silently refuse a load: an entry typed into P66's VERTDISP
+/// repaint stream is rejected with OPR ERR and KEY REL lit, leaving
+/// RODCOUNT unwritten and VDGVERT unmoved (`runner::rod_load`'s note,
+/// spike-B iter 18). Before 2026-07-31 nothing noticed, so a refused click
+/// vanished: the vehicle flew a commanded rate nobody had asked for, and
+/// `rod_clicks_cum` counted it anyway.
+///
+/// One retry, then give up loudly. `grab_dsky` already waits for a repaint
+/// gap, so a retry lands in a different part of the guidance pass than the
+/// attempt that failed; retrying forever would just type into a display
+/// that is not going to yield.
+async fn rod_load_verified(
+    script: &mut DskyScript,
+    clicks: i16,
+    sim_in_tx: &std::sync::mpsc::Sender<SimIn>,
+) -> Result<()> {
+    const ATTEMPTS: u32 = 2;
+    for attempt in 1..=ATTEMPTS {
+        let status = runner::rod_load(script, clicks).await?;
+        if !status.rejected() {
+            // Only clicks the AGC took are clicks VDGVERT moved by.
+            let _ = sim_in_tx.send(SimIn::RodApplied(i32::from(clicks)));
+            return Ok(());
+        }
+        eprintln!(
+            "headless: ROD load {clicks:+} REJECTED by the AGC              (key_rel={} opr_err={}), attempt {attempt}/{ATTEMPTS}",
+            status.key_rel, status.opr_err
+        );
+    }
+    // Not an error: the descent continues, and the run is still worth
+    // flying. But the commanded rate is now NOT what the schedule asked
+    // for, and every later analysis has to know that.
+    eprintln!(
+        "headless: ROD load {clicks:+} GAVE UP after {ATTEMPTS} attempts —          VDGVERT did not move; rod_clicks_cum excludes these clicks"
+    );
+    Ok(())
+}
+
 /// failing. The packet forwarder in `run_headless` already does the same
 /// `continue`.
 async fn collect_telemetry(mut telem_rx: broadcast::Receiver<String>, sum: Arc<Mutex<Summary>>) {
     // Optional per-frame telemetry dump for descent-profile debugging.
-    let mut dump = std::env::var("EAGLE_TELEM_OUT")
-        .ok()
-        .and_then(|p| std::fs::File::create(p).ok());
+    // Fail LOUDLY if the dump cannot be opened. This used to be
+    // `.and_then(|p| File::create(p).ok())`, which silently disabled the
+    // instrumentation — and since the runtime's cwd is `runtime/` (the
+    // Makefile does `cd runtime && cargo run`), the natural
+    // `EAGLE_TELEM_OUT=build/traces/x.jsonl` from the repo root resolves
+    // to a directory that does not exist and lands in exactly that hole.
+    // It cost a full 20-minute descent on 2026-07-31.
+    let mut dump = match std::env::var("EAGLE_TELEM_OUT") {
+        Ok(path) => Some(std::fs::File::create(&path).unwrap_or_else(|e| {
+            panic!(
+                "EAGLE_TELEM_OUT={path}: cannot create ({e}). The runtime's cwd \
+                 is `runtime/`, so a RELATIVE path resolves under it — pass an \
+                 absolute path. Refusing to fly with instrumentation off."
+            )
+        })),
+        Err(_) => None,
+    };
     loop {
         let json = match telem_rx.recv().await {
             Ok(json) => json,
@@ -390,6 +467,8 @@ mod tests {
             fuel_rcs_kg: 100.0,
             thrust_n: 0.0,
             throttle_cmd_pulses: 0,
+            rod_clicks_cum: 0,
+            pipa_pulses_cum: [0; 3],
             jets: 0,
             mm: mm.into(),
             agc_alt_m: None,
@@ -424,6 +503,35 @@ mod tests {
         s.note(&dsky(true)); // descent-phase PROG lamp must be counted
         s.note(&dsky(false));
         assert_eq!(s.prog_lamp_frames, 1);
+    }
+
+    #[test]
+    fn prog_lamp_frames_split_at_ground_contact() {
+        // Ledger open item 2a: the counter runs through the sim's ~2 s
+        // post-touchdown tail, with the AGC still flying a vehicle the
+        // sim has latched as landed. Run 5 of the M1 flights counted 21
+        // lamp frames, ALL of them after contact, and the acceptance's
+        // `prog_lamp_frames == 0` gate would have failed a run that had
+        // already landed. Both windows are kept: the gate reads the
+        // pre-contact count, and the post-contact count stays visible
+        // because it is the only evidence the alarm exists at all.
+        let mut s = Summary::default();
+        s.note(&telem(1.0, "63", false)); // engine on
+        s.note(&dsky(true));
+        assert_eq!(s.prog_lamp_frames, 1);
+        assert_eq!(s.prog_lamp_frames_post_contact, 0);
+
+        let mut td = telem(2.0, "66", false);
+        if let ServerMsg::Telemetry(t) = &mut td {
+            t.touchdown = Some("Hard".into());
+        }
+        s.note(&td);
+        s.note(&dsky(true));
+        assert_eq!(
+            s.prog_lamp_frames, 1,
+            "the pre-contact counter must not move after touchdown"
+        );
+        assert_eq!(s.prog_lamp_frames_post_contact, 1);
     }
 
     #[test]

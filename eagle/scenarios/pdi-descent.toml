@@ -26,7 +26,38 @@ padload = "scenarios/p66-padload.toml"
 lm_weight_lbs = 33530.0            # derived: (7009+7950+250) kg = 15209 kg → V48/N47
 tland_offset_cs = 36000            # derived: proven burn lead from Wave 1 acceptance
 flip_atthold_after_engine_on_s = 2.0   # unused in pdi mode (handover is sim-driven)
-lrbypass = true                    # verify-only: fresh start already sets FLAGWRD11 bit15
+# Flight 17 (2026-08-01): testing defect 7 -- ch33 is now written with a
+# bitmask (discrete_write) instead of a cached whole word, so the
+# responder can no longer clobber runner P63SPOT3 handshake.
+# REVERTED after flight 17 (2026-08-01). Defect 7 IS fixed -- the run
+# cleared P63 for the first time with the radar live -- but it then flew
+# AWAY: vz positive from ignition, altitude to 2496 km, nav_err diverging
+# monotonically to -90 km. The AGC believes it is far too low and thrusts
+# continuously. See defect 8 in sim.rs.
+# Flight 18 (2026-08-01): defect 8 IS fixed. Negating the altitude count
+# stopped the runaway -- the vehicle braked normally from 15.2 km at
+# -28 m/s where flight 17 had climbed to 2496 km. REVERTED again because
+# the flight still crashed (119.6 / 770.0 m/s): the AGC's altitude now
+# oscillates +-3 km instead of diverging, which is DEFECT 9 -- the LR
+# pad-load block was never loaded and nothing declares the altitude scale.
+# See sim.rs and the ledger's section 12.
+#
+# Flight 19 (2026-08-01): two provable defect-9 fixes.
+#  1. ALTSCBIT (FLGWRD12 bit 9) is now DECLARED, read-modify-write, in the
+#     pad-load choreography. Nothing in the rope writes it; leaving it
+#     clear selected the low scale and multiplied every reading by an
+#     unloaded SKALSKAL = 0.
+#  2. Velocity data-good is now gated on the counter's own window, the
+#     same rule the altitude path already used. Flights 11 and 18 flew
+#     IDENTICALLY to TIG+300 s and then split -- the rope acting on a
+#     wrapped velocity count.
+# Decision rule, fixed before the result: track flight 11 (the healthy
+# bypassed run) past TIG+360 s => both fixes hold; split at the same place
+# => velocity was not the whole story and the next cut is LR velocity off
+# entirely, altitude only.
+# RESULT: it split at the SAME place and WORSE (tilt 112.5 deg vs 62.1;
+# MM64 never reached at all). Reverted -- see the ledger's section 13.
+lrbypass = true
                                    # (vendor/virtualagc/Luminary099/FRESH_START_AND_RESTART.agc:623); abort if missing
 
 [handover]
@@ -72,11 +103,24 @@ alt_m = 250.0
 # neither a step-size nor an engine-constant artefact.
 # Suspect: TAUROD/LAG-TAU/MINFORCE/MAXFORCE are
 # the only UNVERIFIED scale-chain pad words left (padload::P66_BSCALE_TABLE)
-# and they are exactly the P66 force law's gain and limits; TAUROD's scale
-# is derivable statically (LLGE:155-157 + :1050 + GSCALE at :1477), costing
-# no flights. Second suspect, needing a citation first: dps_envelope's
-# 19.26 kN discontinuity at 0.6*MAX with no hysteresis (forces.rs). See the
-# ledger.
+# and they are exactly the P66 force law's gain and limits.
+#
+# 2026-07-31: TAUROD is now the PRIME suspect, and the claim that once
+# stood here -- "TAUROD's scale is derivable statically (LLGE:155-157 +
+# :1050 + GSCALE at :1477), costing no flights" -- did NOT hold. That
+# route was taken and it stops one power of two short: the chain runs
+# through the BDDV by the DOT-built direction cosine (LLGE:1051-1058) and
+# the SR2 on the gravity path (:1047), neither of which is pinned, and
+# they are exactly the difference between b=11 (0.1875 s) and b=12
+# (0.375 s). What IS established is that the shipped b=14 rests on a
+# velocity scale the repo's own spike-B measurement contradicts, so the
+# loop is 4x or 8x too fast against THROTLAG's 0.2 s. Do not change the
+# pad load until the scale is measured -- and it cannot be measured from
+# a descent (a saturated limit cycle carries almost no information about
+# the gain inside it; three estimators failed, the most convincing one by
+# fitting the cycle's own quarter period). Second suspect, needing a
+# citation first: dps_envelope's 19.26 kN discontinuity at 0.6*MAX with no
+# hysteresis (forces.rs). See docs/superpowers/notes/2026-07-31-m1b-rod-loop.md.
 steps = [[240.0, -1.5], [40.0, 0.2], [10.0, 0.8]]
 
 [errors]                 # empty = all OFF (acceptance runs use this)

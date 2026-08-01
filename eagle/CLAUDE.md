@@ -77,6 +77,60 @@ AGC-clock blocks would pass, its touchdown block would fail, and its
 thresholds (they are the scenario's design limits) and do not describe M1
 as landing anything until that test is the thing that measured it.
 
+## 2026-07-31 — M1b: the TAUROD scale, and two more flights
+
+Flights 7 and 8 (`build/traces/telem-m1-run{7,8}.jsonl`). **Both still
+crash** — 29.23/72.04 m/s and 36.81/64.18 m/s — because the loop's gain
+was deliberately NOT changed. Full ledger:
+`docs/superpowers/notes/2026-07-31-m1b-rod-loop.md`.
+
+**The prime suspect for the limit cycle is now named: `TAUROD`'s
+b-scale.** `scenarios/p66-padload.toml` derives it at b=14 from a premise
+("velocities in this file are at 2^10 m/cs", `:252-259`) that the
+spike-B live measurement fifteen lines below contradicts for the two
+words the force law actually divides — `VDGVERT`/`HDOTDISP` are b=7
+(`:265-274`, the one `Verified` entry in `P66_BSCALE_TABLE`). **Nobody
+re-derived TAUROD after that measurement landed.** At b=11 the AGC reads
+the committed 150 cs word as 0.1875 s, at b=12 as 0.375 s — a 4× or 8×
+too-fast rate loop against the rope's own 0.2 s `THROTLAG`. **The
+direction is certain; the factor is NOT.** Two unpinned one-power-of-two
+shifts sit in the chain (the `BDDV` by the `DOT`-built cosine at
+`:1051-1058`, the `SR2` at `:1047`). **Do not change the pad load until
+one of them is measured.**
+
+**τ cannot be measured from a descent, and this is structural.** Three
+estimators on flight 8's good data give r² = 0.088 / 0.042 / 0.63. The
+last is a trap: sweeping the assumed command lag makes r² a *periodic*
+function of lag, peaking at 5.0 s against a measured limit-cycle period
+of 19.4 s (quarter period 4.9 s). It aligns phase, it does not measure
+gain. A saturated relay limit cycle carries almost no information about
+the linear gain inside it. The experiment that will work is an open-loop
+step test off `live_spike_p66` — see the ledger's §7.
+
+**A refused ROD load used to be silent, and blinded the run.** An entry
+typed into P66's VERTDISP repaint stream is rejected with OPR ERR / KEY
+REL, leaving RODCOUNT unwritten; nothing checked, and nothing handed the
+display back. Flight 7 painted **6** distinct `HDOTDISP` values in 222 s
+of P66 (against 206/230 on runs 5/6) and counted 41 PROG lamp frames.
+Fixed (`a984c46a`): `rod_load` samples the lamps and returns an
+`EntryStatus`, then always releases the display; `headless` retries once
+and reports; **`rod_clicks_cum` counts only clicks the AGC confirmed**,
+because a refused click never moved VDGVERT. Flight 8: 231 repaints
+(1.07/s, best of any run), 0 rejections, 0 PROG frames. Never RSET in
+these paths — it clears FAILREG, and the P65 alarm's code is still
+unknown.
+
+`EAGLE_TELEM_OUT` / `EAGLE_ATT_DEBUG` need **absolute** paths: the
+runtime's cwd is `runtime/`. They used to swallow a bad path silently and
+cost a whole flight; they now panic. `make descent-full` always writes
+`build/traces/pkt-descent-full.jsonl`.
+
+One correction to the block above: `DPS_MIN_N` is the **plant's** lower
+stop (`runner.rs` clamps delivered thrust), not a clamp on the AGC's
+command — the commanded throttle roams smoothly down to ~178 bits with no
+mode anywhere, so the command floor cannot be used to read `MINFORCE`'s
+scale (ledger §3b). It stays on the suspect list.
+
 - Specs: docs/superpowers/specs/2026-07-21-eagle-roadmap-design.md,
   docs/superpowers/specs/2026-07-22-eagle-phase2-closed-loop-design.md
 - Channel semantics: docs/agc-channel-map.md (octal; update with citations)

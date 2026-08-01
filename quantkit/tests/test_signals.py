@@ -9,8 +9,9 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
-from quantkit import signals as S
 from quantkit.signals.schema import Signal, SignalCategory
+
+from quantkit import signals as S
 
 
 def _trending_panel(n=300):

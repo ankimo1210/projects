@@ -31,6 +31,14 @@ Jupyter Notebook ベースの線形代数教科書プロジェクト。
 共通関数は `src/la_book/` にまとめている
 (`plotting.py` / `widgets.py` / `algebra.py` / `decompositions.py` / `datasets.py`)。
 
+## 変更記録
+
+- [`docs/2026-08-01-review-fixes.md`](docs/2026-08-01-review-fixes.md) —
+  全章レビューと修正(Newton の収束次数・PageRank のダングリング処理・確率行列の規約・
+  図の軸レンジ/対数軸・重複図の作り替え・ノートブック 19MB → 12MB)、
+  および可視化の新規実装(3D ランク落ち・最小二乗の 3D 幾何・グラフ描画・
+  掃き出し法のステップ再生・$\det(A-\lambda I)$ の連動図・SVD 連動ビュー)。
+
 ## 環境構築
 
 ### この workspace 内で使う場合(推奨)
@@ -70,7 +78,9 @@ for nb in notebooks/0*.ipynb; do
 done
 ```
 
-ipywidgets を使うセルは JupyterLab 上でのみ動く(静的 HTML では代替の静的図を参照)。
+Notebook 内のインタラクティブ図はすべて Plotly で、**静的 HTML でもそのまま動く**。
+`src/la_book/widgets.py`(ipywidgets 版)は JupyterLab 専用の任意の追加で、
+Notebook からは呼んでいない(静的 HTML で空セルになるため)。
 
 ## Jupyter Book のビルド
 

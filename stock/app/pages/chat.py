@@ -260,7 +260,8 @@ def poll_result(n_intervals, job_id, history, current_messages):
         )
         status = resp.json()
     except Exception:
-        raise PreventUpdate
+        # PreventUpdate is Dash control flow, not an error to chain onto.
+        raise PreventUpdate from None
 
     if status["status"] == "running":
         raise PreventUpdate
