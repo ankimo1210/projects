@@ -23,6 +23,7 @@ sys.path.insert(0, str(TOOLS))
 # Plan 1 fills 00-05; Plan 2 and 3 append 06-13.
 NOTEBOOKS = [
     ("build_nb00", "00_overview"),
+    ("build_nb01", "01_probability_foundations"),
 ]
 
 
