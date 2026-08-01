@@ -118,9 +118,10 @@ analytics/statistics/
 │   └── build_notebooks.py    # 全章ビルド（--check で dry-run）
 ├── notebooks/                # 出力込みでコミット（生成物だが版管理する）
 ├── tests/
-│   ├── test_distributions.py  test_processes.py   test_estimation.py
-│   ├── test_intervals.py      test_testing.py     test_regression.py
-│   ├── test_glm.py            test_simulation.py  test_plotting.py  test_widgets.py
+│   ├── test_datasets.py       test_distributions.py  test_processes.py
+│   ├── test_estimation.py     test_intervals.py      test_testing.py
+│   ├── test_regression.py     test_glm.py            test_simulation.py
+│   ├── test_plotting.py       test_widgets.py        # src の全モジュールに 1 対 1
 └── book/
     ├── _config.yml           # execute_notebooks: "off"、require.js で Plotly
     ├── _toc.yml
@@ -201,7 +202,9 @@ done
 - **自前 IRLS は statsmodels と係数・標準誤差で一致することをテスト**（10 章の主張そのもの）
 - **モンテカルロの主張は緩い許容誤差でテスト**: 名目 95% 区間の実測被覆が seed 固定で 93–97% に入る
 - **図は純関数テスト**: `go.Figure` が返る・トレース数・軸ラベル
-- 想定テスト数 55–65 本（`bayesian` 55・`machine_learning` 59 と同水準）
+- 想定テスト数 55–65 本（`bayesian` 55・`machine_learning` 59 と同水準）。
+  内訳は M1 ~20（確率論のコア）・M3 ~25（推測のコア）・M5 ~15（回帰と GLM）で、
+  `plotting` / `widgets` のテストは各マイルストーンの内数とする
 
 ## 8. 依存
 
@@ -244,7 +247,7 @@ testpaths = [ ..., "analytics/statistics/tests", ... ]
 
 | # | 内容 | 完了条件 |
 |---|---|---|
-| **M0** | 足場 — ディレクトリ・pyproject・requirements・nbkit・book/_config・_toc・README 骨子・workspace 登録 | `uv run pytest analytics/statistics/tests` が通る・`jupyter-book build` が空の本を作れる |
+| **M0** | 足場 — ディレクトリ・pyproject・requirements・nbkit・book/_config・_toc・README 骨子・workspace 登録 | `pytest analytics/statistics/tests` が通る（`import stats_textbook` を確認する smoke テスト 1 本を置き、0 件収集による exit code 5 を避ける）・`jupyter-book build` が `00_overview` のみの本を作れる |
 | **M1** | 確率論のコア — `datasets` / `distributions` / `processes` / `simulation` ＋ `plotting/probability` | テスト ~20 本が緑 |
 | **M2** | NB 00–05 生成（第Ⅰ部 6 章） | 全章が nbconvert で実行完了・図が静的 HTML で動く |
 | **M3** | 推測のコア — `estimation` / `intervals` / `testing` ＋ `plotting/inference` | テスト ~25 本追加（CRLB・被覆確率・検出力の検算含む） |
@@ -253,7 +256,22 @@ testpaths = [ ..., "analytics/statistics/tests", ... ]
 | **M6** | 橋渡し・キャップストーン・演習解答 — NB 11–13 | ベイズ書・ML 書へのリンクが正しい |
 | **M7** | 仕上げ — README 完成・コールアウト数の点検・report ポータル統合・Makefile・全書ビルド | `make test` / `make lint` / `make books` / `make report` が全て緑 |
 
-M1→M2、M3→M4 は依存するが、**M1 と M3 は独立**なので並行実装が可能（サブエージェント実行時の分割点）。
+依存関係は M0 → M1 → {M2, M3} → M4 → M5 → M6 → M7。
+`estimation` は `distributions` を使うため **M3 は M1 に依存する**（セクション 5 の一方向依存）。
+並行実装できるのは **M2（第Ⅰ部のノートブック執筆）と M3（推測のコア実装）**で、
+どちらも M1 の完了だけを必要とする。ここがサブエージェント実行時の分割点になる。
+
+### 実装プランの分割
+
+本設計は 1 本の実装プランに収めるには大きい。以下の 3 プランに分けて順に書く。
+
+| プラン | 範囲 | 前提 |
+|---|---|---|
+| Plan 1 | M0–M2（足場・確率論のコア・第Ⅰ部 6 章） | なし |
+| Plan 2 | M3–M5（推測のコア・第Ⅱ部 5 章・回帰と GLM） | Plan 1 完了 |
+| Plan 3 | M6–M7（橋渡し・キャップストーン・演習解答・仕上げ） | Plan 2 完了 |
+
+各プランの完了時に実測値（テスト数・実行時間・図の点数）を記録し、次プランの前提を更新する。
 
 ## 11. リスクと対策
 
