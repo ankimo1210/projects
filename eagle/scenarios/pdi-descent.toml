@@ -26,7 +26,13 @@ padload = "scenarios/p66-padload.toml"
 lm_weight_lbs = 33530.0            # derived: (7009+7950+250) kg = 15209 kg → V48/N47
 tland_offset_cs = 36000            # derived: proven burn lead from Wave 1 acceptance
 flip_atthold_after_engine_on_s = 2.0   # unused in pdi mode (handover is sim-driven)
-lrbypass = true                    # verify-only: fresh start already sets FLAGWRD11 bit15
+# REVERTED to true after flight 13 (2026-08-01), the first run with the
+# radar live. It flew, and the AGC plainly SAW the radar -- P65 appeared
+# for the first time in this project -- but the readings are wrong:
+# nav_err_alt diverged to +11 963 m in P65 and the run raised 4228 PROG
+# lamp frames against 0 on flights 8-11. Do not re-enable until the RNRAD
+# accumulation question below is settled.
+lrbypass = true
                                    # (vendor/virtualagc/Luminary099/FRESH_START_AND_RESTART.agc:623); abort if missing
 
 [handover]
