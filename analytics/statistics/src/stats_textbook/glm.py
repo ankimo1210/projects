@@ -19,6 +19,14 @@ __all__ = ["GLMResult", "deviance_residuals", "dispersion", "irls"]
 
 _FAMILIES = ("binomial", "poisson", "gaussian")
 
+# Keep the fitted mean off the boundary of its support. Under perfect
+# separation a logistic fit drives mu to exactly 0 or 1, the working weight
+# mu(1-mu) goes to zero, the working response goes infinite, and the least
+# squares solve dies with "SVD did not converge" -- a crash where the honest
+# answer is "the MLE does not exist, and here is the coefficient running
+# away". Clipping keeps that visible instead of fatal.
+_EPS = 1e-10
+
 
 @dataclass(frozen=True)
 class GLMResult:
@@ -39,11 +47,11 @@ def _check_family(family: str) -> None:
 
 
 def _link_inverse(eta: np.ndarray, family: str) -> np.ndarray:
-    """Canonical inverse link: logit, log, or identity."""
+    """Canonical inverse link: logit, log, or identity, clipped off the boundary."""
     if family == "binomial":
-        return special.expit(eta)
+        return np.clip(special.expit(eta), _EPS, 1.0 - _EPS)
     if family == "poisson":
-        return np.exp(eta)
+        return np.maximum(np.exp(eta), _EPS)
     return eta
 
 

@@ -19,13 +19,24 @@ def poisson_data(n=300, seed=1):
     return X, rng.poisson(np.exp(X @ np.array([0.7, 0.4]))).astype(float)
 
 
+# Coefficients agree to ~1e-11 or better; standard errors only to ~5e-6.
+# The gap is not a convergence artefact -- it survives evaluating both
+# formulas at statsmodels' own coefficients. statsmodels reports the
+# covariance built from the working weights of its final weighted least
+# squares, and those weights were formed from the *previous* iterate's mu;
+# recomputing them at the converged mu (what irls does) differs by O(tol).
+# Verified: feeding statsmodels' own model.weights into this module's
+# covariance formula reproduces its bse to 1.8e-16. Neither is wrong.
+SE_RTOL = 1e-5
+
+
 def test_logistic_irls_matches_statsmodels():
     X, y = logistic_data()
     got = glm.irls(X, y, family="binomial")
     ref = sm.GLM(y, X, family=sm.families.Binomial()).fit()
     assert got.converged
     np.testing.assert_allclose(got.params, ref.params, rtol=1e-8)
-    np.testing.assert_allclose(got.se, ref.bse, rtol=1e-7)
+    np.testing.assert_allclose(got.se, ref.bse, rtol=SE_RTOL)
     assert abs(got.deviance - ref.deviance) < 1e-7
     assert abs(got.loglik - ref.llf) < 1e-7
 
@@ -36,11 +47,23 @@ def test_poisson_irls_matches_statsmodels():
     ref = sm.GLM(y, X, family=sm.families.Poisson()).fit()
     assert got.converged
     np.testing.assert_allclose(got.params, ref.params, rtol=1e-8)
-    # Measured agreement: params to 7e-12, se to 2e-6 relative. The looser
-    # tolerance on se is real -- statsmodels stops iterating on a different
-    # criterion, so the covariance is evaluated at a marginally different mu.
-    np.testing.assert_allclose(got.se, ref.bse, rtol=1e-5)
+    np.testing.assert_allclose(got.se, ref.bse, rtol=SE_RTOL)
     assert abs(got.deviance - ref.deviance) < 1e-6
+
+
+def test_standard_error_gap_is_the_weight_evaluation_point():
+    """Pin the diagnosis, so a future regression is not misread as drift."""
+    from scipy import special
+
+    X, y = logistic_data()
+    ref = sm.GLM(y, X, family=sm.families.Binomial()).fit()
+    # statsmodels' stored weights are not mu(1-mu) at the converged mu ...
+    mu = special.expit(X @ ref.params)
+    assert np.abs(np.asarray(ref.model.weights) - mu * (1 - mu)).max() > 1e-12
+    # ... but feeding them through this module's covariance reproduces bse.
+    w = np.asarray(ref.model.weights)
+    se = np.sqrt(np.diag(np.linalg.pinv((X * w[:, None]).T @ X)))
+    np.testing.assert_allclose(se, ref.bse, rtol=1e-12)
 
 
 def test_gaussian_irls_reduces_to_ordinary_least_squares():
@@ -85,6 +108,24 @@ def test_dispersion_is_about_one_for_a_true_poisson():
     X, y = poisson_data(n=2000, seed=3)
     got = glm.irls(X, y, family="poisson")
     assert 0.85 <= glm.dispersion(got, y, X, "poisson") <= 1.15
+
+
+def test_perfect_separation_diverges_without_crashing():
+    """When the MLE does not exist, say so -- do not raise LinAlgError.
+
+    A perfectly separated logistic fit drives mu to the boundary, the
+    working weight to zero and the working response to infinity. Without
+    clipping, numpy's lstsq dies with "SVD did not converge", which reads
+    as a bug in the caller's data rather than as the real answer: there is
+    no maximum, the coefficient just runs away.
+    """
+    x = np.array([-3.0, -2.0, -1.0, 1.0, 2.0, 3.0])
+    y = np.array([0.0, 0.0, 0.0, 1.0, 1.0, 1.0])
+    X = np.column_stack([np.ones(6), x])
+    slopes = [glm.irls(X, y, family="binomial", max_iter=k, tol=0.0).params[1] for k in (5, 20, 50)]
+    assert all(np.isfinite(s) for s in slopes), slopes
+    assert slopes[0] < slopes[1] < slopes[2], f"the slope should keep growing: {slopes}"
+    assert slopes[-1] > 10.0, f"and grow a lot: {slopes[-1]}"
 
 
 def test_dispersion_detects_overdispersion():

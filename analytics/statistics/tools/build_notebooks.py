@@ -44,6 +44,7 @@ NOTEBOOKS = [
     ("build_nb07", "07_confidence_intervals_bootstrap"),
     ("build_nb08", "08_hypothesis_testing"),
     ("build_nb09", "09_regression_inference"),
+    ("build_nb10", "10_glm"),
 ]
 
 
