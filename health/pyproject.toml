@@ -8,6 +8,11 @@ dependencies = [
     "plotly>=6.0",
     "duckdb>=1.1",
     "pandas>=2.2",
+    # pandas dispatches .corr(method="spearman") to scipy.stats.spearmanr,
+    # so analytics.lagged_correlation needs scipy even though nothing
+    # imports it directly. Without it `uv sync --package health` gives a
+    # working-looking install that raises ModuleNotFoundError at runtime.
+    "scipy>=1.11",
     "requests>=2.32",
     "python-dotenv>=1.0",
 ]
