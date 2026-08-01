@@ -27,6 +27,7 @@ NOTEBOOKS = [
     ("build_nb02", "02_random_variables_expectation"),
     ("build_nb03", "03_distributions_zoo"),
     ("build_nb04", "04_limit_theorems"),
+    ("build_nb05", "05_stochastic_processes"),
 ]
 
 
