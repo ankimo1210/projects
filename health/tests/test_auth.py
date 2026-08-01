@@ -1,14 +1,28 @@
+# health/tests/ is a package, so a plain `from tests.fakes import ...` resolves
+# through the top-level name `tests` -- which in a full-workspace run belongs to
+# whichever member project pytest imported first (stock/tests today). That made
+# this module error out at collection from the repo root while passing from
+# health/. Loading the sibling module by path is independent of rootdir, and
+# adding a conftest here is not an option: it would be named `tests.conftest`
+# and collide with stock's.
+import importlib.util as _importlib_util
 import json
 import os
 import stat
 from pathlib import Path
+from pathlib import Path as _Path
 from urllib.parse import parse_qs, urlparse
 
 import pytest
 import requests
 from health.auth import AUTHORIZE_URL, SCOPES, TOKEN_URL, AuthError, GoogleHealthAuth
 
-from tests.fakes import FakeResponse, FakeSession
+_fakes_spec = _importlib_util.spec_from_file_location(
+    "health_test_fakes", _Path(__file__).resolve().with_name("fakes.py")
+)
+_fakes = _importlib_util.module_from_spec(_fakes_spec)
+_fakes_spec.loader.exec_module(_fakes)
+FakeResponse, FakeSession = _fakes.FakeResponse, _fakes.FakeSession
 
 
 def make_auth(tmp_path, session=None, clock=lambda: 1000.0):
