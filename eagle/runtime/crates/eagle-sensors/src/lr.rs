@@ -268,11 +268,17 @@ pub fn ch33_bits(range_good: bool, vel_good: bool, in_position_2: bool) -> u16 {
     )
 }
 
-/// Every channel-33 bit this module owns. Anything outside this mask
-/// belongs to `runner::init_discretes` (uplink, PIPA fail, oscillator)
-/// and must survive an LR update untouched.
-pub const CH33_LR_MASK: u16 =
-    CH33_LR_RANGE_DATA_GOOD | CH33_LR_POS1 | CH33_LR_POS2 | CH33_LR_VEL_DATA_GOOD;
+/// Every channel-33 bit this module owns.
+///
+/// **`CH33_LR_POS1` is deliberately NOT in it.** `runner` owns BIT6: it
+/// clears the bit as its own responder when P63SPOT3 asks for the antenna
+/// (`runner.rs:657`, `discrete_write(0o33, 0, CH33_BIT6_LR_POS1)`).
+/// Including POS1 here made `apply_lr_bits`'s `current | CH33_LR_MASK`
+/// re-SET the bit every tick, silently undoing that handshake — which is
+/// why flights 14 and 15 both died at P63 on `LRPOSALM` (0522). A mask
+/// that covers a bit you never assert is a mask that erases someone
+/// else's work.
+pub const CH33_LR_MASK: u16 = CH33_LR_RANGE_DATA_GOOD | CH33_LR_POS2 | CH33_LR_VEL_DATA_GOOD;
 
 /// Read-modify-write the LR bits of an existing channel-33 word.
 ///
@@ -969,6 +975,22 @@ mod tests {
         }
         // Zero velocity is NOT a zero count -- that is the whole point.
         assert_eq!(vel_raw_counts(0.0, q), 12288);
+    }
+
+    #[test]
+    fn an_lr_update_never_touches_the_pos1_bit_runner_owns() {
+        // Flights 14 and 15 both died at P63 on LRPOSALM because this
+        // module's mask covered BIT6 without ever asserting it, so every
+        // tick re-set a bit runner had just cleared for the P63SPOT3
+        // handshake.
+        let with_pos1_asserted: u16 = 0o57776 & !CH33_LR_POS1;
+        let out = apply_lr_bits(with_pos1_asserted, true, true, true);
+        assert_eq!(
+            out & CH33_LR_POS1,
+            0,
+            "POS1 must stay as runner left it: {out:o}"
+        );
+        assert_eq!(CH33_LR_MASK & CH33_LR_POS1, 0, "POS1 is not ours to own");
     }
 
     #[test]
