@@ -201,6 +201,17 @@ def plot_latent_space(Z, y, ax=None, title: str | None = None):
 # ---------------------------------------------------------------------------
 
 
+def _f(a, decimals: int = 4):
+    """Round a numeric payload before it is embedded in the notebook JSON.
+
+    Slider figures repeat their traces once per frame, so full float64 repr
+    dominates the committed ``.ipynb`` while adding no visible precision.
+    Applied to coordinates and image/contour values only — never to quantities
+    that span many decades, where absolute rounding would destroy the small end.
+    """
+    return np.round(np.asarray(a, dtype=float), decimals).tolist()
+
+
 def plotly_image_slider(images, labels, title: str | None = None, slider_name: str = "step"):
     """A grayscale image with a slider stepping through ``images``.
 
@@ -209,7 +220,7 @@ def plotly_image_slider(images, labels, title: str | None = None, slider_name: s
     """
     import plotly.graph_objects as go
 
-    frames_z = [np.asarray(im, dtype=float)[::-1] for im in images]  # flip so row 0 is on top
+    frames_z = [_f(np.asarray(im, dtype=float)[::-1], 3) for im in images]  # flip so row 0 is on top
     fig = go.Figure(
         data=[go.Heatmap(z=frames_z[0], colorscale="gray", showscale=False)],
         frames=[
@@ -247,7 +258,7 @@ def plotly_attention_slider(tokens, scores, temperatures, title: str | None = No
     from .metrics import softmax_np
 
     scores = np.asarray(scores, dtype=float)
-    mats = [softmax_np(scores / t, axis=1) for t in temperatures]
+    mats = [softmax_np(scores / t, axis=1) for t in temperatures]  # not rounded: rows must stay normalised
     axis = {"tickvals": list(range(len(tokens))), "ticktext": list(tokens)}
     fig = go.Figure(
         data=[go.Heatmap(z=mats[0], colorscale="Viridis", zmin=0, zmax=1)],
@@ -325,11 +336,14 @@ def plotly_decision_boundary(
         prev = int(c)
         snapshots.append((int(c), prob_grid()))
 
-    def traces(z):
+    def surface(z):
+        return go.Heatmap(
+            x=_f(xs), y=_f(ys), z=_f(z, 3),
+            colorscale="RdBu", zmin=0, zmax=1, opacity=0.85, showscale=False,
+        )
+
+    def points():
         return [
-            go.Heatmap(
-                x=xs, y=ys, z=z, colorscale="RdBu", zmin=0, zmax=1, opacity=0.85, showscale=False
-            ),
             go.Scatter(
                 x=list(X[:, 0]),
                 y=list(X[:, 1]),
@@ -344,9 +358,11 @@ def plotly_decision_boundary(
             ),
         ]
 
+    # Only the probability surface changes; re-sending the scatter in every
+    # frame used to make this the largest output in the book.
     fig = go.Figure(
-        data=traces(snapshots[0][1]),
-        frames=[go.Frame(data=traces(z), name=str(ep)) for ep, z in snapshots],
+        data=[surface(snapshots[0][1]), *points()],
+        frames=[go.Frame(data=[surface(z)], traces=[0], name=str(ep)) for ep, z in snapshots],
     )
     steps = [
         {
@@ -398,7 +414,10 @@ def plotly_training_curves(
         for lab, s in zip(labels, series, strict=True):
             out.append(
                 go.Scatter(
-                    x=list(epochs), y=list(np.where(shown, s, np.nan)), mode="lines", name=lab
+                    x=[int(e) for e in epochs],
+                    y=_f(np.where(shown, s, np.nan), 5),
+                    mode="lines",
+                    name=lab,
                 )
             )
         return out
@@ -508,8 +527,8 @@ def plotly_activations(
     def traces(name):
         f, df = fns(name)
         return [
-            go.Scatter(x=list(x), y=list(f), mode="lines", name="f(x)"),
-            go.Scatter(x=list(x), y=list(df), mode="lines", name="f'(x)", line={"dash": "dash"}),
+            go.Scatter(x=_f(x), y=_f(f), mode="lines", name="f(x)"),
+            go.Scatter(x=_f(x), y=_f(df), mode="lines", name="f'(x)", line={"dash": "dash"}),
         ]
 
     frames = [go.Frame(data=traces(nm), name=nm) for nm in names]
@@ -574,8 +593,8 @@ def plotly_hidden_unfolding(
     def traces(H):
         return [
             go.Scatter(
-                x=list(H[:, 0]),
-                y=list(H[:, 1]),
+                x=_f(H[:, 0], 3),
+                y=_f(H[:, 1], 3),
                 mode="markers",
                 marker={
                     "color": list(map(int, y)),
@@ -627,7 +646,8 @@ def plotly_ssm_impulse(
 
     def traces(a):
         y = linear_ssm_scan(x, np.array([a]), np.array([1.0]), np.array([1.0]))
-        return [go.Scatter(x=list(t), y=list(y), mode="lines+markers", name="impulse response")]
+        return [go.Scatter(x=[int(v) for v in t], y=_f(y, 5), mode="lines+markers",
+                           name="impulse response")]
 
     frames = [go.Frame(data=traces(a), name=f"{a:g}") for a in decays]
     fig = go.Figure(data=traces(decays[0]), frames=frames)
@@ -679,16 +699,18 @@ def plotly_function_approx(n_units_list=(1, 2, 4, 8, 16, 32, 64), seed: int = 0,
         f"{n} units (RMSE={np.sqrt(np.mean((yh - target) ** 2)):.3f})" for n, yh in fits
     ]
 
-    def traces(yhat):
-        return [
-            go.Scatter(x=list(x), y=list(target), mode="lines",
-                       line={"color": "gray", "width": 2}, name="target f(x)"),
-            go.Scatter(x=list(x), y=list(yhat), mode="lines",
-                       line={"color": "#d62728", "width": 2}, name="ReLU net fit"),
-        ]
+    def target_trace():
+        return go.Scatter(x=_f(x), y=_f(target), mode="lines",
+                          line={"color": "gray", "width": 2}, name="target f(x)")
 
-    frames = [go.Frame(data=traces(yh), name=lab) for (_, yh), lab in zip(fits, labels, strict=True)]
-    fig = go.Figure(data=traces(fits[0][1]), frames=frames)
+    def fit_trace(yhat):
+        return go.Scatter(x=_f(x), y=_f(yhat), mode="lines",
+                          line={"color": "#d62728", "width": 2}, name="ReLU net fit")
+
+    # The target never changes with the unit count; only the fit does.
+    frames = [go.Frame(data=[fit_trace(yh)], traces=[1], name=lab)
+              for (_, yh), lab in zip(fits, labels, strict=True)]
+    fig = go.Figure(data=[target_trace(), fit_trace(fits[0][1])], frames=frames)
     steps = [
         {"args": [[lab], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
          "label": lab, "method": "animate"}
