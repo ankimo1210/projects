@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+from itertools import pairwise
 
 import torch
 from jp_llm_lab.calibration.probability import (
@@ -65,7 +66,7 @@ def do_calibration(model, tok, device, out):
     scaled = metrics_at_temperature(tst["logits"], tst["targets"], T)  # eval on TEST
 
     ece_w, bins_w = ece_equal_width(tst["conf"], tst["correct"], 15)
-    ece_m, bins_m = ece_equal_mass(tst["conf"], tst["correct"], 15)
+    _ece_m, bins_m = ece_equal_mass(tst["conf"], tst["correct"], 15)
     result = {
         "fitted_T": T,
         "fit_split": "calibration",
@@ -94,7 +95,10 @@ def do_generation_anatomy(model, tok, device, out):
             "chosen": tok.id_to_token(s.chosen_id),
             "chosen_prob": round(s.chosen_prob, 4),
             "entropy": round(s.entropy, 3),
-            "top5": [(tok.id_to_token(i), round(p, 4)) for i, p in zip(s.top_ids[:5], s.top_probs[:5])],
+            "top5": [
+                        (tok.id_to_token(i), round(p, 4))
+                        for i, p in zip(s.top_ids[:5], s.top_probs[:5], strict=False)
+                    ],
         }
         for s in steps
     ]
@@ -131,7 +135,7 @@ def do_memorization(model, tok, device, out):
         arr = tokens.tolist()
         eos_positions = [i for i, t in enumerate(arr[:200000]) if t == EOS_ID][: k + 1]
         out_docs = []
-        for a, b in zip(eos_positions, eos_positions[1:], strict=False):
+        for a, b in pairwise(eos_positions):
             seg = arr[a + 1 : b]
             if len(seg) >= doc_len:
                 out_docs.append(seg[:doc_len])
@@ -184,7 +188,7 @@ def main() -> None:
     out = root / OUT_REL
     out.mkdir(parents=True, exist_ok=True)
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    model, tok, run_dir = load_final_model(root, device)
+    model, tok, _run_dir = load_final_model(root, device)
     print(f"loaded {RUN}, vocab {tok.vocab_size}, device {device}")
 
     if "calibration" not in args.skip:

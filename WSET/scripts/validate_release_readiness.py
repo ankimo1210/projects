@@ -14,7 +14,6 @@ import re
 from pathlib import Path
 from typing import Any
 
-
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_QUESTION_PACK = ROOT / "WSET" / "QuestionData" / "question_pack.json"
 DEFAULT_WRITTEN_PACK = ROOT / "WSET" / "QuestionData" / "written_question_pack.json"

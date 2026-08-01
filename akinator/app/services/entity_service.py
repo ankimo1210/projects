@@ -14,7 +14,7 @@ class EntityService:
         self._by_id = {e.id: e for e in entities}
 
     @classmethod
-    def from_disk(cls) -> "EntityService":
+    def from_disk(cls) -> EntityService:
         # Tolerate missing processed data (e.g. before the first Wikidata build)
         # so importing the app never crashes; the pool is simply empty until
         # `build_questions.py` has run.

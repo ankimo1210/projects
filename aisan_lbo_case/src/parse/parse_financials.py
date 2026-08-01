@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 import pandas as pd
 
 from src.utils.sources import CONFIG_DIR, PROJECT_ROOT, load_yaml

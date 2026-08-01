@@ -1,4 +1,10 @@
-from app.inference.scoring import MatchResult, expected_match
+from app.inference.scoring import (
+    MatchResult,
+    expected_match,
+    posteriors,
+    top_candidates,
+    update_log_score,
+)
 from app.models import Answer, Entity, Question
 
 
@@ -31,7 +37,6 @@ def test_numeric_equals():
     assert expected_match(_entity({"birth_century": 19}), q) == MatchResult.MISMATCH
 
 
-from app.inference.scoring import update_log_score
 
 
 def test_yes_raises_match_lowers_mismatch():
@@ -71,7 +76,6 @@ def test_probably_yes_is_weaker_than_yes():
     assert 0.0 < weak < strong
 
 
-from app.inference.scoring import posteriors, top_candidates
 
 
 def test_posteriors_sum_to_one_and_rank():

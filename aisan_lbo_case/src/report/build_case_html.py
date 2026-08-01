@@ -98,15 +98,19 @@ def svg_bars(series, labels, width=560, height=240, pad=34, colors=None, fmt=lam
 
 def svg_waterfall(items, width=620, height=300, pad=40):
     """Waterfall: items = list of (label, value, kind) kind in start/up/down/end."""
-    vals = [v for _, v, _ in items]
-    cum, lo, hi, tops = 0, 0, 0, []
+    cum, hi, tops = 0, 0, []
     for _, v, k in items:
         if k in ("start", "end"):
-            tops.append((0, v)); hi = max(hi, v)
+            tops.append((0, v))
+            hi = max(hi, v)
         elif k == "up":
-            tops.append((cum, cum + v)); hi = max(hi, cum + v); cum += v
+            tops.append((cum, cum + v))
+            hi = max(hi, cum + v)
+            cum += v
         else:
-            tops.append((cum + v, cum)); hi = max(hi, cum); cum += v
+            tops.append((cum + v, cum))
+            hi = max(hi, cum)
+            cum += v
     hi *= 1.12
     plot_w, plot_h = width - pad * 2, height - pad * 2
     bw = plot_w / len(items) * 0.62
@@ -156,7 +160,7 @@ def heatmap(prem, mults, grid):
 # --------------------------------------------------------------------------- build
 def build():
     S = load()
-    A, SU, M, D, R, SC, LV = (S["Assumptions"], S["Sources_Uses"], S["Model"],
+    A, SU, M, _D, R, SC, LV = (S["Assumptions"], S["Sources_Uses"], S["Model"],
                               S["Debt_FCF"], S["Returns"], S["Scenarios"], S["Lev_Sensitivity"])
     peers = read_csv(PEERS)
     preced = read_csv(PRECED)

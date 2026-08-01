@@ -4,7 +4,6 @@ import pandas as pd
 
 from src.utils.sources import PROJECT_ROOT
 
-
 SHAREHOLDERS = [
     {"shareholder": "Kiyohisa Kato", "shares": 554400, "ownership_pct": 0.0999},
     {"shareholder": "Mitsubishi Electric Corporation", "shares": 350000, "ownership_pct": 0.0630},

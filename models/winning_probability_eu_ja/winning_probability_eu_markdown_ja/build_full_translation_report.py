@@ -8,12 +8,11 @@ import sys
 import time
 import urllib.error
 import urllib.request
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from html import escape
 from pathlib import Path
 
 from markdown_it import MarkdownIt
-
 
 ROOT = Path(__file__).resolve().parent
 SOURCE_DIR = ROOT / "source_en_pages"
@@ -266,7 +265,7 @@ def details_block(summary: str, body: str, language: str = "") -> str:
 
 
 def build_markdown_report(*, model: str, pages: list[int]) -> None:
-    generated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+    generated_at = datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S UTC")
     manifest = json.loads(read_text(ROOT / "manifest_ja.json"))
 
     parts: list[str] = [

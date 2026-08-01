@@ -9,7 +9,6 @@ from pathlib import Path
 
 from markdown_it import MarkdownIt
 
-
 ROOT = Path(__file__).resolve().parent
 OUT_DIR = ROOT / "html_textbook"
 OUT_FILE = OUT_DIR / "index.html"

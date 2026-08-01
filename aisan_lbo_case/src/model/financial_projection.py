@@ -4,7 +4,6 @@ from typing import Any
 
 import pandas as pd
 
-
 FISCAL_YEARS = ["FY2026E", "FY2027E", "FY2028E", "FY2029E", "FY2030E"]
 
 

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
 from typing import Any
 
 import pandas as pd
@@ -225,7 +224,7 @@ def write_model_outputs() -> dict[str, Any]:
         "company": inputs["assumptions"]["company"],
         "market_snapshot": inputs["market_snapshot"],
         "recommendation": recommendation,
-        "case_count": int(len(summaries)),
+        "case_count": len(summaries),
         "default_outputs": summaries[
             summaries["premium"].round(6)
             == round(float(inputs["assumptions"]["transaction_assumptions"]["default_premium"]), 6)

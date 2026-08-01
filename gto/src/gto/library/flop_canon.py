@@ -16,6 +16,7 @@ Algorithm:
 from __future__ import annotations
 
 from itertools import combinations
+from itertools import permutations as _perms
 
 RANKS = "AKQJT98765432"
 SUITS = "cdhs"
@@ -27,7 +28,6 @@ def _parse(card: str) -> tuple[int, int]:
     return RANK_ORDER[card[0]], SUITS.index(card[1])
 
 
-from itertools import permutations as _perms
 
 
 def canonicalize(cards: list[str]) -> tuple[str, ...]:

@@ -35,7 +35,7 @@ def test_assistant_only_masks_prompt_targets():
 
 def test_padding_is_masked():
     tok = _tok()
-    x, y = build_batch([("あ", "い")], tok, context_len=32, assistant_only=False, device="cpu")
+    _x, y = build_batch([("あ", "い")], tok, context_len=32, assistant_only=False, device="cpu")
     # trailing padding target positions are IGNORE
     assert (y[0, -5:] == IGNORE).all()
 
