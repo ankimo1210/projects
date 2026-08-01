@@ -34,6 +34,13 @@ flip_atthold_after_engine_on_s = 2.0   # unused in pdi mode (handover is sim-dri
 # AWAY: vz positive from ignition, altitude to 2496 km, nav_err diverging
 # monotonically to -90 km. The AGC believes it is far too low and thrusts
 # continuously. See defect 8 in sim.rs.
+# Flight 18 (2026-08-01): defect 8 IS fixed. Negating the altitude count
+# stopped the runaway -- the vehicle braked normally from 15.2 km at
+# -28 m/s where flight 17 had climbed to 2496 km. REVERTED again because
+# the flight still crashed (119.6 / 770.0 m/s): the AGC's altitude now
+# oscillates +-3 km instead of diverging, which is DEFECT 9 -- the LR
+# pad-load block was never loaded and nothing declares the altitude scale.
+# See sim.rs and the ledger's section 12.
 lrbypass = true
                                    # (vendor/virtualagc/Luminary099/FRESH_START_AND_RESTART.agc:623); abort if missing
 
