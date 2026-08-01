@@ -60,10 +60,39 @@
 //! (`TC INITREAD -1`); the three LR velocity beams take five
 //! (`LRVEL`, `:2759-2762`).
 //!
+//! The read sequence itself is `P20-P25.agc:2780-2801`: sample the
+//! data-good bits (`DGBITS OCT 230` = bit 4 RR + bit 5 LR range + bit 8
+//! LR velocity), `WAND` off all radar bits, `WOR` in the new select, and
+//! wait for RADARUPT; `RADAREAD` (`:2812-2828`) then reads `RNRAD`.
+//!
+//! # The integration constraint — RADARUPT works, the DATA does not
+//!
+//! **Good news:** unlike the ROD channel, no vendor patch is needed for
+//! the interrupt. yaAGC simulates RADARUPT natively
+//! (`agc_engine.c:2223-2234`, added 2024-01-29): on radar-cycle
+//! completion it clears ch13 bit 4, calls `RequestRadarData()`, and sets
+//! `InterruptRequests[9]`.
+//!
+//! **The catch:** `RequestRadarData` is an EMPTY STUB —
+//! `yaAGC/NullAPI.c:188-197`, "provided as a stub for integrators of
+//! yaAGC into more complete simulations. It is expected to populate the
+//! counter RNRAD with radar data", with the only line commented out. So
+//! the interrupt fires on schedule and the AGC reads whatever `RNRAD`
+//! happens to hold.
+//!
+//! `vendor/` is READ-ONLY, so the value has to arrive from outside.
+//! `RNRAD` is at erasable 0o46 and AGC counters are driven by input
+//! pulses over the same socket path the sim already uses for PIPA
+//! (0o37-0o41) and THRUST (0o55) — the same no-patch pattern that solved
+//! the ROD channel. **The timing is the real constraint:** `RNRAD` must
+//! already hold the answer when the radar gate completes, so the sim has
+//! to notice ch13 bit 4 going up and drive the counter within one radar
+//! gate, rather than answering the interrupt afterwards.
+//!
 //! So the sim's side is: watch channel 13 for bit 4 with a select in
-//! 4..=7, compute the corresponding beam from this module's geometry,
-//! quantize it, and drive `RNRAD` — then assert the ch33 data-good bit
-//! for that quantity, remembering it is ACTIVE LOW.
+//! 1..=7, compute the corresponding beam from this module's geometry,
+//! quantize it, drive `RNRAD` before the gate closes — then assert the
+//! ch33 data-good bit for that quantity, remembering it is ACTIVE LOW.
 use eagle_dynamics::frames::{Body, Frame, Mcmf, V3};
 
 /// One landing-radar beam, as a unit vector in body axes.
