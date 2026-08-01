@@ -439,11 +439,35 @@ pub fn hbeam_unit() -> [f64; 3] {
 /// `VZBEAMNB = VXBEAMNB x VYBEAMNB` (`SERVICER.agc:1705-1717`).
 /// `HBEAMANT` rides the same transform.
 ///
-/// **Still unimplemented**: the exact axis-application order inside
-/// `AX*SR*T`. Everything above is pinned; that one detail is not, and
-/// guessing it would mis-point the beams in exactly the way this note
-/// warns about.
+/// **The axis order inside `AX*SR*T` is now pinned too.** Its own
+/// documentation (`POWERED_FLIGHT_SUBROUTINES.agc:217-235`) says: enter
+/// with `+3` for NB→SM and `-3` for SM→NB, with sines and cosines "AT
+/// SINCDU AND COSCDU, IN THE ORDER Y Z X". The loop `R*TL**P` (`:239-242`)
+/// maps that entry value to a starting index — `+3 -> 0`, `+2 -> 1`,
+/// `+1 -> 2` and `-3 -> 2`, `-2 -> 1`, `-1 -> 0` — so it is three
+/// single-axis rotations walked forwards for NB→SM and backwards for
+/// SM→NB.
+///
+/// With the Y,Z,X ordering that makes **SM→NB apply X, then Z, then Y**.
+/// The LR case zeroes Z, so a beam reaches the navigation base as
+///
+/// ```text
+///   beam_nb = R_y(beta) . R_x(alpha) . beam_antenna
+/// ```
+///
+/// **What is still NOT pinned is the rotation SIGN.** `AX*SR*T` negates
+/// one direction internally (`DCS VBUF` against `DCA`, `:246-250`), and
+/// which sense that leaves for a given entry value has not been traced.
+/// Getting it wrong mirrors the beams about the antenna axis — plausible
+/// output, wrong geometry — so it wants a numerical check against a known
+/// case (position 2 has beta = 0, which makes it the natural fixture)
+/// rather than a reading of the source.
 pub const CDUSPOT_ORDER: [&str; 3] = ["Y (LRBETA)", "Z (zero)", "X (LRALPHA)"];
+
+/// Rotation order for the SM→NB direction `AX*SR*T` uses: X, then Z,
+/// then Y (`POWERED_FLIGHT_SUBROUTINES.agc:217-242`). NB→SM is the
+/// reverse.
+pub const SMNB_ROTATION_ORDER: [&str; 3] = ["X (alpha)", "Z (zero)", "Y (beta)"];
 
 /// The moon-fixed radius the beams intersect. Kept as a parameter rather
 /// than a constant so a test can use a unit sphere.
