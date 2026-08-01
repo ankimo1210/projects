@@ -682,6 +682,26 @@ impl SimCore {
         let alt = self.alt_agl();
         let lr = self.lr.as_mut().expect("checked above");
 
+        // NOT SUFFICIENT -- flight 15 died at P63 with the same FAILREG =
+        // 00522 as flight 14. The standing discrete below is necessary but
+        // asserts the WRONG BIT.
+        //
+        // `LRPOSCHK` (`P20-P25.agc:2863-2869`) tests
+        // `(RADMODES XOR ch33) & BIT6` and alarms 0522 when it is
+        // non-zero. BIT6 is POS1. This responder only ever clears BIT7
+        // (POS2), so BIT6 stays set at `INIT_CH33`'s value and the XOR
+        // against RADMODES trips whenever the AGC has selected position 1
+        // -- which it has, at P63.
+        //
+        // The fix is not to clear BIT6 unconditionally: the check is a
+        // MATCH against RADMODES, so the sim must track which position the
+        // AGC has commanded and present that one. `runner`'s own comment
+        // on `INIT_CH33` already describes the handshake ("P63SPOT3 checks
+        // it and flashes V50N25 code 00500 until it appears -- the
+        // responder asserts it then"), so the mechanism exists for P63;
+        // what is missing is carrying it through the reposition to
+        // position 2 that `POS2CHK` (`SERVICER.agc:749`) then requires.
+        //
         // The antenna position is a STANDING discrete, not a reply. The
         // rope polls it continuously once the radar is live -- LRPOSCHK
         // (P20-P25.agc:2863-2869) from P20 and POS2CHK (SERVICER.agc:749)
