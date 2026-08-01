@@ -455,13 +455,29 @@ pub fn hbeam_unit() -> [f64; 3] {
 ///   beam_nb = R_y(beta) . R_x(alpha) . beam_antenna
 /// ```
 ///
-/// **What is still NOT pinned is the rotation SIGN.** `AX*SR*T` negates
-/// one direction internally (`DCS VBUF` against `DCA`, `:246-250`), and
-/// which sense that leaves for a given entry value has not been traced.
-/// Getting it wrong mirrors the beams about the antenna axis — plausible
-/// output, wrong geometry — so it wants a numerical check against a known
-/// case (position 2 has beta = 0, which makes it the natural fixture)
-/// rather than a reading of the source.
+/// **The rotation SIGN does not need a flight to settle.** `AX*SR*T`
+/// negates one direction internally (`DCS VBUF` against `DCA`,
+/// `:246-250`), and tracing that arithmetic by eye is exactly the kind of
+/// reading that produces a confident, mirrored, wrong answer. It does not
+/// have to be traced:
+///
+/// `CDU*SMNB` and `TRG*SMNB` differ ONLY in where the angles come from —
+/// live CDU counters versus `CDUSPOT`. Both fall through to the same
+/// `C*MM*N1` and the same `AX*SR*T` call with `CS THREE`
+/// (`POWERED_FLIGHT_SUBROUTINES.agc:179-190`). So whatever rotation sense
+/// the CDU path uses, the `CDUSPOT` path uses identically.
+///
+/// And this project's CDU convention is **already live-verified**:
+/// `eagle_sensors::imu::Imu::gimbals_deg` decomposes Body→SM into
+/// (OGA, IGA, MGA) = (X, Y, Z) CDU slots, and Wave 1 established that the
+/// attitude loop closes correctly against the real rope — the DAP slews
+/// and captures, which it could not do through a mirrored transform.
+///
+/// So the antenna transform should be built as the inverse of that same
+/// decomposition, with `LRALPHA` in the X slot and `LRBETA` in the Y
+/// slot, and validated against `gimbals_deg` on a round trip rather than
+/// against a fresh reading of `AX*SR*T`. **That is the remaining work,
+/// and it needs no flight** — only the acceptance flight afterwards does.
 pub const CDUSPOT_ORDER: [&str; 3] = ["Y (LRBETA)", "Z (zero)", "X (LRALPHA)"];
 
 /// Rotation order for the SM→NB direction `AX*SR*T` uses: X, then Z,
