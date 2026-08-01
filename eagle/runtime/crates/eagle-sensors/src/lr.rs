@@ -35,6 +35,35 @@
 //! position 2" is bit 7 **CLEAR**. Asserting these bits the intuitive way
 //! round makes the radar either invisible or permanently alarmed —
 //! `LRPOSALM` raises alarm 0522 (`P20-P25.agc:2864-2869`).
+//! # The AGC interface, verified (step 0) — not yet implemented
+//!
+//! Recorded here so it is not re-derived. The AGC selects a radar
+//! quantity on **channel 13**: bits 1-3 are the "A,B,C matrix" select and
+//! bit 4 is RADAR ACTIVITY
+//! (`INPUT_OUTPUT_CHANNEL_BIT_DESCRIPTIONS.agc:102`, `:117-120`). The
+//! radar answers with pulses into the **`RNRAD` counter, address 0o46**
+//! (`ERASABLE_ASSIGNMENTS.agc:141`).
+//!
+//! The lead-in routines write these exact octal values to channel 13
+//! (`P20-P25.agc:2738-2755`), i.e. activity (bit 4) plus a 3-bit select:
+//!
+//! | quantity | ch13 | select |
+//! |---|---|---|
+//! | `LRALT`   (LR altitude/range) | `0o17` | 7 |
+//! | `LRVELZ`  | `0o16` | 6 |
+//! | `LRVELY`  | `0o15` | 5 |
+//! | `LRVELX`  | `0o14` | 4 |
+//! | `RRRDOT`  | `0o12` | 2 |
+//! | `RRRANGE` | `0o11` | 1 |
+//!
+//! `LRALT` and the RR quantities take ONE sample per reading
+//! (`TC INITREAD -1`); the three LR velocity beams take five
+//! (`LRVEL`, `:2759-2762`).
+//!
+//! So the sim's side is: watch channel 13 for bit 4 with a select in
+//! 4..=7, compute the corresponding beam from this module's geometry,
+//! quantize it, and drive `RNRAD` — then assert the ch33 data-good bit
+//! for that quantity, remembering it is ACTIVE LOW.
 use eagle_dynamics::frames::{Body, Frame, Mcmf, V3};
 
 /// One landing-radar beam, as a unit vector in body axes.
