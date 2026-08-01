@@ -164,8 +164,23 @@ pub fn agc_packet_to_simin(p: &Packet, dsky: &mut DskyState) -> Vec<SimIn> {
 struct LrState {
     /// Last channel-13 value seen, to detect the rising edge.
     last_ch13: u16,
-    /// Counts already driven into RNRAD, so the responder can send the
+    /// Counts already driven into RNRAD, so the responder sends the
     /// difference rather than an absolute value — RNRAD is a counter.
+    ///
+    /// **This is the prime suspect for flight 13's failure and is NOT
+    /// settled.** That run (2026-08-01, the first with the radar live)
+    /// proved the AGC sees the radar — P65 appeared for the first time in
+    /// this project — but its altitude diverged to +11 963 m in P65 and it
+    /// raised 4228 PROG lamp frames against 0 on flights 8-11.
+    ///
+    /// The likely cause: `RADAREAD` does a plain `CA RNRAD`
+    /// (`P20-P25.agc:2820`), reading it as the value for THAT sample. If
+    /// the AGC (or the hardware it models) zeroes or consumes the counter
+    /// between reads, then sending only the delta leaves RNRAD carrying a
+    /// running total that grows without bound — which is exactly the shape
+    /// of a 12 km altitude runaway. Settle it by reading how `SAMPLSUM`
+    /// and `TRYCOUNT` (`:2823-2828`) treat successive samples before
+    /// changing anything.
     rnrad: i32,
     /// Seeded error injector; default config is OFF and RNG-free.
     errors: eagle_sensors::lr::LrErrors,
