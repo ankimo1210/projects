@@ -196,7 +196,17 @@ pub const LR_ALT_M_PER_COUNT: f64 = 0.328_879_2;
 /// residual belongs to the caller so successive readings do not lose it —
 /// the same carry-forward the PIPA model uses.
 pub fn alt_counts(range_m: f64) -> i32 {
-    (range_m / LR_ALT_M_PER_COUNT).trunc() as i32
+    // NEGATED, because `HSCAL` is negative (-0.3288792) and the AGC
+    // multiplies the reading by it (`SERVICER.agc:1144-1147`,
+    // `DMP HSCAL`). Sending a positive count therefore yields a NEGATIVE
+    // computed altitude — the AGC concludes it is below the surface and
+    // thrusts continuously, which is exactly what flight 17 did: vz
+    // positive from ignition, climbing to 2496 km with nav_err_alt
+    // diverging monotonically to -90 km.
+    //
+    // The quantum constant here is the magnitude of HSCAL; the sign lives
+    // in the count.
+    -(range_m / LR_ALT_M_PER_COUNT).trunc() as i32
 }
 
 /// Which quantity the AGC has selected on channel 13.
@@ -697,10 +707,14 @@ mod tests {
     }
 
     #[test]
-    fn altitude_counts_round_trip_at_descent_altitudes() {
+    fn altitude_counts_round_trip_through_the_agcs_own_negative_scale() {
+        // The AGC recovers altitude as count * HSCAL, and HSCAL is
+        // NEGATIVE. So the round trip must go through -LR_ALT_M_PER_COUNT,
+        // and a positive altitude must produce a NEGATIVE count.
         for h in [15_000.0, 3_000.0, 250.0, 40.0, 3.0] {
             let n = alt_counts(h);
-            let back = f64::from(n) * LR_ALT_M_PER_COUNT;
+            assert!(n < 0, "h={h} must give a negative count, got {n}");
+            let back = f64::from(n) * -LR_ALT_M_PER_COUNT;
             assert!(
                 (h - back) < LR_ALT_M_PER_COUNT && h - back >= 0.0,
                 "h={h} -> {n} counts -> {back}"
@@ -711,8 +725,9 @@ mod tests {
     #[test]
     fn altitude_counts_truncate_rather_than_round() {
         // A counter carries whole pulses; the residual is the caller's,
-        // so half a quantum must not become a whole one.
-        assert_eq!(alt_counts(LR_ALT_M_PER_COUNT * 1.9), 1);
+        // so half a quantum must not become a whole one. (Negated, per
+        // HSCAL's sign.)
+        assert_eq!(alt_counts(LR_ALT_M_PER_COUNT * 1.9), -1);
         assert_eq!(alt_counts(LR_ALT_M_PER_COUNT * 0.9), 0);
     }
 
