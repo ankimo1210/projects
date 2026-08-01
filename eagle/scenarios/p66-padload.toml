@@ -325,3 +325,50 @@ provenance = "derived (scale chain); 42500 N = 4.25 kg*m/cs^2"
 #     the attribution.
 # Next task owns the decision: pin the b-scale, then set this from FSAT.
 comment = "max P66 force, kg*m/cs^2 at b=12 -- UNVERIFIED live until Spike B"
+
+# ---- Landing radar antenna orientation (M3) ---------------------------
+# INERT while `lrbypass = true`: the rope is told the radar is absent and
+# never runs SETPOS, so these are dead words. They are loaded anyway so
+# that flipping `lrbypass` to false is a one-line scenario change rather
+# than a pad-load change made under time pressure.
+#
+# SETPOS (SERVICER.agc:1691-1699) reads LRALPHA/LRBETA as rotations about
+# X and Y, builds the antenna-to-navigation-base transform, and derives
+# every beam from it (VYBEAMNB from UNITY, VXBEAMNB from UNITX,
+# VZBEAMNB = X x Y, altitude beam from HBEAMANT). Without them the
+# velocity beams cannot be built at all.
+#
+# Raw octal, exactly as the flown reference pad load gives them
+# (LUM69R2/PADLOADS.agc:542-559) -- no b-scale is involved and none is
+# assumed. The comments there give both the word and the intended angle,
+# and they agree under `degrees = word / 2^14 * 180`: 01042 -> 5.999 deg
+# against a documented 6, 04210 -> 23.99 against 24.
+#
+# The four words MUST stay in this order and adjacency: SETPOS indexes
+# them as a block (`DCA LRALPHA` loads alpha into A and beta into L, and
+# SETPOS2 offsets by 2 for position 2), and
+# ERASABLE_ASSIGNMENTS.agc:1389-1393 marks them "* MUST * BE * IN * ORDER".
+
+[[word]]
+symbol = "LRALPHA"
+octal = "01042"
+provenance = "LUM69R2/PADLOADS.agc:542-545"
+comment = "LR antenna position 1, rotation about X: 6 deg"
+
+[[word]]
+symbol = "LRBETA1"
+octal = "04210"
+provenance = "LUM69R2/PADLOADS.agc:547-550"
+comment = "LR antenna position 1, rotation about Y: 24 deg"
+
+[[word]]
+symbol = "LRALPHA2"
+octal = "01042"
+provenance = "LUM69R2/PADLOADS.agc:552-555"
+comment = "LR antenna position 2, rotation about X: 6 deg"
+
+[[word]]
+symbol = "LRBETA2"
+octal = "00000"
+provenance = "LUM69R2/PADLOADS.agc:557-560"
+comment = "LR antenna position 2, rotation about Y: 0 deg"
