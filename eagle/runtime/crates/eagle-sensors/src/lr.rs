@@ -485,6 +485,63 @@ pub const CDUSPOT_ORDER: [&str; 3] = ["Y (LRBETA)", "Z (zero)", "X (LRALPHA)"];
 /// reverse.
 pub const SMNB_ROTATION_ORDER: [&str; 3] = ["X (alpha)", "Z (zero)", "Y (beta)"];
 
+/// Transform a vector from LR ANTENNA axes to the navigation base.
+///
+/// # Derivation, from the live-verified CDU convention
+///
+/// `imu::gimbals_deg` decomposes Body→SM as
+/// `mga = asin(M[1][0])`, `iga = atan2(-M[2][0], M[0][0])`,
+/// `oga = atan2(-M[1][2], M[1][1])`. The unique product satisfying all
+/// three is
+///
+/// ```text
+///   M(body->SM) = Ry(IGA) . Rz(MGA) . Rx(OGA)
+/// ```
+///
+/// — and that factor order is exactly `CDUSPOT`'s documented Y, Z, X
+/// ordering (`POWERED_FLIGHT_SUBROUTINES.agc:169-172`), which is the
+/// cross-check that the decomposition and the rope agree.
+///
+/// `TRG*SMNB` is the inverse direction, so with the LR's angles
+/// (X slot = `LRALPHA` = alpha, Y slot = `LRBETA` = beta, Z = 0):
+///
+/// ```text
+///   beam_nb = Rx(-alpha) . Ry(-beta) . beam_antenna
+/// ```
+///
+/// This needs no reading of `AX*SR*T`'s internal negation: `CDU*SMNB` and
+/// `TRG*SMNB` share that code, and the CDU path is verified by Wave 1's
+/// working attitude loop.
+pub fn antenna_to_nav_base(v: [f64; 3], alpha_deg: f64, beta_deg: f64) -> [f64; 3] {
+    let (a, b) = (-alpha_deg.to_radians(), -beta_deg.to_radians());
+    // Ry(b) first, then Rx(a).
+    let (sb, cb) = b.sin_cos();
+    let y = [cb * v[0] + sb * v[2], v[1], -sb * v[0] + cb * v[2]];
+    let (sa, ca) = a.sin_cos();
+    [y[0], ca * y[1] - sa * y[2], sa * y[1] + ca * y[2]]
+}
+
+/// The three LR velocity beams in navigation-base axes, for one antenna
+/// position.
+///
+/// `SERVICER.agc:1705-1717`: `VYBEAMNB` from `UNITY`, `VXBEAMNB` from
+/// `UNITX`, and `VZBEAMNB = VXBEAMNB x VYBEAMNB`.
+pub fn velocity_beams_nb(alpha_deg: f64, beta_deg: f64) -> [[f64; 3]; 3] {
+    let x = antenna_to_nav_base([1.0, 0.0, 0.0], alpha_deg, beta_deg);
+    let y = antenna_to_nav_base([0.0, 1.0, 0.0], alpha_deg, beta_deg);
+    let z = [
+        x[1] * y[2] - x[2] * y[1],
+        x[2] * y[0] - x[0] * y[2],
+        x[0] * y[1] - x[1] * y[0],
+    ];
+    [x, y, z]
+}
+
+/// The altitude beam in navigation-base axes.
+pub fn altitude_beam_nb(alpha_deg: f64, beta_deg: f64) -> [f64; 3] {
+    antenna_to_nav_base(hbeam_unit(), alpha_deg, beta_deg)
+}
+
 /// The moon-fixed radius the beams intersect. Kept as a parameter rather
 /// than a constant so a test can use a unit sphere.
 pub type Surface = Mcmf;
@@ -730,6 +787,77 @@ mod tests {
         // 20.4 deg off the antenna -X axis, in the X-Z plane.
         let tilt = (-u[2]).atan2(-u[0]).to_degrees();
         assert!((tilt - 20.4).abs() < 0.1, "tilt {tilt} deg");
+    }
+
+    #[test]
+    fn the_transform_matches_the_gimbal_decomposition_it_was_derived_from() {
+        // The validation the derivation calls for: build M(body->SM) as
+        // Ry(iga).Rz(mga).Rx(oga), then check gimbals_deg's three formulas
+        // recover the angles. If the factor order were wrong this fails.
+        let (oga, mga, iga) = (0.11_f64, -0.07_f64, 0.23_f64);
+        let (so, co) = oga.sin_cos();
+        let (sm, cm) = mga.sin_cos();
+        let (si, ci) = iga.sin_cos();
+        // M = Ry(iga) . Rz(mga) . Rx(oga), rows.
+        let m = [
+            [ci * cm, -ci * sm * co + si * so, ci * sm * so + si * co],
+            [sm, cm * co, -cm * so],
+            [-si * cm, si * sm * co + ci * so, -si * sm * so + ci * co],
+        ];
+        assert!((m[1][0].asin() - mga).abs() < 1e-12, "mga");
+        assert!(((-m[2][0]).atan2(m[0][0]) - iga).abs() < 1e-12, "iga");
+        assert!(((-m[1][2]).atan2(m[1][1]) - oga).abs() < 1e-12, "oga");
+    }
+
+    #[test]
+    fn the_antenna_transform_is_an_isometry_and_inverts_cleanly() {
+        let v: [f64; 3] = [0.3, -0.5, 0.81];
+        let n = (v[0] * v[0] + v[1] * v[1] + v[2] * v[2]).sqrt();
+        let out = antenna_to_nav_base(v, 6.0, 24.0);
+        let no = (out[0] * out[0] + out[1] * out[1] + out[2] * out[2]).sqrt();
+        assert!((n - no).abs() < 1e-12, "length must be preserved");
+        // Zero angles are the identity.
+        assert_eq!(antenna_to_nav_base(v, 0.0, 0.0), v);
+    }
+
+    #[test]
+    fn position_2_rotates_about_x_only() {
+        // beta = 0, so the X component is untouched -- the natural
+        // fixture, and the one that would expose a swapped axis order.
+        let v: [f64; 3] = [0.5, 0.5, 0.5];
+        let out = antenna_to_nav_base(v, 6.0, LR_ANTENNA_POS2_DEG.1);
+        assert!((out[0] - v[0]).abs() < 1e-12, "X untouched at beta=0");
+        assert!((out[1] - v[1]).abs() > 1e-6, "but Y must move");
+    }
+
+    #[test]
+    fn the_velocity_beams_are_an_orthonormal_triad() {
+        // These come from exact unit axes, so they ARE exactly orthonormal
+        // -- unlike the altitude beam, which inherits HBEAMANT's precision.
+        let [x, y, z] = velocity_beams_nb(LR_ANTENNA_POS1_DEG.0, LR_ANTENNA_POS1_DEG.1);
+        let dot = |a: [f64; 3], b: [f64; 3]| a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+        for v in [x, y, z] {
+            assert!((dot(v, v) - 1.0).abs() < 1e-12, "unit");
+        }
+        assert!(dot(x, y).abs() < 1e-12, "x.y");
+        assert!(dot(x, z).abs() < 1e-12, "x.z");
+        assert!(dot(y, z).abs() < 1e-12, "y.z");
+    }
+
+    #[test]
+    fn the_altitude_beam_still_points_down_after_the_transform() {
+        // HBEAMANT is 20.4 deg off antenna -X; a 6/24 deg antenna tilt
+        // must not turn it upward, or the altimeter would look at the sky.
+        let b = altitude_beam_nb(LR_ANTENNA_POS1_DEG.0, LR_ANTENNA_POS1_DEG.1);
+        assert!(b[0] < -0.5, "still predominantly -X (down): {b:?}");
+        // Unit to the precision of HBEAMANT itself: the rope's constant is
+        // 0.5 to seven digits (0.5000016), so the doubled vector is unit to
+        // ~3e-5. Asserting tighter would be asserting against the rope.
+        let n = (b[0] * b[0] + b[1] * b[1] + b[2] * b[2]).sqrt();
+        assert!(
+            (n - 1.0).abs() < 1e-4,
+            "unit to HBEAMANT's own precision: {n}"
+        );
     }
 
     #[test]
