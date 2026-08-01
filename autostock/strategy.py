@@ -12,8 +12,7 @@ Run:
 import argparse
 
 import pandas as pd
-
-from prepare import UNIVERSE, evaluate, load_prices
+from prepare import evaluate, load_prices
 
 # ---------------------------------------------------------------------------
 # Hyperparameters (edit these directly, no CLI flags)

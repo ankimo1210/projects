@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import train as T  # noqa: E402
+import train as T
 
 
 def build(train_raw, test_raw):
@@ -43,7 +43,8 @@ def curated_predict(train_raw, test_raw):
         else:
             Xtr, Xte, seeds = X, X_test, (T.SEED,)
         oof, tst = T.oof_and_test(fac, Xtr, y, Xte, seeds=seeds)
-        oof_list.append(oof); test_list.append(tst)
+        oof_list.append(oof)
+    test_list.append(tst)
     oof = np.mean(oof_list, axis=0)
     test_log = np.mean(test_list, axis=0)
     cv = T.rmse(y, oof)

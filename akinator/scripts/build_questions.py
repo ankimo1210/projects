@@ -9,8 +9,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from app import config  # noqa: E402
-from app.build import build_from_raw  # noqa: E402
+from app import config
+from app.build import build_from_raw
 
 
 def main() -> None:

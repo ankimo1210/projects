@@ -143,7 +143,9 @@ def main():
     dark.save(os.path.join(OUT, "icon-dark.png"))
 
     # Tinted: grayscale thread on black; iOS applies the user's tint.
-    gray = lambda t: (200, 200, 200)
+    def gray(t):
+        return (200, 200, 200)
+
     tinted = build(Image.new("RGB", (S, S), (0, 0, 0)), gray, (240, 240, 240), mono=True)
     tinted.save(os.path.join(OUT, "icon-tinted.png"))
 

@@ -10,11 +10,10 @@ import re
 import time
 import urllib.error
 import urllib.request
+from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Iterable
-
 
 PROJECT_DIR = Path(__file__).resolve().parent
 SOURCE_DIR = PROJECT_DIR / "econometrics_hf_ch1_ch7_markdown_ja"

@@ -7,7 +7,10 @@ from enum import Enum
 from typing import Any
 
 
-class Answer(str, Enum):
+# Deliberately str+Enum, not StrEnum: StrEnum changes what str()/f-string
+# interpolation produces (the value instead of 'Answer.YES'), which would
+# silently alter anything that formats an Answer into text.
+class Answer(str, Enum):  # noqa: UP042
     YES = "yes"
     NO = "no"
     PROBABLY_YES = "probably_yes"

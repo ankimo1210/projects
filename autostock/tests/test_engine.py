@@ -1,5 +1,4 @@
 import pandas as pd
-
 import prepare
 
 
@@ -16,7 +15,7 @@ def test_no_same_day_lookahead():
     cheat = rets.apply(lambda r: 1.0 if r > 0 else (-1.0 if r < 0 else 0.0))
     weights = pd.DataFrame({"X": cheat})
 
-    net, turnover = prepare._net_returns(weights, prices)
+    net, _turnover = prepare._net_returns(weights, prices)
 
     # weight is clipped to +/-0.5, then LAGGED one day by the engine, so the
     # position held on d2 is the (sign of d1's return) = +0.5, applied to d2's

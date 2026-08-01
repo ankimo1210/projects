@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Boot yaAGC with Luminary099, press RSET, expect packet traffic back."""
-import socket, subprocess, sys, time
+import socket
+import subprocess
+import sys
+import time
 
 PORT = 19897
 AGC = ["build/agc/yaAGC", "--core=build/agc/Luminary099.bin", f"--port={PORT}"]
@@ -15,7 +18,8 @@ try:
     s = None
     for _ in range(50):
         try:
-            s = socket.create_connection(("127.0.0.1", PORT), timeout=0.2); break
+            s = socket.create_connection(("127.0.0.1", PORT), timeout=0.2)
+            break
         except OSError:
             time.sleep(0.1)
     assert s, "could not connect to yaAGC"
@@ -25,4 +29,5 @@ try:
     assert len(data) >= 4, "no packet traffic from yaAGC"
     print(f"OK: received {len(data)} bytes from yaAGC")
 finally:
-    proc.terminate(); proc.wait(timeout=5)
+    proc.terminate()
+    proc.wait(timeout=5)

@@ -17,11 +17,10 @@ import matplotlib
 
 matplotlib.use("Agg")
 
-import matplotlib.pyplot as plt  # noqa: E402
-import pandas as pd  # noqa: E402
-
-import prepare  # noqa: E402
-import strategy  # noqa: E402
+import matplotlib.pyplot as plt
+import pandas as pd
+import prepare
+import strategy
 
 OUT_PATH = os.path.join(os.path.dirname(__file__), "progress.png")
 RESULTS_PATH = os.path.join(os.path.dirname(__file__), "results.tsv")

@@ -1,6 +1,10 @@
 from app.db import (
-    init_db, create_game, save_answer, finish_game, save_correction,
+    create_game,
+    finish_game,
     get_game_answers,
+    init_db,
+    save_answer,
+    save_correction,
 )
 
 

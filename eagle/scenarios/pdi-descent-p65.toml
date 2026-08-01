@@ -1,0 +1,149 @@
+schema = 1
+name = "pdi-descent-p65"
+# Wave 2 M1, P65 variant: identical to `pdi-descent.toml` except that the
+# sim-driven P64->P66 handover is REMOVED, so the rope flies its own
+# automatic landing (P64 -> P65) instead. Diagnostic scenario for ledger
+# items 2 and 4 -- NOT the acceptance gate.
+#
+# Wave 2 M1: the real descent. Truth starts AT the pad-loaded PDI ignition
+# point (padload::pdi_truth_state — single source with generate_state), in
+# the pad-load's MCI frame: site radial = +X at TLAND, orbit plane = XY.
+# [site] lat/lon are therefore NOT used for geometry in pdi mode; the site
+# is MCI +X. miss_m carries a documented few-km frame/time-base caveat
+# until measured (M1 plan Task 5).
+
+[site]
+lat_deg = 0.0            # unused in pdi mode (site ≡ MCI +X at TLAND)
+lon_deg = 0.0            # unused in pdi mode
+radius_m = 1737400.0     # assumed (mean lunar radius; same as p66-gate)
+
+[gate]
+mode = "pdi"
+alt_m = 0.0              # unused in pdi mode (state comes from StateCfg)
+vz_ms = 0.0              # unused in pdi mode
+mass_dry_kg = 7009.0     # derived: descent dry 2339 + ascent stage wet 4670 (Wave 1)
+fuel_dps_kg = 7950.0     # derived: LM-5 total at PDI ≈ 15.2 t minus dry+RCS
+fuel_rcs_kg = 250.0      # derived: ~287 kg loaded minus separation/DOI usage
+inertia_kgm2 = [23000.0, 25000.0, 24000.0]  # assumed (full LM order-of-magnitude; M1 measures)
+
+[agc]
+padload = "scenarios/p66-padload.toml"
+lm_weight_lbs = 33530.0            # derived: (7009+7950+250) kg = 15209 kg → V48/N47
+tland_offset_cs = 36000            # derived: proven burn lead from Wave 1 acceptance
+flip_atthold_after_engine_on_s = 2.0   # unused in pdi mode (handover is sim-driven)
+# Flight 17 (2026-08-01): testing defect 7 -- ch33 is now written with a
+# bitmask (discrete_write) instead of a cached whole word, so the
+# responder can no longer clobber runner P63SPOT3 handshake.
+# REVERTED after flight 17 (2026-08-01). Defect 7 IS fixed -- the run
+# cleared P63 for the first time with the radar live -- but it then flew
+# AWAY: vz positive from ignition, altitude to 2496 km, nav_err diverging
+# monotonically to -90 km. The AGC believes it is far too low and thrusts
+# continuously. See defect 8 in sim.rs.
+# Flight 18 (2026-08-01): testing defect 8 -- the altitude count is now
+# NEGATED, because HSCAL is negative and the AGC multiplies by it. Flight
+# 17 sent positive counts, so the AGC read a negative altitude and flew
+# away.
+lrbypass = false
+                                   # (vendor/virtualagc/Luminary099/FRESH_START_AND_RESTART.agc:623); abort if missing
+
+# NO [handover] BLOCK -- that is the whole point of this scenario.
+#
+# `pdi-descent.toml` hands the rope from P64 to P66 at 250 m to jump over
+# P65, because P65 entry is where earlier runs died with a PROG alarm
+# (ledger item 2, code never read). The cost of that jump is item 4:
+# P66's law is scalar and vertical (`P66VERTA`/`RODCOMP`), so nothing
+# nulls horizontal velocity, and the handover state measured 5.8 m/s of
+# it against an acceptance limit of 1.5.
+#
+# P65's law IS the vector one:
+#
+#     ACG = (V2FG - VGU) / TAUVERT
+#
+# (`LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:911-922`.) Nulling horizontal
+# velocity is structurally P65's job. `phase9_handover` returns
+# immediately when `handover_alt_m` is None (`sim.rs:895`), so omitting
+# the block simply lets the rope fly its own P64 -> P65 sequence.
+#
+# The `[rod]` schedule below is inert here: RODCOUNT is only read by
+# P66's RODCOMP. It is left in place so this file differs from the
+# acceptance scenario in exactly one thing.
+[rod]
+# measured: run 3's P64 endgame (above) for the entry rate, run 4 for the
+# step SIZE. Values are the commanded VDGVERT DELTA from the P66-entry
+# rate, not absolute sink rates: `SimCore` starts its rod bookkeeping at 0
+# while STARTP66 seeds VDGVERT from the CURRENT HDOTDISP
+# (vendor/virtualagc/Luminary099/
+# LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:155-157), so a step of v commands
+# entry_rate + v. Entry rate measured at -1.7 m/s, and the handover's own
+# selection click adds -0.30 m/s (one ft/s), so entry is ~-2.0 m/s:
+#   240 m: -1.5 -> ~-3.5 m/s   (5 clicks)
+#    40 m: +0.2 -> ~-1.8 m/s   (6 clicks back)
+#    10 m: +0.8 -> ~-1.2 m/s   (2 clicks, touchdown rate)
+# PROVISIONAL — this schedule has NOT been validated to a soft landing,
+# because P66's own rate loop oscillates on this build. Run 4 used a single
+# -8-click step to ~-7.3 m/s and the loop went bang-bang -- over the whole
+# P66 segment the throttle stroked 0 -> 46706 N, the full stop-to-stop
+# range, with the sink rate spanning -47.3 to +26.0 m/s about the command
+# (the smaller "4.6 <-> 26.8 kN / -9.5 to +7.4 m/s" figures first written
+# here were a 5-second telemetry sample and under-report the swing; see the
+# ledger) -- until the vehicle climbed away and ran the tank dry: v_vert
+# 44.09 m/s.
+# These smaller steps (<=6 clicks) halved that — run 5 measured v_vert
+# 13.58 m/s — but the limit cycle survives, so the schedule is a starting
+# point, not a tuned answer. Run 6 flew this same schedule on the corrected
+# engine constants (12.532 N/bit, FSAT 48145.4 N, tau 0.2 s) and the loop
+# still ran the throttle stop-to-stop, 0 -> 48132 N for 218 s with the sink
+# rate spanning -34.1 to +16.2 m/s: v_vert 30.86 m/s. So the oscillation is
+# neither a step-size nor an engine-constant artefact.
+# Suspect: TAUROD/LAG-TAU/MINFORCE/MAXFORCE are
+# the only UNVERIFIED scale-chain pad words left (padload::P66_BSCALE_TABLE)
+# and they are exactly the P66 force law's gain and limits.
+#
+# 2026-07-31: TAUROD is now the PRIME suspect, and the claim that once
+# stood here -- "TAUROD's scale is derivable statically (LLGE:155-157 +
+# :1050 + GSCALE at :1477), costing no flights" -- did NOT hold. That
+# route was taken and it stops one power of two short: the chain runs
+# through the BDDV by the DOT-built direction cosine (LLGE:1051-1058) and
+# the SR2 on the gravity path (:1047), neither of which is pinned, and
+# they are exactly the difference between b=11 (0.1875 s) and b=12
+# (0.375 s). What IS established is that the shipped b=14 rests on a
+# velocity scale the repo's own spike-B measurement contradicts, so the
+# loop is 4x or 8x too fast against THROTLAG's 0.2 s. Do not change the
+# pad load until the scale is measured -- and it cannot be measured from
+# a descent (a saturated limit cycle carries almost no information about
+# the gain inside it; three estimators failed, the most convincing one by
+# fitting the cycle's own quarter period). Second suspect, needing a
+# citation first: dps_envelope's 19.26 kN discontinuity at 0.6*MAX with no
+# hysteresis (forces.rs). See docs/superpowers/notes/2026-07-31-m1b-rod-loop.md.
+steps = [[240.0, -1.5], [40.0, 0.2], [10.0, 0.8]]
+
+[errors]                 # empty = all OFF (acceptance runs use this)
+
+[acceptance]
+# v_vert_max / v_horiz_max: LM touchdown design limits, carried over from
+# Wave 1. **NOT YET MET, and deliberately not relaxed to what was
+# measured** — the best M1 flights hit at v_vert 13.58 m/s (run 5) and
+# v_horiz 60.04 m/s (run 6), both of which are the P66 rate-loop
+# oscillation and the un-flown attitude, not a landing. Writing those
+# numbers in here would turn a known-open blocker into a passing gate.
+v_vert_max = 3.0
+v_horiz_max = 1.5
+# measured: runs 4 and 5 contacted at 11.2 deg and 12.0 deg of tilt, i.e.
+# BOTH met the Wave 1 bar of 12.0 (run 5 only just) -- and run 6, on the
+# corrected engine constants, contacted at 12.8 deg and MISSED it. This was
+# briefly relaxed to 15.0 and is put back: relaxing the one limit some
+# flights happened to meet, while correctly refusing to relax
+# v_vert/v_horiz, was inconsistent, and run 6 shows the margin was never
+# there. P66 holds attitude and does not re-orient, so whatever P64 leaves
+# behind is what lands (12.2 deg at run 4's handover, 14.4 deg at run 5's,
+# 11.7 deg at run 6's) -- that is a reason to expect this bar to be tight,
+# not a reason to move it.
+tilt_max_deg = 12.0
+# measured: from ENGINE ON. Runs 3-5 all reached MM64 at TIG+480.6 s and
+# runs 4/5 reached MM66 (the handover) at TIG+640.5 / +638.6 s; run 6, on
+# the corrected engine constants, reached MM64 at TIG+488.6 s and handed
+# over at TIG+647.1 s. A stable P66 from the measured ~247 m entry at
+# ~3 m/s adds ~85 s, i.e. ~735 s total; 800 s keeps ~9% margin. (Runs 4-6
+# ran 866.9 / 848.6 / 865.1 s, but all three were the P66 limit cycle
+# porpoising, not descending.)
+timeout_s = 800.0

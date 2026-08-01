@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 import pandas as pd
-from quantkit.data import price_panel
 from quantkit.data.base import FetchResult
 from quantkit.data.quality import assess
 from quantkit.utils.config import load_config
+
+from quantkit.data import price_panel
 
 
 def test_configs_load():

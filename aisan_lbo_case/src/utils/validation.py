@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Iterable
 from math import isclose
-from typing import Iterable
 
 
 def assert_close(left: float, right: float, label: str, tolerance: float = 1e-6) -> None:
