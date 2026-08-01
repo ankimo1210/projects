@@ -64,6 +64,7 @@ def test_flop_rake_rejected_422():
     assert "rake" in r.json()["detail"].lower()
 
 
+@pytest.mark.skipif(not HAS_BINDING, reason="gto_py not built")
 def test_flop_infeasible_table_rejected_at_submit_422():
     # Exact (no bucketing) 100bb SRP flop is ~105 GB -> reject immediately.
     s = _spec()

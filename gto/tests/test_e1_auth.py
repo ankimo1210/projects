@@ -16,6 +16,14 @@ from gto.api.main import app
 
 client = TestClient(app)
 
+try:
+    import gto_py
+
+    # These tests drive /api/equity, which calls into the Rust binding.
+    HAS_BINDING = hasattr(gto_py, "equity")
+except ImportError:
+    HAS_BINDING = False
+
 SECRET = "test-secret"
 
 
@@ -90,12 +98,14 @@ def test_tampered_payload_rejected():
 # ----- gating ---------------------------------------------------------------
 
 
+@pytest.mark.skipif(not HAS_BINDING, reason="gto_py not built")
 def test_local_dev_has_no_gates():
     # PUBLIC_DEPLOY unset: gated routes work with no token.
     r = client.get("/api/equity", params={"hero": "Ah As", "villain": "Kd Kc", "iterations": 1000})
     assert r.status_code == 200
 
 
+@pytest.mark.skipif(not HAS_BINDING, reason="gto_py not built")
 def test_public_deploy_requires_token(public_deploy):
     r = client.get("/api/equity", params={"hero": "Ah As", "villain": "Kd Kc", "iterations": 1000})
     assert r.status_code == 401
@@ -113,6 +123,7 @@ def test_public_routes_need_no_token(public_deploy):
     assert client.get("/api/trainer/quiz").status_code in (200, 404)
 
 
+@pytest.mark.skipif(not HAS_BINDING, reason="gto_py not built")
 def test_rate_limit_429_with_retry_after(public_deploy):
     headers = {"Authorization": f"Bearer {make_jwt(sub='limited')}"}
     params = {"hero": "Ah As", "villain": "Kd Kc", "iterations": 1000}
