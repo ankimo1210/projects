@@ -161,13 +161,24 @@ pub fn agc_packet_to_simin(p: &Packet, dsky: &mut DskyState) -> Vec<SimIn> {
 /// `RNRAD` must already hold the answer when the gate closes, which is
 /// why this reacts to the ACTIVITY BIT GOING UP rather than to the
 /// interrupt: by the time RADARUPT fires it is too late.
-#[derive(Debug, Default)]
 struct LrState {
     /// Last channel-13 value seen, to detect the rising edge.
     last_ch13: u16,
     /// Counts already driven into RNRAD, so the responder can send the
     /// difference rather than an absolute value — RNRAD is a counter.
     rnrad: i32,
+    /// Seeded error injector; default config is OFF and RNG-free.
+    errors: eagle_sensors::lr::LrErrors,
+}
+
+impl Default for LrState {
+    fn default() -> Self {
+        Self {
+            last_ch13: 0,
+            rnrad: 0,
+            errors: eagle_sensors::lr::LrErrors::new(Default::default()),
+        }
+    }
 }
 
 /// `RNRAD`, the radar counter (`ERASABLE_ASSIGNMENTS.agc:141`).
@@ -623,7 +634,17 @@ impl SimCore {
         if alt <= 0.0 {
             return;
         }
-        let counts = eagle_sensors::lr::alt_counts(alt);
+        // A dropout must become data-NOT-good, never a zero range: zero
+        // reads as "on the surface" and would fly the vehicle into the
+        // ground. RNRAD is left untouched so the AGC keeps its last good
+        // count rather than being handed a fabricated one.
+        let Some(measured) = lr.errors.corrupt_range(alt) else {
+            if let Ok(p) = Packet::io(0o33, eagle_sensors::lr::ch33_bits(false, false, true)) {
+                out.to_agc.push(p);
+            }
+            return;
+        };
+        let counts = eagle_sensors::lr::alt_counts(measured);
         let delta = counts - lr.rnrad;
         lr.rnrad = counts;
         for _ in 0..delta.unsigned_abs().min(16_384) {
@@ -1424,6 +1445,48 @@ mod tests {
         assert!(
             !again.to_agc.iter().any(|p| p.channel == 0o46),
             "only the rising edge triggers a read"
+        );
+    }
+
+    #[test]
+    fn a_radar_dropout_reports_data_not_good_and_leaves_rnrad_alone() {
+        // The failure mode that matters: a dropout must NOT become a zero
+        // range. Zero reads as "on the surface". The AGC keeps its last
+        // good count and is told the data is bad.
+        let mut sc = pdi_scenario();
+        sc.agc.lrbypass = false;
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+        core.lr = Some(LrState {
+            last_ch13: 0,
+            rnrad: 0,
+            errors: eagle_sensors::lr::LrErrors::new(eagle_sensors::lr::LrErrorCfg {
+                dropout_probability: 1.0,
+                seed: 5,
+                ..Default::default()
+            }),
+        });
+        core.ch13 = 0o17;
+        let out = core.tick();
+
+        assert!(
+            !out.to_agc.iter().any(|p| p.channel == 0o46),
+            "a dropout must not drive RNRAD at all"
+        );
+        let ch33 = out
+            .to_agc
+            .iter()
+            .find(|p| p.channel == 0o33)
+            .expect("ch33 written even on a dropout");
+        assert_ne!(
+            ch33.data & 0o20,
+            0,
+            "LR range data NOT good => the bit stays SET (active low)"
+        );
+        assert_eq!(
+            core.lr.as_ref().unwrap().rnrad,
+            0,
+            "RNRAD bookkeeping untouched by a dropout"
         );
     }
 
