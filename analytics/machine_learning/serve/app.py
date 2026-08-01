@@ -15,9 +15,8 @@ from pathlib import Path
 
 import pandas as pd
 from fastapi import FastAPI
-from pydantic import BaseModel, Field
-
 from ml_textbook.pipelines import load_pipeline
+from pydantic import BaseModel, Field
 
 from .train import DEFAULT_MODEL_PATH, FEATURE_COLUMNS, train_pipeline
 

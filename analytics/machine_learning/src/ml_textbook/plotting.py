@@ -436,7 +436,7 @@ def plotly_model_complexity(x, y, degrees=range(1, 13), test_size: float = 0.3, 
         frames.append(
             go.Frame(name=str(d), data=[fit], traces=[2], layout={"title": titles[str(d)]})
         )
-    first = list(degrees)[0]
+    first = next(iter(degrees))
     fig = go.Figure(data=[*scatters, first_fit], frames=frames)
     steps = [
         {
@@ -558,16 +558,25 @@ def plotly_decision_surface_slider(
     def surface(v):
         z = np.asarray(surface_fn(grid, v), dtype=float).reshape(xx.shape)
         return go.Heatmap(
-            x=_f(xs), y=_f(ys), z=_f(z, 2),
-            colorscale=colorscale, zmid=zmid, showscale=False, opacity=opacity,
+            x=_f(xs),
+            y=_f(ys),
+            z=_f(z, 2),
+            colorscale=colorscale,
+            zmid=zmid,
+            showscale=False,
+            opacity=opacity,
             hoverinfo="skip",
         )
 
     points = go.Scatter(
-        x=_f(X[:, 0]), y=_f(X[:, 1]), mode="markers",
+        x=_f(X[:, 0]),
+        y=_f(X[:, 1]),
+        mode="markers",
         marker={
-            "color": [int(v) for v in y], "colorscale": colorscale,
-            "line": {"color": "black", "width": 0.5}, "size": 7,
+            "color": [int(v) for v in y],
+            "colorscale": colorscale,
+            "line": {"color": "black", "width": 0.5},
+            "size": 7,
         },
         showlegend=False,
     )
