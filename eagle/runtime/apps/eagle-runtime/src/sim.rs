@@ -153,6 +153,71 @@ pub fn agc_packet_to_simin(p: &Packet, dsky: &mut DskyState) -> Vec<SimIn> {
     evs
 }
 
+/// Landing-radar responder state.
+///
+/// The AGC selects a quantity on channel 13 and yaAGC generates RADARUPT
+/// on its own; what it does NOT do is supply the data —
+/// `RequestRadarData` is an empty stub (`yaAGC/NullAPI.c:188-197`). So
+/// `RNRAD` must already hold the answer when the gate closes, which is
+/// why this reacts to the ACTIVITY BIT GOING UP rather than to the
+/// interrupt: by the time RADARUPT fires it is too late.
+struct LrState {
+    /// Last channel-13 value seen, to detect the rising edge.
+    last_ch13: u16,
+    /// Counts already driven into RNRAD, so the responder sends the
+    /// difference rather than an absolute value — RNRAD is a counter.
+    ///
+    /// **SETTLED, and this single field is flight 13's bug.** One counter
+    /// is tracked for ALL quantities, so when the AGC reads `LRALT` and
+    /// then `LRVELX`, the responder computes the delta from an ALTITUDE
+    /// count to a VELOCITY count and drives that difference into `RNRAD`.
+    /// The result is neither reading. Flight 13 (2026-08-01, the first
+    /// with the radar live) diverged to +11 963 m in P65 and raised 4228
+    /// PROG lamp frames.
+    ///
+    /// The rope reads `RNRAD` as an ABSOLUTE data word, not a running
+    /// total (`P20-P25.agc:2878-2885`):
+    ///
+    /// ```text
+    ///   CAF  POSMAX
+    ///   MASK RNRAD        # 14-bit magnitude
+    ///   AD   LVELBIAS     # ... plus a BIAS, for velocity
+    ///   TS   L
+    ///   CAE  RNRAD
+    ///   DOUBLE
+    ///   MASK BIT1         # sign/overflow bit read separately
+    /// ```
+    ///
+    /// Fixed by tracking the driven count per quantity (below), and the
+    /// velocity beams now carry the `LVELBIAS` carrier offset the AGC
+    /// removes with `AD LVELBIAS`.
+    /// Counts already driven into `RNRAD`, **per quantity**: altitude,
+    /// then the three velocity beams. Four independent readings share one
+    /// counter in the AGC, so the responder must know what it last left
+    /// there for each — a single shared total made flight 13 drive the
+    /// difference between an altitude and a velocity (see above).
+    rnrad: [i32; 4],
+    /// Which quantity `RNRAD` currently holds, so a switch between
+    /// quantities is driven from the right starting value.
+    rnrad_holds: usize,
+    /// Seeded error injector; default config is OFF and RNG-free.
+    errors: eagle_sensors::lr::LrErrors,
+}
+
+impl Default for LrState {
+    fn default() -> Self {
+        Self {
+            last_ch13: 0,
+            rnrad: [0; 4],
+            rnrad_holds: 0,
+            errors: eagle_sensors::lr::LrErrors::new(Default::default()),
+        }
+    }
+}
+
+/// `RNRAD`, the radar counter (`ERASABLE_ASSIGNMENTS.agc:141`).
+const RNRAD_ADDR: u8 = 0o46;
+
 /// Result of one 10 ms tick.
 #[derive(Debug, Default)]
 pub struct SimTickOut {
@@ -224,6 +289,11 @@ pub struct SimCore {
     /// the chain excluded by measurement. See
     /// `docs/superpowers/notes/2026-07-31-m1b-rod-loop.md` 9i.
     pipa_pulses_cum: [i64; 3],
+    /// Last channel-13 word the AGC wrote.
+    ch13: u16,
+    /// Landing radar: `None` when the scenario bypasses it (`lrbypass`),
+    /// which every flight before M3 did.
+    lr: Option<LrState>,
     downlink_words: u64,
     mm: String,
     agc_nav: Option<AgcNav>,
@@ -282,6 +352,16 @@ impl SimCore {
             rod_step_idx: 0,
             rod_clicks_cum: 0,
             pipa_pulses_cum: [0; 3],
+            ch13: 0,
+            // `lrbypass = true` means the rope is told the radar is
+            // absent, so the model must be absent too — presenting a
+            // radar the AGC has been told to ignore is worse than no
+            // radar at all.
+            lr: if sc.agc.lrbypass {
+                None
+            } else {
+                Some(LrState::default())
+            },
             downlink_words: 0,
             mm: String::new(),
             agc_nav: None,
@@ -324,6 +404,7 @@ impl SimCore {
         self.phase3_throttle();
         self.phase4_5_dynamics();
         self.phase6_sensors(&mut out);
+        self.phase6b_landing_radar(&mut out);
         self.phase7_thrust(&mut out);
         self.phase8_rod(&mut out);
         self.phase9_handover(&mut out);
@@ -428,7 +509,13 @@ impl SimCore {
                     }
                     AgcOutput::Gyro { raw } => self.imu.apply_gyro(raw),
                     AgcOutput::Downlink => self.downlink_words += 1,
-                    AgcOutput::Other(_) => {}
+                    AgcOutput::Other(p) => {
+                        // Channel 13 carries the radar select; nothing
+                        // else decodes it, so capture it here.
+                        if p.channel == 0o13 {
+                            self.ch13 = p.data;
+                        }
+                    }
                 },
                 SimIn::RodApplied(n) => {
                     self.rod_clicks_cum += i64::from(n);
@@ -546,6 +633,118 @@ impl SimCore {
         }
         for pk in self.cdu.step(self.imu.gimbals_deg(&self.st.att)) {
             out.to_agc.push(pk);
+        }
+    }
+
+    // 6b. Landing radar: answer a channel-13 read before the gate closes.
+    //
+    // Inert unless the scenario enables the radar. The altitude beam is
+    // taken along the body -X axis (the LM's descent-stage boresight,
+    // opposite the thrust axis), which is the geometry P66 flies with the
+    // vehicle near-upright; a full four-beam model with the real antenna
+    // angles is M3's remaining work.
+    fn phase6b_landing_radar(&mut self, out: &mut SimTickOut) {
+        if self.lr.is_none() {
+            return;
+        }
+        let ch13 = self.ch13;
+        let alt = self.alt_agl();
+        let lr = self.lr.as_mut().expect("checked above");
+        let rising = eagle_sensors::lr::decode_ch13(ch13).is_some()
+            && eagle_sensors::lr::decode_ch13(lr.last_ch13).is_none();
+        lr.last_ch13 = ch13;
+        if !rising {
+            return;
+        }
+        let Some(sel) = eagle_sensors::lr::decode_ch13(ch13) else {
+            return;
+        };
+        // Velocity beams: project the surface-relative velocity onto the
+        // beam and quantize with THAT beam's own quantum -- the three
+        // differ and X's is negative (eagle_sensors::lr).
+        let vel_beam = |idx: usize| -> (f64, f64) {
+            let beams = eagle_sensors::lr::velocity_beams_nb(
+                eagle_sensors::lr::LR_ANTENNA_POS2_DEG.0,
+                eagle_sensors::lr::LR_ANTENNA_POS2_DEG.1,
+            );
+            let b = beams[idx];
+            // Surface-relative velocity in body axes.
+            let v_rel = self.st.vel - surface_velocity(self.st.pos);
+            let v_body = self.st.att.inverse().apply(v_rel);
+            let along = v_body.x * b[0] + v_body.y * b[1] + v_body.z * b[2];
+            (along, eagle_sensors::lr::LR_VEL_MS_PER_COUNT[idx])
+        };
+        let idx = match sel {
+            eagle_sensors::lr::RadarSelect::LrAlt => None,
+            eagle_sensors::lr::RadarSelect::LrVelX => Some(0),
+            eagle_sensors::lr::RadarSelect::LrVelY => Some(1),
+            eagle_sensors::lr::RadarSelect::LrVelZ => Some(2),
+            // The LR must not answer a rendezvous-radar select.
+            eagle_sensors::lr::RadarSelect::Rendezvous => return,
+        };
+        if let Some(i) = idx {
+            let (along, quantum) = vel_beam(i);
+            // Includes the carrier offset the AGC removes with
+            // `AD LVELBIAS`; zero velocity is NOT a zero count.
+            let counts = eagle_sensors::lr::vel_raw_counts(along, quantum);
+            let delta = counts - lr.rnrad[lr.rnrad_holds];
+            lr.rnrad[i + 1] = counts;
+            lr.rnrad_holds = i + 1;
+            for _ in 0..delta.unsigned_abs().min(16_384) {
+                let inc = if delta > 0 { 0 } else { 2 };
+                if let Ok(p) = Packet::counter(RNRAD_ADDR, inc) {
+                    out.to_agc.push(p);
+                }
+            }
+            // Velocity data good; range not being read this pass.
+            if let Ok(p) = Packet::io(0o33, eagle_sensors::lr::ch33_bits(false, true, true)) {
+                out.to_agc.push(p);
+            }
+            return;
+        }
+        if alt <= 0.0 {
+            return;
+        }
+        // A dropout must become data-NOT-good, never a zero range: zero
+        // reads as "on the surface" and would fly the vehicle into the
+        // ground. RNRAD is left untouched so the AGC keeps its last good
+        // count rather than being handed a fabricated one.
+        let Some(measured) = lr.errors.corrupt_range(alt) else {
+            if let Ok(p) = Packet::io(0o33, eagle_sensors::lr::ch33_bits(false, false, true)) {
+                out.to_agc.push(p);
+            }
+            return;
+        };
+        let counts = eagle_sensors::lr::alt_counts(measured);
+        // The AGC reads RNRAD's magnitude through `MASK POSMAX`
+        // (P20-P25.agc:2878), so a count above 16383 cannot be
+        // represented — at the high-scale quantum that is ~5.4 km. Above
+        // it the radar has no usable reading and must say so, not hand
+        // over a truncated one. (The rope's low scale, ALTSCBIT with
+        // SKALSKAL, extends this; that path is not pinned, so the
+        // conservative bound is used.)
+        if counts.unsigned_abs() > 16_383 {
+            if let Ok(p) = Packet::io(0o33, eagle_sensors::lr::ch33_bits(false, false, true)) {
+                out.to_agc.push(p);
+            }
+            return;
+        }
+        // Drive from whatever RNRAD actually holds now, not from this
+        // quantity's own last value: the AGC's counter is shared.
+        let delta = counts - lr.rnrad[lr.rnrad_holds];
+        lr.rnrad[0] = counts;
+        lr.rnrad_holds = 0;
+        for _ in 0..delta.unsigned_abs().min(16_384) {
+            let inc = if delta > 0 { 0 } else { 2 }; // PINC / MINC
+            if let Ok(p) = Packet::counter(RNRAD_ADDR, inc) {
+                out.to_agc.push(p);
+            }
+        }
+        // Data good, and the antenna in position 2 — asserted by CLEARING
+        // the bits (see eagle_sensors::lr).
+        let w = eagle_sensors::lr::ch33_bits(true, false, true);
+        if let Ok(p) = Packet::io(0o33, w) {
+            out.to_agc.push(p);
         }
     }
 
@@ -1271,6 +1470,192 @@ mod tests {
             "pitchover at 3 deg/s: PIPA reported {reported:?} against truth {actual:?} \
              (err {err} m/s over 12 s = {} m/s^2)",
             err / 12.0
+        );
+    }
+
+    #[test]
+    fn landing_radar_stays_silent_when_the_scenario_bypasses_it() {
+        // `lrbypass = true` tells the rope the radar is absent. Presenting
+        // one anyway is worse than none at all, so the model must be
+        // absent too. pdi-descent.toml bypasses.
+        let sc = pdi_scenario();
+        assert!(sc.agc.lrbypass, "fixture must bypass");
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+        core.ch13 = 0o17; // LRALT selected
+        let out = core.tick();
+        assert!(
+            !out.to_agc.iter().any(|p| p.channel == 0o46),
+            "no RNRAD traffic when the radar is bypassed"
+        );
+    }
+
+    #[test]
+    fn landing_radar_answers_an_altitude_read_before_the_gate_closes() {
+        // yaAGC supplies no radar data of its own (RequestRadarData is a
+        // stub), so RNRAD must be driven on the ACTIVITY RISING EDGE --
+        // by the time RADARUPT fires it is too late.
+        let mut sc = pdi_scenario();
+        sc.agc.lrbypass = false;
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+        // Below the AGC counter's 16383-count ceiling (~5.4 km at the
+        // high-scale quantum); the 15.2 km PDI start is out of range and
+        // correctly refused.
+        core.st.pos = core.st.pos.unit().scale(sc.site.radius_m + 3_000.0);
+        let alt = core.alt_agl();
+        assert!(alt > 1000.0, "fixture should start high, got {alt}");
+
+        core.ch13 = 0o17; // activity + LRALT select
+        let out = core.tick();
+
+        let counter: Vec<_> = out.to_agc.iter().filter(|p| p.channel == 0o46).collect();
+        let expect = eagle_sensors::lr::alt_counts(alt);
+        assert!(
+            !counter.is_empty(),
+            "the radar must answer on the rising edge"
+        );
+        assert_eq!(
+            counter.len() as i32,
+            expect.min(16_384),
+            "one pulse per count of altitude"
+        );
+
+        // Data good and in position 2 are asserted by CLEARING the bits.
+        let ch33 = out
+            .to_agc
+            .iter()
+            .find(|p| p.channel == 0o33)
+            .expect("ch33 written");
+        assert_eq!(ch33.data & 0o20, 0, "LR range data good => bit clear");
+        assert_eq!(ch33.data & 0o100, 0, "in position 2 => bit clear");
+
+        // A second tick with the activity bit still up is NOT a new read;
+        // the rope clears and re-sets it for each one.
+        let again = core.tick();
+        assert!(
+            !again.to_agc.iter().any(|p| p.channel == 0o46),
+            "only the rising edge triggers a read"
+        );
+    }
+
+    #[test]
+    fn the_radar_answers_a_velocity_select_and_refuses_a_rendezvous_one() {
+        let mut sc = pdi_scenario();
+        sc.agc.lrbypass = false;
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+        // Give the vehicle a real surface-relative velocity to project.
+        core.st.vel = core.st.vel + V3::new(0.0, 0.0, -40.0);
+
+        core.ch13 = 0o14; // activity + LRVELX
+        let out = core.tick();
+        assert!(
+            out.to_agc.iter().any(|p| p.channel == 0o46),
+            "a velocity select must be answered"
+        );
+        let ch33 = out
+            .to_agc
+            .iter()
+            .find(|p| p.channel == 0o33)
+            .expect("ch33 written");
+        assert_eq!(ch33.data & 0o200, 0, "LR VEL data good => bit clear");
+        assert_ne!(
+            ch33.data & 0o20,
+            0,
+            "range is NOT being read this pass, so its bit stays set"
+        );
+
+        // A rendezvous-radar select must be refused outright -- the LR is
+        // not the RR, and answering would feed the AGC a fabricated range.
+        core.ch13 = 0; // drop activity so the next set is a rising edge
+        core.tick();
+        core.ch13 = 0o11; // RRRANGE
+        let rr = core.tick();
+        assert!(
+            !rr.to_agc.iter().any(|p| p.channel == 0o46),
+            "the LR must not answer a rendezvous-radar select"
+        );
+    }
+
+    #[test]
+    fn switching_quantities_drives_rnrad_from_what_it_actually_holds() {
+        // Flight 13's bug: one shared counter meant a read of LRVELX
+        // after LRALT drove the DIFFERENCE between an altitude count and
+        // a velocity count into RNRAD -- neither reading. The AGC's
+        // counter is shared, so the responder must drive from what it
+        // last left there, whatever quantity that was.
+        let mut sc = pdi_scenario();
+        sc.agc.lrbypass = false;
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+
+        // Drop to an altitude the radar can actually represent (a 15 km
+        // PDI start exceeds the AGC counter's 16383-count magnitude).
+        core.st.pos = core.st.pos.unit().scale(sc.site.radius_m + 3_000.0);
+        core.ch13 = 0o17; // LRALT
+        let a = core.tick();
+        let alt_pulses = a.to_agc.iter().filter(|p| p.channel == 0o46).count() as i32;
+        let held = core.lr.as_ref().unwrap().rnrad[0];
+        assert_eq!(alt_pulses, held.abs(), "altitude drove its own count");
+        assert_eq!(core.lr.as_ref().unwrap().rnrad_holds, 0);
+
+        core.ch13 = 0; // release, so the next set is a rising edge
+        core.tick();
+        core.ch13 = 0o14; // LRVELX
+        let v = core.tick();
+        let vel_pulses = v.to_agc.iter().filter(|p| p.channel == 0o46).count() as i32;
+        let lr = core.lr.as_ref().unwrap();
+        assert_eq!(lr.rnrad_holds, 1, "RNRAD now holds the X beam");
+        // The pulses sent must be the step FROM the altitude count TO the
+        // velocity count -- that is what leaves RNRAD holding the reading.
+        assert_eq!(
+            vel_pulses,
+            (lr.rnrad[1] - held).abs(),
+            "driven from what RNRAD held, not from this beam's own last value"
+        );
+    }
+
+    #[test]
+    fn a_radar_dropout_reports_data_not_good_and_leaves_rnrad_alone() {
+        // The failure mode that matters: a dropout must NOT become a zero
+        // range. Zero reads as "on the surface". The AGC keeps its last
+        // good count and is told the data is bad.
+        let mut sc = pdi_scenario();
+        sc.agc.lrbypass = false;
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+        core.lr = Some(LrState {
+            last_ch13: 0,
+            rnrad: [0; 4],
+            rnrad_holds: 0,
+            errors: eagle_sensors::lr::LrErrors::new(eagle_sensors::lr::LrErrorCfg {
+                dropout_probability: 1.0,
+                seed: 5,
+                ..Default::default()
+            }),
+        });
+        core.ch13 = 0o17;
+        let out = core.tick();
+
+        assert!(
+            !out.to_agc.iter().any(|p| p.channel == 0o46),
+            "a dropout must not drive RNRAD at all"
+        );
+        let ch33 = out
+            .to_agc
+            .iter()
+            .find(|p| p.channel == 0o33)
+            .expect("ch33 written even on a dropout");
+        assert_ne!(
+            ch33.data & 0o20,
+            0,
+            "LR range data NOT good => the bit stays SET (active low)"
+        );
+        assert_eq!(
+            core.lr.as_ref().unwrap().rnrad,
+            [0; 4],
+            "RNRAD bookkeeping untouched by a dropout"
         );
     }
 

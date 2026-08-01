@@ -453,6 +453,16 @@ def _plotly_slider(labels, frames_data, title, xaxis, yaxis, active=0, prefix=""
     """Assemble a Plotly slider figure from per-frame trace lists."""
     import plotly.graph_objects as go
 
+    # Round coordinates centrally: every caller repeats its traces once per
+    # frame, so full float64 repr dominates the committed .ipynb for no visible
+    # gain. Done here so each slider caller benefits without repeating itself.
+    for frame_traces in frames_data:
+        for tr in frame_traces:
+            for axis in ("x", "y"):
+                vals = getattr(tr, axis, None)
+                if vals is not None:
+                    setattr(tr, axis, np.round(np.asarray(vals, dtype=float), 5))
+
     frames = [go.Frame(name=labels[i], data=frames_data[i]) for i in range(len(labels))]
     fig = go.Figure(data=frames_data[active], frames=frames)
     steps = [

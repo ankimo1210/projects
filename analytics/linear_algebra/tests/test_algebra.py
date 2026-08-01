@@ -128,6 +128,33 @@ def test_conjugate_gradient_solves_spd():
     assert res[-1] < 1e-9
 
 
+def test_preconditioned_cg_beats_plain_cg_on_a_badly_scaled_system():
+    n = 20
+    lap = 2 * np.eye(n) - np.eye(n, k=1) - np.eye(n, k=-1)
+    scale = np.logspace(0.0, 2.0, n)
+    A = (scale[:, None] * lap) * scale[None, :]  # SPD, diagonal spans 1e0..1e4
+    b = np.ones(n)
+    d = np.diag(A)
+
+    _, plain = algebra.conjugate_gradient(A, b, max_iter=25)
+    x_pre, pre = algebra.conjugate_gradient(A, b, max_iter=25, M_inv=lambda v: v / d)
+
+    assert pre[-1] < plain[-1]
+    # Preconditioning changes the iteration path, not the answer.
+    x_exact = np.linalg.solve(A, b)
+    np.testing.assert_allclose(x_pre, x_exact, rtol=1e-5)
+
+
+def test_preconditioned_cg_accepts_a_matrix_and_matches_plain_cg_with_identity():
+    rng = np.random.default_rng(11)
+    M = rng.standard_normal((6, 6))
+    A = M @ M.T + 6 * np.eye(6)
+    b = rng.standard_normal(6)
+    x_none, _ = algebra.conjugate_gradient(A, b)
+    x_eye, _ = algebra.conjugate_gradient(A, b, M_inv=np.eye(6))
+    np.testing.assert_allclose(x_none, x_eye, atol=1e-10)
+
+
 def test_gradient_descent_quadratic_converges():
     A = np.array([[3.0, 0.0], [0.0, 1.0]])
     b = np.array([3.0, 2.0])

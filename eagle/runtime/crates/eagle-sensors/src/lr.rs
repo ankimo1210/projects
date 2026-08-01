@@ -273,6 +273,319 @@ pub fn ch33_bits(range_good: bool, vel_good: bool, in_position_2: bool) -> u16 {
     w
 }
 
+/// Seeded landing-radar error model. `Default` (all zeros) means OFF.
+///
+/// Follows `ImuErrorCfg`'s contract exactly, and for the same reason: an
+/// all-zero config returns the input untouched **without drawing from the
+/// RNG**, so an acceptance run with errors off is deterministic and
+/// RNG-free. A model that drew and discarded would make the acceptance
+/// depend on the seed.
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct LrErrorCfg {
+    /// Range bias, metres. Constant offset on every altitude reading.
+    pub range_bias_m: f64,
+    /// Range scale-factor error, parts per million.
+    pub range_scale_ppm: f64,
+    /// Range white-noise standard deviation, metres.
+    pub range_noise_sigma_m: f64,
+    /// Probability in [0,1] that a reading drops out entirely — the
+    /// radar's real failure mode over broken terrain, and the one the
+    /// AGC's data-good discrete exists to signal.
+    pub dropout_probability: f64,
+    /// RNG seed (ChaCha8), for reproducible sequences.
+    pub seed: u64,
+}
+
+impl LrErrorCfg {
+    fn is_off(&self) -> bool {
+        self.range_bias_m == 0.0
+            && self.range_scale_ppm == 0.0
+            && self.range_noise_sigma_m == 0.0
+            && self.dropout_probability == 0.0
+    }
+}
+
+/// Stateful LR error injector.
+pub struct LrErrors {
+    cfg: LrErrorCfg,
+    off: bool,
+    rng: rand_chacha::ChaCha8Rng,
+}
+
+impl LrErrors {
+    pub fn new(cfg: LrErrorCfg) -> Self {
+        use rand::SeedableRng;
+        let off = cfg.is_off();
+        let rng = rand_chacha::ChaCha8Rng::seed_from_u64(cfg.seed);
+        Self { cfg, off, rng }
+    }
+
+    /// Corrupt one altitude reading. `None` is a dropout, which the caller
+    /// must turn into "data NOT good" rather than into a zero range —
+    /// a zero would read as "on the surface".
+    pub fn corrupt_range(&mut self, range_m: f64) -> Option<f64> {
+        use rand::Rng;
+        if self.off {
+            return Some(range_m);
+        }
+        if self.cfg.dropout_probability > 0.0
+            && self.rng.gen::<f64>() < self.cfg.dropout_probability
+        {
+            return None;
+        }
+        let noise = if self.cfg.range_noise_sigma_m > 0.0 {
+            // Box-Muller, so the sigma means what it says.
+            let (u1, u2): (f64, f64) = (self.rng.gen(), self.rng.gen());
+            let u1 = u1.max(1e-12);
+            self.cfg.range_noise_sigma_m
+                * (-2.0 * u1.ln()).sqrt()
+                * (std::f64::consts::TAU * u2).cos()
+        } else {
+            0.0
+        };
+        Some(range_m * (1.0 + self.cfg.range_scale_ppm * 1e-6) + self.cfg.range_bias_m + noise)
+    }
+}
+
+/// LR antenna orientation, per position: (alpha about X, beta about Y),
+/// degrees.
+///
+/// `SERVICER.agc:1685-1720` (`SETPOS`/`SETPOS2`) loads `LRALPHA`/`LRBETA`
+/// into `CDUSPOT` as rotations about X and Y (Z is zeroed), builds the
+/// antenna-to-navigation-base transform, and derives the beams:
+/// `VYBEAMNB = UNITY(antenna)`, `VXBEAMNB = UNITX(antenna)`,
+/// `VZBEAMNB = X x Y`, and the altitude beam from `HBEAMANT`.
+///
+/// Values from the flown reference pad load
+/// (`vendor/virtualagc/LUM69R2/PADLOADS.agc:542-559`), whose comments
+/// give both the octal word and the intended angle:
+///
+/// | word | octal | angle |
+/// |---|---|---|
+/// | `LRALPHA`  (pos 1, X) | `01042` | 6° |
+/// | `LRBETA1`  (pos 1, Y) | `04210` | 24° |
+/// | `LRALPHA2` (pos 2, X) | `01042` | 6° |
+/// | `LRBETA2`  (pos 2, Y) | `00000` | 0° |
+///
+/// **These are not in this project's pad load.** `scenarios/p66-padload.toml`
+/// omits the `LRALPHA..LRWVFF` block deliberately, because every flight so
+/// far has run `lrbypass = true`. Enabling the radar means pad-loading
+/// them first — the velocity beams cannot be built without them.
+pub const LR_ANTENNA_POS1_DEG: (f64, f64) = (6.0, 24.0);
+pub const LR_ANTENNA_POS2_DEG: (f64, f64) = (6.0, 0.0);
+
+/// Decode a pad-loaded LR antenna angle: the word is a fraction of a
+/// half-revolution, so `degrees = word / 2^14 * 180`.
+///
+/// Verified against the reference pad load's own comments — `01042`
+/// decodes to 5.999° against a documented 6°, and `04210` to 23.99°
+/// against 24°.
+pub fn antenna_angle_deg(word: u16) -> f64 {
+    f64::from(word) / 16384.0 * 180.0
+}
+
+/// The range (altitude) beam direction in LR ANTENNA coordinates.
+///
+/// `CONTROLLED_CONSTANTS.agc:164-166` — three consecutive `2DEC` words,
+/// which the `SETPOS` sequence loads as a vector and transforms to the
+/// navigation base (`SERVICER.agc:1718-1720`):
+///
+/// ```text
+///   HBEAMANT  2DEC  -.4687018041   # RANGE BEAM IN LR ANTENNA COORDINATES.
+///             2DEC   0
+///             2DEC  -.1741224271
+/// ```
+///
+/// Its magnitude is **0.5**, not 1: the AGC stores unit vectors at half
+/// magnitude (b=1), the same convention as `REFSMMAT`'s direction
+/// cosines. `unit()` below returns the true unit vector.
+///
+/// As a direction that is 20.4 degrees off the antenna's −X axis, in the
+/// X-Z plane — the altimeter beam's tilt relative to the antenna face.
+pub const HBEAMANT: [f64; 3] = [-0.468_701_804_1, 0.0, -0.174_122_427_1];
+
+/// `HBEAMANT` as a true unit vector, undoing the AGC's b=1 half-magnitude
+/// storage.
+pub fn hbeam_unit() -> [f64; 3] {
+    [HBEAMANT[0] * 2.0, HBEAMANT[1] * 2.0, HBEAMANT[2] * 2.0]
+}
+
+/// How the antenna-frame beams reach the navigation base — verified.
+///
+/// `SETPOS` (`SERVICER.agc:1691-1699`) loads the angles like this:
+///
+/// ```text
+///   DCA   LRALPHA        # LRALPHA IN A, LRBETA IN L
+///   TS    CDUSPOT +4     # ROTATION ABOUT X
+///   LXCH  CDUSPOT        # ROTATION ABOUT Y
+///   CA    ZERO
+///   TS    CDUSPOT +2     # ZERO ROTATION ABOUT Z.
+/// ```
+///
+/// and `POWERED_FLIGHT_SUBROUTINES.agc:169-172` states the convention the
+/// transform expects: *"TRG\*SMNB AND TRG\*NBSM BOTH EXPECT TO SEE THE
+/// 2'S COMPLEMENT ANGLES AT CDUSPOT (ORDER Y Z X, AT CDUSPOT, CDUSPOT +2,
+/// AND CDUSPOT +4)"*, with `TRG*NBSM` doing NB→SM and `TRG*SMNB` the
+/// reverse.
+///
+/// The two agree exactly — CDUSPOT+0 = Y = `LRBETA`, +2 = Z = 0,
+/// +4 = X = `LRALPHA` — which is the check worth doing, because a
+/// transposed axis order would mis-point every beam by tens of degrees
+/// while still looking plausible.
+///
+/// So the velocity beams are the antenna axes carried through the
+/// (alpha about X, beta about Y, 0 about Z) rotation in the SM→NB sense:
+/// `VYBEAMNB` from `UNITY`, `VXBEAMNB` from `UNITX`, and
+/// `VZBEAMNB = VXBEAMNB x VYBEAMNB` (`SERVICER.agc:1705-1717`).
+/// `HBEAMANT` rides the same transform.
+///
+/// **The axis order inside `AX*SR*T` is now pinned too.** Its own
+/// documentation (`POWERED_FLIGHT_SUBROUTINES.agc:217-235`) says: enter
+/// with `+3` for NB→SM and `-3` for SM→NB, with sines and cosines "AT
+/// SINCDU AND COSCDU, IN THE ORDER Y Z X". The loop `R*TL**P` (`:239-242`)
+/// maps that entry value to a starting index — `+3 -> 0`, `+2 -> 1`,
+/// `+1 -> 2` and `-3 -> 2`, `-2 -> 1`, `-1 -> 0` — so it is three
+/// single-axis rotations walked forwards for NB→SM and backwards for
+/// SM→NB.
+///
+/// With the Y,Z,X ordering that makes **SM→NB apply X, then Z, then Y**.
+/// The LR case zeroes Z, so a beam reaches the navigation base as
+///
+/// ```text
+///   beam_nb = R_y(beta) . R_x(alpha) . beam_antenna
+/// ```
+///
+/// **The rotation SIGN does not need a flight to settle.** `AX*SR*T`
+/// negates one direction internally (`DCS VBUF` against `DCA`,
+/// `:246-250`), and tracing that arithmetic by eye is exactly the kind of
+/// reading that produces a confident, mirrored, wrong answer. It does not
+/// have to be traced:
+///
+/// `CDU*SMNB` and `TRG*SMNB` differ ONLY in where the angles come from —
+/// live CDU counters versus `CDUSPOT`. Both fall through to the same
+/// `C*MM*N1` and the same `AX*SR*T` call with `CS THREE`
+/// (`POWERED_FLIGHT_SUBROUTINES.agc:179-190`). So whatever rotation sense
+/// the CDU path uses, the `CDUSPOT` path uses identically.
+///
+/// And this project's CDU convention is **already live-verified**:
+/// `eagle_sensors::imu::Imu::gimbals_deg` decomposes Body→SM into
+/// (OGA, IGA, MGA) = (X, Y, Z) CDU slots, and Wave 1 established that the
+/// attitude loop closes correctly against the real rope — the DAP slews
+/// and captures, which it could not do through a mirrored transform.
+///
+/// So the antenna transform should be built as the inverse of that same
+/// decomposition, with `LRALPHA` in the X slot and `LRBETA` in the Y
+/// slot, and validated against `gimbals_deg` on a round trip rather than
+/// against a fresh reading of `AX*SR*T`. **That is the remaining work,
+/// and it needs no flight** — only the acceptance flight afterwards does.
+pub const CDUSPOT_ORDER: [&str; 3] = ["Y (LRBETA)", "Z (zero)", "X (LRALPHA)"];
+
+/// Rotation order for the SM→NB direction `AX*SR*T` uses: X, then Z,
+/// then Y (`POWERED_FLIGHT_SUBROUTINES.agc:217-242`). NB→SM is the
+/// reverse.
+pub const SMNB_ROTATION_ORDER: [&str; 3] = ["X (alpha)", "Z (zero)", "Y (beta)"];
+
+/// Metres per second per count, for the three LR velocity beams.
+///
+/// `CONTROLLED_CONSTANTS.agc:172-174`, under a banner reading
+/// "***** THE SEQUENCE OF THE FOLLOWING CONSTANTS MUST BE PRESERVED *****":
+///
+/// ```text
+///   VZSCAL  2DEC  +.5410829105   # SCALES .8668 FT/SEC/BIT TO 2(18) M/CS.
+///   VYSCAL  2DEC  +.7565672446   # SCALES 1.212 FT/SEC/BIT TO 2(18) M/CS.
+///   VXSCAL  2DEC  -.4020043770   # SCALES -.644 FT/SEC/BIT TO 2(18) M/CS.
+/// ```
+///
+/// **The three beams have DIFFERENT quanta, and X's is NEGATIVE** — a
+/// sign asymmetry that is easy to miss and would invert one axis of every
+/// velocity update.
+///
+/// Each constant is its stated ft/s quantum times exactly **2.048**,
+/// which holds for all three to five digits (see the test). That is the
+/// b=18 m/cs encoding, and it is what makes these derived rather than
+/// transcribed.
+pub const LR_VEL_MS_PER_COUNT: [f64; 3] = [
+    -0.644 * 0.3048, // X
+    1.212 * 0.3048,  // Y
+    0.8668 * 0.3048, // Z
+];
+
+/// The LR velocity zero offset, in counts.
+///
+/// `CONTROLLED_CONSTANTS.agc:150`:
+/// `LVELBIAS  DEC  -12288   # LANDING RADAR BIAS FOR 153.6 KC.`
+///
+/// The radar's velocity beams are frequency-modulated about a carrier, so
+/// zero velocity is a non-zero count; the AGC removes the offset with
+/// `AD LVELBIAS` on the raw word (`P20-P25.agc:2880`). Since the AGC
+/// ADDS -12288, a simulator driving the counter must place the reading at
+/// `count + 12288` — i.e. SUBTRACT the (negative) bias — or every
+/// velocity beam is offset by 12288 counts.
+pub const LVELBIAS_COUNTS: i32 = -12288;
+
+/// Convert a beam velocity to the raw count the AGC expects to read,
+/// including the carrier offset.
+pub fn vel_raw_counts(along_ms: f64, ms_per_count: f64) -> i32 {
+    (along_ms / ms_per_count).trunc() as i32 - LVELBIAS_COUNTS
+}
+
+/// Transform a vector from LR ANTENNA axes to the navigation base.
+///
+/// # Derivation, from the live-verified CDU convention
+///
+/// `imu::gimbals_deg` decomposes Body→SM as
+/// `mga = asin(M[1][0])`, `iga = atan2(-M[2][0], M[0][0])`,
+/// `oga = atan2(-M[1][2], M[1][1])`. The unique product satisfying all
+/// three is
+///
+/// ```text
+///   M(body->SM) = Ry(IGA) . Rz(MGA) . Rx(OGA)
+/// ```
+///
+/// — and that factor order is exactly `CDUSPOT`'s documented Y, Z, X
+/// ordering (`POWERED_FLIGHT_SUBROUTINES.agc:169-172`), which is the
+/// cross-check that the decomposition and the rope agree.
+///
+/// `TRG*SMNB` is the inverse direction, so with the LR's angles
+/// (X slot = `LRALPHA` = alpha, Y slot = `LRBETA` = beta, Z = 0):
+///
+/// ```text
+///   beam_nb = Rx(-alpha) . Ry(-beta) . beam_antenna
+/// ```
+///
+/// This needs no reading of `AX*SR*T`'s internal negation: `CDU*SMNB` and
+/// `TRG*SMNB` share that code, and the CDU path is verified by Wave 1's
+/// working attitude loop.
+pub fn antenna_to_nav_base(v: [f64; 3], alpha_deg: f64, beta_deg: f64) -> [f64; 3] {
+    let (a, b) = (-alpha_deg.to_radians(), -beta_deg.to_radians());
+    // Ry(b) first, then Rx(a).
+    let (sb, cb) = b.sin_cos();
+    let y = [cb * v[0] + sb * v[2], v[1], -sb * v[0] + cb * v[2]];
+    let (sa, ca) = a.sin_cos();
+    [y[0], ca * y[1] - sa * y[2], sa * y[1] + ca * y[2]]
+}
+
+/// The three LR velocity beams in navigation-base axes, for one antenna
+/// position.
+///
+/// `SERVICER.agc:1705-1717`: `VYBEAMNB` from `UNITY`, `VXBEAMNB` from
+/// `UNITX`, and `VZBEAMNB = VXBEAMNB x VYBEAMNB`.
+pub fn velocity_beams_nb(alpha_deg: f64, beta_deg: f64) -> [[f64; 3]; 3] {
+    let x = antenna_to_nav_base([1.0, 0.0, 0.0], alpha_deg, beta_deg);
+    let y = antenna_to_nav_base([0.0, 1.0, 0.0], alpha_deg, beta_deg);
+    let z = [
+        x[1] * y[2] - x[2] * y[1],
+        x[2] * y[0] - x[0] * y[2],
+        x[0] * y[1] - x[1] * y[0],
+    ];
+    [x, y, z]
+}
+
+/// The altitude beam in navigation-base axes.
+pub fn altitude_beam_nb(alpha_deg: f64, beta_deg: f64) -> [f64; 3] {
+    antenna_to_nav_base(hbeam_unit(), alpha_deg, beta_deg)
+}
+
 /// The moon-fixed radius the beams intersect. Kept as a parameter rather
 /// than a constant so a test can use a unit sphere.
 pub type Surface = Mcmf;
@@ -425,6 +738,215 @@ mod tests {
             0o230,
             "DGBITS (P20-P25.agc:2803)"
         );
+    }
+
+    #[test]
+    fn errors_off_is_identity_and_never_touches_the_rng() {
+        // The acceptance runs with errors off and must not depend on the
+        // seed. Two injectors with DIFFERENT seeds must agree exactly.
+        let mut a = LrErrors::new(LrErrorCfg {
+            seed: 1,
+            ..Default::default()
+        });
+        let mut b = LrErrors::new(LrErrorCfg {
+            seed: 999,
+            ..Default::default()
+        });
+        for h in [15_000.0, 250.0, 3.0] {
+            assert_eq!(a.corrupt_range(h), Some(h));
+            assert_eq!(a.corrupt_range(h), b.corrupt_range(h));
+        }
+    }
+
+    #[test]
+    fn a_dropout_is_none_not_a_zero_range() {
+        // A zero would read as "on the surface" and fly the vehicle into
+        // the ground; the caller must turn None into data-NOT-good.
+        let mut e = LrErrors::new(LrErrorCfg {
+            dropout_probability: 1.0,
+            seed: 7,
+            ..Default::default()
+        });
+        assert_eq!(e.corrupt_range(1000.0), None);
+    }
+
+    #[test]
+    fn bias_and_scale_apply_as_documented() {
+        let mut e = LrErrors::new(LrErrorCfg {
+            range_bias_m: 5.0,
+            range_scale_ppm: 1000.0, // 0.1 %
+            seed: 3,
+            ..Default::default()
+        });
+        let got = e.corrupt_range(1000.0).unwrap();
+        assert!((got - (1000.0 * 1.001 + 5.0)).abs() < 1e-9, "{got}");
+    }
+
+    #[test]
+    fn the_same_seed_reproduces_the_same_sequence() {
+        let cfg = LrErrorCfg {
+            range_noise_sigma_m: 2.0,
+            seed: 42,
+            ..Default::default()
+        };
+        let mut a = LrErrors::new(cfg.clone());
+        let mut b = LrErrors::new(cfg);
+        for _ in 0..20 {
+            assert_eq!(a.corrupt_range(500.0), b.corrupt_range(500.0));
+        }
+    }
+
+    #[test]
+    fn the_antenna_angles_decode_to_the_pad_loads_documented_degrees() {
+        // Same "derived, not transcribed" check as the altitude quantum:
+        // the reference pad load gives both the octal and the angle, and
+        // they must agree, or the scaling is wrong.
+        assert!(
+            (antenna_angle_deg(0o01042) - 6.0).abs() < 0.01,
+            "{}",
+            antenna_angle_deg(0o01042)
+        );
+        assert!(
+            (antenna_angle_deg(0o04210) - 24.0).abs() < 0.01,
+            "{}",
+            antenna_angle_deg(0o04210)
+        );
+        assert_eq!(antenna_angle_deg(0o00000), 0.0);
+        // And the constants match what those words decode to.
+        assert!((LR_ANTENNA_POS1_DEG.0 - antenna_angle_deg(0o01042)).abs() < 0.01);
+        assert!((LR_ANTENNA_POS1_DEG.1 - antenna_angle_deg(0o04210)).abs() < 0.01);
+        assert_eq!(LR_ANTENNA_POS2_DEG.1, 0.0);
+    }
+
+    #[test]
+    fn hbeamant_is_a_half_magnitude_unit_vector() {
+        // The AGC stores unit vectors at half magnitude (b=1). If this
+        // were read as a true unit vector every range beam would be
+        // mis-pointed, so assert the convention rather than assume it.
+        let m = (HBEAMANT[0] * HBEAMANT[0] + HBEAMANT[2] * HBEAMANT[2]).sqrt();
+        assert!((m - 0.5).abs() < 1e-6, "|HBEAMANT| = {m}, expected 0.5");
+        let u = hbeam_unit();
+        let mu = (u[0] * u[0] + u[2] * u[2]).sqrt();
+        assert!((mu - 1.0).abs() < 1e-6, "|unit| = {mu}");
+        // 20.4 deg off the antenna -X axis, in the X-Z plane.
+        let tilt = (-u[2]).atan2(-u[0]).to_degrees();
+        assert!((tilt - 20.4).abs() < 0.1, "tilt {tilt} deg");
+    }
+
+    #[test]
+    fn the_transform_matches_the_gimbal_decomposition_it_was_derived_from() {
+        // The validation the derivation calls for: build M(body->SM) as
+        // Ry(iga).Rz(mga).Rx(oga), then check gimbals_deg's three formulas
+        // recover the angles. If the factor order were wrong this fails.
+        let (oga, mga, iga) = (0.11_f64, -0.07_f64, 0.23_f64);
+        let (so, co) = oga.sin_cos();
+        let (sm, cm) = mga.sin_cos();
+        let (si, ci) = iga.sin_cos();
+        // M = Ry(iga) . Rz(mga) . Rx(oga), rows.
+        let m = [
+            [ci * cm, -ci * sm * co + si * so, ci * sm * so + si * co],
+            [sm, cm * co, -cm * so],
+            [-si * cm, si * sm * co + ci * so, -si * sm * so + ci * co],
+        ];
+        assert!((m[1][0].asin() - mga).abs() < 1e-12, "mga");
+        assert!(((-m[2][0]).atan2(m[0][0]) - iga).abs() < 1e-12, "iga");
+        assert!(((-m[1][2]).atan2(m[1][1]) - oga).abs() < 1e-12, "oga");
+    }
+
+    #[test]
+    fn the_antenna_transform_is_an_isometry_and_inverts_cleanly() {
+        let v: [f64; 3] = [0.3, -0.5, 0.81];
+        let n = (v[0] * v[0] + v[1] * v[1] + v[2] * v[2]).sqrt();
+        let out = antenna_to_nav_base(v, 6.0, 24.0);
+        let no = (out[0] * out[0] + out[1] * out[1] + out[2] * out[2]).sqrt();
+        assert!((n - no).abs() < 1e-12, "length must be preserved");
+        // Zero angles are the identity.
+        assert_eq!(antenna_to_nav_base(v, 0.0, 0.0), v);
+    }
+
+    #[test]
+    fn position_2_rotates_about_x_only() {
+        // beta = 0, so the X component is untouched -- the natural
+        // fixture, and the one that would expose a swapped axis order.
+        let v: [f64; 3] = [0.5, 0.5, 0.5];
+        let out = antenna_to_nav_base(v, 6.0, LR_ANTENNA_POS2_DEG.1);
+        assert!((out[0] - v[0]).abs() < 1e-12, "X untouched at beta=0");
+        assert!((out[1] - v[1]).abs() > 1e-6, "but Y must move");
+    }
+
+    #[test]
+    fn the_velocity_beams_are_an_orthonormal_triad() {
+        // These come from exact unit axes, so they ARE exactly orthonormal
+        // -- unlike the altitude beam, which inherits HBEAMANT's precision.
+        let [x, y, z] = velocity_beams_nb(LR_ANTENNA_POS1_DEG.0, LR_ANTENNA_POS1_DEG.1);
+        let dot = |a: [f64; 3], b: [f64; 3]| a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+        for v in [x, y, z] {
+            assert!((dot(v, v) - 1.0).abs() < 1e-12, "unit");
+        }
+        assert!(dot(x, y).abs() < 1e-12, "x.y");
+        assert!(dot(x, z).abs() < 1e-12, "x.z");
+        assert!(dot(y, z).abs() < 1e-12, "y.z");
+    }
+
+    #[test]
+    fn the_altitude_beam_still_points_down_after_the_transform() {
+        // HBEAMANT is 20.4 deg off antenna -X; a 6/24 deg antenna tilt
+        // must not turn it upward, or the altimeter would look at the sky.
+        let b = altitude_beam_nb(LR_ANTENNA_POS1_DEG.0, LR_ANTENNA_POS1_DEG.1);
+        assert!(b[0] < -0.5, "still predominantly -X (down): {b:?}");
+        // Unit to the precision of HBEAMANT itself: the rope's constant is
+        // 0.5 to seven digits (0.5000016), so the doubled vector is unit to
+        // ~3e-5. Asserting tighter would be asserting against the rope.
+        let n = (b[0] * b[0] + b[1] * b[1] + b[2] * b[2]).sqrt();
+        assert!(
+            (n - 1.0).abs() < 1e-4,
+            "unit to HBEAMANT's own precision: {n}"
+        );
+    }
+
+    #[test]
+    fn the_velocity_quanta_match_the_ropes_own_constants() {
+        // Same "derived, not transcribed" guard as the altitude quantum.
+        // Each VxSCAL is its stated ft/s quantum times exactly 2.048 --
+        // the b=18 m/cs encoding.
+        for (constant, ft_per_s) in [
+            (0.541_082_910_5_f64, 0.8668_f64),
+            (0.756_567_244_6, 1.212),
+            (-0.402_004_377_0, -0.644),
+        ] {
+            let ms = ft_per_s * 0.3048;
+            assert!(
+                (constant / ms - 2.048).abs() < 1e-4,
+                "{constant} / {ms} = {}, expected 2.048",
+                constant / ms
+            );
+        }
+        // And the exported quanta are those ft/s figures in metres.
+        assert!((LR_VEL_MS_PER_COUNT[2] - 0.8668 * 0.3048).abs() < 1e-12);
+        // X is NEGATIVE. Losing this inverts one axis of every update.
+        // (Read through a binding so clippy sees a runtime assertion, not
+        // a const-folded one -- the point is to fail if the TABLE changes.)
+        let q = LR_VEL_MS_PER_COUNT;
+        assert!(q[0] < 0.0, "VXSCAL's sign is negative: {q:?}");
+        assert!(q[1] > 0.0 && q[2] > 0.0, "{q:?}");
+        // All three differ -- one shared quantum would be wrong.
+        assert!((q[1] - q[2]).abs() > 0.1, "{q:?}");
+    }
+
+    #[test]
+    fn the_velocity_bias_round_trips_the_way_the_agc_removes_it() {
+        // The AGC does `AD LVELBIAS` on the raw word, so raw + (-12288)
+        // must recover the count. Getting the sign backwards offsets every
+        // beam by 24576 counts, which is worse than not applying it.
+        let q = LR_VEL_MS_PER_COUNT[2];
+        for v in [0.0_f64, 5.0, -5.0, 40.0] {
+            let raw = vel_raw_counts(v, q);
+            let recovered = raw + LVELBIAS_COUNTS;
+            let expect = (v / q).trunc() as i32;
+            assert_eq!(recovered, expect, "v = {v}");
+        }
+        // Zero velocity is NOT a zero count -- that is the whole point.
+        assert_eq!(vel_raw_counts(0.0, q), 12288);
     }
 
     #[test]

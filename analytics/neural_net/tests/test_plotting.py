@@ -26,8 +26,11 @@ def test_plotly_decision_boundary_animates():
     X, y = datasets.make_moons_dataset(n=160, seed=0)
     fig = viz.plotly_decision_boundary(X, y, epochs=40, n_frames=6, grid_steps=30)
     assert len(fig.frames) >= 2
-    # heatmap + scatter per frame.
-    assert len(fig.frames[-1].data) == 2
+    # The data scatter never changes with the epoch, so it stays in fig.data and
+    # a frame carries only the probability surface (trace 0).
+    assert len(fig.data) == 2  # surface + scatter
+    assert len(fig.frames[-1].data) == 1
+    assert tuple(fig.frames[-1].traces) == (0,)
     # Probabilities stay in [0, 1].
     z = np.asarray(fig.frames[-1].data[0].z)
     assert z.min() >= 0.0 and z.max() <= 1.0

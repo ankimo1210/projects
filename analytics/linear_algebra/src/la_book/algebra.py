@@ -41,6 +41,69 @@ def rank(A, tol: float = 1e-10) -> int:
     return len(rref(A, tol=tol)[1])
 
 
+def rref_steps(A, tol: float = 1e-10):
+    """RREF with the elimination recorded, one row operation at a time.
+
+    Gauss-Jordan is a *procedure*, but :func:`rref` only ever shows its result.
+    This returns (R, pivot_cols, steps) where ``steps`` is a list of dicts::
+
+        {"matrix": ndarray,      # state AFTER the operation
+         "kind": "swap" | "scale" | "eliminate",
+         "rows": (i, j) | "row": i | ("target", "source"),
+         "factor": float,        # for scale / eliminate
+         "pivot": (row, col)}    # pivot the operation is working on
+
+    The op is described structurally rather than as a sentence so the caller
+    picks the wording (the notebooks label them in Japanese).
+    """
+    R = np.array(A, dtype=float)
+    n_rows, n_cols = R.shape
+    pivots: list[int] = []
+    steps: list[dict] = []
+    row = 0
+    for col in range(n_cols):
+        if row >= n_rows:
+            break
+        p = row + int(np.argmax(np.abs(R[row:, col])))
+        if abs(R[p, col]) < tol:
+            continue
+        if p != row:
+            R[[row, p]] = R[[p, row]]
+            steps.append(
+                {"matrix": R.copy(), "kind": "swap", "rows": (row, p), "pivot": (row, col)}
+            )
+        if not np.isclose(R[row, col], 1.0):
+            factor = 1.0 / R[row, col]
+            R[row] = R[row] * factor
+            steps.append(
+                {
+                    "matrix": R.copy(),
+                    "kind": "scale",
+                    "row": row,
+                    "factor": float(factor),
+                    "pivot": (row, col),
+                }
+            )
+        for r in range(n_rows):
+            if r != row and abs(R[r, col]) > tol:
+                factor = -R[r, col]
+                R[r] = R[r] + factor * R[row]
+                steps.append(
+                    {
+                        "matrix": R.copy(),
+                        "kind": "eliminate",
+                        "target": r,
+                        "source": row,
+                        "factor": float(factor),
+                        "pivot": (row, col),
+                    }
+                )
+        pivots.append(col)
+        row += 1
+    R[np.abs(R) < tol] = 0.0
+    return R, pivots, steps
+
+
 def gram_schmidt(V, tol: float = 1e-12):
     """Orthonormalize the columns of V (classical Gram-Schmidt).
 
@@ -208,30 +271,51 @@ def gauss_seidel(A, b, n_iter: int = 100, x0=None, return_history: bool = False)
     return (x, np.array(res)) if return_history else x
 
 
-def conjugate_gradient(A, b, tol: float = 1e-10, max_iter: int | None = None, x0=None):
+def conjugate_gradient(A, b, tol: float = 1e-10, max_iter: int | None = None, x0=None, M_inv=None):
     """Conjugate gradient for symmetric positive definite A.
 
-    Returns (x, residual_norms).
+    With ``M_inv`` (a matrix or a callable applying M^{-1}) this is
+    *preconditioned* CG: it runs CG on the better-conditioned system
+    M^{-1}A x = M^{-1}b while keeping the iterates in the original variables.
+    Passing ``M_inv=None`` (the default) is plain CG.
+
+    Returns (x, residual_norms) — the residuals are ||b - A x|| in both cases,
+    so preconditioned and plain runs are directly comparable.
     """
     A = np.asarray(A, dtype=float)
     b = np.asarray(b, dtype=float)
     n = b.size
+    if M_inv is None:
+
+        def apply_minv(v):
+            return v
+
+    elif callable(M_inv):
+        apply_minv = M_inv
+    else:
+        M_mat = np.asarray(M_inv, dtype=float)
+
+        def apply_minv(v):
+            return M_mat @ v
+
     x = np.zeros(n) if x0 is None else np.array(x0, dtype=float)
     r = b - A @ x
-    p = r.copy()
-    rs = float(r @ r)
-    res = [np.sqrt(rs)]
+    z = apply_minv(r)
+    p = z.copy()
+    rz = float(r @ z)
+    res = [float(np.linalg.norm(r))]
     for _ in range(max_iter if max_iter is not None else n):
         Ap = A @ p
-        alpha = rs / float(p @ Ap)
+        alpha = rz / float(p @ Ap)
         x = x + alpha * p
         r = r - alpha * Ap
-        rs_new = float(r @ r)
-        res.append(np.sqrt(rs_new))
-        if np.sqrt(rs_new) < tol:
+        res.append(float(np.linalg.norm(r)))
+        if res[-1] < tol:
             break
-        p = r + (rs_new / rs) * p
-        rs = rs_new
+        z = apply_minv(r)
+        rz_new = float(r @ z)
+        p = z + (rz_new / rz) * p
+        rz = rz_new
     return x, np.array(res)
 
 
