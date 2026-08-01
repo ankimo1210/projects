@@ -10,9 +10,9 @@ import numpy as np
 import pytest
 
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402
-from ml_textbook import datasets, widgets  # noqa: E402
-from sklearn.linear_model import LogisticRegression  # noqa: E402
+import matplotlib.pyplot as plt
+from ml_textbook import datasets, widgets
+from sklearn.linear_model import LogisticRegression
 
 
 @pytest.fixture(autouse=True)

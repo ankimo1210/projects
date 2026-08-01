@@ -110,7 +110,7 @@ def correlated_feature_demo(
     X = np.column_stack([x1, x2])
 
     c1, c2 = [], []
-    for r in range(n_runs):
+    for _ in range(n_runs):
         idx = rng.integers(0, n, size=n)  # bootstrap resample
         model = LinearRegression().fit(X[idx], y[idx])
         c1.append(model.coef_[0])

@@ -10,7 +10,6 @@ import json
 from pathlib import Path
 
 import pandas as pd
-
 from ml_textbook.pipelines import load_pipeline
 
 from .train import DEFAULT_MODEL_PATH, FEATURE_COLUMNS, train_pipeline
