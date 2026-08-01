@@ -547,6 +547,11 @@ dependencies = [
     { name = "yfinance" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "matplotlib", specifier = ">=3.8" },
@@ -555,6 +560,9 @@ requires-dist = [
     { name = "pyarrow", specifier = ">=15.0" },
     { name = "yfinance", specifier = ">=0.2.40" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8.0" }]
 
 [[package]]
 name = "babel"
@@ -585,6 +593,11 @@ dependencies = [
     { name = "scipy" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "arviz", specifier = ">=0.18" },
@@ -601,6 +614,9 @@ requires-dist = [
     { name = "pymc", specifier = ">=5.16" },
     { name = "scipy", specifier = ">=1.13" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8.0" }]
 
 [[package]]
 name = "beautifulsoup4"
@@ -1551,6 +1567,11 @@ extras = [
     { name = "seaborn" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "ipykernel", specifier = ">=6.29" },
@@ -1569,6 +1590,9 @@ requires-dist = [
     { name = "sympy", specifier = ">=1.12" },
 ]
 provides-extras = ["extras"]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8.0" }]
 
 [[package]]
 name = "fqdn"
@@ -1862,6 +1886,7 @@ dependencies = [
     { name = "fastapi" },
     { name = "maturin" },
     { name = "numpy" },
+    { name = "pandas" },
     { name = "pydantic" },
     { name = "torch" },
     { name = "uvicorn", extra = ["standard"] },
@@ -1888,6 +1913,7 @@ requires-dist = [
     { name = "httpx", marker = "extra == 'dev'", specifier = ">=0.27" },
     { name = "maturin", specifier = ">=1.7" },
     { name = "numpy", specifier = ">=2.0" },
+    { name = "pandas", specifier = ">=2.2" },
     { name = "pydantic", specifier = ">=2.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0" },
     { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.23" },
@@ -2112,6 +2138,11 @@ dependencies = [
     { name = "scipy" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "ipykernel", specifier = ">=6.29" },
@@ -2127,6 +2158,9 @@ requires-dist = [
     { name = "plotly", specifier = ">=5.20" },
     { name = "scipy", specifier = ">=1.13" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8.0" }]
 
 [[package]]
 name = "hypothesis"
@@ -2490,6 +2524,11 @@ dependencies = [
     { name = "torch" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "ipykernel", specifier = ">=6.29" },
@@ -2505,6 +2544,9 @@ requires-dist = [
     { name = "tokenizers", specifier = ">=0.15" },
     { name = "torch", specifier = ">=2.6", index = "https://download.pytorch.org/whl/cu128" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8.0" }]
 
 [[package]]
 name = "json5"
@@ -2935,6 +2977,11 @@ dependencies = [
     { name = "sympy" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "ipykernel", specifier = ">=6.29" },
@@ -2951,6 +2998,9 @@ requires-dist = [
     { name = "scipy", specifier = ">=1.13" },
     { name = "sympy", specifier = ">=1.12" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8.0" }]
 
 [[package]]
 name = "laplace-book"
@@ -2971,6 +3021,11 @@ dependencies = [
     { name = "sympy" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "ipykernel", specifier = ">=6.29" },
@@ -2986,6 +3041,9 @@ requires-dist = [
     { name = "scipy", specifier = ">=1.13" },
     { name = "sympy", specifier = ">=1.12" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8.0" }]
 
 [[package]]
 name = "lark"
@@ -3110,7 +3168,13 @@ name = "line-backup-exporter"
 version = "0.1.0"
 source = { editable = "line_backup" }
 
+[package.optional-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
+requires-dist = [{ name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0" }]
 provides-extras = ["dev"]
 
 [[package]]
@@ -3156,6 +3220,7 @@ source = { editable = "market_nn" }
 dependencies = [
     { name = "numpy" },
     { name = "pandas" },
+    { name = "pillow" },
     { name = "pyarrow" },
     { name = "pyyaml" },
     { name = "scikit-learn" },
@@ -3179,6 +3244,7 @@ dev = [
 requires-dist = [
     { name = "numpy", specifier = ">=2.0" },
     { name = "pandas", specifier = ">=2.2" },
+    { name = "pillow", specifier = ">=10.0" },
     { name = "pyarrow", specifier = ">=18" },
     { name = "pyyaml", specifier = ">=6" },
     { name = "scikit-learn", specifier = ">=1.5" },
@@ -3315,10 +3381,12 @@ dependencies = [
     { name = "fastapi" },
     { name = "numpy" },
     { name = "pandas" },
+    { name = "plotly" },
     { name = "python-dotenv" },
     { name = "pyyaml" },
     { name = "requests" },
     { name = "scipy" },
+    { name = "streamlit" },
     { name = "uvicorn", extra = ["standard"] },
     { name = "yfinance" },
 ]
@@ -3336,10 +3404,12 @@ requires-dist = [
     { name = "fastapi", specifier = ">=0.115" },
     { name = "numpy", specifier = ">=1.26" },
     { name = "pandas", specifier = ">=2.2" },
+    { name = "plotly", specifier = ">=5.22" },
     { name = "python-dotenv", specifier = ">=1.0" },
     { name = "pyyaml", specifier = ">=6.0" },
     { name = "requests", specifier = ">=2.32" },
     { name = "scipy", specifier = ">=1.13" },
+    { name = "streamlit", specifier = ">=1.51" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.32" },
     { name = "yfinance", specifier = ">=0.2.40" },
 ]
@@ -3616,6 +3686,11 @@ serve = [
     { name = "uvicorn" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "fastapi", marker = "extra == 'serve'", specifier = ">=0.110" },
@@ -3639,6 +3714,9 @@ requires-dist = [
     { name = "uvicorn", marker = "extra == 'serve'", specifier = ">=0.27" },
 ]
 provides-extras = ["extras", "serve"]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8.0" }]
 
 [[package]]
 name = "mpmath"
@@ -4008,6 +4086,11 @@ dependencies = [
     { name = "tqdm" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "ipykernel", specifier = ">=6.29" },
@@ -4026,6 +4109,9 @@ requires-dist = [
     { name = "torchvision", specifier = ">=0.21", index = "https://download.pytorch.org/whl/cu128" },
     { name = "tqdm", specifier = ">=4.66" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8.0" }]
 
 [[package]]
 name = "notebook"
@@ -4312,6 +4398,12 @@ dependencies = [
     { name = "sympy" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "hypothesis" },
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "ipykernel", specifier = ">=6.29" },
@@ -4326,6 +4418,12 @@ requires-dist = [
     { name = "plotly", specifier = ">=5.22" },
     { name = "scipy", specifier = ">=1.13" },
     { name = "sympy", specifier = ">=1.12" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "hypothesis", specifier = ">=6.100" },
+    { name = "pytest", specifier = ">=8.0" },
 ]
 
 [[package]]
@@ -4604,6 +4702,12 @@ dependencies = [
     { name = "sympy" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "hypothesis" },
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "ipykernel", specifier = ">=6.29" },
@@ -4618,6 +4722,12 @@ requires-dist = [
     { name = "plotly", specifier = ">=5.22" },
     { name = "scipy", specifier = ">=1.13" },
     { name = "sympy", specifier = ">=1.12" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "hypothesis", specifier = ">=6.100" },
+    { name = "pytest", specifier = ">=8.0" },
 ]
 
 [[package]]
@@ -6447,6 +6557,11 @@ dependencies = [
     { name = "sympy" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "ipykernel", specifier = ">=6.29" },
@@ -6463,6 +6578,9 @@ requires-dist = [
     { name = "statsmodels", specifier = ">=0.14" },
     { name = "sympy", specifier = ">=1.12" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8.0" }]
 
 [[package]]
 name = "statsmodels"
