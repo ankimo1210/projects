@@ -78,9 +78,17 @@ def test_clt_convergence_has_one_frame_per_sample_size():
 def test_clt_convergence_bins_every_series_on_the_same_grid():
     """Per-series autobinning would render Cauchy as nothing, not as wide."""
     fig = plotting.clt_convergence(["normal", "cauchy"], ns=[50], n_reps=1500)
-    bins = [tr.xbins for tr in fig.frames[0].data]
-    assert bins[0] == bins[1], "series must share one binning to be comparable"
-    assert all(tr.autobinx is False for tr in fig.frames[0].data)
+    xs = [np.asarray(tr.x, dtype=float) for tr in fig.frames[0].data]
+    np.testing.assert_array_equal(xs[0], xs[1])  # one shared grid
+    assert xs[0].min() > -5.0 and xs[0].max() < 5.0  # inside the display window
+
+
+def test_clt_convergence_ships_bin_counts_not_raw_samples():
+    """A go.Histogram would serialise every observation into the notebook."""
+    fig = plotting.clt_convergence(["normal"], ns=[10], n_reps=4000)
+    trace = fig.frames[0].data[0]
+    assert trace.type == "bar", "histograms embed the raw sample; bars embed 60 counts"
+    assert len(trace.x) == 60
 
 
 def test_clt_convergence_names_the_off_screen_mass():
