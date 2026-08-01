@@ -23,7 +23,11 @@ TIME2/PIPTIME b=28 cs. LAND magnitude = R_SITE exactly (validated);
 LAND rotates with the moon in ref coords (~4.6 m/s in Y), so validate
 on |LAND| and the pole component, never on X/Y constancy.
 """
-import json, sys
+import json
+import math
+import pickle
+import sys
+from itertools import pairwise
 
 TRACE = sys.argv[1] if len(sys.argv) > 1 else 'build/traces/pkt-descent-full.jsonl'
 
@@ -61,7 +65,7 @@ for k in range(100):
     if len(seq) < 50:
         continue
     good = 0
-    for a, b_ in zip(seq[100:200], seq[101:201]):
+    for a, b_ in pairwise(seq[100:201]):
         d = dp(b_[1], b_[2]) - dp(a[1], a[2])
         if 190 <= d <= 210:
             good += 1
@@ -76,8 +80,8 @@ def slot(idx):
     return pairs[(id_off + idx) % 100::100]
 
 # ---- 3. sanity: LAND magnitude ------------------------------------------
-import math
-lands = list(zip(slot(72), slot(73), slot(74)))
+
+lands = list(zip(slot(72), slot(73), slot(74), strict=False))
 mid = lands[len(lands)//2]
 for b_try in (24, 25, 26, 27):
     v = [phys(p[1], p[2], b_try) for p in mid]
@@ -110,7 +114,7 @@ for f in range(0, frames, max(1, frames // 25)):
           f"{rgu[f][1][2]:12.1f} {vgu[f][1][0]*100:8.2f} {vgu[f][1][2]*100:9.2f}")
 
 # persist for the analysis step
-import pickle
+
 with open('/tmp/claude-1000/-home-kazumasa-projects/31fea53a-1dc3-4021-b79f-712a89c4f820/scratchpad/downlink9.pkl', 'wb') as fh:
     pickle.dump({'t2': t2, 'rgu': rgu, 'vgu': vgu, 'land': land}, fh)
 print("saved downlink9.pkl")

@@ -5,8 +5,17 @@ Every physical HTTP send goes through FakeSession so nothing here touches a
 real network or sleeps for real time (pacing uses tests.fakes.FakeClock).
 """
 
+# health/tests/ is a package, so a plain `from tests.fakes import ...` resolves
+# through the top-level name `tests` -- which in a full-workspace run belongs to
+# whichever member project pytest imported first (stock/tests today). That made
+# this module error out at collection from the repo root while passing from
+# health/. Loading the sibling module by path is independent of rootdir, and
+# adding a conftest here is not an option: it would be named `tests.conftest`
+# and collide with stock's.
+import importlib.util as _importlib_util
 from datetime import UTC, date, datetime, timedelta
 from email.utils import format_datetime
+from pathlib import Path as _Path
 
 import pytest
 import requests
@@ -21,7 +30,12 @@ from health.client import (
 )
 from health.endpoints import CATALOG, closed_open_filter, daily_rollup_body
 
-from tests.fakes import FakeClock, FakeResponse, FakeSession
+_fakes_spec = _importlib_util.spec_from_file_location(
+    "health_test_fakes", _Path(__file__).resolve().with_name("fakes.py")
+)
+_fakes = _importlib_util.module_from_spec(_fakes_spec)
+_fakes_spec.loader.exec_module(_fakes)
+FakeClock, FakeResponse, FakeSession = _fakes.FakeClock, _fakes.FakeResponse, _fakes.FakeSession
 
 START = date(2026, 7, 1)
 END = date(2026, 7, 3)

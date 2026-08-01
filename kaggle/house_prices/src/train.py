@@ -16,8 +16,10 @@ Pipeline:
 
 from pathlib import Path
 
+import lightgbm as lgb
 import numpy as np
 import pandas as pd
+import xgboost as xgb
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.impute import SimpleImputer
@@ -28,9 +30,6 @@ from sklearn.model_selection import KFold, cross_val_predict
 from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.preprocessing import FunctionTransformer, OneHotEncoder, StandardScaler
 from sklearn.svm import SVR
-
-import lightgbm as lgb
-import xgboost as xgb
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "house-prices-advanced-regression-techniques"
@@ -297,7 +296,7 @@ def main() -> None:
     print()
     for name, (oof_p, _) in candidates.items():
         print(f"{name:<14} {rmse(y, oof_p):.5f}")
-    weights = dict(zip(names, meta.coef_.round(3)))
+    weights = dict(zip(names, meta.coef_.round(3), strict=False))
     print(f"stack weights (intercept={meta.intercept_:.3f}): {weights}")
 
     best = min(candidates, key=lambda k: rmse(y, candidates[k][0]))

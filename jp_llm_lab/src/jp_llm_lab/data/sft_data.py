@@ -53,7 +53,7 @@ def build_sft_dataset(n: int = 1200, max_chars: int = 180, force: bool = False) 
         examples = [list(p) for p in _SYNTHETIC] * 40
 
     payload = {
-        "source": "kunishou/databricks-dolly-15k-ja (closed-book, len<=%d)" % max_chars if not synthetic else "synthetic (in-repo)",
+        "source": f"kunishou/databricks-dolly-15k-ja (closed-book, len<={max_chars})" if not synthetic else "synthetic (in-repo)",
         "license": "CC-BY-SA-3.0 (dolly-15k-ja)" if not synthetic else "synthetic",
         "synthetic": synthetic,
         "n_examples": len(examples),

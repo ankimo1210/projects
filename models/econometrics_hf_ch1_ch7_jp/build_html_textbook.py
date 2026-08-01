@@ -11,8 +11,6 @@ import re
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable
-
 
 PROJECT_DIR = Path(__file__).resolve().parent
 SOURCE_DIR = PROJECT_DIR / "econometrics_hf_ch1_ch7_markdown_ja"

@@ -123,10 +123,10 @@ def write_wav(name, mono=None, stereo=None):
             data = b"".join(
                 struct.pack(
                     "<hh",
-                    int(max(-1.0, min(1.0, l)) * 32767),
-                    int(max(-1.0, min(1.0, r)) * 32767),
+                    int(max(-1.0, min(1.0, lch)) * 32767),
+                    int(max(-1.0, min(1.0, rch)) * 32767),
                 )
-                for l, r in zip(left, right)
+                for lch, rch in zip(left, right, strict=True)
             )
         w.writeframes(data)
     print("wrote", path)
@@ -142,7 +142,7 @@ def gen_button():
 def gen_start():
     sweep = tone(250, 0.35, saw, attack=0.01, decay=6, freq_end=950)
     shimmer = tone(500, 0.35, sq30, attack=0.01, decay=8, freq_end=1900)
-    mix = [a + 0.3 * b for a, b in zip(sweep, shimmer)]
+    mix = [a + 0.3 * b for a, b in zip(sweep, shimmer, strict=False)]
     write_wav("sfx_start.wav", mono=normalize(mix, 0.8))
 
 
@@ -156,7 +156,9 @@ def gen_hit():
 
 
 def gen_coin():
-    voice = lambda p: 0.5 * sine(p) + 0.5 * square(p, 0.4)
+    def voice(p):
+        return 0.5 * sine(p) + 0.5 * square(p, 0.4)
+
     mix = zeros(0.22)
     add(mix, tone(1318, 0.07, voice, decay=20))       # E6
     add(mix, tone(1976, 0.14, voice, decay=16), 0.06)  # B6
@@ -164,7 +166,9 @@ def gen_coin():
 
 
 def gen_gameover():
-    voice = lambda p: 0.6 * saw(p) + 0.4 * square(p)
+    def voice(p):
+        return 0.6 * saw(p) + 0.4 * square(p)
+
     mix = zeros(1.3)
     for i, m in enumerate([69, 64, 60]):  # A4 E4 C4
         add(mix, tone(midi(m), 0.18, voice, decay=12), i * 0.14)

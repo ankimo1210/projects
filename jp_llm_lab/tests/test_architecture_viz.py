@@ -7,7 +7,6 @@ from __future__ import annotations
 import json
 
 import plotly.graph_objects as go
-
 from jp_llm_lab.visualization.architecture_viz import block_internals_figure, model_flow_figure
 
 MODEL_CFG = {

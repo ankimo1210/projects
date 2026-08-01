@@ -195,8 +195,33 @@ pub const LR_ALT_M_PER_COUNT: f64 = 0.328_879_2;
 /// Truncation, not rounding: a counter accumulates whole pulses, and the
 /// residual belongs to the caller so successive readings do not lose it —
 /// the same carry-forward the PIPA model uses.
+/// The largest altitude the `RNRAD` counter can carry on the AGC's HIGH
+/// altitude scale: 16383 counts x `LR_ALT_M_PER_COUNT`.
+///
+/// `RNRAD` is a 15-bit counter, and `HSCAL` is 1.079 ft/bit
+/// (`CONTROLLED_CONSTANTS.agc:168`), so the high scale tops out here and
+/// the low scale (x `SKALSKAL`, .2 nominal) at a fifth of it. Flight 18
+/// asked it to carry 15 213 m = 46 257 counts. Altitude data-good must
+/// not be asserted above this — see the ledger's defect 9.
+pub const LR_ALT_MAX_M: f64 = 16_383.0 * LR_ALT_M_PER_COUNT;
+
+/// Whether the LR can report this altitude at all on the high scale.
+pub fn alt_in_counter_range(range_m: f64) -> bool {
+    range_m.abs() <= LR_ALT_MAX_M
+}
+
 pub fn alt_counts(range_m: f64) -> i32 {
-    (range_m / LR_ALT_M_PER_COUNT).trunc() as i32
+    // NEGATED, because `HSCAL` is negative (-0.3288792) and the AGC
+    // multiplies the reading by it (`SERVICER.agc:1144-1147`,
+    // `DMP HSCAL`). Sending a positive count therefore yields a NEGATIVE
+    // computed altitude — the AGC concludes it is below the surface and
+    // thrusts continuously, which is exactly what flight 17 did: vz
+    // positive from ignition, climbing to 2496 km with nav_err_alt
+    // diverging monotonically to -90 km.
+    //
+    // The quantum constant here is the magnitude of HSCAL; the sign lives
+    // in the count.
+    -(range_m / LR_ALT_M_PER_COUNT).trunc() as i32
 }
 
 /// Which quantity the AGC has selected on channel 13.
@@ -268,11 +293,17 @@ pub fn ch33_bits(range_good: bool, vel_good: bool, in_position_2: bool) -> u16 {
     )
 }
 
-/// Every channel-33 bit this module owns. Anything outside this mask
-/// belongs to `runner::init_discretes` (uplink, PIPA fail, oscillator)
-/// and must survive an LR update untouched.
-pub const CH33_LR_MASK: u16 =
-    CH33_LR_RANGE_DATA_GOOD | CH33_LR_POS1 | CH33_LR_POS2 | CH33_LR_VEL_DATA_GOOD;
+/// Every channel-33 bit this module owns.
+///
+/// **`CH33_LR_POS1` is deliberately NOT in it.** `runner` owns BIT6: it
+/// clears the bit as its own responder when P63SPOT3 asks for the antenna
+/// (`runner.rs:657`, `discrete_write(0o33, 0, CH33_BIT6_LR_POS1)`).
+/// Including POS1 here made `apply_lr_bits`'s `current | CH33_LR_MASK`
+/// re-SET the bit every tick, silently undoing that handshake — which is
+/// why flights 14 and 15 both died at P63 on `LRPOSALM` (0522). A mask
+/// that covers a bit you never assert is a mask that erases someone
+/// else's work.
+pub const CH33_LR_MASK: u16 = CH33_LR_RANGE_DATA_GOOD | CH33_LR_POS2 | CH33_LR_VEL_DATA_GOOD;
 
 /// Read-modify-write the LR bits of an existing channel-33 word.
 ///
@@ -691,10 +722,14 @@ mod tests {
     }
 
     #[test]
-    fn altitude_counts_round_trip_at_descent_altitudes() {
+    fn altitude_counts_round_trip_through_the_agcs_own_negative_scale() {
+        // The AGC recovers altitude as count * HSCAL, and HSCAL is
+        // NEGATIVE. So the round trip must go through -LR_ALT_M_PER_COUNT,
+        // and a positive altitude must produce a NEGATIVE count.
         for h in [15_000.0, 3_000.0, 250.0, 40.0, 3.0] {
             let n = alt_counts(h);
-            let back = f64::from(n) * LR_ALT_M_PER_COUNT;
+            assert!(n < 0, "h={h} must give a negative count, got {n}");
+            let back = f64::from(n) * -LR_ALT_M_PER_COUNT;
             assert!(
                 (h - back) < LR_ALT_M_PER_COUNT && h - back >= 0.0,
                 "h={h} -> {n} counts -> {back}"
@@ -705,8 +740,9 @@ mod tests {
     #[test]
     fn altitude_counts_truncate_rather_than_round() {
         // A counter carries whole pulses; the residual is the caller's,
-        // so half a quantum must not become a whole one.
-        assert_eq!(alt_counts(LR_ALT_M_PER_COUNT * 1.9), 1);
+        // so half a quantum must not become a whole one. (Negated, per
+        // HSCAL's sign.)
+        assert_eq!(alt_counts(LR_ALT_M_PER_COUNT * 1.9), -1);
         assert_eq!(alt_counts(LR_ALT_M_PER_COUNT * 0.9), 0);
     }
 
@@ -972,6 +1008,22 @@ mod tests {
     }
 
     #[test]
+    fn an_lr_update_never_touches_the_pos1_bit_runner_owns() {
+        // Flights 14 and 15 both died at P63 on LRPOSALM because this
+        // module's mask covered BIT6 without ever asserting it, so every
+        // tick re-set a bit runner had just cleared for the P63SPOT3
+        // handshake.
+        let with_pos1_asserted: u16 = 0o57776 & !CH33_LR_POS1;
+        let out = apply_lr_bits(with_pos1_asserted, true, true, true);
+        assert_eq!(
+            out & CH33_LR_POS1,
+            0,
+            "POS1 must stay as runner left it: {out:o}"
+        );
+        assert_eq!(CH33_LR_MASK & CH33_LR_POS1, 0, "POS1 is not ours to own");
+    }
+
+    #[test]
     fn an_lr_update_leaves_every_other_ch33_bit_alone() {
         // Flight 14: building the word from scratch overwrote the uplink,
         // PIPA-fail and oscillator bits init_discretes had set.
@@ -1008,5 +1060,34 @@ mod tests {
             };
             assert!((r - altitude(pos, R)).abs() < 1e-6, "h={h}");
         }
+    }
+}
+
+#[cfg(test)]
+mod defect9_tests {
+    use super::*;
+
+    #[test]
+    fn the_counter_cannot_carry_the_braking_phase() {
+        // Flight 18's ignition altitude. The point of the constant is that
+        // this is OUT of range, not in it.
+        assert!(!alt_in_counter_range(15_213.0));
+        assert!(alt_counts(15_213.0).unsigned_abs() > 16_383);
+    }
+
+    #[test]
+    fn the_counter_covers_the_approach_and_the_handover() {
+        // The gate the scenario hands over at, and P64's own altitudes.
+        assert!(alt_in_counter_range(250.0));
+        assert!(alt_in_counter_range(1_500.0));
+        assert!(alt_in_counter_range(5_000.0));
+    }
+
+    #[test]
+    fn the_range_limit_is_the_counter_times_the_quantum() {
+        assert!((LR_ALT_MAX_M - 5387.4).abs() < 1.0, "{LR_ALT_MAX_M}");
+        // Exactly at the edge is representable; one quantum past is not.
+        assert!(alt_in_counter_range(LR_ALT_MAX_M));
+        assert!(!alt_in_counter_range(LR_ALT_MAX_M + LR_ALT_M_PER_COUNT));
     }
 }

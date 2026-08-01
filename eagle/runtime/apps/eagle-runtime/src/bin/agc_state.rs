@@ -35,6 +35,15 @@ const SCALARS: &[(&str, i32, &str)] = &[
     ("TIME2", 28, "AGC clock, cs"),
 ];
 
+/// Erasables that are not numbers — print them as the AGC stores them.
+///
+/// `FAILREG` is three single-precision alarm-code registers
+/// (`ERASABLE_ASSIGNMENTS.agc:442`, "B(3)PRM 3 ALARM CODE REGISTERS"),
+/// which is the only place the code of ledger item 2's P65 alarm is
+/// recorded. Reading it here costs nothing and does not clear it — the
+/// dump is passive, unlike RSET, which the runner must never send.
+const OCTAL_TRIPLES: &[(&str, &str)] = &[("FAILREG", "alarm codes (0 = none)")];
+
 fn mag(v: [f64; 3]) -> f64 {
     (v[0] * v[0] + v[1] * v[1] + v[2] * v[2]).sqrt()
 }
@@ -56,6 +65,20 @@ fn main() -> Result<()> {
     for (sym, b, what) in SCALARS {
         match symtab.ecadr(sym).and_then(|e| dump.dp_at(e, *b)) {
             Some(v) => println!("{sym:<10} {v:>18.4}   {what}"),
+            None => println!("{sym:<10} {:>18}   {what}", "(not found)"),
+        }
+    }
+    for (sym, what) in OCTAL_TRIPLES {
+        match symtab.ecadr(sym) {
+            Some(e) => {
+                let w: Vec<String> = (0..3)
+                    .map(|i| match dump.word(e + i) {
+                        Some(v) => format!("{v:05o}"),
+                        None => "?????".into(),
+                    })
+                    .collect();
+                println!("{sym:<10} {:>18}   {what}", w.join(" "));
+            }
             None => println!("{sym:<10} {:>18}   {what}", "(not found)"),
         }
     }

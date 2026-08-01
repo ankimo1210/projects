@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from pathlib import Path
+from datetime import UTC, datetime
 from typing import Any
 
 import pandas as pd
 
 from src.utils.sources import PROJECT_ROOT
-
 
 PEER_SET = PROJECT_ROOT / "data" / "processed" / "peer_set.csv"
 OUTPUT = PROJECT_ROOT / "data" / "processed" / "peer_multiples.csv"
@@ -51,7 +49,7 @@ def fetch_one(yf, peer: dict[str, Any], retrieved_at: str) -> dict[str, Any]:
     try:
         t = yf.Ticker(ticker)
         info = t.get_info()
-    except Exception as exc:  # noqa: BLE001 - capture provider failures in output
+    except Exception as exc:
         row.update(
             {
                 "data_status": "fetch_failed",
@@ -85,7 +83,7 @@ def fetch_one(yf, peer: dict[str, Any], retrieved_at: str) -> dict[str, Any]:
 
     row.update(
         {
-            "as_of": datetime.now(timezone.utc).date().isoformat(),
+            "as_of": datetime.now(UTC).date().isoformat(),
             "currency": trading_currency or financial_currency,
             "financial_currency": financial_currency,
             "price": _field(info, "currentPrice", "regularMarketPrice", "previousClose"),

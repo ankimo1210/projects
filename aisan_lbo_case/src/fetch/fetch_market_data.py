@@ -1,15 +1,12 @@
 from __future__ import annotations
 
-import time
 from datetime import datetime
-from pathlib import Path
 from typing import Any
 
 import pandas as pd
 import requests
 
 from src.utils.sources import CONFIG_DIR, PROJECT_ROOT, load_yaml, now_jst_iso
-
 
 RAW_DIR = PROJECT_ROOT / "data" / "raw" / "market_data"
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
@@ -97,7 +94,7 @@ def main() -> None:
     try:
         prices = fetch_prices()
         prices.to_csv(RAW_DIR / "4667_prices.csv", index=False)
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         prices = pd.DataFrame()
         (RAW_DIR / "4667_prices_fetch_error.txt").write_text(
             f"Fetch failed at {now_jst_iso()}\n{exc!r}\n", encoding="utf-8"

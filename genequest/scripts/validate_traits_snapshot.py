@@ -8,7 +8,6 @@ import hashlib
 import json
 from pathlib import Path
 
-
 PROJECT_DIR = Path(__file__).resolve().parents[1]
 DATA_DIR = PROJECT_DIR / "data"
 JSON_PATH = DATA_DIR / "traits.json"

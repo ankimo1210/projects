@@ -32,7 +32,7 @@ def run(code: str) -> dict[str, Any]:
         import pandas as pd
         import plotly.express as px
         import plotly.graph_objects as go
-        import plotly.io as pio
+        import plotly.io as pio  # noqa: F401  (exported into the sandbox namespace)
         from stockkit.data import get_jp_cpi as _get_jp_cpi
         from stockkit.data import get_macro as _get_macro
         from stockkit.data import get_prices as _get_prices

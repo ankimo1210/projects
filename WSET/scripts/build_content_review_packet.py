@@ -18,33 +18,53 @@ from typing import Any
 try:
     from scripts.build_question_pack import (
         DEFAULT_INPUT as DEFAULT_MCQ_INPUT,
+    )
+    from scripts.build_question_pack import (
         pack_question,
         read_question_rows,
     )
     from scripts.build_region_map_pack import (
         DEFAULT_INPUT as DEFAULT_MAP_INPUT,
+    )
+    from scripts.build_region_map_pack import (
         REVIEW_SCOPES,
+    )
+    from scripts.build_region_map_pack import (
         build_pack as build_map_pack,
     )
     from scripts.build_written_question_pack import (
         DEFAULT_INPUT as DEFAULT_WRITTEN_INPUT,
+    )
+    from scripts.build_written_question_pack import (
         review_target_hash as written_review_target_hash,
+    )
+    from scripts.build_written_question_pack import (
         validate_source as validate_written_source,
     )
 except ModuleNotFoundError:  # Direct execution: python3 scripts/this_file.py
     from build_question_pack import (  # type: ignore[no-redef]
         DEFAULT_INPUT as DEFAULT_MCQ_INPUT,
+    )
+    from build_question_pack import (
         pack_question,
         read_question_rows,
     )
     from build_region_map_pack import (  # type: ignore[no-redef]
         DEFAULT_INPUT as DEFAULT_MAP_INPUT,
+    )
+    from build_region_map_pack import (
         REVIEW_SCOPES,
+    )
+    from build_region_map_pack import (
         build_pack as build_map_pack,
     )
     from build_written_question_pack import (  # type: ignore[no-redef]
         DEFAULT_INPUT as DEFAULT_WRITTEN_INPUT,
+    )
+    from build_written_question_pack import (
         review_target_hash as written_review_target_hash,
+    )
+    from build_written_question_pack import (
         validate_source as validate_written_source,
     )
 

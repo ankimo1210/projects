@@ -45,7 +45,7 @@ def make_key(df: pd.DataFrame) -> pd.Series:
             parts.append(col.fillna(-1).astype("int64").astype(str))
         else:
             parts.append(col.fillna("NA").astype(str))
-    return pd.Series(["|".join(v) for v in zip(*parts)], index=df.index)
+    return pd.Series(["|".join(v) for v in zip(*parts, strict=False)], index=df.index)
 
 
 def main() -> None:
