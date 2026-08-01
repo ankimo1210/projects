@@ -293,6 +293,16 @@ def plot_ranking_intervals(names, samples_list, level: float = 0.95, ax=None, tr
 # ---------------------------------------------------------------------------
 
 
+def _f(a, decimals: int = 4):
+    """Round a numeric payload before it is embedded in the notebook JSON.
+
+    Slider figures repeat their traces once per frame, so full float64 repr
+    dominates the committed ``.ipynb`` while adding no visible precision.
+    Not applied to densities or probabilities whose normalisation is asserted.
+    """
+    return np.round(np.asarray(a, dtype=float), decimals).tolist()
+
+
 def plotly_curve_slider(
     x, frames, slider_name: str = "step", title=None, ylim=None, frame_traces: int | None = None
 ):
@@ -503,8 +513,8 @@ def plotly_posterior_predictive(
                 name="posterior mean",
             ),
             go.Scatter(
-                x=list(x[:k]),
-                y=list(y[:k]),
+                x=_f(x[:k]),
+                y=_f(y[:k]),
                 mode="markers",
                 marker={"color": "black", "size": 6},
                 name="data",
@@ -596,8 +606,8 @@ def plotly_gp_regression(
                 name="posterior mean",
             ),
             go.Scatter(
-                x=list(x_all[:k]),
-                y=list(y_all[:k]),
+                x=_f(x_all[:k]),
+                y=_f(y_all[:k]),
                 mode="markers",
                 marker={"color": "black", "size": 7},
                 name="observations",
@@ -704,29 +714,31 @@ def plotly_gibbs_path(
     Z = np.exp(-0.5 * (XX**2 - 2 * rho * XX * YY + YY**2) / det)
     cutoffs = np.unique(np.linspace(2, n_steps, n_frames).astype(int))
 
-    def traces(c):
-        return [
-            go.Contour(
-                x=g,
-                y=g,
-                z=Z,
-                showscale=False,
-                contours_coloring="lines",
-                line_width=1,
-                colorscale="Greys",
-            ),
-            go.Scatter(
-                x=list(s[:c, 0]),
-                y=list(s[:c, 1]),
-                mode="lines+markers",
-                marker={"size": 4},
-                name="chain",
-            ),
-        ]
+    density = go.Contour(
+        x=_f(g),
+        y=_f(g),
+        z=_f(Z, 4),
+        showscale=False,
+        contours_coloring="lines",
+        line_width=1,
+        colorscale="Greys",
+        hoverinfo="skip",
+    )
 
+    def chain(c):
+        return go.Scatter(
+            x=_f(s[:c, 0]),
+            y=_f(s[:c, 1]),
+            mode="lines+markers",
+            marker={"size": 4},
+            name="chain",
+        )
+
+    # The target density does not move; only the chain grows. Re-sending the
+    # 60x60 contour in every frame made this the largest output in the book.
     fig = go.Figure(
-        data=traces(int(cutoffs[0])),
-        frames=[go.Frame(data=traces(int(c)), name=str(int(c))) for c in cutoffs],
+        data=[density, chain(int(cutoffs[0]))],
+        frames=[go.Frame(data=[chain(int(c))], traces=[1], name=str(int(c))) for c in cutoffs],
     )
     steps = [
         {
