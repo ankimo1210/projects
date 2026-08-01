@@ -33,14 +33,14 @@
 
 ### 第Ⅱ部 統計的推測 — 基準を使って判断する
 
-| Notebook | 内容 | 状態 |
-|---|---|---|
-| `06_estimation_mle` | 推定量の性質・MLE・Fisher 情報・Cramér–Rao・漸近正規性 | 予定 |
-| `07_confidence_intervals_bootstrap` | 区間推定の正しい読み方・被覆確率の実測・ブートストラップ | 予定 |
-| `08_hypothesis_testing` | 検定の構造・p 値の誤解・検出力・多重比較・p-hacking | 予定 |
-| `09_regression_inference` | 回帰係数の分布・残差診断・頑健標準誤差 | 予定 |
-| `10_glm` | 指数型分布族から GLM へ・IRLS 自前実装 | 予定 |
-| `11_frequentist_vs_bayes` | 同じデータを両流儀で解いて比べる橋渡し章 | 予定 |
+| Notebook | 内容 | 実行時間 | 状態 |
+|---|---|---|---|
+| `06_estimation_mle` | 推定量の性質・MLE・Fisher 情報(期待/観測)・Cramér–Rao・漸近正規性 | 3.8 s | ✅ |
+| `07_confidence_intervals_bootstrap` | 区間推定の正しい読み方・被覆確率の実測・ブートストラップ・順列検定 | 13.8 s | ✅ |
+| `08_hypothesis_testing` | 検定の構造・p 値の誤解・検出力・多重比較・p-hacking | 6.4 s | ✅ |
+| `09_regression_inference` | 回帰係数の分布・残差診断・頑健標準誤差・多重共線性 | 4.4 s | ✅ |
+| `10_glm` | 指数型分布族から GLM へ・IRLS 自前実装・過分散 | 3.4 s | ✅ |
+| `11_frequentist_vs_bayes` | 同じデータを両流儀で解いて比べる橋渡し章 | — | 予定 |
 
 ### 付録
 
@@ -49,8 +49,9 @@
 | `12_capstone_three_lenses` | 頻度論／ベイズ／機械学習の 3 視点で同一データを解く | 予定 |
 | `13_exercise_solutions` | 01–11 章 演習の解答 | 予定 |
 
-第Ⅰ部の実測値: **6 章・140 セル・インタラクティブ図 8 点・
-核心コールアウト 6・実社会コールアウト 6・全章の再実行が合計 28.3 秒**。
+実測値(NB00–10 の 11 章): **266 セル・インタラクティブ図 19 点・
+核心コールアウト 11・実社会コールアウト 11・全章の再実行が合計 52.7 秒**
+(全 14 章の予算 300 秒に対し、残り 3 章に 247 秒)。
 
 ## 共通コード
 
@@ -62,11 +63,16 @@
 | `distributions` | 分布の関係グラフ・指数型分布族の 4 部品・二項/ポアソンの TV 距離 |
 | `processes` | ランダムウォーク・`MarkovChain`・ポアソン過程 |
 | `simulation` | モンテカルロ実験ハーネス(被覆確率・棄却率・標本分布) |
-| `plotting/` | Plotly 図の純関数。`core`(共通スライダー)と `probability`(01–05 章) |
+| `estimation` | MLE・期待/観測 Fisher 情報・Cramér–Rao |
+| `intervals` | t/Wald 区間・ブートストラップ(percentile・BCa)・順列検定 |
+| `testing` | t 検定・検出力(非心 t)・Bonferroni/BH・FDP |
+| `regression` | OLS 推測・頑健 SE(HC0–HC3)・F 検定・VIF・レバレッジ |
+| `glm` | IRLS 自前実装・逸脱度・過分散 |
+| `plotting/` | Plotly 図の純関数。`core`(共通スライダー)・`probability`(01–05)・`inference`(06–08)・`regression`(09–10) |
 | `widgets` | `plotting` の薄い ipywidgets ラッパ。ライブカーネル用 |
 
-第Ⅱ部で `estimation` / `intervals` / `testing` / `regression` / `glm` と
-`plotting/inference` / `plotting/regression` が加わる。
+`regression` と `glm` は **numpy だけで書いてある**。`statsmodels` は
+テストとノートブックの照合先としてのみ使う(実装の中身を見せるため)。
 
 ## 環境構築
 
@@ -152,8 +158,18 @@ cd ~/projects
 uv run --no-sync pytest analytics/statistics/tests -q
 ```
 
-第Ⅰ部完了時点で **57 passed**(smoke 1・nbkit 4・datasets 8・distributions 8・
-processes 10・simulation 7・plotting 14・widgets 5)。
+NB00–10 完了時点で **142 passed**。内訳:
+
+| ファイル | 本数 | | ファイル | 本数 |
+|---|---:|---|---|---:|
+| `test_smoke` | 1 | | `test_estimation` | 11 |
+| `test_nbkit` | 14 | | `test_intervals` | 10 |
+| `test_datasets` | 8 | | `test_testing` | 13 |
+| `test_distributions` | 8 | | `test_regression` | 12 |
+| `test_processes` | 10 | | `test_glm` | 11 |
+| `test_simulation` | 7 | | `test_plotting_inference` | 10 |
+| `test_plotting` | 14 | | `test_plotting_regression` | 8 |
+| `test_widgets` | 5 | | | |
 
 テストの方針:
 
@@ -162,6 +178,8 @@ processes 10・simulation 7・plotting 14・widgets 5)。
 - **モンテカルロの主張はモンテカルロ誤差込みで判定する** — t 信頼区間の被覆が
   自身の 95% 区間に 0.95 を含むか。`sqrt(n)` を `n` と書き間違えた区間は 0.42 で捕まる
 - **図は純関数として検査する** — トレース数・フレーム数・軸ラベル。描画自体はクライアント側
+- **自前実装は実務標準と照合する** — `regression` は `statsmodels` の OLS と
+  HC0–HC3 に 1e-9 で、`glm` の IRLS は係数・逸脱度に 1e-8 で一致する
 - **設計上の約束もテストで守る** — `widgets` が図を自作していないか、
   アニメーション図がスライダー配線を手書きしていないかを、ソースを走査して確認する
 
