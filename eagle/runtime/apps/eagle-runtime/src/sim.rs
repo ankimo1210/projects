@@ -213,6 +213,17 @@ pub struct SimCore {
     /// at a live-verified 1 ft/s per click, so this total reconstructs
     /// VDGVERT — the one term of the P66 force law nothing else observes.
     rod_clicks_cum: i64,
+    /// PIPA pulses EMITTED since t0, per SM axis, signed.
+    ///
+    /// The sent side of a sent-versus-received check on the accelerometer
+    /// path. The AGC's own accumulated delta-V (differenced from `VN` in
+    /// two core dumps over the same PIPTIME interval) must equal
+    /// `pipa_pulses_cum * PIPA_INCR`; a 2026-07-31 core-dump analysis
+    /// measured the AGC short by ~5e-4 of its accumulated delta-V, which
+    /// integrates to the -190 m altitude error, with every other link in
+    /// the chain excluded by measurement. See
+    /// `docs/superpowers/notes/2026-07-31-m1b-rod-loop.md` 9i.
+    pipa_pulses_cum: [i64; 3],
     downlink_words: u64,
     mm: String,
     agc_nav: Option<AgcNav>,
@@ -270,6 +281,7 @@ impl SimCore {
             rod_target_ms: 0.0,
             rod_step_idx: 0,
             rod_clicks_cum: 0,
+            pipa_pulses_cum: [0; 3],
             downlink_words: 0,
             mm: String::new(),
             agc_nav: None,
@@ -525,6 +537,9 @@ impl SimCore {
         let pulses = self.pipa.step(dv_sm);
         let axes = [PipaAxis::X, PipaAxis::Y, PipaAxis::Z];
         for (i, axis) in axes.into_iter().enumerate() {
+            // Count what is EMITTED, at the point of emission, so the
+            // total cannot drift from the packets actually queued.
+            self.pipa_pulses_cum[i] += i64::from(pulses[i]);
             for _ in 0..pulses[i].abs() {
                 out.to_agc.push(pipa_pulse(axis, pulses[i] > 0));
             }
@@ -669,6 +684,7 @@ impl SimCore {
             thrust_n: self.act.thrust_n,
             throttle_cmd_pulses: self.thrust.cmd_pulses,
             rod_clicks_cum: self.rod_clicks_cum,
+            pipa_pulses_cum: self.pipa_pulses_cum,
             jets: self.act.jets,
             mm: self.mm.clone(),
             agc_alt_m,
@@ -1255,6 +1271,51 @@ mod tests {
             "pitchover at 3 deg/s: PIPA reported {reported:?} against truth {actual:?} \
              (err {err} m/s over 12 s = {} m/s^2)",
             err / 12.0
+        );
+    }
+
+    #[test]
+    fn telemetry_counts_every_pipa_pulse_emitted() {
+        // The SENT side of the sent-versus-received check. This total is
+        // compared against the AGC's own accumulated delta-V (differenced
+        // from VN across two core dumps), so it must equal the packets
+        // actually queued -- not an estimate, and not off by the sign.
+        let sc = pdi_scenario();
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+        core.thrust.cmd_pulses = 2400;
+        let mut counted = [0i64; 3];
+        let mut last = None;
+        for _ in 0..2000 {
+            let out = core.tick();
+            for p in &out.to_agc {
+                if p.kind != eagle_agc_protocol::PacketKind::Counter {
+                    continue;
+                }
+                let axis = match p.channel {
+                    0o37 => 0,
+                    0o40 => 1,
+                    0o41 => 2,
+                    _ => continue,
+                };
+                match p.data {
+                    0 => counted[axis] += 1, // INC_PINC
+                    2 => counted[axis] -= 1, // INC_MINC
+                    _ => {}
+                }
+            }
+            if let Some(t) = out.telemetry {
+                last = Some(t.pipa_pulses_cum);
+                assert_eq!(
+                    t.pipa_pulses_cum, counted,
+                    "telemetered pulse total must equal the packets emitted"
+                );
+            }
+        }
+        let total = last.expect("telemetry emitted");
+        assert!(
+            total[0].abs() > 100,
+            "test is vacuous -- only {total:?} pulses emitted"
         );
     }
 

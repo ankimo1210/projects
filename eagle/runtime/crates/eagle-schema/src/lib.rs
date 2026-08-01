@@ -65,6 +65,13 @@ pub struct TelemetryMsg {
     ///
     /// `SCHEMA_VERSION` stays 2: purely ADDITIVE, like `handover` below.
     pub rod_clicks_cum: i64,
+    /// PIPA pulses emitted since t0, per SM axis (X, Y, Z), signed.
+    ///
+    /// The SENT side of a sent-versus-received check on the accelerometer
+    /// path: the AGC's own accumulated delta-V must equal
+    /// `pipa_pulses_cum * PIPA_INCR`. Additive field; SCHEMA_VERSION
+    /// stays 2.
+    pub pipa_pulses_cum: [i64; 3],
     pub jets: u16,
     pub mm: String,
     pub agc_alt_m: Option<f64>,
@@ -163,6 +170,7 @@ mod tests {
             thrust_n: 14800.0,
             throttle_cmd_pulses: 1234,
             rod_clicks_cum: -7,
+            pipa_pulses_cum: [11, -2, 3],
             jets: 0b0000_0001,
             mm: "66".into(),
             agc_alt_m: None,
