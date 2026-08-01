@@ -781,7 +781,11 @@ impl SimCore {
             let delta = counts - lr.rnrad[lr.rnrad_holds];
             lr.rnrad[i + 1] = counts;
             lr.rnrad_holds = i + 1;
-            for _ in 0..delta.unsigned_abs().min(16_384) {
+            // 15-bit counter, so a legitimate delta reaches ~32768. The
+            // old 16384 cap silently truncated the altitude -> velocity
+            // transition (a negative altitude count to a positive biased
+            // velocity count is ~19000 pulses).
+            for _ in 0..delta.unsigned_abs().min(32_768) {
                 let inc = if delta > 0 { 0 } else { 2 };
                 if let Ok(p) = Packet::counter(RNRAD_ADDR, inc) {
                     out.to_agc.push(p);
@@ -834,7 +838,7 @@ impl SimCore {
         let delta = counts - lr.rnrad[lr.rnrad_holds];
         lr.rnrad[0] = counts;
         lr.rnrad_holds = 0;
-        for _ in 0..delta.unsigned_abs().min(16_384) {
+        for _ in 0..delta.unsigned_abs().min(32_768) {
             let inc = if delta > 0 { 0 } else { 2 }; // PINC / MINC
             if let Ok(p) = Packet::counter(RNRAD_ADDR, inc) {
                 out.to_agc.push(p);
@@ -1619,8 +1623,8 @@ mod tests {
         );
         assert_eq!(
             counter.len() as i32,
-            expect.min(16_384),
-            "one pulse per count of altitude"
+            expect.abs().min(32_768),
+            "one pulse per count of altitude (counts are negative: HSCAL is)"
         );
 
         // Data good and in position 2 are asserted by CLEARING the bits.
@@ -1697,6 +1701,7 @@ mod tests {
         let a = core.tick();
         let alt_pulses = a.to_agc.iter().filter(|p| p.channel == 0o46).count() as i32;
         let held = core.lr.as_ref().unwrap().rnrad[0];
+        assert!(held < 0, "altitude counts are negative (HSCAL is): {held}");
         assert_eq!(alt_pulses, held.abs(), "altitude drove its own count");
         assert_eq!(core.lr.as_ref().unwrap().rnrad_holds, 0);
 
