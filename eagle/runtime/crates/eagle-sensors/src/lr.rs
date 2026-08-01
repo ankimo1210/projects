@@ -410,6 +410,41 @@ pub fn hbeam_unit() -> [f64; 3] {
     [HBEAMANT[0] * 2.0, HBEAMANT[1] * 2.0, HBEAMANT[2] * 2.0]
 }
 
+/// How the antenna-frame beams reach the navigation base — verified.
+///
+/// `SETPOS` (`SERVICER.agc:1691-1699`) loads the angles like this:
+///
+/// ```text
+///   DCA   LRALPHA        # LRALPHA IN A, LRBETA IN L
+///   TS    CDUSPOT +4     # ROTATION ABOUT X
+///   LXCH  CDUSPOT        # ROTATION ABOUT Y
+///   CA    ZERO
+///   TS    CDUSPOT +2     # ZERO ROTATION ABOUT Z.
+/// ```
+///
+/// and `POWERED_FLIGHT_SUBROUTINES.agc:169-172` states the convention the
+/// transform expects: *"TRG\*SMNB AND TRG\*NBSM BOTH EXPECT TO SEE THE
+/// 2'S COMPLEMENT ANGLES AT CDUSPOT (ORDER Y Z X, AT CDUSPOT, CDUSPOT +2,
+/// AND CDUSPOT +4)"*, with `TRG*NBSM` doing NB→SM and `TRG*SMNB` the
+/// reverse.
+///
+/// The two agree exactly — CDUSPOT+0 = Y = `LRBETA`, +2 = Z = 0,
+/// +4 = X = `LRALPHA` — which is the check worth doing, because a
+/// transposed axis order would mis-point every beam by tens of degrees
+/// while still looking plausible.
+///
+/// So the velocity beams are the antenna axes carried through the
+/// (alpha about X, beta about Y, 0 about Z) rotation in the SM→NB sense:
+/// `VYBEAMNB` from `UNITY`, `VXBEAMNB` from `UNITX`, and
+/// `VZBEAMNB = VXBEAMNB x VYBEAMNB` (`SERVICER.agc:1705-1717`).
+/// `HBEAMANT` rides the same transform.
+///
+/// **Still unimplemented**: the exact axis-application order inside
+/// `AX*SR*T`. Everything above is pinned; that one detail is not, and
+/// guessing it would mis-point the beams in exactly the way this note
+/// warns about.
+pub const CDUSPOT_ORDER: [&str; 3] = ["Y (LRBETA)", "Z (zero)", "X (LRALPHA)"];
+
 /// The moon-fixed radius the beams intersect. Kept as a parameter rather
 /// than a constant so a test can use a unit sphere.
 pub type Surface = Mcmf;
