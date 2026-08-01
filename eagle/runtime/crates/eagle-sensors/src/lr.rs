@@ -384,6 +384,32 @@ pub fn antenna_angle_deg(word: u16) -> f64 {
     f64::from(word) / 16384.0 * 180.0
 }
 
+/// The range (altitude) beam direction in LR ANTENNA coordinates.
+///
+/// `CONTROLLED_CONSTANTS.agc:164-166` — three consecutive `2DEC` words,
+/// which the `SETPOS` sequence loads as a vector and transforms to the
+/// navigation base (`SERVICER.agc:1718-1720`):
+///
+/// ```text
+///   HBEAMANT  2DEC  -.4687018041   # RANGE BEAM IN LR ANTENNA COORDINATES.
+///             2DEC   0
+///             2DEC  -.1741224271
+/// ```
+///
+/// Its magnitude is **0.5**, not 1: the AGC stores unit vectors at half
+/// magnitude (b=1), the same convention as `REFSMMAT`'s direction
+/// cosines. `unit()` below returns the true unit vector.
+///
+/// As a direction that is 20.4 degrees off the antenna's −X axis, in the
+/// X-Z plane — the altimeter beam's tilt relative to the antenna face.
+pub const HBEAMANT: [f64; 3] = [-0.468_701_804_1, 0.0, -0.174_122_427_1];
+
+/// `HBEAMANT` as a true unit vector, undoing the AGC's b=1 half-magnitude
+/// storage.
+pub fn hbeam_unit() -> [f64; 3] {
+    [HBEAMANT[0] * 2.0, HBEAMANT[1] * 2.0, HBEAMANT[2] * 2.0]
+}
+
 /// The moon-fixed radius the beams intersect. Kept as a parameter rather
 /// than a constant so a test can use a unit sphere.
 pub type Surface = Mcmf;
@@ -614,6 +640,21 @@ mod tests {
         assert!((LR_ANTENNA_POS1_DEG.0 - antenna_angle_deg(0o01042)).abs() < 0.01);
         assert!((LR_ANTENNA_POS1_DEG.1 - antenna_angle_deg(0o04210)).abs() < 0.01);
         assert_eq!(LR_ANTENNA_POS2_DEG.1, 0.0);
+    }
+
+    #[test]
+    fn hbeamant_is_a_half_magnitude_unit_vector() {
+        // The AGC stores unit vectors at half magnitude (b=1). If this
+        // were read as a true unit vector every range beam would be
+        // mis-pointed, so assert the convention rather than assume it.
+        let m = (HBEAMANT[0] * HBEAMANT[0] + HBEAMANT[2] * HBEAMANT[2]).sqrt();
+        assert!((m - 0.5).abs() < 1e-6, "|HBEAMANT| = {m}, expected 0.5");
+        let u = hbeam_unit();
+        let mu = (u[0] * u[0] + u[2] * u[2]).sqrt();
+        assert!((mu - 1.0).abs() < 1e-6, "|unit| = {mu}");
+        // 20.4 deg off the antenna -X axis, in the X-Z plane.
+        let tilt = (-u[2]).atan2(-u[0]).to_degrees();
+        assert!((tilt - 20.4).abs() < 0.1, "tilt {tilt} deg");
     }
 
     #[test]
