@@ -5,14 +5,19 @@ Keeping the notebooks under version control as *generated* artifacts means we
 can regenerate them deterministically (seeds fixed) instead of hand-editing JSON.
 
 Mirrors the sibling analytics books' ``nbkit`` (``md`` / ``code`` / ``write`` /
-``build``) and adds ``check_typography``: MyST admonitions render bold text
-incorrectly when the ``**`` sits directly against a CJK bracket, which the
-linear_algebra book hit in practice.
+``build``).
+
+An earlier draft carried a ``check_typography`` guard against bold markers
+touching CJK punctuation, on the strength of a note that linear_algebra had
+hit such a trap. Measurement retired it: markdown-it renders every spelling
+the guard banned -- including ``**「これはダメ」**`` -- as ``<strong>``, and
+the pattern appears on 56 admonition lines across the bayesian, neural_net
+and linear_algebra books, all of which build and display correctly. The rule
+rejected the series' own house style and caught nothing. Whatever the
+original problem was, it was not this, so nothing is asserted about it here.
 """
 
 from __future__ import annotations
-
-import re
 
 import nbformat
 from nbformat.v4 import new_code_cell, new_markdown_cell, new_notebook
@@ -29,28 +34,10 @@ for _p in [_here, *_here.parents]:
         break
 """.strip()
 
-# ``**`` touching a CJK bracket from the *inside* of the emphasis. The
-# negative lookahead spares the legitimate spelling 「…」**だ**, where the
-# emphasis opens outside the bracket.
-_CJK_PUNCT = "「」『』（）【】、。・"
-_BAD_BOLD = re.compile(rf"\*\*[{_CJK_PUNCT}]|[{_CJK_PUNCT}]\*\*(?!\S)")
-
-
-def check_typography(text: str) -> list[str]:
-    """Return the offending lines where bold markers touch CJK punctuation."""
-    return [line for line in text.splitlines() if _BAD_BOLD.search(line)]
-
 
 def md(text: str):
     """A markdown cell (leading/trailing blank lines trimmed)."""
-    body = text.strip("\n")
-    offenders = check_typography(body)
-    if offenders:
-        raise ValueError(
-            "bold marker touches CJK punctuation (MyST renders this wrong):\n  "
-            + "\n  ".join(offenders)
-        )
-    return new_markdown_cell(body)
+    return new_markdown_cell(text.strip("\n"))
 
 
 def code(src: str):
