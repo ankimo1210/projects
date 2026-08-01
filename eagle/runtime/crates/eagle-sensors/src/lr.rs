@@ -256,11 +256,33 @@ pub const CH33_LR_VEL_DATA_GOOD: u16 = 0o200;
 /// all-set and clears what is true. Getting this backwards makes the
 /// radar either invisible or permanently alarmed (`LRPOSALM`, 0522).
 pub fn ch33_bits(range_good: bool, vel_good: bool, in_position_2: bool) -> u16 {
-    let mut w = CH33_RR_DATA_GOOD
-        | CH33_LR_RANGE_DATA_GOOD
-        | CH33_LR_POS1
-        | CH33_LR_POS2
-        | CH33_LR_VEL_DATA_GOOD;
+    apply_lr_bits(
+        CH33_RR_DATA_GOOD
+            | CH33_LR_RANGE_DATA_GOOD
+            | CH33_LR_POS1
+            | CH33_LR_POS2
+            | CH33_LR_VEL_DATA_GOOD,
+        range_good,
+        vel_good,
+        in_position_2,
+    )
+}
+
+/// Every channel-33 bit this module owns. Anything outside this mask
+/// belongs to `runner::init_discretes` (uplink, PIPA fail, oscillator)
+/// and must survive an LR update untouched.
+pub const CH33_LR_MASK: u16 =
+    CH33_LR_RANGE_DATA_GOOD | CH33_LR_POS1 | CH33_LR_POS2 | CH33_LR_VEL_DATA_GOOD;
+
+/// Read-modify-write the LR bits of an existing channel-33 word.
+///
+/// Building the whole word from scratch clobbers the bits
+/// `init_discretes` set — which is what flight 14 did on every radar
+/// reply. Only `CH33_LR_MASK` may move.
+pub fn apply_lr_bits(current: u16, range_good: bool, vel_good: bool, in_position_2: bool) -> u16 {
+    // Start from "nothing good, not in position" for the owned bits...
+    let mut w = current | CH33_LR_MASK;
+    // ...then CLEAR what is true (active low).
     if range_good {
         w &= !CH33_LR_RANGE_DATA_GOOD;
     }
@@ -947,6 +969,23 @@ mod tests {
         }
         // Zero velocity is NOT a zero count -- that is the whole point.
         assert_eq!(vel_raw_counts(0.0, q), 12288);
+    }
+
+    #[test]
+    fn an_lr_update_leaves_every_other_ch33_bit_alone() {
+        // Flight 14: building the word from scratch overwrote the uplink,
+        // PIPA-fail and oscillator bits init_discretes had set.
+        let init: u16 = 0o57776; // runner::INIT_CH33
+        let out = apply_lr_bits(init, true, true, true);
+        assert_eq!(
+            out & !CH33_LR_MASK,
+            init & !CH33_LR_MASK,
+            "bits outside CH33_LR_MASK must survive"
+        );
+        // And the LR bits still assert correctly (active low).
+        assert_eq!(out & CH33_LR_RANGE_DATA_GOOD, 0);
+        assert_eq!(out & CH33_LR_VEL_DATA_GOOD, 0);
+        assert_eq!(out & CH33_LR_POS2, 0);
     }
 
     #[test]

@@ -225,6 +225,11 @@ struct LrState {
     /// Which quantity `RNRAD` currently holds, so a switch between
     /// quantities is driven from the right starting value.
     rnrad_holds: usize,
+    /// The channel-33 word as last presented. The LR position is a
+    /// STANDING discrete the rope polls continuously (`LRPOSCHK`,
+    /// `POS2CHK`), not a reply — flight 14 died at P63 on `LRPOSALM`
+    /// because this responder only wrote ch33 when answering a read.
+    ch33: u16,
     /// Seeded error injector; default config is OFF and RNG-free.
     errors: eagle_sensors::lr::LrErrors,
 }
@@ -235,6 +240,7 @@ impl Default for LrState {
             last_ch13: 0,
             rnrad: [0; 4],
             rnrad_holds: 0,
+            ch33: crate::runner::INIT_CH33,
             errors: eagle_sensors::lr::LrErrors::new(Default::default()),
         }
     }
@@ -675,6 +681,21 @@ impl SimCore {
         let ch13 = self.ch13;
         let alt = self.alt_agl();
         let lr = self.lr.as_mut().expect("checked above");
+
+        // The antenna position is a STANDING discrete, not a reply. The
+        // rope polls it continuously once the radar is live -- LRPOSCHK
+        // (P20-P25.agc:2863-2869) from P20 and POS2CHK (SERVICER.agc:749)
+        // through the descent -- and flight 14 died in the P63 dialog on
+        // LRPOSALM (0522) because it was only asserted while answering a
+        // read. Present it every tick, before any select is considered.
+        let want = eagle_sensors::lr::apply_lr_bits(lr.ch33, false, false, true);
+        if want != lr.ch33 {
+            lr.ch33 = want;
+            if let Ok(p) = Packet::io(0o33, want) {
+                out.to_agc.push(p);
+            }
+        }
+
         let rising = eagle_sensors::lr::decode_ch13(ch13).is_some()
             && eagle_sensors::lr::decode_ch13(lr.last_ch13).is_none();
         lr.last_ch13 = ch13;
@@ -722,7 +743,8 @@ impl SimCore {
                 }
             }
             // Velocity data good; range not being read this pass.
-            if let Ok(p) = Packet::io(0o33, eagle_sensors::lr::ch33_bits(false, true, true)) {
+            lr.ch33 = eagle_sensors::lr::apply_lr_bits(lr.ch33, false, true, true);
+            if let Ok(p) = Packet::io(0o33, lr.ch33) {
                 out.to_agc.push(p);
             }
             return;
@@ -735,7 +757,8 @@ impl SimCore {
         // ground. RNRAD is left untouched so the AGC keeps its last good
         // count rather than being handed a fabricated one.
         let Some(measured) = lr.errors.corrupt_range(alt) else {
-            if let Ok(p) = Packet::io(0o33, eagle_sensors::lr::ch33_bits(false, false, true)) {
+            lr.ch33 = eagle_sensors::lr::apply_lr_bits(lr.ch33, false, false, true);
+            if let Ok(p) = Packet::io(0o33, lr.ch33) {
                 out.to_agc.push(p);
             }
             return;
@@ -749,7 +772,8 @@ impl SimCore {
         // SKALSKAL, extends this; that path is not pinned, so the
         // conservative bound is used.)
         if counts.unsigned_abs() > 16_383 {
-            if let Ok(p) = Packet::io(0o33, eagle_sensors::lr::ch33_bits(false, false, true)) {
+            lr.ch33 = eagle_sensors::lr::apply_lr_bits(lr.ch33, false, false, true);
+            if let Ok(p) = Packet::io(0o33, lr.ch33) {
                 out.to_agc.push(p);
             }
             return;
@@ -767,8 +791,8 @@ impl SimCore {
         }
         // Data good, and the antenna in position 2 — asserted by CLEARING
         // the bits (see eagle_sensors::lr).
-        let w = eagle_sensors::lr::ch33_bits(true, false, true);
-        if let Ok(p) = Packet::io(0o33, w) {
+        lr.ch33 = eagle_sensors::lr::apply_lr_bits(lr.ch33, true, false, true);
+        if let Ok(p) = Packet::io(0o33, lr.ch33) {
             out.to_agc.push(p);
         }
     }
@@ -1547,10 +1571,12 @@ mod tests {
         );
 
         // Data good and in position 2 are asserted by CLEARING the bits.
+        // The LAST ch33 write of the tick: the standing position discrete
+        // is emitted first, then the read's data-good update.
         let ch33 = out
             .to_agc
             .iter()
-            .find(|p| p.channel == 0o33)
+            .rfind(|p| p.channel == 0o33)
             .expect("ch33 written");
         assert_eq!(ch33.data & 0o20, 0, "LR range data good => bit clear");
         assert_eq!(ch33.data & 0o100, 0, "in position 2 => bit clear");
@@ -1582,7 +1608,7 @@ mod tests {
         let ch33 = out
             .to_agc
             .iter()
-            .find(|p| p.channel == 0o33)
+            .rfind(|p| p.channel == 0o33)
             .expect("ch33 written");
         assert_eq!(ch33.data & 0o200, 0, "LR VEL data good => bit clear");
         assert_ne!(
@@ -1642,6 +1668,41 @@ mod tests {
     }
 
     #[test]
+    fn the_antenna_position_is_a_standing_discrete_not_a_reply() {
+        // Flight 14 died at P63 on LRPOSALM (0522): the rope polls the
+        // position continuously once the radar is live, and this
+        // responder only asserted it while answering a read -- which
+        // never happens during the P63 dialog.
+        let mut sc = pdi_scenario();
+        sc.agc.lrbypass = false;
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+
+        // No radar select at all.
+        core.ch13 = 0;
+        let out = core.tick();
+        let ch33 = out
+            .to_agc
+            .iter()
+            .find(|p| p.channel == 0o33)
+            .expect("position must be presented without any read");
+        assert_eq!(ch33.data & 0o100, 0, "in position 2 => BIT7 clear");
+        // Everything init_discretes owns survives.
+        let mask = eagle_sensors::lr::CH33_LR_MASK;
+        assert_eq!(
+            ch33.data & !mask,
+            crate::runner::INIT_CH33 & !mask,
+            "non-LR bits must be preserved"
+        );
+        // And it is not re-sent every tick once it is already correct.
+        let again = core.tick();
+        assert!(
+            !again.to_agc.iter().any(|p| p.channel == 0o33),
+            "only sent when the word changes"
+        );
+    }
+
+    #[test]
     fn a_radar_dropout_reports_data_not_good_and_leaves_rnrad_alone() {
         // The failure mode that matters: a dropout must NOT become a zero
         // range. Zero reads as "on the surface". The AGC keeps its last
@@ -1654,6 +1715,7 @@ mod tests {
             last_ch13: 0,
             rnrad: [0; 4],
             rnrad_holds: 0,
+            ch33: crate::runner::INIT_CH33,
             errors: eagle_sensors::lr::LrErrors::new(eagle_sensors::lr::LrErrorCfg {
                 dropout_probability: 1.0,
                 seed: 5,
@@ -1670,7 +1732,7 @@ mod tests {
         let ch33 = out
             .to_agc
             .iter()
-            .find(|p| p.channel == 0o33)
+            .rfind(|p| p.channel == 0o33)
             .expect("ch33 written even on a dropout");
         assert_ne!(
             ch33.data & 0o20,
