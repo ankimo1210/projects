@@ -191,6 +191,31 @@ struct LrState {
     /// Fixed by tracking the driven count per quantity (below), and the
     /// velocity beams now carry the `LVELBIAS` carrier offset the AGC
     /// removes with `AD LVELBIAS`.
+    ///
+    /// # Flight 14 died BEFORE ignition — two more defects, both in ch33
+    ///
+    /// `FAILREG = 00522 00511` in the P63 dialog. **0522 is `LRPOSALM`**,
+    /// exactly the failure `eagle_sensors::lr`'s header warns about.
+    ///
+    /// 1. **The position is only presented while answering a read.** With
+    ///    `lrbypass = true` the rope never ran `LRPOSCHK`
+    ///    (`P20-P25.agc:2863-2869`) or `POS2CHK` (`SERVICER.agc:749`);
+    ///    with it false they run from P63 onward, and they check ch33
+    ///    CONTINUOUSLY. `runner::INIT_CH33` deliberately does not assert
+    ///    the antenna position — its own comment says "the responder
+    ///    asserts it then" — and this responder only writes ch33 when a
+    ///    radar read arrives, which is never during the P63 dialog. The
+    ///    LR position has to be a standing discrete, not a reply.
+    /// 2. **Writing ch33 clobbers every other bit in it.**
+    ///    `lr::ch33_bits` builds the whole word from scratch, so each
+    ///    reply overwrites the uplink, PIPA-fail and oscillator bits
+    ///    `init_discretes` set. It must read-modify-write the LR bits
+    ///    only.
+    ///
+    /// `LRPOSCHK` compares `RADMODES` against ch33 with `RXOR`/`MASK BIT6`,
+    /// so the position the sim presents must match the position the AGC
+    /// has selected in `RADMODES` — which is state the responder does not
+    /// track yet.
     /// Counts already driven into `RNRAD`, **per quantity**: altitude,
     /// then the three velocity beams. Four independent readings share one
     /// counter in the AGC, so the responder must know what it last left
