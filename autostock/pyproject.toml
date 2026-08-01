@@ -15,3 +15,6 @@ dependencies = [
 # no wheel is built. Dependencies still resolve into the shared workspace env.
 [tool.uv]
 package = false
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
