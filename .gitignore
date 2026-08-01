@@ -16,6 +16,10 @@ venv/
 .ruff_cache/
 .ipynb_checkpoints/
 
+# Jupyter Book build output (analytics/*/book/, johnhull/*/book/).
+# Needs the leading **/ : a pattern containing a slash is anchored to this file.
+**/book/_build/
+
 # workspace-level generated data
 _data/
 _logs/
