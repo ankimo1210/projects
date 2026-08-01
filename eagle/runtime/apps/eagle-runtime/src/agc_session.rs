@@ -46,6 +46,14 @@ impl AgcSession {
             // across separate boots by exactly the cumulative run time,
             // and a stale-state POODOO aborted P00).
             .arg("--no-resume")
+            // Dump erasable every second instead of the default 10
+            // (agc_cli.c:188). The servicer runs a 2 s pass, so this
+            // captures EVERY pass's DELV rather than one in five, which
+            // is what a sent-versus-received check on the accelerometer
+            // path needs: at ~430 passes the standard error drops below
+            // the 5e-4 effect being measured. Sampling one pass in five
+            // resolved only 2.7e-3 (2026-07-31 ledger, 9j).
+            .arg("--dump-time=1")
             .current_dir(core_dir)
             .stdout(Stdio::null())
             .stderr(Stdio::null())
