@@ -39,8 +39,10 @@ RANDOM_SEED = 0
 print("setup ok")
 """),
     code("""
-flips = datasets.coin_flips(10, p=0.5, seed=4)
+# 上の話に出てきたデータ。seed 25 の公正な硬貨がたまたま 8 回表を出した。
+flips = datasets.coin_flips(10, p=0.5, seed=25)
 print("観測:", flips, "-> 表", flips.sum(), "回")
+assert flips.sum() == 8, "本文が語っているのは 8 回表のデータである"
 
 # 公正な硬貨でも 8 回以上表が出ることは珍しくない。
 reps = simulation.sampling_distribution(
@@ -51,11 +53,20 @@ print(f"公正な硬貨で 8 回以上表が出る割合: {(reps >= 8).mean():.3
     md(r"""
 20 回に 1 回ほどは起きる。「まず起こらないこと」ではない。
 
+しかも上のデータは、**実際に公正な硬貨から出ている**。
+`p=0.5` を指定して生成したのだから、偏りは無いと私たちは知っている。
+それでも 8 回表が出た。
+
 つまり「8 回表」というデータは、公正な硬貨という仮説とそれほど矛盾していない。
 かといって「偏っている」という仮説とも矛盾しない。
 **データが両方の仮説と両立してしまう** ため、どちらを選ぶかはデータの外側で決まる。
 
 本書は、この「外側」を明示的に扱う道具を作る。
+ただし注意してほしい。私たちがここで「公正だと知っている」のは、
+データを生成した側に回ったからである。
+現実の推測では、真値を知る側には立てない。
+だからこそ本書は繰り返し、**真値が分かっている人工データで手続きを検算する**。
+手続きが正しく動くかどうかは、真値を知っている場合にしか確かめられない。
 """),
     md(r"""
 ```{admonition} 核心 — ひとことで
@@ -145,8 +156,10 @@ plotting.relation_graph()
 
 ### 姉妹本
 
-- ベイズ流の推論は [`analytics/bayesian`](../../bayesian/book/_build/html/index.html) へ
-- 予測性能の検証は [`analytics/machine_learning`](../../machine_learning/book/_build/html/index.html) へ
+- ベイズ流の推論は `analytics/bayesian`(ベイズ推定の体験)
+- 予測性能の検証は `analytics/machine_learning`(機械学習の実践)
 - 本書 11 章はその両方への橋渡しになっている
+
+いずれも同じ analytics シリーズの一冊で、`analytics/README.md` から辿れる。
 """),
 ]
