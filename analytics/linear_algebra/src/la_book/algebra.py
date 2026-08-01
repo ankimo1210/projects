@@ -208,30 +208,51 @@ def gauss_seidel(A, b, n_iter: int = 100, x0=None, return_history: bool = False)
     return (x, np.array(res)) if return_history else x
 
 
-def conjugate_gradient(A, b, tol: float = 1e-10, max_iter: int | None = None, x0=None):
+def conjugate_gradient(A, b, tol: float = 1e-10, max_iter: int | None = None, x0=None, M_inv=None):
     """Conjugate gradient for symmetric positive definite A.
 
-    Returns (x, residual_norms).
+    With ``M_inv`` (a matrix or a callable applying M^{-1}) this is
+    *preconditioned* CG: it runs CG on the better-conditioned system
+    M^{-1}A x = M^{-1}b while keeping the iterates in the original variables.
+    Passing ``M_inv=None`` (the default) is plain CG.
+
+    Returns (x, residual_norms) — the residuals are ||b - A x|| in both cases,
+    so preconditioned and plain runs are directly comparable.
     """
     A = np.asarray(A, dtype=float)
     b = np.asarray(b, dtype=float)
     n = b.size
+    if M_inv is None:
+
+        def apply_minv(v):
+            return v
+
+    elif callable(M_inv):
+        apply_minv = M_inv
+    else:
+        M_mat = np.asarray(M_inv, dtype=float)
+
+        def apply_minv(v):
+            return M_mat @ v
+
     x = np.zeros(n) if x0 is None else np.array(x0, dtype=float)
     r = b - A @ x
-    p = r.copy()
-    rs = float(r @ r)
-    res = [np.sqrt(rs)]
+    z = apply_minv(r)
+    p = z.copy()
+    rz = float(r @ z)
+    res = [float(np.linalg.norm(r))]
     for _ in range(max_iter if max_iter is not None else n):
         Ap = A @ p
-        alpha = rs / float(p @ Ap)
+        alpha = rz / float(p @ Ap)
         x = x + alpha * p
         r = r - alpha * Ap
-        rs_new = float(r @ r)
-        res.append(np.sqrt(rs_new))
-        if np.sqrt(rs_new) < tol:
+        res.append(float(np.linalg.norm(r)))
+        if res[-1] < tol:
             break
-        p = r + (rs_new / rs) * p
-        rs = rs_new
+        z = apply_minv(r)
+        rz_new = float(r @ z)
+        p = z + (rz_new / rz) * p
+        rz = rz_new
     return x, np.array(res)
 
 

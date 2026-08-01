@@ -31,6 +31,13 @@ Jupyter Notebook ベースの線形代数教科書プロジェクト。
 共通関数は `src/la_book/` にまとめている
 (`plotting.py` / `widgets.py` / `algebra.py` / `decompositions.py` / `datasets.py`)。
 
+## 変更記録
+
+- [`docs/2026-08-01-review-fixes.md`](docs/2026-08-01-review-fixes.md) —
+  全章レビューと修正(Newton の収束次数・PageRank のダングリング処理・確率行列の規約・
+  図の軸レンジ/対数軸・重複図の作り替え・ノートブック 19MB → 11MB)。
+  未着手の発展案(3D 化・グラフ描画など)もここに記録。
+
 ## 環境構築
 
 ### この workspace 内で使う場合(推奨)
