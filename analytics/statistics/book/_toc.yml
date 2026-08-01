@@ -5,3 +5,4 @@ format: jb-book
 root: notebooks/00_overview
 chapters:
   - file: notebooks/01_probability_foundations
+  - file: notebooks/02_random_variables_expectation
