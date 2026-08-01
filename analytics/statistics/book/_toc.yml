@@ -9,3 +9,4 @@ chapters:
   - file: notebooks/03_distributions_zoo
   - file: notebooks/04_limit_theorems
   - file: notebooks/05_stochastic_processes
+  - file: notebooks/06_estimation_mle
