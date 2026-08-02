@@ -3,18 +3,27 @@ import { degToRad, radToDeg, normalizeDeg360 } from './units.js';
 export const EARTH_RADIUS_M = 6371000;
 
 /** Great-circle distance in meters (haversine). */
-export function distanceM(lat1Deg: number, lon1Deg: number, lat2Deg: number, lon2Deg: number): number {
+export function distanceM(
+  lat1Deg: number,
+  lon1Deg: number,
+  lat2Deg: number,
+  lon2Deg: number,
+): number {
   const φ1 = degToRad(lat1Deg);
   const φ2 = degToRad(lat2Deg);
   const dφ = degToRad(lat2Deg - lat1Deg);
   const dλ = degToRad(lon2Deg - lon1Deg);
-  const a =
-    Math.sin(dφ / 2) ** 2 + Math.cos(φ1) * Math.cos(φ2) * Math.sin(dλ / 2) ** 2;
+  const a = Math.sin(dφ / 2) ** 2 + Math.cos(φ1) * Math.cos(φ2) * Math.sin(dλ / 2) ** 2;
   return 2 * EARTH_RADIUS_M * Math.asin(Math.min(1, Math.sqrt(a)));
 }
 
 /** Initial great-circle bearing from point 1 to point 2, degrees true [0, 360). */
-export function bearingDeg(lat1Deg: number, lon1Deg: number, lat2Deg: number, lon2Deg: number): number {
+export function bearingDeg(
+  lat1Deg: number,
+  lon1Deg: number,
+  lat2Deg: number,
+  lon2Deg: number,
+): number {
   const φ1 = degToRad(lat1Deg);
   const φ2 = degToRad(lat2Deg);
   const dλ = degToRad(lon2Deg - lon1Deg);
@@ -36,7 +45,8 @@ export function destinationPoint(
   const λ1 = degToRad(lonDeg);
   const φ2 = Math.asin(Math.sin(φ1) * Math.cos(δ) + Math.cos(φ1) * Math.sin(δ) * Math.cos(θ));
   const λ2 =
-    λ1 + Math.atan2(Math.sin(θ) * Math.sin(δ) * Math.cos(φ1), Math.cos(δ) - Math.sin(φ1) * Math.sin(φ2));
+    λ1 +
+    Math.atan2(Math.sin(θ) * Math.sin(δ) * Math.cos(φ1), Math.cos(δ) - Math.sin(φ1) * Math.sin(φ2));
   return { latDeg: radToDeg(φ2), lonDeg: normalizeDeg360(radToDeg(λ2) + 180) - 180 };
 }
 
@@ -52,8 +62,7 @@ export function toLocalEnuM(
   lonDeg: number,
 ): { eastM: number; northM: number } {
   const northM = degToRad(latDeg - originLatDeg) * EARTH_RADIUS_M;
-  const eastM =
-    degToRad(lonDeg - originLonDeg) * EARTH_RADIUS_M * Math.cos(degToRad(originLatDeg));
+  const eastM = degToRad(lonDeg - originLonDeg) * EARTH_RADIUS_M * Math.cos(degToRad(originLatDeg));
   return { eastM, northM };
 }
 

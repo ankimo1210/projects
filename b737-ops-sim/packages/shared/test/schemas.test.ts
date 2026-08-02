@@ -23,9 +23,7 @@ describe('AircraftStateSchema', () => {
 
 describe('AircraftCommandSchema', () => {
   it('accepts valid commands', () => {
-    expect(
-      AircraftCommandSchema.safeParse({ type: 'set_flaps', detent: 5 }).success,
-    ).toBe(true);
+    expect(AircraftCommandSchema.safeParse({ type: 'set_flaps', detent: 5 }).success).toBe(true);
     expect(
       AircraftCommandSchema.safeParse({
         type: 'set_control_axis',

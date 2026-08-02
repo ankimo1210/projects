@@ -1,11 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  bearingDeg,
-  destinationPoint,
-  distanceM,
-  fromLocalEnuM,
-  toLocalEnuM,
-} from '../src/geo.js';
+import { bearingDeg, destinationPoint, distanceM, fromLocalEnuM, toLocalEnuM } from '../src/geo.js';
 
 describe('geo', () => {
   it('computes zero distance to self', () => {
