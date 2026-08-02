@@ -2,6 +2,7 @@ import {
   PROTOCOL_VERSION,
   parseServerMessage,
   type AircraftCommand,
+  type AircraftState,
   type BackendStatus,
   type ClientMessage,
   type ScenarioInitialState,
@@ -15,7 +16,7 @@ import {
 export type ConnectionState = 'connecting' | 'connected' | 'disconnected';
 
 export interface WsClientEvents {
-  onState: (state: import('@b737/shared').AircraftState, seq: number) => void;
+  onState: (state: AircraftState, seq: number) => void;
   onConnectionChange: (state: ConnectionState) => void;
   onBackendStatus: (status: BackendStatus) => void;
   onWelcome: (info: { backendMode: string; stateRateHz: number }) => void;

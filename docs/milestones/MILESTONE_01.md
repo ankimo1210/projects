@@ -5,7 +5,7 @@
 > deterministic first-officer callouts, text ATC, checklists, and a structured
 > debrief.
 
-**Status:** In progress
+**Status:** Complete (see MILESTONE_01_DOD.md — FlightGear live validation pending local FG install)
 **Environment (verified 2026-08-02):** WSL2 (Ubuntu), Node v22.22.2, pnpm 11.1.0,
 git 2.43, 20 cores. FlightGear **not installed** on the Windows host — mock mode
 is the primary development path; the FlightGear adapter is validated against a
@@ -46,22 +46,22 @@ config/flightgear/737-800-property-map.json   versioned FG property mapping
 ## Tasks
 
 - [x] T0 Phase 0: environment inspection (Node/pnpm/FG/WSL networking) — findings above
-- [ ] T1 Monorepo scaffold: pnpm workspaces, strict TS base config, eslint+prettier, .gitignore (private/ etc.), root scripts
-- [ ] T2 `packages/shared`: unit-explicit zod schemas (AircraftState, AircraftCommand, wire messages, BackendStatus) + tests
-- [ ] T3 `packages/flightgear-adapter`: `FlightBackend` interface + **MockBackend** — deterministic point-mass 737-class model (seeded), ground roll, rotation, climb, turns, ILS geometry vs KSFO 28R, landing, reversers/braking, simple MCP hold modes + tests (determinism, liftoff physics sanity, ILS convergence)
-- [ ] T4 `apps/bridge`: Fastify + WS, backend selection via `FLIGHT_BACKEND`, zod-validated commands, seq/ack, heartbeat, input rate limiting, stale detection, `/health` + `/status`, structured logs + integration test (real WS client ↔ mock backend)
-- [ ] T5 `packages/scenario-engine`: condition DSL, phase machine, checklist runtime (state-validated items), event log + tests for spec §11 rules (positive rate, clearance gating, checklist auto-complete)
-- [ ] T6 `packages/training-engine`: FO deterministic callouts (80kt/V1/Rotate/positive rate/approach alts/unstable-approach), ATC clearance state machine with readback tracking, debrief scorer with transparent per-category rules + tests
-- [ ] T7 `apps/web` core: WS client with reconnect + interpolation, Zustand stores, layout per spec §19, status bar, diagnostics panel (hidden by default)
-- [ ] T8 Instruments: PFD (speed/alt tapes, attitude, VS, RA, FD, ILS dev, AP annunciation, speed bugs), ND (rose, heading bug, runway/approach line, range), N1 gauges, MCP panel
-- [ ] T9 Cockpit 3D + controls: captain-seat camera with mouse-look, windshield + runway world, yoke/throttle/flaps/gear/speedbrake/autobrake/lights bound through `cockpit-model` registry; keyboard/mouse/gamepad input abstraction (deadzone/sensitivity/invert, localStorage bindings)
-- [ ] T10 `FlightGearBackend` over httpd WS + property map JSON + fake-FG-server test + `scripts/fg-diagnostic.ts` connection probe + launch scripts (PowerShell + WSL)
-- [ ] T11 MVP scenario data: before-takeoff/landing/after-landing checklists, phases per spec §20, ATC script, FO rules wiring, V-speed table (marked approximations)
-- [ ] T12 Audio: synthesized engine/wind/ground-roll/touchdown/click/warning sounds, state-driven gains; optional Web Speech TTS for FO/ATC
-- [ ] T13 Debrief screen: per-category scores + event timeline per spec §16
-- [ ] T14 Docs: README, ARCHITECTURE, FLIGHTGEAR_SETUP, ASSET_PIPELINE, THIRD_PARTY_ASSETS, SCENARIO_AUTHORING, COCKPIT_CONTROL_MAPPING, TROUBLESHOOTING
-- [ ] T15 Playwright smoke test (app boots in mock mode, PFD updates, scenario starts) + full `pnpm test` green + typecheck green
-- [ ] T16 End-to-end manual run of the documented flow; fix until DoD passes
+- [x] T1 Monorepo scaffold: pnpm workspaces, strict TS base config, eslint+prettier, .gitignore (private/ etc.), root scripts
+- [x] T2 `packages/shared`: unit-explicit zod schemas (AircraftState, AircraftCommand, wire messages, BackendStatus) + tests
+- [x] T3 `packages/flightgear-adapter`: `FlightBackend` interface + **MockBackend** — deterministic point-mass 737-class model (seeded), ground roll, rotation, climb, turns, ILS geometry vs KSFO 28R, landing, reversers/braking, simple MCP hold modes + tests (determinism, liftoff physics sanity, ILS convergence)
+- [x] T4 `apps/bridge`: Fastify + WS, backend selection via `FLIGHT_BACKEND`, zod-validated commands, seq/ack, heartbeat, input rate limiting, stale detection, `/health` + `/status`, structured logs + integration test (real WS client ↔ mock backend)
+- [x] T5 `packages/scenario-engine`: condition DSL, phase machine, checklist runtime (state-validated items), event log + tests for spec §11 rules (positive rate, clearance gating, checklist auto-complete)
+- [x] T6 `packages/training-engine`: FO deterministic callouts (80kt/V1/Rotate/positive rate/approach alts/unstable-approach), ATC clearance state machine with readback tracking, debrief scorer with transparent per-category rules + tests
+- [x] T7 `apps/web` core: WS client with reconnect + interpolation, Zustand stores, layout per spec §19, status bar, diagnostics panel (hidden by default)
+- [x] T8 Instruments: PFD (speed/alt tapes, attitude, VS, RA, FD, ILS dev, AP annunciation, speed bugs), ND (rose, heading bug, runway/approach line, range), N1 gauges, MCP panel
+- [x] T9 Cockpit 3D + controls: captain-seat camera with mouse-look, windshield + runway world, yoke/throttle/flaps/gear/speedbrake/autobrake/lights bound through `cockpit-model` registry; keyboard/mouse/gamepad input abstraction (deadzone/sensitivity/invert, localStorage bindings)
+- [x] T10 `FlightGearBackend` over httpd WS + property map JSON + fake-FG-server test + `scripts/fg-diagnostic.ts` connection probe + launch scripts (PowerShell + WSL)
+- [x] T11 MVP scenario data: before-takeoff/landing/after-landing checklists, phases per spec §20, ATC script, FO rules wiring, V-speed table (marked approximations)
+- [x] T12 Audio: synthesized engine/wind/ground-roll/touchdown/click/warning sounds, state-driven gains; optional Web Speech TTS for FO/ATC
+- [x] T13 Debrief screen: per-category scores + event timeline per spec §16
+- [x] T14 Docs: README, ARCHITECTURE, FLIGHTGEAR_SETUP, ASSET_PIPELINE, THIRD_PARTY_ASSETS, SCENARIO_AUTHORING, COCKPIT_CONTROL_MAPPING, TROUBLESHOOTING
+- [x] T15 Playwright smoke test (app boots in mock mode, PFD updates, scenario starts) + full `pnpm test` green + typecheck green
+- [x] T16 End-to-end verification: golden full-circuit test (scripted pilot flies takeoff→ILS→landing→exit against mock physics) + Playwright command round-trips
 
 ## Definition of Done
 

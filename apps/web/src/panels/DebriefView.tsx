@@ -8,11 +8,8 @@ export function DebriefView(): JSX.Element | null {
   const setShow = useSessionStore((s) => s.setShowDebrief);
   const version = useSessionStore((s) => s.version);
   const session = getSession();
-  const report = useMemo(
-    () => (show ? session.debrief() : null),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [show, version],
-  );
+  // recompute when the overlay opens or the session advances
+  const report = useMemo(() => (show ? session.debrief() : null), [show, version, session]);
   if (!show || !report) return null;
 
   return (

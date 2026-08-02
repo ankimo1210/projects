@@ -331,7 +331,6 @@ export class MockFlightModel {
   private substep(dt: number): void {
     this.simTimeSec += dt;
     const fieldAltM = this.runway.elevationFtMsl * FT_TO_M;
-    const altAglM = Math.max(0, this.altM - fieldAltM);
 
     // --- Secondary surfaces move toward their commands ---
     const flapTargetNorm = flapDetentToNorm(this.flapHandleDetent);
@@ -565,7 +564,6 @@ export class MockFlightModel {
     const lengthM = rwy.lengthFt * FT_TO_M;
 
     // Localizer antenna at the stop end.
-    const distFromLocM = Math.hypot(lengthM - alongM, crossM);
     const approachingDistM = -alongM; // >0 when on approach side of threshold
     if (approachingDistM > 25 * 1852 || alongM > lengthM + 500) {
       return { locDots: null, gsDots: null };

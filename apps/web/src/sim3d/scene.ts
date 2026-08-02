@@ -6,7 +6,6 @@ import {
   DynamicTexture,
   Engine,
   HemisphericLight,
-  Mesh,
   MeshBuilder,
   Scene,
   StandardMaterial,
@@ -14,6 +13,7 @@ import {
   UniversalCamera,
   Vector3,
 } from '@babylonjs/core';
+import type { Mesh } from '@babylonjs/core';
 import {
   FT_TO_M,
   KSFO_28R,

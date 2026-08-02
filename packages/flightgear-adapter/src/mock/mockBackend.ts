@@ -5,6 +5,7 @@ import type {
   CommandResult,
   ScenarioInitialState,
 } from '@b737/shared';
+type Result = CommandResult;
 import type { FlightBackend } from '../backend.js';
 import { DEFAULT_SCENARIO_INIT } from '../backend.js';
 import { MockFlightModel } from './flightModel.js';
@@ -49,7 +50,7 @@ export class MockBackend implements FlightBackend {
     return Promise.resolve();
   }
 
-  setPaused(paused: boolean): Promise<import('@b737/shared').CommandResult> {
+  setPaused(paused: boolean): Promise<Result> {
     this.paused = paused;
     return Promise.resolve({ ok: true });
   }
