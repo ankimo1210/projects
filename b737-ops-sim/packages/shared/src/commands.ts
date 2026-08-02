@@ -35,6 +35,10 @@ export const AircraftCommandSchema = z.discriminatedUnion('type', [
   }),
   z.object({ type: z.literal('set_autopilot'), engaged: z.boolean() }),
   z.object({ type: z.literal('set_flight_director'), on: z.boolean() }),
+  /** Arm the approach: the autopilot captures LOC then G/S on its own. */
+  z.object({ type: z.literal('set_ap_approach_mode'), armed: z.boolean() }),
+  /** Take-off / go-around: go-around thrust and pitch, autopilot disengaged. */
+  z.object({ type: z.literal('set_toga'), engaged: z.boolean() }),
   z.object({
     type: z.literal('set_light'),
     light: z.enum(['landing', 'taxi', 'strobe', 'beacon']),
@@ -57,7 +61,11 @@ export const ScenarioInitialStateSchema = z.object({
   seed: z.number().int(),
   airportIcao: z.string(),
   runwayId: z.string(),
-  startAt: z.enum(['holding_point', 'threshold']),
+  /**
+   * `stand` starts parked on the ramp (taxi scenarios), `holding_point` short
+   * of the runway, `threshold` lined up, `final_approach` established inbound.
+   */
+  startAt: z.enum(['stand', 'holding_point', 'threshold', 'final_approach']),
   flapDetent: FlapDetentSchema,
   parkingBrakeSet: z.boolean(),
   /** NON_CERTIFIED_APPROXIMATION: default MVP weight 145,000 lb. */

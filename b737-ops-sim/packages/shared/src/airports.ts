@@ -9,7 +9,7 @@
  * datum is only the mock-mode world reference and scenario geometry source.
  */
 
-import { toLocalEnuM } from './geo.js';
+import { fromLocalEnuM, toLocalEnuM } from './geo.js';
 import { degToRad, FT_TO_M } from './units.js';
 
 export interface RunwayData {
@@ -105,3 +105,37 @@ export function runwayPosition(runway: RunwayData, latDeg: number, lonDeg: numbe
 
 /** Displaced-threshold/overrun tolerance treated as "still on the runway". */
 const RUNWAY_END_MARGIN_M = 30;
+
+/** Inverse of {@link runwayPosition} — authoring ground layouts in runway coordinates. */
+export function runwayPointToLatLon(
+  runway: RunwayData,
+  alongM: number,
+  crossM: number,
+): { latDeg: number; lonDeg: number } {
+  const hdgRad = degToRad(runway.headingDegTrue);
+  const eastM = alongM * Math.sin(hdgRad) + crossM * Math.cos(hdgRad);
+  const northM = alongM * Math.cos(hdgRad) - crossM * Math.sin(hdgRad);
+  return fromLocalEnuM(runway.thresholdLatDeg, runway.thresholdLonDeg, eastM, northM);
+}
+
+/**
+ * Lateral distance from the centerline at which a runway holding position sits.
+ * NON_CERTIFIED_APPROXIMATION — representative of an ICAO code-E holding
+ * position, not surveyed data.
+ */
+export const HOLD_SHORT_OFFSET_M = 45;
+
+/**
+ * Signed distance to the runway's holding position: positive = still short of
+ * it, negative = inside the protected area. Only meaningful abeam the runway.
+ */
+export function distanceToHoldShortM(pos: RunwayPosition): number {
+  return Math.abs(pos.crossM) - HOLD_SHORT_OFFSET_M;
+}
+
+/** Inside the runway protected area (past the holding position). */
+export function isPastHoldShort(runway: RunwayData, pos: RunwayPosition): boolean {
+  const lengthM = runway.lengthFt * FT_TO_M;
+  const abeam = pos.alongM > -RUNWAY_END_MARGIN_M && pos.alongM < lengthM + RUNWAY_END_MARGIN_M;
+  return abeam && distanceToHoldShortM(pos) < 0;
+}

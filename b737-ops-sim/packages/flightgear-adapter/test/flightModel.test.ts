@@ -238,6 +238,80 @@ describe('RTO autobrake', () => {
   });
 });
 
+// M3 T2: the autopilot flies modes, not just knob values.
+describe('autopilot modes', () => {
+  /** Put the aircraft airborne, some way out on the approach course. */
+  function onApproach(): MockFlightModel {
+    const m = makeModel();
+    flyTakeoff(m, 145);
+    m.applyCommand({ type: 'set_control_axis', axis: 'pitch', valueNorm: 0 });
+    m.applyCommand({ type: 'set_throttle', valueNorm: 0.75 });
+    m.applyCommand({ type: 'set_mcp_altitude', altitudeFt: 3000 });
+    m.applyCommand({ type: 'set_autopilot', engaged: true });
+    m.step(60);
+    return m;
+  }
+
+  it('annunciates HDG SEL and ALT HOLD without the approach armed', () => {
+    const m = onApproach();
+    m.step(120); // let it settle at the selected altitude
+    const s = m.snapshot(0);
+    expect(s.mcp.rollMode).toBe('HDG_SEL');
+    expect(s.mcp.pitchMode).toBe('ALT_HOLD');
+    expect(Math.abs(s.position.altitudeFtMsl - 3000)).toBeLessThan(250);
+  });
+
+  it('arms then captures the localizer, and only then the glideslope', () => {
+    const m = onApproach();
+    m.applyCommand({ type: 'set_ap_approach_mode', armed: true });
+    m.step(1);
+    expect(m.snapshot(0).mcp.approachArmed).toBe(true);
+    // pointed away from the runway: armed, not captured
+    m.applyCommand({ type: 'set_mcp_heading', headingDeg: 104 });
+    m.step(60);
+    expect(m.snapshot(0).mcp.rollMode).toBe('LOC_ARM');
+    expect(m.snapshot(0).mcp.pitchMode).toBe('GS_ARM');
+  });
+
+  it('captures and tracks the localizer and glideslope from a final-approach start', () => {
+    const m = makeModel({ startAt: 'final_approach' });
+    const initial = m.snapshot(0);
+    expect(initial.weightOnWheels).toBe(false);
+    expect(initial.nav.locDeviationDots).not.toBeNull();
+
+    m.applyCommand({ type: 'set_mcp_heading', headingDeg: 284 });
+    m.applyCommand({ type: 'set_mcp_altitude', altitudeFt: 2000 });
+    m.applyCommand({ type: 'set_throttle', valueNorm: 0.45 });
+    m.applyCommand({ type: 'set_autopilot', engaged: true });
+    m.applyCommand({ type: 'set_ap_approach_mode', armed: true });
+    m.step(20);
+    const s = m.snapshot(0);
+    expect(s.mcp.rollMode).toBe('LOC');
+    expect(s.mcp.pitchMode).toBe('GS');
+    expect(Math.abs(s.nav.locDeviationDots!)).toBeLessThan(1);
+    expect(Math.abs(s.nav.gsDeviationDots!)).toBeLessThan(1);
+    // and it is descending on the path rather than holding the MCP altitude
+    expect(s.speeds.verticalSpeedFpm).toBeLessThan(-300);
+  });
+
+  it('TO/GA drops the autopilot, commands go-around thrust and climbs', () => {
+    const m = onApproach();
+    m.applyCommand({ type: 'set_mcp_altitude', altitudeFt: 500 });
+    m.applyCommand({ type: 'set_mcp_vertical_speed', verticalSpeedFpm: -1000 });
+    m.step(60);
+    expect(m.snapshot(0).speeds.verticalSpeedFpm).toBeLessThan(0);
+
+    m.applyCommand({ type: 'set_toga', engaged: true });
+    m.step(20);
+    const s = m.snapshot(0);
+    expect(s.mcp.autopilotEngaged).toBe(false);
+    expect(s.mcp.pitchMode).toBe('TOGA');
+    expect(s.mcp.approachArmed).toBe(false);
+    expect(s.engines.left.throttleLeverNorm).toBe(1);
+    expect(s.speeds.verticalSpeedFpm).toBeGreaterThan(0);
+  });
+});
+
 // R-17: an MCP V/S selection has a sign; the autopilot must honour it.
 describe('MCP vertical speed sign', () => {
   it('descends when a negative V/S is selected below a higher target altitude', () => {

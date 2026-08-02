@@ -9,6 +9,18 @@ import { z } from 'zod';
  * (spec §5: explicit unit boundaries).
  */
 
+/**
+ * Autopilot mode annunciation (spec §22 Phase 3). Lateral: heading select,
+ * localizer armed, localizer captured. Vertical: vertical speed, altitude
+ * hold, glideslope armed, glideslope captured, take-off/go-around.
+ */
+export const ROLL_MODES = ['HDG_SEL', 'LOC_ARM', 'LOC'] as const;
+export const PITCH_MODES = ['VS', 'ALT_HOLD', 'GS_ARM', 'GS', 'TOGA'] as const;
+export const RollModeSchema = z.enum(ROLL_MODES);
+export const PitchModeSchema = z.enum(PITCH_MODES);
+export type RollMode = (typeof ROLL_MODES)[number];
+export type PitchMode = (typeof PITCH_MODES)[number];
+
 /** B737-800 flap lever detents (handle labels). */
 export const FLAP_DETENTS = [0, 1, 2, 5, 10, 15, 25, 30, 40] as const;
 export type FlapDetent = (typeof FLAP_DETENTS)[number];
@@ -103,6 +115,12 @@ export const AircraftStateSchema = z.object({
     selVerticalSpeedFpm: z.number(),
     autopilotEngaged: z.boolean(),
     flightDirectorOn: z.boolean(),
+    /** Approach (LOC/GS) armed on the MCP. */
+    approachArmed: z.boolean(),
+    /** Active lateral mode; null when the backend does not report one. */
+    rollMode: RollModeSchema.nullable(),
+    /** Active vertical mode; null when the backend does not report one. */
+    pitchMode: PitchModeSchema.nullable(),
   }),
 
   nav: z.object({

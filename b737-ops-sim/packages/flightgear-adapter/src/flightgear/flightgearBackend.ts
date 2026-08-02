@@ -284,6 +284,10 @@ export class FlightGearBackend implements FlightBackend {
         return simple('set_autopilot', command.engaged);
       case 'set_flight_director':
         return simple('set_flight_director', command.on);
+      case 'set_ap_approach_mode':
+        return simple('set_ap_approach_mode', command.armed);
+      case 'set_toga':
+        return simple('set_toga', command.engaged);
       case 'set_light':
         return simple(`set_light.${command.light}`, command.on);
     }
@@ -420,6 +424,11 @@ export class FlightGearBackend implements FlightBackend {
         selVerticalSpeedFpm: this.num('mcp.selVerticalSpeedFpm'),
         autopilotEngaged: this.bool('mcp.autopilotEngaged'),
         flightDirectorOn: this.bool('mcp.flightDirectorOn'),
+        approachArmed: this.bool('mcp.approachArmed'),
+        // Mode annunciation is aircraft-specific; FlightGear mode reports null
+        // unless the property map provides it (spec §22 Phase 3, D2).
+        rollMode: null,
+        pitchMode: null,
       },
       nav: {
         ilsTuned: locInRange || gsInRange,

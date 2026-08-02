@@ -14,7 +14,9 @@ import {
   destinationPoint,
   flapDetentToNorm,
   getRunway,
+  getTaxiNetwork,
   normalizeDeg360,
+  runwayPointToLatLon,
   radToDeg,
   toLocalEnuM,
   fromLocalEnuM,
@@ -23,6 +25,8 @@ import {
   type AutobrakeSetting,
   type CommandResult,
   type FlapDetent,
+  type PitchMode,
+  type RollMode,
   type RunwayData,
   type ScenarioInitialState,
 } from '@b737/shared';
@@ -84,6 +88,24 @@ const RTO_TRIGGER_THROTTLE_NORM = 0.05;
 const RTO_ARM_SPEED_KT = 60;
 /** V/S the simple autopilot uses when the MCP V/S window is zeroed. */
 const DEFAULT_AP_CLIMB_FPM = 1800;
+
+/**
+ * Autopilot mode thresholds. NON_CERTIFIED_APPROXIMATION — tuned so capture
+ * behaves plausibly in the mock world, not taken from a 737 FCOM.
+ */
+const LOC_CAPTURE_DOTS = 1.5;
+const LOC_CAPTURE_DEG = 45;
+const LOC_LOSS_DOTS = 2.2;
+const LOC_TRACK_DEG_PER_DOT = 9;
+const GS_CAPTURE_DOTS = 0.6;
+const GS_LOSS_DOTS = 2.2;
+const GS_TRACK_FPM_PER_DOT = 350;
+const ALT_CAPTURE_FT = 400;
+/** Go-around attitude held by TO/GA. */
+const TOGA_PITCH_DEG = 15;
+/** `startAt: 'final_approach'` places the aircraft this far out, on profile. */
+const FINAL_APPROACH_DIST_M = 9000; // ~4.9 NM
+const FINAL_APPROACH_IAS_KT = 150;
 
 const AUTOBRAKE_BRAKE_NORM: Record<AutobrakeSetting, number> = {
   OFF: 0,
@@ -147,6 +169,11 @@ export class MockFlightModel {
   private autobrakeActive = false;
   /** RTO autobrake armed: selected on the ground and takeoff thrust seen. */
   private rtoArmed = false;
+  /** Approach armed on the MCP; drives LOC/GS capture. */
+  private approachArmed = false;
+  private togaActive = false;
+  private apRollMode: RollMode | null = null;
+  private apPitchMode: PitchMode | null = null;
   /** Sub-step remainder carried between `step()` calls. */
   private stepCarrySec = 0;
   private lights = { landing: false, taxi: false, strobe: false, beacon: true };
@@ -186,7 +213,27 @@ export class MockFlightModel {
 
     this.simTimeSec = 0;
     const fieldAltM = rwy.elevationFtMsl * FT_TO_M;
-    if (config.startAt === 'holding_point') {
+    if (config.startAt === 'stand') {
+      const network = getTaxiNetwork(rwy.airportIcao, rwy.runwayId);
+      const stand = network?.stands[0];
+      const standNode = stand ? network?.nodes[stand.nodeId] : undefined;
+      if (standNode && stand) {
+        this.latDeg = standNode.latDeg;
+        this.lonDeg = standNode.lonDeg;
+        this.headingDegTrue = stand.headingDegTrue;
+      } else {
+        this.latDeg = rwy.thresholdLatDeg;
+        this.lonDeg = rwy.thresholdLonDeg;
+        this.headingDegTrue = rwy.headingDegTrue;
+      }
+    } else if (config.startAt === 'final_approach') {
+      // Established on the ILS at FINAL_APPROACH_DIST_M, on profile and on speed.
+      const distM = FINAL_APPROACH_DIST_M;
+      const pos = runwayPointToLatLon(rwy, -distM, 0);
+      this.latDeg = pos.latDeg;
+      this.lonDeg = pos.lonDeg;
+      this.headingDegTrue = rwy.headingDegTrue;
+    } else if (config.startAt === 'holding_point') {
       // Abeam the threshold on the parallel taxiway, facing the runway entry.
       const alongThreshold = destinationPoint(
         rwy.thresholdLatDeg,
@@ -214,13 +261,27 @@ export class MockFlightModel {
       this.lonDeg = pos.lonDeg;
       this.headingDegTrue = rwy.headingDegTrue;
     }
-    this.altM = fieldAltM;
-    this.iasMps = 0;
-    this.pitchDeg = 0;
-    this.rollDeg = 0;
-    this.vsMps = 0;
-    this.onGround = true;
-    this.aoaDeg = 0;
+    if (config.startAt === 'final_approach') {
+      // On the 3° path with the threshold crossing height, gear down, on speed.
+      const heightM =
+        FINAL_APPROACH_DIST_M * Math.tan(degToRad(rwy.ils.glideslopeDeg)) +
+        rwy.ils.thresholdCrossingHeightFt * FT_TO_M;
+      this.altM = fieldAltM + heightM;
+      this.iasMps = FINAL_APPROACH_IAS_KT * KT_TO_MPS;
+      this.pitchDeg = 2;
+      this.rollDeg = 0;
+      this.vsMps = -this.iasMps * Math.sin(degToRad(rwy.ils.glideslopeDeg));
+      this.onGround = false;
+      this.aoaDeg = 4;
+    } else {
+      this.altM = fieldAltM;
+      this.iasMps = 0;
+      this.pitchDeg = 0;
+      this.rollDeg = 0;
+      this.vsMps = 0;
+      this.onGround = true;
+      this.aoaDeg = 0;
+    }
 
     this.n1LeftPct = IDLE_N1_PCT;
     this.n1RightPct = IDLE_N1_PCT;
@@ -231,10 +292,14 @@ export class MockFlightModel {
     this.speedbrakeLeverNorm = 0;
     this.speedbrakeArmed = false;
     this.spoilersNorm = 0;
-    this.parkingBrakeSet = config.parkingBrakeSet;
+    this.parkingBrakeSet = config.startAt === 'final_approach' ? false : config.parkingBrakeSet;
     this.autobrake = 'OFF';
     this.autobrakeActive = false;
     this.rtoArmed = false;
+    this.approachArmed = false;
+    this.togaActive = false;
+    this.apRollMode = null;
+    this.apPitchMode = null;
     this.stepCarrySec = 0;
     this.lights = { landing: false, taxi: false, strobe: false, beacon: true };
     this.mcp = {
@@ -335,6 +400,22 @@ export class MockFlightModel {
       case 'set_flight_director':
         this.mcp.flightDirectorOn = cmd.on;
         return { ok: true };
+      case 'set_ap_approach_mode':
+        this.approachArmed = cmd.armed;
+        return { ok: true };
+      case 'set_toga':
+        if (cmd.engaged) {
+          // TO/GA commands go-around thrust and drops the autopilot out of the
+          // approach; the crew flies (or re-engages) from there.
+          this.togaActive = true;
+          this.approachArmed = false;
+          this.mcp.autopilotEngaged = false;
+          this.inputs.throttleNorm = 1;
+          this.inputs.reverserLeverNorm = 0;
+        } else {
+          this.togaActive = false;
+        }
+        return { ok: true };
       case 'set_light':
         this.lights[cmd.light] = cmd.on;
         return { ok: true };
@@ -401,26 +482,39 @@ export class MockFlightModel {
     let thrustN = thrustFraction * MAX_TOTAL_THRUST_N;
     if (reverserActive) thrustN = -thrustN * REVERSE_EFFICIENCY;
 
-    // --- Autopilot (simple HDG/ALT-VS hold; no autothrottle in M1) ---
+    // --- Autopilot: HDG SEL / LOC and V/S / ALT HOLD / G/S, plus TO/GA ---
     let elevator = this.inputs.elevatorNorm;
     let aileron = this.inputs.aileronNorm;
-    if (this.mcp.autopilotEngaged && !this.onGround) {
-      const hdgErr = angleDiffDeg(this.headingDegMag(), this.mcp.selHeadingDeg);
+    this.updateApModes();
+    if (this.togaActive && !this.onGround) {
+      // Go-around: hold the go-around attitude, wings level (spec §22 Phase 3).
+      const pitchErr = TOGA_PITCH_DEG - this.pitchDeg;
+      elevator = clamp(pitchErr * 0.12, -0.4, 0.8);
+      aileron = clamp(-this.rollDeg * 0.08, -0.3, 0.3);
+    } else if (this.mcp.autopilotEngaged && !this.onGround) {
+      // ---- lateral ----
+      const targetHeadingDeg =
+        this.apRollMode === 'LOC' ? this.localizerInterceptHeadingDeg() : this.mcp.selHeadingDeg;
+      const hdgErr = angleDiffDeg(this.headingDegMag(), targetHeadingDeg);
       const targetBank = clamp(hdgErr * 1.2, -25, 25);
       aileron = clamp((targetBank - this.rollDeg) / 10, -1, 1);
+
+      // ---- vertical ----
       const altErrFt = this.altM * M_TO_FT - this.mcp.selAltitudeFt;
-      const capture = Math.abs(altErrFt) < 400;
-      // Outside the capture window the selected V/S is followed with its sign
-      // (an MCP V/S of -1000 means descend, whatever the selected altitude is —
-      // R-17). Only when no V/S is selected does the model pick the direction.
       const selVsFpm = this.mcp.selVerticalSpeedFpm;
-      const targetVsFpm = capture
-        ? clamp(-altErrFt * 4, -1000, 1000)
-        : selVsFpm !== 0
-          ? selVsFpm
-          : altErrFt < 0
-            ? DEFAULT_AP_CLIMB_FPM
-            : -DEFAULT_AP_CLIMB_FPM;
+      let targetVsFpm: number;
+      if (this.apPitchMode === 'GS') {
+        targetVsFpm = this.glideslopeTargetVsFpm();
+      } else if (this.apPitchMode === 'ALT_HOLD') {
+        targetVsFpm = clamp(-altErrFt * 4, -1000, 1000);
+      } else if (selVsFpm !== 0) {
+        // Outside the capture window the selected V/S is followed with its sign
+        // (an MCP V/S of -1000 means descend, whatever the selected altitude is
+        // — R-17). Only when no V/S is selected does the model pick a direction.
+        targetVsFpm = selVsFpm;
+      } else {
+        targetVsFpm = altErrFt < 0 ? DEFAULT_AP_CLIMB_FPM : -DEFAULT_AP_CLIMB_FPM;
+      }
       const vsErrFpm = targetVsFpm - this.vsMps * MPS_TO_FPM;
       elevator = clamp(vsErrFpm * 0.0006, -0.6, 0.6);
     }
@@ -595,6 +689,69 @@ export class MockFlightModel {
     return normalizeDeg360(this.headingDegTrue - this.runway.magneticVariationDeg);
   }
 
+  // ------------------------------------------------------------ autopilot modes
+
+  /**
+   * Mode logic (spec §22 Phase 3). Arming the approach lets the autopilot
+   * capture the localizer and then the glideslope from real deviations instead
+   * of the crew chasing them with the heading and V/S knobs.
+   */
+  private updateApModes(): void {
+    if (this.togaActive) {
+      this.apRollMode = null;
+      this.apPitchMode = 'TOGA';
+      return;
+    }
+    if (!this.mcp.autopilotEngaged || this.onGround) {
+      this.apRollMode = null;
+      this.apPitchMode = null;
+      return;
+    }
+    const { locDots, gsDots } = this.computeIls();
+
+    // ---- lateral ----
+    if (!this.approachArmed) {
+      this.apRollMode = 'HDG_SEL';
+    } else if (this.apRollMode === 'LOC') {
+      // stay captured while guidance is usable
+      if (locDots === null || Math.abs(locDots) > LOC_LOSS_DOTS) this.apRollMode = 'LOC_ARM';
+    } else {
+      const courseErrDeg = Math.abs(angleDiffDeg(this.headingDegMag(), this.runway.headingDegMag));
+      const capture =
+        locDots !== null && Math.abs(locDots) < LOC_CAPTURE_DOTS && courseErrDeg < LOC_CAPTURE_DEG;
+      this.apRollMode = capture ? 'LOC' : 'LOC_ARM';
+    }
+
+    // ---- vertical ----
+    const altErrFt = this.altM * M_TO_FT - this.mcp.selAltitudeFt;
+    if (this.approachArmed && this.apPitchMode === 'GS') {
+      if (gsDots === null || Math.abs(gsDots) > GS_LOSS_DOTS) this.apPitchMode = 'GS_ARM';
+    } else if (this.approachArmed) {
+      // the glideslope is only armed once the localizer is captured
+      const capture =
+        this.apRollMode === 'LOC' && gsDots !== null && Math.abs(gsDots) < GS_CAPTURE_DOTS;
+      this.apPitchMode = capture ? 'GS' : 'GS_ARM';
+    } else {
+      this.apPitchMode = Math.abs(altErrFt) < ALT_CAPTURE_FT ? 'ALT_HOLD' : 'VS';
+    }
+  }
+
+  /** Heading that flies the aircraft back onto the localizer course. */
+  private localizerInterceptHeadingDeg(): number {
+    const { locDots } = this.computeIls();
+    const correctionDeg = clamp((locDots ?? 0) * LOC_TRACK_DEG_PER_DOT, -20, 20);
+    return normalizeDeg360(this.runway.headingDegMag + correctionDeg);
+  }
+
+  /** Descent rate that flies the glidepath, corrected for deviation. */
+  private glideslopeTargetVsFpm(): number {
+    const { gsDots } = this.computeIls();
+    const gsMps = Math.max(30, this.lastGsMps);
+    const nominalFpm = -gsMps * Math.tan(degToRad(this.runway.ils.glideslopeDeg)) * MPS_TO_FPM;
+    const correctionFpm = clamp((gsDots ?? 0) * GS_TRACK_FPM_PER_DOT, -400, 400);
+    return clamp(nominalFpm + correctionFpm, -1200, 200);
+  }
+
   // ---------------------------------------------------------------- ILS geometry
 
   /**
@@ -697,7 +854,12 @@ export class MockFlightModel {
         brakeNorm: this.effectiveBrakeNorm(this.iasMps * MPS_TO_KT),
         autobrake: this.autobrake,
       },
-      mcp: { ...this.mcp },
+      mcp: {
+        ...this.mcp,
+        approachArmed: this.approachArmed,
+        rollMode: this.apRollMode,
+        pitchMode: this.apPitchMode,
+      },
       nav: {
         ilsTuned: true,
         locDeviationDots: ils.locDots,

@@ -1,34 +1,68 @@
 {
-  "version": 2,
+  "version": 3,
   "aircraft": "Generic FG 737 NG class (verified paths: FG core; aircraft-specific paths marked)",
-  "notes": "Single source of truth for FlightGear property paths (spec §5). Paths under /instrumentation and MCP/autobrake sections are AIRCRAFT-MODEL-DEPENDENT: verify against the installed 737 package (e.g. 737-800YV) with scripts/fg-diagnostic before relying on them. scale converts FG-native units to the schema's explicit units.",
+  "notes": "Single source of truth for FlightGear property paths (spec \u00a75). Paths under /instrumentation and MCP/autobrake sections are AIRCRAFT-MODEL-DEPENDENT: verify against the installed 737 package (e.g. 737-800YV) with scripts/fg-diagnostic before relying on them. scale converts FG-native units to the schema's explicit units.",
   "state": {
     "sim.simTimeSec": {
       "fgProp": "/sim/time/elapsed-sec",
       "optional": true,
       "comment": "FG core simulation clock. Optional: when absent the adapter falls back to wall clock, which does not stop when the sim is paused. SOURCE_REQUIRED: confirm with fg-diagnostic on the installed build."
     },
-    "position.latDeg": { "fgProp": "/position/latitude-deg" },
-    "position.lonDeg": { "fgProp": "/position/longitude-deg" },
-    "position.altitudeFtMsl": { "fgProp": "/position/altitude-ft" },
-    "position.radioAltitudeFt": { "fgProp": "/position/altitude-agl-ft" },
-    "attitude.pitchDeg": { "fgProp": "/orientation/pitch-deg" },
-    "attitude.rollDeg": { "fgProp": "/orientation/roll-deg" },
-    "attitude.headingDegMag": { "fgProp": "/orientation/heading-magnetic-deg" },
-    "attitude.groundTrackDegMag": { "fgProp": "/orientation/track-magnetic-deg" },
-    "attitude.aoaDeg": { "fgProp": "/orientation/alpha-deg", "optional": true },
-    "speeds.iasKt": { "fgProp": "/velocities/airspeed-kt" },
-    "speeds.gsKt": { "fgProp": "/velocities/groundspeed-kt" },
+    "position.latDeg": {
+      "fgProp": "/position/latitude-deg"
+    },
+    "position.lonDeg": {
+      "fgProp": "/position/longitude-deg"
+    },
+    "position.altitudeFtMsl": {
+      "fgProp": "/position/altitude-ft"
+    },
+    "position.radioAltitudeFt": {
+      "fgProp": "/position/altitude-agl-ft"
+    },
+    "attitude.pitchDeg": {
+      "fgProp": "/orientation/pitch-deg"
+    },
+    "attitude.rollDeg": {
+      "fgProp": "/orientation/roll-deg"
+    },
+    "attitude.headingDegMag": {
+      "fgProp": "/orientation/heading-magnetic-deg"
+    },
+    "attitude.groundTrackDegMag": {
+      "fgProp": "/orientation/track-magnetic-deg"
+    },
+    "attitude.aoaDeg": {
+      "fgProp": "/orientation/alpha-deg",
+      "optional": true
+    },
+    "speeds.iasKt": {
+      "fgProp": "/velocities/airspeed-kt"
+    },
+    "speeds.gsKt": {
+      "fgProp": "/velocities/groundspeed-kt"
+    },
     "speeds.verticalSpeedFpm": {
       "fgProp": "/velocities/vertical-speed-fps",
       "scale": 60,
       "comment": "FG native fps -> fpm"
     },
-    "weightOnWheels": { "fgProp": "/gear/gear[1]/wow", "type": "bool" },
-    "engines.left.n1Pct": { "fgProp": "/engines/engine[0]/n1" },
-    "engines.right.n1Pct": { "fgProp": "/engines/engine[1]/n1" },
-    "engines.left.throttleLeverNorm": { "fgProp": "/controls/engines/engine[0]/throttle" },
-    "engines.right.throttleLeverNorm": { "fgProp": "/controls/engines/engine[1]/throttle" },
+    "weightOnWheels": {
+      "fgProp": "/gear/gear[1]/wow",
+      "type": "bool"
+    },
+    "engines.left.n1Pct": {
+      "fgProp": "/engines/engine[0]/n1"
+    },
+    "engines.right.n1Pct": {
+      "fgProp": "/engines/engine[1]/n1"
+    },
+    "engines.left.throttleLeverNorm": {
+      "fgProp": "/controls/engines/engine[0]/throttle"
+    },
+    "engines.right.throttleLeverNorm": {
+      "fgProp": "/controls/engines/engine[1]/throttle"
+    },
     "engines.left.reverserNorm": {
       "fgProp": "/engines/engine[0]/reverser-pos-norm",
       "optional": true
@@ -37,11 +71,22 @@
       "fgProp": "/engines/engine[1]/reverser-pos-norm",
       "optional": true
     },
-    "controls.flapHandleNorm": { "fgProp": "/controls/flight/flaps" },
-    "controls.flapsActualNorm": { "fgProp": "/surface-positions/flap-pos-norm" },
-    "controls.gearLeverDown": { "fgProp": "/controls/gear/gear-down", "type": "bool" },
-    "controls.gearPositionNorm": { "fgProp": "/gear/gear[1]/position-norm" },
-    "controls.speedbrakeLeverNorm": { "fgProp": "/controls/flight/speedbrake" },
+    "controls.flapHandleNorm": {
+      "fgProp": "/controls/flight/flaps"
+    },
+    "controls.flapsActualNorm": {
+      "fgProp": "/surface-positions/flap-pos-norm"
+    },
+    "controls.gearLeverDown": {
+      "fgProp": "/controls/gear/gear-down",
+      "type": "bool"
+    },
+    "controls.gearPositionNorm": {
+      "fgProp": "/gear/gear[1]/position-norm"
+    },
+    "controls.speedbrakeLeverNorm": {
+      "fgProp": "/controls/flight/speedbrake"
+    },
     "controls.speedbrakeArmed": {
       "fgProp": "/controls/flight/speedbrake-armed",
       "type": "bool",
@@ -52,17 +97,33 @@
       "fgProp": "/surface-positions/speedbrake-pos-norm",
       "optional": true
     },
-    "controls.parkingBrakeSet": { "fgProp": "/controls/gear/brake-parking", "type": "bool" },
-    "controls.brakeLeftNorm": { "fgProp": "/controls/gear/brake-left" },
-    "controls.brakeRightNorm": { "fgProp": "/controls/gear/brake-right" },
+    "controls.parkingBrakeSet": {
+      "fgProp": "/controls/gear/brake-parking",
+      "type": "bool"
+    },
+    "controls.brakeLeftNorm": {
+      "fgProp": "/controls/gear/brake-left"
+    },
+    "controls.brakeRightNorm": {
+      "fgProp": "/controls/gear/brake-right"
+    },
     "controls.autobrakeRaw": {
       "fgProp": "/autopilot/autobrake/step",
       "optional": true,
       "comment": "AIRCRAFT-MODEL-DEPENDENT: -1=RTO 0=OFF 1..3 4=MAX convention"
     },
-    "mcp.selSpeedKt": { "fgProp": "/autopilot/settings/target-speed-kt", "optional": true },
-    "mcp.selHeadingDeg": { "fgProp": "/autopilot/settings/heading-bug-deg", "optional": true },
-    "mcp.selAltitudeFt": { "fgProp": "/autopilot/settings/target-altitude-ft", "optional": true },
+    "mcp.selSpeedKt": {
+      "fgProp": "/autopilot/settings/target-speed-kt",
+      "optional": true
+    },
+    "mcp.selHeadingDeg": {
+      "fgProp": "/autopilot/settings/heading-bug-deg",
+      "optional": true
+    },
+    "mcp.selAltitudeFt": {
+      "fgProp": "/autopilot/settings/target-altitude-ft",
+      "optional": true
+    },
     "mcp.selVerticalSpeedFpm": {
       "fgProp": "/autopilot/settings/vertical-speed-fpm",
       "optional": true
@@ -71,7 +132,7 @@
       "fgProp": "/autopilot/locks/passive-mode",
       "type": "bool",
       "optional": true,
-      "comment": "AIRCRAFT-MODEL-DEPENDENT: many 737 models expose a dedicated CMD A property instead — verify"
+      "comment": "AIRCRAFT-MODEL-DEPENDENT: many 737 models expose a dedicated CMD A property instead \u2014 verify"
     },
     "mcp.flightDirectorOn": {
       "fgProp": "/instrumentation/flightdirector/fd-on",
@@ -79,26 +140,50 @@
       "optional": true,
       "comment": "AIRCRAFT-MODEL-DEPENDENT"
     },
-    "nav.locInRange": { "fgProp": "/instrumentation/nav[0]/in-range", "type": "bool" },
-    "nav.gsInRange": { "fgProp": "/instrumentation/nav[0]/gs-in-range", "type": "bool" },
+    "nav.locInRange": {
+      "fgProp": "/instrumentation/nav[0]/in-range",
+      "type": "bool"
+    },
+    "nav.gsInRange": {
+      "fgProp": "/instrumentation/nav[0]/gs-in-range",
+      "type": "bool"
+    },
     "nav.locDeviationDots": {
       "fgProp": "/instrumentation/nav[0]/heading-needle-deflection",
       "scale": 0.25,
-      "comment": "FG deflection is ±10 full scale; ±2.5 dots -> scale 0.25. Verify per aircraft."
+      "comment": "FG deflection is \u00b110 full scale; \u00b12.5 dots -> scale 0.25. Verify per aircraft."
     },
     "nav.gsDeviationDots": {
       "fgProp": "/instrumentation/nav[0]/gs-needle-deflection",
       "scale": 0.7142857,
-      "comment": "FG deflection is ±3.5 full scale; ±2.5 dots -> scale 5/7. Verify per aircraft."
+      "comment": "FG deflection is \u00b13.5 full scale; \u00b12.5 dots -> scale 5/7. Verify per aircraft."
     },
     "lights.landing": {
       "fgProp": "/controls/lighting/landing-lights",
       "type": "bool",
       "optional": true
     },
-    "lights.taxi": { "fgProp": "/controls/lighting/taxi-light", "type": "bool", "optional": true },
-    "lights.strobe": { "fgProp": "/controls/lighting/strobe", "type": "bool", "optional": true },
-    "lights.beacon": { "fgProp": "/controls/lighting/beacon", "type": "bool", "optional": true }
+    "lights.taxi": {
+      "fgProp": "/controls/lighting/taxi-light",
+      "type": "bool",
+      "optional": true
+    },
+    "lights.strobe": {
+      "fgProp": "/controls/lighting/strobe",
+      "type": "bool",
+      "optional": true
+    },
+    "lights.beacon": {
+      "fgProp": "/controls/lighting/beacon",
+      "type": "bool",
+      "optional": true
+    },
+    "mcp.approachArmed": {
+      "fgProp": "/autopilot/locks/approach-armed",
+      "optional": true,
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT: APP armed annunciation. SOURCE_REQUIRED \u2014 verify with fg-diagnostic; absent means the state reports false."
+    }
   },
   "commands": {
     "set_control_axis.pitch": {
@@ -106,19 +191,33 @@
       "scale": -1,
       "comment": "Schema +1 = nose up; FG elevator -1 = nose up"
     },
-    "set_control_axis.roll": { "fgProps": ["/controls/flight/aileron"] },
-    "set_control_axis.yaw": { "fgProps": ["/controls/flight/rudder"] },
+    "set_control_axis.roll": {
+      "fgProps": ["/controls/flight/aileron"]
+    },
+    "set_control_axis.yaw": {
+      "fgProps": ["/controls/flight/rudder"]
+    },
     "set_throttle": {
       "fgProps": ["/controls/engines/engine[0]/throttle", "/controls/engines/engine[1]/throttle"]
     },
-    "set_brakes": { "fgProps": ["/controls/gear/brake-left", "/controls/gear/brake-right"] },
-    "set_parking_brake": { "fgProps": ["/controls/gear/brake-parking"], "type": "bool" },
+    "set_brakes": {
+      "fgProps": ["/controls/gear/brake-left", "/controls/gear/brake-right"]
+    },
+    "set_parking_brake": {
+      "fgProps": ["/controls/gear/brake-parking"],
+      "type": "bool"
+    },
     "set_flaps": {
       "fgProps": ["/controls/flight/flaps"],
       "comment": "value is normalized 0..1 (detent -> norm in adapter)"
     },
-    "set_gear": { "fgProps": ["/controls/gear/gear-down"], "type": "bool" },
-    "set_speedbrake": { "fgProps": ["/controls/flight/speedbrake"] },
+    "set_gear": {
+      "fgProps": ["/controls/gear/gear-down"],
+      "type": "bool"
+    },
+    "set_speedbrake": {
+      "fgProps": ["/controls/flight/speedbrake"]
+    },
     "set_speedbrake_armed": {
       "fgProps": ["/controls/flight/speedbrake-armed"],
       "type": "bool",
@@ -132,10 +231,18 @@
       "fgProps": ["/autopilot/autobrake/step"],
       "comment": "AIRCRAFT-MODEL-DEPENDENT"
     },
-    "set_mcp_speed": { "fgProps": ["/autopilot/settings/target-speed-kt"] },
-    "set_mcp_heading": { "fgProps": ["/autopilot/settings/heading-bug-deg"] },
-    "set_mcp_altitude": { "fgProps": ["/autopilot/settings/target-altitude-ft"] },
-    "set_mcp_vertical_speed": { "fgProps": ["/autopilot/settings/vertical-speed-fpm"] },
+    "set_mcp_speed": {
+      "fgProps": ["/autopilot/settings/target-speed-kt"]
+    },
+    "set_mcp_heading": {
+      "fgProps": ["/autopilot/settings/heading-bug-deg"]
+    },
+    "set_mcp_altitude": {
+      "fgProps": ["/autopilot/settings/target-altitude-ft"]
+    },
+    "set_mcp_vertical_speed": {
+      "fgProps": ["/autopilot/settings/vertical-speed-fpm"]
+    },
     "set_autopilot": {
       "fgProps": ["/autopilot/locks/passive-mode"],
       "type": "bool",
@@ -146,10 +253,35 @@
       "type": "bool",
       "comment": "AIRCRAFT-MODEL-DEPENDENT"
     },
-    "set_paused": { "fgProps": ["/sim/freeze/master", "/sim/freeze/clock"], "type": "bool" },
-    "set_light.landing": { "fgProps": ["/controls/lighting/landing-lights"], "type": "bool" },
-    "set_light.taxi": { "fgProps": ["/controls/lighting/taxi-light"], "type": "bool" },
-    "set_light.strobe": { "fgProps": ["/controls/lighting/strobe"], "type": "bool" },
-    "set_light.beacon": { "fgProps": ["/controls/lighting/beacon"], "type": "bool" }
+    "set_paused": {
+      "fgProps": ["/sim/freeze/master", "/sim/freeze/clock"],
+      "type": "bool"
+    },
+    "set_light.landing": {
+      "fgProps": ["/controls/lighting/landing-lights"],
+      "type": "bool"
+    },
+    "set_light.taxi": {
+      "fgProps": ["/controls/lighting/taxi-light"],
+      "type": "bool"
+    },
+    "set_light.strobe": {
+      "fgProps": ["/controls/lighting/strobe"],
+      "type": "bool"
+    },
+    "set_light.beacon": {
+      "fgProps": ["/controls/lighting/beacon"],
+      "type": "bool"
+    },
+    "set_ap_approach_mode": {
+      "fgProps": ["/autopilot/locks/approach-armed"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT: arms LOC/GS capture. SOURCE_REQUIRED."
+    },
+    "set_toga": {
+      "fgProps": ["/autopilot/locks/toga"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT: TO/GA. SOURCE_REQUIRED \u2014 many 737 packages expose this as a button property instead."
+    }
   }
 }
