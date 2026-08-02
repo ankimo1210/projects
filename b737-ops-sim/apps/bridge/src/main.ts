@@ -36,24 +36,17 @@ const app = await buildBridge({
   allowedOrigins: config.allowedOrigins,
 });
 
-// FlightGear may start after the bridge: retry until the first connect works,
-// after which the backend reconnects on its own.
-async function connectWithRetry(): Promise<void> {
-  for (;;) {
-    try {
-      await backend.connect();
-      app.log.info({ mode: config.backendMode }, 'flight backend connected');
-      return;
-    } catch (err) {
-      app.log.warn(
-        { err: String(err), mode: config.backendMode },
-        'backend connect failed; retrying in 3 s (is FlightGear running with --httpd? see FLIGHTGEAR_SETUP.md)',
-      );
-      await new Promise((r) => setTimeout(r, 3000));
-    }
-  }
-}
-void connectWithRetry();
+// FlightGear may start after the bridge. The backend owns reconnection (a
+// second retry loop here would race it and leak sockets — R-04); we just start
+// it and report what the status says.
+await backend.connect();
+const initialStatus = backend.getStatus();
+app.log[initialStatus.connected ? 'info' : 'warn'](
+  { mode: config.backendMode, detail: initialStatus.detail },
+  initialStatus.connected
+    ? 'flight backend connected'
+    : 'flight backend not ready; retrying in the background (is FlightGear running with --httpd? see FLIGHTGEAR_SETUP.md)',
+);
 
 await app.listen({ port: config.port, host: config.host });
 app.log.info(
