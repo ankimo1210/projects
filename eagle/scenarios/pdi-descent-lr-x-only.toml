@@ -1,0 +1,50 @@
+schema = 1
+name = "pdi-descent-lr-x-only"
+# Beam bisection fixed before launch (2026-08-02): full Apollo 11 LR pad
+# block and altitude remain active, but only velocity X can assert data-good.
+# Y and Z selects leave RNRAD unchanged and report active-low NOT-good.
+#
+# Run 22's first accepted transactions started X at TIG+336.31, Y at
+# +338.32 and Z at +340.28. Its first material attitude delta appeared at
+# +339 and grew rapidly. X is therefore the first discriminating flight:
+# - split by TIG+360 using the unchanged 250m/5m/s/10deg diagnostic limits
+#   => X is independently sufficient; stop and inspect X sign/frame path.
+# - track run 20 through TIG+420 => X is excluded; fly Y-only next, then Z.
+# Any accepted Y/Z RNRAD pulse invalidates the run.
+
+[site]
+lat_deg = 0.0
+lon_deg = 0.0
+radius_m = 1737400.0
+
+[gate]
+mode = "pdi"
+alt_m = 0.0
+vz_ms = 0.0
+mass_dry_kg = 7009.0
+fuel_dps_kg = 7950.0
+fuel_rcs_kg = 250.0
+inertia_kgm2 = [23000.0, 25000.0, 24000.0]
+
+[agc]
+padload = "scenarios/p66-padload.toml"
+lm_weight_lbs = 33530.0
+tland_offset_cs = 36000
+flip_atthold_after_engine_on_s = 2.0
+lrbypass = false
+lr_altitude_only = false
+lr_velocity_beams = [true, false, false] # X, Y, Z
+
+[handover]
+alt_m = 250.0
+
+[rod]
+steps = [[240.0, -1.5], [40.0, 0.2], [10.0, 0.8]]
+
+[errors]
+
+[acceptance]
+v_vert_max = 3.0
+v_horiz_max = 1.5
+tilt_max_deg = 12.0
+timeout_s = 800.0

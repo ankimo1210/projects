@@ -90,6 +90,9 @@ pub enum AgcOutput {
         plus_pitch: bool,
         minus_roll: bool,
         plus_roll: bool,
+        /// Channel 12 BIT13: command the landing-radar antenna to
+        /// position 2 (`LRPOS2`, Luminary `P20-P25.agc`).
+        lr_pos2_command: bool,
     },
     ThrustDrive(bool),
     ThrustPulse(ThrustPulse),
@@ -130,6 +133,7 @@ pub fn decode_output(p: &Packet) -> AgcOutput {
             plus_pitch: p.data & (1 << 9) != 0,
             minus_roll: p.data & (1 << 10) != 0,
             plus_roll: p.data & (1 << 11) != 0,
+            lr_pos2_command: p.data & (1 << 12) != 0,
         },
         0o14 => AgcOutput::ThrustDrive(p.data & (1 << 3) != 0),
         0o174..=0o176 => AgcOutput::CoarseAlign {
@@ -230,7 +234,18 @@ mod tests {
                 plus_pitch: true,
                 minus_pitch: false,
                 minus_roll: false,
-                plus_roll: false
+                plus_roll: false,
+                lr_pos2_command: false
+            }
+        ));
+        assert!(matches!(
+            decode_output(&Packet::io(0o12, 1 << 12).unwrap()),
+            AgcOutput::Trim {
+                plus_pitch: false,
+                minus_pitch: false,
+                minus_roll: false,
+                plus_roll: false,
+                lr_pos2_command: true
             }
         ));
         assert!(matches!(

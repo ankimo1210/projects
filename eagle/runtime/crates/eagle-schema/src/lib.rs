@@ -82,6 +82,17 @@ pub struct TelemetryMsg {
     pub downlink_wps: f64,
     pub ingest_drops: u64,
     pub touchdown: Option<String>,
+    /// True only for a scenario that explicitly opted into the game-facing
+    /// terminal safety layer. Additive schema-v2 fields.
+    pub demo_mode: bool,
+    pub assist_active: bool,
+    /// Signed target vertical velocity (m/s, negative down) while active.
+    pub assist_target_vz_ms: Option<f64>,
+    /// Contact values latched on the touchdown tick so the UI can score the
+    /// landing after the physics thread continues its two-second tail.
+    pub touchdown_v_vert_ms: Option<f64>,
+    pub touchdown_v_horiz_ms: Option<f64>,
+    pub touchdown_tilt_deg: Option<f64>,
     /// The sim-driven P64→P66 handover (ATT HOLD + selection ROD click)
     /// has fired. Latched true for the rest of the run; always false in
     /// hover mode, which flips ATT HOLD on a wall clock instead.
@@ -181,6 +192,12 @@ mod tests {
             downlink_wps: 50.0,
             ingest_drops: 0,
             touchdown: None,
+            demo_mode: true,
+            assist_active: true,
+            assist_target_vz_ms: Some(-1.0),
+            touchdown_v_vert_ms: None,
+            touchdown_v_horiz_ms: None,
+            touchdown_tilt_deg: None,
             handover: true,
         });
         let j: serde_json::Value = serde_json::to_value(&msg).unwrap();
@@ -189,6 +206,8 @@ mod tests {
         assert_eq!(j["schema_version"], 2);
         assert_eq!(j["agc_alt_m"], serde_json::Value::Null);
         assert_eq!(j["handover"], true);
+        assert_eq!(j["demo_mode"], true);
+        assert_eq!(j["assist_target_vz_ms"], -1.0);
     }
 
     #[test]

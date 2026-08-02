@@ -1,0 +1,45 @@
+schema = 1
+name = "playable-demo-assisted"
+
+[site]
+lat_deg = 0.674
+lon_deg = 23.473
+radius_m = 1737400.0
+
+[gate]
+alt_m = 500.0
+vz_ms = 0.0
+mass_dry_kg = 7009.0
+fuel_dps_kg = 2000.0
+fuel_rcs_kg = 150.0
+inertia_kgm2 = [12000.0, 13500.0, 13000.0]
+
+[agc]
+padload = "scenarios/p66-padload.toml"
+lm_weight_lbs = 20200.0
+tland_offset_cs = 36000
+flip_atthold_after_engine_on_s = 2.0
+# The assisted demo does not need LR integration. The authentic LR/P65 and
+# frozen acceptance scenarios remain separate and unchanged.
+lrbypass = true
+
+[rod]
+# No automatic ROD schedule: after P66, the player's ENGR buttons adjust the
+# assist target by the same 1 ft/s increments delivered to Luminary.
+steps = []
+
+[terminal_assist]
+start_alt_m = 500.0
+flare_alt_m = 100.0
+approach_vz_ms = 5.0
+touchdown_vz_ms = 1.0
+horizontal_tau_s = 3.0
+vertical_tau_s = 1.0
+
+[errors]
+
+[acceptance]
+v_vert_max = 3.0
+v_horiz_max = 1.5
+tilt_max_deg = 12.0
+timeout_s = 180.0

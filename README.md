@@ -15,6 +15,7 @@
 | [`agent-profiler/`](agent-profiler/) | Codex CLI / Claude Code の実行をリアルタイム可視化・保存・分析するローカル TUI | Python / Textual |
 | [`akinator/`](akinator/) | Wikidata をエンティティ源とするローカル・アキネーター風推測ゲーム（確率的候補更新エンジン） | Python / FastAPI |
 | [`pokemon/`](pokemon/) | Quokka Wilds: オリジナル 3D モンスター収集ゲーム | Vite / React Three Fiber |
+| [`b737-ops-sim/`](b737-ops-sim/) | ローカル専用 Boeing 737-800 運航手順トレーナー（FlightGear/mock バックエンド、3D コックピット、ATC・チェックリスト・デブリーフ。認定訓練装置ではない） | TypeScript / pnpm / React / Babylon.js / Fastify |
 | [`EitanQuest/`](EitanQuest/) | えいたんクエスト: iPhone 向け英単語 4 択クイズアプリ（オフライン完結 MVP） | Swift / SwiftUI / SwiftData |
 | [`NeonThread/`](NeonThread/) | 発光ラインを操作して隙間をくぐる iOS 無限ランゲーム | Swift / SwiftUI + SpriteKit |
 | [`genequest/`](genequest/) | Genequest 健康リスク・体質・母系祖先結果のローカル保存と検証（機微データは Git 管理外） | CSV / JSON / Markdown / Python |
