@@ -66,7 +66,12 @@ test('imported 3D cockpit loads and 3D picking round-trips (skipped without asse
   // wait for the cockpit; skip cleanly when assets were not built (fallback shell)
   const loaded = await page
     .waitForFunction(
-      () => Number(document.querySelector('[data-testid="sim-canvas"]')?.getAttribute('data-cockpit-meshes') ?? 0) > 0,
+      () =>
+        Number(
+          document
+            .querySelector('[data-testid="sim-canvas"]')
+            ?.getAttribute('data-cockpit-meshes') ?? 0,
+        ) > 0,
       undefined,
       { timeout: 20_000 },
     )
@@ -78,6 +83,40 @@ test('imported 3D cockpit loads and 3D picking round-trips (skipped without asse
     await page.getByTestId('sim-canvas').getAttribute('data-cockpit-meshes'),
   );
   expect(meshCount).toBeGreaterThan(500);
+
+  // R-11: the FlightGear assembly rotations must actually reach the scene.
+  const assembly = await page.evaluate(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const scene = (window as never as { __simScene: any }).__simScene;
+    const centerOf = (name: string): { x: number; y: number; z: number } | null => {
+      const node = scene.getNodeByName(name);
+      if (!node) return null;
+      node.computeWorldMatrix(true);
+      const hb = node.getHierarchyBoundingVectors(true);
+      const c = hb.min.add(hb.max).scale(0.5);
+      return { x: c.x, y: c.y, z: c.z };
+    };
+    const tilt = (name: string): number | null => {
+      const node = scene.getTransformNodeByName(name);
+      const q = node?.rotationQuaternion;
+      if (!q) return null;
+      return (2 * Math.acos(Math.min(1, Math.abs(q.w))) * 180) / Math.PI;
+    };
+    return {
+      flightdeskTiltDeg: tilt('inst:cockpit/flightdesk_0:chain0'),
+      overheadTiltDeg: tilt('inst:cockpit/Overhead_1:chain0'),
+      overhead: centerOf('inst:cockpit/Overhead_1'),
+      flightdesk: centerOf('inst:cockpit/flightdesk_0'),
+    };
+  });
+  // the flightdesk is mounted at -15°, the overhead at 90/90
+  expect(assembly.flightdeskTiltDeg).toBeCloseTo(15, 0);
+  expect(assembly.overheadTiltDeg ?? 0).toBeGreaterThan(45);
+  // and the assembled panels land where a 737 flight deck has them: the
+  // overhead above the captain's eye datum (floor 2.55 m + 1.2 m), clearly
+  // above the main panel
+  expect(assembly.overhead!.y).toBeGreaterThan(3.8);
+  expect(assembly.overhead!.y).toBeGreaterThan(assembly.flightdesk!.y + 0.4);
 
   // project the 3D gear lever to screen coords and click it — on the ground
   // the backend must REJECT the command (full 3D→bridge→backend round trip)
