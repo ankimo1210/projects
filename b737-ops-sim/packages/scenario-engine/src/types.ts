@@ -10,6 +10,16 @@ export interface ScenarioPhase {
   transitions: { to: string; when: Condition; eventId?: string }[];
   /** Rules that may fire (once) while this phase is active. */
   ruleIds?: string[];
+  /**
+   * Checklists re-armed when this phase is entered. Used when a procedure is
+   * flown again — the Landing checklist after a go-around (spec §22 Phase 3).
+   */
+  resetChecklistIds?: string[];
+  /**
+   * Flags set when this phase is entered — e.g. clearing `goAroundAnnounced`
+   * once the missed approach has been rejoined to the pattern.
+   */
+  setFlagsOnEnter?: Record<string, boolean | number | string>;
 }
 
 /**

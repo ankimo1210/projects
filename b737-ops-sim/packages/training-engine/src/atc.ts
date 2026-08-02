@@ -1,4 +1,4 @@
-import { angleDiffDeg, type AircraftState, type RunwayData } from '@b737/shared';
+import { angleDiffDeg, getTaxiNetwork, type AircraftState, type RunwayData } from '@b737/shared';
 import { transcriptId, type ReadbackOption, type TranscriptEntry } from './transcript.js';
 
 /**
@@ -8,6 +8,8 @@ import { transcriptId, type ReadbackOption, type TranscriptEntry } from './trans
  */
 
 export type AtcPhase =
+  | 'awaiting_taxi_request'
+  | 'taxi_out'
   | 'awaiting_takeoff_request'
   | 'takeoff_clearance_issued'
   | 'departure'
@@ -18,7 +20,9 @@ export type AtcPhase =
   | 'cleared_approach'
   | 'cleared_to_land'
   | 'rollout'
-  | 'runway_exited';
+  | 'runway_exited'
+  | 'taxi_in'
+  | 'go_around';
 
 export interface AtcInstruction {
   id: string;
@@ -48,7 +52,7 @@ interface VectorLeg {
 }
 
 export class AtcController {
-  phase: AtcPhase = 'awaiting_takeoff_request';
+  phase: AtcPhase;
   readonly stats: AtcStats = { readbacksTotal: 0, readbacksCorrect: 0 };
   private pendingInstruction: AtcInstruction | null = null;
   private legStartedAtSec: number | null = null;
@@ -60,7 +64,10 @@ export class AtcController {
     private readonly runway: RunwayData,
     /** Surface wind actually in force in the scenario (spec §13). */
     private readonly wind: { dirDeg: number; speedKt: number } = { dirDeg: 0, speedKt: 0 },
+    /** Where the flight joins the ATC sequence (depends on the scenario start). */
+    initialPhase: AtcPhase = 'awaiting_takeoff_request',
   ) {
+    this.phase = initialPhase;
     const rwyHdg = Math.round(runway.headingDegMag);
     // Right-hand pattern back to the ILS (KSFO 28R: right turns over the bay).
     this.legs = [
@@ -97,6 +104,83 @@ export class AtcController {
     if (this.wind.speedKt < 3) return 'wind calm';
     const dir = String(Math.round(this.wind.dirDeg / 10) * 10).padStart(3, '0');
     return `wind ${dir} at ${Math.round(this.wind.speedKt)}`;
+  }
+
+  /**
+   * User keys the mic for a taxi clearance (spec §22 Phase 3 ground control).
+   * The route is read from the taxi network so the clearance names taxiways
+   * that actually exist.
+   */
+  requestTaxiClearance(state: AircraftState): AtcInstruction | TranscriptEntry {
+    if (this.phase !== 'awaiting_taxi_request') {
+      return {
+        id: transcriptId('atc'),
+        simTimeSec: state.simTimeSec,
+        speaker: 'atc',
+        message: `${this.callsign}, standby.`,
+      };
+    }
+    this.phase = 'taxi_out';
+    const rwy = this.runway.runwayId;
+    const via = this.taxiRoute();
+    return this.makeInstruction(
+      state.simTimeSec,
+      `${this.callsign}, ground, taxi to runway ${rwy} via ${via}, hold short of runway ${rwy}.`,
+      { taxiClearanceReceived: true },
+      [
+        {
+          id: 'correct',
+          text: `Taxi to runway ${rwy} via ${via}, hold short runway ${rwy}, ${this.callsign}.`,
+          correct: true,
+        },
+        {
+          id: 'cross',
+          text: `Taxi to runway ${rwy}, cleared to cross, ${this.callsign}.`,
+          correct: false,
+        },
+        { id: 'roger', text: 'Roger.', correct: false },
+      ],
+    );
+  }
+
+  /**
+   * The crew announces a go-around. ATC re-sequences them onto the pattern —
+   * without this the first officer could call for something unflyable
+   * (docs/REVIEW_RESPONSE.md).
+   */
+  announceGoAround(state: AircraftState): AtcInstruction {
+    this.phase = 'go_around';
+    const hdg = Math.round(this.runway.headingDegMag);
+    return this.makeInstruction(
+      state.simTimeSec,
+      `${this.callsign}, roger, go around, fly runway heading, climb and maintain 3,000, expect vectors for another approach.`,
+      {
+        goAroundInstructionGiven: true,
+        landingClearanceReceived: false,
+        atcTargetHeadingDeg: hdg,
+        atcTargetAltitudeFt: 3000,
+      },
+      [
+        {
+          id: 'correct',
+          text: `Runway heading, climb and maintain 3,000, ${this.callsign}.`,
+          correct: true,
+        },
+        { id: 'continue', text: `Continuing the approach, ${this.callsign}.`, correct: false },
+        { id: 'roger', text: 'Roger.', correct: false },
+      ],
+      { targetHeadingDeg: hdg, targetAltitudeFt: 3000 },
+    );
+  }
+
+  /** Taxi route from the stand to the runway, as ATC would read it. */
+  private taxiRoute(): string {
+    const network = getTaxiNetwork(this.runway.airportIcao, this.runway.runwayId);
+    if (!network) return 'the parallel taxiway';
+    const labels = [...new Set(network.segments.map((s) => s.label))].filter(
+      (l) => l !== 'apron' && !l.startsWith('E'),
+    );
+    return labels.join(', ');
   }
 
   /** User keys the mic to request takeoff clearance. */
@@ -243,7 +327,68 @@ export class AtcController {
         }
         return out;
       }
-      case 'rollout':
+      case 'taxi_out': {
+        // Geometry decides when the aircraft is holding short; ATC only reacts.
+        if (scenarioPhaseId === 'hold_short' && state.speeds.gsKt < 5) {
+          this.phase = 'awaiting_takeoff_request';
+          out.push(
+            this.makeInstruction(
+              t,
+              `${this.callsign}, hold short of runway ${this.runway.runwayId}, contact tower on 120.5.`,
+              { towerHandoffGiven: true },
+              [
+                {
+                  id: 'correct',
+                  text: `Hold short runway ${this.runway.runwayId}, over to tower, ${this.callsign}.`,
+                  correct: true,
+                },
+                {
+                  id: 'lineup',
+                  text: `Lining up runway ${this.runway.runwayId}, ${this.callsign}.`,
+                  correct: false,
+                },
+              ],
+            ),
+          );
+        }
+        return out;
+      }
+      case 'go_around': {
+        // Re-sequence: rejoin the pattern at the downwind leg.
+        if (!state.weightOnWheels && ra > 1500) {
+          this.legIndex = 1;
+          const leg = this.legs[this.legIndex]!;
+          this.phase = leg.atcPhase;
+          this.legStartedAtSec = t;
+          out.push(this.legInstruction(t, leg));
+        }
+        return out;
+      }
+      case 'rollout': {
+        if (scenarioPhaseId === 'runway_exit') {
+          this.phase = 'taxi_in';
+          const stand = getTaxiNetwork(this.runway.airportIcao, this.runway.runwayId)?.stands[0];
+          const standId = stand?.id ?? 'the ramp';
+          out.push(
+            this.makeInstruction(
+              t,
+              `${this.callsign}, ground, taxi to stand ${standId} via ${this.taxiRoute()}.`,
+              { taxiInClearanceReceived: true },
+              [
+                {
+                  id: 'correct',
+                  text: `Taxi to stand ${standId} via ${this.taxiRoute()}, ${this.callsign}.`,
+                  correct: true,
+                },
+                { id: 'roger', text: 'Roger.', correct: false },
+              ],
+            ),
+          );
+        }
+        return out;
+      }
+      case 'awaiting_taxi_request':
+      case 'taxi_in':
       case 'awaiting_takeoff_request':
       case 'runway_exited':
         return out;

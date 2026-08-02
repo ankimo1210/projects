@@ -1,15 +1,22 @@
-import { getRunway, type AircraftState } from '@b737/shared';
+import { getRunway, type AircraftState, type ScenarioInitialState } from '@b737/shared';
 import {
   ScenarioRuntime,
   type ScenarioDefinition,
   type ScenarioEvent,
 } from '@b737/scenario-engine';
-import { AtcController, type AtcInstruction } from './atc.js';
+import { AtcController, type AtcInstruction, type AtcPhase } from './atc.js';
 import { generateDebrief, type DebriefReport } from './debrief.js';
 import { FirstOfficer } from './firstOfficer.js';
 import type { TranscriptEntry } from './transcript.js';
 
 export type TrainingMode = 'guided' | 'assisted' | 'evaluation';
+
+/** Where the flight joins the ATC sequence, from the scenario's start point. */
+function atcEntryPhase(startAt: ScenarioInitialState['startAt']): AtcPhase {
+  if (startAt === 'stand') return 'awaiting_taxi_request';
+  if (startAt === 'final_approach') return 'cleared_approach';
+  return 'awaiting_takeoff_request';
+}
 
 /** FO callouts the debrief must see as events (R-19). */
 const FO_SAFETY_EVENTS: Record<string, { severity: ScenarioEvent['severity']; message: string }> = {
@@ -62,10 +69,14 @@ export class TrainingSession {
     });
     const runway = getRunway(scenario.initialState.airportIcao, scenario.initialState.runwayId);
     if (!runway) throw new Error('scenario runway not found');
-    this.atc = new AtcController(runway, {
-      dirDeg: scenario.initialState.windDirDeg,
-      speedKt: scenario.initialState.windSpeedKt,
-    });
+    this.atc = new AtcController(
+      runway,
+      {
+        dirDeg: scenario.initialState.windDirDeg,
+        speedKt: scenario.initialState.windSpeedKt,
+      },
+      atcEntryPhase(scenario.initialState.startAt),
+    );
     this.runtime.onEvent((event) => this.onScenarioEvent(event));
   }
 
@@ -102,6 +113,36 @@ export class TrainingSession {
     for (const instruction of this.atc.update(state, this.runtime.phaseId)) {
       this.registerInstruction(instruction);
     }
+  }
+
+  /** User keys the mic for a taxi clearance (ground control). */
+  requestTaxiClearance(): void {
+    if (!this.lastState) return;
+    this.push({
+      id: `user_req_${this.transcript.length}`,
+      simTimeSec: this.lastState.simTimeSec,
+      speaker: 'captain',
+      message: `Ground, Boeing 737 at the stand, request taxi.`,
+    });
+    const result = this.atc.requestTaxiClearance(this.lastState);
+    if ('flagsOnAccept' in result) this.registerInstruction(result);
+    else this.push(result);
+  }
+
+  /**
+   * The crew goes around. This is the crew's call — the FO may advise it, but
+   * pressing TO/GA is what starts the missed approach (spec §22 Phase 3).
+   */
+  announceGoAround(): void {
+    if (!this.lastState) return;
+    this.push({
+      id: `user_ga_${this.transcript.length}`,
+      simTimeSec: this.lastState.simTimeSec,
+      speaker: 'captain',
+      message: 'Going around.',
+    });
+    this.runtime.setFlag('goAroundAnnounced', true);
+    this.registerInstruction(this.atc.announceGoAround(this.lastState));
   }
 
   /** User keys the mic for takeoff clearance. */
@@ -163,7 +204,10 @@ export class TrainingSession {
    * checked" item can be validated from real control movement.
    */
   notifyAxisInput(axis: 'pitch' | 'roll' | 'yaw', valueNorm: number): void {
-    if (this.runtime.phaseId !== 'before_takeoff') return;
+    // Valid wherever the Before Takeoff checklist may be run — in a gate-to-gate
+    // scenario the crew checks the controls while holding short, not in a phase
+    // that happens to be called 'before_takeoff'.
+    if (!this.runtime.isChecklistAvailable('before_takeoff')) return;
     if (axis === 'roll') {
       this.axisExtremes.rollMin = Math.min(this.axisExtremes.rollMin, valueNorm);
       this.axisExtremes.rollMax = Math.max(this.axisExtremes.rollMax, valueNorm);
@@ -205,8 +249,11 @@ export class TrainingSession {
   }
 
   private onScenarioEvent(event: ScenarioEvent): void {
-    if (event.kind === 'checklist_completed' && event.id === 'after_landing') {
-      this.runtime.setFlag('afterLandingChecklistComplete', true);
+    if (event.kind === 'checklist_completed') {
+      // `after_landing` → `afterLandingChecklistComplete`, so scenarios can
+      // gate a phase on any checklist without engine changes.
+      const camel = event.id.replace(/_([a-z])/g, (_, c: string) => c.toUpperCase());
+      this.runtime.setFlag(`${camel}ChecklistComplete`, true);
     }
     for (const line of this.fo.onScenarioEvent(event)) this.push(line);
     this.version += 1;

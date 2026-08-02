@@ -101,6 +101,8 @@ const GS_CAPTURE_DOTS = 0.6;
 const GS_LOSS_DOTS = 2.2;
 const GS_TRACK_FPM_PER_DOT = 350;
 const ALT_CAPTURE_FT = 400;
+/** Below this radio altitude an armed approach keeps flying the path down. */
+const GS_HOLD_BELOW_FT = 300;
 /** Go-around attitude held by TO/GA. */
 const TOGA_PITCH_DEG = 15;
 /** `startAt: 'final_approach'` places the aircraft this far out, on profile. */
@@ -507,6 +509,10 @@ export class MockFlightModel {
         targetVsFpm = this.glideslopeTargetVsFpm();
       } else if (this.apPitchMode === 'ALT_HOLD') {
         targetVsFpm = clamp(-altErrFt * 4, -1000, 1000);
+      } else if (this.approachArmed && this.radioAltitudeFt() < GS_HOLD_BELOW_FT) {
+        // On an armed approach near the ground the autopilot never commands a
+        // climb; going around is the crew's decision (TO/GA), not the AP's.
+        targetVsFpm = this.glideslopeTargetVsFpm();
       } else if (selVsFpm !== 0) {
         // Outside the capture window the selected V/S is followed with its sign
         // (an MCP V/S of -1000 means descend, whatever the selected altitude is
@@ -724,8 +730,12 @@ export class MockFlightModel {
 
     // ---- vertical ----
     const altErrFt = this.altM * M_TO_FT - this.mcp.selAltitudeFt;
+    const raFt = Math.max(0, this.altM - this.runway.elevationFtMsl * FT_TO_M) * M_TO_FT;
     if (this.approachArmed && this.apPitchMode === 'GS') {
-      if (gsDots === null || Math.abs(gsDots) > GS_LOSS_DOTS) this.apPitchMode = 'GS_ARM';
+      // Close in, the beam is behind the aircraft and drops out — that is the
+      // flare region, not a reason to climb back to the MCP altitude.
+      const lostBeam = gsDots === null || Math.abs(gsDots) > GS_LOSS_DOTS;
+      if (lostBeam && raFt > GS_HOLD_BELOW_FT) this.apPitchMode = 'GS_ARM';
     } else if (this.approachArmed) {
       // the glideslope is only armed once the localizer is captured
       const capture =
@@ -734,6 +744,11 @@ export class MockFlightModel {
     } else {
       this.apPitchMode = Math.abs(altErrFt) < ALT_CAPTURE_FT ? 'ALT_HOLD' : 'VS';
     }
+  }
+
+  /** Height above the runway elevation, in feet. */
+  private radioAltitudeFt(): number {
+    return Math.max(0, (this.altM - this.runway.elevationFtMsl * FT_TO_M) * M_TO_FT);
   }
 
   /** Heading that flies the aircraft back onto the localizer course. */

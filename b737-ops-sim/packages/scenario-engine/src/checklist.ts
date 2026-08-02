@@ -88,4 +88,17 @@ export class ChecklistRun {
     const item = this.items[this.cursor];
     if (item && item.status === 'failed') item.status = 'active';
   }
+
+  /**
+   * Start the checklist over — used when a procedure is flown again, e.g. the
+   * Landing checklist after a go-around (spec §22 Phase 3).
+   */
+  reset(): void {
+    this.cursor = 0;
+    this.items.forEach((item, i) => {
+      item.status = i === 0 ? 'active' : 'pending';
+      item.failureMessage = null;
+      item.completedAtSimTimeSec = null;
+    });
+  }
 }
