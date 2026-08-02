@@ -12,6 +12,7 @@ import { StatusBar } from './panels/StatusBar.js';
 import { DebriefView } from './panels/DebriefView.js';
 import { DiagnosticsPanel } from './panels/DiagnosticsPanel.js';
 import { OverheadPanel } from './panels/OverheadPanel.js';
+import { FmsPanel } from './panels/FmsPanel.js';
 import { deriveGuidance } from './cockpit/guidance.js';
 import { getSession } from './state/connection.js';
 import { useSessionStore, useSettingsStore, useSimStore } from './state/stores.js';
@@ -80,6 +81,7 @@ export function App(): JSX.Element {
           <ChecklistPanel />
           <TranscriptPanel />
           {showOverhead && state && <OverheadPanel state={state} />}
+          {showOverhead && state && <FmsPanel state={state} />}
         </section>
       )}
 

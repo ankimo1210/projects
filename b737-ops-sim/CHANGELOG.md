@@ -2,6 +2,38 @@
 
 Local-only project; versions track milestones rather than releases.
 
+## Milestone 5 — Advanced Training (2026-08-02)
+
+Plan: [docs/milestones/MILESTONE_05.md](docs/milestones/MILESTONE_05.md),
+verification: [docs/milestones/MILESTONE_05_DOD.md](docs/milestones/MILESTONE_05_DOD.md),
+route data: [NAVIGATION_DATA.md](NAVIGATION_DATA.md).
+
+### Added
+
+- **Navigation data and route model**: waypoints, a SID, an arrival and an
+  approach transition; leg construction, signed cross-track with a bounded
+  intercept, waypoint sequencing (on the fix or once it is behind), and a
+  wind-triangle heading.
+- **LNAV** as an autopilot roll mode, annunciated on the FMA, with `load_route`,
+  `direct_to` and `set_lnav` commands and an FMS panel; the ND draws the route.
+- **Weather**: wind aloft blended from the surface wind, seeded gusts,
+  visibility and turbulence in `ScenarioInitialState`, echoed in
+  `AircraftState.weather`.
+- **Failures**: `inject_failure` / `clear_failures`, and scenario rules that can
+  declare a failure so it fires from real state (the V1 cut happens because the
+  aeroplane reached V1). Failures are expressed through the systems model, so
+  the annunciator and debrief see them without a second code path.
+- **Three scenarios**: engine failure after V1, crosswind landing, SID and
+  arrival on the route.
+- **Optional voice readbacks**: deterministic token matching against the
+  options ATC already produced; the existing grader decides correctness. Off by
+  default with a privacy note.
+
+### Known limitations
+
+- Not a CDU: no VNAV, no constraint enforcement, no holds or airways.
+- Route, weather and failure commands are mock-mode only.
+
 ## Milestone 4 — Aircraft Systems (2026-08-02)
 
 Start the aeroplane. Plan: [docs/milestones/MILESTONE_04.md](docs/milestones/MILESTONE_04.md),

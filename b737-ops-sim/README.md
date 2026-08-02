@@ -12,9 +12,26 @@ state-validated checklists, and a transparent scoring debrief.
 > `NON_CERTIFIED_APPROXIMATION` / `SOURCE_REQUIRED` in the code/data).
 > Do not use it for real-world flight training.
 
-## Current capabilities (Milestone 4)
+## Current capabilities (Milestone 5)
 
-**Phase 4 — aircraft systems (new):**
+**Phase 5 — advanced training (new):**
+
+- **Route and LNAV**: a SID, an arrival and an approach transition
+  ([NAVIGATION_DATA.md](NAVIGATION_DATA.md)) flown by the autopilot's LNAV mode,
+  with an FMS panel (legs, direct-to) and the route drawn on the ND.
+- **Weather**: wind aloft blended from the surface wind, seeded gusts,
+  visibility and turbulence — per scenario, so a crosswind landing is just a
+  scenario.
+- **Failures**: engine flameout, generator and hydraulic failures, injected by
+  scenario rules from real state (the V1 cut happens because the aeroplane
+  reached V1) and expressed through the systems model.
+- **Three more scenarios**: engine failure after V1, crosswind landing, and a
+  SID/arrival flown on the route.
+- **Voice readbacks** (optional, off by default): speak a readback instead of
+  clicking. The recogniser only proposes; the deterministic grader still
+  decides. See the privacy note below.
+
+**Phase 4 — aircraft systems:**
 
 - **Cold and dark**: a scenario that starts with everything off — battery, APU
   start, generator on the bus, IRS alignment, fuel pumps, both engines started
@@ -67,7 +84,7 @@ state-validated checklists, and a transparent scoring debrief.
 - Without built assets the app runs exactly as Milestone 1 (temporary
   geometry) — `pnpm assets:build` is optional.
 
-## Milestone 1–3 capabilities
+## Milestone 1–4 capabilities
 
 - **Mock mode (default):** a deterministic 737-class point-mass flight model —
   no FlightGear needed. Fixed seed ⇒ reproducible flights.
@@ -211,7 +228,13 @@ In this WSL environment Playwright needs `TMPDIR=/tmp TEMP=/tmp TMP=/tmp`.
 - Systems are modelled to procedure depth only — no electrical loads, no fuel
   burn, no pack temperatures, no failures. See SYSTEMS_MODEL.md for the full
   list of simplifications.
-- The FMC, SID/STAR, weather, failures and voice interaction are Phase 5.
+- The route model is not a CDU: no VNAV, no constraint enforcement, no holds,
+  no airways (NAVIGATION_DATA.md).
+- **Voice input privacy**: the browser's speech recognition may send audio to a
+  cloud service (Chrome does). It is off by default, asks before starting, and
+  everything works without it.
+- Route, weather and failure commands are mock-mode features; FlightGear owns
+  those in FlightGear mode and rejects them with that message.
 - The taxi layout is a plausible approximation, not survey data; in FlightGear
   mode the scenery is FlightGear's and may not match it.
 
@@ -224,6 +247,7 @@ In this WSL environment Playwright needs `TMPDIR=/tmp TEMP=/tmp TMP=/tmp`.
 [SCENARIO_AUTHORING.md](SCENARIO_AUTHORING.md) ·
 [COCKPIT_CONTROL_MAPPING.md](COCKPIT_CONTROL_MAPPING.md) ·
 [SYSTEMS_MODEL.md](SYSTEMS_MODEL.md) ·
+[NAVIGATION_DATA.md](NAVIGATION_DATA.md) ·
 [docs/REVIEW_RESPONSE.md](docs/REVIEW_RESPONSE.md) ·
 [TROUBLESHOOTING.md](TROUBLESHOOTING.md) ·
 [docs/milestones/](docs/milestones/)

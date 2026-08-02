@@ -4,7 +4,12 @@
 > to fly, weather to fly it in, failures to handle, and the option of speaking
 > to ATC instead of clicking.
 
-**Status:** in progress (started 2026-08-02)
+**Status:** Complete (2026-08-02) — see [MILESTONE_05_DOD.md](MILESTONE_05_DOD.md).
+
+Deviations from this plan, recorded in the DoD: the crosswind scenario reuses
+the approach drill rather than adding phases, and the browser test for the V1
+cut was replaced by a weather-readout test because flying to V1 through the UI
+made the suite slow — the injection path is proven by the golden test.
 
 Phase 5 items from the spec: FMC and route entry · SID and STAR · weather ·
 failures · rejected takeoff · go-around · engine failure · crosswind
@@ -16,15 +21,15 @@ covers the rest.
 
 ## Decisions
 
-| # | Decision | Rationale |
-| --- | --- | --- |
-| D1 | Route and procedures are **data in `@b737/shared`** (waypoints, one SID, one STAR, approach transitions), marked `NON_CERTIFIED_APPROXIMATION — SOURCE_REQUIRED` | Same rule as the runway and taxi data: geometry lives in one place and the UI, autopilot and scenarios all read it |
-| D2 | The FMC is a **route model, not a CDU emulation**: origin/destination/runway, a SID, an arrival, and a leg list with the cross-track and distance the autopilot needs | A faithful CDU is months of work and teaches typing, not flying; the training value is in following a route |
-| D3 | The autopilot gains **LNAV** as a roll mode alongside HDG SEL and LOC, tracking the active leg | Consistent with M3's mode logic and annunciated the same way |
-| D4 | Weather is **scenario configuration plus live state**: surface wind, wind aloft, gust, visibility and turbulence, applied by the flight model | Crosswind operations are then just a scenario, not a special mode |
-| D5 | Failures are **injected as commands/scenario events and expressed through existing systems state** — an engine failure sets the systems model's engine to not running, a generator failure drops its bus | The annunciator, checklists and debrief already read that state, so nothing needs a second failure path |
-| D6 | Voice input maps an utterance to **an existing readback option**; the deterministic grader still decides correctness | Spec §12/§13: a language/speech layer may phrase or recognise, never judge |
-| D7 | Voice input is **opt-in and warns** that the browser's speech recognition may send audio off the machine; it degrades to buttons when unavailable | The project is local-only by design; the user decides |
+| #   | Decision                                                                                                                                                                                                 | Rationale                                                                                                          |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| D1  | Route and procedures are **data in `@b737/shared`** (waypoints, one SID, one STAR, approach transitions), marked `NON_CERTIFIED_APPROXIMATION — SOURCE_REQUIRED`                                         | Same rule as the runway and taxi data: geometry lives in one place and the UI, autopilot and scenarios all read it |
+| D2  | The FMC is a **route model, not a CDU emulation**: origin/destination/runway, a SID, an arrival, and a leg list with the cross-track and distance the autopilot needs                                    | A faithful CDU is months of work and teaches typing, not flying; the training value is in following a route        |
+| D3  | The autopilot gains **LNAV** as a roll mode alongside HDG SEL and LOC, tracking the active leg                                                                                                           | Consistent with M3's mode logic and annunciated the same way                                                       |
+| D4  | Weather is **scenario configuration plus live state**: surface wind, wind aloft, gust, visibility and turbulence, applied by the flight model                                                            | Crosswind operations are then just a scenario, not a special mode                                                  |
+| D5  | Failures are **injected as commands/scenario events and expressed through existing systems state** — an engine failure sets the systems model's engine to not running, a generator failure drops its bus | The annunciator, checklists and debrief already read that state, so nothing needs a second failure path            |
+| D6  | Voice input maps an utterance to **an existing readback option**; the deterministic grader still decides correctness                                                                                     | Spec §12/§13: a language/speech layer may phrase or recognise, never judge                                         |
+| D7  | Voice input is **opt-in and warns** that the browser's speech recognition may send audio off the machine; it degrades to buttons when unavailable                                                        | The project is local-only by design; the user decides                                                              |
 
 ## Tasks
 

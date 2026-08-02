@@ -1,4 +1,4 @@
-import type { ScenarioInitialState } from '@b737/shared';
+import type { FailureKind, ScenarioInitialState } from '@b737/shared';
 import type { Condition } from './conditions.js';
 
 /** Data-driven scenario definition (spec §11). Authoring: SCENARIO_AUTHORING.md. */
@@ -30,6 +30,12 @@ export interface ScenarioPhase {
 export interface ScenarioRule {
   id: string;
   when: Condition;
+  /**
+   * Failure injected when this rule fires (spec §22 Phase 5). The rule is
+   * state-driven, so a V1 cut happens because the aeroplane reached V1 — the
+   * host applies the command, the engine only says what should happen.
+   */
+  injectFailure?: FailureKind;
   /** Restrict to specific phases; omit = active in every phase. */
   phases?: string[];
   once?: boolean;
