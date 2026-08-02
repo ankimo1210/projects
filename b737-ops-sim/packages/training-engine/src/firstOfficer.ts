@@ -1,8 +1,4 @@
-import {
-  vSpeedsForWeight,
-  type AircraftState,
-  type VSpeeds,
-} from '@b737/shared';
+import { vSpeedsForWeight, type AircraftState, type VSpeeds } from '@b737/shared';
 import type { ScenarioEvent } from '@b737/scenario-engine';
 import { transcriptId, type TranscriptEntry } from './transcript.js';
 
@@ -26,6 +22,8 @@ interface PendingExpectation {
 }
 
 const APPROACH_ALT_CALLOUTS_FT = [1000, 500, 100, 50, 40, 30, 20, 10] as const;
+/** Climb must persist this long before "Positive rate" is called. */
+const POSITIVE_RATE_CONFIRM_SEC = 0.3;
 
 export class FirstOfficer {
   readonly vSpeeds: VSpeeds;
@@ -37,6 +35,7 @@ export class FirstOfficer {
   private saidGoAround = false;
   private pending: PendingExpectation | null = null;
   private lastRaFt = 0;
+  private climbingSinceSec: number | null = null;
   private readonly takeoffPhases: Set<string>;
   private readonly approachPhases: Set<string>;
 
@@ -70,12 +69,20 @@ export class FirstOfficer {
     }
 
     // --- Positive rate (from state, mirrors the scenario rule) ---
+    // Climb is confirmed over elapsed time, not over one sample: requiring the
+    // radio altitude to gain a foot per sample made the callout depend on the
+    // state rate and never fire at 30 Hz (R-12).
+    const climbing = !state.weightOnWheels && state.speeds.verticalSpeedFpm > 300 && ra > 20;
+    if (!climbing) {
+      this.climbingSinceSec = null;
+    } else if (this.climbingSinceSec === null) {
+      this.climbingSinceSec = t;
+    }
     if (
       !this.saidPositiveRate &&
-      !state.weightOnWheels &&
-      state.speeds.verticalSpeedFpm > 300 &&
-      ra > this.lastRaFt + 1 &&
-      ra > 20
+      climbing &&
+      this.climbingSinceSec !== null &&
+      t - this.climbingSinceSec >= POSITIVE_RATE_CONFIRM_SEC
     ) {
       this.saidPositiveRate = true;
       const entry: TranscriptEntry = {
@@ -126,8 +133,7 @@ export class FirstOfficer {
 
     // --- Stabilized approach monitoring below 1000 ft (spec §12) ---
     if (this.approachPhases.has(phaseId) && !state.weightOnWheels && ra < 1000 && ra > 50) {
-      const speedOk =
-        ias >= this.vSpeeds.vappKt - 5 && ias <= this.vSpeeds.vappKt + 20;
+      const speedOk = ias >= this.vSpeeds.vappKt - 5 && ias <= this.vSpeeds.vappKt + 20;
       const configOk = state.controls.gearLeverDown && state.controls.flapHandleDetent >= 30;
       const pathOk =
         (state.nav.locDeviationDots === null || Math.abs(state.nav.locDeviationDots) <= 1) &&
@@ -148,9 +154,7 @@ export class FirstOfficer {
         ]
           .filter(Boolean)
           .join(', ');
-        out.push(
-          this.say(t, `Unstable — ${reasons}. Go around.`, 'fo:unstable_approach'),
-        );
+        out.push(this.say(t, `Unstable — ${reasons}. Go around.`, 'fo:unstable_approach'));
       }
     }
 
@@ -173,7 +177,11 @@ export class FirstOfficer {
    * The user answered a pending callout. Returns correctness plus a follow-up
    * line when appropriate. Correctness is judged by the option's flag only.
    */
-  respond(entry: TranscriptEntry, optionId: string, state: AircraftState): {
+  respond(
+    entry: TranscriptEntry,
+    optionId: string,
+    state: AircraftState,
+  ): {
     correct: boolean;
     followUps: TranscriptEntry[];
   } {
@@ -191,6 +199,12 @@ export class FirstOfficer {
   }
 
   private say(simTimeSec: number, message: string, relatedEventId: string): TranscriptEntry {
-    return { id: transcriptId('fo'), simTimeSec, speaker: 'first_officer', message, relatedEventId };
+    return {
+      id: transcriptId('fo'),
+      simTimeSec,
+      speaker: 'first_officer',
+      message,
+      relatedEventId,
+    };
   }
 }

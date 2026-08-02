@@ -64,14 +64,24 @@ describe('FirstOfficer takeoff callouts', () => {
       }),
       'initial_climb',
     );
-    const lines = fo.update(
-      st(11, (s) => {
-        s.weightOnWheels = false;
-        s.speeds.verticalSpeedFpm = 800;
-        s.position.radioAltitudeFt = 40;
-      }),
-      'initial_climb',
-    );
+    const lines = [
+      ...fo.update(
+        st(11, (s) => {
+          s.weightOnWheels = false;
+          s.speeds.verticalSpeedFpm = 800;
+          s.position.radioAltitudeFt = 40;
+        }),
+        'initial_climb',
+      ),
+      ...fo.update(
+        st(11.5, (s) => {
+          s.weightOnWheels = false;
+          s.speeds.verticalSpeedFpm = 900;
+          s.position.radioAltitudeFt = 55;
+        }),
+        'initial_climb',
+      ),
+    ];
     const positiveRate = lines.find((l) => l.message === 'Positive rate.');
     expect(positiveRate).toBeDefined();
     expect(positiveRate!.expectedResponse!.options.some((o) => o.correct)).toBe(true);
@@ -94,16 +104,30 @@ describe('FirstOfficer takeoff callouts', () => {
       }),
       'initial_climb',
     );
-    const prLines = fo.update(
-      st(11, (s) => {
-        s.weightOnWheels = false;
-        s.speeds.verticalSpeedFpm = 800;
-        s.position.radioAltitudeFt = 40;
-      }),
-      'initial_climb',
-    );
+    const prLines = [
+      ...fo.update(
+        st(11, (s) => {
+          s.weightOnWheels = false;
+          s.speeds.verticalSpeedFpm = 800;
+          s.position.radioAltitudeFt = 40;
+        }),
+        'initial_climb',
+      ),
+      ...fo.update(
+        st(11.5, (s) => {
+          s.weightOnWheels = false;
+          s.speeds.verticalSpeedFpm = 800;
+          s.position.radioAltitudeFt = 55;
+        }),
+        'initial_climb',
+      ),
+    ];
     const pr = prLines.find((l) => l.message === 'Positive rate.')!;
-    fo.respond(pr, 'roger', st(12, () => undefined)); // wrong response; gear stays down
+    fo.respond(
+      pr,
+      'roger',
+      st(12, () => undefined),
+    ); // wrong response; gear stays down
     const reminder = fo.update(
       st(40, (s) => {
         s.weightOnWheels = false;
@@ -113,6 +137,30 @@ describe('FirstOfficer takeoff callouts', () => {
       'initial_climb',
     );
     expect(reminder.map((l) => l.message)).toContain('Gear is still down.');
+  });
+
+  // R-12: the callout must not depend on how often state samples arrive.
+  it.each([5, 30, 60])('calls positive rate at %i Hz on a 900 fpm climb', (rateHz) => {
+    const fo = new FirstOfficer({ grossWeightLb: 145000 });
+    const dt = 1 / rateHz;
+    const messages: string[] = [];
+    let ra = 0;
+    for (let t = 0; t < 6; t += dt) {
+      ra += (900 / 60) * dt; // 900 fpm
+      messages.push(
+        ...fo
+          .update(
+            st(t, (s) => {
+              s.weightOnWheels = false;
+              s.speeds.verticalSpeedFpm = 900;
+              s.position.radioAltitudeFt = ra;
+            }),
+            'initial_climb',
+          )
+          .map((l) => l.message),
+      );
+    }
+    expect(messages.filter((m) => m === 'Positive rate.')).toHaveLength(1);
   });
 
   it('makes descending approach altitude callouts once each', () => {

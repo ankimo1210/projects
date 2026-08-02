@@ -75,6 +75,16 @@ const FLAP_FULL_TRAVEL_SEC = 25;
 const SPOILER_TRAVEL_SEC = 1.5;
 const GROUND_STEER_MAX_DEGPS = 30;
 
+/**
+ * RTO autobrake arming/trigger thresholds. NON_CERTIFIED_APPROXIMATION —
+ * representative of published 737 behaviour, not taken from an FCOM.
+ */
+const RTO_ARM_THROTTLE_NORM = 0.6;
+const RTO_TRIGGER_THROTTLE_NORM = 0.05;
+const RTO_ARM_SPEED_KT = 60;
+/** V/S the simple autopilot uses when the MCP V/S window is zeroed. */
+const DEFAULT_AP_CLIMB_FPM = 1800;
+
 const AUTOBRAKE_BRAKE_NORM: Record<AutobrakeSetting, number> = {
   OFF: 0,
   RTO: 0.9,
@@ -135,6 +145,10 @@ export class MockFlightModel {
   private parkingBrakeSet = true;
   private autobrake: AutobrakeSetting = 'OFF';
   private autobrakeActive = false;
+  /** RTO autobrake armed: selected on the ground and takeoff thrust seen. */
+  private rtoArmed = false;
+  /** Sub-step remainder carried between `step()` calls. */
+  private stepCarrySec = 0;
   private lights = { landing: false, taxi: false, strobe: false, beacon: true };
   private mcp: McpState = {
     selSpeedKt: 150,
@@ -220,6 +234,8 @@ export class MockFlightModel {
     this.parkingBrakeSet = config.parkingBrakeSet;
     this.autobrake = 'OFF';
     this.autobrakeActive = false;
+    this.rtoArmed = false;
+    this.stepCarrySec = 0;
     this.lights = { landing: false, taxi: false, strobe: false, beacon: true };
     this.mcp = {
       selSpeedKt: 150,
@@ -294,6 +310,9 @@ export class MockFlightModel {
       case 'set_autobrake':
         this.autobrake = cmd.setting;
         this.autobrakeActive = false;
+        // RTO arms as soon as it is selected on the ground; it applies braking
+        // only once takeoff thrust has been set and then retarded (see substep).
+        this.rtoArmed = false;
         return { ok: true };
       case 'set_mcp_speed':
         this.mcp.selSpeedKt = cmd.speedKt;
@@ -322,10 +341,20 @@ export class MockFlightModel {
     }
   }
 
-  /** Advance simulation by whole physics steps totalling `dtSec` (rounded to step count). */
+  /**
+   * Advance simulation by `dtSec` of simulated time. Physics always runs in
+   * fixed {@link PHYSICS_DT_SEC} substeps; the leftover is carried to the next
+   * call, so simulated time tracks requested time exactly at any publish rate.
+   * (Rounding the step count instead made 25 Hz run at 0.83× and 40 Hz at
+   * 1.33× real time — R-06.)
+   */
   step(dtSec: number): void {
-    const steps = Math.max(1, Math.round(dtSec / PHYSICS_DT_SEC));
-    for (let i = 0; i < steps; i++) this.substep(PHYSICS_DT_SEC);
+    if (!(dtSec > 0)) return;
+    this.stepCarrySec += dtSec;
+    while (this.stepCarrySec >= PHYSICS_DT_SEC) {
+      this.substep(PHYSICS_DT_SEC);
+      this.stepCarrySec -= PHYSICS_DT_SEC;
+    }
   }
 
   private substep(dt: number): void {
@@ -335,8 +364,7 @@ export class MockFlightModel {
     // --- Secondary surfaces move toward their commands ---
     const flapTargetNorm = flapDetentToNorm(this.flapHandleDetent);
     const flapRate = dt / FLAP_FULL_TRAVEL_SEC;
-    this.flapsActualNorm +=
-      clamp(flapTargetNorm - this.flapsActualNorm, -flapRate, flapRate);
+    this.flapsActualNorm += clamp(flapTargetNorm - this.flapsActualNorm, -flapRate, flapRate);
 
     const gearTarget = this.gearLeverDown ? 1 : 0;
     const gearRate = dt / GEAR_TRANSIT_SEC;
@@ -382,13 +410,17 @@ export class MockFlightModel {
       aileron = clamp((targetBank - this.rollDeg) / 10, -1, 1);
       const altErrFt = this.altM * M_TO_FT - this.mcp.selAltitudeFt;
       const capture = Math.abs(altErrFt) < 400;
-      const climbVsFpm =
-        this.mcp.selVerticalSpeedFpm !== 0 ? Math.abs(this.mcp.selVerticalSpeedFpm) : 1800;
+      // Outside the capture window the selected V/S is followed with its sign
+      // (an MCP V/S of -1000 means descend, whatever the selected altitude is —
+      // R-17). Only when no V/S is selected does the model pick the direction.
+      const selVsFpm = this.mcp.selVerticalSpeedFpm;
       const targetVsFpm = capture
         ? clamp(-altErrFt * 4, -1000, 1000)
-        : altErrFt < 0
-          ? climbVsFpm
-          : -climbVsFpm;
+        : selVsFpm !== 0
+          ? selVsFpm
+          : altErrFt < 0
+            ? DEFAULT_AP_CLIMB_FPM
+            : -DEFAULT_AP_CLIMB_FPM;
       const vsErrFpm = targetVsFpm - this.vsMps * MPS_TO_FPM;
       elevator = clamp(vsErrFpm * 0.0006, -0.6, 0.6);
     }
@@ -420,9 +452,7 @@ export class MockFlightModel {
       this.rollDeg = clamp(this.rollDeg + rollRate * dt, -60, 60);
       // Coordinated turn: ψ̇ = g·tanφ / V
       if (this.iasMps > 30) {
-        const turnRateDegPs = radToDeg(
-          (G_MPS2 * Math.tan(degToRad(this.rollDeg))) / this.iasMps,
-        );
+        const turnRateDegPs = radToDeg((G_MPS2 * Math.tan(degToRad(this.rollDeg))) / this.iasMps);
         this.headingDegTrue = normalizeDeg360(this.headingDegTrue + turnRateDegPs * dt);
       }
     }
@@ -480,6 +510,28 @@ export class MockFlightModel {
     }
     this.iasMps = Math.max(0, this.iasMps + accelMps2 * dt);
 
+    // --- RTO autobrake (rejected takeoff) ---
+    // Boeing behaviour, NON_CERTIFIED_APPROXIMATION: RTO arms on the ground once
+    // takeoff thrust is set, applies maximum braking when the thrust levers are
+    // retarded to idle above the arming speed, and disarms at liftoff. It is not
+    // a landing autobrake — touchdown must not activate it (R-07).
+    if (this.autobrake === 'RTO') {
+      if (this.onGround) {
+        if (this.inputs.throttleNorm >= RTO_ARM_THROTTLE_NORM) this.rtoArmed = true;
+        if (
+          this.rtoArmed &&
+          !this.autobrakeActive &&
+          this.inputs.throttleNorm < RTO_TRIGGER_THROTTLE_NORM &&
+          iasKt >= RTO_ARM_SPEED_KT
+        ) {
+          this.autobrakeActive = true;
+        }
+      } else {
+        this.rtoArmed = false;
+        this.autobrakeActive = false;
+      }
+    }
+
     // --- Vertical motion ---
     if (this.onGround) {
       this.vsMps = 0;
@@ -497,7 +549,7 @@ export class MockFlightModel {
         this.onGround = true;
         this.vsMps = 0;
         this.rollDeg = 0;
-        if (['1', '2', '3', 'MAX', 'RTO'].includes(this.autobrake)) {
+        if (['1', '2', '3', 'MAX'].includes(this.autobrake)) {
           this.autobrakeActive = true;
         }
       }
