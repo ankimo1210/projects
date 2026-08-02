@@ -22,6 +22,14 @@ export interface TelemetryFrame {
   downlink_wps: number;
   ingest_drops: number;
   touchdown: string | null;
+  /** Scenario explicitly opts into the non-authentic playable safety layer. */
+  demo_mode: boolean;
+  assist_active: boolean;
+  /** Signed target vertical velocity; negative means down. */
+  assist_target_vz_ms: number | null;
+  touchdown_v_vert_ms: number | null;
+  touchdown_v_horiz_ms: number | null;
+  touchdown_tilt_deg: number | null;
   /** Sim-driven P64→P66 handover has fired (latched). Always false in hover mode. */
   handover: boolean;
 }

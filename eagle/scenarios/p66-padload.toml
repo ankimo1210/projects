@@ -19,9 +19,6 @@
 # - GAINBRAK/GAINAPPR: value unknown (not in any vendored padload; new in
 #   Luminary 99). Left at cold-boot zero — with TTF/8 = 0 at IGNALG start
 #   the GAINBRAK term of CGCALC's row-1 vector vanishes anyway.
-# - LR position/weight block (LRALPHA..LRWVFF), V2FG, TAUVERT, DELQFIX
-#   companions: landing radar stays silent in Spike A (no LR data-good
-#   discretes), P65 is out of scope.
 # - LEMMASS/CSMMASS: loaded through V48/N47 (R03 also derives MASS).
 # - FLAGWRD8 moon bits, REFSMFLG: set via read-modify-write in the
 #   choreography (a blunt manifest write would clobber live flag bits).
@@ -326,7 +323,70 @@ provenance = "derived (scale chain); 42500 N = 4.25 kg*m/cs^2"
 # Next task owns the decision: pin the b-scale, then set this from FSAT.
 comment = "max P66 force, kg*m/cs^2 at b=12 -- UNVERIFIED live until Spike B"
 
-# ---- Landing radar antenna orientation (M3) ---------------------------
+# ---- Landing radar and P65 constants (M3) -----------------------------
+# Apollo 11's actual Luminary 99 prelaunch erasable-load table is the
+# authority for this whole block:
+# https://ibiblio.org/apollo/Documents/Luminary99PadLoads.pdf,
+# Table LM5/4.5.1-1. Unlike the older LUM69R2 transcription used for the
+# original target block, it gives physical value, scale factor and octal
+# side by side. Each physical+b entry below is regression-checked against
+# that printed octal in padload.rs.
+#
+# RADSKAL is zero because this simulator reports instantaneous slant range
+# rather than a delayed Doppler range; Apollo 11's flight load is also zero.
+# SKALSKAL rescales only RADSKAL's Doppler correction on the low-scale
+# branch (`SERVICER.agc:1133-1149`). Because RADSKAL is zero, the Apollo 11
+# zero leaves that correction zero on either range scale. Keeping both
+# explicit distinguishes a deliberate flight load from an omitted erasable.
+
+[[word]]
+symbol = "RADSKAL"
+physical = { value = 0.0, b = 7, dp = true }
+provenance = "Apollo 11 LM Data Book, Luminary99PadLoads.pdf Table LM5/4.5.1-1 (RADscale)"
+comment = "LR altitude Doppler correction, m/cs to counts x5; instantaneous sim and flight load both zero"
+
+[[word]]
+symbol = "SKALSKAL"
+physical = { value = 0.0, b = 0, dp = false }
+provenance = "Apollo 11 LM Data Book, Luminary99PadLoads.pdf Table LM5/4.5.1-1 (SKALSKAL)"
+comment = "low/high Doppler-correction ratio; RADSKAL=0 makes it operationally zero on either range scale"
+
+# P65 velocity target and nulling time. V2FG is a three-component DP
+# vector at b=10 m/cs; Apollo 11 commanded -3 ft/s in X and zero Y/Z.
+# TAUVERT is 10 s = 1000 cs at b=14. DELQFIX is the 200 ft LR altitude
+# reasonableness allowance at b=24 m.
+
+[[word]]
+symbol = "V2FG+0"
+physical = { value = -0.009144, b = 10, dp = true }
+provenance = "Apollo 11 LM Data Book, Luminary99PadLoads.pdf Table LM5/4.5.1-1 (V2FG)"
+comment = "P65 desired X velocity, -3 ft/s = -0.009144 m/cs"
+
+[[word]]
+symbol = "V2FG+2"
+physical = { value = 0.0, b = 10, dp = true }
+provenance = "Apollo 11 LM Data Book, Luminary99PadLoads.pdf Table LM5/4.5.1-1 (V2FG+2)"
+comment = "P65 desired Y velocity"
+
+[[word]]
+symbol = "V2FG+4"
+physical = { value = 0.0, b = 10, dp = true }
+provenance = "Apollo 11 LM Data Book, Luminary99PadLoads.pdf Table LM5/4.5.1-1 (V2FG+4)"
+comment = "P65 desired Z velocity"
+
+[[word]]
+symbol = "TAUVERT"
+physical = { value = 1000.0, b = 14, dp = true }
+provenance = "Apollo 11 LM Data Book, Luminary99PadLoads.pdf Table LM5/4.5.1-1 (TAUVERT)"
+comment = "P65 velocity-nulling time constant, 1000 cs = 10 s"
+
+[[word]]
+symbol = "DELQFIX"
+physical = { value = 60.96, b = 24, dp = true }
+provenance = "Apollo 11 LM Data Book, Luminary99PadLoads.pdf Table LM5/4.5.1-1 (DELQFIX)"
+comment = "LR altitude reasonableness allowance, 200 ft = 60.96 m"
+
+# Antenna orientation.
 # INERT while `lrbypass = true`: the rope is told the radar is absent and
 # never runs SETPOS, so these are dead words. They are loaded anyway so
 # that flipping `lrbypass` to false is a one-line scenario change rather
@@ -372,3 +432,89 @@ symbol = "LRBETA2"
 octal = "00000"
 provenance = "LUM69R2/PADLOADS.agc:557-560"
 comment = "LR antenna position 2, rotation about Y: 0 deg"
+
+# Velocity update thresholds and gains. LRVMAX/LRVF are SP b=7 m/cs;
+# the weights are dimensionless SP b=0. These are Apollo 11 values, not
+# LUM69R2's older .7/.7/.4 preliminary weights.
+
+[[word]]
+symbol = "LRVMAX"
+physical = { value = 6.096, b = 7, dp = false }
+provenance = "Apollo 11 LM Data Book, Luminary99PadLoads.pdf Table LM5/4.5.1-1 (LRVMAX)"
+comment = "LR velocity weighting cutoff, 2000 ft/s"
+
+[[word]]
+symbol = "LRVF"
+physical = { value = 0.6096, b = 7, dp = false }
+provenance = "Apollo 11 LM Data Book, Luminary99PadLoads.pdf Table LM5/4.5.1-1 (LRVF)"
+comment = "LR fixed-weight threshold, 200 ft/s"
+
+[[word]]
+symbol = "LRWVZ"
+physical = { value = 0.3, b = 0, dp = false }
+provenance = "Apollo 11 LM Data Book, Luminary99PadLoads.pdf Table LM5/4.5.1-1 (LRWVZ)"
+comment = "Z velocity linear weight"
+
+[[word]]
+symbol = "LRWVY"
+physical = { value = 0.3, b = 0, dp = false }
+provenance = "Apollo 11 LM Data Book, Luminary99PadLoads.pdf Table LM5/4.5.1-1 (LRWVY)"
+comment = "Y velocity linear weight"
+
+[[word]]
+symbol = "LRWVX"
+physical = { value = 0.3, b = 0, dp = false }
+provenance = "Apollo 11 LM Data Book, Luminary99PadLoads.pdf Table LM5/4.5.1-1 (LRWVX)"
+comment = "X velocity linear weight"
+
+[[word]]
+symbol = "LRWVFZ"
+physical = { value = 0.2, b = 0, dp = false }
+provenance = "Apollo 11 LM Data Book, Luminary99PadLoads.pdf Table LM5/4.5.1-1 (LRWVFZ)"
+comment = "Z velocity fixed low-speed weight"
+
+[[word]]
+symbol = "LRWVFY"
+physical = { value = 0.2, b = 0, dp = false }
+provenance = "Apollo 11 LM Data Book, Luminary99PadLoads.pdf Table LM5/4.5.1-1 (LRWVFY)"
+comment = "Y velocity fixed low-speed weight"
+
+[[word]]
+symbol = "LRWVFX"
+physical = { value = 0.2, b = 0, dp = false }
+provenance = "Apollo 11 LM Data Book, Luminary99PadLoads.pdf Table LM5/4.5.1-1 (LRWVFX)"
+comment = "X velocity fixed low-speed weight"
+
+[[word]]
+symbol = "LRWVFF"
+physical = { value = 0.1, b = 0, dp = false }
+provenance = "Apollo 11 LM Data Book, Luminary99PadLoads.pdf Table LM5/4.5.1-1 (LRWVFF)"
+comment = "P65/P66/P67 fixed velocity weight"
+
+# Altitude update and high-gate reposition criteria. LRHMAX is SP b=14 m;
+# LRWH is a dimensionless SP b=0 gain. RPCRTIME is SP b=17 cs, and the
+# attitude switch is -1 at b=1, exactly the Apollo 11 two-phase load.
+
+[[word]]
+symbol = "LRHMAX"
+physical = { value = 15240.0, b = 14, dp = false }
+provenance = "Apollo 11 LM Data Book, Luminary99PadLoads.pdf Table LM5/4.5.1-1 (LRHMAX)"
+comment = "LR altitude update cutoff, 50000 ft"
+
+[[word]]
+symbol = "LRWH"
+physical = { value = 0.35, b = 0, dp = false }
+provenance = "Apollo 11 LM Data Book, Luminary99PadLoads.pdf Table LM5/4.5.1-1 (LRWH)"
+comment = "LR altitude update gain"
+
+[[word]]
+symbol = "RPCRTIME"
+physical = { value = 6200.0, b = 17, dp = false }
+provenance = "Apollo 11 LM Data Book, Luminary99PadLoads.pdf Table LM5/4.5.1-1 (RPCRTIME)"
+comment = "LR position-2 time criterion, 6200 cs = 62 s before landing"
+
+[[word]]
+symbol = "RPCRTQSW"
+physical = { value = -1.0, b = 1, dp = false }
+provenance = "Apollo 11 LM Data Book, Luminary99PadLoads.pdf Table LM5/4.5.1-1 (RPCRTQSW)"
+comment = "LR reposition attitude criterion, Apollo 11 two-phase value -1"

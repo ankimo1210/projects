@@ -23,6 +23,7 @@ export type LabKind =
   | "feynman-kac"
   | "first-passage"
   | "euler"
+  | "weak-convergence"
   | "measure-change"
   | "brownian-default"
   | "poisson-jumps"

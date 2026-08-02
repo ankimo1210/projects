@@ -136,6 +136,9 @@ test("keeps the textbook structured and the starter preview removed", async () =
   assert.match(textbook, /roughnessDiagnostics/);
   assert.match(textbook, /stochasticIntegralDiagnostics/);
   assert.match(textbook, /correlatedBrownianDiagnostics/);
+  assert.match(textbook, /window\.history\.pushState/);
+  assert.match(textbook, /window\.addEventListener\("popstate"/);
+  assert.match(textbook, /event\.metaKey \|\| event\.ctrlKey \|\| event\.altKey/);
   assert.match(extendedLabs, /drawFractionalBrownian/);
   assert.match(extendedLabs, /drawMilstein/);
   assert.match(extendedLabs, /drawDeltaHedging/);

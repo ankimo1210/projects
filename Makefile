@@ -9,7 +9,7 @@
 # `aisan_lbo_case/` uses requirements.txt; `csharp_calc/` is .NET;
 # `rates_volatility_model/`, `notebooks/` have no managed env.
 
-.PHONY: help install sync lint fmt fmt-fix test clean tree report books hull-report hull-book hull-artifacts-check hull-notebooks-check hull-paper-corpus-check hull-paper-corpus-gold-check hull-paper-corpus-v2-check hull-release-check hull-release rough-vol optimal-execution
+.PHONY: help install sync lint fmt fmt-fix test clean tree report books sde-check hull-report hull-book hull-artifacts-check hull-notebooks-check hull-paper-corpus-check hull-paper-corpus-gold-check hull-paper-corpus-v2-check hull-release-check hull-release rough-vol optimal-execution
 
 help:
 	@echo "Workspace targets (run from repo root):"
@@ -23,6 +23,7 @@ help:
 	@echo "  make tree     - print a project tree (depth 2, ignoring heavy dirs)"
 	@echo "  make report   - build the offline analytics portal (analytics/report/site/)"
 	@echo "  make books    - build the analytics Jupyter Books"
+	@echo "  make sde-check - typecheck, lint, build, and test the interactive SDE book"
 	@echo "  make hull-report - build the offline johnhull portal (johnhull/report/site/)"
 	@echo "  make hull-book   - build the johnhull Jupyter Book (johnhull/book/_build/)"
 	@echo "  make hull-artifacts-check - rebuild vol 19-27 in /tmp and compare references"
@@ -75,6 +76,11 @@ books:
 	uv run --no-sync jupyter-book build analytics/differential_equation/pde-book/book/
 	uv run --no-sync jupyter-book build analytics/machine_learning/book/
 	uv run --no-sync jupyter-book build analytics/statistics/book/
+
+sde-check:
+	npm --prefix analytics/differential_equation/sde-book run typecheck
+	npm --prefix analytics/differential_equation/sde-book run lint
+	npm --prefix analytics/differential_equation/sde-book test
 
 hull-report:
 	PYTHONPATH=johnhull/report uv run --no-sync python -m report_builder.build

@@ -1,5 +1,7 @@
 import type { LabKind } from "../content/chapters";
 import { applicationMetrics, drawApplicationLab } from "./application-labs";
+import { memoizedDiagnostics } from "./diagnostics-cache.mjs";
+import { normalCdf } from "./numerical-functions.mjs";
 
 export type ExtendedSettings = {
   seed: number;
@@ -56,17 +58,6 @@ function mulberry32(seed: number) {
 function normal(random: () => number) {
   const u = Math.max(random(), Number.EPSILON);
   return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * random());
-}
-
-function normalCdf(value: number) {
-  const sign = value < 0 ? -1 : 1;
-  const x = Math.abs(value) / Math.sqrt(2);
-  const t = 1 / (1 + 0.3275911 * x);
-  const polynomial =
-    (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t +
-      0.254829592) *
-    t;
-  return 0.5 * (1 + sign * (1 - polynomial * Math.exp(-x * x)));
 }
 
 function format(value: number, digits = 2) {
@@ -387,7 +378,12 @@ function drawLevyTails(
     for (let event = 0; event < events; event += 1) value += settings.sigma2 * normal(random);
     return Math.abs(value / compoundScale);
   });
-  const stable = Array.from({ length: 5000 }, () => Math.abs(symmetricStable(random, alpha)));
+  const stableRaw = Array.from({ length: 5000 }, () => symmetricStable(random, alpha));
+  const stableMedianAbsolute = [...stableRaw]
+    .map((value) => Math.abs(value))
+    .sort((left, right) => left - right)[Math.floor(stableRaw.length / 2)];
+  const stableRobustScale = Math.max(stableMedianAbsolute / 0.67448975, 1e-6);
+  const stable = stableRaw.map((value) => Math.abs(value / stableRobustScale));
   const thresholds = Array.from({ length: 60 }, (_, index) => 0.2 + (index / 59) * 7.8);
   const gaussianTail: Point[] = thresholds.map((threshold) => [
     threshold,
@@ -406,8 +402,8 @@ function drawLevyTails(
     { points: gaussianTail, color: colors.teal, width: 2.3 },
     { points: compoundTail, color: colors.amber, width: 2.1 },
     { points: stableTail, color: colors.coral, width: 2.3 },
-  ], { x: [0.2, 8], y: [-4.2, 0] }, colors, "標準化閾値 |z|", "log₁₀ P(|Z|>z)");
-  label(context, "裾確率の比較", right.x + 52, right.y + 18, colors.ink);
+  ], { x: [0.2, 8], y: [-4.2, 0] }, colors, "尺度調整閾値 |z|", "log₁₀ P(|Z|>z)");
+  label(context, "裾確率 · stable は MAD 尺度", right.x + 52, right.y + 18, colors.ink);
 }
 
 function drawColoredNoise(
@@ -643,7 +639,11 @@ function drawHawkes(
   colors: ExtendedColors,
 ) {
   const { left, right } = panels(area, 0.52);
-  const diagnostics = hawkesPath(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "hawkes",
+    () => hawkesPath(settings),
+  );
   rounded(context, left, 16, colors.paper);
   chart(context, left, [
     { points: diagnostics.poissonCounting, color: colors.muted, width: 1.7, dashed: true },
@@ -718,7 +718,11 @@ function drawMilstein(
   colors: ExtendedColors,
 ) {
   const { left, right } = panels(area, 0.6);
-  const diagnostics = milsteinDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "milstein",
+    () => milsteinDiagnostics(settings),
+  );
   const selected = diagnostics.selected;
   rounded(context, left, 16, colors.paper);
   chart(context, left, [
@@ -813,7 +817,11 @@ function drawMonteCarlo(
   settings: ExtendedSettings,
   colors: ExtendedColors,
 ) {
-  const diagnostics = monteCarloDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "monte-carlo",
+    () => monteCarloDiagnostics(settings),
+  );
   rounded(context, area, 16, colors.paper);
   const xMin = diagnostics.estimate[0][0];
   const xMax = diagnostics.estimate[diagnostics.estimate.length - 1][0];
@@ -918,7 +926,11 @@ function drawParameterInference(
   colors: ExtendedColors,
 ) {
   const { left, right } = panels(area, 0.64);
-  const diagnostics = inferenceDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "parameter-inference",
+    () => inferenceDiagnostics(settings),
+  );
   rounded(context, left, 16, colors.paper);
   chart(context, left, [
     { points: diagnostics.upper, color: colors.amber, width: 1.1, dashed: true },
@@ -993,7 +1005,11 @@ function drawPredictability(
   colors: ExtendedColors,
 ) {
   const { left, right } = panels(area, 0.66);
-  const diagnostics = predictabilityDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "predictability",
+    () => predictabilityDiagnostics(settings),
+  );
   const mean: Point[] = [[0, 0], [settings.horizon, diagnostics.logDrift * settings.horizon]];
   rounded(context, left, 16, colors.paper);
   chart(context, left, [
@@ -1091,7 +1107,11 @@ function drawMartingale(
   settings: ExtendedSettings,
   colors: ExtendedColors,
 ) {
-  const diagnostics = martingaleDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "martingale",
+    () => martingaleDiagnostics(settings),
+  );
   const { left, right } = panels(area, 0.68);
   rounded(context, left, 16, colors.paper);
   const reference: Point[] = [[0, settings.x0], [settings.horizon, settings.x0]];
@@ -1194,7 +1214,11 @@ function drawDeltaHedging(
   colors: ExtendedColors,
 ) {
   const { left, right } = panels(area, 0.6);
-  const diagnostics = deltaHedgeDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "delta-hedging",
+    () => deltaHedgeDiagnostics(settings),
+  );
   rounded(context, left, 16, colors.paper);
   chart(context, left, [
     { points: diagnostics.selected.optionPath, color: colors.teal, width: 2.5 },
@@ -1230,7 +1254,7 @@ function volatilityDiagnostics(settings: ExtendedSettings) {
   for (let index = 0; index < steps; index += 1) {
     const z1 = normal(random);
     const z2 = settings.rho * z1 + Math.sqrt(Math.max(1 - settings.rho ** 2, 0)) * normal(random);
-    const localVol = clamp(settings.sigma * (1 + settings.sigma2 * (1 - local / s0)), 0.05, 1.5);
+    const localVol = clamp(settings.sigma * (1 + settings.zoom * (1 - local / s0)), 0.05, 1.5);
     const stochasticVol = clamp(Math.sqrt(Math.max(variance, 0)), 0.03, 1.5);
     constant *= Math.exp(-0.5 * settings.sigma ** 2 * dt + settings.sigma * Math.sqrt(dt) * z1);
     local *= Math.exp(-0.5 * localVol ** 2 * dt + localVol * Math.sqrt(dt) * z1);
@@ -1256,7 +1280,11 @@ function drawVolatilityModels(
   colors: ExtendedColors,
 ) {
   const { left, right } = panels(area, 0.7);
-  const diagnostics = volatilityDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "volatility-models",
+    () => volatilityDiagnostics(settings),
+  );
   rounded(context, left, 16, colors.paper);
   chart(context, left, [
     { points: diagnostics.constantPath, color: colors.muted, width: 1.7, dashed: true },
@@ -1405,7 +1433,11 @@ function drawCreditDefault(
   colors: ExtendedColors,
 ) {
   const { left, right } = panels(area, 0.5);
-  const diagnostics = creditDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "credit-default",
+    () => creditDiagnostics(settings),
+  );
   rounded(context, left, 16, colors.paper);
   chart(context, left, [{ points: diagnostics.survival, color: colors.teal, width: 2.5 }], {
     x: [0, settings.horizon], y: [0, 1.05],
@@ -1534,7 +1566,11 @@ export function extendedMetrics(
       ];
     }
     case "hawkes": {
-      const diagnostics = hawkesPath(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "hawkes",
+        () => hawkesPath(settings),
+      );
       const ratio = diagnostics.excitation / diagnostics.decayRate;
       return [
         ["分枝比 α/β", format(ratio, 2)],
@@ -1543,7 +1579,11 @@ export function extendedMetrics(
       ];
     }
     case "milstein": {
-      const selected = milsteinDiagnostics(settings).selected;
+      const selected = memoizedDiagnostics(
+        settings,
+        "milstein",
+        () => milsteinDiagnostics(settings),
+      ).selected;
       return [
         ["Euler 終点誤差", format(Math.abs(selected.euler - selected.exact), 3)],
         ["Milstein 終点誤差", format(Math.abs(selected.milstein - selected.exact), 3)],
@@ -1551,7 +1591,11 @@ export function extendedMetrics(
       ];
     }
     case "monte-carlo": {
-      const diagnostics = monteCarloDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "monte-carlo",
+        () => monteCarloDiagnostics(settings),
+      );
       const estimate = diagnostics.estimate[diagnostics.estimate.length - 1][1];
       const upper = diagnostics.upper[diagnostics.upper.length - 1][1];
       const lower = diagnostics.lower[diagnostics.lower.length - 1][1];
@@ -1562,7 +1606,11 @@ export function extendedMetrics(
       ];
     }
     case "parameter-inference": {
-      const diagnostics = inferenceDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "parameter-inference",
+        () => inferenceDiagnostics(settings),
+      );
       return [
         ["真の κ", format(settings.kappa, 3)],
         ["単純推定 κ", format(diagnostics.kappaEstimate[diagnostics.kappaEstimate.length - 1][1], 3)],
@@ -1579,7 +1627,11 @@ export function extendedMetrics(
       ];
     }
     case "martingale": {
-      const diagnostics = martingaleDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "martingale",
+        () => martingaleDiagnostics(settings),
+      );
       return [
         ["Q平均誤差", format(diagnostics.terminalMeanQ - settings.x0, 2)],
         ["P割引平均", format(diagnostics.terminalMeanP, 2)],
@@ -1587,7 +1639,11 @@ export function extendedMetrics(
       ];
     }
     case "delta-hedging": {
-      const diagnostics = deltaHedgeDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "delta-hedging",
+        () => deltaHedgeDiagnostics(settings),
+      );
       return [
         ["選択経路の誤差", format(diagnostics.selected.error, 3)],
         ["最小頻度 SD", format(diagnostics.errorSd[0][1], 3)],
@@ -1595,7 +1651,11 @@ export function extendedMetrics(
       ];
     }
     case "volatility-models": {
-      const diagnostics = volatilityDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "volatility-models",
+        () => volatilityDiagnostics(settings),
+      );
       const currentVol = diagnostics.volPath[diagnostics.volPath.length - 1][1];
       return [
         ["基準ボラ", format(settings.sigma, 3)],
@@ -1616,7 +1676,11 @@ export function extendedMetrics(
         ["曲線ショック σ", format(settings.sigma, 3)],
       ];
     case "credit-default": {
-      const diagnostics = creditDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "credit-default",
+        () => creditDiagnostics(settings),
+      );
       return [
         ["強度 λ", format(diagnostics.intensity, 3)],
         ["満期生存確率", format(Math.exp(-diagnostics.intensity * settings.horizon), 3)],
