@@ -2,6 +2,7 @@ import {
   FT_TO_M,
   angleDiffDeg,
   degToRad,
+  flapDetentToNorm,
   toLocalEnuM,
   vSpeedsForWeight,
   type RunwayData,
@@ -15,6 +16,9 @@ import type { TranscriptEntry } from './transcript.js';
  * every deduction is an explicit finding — no opaque aggregate.
  * Thresholds are NON_CERTIFIED_APPROXIMATION training heuristics.
  */
+
+/** Actual flap travel that counts as landing flaps (handle 30, small margin). */
+const LANDING_FLAP_NORM = flapDetentToNorm(30) - 0.02;
 
 export interface DebriefFinding {
   label: string;
@@ -123,6 +127,7 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
         pointsDelta: -15,
       });
     }
+    // retraction timing measures the crew action, so the lever is correct here
     const gearUpSample = history.slice(liftoffIdx).find((s) => !s.gearLeverDown);
     if (!gearUpSample) {
       takeoff.push({
@@ -269,16 +274,22 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
   if (gate) {
     metrics['500 ft gate'] =
       `${gate.iasKt.toFixed(0)} kt / ${gate.verticalSpeedFpm.toFixed(0)} fpm / flaps ${gate.flapHandleDetent}`;
-    if (!gate.gearLeverDown)
+    // Down-and-locked / surfaces travelled, not lever positions (R-18).
+    if (gate.gearPositionNorm <= 0.99)
       approach.push({
         label: 'Configuration',
-        detail: 'Gear not down at the 500 ft gate',
+        detail: gate.gearLeverDown
+          ? 'Gear still in transit at the 500 ft gate'
+          : 'Gear not down at the 500 ft gate',
         pointsDelta: -25,
       });
-    if (gate.flapHandleDetent < 30)
+    if (gate.flapsActualNorm < LANDING_FLAP_NORM)
       approach.push({
         label: 'Configuration',
-        detail: `Flaps ${gate.flapHandleDetent} at the 500 ft gate (landing flaps expected)`,
+        detail:
+          gate.flapHandleDetent >= 30
+            ? `Flap handle 30 but the surfaces were only ${(gate.flapsActualNorm * 100).toFixed(0)}% at the 500 ft gate`
+            : `Flaps ${gate.flapHandleDetent} at the 500 ft gate (landing flaps expected)`,
         pointsDelta: -15,
       });
     if (gate.iasKt > vs.vappKt + 20 || gate.iasKt < vs.vappKt - 5)

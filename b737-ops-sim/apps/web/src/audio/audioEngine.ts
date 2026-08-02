@@ -99,10 +99,7 @@ class AudioEngine {
 
   /** Fetch + decode the optional GPL sample set; missing files are fine. */
   private async loadSamples(ctx: AudioContext): Promise<void> {
-    const names = [
-      ...Object.values(SAMPLES),
-      ...CALLOUT_ALTS.map((a) => `altitude-${a}.wav`),
-    ];
+    const names = [...Object.values(SAMPLES), ...CALLOUT_ALTS.map((a) => `altitude-${a}.wav`)];
     await Promise.all(
       names.map(async (name) => {
         try {
@@ -140,7 +137,11 @@ class AudioEngine {
     }
   }
 
-  private loopSample(ctx: AudioContext, buffer: AudioBuffer, gain: GainNode): AudioBufferSourceNode {
+  private loopSample(
+    ctx: AudioContext,
+    buffer: AudioBuffer,
+    gain: GainNode,
+  ): AudioBufferSourceNode {
     const src = ctx.createBufferSource();
     src.buffer = buffer;
     src.loop = true;

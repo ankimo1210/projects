@@ -17,8 +17,15 @@ if (!existsSync(importedDir)) {
 console.log(`[convert] ${importedDir} → ${outDir}`);
 const summary = convertCockpitAssets(importedDir, outDir);
 for (const m of summary.models) {
-  const missing = m.missingTextures.length ? `  (missing tex: ${m.missingTextures.join(', ')})` : '';
+  const missing = m.missingTextures.length
+    ? `  (missing tex: ${m.missingTextures.join(', ')})`
+    : '';
   console.log(`  ${m.name.padEnd(16)} ${String(m.meshes).padStart(4)} meshes${missing}`);
+}
+if (summary.missingSounds.length > 0) {
+  console.warn(
+    `[convert] sounds not found in the imported set: ${summary.missingSounds.join(', ')}`,
+  );
 }
 const b = summary.bounds['cockpit'];
 if (b) {

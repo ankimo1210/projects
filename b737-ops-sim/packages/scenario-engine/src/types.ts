@@ -114,6 +114,10 @@ export interface HistorySample {
   weightOnWheels: boolean;
   flapHandleDetent: number;
   gearLeverDown: boolean;
+  /** Actual surface/gear positions — the debrief scores these, not the levers (R-18). */
+  flapsActualNorm: number;
+  gearPositionNorm: number;
+  spoilersDeployedNorm: number;
   n1AvgPct: number;
   phaseId: string;
 }

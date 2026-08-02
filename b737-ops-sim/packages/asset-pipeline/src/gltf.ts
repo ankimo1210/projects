@@ -12,13 +12,7 @@
  *  - Materials are emitted double-sided (cockpit interiors rely on it).
  */
 
-import {
-  isPolySurface,
-  isShaded,
-  walkObjects,
-  type AcModel,
-  type AcObject,
-} from './ac3d.js';
+import { isPolySurface, isShaded, walkObjects, type AcModel, type AcObject } from './ac3d.js';
 
 export interface GltfResult {
   json: Record<string, unknown>;
@@ -100,10 +94,22 @@ class GltfBuilder {
       // row-major 3x3 + loc → column-major 4x4
       const r = obj.rot;
       node.matrix = [
-        r[0], r[3], r[6], 0,
-        r[1], r[4], r[7], 0,
-        r[2], r[5], r[8], 0,
-        obj.loc[0], obj.loc[1], obj.loc[2], 1,
+        r[0],
+        r[3],
+        r[6],
+        0,
+        r[1],
+        r[4],
+        r[7],
+        0,
+        r[2],
+        r[5],
+        r[8],
+        0,
+        obj.loc[0],
+        obj.loc[1],
+        obj.loc[2],
+        1,
       ];
     } else if (obj.loc.some((v) => v !== 0)) {
       node.translation = [...obj.loc];

@@ -40,8 +40,7 @@ export function deriveGuidance(session: TrainingSession): GuidanceHint {
       return {
         controlId: CHECKLIST_ITEM_TO_CONTROL[item.definition.id] ?? null,
         text:
-          item.definition.trainingHint ??
-          `${run!.definition.title}: ${item.definition.challenge}`,
+          item.definition.trainingHint ?? `${run!.definition.title}: ${item.definition.challenge}`,
       };
     }
   }
@@ -65,11 +64,20 @@ export function deriveGuidance(session: TrainingSession): GuidanceHint {
         text: 'Configure for landing: flaps, gear, arm speed brake, set autobrake.',
       };
     case 'final_approach':
-      return { controlId: null, text: 'Track the localizer and glideslope. Complete the Landing checklist.' };
+      return {
+        controlId: null,
+        text: 'Track the localizer and glideslope. Complete the Landing checklist.',
+      };
     case 'landing':
-      return { controlId: 'reverse_thrust', text: 'After touchdown: reverse thrust, brake, track the centerline.' };
+      return {
+        controlId: 'reverse_thrust',
+        text: 'After touchdown: reverse thrust, brake, track the centerline.',
+      };
     case 'runway_exit':
-      return { controlId: 'flaps', text: 'Exit the runway, then complete the After Landing checklist.' };
+      return {
+        controlId: 'flaps',
+        text: 'Exit the runway, then complete the After Landing checklist.',
+      };
     default:
       return { controlId: null, text: 'Review your debrief.' };
   }

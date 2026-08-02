@@ -80,7 +80,7 @@ class LineReader {
 function afterKeyword(line: string, keyword: string): string {
   const rest = line.slice(keyword.length).trim();
   const quoted = rest.match(/^"([^"]*)"/);
-  return quoted ? quoted[1]! : rest.split(/\s+/)[0] ?? '';
+  return quoted ? quoted[1]! : (rest.split(/\s+/)[0] ?? '');
 }
 
 function parseFloats(text: string): number[] {
@@ -171,7 +171,11 @@ function parseObject(reader: LineReader): AcObject {
     } else if (line.startsWith('texrep ')) {
       const [x = 1, y = 1] = parseFloats(reader.next().trim().slice('texrep'.length));
       obj.texrep = [x, y];
-    } else if (line.startsWith('texoff ') || line.startsWith('subdiv ') || line.startsWith('url ')) {
+    } else if (
+      line.startsWith('texoff ') ||
+      line.startsWith('subdiv ') ||
+      line.startsWith('url ')
+    ) {
       reader.next();
     } else if (line.startsWith('crease ')) {
       obj.crease = parseFloats(reader.next().trim().slice('crease'.length))[0] ?? null;
@@ -274,9 +278,15 @@ export function toFgFrame(model: AcModel): AcModel {
       // build R' entries: indices via mapping m(0)=0, m(1)=2(+), m(2)=1(−)…
       // implemented directly:
       obj.rot = [
-        q(0, 0), -q(0, 2), q(0, 1),
-        -q(2, 0), q(2, 2), -q(2, 1),
-        q(1, 0), -q(1, 2), q(1, 1),
+        q(0, 0),
+        -q(0, 2),
+        q(0, 1),
+        -q(2, 0),
+        q(2, 2),
+        -q(2, 1),
+        q(1, 0),
+        -q(1, 2),
+        q(1, 1),
       ];
     }
   }

@@ -15,8 +15,18 @@ export function EngineDisplay({ state }: { state: AircraftState }): JSX.Element 
       <text x={150} y={22} textAnchor="middle" fill="#9ad" fontSize={14}>
         N1
       </text>
-      <N1Gauge cx={80} cy={90} n1={state.engines.left.n1Pct} rev={state.engines.left.reverserNorm} />
-      <N1Gauge cx={220} cy={90} n1={state.engines.right.n1Pct} rev={state.engines.right.reverserNorm} />
+      <N1Gauge
+        cx={80}
+        cy={90}
+        n1={state.engines.left.n1Pct}
+        rev={state.engines.left.reverserNorm}
+      />
+      <N1Gauge
+        cx={220}
+        cy={90}
+        n1={state.engines.right.n1Pct}
+        rev={state.engines.right.reverserNorm}
+      />
 
       {/* flaps */}
       <text x={70} y={205} fill="#9ad" fontSize={13}>
@@ -41,35 +51,67 @@ export function EngineDisplay({ state }: { state: AircraftState }): JSX.Element 
       <text x={200} y={205} fill="#9ad" fontSize={13}>
         GEAR
       </text>
-      <rect x={190} y={215} width={80} height={34} fill="#1a1b1e" stroke={gearColor} strokeWidth={2} />
+      <rect
+        x={190}
+        y={215}
+        width={80}
+        height={34}
+        fill="#1a1b1e"
+        stroke={gearColor}
+        strokeWidth={2}
+      />
       <text x={230} y={238} fill={gearColor} fontSize={16} textAnchor="middle" className="pfd-num">
         {gearLabel}
       </text>
 
       {/* spoilers / autobrake / parking brake */}
-      <text x={190} y={285} fill={state.controls.spoilersDeployedNorm > 0.1 ? '#ffd21f' : '#555'} fontSize={13}>
+      <text
+        x={190}
+        y={285}
+        fill={state.controls.spoilersDeployedNorm > 0.1 ? '#ffd21f' : '#555'}
+        fontSize={13}
+      >
         SPEEDBRAKE {state.controls.speedbrakeArmed ? '(ARM)' : ''}
       </text>
       <text x={190} y={310} fill="#9ad" fontSize={13}>
         AUTOBRK {state.controls.autobrake}
       </text>
-      <text x={190} y={335} fill={state.controls.parkingBrakeSet ? '#e5484d' : '#555'} fontSize={13}>
+      <text
+        x={190}
+        y={335}
+        fill={state.controls.parkingBrakeSet ? '#e5484d' : '#555'}
+        fontSize={13}
+      >
         PARK BRK
       </text>
 
       {/* wind/status line */}
       <text x={60} y={380} fill="#888" fontSize={12}>
-        WOW {state.weightOnWheels ? 'GND' : 'AIR'} · RA {Math.round(state.position.radioAltitudeFt)} ft
+        WOW {state.weightOnWheels ? 'GND' : 'AIR'} · RA {Math.round(state.position.radioAltitudeFt)}{' '}
+        ft
       </text>
       <text x={60} y={402} fill="#888" fontSize={12}>
-        REV {(Math.max(state.engines.left.reverserNorm, state.engines.right.reverserNorm) * 100).toFixed(0)}%
-        · BRK {(state.controls.brakeNorm * 100).toFixed(0)}%
+        REV{' '}
+        {(
+          Math.max(state.engines.left.reverserNorm, state.engines.right.reverserNorm) * 100
+        ).toFixed(0)}
+        % · BRK {(state.controls.brakeNorm * 100).toFixed(0)}%
       </text>
     </svg>
   );
 }
 
-function N1Gauge({ cx, cy, n1, rev }: { cx: number; cy: number; n1: number; rev: number }): JSX.Element {
+function N1Gauge({
+  cx,
+  cy,
+  n1,
+  rev,
+}: {
+  cx: number;
+  cy: number;
+  n1: number;
+  rev: number;
+}): JSX.Element {
   const frac = clamp(n1 / 104, 0, 1);
   const start = -210;
   const sweep = 240;

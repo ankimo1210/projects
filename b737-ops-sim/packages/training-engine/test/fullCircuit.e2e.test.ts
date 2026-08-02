@@ -231,9 +231,11 @@ describe('full circuit end-to-end (mock model + training session)', () => {
 
     // ---- before takeoff: control check, config, checklist, clearance ----
     session.update(model.snapshot(0));
+    // full and free: roll, pitch AND rudder, as the hint asks
     for (const v of [1, -1, 0]) {
       session.notifyAxisInput('roll', v);
       session.notifyAxisInput('pitch', v);
+      session.notifyAxisInput('yaw', v);
     }
     pilot.cmd({ type: 'set_autobrake', setting: 'RTO' });
     pilot.cmd({ type: 'set_light', light: 'landing', on: true });

@@ -29,7 +29,12 @@ export function Pfd({ state, vSpeeds }: PfdProps): JSX.Element {
       <rect width={W} height={H} fill="#101114" />
       <FmaRow state={state} />
       <AttitudeIndicator pitchDeg={pitchDeg} rollDeg={rollDeg} state={state} />
-      <SpeedTape iasKt={ias} vSpeeds={vSpeeds} selSpeedKt={state.mcp.selSpeedKt} wow={state.weightOnWheels} />
+      <SpeedTape
+        iasKt={ias}
+        vSpeeds={vSpeeds}
+        selSpeedKt={state.mcp.selSpeedKt}
+        wow={state.weightOnWheels}
+      />
       <AltitudeTape altFt={alt} selAltFt={state.mcp.selAltitudeFt} />
       <VsIndicator vsFpm={vs} />
       <HeadingStrip headingDeg={headingDegMag} selHeadingDeg={state.mcp.selHeadingDeg} />
@@ -239,12 +244,23 @@ function SpeedTape({
         </clipPath>
         {ticks}
         {wow || iasKt < 220
-          ? [bug(vSpeeds.v1Kt, 'V1', '#39d353'), bug(vSpeeds.vrKt, 'VR', '#39d353'), bug(vSpeeds.v2Kt, 'V2', '#39d353')]
+          ? [
+              bug(vSpeeds.v1Kt, 'V1', '#39d353'),
+              bug(vSpeeds.vrKt, 'VR', '#39d353'),
+              bug(vSpeeds.v2Kt, 'V2', '#39d353'),
+            ]
           : null}
         {bug(selSpeedKt, '', '#ff3ec8')}
       </g>
       <rect x={x - 4} y={cy - 16} width={w + 6} height={32} fill="#000" stroke="#fff" />
-      <text x={x + w - 12} y={cy + 8} fill="#fff" fontSize={22} textAnchor="end" className="pfd-num">
+      <text
+        x={x + w - 12}
+        y={cy + 8}
+        fill="#fff"
+        fontSize={22}
+        textAnchor="end"
+        className="pfd-num"
+      >
         {Math.round(iasKt)}
       </text>
       <text x={x + 20} y={20} fill="#ff3ec8" fontSize={14}>
@@ -322,7 +338,13 @@ function VsIndicator({ vsFpm }: { vsFpm: number }): JSX.Element {
       <line x1={x - 4} y1={cy} x2={x + 4} y2={cy} stroke="#fff" strokeWidth={2} />
       <line x1={x + 14} y1={cy} x2={x - 2} y2={y} stroke="#fff" strokeWidth={2.5} />
       {Math.abs(vsFpm) > 150 && (
-        <text x={x + 8} y={vsFpm > 0 ? cy - 104 : cy + 112} fill="#fff" fontSize={12} textAnchor="end">
+        <text
+          x={x + 8}
+          y={vsFpm > 0 ? cy - 104 : cy + 112}
+          fill="#fff"
+          fontSize={12}
+          textAnchor="end"
+        >
           {Math.abs(Math.round(vsFpm / 50) * 50)}
         </text>
       )}
@@ -366,10 +388,23 @@ function HeadingStrip({
           <rect x={ADI_CX - 152} y={cy - 26} width={304} height={32} />
         </clipPath>
         {ticks}
-        <polygon points={`${selX - 7},${cy + 4} ${selX + 7},${cy + 4} ${selX},${cy - 4}`} fill="#ff3ec8" />
+        <polygon
+          points={`${selX - 7},${cy + 4} ${selX + 7},${cy + 4} ${selX},${cy - 4}`}
+          fill="#ff3ec8"
+        />
       </g>
-      <polygon points={`${ADI_CX - 6},${cy - 28} ${ADI_CX + 6},${cy - 28} ${ADI_CX},${cy - 20}`} fill="#fff" />
-      <text x={ADI_CX} y={cy - 32} fill="#39d353" fontSize={15} textAnchor="middle" className="pfd-num">
+      <polygon
+        points={`${ADI_CX - 6},${cy - 28} ${ADI_CX + 6},${cy - 28} ${ADI_CX},${cy - 20}`}
+        fill="#fff"
+      />
+      <text
+        x={ADI_CX}
+        y={cy - 32}
+        fill="#39d353"
+        fontSize={15}
+        textAnchor="middle"
+        className="pfd-num"
+      >
         {String(Math.round(headingDeg)).padStart(3, '0')}
       </text>
     </g>

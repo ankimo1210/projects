@@ -350,7 +350,13 @@ export const MVP_CIRCUIT_SCENARIO: ScenarioDefinition = {
           id: 'flaps',
           challenge: 'Flaps',
           dynamicResponseProp: 'controls.flapHandleDetent',
-          validation: { prop: 'controls.flapHandleDetent', op: 'gte', value: 30 },
+          // The surfaces must have travelled, not just the handle (R-18).
+          validation: {
+            all: [
+              { prop: 'controls.flapHandleDetent', op: 'gte', value: 30 },
+              { prop: 'controls.flapsActualNorm', op: 'gte', value: 0.855 },
+            ],
+          },
           responsibleCrew: 'first_officer',
           failureMessage: 'Landing flaps (30) are not set',
           sourceReference: SOURCE,
@@ -381,7 +387,13 @@ export const MVP_CIRCUIT_SCENARIO: ScenarioDefinition = {
           id: 'speedbrake_down',
           challenge: 'Speed brake',
           response: 'Down detent',
-          validation: { prop: 'controls.speedbrakeLeverNorm', op: 'lt', value: 0.05 },
+          // Lever AND the spoiler panels themselves must be stowed (R-18).
+          validation: {
+            all: [
+              { prop: 'controls.speedbrakeLeverNorm', op: 'lt', value: 0.05 },
+              { prop: 'controls.spoilersDeployedNorm', op: 'lt', value: 0.05 },
+            ],
+          },
           responsibleCrew: 'first_officer',
           failureMessage: 'Speed-brake lever is still up',
           sourceReference: SOURCE,
@@ -390,7 +402,13 @@ export const MVP_CIRCUIT_SCENARIO: ScenarioDefinition = {
           id: 'flaps_up',
           challenge: 'Flaps',
           response: 'Up',
-          validation: { prop: 'controls.flapHandleDetent', op: 'eq', value: 0 },
+          // Not complete while the flaps are still travelling up (R-18).
+          validation: {
+            all: [
+              { prop: 'controls.flapHandleDetent', op: 'eq', value: 0 },
+              { prop: 'controls.flapsActualNorm', op: 'lt', value: 0.02 },
+            ],
+          },
           responsibleCrew: 'first_officer',
           failureMessage: 'Flaps are not up',
           sourceReference: SOURCE,

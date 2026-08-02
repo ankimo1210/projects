@@ -4,6 +4,17 @@ import type { AircraftState } from '@b737/shared';
 import { FirstOfficer } from '../src/firstOfficer.js';
 import { resetTranscriptIds } from '../src/transcript.js';
 
+/** Landing configuration as the aircraft actually reports it (R-18/R-19). */
+function configureForLanding(s: AircraftState): void {
+  s.controls.flapHandleDetent = 30;
+  s.controls.flapsActualNorm = 0.875; // flaps 30 fully travelled
+  s.controls.gearLeverDown = true;
+  s.controls.gearPositionNorm = 1;
+  s.nav.ilsTuned = true;
+  s.nav.locDeviationDots = 0;
+  s.nav.gsDeviationDots = 0;
+}
+
 function st(simTimeSec: number, mutate: (s: AircraftState) => void): AircraftState {
   const s = makeTestAircraftState();
   s.simTimeSec = simTimeSec;
@@ -173,8 +184,7 @@ describe('FirstOfficer takeoff callouts', () => {
           s.position.radioAltitudeFt = Math.max(0, ra);
           s.speeds.verticalSpeedFpm = -700;
           s.speeds.iasKt = 145;
-          s.controls.flapHandleDetent = 30;
-          s.controls.gearLeverDown = true;
+          configureForLanding(s);
         }),
         'final_approach',
       );
@@ -193,15 +203,65 @@ describe('FirstOfficer takeoff callouts', () => {
           s.position.radioAltitudeFt = 800;
           s.speeds.verticalSpeedFpm = -700;
           s.speeds.iasKt = 190; // way too fast
-          s.controls.flapHandleDetent = 30;
-          s.controls.gearLeverDown = true;
+          configureForLanding(s);
         }),
         'final_approach',
       );
       messages.push(...lines.map((l) => l.message));
     }
     expect(messages.some((m) => m.includes('Go around'))).toBe(true);
+    expect(messages.find((m) => m.includes('Go around'))).toContain('speed');
     // fires once only
     expect(messages.filter((m) => m.includes('Go around'))).toHaveLength(1);
+  });
+
+  // R-18: the surfaces decide, not the handles.
+  it('treats a landing flap handle with the surface still in transit as unstable', () => {
+    const fo = new FirstOfficer({ grossWeightLb: 145000 });
+    const messages: string[] = [];
+    for (let t = 0; t < 8; t += 0.5) {
+      messages.push(
+        ...fo
+          .update(
+            st(t, (s) => {
+              s.weightOnWheels = false;
+              s.position.radioAltitudeFt = 800;
+              s.speeds.verticalSpeedFpm = -700;
+              s.speeds.iasKt = 149;
+              configureForLanding(s);
+              s.controls.flapHandleDetent = 30; // selected…
+              s.controls.flapsActualNorm = 0.5; // …but still travelling
+            }),
+            'final_approach',
+          )
+          .map((l) => l.message),
+      );
+    }
+    expect(messages.find((m) => m.includes('Go around'))).toContain('configuration');
+  });
+
+  // R-19: on an ILS approach, missing guidance is not a stable flight path.
+  it('treats a tuned ILS with no deviation data as unstable', () => {
+    const fo = new FirstOfficer({ grossWeightLb: 145000 });
+    const messages: string[] = [];
+    for (let t = 0; t < 8; t += 0.5) {
+      messages.push(
+        ...fo
+          .update(
+            st(t, (s) => {
+              s.weightOnWheels = false;
+              s.position.radioAltitudeFt = 800;
+              s.speeds.verticalSpeedFpm = -700;
+              s.speeds.iasKt = 149;
+              configureForLanding(s);
+              s.nav.locDeviationDots = null;
+              s.nav.gsDeviationDots = null;
+            }),
+            'final_approach',
+          )
+          .map((l) => l.message),
+      );
+    }
+    expect(messages.find((m) => m.includes('Go around'))).toContain('flight path');
   });
 });

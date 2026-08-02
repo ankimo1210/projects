@@ -41,7 +41,9 @@ export function App(): JSX.Element {
         {connection !== 'connected' && (
           <div className="disconnect-overlay" data-testid="disconnect-overlay">
             <div>
-              <h2>{connection === 'connecting' ? 'Connecting to bridge…' : 'Bridge disconnected'}</h2>
+              <h2>
+                {connection === 'connecting' ? 'Connecting to bridge…' : 'Bridge disconnected'}
+              </h2>
               <p>
                 Start it with <code>pnpm dev</code> (mock) — see README. Reconnecting automatically…
               </p>

@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, posix } from 'node:path';
 import { parseAc3d, toFgFrame } from './ac3d.js';
 import { acToGltf, computeBounds } from './gltf.js';
@@ -24,16 +24,42 @@ const MODELS: { ac: string; out: string }[] = [
   { ac: 'Models/seats/cockpitseat2.ac', out: 'cockpitseat2' },
 ];
 
-const TEXTURE_FALLBACK_DIRS = ['Models', 'Models/Instruments', 'Models/Overhead', 'Models/OH-panel'];
+const TEXTURE_FALLBACK_DIRS = [
+  'Models',
+  'Models/Instruments',
+  'Models/Overhead',
+  'Models/OH-panel',
+];
+
+/**
+ * Sounds the web audio engine loads by name (apps/web/src/audio/audioEngine.ts)
+ * — the converter copies exactly these, nothing else.
+ */
+const SOUND_ALLOWLIST = [
+  'click.wav',
+  'flaps.wav',
+  'gear.wav',
+  'Wind.wav',
+  'Apdisco.wav',
+  'altAlert.wav',
+  'approaching-minimums.wav',
+  'cfm11a.wav',
+  'cfm14a.wav',
+  ...[10, 20, 30, 40, 50, 100, 200, 300, 400, 500, 1000, 2500].map((a) => `altitude-${a}.wav`),
+];
 
 export interface ConvertSummary {
   models: { name: string; meshes: number; missingTextures: string[] }[];
   bounds: Record<string, { min: number[]; max: number[] }>;
+  missingSounds: string[];
 }
 
 export function convertCockpitAssets(importedDir: string, outDir: string): ConvertSummary {
+  // Regenerate from scratch: stale output from an earlier asset set must not
+  // survive into a new build (R-21).
+  rmSync(outDir, { recursive: true, force: true });
   mkdirSync(join(outDir, 'textures'), { recursive: true });
-  const summary: ConvertSummary = { models: [], bounds: {} };
+  const summary: ConvertSummary = { models: [], bounds: {}, missingSounds: [] };
   const copiedByAbsPath = new Map<string, string>();
 
   for (const model of MODELS) {
@@ -100,17 +126,24 @@ export function convertCockpitAssets(importedDir: string, outDir: string): Conve
   };
   writeFileSync(join(outDir, 'cockpit-bindings.json'), JSON.stringify(enriched, null, 1));
 
-  // flatten fetched GPL sounds for the web audio engine (basename-keyed)
+  // Flatten the GPL sounds the audio engine actually asks for. Copying every
+  // .wav that happened to be on disk made the output depend on leftovers from
+  // previous fetches (R-21).
   const soundsOut = join(outDir, 'sounds');
   mkdirSync(soundsOut, { recursive: true });
   const soundDirs = ['Sounds', 'Sounds/FL2070', 'Sounds/gpws'];
-  for (const dir of soundDirs) {
-    const abs = join(importedDir, dir);
-    if (!existsSync(abs)) continue;
-    for (const file of readdirSync(abs)) {
-      if (file.endsWith('.wav')) copyFileSync(join(abs, file), join(soundsOut, file));
+  const missingSounds: string[] = [];
+  for (const name of SOUND_ALLOWLIST) {
+    const sourcePath = soundDirs
+      .map((dir) => join(importedDir, dir, name))
+      .find((abs) => existsSync(abs));
+    if (!sourcePath) {
+      missingSounds.push(name);
+      continue;
     }
+    copyFileSync(sourcePath, join(soundsOut, name));
   }
+  summary.missingSounds = missingSounds;
   return summary;
 }
 

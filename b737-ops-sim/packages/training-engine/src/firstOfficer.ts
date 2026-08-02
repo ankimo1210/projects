@@ -1,4 +1,4 @@
-import { vSpeedsForWeight, type AircraftState, type VSpeeds } from '@b737/shared';
+import { flapDetentToNorm, vSpeedsForWeight, type AircraftState, type VSpeeds } from '@b737/shared';
 import type { ScenarioEvent } from '@b737/scenario-engine';
 import { transcriptId, type TranscriptEntry } from './transcript.js';
 
@@ -24,6 +24,14 @@ interface PendingExpectation {
 const APPROACH_ALT_CALLOUTS_FT = [1000, 500, 100, 50, 40, 30, 20, 10] as const;
 /** Climb must persist this long before "Positive rate" is called. */
 const POSITIVE_RATE_CONFIRM_SEC = 0.3;
+/** How long the FO waits for an answer before resuming other monitoring. */
+const PENDING_TIMEOUT_SEC = 12;
+/**
+ * Actual flap position for the landing detent, with a small tolerance so a
+ * surface still a fraction from the stop does not read as unconfigured.
+ * Checking the surface, not the handle, is the point (R-18).
+ */
+const LANDING_FLAP_NORM = flapDetentToNorm(30) - 0.02;
 
 export class FirstOfficer {
   readonly vSpeeds: VSpeeds;
@@ -51,6 +59,12 @@ export class FirstOfficer {
     const t = state.simTimeSec;
     const ias = state.speeds.iasKt;
     const ra = state.position.radioAltitudeFt;
+
+    // An unanswered callout must not silence the FO forever: without this the
+    // gear reminder was suppressed for the rest of the flight (R-20).
+    if (this.pending !== null && t - this.pending.sinceSimTimeSec > PENDING_TIMEOUT_SEC) {
+      this.pending = null;
+    }
 
     // --- Takeoff roll speed callouts (ordered, once each) ---
     if (this.takeoffPhases.has(phaseId) && state.weightOnWheels) {
@@ -134,10 +148,17 @@ export class FirstOfficer {
     // --- Stabilized approach monitoring below 1000 ft (spec §12) ---
     if (this.approachPhases.has(phaseId) && !state.weightOnWheels && ra < 1000 && ra > 50) {
       const speedOk = ias >= this.vSpeeds.vappKt - 5 && ias <= this.vSpeeds.vappKt + 20;
-      const configOk = state.controls.gearLeverDown && state.controls.flapHandleDetent >= 30;
-      const pathOk =
-        (state.nav.locDeviationDots === null || Math.abs(state.nav.locDeviationDots) <= 1) &&
-        (state.nav.gsDeviationDots === null || Math.abs(state.nav.gsDeviationDots) <= 1);
+      const configOk =
+        state.controls.gearPositionNorm > 0.99 &&
+        state.controls.flapsActualNorm >= LANDING_FLAP_NORM;
+      // A missing deviation is NOT a stable path: on an ILS approach the
+      // absence of guidance is itself a reason to go around (R-19).
+      const pathOk = state.nav.ilsTuned
+        ? state.nav.locDeviationDots !== null &&
+          state.nav.gsDeviationDots !== null &&
+          Math.abs(state.nav.locDeviationDots) <= 1 &&
+          Math.abs(state.nav.gsDeviationDots) <= 1
+        : true;
       const sinkOk = state.speeds.verticalSpeedFpm > -1100;
       const stable = speedOk && configOk && pathOk && sinkOk;
       if (stable) {
