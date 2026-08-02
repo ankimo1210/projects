@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "aircraft": "Generic FG 737 NG class (verified paths: FG core; aircraft-specific paths marked)",
   "notes": "Single source of truth for FlightGear property paths (spec \u00a75). Paths under /instrumentation and MCP/autobrake sections are AIRCRAFT-MODEL-DEPENDENT: verify against the installed 737 package (e.g. 737-800YV) with scripts/fg-diagnostic before relying on them. scale converts FG-native units to the schema's explicit units.",
   "state": {
@@ -183,6 +183,16 @@
       "optional": true,
       "type": "bool",
       "comment": "AIRCRAFT-MODEL-DEPENDENT: APP armed annunciation. SOURCE_REQUIRED \u2014 verify with fg-diagnostic; absent means the state reports false."
+    },
+    "weather.windDirDeg": {
+      "fgProp": "/environment/wind-from-heading-deg",
+      "optional": true,
+      "comment": "FG core environment; optional so the state degrades to 0 when absent."
+    },
+    "weather.windSpeedKt": {
+      "fgProp": "/environment/wind-speed-kt",
+      "optional": true,
+      "comment": "FG core environment."
     }
   },
   "commands": {

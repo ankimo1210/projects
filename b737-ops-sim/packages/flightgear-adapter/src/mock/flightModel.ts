@@ -26,6 +26,15 @@ import {
   type AutobrakeSetting,
   type CommandResult,
   type FlapDetent,
+  buildRoute,
+  emptyFmsState,
+  headingForTrack,
+  getProcedure,
+  getWaypoint,
+  trackLeg,
+  WAYPOINT_SEQUENCE_NM,
+  type FailureKind,
+  type FmsState,
   type PitchMode,
   type RollMode,
   type RunwayData,
@@ -92,6 +101,11 @@ const GROUND_STEER_MAX_DEGPS = 30;
 const RTO_ARM_THROTTLE_NORM = 0.6;
 const RTO_TRIGGER_THROTTLE_NORM = 0.05;
 const RTO_ARM_SPEED_KT = 60;
+/** Altitude over which the surface wind blends into the wind aloft. */
+const WIND_ALOFT_BLEND_FT = 3000;
+/** Gust response time constant. */
+const GUST_TAU_SEC = 4;
+
 /** V/S the simple autopilot uses when the MCP V/S window is zeroed. */
 const DEFAULT_AP_CLIMB_FPM = 1800;
 
@@ -179,6 +193,17 @@ export class MockFlightModel {
   private rtoArmed = false;
   /** Approach armed on the MCP; drives LOC/GS capture. */
   private approachArmed = false;
+  /** Route / FMS state (spec §22 Phase 5). */
+  private fms: FmsState = emptyFmsState();
+  /** Active failures; systems express them, this set records them. */
+  private failures = new Set<FailureKind>();
+  /** Weather beyond the steady surface wind. */
+  private windAloftDirDeg = 0;
+  private windAloftSpeedKt = 0;
+  private gustMaxKt = 0;
+  private visibilityM = 10000;
+  private turbulence = 0;
+  private gustKt = 0;
   private togaActive = false;
   private apRollMode: RollMode | null = null;
   private apPitchMode: PitchMode | null = null;
@@ -307,6 +332,16 @@ export class MockFlightModel {
     this.autobrake = 'OFF';
     this.autobrakeActive = false;
     this.systems.reset(systemsModeFor(config));
+    this.fms = emptyFmsState();
+    this.failures.clear();
+    const wx = config.weather;
+    this.windAloftDirDeg = wx?.windAloftDirDeg ?? config.windDirDeg;
+    this.windAloftSpeedKt = wx?.windAloftSpeedKt ?? config.windSpeedKt;
+    this.gustMaxKt = wx?.gustKt ?? 0;
+    this.visibilityM = wx?.visibilityM ?? 10000;
+    this.turbulence = wx?.turbulence ?? 0;
+    this.gustKt = 0;
+    for (const failure of config.failures ?? []) this.applyFailure(failure);
     this.rtoArmed = false;
     this.approachArmed = false;
     this.togaActive = false;
@@ -437,6 +472,47 @@ export class MockFlightModel {
         return this.systems.setEngineStart(cmd.engine, cmd.mode);
       case 'reset_master_caution':
         return this.systems.resetMasterCaution();
+      case 'load_route': {
+        const ids = [cmd.sidId, cmd.starId, cmd.approachId]
+          .filter((id): id is string => id !== null)
+          .flatMap((id) => getProcedure(id)?.waypointIds ?? []);
+        if (ids.length === 0) return { ok: false, error: 'no known procedure in that route' };
+        this.fms = {
+          ...emptyFmsState(),
+          routeId: [cmd.sidId, cmd.starId, cmd.approachId].filter(Boolean).join('/'),
+          legs: buildRoute(this.latDeg, this.lonDeg, ids),
+          lnavArmed: this.fms.lnavArmed,
+        };
+        return { ok: true };
+      }
+      case 'direct_to': {
+        const wp = getWaypoint(cmd.waypointId);
+        if (!wp) return { ok: false, error: `unknown waypoint '${cmd.waypointId}'` };
+        const index = this.fms.legs.findIndex((l) => l.waypoint.id === wp.id);
+        if (index < 0) {
+          // Not in the route: fly direct to it as a one-leg route.
+          this.fms = {
+            ...this.fms,
+            legs: buildRoute(this.latDeg, this.lonDeg, [wp.id]),
+            activeLegIndex: 0,
+          };
+        } else {
+          this.fms = { ...this.fms, activeLegIndex: index };
+        }
+        return { ok: true };
+      }
+      case 'set_lnav':
+        if (cmd.armed && this.fms.legs.length === 0) {
+          return { ok: false, error: 'no route loaded' };
+        }
+        this.fms = { ...this.fms, lnavArmed: cmd.armed };
+        return { ok: true };
+      case 'inject_failure':
+        this.applyFailure(cmd.failure);
+        return { ok: true };
+      case 'clear_failures':
+        this.failures.clear();
+        return { ok: true };
     }
   }
 
@@ -492,6 +568,12 @@ export class MockFlightModel {
     // Systems decide whether there is an engine at all (spec §22 Phase 4 D6):
     // a shut-down engine windmills, it does not idle.
     this.systems.step(dt, { onGround: this.onGround, dtSec: dt });
+    this.updateFms();
+    // Gusts are seeded noise, so a scenario stays reproducible (M5 D4).
+    if (this.gustMaxKt > 0) {
+      const target = this.gustMaxKt * this.rand() ** 2;
+      this.gustKt += (target - this.gustKt) * clamp(dt / GUST_TAU_SEC, 0, 1);
+    }
     const leftRunning = this.systems.engineRunning('left');
     const rightRunning = this.systems.engineRunning('right');
     const anyRunning = leftRunning || rightRunning;
@@ -529,7 +611,11 @@ export class MockFlightModel {
     } else if (this.mcp.autopilotEngaged && !this.onGround) {
       // ---- lateral ----
       const targetHeadingDeg =
-        this.apRollMode === 'LOC' ? this.localizerInterceptHeadingDeg() : this.mcp.selHeadingDeg;
+        this.apRollMode === 'LOC'
+          ? this.localizerInterceptHeadingDeg()
+          : this.apRollMode === 'LNAV'
+            ? this.lnavHeadingDeg()
+            : this.mcp.selHeadingDeg;
       const hdgErr = angleDiffDeg(this.headingDegMag(), targetHeadingDeg);
       const targetBank = clamp(hdgErr * 1.2, -25, 25);
       aileron = clamp((targetBank - this.rollDeg) / 10, -1, 1);
@@ -750,7 +836,8 @@ export class MockFlightModel {
 
     // ---- lateral ----
     if (!this.approachArmed) {
-      this.apRollMode = 'HDG_SEL';
+      this.apRollMode =
+        this.fms.lnavArmed && this.fms.desiredTrackDegTrue !== null ? 'LNAV' : 'HDG_SEL';
     } else if (this.apRollMode === 'LOC') {
       // stay captured while guidance is usable
       if (locDots === null || Math.abs(locDots) > LOC_LOSS_DOTS) this.apRollMode = 'LOC_ARM';
@@ -798,6 +885,101 @@ export class MockFlightModel {
     const nominalFpm = -gsMps * Math.tan(degToRad(this.runway.ils.glideslopeDeg)) * MPS_TO_FPM;
     const correctionFpm = clamp((gsDots ?? 0) * GS_TRACK_FPM_PER_DOT, -400, 400);
     return clamp(nominalFpm + correctionFpm, -1200, 200);
+  }
+
+  // ------------------------------------------------------------------ failures
+
+  /**
+   * Failures are expressed through the systems model, so the annunciator,
+   * checklists and debrief see them without a second code path (M5 D5).
+   */
+  private applyFailure(failure: FailureKind): void {
+    this.failures.add(failure);
+    switch (failure) {
+      case 'engine_1_flameout':
+        this.systems.failEngine('left');
+        break;
+      case 'engine_2_flameout':
+        this.systems.failEngine('right');
+        break;
+      case 'generator_1':
+        this.systems.applySwitch('gen1', false);
+        break;
+      case 'generator_2':
+        this.systems.applySwitch('gen2', false);
+        break;
+      case 'hydraulic_a':
+        this.systems.applySwitch('hyd_pump_eng1', false);
+        this.systems.applySwitch('hyd_pump_elec2', false);
+        break;
+      case 'hydraulic_b':
+        this.systems.applySwitch('hyd_pump_eng2', false);
+        this.systems.applySwitch('hyd_pump_elec1', false);
+        break;
+    }
+  }
+
+  // ----------------------------------------------------------------- route/FMS
+
+  /** Follow the active leg, sequencing when the fix goes behind (M5 T2). */
+  private updateFms(): void {
+    const legs = this.fms.legs;
+    if (legs.length === 0 || this.fms.activeLegIndex >= legs.length) {
+      this.fms = {
+        ...this.fms,
+        distanceToWaypointNm: null,
+        crossTrackNm: null,
+        desiredTrackDegTrue: null,
+      };
+      return;
+    }
+    const index = this.fms.activeLegIndex;
+    const leg = legs[index]!;
+    const previous =
+      index === 0
+        ? { latDeg: this.latDeg, lonDeg: this.lonDeg }
+        : {
+            latDeg: legs[index - 1]!.waypoint.latDeg,
+            lonDeg: legs[index - 1]!.waypoint.lonDeg,
+          };
+    const tracking = trackLeg(leg, previous, { latDeg: this.latDeg, lonDeg: this.lonDeg });
+    if (tracking.distanceToWaypointNm < WAYPOINT_SEQUENCE_NM && index + 1 < legs.length) {
+      this.fms = { ...this.fms, activeLegIndex: index + 1 };
+      return;
+    }
+    this.fms = {
+      ...this.fms,
+      distanceToWaypointNm: tracking.distanceToWaypointNm,
+      crossTrackNm: tracking.crossTrackNm,
+      desiredTrackDegTrue: tracking.desiredTrackDegTrue,
+    };
+  }
+
+  /** Heading that makes good the FMS desired track, allowing for wind. */
+  private lnavHeadingDeg(): number {
+    const desiredTrue = this.fms.desiredTrackDegTrue;
+    if (desiredTrue === null) return this.mcp.selHeadingDeg;
+    const wind = this.currentWind();
+    const headingTrue = headingForTrack(
+      desiredTrue,
+      this.iasMps * MPS_TO_KT,
+      wind.dirDeg,
+      wind.speedKt,
+    );
+    return normalizeDeg360(headingTrue - this.runway.magneticVariationDeg);
+  }
+
+  /** Steady wind at the current altitude, blended surface → aloft. */
+  private currentWind(): { dirDeg: number; speedKt: number } {
+    const altAglFt = Math.max(0, (this.altM - this.runway.elevationFtMsl * FT_TO_M) * M_TO_FT);
+    const blend = clamp(altAglFt / WIND_ALOFT_BLEND_FT, 0, 1);
+    const surfaceKt = this.windSpeedMps * MPS_TO_KT;
+    return {
+      dirDeg: normalizeDeg360(
+        this.windDirDeg + angleDiffDeg(this.windAloftDirDeg, this.windDirDeg) * -blend,
+      ),
+      speedKt: surfaceKt + (this.windAloftSpeedKt - surfaceKt) * blend,
+    };
   }
 
   // ---------------------------------------------------------------- ILS geometry
@@ -915,6 +1097,15 @@ export class MockFlightModel {
       },
       lights: { ...this.lights },
       systems: this.systems.state,
+      fms: this.fms,
+      weather: {
+        windDirDeg: this.currentWind().dirDeg,
+        windSpeedKt: this.currentWind().speedKt,
+        gustKt: this.gustKt,
+        visibilityM: this.visibilityM,
+        turbulence: this.turbulence,
+      },
+      activeFailures: [...this.failures],
       airport: { icao: rwy.airportIcao, runwayId: rwy.runwayId },
     };
   }

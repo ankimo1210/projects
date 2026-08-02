@@ -6,4 +6,5 @@ export * from './commands.js';
 export * from './protocol.js';
 export * from './airports.js';
 export * from './taxi.js';
+export * from './navigation.js';
 export * from './performance.js';

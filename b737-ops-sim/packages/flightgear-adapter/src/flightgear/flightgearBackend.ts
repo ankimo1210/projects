@@ -1,5 +1,6 @@
 import {
   AircraftStateSchema,
+  emptyFmsState,
   enginesRunningSystems,
   flapDetentToNorm,
   flapNormToNearestDetent,
@@ -295,6 +296,12 @@ export class FlightGearBackend implements FlightBackend {
         return simple(`set_engine_start.${command.engine}`, command.mode);
       case 'reset_master_caution':
         return simple('reset_master_caution', true);
+      case 'load_route':
+      case 'direct_to':
+      case 'set_lnav':
+      case 'inject_failure':
+      case 'clear_failures':
+        return { error: `'${command.type}' is a mock-mode feature (see NAVIGATION_DATA.md)` };
       case 'set_light':
         return simple(`set_light.${command.light}`, command.on);
     }
@@ -452,6 +459,18 @@ export class FlightGearBackend implements FlightBackend {
       // map carries them, report the engines-running baseline so the schema is
       // satisfied and the UI shows an honest "not modelled here" (M4 D8).
       systems: enginesRunningSystems(),
+      // Route, weather and failures are trainer-side concepts in mock mode; in
+      // FlightGear mode the sim owns them and the property map does not carry
+      // them yet (M5 non-goal, documented in NAVIGATION_DATA.md).
+      fms: emptyFmsState(),
+      weather: {
+        windDirDeg: this.num('weather.windDirDeg'),
+        windSpeedKt: this.num('weather.windSpeedKt'),
+        gustKt: 0,
+        visibilityM: 10000,
+        turbulence: 0,
+      },
+      activeFailures: [],
       airport: { icao: null, runwayId: null },
     };
     const validated = AircraftStateSchema.safeParse(state);

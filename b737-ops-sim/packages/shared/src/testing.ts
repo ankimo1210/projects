@@ -1,5 +1,6 @@
 import type { AircraftState } from './aircraftState.js';
 import { enginesRunningSystems } from './systems.js';
+import { emptyFmsState } from './navigation.js';
 
 /** A structurally complete, mutable state sample for tests. */
 export function makeTestAircraftState(overrides: Partial<AircraftState> = {}): AircraftState {
@@ -46,6 +47,9 @@ export function makeTestAircraftState(overrides: Partial<AircraftState> = {}): A
     nav: { ilsTuned: true, locDeviationDots: null, gsDeviationDots: null },
     lights: { landing: false, taxi: false, strobe: false, beacon: true },
     systems: enginesRunningSystems(),
+    fms: emptyFmsState(),
+    weather: { windDirDeg: 290, windSpeedKt: 6, gustKt: 0, visibilityM: 10000, turbulence: 0 },
+    activeFailures: [],
     airport: { icao: 'KSFO', runwayId: '28R' },
   };
   return { ...base, ...overrides };
