@@ -1,11 +1,12 @@
 # B737-800 Web Flight Operations Trainer
 
-A **local-only**, web-based Boeing 737-800-style flight *operations* trainer:
+A **local-only**, web-based Boeing 737-800-style flight _operations_ trainer:
 takeoff → ATC vectors → ILS approach → landing → rollout → debrief, with a
 deterministic first officer (Pilot Monitoring), text ATC with readbacks,
 state-validated checklists, and a transparent scoring debrief.
 
 > ## ⚠ NOT A CERTIFIED TRAINING DEVICE
+>
 > This is a hobby simulation for personal use. Procedures, speeds and
 > checklists are **non-certified approximations** (marked
 > `NON_CERTIFIED_APPROXIMATION` / `SOURCE_REQUIRED` in the code/data).
@@ -48,7 +49,7 @@ state-validated checklists, and a transparent scoring debrief.
   reverse, flaps (detents), speed brake + ARM, gear, autobrake, lights,
   parking brake — all displaying **backend** state.
 - Keyboard / mouse / gamepad input with deadzone/sensitivity/inversion.
-- One polished scenario: *Takeoff and ILS Landing — KSFO 28R* with
+- One polished scenario: _Takeoff and ILS Landing — KSFO 28R_ with
   Before Takeoff / Landing / After Landing checklists, deterministic FO
   callouts (80 kt / V1 / Rotate / positive rate / approach altitudes /
   unstable-approach), ATC clearance + vector + landing workflow with
@@ -64,10 +65,10 @@ the diagnostic below and file any property-map corrections in
 
 ## Required software
 
-| What | Version | Where |
-|------|---------|-------|
-| Node.js | ≥ 20 | WSL2 or Windows |
-| pnpm | ≥ 9 | `corepack enable` or `npm i -g pnpm` |
+| What                  | Version | Where                                       |
+| --------------------- | ------- | ------------------------------------------- |
+| Node.js               | ≥ 20    | WSL2 or Windows                             |
+| pnpm                  | ≥ 9     | `corepack enable` or `npm i -g pnpm`        |
 | FlightGear (optional) | 2020.3+ | Windows native — only for `flightgear` mode |
 
 The repo lives in the WSL2 filesystem (`~/projects/b737-ops-sim`) for
@@ -110,20 +111,20 @@ Details + firewall notes: [FLIGHTGEAR_SETUP.md](FLIGHTGEAR_SETUP.md).
 
 ## Controls (default)
 
-| Input | Action |
-|-------|--------|
-| Arrow keys | Yoke (↓ = nose up) |
-| `,` / `.` | Rudder |
-| `=` / `-` (or PgUp/PgDn) | Throttle up/down |
-| Space (hold) | Wheel brakes |
-| `G` | Gear toggle · `[` `]` flaps up/down a detent |
-| `B` | Speed brake toggle · `R` reverse toggle · `P` parking brake |
-| `A` | Autopilot toggle · `C` center view · `` ` `` diagnostics |
-| Mouse drag on 3D view | Look around (double-click to center) |
-| Gamepad | Left stick = yoke, axis 3 = throttle (configurable in `localStorage`) |
+| Input                    | Action                                                                |
+| ------------------------ | --------------------------------------------------------------------- |
+| Arrow keys               | Yoke (↓ = nose up)                                                    |
+| `,` / `.`                | Rudder                                                                |
+| `=` / `-` (or PgUp/PgDn) | Throttle up/down                                                      |
+| Space (hold)             | Wheel brakes                                                          |
+| `G`                      | Gear toggle · `[` `]` flaps up/down a detent                          |
+| `B`                      | Speed brake toggle · `R` reverse toggle · `P` parking brake           |
+| `A`                      | Autopilot toggle · `C` center view · `` ` `` diagnostics              |
+| Mouse drag on 3D view    | Look around (double-click to center)                                  |
+| Gamepad                  | Left stick = yoke, axis 3 = throttle (configurable in `localStorage`) |
 
 Flying the scenario: complete the Before Takeoff checklist (guided hints show
-in *Guided* mode), request clearance in the ATC panel, read back, taxi onto
+in _Guided_ mode), request clearance in the ATC panel, read back, taxi onto
 28R, full thrust, rotate at VR, gear up on "positive rate", follow ATC
 headings/altitudes via the MCP (CMD A engages the autopilot), configure on
 the vectors, capture the ILS, land, reverse + brake, exit, After Landing
@@ -131,13 +132,14 @@ checklist → debrief.
 
 ## Environment variables
 
-| Var | Default | Meaning |
-|-----|---------|---------|
-| `FLIGHT_BACKEND` | `mock` | `mock` or `flightgear` |
-| `BRIDGE_PORT` | `8737` | Bridge WS/HTTP port |
-| `STATE_RATE_HZ` | `30` | State stream rate (5–60) |
-| `FG_HOST` / `FG_HTTP_PORT` | `127.0.0.1` / `5500` | FlightGear httpd address |
-| `VITE_BRIDGE_URL` | `ws://127.0.0.1:8737/ws` | Browser → bridge URL |
+| Var                        | Default                                       | Meaning                                                                                                                                                                                                                                    |
+| -------------------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `FLIGHT_BACKEND`           | `mock`                                        | `mock` or `flightgear`                                                                                                                                                                                                                     |
+| `BRIDGE_PORT`              | `8737`                                        | Bridge WS/HTTP port                                                                                                                                                                                                                        |
+| `STATE_RATE_HZ`            | `30`                                          | State stream rate (5–60)                                                                                                                                                                                                                   |
+| `FG_HOST` / `FG_HTTP_PORT` | `127.0.0.1` / `5500`                          | FlightGear httpd address                                                                                                                                                                                                                   |
+| `VITE_BRIDGE_URL`          | `ws://127.0.0.1:8737/ws`                      | Browser → bridge URL                                                                                                                                                                                                                       |
+| `ALLOWED_ORIGINS`          | `http://localhost:5173,http://127.0.0.1:5173` | Browser origins allowed to open the control socket. Any page you visit can reach a loopback port, so the bridge refuses the WebSocket upgrade from anything else; requests without an `Origin` header (tests, `fg:diagnostic`) are allowed |
 
 ## Tests
 
@@ -150,7 +152,12 @@ pnpm lint
 
 The golden test (`packages/training-engine/test/fullCircuit.e2e.test.ts`)
 flies the complete circuit against the mock model and asserts phase
-detection, callout order, ATC flow and debrief scoring.
+detection, callout order, ATC flow and debrief scoring — including steering
+off the runway, since the exit is detected from runway geometry.
+
+136 unit/integration tests across 7 packages, plus 3 Playwright specs. The
+3D-cockpit spec skips itself when `assets/generated/` has not been built.
+In this WSL environment Playwright needs `TMPDIR=/tmp TEMP=/tmp TMP=/tmp`.
 
 ## Known limitations
 
@@ -164,6 +171,10 @@ detection, callout order, ATC flow and debrief scoring.
 - ATC readbacks are option-buttons (voice input is a later phase).
 - MCP/autobrake FlightGear property paths are aircraft-model-dependent and
   marked for verification in the property map.
+- The mock model touches down at field elevation anywhere — an off-runway
+  landing is not modelled (scenario logic uses runway geometry regardless).
+- The first officer can call for a go-around, but there is no go-around /
+  missed-approach phase to fly; see docs/REVIEW_RESPONSE.md.
 
 ## Documentation
 
@@ -173,5 +184,6 @@ detection, callout order, ATC flow and debrief scoring.
 [THIRD_PARTY_ASSETS.md](THIRD_PARTY_ASSETS.md) ·
 [SCENARIO_AUTHORING.md](SCENARIO_AUTHORING.md) ·
 [COCKPIT_CONTROL_MAPPING.md](COCKPIT_CONTROL_MAPPING.md) ·
+[docs/REVIEW_RESPONSE.md](docs/REVIEW_RESPONSE.md) ·
 [TROUBLESHOOTING.md](TROUBLESHOOTING.md) ·
 [docs/milestones/](docs/milestones/)

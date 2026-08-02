@@ -13,16 +13,16 @@ protocol-level fake server (see Task 10) and documented in `FLIGHTGEAR_SETUP.md`
 
 ## Key decisions (assumptions documented per spec §25)
 
-| # | Decision | Rationale |
-|---|----------|-----------|
-| D1 | Repo lives at `~/projects/b737-ops-sim` (WSL ext4), **not** `/mnt/c` | node_modules over 9p is 10–50× slower; Windows access via `\\wsl.localhost\` |
-| D2 | FlightGear integration uses the built-in **httpd WebSocket property interface** (`--httpd=5500`, `/PropertyListener`) | Push-based property streaming + writes over one socket; no custom protocol XML to install into FG_ROOT; validated against a fake FG server until FlightGear is installed |
-| D3 | Scenario airport is **KSFO 28R** (FlightGear's default airport) | Mock and FlightGear backends share the same world; ILS geometry computed from configured threshold coordinates (`NON_CERTIFIED_APPROXIMATION`) |
-| D4 | Scenario/FO/ATC/debrief logic runs **in the browser** as pure deterministic packages; the bridge stays a thin validated pipe | Keeps simulation-of-record (FlightGear/mock) separate from training logic; trivially testable |
-| D5 | Workspace packages export TypeScript source directly (no build step in dev); `tsx` runs the bridge, Vite consumes packages as source | Fastest iteration; `tsc --noEmit` in CI-style script guards types |
-| D6 | M1 audio is **synthesized** (Web Audio oscillators/filtered noise) | No third-party samples needed yet; THIRD_PARTY_ASSETS.md stays empty until Phase 2 |
-| D7 | V-speeds, flap detents, trim green band etc. are config data marked `NON_CERTIFIED_APPROXIMATION` / `SOURCE_REQUIRED` | Spec §14 — no invented Boeing data presented as authoritative |
-| D8 | React 18 + Vite 6 + Babylon.js 7 + Zustand 5 + Fastify 5 + Zod 3 + Vitest 3 + Playwright | Spec §4 defaults, pinned to stable majors |
+| #   | Decision                                                                                                                             | Rationale                                                                                                                                                                |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| D1  | Repo lives at `~/projects/b737-ops-sim` (WSL ext4), **not** `/mnt/c`                                                                 | node_modules over 9p is 10–50× slower; Windows access via `\\wsl.localhost\`                                                                                             |
+| D2  | FlightGear integration uses the built-in **httpd WebSocket property interface** (`--httpd=5500`, `/PropertyListener`)                | Push-based property streaming + writes over one socket; no custom protocol XML to install into FG_ROOT; validated against a fake FG server until FlightGear is installed |
+| D3  | Scenario airport is **KSFO 28R** (FlightGear's default airport)                                                                      | Mock and FlightGear backends share the same world; ILS geometry computed from configured threshold coordinates (`NON_CERTIFIED_APPROXIMATION`)                           |
+| D4  | Scenario/FO/ATC/debrief logic runs **in the browser** as pure deterministic packages; the bridge stays a thin validated pipe         | Keeps simulation-of-record (FlightGear/mock) separate from training logic; trivially testable                                                                            |
+| D5  | Workspace packages export TypeScript source directly (no build step in dev); `tsx` runs the bridge, Vite consumes packages as source | Fastest iteration; `tsc --noEmit` in CI-style script guards types                                                                                                        |
+| D6  | M1 audio is **synthesized** (Web Audio oscillators/filtered noise)                                                                   | No third-party samples needed yet; THIRD_PARTY_ASSETS.md stays empty until Phase 2                                                                                       |
+| D7  | V-speeds, flap detents, trim green band etc. are config data marked `NON_CERTIFIED_APPROXIMATION` / `SOURCE_REQUIRED`                | Spec §14 — no invented Boeing data presented as authoritative                                                                                                            |
+| D8  | React 18 + Vite 6 + Babylon.js 7 + Zustand 5 + Fastify 5 + Zod 3 + Vitest 3 + Playwright                                             | Spec §4 defaults, pinned to stable majors                                                                                                                                |
 
 ## Architecture (summary — details in ARCHITECTURE.md)
 

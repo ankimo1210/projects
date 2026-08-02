@@ -2,6 +2,52 @@
 
 Local-only project; versions track milestones rather than releases.
 
+## Review remediation — M1/M2 re-opened and fixed (2026-08-02)
+
+All 22 findings in [REVIEW_FEEDBACK.md](REVIEW_FEEDBACK.md) addressed;
+per-finding detail and the deliberate exclusions are in
+[docs/REVIEW_RESPONSE.md](docs/REVIEW_RESPONSE.md).
+
+### Fixed
+
+- **Security**: the control socket now requires an allowed `Origin`
+  (`ALLOWED_ORIGINS`) and a completed `hello` before any command; a protocol
+  version mismatch closes the socket; pause/reset are rate-limited.
+- **FlightGear**: one connection state machine (idempotent connect, socket
+  generation guard, no competing retry loop) and no stale or partially
+  populated state — publishing waits for every required property, stops when
+  the stream goes stale, drops its cache on close and validates each sample.
+  `simTimeSec` comes from FlightGear's clock (property map v2).
+- **Mock physics**: simulated time no longer scales with the state publish rate
+  (25 Hz ran at 0.83×, 40 Hz at 1.33×); RTO autobrake works on a rejected
+  takeoff and no longer fires at touchdown; the autopilot honours the sign of
+  the selected MCP V/S.
+- **Scenario/scoring**: runway entry, occupancy and exit are geometric
+  (`runwayPosition()`); `rollout` and `runway_exit` are distinct phases; one
+  safety-critical event fails the flight; checklists are gated on the flight
+  phase and validate actual surfaces (flap travel, gear down-locked, spoilers
+  stowed) rather than lever positions.
+- **First officer**: "Positive rate" no longer depends on the sample rate; a
+  tuned ILS with no deviation data counts as unstable; safety callouts reach
+  the debrief as events; an unanswered callout expires.
+- **3D cockpit**: FlightGear assembly rotations (flightdesk −15°, overhead
+  90/90) are applied instead of being warned about and dropped; the control
+  registry lists only meshes that exist in the model.
+- **Interaction**: keyboard, gamepad, DOM panel and 3D drags share one control
+  target; drags coalesce to 20 Hz and always deliver the released value;
+  pause/reset and control sounds wait for the backend's acknowledgement;
+  pointer listeners are removed on dispose.
+- **Tooling**: `pnpm test` no longer collects Playwright specs (it was red);
+  asset fetching verifies recorded hashes and stages atomically; the converter
+  regenerates its output and copies an allowlist; `fg-diagnostic` derives every
+  property from the property map.
+
+### Changed
+
+- The project now lives in the `~/projects` workspace repository (history
+  preserved); it is no longer a nested repository without a remote.
+- ATC reads the scenario's surface wind instead of always saying "wind calm".
+
 ## Milestone 2 — Asset Integration (2026-08-02)
 
 Real open-source 737 cockpit imported through a fully scripted pipeline.

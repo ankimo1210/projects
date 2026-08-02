@@ -24,11 +24,18 @@ temporary geometry when `assets/generated/webroot` is absent.
 ## Stage 1 — fetch (`scripts/fetch-cockpit-assets.mjs`)
 
 - Pinned to one upstream commit; `--force` re-downloads.
+- Skipping is earned, not assumed: an existing manifest is only trusted after
+  every recorded sha256 is re-verified against the files on disk.
+- Downloads into `assets/imported/737-800YV.staging` and swaps the directory in
+  only when the run succeeds, so a failed or partial fetch leaves no residue.
+- Fails (and discards the staging tree) when a required sound is unavailable
+  upstream — a silent build is worse than a loud failure.
 - Downloads models (.ac), the FG model XMLs, LICENSE and selected GPL sounds.
 - Parses each `.ac` for `texture "…"` references and fetches them with
   fallback directories (`Models/`, `Models/Instruments/`, `Models/Overhead/`,
   `Models/OH-panel/`); genuinely missing upstream textures are recorded.
-- Writes `manifest.json` (per-file sha256, sizes, missing list).
+- Writes `manifest.json` (full per-file sha256, sizes, missing list). Files
+  resolved through a fallback directory are not reported as missing.
 
 ## Stage 2 — convert (`packages/asset-pipeline`)
 
@@ -54,8 +61,12 @@ temporary geometry when `assets/generated/webroot` is absent.
      interpolation table, FG property) for the whitelisted properties
      (throttle, reversers, flaps, speed brake, gear lever, parking brake,
      autobrake, yoke elevator/aileron).
-   Output: `cockpit-bindings.json`.
+     Output: `cockpit-bindings.json`.
 5. **Sounds**: fetched `.wav` files are flattened into `sounds/`.
+
+Stage 2 removes its output directory first, and copies only the sounds the
+audio engine actually loads (an allowlist), so the generated tree never depends
+on leftovers from an earlier asset set.
 
 ## Stage 3 — runtime (apps/web)
 

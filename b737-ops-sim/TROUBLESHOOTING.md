@@ -32,13 +32,27 @@
 - Units look off by ×60 or ×0.3048: check the `scale` field of the map entry;
   never adjust units in UI code.
 
+## The browser cannot open the control socket (HTTP 403 on /ws)
+
+The bridge only accepts a WebSocket upgrade from an allowed origin — any page
+you visit could otherwise reach the loopback port and fly the aircraft. Serve
+the app from `http://localhost:5173` / `http://127.0.0.1:5173`, or set
+`ALLOWED_ORIGINS` for a different origin. Non-browser clients (tests,
+`fg:diagnostic`) send no `Origin` header and are allowed.
+
 ## Commands are ignored
 
 - Status bar shows the last rejection (e.g. "gear lever locked on ground",
   "cannot set parking brake while moving", "rate limited") — most rejections
   are intentional physical interlocks.
-- Rate limiting: axis streams are capped (~60/s) and discrete commands at
-  ~10/s per connection.
+- Rate limiting: continuous controls (axes, throttle, brakes, speed brake,
+  reverse) are capped at ~60/s and discrete commands, pause and reset at ~10/s
+  per connection.
+- "handshake required: send hello first" means the client sent a command
+  before the protocol handshake; the browser client does this automatically, so
+  it points at a custom client.
+- Checklist items refuse out-of-phase: the Landing / After Landing checklists
+  are read-only until the flight reaches the phase they belong to.
 
 ## No sound
 

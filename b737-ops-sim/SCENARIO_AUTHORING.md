@@ -36,8 +36,16 @@ advance on button clicks alone (spec §11).
 ```
 
 Property namespaces:
+
 - `AircraftState` dot paths: `speeds.iasKt`, `controls.flapHandleDetent`, …
 - `derived.radioAltitudeTrend` / `derived.altitudeTrend` / `derived.iasTrend`
+- `derived.runwayAlongM` / `derived.runwayCrossM` — position in the scenario
+  runway's frame (metres from the threshold along the centerline; + = right of
+  the landing direction); `null` when the runway is unknown
+- `derived.onRunwaySurface` — on the paved surface with weight on wheels
+- `derived.enteredRunwaySurface` — true only on the sample that crossed onto
+  the surface, so an aircraft positioned on the runway at scenario start is not
+  reported as entering it
   → `'increasing' | 'decreasing' | 'flat'` over a 3 s window
 - `flags.<name>` — host-set flags (ATC clearances, checklist completions,
   control-check done). ATC applies `takeoffClearanceReceived`,
@@ -67,12 +75,27 @@ markers in `sourceReference`, and keep uncertain numbers in config, not code.
 }
 ```
 
+### Checklist phases
+
+`ChecklistDefinition.allowedPhaseIds` restricts when a checklist can be
+actioned (omit = any phase). The runtime refuses out-of-phase items and emits a
+`checklist_item_failed` event; the UI shows those checklists read-only. Without
+it the crew can complete the Landing and After Landing checklists while still
+holding short.
+
 ## Rules
 
 Monitor rules fire (once, unless `once: false`) while their phase filter
 matches: use severity `info` for milestones (e.g. `reverse_deployed` is
 consumed by the debrief), `deviation` for procedure errors,
-`safety_critical` for incidents (fails the flight in scoring).
+`safety_critical` for incidents. One `safety_critical` event fails the flight
+in the debrief — do not use it for anything you would accept in a passing run.
+
+Prefer geometry over proxies: use `derived.onRunwaySurface` /
+`derived.enteredRunwaySurface` for runway occupancy instead of ground speed,
+and validate configuration from actual surfaces (`controls.flapsActualNorm`,
+`controls.gearPositionNorm`, `controls.spoilersDeployedNorm`) rather than lever
+positions.
 
 ## Testing a scenario
 
