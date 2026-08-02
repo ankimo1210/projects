@@ -225,6 +225,20 @@ export class FlightGearBackend implements FlightBackend {
    * running FlightGear requires fgcommands not exposed here). We set what we
    * safely can and direct the user to the launch script for a clean restart.
    */
+  /** Uses FlightGear's freeze properties when mapped in the property map. */
+  setPaused(paused: boolean): Promise<CommandResult> {
+    const ws = this.ws;
+    if (!ws || ws.readyState !== WebSocket.OPEN) {
+      return Promise.resolve({ ok: false, error: 'FlightGear not connected' });
+    }
+    const entry = this.opts.propertyMap.commands['set_paused'];
+    if (!entry) return Promise.resolve({ ok: false, error: 'set_paused not mapped' });
+    for (const node of entry.fgProps) {
+      ws.send(JSON.stringify({ command: 'set', node, value: paused }));
+    }
+    return Promise.resolve({ ok: true });
+  }
+
   resetScenario(config: ScenarioInitialState): Promise<void> {
     this.opts.log(
       'warn',

@@ -19,6 +19,8 @@ export interface FlightBackend {
   subscribe(listener: (state: AircraftState) => void): () => void;
   sendCommand(command: AircraftCommand): Promise<CommandResult>;
   resetScenario(config: ScenarioInitialState): Promise<void>;
+  /** Freeze/unfreeze the simulation (training aid). Optional per backend. */
+  setPaused?(paused: boolean): Promise<CommandResult>;
 }
 
 /** Default MVP scenario initial conditions (spec §20). */

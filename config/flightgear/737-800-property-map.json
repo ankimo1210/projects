@@ -128,6 +128,7 @@
       "type": "bool",
       "comment": "AIRCRAFT-MODEL-DEPENDENT"
     },
+    "set_paused": { "fgProps": ["/sim/freeze/master", "/sim/freeze/clock"], "type": "bool" },
     "set_light.landing": { "fgProps": ["/controls/lighting/landing-lights"], "type": "bool" },
     "set_light.taxi": { "fgProps": ["/controls/lighting/taxi-light"], "type": "bool" },
     "set_light.strobe": { "fgProps": ["/controls/lighting/strobe"], "type": "bool" },

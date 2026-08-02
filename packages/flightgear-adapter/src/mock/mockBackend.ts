@@ -29,6 +29,8 @@ export class MockBackend implements FlightBackend {
   private lastStateAtMs: number | null = null;
   private connected = false;
 
+  private paused = false;
+
   constructor(options: MockBackendOptions = {}) {
     this.stateRateHz = options.stateRateHz ?? 30;
     this.model = new MockFlightModel(options.initialScenario ?? DEFAULT_SCENARIO_INIT);
@@ -39,12 +41,17 @@ export class MockBackend implements FlightBackend {
     this.connected = true;
     const periodMs = 1000 / this.stateRateHz;
     this.timer = setInterval(() => {
-      this.model.step(periodMs / 1000);
+      if (!this.paused) this.model.step(periodMs / 1000);
       const state = this.model.snapshot(Date.now());
       this.lastStateAtMs = state.timestampMs;
       for (const l of this.listeners) l(state);
     }, periodMs);
     return Promise.resolve();
+  }
+
+  setPaused(paused: boolean): Promise<import('@b737/shared').CommandResult> {
+    this.paused = paused;
+    return Promise.resolve({ ok: true });
   }
 
   disconnect(): Promise<void> {

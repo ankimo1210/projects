@@ -162,6 +162,13 @@ export async function buildBridge(options: BridgeOptions): Promise<FastifyInstan
         send(session.socket, { t: 'command_ack', seq: msg.seq, result });
         return;
       }
+      case 'set_paused': {
+        const result = options.backend.setPaused
+          ? await options.backend.setPaused(msg.paused)
+          : { ok: false as const, error: 'pause not supported by this backend' };
+        send(session.socket, { t: 'command_ack', seq: msg.seq, result });
+        return;
+      }
       case 'reset_scenario': {
         app.log.info({ config: msg.config }, 'scenario reset requested');
         try {

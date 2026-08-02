@@ -1,0 +1,196 @@
+import { clamp, type AircraftState } from '@b737/shared';
+
+/**
+ * Synthesized, state-driven cockpit soundscape (spec §17). No samples are
+ * used in Milestone 1 — everything is generated, so THIRD_PARTY_ASSETS.md
+ * stays empty. Levels follow aircraft state, not UI clicks.
+ */
+class AudioEngine {
+  private ctx: AudioContext | null = null;
+  private master: GainNode | null = null;
+  private engineOsc: OscillatorNode | null = null;
+  private engineOsc2: OscillatorNode | null = null;
+  private engineGain: GainNode | null = null;
+  private engineFilter: BiquadFilterNode | null = null;
+  private windNoise: AudioBufferSourceNode | null = null;
+  private windGain: GainNode | null = null;
+  private windFilter: BiquadFilterNode | null = null;
+  private rollNoise: AudioBufferSourceNode | null = null;
+  private rollGain: GainNode | null = null;
+  private prevWow = true;
+  private prevGearPos = 1;
+  enabled = false;
+
+  /** Must be called from a user gesture (browser autoplay policy). */
+  start(): void {
+    if (this.ctx) {
+      this.enabled = true;
+      void this.ctx.resume();
+      return;
+    }
+    const ctx = new AudioContext();
+    this.ctx = ctx;
+    this.master = ctx.createGain();
+    this.master.gain.value = 0.5;
+    this.master.connect(ctx.destination);
+
+    // Engine: two detuned saws through a lowpass
+    this.engineOsc = ctx.createOscillator();
+    this.engineOsc.type = 'sawtooth';
+    this.engineOsc2 = ctx.createOscillator();
+    this.engineOsc2.type = 'sawtooth';
+    this.engineFilter = ctx.createBiquadFilter();
+    this.engineFilter.type = 'lowpass';
+    this.engineFilter.frequency.value = 400;
+    this.engineGain = ctx.createGain();
+    this.engineGain.gain.value = 0;
+    this.engineOsc.connect(this.engineFilter);
+    this.engineOsc2.connect(this.engineFilter);
+    this.engineFilter.connect(this.engineGain);
+    this.engineGain.connect(this.master);
+    this.engineOsc.start();
+    this.engineOsc2.start();
+
+    // Wind + ground roll: looped noise buffers with filters
+    const noiseBuffer = this.makeNoiseBuffer(ctx);
+    this.windFilter = ctx.createBiquadFilter();
+    this.windFilter.type = 'bandpass';
+    this.windFilter.frequency.value = 700;
+    this.windGain = ctx.createGain();
+    this.windGain.gain.value = 0;
+    this.windNoise = this.loopNoise(ctx, noiseBuffer, this.windFilter, this.windGain);
+
+    const rollFilter = ctx.createBiquadFilter();
+    rollFilter.type = 'lowpass';
+    rollFilter.frequency.value = 140;
+    this.rollGain = ctx.createGain();
+    this.rollGain.gain.value = 0;
+    this.rollNoise = this.loopNoise(ctx, noiseBuffer, rollFilter, this.rollGain);
+
+    this.enabled = true;
+  }
+
+  stop(): void {
+    this.enabled = false;
+    if (this.ctx) void this.ctx.suspend();
+  }
+
+  /** Called on every state sample (spec §17 level rules). */
+  update(state: AircraftState): void {
+    if (!this.enabled || !this.ctx) return;
+    const t = this.ctx.currentTime;
+    const n1 = (state.engines.left.n1Pct + state.engines.right.n1Pct) / 2;
+    const n1Norm = clamp((n1 - 20) / 80, 0, 1);
+    const reverse = Math.max(state.engines.left.reverserNorm, state.engines.right.reverserNorm);
+
+    if (this.engineOsc && this.engineOsc2 && this.engineGain && this.engineFilter) {
+      this.engineOsc.frequency.setTargetAtTime(35 + n1Norm * 95, t, 0.2);
+      this.engineOsc2.frequency.setTargetAtTime(36.5 + n1Norm * 99, t, 0.2);
+      this.engineFilter.frequency.setTargetAtTime(200 + n1Norm * 900 + reverse * 500, t, 0.2);
+      this.engineGain.gain.setTargetAtTime(0.05 + n1Norm * 0.3 + reverse * 0.15, t, 0.2);
+    }
+    if (this.windGain && this.windFilter) {
+      const windNorm = clamp(state.speeds.iasKt / 250, 0, 1);
+      this.windGain.gain.setTargetAtTime(windNorm * windNorm * 0.25, t, 0.3);
+      this.windFilter.frequency.setTargetAtTime(400 + windNorm * 1200, t, 0.3);
+    }
+    if (this.rollGain) {
+      const rollNorm = state.weightOnWheels ? clamp(state.speeds.gsKt / 150, 0, 1) : 0;
+      this.rollGain.gain.setTargetAtTime(rollNorm * 0.35, t, 0.15);
+    }
+    // touchdown thump on WOW transition
+    if (state.weightOnWheels && !this.prevWow && state.speeds.gsKt > 30) {
+      this.thump();
+    }
+    this.prevWow = state.weightOnWheels;
+    // gear transit rumble
+    if (Math.abs(state.controls.gearPositionNorm - this.prevGearPos) > 0.001) {
+      this.gearWhir();
+    }
+    this.prevGearPos = state.controls.gearPositionNorm;
+  }
+
+  /** Switch/lever interaction click (only called after backend accepts). */
+  click(kind: 'click' | 'lever' | 'rotary' | 'flap_lever' | 'gear_lever' = 'click'): void {
+    if (!this.ctx || !this.master || !this.enabled) return;
+    const t = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'square';
+    osc.frequency.value = kind === 'click' ? 2200 : kind === 'rotary' ? 1400 : 700;
+    gain.gain.setValueAtTime(0.12, t);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
+    osc.connect(gain).connect(this.master);
+    osc.start(t);
+    osc.stop(t + 0.06);
+  }
+
+  /** Advisory / warning chime (rule events). */
+  chime(severity: 'advisory' | 'warning'): void {
+    if (!this.ctx || !this.master || !this.enabled) return;
+    const t0 = this.ctx.currentTime;
+    const count = severity === 'warning' ? 3 : 1;
+    for (let i = 0; i < count; i++) {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = 620;
+      const t = t0 + i * 0.25;
+      gain.gain.setValueAtTime(0.0001, t);
+      gain.gain.exponentialRampToValueAtTime(0.25, t + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+      osc.connect(gain).connect(this.master);
+      osc.start(t);
+      osc.stop(t + 0.24);
+    }
+  }
+
+  private thump(): void {
+    if (!this.ctx || !this.master) return;
+    const t = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(80, t);
+    osc.frequency.exponentialRampToValueAtTime(35, t + 0.25);
+    gain.gain.setValueAtTime(0.6, t);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
+    osc.connect(gain).connect(this.master);
+    osc.start(t);
+    osc.stop(t + 0.35);
+  }
+
+  private gearWhir(): void {
+    // subtle: reuse click at low rate — full servo loop omitted in M1
+  }
+
+  private makeNoiseBuffer(ctx: AudioContext): AudioBuffer {
+    const buffer = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    let last = 0;
+    for (let i = 0; i < data.length; i++) {
+      const white = Math.random() * 2 - 1;
+      last = (last + 0.02 * white) / 1.02; // pinkish
+      data[i] = last * 3.5;
+    }
+    return buffer;
+  }
+
+  private loopNoise(
+    ctx: AudioContext,
+    buffer: AudioBuffer,
+    filter: BiquadFilterNode,
+    gain: GainNode,
+  ): AudioBufferSourceNode {
+    const src = ctx.createBufferSource();
+    src.buffer = buffer;
+    src.loop = true;
+    src.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.master!);
+    src.start();
+    return src;
+  }
+}
+
+export const audioEngine = new AudioEngine();

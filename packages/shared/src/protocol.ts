@@ -42,6 +42,7 @@ export const ClientMessageSchema = z.discriminatedUnion('t', [
     seq: z.number().int(),
     config: ScenarioInitialStateSchema,
   }),
+  z.object({ t: z.literal('set_paused'), seq: z.number().int(), paused: z.boolean() }),
 ]);
 export type ClientMessage = z.infer<typeof ClientMessageSchema>;
 
