@@ -207,3 +207,27 @@ describe('generateDebrief', () => {
     expect(report.metrics['Centerline offset at touchdown']).toMatch(/m$/);
   });
 });
+
+// F-03: an injected failure is the exercise, not the crew's mistake.
+describe('injected failures', () => {
+  const event = (data?: Record<string, unknown>): ScenarioEvent => ({
+    kind: 'rule_fired',
+    simTimeSec: 15,
+    id: 'v1_cut',
+    message: 'Engine 1 failure after V1',
+    severity: 'safety_critical',
+    data,
+  });
+
+  it('does not fail the flight for a scenario-injected event', () => {
+    const report = generateDebrief(
+      baseInput(makeHistory({}), [event({ injectFailure: 'engine_1_flameout' })]),
+    );
+    expect(report.overall).not.toBe('FAIL');
+  });
+
+  it('still fails the flight for a real safety-critical event', () => {
+    const report = generateDebrief(baseInput(makeHistory({}), [event(undefined)]));
+    expect(report.overall).toBe('FAIL');
+  });
+});

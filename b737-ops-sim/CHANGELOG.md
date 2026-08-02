@@ -2,6 +2,29 @@
 
 Local-only project; versions track milestones rather than releases.
 
+## Second review remediation — M5 re-opened and fixed (2026-08-02)
+
+All 10 findings in [REVIEW_FEEDBACK_2.md](REVIEW_FEEDBACK_2.md) addressed;
+per-finding detail in [docs/REVIEW_RESPONSE_2.md](docs/REVIEW_RESPONSE_2.md).
+
+### Fixed
+
+- **Failure injection reaches the aircraft in the browser** (F-01): the web app
+  now passes the crew's command path into the training session; the browser V1
+  test that was wrongly removed during M5 is restored.
+- **Weather acts on the physics** (F-02): the aircraft drifts by the blended
+  surface/aloft wind plus the seeded gust, and the scenario's turbulence
+  setting scales the attitude perturbation — LNAV's crab and the actual drift
+  now agree, so it converges in a crosswind.
+- Injected failures no longer auto-FAIL the debrief (F-03); the route-deviation
+  rule catches both sides of the course (F-04); airborne-start scenarios no
+  longer carry a phantom "no liftoff" deduction (F-05).
+- Cold-and-dark: inherited checklists remapped to reachable phases (F-06) and
+  the taxi-without-clearance rule re-armed (F-10).
+- Wind direction declared degrees TRUE in the schemas and converted to magnetic
+  in ATC readouts (F-07); ND draws only the remaining route (F-09); duplicate
+  react import removed (F-08).
+
 ## Milestone 5 — Advanced Training (2026-08-02)
 
 Plan: [docs/milestones/MILESTONE_05.md](docs/milestones/MILESTONE_05.md),

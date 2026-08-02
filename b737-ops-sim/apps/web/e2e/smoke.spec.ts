@@ -291,3 +291,35 @@ test('weather readout reflects the scenario weather', async ({ page }) => {
   });
   await expect(page.getByTestId('weather-readout')).toContainText('turb');
 });
+
+// F-01: the failure a scenario injects must reach the AIRCRAFT in the browser,
+// not just the transcript. This is the test whose earlier removal hid the bug.
+test('V1 engine failure happens in the browser and the aircraft feels it', async ({ page }) => {
+  test.setTimeout(120_000);
+  await page.goto('/');
+  await expect(page.getByTestId('conn-status')).toContainText('mock backend', { timeout: 15_000 });
+  await page
+    .getByTestId('scenario-picker')
+    .selectOption({ label: 'Engine Failure after V1 — KSFO 28R' });
+  await page.getByTestId('overhead-btn').click();
+
+  await page.getByTestId('request-takeoff').click();
+  await page
+    .getByTestId('response-options')
+    .getByRole('button', { name: /Cleared for takeoff runway 28R/ })
+    .click();
+  await page.getByTestId('parking-brake').click();
+  // set takeoff thrust via the DOM throttle (the keyboard ramp relies on a
+  // 20 Hz interval that headless Chromium throttles)
+  await page.getByTestId('throttle-slider').fill('100');
+
+  // the rule fires when the aeroplane reaches V1 — and the aircraft feels it:
+  // active failure reported, hydraulic system A decays, master caution lights
+  await expect(page.getByTestId('weather-readout')).toContainText('FAIL: engine_1_flameout', {
+    timeout: 60_000,
+  });
+  await expect(page.getByTestId('ann-hyd_a_low')).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByTestId('master-caution')).toContainText('MASTER CAUTION');
+  // and the systems synoptic shows system A collapsing while B holds
+  await expect(page.getByTestId('synoptic')).toContainText('HYD A/B');
+});

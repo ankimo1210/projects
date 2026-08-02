@@ -267,6 +267,12 @@ describe('approach drill scenario', () => {
     expect(messages.some((m) => m.startsWith('1000,'))).toBe(true);
     expect(messages.some((m) => m.startsWith('500,'))).toBe(true);
     expect(messages.some((m) => m.startsWith('Minimums'))).toBe(true);
+
+    // F-05: an airborne start has no takeoff to score — no phantom deduction.
+    const report = session.debrief();
+    const takeoff = report.categories.find((c) => c.id === 'takeoff_procedure')!;
+    expect(takeoff.findings.some((f) => f.detail.includes('No liftoff'))).toBe(false);
+    expect(report.overall).not.toBe('FAIL');
   });
 
   it('flies a go-around when the crew calls it, and the drill records it', () => {
@@ -461,6 +467,13 @@ describe('advanced scenarios (M5)', () => {
       }
     }
     expect(model.snapshot(0).weightOnWheels).toBe(false);
+
+    // F-03: the injected event carries its marker into the debrief timeline
+    // (the not-auto-FAIL rule itself is unit-tested in debrief.test.ts —
+    // mid-flight the overall is legitimately poor for other reasons).
+    const report = session.debrief();
+    const cut = report.timeline.find((e) => e.id === 'v1_cut');
+    expect(cut?.data && 'injectFailure' in cut.data).toBe(true);
   });
 
   it('a crosswind approach drifts the aircraft when it is not corrected', () => {

@@ -148,7 +148,7 @@ export const AircraftStateSchema = z.object({
 
   /** What the aircraft is flying through right now (spec §22 Phase 5). */
   weather: z.object({
-    /** Wind the aircraft is actually in, at its altitude. */
+    /** Wind the aircraft is actually in, FROM this direction, degrees TRUE. */
     windDirDeg: z.number(),
     windSpeedKt: z.number(),
     /** Instantaneous gust component on top of the steady wind. */

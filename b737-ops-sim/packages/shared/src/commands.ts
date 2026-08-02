@@ -96,6 +96,7 @@ export const ScenarioInitialStateSchema = z.object({
   parkingBrakeSet: z.boolean(),
   /** NON_CERTIFIED_APPROXIMATION: default MVP weight 145,000 lb. */
   grossWeightLb: z.number().min(90000).max(174000),
+  /** Surface wind FROM this direction, degrees TRUE (ATC reads it as magnetic). */
   windDirDeg: z.number().min(0).max(360),
   windSpeedKt: z.number().min(0).max(40),
   /** Start with every system off (spec §22 Phase 4). Only valid at a stand. */
@@ -103,7 +104,7 @@ export const ScenarioInitialStateSchema = z.object({
   /** Weather beyond the surface wind (spec §22 Phase 5). */
   weather: z
     .object({
-      /** Wind at 3,000 ft and above; the surface wind is interpolated below. */
+      /** Wind aloft FROM this direction, degrees TRUE (at/above 3,000 ft AGL). */
       windAloftDirDeg: z.number().min(0).max(360),
       windAloftSpeedKt: z.number().min(0).max(120),
       /** Peak gust above the steady wind, in knots. */

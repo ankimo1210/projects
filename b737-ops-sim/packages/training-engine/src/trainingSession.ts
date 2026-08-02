@@ -266,6 +266,8 @@ export class TrainingSession {
       grossWeightLb: this.scenario.initialState.grossWeightLb,
       runway: this.atcRunway(),
       expectedChecklistIds: this.scenario.checklists.map((c) => c.id),
+      // Scenarios that begin established on final have no takeoff to score.
+      expectTakeoff: this.scenario.initialState.startAt !== 'final_approach',
     });
   }
 

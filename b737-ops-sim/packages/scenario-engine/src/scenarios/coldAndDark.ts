@@ -275,6 +275,20 @@ export const COLD_AND_DARK_SCENARIO: ScenarioDefinition = {
   rules: [
     ...GATE_TO_GATE_SCENARIO.rules.filter((r) => r.id !== 'taxi_without_clearance'),
     {
+      // Re-declared for this scenario's phase names (F-10): the inherited rule
+      // was scoped to gate-to-gate's 'preflight' phase and never armed here.
+      id: 'taxi_without_clearance',
+      when: {
+        all: [
+          { prop: 'flags.taxiClearanceReceived', op: 'neq', value: true },
+          { prop: 'speeds.gsKt', op: 'gt', value: 5 },
+        ],
+      },
+      phases: ['ready_to_taxi'],
+      severity: 'deviation',
+      message: 'Started taxiing before the taxi clearance',
+    },
+    {
       id: 'engine_start_without_duct_pressure',
       when: {
         all: [
@@ -307,5 +321,18 @@ export const COLD_AND_DARK_SCENARIO: ScenarioDefinition = {
       once: false,
     },
   ],
-  checklists: [PREFLIGHT, BEFORE_START, AFTER_START, ...GATE_TO_GATE_SCENARIO.checklists],
+  // Inherited checklists carry gate-to-gate phase names that do not exist
+  // here; remap them or they are permanently locked "review only" (F-06).
+  checklists: [
+    PREFLIGHT,
+    BEFORE_START,
+    AFTER_START,
+    ...GATE_TO_GATE_SCENARIO.checklists.map((c) =>
+      c.id === 'before_start'
+        ? { ...c, allowedPhaseIds: ['cold_and_dark', 'power_on', 'apu_available'] }
+        : c.id === 'before_taxi'
+          ? { ...c, allowedPhaseIds: ['ready_to_taxi', 'taxi_out'] }
+          : c,
+    ),
+  ],
 };
