@@ -24,6 +24,26 @@ const VECTORS: &[(&str, i32, &str)] = &[
     ("LAND", 24, "landing site, m"),
     ("RGU", 24, "guidance-frame position, m"),
     ("VGU", 10, "guidance-frame velocity, m/cs"),
+    (
+        "VXBEAMNB",
+        1,
+        "LR X velocity beam, navigation-base unit vector",
+    ),
+    (
+        "VYBEAMNB",
+        1,
+        "LR Y velocity beam, navigation-base unit vector",
+    ),
+    (
+        "VZBEAMNB",
+        1,
+        "LR Z velocity beam, navigation-base unit vector",
+    ),
+    (
+        "HBEAMNB",
+        1,
+        "LR altitude beam, navigation-base unit vector",
+    ),
 ];
 
 const SCALARS: &[(&str, i32, &str)] = &[
@@ -43,6 +63,15 @@ const SCALARS: &[(&str, i32, &str)] = &[
 /// recorded. Reading it here costs nothing and does not clear it — the
 /// dump is passive, unlike RSET, which the runner must never send.
 const OCTAL_TRIPLES: &[(&str, &str)] = &[("FAILREG", "alarm codes (0 = none)")];
+
+/// Raw landing-radar working state. `VSELECT` is a single-word beam
+/// selector; `VMEAS` is the two-word five-sample result before SERVICER
+/// applies the selected beam scale. Raw octal and integer forms avoid
+/// assuming a b-scale while diagnosing the counter transaction.
+const LR_RAW: &[(&str, usize, &str)] = &[
+    ("VSELECT", 1, "LR velocity selector (0=Z, 1=Y, 2=X)"),
+    ("VMEAS", 2, "LR five-sample measurement, raw DP"),
+];
 
 fn mag(v: [f64; 3]) -> f64 {
     (v[0] * v[0] + v[1] * v[1] + v[2] * v[2]).sqrt()
@@ -79,6 +108,28 @@ fn main() -> Result<()> {
                     .collect();
                 println!("{sym:<10} {:>18}   {what}", w.join(" "));
             }
+            None => println!("{sym:<10} {:>18}   {what}", "(not found)"),
+        }
+    }
+    for (sym, words, what) in LR_RAW {
+        match symtab.ecadr(sym) {
+            Some(e) if *words == 1 => println!(
+                "{sym:<10} {:>18}   {what}",
+                format!(
+                    "{:05o} ({})",
+                    dump.word(e).unwrap_or_default(),
+                    dump.sp(e).unwrap_or_default()
+                )
+            ),
+            Some(e) => println!(
+                "{sym:<10} {:>18}   {what}",
+                format!(
+                    "{:05o} {:05o} ({})",
+                    dump.word(e).unwrap_or_default(),
+                    dump.word(e + 1).unwrap_or_default(),
+                    dump.dp(e).unwrap_or_default()
+                )
+            ),
             None => println!("{sym:<10} {:>18}   {what}", "(not found)"),
         }
     }

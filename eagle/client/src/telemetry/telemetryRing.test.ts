@@ -26,6 +26,12 @@ function frame(t: number, mm: string): TelemetryFrame {
     downlink_wps: 50,
     ingest_drops: 0,
     touchdown: null,
+    demo_mode: false,
+    assist_active: false,
+    assist_target_vz_ms: null,
+    touchdown_v_vert_ms: null,
+    touchdown_v_horiz_ms: null,
+    touchdown_tilt_deg: null,
     handover: false,
   };
 }

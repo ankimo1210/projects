@@ -172,38 +172,36 @@ pub fn altitude<F: Frame>(pos: V3<F>, r_surface: f64) -> f64 {
     pos.norm() - r_surface
 }
 
-/// Metres per LR altitude count, high scale.
+/// Metres per LR altitude count on the fine/low-range branch.
 ///
 /// `CONTROLLED_CONSTANTS.agc:168`:
 /// `HSCAL  2DEC  -.3288792   # SCALES 1.079 FT/BIT TO 2(22)M.`
 ///
 /// The comment names the quantum in feet and the constant is that same
 /// quantum in metres: 1.079 ft x 0.3048 = 0.32887920 m, matching all
-/// eight digits. `HSCAL` is negative because the AGC's slant range closes
-/// as the vehicle descends; the magnitude is the quantum.
+/// eight digits. `HSCAL`'s negative sign belongs to the rope's down-pointing
+/// beam/vector convention; it is not a sign to apply to the hardware
+/// counter word itself.
 ///
-/// Low scale is selected by `ALTSCBIT` (`FLAGWORD_ASSIGNMENTS.agc:1147`,
-/// `BIT9` of FLGWRD12), which is the flag counterpart of channel 33's
-/// bit 9 "LR RANGE LOW SCALE", and rescaled through `SKALSKAL`
-/// (`ERASABLE_ASSIGNMENTS.agc:813`, "LR ALT SCALE FACTOR RATIO: .2 NOM").
-/// Only the high scale is pinned here; the low-scale path is not yet
-/// verified and must not be guessed.
-pub const LR_ALT_M_PER_COUNT: f64 = 0.328_879_2;
+/// NASSP's LGC interface provides the hardware pairing that the rope's
+/// scale-status logic expects: 5.395 ft/count at or above 2500 ft,
+/// 1.079 ft/count below it, with channel 33 bit 9 declaring low range.
+pub const LR_ALT_M_PER_COUNT: f64 = 1.079 * 0.3048;
+/// Coarse/high-range quantum used above 2500 ft, matching the LR hardware
+/// interface in NASSP (`GetRangeLGC`).
+pub const LR_ALT_HIGH_M_PER_COUNT: f64 = 5.395 * 0.3048;
+/// Hardware range-scale transition: below 2500 ft channel 33 bit 9 is set
+/// and the fine 1.079 ft/count scale is used.
+pub const LR_ALT_SCALE_SWITCH_M: f64 = 2500.0 * 0.3048;
 
-/// Quantize a slant range to LR altitude counts, high scale.
+/// Quantize a slant range using the radar's automatic range scale.
 ///
 /// Truncation, not rounding: a counter accumulates whole pulses, and the
 /// residual belongs to the caller so successive readings do not lose it —
 /// the same carry-forward the PIPA model uses.
-/// The largest altitude the `RNRAD` counter can carry on the AGC's HIGH
-/// altitude scale: 16383 counts x `LR_ALT_M_PER_COUNT`.
-///
-/// `RNRAD` is a 15-bit counter, and `HSCAL` is 1.079 ft/bit
-/// (`CONTROLLED_CONSTANTS.agc:168`), so the high scale tops out here and
-/// the low scale (x `SKALSKAL`, .2 nominal) at a fifth of it. Flight 18
-/// asked it to carry 15 213 m = 46 257 counts. Altitude data-good must
-/// not be asserted above this — see the ledger's defect 9.
-pub const LR_ALT_MAX_M: f64 = 16_383.0 * LR_ALT_M_PER_COUNT;
+/// Published LR altimeter acquisition ceiling (40,000 ft). Both automatic
+/// scale branches fit in RNRAD inside this operating band.
+pub const LR_ALT_MAX_M: f64 = 40_000.0 * 0.3048;
 
 /// The along-beam velocity a beam can report, given `LVELBIAS_COUNTS` and
 /// the 15-bit counter.
@@ -232,23 +230,32 @@ pub fn vel_in_counter_range(along_ms: f64, ms_per_count: f64) -> bool {
     along_ms >= lo && along_ms <= hi
 }
 
-/// Whether the LR can report this altitude at all on the high scale.
+/// Whether the LR can report this slant range at all.
 pub fn alt_in_counter_range(range_m: f64) -> bool {
-    range_m.abs() <= LR_ALT_MAX_M
+    range_m > 0.0 && range_m <= LR_ALT_MAX_M
+}
+
+pub fn alt_uses_low_scale(range_m: f64) -> bool {
+    range_m < LR_ALT_SCALE_SWITCH_M
+}
+
+pub fn alt_m_per_count(range_m: f64) -> f64 {
+    if alt_uses_low_scale(range_m) {
+        LR_ALT_M_PER_COUNT
+    } else {
+        LR_ALT_HIGH_M_PER_COUNT
+    }
 }
 
 pub fn alt_counts(range_m: f64) -> i32 {
-    // NEGATED, because `HSCAL` is negative (-0.3288792) and the AGC
-    // multiplies the reading by it (`SERVICER.agc:1144-1147`,
-    // `DMP HSCAL`). Sending a positive count therefore yields a NEGATIVE
-    // computed altitude — the AGC concludes it is below the surface and
-    // thrusts continuously, which is exactly what flight 17 did: vz
-    // positive from ignition, climbing to 2496 km with nav_err_alt
-    // diverging monotonically to -90 km.
-    //
-    // The quantum constant here is the magnitude of HSCAL; the sign lives
-    // in the count.
-    -(range_m / LR_ALT_M_PER_COUNT).trunc() as i32
+    // The LR hardware word is a positive range magnitude. NASSP's LGC
+    // interface writes `range / 5.395 ft` above 2500 ft and
+    // `range / 1.079 ft` below it
+    // (orbiternassp/NASSP e19070c, src_lm/lm_lr.cpp:87-100), while the rope
+    // reads that magnitude with `MASK POSMAX` (P20-P25.agc:2949-2957).
+    // HSCAL's negative sign is consumed later by the down-pointing beam
+    // geometry in SERVICER; negating the counter here applies it twice.
+    (range_m / alt_m_per_count(range_m)).trunc() as i32
 }
 
 /// Which quantity the AGC has selected on channel 13.
@@ -301,6 +308,9 @@ pub const CH33_LR_RANGE_DATA_GOOD: u16 = 0o20;
 pub const CH33_LR_POS1: u16 = 0o40;
 pub const CH33_LR_POS2: u16 = 0o100;
 pub const CH33_LR_VEL_DATA_GOOD: u16 = 0o200;
+/// Channel 33 bit 9. Unlike DATA GOOD and position, this is not inverted:
+/// clear declares the HSCAL/high-scale path, set declares low scale.
+pub const CH33_LR_RANGE_LOW_SCALE: u16 = 0o400;
 
 /// Build the channel-33 word the LR should be presenting.
 ///
@@ -322,14 +332,13 @@ pub fn ch33_bits(range_good: bool, vel_good: bool, in_position_2: bool) -> u16 {
 
 /// Every channel-33 bit this module owns.
 ///
-/// **`CH33_LR_POS1` is deliberately NOT in it.** `runner` owns BIT6: it
-/// clears the bit as its own responder when P63SPOT3 asks for the antenna
-/// (`runner.rs:657`, `discrete_write(0o33, 0, CH33_BIT6_LR_POS1)`).
-/// Including POS1 here made `apply_lr_bits`'s `current | CH33_LR_MASK`
-/// re-SET the bit every tick, silently undoing that handshake — which is
-/// why flights 14 and 15 both died at P63 on `LRPOSALM` (0522). A mask
-/// that covers a bit you never assert is a mask that erases someone
-/// else's work.
+/// **`CH33_LR_POS1` is deliberately NOT in it.** `runner` owns the initial
+/// BIT6 assertion when P63SPOT3 asks for the antenna (`runner.rs:685`).
+/// The runtime's physical antenna state machine later deasserts BIT6 with
+/// its own explicit masked write when CH12 BIT13 commands position 2.
+/// Generic data-good updates must still exclude POS1 or they would undo
+/// runner's handshake — the defect that killed flights 14 and 15 with
+/// `LRPOSALM` (0522).
 pub const CH33_LR_MASK: u16 = CH33_LR_RANGE_DATA_GOOD | CH33_LR_POS2 | CH33_LR_VEL_DATA_GOOD;
 
 /// Read-modify-write the LR bits of an existing channel-33 word.
@@ -749,27 +758,41 @@ mod tests {
     }
 
     #[test]
-    fn altitude_counts_round_trip_through_the_agcs_own_negative_scale() {
-        // The AGC recovers altitude as count * HSCAL, and HSCAL is
-        // NEGATIVE. So the round trip must go through -LR_ALT_M_PER_COUNT,
-        // and a positive altitude must produce a NEGATIVE count.
+    fn altitude_counts_are_the_positive_hardware_range_magnitude() {
+        // RNRAD carries the positive range magnitude. HSCAL's negative
+        // sign belongs to the rope's beam-vector computation, not this
+        // hardware conversion.
         for h in [15_000.0, 3_000.0, 250.0, 40.0, 3.0] {
             let n = alt_counts(h);
-            assert!(n < 0, "h={h} must give a negative count, got {n}");
-            let back = f64::from(n) * -LR_ALT_M_PER_COUNT;
+            assert!(n > 0, "h={h} must give a positive range, got {n}");
+            let quantum = alt_m_per_count(h);
+            let back = f64::from(n) * quantum;
             assert!(
-                (h - back) < LR_ALT_M_PER_COUNT && h - back >= 0.0,
+                (h - back) < quantum && h - back >= 0.0,
                 "h={h} -> {n} counts -> {back}"
             );
         }
     }
 
     #[test]
+    fn altitude_scale_switch_matches_the_landing_radar_interface() {
+        assert!(!alt_uses_low_scale(LR_ALT_SCALE_SWITCH_M));
+        assert!(alt_uses_low_scale(LR_ALT_SCALE_SWITCH_M - 0.01));
+        assert_eq!(
+            alt_counts(10_000.0 * 0.3048),
+            (10_000.0_f64 / 5.395).trunc() as i32
+        );
+        assert_eq!(
+            alt_counts(1_000.0 * 0.3048),
+            (1_000.0_f64 / 1.079).trunc() as i32
+        );
+    }
+
+    #[test]
     fn altitude_counts_truncate_rather_than_round() {
         // A counter carries whole pulses; the residual is the caller's,
-        // so half a quantum must not become a whole one. (Negated, per
-        // HSCAL's sign.)
-        assert_eq!(alt_counts(LR_ALT_M_PER_COUNT * 1.9), -1);
+        // so half a quantum must not become a whole one.
+        assert_eq!(alt_counts(LR_ALT_M_PER_COUNT * 1.9), 1);
         assert_eq!(alt_counts(LR_ALT_M_PER_COUNT * 0.9), 0);
     }
 
@@ -1095,11 +1118,10 @@ mod defect9_tests {
     use super::*;
 
     #[test]
-    fn the_counter_cannot_carry_the_braking_phase() {
-        // Flight 18's ignition altitude. The point of the constant is that
-        // this is OUT of range, not in it.
+    fn the_radar_does_not_acquire_above_its_operating_ceiling() {
+        // Flight 18's ignition altitude is above the LR's 40,000 ft
+        // acquisition ceiling even though the coarse counter can encode it.
         assert!(!alt_in_counter_range(15_213.0));
-        assert!(alt_counts(15_213.0).unsigned_abs() > 16_383);
     }
 
     #[test]
@@ -1132,9 +1154,9 @@ mod defect9_tests {
     }
 
     #[test]
-    fn the_range_limit_is_the_counter_times_the_quantum() {
-        assert!((LR_ALT_MAX_M - 5387.4).abs() < 1.0, "{LR_ALT_MAX_M}");
-        // Exactly at the edge is representable; one quantum past is not.
+    fn the_range_limit_is_the_published_40000_feet() {
+        assert!((LR_ALT_MAX_M - 12_192.0).abs() < 1e-9, "{LR_ALT_MAX_M}");
+        // Exactly at the operating edge is accepted; anything past is not.
         assert!(alt_in_counter_range(LR_ALT_MAX_M));
         assert!(!alt_in_counter_range(LR_ALT_MAX_M + LR_ALT_M_PER_COUNT));
     }

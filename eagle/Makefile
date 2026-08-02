@@ -1,4 +1,4 @@
-.PHONY: vendor agc-tools agc test test-integration dev descent-p66 descent-p66-fast descent-full lint
+.PHONY: vendor agc-tools agc test test-integration dev demo descent-p66 descent-p66-fast descent-full descent-lr-alt-only descent-lr-pos1 descent-lr-full descent-lr-x-only descent-p65 lint
 
 vendor:
 	bash scripts/fetch-vendor.sh
@@ -25,6 +25,17 @@ dev-runtime: agc
 
 dev-client:
 	cd client && npm run dev
+
+# Playable Alpha: real Luminary099/DSKY/P63→P66 with an explicitly labelled,
+# scenario-local terminal safety layer. This is a game demo, NOT an authentic
+# acceptance result. Start `make dev-client` in another terminal and open ENGR.
+demo: agc
+	@echo "ASSISTED DEMO — run 'make dev-client' separately, then open http://localhost:5173 → ENGR"
+	mkdir -p build/traces
+	cd runtime && cargo run -p eagle-runtime -- \
+	  --yaagc ../build/agc/yaAGC --core ../build/agc/Luminary099.bin \
+	  --scenario ../scenarios/playable-demo.toml --root .. \
+	  --trace-out ../build/traces/pkt-playable-demo.jsonl
 
 # Closed-loop descent: real Luminary099 against our 6-DoF physics, boot →
 # P63 → ENGINE ON → ATT HOLD → ground contact. NOT a soft landing today —
@@ -65,6 +76,51 @@ descent-full: agc
 	  --yaagc ../build/agc/yaAGC --core ../build/agc/Luminary099.bin \
 	  --scenario ../scenarios/pdi-descent.toml --root .. \
 	  --trace-out ../build/traces/pkt-descent-full.jsonl
+
+# M3 diagnostic bisection: keep LR altitude live, but report every LR
+# velocity read as data NOT-good. The scenario records the decision rule
+# against flight 11 before launch; this target is not an acceptance gate.
+descent-lr-alt-only: agc
+	mkdir -p build/traces
+	cd runtime && cargo run -p eagle-runtime -- \
+	  --yaagc ../build/agc/yaAGC --core ../build/agc/Luminary099.bin \
+	  --scenario ../scenarios/pdi-descent-lr-alt-only.toml --root .. \
+	  --trace-out ../build/traces/pkt-m1-lr-alt-only.jsonl
+
+# M3 diagnostic: velocity data enabled with the simulator and rope both
+# using antenna position 1 until Luminary explicitly commands position 2.
+descent-lr-pos1: agc
+	mkdir -p build/traces
+	cd runtime && cargo run -p eagle-runtime -- \
+	  --yaagc ../build/agc/yaAGC --core ../build/agc/Luminary099.bin \
+	  --scenario ../scenarios/pdi-descent-lr-pos1.toml --root .. \
+	  --trace-out ../build/traces/pkt-m1-lr-pos1.jsonl
+
+# M3 integration: complete Apollo 11 LR/P65 pad block, five-sample radar
+# transactions and commanded POS1->POS2 antenna motion all enabled.
+descent-lr-full: agc
+	mkdir -p build/traces
+	cd runtime && cargo run -p eagle-runtime -- \
+	  --yaagc ../build/agc/yaAGC --core ../build/agc/Luminary099.bin \
+	  --scenario ../scenarios/pdi-descent-lr-full.toml --root .. \
+	  --trace-out ../build/traces/pkt-m1-lr-full.jsonl
+
+# M3 beam bisection: LR altitude + velocity X only; Y/Z report not-good.
+descent-lr-x-only: agc
+	mkdir -p build/traces
+	cd runtime && cargo run -p eagle-runtime -- \
+	  --yaagc ../build/agc/yaAGC --core ../build/agc/Luminary099.bin \
+	  --scenario ../scenarios/pdi-descent-lr-x-only.toml --root .. \
+	  --trace-out ../build/traces/pkt-m1-lr-x-only.jsonl
+
+# M3 end-to-end diagnostic: full LR with no forced P64->P66 handover, so
+# Luminary flies its automatic P65 vector-velocity law. Not the frozen gate.
+descent-p65: agc
+	mkdir -p build/traces
+	cd runtime && cargo run -p eagle-runtime -- \
+	  --yaagc ../build/agc/yaAGC --core ../build/agc/Luminary099.bin \
+	  --scenario ../scenarios/pdi-descent-p65.toml --root .. \
+	  --trace-out ../build/traces/pkt-m1-p65.jsonl
 
 lint:
 	cd runtime && cargo clippy --workspace --all-targets -- -D warnings

@@ -228,7 +228,7 @@ export const chaptersPartVVI: Chapter[] = [
     labObjective:
       "white noise、OU colored noise、ゆっくり変わる外乱を同じ積分強度で比較し、外乱の自己相関と駆動された状態経路を連動表示します。",
     notice: [
-      "τ_c を大きくすると外乱の自己相関が長く残り、状態は同じ方向へ動き続けやすくなる",
+      "減衰 κ=1/τ_c を小さくすると相関時間が長くなり、状態は同じ方向へ動き続けやすくなる",
       "X だけでは記憶を持つように見えても、(X,η) を状態とすれば基本モデルは Markov になる",
       "相関時間を変える比較では、瞬時分散と積分強度のどちらを固定したかを確認する",
     ],
@@ -402,8 +402,8 @@ export const chaptersPartVVI: Chapter[] = [
       "強収束は同じノイズ下の経路精度、弱収束は期待値・分布量の精度。用途に合う誤差を測って刻み幅を選ぶ。",
     notation:
       "γ、q は Δ→0 の漸近次数です。定数 C、十分小さい Δ の範囲、係数・試験関数の正則性は定義の背後にある仮定です。",
-    lab: "euler",
-    labTitle: "強誤差・弱誤差の log–log 収束",
+    lab: "weak-convergence",
+    labTitle: "試験関数別・強誤差と弱誤差の log–log 収束",
     labObjective:
       "GBM の厳密解と Euler 近似を同じ微細増分で結合し、終端強誤差と選択した期待値の弱誤差を刻み幅ごとに比較します。",
     notice: [

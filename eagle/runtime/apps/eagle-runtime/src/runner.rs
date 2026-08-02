@@ -98,22 +98,15 @@ pub const FLGWRD12_ECADR: u16 = 0o110;
 /// `ALTSCBIT` = BIT9 (`FLAGWORD_ASSIGNMENTS.agc:1147`), the LR altitude
 /// scale factor: **set = high scale, clear = low scale**.
 ///
-/// **Nothing in the rope ever writes this bit.** `SERVICER.agc:1137` is
-/// its only reference in Luminary099, and the same holds in Luminary131
-/// and Luminary210 — it is external state the landing radar supplies, so
-/// in this architecture we are the only thing that can supply it.
+/// The landing radar exposes the corresponding scale status on channel 33
+/// bit 9, and `SCALECHK/SCALCHNG` keeps `RADMODES` synchronized with it.
+/// The runner seeds the high-scale state here; the responder must present
+/// the matching cleared channel bit before the first read.
 ///
-/// Leaving it clear is not neutral. Fresh start zeroes the flagwords, so
-/// the low-scale branch runs and the AGC multiplies the reading by
-/// `SKALSKAL` — a pad load (`ERASABLE_ASSIGNMENTS.agc:813`, ".2 NOM")
-/// that `scenarios/p66-padload.toml` does not load, i.e. **zero**. The
-/// slant range collapses and `DELTAH = 0 - HCALC` drags the AGC's own
-/// altitude toward the surface on every update.
-///
-/// High scale is the right declaration and not merely the convenient one:
-/// it uses `HSCAL` alone, so it needs no `SKALSKAL` at all, and its
-/// quantum is the one `eagle_sensors::lr::LR_ALT_M_PER_COUNT` already
-/// encodes. Setting it read-modify-write matters — `RADMODES` carries
+/// Fresh start zeroes the flagwords, which disagrees with the radar's
+/// initial coarse/high-range status during PDI. Seed that initial state;
+/// later `SCALECHK/SCALCHNG` follows the responder's 2500 ft channel-33
+/// transition. Setting it read-modify-write matters — `RADMODES` carries
 /// live radar bits, and a blunt manifest write would clobber them, the
 /// hazard `p66-padload.toml` already documents for `FLAGWRD8`.
 pub const ALTSCBIT: u16 = 0o400;

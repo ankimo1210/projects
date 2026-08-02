@@ -5,10 +5,12 @@
 //! errors OFF. Live: needs `make agc`; run with
 //! `cargo test -p eagle-runtime --test live_pdi_descent -- --ignored --test-threads=1`.
 //!
-//! **STATUS 2026-07-26: this test has NEVER been run green — it has never
-//! been run at all.** It is the frozen M1 target, written after the flight
-//! budget (6 of 6) was spent, and it is expected to FAIL today on the
-//! touchdown block below. What six instrumented flights measured
+//! **STATUS 2026-08-02: RED.** The frozen M1 target was executed unchanged
+//! for the first time. It flew `["00","63","64","66"]` and crashed after
+//! 856.5 s from ENGINE ON at 20.70 m/s vertical, 62.40 m/s horizontal and
+//! 11.67° tilt, with 1,353 pre-contact PROG frames. The first failing assert
+//! was the 800 s timeout below; the class and velocity asserts would also
+//! fail. The earlier six instrumented flights measured
 //! (`docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`):
 //!
 //! - The mode assert PASSES on the measured sequence: `["00","63","64","66"]`

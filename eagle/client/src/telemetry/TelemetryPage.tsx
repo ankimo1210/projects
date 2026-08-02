@@ -1,4 +1,5 @@
 import { StripChart } from "./StripChart";
+import { landingScore } from "./landingScore";
 import type { TelemetryBuffer } from "./useTelemetryBuffer";
 
 interface Props {
@@ -19,9 +20,22 @@ function popcount(n: number): number {
 export function TelemetryPage({ buffer, sendRod }: Props) {
   const { ring, version, latest, phases } = buffer;
   const frames = ring.frames();
+  const score = touchdownScore(latest);
 
   return (
     <div className="engr">
+      {latest?.demo_mode && (
+        <div className="assist-banner" role="status">
+          <strong>ASSISTED DEMO</strong>
+          <span>
+            Terminal Assist: {latest.assist_active ? "ACTIVE" : "ARMED"}
+            {latest.assist_target_vz_ms !== null &&
+              ` · target ${latest.assist_target_vz_ms.toFixed(2)} m/s`}
+          </span>
+          <small>Game aid — authentic acceptance results are unchanged.</small>
+        </div>
+      )}
+
       <div className="engr-charts">
         <StripChart
           title="Altitude (m)"
@@ -79,20 +93,55 @@ export function TelemetryPage({ buffer, sendRod }: Props) {
                 <Row k="downlink" v={latest.downlink_wps.toFixed(0) + " wps"} />
                 <Row k="ingest drops" v={String(latest.ingest_drops)} />
                 <Row k="handover" v={latest.handover ? "FIRED" : "—"} />
+                <Row
+                  k="terminal assist"
+                  v={
+                    latest.demo_mode
+                      ? latest.assist_active
+                        ? "ACTIVE"
+                        : "ARMED"
+                      : "OFF"
+                  }
+                />
+                <Row
+                  k="assist target"
+                  v={fmt(latest.assist_target_vz_ms, "m/s")}
+                />
               </tbody>
             </table>
           ) : (
             <p className="muted">waiting for telemetry…</p>
           )}
           {latest?.touchdown && (
-            <div className={"td-badge td-" + latest.touchdown.toLowerCase()}>
-              TOUCHDOWN: {latest.touchdown}
+            <div
+              className={"landing-result td-" + latest.touchdown.toLowerCase()}
+            >
+              <div className="landing-result-title">
+                TOUCHDOWN: {latest.touchdown}
+              </div>
+              {score !== null && (
+                <>
+                  <div className="landing-score">
+                    <strong>{score}</strong><span>/100</span>
+                  </div>
+                  <div className="landing-metrics">
+                    <span>VERT {latest.touchdown_v_vert_ms?.toFixed(2)} m/s</span>
+                    <span>HORIZ {latest.touchdown_v_horiz_ms?.toFixed(2)} m/s</span>
+                    <span>TILT {latest.touchdown_tilt_deg?.toFixed(1)}°</span>
+                  </div>
+                </>
+              )}
             </div>
           )}
         </div>
 
         <div className="engr-rod">
           <h2>Rate of descent</h2>
+          {latest?.demo_mode && (
+            <p className="assist-note">
+              In P66, each click also changes the assisted target by 0.3048 m/s.
+            </p>
+          )}
           <button
             onClick={() => sendRod(false)}
             title="ch016 bit7 — descend faster (−1 ft/s target)"
@@ -134,4 +183,24 @@ function Row({ k, v }: { k: string; v: string }) {
 
 function fmt(x: number | null, unit: string): string {
   return x === null ? "—" : x.toFixed(2) + " " + unit;
+}
+
+function touchdownScore(
+  latest: TelemetryBuffer["latest"],
+): number | null {
+  if (
+    latest?.touchdown_v_vert_ms === null ||
+    latest?.touchdown_v_vert_ms === undefined ||
+    latest.touchdown_v_horiz_ms === null ||
+    latest.touchdown_v_horiz_ms === undefined ||
+    latest.touchdown_tilt_deg === null ||
+    latest.touchdown_tilt_deg === undefined
+  ) {
+    return null;
+  }
+  return landingScore(
+    latest.touchdown_v_vert_ms,
+    latest.touchdown_v_horiz_ms,
+    latest.touchdown_tilt_deg,
+  );
 }

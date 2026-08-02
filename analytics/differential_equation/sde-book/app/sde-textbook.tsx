@@ -8,7 +8,9 @@ import {
   useState,
 } from "react";
 import { chapters, glossary, type LabKind } from "../content/chapters";
+import { memoizedDiagnostics } from "./diagnostics-cache.mjs";
 import { drawExtendedLab, extendedMetrics } from "./extended-labs";
+import { normalCdf } from "./numerical-functions.mjs";
 
 type Settings = {
   seed: number;
@@ -70,16 +72,23 @@ const labDefaults: Partial<Record<LabKind, Partial<Settings>>> = {
   "ito-correction": { steps: 128, paths: 64, mu: 0, sigma: 0.7, functionChoice: 1 },
   "drift-diffusion": { steps: 160, paths: 24, mu: 0.2, sigma: 0.5, kappa: 1.2, theta: 0, functionChoice: 0, x0: 0.4 },
   "arithmetic-brownian": { steps: 160, paths: 40, x0: 0, mu: 0.3, sigma: 0.7, time: 0.65 },
-  gbm: { steps: 160, paths: 40, mu: 0.08, sigma: 0.3 },
-  ou: { steps: 160, paths: 24, sigma: 0.45, kappa: 1.4, theta: 0 },
+  gbm: { steps: 160, paths: 40, x0: 100, mu: 0.08, sigma: 0.3 },
+  ou: { steps: 160, paths: 24, x0: 1.2, sigma: 0.45, kappa: 1.4, theta: 0 },
   cir: { steps: 256, paths: 24, x0: 0.6, kappa: 1.4, theta: 0.6, sigma: 0.55 },
   "correlated-brownian": { steps: 160, paths: 64, mu: 0, sigma: 0.7, sigma2: 0.45, rho: 0.65 },
   generator: { paths: 64, x0: 0.4, mu: 0.2, sigma: 0.6, localDt: 0.08, functionChoice: 1 },
   "backward-equation": { x0: 0, mu: 0.15, sigma: 0.7, time: 0.35, strike: 0.3, functionChoice: 0 },
-  "fokker-planck": { paths: 72, mu: 0.2, sigma: 0.5, time: 0.65 },
+  "fokker-planck": { paths: 72, x0: 0, mu: 0.2, sigma: 0.5, time: 0.65 },
   "feynman-kac": { paths: 32, x0: 0.4, mu: 0.15, rate: 0.08, sigma: 0.55, horizon: 1 },
   "first-passage": { paths: 64, steps: 256, x0: 0, mu: 0.05, sigma: 0.65, lowerBarrier: -1, upperBarrier: 1 },
   euler: { steps: 24, paths: 16, mu: 0.08, sigma: 0.45 },
+  "weak-convergence": {
+    paths: 32,
+    mu: 0.08,
+    sigma: 0.45,
+    strike: 100,
+    functionChoice: 0,
+  },
   "measure-change": { paths: 56, mu: 0.09, sigma: 0.2, rate: 0.03 },
   "brownian-default": { steps: 128, sigma: 0.6, horizon: 1 },
   "poisson-jumps": { kappa: 3, horizon: 2 },
@@ -101,7 +110,7 @@ const labDefaults: Partial<Record<LabKind, Partial<Settings>>> = {
   predictability: { mu: 0.08, sigma: 0.35, horizon: 3 },
   martingale: { x0: 100, strike: 100, mu: 0.08, rate: 0.03, sigma: 0.25, paths: 64 },
   "delta-hedging": { x0: 100, strike: 100, rate: 0.03, sigma: 0.25, steps: 32 },
-  "volatility-models": { x0: 100, sigma: 0.25, sigma2: 0.5, rho: -0.6, kappa: 2 },
+  "volatility-models": { x0: 100, sigma: 0.25, sigma2: 0.5, rho: -0.6, kappa: 2, zoom: 0.5 },
   "short-rate": { x0: 0.03, theta: 0.05, kappa: 1.2, sigma: 0.08, horizon: 5 },
   "forward-curve": { rate: 0.03, sigma: 0.02, kappa: 0.5 },
   "credit-default": { kappa: 0.25, rho: 0.4, horizon: 5 },
@@ -109,7 +118,16 @@ const labDefaults: Partial<Record<LabKind, Partial<Settings>>> = {
   "chemical-reaction": { x0: 36, rate: 5, kappa: 0.25, sigma: 0.5, horizon: 8 },
   population: { x0: 12, theta: 80, rate: 0.8, sigma: 0.35, sigma2: 0.12, horizon: 8 },
   epidemic: { x0: 4, theta: 120, rate: 1.6, kappa: 0.65, horizon: 10 },
-  neuroscience: { x0: -0.4, theta: 0.2, kappa: 2, sigma: 0.55, rho: 0.35, upperBarrier: 1, horizon: 6 },
+  neuroscience: {
+    x0: -0.55,
+    lowerBarrier: -0.4,
+    theta: 0.2,
+    kappa: 2,
+    sigma: 0.55,
+    rho: 0.35,
+    upperBarrier: 1,
+    horizon: 6,
+  },
   filtering: { x0: 0, kappa: 0.8, sigma: 0.45, sigma2: 0.7, horizon: 6 },
   "model-selection": { functionChoice: 0, kappa: 1.4, sigma: 0.45, sigma2: 0.35, horizon: 4 },
   "model-criticism": { functionChoice: 1, kappa: 1.4, sigma: 0.45, sigma2: 0.3, horizon: 4 },
@@ -141,18 +159,6 @@ function normalPdf(x: number, mean: number, sd: number) {
   return Math.exp(-0.5 * z * z) / (safeSd * Math.sqrt(2 * Math.PI));
 }
 
-function normalCdf(value: number) {
-  const sign = value < 0 ? -1 : 1;
-  const x = Math.abs(value) / Math.sqrt(2);
-  const t = 1 / (1 + 0.3275911 * x);
-  const polynomial =
-    (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t +
-      0.254829592) *
-    t;
-  const erf = sign * (1 - polynomial * Math.exp(-x * x));
-  return 0.5 * (1 + erf);
-}
-
 function lognormalPdf(x: number, logMean: number, logSd: number) {
   if (x <= 0) return 0;
   return normalPdf(Math.log(x), logMean, logSd) / x;
@@ -174,30 +180,40 @@ function formatPercent(value: number) {
 }
 
 function chartColors(canvas: HTMLCanvasElement, dark = false) {
-  if (dark) {
-    return {
-      ink: "#e8f0ed",
-      muted: "#95aaa5",
-      grid: "#34484b",
-      paper: "#1a292d",
-      teal: "#58c6b9",
-      amber: "#efa85f",
-      coral: "#ec8179",
-      violet: "#a89fe8",
-      white: "#142226",
-    };
-  }
   const style = getComputedStyle(canvas);
+  const fallback = dark
+    ? {
+        ink: "#e8f0ed",
+        muted: "#95aaa5",
+        grid: "#34484b",
+        paper: "#1a292d",
+        teal: "#58c6b9",
+        amber: "#efa85f",
+        coral: "#ec8179",
+        violet: "#a89fe8",
+        white: "#142226",
+      }
+    : {
+        ink: "#142b33",
+        muted: "#60747a",
+        grid: "#dce3df",
+        paper: "#f8faf7",
+        teal: "#007f78",
+        amber: "#d77a25",
+        coral: "#d85f58",
+        violet: "#6f66b3",
+        white: "#ffffff",
+      };
   return {
-    ink: style.getPropertyValue("--plot-ink").trim() || "#142b33",
-    muted: style.getPropertyValue("--plot-muted").trim() || "#60747a",
-    grid: style.getPropertyValue("--plot-grid").trim() || "#dce3df",
-    paper: style.getPropertyValue("--plot-paper").trim() || "#f8faf7",
-    teal: style.getPropertyValue("--plot-teal").trim() || "#007f78",
-    amber: style.getPropertyValue("--plot-amber").trim() || "#d77a25",
-    coral: style.getPropertyValue("--plot-coral").trim() || "#d85f58",
-    violet: style.getPropertyValue("--plot-violet").trim() || "#6f66b3",
-    white: style.getPropertyValue("--plot-white").trim() || "#ffffff",
+    ink: style.getPropertyValue("--plot-ink").trim() || fallback.ink,
+    muted: style.getPropertyValue("--plot-muted").trim() || fallback.muted,
+    grid: style.getPropertyValue("--plot-grid").trim() || fallback.grid,
+    paper: style.getPropertyValue("--plot-paper").trim() || fallback.paper,
+    teal: style.getPropertyValue("--plot-teal").trim() || fallback.teal,
+    amber: style.getPropertyValue("--plot-amber").trim() || fallback.amber,
+    coral: style.getPropertyValue("--plot-coral").trim() || fallback.coral,
+    violet: style.getPropertyValue("--plot-violet").trim() || fallback.violet,
+    white: style.getPropertyValue("--plot-white").trim() || fallback.white,
   };
 }
 
@@ -464,11 +480,6 @@ function drawRandomWalk(
   const gap = 14;
   const height = (area.h - gap * 2) / 3;
   const expectedEnd = settings.mu * settings.horizon;
-  const referenceSpan = Math.max(3.5 * settings.sigma * Math.sqrt(settings.horizon), 0.6);
-  const sharedDomain: [number, number] = [
-    Math.min(0, expectedEnd) - referenceSpan,
-    Math.max(0, expectedEnd) + referenceSpan,
-  ];
 
   definitions.forEach((definition, panelIndex) => {
     let value = 0;
@@ -477,11 +488,17 @@ function drawRandomWalk(
       value += settings.mu * dt + settings.sigma * definition.scale * shock;
       points.push([(index + 1) * dt, value]);
     });
+    const terminalSd = settings.sigma * definition.scale * Math.sqrt(steps);
+    const values = points.map((point) => point[1]);
+    const minimum = Math.min(0, expectedEnd, ...values);
+    const maximum = Math.max(0, expectedEnd, ...values);
+    const span = Math.max(maximum - minimum, 2 * terminalSd, 1e-4);
+    const panelDomain: [number, number] = [minimum - 0.12 * span, maximum + 0.12 * span];
     const panel = { x: area.x, y: area.y + panelIndex * (height + gap), w: area.w, h: height };
     drawRoundedRect(context, panel, 12, colors.paper);
     drawLabel(
       context,
-      `${definition.label}   Xₜ=${formatNumber(value, 2)}`,
+      `${definition.label}   sd(Xₜ)=${formatNumber(terminalSd, 3)}   Xₜ=${formatNumber(value, 2)}`,
       panel.x + 14,
       panel.y + 18,
       definition.color,
@@ -490,7 +507,7 @@ function drawRandomWalk(
       context,
       { x: panel.x + 2, y: panel.y + 20, w: panel.w - 4, h: panel.h - 20 },
       [{ points, color: definition.color, width: 1.8 }],
-      { x: [0, settings.horizon], y: sharedDomain },
+      { x: [0, settings.horizon], y: panelDomain },
       colors,
       { zeroLine: true, xLabel: panelIndex === 2 ? "時間 t" : undefined },
     );
@@ -575,7 +592,11 @@ function drawPathDistribution(
   settings: Settings,
   colors: ReturnType<typeof chartColors>,
 ) {
-  const diagnostics = pathDistributionDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "path-distribution",
+    () => pathDistributionDiagnostics(settings),
+  );
   const gap = 14;
   const left = { x: area.x, y: area.y, w: area.w * 0.66 - gap / 2, h: area.h };
   const right = { x: left.x + left.w + gap, y: area.y, w: area.w - left.w - gap, h: area.h };
@@ -693,7 +714,11 @@ function drawRoughness(
   settings: Settings,
   colors: ReturnType<typeof chartColors>,
 ) {
-  const diagnostics = roughnessDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "roughness",
+    () => roughnessDiagnostics(settings),
+  );
   const gap = 14;
   const left = { x: area.x, y: area.y, w: area.w * 0.43 - gap / 2, h: area.h };
   const right = { x: left.x + left.w + gap, y: area.y, w: area.w - left.w - gap, h: area.h };
@@ -839,7 +864,11 @@ function drawStochasticIntegral(
   settings: Settings,
   colors: ReturnType<typeof chartColors>,
 ) {
-  const diagnostics = stochasticIntegralDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "stochastic-integral",
+    () => stochasticIntegralDiagnostics(settings),
+  );
   const gap = 14;
   const left = { x: area.x, y: area.y, w: area.w * 0.66 - gap / 2, h: area.h };
   const right = { x: left.x + left.w + gap, y: area.y, w: area.w - left.w - gap, h: area.h };
@@ -1154,7 +1183,7 @@ function simulateGbmPaths(settings: Settings, count: number) {
   const paths: Point[][] = [];
   const terminal: number[] = [];
   for (let pathIndex = 0; pathIndex < count; pathIndex += 1) {
-    let price = 100;
+    let price = settings.x0;
     const points: Point[] = [[0, price]];
     for (let index = 0; index < settings.steps; index += 1) {
       price *= Math.exp(
@@ -1237,8 +1266,8 @@ function drawGbm(
     colors,
     { xLabel: "時間 t" },
   );
-  const mean = 100 * Math.exp(settings.mu * settings.horizon);
-  const median = 100 * Math.exp((settings.mu - 0.5 * settings.sigma ** 2) * settings.horizon);
+  const mean = settings.x0 * Math.exp(settings.mu * settings.horizon);
+  const median = settings.x0 * Math.exp((settings.mu - 0.5 * settings.sigma ** 2) * settings.horizon);
   drawHistogram(context, right, distribution.terminal, colors, colors.teal, [
     { value: mean, color: colors.amber, label: "平均" },
     { value: median, color: colors.violet, label: "中央値" },
@@ -1257,7 +1286,7 @@ function drawOu(
   const dt = settings.horizon / settings.steps;
   const decay = Math.exp(-settings.kappa * dt);
   const stepSd = settings.sigma * Math.sqrt((1 - decay * decay) / (2 * settings.kappa));
-  const x0 = 1.2;
+  const x0 = settings.x0;
   const count = Math.min(settings.paths, 18);
   const paths: Point[][] = [];
   for (let pathIndex = 0; pathIndex < count; pathIndex += 1) {
@@ -1406,7 +1435,11 @@ function drawCir(
   settings: Settings,
   colors: ReturnType<typeof chartColors>,
 ) {
-  const diagnostics = cirDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "cir",
+    () => cirDiagnostics(settings),
+  );
   const gap = 14;
   const left = { x: area.x, y: area.y, w: area.w * 0.68 - gap / 2, h: area.h };
   const right = { x: left.x + left.w + gap, y: area.y, w: area.w - left.w - gap, h: area.h };
@@ -1538,9 +1571,11 @@ function drawCorrelatedBrownian(
   settings: Settings,
   colors: ReturnType<typeof chartColors>,
 ) {
-  const diagnostics = correlatedBrownianDiagnostics(
+  const sampleCount = Math.min(Math.max(settings.paths * 8, 400), 480);
+  const diagnostics = memoizedDiagnostics(
     settings,
-    Math.max(settings.paths * 8, 400),
+    `correlated-brownian:${sampleCount}`,
+    () => correlatedBrownianDiagnostics(settings, sampleCount),
   );
   const gap = 14;
   const left = { x: area.x, y: area.y, w: area.w * 0.48 - gap / 2, h: area.h };
@@ -1684,7 +1719,11 @@ function drawGenerator(
   settings: Settings,
   colors: ReturnType<typeof chartColors>,
 ) {
-  const diagnostics = generatorDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "generator",
+    () => generatorDiagnostics(settings),
+  );
   const gap = 14;
   const left = { x: area.x, y: area.y, w: area.w * 0.42 - gap / 2, h: area.h };
   const right = { x: left.x + left.w + gap, y: area.y, w: area.w - left.w - gap, h: area.h };
@@ -1769,7 +1808,11 @@ function drawBackwardEquation(
   settings: Settings,
   colors: ReturnType<typeof chartColors>,
 ) {
-  const diagnostics = backwardDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "backward-equation",
+    () => backwardDiagnostics(settings),
+  );
   drawRoundedRect(context, area, 16, colors.paper);
   drawChart(
     context,
@@ -1808,9 +1851,9 @@ function drawFokkerPlanck(
   const sampleCount = Math.max(settings.paths * 14, 600);
   const values = Array.from(
     { length: sampleCount },
-    () => settings.mu * t + settings.sigma * Math.sqrt(t) * normal(random),
+    () => settings.x0 + settings.mu * t + settings.sigma * Math.sqrt(t) * normal(random),
   );
-  const mean = settings.mu * t;
+  const mean = settings.x0 + settings.mu * t;
   const sd = settings.sigma * Math.sqrt(t);
   const xMin = mean - 3.8 * sd;
   const xMax = mean + 3.8 * sd;
@@ -1931,7 +1974,11 @@ function drawFeynmanKac(
   settings: Settings,
   colors: ReturnType<typeof chartColors>,
 ) {
-  const diagnostics = feynmanKacDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "feynman-kac",
+    () => feynmanKacDiagnostics(settings),
+  );
   const gap = 14;
   const left = { x: area.x, y: area.y, w: area.w * 0.5 - gap / 2, h: area.h };
   const right = { x: left.x + left.w + gap, y: area.y, w: area.w - left.w - gap, h: area.h };
@@ -2059,7 +2106,11 @@ function drawFirstPassage(
   settings: Settings,
   colors: ReturnType<typeof chartColors>,
 ) {
-  const diagnostics = firstPassageDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "first-passage",
+    () => firstPassageDiagnostics(settings),
+  );
   const gap = 14;
   const left = { x: area.x, y: area.y, w: area.w * 0.64 - gap / 2, h: area.h };
   const right = { x: left.x + left.w + gap, y: area.y, w: area.w - left.w - gap, h: area.h };
@@ -2267,6 +2318,118 @@ function drawEuler(
   );
 }
 
+function weakTestFunction(choice: number, value: number, strike: number) {
+  if (choice === 1) return (value / 100) ** 2;
+  if (choice === 2) return Number(value > strike);
+  return value / 100;
+}
+
+function weakConvergenceDiagnostics(settings: Settings) {
+  const choice = clamp(Math.round(settings.functionChoice), 0, 2);
+  const samplePaths = Math.max(settings.paths * 64, 2048);
+  const stepCounts = [8, 16, 32, 64, 128];
+  const strong: Point[] = [];
+  const weak: Point[] = [];
+  const standardError: Point[] = [];
+  let finalWeakError = 0;
+  let finalStandardError = 0;
+
+  stepCounts.forEach((steps) => {
+    const random = mulberry32(settings.seed + 2701 + choice * 101 + steps * 17);
+    const dt = settings.horizon / steps;
+    let strongTotal = 0;
+    let differenceTotal = 0;
+    let squaredDifferenceTotal = 0;
+    for (let pathIndex = 0; pathIndex < samplePaths; pathIndex += 1) {
+      let euler = 100;
+      let brownianTerminal = 0;
+      for (let index = 0; index < steps; index += 1) {
+        const dW = Math.sqrt(dt) * normal(random);
+        brownianTerminal += dW;
+        euler *= 1 + settings.mu * dt + settings.sigma * dW;
+      }
+      const exact = 100 * Math.exp(
+        (settings.mu - 0.5 * settings.sigma ** 2) * settings.horizon +
+          settings.sigma * brownianTerminal,
+      );
+      const difference =
+        weakTestFunction(choice, euler, settings.strike) -
+        weakTestFunction(choice, exact, settings.strike);
+      strongTotal += Math.abs(euler - exact) / 100;
+      differenceTotal += difference;
+      squaredDifferenceTotal += difference ** 2;
+    }
+    const meanDifference = differenceTotal / samplePaths;
+    const varianceDifference = Math.max(
+      (squaredDifferenceTotal - samplePaths * meanDifference ** 2) / (samplePaths - 1),
+      0,
+    );
+    const weakError = Math.abs(meanDifference);
+    const samplingError = Math.sqrt(varianceDifference / samplePaths);
+    const logDt = Math.log10(dt);
+    strong.push([logDt, Math.log10(Math.max(strongTotal / samplePaths, 1e-8))]);
+    weak.push([logDt, Math.log10(Math.max(weakError, 1e-8))]);
+    standardError.push([logDt, Math.log10(Math.max(samplingError, 1e-8))]);
+    finalWeakError = weakError;
+    finalStandardError = samplingError;
+  });
+
+  return {
+    strong,
+    weak,
+    standardError,
+    samplePaths,
+    finalWeakError,
+    finalStandardError,
+    choiceLabel: ["φ(S)=S/100", "φ(S)=(S/100)²", `φ(S)=1{S>${formatNumber(settings.strike, 0)}}`][choice],
+  };
+}
+
+type WeakConvergenceDiagnostics = ReturnType<typeof weakConvergenceDiagnostics>;
+
+function drawWeakConvergence(
+  context: CanvasRenderingContext2D,
+  area: Rect,
+  colors: ReturnType<typeof chartColors>,
+  diagnostics: WeakConvergenceDiagnostics,
+) {
+  const gap = 14;
+  const left = { x: area.x, y: area.y, w: area.w * 0.54 - gap / 2, h: area.h };
+  const right = { x: left.x + left.w + gap, y: area.y, w: area.w - left.w - gap, h: area.h };
+  const xValues = diagnostics.strong.map((point) => point[0]);
+  const xDomain: [number, number] = [Math.min(...xValues), Math.max(...xValues)];
+
+  drawRoundedRect(context, left, 16, colors.paper);
+  drawChart(
+    context,
+    left,
+    [
+      { points: diagnostics.strong, color: colors.teal, width: 2.4 },
+      { points: diagnostics.weak, color: colors.amber, width: 2.4 },
+    ],
+    { x: xDomain, y: yDomain([diagnostics.strong, diagnostics.weak], 0.18) },
+    colors,
+    { xLabel: "log₁₀ Δt", yLabel: "log₁₀ error" },
+  );
+  drawLabel(context, "強誤差", left.x + 52, left.y + 18, colors.teal);
+  drawLabel(context, "弱誤差", left.x + 108, left.y + 18, colors.amber);
+
+  drawRoundedRect(context, right, 16, colors.paper);
+  drawChart(
+    context,
+    right,
+    [
+      { points: diagnostics.weak, color: colors.amber, width: 2.4 },
+      { points: diagnostics.standardError, color: colors.coral, width: 2, dashed: true },
+    ],
+    { x: xDomain, y: yDomain([diagnostics.weak, diagnostics.standardError], 0.18) },
+    colors,
+    { xLabel: "log₁₀ Δt", yLabel: "log₁₀ scale" },
+  );
+  drawLabel(context, diagnostics.choiceLabel, right.x + 52, right.y + 18, colors.amber);
+  drawLabel(context, "MC SE", right.x + right.w - 14, right.y + 18, colors.coral, "right");
+}
+
 function measureChangeDiagnostics(settings: Settings, count: number) {
   const random = mulberry32(settings.seed + 313);
   const s0 = 100;
@@ -2315,7 +2478,11 @@ function drawMeasureChange(
     qDensity.push([x, lognormalPdf(x, qLogMean, logSd)]);
   }
   const upper = Math.max(...pDensity.map((point) => point[1]), ...qDensity.map((point) => point[1])) * 1.12;
-  const diagnostics = measureChangeDiagnostics(settings, 180);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "measure-change:180",
+    () => measureChangeDiagnostics(settings, 180),
+  );
   const gap = 14;
   const left = { x: area.x, y: area.y, w: area.w * 0.62 - gap / 2, h: area.h };
   const right = { x: left.x + left.w + gap, y: area.y, w: area.w - left.w - gap, h: area.h };
@@ -2380,7 +2547,13 @@ function drawMeasureChange(
   drawLabel(context, "重み=1", right.x + right.w - 14, right.y + 18, colors.muted, "right");
 }
 
-function drawLab(canvas: HTMLCanvasElement, lab: LabKind, settings: Settings, dark: boolean) {
+function drawLab(
+  canvas: HTMLCanvasElement,
+  lab: LabKind,
+  settings: Settings,
+  dark: boolean,
+  weakDiagnostics: WeakConvergenceDiagnostics | null = null,
+) {
   const prepared = prepareCanvas(canvas);
   if (!prepared) return;
   const { context, width, height } = prepared;
@@ -2449,6 +2622,17 @@ function drawLab(canvas: HTMLCanvasElement, lab: LabKind, settings: Settings, da
     case "euler":
       drawEuler(context, area, settings, colors);
       break;
+    case "weak-convergence":
+      if (!weakDiagnostics) {
+        throw new Error("Weak-convergence diagnostics were not prepared");
+      }
+      drawWeakConvergence(
+        context,
+        area,
+        colors,
+        weakDiagnostics,
+      );
+      break;
     case "measure-change":
       drawMeasureChange(context, area, settings, colors);
       break;
@@ -2463,24 +2647,42 @@ function CanvasLab({
   settings,
   dark,
   label,
+  weakDiagnostics,
 }: {
   lab: LabKind;
   settings: Settings;
   dark: boolean;
   label: string;
+  weakDiagnostics: WeakConvergenceDiagnostics | null;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const draw = useCallback(() => {
-    if (canvasRef.current) drawLab(canvasRef.current, lab, settings, dark);
-  }, [dark, lab, settings]);
+    if (canvasRef.current) {
+      drawLab(canvasRef.current, lab, settings, dark, weakDiagnostics);
+    }
+  }, [dark, lab, settings, weakDiagnostics]);
 
   useEffect(() => {
     draw();
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const observer = new ResizeObserver(draw);
+    let width = canvas.clientWidth;
+    let height = canvas.clientHeight;
+    let resizeTimer: number | undefined;
+    const observer = new ResizeObserver(() => {
+      const nextWidth = canvas.clientWidth;
+      const nextHeight = canvas.clientHeight;
+      if (nextWidth === width && nextHeight === height) return;
+      width = nextWidth;
+      height = nextHeight;
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(draw, 100);
+    });
     observer.observe(canvas);
-    return () => observer.disconnect();
+    return () => {
+      window.clearTimeout(resizeTimer);
+      observer.disconnect();
+    };
   }, [draw]);
 
   return (
@@ -2534,6 +2736,12 @@ function choiceOptionsFor(lab: LabKind): Array<[number, string, string]> | null 
         [1, "反対変数", "antithetic"],
         [2, "制御変数", "Zを利用"],
       ];
+    case "weak-convergence":
+      return [
+        [0, "φ(S)=S/100", "滑らかな平均"],
+        [1, "φ(S)=(S/100)²", "滑らかな二次"],
+        [2, "φ(S)=1{S>K}", "非連続な確率"],
+      ];
     case "model-selection":
       return [
         [0, "拡散", "連続"],
@@ -2555,12 +2763,13 @@ function choiceLegendFor(lab: LabKind) {
   if (lab === "drift-diffusion") return "局所モデル";
   if (lab === "backward-equation") return "終端関数 g(x)";
   if (lab === "monte-carlo") return "推定法";
+  if (lab === "weak-convergence") return "弱誤差の試験関数 φ";
   if (lab === "model-selection") return "候補モデル";
   if (lab === "model-criticism") return "残差シナリオ";
   return "関数 f(x)";
 }
 
-function controlsFor(lab: LabKind): ControlDefinition[] {
+function controlsFor(lab: LabKind, pathCount = baseSettings.paths): ControlDefinition[] {
   const usesAdditiveDrift = [
     "sde-overview",
     "drift-diffusion",
@@ -2602,7 +2811,9 @@ function controlsFor(lab: LabKind): ControlDefinition[] {
       if (lab === "gbm") return `${Math.min(value, 24)} / ${Math.max(value * 16, 500)}`;
       if (lab === "feynman-kac") return `${Math.max(value * 128, 2048)}`;
       if (lab === "first-passage") return `${Math.max(value * 4, 256)}`;
-      if (lab === "correlated-brownian") return `${Math.max(value * 8, 400)}`;
+      if (lab === "correlated-brownian") {
+        return `${Math.min(Math.max(value * 8, 400), 480)}`;
+      }
       if (lab === "fokker-planck") return `${value} / ${Math.max(value * 14, 600)}`;
       if (lab === "ito-correction") return `${Math.max(value * 24, 600)}`;
       return `${Math.max(value, 16)}`;
@@ -2740,7 +2951,7 @@ function controlsFor(lab: LabKind): ControlDefinition[] {
           key: "selectedPath",
           label: "注目する経路",
           min: 0,
-          max: 15,
+          max: Math.max(Math.round(pathCount), 16) - 1,
           step: 1,
           format: (value) => `${value + 1}`,
         },
@@ -2815,9 +3026,22 @@ function controlsFor(lab: LabKind): ControlDefinition[] {
         },
       ];
     case "gbm":
-      return [sigma, mu, paths];
+      return [
+        { ...positiveX0, label: "初期価格 S₀", min: 40, max: 160, step: 5 },
+        sigma,
+        mu,
+        paths,
+      ];
     case "ou":
       return [
+        {
+          key: "x0",
+          label: "初期状態 x₀",
+          min: -2,
+          max: 2,
+          step: 0.1,
+          format: (value) => formatNumber(value, 1),
+        },
         {
           key: "kappa",
           label: "回帰速度 κ",
@@ -2930,6 +3154,14 @@ function controlsFor(lab: LabKind): ControlDefinition[] {
     case "fokker-planck":
       return [
         {
+          key: "x0",
+          label: "初期位置 x₀",
+          min: -1.5,
+          max: 1.5,
+          step: 0.1,
+          format: (value) => formatNumber(value, 1),
+        },
+        {
           key: "time",
           label: "観測時刻",
           min: 0.05,
@@ -2965,6 +3197,7 @@ function controlsFor(lab: LabKind): ControlDefinition[] {
       ];
     case "first-passage":
       return [
+        { ...steps, min: 64, max: 512, step: 64 },
         {
           key: "x0",
           label: "開始点 x₀",
@@ -2995,6 +3228,24 @@ function controlsFor(lab: LabKind): ControlDefinition[] {
       ];
     case "euler":
       return [steps, sigma, mu, paths];
+    case "weak-convergence":
+      return [
+        {
+          ...paths,
+          label: "弱誤差の結合標本 N",
+          format: (value) => `${Math.max(value * 64, 2048)}`,
+        },
+        sigma,
+        mu,
+        {
+          key: "strike",
+          label: "閾値 K",
+          min: 70,
+          max: 130,
+          step: 5,
+          format: (value) => formatNumber(value, 0),
+        },
+      ];
     case "measure-change":
       return [
         mu,
@@ -3028,7 +3279,7 @@ function controlsFor(lab: LabKind): ControlDefinition[] {
       ];
     case "colored-noise":
       return [
-        { ...kappa, label: "相関減衰 κ" },
+        { ...kappa, label: "減衰 κ=1/τc（小さいほど長相関）" },
         { ...sigma, label: "積分強度 D", min: 0.05, max: 1, step: 0.05 },
         { ...horizon, max: 5, step: 0.25 },
       ];
@@ -3113,7 +3364,20 @@ function controlsFor(lab: LabKind): ControlDefinition[] {
         sigma,
       ];
     case "volatility-models":
-      return [sigma, { ...sigma2, label: "ボラ変動 / smile" }, rho, kappa];
+      return [
+        sigma,
+        {
+          key: "zoom",
+          label: "Local vol の状態依存",
+          min: 0,
+          max: 1.2,
+          step: 0.05,
+          format: (value) => formatNumber(value, 2),
+        },
+        { ...sigma2, label: "確率ボラの vol-of-vol ξ" },
+        rho,
+        kappa,
+      ];
     case "short-rate":
       return [
         {
@@ -3182,15 +3446,23 @@ function controlsFor(lab: LabKind): ControlDefinition[] {
     case "neuroscience":
       return [
         {
+          key: "lowerBarrier",
+          label: "静止電位 Vrest",
+          min: -1,
+          max: 0.4,
+          step: 0.05,
+          format: (value) => formatNumber(value, 2),
+        },
+        {
           key: "x0",
-          label: "リセット電位",
+          label: "リセット電位 Vreset",
           min: -1,
           max: 0.4,
           step: 0.05,
           format: (value) => formatNumber(value, 2),
         },
         { ...theta, label: "平均入力", min: -0.2, max: 1, step: 0.05 },
-        { ...kappa, label: "漏れ κ", min: 0.4, max: 4 },
+        { ...kappa, label: "漏れ κ=1/τm", min: 0.4, max: 4 },
         sigma,
         { ...rho, label: "共通入力率 ρ", min: 0, max: 0.95 },
         {
@@ -3247,7 +3519,11 @@ function controlsFor(lab: LabKind): ControlDefinition[] {
   }
 }
 
-function metricsFor(lab: LabKind, settings: Settings) {
+function metricsFor(
+  lab: LabKind,
+  settings: Settings,
+  weakDiagnostics: WeakConvergenceDiagnostics | null = null,
+) {
   switch (lab) {
     case "sde-overview": {
       const time = settings.time * settings.horizon;
@@ -3270,7 +3546,11 @@ function metricsFor(lab: LabKind, settings: Settings) {
         ["自己相似尺度", `√T = ${formatNumber(Math.sqrt(settings.horizon), 2)}`],
       ];
     case "path-distribution": {
-      const diagnostics = pathDistributionDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "path-distribution",
+        () => pathDistributionDiagnostics(settings),
+      );
       const selectedValue = diagnostics.paths[diagnostics.selectedPath][diagnostics.selectedIndex][1];
       return [
         ["選択経路 Xₜ", formatNumber(selectedValue, 2)],
@@ -3279,7 +3559,11 @@ function metricsFor(lab: LabKind, settings: Settings) {
       ];
     }
     case "roughness": {
-      const diagnostics = roughnessDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "roughness",
+        () => roughnessDiagnostics(settings),
+      );
       return [
         ["選択幅 Δt", formatNumber(diagnostics.window, 4)],
         ["Brownian |傾き|", formatNumber(diagnostics.brownianSlope, 2)],
@@ -3293,7 +3577,11 @@ function metricsFor(lab: LabKind, settings: Settings) {
         ["二乗の次数", "dt"],
       ];
     case "stochastic-integral": {
-      const diagnostics = stochasticIntegralDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "stochastic-integral",
+        () => stochasticIntegralDiagnostics(settings),
+      );
       return [
         ["左端 Itô 和", formatNumber(diagnostics.left, 3)],
         ["中点 Stratonovich 和", formatNumber(diagnostics.midpoint, 3)],
@@ -3332,8 +3620,8 @@ function metricsFor(lab: LabKind, settings: Settings) {
     }
     case "gbm":
       return [
-        ["理論平均", formatNumber(100 * Math.exp(settings.mu * settings.horizon), 1)],
-        ["中央値", formatNumber(100 * Math.exp((settings.mu - 0.5 * settings.sigma ** 2) * settings.horizon), 1)],
+        ["理論平均", formatNumber(settings.x0 * Math.exp(settings.mu * settings.horizon), 1)],
+        ["中央値", formatNumber(settings.x0 * Math.exp((settings.mu - 0.5 * settings.sigma ** 2) * settings.horizon), 1)],
         ["対数ドリフト", formatPercent(settings.mu - 0.5 * settings.sigma ** 2)],
       ];
     case "ou":
@@ -3343,7 +3631,11 @@ function metricsFor(lab: LabKind, settings: Settings) {
         ["定常標準偏差", formatNumber(settings.sigma / Math.sqrt(2 * settings.kappa), 2)],
       ];
     case "cir": {
-      const diagnostics = cirDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "cir",
+        () => cirDiagnostics(settings),
+      );
       return [
         ["Feller 比", formatNumber(diagnostics.fellerRatio, 2)],
         ["0 の到達", diagnostics.fellerRatio >= 1 ? "到達不能" : "到達し得る"],
@@ -3351,9 +3643,11 @@ function metricsFor(lab: LabKind, settings: Settings) {
       ];
     }
     case "correlated-brownian": {
-      const diagnostics = correlatedBrownianDiagnostics(
+      const sampleCount = Math.min(Math.max(settings.paths * 8, 400), 480);
+      const diagnostics = memoizedDiagnostics(
         settings,
-        Math.max(settings.paths * 12, 800),
+        `correlated-brownian:${sampleCount}`,
+        () => correlatedBrownianDiagnostics(settings, sampleCount),
       );
       return [
         ["理論相関", formatNumber(settings.rho, 2)],
@@ -3362,7 +3656,11 @@ function metricsFor(lab: LabKind, settings: Settings) {
       ];
     }
     case "generator": {
-      const diagnostics = generatorDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "generator",
+        () => generatorDiagnostics(settings),
+      );
       return [
         ["解析 ℒf(x)", formatNumber(diagnostics.localAnalytic, 3)],
         ["一歩の標本推定", formatNumber(diagnostics.localEmpirical, 3)],
@@ -3370,7 +3668,11 @@ function metricsFor(lab: LabKind, settings: Settings) {
       ];
     }
     case "backward-equation": {
-      const diagnostics = backwardDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "backward-equation",
+        () => backwardDiagnostics(settings),
+      );
       return [
         ["残存時間 T−t", formatNumber(settings.horizon - diagnostics.selectedTime, 2)],
         ["u(t,x₀)", formatNumber(diagnostics.valueAtState, 3)],
@@ -3380,13 +3682,17 @@ function metricsFor(lab: LabKind, settings: Settings) {
     case "fokker-planck": {
       const t = settings.time * settings.horizon;
       return [
-        ["密度の中心", formatNumber(settings.mu * t, 2)],
+        ["密度の中心", formatNumber(settings.x0 + settings.mu * t, 2)],
         ["密度の標準偏差", formatNumber(settings.sigma * Math.sqrt(t), 2)],
         ["全確率", "1.000"],
       ];
     }
     case "feynman-kac": {
-      const diagnostics = feynmanKacDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "feynman-kac",
+        () => feynmanKacDiagnostics(settings),
+      );
       return [
         ["PDE / 解析値", formatNumber(diagnostics.analytic, 3)],
         ["Monte Carlo", formatNumber(diagnostics.finalEstimate, 3)],
@@ -3394,7 +3700,11 @@ function metricsFor(lab: LabKind, settings: Settings) {
       ];
     }
     case "first-passage": {
-      const diagnostics = firstPassageDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "first-passage",
+        () => firstPassageDiagnostics(settings),
+      );
       return [
         ["上側到達率", formatPercent(diagnostics.upperHitRate)],
         ["下側到達率", formatPercent(diagnostics.lowerHitRate)],
@@ -3409,8 +3719,22 @@ function metricsFor(lab: LabKind, settings: Settings) {
         ["結合標本数", `${Math.max(settings.paths, 16)}`],
       ];
     }
+    case "weak-convergence": {
+      if (!weakDiagnostics) {
+        throw new Error("Weak-convergence diagnostics were not prepared");
+      }
+      return [
+        ["試験関数", weakDiagnostics.choiceLabel],
+        ["最細分割の弱誤差", formatNumber(weakDiagnostics.finalWeakError, 5)],
+        ["同じ推定の MC SE", formatNumber(weakDiagnostics.finalStandardError, 5)],
+      ];
+    }
     case "measure-change": {
-      const diagnostics = measureChangeDiagnostics(settings, Math.max(settings.paths * 20, 1000));
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "measure-change:180",
+        () => measureChangeDiagnostics(settings, 180),
+      );
       return [
         ["市場価格リスク λ", formatNumber((settings.mu - settings.rate) / settings.sigma, 2)],
         ["Eᴾ[dQ/dP]", formatNumber(diagnostics.meanWeight, 3)],
@@ -3452,9 +3776,19 @@ export function SDETextbook() {
   const activeIndex = chapters.findIndex((chapter) => chapter.id === activeId);
   const chapter = chapters[Math.max(activeIndex, 0)];
   const progress = Math.round((completed.length / chapters.length) * 100);
-  const controls = useMemo(() => controlsFor(chapter.lab), [chapter.lab]);
+  const controls = useMemo(
+    () => controlsFor(chapter.lab, settings.paths),
+    [chapter.lab, settings.paths],
+  );
   const choiceOptions = useMemo(() => choiceOptionsFor(chapter.lab), [chapter.lab]);
-  const metrics = useMemo(() => metricsFor(chapter.lab, settings), [chapter.lab, settings]);
+  const weakDiagnostics = useMemo(
+    () => chapter.lab === "weak-convergence" ? weakConvergenceDiagnostics(settings) : null,
+    [chapter.lab, settings],
+  );
+  const metrics = useMemo(
+    () => metricsFor(chapter.lab, settings, weakDiagnostics),
+    [chapter.lab, settings, weakDiagnostics],
+  );
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -3541,21 +3875,42 @@ export function SDETextbook() {
   const navigate = useCallback((id: string) => {
     const next = chapters.find((item) => item.id === id);
     if (!next) return;
+    const shouldAddHistory = id !== activeId;
     setActiveId(id);
     setSettings({ ...baseSettings, ...labDefaults[next.lab] });
     setCopied(false);
     setSidebarOpen(false);
-    window.history.replaceState(null, "", `#chapter-${id}`);
+    if (shouldAddHistory) {
+      window.history.pushState(null, "", `#chapter-${id}`);
+    }
     window.scrollTo({ top: 0, behavior: "smooth" });
     window.requestAnimationFrame(() => {
       document.querySelector<HTMLElement>(".chapter-hero h1")?.focus({ preventScroll: true });
     });
+  }, [activeId]);
+
+  useEffect(() => {
+    const onPopState = () => {
+      const hash = window.location.hash.replace(/^#chapter-/, "");
+      const next = chapters.find((item) => item.id === hash) ?? chapters[0];
+      setActiveId(next.id);
+      setSettings({ ...baseSettings, ...labDefaults[next.lab] });
+      setCopied(false);
+      setSidebarOpen(false);
+      window.scrollTo({ top: 0, behavior: "auto" });
+      window.requestAnimationFrame(() => {
+        document.querySelector<HTMLElement>(".chapter-hero h1")?.focus({ preventScroll: true });
+      });
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
   }, []);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
       if (target?.matches("input, button, textarea, select, summary")) return;
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
       if (event.key === "j" && activeIndex < chapters.length - 1) {
         navigate(chapters[activeIndex + 1].id);
       }
@@ -3585,6 +3940,29 @@ export function SDETextbook() {
     }
   };
 
+  const updateControl = (key: keyof Settings, value: number) => {
+    setSettings((current) => {
+      const next = { ...current, [key]: value };
+      if (key === "paths") {
+        next.selectedPath = clamp(
+          Math.round(current.selectedPath),
+          0,
+          Math.max(Math.round(value), 16) - 1,
+        );
+      }
+      return next;
+    });
+  };
+
+  const toggleTheme = () => {
+    setDark((current) => {
+      const next = !current;
+      document.documentElement.dataset.theme = next ? "dark" : "light";
+      localStorage.setItem("sde-textbook-theme", next ? "dark" : "light");
+      return next;
+    });
+  };
+
   return (
     <div className="textbook-shell">
       <a className="skip-link" href="#main-content">
@@ -3601,7 +3979,14 @@ export function SDETextbook() {
         >
           <Icon name="menu" />
         </button>
-        <a className="brand" href={`#chapter-${chapters[0].id}`} onClick={() => navigate(chapters[0].id)}>
+        <a
+          className="brand"
+          href={`#chapter-${chapters[0].id}`}
+          onClick={(event) => {
+            event.preventDefault();
+            navigate(chapters[0].id);
+          }}
+        >
           <span className="brand-mark">dW</span>
           <span>
             <strong>Stochastic</strong>
@@ -3616,7 +4001,7 @@ export function SDETextbook() {
           className="icon-button"
           type="button"
           aria-label={dark ? "ライトモードに切り替える" : "ダークモードに切り替える"}
-          onClick={() => setDark((value) => !value)}
+          onClick={toggleTheme}
         >
           <Icon name={dark ? "sun" : "moon"} />
         </button>
@@ -3753,7 +4138,8 @@ export function SDETextbook() {
                     lab={chapter.lab}
                     settings={settings}
                     dark={dark}
-                    label={`${chapter.labTitle}。${metrics.map(([label, value]) => `${label}: ${value}`).join("、")}`}
+                    weakDiagnostics={weakDiagnostics}
+                    label={`${chapter.labTitle}。${chapter.labObjective}。注目点: ${chapter.notice.join("、")}。指標: ${metrics.map(([label, value]) => `${label}: ${value}`).join("、")}`}
                   />
                   <div className="metric-row" aria-live="polite">
                     {metrics.map(([label, value]) => (
@@ -3805,10 +4191,10 @@ export function SDETextbook() {
                         max={control.max}
                         step={control.step}
                         value={settings[control.key]}
-                        onChange={(event) => setSettings((current) => ({
-                          ...current,
-                          [control.key]: Number(event.target.value),
-                        }))}
+                        onChange={(event) => updateControl(
+                          control.key,
+                          Number(event.target.value),
+                        )}
                       />
                     </label>
                   ))}

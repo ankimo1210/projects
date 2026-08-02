@@ -1,0 +1,56 @@
+schema = 1
+name = "pdi-descent-lr-alt-only"
+# Diagnostic flight fixed before launch (2026-08-02): present the landing
+# radar, but report velocity data NOT-good for every LR velocity select.
+# Altitude remains enabled inside its 15-bit counter window.
+#
+# Decision rule against build/traces/telem-m1-run11.jsonl at
+# TIG+240/270/300/330/360/390/420:
+# - tracks run 11 past TIG+360 => the defect is in the velocity chain;
+#   bisect within the velocity path next.
+# - splits anyway => neither velocity nor altitude measurements cause it;
+#   inspect SERVICER's reasonableness test and PSTHIBIT before HIGATE.
+#
+# RESULT -- flight 20, 2026-08-02: the first branch fired. The run tracked
+# flight 11 through TIG+420; at TIG+360 the deltas were +31.5 m altitude,
+# +0.08 m/s vertical, -1.99 m/s horizontal and +0.66 deg tilt. Therefore
+# velocity-good is necessary for the known TIG+360 split. This does NOT yet
+# prove the altitude chain sound: flight 20 was still at 6141 m at TIG+420,
+# above the high-scale counter limit (~5388 m), so altitude had not been
+# exercised in the comparison window. See the ledger section 14.
+
+[site]
+lat_deg = 0.0
+lon_deg = 0.0
+radius_m = 1737400.0
+
+[gate]
+mode = "pdi"
+alt_m = 0.0
+vz_ms = 0.0
+mass_dry_kg = 7009.0
+fuel_dps_kg = 7950.0
+fuel_rcs_kg = 250.0
+inertia_kgm2 = [23000.0, 25000.0, 24000.0]
+
+[agc]
+padload = "scenarios/p66-padload.toml"
+lm_weight_lbs = 33530.0
+tland_offset_cs = 36000
+flip_atthold_after_engine_on_s = 2.0
+lrbypass = false
+lr_altitude_only = true
+
+[handover]
+alt_m = 250.0
+
+[rod]
+steps = [[240.0, -1.5], [40.0, 0.2], [10.0, 0.8]]
+
+[errors]
+
+[acceptance]
+v_vert_max = 3.0
+v_horiz_max = 1.5
+tilt_max_deg = 12.0
+timeout_s = 800.0

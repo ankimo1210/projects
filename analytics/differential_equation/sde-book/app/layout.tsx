@@ -5,6 +5,15 @@ import "./globals.css";
 const title = "Stochastic — 不確かな世界の微分方程式";
 const description =
   "ランダムウォークから Itô 計算、SDE モデル、Fokker–Planck 方程式、数値計算、測度変更までを実験で学ぶインタラクティブ教科書。";
+const themeInitializer = `(() => {
+  try {
+    const stored = localStorage.getItem("sde-textbook-theme");
+    const prefersDark = matchMedia("(prefers-color-scheme: dark)").matches;
+    document.documentElement.dataset.theme = stored === "dark" || stored === "light"
+      ? stored
+      : (prefersDark ? "dark" : "light");
+  } catch {}
+})();`;
 
 export async function generateMetadata(): Promise<Metadata> {
   const requestHeaders = await headers();
@@ -60,6 +69,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitializer }} />
+      </head>
       <body>{children}</body>
     </html>
   );

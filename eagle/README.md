@@ -4,6 +4,35 @@ EAGLE is a browser-based simulator of the Apollo 11 lunar descent phase, running
 
 As of Phase 2 Wave 1 the loop is closed end to end — PIPA/CDU sensors feed the AGC, and its autopilot outputs (RCS jets, descent engine, THRUST DINC throttle) drive a 6-DoF rigid-body model whose telemetry an engineer board plots in real time. A run boots the AGC, uplinks the pad load, enters P63, reaches ENGINE ON, flips to ATT HOLD, and flies to ground contact.
 
+> **Playable Alpha (2026-08-02): an assisted landing demo is available.**
+> `make demo` keeps the real Luminary099 boot, DSKY, P63→P66 flow and ROD
+> input, then uses an explicitly labelled Terminal Assist below 500 m to
+> level the LM, remove horizontal speed and flare to a survivable contact.
+> ENGR always shows `ASSISTED DEMO`, the assisted target and a transparent
+> 100-point touchdown score. This is for getting the feel of the project;
+> it is not evidence that the authentic landing acceptance passed. The
+> existing authentic scenarios and thresholds below are unchanged. See the
+> [Playable Alpha specification](docs/superpowers/specs/2026-08-02-playable-alpha.md).
+> The first live validation completed `00→63→66` and landed Nominal at
+> 2.20 m/s vertical, 0.16 m/s horizontal and 0.0° tilt (83/100), 91.8 s
+> after ENGINE ON, with no alarm episode or PROG-lamp frame.
+
+> **Current status (2026-08-02): LR integration passes; landing acceptance is
+> RED.** Run 27 closed the LR velocity split and former LR alarms with the
+> complete Apollo 11 pad block, five-sample beam reads and bounded 28-packet
+> absolute `RNRAD` loads. Run 31 then flew Luminary's automatic P65 route
+> (`00→63→64→65`) with the correct H-beam slant range and automatic 2,500 ft
+> channel-33 scale transition. P65 controlled horizontal velocity and attitude
+> but believed it was at the surface while still about 200 m high, hovered to
+> fuel exhaustion and crashed at 25.90 m/s vertical / 1.72 m/s horizontal.
+>
+> The frozen M1 acceptance was also executed unchanged. Its forced-P66 path
+> crashed at 20.70 m/s vertical / 62.40 m/s horizontal after 856.5 s, failing
+> the 800 s limit before the later touchdown assertions. Thresholds remain
+> 3.0 m/s vertical, 1.5 m/s horizontal and 12° tilt. See the current
+> [handoff](docs/superpowers/notes/2026-08-01-handoff.md) and the measured
+> [flight ledger](docs/superpowers/notes/2026-07-31-m1b-rod-loop.md#22-frozen-m1-acceptance-executed-unchanged--red).
+
 > **Wave 1 acceptance is RED — the landing is not soft, and P66 never flew.**
 > MM66 does light (the measured mode sequence is `["00","63","66"]`), but only
 > 0.6-1.8 s *after* ground contact, so it controlled nothing.
@@ -55,12 +84,11 @@ As of Phase 2 Wave 1 the loop is closed end to end — PIPA/CDU sensors feed the
 > m/s/pulse, `THRUST_N_PER_PULSE` → 12.5319585 N/bit, DPS full throttle →
 > 48 145.4 N, `DPS_TAU` → 0.2 s) and none of them cured it.
 >
-> The acceptance test (`tests/live_pdi_descent.rs`) is frozen and **has
-> never been run**: it was written after the flight budget was spent, so it
-> records the target, not a result. On the last three flights its mode,
-> alarm-episode and AGC-clock assertions would pass, its touchdown block
-> would fail, and its `prog_lamp_frames == 0` gate would fail on run 5 —
-> which counted 21 lamp frames, all raised *after* ground contact.
+> The acceptance test (`tests/live_pdi_descent.rs`) is frozen and was first
+> executed unchanged on 2026-08-02. It failed at the first touchdown-block
+> assertion: 856.5 s from ENGINE ON exceeded the 800 s limit. The measured
+> result was Crash at 20.70 m/s vertical, 62.40 m/s horizontal and 11.67°,
+> with 1,353 pre-contact PROG-lamp frames. Its limits were not relaxed.
 > Measured numbers, citations and the open items:
 > [docs/superpowers/notes/2026-07-26-m1-pdi-flight.md](docs/superpowers/notes/2026-07-26-m1-pdi-flight.md).
 
@@ -93,6 +121,30 @@ As of Phase 2 Wave 1 the loop is closed end to end — PIPA/CDU sensors feed the
 - Node.js 22+ (`npm`) — web client
 
 ## Quickstart
+
+### Playable Alpha (recommended)
+
+```bash
+# Terminal 1: real AGC + assisted demo scenario
+make demo
+
+# Terminal 2: browser client
+make dev-client
+```
+
+Open `http://localhost:5173`, select **ENGR**, and watch the real startup and
+descent. The first Alpha retains the real AGC pad-load/TIG wait (typically
+about 5–7 minutes before ENGINE ON). Once P66 appears, `ROD −1 ft/s` descends
+faster and `ROD +1 ft/s` descends slower. Each accepted click changes both
+Luminary's `VDGVERT` and the assisted target by 0.3048 m/s; the target is
+guarded to 0.4–8.0 m/s downward. Contact shows the existing
+Nominal/Hard/Crash class plus a 0–100 score.
+
+The Terminal Assist exists only in
+[`scenarios/playable-demo.toml`](scenarios/playable-demo.toml). Running any
+other scenario remains unassisted.
+
+### Development runtime
 
 ```bash
 # Build AGC tools and assemble Luminary099 binary (once)
@@ -127,6 +179,12 @@ make descent-p66-fast
 # land — see the M1 status block above. Prints the same `[accept]`
 # diagnostics block as the acceptance test, so the run records itself.
 make descent-full
+
+# Final landing-radar path with the diagnostic forced P66 handover
+make descent-lr-full
+
+# Final landing-radar path with Luminary's automatic P64 → P65 transition
+make descent-p65
 
 # Instrument any of these runs:
 #   EAGLE_ATT_DEBUG=<path>  attitude sign-chain trace (jets, gimbals, omega, torque)
@@ -178,12 +236,10 @@ Two live acceptance tests, both currently **red**, for different reasons:
   *nominal* landing. Fails on the touchdown class; P66 never flies (see the
   re-flight ledger linked above).
 - **Wave 2 M1** — `tests/live_pdi_descent.rs` (port 19905, ~20 min): the
-  real profile from the PDI ignition point, radar bypassed. **Never run** —
-  frozen after the flight budget was spent. On the six measured flights its
-  mode-sequence, alarm and AGC-clock assertions would pass and its
-  touchdown assertions would fail; the file's own header says which is
-  which. Its thresholds are the scenario's design limits and are
-  deliberately not relaxed to what was measured.
+  real profile from the PDI ignition point, radar bypassed. Executed unchanged
+  on 2026-08-02: `00→63→64→66`, Crash at 20.70/62.40 m/s after 856.5 s,
+  failing the frozen 800 s timeout first. Its scenario design limits remain
+  unchanged and deliberately are not relaxed to what was measured.
 
 ## Specification
 

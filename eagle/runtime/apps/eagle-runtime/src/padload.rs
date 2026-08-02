@@ -402,11 +402,60 @@ pub const P66_BSCALE_TABLE: &[BScaleEntry] = &[
     },
 ];
 
+/// Luminary 99 landing-radar/P65 erasable scales, verified against the
+/// Apollo 11 LM Data Book's G prelaunch erasable-load table. That primary
+/// source prints physical value, SF and octal together, so the manifest
+/// tests can independently re-encode every group and compare the flight
+/// word rather than trusting a transcribed scale in isolation.
+pub const LR_BSCALE_TABLE: &[BScaleEntry] = &[
+    BScaleEntry {
+        symbol: "RADSKAL/SKALSKAL",
+        status: BScaleStatus::Verified,
+        note: "Apollo 11 LM Data Book Table LM5/4.5.1-1: RADSCALE=0 b=7 DP, SKALSKAL=0 b=0 SP.",
+    },
+    BScaleEntry {
+        symbol: "V2FG",
+        status: BScaleStatus::Verified,
+        note: "Apollo 11 load: [-0.009144,0,0] m/cs at b=10 DP (-3 ft/s in X).",
+    },
+    BScaleEntry {
+        symbol: "TAUVERT",
+        status: BScaleStatus::Verified,
+        note: "Apollo 11 load: 1000 cs at b=14 DP (10 s).",
+    },
+    BScaleEntry {
+        symbol: "DELQFIX",
+        status: BScaleStatus::Verified,
+        note: "Apollo 11 load: 60.96 m at b=24 DP (200 ft).",
+    },
+    BScaleEntry {
+        symbol: "LRVMAX/LRVF",
+        status: BScaleStatus::Verified,
+        note: "Apollo 11 load: 6.096/0.6096 m/cs at b=7 SP (2000/200 ft/s).",
+    },
+    BScaleEntry {
+        symbol: "LRWV*/LRWVF*",
+        status: BScaleStatus::Verified,
+        note: "Apollo 11 dimensionless b=0 SP weights: WV X/Y/Z=.3, WVF X/Y/Z=.2, final=.1.",
+    },
+    BScaleEntry {
+        symbol: "LRHMAX/LRWH",
+        status: BScaleStatus::Verified,
+        note: "Apollo 11 load: LRHMAX=15240 m at b=14 SP; LRWH=.35 at b=0 SP.",
+    },
+    BScaleEntry {
+        symbol: "RPCRTIME/RPCRTQSW",
+        status: BScaleStatus::Verified,
+        note: "Apollo 11 two-phase load: 6200 cs at b=17 SP and -1 at b=1 SP.",
+    },
+];
+
 /// Hard-fail if any b-scale hypothesis is still `Unverified`, unless the
 /// caller passed `--allow-unverified` (Spike A iterating live).
 pub fn check_bscales(allow_unverified: bool) -> Result<()> {
     let unverified: Vec<&str> = P66_BSCALE_TABLE
         .iter()
+        .chain(LR_BSCALE_TABLE)
         .filter(|e| e.status == BScaleStatus::Unverified)
         .map(|e| e.symbol)
         .collect();
@@ -1660,6 +1709,42 @@ mod tests {
         ];
         let decoded = eagle_agc_protocol::words::dp_decode(vign) as f64 * 2f64.powi(10 - 28);
         assert!((decoded - 16.9952182).abs() < 1e-4, "VIGN {decoded}");
+
+        // Apollo 11 LM Data Book Table LM5/4.5.1-1 prints value, SF and
+        // octal side-by-side. Re-encoding the committed physical+b entries
+        // must reproduce those flight words exactly.
+        let at = |symbol: &str, offset: u16| {
+            let ecadr = st.ecadr(symbol).unwrap() + offset;
+            words.iter().find(|w| w.ecadr == ecadr).unwrap().word
+        };
+        assert_eq!([at("RADSKAL", 0), at("RADSKAL", 1)], [0, 0]);
+        assert_eq!(at("SKALSKAL", 0), 0);
+        assert_eq!([at("V2FG", 0), at("V2FG", 1)], [0o77777, 0o73242]);
+        assert_eq!([at("TAUVERT", 0), at("TAUVERT", 1)], [0o01750, 0]);
+        assert_eq!([at("DELQFIX", 0), at("DELQFIX", 1)], [0, 0o01717]);
+        assert_eq!(at("LRVMAX", 0), 0o01414);
+        assert_eq!(at("LRVF", 0), 0o00116);
+        for symbol in ["LRWVZ", "LRWVY", "LRWVX"] {
+            assert_eq!(at(symbol, 0), 0o11463, "{symbol}");
+        }
+        for symbol in ["LRWVFZ", "LRWVFY", "LRWVFX"] {
+            assert_eq!(at(symbol, 0), 0o06315, "{symbol}");
+        }
+        assert_eq!(at("LRWVFF", 0), 0o03146);
+        assert_eq!(at("LRHMAX", 0), 0o35610);
+        assert_eq!(at("LRWH", 0), 0o13146);
+        assert_eq!(at("RPCRTIME", 0), 0o01407);
+        assert_eq!(at("RPCRTQSW", 0), 0o57777);
+    }
+
+    #[test]
+    fn landing_radar_bscales_are_all_primary_source_verified() {
+        assert!(
+            LR_BSCALE_TABLE
+                .iter()
+                .all(|entry| entry.status == BScaleStatus::Verified),
+            "no LR/P65 scale may enter the flight manifest as a hypothesis"
+        );
     }
 
     #[test]
