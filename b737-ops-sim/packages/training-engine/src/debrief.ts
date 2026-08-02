@@ -330,6 +330,22 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
       pointsDelta: -15,
     });
   }
+  for (const gate of [1000, 500] as const) {
+    if (events.some((e) => e.id === `fo:gate_${gate}_unstable`)) {
+      approach.push({
+        label: `${gate} ft gate`,
+        detail: `Not stable at the ${gate} ft gate`,
+        pointsDelta: gate === 500 ? -15 : -10,
+      });
+    }
+  }
+  if (events.some((e) => e.id === 'fo:minimums_go_around')) {
+    approach.push({
+      label: 'Minimums',
+      detail: 'Not stable at minimums — a go-around was called for',
+      pointsDelta: -10,
+    });
+  }
 
   // ---- category: landing --------------------------------------------------
   const landing: DebriefFinding[] = [];

@@ -46,6 +46,13 @@ Property namespaces:
 - `derived.enteredRunwaySurface` — true only on the sample that crossed onto
   the surface, so an aircraft positioned on the runway at scenario start is not
   reported as entering it
+- `derived.onTaxiSurface` / `derived.taxiwayLabel` — on a paved taxi surface of
+  the airport's taxi network, and which taxiway it is
+- `derived.distanceToHoldShortM` — metres to the runway holding position;
+  negative once inside the protected area
+- `derived.pastHoldShort` — crossed the holding position (this is what a runway
+  incursion rule should use in a taxi scenario)
+- `derived.distanceToStandM` — metres to the scenario's stand, for parking
   → `'increasing' | 'decreasing' | 'flat'` over a 3 s window
 - `flags.<name>` — host-set flags (ATC clearances, checklist completions,
   control-check done). ATC applies `takeoffClearanceReceived`,
@@ -74,6 +81,28 @@ markers in `sourceReference`, and keep uncertain numbers in config, not code.
   sourceReference: 'NON_CERTIFIED_APPROXIMATION — SOURCE_REQUIRED',
 }
 ```
+
+### Phase entry actions
+
+A phase may declare `resetChecklistIds` (re-arm those checklists on entry — the
+Landing checklist after a go-around) and `setFlagsOnEnter` (set flags on entry —
+clearing `goAroundAnnounced` once the approach is rejoined). Both keep procedure
+repetition in the scenario data instead of in engine code.
+
+### Scenario catalogue
+
+`SCENARIOS` in `packages/scenario-engine/src/scenarios/catalogue.ts` is what the
+UI picker offers:
+
+| id                               | start                  | what it exercises                                                    |
+| -------------------------------- | ---------------------- | -------------------------------------------------------------------- |
+| `circuit_takeoff_ils_landing_01` | holding point          | takeoff, ATC pattern, ILS, landing, runway exit                      |
+| `gate_to_gate_ksfo_01`           | stand                  | ground control, taxi out, hold short, the circuit, taxi in, shutdown |
+| `approach_drill_ksfo_28r_01`     | established on the ILS | configuration, stabilisation gates, landing or go-around             |
+
+Adding one is a data change: define the scenario, export it, add it to
+`SCENARIOS`. The gate-to-gate and drill scenarios reuse the circuit's airborne
+phases, rules and checklists rather than copying them.
 
 ### Checklist phases
 

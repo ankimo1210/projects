@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import {
   FT_TO_M,
+  HOLD_SHORT_OFFSET_M,
   KSFO_28R,
   NM_TO_M,
   angleDiffDeg,
   degToRad,
+  getTaxiNetwork,
+  runwayPointToLatLon,
   toLocalEnuM,
   type AircraftState,
 } from '@b737/shared';
@@ -20,10 +23,19 @@ const CX = 240;
 const CY = 300;
 const R = 210;
 
+/** {latDeg,lonDeg} → ENU metres from the runway threshold, as positional args. */
+function enu(p: { latDeg: number; lonDeg: number }): [number, number] {
+  const e = toLocalEnuM(KSFO_28R.thresholdLatDeg, KSFO_28R.thresholdLonDeg, p.latDeg, p.lonDeg);
+  return [e.eastM, e.northM];
+}
+
 export function Nd({ state }: { state: AircraftState }): JSX.Element {
   const [rangeNm, setRangeNm] = useState(10);
   const hdg = state.attitude.headingDegMag;
-  const pxPerM = R / (rangeNm * NM_TO_M);
+  // On the ground the interesting features are metres apart, not miles: clamp
+  // the range so the taxi layout is actually visible (M3).
+  const effectiveRangeNm = state.weightOnWheels ? Math.min(rangeNm, 0.5) : rangeNm;
+  const pxPerM = R / (effectiveRangeNm * NM_TO_M);
 
   // aircraft position in runway-threshold ENU
   const { eastM, northM } = toLocalEnuM(
@@ -87,6 +99,38 @@ export function Nd({ state }: { state: AircraftState }): JSX.Element {
 
   const selRel = angleDiffDeg(hdg, state.mcp.selHeadingDeg);
   const selRad = degToRad(selRel - 90);
+  // Ground movement awareness (M3): the taxi layout is drawn from the same
+  // network the scenario rules use, so what the crew sees is what is judged.
+  const network = getTaxiNetwork(state.airport.icao ?? '', state.airport.runwayId ?? '');
+  const nodeToScreen = (nodeId: string): { x: number; y: number } | null => {
+    const node = network?.nodes[nodeId];
+    if (!node) return null;
+    const p = toLocalEnuM(
+      KSFO_28R.thresholdLatDeg,
+      KSFO_28R.thresholdLonDeg,
+      node.latDeg,
+      node.lonDeg,
+    );
+    return toScreen(p.eastM, p.northM);
+  };
+  const taxiLines =
+    network && state.weightOnWheels
+      ? network.segments.map((seg) => ({
+          id: seg.id,
+          label: seg.label,
+          from: nodeToScreen(seg.fromNodeId),
+          to: nodeToScreen(seg.toNodeId),
+        }))
+      : [];
+  // hold-short bar across the runway entry, at the holding position
+  const holdShort =
+    network && state.weightOnWheels
+      ? {
+          a: toScreen(...enu(runwayPointToLatLon(KSFO_28R, 40 - 20, HOLD_SHORT_OFFSET_M))),
+          b: toScreen(...enu(runwayPointToLatLon(KSFO_28R, 40 + 20, HOLD_SHORT_OFFSET_M))),
+        }
+      : null;
+
   const trackRel = angleDiffDeg(hdg, state.attitude.groundTrackDegMag);
   const trackRad = degToRad(trackRel - 90);
 
@@ -110,6 +154,31 @@ export function Nd({ state }: { state: AircraftState }): JSX.Element {
           strokeWidth={1.5}
         />
         <line x1={thr.x} y1={thr.y} x2={end.x} y2={end.y} stroke="#fff" strokeWidth={6} />
+        {/* taxi network (ground only) */}
+        {taxiLines.map((seg) =>
+          seg.from && seg.to ? (
+            <line
+              key={seg.id}
+              x1={seg.from.x}
+              y1={seg.from.y}
+              x2={seg.to.x}
+              y2={seg.to.y}
+              stroke="#7a8798"
+              strokeWidth={3}
+            />
+          ) : null,
+        )}
+        {holdShort && (
+          <line
+            x1={holdShort.a.x}
+            y1={holdShort.a.y}
+            x2={holdShort.b.x}
+            y2={holdShort.b.y}
+            stroke="#ffb648"
+            strokeWidth={3}
+            strokeDasharray="4 3"
+          />
+        )}
         {/* track line */}
         <line
           x1={CX}
@@ -141,7 +210,7 @@ export function Nd({ state }: { state: AircraftState }): JSX.Element {
       </text>
       <g className="nd-range">
         <text x={16} y={H - 42} fill="#888" fontSize={12}>
-          RNG {rangeNm} NM
+          RNG {effectiveRangeNm} NM
         </text>
         {[5, 10, 20].map((r) => (
           <text

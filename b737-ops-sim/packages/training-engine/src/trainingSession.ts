@@ -28,6 +28,20 @@ const FO_SAFETY_EVENTS: Record<string, { severity: ScenarioEvent['severity']; me
     severity: 'deviation',
     message: 'First officer had to prompt for the landing gear',
   },
+  // Stabilisation gates (M3 D4): the call is data the debrief scores, not just
+  // a line of transcript.
+  'fo:gate_1000_unstable': {
+    severity: 'deviation',
+    message: 'Not stable at the 1,000 ft gate',
+  },
+  'fo:gate_500_unstable': {
+    severity: 'deviation',
+    message: 'Not stable at the 500 ft gate',
+  },
+  'fo:minimums_go_around': {
+    severity: 'deviation',
+    message: 'Not stable at minimums — a go-around was called for',
+  },
 };
 
 /**

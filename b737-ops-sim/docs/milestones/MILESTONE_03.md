@@ -6,7 +6,11 @@
 > the approach is not stable, taxi in after landing — and do it in more than one
 > scenario.
 
-**Status:** in progress (started 2026-08-02)
+**Status:** Complete (2026-08-02) — see [MILESTONE_03_DOD.md](MILESTONE_03_DOD.md).
+
+Deviations from this plan, all recorded in the DoD: the mock's ground handling
+needed no new braking model (the existing steering/friction was adequate), and
+the ND draws the taxi network but has no dedicated airport-map mode.
 
 Phase 3 items from the spec: taxi operations · more complete checklists · MCP
 and autopilot · ILS behaviour · more realistic callouts · stable-approach
@@ -17,15 +21,15 @@ currently has nowhere to fly it (recorded as a gap in
 
 ## Decisions
 
-| #   | Decision | Rationale |
-| --- | --- | --- |
-| D1 | Ground layout is **data**, not geometry: a small taxiway graph (nodes + segments with width) in `@b737/shared`, marked `NON_CERTIFIED_APPROXIMATION — SOURCE_REQUIRED`, used by the scenario engine, the 3D world and ground ATC alike | One source of truth; the 3D world stops inventing its own taxiway |
-| D2 | Autopilot gains **modes** (roll: HDG SEL / LOC, pitch: V/S / ALT HOLD / G/S) with an armed→captured transition, annunciated on the PFD FMA | "MCP and autopilot" + "ILS behaviour"; the scripted pilot currently fakes LOC tracking by dialling headings |
-| D3 | Go-around is a **scenario phase** entered from a TO/GA action, with ATC re-vectoring back onto the approach; the FO's existing call becomes actionable | Removes the "instructed to do something unflyable" inconsistency |
-| D4 | Stabilisation is judged at **1000 ft and 500 ft gates**, published as scenario events, and scored | Spec asks for stable-approach monitoring; events make it debriefable (same pattern as R-19) |
-| D5 | Scenarios become a **catalogue** with a picker in the UI; the MVP circuit stays as-is and gains a full gate-to-gate variant and a short approach-only drill | "Multiple scenarios" without rewriting the existing one |
-| D6 | Taxi speed/hold-short discipline is enforced by **rules on geometry** (`derived.*`), not by prompts | Consistent with R-08; no button-click gating |
-| D7 | Mock-only for M3. FlightGear mode keeps working (property map already covers AP/nav), but live validation stays blocked on FlightGear not being installed | Same constraint as M1/M2 |
+| #   | Decision                                                                                                                                                                                                                               | Rationale                                                                                                   |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| D1  | Ground layout is **data**, not geometry: a small taxiway graph (nodes + segments with width) in `@b737/shared`, marked `NON_CERTIFIED_APPROXIMATION — SOURCE_REQUIRED`, used by the scenario engine, the 3D world and ground ATC alike | One source of truth; the 3D world stops inventing its own taxiway                                           |
+| D2  | Autopilot gains **modes** (roll: HDG SEL / LOC, pitch: V/S / ALT HOLD / G/S) with an armed→captured transition, annunciated on the PFD FMA                                                                                             | "MCP and autopilot" + "ILS behaviour"; the scripted pilot currently fakes LOC tracking by dialling headings |
+| D3  | Go-around is a **scenario phase** entered from a TO/GA action, with ATC re-vectoring back onto the approach; the FO's existing call becomes actionable                                                                                 | Removes the "instructed to do something unflyable" inconsistency                                            |
+| D4  | Stabilisation is judged at **1000 ft and 500 ft gates**, published as scenario events, and scored                                                                                                                                      | Spec asks for stable-approach monitoring; events make it debriefable (same pattern as R-19)                 |
+| D5  | Scenarios become a **catalogue** with a picker in the UI; the MVP circuit stays as-is and gains a full gate-to-gate variant and a short approach-only drill                                                                            | "Multiple scenarios" without rewriting the existing one                                                     |
+| D6  | Taxi speed/hold-short discipline is enforced by **rules on geometry** (`derived.*`), not by prompts                                                                                                                                    | Consistent with R-08; no button-click gating                                                                |
+| D7  | Mock-only for M3. FlightGear mode keeps working (property map already covers AP/nav), but live validation stays blocked on FlightGear not being installed                                                                              | Same constraint as M1/M2                                                                                    |
 
 ## Tasks
 

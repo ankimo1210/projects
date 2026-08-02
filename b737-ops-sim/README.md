@@ -12,9 +12,29 @@ state-validated checklists, and a transparent scoring debrief.
 > `NON_CERTIFIED_APPROXIMATION` / `SOURCE_REQUIRED` in the code/data).
 > Do not use it for real-world flight training.
 
-## Current capabilities (Milestone 2)
+## Current capabilities (Milestone 3)
 
-**Phase 2 — asset integration (new):**
+**Phase 3 — operations (new):**
+
+- **Taxi operations**: a KSFO ground layout (stand, taxiway A, runway entry and
+  high-speed exit) that the scenario engine, ATC and the ND all read from.
+  Runway entry, holding-position crossing, taxi speed and taxiing off the
+  pavement are judged from geometry.
+- **Ground control**: taxi clearance with a route, hold-short instruction,
+  handover to the tower when the aircraft is really holding short, and
+  `taxi to stand` after landing.
+- **Autopilot modes**: HDG SEL / LOC ARM / LOC and V/S / ALT HOLD / G/S ARM /
+  G/S with real capture from the ILS, annunciated on the PFD FMA; arm the
+  approach and the autopilot flies it.
+- **Go-around**: TO/GA gives go-around thrust and attitude, ATC re-sequences
+  the aircraft onto the pattern, and the Landing checklist is re-armed.
+- **Stabilisation gates**: the first officer calls 1000 ft and 500 ft "stable"
+  or "not stable", plus minimums, gear/flap read-backs and "three green".
+- **Three scenarios** in a picker: the original circuit, a gate-to-gate flight
+  (stand → taxi → circuit → taxi in → shutdown) and a short approach drill that
+  starts established on the ILS.
+
+**Phase 2 — asset integration:**
 
 - Real open-source **737-800YV cockpit** (GPL-2.0, provenance in
   [THIRD_PARTY_ASSETS.md](THIRD_PARTY_ASSETS.md)) imported through a fully
@@ -32,7 +52,7 @@ state-validated checklists, and a transparent scoring debrief.
 - Without built assets the app runs exactly as Milestone 1 (temporary
   geometry) — `pnpm assets:build` is optional.
 
-## Milestone 1 capabilities
+## Milestone 1–2 capabilities
 
 - **Mock mode (default):** a deterministic 737-class point-mass flight model —
   no FlightGear needed. Fixed seed ⇒ reproducible flights.
@@ -173,8 +193,10 @@ In this WSL environment Playwright needs `TMPDIR=/tmp TEMP=/tmp TMP=/tmp`.
   marked for verification in the property map.
 - The mock model touches down at field elevation anywhere — an off-runway
   landing is not modelled (scenario logic uses runway geometry regardless).
-- The first officer can call for a go-around, but there is no go-around /
-  missed-approach phase to fly; see docs/REVIEW_RESPONSE.md.
+- Aircraft systems (electrical, hydraulic, bleed, APU, engine start), the FMC,
+  SID/STAR, weather and failures are Phase 4/5 and not modelled.
+- The taxi layout is a plausible approximation, not survey data; in FlightGear
+  mode the scenery is FlightGear's and may not match it.
 
 ## Documentation
 

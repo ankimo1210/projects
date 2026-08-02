@@ -2,6 +2,54 @@
 
 Local-only project; versions track milestones rather than releases.
 
+## Milestone 3 — Operations (2026-08-02)
+
+Ground operations, real autopilot modes and more than one scenario.
+Plan: [docs/milestones/MILESTONE_03.md](docs/milestones/MILESTONE_03.md),
+verification: [docs/milestones/MILESTONE_03_DOD.md](docs/milestones/MILESTONE_03_DOD.md).
+
+### Added
+
+- **Taxi operations**: a KSFO ground layout in `@b737/shared` (stand, taxiway
+  A, runway entry, high-speed exit) with segment/offset queries and holding
+  position helpers. The scenario engine exposes `derived.onTaxiSurface`,
+  `taxiwayLabel`, `distanceToHoldShortM`, `pastHoldShort` and
+  `distanceToStandM`; the ND draws the same network on the ground.
+- **Ground control**: taxi clearance with a route read from the network,
+  hold-short instruction, tower handover once the aircraft is really holding
+  short, and `taxi to stand` after landing.
+- **Autopilot modes**: HDG SEL / LOC ARM / LOC and V/S / ALT HOLD / G/S ARM /
+  G/S captured from real deviations, plus TO/GA — exposed as
+  `mcp.rollMode` / `mcp.pitchMode` / `mcp.approachArmed` and annunciated on the
+  PFD FMA (armed white, active green).
+- **Go-around**: a `go_around` phase reachable from final approach or the
+  flare, ATC re-sequencing onto the downwind leg, and the Landing checklist
+  re-armed on entry.
+- **Stabilisation gates**: 1000 ft and 500 ft "stable / not stable" calls,
+  minimums, gear and flap read-backs, and "gear down, three green" — all from
+  one shared definition of stable.
+- **Scenario catalogue and picker**: the original circuit, a gate-to-gate
+  flight (stand → taxi → circuit → taxi in → shutdown) with Before Start,
+  Before Taxi and Shutdown checklists, and a short approach drill that starts
+  established on the ILS. Switching scenario resets through the backend.
+- Scenarios can start at a stand or established on final approach; phases can
+  re-arm checklists and set flags on entry.
+
+### Fixed
+
+- An armed approach now keeps flying the glidepath below 300 ft instead of
+  reverting to the MCP altitude and climbing away at about 40 ft.
+- The flight-control check is valid wherever the Before Takeoff checklist is
+  allowed, not only in a phase named `before_takeoff`.
+- The ND clamps its range to 0.5 NM on the ground, where the taxi layout is.
+
+### Known limitations
+
+- Mode annunciation and the new commands are mock-verified; the FlightGear
+  property map entries for approach-armed and TO/GA are marked
+  AIRCRAFT-MODEL-DEPENDENT and still need a live check.
+- The taxi network is a plausible approximation for KSFO 28R only.
+
 ## Review remediation — M1/M2 re-opened and fixed (2026-08-02)
 
 All 22 findings in [REVIEW_FEEDBACK.md](REVIEW_FEEDBACK.md) addressed;

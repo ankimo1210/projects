@@ -49,6 +49,13 @@ bind through this registry.
 MCP knobs/buttons (IAS/HDG/ALT/VS, CMD A, F/D) are implemented directly in
 `apps/web/src/instruments/Mcp.tsx` with the same display-from-state rule.
 
+Two M3 actions are not pedestal controls and live with the ATC/crew panel:
+
+| action            | command                | effect                                                                                          |
+| ----------------- | ---------------------- | ----------------------------------------------------------------------------------------------- |
+| Arm the approach  | `set_ap_approach_mode` | the autopilot captures LOC then G/S; annunciated on the PFD FMA                                 |
+| Go around (TO/GA) | `set_toga`             | go-around thrust and attitude, autopilot out of the approach; the crew also announces it to ATC |
+
 ## Phase 2: 3D binding
 
 Interactive meshes are named in the registry's `meshNames`; a Babylon picking
