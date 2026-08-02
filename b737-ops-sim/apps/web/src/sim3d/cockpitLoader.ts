@@ -17,6 +17,7 @@ import {
   type FLAP_DETENTS,
 } from '@b737/shared';
 import { COCKPIT_CONTROLS } from '@b737/cockpit-model';
+import { fgOffsetRotation, fgRotationInContentFrame } from './fgFrame.js';
 
 /**
  * Loads the converted 737-800YV cockpit (Phase 2 asset pipeline) and binds:
@@ -73,12 +74,7 @@ export function fgToAircraft(p: { x: number; y: number; z: number }): Vector3 {
 /** Desired FG→aircraft linear map D as a Babylon matrix (row-vector form). */
 function desiredMapMatrix(): Matrix {
   // rows are images of the FG basis vectors: aft→-z, right→+x, up→+y
-  return Matrix.FromValues(
-    0, 0, -1, 0,
-    1, 0, 0, 0,
-    0, 1, 0, 0,
-    0, 0, 0, 1,
-  );
+  return Matrix.FromValues(0, 0, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1);
 }
 
 /** Cockpit floor height above ground (gear datum) — visual approximation. */
@@ -121,7 +117,7 @@ export async function loadCockpit(
   // glTF nodes with multiple primitives surface as TransformNodes with
   // child meshes — index both kinds by name for animation + picking.
   const meshByName = new Map<string, TransformNode[]>();
-  const chainLinks: { node: TransformNode; t: Vector3 }[] = [];
+  const chainLinks: { node: TransformNode; t: Vector3; rotation: Quaternion }[] = [];
   let loaderRootSample: TransformNode | null = null;
   let meshCount = 0;
 
@@ -136,14 +132,10 @@ export async function loadCockpit(
       const child = new TransformNode(`inst:${instance.id}:chain${i}`, scene);
       child.parent = node;
       const [pitchDeg = 0, rollDeg = 0, headingDeg = 0] = link.rDeg;
-      if (pitchDeg || rollDeg || headingDeg) {
-        console.warn(
-          `[cockpit] non-zero offset rotation on ${instance.id} chain${i} — not yet supported, ignoring`,
-        );
-      }
       chainLinks.push({
         node: child,
         t: new Vector3(link.t[0] ?? 0, link.t[1] ?? 0, link.t[2] ?? 0),
+        rotation: fgOffsetRotation(pitchDeg, rollDeg, headingDeg),
       });
       node = child;
     });
@@ -189,6 +181,9 @@ export async function loadCockpit(
   wrapper.scaling = wScale;
   for (const link of chainLinks) {
     link.node.position = Vector3.TransformNormal(link.t, L);
+    // Assembly rotations (flightdesk −15°, overhead 90/90) are declared in FG
+    // coordinates; conjugate them into the loader's content frame (R-11).
+    link.node.rotationQuaternion = fgRotationInContentFrame(link.rotation, L);
   }
 
   // ---------- animation bindings ----------
