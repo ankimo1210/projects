@@ -20,6 +20,14 @@ const CHECKLIST_ITEM_TO_CONTROL: Record<string, string> = {
   gear: 'gear',
   flaps_up: 'flaps',
   autobrake_off: 'autobrake',
+  parking_brake: 'parking_brake',
+  parking_brake_released: 'parking_brake',
+  parking_brake_set: 'parking_brake',
+  taxi_light: 'light_taxi',
+  beacon: 'light_beacon',
+  flaps_takeoff: 'flaps',
+  thrust_idle: 'throttle',
+  exterior_lights_off: 'light_landing',
 };
 
 export function deriveGuidance(session: TrainingSession): GuidanceHint {
@@ -45,6 +53,31 @@ export function deriveGuidance(session: TrainingSession): GuidanceHint {
     }
   }
   switch (phase) {
+    // ---- ground phases (M3) ----
+    case 'preflight':
+      return {
+        controlId: null,
+        text: 'Complete the Before Start checklist, then request a taxi clearance.',
+      };
+    case 'taxi_out':
+      return {
+        controlId: 'throttle',
+        text: 'Taxi via A to runway 28R and stop before the holding position.',
+      };
+    case 'hold_short':
+      return {
+        controlId: null,
+        text: 'Holding short: finish the Before Takeoff checklist and request takeoff clearance.',
+      };
+    case 'taxi_in':
+      return { controlId: 'throttle', text: 'Taxi to the stand via A.' };
+    case 'parked':
+      return { controlId: 'parking_brake', text: 'Set the parking brake and run Shutdown.' };
+    case 'go_around':
+      return {
+        controlId: 'gear',
+        text: 'Go-around: gear up, flaps 15, climb to 3,000 and follow ATC vectors.',
+      };
     case 'before_takeoff':
       return {
         controlId: null,
