@@ -104,6 +104,8 @@ const RTO_ARM_SPEED_KT = 60;
 const WIND_ALOFT_BLEND_FT = 3000;
 /** Gust response time constant. */
 const GUST_TAU_SEC = 4;
+/** Attitude-perturbation amplitude added at turbulence = 1.0. */
+const TURBULENCE_ATTITUDE_GAIN = 2.5;
 
 /** V/S the simple autopilot uses when the MCP V/S window is zeroed. */
 const DEFAULT_AP_CLIMB_FPM = 1800;
@@ -672,7 +674,10 @@ export class MockFlightModel {
         clamp(this.iasMps / 1.5, 0, 1);
       this.headingDegTrue = normalizeDeg360(this.headingDegTrue + yawRate * dt);
     } else {
-      const turbulence = this.iasMps > 15 ? (this.rand() - 0.5) * 0.5 : 0;
+      // Baseline light bumpiness plus the scenario's turbulence setting
+      // (0..1) — at 1.0 the perturbation is several times the baseline (F-02).
+      const turbAmplitude = 0.5 + this.turbulence * TURBULENCE_ATTITUDE_GAIN;
+      const turbulence = this.iasMps > 15 ? (this.rand() - 0.5) * turbAmplitude : 0;
       const pitchRate = elevator * PITCH_RATE_MAX_DEGPS + turbulence * 0.3;
       this.pitchDeg = clamp(this.pitchDeg + pitchRate * dt, -15, 25);
       const rollRate = aileron * ROLL_RATE_MAX_DEGPS - this.rollDeg * 0.05 + turbulence;
@@ -783,9 +788,15 @@ export class MockFlightModel {
     }
 
     // --- Ground track & position (wind applied to track, not IAS) ---
-    const windToDeg = normalizeDeg360(this.windDirDeg + 180);
-    const windE = this.windSpeedMps * Math.sin(degToRad(windToDeg));
-    const windN = this.windSpeedMps * Math.cos(degToRad(windToDeg));
+    // The wind the aircraft is IN: surface blended toward the wind aloft with
+    // altitude, plus the seeded gust — the same wind the state reports and the
+    // LNAV crab is computed for (F-02: it used to drift by the surface wind at
+    // every altitude while LNAV crabbed for the blended one).
+    const windNow = this.currentWind();
+    const windSpeedNowMps = Math.max(0, windNow.speedKt + this.gustKt) * KT_TO_MPS;
+    const windToDeg = normalizeDeg360(windNow.dirDeg + 180);
+    const windE = windSpeedNowMps * Math.sin(degToRad(windToDeg));
+    const windN = windSpeedNowMps * Math.cos(degToRad(windToDeg));
     const acE = this.iasMps * Math.sin(degToRad(this.headingDegTrue));
     const acN = this.iasMps * Math.cos(degToRad(this.headingDegTrue));
     // On ground the wheels dominate: track = heading, wind ignored.

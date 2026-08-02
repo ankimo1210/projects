@@ -44,6 +44,8 @@ export interface DebriefReport {
 
 export interface DebriefInput {
   events: ScenarioEvent[];
+  /** False for scenarios that start airborne — no takeoff to score (F-05). */
+  expectTakeoff?: boolean;
   history: HistorySample[];
   transcript: TranscriptEntry[];
   atcStats: AtcStats;
@@ -161,7 +163,7 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
         });
       }
     }
-  } else {
+  } else if (input.expectTakeoff !== false) {
     takeoff.push({
       label: 'Takeoff',
       detail: 'No liftoff detected in this session',
@@ -447,7 +449,11 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
     cat('checklist_discipline', 'Checklist discipline', checklist),
   ];
 
-  const safetyCritical = events.filter((e) => e.severity === 'safety_critical');
+  // An event a scenario injected (engine failure at V1) is the exercise, not
+  // the crew's mistake — it must not fail the flight by itself (F-03).
+  const safetyCritical = events.filter(
+    (e) => e.severity === 'safety_critical' && !(e.data && 'injectFailure' in e.data),
+  );
   const minScore = Math.min(...categories.map((c) => c.score));
   // A single safety-critical event fails the flight. SCENARIO_AUTHORING.md
   // defines that severity as flight-failing, and a runway incursion scoring

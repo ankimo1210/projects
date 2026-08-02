@@ -131,8 +131,9 @@ export function Nd({ state }: { state: AircraftState }): JSX.Element {
         }
       : null;
 
-  // Route ahead (M5): the same legs the autopilot is flying.
-  const routePoints = state.fms.legs.map((leg) => {
+  // Route ahead (M5): only the active leg onward — passed fixes are history,
+  // not guidance (F-09).
+  const routePoints = state.fms.legs.slice(state.fms.activeLegIndex).map((leg) => {
     const e = toLocalEnuM(
       KSFO_28R.thresholdLatDeg,
       KSFO_28R.thresholdLonDeg,
@@ -205,7 +206,7 @@ export function Nd({ state }: { state: AircraftState }): JSX.Element {
             <polygon
               points={`${p.x},${p.y - 5} ${p.x + 5},${p.y} ${p.x},${p.y + 5} ${p.x - 5},${p.y}`}
               fill="none"
-              stroke={i === state.fms.activeLegIndex ? '#39d353' : '#ff3ec8'}
+              stroke={i === 0 ? '#39d353' : '#ff3ec8'}
               strokeWidth={1.5}
             />
             <text x={p.x + 8} y={p.y + 4} fill="#cbd" fontSize={11}>

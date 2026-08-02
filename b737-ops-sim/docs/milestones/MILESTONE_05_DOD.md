@@ -1,11 +1,18 @@
 # Milestone 5 — Definition of Done verification
 
+> **Correction (2026-08-02, second review):** the original version of this DoD
+> was wrong on two rows. T4's browser path was broken (failure injection never
+> reached the aircraft in the web app) and untested — the e2e that would have
+> caught it was removed during M5 instead of being investigated. T3's weather
+> was display-only. Both are fixed and regression-tested; see
+> `REVIEW_FEEDBACK_2.md` (F-01, F-02) and `docs/REVIEW_RESPONSE_2.md`.
+
 Verified 2026-08-02 on WSL2 (Ubuntu), Node v22.22.2, pnpm 11.1.0, at the commit
-that contains the code.
+that contains the remediation.
 
 ```
-pnpm test        PASS — 204 unit/integration tests, 7 packages
-pnpm test:e2e    PASS — 7 Playwright specs (with built assets)
+pnpm test        PASS — 213 unit/integration tests, 7 packages
+pnpm test:e2e    PASS — 8 Playwright specs (with built assets)
 pnpm typecheck   PASS
 pnpm lint        PASS
 pnpm build       PASS

@@ -1,5 +1,4 @@
-import { useEffect, useRef } from 'react';
-import { useEffect as useVoiceEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getSession, sendCommand } from '../state/connection.js';
 import { matchReadback, voiceInput, voiceInputAvailable } from '../audio/voiceInput.js';
 import { useSessionStore, useSettingsStore } from '../state/stores.js';
@@ -14,7 +13,7 @@ export function TranscriptPanel(): JSX.Element {
   const [voiceOn, setVoiceOn] = useState(false);
 
   // Voice input proposes; the deterministic grader still decides (M5 D6).
-  useVoiceEffect(() => {
+  useEffect(() => {
     if (!voiceOn) {
       voiceInput.stop();
       return;

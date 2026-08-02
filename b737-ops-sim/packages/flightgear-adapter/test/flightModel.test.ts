@@ -419,3 +419,89 @@ describe('LNAV, weather and failures', () => {
     expect(s.systems.hydraulic.engPump1On).toBe(false);
   });
 });
+
+// F-02 regression: the weather must act on the aircraft, not just the readout.
+describe('weather acts on the physics', () => {
+  const CROSSWIND_WX = {
+    windAloftDirDeg: 235,
+    windAloftSpeedKt: 38,
+    gustKt: 0,
+    visibilityM: 9000,
+    turbulence: 0,
+  };
+
+  function airborneInWind() {
+    const m = makeModel({ windDirDeg: 245, windSpeedKt: 22, weather: CROSSWIND_WX });
+    flyTakeoff(m, 145);
+    m.applyCommand({ type: 'set_control_axis', axis: 'pitch', valueNorm: 0 });
+    m.applyCommand({ type: 'set_throttle', valueNorm: 0.8 });
+    m.applyCommand({ type: 'set_mcp_altitude', altitudeFt: 5000 });
+    m.applyCommand({ type: 'set_autopilot', engaged: true });
+    m.step(30);
+    return m;
+  }
+
+  it('LNAV converges onto the route in a strong crosswind', () => {
+    // Before F-02 the LNAV crab was computed for the blended wind while the
+    // aircraft drifted by the surface wind — the cross-track never settled.
+    const m = airborneInWind();
+    m.applyCommand({ type: 'load_route', sidId: 'SFOUT1', starId: null, approachId: null });
+    m.applyCommand({ type: 'set_lnav', armed: true });
+    m.step(120);
+    const s = m.snapshot(0);
+    expect(s.mcp.rollMode).toBe('LNAV');
+    expect(Math.abs(s.fms.crossTrackNm ?? 99)).toBeLessThan(0.8);
+  });
+
+  it('the aircraft drifts with the blended wind, not the surface wind', () => {
+    const m = airborneInWind();
+    // hold a heading and compare track vs heading: the drift angle implied by
+    // the wind the aircraft reports must match what actually happens
+    m.applyCommand({ type: 'set_mcp_heading', headingDeg: 284 });
+    m.step(60);
+    const s = m.snapshot(0);
+    const driftDeg = Math.abs(
+      ((s.attitude.groundTrackDegMag - s.attitude.headingDegMag + 540) % 360) - 180,
+    );
+    // ~30+ kt of crosswind component at 250 kt GS ≈ 5-9° of drift
+    expect(driftDeg).toBeGreaterThan(3);
+    expect(s.weather.windSpeedKt).toBeGreaterThan(25); // blended, not the 22 kt surface
+  });
+
+  it('gusts vary the wind the aircraft is in, reproducibly per seed', () => {
+    const run = () => {
+      const m = makeModel({
+        seed: 42,
+        windDirDeg: 245,
+        windSpeedKt: 20,
+        weather: { ...CROSSWIND_WX, gustKt: 15 },
+      });
+      flyTakeoff(m, 145);
+      m.step(30);
+      return m.snapshot(0);
+    };
+    const a = run();
+    const b = run();
+    expect(a.weather.gustKt).toBeGreaterThan(0.5); // gusting, not static
+    expect(a.weather.gustKt).toBeCloseTo(b.weather.gustKt, 10); // seeded
+    expect(a.position).toEqual(b.position); // and so is the trajectory
+  });
+
+  it('scenario turbulence shakes the aircraft more than calm air', () => {
+    const rollActivity = (turbulence: number): number => {
+      const m = makeModel({
+        seed: 7,
+        weather: { ...CROSSWIND_WX, windAloftSpeedKt: 6, turbulence },
+      });
+      flyTakeoff(m, 145);
+      m.applyCommand({ type: 'set_control_axis', axis: 'pitch', valueNorm: 0.1 });
+      let sum = 0;
+      for (let i = 0; i < 600; i++) {
+        m.step(1 / 60);
+        sum += Math.abs(m.snapshot(0).attitude.rollDeg);
+      }
+      return sum / 600;
+    };
+    expect(rollActivity(1)).toBeGreaterThan(rollActivity(0) * 1.5);
+  });
+});

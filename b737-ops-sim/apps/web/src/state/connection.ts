@@ -20,7 +20,10 @@ const BRIDGE_URL =
 export const interpolator = new StateInterpolator(120);
 
 let scenario = getScenario(DEFAULT_SCENARIO_ID)!;
-let session = new TrainingSession(scenario, { mode: 'guided' });
+// The scenario may ask the aircraft to do something (failure injection); it
+// goes through the same command path the crew uses (F-01).
+const scenarioCommands = { sendCommand: (c: AircraftCommand) => sendCommand(c) };
+let session = new TrainingSession(scenario, { mode: 'guided', ...scenarioCommands });
 let spokenCount = 0;
 
 export function getSession(): TrainingSession {
@@ -73,7 +76,7 @@ export async function resetSession(): Promise<boolean> {
 
 function startFreshSession(): void {
   const mode = useSettingsStore.getState().mode;
-  session = new TrainingSession(scenario, { mode });
+  session = new TrainingSession(scenario, { mode, ...scenarioCommands });
   spokenCount = 0;
   controlTargets.reset();
   useSessionStore.getState().setShowDebrief(false);

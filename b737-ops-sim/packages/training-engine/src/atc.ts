@@ -1,4 +1,10 @@
-import { angleDiffDeg, getTaxiNetwork, type AircraftState, type RunwayData } from '@b737/shared';
+import {
+  angleDiffDeg,
+  getTaxiNetwork,
+  normalizeDeg360,
+  type AircraftState,
+  type RunwayData,
+} from '@b737/shared';
 import { transcriptId, type ReadbackOption, type TranscriptEntry } from './transcript.js';
 
 /**
@@ -99,10 +105,14 @@ export class AtcController {
     ];
   }
 
-  /** Surface wind as ATC reads it — the scenario's wind, not a fixed phrase. */
+  /**
+   * Surface wind as ATC reads it. Scenario wind is degrees TRUE (it drives the
+   * physics); a controller reads magnetic, so convert here (F-07).
+   */
   private windPhrase(): string {
     if (this.wind.speedKt < 3) return 'wind calm';
-    const dir = String(Math.round(this.wind.dirDeg / 10) * 10).padStart(3, '0');
+    const magDeg = normalizeDeg360(this.wind.dirDeg - this.runway.magneticVariationDeg);
+    const dir = String(Math.round(magDeg / 10) * 10).padStart(3, '0');
     return `wind ${dir} at ${Math.round(this.wind.speedKt)}`;
   }
 

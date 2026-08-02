@@ -119,6 +119,9 @@ matches: use severity `info` for milestones (e.g. `reverse_deployed` is
 consumed by the debrief), `deviation` for procedure errors,
 `safety_critical` for incidents. One `safety_critical` event fails the flight
 in the debrief — do not use it for anything you would accept in a passing run.
+Exception: an event whose rule declares `injectFailure` is the exercise itself
+(an engine failure the scenario caused) and is excluded from that automatic
+FAIL; the crew is judged on how they handle it, not on its occurrence.
 
 Prefer geometry over proxies: use `derived.onRunwaySurface` /
 `derived.enteredRunwaySurface` for runway occupancy instead of ground speed,

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { makeTestAircraftState } from '@b737/shared/testing';
 import { destinationPoint, KSFO_28R, runwayPointToLatLon, type AircraftState } from '@b737/shared';
 import { ScenarioRuntime } from '../src/scenarioRuntime.js';
+import { ROUTE_SID_STAR_SCENARIO } from '../src/scenarios/advanced.js';
 import type { ScenarioDefinition } from '../src/types.js';
 
 /** Minimal two-checklist scenario exercising spec §11 example rules. */
@@ -468,5 +469,33 @@ describe('history', () => {
     expect(rt.history.length).toBeGreaterThan(15);
     expect(rt.history.length).toBeLessThan(30);
     expect(rt.history.at(-1)!.phaseId).toBe('before_takeoff');
+  });
+});
+
+// F-04: cross-track is signed; the deviation rule must catch both sides.
+describe('route deviation rule', () => {
+  const offRoute = (crossTrackNm: number) => {
+    const rt = new ScenarioRuntime({ ...ROUTE_SID_STAR_SCENARIO, initialPhaseId: 'initial_climb' });
+    for (let t = 0; t < 12; t += 0.5) {
+      rt.update(
+        state(t, (s) => {
+          s.weightOnWheels = false;
+          s.position.radioAltitudeFt = 3000;
+          s.mcp.rollMode = 'LNAV';
+          s.fms.crossTrackNm = crossTrackNm;
+        }),
+      );
+    }
+    return rt.events.some((e) => e.id === 'route_deviation');
+  };
+
+  it('fires right of course', () => {
+    expect(offRoute(3)).toBe(true);
+  });
+  it('fires left of course too', () => {
+    expect(offRoute(-3)).toBe(true);
+  });
+  it('stays quiet on course', () => {
+    expect(offRoute(0.5)).toBe(false);
   });
 });

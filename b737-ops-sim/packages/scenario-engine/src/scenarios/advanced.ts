@@ -149,10 +149,17 @@ export const ROUTE_SID_STAR_SCENARIO: ScenarioDefinition = {
     },
     {
       id: 'route_deviation',
+      // Cross-track is signed (+ = right); the DSL has no abs, so both sides
+      // are spelled out (F-04: the first version only caught right deviations).
       when: {
         all: [
           { prop: 'mcp.rollMode', op: 'eq', value: 'LNAV' },
-          { prop: 'fms.crossTrackNm', op: 'gt', value: 2 },
+          {
+            any: [
+              { prop: 'fms.crossTrackNm', op: 'gt', value: 2 },
+              { prop: 'fms.crossTrackNm', op: 'lt', value: -2 },
+            ],
+          },
         ],
         sustainedSec: 10,
       },
