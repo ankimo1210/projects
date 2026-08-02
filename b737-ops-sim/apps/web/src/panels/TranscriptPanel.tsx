@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react';
+import { useEffect as useVoiceEffect, useState } from 'react';
 import { getSession, sendCommand } from '../state/connection.js';
+import { matchReadback, voiceInput, voiceInputAvailable } from '../audio/voiceInput.js';
 import { useSessionStore, useSettingsStore } from '../state/stores.js';
 
 /** ATC / crew transcript with readback controls (spec §12/§13/§19). */
@@ -9,6 +11,23 @@ export function TranscriptPanel(): JSX.Element {
   const setTtsEnabled = useSettingsStore((s) => s.setTtsEnabled);
   const session = getSession();
   const listRef = useRef<HTMLDivElement | null>(null);
+  const [voiceOn, setVoiceOn] = useState(false);
+
+  // Voice input proposes; the deterministic grader still decides (M5 D6).
+  useVoiceEffect(() => {
+    if (!voiceOn) {
+      voiceInput.stop();
+      return;
+    }
+    voiceInput.start((utterance) => {
+      const active = getSession();
+      const pending = active.transcript.find((e) => e.expectedResponse && !e.responseResult);
+      if (!pending?.expectedResponse) return;
+      const optionId = matchReadback(utterance, pending.expectedResponse.options);
+      if (optionId) active.respond(pending.id, optionId);
+    });
+    return () => voiceInput.stop();
+  }, [voiceOn]);
 
   useEffect(() => {
     const el = listRef.current;
@@ -72,6 +91,20 @@ export function TranscriptPanel(): JSX.Element {
         ))}
       </div>
       <div className="transcript-actions">
+        {voiceInputAvailable() && (
+          <label
+            className="voice-toggle"
+            title="Speech recognition may send audio to a browser cloud service. Off by default."
+          >
+            <input
+              type="checkbox"
+              data-testid="voice-input"
+              checked={voiceOn}
+              onChange={(e) => setVoiceOn(e.target.checked)}
+            />
+            🎤 speak readbacks
+          </label>
+        )}
         {canRequestTaxi && (
           <button
             type="button"

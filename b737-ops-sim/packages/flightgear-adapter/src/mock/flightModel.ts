@@ -32,7 +32,6 @@ import {
   getProcedure,
   getWaypoint,
   trackLeg,
-  WAYPOINT_SEQUENCE_NM,
   type FailureKind,
   type FmsState,
   type PitchMode,
@@ -195,6 +194,12 @@ export class MockFlightModel {
   private approachArmed = false;
   /** Route / FMS state (spec §22 Phase 5). */
   private fms: FmsState = emptyFmsState();
+  /**
+   * Where the first leg starts. It must be the position the route was built
+   * from, not the live position — using the latter makes the cross-track
+   * identically zero and the leg impossible to sequence.
+   */
+  private fmsOrigin: { latDeg: number; lonDeg: number } | null = null;
   /** Active failures; systems express them, this set records them. */
   private failures = new Set<FailureKind>();
   /** Weather beyond the steady surface wind. */
@@ -333,6 +338,7 @@ export class MockFlightModel {
     this.autobrakeActive = false;
     this.systems.reset(systemsModeFor(config));
     this.fms = emptyFmsState();
+    this.fmsOrigin = null;
     this.failures.clear();
     const wx = config.weather;
     this.windAloftDirDeg = wx?.windAloftDirDeg ?? config.windDirDeg;
@@ -477,6 +483,7 @@ export class MockFlightModel {
           .filter((id): id is string => id !== null)
           .flatMap((id) => getProcedure(id)?.waypointIds ?? []);
         if (ids.length === 0) return { ok: false, error: 'no known procedure in that route' };
+        this.fmsOrigin = { latDeg: this.latDeg, lonDeg: this.lonDeg };
         this.fms = {
           ...emptyFmsState(),
           routeId: [cmd.sidId, cmd.starId, cmd.approachId].filter(Boolean).join('/'),
@@ -491,6 +498,7 @@ export class MockFlightModel {
         const index = this.fms.legs.findIndex((l) => l.waypoint.id === wp.id);
         if (index < 0) {
           // Not in the route: fly direct to it as a one-leg route.
+          this.fmsOrigin = { latDeg: this.latDeg, lonDeg: this.lonDeg };
           this.fms = {
             ...this.fms,
             legs: buildRoute(this.latDeg, this.lonDeg, [wp.id]),
@@ -937,13 +945,15 @@ export class MockFlightModel {
     const leg = legs[index]!;
     const previous =
       index === 0
-        ? { latDeg: this.latDeg, lonDeg: this.lonDeg }
+        ? (this.fmsOrigin ?? { latDeg: this.latDeg, lonDeg: this.lonDeg })
         : {
             latDeg: legs[index - 1]!.waypoint.latDeg,
             lonDeg: legs[index - 1]!.waypoint.lonDeg,
           };
     const tracking = trackLeg(leg, previous, { latDeg: this.latDeg, lonDeg: this.lonDeg });
-    if (tracking.distanceToWaypointNm < WAYPOINT_SEQUENCE_NM && index + 1 < legs.length) {
+    // Sequence on the fix OR once it is behind the aircraft — passing a mile
+    // wide of a waypoint must not leave the route chasing it forever.
+    if (tracking.sequenced && index + 1 < legs.length) {
       this.fms = { ...this.fms, activeLegIndex: index + 1 };
       return;
     }

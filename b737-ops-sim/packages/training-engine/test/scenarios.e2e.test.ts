@@ -3,7 +3,10 @@ import { MockFlightModel } from '@b737/flightgear-adapter';
 import {
   APPROACH_DRILL_SCENARIO,
   COLD_AND_DARK_SCENARIO,
+  CROSSWIND_LANDING_SCENARIO,
+  ENGINE_FAILURE_V1_SCENARIO,
   GATE_TO_GATE_SCENARIO,
+  ROUTE_SID_STAR_SCENARIO,
 } from '@b737/scenario-engine';
 import {
   KSFO_TAXI,
@@ -414,5 +417,106 @@ describe('cold and dark scenario', () => {
     });
     expect(rejected.ok).toBe(false);
     expect(rejected.ok ? '' : rejected.error).toMatch(/duct pressure/);
+  });
+});
+
+describe('advanced scenarios (M5)', () => {
+  beforeEach(() => resetTranscriptIds());
+
+  it('fails an engine at V1 because the aeroplane reached V1', () => {
+    const scenario = ENGINE_FAILURE_V1_SCENARIO;
+    const model = new MockFlightModel(scenario.initialState);
+    const session = new TrainingSession(scenario, {
+      mode: 'evaluation',
+      // the scenario asks, the aircraft applies — same path the crew uses
+      sendCommand: (command) => void model.applyCommand(command),
+    });
+    const crew = new Crew(model, session);
+    session.update(model.snapshot(0));
+    session.runtime.setFlag('takeoffClearanceReceived', true);
+
+    crew.cmd({ type: 'set_parking_brake', engaged: false });
+    crew.cmd({ type: 'set_throttle', valueNorm: 1 });
+
+    let failedAtKt: number | null = null;
+    let simTime = 0;
+    while (simTime < 60 && failedAtKt === null) {
+      const s = step(model, session, crew);
+      simTime += DT;
+      if (!s.systems.engines.left.running) failedAtKt = s.speeds.iasKt;
+    }
+
+    expect(failedAtKt, 'engine 1 never failed').not.toBeNull();
+    expect(failedAtKt!).toBeGreaterThan(140);
+    expect(session.runtime.events.some((e) => e.id === 'v1_cut')).toBe(true);
+    // the aeroplane keeps flying on the remaining engine
+    expect(model.snapshot(0).systems.engines.right.running).toBe(true);
+
+    // continue: rotate and climb away on one engine
+    while (simTime < 120 && model.snapshot(0).weightOnWheels) {
+      const s = step(model, session, crew);
+      simTime += DT;
+      if (s.speeds.iasKt >= 150) {
+        crew.cmd({ type: 'set_control_axis', axis: 'pitch', valueNorm: 0.5 });
+      }
+    }
+    expect(model.snapshot(0).weightOnWheels).toBe(false);
+  });
+
+  it('a crosswind approach drifts the aircraft when it is not corrected', () => {
+    const scenario = CROSSWIND_LANDING_SCENARIO;
+    const model = new MockFlightModel(scenario.initialState);
+    const session = new TrainingSession(scenario, { mode: 'evaluation' });
+    const crew = new Crew(model, session);
+    session.update(model.snapshot(0));
+
+    const wx = model.snapshot(0).weather;
+    expect(wx.windSpeedKt).toBeGreaterThan(15);
+
+    // fly runway heading with no drift correction: the localizer must move
+    crew.cmd({ type: 'set_mcp_heading', headingDeg: 284 });
+    crew.cmd({ type: 'set_mcp_altitude', altitudeFt: 2000 });
+    crew.cmd({ type: 'set_autopilot', engaged: true });
+    const startLoc = model.snapshot(0).nav.locDeviationDots ?? 0;
+    for (let t = 0; t < 60; t += DT) step(model, session, crew);
+    const endLoc = model.snapshot(0).nav.locDeviationDots ?? 0;
+    expect(Math.abs(endLoc)).toBeGreaterThan(Math.abs(startLoc) + 0.3);
+  });
+
+  it('flies the SID with LNAV once the route is loaded', () => {
+    const scenario = ROUTE_SID_STAR_SCENARIO;
+    const model = new MockFlightModel(scenario.initialState);
+    const session = new TrainingSession(scenario, { mode: 'evaluation' });
+    const crew = new Crew(model, session);
+    session.update(model.snapshot(0));
+
+    crew.cmd({ type: 'load_route', sidId: 'SFOUT1', starId: 'BAYIN1', approachId: null });
+    expect(model.snapshot(0).fms.legs.length).toBe(6);
+
+    // the Before Takeoff checklist now starts with the route item
+    session.runtime.setFlag('takeoffClearanceReceived', true);
+    crew.cmd({ type: 'set_parking_brake', engaged: false });
+    crew.cmd({ type: 'set_throttle', valueNorm: 1 });
+    let simTime = 0;
+    while (simTime < 60 && model.snapshot(0).weightOnWheels) {
+      const s = step(model, session, crew);
+      simTime += DT;
+      if (s.speeds.iasKt >= 146) {
+        crew.cmd({ type: 'set_control_axis', axis: 'pitch', valueNorm: 0.55 });
+      }
+    }
+    crew.cmd({ type: 'set_control_axis', axis: 'pitch', valueNorm: 0.15 });
+    for (let t = 0; t < 20; t += DT) step(model, session, crew);
+
+    crew.cmd({ type: 'set_mcp_altitude', altitudeFt: 6000 });
+    crew.cmd({ type: 'set_control_axis', axis: 'pitch', valueNorm: 0 });
+    crew.cmd({ type: 'set_autopilot', engaged: true });
+    crew.cmd({ type: 'set_lnav', armed: true });
+    for (let t = 0; t < 200; t += DT) step(model, session, crew);
+
+    const s = model.snapshot(0);
+    expect(s.mcp.rollMode).toBe('LNAV');
+    expect(s.fms.activeLegIndex).toBeGreaterThan(0); // sequenced at least one fix
+    expect(Math.abs(s.fms.crossTrackNm ?? 99)).toBeLessThan(2);
   });
 });

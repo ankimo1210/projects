@@ -131,6 +131,17 @@ export function Nd({ state }: { state: AircraftState }): JSX.Element {
         }
       : null;
 
+  // Route ahead (M5): the same legs the autopilot is flying.
+  const routePoints = state.fms.legs.map((leg) => {
+    const e = toLocalEnuM(
+      KSFO_28R.thresholdLatDeg,
+      KSFO_28R.thresholdLonDeg,
+      leg.waypoint.latDeg,
+      leg.waypoint.lonDeg,
+    );
+    return { id: leg.waypoint.id, ...toScreen(e.eastM, e.northM) };
+  });
+
   const trackRel = angleDiffDeg(hdg, state.attitude.groundTrackDegMag);
   const trackRad = degToRad(trackRel - 90);
 
@@ -179,6 +190,29 @@ export function Nd({ state }: { state: AircraftState }): JSX.Element {
             strokeDasharray="4 3"
           />
         )}
+        {/* route */}
+        {routePoints.length > 0 && (
+          <polyline
+            points={[`${CX},${CY}`, ...routePoints.map((p) => `${p.x},${p.y}`)].join(' ')}
+            fill="none"
+            stroke="#ff3ec8"
+            strokeWidth={1.5}
+            strokeDasharray="6 4"
+          />
+        )}
+        {routePoints.map((p, i) => (
+          <g key={p.id}>
+            <polygon
+              points={`${p.x},${p.y - 5} ${p.x + 5},${p.y} ${p.x},${p.y + 5} ${p.x - 5},${p.y}`}
+              fill="none"
+              stroke={i === state.fms.activeLegIndex ? '#39d353' : '#ff3ec8'}
+              strokeWidth={1.5}
+            />
+            <text x={p.x + 8} y={p.y + 4} fill="#cbd" fontSize={11}>
+              {p.id}
+            </text>
+          </g>
+        ))}
         {/* track line */}
         <line
           x1={CX}

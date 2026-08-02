@@ -252,3 +252,42 @@ test('overhead panel powers the aircraft up from cold and dark', async ({ page }
     timeout: 5_000,
   });
 });
+
+// M5: the route panel drives the FMS through the bridge, and the ND shows it.
+test('FMS panel loads a route and arms LNAV', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByTestId('conn-status')).toContainText('mock backend', { timeout: 15_000 });
+  await page.getByTestId('scenario-picker').selectOption({ label: 'SID and Arrival — KSFO 28R' });
+  await page.getByTestId('overhead-btn').click();
+  await expect(page.getByTestId('fms-panel')).toBeVisible();
+  await expect(page.getByTestId('fms-route')).toContainText('no route');
+
+  await page.getByTestId('load-route').click();
+  await expect(page.getByTestId('fms-route')).toContainText('SFOUT1', { timeout: 5_000 });
+  await expect(page.getByTestId('fms-panel')).toContainText('SFOUT');
+  await expect(page.getByTestId('fms-panel')).toContainText('WESTB');
+
+  // LNAV is refused on the ground with no route... now it has one
+  await page.getByTestId('lnav-btn').click();
+  await expect(page.getByTestId('fms-readout')).toContainText('NM', { timeout: 5_000 });
+
+  // direct-to re-anchors the route on that fix
+  await page.getByTestId('direct-MIDBA').click();
+  await expect(page.getByTestId('fms-readout')).toContainText('xtk', { timeout: 5_000 });
+});
+
+// M5: weather reaches the UI, and the crosswind scenario really is one.
+test('weather readout reflects the scenario weather', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByTestId('conn-status')).toContainText('mock backend', { timeout: 15_000 });
+  await page.getByTestId('overhead-btn').click();
+  await expect(page.getByTestId('weather-readout')).toContainText('Wind 290/6');
+
+  await page.getByTestId('scenario-picker').selectOption({ label: 'Crosswind Landing — ILS 28R' });
+  // The drill starts at ~2,000 ft, so the wind shown is blended toward the
+  // wind aloft (235/38) — from the south-west and strong either way.
+  await expect(page.getByTestId('weather-readout')).toHaveText(/Wind 2[34]\d\/[23]\d/, {
+    timeout: 10_000,
+  });
+  await expect(page.getByTestId('weather-readout')).toContainText('turb');
+});

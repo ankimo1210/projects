@@ -379,7 +379,77 @@ button {
   color: #39d353;
 }
 .lower-panels.with-overhead {
-  grid-template-columns: 1fr 1fr 1.4fr;
+  grid-template-columns: 1fr 1fr 1.4fr 1fr;
+}
+.voice-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #9a9da5;
+  cursor: pointer;
+}
+.fms-panel {
+  font-size: 12px;
+}
+.fms-route-id {
+  color: #ffb648;
+  font-family: 'Consolas', monospace;
+  flex: 1;
+}
+.fms-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+}
+.fms-readout {
+  color: #9ad;
+  font-family: 'Consolas', monospace;
+}
+.fms-legs {
+  list-style: none;
+  margin: 0;
+  padding: 0 8px;
+  overflow-y: auto;
+  flex: 1;
+}
+.fms-leg {
+  display: grid;
+  grid-template-columns: 54px 48px 56px 1fr 34px;
+  gap: 4px;
+  align-items: center;
+  padding: 2px 0;
+  border-bottom: 1px dotted #2c2d31;
+  font-family: 'Consolas', monospace;
+}
+.fms-leg.active {
+  color: #39d353;
+}
+.fms-leg.passed {
+  color: #6a6d75;
+}
+.fms-direct {
+  background: #2d4b78;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 10px;
+}
+.fms-empty {
+  color: #8b8f98;
+  padding: 6px 0;
+}
+.fms-weather {
+  border-top: 1px solid #2f3036;
+  padding: 4px 8px;
+  color: #9ad;
+  font-family: 'Consolas', monospace;
+  font-size: 11px;
+}
+.fms-failures {
+  color: #ff9a9d;
 }
 .overhead-panel .panel-head {
   justify-content: space-between;

@@ -1,4 +1,10 @@
-import { getRunway, type AircraftState, type ScenarioInitialState } from '@b737/shared';
+import {
+  getRunway,
+  type AircraftCommand,
+  type AircraftState,
+  type FailureKind,
+  type ScenarioInitialState,
+} from '@b737/shared';
 import {
   ScenarioRuntime,
   type ScenarioDefinition,
@@ -69,12 +75,22 @@ export class TrainingSession {
     yawMax: 0,
   };
   private lastState: AircraftState | null = null;
+  private readonly sendCommand: (command: AircraftCommand) => void;
 
   constructor(
     readonly scenario: ScenarioDefinition,
-    options: { mode?: TrainingMode } = {},
+    options: {
+      mode?: TrainingMode;
+      /**
+       * How the session asks the aircraft to do something the scenario
+       * requires — currently only failure injection (spec §22 Phase 5). The
+       * host wires this to the same command path the crew uses.
+       */
+      sendCommand?: (command: AircraftCommand) => void;
+    } = {},
   ) {
     this.mode = options.mode ?? 'guided';
+    this.sendCommand = options.sendCommand ?? (() => undefined);
     this.runtime = new ScenarioRuntime(scenario);
     this.fo = new FirstOfficer({
       grossWeightLb: scenario.initialState.grossWeightLb,
@@ -263,6 +279,11 @@ export class TrainingSession {
   }
 
   private onScenarioEvent(event: ScenarioEvent): void {
+    // A rule may demand a failure; the aircraft applies it, not the engine.
+    const failure = event.data?.['injectFailure'];
+    if (typeof failure === 'string') {
+      this.sendCommand({ type: 'inject_failure', failure: failure as FailureKind });
+    }
     if (event.kind === 'checklist_completed') {
       // `after_landing` → `afterLandingChecklistComplete`, so scenarios can
       // gate a phase on any checklist without engine changes.

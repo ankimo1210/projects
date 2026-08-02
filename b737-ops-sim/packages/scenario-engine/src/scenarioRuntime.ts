@@ -90,6 +90,7 @@ export class ScenarioRuntime {
           id: rule.id,
           message: rule.message,
           severity: rule.severity,
+          data: rule.injectFailure ? { injectFailure: rule.injectFailure } : undefined,
         });
       }
     }
