@@ -22,6 +22,7 @@ cd \\wsl.localhost\<distro>\home\<user>\projects\b737-ops-sim   # or a Windows c
 ```
 
 The script starts FlightGear at **KSFO 28R**, engines running, with:
+
 - `--httpd=5500` — the WebSocket property interface the bridge uses
   (`ws://<host>:5500/PropertyListener`)
 - `--telnet=...5401` — fallback/diagnostic interface
@@ -53,8 +54,11 @@ If you use **mirrored networking** (`.wslconfig` → `networkingMode=mirrored`),
 FG_HOST=$(./scripts/fg-host-ip.sh) pnpm fg:diagnostic
 ```
 
-Expected output: property reads (aircraft, position, airspeed) and a
-confirmed harmless write (taxi light toggled and restored). Exit code 0.
+The diagnostic reads **every non-optional property in the map** and writes the
+one harmless control property the map defines for the taxi light (toggled and
+restored). Exit code 0 means the paths the bridge actually uses answered; a
+timeout lists exactly which mapped properties this aircraft did not answer, so
+the message is a work list for the map.
 
 ## 5. Run the app against FlightGear
 
@@ -62,8 +66,11 @@ confirmed harmless write (taxi light toggled and restored). Exit code 0.
 FG_HOST=$(./scripts/fg-host-ip.sh) pnpm dev:fg
 ```
 
-The bridge retries every 3 s until FlightGear is up, and reconnects if
-FlightGear restarts. The browser shows the backend mode in the status bar.
+The FlightGear backend owns reconnection: it retries in the background until
+FlightGear is up and reconnects if FlightGear restarts, and the browser shows
+the backend state in the status bar. Until every required property has arrived
+the bridge publishes nothing and reports "waiting for N property/ies" — a
+partially populated state is never sent as if it were real.
 
 ## Property map verification
 
@@ -77,6 +84,11 @@ package:
    Internal Properties) or `http://localhost:5500/props/`.
 2. Find the actual path (e.g. the model's CMD A property).
 3. Update the JSON map — no code changes needed. Bump `version`.
+
+The map is version 2: it adds `sim.simTimeSec` (`/sim/time/elapsed-sec`) so the
+state stream carries FlightGear's simulation clock rather than wall time. It is
+marked optional; without it the adapter falls back to wall clock, which does not
+stop when the sim is paused.
 
 ## Known limitations
 

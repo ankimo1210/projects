@@ -9,25 +9,25 @@
 
 ## Spike findings (P2-T0, verified 2026-08-02)
 
-| Question | Answer |
-|---|---|
-| Source aircraft | **`YV3399/737-800YV`** (GitHub, GPL-2.0, FlightGear 737-800) |
-| Cockpit assets | `Models/cockpit.ac` (914 objects), `Models/flightdesk.*` (main panel), `Models/pedestal.ac` (203 objects incl. throttle quadrant), `Models/yoke/yoke.ac`, `Models/OH-panel/OH-panel.ac`, `Models/Instruments/autopilot-panel.ac` (MCP) + referenced PNG textures |
-| Interactive mesh names | From `cockpit.xml` (110 animation blocks): throttle `quadone/boxone/no1thrarm` (+2), reversers `no*revarm`, flaps `flaparm/handle`, speed brake `sbhandle/sbarm`, gear lever `lghandle`, `autobrake`, `parkbrake_*` |
-| Animation authority | FG model XMLs define rotate/pick with exact axis+center per object → extract to JSON instead of hand-tuning |
-| Sounds | Repo `Sounds/*.wav` (GPL): CFM56 loops (`FL2070/cfm1*.wav`), callouts etc. |
-| Conversion tool | **Custom Node AC3D→glTF converter** (AC3D is a simple text format). No Blender dependency ⇒ fully scripted + unit-testable, satisfying spec §8 "no undocumented manual steps" |
+| Question               | Answer                                                                                                                                                                                                                                                           |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Source aircraft        | **`YV3399/737-800YV`** (GitHub, GPL-2.0, FlightGear 737-800)                                                                                                                                                                                                     |
+| Cockpit assets         | `Models/cockpit.ac` (914 objects), `Models/flightdesk.*` (main panel), `Models/pedestal.ac` (203 objects incl. throttle quadrant), `Models/yoke/yoke.ac`, `Models/OH-panel/OH-panel.ac`, `Models/Instruments/autopilot-panel.ac` (MCP) + referenced PNG textures |
+| Interactive mesh names | From `cockpit.xml` (110 animation blocks): throttle `quadone/boxone/no1thrarm` (+2), reversers `no*revarm`, flaps `flaparm/handle`, speed brake `sbhandle/sbarm`, gear lever `lghandle`, `autobrake`, `parkbrake_*`                                              |
+| Animation authority    | FG model XMLs define rotate/pick with exact axis+center per object → extract to JSON instead of hand-tuning                                                                                                                                                      |
+| Sounds                 | Repo `Sounds/*.wav` (GPL): CFM56 loops (`FL2070/cfm1*.wav`), callouts etc.                                                                                                                                                                                       |
+| Conversion tool        | **Custom Node AC3D→glTF converter** (AC3D is a simple text format). No Blender dependency ⇒ fully scripted + unit-testable, satisfying spec §8 "no undocumented manual steps"                                                                                    |
 
 ## Key decisions
 
-| # | Decision | Rationale |
-|---|----------|-----------|
-| D1 | Pin the source to a specific commit SHA in the fetch script | Reproducibility + provenance in THIRD_PARTY_ASSETS.md |
-| D2 | Originals under `assets/imported/737-800YV/` (with LICENSE); converted output under `assets/generated/webroot/cockpit/` served by Vite `publicDir` | Spec §8 directory contract; regeneration never touches originals |
-| D3 | Emit `.gltf` + `.bin` + copied textures (not GLB) | Simpler writer; textures stay inspectable files |
-| D4 | The web app keeps the M1 temporary shell as **fallback** when converted assets are absent | Tests/e2e stay green offline; graceful degradation |
-| D5 | GPL-2.0 assets are recorded, licenses preserved; acceptable because the app is local-only and not distributed | Spec §8 |
-| D6 | 3D display units (DU screens) remain textured (non-live) in M2 | Live 3D PFD texture is Phase 3+ polish; 2D instruments remain the primary display |
+| #   | Decision                                                                                                                                           | Rationale                                                                         |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| D1  | Pin the source to a specific commit SHA in the fetch script                                                                                        | Reproducibility + provenance in THIRD_PARTY_ASSETS.md                             |
+| D2  | Originals under `assets/imported/737-800YV/` (with LICENSE); converted output under `assets/generated/webroot/cockpit/` served by Vite `publicDir` | Spec §8 directory contract; regeneration never touches originals                  |
+| D3  | Emit `.gltf` + `.bin` + copied textures (not GLB)                                                                                                  | Simpler writer; textures stay inspectable files                                   |
+| D4  | The web app keeps the M1 temporary shell as **fallback** when converted assets are absent                                                          | Tests/e2e stay green offline; graceful degradation                                |
+| D5  | GPL-2.0 assets are recorded, licenses preserved; acceptable because the app is local-only and not distributed                                      | Spec §8                                                                           |
+| D6  | 3D display units (DU screens) remain textured (non-live) in M2                                                                                     | Live 3D PFD texture is Phase 3+ polish; 2D instruments remain the primary display |
 
 ## Tasks
 

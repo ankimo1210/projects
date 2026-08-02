@@ -29,15 +29,15 @@ packages/flightgear-adapter
 
 ## Packages
 
-| Package | Responsibility | Key entry points |
-|---------|----------------|------------------|
-| `@b737/shared` | zod schemas (state/commands/wire protocol), units, geo, runway datum, V-speed table | `AircraftStateSchema`, `AircraftCommandSchema`, `ClientMessage`/`ServerMessage` |
-| `@b737/flightgear-adapter` | `FlightBackend` interface + both backends + property map parsing | `MockFlightModel` (pure), `MockBackend`, `FlightGearBackend` |
-| `@b737/scenario-engine` | condition DSL (+trends/sustain), phase machine, state-validated checklists, event log, MVP scenario data | `ScenarioRuntime`, `ChecklistRun`, `MVP_CIRCUIT_SCENARIO` |
-| `@b737/training-engine` | FO (PM) rules, ATC state machine + readbacks, debrief scorer, session orchestrator | `TrainingSession`, `FirstOfficer`, `AtcController`, `generateDebrief` |
-| `@b737/cockpit-model` | declarative `CockpitControlDefinition` registry | `COCKPIT_CONTROLS` |
-| `@b737/bridge` | WS server, command validation + rate limiting, seq/ack, status broadcast, diagnostics endpoints | `buildBridge` |
-| `@b737/web` | rendering + interaction only | `state/connection.ts` wiring |
+| Package                    | Responsibility                                                                                           | Key entry points                                                                |
+| -------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `@b737/shared`             | zod schemas (state/commands/wire protocol), units, geo, runway datum, V-speed table                      | `AircraftStateSchema`, `AircraftCommandSchema`, `ClientMessage`/`ServerMessage` |
+| `@b737/flightgear-adapter` | `FlightBackend` interface + both backends + property map parsing                                         | `MockFlightModel` (pure), `MockBackend`, `FlightGearBackend`                    |
+| `@b737/scenario-engine`    | condition DSL (+trends/sustain), phase machine, state-validated checklists, event log, MVP scenario data | `ScenarioRuntime`, `ChecklistRun`, `MVP_CIRCUIT_SCENARIO`                       |
+| `@b737/training-engine`    | FO (PM) rules, ATC state machine + readbacks, debrief scorer, session orchestrator                       | `TrainingSession`, `FirstOfficer`, `AtcController`, `generateDebrief`           |
+| `@b737/cockpit-model`      | declarative `CockpitControlDefinition` registry                                                          | `COCKPIT_CONTROLS`                                                              |
+| `@b737/bridge`             | WS server, command validation + rate limiting, seq/ack, status broadcast, diagnostics endpoints          | `buildBridge`                                                                   |
+| `@b737/web`                | rendering + interaction only                                                                             | `state/connection.ts` wiring                                                    |
 
 ## Data flow
 
@@ -55,13 +55,13 @@ packages/flightgear-adapter
 
 ## Timing
 
-| Loop | Rate |
-|------|------|
-| Mock physics substeps | fixed 60 Hz (deterministic, decoupled from timers) |
-| State stream | 20–60 Hz (`STATE_RATE_HZ`) |
-| Browser rendering | display refresh (interpolated) |
-| Axis input send | ≤ 20 Hz coalesced |
-| Backend status broadcast | 1 Hz |
+| Loop                     | Rate                                               |
+| ------------------------ | -------------------------------------------------- |
+| Mock physics substeps    | fixed 60 Hz (deterministic, decoupled from timers) |
+| State stream             | 20–60 Hz (`STATE_RATE_HZ`)                         |
+| Browser rendering        | display refresh (interpolated)                     |
+| Axis input send          | ≤ 20 Hz coalesced                                  |
+| Backend status broadcast | 1 Hz                                               |
 
 ## Failure handling
 
