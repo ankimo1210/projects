@@ -9,6 +9,8 @@ export interface BridgeConfig {
   fgHost: string;
   fgHttpPort: number;
   logLevel: string;
+  /** Browser origins allowed to open the control socket (spec §2). */
+  allowedOrigins: string[];
 }
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): BridgeConfig {
@@ -20,8 +22,16 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): BridgeConfig {
   if (!(stateRateHz >= 5 && stateRateHz <= 60)) {
     throw new Error(`STATE_RATE_HZ must be 5..60, got '${env.STATE_RATE_HZ}'`);
   }
+  const allowedOrigins = (env.ALLOWED_ORIGINS ?? 'http://localhost:5173,http://127.0.0.1:5173')
+    .split(',')
+    .map((o) => o.trim())
+    .filter((o) => o.length > 0);
+  if (allowedOrigins.length === 0) {
+    throw new Error('ALLOWED_ORIGINS must list at least one origin');
+  }
   return {
     backendMode: mode.data,
+    allowedOrigins,
     port: Number(env.BRIDGE_PORT ?? 8737),
     host: env.BRIDGE_HOST ?? '127.0.0.1',
     stateRateHz,

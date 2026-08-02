@@ -33,6 +33,7 @@ const app = await buildBridge({
   stateRateHz: config.stateRateHz,
   logLevel: config.logLevel,
   prettyLogs: process.stdout.isTTY,
+  allowedOrigins: config.allowedOrigins,
 });
 
 // FlightGear may start after the bridge: retry until the first connect works,

@@ -17,7 +17,17 @@ export interface BridgeOptions {
   logLevel?: string;
   /** Pretty logs for interactive dev; JSON otherwise. */
   prettyLogs?: boolean;
+  /**
+   * Browser origins allowed to open the control socket. A page on any other
+   * origin can reach a loopback port too, so the upgrade is refused unless the
+   * Origin matches (spec §2: the browser must not get an unrestricted control
+   * interface). Requests without an Origin header are non-browser clients
+   * (tests, fg-diagnostic) and are allowed.
+   */
+  allowedOrigins?: string[];
 }
+
+export const DEFAULT_ALLOWED_ORIGINS = ['http://localhost:5173', 'http://127.0.0.1:5173'] as const;
 
 interface ClientSession {
   socket: WebSocket;
@@ -43,7 +53,8 @@ export async function buildBridge(options: BridgeOptions): Promise<FastifyInstan
         : {}),
     },
   });
-  await app.register(cors, { origin: true });
+  const allowedOrigins = options.allowedOrigins ?? [...DEFAULT_ALLOWED_ORIGINS];
+  await app.register(cors, { origin: allowedOrigins });
   await app.register(websocket, { options: { maxPayload: 64 * 1024 } });
 
   const sessions = new Set<ClientSession>();
@@ -81,40 +92,55 @@ export async function buildBridge(options: BridgeOptions): Promise<FastifyInstan
     uptimeSec: process.uptime(),
   }));
 
-  app.get('/ws', { websocket: true }, (socket: WebSocket, req) => {
-    const session: ClientSession = {
-      socket,
-      stateSeq: 0,
-      saidHello: false,
-      axisBucket: new TokenBucket(120, 60, Date.now()),
-      discreteBucket: new TokenBucket(20, 10, Date.now()),
-      lastCommand: null,
-      lastCommandResult: null,
-    };
-    sessions.add(session);
-    req.log.info({ clients: sessions.size }, 'ws client connected');
+  const originAllowed = (origin: string | undefined): boolean =>
+    origin === undefined || allowedOrigins.includes(origin);
 
-    send(socket, {
-      t: 'welcome',
-      protocolVersion: PROTOCOL_VERSION,
-      backendMode: options.backend.getStatus().mode,
-      stateRateHz: options.stateRateHz,
-      serverTimeMs: Date.now(),
-    });
-    if (lastState) {
-      session.stateSeq += 1;
-      send(socket, { t: 'state', seq: session.stateSeq, state: lastState });
-    }
+  app.get(
+    '/ws',
+    {
+      websocket: true,
+      preValidation: async (req, reply) => {
+        if (!originAllowed(req.headers.origin)) {
+          req.log.warn({ origin: req.headers.origin }, 'refused ws upgrade from foreign origin');
+          await reply.code(403).send({ error: 'origin not allowed' });
+        }
+      },
+    },
+    (socket: WebSocket, req) => {
+      const session: ClientSession = {
+        socket,
+        stateSeq: 0,
+        saidHello: false,
+        axisBucket: new TokenBucket(120, 60, Date.now()),
+        discreteBucket: new TokenBucket(20, 10, Date.now()),
+        lastCommand: null,
+        lastCommandResult: null,
+      };
+      sessions.add(session);
+      req.log.info({ clients: sessions.size }, 'ws client connected');
 
-    socket.on('message', (raw: Buffer | string) => {
-      void handleMessage(session, String(raw));
-    });
-    socket.on('close', () => {
-      sessions.delete(session);
-      app.log.info({ clients: sessions.size }, 'ws client disconnected');
-    });
-    socket.on('error', (err: Error) => app.log.warn({ err }, 'ws client error'));
-  });
+      send(socket, {
+        t: 'welcome',
+        protocolVersion: PROTOCOL_VERSION,
+        backendMode: options.backend.getStatus().mode,
+        stateRateHz: options.stateRateHz,
+        serverTimeMs: Date.now(),
+      });
+      if (lastState) {
+        session.stateSeq += 1;
+        send(socket, { t: 'state', seq: session.stateSeq, state: lastState });
+      }
+
+      socket.on('message', (raw: Buffer | string) => {
+        void handleMessage(session, String(raw));
+      });
+      socket.on('close', () => {
+        sessions.delete(session);
+        app.log.info({ clients: sessions.size }, 'ws client disconnected');
+      });
+      socket.on('error', (err: Error) => app.log.warn({ err }, 'ws client error'));
+    },
+  );
 
   async function handleMessage(session: ClientSession, raw: string): Promise<void> {
     const msg = parseClientMessage(raw);
@@ -122,15 +148,29 @@ export async function buildBridge(options: BridgeOptions): Promise<FastifyInstan
       send(session.socket, { t: 'protocol_error', message: msg.parseError });
       return;
     }
+    // Nothing but the handshake is honoured until the client has said hello
+    // with a matching protocol version.
+    if (msg.t !== 'hello' && msg.t !== 'ping' && !session.saidHello) {
+      send(session.socket, {
+        t: 'command_ack',
+        seq: msg.seq,
+        result: { ok: false, error: 'handshake required: send hello first' },
+      });
+      return;
+    }
     switch (msg.t) {
       case 'hello': {
-        session.saidHello = true;
         if (msg.protocolVersion !== PROTOCOL_VERSION) {
           send(session.socket, {
             t: 'protocol_error',
             message: `protocol version mismatch: bridge=${PROTOCOL_VERSION} client=${msg.protocolVersion}`,
           });
+          // A client speaking a different protocol cannot be trusted to send
+          // well-formed commands: close instead of staying half-connected.
+          session.socket.close(1002, 'protocol version mismatch');
+          return;
         }
+        session.saidHello = true;
         return;
       }
       case 'ping':
@@ -163,6 +203,14 @@ export async function buildBridge(options: BridgeOptions): Promise<FastifyInstan
         return;
       }
       case 'set_paused': {
+        if (!session.discreteBucket.tryTake(Date.now())) {
+          send(session.socket, {
+            t: 'command_ack',
+            seq: msg.seq,
+            result: { ok: false, error: 'rate limited' },
+          });
+          return;
+        }
         const result = options.backend.setPaused
           ? await options.backend.setPaused(msg.paused)
           : { ok: false as const, error: 'pause not supported by this backend' };
@@ -170,6 +218,14 @@ export async function buildBridge(options: BridgeOptions): Promise<FastifyInstan
         return;
       }
       case 'reset_scenario': {
+        if (!session.discreteBucket.tryTake(Date.now())) {
+          send(session.socket, {
+            t: 'command_ack',
+            seq: msg.seq,
+            result: { ok: false, error: 'rate limited' },
+          });
+          return;
+        }
         app.log.info({ config: msg.config }, 'scenario reset requested');
         try {
           await options.backend.resetScenario(msg.config);
