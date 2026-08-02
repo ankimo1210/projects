@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { EngineStartModeSchema, SystemSwitchSchema } from './systems.js';
 import { AutobrakeSettingSchema, FlapDetentSchema } from './aircraftState.js';
 
 /**
@@ -39,6 +40,19 @@ export const AircraftCommandSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('set_ap_approach_mode'), armed: z.boolean() }),
   /** Take-off / go-around: go-around thrust and pitch, autopilot disengaged. */
   z.object({ type: z.literal('set_toga'), engaged: z.boolean() }),
+  /** Overhead-panel switch (spec §22 Phase 4); ids listed in systems.ts. */
+  z.object({
+    type: z.literal('set_system_switch'),
+    switch: SystemSwitchSchema,
+    on: z.boolean(),
+  }),
+  z.object({
+    type: z.literal('set_engine_start'),
+    engine: z.enum(['left', 'right']),
+    mode: EngineStartModeSchema,
+  }),
+  /** Master caution / warning recall. */
+  z.object({ type: z.literal('reset_master_caution') }),
   z.object({
     type: z.literal('set_light'),
     light: z.enum(['landing', 'taxi', 'strobe', 'beacon']),
@@ -72,5 +86,7 @@ export const ScenarioInitialStateSchema = z.object({
   grossWeightLb: z.number().min(90000).max(174000),
   windDirDeg: z.number().min(0).max(360),
   windSpeedKt: z.number().min(0).max(40),
+  /** Start with every system off (spec §22 Phase 4). Only valid at a stand. */
+  coldAndDark: z.boolean().optional(),
 });
 export type ScenarioInitialState = z.infer<typeof ScenarioInitialStateSchema>;

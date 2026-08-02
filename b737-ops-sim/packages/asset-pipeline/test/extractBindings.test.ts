@@ -77,9 +77,7 @@ describe('extractBindings', () => {
 
   it('extracts relevant rotate animations with axis/center/factor', () => {
     const b = extractBindings('Models/cockpit.xml', source);
-    const throttle = b.animations.find((a) =>
-      a.fgProperty.includes('engine[0]/throttle'),
-    )!;
+    const throttle = b.animations.find((a) => a.fgProperty.includes('engine[0]/throttle'))!;
     expect(throttle.objects).toEqual(['quadone', 'no1thrarm']);
     expect(throttle.factor).toBe(50);
     expect(throttle.center).toEqual([1.2, 0, -0.4]);

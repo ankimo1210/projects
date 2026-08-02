@@ -1,11 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { makeTestAircraftState } from '@b737/shared/testing';
-import {
-  destinationPoint,
-  KSFO_28R,
-  runwayPointToLatLon,
-  type AircraftState,
-} from '@b737/shared';
+import { destinationPoint, KSFO_28R, runwayPointToLatLon, type AircraftState } from '@b737/shared';
 import { ScenarioRuntime } from '../src/scenarioRuntime.js';
 import type { ScenarioDefinition } from '../src/types.js';
 

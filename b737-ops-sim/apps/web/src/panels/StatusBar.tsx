@@ -84,6 +84,14 @@ export function StatusBar(): JSX.Element {
       <button type="button" data-testid="reset-btn" onClick={() => void resetSession()}>
         ↺ Reset
       </button>
+      <button
+        type="button"
+        data-testid="overhead-btn"
+        title="overhead / systems panel"
+        onClick={() => settings.toggleOverhead()}
+      >
+        ⚡ Systems
+      </button>
       <button type="button" data-testid="debrief-btn" onClick={() => setShowDebrief(true)}>
         Debrief
       </button>

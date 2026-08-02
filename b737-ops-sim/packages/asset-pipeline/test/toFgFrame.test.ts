@@ -47,7 +47,10 @@ describe('toFgFrame', () => {
     const normalAcc = accessors[meshes[0]!.primitives[0]!.attributes.NORMAL]!;
     const view = views[normalAcc.bufferView]!;
     const normals = new Float32Array(
-      bin.buffer.slice(bin.byteOffset + view.byteOffset, bin.byteOffset + view.byteOffset + view.byteLength),
+      bin.buffer.slice(
+        bin.byteOffset + view.byteOffset,
+        bin.byteOffset + view.byteOffset + view.byteLength,
+      ),
     );
     const len = Math.hypot(normals[0]!, normals[1]!, normals[2]!);
     expect(len).toBeCloseTo(1, 5);

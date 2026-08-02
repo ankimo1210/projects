@@ -5,4 +5,5 @@ export * from './scenarioRuntime.js';
 export * from './scenarios/mvpCircuit.js';
 export * from './scenarios/gateToGate.js';
 export * from './scenarios/approachDrill.js';
+export * from './scenarios/coldAndDark.js';
 export * from './scenarios/catalogue.js';

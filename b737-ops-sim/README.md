@@ -12,9 +12,24 @@ state-validated checklists, and a transparent scoring debrief.
 > `NON_CERTIFIED_APPROXIMATION` / `SOURCE_REQUIRED` in the code/data).
 > Do not use it for real-world flight training.
 
-## Current capabilities (Milestone 3)
+## Current capabilities (Milestone 4)
 
-**Phase 3 — operations (new):**
+**Phase 4 — aircraft systems (new):**
+
+- **Cold and dark**: a scenario that starts with everything off — battery, APU
+  start, generator on the bus, IRS alignment, fuel pumps, both engines started
+  on APU bleed, then After Start and taxi.
+- **Systems model**: electrical buses, APU, pneumatics, fuel, hydraulics,
+  anti-ice, IRS and engine start as a dependency graph
+  ([SYSTEMS_MODEL.md](SYSTEMS_MODEL.md)). Procedure errors are rejected by the
+  aircraft, not by the UI: no APU start without DC power, no generator without
+  a running engine, no engine start without duct pressure (packs off!).
+- **Overhead panel + synoptic + annunciators** in the browser, with master
+  caution/warning and a recall button.
+- With both hydraulic systems unpressurised the gear, flaps and speed brake
+  stop moving, and a shut-down engine produces no thrust.
+
+**Phase 3 — operations:**
 
 - **Taxi operations**: a KSFO ground layout (stand, taxiway A, runway entry and
   high-speed exit) that the scenario engine, ATC and the ND all read from.
@@ -52,7 +67,7 @@ state-validated checklists, and a transparent scoring debrief.
 - Without built assets the app runs exactly as Milestone 1 (temporary
   geometry) — `pnpm assets:build` is optional.
 
-## Milestone 1–2 capabilities
+## Milestone 1–3 capabilities
 
 - **Mock mode (default):** a deterministic 737-class point-mass flight model —
   no FlightGear needed. Fixed seed ⇒ reproducible flights.
@@ -193,8 +208,10 @@ In this WSL environment Playwright needs `TMPDIR=/tmp TEMP=/tmp TMP=/tmp`.
   marked for verification in the property map.
 - The mock model touches down at field elevation anywhere — an off-runway
   landing is not modelled (scenario logic uses runway geometry regardless).
-- Aircraft systems (electrical, hydraulic, bleed, APU, engine start), the FMC,
-  SID/STAR, weather and failures are Phase 4/5 and not modelled.
+- Systems are modelled to procedure depth only — no electrical loads, no fuel
+  burn, no pack temperatures, no failures. See SYSTEMS_MODEL.md for the full
+  list of simplifications.
+- The FMC, SID/STAR, weather, failures and voice interaction are Phase 5.
 - The taxi layout is a plausible approximation, not survey data; in FlightGear
   mode the scenery is FlightGear's and may not match it.
 
@@ -206,6 +223,7 @@ In this WSL environment Playwright needs `TMPDIR=/tmp TEMP=/tmp TMP=/tmp`.
 [THIRD_PARTY_ASSETS.md](THIRD_PARTY_ASSETS.md) ·
 [SCENARIO_AUTHORING.md](SCENARIO_AUTHORING.md) ·
 [COCKPIT_CONTROL_MAPPING.md](COCKPIT_CONTROL_MAPPING.md) ·
+[SYSTEMS_MODEL.md](SYSTEMS_MODEL.md) ·
 [docs/REVIEW_RESPONSE.md](docs/REVIEW_RESPONSE.md) ·
 [TROUBLESHOOTING.md](TROUBLESHOOTING.md) ·
 [docs/milestones/](docs/milestones/)

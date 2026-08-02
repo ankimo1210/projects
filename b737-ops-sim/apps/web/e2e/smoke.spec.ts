@@ -215,3 +215,40 @@ test('debrief report opens with transparent categories', async ({ page }) => {
   await expect(page.getByTestId('debrief')).toContainText('ATC compliance');
   await expect(page.getByTestId('debrief')).toContainText('NON_CERTIFIED_APPROXIMATION');
 });
+
+// M4: the overhead panel drives real systems state through the bridge.
+test('overhead panel powers the aircraft up from cold and dark', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByTestId('conn-status')).toContainText('mock backend', { timeout: 15_000 });
+
+  await page.getByTestId('scenario-picker').selectOption({ label: 'Cold and Dark — KSFO' });
+  await expect(page.getByTestId('phase-chip')).toContainText('Cold and dark', { timeout: 10_000 });
+
+  await page.getByTestId('overhead-btn').click();
+  await expect(page.getByTestId('overhead-panel')).toBeVisible();
+  await expect(page.getByTestId('synoptic')).toContainText('OFF');
+
+  // battery → DC bus, and the master caution lights because there is no AC
+  await page.getByTestId('sw-battery').click();
+  await expect(page.getByTestId('synoptic')).toContainText('POWERED', { timeout: 5_000 });
+  await expect(page.getByTestId('ann-elec_no_ac')).toBeVisible();
+  await expect(page.getByTestId('master-caution')).toContainText('MASTER CAUTION');
+
+  // recall acknowledges it; the annunciation stays but the light goes out
+  await page.getByTestId('master-caution').click();
+  await expect(page.getByTestId('master-caution')).toContainText('NO ALERTS', { timeout: 5_000 });
+  await expect(page.getByTestId('ann-elec_no_ac')).toBeVisible();
+
+  // APU start needs the master switch first; then it runs and can be put on bus
+  await page.getByTestId('sw-apu_master').click();
+  await page.getByTestId('sw-apu_start').click();
+  await expect(page.getByTestId('synoptic')).toContainText('RUNNING', { timeout: 45_000 });
+  await page.getByTestId('sw-apu_gen').click();
+  await expect(page.getByTestId('ann-elec_no_ac')).toHaveCount(0, { timeout: 5_000 });
+
+  // and an engine start without duct pressure is refused by the backend
+  await page.getByTestId('start-left-ground').click();
+  await expect(page.getByTestId('cmd-rejection')).toContainText('duct pressure', {
+    timeout: 5_000,
+  });
+});

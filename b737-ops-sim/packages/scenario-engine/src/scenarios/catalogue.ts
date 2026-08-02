@@ -2,6 +2,7 @@ import type { ScenarioDefinition } from '../types.js';
 import { MVP_CIRCUIT_SCENARIO } from './mvpCircuit.js';
 import { GATE_TO_GATE_SCENARIO } from './gateToGate.js';
 import { APPROACH_DRILL_SCENARIO } from './approachDrill.js';
+import { COLD_AND_DARK_SCENARIO } from './coldAndDark.js';
 
 /**
  * Scenario catalogue (spec §22 Phase 3 "multiple scenarios"). The UI picks
@@ -12,6 +13,7 @@ export const SCENARIOS: ScenarioDefinition[] = [
   MVP_CIRCUIT_SCENARIO,
   GATE_TO_GATE_SCENARIO,
   APPROACH_DRILL_SCENARIO,
+  COLD_AND_DARK_SCENARIO,
 ];
 
 export const DEFAULT_SCENARIO_ID = MVP_CIRCUIT_SCENARIO.id;

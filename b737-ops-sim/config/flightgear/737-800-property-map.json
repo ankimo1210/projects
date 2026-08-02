@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "aircraft": "Generic FG 737 NG class (verified paths: FG core; aircraft-specific paths marked)",
   "notes": "Single source of truth for FlightGear property paths (spec \u00a75). Paths under /instrumentation and MCP/autobrake sections are AIRCRAFT-MODEL-DEPENDENT: verify against the installed 737 package (e.g. 737-800YV) with scripts/fg-diagnostic before relying on them. scale converts FG-native units to the schema's explicit units.",
   "state": {
@@ -282,6 +282,159 @@
       "fgProps": ["/autopilot/locks/toga"],
       "type": "bool",
       "comment": "AIRCRAFT-MODEL-DEPENDENT: TO/GA. SOURCE_REQUIRED \u2014 many 737 packages expose this as a button property instead."
+    },
+    "set_system_switch.battery": {
+      "fgProps": ["/controls/b737-ops-sim/battery"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.apu_master": {
+      "fgProps": ["/controls/b737-ops-sim/apu_master"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.apu_start": {
+      "fgProps": ["/controls/b737-ops-sim/apu_start"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.apu_gen": {
+      "fgProps": ["/controls/b737-ops-sim/apu_gen"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.gen1": {
+      "fgProps": ["/controls/b737-ops-sim/gen1"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.gen2": {
+      "fgProps": ["/controls/b737-ops-sim/gen2"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.external_power": {
+      "fgProps": ["/controls/b737-ops-sim/external_power"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.standby_power": {
+      "fgProps": ["/controls/b737-ops-sim/standby_power"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.fuel_pump_left": {
+      "fgProps": ["/controls/b737-ops-sim/fuel_pump_left"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.fuel_pump_right": {
+      "fgProps": ["/controls/b737-ops-sim/fuel_pump_right"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.fuel_pump_center": {
+      "fgProps": ["/controls/b737-ops-sim/fuel_pump_center"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.hyd_pump_eng1": {
+      "fgProps": ["/controls/b737-ops-sim/hyd_pump_eng1"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.hyd_pump_eng2": {
+      "fgProps": ["/controls/b737-ops-sim/hyd_pump_eng2"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.hyd_pump_elec1": {
+      "fgProps": ["/controls/b737-ops-sim/hyd_pump_elec1"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.hyd_pump_elec2": {
+      "fgProps": ["/controls/b737-ops-sim/hyd_pump_elec2"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.bleed_eng1": {
+      "fgProps": ["/controls/b737-ops-sim/bleed_eng1"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.bleed_eng2": {
+      "fgProps": ["/controls/b737-ops-sim/bleed_eng2"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.bleed_apu": {
+      "fgProps": ["/controls/b737-ops-sim/bleed_apu"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.isolation_valve": {
+      "fgProps": ["/controls/b737-ops-sim/isolation_valve"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.pack_left": {
+      "fgProps": ["/controls/b737-ops-sim/pack_left"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.pack_right": {
+      "fgProps": ["/controls/b737-ops-sim/pack_right"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.anti_ice_eng1": {
+      "fgProps": ["/controls/b737-ops-sim/anti_ice_eng1"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.anti_ice_eng2": {
+      "fgProps": ["/controls/b737-ops-sim/anti_ice_eng2"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.anti_ice_wing": {
+      "fgProps": ["/controls/b737-ops-sim/anti_ice_wing"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.irs_left": {
+      "fgProps": ["/controls/b737-ops-sim/irs_left"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.irs_right": {
+      "fgProps": ["/controls/b737-ops-sim/irs_right"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.start_lever_left": {
+      "fgProps": ["/controls/b737-ops-sim/start_lever_left"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_system_switch.start_lever_right": {
+      "fgProps": ["/controls/b737-ops-sim/start_lever_right"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: placeholder path; map to the installed 737 package's overhead property (SYSTEMS_MODEL.md)."
+    },
+    "set_engine_start.left": {
+      "fgProps": ["/controls/engines/engine[0]/starter-mode"],
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: engine start selector."
+    },
+    "set_engine_start.right": {
+      "fgProps": ["/controls/engines/engine[1]/starter-mode"],
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED: engine start selector."
+    },
+    "reset_master_caution": {
+      "fgProps": ["/instrumentation/master-caution/reset"],
+      "type": "bool",
+      "comment": "AIRCRAFT-MODEL-DEPENDENT \u2014 SOURCE_REQUIRED."
     }
   }
 }
