@@ -13,9 +13,9 @@ import { angleDiffDeg, type AircraftState } from '@b737/shared';
 export type ConditionLeafOp = 'gt' | 'gte' | 'lt' | 'lte' | 'eq' | 'neq';
 
 export type Condition =
-  | { all: Condition[] }
-  | { any: Condition[] }
-  | { not: Condition }
+  | { all: Condition[]; sustainedSec?: number }
+  | { any: Condition[]; sustainedSec?: number }
+  | { not: Condition; sustainedSec?: number }
   | {
       prop: string;
       op: ConditionLeafOp;

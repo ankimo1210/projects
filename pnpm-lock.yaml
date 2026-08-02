@@ -67,6 +67,19 @@ importers:
         specifier: ^3.0.0
         version: 3.2.7(@types/node@22.20.1)(tsx@4.23.1)
 
+  packages/cockpit-model:
+    dependencies:
+      '@b737/shared':
+        specifier: workspace:*
+        version: link:../shared
+    devDependencies:
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.7(@types/node@26.1.2)(tsx@4.23.1)
+
   packages/flightgear-adapter:
     dependencies:
       '@b737/shared':
@@ -124,6 +137,9 @@ importers:
         specifier: workspace:*
         version: link:../shared
     devDependencies:
+      '@b737/flightgear-adapter':
+        specifier: workspace:*
+        version: link:../flightgear-adapter
       typescript:
         specifier: ^5.7.2
         version: 5.9.3

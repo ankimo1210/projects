@@ -70,14 +70,14 @@ export class AtcController {
         atcPhase: 'vector_downwind',
         headingDeg: norm(rwyHdg + 180),
         say: `turn right heading ${fmtHdg(norm(rwyHdg + 180))}`,
-        minLegSec: 95,
+        minLegSec: 130,
       },
       {
         atcPhase: 'vector_base',
         headingDeg: norm(rwyHdg + 270),
         altitudeFt: 1800,
         say: `turn right heading ${fmtHdg(norm(rwyHdg + 270))}, descend and maintain 1,800`,
-        minLegSec: 55,
+        minLegSec: 70,
       },
       {
         atcPhase: 'vector_final',
@@ -127,7 +127,11 @@ export class AtcController {
             this.makeInstruction(
               t,
               `${this.callsign}, fly runway heading, climb and maintain 3,000.`,
-              { departureInstructionGiven: true },
+              {
+                departureInstructionGiven: true,
+                atcTargetHeadingDeg: Math.round(this.runway.headingDegMag),
+                atcTargetAltitudeFt: 3000,
+              },
               [
                 {
                   id: 'correct',

@@ -89,8 +89,11 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
     });
   }
   if (liftoff) {
-    const prev = history[liftoffIdx - 1]!;
-    const iasAtRotation = prev.iasKt;
+    // Rotation = first pitch-up on the ground before liftoff (not liftoff speed).
+    const rotationSample =
+      history.slice(0, liftoffIdx).find((s) => s.weightOnWheels && s.pitchDeg > 2 && s.iasKt > 80) ??
+      history[liftoffIdx - 1]!;
+    const iasAtRotation = rotationSample.iasKt;
     metrics['Rotation speed'] = `${iasAtRotation.toFixed(0)} kt (Vr ${vs.vrKt} kt)`;
     const rotDelta = iasAtRotation - vs.vrKt;
     if (rotDelta < -8) {
@@ -149,13 +152,17 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
 
   // ---- category: flight path control -------------------------------------
   const flightPath: DebriefFinding[] = [];
+  // Heading assignments end once established on the approach (the pilot then
+  // flies the localizer, not the last vector).
+  const establishedAtSec =
+    events.find((e) => e.id === 'established_on_approach')?.simTimeSec ?? Infinity;
   const headingTargets = flagSegments(events, 'atcTargetHeadingDeg');
   let worstHdgErr = 0;
   for (const seg of headingTargets) {
     const segSamples = history.filter(
       (s) =>
         s.simTimeSec >= seg.fromSec + 45 &&
-        s.simTimeSec < seg.toSec &&
+        s.simTimeSec < Math.min(seg.toSec, establishedAtSec) &&
         !s.weightOnWheels,
     );
     for (const s of segSamples) {
@@ -182,10 +189,19 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
   let worstAltBust = 0;
   for (const seg of altTargets) {
     const segSamples = history.filter(
-      (s) => s.simTimeSec >= seg.fromSec && s.simTimeSec < seg.toSec && !s.weightOnWheels,
+      (s) =>
+        s.simTimeSec >= seg.fromSec &&
+        s.simTimeSec < Math.min(seg.toSec, establishedAtSec) &&
+        !s.weightOnWheels,
     );
-    for (const s of segSamples) {
-      const over = s.altitudeFtMsl - Number(seg.value);
+    // A bust only counts after the aircraft first reaches the assigned level
+    // (climbing/descending toward a new assignment is not a violation).
+    const capturedIdx = segSamples.findIndex(
+      (s) => Math.abs(s.altitudeFtMsl - Number(seg.value)) < 150,
+    );
+    if (capturedIdx < 0) continue;
+    for (const s of segSamples.slice(capturedIdx)) {
+      const over = Math.abs(s.altitudeFtMsl - Number(seg.value));
       if (over > worstAltBust) worstAltBust = over;
     }
   }
@@ -327,16 +343,16 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
         pointsDelta: -12,
       });
     }
-    const rollout = history.slice(touchdownIdx, touchdownIdx + 20);
+    const rollout = history.slice(touchdownIdx, touchdownIdx + 50); // ~25 s
     const usedReverse = events.some((e) => e.id === 'reverse_deployed');
     if (!usedReverse) {
       landing.push({ label: 'Reverse thrust', detail: 'Reverse thrust was not used', pointsDelta: -8 });
     }
-    const slowed = rollout.some((s) => s.iasKt < 40);
-    if (!slowed && rollout.length >= 20) {
+    const slowed = rollout.some((s) => s.iasKt < 45);
+    if (!slowed && rollout.length >= 50) {
       landing.push({
         label: 'Deceleration',
-        detail: 'Aircraft was still fast 10 s after touchdown',
+        detail: 'Aircraft had not reached taxi speed 25 s after touchdown',
         pointsDelta: -8,
       });
     }

@@ -1,5 +1,5 @@
 {
-  "name": "@b737/training-engine",
+  "name": "@b737/cockpit-model",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -11,11 +11,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@b737/scenario-engine": "workspace:*",
     "@b737/shared": "workspace:*"
   },
   "devDependencies": {
-    "@b737/flightgear-adapter": "workspace:*",
     "typescript": "^5.7.2",
     "vitest": "^3.0.0"
   }

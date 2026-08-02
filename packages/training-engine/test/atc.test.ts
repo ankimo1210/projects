@@ -79,7 +79,7 @@ describe('AtcController', () => {
 
     // downwind → base (with descent)
     out = atc.update(
-      st(290, (s) => {
+      st(330, (s) => {
         s.weightOnWheels = false;
         s.position.radioAltitudeFt = 2800;
         s.attitude.headingDegMag = downwindHdg;
@@ -91,7 +91,7 @@ describe('AtcController', () => {
 
     // base → intercept + approach clearance
     out = atc.update(
-      st(360, (s) => {
+      st(420, (s) => {
         s.weightOnWheels = false;
         s.position.radioAltitudeFt = 1800;
         s.attitude.headingDegMag = baseHdg;

@@ -382,7 +382,7 @@ export class MockFlightModel {
       const targetBank = clamp(hdgErr * 1.2, -25, 25);
       aileron = clamp((targetBank - this.rollDeg) / 10, -1, 1);
       const altErrFt = this.altM * M_TO_FT - this.mcp.selAltitudeFt;
-      const capture = Math.abs(altErrFt) < 200;
+      const capture = Math.abs(altErrFt) < 400;
       const climbVsFpm =
         this.mcp.selVerticalSpeedFpm !== 0 ? Math.abs(this.mcp.selVerticalSpeedFpm) : 1800;
       const targetVsFpm = capture
@@ -575,12 +575,18 @@ export class MockFlightModel {
     const locDotsPerDeg = 2 / rwy.ils.locFullScaleDeg;
     const locDots = clamp(-angleOffDeg * locDotsPerDeg, -2.5, 2.5);
 
-    // Glideslope antenna ~300 m past threshold.
+    // Glideslope antenna ~300 m past threshold. The beam is narrow: only
+    // valid near the localizer course (prevents bogus capture on base leg).
     const gsAntennaAlongM = 300;
     const horizDistM = Math.hypot(alongM - gsAntennaAlongM, crossM);
     const heightM = this.altM - rwy.elevationFtMsl * FT_TO_M;
     let gsDots: number | null = null;
-    if (approachingDistM > -gsAntennaAlongM && horizDistM > 300 && horizDistM < 10 * 1852) {
+    if (
+      approachingDistM > -gsAntennaAlongM &&
+      horizDistM > 300 &&
+      horizDistM < 10 * 1852 &&
+      Math.abs(angleOffDeg) < 10
+    ) {
       const elevAngleDeg = radToDeg(Math.atan2(heightM, horizDistM));
       const gsDotsPerDeg = 2 / rwy.ils.gsFullScaleDeg;
       gsDots = clamp((rwy.ils.glideslopeDeg - elevAngleDeg) * gsDotsPerDeg, -2.5, 2.5);
