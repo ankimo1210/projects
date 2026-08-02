@@ -1,4 +1,4 @@
-import type { AircraftState } from '../src/aircraftState.js';
+import type { AircraftState } from './aircraftState.js';
 
 /** A structurally complete, mutable state sample for tests. */
 export function makeTestAircraftState(overrides: Partial<AircraftState> = {}): AircraftState {

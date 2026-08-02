@@ -7,7 +7,7 @@ import {
   parseClientMessage,
   vSpeedsForWeight,
 } from '../src/index.js';
-import { makeTestAircraftState } from './stateFixture.js';
+import { makeTestAircraftState } from '../src/testing.js';
 
 describe('AircraftStateSchema', () => {
   it('accepts a complete valid state', () => {
