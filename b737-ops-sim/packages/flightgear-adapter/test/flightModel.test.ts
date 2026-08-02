@@ -168,3 +168,89 @@ describe('landing rollout', () => {
     expect(slow).toBeLessThan(30);
   });
 });
+
+// R-06: publish rate must not scale simulated time.
+describe('physics timing is independent of the state publish rate', () => {
+  it.each([25, 30, 40, 50, 60])('advances 1.0 s of sim time at %i Hz', (rateHz) => {
+    const m = makeModel();
+    const dt = 1 / rateHz;
+    for (let i = 0; i < rateHz; i++) m.step(dt);
+    expect(m.snapshot(0).simTimeSec).toBeCloseTo(1, 2);
+  });
+
+  it('reaches the same speed after 20 s regardless of tick size', () => {
+    const speedAt = (rateHz: number): number => {
+      const m = makeModel();
+      m.applyCommand({ type: 'set_parking_brake', engaged: false });
+      m.applyCommand({ type: 'set_throttle', valueNorm: 1 });
+      for (let i = 0; i < rateHz * 20; i++) m.step(1 / rateHz);
+      return m.snapshot(0).speeds.iasKt;
+    };
+    expect(speedAt(25)).toBeCloseTo(speedAt(60), 0);
+    expect(speedAt(40)).toBeCloseTo(speedAt(60), 0);
+  });
+});
+
+// R-07: RTO is a rejected-takeoff device, not a landing autobrake.
+describe('RTO autobrake', () => {
+  /** Accelerate to takeoff speed, then chop the thrust levers. */
+  function rejectedTakeoff(setting: 'OFF' | 'RTO'): number {
+    const m = makeModel();
+    m.applyCommand({ type: 'set_parking_brake', engaged: false });
+    m.applyCommand({ type: 'set_autobrake', setting });
+    m.applyCommand({ type: 'set_throttle', valueNorm: 1 });
+    m.step(25);
+    expect(m.snapshot(0).speeds.iasKt).toBeGreaterThan(RTO_TEST_MIN_ABORT_KT);
+    m.applyCommand({ type: 'set_throttle', valueNorm: 0 });
+    m.step(20);
+    return m.snapshot(0).speeds.iasKt;
+  }
+  const RTO_TEST_MIN_ABORT_KT = 100;
+
+  it('brakes on a rejected takeoff while OFF does not', () => {
+    const withRto = rejectedTakeoff('RTO');
+    const withoutRto = rejectedTakeoff('OFF');
+    expect(withRto).toBeLessThan(withoutRto - 20);
+    expect(withRto).toBeLessThan(30);
+  });
+
+  it('reports braking through the state while RTO is decelerating', () => {
+    const m = makeModel();
+    m.applyCommand({ type: 'set_parking_brake', engaged: false });
+    m.applyCommand({ type: 'set_autobrake', setting: 'RTO' });
+    m.applyCommand({ type: 'set_throttle', valueNorm: 1 });
+    m.step(25);
+    expect(m.snapshot(0).controls.brakeNorm).toBe(0); // no braking during the roll
+    m.applyCommand({ type: 'set_throttle', valueNorm: 0 });
+    m.step(1);
+    expect(m.snapshot(0).controls.brakeNorm).toBeGreaterThan(0.5);
+  });
+
+  it('does not act as a landing autobrake after touchdown', () => {
+    const m = makeModel();
+    m.applyCommand({ type: 'set_autobrake', setting: 'RTO' });
+    flyTakeoff(m, 145);
+    expect(m.snapshot(0).weightOnWheels).toBe(false);
+    // airborne: RTO is disarmed, so no braking is commanded
+    m.applyCommand({ type: 'set_throttle', valueNorm: 0 });
+    m.step(2);
+    expect(m.snapshot(0).controls.brakeNorm).toBe(0);
+  });
+});
+
+// R-17: an MCP V/S selection has a sign; the autopilot must honour it.
+describe('MCP vertical speed sign', () => {
+  it('descends when a negative V/S is selected below a higher target altitude', () => {
+    const m = makeModel();
+    flyTakeoff(m, 145);
+    m.applyCommand({ type: 'set_control_axis', axis: 'pitch', valueNorm: 0 });
+    m.applyCommand({ type: 'set_throttle', valueNorm: 0.8 });
+    m.step(40); // gain some altitude first
+    const start = m.snapshot(0).position.altitudeFtMsl;
+    m.applyCommand({ type: 'set_mcp_altitude', altitudeFt: start + 3000 });
+    m.applyCommand({ type: 'set_mcp_vertical_speed', verticalSpeedFpm: -1000 });
+    m.applyCommand({ type: 'set_autopilot', engaged: true });
+    m.step(20);
+    expect(m.snapshot(0).speeds.verticalSpeedFpm).toBeLessThan(0);
+  });
+});
