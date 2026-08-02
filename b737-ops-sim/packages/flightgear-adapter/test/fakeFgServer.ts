@@ -36,6 +36,11 @@ export class FakeFgServer {
     });
   }
 
+  /** Open client sockets — used to prove the adapter keeps exactly one. */
+  get clientCount(): number {
+    return this.clients.size;
+  }
+
   /** Update a property and push to clients listening on it (like real FG). */
   push(path: string, value: number | boolean | string): void {
     this.properties.set(path, value);

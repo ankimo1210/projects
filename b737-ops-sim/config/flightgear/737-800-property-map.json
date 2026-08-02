@@ -1,8 +1,13 @@
 {
-  "version": 1,
+  "version": 2,
   "aircraft": "Generic FG 737 NG class (verified paths: FG core; aircraft-specific paths marked)",
   "notes": "Single source of truth for FlightGear property paths (spec §5). Paths under /instrumentation and MCP/autobrake sections are AIRCRAFT-MODEL-DEPENDENT: verify against the installed 737 package (e.g. 737-800YV) with scripts/fg-diagnostic before relying on them. scale converts FG-native units to the schema's explicit units.",
   "state": {
+    "sim.simTimeSec": {
+      "fgProp": "/sim/time/elapsed-sec",
+      "optional": true,
+      "comment": "FG core simulation clock. Optional: when absent the adapter falls back to wall clock, which does not stop when the sim is paused. SOURCE_REQUIRED: confirm with fg-diagnostic on the installed build."
+    },
     "position.latDeg": { "fgProp": "/position/latitude-deg" },
     "position.lonDeg": { "fgProp": "/position/longitude-deg" },
     "position.altitudeFtMsl": { "fgProp": "/position/altitude-ft" },
@@ -24,8 +29,14 @@
     "engines.right.n1Pct": { "fgProp": "/engines/engine[1]/n1" },
     "engines.left.throttleLeverNorm": { "fgProp": "/controls/engines/engine[0]/throttle" },
     "engines.right.throttleLeverNorm": { "fgProp": "/controls/engines/engine[1]/throttle" },
-    "engines.left.reverserNorm": { "fgProp": "/engines/engine[0]/reverser-pos-norm", "optional": true },
-    "engines.right.reverserNorm": { "fgProp": "/engines/engine[1]/reverser-pos-norm", "optional": true },
+    "engines.left.reverserNorm": {
+      "fgProp": "/engines/engine[0]/reverser-pos-norm",
+      "optional": true
+    },
+    "engines.right.reverserNorm": {
+      "fgProp": "/engines/engine[1]/reverser-pos-norm",
+      "optional": true
+    },
     "controls.flapHandleNorm": { "fgProp": "/controls/flight/flaps" },
     "controls.flapsActualNorm": { "fgProp": "/surface-positions/flap-pos-norm" },
     "controls.gearLeverDown": { "fgProp": "/controls/gear/gear-down", "type": "bool" },
@@ -37,7 +48,10 @@
       "optional": true,
       "comment": "AIRCRAFT-MODEL-DEPENDENT"
     },
-    "controls.spoilersDeployedNorm": { "fgProp": "/surface-positions/speedbrake-pos-norm", "optional": true },
+    "controls.spoilersDeployedNorm": {
+      "fgProp": "/surface-positions/speedbrake-pos-norm",
+      "optional": true
+    },
     "controls.parkingBrakeSet": { "fgProp": "/controls/gear/brake-parking", "type": "bool" },
     "controls.brakeLeftNorm": { "fgProp": "/controls/gear/brake-left" },
     "controls.brakeRightNorm": { "fgProp": "/controls/gear/brake-right" },
@@ -77,7 +91,11 @@
       "scale": 0.7142857,
       "comment": "FG deflection is ±3.5 full scale; ±2.5 dots -> scale 5/7. Verify per aircraft."
     },
-    "lights.landing": { "fgProp": "/controls/lighting/landing-lights", "type": "bool", "optional": true },
+    "lights.landing": {
+      "fgProp": "/controls/lighting/landing-lights",
+      "type": "bool",
+      "optional": true
+    },
     "lights.taxi": { "fgProp": "/controls/lighting/taxi-light", "type": "bool", "optional": true },
     "lights.strobe": { "fgProp": "/controls/lighting/strobe", "type": "bool", "optional": true },
     "lights.beacon": { "fgProp": "/controls/lighting/beacon", "type": "bool", "optional": true }

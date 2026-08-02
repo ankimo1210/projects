@@ -31,6 +31,20 @@ function waitFor<T>(predicate: () => T | undefined, timeoutMs = 3000): Promise<T
   });
 }
 
+const propertyMap = parsePropertyMap(mapJson);
+
+/**
+ * FlightGear pushes every subscribed property once on connect. Tests that want
+ * state out of the adapter must reproduce that: the adapter refuses to publish
+ * until every non-optional property has arrived (R-05).
+ */
+function seedRequired(server: FakeFgServer): void {
+  for (const [key, entry] of Object.entries(propertyMap.state)) {
+    if (entry.optional === true) continue;
+    server.push(entry.fgProp, key === 'weightOnWheels' ? true : 0);
+  }
+}
+
 describe('FlightGearBackend against a fake FG server', () => {
   let server: FakeFgServer;
   let backend: FlightGearBackend;
@@ -40,7 +54,7 @@ describe('FlightGearBackend against a fake FG server', () => {
     backend = new FlightGearBackend({
       host: '127.0.0.1',
       httpPort: PORT,
-      propertyMap: parsePropertyMap(mapJson),
+      propertyMap,
       stateRateHz: 50,
       reconnectDelayMs: 100,
     });
@@ -65,6 +79,7 @@ describe('FlightGearBackend against a fake FG server', () => {
   it('assembles unit-converted state from pushed properties', async () => {
     await backend.connect();
     await waitFor(() => (server.listenedPaths.size > 0 ? true : undefined));
+    seedRequired(server);
     server.push('/position/altitude-ft', 1500);
     server.push('/velocities/airspeed-kt', 180);
     server.push('/velocities/vertical-speed-fps', 20); // 1200 fpm
@@ -80,7 +95,11 @@ describe('FlightGearBackend against a fake FG server', () => {
 
   it('maps commands to FG property writes with conversions', async () => {
     await backend.connect();
-    const r1 = await backend.sendCommand({ type: 'set_control_axis', axis: 'pitch', valueNorm: 0.5 });
+    const r1 = await backend.sendCommand({
+      type: 'set_control_axis',
+      axis: 'pitch',
+      valueNorm: 0.5,
+    });
     const r2 = await backend.sendCommand({ type: 'set_flaps', detent: 5 });
     const r3 = await backend.sendCommand({ type: 'set_throttle', valueNorm: 0.9 });
     expect(r1.ok && r2.ok && r3.ok).toBe(true);
@@ -113,5 +132,99 @@ describe('FlightGearBackend against a fake FG server', () => {
     server = new FakeFgServer(PORT);
     await waitFor(() => (server.listenedPaths.size > 0 ? true : undefined), 5000);
     expect(server.listenedPaths.has('/position/altitude-ft')).toBe(true);
+  });
+
+  // -------------------------------------------------- R-04 connection lifecycle
+
+  it('starts streaming when FlightGear appears after a failed first connect', async () => {
+    await server.close();
+    const states: AircraftState[] = [];
+    backend.subscribe((s) => states.push(s));
+    await backend.connect(); // FG is not up yet: must not throw, must keep trying
+    expect(backend.getStatus().connected).toBe(false);
+
+    server = new FakeFgServer(PORT);
+    await waitFor(() => (server.listenedPaths.size > 0 ? true : undefined), 5000);
+    seedRequired(server);
+    server.push('/position/altitude-ft', 2500);
+    const state = await waitFor(() => states.find((s) => s.position.altitudeFtMsl === 2500));
+    expect(state).toBeDefined();
+    expect(backend.getStatus().connected).toBe(true);
+  });
+
+  it('keeps exactly one FlightGear socket across repeated connects', async () => {
+    await backend.connect();
+    await backend.connect();
+    await backend.connect();
+    await waitFor(() => (server.listenedPaths.size > 0 ? true : undefined));
+    await new Promise((r) => setTimeout(r, 300));
+    expect(server.clientCount).toBe(1);
+    await backend.disconnect();
+    await waitFor(() => (server.clientCount === 0 ? true : undefined));
+    expect(server.clientCount).toBe(0);
+  });
+
+  // ------------------------------------------------------- R-05 state integrity
+
+  it('publishes nothing until every required property has arrived', async () => {
+    const states: AircraftState[] = [];
+    backend.subscribe((s) => states.push(s));
+    await backend.connect();
+    await waitFor(() => (server.listenedPaths.size > 0 ? true : undefined));
+    server.push('/position/altitude-ft', 1000); // partial cache
+    await new Promise((r) => setTimeout(r, 200));
+    expect(states).toHaveLength(0);
+    expect(backend.getStatus().connected).toBe(false);
+    expect(backend.getStatus().detail).toMatch(/waiting for/);
+
+    seedRequired(server);
+    await waitFor(() => (states.length > 0 ? true : undefined));
+    expect(backend.getStatus().connected).toBe(true);
+  });
+
+  it('stops publishing when the FlightGear stream goes stale', async () => {
+    const stale = new FlightGearBackend({
+      host: '127.0.0.1',
+      httpPort: PORT,
+      propertyMap,
+      stateRateHz: 50,
+      reconnectDelayMs: 100,
+      staleAfterMs: 120,
+    });
+    try {
+      const states: AircraftState[] = [];
+      stale.subscribe((s) => states.push(s));
+      await stale.connect();
+      await waitFor(() => (server.listenedPaths.size > 0 ? true : undefined));
+      seedRequired(server);
+      await waitFor(() => (states.length > 0 ? true : undefined));
+
+      await new Promise((r) => setTimeout(r, 300)); // FG says nothing further
+      const frozen = states.length;
+      await new Promise((r) => setTimeout(r, 200));
+      expect(states.length).toBe(frozen);
+      expect(stale.getStatus().connected).toBe(false);
+    } finally {
+      await stale.disconnect();
+    }
+  });
+
+  it('drops cached values when the socket closes', async () => {
+    const states: AircraftState[] = [];
+    backend.subscribe((s) => states.push(s));
+    await backend.connect();
+    await waitFor(() => (server.listenedPaths.size > 0 ? true : undefined));
+    seedRequired(server);
+    server.push('/position/altitude-ft', 4200);
+    await waitFor(() => states.find((s) => s.position.altitudeFtMsl === 4200));
+
+    await server.close();
+    await new Promise((r) => setTimeout(r, 50));
+    const afterClose = states.length;
+    server = new FakeFgServer(PORT);
+    await waitFor(() => (server.listenedPaths.size > 0 ? true : undefined), 5000);
+    // reconnected, but the new session has no properties yet: no stale 4200 ft
+    await new Promise((r) => setTimeout(r, 200));
+    expect(states.length).toBe(afterClose);
   });
 });

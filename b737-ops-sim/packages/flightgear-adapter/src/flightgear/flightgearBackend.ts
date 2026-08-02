@@ -1,4 +1,5 @@
 import {
+  AircraftStateSchema,
   flapDetentToNorm,
   flapNormToNearestDetent,
   normalizeDeg360,
@@ -55,6 +56,15 @@ export class FlightGearBackend implements FlightBackend {
   private lastStateAtMs: number | null = null;
   private wantConnected = false;
   private simStartMs: number | null = null;
+  /**
+   * Monotonic socket id. Handlers belonging to a superseded socket must not
+   * mutate `ws`/`cache`, otherwise a late close event from the previous
+   * attempt tears down the connection that replaced it (R-04).
+   */
+  private generation = 0;
+  /** State keys the property map does not mark `optional`. */
+  private readonly requiredKeys: string[];
+  private loggedInvalidState = false;
 
   constructor(options: FlightGearBackendOptions) {
     this.opts = {
@@ -66,28 +76,64 @@ export class FlightGearBackend implements FlightBackend {
       staleAfterMs: options.staleAfterMs ?? 3000,
       log: options.log ?? (() => undefined),
     };
+    this.requiredKeys = Object.entries(this.opts.propertyMap.state)
+      .filter(([, entry]) => entry.optional !== true)
+      .map(([key]) => key);
   }
 
   get url(): string {
     return `ws://${this.opts.host}:${this.opts.httpPort}/PropertyListener`;
   }
 
+  /**
+   * Idempotent. The backend owns reconnection: `connect()` resolves once the
+   * first attempt has been made, whether or not it succeeded, and keeps
+   * retrying in the background. Callers watch `getStatus()`; they must not run
+   * a competing retry loop (R-04).
+   */
   async connect(): Promise<void> {
     this.wantConnected = true;
-    await this.openSocket();
     if (!this.publishTimer) {
       this.publishTimer = setInterval(() => this.publish(), 1000 / this.opts.stateRateHz);
     }
+    await this.attempt();
+  }
+
+  private async attempt(): Promise<void> {
+    if (!this.wantConnected) return;
+    const readyState = this.ws?.readyState;
+    if (readyState === WebSocket.OPEN || readyState === WebSocket.CONNECTING) return;
+    try {
+      await this.openSocket();
+    } catch (err) {
+      this.opts.log('warn', `FlightGear connect failed: ${String(err)}`);
+      this.scheduleReconnect();
+    }
+  }
+
+  private scheduleReconnect(): void {
+    if (!this.wantConnected || this.reconnectTimer) return;
+    this.reconnectTimer = setTimeout(() => {
+      this.reconnectTimer = null;
+      void this.attempt();
+    }, this.opts.reconnectDelayMs);
   }
 
   private openSocket(): Promise<void> {
     return new Promise((resolve, reject) => {
+      const generation = ++this.generation;
+      const isCurrent = (): boolean => this.generation === generation;
       const ws = new WebSocket(this.url);
       this.ws = ws;
       const onOpenError = (err: Error) => reject(err);
       ws.once('error', onOpenError);
       ws.on('open', () => {
         ws.removeListener('error', onOpenError);
+        if (!isCurrent()) {
+          ws.close();
+          resolve();
+          return;
+        }
         this.opts.log('info', `connected to FlightGear at ${this.url}`);
         this.lastMessageAtMs = Date.now();
         if (this.simStartMs === null) this.simStartMs = Date.now();
@@ -99,6 +145,7 @@ export class FlightGearBackend implements FlightBackend {
         resolve();
       });
       ws.on('message', (data) => {
+        if (!isCurrent()) return;
         this.lastMessageAtMs = Date.now();
         try {
           const msg = JSON.parse(String(data)) as { path?: string; value?: FgValue };
@@ -110,42 +157,61 @@ export class FlightGearBackend implements FlightBackend {
         }
       });
       ws.on('close', () => {
+        if (!isCurrent()) return;
         this.opts.log('warn', 'FlightGear socket closed');
         this.ws = null;
-        if (this.wantConnected && !this.reconnectTimer) {
-          this.reconnectTimer = setTimeout(() => {
-            this.reconnectTimer = null;
-            this.openSocket().catch((err) =>
-              this.opts.log('warn', `reconnect failed: ${String(err)}`),
-            );
-          }, this.opts.reconnectDelayMs);
-        }
+        // Values from the previous session must never be mixed into a new one
+        // or re-published with fresh timestamps (R-05).
+        this.cache.clear();
+        this.lastMessageAtMs = null;
+        this.scheduleReconnect();
       });
     });
   }
 
   async disconnect(): Promise<void> {
     this.wantConnected = false;
+    // Retire every in-flight socket: their handlers become no-ops.
+    this.generation += 1;
     if (this.publishTimer) clearInterval(this.publishTimer);
     this.publishTimer = null;
     if (this.reconnectTimer) clearTimeout(this.reconnectTimer);
     this.reconnectTimer = null;
     this.ws?.close();
     this.ws = null;
+    this.cache.clear();
+    this.lastMessageAtMs = null;
+  }
+
+  /** State keys whose FG property has not arrived yet. */
+  private missingRequired(): string[] {
+    return this.requiredKeys.filter((key) => {
+      const entry = this.opts.propertyMap.state[key];
+      return entry === undefined || !this.cache.has(entry.fgProp);
+    });
+  }
+
+  private isStale(): boolean {
+    return (
+      this.lastMessageAtMs === null || Date.now() - this.lastMessageAtMs > this.opts.staleAfterMs
+    );
   }
 
   getStatus(): BackendStatus {
-    const stale =
-      this.lastMessageAtMs === null || Date.now() - this.lastMessageAtMs > this.opts.staleAfterMs;
+    const stale = this.isStale();
     const socketOpen = this.ws?.readyState === WebSocket.OPEN;
+    const missing = socketOpen ? this.missingRequired() : [];
+    const streaming = socketOpen && !stale && missing.length === 0;
     return {
       mode: 'flightgear',
-      connected: socketOpen && !stale,
-      detail: socketOpen
-        ? stale
+      connected: streaming,
+      detail: !socketOpen
+        ? `not connected to ${this.url}`
+        : stale
           ? 'socket open but no recent data (is the sim paused or crashed?)'
-          : `streaming from ${this.url}`
-        : `not connected to ${this.url}`,
+          : missing.length > 0
+            ? `waiting for ${missing.length} property/ies (first: ${missing[0]})`
+            : `streaming from ${this.url}`,
       lastStateAgeMs: this.lastStateAtMs === null ? null : Date.now() - this.lastStateAtMs,
       stateRateHz: this.opts.stateRateHz,
     };
@@ -175,7 +241,10 @@ export class FlightGearBackend implements FlightBackend {
   ): { writes: { node: string; value: FgValue }[] } | { error: string } {
     const cmds = this.opts.propertyMap.commands;
     const lookup = (key: string): FgCommandEntry | undefined => cmds[key];
-    const simple = (key: string, value: FgValue): { writes: { node: string; value: FgValue }[] } | { error: string } => {
+    const simple = (
+      key: string,
+      value: FgValue,
+    ): { writes: { node: string; value: FgValue }[] } | { error: string } => {
       const entry = lookup(key);
       if (!entry) return { error: `no property mapping for command '${key}'` };
       const scaled =
@@ -282,14 +351,22 @@ export class FlightGearBackend implements FlightBackend {
   }
 
   private publish(): void {
-    if (!this.ws || this.ws.readyState !== WebSocket.OPEN || this.cache.size === 0) return;
+    // A partially-populated or stale cache must never be dressed up as a fresh
+    // sample: publishing 0-filled defaults with an advancing timestamp is worse
+    // than publishing nothing (R-05).
+    if (!this.ws || this.ws.readyState !== WebSocket.OPEN) return;
+    if (this.isStale()) return;
+    if (this.missingRequired().length > 0) return;
     const now = Date.now();
     const flapsActualNorm = this.num('controls.flapsActualNorm');
     const locInRange = this.bool('nav.locInRange');
     const gsInRange = this.bool('nav.gsInRange');
+    // Prefer FlightGear's own simulation clock; fall back to wall clock only
+    // when the map has no sim-time property (older maps).
+    const fgSimTimeSec = this.numOrNull('sim.simTimeSec');
     const state: AircraftState = {
       timestampMs: now,
-      simTimeSec: this.simStartMs === null ? 0 : (now - this.simStartMs) / 1000,
+      simTimeSec: fgSimTimeSec ?? (this.simStartMs === null ? 0 : (now - this.simStartMs) / 1000),
       position: {
         latDeg: this.num('position.latDeg'),
         lonDeg: this.num('position.lonDeg'),
@@ -330,7 +407,10 @@ export class FlightGearBackend implements FlightBackend {
         speedbrakeArmed: this.bool('controls.speedbrakeArmed'),
         spoilersDeployedNorm: this.num('controls.spoilersDeployedNorm'),
         parkingBrakeSet: this.bool('controls.parkingBrakeSet'),
-        brakeNorm: Math.max(this.num('controls.brakeLeftNorm'), this.num('controls.brakeRightNorm')),
+        brakeNorm: Math.max(
+          this.num('controls.brakeLeftNorm'),
+          this.num('controls.brakeRightNorm'),
+        ),
         autobrake: fgValueToAutobrake(this.num('controls.autobrakeRaw', 0)),
       },
       mcp: {
@@ -354,8 +434,20 @@ export class FlightGearBackend implements FlightBackend {
       },
       airport: { icao: null, runwayId: null },
     };
+    const validated = AircraftStateSchema.safeParse(state);
+    if (!validated.success) {
+      if (!this.loggedInvalidState) {
+        this.loggedInvalidState = true;
+        this.opts.log(
+          'error',
+          `assembled FlightGear state failed schema validation (check the property map): ${validated.error.message}`,
+        );
+      }
+      return;
+    }
+    this.loggedInvalidState = false;
     this.lastStateAtMs = now;
-    for (const l of this.listeners) l(state);
+    for (const l of this.listeners) l(validated.data);
   }
 }
 
