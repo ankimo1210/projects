@@ -1,0 +1,32 @@
+{
+  "name": "b737-ops-sim",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local-only Boeing 737-800 style web-based flight operations trainer (NOT a certified training device)",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@11.1.0",
+  "scripts": {
+    "dev": "concurrently -n bridge,web -c blue,green \"pnpm --filter @b737/bridge dev\" \"pnpm --filter @b737/web dev\"",
+    "dev:fg": "concurrently -n bridge,web -c blue,green \"pnpm --filter @b737/bridge dev:fg\" \"pnpm --filter @b737/web dev\"",
+    "build": "pnpm -r build",
+    "test": "pnpm -r --no-bail test",
+    "test:e2e": "pnpm --filter @b737/web test:e2e",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "fg:diagnostic": "pnpm --filter @b737/bridge fg:diagnostic",
+    "assets:fetch": "node scripts/fetch-cockpit-assets.mjs",
+    "assets:build": "node scripts/fetch-cockpit-assets.mjs && pnpm --filter @b737/asset-pipeline convert"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "concurrently": "^9.1.0",
+    "eslint": "^9.18.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.19.0"
+  }
+}
