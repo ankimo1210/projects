@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { getSession } from '../state/connection.js';
+import { getSession, sendCommand } from '../state/connection.js';
 import { useSessionStore, useSettingsStore } from '../state/stores.js';
 
 /** ATC / crew transcript with readback controls (spec §12/§13/§19). */
@@ -15,10 +15,20 @@ export function TranscriptPanel(): JSX.Element {
     if (el) el.scrollTop = el.scrollHeight;
   });
 
+  const awaitingReadback = session.transcript.some((e) => e.expectedResponse && !e.responseResult);
   const canRequestTakeoff =
-    session.phaseId === 'before_takeoff' &&
+    ['before_takeoff', 'hold_short'].includes(session.phaseId) &&
     session.runtime.getFlag('takeoffClearanceReceived') !== true &&
-    !session.transcript.some((e) => e.expectedResponse && !e.responseResult);
+    !awaitingReadback;
+  // Ground control is only in the loop for scenarios that start at a stand.
+  const canRequestTaxi =
+    session.atc.phase === 'awaiting_taxi_request' &&
+    session.runtime.getFlag('taxiClearanceReceived') !== true &&
+    !awaitingReadback;
+  // Going around is the crew's decision, available whenever one can be flown.
+  const canGoAround =
+    ['approach_setup', 'final_approach', 'landing'].includes(session.phaseId) &&
+    session.runtime.getFlag('goAroundAnnounced') !== true;
 
   return (
     <div className="panel transcript-panel" data-testid="transcript-panel">
@@ -62,6 +72,30 @@ export function TranscriptPanel(): JSX.Element {
         ))}
       </div>
       <div className="transcript-actions">
+        {canRequestTaxi && (
+          <button
+            type="button"
+            className="mic-btn"
+            data-testid="request-taxi"
+            onClick={() => session.requestTaxiClearance()}
+          >
+            🎙 Request taxi clearance
+          </button>
+        )}
+        {canGoAround && (
+          <button
+            type="button"
+            className="mic-btn go-around"
+            data-testid="go-around"
+            onClick={() => {
+              // TO/GA to the aircraft, and tell ATC what we are doing.
+              sendCommand({ type: 'set_toga', engaged: true });
+              session.announceGoAround();
+            }}
+          >
+            ⬆ Go around (TO/GA)
+          </button>
+        )}
         <button
           type="button"
           className="mic-btn"

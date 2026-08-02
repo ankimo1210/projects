@@ -185,6 +185,27 @@ test('imported 3D cockpit loads and 3D picking round-trips (skipped without asse
   expect(registry.filter((r) => !r.pickable)).toEqual([]);
 });
 
+// M3: the scenario catalogue is switchable, and the switch goes through the
+// backend — the training session must never describe a flight the aircraft is
+// not flying.
+test('switching scenario resets the aircraft into the new one', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByTestId('conn-status')).toContainText('mock backend', { timeout: 15_000 });
+  await expect(page.getByTestId('phase-chip')).toContainText('Before takeoff');
+
+  await page.getByTestId('scenario-picker').selectOption({ label: 'Gate to Gate — KSFO 28R' });
+  // parked at the stand: ground control, not the tower
+  await expect(page.getByTestId('phase-chip')).toContainText('At the stand', { timeout: 10_000 });
+  await expect(page.getByTestId('request-taxi')).toBeVisible();
+  await expect(page.getByTestId('checklist-panel')).toContainText('Before Start');
+
+  await page.getByTestId('scenario-picker').selectOption({ label: 'Approach Drill — ILS 28R' });
+  await expect(page.getByTestId('phase-chip')).toContainText('Final approach', { timeout: 10_000 });
+  // airborne on the ILS: the PFD shows a real radio altitude and the go-around
+  // action is available
+  await expect(page.getByTestId('go-around')).toBeVisible();
+});
+
 test('debrief report opens with transparent categories', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByTestId('conn-status')).toContainText('mock backend', { timeout: 15_000 });
