@@ -52,14 +52,16 @@ export const client = new BridgeClient(BRIDGE_URL, {
     const store = useSessionStore.getState();
     if (store.version !== session.version) {
       store.bump(session.version, session.phaseId);
-      // speak any new FO/ATC lines (optional, offline Web Speech)
-      if (useSettingsStore.getState().ttsEnabled) {
-        for (; spokenCount < session.transcript.length; spokenCount++) {
-          const entry = session.transcript[spokenCount]!;
-          if (entry.speaker === 'first_officer' || entry.speaker === 'atc') speakEntry(entry);
+      // voice new FO/ATC lines: GPWS altitude callouts use the real samples
+      // when available; everything else uses offline Web Speech (optional)
+      const ttsEnabled = useSettingsStore.getState().ttsEnabled;
+      for (; spokenCount < session.transcript.length; spokenCount++) {
+        const entry = session.transcript[spokenCount]!;
+        const calloutAlt = entry.relatedEventId?.match(/^callout:ra_(\d+)$/);
+        if (calloutAlt && audioEngine.playAltitudeCallout(Number(calloutAlt[1]))) continue;
+        if (ttsEnabled && (entry.speaker === 'first_officer' || entry.speaker === 'atc')) {
+          speakEntry(entry);
         }
-      } else {
-        spokenCount = session.transcript.length;
       }
       if (session.complete && !store.showDebrief) store.setShowDebrief(true);
     }

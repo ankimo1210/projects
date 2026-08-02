@@ -1,10 +1,27 @@
 import { clamp, type AircraftState } from '@b737/shared';
 
 /**
- * Synthesized, state-driven cockpit soundscape (spec §17). No samples are
- * used in Milestone 1 — everything is generated, so THIRD_PARTY_ASSETS.md
- * stays empty. Levels follow aircraft state, not UI clicks.
+ * State-driven cockpit soundscape (spec §17).
+ * Phase 2: when the converted GPL sound set (737-800YV, see
+ * THIRD_PARTY_ASSETS.md) is served under /cockpit/sounds/, real samples are
+ * used (engine loops, levers, wind, GPWS callouts); otherwise everything
+ * falls back to the Milestone-1 synthesized sounds. Levels always follow
+ * aircraft state, not UI clicks.
  */
+
+/** Sample files (basenames under /cockpit/sounds/). */
+const SAMPLES = {
+  click: 'click.wav',
+  flaps: 'flaps.wav',
+  gear: 'gear.wav',
+  wind: 'Wind.wav',
+  engineIdle: 'cfm11a.wav',
+  engineFull: 'cfm14a.wav',
+  apDisconnect: 'Apdisco.wav',
+} as const;
+
+const CALLOUT_ALTS = [10, 20, 30, 40, 50, 100, 200, 300, 400, 500, 1000, 2500] as const;
+
 class AudioEngine {
   private ctx: AudioContext | null = null;
   private master: GainNode | null = null;
@@ -20,6 +37,15 @@ class AudioEngine {
   private prevWow = true;
   private prevGearPos = 1;
   enabled = false;
+
+  // sample-based playback (Phase 2, optional)
+  private samples = new Map<string, AudioBuffer>();
+  private engineIdleGain: GainNode | null = null;
+  private engineFullGain: GainNode | null = null;
+  private engineIdleSrc: AudioBufferSourceNode | null = null;
+  private engineFullSrc: AudioBufferSourceNode | null = null;
+  private windSampleGain: GainNode | null = null;
+  private gearSamplePlaying = false;
 
   /** Must be called from a user gesture (browser autoplay policy). */
   start(): void {
@@ -68,6 +94,80 @@ class AudioEngine {
     this.rollNoise = this.loopNoise(ctx, noiseBuffer, rollFilter, this.rollGain);
 
     this.enabled = true;
+    void this.loadSamples(ctx);
+  }
+
+  /** Fetch + decode the optional GPL sample set; missing files are fine. */
+  private async loadSamples(ctx: AudioContext): Promise<void> {
+    const names = [
+      ...Object.values(SAMPLES),
+      ...CALLOUT_ALTS.map((a) => `altitude-${a}.wav`),
+    ];
+    await Promise.all(
+      names.map(async (name) => {
+        try {
+          const res = await fetch(`/cockpit/sounds/${name}`);
+          if (!res.ok) return;
+          const buf = await ctx.decodeAudioData(await res.arrayBuffer());
+          this.samples.set(name, buf);
+        } catch {
+          /* keep synth fallback */
+        }
+      }),
+    );
+    this.startSampleLoops(ctx);
+  }
+
+  /** Swap synth engine/wind loops for real recordings when available. */
+  private startSampleLoops(ctx: AudioContext): void {
+    const idle = this.samples.get(SAMPLES.engineIdle);
+    const full = this.samples.get(SAMPLES.engineFull);
+    if (idle && full && this.master && !this.engineIdleSrc) {
+      this.engineIdleGain = ctx.createGain();
+      this.engineIdleGain.gain.value = 0.25;
+      this.engineFullGain = ctx.createGain();
+      this.engineFullGain.gain.value = 0;
+      this.engineIdleSrc = this.loopSample(ctx, idle, this.engineIdleGain);
+      this.engineFullSrc = this.loopSample(ctx, full, this.engineFullGain);
+      this.engineGain?.gain.setValueAtTime(0, ctx.currentTime); // silence synth
+    }
+    const wind = this.samples.get(SAMPLES.wind);
+    if (wind && this.master && !this.windSampleGain) {
+      this.windSampleGain = ctx.createGain();
+      this.windSampleGain.gain.value = 0;
+      this.loopSample(ctx, wind, this.windSampleGain);
+      this.windGain?.gain.setValueAtTime(0, ctx.currentTime);
+    }
+  }
+
+  private loopSample(ctx: AudioContext, buffer: AudioBuffer, gain: GainNode): AudioBufferSourceNode {
+    const src = ctx.createBufferSource();
+    src.buffer = buffer;
+    src.loop = true;
+    src.connect(gain);
+    gain.connect(this.master!);
+    src.start();
+    return src;
+  }
+
+  /** One-shot sample; returns false when unavailable (caller uses synth). */
+  private playSample(name: string, gainValue = 0.6, rate = 1): boolean {
+    if (!this.ctx || !this.master || !this.enabled) return false;
+    const buffer = this.samples.get(name);
+    if (!buffer) return false;
+    const src = this.ctx.createBufferSource();
+    src.buffer = buffer;
+    src.playbackRate.value = rate;
+    const gain = this.ctx.createGain();
+    gain.gain.value = gainValue;
+    src.connect(gain).connect(this.master);
+    src.start();
+    return true;
+  }
+
+  /** Radio-altitude callout (GPWS voice) — returns false if no sample. */
+  playAltitudeCallout(altFt: number): boolean {
+    return this.playSample(`altitude-${altFt}.wav`, 0.9);
   }
 
   stop(): void {
@@ -83,14 +183,22 @@ class AudioEngine {
     const n1Norm = clamp((n1 - 20) / 80, 0, 1);
     const reverse = Math.max(state.engines.left.reverserNorm, state.engines.right.reverserNorm);
 
-    if (this.engineOsc && this.engineOsc2 && this.engineGain && this.engineFilter) {
+    if (this.engineIdleSrc && this.engineIdleGain && this.engineFullGain) {
+      // real CFM56 loops: crossfade + pitch by N1
+      this.engineIdleGain.gain.setTargetAtTime((1 - n1Norm) * 0.4, t, 0.25);
+      this.engineFullGain.gain.setTargetAtTime(n1Norm * (0.5 + reverse * 0.2), t, 0.25);
+      this.engineIdleSrc.playbackRate.setTargetAtTime(0.85 + n1Norm * 0.3, t, 0.25);
+      this.engineFullSrc?.playbackRate.setTargetAtTime(0.8 + n1Norm * 0.45, t, 0.25);
+    } else if (this.engineOsc && this.engineOsc2 && this.engineGain && this.engineFilter) {
       this.engineOsc.frequency.setTargetAtTime(35 + n1Norm * 95, t, 0.2);
       this.engineOsc2.frequency.setTargetAtTime(36.5 + n1Norm * 99, t, 0.2);
       this.engineFilter.frequency.setTargetAtTime(200 + n1Norm * 900 + reverse * 500, t, 0.2);
       this.engineGain.gain.setTargetAtTime(0.05 + n1Norm * 0.3 + reverse * 0.15, t, 0.2);
     }
-    if (this.windGain && this.windFilter) {
-      const windNorm = clamp(state.speeds.iasKt / 250, 0, 1);
+    const windNorm = clamp(state.speeds.iasKt / 250, 0, 1);
+    if (this.windSampleGain) {
+      this.windSampleGain.gain.setTargetAtTime(windNorm * windNorm * 0.5, t, 0.3);
+    } else if (this.windGain && this.windFilter) {
       this.windGain.gain.setTargetAtTime(windNorm * windNorm * 0.25, t, 0.3);
       this.windFilter.frequency.setTargetAtTime(400 + windNorm * 1200, t, 0.3);
     }
@@ -103,9 +211,12 @@ class AudioEngine {
       this.thump();
     }
     this.prevWow = state.weightOnWheels;
-    // gear transit rumble
-    if (Math.abs(state.controls.gearPositionNorm - this.prevGearPos) > 0.001) {
-      this.gearWhir();
+    // gear transit sound (sample once per transit; synth fallback is silent)
+    const gearMoving = Math.abs(state.controls.gearPositionNorm - this.prevGearPos) > 0.001;
+    if (gearMoving && !this.gearSamplePlaying) {
+      this.gearSamplePlaying = this.playSample(SAMPLES.gear, 0.5);
+    } else if (!gearMoving) {
+      this.gearSamplePlaying = false;
     }
     this.prevGearPos = state.controls.gearPositionNorm;
   }
@@ -113,6 +224,10 @@ class AudioEngine {
   /** Switch/lever interaction click (only called after backend accepts). */
   click(kind: 'click' | 'lever' | 'rotary' | 'flap_lever' | 'gear_lever' = 'click'): void {
     if (!this.ctx || !this.master || !this.enabled) return;
+    // real samples when available
+    if (kind === 'flap_lever' && this.playSample(SAMPLES.flaps, 0.5)) return;
+    if (kind === 'gear_lever' && this.playSample(SAMPLES.gear, 0.4, 1.4)) return;
+    if (this.playSample(SAMPLES.click, kind === 'rotary' ? 0.35 : 0.5)) return;
     const t = this.ctx.currentTime;
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();

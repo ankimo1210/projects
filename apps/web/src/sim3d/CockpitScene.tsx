@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { interpolator } from '../state/connection.js';
 import { inputManager } from '../input/inputManager.js';
 import { createSimWorld } from './scene.js';
@@ -9,11 +9,16 @@ import { createSimWorld } from './scene.js';
  */
 export function CockpitScene(): JSX.Element {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [hover, setHover] = useState<{ label: string; hint?: string } | null>(null);
+  const [cockpitMeshes, setCockpitMeshes] = useState(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const world = createSimWorld(canvas);
+    const world = createSimWorld(canvas, {
+      onHoverControl: setHover,
+      onCockpitLoaded: setCockpitMeshes,
+    });
     const keyHandler = (e: KeyboardEvent): void => {
       if (e.code === 'KeyC') world.centerView();
     };
@@ -32,5 +37,20 @@ export function CockpitScene(): JSX.Element {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="sim-canvas" data-testid="sim-canvas" />;
+  return (
+    <>
+      <canvas
+        ref={canvasRef}
+        className="sim-canvas"
+        data-testid="sim-canvas"
+        data-cockpit-meshes={cockpitMeshes}
+      />
+      {hover && (
+        <div className="control-tooltip" data-testid="control-tooltip">
+          <b>{hover.label}</b>
+          {hover.hint && <span> — {hover.hint}</span>}
+        </div>
+      )}
+    </>
+  );
 }

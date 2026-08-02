@@ -7,13 +7,14 @@ import {
   Engine,
   HemisphericLight,
   MeshBuilder,
+  PointLight,
   Scene,
   StandardMaterial,
   TransformNode,
   UniversalCamera,
   Vector3,
 } from '@babylonjs/core';
-import type { Mesh } from '@babylonjs/core';
+import type { AbstractMesh, Mesh } from '@babylonjs/core';
 import {
   FT_TO_M,
   KSFO_28R,
@@ -22,6 +23,13 @@ import {
   toLocalEnuM,
   type AircraftState,
 } from '@b737/shared';
+import { fgToAircraft, loadCockpit, type LoadedCockpit } from './cockpitLoader.js';
+import {
+  beginControlDrag,
+  clickControl,
+  updateControlDrag,
+  type DragSession,
+} from '../cockpit/controlActions.js';
 
 /**
  * Temporary-geometry 3D world (spec §3/§7): captain-seat view, runway with
@@ -39,10 +47,20 @@ export interface SimWorld {
   dispose(): void;
 }
 
+export interface SimWorldHooks {
+  /** Hovered interactive cockpit control (null when none). */
+  onHoverControl?: (info: { label: string; hint?: string } | null) => void;
+  /** Fired once the imported cockpit finished loading (mesh count). */
+  onCockpitLoaded?: (meshCount: number) => void;
+}
+
 const RWY = KSFO_28R;
 const FIELD_ELEV_M = RWY.elevationFtMsl * FT_TO_M;
 
-export function createSimWorld(canvas: HTMLCanvasElement): SimWorld {
+/** Captain eye point in FG cockpit coordinates (aft, right, up). */
+const CAPTAIN_EYE_FG = { x: 1.04, y: -0.512, z: 1.2 };
+
+export function createSimWorld(canvas: HTMLCanvasElement, hooks: SimWorldHooks = {}): SimWorld {
   const engine = new Engine(canvas, true, { stencil: false }, true);
   const scene = new Scene(engine);
   scene.clearColor = new Color4(0.53, 0.72, 0.92, 1);
@@ -124,6 +142,12 @@ export function createSimWorld(canvas: HTMLCanvasElement): SimWorld {
   camera.inputs.clear(); // we drive the view ourselves (mouse look below)
   scene.activeCamera = camera;
 
+  // interior fill light so the imported panel textures stay readable
+  const cabinLight = new PointLight('cabinLight', new Vector3(0, 3.4, 0.6), scene);
+  cabinLight.parent = aircraft;
+  cabinLight.intensity = 0.55;
+  cabinLight.range = 9;
+
   // simple cockpit shell fixed to the aircraft (temporary geometry)
   const shellMat = new StandardMaterial('shellMat', scene);
   shellMat.diffuseColor = new Color3(0.13, 0.14, 0.16);
@@ -171,25 +195,106 @@ export function createSimWorld(canvas: HTMLCanvasElement): SimWorld {
   yokeMat.diffuseColor = new Color3(0.08, 0.08, 0.09);
   wheel.material = yokeMat;
 
-  // ---------- mouse look ----------
+  const tempShell: (Mesh | TransformNode)[] = [
+    dash,
+    glareshield,
+    pillarL,
+    pillarC,
+    pillarR,
+    roof,
+    sideL,
+    sideR,
+    yokeRoot,
+  ];
+
+  // ---------- imported cockpit (Phase 2 asset pipeline; falls back to shell) ----------
+  let cockpit: LoadedCockpit | null = null;
+  void loadCockpit(scene, aircraft).then((loaded) => {
+    if (!loaded || scene.isDisposed) return;
+    cockpit = loaded;
+    for (const part of tempShell) part.setEnabled(false);
+    const eye = fgToAircraft(CAPTAIN_EYE_FG);
+    camera.position.copyFrom(eye);
+    hooks.onCockpitLoaded?.(loaded.meshCount);
+    // dev diagnostics (used by tooling/screenshot probes)
+    (window as unknown as Record<string, unknown>).__simScene = scene;
+  });
+
+  // ---------- pointer: control picking + mouse look ----------
   let lookYaw = 0;
   let lookPitch = 0;
   let dragging = false;
+  let dragSession: DragSession | null = null;
+  let dragStartY = 0;
   let lastX = 0;
   let lastY = 0;
+  let lastHoverAt = 0;
+  let hoveredMesh: AbstractMesh | null = null;
+
+  const pickInteractive = (): { mesh: AbstractMesh; controlId: string; label: string; hint?: string; interaction: string } | null => {
+    if (!cockpit) return null;
+    const info = scene.pick(scene.pointerX, scene.pointerY, (m) => m.isPickable && m.isEnabled());
+    if (!info?.hit || !info.pickedMesh) return null;
+    const interaction = cockpit.interactionFor(info.pickedMesh);
+    if (!interaction) return null;
+    return {
+      mesh: info.pickedMesh,
+      controlId: interaction.controlId,
+      label: interaction.label,
+      hint: interaction.trainingHint,
+      interaction: interaction.interaction,
+    };
+  };
+
   canvas.addEventListener('pointerdown', (e) => {
     if (e.button !== 0) return;
+    const hit = pickInteractive();
+    if (hit) {
+      if (hit.interaction === 'lever' || hit.interaction === 'drag') {
+        dragSession = beginControlDrag(hit.controlId);
+        dragStartY = e.clientY;
+        if (dragSession) return; // control drag, not look drag
+      }
+      clickControl(hit.controlId, e.shiftKey);
+      return;
+    }
     dragging = true;
     lastX = e.clientX;
     lastY = e.clientY;
   });
-  window.addEventListener('pointerup', () => (dragging = false));
+  window.addEventListener('pointerup', () => {
+    dragging = false;
+    dragSession = null;
+  });
   window.addEventListener('pointermove', (e) => {
-    if (!dragging) return;
-    lookYaw = clamp(lookYaw + (e.clientX - lastX) * 0.003, -2.4, 2.4);
-    lookPitch = clamp(lookPitch + (e.clientY - lastY) * 0.003, -0.5, 0.7);
-    lastX = e.clientX;
-    lastY = e.clientY;
+    if (dragSession) {
+      updateControlDrag(dragSession, e.clientY - dragStartY);
+      return;
+    }
+    if (dragging) {
+      lookYaw = clamp(lookYaw + (e.clientX - lastX) * 0.003, -2.4, 2.4);
+      lookPitch = clamp(lookPitch + (e.clientY - lastY) * 0.003, -0.5, 0.7);
+      lastX = e.clientX;
+      lastY = e.clientY;
+      return;
+    }
+    // hover highlight + tooltip (throttled)
+    const now = performance.now();
+    if (now - lastHoverAt < 66) return;
+    lastHoverAt = now;
+    const hit = pickInteractive();
+    const mesh = hit?.mesh ?? null;
+    if (mesh !== hoveredMesh) {
+      if (hoveredMesh) hoveredMesh.renderOutline = false;
+      if (mesh) {
+        mesh.renderOutline = true;
+        mesh.outlineColor = new Color3(0.35, 0.65, 1);
+        mesh.outlineWidth = 0.004;
+      }
+      hoveredMesh = mesh;
+      canvas.style.cursor = mesh ? 'pointer' : 'default';
+      hooks.onHoverControl?.(hit ? { label: hit.label, hint: hit.hint } : null);
+    }
   });
   canvas.addEventListener('dblclick', () => {
     lookYaw = 0;
@@ -198,6 +303,10 @@ export function createSimWorld(canvas: HTMLCanvasElement): SimWorld {
 
   const resize = (): void => engine.resize();
   window.addEventListener('resize', resize);
+  // the canvas resizes with panel collapse/expansion, not just the window —
+  // keep the backing store in sync or pointer picking coordinates drift
+  const resizeObserver = new ResizeObserver(resize);
+  resizeObserver.observe(canvas);
 
   return {
     engine,
@@ -218,9 +327,14 @@ export function createSimWorld(canvas: HTMLCanvasElement): SimWorld {
       aircraft.rotation.z = degToRad(-state.attitude.rollDeg);
       camera.rotation.y = lookYaw;
       camera.rotation.x = lookPitch;
-      // yoke visual from input (explicitly a pending-command display, spec §7)
-      yokeRoot.rotation.z = -yoke.roll * 1.1;
-      yokeRoot.rotation.x = yoke.pitch * 0.25;
+      if (cockpit) {
+        // imported levers/yoke follow backend state (+ yoke pending input)
+        cockpit.update(state, yoke);
+      } else {
+        // temporary yoke visual from input (pending-command display, spec §7)
+        yokeRoot.rotation.z = -yoke.roll * 1.1;
+        yokeRoot.rotation.x = yoke.pitch * 0.25;
+      }
 
       // PAPI: light i is white above its threshold angle
       const distToPapiM = Math.hypot(eastM, northM - 300);
@@ -238,6 +352,7 @@ export function createSimWorld(canvas: HTMLCanvasElement): SimWorld {
     },
     dispose() {
       window.removeEventListener('resize', resize);
+      resizeObserver.disconnect();
       scene.dispose();
       engine.dispose();
     },

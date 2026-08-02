@@ -17,7 +17,9 @@
     "typecheck": "pnpm -r typecheck",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "fg:diagnostic": "pnpm --filter @b737/bridge fg:diagnostic"
+    "fg:diagnostic": "pnpm --filter @b737/bridge fg:diagnostic",
+    "assets:fetch": "node scripts/fetch-cockpit-assets.mjs",
+    "assets:build": "node scripts/fetch-cockpit-assets.mjs && pnpm --filter @b737/asset-pipeline convert"
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",

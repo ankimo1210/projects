@@ -1,56 +1,87 @@
-# Asset Pipeline (Phase 2)
+# Asset Pipeline
 
-Milestone 1 uses **only original temporary geometry and synthesized audio** —
-nothing is imported yet, so `THIRD_PARTY_ASSETS.md` is an empty registry.
-This document defines the pipeline that Phase 2 must follow when importing
-FlightGear 737 cockpit assets.
+The Phase-2 pipeline is **fully scripted** (spec §8: no undocumented manual
+steps, no Blender dependency) and runs with one command:
 
-## Pipeline
-
-```
-FlightGear aircraft package (AC3D .ac + textures + XML)
-    → Blender import (io_scene_ac3d or converted via osgconv/assimp)
-    → cleanup (see checklist)
-    → glTF 2.0 / GLB export
-    → Babylon.js loadAssetContainer
+```bash
+pnpm assets:build      # = assets:fetch + convert
 ```
 
-## Rules (spec §8)
+```
+GitHub YV3399/737-800YV @ pinned SHA           scripts/fetch-cockpit-assets.mjs
+    → assets/imported/737-800YV/               (originals + LICENSE + manifest.json)
+        → packages/asset-pipeline (AC3D parser → glTF writer,
+                                   FG-XML animation/assembly extractor)
+            → assets/generated/webroot/cockpit/   *.gltf / *.bin / textures/ / sounds/
+                                                  + cockpit-bindings.json
+                → served by Vite publicDir → Babylon.js at runtime
+```
 
-- Preserve original license files and attribution; never strip copyright.
-- Record EVERY imported asset in `THIRD_PARTY_ASSETS.md`
-  (source URL, license, original path, conversion steps, modifications).
-- GPL-licensed FlightGear assets stay acceptable because this project is
-  local-only and not distributed; still record them.
-- Private Boeing/airline materials live under `private/` (gitignored) and
-  are never committed or converted into repo assets.
-- Manual Blender exploration is fine, but the final conversion MUST be a
-  scripted, reproducible process (`scripts/convert-cockpit.py`, to be written
-  in Phase 2 as a Blender headless script: `blender -b -P scripts/convert-cockpit.py -- <in> <out>`).
+Both asset directories are **gitignored** (re-fetchable, provenance in
+THIRD_PARTY_ASSETS.md + the manifest). The app falls back to the Milestone-1
+temporary geometry when `assets/generated/webroot` is absent.
 
-## Conversion checklist (to encode in the script)
+## Stage 1 — fetch (`scripts/fetch-cockpit-assets.mjs`)
 
-1. **Coordinate systems:** AC3D/FlightGear models are typically +X aft,
-   +Y right? (verify per model; FG uses +X aft, +Y right, +Z up for aircraft
-   models) → glTF is +Y up, -Z forward → Babylon default is left-handed
-   +Z forward. Apply one explicit conversion matrix; never eyeball rotations.
-2. **Scale:** meters everywhere; normalize any non-metric source scale.
-3. **Origin/pivot:** re-origin so the captain eye reference point matches the
-   camera rig defined in `apps/web/src/sim3d/scene.ts`.
-4. **Materials:** convert to PBR-lite (baseColor + emissive for lit
-   annunciators); repair texture paths to relative `assets/imported/...`.
-5. **Mesh naming:** rename interactive meshes to the `meshNames` ids declared
-   in `packages/cockpit-model` (e.g. `flap_lever`, `gear_lever`) so the
-   control registry binds without code changes.
-6. **Animation mapping:** export lever/switch animations as named glTF
-   animations keyed 0..1 matching the control's normalized state.
-7. **LODs:** optional; only if frame rate requires it.
+- Pinned to one upstream commit; `--force` re-downloads.
+- Downloads models (.ac), the FG model XMLs, LICENSE and selected GPL sounds.
+- Parses each `.ac` for `texture "…"` references and fetches them with
+  fallback directories (`Models/`, `Models/Instruments/`, `Models/Overhead/`,
+  `Models/OH-panel/`); genuinely missing upstream textures are recorded.
+- Writes `manifest.json` (per-file sha256, sizes, missing list).
+
+## Stage 2 — convert (`packages/asset-pipeline`)
+
+1. **Parse** AC3D (`src/ac3d.ts`): materials, object tree, `loc`/`rot`,
+   per-surface UVs, SURF flags. Unit-tested against a golden mini model.
+2. **Frame change** (`toFgFrame`): AC3D native (x aft, y up, z toward viewer)
+   → FlightGear model frame (x aft, y lateral, z up) via the proper rotation
+   `(x, y, z)_fg = (x, −z, y)_ac`. After this, vertex data and the XML
+   offsets/animation axes share one frame. (Empirically verified against the
+   in-sim geometry; a reflection here would mirror panel lettering.)
+3. **glTF write** (`src/gltf.ts`): fan triangulation, Newell face normals,
+   smooth normals for `shaded` surfaces / flat otherwise (crease angle is
+   approximated by this split), UV v-flip + `texrep`, PBR-lite materials
+   (baseColor/emissive/alpha from AC3D material, double-sided), object names
+   preserved verbatim on nodes/meshes — the control registry binds by name.
+   Textures are copied with a content-hash prefix (same basename can differ
+   between directories upstream).
+4. **Bindings extraction** (`src/extractBindings.ts`): walks
+   `Models/cockpit.xml` includes (both file-relative and aircraft-root
+   relative paths), collecting
+   - assembly instances: which `.ac` renders where (offset chains), and
+   - rotate/translate animation specs (objects, axis, center, factor,
+     interpolation table, FG property) for the whitelisted properties
+     (throttle, reversers, flaps, speed brake, gear lever, parking brake,
+     autobrake, yoke elevator/aileron).
+   Output: `cockpit-bindings.json`.
+5. **Sounds**: fetched `.wav` files are flattened into `sounds/`.
+
+## Stage 3 — runtime (apps/web)
+
+- `src/sim3d/cockpitLoader.ts` loads each instance's glTF, builds the offset
+  chains, and computes the wrapper transform at runtime as `W = L⁻¹·D`
+  (L = the glTF importer's own root transform, D = FG→aircraft mapping), so
+  the code does not depend on Babylon's internal handedness convention.
+- Animation specs get pivot nodes inserted at the FG-declared centers;
+  values come from **backend state** every frame (spec §7).
+- Interactive meshes bind through `packages/cockpit-model` `meshNames`
+  (hover outline + tooltip, click/drag → typed commands).
+- Audio uses the real samples when present, synthesized fallback otherwise.
+
+## Verifying / regenerating
+
+```bash
+pnpm --filter @b737/asset-pipeline test    # parser/writer/extractor units
+pnpm assets:build                          # idempotent; --force via assets:fetch
+pnpm test:e2e                              # includes a 3D pick round-trip test
+```
 
 ## Directory contract
 
 ```
-assets/imported/    converted, license-recorded assets (committed)
-assets/generated/   outputs of scripts (rebuildable, committed if small)
-assets/references/  free-license reference images only
-private/            NEVER committed (gitignored) — personal materials
+assets/imported/    fetched originals + LICENSE + manifest (gitignored, re-fetchable)
+assets/generated/   converted outputs (gitignored, rebuildable)
+assets/references/  free-license reference images only (committed)
+private/            NEVER committed — personal materials
 ```

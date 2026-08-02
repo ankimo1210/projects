@@ -25,6 +25,11 @@ manuals/
 *.fctm.pdf
 *.qrh.pdf
 
+# Re-fetchable third-party assets + generated conversions (pnpm assets:build)
+# Provenance lives in THIRD_PARTY_ASSETS.md + the pinned fetch script.
+assets/imported/737-800YV/
+assets/generated/
+
 # OS noise
 .DS_Store
 Thumbs.db

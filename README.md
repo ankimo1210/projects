@@ -11,7 +11,27 @@ state-validated checklists, and a transparent scoring debrief.
 > `NON_CERTIFIED_APPROXIMATION` / `SOURCE_REQUIRED` in the code/data).
 > Do not use it for real-world flight training.
 
-## Current capabilities (Milestone 1)
+## Current capabilities (Milestone 2)
+
+**Phase 2 — asset integration (new):**
+
+- Real open-source **737-800YV cockpit** (GPL-2.0, provenance in
+  [THIRD_PARTY_ASSETS.md](THIRD_PARTY_ASSETS.md)) imported through a fully
+  scripted AC3D→glTF pipeline — `pnpm assets:build`, no Blender needed
+  ([ASSET_PIPELINE.md](ASSET_PIPELINE.md)).
+- Captain-seat view inside the imported cockpit: main panel, glareshield,
+  pedestal with throttle quadrant, MCP, overhead, yokes, seats.
+- **Interactive 3D controls**: throttle/reverse/flaps/speed brake levers
+  (drag), gear lever, parking brake, autobrake (click) — hover outline +
+  tooltip; every mesh moves from **backend state** using the pivots declared
+  in the FlightGear model XMLs.
+- Real GPL cockpit sounds when assets are built: CFM56 engine loops
+  (N1 crossfade), wind, flap/gear lever sounds, GPWS altitude callouts —
+  synthesized fallback otherwise.
+- Without built assets the app runs exactly as Milestone 1 (temporary
+  geometry) — `pnpm assets:build` is optional.
+
+## Milestone 1 capabilities
 
 - **Mock mode (default):** a deterministic 737-class point-mass flight model —
   no FlightGear needed. Fixed seed ⇒ reproducible flights.
@@ -57,6 +77,7 @@ performance; access it from Windows at `\\wsl.localhost\<distro>\home\<user>\pro
 
 ```bash
 pnpm install
+pnpm assets:build   # optional: fetch + convert the 3D cockpit + sounds (~23 MB download)
 ```
 
 ## Run — mock mode (no FlightGear)
@@ -131,10 +152,12 @@ The golden test (`packages/training-engine/test/fullCircuit.e2e.test.ts`)
 flies the complete circuit against the mock model and asserts phase
 detection, callout order, ATC flow and debrief scoring.
 
-## Known limitations (M1)
+## Known limitations
 
-- Temporary cockpit geometry; real 3D cockpit import is Phase 2
-  ([ASSET_PIPELINE.md](ASSET_PIPELINE.md)).
+- 3D display units (PFD/ND screens inside the 3D cockpit) are static — the
+  2D instrument row is the live display; overhead switches are visual only
+  (lights are operated from the DOM panel). Some upstream overhead textures
+  are missing (see THIRD_PARTY_ASSETS.md).
 - No autothrottle, trim, FMC, or systems beyond spec §3 scope.
 - FlightGear `resetScenario` is best-effort — restart FG for a clean start.
 - Mock ILS/runway datum is an approximation (self-consistent, not nav data).
