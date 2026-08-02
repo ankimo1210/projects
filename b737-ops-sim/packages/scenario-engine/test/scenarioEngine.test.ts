@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { makeTestAircraftState } from '@b737/shared/testing';
-import type { AircraftState } from '@b737/shared';
+import { destinationPoint, KSFO_28R, type AircraftState } from '@b737/shared';
 import { ScenarioRuntime } from '../src/scenarioRuntime.js';
 import type { ScenarioDefinition } from '../src/types.js';
 
@@ -111,6 +111,72 @@ function makeScenario(): ScenarioDefinition {
       },
     ],
   };
+}
+
+/** Same base, but the incursion rule is geometric (R-08). */
+function makeIncursionScenario(): ScenarioDefinition {
+  const scenario = makeScenario();
+  const rule = scenario.rules.find((r) => r.id === 'runway_incursion')!;
+  rule.when = {
+    all: [
+      { prop: 'flags.takeoffClearanceReceived', op: 'neq', value: true },
+      { prop: 'derived.enteredRunwaySurface', op: 'eq', value: true },
+    ],
+  };
+  return scenario;
+}
+
+/** Landing → rollout → clear of the runway, gated on geometry. */
+function makeExitScenario(): ScenarioDefinition {
+  const scenario = makeScenario();
+  scenario.initialPhaseId = 'rollout';
+  scenario.phases = [
+    ...scenario.phases,
+    {
+      id: 'rollout',
+      title: 'Rollout',
+      transitions: [
+        {
+          to: 'runway_exit',
+          when: {
+            all: [
+              { prop: 'weightOnWheels', op: 'eq', value: true },
+              { prop: 'derived.onRunwaySurface', op: 'eq', value: false },
+              { prop: 'speeds.gsKt', op: 'lt', value: 30 },
+            ],
+            sustainedSec: 1,
+          },
+          eventId: 'runway_exited',
+        },
+      ],
+    },
+    { id: 'runway_exit', title: 'Clear of the runway', transitions: [] },
+  ];
+  return scenario;
+}
+
+/** Adds an After Landing checklist that may only run after vacating. */
+function makePhaseGatedScenario(): ScenarioDefinition {
+  const scenario = makeScenario();
+  scenario.checklists = [
+    { ...scenario.checklists[0]!, allowedPhaseIds: ['before_takeoff'] },
+    {
+      id: 'after_landing',
+      title: 'After Landing',
+      allowedPhaseIds: ['runway_exit'],
+      items: [
+        {
+          id: 'flaps_up',
+          challenge: 'Flaps',
+          response: 'Up',
+          validation: { prop: 'controls.flapHandleDetent', op: 'eq', value: 0 },
+          responsibleCrew: 'first_officer',
+          sourceReference: 'NON_CERTIFIED_APPROXIMATION',
+        },
+      ],
+    },
+  ];
+  return scenario;
 }
 
 function state(simTimeSec: number, overrides: (s: AircraftState) => void): AircraftState {
@@ -231,6 +297,81 @@ describe('checklist runtime', () => {
     expect(rt.answerChecklistItem('before_takeoff')?.kind).toBe('checklist_item_completed');
     expect(rt.events.some((e) => e.kind === 'checklist_completed')).toBe(true);
     expect(rt.checklistRuns.get('before_takeoff')!.complete).toBe(true);
+  });
+});
+
+// --------------------------------------------------------------- R-08 / R-10
+
+describe('runway geometry drives entry, occupancy and exit', () => {
+  const rwy = KSFO_28R;
+  const at =
+    (alongM: number, crossM: number, mutate: (s: AircraftState) => void = () => undefined) =>
+    (t: number): AircraftState => {
+      const centerline = destinationPoint(
+        rwy.thresholdLatDeg,
+        rwy.thresholdLonDeg,
+        rwy.headingDegTrue,
+        alongM,
+      );
+      const p = destinationPoint(
+        centerline.latDeg,
+        centerline.lonDeg,
+        rwy.headingDegTrue + 90,
+        crossM,
+      );
+      return state(t, (s) => {
+        s.position.latDeg = p.latDeg;
+        s.position.lonDeg = p.lonDeg;
+        s.weightOnWheels = true;
+        mutate(s);
+      });
+    };
+
+  it('reports occupancy from position, not ground speed', () => {
+    const rt = new ScenarioRuntime(makeScenario());
+    rt.update(at(800, 0)(0));
+    expect(rt.context(rt.state!).derived.onRunwaySurface).toBe(true);
+    expect(rt.context(rt.state!).derived.runwayAlongM).toBeCloseTo(800, 0);
+
+    rt.update(at(800, 76)(1)); // the offset that used to trigger an incursion
+    expect(rt.context(rt.state!).derived.onRunwaySurface).toBe(false);
+  });
+
+  it('flags an incursion when the aircraft crosses onto the runway uncleared', () => {
+    const rt = new ScenarioRuntime(makeIncursionScenario());
+    rt.update(at(40, 90)(0)); // holding point, clear of the runway
+    rt.update(at(40, 60)(1)); // still clear
+    expect(rt.events.some((e) => e.id === 'runway_incursion')).toBe(false);
+    rt.update(at(40, 5)(2)); // crossed the edge without a clearance
+    expect(rt.events.some((e) => e.id === 'runway_incursion')).toBe(true);
+  });
+
+  it('does not flag an aircraft that starts lined up on the runway', () => {
+    const rt = new ScenarioRuntime(makeIncursionScenario());
+    rt.update(at(30, 0)(0));
+    rt.update(at(30, 0)(1));
+    expect(rt.events.some((e) => e.id === 'runway_incursion')).toBe(false);
+  });
+
+  it('slowing down on the centerline is not "clear of the runway"', () => {
+    const rt = new ScenarioRuntime(makeExitScenario());
+    for (let t = 0; t < 5; t += 0.5) rt.update(at(2000, 0, (s) => (s.speeds.gsKt = 8))(t));
+    expect(rt.phaseId).toBe('rollout');
+    for (let t = 5; t < 10; t += 0.5) rt.update(at(2000, 45, (s) => (s.speeds.gsKt = 8))(t));
+    expect(rt.phaseId).toBe('runway_exit');
+  });
+});
+
+describe('checklists are gated on the flight phase', () => {
+  it('refuses a checklist that does not belong to the current phase', () => {
+    const rt = new ScenarioRuntime(makePhaseGatedScenario());
+    rt.update(state(0, () => undefined));
+    const event = rt.answerChecklistItem('after_landing');
+    expect(event?.kind).toBe('checklist_item_failed');
+    expect(event?.id).toContain('out_of_phase');
+    expect(rt.checklistRuns.get('after_landing')!.complete).toBe(false);
+    expect(rt.isChecklistAvailable('after_landing')).toBe(false);
+    expect(rt.isChecklistAvailable('before_takeoff')).toBe(true);
   });
 });
 

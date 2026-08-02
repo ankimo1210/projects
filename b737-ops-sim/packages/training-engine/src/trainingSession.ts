@@ -64,6 +64,7 @@ export class TrainingSession {
     const phase = this.runtime.phaseId;
     if (['before_takeoff', 'line_up'].includes(phase)) return 'before_takeoff';
     if (['approach_setup', 'final_approach'].includes(phase)) return 'landing';
+    // After Landing is run once clear of the runway, not during the rollout.
     if (['runway_exit'].includes(phase)) return 'after_landing';
     return null;
   }

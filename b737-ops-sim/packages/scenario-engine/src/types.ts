@@ -55,6 +55,12 @@ export interface ChecklistDefinition {
   id: string;
   title: string;
   items: ChecklistItemDefinition[];
+  /**
+   * Phases in which this checklist may be actioned. Omit = any phase.
+   * Without it the crew could complete the Landing and After Landing
+   * checklists while still holding short (R-10).
+   */
+  allowedPhaseIds?: string[];
 }
 
 export interface ScenarioDefinition {

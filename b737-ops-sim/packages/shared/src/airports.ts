@@ -9,6 +9,9 @@
  * datum is only the mock-mode world reference and scenario geometry source.
  */
 
+import { toLocalEnuM } from './geo.js';
+import { degToRad, FT_TO_M } from './units.js';
+
 export interface RunwayData {
   airportIcao: string;
   runwayId: string;
@@ -61,3 +64,44 @@ export const RUNWAYS: Record<string, RunwayData> = {
 export function getRunway(airportIcao: string, runwayId: string): RunwayData | undefined {
   return RUNWAYS[`${airportIcao}/${runwayId}`];
 }
+
+// ------------------------------------------------------------- runway geometry
+
+/** Position expressed in the runway's own frame. */
+export interface RunwayPosition {
+  /** Metres along the centerline from the threshold; + = toward the far end. */
+  alongM: number;
+  /** Metres from the centerline; + = right of the landing direction. */
+  crossM: number;
+  /** Inside the paved surface (threshold..far end, within half the width). */
+  onSurface: boolean;
+}
+
+/**
+ * Runway-frame coordinates of a geodetic position. Scenario logic (runway
+ * entry, exit, incursion) must be geometric — "slow and on the ground" is not
+ * the same thing as "clear of the runway" (R-08).
+ */
+export function runwayPosition(runway: RunwayData, latDeg: number, lonDeg: number): RunwayPosition {
+  const { eastM, northM } = toLocalEnuM(
+    runway.thresholdLatDeg,
+    runway.thresholdLonDeg,
+    latDeg,
+    lonDeg,
+  );
+  const hdgRad = degToRad(runway.headingDegTrue);
+  // Runway axis unit vector in ENU is (sin h, cos h); the cross axis is its
+  // right-hand normal (cos h, -sin h).
+  const alongM = eastM * Math.sin(hdgRad) + northM * Math.cos(hdgRad);
+  const crossM = eastM * Math.cos(hdgRad) - northM * Math.sin(hdgRad);
+  const lengthM = runway.lengthFt * FT_TO_M;
+  const halfWidthM = (runway.widthFt * FT_TO_M) / 2;
+  const onSurface =
+    alongM >= -RUNWAY_END_MARGIN_M &&
+    alongM <= lengthM + RUNWAY_END_MARGIN_M &&
+    Math.abs(crossM) <= halfWidthM;
+  return { alongM, crossM, onSurface };
+}
+
+/** Displaced-threshold/overrun tolerance treated as "still on the runway". */
+const RUNWAY_END_MARGIN_M = 30;

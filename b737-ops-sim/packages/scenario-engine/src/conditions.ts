@@ -1,4 +1,10 @@
-import { angleDiffDeg, type AircraftState } from '@b737/shared';
+import {
+  angleDiffDeg,
+  getRunway,
+  runwayPosition,
+  type AircraftState,
+  type RunwayPosition,
+} from '@b737/shared';
 
 /**
  * Declarative, JSON-serializable condition DSL evaluated against live
@@ -42,6 +48,14 @@ export interface EvaluationContext {
     radioAltitudeTrend: Trend;
     altitudeTrend: Trend;
     iasTrend: Trend;
+    /** Metres along the scenario runway from its threshold; null off-datum. */
+    runwayAlongM: number | null;
+    /** Metres right of the centerline; null when the runway is unknown. */
+    runwayCrossM: number | null;
+    /** Inside the paved runway surface (spec §11 geometric gating, R-08). */
+    onRunwaySurface: boolean;
+    /** True on the sample where the aircraft crossed onto the runway. */
+    enteredRunwaySurface: boolean;
   };
 }
 
@@ -59,6 +73,20 @@ export function resolveProp(ctx: EvaluationContext, path: string): unknown {
   return cur;
 }
 
+/** Runway-frame position of a state sample, or null when the runway is unknown. */
+function runwayPositionOf(state: AircraftState): RunwayPosition | null {
+  const { icao, runwayId } = state.airport;
+  if (!icao || !runwayId) return null;
+  const runway = getRunway(icao, runwayId);
+  if (!runway) return null;
+  return runwayPosition(runway, state.position.latDeg, state.position.lonDeg);
+}
+
+function onRunwaySurfaceOf(state: AircraftState): boolean {
+  const pos = runwayPositionOf(state);
+  return pos !== null && pos.onSurface && state.weightOnWheels;
+}
+
 /**
  * Stateful evaluator: tracks `sustainedSec` timers per condition instance and
  * computes trend signals over a sliding window. One instance per scenario run.
@@ -66,6 +94,9 @@ export function resolveProp(ctx: EvaluationContext, path: string): unknown {
 export class ConditionEvaluator {
   private sustainSince = new WeakMap<object, number | null>();
   private history: { simTimeSec: number; raFt: number; altFt: number; iasKt: number }[] = [];
+  /** Previous sample's runway occupancy; null until the first sample. */
+  private prevOnRunwaySurface: boolean | null = null;
+  private enteredRunwayThisTick = false;
 
   /** Push a state sample to update trend windows. Call once per update tick. */
   observe(state: AircraftState): void {
@@ -77,10 +108,19 @@ export class ConditionEvaluator {
     });
     const cutoff = state.simTimeSec - 3;
     while (this.history.length > 2 && this.history[0]!.simTimeSec < cutoff) this.history.shift();
+
+    // Runway entry is an edge, not a level: an aircraft positioned on the
+    // runway at scenario start has not entered it (R-08).
+    const onSurface = onRunwaySurfaceOf(state);
+    this.enteredRunwayThisTick = this.prevOnRunwaySurface === false && onSurface;
+    this.prevOnRunwaySurface = onSurface;
   }
 
-  derived(): EvaluationContext['derived'] {
-    const trendOf = (selector: (s: (typeof this.history)[number]) => number, eps: number): Trend => {
+  derived(state: AircraftState | null = null): EvaluationContext['derived'] {
+    const trendOf = (
+      selector: (s: (typeof this.history)[number]) => number,
+      eps: number,
+    ): Trend => {
       if (this.history.length < 2) return 'flat';
       const first = this.history[0]!;
       const last = this.history[this.history.length - 1]!;
@@ -89,10 +129,17 @@ export class ConditionEvaluator {
       if (delta < -eps) return 'decreasing';
       return 'flat';
     };
+    const rwyPos = state === null ? null : runwayPositionOf(state);
     return {
       radioAltitudeTrend: trendOf((s) => s.raFt, 4),
       altitudeTrend: trendOf((s) => s.altFt, 4),
       iasTrend: trendOf((s) => s.iasKt, 1.5),
+      runwayAlongM: rwyPos?.alongM ?? null,
+      runwayCrossM: rwyPos?.crossM ?? null,
+      // Only true when the aircraft is demonstrably on the paved surface: an
+      // unknown runway must not read as "on the runway".
+      onRunwaySurface: state !== null && onRunwaySurfaceOf(state),
+      enteredRunwaySurface: this.enteredRunwayThisTick,
     };
   }
 
@@ -134,13 +181,21 @@ export class ConditionEvaluator {
       case 'neq':
         return raw !== condition.value;
       case 'gt':
-        return typeof raw === 'number' && typeof condition.value === 'number' && raw > condition.value;
+        return (
+          typeof raw === 'number' && typeof condition.value === 'number' && raw > condition.value
+        );
       case 'gte':
-        return typeof raw === 'number' && typeof condition.value === 'number' && raw >= condition.value;
+        return (
+          typeof raw === 'number' && typeof condition.value === 'number' && raw >= condition.value
+        );
       case 'lt':
-        return typeof raw === 'number' && typeof condition.value === 'number' && raw < condition.value;
+        return (
+          typeof raw === 'number' && typeof condition.value === 'number' && raw < condition.value
+        );
       case 'lte':
-        return typeof raw === 'number' && typeof condition.value === 'number' && raw <= condition.value;
+        return (
+          typeof raw === 'number' && typeof condition.value === 'number' && raw <= condition.value
+        );
     }
   }
 }

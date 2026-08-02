@@ -1,12 +1,7 @@
 import type { AircraftState } from '@b737/shared';
 import { ConditionEvaluator, type EvaluationContext } from './conditions.js';
 import { ChecklistRun } from './checklist.js';
-import type {
-  HistorySample,
-  ScenarioDefinition,
-  ScenarioEvent,
-  ScenarioPhase,
-} from './types.js';
+import type { HistorySample, ScenarioDefinition, ScenarioEvent, ScenarioPhase } from './types.js';
 
 export type ScenarioEventListener = (event: ScenarioEvent) => void;
 
@@ -71,7 +66,7 @@ export class ScenarioRuntime {
   }
 
   context(state: AircraftState): EvaluationContext {
-    return { state, flags: this.flags, derived: this.evaluator.derived() };
+    return { state, flags: this.flags, derived: this.evaluator.derived(state) };
   }
 
   /** Feed one state sample. Returns events emitted during this update. */
@@ -146,11 +141,30 @@ export class ScenarioRuntime {
     return this.events.slice(before);
   }
 
+  /** Is this checklist actionable in the phase the flight is actually in? */
+  isChecklistAvailable(checklistId: string): boolean {
+    const run = this.checklistRuns.get(checklistId);
+    if (!run) return false;
+    const allowed = run.definition.allowedPhaseIds;
+    return allowed === undefined || allowed.includes(this.currentPhase.id);
+  }
+
   /** Crew answers the active item of a checklist against live state. */
   answerChecklistItem(checklistId: string): ScenarioEvent | null {
     const run = this.checklistRuns.get(checklistId);
     const state = this.lastState;
     if (!run || !state) return null;
+    if (!this.isChecklistAvailable(checklistId)) {
+      const event: ScenarioEvent = {
+        kind: 'checklist_item_failed',
+        simTimeSec: state.simTimeSec,
+        id: `${checklistId}.out_of_phase`,
+        message: `${run.definition.title} is not run during ${this.currentPhase.title.toLowerCase()}`,
+        severity: 'deviation',
+      };
+      this.emit(event);
+      return event;
+    }
     const result = run.answerActiveItem(this.context(state));
     if (!result) return null;
     const { item, ok } = result;

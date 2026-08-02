@@ -13,6 +13,9 @@ export function ChecklistPanel(): JSX.Element {
   const run = session.runtime.checklistRuns.get(activeId);
   const guidance = deriveGuidance(session);
   const phase = session.scenario.phases.find((p) => p.id === session.phaseId);
+  // A checklist that does not belong to this phase is readable but not
+  // actionable — the runtime refuses it anyway (R-10).
+  const available = session.runtime.isChecklistAvailable(activeId);
 
   return (
     <div className="panel checklist-panel" data-testid="checklist-panel">
@@ -44,6 +47,12 @@ export function ChecklistPanel(): JSX.Element {
         </div>
       )}
 
+      {!available && (
+        <div className="checklist-locked" data-testid="checklist-locked">
+          Not run during {(phase?.title ?? session.phaseId).toLowerCase()} — review only.
+        </div>
+      )}
+
       {run && (
         <ul className="checklist-items">
           {run.items.map((item) => (
@@ -54,7 +63,7 @@ export function ChecklistPanel(): JSX.Element {
                 {item.dynamicResponseValue ?? item.definition.response ?? '—'}
               </span>
               {item.status === 'completed' && <span className="ci-check">✓</span>}
-              {item.status === 'active' && (
+              {item.status === 'active' && available && (
                 <button
                   type="button"
                   className="ci-answer"

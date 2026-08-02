@@ -77,7 +77,8 @@ export class ChecklistRun {
     } else {
       item.status = 'failed';
       item.failureMessage =
-        def.failureMessage ?? `${def.challenge}: aircraft state does not match the required response`;
+        def.failureMessage ??
+        `${def.challenge}: aircraft state does not match the required response`;
     }
     return { item, ok };
   }
