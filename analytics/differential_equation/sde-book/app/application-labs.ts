@@ -1,5 +1,8 @@
 import type { LabKind } from "../content/chapters";
 import type { ExtendedColors, ExtendedSettings } from "./extended-labs";
+import { memoizedDiagnostics } from "./diagnostics-cache.mjs";
+import { normalQuantile } from "./numerical-functions.mjs";
+import { binomial, mulberry32, normal, poisson } from "./random-distributions.mjs";
 
 type Point = [number, number];
 type Rect = { x: number; y: number; w: number; h: number };
@@ -13,50 +16,6 @@ type Series = {
 
 function clamp(value: number, low: number, high: number) {
   return Math.min(Math.max(value, low), high);
-}
-
-function mulberry32(seed: number) {
-  let value = seed >>> 0;
-  return () => {
-    value += 0x6d2b79f5;
-    let x = value;
-    x = Math.imul(x ^ (x >>> 15), x | 1);
-    x ^= x + Math.imul(x ^ (x >>> 7), x | 61);
-    return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-function normal(random: () => number) {
-  const u = Math.max(random(), Number.EPSILON);
-  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * random());
-}
-
-function poisson(random: () => number, mean: number) {
-  if (mean <= 0) return 0;
-  if (mean > 32) return Math.max(0, Math.round(mean + Math.sqrt(mean) * normal(random)));
-  const threshold = Math.exp(-mean);
-  let product = 1;
-  let count = 0;
-  do {
-    count += 1;
-    product *= random();
-  } while (product > threshold);
-  return count - 1;
-}
-
-function binomial(random: () => number, trials: number, probability: number) {
-  const n = Math.max(0, Math.round(trials));
-  const p = clamp(probability, 0, 1);
-  if (n === 0 || p === 0) return 0;
-  if (p === 1) return n;
-  if (n <= 48) {
-    let count = 0;
-    for (let index = 0; index < n; index += 1) if (random() < p) count += 1;
-    return count;
-  }
-  const mean = n * p;
-  const sd = Math.sqrt(n * p * (1 - p));
-  return clamp(Math.round(mean + sd * normal(random)), 0, n);
 }
 
 function format(value: number, digits = 2) {
@@ -322,7 +281,11 @@ function drawLangevin(
   colors: ExtendedColors,
 ) {
   const { left, right } = panels(area);
-  const diagnostics = langevinDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "langevin",
+    () => langevinDiagnostics(settings),
+  );
   rounded(context, left, colors.paper);
   chart(
     context,
@@ -418,7 +381,11 @@ function drawChemicalReaction(
   colors: ExtendedColors,
 ) {
   const { left, right } = panels(area);
-  const diagnostics = chemicalDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "chemical-reaction",
+    () => chemicalDiagnostics(settings),
+  );
   rounded(context, left, colors.paper);
   const pathDomain = yDomain(
     [diagnostics.jumpPath, diagnostics.diffusionPath, diagnostics.deterministic],
@@ -510,7 +477,11 @@ function drawPopulation(
   colors: ExtendedColors,
 ) {
   const { left, right } = panels(area);
-  const diagnostics = populationDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "population",
+    () => populationDiagnostics(settings),
+  );
   rounded(context, left, colors.paper);
   const pathSeries = diagnostics.paths.map((points, index) => ({
     points,
@@ -653,6 +624,7 @@ function epidemicDiagnostics(settings: ExtendedSettings) {
     effectiveReproduction,
     empiricalOutbreak,
     branchingOutbreak,
+    outbreakThreshold,
     meanPeak: mean(outcomes.map((outcome) => outcome.peak)),
   };
 }
@@ -664,7 +636,11 @@ function drawEpidemic(
   colors: ExtendedColors,
 ) {
   const { left, right } = panels(area);
-  const diagnostics = epidemicDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "epidemic",
+    () => epidemicDiagnostics(settings),
+  );
   rounded(context, left, colors.paper);
   chart(
     context,
@@ -692,7 +668,7 @@ function drawEpidemic(
   label(context, `R₀=${format(diagnostics.reproduction, 2)}`, right.x + 52, right.y + 18, colors.ink);
   label(
     context,
-    `大流行 ${percent(diagnostics.empiricalOutbreak)}`,
+    `大流行(≥${format(diagnostics.outbreakThreshold, 0)}) ${percent(diagnostics.empiricalOutbreak)}`,
     right.x + right.w - 14,
     right.y + 18,
     colors.coral,
@@ -715,7 +691,8 @@ function neuralDiagnostics(settings: ExtendedSettings): NeuralDiagnostics {
   const steps = 520;
   const horizon = Math.max(settings.horizon, 0.2);
   const dt = horizon / steps;
-  const rest = settings.x0;
+  const rest = settings.lowerBarrier;
+  const reset = settings.x0;
   const threshold = Math.max(settings.upperBarrier, rest + 0.15);
   const input = settings.theta;
   const leak = Math.max(settings.kappa, 0.05);
@@ -741,23 +718,23 @@ function neuralDiagnostics(settings: ExtendedSettings): NeuralDiagnostics {
     const shockB = sharedWeight * common + independentWeight * normal(random);
     if (refractoryA > 0) {
       refractoryA -= 1;
-      voltageA = rest;
+      voltageA = reset;
     } else {
       voltageA += (-leak * (voltageA - rest) + input) * dt + noise * Math.sqrt(dt) * shockA;
       if (voltageA >= threshold) {
         spikesA.push(time);
-        voltageA = rest;
+        voltageA = reset;
         refractoryA = refractorySteps;
       }
     }
     if (refractoryB > 0) {
       refractoryB -= 1;
-      voltageB = rest;
+      voltageB = reset;
     } else {
       voltageB += (-leak * (voltageB - rest) + input) * dt + noise * Math.sqrt(dt) * shockB;
       if (voltageB >= threshold) {
         spikesB.push(time);
-        voltageB = rest;
+        voltageB = reset;
         refractoryB = refractorySteps;
       }
     }
@@ -791,7 +768,11 @@ function drawNeuroscience(
   colors: ExtendedColors,
 ) {
   const { left, right } = panels(area);
-  const diagnostics = neuralDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "neuroscience",
+    () => neuralDiagnostics(settings),
+  );
   const thresholdLine: Point[] = [
     [0, diagnostics.threshold],
     [settings.horizon, diagnostics.threshold],
@@ -923,7 +904,11 @@ function drawFiltering(
   colors: ExtendedColors,
 ) {
   const { left, right } = panels(area, 0.62);
-  const diagnostics = filteringDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "filtering",
+    () => filteringDiagnostics(settings),
+  );
   rounded(context, left, colors.paper);
   const frame = chart(
     context,
@@ -1118,7 +1103,11 @@ function drawModelSelection(
   colors: ExtendedColors,
 ) {
   const { left, right } = panels(area, 0.59);
-  const diagnostics = modelSelectionDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "model-selection",
+    () => modelSelectionDiagnostics(settings),
+  );
   rounded(context, left, colors.paper);
   chart(
     context,
@@ -1149,30 +1138,6 @@ function drawModelSelection(
     ],
     colors,
   );
-}
-
-function normalQuantile(probability: number) {
-  const p = clamp(probability, 1e-12, 1 - 1e-12);
-  const a = [-39.6968302866538, 220.946098424521, -275.928510446969, 138.357751867269, -30.6647980661472, 2.50662827745924];
-  const b = [-54.4760987982241, 161.585836858041, -155.698979859887, 66.8013118877197, -13.2806815528857];
-  const c = [-0.00778489400243029, -0.322396458041136, -2.40075827716184, -2.54973253934373, 4.37466414146497, 2.93816398269878];
-  const d = [0.00778469570904146, 0.32246712907004, 2.445134137143, 3.75440866190742];
-  const low = 0.02425;
-  const high = 1 - low;
-  if (p < low) {
-    const q = Math.sqrt(-2 * Math.log(p));
-    return (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
-      ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
-  }
-  if (p > high) {
-    const q = Math.sqrt(-2 * Math.log(1 - p));
-    return -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
-      ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
-  }
-  const q = p - 0.5;
-  const r = q * q;
-  return (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q /
-    (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1);
 }
 
 function modelCriticismDiagnostics(settings: ExtendedSettings) {
@@ -1227,7 +1192,11 @@ function drawModelCriticism(
 ) {
   const { left, right } = panels(area, 0.57);
   const { top, bottom } = splitVertical(right, 0.47);
-  const diagnostics = modelCriticismDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "model-criticism",
+    () => modelCriticismDiagnostics(settings),
+  );
   rounded(context, left, colors.paper);
   const residualBand: Point[] = [
     [0, 1.96],
@@ -1350,7 +1319,11 @@ function drawSdeSynthesis(
   colors: ExtendedColors,
 ) {
   const { left, right } = panels(area, 0.6);
-  const diagnostics = synthesisDiagnostics(settings);
+  const diagnostics = memoizedDiagnostics(
+    settings,
+    "sde-synthesis",
+    () => synthesisDiagnostics(settings),
+  );
   rounded(context, left, colors.paper);
   chart(
     context,
@@ -1424,7 +1397,11 @@ export function applicationMetrics(
 ): Array<[string, string]> | null {
   switch (lab) {
     case "langevin": {
-      const diagnostics = langevinDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "langevin",
+        () => langevinDiagnostics(settings),
+      );
       return [
         ["速度緩和時間 m/γ", format(diagnostics.tau, 2)],
         ["長時間拡散 D", format(diagnostics.diffusion, 3)],
@@ -1432,7 +1409,11 @@ export function applicationMetrics(
       ];
     }
     case "chemical-reaction": {
-      const diagnostics = chemicalDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "chemical-reaction",
+        () => chemicalDiagnostics(settings),
+      );
       return [
         ["平衡平均 k₊Ω/k₋", format(diagnostics.equilibrium, 2)],
         ["終端 Fano 因子", format(diagnostics.terminalVariance / Math.max(diagnostics.expectedTerminal, 1e-9), 2)],
@@ -1440,7 +1421,11 @@ export function applicationMetrics(
       ];
     }
     case "population": {
-      const diagnostics = populationDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "population",
+        () => populationDiagnostics(settings),
+      );
       return [
         ["環境収容力 K", format(diagnostics.capacity, 0)],
         ["有限期間絶滅率", percent(diagnostics.extinctionRate)],
@@ -1448,15 +1433,23 @@ export function applicationMetrics(
       ];
     }
     case "epidemic": {
-      const diagnostics = epidemicDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "epidemic",
+        () => epidemicDiagnostics(settings),
+      );
       return [
         ["基本再生産数 R₀", format(diagnostics.reproduction, 2)],
         [`初期分枝近似 (Rₑ=${format(diagnostics.effectiveReproduction, 2)})`, percent(diagnostics.branchingOutbreak)],
-        ["標本大流行率", percent(diagnostics.empiricalOutbreak)],
+        [`標本大流行率 (累積≥${format(diagnostics.outbreakThreshold, 0)})`, percent(diagnostics.empiricalOutbreak)],
       ];
     }
     case "neuroscience": {
-      const diagnostics = neuralDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "neuroscience",
+        () => neuralDiagnostics(settings),
+      );
       return [
         ["平均発火率", `${format(diagnostics.firingRate, 1)} /時間`],
         ["ISI 変動係数", diagnostics.spikesA.length > 2 ? format(diagnostics.isiCv, 2) : "標本不足"],
@@ -1464,7 +1457,11 @@ export function applicationMetrics(
       ];
     }
     case "filtering": {
-      const diagnostics = filteringDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "filtering",
+        () => filteringDiagnostics(settings),
+      );
       return [
         ["観測 RMSE", format(diagnostics.observationRmse, 3)],
         ["Filter RMSE", format(diagnostics.filterRmse, 3)],
@@ -1472,7 +1469,11 @@ export function applicationMetrics(
       ];
     }
     case "model-selection": {
-      const diagnostics = modelSelectionDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "model-selection",
+        () => modelSelectionDiagnostics(settings),
+      );
       return [
         ["第一候補", diagnostics.candidate],
         ["増分の超過尖度", format(diagnostics.kurtosis, 2)],
@@ -1480,7 +1481,11 @@ export function applicationMetrics(
       ];
     }
     case "model-criticism": {
-      const diagnostics = modelCriticismDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "model-criticism",
+        () => modelCriticismDiagnostics(settings),
+      );
       return [
         ["診断シナリオ", diagnostics.diagnosis],
         ["残差 lag 1 ACF", format(diagnostics.lagOne, 2)],
@@ -1488,7 +1493,11 @@ export function applicationMetrics(
       ];
     }
     case "sde-synthesis": {
-      const diagnostics = synthesisDiagnostics(settings);
+      const diagnostics = memoizedDiagnostics(
+        settings,
+        "sde-synthesis",
+        () => synthesisDiagnostics(settings),
+      );
       return [
         ["観測区間の期待事象数", format(diagnostics.expectedEvents, 2)],
         ["理論超過尖度", format(diagnostics.theoreticalExcess, 2)],

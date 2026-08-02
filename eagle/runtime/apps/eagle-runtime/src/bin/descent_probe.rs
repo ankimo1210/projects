@@ -422,16 +422,31 @@ async fn main() -> Result<()> {
                             plus_pitch,
                             minus_roll,
                             plus_roll,
-                        } if trim == Some((minus_pitch, plus_pitch, minus_roll, plus_roll)) => {}
+                            lr_pos2_command,
+                        } if trim
+                            == Some((
+                                minus_pitch,
+                                plus_pitch,
+                                minus_roll,
+                                plus_roll,
+                                lr_pos2_command,
+                            )) => {}
                         AgcOutput::Trim {
                             minus_pitch,
                             plus_pitch,
                             minus_roll,
                             plus_roll,
+                            lr_pos2_command,
                         } => {
-                            trim = Some((minus_pitch, plus_pitch, minus_roll, plus_roll));
+                            trim = Some((
+                                minus_pitch,
+                                plus_pitch,
+                                minus_roll,
+                                plus_roll,
+                                lr_pos2_command,
+                            ));
                             eprintln!(
-                                "[{}][agc] Trim {{ -P:{minus_pitch} +P:{plus_pitch} -R:{minus_roll} +R:{plus_roll} }}",
+                                "[{}][agc] Trim {{ -P:{minus_pitch} +P:{plus_pitch} -R:{minus_roll} +R:{plus_roll} LRPOS2:{lr_pos2_command} }}",
                                 ts()
                             );
                         }

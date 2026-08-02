@@ -145,6 +145,14 @@
 .tabs button.active { background: #243044; color: #cfe3ff; border-color: #3a5a8a; }
 
 .engr { display: flex; gap: 1rem; padding: 1rem; align-items: flex-start; flex-wrap: wrap; }
+.assist-banner {
+  flex: 1 0 calc(100% - 2rem); display: grid; grid-template-columns: auto 1fr auto;
+  gap: 0.8rem; align-items: center; padding: 0.65rem 0.9rem;
+  border: 1px solid #d59a32; border-radius: 5px; background: #30230d; color: #f2ca7a;
+}
+.assist-banner strong { letter-spacing: 0.12em; }
+.assist-banner span { color: #f0d9a4; }
+.assist-banner small { color: #bca477; }
 .engr-charts { flex: 1 1 640px; min-width: 320px; display: flex; flex-direction: column; gap: 0.75rem; }
 .engr-side { flex: 0 0 280px; display: flex; flex-direction: column; gap: 1rem; }
 .engr-nums table { width: 100%; border-collapse: collapse; }
@@ -154,7 +162,12 @@
 .engr-nums .muted { color: #667; }
 .engr h2 { font-size: 0.8rem; color: #9aa; text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 0.4rem; }
 
-.td-badge { margin-top: 0.6rem; padding: 0.4rem 0.6rem; border-radius: 4px; text-align: center; font-weight: 600; }
+.landing-result { margin-top: 0.6rem; padding: 0.65rem; border-radius: 4px; text-align: center; }
+.landing-result-title { font-size: 0.76rem; font-weight: 600; letter-spacing: 0.06em; }
+.landing-score { margin: 0.25rem 0; line-height: 1; }
+.landing-score strong { font-size: 2.25rem; }
+.landing-score span { margin-left: 0.15rem; color: #aab; }
+.landing-metrics { display: flex; flex-direction: column; gap: 0.12rem; font-size: 0.7rem; font-variant-numeric: tabular-nums; }
 .td-nominal { background: #14361f; color: #7fe0a0; }
 .td-hard { background: #3a3212; color: #e6d060; }
 .td-crash { background: #3a1414; color: #f08080; }
@@ -165,6 +178,11 @@
   border-radius: 4px; cursor: pointer; font: inherit;
 }
 .engr-rod button:hover { background: #243044; }
+.assist-note { margin: 0 0 0.5rem; color: #bca477; font-size: 0.72rem; line-height: 1.4; }
+
+@media (max-width: 760px) {
+  .assist-banner { grid-template-columns: 1fr; gap: 0.2rem; }
+}
 
 .engr-phases ul { list-style: none; margin: 0; padding: 0; max-height: 220px; overflow-y: auto; }
 .engr-phases li { display: flex; justify-content: space-between; padding: 0.2rem 0.3rem; font-size: 0.82rem; border-bottom: 1px solid #1c2029; }

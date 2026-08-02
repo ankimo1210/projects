@@ -479,6 +479,12 @@ mod tests {
             downlink_wps: 50.0,
             ingest_drops: 0,
             touchdown: None,
+            demo_mode: false,
+            assist_active: false,
+            assist_target_vz_ms: None,
+            touchdown_v_vert_ms: None,
+            touchdown_v_horiz_ms: None,
+            touchdown_tilt_deg: None,
             handover: false,
         })
     }

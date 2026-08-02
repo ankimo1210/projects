@@ -2,7 +2,7 @@
 //! choreography parameters, ROD schedule, optional sensor errors, and
 //! acceptance thresholds. Every struct is `deny_unknown_fields` so a typo
 //! in the TOML is a hard error, not a silent default.
-use anyhow::{Context, Result};
+use anyhow::{ensure, Context, Result};
 use eagle_dynamics::frames::{mci_to_mcmf, retag, Body, Mci, Mcmf, Rot, V3};
 use eagle_dynamics::state::LmState;
 use eagle_sensors::errors::ImuErrorCfg;
@@ -23,6 +23,10 @@ pub struct Scenario {
     pub acceptance: Acceptance,
     #[serde(default)]
     pub handover: Option<Handover>,
+    /// Optional game-facing safety layer. Absence is the authentic default;
+    /// committed acceptance scenarios deliberately omit this table.
+    #[serde(default)]
+    pub terminal_assist: Option<TerminalAssist>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -66,6 +70,21 @@ pub struct Agc {
     pub flip_atthold_after_engine_on_s: f64,
     #[serde(default)]
     pub lrbypass: bool,
+    /// Diagnostic bisection: present LR altitude, but hold the active-low
+    /// velocity data-good discrete in the NOT-good state for every velocity
+    /// select. Defaults OFF so existing radar-live scenarios keep their
+    /// full altitude + velocity behaviour.
+    #[serde(default)]
+    pub lr_altitude_only: bool,
+    /// Diagnostic per-beam enable mask in X/Y/Z order. The default keeps
+    /// all beams enabled; a scenario may isolate one velocity path without
+    /// changing the simulator code used by the acceptance scenario.
+    #[serde(default = "all_lr_velocity_beams")]
+    pub lr_velocity_beams: [bool; 3],
+}
+
+fn all_lr_velocity_beams() -> [bool; 3] {
+    [true; 3]
 }
 
 /// Sim-driven attitude/mode-control handover point (Wave 2 M1): once MM64
@@ -78,6 +97,31 @@ pub struct Handover {
     /// commands ATT HOLD + the selection ROD click into P66. historical:
     /// the crew took over near 500 ft.
     pub alt_m: f64,
+}
+
+/// Explicitly assisted terminal-descent profile for the playable demo.
+///
+/// This is not an AGC tuning parameter. Once active, the simulator gently
+/// drives truth toward a level, low-horizontal-speed descent while the real
+/// Luminary program, DSKY and ROD input continue running. Keeping the switch
+/// in the scenario makes the compromise visible and default-OFF.
+#[derive(Debug, Clone, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct TerminalAssist {
+    /// Arm below this altitude after ENGINE ON.
+    pub start_alt_m: f64,
+    /// Linearly transition from `approach_vz_ms` here to
+    /// `touchdown_vz_ms` at the surface.
+    pub flare_alt_m: f64,
+    /// Positive downward speed magnitude above the flare gate.
+    pub approach_vz_ms: f64,
+    /// Positive downward speed magnitude at the surface.
+    pub touchdown_vz_ms: f64,
+    /// Exponential time constant for removing surface-relative horizontal
+    /// velocity.
+    pub horizontal_tau_s: f64,
+    /// Exponential time constant for tracking the scheduled vertical rate.
+    pub vertical_tau_s: f64,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -148,7 +192,34 @@ impl Scenario {
     pub fn load(path: &Path) -> Result<Scenario> {
         let text = std::fs::read_to_string(path)
             .with_context(|| format!("reading scenario {}", path.display()))?;
-        toml::from_str(&text).with_context(|| format!("parsing scenario {}", path.display()))
+        let scenario: Scenario = toml::from_str(&text)
+            .with_context(|| format!("parsing scenario {}", path.display()))?;
+        scenario
+            .validate()
+            .with_context(|| format!("validating scenario {}", path.display()))?;
+        Ok(scenario)
+    }
+
+    fn validate(&self) -> Result<()> {
+        if let Some(a) = &self.terminal_assist {
+            ensure!(
+                a.start_alt_m > 0.0,
+                "terminal_assist.start_alt_m must be > 0"
+            );
+            ensure!(
+                a.flare_alt_m > 0.0 && a.flare_alt_m < a.start_alt_m,
+                "terminal_assist.flare_alt_m must be between 0 and start_alt_m"
+            );
+            ensure!(
+                a.approach_vz_ms >= a.touchdown_vz_ms && a.touchdown_vz_ms > 0.0,
+                "terminal_assist descent speeds must satisfy approach >= touchdown > 0"
+            );
+            ensure!(
+                a.horizontal_tau_s > 0.0 && a.vertical_tau_s > 0.0,
+                "terminal_assist time constants must be > 0"
+            );
+        }
+        Ok(())
     }
 
     /// Landing-site radial unit vector in the moon-fixed frame (z = pole).
@@ -202,7 +273,7 @@ impl Scenario {
 }
 
 /// A Body→MCI attitude whose body +X maps to the MCI unit vector `u`.
-fn body_x_to(u: V3<Mci>) -> Rot<Body, Mci> {
+pub(crate) fn body_x_to(u: V3<Mci>) -> Rot<Body, Mci> {
     let x = V3::<Mci>::new(1.0, 0.0, 0.0);
     let c = x.dot(u);
     let r: Rot<Mci, Mci> = if c > 1.0 - 1e-12 {
@@ -291,6 +362,17 @@ mod tests {
     }
 
     #[test]
+    fn loads_playable_demo_with_explicit_assist() {
+        let s = Scenario::load(&repo().join("scenarios/playable-demo.toml")).unwrap();
+        assert_eq!(s.name, "playable-demo-assisted");
+        let assist = s.terminal_assist.expect("demo must opt into assist");
+        assert_eq!(assist.start_alt_m, 500.0);
+        assert_eq!(assist.flare_alt_m, 100.0);
+        assert!(s.agc.lrbypass);
+        assert!(s.rod.steps.is_empty());
+    }
+
+    #[test]
     fn initial_state_geometry() {
         let s = Scenario::load(&repo().join("scenarios/p66-gate.toml")).unwrap();
         let st = s.initial_state(1234.0);
@@ -364,11 +446,68 @@ mod tests {
     }
 
     #[test]
+    fn loads_lr_altitude_only_diagnostic_scenario() {
+        let s = Scenario::load(&repo().join("scenarios/pdi-descent-lr-alt-only.toml")).unwrap();
+        assert!(matches!(s.gate.mode, GateMode::Pdi));
+        assert!(!s.agc.lrbypass, "the diagnostic must present the LR");
+        assert!(
+            s.agc.lr_altitude_only,
+            "the diagnostic must withhold LR velocity data-good"
+        );
+    }
+
+    #[test]
+    fn loads_lr_position1_diagnostic_scenario() {
+        let s = Scenario::load(&repo().join("scenarios/pdi-descent-lr-pos1.toml")).unwrap();
+        assert!(matches!(s.gate.mode, GateMode::Pdi));
+        assert!(!s.agc.lrbypass, "the diagnostic must present the LR");
+        assert!(
+            !s.agc.lr_altitude_only,
+            "the diagnostic must enable all three velocity beams"
+        );
+    }
+
+    #[test]
+    fn loads_full_landing_radar_scenario() {
+        let s = Scenario::load(&repo().join("scenarios/pdi-descent-lr-full.toml")).unwrap();
+        assert!(matches!(s.gate.mode, GateMode::Pdi));
+        assert!(!s.agc.lrbypass);
+        assert!(!s.agc.lr_altitude_only);
+        assert_eq!(s.acceptance.v_vert_max, 3.0);
+        assert_eq!(s.acceptance.v_horiz_max, 1.5);
+        assert_eq!(s.acceptance.tilt_max_deg, 12.0);
+    }
+
+    #[test]
+    fn loads_x_only_landing_radar_scenario() {
+        let s = Scenario::load(&repo().join("scenarios/pdi-descent-lr-x-only.toml")).unwrap();
+        assert!(!s.agc.lrbypass);
+        assert_eq!(s.agc.lr_velocity_beams, [true, false, false]);
+    }
+
+    #[test]
+    fn loads_p65_landing_radar_scenario_without_forced_handover() {
+        let s = Scenario::load(&repo().join("scenarios/pdi-descent-p65.toml")).unwrap();
+        assert!(matches!(s.gate.mode, GateMode::Pdi));
+        assert!(!s.agc.lrbypass, "P65 requires the landing radar");
+        assert!(s.handover.is_none(), "the rope must select P65 itself");
+        assert_eq!(s.acceptance.v_vert_max, 3.0);
+        assert_eq!(s.acceptance.v_horiz_max, 1.5);
+        assert_eq!(s.acceptance.tilt_max_deg, 12.0);
+    }
+
+    #[test]
     fn hover_scenarios_do_not_need_the_new_fields() {
         // Back-compat: the committed Wave 1 files carry no mode/handover/lrbypass.
         let s = Scenario::load(&repo().join("scenarios/p66-gate.toml")).unwrap();
         assert!(matches!(s.gate.mode, GateMode::Hover));
         assert!(s.handover.is_none());
+        assert!(s.terminal_assist.is_none());
         assert!(!s.agc.lrbypass);
+        assert!(
+            !s.agc.lr_altitude_only,
+            "existing scenarios must retain full LR behaviour by default"
+        );
+        assert_eq!(s.agc.lr_velocity_beams, [true; 3]);
     }
 }

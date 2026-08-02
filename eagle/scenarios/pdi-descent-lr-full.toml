@@ -1,0 +1,55 @@
+schema = 1
+name = "pdi-descent-lr-full"
+# M3 integration flight fixed before launch (2026-08-02):
+# - Apollo 11 Luminary 99 LR/P65 erasable block is loaded, with each b-scale
+#   regression-checked against the prelaunch table's printed octal;
+# - every ~90 ms CH13 strobe in the five-sample LRVEL transaction is served;
+# - antenna geometry starts POS1 and changes to POS2 only after CH12 BIT13
+#   plus seven seconds of modeled travel.
+#
+# Decision rule against bypassed run 11 and velocity-off run 20:
+# 1. First complete X/Y/Z transactions must each contain five samples at
+#    ~0.09-0.12 s spacing and satisfy raw-12288=trunc(along/quantum).
+# 2. Until a CH12 command, every sample is Position1; after the seven-second
+#    travel every sample is Position2. Any earlier switch invalidates run.
+# 3. At TIG+360 require |delta altitude| <250 m, |delta vz| <5 m/s and
+#    |delta tilt| <10 deg versus run 11. Passing continues to P64/P66;
+#    failing returns to a one-beam X/Y/Z bisection without changing limits.
+# 4. No PROG alarm, ingest drop, pre-P64 ground contact, or schema/timing
+#    failure is acceptable. Touchdown limits remain the frozen 3/1.5/12.
+
+[site]
+lat_deg = 0.0
+lon_deg = 0.0
+radius_m = 1737400.0
+
+[gate]
+mode = "pdi"
+alt_m = 0.0
+vz_ms = 0.0
+mass_dry_kg = 7009.0
+fuel_dps_kg = 7950.0
+fuel_rcs_kg = 250.0
+inertia_kgm2 = [23000.0, 25000.0, 24000.0]
+
+[agc]
+padload = "scenarios/p66-padload.toml"
+lm_weight_lbs = 33530.0
+tland_offset_cs = 36000
+flip_atthold_after_engine_on_s = 2.0
+lrbypass = false
+lr_altitude_only = false
+
+[handover]
+alt_m = 250.0
+
+[rod]
+steps = [[240.0, -1.5], [40.0, 0.2], [10.0, 0.8]]
+
+[errors]
+
+[acceptance]
+v_vert_max = 3.0
+v_horiz_max = 1.5
+tilt_max_deg = 12.0
+timeout_s = 800.0

@@ -1,0 +1,62 @@
+schema = 1
+name = "pdi-descent-lr-pos1"
+# Diagnostic flight fixed before launch (2026-08-02): landing-radar
+# altitude and all three velocity beams are enabled. The simulator starts
+# in antenna position 1, matching Luminary's SETPOS initialization, and
+# changes to position 2 only after CH12 BIT13 plus the seven-second travel.
+# Flight 21 used the then-current pad load, which omitted
+# RPCRTIME/RPCRTQSW, so no command was expected before TIG+420 and every
+# recorded velocity sample had to say Position1.
+#
+# Decision rule against bypassed run 11 and velocity-off run 20 at
+# TIG+240/270/300/330/360/390/420:
+# - tracks both through TIG+420 => the premature POS2 beam transform caused
+#   the known TIG+360 split; proceed to load and verify the full LR block.
+# - splits near TIG+360 => inspect EAGLE_LR_DEBUG plus VSELECT/VMEAS; if the
+#   raw five-sample equation is sound, bisect Y/X/Z one beam at a time.
+# - any Position2 sample before a logged CH12 command => stop; the physical
+#   state machine is still wrong and no pad-load conclusion is permitted.
+#
+# RESULT -- flight 21, 2026-08-02 (before the complete LR block was added):
+# all 15 recorded samples were Position1 and every raw-count equation had
+# residual zero, but the run split by TIG+360 and crashed at TIG+435.5.
+# The packet trace then showed the deeper interface defect: Luminary wrote
+# the same active CH13 select five times per LRVEL transaction, while the
+# rising-edge-only responder serviced only the first. This scenario is now
+# historical evidence; `pdi-descent-lr-full.toml` owns the next flight.
+
+[site]
+lat_deg = 0.0
+lon_deg = 0.0
+radius_m = 1737400.0
+
+[gate]
+mode = "pdi"
+alt_m = 0.0
+vz_ms = 0.0
+mass_dry_kg = 7009.0
+fuel_dps_kg = 7950.0
+fuel_rcs_kg = 250.0
+inertia_kgm2 = [23000.0, 25000.0, 24000.0]
+
+[agc]
+padload = "scenarios/p66-padload.toml"
+lm_weight_lbs = 33530.0
+tland_offset_cs = 36000
+flip_atthold_after_engine_on_s = 2.0
+lrbypass = false
+lr_altitude_only = false
+
+[handover]
+alt_m = 250.0
+
+[rod]
+steps = [[240.0, -1.5], [40.0, 0.2], [10.0, 0.8]]
+
+[errors]
+
+[acceptance]
+v_vert_max = 3.0
+v_horiz_max = 1.5
+tilt_max_deg = 12.0
+timeout_s = 800.0
