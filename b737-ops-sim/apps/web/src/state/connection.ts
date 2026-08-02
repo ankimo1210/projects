@@ -1,4 +1,4 @@
-import { MVP_CIRCUIT_SCENARIO } from '@b737/scenario-engine';
+import { DEFAULT_SCENARIO_ID, SCENARIOS, getScenario } from '@b737/scenario-engine';
 import { TrainingSession } from '@b737/training-engine';
 import type { AircraftCommand } from '@b737/shared';
 import { BridgeClient } from '../net/wsClient.js';
@@ -19,11 +19,41 @@ const BRIDGE_URL =
 
 export const interpolator = new StateInterpolator(120);
 
-let session = new TrainingSession(MVP_CIRCUIT_SCENARIO, { mode: 'guided' });
+let scenario = getScenario(DEFAULT_SCENARIO_ID)!;
+let session = new TrainingSession(scenario, { mode: 'guided' });
 let spokenCount = 0;
 
 export function getSession(): TrainingSession {
   return session;
+}
+
+/** Scenario catalogue for the picker (spec §22 Phase 3 D5). */
+export const scenarioCatalogue = SCENARIOS.map((s) => ({
+  id: s.id,
+  title: s.title,
+  description: s.description,
+}));
+
+export function getCurrentScenarioId(): string {
+  return scenario.id;
+}
+
+/**
+ * Switch scenario. Like reset, this only takes effect once the BACKEND has
+ * accepted the new initial state — the session must never describe a flight
+ * the aircraft is not flying (R-16).
+ */
+export async function selectScenario(id: string): Promise<boolean> {
+  const next = getScenario(id);
+  if (!next || next.id === scenario.id) return false;
+  const ack = await client.resetScenario(next.initialState);
+  if (!ack.ok) {
+    useSettingsStore.getState().setLastCommandRejection(ack.error ?? 'scenario change failed');
+    return false;
+  }
+  scenario = next;
+  startFreshSession();
+  return true;
 }
 
 /**
@@ -32,19 +62,23 @@ export function getSession(): TrainingSession {
  * detached the session from the aircraft (R-16).
  */
 export async function resetSession(): Promise<boolean> {
-  const ack = await client.resetScenario(MVP_CIRCUIT_SCENARIO.initialState);
+  const ack = await client.resetScenario(scenario.initialState);
   if (!ack.ok) {
     useSettingsStore.getState().setLastCommandRejection(ack.error ?? 'scenario reset failed');
     return false;
   }
+  startFreshSession();
+  return true;
+}
+
+function startFreshSession(): void {
   const mode = useSettingsStore.getState().mode;
-  session = new TrainingSession(MVP_CIRCUIT_SCENARIO, { mode });
+  session = new TrainingSession(scenario, { mode });
   spokenCount = 0;
   controlTargets.reset();
   useSessionStore.getState().setShowDebrief(false);
   useSessionStore.getState().setPaused(false);
   useSessionStore.getState().bump(session.version, session.phaseId);
-  return true;
 }
 
 /** Pause/resume, committed to the UI only after the bridge confirms (R-16). */

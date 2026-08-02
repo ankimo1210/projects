@@ -378,6 +378,20 @@ button {
   padding: 6px 10px;
   color: #39d353;
 }
+.scenario-picker {
+  background: #16171a;
+  color: #ccd;
+  border: 1px solid #333;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-size: 12px;
+  max-width: 240px;
+}
+.mic-btn.go-around {
+  background: #3a2a12;
+  border-color: #a86b1e;
+  color: #ffcf87;
+}
 .checklist-locked {
   padding: 6px 10px;
   color: #d2a24c;

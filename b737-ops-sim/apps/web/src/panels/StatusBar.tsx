@@ -1,5 +1,11 @@
 import { audioEngine } from '../audio/audioEngine.js';
-import { getSession, resetSession, setPaused as setPausedAcked } from '../state/connection.js';
+import {
+  getCurrentScenarioId,
+  resetSession,
+  scenarioCatalogue,
+  selectScenario,
+  setPaused as setPausedAcked,
+} from '../state/connection.js';
 import { useSessionStore, useSettingsStore, useSimStore } from '../state/stores.js';
 import type { TrainingMode } from '@b737/training-engine';
 
@@ -13,7 +19,6 @@ export function StatusBar(): JSX.Element {
   const setShowDebrief = useSessionStore((s) => s.setShowDebrief);
   useSessionStore((s) => s.version);
   const settings = useSettingsStore();
-  const session = getSession();
 
   const connClass =
     connection === 'connected' && (backendStatus?.connected ?? true)
@@ -32,7 +37,19 @@ export function StatusBar(): JSX.Element {
             ? 'connecting…'
             : 'DISCONNECTED'}
       </span>
-      <span className="scenario-name">{session.scenario.title}</span>
+      <select
+        className="scenario-picker"
+        data-testid="scenario-picker"
+        value={getCurrentScenarioId()}
+        title="scenario — changing it resets the flight"
+        onChange={(e) => void selectScenario(e.target.value)}
+      >
+        {scenarioCatalogue.map((s) => (
+          <option key={s.id} value={s.id}>
+            {s.title}
+          </option>
+        ))}
+      </select>
       <span data-testid="sim-time">t+{latest ? Math.floor(latest.simTimeSec) : 0}s</span>
 
       <select

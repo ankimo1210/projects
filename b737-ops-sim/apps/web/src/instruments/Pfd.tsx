@@ -47,22 +47,58 @@ export function Pfd({ state, vSpeeds }: PfdProps): JSX.Element {
   );
 }
 
+/** Mode annunciation text; armed modes are shown in white, active in green. */
+const ROLL_MODE_LABEL: Record<string, string> = {
+  HDG_SEL: 'HDG SEL',
+  LOC_ARM: 'LOC',
+  LOC: 'LOC',
+};
+const PITCH_MODE_LABEL: Record<string, string> = {
+  VS: 'V/S',
+  ALT_HOLD: 'ALT HOLD',
+  GS_ARM: 'G/S',
+  GS: 'G/S',
+  TOGA: 'TO/GA',
+};
+
 function FmaRow({ state }: { state: AircraftState }): JSX.Element {
   const ap = state.mcp.autopilotEngaged;
+  const { rollMode, pitchMode } = state.mcp;
+  const rollArmed = rollMode === 'LOC_ARM';
+  const pitchArmed = pitchMode === 'GS_ARM';
+  const armedColour = '#e6e6e6';
+  const activeColour = '#39d353';
   return (
     <g className="pfd-fma">
-      <text x={120} y={18} textAnchor="middle" fill="#39d353">
-        {ap ? 'SPD' : ''}
+      <text x={120} y={18} textAnchor="middle" fill={activeColour} data-testid="fma-thrust">
+        {pitchMode === 'TOGA' ? 'TO/GA' : ap ? 'SPD' : ''}
       </text>
-      <text x={240} y={18} textAnchor="middle" fill="#39d353">
-        {ap ? 'HDG SEL' : state.mcp.flightDirectorOn ? 'FD' : ''}
+      <text
+        x={240}
+        y={18}
+        textAnchor="middle"
+        fill={rollArmed ? armedColour : activeColour}
+        data-testid="fma-roll"
+      >
+        {rollMode ? ROLL_MODE_LABEL[rollMode] : state.mcp.flightDirectorOn ? 'FD' : ''}
       </text>
-      <text x={360} y={18} textAnchor="middle" fill="#39d353">
-        {ap ? 'ALT/VS' : ''}
+      <text
+        x={360}
+        y={18}
+        textAnchor="middle"
+        fill={pitchArmed ? armedColour : activeColour}
+        data-testid="fma-pitch"
+      >
+        {pitchMode ? PITCH_MODE_LABEL[pitchMode] : ''}
       </text>
-      <text x={240} y={38} textAnchor="middle" fill={ap ? '#39d353' : '#888'} fontSize={15}>
+      <text x={240} y={38} textAnchor="middle" fill={ap ? activeColour : '#888'} fontSize={15}>
         {ap ? 'CMD' : state.mcp.flightDirectorOn ? 'FD ONLY' : 'MANUAL'}
       </text>
+      {state.mcp.approachArmed && (
+        <text x={430} y={38} textAnchor="middle" fill={armedColour} fontSize={12}>
+          APP
+        </text>
+      )}
     </g>
   );
 }
