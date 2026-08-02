@@ -1,7 +1,7 @@
 import { FLAP_DETENTS, clamp, type FlapDetent } from '@b737/shared';
-import { audioEngine } from '../audio/audioEngine.js';
-import { sendCommand } from '../state/connection.js';
+import { sendCommand, sendCommandWithSound } from '../state/connection.js';
 import { useSimStore } from '../state/stores.js';
+import { controlTargets } from './controlTargets.js';
 
 /**
  * Input abstraction layer (spec §18): keyboard + mouse + standard gamepad in
@@ -58,9 +58,7 @@ export class InputManager {
   private keys = new Set<string>();
   /** Last shaped axis values (read by the 3D yoke display). */
   readonly axes = { pitch: 0, roll: 0, yaw: 0 };
-  private throttle = 0;
   private brake = 0;
-  private reverser = 0;
   private lastSent = { pitch: NaN, roll: NaN, yaw: NaN, throttle: NaN, brake: NaN };
   private timer: number | null = null;
   private gamepadIndex: number | null = null;
@@ -83,18 +81,20 @@ export class InputManager {
     if (this.timer !== null) window.clearInterval(this.timer);
   }
 
-  /** Current throttle target (UI slider sync). */
+  /** Current throttle target (UI slider sync) — shared with 3D/DOM input. */
   get throttleNorm(): number {
-    return this.throttle;
+    return controlTargets.get('throttle');
   }
 
   setThrottle(v: number): void {
-    this.throttle = clamp(v, 0, 1);
+    controlTargets.set('throttle', v);
   }
 
   setReverser(v: number): void {
-    this.reverser = clamp(v, 0, 1);
-    sendCommand({ type: 'set_reverse_thrust', leverNorm: this.reverser });
+    sendCommandWithSound(
+      { type: 'set_reverse_thrust', leverNorm: controlTargets.set('reverser', v) },
+      'lever',
+    );
   }
 
   private onKeyDown = (e: KeyboardEvent): void => {
@@ -113,8 +113,7 @@ export class InputManager {
     switch (code) {
       case 'KeyG': {
         const down = state?.controls.gearLeverDown ?? true;
-        sendCommand({ type: 'set_gear', down: !down });
-        audioEngine.click('gear_lever');
+        sendCommandWithSound({ type: 'set_gear', down: !down }, 'gear_lever');
         break;
       }
       case 'BracketRight': {
@@ -127,25 +126,21 @@ export class InputManager {
       }
       case 'KeyP': {
         const set = state?.controls.parkingBrakeSet ?? false;
-        sendCommand({ type: 'set_parking_brake', engaged: !set });
-        audioEngine.click('click');
+        sendCommandWithSound({ type: 'set_parking_brake', engaged: !set }, 'click');
         break;
       }
       case 'KeyB': {
         const lever = state?.controls.speedbrakeLeverNorm ?? 0;
-        sendCommand({ type: 'set_speedbrake', leverNorm: lever > 0.5 ? 0 : 1 });
-        audioEngine.click('lever');
+        sendCommandWithSound({ type: 'set_speedbrake', leverNorm: lever > 0.5 ? 0 : 1 }, 'lever');
         break;
       }
       case 'KeyR': {
-        this.setReverser(this.reverser > 0.5 ? 0 : 1);
-        audioEngine.click('lever');
+        this.setReverser(controlTargets.get('reverser') > 0.5 ? 0 : 1);
         break;
       }
       case 'KeyA': {
         const engaged = state?.mcp.autopilotEngaged ?? false;
-        sendCommand({ type: 'set_autopilot', engaged: !engaged });
-        audioEngine.click('click');
+        sendCommandWithSound({ type: 'set_autopilot', engaged: !engaged }, 'click');
         break;
       }
       default:
@@ -159,8 +154,7 @@ export class InputManager {
     const idx = FLAP_DETENTS.indexOf(current);
     const next = FLAP_DETENTS[clamp(idx + direction, 0, FLAP_DETENTS.length - 1)]!;
     if (next !== current) {
-      sendCommand({ type: 'set_flaps', detent: next });
-      audioEngine.click('flap_lever');
+      sendCommandWithSound({ type: 'set_flaps', detent: next }, 'flap_lever');
     }
   }
 
@@ -175,11 +169,13 @@ export class InputManager {
     if (this.keys.has('ArrowRight')) kbRoll += 1;
     if (this.keys.has('Comma')) kbYaw -= 1;
     if (this.keys.has('Period')) kbYaw += 1;
+    // Keyboard steps move the SHARED target, so they continue from wherever
+    // the lever actually is (3D drag, DOM slider, backend) — R-13.
     if (this.keys.has('Equal') || this.keys.has('PageUp')) {
-      this.throttle = clamp(this.throttle + 0.02, 0, 1);
+      controlTargets.nudge('throttle', 0.02);
     }
     if (this.keys.has('Minus') || this.keys.has('PageDown')) {
-      this.throttle = clamp(this.throttle - 0.02, 0, 1);
+      controlTargets.nudge('throttle', -0.02);
     }
     this.brake = this.keys.has('Space') ? 1 : 0;
 
@@ -196,7 +192,7 @@ export class InputManager {
       kbYaw = kbYaw || shapeAxis(gp.axes[a.yaw] ?? 0, s.yaw);
       const rawThr = gp.axes[a.throttle];
       if (rawThr !== undefined && Math.abs(rawThr) > 0.02) {
-        this.throttle = clamp((1 - rawThr) / 2, 0, 1); // typical inverted slider
+        controlTargets.set('throttle', (1 - rawThr) / 2); // typical inverted slider
       }
     }
 
@@ -208,9 +204,10 @@ export class InputManager {
     this.sendIfChanged('pitch', this.axes.pitch);
     this.sendIfChanged('roll', this.axes.roll);
     this.sendIfChanged('yaw', this.axes.yaw);
-    if (this.lastSent.throttle !== this.throttle) {
-      this.lastSent.throttle = this.throttle;
-      sendCommand({ type: 'set_throttle', valueNorm: this.throttle });
+    const throttle = controlTargets.get('throttle');
+    if (this.lastSent.throttle !== throttle) {
+      this.lastSent.throttle = throttle;
+      sendCommand({ type: 'set_throttle', valueNorm: throttle });
     }
     if (this.lastSent.brake !== this.brake) {
       this.lastSent.brake = this.brake;

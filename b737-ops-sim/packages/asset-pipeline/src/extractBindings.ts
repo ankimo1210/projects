@@ -113,7 +113,8 @@ function normalize(path: string): string {
  * "Aircraft/<name>/" prefix) — try both against the fetched files.
  */
 function resolvePath(fromXml: string, ref: string, source: XmlSource): string {
-  if (ref.startsWith('Aircraft/737-800YV/')) return normalize(ref.slice('Aircraft/737-800YV/'.length));
+  if (ref.startsWith('Aircraft/737-800YV/'))
+    return normalize(ref.slice('Aircraft/737-800YV/'.length));
   const dir = fromXml.split('/').slice(0, -1).join('/');
   const fileRelative = normalize(dir ? `${dir}/${ref}` : ref);
   if (source.exists(fileRelative)) return fileRelative;
@@ -127,7 +128,9 @@ export function extractBindings(rootXmlPath: string, source: XmlSource): Cockpit
   const animations: AnimationSpec[] = [];
   const visitedAnimationFiles = new Set<string>();
 
-  const offsetsOf = (xml: string): { t: [number, number, number]; rDeg: [number, number, number] } => {
+  const offsetsOf = (
+    xml: string,
+  ): { t: [number, number, number]; rDeg: [number, number, number] } => {
     const off = blocks(xml, 'offsets')[0] ?? '';
     return {
       t: [num(off, 'x-m'), num(off, 'y-m'), num(off, 'z-m')],
@@ -191,7 +194,10 @@ export function extractBindings(rootXmlPath: string, source: XmlSource): Cockpit
       if (!ref) return;
       const childOffsets = offsetsOf(modelBlock);
       const childChain = [...chain, childOffsets];
-      const childId = `${instanceId}/${ref.split('/').pop()!.replace(/\.(xml|ac)$/, '')}_${i}`;
+      const childId = `${instanceId}/${ref
+        .split('/')
+        .pop()!
+        .replace(/\.(xml|ac)$/, '')}_${i}`;
       const resolved = resolvePath(xmlPath, ref, source);
       if (ref.endsWith('.ac')) {
         instances.push({ id: childId, ac: resolved, chain: childChain });

@@ -100,7 +100,11 @@ export function interpolateStates(a: AircraftState, b: AircraftState, t: number)
       ...b.controls,
       flapsActualNorm: lerp(a.controls.flapsActualNorm, b.controls.flapsActualNorm, t),
       gearPositionNorm: lerp(a.controls.gearPositionNorm, b.controls.gearPositionNorm, t),
-      spoilersDeployedNorm: lerp(a.controls.spoilersDeployedNorm, b.controls.spoilersDeployedNorm, t),
+      spoilersDeployedNorm: lerp(
+        a.controls.spoilersDeployedNorm,
+        b.controls.spoilersDeployedNorm,
+        t,
+      ),
     },
   };
 }

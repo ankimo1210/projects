@@ -15,18 +15,13 @@ import {
   Vector3,
 } from '@babylonjs/core';
 import type { AbstractMesh, Mesh } from '@babylonjs/core';
-import {
-  FT_TO_M,
-  KSFO_28R,
-  clamp,
-  degToRad,
-  toLocalEnuM,
-  type AircraftState,
-} from '@b737/shared';
+import { FT_TO_M, KSFO_28R, clamp, degToRad, toLocalEnuM, type AircraftState } from '@b737/shared';
+import { COCKPIT_CONTROLS } from '@b737/cockpit-model';
 import { fgToAircraft, loadCockpit, type LoadedCockpit } from './cockpitLoader.js';
 import {
   beginControlDrag,
   clickControl,
+  endControlDrag,
   updateControlDrag,
   type DragSession,
 } from '../cockpit/controlActions.js';
@@ -156,11 +151,19 @@ export function createSimWorld(canvas: HTMLCanvasElement, hooks: SimWorldHooks =
   dash.parent = aircraft;
   dash.position.set(0, 3.25, 2.15);
   dash.material = shellMat;
-  const glareshield = MeshBuilder.CreateBox('glare', { width: 3.4, height: 0.08, depth: 0.9 }, scene);
+  const glareshield = MeshBuilder.CreateBox(
+    'glare',
+    { width: 3.4, height: 0.08, depth: 0.9 },
+    scene,
+  );
   glareshield.parent = aircraft;
   glareshield.position.set(0, 3.72, 2.1);
   glareshield.material = shellMat;
-  const pillarL = MeshBuilder.CreateBox('pillarL', { width: 0.14, height: 1.6, depth: 0.14 }, scene);
+  const pillarL = MeshBuilder.CreateBox(
+    'pillarL',
+    { width: 0.14, height: 1.6, depth: 0.14 },
+    scene,
+  );
   pillarL.parent = aircraft;
   pillarL.position.set(-1.55, 4.15, 2.3);
   pillarL.material = shellMat;
@@ -216,8 +219,11 @@ export function createSimWorld(canvas: HTMLCanvasElement, hooks: SimWorldHooks =
     const eye = fgToAircraft(CAPTAIN_EYE_FG);
     camera.position.copyFrom(eye);
     hooks.onCockpitLoaded?.(loaded.meshCount);
-    // dev diagnostics (used by tooling/screenshot probes)
+    // dev diagnostics (used by tooling/screenshot probes and the e2e suite)
     (window as unknown as Record<string, unknown>).__simScene = scene;
+    (window as unknown as Record<string, unknown>).__simControls = COCKPIT_CONTROLS.filter(
+      (c) => c.meshNames.length > 0,
+    );
   });
 
   // ---------- pointer: control picking + mouse look ----------
@@ -231,7 +237,13 @@ export function createSimWorld(canvas: HTMLCanvasElement, hooks: SimWorldHooks =
   let lastHoverAt = 0;
   let hoveredMesh: AbstractMesh | null = null;
 
-  const pickInteractive = (): { mesh: AbstractMesh; controlId: string; label: string; hint?: string; interaction: string } | null => {
+  const pickInteractive = (): {
+    mesh: AbstractMesh;
+    controlId: string;
+    label: string;
+    hint?: string;
+    interaction: string;
+  } | null => {
     if (!cockpit) return null;
     const info = scene.pick(scene.pointerX, scene.pointerY, (m) => m.isPickable && m.isEnabled());
     if (!info?.hit || !info.pickedMesh) return null;
@@ -246,7 +258,9 @@ export function createSimWorld(canvas: HTMLCanvasElement, hooks: SimWorldHooks =
     };
   };
 
-  canvas.addEventListener('pointerdown', (e) => {
+  // Named handlers: StrictMode mounts the scene twice, so anonymous listeners
+  // left behind by the discarded mount kept firing (R-15).
+  const onPointerDown = (e: PointerEvent): void => {
     if (e.button !== 0) return;
     const hit = pickInteractive();
     if (hit) {
@@ -261,12 +275,13 @@ export function createSimWorld(canvas: HTMLCanvasElement, hooks: SimWorldHooks =
     dragging = true;
     lastX = e.clientX;
     lastY = e.clientY;
-  });
-  window.addEventListener('pointerup', () => {
+  };
+  const onPointerUp = (): void => {
     dragging = false;
+    if (dragSession) endControlDrag(); // the released value must be sent
     dragSession = null;
-  });
-  window.addEventListener('pointermove', (e) => {
+  };
+  const onPointerMove = (e: PointerEvent): void => {
     if (dragSession) {
       updateControlDrag(dragSession, e.clientY - dragStartY);
       return;
@@ -295,11 +310,15 @@ export function createSimWorld(canvas: HTMLCanvasElement, hooks: SimWorldHooks =
       canvas.style.cursor = mesh ? 'pointer' : 'default';
       hooks.onHoverControl?.(hit ? { label: hit.label, hint: hit.hint } : null);
     }
-  });
-  canvas.addEventListener('dblclick', () => {
+  };
+  const onDoubleClick = (): void => {
     lookYaw = 0;
     lookPitch = 0;
-  });
+  };
+  canvas.addEventListener('pointerdown', onPointerDown);
+  window.addEventListener('pointerup', onPointerUp);
+  window.addEventListener('pointermove', onPointerMove);
+  canvas.addEventListener('dblclick', onDoubleClick);
 
   const resize = (): void => engine.resize();
   window.addEventListener('resize', resize);
@@ -352,6 +371,10 @@ export function createSimWorld(canvas: HTMLCanvasElement, hooks: SimWorldHooks =
     },
     dispose() {
       window.removeEventListener('resize', resize);
+      canvas.removeEventListener('pointerdown', onPointerDown);
+      canvas.removeEventListener('dblclick', onDoubleClick);
+      window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('pointermove', onPointerMove);
       resizeObserver.disconnect();
       scene.dispose();
       engine.dispose();

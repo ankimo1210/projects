@@ -56,7 +56,11 @@ export class AtcController {
   private legIndex = 0;
   private callsign = 'Boeing 737';
 
-  constructor(private readonly runway: RunwayData) {
+  constructor(
+    private readonly runway: RunwayData,
+    /** Surface wind actually in force in the scenario (spec §13). */
+    private readonly wind: { dirDeg: number; speedKt: number } = { dirDeg: 0, speedKt: 0 },
+  ) {
     const rwyHdg = Math.round(runway.headingDegMag);
     // Right-hand pattern back to the ILS (KSFO 28R: right turns over the bay).
     this.legs = [
@@ -88,6 +92,13 @@ export class AtcController {
     ];
   }
 
+  /** Surface wind as ATC reads it — the scenario's wind, not a fixed phrase. */
+  private windPhrase(): string {
+    if (this.wind.speedKt < 3) return 'wind calm';
+    const dir = String(Math.round(this.wind.dirDeg / 10) * 10).padStart(3, '0');
+    return `wind ${dir} at ${Math.round(this.wind.speedKt)}`;
+  }
+
   /** User keys the mic to request takeoff clearance. */
   requestTakeoffClearance(state: AircraftState): AtcInstruction | TranscriptEntry {
     if (this.phase !== 'awaiting_takeoff_request') {
@@ -102,10 +113,14 @@ export class AtcController {
     const rwy = this.runway.runwayId;
     const instruction = this.makeInstruction(
       state.simTimeSec,
-      `${this.callsign}, wind calm, runway ${rwy}, cleared for takeoff.`,
+      `${this.callsign}, ${this.windPhrase()}, runway ${rwy}, cleared for takeoff.`,
       { takeoffClearanceReceived: true },
       [
-        { id: 'correct', text: `Cleared for takeoff runway ${rwy}, ${this.callsign}.`, correct: true },
+        {
+          id: 'correct',
+          text: `Cleared for takeoff runway ${rwy}, ${this.callsign}.`,
+          correct: true,
+        },
         { id: 'lineup', text: `Line up and wait runway ${rwy}, ${this.callsign}.`, correct: false },
         { id: 'roger', text: 'Roger.', correct: false },
       ],
@@ -138,7 +153,11 @@ export class AtcController {
                   text: `Runway heading, climb and maintain 3,000, ${this.callsign}.`,
                   correct: true,
                 },
-                { id: 'wrong_alt', text: `Climb and maintain 13,000, ${this.callsign}.`, correct: false },
+                {
+                  id: 'wrong_alt',
+                  text: `Climb and maintain 13,000, ${this.callsign}.`,
+                  correct: false,
+                },
                 { id: 'roger', text: 'Roger.', correct: false },
               ],
               { targetHeadingDeg: Math.round(this.runway.headingDegMag), targetAltitudeFt: 3000 },
@@ -161,8 +180,7 @@ export class AtcController {
       case 'vector_downwind':
       case 'vector_base': {
         const leg = this.legs[this.legIndex]!;
-        const captured =
-          Math.abs(angleDiffDeg(state.attitude.headingDegMag, leg.headingDeg)) < 15;
+        const captured = Math.abs(angleDiffDeg(state.attitude.headingDegMag, leg.headingDeg)) < 15;
         if (
           this.legStartedAtSec !== null &&
           captured &&
@@ -188,7 +206,7 @@ export class AtcController {
           out.push(
             this.makeInstruction(
               t,
-              `${this.callsign}, wind calm, runway ${this.runway.runwayId}, cleared to land.`,
+              `${this.callsign}, ${this.windPhrase()}, runway ${this.runway.runwayId}, cleared to land.`,
               { landingClearanceReceived: true },
               [
                 {
@@ -213,7 +231,11 @@ export class AtcController {
               `${this.callsign}, exit the runway when able, then contact ground.`,
               { runwayExitInstructionGiven: true },
               [
-                { id: 'correct', text: `Exit when able, to ground, ${this.callsign}.`, correct: true },
+                {
+                  id: 'correct',
+                  text: `Exit when able, to ground, ${this.callsign}.`,
+                  correct: true,
+                },
                 { id: 'holdshort', text: `Hold short, ${this.callsign}.`, correct: false },
               ],
             ),
@@ -243,15 +265,18 @@ export class AtcController {
     instruction.transcriptEntry.responseResult = correct ? 'correct' : 'incorrect';
     this.stats.readbacksTotal += 1;
     if (correct) this.stats.readbacksCorrect += 1;
-    if (this.pendingInstruction?.id === instruction.id) this.pendingInstruction = null;
+    if (correct && this.pendingInstruction?.id === instruction.id) this.pendingInstruction = null;
     const followUps: TranscriptEntry[] = [];
     if (!correct) {
+      // "Negative — read back" has to be answerable, or the crew is stuck with
+      // a controller waiting for a correction they cannot give (R-20).
       followUps.push({
         id: transcriptId('atc'),
         simTimeSec: state.simTimeSec,
         speaker: 'atc',
         message: `${this.callsign}, negative — read back: ${instruction.transcriptEntry.message}`,
         relatedEventId: instruction.id,
+        expectedResponse: instruction.transcriptEntry.expectedResponse,
       });
     }
     // Operational flags apply even on an imperfect readback (the clearance was

@@ -1,5 +1,5 @@
 import { audioEngine } from '../audio/audioEngine.js';
-import { client, getSession, resetSession } from '../state/connection.js';
+import { getSession, resetSession, setPaused as setPausedAcked } from '../state/connection.js';
 import { useSessionStore, useSettingsStore, useSimStore } from '../state/stores.js';
 import type { TrainingMode } from '@b737/training-engine';
 
@@ -10,7 +10,6 @@ export function StatusBar(): JSX.Element {
   const backendStatus = useSimStore((s) => s.backendStatus);
   const latest = useSimStore((s) => s.latest);
   const paused = useSessionStore((s) => s.paused);
-  const setPaused = useSessionStore((s) => s.setPaused);
   const setShowDebrief = useSessionStore((s) => s.setShowDebrief);
   useSessionStore((s) => s.version);
   const settings = useSettingsStore();
@@ -62,23 +61,20 @@ export function StatusBar(): JSX.Element {
         {settings.soundEnabled ? '🔊' : '🔇'}
       </button>
 
-      <button
-        type="button"
-        data-testid="pause-btn"
-        onClick={() => {
-          client.setPaused(!paused);
-          setPaused(!paused);
-        }}
-      >
+      <button type="button" data-testid="pause-btn" onClick={() => void setPausedAcked(!paused)}>
         {paused ? '▶ Resume' : '⏸ Pause'}
       </button>
-      <button type="button" data-testid="reset-btn" onClick={() => resetSession()}>
+      <button type="button" data-testid="reset-btn" onClick={() => void resetSession()}>
         ↺ Reset
       </button>
       <button type="button" data-testid="debrief-btn" onClick={() => setShowDebrief(true)}>
         Debrief
       </button>
-      <button type="button" title="diagnostics (backquote)" onClick={() => settings.toggleDiagnostics()}>
+      <button
+        type="button"
+        title="diagnostics (backquote)"
+        onClick={() => settings.toggleDiagnostics()}
+      >
         ⚙
       </button>
       {settings.lastCommandRejection && (

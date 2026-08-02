@@ -74,9 +74,21 @@ export function ChecklistPanel(): JSX.Element {
                 </button>
               )}
               {item.status === 'failed' && (
-                <span className="ci-fail" title={item.failureMessage ?? ''}>
-                  ✗ {item.failureMessage}
-                </span>
+                <>
+                  <span className="ci-fail" title={item.failureMessage ?? ''}>
+                    ✗ {item.failureMessage}
+                  </span>
+                  {available && (
+                    <button
+                      type="button"
+                      className="ci-answer"
+                      data-testid={`checklist-retry-${item.definition.id}`}
+                      onClick={() => session.answerChecklistItem(activeId)}
+                    >
+                      Retry
+                    </button>
+                  )}
+                </>
               )}
             </li>
           ))}

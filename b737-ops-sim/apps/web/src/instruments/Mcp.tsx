@@ -10,17 +10,20 @@ import { sendCommand } from '../state/connection.js';
 export function Mcp({ state }: { state: AircraftState }): JSX.Element {
   const mcp = state.mcp;
 
-  const adjust = (
-    kind: 'speed' | 'heading' | 'altitude' | 'vs',
-    delta: number,
-  ): void => {
+  const adjust = (kind: 'speed' | 'heading' | 'altitude' | 'vs', delta: number): void => {
     audioEngine.click('rotary');
     switch (kind) {
       case 'speed':
-        sendCommand({ type: 'set_mcp_speed', speedKt: clampRange(mcp.selSpeedKt + delta, 100, 340) });
+        sendCommand({
+          type: 'set_mcp_speed',
+          speedKt: clampRange(mcp.selSpeedKt + delta, 100, 340),
+        });
         break;
       case 'heading':
-        sendCommand({ type: 'set_mcp_heading', headingDeg: normalizeDeg360(mcp.selHeadingDeg + delta) });
+        sendCommand({
+          type: 'set_mcp_heading',
+          headingDeg: normalizeDeg360(mcp.selHeadingDeg + delta),
+        });
         break;
       case 'altitude':
         sendCommand({
@@ -106,10 +109,18 @@ function McpWindow({
         {value}
       </span>
       <span className="mcp-knob">
-        <button type="button" onClick={(e) => onDelta(-1, e.shiftKey)} aria-label={`${label} decrease`}>
+        <button
+          type="button"
+          onClick={(e) => onDelta(-1, e.shiftKey)}
+          aria-label={`${label} decrease`}
+        >
           −
         </button>
-        <button type="button" onClick={(e) => onDelta(1, e.shiftKey)} aria-label={`${label} increase`}>
+        <button
+          type="button"
+          onClick={(e) => onDelta(1, e.shiftKey)}
+          aria-label={`${label} increase`}
+        >
           +
         </button>
       </span>

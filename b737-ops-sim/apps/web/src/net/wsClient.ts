@@ -15,6 +15,14 @@ import {
 
 export type ConnectionState = 'connecting' | 'connected' | 'disconnected';
 
+/** Outcome of a bridge request that the UI must not assume succeeded (R-16). */
+export interface AckResult {
+  ok: boolean;
+  error?: string;
+}
+
+const ACK_TIMEOUT_MS = 3000;
+
 export interface WsClientEvents {
   onState: (state: AircraftState, seq: number) => void;
   onConnectionChange: (state: ConnectionState) => void;
@@ -46,6 +54,7 @@ export class BridgeClient {
   private staleTimer: number | null = null;
   private lastMessageAt = 0;
   private stateTimestamps: number[] = [];
+  private acks = new Map<number, (result: AckResult) => void>();
   readonly diagnostics: WsClientDiagnostics = {
     latencyMs: null,
     lastStateSeq: 0,
@@ -112,7 +121,15 @@ export class BridgeClient {
         }
         case 'command_ack':
           this.diagnostics.lastCommandResult = msg.result.ok ? 'ok' : msg.result.error;
-          this.events.onCommandAck(msg.seq, msg.result.ok, msg.result.ok ? undefined : msg.result.error);
+          this.acks.get(msg.seq)?.({
+            ok: msg.result.ok,
+            error: msg.result.ok ? undefined : msg.result.error,
+          });
+          this.events.onCommandAck(
+            msg.seq,
+            msg.result.ok,
+            msg.result.ok ? undefined : msg.result.error,
+          );
           return;
         case 'pong':
           this.diagnostics.latencyMs = Date.now() - msg.clientSentAtMs;
@@ -153,22 +170,47 @@ export class BridgeClient {
     return seq;
   }
 
-  resetScenario(config: ScenarioInitialState): number {
+  /** Same, but resolves with the bridge's verdict (for ack-gated feedback). */
+  sendCommandAcked(command: AircraftCommand): Promise<AckResult> {
     const seq = this.nextSeq();
-    this.send({ t: 'reset_scenario', seq, config });
-    return seq;
+    this.diagnostics.lastCommand = command.type;
+    return this.waitForAck(seq, this.send({ t: 'command', seq, sentAtMs: Date.now(), command }));
   }
 
-  setPaused(paused: boolean): number {
+  /**
+   * Reset/pause change simulation state, so the UI must wait for the bridge to
+   * confirm rather than assuming (the socket silently drops sends while
+   * disconnected — R-16).
+   */
+  resetScenario(config: ScenarioInitialState): Promise<AckResult> {
     const seq = this.nextSeq();
-    this.send({ t: 'set_paused', seq, paused });
-    return seq;
+    return this.waitForAck(seq, this.send({ t: 'reset_scenario', seq, config }));
   }
 
-  private send(message: ClientMessage): void {
-    if (this.ws?.readyState === WebSocket.OPEN) {
-      this.ws.send(JSON.stringify(message));
-    }
+  setPaused(paused: boolean): Promise<AckResult> {
+    const seq = this.nextSeq();
+    return this.waitForAck(seq, this.send({ t: 'set_paused', seq, paused }));
+  }
+
+  private waitForAck(seq: number, sent: boolean): Promise<AckResult> {
+    if (!sent) return Promise.resolve({ ok: false, error: 'not connected to the bridge' });
+    return new Promise((resolve) => {
+      const timer = window.setTimeout(() => {
+        this.acks.delete(seq);
+        resolve({ ok: false, error: 'the bridge did not acknowledge' });
+      }, ACK_TIMEOUT_MS);
+      this.acks.set(seq, (result) => {
+        window.clearTimeout(timer);
+        this.acks.delete(seq);
+        resolve(result);
+      });
+    });
+  }
+
+  private send(message: ClientMessage): boolean {
+    if (this.ws?.readyState !== WebSocket.OPEN) return false;
+    this.ws.send(JSON.stringify(message));
+    return true;
   }
 
   private nextSeq(): number {

@@ -23,7 +23,10 @@ export function DiagnosticsPanel(): JSX.Element | null {
         <tbody>
           <Row k="connection" v={`${sim.connection} (${sim.backendMode ?? '-'})`} />
           <Row k="backend" v={sim.backendStatus?.detail ?? '-'} />
-          <Row k="state rate" v={`${d.updatesPerSecond.toFixed(1)}/s (cfg ${sim.stateRateHz} Hz)`} />
+          <Row
+            k="state rate"
+            v={`${d.updatesPerSecond.toFixed(1)}/s (cfg ${sim.stateRateHz} Hz)`}
+          />
           <Row k="ws latency" v={d.latencyMs === null ? '-' : `${d.latencyMs} ms`} />
           <Row k="state seq" v={`${d.lastStateSeq} (gaps ${d.droppedSeqGaps})`} />
           <Row k="last cmd" v={`${d.lastCommand ?? '-'} → ${d.lastCommandResult ?? '-'}`} />

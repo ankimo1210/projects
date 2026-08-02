@@ -133,6 +133,9 @@ export class ScenarioRuntime {
         weightOnWheels: state.weightOnWheels,
         flapHandleDetent: state.controls.flapHandleDetent,
         gearLeverDown: state.controls.gearLeverDown,
+        flapsActualNorm: state.controls.flapsActualNorm,
+        gearPositionNorm: state.controls.gearPositionNorm,
+        spoilersDeployedNorm: state.controls.spoilersDeployedNorm,
         n1AvgPct: (state.engines.left.n1Pct + state.engines.right.n1Pct) / 2,
         phaseId: this.currentPhase.id,
       });
@@ -165,6 +168,9 @@ export class ScenarioRuntime {
       this.emit(event);
       return event;
     }
+    // Re-arm on the NEXT answer, not immediately after failing: clearing the
+    // failed status in the same tick meant the UI never showed it (review note).
+    run.retryActiveItem();
     const result = run.answerActiveItem(this.context(state));
     if (!result) return null;
     const { item, ok } = result;
@@ -195,8 +201,17 @@ export class ScenarioRuntime {
         severity: 'info',
       });
     }
-    if (!ok) run.retryActiveItem();
     return event;
+  }
+
+  /**
+   * Record an event produced outside the phase machine — e.g. a first-officer
+   * safety callout, which must reach the debrief as data rather than only as a
+   * line of transcript (R-19).
+   */
+  recordEvent(event: ScenarioEvent): void {
+    if (this.events.some((e) => e.id === event.id)) return;
+    this.emit(event);
   }
 
   private emit(event: ScenarioEvent): void {

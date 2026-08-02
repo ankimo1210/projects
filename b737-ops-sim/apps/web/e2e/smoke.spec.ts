@@ -155,6 +155,34 @@ test('imported 3D cockpit loads and 3D picking round-trips (skipped without asse
   await expect(page.getByTestId('cmd-rejection')).toContainText('gear lever locked', {
     timeout: 5_000,
   });
+
+  // Every mesh the control registry claims must exist in the imported cockpit,
+  // and must be pickable — otherwise a control is silently dead in 3D.
+  const registry = await page.evaluate(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const scene = (window as never as { __simScene: any }).__simScene;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const controls = (window as never as { __simControls: any[] }).__simControls;
+    return controls
+      .flatMap((c) => c.meshNames.map((name: string) => ({ control: c.id, name })))
+      .map(({ control, name }) => {
+        const node = scene.getNodeByName(name);
+        const meshes = node
+          ? [node, ...node.getChildMeshes(false)].filter(
+              (n: { isPickable?: boolean }) => n.isPickable !== undefined,
+            )
+          : [];
+        return {
+          control,
+          name,
+          found: node !== null,
+          pickable: meshes.some((m: { isPickable?: boolean }) => m.isPickable === true),
+        };
+      });
+  });
+  expect(registry.length).toBeGreaterThan(5);
+  expect(registry.filter((r) => !r.found)).toEqual([]);
+  expect(registry.filter((r) => !r.pickable)).toEqual([]);
 });
 
 test('debrief report opens with transparent categories', async ({ page }) => {

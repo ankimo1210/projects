@@ -17,7 +17,10 @@ export function DebriefView(): JSX.Element | null {
       <div className="debrief-card">
         <div className="debrief-head">
           <h2>Flight Debrief</h2>
-          <span className={`overall overall-${report.overall.toLowerCase()}`} data-testid="debrief-overall">
+          <span
+            className={`overall overall-${report.overall.toLowerCase()}`}
+            data-testid="debrief-overall"
+          >
             {report.overall.replaceAll('_', ' ')}
           </span>
           <button type="button" className="debrief-close" onClick={() => setShow(false)}>
@@ -70,7 +73,10 @@ export function DebriefView(): JSX.Element | null {
             <ul className="debrief-timeline">
               {report.timeline.map((e, i) => (
                 <li key={i} className={`ev ev-${e.severity}`}>
-                  <span className="ev-time">{Math.floor(e.simTimeSec / 60)}:{String(Math.floor(e.simTimeSec % 60)).padStart(2, '0')}</span>
+                  <span className="ev-time">
+                    {Math.floor(e.simTimeSec / 60)}:
+                    {String(Math.floor(e.simTimeSec % 60)).padStart(2, '0')}
+                  </span>
                   <span>{e.message}</span>
                 </li>
               ))}
@@ -78,7 +84,8 @@ export function DebriefView(): JSX.Element | null {
           </section>
         </div>
         <p className="disclaimer">
-          Scores are training heuristics (NON_CERTIFIED_APPROXIMATION) — not airline or Boeing criteria.
+          Scores are training heuristics (NON_CERTIFIED_APPROXIMATION) — not airline or Boeing
+          criteria.
         </p>
       </div>
     </div>

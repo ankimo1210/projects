@@ -1,8 +1,12 @@
-import { FLAP_DETENTS, type AircraftState, type AutobrakeSetting, type FlapDetent } from '@b737/shared';
+import {
+  FLAP_DETENTS,
+  type AircraftState,
+  type AutobrakeSetting,
+  type FlapDetent,
+} from '@b737/shared';
 import { COCKPIT_CONTROLS } from '@b737/cockpit-model';
-import { audioEngine } from '../audio/audioEngine.js';
 import { inputManager } from '../input/inputManager.js';
-import { sendCommand } from '../state/connection.js';
+import { sendCommand, sendCommandWithSound } from '../state/connection.js';
 import { useSettingsStore } from '../state/stores.js';
 
 /**
@@ -71,10 +75,9 @@ export function ControlsPanel({
               key={d}
               type="button"
               className={state.controls.flapHandleDetent === d ? 'detent active' : 'detent'}
-              onClick={() => {
-                audioEngine.click('flap_lever');
-                sendCommand({ type: 'set_flaps', detent: d as FlapDetent });
-              }}
+              onClick={() =>
+                sendCommandWithSound({ type: 'set_flaps', detent: d as FlapDetent }, 'flap_lever')
+              }
             >
               {d}
             </button>
@@ -91,10 +94,12 @@ export function ControlsPanel({
           min={0}
           max={100}
           value={Math.round(state.controls.speedbrakeLeverNorm * 100)}
-          onChange={(e) => {
-            audioEngine.click('lever');
-            sendCommand({ type: 'set_speedbrake', leverNorm: Number(e.target.value) / 100 });
-          }}
+          onChange={(e) =>
+            sendCommandWithSound(
+              { type: 'set_speedbrake', leverNorm: Number(e.target.value) / 100 },
+              'lever',
+            )
+          }
           className="vertical-slider"
         />
         <button
@@ -102,10 +107,12 @@ export function ControlsPanel({
           className={`ctl-btn ${cls('speedbrake_arm')} ${state.controls.speedbrakeArmed ? 'lit' : ''}`}
           data-testid="speedbrake-arm"
           title={hint('speedbrake_arm')}
-          onClick={() => {
-            audioEngine.click();
-            sendCommand({ type: 'set_speedbrake_armed', armed: !state.controls.speedbrakeArmed });
-          }}
+          onClick={() =>
+            sendCommandWithSound(
+              { type: 'set_speedbrake_armed', armed: !state.controls.speedbrakeArmed },
+              'click',
+            )
+          }
         >
           ARM
         </button>
@@ -118,20 +125,14 @@ export function ControlsPanel({
           <button
             type="button"
             className={!state.controls.gearLeverDown ? 'detent active' : 'detent'}
-            onClick={() => {
-              audioEngine.click('gear_lever');
-              sendCommand({ type: 'set_gear', down: false });
-            }}
+            onClick={() => sendCommandWithSound({ type: 'set_gear', down: false }, 'gear_lever')}
           >
             UP
           </button>
           <button
             type="button"
             className={state.controls.gearLeverDown ? 'detent active' : 'detent'}
-            onClick={() => {
-              audioEngine.click('gear_lever');
-              sendCommand({ type: 'set_gear', down: true });
-            }}
+            onClick={() => sendCommandWithSound({ type: 'set_gear', down: true }, 'gear_lever')}
           >
             DN
           </button>
@@ -147,10 +148,7 @@ export function ControlsPanel({
               key={s}
               type="button"
               className={state.controls.autobrake === s ? 'detent active' : 'detent'}
-              onClick={() => {
-                audioEngine.click('rotary');
-                sendCommand({ type: 'set_autobrake', setting: s });
-              }}
+              onClick={() => sendCommandWithSound({ type: 'set_autobrake', setting: s }, 'rotary')}
             >
               {s}
             </button>
@@ -175,11 +173,13 @@ export function ControlsPanel({
               type="button"
               title={hint(id)}
               data-testid={`light-${light}`}
-              className={`ctl-btn ${guidedControlId === id ? 'ctl-guided' : ''} ${state.lights[light] ? 'lit' : ''}`}
-              onClick={() => {
-                audioEngine.click();
-                sendCommand({ type: 'set_light', light, on: !state.lights[light] });
-              }}
+              className={`ctl-btn ${guidedControlId === id && showHints ? 'ctl-guided' : ''} ${state.lights[light] ? 'lit' : ''}`}
+              onClick={() =>
+                sendCommandWithSound(
+                  { type: 'set_light', light, on: !state.lights[light] },
+                  'click',
+                )
+              }
             >
               {label}
             </button>
@@ -188,10 +188,12 @@ export function ControlsPanel({
             type="button"
             data-testid="parking-brake"
             className={`ctl-btn ${state.controls.parkingBrakeSet ? 'lit-red' : ''}`}
-            onClick={() => {
-              audioEngine.click();
-              sendCommand({ type: 'set_parking_brake', engaged: !state.controls.parkingBrakeSet });
-            }}
+            onClick={() =>
+              sendCommandWithSound(
+                { type: 'set_parking_brake', engaged: !state.controls.parkingBrakeSet },
+                'click',
+              )
+            }
           >
             PARK
           </button>

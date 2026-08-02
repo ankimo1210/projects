@@ -11,6 +11,18 @@ import type { TranscriptEntry } from './transcript.js';
 
 export type TrainingMode = 'guided' | 'assisted' | 'evaluation';
 
+/** FO callouts the debrief must see as events (R-19). */
+const FO_SAFETY_EVENTS: Record<string, { severity: ScenarioEvent['severity']; message: string }> = {
+  'fo:unstable_approach': {
+    severity: 'deviation',
+    message: 'First officer called an unstable approach',
+  },
+  'fo:gear_reminder': {
+    severity: 'deviation',
+    message: 'First officer had to prompt for the landing gear',
+  },
+};
+
 /**
  * Orchestrates one training run: scenario phase machine + first officer +
  * ATC + transcript (spec §11–§16). Pure and deterministic — the browser (or a
@@ -27,7 +39,14 @@ export class TrainingSession {
   version = 0;
 
   private pendingInstructions = new Map<string, AtcInstruction>();
-  private axisExtremes = { rollMin: 0, rollMax: 0, pitchMin: 0, pitchMax: 0 };
+  private axisExtremes = {
+    rollMin: 0,
+    rollMax: 0,
+    pitchMin: 0,
+    pitchMax: 0,
+    yawMin: 0,
+    yawMax: 0,
+  };
   private lastState: AircraftState | null = null;
 
   constructor(
@@ -43,7 +62,10 @@ export class TrainingSession {
     });
     const runway = getRunway(scenario.initialState.airportIcao, scenario.initialState.runwayId);
     if (!runway) throw new Error('scenario runway not found');
-    this.atc = new AtcController(runway);
+    this.atc = new AtcController(runway, {
+      dirDeg: scenario.initialState.windDirDeg,
+      speedKt: scenario.initialState.windSpeedKt,
+    });
     this.runtime.onEvent((event) => this.onScenarioEvent(event));
   }
 
@@ -73,7 +95,10 @@ export class TrainingSession {
   update(state: AircraftState): void {
     this.lastState = state;
     this.runtime.update(state); // events flow via onScenarioEvent
-    for (const line of this.fo.update(state, this.runtime.phaseId)) this.push(line);
+    for (const line of this.fo.update(state, this.runtime.phaseId)) {
+      this.push(line);
+      this.recordFoSafetyEvent(line, state);
+    }
     for (const instruction of this.atc.update(state, this.runtime.phaseId)) {
       this.registerInstruction(instruction);
     }
@@ -113,8 +138,13 @@ export class TrainingSession {
     if (instruction) {
       const { followUps, flags } = this.atc.handleReadback(instruction, optionId, state);
       for (const [name, value] of Object.entries(flags)) this.runtime.setFlag(name, value);
-      for (const f of followUps) this.push(f);
       this.pendingInstructions.delete(entryId);
+      for (const f of followUps) {
+        this.push(f);
+        // A "negative — read back" follow-up routes back to the same
+        // instruction so the crew can correct themselves (R-20).
+        if (f.expectedResponse) this.pendingInstructions.set(f.id, instruction);
+      }
     } else {
       const { followUps } = this.fo.respond(entry, optionId, state);
       for (const f of followUps) this.push(f);
@@ -140,9 +170,14 @@ export class TrainingSession {
     } else if (axis === 'pitch') {
       this.axisExtremes.pitchMin = Math.min(this.axisExtremes.pitchMin, valueNorm);
       this.axisExtremes.pitchMax = Math.max(this.axisExtremes.pitchMax, valueNorm);
+    } else {
+      this.axisExtremes.yawMin = Math.min(this.axisExtremes.yawMin, valueNorm);
+      this.axisExtremes.yawMax = Math.max(this.axisExtremes.yawMax, valueNorm);
     }
+    // The hint asks for rudder too, so the check must require it (R-18).
     const e = this.axisExtremes;
-    if (e.rollMin < -0.85 && e.rollMax > 0.85 && e.pitchMin < -0.85 && e.pitchMax > 0.85) {
+    const full = (min: number, max: number): boolean => min < -0.85 && max > 0.85;
+    if (full(e.rollMin, e.rollMax) && full(e.pitchMin, e.pitchMax) && full(e.yawMin, e.yawMax)) {
       this.runtime.setFlag('flightControlCheckDone', true);
     }
   }
@@ -180,6 +215,22 @@ export class TrainingSession {
   private registerInstruction(instruction: AtcInstruction): void {
     this.pendingInstructions.set(instruction.id, instruction);
     this.push(instruction.transcriptEntry);
+  }
+
+  /**
+   * FO callouts that represent a real deviation become scenario events, so the
+   * debrief scores them instead of leaving them buried in the transcript.
+   */
+  private recordFoSafetyEvent(line: TranscriptEntry, state: AircraftState): void {
+    const safety = line.relatedEventId ? FO_SAFETY_EVENTS[line.relatedEventId] : undefined;
+    if (!safety || !line.relatedEventId) return;
+    this.runtime.recordEvent({
+      kind: 'rule_fired',
+      simTimeSec: state.simTimeSec,
+      id: line.relatedEventId,
+      message: safety.message,
+      severity: safety.severity,
+    });
   }
 
   private push(entry: TranscriptEntry): void {

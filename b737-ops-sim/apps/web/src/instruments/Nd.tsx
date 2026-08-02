@@ -100,7 +100,15 @@ export function Nd({ state }: { state: AircraftState }): JSX.Element {
         {/* range rings */}
         <circle cx={CX} cy={CY} r={R / 2} fill="none" stroke="#3a3b40" strokeDasharray="3 5" />
         {/* extended centerline + runway */}
-        <line x1={appStart.x} y1={appStart.y} x2={thr.x} y2={thr.y} stroke="#39d353" strokeDasharray="8 8" strokeWidth={1.5} />
+        <line
+          x1={appStart.x}
+          y1={appStart.y}
+          x2={thr.x}
+          y2={thr.y}
+          stroke="#39d353"
+          strokeDasharray="8 8"
+          strokeWidth={1.5}
+        />
         <line x1={thr.x} y1={thr.y} x2={end.x} y2={end.y} stroke="#fff" strokeWidth={6} />
         {/* track line */}
         <line
@@ -114,7 +122,9 @@ export function Nd({ state }: { state: AircraftState }): JSX.Element {
       </g>
       {roseTicks}
       {/* selected heading bug */}
-      <g transform={`translate(${CX + (R + 4) * Math.cos(selRad)} ${CY + (R + 4) * Math.sin(selRad)}) rotate(${selRel})`}>
+      <g
+        transform={`translate(${CX + (R + 4) * Math.cos(selRad)} ${CY + (R + 4) * Math.sin(selRad)}) rotate(${selRel})`}
+      >
         <polygon points="-9,0 9,0 4,8 -4,8" fill="#ff3ec8" />
       </g>
       {/* aircraft symbol */}

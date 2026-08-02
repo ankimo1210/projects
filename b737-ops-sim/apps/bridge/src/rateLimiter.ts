@@ -24,5 +24,16 @@ export class TokenBucket {
   }
 }
 
-/** Axis-style commands stream continuously; discrete commands do not. */
-export const AXIS_COMMAND_TYPES = new Set(['set_control_axis', 'set_throttle', 'set_brakes']);
+/**
+ * Axis-style commands stream continuously; discrete commands do not.
+ * Speed brake and reverse levers are dragged like the throttle, so they belong
+ * in the continuous bucket — in the discrete one a normal drag was mostly
+ * rejected and the lever stopped short of where it was released (R-14).
+ */
+export const AXIS_COMMAND_TYPES = new Set([
+  'set_control_axis',
+  'set_throttle',
+  'set_brakes',
+  'set_speedbrake',
+  'set_reverse_thrust',
+]);
