@@ -1,7 +1,7 @@
 # analytics — 体験型インタラクティブ教科書シリーズ
 
-数学・機械学習のトピックを「直感 → 図 → 最小限の数式 → Python 実装 → 実験 → 演習」の順で
-学ぶ、Jupyter Book ベースの教科書群。共通の流儀で揃えており、多くは uv workspace メンバー
+数学・機械学習のトピックを「直感 → 図 → 最小限の数式 → 実装 → 実験 → 演習」の順で
+学ぶ、Jupyter Book と独立 Web アプリによる教科書群。共通の流儀で揃えており、多くは uv workspace メンバー
 (`differential_equation` は `ode-book` / `pde-book` の2サブパッケージがメンバー、`report` のみ
 メンバー外)。
 
@@ -19,7 +19,7 @@
 | [`bayesian/`](bayesian/) | ベイズ推定の体験 — 信念の更新装置としての統計 | 14 |
 | [`fourier/`](fourier/) | フーリエ解析の風景 — 波・周波数・分解の言語 | 10 |
 | [`laplace/`](laplace/) | ラプラス変換の風景 — 時間・複素周波数・システムの言語 | 11 |
-| [`differential_equation/`](differential_equation/) | 微分方程式 — ODE / PDE の2分冊（変化・流れ・場の言語） | 18 (ODE 9 / PDE 9) |
+| [`differential_equation/`](differential_equation/) | 微分方程式 — ODE / PDE の2分冊 + SDE インタラクティブ教科書（経路・分布、基本過程、生成作用素、後退方程式、Feynman–Kac、初到達を数値実験で学ぶ） | 18 (ODE 9 / PDE 9) + SDE 47章 |
 | [`machine_learning/`](machine_learning/) | 機械学習の実践 — 正しく定式化し、検証し、解釈する | 14 |
 
 > Notebook 数は時点の目安(各教材は随時加筆)。
@@ -42,6 +42,13 @@ make report    # 統合ポータルをビルド(analytics/report/site/index.html
 個別ビルド: `uv run jupyter-book build analytics/<book>/book/`
 (`differential_equation` は `ode-book/` / `pde-book/`)。
 `book/_build/` と `report/site/` はビルド成果物(gitignore)。
+
+SDE 教材は独立 Web アプリとしてビルドする:
+
+```bash
+cd analytics/differential_equation/sde-book
+npm ci && npm run build
+```
 
 ## テスト
 

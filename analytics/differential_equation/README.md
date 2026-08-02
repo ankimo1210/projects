@@ -3,7 +3,8 @@
 > シリーズ索引: [analytics 教材一覧](../README.md)
 
 `analytics` シリーズの微分方程式プロジェクト。**常微分方程式 (ODE)** と
-**偏微分方程式 (PDE)** を、それぞれ独立した Jupyter Book 教科書として収める。
+**偏微分方程式 (PDE)** の Jupyter Book に加え、**確率微分方程式 (SDE)** の
+独立インタラクティブ Web 教科書を収める。
 
 > **微分方程式は、変化・流れ・場を記述するための言語である。**
 
@@ -15,15 +16,16 @@ microscope of change:  微分積分の基礎  →  ODE  →  PDE  →  応用
 微分=変化率・積分=蓄積・偏微分=方向別の変化率・勾配=最も増える方向、という直感を作ってから
 微分方程式へ進む構成。
 
-## 2 つの教材
+## 3 つの教材
 
 | プロジェクト | テーマ | 中心思想 |
 |---|---|---|
 | [`ode-book/`](ode-book/) | 常微分方程式 | 状態が **時間** とともにどう変わるか |
 | [`pde-book/`](pde-book/) | 偏微分方程式 | **空間と時間** の中で、場がどう変化するか |
+| [`sde-book/`](sde-book/) | 確率微分方程式 | **経路と分布** が不確実性の中でどう進化するか |
 
-各プロジェクトは自分の `README.md` / `pyproject.toml` / `src/` / `tests/` / `book/` を持つ
-standalone なパッケージ。詳しい使い方は各 README を参照。
+各プロジェクトは自分の `README.md` とテスト・ビルド設定を持つ standalone な教材。
+ODE / PDE は Python + Jupyter Book、SDE は TypeScript + Canvas のブラウザ教材。詳しい使い方は各 README を参照。
 
 ## クイックスタート
 
@@ -39,6 +41,14 @@ jupyter-book build book/             # -> book/_build/html/index.html
 
 # テスト(workspace 未登録でも)
 PYTHONPATH=src python -m pytest tests -q
+```
+
+SDE 教材:
+
+```bash
+cd sde-book
+npm ci
+npm run dev
 ```
 
 ## ノートブックの再生成(任意)
