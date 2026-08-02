@@ -53,6 +53,34 @@ export function deriveGuidance(session: TrainingSession): GuidanceHint {
     }
   }
   switch (phase) {
+    // ---- systems phases (M4) ----
+    case 'cold_and_dark':
+      return {
+        controlId: null,
+        text: 'Everything is off. Open the Systems panel: battery, standby power, IRS to NAV.',
+      };
+    case 'power_on':
+      return {
+        controlId: null,
+        text: 'DC power is up. Start the APU (master, then start) — it needs the battery.',
+      };
+    case 'apu_available':
+      return {
+        controlId: null,
+        text: 'APU running: generator on the bus, fuel pumps on, packs OFF, APU bleed on, then the Before Start checklist.',
+      };
+    case 'engine_start':
+      return {
+        controlId: null,
+        text: 'Start selector to GND, wait for N2, then raise the start lever. One engine at a time.',
+      };
+    case 'after_start':
+      return {
+        controlId: null,
+        text: 'Generators on, APU bleed off, engine bleeds and packs on, hydraulic pumps on.',
+      };
+    case 'ready_to_taxi':
+      return { controlId: null, text: 'Systems are set. Request a taxi clearance.' };
     // ---- ground phases (M3) ----
     case 'preflight':
       return {
