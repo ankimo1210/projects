@@ -11,6 +11,7 @@ import { TranscriptPanel } from './panels/TranscriptPanel.js';
 import { StatusBar } from './panels/StatusBar.js';
 import { DebriefView } from './panels/DebriefView.js';
 import { DiagnosticsPanel } from './panels/DiagnosticsPanel.js';
+import { OverheadPanel } from './panels/OverheadPanel.js';
 import { deriveGuidance } from './cockpit/guidance.js';
 import { getSession } from './state/connection.js';
 import { useSessionStore, useSettingsStore, useSimStore } from './state/stores.js';
@@ -20,6 +21,7 @@ export function App(): JSX.Element {
   const connection = useSimStore((s) => s.connection);
   useSessionStore((s) => s.version);
   const panelsCollapsed = useSettingsStore((s) => s.panelsCollapsed);
+  const showOverhead = useSettingsStore((s) => s.showOverhead);
   const togglePanels = useSettingsStore((s) => s.togglePanels);
   const toggleDiagnostics = useSettingsStore((s) => s.toggleDiagnostics);
   const session = getSession();
@@ -74,9 +76,10 @@ export function App(): JSX.Element {
       )}
 
       {!panelsCollapsed && (
-        <section className="lower-panels">
+        <section className={`lower-panels ${showOverhead ? 'with-overhead' : ''}`}>
           <ChecklistPanel />
           <TranscriptPanel />
+          {showOverhead && state && <OverheadPanel state={state} />}
         </section>
       )}
 

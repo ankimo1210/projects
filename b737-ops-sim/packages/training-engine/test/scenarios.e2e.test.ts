@@ -1,6 +1,10 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { MockFlightModel } from '@b737/flightgear-adapter';
-import { APPROACH_DRILL_SCENARIO, GATE_TO_GATE_SCENARIO } from '@b737/scenario-engine';
+import {
+  APPROACH_DRILL_SCENARIO,
+  COLD_AND_DARK_SCENARIO,
+  GATE_TO_GATE_SCENARIO,
+} from '@b737/scenario-engine';
 import {
   KSFO_TAXI,
   angleDiffDeg,
@@ -299,5 +303,116 @@ describe('approach drill scenario', () => {
       session.transcript.some((e) => e.message.includes('go around, fly runway heading')),
     ).toBe(true);
     expect(model.snapshot(0).position.radioAltitudeFt).toBeGreaterThan(1500);
+  });
+});
+
+describe('cold and dark scenario', () => {
+  beforeEach(() => resetTranscriptIds());
+
+  it('brings the aeroplane from cold and dark to both engines running', () => {
+    const scenario = COLD_AND_DARK_SCENARIO;
+    const model = new MockFlightModel(scenario.initialState);
+    const session = new TrainingSession(scenario, { mode: 'evaluation' });
+    const crew = new Crew(model, session);
+    session.update(model.snapshot(0));
+
+    // ---- everything is off ----
+    expect(session.phaseId).toBe('cold_and_dark');
+    const dark = model.snapshot(0).systems;
+    expect(dark.electrical.dcBusPowered).toBe(false);
+    expect(dark.engines.left.running).toBe(false);
+
+    // ---- power on + IRS ----
+    crew.cmd({ type: 'set_system_switch', switch: 'battery', on: true });
+    crew.cmd({ type: 'set_system_switch', switch: 'standby_power', on: true });
+    crew.cmd({ type: 'set_system_switch', switch: 'irs_left', on: true });
+    crew.cmd({ type: 'set_system_switch', switch: 'irs_right', on: true });
+    step(model, session, crew);
+    expect(session.phaseId).toBe('power_on');
+    for (let i = 0; i < 3; i++) session.answerChecklistItem('preflight');
+    expect(session.runtime.checklistRuns.get('preflight')!.complete).toBe(true);
+
+    // ---- APU start (needs DC power) ----
+    crew.cmd({ type: 'set_system_switch', switch: 'apu_master', on: true });
+    crew.cmd({ type: 'set_system_switch', switch: 'apu_start', on: true });
+    for (let t = 0; t < 32; t += DT) step(model, session, crew);
+    expect(model.snapshot(0).systems.apu.state).toBe('running');
+    expect(session.phaseId).toBe('apu_available');
+
+    // ---- Before Start: generator, fuel, packs off, bleed ----
+    crew.cmd({ type: 'set_system_switch', switch: 'apu_gen', on: true });
+    crew.cmd({ type: 'set_system_switch', switch: 'fuel_pump_left', on: true });
+    crew.cmd({ type: 'set_system_switch', switch: 'fuel_pump_right', on: true });
+    crew.cmd({ type: 'set_system_switch', switch: 'bleed_apu', on: true });
+    step(model, session, crew);
+    for (let i = 0; i < 4; i++) session.answerChecklistItem('before_start_systems');
+    expect(session.runtime.checklistRuns.get('before_start_systems')!.complete).toBe(true);
+    step(model, session, crew); // the phase machine runs on the next sample
+    expect(session.phaseId).toBe('engine_start');
+
+    // ---- start both engines ----
+    for (const [engine, lever] of [
+      ['left', 'start_lever_left'],
+      ['right', 'start_lever_right'],
+    ] as const) {
+      crew.cmd({ type: 'set_engine_start', engine, mode: 'ground' });
+      for (let t = 0; t < 8; t += DT) step(model, session, crew); // motoring
+      expect(model.snapshot(0).systems.engines[engine].n2Pct).toBeGreaterThan(20);
+      crew.cmd({ type: 'set_system_switch', switch: lever, on: true });
+      for (let t = 0; t < 12; t += DT) step(model, session, crew);
+      expect(model.snapshot(0).systems.engines[engine].running).toBe(true);
+    }
+    expect(session.phaseId).toBe('after_start');
+
+    // ---- After Start: generators, bleed off, packs on, hydraulics ----
+    crew.cmd({ type: 'set_system_switch', switch: 'gen1', on: true });
+    crew.cmd({ type: 'set_system_switch', switch: 'gen2', on: true });
+    crew.cmd({ type: 'set_system_switch', switch: 'bleed_apu', on: false });
+    crew.cmd({ type: 'set_system_switch', switch: 'bleed_eng1', on: true });
+    crew.cmd({ type: 'set_system_switch', switch: 'bleed_eng2', on: true });
+    crew.cmd({ type: 'set_system_switch', switch: 'pack_left', on: true });
+    crew.cmd({ type: 'set_system_switch', switch: 'pack_right', on: true });
+    crew.cmd({ type: 'set_system_switch', switch: 'hyd_pump_eng1', on: true });
+    crew.cmd({ type: 'set_system_switch', switch: 'hyd_pump_eng2', on: true });
+    for (let t = 0; t < 8; t += DT) step(model, session, crew);
+    for (let i = 0; i < 4; i++) session.answerChecklistItem('after_start');
+    expect(session.runtime.checklistRuns.get('after_start')!.complete).toBe(true);
+    step(model, session, crew);
+    expect(session.phaseId).toBe('ready_to_taxi');
+
+    const s = model.snapshot(0).systems;
+    expect(s.electrical.gen1On && s.electrical.gen2On).toBe(true);
+    expect(s.hydraulic.systemAPressurePsi).toBeGreaterThan(2500);
+    expect(s.annunciations.filter((a) => a.severity !== 'advisory')).toEqual([]);
+    // and the aeroplane can now actually move
+    crew.cmd({ type: 'set_parking_brake', engaged: false });
+    crew.cmd({ type: 'set_throttle', valueNorm: 0.4 });
+    for (let t = 0; t < 10; t += DT) step(model, session, crew);
+    expect(model.snapshot(0).speeds.gsKt).toBeGreaterThan(3);
+  });
+
+  it('refuses an engine start with the packs on APU bleed', () => {
+    const scenario = COLD_AND_DARK_SCENARIO;
+    const model = new MockFlightModel(scenario.initialState);
+    const session = new TrainingSession(scenario, { mode: 'evaluation' });
+    const crew = new Crew(model, session);
+    session.update(model.snapshot(0));
+
+    crew.cmd({ type: 'set_system_switch', switch: 'battery', on: true });
+    crew.cmd({ type: 'set_system_switch', switch: 'apu_master', on: true });
+    crew.cmd({ type: 'set_system_switch', switch: 'apu_start', on: true });
+    for (let t = 0; t < 32; t += DT) step(model, session, crew);
+    crew.cmd({ type: 'set_system_switch', switch: 'bleed_apu', on: true });
+    crew.cmd({ type: 'set_system_switch', switch: 'pack_left', on: true });
+    crew.cmd({ type: 'set_system_switch', switch: 'pack_right', on: true });
+    step(model, session, crew);
+
+    const rejected = model.applyCommand({
+      type: 'set_engine_start',
+      engine: 'left',
+      mode: 'ground',
+    });
+    expect(rejected.ok).toBe(false);
+    expect(rejected.ok ? '' : rejected.error).toMatch(/duct pressure/);
   });
 });

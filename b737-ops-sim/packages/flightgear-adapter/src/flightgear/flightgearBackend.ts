@@ -1,5 +1,6 @@
 import {
   AircraftStateSchema,
+  enginesRunningSystems,
   flapDetentToNorm,
   flapNormToNearestDetent,
   normalizeDeg360,
@@ -288,6 +289,12 @@ export class FlightGearBackend implements FlightBackend {
         return simple('set_ap_approach_mode', command.armed);
       case 'set_toga':
         return simple('set_toga', command.engaged);
+      case 'set_system_switch':
+        return simple(`set_system_switch.${command.switch}`, command.on);
+      case 'set_engine_start':
+        return simple(`set_engine_start.${command.engine}`, command.mode);
+      case 'reset_master_caution':
+        return simple('reset_master_caution', true);
       case 'set_light':
         return simple(`set_light.${command.light}`, command.on);
     }
@@ -441,6 +448,10 @@ export class FlightGearBackend implements FlightBackend {
         strobe: this.bool('lights.strobe'),
         beacon: this.bool('lights.beacon'),
       },
+      // Systems are aircraft-package specific in FlightGear; until the property
+      // map carries them, report the engines-running baseline so the schema is
+      // satisfied and the UI shows an honest "not modelled here" (M4 D8).
+      systems: enginesRunningSystems(),
       airport: { icao: null, runwayId: null },
     };
     const validated = AircraftStateSchema.safeParse(state);

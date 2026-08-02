@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { SystemsStateSchema } from './systems.js';
 
 /**
  * Canonical aircraft state streamed bridge → browser.
@@ -137,6 +138,9 @@ export const AircraftStateSchema = z.object({
     strobe: z.boolean(),
     beacon: z.boolean(),
   }),
+
+  /** Aircraft systems (spec §22 Phase 4); see systems.ts. */
+  systems: SystemsStateSchema,
 
   airport: z.object({
     icao: z.string().nullable(),

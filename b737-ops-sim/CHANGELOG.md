@@ -2,6 +2,43 @@
 
 Local-only project; versions track milestones rather than releases.
 
+## Milestone 4 — Aircraft Systems (2026-08-02)
+
+Start the aeroplane. Plan: [docs/milestones/MILESTONE_04.md](docs/milestones/MILESTONE_04.md),
+verification: [docs/milestones/MILESTONE_04_DOD.md](docs/milestones/MILESTONE_04_DOD.md),
+what is and is not modelled: [SYSTEMS_MODEL.md](SYSTEMS_MODEL.md).
+
+### Added
+
+- **Systems state** in the shared schema: electrical buses, APU, pneumatics,
+  fuel, hydraulics, ice protection, IRS, per-engine start state, plus derived
+  annunciations and master caution/warning.
+- **Systems model** in mock mode — a dependency graph evaluated every physics
+  step. Interlocks fall out of it: no APU start without DC power, no generator
+  without a running engine, no engine start without duct pressure, no start
+  lever without fuel pressure, and the packs starve an APU-bleed start.
+- **Engine start sequence**: starter motoring, light-off at 25 % N2, starter
+  cut-out at 56 %, idle at 62 %, with the selector springing back to OFF.
+- **Cold-and-dark scenario** with Preflight, Before Start (systems) and After
+  Start checklists, every item validated against systems state, handing over to
+  the gate-to-gate taxi flow.
+- **Overhead panel, systems synoptic and annunciator strip** in the browser,
+  including master caution/warning recall.
+- `set_system_switch`, `set_engine_start` and `reset_master_caution` commands,
+  validated at the bridge and mapped (as placeholders) in property map v4.
+
+### Changed
+
+- A shut-down engine windmills instead of idling and produces no thrust; with
+  both hydraulic systems below 1500 psi the gear, flaps and spoilers stop.
+
+### Known limitations
+
+- Systems are procedure-depth only: no electrical loads, fuel burn, pack
+  temperatures, crossfeed, standby hydraulics or failures (SYSTEMS_MODEL.md).
+- FlightGear mode reports the engines-running baseline for systems; the new
+  property-map entries are placeholders marked AIRCRAFT-MODEL-DEPENDENT.
+
 ## Milestone 3 — Operations (2026-08-02)
 
 Ground operations, real autopilot modes and more than one scenario.

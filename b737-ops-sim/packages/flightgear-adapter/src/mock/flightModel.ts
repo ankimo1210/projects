@@ -1,3 +1,4 @@
+import { MockSystemsModel, type SystemsStartMode } from './systemsModel.js';
 import {
   FLAP_DETENTS,
   FT_TO_M,
@@ -47,6 +48,11 @@ import {
  */
 
 export const PHYSICS_DT_SEC = 1 / 60;
+
+/** Cold-and-dark scenarios start at a stand with everything off. */
+function systemsModeFor(config: ScenarioInitialState): SystemsStartMode {
+  return config.startAt === 'stand' && config.coldAndDark === true ? 'cold_and_dark' : 'running';
+}
 
 // --- Airframe constants (approximate 737-800 magnitudes) ---
 const WING_AREA_M2 = 124.6;
@@ -178,6 +184,8 @@ export class MockFlightModel {
   private apPitchMode: PitchMode | null = null;
   /** Sub-step remainder carried between `step()` calls. */
   private stepCarrySec = 0;
+  /** Aircraft systems (spec §22 Phase 4); drives what the engines can do. */
+  readonly systems: MockSystemsModel;
   private lights = { landing: false, taxi: false, strobe: false, beacon: true };
   private mcp: McpState = {
     selSpeedKt: 150,
@@ -201,6 +209,7 @@ export class MockFlightModel {
     const rwy = getRunway(config.airportIcao, config.runwayId);
     if (!rwy) throw new Error(`unknown runway ${config.airportIcao}/${config.runwayId}`);
     this.runway = rwy;
+    this.systems = new MockSystemsModel(systemsModeFor(config));
     this.reset(config);
   }
 
@@ -297,6 +306,7 @@ export class MockFlightModel {
     this.parkingBrakeSet = config.startAt === 'final_approach' ? false : config.parkingBrakeSet;
     this.autobrake = 'OFF';
     this.autobrakeActive = false;
+    this.systems.reset(systemsModeFor(config));
     this.rtoArmed = false;
     this.approachArmed = false;
     this.togaActive = false;
@@ -421,6 +431,12 @@ export class MockFlightModel {
       case 'set_light':
         this.lights[cmd.light] = cmd.on;
         return { ok: true };
+      case 'set_system_switch':
+        return this.systems.applySwitch(cmd.switch, cmd.on);
+      case 'set_engine_start':
+        return this.systems.setEngineStart(cmd.engine, cmd.mode);
+      case 'reset_master_caution':
+        return this.systems.resetMasterCaution();
     }
   }
 
@@ -445,11 +461,16 @@ export class MockFlightModel {
     const fieldAltM = this.runway.elevationFtMsl * FT_TO_M;
 
     // --- Secondary surfaces move toward their commands ---
-    const flapTargetNorm = flapDetentToNorm(this.flapHandleDetent);
+    // Flaps, gear and spoilers are hydraulic: with both systems down they stop
+    // where they are (spec §22 Phase 4 D6).
+    const hydraulics = this.systems.hydraulicsAvailable;
+    const flapTargetNorm = hydraulics
+      ? flapDetentToNorm(this.flapHandleDetent)
+      : this.flapsActualNorm;
     const flapRate = dt / FLAP_FULL_TRAVEL_SEC;
     this.flapsActualNorm += clamp(flapTargetNorm - this.flapsActualNorm, -flapRate, flapRate);
 
-    const gearTarget = this.gearLeverDown ? 1 : 0;
+    const gearTarget = hydraulics ? (this.gearLeverDown ? 1 : 0) : this.gearPositionNorm;
     const gearRate = dt / GEAR_TRANSIT_SEC;
     this.gearPositionNorm += clamp(gearTarget - this.gearPositionNorm, -gearRate, gearRate);
 
@@ -463,24 +484,36 @@ export class MockFlightModel {
       this.speedbrakeLeverNorm = 1;
       this.speedbrakeArmed = false;
     }
-    const spoilerTarget = this.speedbrakeLeverNorm;
+    const spoilerTarget = hydraulics ? this.speedbrakeLeverNorm : this.spoilersNorm;
     const spoilerRate = dt / SPOILER_TRAVEL_SEC;
     this.spoilersNorm += clamp(spoilerTarget - this.spoilersNorm, -spoilerRate, spoilerRate);
 
     // --- Engines ---
-    const reverserActive = this.onGround && this.inputs.reverserLeverNorm > 0.02;
-    const targetN1 = reverserActive
+    // Systems decide whether there is an engine at all (spec §22 Phase 4 D6):
+    // a shut-down engine windmills, it does not idle.
+    this.systems.step(dt, { onGround: this.onGround, dtSec: dt });
+    const leftRunning = this.systems.engineRunning('left');
+    const rightRunning = this.systems.engineRunning('right');
+    const anyRunning = leftRunning || rightRunning;
+    const reverserActive = anyRunning && this.onGround && this.inputs.reverserLeverNorm > 0.02;
+    const commandedN1 = reverserActive
       ? IDLE_N1_PCT + this.inputs.reverserLeverNorm * (REVERSE_MAX_N1_PCT - IDLE_N1_PCT)
       : IDLE_N1_PCT + this.inputs.throttleNorm * (MAX_N1_PCT - IDLE_N1_PCT);
-    const stepN1 = (n1: number): number => {
-      const delta = ((targetN1 - n1) / N1_TAU_SEC) * dt;
+    const windmillN1 = clamp((this.iasMps * MPS_TO_KT) / 12, 0, 18);
+    const targetN1Left = leftRunning ? commandedN1 : windmillN1;
+    const targetN1Right = rightRunning ? commandedN1 : windmillN1;
+    const stepN1 = (n1: number, target: number): number => {
+      const delta = ((target - n1) / N1_TAU_SEC) * dt;
       const limited = clamp(delta, -N1_RATE_LIMIT_PCT_PER_SEC * dt, N1_RATE_LIMIT_PCT_PER_SEC * dt);
       return n1 + limited;
     };
-    this.n1LeftPct = stepN1(this.n1LeftPct);
-    this.n1RightPct = stepN1(this.n1RightPct);
-    const n1Avg = (this.n1LeftPct + this.n1RightPct) / 2;
-    const thrustFraction = Math.max(0, (n1Avg - IDLE_N1_PCT) / (MAX_N1_PCT - IDLE_N1_PCT)) ** 2;
+    this.n1LeftPct = stepN1(this.n1LeftPct, targetN1Left);
+    this.n1RightPct = stepN1(this.n1RightPct, targetN1Right);
+    // Only running engines contribute thrust.
+    const thrustOf = (n1: number, running: boolean): number =>
+      running ? Math.max(0, (n1 - IDLE_N1_PCT) / (MAX_N1_PCT - IDLE_N1_PCT)) ** 2 : 0;
+    const thrustFraction =
+      (thrustOf(this.n1LeftPct, leftRunning) + thrustOf(this.n1RightPct, rightRunning)) / 2;
     let thrustN = thrustFraction * MAX_TOTAL_THRUST_N;
     if (reverserActive) thrustN = -thrustN * REVERSE_EFFICIENCY;
 
@@ -881,6 +914,7 @@ export class MockFlightModel {
         gsDeviationDots: ils.gsDots,
       },
       lights: { ...this.lights },
+      systems: this.systems.state,
       airport: { icao: rwy.airportIcao, runwayId: rwy.runwayId },
     };
   }

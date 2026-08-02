@@ -58,6 +58,9 @@ interface SettingsStore {
   ttsEnabled: boolean;
   showDiagnostics: boolean;
   panelsCollapsed: boolean;
+  /** Overhead/systems panel visible (spec §22 Phase 4). */
+  showOverhead: boolean;
+  toggleOverhead: () => void;
   lastCommandRejection: string | null;
   setMode: (m: TrainingMode) => void;
   setSoundEnabled: (v: boolean) => void;
@@ -73,6 +76,8 @@ export const useSettingsStore = create<SettingsStore>((set) => ({
   ttsEnabled: false,
   showDiagnostics: false,
   panelsCollapsed: false,
+  showOverhead: false,
+  toggleOverhead: () => set((s) => ({ showOverhead: !s.showOverhead })),
   lastCommandRejection: null,
   setMode: (mode) => set({ mode }),
   setSoundEnabled: (soundEnabled) => set({ soundEnabled }),

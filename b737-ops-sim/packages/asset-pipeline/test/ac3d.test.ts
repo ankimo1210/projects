@@ -114,7 +114,10 @@ describe('acToGltf', () => {
     const uvAcc = accessors[quad.primitives[0]!.attributes.TEXCOORD_0]!;
     const uvView = views[uvAcc.bufferView]!;
     const uvs = new Float32Array(
-      bin.buffer.slice(bin.byteOffset + uvView.byteOffset, bin.byteOffset + uvView.byteOffset + uvView.byteLength),
+      bin.buffer.slice(
+        bin.byteOffset + uvView.byteOffset,
+        bin.byteOffset + uvView.byteOffset + uvView.byteLength,
+      ),
     );
     // ref (u=1,v=1) with texrep [2,1] → u=2, v' = 1-1 = 0
     const pairs = Array.from({ length: uvs.length / 2 }, (_, i) => [uvs[i * 2], uvs[i * 2 + 1]]);
