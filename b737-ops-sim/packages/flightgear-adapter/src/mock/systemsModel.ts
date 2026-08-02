@@ -258,6 +258,20 @@ export class MockSystemsModel {
     return { ok: true };
   }
 
+  /**
+   * Fail an engine (spec §22 Phase 5): the fuel valve shuts and the engine
+   * spools down, exactly as if the crew had cut the start lever — so every
+   * consequence (generator, hydraulics, bleed) follows the same graph.
+   */
+  failEngine(engine: 'left' | 'right'): void {
+    const eng = this.s.engines[engine];
+    eng.running = false;
+    eng.fuelValveOpen = false;
+    eng.startMode = 'off';
+    eng.startValveOpen = false;
+    this.refreshInstantaneous();
+  }
+
   /** Master caution/warning recall: acknowledges everything currently active. */
   resetMasterCaution(): CommandResult {
     for (const a of this.s.annunciations) this.acknowledgedIds.add(a.id);

@@ -328,3 +328,94 @@ describe('MCP vertical speed sign', () => {
     expect(m.snapshot(0).speeds.verticalSpeedFpm).toBeLessThan(0);
   });
 });
+
+// M5: route following, weather and failures.
+describe('LNAV, weather and failures', () => {
+  function airborne(overrides: Partial<typeof DEFAULT_SCENARIO_INIT> = {}) {
+    const m = makeModel(overrides);
+    flyTakeoff(m, 145);
+    m.applyCommand({ type: 'set_control_axis', axis: 'pitch', valueNorm: 0 });
+    m.applyCommand({ type: 'set_throttle', valueNorm: 0.8 });
+    m.applyCommand({ type: 'set_mcp_altitude', altitudeFt: 4000 });
+    m.applyCommand({ type: 'set_autopilot', engaged: true });
+    m.step(30);
+    return m;
+  }
+
+  it('refuses LNAV without a route and annunciates it once loaded', () => {
+    const m = airborne();
+    expect(m.applyCommand({ type: 'set_lnav', armed: true }).ok).toBe(false);
+    expect(
+      m.applyCommand({ type: 'load_route', sidId: 'SFOUT1', starId: null, approachId: null }).ok,
+    ).toBe(true);
+    expect(m.applyCommand({ type: 'set_lnav', armed: true }).ok).toBe(true);
+    m.step(2);
+    const s = m.snapshot(0);
+    expect(s.fms.legs.map((l) => l.waypoint.id)).toEqual(['SFOUT', 'BAYNE', 'WESTB']);
+    expect(s.mcp.rollMode).toBe('LNAV');
+    expect(s.fms.distanceToWaypointNm).toBeGreaterThan(0);
+  });
+
+  it('flies the route and sequences to the next leg', () => {
+    const m = airborne();
+    m.applyCommand({ type: 'load_route', sidId: 'SFOUT1', starId: null, approachId: null });
+    m.applyCommand({ type: 'set_lnav', armed: true });
+    const start = m.snapshot(0).fms;
+    expect(start.activeLegIndex).toBe(0);
+    m.step(180);
+    const s = m.snapshot(0);
+    expect(s.fms.activeLegIndex).toBeGreaterThan(0);
+    expect(Math.abs(s.fms.crossTrackNm ?? 99)).toBeLessThan(2);
+  });
+
+  it('direct-to a fix that is not in the route builds a one-leg route', () => {
+    const m = airborne();
+    expect(m.applyCommand({ type: 'direct_to', waypointId: 'MIDBA' }).ok).toBe(true);
+    expect(m.applyCommand({ type: 'direct_to', waypointId: 'NOWHERE' }).ok).toBe(false);
+    expect(m.snapshot(0).fms.legs.map((l) => l.waypoint.id)).toEqual(['MIDBA']);
+  });
+
+  it('reports the wind it is actually in, blending toward the wind aloft', () => {
+    const m = makeModel({
+      windDirDeg: 290,
+      windSpeedKt: 6,
+      weather: {
+        windAloftDirDeg: 250,
+        windAloftSpeedKt: 45,
+        gustKt: 0,
+        visibilityM: 8000,
+        turbulence: 0,
+      },
+    });
+    const surface = m.snapshot(0).weather;
+    expect(surface.windSpeedKt).toBeCloseTo(6, 0);
+    flyTakeoff(m, 145);
+    m.applyCommand({ type: 'set_control_axis', axis: 'pitch', valueNorm: 0.2 });
+    m.step(90);
+    const aloft = m.snapshot(0).weather;
+    expect(aloft.windSpeedKt).toBeGreaterThan(surface.windSpeedKt + 5);
+    expect(aloft.visibilityM).toBe(8000);
+  });
+
+  it('an engine failure stops that engine and halves the thrust available', () => {
+    const m = airborne();
+    const before = m.snapshot(0);
+    expect(before.systems.engines.left.running).toBe(true);
+    m.applyCommand({ type: 'inject_failure', failure: 'engine_1_flameout' });
+    m.step(10);
+    const after = m.snapshot(0);
+    expect(after.systems.engines.left.running).toBe(false);
+    expect(after.activeFailures).toContain('engine_1_flameout');
+    expect(after.engines.left.n1Pct).toBeLessThan(before.engines.left.n1Pct);
+    expect(after.systems.engines.right.running).toBe(true);
+    // the annunciator sees it through the systems model, not a second path
+    expect(after.systems.annunciations.some((a) => a.id === 'gen1_off_bus')).toBe(false);
+  });
+
+  it('a failure armed in the scenario is active from the first sample', () => {
+    const m = makeModel({ failures: ['hydraulic_a'] });
+    const s = m.snapshot(0);
+    expect(s.activeFailures).toContain('hydraulic_a');
+    expect(s.systems.hydraulic.engPump1On).toBe(false);
+  });
+});

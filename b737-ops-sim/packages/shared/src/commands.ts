@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { EngineStartModeSchema, SystemSwitchSchema } from './systems.js';
+import { EngineStartModeSchema, FailureKindSchema, SystemSwitchSchema } from './systems.js';
 import { AutobrakeSettingSchema, FlapDetentSchema } from './aircraftState.js';
 
 /**
@@ -53,6 +53,18 @@ export const AircraftCommandSchema = z.discriminatedUnion('type', [
   }),
   /** Master caution / warning recall. */
   z.object({ type: z.literal('reset_master_caution') }),
+  /** Load a route (spec §22 Phase 5). Procedure ids come from navigation.ts. */
+  z.object({
+    type: z.literal('load_route'),
+    sidId: z.string().nullable(),
+    starId: z.string().nullable(),
+    approachId: z.string().nullable(),
+  }),
+  z.object({ type: z.literal('direct_to'), waypointId: z.string() }),
+  z.object({ type: z.literal('set_lnav'), armed: z.boolean() }),
+  /** Inject a failure — used by scenarios and by the instructor. */
+  z.object({ type: z.literal('inject_failure'), failure: FailureKindSchema }),
+  z.object({ type: z.literal('clear_failures') }),
   z.object({
     type: z.literal('set_light'),
     light: z.enum(['landing', 'taxi', 'strobe', 'beacon']),
@@ -88,5 +100,20 @@ export const ScenarioInitialStateSchema = z.object({
   windSpeedKt: z.number().min(0).max(40),
   /** Start with every system off (spec §22 Phase 4). Only valid at a stand. */
   coldAndDark: z.boolean().optional(),
+  /** Weather beyond the surface wind (spec §22 Phase 5). */
+  weather: z
+    .object({
+      /** Wind at 3,000 ft and above; the surface wind is interpolated below. */
+      windAloftDirDeg: z.number().min(0).max(360),
+      windAloftSpeedKt: z.number().min(0).max(120),
+      /** Peak gust above the steady wind, in knots. */
+      gustKt: z.number().min(0).max(40),
+      visibilityM: z.number().min(50).max(20000),
+      /** 0..1; perturbs attitude and airspeed, seeded so runs reproduce. */
+      turbulence: z.number().min(0).max(1),
+    })
+    .optional(),
+  /** Failures armed at scenario start (spec §22 Phase 5). */
+  failures: z.array(FailureKindSchema).optional(),
 });
 export type ScenarioInitialState = z.infer<typeof ScenarioInitialStateSchema>;

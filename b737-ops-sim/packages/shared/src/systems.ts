@@ -147,6 +147,18 @@ export const SystemsStateSchema = z.object({
 });
 export type SystemsState = z.infer<typeof SystemsStateSchema>;
 
+/** Failures a scenario or the instructor can inject (spec §22 Phase 5). */
+export const FAILURE_KINDS = [
+  'engine_1_flameout',
+  'engine_2_flameout',
+  'generator_1',
+  'generator_2',
+  'hydraulic_a',
+  'hydraulic_b',
+] as const;
+export const FailureKindSchema = z.enum(FAILURE_KINDS);
+export type FailureKind = (typeof FAILURE_KINDS)[number];
+
 // ------------------------------------------------------------ default states
 
 /** Everything off: the aeroplane as it is found at the gate overnight. */

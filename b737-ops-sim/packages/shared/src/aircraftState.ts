@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { SystemsStateSchema } from './systems.js';
+import { FailureKindSchema, SystemsStateSchema } from './systems.js';
+import { FmsStateSchema } from './navigation.js';
 
 /**
  * Canonical aircraft state streamed bridge → browser.
@@ -15,7 +16,7 @@ import { SystemsStateSchema } from './systems.js';
  * localizer armed, localizer captured. Vertical: vertical speed, altitude
  * hold, glideslope armed, glideslope captured, take-off/go-around.
  */
-export const ROLL_MODES = ['HDG_SEL', 'LOC_ARM', 'LOC'] as const;
+export const ROLL_MODES = ['HDG_SEL', 'LNAV', 'LOC_ARM', 'LOC'] as const;
 export const PITCH_MODES = ['VS', 'ALT_HOLD', 'GS_ARM', 'GS', 'TOGA'] as const;
 export const RollModeSchema = z.enum(ROLL_MODES);
 export const PitchModeSchema = z.enum(PITCH_MODES);
@@ -141,6 +142,24 @@ export const AircraftStateSchema = z.object({
 
   /** Aircraft systems (spec §22 Phase 4); see systems.ts. */
   systems: SystemsStateSchema,
+
+  /** Flight management / route state (spec §22 Phase 5); see navigation.ts. */
+  fms: FmsStateSchema,
+
+  /** What the aircraft is flying through right now (spec §22 Phase 5). */
+  weather: z.object({
+    /** Wind the aircraft is actually in, at its altitude. */
+    windDirDeg: z.number(),
+    windSpeedKt: z.number(),
+    /** Instantaneous gust component on top of the steady wind. */
+    gustKt: z.number(),
+    visibilityM: z.number(),
+    /** 0..1 turbulence intensity. */
+    turbulence: z.number(),
+  }),
+
+  /** Failures currently active (spec §22 Phase 5). */
+  activeFailures: z.array(FailureKindSchema),
 
   airport: z.object({
     icao: z.string().nullable(),
