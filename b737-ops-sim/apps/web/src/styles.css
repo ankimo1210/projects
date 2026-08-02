@@ -378,6 +378,11 @@ button {
   padding: 6px 10px;
   color: #39d353;
 }
+.checklist-locked {
+  padding: 6px 10px;
+  color: #d2a24c;
+  font-size: 12px;
+}
 
 /* transcript */
 .transcript-list {

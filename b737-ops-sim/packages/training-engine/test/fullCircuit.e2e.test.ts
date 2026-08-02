@@ -182,7 +182,18 @@ class ScriptedPilot {
       this.cmd({ type: 'set_reverse_thrust', leverNorm: 1 });
     }
 
+    // Rollout: stow reverse, then steer right and taxi clear of the pavement.
+    // The scenario only leaves this phase on real runway geometry (R-08).
+    if (phase === 'rollout') {
+      this.cmd({ type: 'set_reverse_thrust', leverNorm: 0 });
+      this.cmd({ type: 'set_control_axis', axis: 'yaw', valueNorm: 1 });
+      this.cmd({ type: 'set_throttle', valueNorm: s.speeds.gsKt < 12 ? 0.3 : 0 });
+    }
+
     if (phase === 'runway_exit') {
+      this.cmd({ type: 'set_control_axis', axis: 'yaw', valueNorm: 0 });
+      this.cmd({ type: 'set_throttle', valueNorm: 0 });
+      this.cmd({ type: 'set_brakes', valueNorm: 0.3 });
       this.cmd({ type: 'set_reverse_thrust', leverNorm: 0 });
       const checklist = this.session.runtime.checklistRuns.get('after_landing')!;
       if (!checklist.complete) {
@@ -263,12 +274,14 @@ describe('full circuit end-to-end (mock model + training session)', () => {
       'approach_setup',
       'final_approach',
       'landing',
+      'rollout',
       'runway_exit',
       'debrief',
     ]) {
-      expect(phasesSeen, `phase ${phase} was never reached (last=${session.phaseId} t=${simTime})`).toContain(
-        phase,
-      );
+      expect(
+        phasesSeen,
+        `phase ${phase} was never reached (last=${session.phaseId} t=${simTime})`,
+      ).toContain(phase);
     }
     expect(session.complete).toBe(true);
 

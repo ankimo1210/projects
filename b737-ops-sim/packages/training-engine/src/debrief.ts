@@ -68,7 +68,9 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
   };
 
   // ---- key moments -------------------------------------------------------
-  const liftoffIdx = history.findIndex((s, i) => i > 0 && !s.weightOnWheels && history[i - 1]!.weightOnWheels);
+  const liftoffIdx = history.findIndex(
+    (s, i) => i > 0 && !s.weightOnWheels && history[i - 1]!.weightOnWheels,
+  );
   const liftoff = liftoffIdx > 0 ? history[liftoffIdx]! : null;
   let touchdownIdx = -1;
   for (let i = history.length - 1; i > 0; i--) {
@@ -91,7 +93,9 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
   if (liftoff) {
     // Rotation = first pitch-up on the ground before liftoff (not liftoff speed).
     const rotationSample =
-      history.slice(0, liftoffIdx).find((s) => s.weightOnWheels && s.pitchDeg > 2 && s.iasKt > 80) ??
+      history
+        .slice(0, liftoffIdx)
+        .find((s) => s.weightOnWheels && s.pitchDeg > 2 && s.iasKt > 80) ??
       history[liftoffIdx - 1]!;
     const iasAtRotation = rotationSample.iasKt;
     metrics['Rotation speed'] = `${iasAtRotation.toFixed(0)} kt (Vr ${vs.vrKt} kt)`;
@@ -121,7 +125,11 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
     }
     const gearUpSample = history.slice(liftoffIdx).find((s) => !s.gearLeverDown);
     if (!gearUpSample) {
-      takeoff.push({ label: 'Gear retraction', detail: 'Gear was never retracted', pointsDelta: -20 });
+      takeoff.push({
+        label: 'Gear retraction',
+        detail: 'Gear was never retracted',
+        pointsDelta: -20,
+      });
     } else {
       const delay = gearUpSample.simTimeSec - liftoff.simTimeSec;
       metrics['Gear retraction after liftoff'] = `${delay.toFixed(0)} s`;
@@ -134,7 +142,9 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
       }
     }
     // Centerline during the roll
-    const rollSamples = history.slice(0, liftoffIdx).filter((s) => s.weightOnWheels && s.iasKt > 40);
+    const rollSamples = history
+      .slice(0, liftoffIdx)
+      .filter((s) => s.weightOnWheels && s.iasKt > 40);
     if (rollSamples.length > 0) {
       const maxOff = Math.max(...rollSamples.map((s) => Math.abs(frame(s).crossM)));
       metrics['Max centerline offset (takeoff roll)'] = `${maxOff.toFixed(1)} m`;
@@ -147,7 +157,11 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
       }
     }
   } else {
-    takeoff.push({ label: 'Takeoff', detail: 'No liftoff detected in this session', pointsDelta: -50 });
+    takeoff.push({
+      label: 'Takeoff',
+      detail: 'No liftoff detected in this session',
+      pointsDelta: -50,
+    });
   }
 
   // ---- category: flight path control -------------------------------------
@@ -166,7 +180,10 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
         !s.weightOnWheels,
     );
     for (const s of segSamples) {
-      worstHdgErr = Math.max(worstHdgErr, Math.abs(angleDiffDeg(s.headingDegMag, Number(seg.value))));
+      worstHdgErr = Math.max(
+        worstHdgErr,
+        Math.abs(angleDiffDeg(s.headingDegMag, Number(seg.value))),
+      );
     }
   }
   if (headingTargets.length > 0) {
@@ -250,9 +267,14 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
         .find((s) => !s.weightOnWheels && s.radioAltitudeFt >= 450 && s.radioAltitudeFt <= 700)
     : null;
   if (gate) {
-    metrics['500 ft gate'] = `${gate.iasKt.toFixed(0)} kt / ${gate.verticalSpeedFpm.toFixed(0)} fpm / flaps ${gate.flapHandleDetent}`;
+    metrics['500 ft gate'] =
+      `${gate.iasKt.toFixed(0)} kt / ${gate.verticalSpeedFpm.toFixed(0)} fpm / flaps ${gate.flapHandleDetent}`;
     if (!gate.gearLeverDown)
-      approach.push({ label: 'Configuration', detail: 'Gear not down at the 500 ft gate', pointsDelta: -25 });
+      approach.push({
+        label: 'Configuration',
+        detail: 'Gear not down at the 500 ft gate',
+        pointsDelta: -25,
+      });
     if (gate.flapHandleDetent < 30)
       approach.push({
         label: 'Configuration',
@@ -330,7 +352,8 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
       landing.push({
         label: 'Long landing',
         detail: `Touched down ${tdDistM.toFixed(0)} m past the threshold (${(
-          tdDistM / (runway.lengthFt * FT_TO_M)
+          tdDistM /
+          (runway.lengthFt * FT_TO_M)
         ).toLocaleString(undefined, { style: 'percent' })} of the runway)`,
         pointsDelta: -15,
       });
@@ -346,7 +369,11 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
     const rollout = history.slice(touchdownIdx, touchdownIdx + 50); // ~25 s
     const usedReverse = events.some((e) => e.id === 'reverse_deployed');
     if (!usedReverse) {
-      landing.push({ label: 'Reverse thrust', detail: 'Reverse thrust was not used', pointsDelta: -8 });
+      landing.push({
+        label: 'Reverse thrust',
+        detail: 'Reverse thrust was not used',
+        pointsDelta: -8,
+      });
     }
     const slowed = rollout.some((s) => s.iasKt < 45);
     if (!slowed && rollout.length >= 50) {
@@ -357,7 +384,11 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
       });
     }
   } else {
-    landing.push({ label: 'Landing', detail: 'No touchdown recorded in this session', pointsDelta: -60 });
+    landing.push({
+      label: 'Landing',
+      detail: 'No touchdown recorded in this session',
+      pointsDelta: -60,
+    });
   }
 
   // ---- category: checklist discipline ------------------------------------
@@ -391,10 +422,13 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
 
   const safetyCritical = events.filter((e) => e.severity === 'safety_critical');
   const minScore = Math.min(...categories.map((c) => c.score));
+  // A single safety-critical event fails the flight. SCENARIO_AUTHORING.md
+  // defines that severity as flight-failing, and a runway incursion scoring
+  // "pass with deviations" contradicted it (R-09).
   const overall: DebriefOverall =
-    minScore < 50 || safetyCritical.length > 1
+    minScore < 50 || safetyCritical.length > 0
       ? 'FAIL'
-      : minScore < 85 || safetyCritical.length > 0 || categories.some((c) => c.findings.length > 0)
+      : minScore < 85 || categories.some((c) => c.findings.length > 0)
         ? 'PASS_WITH_DEVIATIONS'
         : 'PASS';
 

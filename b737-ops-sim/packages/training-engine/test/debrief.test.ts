@@ -10,12 +10,7 @@ function makeHistory(opts: {
   gearUpDelaySec?: number;
   offCenterM?: number;
 }): HistorySample[] {
-  const {
-    touchdownVsFpm = -200,
-    touchdownDistM = 450,
-    gearUpDelaySec = 6,
-    offCenterM = 1,
-  } = opts;
+  const { touchdownVsFpm = -200, touchdownDistM = 450, gearUpDelaySec = 6, offCenterM = 1 } = opts;
   const samples: HistorySample[] = [];
   const push = (
     t: number,
@@ -119,8 +114,20 @@ function makeHistory(opts: {
 function baseInput(history: HistorySample[], events: ScenarioEvent[] = []): DebriefInput {
   return {
     events: [
-      { kind: 'checklist_completed', simTimeSec: 5, id: 'before_takeoff', message: '', severity: 'info' },
-      { kind: 'checklist_completed', simTimeSec: 340, id: 'landing', message: '', severity: 'info' },
+      {
+        kind: 'checklist_completed',
+        simTimeSec: 5,
+        id: 'before_takeoff',
+        message: '',
+        severity: 'info',
+      },
+      {
+        kind: 'checklist_completed',
+        simTimeSec: 340,
+        id: 'landing',
+        message: '',
+        severity: 'info',
+      },
       { kind: 'milestone', simTimeSec: 362, id: 'reverse_deployed', message: '', severity: 'info' },
       ...events,
     ],
@@ -171,7 +178,7 @@ describe('generateDebrief', () => {
     );
     const takeoff = report.categories.find((c) => c.id === 'takeoff_procedure')!;
     expect(takeoff.score).toBeLessThanOrEqual(60);
-    expect(['FAIL', 'PASS_WITH_DEVIATIONS']).toContain(report.overall);
+    expect(report.overall).toBe('FAIL');
   });
 
   it('penalizes incorrect readbacks and missing checklists', () => {
@@ -179,13 +186,13 @@ describe('generateDebrief', () => {
     input.atcStats = { readbacksTotal: 6, readbacksCorrect: 4 };
     input.expectedChecklistIds = ['before_takeoff', 'landing', 'after_landing'];
     const report = generateDebrief(input);
+    expect(report.categories.find((c) => c.id === 'atc_compliance')!.findings[0]!.detail).toContain(
+      '2 incorrect',
+    );
     expect(
-      report.categories.find((c) => c.id === 'atc_compliance')!.findings[0]!.detail,
-    ).toContain('2 incorrect');
-    expect(
-      report.categories.find((c) => c.id === 'checklist_discipline')!.findings.some((f) =>
-        f.detail.includes('after_landing'),
-      ),
+      report.categories
+        .find((c) => c.id === 'checklist_discipline')!
+        .findings.some((f) => f.detail.includes('after_landing')),
     ).toBe(true);
   });
 

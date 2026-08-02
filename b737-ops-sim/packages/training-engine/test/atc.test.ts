@@ -4,7 +4,10 @@ import { makeTestAircraftState } from '@b737/shared/testing';
 import { AtcController, type AtcInstruction } from '../src/atc.js';
 import { resetTranscriptIds } from '../src/transcript.js';
 
-function st(simTimeSec: number, mutate: (s: AircraftState) => void = () => undefined): AircraftState {
+function st(
+  simTimeSec: number,
+  mutate: (s: AircraftState) => void = () => undefined,
+): AircraftState {
   const s = makeTestAircraftState();
   s.simTimeSec = simTimeSec;
   mutate(s);
@@ -127,8 +130,14 @@ describe('AtcController', () => {
   it('does not issue landing clearance when not established', () => {
     const atc = new AtcController(KSFO_28R);
     atc.requestTakeoffClearance(st(1));
-    atc.update(st(60, (s) => ((s.weightOnWheels = false), (s.position.radioAltitudeFt = 400))), 'x');
-    atc.update(st(120, (s) => ((s.weightOnWheels = false), (s.position.radioAltitudeFt = 1600))), 'x');
+    atc.update(
+      st(60, (s) => ((s.weightOnWheels = false), (s.position.radioAltitudeFt = 400))),
+      'x',
+    );
+    atc.update(
+      st(120, (s) => ((s.weightOnWheels = false), (s.position.radioAltitudeFt = 1600))),
+      'x',
+    );
     // skip ahead: pretend we're on final but 2 dots off
     const out = atc.update(
       st(400, (s) => {

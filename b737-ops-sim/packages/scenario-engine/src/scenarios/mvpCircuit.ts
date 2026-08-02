@@ -1,6 +1,7 @@
 import type { ScenarioDefinition } from '../types.js';
 
-const SOURCE = 'NON_CERTIFIED_APPROXIMATION — replace from legally obtained references (SOURCE_REQUIRED)';
+const SOURCE =
+  'NON_CERTIFIED_APPROXIMATION — replace from legally obtained references (SOURCE_REQUIRED)';
 
 /**
  * MVP scenario (spec §20): engines running near KSFO 28R, takeoff, right
@@ -47,9 +48,7 @@ export const MVP_CIRCUIT_SCENARIO: ScenarioDefinition = {
     {
       id: 'line_up',
       title: 'Line up',
-      transitions: [
-        { to: 'takeoff_roll', when: { prop: 'speeds.gsKt', op: 'gt', value: 40 } },
-      ],
+      transitions: [{ to: 'takeoff_roll', when: { prop: 'speeds.gsKt', op: 'gt', value: 40 } }],
     },
     {
       id: 'takeoff_roll',
@@ -130,7 +129,8 @@ export const MVP_CIRCUIT_SCENARIO: ScenarioDefinition = {
       title: 'Landing',
       transitions: [
         {
-          to: 'runway_exit',
+          // Decelerated to taxi speed — still ON the runway.
+          to: 'rollout',
           when: {
             all: [
               { prop: 'weightOnWheels', op: 'eq', value: true },
@@ -142,8 +142,27 @@ export const MVP_CIRCUIT_SCENARIO: ScenarioDefinition = {
       ],
     },
     {
+      id: 'rollout',
+      title: 'Rollout / vacate',
+      transitions: [
+        {
+          // Geometrically clear of the paved surface, not merely slow (R-08).
+          to: 'runway_exit',
+          when: {
+            all: [
+              { prop: 'weightOnWheels', op: 'eq', value: true },
+              { prop: 'derived.onRunwaySurface', op: 'eq', value: false },
+              { prop: 'speeds.gsKt', op: 'lt', value: 30 },
+            ],
+            sustainedSec: 1,
+          },
+          eventId: 'runway_exited',
+        },
+      ],
+    },
+    {
       id: 'runway_exit',
-      title: 'Runway exit',
+      title: 'Clear of the runway',
       transitions: [
         {
           to: 'debrief',
@@ -161,10 +180,12 @@ export const MVP_CIRCUIT_SCENARIO: ScenarioDefinition = {
   rules: [
     {
       id: 'runway_incursion',
+      // Being on the paved surface without a clearance is the violation —
+      // ground speed is not a proxy for position (R-08).
       when: {
         all: [
           { prop: 'flags.takeoffClearanceReceived', op: 'neq', value: true },
-          { prop: 'speeds.gsKt', op: 'gt', value: 15 },
+          { prop: 'derived.enteredRunwaySurface', op: 'eq', value: true },
         ],
       },
       phases: ['before_takeoff'],
@@ -186,7 +207,7 @@ export const MVP_CIRCUIT_SCENARIO: ScenarioDefinition = {
     {
       id: 'reverse_deployed',
       when: { prop: 'engines.left.reverserNorm', op: 'gt', value: 0.3 },
-      phases: ['landing', 'runway_exit'],
+      phases: ['landing', 'rollout', 'runway_exit'],
       severity: 'info',
       message: 'Reverse thrust deployed',
     },
@@ -222,6 +243,7 @@ export const MVP_CIRCUIT_SCENARIO: ScenarioDefinition = {
     {
       id: 'before_takeoff',
       title: 'Before Takeoff',
+      allowedPhaseIds: ['before_takeoff'],
       items: [
         {
           id: 'flight_controls',
@@ -245,7 +267,8 @@ export const MVP_CIRCUIT_SCENARIO: ScenarioDefinition = {
             ],
           },
           responsibleCrew: 'first_officer',
-          trainingHint: 'Takeoff flaps for this scenario are flaps 5; verify the surfaces reached the setting.',
+          trainingHint:
+            'Takeoff flaps for this scenario are flaps 5; verify the surfaces reached the setting.',
           failureMessage: 'Flaps are not set to 5 (green band)',
           sourceReference: SOURCE,
         },
@@ -298,6 +321,7 @@ export const MVP_CIRCUIT_SCENARIO: ScenarioDefinition = {
     {
       id: 'landing',
       title: 'Landing',
+      allowedPhaseIds: ['approach_setup', 'final_approach', 'landing'],
       items: [
         {
           id: 'speedbrake_armed',
@@ -350,6 +374,8 @@ export const MVP_CIRCUIT_SCENARIO: ScenarioDefinition = {
     {
       id: 'after_landing',
       title: 'After Landing',
+      // Run only once the aircraft is clear of the runway.
+      allowedPhaseIds: ['runway_exit'],
       items: [
         {
           id: 'speedbrake_down',
