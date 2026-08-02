@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { makeTestAircraftState } from '@b737/shared/testing';
-import { destinationPoint, KSFO_28R, type AircraftState } from '@b737/shared';
+import {
+  destinationPoint,
+  KSFO_28R,
+  runwayPointToLatLon,
+  type AircraftState,
+} from '@b737/shared';
 import { ScenarioRuntime } from '../src/scenarioRuntime.js';
 import type { ScenarioDefinition } from '../src/types.js';
 
@@ -359,6 +364,90 @@ describe('runway geometry drives entry, occupancy and exit', () => {
     expect(rt.phaseId).toBe('rollout');
     for (let t = 5; t < 10; t += 0.5) rt.update(at(2000, 45, (s) => (s.speeds.gsKt = 8))(t));
     expect(rt.phaseId).toBe('runway_exit');
+  });
+});
+
+// ------------------------------------------------------------------ M3 taxi
+
+describe('taxi geometry', () => {
+  const onGroundAt = (latDeg: number, lonDeg: number, gsKt = 10) =>
+    state(0, (s) => {
+      s.position.latDeg = latDeg;
+      s.position.lonDeg = lonDeg;
+      s.weightOnWheels = true;
+      s.speeds.gsKt = gsKt;
+    });
+
+  it('reports the taxiway the aircraft is on', () => {
+    const rt = new ScenarioRuntime(makeScenario());
+    const p = runwayPointToLatLon(KSFO_28R, 700, 90);
+    rt.update(onGroundAt(p.latDeg, p.lonDeg));
+    const d = rt.context(rt.state!).derived;
+    expect(d.onTaxiSurface).toBe(true);
+    expect(d.taxiwayLabel).toBe('A');
+    expect(d.pastHoldShort).toBe(false);
+    expect(d.distanceToHoldShortM).toBeCloseTo(45, 0);
+  });
+
+  it('reports crossing the holding position before reaching the runway', () => {
+    const rt = new ScenarioRuntime(makeScenario());
+    const p = runwayPointToLatLon(KSFO_28R, 40, 40);
+    rt.update(onGroundAt(p.latDeg, p.lonDeg));
+    const d = rt.context(rt.state!).derived;
+    expect(d.pastHoldShort).toBe(true);
+    expect(d.onRunwaySurface).toBe(false); // not on the pavement yet
+  });
+
+  it('measures the distance to the stand', () => {
+    const rt = new ScenarioRuntime(makeScenario());
+    const p = runwayPointToLatLon(KSFO_28R, 350, 205);
+    rt.update(onGroundAt(p.latDeg, p.lonDeg, 0));
+    expect(rt.context(rt.state!).derived.distanceToStandM!).toBeLessThan(6);
+  });
+
+  it('is not "on a taxiway" while airborne over one', () => {
+    const rt = new ScenarioRuntime(makeScenario());
+    const p = runwayPointToLatLon(KSFO_28R, 700, 90);
+    rt.update(
+      state(0, (s) => {
+        s.position.latDeg = p.latDeg;
+        s.position.lonDeg = p.lonDeg;
+        s.weightOnWheels = false;
+        s.position.radioAltitudeFt = 600;
+      }),
+    );
+    expect(rt.context(rt.state!).derived.onTaxiSurface).toBe(false);
+  });
+});
+
+describe('phases can re-arm a checklist', () => {
+  it('resets the checklists a phase declares on entry (go-around)', () => {
+    const scenario = makeScenario();
+    scenario.phases = [
+      {
+        id: 'before_takeoff',
+        title: 'Before takeoff',
+        transitions: [{ to: 'go_around', when: { prop: 'speeds.gsKt', op: 'gt', value: 50 } }],
+      },
+      {
+        id: 'go_around',
+        title: 'Go around',
+        transitions: [],
+        resetChecklistIds: ['before_takeoff'],
+      },
+      ...scenario.phases.filter((p) => p.id !== 'before_takeoff'),
+    ];
+    const rt = new ScenarioRuntime(scenario);
+    rt.update(state(0, (s) => (s.controls.flapsActualNorm = 0.375)));
+    rt.setFlag('flightControlCheckDone', true);
+    rt.update(state(1, (s) => (s.controls.flapsActualNorm = 0.375)));
+    expect(rt.answerChecklistItem('before_takeoff')?.kind).toBe('checklist_item_completed');
+    expect(rt.checklistRuns.get('before_takeoff')!.items[0]!.status).toBe('completed');
+
+    rt.update(state(2, (s) => (s.speeds.gsKt = 60)));
+    expect(rt.phaseId).toBe('go_around');
+    expect(rt.checklistRuns.get('before_takeoff')!.items[0]!.status).toBe('active');
+    expect(rt.checklistRuns.get('before_takeoff')!.complete).toBe(false);
   });
 });
 

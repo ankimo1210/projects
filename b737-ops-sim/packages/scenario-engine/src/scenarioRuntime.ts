@@ -102,6 +102,10 @@ export class ScenarioRuntime {
         if (!next) throw new Error(`transition to unknown phase '${transition.to}'`);
         const from = this.currentPhase.id;
         this.currentPhase = next;
+        for (const checklistId of next.resetChecklistIds ?? []) this.resetChecklist(checklistId);
+        for (const [name, value] of Object.entries(next.setFlagsOnEnter ?? {})) {
+          this.flags[name] = value;
+        }
         this.emit({
           kind: 'phase_transition',
           simTimeSec: state.simTimeSec,
@@ -142,6 +146,11 @@ export class ScenarioRuntime {
     }
 
     return this.events.slice(before);
+  }
+
+  /** Re-arm a checklist so it can be flown again (e.g. after a go-around). */
+  resetChecklist(checklistId: string): void {
+    this.checklistRuns.get(checklistId)?.reset();
   }
 
   /** Is this checklist actionable in the phase the flight is actually in? */

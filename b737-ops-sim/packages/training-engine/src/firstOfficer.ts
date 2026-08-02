@@ -32,6 +32,10 @@ const PENDING_TIMEOUT_SEC = 12;
  * Checking the surface, not the handle, is the point (R-18).
  */
 const LANDING_FLAP_NORM = flapDetentToNorm(30) - 0.02;
+/** Radio altitudes at which the PM calls the approach stable or not. */
+const STABILISATION_GATES_FT = [1000, 500] as const;
+/** CAT I decision altitude used for the minimums call. NON_CERTIFIED_APPROXIMATION. */
+const DECISION_ALTITUDE_FT = 200;
 
 export class FirstOfficer {
   readonly vSpeeds: VSpeeds;
@@ -44,6 +48,11 @@ export class FirstOfficer {
   private pending: PendingExpectation | null = null;
   private lastRaFt = 0;
   private climbingSinceSec: number | null = null;
+  private lastFlapDetent: number | null = null;
+  private lastGearLeverDown: boolean | null = null;
+  private saidGearGreen = false;
+  private saidGate = new Set<number>();
+  private saidMinimums = false;
   private readonly takeoffPhases: Set<string>;
   private readonly approachPhases: Set<string>;
 
@@ -145,42 +154,112 @@ export class FirstOfficer {
       }
     }
 
+    // --- Configuration read-backs (PM confirms what the PF selected) ---
+    if (this.lastFlapDetent !== null && state.controls.flapHandleDetent !== this.lastFlapDetent) {
+      out.push(this.say(t, `Flaps ${state.controls.flapHandleDetent}.`, 'fo:flap_callout'));
+    }
+    this.lastFlapDetent = state.controls.flapHandleDetent;
+    if (
+      this.lastGearLeverDown !== null &&
+      state.controls.gearLeverDown !== this.lastGearLeverDown
+    ) {
+      out.push(
+        this.say(t, state.controls.gearLeverDown ? 'Gear down.' : 'Gear up.', 'fo:gear_callout'),
+      );
+    }
+    this.lastGearLeverDown = state.controls.gearLeverDown;
+    if (
+      !this.saidGearGreen &&
+      state.controls.gearLeverDown &&
+      state.controls.gearPositionNorm > 0.99 &&
+      !state.weightOnWheels &&
+      this.approachPhases.has(phaseId)
+    ) {
+      this.saidGearGreen = true;
+      out.push(this.say(t, 'Gear down, three green.', 'fo:gear_green'));
+    }
+
+    // --- Stabilisation gates and minimums (spec §22 Phase 3) ---
+    if (this.approachPhases.has(phaseId) && !state.weightOnWheels) {
+      for (const gateFt of STABILISATION_GATES_FT) {
+        if (this.saidGate.has(gateFt) || this.lastRaFt <= gateFt || ra > gateFt) continue;
+        this.saidGate.add(gateFt);
+        const assessment = this.assessStability(state);
+        out.push(
+          this.say(
+            t,
+            assessment.stable
+              ? `${gateFt}, stable.`
+              : `${gateFt}, not stable — ${assessment.reasons}.`,
+            assessment.stable ? `fo:gate_${gateFt}_stable` : `fo:gate_${gateFt}_unstable`,
+          ),
+        );
+      }
+      if (
+        !this.saidMinimums &&
+        this.lastRaFt > DECISION_ALTITUDE_FT &&
+        ra <= DECISION_ALTITUDE_FT
+      ) {
+        this.saidMinimums = true;
+        const assessment = this.assessStability(state);
+        out.push(
+          this.say(
+            t,
+            assessment.stable ? 'Minimums, runway in sight.' : 'Minimums, go around.',
+            assessment.stable ? 'fo:minimums_continue' : 'fo:minimums_go_around',
+          ),
+        );
+      }
+    }
+
     // --- Stabilized approach monitoring below 1000 ft (spec §12) ---
     if (this.approachPhases.has(phaseId) && !state.weightOnWheels && ra < 1000 && ra > 50) {
-      const speedOk = ias >= this.vSpeeds.vappKt - 5 && ias <= this.vSpeeds.vappKt + 20;
-      const configOk =
-        state.controls.gearPositionNorm > 0.99 &&
-        state.controls.flapsActualNorm >= LANDING_FLAP_NORM;
-      // A missing deviation is NOT a stable path: on an ILS approach the
-      // absence of guidance is itself a reason to go around (R-19).
-      const pathOk = state.nav.ilsTuned
-        ? state.nav.locDeviationDots !== null &&
-          state.nav.gsDeviationDots !== null &&
-          Math.abs(state.nav.locDeviationDots) <= 1 &&
-          Math.abs(state.nav.gsDeviationDots) <= 1
-        : true;
-      const sinkOk = state.speeds.verticalSpeedFpm > -1100;
-      const stable = speedOk && configOk && pathOk && sinkOk;
-      if (stable) {
+      const assessment = this.assessStability(state);
+      if (assessment.stable) {
         this.unstableSinceSec = null;
       } else if (this.unstableSinceSec === null) {
         this.unstableSinceSec = t;
       } else if (!this.saidGoAround && t - this.unstableSinceSec > 3) {
         this.saidGoAround = true;
-        const reasons = [
-          !speedOk ? 'speed' : null,
-          !configOk ? 'configuration' : null,
-          !pathOk ? 'flight path' : null,
-          !sinkOk ? 'sink rate' : null,
-        ]
-          .filter(Boolean)
-          .join(', ');
-        out.push(this.say(t, `Unstable — ${reasons}. Go around.`, 'fo:unstable_approach'));
+        out.push(
+          this.say(t, `Unstable — ${assessment.reasons}. Go around.`, 'fo:unstable_approach'),
+        );
       }
     }
 
     this.lastRaFt = ra;
     return out;
+  }
+
+  /**
+   * One definition of "stable" for the gate calls, the monitoring loop and the
+   * minimums call — three places used to be able to disagree (R-19).
+   */
+  private assessStability(state: AircraftState): { stable: boolean; reasons: string } {
+    const ias = state.speeds.iasKt;
+    const speedOk = ias >= this.vSpeeds.vappKt - 5 && ias <= this.vSpeeds.vappKt + 20;
+    const configOk =
+      state.controls.gearPositionNorm > 0.99 && state.controls.flapsActualNorm >= LANDING_FLAP_NORM;
+    // A missing deviation is NOT a stable path: on an ILS approach the absence
+    // of guidance is itself a reason to go around (R-19).
+    const pathOk = state.nav.ilsTuned
+      ? state.nav.locDeviationDots !== null &&
+        state.nav.gsDeviationDots !== null &&
+        Math.abs(state.nav.locDeviationDots) <= 1 &&
+        Math.abs(state.nav.gsDeviationDots) <= 1
+      : true;
+    const sinkOk = state.speeds.verticalSpeedFpm > -1100;
+    return {
+      stable: speedOk && configOk && pathOk && sinkOk,
+      reasons: [
+        !speedOk ? 'speed' : null,
+        !configOk ? 'configuration' : null,
+        !pathOk ? 'flight path' : null,
+        !sinkOk ? 'sink rate' : null,
+      ]
+        .filter(Boolean)
+        .join(', '),
+    };
   }
 
   /** React to scenario events (checklist reading etc.). */

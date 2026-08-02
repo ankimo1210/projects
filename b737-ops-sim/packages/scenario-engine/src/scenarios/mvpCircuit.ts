@@ -95,6 +95,7 @@ export const MVP_CIRCUIT_SCENARIO: ScenarioDefinition = {
     {
       id: 'approach_setup',
       title: 'Approach setup',
+      setFlagsOnEnter: { goAroundAnnounced: false },
       transitions: [
         {
           to: 'final_approach',
@@ -118,6 +119,8 @@ export const MVP_CIRCUIT_SCENARIO: ScenarioDefinition = {
       id: 'final_approach',
       title: 'Final approach',
       transitions: [
+        // The crew's go-around call wins over continuing the approach.
+        { to: 'go_around', when: { prop: 'flags.goAroundAnnounced', op: 'eq', value: true } },
         {
           to: 'landing',
           when: { prop: 'position.radioAltitudeFt', op: 'lt', value: 60 },
@@ -125,9 +128,37 @@ export const MVP_CIRCUIT_SCENARIO: ScenarioDefinition = {
       ],
     },
     {
+      id: 'go_around',
+      title: 'Go around',
+      // The approach is flown again from scratch once re-established.
+      resetChecklistIds: ['landing'],
+      transitions: [
+        {
+          to: 'approach_setup',
+          when: {
+            all: [
+              { prop: 'weightOnWheels', op: 'eq', value: false },
+              { prop: 'position.radioAltitudeFt', op: 'gt', value: 1500 },
+            ],
+          },
+          eventId: 'go_around_established',
+        },
+      ],
+      setFlagsOnEnter: { goAroundFlown: true },
+    },
+    {
       id: 'landing',
       title: 'Landing',
       transitions: [
+        {
+          to: 'go_around',
+          when: {
+            all: [
+              { prop: 'flags.goAroundAnnounced', op: 'eq', value: true },
+              { prop: 'weightOnWheels', op: 'eq', value: false },
+            ],
+          },
+        },
         {
           // Decelerated to taxi speed — still ON the runway.
           to: 'rollout',

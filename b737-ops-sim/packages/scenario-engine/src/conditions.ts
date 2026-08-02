@@ -1,7 +1,12 @@
 import {
   angleDiffDeg,
+  distanceToHoldShortM,
+  distanceToStandM,
   getRunway,
+  getTaxiNetwork,
+  isPastHoldShort,
   runwayPosition,
+  taxiPosition,
   type AircraftState,
   type RunwayPosition,
 } from '@b737/shared';
@@ -56,6 +61,16 @@ export interface EvaluationContext {
     onRunwaySurface: boolean;
     /** True on the sample where the aircraft crossed onto the runway. */
     enteredRunwaySurface: boolean;
+    /** On a paved taxi surface of the airport's taxi network (M3). */
+    onTaxiSurface: boolean;
+    /** Designator of the nearest taxi segment ("A", "C1"), null when unknown. */
+    taxiwayLabel: string | null;
+    /** Metres to the runway holding position; negative = inside it. */
+    distanceToHoldShortM: number | null;
+    /** Past the holding position of the scenario runway. */
+    pastHoldShort: boolean;
+    /** Metres to the scenario's stand, null when the airport has none. */
+    distanceToStandM: number | null;
   };
 }
 
@@ -130,6 +145,17 @@ export class ConditionEvaluator {
       return 'flat';
     };
     const rwyPos = state === null ? null : runwayPositionOf(state);
+    const runway =
+      state?.airport.icao && state.airport.runwayId
+        ? getRunway(state.airport.icao, state.airport.runwayId)
+        : undefined;
+    const network =
+      state?.airport.icao && state.airport.runwayId
+        ? getTaxiNetwork(state.airport.icao, state.airport.runwayId)
+        : undefined;
+    const taxiPos =
+      network && state ? taxiPosition(network, state.position.latDeg, state.position.lonDeg) : null;
+    const standId = network?.stands[0]?.id;
     return {
       radioAltitudeTrend: trendOf((s) => s.raFt, 4),
       altitudeTrend: trendOf((s) => s.altFt, 4),
@@ -140,6 +166,16 @@ export class ConditionEvaluator {
       // unknown runway must not read as "on the runway".
       onRunwaySurface: state !== null && onRunwaySurfaceOf(state),
       enteredRunwaySurface: this.enteredRunwayThisTick,
+      // Ground movement (M3): the taxi network is geometry, like the runway —
+      // never infer "on a taxiway" from speed or phase.
+      onTaxiSurface: (taxiPos?.onSurface ?? false) && (state?.weightOnWheels ?? false),
+      taxiwayLabel: taxiPos?.onSurface ? taxiPos.label : null,
+      distanceToHoldShortM: rwyPos === null ? null : distanceToHoldShortM(rwyPos),
+      pastHoldShort: runway !== undefined && rwyPos !== null && isPastHoldShort(runway, rwyPos),
+      distanceToStandM:
+        network && state && standId
+          ? distanceToStandM(network, standId, state.position.latDeg, state.position.lonDeg)
+          : null,
     };
   }
 
