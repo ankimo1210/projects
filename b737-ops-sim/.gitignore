@@ -1,0 +1,35 @@
+# Dependencies / build outputs
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+.vite/
+playwright-report/
+test-results/
+
+# Environment / local config
+.env
+.env.local
+*.local.json
+
+# Logs
+logs/
+*.log
+
+# Private materials — never commit (spec §8)
+private/
+local-assets/
+manuals/
+*.fcom.pdf
+*.fctm.pdf
+*.qrh.pdf
+
+# Re-fetchable third-party assets + generated conversions (pnpm assets:build)
+# Provenance lives in THIRD_PARTY_ASSETS.md + the pinned fetch script.
+assets/imported/737-800YV/
+assets/generated/
+
+# OS noise
+.DS_Store
+Thumbs.db
