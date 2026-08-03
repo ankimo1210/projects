@@ -17,6 +17,28 @@ As of Phase 2 Wave 1 the loop is closed end to end — PIPA/CDU sensors feed the
 > 2.20 m/s vertical, 0.16 m/s horizontal and 0.0° tilt (83/100), 91.8 s
 > after ENGINE ON, with no alarm episode or PROG-lamp frame.
 
+> **2026-08-03: the P65 altitude divergence is root-caused — no LR
+> measurement was ever incorporated — and enabling incorporation exposed
+> the next defect layer.** Offline forensics on Run 31's own recordings
+> found `LRINH` (FLGWRD11 bit 8) clear in every flight ever flown:
+> SERVICER computed DELTAH and discarded it at the `NOREASON`/`VUPDAT`
+> gates, because **V57 — the astronaut action that permits LR
+> incorporation — was never keyed**. The "navigation bias" is the item-3
+> inertial drift (−0.86 m/s from the P64 pitchover), uncorrected; that is
+> why three LR-presentation repairs (Runs 29-31) changed nothing. Two
+> masked defects were fixed with it: the responder's ch33 bit-9 scale
+> polarity was inverted against the rope's `SCALADJ`/`SCALECHK` (set =
+> high scale), and the V01N01 erasable read-back killed the burn monitor.
+> **Runs 32/33 measured the fix and are both RED**: Run 32 proved V57
+> keyed in P00 is erased by V37's R00 flagword wipe (it must be keyed
+> inside P63, as the crew did); Run 33, with LRINH verified live,
+> incorporated LR altitude and flew a violent P64 attitude excursion into
+> a 126.95 / 215.71 m/s crash — the incorporated measurement itself is
+> now the suspect. Per the three-attempt rule the next step is an
+> instrument (DELTAH/RGU downlink decode, LR-range debug rows), not
+> another flight. Evidence:
+> [2026-08-03-v57-lr-incorporation.md](docs/superpowers/notes/2026-08-03-v57-lr-incorporation.md).
+
 > **Current status (2026-08-02): LR integration passes; landing acceptance is
 > RED.** Run 27 closed the LR velocity split and former LR alarms with the
 > complete Apollo 11 pad block, five-sample beam reads and bounded 28-packet

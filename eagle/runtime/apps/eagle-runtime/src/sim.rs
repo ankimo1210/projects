@@ -242,9 +242,14 @@ struct LrState {
     /// `antenna_position`. Position 1 is initially presented by runner's
     /// P63 handshake, so only transitions need writes here.
     position_discrete_dirty: bool,
-    /// Last channel-33 range-scale status presented. LM_Sim's boot word
-    /// starts low-scale (set); the responder switches at 2500 ft to match
-    /// the quantum loaded into RNRAD.
+    /// Last channel-33 range-scale status presented, as a "low scale in
+    /// effect" flag. On the wire the LOW SCALE discrete is active-low like
+    /// every ch33 bit: bit 9 = 1 means HIGH scale (SCALADJ's ×5 branch,
+    /// P20-P25.agc:3002-3011). LM_Sim's boot word and INIT_CH33 both carry
+    /// bit 9 = 1 — high scale, the LR's powered-on state — so the `true`
+    /// default forces the first tick to present the real status
+    /// explicitly. The responder switches at 2500 ft to match the quantum
+    /// loaded into RNRAD.
     range_low_scale_presented: bool,
     /// Standing active-low DATA GOOD discretes. RADAREAD samples each bit
     /// both before and after a gate, so asserting it only in the reply is
@@ -969,10 +974,21 @@ impl SimCore {
         let standing_range = at_detent.then(|| slant_for(standing_angles)).flatten();
         let range_low_scale = standing_range.is_some_and(eagle_sensors::lr::alt_uses_low_scale);
         if range_low_scale != lr.range_low_scale_presented {
+            // ch33 is uniformly active-low: the LOW SCALE discrete reads 0
+            // when present, exactly like DATA GOOD and the position bits
+            // below. The rope keeps RADMODES bit 9 EQUAL to this channel
+            // bit (SCALECHK RXORs them, P20-P25.agc:2941-2948) and SCALADJ
+            // takes bit-9-nonzero as the HIGH branch, multiplying the
+            // counter by 5 into HMEAS's fixed 1.079 ft/bit units
+            // (P20-P25.agc:3002-3011, "CCS L; TCF +2  # ON HIGH SCALE").
+            // Until 2026-08-03 these two arms were swapped; nothing
+            // downstream noticed because V57 (LRON) was never keyed and no
+            // measurement was ever incorporated — see
+            // docs/superpowers/notes/2026-08-03-v57-lr-incorporation.md.
             let (bits_high, bits_low) = if range_low_scale {
-                (eagle_sensors::lr::CH33_LR_RANGE_LOW_SCALE, 0)
-            } else {
                 (0, eagle_sensors::lr::CH33_LR_RANGE_LOW_SCALE)
+            } else {
+                (eagle_sensors::lr::CH33_LR_RANGE_LOW_SCALE, 0)
             };
             out.to_agc
                 .extend(eagle_agc_protocol::agc_io::discrete_write(
@@ -2162,10 +2178,13 @@ mod tests {
             !out.to_agc.iter().any(|p| p.channel == RNRAD_ADDR),
             "a standing discrete must not fabricate a sample"
         );
+        // High scale: the LOW SCALE discrete is ABSENT, and ch33 discretes
+        // read 1 when absent (SCALADJ: "CCS L; TCF +2  # ON HIGH SCALE",
+        // P20-P25.agc:3002-3004 — bit 9 nonzero IS the high-scale branch).
         let high_scale = eagle_agc_protocol::agc_io::discrete_write(
             0o33,
-            0,
             eagle_sensors::lr::CH33_LR_RANGE_LOW_SCALE,
+            0,
         );
         assert!(
             out.to_agc.windows(2).any(|pair| pair == high_scale),
@@ -2191,19 +2210,24 @@ mod tests {
 
         core.st.pos = core.st.pos.unit().scale(sc.site.radius_m + 3_000.0);
         let high = core.tick();
+        // ch33 is uniformly active-low: a named discrete reads 0 when
+        // present. High scale = LOW SCALE discrete absent = bit 9 driven
+        // HIGH; SCALADJ multiplies the counter by 5 on that branch
+        // (P20-P25.agc:3002-3011) to reach HMEAS's fixed 1.079 ft/bit.
         let high_status = eagle_agc_protocol::agc_io::discrete_write(
             0o33,
-            0,
             eagle_sensors::lr::CH33_LR_RANGE_LOW_SCALE,
+            0,
         );
         assert!(high.to_agc.windows(2).any(|pair| pair == high_status));
 
         core.st.pos = core.st.pos.unit().scale(sc.site.radius_m + 300.0);
         let low = core.tick();
+        // Below 2500 ft the LOW SCALE discrete is present: bit 9 driven LOW.
         let low_status = eagle_agc_protocol::agc_io::discrete_write(
             0o33,
-            eagle_sensors::lr::CH33_LR_RANGE_LOW_SCALE,
             0,
+            eagle_sensors::lr::CH33_LR_RANGE_LOW_SCALE,
         );
         assert!(low.to_agc.windows(2).any(|pair| pair == low_status));
         assert!(core.lr.as_ref().unwrap().range_low_scale_presented);

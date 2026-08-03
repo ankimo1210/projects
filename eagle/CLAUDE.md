@@ -2,11 +2,20 @@
 
 > **Status lives in `README.md`, not here.** The dated blocks below are kept
 > as the reasoning record for each milestone; they are not a current report.
-> As of 2026-08-02 (`71a2e29f`) the landing radar integration passes, the
-> automatic P65 route (`00→63→64→65`) flies, and a separately-labelled
-> Playable Alpha assisted demo exists — **and the authentic landing
-> acceptance is still RED**. Read `README.md` before quoting any number from
-> this file.
+> As of 2026-08-03 the P65 altitude divergence is root-caused: **no LR
+> measurement was ever incorporated — V57 was never keyed** (LRINH clear
+> in every flight; SERVICER discarded every DELTAH at the NOREASON/VUPDAT
+> gates). V57 must be keyed INSIDE P63 — R00 wipes FLGWRD11 on every V37
+> (Run 32 measured a P00-keyed V57 doing nothing). Run 33, with LRINH
+> verified live, went RED differently: LR-altitude incorporation bent P64
+> guidance into a 127/216 m/s crash — the incorporated measurement is the
+> new suspect, and the prescribed next step is the DELTAH/RGU downlink
+> instrument plus LR-range debug rows, NOT another flight. Also fixed: ch33
+> bit-9 scale polarity was inverted vs the rope (SCALADJ: set = high), and
+> the V01N01 read-back killed the burn monitor (V16N63E now restored).
+> Evidence: `docs/superpowers/notes/2026-08-03-v57-lr-incorporation.md`.
+> The authentic landing acceptance is still RED. Read `README.md` before
+> quoting any number from this file.
 
 Original Luminary099 running in vendored yaAGC, bridged to a web DSKY, and —
 as of Phase 2 Wave 1 — flying a closed loop against our own 6-DoF physics
