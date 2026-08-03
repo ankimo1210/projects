@@ -18,9 +18,10 @@
 | [`neural_net/`](neural_net/) | ニューラルネットの中身 — 関数近似から Transformer まで | 14 |
 | [`bayesian/`](bayesian/) | ベイズ推定の体験 — 信念の更新装置としての統計 | 14 |
 | [`fourier/`](fourier/) | フーリエ解析の風景 — 波・周波数・分解の言語 | 10 |
-| [`laplace/`](laplace/) | ラプラス変換の風景 — 時間・複素周波数・システムの言語 | 11 |
-| [`differential_equation/`](differential_equation/) | 微分方程式 — ODE / PDE の2分冊 + SDE インタラクティブ教科書（経路・分布、基本過程、生成作用素、後退方程式、Feynman–Kac、初到達を数値実験で学ぶ） | 18 (ODE 9 / PDE 9) + SDE 47章 |
+| [`laplace/`](laplace/) | ラプラス変換の風景 — 時間・複素周波数・システムの言語 | 12 |
+| [`differential_equation/`](differential_equation/) | 微分方程式 — ODE / PDE の2分冊 + SDE インタラクティブ教科書（経路・分布、基本過程、生成作用素、後退方程式、Feynman–Kac、初到達を数値実験で学ぶ） | 21 (ODE 10 / PDE 11) + SDE 47章 |
 | [`machine_learning/`](machine_learning/) | 機械学習の実践 — 正しく定式化し、検証し、解釈する | 14 |
+| [`statistics/`](statistics/) | 統計的推測の風景 — 不確実性を測り、判断する言語（確率論 + 頻度論。ベイズは `bayesian/` と対） | 11 |
 
 > Notebook 数は時点の目安(各教材は随時加筆)。
 
@@ -28,7 +29,7 @@
 
 | ディレクトリ | 内容 |
 |---|---|
-| [`report/`](report/) | **統合インタラクティブ HTML ポータル**。線形代数・NN・ベイズ・ラプラス・機械学習の代表可視化をギャラリーに束ね、フーリエ・微分方程式(ODE/PDE)へもカード+教科書リンクで導線化。横断キャップストーン付き・オフライン自己完結。`make report` で生成 |
+| [`report/`](report/) | **統合インタラクティブ HTML ポータル**。線形代数・NN・ベイズ・ラプラス・機械学習の代表可視化をギャラリーに束ね、フーリエ・微分方程式(ODE/PDE)へもカード+教科書リンクで導線化。横断キャップストーン付き・オフライン自己完結。`make report` で生成。**`statistics/` は未統合** |
 
 ## ビルド
 

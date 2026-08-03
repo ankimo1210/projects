@@ -1,9 +1,10 @@
 # Workspace-wide convenience targets.
 #
 # Most Python work runs inside a single uv workspace at the repo root
-# (members: gto, market-viz, stock, nbody-gpu, line_backup, akinator,
-#  autostock, johnhull/hullkit, and the analytics books — see
-#  pyproject.toml [tool.uv.workspace] for the canonical list).
+# (members: agent-profiler, JHRMBS, gto, market-viz, stock, nbody-gpu,
+#  line_backup, akinator, autostock, health, market_nn, johnhull/hullkit,
+#  and the analytics books — see pyproject.toml [tool.uv.workspace] for
+#  the canonical list).
 #
 # `johnhull/hullkit` is a workspace member (used by johnhull notebooks).
 # `aisan_lbo_case/` uses requirements.txt; `csharp_calc/` is .NET;
@@ -38,14 +39,15 @@ help:
 	@echo "  make optimal-execution - optimal_execution quick end-to-end visual lab"
 	@echo ""
 	@echo "Workspace members:"
-	@echo "  gto market-viz stock nbody-gpu line_backup akinator autostock"
+	@echo "  agent-profiler JHRMBS gto market-viz stock nbody-gpu line_backup"
+	@echo "  akinator autostock health market_nn jp_llm_lab"
 	@echo "  johnhull/hullkit"
-	@echo "  analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning}"
+	@echo "  analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning,statistics}"
 	@echo "  analytics/differential_equation/{ode-book,pde-book}"
 	@echo "  quantkit deep_hedge_price optimal_execution rough_volatility"
 	@echo ""
 	@echo "Outside the workspace:"
-	@echo "  rates_volatility_model, notebooks, shortest_path, cpp_algo_lab (manual envs)"
+	@echo "  rates_volatility_model, notebooks, kaggle, shortest_path, cpp_algo_lab (manual envs)"
 
 install sync:
 	uv sync --all-packages
