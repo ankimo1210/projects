@@ -11,8 +11,39 @@ use crate::frames::{Body, V3};
 use crate::state::{Derivs, LmState};
 
 /// DPS gimbal mount below the CG on the −X (thrust) axis, m. Provenance:
-/// assumed.
+/// assumed — **superseded by `pvt_cg_arm_m`**, which the flown rope
+/// publishes. Kept only so the old value stays visible next to the
+/// measured one; nothing in the force model reads it.
+#[deprecated(note = "use pvt_cg_arm_m: the rope publishes L,PVT-CG as a function of mass")]
 pub const ENGINE_MOUNT_M: f64 = -1.7;
+
+/// Descent-engine pivot-to-CG distance, m, as a function of vehicle mass —
+/// **the flown rope's own curve fit**, the same one the DAP uses to size
+/// its gimbal authority.
+///
+/// `vendor/virtualagc/Luminary099/AOSTASK_AND_AOSJOB.agc:425-455`:
+/// `1JACC = A/(MASS + C) + B`, and "THE CURVE FIT FOR L,PVT-CG IS OF THE
+/// SAME FORM, EXCEPT THAT A IS SCALED AT 8 FT B+16 KG, B IS SCALED AT
+/// 8 FT, AND C IS SCALED AT B+16 KG". The descent coefficients are the
+/// first entries of each table: A = +.0410511917, B = +.155044,
+/// C = −.025233.
+///
+/// It matters because this arm sets the trim gimbal's torque, and the
+/// gimbal outweighs the RCS: at 26 kN one degree of trim over the rope's
+/// 0.862 m arm is 394 N·m against a jet's 529 N·m, while over the old
+/// assumed 1.7 m it was 777 N·m — half the vehicle's attitude authority,
+/// invented. Runs 33/35/36 all tumbled at P64 with the trim ramping to
+/// the actuator's rate limit; see
+/// `docs/superpowers/notes/2026-08-03-v57-lr-incorporation.md` §12b.
+pub fn pvt_cg_arm_m(mass_kg: f64) -> f64 {
+    /// 8 ft × 2^16 kg, the A-coefficient scale.
+    const A: f64 = 0.0410511917 * 8.0 * 0.3048 * 65536.0;
+    /// 8 ft.
+    const B: f64 = 0.155044 * 8.0 * 0.3048;
+    /// 2^16 kg.
+    const C: f64 = -0.025233 * 65536.0;
+    A / (mass_kg + C) + B
+}
 
 /// Const-friendly plain triple; only `forces` turns it into a typed
 /// `V3<Body>`. Keeps `JET_TABLE`/inertia usable in `const` position.
@@ -241,6 +272,24 @@ pub fn jet_torque(jets: u16) -> V3<Body> {
     torque
 }
 
+/// Torque from the descent engine alone, given its current thrust and
+/// trim-gimbal deflection — the same term `forces` adds below, exposed so
+/// an instrumented run can separate it from the RCS jets'.
+///
+/// It matters because the two authorities are nowhere near equal: one jet
+/// makes 529 N·m, while a single degree of trim at full throttle makes
+/// 1 428 N·m and the 6° stop makes 8 555 N·m. Any attitude question at
+/// high throttle is a question about THIS term.
+pub fn dps_torque(a: &Actuators, mass_kg: f64) -> V3<Body> {
+    if !a.engine_on || a.thrust_n <= 0.0 {
+        return V3::<Body>::zero();
+    }
+    let f = thrust_dir(a.trim_pitch_rad, a.trim_roll_rad).scale(a.thrust_n);
+    // The pivot sits below the CG on −X; the arm itself grows as
+    // propellant burns off, which the rope's curve fit already carries.
+    V3::<Body>::new(-pvt_cg_arm_m(mass_kg), 0.0, 0.0).cross(f)
+}
+
 /// Net force/torque on the vehicle from the DPS and every firing RCS jet,
 /// plus lunar gravity, as state derivatives. `inertia0` is the diagonal
 /// body inertia (kg·m²) at `mass0_kg`; the inertia used scales linearly
@@ -250,11 +299,7 @@ pub fn forces(s: &LmState, a: &Actuators, inertia0: V3Raw, mass0_kg: f64) -> Der
     let mut torque = V3::<Body>::zero();
 
     // DPS torque: thrust at the gimbal mount.
-    if a.engine_on && a.thrust_n > 0.0 {
-        let f = thrust_dir(a.trim_pitch_rad, a.trim_roll_rad).scale(a.thrust_n);
-        let mount = V3::<Body>::new(ENGINE_MOUNT_M, 0.0, 0.0);
-        torque = torque + mount.cross(f);
-    }
+    torque = torque + dps_torque(a, s.mass_kg);
 
     // RCS torque: each firing jet's force at its mount.
     for (i, jet) in JET_TABLE.iter().enumerate() {
@@ -304,6 +349,52 @@ pub fn forces(s: &LmState, a: &Actuators, inertia0: V3Raw, mass0_kg: f64) -> Der
 mod tests {
     use super::*;
     use crate::testutil::hover_state;
+
+    #[test]
+    fn pvt_cg_arm_matches_the_ropes_published_curve_fit() {
+        // Recomputed here from the listing's decimals and scalings, not
+        // copied from the implementation: A/(m+C)+B with A at 8 ft·2^16 kg,
+        // B at 8 ft, C at 2^16 kg (AOSTASK_AND_AOSJOB.agc:425-455).
+        let ft = 0.3048;
+        let expect = |m: f64| {
+            (0.0410511917 * 8.0 * ft * 65536.0) / (m + -0.025233 * 65536.0) + 0.155044 * 8.0 * ft
+        };
+        for mass in [15_209.0, 13_000.0, 11_000.0, 9_000.0] {
+            assert!((pvt_cg_arm_m(mass) - expect(mass)).abs() < 1e-9, "{mass}");
+        }
+        // The arm the rope publishes at PDI mass, and the assumed value it
+        // replaces — nearly 2x too long, which doubled the trim gimbal's
+        // torque against an RCS authority that is correct to 4-6 %.
+        assert!((pvt_cg_arm_m(15_209.0) - 0.862).abs() < 0.001);
+        // It GROWS as propellant burns off: the CG walks toward the pivot.
+        assert!(pvt_cg_arm_m(11_000.0) > pvt_cg_arm_m(15_209.0));
+    }
+
+    #[test]
+    fn trim_gimbal_torque_uses_the_rope_arm_and_scales_with_thrust() {
+        let a = Actuators {
+            engine_on: true,
+            throttle_cmd_n: 26_192.0,
+            thrust_n: 26_192.0,
+            trim_pitch_rad: 1f64.to_radians(),
+            trim_roll_rad: 0.0,
+            jets: 0,
+        };
+        let tq = dps_torque(&a, 15_209.0);
+        let expect = 26_192.0 * 1f64.to_radians().sin() * pvt_cg_arm_m(15_209.0);
+        assert!((tq.y.abs() - expect).abs() < 1e-6, "{tq:?}");
+        // One degree of trim must no longer outweigh an RCS jet at this
+        // throttle: 394 N*m against 529 N*m. Under the assumed 1.7 m arm it
+        // was 777 N*m, and Runs 33/35/36 tumbled at P64.
+        let one_jet = jet_torque(1).y.abs();
+        assert!(tq.y.abs() < one_jet, "{} vs {one_jet}", tq.y.abs());
+        // Engine off is zero torque regardless of trim.
+        let off = Actuators {
+            engine_on: false,
+            ..a.clone()
+        };
+        assert_eq!(dps_torque(&off, 15_209.0), V3::<Body>::zero());
+    }
 
     #[test]
     fn envelope_clamps_and_ftp_snaps() {

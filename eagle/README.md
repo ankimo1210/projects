@@ -44,8 +44,23 @@ As of Phase 2 Wave 1 the loop is closed end to end — PIPA/CDU sensors feed the
 > before HIGATE it runs no reasonableness test. A real landing radar
 > cannot lock at those attitudes. Half of that gap is closed (the read
 > path now applies the same 40,000 ft ceiling as the DATA GOOD discrete);
-> the beam-pointing envelope still needs a sourced limit, and the P64
-> wobble is the primary instability behind both crashes. Evidence:
+> the beam-pointing envelope still needs a sourced limit.
+>
+> **The attitude loop, not the radar, is the primary instability, and it is
+> now localized.** An extended attitude trace (trim angle, thrust and DPS
+> gimbal torque, added because the trace logged only RCS torque) showed the
+> trim gimbal saturated at its 0.2°/s rate limit in 57 % of samples with
+> 3.2× the RCS torque — and its moment arm turned out to be invented:
+> `ENGINE_MOUNT_M = 1.7 m` against the **0.862 m the rope publishes** as
+> `L,PVT-CG` (`AOSTASK_AND_AOSJOB.agc:425-455`), now implemented as a
+> mass-dependent curve fit. That correction did not cure the instability
+> (Run 37 crashed earlier), and the trace says why: **the runaway is about
+> body X, the thrust axis, which the gimbal cannot torque at all.** The AGC
+> held a fixed four-jet mask for fifteen seconds while the rate it should
+> have nulled grew to 3.31 rad/s, and the yaw torque reinforced the
+> rotation as often as it opposed it. The body-X sign chain (ch006
+> `ROLLJETS` and its CDU feedback) is the next thing to verify — the ch005
+> couples got exactly this treatment in 2026-07. Evidence:
 > [2026-08-03-v57-lr-incorporation.md](docs/superpowers/notes/2026-08-03-v57-lr-incorporation.md) §9-12.
 
 > **Current status (2026-08-02): LR integration passes; landing acceptance is

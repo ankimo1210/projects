@@ -689,12 +689,34 @@ impl SimCore {
                 use std::io::Write;
                 let g = self.imu.gimbals_deg(&self.st.att);
                 let tau = eagle_dynamics::forces::jet_torque(self.act.jets);
+                let dps = eagle_dynamics::forces::dps_torque(&self.act, self.st.mass_kg);
                 let w = self.st.omega;
+                // The DPS terms were missing until 2026-08-03, which made
+                // this trace unable to answer the only attitude question
+                // that matters at high throttle: one degree of trim at
+                // full thrust outweighs 2.7 RCS jets.
                 let _ = writeln!(
                     f,
-                    "t={:.2} jets={} gimbal=[{:.2},{:.2},{:.2}] omega=[{:.4},{:.4},{:.4}] torque=[{:.1},{:.1},{:.1}]",
-                    self.st.t, self.act.jets, g[0], g[1], g[2],
-                    w.x, w.y, w.z, tau.x, tau.y, tau.z
+                    "t={:.2} jets={} gimbal=[{:.2},{:.2},{:.2}] omega=[{:.4},{:.4},{:.4}] \
+                     torque=[{:.1},{:.1},{:.1}] trim_deg=[{:.3},{:.3}] thrust={:.0} \
+                     dps_torque=[{:.1},{:.1},{:.1}]",
+                    self.st.t,
+                    self.act.jets,
+                    g[0],
+                    g[1],
+                    g[2],
+                    w.x,
+                    w.y,
+                    w.z,
+                    tau.x,
+                    tau.y,
+                    tau.z,
+                    self.act.trim_pitch_rad.to_degrees(),
+                    self.act.trim_roll_rad.to_degrees(),
+                    self.act.thrust_n,
+                    dps.x,
+                    dps.y,
+                    dps.z
                 );
             }
         });
