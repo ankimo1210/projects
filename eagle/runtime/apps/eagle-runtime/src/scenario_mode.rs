@@ -33,6 +33,36 @@ pub async fn run(cfg: Cfg) -> Result<()> {
     )?;
     let manifest = PadloadManifest::load(&cfg.root.join(&sc.agc.padload))?;
 
+    // Forensic instrument, off by default: sample yaAGC's periodic core
+    // dump into a CSV time series of R12's working set. This is the read
+    // side of the 2026-08-03 investigation — the downlink cannot reach
+    // DELTAH or RGU (no offset/scale matches the AGC's own altitude better
+    // than ~300 m median), while the dump gives every word by symbol.
+    // Sampling is passive; it does NOT shorten the dump interval, so the
+    // `EAGLE_DUMP_TIME` boot hazard is not incurred.
+    if let Ok(path) = std::env::var("EAGLE_CORE_SAMPLE") {
+        let core = cfg.root.join("build/agc/core");
+        let symtab_for_sampler = SymTab::from_listing(
+            &std::fs::read_to_string(cfg.root.join("build/agc/Luminary099.log"))
+                .context("reading build/agc/Luminary099.log for the core sampler")?,
+        )?;
+        // Resolve the symbols BEFORE the flight starts, so a bad symbol
+        // stops the run here instead of costing a 20-minute descent.
+        eagle_runtime::coredump::lr_sample_addrs(&symtab_for_sampler)?;
+        eprintln!("scenario: core sampler -> {path}");
+        tokio::spawn(async move {
+            if let Err(e) = eagle_runtime::coredump::run_lr_sampler(
+                core,
+                PathBuf::from(path),
+                symtab_for_sampler,
+            )
+            .await
+            {
+                eprintln!("core sampler stopped: {e:#}");
+            }
+        });
+    }
+
     eprintln!("scenario: closed loop starting ({})", sc.name);
     let result = run_headless(HeadlessCfg {
         session: cfg.session,

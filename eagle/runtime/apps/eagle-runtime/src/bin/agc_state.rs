@@ -90,6 +90,19 @@ fn main() -> Result<()> {
         &std::fs::read_to_string(log_path).with_context(|| format!("reading {log_path}"))?,
     )?;
 
+    // The same row `EAGLE_CORE_SAMPLE` records once per dump, printed for
+    // one file. Useful on its own, and it means the sampler's columns can
+    // be checked against a real core without spending a flight.
+    if args.iter().any(|a| a == "--sample-row") {
+        let addrs = eagle_runtime::coredump::lr_sample_addrs(&symtab)?;
+        println!("{}", eagle_runtime::coredump::LR_SAMPLE_HEADER);
+        match eagle_runtime::coredump::lr_sample_row(&dump, &addrs) {
+            Some(row) => println!("{row}"),
+            None => println!("(dump does not cover every sampled address)"),
+        }
+        return Ok(());
+    }
+
     println!("# {core_path}");
     for (sym, b, what) in SCALARS {
         match symtab.ecadr(sym).and_then(|e| dump.dp_at(e, *b)) {

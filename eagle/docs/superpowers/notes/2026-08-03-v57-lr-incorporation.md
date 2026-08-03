@@ -219,7 +219,10 @@ Measured boundaries:
 flights on this defect chain. No further flight until the DELTAH/RGU
 instrument exists.**
 
-## 8. Prescribed next measurement
+## 8. Prescribed next measurement — DONE, see §9-11
+
+(Plan as written: pin DELTAH/RGU, add range rows, then judge where the
+incorporated altitude goes wrong. What follows is what it measured.)
 
 1. Pin `DELTAH` (control-list slot 21 by hand count, LAND−49±2 after the
    known +2 slot shift) and ideally `RGU` in the LAND-anchored decoder,
@@ -236,3 +239,118 @@ instrument exists.**
 3. The V57 keying and the ch33 polarity fix stay: both are rope-proven
    prerequisites. Run 33's regression is the next defect layer becoming
    visible, not a reason to re-inhibit the radar.
+
+## 9. The instrument that was built instead of the downlink decoder
+
+**The downlink cannot reach DELTAH or RGU, and the note's plan above was
+wrong about why.** A brute-force scan over every offset in LAND−60..+10 at
+b=23/24/25 finds no word matching the AGC's own painted altitude better
+than ~300 m median — and the premise was broken anyway: `RGU = CG (R −
+LAND)` (`LUNAR_LANDING_GUIDANCE_EQUATIONS.agc:430`) is **site-relative**,
+so the "|RGU| ≈ lunar radius" test used to search for it could never
+succeed. This matches `downlink_dump`'s own recorded failure to resolve
+RGU.
+
+The repo already documents the right instrument and this investigation
+ignored it for a second time: `coredump.rs` — "the instrument of first
+resort for any question about what the AGC believes". Built:
+
+- `EAGLE_CORE_SAMPLE=<abs path>` samples yaAGC's periodic core dump into a
+  CSV time series of R12's working set — `HMEAS`, `HCALC`, `DELTAH`,
+  `RGU`, `VGU`, `RNRAD`, `FLGWRD11`, `RADMODES`, channel 33, the
+  `LRLCTR/LRRCTR/LRSCTR/LRMCTR` reasonableness counters and `FAILREG` —
+  every field by symbol. Symbols resolve before the flight starts, so a
+  bad name costs a second rather than 20 minutes. `TIME2` and `RNRAD` are
+  hardware counters with no listing address and come from pinned
+  constants cross-checked against `runner`/`sim`.
+  It does NOT shorten `EAGLE_DUMP_TIME`, so the flight-12 boot hazard is
+  not incurred; the default 10 s interval yields ~100 samples per descent.
+- `EAGLE_LR_DEBUG` gained `ALT` rows (true slant, measured slant, scale
+  branch, quantum, counts). It had only ever logged velocity
+  transactions — the presented-count side of an altitude investigation
+  was simply not being recorded.
+- `agc_state --sample-row` prints the same row for one dump, so the
+  columns can be checked without a flight.
+
+One defect found by using it: the sampler's first row came from the
+PREVIOUS flight's dump file (`--no-resume` stops the AGC reading it, not
+yaAGC writing it). Run 34's first row is Run 33's crashed state. Fixed —
+dumps older than sampler start are ignored — and confirmed in Run 35,
+whose first row is t=30 s.
+
+## 10. Runs 34 and 35 — a Nominal landing that does NOT reproduce
+
+**Run 34 (`00→63→64→65`) landed: Nominal, 1.14 m/s vertical, 0.50 m/s
+horizontal, 0.9° tilt, 687.2 s after ENGINE ON, 640 kg of DPS fuel
+remaining, no alarm episode, no PROG-lamp frame.** P64 flew it to 21 m at
+0.94 m/s and P65 took over at TIG+661 s. It is the first authentic soft
+touchdown this project has measured. It missed the target site by
+5,256.7 m.
+
+**Run 35, same binary and same scenario, crashed: 137.76 / 105.47 m/s at
+136.7° of tilt, `00→63→64`, 537.1 s.** Run 33 failed the same way. The
+outcome is bimodal, so **nothing in this project's status may be
+upgraded to "lands" on Run 34** — one landing in three flights of the
+same configuration is a coin toss, not a capability.
+
+The instruments explain the split, and it is not the LR incorporation
+itself. Through braking both runs are healthy: `DELTAH` stays inside
+±50 m, `HCALC` tracks truth to ~25 m at 600 m altitude (Run 31's
+equivalent error was −222 m), and the channel-33 HIGH→LOW transition
+fires in flight at the 762 m slant crossing, exactly as the rope's
+SCALADJ expects. Run 34's HMEAS/presented-count ratio holds at 0.96-0.98
+for the whole descent.
+
+## 11. ROOT CAUSE of the crashes: a grazing beam reported as good
+
+Run 35's core samples show the state break at one instant: at TIG+507 s
+`HMEAS` jumps to **21 556 m** with the vehicle at 2 989 m, `DELTAH` to
+**12 117 m**, and `HCALC` never recovers (2 001 m at truth 1 234 m,
+1 117 m at truth −64 m). The new `ALT` rows say where that came from —
+the responder's own geometry:
+
+| t_s | true slant | counts | truth alt | tilt |
+|---:|---:|---:|---:|---:|
+| 838.5 | 3 465.9 | 2 107 | 3 427.0 | 28.0° |
+| 846.5 | **10 497.5** | 6 383 | 3 158.4 | **86.3°** |
+| 856.5 | 5 962.7 | 3 626 | 2 551.7 | 81.8° |
+| 872.5 | **17 957.2** | 10 920 | 913.4 | **78.7°** |
+
+At P64 entry the attitude loop wobbles (Run 35: 67.8° → 38.6° → 28.0° →
+50.9° → 86.3° in 16 s; Run 34 over the same seconds: 64° → 51° → 50°,
+smooth). Once tilt passes ~60° the H beam grazes the surface and the
+spherical intersection returns a legitimately huge slant range — which
+the responder presents as DATA GOOD. **Before HIGATE the rope runs no
+reasonableness test** (`SERVICER.agc:1157-1161`, PSTHIBIT), so it
+incorporates the reading raw, the altitude state jumps, guidance
+commands a worse attitude, the beam grazes further: a runaway. Run 34
+never wobbled far enough to enter it.
+
+So the bimodality is a marginal P64 attitude loop **coupled through an
+unphysical radar**: the sim reports altitude data good at attitudes where
+no real landing radar could lock.
+
+Fixed now (unit-gated, NOT flown): the read path applies the same 40,000 ft
+operating ceiling (`alt_in_counter_range`) the standing DATA GOOD discrete
+already applied. The two disagreed — the load path only rejected counts
+overflowing 14 bits, i.e. 26.9 km at the high scale — and Run 35 flew
+straight through the gap. That kills the 17 957 m reading. **It does NOT
+kill the 10 497 m one**, which is inside the ceiling: a beam-pointing
+envelope is still missing, and picking its limit needs a source, not a
+guess. That is the open decision.
+
+## 12. Open, in order
+
+1. **The LR needs a beam-validity envelope with a citation.** A real LR
+   does not report altitude data good with the vehicle 86° off vertical.
+   Candidate rule: require the beam's surface incidence within the
+   radar's design cone, sourced from the LR spec or NASSP's
+   implementation, rather than a number chosen to make a flight work.
+2. **The P64 attitude wobble is the primary instability** and is
+   independent of the radar (Run 33 and 35 both start wobbling before any
+   bad reading). It is the next thing to measure — the core sampler can
+   now record the guidance/DAP state alongside R12's.
+3. Only then re-fly, and judge reproducibility over several flights, not
+   one. Run 34 is evidence the chain CAN land, not that it does.
+4. Unaffected and still RED: the frozen M1 acceptance
+   (`live_pdi_descent`) bypasses the radar entirely and never keys V57.
