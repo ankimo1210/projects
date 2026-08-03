@@ -29,15 +29,24 @@ As of Phase 2 Wave 1 the loop is closed end to end — PIPA/CDU sensors feed the
 > masked defects were fixed with it: the responder's ch33 bit-9 scale
 > polarity was inverted against the rope's `SCALADJ`/`SCALECHK` (set =
 > high scale), and the V01N01 erasable read-back killed the burn monitor.
-> **Runs 32/33 measured the fix and are both RED**: Run 32 proved V57
-> keyed in P00 is erased by V37's R00 flagword wipe (it must be keyed
-> inside P63, as the crew did); Run 33, with LRINH verified live,
-> incorporated LR altitude and flew a violent P64 attitude excursion into
-> a 126.95 / 215.71 m/s crash — the incorporated measurement itself is
-> now the suspect. Per the three-attempt rule the next step is an
-> instrument (DELTAH/RGU downlink decode, LR-range debug rows), not
-> another flight. Evidence:
-> [2026-08-03-v57-lr-incorporation.md](docs/superpowers/notes/2026-08-03-v57-lr-incorporation.md).
+> Run 32 proved V57 keyed in P00 is erased by V37's R00 flagword wipe (it
+> must be keyed inside P63, as the crew did). With incorporation live and
+> instrumented by a new core-dump sampler, `DELTAH` now stays inside
+> ±50 m and `HCALC` tracks truth to ~25 m where Run 31 was −222 m out.
+>
+> **Run 34 then landed — Nominal, 1.14 m/s vertical, 0.50 m/s horizontal,
+> 0.9° tilt, 640 kg of fuel left — and Run 35, same binary and scenario,
+> crashed at 137.76 / 105.47 m/s.** The outcome is bimodal, so this is
+> NOT a landing capability and nothing below is upgraded. Measured cause:
+> at P64 entry the attitude loop wobbles, and past ~60° of tilt the H beam
+> grazes the surface and returns a huge slant range that the responder
+> still reports as data good — which the rope incorporates raw, because
+> before HIGATE it runs no reasonableness test. A real landing radar
+> cannot lock at those attitudes. Half of that gap is closed (the read
+> path now applies the same 40,000 ft ceiling as the DATA GOOD discrete);
+> the beam-pointing envelope still needs a sourced limit, and the P64
+> wobble is the primary instability behind both crashes. Evidence:
+> [2026-08-03-v57-lr-incorporation.md](docs/superpowers/notes/2026-08-03-v57-lr-incorporation.md) §9-12.
 
 > **Current status (2026-08-02): LR integration passes; landing acceptance is
 > RED.** Run 27 closed the LR velocity split and former LR alarms with the
@@ -209,8 +218,20 @@ make descent-lr-full
 make descent-p65
 
 # Instrument any of these runs:
-#   EAGLE_ATT_DEBUG=<path>  attitude sign-chain trace (jets, gimbals, omega, torque)
-#   EAGLE_TELEM_OUT=<path>  per-frame telemetry JSONL
+#   EAGLE_ATT_DEBUG=<path>   attitude sign-chain trace (jets, gimbals, omega, torque)
+#   EAGLE_TELEM_OUT=<path>   per-frame telemetry JSONL
+#   EAGLE_LR_DEBUG=<path>    landing-radar CSV: velocity transactions AND
+#                            range reads (true/measured slant, scale, counts)
+#   EAGLE_CORE_SAMPLE=<path> R12 working set as a time series, read by symbol
+#                            out of yaAGC's periodic core dump: HMEAS, HCALC,
+#                            DELTAH, RGU, VGU, RNRAD, FLGWRD11, RADMODES,
+#                            ch33, the LR reasonableness counters, FAILREG.
+#                            This is the instrument of first resort for any
+#                            question about what the AGC believes — the
+#                            downlink cannot reach DELTAH or RGU at all.
+#                            `cargo run --bin agc_state -- <core> <log>
+#                            --sample-row` prints the same row for one dump.
+# All four need ABSOLUTE paths (the runtime's cwd is `runtime/`).
 
 # Watch it live: serve the client and open the ENGR tab
 make dev-client        # http://localhost:5173 → ENGR

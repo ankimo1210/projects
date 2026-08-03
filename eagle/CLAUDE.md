@@ -6,16 +6,23 @@
 > measurement was ever incorporated — V57 was never keyed** (LRINH clear
 > in every flight; SERVICER discarded every DELTAH at the NOREASON/VUPDAT
 > gates). V57 must be keyed INSIDE P63 — R00 wipes FLGWRD11 on every V37
-> (Run 32 measured a P00-keyed V57 doing nothing). Run 33, with LRINH
-> verified live, went RED differently: LR-altitude incorporation bent P64
-> guidance into a 127/216 m/s crash — the incorporated measurement is the
-> new suspect, and the prescribed next step is the DELTAH/RGU downlink
-> instrument plus LR-range debug rows, NOT another flight. Also fixed: ch33
-> bit-9 scale polarity was inverted vs the rope (SCALADJ: set = high), and
-> the V01N01 read-back killed the burn monitor (V16N63E now restored).
-> Evidence: `docs/superpowers/notes/2026-08-03-v57-lr-incorporation.md`.
-> The authentic landing acceptance is still RED. Read `README.md` before
-> quoting any number from this file.
+> (Run 32 measured a P00-keyed V57 doing nothing). Navigation is now fixed:
+> DELTAH inside ±50 m, HCALC within ~25 m of truth at 600 m. **Run 34
+> landed Nominal (1.14/0.50 m/s) and Run 35, identical, crashed at
+> 137.76/105.47 m/s — bimodal, so this is NOT a landing capability.**
+> Measured cause: a marginal P64 attitude wobble plus an unphysical radar —
+> past ~60° tilt the H beam grazes and returns 10-18 km of slant range that
+> the responder still calls DATA GOOD, and the rope incorporates it raw
+> (no reasonableness test before HIGATE). The beam-pointing envelope needs
+> a SOURCED limit; do not invent one. Also fixed: ch33 bit-9 polarity
+> (SCALADJ: set = high), the V01N01 read-back killing the burn monitor
+> (V16N63E restored), and the read path now applies the same 40,000 ft
+> ceiling as the DATA GOOD discrete. Instruments: `EAGLE_CORE_SAMPLE`
+> (core-dump time series, the instrument of first resort — the downlink
+> cannot reach DELTAH/RGU) and `EAGLE_LR_DEBUG` ALT rows. Evidence:
+> `docs/superpowers/notes/2026-08-03-v57-lr-incorporation.md` §9-12.
+> The frozen M1 acceptance bypasses the radar and is still RED. Read
+> `README.md` before quoting any number from this file.
 
 Original Luminary099 running in vendored yaAGC, bridged to a web DSKY, and —
 as of Phase 2 Wave 1 — flying a closed loop against our own 6-DoF physics

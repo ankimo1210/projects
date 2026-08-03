@@ -313,9 +313,17 @@ struct LrVelocityDebug {
     delta: i32,
 }
 
-/// Optional forensic stream for one full five-sample X/Y/Z transaction.
-/// Kept out of telemetry so the frozen acceptance schema remains unchanged.
-fn debug_lr_velocity_transaction(sample: LrVelocityDebug) {
+/// Columns of the optional `EAGLE_LR_DEBUG` stream. One file carries both
+/// row shapes, told apart by `select`: `X`/`Y`/`Z` velocity transactions
+/// fill the velocity block and leave the range block empty, `ALT` range
+/// reads do the reverse. A union header rather than two files, because
+/// the question these answer is always "what did we present, and when,
+/// relative to the other beams".
+const LR_DEBUG_HEADER: &str = "t_s,select,position,along_ms,quantum_ms,raw_target,\
+rnrad_before,delta,true_slant_m,measured_slant_m,scale,m_per_count,counts";
+
+/// Append one row to the forensic stream, opening it on first use.
+fn lr_debug_write(row: &str) {
     thread_local! {
         static DBG: std::cell::RefCell<Option<std::fs::File>> =
             const { std::cell::RefCell::new(None) };
@@ -332,11 +340,7 @@ fn debug_lr_velocity_transaction(sample: LrVelocityDebug) {
                     )
                 });
                 use std::io::Write;
-                writeln!(
-                    file,
-                    "t_s,select,position,along_ms,quantum_ms,raw_target,rnrad_before,delta"
-                )
-                .expect("write EAGLE_LR_DEBUG header");
+                writeln!(file, "{LR_DEBUG_HEADER}").expect("write EAGLE_LR_DEBUG header");
                 DBG.with(|d| *d.borrow_mut() = Some(file));
             }
         }
@@ -344,24 +348,67 @@ fn debug_lr_velocity_transaction(sample: LrVelocityDebug) {
     DBG.with(|d| {
         if let Some(file) = d.borrow_mut().as_mut() {
             use std::io::Write;
-            let _ = writeln!(
-                file,
-                "{:.2},{},{:?},{:.9},{:.9},{},{},{}",
-                sample.t_s,
-                ["X", "Y", "Z"][sample.select],
-                sample.position,
-                sample.along_ms,
-                sample.quantum_ms,
-                sample.raw_target,
-                sample.rnrad_before,
-                sample.delta
-            );
+            let _ = writeln!(file, "{row}");
         }
     });
 }
 
+/// One velocity row: the velocity block filled, the range block empty.
+fn lr_velocity_row(sample: LrVelocityDebug) -> String {
+    format!(
+        "{:.2},{},{:?},{:.9},{:.9},{},{},{},,,,,",
+        sample.t_s,
+        ["X", "Y", "Z"][sample.select],
+        sample.position,
+        sample.along_ms,
+        sample.quantum_ms,
+        sample.raw_target,
+        sample.rnrad_before,
+        sample.delta
+    )
+}
+
+/// Optional forensic stream for one full five-sample X/Y/Z transaction.
+/// Kept out of telemetry so the frozen acceptance schema remains unchanged.
+fn debug_lr_velocity_transaction(sample: LrVelocityDebug) {
+    lr_debug_write(&lr_velocity_row(sample));
+}
+
+#[derive(Debug, Clone, Copy)]
+struct LrRangeDebug {
+    t_s: f64,
+    position: LrAntennaPosition,
+    true_slant_m: f64,
+    measured_slant_m: f64,
+    low_scale: bool,
+    m_per_count: f64,
+    counts: i32,
+}
+
+/// Forensic record of one accepted altitude read, written to the same
+/// `EAGLE_LR_DEBUG` file as the velocity transactions and distinguished by
+/// its `select` column (`ALT`). Everything needed to check the rope's
+/// side offline: the geometry we saw, the quantum and scale discrete we
+/// presented, and the exact count loaded into `RNRAD`.
+fn lr_range_row(sample: LrRangeDebug) -> String {
+    format!(
+        "{:.2},ALT,{:?},,,,,,{:.6},{:.6},{},{:.9},{}",
+        sample.t_s,
+        sample.position,
+        sample.true_slant_m,
+        sample.measured_slant_m,
+        if sample.low_scale { "LOW" } else { "HIGH" },
+        sample.m_per_count,
+        sample.counts,
+    )
+}
+
+fn debug_lr_range_read(sample: LrRangeDebug) {
+    lr_debug_write(&lr_range_row(sample));
+}
+
 /// `RNRAD`, the radar counter (`ERASABLE_ASSIGNMENTS.agc:141`).
-const RNRAD_ADDR: u8 = 0o46;
+pub const RNRAD_ADDR: u8 = 0o46;
 
 /// Form one absolute 14-bit RNRAD load using the AGC's shift-counter
 /// inputs. Fourteen SHINCs first discard any previous word; fourteen more
@@ -1181,6 +1228,22 @@ impl SimCore {
                 ));
             return;
         };
+        // The same operating ceiling the standing DATA GOOD discrete
+        // applies. Without it the two disagreed between 40,000 ft and the
+        // 14-bit limit below (26.9 km at the high scale), and Run 35 flew
+        // into that gap: at 86 degrees of tilt the H beam grazed the
+        // surface and returned 10-18 km of slant range from under 3.2 km
+        // of altitude. Before HIGATE the rope runs no reasonableness test
+        // (`SERVICER.agc:1157-1161`), so it incorporated the reading raw.
+        if !eagle_sensors::lr::alt_in_counter_range(measured) {
+            out.to_agc
+                .extend(eagle_agc_protocol::agc_io::discrete_write(
+                    0o33,
+                    eagle_sensors::lr::CH33_LR_RANGE_DATA_GOOD,
+                    0,
+                ));
+            return;
+        }
         let counts = eagle_sensors::lr::alt_counts(measured);
         // The AGC reads RNRAD's magnitude through `MASK POSMAX`
         // (P20-P25.agc:2878). The automatic 5.395/1.079 ft scales keep
@@ -1196,6 +1259,19 @@ impl SimCore {
         }
         lr.rnrad[0] = counts;
         lr.rnrad_holds = 0;
+        // The presented-count side of the three-point measurement. Until
+        // 2026-08-03 this stream carried velocity transactions only, so a
+        // range read left no record of what was actually handed to the
+        // rope — the one thing an altitude investigation needs.
+        debug_lr_range_read(LrRangeDebug {
+            t_s: self.st.t,
+            position: lr.antenna_position,
+            true_slant_m: range_m,
+            measured_slant_m: measured,
+            low_scale: range_low_scale,
+            m_per_count: eagle_sensors::lr::alt_m_per_count(measured),
+            counts,
+        });
         out.to_agc.extend(rnrad_load_packets(counts));
         // Data good, and the antenna in position 2 — asserted by CLEARING
         // the bits (see eagle_sensors::lr).
@@ -2094,6 +2170,83 @@ mod tests {
         assert!(
             !again.to_agc.iter().any(|p| p.channel == 0o46),
             "only the rising edge triggers a read"
+        );
+    }
+
+    #[test]
+    fn a_range_beyond_the_operating_ceiling_is_refused_by_the_read_too() {
+        // Run 35: at 86 degrees of tilt the H beam grazed the surface and
+        // the responder answered 10.5 km of slant range from 3.2 km of
+        // altitude, then 18.0 km from 913 m. The standing DATA GOOD
+        // discrete already applies the 40,000 ft operating ceiling
+        // (`alt_in_counter_range`), but the read path only rejected counts
+        // that overflow 14 bits — 26.9 km at the high scale — so ranges
+        // between the two limits were loaded into RNRAD while the discrete
+        // said NOT good. Before HIGATE the rope runs no reasonableness
+        // test (`SERVICER.agc:1157-1161`), so such a load is incorporated
+        // raw. The two paths must agree.
+        let mut sc = pdi_scenario();
+        sc.agc.lrbypass = false;
+        let mut core = SimCore::new(&sc, 0.0);
+        engine_on(&mut core);
+        point_position1_h_beam_toward_surface(&mut core);
+        core.st.pos = core
+            .st
+            .pos
+            .unit()
+            .scale(sc.site.radius_m + eagle_sensors::lr::LR_ALT_MAX_M + 5_000.0);
+
+        core.ch13 = 0o17; // activity + LRALT select
+        let out = core.tick();
+        assert!(
+            !out.to_agc.iter().any(|p| p.channel == RNRAD_ADDR),
+            "a range past the operating ceiling must not reach RNRAD"
+        );
+        let ch33 = out
+            .to_agc
+            .iter()
+            .rfind(|p| p.channel == 0o33)
+            .expect("ch33 written");
+        assert_ne!(
+            ch33.data & eagle_sensors::lr::CH33_LR_RANGE_DATA_GOOD,
+            0,
+            "and it must be declared NOT good (active low: the bit is SET)"
+        );
+    }
+
+    #[test]
+    fn both_lr_debug_row_shapes_match_the_header_width() {
+        // One file carries both shapes; a width mismatch would silently
+        // shift every column of an offline analysis.
+        let cols = LR_DEBUG_HEADER.split(',').count();
+        let vel = lr_velocity_row(LrVelocityDebug {
+            t_s: 1.0,
+            select: 0,
+            position: LrAntennaPosition::Position1,
+            along_ms: -1.5,
+            quantum_ms: 0.1,
+            raw_target: 12,
+            rnrad_before: 3,
+            delta: 9,
+        });
+        let alt = lr_range_row(LrRangeDebug {
+            t_s: 2.0,
+            position: LrAntennaPosition::Position2,
+            true_slant_m: 700.0,
+            measured_slant_m: 701.0,
+            low_scale: true,
+            m_per_count: 0.3288792,
+            counts: 2131,
+        });
+        assert_eq!(vel.split(',').count(), cols, "velocity row: {vel}");
+        assert_eq!(alt.split(',').count(), cols, "range row: {alt}");
+        assert!(
+            alt.contains(",ALT,"),
+            "range rows are keyed by select: {alt}"
+        );
+        assert!(
+            alt.contains(",LOW,"),
+            "the presented scale is recorded: {alt}"
         );
     }
 
