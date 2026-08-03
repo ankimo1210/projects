@@ -9,8 +9,6 @@ test_app/
 _scratch/
 
 # Compatibility symlinks into workspace data
-land_price_api_app/data/raw/
-land_price_api_app/data/processed/
 **/data/raw/
 **/data/processed/
 **/data/*.migrated/

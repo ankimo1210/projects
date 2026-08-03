@@ -40,14 +40,17 @@ make lint / make test / make fmt    # cross-workspace checks
 ```
 
 Run `uv` from the repo root — running it inside a member directory can
-create a stray venv. Non-Python projects: `EitanQuest` / `NeonThread`
-(Xcode), `ts-rosetta` (pnpm), `pokemon` (npm), `csharp_calc` (.NET).
+create a stray venv. Non-Python projects: `EitanQuest` / `NeonThread` /
+`WSET` / `My Tianjin` (Xcode), `ts-rosetta` / `b737-ops-sim` (pnpm),
+`pokemon` (npm), `eagle` (cargo + npm), `csharp_calc` / `CsharpApp`
+(.NET), `cpp_algo_lab` (make + CUDA).
 
 The root `conftest.py` imports same-named packages explicitly so that a
 full-workspace `pytest` run does not break them via namespace packages
 (pytest 9 behavior); keep it when touching test config.
 
-`make lint` and the full-workspace `pytest` are green as of 2026-08-01, so a red
+`make lint` and the full-workspace `pytest` are green as of 2026-08-03
+(2484 passed, 46 skipped), so a red
 result means the change under test broke something — diagnose it rather than
 assuming it predates you. Every member declares what it imports, including
 indirect (`health` declares `scipy` for `pandas.corr(method="spearman")`) and

@@ -13,15 +13,19 @@
 | [`nbody-gpu/`](nbody-gpu/) | GPU 加速 N 体シミュレーション + リアルタイム 3D 可視化 | CuPy / VisPy |
 | [`line_backup/`](line_backup/) | iPhone ローカルバックアップから LINE データを完全オフラインで解析する CLI | Python |
 | [`agent-profiler/`](agent-profiler/) | Codex CLI / Claude Code の実行をリアルタイム可視化・保存・分析するローカル TUI | Python / Textual |
+| [`health/`](health/) | Google Health API の本人データを OAuth 取得 → DuckDB 保存 → 閲覧するローカル専用ダッシュボード | Python / Streamlit / DuckDB / Plotly |
 | [`akinator/`](akinator/) | Wikidata をエンティティ源とするローカル・アキネーター風推測ゲーム（確率的候補更新エンジン） | Python / FastAPI |
 | [`pokemon/`](pokemon/) | Quokka Wilds: オリジナル 3D モンスター収集ゲーム | Vite / React Three Fiber |
 | [`b737-ops-sim/`](b737-ops-sim/) | ローカル専用 Boeing 737-800 運航手順トレーナー（FlightGear/mock バックエンド、3D コックピット、ATC・チェックリスト・デブリーフ。認定訓練装置ではない） | TypeScript / pnpm / React / Babylon.js / Fastify |
+| [`eagle/`](eagle/) | Apollo 11 月着陸船の降下シミュレータ（Luminary099 の実 AGC コードを yaAGC で実行、Rust ランタイム + Web DSKY・6DoF・エンジニアボード） | Rust / TypeScript / yaAGC |
 | [`EitanQuest/`](EitanQuest/) | えいたんクエスト: iPhone 向け英単語 4 択クイズアプリ（オフライン完結 MVP） | Swift / SwiftUI / SwiftData |
 | [`NeonThread/`](NeonThread/) | 発光ラインを操作して隙間をくぐる iOS 無限ランゲーム | Swift / SwiftUI + SpriteKit |
+| [`WSET/`](WSET/) | CruNote for WSET: WSET Level 3 のオフライン学習 iOS アプリ（自作日本語 4 択 1100 問・用語 SRS・模試・テイスティング記録） | Swift / SwiftUI（問題コーパス生成は Python） |
+| [`My Tianjin/`](My%20Tianjin/) | 中国語 (HSK) 学習 iOS アプリ。公式 HSK 3.0 の 11,000 語を 7 パック収録、選択・整列・読解・産出トラック | Swift / SwiftUI |
 | [`genequest/`](genequest/) | Genequest 健康リスク・体質・母系祖先結果のローカル保存と検証（機微データは Git 管理外） | CSV / JSON / Markdown / Python |
 | [`shortest_path/`](shortest_path/) | ダイクストラ法・A*・双方向探索の実装と可視化ラボ | Python / Jupyter / HTML |
-| [`cpp_algo_lab/`](cpp_algo_lab/) | C++学習ラボ：ソート/文字列検索/CPU・GPU並列化の実装と計測（Phase 1: ソート10種+評価4軸） | C++20 / make / doctest |
-| [`analytics/`](analytics/) | 体験型インタラクティブ教科書シリーズ（線形代数・NN・ベイズ・フーリエ・ラプラス・ODE/PDE/SDE・機械学習）+ 統合オフラインポータル。索引: [`analytics/README.md`](analytics/README.md) | Python / Jupyter Book / Plotly / TypeScript |
+| [`cpp_algo_lab/`](cpp_algo_lab/) | C++学習ラボ：ソート10種 / 文字列検索 / CPU 並列 / CUDA の実装と 4 軸計測（Phase 1〜4 完了） | C++20 / CUDA / make / doctest |
+| [`analytics/`](analytics/) | 体験型インタラクティブ教科書シリーズ（線形代数・NN・ベイズ・フーリエ・ラプラス・ODE/PDE/SDE・機械学習・統計）+ 統合オフラインポータル。索引: [`analytics/README.md`](analytics/README.md) | Python / Jupyter Book / Plotly / TypeScript |
 | [`johnhull/`](johnhull/) | Hull『Options, Futures, and Other Derivatives』11e の章別学習ボリューム + `hullkit` 共有パッケージ + Jupyter Book / オフラインポータル | Python / Jupyter |
 | [`autostock/`](autostock/) | Mag7 株ストラテジーの自律探索デモ（read-only バックテスト + OOS 評価） | Python |
 | [`quantkit/`](quantkit/) | ローカル無料データで完結するマルチアセット投資リサーチ基盤（データ→シグナル→バックテスト→ポートフォリオ→可視化） | Python / DuckDB / Plotly |
@@ -33,6 +37,7 @@
 | [`market_nn/`](market_nn/) | LOB予測論文の一次資料・公式コード差分を追跡する構造再現スイート | Python / PyTorch |
 | [`aisan_lbo_case/`](aisan_lbo_case/) | アイサンテクノロジー (4667.T) 非公開化 LBO ケーススタディ（公開情報ベース、HTML レポート出力） | Python / Jupyter |
 | [`notebooks/`](notebooks/) | 単発の分析ノートブック置き場（債券、ETF、不動産シミュ等） | Jupyter |
+| [`kaggle/`](kaggle/) | Kaggle コンペの実験（house_prices / titanic）。env 管理なしの単発スクリプト | Python |
 | [`csharp_calc/`](csharp_calc/) | WinForms 四則演算電卓サンプル（エンジンは UI 非依存・ユニットテスト付き） | C# / .NET 9 |
 | [`CsharpApp/`](CsharpApp/) | WPF / MVVM 学習用リアルタイム価格ティッカー（オフライン GBM、固定長履歴、カスタムチャート） | C# / WPF / .NET 9 |
 | [`ts-rosetta/`](ts-rosetta/) | 同一タスクアプリを React / Vue / Angular / Next.js / Express / NestJS 等で並列実装した TS エコシステム学習ラボ | TypeScript / pnpm |
@@ -82,8 +87,8 @@ make tree      # ヘビーディレクトリを除外したツリー表示
 
 - 対応プラットフォーム: **WSL2 (Ubuntu) を主**とし、ネイティブ Windows (PowerShell) と macOS でも動作（差分は下記セットアップ参照）
 - Python は **ルート単一の uv workspace** で管理（`.venv` は repo root に1個）
-  - workspace メンバー: `gto`, `market-viz`, `stock`, `nbody-gpu`, `line_backup`, `akinator`, `autostock`, `quantkit`, `deep_hedge_price`, `optimal_execution`, `rough_volatility`, `jp_llm_lab`, `johnhull/hullkit`、`analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning}` と `analytics/differential_equation/{ode-book,pde-book}`（`analytics/report` のみメンバー外）
-  - 例外: `aisan_lbo_case` は `requirements.txt`、`csharp_calc` / `CsharpApp` は .NET、`EitanQuest` / `NeonThread` は Xcode (Swift)、`ts-rosetta` は pnpm、`rates_volatility_model` / `notebooks` / `models` は env 管理なし、`shortest_path` は依存なしの教材プロジェクト（`PYTHONPATH=shortest_path/src` で実行）
+  - workspace メンバー（正は root `pyproject.toml` の `[tool.uv.workspace]`）: `agent-profiler`, `JHRMBS`, `gto`, `market-viz`, `stock`, `nbody-gpu`, `line_backup`, `akinator`, `autostock`, `health`, `quantkit`, `deep_hedge_price`, `optimal_execution`, `rough_volatility`, `jp_llm_lab`, `market_nn`, `johnhull/hullkit`、`analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning,statistics}` と `analytics/differential_equation/{ode-book,pde-book}`（`analytics/report` のみメンバー外）
+  - 例外: `aisan_lbo_case` は `requirements.txt`、`csharp_calc` / `CsharpApp` は .NET、`EitanQuest` / `NeonThread` / `WSET` / `My Tianjin` は Xcode (Swift)、`ts-rosetta` / `b737-ops-sim` は pnpm、`pokemon` は npm、`eagle` は Rust (cargo) + npm、`rates_volatility_model` / `notebooks` / `models` / `kaggle` は env 管理なし、`shortest_path` は依存なしの教材プロジェクト（`PYTHONPATH=shortest_path/src` で実行）
 - AI コラボ前提（Claude Code / Copilot）。エージェント向け規約は `CLAUDE.md` と `AGENTS.md` を参照
 
 ## セットアップ
@@ -121,8 +126,8 @@ make help                # 横断ターゲット一覧
 
 | ツール | 必要なプロジェクト | 入れ方 |
 |---|---|---|
-| Node.js 20+ | `gto/web`（Next.js）, `pokemon`（Vite） | WSL/Linux: nvm or apt ／ macOS: `brew install node` ／ Windows: `winget install OpenJS.NodeJS` |
-| Rust (cargo) | `gto`（Rust エンジン、maturin でビルド） | 全環境 `rustup`（<https://rustup.rs>） |
+| Node.js 20+ | `gto/web`（Next.js）, `pokemon`（Vite）, `b737-ops-sim` / `ts-rosetta`（pnpm）, `eagle/client`（Vite） | WSL/Linux: nvm or apt ／ macOS: `brew install node` ／ Windows: `winget install OpenJS.NodeJS` |
+| Rust (cargo) | `gto`（Rust エンジン、maturin でビルド）, `eagle/runtime`（yaAGC ブリッジ） | 全環境 `rustup`（<https://rustup.rs>） |
 | .NET 9 SDK | `csharp_calc`, `CsharpApp` | macOS: `brew install dotnet` ／ Windows: `winget install Microsoft.DotNet.SDK.9` ／ WSL: 公式 apt リポジトリ |
 | NVIDIA CUDA | `nbody-gpu`（CuPy）, `gto` の GPU 機能（preview） | NVIDIA GPU + ドライバ必須。**macOS 非対応** |
 

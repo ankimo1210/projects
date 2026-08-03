@@ -9,7 +9,7 @@
 | サブディレクトリ | 用途 |
 |---|---|
 | `finance/` | 債券・ETF・コンベキシティなど金融分析の単発ノート |
-| `real_estate/` | 不動産データ収集・投資シミュレーション。製品化したものは `re_invest_os/` / `land_price_api_app/` を参照 |
+| `real_estate/` | 不動産データ収集・投資シミュレーション。製品化したものは独立リポジトリ `~/re_invest_os` を参照（`land_price_api_app` は `_archive/` へ退避済み） |
 | `scrapers/` | 価格スクレイパーと取得 CSV |
 | `vector_analogy/` | ベクトル類似度の可視化実験（自己完結ミニプロジェクト） |
 | `launch_streamlit_from_notebook.ipynb` | ノートブックから Streamlit を起動するパターンメモ |
