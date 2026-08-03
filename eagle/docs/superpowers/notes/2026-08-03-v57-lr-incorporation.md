@@ -339,6 +339,156 @@ kill the 10 497 m one**, which is inside the ceiling: a beam-pointing
 envelope is still missing, and picking its limit needs a source, not a
 guess. That is the open decision.
 
+## 12a. The P64 instability, narrowed — RCS authority is EXONERATED by the rope
+
+The rope publishes its own model of the vehicle's rotational authority, and
+this project had never compared against it. `AOSTASK_AND_AOSJOB.agc:425-455`:
+
+```
+# 1JACC = A/(MASS + C) + B
+# A IS SCALED AT PI/4 RAD/SEC**2 B+16KG, B AT PI/4 RAD/SEC**2, C AT B+16 KG
+INERCONA  2DEC +.0059347674   # 1JACCP A  DESCENT   (roll)
+          2DEC +.0014979264   # 1JACCQ A  DESCENT   (pitch)
+          2DEC +.0010451889   # 1JACCR A  DESCENT   (yaw)
+INERCONB  DEC  +.002989 / .018791 / .021345      # P / Q / R  B
+INERCONC  DEC  +.008721 / -.068163 / -.066027    # P / Q / R  C
+```
+
+Evaluated at the flown PDI mass (15 209 kg) this gives **one-jet angular
+accelerations of 1.244° / 1.257° / 1.244°/s²** in roll / pitch / yaw. Our
+plant delivers `RCS_THRUST_N × RCS_LEVER_M/√2 / I` = 529 N·m / 25 000 kg·m²
+= **1.212°/s²** in pitch (and 1.32° in roll at I=23 000). **The plant and
+the DAP's own model agree to 4-6 %** — so RCS authority, `RCS_THRUST_N`,
+`RCS_LEVER_M` and the scenario's assumed inertia are NOT the instability,
+and the hypothesis that they were is dead.
+
+What survives is the other torque source, and the arithmetic is stark:
+
+| source | torque | α at I = 25 000 |
+|---|---:|---:|
+| one RCS jet | 529 N·m | 1.21°/s² |
+| trim gimbal, 1°, at Run 34's ~25 kN | 742 N·m | 1.70°/s² |
+| trim gimbal, 1°, at full 48.1 kN | 1 428 N·m | 3.27°/s² |
+| trim gimbal, 6° stop, at full thrust | 8 555 N·m | 19.6°/s² |
+
+**One degree of trim at full throttle outweighs 2.7 RCS jets; the stop
+outweighs sixteen.** And Run 35's throttle went to FULL at MM64 (t=833,
+48 145 N) and stayed there for the rest of the flight, while Run 34's
+modulated between 17 and 27 kN — the trim-gimbal torque gain in the
+crashed run was roughly double the landed one, in the exact seconds the
+attitude diverged (Run 35 tilt: 69.4° → 27.8° at −13°/s, then +10, +19,
++30, +42°/s into a tumble; Run 34 over the same interval: 68.9° → 49.3°,
+caught and held).
+
+There is a modelling defect behind this, not yet confirmed in flight:
+**our plant has no CG offset.** `forces` puts the thrust through
+`ENGINE_MOUNT_M` (−1.7 m, provenance "assumed") with the trim deflection
+applied to its direction, so zero trim gives zero torque. On the real
+vehicle the trim gimbal exists to point thrust THROUGH a CG that migrates
+as propellant burns — the trim angle CANCELS an offset torque. Here it can
+only CREATE one. If that is what happens, every degree the AGC trims is a
+pure disturbance whose gain rises with throttle, which is exactly the
+observed signature.
+
+`EAGLE_ATT_DEBUG` could not settle this: it logged only the RCS jet torque.
+It now also records the trim angles, the thrust, and the DPS gimbal torque
+(`forces::dps_torque`), so one instrumented flight separates the two
+authorities directly instead of by inference.
+
+## 12b. MEASURED (Run 36): the trim gimbal runs to its rate limit, and its arm was invented
+
+Run 36 flew with the extended attitude trace. It crashed like 33 and 35 —
+101.42 / 198.35 m/s, 88.9° tilt, `00→63→64`, TIG+547.0 s — and the trace
+names the mechanism. From TIG+493 s (MM64 at 833.4):
+
+| t_s | trim pitch | trim roll | thrust | \|RCS τ\| | \|DPS τ\| | ω_y |
+|---:|---:|---:|---:|---:|---:|---:|
+| 835 | 0.266° | −0.082° | 25 934 | 2 114 | 205 | −0.07 |
+| 840 | 1.246° | −0.068° | 26 091 | 1 057 | 964 | −0.98 |
+| 845 | 2.246° | −0.070° | 26 167 | 2 114 | 1 743 | −1.25 |
+| 855 | 0.298° | −2.044° | 26 192 | 2 114 | 1 588 | +0.32 |
+| 865 | −1.702° | −3.914° | 26 192 | 2 114 | 3 038 | +2.15 |
+
+**The trim ramps monotonically at exactly 0.2°/s — the actuator's rate
+limit — for eleven seconds at a time, reverses, and ramps again.** It is
+saturated, not regulating. Its torque passes the RCS jets' at t≈858 and
+reaches 1.4× by t=865, while ω grows monotonically in the sign the trim
+sets. Full throttle is NOT required: Run 36 crashed at 26 kN, where
+Run 35 had pegged at 48 kN.
+
+Over the whole post-freeze trace (5 490 samples): the trim sits at its
+0.2°/s rate limit in **57 %** of samples, reaches **4.33°** (the stop is
+6°), and its torque peaks at **3 363 N·m — 3.18× the RCS torque** in the
+same sample. Final |ω| is 5.58 rad/s, a flat tumble.
+
+**The arm that sets that torque was invented, and the rope publishes the
+real one.** `ENGINE_MOUNT_M = -1.7 m` carried the provenance "assumed".
+The same table that gives `1JACC` gives the pivot-to-CG distance:
+
+```
+2DEC +.0410511917   # L  A  DESCENT      A at 8 FT B+16 KG
+DEC  +.155044       # L  B  DESCENT      B at 8 FT
+DEC  -.025233       # L  C  DESCENT      C at B+16 KG
+```
+
+`L = A/(MASS + C) + B` gives **0.862 m at the flown PDI mass**, growing to
+1.08 m at 11 000 kg as the CG walks toward the pivot. The assumed value was
+**1.97× too long at PDI and 1.57× at landing mass** — so the trim gimbal
+carried roughly double the torque it should, in the one authority that
+already outweighs the RCS.
+
+Corrected (test first): `forces::pvt_cg_arm_m(mass_kg)` implements the
+rope's curve fit, recomputed independently in its test from the listing's
+decimals; `dps_torque` takes mass and uses it; `ENGINE_MOUNT_M` is
+deprecated and unused. At 26 kN one degree of trim now makes 394 N·m
+against a jet's 529 N·m — the DAP can win — where before it made 777 N·m.
+This is the fifth vehicle constant this project has replaced with the flown
+rope's own number, after `PIPA_INCR`, `THRUST_N_PER_PULSE`, DPS full
+throttle and `DPS_TAU`.
+
+## 12c. Run 37 — the arm correction is NOT curative, and the runaway axis is one the gimbal cannot touch
+
+Run 37 flew the corrected arm and was **worse**: it never reached P64.
+`00→63`, Crash 180.19 / 427.87 m/s at 96.1° tilt, TIG+458.2 s, 23.7 km
+miss. Trim saturation went UP (67 % of samples at the rate limit, and it
+reached the 6° stop).
+
+The trace says why the arm was never the whole story: **the runaway is
+about body X — the thrust axis — and `dps_torque` has identically zero X
+component**, because the pivot lies on that axis (`mount × f` with
+`mount ∥ x̂`). Whatever the gimbal arm is, it cannot torque or damp this
+axis. Only the ch006 jets can.
+
+The decisive fifteen seconds (`att-m1-run37-p65-arm.txt`):
+
+| t_s | jet word | RCS τ_x | DPS τ_x | ω_x |
+|---:|---:|---:|---:|---:|
+| 750 | 21925 | +2 990 | 0.0 | +0.06 |
+| 755 | 21793 | +2 990 | 0.0 | +1.13 |
+| 760 | 21865 | +2 990 | 0.0 | +2.23 |
+| 765 | 21925 | +2 990 | 0.0 | **+3.31** |
+
+**The AGC held a fixed four-jet mask for fifteen consecutive seconds,
+producing a constant +2 990 N·m, while the rate it should have been
+nulling grew from 0.06 to 3.31 rad/s in the same direction.** Over the
+whole divergence the yaw torque reinforces ω_x as often as it opposes it
+(252 / 252) — the loop carries no net damping at all. A correctly-signed
+attitude loop cannot do that; a sign-inverted feedback path does exactly
+this. The 2026-07 sign work pinned the ch005 couples ("couples torqued Z
+where the DAP expected Y"); **the body-X chain — ch006 `ROLLJETS`, and
+the CDU/gimbal angle that feeds it back — was never verified the same
+way**, and it is now the prime suspect.
+
+The arm correction is kept, on the same principle as the four vehicle
+constants before it: its provenance is the flown rope where the value it
+replaced was invented. It is **not** credited with curing anything, and
+it is not exonerated either — one flight cannot separate it from the
+body-X defect that dominates. Do not tune it further until the sign chain
+is settled.
+
+**Score-keeping: six flights this session (32-37).** Runs 33, 35, 36 and
+37 all crashed; Run 34 landed. Stop changing the vehicle model here.
+
 ## 12. Open, in order
 
 1. **The LR needs a beam-validity envelope with a citation.** A real LR
@@ -346,10 +496,16 @@ guess. That is the open decision.
    Candidate rule: require the beam's surface incidence within the
    radar's design cone, sourced from the LR spec or NASSP's
    implementation, rather than a number chosen to make a flight work.
-2. **The P64 attitude wobble is the primary instability** and is
-   independent of the radar (Run 33 and 35 both start wobbling before any
-   bad reading). It is the next thing to measure — the core sampler can
-   now record the guidance/DAP state alongside R12's.
+2. **The attitude loop is the primary instability**, independent of the
+   radar, and §12c localizes it: the divergence is about **body X**, the
+   thrust axis, which the DPS gimbal cannot torque at all. The AGC holds a
+   fixed four-jet mask for fifteen seconds while the rate it should null
+   grows to 3.31 rad/s, and over the whole event the yaw torque reinforces
+   the rotation as often as it opposes it. **Verify the body-X sign chain
+   — ch006 `ROLLJETS` geometry and the CDU/gimbal angle feeding it back —
+   the way the ch005 couples were verified in 2026-07.** That is a
+   bench/unit question first: drive a known rate, check the commanded jets
+   oppose it. No more vehicle-constant tuning until it is settled.
 3. Only then re-fly, and judge reproducibility over several flights, not
    one. Run 34 is evidence the chain CAN land, not that it does.
 4. Unaffected and still RED: the frozen M1 acceptance

@@ -10,7 +10,17 @@
 > DELTAH inside ±50 m, HCALC within ~25 m of truth at 600 m. **Run 34
 > landed Nominal (1.14/0.50 m/s) and Run 35, identical, crashed at
 > 137.76/105.47 m/s — bimodal, so this is NOT a landing capability.**
-> Measured cause: a marginal P64 attitude wobble plus an unphysical radar —
+> **The attitude loop is the primary instability and it is localized: the
+> runaway is about body X (the thrust axis), which the DPS gimbal cannot
+> torque. The AGC holds a fixed four-jet mask for 15 s while ω_x grows to
+> 3.31 rad/s, and the yaw torque reinforces the rotation as often as it
+> opposes it — verify the ch006 ROLLJETS / CDU sign chain the way ch005
+> was verified in 2026-07, on the bench, before any more flights or
+> constant tuning.** Corrected along the way: the trim gimbal's moment arm
+> was invented (1.7 m) where the rope publishes L,PVT-CG = 0.862 m at PDI
+> mass (`AOSTASK_AND_AOSJOB.agc:425-455`), now a mass-dependent curve fit —
+> sourced, but NOT curative (Run 37 crashed earlier).
+> Secondary cause: an unphysical radar —
 > past ~60° tilt the H beam grazes and returns 10-18 km of slant range that
 > the responder still calls DATA GOOD, and the rope incorporates it raw
 > (no reasonableness test before HIGATE). The beam-pointing envelope needs
