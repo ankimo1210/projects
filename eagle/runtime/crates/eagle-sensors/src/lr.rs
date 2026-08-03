@@ -185,13 +185,19 @@ pub fn altitude<F: Frame>(pos: V3<F>, r_surface: f64) -> f64 {
 ///
 /// NASSP's LGC interface provides the hardware pairing that the rope's
 /// scale-status logic expects: 5.395 ft/count at or above 2500 ft,
-/// 1.079 ft/count below it, with channel 33 bit 9 declaring low range.
+/// 1.079 ft/count below it. The channel-33 bit is active-low like every
+/// ch33 discrete: bit 9 reads 0 when the LOW SCALE discrete is present.
+/// SCALADJ takes bit-9-nonzero as the HIGH branch and multiplies the
+/// counter by 5 into HMEAS's fixed 1.079 ft/bit units
+/// (P20-P25.agc:3002-3011; LRHJOB stores "LRH DATA 1.079 FT/BIT",
+/// SERVICER.agc:1550).
 pub const LR_ALT_M_PER_COUNT: f64 = 1.079 * 0.3048;
 /// Coarse/high-range quantum used above 2500 ft, matching the LR hardware
 /// interface in NASSP (`GetRangeLGC`).
 pub const LR_ALT_HIGH_M_PER_COUNT: f64 = 5.395 * 0.3048;
-/// Hardware range-scale transition: below 2500 ft channel 33 bit 9 is set
-/// and the fine 1.079 ft/count scale is used.
+/// Hardware range-scale transition: below 2500 ft the LOW SCALE discrete
+/// appears (channel 33 bit 9 drops to 0) and the fine 1.079 ft/count
+/// scale is used.
 pub const LR_ALT_SCALE_SWITCH_M: f64 = 2500.0 * 0.3048;
 
 /// Quantize a slant range using the radar's automatic range scale.
@@ -308,8 +314,12 @@ pub const CH33_LR_RANGE_DATA_GOOD: u16 = 0o20;
 pub const CH33_LR_POS1: u16 = 0o40;
 pub const CH33_LR_POS2: u16 = 0o100;
 pub const CH33_LR_VEL_DATA_GOOD: u16 = 0o200;
-/// Channel 33 bit 9. Unlike DATA GOOD and position, this is not inverted:
-/// clear declares the HSCAL/high-scale path, set declares low scale.
+/// Channel 33 bit 9. Inverted exactly like DATA GOOD and position — the
+/// LOW SCALE discrete reads 0 when present. The rope keeps RADMODES bit 9
+/// EQUAL to this bit (SCALECHK, P20-P25.agc:2941-2948) and SCALADJ's
+/// "CCS L; TCF +2  # ON HIGH SCALE" (P20-P25.agc:3002-3004) takes the
+/// set bit as the ×5 high-scale branch. The previous claim here ("this is
+/// not inverted") was the 2026-08-03 polarity defect.
 pub const CH33_LR_RANGE_LOW_SCALE: u16 = 0o400;
 
 /// Build the channel-33 word the LR should be presenting.

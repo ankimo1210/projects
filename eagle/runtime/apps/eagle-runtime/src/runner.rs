@@ -99,9 +99,14 @@ pub const FLGWRD12_ECADR: u16 = 0o110;
 /// scale factor: **set = high scale, clear = low scale**.
 ///
 /// The landing radar exposes the corresponding scale status on channel 33
-/// bit 9, and `SCALECHK/SCALCHNG` keeps `RADMODES` synchronized with it.
-/// The runner seeds the high-scale state here; the responder must present
-/// the matching cleared channel bit before the first read.
+/// bit 9, and `SCALECHK/SCALCHNG` keeps `RADMODES` synchronized with it —
+/// by direct `RXOR` comparison, so the two bits carry the SAME sense
+/// (P20-P25.agc:2941-2948): set = high scale on both. The runner seeds the
+/// high-scale state here; the responder must present the matching SET
+/// channel bit before the first read (INIT_CH33 bit 9 = 1 already does).
+/// The pre-2026-08-03 version of this comment demanded the cleared bit —
+/// that polarity was inverted, see
+/// docs/superpowers/notes/2026-08-03-v57-lr-incorporation.md.
 ///
 /// Fresh start zeroes the flagwords, which disagrees with the radar's
 /// initial coarse/high-range status during PDI. Seed that initial state;
@@ -123,6 +128,17 @@ pub const FLGWRD11_ECADR: u16 = 0o107;
 /// a cleared bit means R12 would read our nonexistent radar and the whole
 /// descent premise is broken.
 pub const LRBYBIT: u16 = 0o40000;
+/// LRINH = FLGWRD11 BIT8 — SET means "LANDING RADAR UPDATES PERMITTED BY
+/// ASTRONAUT", clear means "LR UPDATES INHIBITED BY ASTRONAUT"
+/// (`vendor/virtualagc/Luminary099/FLAGWORD_ASSIGNMENTS.agc:1074-1076`).
+/// Fresh start leaves it CLEAR, and SERVICER skips BOTH the altitude
+/// position update and the velocity update while it is clear
+/// (`SERVICER.agc:1174-1178` NOREASON, `:1320-1323` VUPDAT) — DELTAH is
+/// computed, stored for the downlink, and discarded. The crew grants it
+/// with V57 (`EXTENDED_VERBS.agc:443-446`, LRON: `UPFLAG LRINH`); V58
+/// revokes it. Every LR flight through Run 31 flew with it clear — the
+/// choreography keys V57E below.
+pub const LRINHBIT: u16 = 0o200;
 
 /// TIME2/TIME1 master clock, unswitched 0o24/0o25; TIME2 counts TIME1
 /// overflows (2^14 cs each).
@@ -1215,6 +1231,47 @@ pub async fn run_scenario(
         .await
         .context("ENGINE ON")?;
 
+    // Permit LR data incorporation — the crew action V57 (LRON). Without
+    // it SERVICER measures the radar and incorporates nothing (see
+    // LRINHBIT above); Runs 27-31 all flew that way, which is why three
+    // LR-presentation repairs changed nothing downstream. It MUST be keyed
+    // after the program is up: R00 wipes the whole R12 flagword on every
+    // V37 program change (`FRESH_START_AND_RESTART.agc:844-846`, `CAF
+    // LRBYBIT / TS FLGWRD11` — "CLEAN UP THE R12 FLAGWORD"), so a V57
+    // keyed in P00 is erased by V37E63E. Run 32 measured exactly that: V57
+    // verified set in P00, and the descent flew the same -0.86 m/s
+    // altitude drift as Run 31, byte-for-byte. Apollo 11 keyed V57 inside
+    // P63 (~102:38 GET, after LR lock); keying at ENGINE ON is the same
+    // program state, just earlier — LRINH simply waits for measurements.
+    // Keyed as the verb, not `set_flag_bits`: R12 read-modify-writes other
+    // FLGWRD11 bits live during the descent, and LRON runs under the
+    // rope's own interlocks. Gated on the radar actually existing so the
+    // frozen radar-bypass acceptance choreography stays byte-identical.
+    if !sc.agc.lrbypass {
+        script.keys("V57E").await.context("V57 permit LR updates")?;
+        tokio::time::sleep(Duration::from_millis(300)).await;
+        let word = script
+            .read_erasable(FLGWRD11_ECADR)
+            .await
+            .context("read FLGWRD11 after V57")?;
+        ensure!(
+            word & LRINHBIT != 0,
+            "V57 did not set LRINH (FLGWRD11 @{:05o} = {:05o})",
+            FLGWRD11_ECADR,
+            word
+        );
+        // The V01N01 read above TERMINATES the burn monitor — a V16
+        // monitor persists only until the next verb — and nothing restarts
+        // it. Run 33 flew blind from ENGINE ON+1 s: telemetry `agc_alt_m`
+        // froze at its last painted value (15207.7 m) for the whole
+        // descent. Restore the crew's N63 velocity/altitude monitor
+        // exactly as a crew member would.
+        script
+            .keys("V16N63E")
+            .await
+            .context("restore N63 monitor")?;
+    }
+
     // PDI mode ends here: the P64→P66 handover is SIM-driven (armed by
     // MM64, fired at `[handover] alt_m`), delivered by the headless event
     // loop. Running the hover block below would flip ATT HOLD at TIG+2 s —
@@ -1265,6 +1322,7 @@ mod tests {
         // STATE + 11D = 0o74 + 11 = 0o107.
         assert_eq!(FLGWRD11_ECADR, 0o74 + 11);
         assert_eq!(LRBYBIT, 1 << 14); // BIT 15 in AGC 1-based numbering
+        assert_eq!(LRINHBIT, 1 << 7); // BIT 8 — V57/LRON's UPFLAG target
     }
 
     #[test]
