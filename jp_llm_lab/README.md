@@ -100,7 +100,7 @@ jp_llm_lab/
 ├── experiments/{cards,runs,comparisons,calibrations,analysis_m5}/
 ├── reports/{html,site,figures,env}/
 ├── data/{manifests,samples,snapshots,tokenized,sft}/  # 大物は git-ignore
-└── tests/            # 78 tests
+└── tests/            # 85 tests
 ```
 
 ## 設計原則（spec より）

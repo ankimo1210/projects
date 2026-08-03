@@ -3,7 +3,7 @@ name = "optimal-execution"
 version = "0.1.0"
 description = "Market microstructure and optimal execution visual lab with bilingual (EN/JA) reports"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = [
     "jinja2>=3.1",
     "latex2mathml>=3.77",

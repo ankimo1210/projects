@@ -50,7 +50,7 @@ full-workspace `pytest` run does not break them via namespace packages
 (pytest 9 behavior); keep it when touching test config.
 
 `make lint` and the full-workspace `pytest` are green as of 2026-08-03
-(2484 passed, 46 skipped), so a red
+(2494 passed, 45 skipped), so a red
 result means the change under test broke something — diagnose it rather than
 assuming it predates you. Every member declares what it imports, including
 indirect (`health` declares `scipy` for `pandas.corr(method="spearman")`) and

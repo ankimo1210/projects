@@ -1,4 +1,12 @@
-# eagle — Apollo 11 lunar descent simulator (Phase 2 Wave 1)
+# eagle — Apollo 11 lunar descent simulator
+
+> **Status lives in `README.md`, not here.** The dated blocks below are kept
+> as the reasoning record for each milestone; they are not a current report.
+> As of 2026-08-02 (`71a2e29f`) the landing radar integration passes, the
+> automatic P65 route (`00→63→64→65`) flies, and a separately-labelled
+> Playable Alpha assisted demo exists — **and the authentic landing
+> acceptance is still RED**. Read `README.md` before quoting any number from
+> this file.
 
 Original Luminary099 running in vendored yaAGC, bridged to a web DSKY, and —
 as of Phase 2 Wave 1 — flying a closed loop against our own 6-DoF physics
@@ -69,13 +77,16 @@ proved the remaining braking-gate error (911 m / 47 m/s) is *not*
 thrust. Numbers, citations and the open blockers:
 `docs/superpowers/notes/2026-07-26-m1-pdi-flight.md`.
 
-**The M1 acceptance (`tests/live_pdi_descent.rs`) is frozen and has never
-been run.** It was written after the 6-flight budget was spent, so it is a
+**The M1 acceptance (`tests/live_pdi_descent.rs`) is frozen.** It was written
+after the 6-flight budget was spent, so at the time of this block it was a
 target, not a result: on the last three flights its mode, alarm-episode and
 AGC-clock blocks would pass, its touchdown block would fail, and its
 `prog_lamp_frames == 0` gate would fail on run 5. Do not relax its
 thresholds (they are the scenario's design limits) and do not describe M1
 as landing anything until that test is the thing that measured it.
+**It has since been executed unchanged (2026-08-02) and is RED**: the
+forced-P66 path crashed at 20.70 m/s vertical / 62.40 m/s horizontal and hit
+the 800 s limit at 856.5 s before the touchdown assertions. See `README.md`.
 
 ## 2026-07-31 — M1b: the TAUROD scale, and two more flights
 
@@ -176,9 +187,8 @@ scale (ledger §3b). It stays on the suspect list.
   default `make test-integration`.
 - Wave 2 M1 acceptance test: `cargo test -p eagle-runtime --test
   live_pdi_descent -- --ignored --test-threads=1` (port 19905, ~20 min).
-  Frozen 2026-07-26 and **never run** — see the status block at the top of
-  the file for which of its assertions the six flights met and which they
-  did not.
+  Frozen 2026-07-26; first executed unchanged 2026-08-02 and **RED** (800 s
+  limit hit at 856.5 s). See `README.md` for the current result.
 - ROD without a vendor patch: stock yaAGC raises no interrupt for channel
   016, so in **scenario mode** a rate-of-descent click — from the client's
   ENGR buttons or the scenario's own schedule — is issued as a direct
