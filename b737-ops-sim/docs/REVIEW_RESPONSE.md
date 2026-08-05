@@ -1,5 +1,12 @@
 # Response to REVIEW_FEEDBACK.md
 
+> **Historical response, not current completion evidence.** The third review
+> ([REVIEW_FEEDBACK_3.md](../REVIEW_FEEDBACK_3.md)) re-opened claims R-05,
+> R-07, R-21 and R-22 as V-01, V-08, V-02/V-12 and V-09 respectively.
+> V-01/V-02/V-08/V-09 are now closed in `REVIEW_RESPONSE_3.md`; V-12 remains
+> open. Use that response and the current README completion gate for status; the details
+> below preserve what was claimed and tested at this earlier checkpoint.
+
 Review date 2026-08-02 (`REVIEW_FEEDBACK.md`), remediation the same day.
 Every P0/P1 finding was independently reproduced against the code before it was
 fixed, and every fix carries a regression test unless noted.

@@ -1,6 +1,5 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { vSpeedsForWeight } from '@b737/shared';
-import { CockpitScene } from './sim3d/CockpitScene.js';
 import { Pfd } from './instruments/Pfd.js';
 import { Nd } from './instruments/Nd.js';
 import { EngineDisplay } from './instruments/EngineDisplay.js';
@@ -13,9 +12,15 @@ import { DebriefView } from './panels/DebriefView.js';
 import { DiagnosticsPanel } from './panels/DiagnosticsPanel.js';
 import { OverheadPanel } from './panels/OverheadPanel.js';
 import { FmsPanel } from './panels/FmsPanel.js';
+import { MissionCoach } from './panels/MissionCoach.js';
 import { deriveGuidance } from './cockpit/guidance.js';
 import { getSession } from './state/connection.js';
 import { useSessionStore, useSettingsStore, useSimStore } from './state/stores.js';
+
+const CockpitScene = lazy(async () => {
+  const module = await import('./sim3d/CockpitScene.js');
+  return { default: module.CockpitScene };
+});
 
 export function App(): JSX.Element {
   const state = useSimStore((s) => s.latest);
@@ -40,7 +45,10 @@ export function App(): JSX.Element {
   return (
     <div className="app">
       <main className="sim-area">
-        <CockpitScene />
+        <Suspense fallback={<div className="scene-loading">Loading 3D cockpit…</div>}>
+          <CockpitScene />
+        </Suspense>
+        <MissionCoach guidance={guidance} />
         {connection !== 'connected' && (
           <div className="disconnect-overlay" data-testid="disconnect-overlay">
             <div>
@@ -80,7 +88,9 @@ export function App(): JSX.Element {
         <section className={`lower-panels ${showOverhead ? 'with-overhead' : ''}`}>
           <ChecklistPanel />
           <TranscriptPanel />
-          {showOverhead && state && <OverheadPanel state={state} />}
+          {showOverhead && state && (
+            <OverheadPanel state={state} guidedControlId={guidance.controlId} />
+          )}
           {showOverhead && state && <FmsPanel state={state} />}
         </section>
       )}

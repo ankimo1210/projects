@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { KSFO_28R, type AircraftState } from '@b737/shared';
 import { makeTestAircraftState } from '@b737/shared/testing';
+import { MVP_CIRCUIT_SCENARIO } from '@b737/scenario-engine';
 import { AtcController, type AtcInstruction } from '../src/atc.js';
+import { TrainingSession } from '../src/trainingSession.js';
 import { resetTranscriptIds } from '../src/transcript.js';
 
 function st(
@@ -40,6 +42,28 @@ describe('AtcController', () => {
     const right = atc.handleReadback(instruction, 'correct', st(3));
     expect(right.correct).toBe(true);
     expect(atc.stats).toEqual({ readbacksTotal: 2, readbacksCorrect: 1 });
+  });
+
+  it('completes a correction after one correct retry without rewriting the original result', () => {
+    const session = new TrainingSession(MVP_CIRCUIT_SCENARIO);
+    session.update(st(1));
+    session.requestTakeoffClearance();
+    const original = session.transcript.find((entry) =>
+      entry.message.includes('cleared for takeoff'),
+    )!;
+
+    session.respond(original.id, 'roger');
+    const correction = session.transcript.find((entry) => entry.message.includes('negative'))!;
+    expect(original.responseResult).toBe('incorrect');
+    expect(correction.responseResult).toBeUndefined();
+
+    session.respond(correction.id, 'correct');
+
+    expect(original.responseResult).toBe('incorrect');
+    expect(correction.responseResult).toBe('correct');
+    expect(
+      session.transcript.filter((entry) => entry.expectedResponse && !entry.responseResult),
+    ).toHaveLength(0);
   });
 
   it('walks the departure → vectors → approach → landing sequence from state', () => {

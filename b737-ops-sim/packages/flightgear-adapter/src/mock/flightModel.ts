@@ -38,6 +38,7 @@ import {
   type RollMode,
   type RunwayData,
   type ScenarioInitialState,
+  type SystemSwitch,
 } from '@b737/shared';
 
 /**
@@ -92,6 +93,12 @@ const GEAR_TRANSIT_SEC = 8;
 const FLAP_FULL_TRAVEL_SEC = 25;
 const SPOILER_TRAVEL_SEC = 1.5;
 const GROUND_STEER_MAX_DEGPS = 30;
+/** Full single-engine thrust imbalance yaw rate in free flight. */
+const ENGINE_ASYMMETRY_YAW_RATE_DEGPS = 3;
+/** Full rudder authority at flying speed; sized to counter one failed engine. */
+const RUDDER_YAW_RATE_MAX_DEGPS = 4;
+/** Small rolling tendency toward the failed engine. */
+const ENGINE_ASYMMETRY_ROLL_RATE_DEGPS = 1.5;
 
 /**
  * RTO autobrake arming/trigger thresholds. NON_CERTIFIED_APPROXIMATION —
@@ -192,6 +199,8 @@ export class MockFlightModel {
   private autobrakeActive = false;
   /** RTO autobrake armed: selected on the ground and takeoff thrust seen. */
   private rtoArmed = false;
+  /** Manual braking inhibits RTO until the crew explicitly reselects it. */
+  private rtoManualOverride = false;
   /** Approach armed on the MCP; drives LOC/GS capture. */
   private approachArmed = false;
   /** Route / FMS state (spec §22 Phase 5). */
@@ -204,6 +213,8 @@ export class MockFlightModel {
   private fmsOrigin: { latDeg: number; lonDeg: number } | null = null;
   /** Active failures; systems express them, this set records them. */
   private failures = new Set<FailureKind>();
+  /** Exact target-state restorers, applied in reverse injection order on clear. */
+  private failureRestores = new Map<FailureKind, () => void>();
   /** Weather beyond the steady surface wind. */
   private windAloftDirDeg = 0;
   private windAloftSpeedKt = 0;
@@ -342,6 +353,7 @@ export class MockFlightModel {
     this.fms = emptyFmsState();
     this.fmsOrigin = null;
     this.failures.clear();
+    this.failureRestores.clear();
     const wx = config.weather;
     this.windAloftDirDeg = wx?.windAloftDirDeg ?? config.windDirDeg;
     this.windAloftSpeedKt = wx?.windAloftSpeedKt ?? config.windSpeedKt;
@@ -351,6 +363,7 @@ export class MockFlightModel {
     this.gustKt = 0;
     for (const failure of config.failures ?? []) this.applyFailure(failure);
     this.rtoArmed = false;
+    this.rtoManualOverride = false;
     this.approachArmed = false;
     this.togaActive = false;
     this.apRollMode = null;
@@ -393,7 +406,13 @@ export class MockFlightModel {
         return { ok: true };
       case 'set_brakes':
         this.inputs.brakeNorm = cmd.valueNorm;
-        if (cmd.valueNorm > 0.6) this.autobrakeActive = false; // manual override disarms
+        if (cmd.valueNorm > 0.6 && this.autobrake === 'RTO') {
+          // A manual takeover is a persistent disarm, not a one-frame drop of
+          // autobrake pressure. RTO may arm again only after it is reselected.
+          this.autobrakeActive = false;
+          this.rtoArmed = false;
+          this.rtoManualOverride = true;
+        }
         return { ok: true };
       case 'set_parking_brake':
         if (cmd.engaged && this.iasMps * MPS_TO_KT > 5) {
@@ -433,6 +452,7 @@ export class MockFlightModel {
         // RTO arms as soon as it is selected on the ground; it applies braking
         // only once takeoff thrust has been set and then retarded (see substep).
         this.rtoArmed = false;
+        this.rtoManualOverride = false;
         return { ok: true };
       case 'set_mcp_speed':
         this.mcp.selSpeedKt = cmd.speedKt;
@@ -475,8 +495,20 @@ export class MockFlightModel {
         this.lights[cmd.light] = cmd.on;
         return { ok: true };
       case 'set_system_switch':
+        if (cmd.on) {
+          const blockingFailure = this.failureBlockingSwitch(cmd.switch);
+          if (blockingFailure) {
+            return { ok: false, error: `${cmd.switch} is unavailable: ${blockingFailure} active` };
+          }
+        }
         return this.systems.applySwitch(cmd.switch, cmd.on);
       case 'set_engine_start':
+        if (
+          (cmd.engine === 'left' && this.failures.has('engine_1_flameout')) ||
+          (cmd.engine === 'right' && this.failures.has('engine_2_flameout'))
+        ) {
+          return { ok: false, error: `engine ${cmd.engine} start unavailable: flameout active` };
+        }
         return this.systems.setEngineStart(cmd.engine, cmd.mode);
       case 'reset_master_caution':
         return this.systems.resetMasterCaution();
@@ -518,11 +550,9 @@ export class MockFlightModel {
         this.fms = { ...this.fms, lnavArmed: cmd.armed };
         return { ok: true };
       case 'inject_failure':
-        this.applyFailure(cmd.failure);
-        return { ok: true };
+        return this.applyFailure(cmd.failure);
       case 'clear_failures':
-        this.failures.clear();
-        return { ok: true };
+        return this.clearFailures();
     }
   }
 
@@ -604,8 +634,10 @@ export class MockFlightModel {
     // Only running engines contribute thrust.
     const thrustOf = (n1: number, running: boolean): number =>
       running ? Math.max(0, (n1 - IDLE_N1_PCT) / (MAX_N1_PCT - IDLE_N1_PCT)) ** 2 : 0;
-    const thrustFraction =
-      (thrustOf(this.n1LeftPct, leftRunning) + thrustOf(this.n1RightPct, rightRunning)) / 2;
+    const leftThrustFraction = thrustOf(this.n1LeftPct, leftRunning);
+    const rightThrustFraction = thrustOf(this.n1RightPct, rightRunning);
+    const thrustAsymmetry = leftThrustFraction - rightThrustFraction;
+    const thrustFraction = (leftThrustFraction + rightThrustFraction) / 2;
     let thrustN = thrustFraction * MAX_TOTAL_THRUST_N;
     if (reverserActive) thrustN = -thrustN * REVERSE_EFFICIENCY;
 
@@ -680,12 +712,22 @@ export class MockFlightModel {
       const turbulence = this.iasMps > 15 ? (this.rand() - 0.5) * turbAmplitude : 0;
       const pitchRate = elevator * PITCH_RATE_MAX_DEGPS + turbulence * 0.3;
       this.pitchDeg = clamp(this.pitchDeg + pitchRate * dt, -15, 25);
-      const rollRate = aileron * ROLL_RATE_MAX_DEGPS - this.rollDeg * 0.05 + turbulence;
+      const rollRate =
+        aileron * ROLL_RATE_MAX_DEGPS -
+        this.rollDeg * 0.05 +
+        turbulence +
+        thrustAsymmetry * ENGINE_ASYMMETRY_ROLL_RATE_DEGPS;
       this.rollDeg = clamp(this.rollDeg + rollRate * dt, -60, 60);
-      // Coordinated turn: ψ̇ = g·tanφ / V
+      // Coordinated turn plus asymmetric-thrust yaw and airborne rudder.
       if (this.iasMps > 30) {
         const turnRateDegPs = radToDeg((G_MPS2 * Math.tan(degToRad(this.rollDeg))) / this.iasMps);
-        this.headingDegTrue = normalizeDeg360(this.headingDegTrue + turnRateDegPs * dt);
+        const rudderAuthority = clamp((iasKt - 60) / 80, 0, 1);
+        const yawRateDegPs =
+          thrustAsymmetry * ENGINE_ASYMMETRY_YAW_RATE_DEGPS +
+          this.inputs.rudderNorm * RUDDER_YAW_RATE_MAX_DEGPS * rudderAuthority;
+        this.headingDegTrue = normalizeDeg360(
+          this.headingDegTrue + (turnRateDegPs + yawRateDegPs) * dt,
+        );
       }
     }
 
@@ -748,7 +790,10 @@ export class MockFlightModel {
     // retarded to idle above the arming speed, and disarms at liftoff. It is not
     // a landing autobrake — touchdown must not activate it (R-07).
     if (this.autobrake === 'RTO') {
-      if (this.onGround) {
+      if (this.rtoManualOverride) {
+        this.rtoArmed = false;
+        this.autobrakeActive = false;
+      } else if (this.onGround) {
         if (this.inputs.throttleNorm >= RTO_ARM_THROTTLE_NORM) this.rtoArmed = true;
         if (
           this.rtoArmed &&
@@ -912,30 +957,88 @@ export class MockFlightModel {
    * Failures are expressed through the systems model, so the annunciator,
    * checklists and debrief see them without a second code path (M5 D5).
    */
-  private applyFailure(failure: FailureKind): void {
+  private applyFailure(failure: FailureKind): CommandResult {
+    if (this.failures.has(failure)) return { ok: true };
+    const s = this.systems.state;
     this.failures.add(failure);
     switch (failure) {
-      case 'engine_1_flameout':
+      case 'engine_1_flameout': {
+        const engine = { ...s.engines.left };
+        const generatorOn = s.electrical.gen1On;
+        this.failureRestores.set(failure, () =>
+          this.systems.restoreEngine('left', engine, generatorOn),
+        );
         this.systems.failEngine('left');
         break;
-      case 'engine_2_flameout':
+      }
+      case 'engine_2_flameout': {
+        const engine = { ...s.engines.right };
+        const generatorOn = s.electrical.gen2On;
+        this.failureRestores.set(failure, () =>
+          this.systems.restoreEngine('right', engine, generatorOn),
+        );
         this.systems.failEngine('right');
         break;
-      case 'generator_1':
+      }
+      case 'generator_1': {
+        const previous = s.electrical.gen1On;
+        this.failureRestores.set(failure, () => void this.systems.applySwitch('gen1', previous));
         this.systems.applySwitch('gen1', false);
         break;
-      case 'generator_2':
+      }
+      case 'generator_2': {
+        const previous = s.electrical.gen2On;
+        this.failureRestores.set(failure, () => void this.systems.applySwitch('gen2', previous));
         this.systems.applySwitch('gen2', false);
         break;
-      case 'hydraulic_a':
+      }
+      case 'hydraulic_a': {
+        const engPump = s.hydraulic.engPump1On;
+        const elecPump = s.hydraulic.elecPump2On;
+        this.failureRestores.set(failure, () => {
+          this.systems.applySwitch('hyd_pump_eng1', engPump);
+          this.systems.applySwitch('hyd_pump_elec2', elecPump);
+        });
         this.systems.applySwitch('hyd_pump_eng1', false);
         this.systems.applySwitch('hyd_pump_elec2', false);
         break;
-      case 'hydraulic_b':
+      }
+      case 'hydraulic_b': {
+        const engPump = s.hydraulic.engPump2On;
+        const elecPump = s.hydraulic.elecPump1On;
+        this.failureRestores.set(failure, () => {
+          this.systems.applySwitch('hyd_pump_eng2', engPump);
+          this.systems.applySwitch('hyd_pump_elec1', elecPump);
+        });
         this.systems.applySwitch('hyd_pump_eng2', false);
         this.systems.applySwitch('hyd_pump_elec1', false);
         break;
+      }
     }
+    return { ok: true };
+  }
+
+  /** Clear instructor failures and restore each affected target to its prior state. */
+  private clearFailures(): CommandResult {
+    for (const restore of [...this.failureRestores.values()].reverse()) restore();
+    this.failureRestores.clear();
+    this.failures.clear();
+    return { ok: true };
+  }
+
+  private failureBlockingSwitch(id: SystemSwitch): FailureKind | null {
+    const blocked: Partial<Record<SystemSwitch, FailureKind>> = {
+      start_lever_left: 'engine_1_flameout',
+      start_lever_right: 'engine_2_flameout',
+      gen1: 'generator_1',
+      gen2: 'generator_2',
+      hyd_pump_eng1: 'hydraulic_a',
+      hyd_pump_elec2: 'hydraulic_a',
+      hyd_pump_eng2: 'hydraulic_b',
+      hyd_pump_elec1: 'hydraulic_b',
+    };
+    const failure = blocked[id];
+    return failure && this.failures.has(failure) ? failure : null;
   }
 
   // ----------------------------------------------------------------- route/FMS

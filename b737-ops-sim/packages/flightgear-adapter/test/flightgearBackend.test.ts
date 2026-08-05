@@ -41,7 +41,7 @@ const propertyMap = parsePropertyMap(mapJson);
 function seedRequired(server: FakeFgServer): void {
   for (const [key, entry] of Object.entries(propertyMap.state)) {
     if (entry.optional === true) continue;
-    server.push(entry.fgProp, key === 'weightOnWheels' ? true : 0);
+    server.push(entry.fgProp, entry.type === 'bool' ? key === 'weightOnWheels' : 0);
   }
 }
 
@@ -91,6 +91,27 @@ describe('FlightGearBackend against a fake FG server', () => {
     expect(state.speeds.iasKt).toBe(180);
     expect(state.speeds.verticalSpeedFpm).toBeCloseTo(1200, 5);
     expect(state.weightOnWheels).toBe(false);
+  });
+
+  it('requires FlightGear simulation time and keeps it frozen while other frames change', async () => {
+    const states: AircraftState[] = [];
+    backend.subscribe((s) => states.push(s));
+    await backend.connect();
+    await waitFor(() => (server.listenedPaths.size > 0 ? true : undefined));
+
+    for (const [key, entry] of Object.entries(propertyMap.state)) {
+      if (entry.optional === true || key === 'sim.simTimeSec') continue;
+      server.push(entry.fgProp, entry.type === 'bool' ? key === 'weightOnWheels' : 0);
+    }
+    await new Promise((r) => setTimeout(r, 100));
+    expect(states).toHaveLength(0);
+    expect(backend.getStatus().detail).toMatch(/sim\.simTimeSec/);
+
+    server.push('/sim/time/elapsed-sec', 42.5);
+    await waitFor(() => (states.length > 0 ? true : undefined));
+    server.push('/position/altitude-ft', 1234);
+    const changed = await waitFor(() => states.find((s) => s.position.altitudeFtMsl === 1234));
+    expect(changed.simTimeSec).toBe(42.5);
   });
 
   it('maps commands to FG property writes with conversions', async () => {
@@ -199,6 +220,7 @@ describe('FlightGearBackend against a fake FG server', () => {
       seedRequired(server);
       await waitFor(() => (states.length > 0 ? true : undefined));
 
+      server.setGetResponsesEnabled(false);
       await new Promise((r) => setTimeout(r, 300)); // FG says nothing further
       const frozen = states.length;
       await new Promise((r) => setTimeout(r, 200));
@@ -206,6 +228,114 @@ describe('FlightGearBackend against a fake FG server', () => {
       expect(stale.getStatus().connected).toBe(false);
     } finally {
       await stale.disconnect();
+    }
+  });
+
+  it('rejects null and wrong-typed required values at ingress', async () => {
+    const states: AircraftState[] = [];
+    backend.subscribe((s) => states.push(s));
+    await backend.connect();
+    await waitFor(() => (server.listenedPaths.size > 0 ? true : undefined));
+
+    seedRequired(server);
+    await waitFor(() => (states.length > 0 ? true : undefined));
+    server.setGetResponsesEnabled(false);
+    server.sendRaw({ path: '/position/altitude-ft', value: null });
+    server.sendRaw({ path: '/gear/gear[1]/wow', value: 1 });
+    await waitFor(() => (backend.getStatus().connected ? undefined : true));
+
+    const frozen = states.length;
+    await new Promise((r) => setTimeout(r, 100));
+    expect(states).toHaveLength(frozen);
+    expect(backend.getStatus().detail).toMatch(/waiting for .*valid property/);
+  });
+
+  it('malformed and unmapped frames cannot keep required data fresh', async () => {
+    const guarded = new FlightGearBackend({
+      host: '127.0.0.1',
+      httpPort: PORT,
+      propertyMap,
+      stateRateHz: 50,
+      reconnectDelayMs: 100,
+      staleAfterMs: 120,
+    });
+    try {
+      const states: AircraftState[] = [];
+      guarded.subscribe((s) => states.push(s));
+      await guarded.connect();
+      await waitFor(() => (server.listenedPaths.size > 0 ? true : undefined));
+      seedRequired(server);
+      await waitFor(() => (states.length > 0 ? true : undefined));
+      server.setGetResponsesEnabled(false);
+
+      const noise = setInterval(() => {
+        server.sendRaw('not-json');
+        server.sendRaw({ path: '/unmapped/noise', value: 123 });
+      }, 25);
+      await new Promise((r) => setTimeout(r, 300));
+      clearInterval(noise);
+
+      const frozen = states.length;
+      await new Promise((r) => setTimeout(r, 100));
+      expect(states).toHaveLength(frozen);
+      expect(guarded.getStatus().connected).toBe(false);
+      expect(guarded.getStatus().detail).toMatch(/required property\/ies are stale/);
+    } finally {
+      await guarded.disconnect();
+    }
+  });
+
+  it('tracks freshness for every required property, not just the busiest one', async () => {
+    const guarded = new FlightGearBackend({
+      host: '127.0.0.1',
+      httpPort: PORT,
+      propertyMap,
+      stateRateHz: 50,
+      reconnectDelayMs: 100,
+      staleAfterMs: 120,
+    });
+    try {
+      const states: AircraftState[] = [];
+      guarded.subscribe((s) => states.push(s));
+      await guarded.connect();
+      await waitFor(() => (server.listenedPaths.size > 0 ? true : undefined));
+      seedRequired(server);
+      await waitFor(() => (states.length > 0 ? true : undefined));
+      server.setGetResponsesEnabled(false);
+
+      const oneFreshPath = setInterval(() => server.push('/position/altitude-ft', 9000), 25);
+      await new Promise((r) => setTimeout(r, 300));
+      clearInterval(oneFreshPath);
+
+      expect(guarded.getStatus().connected).toBe(false);
+      expect(guarded.getStatus().detail).toMatch(/required property\/ies are stale/);
+    } finally {
+      await guarded.disconnect();
+    }
+  });
+
+  it('keeps unchanged required properties fresh by polling them', async () => {
+    const guarded = new FlightGearBackend({
+      host: '127.0.0.1',
+      httpPort: PORT,
+      propertyMap,
+      stateRateHz: 50,
+      reconnectDelayMs: 100,
+      staleAfterMs: 120,
+    });
+    try {
+      const states: AircraftState[] = [];
+      guarded.subscribe((s) => states.push(s));
+      await guarded.connect();
+      await waitFor(() => (server.listenedPaths.size > 0 ? true : undefined));
+      seedRequired(server);
+      await waitFor(() => (states.length > 0 ? true : undefined));
+
+      await new Promise((r) => setTimeout(r, 350));
+      expect(guarded.getStatus().connected).toBe(true);
+      expect(states.length).toBeGreaterThan(5);
+    } finally {
+      await guarded.disconnect();
     }
   });
 

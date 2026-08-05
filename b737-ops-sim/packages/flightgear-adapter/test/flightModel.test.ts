@@ -226,6 +226,33 @@ describe('RTO autobrake', () => {
     expect(m.snapshot(0).controls.brakeNorm).toBeGreaterThan(0.5);
   });
 
+  it('keeps a manual brake takeover until RTO is explicitly reselected', () => {
+    const m = makeModel();
+    m.applyCommand({ type: 'set_parking_brake', engaged: false });
+    m.applyCommand({ type: 'set_autobrake', setting: 'RTO' });
+    m.applyCommand({ type: 'set_throttle', valueNorm: 1 });
+    m.step(25);
+    m.applyCommand({ type: 'set_throttle', valueNorm: 0 });
+    m.step(1);
+    expect(m.snapshot(0).controls.brakeNorm).toBe(0.9);
+
+    m.applyCommand({ type: 'set_brakes', valueNorm: 0.7 });
+    expect(m.snapshot(0).controls.brakeNorm).toBe(0.7);
+    m.step(1 / 60);
+    expect(m.snapshot(0).controls.brakeNorm).toBe(0.7);
+
+    m.applyCommand({ type: 'set_brakes', valueNorm: 0 });
+    m.step(0.1);
+    expect(m.snapshot(0).controls.brakeNorm).toBe(0);
+
+    m.applyCommand({ type: 'set_autobrake', setting: 'RTO' });
+    m.applyCommand({ type: 'set_throttle', valueNorm: 1 });
+    m.step(0.1);
+    m.applyCommand({ type: 'set_throttle', valueNorm: 0 });
+    m.step(0.1);
+    expect(m.snapshot(0).controls.brakeNorm).toBe(0.9);
+  });
+
   it('does not act as a landing autobrake after touchdown', () => {
     const m = makeModel();
     m.applyCommand({ type: 'set_autobrake', setting: 'RTO' });
@@ -410,6 +437,64 @@ describe('LNAV, weather and failures', () => {
     expect(after.systems.engines.right.running).toBe(true);
     // the annunciator sees it through the systems model, not a second path
     expect(after.systems.annunciations.some((a) => a.id === 'gen1_off_bus')).toBe(false);
+  });
+
+  it('latches failures until clear and restores their pre-injection state', () => {
+    const m = makeModel();
+    expect(m.applyCommand({ type: 'inject_failure', failure: 'engine_1_flameout' }).ok).toBe(true);
+    expect(
+      m.applyCommand({ type: 'set_system_switch', switch: 'start_lever_left', on: true }).ok,
+    ).toBe(false);
+    expect(m.applyCommand({ type: 'set_engine_start', engine: 'left', mode: 'flight' }).ok).toBe(
+      false,
+    );
+
+    expect(m.applyCommand({ type: 'inject_failure', failure: 'generator_2' }).ok).toBe(true);
+    expect(m.applyCommand({ type: 'set_system_switch', switch: 'gen2', on: true }).ok).toBe(false);
+    expect(m.applyCommand({ type: 'inject_failure', failure: 'hydraulic_a' }).ok).toBe(true);
+    expect(
+      m.applyCommand({ type: 'set_system_switch', switch: 'hyd_pump_eng1', on: true }).ok,
+    ).toBe(false);
+
+    const failed = m.snapshot(0);
+    expect(failed.activeFailures).toEqual(['engine_1_flameout', 'generator_2', 'hydraulic_a']);
+    expect(failed.systems.engines.left.running).toBe(false);
+    expect(failed.systems.electrical.gen2On).toBe(false);
+    expect(failed.systems.hydraulic.engPump1On).toBe(false);
+
+    expect(m.applyCommand({ type: 'clear_failures' }).ok).toBe(true);
+    const restored = m.snapshot(0);
+    expect(restored.activeFailures).toEqual([]);
+    expect(restored.systems.engines.left.running).toBe(true);
+    expect(restored.systems.electrical.gen1On).toBe(true);
+    expect(restored.systems.electrical.gen2On).toBe(true);
+    expect(restored.systems.hydraulic.engPump1On).toBe(true);
+  });
+
+  it('yaws toward the failed engine and airborne rudder reduces the deviation', () => {
+    const run = (failure: 'engine_1_flameout' | 'engine_2_flameout', rudder: number) => {
+      const m = airborne({ seed: 73706 });
+      m.applyCommand({ type: 'set_autopilot', engaged: false });
+      const start = m.snapshot(0).attitude.headingDegMag;
+      m.applyCommand({ type: 'inject_failure', failure });
+      m.applyCommand({ type: 'set_control_axis', axis: 'yaw', valueNorm: rudder });
+      m.step(10);
+      const end = m.snapshot(0);
+      const headingDelta = ((end.attitude.headingDegMag - start + 540) % 360) - 180;
+      return { headingDelta, state: end };
+    };
+
+    const leftFailed = run('engine_1_flameout', 0);
+    const rightFailed = run('engine_2_flameout', 0);
+    expect(leftFailed.headingDelta).toBeLessThan(-5);
+    expect(rightFailed.headingDelta).toBeGreaterThan(5);
+    expect(leftFailed.state.position).not.toEqual(rightFailed.state.position);
+    expect(leftFailed.state.attitude.rollDeg).toBeLessThan(rightFailed.state.attitude.rollDeg);
+
+    const correctedLeft = run('engine_1_flameout', 0.75);
+    const correctedRight = run('engine_2_flameout', -0.75);
+    expect(Math.abs(correctedLeft.headingDelta)).toBeLessThan(Math.abs(leftFailed.headingDelta));
+    expect(Math.abs(correctedRight.headingDelta)).toBeLessThan(Math.abs(rightFailed.headingDelta));
   });
 
   it('a failure armed in the scenario is active from the first sample', () => {

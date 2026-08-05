@@ -63,6 +63,24 @@ Current list: `NO AC POWER`, `GEN 1/2 OFF BUS`, `FUEL LOW PRESSURE`,
 `HYD SYS A/B LOW PRESSURE`, `ENG 1/2 LOW OIL PRESSURE`,
 `ENG 1/2 START VALVE OPEN`, `IRS ALIGN`, `IRS OFF`.
 
+## Training failure lifecycle
+
+Scenario and instructor failures use the same acknowledged aircraft command
+path. A rejected or unacknowledged scenario injection becomes a
+`failure_injection_failed` safety event rather than a successful exercise.
+
+Once accepted, an engine flameout, generator failure or hydraulic failure is
+latched. Commands that would directly restore the failed component are refused
+while the failure is active. `clear_failures` is an instructor/training reset:
+it restores the affected engine, generator and pump targets to the state
+captured immediately before injection, applying restorations in reverse order
+when failures overlap. It is not a real airborne restart procedure.
+
+The mock flight model adds a small asymmetric yaw/roll moment from unequal
+engine thrust and gives the airborne rudder enough approximate authority to
+counter it. These coefficients are game/training heuristics, not aircraft
+performance data.
+
 ## Deliberate simplifications
 
 - **Bus structure**: any AC source powers both transfer buses. Real bus tie /
@@ -74,8 +92,9 @@ Current list: `NO AC POWER`, `GEN 1/2 OFF BUS`, `FUEL LOW PRESSURE`,
   quantity, no brake accumulator.
 - **Pneumatics**: one duct pressure for the whole aeroplane; the isolation valve
   is state but does not split the duct. No pack temperature or pressurisation.
-- **Engines**: N2 and oil pressure only; no EGT limit, no hot/hung start, no
-  N1 spool interaction with the flight model beyond "running or not".
+- **Engines**: N2 and oil pressure only; no EGT limit, no hot/hung start. The
+  N1/thrust split produces approximate engine-out yaw/roll, but there is no
+  sideslip, control-force or certified performance model.
 - **IRS**: a single alignment timer; no position entry, no drift, no attitude
   loss when it is off.
 - **Anti-ice**: consumes duct pressure; it has no effect on performance or on

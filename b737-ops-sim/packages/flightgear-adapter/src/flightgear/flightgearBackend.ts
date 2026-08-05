@@ -14,7 +14,7 @@ import {
 } from '@b737/shared';
 import { WebSocket } from 'ws';
 import type { FlightBackend } from '../backend.js';
-import type { FgCommandEntry, PropertyMap } from './propertyMap.js';
+import type { FgCommandEntry, FgStateEntry, PropertyMap } from './propertyMap.js';
 
 /**
  * FlightBackend speaking FlightGear's built-in httpd WebSocket property
@@ -45,6 +45,11 @@ export interface FlightGearBackendOptions {
 
 type FgValue = number | boolean | string;
 
+interface MappedStateProperty {
+  stateKey: string;
+  entry: FgStateEntry;
+}
+
 export class FlightGearBackend implements FlightBackend {
   private readonly opts: Required<Omit<FlightGearBackendOptions, 'log'>> & {
     log: (level: 'info' | 'warn' | 'error', msg: string) => void;
@@ -54,10 +59,13 @@ export class FlightGearBackend implements FlightBackend {
   private listeners = new Set<(state: AircraftState) => void>();
   private publishTimer: ReturnType<typeof setInterval> | null = null;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
-  private lastMessageAtMs: number | null = null;
+  /** Updated only by a known property whose value passes ingress validation. */
+  private lastValidMappedAtMs: number | null = null;
+  /** Per-property freshness prevents one noisy path from masking stale state. */
+  private validAtMs = new Map<string, number>();
+  private lastFreshnessProbeAtMs: number | null = null;
   private lastStateAtMs: number | null = null;
   private wantConnected = false;
-  private simStartMs: number | null = null;
   /**
    * Monotonic socket id. Handlers belonging to a superseded socket must not
    * mutate `ws`/`cache`, otherwise a late close event from the previous
@@ -66,6 +74,7 @@ export class FlightGearBackend implements FlightBackend {
   private generation = 0;
   /** State keys the property map does not mark `optional`. */
   private readonly requiredKeys: string[];
+  private readonly stateByFgPath: Map<string, MappedStateProperty>;
   private loggedInvalidState = false;
 
   constructor(options: FlightGearBackendOptions) {
@@ -81,6 +90,12 @@ export class FlightGearBackend implements FlightBackend {
     this.requiredKeys = Object.entries(this.opts.propertyMap.state)
       .filter(([, entry]) => entry.optional !== true)
       .map(([key]) => key);
+    this.stateByFgPath = new Map(
+      Object.entries(this.opts.propertyMap.state).map(([stateKey, entry]) => [
+        entry.fgProp,
+        { stateKey, entry },
+      ]),
+    );
   }
 
   get url(): string {
@@ -137,25 +152,21 @@ export class FlightGearBackend implements FlightBackend {
           return;
         }
         this.opts.log('info', `connected to FlightGear at ${this.url}`);
-        this.lastMessageAtMs = Date.now();
-        if (this.simStartMs === null) this.simStartMs = Date.now();
         for (const entry of Object.values(this.opts.propertyMap.state)) {
           ws.send(JSON.stringify({ command: 'addListener', node: entry.fgProp }));
           ws.send(JSON.stringify({ command: 'get', node: entry.fgProp }));
         }
+        this.lastFreshnessProbeAtMs = Date.now();
         ws.on('error', (err) => this.opts.log('error', `FlightGear socket error: ${err.message}`));
         resolve();
       });
       ws.on('message', (data) => {
         if (!isCurrent()) return;
-        this.lastMessageAtMs = Date.now();
         try {
-          const msg = JSON.parse(String(data)) as { path?: string; value?: FgValue };
-          if (typeof msg.path === 'string' && msg.value !== undefined) {
-            this.cache.set(msg.path, msg.value);
-          }
+          const msg = JSON.parse(String(data)) as unknown;
+          this.acceptFrame(msg);
         } catch {
-          // Non-JSON frames from FG are ignored.
+          // Malformed frames must not keep an old cache fresh.
         }
       });
       ws.on('close', () => {
@@ -165,7 +176,9 @@ export class FlightGearBackend implements FlightBackend {
         // Values from the previous session must never be mixed into a new one
         // or re-published with fresh timestamps (R-05).
         this.cache.clear();
-        this.lastMessageAtMs = null;
+        this.validAtMs.clear();
+        this.lastValidMappedAtMs = null;
+        this.lastFreshnessProbeAtMs = null;
         this.scheduleReconnect();
       });
     });
@@ -182,7 +195,39 @@ export class FlightGearBackend implements FlightBackend {
     this.ws?.close();
     this.ws = null;
     this.cache.clear();
-    this.lastMessageAtMs = null;
+    this.validAtMs.clear();
+    this.lastValidMappedAtMs = null;
+    this.lastFreshnessProbeAtMs = null;
+  }
+
+  /**
+   * Validate a FlightGear wire frame before it can affect state or freshness.
+   * Numeric properties accept finite numbers only; bool properties accept
+   * booleans only. Coercion belongs nowhere on this untrusted boundary.
+   */
+  private acceptFrame(frame: unknown): void {
+    if (typeof frame !== 'object' || frame === null) return;
+    const { path, value } = frame as { path?: unknown; value?: unknown };
+    if (typeof path !== 'string') return;
+    const mapped = this.stateByFgPath.get(path);
+    if (!mapped) return;
+
+    const valid =
+      mapped.entry.type === 'bool'
+        ? typeof value === 'boolean'
+        : typeof value === 'number' && Number.isFinite(value);
+    if (!valid) {
+      // A fresh invalid value is stronger evidence than an older valid one.
+      // Required properties therefore become missing immediately.
+      this.cache.delete(path);
+      this.validAtMs.delete(path);
+      return;
+    }
+
+    const now = Date.now();
+    this.cache.set(path, value as FgValue);
+    this.validAtMs.set(path, now);
+    this.lastValidMappedAtMs = now;
   }
 
   /** State keys whose FG property has not arrived yet. */
@@ -193,26 +238,58 @@ export class FlightGearBackend implements FlightBackend {
     });
   }
 
+  private staleRequired(): string[] {
+    const now = Date.now();
+    return this.requiredKeys.filter((key) => {
+      const entry = this.opts.propertyMap.state[key];
+      if (!entry) return true;
+      const validAt = this.validAtMs.get(entry.fgProp);
+      return validAt === undefined || now - validAt > this.opts.staleAfterMs;
+    });
+  }
+
   private isStale(): boolean {
     return (
-      this.lastMessageAtMs === null || Date.now() - this.lastMessageAtMs > this.opts.staleAfterMs
+      this.lastValidMappedAtMs === null ||
+      Date.now() - this.lastValidMappedAtMs > this.opts.staleAfterMs ||
+      this.staleRequired().length > 0
     );
+  }
+
+  /**
+   * PropertyListener sends change events, so an unchanged but healthy value
+   * cannot prove freshness by itself. Re-read required properties before
+   * their deadline; only the validated replies update `validAtMs`.
+   */
+  private requestRequiredPropertiesIfDue(now: number): void {
+    const ws = this.ws;
+    if (!ws || ws.readyState !== WebSocket.OPEN) return;
+    const intervalMs = Math.max(25, this.opts.staleAfterMs / 2);
+    if (this.lastFreshnessProbeAtMs !== null && now - this.lastFreshnessProbeAtMs < intervalMs) {
+      return;
+    }
+    this.lastFreshnessProbeAtMs = now;
+    for (const key of this.requiredKeys) {
+      const entry = this.opts.propertyMap.state[key];
+      if (entry) ws.send(JSON.stringify({ command: 'get', node: entry.fgProp }));
+    }
   }
 
   getStatus(): BackendStatus {
     const stale = this.isStale();
     const socketOpen = this.ws?.readyState === WebSocket.OPEN;
     const missing = socketOpen ? this.missingRequired() : [];
+    const staleProperties = socketOpen && missing.length === 0 ? this.staleRequired() : [];
     const streaming = socketOpen && !stale && missing.length === 0;
     return {
       mode: 'flightgear',
       connected: streaming,
       detail: !socketOpen
         ? `not connected to ${this.url}`
-        : stale
-          ? 'socket open but no recent data (is the sim paused or crashed?)'
-          : missing.length > 0
-            ? `waiting for ${missing.length} property/ies (first: ${missing[0]})`
+        : missing.length > 0
+          ? `waiting for ${missing.length} valid property/ies (first: ${missing[0]})`
+          : stale
+            ? `socket open but ${staleProperties.length} required property/ies are stale (first: ${staleProperties[0] ?? 'unknown'})`
             : `streaming from ${this.url}`,
       lastStateAgeMs: this.lastStateAtMs === null ? null : Date.now() - this.lastStateAtMs,
       stateRateHz: this.opts.stateRateHz,
@@ -373,18 +450,18 @@ export class FlightGearBackend implements FlightBackend {
     // sample: publishing 0-filled defaults with an advancing timestamp is worse
     // than publishing nothing (R-05).
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) return;
+    this.requestRequiredPropertiesIfDue(Date.now());
     if (this.isStale()) return;
     if (this.missingRequired().length > 0) return;
     const now = Date.now();
     const flapsActualNorm = this.num('controls.flapsActualNorm');
     const locInRange = this.bool('nav.locInRange');
     const gsInRange = this.bool('nav.gsInRange');
-    // Prefer FlightGear's own simulation clock; fall back to wall clock only
-    // when the map has no sim-time property (older maps).
-    const fgSimTimeSec = this.numOrNull('sim.simTimeSec');
     const state: AircraftState = {
       timestampMs: now,
-      simTimeSec: fgSimTimeSec ?? (this.simStartMs === null ? 0 : (now - this.simStartMs) / 1000),
+      // This mapped property is required. A missing simulator clock suppresses
+      // the entire sample, so pause/freeze can never leak wall time into rules.
+      simTimeSec: this.num('sim.simTimeSec'),
       position: {
         latDeg: this.num('position.latDeg'),
         lonDeg: this.num('position.lonDeg'),

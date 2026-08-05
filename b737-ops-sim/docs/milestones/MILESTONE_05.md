@@ -4,12 +4,21 @@
 > to fly, weather to fly it in, failures to handle, and the option of speaking
 > to ATC instead of clicking.
 
-**Status:** Complete (2026-08-02) — see [MILESTONE_05_DOD.md](MILESTONE_05_DOD.md).
+**Status:** **Acceptance re-opened** (2026-08-02). The feature tasks were
+delivered, but the third review found 2 P1, 10 P2 and 3 P3 gaps, so Milestone 5
+is not currently approved as complete. See
+[MILESTONE_05_DOD.md](MILESTONE_05_DOD.md) for the historical verification and
+[../../REVIEW_FEEDBACK_3.md](../../REVIEW_FEEDBACK_3.md) for the current gate.
+The two P1 integrity findings V-01/V-02 were fixed and regression-tested on
+2026-08-03. Training-loop, failure and state-transition findings V-03–V-09
+were fixed on 2026-08-04; the remaining V-10–V-15 findings and live
+FlightGear validation remain open in
+[../REVIEW_RESPONSE_3.md](../REVIEW_RESPONSE_3.md).
 
 Deviations from this plan, recorded in the DoD: the crosswind scenario reuses
-the approach drill rather than adding phases, and the browser test for the V1
-cut was replaced by a weather-readout test because flying to V1 through the UI
-made the suite slow — the injection path is proven by the golden test.
+the approach drill rather than adding phases. The browser V1-cut test was
+temporarily removed for speed, but was restored during the second-review
+remediation; the current built-assets suite has 9 Playwright specs.
 
 Phase 5 items from the spec: FMC and route entry · SID and STAR · weather ·
 failures · rejected takeoff · go-around · engine failure · crosswind

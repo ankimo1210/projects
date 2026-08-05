@@ -18,6 +18,15 @@ test('app boots, streams live state, and completes a command round-trip', async 
   // connected to the mock backend
   await expect(page.getByTestId('conn-status')).toContainText('mock backend', { timeout: 15_000 });
 
+  // Beginner mission coach: one objective, optional explanation and a
+  // SHOW ME interaction that highlights the relevant panel.
+  await expect(page.getByTestId('mission-coach')).toBeVisible();
+  await expect(page.getByTestId('mission-coach')).toContainText('NEXT ACTION');
+  await page.getByRole('button', { name: /なぜ/ }).click();
+  await expect(page.getByTestId('mission-help')).toContainText('SUCCESS');
+  await page.getByRole('button', { name: /場所を表示/ }).click();
+  await expect(page.getByTestId('sim-canvas')).toHaveClass(/coach-focus/);
+
   // state stream is LIVE: sim time advances
   const t1 = await page.getByTestId('sim-time').textContent();
   await page.waitForTimeout(2500);
@@ -38,14 +47,22 @@ test('app boots, streams live state, and completes a command round-trip', async 
     timeout: 5_000,
   });
 
-  // ATC workflow: request clearance → readback → transcript records it
+  // ATC correction workflow: one wrong answer followed by one correct retry
+  // must clear the pending response instead of leaving the UI stuck (V-07).
   await page.getByTestId('request-takeoff').click();
   await expect(page.getByTestId('transcript-list')).toContainText('cleared for takeoff');
+  await page
+    .getByTestId('response-options')
+    .getByRole('button', { name: 'Roger.', exact: true })
+    .click();
+  await expect(page.getByTestId('transcript-list')).toContainText('negative — read back');
+  await expect(page.getByTestId('transcript-list')).toContainText('✗ readback');
   await page
     .getByTestId('response-options')
     .getByRole('button', { name: /Cleared for takeoff runway 28R/ })
     .click();
   await expect(page.getByTestId('transcript-list')).toContainText('✓ readback');
+  await expect(page.getByTestId('response-options')).toHaveCount(0);
 
   // checklist panel + guidance visible (guided mode default)
   await expect(page.getByTestId('checklist-panel')).toContainText('Flight controls');
@@ -56,6 +73,22 @@ test('app boots, streams live state, and completes a command round-trip', async 
   await page.keyboard.press('Backquote');
   await expect(page.getByTestId('diagnostics')).toBeVisible();
   await expect(page.getByTestId('diagnostics')).toContainText('state rate');
+});
+
+test('brief keyboard taps complete the flight-control check with live progress', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await expect(page.getByTestId('conn-status')).toContainText('mock backend', { timeout: 15_000 });
+  await page.getByTestId('sim-canvas').click({ position: { x: 80, y: 80 } });
+
+  for (const key of ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ',', '.']) {
+    await page.keyboard.press(key);
+  }
+
+  await expect(page.locator('.mission-metric.metric-good')).toHaveCount(6);
+  await page.getByTestId('checklist-answer-flight_controls').click();
+  await expect(page.getByTestId('checklist-answer-flaps')).toBeVisible();
 });
 
 test('imported 3D cockpit loads and 3D picking round-trips (skipped without assets)', async ({

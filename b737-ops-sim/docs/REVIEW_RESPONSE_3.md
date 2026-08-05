@@ -1,0 +1,46 @@
+# Partial response to REVIEW_FEEDBACK_3.md
+
+Remediation dates: 2026-08-03 and 2026-08-04. This response closes the two P1
+integrity findings plus training-loop findings V-03–V-09; it does not claim
+Milestone 5 acceptance. V-10–V-15 and the live FlightGear gate remain open.
+
+## Verification
+
+```text
+unit/integration  PASS — 238 tests across 7 packages
+Playwright        PASS — 9/9 with generated cockpit assets
+typecheck         PASS — all 8 workspace packages
+lint              PASS
+production build  PASS — no oversized-chunk warning
+assets fetch      PASS — existing manifest fully re-verified
+assets convert    PASS — 10 models, bindings and required sounds
+```
+
+FlightGear itself is not installed in this environment. V-01 is covered
+against the protocol-emulating WebSocket server; the final property-map and
+end-to-end flight validation must still be run against a live installation.
+
+## Findings addressed
+
+| ID   | Result | Implementation                                                                                                                                                                                                                                                                                                                                                                                                                                    | Regression evidence                                                                                                                                                                                                                                                 |
+| ---- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| V-01 | Fixed  | `FlightGearBackend` builds a reverse property index and accepts only known paths with a declared boolean or finite numeric value. Invalid required values evict old cache entries. Valid time is tracked for every required property, so malformed, unmapped, optional-only or single-path traffic cannot refresh stale required state. Because PropertyListener emits changes, unchanged required values are periodically re-read before expiry. | `flightgearBackend.test.ts`: invalid/null/wrong type, malformed + unmapped noise, one-busy-path freshness, and healthy static-value polling; 16 backend integration tests pass.                                                                                     |
+| V-02 | Fixed  | Manifest trust requires the pinned repository/license/SHA, valid date, non-empty unique safe paths, positive sizes, 64-digit hashes and the complete required set; disk size and hash are verified before skip. Conversion preflights every required model, root binding XML and runtime sound, then rejects empty instance/animation output.                                                                                                     | `assetManifest.test.ts` and `convertValidation.test.ts`: empty/incomplete manifest, bad hash, duplicate/unsafe path, invalid size, missing model and missing sound. The real manifest skipped only after verification and the real assets reconverted successfully. |
+| V-03 | Fixed  | A scenario that completes through the `go_around → debrief` transition marks Landing and landing-only checklists as not applicable. Normal landing scoring is unchanged.                                                                                                                                                                                                                                                                          | The Approach Drill golden test now requires a non-`FAIL` debrief, Landing 100 and no incomplete Landing/After Landing deduction after a completed go-around.                                                                                                        |
+| V-04 | Fixed  | The `go_around → approach_setup` transition re-arms FO radio-altitude, 1,000/500-ft gate, minimums, unstable-approach and three-green monitoring.                                                                                                                                                                                                                                                                                                 | `firstOfficer.test.ts` flies two approaches around the re-arm event and requires both approaches to produce altitude, gate, minimums and three-green calls.                                                                                                         |
+| V-05 | Fixed  | Web scenario injection uses the acked command path. Rejection/disconnection records a safety-critical `failure_injection_failed` event. Accepted engine/generator/hydraulic failures block direct recovery commands until `clear_failures`, which restores captured target state in reverse injection order.                                                                                                                                      | `scenarios.e2e.test.ts` rejects an injection and requires the explicit safety event. `flightModel.test.ts` injects three failure kinds, verifies recovery attempts are refused, then requires clear to restore engines, generators, pumps and `activeFailures`.     |
+| V-06 | Fixed  | Individual engine thrust now produces an asymmetric yaw/roll term, and rudder has speed-dependent airborne yaw authority. The coefficients remain explicit non-certified 2.5-DOF approximations.                                                                                                                                                                                                                                                  | `flightModel.test.ts` requires left/right engine failures to diverge in opposite directions and position/roll, then requires the correct opposite rudder to reduce each heading deviation.                                                                          |
+| V-07 | Fixed  | ATC grading is recorded on the transcript entry actually answered. A correction therefore completes after one correct retry while the original incorrect result remains visible and scored through ATC statistics.                                                                                                                                                                                                                                | `atc.test.ts` requires wrong → correct to leave zero unanswered entries, with the original `incorrect` and correction `correct`; the browser smoke repeats that path and requires the response buttons to disappear.                                                |
+| V-08 | Fixed  | Manual braking above 0.6 while RTO is selected now clears the arming/active state and sets a durable inhibit. Releasing the pedals cannot reactivate RTO; only an explicit autobrake reselection clears the inhibit.                                                                                                                                                                                                                              | `flightModel.test.ts` reproduces 0.9 → manual 0.7 → one physics step and requires 0.7, then proves release remains at 0 and a deliberate RTO reselection can arm it again.                                                                                          |
+| V-09 | Fixed  | Property map v6 makes FlightGear simulation time required and removes wall-clock fallback. The diagnostic waits for the typed taxi-light original, writes its opposite, confirms read-back, restores the exact original boolean and confirms restoration before success.                                                                                                                                                                          | `flightgearBackend.test.ts` requires `/sim/time/elapsed-sec` and proves other changing frames cannot advance a frozen clock. `fgDiagnostic.test.ts` covers initial `false`, initial `true`, exact restore and rejected writes against a fake FG server.             |
+
+The fetch directory replacement is still only “atomic-ish”; the backup,
+rollback and locking work requested by V-12 is intentionally still open.
+
+## Additional build improvement
+
+The app lazy-loads the 3D cockpit, loads the glTF plugin only when generated
+bindings exist, and imports Babylon modules directly. Initial minified JS is
+about 357 KB instead of 5.7 MB; the largest lazy chunk is about 1.16 MB. The
+3D-picking browser test verifies that the split still loads 1,439 cockpit
+meshes and completes the gear-lever command round trip.

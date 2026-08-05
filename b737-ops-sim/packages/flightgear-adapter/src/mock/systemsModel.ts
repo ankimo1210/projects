@@ -272,6 +272,18 @@ export class MockSystemsModel {
     this.refreshInstantaneous();
   }
 
+  /** Restore the exact engine/generator state captured before a training failure. */
+  restoreEngine(
+    engine: 'left' | 'right',
+    state: SystemsState['engines']['left'],
+    generatorOn: boolean,
+  ): void {
+    this.s.engines[engine] = { ...state };
+    if (engine === 'left') this.s.electrical.gen1On = generatorOn;
+    else this.s.electrical.gen2On = generatorOn;
+    this.refreshInstantaneous();
+  }
+
   /** Master caution/warning recall: acknowledges everything currently active. */
   resetMasterCaution(): CommandResult {
     for (const a of this.s.annunciations) this.acknowledgedIds.add(a.id);

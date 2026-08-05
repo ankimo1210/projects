@@ -25,7 +25,9 @@ temporary geometry when `assets/generated/webroot` is absent.
 
 - Pinned to one upstream commit; `--force` re-downloads.
 - Skipping is earned, not assumed: an existing manifest is only trusted after
-  every recorded sha256 is re-verified against the files on disk.
+  its repository, license, pinned SHA, non-empty file schema, safe unique
+  paths, positive sizes, 64-digit hashes and complete required-file allowlist
+  pass; every recorded size and sha256 is then re-verified against disk.
 - Downloads into `assets/imported/737-800YV.staging` and swaps the directory in
   only when the run succeeds, so a failed or partial fetch leaves no residue.
 - Fails (and discards the staging tree) when a required sound is unavailable
@@ -66,7 +68,10 @@ temporary geometry when `assets/generated/webroot` is absent.
 
 Stage 2 removes its output directory first, and copies only the sounds the
 audio engine actually loads (an allowlist), so the generated tree never depends
-on leftovers from an earlier asset set.
+on leftovers from an earlier asset set. Before removing output, it rejects any
+missing or empty required model, root binding XML, or runtime loop
+(`Wind.wav`, `cfm11a.wav`, `cfm14a.wav`). It also rejects binding extraction
+that produces no instances or animations.
 
 ## Stage 3 — runtime (apps/web)
 

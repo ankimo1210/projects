@@ -34,7 +34,7 @@ export function ControlsPanel({
   return (
     <div className="controls-panel" data-testid="controls-panel">
       {/* Thrust + reverse */}
-      <div className={cls('throttle')} title={hint('throttle')}>
+      <div className={cls('throttle')} title={hint('throttle')} data-control-id="throttle">
         <label htmlFor="ctl-throttle">THROTTLE</label>
         <input
           id="ctl-throttle"
@@ -52,7 +52,11 @@ export function ControlsPanel({
         />
         <span className="ctl-value">{Math.round(state.engines.left.throttleLeverNorm * 100)}%</span>
       </div>
-      <div className={cls('reverse_thrust')} title={hint('reverse_thrust')}>
+      <div
+        className={cls('reverse_thrust')}
+        title={hint('reverse_thrust')}
+        data-control-id="reverse_thrust"
+      >
         <label htmlFor="ctl-reverse">REVERSE</label>
         <input
           id="ctl-reverse"
@@ -67,7 +71,7 @@ export function ControlsPanel({
       </div>
 
       {/* Flap lever with detents */}
-      <div className={cls('flaps')} title={hint('flaps')}>
+      <div className={cls('flaps')} title={hint('flaps')} data-control-id="flaps">
         <label>FLAPS</label>
         <div className="flap-detents" data-testid="flap-lever">
           {FLAP_DETENTS.map((d) => (
@@ -86,7 +90,7 @@ export function ControlsPanel({
       </div>
 
       {/* Speed brake */}
-      <div className={cls('speedbrake')} title={hint('speedbrake')}>
+      <div className={cls('speedbrake')} title={hint('speedbrake')} data-control-id="speedbrake">
         <label htmlFor="ctl-spdbrk">SPD BRK</label>
         <input
           id="ctl-spdbrk"
@@ -106,6 +110,7 @@ export function ControlsPanel({
           type="button"
           className={`ctl-btn ${cls('speedbrake_arm')} ${state.controls.speedbrakeArmed ? 'lit' : ''}`}
           data-testid="speedbrake-arm"
+          data-control-id="speedbrake_arm"
           title={hint('speedbrake_arm')}
           onClick={() =>
             sendCommandWithSound(
@@ -119,7 +124,7 @@ export function ControlsPanel({
       </div>
 
       {/* Gear lever */}
-      <div className={cls('gear')} title={hint('gear')}>
+      <div className={cls('gear')} title={hint('gear')} data-control-id="gear">
         <label>GEAR</label>
         <div className="gear-lever" data-testid="gear-lever">
           <button
@@ -140,7 +145,7 @@ export function ControlsPanel({
       </div>
 
       {/* Autobrake rotary */}
-      <div className={cls('autobrake')} title={hint('autobrake')}>
+      <div className={cls('autobrake')} title={hint('autobrake')} data-control-id="autobrake">
         <label>AUTOBRK</label>
         <div className="rotary" data-testid="autobrake">
           {AUTOBRAKE_ORDER.map((s) => (
@@ -173,6 +178,7 @@ export function ControlsPanel({
               type="button"
               title={hint(id)}
               data-testid={`light-${light}`}
+              data-control-id={id}
               className={`ctl-btn ${guidedControlId === id && showHints ? 'ctl-guided' : ''} ${state.lights[light] ? 'lit' : ''}`}
               onClick={() =>
                 sendCommandWithSound(
@@ -187,7 +193,8 @@ export function ControlsPanel({
           <button
             type="button"
             data-testid="parking-brake"
-            className={`ctl-btn ${state.controls.parkingBrakeSet ? 'lit-red' : ''}`}
+            data-control-id="parking_brake"
+            className={`ctl-btn ${guidedControlId === 'parking_brake' && showHints ? 'ctl-guided' : ''} ${state.controls.parkingBrakeSet ? 'lit-red' : ''}`}
             onClick={() =>
               sendCommandWithSound(
                 { type: 'set_parking_brake', engaged: !state.controls.parkingBrakeSet },

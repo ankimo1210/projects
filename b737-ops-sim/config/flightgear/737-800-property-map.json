@@ -1,12 +1,11 @@
 {
-  "version": 5,
+  "version": 6,
   "aircraft": "Generic FG 737 NG class (verified paths: FG core; aircraft-specific paths marked)",
   "notes": "Single source of truth for FlightGear property paths (spec \u00a75). Paths under /instrumentation and MCP/autobrake sections are AIRCRAFT-MODEL-DEPENDENT: verify against the installed 737 package (e.g. 737-800YV) with scripts/fg-diagnostic before relying on them. scale converts FG-native units to the schema's explicit units.",
   "state": {
     "sim.simTimeSec": {
       "fgProp": "/sim/time/elapsed-sec",
-      "optional": true,
-      "comment": "FG core simulation clock. Optional: when absent the adapter falls back to wall clock, which does not stop when the sim is paused. SOURCE_REQUIRED: confirm with fg-diagnostic on the installed build."
+      "comment": "FG core simulation clock. Required so pause/freeze never advances training time through a wall-clock fallback. SOURCE_REQUIRED: confirm with fg-diagnostic on the installed build."
     },
     "position.latDeg": {
       "fgProp": "/position/latitude-deg"

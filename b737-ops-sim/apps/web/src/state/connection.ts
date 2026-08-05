@@ -22,7 +22,14 @@ export const interpolator = new StateInterpolator(120);
 let scenario = getScenario(DEFAULT_SCENARIO_ID)!;
 // The scenario may ask the aircraft to do something (failure injection); it
 // goes through the same command path the crew uses (F-01).
-const scenarioCommands = { sendCommand: (c: AircraftCommand) => sendCommand(c) };
+const scenarioCommands = {
+  sendCommand: async (command: AircraftCommand) => {
+    const ack = await client.sendCommandAcked(command);
+    return ack.ok
+      ? ({ ok: true } as const)
+      : ({ ok: false, error: ack.error ?? 'scenario command rejected' } as const);
+  },
+};
 let session = new TrainingSession(scenario, { mode: 'guided', ...scenarioCommands });
 let spokenCount = 0;
 

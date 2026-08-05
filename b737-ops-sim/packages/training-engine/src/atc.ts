@@ -417,7 +417,6 @@ export class AtcController {
       (o) => o.id === optionId,
     );
     const correct = option?.correct ?? false;
-    instruction.transcriptEntry.responseResult = correct ? 'correct' : 'incorrect';
     this.stats.readbacksTotal += 1;
     if (correct) this.stats.readbacksCorrect += 1;
     if (correct && this.pendingInstruction?.id === instruction.id) this.pendingInstruction = null;

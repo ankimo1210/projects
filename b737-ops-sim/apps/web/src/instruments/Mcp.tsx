@@ -41,7 +41,7 @@ export function Mcp({ state }: { state: AircraftState }): JSX.Element {
   };
 
   return (
-    <div className="mcp" data-testid="mcp">
+    <div className="mcp" data-testid="mcp" data-control-id="mcp">
       <McpWindow
         label="IAS"
         value={String(Math.round(mcp.selSpeedKt))}

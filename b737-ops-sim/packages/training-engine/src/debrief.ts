@@ -58,6 +58,12 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
   const { history, events, runway } = input;
   const vs = vSpeedsForWeight(input.grossWeightLb);
   const metrics: Record<string, string> = {};
+  const completedViaGoAround = events.some(
+    (event) =>
+      event.kind === 'phase_transition' &&
+      event.data?.['from'] === 'go_around' &&
+      event.data?.['to'] === 'debrief',
+  );
 
   const frame = (s: HistorySample): { alongM: number; crossM: number } => {
     const { eastM, northM } = toLocalEnuM(
@@ -351,7 +357,9 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
 
   // ---- category: landing --------------------------------------------------
   const landing: DebriefFinding[] = [];
-  if (touchdown) {
+  if (completedViaGoAround) {
+    metrics['Landing outcome'] = 'Not applicable — go-around completed';
+  } else if (touchdown) {
     const before = history[touchdownIdx - 1]!;
     const tdVs = Math.min(before.verticalSpeedFpm, 0);
     metrics['Touchdown sink rate'] = `${Math.abs(tdVs).toFixed(0)} fpm`;
@@ -423,6 +431,7 @@ export function generateDebrief(input: DebriefInput): DebriefReport {
   // ---- category: checklist discipline ------------------------------------
   const checklist: DebriefFinding[] = [];
   for (const id of input.expectedChecklistIds) {
+    if (completedViaGoAround && (id === 'landing' || id === 'after_landing')) continue;
     if (!events.some((e) => e.kind === 'checklist_completed' && e.id === id)) {
       checklist.push({
         label: 'Incomplete checklist',

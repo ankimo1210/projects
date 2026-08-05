@@ -1,5 +1,10 @@
 # Response to REVIEW_FEEDBACK_2.md
 
+> **Historical response, superseded for completion status.** The third review
+> ([REVIEW_FEEDBACK_3.md](../REVIEW_FEEDBACK_3.md)) found additional P1–P3
+> gaps after this remediation. This file remains the evidence for F-01..F-10,
+> but does not establish current Milestone 5 completion.
+
 Review date 2026-08-02 (`REVIEW_FEEDBACK_2.md`, findings F-01..F-10),
 remediation the same day. Every finding was fixed; each fix carries a
 regression test unless noted.

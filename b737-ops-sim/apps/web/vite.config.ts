@@ -18,6 +18,7 @@ export default defineConfig({
     strictPort: true,
   },
   build: {
-    chunkSizeWarningLimit: 4000, // Babylon.js is large; fine for a local app
+    // The initial UI is small; the Babylon cockpit and glTF loader are lazy.
+    chunkSizeWarningLimit: 1500,
   },
 });

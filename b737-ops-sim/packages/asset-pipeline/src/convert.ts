@@ -1,5 +1,13 @@
 import { createHash } from 'node:crypto';
-import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs';
 import { dirname, join, posix } from 'node:path';
 import { parseAc3d, toFgFrame } from './ac3d.js';
 import { acToGltf, computeBounds } from './gltf.js';
@@ -48,13 +56,43 @@ const SOUND_ALLOWLIST = [
   ...[10, 20, 30, 40, 50, 100, 200, 300, 400, 500, 1000, 2500].map((a) => `altitude-${a}.wav`),
 ];
 
+/** Sample loops whose absence would make the verified sample build misleading. */
+const REQUIRED_RUNTIME_SOUNDS = ['Wind.wav', 'cfm11a.wav', 'cfm14a.wav'];
+const REQUIRED_BINDING_FILES = ['Models/cockpit.xml'];
+
 export interface ConvertSummary {
   models: { name: string; meshes: number; missingTextures: string[] }[];
   bounds: Record<string, { min: number[]; max: number[] }>;
   missingSounds: string[];
 }
 
+function soundPath(importedDir: string, name: string): string | undefined {
+  return ['Sounds', 'Sounds/FL2070', 'Sounds/gpws']
+    .map((dir) => join(importedDir, dir, name))
+    .find((abs) => existsSync(abs) && statSync(abs).size > 0);
+}
+
+/** Fail before deleting a previously usable generated tree. */
+export function validateImportedAssets(importedDir: string): void {
+  const requiredFiles = [...MODELS.map((model) => model.ac), ...REQUIRED_BINDING_FILES];
+  const missingFiles = requiredFiles.filter((path) => {
+    const abs = join(importedDir, path);
+    return !existsSync(abs) || statSync(abs).size === 0;
+  });
+  const missingSounds = REQUIRED_RUNTIME_SOUNDS.filter(
+    (name) => soundPath(importedDir, name) === undefined,
+  );
+  if (missingFiles.length > 0 || missingSounds.length > 0) {
+    const detail = [
+      ...missingFiles.map((path) => `required model/binding missing or empty: ${path}`),
+      ...missingSounds.map((name) => `required runtime sound missing or empty: ${name}`),
+    ];
+    throw new Error(`invalid imported cockpit assets:\n${detail.join('\n')}`);
+  }
+}
+
 export function convertCockpitAssets(importedDir: string, outDir: string): ConvertSummary {
+  validateImportedAssets(importedDir);
   // Regenerate from scratch: stale output from an earlier asset set must not
   // survive into a new build (R-21).
   rmSync(outDir, { recursive: true, force: true });
@@ -64,10 +102,6 @@ export function convertCockpitAssets(importedDir: string, outDir: string): Conve
 
   for (const model of MODELS) {
     const acAbs = join(importedDir, model.ac);
-    if (!existsSync(acAbs)) {
-      summary.models.push({ name: model.out, meshes: 0, missingTextures: ['(model missing)'] });
-      continue;
-    }
     // normalize into the FG model frame so vertices match the XML data
     const parsed = toFgFrame(parseAc3d(readFileSync(acAbs, 'latin1')));
     const missingTextures: string[] = [];
@@ -124,6 +158,9 @@ export function convertCockpitAssets(importedDir: string, outDir: string): Conve
       .map((inst) => ({ ...inst, gltf: acToOut.get(inst.ac) ?? null }))
       .filter((inst) => inst.gltf !== null),
   };
+  if (enriched.instances.length === 0 || enriched.animations.length === 0) {
+    throw new Error('invalid cockpit bindings: expected at least one model instance and animation');
+  }
   writeFileSync(join(outDir, 'cockpit-bindings.json'), JSON.stringify(enriched, null, 1));
 
   // Flatten the GPL sounds the audio engine actually asks for. Copying every
@@ -131,12 +168,9 @@ export function convertCockpitAssets(importedDir: string, outDir: string): Conve
   // previous fetches (R-21).
   const soundsOut = join(outDir, 'sounds');
   mkdirSync(soundsOut, { recursive: true });
-  const soundDirs = ['Sounds', 'Sounds/FL2070', 'Sounds/gpws'];
   const missingSounds: string[] = [];
   for (const name of SOUND_ALLOWLIST) {
-    const sourcePath = soundDirs
-      .map((dir) => join(importedDir, dir, name))
-      .find((abs) => existsSync(abs));
+    const sourcePath = soundPath(importedDir, name);
     if (!sourcePath) {
       missingSounds.push(name);
       continue;

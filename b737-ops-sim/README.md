@@ -12,6 +12,26 @@ state-validated checklists, and a transparent scoring debrief.
 > `NON_CERTIFIED_APPROXIMATION` / `SOURCE_REQUIRED` in the code/data).
 > Do not use it for real-world flight training.
 
+> ## Current status — playable prototype; Milestone 5 acceptance re-opened
+>
+> The mock-backed trainer is runnable end to end and the Milestone 1–5 feature
+> set is present. It is **not complete as an accepted Milestone 5 build**. The
+> third review on 2026-08-02 re-opened the gate with 2 P1, 10 P2 and 3 P3
+> findings. Both P1 integrity gaps — FlightGear ingress/freshness (V-01) and
+> false-green asset verification (V-02) — were fixed on 2026-08-03 with
+> negative regression coverage. Training-loop findings V-03, V-04 and V-07
+> were fixed on 2026-08-04: a completed go-around is no longer scored as a
+> failed landing, FO approach monitoring re-arms for the second approach, and
+> one correct ATC correction clears the pending response. Failure lifecycle
+> and engine-out findings V-05/V-06 were also fixed: injection is ack-checked,
+> failures stay latched until a restoring clear, and asymmetric thrust plus
+> airborne rudder now affect the flight path. V-08/V-09 now keep RTO manual
+> takeover disarmed and make FlightGear time/diagnostic transitions exact.
+> The latest recorded suite is green (238 unit/integration tests, 9 Playwright
+> specs with verified built assets, typecheck, lint and build). Remaining P2/P3 findings and a live
+> FlightGear run keep acceptance open; see
+> [docs/REVIEW_RESPONSE_3.md](docs/REVIEW_RESPONSE_3.md).
+
 ## Current capabilities (Milestone 5)
 
 **Phase 5 — advanced training (new):**
@@ -24,7 +44,9 @@ state-validated checklists, and a transparent scoring debrief.
   scenario.
 - **Failures**: engine flameout, generator and hydraulic failures, injected by
   scenario rules from real state (the V1 cut happens because the aeroplane
-  reached V1) and expressed through the systems model.
+  reached V1) and expressed through the systems model. They remain latched
+  until cleared; engine-out thrust produces approximate yaw/roll and can be
+  countered with rudder.
 - **Three more scenarios**: engine failure after V1, crosswind landing, and a
   SID/arrival flown on the route.
 - **Voice readbacks** (optional, off by default): speak a readback instead of
@@ -142,6 +164,29 @@ pnpm dev
 Then open **http://localhost:5173** in a Windows browser.
 The bridge (mock backend) listens on `ws://127.0.0.1:8737/ws`.
 
+### First flight — beginner Guided mode
+
+`Guided` is selected by default. The mission card in the upper-right always
+shows one **NEXT ACTION / 次にやること**, the current phase, scenario progress
+and the live values that matter. Use it as follows:
+
+1. Do only the action shown on the card.
+2. Press **◎ 場所を表示** if you cannot find the control; the relevant switch
+   or panel opens and flashes.
+3. Press **? なぜ？ / 完了条件** to see why the action matters and exactly what
+   state advances the objective.
+4. When the objective changes, `✓ OBJECTIVE COMPLETE` confirms progress.
+
+Cold-and-dark startup is broken into individual switches; during flight the
+coach prioritises an unanswered ATC readback, then the active checklist item,
+then the current phase objective. `Assisted` keeps textual guidance without
+control pulsing. `Evaluation` hides the coach entirely.
+
+For **Flight controls**, click the 3D view and press `←`, `→`, `↑`, `↓`, `,`
+and `.` once each. The mission card shows six live `✓ DONE` indicators; press
+`Verify` only after all six are green. The keys move the control only while
+pressed and return it to centre on release.
+
 ## Run — FlightGear mode
 
 1. **Windows:** install FlightGear + a 737 NG package (e.g. `737-800YV`),
@@ -207,8 +252,9 @@ flies the complete circuit against the mock model and asserts phase
 detection, callout order, ATC flow and debrief scoring — including steering
 off the runway, since the exit is detected from runway geometry.
 
-136 unit/integration tests across 7 packages, plus 3 Playwright specs. The
-3D-cockpit spec skips itself when `assets/generated/` has not been built.
+238 unit/integration tests across 7 packages, plus 9 Playwright specs when
+assets are built. The 3D-cockpit spec skips itself when `assets/generated/`
+has not been built.
 In this WSL environment Playwright needs `TMPDIR=/tmp TEMP=/tmp TMP=/tmp`.
 
 ## Known limitations
@@ -217,17 +263,19 @@ In this WSL environment Playwright needs `TMPDIR=/tmp TEMP=/tmp TMP=/tmp`.
   2D instrument row is the live display; overhead switches are visual only
   (lights are operated from the DOM panel). Some upstream overhead textures
   are missing (see THIRD_PARTY_ASSETS.md).
-- No autothrottle, trim, FMC, or systems beyond spec §3 scope.
+- No autothrottle, trim, full CDU, VNAV or performance-initialisation model.
 - FlightGear `resetScenario` is best-effort — restart FG for a clean start.
 - Mock ILS/runway datum is an approximation (self-consistent, not nav data).
-- ATC readbacks are option-buttons (voice input is a later phase).
+- ATC readback buttons are always available; optional browser speech
+  recognition can propose the same deterministic choices.
 - MCP/autobrake FlightGear property paths are aircraft-model-dependent and
   marked for verification in the property map.
 - The mock model touches down at field elevation anywhere — an off-runway
   landing is not modelled (scenario logic uses runway geometry regardless).
-- Systems are modelled to procedure depth only — no electrical loads, no fuel
-  burn, no pack temperatures, no failures. See SYSTEMS_MODEL.md for the full
-  list of simplifications.
+- Systems are modelled to procedure depth only — no electrical loads, fuel
+  burn or pack temperatures. Failure latching/restoration and engine-out
+  yaw/rudder are training approximations, not detailed fault or aerodynamic
+  models. See SYSTEMS_MODEL.md for the simplifications.
 - The route model is not a CDU: no VNAV, no constraint enforcement, no holds,
   no airways (NAVIGATION_DATA.md).
 - **Voice input privacy**: the browser's speech recognition may send audio to a
@@ -237,6 +285,32 @@ In this WSL environment Playwright needs `TMPDIR=/tmp TEMP=/tmp TMP=/tmp`.
   those in FlightGear mode and rejects them with that message.
 - The taxi layout is a plausible approximation, not survey data; in FlightGear
   mode the scenery is FlightGear's and may not match it.
+
+## Completion gate and next steps
+
+Work in this order; every item can be developed against the mock model, fake
+FlightGear server or isolated asset fixtures except the final live check.
+
+1. **P1 safety/integrity gaps — completed 2026-08-03:** mapped FlightGear
+   values now pass strict ingress typing and per-property freshness (V-01);
+   empty/incomplete manifests and missing required outputs fail (V-02).
+2. **Training-loop integrity — completed 2026-08-04:** normal
+   go-arounds score correctly, FO approach callouts re-arm, and one correct
+   ATC correction clears the pending response (V-03/V-04/V-07). Scenario
+   failures are ack-checked, latched and restoring, with approximate
+   asymmetric-thrust yaw and airborne rudder authority (V-05/V-06).
+3. **State transitions — completed 2026-08-04:** manual brake takeover now
+   inhibits RTO until explicit reselection; FlightGear time is required and
+   the diagnostic confirms write/read-back/exact restore (V-08/V-09).
+4. **Close remaining fidelity and robustness findings:** gust/visibility
+   effects, edge-triggered repeatable rules, atomic asset swap, pointer cancel
+   handling, cold-and-dark beacon state and stale evidence (V-10–V-15).
+5. **Re-run the gate:** `pnpm test`, `pnpm test:e2e` with required assets,
+   `pnpm typecheck`, `pnpm lint`, and `pnpm build`; then install FlightGear and
+   complete the live property-map diagnostic and one end-to-end flight.
+
+The concrete regression requirements and evidence for each item are in
+[REVIEW_FEEDBACK_3.md](REVIEW_FEEDBACK_3.md#完了判定).
 
 ## Documentation
 
@@ -249,5 +323,6 @@ In this WSL environment Playwright needs `TMPDIR=/tmp TEMP=/tmp TMP=/tmp`.
 [SYSTEMS_MODEL.md](SYSTEMS_MODEL.md) ·
 [NAVIGATION_DATA.md](NAVIGATION_DATA.md) ·
 [docs/REVIEW_RESPONSE.md](docs/REVIEW_RESPONSE.md) ·
+[docs/REVIEW_RESPONSE_3.md](docs/REVIEW_RESPONSE_3.md) ·
 [TROUBLESHOOTING.md](TROUBLESHOOTING.md) ·
 [docs/milestones/](docs/milestones/)

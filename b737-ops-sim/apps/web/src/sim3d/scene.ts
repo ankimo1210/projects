@@ -1,20 +1,19 @@
-import {
-  ArcRotateCamera,
-  Color3,
-  Color4,
-  DirectionalLight,
-  DynamicTexture,
-  Engine,
-  HemisphericLight,
-  MeshBuilder,
-  PointLight,
-  Scene,
-  StandardMaterial,
-  TransformNode,
-  UniversalCamera,
-  Vector3,
-} from '@babylonjs/core';
-import type { AbstractMesh, Mesh } from '@babylonjs/core';
+import { ArcRotateCamera } from '@babylonjs/core/Cameras/arcRotateCamera.js';
+import { UniversalCamera } from '@babylonjs/core/Cameras/universalCamera.js';
+import '@babylonjs/core/Culling/ray.js';
+import { Engine } from '@babylonjs/core/Engines/engine.js';
+import { DirectionalLight } from '@babylonjs/core/Lights/directionalLight.js';
+import { HemisphericLight } from '@babylonjs/core/Lights/hemisphericLight.js';
+import { PointLight } from '@babylonjs/core/Lights/pointLight.js';
+import { Color3, Color4 } from '@babylonjs/core/Maths/math.color.js';
+import { Vector3 } from '@babylonjs/core/Maths/math.vector.js';
+import { DynamicTexture } from '@babylonjs/core/Materials/Textures/dynamicTexture.js';
+import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial.js';
+import type { AbstractMesh } from '@babylonjs/core/Meshes/abstractMesh.js';
+import type { Mesh } from '@babylonjs/core/Meshes/mesh.js';
+import { MeshBuilder } from '@babylonjs/core/Meshes/meshBuilder.js';
+import { TransformNode } from '@babylonjs/core/Meshes/transformNode.js';
+import { Scene } from '@babylonjs/core/scene.js';
 import { FT_TO_M, KSFO_28R, clamp, degToRad, toLocalEnuM, type AircraftState } from '@b737/shared';
 import { COCKPIT_CONTROLS } from '@b737/cockpit-model';
 import { fgToAircraft, loadCockpit, type LoadedCockpit } from './cockpitLoader.js';
