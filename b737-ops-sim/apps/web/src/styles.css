@@ -29,6 +29,16 @@ button {
   min-height: 160px;
   background: #000;
 }
+
+.scene-loading {
+  display: grid;
+  min-height: 360px;
+  place-items: center;
+  color: #7ad7ff;
+  font: 600 0.75rem/1.2 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
 .sim-canvas {
   width: 100%;
   height: 100%;
@@ -60,6 +70,228 @@ button {
   color: #cfe3ff;
   font-size: 13px;
   pointer-events: none;
+}
+
+/* ---------- beginner mission coach ---------- */
+.mission-coach {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 4;
+  width: min(440px, calc(100% - 24px));
+  padding: 12px 14px;
+  overflow: hidden;
+  color: #eaf5ff;
+  background: linear-gradient(135deg, rgba(12, 29, 48, 0.97), rgba(12, 15, 23, 0.95)), #101722;
+  border: 1px solid #398ad1;
+  border-left: 4px solid #55c7ff;
+  border-radius: 8px;
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(45, 139, 214, 0.18);
+  backdrop-filter: blur(8px);
+}
+.mission-topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  font-family: 'Consolas', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+.mission-kicker {
+  color: #6fd2ff;
+  font-weight: 800;
+}
+.mission-step {
+  color: #94a8bc;
+}
+.mission-progress {
+  height: 4px;
+  margin: 7px 0 8px;
+  overflow: hidden;
+  background: #1e3042;
+  border-radius: 3px;
+}
+.mission-progress span {
+  display: block;
+  height: 100%;
+  min-width: 4px;
+  background: linear-gradient(90deg, #2f88d0, #63e1ff);
+  box-shadow: 0 0 8px #55c7ff;
+  transition: width 0.5s ease;
+}
+.mission-phase {
+  color: #ffbd59;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.mission-coach h2 {
+  margin: 3px 0 5px;
+  color: #fff;
+  font-size: 20px;
+  line-height: 1.2;
+}
+.mission-action {
+  margin: 0;
+  color: #cfe6f7;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.mission-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  margin-top: 9px;
+}
+.mission-metric {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 5px 7px;
+  background: rgba(6, 13, 21, 0.72);
+  border: 1px solid #29455e;
+  border-radius: 4px;
+  font-family: 'Consolas', monospace;
+}
+.mission-metric small {
+  color: #748ca0;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+.mission-metric strong {
+  overflow: hidden;
+  color: #ccecff;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mission-metric.metric-good strong {
+  color: #59e68c;
+}
+.mission-metric.metric-warn strong {
+  color: #ffbd59;
+}
+.mission-help {
+  margin-top: 8px;
+  padding: 7px 9px;
+  background: rgba(5, 10, 16, 0.62);
+  border-radius: 5px;
+  color: #9fb9cd;
+  font-size: 11px;
+  line-height: 1.45;
+}
+.mission-help p {
+  margin: 2px 0;
+}
+.mission-help strong {
+  margin-right: 5px;
+  color: #ffbd59;
+  font-family: 'Consolas', monospace;
+  font-size: 10px;
+}
+.mission-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 9px;
+}
+.mission-actions button {
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+}
+.mission-show {
+  color: #06111a;
+  background: #63d5ff;
+  border: 1px solid #8be1ff;
+  font-weight: 800;
+}
+.mission-show:hover {
+  background: #9be9ff;
+}
+.mission-help-toggle {
+  color: #b7ccdc;
+  background: transparent;
+  border: 1px solid #3b566d;
+}
+.mission-complete-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #dfffea;
+  background: rgba(13, 91, 47, 0.94);
+  font-family: 'Consolas', monospace;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  animation: objective-complete 1.4s ease both;
+  pointer-events: none;
+}
+@keyframes objective-complete {
+  0% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  15%,
+  72% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+}
+.coach-focus {
+  position: relative;
+  z-index: 7;
+  animation: coach-target 0.7s ease-in-out 3;
+}
+@keyframes coach-target {
+  0%,
+  100% {
+    box-shadow: 0 0 0 2px rgba(99, 213, 255, 0.2);
+  }
+  50% {
+    box-shadow:
+      0 0 0 6px rgba(99, 213, 255, 0.75),
+      0 0 28px #55c7ff;
+  }
+}
+
+@media (max-width: 850px), (max-height: 720px) {
+  .mission-coach {
+    top: 6px;
+    right: 6px;
+    width: min(390px, calc(100% - 12px));
+    padding: 8px 10px;
+  }
+  .mission-coach h2 {
+    font-size: 16px;
+  }
+  .mission-action {
+    font-size: 12px;
+  }
+  .mission-metrics {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mission-progress span,
+  .mission-complete-flash,
+  .coach-focus,
+  .ctl-guided {
+    animation: none;
+    transition: none;
+  }
 }
 
 .collapse-btn {

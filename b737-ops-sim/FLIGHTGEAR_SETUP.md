@@ -54,11 +54,13 @@ If you use **mirrored networking** (`.wslconfig` → `networkingMode=mirrored`),
 FG_HOST=$(./scripts/fg-host-ip.sh) pnpm fg:diagnostic
 ```
 
-The diagnostic reads **every non-optional property in the map** and writes the
-one harmless control property the map defines for the taxi light (toggled and
-restored). Exit code 0 means the paths the bridge actually uses answered; a
-timeout lists exactly which mapped properties this aircraft did not answer, so
-the message is a work list for the map.
+The diagnostic reads **every non-optional property in the map**, waits for the
+taxi light's typed initial value, writes the opposite value, confirms the
+read-back, restores the exact original value, and confirms that restoration.
+Exit code 0 means all reads, the write and the restore were confirmed. Exit
+code 2 means the write or restore was not confirmed. A read timeout lists the
+mapped properties that did not answer, so the message is a work list for the
+map.
 
 ## 5. Run the app against FlightGear
 
@@ -85,10 +87,10 @@ package:
 2. Find the actual path (e.g. the model's CMD A property).
 3. Update the JSON map — no code changes needed. Bump `version`.
 
-The map is version 2: it adds `sim.simTimeSec` (`/sim/time/elapsed-sec`) so the
-state stream carries FlightGear's simulation clock rather than wall time. It is
-marked optional; without it the adapter falls back to wall clock, which does not
-stop when the sim is paused.
+The map is version 6. `sim.simTimeSec` (`/sim/time/elapsed-sec`) is required so
+the state stream always carries FlightGear's simulation clock. The adapter does
+not substitute wall time: if this property is absent or stale, it suppresses
+state publication instead of advancing training rules while the sim is paused.
 
 ## Known limitations
 

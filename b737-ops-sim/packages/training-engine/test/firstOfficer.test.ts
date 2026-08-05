@@ -218,6 +218,33 @@ describe('FirstOfficer takeoff callouts', () => {
     expect(messages).toContain('Gear down, three green.');
   });
 
+  it('re-arms altitude, gate, minimums and gear monitoring for a second approach', () => {
+    const fo = new FirstOfficer({ grossWeightLb: 145000 });
+    const first = flyDescent(fo).map((line) => line.message);
+
+    fo.onScenarioEvent({
+      kind: 'phase_transition',
+      simTimeSec: 130,
+      id: 'go_around_established',
+      message: 'go_around → approach_setup',
+      severity: 'info',
+      data: { from: 'go_around', to: 'approach_setup' },
+    });
+
+    const second = flyDescent(fo).map((line) => line.message);
+    for (const expected of [
+      '1000.',
+      '500.',
+      '1000, stable.',
+      '500, stable.',
+      'Minimums, runway in sight.',
+      'Gear down, three green.',
+    ]) {
+      expect(first).toContain(expected);
+      expect(second).toContain(expected);
+    }
+  });
+
   it('calls the gates as not stable when the approach is not', () => {
     const fo = new FirstOfficer({ grossWeightLb: 145000 });
     const messages = flyDescent(fo, (s) => {

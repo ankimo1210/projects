@@ -11,6 +11,7 @@ export class FakeFgServer {
   readonly listenedPaths = new Set<string>();
   readonly setLog: { path: string; value: number | boolean | string }[] = [];
   private clients = new Set<WebSocket>();
+  private respondToGets = true;
 
   constructor(port: number) {
     this.wss = new WebSocketServer({ port, path: '/PropertyListener' });
@@ -27,7 +28,9 @@ export class FakeFgServer {
           this.listenedPaths.add(msg.node);
         } else if (msg.command === 'get') {
           const value = this.properties.get(msg.node);
-          if (value !== undefined) ws.send(JSON.stringify({ path: msg.node, value }));
+          if (this.respondToGets && value !== undefined) {
+            ws.send(JSON.stringify({ path: msg.node, value }));
+          }
         } else if (msg.command === 'set' && msg.value !== undefined) {
           this.properties.set(msg.node, msg.value);
           this.setLog.push({ path: msg.node, value: msg.value });
@@ -47,6 +50,16 @@ export class FakeFgServer {
     if (!this.listenedPaths.has(path)) return;
     const frame = JSON.stringify({ path, value });
     for (const ws of this.clients) ws.send(frame);
+  }
+
+  /** Send an arbitrary frame to exercise the adapter's untrusted boundary. */
+  sendRaw(frame: string | Record<string, unknown>): void {
+    const payload = typeof frame === 'string' ? frame : JSON.stringify(frame);
+    for (const ws of this.clients) ws.send(payload);
+  }
+
+  setGetResponsesEnabled(enabled: boolean): void {
+    this.respondToGets = enabled;
   }
 
   async close(): Promise<void> {

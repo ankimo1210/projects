@@ -11,6 +11,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, posix } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { validateAssetManifest } from './asset-manifest.mjs';
 
 const REPO = 'YV3399/737-800YV';
 const PINNED_SHA = '9d967d89dd2ee0ae1bf01d00c49839a574aa9da5'; // master @ 2026-08-02
@@ -70,6 +71,7 @@ const REQUIRED_SOUNDS = [
   'Sounds/Wind.wav',
   ...['a', 'b'].flatMap((s) => [1, 2, 3, 4].map((n) => `Sounds/FL2070/cfm1${n}${s}.wav`)),
 ];
+const REQUIRED_FILES = [...MODEL_FILES, ...REQUIRED_SOUNDS];
 
 const force = process.argv.includes('--force');
 
@@ -89,14 +91,28 @@ function manifestIntact() {
   } catch {
     return false;
   }
-  if (manifest.sha !== PINNED_SHA || !Array.isArray(manifest.files)) return false;
+  const validation = validateAssetManifest(manifest, {
+    pinnedSha: PINNED_SHA,
+    repo: REPO,
+    license: LICENSE_SPDX,
+    requiredPaths: REQUIRED_FILES,
+  });
+  if (!validation.ok) {
+    console.log(`[fetch-assets] manifest is not trusted (${validation.reason}) — re-fetching`);
+    return false;
+  }
   for (const file of manifest.files) {
     const abs = join(DEST, file.path);
     if (!existsSync(abs)) {
       console.log(`[fetch-assets] ${file.path} is missing — re-fetching`);
       return false;
     }
-    if (file.sha256 && sha256(readFileSync(abs)) !== file.sha256) {
+    const contents = readFileSync(abs);
+    if (contents.length !== file.bytes) {
+      console.log(`[fetch-assets] ${file.path} does not match its recorded size — re-fetching`);
+      return false;
+    }
+    if (sha256(contents) !== file.sha256) {
       console.log(`[fetch-assets] ${file.path} does not match its recorded hash — re-fetching`);
       return false;
     }

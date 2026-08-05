@@ -1,13 +1,8 @@
-import {
-  AbstractMesh,
-  Matrix,
-  Quaternion,
-  SceneLoader,
-  TransformNode,
-  Vector3,
-  type Scene,
-} from '@babylonjs/core';
-import '@babylonjs/loaders/glTF';
+import { AbstractMesh } from '@babylonjs/core/Meshes/abstractMesh.js';
+import { Matrix, Quaternion, Vector3 } from '@babylonjs/core/Maths/math.vector.js';
+import { SceneLoader } from '@babylonjs/core/Loading/sceneLoader.js';
+import { TransformNode } from '@babylonjs/core/Meshes/transformNode.js';
+import type { Scene } from '@babylonjs/core/scene.js';
 import {
   clamp,
   degToRad,
@@ -109,6 +104,11 @@ export async function loadCockpit(
   } catch {
     return null;
   }
+
+  // The temporary fallback cockpit does not need the glTF loader. Keep its
+  // sizeable implementation out of the first 3D chunk and load it only after
+  // a generated bindings file proves that imported assets are available.
+  await import('@babylonjs/loaders/glTF');
 
   const wrapper = new TransformNode('cockpitRoot', scene);
   wrapper.parent = aircraft;

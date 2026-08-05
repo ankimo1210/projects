@@ -30,6 +30,26 @@ const DEFAULT_BINDINGS: InputBindings = {
 };
 
 const STORAGE_KEY = 'b737.bindings.v1';
+const BOUND_KEYS = new Set([
+  'ArrowUp',
+  'ArrowDown',
+  'ArrowLeft',
+  'ArrowRight',
+  'Comma',
+  'Period',
+  'Equal',
+  'Minus',
+  'PageUp',
+  'PageDown',
+  'Space',
+  'KeyG',
+  'KeyP',
+  'KeyB',
+  'KeyR',
+  'KeyA',
+  'BracketLeft',
+  'BracketRight',
+]);
 
 export function loadBindings(): InputBindings {
   try {
@@ -66,6 +86,7 @@ export class InputManager {
   start(): void {
     window.addEventListener('keydown', this.onKeyDown);
     window.addEventListener('keyup', this.onKeyUp);
+    window.addEventListener('blur', this.onBlur);
     window.addEventListener('gamepadconnected', (e) => {
       this.gamepadIndex = (e as GamepadEvent).gamepad.index;
     });
@@ -78,7 +99,10 @@ export class InputManager {
   stop(): void {
     window.removeEventListener('keydown', this.onKeyDown);
     window.removeEventListener('keyup', this.onKeyUp);
+    window.removeEventListener('blur', this.onBlur);
     if (this.timer !== null) window.clearInterval(this.timer);
+    this.timer = null;
+    this.keys.clear();
   }
 
   /** Current throttle target (UI slider sync) — shared with 3D/DOM input. */
@@ -98,14 +122,27 @@ export class InputManager {
   }
 
   private onKeyDown = (e: KeyboardEvent): void => {
-    if (e.repeat) return;
     if (isTypingTarget(e.target)) return;
+    if (BOUND_KEYS.has(e.code)) e.preventDefault();
+    if (e.repeat) return;
     this.keys.add(e.code);
     this.handleDiscreteKey(e.code);
+    // Do not make a beginner hold a key long enough to cross the 50 ms timer
+    // boundary: capture the full keyboard deflection immediately.
+    this.tick();
   };
 
   private onKeyUp = (e: KeyboardEvent): void => {
-    this.keys.delete(e.code);
+    const wasPressed = this.keys.delete(e.code);
+    if (!wasPressed) return;
+    if (BOUND_KEYS.has(e.code)) e.preventDefault();
+    this.tick();
+  };
+
+  private onBlur = (): void => {
+    if (this.keys.size === 0) return;
+    this.keys.clear();
+    this.tick();
   };
 
   private handleDiscreteKey(code: string): void {
@@ -224,8 +261,9 @@ export class InputManager {
 
 function isTypingTarget(target: EventTarget | null): boolean {
   return (
-    target instanceof HTMLInputElement ||
+    (target instanceof HTMLInputElement && target.type !== 'range') ||
     target instanceof HTMLTextAreaElement ||
+    target instanceof HTMLSelectElement ||
     (target instanceof HTMLElement && target.isContentEditable)
   );
 }

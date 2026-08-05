@@ -5,6 +5,7 @@ import {
   type SystemSwitch,
 } from '@b737/shared';
 import { sendCommand, sendCommandWithSound } from '../state/connection.js';
+import { useSettingsStore } from '../state/stores.js';
 
 /**
  * Overhead panel and annunciators (spec §22 Phase 4 T5).
@@ -109,8 +110,15 @@ const GROUPS: SwitchGroup[] = [
 const PANEL_SWITCH_IDS = new Set(GROUPS.flatMap((g) => g.switches.map((s) => s.id)));
 export const MISSING_PANEL_SWITCHES = SYSTEM_SWITCHES.filter((id) => !PANEL_SWITCH_IDS.has(id));
 
-export function OverheadPanel({ state }: { state: AircraftState }): JSX.Element {
+export function OverheadPanel({
+  state,
+  guidedControlId,
+}: {
+  state: AircraftState;
+  guidedControlId: string | null;
+}): JSX.Element {
   const sys = state.systems;
+  const guidedMode = useSettingsStore((s) => s.mode === 'guided');
   return (
     <div className="panel overhead-panel" data-testid="overhead-panel">
       <div className="panel-head">
@@ -128,8 +136,9 @@ export function OverheadPanel({ state }: { state: AircraftState }): JSX.Element 
                   <button
                     key={sw.id}
                     type="button"
-                    className={`oh-switch ${on ? 'on' : ''}`}
+                    className={`oh-switch ${on ? 'on' : ''} ${guidedMode && guidedControlId === `system:${sw.id}` ? 'ctl-guided' : ''}`}
                     data-testid={`sw-${sw.id}`}
+                    data-control-id={`system:${sw.id}`}
                     onClick={() =>
                       sendCommandWithSound(
                         { type: 'set_system_switch', switch: sw.id, on: !on },
@@ -157,8 +166,9 @@ export function OverheadPanel({ state }: { state: AircraftState }): JSX.Element 
                     <button
                       key={mode}
                       type="button"
-                      className={`oh-switch ${eng.startMode === mode ? 'on' : ''}`}
+                      className={`oh-switch ${eng.startMode === mode ? 'on' : ''} ${guidedMode && guidedControlId === `system:start_${engine}_${mode}` ? 'ctl-guided' : ''}`}
                       data-testid={`start-${engine}-${mode}`}
+                      data-control-id={`system:start_${engine}_${mode}`}
                       onClick={() => sendCommand({ type: 'set_engine_start', engine, mode })}
                     >
                       {mode === 'off' ? 'OFF' : 'GND'}

@@ -2,6 +2,7 @@ import {
   getRunway,
   type AircraftCommand,
   type AircraftState,
+  type CommandResult,
   type FailureKind,
   type ScenarioInitialState,
 } from '@b737/shared';
@@ -16,6 +17,15 @@ import { FirstOfficer } from './firstOfficer.js';
 import type { TranscriptEntry } from './transcript.js';
 
 export type TrainingMode = 'guided' | 'assisted' | 'evaluation';
+
+export interface FlightControlCheckProgress {
+  rollLeft: boolean;
+  rollRight: boolean;
+  pitchForward: boolean;
+  pitchBack: boolean;
+  rudderLeft: boolean;
+  rudderRight: boolean;
+}
 
 /** Where the flight joins the ATC sequence, from the scenario's start point. */
 function atcEntryPhase(startAt: ScenarioInitialState['startAt']): AtcPhase {
@@ -75,7 +85,9 @@ export class TrainingSession {
     yawMax: 0,
   };
   private lastState: AircraftState | null = null;
-  private readonly sendCommand: (command: AircraftCommand) => void;
+  private readonly sendCommand: (
+    command: AircraftCommand,
+  ) => void | CommandResult | Promise<CommandResult>;
 
   constructor(
     readonly scenario: ScenarioDefinition,
@@ -86,7 +98,7 @@ export class TrainingSession {
        * requires — currently only failure injection (spec §22 Phase 5). The
        * host wires this to the same command path the crew uses.
        */
-      sendCommand?: (command: AircraftCommand) => void;
+      sendCommand?: (command: AircraftCommand) => void | CommandResult | Promise<CommandResult>;
     } = {},
   ) {
     this.mode = options.mode ?? 'guided';
@@ -114,6 +126,18 @@ export class TrainingSession {
     return this.lastState;
   }
 
+  get flightControlCheckProgress(): FlightControlCheckProgress {
+    const e = this.axisExtremes;
+    return {
+      rollLeft: e.rollMin < -0.85,
+      rollRight: e.rollMax > 0.85,
+      pitchForward: e.pitchMin < -0.85,
+      pitchBack: e.pitchMax > 0.85,
+      rudderLeft: e.yawMin < -0.85,
+      rudderRight: e.yawMax > 0.85,
+    };
+  }
+
   get phaseId(): string {
     return this.runtime.phaseId;
   }
@@ -125,6 +149,10 @@ export class TrainingSession {
   /** Checklist relevant to the current phase (UI focus). */
   get activeChecklistId(): string | null {
     const phase = this.runtime.phaseId;
+    if (['cold_and_dark', 'power_on'].includes(phase)) return 'preflight';
+    if (phase === 'apu_available') return 'before_start_systems';
+    if (phase === 'after_start') return 'after_start';
+    if (phase === 'ready_to_taxi') return 'before_taxi';
     if (['before_takeoff', 'line_up'].includes(phase)) return 'before_takeoff';
     if (['approach_setup', 'final_approach'].includes(phase)) return 'landing';
     // After Landing is run once clear of the runway, not during the rollout.
@@ -207,7 +235,11 @@ export class TrainingSession {
     }
     const instruction = this.pendingInstructions.get(entryId);
     if (instruction) {
-      const { followUps, flags } = this.atc.handleReadback(instruction, optionId, state);
+      const { correct, followUps, flags } = this.atc.handleReadback(instruction, optionId, state);
+      // Grade the transcript line the crew actually answered. A correction is
+      // a separate entry from the original instruction; marking only the
+      // original leaves that correction pending in the UI forever (V-07).
+      entry.responseResult = correct ? 'correct' : 'incorrect';
       for (const [name, value] of Object.entries(flags)) this.runtime.setFlag(name, value);
       this.pendingInstructions.delete(entryId);
       for (const f of followUps) {
@@ -238,6 +270,7 @@ export class TrainingSession {
     // scenario the crew checks the controls while holding short, not in a phase
     // that happens to be called 'before_takeoff'.
     if (!this.runtime.isChecklistAvailable('before_takeoff')) return;
+    const before = this.flightControlProgressMask();
     if (axis === 'roll') {
       this.axisExtremes.rollMin = Math.min(this.axisExtremes.rollMin, valueNorm);
       this.axisExtremes.rollMax = Math.max(this.axisExtremes.rollMax, valueNorm);
@@ -249,11 +282,18 @@ export class TrainingSession {
       this.axisExtremes.yawMax = Math.max(this.axisExtremes.yawMax, valueNorm);
     }
     // The hint asks for rudder too, so the check must require it (R-18).
-    const e = this.axisExtremes;
-    const full = (min: number, max: number): boolean => min < -0.85 && max > 0.85;
-    if (full(e.rollMin, e.rollMax) && full(e.pitchMin, e.pitchMax) && full(e.yawMin, e.yawMax)) {
+    const progress = this.flightControlCheckProgress;
+    if (Object.values(progress).every(Boolean)) {
       this.runtime.setFlag('flightControlCheckDone', true);
     }
+    if (this.flightControlProgressMask() !== before) this.version += 1;
+  }
+
+  private flightControlProgressMask(): number {
+    return Object.values(this.flightControlCheckProgress).reduce(
+      (mask, complete, index) => mask | (complete ? 1 << index : 0),
+      0,
+    );
   }
 
   /** Structured report; meaningful once the scenario is complete (spec §16). */
@@ -284,7 +324,7 @@ export class TrainingSession {
     // A rule may demand a failure; the aircraft applies it, not the engine.
     const failure = event.data?.['injectFailure'];
     if (typeof failure === 'string') {
-      this.sendCommand({ type: 'inject_failure', failure: failure as FailureKind });
+      this.injectScenarioFailure(failure as FailureKind, event);
     }
     if (event.kind === 'checklist_completed') {
       // `after_landing` → `afterLandingChecklistComplete`, so scenarios can
@@ -294,6 +334,39 @@ export class TrainingSession {
     }
     for (const line of this.fo.onScenarioEvent(event)) this.push(line);
     this.version += 1;
+  }
+
+  private injectScenarioFailure(failure: FailureKind, source: ScenarioEvent): void {
+    let result: void | CommandResult | Promise<CommandResult>;
+    try {
+      result = this.sendCommand({ type: 'inject_failure', failure });
+    } catch (error) {
+      this.recordFailureInjectionFailure(failure, source, String(error));
+      return;
+    }
+    if (result === undefined) return;
+    void Promise.resolve(result)
+      .then((ack) => {
+        if (!ack.ok) this.recordFailureInjectionFailure(failure, source, ack.error);
+      })
+      .catch((error: unknown) =>
+        this.recordFailureInjectionFailure(failure, source, String(error)),
+      );
+  }
+
+  private recordFailureInjectionFailure(
+    failure: FailureKind,
+    source: ScenarioEvent,
+    error: string,
+  ): void {
+    this.runtime.recordEvent({
+      kind: 'milestone',
+      simTimeSec: this.lastState?.simTimeSec ?? source.simTimeSec,
+      id: `failure_injection_failed:${source.id}`,
+      message: `Aircraft rejected ${failure}: ${error}`,
+      severity: 'safety_critical',
+      data: { failure, sourceEventId: source.id },
+    });
   }
 
   private registerInstruction(instruction: AtcInstruction): void {

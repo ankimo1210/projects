@@ -17,6 +17,7 @@ import {
   type AircraftCommand,
   type AircraftState,
 } from '@b737/shared';
+import { makeTestAircraftState } from '@b737/shared/testing';
 import { TrainingSession } from '../src/trainingSession.js';
 import { resetTranscriptIds } from '../src/transcript.js';
 
@@ -312,6 +313,16 @@ describe('approach drill scenario', () => {
       session.transcript.some((e) => e.message.includes('go around, fly runway heading')),
     ).toBe(true);
     expect(model.snapshot(0).position.radioAltitudeFt).toBeGreaterThan(1500);
+
+    const report = session.debrief();
+    expect(report.overall).not.toBe('FAIL');
+    expect(report.categories.find((category) => category.id === 'landing')?.score).toBe(100);
+    expect(report.metrics['Landing outcome']).toContain('go-around completed');
+    expect(
+      report.categories
+        .find((category) => category.id === 'checklist_discipline')
+        ?.findings.some((finding) => /'landing'|'after_landing'/.test(finding.detail)),
+    ).toBe(false);
   });
 });
 
@@ -435,7 +446,7 @@ describe('advanced scenarios (M5)', () => {
     const session = new TrainingSession(scenario, {
       mode: 'evaluation',
       // the scenario asks, the aircraft applies — same path the crew uses
-      sendCommand: (command) => void model.applyCommand(command),
+      sendCommand: (command) => model.applyCommand(command),
     });
     const crew = new Crew(model, session);
     session.update(model.snapshot(0));
@@ -474,6 +485,33 @@ describe('advanced scenarios (M5)', () => {
     const report = session.debrief();
     const cut = report.timeline.find((e) => e.id === 'v1_cut');
     expect(cut?.data && 'injectFailure' in cut.data).toBe(true);
+  });
+
+  it('records a rejected scenario failure command as a safety-critical event', async () => {
+    const session = new TrainingSession(ENGINE_FAILURE_V1_SCENARIO, {
+      mode: 'evaluation',
+      sendCommand: () => Promise.resolve({ ok: false, error: 'bridge disconnected' }),
+    });
+    session.update(makeTestAircraftState());
+    session.runtime.recordEvent({
+      kind: 'rule_fired',
+      simTimeSec: 15,
+      id: 'v1_cut_probe',
+      message: 'Engine 1 failure after V1',
+      severity: 'safety_critical',
+      data: { injectFailure: 'engine_1_flameout' },
+    });
+    await Promise.resolve();
+
+    const failed = session.runtime.events.find(
+      (event) => event.id === 'failure_injection_failed:v1_cut_probe',
+    );
+    expect(failed?.severity).toBe('safety_critical');
+    expect(failed?.message).toContain('bridge disconnected');
+    expect(failed?.data).toEqual({
+      failure: 'engine_1_flameout',
+      sourceEventId: 'v1_cut_probe',
+    });
   });
 
   it('a crosswind approach drifts the aircraft when it is not corrected', () => {

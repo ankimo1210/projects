@@ -2,6 +2,129 @@
 
 Local-only project; versions track milestones rather than releases.
 
+## RTO and FlightGear diagnostic state integrity (2026-08-04)
+
+### Fixed
+
+- Manual braking now persistently inhibits an armed/active RTO autobrake until
+  the crew explicitly reselects RTO; the next physics step no longer restores
+  automatic pressure over the pilot's brake input.
+- FlightGear property map v6 makes `/sim/time/elapsed-sec` required and the
+  adapter no longer advances simulation time from a wall-clock fallback.
+- `fg:diagnostic` now reads the taxi light's typed initial value, toggles it,
+  confirms read-back, restores the exact original value and confirms the
+  restoration. Rejected writes fail the diagnostic.
+
+Five regression tests cover RTO takeover, frozen FlightGear time, taxi-light
+initial ON/OFF, exact restore and write rejection. The current gate is green
+with 238 unit/integration tests, 9/9 built-asset Playwright specs, typecheck,
+lint and production build.
+
+## Failure lifecycle and engine-out response (2026-08-04)
+
+### Fixed
+
+- Scenario failure injection now waits for the bridge command acknowledgement;
+  rejection or disconnection records a safety-critical
+  `failure_injection_failed` event instead of silently treating the exercise as
+  active.
+- Engine, generator and hydraulic failures remain latched. Recovery commands
+  for the failed component are rejected until `clear_failures`, which restores
+  each target to its captured pre-injection state in reverse injection order.
+- The mock flight model now applies asymmetric-thrust yaw/roll and airborne
+  rudder authority. Left/right engine failures diverge in opposite directions,
+  and appropriate rudder reduces the heading deviation.
+
+Three regression tests cover rejected injection, failure persistence/clear and
+engine-out control. The current gate is green with 233 unit/integration tests,
+9/9 built-asset Playwright specs, typecheck, lint and production build.
+
+## Training-loop state fixes (2026-08-04)
+
+### Fixed
+
+- A completed Approach Drill go-around now treats Landing and landing-only
+  checklists as not applicable instead of forcing the debrief to `FAIL`.
+- Returning from go-around to approach setup re-arms the first officer's
+  altitude, stabilisation-gate, minimums, unstable-approach and three-green
+  monitoring for the second approach.
+- An incorrect ATC readback followed by one correct correction now marks the
+  correction entry complete while preserving the original incorrect result.
+
+Two regression tests were added and the go-around golden scenario now asserts
+its debrief. The current gate is green with 230 unit/integration tests, 9/9
+built-asset Playwright specs, typecheck, lint and production build.
+
+## Flight-control check input feedback (2026-08-03)
+
+### Fixed
+
+- Brief keyboard taps are captured immediately instead of being lost between
+  50 ms input ticks; bound flight keys no longer scroll the page, range-slider
+  focus no longer blocks them, and window blur releases held controls.
+- The beginner mission card names the exact six keys and shows live
+  `ROLL/PITCH/RUDDER` progress. **Show me** now highlights the 3D cockpit.
+- A browser regression proves six brief taps advance the checklist to Flaps.
+
+The current gate is green with 228 unit/integration tests and 9 built-asset
+Playwright specs.
+
+## Third-review P1 remediation and web split (2026-08-03)
+
+### Fixed
+
+- **FlightGear ingress (V-01):** only known mapped paths with the declared
+  boolean type or a finite numeric value enter the state cache. Invalid
+  required values evict old cache entries, and freshness is tracked for every
+  required property so malformed, unmapped or single-path noise cannot keep a
+  stale state streaming.
+  Because FlightGear listeners emit changes rather than heartbeats, unchanged
+  required values are periodically re-read before their freshness deadline.
+- **Asset false-green (V-02):** the fetch manifest now requires the pinned
+  repository/license/SHA, a non-empty unique safe path list, positive sizes,
+  64-digit hashes and the full required-file set. Conversion fails before
+  deleting output when a required model, binding file or runtime sound is
+  absent or empty, and refuses empty binding output.
+- **Web bundle:** the 3D cockpit and glTF loader are lazy, and Babylon imports
+  use the modules actually needed. Initial minified JS fell from about 5.7 MB
+  to 357 KB; the largest lazy chunk is about 1.16 MB and the build warning is
+  gone.
+
+Eleven ingress/asset regression tests were added. The full gate is green with 228
+unit/integration tests, 9 built-asset Playwright specs, typecheck, lint and
+production build. Real FlightGear validation and V-03–V-15 remain open; see
+[docs/REVIEW_RESPONSE_3.md](docs/REVIEW_RESPONSE_3.md).
+
+## Beginner mission coach (2026-08-03)
+
+The playable prototype now teaches a first-time user directly in the cockpit.
+
+### Added
+
+- A game-like **NEXT ACTION / 次にやること** mission card with one objective at
+  a time, scenario progress and the live values needed to judge it.
+- Expandable **why** and **completion condition** explanations, a **show me**
+  action that opens and highlights the relevant control, and an objective
+  completion animation.
+- Beginner guidance for cold-and-dark startup, ATC readbacks, active checklist
+  items and every flight phase through shutdown; unanswered ATC always takes
+  priority.
+- Four guidance regression tests and browser smoke paths for the mission card
+  and brief keyboard input. The current gate is green with 228 unit/integration tests, 9 Playwright
+  specs, typecheck, lint and production build.
+
+`Guided` enables the full coach and control pulse, `Assisted` keeps the text
+without the pulse, and `Evaluation` hides the coach.
+
+## Third review — Milestone 5 acceptance re-opened (2026-08-02)
+
+The feature set remains runnable and the recorded five-command suite is green,
+but [REVIEW_FEEDBACK_3.md](REVIEW_FEEDBACK_3.md) found 2 P1, 10 P2 and 3 P3
+gaps. The current release blockers are unvalidated/stale FlightGear ingress and
+asset verification that can accept empty or incomplete output. Milestone 5 is
+therefore implemented but not accepted as complete; the README now records the
+ordered remediation and final live-FlightGear gate.
+
 ## Second review remediation — M5 re-opened and fixed (2026-08-02)
 
 All 10 findings in [REVIEW_FEEDBACK_2.md](REVIEW_FEEDBACK_2.md) addressed;

@@ -264,6 +264,13 @@ export class FirstOfficer {
 
   /** React to scenario events (checklist reading etc.). */
   onScenarioEvent(event: ScenarioEvent): TranscriptEntry[] {
+    if (
+      event.kind === 'phase_transition' &&
+      event.data?.['from'] === 'go_around' &&
+      event.data?.['to'] === 'approach_setup'
+    ) {
+      this.rearmApproachMonitoring();
+    }
     if (event.kind === 'checklist_item_failed') {
       return [this.say(event.simTimeSec, event.message, event.id)];
     }
@@ -271,6 +278,16 @@ export class FirstOfficer {
       return [this.say(event.simTimeSec, `${event.message}.`, event.id)];
     }
     return [];
+  }
+
+  /** A go-around starts a new approach cycle with fresh PM safety monitoring. */
+  private rearmApproachMonitoring(): void {
+    this.saidApproachAlt.clear();
+    this.saidGate.clear();
+    this.saidMinimums = false;
+    this.saidGoAround = false;
+    this.saidGearGreen = false;
+    this.unstableSinceSec = null;
   }
 
   /**

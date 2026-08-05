@@ -1,5 +1,23 @@
 # Milestone 5 — Definition of Done verification
 
+> **CURRENT STATUS — RE-OPENED (2026-08-02):** this file records the earlier
+> green verification snapshot; it is not the current completion approval.
+> [REVIEW_FEEDBACK_3.md](../../REVIEW_FEEDBACK_3.md) subsequently found 2 P1,
+> 10 P2 and 3 P3 gaps, including false-green FlightGear ingress and asset-build
+> paths. Milestone 5 remains open until that review's completion gate and the
+> five-command suite pass together.
+
+> **Remediation update (2026-08-04):** V-01 and V-02 are fixed with strict
+> FlightGear ingress/per-property freshness and complete asset manifest/output
+> validation. V-03–V-09 are also fixed: go-around completion scoring,
+> second-approach FO monitoring, failure lifecycle/engine-out response and
+> one-step ATC correction, durable RTO manual takeover, required FlightGear
+> time and exact diagnostic restore now have regression coverage. The current
+> gate is 238 unit/integration tests, 9/9 built-asset
+> Playwright specs, typecheck, lint and build. Acceptance remains open for
+> V-10–V-15 and a live FlightGear run; evidence is in
+> [REVIEW_RESPONSE_3.md](../REVIEW_RESPONSE_3.md).
+
 > **Correction (2026-08-02, second review):** the original version of this DoD
 > was wrong on two rows. T4's browser path was broken (failure injection never
 > reached the aircraft in the web app) and untested — the e2e that would have
@@ -58,9 +76,10 @@ pnpm build       PASS
 
 - The crosswind scenario reuses the approach drill's phases rather than adding
   its own; only the weather differs, which is the point.
-- The browser test for the V1 cut was replaced by a weather-readout test:
-  flying to V1 through the UI took over a minute of wall clock per run. The
-  injection path is covered by the golden test.
+- The browser test for the V1 cut was initially replaced by a weather-readout
+  test because flying to V1 through the UI took over a minute per run. It was
+  later restored during second-review remediation and is part of the current
+  8-spec built-assets suite.
 
 ## Known limitations
 
