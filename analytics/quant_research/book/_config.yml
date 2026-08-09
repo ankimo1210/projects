@@ -1,0 +1,25 @@
+title: Quant Research Data Science — 数理・実装・検証をつなぐ教科書
+author: Kazumasa
+language: ja
+only_build_toc_files: true
+
+execute:
+  # Notebook は生成時に実行・検証し、出力込みで保存する。
+  # HTML build を高速かつ決定論的に保つため、ここでは再実行しない。
+  execute_notebooks: "off"
+
+repository:
+  url: https://github.com/ankimo1210/projects
+  path_to_book: analytics/quant_research
+
+html:
+  use_issues_button: false
+  use_repository_button: false
+
+sphinx:
+  config:
+    language: ja
+    html_static_path:
+      - _static
+    html_css_files:
+      - custom.css
