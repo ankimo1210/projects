@@ -1,0 +1,21 @@
+# Jupyter Book 1.x table of contents.
+# `book/notebooks` is a symlink to `../notebooks`, keeping all content below
+# the book root while retaining notebooks at the project top level.
+format: jb-book
+root: notebooks/00_overview
+parts:
+  - caption: B1 — 行列法と数値線形代数
+    chapters:
+      - file: notebooks/01_week1_least_squares
+      - file: notebooks/02_week2_numerical_stability
+      - file: notebooks/03_week3_svd_pca_yield_curve
+      - file: notebooks/04_week4_regularization_curve_fitting
+      - file: notebooks/05_b1_project_jgb_curve_fitter
+  - caption: B2 — 確率・martingale・確率システム
+    chapters:
+      - file: notebooks/06_b2_overview
+      - file: notebooks/07_week5_conditional_probability
+      - file: notebooks/08_week6_convergence_heavy_tails
+      - file: notebooks/09_week7_markov_martingales
+      - file: notebooks/10_week8_brownian_monte_carlo
+      - file: notebooks/11_b2_project_monte_carlo_library

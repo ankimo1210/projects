@@ -42,7 +42,7 @@ help:
 	@echo "  agent-profiler JHRMBS gto market-viz stock nbody-gpu line_backup"
 	@echo "  akinator autostock health market_nn jp_llm_lab"
 	@echo "  johnhull/hullkit"
-	@echo "  analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning,statistics}"
+	@echo "  analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning,statistics,quant_research}"
 	@echo "  analytics/differential_equation/{ode-book,pde-book}"
 	@echo "  quantkit deep_hedge_price optimal_execution rough_volatility"
 	@echo ""
@@ -78,6 +78,7 @@ books:
 	uv run --no-sync jupyter-book build analytics/differential_equation/pde-book/book/
 	uv run --no-sync jupyter-book build analytics/machine_learning/book/
 	uv run --no-sync jupyter-book build analytics/statistics/book/
+	uv run --no-sync jupyter-book build analytics/quant_research/book/
 
 sde-check:
 	npm --prefix analytics/differential_equation/sde-book run typecheck

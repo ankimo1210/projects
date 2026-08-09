@@ -1,0 +1,1034 @@
+schema_version: "1.1"
+curriculum_version: "1.1"
+updated: "2026-08-10"
+language: ja
+title: Quant Research Data Science — Stage 1 Foundation
+
+scope:
+  stage: 1
+  blocks: [B1, B2, B3, B4]
+  week_range: [1, 16]
+  duration_weeks: 16
+  scope_note: >-
+    このファイルは原典60週カリキュラムのうち Stage 1 だけを正規化する。
+    Stage 2、Stage 3、Capstone は後続設計で扱い、この16週の完了を全課程修了とはみなさない。
+  excludes:
+    - Stage 2（B5–B11）
+    - Stage 3（R1–R4）
+    - Capstone Research Program
+  audience: 数学・統計・Python の基礎を持ち、再現可能なクオンツ研究を学ぶ読者
+  status:
+    phase_0: implemented
+    b1_mvp: implemented
+    b2_mvp: implemented
+    b3_to_b4_notebooks: planned
+
+layering:
+  core:
+    meaning: 必修。週7〜8時間を目安に、導出・実装・診断まで行う。
+    completion_rule: learning_objectives と exit_criteria をすべて満たす。
+  advanced:
+    meaning: 発展。Core 修了後に選択し、概観だけで必修扱いにはしない。
+    completion_rule: 本編の進行を妨げず、追加の検証を伴う場合だけ成果物へ含める。
+
+assessment:
+  applies_to: 各 block
+  required_artifacts:
+    derivation_note:
+      required_content:
+        - key equations
+        - assumptions
+        - important proofs or derivations
+    implementation:
+      required_content:
+        - library呼び出しだけに依存しないalgorithm実装
+        - unit tests
+        - numerical checks
+    experiment:
+      required_content:
+        - synthetic or financial data
+        - baseline comparison
+        - robustness analysis
+    technical_memo:
+      expected_length_pages: [2, 4]
+      required_content:
+        - research question
+        - method
+        - result
+        - failure modes
+        - conclusion
+  grading:
+    mathematical_understanding: 25
+    correct_implementation_and_testing: 30
+    experimental_design: 30
+    explanation_and_memo: 15
+    total: 100
+  pass_mark: 75
+  completion_rule:
+    - 4成果物をすべて提出し、合計75点以上を得る。
+    - block と各週の必須 exit_criteria を満たす。
+    - 講義や教科書を読み終えただけでは修了としない。
+
+placement:
+  principle: >-
+    placement診断は学習速度だけを変える。成果物、採点、exit_criteria、再現性・検証要件は免除しない。
+  pass_rule: 各診断項目を説明し、導出または再実行可能な数値確認で根拠を示す。
+  blocks:
+    B1:
+      recommendation: 診断が強ければ4週を2週へ圧縮する。
+      diagnostic:
+        - QRで最小二乗を解く。
+        - conditioningを説明する。
+        - SVDからPCAを導出する。
+        - explicit inverseが通常不要な理由を説明する。
+        - rank-deficient regressionを分析する。
+    B2:
+      recommendation: 確率の基礎は圧縮できるが、martingale、measureへの橋渡し、Monte Carlo診断は残す。
+      diagnostic:
+        - conditional expectationを導出する。
+        - LLNとCLTを区別する。
+        - martingaleを定義する。
+        - optional stoppingの成立条件を説明する。
+        - Itô lemmaを適用する。
+        - Monte Carlo confidence intervalを構成・診断する。
+    B3:
+      recommendation: placement-outせず4週すべてを完了する。
+      diagnostic: []
+    B4:
+      recommendation: 凸最適化の基礎は圧縮できるが、proximal methodとsolver診断は残す。
+      diagnostic:
+        - convexityを分類する。
+        - KKT条件を導出する。
+        - dual variableを解釈する。
+        - Newton methodとgradient methodを比較する。
+        - optimization failureを診断する。
+  future_reinvestment_candidates:
+    status: Stage 2以降の設計時に再評価する。
+    topics:
+      - high-frequency econometrics
+      - advanced stochastic control
+      - online learning and bandits
+      - causal machine learning
+      - Bayesian nonparametrics
+
+reference_priority:
+  scope: 原典のPriority A/BからStage 1に直接関係する資料を保持する。
+  priority_a:
+    - area: numerical linear algebra
+      work: Trefethen & Bau, Numerical Linear Algebra
+    - area: statistical inference
+      work: Wasserman, All of Statistics
+  priority_b:
+    - area: numerical stability
+      work: Higham, Accuracy and Stability of Numerical Algorithms
+    - area: optimization
+      work: Nocedal & Wright, Numerical Optimization
+    - area: advanced probability
+      work: Durrett, Probability Theory and Examples
+    - area: Monte Carlo
+      work: Glasserman, Monte Carlo Methods in Financial Engineering
+    - area: econometrics
+      work: Hayashi, Econometrics
+  online:
+    - MIT 18.06SC Linear Algebra
+    - MIT 18.600 Probability and Random Variables
+    - MIT 18.650 Statistics for Applications
+    - Stanford Boyd & Vandenberghe, Convex Optimization
+    - "Hernán & Robins, Causal Inference: What If"
+
+curriculum_rules:
+  - 各週は「直感、仮定、導出、最小実装、ライブラリ比較、失敗例」の順で学ぶ。
+  - 各モデルに単純な baseline を置き、改善量と失敗条件を同時に報告する。
+  - 乱数実験は seed または numpy.random.Generator を明示し、設定を成果物へ保存する。
+  - 時系列の変換・推定・選択は、評価時点より後の情報を使わない。
+  - 数値結果は solver status だけでなく、残差、制約違反、条件数、感度で検証する。
+  - 統計的有意性だけでなく、効果量、不確実性、経済的意味、主張の限界を報告する。
+
+shared_evidence_contract:
+  assumptions:
+    - 推定対象、観測単位、時間基準、単位、情報集合を先に定義する。
+    - 合成データと実データを明記し、実データの出所・timestamp・ライセンスを記録する。
+  reproducibility:
+    - 実行環境、seed、設定、入力の fingerprint を残す。
+    - Notebook は上から順に実行可能とし、隠れた状態へ依存しない。
+  validation:
+    - 解析解または信頼できるライブラリ実装との一致を検査する。
+    - 通常例だけでなく、rank deficiency、heavy tail、misspecification、infeasibility を試す。
+
+blocks:
+  - id: B1
+    title: Matrix Methods & Numerical Linear Algebra
+    title_ja: 行列法と数値線形代数
+    weeks: [1, 4]
+    goal: >-
+      行列計算を機械的に行う段階から進み、問題構造と数値条件に応じて分解法を選び、
+      結果を残差・条件数・感度から信頼できるか判断する。
+    design_corrections:
+      - 最小二乗の主役を QR と SVD に置き、normal equations は不安定性を学ぶ比較対象にする。
+      - 金利 PCA は原則として水準ではなく変化へ適用し、rolling fit で未来情報を使わない。
+      - ゼロ金利の回帰と、coupon cash flow からの債券価格 fitting を別モードとして扱う。
+    references:
+      core:
+        - Trefethen & Bau, Numerical Linear Algebra
+        - Strang, Introduction to Linear Algebra
+      reference:
+        - Higham, Accuracy and Stability of Numerical Algorithms
+        - Golub & Van Loan, Matrix Computations
+        - Petersen & Pedersen, The Matrix Cookbook
+      online:
+        - MIT 18.06SC Linear Algebra
+    weeks_detail:
+      - week: 1
+        code: B1-W1
+        title: Vector Spaces, Projections, and Least Squares
+        title_ja: ベクトル空間・射影・最小二乗
+        core:
+          - ベクトル空間、部分空間、基底、rank、null space、column space
+          - 内積、ノルム、直交性、直交射影
+          - 過決定・劣決定・rank-deficient な線形系
+          - OLS、WLS、Moore–Penrose pseudoinverse の役割
+          - 残差直交性と回帰の幾何学
+        advanced:
+          - 一般化逆行列の四条件と最小ノルム解
+          - GLS を共分散行列による whitening として導出する
+        learning_objectives:
+          - normal equations を導出し、残差が column space に直交する理由を説明できる。
+          - 解の存在・一意性を rank と null space から判定できる。
+          - OLS、WLS、最小ノルム解が答える問いの違いを説明できる。
+        lab:
+          title: Four OLS Implementations
+          question: 同じ最小二乗問題でも実装法によって何が変わるか。
+          tasks:
+            - explicit inverse、linear solve、QR、SVD で係数を推定する。
+            - full rank、過決定、劣決定、rank deficiency の4条件を比較する。
+            - residual norm、orthogonality error、parameter error を記録する。
+          validation:
+            - "||A^T r|| が scale-aware tolerance 以下である。"
+            - NumPy / SciPy の least-squares 解と許容誤差内で一致する。
+        deliverable:
+          artifact: 実行済み Notebook と solver 比較表
+          required_evidence:
+            - 問題の shape と numerical rank
+            - 解が一意かどうかの説明
+            - inverse を既定手段にしない理由
+        exit_criteria:
+          - residual orthogonality を数式と数値の両方で確認できる。
+          - rank deficiency を検出し、返すべき解と不確実性を説明できる。
+
+      - week: 2
+        code: B1-W2
+        title: Matrix Factorizations and Numerical Stability
+        title_ja: 行列分解と数値安定性
+        core:
+          - 浮動小数点、machine epsilon、丸め誤差
+          - condition number、forward error、backward error
+          - LU、Cholesky、QR、SVD の適用条件と計算量
+          - Householder QR と modified Gram–Schmidt の安定性
+          - normal equations が有効条件数を二乗する問題
+        advanced:
+          - classical Gram–Schmidt の直交性喪失の誤差解析
+          - rank-revealing QR と pivoting
+          - mixed precision と iterative refinement
+        learning_objectives:
+          - 入力摂動、backward error、forward error を区別できる。
+          - 行列の構造と精度要件から QR、Cholesky、SVD を選べる。
+          - 小さい residual が小さい parameter error を保証しない例を作れる。
+        lab:
+          title: Ill-Conditioned Least-Squares Stress Test
+          question: 条件数が増えると各 solver の残差と係数誤差はどう変わるか。
+          tasks:
+            - 近接列と Vandermonde 型の design matrix を生成する。
+            - normal equations、Cholesky、QR、SVD を同じ入力で比較する。
+            - condition number、residual、parameter error、runtime、摂動感度を測る。
+          validation:
+            - 入力 scale と tolerance を記録する。
+            - condition number と誤差の関係を log scale で示す。
+        deliverable:
+          artifact: solver decision table と数値実験レポート
+          required_evidence:
+            - solver ごとの失敗条件
+            - 精度と計算量の trade-off
+            - backward-stable でも ill-conditioned 問題は難しいことの説明
+        exit_criteria:
+          - normal equations が条件数を悪化させる理由を説明できる。
+          - 問題に応じて QR と SVD を選び、選択根拠を数値で示せる。
+
+      - week: 3
+        code: B1-W3
+        title: Eigenvalues, SVD, and PCA
+        title_ja: 固有値・SVD・PCA
+        core:
+          - 対称行列、positive definite / semidefinite、spectral theorem
+          - SVD、低rank近似、Eckart–Young theorem
+          - PCA の中心化、共分散、SVD 実装
+          - 金利変化の level-like、slope-like、curvature-like factor
+          - rolling PCA と factor / eigenspace stability
+        advanced:
+          - eigenvalue perturbation と spectral gap
+          - 近接固有値で個別 eigenvector ではなく部分空間を比較する方法
+          - randomized SVD
+        learning_objectives:
+          - PCA を covariance eigendecomposition と centered-data SVD の両方から導出できる。
+          - explained variance だけに頼らず、loading と安定性を診断できる。
+          - eigenvector の符号不定性と近接固有値の識別困難を説明できる。
+        lab:
+          title: Yield-Curve Change PCA
+          question: level / slope / curvature の解釈はデータと前処理に対して安定か。
+          tasks:
+            - seed 固定の JGB-like yield changes を生成する。
+            - centered SVD から PCA を実装し、ライブラリ相当の結果と比較する。
+            - rolling window、maturity subset、standardization の感度を調べる。
+            - 各 window の fit にはその時点以前の観測だけを使う。
+          validation:
+            - reconstruction error と特異値から低rank近似を検証する。
+            - loading の符号を alignment してから安定性を比較する。
+        deliverable:
+          artifact: PCA diagnostic report
+          required_evidence:
+            - scree plot と loading plot
+            - factor score と reconstruction error
+            - 前処理・window・maturity set への感度
+        exit_criteria:
+          - PCA を SVD から実装し、再構成誤差を検証できる。
+          - level / slope / curvature を自動的な事実ではなく loading に基づく解釈として述べられる。
+
+      - week: 4
+        code: B1-W4
+        title: Regularization, Matrix Calculus, and Curve Fitting
+        title_ja: 正則化・行列微分・曲線推定
+        core:
+          - Ridge / Tikhonov regularization と bias–variance trade-off
+          - basis-function regression、smoothness penalty、constrained least squares
+          - 二次形式の gradient と Hessian
+          - polynomial、spline、Nelson–Siegel basis
+          - fit quality と numerical stability の分離
+        advanced:
+          - generalized cross-validation と effective degrees of freedom
+          - shape constraints を持つ spline
+          - Nelson–Siegel の decay parameter を含む非凸性
+        learning_objectives:
+          - Ridge 解を解析的・幾何学的・数値的に説明できる。
+          - 曲線基底の表現力と条件数の trade-off を比較できる。
+          - price fitting と yield fitting が異なる観測方程式を持つと説明できる。
+        lab:
+          title: Regularized Curve-Fitting Sandbox
+          question: 基底・正則化・solver は外挿と安定性へどう影響するか。
+          tasks:
+            - ゼロ金利の合成データを polynomial、spline、Nelson–Siegel で近似する。
+            - QR、SVD、Ridge で fit し、leave-one-maturity-out error を比較する。
+            - regularization path と parameter sensitivity を可視化する。
+          validation:
+            - raw RMSE と weighted RMSE を分けて報告する。
+            - fit が良くても係数が不安定な例を含める。
+        deliverable:
+          artifact: Curve Fitter v0 の設計メモと最小実装
+          required_evidence:
+            - input contract と推定対象
+            - basis / solver / regularization の選択根拠
+            - 診断値と既知の制約
+        exit_criteria:
+          - regularization が fit と安定性へ与える影響を数値で説明できる。
+          - yield mode と bond-price mode を混在させず実装仕様を記述できる。
+
+    block_project:
+      title: JGB Curve Fitter v0
+      required_modes:
+        educational_zero_curve:
+          purpose: 基底・正則化・数値安定性を学ぶ合成データモード
+          inputs:
+            - maturity_years
+            - observed_zero_rate
+            - optional_observation_weight
+          target: zero-rate curve
+          prohibited_inputs:
+            - coupon_rate
+            - bond_price
+        bond_pricing:
+          purpose: cash flow を割り引き、観測 dirty price を合わせる債券モード
+          inputs:
+            - valuation_time_origin
+            - cashflow_times_in_years
+            - coupon_and_principal_cashflows
+            - observed_dirty_price
+            - optional_bid_ask_spread
+          pricing_equation: "P_i = sum_j C_ij * D(t_ij)"
+          target: discount function and model dirty prices
+          conventions_to_declare:
+            - day-count and compounding convention
+            - accrued interest treatment
+            - stub coupon treatment
+          production_adapter_requires:
+            - settlement date and contractual cash-flow dates
+            - calendar and day-count conversion
+          prohibited_shortcut: coupon を入力しながら observed yield を直接回帰しない。
+      models:
+        - polynomial basis
+        - spline basis
+        - Nelson–Siegel basis
+      solvers:
+        educational_zero_curve:
+          core: [QR, SVD, Ridge]
+          comparison_only: [normal equations]
+        bond_pricing:
+          core: fixed-decay nonlinear least squares with Jacobian diagnostics
+          initialization: QR or SVD yield-basis fit
+      evaluation:
+        - pricing or rate RMSE appropriate to the selected mode
+        - bid–ask weighted RMSE when quotes are available
+        - condition number and numerical rank
+        - leave-one-instrument-out error
+        - solver disagreement and perturbation sensitivity
+        - outlier sensitivity
+      exit_criteria:
+        - mode ごとに入力、観測方程式、損失、単位を明示している。
+        - fit quality と numerical stability を別々に合否判定している。
+        - 実 JGB 対応を主張する場合に必要な未実装の市場慣行を明記している。
+
+  - id: B2
+    title: Probability, Martingales & Stochastic Systems
+    title_ja: 確率・martingale・確率システム
+    weeks: [5, 8]
+    goal: >-
+      確率を公式集ではなく、時間とともに変わる情報の下で不確実性を記述し、
+      simulation の誤差を分解して検証するための言語として使う。
+    design_corrections:
+      - 測度論の完全な展開より conditional expectation と情報集合の運用を Core に置く。
+      - Brownian motion、Itô、Euler–Maruyama、基本的 variance reduction を Core に絞る。
+      - Girsanov、importance sampling、Brownian bridge は診断込みで扱える場合のみ Advanced とする。
+      - Poisson process と compensator は連続時間の計数過程まで扱う追加時間が必要なため Advanced とし、Core は finite-state Markov、martingale、stopping、Monte Carlo 診断を優先する。
+    references:
+      core:
+        - Williams, Probability with Martingales
+        - Bertsekas & Tsitsiklis, Introduction to Probability
+      bridge:
+        - Shreve, Stochastic Calculus for Finance II
+        - Glasserman, Monte Carlo Methods in Financial Engineering
+      advanced:
+        - Durrett, Probability Theory and Examples
+        - Øksendal, Stochastic Differential Equations
+      online:
+        - MIT 18.600 Probability and Random Variables
+    weeks_detail:
+      - week: 5
+        code: B2-W5
+        title: Conditional Probability and Multivariate Systems
+        title_ja: 条件付き確率と多変量系
+        core:
+          - probability space と sigma-algebra の運用上の意味
+          - random variable、joint / marginal / conditional distribution
+          - conditional expectation、covariance、independence
+          - multivariate Gaussian と change of variables
+          - conditional expectation as projection
+        advanced:
+          - Radon–Nikodym derivative の入口
+          - regular conditional probability の注意点
+        learning_objectives:
+          - 情報集合を変えたときの conditional expectation を説明できる。
+          - multivariate normal の条件付き分布を導出し simulation で確認できる。
+          - zero covariance と independence の違いを反例で示せる。
+        lab:
+          title: Gaussian Conditioning and Correlated Simulation
+          question: 共分散構造と観測情報は予測分布をどう変えるか。
+          tasks:
+            - Cholesky と eigendecomposition で相関 Gaussian を生成する。
+            - 条件付き平均・分散を解析解と Monte Carlo で比較する。
+            - near-singular covariance で factorization の挙動を調べる。
+          validation:
+            - sample moments の Monte Carlo uncertainty を併記する。
+            - covariance matrix の対称性と positive semidefiniteness を検査する。
+        deliverable:
+          artifact: 条件付き分布の導出と simulation report
+          required_evidence:
+            - analytical result
+            - empirical estimate with uncertainty
+            - near-singular failure case
+        exit_criteria:
+          - conditional expectation を情報集合に対する最良予測として説明できる。
+          - 相関乱数生成の前提と数値的失敗条件を検査できる。
+
+      - week: 6
+        code: B2-W6
+        title: Convergence, Limit Theorems, and Heavy Tails
+        title_ja: 収束・極限定理・重い裾
+        core:
+          - almost sure、probability、distribution、Lp convergence の違い
+          - LLN、CLT、Delta method の仮定と用途
+          - Hoeffding bound の適用条件
+          - Gaussian、Student-t、Pareto-like、mixture の有限標本挙動
+          - finite variance で遅い収束と、variance 不存在で通常の CLT が破れる場合の分離
+        advanced:
+          - Bernstein / sub-exponential bounds
+          - generalized CLT と stable laws の概観
+          - robust mean estimation
+        learning_objectives:
+          - 4つの収束概念を例と反例で区別できる。
+          - CLT や concentration bound の仮定をデータ生成過程に照らして確認できる。
+          - heavy tail で通常の標準誤差と confidence interval が壊れる理由を説明できる。
+        lab:
+          title: Convergence Under Tail Stress
+          question: 標本平均と区間推定は裾の厚さにどれだけ敏感か。
+          tasks:
+            - 分布と sample size を変え、bias、variance、coverage を反復推定する。
+            - Student-t と Pareto の parameter から moment existence を判定する。
+            - nominal 95% interval の実被覆率を比較する。
+          validation:
+            - simulation repetition 自体の Monte Carlo uncertainty を示す。
+            - mean / variance が存在しない条件を別シナリオとして表示する。
+        deliverable:
+          artifact: coverage と収束速度の診断レポート
+          required_evidence:
+            - distribution parameters and moment existence
+            - empirical coverage curve
+            - 破綻した推論を使わない判断基準
+        exit_criteria:
+          - finite sample の遅い収束と theorem の仮定違反を区別できる。
+          - 区間推定の nominal level と empirical coverage を比較できる。
+
+      - week: 7
+        code: B2-W7
+        title: Markov Chains, Filtrations, and Martingales
+        title_ja: Markov 連鎖・filtration・martingale
+        core:
+          - finite-state Markov chain、transition matrix、stationary distribution
+          - irreducibility、aperiodicity、ergodicity
+          - filtration、adapted process、martingale / submartingale / supermartingale
+          - stopping time と optional stopping の成立条件
+          - Markov property と martingale property の違い
+        advanced:
+          - Poisson process と compensator
+          - general-state Markov process の概観
+          - martingale convergence theorem の入口
+        learning_objectives:
+          - transition convention を明示して stationary distribution を計算できる。
+          - process が filtration に adapted か、martingale かを判定できる。
+          - optional stopping を無条件に適用できない理由を反例で示せる。
+        lab:
+          title: Stopping Rules Without Free Lunches
+          question: 停止規則はどの条件で期待値を保ち、どこで破れるか。
+          tasks:
+            - finite Markov-chain simulator と stationary solver を実装する。
+            - bounded stopping time で martingale の期待値を検査する。
+            - 条件を外した stopping rule の反例を simulation する。
+          validation:
+            - transition rows or columns の convention を明記する。
+            - empirical expectation に Monte Carlo interval を付ける。
+        deliverable:
+          artifact: Markov / martingale diagnostic notebook
+          required_evidence:
+            - stationary residual
+            - martingale conditional-mean diagnostic
+            - optional stopping の条件と反例
+        exit_criteria:
+          - Markov と martingale の性質を混同せず説明できる。
+          - optional stopping の結論の前に十分条件を確認できる。
+
+      - week: 8
+        code: B2-W8
+        title: Brownian Motion, Itô Calculus, and Monte Carlo
+        title_ja: Brownian motion・Itô calculus・Monte Carlo
+        core:
+          - Brownian motion、independent increments、quadratic variation
+          - Itô integral と Itô correction の直感
+          - 単純な f(t, X_t) への Itô formula の適用
+          - SDE と Euler–Maruyama
+          - strong / weak error の区別
+          - Monte Carlo standard error と discretization bias の分離
+          - antithetic variates と control variates
+        advanced:
+          - Girsanov theorem の直感と適用条件
+          - importance sampling の weight variance と effective sample size
+          - Brownian bridge と conditional path construction
+        learning_objectives:
+          - Brownian path の quadratic variation を数値で確認できる。
+          - Itô formula を単純な f(t, X_t) へ適用し、二次変分項を説明できる。
+          - GBM の解析解と Euler–Maruyama を比較し、誤差源を分けられる。
+          - variance reduction を同じ計算予算で公平に評価できる。
+        lab:
+          title: Verified SDE Monte Carlo
+          question: path 数と time step は estimator の誤差へどう寄与するか。
+          tasks:
+            - Generator を外から受け取る Brownian / GBM simulator を作る。
+            - f(x)=log(x) に Itô formula を適用して GBM の対数過程を導出する。
+            - N と dt を別々に変えて sampling error と discretization bias を測る。
+            - antithetic と control variate の variance reduction ratio を計算する。
+          validation:
+            - 既知の期待値と confidence interval の整合を検査する。
+            - standard error の 1/sqrt(N) scaling を log-log slope で確認する。
+            - parallel 実行時は独立 random stream を構成する。
+        deliverable:
+          artifact: Reusable Monte Carlo Library v0
+          required_evidence:
+            - API contract and RNG ownership
+            - analytical benchmark
+            - error decomposition
+            - variance-reduction comparison
+        exit_criteria:
+          - Monte Carlo error、discretization error、model error を区別できる。
+          - Itô formula を適用し、Itô correction と Euler bias を式と実験で説明できる。
+
+    block_project:
+      title: Reusable Monte Carlo Library
+      core_api:
+        - simulate_paths
+        - estimate_expectation
+        - estimate_confidence_interval
+        - antithetic_variates
+        - control_variate
+      advanced_api:
+        - importance_sampling
+        - brownian_bridge
+      design_requirements:
+        - RNG は global state に隠さず numpy.random.Generator として注入できる。
+        - path generation と payoff / functional evaluation を分離する。
+        - sampling error と time-discretization error を別の軸で報告する。
+      validation:
+        - known analytical expectations
+        - seed reproducibility
+        - independent parallel streams
+        - 1/sqrt(N) standard-error scaling
+        - variance-reduction effectiveness
+        - Euler discretization bias
+        - heavy-tail interval instability
+      exit_criteria:
+        - 同一設定の再現と独立 stream の両方を満たす。
+        - Advanced 法を使う場合は weight degeneracy 等の固有診断を含む。
+
+  - id: B3
+    title: Statistical Inference & Causal Foundations
+    title_ja: 統計的推測と因果推論の基礎
+    weeks: [9, 12]
+    goal: >-
+      モデルを fit するだけでなく、estimand、識別仮定、標準誤差、有限標本挙動を定義し、
+      予測・関連・市場反応・因果効果のどこまでが支持されるか判断する。
+    design_corrections:
+      - 証明を網羅せず、推定対象、仮定、有限標本 simulation の三点を Core に置く。
+      - 金融の発表時刻 event study と、DiD の causal event-study design を明確に分離する。
+      - BOJ 課題の既定結論は announcement response とし、追加識別なしに causal effect と呼ばない。
+    references:
+      core:
+        - Wasserman, All of Statistics
+        - Casella & Berger, Statistical Inference
+      econometrics:
+        - Hayashi, Econometrics
+        - Wooldridge, Econometric Analysis of Cross Section and Panel Data
+      modern_inference:
+        - Efron & Hastie, Computer Age Statistical Inference
+        - Harrell, Regression Modeling Strategies
+      causal:
+        - "Hernán & Robins, Causal Inference: What If"
+        - Angrist & Pischke, Mostly Harmless Econometrics
+      online:
+        - MIT 18.650 Statistics for Applications
+    weeks_detail:
+      - week: 9
+        code: B3-W9
+        title: Likelihood, Estimands, and Estimation
+        title_ja: 尤度・estimand・推定
+        core:
+          - estimand、estimator、estimate の区別
+          - likelihood、score、Hessian、Fisher information
+          - Gaussian、logistic、Poisson MLE
+          - consistency、asymptotic normality、Delta method
+          - M-estimation と model misspecification
+        advanced:
+          - sufficient statistics と exponential family
+          - profile likelihood
+          - quasi-likelihood と Godambe information
+        learning_objectives:
+          - データを見る前に estimand と sampling unit を記述できる。
+          - score と Hessian から MLE と近似標準誤差を計算できる。
+          - asymptotic approximation を finite-sample simulation で検査できる。
+        lab:
+          title: MLE Under Finite Samples and Misspecification
+          question: asymptotic standard error はどの標本サイズとモデル条件で信用できるか。
+          tasks:
+            - Gaussian、logistic、Poisson の log-likelihood と gradient を実装する。
+            - empirical bias、model-based SE、Monte Carlo SD、coverage を比較する。
+            - logistic separation と Poisson overdispersion を失敗例にする。
+          validation:
+            - numerical gradient と analytic gradient を照合する。
+            - optimizer convergence と statistical validity を別々に判定する。
+        deliverable:
+          artifact: MLE simulation report
+          required_evidence:
+            - explicit estimand
+            - finite-sample bias and coverage
+            - separation or overdispersion diagnostic
+        exit_criteria:
+          - optimizer の成功を推定の妥当性と混同しない。
+          - model-based SE と empirical SD の差を説明できる。
+
+      - week: 10
+        code: B3-W10
+        title: Testing, Resampling, and Multiple Comparisons
+        title_ja: 検定・resampling・多重比較
+        core:
+          - confidence interval、hypothesis test、power、effect size
+          - likelihood-ratio、Wald、score test の違い
+          - parametric / nonparametric bootstrap と permutation test
+          - family-wise error、FDR、selection-induced bias
+          - data snooping と pre-specification
+        advanced:
+          - bootstrap consistency と非滑らかな statistic の失敗
+          - block bootstrap と dependent wild bootstrap
+          - selective inference の概観
+        learning_objectives:
+          - p-value、effect size、confidence interval、power を別々に解釈できる。
+          - resampling が近似する sampling mechanism を明示できる。
+          - 多数の false signal から見かけの発見が生じる過程を再現できる。
+        lab:
+          title: False Discoveries in a Research Factory
+          question: signal 選択と報告規則は false discovery をどう増やすか。
+          tasks:
+            - null signal を多数生成し、unadjusted、FWER、FDR を比較する。
+            - effect size と interval を p-value と併記する。
+            - iid bootstrap を時系列へ誤適用した失敗例を示す。
+          validation:
+            - family size と selection rule を記録する。
+            - empirical type-I error、FDR、power を Monte Carlo 誤差付きで報告する。
+        deliverable:
+          artifact: multiple-testing and resampling audit
+          required_evidence:
+            - pre-specified primary analysis
+            - corrected and uncorrected results
+            - resampling assumptions
+        exit_criteria:
+          - p-value だけで実質的な発見を主張しない。
+          - bootstrap / permutation の exchangeability または依存構造を確認できる。
+
+      - week: 11
+        code: B3-W11
+        title: Regression and Robust Inference
+        title_ja: 回帰と頑健推論
+        core:
+          - linear regression と GLM の estimand
+          - heteroskedasticity、serial correlation、cluster dependence
+          - HC、HAC / Newey–West、cluster-robust standard errors
+          - sandwich estimator
+          - omitted-variable bias、measurement error、misspecification
+        advanced:
+          - small-sample cluster correction と wild cluster bootstrap
+          - HAC lag / kernel selection
+          - multi-way clustering
+        learning_objectives:
+          - coefficient estimate と covariance estimate の問題を分離できる。
+          - 依存構造から HC、HAC、cluster の候補を選べる。
+          - robust SE が omitted-variable bias を直さないと説明できる。
+        lab:
+          title: Standard Errors Under Dependence
+          question: 同じ coefficient に対する uncertainty は依存構造の仮定でどう変わるか。
+          tasks:
+            - heteroskedastic、serially correlated、clustered data を生成する。
+            - naive、HC、HAC、cluster SE の coverage を比較する。
+            - HAC lag と cluster 数への感度を調べる。
+          validation:
+            - sampling unit と cluster definition を明記する。
+            - estimator bias と interval coverage を別々に測る。
+        deliverable:
+          artifact: robust-inference decision memo
+          required_evidence:
+            - dependence diagnosis
+            - SE choice and sensitivity
+            - remaining bias risks
+        exit_criteria:
+          - データ生成過程に対応した covariance estimator を選べる。
+          - robust SE の守備範囲と限界を説明できる。
+
+      - week: 12
+        code: B3-W12
+        title: Causal Foundations and Event-Study Boundaries
+        title_ja: 因果推論の基礎と event study の境界
+        core:
+          - potential outcomes、ATE、conditional ignorability、overlap
+          - DAG、confounding、collider、selection bias
+          - randomization、matching、IPW、doubly robust estimation の役割
+          - difference-in-differences と parallel trends
+          - placebo、negative control、anticipation
+          - financial announcement study と causal panel event study の区別
+        advanced:
+          - staggered-adoption DiD の heterogeneous treatment effect 問題
+          - sensitivity analysis for unmeasured confounding
+          - high-frequency identification with an explicit surprise measure
+        learning_objectives:
+          - association から causality へ進むための識別仮定を列挙できる。
+          - collider conditioning と anticipation の bias を DAG / timing で説明できる。
+          - 発表前後の価格反応と政策の因果効果を区別できる。
+        lab:
+          title: Announcement Response vs Causal Effect
+          question: 同じ event-study という語が指す二つの設計は何を識別するか。
+          tasks:
+            - 合成 intraday announcement data で event window return を測る。
+            - 合成 panel data で DiD event-time coefficient を推定する。
+            - 各設計の estimand、counterfactual、assumption、failure mode を対照表にする。
+          validation:
+            - event timestamp と timezone を明記する。
+            - anticipation、overlap、simultaneous news、pre-trend を検査する。
+        deliverable:
+          artifact: BOJ Announcement Study の pre-analysis specification
+          required_evidence:
+            - primary event definition and window
+            - explicit estimand and claim class
+            - placebo and negative-control plan
+            - multiple-testing plan
+        exit_criteria:
+          - financial event study を識別仮定なしに causal study と呼ばない。
+          - event window を結果確認後に選ぶ危険を説明し、primary window を事前指定できる。
+
+    block_project:
+      title: BOJ Announcement Study with Honest Inference
+      default_mode:
+        name: high-frequency financial announcement study
+        estimand: 事前指定した window における発表時点周辺の市場反応
+        allowed_claim: 観測された announcement response
+        disallowed_claim_without_extra_identification: 金融政策の因果効果
+      causal_extension:
+        status: advanced
+        requirement: 明示的な counterfactual、識別戦略、surprise measure、または妥当な control design
+      required_specification:
+        - official document URL or event source
+        - publication timestamp, timezone, and timestamp precision
+        - primary anticipation and response windows
+        - expectation or surprise definition
+        - overlapping event and simultaneous-news rule
+        - intraday seasonality adjustment
+        - uncertainty estimator matched to dependence
+        - placebo dates and negative controls
+        - multiple-testing correction
+        - alternative-window sensitivity labeled secondary
+      reporting:
+        - effect size with interval
+        - statistical and economic significance
+        - missing data and market-liquidity diagnostics
+        - causal interpretation audit
+      exit_criteria:
+        - primary analysis と sensitivity analysis が明確に分離されている。
+        - timestamp precision が data frequency に十分か評価している。
+        - causal claim の可否を識別仮定に基づいて説明している。
+
+  - id: B4
+    title: Optimization, Algorithms & Research Software
+    title_ja: 最適化・アルゴリズム・研究ソフトウェア
+    weeks: [13, 16]
+    goal: >-
+      solver を呼ぶ段階から進み、凸性、双対性、収束、計算量、制約残差を理解して、
+      solver failure を診断できる再現可能な研究実装を作る。
+    design_corrections:
+      - Core の問題クラスを LP、QP、SOCP に絞り、SDP は Advanced とする。
+      - projected gradient を制約付き最適化の入口として proximal gradient とともに先に学ぶ。
+      - coordinate descent、ADMM、SGD、momentum は Advanced とし、Core を過密にしない。
+      - discount-factor monotonicity は負金利下の普遍的無裁定条件ではなく、非負 forward rate を仮定する任意制約とする。
+      - graph、heap、tree は数値研究の全課題に共通するCoreではないため Advanced とし、具体的な研究問題で必要になったときに計算量と実装を検証する。
+    references:
+      core:
+        - Boyd & Vandenberghe, Convex Optimization
+        - Nocedal & Wright, Numerical Optimization
+      practice:
+        - Kochenderfer & Wheeler, Algorithms for Optimization
+      algorithms:
+        - Cormen, Leiserson, Rivest & Stein, Introduction to Algorithms
+        - Skiena, The Algorithm Design Manual
+      online:
+        - Stanford Boyd & Vandenberghe, Convex Optimization
+    weeks_detail:
+      - week: 13
+        code: B4-W13
+        title: Convex Problems and Modeling
+        title_ja: 凸問題とモデリング
+        core:
+          - convex set、convex function、epigraph
+          - LP、QP、SOCP と代表的な regression / portfolio formulation
+          - convex reformulation と disciplined convex programming
+          - scaling、units、feasibility
+          - 同じ目的を表す複数 formulation の比較
+        advanced:
+          - semidefinite programming
+          - conic duality の一般形
+          - convexity-preserving composition rules の証明
+        learning_objectives:
+          - domain を含めて問題の convexity を判定できる。
+          - 非凸な表現を同値な凸表現へ直せる場合を認識できる。
+          - DCP checker の accepted / unknown と数学的 convexity を区別できる。
+        lab:
+          title: Equivalent Formulations, Different Numerics
+          question: 数学的に同値な formulation は solver の挙動まで同じか。
+          tasks:
+            - constrained least squares と small portfolio QP を複数表現で解く。
+            - scaling を変え、runtime、iterations、constraint residual を比較する。
+            - infeasible case を作り、status と residual を記録する。
+          validation:
+            - objective value だけでなく primal feasibility を検査する。
+            - 変数と制約の単位・scale を明示する。
+        deliverable:
+          artifact: convex-model specification and solver comparison
+          required_evidence:
+            - convexity argument
+            - DCP status
+            - scaling and feasibility diagnostics
+        exit_criteria:
+          - 問題クラスと solver family を対応づけられる。
+          - solver が返した値を独立に制約検査できる。
+
+      - week: 14
+        code: B4-W14
+        title: Duality, KKT, and Sensitivity
+        title_ja: 双対性・KKT・感度
+        core:
+          - Lagrangian、dual function、weak / strong duality
+          - Slater condition と constraint qualification
+          - KKT conditions
+          - shadow price と sensitivity analysis
+          - primal / dual certificate
+        advanced:
+          - Fenchel conjugate と Fenchel duality
+          - nonsmooth KKT conditions
+          - perturbation function の幾何学
+        learning_objectives:
+          - constrained least squares、Ridge、portfolio QP の KKT 条件を導出できる。
+          - strong duality を使う前に条件を確認できる。
+          - dual variable を制約緩和の局所価値として解釈できる。
+        lab:
+          title: KKT as an Independent Solver Audit
+          question: solver status 以外の何を確認すれば解を信用できるか。
+          tasks:
+            - 小さな QP の primal と dual を解く。
+            - stationarity、primal / dual feasibility、complementarity residual を計算する。
+            - constraint bound を摂動し、dual sensitivity と finite difference を比較する。
+          validation:
+            - residual tolerance を problem scale に応じて定める。
+            - "`optimal_inaccurate` を無条件に合格させない。"
+        deliverable:
+          artifact: KKT diagnostic report
+          required_evidence:
+            - primal and dual objective
+            - four KKT residual families
+            - shadow-price finite-difference check
+        exit_criteria:
+          - KKT residual から解の妥当性を診断できる。
+          - duality gap と infeasibility を区別できる。
+
+      - week: 15
+        code: B4-W15
+        title: First- and Second-Order Algorithms
+        title_ja: 一次・二次最適化アルゴリズム
+        core:
+          - gradient descent と step-size sensitivity
+          - backtracking line search
+          - Newton method と Hessian conditioning
+          - BFGS の役割
+          - projected gradient for simple convex constraints
+          - proximal gradient for nonsmooth regularization
+          - objective gap、gradient mapping、feasibility による停止判定
+        advanced:
+          - coordinate descent
+          - ADMM と primal / dual residual balancing
+          - SGD と momentum
+          - accelerated proximal gradient
+        learning_objectives:
+          - smoothness、conditioning、constraint structure から method を選べる。
+          - projected gradient を proximal / splitting 法より前の基本手段として実装できる。
+          - parameter change ではなく最適性指標で convergence を判定できる。
+        lab:
+          title: Algorithm Convergence Under Conditioning and Constraints
+          question: conditioning と制約は一次法・二次法の収束をどう変えるか。
+          tasks:
+            - gradient descent、Newton、projected gradient、proximal gradient を実装する。
+            - quadratic と L1-regularized problem で objective gap と residual を比較する。
+            - step size、line search、feature scaling の感度を測る。
+          validation:
+            - reference optimum または dual lower bound を用意する。
+            - projected solution の feasibility を毎 iteration 検査する。
+        deliverable:
+          artifact: optimizer benchmark notebook
+          required_evidence:
+            - convergence traces
+            - stopping rule
+            - ill-conditioned and constrained cases
+        exit_criteria:
+          - first-order と second-order の trade-off を実測値で説明できる。
+          - projected gradient の projection と最適性条件を検証できる。
+
+      - week: 16
+        code: B4-W16
+        title: Research Software and Numerical Contracts
+        title_ja: 研究ソフトウェアと数値契約
+        core:
+          - Big-O、array layout、vectorization、sparse matrix の実用的基礎
+          - hash table と expected lookup complexity
+          - automatic differentiation と finite-difference check
+          - unit test、numerical tolerance、property-based test の考え方
+          - benchmark、profiling、solver diagnostics
+          - packaging、configuration、provenance、reproducible artifact
+        advanced:
+          - graph / heap / tree を必要な研究問題へ適用する
+          - differentiable optimization
+          - continuous benchmarking
+        learning_objectives:
+          - 数値関数の input / output / invariant / tolerance を契約として書ける。
+          - correctness test と performance benchmark を分離できる。
+          - experiment configuration と library code を分離できる。
+        lab:
+          title: Turn a Notebook into a Tested Research Component
+          question: exploratory code を再利用可能かつ検証可能にする最小境界は何か。
+          tasks:
+            - B1 curve fitter の共通処理を小さな pure function へ分離する。
+            - analytic、finite-difference、automatic differentiation の gradient を比較する。
+            - numerical invariants、edge case、benchmark を追加する。
+          validation:
+            - tolerance の根拠を scale と floating-point precision から記述する。
+            - clean process で同じ artifact を再生成する。
+        deliverable:
+          artifact: tested research package slice
+          required_evidence:
+            - API and numerical contracts
+            - unit and edge-case tests
+            - benchmark with environment metadata
+            - reproducible build command
+        exit_criteria:
+          - Notebook state に依存しない最小実装を作れる。
+          - solver・gradient・constraint の診断を自動テストに落とせる。
+
+    block_project:
+      required:
+        title: Constrained Yield Curve Fitter
+        relation_to_b1: B1 の Curve Fitter を凸制約・robust loss・診断で頑健化する。
+        convexity_boundary:
+          - Nelson–Siegel decay parameter は固定または事前 grid search とする。
+          - decay parameter と linear coefficients の同時推定は非凸であり、Core の凸課題と混同しない。
+        constraints:
+          required:
+            - name: positive discount factors
+              convex_form: D_i >= epsilon_D
+              epsilon_D: 1.0e-8
+              requirement: epsilon_D の尺度根拠を記録し、制約違反を同じ尺度で検査する。
+            - smoothness penalty or bound
+            - bid–ask weighting when quote widths exist
+          optional:
+            - name: monotone non-increasing discount factors
+              assumption: nonnegative instantaneous forward rates
+              warning: >-
+                負金利では D(T) が 1 を超えたり局所的に増加したりし得るため、
+                普遍的な no-arbitrage condition として強制しない。
+            - robust loss
+        validation:
+          - DCP compliance or explicit convexity argument
+          - primal and dual feasibility
+          - complementary slackness and stationarity
+          - solver disagreement and scaling sensitivity
+          - out-of-sample or leave-one-bond-out pricing error
+      advanced:
+        title: Multi-Period Portfolio Optimizer
+        features:
+          - risk penalty
+          - transaction costs and turnover
+          - position and factor constraints
+          - liquidity and funding constraints
+      exit_criteria:
+        - convex / nonconvex の境界と solver の保証を明記している。
+        - solver status とは独立に KKT residual と制約違反を検査している。
+        - 負金利下での discount-factor constraint の意味を正しく限定している。
+
+stage_exit_criteria:
+  - B1〜B4 の各 block project が、入力契約・仮定・validation・既知の限界を持つ。
+  - 数値・統計・Monte Carlo・最適化の診断が、再実行可能な成果物として残る。
+  - 金融データの timestamp と情報集合を明示し、look-ahead leakage を防いでいる。
+  - 結果から支持される主張と、追加の識別・データが必要な主張を区別できる。

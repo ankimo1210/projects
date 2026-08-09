@@ -1,0 +1,112 @@
+/* Quant Research textbook: restrained additions to the Jupyter Book 1.x theme. */
+
+:root {
+  --qr-core: #0f766e;
+  --qr-core-bg: #f0fdfa;
+  --qr-advanced: #7c3aed;
+  --qr-advanced-bg: #f5f3ff;
+  --qr-info-bg: #eff6ff;
+  --qr-warning: #b45309;
+  --qr-warning-bg: #fffbeb;
+  --qr-border: #d7dee7;
+}
+
+/* Keep long equations and wide diagnostic tables usable on narrow screens. */
+.bd-article-container {
+  max-width: 72rem;
+}
+
+.bd-content table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: normal;
+}
+
+.bd-content .MathJax_Display,
+.bd-content mjx-container[display="true"] {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: 0.25rem;
+}
+
+/* Reusable semantic panels used by generated MyST/Notebook Markdown. */
+.layer-core,
+.layer-advanced,
+.learning-objectives,
+.exit-criteria,
+.quant-caution {
+  margin: 1.25rem 0;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--qr-border);
+  border-left-width: 0.35rem;
+  border-radius: 0.35rem;
+}
+
+.layer-core {
+  border-left-color: var(--qr-core);
+  background: var(--qr-core-bg);
+}
+
+.layer-advanced {
+  border-left-color: var(--qr-advanced);
+  background: var(--qr-advanced-bg);
+}
+
+.learning-objectives,
+.exit-criteria {
+  border-left-color: #2563eb;
+  background: var(--qr-info-bg);
+}
+
+.quant-caution {
+  border-left-color: var(--qr-warning);
+  background: var(--qr-warning-bg);
+}
+
+.layer-core > :first-child,
+.layer-advanced > :first-child,
+.learning-objectives > :first-child,
+.exit-criteria > :first-child,
+.quant-caution > :first-child {
+  margin-top: 0;
+}
+
+.layer-core > :last-child,
+.layer-advanced > :last-child,
+.learning-objectives > :last-child,
+.exit-criteria > :last-child,
+.quant-caution > :last-child {
+  margin-bottom: 0;
+}
+
+/* Figures are evidence: give captions enough contrast without dominating. */
+.figure .caption,
+figcaption {
+  color: #475569;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+/* Dark theme equivalents for custom panels. */
+html[data-theme="dark"] {
+  --qr-core-bg: #0f2928;
+  --qr-advanced-bg: #21183a;
+  --qr-info-bg: #172554;
+  --qr-warning-bg: #31230e;
+  --qr-border: #475569;
+}
+
+@media (max-width: 48rem) {
+  .bd-article-container {
+    padding-inline: 0.75rem;
+  }
+
+  .layer-core,
+  .layer-advanced,
+  .learning-objectives,
+  .exit-criteria,
+  .quant-caution {
+    padding: 0.75rem;
+  }
+}
