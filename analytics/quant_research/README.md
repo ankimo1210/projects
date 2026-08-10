@@ -6,8 +6,8 @@
 **仮定を定める → 安定に実装する → 診断する → 主張の限界を説明する**という一連の研究作業として
 学ぶための日本語 HTML 教科書プロジェクトです。
 
-現在は Stage 1（B1〜B4、全16週）の設計を固定し、B1–B3（Weeks 1〜12）を縦切り MVP として
-実装しています。60週版の原案をそのまま詰め込まず、各週を `core`（必修）と
+現在は Stage 1（B1〜B4、全16週）を縦切り MVP として実装しています。60週版の原案を
+そのまま詰め込まず、各週を `core`（必修）と
 `advanced`（発展）に分けています。正規化した学習仕様の source of truth は
 [`curriculum_map.yml`](curriculum_map.yml) です。
 
@@ -81,6 +81,12 @@ B3は全4週を必修とします。Placement-outは学習速度だけを変え�
 | `15_week11_robust_inference` | HC・HAC・cluster robust covarianceと守備範囲 |
 | `16_week12_causal_event_study` | potential outcomes、DAG、DiD、event studyの境界 |
 | `17_b3_project_boj_announcement_study` | 合成BOJ発表データによるhonest inference総合演習 |
+| `18_b4_overview` | 凸性、双対性、algorithm、数値契約を結ぶB4研究フロー |
+| `19_week13_convex_modeling` | LP・QP・SOCP、DCP境界、scaling、feasibility |
+| `20_week14_duality_kkt_sensitivity` | Lagrangian、KKT residual、duality gap、shadow price |
+| `21_week15_optimization_algorithms` | GD、Newton、BFGS、projected・proximal gradient |
+| `22_week16_research_software` | 計算量、gradient audit、test、benchmark、provenance |
+| `23_b4_project_constrained_curve_fitter` | discount-factor QPによる制約付きCurve Fitter |
 
 ## ディレクトリ
 
@@ -199,8 +205,20 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 - event windowの変更、placebo、negative control、多重比較補正はprimary analysisと分けて報告する。
 - 実データadapterではBOJ公式文書の公開timestamp、精度、重複ニュース、利用条件を別途検証する。
 
+## B4 最適化と制約付き曲線の数値契約
+
+- 問題のconvexityとsolver statusを分離し、目的関数・domain・制約から凸性を先に示す。
+- QPは $Gx\le h$ の符号規約を固定し、primal feasibility、dual feasibility、stationarity、
+  complementarityをsolverとは独立に再計算する。
+- SciPyにDCP checkerや汎用SOCP certificateがあるとはみなさず、対応範囲外を`unknown`として残す。
+- B4 Projectはcash-flow node上のdiscount factorを変数にする価格空間QPとし、
+  Nelson–Siegel decayの同時推定という非凸問題と混同しない。
+- discount factorの単調減少は非負forward rateを仮定する任意制約であり、負金利regimeでは強制しない。
+- optimizerの停止はgradient mappingと制約残差で判定し、reference optimumがある実験では
+  objective gapを事後評価として併記する。
+- correctness test、performance benchmark、environment metadataを分離して保存する。
+
 ## 現在の範囲
 
-- 実装済み: Phase 0（設計・骨格）と B1–B3 MVP
-- 設計済み: B1〜B4（Weeks 1〜16）
-- 後続: B4 の Notebook、Stage 2（B5〜B11）、Research Apprenticeship
+- 実装済み: Phase 0（設計・骨格）と Stage 1 / B1–B4 MVP
+- 後続: Stage 2（B5〜B11）、Research Apprenticeship
