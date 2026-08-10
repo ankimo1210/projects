@@ -22,7 +22,8 @@ scope:
     b1_mvp: implemented
     b2_mvp: implemented
     b3_mvp: implemented
-    b4_notebooks: planned
+    b4_mvp: implemented
+    stage_1_mvp: implemented
 
 layering:
   core:
@@ -918,7 +919,7 @@ blocks:
           - BFGS の役割
           - projected gradient for simple convex constraints
           - proximal gradient for nonsmooth regularization
-          - objective gap、gradient mapping、feasibility による停止判定
+          - objective gap による事後評価と、gradient mapping、feasibility による停止判定
         advanced:
           - coordinate descent
           - ADMM と primal / dual residual balancing
@@ -991,7 +992,9 @@ blocks:
     block_project:
       required:
         title: Constrained Yield Curve Fitter
-        relation_to_b1: B1 の Curve Fitter を凸制約・robust loss・診断で頑健化する。
+        relation_to_b1: >-
+          B1 の Curve Fitter を凸制約、bid–ask weighting、診断で頑健化する。
+          robust loss は任意の Advanced 拡張とする。
         convexity_boundary:
           - Nelson–Siegel decay parameter は固定または事前 grid search とする。
           - decay parameter と linear coefficients の同時推定は非凸であり、Core の凸課題と混同しない。

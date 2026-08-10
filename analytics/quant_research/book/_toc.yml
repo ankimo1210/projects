@@ -27,3 +27,11 @@ parts:
       - file: notebooks/15_week11_robust_inference
       - file: notebooks/16_week12_causal_event_study
       - file: notebooks/17_b3_project_boj_announcement_study
+  - caption: B4 — 最適化・アルゴリズム・研究ソフトウェア
+    chapters:
+      - file: notebooks/18_b4_overview
+      - file: notebooks/19_week13_convex_modeling
+      - file: notebooks/20_week14_duality_kkt_sensitivity
+      - file: notebooks/21_week15_optimization_algorithms
+      - file: notebooks/22_week16_research_software
+      - file: notebooks/23_b4_project_constrained_curve_fitter
