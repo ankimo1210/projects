@@ -1,4 +1,4 @@
-"""Regenerate the B1-B4 textbook notebooks from Python builders.
+"""Regenerate the B1-B6 textbook notebooks from Python builders.
 
 Run from ``analytics/quant_research``::
 
@@ -51,6 +51,18 @@ NOTEBOOKS = [
     ("build_nb21", "21_week15_optimization_algorithms"),
     ("build_nb22", "22_week16_research_software"),
     ("build_nb23", "23_b4_project_constrained_curve_fitter"),
+    ("build_nb24", "24_b5_overview"),
+    ("build_nb25", "25_week17_learning_baselines"),
+    ("build_nb26", "26_week18_regularized_models"),
+    ("build_nb27", "27_week19_classification_calibration"),
+    ("build_nb28", "28_week20_validation_pipelines"),
+    ("build_nb29", "29_b5_project_treasury_baseline_pipeline"),
+    ("build_nb30", "30_b6_overview"),
+    ("build_nb31", "31_week21_trees_boosting"),
+    ("build_nb32", "32_week22_kernels_gaussian_processes"),
+    ("build_nb33", "33_week23_unsupervised_regimes"),
+    ("build_nb34", "34_week24_evaluation_under_shift"),
+    ("build_nb35", "35_b6_project_treasury_model_tournament"),
 ]
 
 _CJK = re.compile(r"[\u3040-\u30ff\u3400-\u9fff]")

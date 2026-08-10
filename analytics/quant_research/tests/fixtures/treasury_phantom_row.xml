@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+ xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices"
+ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+ <entry><content type="application/xml"><m:properties>
+  <d:NEW_DATE m:type="Edm.DateTime">2010-10-11T00:00:00</d:NEW_DATE>
+  <d:BC_30YEARDISPLAY>0.00</d:BC_30YEARDISPLAY>
+ </m:properties></content></entry>
+ <entry><content type="application/xml"><m:properties>
+  <d:NEW_DATE m:type="Edm.DateTime">2010-10-12T00:00:00</d:NEW_DATE>
+  <d:BC_3MONTH m:type="Edm.Double">0.13</d:BC_3MONTH>
+  <d:BC_2YEAR m:type="Edm.Double">0.37</d:BC_2YEAR>
+  <d:BC_5YEAR m:type="Edm.Double">1.18</d:BC_5YEAR>
+  <d:BC_10YEAR m:type="Edm.Double">2.43</d:BC_10YEAR>
+  <d:BC_30YEAR m:type="Edm.Double">3.93</d:BC_30YEAR>
+  <d:BC_30YEARDISPLAY>3.93</d:BC_30YEARDISPLAY>
+ </m:properties></content></entry>
+</feed>

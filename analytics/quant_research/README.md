@@ -6,14 +6,14 @@
 **仮定を定める → 安定に実装する → 診断する → 主張の限界を説明する**という一連の研究作業として
 学ぶための日本語 HTML 教科書プロジェクトです。
 
-現在は Stage 1（B1〜B4、全16週）を縦切り MVP として実装しています。60週版の原案を
-そのまま詰め込まず、各週を `core`（必修）と
+現在は Stage 1（B1〜B4）と Stage 2A（B5〜B6）、全24週・36 Notebookを実装しています。
+60週版の原案をそのまま詰め込まず、各週を `core`（必修）と
 `advanced`（発展）に分けています。正規化した学習仕様の source of truth は
 [`curriculum_map.yml`](curriculum_map.yml) です。
 
 ## 到達点
 
-Stage 1 の修了時に、学習者が次の判断を自力で行えることを目標にします。
+現在のStage 1–2A修了時に、学習者が次の判断を自力で行えることを目標にします。
 
 - 問題の構造と数値条件から、分解法・推定法・最適化法を選ぶ。
 - 統計誤差、数値誤差、Monte Carlo 誤差、離散化誤差、モデル誤差を区別する。
@@ -27,8 +27,10 @@ Stage 1 の修了時に、学習者が次の判断を自力で行えることを
    Core は週7〜8時間で到達すべき内容、Advanced は前提が整った読者向けの発展課題です。
 2. **直感 → 導出 → 最小実装 → ライブラリ比較 → 失敗例**
    各章は正解例だけでなく、壊れる条件と診断方法まで扱います。
-3. **データなしでも再現可能**
-   既定の演習は seed 固定の合成データで完結します。外部データは任意アダプターとして追加します。
+3. **方法検証と実証分析でデータの役割を分ける**
+   解析解との照合、edge case、Monte Carlo、単体テストには seed 固定の合成fixtureを使います。
+   Stage 2以降の実証Block Projectは取得・利用条件を確認した実データを既定とし、取得できない
+   市場データを都合のよい合成系列で代替しません。
 4. **金融上の対象を曖昧にしない**
    ゼロ金利を回帰する教育モードと、債券キャッシュフローを割り引いて価格を合わせる
    債券モードを分離します。coupon を入力しながら yield を直接回帰する混成仕様にはしません。
@@ -36,7 +38,7 @@ Stage 1 の修了時に、学習者が次の判断を自力で行えることを
    BOJ 発表前後の価格反応を測る金融イベントスタディと、DiD 等の因果イベントスタディを
    区別し、識別仮定なしに「政策の因果効果」とは呼びません。
 
-## Stage 1 の構成
+## Stage 1–2A の構成
 
 | Block | Weeks | 主題 | ブロック成果物 |
 |---|---:|---|---|
@@ -44,10 +46,19 @@ Stage 1 の修了時に、学習者が次の判断を自力で行えることを
 | B2 | 5〜8 | 確率・martingale・SDE・Monte Carlo | 再利用可能な Monte Carlo ライブラリ |
 | B3 | 9〜12 | 推定・頑健推論・因果推論の基礎 | BOJ Announcement Study with Honest Inference |
 | B4 | 13〜16 | 凸最適化・アルゴリズム・研究ソフトウェア | 制約付き Curve Fitter（発展: portfolio optimizer） |
+| B5 | 17〜20 | baseline・正則化・分類・時系列validation | Daily Treasury Curve Forecasting Baseline |
+| B6 | 21〜24 | tree・kernel/GP・clustering・shift下評価 | Treasury Forecast Model Tournament |
 
 B2 の Girsanov・importance sampling・Brownian bridge、B4 の ADMM 等は Advanced に置き、
 Core の理解と検証を犠牲にしない順序にしています。B4 では制約付き最適化への自然な入口として、
 ADMM より先に projected gradient を扱います。
+
+Stage 1のJGB-like curveとBOJ announcementの既定データは、数値・推論・最適化の契約を
+検証する合成fixtureです。実JGB市場やBOJ政策についての実証結果ではありません。
+
+B5–B6は公式U.S. Treasury daily par yield curveの固定snapshotを使います。transaction price、
+executable quote、zero rate、intraday dataではないため、予測誤差と分布シフトは分析しても、
+取引収益・流動性・政策因果効果は主張しません。
 
 ## 評価と Placement-out
 
@@ -55,8 +66,9 @@ ADMM より先に projected gradient を扱います。
 2〜4ページの技術メモの4成果物で評価します。配点は数学25、実装・テスト30、実験設計30、
 説明・メモ15で、合格点は75/100です。読了だけでは修了とせず、必須Exit Criteriaも満たします。
 
-事前診断が強い場合、B1は4週から2週へ、B2は確率の基礎、B4は凸最適化の基礎を圧縮できます。
-B3は全4週を必修とします。Placement-outは学習速度だけを変え、成果物、採点、再現性・検証要件を
+事前診断が強い場合、B1は4週から2週へ、B2は確率の基礎、B4は凸最適化の基礎、
+B5は線形modelの基礎を圧縮できます。B3は全4週、B6はshift下の共通評価を必修とします。
+Placement-outは学習速度だけを変え、成果物、採点、再現性・検証要件を
 免除しません。診断項目と判定規約は [`curriculum_map.yml`](curriculum_map.yml) がsource of truthです。
 
 ## 実装済み Notebook
@@ -87,12 +99,24 @@ B3は全4週を必修とします。Placement-outは学習速度だけを変え�
 | `21_week15_optimization_algorithms` | GD、Newton、BFGS、projected・proximal gradient |
 | `22_week16_research_software` | 計算量、gradient audit、test、benchmark、provenance |
 | `23_b4_project_constrained_curve_fitter` | discount-factor QPによる制約付きCurve Fitter |
+| `24_b5_overview` | 実データ契約、予測時点、baseline、locked testを結ぶB5研究フロー |
+| `25_week17_learning_baselines` | Treasury snapshot品質監査、予測問題、単純baseline |
+| `26_week18_regularized_models` | Ridge、lasso、elastic net、training-only標準化 |
+| `27_week19_classification_calibration` | 方向分類、Brier score、reliability、確率calibration |
+| `28_week20_validation_pipelines` | expanding validation、purging、leakage失敗例 |
+| `29_b5_project_treasury_baseline_pipeline` | Daily Treasury Curve Forecasting Baseline |
+| `30_b6_overview` | 非線形model、uncertainty、shift、共通tournament規約 |
+| `31_week21_trees_boosting` | regression stump、gradient boosting、予測的重要度 |
+| `32_week22_kernels_gaussian_processes` | kernel ridge、GP posterior、計算量とcoverage |
+| `33_week23_unsupervised_regimes` | k-means、cluster stability、記述的regime |
+| `34_week24_evaluation_under_shift` | nested temporal validation、drift、conformal境界 |
+| `35_b6_project_treasury_model_tournament` | 共通outer testによるTreasury model tournament |
 
 ## ディレクトリ
 
 ```text
 analytics/quant_research/
-├── curriculum_map.yml       # Stage 1 の正規化された学習仕様
+├── curriculum_map.yml       # Stage 1–2A の正規化された学習仕様
 ├── book/                    # Jupyter Book 設定と静的 HTML の入口
 ├── notebooks/               # 実行済み教材 Notebook
 ├── tools/                   # Notebook 生成・検証スクリプト
@@ -163,6 +187,8 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 - OLS・PCA・曲線推定・確率simulationの自作実装が解析解または NumPy / SciPy と許容誤差内で一致すること。
 - 残差、直交性、条件数、rank、solver disagreement を数値で検査すること。
 - 時系列を使う章では、時点 \(t\) より後の情報を fit に使わないこと。
+- 実データ章ではsource、retrieval、hash、grain、unit、availability、methodology breakを保存すること。
+- final testをmodel選択から隔離し、単純baselineを超えない場合はno model selectedを許容すること。
 - Monte Carlo誤差と時間離散化誤差を分離し、独立streamとseed再現性を検査すること。
 - HTML のリンク、数式、Plotly 図、狭い画面での表を確認すること。
 
@@ -218,11 +244,39 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
   objective gapを事後評価として併記する。
 - correctness test、performance benchmark、environment metadataを分離して保存する。
 
+## B5–B6 Treasury実データの研究契約
+
+- 固定snapshotは2015-01-02–2025-12-31の2,750公表日、3m・2y・5y・10y・30yを使う。
+- 値はpercent単位のconstant-maturity par yieldであり、zero rateやtransaction rateではない。
+- 予測時点はday-\(t\)公式curve公表後、targetは次のTreasury公表日の10年yield変化（bp）とする。
+- 2021-12-06の公式methodology changeを既知breakとして保持する。
+- scaler、feature transform、hyperparameterはtraining/validationだけで決め、final 20% testを保護する。
+- 採用にはzero-change RMSEを1%以上改善し、MAEも悪化しない教材用gateを使う。これは経済的
+  materialityではなく、価格・position・costのないデータからPnLを主張しない。
+- XML parserは実テナー列だけを列挙し、`BC_30YEARDISPLAY=0.00`だけの休場日phantom rowを除外する。
+- 詳細な品質監査と結果は
+  [Stage 2A / B5–B6実装ノート](docs/updates/2026-08-10-stage-2a-b5-b6.md)に残す。
+
+## B7–B9の着手前契約
+
+- B7–B8 CoreはB5–B6と同じ2015–2025 snapshotを使い、2007–2025拡張版は別manifestの
+  Advanced historical robustnessに限定する。
+- B7のprimary horizonは5 Treasury公表日とし、filtered stateだけを予測入力に使う。
+  smoothed stateは事後診断であり、forecast featureにはしない。
+- B8は同じtargetのposterior predictive distributionを評価し、point errorとinterval coverageを分離する。
+- SECはAccess・Sample・Teaching fitを実測済みだが、Baseline未実施の条件付き候補である。
+- B9はFrames APIを分析経路に使わず、Company Factsの`accn`をSubmissionsへ結合する。
+  日次Coreでは受理日の次の営業日から利用可能とする保守的PIT規則を使う。
+
 ## 現在の範囲
 
-- 実装済み: Phase 0（設計・骨格）と Stage 1 / B1–B4 MVP
-- 後続: Stage 2（B5〜B11）、Research Apprenticeship
+- 実装済み: Phase 0、Stage 1 / B1–B4、Stage 1評価・placement追補、Stage 2A / B5–B6
+- 後続: Stage 2後半（B7〜B11）。B9の前にSEC baseline gateとPIT contractを完了する
+- 未実装: Research Apprenticeship、Capstone
 
 ## 更新ノート
 
 - [2026-08-10 — Stage 1 / B4実装完了](docs/updates/2026-08-10-stage-1-b4.md)
+- [2026-08-10 — Stage 1整合性フォローアップとStage 2実データ優先計画](docs/plans/2026-08-10-stage-2-real-data-first.md)
+- [2026-08-10 — Stage 2A / B5–B6実装・データ品質ノート](docs/updates/2026-08-10-stage-2a-b5-b6.md)
+- [2026-08-10 — Stage 2 Data Feasibility follow-up](docs/updates/2026-08-10-stage-2-data-feasibility-follow-up.md)
