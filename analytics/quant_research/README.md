@@ -222,3 +222,7 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 
 - 実装済み: Phase 0（設計・骨格）と Stage 1 / B1–B4 MVP
 - 後続: Stage 2（B5〜B11）、Research Apprenticeship
+
+## 更新ノート
+
+- [2026-08-10 — Stage 1 / B4実装完了](docs/updates/2026-08-10-stage-1-b4.md)
