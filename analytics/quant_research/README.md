@@ -285,9 +285,20 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 
 - 2007–2025 Treasury拡張版は別manifestの
   Advanced historical robustnessに限定する。
-- SECはAccess・Sample・Teaching fitを実測済みだが、Baseline未実施の条件付き候補である。
-- B9はFrames APIを分析経路に使わず、Company Factsの`accn`をSubmissionsへ結合する。
-  日次Coreでは受理日の次の営業日から利用可能とする保守的PIT規則を使う。
+- SECのbounded baselineは実行可能性を確認したが、strict company × time split が
+  $n=84$ で、事前ゲート $n\ge 200$ を満たさないためB9は実装保留である。
+- B9 v1 Coreは現在のFrames APIを過去へ遡及適用しない。`us-gaap/Assets/USD` の
+  `2015-12-31` anchor factを `2016-04-01` 以下のavailabilityで選び、anchor後の観測だけを使う
+  固定PIT cohortとする。dynamic historical universeはAdvancedへ分離する。
+- Company Factsの`accn`はSubmissionsの`recent`だけでなく`filings.files`の全archiveへ結合する。
+  acceptance metadataが未解決なら失敗とし、`filed`単独へfallbackしない。
+- acceptanceDateTimeのtimezoneを保持し、`America/New_York`の日付と`filingDate`の遅い方の
+  次の米国連邦営業日から利用可能とする。size floorは前四半期Assets $\ge 100\,\mathrm{M}$ とする。
+- B9のprimary metricはMAE、secondaryはmedAE、RMSEはreferenceとし、zero / pooled drift /
+  seasonal / company expanding meanをbaseline ladderへ含める。primary 1%以上改善かつ
+  secondary非悪化を候補gateとする。
+- 実測値、未解決リスク、再現部品は
+  [SEC B9 baseline gate follow-up](docs/updates/2026-08-11-sec-baseline-gate.md)に固定する。
 
 ## 現在の範囲
 
@@ -302,3 +313,4 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 - [2026-08-10 — Stage 2A / B5–B6実装・データ品質ノート](docs/updates/2026-08-10-stage-2a-b5-b6.md)
 - [2026-08-10 — Stage 2 Data Feasibility follow-up](docs/updates/2026-08-10-stage-2-data-feasibility-follow-up.md)
 - [2026-08-10 — Stage 2B / B7–B8実装・予測結果ノート](docs/updates/2026-08-10-stage-2b-b7-b8.md)
+- [2026-08-11 — SEC B9 baseline gate follow-up](docs/updates/2026-08-11-sec-baseline-gate.md)
