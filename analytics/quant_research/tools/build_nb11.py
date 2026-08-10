@@ -80,7 +80,19 @@ def task_rng(task_name, *coordinates):
 v0はCPU上のdense NumPy arrayを対象とする。automatic differentiation、GPU、quasi-Monte Carlo、multi-level Monte Carlo、production derivative conventionsは扱わない。
 """),
     md(r"""
-## 2. Data contract — 乱数を隠さない
+## 2. Block成果物と採点check
+
+| 成果物 | このProjectでの必須内容 | 配点軸 |
+|---|---|---:|
+| Derivation note | estimand、CLT interval、Euler bias、variance reduction | 25 |
+| Implementation + tests | RNG注入、path/payoff分離、CI、stream contract | 30 |
+| Experiment | $N^{-1/2}$、analytic benchmark、coverage、費用公平性 | 30 |
+| Technical memo | error budget、証拠、failure mode、結論（2〜4ページ） | 15 |
+
+総合75点以上でも、4成果物の欠落、必須Exit Criteria未達、またはsampling errorとdiscretization biasの混同があれば未修了とする。
+"""),
+    md(r"""
+## 3. Data contract — 乱数を隠さない
 
 すべてのstochastic APIは呼び出し側が作った `Generator` を受け取る。module-level global RNGや、関数内の固定seedは使わない。
 
@@ -101,7 +113,7 @@ print(np.round(draws_first, 3))
 これはstream間の統計的独立性を有限標本から証明しているのではない。再現可能なspawn契約と、誤って同一streamを複製していないことを確認するsmoke testである。並列実行ではworker数ではなく論理task IDへchild streamを割り当てると、scheduler順序が変わっても結果を再現しやすい。
 """),
     md(r"""
-## 3. Path generationとpayoffを分ける
+## 4. Path generationとpayoffを分ける
 
 generic simulatorは
 
@@ -151,7 +163,7 @@ print("confidence interval:", euler_interval)
 pathを全保存するとpath-dependent payoffへ再利用できる一方、memoryは $O(Nm)$ で増える。terminal-only payoffならstreamingやterminal-only専用関数へ切り替える設計余地がある。v0では教育上の透明性を優先し、array shapeを明示する。
 """),
     md(r"""
-## 4. Analytic benchmark — samplingとtime biasを切り分ける
+## 5. Analytic benchmark — samplingとtime biasを切り分ける
 
 risk-neutral GBMのEuropean callにはanalytic valueがある。
 
@@ -275,7 +287,7 @@ fig.show()
 同一Brownian incrementからexact payoffとEuler payoffを作り、その差をpathごとに取る。これにより、独立run同士の差より小さいpaired standard errorで $\mathbb{E}[Y_h-Y]$ を推定できる。表と図のintervalはbias推定のMonte Carlo uncertaintyである。coarse gridのbiasは0から識別できるが、細かいgridのintervalは0を跨ぐため、有限runから単調なtrendまで主張しない。
 """),
     md(r"""
-## 5. $N^{-1/2}$ scalingをreplicationで検証する
+## 6. $N^{-1/2}$ scalingをreplicationで検証する
 
 1つの大標本で推定SEを見るだけでなく、各sample sizeを独立に複数回実行し、analytic valueに対するRMSEを測る。有限分散なら
 
@@ -343,7 +355,7 @@ print("log-log slope:", empirical_slope)
 30 replicationsではslopeそのものにも大きな標本変動がある。合格判定を「ちょうど $-1/2$」にせず、sample sizeとreplication数を増やしたときの安定性、外れreplication、乱数streamの割当を併記する。
 """),
     md(r"""
-## 6. Variance reductionを共通harnessで比較する
+## 7. Variance reductionを共通harnessで比較する
 
 plain、antithetic、control variateを同じanalytic benchmarkへ通す。ここではplainとcontrolが同じnormal drawsを共有する。antitheticは $N$ 個の独立normal drawsとその符号反転を使い、pair平均を $N$ 個の独立単位として扱う。したがってnormal draw数は揃うがpayoff評価数は2倍である。wall-clockとpayoff評価数もproduction benchmarkでは別列にする。
 """),
@@ -434,7 +446,7 @@ fig.show()
 variance ratioはnormal draw数を揃えた統計的比較、payoff cost efficiencyはvarianceとpayoff評価数の積を使う簡易な費用調整である。値が1より大きければplainより効率的である。実際の採用判断では、vectorization、memory、payoffの計算量を含むwall-clockも測る。
 """),
     md(r"""
-## 7. Advanced — Importance samplingはESSまで報告する
+## 8. Advanced — Importance samplingはESSまで報告する
 
 rare event $p=\mathbb{P}(Z>a)$ をstandard normalから直接推定すると、多くの標本がindicator 0になる。proposal $q=\mathcal{N}(m,1)$ から $X_i$ を生成し、likelihood ratio
 
@@ -529,7 +541,7 @@ raw weightのESSはtargetとproposal全体のoverlap診断であり、indicator�
 normal CI warningが真ならnonzero contributionが30未満であり、標本分散から作るnormal intervalは特に不安定である。これは普遍的な閾値ではなく、0やごく少数のhitから精度を主張しないための停止信号である。
 """),
     md(r"""
-## 8. Advanced — Brownian bridge
+## 9. Advanced — Brownian bridge
 
 $W_0=x_0$、$W_T=x_T$ を条件としたBrownian bridgeは、中間時刻 $t$ で
 
@@ -597,7 +609,7 @@ fig.show()
 bridgeはunconditional Brownian motionの代用品ではない。endpointを条件とするsampling、path reconstruction、barrier crossing補正など、条件付きlawが対象のときに使う。粗いgridのbarrier optionでbridgeを使っても、model riskやvolatility discretizationまで自動的に解決しない。
 """),
     md(r"""
-## 9. Validation matrix
+## 10. Validation matrix
 
 | Contract | Oracle / invariant | v0 check |
 |---|---|---|
@@ -617,7 +629,7 @@ bridgeはunconditional Brownian motionの代用品ではない。endpointを条�
 unit testは単一seedのsnapshotだけにしない。algebraic invariant、analytic moment、複数seed coverage、収束trendを組み合わせる。
 """),
     md(r"""
-## 10. 失敗モード
+## 11. 失敗モード
 
 - stochastic function内部で `default_rng(固定値)` を作り、全callが同じpathになる
 - 同じ `Generator` stateを複数workerへ複製する
@@ -631,7 +643,7 @@ unit testは単一seedのsnapshotだけにしない。algebraic invariant、anal
 - Brownian bridgeをunconditional pathとして使う
 """),
     md(r"""
-## 11. 段階別演習
+## 12. 段階別演習
 
 ### 基礎
 
@@ -651,7 +663,7 @@ unit testは単一seedのsnapshotだけにしない。algebraic invariant、anal
 8. Brownian bridgeを用いたbarrier crossing probabilityを導出し、naive grid monitoringとのbiasを比較せよ。
 """),
     md(r"""
-## 12. Exit Criteria
+## 13. Exit Criteria
 
 ### Core必須
 
@@ -663,6 +675,7 @@ unit testは単一seedのsnapshotだけにしない。algebraic invariant、anal
 - [ ] sampling errorとEuler discretization biasを別々に測れる
 - [ ] antitheticをpair単位、control variateを既知期待値付きで評価できる
 - [ ] analytic oracleがない場合のinvariant、refinement、coverage testを設計できる
+- [ ] 4成果物を提出し、75点と必須gateを別々に確認した
 
 ### Advanced（任意）
 
@@ -670,7 +683,7 @@ unit testは単一seedのsnapshotだけにしない。algebraic invariant、anal
 - [ ] Brownian bridgeのendpointとconditional momentsを検証できる
 """),
     md(r"""
-## 13. 出典
+## 14. 出典
 
 - [NumPy Random Sampling](https://numpy.org/doc/stable/reference/random/) — `Generator`とbit generatorを分離した公式乱数API
 - [NumPy `Generator.spawn`](https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.spawn.html) — child generatorの生成

@@ -1,0 +1,42 @@
+{
+  "availability_contract": "usually available by 18:00 America/New_York on each trading day; system delays are possible, so same-day trading claims are prohibited",
+  "end_date": "2025-12-31",
+  "methodology_break_date": "2021-12-06",
+  "observation_contract": "constant-maturity par yields derived from indicative bid-side quotations; not transactions, executable quotes, or zero-coupon rates",
+  "quote_convention": "par yield, bond-equivalent, semiannual coupon basis",
+  "redistribution_decision": "bundle the factual numeric snapshot with source attribution and hashes; exclude agency logos and page text; re-check restrictions before external publication",
+  "retrieval_user_agent": "quant-research-textbook/0.1 (educational data audit)",
+  "retrieved_at_utc": "2026-08-10T04:52:19+00:00",
+  "row_count": 2750,
+  "snapshot_sha256": "6ddef9605abbf02c6a4526a51f098135b41da1a437915623af672b1c7bcbd295",
+  "source_feed_template": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_yield_curve&field_tdr_date_value={year}",
+  "source_name": "U.S. Treasury Daily Par Yield Curve Rates",
+  "source_page": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?page=1&type=daily_treasury_yield_curve",
+  "source_terms_pages": [
+    "https://home.treasury.gov/subfooter/site-policies-and-notices",
+    "https://www.usa.gov/government-copyright"
+  ],
+  "source_sha256_by_year": {
+    "2015": "03b0640ff8b641121d73f77462c3bb7abe1030d650c9894419da059f9716be10",
+    "2016": "9d2f5687aadc4d00147ccf505ec7efc5d87ddea0947639f3ce147b539a7ffa21",
+    "2017": "7ad416d942f93dc04e2115dbf566539ce0e838e075dff5ddf43629197ffc1f7e",
+    "2018": "3d1914ecb4d036f8d916a1a15dc9ed7a29a65ac0614bd6e12e02e891fc480937",
+    "2019": "8943c11f6ad776f05ec6a5a20b5130a21059e3b6bef05628792c2aae32349e97",
+    "2020": "e58843c59d754ba09ec5f4d8afdfd12de1a964563b11b26720b452591edabe8b",
+    "2021": "4ac1d4b2bb8f07f43a94d1c2b12b1c62780c4ad88bb72e2ea92b86256a96a3fd",
+    "2022": "a595547fcd6c6e457c4d9775c6f98138d5f6a5068f22217d1daded132ebc24aa",
+    "2023": "9260f47cc662f161931792254e25bcfe35588731f8abce85307b2ecff7033c81",
+    "2024": "3d77ebdb32fba00bf4f2211af3ea8924f275518c00f2faa53698b9336d180c36",
+    "2025": "ac0a8ea1a70b6a22e05aa52513188076b2eddfde5e340bd17db71b48cb3df5a5"
+  },
+  "start_date": "2015-01-02",
+  "tenors": [
+    "3m",
+    "2y",
+    "5y",
+    "10y",
+    "30y"
+  ],
+  "terms_reviewed_at": "2026-08-10",
+  "value_unit": "percent per annum"
+}

@@ -35,3 +35,19 @@ parts:
       - file: notebooks/21_week15_optimization_algorithms
       - file: notebooks/22_week16_research_software
       - file: notebooks/23_b4_project_constrained_curve_fitter
+  - caption: B5 — 統計学習の基礎と検証設計
+    chapters:
+      - file: notebooks/24_b5_overview
+      - file: notebooks/25_week17_learning_baselines
+      - file: notebooks/26_week18_regularized_models
+      - file: notebooks/27_week19_classification_calibration
+      - file: notebooks/28_week20_validation_pipelines
+      - file: notebooks/29_b5_project_treasury_baseline_pipeline
+  - caption: B6 — 高度な学習手法と分布シフト
+    chapters:
+      - file: notebooks/30_b6_overview
+      - file: notebooks/31_week21_trees_boosting
+      - file: notebooks/32_week22_kernels_gaussian_processes
+      - file: notebooks/33_week23_unsupervised_regimes
+      - file: notebooks/34_week24_evaluation_under_shift
+      - file: notebooks/35_b6_project_treasury_model_tournament

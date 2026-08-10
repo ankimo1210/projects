@@ -1,19 +1,19 @@
-schema_version: "1.1"
-curriculum_version: "1.1"
+schema_version: "1.2"
+curriculum_version: "1.2"
 updated: "2026-08-10"
 language: ja
-title: Quant Research Data Science — Stage 1 Foundation
+title: Quant Research Data Science — Stage 1 Foundation and Stage 2A Learning
 
 scope:
-  stage: 1
-  blocks: [B1, B2, B3, B4]
-  week_range: [1, 16]
-  duration_weeks: 16
+  stage: 1–2A
+  blocks: [B1, B2, B3, B4, B5, B6]
+  week_range: [1, 24]
+  duration_weeks: 24
   scope_note: >-
-    このファイルは原典60週カリキュラムのうち Stage 1 だけを正規化する。
-    Stage 2、Stage 3、Capstone は後続設計で扱い、この16週の完了を全課程修了とはみなさない。
+    このファイルは原典60週カリキュラムのうち Stage 1 と Stage 2前半のB5–B6を正規化する。
+    B7以降、Stage 3、Capstoneは後続設計で扱い、この24週の完了を全課程修了とはみなさない。
   excludes:
-    - Stage 2（B5–B11）
+    - Stage 2後半（B7–B11）
     - Stage 3（R1–R4）
     - Capstone Research Program
   audience: 数学・統計・Python の基礎を持ち、再現可能なクオンツ研究を学ぶ読者
@@ -24,6 +24,11 @@ scope:
     b3_mvp: implemented
     b4_mvp: implemented
     stage_1_mvp: implemented
+    stage_1_alignment_follow_up: implemented
+    stage_2a_treasury_data_spike: implemented
+    stage_2b_sec_data_spike: planned_before_b9
+    b5_mvp: implemented
+    b6_mvp: implemented
 
 layering:
   core:
@@ -48,7 +53,7 @@ assessment:
         - numerical checks
     experiment:
       required_content:
-        - synthetic or financial data
+        - known-truth validationではsynthetic fixture、実証Block Projectでは取得条件を確認した実データ
         - baseline comparison
         - robustness analysis
     technical_memo:
@@ -104,6 +109,22 @@ placement:
         - dual variableを解釈する。
         - Newton methodとgradient methodを比較する。
         - optimization failureを診断する。
+    B5:
+      recommendation: linear modelの基礎は圧縮できるが、baseline、時系列validation、leakage監査は残す。
+      diagnostic:
+        - lossとmetricを区別する。
+        - train、validation、testを時系列順に分割する。
+        - ridgeとlassoのgeometryを説明する。
+        - Brier scoreとreliability diagramを解釈する。
+        - preprocessingをtraining partitionだけでfitする。
+    B6:
+      recommendation: model名の既知・未知にかかわらず、shift下の共通評価とfailure analysisは全員必修とする。
+      diagnostic:
+        - tree splitとboosting updateを導出する。
+        - kernel ridgeとGaussian processの関係を説明する。
+        - clustering labelを真のmarket regimeと呼べない理由を説明する。
+        - nested temporal validationを設計する。
+        - conformal coverageのexchangeability仮定を説明する。
   future_reinvestment_candidates:
     status: Stage 2以降の設計時に再評価する。
     topics:
@@ -131,12 +152,18 @@ reference_priority:
       work: Glasserman, Monte Carlo Methods in Financial Engineering
     - area: econometrics
       work: Hayashi, Econometrics
+    - area: statistical learning
+      work: Hastie, Tibshirani & Friedman, The Elements of Statistical Learning
+    - area: probabilistic machine learning
+      work: Murphy, Probabilistic Machine Learning
   online:
     - MIT 18.06SC Linear Algebra
     - MIT 18.600 Probability and Random Variables
     - MIT 18.650 Statistics for Applications
     - Stanford Boyd & Vandenberghe, Convex Optimization
     - "Hernán & Robins, Causal Inference: What If"
+    - ISLP, An Introduction to Statistical Learning with Applications in Python
+    - Rasmussen & Williams, Gaussian Processes for Machine Learning
 
 curriculum_rules:
   - 各週は「直感、仮定、導出、最小実装、ライブラリ比較、失敗例」の順で学ぶ。
@@ -145,11 +172,13 @@ curriculum_rules:
   - 時系列の変換・推定・選択は、評価時点より後の情報を使わない。
   - 数値結果は solver status だけでなく、残差、制約違反、条件数、感度で検証する。
   - 統計的有意性だけでなく、効果量、不確実性、経済的意味、主張の限界を報告する。
+  - 実証Block Projectは取得・利用条件を確認した実データを使い、取得不能な市場dataを合成系列で代替しない。
 
 shared_evidence_contract:
   assumptions:
     - 推定対象、観測単位、時間基準、単位、情報集合を先に定義する。
     - 合成データと実データを明記し、実データの出所・timestamp・ライセンスを記録する。
+    - 実データでは observation_time、availability_time、revision policy、methodology breakを記録する。
   reproducibility:
     - 実行環境、seed、設定、入力の fingerprint を残す。
     - Notebook は上から順に実行可能とし、隠れた状態へ依存しない。
@@ -1031,8 +1060,437 @@ blocks:
         - solver status とは独立に KKT residual と制約違反を検査している。
         - 負金利下での discount-factor constraint の意味を正しく限定している。
 
+  - id: B5
+    title: Statistical Learning I
+    title_ja: 統計的学習I — 問い・baseline・validation
+    weeks: [17, 20]
+    goal: >-
+      複雑なmodelを試す前に、予測時点、情報集合、target、loss、baseline、時系列validationを固定し、
+      実データで改善量と失敗条件を再現可能に評価する。
+    data_contract:
+      source: U.S. Treasury Daily Par Yield Curve Rates
+      snapshot: 2015-01-02 through 2025-12-31
+      grain: one row per Treasury trading date
+      tenors: [3m, 2y, 5y, 10y, 30y]
+      value_unit: percent per annum
+      quote_convention: par yield、bond-equivalent、semiannual coupon basis
+      availability: 通常は各営業日18:00 America/New_Yorkまでに公表されるが、system delayを許容する。
+      prohibited_interpretations:
+        - transaction price
+        - executable quote
+        - zero-coupon rate
+        - intraday liquidity or trading-profit evidence
+      known_break:
+        date: "2021-12-06"
+        description: official curve methodology changed from quasi-cubic Hermite spline to monotone convex
+    design_corrections:
+      - 原典の候補targetから、取得不能な5分yield・swap spreadをCoreから外し、次のTreasury公表日の10年CMT変化を採用する。
+      - prediction originをday-t公式curve公表後に固定し、same-day trading claimを禁止する。
+      - random splitを使わず、target horizonをpurgeしたchronological / expanding-window validationを使う。
+      - 2021-12-06のmethodology変更をまたぐtargetは通常の金利変化と同一視せず除外する。
+      - transaction cost、turnover、net utilityは取引instrumentとquoteが無いため報告しない。
+      - neural networkはB9のbackpropagation学習後にAdvancedとして比較し、B5 Coreへ入れない。
+    references:
+      core:
+        - James et al., An Introduction to Statistical Learning with Applications in Python
+        - Murphy, Probabilistic Machine Learning: An Introduction
+      theory:
+        - Hastie, Tibshirani & Friedman, The Elements of Statistical Learning
+        - Shalev-Shwartz & Ben-David, Understanding Machine Learning
+      primary_data:
+        - U.S. Treasury Daily Treasury Rates
+        - U.S. Treasury Yield Curve Methodology
+    weeks_detail:
+      - week: 17
+        code: B5-W17
+        title: Learning Problems, Real Data, and Baselines
+        title_ja: 予測問題・実データ契約・baseline
+        core:
+          - supervised learning、empirical risk、lossとmetric
+          - prediction time、target time、information set
+          - no-change、historical mean、AR / linear baseline
+          - chronological train / validation / test split
+          - Treasury CMTのgrain、unit、publication、methodology break
+        advanced:
+          - decision-theoretic utility under an independently specified instrument
+          - direct multi-horizon forecast
+        learning_objectives:
+          - sourceの列名より先にprediction contractを定義できる。
+          - zero forecastを含む単純baselineを同じholdoutで比較できる。
+          - source dataの意味と、主張できない市場属性を説明できる。
+        lab:
+          title: Audit and Baseline the Treasury Snapshot
+          question: 実データは翌日金利変化の教材として安全に使えるか。
+          tasks:
+            - row count、date key、missingness、range、calendar gapを監査する。
+            - 2021 methodology breakの前後を分離する。
+            - zero、historical mean、lag-1 baselineを比較する。
+          validation:
+            - prediction dateよりtarget dateが常に後である。
+            - methodology breakをまたぐtargetを学習・評価へ残さない。
+            - preprocessingにtest情報を使わない。
+        deliverable:
+          artifact: real-data contract and baseline notebook
+          required_evidence:
+            - source manifest and content hash
+            - data-quality table
+            - chronological split dates
+            - baseline RMSE / MAE in basis points
+        exit_criteria:
+          - loss、metric、utilityを区別できる。
+          - no-change baselineを超えないmodelを改善と呼ばない。
+          - Treasury par yieldをzero rateやtransaction rateと呼ばない。
+
+      - week: 18
+        code: B5-W18
+        title: Linear and Regularized Models
+        title_ja: 線形modelと正則化
+        core:
+          - OLS、ridge、lasso、elastic net
+          - feature transformationとinteraction
+          - regularization geometry
+          - coordinate descentまたはproximal update
+          - training-only standardization
+        advanced:
+          - generalized linear model extensions
+          - regularization pathのdegrees of freedom
+        learning_objectives:
+          - ridgeとlassoの目的関数・geometry・scale依存を説明できる。
+          - coordinate descentを実装し、KKTまたは更新量で停止できる。
+          - alphaをvalidationだけで選びfinal testを保護できる。
+        lab:
+          title: Regularized Treasury Forecasts
+          question: 多数のlagとcurve featureは単純ARより安定した予測を返すか。
+          tasks:
+            - OLS、ridge、lassoを同一feature setで比較する。
+            - feature列を再尺度化してprediction invarianceを検査する。
+            - coefficient pathとvalidation errorを表示する。
+          validation:
+            - scalerは各foldのtraining rowsだけでfitする。
+            - convergenceとsparsityを記録する。
+        deliverable:
+          artifact: regularization path experiment
+          required_evidence:
+            - objective and update equation
+            - scale-invariance test
+            - validation-selected alpha
+            - untouched test result
+        exit_criteria:
+          - ridge、lasso、elastic netの違いを導出と実測で説明できる。
+          - test scoreを見てalphaを選ばない。
+
+      - week: 19
+        code: B5-W19
+        title: Classification and Calibration
+        title_ja: 方向分類と確率calibration
+        core:
+          - generative vs discriminative classifier
+          - LDA、QDA、Gaussian naive Bayes、kNN、logistic regression
+          - class balance、log loss、Brier score、reliability diagram
+          - discriminationとcalibrationの分離
+        advanced:
+          - isotonic calibration
+          - cost-sensitive classification with a predeclared decision rule
+        learning_objectives:
+          - 翌日10年yield上昇確率をtargetとして定義できる。
+          - accuracyだけでなくBrier、log loss、calibrationを比較できる。
+          - calibration用dataをmodel fittingとfinal testから分離できる。
+        lab:
+          title: Direction Probability, Not Direction Certainty
+          question: 方向を当てるmodelの確率は観測頻度と整合するか。
+          tasks:
+            - constant-rate、logistic、LDA/QDA/NB、kNNを比較する。
+            - reliability tableとdiagramを作る。
+            - intentionally overconfident probabilityのBrier悪化を示す。
+          validation:
+            - probabilityは[0,1]でfiniteである。
+            - bin countと各binの標本数を併記する。
+        deliverable:
+          artifact: classification and calibration audit
+          required_evidence:
+            - class prevalence
+            - log loss / Brier / accuracy
+            - reliability diagram
+            - calibration caveat
+        exit_criteria:
+          - discriminationとcalibrationを別々に診断できる。
+          - class imbalance下でaccuracyだけを採用基準にしない。
+
+      - week: 20
+        code: B5-W20
+        title: Temporal Validation and Leakage-Resistant Pipelines
+        title_ja: 時系列validationとleakage-resistant pipeline
+        core:
+          - expanding / rolling validation
+          - hyperparameter selectionとfinal evaluation
+          - missing-data ruleとfeature pipeline
+          - target-horizon purge
+          - provenance、schema、feature timestamp test
+        advanced:
+          - embargo when labels overlap economically rather than only by row
+          - multiple-testing adjustment across large search spaces
+        learning_objectives:
+          - foldごとのfit / transform / predict境界を実装できる。
+          - target horizonに合わせてsplit boundaryをpurgeできる。
+          - final testを一度だけ使うmodel-selection protocolを書ける。
+        lab:
+          title: Break a Leaky Pipeline
+          question: full-sample scalingとrandom splitはどれだけ評価を歪めるか。
+          tasks:
+            - correct expanding pipelineを実行する。
+            - random splitとfull-sample transformを失敗例として比較する。
+            - methodology break前後のerrorを分ける。
+          validation:
+            - target dateが次foldのtraining informationへ入らない。
+            - selected hyperparameterとsearch budgetを保存する。
+        deliverable:
+          artifact: leakage-resistant validation pipeline
+          required_evidence:
+            - fold table
+            - transform fit range
+            - search budget
+            - final test lock
+        exit_criteria:
+          - random splitが不適切な理由を時点で説明できる。
+          - pipeline stepごとのfit対象期間を監査できる。
+
+    block_project:
+      required:
+        title: Daily Treasury Curve Forecasting Baseline
+        target: next Treasury publication 10-year CMT change in basis points
+        prediction_origin: after official day-t curve publication
+        models:
+          - zero change
+          - historical mean
+          - lag-1 AR / linear baseline
+          - ridge
+          - lasso
+          - logistic direction model
+        evaluation:
+          - chronological train / validation / test
+          - expanding-window RMSE and MAE
+          - Brier score and reliability diagram for direction
+          - pre/post 2021-12-06 methodology-break results
+        adoption_gate: >-
+          zero-change RMSEを1%以上改善し、MAEも悪化しないことを教材用の停止規則とする。
+          これは取引instrumentのないpar-yield dataに対する経済的materialityではない。
+        prohibited_claims:
+          - trade profitability
+          - liquidity improvement
+          - intraday forecasting
+      exit_criteria:
+        - simple baselineと同じinformation set・timestamp・holdoutで比較している。
+        - feature変換とhyperparameter選択にfinal testを使っていない。
+        - 改善がregime別に不安定ならaggregate scoreだけで採用しない。
+
+  - id: B6
+    title: Statistical Learning II & Model Evaluation
+    title_ja: 統計的学習II — 非線形modelとshift下評価
+    weeks: [21, 24]
+    goal: >-
+      score最大化ではなく、同じ情報集合・予測時点・評価窓・計算予算でmodelを比較し、
+      nonlinear fit、uncertainty、unsupervised label、distribution shiftの失敗条件を特定する。
+    relation_to_b5: B5の固定Treasury snapshot、forecast target、outer test、data contractを変更せず再利用する。
+    design_corrections:
+      - 原典のMLP必須比較はB9のbackpropagation後へ移し、B6 Coreではlinear、boosting、kernel ridge、GPを比較する。
+      - GPは計算量を記録し、固定rolling subsetでfitする。全履歴dense GPを暗黙に要求しない。
+      - clustering labelはdescriptive partitionであり、真のlatent market regimeと呼ばない。
+      - standard split conformalの有限標本保証はexchangeabilityを要し、依存時系列へ無条件に拡張しない。
+      - price・position・cost dataが無いため、turnover、transaction cost、net utilityをmodel metricにしない。
+    references:
+      core:
+        - Hastie, Tibshirani & Friedman, The Elements of Statistical Learning
+        - Murphy, Probabilistic Machine Learning
+        - Rasmussen & Williams, Gaussian Processes for Machine Learning
+        - Molnar, Interpretable Machine Learning
+      theory:
+        - Mohri, Rostamizadeh & Talwalkar, Foundations of Machine Learning
+    weeks_detail:
+      - week: 21
+        code: B6-W21
+        title: Trees and Gradient Boosting
+        title_ja: treeとgradient boosting
+        core:
+          - regression tree split、bagging intuition、gradient boosting
+          - shrinkage、tree depth、early stopping
+          - permutation importanceとpartial dependenceの予測的解釈
+        advanced:
+          - random forest
+          - monotonic constraints
+          - histogram-based boosting
+        learning_objectives:
+          - squared-error stumpを実装できる。
+          - boostingをfunction-space gradient stepとして説明できる。
+          - feature importanceを因果効果と呼ばない。
+        lab:
+          title: Boosting Beyond a Treasury Linear Baseline
+          tasks:
+            - stumpとboostingを実装する。
+            - estimator数とlearning rateをvalidationで選ぶ。
+            - linear baselineとの差をregime別に評価する。
+          validation:
+            - training lossの推移とvalidation overfitを分離する。
+            - 同じouter testとfeature setを使う。
+        deliverable:
+          artifact: boosting trace and failure audit
+          required_evidence:
+            - split rule
+            - learning curve
+            - validation selection
+            - regime errors
+        exit_criteria:
+          - tree splitとboosting updateを式とcodeで説明できる。
+          - importanceをcausal statementへ変換しない。
+
+      - week: 22
+        code: B6-W22
+        title: Kernels and Gaussian Processes
+        title_ja: kernel法とGaussian process
+        core:
+          - kernel trick、RBF kernel、kernel ridge
+          - GP posterior meanとpredictive variance
+          - length scale、ridge / noise、cubic cost
+          - linear baselineとの同一task比較
+        advanced:
+          - sparse GP approximation
+          - nonstationary kernels
+        learning_objectives:
+          - kernel ridgeとGP posterior meanの関係を説明できる。
+          - predictive standard deviationを頻度論coverageと同一視しない。
+          - subset sizeとruntimeをmodel artifactへ保存できる。
+        lab:
+          title: Smooth Nonlinearity Under a Fixed Compute Budget
+          tasks:
+            - kernel ridgeとGPを固定rolling subsetでfitする。
+            - length scaleをvalidationで比較する。
+            - GP intervalのempirical coverageを測る。
+          validation:
+            - Cholesky solveを使いexplicit inverseを作らない。
+            - training subsetと計算量を記録する。
+        deliverable:
+          artifact: kernel / GP comparison
+          required_evidence:
+            - kernel equation
+            - validation surface
+            - runtime and fit size
+            - interval coverage
+        exit_criteria:
+          - kernel parameterとregularizationの役割を区別できる。
+          - uncertaintyのmodel dependenceを説明できる。
+
+      - week: 23
+        code: B6-W23
+        title: Unsupervised Learning and Descriptive Regimes
+        title_ja: 教師なし学習と記述的regime
+        core:
+          - PCA review、k-means、hierarchical clustering、Gaussian mixture intuition
+          - scaling、distance concentration、cluster stability
+          - volatility / curve-change regimesの記述
+        advanced:
+          - ICA
+          - anomaly detection
+          - mixture-model uncertainty
+        learning_objectives:
+          - RNGを明示したk-meansを実装できる。
+          - cluster数とlabelの不安定性を測れる。
+          - clusterを経済状態の真値と呼ばず、conditional error sliceとして使える。
+        lab:
+          title: Descriptive Treasury Change Regimes
+          tasks:
+            - curve changeとrolling volatilityをstandardizeしてclusterする。
+            - seedと期間を変えてlabel stabilityを測る。
+            - supervised model errorをcluster別に集計する。
+          validation:
+            - scalerは分析対象期間だけでfitする。
+            - label permutationを考慮して比較する。
+        deliverable:
+          artifact: cluster stability and conditional-error report
+          required_evidence:
+            - feature definition
+            - seed contract
+            - stability table
+            - non-causal interpretation
+        exit_criteria:
+          - distanceとscalingの影響を説明できる。
+          - descriptive clusterとlatent truthを区別できる。
+
+      - week: 24
+        code: B6-W24
+        title: Model Evaluation Under Shift
+        title_ja: distribution shift下のmodel評価
+        core:
+          - nested temporal validation
+          - rolling / expanding window
+          - grouped split、purging、embargoの適用境界
+          - feature drift、performance drift、regime stability
+          - conformal predictionとexchangeability境界
+        advanced:
+          - adaptive conformal inference under distribution shift
+          - online monitoring and recalibration
+        learning_objectives:
+          - CV自体のoverfitを避けるouter / inner構造を設計できる。
+          - feature driftとerror driftを分離できる。
+          - standard conformalの保証を依存時系列へ過大適用しない。
+        lab:
+          title: Tournament Protocol Before Tournament Scores
+          tasks:
+            - common outer testとinner budgetを固定する。
+            - standardized mean differenceとPSIを期間別に計算する。
+            - split-conformal intervalのcoverageをregime別に測る。
+          validation:
+            - final testはmodel選択に使わない。
+            - conformal guaranteeの仮定と実測coverageを別々に書く。
+        deliverable:
+          artifact: shift and interval audit
+          required_evidence:
+            - nested split diagram
+            - drift table
+            - interval coverage and width
+            - assumption boundary
+        exit_criteria:
+          - CVのoverfitを説明できる。
+          - aggregate metricだけでshift下のmodelを採用しない。
+
+    block_project:
+      required:
+        title: Treasury Forecast Model Tournament
+        immutable_contract:
+          - B5と同じsource snapshot
+          - B5と同じnext-publication 10-year CMT target
+          - B5と同じprediction origin
+          - B5でlockしたouter test
+          - 同じmissing-data ruleとfeature set
+          - model familyごとに事前固定したinner budget
+        core_models:
+          - zero / historical mean
+          - ridge
+          - gradient boosting
+          - kernel ridge
+          - Gaussian process on a fixed rolling subset
+        advanced_models:
+          - MLP after completing B9 backpropagation
+        metrics:
+          - RMSE / MAE in basis points
+          - rank correlation with uncertainty caveat
+          - direction Brier score where probabilities exist
+          - interval coverage and width
+          - pre/post-methodology-break stability
+          - feature drift and runtime
+        claim_rule: >-
+          winnerを単一metricで選ばない。zero-change RMSEを1%以上改善しMAEも悪化しないという
+          教材用停止規則に加え、regime stability、calibrationまたはinterval、
+          runtime、failure modeを同時に満たすmodelだけをcandidateとする。全modelがgateを落ちた場合は
+          no model selectedを正しい結論として許容する。
+      exit_criteria:
+        - 同じ情報集合・timestamp・outer test・search budgetで比較している。
+        - model-selection scoreとfinal evaluationを分離している。
+        - feature importanceやcluster labelを因果説明として使っていない。
+        - standard conformalの仮定違反を隠していない。
+
 stage_exit_criteria:
-  - B1〜B4 の各 block project が、入力契約・仮定・validation・既知の限界を持つ。
+  - B1〜B6 の各 block project が、入力契約・仮定・validation・既知の限界を持つ。
   - 数値・統計・Monte Carlo・最適化の診断が、再実行可能な成果物として残る。
   - 金融データの timestamp と情報集合を明示し、look-ahead leakage を防いでいる。
   - 結果から支持される主張と、追加の識別・データが必要な主張を区別できる。
+  - B5–B6では実データのsource、availability、methodology break、outer testを固定している。
+  - model tournamentは単一scoreだけでwinnerを選ばず、no model selectedを許容する。

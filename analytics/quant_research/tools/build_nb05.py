@@ -65,7 +65,19 @@ RANDOM_SEED = 20260809
 settlement date、actual coupon calendar、day-count、holiday、clean price、経過利息、tax、special issue、liquidity premium、on/off-the-run差は実装しない。したがって本Notebookはproduction pricerではない。
 """),
     md(r"""
-## 2. 直感と価格式 — 識別したい対象
+## 2. Block成果物と採点check
+
+| 成果物 | このProjectでの必須内容 | 配点軸 |
+|---|---|---:|
+| Derivation note | zero-rate modeとcash-flow price modeの観測方程式 | 25 |
+| Implementation + tests | basis、solver、pricing、YTM境界、edge case | 30 |
+| Experiment | baseline、ridge、solver disagreement、LOO、outlier | 30 |
+| Technical memo | decision、evidence、assumptions、remaining risks（2〜4ページ） | 15 |
+
+総合75点以上でも、4成果物の欠落、必須Exit Criteria未達、または価格とyieldの混成仕様があれば未修了とする。
+"""),
+    md(r"""
+## 3. 直感と価格式 — 識別したい対象
 
 bond $i$ のdirty priceを
 
@@ -152,7 +164,7 @@ fig.update_layout(
 fig.show()
 """),
     md(r"""
-## 3. 共通評価harness
+## 4. 共通評価harness
 
 curve modelをcash-flow pricerへ渡すadapterを1つだけ作る。各modelが独自の価格計算を持つと、比較がpricing conventionの差になってしまう。
 """),
@@ -204,7 +216,7 @@ def evaluate_candidate(name, model, loo_error, bond_table, bond_universe):
     }
 """),
     md(r"""
-## 4. Basis・solver・ridgeを比較する
+## 5. Basis・solver・ridgeを比較する
 
 候補集合はデータを見る前に固定する。ここでは高自由度を競うのではなく、失敗の種類が異なる小さな集合を使う。
 """),
@@ -303,7 +315,7 @@ fig.update_layout(
 fig.show()
 """),
     md(r"""
-## 5. 観測dirty priceからzero curveをcalibrateする
+## 6. 観測dirty priceからzero curveをcalibrateする
 
 ここまでのoracle zero-rate fitは、basisと線形solverを監査する教育モードだった。債券モードではoracleを入力にしてはいけない。固定したbasis parameter $\eta$ と係数 $\beta$ に対し、直接
 
@@ -415,7 +427,7 @@ fig.show()
 latent zero rateは図の答え合わせにだけ使い、fitには渡していない。実データではこの線は存在しないため、価格残差、保留債券誤差、quote幅、parameter sensitivityで判断する。
 """),
     md(r"""
-## 6. Solver disagreement
+## 7. Solver disagreement
 
 同じNelson–Siegel basisをQRとSVDで解いた予測差を測る。係数差だけでなく、採用対象であるcurveとpriceの差を見る。
 """),
@@ -436,7 +448,7 @@ print(
 一致は「正しさ」の証明ではない。両solverが同じ誤ったdata contractを解くこともある。不一致は調査開始のsignal、一致は数値経路の限定的なcheckである。
 """),
     md(r"""
-## 7. YTM curveをzero curveとして使う誤り
+## 8. YTM curveをzero curveとして使う誤り
 
 比較のため、YTMを満期へfitし、それをzero curveと誤ってprice adapterへ渡す。fitしたYTM curve自体が滑らかでも、coupon cash flowのdiscount rateとしては別の対象である。
 """),
@@ -486,7 +498,7 @@ fig.update_layout(
 fig.show()
 """),
     md(r"""
-## 8. Outlier sensitivityと採用順位
+## 9. Outlier sensitivityと採用順位
 
 20年bondの観測dirty priceを合成half-spreadの3倍だけ動かし、全候補を再calibrateする。1候補の係数変化だけでなく、事前に決めた採用規則が反転するかを検査する。
 """),
@@ -546,7 +558,7 @@ print("selection changed:", outlier_selected_name != selected_name)
 outlierが1点でも全満期へ影響するのはglobal basisの特徴である。順位が不変でもrobustnessの証明にはならず、順位が変われば選択規則の脆弱性が可視化されたことになる。除外前にsource、timestamp、spread、cash-flow conventionを調査する。
 """),
     md(r"""
-## 9. 採用メモ
+## 10. 採用メモ
 
 まず、計算結果から機械的に再生成できるdecision recordを残す。
 """),
@@ -598,7 +610,7 @@ display(decision_record.to_frame())
 数値が良いだけでは採用しない。第三者が同じ入力から同じ表を再生成でき、判断の境界を説明できることを合格条件とする。
 """),
     md(r"""
-## 10. 失敗モード — 教材oracleを実データでも観測できると思う
+## 11. 失敗モード — 教材oracleを実データでも観測できると思う
 
 `zero_rate_at_maturity` はgeneratorの内部curveから得た教師情報であり、市場quoteではない。実データに同じ列があるように見えても、それは別モデルが推定したcurveかもしれない。
 
@@ -612,7 +624,7 @@ display(decision_record.to_frame())
 実データadapterを作る前に、field lineageとpoint-in-time availabilityを表にする。
 """),
     md(r"""
-## 11. 段階別演習
+## 12. 段階別演習
 
 ### 基礎
 
@@ -633,7 +645,7 @@ display(decision_record.to_frame())
 9. 評価表から採用候補を1つ選び、反対意見を含む500–800字の技術メモを書け。
 """),
     md(r"""
-## 12. Exit Criteria
+## 13. Exit Criteria
 
 - [ ] zero yield、YTM、discount factor、dirty priceを区別できる
 - [ ] coupon cash flowを各時点のzero rateで価格評価できる
@@ -642,9 +654,10 @@ display(decision_record.to_frame())
 - [ ] LOO、weighted pricing error、solver disagreement、outlier感度を報告できる
 - [ ] synthetic oracleと実市場で観測可能なfieldを分けられる
 - [ ] 採用／不採用の理由と残るriskを技術メモにできる
+- [ ] 4成果物を提出し、75点と必須gateを別々に確認した
 """),
     md(r"""
-## 13. 出典
+## 14. 出典
 
 - [BIS: Technical note on Japanese government securities](https://www.bis.org/publ/bppdf/bispap25h.pdf) — JGBをcoupon・principal cash flowへ分解するcurve推定資料。歴史的慣行を含むため現行規約とは別に検証する
 - [BIS Papers No. 25: Zero-coupon yield curves](https://www.bis.org/publ/bppdf/bispap25.htm) — discount factor、spot/forward rate、中央銀行のcurve推定法

@@ -64,7 +64,21 @@ fig.update_layout(
 fig.show()
 """),
     md(r"""
-## 2. 直感 — 何を「信頼できる」と呼ぶか
+## 2. 4成果物と75点gate
+
+B1も導出ノート、実装とtest、実験、2〜4ページの技術メモをすべて提出する。
+
+| Category | Points | B1で必要な証拠 |
+|---|---:|---|
+| Mathematical understanding | 25 | projection、factorization、regularizationの導出 |
+| Implementation and testing | 30 | least-squares、PCA、curve APIとedge-case test |
+| Experimental design | 30 | baseline、conditioning、solver、LOO、failure mode |
+| Explanation and memo | 15 | 問い、単位、仮定、結果、限界を2〜4ページで説明 |
+
+合計75点以上に加え、4成果物すべての提出と必須Exit Criteriaの達成を独立gateにする。placementでB1を圧縮しても、この三つの修了条件は免除しない。
+"""),
+    md(r"""
+## 3. 直感 — 何を「信頼できる」と呼ぶか
 
 観測ベクトルを $y$、設計行列を $X$、係数を $\beta$ とする。最小二乗は
 
@@ -91,7 +105,7 @@ print("same fitted values:", np.allclose(design @ beta_a, design @ beta_b))
 print("coefficient distance:", np.linalg.norm(beta_a - beta_b))
 """),
     md(r"""
-## 3. B1を貫く導出 — 射影と分解
+## 4. B1を貫く導出 — 射影と分解
 
 $\hat{y}=X\hat{\beta}$ が $\operatorname{col}(X)$ への直交射影なら、残差 $r=y-\hat{y}$ は列空間のすべての方向と直交する。
 
@@ -112,7 +126,7 @@ $$
 となる。したがって $\hat{\beta}$ は残差平方和を最小にする。この幾何がWeek 1の土台であり、QRは直交基底、SVDは作用する方向と強さ、ridgeは不安定な方向への罰則として同じ絵に戻せる。
 """),
     md(r"""
-## 4. 事前診断
+## 5. 事前診断
 
 次の5問を、資料を見ずに各10分で解く。正解数より、説明と数値チェックの両方ができるかを重視する。
 
@@ -145,7 +159,7 @@ fig.update_layout(
 fig.show()
 """),
     md(r"""
-## 5. 再現可能性の契約
+## 6. 再現可能性の契約
 
 Notebookの結果は、次を満たして初めて教材の主張として扱う。
 
@@ -159,7 +173,7 @@ Notebookの結果は、次を満たして初めて教材の主張として扱う
 合成JGB universeは学習用であり、市場価格、休日、決済、経過利息、入札慣行を完全には再現しない。プロジェクトの結論を実取引へ外挿しない。
 """),
     md(r"""
-## 6. 失敗モード — きれいな図が監査を代替する
+## 7. 失敗モード — きれいな図が監査を代替する
 
 もっとも危険なのは、滑らかな曲線と小さいRMSEを見て終了することである。
 
@@ -172,7 +186,7 @@ Notebookの結果は、次を満たして初めて教材の主張として扱う
 この教材では、図の下に「何を測ったか」「単位」「fitに使った情報」「未実装の市場慣行」を必ず書く。
 """),
     md(r"""
-## 7. 段階別演習
+## 8. 段階別演習
 
 ### 基礎
 
@@ -190,17 +204,18 @@ Notebookの結果は、次を満たして初めて教材の主張として扱う
 6. モデル採用前に確認する停止条件を3つ定義せよ。
 """),
     md(r"""
-## 8. Exit Criteria
+## 9. Exit Criteria
 
 - [ ] 射影、分解、正則化が同じ最小二乗問題をどう見ているか説明できる
 - [ ] 当てはまり、数値安定性、研究妥当性の3軸を混同しない
 - [ ] 事前診断から自分の学習ルートを決めた
+- [ ] 4成果物、75点、必須Exit Criteriaの三つの修了条件を説明できる
 - [ ] 合成JGB教材の限界を、少なくとも3点説明できる
 
 すべて満たしたらWeek 1へ進む。チェックは自己申告で終えず、短い技術メモかコードで根拠を残す。
 """),
     md(r"""
-## 9. 出典と次の読書
+## 10. 出典と次の読書
 
 - [MIT OpenCourseWare 18.335J: Introduction to Numerical Methods](https://ocw.mit.edu/courses/18-335j-introduction-to-numerical-methods-spring-2019/) — conditioning、stability、数値線形代数の講義全体
 - [MIT OpenCourseWare 18.065 Lecture 9: Four Ways to Solve Least Squares Problems](https://ocw.mit.edu/courses/18-065-matrix-methods-in-data-analysis-signal-processing-and-machine-learning-spring-2018/resources/lecture-9-four-ways-to-solve-least-squares-problems/) — 最小二乗と分解
