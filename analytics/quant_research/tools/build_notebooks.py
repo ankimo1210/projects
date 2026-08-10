@@ -1,4 +1,4 @@
-"""Regenerate the B1-B6 textbook notebooks from Python builders.
+"""Regenerate the B1-B8 textbook notebooks from Python builders.
 
 Run from ``analytics/quant_research``::
 
@@ -63,6 +63,18 @@ NOTEBOOKS = [
     ("build_nb33", "33_week23_unsupervised_regimes"),
     ("build_nb34", "34_week24_evaluation_under_shift"),
     ("build_nb35", "35_b6_project_treasury_model_tournament"),
+    ("build_nb36", "36_b7_overview"),
+    ("build_nb37", "37_week25_stationarity_arima"),
+    ("build_nb38", "38_week26_var_cointegration"),
+    ("build_nb39", "39_week27_state_space_dns"),
+    ("build_nb40", "40_week28_volatility_breaks"),
+    ("build_nb41", "41_b7_project_dynamic_treasury_curve"),
+    ("build_nb42", "42_b8_overview"),
+    ("build_nb43", "43_week29_bayesian_foundations"),
+    ("build_nb44", "44_week30_hierarchical_models"),
+    ("build_nb45", "45_week31_graphical_latent_hmm"),
+    ("build_nb46", "46_week32_mcmc_approximate_inference"),
+    ("build_nb47", "47_b8_project_treasury_regime_uncertainty"),
 ]
 
 _CJK = re.compile(r"[\u3040-\u30ff\u3400-\u9fff]")

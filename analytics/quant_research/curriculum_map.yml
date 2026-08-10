@@ -1,19 +1,19 @@
-schema_version: "1.2"
-curriculum_version: "1.2"
+schema_version: "1.3"
+curriculum_version: "1.3"
 updated: "2026-08-10"
 language: ja
-title: Quant Research Data Science — Stage 1 Foundation and Stage 2A Learning
+title: Quant Research Data Science — Stage 1 Foundation and Stage 2 Treasury Dynamics
 
 scope:
-  stage: 1–2A
-  blocks: [B1, B2, B3, B4, B5, B6]
-  week_range: [1, 24]
-  duration_weeks: 24
+  stage: 1–2B
+  blocks: [B1, B2, B3, B4, B5, B6, B7, B8]
+  week_range: [1, 32]
+  duration_weeks: 32
   scope_note: >-
-    このファイルは原典60週カリキュラムのうち Stage 1 と Stage 2前半のB5–B6を正規化する。
-    B7以降、Stage 3、Capstoneは後続設計で扱い、この24週の完了を全課程修了とはみなさない。
+    このファイルは原典60週カリキュラムのうち Stage 1 と Stage 2のB5–B8を正規化する。
+    B9以降、Stage 3、Capstoneは後続設計で扱い、この32週の完了を全課程修了とはみなさない。
   excludes:
-    - Stage 2後半（B7–B11）
+    - Stage 2後半（B9–B11）
     - Stage 3（R1–R4）
     - Capstone Research Program
   audience: 数学・統計・Python の基礎を持ち、再現可能なクオンツ研究を学ぶ読者
@@ -29,6 +29,8 @@ scope:
     stage_2b_sec_data_spike: planned_before_b9
     b5_mvp: implemented
     b6_mvp: implemented
+    b7_mvp: implemented
+    b8_mvp: implemented
 
 layering:
   core:
@@ -125,6 +127,22 @@ placement:
         - clustering labelを真のmarket regimeと呼べない理由を説明する。
         - nested temporal validationを設計する。
         - conformal coverageのexchangeability仮定を説明する。
+    B7:
+      recommendation: AR/VARの既知・未知にかかわらず、filtered情報集合とforecast evaluationは全員必修とする。
+      diagnostic:
+        - weak stationarityとergodicityを区別する。
+        - VARの安定性とGranger predictive contentを説明する。
+        - Kalman filterとsmootherの条件付け集合を比較する。
+        - publication horizonとcalendar horizonを区別する。
+        - random walkを外した金利予測比較を拒否する。
+    B8:
+      recommendation: 共役計算は圧縮できるが、prior predictive、posterior predictive、MCMC診断、latent-label監査は残す。
+      diagnostic:
+        - prior、likelihood、posterior、posterior predictiveを区別する。
+        - partial poolingのshrinkage weightを導出する。
+        - HMMのforward recursionを説明する。
+        - acceptance rate、ESS、multi-chain R-hatを区別する。
+        - latent stateを観測された真のregimeと呼べない理由を説明する。
   future_reinvestment_candidates:
     status: Stage 2以降の設計時に再評価する。
     topics:
@@ -1487,10 +1505,414 @@ blocks:
         - feature importanceやcluster labelを因果説明として使っていない。
         - standard conformalの仮定違反を隠していない。
 
+  - id: B7
+    title: Time Series, State Space, and Dynamic Term Structure
+    title_ja: 時系列・状態空間・動的金利モデル
+    weeks: [25, 28]
+    goal: >-
+      Treasury公表観測日で進む曲線系列について、stationarity、multivariate dynamics、
+      filtered state、conditional varianceを分け、単純baselineを超える将来予測かを検証する。
+    relation_to_b5_b6: >-
+      B5–B6の2015–2025固定snapshot、availability、methodology break、outer-test開始日を再利用する。
+      primary horizonは5公表観測、1と20はsecondaryとする。
+    design_corrections:
+      - 原典のcash bond・futures・swap比較は同一PIT条件で取得できないためCoreから外し、同じTreasury curveのNS factorへ置換する。
+      - 日次をcalendar等間隔と呼ばず、Treasury publication observationを時間単位とする。
+      - smoothed stateはretrospective diagnosticに限定し、forecast originではfiltered stateだけを使う。
+      - 原典のhedge errorはtradable price・cash flow・costが無いためCoreで作らず、yield forecast accuracyと分離する。
+      - 2007–2025拡張dataは別manifestのAdvanced robustnessに限定し、既存outer testやmodel selectionへ混ぜない。
+    references:
+      core:
+        - Hyndman & Athanasopoulos, Forecasting: Principles and Practice
+        - Särkkä & Svensson, Bayesian Filtering and Smoothing
+        - Diebold & Li, Forecasting the Term Structure of Government Bond Yields
+      primary:
+        - Kalman (1960), A New Approach to Linear Filtering and Prediction Problems
+        - Engle (1982), ARCH
+        - Bollerslev (1986), GARCH
+    weeks_detail:
+      - week: 25
+        code: B7-W25
+        title: Stationarity, AR Diagnostics, and Forecast Evaluation
+        title_ja: 定常性・AR診断・予測評価
+        core:
+          - weak stationarity、ergodicity、ACF、PACF
+          - AR、difference、random-walk baseline
+          - Dickey–Fuller diagnosticと非標準critical value
+          - rolling-origin forecast evaluation
+        advanced:
+          - ARMA / ARIMA order selection
+          - block-aware loss-difference uncertainty
+        learning_objectives:
+          - levelとchangeのstationarity診断を比較できる。
+          - DF statisticへordinary t critical valueを使わない。
+          - publication horizon 5のAR forecastをrandom walkと同じoriginで評価できる。
+        lab:
+          title: Treasury Level versus Change
+          tasks:
+            - 10年CMTのlevel/change ACFとPACFを比較する。
+            - trainingでARをfitしvalidation 5公表日先を評価する。
+            - horizon 1/20をsecondaryとして比較する。
+          validation:
+            - order選択にouter testを使わない。
+            - originとtargetの公表日を保存する。
+        deliverable:
+          artifact: stationarity and forecast baseline audit
+          required_evidence:
+            - ACF / PACF table
+            - DF diagnostic without fake p-value
+            - rolling-origin RMSE
+            - random-walk comparison
+        exit_criteria:
+          - stationarityとergodicityを区別できる。
+          - level persistenceをforecast improvementと混同しない。
+
+      - week: 26
+        code: B7-W26
+        title: VAR, Predictive Content, Impulse Responses, and Cointegration
+        title_ja: VAR・予測的情報・インパルス応答・共和分
+        core:
+          - fixed-decay Nelson–Siegel factor extraction
+          - VAR、Granger predictive content、reduced-form IRF
+          - orthogonalized IRFのordering sensitivity
+          - cointegrationとlevel correlationの分離
+        advanced:
+          - local projections with dependence-aware inference
+          - VECM and formal Engle–Granger critical values
+        learning_objectives:
+          - factor VARをfitしmulti-step curve forecastへ戻せる。
+          - Granger testをcausalityと呼ばない。
+          - residual stationarityをcointegration診断の中心に置ける。
+        lab:
+          title: Treasury Factor Dynamics
+          tasks:
+            - level/slope/curvature VARをfitする。
+            - directional Granger tableとIRFを作る。
+            - validationでfactor VARとrandom walkを比較する。
+          validation:
+            - shock normalizationとfactor orderingを記録する。
+            - cointegration diagnosticにfake calibrated p-valueを付けない。
+        deliverable:
+          artifact: factor VAR and identification-boundary report
+          required_evidence:
+            - coefficient / stability diagnostics
+            - Granger table
+            - IRF convention
+            - validation curve RMSE
+        exit_criteria:
+          - predictive content、structural shock、causal effectを区別できる。
+          - level correlationだけでcointegrationと結論しない。
+
+      - week: 27
+        code: B7-W27
+        title: Kalman Filtering, Smoothing, Missing Data, and DNS
+        title_ja: Kalman filter・smoother・欠測・Dynamic Nelson–Siegel
+        core:
+          - linear-Gaussian state-space representation
+          - Kalman predict/update、innovation、log likelihood
+          - Rauch–Tung–Striebel smoother
+          - missing observation update
+          - fixed-decay Dynamic Nelson–Siegel
+        advanced:
+          - EM parameter estimation
+          - switching / nonlinear filters
+        learning_objectives:
+          - filterとsmootherの情報集合を式で区別できる。
+          - missing tenorをobservation equationから除外できる。
+          - filtered factorから5公表日先curve distributionを作れる。
+        lab:
+          title: Filtered, Smoothed, and Missing Treasury Curves
+          tasks:
+            - scalar local-level modelを実行する。
+            - validation tenorを人工的にblank化してmissing auditを行う。
+            - DNS factor forecastとcovarianceを出す。
+          validation:
+            - covarianceの対称性・PSDを検査する。
+            - forecast inputにsmoothed stateが入っていないことをassertする。
+        deliverable:
+          artifact: state-space derivation and information-set audit
+          required_evidence:
+            - predict/update equations
+            - innovation diagnostics
+            - missing mask
+            - filtered/smoothed comparison
+        exit_criteria:
+          - online forecastとretrospective state reconstructionを混同しない。
+          - two-step DNSをjoint MLEと呼ばない。
+
+      - week: 28
+        code: B7-W28
+        title: Conditional Volatility and Structural Breaks
+        title_ja: 条件付きvolatilityと構造変化
+        core:
+          - ARCH / GARCH recursionとstationarity constraint
+          - daily squared-change proxy
+          - rolling volatility comparison
+          - methodology-break前後のparameter / error audit
+        advanced:
+          - stochastic volatility
+          - Markov switching volatility
+          - intraday realized-volatility estimators when legal data exists
+        learning_objectives:
+          - GARCH(1,1)を制約付きでfitできる。
+          - daily proxyをintraday realized volatilityと呼ばない。
+          - conditional varianceとconditional mean forecastを分離できる。
+        lab:
+          title: Treasury Conditional Variance Through a Methodology Break
+          tasks:
+            - 10年変化へGARCHをfitする。
+            - rolling sigmaとconditional sigmaを比較する。
+            - 2021-12-06前後を別sliceで報告する。
+          validation:
+            - omega > 0、alpha/beta >= 0、alpha + beta < 1を検査する。
+            - variance forecastをdirection scoreへ混ぜない。
+        deliverable:
+          artifact: volatility and break audit
+          required_evidence:
+            - parameter constraints
+            - conditional-variance trace
+            - break slices
+            - data-frequency caveat
+        exit_criteria:
+          - realized volatilityのdata requirementを説明できる。
+          - break-aware evaluationをaggregateから分離できる。
+
+    block_project:
+      required:
+        title: Dynamic Treasury Curve Forecasting Audit
+        target: five-publication-ahead 3m / 2y / 5y / 10y / 30y par-yield curve
+        prediction_origin: after official day-t curve publication
+        models:
+          - random walk in yield levels
+          - static fixed-decay Nelson–Siegel
+          - factor AR(1)
+          - factor VAR(1)
+          - Kalman Dynamic Nelson–Siegel
+        evaluation:
+          - unchanged B5/B6 outer-test start
+          - maturity-level and aggregate RMSE / MAE
+          - DNS marginal 90% coverage and width
+          - secondary horizon 1 / 20
+          - filtered versus smoothed retrospective difference
+          - missing-tenor and methodology-break stability
+        observed_result: >-
+          2023-10-23以降のlocked testではrandom walkが全5tenorで最小RMSEとなり、
+          AR、VAR、Kalman DNSを採用しないnegative resultになった。
+        prohibited_claims:
+          - hedge effectiveness without tradable instrument data
+          - PnL / liquidity
+          - smoothed-state forecasting
+      exit_criteria:
+        - filtered stateだけをforecast originで使っている。
+        - maturity・horizon・distribution metricを分けている。
+        - random walkを超えなければno model selectedを結論にできる。
+
+  - id: B8
+    title: Bayesian Inference and Latent-State Uncertainty
+    title_ja: Bayesian推論と潜在状態の不確実性
+    weeks: [29, 32]
+    goal: >-
+      B7と同じTreasury予測対象へprior・parameter・predictive・latent-state uncertaintyを追加し、
+      calibration、mixing、label、stabilityの失敗を含めて評価する。
+    relation_to_b7: >-
+      target、publication horizon、outer-test境界を変更しない。point forecastとpredictive distributionを
+      別metricで比較し、HMM EMのconditional predictiveをfull Bayesian posterior predictiveと呼ばない。
+    design_corrections:
+      - 原典のsector/bond hierarchyは同質の合法dataが無いため、同じTreasury tenorのpartial poolingへ限定する。
+      - HMC/NUTSは新しいAD依存を追加せずAdvanced理論・診断として扱い、Coreは共役計算とMHで検証する。
+      - HMM labelは観測されたmarket regimeではなく、point-estimated latent componentとして扱う。
+      - WAIC/LOOのpointwise-i.i.d.近似をoverlapping 5日targetの最終selectorに使わない。
+      - state数はtraining/validationだけで固定し、outer testをlabel storyやprior調整に使わない。
+    references:
+      core:
+        - Gelman et al., Bayesian Data Analysis
+        - Murphy, Probabilistic Machine Learning
+        - Rabiner (1989), A Tutorial on Hidden Markov Models
+      diagnostics:
+        - Vehtari et al., Rank-normalization, folding, and localization
+        - Stan Reference Manual
+    weeks_detail:
+      - week: 29
+        code: B8-W29
+        title: Conjugacy, Prior Predictive Checks, and Bayesian Regression
+        title_ja: 共役性・prior predictive・Bayesian regression
+        core:
+          - prior、likelihood、posterior、posterior predictive
+          - normal-normal conjugacy
+          - Normal–Inverse-Gamma regression
+          - prior sensitivity、coverage、interval width
+        advanced:
+          - robust Student-t likelihood
+          - decision theory with explicit loss
+        learning_objectives:
+          - precision-weighted updateを導出できる。
+          - prior predictiveで単位・scaleを監査できる。
+          - 5日先10年変化のposterior predictiveをvalidation評価できる。
+        lab:
+          title: Prior and Posterior Predictive Treasury Changes
+          tasks:
+            - prior scale 1/5/20 bpを比較する。
+            - training-only標準化でBayesian linear regressionをfitする。
+            - validation RMSE、90% coverage、widthを報告する。
+          validation:
+            - future rowsをstandardizationへ使わない。
+            - nominal coverageと実測coverageを分ける。
+        deliverable:
+          artifact: conjugate derivation and predictive calibration report
+          required_evidence:
+            - prior predictive plot
+            - posterior parameters
+            - validation RMSE
+            - coverage and width
+        exit_criteria:
+          - posterior meanとposterior predictiveを区別できる。
+          - Gaussian tail assumptionを保証と呼ばない。
+
+      - week: 30
+        code: B8-W30
+        title: Hierarchical Shrinkage and Model-Evaluation Boundaries
+        title_ja: 階層shrinkageとmodel評価の境界
+        core:
+          - no / complete / partial pooling
+          - normal-normal hierarchy
+          - tenor exchangeability
+          - WAIC formula and dependence boundary
+        advanced:
+          - hyperprior estimation
+          - leave-future-block-out predictive evaluation
+        learning_objectives:
+          - sampling SEに応じたshrinkage weightを説明できる。
+          - tenor hierarchyのexchangeabilityを仮定として監査できる。
+          - overlapping targetへnaive WAICを最終selectorとして使わない。
+        lab:
+          title: Partial Pooling Across Treasury Tenors
+          tasks:
+            - tenor別5日変化meanをpartial poolする。
+            - tenor別posterior predictiveをvalidation評価する。
+            - draw-by-observation log likelihoodからWAIC diagnosticを計算する。
+          validation:
+            - hyperparameterの固定/推定を記録する。
+            - time dependence caveatをWAIC結果と併記する。
+        deliverable:
+          artifact: hierarchical shrinkage and evaluation-boundary memo
+          required_evidence:
+            - pooling comparison
+            - shrinkage weights
+            - tenor coverage / width
+            - WAIC non-selection caveat
+        exit_criteria:
+          - pooling regimesとbias-variance trade-offを説明できる。
+          - time-series predictionへpointwise-i.i.d.近似を過大適用しない。
+
+      - week: 31
+        code: B8-W31
+        title: Graphical Models, Mixtures, HMMs, and EM
+        title_ja: graphical model・mixture・HMM・EM
+        core:
+          - DAG factorizationとconditional independence
+          - iid mixtureとHMMの差
+          - forward-backward、Viterbi、Baum–Welch
+          - label switching、occupancy、duration
+        advanced:
+          - switching VAR / Kalman model
+          - Bayesian HMM
+        learning_objectives:
+          - HMM joint distributionをfactorizeできる。
+          - filtered、smoothed、Viterbi stateを区別できる。
+          - EM monotonicityとlocal-optimum boundaryを説明できる。
+        lab:
+          title: Latent Treasury Factor-Change States
+          tasks:
+            - 2-state Gaussian HMMをtraining factor changesへfitする。
+            - filtered/smoothed probabilityを比較する。
+            - occupancy、duration、transition、label canonicalizationを監査する。
+          validation:
+            - EM log likelihoodが数値誤差以上に減少しない。
+            - state番号を外部のeconomic labelへ自動変換しない。
+        deliverable:
+          artifact: HMM algorithm and latent-label audit
+          required_evidence:
+            - factorization
+            - EM trace
+            - filtered / smoothed plot
+            - occupancy / duration / transition
+        exit_criteria:
+          - HMM stateを観測真値と呼ばない。
+          - forecastにはfiltered probabilityだけを使う。
+
+      - week: 32
+        code: B8-W32
+        title: MCMC Diagnostics and Approximation Boundaries
+        title_ja: MCMC診断と近似推論の境界
+        core:
+          - random-walk Metropolis
+          - acceptance rate、ESS、multiple chains、classical split-R-hat
+          - proposal-scale failure
+          - Gibbs / HMC / NUTS / VI / SMC comparison
+        advanced:
+          - rank-normalized / folded / localized diagnostics
+          - HMC/NUTS with AD and divergence checks
+          - simulation-based calibration
+        learning_objectives:
+          - acceptance rateだけではmixingを診断できないと説明できる。
+          - ESSとmulti-chain R-hatを計算できる。
+          - classical split-R-hatをmodern rank-normalized diagnosticと呼ばない。
+        lab:
+          title: MCMC Audit for a Treasury Mean-Change Posterior
+          tasks:
+            - four chainsを独立RNGで実行する。
+            - small/good/large proposal scaleを比較する。
+            - trace、acceptance、ESS、split-R-hatを報告する。
+          validation:
+            - chain initializationとseedを保存する。
+            - trace plot単独でconvergenceを宣言しない。
+        deliverable:
+          artifact: MCMC diagnostics and algorithm-boundary report
+          required_evidence:
+            - multiple traces
+            - acceptance / ESS / R-hat
+            - proposal failure table
+            - unimplemented Advanced boundary
+        exit_criteria:
+          - MCMC errorとposterior uncertaintyを区別できる。
+          - HMC/NUTS/VI/SMCの未実装範囲を隠さない。
+
+    block_project:
+      required:
+        title: Treasury Predictive Uncertainty and Latent-State Audit
+        target: B7と同じ5公表日先の5-tenor par-yield curve change
+        models:
+          - zero-change random-walk point baseline
+          - tenor-wise Bayesian NIG regression posterior predictive
+          - Gaussian HMM factor-change conditional predictive
+        selection:
+          - HMM state count 2 / 3 / 4 is selected by validation log score only
+          - priors and features are fixed before outer test
+        evaluation:
+          - aggregate and maturity RMSE
+          - marginal 90% coverage and width
+          - uncertainty-contract label
+          - state occupancy / duration / transition stability
+          - label and state-count sensitivity
+        observed_result: >-
+          locked testではrandom walkのaggregate RMSE 11.13 bpに対し、Bayesian regression 11.26 bp、
+          HMM 11.29 bpでpoint accuracyは改善しなかった。HMM coverage 92.6%はBayesian 88.2%より高いが、
+          mean interval widthも44.4 bp対33.7 bpと広く、採用modelなしを結論とする。
+        prohibited_claims:
+          - HMM state is a true observed market regime
+          - HMM EM predictive is a full Bayesian posterior predictive
+          - causal / trading / PnL interpretation
+      exit_criteria:
+        - state数をouter test前に固定している。
+        - point errorとcoverage/widthを分離している。
+        - HMM parameter uncertainty不足を明記している。
+        - random walkを超えなければno model selectedを結論にできる。
+
 stage_exit_criteria:
-  - B1〜B6 の各 block project が、入力契約・仮定・validation・既知の限界を持つ。
+  - B1〜B8 の各 block project が、入力契約・仮定・validation・既知の限界を持つ。
   - 数値・統計・Monte Carlo・最適化の診断が、再実行可能な成果物として残る。
   - 金融データの timestamp と情報集合を明示し、look-ahead leakage を防いでいる。
   - 結果から支持される主張と、追加の識別・データが必要な主張を区別できる。
-  - B5–B6では実データのsource、availability、methodology break、outer testを固定している。
+  - B5–B8では実データのsource、availability、methodology break、outer testを固定している。
   - model tournamentは単一scoreだけでwinnerを選ばず、no model selectedを許容する。
+  - B7ではfiltered/smoothed情報集合を分離し、B8ではposterior predictiveとparameter-conditional predictiveを分離する。

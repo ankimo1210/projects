@@ -51,3 +51,19 @@ parts:
       - file: notebooks/33_week23_unsupervised_regimes
       - file: notebooks/34_week24_evaluation_under_shift
       - file: notebooks/35_b6_project_treasury_model_tournament
+  - caption: B7 — 時系列・状態空間・動的金利モデル
+    chapters:
+      - file: notebooks/36_b7_overview
+      - file: notebooks/37_week25_stationarity_arima
+      - file: notebooks/38_week26_var_cointegration
+      - file: notebooks/39_week27_state_space_dns
+      - file: notebooks/40_week28_volatility_breaks
+      - file: notebooks/41_b7_project_dynamic_treasury_curve
+  - caption: B8 — Bayesian推論と潜在状態の不確実性
+    chapters:
+      - file: notebooks/42_b8_overview
+      - file: notebooks/43_week29_bayesian_foundations
+      - file: notebooks/44_week30_hierarchical_models
+      - file: notebooks/45_week31_graphical_latent_hmm
+      - file: notebooks/46_week32_mcmc_approximate_inference
+      - file: notebooks/47_b8_project_treasury_regime_uncertainty

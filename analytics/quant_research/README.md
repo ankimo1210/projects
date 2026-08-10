@@ -6,14 +6,14 @@
 **仮定を定める → 安定に実装する → 診断する → 主張の限界を説明する**という一連の研究作業として
 学ぶための日本語 HTML 教科書プロジェクトです。
 
-現在は Stage 1（B1〜B4）と Stage 2A（B5〜B6）、全24週・36 Notebookを実装しています。
+現在は Stage 1（B1〜B4）と Stage 2（B5〜B8）、全32週・48 Notebookを実装しています。
 60週版の原案をそのまま詰め込まず、各週を `core`（必修）と
 `advanced`（発展）に分けています。正規化した学習仕様の source of truth は
 [`curriculum_map.yml`](curriculum_map.yml) です。
 
 ## 到達点
 
-現在のStage 1–2A修了時に、学習者が次の判断を自力で行えることを目標にします。
+現在のStage 1–2B修了時に、学習者が次の判断を自力で行えることを目標にします。
 
 - 問題の構造と数値条件から、分解法・推定法・最適化法を選ぶ。
 - 統計誤差、数値誤差、Monte Carlo 誤差、離散化誤差、モデル誤差を区別する。
@@ -38,7 +38,7 @@
    BOJ 発表前後の価格反応を測る金融イベントスタディと、DiD 等の因果イベントスタディを
    区別し、識別仮定なしに「政策の因果効果」とは呼びません。
 
-## Stage 1–2A の構成
+## Stage 1–2B の構成
 
 | Block | Weeks | 主題 | ブロック成果物 |
 |---|---:|---|---|
@@ -48,6 +48,8 @@
 | B4 | 13〜16 | 凸最適化・アルゴリズム・研究ソフトウェア | 制約付き Curve Fitter（発展: portfolio optimizer） |
 | B5 | 17〜20 | baseline・正則化・分類・時系列validation | Daily Treasury Curve Forecasting Baseline |
 | B6 | 21〜24 | tree・kernel/GP・clustering・shift下評価 | Treasury Forecast Model Tournament |
+| B7 | 25〜28 | stationarity・VAR・state space・volatility | Dynamic Treasury Curve Forecasting Audit |
+| B8 | 29〜32 | Bayesian推論・階層model・HMM・MCMC診断 | Treasury Predictive Uncertainty and Latent-State Audit |
 
 B2 の Girsanov・importance sampling・Brownian bridge、B4 の ADMM 等は Advanced に置き、
 Core の理解と検証を犠牲にしない順序にしています。B4 では制約付き最適化への自然な入口として、
@@ -56,7 +58,7 @@ ADMM より先に projected gradient を扱います。
 Stage 1のJGB-like curveとBOJ announcementの既定データは、数値・推論・最適化の契約を
 検証する合成fixtureです。実JGB市場やBOJ政策についての実証結果ではありません。
 
-B5–B6は公式U.S. Treasury daily par yield curveの固定snapshotを使います。transaction price、
+B5–B8は公式U.S. Treasury daily par yield curveの固定snapshotを使います。transaction price、
 executable quote、zero rate、intraday dataではないため、予測誤差と分布シフトは分析しても、
 取引収益・流動性・政策因果効果は主張しません。
 
@@ -111,12 +113,24 @@ Placement-outは学習速度だけを変え、成果物、採点、再現性・�
 | `33_week23_unsupervised_regimes` | k-means、cluster stability、記述的regime |
 | `34_week24_evaluation_under_shift` | nested temporal validation、drift、conformal境界 |
 | `35_b6_project_treasury_model_tournament` | 共通outer testによるTreasury model tournament |
+| `36_b7_overview` | publication horizon、動学予測、filtered情報集合のB7研究フロー |
+| `37_week25_stationarity_arima` | stationarity、ACF/PACF、DF diagnostic、AR baseline |
+| `38_week26_var_cointegration` | NS factor VAR、Granger、IRF、cointegration境界 |
+| `39_week27_state_space_dns` | Kalman filter/smoother、missing data、Dynamic Nelson–Siegel |
+| `40_week28_volatility_breaks` | GARCH、volatility proxy、methodology break |
+| `41_b7_project_dynamic_treasury_curve` | 5公表日先Dynamic Treasury Curve Forecasting Audit |
+| `42_b8_overview` | prior・predictive・latent-state uncertaintyのB8研究フロー |
+| `43_week29_bayesian_foundations` | 共役Bayes、prior predictive、Bayesian regression |
+| `44_week30_hierarchical_models` | partial pooling、tenor hierarchy、WAIC境界 |
+| `45_week31_graphical_latent_hmm` | graphical model、Gaussian HMM、EM、label監査 |
+| `46_week32_mcmc_approximate_inference` | MH、ESS、split-R-hat、近似推論の境界 |
+| `47_b8_project_treasury_regime_uncertainty` | 同一targetのBayesian/HMM predictive audit |
 
 ## ディレクトリ
 
 ```text
 analytics/quant_research/
-├── curriculum_map.yml       # Stage 1–2A の正規化された学習仕様
+├── curriculum_map.yml       # Stage 1–2B の正規化された学習仕様
 ├── book/                    # Jupyter Book 設定と静的 HTML の入口
 ├── notebooks/               # 実行済み教材 Notebook
 ├── tools/                   # Notebook 生成・検証スクリプト
@@ -184,7 +198,8 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 ## 検証方針
 
 - Notebook の生成結果が同一入力から再現できること。
-- OLS・PCA・曲線推定・確率simulationの自作実装が解析解または NumPy / SciPy と許容誤差内で一致すること。
+- OLS・PCA・曲線推定・確率simulation・AR/VAR・Kalman・共役Bayes・HMMの自作実装が、
+  解析解または既知真値fixtureと許容誤差内で一致すること。
 - 残差、直交性、条件数、rank、solver disagreement を数値で検査すること。
 - 時系列を使う章では、時点 \(t\) より後の情報を fit に使わないこと。
 - 実データ章ではsource、retrieval、hash、grain、unit、availability、methodology breakを保存すること。
@@ -244,7 +259,7 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
   objective gapを事後評価として併記する。
 - correctness test、performance benchmark、environment metadataを分離して保存する。
 
-## B5–B6 Treasury実データの研究契約
+## B5–B8 Treasury実データの研究契約
 
 - 固定snapshotは2015-01-02–2025-12-31の2,750公表日、3m・2y・5y・10y・30yを使う。
 - 値はpercent単位のconstant-maturity par yieldであり、zero rateやtransaction rateではない。
@@ -257,21 +272,27 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 - 詳細な品質監査と結果は
   [Stage 2A / B5–B6実装ノート](docs/updates/2026-08-10-stage-2a-b5-b6.md)に残す。
 
-## B7–B9の着手前契約
+### B7/B8の追加契約
 
-- B7–B8 CoreはB5–B6と同じ2015–2025 snapshotを使い、2007–2025拡張版は別manifestの
+- B7/B8は同じsnapshotとouter-test開始日（2023-10-23）を使い、新しい都合のよい合成market seriesを作らない。
+- B7 primaryは5 Treasury公表日先の5-tenor curve。1/20公表日はsecondaryで、calendar dayへ読み替えない。
+- forecast originではKalman/HMMのfiltered state probabilityだけを使い、smoothed resultはretrospective diagnosticに限定する。
+- B8のBayesian regressionはposterior predictive、HMM EMはpoint-estimated parameter下のconditional predictiveとして区別する。
+- locked testではB7/B8の候補modelがrandom walkのpoint RMSEを上回らず、no model selectedを結論とする。
+- 結果と数値は[Stage 2B / B7–B8実装ノート](docs/updates/2026-08-10-stage-2b-b7-b8.md)に残す。
+
+## B9の着手前契約
+
+- 2007–2025 Treasury拡張版は別manifestの
   Advanced historical robustnessに限定する。
-- B7のprimary horizonは5 Treasury公表日とし、filtered stateだけを予測入力に使う。
-  smoothed stateは事後診断であり、forecast featureにはしない。
-- B8は同じtargetのposterior predictive distributionを評価し、point errorとinterval coverageを分離する。
 - SECはAccess・Sample・Teaching fitを実測済みだが、Baseline未実施の条件付き候補である。
 - B9はFrames APIを分析経路に使わず、Company Factsの`accn`をSubmissionsへ結合する。
   日次Coreでは受理日の次の営業日から利用可能とする保守的PIT規則を使う。
 
 ## 現在の範囲
 
-- 実装済み: Phase 0、Stage 1 / B1–B4、Stage 1評価・placement追補、Stage 2A / B5–B6
-- 後続: Stage 2後半（B7〜B11）。B9の前にSEC baseline gateとPIT contractを完了する
+- 実装済み: Phase 0、Stage 1 / B1–B4、Stage 1評価・placement追補、Stage 2 / B5–B8
+- 後続: Stage 2後半（B9〜B11）。B9の前にSEC baseline gateとPIT contractを完了する
 - 未実装: Research Apprenticeship、Capstone
 
 ## 更新ノート
@@ -280,3 +301,4 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 - [2026-08-10 — Stage 1整合性フォローアップとStage 2実データ優先計画](docs/plans/2026-08-10-stage-2-real-data-first.md)
 - [2026-08-10 — Stage 2A / B5–B6実装・データ品質ノート](docs/updates/2026-08-10-stage-2a-b5-b6.md)
 - [2026-08-10 — Stage 2 Data Feasibility follow-up](docs/updates/2026-08-10-stage-2-data-feasibility-follow-up.md)
+- [2026-08-10 — Stage 2B / B7–B8実装・予測結果ノート](docs/updates/2026-08-10-stage-2b-b7-b8.md)

@@ -1,7 +1,7 @@
 # Stage 1整合性フォローアップとStage 2実データ優先計画
 
 - 決定日: 2026-08-10
-- 状態: Stage 1整合性修正とStage 2A / B5–B6を実装済み。B7以降は未着手
+- 状態: Stage 1整合性修正とStage 2B / B5–B8を実装済み。B9着手前gateを準備中
 - 対象: Stage 1の残存整合性修正、Stage 2（B5–B11）のデータ・テーマ設計
 
 ## 結論
@@ -16,6 +16,9 @@ Monte Carloそのものを学ぶ章では引き続き使用する。ただし、
 
 > 2026-08-10 update: Treasury spikeはgateを通過し、B5–B6を実装した。実測と検証結果は
 > [Stage 2A / B5–B6実装ノート](../updates/2026-08-10-stage-2a-b5-b6.md)を参照。
+> B7–B8も同じTreasury snapshotとouter testで実装し、複雑な候補がrandom walkを超えない
+> `no model selected`を結論とした。詳細は
+> [Stage 2B / B7–B8実装ノート](../updates/2026-08-10-stage-2b-b7-b8.md)を参照。
 > 独立したEDGAR spikeでAccess・Sample・Teaching fitは通過し、revisionとFrames APIの
 > look-aheadを実測した。一方、Baselineは未実施でavailability contractも未確定なので、
 > SECは5 gate中4 gate相当の条件付き候補でありB9は未着手とする。詳細は
@@ -151,8 +154,8 @@ full limit-order-bookと呼ばない。暗号資産を教材の専門trackに採
 |---|---|---|---|
 | B5 | Daily Treasury Curve Forecasting Baseline | Treasury daily curve | no-change/AR/ridge、expanding window、regime別誤差 |
 | B6 | Treasury Forecast Model Tournament | B5と同一snapshot | nested temporal validation、calibration、計算予算 |
-| B7 | Dynamic Treasury Curve | Treasury daily curve | factor/state-space、filtered vs smoothed、multi-step forecast |
-| B8 | Bayesian Rate Dynamics | Treasury factors | prior/posterior predictive check、coverage、latent-state境界 |
+| B7 | Dynamic Treasury Curve Forecasting Audit（実装済み） | Treasury daily curve | factor/state-space、filtered vs smoothed、multi-step forecast |
+| B8 | Treasury Predictive Uncertainty and Latent-State Audit（実装済み） | Treasury factors | prior/posterior predictive check、coverage、latent-state境界 |
 | B9 | SEC Filing Change & Fundamentals Forecast | Company Facts + Submissions | numeric-only/TF-IDF baseline、`accn` PIT join、企業・時間split、future fundamentals |
 | B10 | Reproducible Public-Data Research Package | B7またはB9 | downloader、cache、availability time、schema、offline fixture |
 | B11 | Rates research またはoptional intraday track | Treasury/SEC、選択時のみ公開trade data | pre-analysis plan、cost/claim boundary、replication package |
@@ -168,7 +171,8 @@ B5/B6ではMLPをAdvancedに置き、単純baselineと同じouter testで比較�
   2007–2014をmodel/hyperparameter選択へ戻さず、B5–B6の結果も遡及変更しない。
 - B7のprimary taskは5公表日先のlevel / slope / curvatureまたはcurve変化の予測とし、random walkと
   last filtered stateをbaselineにする。予測時点ではfiltered stateだけを使い、smoothed stateは事後診断に限定する。
-- B8は同じtargetのposterior predictive distributionを扱い、RMSE・MAEとinterval coverage・widthを分離する。
+- B8は同じtargetについてBayesian posterior predictiveとHMM parameter-conditional predictiveを区別し、
+  RMSE・MAEとinterval coverage・widthを分離する。
 - 1公表日・20公表日のhorizonはsecondaryとし、primary結果を見てから入れ替えない。
 
 ## 6. 実装順序
@@ -180,7 +184,9 @@ B5/B6ではMLPをAdvancedに置き、単純baselineと同じouter testで比較�
 5. gate通過結果に基づいてB5–B6のtarget、split、metric、dependencyを確定する。**完了**
 6. `curriculum_map.yml`へB5–B6を追加し、12章と共通libraryを実装する。**完了**
 7. SECのAccess・Semantics・Sample・Teaching fit spikeを実行する。**完了。ただしavailability contractを保守的規則へ限定**
-8. B9着手前にSECの単純baseline、metric、企業・時間holdout、失敗条件を固定して実行する。**未着手**
+8. `curriculum_map.yml`へB7–B8を追加し、12章と共通libraryを同じTreasury contractで実装する。**完了**
+9. B7/B8 outer testのnegative result、filtered-only、uncertainty contractを更新ノートへ固定する。**完了**
+10. B9着手前にSECの単純baseline、metric、企業・時間holdout、失敗条件を固定して実行する。**未着手**
 
 ## 7. 未決事項
 

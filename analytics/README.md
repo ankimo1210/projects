@@ -6,7 +6,7 @@
 メンバー外)。
 
 - 本文は日本語、コード・コメント・識別子は英語、**LaTeX 内に日本語を入れない**
-- 乱数は seed 固定で再現可能・**外部ダウンロード依存なし**(データは合成・同梱)
+- 乱数は seed 固定で再現可能・**実行時の外部ダウンロード依存なし**（合成fixtureまたは出所・hash付き同梱snapshot）
 - Notebook は出力込みでコミット / 図ヘルパは純関数でテスト付き
 - 可視化はライブカーネル不要の **クライアントサイド Plotly**(静的 HTML でも動くスライダー)
 
@@ -22,7 +22,7 @@
 | [`differential_equation/`](differential_equation/) | 微分方程式 — ODE / PDE の2分冊 + SDE インタラクティブ教科書（経路・分布、基本過程、生成作用素、後退方程式、Feynman–Kac、初到達を数値実験で学ぶ） | 21 (ODE 10 / PDE 11) + SDE 47章 |
 | [`machine_learning/`](machine_learning/) | 機械学習の実践 — 正しく定式化し、検証し、解釈する | 14 |
 | [`statistics/`](statistics/) | 統計的推測の風景 — 不確実性を測り、判断する言語（確率論 + 頻度論。ベイズは `bayesian/` と対） | 11 |
-| [`quant_research/`](quant_research/) | Quant Research / Data Science — 60週カリキュラムの実践教科書（Stage 1–2A / B1–B6を実装） | 36 |
+| [`quant_research/`](quant_research/) | Quant Research / Data Science — 60週カリキュラムの実践教科書（Stage 1–2B / B1–B8を実装） | 48 |
 
 > Notebook 数は時点の目安(各教材は随時加筆)。
 
