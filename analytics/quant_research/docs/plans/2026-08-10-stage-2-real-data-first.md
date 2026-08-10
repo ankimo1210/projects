@@ -1,7 +1,7 @@
 # Stage 1整合性フォローアップとStage 2実データ優先計画
 
-- 決定日: 2026-08-10
-- 状態: Stage 1整合性修正とStage 2B / B5–B8を実装済み。B9着手前gateを準備中
+- 決定日: 2026-08-10（B9 contract revised 2026-08-11）
+- 状態: Stage 1整合性修正とStage 2B / B5–B8を実装済み。B9 baselineは実行可能性を確認したが、PIT cohort・archive join・strict split標本数のため着手保留
 - 対象: Stage 1の残存整合性修正、Stage 2（B5–B11）のデータ・テーマ設計
 
 ## 結論
@@ -20,9 +20,14 @@ Monte Carloそのものを学ぶ章では引き続き使用する。ただし、
 > `no model selected`を結論とした。詳細は
 > [Stage 2B / B7–B8実装ノート](../updates/2026-08-10-stage-2b-b7-b8.md)を参照。
 > 独立したEDGAR spikeでAccess・Sample・Teaching fitは通過し、revisionとFrames APIの
-> look-aheadを実測した。一方、Baselineは未実施でavailability contractも未確定なので、
-> SECは5 gate中4 gate相当の条件付き候補でありB9は未着手とする。詳細は
+> look-aheadを実測した。baseline未実施時点ではavailability contractも未確定だったため、
+> SECは5 gate中4 gate相当の条件付き候補としてB9を未着手にした。詳細は
 > [Stage 2 Data Feasibility follow-up](../updates/2026-08-10-stage-2-data-feasibility-follow-up.md)を参照。
+> その後のbounded baselineは実行可能性を確認したが、現在Frameを2008年以降へ遡及する
+> cohort riskと、company×time strict splitの`n=84`が判明した。v1 Coreは2015-12-31 anchor後の
+> fixed PIT cohort、`filings.files` archive join、size floor、MAE/medAE/RMSE、`n>=200` gateへ修正し、
+> B9実装は再取得・標本拡張まで保留する。詳細は
+> [SEC B9 baseline gate follow-up](../updates/2026-08-11-sec-baseline-gate.md)を参照。
 
 ## 1. Stage 1で先に閉じる整合性項目
 
@@ -186,13 +191,15 @@ B5/B6ではMLPをAdvancedに置き、単純baselineと同じouter testで比較�
 7. SECのAccess・Semantics・Sample・Teaching fit spikeを実行する。**完了。ただしavailability contractを保守的規則へ限定**
 8. `curriculum_map.yml`へB7–B8を追加し、12章と共通libraryを同じTreasury contractで実装する。**完了**
 9. B7/B8 outer testのnegative result、filtered-only、uncertainty contractを更新ノートへ固定する。**完了**
-10. B9着手前にSECの単純baseline、metric、企業・時間holdout、失敗条件を固定して実行する。**未着手**
+10. B9着手前にSECの単純baseline、metric、企業・時間holdout、失敗条件を固定して実行する。**bounded sampleで実行可能性確認済み。ただしstrict split `n=84`のためgate未達**
+11. B9着手前に`filings.files`を含む`accn` join、fixed-anchor PIT cohort、calendar manifest、
+    cache fetcherを実装する。**完了。offline panel fixtureと約150社への拡張、strict split `n>=200`の実測は残作業**
 
 ## 7. 未決事項
 
 - B11を日次rates研究に統一するか、実intraday dataを使う選択trackを設けるか。
 - Stage 1のNotebook title/filenameからJGB・BOJを将来外すか、方法検証labという注記だけに留めるか。
 - 実データsnapshotをrepositoryで再配布できるか、manifestとdownloaderだけを追跡するか。
-- SEC B9のprimary fundamental targetとpoint-in-time企業universe。Baseline gateを通すまで確定しない。
+- SEC B9のdynamic historical universeは未確定。v1 Coreのfixed-anchor cohort（2015-12-31 / 2016-04-01 / Assets ≥ $100M）を先に検証し、dynamic版はAdvancedへ分離する。
 
 これらは推測で決めず、Phase 2.0の取得・利用条件・標本診断を見て確定する。
