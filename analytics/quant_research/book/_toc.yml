@@ -19,3 +19,11 @@ parts:
       - file: notebooks/09_week7_markov_martingales
       - file: notebooks/10_week8_brownian_monte_carlo
       - file: notebooks/11_b2_project_monte_carlo_library
+  - caption: B3 — 統計的推測と因果推論の基礎
+    chapters:
+      - file: notebooks/12_b3_overview
+      - file: notebooks/13_week9_likelihood_estimands
+      - file: notebooks/14_week10_testing_resampling
+      - file: notebooks/15_week11_robust_inference
+      - file: notebooks/16_week12_causal_event_study
+      - file: notebooks/17_b3_project_boj_announcement_study

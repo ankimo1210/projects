@@ -21,7 +21,8 @@ scope:
     phase_0: implemented
     b1_mvp: implemented
     b2_mvp: implemented
-    b3_to_b4_notebooks: planned
+    b3_mvp: implemented
+    b4_notebooks: planned
 
 layering:
   core:

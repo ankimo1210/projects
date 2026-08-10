@@ -6,7 +6,7 @@
 **仮定を定める → 安定に実装する → 診断する → 主張の限界を説明する**という一連の研究作業として
 学ぶための日本語 HTML 教科書プロジェクトです。
 
-現在は Stage 1（B1〜B4、全16週）の設計を固定し、B1–B2（Weeks 1〜8）を縦切り MVP として
+現在は Stage 1（B1〜B4、全16週）の設計を固定し、B1–B3（Weeks 1〜12）を縦切り MVP として
 実装しています。60週版の原案をそのまま詰め込まず、各週を `core`（必修）と
 `advanced`（発展）に分けています。正規化した学習仕様の source of truth は
 [`curriculum_map.yml`](curriculum_map.yml) です。
@@ -75,6 +75,12 @@ B3は全4週を必修とします。Placement-outは学習速度だけを変え�
 | `09_week7_markov_martingales` | Markov連鎖、filtration、martingale、停止時刻 |
 | `10_week8_brownian_monte_carlo` | Brownian motion、Itô、Euler–Maruyama、分散削減 |
 | `11_b2_project_monte_carlo_library` | 再利用可能なMonte Carloライブラリと総合診断 |
+| `12_b3_overview` | 推定対象、識別、推論、主張の境界を結ぶB3研究フロー |
+| `13_week9_likelihood_estimands` | 尤度、MLE、有限標本挙動、model misspecification |
+| `14_week10_testing_resampling` | 検定、bootstrap、permutation、多重比較 |
+| `15_week11_robust_inference` | HC・HAC・cluster robust covarianceと守備範囲 |
+| `16_week12_causal_event_study` | potential outcomes、DAG、DiD、event studyの境界 |
+| `17_b3_project_boj_announcement_study` | 合成BOJ発表データによるhonest inference総合演習 |
 
 ## ディレクトリ
 
@@ -183,8 +189,18 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 - antitheticはpairを1観測単位として扱い、control variateは既知のcontrol期待値を明記する。
 - Advancedのimportance samplingはraw-weight ESSだけでなく、nonzero contributionと寄与集中も診断する。
 
+## B3 推論とイベントスタディの主張契約
+
+- データを見る前にestimand、sampling unit、primary analysisを記述する。
+- optimizerの収束、モデル仮定、有限標本coverageを別々に診断する。
+- covariance estimatorはheteroskedasticity、時系列依存、cluster構造に合わせて選ぶ。
+- robust standard errorはomitted-variable biasや不適切なcounterfactualを修正しない。
+- BOJ演習の既定データはtimezone付きの合成データで、主張はannouncement responseに限定する。
+- event windowの変更、placebo、negative control、多重比較補正はprimary analysisと分けて報告する。
+- 実データadapterではBOJ公式文書の公開timestamp、精度、重複ニュース、利用条件を別途検証する。
+
 ## 現在の範囲
 
-- 実装済み: Phase 0（設計・骨格）と B1–B2 MVP
+- 実装済み: Phase 0（設計・骨格）と B1–B3 MVP
 - 設計済み: B1〜B4（Weeks 1〜16）
-- 後続: B3〜B4 の Notebook、Stage 2（B5〜B11）、Research Apprenticeship
+- 後続: B4 の Notebook、Stage 2（B5〜B11）、Research Apprenticeship
