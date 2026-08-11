@@ -827,11 +827,13 @@ def project_cells():
 | inner train / validation | date cutoff 2021-01-01、company rule維持 |
 | locked outer | 2023-10-23以降かつ`cik % 3 == 0` |
 | primary / secondary | MAE / median absolute error |
-| comparators | pooled drift、TF–IDF ridge |
+| fixed baseline ladder | zero、pooled drift、seasonal、company mean |
+| primary comparator | inner-validation MAE最小baselineを固定tie-breakで選び、outer前にfreeze |
+| neural comparator | TF–IDF ridge |
 | budget | 12 runs/family、200 epochs/run、100k parameters以下 |
 | failure result | `no_model_selected` |
 
-このNotebookは256行教材fixtureだけを使う。full 2,195-row development search、nominee manifest、company-cluster bootstrapが未実行なのでouterは開かない。
+このNotebookは256行教材fixtureだけを使う。candidate教材実装はcompact inner train 192行でfitする一方、fixed baseline predictionは正式規約どおりfull 1,504-row inner training partitionだけから事前計算している。したがって同じ64-row validation上のbaseline ladder規約は検証できるが、candidateとの順位は公平なfull-data tournamentではない。full 2,195-row development search、nominee manifest、company-cluster bootstrapが未実行なのでouterは開かない。
 """),
         code("""
 tfidf_model = qt.fit_hashed_tfidf(
@@ -853,12 +855,16 @@ mlp = qt.train_mlp(
     rng=task_rng(1),
 )
 
+fixed_baseline_names = ["zero", "pooled_drift", "seasonal", "company_mean"]
 project_predictions = {
-    "zero": np.zeros_like(target_validation),
+    name: fixture.baseline_predictions[name][validation_mask]
+    for name in fixed_baseline_names
+}
+project_predictions.update({
     "numeric_ridge": numeric_ridge.predict(numeric_validation),
     "hashed_tfidf_ridge": text_ridge.predict(tfidf[validation_mask]),
     "numeric_mlp": qt.mlp_predict(mlp.parameters, numeric_validation),
-}
+})
 project_metrics = pd.DataFrame(
     [
         {"model": name, **qt.regression_error_table(target_validation, prediction, entity_validation)}
@@ -866,11 +872,32 @@ project_metrics = pd.DataFrame(
     ]
 ).sort_values(["mae", "median_absolute_error"])
 display(project_metrics)
+
+baseline_metrics = (
+    project_metrics.set_index("model").loc[fixed_baseline_names].reset_index()
+)
+tie_break = {name: index for index, name in enumerate(fixed_baseline_names)}
+primary_baseline = min(
+    fixed_baseline_names,
+    key=lambda name: (
+        float(baseline_metrics.loc[baseline_metrics["model"] == name, "mae"].iloc[0]),
+        tie_break[name],
+    ),
+)
+baseline_minima = {
+    metric: float(baseline_metrics[metric].min())
+    for metric in ("mae", "median_absolute_error", "company_macro_mae")
+}
+print("teaching-fixture primary baseline:", primary_baseline)
+print("metric-wise fixed-baseline minima:", baseline_minima)
+assert set(baseline_metrics["model"]) == set(fixed_baseline_names)
 """),
         md(r"""
 ## 2. Evidence gate
 
-教材fixtureのmetric順位をnominee選定に転用しない。正式選定にはfull inner validation、pre-registered hyperparameter grid、3 seed、company-cluster paired bootstrap、runtime/parameter manifestが必要である。さらにneural modelがTF–IDF ridgeを上回るには、MAE 1%以上改善、medAE/company-macro非悪化、paired interval上端0未満を全て満たす必要がある。
+教材fixtureでもfixed baseline 4本を省略しない。ただし64-row validationの順位を正式nominee選定へ転用しない。full inner validationでは、MAEをfixed baseline中の最小値から1%以上改善し、medAEとcompany-macro MAEも各metricのbaseline最小値を悪化させないことを要求する。MAE最小baselineは固定tie-breakで選び、nominee manifestと一緒にouter前にfreezeする。outerのpaired intervalはそのfrozen baselineだけを比較対象とし、outer outcomeから再選択しない。neural valueの追加主張にはTF–IDF ridgeに対する同じpoint/uncertainty gateも必要である。
+
+この規約はteaching fixtureでzeroがpooled driftより強いと確認した後、full candidate search・nominee freeze・outer accessより前にamendmentとして記録した。元のcontract hash、観測済み情報、変更理由をcontractの \`amendments\` へ残しており、事前登録を黙って書き換えてはいない。
 """),
         code("""
 gate = pd.DataFrame(

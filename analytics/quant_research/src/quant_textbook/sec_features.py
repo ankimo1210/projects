@@ -28,6 +28,8 @@ class SECTeachingFixture:
     partitions: np.ndarray
     numeric_feature_names: tuple[str, ...]
     numeric_features: np.ndarray
+    baseline_prediction_contract: dict[str, object]
+    baseline_predictions: dict[str, np.ndarray]
     token_hashes: np.ndarray
     targets: np.ndarray
     document_sha256: tuple[str, ...]
@@ -152,6 +154,18 @@ def load_sec_teaching_fixture() -> SECTeachingFixture:
     rows = payload.get("rows")
     if not isinstance(rows, list) or not rows:
         raise ValueError("SEC teaching fixture contains no rows")
+    baseline_contract = payload.get("baseline_prediction_contract")
+    expected_baselines = ("zero", "pooled_drift", "seasonal", "company_mean")
+    if (
+        not isinstance(baseline_contract, dict)
+        or tuple(baseline_contract.get("names", ())) != expected_baselines
+    ):
+        raise ValueError("SEC teaching fixture baseline contract is inconsistent")
+    if (
+        baseline_contract.get("training_partition") != "full 1504-row inner training partition"
+        or baseline_contract.get("locked_outer_used") is not False
+    ):
+        raise ValueError("SEC teaching fixture baseline partition is inconsistent")
     feature_names = tuple(payload["numeric_feature_names"])
     fixture = SECTeachingFixture(
         row_ids=tuple(str(row["row_id"]) for row in rows),
@@ -162,6 +176,11 @@ def load_sec_teaching_fixture() -> SECTeachingFixture:
         partitions=np.asarray([row["partition"] for row in rows], dtype=str),
         numeric_feature_names=feature_names,
         numeric_features=np.asarray([row["numeric_features"] for row in rows], dtype=float),
+        baseline_prediction_contract=baseline_contract,
+        baseline_predictions={
+            name: np.asarray([row["baseline_predictions"][name] for row in rows], dtype=float)
+            for name in expected_baselines
+        },
         token_hashes=np.asarray([row["token_hashes"] for row in rows], dtype=np.int64),
         targets=np.asarray([row["target"] for row in rows], dtype=float),
         document_sha256=tuple(str(row["document_sha256"]) for row in rows),
@@ -173,6 +192,11 @@ def load_sec_teaching_fixture() -> SECTeachingFixture:
     _token_matrix(fixture.token_hashes)
     if not np.isfinite(fixture.targets).all():
         raise ValueError("SEC teaching fixture targets must be finite")
+    if any(
+        prediction.shape != (n_rows,) or not np.isfinite(prediction).all()
+        for prediction in fixture.baseline_predictions.values()
+    ):
+        raise ValueError("SEC teaching fixture baseline predictions must be finite")
     if set(fixture.partitions) != {"inner_train", "inner_validation"}:
         raise ValueError("SEC teaching fixture may contain only inner partitions")
     if len(set(fixture.row_ids)) != n_rows:

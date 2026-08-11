@@ -320,8 +320,9 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
   次の米国連邦営業日から利用可能とする。size floorは**anchor時点** Assets
   $\ge 100\,\mathrm{M}$ であり、各行の前四半期Assetsへ再適用しない。
 - B9のprimary metricはMAE、secondaryはmedAE、RMSEはreferenceとし、zero / pooled drift /
-  seasonal / company expanding meanをbaseline ladderへ含める。primary 1%以上改善かつ
-  secondary非悪化を候補gateとする。
+  seasonal / company expanding meanをbaseline ladderへ含める。inner validationで4本中の最小MAEを
+  1%以上改善し、medAEとcompany-macro MAEも各metricのbaseline最小値を悪化させないことを候補gateとする。
+  primary baselineは固定tie-breakでouter前にfreezeし、outer outcomeから比較相手を選び直さない。
 - `sec_pit.py`、`sec_panel.py`、batch対応の`fetch_sec_b9_cache.py`、
   `build_b9_panel.py`、`audit_sec_b9_panel.py`は、cache→PIT panel→derived artifactの完全性、
   grain、欠損、split、baselineを検証する再現部品である。raw SEC cacheはrepository外に置く。
@@ -375,3 +376,4 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 - [2026-08-11 — B9 filing provenance and retrieval gate](docs/updates/2026-08-11-b9-filing-provenance.md)
 - [2026-08-11 — Stage 2C / B9教材実装](docs/updates/2026-08-11-stage-2c-b9.md)
 - [2026-08-11 — Stage 2D / B10教材実装](docs/updates/2026-08-11-stage-2d-b10.md)
+- [2026-08-11 — Opus alignment follow-up](docs/updates/2026-08-11-opus-alignment-follow-up.md)

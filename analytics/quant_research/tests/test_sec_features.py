@@ -19,6 +19,21 @@ def test_bundled_fixture_is_development_only_and_integrity_checked() -> None:
     assert fixture.token_hashes.shape == (256, 128)
     assert fixture.training_mask.sum() == 192
     assert fixture.validation_mask.sum() == 64
+    assert fixture.baseline_prediction_contract == {
+        "names": ["zero", "pooled_drift", "seasonal", "company_mean"],
+        "training_partition": "full 1504-row inner training partition",
+        "known_information_rule": "target_available_date < evaluation known_at",
+        "locked_outer_used": False,
+    }
+    assert tuple(fixture.baseline_predictions) == (
+        "zero",
+        "pooled_drift",
+        "seasonal",
+        "company_mean",
+    )
+    np.testing.assert_array_equal(
+        fixture.baseline_predictions["zero"], np.zeros(fixture.targets.size)
+    )
     assert not np.any(fixture.target_available_dates >= np.datetime64("2023-10-23"))
     assert set(fixture.partitions) == {"inner_train", "inner_validation"}
     assert len(set(fixture.row_ids)) == 256

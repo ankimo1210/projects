@@ -2,7 +2,7 @@
   "contains_cik_or_accession": false,
   "contains_locked_outer_rows": false,
   "contains_raw_or_normalized_text": false,
-  "fixture_sha256": "6487c20568fbbbb18326bcde49d985b42ddd5072f321e33e4b2b8154a7293295",
+  "fixture_sha256": "953c9b06c6c1dc1ef68c5e21f1ee88c4fe20d1ee34d5887150e51843184ad0b0",
   "redistribution_decision": "Commit only compact derived numeric values and lossy token hashes from public SEC filings; keep source documents and contact configuration external.",
   "row_count": 256,
   "schema_version": "sec-b9-teaching-fixture-v1",

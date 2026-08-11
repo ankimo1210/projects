@@ -18,7 +18,7 @@ def test_b9_preanalysis_is_bound_to_the_reviewed_m6_contract() -> None:
     parent = preanalysis["parent_data"]
 
     assert preanalysis["schema_version"] == "b9-preanalysis-v1"
-    assert preanalysis["status"] == "preregistered_before_candidate_evaluation"
+    assert preanalysis["status"] == "amended_before_full_candidate_evaluation"
     assert isinstance(parent, dict)
     assert parent["m6_protocol_sha256"] == sha256(m6_path.read_bytes()).hexdigest()
     assert parent["derived_panel_sha256"] == (
@@ -87,7 +87,19 @@ def test_b9_preanalysis_has_locked_metrics_and_no_model_selected_rule() -> None:
     assert evaluation["primary_metric"] == "mae"
     assert evaluation["secondary_metric"] == "median_absolute_error"
     assert evaluation["reference_metric"] == "rmse"
-    assert evaluation["primary_comparator"] == "pooled_drift"
+    comparator = evaluation["primary_comparator"]
+    assert comparator["selection_partition"] == "inner_validation"
+    assert comparator["candidate_baselines"] == [
+        "zero",
+        "pooled_drift",
+        "seasonal",
+        "company_mean",
+    ]
+    assert comparator["tie_break_order"] == comparator["candidate_baselines"]
+    assert comparator["freeze_before_outer_access"] is True
+    assert "minimum metric value" in evaluation["secondary_guardrail_comparator_rule"]
+    assert "do not reselect" in evaluation["outer_uncertainty_comparator"]
+    assert "99 percent of the minimum MAE" in evaluation["model_selection_gate"]
     assert evaluation["deep_learning_comparator"] == "tfidf_ridge"
     assert evaluation["failure_result"] == "no_model_selected"
     assert evaluation["bootstrap"] == {
@@ -114,3 +126,14 @@ def test_b9_preanalysis_has_locked_metrics_and_no_model_selected_rule() -> None:
         "joint_text_numeric_mlp",
     ):
         assert search_space[family]["seed_offsets"] == [0, 1, 2]
+
+
+def test_b9_selection_gate_amendment_is_explicit_and_pre_outer() -> None:
+    contract = _load("b9-preanalysis-v1.json")
+    amendment = contract["amendments"][-1]
+    assert amendment["previous_contract_sha256"] == (
+        "fbe69fdf3b3bccba7fab70bcbb726d0df61685901cc0322d76fc66be1d7bbd6e"
+    )
+    assert "before_full_candidate_evaluation" in amendment["stage"]
+    assert "no full candidate search" in amendment["observed_before_amendment"][1]
+    assert "outer test" in amendment["change"]

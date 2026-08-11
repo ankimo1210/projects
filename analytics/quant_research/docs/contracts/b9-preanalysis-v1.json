@@ -1,6 +1,6 @@
 {
   "schema_version": "b9-preanalysis-v1",
-  "status": "preregistered_before_candidate_evaluation",
+  "status": "amended_before_full_candidate_evaluation",
   "as_of_date": "2026-08-11",
   "amendments": [
     {
@@ -8,6 +8,17 @@
       "stage": "input_quality_audit_before_candidate_evaluation",
       "reason": "Removing complete table subtrees reduced 80 legacy filing documents below 100 visible tokens, while all 80 exceeded 500 tokens when visible layout-table cell text was retained.",
       "change": "Strip table structure but retain visible cell text. Continue to remove scripts, styles, hidden nodes, exhibits, and markup. Candidate models, splits, metrics, and selection rules are unchanged."
+    },
+    {
+      "date": "2026-08-11",
+      "stage": "teaching_fixture_diagnostic_after_preregistration_but_before_full_candidate_evaluation_nominee_freeze_and_outer_access",
+      "previous_contract_sha256": "fbe69fdf3b3bccba7fab70bcbb726d0df61685901cc0322d76fc66be1d7bbd6e",
+      "observed_before_amendment": [
+        "The pre-registered M6 baseline ladder metrics were already listed in parent_data.observed_before_preregistration.",
+        "On the development-only teaching fixture, zero MAE was lower than pooled-drift MAE; no full candidate search, nominee freeze, company-cluster bootstrap, or outer-test access had occurred."
+      ],
+      "reason": "A pooled-drift-only denominator can accept a nominee that fails to beat a stronger fixed baseline, and the prior secondary guardrail text did not name its comparator.",
+      "change": "Evaluate all four fixed baselines. On inner validation, require nominee MAE to improve at least one percent over the lowest fixed-baseline MAE and require median absolute error and company-macro MAE not to exceed their metric-wise fixed-baseline minima. Freeze the identity of the lowest-inner-validation-MAE baseline with the stated tie-break before outer access; use that frozen baseline for the paired outer delta-MAE interval. Candidate families, splits, feature contracts, budgets, bootstrap settings, and the unopened outer test are unchanged."
     }
   ],
   "decision": "Select at most one overall B9 Core predictive model and separately nominate at most one neural model to test whether deep learning adds value over a locked TF-IDF linear baseline.",
@@ -268,9 +279,27 @@
       "text_document_coverage",
       "duplicate_document_family_count"
     ],
-    "primary_comparator": "pooled_drift",
+    "primary_comparator": {
+      "selection_partition": "inner_validation",
+      "rule": "fixed baseline with the lowest inner-validation MAE",
+      "candidate_baselines": [
+        "zero",
+        "pooled_drift",
+        "seasonal",
+        "company_mean"
+      ],
+      "tie_break_order": [
+        "zero",
+        "pooled_drift",
+        "seasonal",
+        "company_mean"
+      ],
+      "freeze_before_outer_access": true
+    },
+    "secondary_guardrail_comparator_rule": "For median absolute error and company-macro MAE separately, use the minimum metric value across all four fixed baselines on inner validation.",
+    "outer_uncertainty_comparator": "Use the primary baseline identity frozen from inner validation; do not reselect a comparator from outer outcomes.",
     "deep_learning_comparator": "tfidf_ridge",
-    "model_selection_gate": "Nominee MAE must improve at least 1 percent over pooled_drift, median absolute error and company-macro MAE must not worsen, and the upper endpoint of a paired company-cluster bootstrap 95 percent interval for delta MAE must be below zero.",
+    "model_selection_gate": "On inner validation, nominee MAE must be at most 99 percent of the minimum MAE across zero, pooled_drift, seasonal, and company_mean. Nominee median absolute error and company-macro MAE must each be no greater than the corresponding metric-wise minimum across those four baselines. Before outer access, freeze the lowest-inner-validation-MAE baseline using tie_break_order. On the one-time outer evaluation, the upper endpoint of the paired company-cluster bootstrap 95 percent interval for nominee-minus-frozen-baseline delta MAE must be below zero.",
     "deep_learning_gain_gate": "A neural nominee must satisfy the same point and uncertainty gates against tfidf_ridge before claiming incremental deep-learning value.",
     "bootstrap": {
       "unit": "company",
