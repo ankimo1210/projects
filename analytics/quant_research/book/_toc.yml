@@ -83,3 +83,11 @@ parts:
       - file: notebooks/57_week39_data_systems_pit
       - file: notebooks/58_week40_experiment_infrastructure
       - file: notebooks/59_b10_project_reproducible_research_package
+  - caption: B11 — Treasury curve forecast-to-decision
+    chapters:
+      - file: notebooks/60_b11_overview
+      - file: notebooks/61_week41_signal_research
+      - file: notebooks/62_week42_liquidity_boundaries
+      - file: notebooks/63_week43_fixed_income_measures
+      - file: notebooks/64_week44_exposure_allocation
+      - file: notebooks/65_b11_project_forecast_to_decision
