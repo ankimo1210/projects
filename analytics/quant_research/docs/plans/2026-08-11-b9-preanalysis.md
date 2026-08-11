@@ -111,6 +111,15 @@ deep-learningの追加価値を主張するには、同じgateをTF-IDF ridgeに
 4. B9のWeek 33–36とProjectを`curriculum_map.yml`へ追加する。
 5. builder / Notebook / library / testsを実装し、outerを開く前にnominee manifestを固定する。
 
+## Development tournament milestone（2026-08-11）
+
+M6のdevelopment partition（2,195行、inner train 1,504行、inner validation 691行）で、
+`numeric_ridge`、`tfidf_ridge`、`numpy_mlp`の固定gridを実行した。outer 413行は未開封である。
+実装済みfamilyではzero baselineを1%以上改善する候補がなく、interim結果は
+`no_model_selected`。LSTM / TCN / self-attention / joint text+numericはtraining loop未実装のため、
+この結果を全Core familyの最終nominee freezeとは扱わない。次は未実装familyを同じbudget・inner splitへ
+追加し、全Core比較後にのみnominee manifestをfreezeする。
+
 raw SEC response、normalized text、contact情報はrepositoryへcommitしない。
 
 実装状況と実測fingerprintは
