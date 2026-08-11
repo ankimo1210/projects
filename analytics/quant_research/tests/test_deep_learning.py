@@ -8,10 +8,12 @@ from quant_textbook.deep_learning import (
     initialize_lstm,
     initialize_mlp,
     lstm_encode,
+    lstm_predict,
     mlp_predict,
     self_attention,
     temporal_convolution_encode,
     token_embedding,
+    train_lstm,
     train_mlp,
 )
 
@@ -86,6 +88,39 @@ def test_lstm_bptt_matches_centered_finite_differences() -> None:
 
     assert audit.passed
     assert audit.maximum_relative_error < 5e-5
+
+
+def test_lstm_training_is_deterministic_and_reduces_validation_loss() -> None:
+    rng = np.random.default_rng(12)
+    embeddings = rng.normal(size=(80, 5, 2))
+    target = embeddings[:, :, 0].mean(axis=1) + 0.1 * embeddings[:, :, 1].mean(axis=1)
+    kwargs = dict(
+        hidden_width=3,
+        learning_rate=0.01,
+        epochs=40,
+        patience=10,
+    )
+    first = train_lstm(
+        embeddings[:50],
+        target[:50],
+        embeddings[50:],
+        target[50:],
+        rng=np.random.default_rng(99),
+        **kwargs,
+    )
+    second = train_lstm(
+        embeddings[:50],
+        target[:50],
+        embeddings[50:],
+        target[50:],
+        rng=np.random.default_rng(99),
+        **kwargs,
+    )
+    np.testing.assert_array_equal(first.training_losses, second.training_losses)
+    np.testing.assert_array_equal(
+        lstm_predict(first.parameters, embeddings), lstm_predict(second.parameters, embeddings)
+    )
+    assert first.validation_losses.min() < first.validation_losses[0]
 
 
 def test_causal_tcn_does_not_use_future_inputs() -> None:
