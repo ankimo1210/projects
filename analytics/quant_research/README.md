@@ -340,17 +340,18 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
   同じdevelopment partitionで比較する。pretrained embeddingとencoder fine-tuningはAdvancedに置く。
 - candidate family、feature manifest、seed、code commitを固定してからouter testを一度だけ開く。
   採用gateを満たさない場合は`no_model_selected`を正式結果とする。
-- development-onlyの第1候補run（numeric ridge / TF-IDF ridge / NumPy MLP）は完了したが、固定baseline
-  のzeroを1%以上改善する候補はなく、implemented-family interimは`no_model_selected`となった。
-  LSTM / TCN / self-attention / joint text+numericのtraining loopと全Core familyのnominee freezeは未完了で、
-  outerは引き続き未開封である。結果は[B9 development tournament note](docs/updates/2026-08-11-b9-development-tournament.md)に残す。
+- development-onlyの候補run（numeric / TF-IDF / NumPy MLP / LSTM / joint MLP、およびdiagnostic probe）は完了した。
+  overallは`no_model_selected`だが、LSTMのneural gateとpaired bootstrapは通過し、neural nominee候補を記録した。
+  nominee manifestのfreezeと明示承認は未実施で、outerは引き続き未開封である。
+  結果は[B9 development tournament note](docs/updates/2026-08-11-b9-development-tournament.md)に残す。
 - 実測値、未解決リスク、再現部品は
   [SEC B9 baseline gate follow-up](docs/updates/2026-08-11-sec-baseline-gate.md)に固定する。
 - Week 33–36とProjectの6 Notebook、NumPy MLP/backprop、LSTM/TCN/attention forward、
   training-only hashed TF–IDF、sparse ridge、実SEC由来fixtureを実装した。fixtureはinner train 192行・
   inner validation 64行のみで、locked outerは未開封である。
-- full 2,195-row candidate search、company-cluster bootstrap、nominee manifest、outer一回評価は別の
-  empirical milestoneとして未実行である。現時点の正式decisionは`no_model_selected`とする。
+- full 2,195-row development candidate searchとneural company-cluster bootstrapは完了した。overallは
+  `no_model_selected`、neural nominee候補はmanifest freeze前であり、locked outer一回評価は未実行である。
+  現時点の正式decisionは`no_model_selected`とする。
 
 ## B10 research systemの実装契約
 

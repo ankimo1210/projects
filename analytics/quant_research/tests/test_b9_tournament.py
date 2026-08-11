@@ -9,6 +9,8 @@ from quant_textbook.b9_tournament import (
     primary_baseline_name,
     regression_metrics,
     selection_gate,
+    text_token_chunk_hashes,
+    text_token_hash_sequence,
 )
 from scipy import sparse
 
@@ -74,3 +76,25 @@ def test_hashed_tfidf_fits_idf_on_training_documents_only(tmp_path: Path) -> Non
     assert matrix.shape == (3, 64)
     assert vectorizer.metadata["eligible_feature_count"] > 0
     assert vectorizer.metadata["ngram_maximum"] == 1
+
+
+def test_text_token_hash_sequence_is_fixed_length_and_seed_independent(tmp_path: Path) -> None:
+    path = tmp_path / "filing.txt"
+    path.write_text("Alpha 123 beta gamma", encoding="utf-8")
+    first = text_token_hash_sequence(path, sequence_length=8, hash_buckets=128)
+    second = text_token_hash_sequence(path, sequence_length=8, hash_buckets=128)
+    np.testing.assert_array_equal(first, second)
+    assert first.shape == (8,)
+    assert int(first.min()) >= 1
+    assert int(first.max()) <= 128
+
+
+def test_text_token_chunk_hashes_matches_padding_contract(tmp_path: Path) -> None:
+    path = tmp_path / "filing.txt"
+    path.write_text(" ".join(f"token{index}" for index in range(520)), encoding="utf-8")
+    chunks = text_token_chunk_hashes(path, chunk_length=512, maximum_chunks=3, hash_buckets=64)
+    assert chunks.shape == (3, 512)
+    assert np.count_nonzero(chunks[0]) == 512
+    assert np.count_nonzero(chunks[1]) == 8
+    assert np.count_nonzero(chunks[2]) == 0
+    assert int(chunks.max()) <= 64

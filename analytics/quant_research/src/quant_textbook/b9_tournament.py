@@ -33,6 +33,7 @@ class CandidateMetrics:
     n: int
     parameter_count: int
     runtime_seconds: float
+    selection_eligible: bool = True
     status: str = "evaluated"
 
 
@@ -170,6 +171,67 @@ def _normalize_tokens(text: str) -> list[str]:
     return ["<NUM>" if token.isdecimal() else token for token in tokens]
 
 
+def text_token_hash_sequence(
+    path: Path, *, sequence_length: int = 64, hash_buckets: int = 2_000
+) -> np.ndarray:
+    """Build a fixed deterministic token sequence for diagnostic encoders.
+
+    The full B9 sequence contract uses 512-token chunks and document-level
+    aggregation.  This compact helper is intentionally marked diagnostic-only
+    by the tournament runner until that chunk aggregation is connected to a
+    trainable sequence model.
+    """
+
+    if sequence_length <= 0 or hash_buckets <= 0:
+        raise ValueError("sequence_length and hash_buckets must be positive")
+    tokens = _normalize_tokens(path.read_text(encoding="utf-8"))
+    if not tokens:
+        raise ValueError(f"normalized text contains no auditable tokens: {path}")
+    if len(tokens) >= sequence_length:
+        indexes = np.linspace(0, len(tokens) - 1, sequence_length, dtype=int)
+        selected = [tokens[index] for index in indexes]
+    else:
+        selected = [tokens[index % len(tokens)] for index in range(sequence_length)]
+    return np.asarray([(_bucket((token,), hash_buckets) + 1) for token in selected], dtype=np.int64)
+
+
+def text_token_chunk_hashes(
+    path: Path,
+    *,
+    chunk_length: int = 512,
+    maximum_chunks: int = 8,
+    hash_buckets: int = 2_000,
+) -> np.ndarray:
+    """Return padded deterministic hashes for the full B9 chunk contract.
+
+    Each selected 512-token chunk is represented in document order.  If a
+    filing has fewer than ``maximum_chunks`` selected chunks, the remaining
+    rows and token positions are zero padded (zero is reserved for padding;
+    real token hashes are in ``1..hash_buckets``).  Chunk selection matches
+    :class:`HashedTfidfDocuments`, so sequence models and TF-IDF see the same
+    auditable text scope.
+    """
+
+    if (
+        isinstance(chunk_length, bool)
+        or not isinstance(chunk_length, int)
+        or chunk_length <= 0
+        or isinstance(maximum_chunks, bool)
+        or not isinstance(maximum_chunks, int)
+        or maximum_chunks <= 0
+        or isinstance(hash_buckets, bool)
+        or not isinstance(hash_buckets, int)
+        or hash_buckets <= 0
+    ):
+        raise ValueError("chunk_length, maximum_chunks, and hash_buckets must be positive integers")
+    tokens = _normalize_tokens(path.read_text(encoding="utf-8"))
+    chunks = _selected_chunks(tokens, chunk_length=chunk_length, maximum_chunks=maximum_chunks)
+    hashes = np.zeros((maximum_chunks, chunk_length), dtype=np.int64)
+    for chunk_index, chunk in enumerate(chunks):
+        hashes[chunk_index, : len(chunk)] = [_bucket((token,), hash_buckets) + 1 for token in chunk]
+    return hashes
+
+
 def _selected_chunks(
     tokens: list[str], *, chunk_length: int, maximum_chunks: int
 ) -> list[list[str]]:
@@ -305,4 +367,6 @@ __all__ = [
     "primary_baseline_name",
     "regression_metrics",
     "selection_gate",
+    "text_token_chunk_hashes",
+    "text_token_hash_sequence",
 ]
