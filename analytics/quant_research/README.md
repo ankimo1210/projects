@@ -327,8 +327,9 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
   次の米国連邦営業日から利用可能とする。size floorは**anchor時点** Assets
   $\ge 100\,\mathrm{M}$ であり、各行の前四半期Assetsへ再適用しない。
 - B9のprimary metricはMAE、secondaryはmedAE、RMSEはreferenceとし、zero / pooled drift /
-  seasonal / company expanding meanをbaseline ladderへ含める。inner validationで4本中の最小MAEを
-  1%以上改善し、medAEとcompany-macro MAEも各metricのbaseline最小値を悪化させないことを候補gateとする。
+  seasonal / company expanding meanをbaseline ladderへ含める。time splitと2方向のcompany-disjoint
+  splitすべてで、4本中の最小MAEを1%以上改善し、medAEとcompany-macro MAEも各metricのbaseline最小値を
+  悪化させないことを候補gateとする。
   primary baselineは固定tie-breakでouter前にfreezeし、outer outcomeから比較相手を選び直さない。
 - `sec_pit.py`、`sec_panel.py`、batch対応の`fetch_sec_b9_cache.py`、
   `build_b9_panel.py`、`audit_sec_b9_panel.py`は、cache→PIT panel→derived artifactの完全性、
@@ -340,17 +341,17 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
   同じdevelopment partitionで比較する。pretrained embeddingとencoder fine-tuningはAdvancedに置く。
 - candidate family、feature manifest、seed、code commitを固定してからouter testを一度だけ開く。
   採用gateを満たさない場合は`no_model_selected`を正式結果とする。
-- development-onlyの候補run（numeric / TF-IDF / NumPy MLP / LSTM / joint MLP、およびdiagnostic probe）は完了した。
-  overallは`no_model_selected`だが、LSTMのneural gateとpaired bootstrapは通過し、neural nominee候補を記録した。
-  nominee manifestのfreezeと明示承認は未実施で、outerは引き続き未開封である。
+- development-onlyの候補runは、time splitに加えてCIK remainder 1→2 / 2→1のcompany-disjoint splitを
+  実行した。計180候補（時間軸76、各企業軸52）で3軸すべてのgateを要求した結果、overallとneuralの
+  nomineeはともに`null`、statusは`no_model_selected`である。outerは引き続き未開封である。
   結果は[B9 development tournament note](docs/updates/2026-08-11-b9-development-tournament.md)に残す。
 - 実測値、未解決リスク、再現部品は
   [SEC B9 baseline gate follow-up](docs/updates/2026-08-11-sec-baseline-gate.md)に固定する。
 - Week 33–36とProjectの6 Notebook、NumPy MLP/backprop、LSTM/TCN/attention forward、
   training-only hashed TF–IDF、sparse ridge、実SEC由来fixtureを実装した。fixtureはinner train 192行・
   inner validation 64行のみで、locked outerは未開封である。
-- full 2,195-row development candidate searchとneural company-cluster bootstrapは完了した。overallは
-  `no_model_selected`、neural nominee候補はmanifest freeze前であり、locked outer一回評価は未実行である。
+- full 2,195-row development candidate searchと3軸の企業分離監査は完了した。all-axis gateを満たす
+  候補がないためbootstrapは生成しておらず、locked outer一回評価も未実行である。
   現時点の正式decisionは`no_model_selected`とする。
 
 ## B10 research systemの実装契約
