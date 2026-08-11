@@ -306,14 +306,18 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
   grain、欠損、split、baselineを検証する再現部品である。raw SEC cacheはrepository外に置く。
 - このgateはB9のmodel選定・企業一般への実証結論ではない。calendar-date anchorに適合する
   deterministic feasibility cohortであり、candidate set、feature availability、locked evaluationは
-  B9のpre-analysis specificationで改めて固定する。
+  [B9 pre-analysis specification](docs/plans/2026-08-11-b9-preanalysis.md)で固定した。
+- B9 Coreはnumeric-only、TF-IDF、NumPy MLP / LSTM / TCN / small self-attention、text+numericを
+  同じdevelopment partitionで比較する。pretrained embeddingとencoder fine-tuningはAdvancedに置く。
+- candidate family、feature manifest、seed、code commitを固定してからouter testを一度だけ開く。
+  採用gateを満たさない場合は`no_model_selected`を正式結果とする。
 - 実測値、未解決リスク、再現部品は
   [SEC B9 baseline gate follow-up](docs/updates/2026-08-11-sec-baseline-gate.md)に固定する。
 
 ## 現在の範囲
 
-- 実装済み: Phase 0、Stage 1 / B1–B4、Stage 1評価・placement追補、Stage 2 / B5–B8、B9 M6 real-data gate
-- 後続: Stage 2後半（B9〜B11）。B9はpre-analysis specificationとmodel tournamentから開始する
+- 実装済み: Phase 0、Stage 1 / B1–B4、Stage 1評価・placement追補、Stage 2 / B5–B8、B9 M6 real-data gate・pre-analysis contract
+- 後続: Stage 2後半（B9〜B11）。B9はfiling provenance / text retrieval gateから開始する
 - 未実装: Research Apprenticeship、Capstone
 
 ## 更新ノート

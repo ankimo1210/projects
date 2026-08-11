@@ -131,5 +131,7 @@ manifest を再検証するが、個々の raw `filingDate` / `acceptanceDateTim
 cache integrity と fixture test に依存する。network の transient 429/5xx に対する retry/backoff、
 dynamic historical universe、raw filing text を用いる feature contract は B9 実装段階の別タスクである。
 
-したがって次の作業は、B9 の estimand・feature availability・text retrieval scope・candidate set・
-locked evaluation を pre-register し、この M6 artifact を変更せずに model tournament を開始することである。
+B9のestimand・feature availability・text retrieval scope・candidate set・locked evaluationは
+[B9 pre-analysis specification](../plans/2026-08-11-b9-preanalysis.md)へ固定した。次の作業は、M6の
+target rowを変えずにprevious filing provenanceとtext retrieval manifestを追加し、coverage、duplicate
+family、target-text exclusion gateを通してからmodel tournamentを開始することである。
