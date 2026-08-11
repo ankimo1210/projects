@@ -22,7 +22,7 @@
 | [`differential_equation/`](differential_equation/) | 微分方程式 — ODE / PDE の2分冊 + SDE インタラクティブ教科書（経路・分布、基本過程、生成作用素、後退方程式、Feynman–Kac、初到達を数値実験で学ぶ） | 21 (ODE 10 / PDE 11) + SDE 47章 |
 | [`machine_learning/`](machine_learning/) | 機械学習の実践 — 正しく定式化し、検証し、解釈する | 14 |
 | [`statistics/`](statistics/) | 統計的推測の風景 — 不確実性を測り、判断する言語（確率論 + 頻度論。ベイズは `bayesian/` と対） | 11 |
-| [`quant_research/`](quant_research/) | Quant Research / Data Science — 原典60週を座学44週へ再定義した実践教科書（Stage 1–2D / B1–B10を実装） | 60 |
+| [`quant_research/`](quant_research/) | Quant Research / Data Science — 原典60週を座学44週へ再定義した実践教科書（Stage 1–2E / B1–B11を実装） | 66 |
 
 > Notebook 数は時点の目安(各教材は随時加筆)。
 

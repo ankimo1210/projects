@@ -6,8 +6,8 @@
 **仮定を定める → 安定に実装する → 診断する → 主張の限界を説明する**という一連の研究作業として
 学ぶための日本語 HTML 教科書プロジェクトです。
 
-現在は Stage 1（B1〜B4）と Stage 2（B5〜B10）、全40週・60 Notebookを実装しています。
-座学教科書としての完成範囲はB1〜B11の44週で、現在は40/44週（91%）です。原典のStage 3と
+現在は Stage 1（B1〜B4）と Stage 2（B5〜B11）、全44週・66 Notebookを実装しています。
+座学教科書としての完成範囲はB1〜B11の44週で、現在は44/44週（100%）です。原典のStage 3と
 Capstoneは成果物・データ要件が異なるためplaceholderとし、設計・実装・完成率の分母に含めません。
 60週版の原案をそのまま詰め込まず、各週を `core`（必修）と
 `advanced`（発展）に分けています。正規化した学習仕様の source of truth は
@@ -15,7 +15,7 @@ Capstoneは成果物・データ要件が異なるためplaceholderとし、設�
 
 ## 到達点
 
-現在のStage 1–2D修了時に、学習者が次の判断を自力で行えることを目標にします。
+現在のStage 1–2E修了時に、学習者が次の判断を自力で行えることを目標にします。
 
 - 問題の構造と数値条件から、分解法・推定法・最適化法を選ぶ。
 - 統計誤差、数値誤差、Monte Carlo 誤差、離散化誤差、モデル誤差を区別する。
@@ -40,7 +40,7 @@ Capstoneは成果物・データ要件が異なるためplaceholderとし、設�
    BOJ 発表前後の価格反応を測る金融イベントスタディと、DiD 等の因果イベントスタディを
    区別し、識別仮定なしに「政策の因果効果」とは呼びません。
 
-## Stage 1–2D の構成
+## Stage 1–2E の構成
 
 | Block | Weeks | 主題 | ブロック成果物 |
 |---|---:|---|---|
@@ -54,6 +54,7 @@ Capstoneは成果物・データ要件が異なるためplaceholderとし、設�
 | B8 | 29〜32 | Bayesian推論・階層model・HMM・MCMC診断 | Treasury Predictive Uncertainty and Latent-State Audit |
 | B9 | 33〜36 | deep learning・sequence model・attention・financial NLP | SEC Filing Text & Fundamentals Forecast |
 | B10 | 37〜40 | scientific computing・PIT data system・experiment infrastructure | Reproducible B9 Research Package |
+| B11 | 41〜44 | signal・liquidity boundary・fixed-income measure・exposure decision | Treasury Curve Forecast-to-Decision Specification |
 
 B2 の Girsanov・importance sampling・Brownian bridge、B4 の ADMM 等は Advanced に置き、
 Core の理解と検証を犠牲にしない順序にしています。B4 では制約付き最適化への自然な入口として、
@@ -146,6 +147,12 @@ Placement-outは学習速度だけを変え、成果物、採点、再現性・�
 | `57_week39_data_systems_pit` | bitemporal record、pandas/SQLite PIT join、schema evolution |
 | `58_week40_experiment_infrastructure` | immutable run registry、drift、batch lineage、rollback |
 | `59_b10_project_reproducible_research_package` | development-only B9 pipelineの再現可能package化 |
+| `60_b11_overview` | Treasury Curve Forecast-to-Decisionの研究フロー |
+| `61_week41_signal_research` | formation lag、signal、multiple testing、falsification |
+| `62_week42_liquidity_boundaries` | FINRA aggregate境界、trade-level spread fixture、scenario cost |
+| `63_week43_fixed_income_measures` | par/zero/forward、pricing measure、finite-horizon control |
+| `64_week44_exposure_allocation` | yield-change covariance、shrinkage、turnover sensitivity |
+| `65_b11_project_forecast_to_decision` | 予測から意思決定までの仕様freezeとclaim audit |
 
 ## ディレクトリ
 
@@ -359,9 +366,9 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 
 ## 現在の範囲
 
-- 実装済み: Phase 0、Stage 1 / B1–B4、Stage 1評価・placement追補、Stage 2 / B5–B10、
+- 実装済み: Phase 0、Stage 1 / B1–B4、Stage 1評価・placement追補、Stage 2 / B5–B11、
   B9 M6 real-data gate・pre-analysis contract・Week 33–36 / Project教材、B10 research system教材
-- 後続: B11 Week 41–44と、別milestoneのB9 full locked model tournament。B9のfiling provenance、
+- 後続: 別milestoneのB9 full locked model tournament。B9のfiling provenance、
   4,631 primary documents取得、visible-text正規化、raw / normalized integrity監査、教材feature pipelineは完了した
 - Placeholder（対象外）: Stage 3 / Research Apprenticeship、Capstone
 
@@ -378,3 +385,4 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 - [2026-08-11 — Stage 2D / B10教材実装](docs/updates/2026-08-11-stage-2d-b10.md)
 - [2026-08-11 — Opus alignment follow-up](docs/updates/2026-08-11-opus-alignment-follow-up.md)
 - [2026-08-11 — B11 FINRA feasibility gate](docs/updates/2026-08-11-b11-finra-feasibility.md)
+- [2026-08-11 — B11 Treasury forecast-to-decision教材](docs/updates/2026-08-11-stage-2e-b11.md)

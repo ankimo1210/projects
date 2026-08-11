@@ -5,23 +5,22 @@ language: ja
 title: Quant Research Data Science — Stage 1 Foundation and Stage 2 Real-Data Modeling
 
 scope:
-  stage: 1–2D
-  blocks: [B1, B2, B3, B4, B5, B6, B7, B8, B9, B10]
-  week_range: [1, 40]
-  duration_weeks: 40
+  stage: 1–2E
+  blocks: [B1, B2, B3, B4, B5, B6, B7, B8, B9, B10, B11]
+  week_range: [1, 44]
+  duration_weeks: 44
   scope_note: >-
-    このファイルは現在実装済みの Stage 1 と Stage 2のB5–B10を正規化する。
-    座学教科書の最終スコープはB1–B11の44週で、B11は実装予定である。
+    このファイルは現在実装済みの Stage 1 と Stage 2のB5–B11を正規化する。
+    座学教科書の最終スコープはB1–B11の44週で、B11はTreasury実データを中心に実装済みである。
     原典のStage 3とCapstoneは成果物・データ要件が本教材と異なるため、存在だけを示す
     placeholderとし、設計・実装・完成率の分母には含めない。
   textbook_target:
     blocks: [B1, B2, B3, B4, B5, B6, B7, B8, B9, B10, B11]
     week_range: [1, 44]
     duration_weeks: 44
-    implemented_weeks: 40
-    completion_percent_rounded: 91
+    implemented_weeks: 44
+    completion_percent_rounded: 100
   excludes:
-    - Stage 2後半（B11、実装予定だがこのversionでは未正規化）
     - Stage 3（R1–R4、placeholder・座学教科書の対象外）
     - Capstone Research Program（placeholder・取得不能なJGB intradayを要求するため対象外）
   audience: 数学・統計・Python の基礎を持ち、再現可能なクオンツ研究を学ぶ読者
@@ -42,6 +41,7 @@ scope:
     b9_mvp: implemented
     b9_locked_model_tournament: not_started
     b10_mvp: implemented
+    b11_mvp: implemented
 
 layering:
   core:
@@ -2356,6 +2356,207 @@ blocks:
         - undeclared dependencyとsecretを含めていない。
         - outer/production未実装範囲を明記している。
 
+  - id: B11
+    title: Treasury Curve Forecast-to-Decision
+    title_ja: Treasury曲線の予測から意思決定まで
+    weeks: [41, 44]
+    goal: >-
+      Treasuryの公表par yieldを予測・measure・curve exposureへ接続し、観測できないexecution
+      quantityや取得不能なJGB intradayを架空データで補わず、主張の境界をfreezeする。
+    relation_to_b10: >-
+      B10のPIT・lineage・reproducibilityを、Treasury forecast、conditional FINRA aggregate、
+      exposure decisionの仕様へ拡張する。
+    design_corrections:
+      - JGB intradayは取得不能のためCore題材にせず、公式Treasury daily par yieldを中心にする。
+      - FINRA Treasury Daily AggregateはAPI access/terms gate通過後だけreal-data Coreへ昇格する。
+      - par yield、zero rate、discount factor、forward、trade-level spreadを別の観測契約にする。
+      - forecast evidence、pricing/control、yield exposure allocationをcash PnLと分離する。
+    references:
+      core:
+        - U.S. Treasury Yield Curve Methodology
+        - FINRA Treasury Daily Aggregate Statistics
+        - Duffie and Kan (1996), A Yield-Factor Model of Interest Rates
+      advanced:
+        - Fama and MacBeth (1973), Risk, Return, and Equilibrium
+        - Boyd and Vandenberghe, Convex Optimization
+    weeks_detail:
+      - week: 41
+        code: B11-W41
+        title: Signal Research Without Alpha Inflation
+        title_ja: alpha inflationを避けるsignal研究
+        core:
+          - formation lagとinformation timestamp
+          - zero-change baselineとpublication horizon
+          - candidate family、multiple testing、falsification
+          - forecast evidenceとP&L claimの分離
+        advanced:
+          - Fama–MacBeth cross-sectional exposure
+          - forecast loss差の依存ロバスト推論
+        learning_objectives:
+          - targetとsignalを公表観測日で整列できる。
+          - candidate countとprimary metricを計算前にfreezeできる。
+          - directional accuracyやcorrelationをtradabilityと呼ばない。
+        lab:
+          title: Five-Publication Treasury Signal Audit
+          tasks:
+            - 10y five-publication changeをtargetにする。
+            - zero-change、curve slope、momentumを同じ情報集合で比較する。
+            - signal diagnosticsとfalsificationを記録する。
+          validation:
+            - formation lagが1以上である。
+            - zero-change baselineが残っている。
+            - P&L interpretationが許可されていない。
+        deliverable:
+          artifact: pre-analysis signal protocol and diagnostic table
+          required_evidence:
+            - information timestamp
+            - candidate family size
+            - target unit
+            - falsification rule
+        exit_criteria:
+          - signal計算前に候補数とprimary metricを固定した。
+          - descriptive forecast evidenceとP&Lを区別した。
+
+      - week: 42
+        code: B11-W42
+        title: Observable Liquidity and Execution Boundaries
+        title_ja: 観測可能な流動性とexecutionの境界
+        core:
+          - FINRA aggregate schema
+          - trade-level quoted/effective/realized spread
+          - scenario-only execution cost
+          - API credential、terms、snapshot hash
+        advanced:
+          - API access後のactivity composition
+          - trade-level quote sourceとのreconciliation
+        learning_objectives:
+          - aggregate volumeからspreadを逆算しない理由を説明できる。
+          - quote fixtureのspread identityを検算できる。
+          - 未承認APIをreal-data claimへ混ぜない。
+        lab:
+          title: FINRA Access Gate and Spread Identity
+          tasks:
+            - API access/terms gateを先に判定する。
+            - fixtureでquoted/effective/realized spreadを計算する。
+            - half spread、impact、delay、fundingをscenarioとして分ける。
+          validation:
+            - real FINRA rowsはgate未通過時に0である。
+            - aggregateに無いbid/ask/queueをmissingとして記録する。
+        deliverable:
+          artifact: liquidity data contract and fixture audit
+          required_evidence:
+            - API status
+            - column/unit table
+            - spread identity
+            - prohibited inverse inference
+        exit_criteria:
+          - aggregateとtrade-level quoteを分離した。
+          - fixture計算を実市場の流動性推定と呼ばない。
+
+      - week: 43
+        code: B11-W43
+        title: Fixed-Income Measure and Control Boundary
+        title_ja: fixed-income measureとcontrolの境界
+        core:
+          - par yield、zero rate、discount factor、forward
+          - pricing measureとforecasting measure
+          - finite-horizon backward induction
+          - no-arbitrage claimの条件
+        advanced:
+          - HJM drift restriction
+          - stochastic control、RL、nonlinear term-structure calibration
+        learning_objectives:
+          - par quoteからzero curveを直接作ってはいけない理由を説明できる。
+          - discountとforwardの単位・符号を検算できる。
+          - finite-horizon controlを再帰式で解ける。
+        lab:
+          title: Measure Vocabulary and Finite Control
+          tasks:
+            - mathematical zero fixtureからdiscount/forwardを計算する。
+            - Treasury par quoteを別系列として表示する。
+            - 2-state finite-horizon controlをbackward inductionする。
+          validation:
+            - discount factorが正でfixtureの範囲内にある。
+            - par/zero/forwardの列を混同していない。
+        deliverable:
+          artifact: fixed-income measure and control note
+          required_evidence:
+            - observation equations
+            - unit/sign convention
+            - recursion and policy
+            - unsupported calibration boundary
+        exit_criteria:
+          - par/zero/discount/forwardを区別した。
+          - solver successをno-arbitrage証明と呼ばない。
+
+      - week: 44
+        code: B11-W44
+        title: Portfolio Decision under Estimation and Cost Uncertainty
+        title_ja: 推定誤差とcost不確実性下のportfolio decision
+        core:
+          - yield-change covariance
+          - diagonal shrinkage
+          - turnover penalty
+          - risk budget and sensitivity
+          - exposure unit and no-PnL boundary
+        advanced:
+          - capacity、crowding、funding scenario
+          - robust allocation and policy logging
+        learning_objectives:
+          - training-only covarianceをcurve exposureへ使える。
+          - shrinkageとturnover penaltyの感度を説明できる。
+          - exposure weightをsecurity holdingと呼ばない。
+        lab:
+          title: Treasury Yield-Change Exposure Allocation
+          tasks:
+            - pre-test Treasury changesからmean/covarianceをfitする。
+            - shrinkageとturnover penaltyを比較する。
+            - budget、stationarity、単位、sensitivityを保存する。
+          validation:
+            - test側をcovariance fitへ使わない。
+            - net exposure residualを検査する。
+            - costはscenarioであり推定値ではない。
+        deliverable:
+          artifact: exposure allocation and uncertainty memo
+          required_evidence:
+            - training boundary
+            - covariance/shrinkage
+            - turnover sensitivity
+            - claim boundary
+        exit_criteria:
+          - exposure unitをbp変化として明記した。
+          - cash portfolio、execution PnL、causal effectを主張していない。
+
+    block_project:
+      required:
+        title: Treasury Curve Forecast-to-Decision Specification
+        input: official Treasury daily par-yield snapshot plus conditional FINRA contract
+        workflow:
+          - freeze economic hypothesis and information timestamp
+          - define target, zero-change baseline, candidate family, and falsification
+          - document FINRA API/terms gate and fixture fallback
+          - separate par/zero/forward, forecast, control, and exposure units
+          - record unavailable liquidity/capacity/funding data
+          - publish executed notebooks and claim audit
+        artifacts:
+          - pre-analysis signal protocol
+          - liquidity schema and spread fixture audit
+          - fixed-income measure/control note
+          - yield-change exposure sensitivity table
+          - final specification and no-model-selected decision
+        prohibited_claims:
+          - JGB intraday or executable quote evidence
+          - bid-ask or impact inferred from aggregate volume
+          - Treasury par yield treated as zero-coupon rate
+          - exposure weights treated as cash security PnL
+          - FINRA real-data analysis before API access/terms approval
+      exit_criteria:
+        - economic hypothesis、timestamp、target、baselineをfreezeしている。
+        - source、availability、methodology break、API statusを記録している。
+        - observable quantityとscenario-only quantityを分離している。
+        - no-model-selectedとno-tradability-claimを保持している。
+        - executed Notebookとclean-kernel executionを再現できる。
+
 stage_exit_criteria:
   - B1〜B10 の各 block project が、入力契約・仮定・validation・既知の限界を持つ。
   - 数値・統計・Monte Carlo・最適化の診断が、再実行可能な成果物として残る。
@@ -2366,3 +2567,4 @@ stage_exit_criteria:
   - B7ではfiltered/smoothed情報集合を分離し、B8ではposterior predictiveとparameter-conditional predictiveを分離する。
   - B9ではprevious/target accessionを分離し、training-only transformと同一budget比較を実施する。
   - B10ではcorrectness/performanceを分離し、PIT dataとexperiment/model/output lineageを保存する。
+  - B11ではTreasury par yield、conditional FINRA aggregate、fixture-only execution quantityを分離し、forecast/control/exposureの主張境界を保存する。
