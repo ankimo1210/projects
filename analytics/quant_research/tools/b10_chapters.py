@@ -820,7 +820,7 @@ evidence = pd.DataFrame(
         {"node": "teaching fixture", "status": "passed"},
         {"node": "feature transforms", "status": "passed"},
         {"node": "development runs", "status": "registered"},
-        {"node": "nominee manifest", "status": "not frozen"},
+        {"node": "development freeze", "status": "frozen: no_model_selected"},
         {"node": "locked outer", "status": "unopened"},
         {"node": "production", "status": "not applicable"},
     ]
