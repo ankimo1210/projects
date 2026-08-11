@@ -1,7 +1,7 @@
 # B9 SEC Filing Text & Fundamentals Forecast — pre-analysis specification
 
 - 決定日: 2026-08-11
-- 状態: candidate evaluation前に固定
+- 状態: development tournament完了、nominee freezeとouter accessは未実施
 - data contract: [`b9-m6-protocol.json`](../contracts/b9-m6-protocol.json)
 - analysis contract: [`b9-preanalysis-v1.json`](../contracts/b9-preanalysis-v1.json)
 
@@ -18,13 +18,15 @@ encoder fine-tuningは、新依存・外部model・大きい計算予算を必�
 ## 既知情報と未開封情報
 
 pre-registration前にM6のdata-quality結果と4 baselineは既に観測している。これは隠さずcontractへ
-列挙した。candidate model、text feature、inner-validation結果、outer testは未評価である。
+列挙した。candidate modelはdevelopment partitionのみで評価し、locked outerは未評価である。
 
 | partition | rule | rows | CIK | availability dates |
 |---|---|---:|---:|---:|
 | development | date < 2023-10-23、`cik % 3 != 0` | 2,195 | 102 | 534 |
 | inner train | development、date < 2021-01-01 | 1,504 | 102 | — |
-| inner validation | 2021-01-01 ≤ date < 2023-10-23、`cik % 3 != 0` | 691 | 68 | 190 |
+| inner validation（time） | 2021-01-01 ≤ date < 2023-10-23、`cik % 3 != 0` | 691 | 68 | 190 |
+| inner validation（company 1→2） | `cik % 3 == 1` train / `== 2` validation | 1,103 | 53 | — |
+| inner validation（company 2→1） | `cik % 3 == 2` train / `== 1` validation | 1,092 | 49 | — |
 | locked outer | date ≥ 2023-10-23、`cik % 3 == 0` | 413 | 38 | 183 |
 
 outerを開く前にcandidate family、hyperparameter grid、seed、feature manifest、code commitを固定する。
@@ -87,7 +89,8 @@ manifest integrityが通らない場合、text trackは開始しない。
 familyごとのtraining runは最大12、1 runは最大200 epoch、trainable parameterは10万以下とする。
 contractにridge、TF-IDF、hidden width、learning rate、kernel、attention head、seedの探索集合を列挙した。
 inner-validation MAE、次にmedAE、次にparameter数で、全familyのoverall nomineeとneural familyの
-neural nomineeを各1件までouterへ進める。両者が同一modelならouter candidateは1件である。
+neural nomineeを各1件までouterへ進める。ただし、timeと2方向のcompany-disjoint axisすべてでgateを
+通過した候補だけを対象とし、両者が同一modelならouter candidateは1件である。
 
 ## Metric、uncertainty、採用規則
 
@@ -95,11 +98,13 @@ neural nomineeを各1件までouterへ進める。両者が同一modelならoute
 - secondary: medAE
 - reference: RMSE
 - guardrail: company-macro MAE、90% interval coverage / width、text coverage、duplicate family
-- primary comparator: pooled drift
+- primary comparator: inner validationでMAE最小の固定baseline（tie-break: zero / pooled drift / seasonal / company mean）
 - deep-learning comparator: TF-IDF ridge
 
-model selectedとするには、pooled driftよりMAEを1%以上改善し、medAEとcompany-macro MAEを悪化させず、
-company-cluster paired bootstrapによる\(\Delta\mathrm{MAE}\)の95% interval上端が0未満でなければならない。
+model selectedとするには、time axisと2方向のcompany-disjoint axisすべてで、4本の固定baseline中の
+最小MAEを1%以上改善し、medAEとcompany-macro MAEを各々のbaseline最小値以下にする。company-cluster
+paired bootstrapによる\(\Delta\mathrm{MAE}\)はnominee候補が存在する場合だけ、固定したprimary baselineに
+対して計算する。候補がない場合の正式な結論は`no_model_selected`である。
 deep-learningの追加価値を主張するには、同じgateをTF-IDF ridgeに対して満たす。満たさない場合の正式な
 結論は`no_model_selected`または`no_incremental_deep_learning_gain`である。
 
@@ -113,13 +118,14 @@ deep-learningの追加価値を主張するには、同じgateをTF-IDF ridgeに
 
 ## Development tournament milestone（2026-08-11）
 
-M6のdevelopment partition（2,195行、inner train 1,504行、inner validation 691行）で、
-`numeric_ridge`、`tfidf_ridge`、`numpy_mlp`、`numpy_lstm`、`joint_text_numeric_mlp`の固定gridを実行した。
-LSTMは512-token chunkを最大8個まで固定embedding平均へ変換し、chunk sequenceをBPTTで学習した。
-TCN/self-attentionは固定encoder probeとして別集計し、selection gateから除外した。outer 413行は未開封である。
-overall gateは `no_model_selected` だが、best LSTMはTF-IDF ridgeへのneural gateとpaired bootstrapを通過し、
-neural nominee候補となった。この結果をouter開封許可とは扱わない。次はneural nominee manifestとfeature/
-seed/code fingerprintをfreezeし、明示承認の有無を確認してから、承認時のみouterを一度だけ開く。
+M6のdevelopment partition（2,195行）で、time splitと2方向のcompany-disjoint splitを事前契約どおり
+評価した。candidate artifactは時間軸76件、各company axis 52件の計180件で、duplicate-family監査は
+3軸すべて0件、outer 413行は未開封である。LSTMは512-token chunkを最大8個まで固定embeddingへ写像し、
+各active chunkの予測をdocument levelで平均する契約へ接続した。
+
+all-axis gateを満たす候補はなく、overallとneuralの両方が`null`、statusは`no_model_selected`である。
+nomineeが存在しないためpaired bootstrapは生成していない。この結果をouter開封許可とは扱わない。次は
+このdevelopment結果をfreezeし、別途明示承認がある場合だけlocked outerを一度だけ開く。
 
 raw SEC response、normalized text、contact情報はrepositoryへcommitしない。
 
