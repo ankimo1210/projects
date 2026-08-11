@@ -1,0 +1,48 @@
+{
+  "schema_version": "b9-development-freeze-v1",
+  "freeze_date": "2026-08-11",
+  "status": "no_model_selected",
+  "outer_accessed": false,
+  "decision": "Freeze the development result without opening the locked outer test because no candidate passed the amended gate on all required inner-selection axes.",
+  "preanalysis_contract_sha256": "b9f8236a21737fd9e6dba56adcc18fe83769dc8bfc12b7279fcad95017db8ed8",
+  "runner_sha256": "eafca12f9e7c9cbb1b0fee8014730551227bffffa897436bf794f3f9a655dbbb",
+  "development_artifact": {
+    "filename": "b9_development_tournament_v1.json",
+    "sha256": "e42e38cd044cfa944cf45e8d06e221fbbe786cdebd2bf7ec77249418f2e7937f"
+  },
+  "input_provenance": {
+    "panel_sha256": "6c6008c2f28c30299e15e37613cfb0b3b22e8fd283858f5b459227c7e4a412a8",
+    "previous_filing_sidecar_sha256": "9ff2efef335357ff53bb1e4ba5c57f4b2e8799fc4ee5d830c55843a50026fbbc",
+    "normalized_manifest_sha256": "1283b9cb0992cfd2caaa942f6c869e212762c90a9abbc9a050173f5e3963daba"
+  },
+  "partitions": {
+    "development_rows": 2195,
+    "inner_train_rows": 1504,
+    "inner_validation_rows": 691,
+    "outer_rows_counted_only": 413
+  },
+  "selection_axes": {
+    "required": [
+      "time",
+      "company_mod_1_to_2",
+      "company_mod_2_to_1"
+    ],
+    "candidate_count_by_axis": {
+      "time": 76,
+      "company_mod_1_to_2": 52,
+      "company_mod_2_to_1": 52
+    },
+    "candidate_count_total": 180,
+    "cross_partition_duplicate_family_count_by_axis": {
+      "time": 0,
+      "company_mod_1_to_2": 0,
+      "company_mod_2_to_1": 0
+    }
+  },
+  "nominees": {
+    "overall": null,
+    "neural": null
+  },
+  "bootstrap_generated": false,
+  "next_allowed_action": "Only a separately approved, contract-preserving outer evaluation may access locked outer rows; otherwise retain no_model_selected."
+}
