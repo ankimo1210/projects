@@ -96,6 +96,41 @@ def test_first_reported_vintage_uses_archive_and_rejects_unresolved_accession() 
         )
 
 
+def test_first_reported_vintage_orders_by_availability_not_filing_date() -> None:
+    filing_index = build_filing_index(
+        _table(
+            ("0000320193-25-000001", "2025-01-01", "2025-01-10T16:00:00-05:00", "10-Q", "320193"),
+            ("0000320193-25-000002", "2025-01-02", "2025-01-02T16:00:00-05:00", "10-Q", "320193"),
+        )
+    )
+    facts = [
+        {
+            "cik": 320193,
+            "concept": "us-gaap/Assets",
+            "unit": "USD",
+            "start": None,
+            "end": "2024-12-31",
+            "val": 100_000_000,
+            "accn": "0000320193-25-000001",
+        },
+        {
+            "cik": 320193,
+            "concept": "us-gaap/Assets",
+            "unit": "USD",
+            "start": None,
+            "end": "2024-12-31",
+            "val": 110_000_000,
+            "accn": "0000320193-25-000002",
+        },
+    ]
+
+    vintage = resolve_first_reported_vintages(facts, filing_index)[0]
+
+    assert vintage["accn"] == "0000320193-25-000002"
+    assert vintage["value"] == 110_000_000
+    assert vintage["availability_date"] == "2025-01-03"
+
+
 def test_fixed_anchor_cohort_excludes_future_selected_and_small_assets() -> None:
     spec = PITUniverseSpec(
         anchor_period_end=date(2015, 12, 31),

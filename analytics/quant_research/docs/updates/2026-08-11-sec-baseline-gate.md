@@ -2,97 +2,134 @@
 
 ## 結論
 
-SEC EDGAR の bounded baseline は、企業・時間 holdout、固定 metric、単純
-baseline を実行できることを確認した。一方、**B9 の実装開始ゲートはまだ保留**とする。
-厳格な company × time split が $n=84$ で、事前に定めた $n\ge 200$ を満たしていない。
-また、`CY2015Q4I` の現在 Frame を 2008 年以降の企業選定に使うと、過去へ現在の
-universe を遡及する look-ahead / survivorship risk が残る。
+M6 の historical SEC cohort は、B9 の **実装開始ゲートを通過**した。固定した
+company × time holdout は \(n=413\) で、事前登録した \(n\ge200\) を満たす。したがって、
+B9 の Notebook 本文と candidate model の設計には進める。ただし、これは **B9 の実証結果でも
+model 選定でもない**。現時点で確認したのは、実データを再取得・PIT 再構成・baseline 比較できる
+再現可能な土台だけである。
 
-このノートは Opus review の再計算結果を永続化したものである。raw SEC response、
-bulk archive、User-Agent の連絡先は保存しない。raw を再取得できる正式な downloader と
-manifest が揃うまでは、数値は feasibility evidence として扱い、B9 の実証結論とは呼ばない。
+この Core は [SEC EDGAR APIs](https://www.sec.gov/search-filings/edgar-application-programming-interfaces)
+の Company Facts / Submissions を用いる。取得は明示的な連絡先付き User-Agent と低い rate で行い、
+[SEC の Fair Access 方針](https://www.sec.gov/search-filings/edgar-search-assistance/accessing-edgar-data)
+に従う。raw response、連絡先、cache は repository に保存しない。
 
-## 再計算された baseline evidence
+## M6 の historical cohort と実測結果
 
-Assets の前四半期が 1 億ドル以上という size floor を適用した bounded sample は
-1,500 行・38 社だった。`pooled_mean` は zero baseline より改善したが、これは
-「平均的な資産成長」を学ぶ単純 drift baseline であり、候補モデルの採用前に必ず含める。
+現在の構成銘柄や現在 Frame を過去に遡及しないため、2016年Q1 EDGAR master index の
+`10-K` 提出者を seed にした。これは CIK-rank 上の deterministic feasibility cohort であり、
+米国上場企業全体や任意の産業への代表性は主張しない。
 
-| split | n | zero MAE | pooled MAE |
+| 段階 | 実測 | 扱い |
+|---|---:|---|
+| historical seed universe | 5,338 unique CIK | 2016 Q1 の exact `10-K`、CIK-rank evenly-spaced selection |
+| requested seed | 300 CIK | protocol 固定 |
+| SEC cache success / failure | 261 / 39 | 39件はすべて HTTP 404。失敗 CIK は panel へ入れない |
+| Core concept exclusion | 1 CIK | `us-gaap/Assets/USD` がないため、別 taxonomy へ fallback せず除外 |
+| fixed-anchor cohort | 164 CIK | `2015-12-31` Assets が `2016-04-01` 以下で利用可能、かつ \(\ge\$100\mathrm{M}\) |
+| valid panel | 4,631 rows / 163 CIK | 1行 = CIK × 隣接四半期 pair |
+| strict both holdout | 413 rows / 38 CIK / 183 availability dates | \(n\ge200\) を通過 |
+| strict both training partition | 2,195 rows / 102 CIK / 534 availability dates | 空でないことを gate に含める |
+
+source からは 166 個の非隣接四半期 transition（140 CIK、最大 2,419 日）と、同じ filing
+availability date を共有する 12 pair（9 CIK）を除外した。出力 panel に残った gap は
+60–98 日である。これらは補間せず、理由と件数を quality artifact に残す。
+
+### Holdout coverage と baseline
+
+time cutoff は B5–B8 と同じ `2023-10-23`、company split は `cik % 3 == 0`、minimum
+holdout は 200 行で固定した。各予測では `known_at` より前に利用可能だった target だけを
+training に使う。
+
+| split | holdout rows | holdout CIK | holdout dates | training rows | training CIK | training dates |
+|---|---:|---:|---:|---:|---:|---:|
+| time | 1,078 | 96 | 247 | 3,553 | 163 | 633 |
+| company | 1,771 | 61 | 662 | 2,860 | 102 | 733 |
+| both | 413 | 38 | 183 | 2,195 | 102 | 534 |
+
+strict `both` の log-Assets growth baseline は次のとおりである。company holdout では
+company mean が利用できないため、事前に定めた pooled fallback を使う。
+
+| baseline | MAE | medAE | RMSE |
 |---|---:|---:|---:|
-| time holdout | 287 | 0.04873 | 0.04769 |
-| company holdout | 450 | 0.05086 | 0.05037 |
-| both | 84 | 0.04788 | 0.04686 |
+| zero | 0.042028 | 0.018403 | 0.143149 |
+| pooled drift | 0.042017 | 0.020048 | 0.141582 |
+| seasonal | 0.042028 | 0.018403 | 0.143149 |
+| company expanding mean | 0.042017 | 0.020048 | 0.141582 |
 
-この値は raw cache がないため、この checkout 上での完全な再実行結果ではない。
-正式な B9 gate の判定は、archive を含む再取得後に同じ manifest から再計算する。
+これは candidate model の比較基準である。candidate が MAE を 1%以上改善し medAE を悪化させない
+かは、B9 の pre-analysis specification と locked evaluation を実装してから別に判定する。
+
+## 再現性 fingerprint
+
+M6 の実測は raw data ではなく、次の manifest / derived artifact の連鎖で固定する。
+
+| artifact | SHA-256 / contract |
+|---|---|
+| 2016 Q1 master index | `43ccb67ed90ad4229b02b99094846a291c6d1672eb25a1ee89dcb0636c2a264e` |
+| selected 300-CIK canonical list | `79b873f2c74357486afbf008ac9bde36ab17165609dc051ab88c6e8c076fd02a` |
+| seed manifest | `3ad7504baae4ed5f108c2b143df46cf2b4c6960c3a965d7c7c9ef3d2a25d3a9b` |
+| batch manifest | `3cf4f63bff3ad48d6b86e2b3f755312609e9cd2efcf0f56085887234c9ce16f3` |
+| M6 protocol | [`b9-m6-protocol.json`](../contracts/b9-m6-protocol.json) / `d2aab034e801a114d1d9a3c9a1b1543063ad37bbd963e2c653e1ff0c83c57995` |
+| holiday manifest | `bcc920ceeefc77a2ec2394018526995104c5f1a74bf066a583996277a5c13314` / `pandas.USFederalHolidayCalendar`、1990-01-01–2036-01-14 |
+| derived panel artifact | `6c6008c2f28c30299e15e37613cfb0b3b22e8fd283858f5b459227c7e4a412a8` |
+| detached audit report | `3ac26319c60540c62956fc3045a29297174c5a9043bbc6ee50e216f271118a1b` |
+
+`tools/prepare_sec_b9_seed_cohort.py`、`tools/prepare_us_federal_holiday_manifest.py`、
+`tools/fetch_sec_b9_cache.py`、`tools/build_b9_panel.py`、
+`tools/audit_sec_b9_panel.py` の順に実行する。最後の detached audit は raw SEC payload とraw
+batch manifestを再読せず、derived artifact、seed manifest、holiday manifest、protocol、artifact内の
+batch/cache-integrity summary を使って grain、PIT ordering、split、baseline、provenance を再計算する。
+raw file の hash・child manifest・advertised archive の完全性はpanel buildの前後で fail-closed に検証する。
+
+正式なM6判定では `audit_sec_b9_panel.py --require-modeling-gate` を使う。この実行では
+`strict_provenance_accepted`、`strict_protocol_accepted`、`strict_sample_gate_accepted`、
+`modeling_gate_accepted` がすべて `true` で、report の全 `checks` は `true` だった。
 
 ## B9 v1 Core contract
 
 ### Point-in-time filing join
 
-- Company Facts の対象 fact は `accn` を必須とする。
-- `accn` は Submissions の `recent` と `filings.files` の全 archive を結合して解決する。
-- acceptance metadata が見つからない accession は失敗として扱い、`filed` 単独へ fallback しない。
-- `acceptanceDateTime` の timezone を保持し、`America/New_York` の日付と `filingDate` の遅い方を基準にする。
-- その基準日の次の米国連邦営業日を `availability_date` とする。holiday manifest を固定した場合は、
-  その manifest を provenance に含める。
-- 同一 period の value は first-reported vintage を使い、後続 amendment で過去の観測を上書きしない。
+- Company Facts の対象 fact は `accn` を必須とする。`accn` は Submissions `recent` と
+  `filings.files` の **全 advertised archive** で解決し、cache 内の archive 集合と manifest hash を
+  fail-closed で照合する。
+- acceptance metadata が見つからない accession、CIK の不一致、壊れた payload は失敗とする。
+  `filed` 単独への fallback はしない。
+- `availability_date` は `America/New_York` の acceptance 日と `filingDate` の遅い方の次の
+  米国連邦営業日である。holiday manifest は hash と coverage を artifact に保存する。
+- 同一 period の value は availability が最も早い first-reported vintage を使う。後続 amendment や
+  later availability は過去の観測を上書きしない。
+- `us-gaap/Assets/USD` のない issuer は `missing_us_gaap_assets_usd` として理由付き除外する。
+  IFRS や custom tag への自動代替はしない。
 
-### Universe and analysis horizon
+### Universe、行の grain、評価
 
-現在の Frame を過去へ適用しない。v1 Core は次の固定 anchor cohort を使う。
+- universe は `2015-12-31` の `us-gaap/Assets/USD` が `2016-04-01` 以下で利用可能で、
+  **anchor 時点** Assets \(\ge\$100\mathrm{M}\) の fixed cohort である。各 row の前四半期 Assets に
+  floor を再適用する仕様ではない。
+- target period は `2016-04-01` 以後、行は CIK × 60–120日 gap の adjacent quarter pair とする。
+  non-positive Assets、非隣接 period、previous/target availability が同日以下の pair は補間せず除外する。
+- panel row は `previous_available_date > previous_period_end`、
+  `target_available_date > target_period_end`、`target_available_date > known_at` を満たす。
+- primary metric は MAE、secondary は medAE、reference は RMSE。baseline ladder は zero / pooled
+  drift / seasonal / company expanding mean とする。
+- strict gate は `both` holdout \(n\ge200\) **かつ** corresponding training partition が空でないこと。
+  protocol の cutoff、company split、metric role は builder と audit の両方で固定値照合する。
 
-- concept/unit: `us-gaap/Assets/USD`
-- anchor period end: `2015-12-31`
-- anchor as-of: `2016-04-01` 以下で利用可能な fact のみ
-- size floor: 前四半期 Assets $\ge 100\,\mathrm{M}$
-- target observation: anchor 後（$analysis\_start\ge 2016\text{-}04\text{-}01$）に限定
-- dynamic historical universe は、archive reconstruction が完了した後の Advanced とする
-
-これにより、2008 年の target を 2015 年時点で選ばれた企業へ遡及することを禁止する。
-実装上は `PITUniverseSpec` と `select_fixed_anchor_cohort` がこの境界を保持する。
-
-### Baseline and acceptance gate
-
-- primary metric: MAE
-- secondary metric: median absolute error（medAE）
-- reference metric: RMSE
-- baseline ladder: zero / pooled drift / seasonal / company expanding mean
-- candidate gate: primary を 1% 以上改善し、secondary を悪化させない
-- strict failure: company × time split の有効標本が $n<200$ なら結論を出さない
-
-実装上は `fundamentals_error_metrics` が3 metricと `n` を保存し、
-`audit_split_counts` が最も厳しい split の gate を判定する。
-
-## 実装した再現可能な最小部品
-
-- `src/quant_textbook/sec_pit.py`
-  - Submissions `recent` + `filings.files` archive の accession index
-  - acceptanceDateTime 必須の availability 計算
-  - first-reported vintage join
-  - fixed anchor cohort selection
-  - split count audit
-  - MAE / medAE / RMSE
-- `tests/test_sec_pit.py`
-  - archive 由来 accession、欠落 acceptance、unresolved accession、holiday、
-    anchor look-ahead、split gate、metricの fixture test
-- `tools/fetch_sec_b9_cache.py`
-  - 明示的なUser-Agent、rate limit、`recent` + `filings.files`全archive取得、content hash manifest
-
-実SECへの取得は連絡先入りUser-Agentを指定して明示的に実行する。raw dataはrepositoryへ
-commitしない。大規模panel builderと実データでの150社拡張はまだ残っており、次段階で
-offline fixtureを追加してから実測する。その際、strict split $n\ge200$ を確認する。
-
-## Gate status
+## Gate status と残る境界
 
 | gate | 状態 | 備考 |
 |---|---|---|
-| Access | pass | 公式 SEC API の bounded取得は確認済み |
-| Semantics | conditional pass | 上記 availability/PIT contract を採用 |
-| Sample | hold | 38社/strict split $n=84$。150社程度へ拡張が必要 |
-| Baseline | provisional pass | baseline は比較可能だが、archive再取得が未完了 |
-| Teaching fit | pass | PIT、baseline、split監査へ接続可能 |
+| Access / cache integrity | pass | 261 success cache の child/raw hash と archive parity を検証 |
+| PIT semantics | pass (Core) | availability、first-vintage、physical date orderを fail-closed にする |
+| Sample | pass | strict both \(n=413\)、training 2,195 行 |
+| Baseline | pass | 比較可能な baseline を固定。candidate model は未評価 |
+| Teaching fit | pass | real-data source、PIT、quality、offline audit を教材へ接続できる |
 
-従って、B9 Notebook本文・model tournament・実証的な企業ファンダメンタルズ結論は、
-archive join、anchor cohort、標本数、offline再現性の4点が完了するまで実装しない。
+残る境界は明示する。calendar-date anchor に適合する issuer だけの deterministic feasibility cohort であり、
+cross-section の代表性を主張しない。derived artifact の detached audit は availability **順序**と
+manifest を再検証するが、個々の raw `filingDate` / `acceptanceDateTime` からの再計算は build 時の
+cache integrity と fixture test に依存する。network の transient 429/5xx に対する retry/backoff、
+dynamic historical universe、raw filing text を用いる feature contract は B9 実装段階の別タスクである。
+
+したがって次の作業は、B9 の estimand・feature availability・text retrieval scope・candidate set・
+locked evaluation を pre-register し、この M6 artifact を変更せずに model tournament を開始することである。

@@ -1,0 +1,39 @@
+{
+  "evaluation": {
+    "company_modulus": 3,
+    "company_remainder": 0,
+    "metrics": {
+      "primary": "mae",
+      "reference": "rmse",
+      "secondary": "median_absolute_error"
+    },
+    "minimum_required": 200,
+    "time_cutoff": "2023-10-23"
+  },
+  "historical_seed": {
+    "filed_end": "2016-03-31",
+    "filed_start": "2016-01-01",
+    "forms": [
+      "10-K"
+    ],
+    "requested_cik_count": 300,
+    "selection_method": "evenly_spaced_cik_rank",
+    "source_url": "https://www.sec.gov/Archives/edgar/full-index/2016/QTR1/master.idx"
+  },
+  "panel": {
+    "availability_calendar": "us_federal_holidays",
+    "holiday_manifest_end": "2035-12-31",
+    "holiday_manifest_start": "1990-01-01",
+    "maximum_gap_days": 120,
+    "minimum_gap_days": 60
+  },
+  "schema_version": "b9-m6-protocol-v1",
+  "universe": {
+    "analysis_start": "2016-04-01",
+    "anchor_as_of": "2016-04-01",
+    "anchor_period_end": "2015-12-31",
+    "concept": "us-gaap/Assets",
+    "minimum_assets_usd": 100000000.0,
+    "unit": "USD"
+  }
+}

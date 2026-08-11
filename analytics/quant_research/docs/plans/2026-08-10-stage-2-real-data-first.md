@@ -1,7 +1,7 @@
 # Stage 1整合性フォローアップとStage 2実データ優先計画
 
 - 決定日: 2026-08-10（B9 contract revised 2026-08-11）
-- 状態: Stage 1整合性修正とStage 2B / B5–B8を実装済み。B9 baselineは実行可能性を確認したが、PIT cohort・archive join・strict split標本数のため着手保留
+- 状態: Stage 1整合性修正とStage 2B / B5–B8を実装済み。B9 M6 real-data gateはhistorical PIT cohort・archive join・strict splitを通過し、次はpre-analysis specificationとmodel tournament
 - 対象: Stage 1の残存整合性修正、Stage 2（B5–B11）のデータ・テーマ設計
 
 ## 結論
@@ -23,10 +23,11 @@ Monte Carloそのものを学ぶ章では引き続き使用する。ただし、
 > look-aheadを実測した。baseline未実施時点ではavailability contractも未確定だったため、
 > SECは5 gate中4 gate相当の条件付き候補としてB9を未着手にした。詳細は
 > [Stage 2 Data Feasibility follow-up](../updates/2026-08-10-stage-2-data-feasibility-follow-up.md)を参照。
-> その後のbounded baselineは実行可能性を確認したが、現在Frameを2008年以降へ遡及する
-> cohort riskと、company×time strict splitの`n=84`が判明した。v1 Coreは2015-12-31 anchor後の
-> fixed PIT cohort、`filings.files` archive join、size floor、MAE/medAE/RMSE、`n>=200` gateへ修正し、
-> B9実装は再取得・標本拡張まで保留する。詳細は
+> 2026-08-11 M6 update: 2016年Q1のexact `10-K`をseedにする固定PIT cohortで、cache integrityを
+> 通過した261 CIKから4,631行 / 163 CIKのpanelを再構成した。company×time strict holdoutは
+> `n=413`、対応するtraining partitionは2,195行で、事前登録した`n>=200`かつtraining非空の
+> gateを通過した。これはB9のmodel選定や母集団への実証結論ではなく、pre-analysis specificationと
+> locked model tournamentへ進むためのdata gateである。詳細は
 > [SEC B9 baseline gate follow-up](../updates/2026-08-11-sec-baseline-gate.md)を参照。
 
 ## 1. Stage 1で先に閉じる整合性項目
@@ -191,9 +192,18 @@ B5/B6ではMLPをAdvancedに置き、単純baselineと同じouter testで比較�
 7. SECのAccess・Semantics・Sample・Teaching fit spikeを実行する。**完了。ただしavailability contractを保守的規則へ限定**
 8. `curriculum_map.yml`へB7–B8を追加し、12章と共通libraryを同じTreasury contractで実装する。**完了**
 9. B7/B8 outer testのnegative result、filtered-only、uncertainty contractを更新ノートへ固定する。**完了**
-10. B9着手前にSECの単純baseline、metric、企業・時間holdout、失敗条件を固定して実行する。**bounded sampleで実行可能性確認済み。ただしstrict split `n=84`のためgate未達**
+10. B9着手前にSECの単純baseline、metric、企業・時間holdout、失敗条件を固定して実行する。**完了。M6 strict both holdout `n=413`、training 2,195行でgate通過**
 11. B9着手前に`filings.files`を含む`accn` join、fixed-anchor PIT cohort、calendar manifest、
-    cache fetcherを実装する。**完了。offline panel fixtureと約150社への拡張、strict split `n>=200`の実測は残作業**
+    cache fetcherを実装する。**完了。batch cache integrity、archive allowlist、holiday manifest、
+    offline panel builder、derived artifact、raw SEC payloadを再読しないdetached audit、PIT/grain/split fixtureを含む**
+
+12. 実SEC cacheを固定anchor cohortへbatch取得し、`tools/build_b9_panel.py`でoffline artifactを生成する。
+    source terms、retrieval、content hash、CIK数、欠損・重複・PIT・split gateを監査し、strict gateを満たす場合のみ
+    B9 Notebook本文とmodel tournamentを開始する。**完了。300 requested / 261 cache success / 163 panel CIK、
+    4,631 rows、strict both `n=413`をartifactと、raw cacheを再読しないdetached auditで固定**
+
+13. B9 の estimand、feature availability、text retrieval scope、candidate set、locked evaluationを
+    pre-registerし、M6 artifactを変更せずにNotebook本文とmodel tournamentを開始する。**次の実行段階**
 
 ## 7. 未決事項
 

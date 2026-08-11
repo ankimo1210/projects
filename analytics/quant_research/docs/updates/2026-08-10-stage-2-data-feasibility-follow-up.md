@@ -109,11 +109,12 @@ FramesのCY2017Q3Iは後者を返した。SEC公式仕様もFramesを「last fil
 5. Framesはlook-ahead反例とcross-sectional sample診断に限定する。
 6. 現在のFrameや指数構成銘柄を過去へ遡及適用しない。B9 v1 Coreは
    `us-gaap/Assets/USD` の`2015-12-31` anchor factを`2016-04-01`以下で観測でき、
-   前四半期Assetsが**1億ドル以上**の固定cohortとし、分析対象はanchor後に限定する。
+   **anchor時点** Assetsが1億ドル以上の固定cohortとし、分析対象はanchor後に限定する。
+   各行の前四半期Assetsへfloorを再適用しない。
    dynamic historical universeはarchive再構築後のAdvancedへ分離する。
 7. downloaderは申告済みUser-Agent、SECのrate limit、local cache、content hashを必須にする。
 
-## Gate判定
+## 2026-08-10時点のGate判定（後続M6により更新）
 
 | Gate | Treasury | SEC |
 |---|---|---|
@@ -123,9 +124,10 @@ FramesのCY2017Q3Iは後者を返した。SEC公式仕様もFramesを「last fil
 | Baseline | pass | provisional。numeric-only baselineは実行可能だがarchiveを含む再取得が必要 |
 | Teaching fit | pass | pass |
 
-したがって、TreasuryはB7–B8へ進める。SECは「5 gate通過」ではなく、B9候補を維持するための
-条件付き結果である。fixed-anchor cohort、`filings.files` join、strict split `n>=200`、
-offline再現性が完了するまでB9本文やmodel tournamentは実装しない。
+したがって、TreasuryはB7–B8へ進める。この表は2026-08-10時点のSEC feasibility結果である。
+SECについては翌日のM6でfixed-anchor cohort、`filings.files` join、strict split \(n\ge200\)、
+offline再現性を完了し、B9実装開始gateを通過した。現行statusは
+[SEC B9 baseline gate follow-up](2026-08-11-sec-baseline-gate.md)をsource of truthとする。
 
 ## B9前の残作業（baseline review反映）
 
