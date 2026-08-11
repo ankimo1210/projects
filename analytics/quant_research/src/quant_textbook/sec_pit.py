@@ -13,6 +13,7 @@ from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 from math import isfinite, sqrt
+from pathlib import PurePosixPath
 from typing import Any
 from zoneinfo import ZoneInfo
 
@@ -47,6 +48,7 @@ class FilingRecord:
     form: str
     filing_date: date
     acceptance_datetime: datetime
+    primary_document: str | None = None
 
     def __post_init__(self) -> None:
         if not self.accession_number:
@@ -57,6 +59,17 @@ class FilingRecord:
             raise ValueError("form must be non-empty")
         if self.acceptance_datetime.tzinfo is None:
             raise ValueError("acceptance_datetime must be timezone-aware")
+        if self.primary_document is not None:
+            if not self.primary_document.strip():
+                raise ValueError("primary_document must be non-empty when present")
+            path = PurePosixPath(self.primary_document)
+            if (
+                path.is_absolute()
+                or ".." in path.parts
+                or "\\" in self.primary_document
+                or any(part in {"", "."} for part in path.parts)
+            ):
+                raise ValueError("primary_document must be a safe SEC-relative path")
 
     def availability_date(
         self,
@@ -189,6 +202,9 @@ def _column_rows(table: Mapping[str, Any], *, cik: int | None) -> list[dict[str,
         raise ValueError("submission cik column has an inconsistent length")
     if cik is None and cik_values is None:
         raise ValueError("cik is required when submission rows have no cik column")
+    primary_documents = table.get("primaryDocument")
+    if primary_documents is not None and len(primary_documents) != count:
+        raise ValueError("submission primaryDocument column has an inconsistent length")
 
     rows: list[dict[str, Any]] = []
     for index in range(count):
@@ -203,6 +219,11 @@ def _column_rows(table: Mapping[str, Any], *, cik: int | None) -> list[dict[str,
                 "filing_date": _as_date(table["filingDate"][index], name="filingDate"),
                 "acceptance_datetime": _parse_acceptance_datetime(
                     table["acceptanceDateTime"][index]
+                ),
+                "primary_document": (
+                    str(primary_documents[index]).strip()
+                    if primary_documents is not None and str(primary_documents[index]).strip()
+                    else None
                 ),
             }
         )
@@ -307,6 +328,7 @@ def resolve_first_reported_vintages(
                 "form": record.form,
                 "filed": record.filing_date.isoformat(),
                 "acceptance_datetime": record.acceptance_datetime.isoformat(),
+                "primary_document": record.primary_document,
                 "availability_date": record.availability_date(
                     holiday_dates=holiday_dates
                 ).isoformat(),

@@ -317,7 +317,9 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 ## 現在の範囲
 
 - 実装済み: Phase 0、Stage 1 / B1–B4、Stage 1評価・placement追補、Stage 2 / B5–B8、B9 M6 real-data gate・pre-analysis contract
-- 後続: Stage 2後半（B9〜B11）。B9はfiling provenance / text retrieval gateから開始する
+- 後続: Stage 2後半（B9〜B11）。B9のfiling provenance sidecar、取得、visible-text正規化、
+  raw / normalized integrity監査は実装済み。次は外部cacheへ一次文書を取得し、90% coverage / normalized
+  duplicate gateを実行する
 - 未実装: Research Apprenticeship、Capstone
 
 ## 更新ノート
@@ -328,3 +330,4 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 - [2026-08-10 — Stage 2 Data Feasibility follow-up](docs/updates/2026-08-10-stage-2-data-feasibility-follow-up.md)
 - [2026-08-10 — Stage 2B / B7–B8実装・予測結果ノート](docs/updates/2026-08-10-stage-2b-b7-b8.md)
 - [2026-08-11 — SEC B9 baseline gate follow-up](docs/updates/2026-08-11-sec-baseline-gate.md)
+- [2026-08-11 — B9 filing provenance and retrieval gate](docs/updates/2026-08-11-b9-filing-provenance.md)

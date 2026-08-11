@@ -207,7 +207,9 @@ B5/B6ではMLPをAdvancedに置き、単純baselineと同じouter testで比較�
 
 14. M6 target rowを変えずにprevious filing provenanceをmaterializeし、staging / retry / atomic publishを
     持つtext downloader、retrieval manifest、coverage・duplicate-family・target-text exclusion auditを
-    実装する。gate通過後にB9 Notebook本文とmodel tournamentを開始する。**次の実行段階**
+    実装する。gate通過後にB9 Notebook本文とmodel tournamentを開始する。**sidecar・downloader・raw
+    integrity audit、visible-text正規化、normalized duplicate auditは実装済み。実文書取得と90% coverage /
+    normalized duplicate gateの実行が次。**
 
 ## 7. 未決事項
 

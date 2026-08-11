@@ -100,10 +100,13 @@ deep-learningの追加価値を主張するには、同じgateをTF-IDF ridgeに
 
 ## B9実装へ進む前のgate
 
-1. panel rowへprevious filing provenanceを追加し、M6 row/hash不変を検査する。
-2. SEC primary document downloaderをstaging + atomic publish + bounded retryで実装する。
-3. text retrieval manifest、coverage、duplicate-family、target-text exclusionを監査する。
+1. panel rowへprevious filing provenanceを追加し、M6 row/hash不変を検査する。**実装・実データ照合済み。4631行、欠損0、target accession混入0。**
+2. SEC primary document downloaderをstaging + atomic publish + bounded retryで実装する。**実装・mock検証済み。連絡先入りUser-Agentを用いる実取得は未実行。**
+3. text retrieval manifest、coverage、duplicate-family、target-text exclusionを監査する。**raw / visible normalized textの監査を実装・mock検証済み。実取得後のcoverage判定は未実行。**
 4. B9のWeek 33–36とProjectを`curriculum_map.yml`へ追加する。
 5. builder / Notebook / library / testsを実装し、outerを開く前にnominee manifestを固定する。
 
 raw SEC response、normalized text、contact情報はrepositoryへcommitしない。
+
+実装状況と実測fingerprintは
+[B9 filing provenance and retrieval gate update](../updates/2026-08-11-b9-filing-provenance.md)に記録する。
