@@ -92,7 +92,7 @@ def overview_cells():
 | 36 | train-only TF–IDF/ridge、ablation | previous SEC filing | target text、duplicate、coverage |
 | Project | frozen contract audit | SEC Assets log-change | `no_model_selected`を許す |
 
-教材fixtureは実SEC filingとfundamentalsから作ったが、inner train 192行・inner validation 64行だけの縮約版である。raw text、CIK、accession、locked outer 413行を含まない。したがってarchitectureの仕組みと漏洩監査には使えるが、pre-registered tournamentのnominee選定には使わない。
+教材fixtureは実SEC filingとfundamentalsから作ったが、inner train 192行・inner validation 64行だけの縮約版である。raw text、CIK、accession、locked outer 413行を含まない。したがってarchitectureの仕組みと漏洩監査には使えるが、pre-registered tournamentのnominee選定には使わない。fixture内のprovenanceはfixture作成時点のcontract snapshotを指す。現在のamended contractとfull tournamentのfingerprintは、別途 [development freeze manifest](../contracts/b9-development-freeze-v1.json) に固定している。
 """),
         code("""
 target_frame = pd.DataFrame(
@@ -833,7 +833,7 @@ def project_cells():
 | budget | 12 runs/family、200 epochs/run、100k parameters以下 |
 | failure result | `no_model_selected` |
 
-このNotebookは256行教材fixtureだけを使う。candidate教材実装はcompact inner train 192行でfitする一方、fixed baseline predictionは正式規約どおりfull 1,504-row inner training partitionだけから事前計算している。したがって同じ64-row validation上のbaseline ladder規約は検証できるが、candidateとの順位は公平なfull-data tournamentではない。full 2,195-row development search、nominee manifest、company-cluster bootstrapが未実行なのでouterは開かない。
+このNotebookは256行教材fixtureだけを使う。candidate教材実装はcompact inner train 192行でfitする一方、fixed baseline predictionは正式規約どおりfull 1,504-row inner training partitionだけから事前計算している。したがって同じ64-row validation上のbaseline ladder規約は検証できるが、candidateとの順位は公平なfull-data tournamentではない。full 2,195-row development searchは別artifactでtime + 2方向company-disjointの計180候補を実行済みで、all-axis gateを満たす候補はなかった。development freezeは`no_model_selected`であり、outerは開かない。
 """),
         code("""
 tfidf_model = qt.fit_hashed_tfidf(
@@ -905,9 +905,9 @@ gate = pd.DataFrame(
         {"artifact": "M6 panel integrity", "status": "passed"},
         {"artifact": "filing retrieval and text gate", "status": "passed"},
         {"artifact": "development-only teaching fixture", "status": "passed"},
-        {"artifact": "full 2,195-row candidate search", "status": "not run"},
-        {"artifact": "company-cluster paired bootstrap", "status": "not run"},
-        {"artifact": "nominee manifest", "status": "not frozen"},
+        {"artifact": "full 2,195-row candidate search", "status": "passed: 180 development candidates"},
+        {"artifact": "company-cluster paired bootstrap", "status": "not run: no nominee"},
+        {"artifact": "development freeze manifest", "status": "frozen: no_model_selected"},
         {"artifact": "locked outer evaluation", "status": "unopened"},
     ]
 )
