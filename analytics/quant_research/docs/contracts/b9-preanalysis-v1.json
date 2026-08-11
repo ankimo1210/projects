@@ -1,6 +1,6 @@
 {
   "schema_version": "b9-preanalysis-v1",
-  "status": "amended_before_full_candidate_evaluation",
+  "status": "amended_before_nominee_freeze",
   "as_of_date": "2026-08-11",
   "amendments": [
     {
@@ -19,6 +19,13 @@
       ],
       "reason": "A pooled-drift-only denominator can accept a nominee that fails to beat a stronger fixed baseline, and the prior secondary guardrail text did not name its comparator.",
       "change": "Evaluate all four fixed baselines. On inner validation, require nominee MAE to improve at least one percent over the lowest fixed-baseline MAE and require median absolute error and company-macro MAE not to exceed their metric-wise fixed-baseline minima. Freeze the identity of the lowest-inner-validation-MAE baseline with the stated tie-break before outer access; use that frozen baseline for the paired outer delta-MAE interval. Candidate families, splits, feature contracts, budgets, bootstrap settings, and the unopened outer test are unchanged."
+    },
+    {
+      "date": "2026-08-11",
+      "stage": "inner_selection_axis_after_initial_development_run_before_nominee_freeze_and_outer_access",
+      "previous_contract_sha256": "0aa180acbcd2b685509d6ec65fdf40f9edfcfc544ecec62c930facd0d4615b20",
+      "reason": "The initial time-only inner validation measured known-company temporal generalization, while the locked outer is company-disjoint. The selection contract must audit the company-disjoint axis before freezing a nominee.",
+      "change": "Add two development-only company folds: CIK remainder 1 trains and remainder 2 validates, then the reverse. A candidate must satisfy the amended point gate independently on the time axis and both company folds. Nominee ordering remains the frozen time-axis MAE, medAE, and parameter-count tie-break after the all-axis gate; no outer rows, features, or predictions are opened."
     }
   ],
   "decision": "Select at most one overall B9 Core predictive model and separately nominate at most one neural model to test whether deep learning adds value over a locked TF-IDF linear baseline.",
@@ -80,6 +87,30 @@
       "validation_companies": 68,
       "validation_availability_dates": 190
     },
+    "inner_selection_axes": {
+      "required_axes": [
+        "time",
+        "company_mod_1_to_2",
+        "company_mod_2_to_1"
+      ],
+      "gate_rule": "The amended point gate must pass independently on every required axis.",
+      "company_mod_1_to_2": {
+        "training_rule": "development rows with cik % 3 == 1",
+        "validation_rule": "development rows with cik % 3 == 2",
+        "training_rows": 1092,
+        "validation_rows": 1103,
+        "training_companies": 49,
+        "validation_companies": 53
+      },
+      "company_mod_2_to_1": {
+        "training_rule": "development rows with cik % 3 == 2",
+        "validation_rule": "development rows with cik % 3 == 1",
+        "training_rows": 1103,
+        "validation_rows": 1092,
+        "training_companies": 53,
+        "validation_companies": 49
+      }
+    },
     "outer_test_access": "Candidate family, hyperparameters, seeds, feature manifest, and code commit must be frozen before one outer-test evaluation. Outer results may not be used to retune or replace the nominee."
   },
   "features": {
@@ -108,7 +139,7 @@
       ],
       "cleaning_contract": "Remove scripts, styles, inline-XBRL hidden nodes, exhibits, and markup. Strip table structure but retain visible cell text because legacy SEC filings use layout tables. Preserve visible headings, cells, and paragraph order. Do not use target-accession text.",
       "tokenization_contract": "Fit vocabulary and document-frequency statistics on the active training partition only. Normalize Unicode and whitespace; retain an explicit numeric-token class.",
-      "sequence_contract": "Use 512-token consecutive chunks. Keep at most 8 chunks per document by deterministic evenly spaced chunk-index selection and average chunk predictions at document level.",
+      "sequence_contract": "Use 512-token consecutive chunks. Keep at most 8 chunks per document by deterministic evenly spaced chunk-index selection. Map each chunk with the fixed 2,000-bucket token embedding, predict each active chunk with the trainable LSTM, and average active-chunk predictions at document level; zero-padded chunk predictions are excluded from the average.",
       "sequence_vocabulary_size": 2000,
       "deduplication_contract": "Hash normalized text and keep identical-document families in one partition. Report exact duplicates and near-duplicate diagnostics before fitting.",
       "minimum_row_coverage": 0.9,
@@ -152,7 +183,7 @@
       "numpy_small_self_attention",
       "joint_text_numeric_mlp"
     ],
-    "nomination_rule": "Choose one overall nominee across all candidate families and one neural nominee across neural families by inner-validation MAE, breaking ties by median absolute error and then lower parameter count. The nominees may be the same model. Freeze both before outer-test access.",
+    "nomination_rule": "Choose one overall nominee across all candidate families and one neural nominee across neural families only among candidates passing the amended gate on every required inner-selection axis. Order survivors by the frozen time-axis MAE, then median absolute error and lower parameter count. The nominees may be the same model. Freeze both before outer-test access.",
     "ablation_rule": "Report locked numeric-only, text-only, and joint variants. Ablations are diagnostics and cannot replace the frozen nominee after outer-test access.",
     "dependency_policy": "B9 Core uses NumPy, SciPy, pandas, and the Python standard library only. Adding a deep-learning or pretrained-model dependency requires a separate reviewed decision."
   },
