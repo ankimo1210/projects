@@ -76,12 +76,14 @@ outer比較用bootstrapを生成していない。
 
 次は以下の順序で進める。
 
-1. 既存のLSTM/TCN/attention forward・gradient primitiveに、pre-registered budget内のtraining loopと
-   parameter-count監査を追加する。
+1. LSTMについてはBPTT primitiveにpre-registered budget内の決定論的Adam training loopを追加済みである。
+   ただし512-token×最大8 chunksのdocument-level aggregationをrunnerへ接続する候補runは未実施であり、
+   次のrunでparameter-countとchunk-level validationを監査する。
 2. joint text+numeric variantを同じinner splitで実行する。
-3. 全Core familyを比較し、accepted nomineeがある場合のみcompany-cluster paired bootstrapとnominee
+3. TCN / self-attentionのtrainable readoutを同じ契約へ接続する。
+4. 全Core familyを比較し、accepted nomineeがある場合のみcompany-cluster paired bootstrapとnominee
    manifestをfreezeする。なければ `no_model_selected` をfreezeする。
-4. nominee manifest、feature manifest、seed、code commitを確認してから、別途明示承認を得てlocked outerを
+5. nominee manifest、feature manifest、seed、code commitを確認してから、別途明示承認を得てlocked outerを
    **一度だけ**開く。
 
 outer結果を見てarchitecture、feature、threshold、comparatorを変更しない。

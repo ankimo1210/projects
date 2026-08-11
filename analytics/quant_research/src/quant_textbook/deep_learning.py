@@ -70,6 +70,16 @@ class LSTMGradients:
     output_bias: float
 
 
+@dataclass(frozen=True)
+class LSTMTrainingResult:
+    """A trained LSTM regressor and deterministic loss trace."""
+
+    parameters: LSTMParameters
+    training_losses: np.ndarray
+    validation_losses: np.ndarray
+    best_epoch: int
+
+
 def _matrix(values: np.ndarray, *, name: str) -> np.ndarray:
     matrix = np.asarray(values, dtype=float)
     if matrix.ndim != 2 or matrix.shape[0] == 0 or matrix.shape[1] == 0:
@@ -341,6 +351,21 @@ def lstm_encode(
     return hidden
 
 
+def lstm_predict(parameters: LSTMParameters, embeddings: np.ndarray) -> np.ndarray:
+    """Run the LSTM encoder followed by its scalar regression readout."""
+
+    values = np.asarray(embeddings, dtype=float)
+    encoded = lstm_encode(
+        values,
+        parameters.input_weights,
+        parameters.recurrent_weights,
+        parameters.bias,
+    )
+    if parameters.output_weights.shape != (encoded.shape[1],):
+        raise ValueError("LSTM output weights have an incompatible shape")
+    return encoded @ parameters.output_weights + parameters.output_bias
+
+
 def initialize_lstm(
     input_width: int, hidden_width: int, *, rng: np.random.Generator
 ) -> LSTMParameters:
@@ -509,6 +534,101 @@ def _unflatten_lstm(template: LSTMParameters, vector: np.ndarray) -> LSTMParamet
     )
 
 
+def train_lstm(
+    training_embeddings: np.ndarray,
+    training_target: np.ndarray,
+    validation_embeddings: np.ndarray,
+    validation_target: np.ndarray,
+    *,
+    hidden_width: int,
+    learning_rate: float,
+    epochs: int,
+    patience: int,
+    rng: np.random.Generator,
+) -> LSTMTrainingResult:
+    """Train a small LSTM by full-batch Adam and restore best validation weights."""
+
+    train_x = np.asarray(training_embeddings, dtype=float)
+    valid_x = np.asarray(validation_embeddings, dtype=float)
+    train_y = np.asarray(training_target, dtype=float)
+    valid_y = np.asarray(validation_target, dtype=float)
+    if (
+        train_x.ndim != 3
+        or valid_x.ndim != 3
+        or train_x.shape[1:] != valid_x.shape[1:]
+        or train_x.shape[0] == 0
+        or valid_x.shape[0] == 0
+    ):
+        raise ValueError(
+            "training and validation embeddings must have matching non-empty 3D shapes"
+        )
+    if train_y.shape != (train_x.shape[0],) or valid_y.shape != (valid_x.shape[0],):
+        raise ValueError("targets need one value per sequence")
+    if not np.isfinite(train_x).all() or not np.isfinite(valid_x).all():
+        raise ValueError("embeddings must be finite")
+    if not np.isfinite(train_y).all() or not np.isfinite(valid_y).all():
+        raise ValueError("targets must be finite")
+    if not np.isfinite(learning_rate) or learning_rate <= 0.0:
+        raise ValueError("learning_rate must be finite and positive")
+    if (
+        isinstance(epochs, bool)
+        or not isinstance(epochs, int)
+        or epochs <= 0
+        or isinstance(patience, bool)
+        or not isinstance(patience, int)
+        or patience <= 0
+    ):
+        raise ValueError("epochs and patience must be positive integers")
+    parameters = initialize_lstm(train_x.shape[2], hidden_width, rng=rng)
+    vector = _flatten_lstm(parameters)
+    first = np.zeros_like(vector)
+    second = np.zeros_like(vector)
+    training_losses: list[float] = []
+    validation_losses: list[float] = []
+    best_vector = vector.copy()
+    best_loss = np.inf
+    best_epoch = 0
+    stale = 0
+    for epoch in range(int(epochs)):
+        parameters = _unflatten_lstm(parameters, vector)
+        train_loss, gradient = lstm_loss_and_gradients(parameters, train_x, train_y)
+        gradient_vector = _flatten_lstm(
+            LSTMParameters(
+                input_weights=gradient.input_weights,
+                recurrent_weights=gradient.recurrent_weights,
+                bias=gradient.bias,
+                output_weights=gradient.output_weights,
+                output_bias=gradient.output_bias,
+            )
+        )
+        first = 0.9 * first + 0.1 * gradient_vector
+        second = 0.999 * second + 0.001 * gradient_vector**2
+        step_number = epoch + 1
+        corrected_first = first / (1.0 - 0.9**step_number)
+        corrected_second = second / (1.0 - 0.999**step_number)
+        vector = vector - learning_rate * corrected_first / (np.sqrt(corrected_second) + 1e-8)
+        parameters = _unflatten_lstm(parameters, vector)
+        validation_residual = lstm_predict(parameters, valid_x) - valid_y
+        validation_loss = 0.5 * float(np.mean(validation_residual**2))
+        training_losses.append(train_loss)
+        validation_losses.append(validation_loss)
+        if validation_loss < best_loss - 1e-12:
+            best_loss = validation_loss
+            best_vector = vector.copy()
+            best_epoch = epoch
+            stale = 0
+        else:
+            stale += 1
+        if stale >= patience:
+            break
+    return LSTMTrainingResult(
+        parameters=_unflatten_lstm(parameters, best_vector),
+        training_losses=np.asarray(training_losses),
+        validation_losses=np.asarray(validation_losses),
+        best_epoch=best_epoch,
+    )
+
+
 def check_lstm_gradients(
     parameters: LSTMParameters,
     embeddings: np.ndarray,
@@ -632,6 +752,7 @@ __all__ = [
     "GradientCheck",
     "LSTMGradients",
     "LSTMParameters",
+    "LSTMTrainingResult",
     "MLPGradients",
     "MLPParameters",
     "MLPTrainingResult",
@@ -641,10 +762,12 @@ __all__ = [
     "initialize_mlp",
     "lstm_encode",
     "lstm_loss_and_gradients",
+    "lstm_predict",
     "mlp_loss_and_gradients",
     "mlp_predict",
     "self_attention",
     "temporal_convolution_encode",
     "token_embedding",
+    "train_lstm",
     "train_mlp",
 ]

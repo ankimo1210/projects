@@ -127,6 +127,7 @@ from .deep_learning import (
     GradientCheck,
     LSTMGradients,
     LSTMParameters,
+    LSTMTrainingResult,
     MLPGradients,
     MLPParameters,
     MLPTrainingResult,
@@ -136,11 +137,13 @@ from .deep_learning import (
     initialize_mlp,
     lstm_encode,
     lstm_loss_and_gradients,
+    lstm_predict,
     mlp_loss_and_gradients,
     mlp_predict,
     self_attention,
     temporal_convolution_encode,
     token_embedding,
+    train_lstm,
     train_mlp,
 )
 from .events import (
