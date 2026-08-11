@@ -203,7 +203,11 @@ B5/B6ではMLPをAdvancedに置き、単純baselineと同じouter testで比較�
     4,631 rows、strict both `n=413`をartifactと、raw cacheを再読しないdetached auditで固定**
 
 13. B9 の estimand、feature availability、text retrieval scope、candidate set、locked evaluationを
-    pre-registerし、M6 artifactを変更せずにNotebook本文とmodel tournamentを開始する。**次の実行段階**
+    pre-registerする。**完了。[B9 pre-analysis specification](2026-08-11-b9-preanalysis.md)に固定**
+
+14. M6 target rowを変えずにprevious filing provenanceをmaterializeし、staging / retry / atomic publishを
+    持つtext downloader、retrieval manifest、coverage・duplicate-family・target-text exclusion auditを
+    実装する。gate通過後にB9 Notebook本文とmodel tournamentを開始する。**次の実行段階**
 
 ## 7. 未決事項
 

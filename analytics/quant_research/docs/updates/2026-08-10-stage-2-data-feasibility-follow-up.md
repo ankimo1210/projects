@@ -129,7 +129,7 @@ SECについては翌日のM6でfixed-anchor cohort、`filings.files` join、str
 offline再現性を完了し、B9実装開始gateを通過した。現行statusは
 [SEC B9 baseline gate follow-up](2026-08-11-sec-baseline-gate.md)をsource of truthとする。
 
-## B9前の残作業（baseline review反映）
+## 2026-08-10時点のB9残作業（後続M6で完了）
 
 - archiveを含む`accn` joinとfixed-anchor point-in-time企業universeをfixtureで固定する。
 - 前期値持ち越し等のnumeric-only baselineを、企業・時間holdoutで実行する。
@@ -141,6 +141,6 @@ offline再現性を完了し、B9実装開始gateを通過した。現行status�
 - `tools/fetch_sec_b9_cache.py` と `sec_pit.py` を小規模fixtureでtestし、bulk archiveをrepositoryへ置かない。
 - 利用条件と再配布境界をB9のmanifestで再確認する。
 
-これらが完了するまでB9のNotebook本文やmodel tournamentは実装しない。実装した
-PIT・metric・split監査の最小部品は`src/quant_textbook/sec_pit.py`にあり、
-詳細なgate statusは[SEC B9 baseline gate follow-up](2026-08-11-sec-baseline-gate.md)に記録する。
+これらは後続M6で完了した。現行のgate statusは
+[SEC B9 baseline gate follow-up](2026-08-11-sec-baseline-gate.md)、candidate evaluation前の契約は
+[B9 pre-analysis specification](../plans/2026-08-11-b9-preanalysis.md)をsource of truthとする。

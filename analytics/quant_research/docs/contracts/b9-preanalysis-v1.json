@@ -1,0 +1,287 @@
+{
+  "schema_version": "b9-preanalysis-v1",
+  "status": "preregistered_before_candidate_evaluation",
+  "as_of_date": "2026-08-11",
+  "decision": "Select at most one overall B9 Core predictive model and separately nominate at most one neural model to test whether deep learning adds value over a locked TF-IDF linear baseline.",
+  "parent_data": {
+    "m6_protocol_path": "analytics/quant_research/docs/contracts/b9-m6-protocol.json",
+    "m6_protocol_sha256": "d2aab034e801a114d1d9a3c9a1b1543063ad37bbd963e2c653e1ff0c83c57995",
+    "derived_panel_sha256": "6c6008c2f28c30299e15e37613cfb0b3b22e8fd283858f5b459227c7e4a412a8",
+    "expected_panel_rows": 4631,
+    "expected_panel_companies": 163,
+    "observed_before_preregistration": [
+      "M6 data-quality diagnostics",
+      "M6 zero, pooled-drift, seasonal, and company-mean baseline results"
+    ]
+  },
+  "research_question": {
+    "estimand": "Expected one-quarter log change in total Assets conditional on information available at the previous filing availability date.",
+    "target_name": "target_log_change",
+    "target_formula": "log(target_assets_usd / previous_assets_usd)",
+    "claim_class": "predictive-association",
+    "disallowed_claims": [
+      "causal effect of filing language",
+      "abnormal return or trading profitability",
+      "representativeness for all U.S. issuers"
+    ]
+  },
+  "information_set": {
+    "prediction_time": "known_at = previous_available_date",
+    "feature_timestamp_rule": "Every feature must be observable on or before known_at; learned target-history features use only rows with target_available_date strictly before known_at.",
+    "target_rule": "target_available_date must be strictly after known_at",
+    "required_row_provenance": [
+      "previous_accession",
+      "previous_form",
+      "previous_filing_date",
+      "previous_acceptance_datetime",
+      "previous_primary_document",
+      "previous_document_sha256"
+    ]
+  },
+  "splits": {
+    "company_rule": "cik % 3 == 0 is held out",
+    "outer_time_cutoff": "2023-10-23",
+    "outer_test": {
+      "rule": "target_available_date >= 2023-10-23 and cik % 3 == 0",
+      "rows": 413,
+      "companies": 38,
+      "availability_dates": 183
+    },
+    "development": {
+      "rule": "target_available_date < 2023-10-23 and cik % 3 != 0",
+      "rows": 2195,
+      "companies": 102,
+      "availability_dates": 534
+    },
+    "inner_validation": {
+      "time_cutoff": "2021-01-01",
+      "training_rows": 1504,
+      "validation_rows": 691,
+      "training_companies": 102,
+      "validation_companies": 68,
+      "validation_availability_dates": 190
+    },
+    "outer_test_access": "Candidate family, hyperparameters, seeds, feature manifest, and code commit must be frozen before one outer-test evaluation. Outer results may not be used to retune or replace the nominee."
+  },
+  "features": {
+    "numeric_core": {
+      "required": [
+        "log_previous_assets",
+        "lag_1_target_log_change",
+        "lag_2_target_log_change",
+        "expanding_mean_target_log_change",
+        "expanding_std_target_log_change",
+        "history_count",
+        "previous_filing_lag_days",
+        "period_gap_days",
+        "fiscal_quarter_one_hot"
+      ],
+      "missing_policy": "Do not drop rows for unavailable lags. Add a missing indicator and impute continuous values with a training-only median; fit all scaling on the active training partition only."
+    },
+    "text_core": {
+      "status": "blocked_until_locked_retrieval_manifest_passes",
+      "source": "Visible body text of the SEC primary document for previous_accession only",
+      "allowed_forms": [
+        "10-K",
+        "10-Q",
+        "10-K/A",
+        "10-Q/A"
+      ],
+      "cleaning_contract": "Remove scripts, styles, tables, inline-XBRL hidden nodes, exhibits, and markup; preserve visible headings and paragraph order. Do not use target-accession text.",
+      "tokenization_contract": "Fit vocabulary and document-frequency statistics on the active training partition only. Normalize Unicode and whitespace; retain an explicit numeric-token class.",
+      "sequence_contract": "Use 512-token consecutive chunks. Keep at most 8 chunks per document by deterministic evenly spaced chunk-index selection and average chunk predictions at document level.",
+      "sequence_vocabulary_size": 2000,
+      "deduplication_contract": "Hash normalized text and keep identical-document families in one partition. Report exact duplicates and near-duplicate diagnostics before fitting.",
+      "minimum_row_coverage": 0.9,
+      "required_manifest_fields": [
+        "accession",
+        "cik",
+        "form",
+        "filing_date",
+        "acceptance_datetime",
+        "availability_date",
+        "primary_document",
+        "retrieved_at_utc",
+        "raw_sha256",
+        "normalized_text_sha256",
+        "byte_count",
+        "token_count"
+      ]
+    },
+    "advanced_only": [
+      "pretrained foundation-model embeddings",
+      "encoder fine-tuning",
+      "external news or market data",
+      "dynamic historical universe"
+    ]
+  },
+  "models": {
+    "fixed_baselines": [
+      "zero",
+      "pooled_drift",
+      "seasonal",
+      "company_mean"
+    ],
+    "mandatory_linear_baselines": [
+      "numeric_ridge",
+      "tfidf_ridge"
+    ],
+    "core_learning_families": [
+      "numpy_mlp",
+      "numpy_lstm",
+      "numpy_tcn",
+      "numpy_small_self_attention",
+      "joint_text_numeric_mlp"
+    ],
+    "nomination_rule": "Choose one overall nominee across all candidate families and one neural nominee across neural families by inner-validation MAE, breaking ties by median absolute error and then lower parameter count. The nominees may be the same model. Freeze both before outer-test access.",
+    "ablation_rule": "Report locked numeric-only, text-only, and joint variants. Ablations are diagnostics and cannot replace the frozen nominee after outer-test access.",
+    "dependency_policy": "B9 Core uses NumPy, SciPy, pandas, and the Python standard library only. Adding a deep-learning or pretrained-model dependency requires a separate reviewed decision."
+  },
+  "training_budget": {
+    "root_seed": 20260811,
+    "maximum_training_runs_per_family": 12,
+    "maximum_epochs_per_run": 200,
+    "early_stopping_patience": 20,
+    "maximum_trainable_parameters": 100000,
+    "selection_metric": "inner_validation_mae",
+    "runtime_reporting": "Record warm-up policy, median runtime, environment versions, parameter count, and peak input matrix size."
+  },
+  "search_space": {
+    "numeric_ridge": {
+      "ridge_lambda": [
+        0.01,
+        0.1,
+        1.0,
+        10.0
+      ]
+    },
+    "tfidf_ridge": {
+      "maximum_features": [
+        5000,
+        10000
+      ],
+      "ngram_maximum": [
+        1,
+        2
+      ],
+      "ridge_lambda": [
+        0.1,
+        1.0,
+        10.0
+      ],
+      "minimum_document_frequency": 3,
+      "sublinear_term_frequency": true,
+      "l2_normalize": true
+    },
+    "numpy_mlp": {
+      "hidden_width": [
+        16,
+        32
+      ],
+      "learning_rate": [
+        0.001,
+        0.003
+      ],
+      "seed_offsets": [
+        0,
+        1,
+        2
+      ]
+    },
+    "numpy_lstm": {
+      "hidden_width": [
+        16,
+        32
+      ],
+      "learning_rate": [
+        0.001,
+        0.003
+      ],
+      "seed_offsets": [
+        0,
+        1,
+        2
+      ]
+    },
+    "numpy_tcn": {
+      "channel_width": [
+        16,
+        32
+      ],
+      "kernel_size": [
+        3,
+        5
+      ],
+      "seed_offsets": [
+        0,
+        1,
+        2
+      ]
+    },
+    "numpy_small_self_attention": {
+      "model_width": [
+        16,
+        32
+      ],
+      "attention_heads": [
+        1,
+        2
+      ],
+      "seed_offsets": [
+        0,
+        1,
+        2
+      ]
+    },
+    "joint_text_numeric_mlp": {
+      "hidden_width": [
+        16,
+        32
+      ],
+      "learning_rate": [
+        0.001,
+        0.003
+      ],
+      "seed_offsets": [
+        0,
+        1,
+        2
+      ]
+    }
+  },
+  "evaluation": {
+    "primary_metric": "mae",
+    "secondary_metric": "median_absolute_error",
+    "reference_metric": "rmse",
+    "guardrails": [
+      "company_macro_mae",
+      "90_percent_prediction_interval_coverage",
+      "90_percent_prediction_interval_width",
+      "text_document_coverage",
+      "duplicate_document_family_count"
+    ],
+    "primary_comparator": "pooled_drift",
+    "deep_learning_comparator": "tfidf_ridge",
+    "model_selection_gate": "Nominee MAE must improve at least 1 percent over pooled_drift, median absolute error and company-macro MAE must not worsen, and the upper endpoint of a paired company-cluster bootstrap 95 percent interval for delta MAE must be below zero.",
+    "deep_learning_gain_gate": "A neural nominee must satisfy the same point and uncertainty gates against tfidf_ridge before claiming incremental deep-learning value.",
+    "bootstrap": {
+      "unit": "company",
+      "replications": 2000,
+      "seed": 20260812,
+      "interval": "percentile_95"
+    },
+    "failure_result": "no_model_selected"
+  },
+  "text_retrieval_gate": {
+    "repository_policy": "Raw filings, normalized text, and contact-bearing User-Agent configuration remain outside the repository.",
+    "network_policy": "Use an explicit contact-bearing User-Agent, bounded retry/backoff, issuer/accession staging, and atomic publish before expanding the locked cache.",
+    "required_before_modeling": [
+      "row provenance materialized without changing the M6 target rows",
+      "retrieval manifest hash recorded",
+      "minimum text row coverage met",
+      "document hash and byte-count integrity passed",
+      "duplicate-family partition audit passed",
+      "no target-accession text in any feature"
+    ]
+  }
+}
