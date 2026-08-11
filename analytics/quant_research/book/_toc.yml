@@ -67,3 +67,11 @@ parts:
       - file: notebooks/45_week31_graphical_latent_hmm
       - file: notebooks/46_week32_mcmc_approximate_inference
       - file: notebooks/47_b8_project_treasury_regime_uncertainty
+  - caption: B9 — Deep learningとSEC filing表現
+    chapters:
+      - file: notebooks/48_b9_overview
+      - file: notebooks/49_week33_neural_networks_backprop
+      - file: notebooks/50_week34_sequence_models
+      - file: notebooks/51_week35_attention_transformers
+      - file: notebooks/52_week36_financial_nlp_multimodal
+      - file: notebooks/53_b9_project_sec_filing_forecast

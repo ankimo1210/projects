@@ -1,27 +1,27 @@
-schema_version: "1.4"
-curriculum_version: "1.4"
+schema_version: "1.5"
+curriculum_version: "1.5"
 updated: "2026-08-11"
 language: ja
-title: Quant Research Data Science — Stage 1 Foundation and Stage 2 Treasury Dynamics
+title: Quant Research Data Science — Stage 1 Foundation and Stage 2 Real-Data Modeling
 
 scope:
-  stage: 1–2B
-  blocks: [B1, B2, B3, B4, B5, B6, B7, B8]
-  week_range: [1, 32]
-  duration_weeks: 32
+  stage: 1–2C
+  blocks: [B1, B2, B3, B4, B5, B6, B7, B8, B9]
+  week_range: [1, 36]
+  duration_weeks: 36
   scope_note: >-
-    このファイルは現在実装済みの Stage 1 と Stage 2のB5–B8を正規化する。
-    座学教科書の最終スコープはB1–B11の44週で、B9–B11は実装予定である。
+    このファイルは現在実装済みの Stage 1 と Stage 2のB5–B9を正規化する。
+    座学教科書の最終スコープはB1–B11の44週で、B10–B11は実装予定である。
     原典のStage 3とCapstoneは成果物・データ要件が本教材と異なるため、存在だけを示す
     placeholderとし、設計・実装・完成率の分母には含めない。
   textbook_target:
     blocks: [B1, B2, B3, B4, B5, B6, B7, B8, B9, B10, B11]
     week_range: [1, 44]
     duration_weeks: 44
-    implemented_weeks: 32
-    completion_percent_rounded: 73
+    implemented_weeks: 36
+    completion_percent_rounded: 82
   excludes:
-    - Stage 2後半（B9–B11、実装予定だがこのversionでは未正規化）
+    - Stage 2後半（B10–B11、実装予定だがこのversionでは未正規化）
     - Stage 3（R1–R4、placeholder・座学教科書の対象外）
     - Capstone Research Program（placeholder・取得不能なJGB intradayを要求するため対象外）
   audience: 数学・統計・Python の基礎を持ち、再現可能なクオンツ研究を学ぶ読者
@@ -39,6 +39,8 @@ scope:
     b6_mvp: implemented
     b7_mvp: implemented
     b8_mvp: implemented
+    b9_mvp: implemented
+    b9_locked_model_tournament: not_started
 
 layering:
   core:
@@ -1916,11 +1918,236 @@ blocks:
         - HMM parameter uncertainty不足を明記している。
         - random walkを超えなければno model selectedを結論にできる。
 
+  - id: B9
+    title: Deep Learning and SEC Filing Representations
+    title_ja: Deep learning・sequence model・SEC filing表現
+    weeks: [33, 36]
+    goal: >-
+      MLP、LSTM、TCN、self-attentionをNumPyで透明に実装し、SEC previous filingから
+      次四半期Assets log-changeを予測する同一data・information set・budgetの比較へ接続する。
+      deep modelの採用を目的化せず、TF–IDF＋ridgeを超える追加価値を反証可能に評価する。
+    relation_to_b8: >-
+      B8までのuncertainty・validation・no-model-selected契約を維持する。B9は新しい市場storyを
+      合成せず、M6で固定した実SEC cohortとprevious-filing provenanceを使う。教材Notebookは
+      development-onlyの縮約fixtureでalgorithmを検証し、full candidate tournamentとlocked outerは分離する。
+    design_corrections:
+      - 原典の中央銀行文書・market reaction題材を、取得・監査可能なSEC filingとfundamentalsへ置き換える。
+      - raw filing、normalized text、contact-bearing User-Agentはrepository外に置く。
+      - 教材fixtureはinner train 192行・inner validation 64行だけで、locked outer、CIK、accession、本文を含めない。
+      - vocabulary、IDF、imputation、scalingはactive training partitionだけでfitする。
+      - TF–IDF・numeric ridgeをneural candidateより先に固定し、同じrow・metric・budgetで比較する。
+      - pretrained embeddingとencoder fine-tuningは新依存・外部corpus・compute監査を要するAdvancedとする。
+      - outer testはnominee manifestを凍結した後に一度だけ開き、教材fixtureの順位でnomineeを決めない。
+    references:
+      core:
+        - Goodfellow, Bengio, and Courville, Deep Learning
+        - Hochreiter and Schmidhuber (1997), Long Short-Term Memory
+        - Vaswani et al. (2017), Attention Is All You Need
+      data_and_nlp:
+        - SEC EDGAR application programming interfaces
+        - Manning, Raghavan, and Schütze, Introduction to Information Retrieval
+    weeks_detail:
+      - week: 33
+        code: B9-W33
+        title: MLP, Backpropagation, Initialization, and Adam
+        title_ja: MLP・backpropagation・初期化・Adam
+        core:
+          - computational graphとreverse-mode chain rule
+          - affine–tanh–affine scalar regression
+          - Xavier initialization
+          - full-batch Adam、L2、early stopping
+          - centered finite-difference gradient audit
+        advanced:
+          - minibatch normalization
+          - residual MLP
+          - Hessian-vector product
+        learning_objectives:
+          - one-hidden-layer MLPの全parameter gradientを導出できる。
+          - finite differenceでanalytic backpropを全parameter照合できる。
+          - initialization、optimizer、regularization、validation selectionを分離できる。
+        lab:
+          title: NumPy MLP on SEC Numeric Features
+          tasks:
+            - training-only imputationとstandardizationをfitする。
+            - forward/backpropを実装しgradient checkを通す。
+            - validation traceとzero/numeric ridge baselineを比較する。
+          validation:
+            - centered finite-difference最大相対誤差を記録する。
+            - validation rowをgradient updateへ使わない。
+            - seed、width、learning rate、epoch上限を保存する。
+        deliverable:
+          artifact: MLP derivation, gradient audit, and training trace
+          required_evidence:
+            - computational graph equations
+            - all-parameter gradient check
+            - training / validation loss
+            - linear-baseline comparison
+        exit_criteria:
+          - forward graphとreverse graphを対応付けられる。
+          - optimizer successとgeneralizationを混同しない。
+          - 教材fixture結果をcandidate nominationに使わない。
+
+      - week: 34
+        code: B9-W34
+        title: Sequence Models, LSTM, and Temporal Convolutions
+        title_ja: sequence model・LSTM・causal TCN
+        core:
+          - recurrent stateとbackpropagation through time
+          - LSTM four gatesとcell state
+          - causal temporal convolution
+          - receptive fieldとeffective context
+          - same-data frozen representation probe
+        advanced:
+          - trained BPTT with gradient clipping
+          - dilated residual TCN
+          - document-level chunk aggregation
+        learning_objectives:
+          - LSTM cell updateとgradient pathを説明できる。
+          - TCNのcausal contractとreceptive fieldを検証できる。
+          - sequence length、width、probe budgetを揃えて比較できる。
+        lab:
+          title: LSTM and TCN Representations of Previous SEC Filings
+          tasks:
+            - hashed token sequenceを共通embeddingへ変換する。
+            - LSTMとcausal TCNのforward encoderを実装する。
+            - 同じridge probeでvalidation metricを比較する。
+          validation:
+            - future-token perturbationでcausal convolutionをtestする。
+            - frozen probeとend-to-end candidateを区別する。
+            - parameter widthとeffective contextを報告する。
+        deliverable:
+          artifact: sequence architecture and causal-context audit
+          required_evidence:
+            - LSTM gate equations
+            - TCN receptive field
+            - causal test
+            - same-budget probe table
+        exit_criteria:
+          - recurrenceとconvolutionのinductive biasを比較できる。
+          - target filingやbidirectional future contextを混ぜない。
+
+      - week: 35
+        code: B9-W35
+        title: Self-Attention and Transformer Boundaries
+        title_ja: self-attentionとtransformerの境界
+        core:
+          - query、key、value projection
+          - scaled dot-product attention
+          - row-stochastic softmaxとmask
+          - positional encoding
+          - single-head small-attention forward probe
+        advanced:
+          - multi-head blockとresidual normalization
+          - pretrained encoder
+          - retrieval-augmented representation
+        learning_objectives:
+          - self-attentionを行列演算から実装できる。
+          - maskとrow sumを数値assertできる。
+          - small NumPy attentionとfoundation modelを区別できる。
+        lab:
+          title: Small Self-Attention on Hashed Filing Tokens
+          tasks:
+            - toy sequenceでcausal attention heatmapを作る。
+            - sinusoidal positionを加える。
+            - pooled attention representationをlinear probeへ渡す。
+          validation:
+            - attention row sumが1である。
+            - causal upper triangleがzeroである。
+            - attention weightを因果的feature importanceと呼ばない。
+        deliverable:
+          artifact: attention implementation and model-boundary memo
+          required_evidence:
+            - scaled attention equation
+            - mask audit
+            - positional counterexample
+            - pretrained boundary
+        exit_criteria:
+          - scaling、mask、positionを説明できる。
+          - pretraining corpusとcomputeを無料の情報と扱わない。
+
+      - week: 36
+        code: B9-W36
+        title: Financial NLP, TF–IDF, and Modality Ablation
+        title_ja: financial NLP・TF–IDF・modality ablation
+        core:
+          - previous-accession text information set
+          - sublinear TF、smoothed IDF、L2 normalization
+          - sparse ridge baseline
+          - numeric-only / text-only / joint ablation
+          - coverage、duplicate、timestamp、company-macro metric
+        advanced:
+          - near-duplicate detection
+          - pretrained embedding
+          - encoder fine-tuning
+        learning_objectives:
+          - training-only vocabularyとIDFを実装できる。
+          - text retrieval qualityとmodel metricを分離できる。
+          - row MAEとequal-company macro MAEを併記できる。
+        lab:
+          title: TF–IDF Ridge and SEC Modality Ablation
+          tasks:
+            - training partitionだけでvocabulary/IDFをfitする。
+            - numeric/text/joint ridgeを同じrowで比較する。
+            - document hash、outer absence、feature shapeを監査する。
+          validation:
+            - validation-only tokenをvocabularyへ入れない。
+            - missing documentを黙ってzero vectorにしない。
+            - target accession leakageとduplicate crossingをpre-fit gateにする。
+        deliverable:
+          artifact: financial-NLP baseline and ablation report
+          required_evidence:
+            - vocabulary / IDF provenance
+            - sparse-matrix dimensions
+            - row and company metrics
+            - modality ablation
+        exit_criteria:
+          - linear probeをdeep modelより先に固定できる。
+          - text gainとcapacity/data差を混同しない。
+
+    block_project:
+      required:
+        title: SEC Filing Text & Fundamentals Forecast
+        target: next-quarter log change in us-gaap/Assets/USD
+        prediction_origin: previous filing conservative availability date
+        data:
+          - fixed-anchor SEC feasibility cohort
+          - previous primary filing document only
+          - development and locked company-by-time outer split
+        models:
+          - zero / pooled drift / seasonal / company mean
+          - numeric ridge
+          - TF–IDF ridge
+          - NumPy MLP / LSTM / TCN / small self-attention
+          - joint text-numeric MLP
+        evaluation:
+          - row MAE / median absolute error / RMSE
+          - equal-company macro MAE
+          - text coverage and duplicate-family audit
+          - same parameter/run/epoch budget
+          - company-cluster paired bootstrap
+        current_evidence: >-
+          M6 panelと4,631 previous-document retrieval/text gateはpassした。教材実装は
+          inner-train 192行・inner-validation 64行のreal-data-derived fixtureでalgorithmと
+          leakage contractを検証する。full 2,195-row candidate search、nominee manifest、
+          locked outer evaluationは未実行なので、現在の正式decisionはno_model_selectedである。
+        prohibited_claims:
+          - causal effect of filing language
+          - abnormal return or trading profitability
+          - representativeness for all U.S. issuers
+          - foundation-model result from the small NumPy attention lab
+      exit_criteria:
+        - raw text、CIK、accession、contact情報を教材fixtureへ入れていない。
+        - full tournamentと教材fixtureを区別している。
+        - nominee manifest前にouter testを開いていない。
+        - linear/deep comparisonが同じdata・metric・budgetである。
+        - gateを満たさなければno_model_selectedを結論にできる。
+
 stage_exit_criteria:
-  - B1〜B8 の各 block project が、入力契約・仮定・validation・既知の限界を持つ。
+  - B1〜B9 の各 block project が、入力契約・仮定・validation・既知の限界を持つ。
   - 数値・統計・Monte Carlo・最適化の診断が、再実行可能な成果物として残る。
   - 金融データの timestamp と情報集合を明示し、look-ahead leakage を防いでいる。
   - 結果から支持される主張と、追加の識別・データが必要な主張を区別できる。
-  - B5–B8では実データのsource、availability、methodology break、outer testを固定している。
+  - B5–B9では実データのsource、availability、methodology breakまたはfiling provenance、outer testを固定している。
   - model tournamentは単一scoreだけでwinnerを選ばず、no model selectedを許容する。
   - B7ではfiltered/smoothed情報集合を分離し、B8ではposterior predictiveとparameter-conditional predictiveを分離する。
+  - B9ではprevious/target accessionを分離し、training-only transformと同一budget比較を実施する。

@@ -6,8 +6,8 @@
 **仮定を定める → 安定に実装する → 診断する → 主張の限界を説明する**という一連の研究作業として
 学ぶための日本語 HTML 教科書プロジェクトです。
 
-現在は Stage 1（B1〜B4）と Stage 2（B5〜B8）、全32週・48 Notebookを実装しています。
-座学教科書としての完成範囲はB1〜B11の44週で、現在は32/44週（73%）です。原典のStage 3と
+現在は Stage 1（B1〜B4）と Stage 2（B5〜B9）、全36週・54 Notebookを実装しています。
+座学教科書としての完成範囲はB1〜B11の44週で、現在は36/44週（82%）です。原典のStage 3と
 Capstoneは成果物・データ要件が異なるためplaceholderとし、設計・実装・完成率の分母に含めません。
 60週版の原案をそのまま詰め込まず、各週を `core`（必修）と
 `advanced`（発展）に分けています。正規化した学習仕様の source of truth は
@@ -15,7 +15,7 @@ Capstoneは成果物・データ要件が異なるためplaceholderとし、設�
 
 ## 到達点
 
-現在のStage 1–2B修了時に、学習者が次の判断を自力で行えることを目標にします。
+現在のStage 1–2C修了時に、学習者が次の判断を自力で行えることを目標にします。
 
 - 問題の構造と数値条件から、分解法・推定法・最適化法を選ぶ。
 - 統計誤差、数値誤差、Monte Carlo 誤差、離散化誤差、モデル誤差を区別する。
@@ -40,7 +40,7 @@ Capstoneは成果物・データ要件が異なるためplaceholderとし、設�
    BOJ 発表前後の価格反応を測る金融イベントスタディと、DiD 等の因果イベントスタディを
    区別し、識別仮定なしに「政策の因果効果」とは呼びません。
 
-## Stage 1–2B の構成
+## Stage 1–2C の構成
 
 | Block | Weeks | 主題 | ブロック成果物 |
 |---|---:|---|---|
@@ -52,6 +52,7 @@ Capstoneは成果物・データ要件が異なるためplaceholderとし、設�
 | B6 | 21〜24 | tree・kernel/GP・clustering・shift下評価 | Treasury Forecast Model Tournament |
 | B7 | 25〜28 | stationarity・VAR・state space・volatility | Dynamic Treasury Curve Forecasting Audit |
 | B8 | 29〜32 | Bayesian推論・階層model・HMM・MCMC診断 | Treasury Predictive Uncertainty and Latent-State Audit |
+| B9 | 33〜36 | deep learning・sequence model・attention・financial NLP | SEC Filing Text & Fundamentals Forecast |
 
 B2 の Girsanov・importance sampling・Brownian bridge、B4 の ADMM 等は Advanced に置き、
 Core の理解と検証を犠牲にしない順序にしています。B4 では制約付き最適化への自然な入口として、
@@ -63,6 +64,11 @@ Stage 1のJGB-like curveとBOJ announcementの既定データは、数値・推�
 B5–B8は公式U.S. Treasury daily par yield curveの固定snapshotを使います。transaction price、
 executable quote、zero rate、intraday dataではないため、予測誤差と分布シフトは分析しても、
 取引収益・流動性・政策因果効果は主張しません。
+
+B9はM6で取得・監査したSEC Company Facts、Submissions、previous primary filing documentを使います。
+教材Notebookにはdevelopment-onlyの実データ由来fixtureだけを同梱し、raw/normalized filing、CIK、
+accession、contact情報、locked outer rowは含めません。fixtureはalgorithmと漏洩契約の検証用であり、
+full candidate tournamentのnominee選定には使いません。
 
 ## 評価と Placement-out
 
@@ -127,12 +133,18 @@ Placement-outは学習速度だけを変え、成果物、採点、再現性・�
 | `45_week31_graphical_latent_hmm` | graphical model、Gaussian HMM、EM、label監査 |
 | `46_week32_mcmc_approximate_inference` | MH、ESS、split-R-hat、近似推論の境界 |
 | `47_b8_project_treasury_regime_uncertainty` | 同一targetのBayesian/HMM predictive audit |
+| `48_b9_overview` | deep learning、SEC information set、同一budget比較のB9研究フロー |
+| `49_week33_neural_networks_backprop` | MLP、backpropagation、gradient audit、Adam |
+| `50_week34_sequence_models` | LSTM、causal TCN、effective context、linear probe |
+| `51_week35_attention_transformers` | scaled self-attention、mask、position、transformer境界 |
+| `52_week36_financial_nlp_multimodal` | training-only TF–IDF、sparse ridge、modality ablation |
+| `53_b9_project_sec_filing_forecast` | SEC Filing Text & Fundamentals Forecast evidence gate |
 
 ## ディレクトリ
 
 ```text
 analytics/quant_research/
-├── curriculum_map.yml       # Stage 1–2B の正規化された学習仕様
+├── curriculum_map.yml       # Stage 1–2C の正規化された学習仕様
 ├── book/                    # Jupyter Book 設定と静的 HTML の入口
 ├── notebooks/               # 実行済み教材 Notebook
 ├── tools/                   # Notebook 生成・検証スクリプト
@@ -283,7 +295,7 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 - locked testではB7/B8の候補modelがrandom walkのpoint RMSEを上回らず、no model selectedを結論とする。
 - 結果と数値は[Stage 2B / B7–B8実装ノート](docs/updates/2026-08-10-stage-2b-b7-b8.md)に残す。
 
-## B9 の M6 データ・実装開始ゲート
+## B9 のデータ契約と教材実装
 
 - 2007–2025 Treasury拡張版は別manifestの
   Advanced historical robustnessに限定する。
@@ -315,13 +327,18 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
   採用gateを満たさない場合は`no_model_selected`を正式結果とする。
 - 実測値、未解決リスク、再現部品は
   [SEC B9 baseline gate follow-up](docs/updates/2026-08-11-sec-baseline-gate.md)に固定する。
+- Week 33–36とProjectの6 Notebook、NumPy MLP/backprop、LSTM/TCN/attention forward、
+  training-only hashed TF–IDF、sparse ridge、実SEC由来fixtureを実装した。fixtureはinner train 192行・
+  inner validation 64行のみで、locked outerは未開封である。
+- full 2,195-row candidate search、company-cluster bootstrap、nominee manifest、outer一回評価は別の
+  empirical milestoneとして未実行である。現時点の正式decisionは`no_model_selected`とする。
 
 ## 現在の範囲
 
-- 実装済み: Phase 0、Stage 1 / B1–B4、Stage 1評価・placement追補、Stage 2 / B5–B8、B9 M6 real-data gate・pre-analysis contract
-- 後続: Stage 2後半（B9〜B11）。B9のfiling provenance、4,631 primary documents取得、visible-text
-  正規化、raw / normalized integrity監査は完了し、text modeling gateを通過した。次はB9 Week 33–36 / Project、
-  feature pipeline、locked model tournamentを実装する
+- 実装済み: Phase 0、Stage 1 / B1–B4、Stage 1評価・placement追補、Stage 2 / B5–B9、
+  B9 M6 real-data gate・pre-analysis contract・Week 33–36 / Project教材
+- 後続: B9 full locked model tournamentとStage 2後半（B10〜B11）。B9のfiling provenance、
+  4,631 primary documents取得、visible-text正規化、raw / normalized integrity監査、教材feature pipelineは完了した
 - Placeholder（対象外）: Stage 3 / Research Apprenticeship、Capstone
 
 ## 更新ノート
@@ -333,3 +350,4 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 - [2026-08-10 — Stage 2B / B7–B8実装・予測結果ノート](docs/updates/2026-08-10-stage-2b-b7-b8.md)
 - [2026-08-11 — SEC B9 baseline gate follow-up](docs/updates/2026-08-11-sec-baseline-gate.md)
 - [2026-08-11 — B9 filing provenance and retrieval gate](docs/updates/2026-08-11-b9-filing-provenance.md)
+- [2026-08-11 — Stage 2C / B9教材実装](docs/updates/2026-08-11-stage-2c-b9.md)
