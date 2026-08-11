@@ -58,8 +58,13 @@ abnormal return、取引収益、米国企業全体への代表性は主張し�
 ### Text Core
 
 前回Assets factと同じ`previous_accession`のSEC primary documentだけを使う。target accessionの
-documentはfeatureへ入れない。visible body textからscript、style、table、hidden inline XBRL、exhibit、
-markupを除き、headingとparagraph順序を保持する。
+documentはfeatureへ入れない。visible body textからscript、style、hidden inline XBRL、exhibit、
+markupを除き、headingとparagraph順序を保持する。legacy filingのlayout tableは構造を除くが、可視cell
+textは保持する。
+
+candidate評価前のinput-quality auditで、table subtreeを丸ごと除くと80文書が100 tokens未満となり、
+可視cell textを保持すれば同じ80文書が全て500 tokens以上になることを確認した。このためcleaning contract
+だけを修正した。split、candidate、metric、selection ruleは変更していない。
 
 現在のderived panelはaccession・filing date・acceptance datetime・primary documentをrowへ保持して
 いない。modeling前にこれらをmaterializeし、raw/normalized hashを持つ別manifestを作る。この拡張で
@@ -101,8 +106,8 @@ deep-learningの追加価値を主張するには、同じgateをTF-IDF ridgeに
 ## B9実装へ進む前のgate
 
 1. panel rowへprevious filing provenanceを追加し、M6 row/hash不変を検査する。**実装・実データ照合済み。4631行、欠損0、target accession混入0。**
-2. SEC primary document downloaderをstaging + atomic publish + bounded retryで実装する。**実装・mock検証済み。連絡先入りUser-Agentを用いる実取得は未実行。**
-3. text retrieval manifest、coverage、duplicate-family、target-text exclusionを監査する。**raw / visible normalized textの監査を実装・mock検証済み。実取得後のcoverage判定は未実行。**
+2. SEC primary document downloaderをstaging + atomic publish + bounded retryで実装する。**実装・実取得済み。4,631 / 4,631成功。**
+3. text retrieval manifest、coverage、duplicate-family、target-text exclusionを監査する。**raw / normalized coverage 100%、空文書0、partition跨ぎduplicate 0、target混入0でpass。**
 4. B9のWeek 33–36とProjectを`curriculum_map.yml`へ追加する。
 5. builder / Notebook / library / testsを実装し、outerを開く前にnominee manifestを固定する。
 

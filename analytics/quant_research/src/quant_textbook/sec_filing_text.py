@@ -98,7 +98,7 @@ class NormalizedTextAudit:
 class _VisibleTextExtractor(HTMLParser):
     """Conservative visible-body extractor for SEC HTML and inline XBRL."""
 
-    _SKIPPED_TAGS = frozenset({"script", "style", "table", "template", "noscript", "ix:hidden"})
+    _SKIPPED_TAGS = frozenset({"script", "style", "template", "noscript", "ix:hidden"})
     _BLOCK_TAGS = frozenset(
         {
             "article",
@@ -115,6 +115,13 @@ class _VisibleTextExtractor(HTMLParser):
             "main",
             "p",
             "section",
+            "table",
+            "tbody",
+            "td",
+            "tfoot",
+            "th",
+            "thead",
+            "tr",
         }
     )
 
@@ -513,6 +520,7 @@ def download_previous_filing_documents(
     sidecar_rows: Iterable[Mapping[str, Any]],
     output_root: Path,
     *,
+    provenance_sha256: str,
     user_agent: str,
     timeout_seconds: float = 60.0,
     maximum_attempts: int = 4,
@@ -523,6 +531,8 @@ def download_previous_filing_documents(
     """Download each unique previous primary document and atomically publish a manifest."""
 
     agent = validate_sec_user_agent(user_agent)
+    if not re.fullmatch(r"[0-9a-f]{64}", provenance_sha256):
+        raise ValueError("provenance_sha256 must be a lowercase SHA-256 digest")
     if sleep_seconds < 0:
         raise ValueError("sleep_seconds must be non-negative")
     root = output_root.expanduser().resolve()
@@ -605,6 +615,7 @@ def download_previous_filing_documents(
 
     manifest = {
         "schema_version": "b9-sec-primary-documents-v1",
+        "source_provenance_sha256": provenance_sha256,
         "retrieved_at_utc": datetime.now(UTC).isoformat(),
         "user_agent_policy": "contact-bearing User-Agent supplied but not persisted",
         "requested_document_count": len(requests),
@@ -625,6 +636,7 @@ def audit_filing_retrieval(
     manifest: Mapping[str, Any],
     document_root: Path,
     *,
+    provenance_sha256: str,
     outer_time_cutoff: date,
     company_modulus: int,
     company_remainder: int,
@@ -646,6 +658,8 @@ def audit_filing_retrieval(
         raise ValueError("retrieval manifest has an unsupported schema")
     root = document_root.expanduser().resolve()
     errors: list[str] = []
+    if manifest.get("source_provenance_sha256") != provenance_sha256:
+        errors.append("retrieval manifest is not linked to the filing provenance sidecar")
     by_request: dict[tuple[int, str, str], Mapping[str, Any]] = {}
     sha_to_requests: dict[str, set[tuple[int, str, str]]] = defaultdict(set)
     for entry in documents:

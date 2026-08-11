@@ -209,6 +209,7 @@ def test_downloader_atomic_manifest_and_retrieval_audit(tmp_path: Path) -> None:
     manifest = download_previous_filing_documents(
         [row],
         tmp_path,
+        provenance_sha256="a" * 64,
         user_agent="Research textbook contact@example.com",
         sleep_seconds=0,
         fetcher=fetcher,
@@ -221,6 +222,7 @@ def test_downloader_atomic_manifest_and_retrieval_audit(tmp_path: Path) -> None:
         [row],
         manifest,
         tmp_path,
+        provenance_sha256="a" * 64,
         outer_time_cutoff=date(2023, 10, 23),
         company_modulus=3,
         company_remainder=0,
@@ -251,6 +253,7 @@ def test_refresh_failure_preserves_last_atomically_published_document(tmp_path: 
     first = download_previous_filing_documents(
         [row],
         tmp_path,
+        provenance_sha256="a" * 64,
         user_agent="Research textbook contact@example.com",
         sleep_seconds=0,
         fetcher=success,
@@ -263,6 +266,7 @@ def test_refresh_failure_preserves_last_atomically_published_document(tmp_path: 
     second = download_previous_filing_documents(
         [row],
         tmp_path,
+        provenance_sha256="a" * 64,
         user_agent="Research textbook contact@example.com",
         sleep_seconds=0,
         refresh=True,
@@ -301,6 +305,7 @@ def test_audit_rejects_cross_partition_duplicate_and_target_text(tmp_path: Path)
         )
     manifest = {
         "schema_version": "b9-sec-primary-documents-v1",
+        "source_provenance_sha256": "a" * 64,
         "success_count": 2,
         "failure_count": 0,
         "documents": documents,
@@ -311,6 +316,7 @@ def test_audit_rejects_cross_partition_duplicate_and_target_text(tmp_path: Path)
         [development, outer],
         manifest,
         tmp_path,
+        provenance_sha256="a" * 64,
         outer_time_cutoff=date(2023, 10, 23),
         company_modulus=3,
         company_remainder=0,
@@ -329,7 +335,7 @@ def test_primary_document_url_rejects_paths() -> None:
         primary_document_url(320193, "0000320193-25-000079", "../secret.htm")
 
 
-def test_visible_text_normalizer_removes_hidden_markup_and_tables() -> None:
+def test_visible_text_normalizer_removes_hidden_markup_and_keeps_visible_table_text() -> None:
     payload = b"""
     <html><body>
       <h1>Risk Factors</h1>
@@ -347,11 +353,11 @@ def test_visible_text_normalizer_removes_hidden_markup_and_tables() -> None:
     assert text.splitlines() == [
         "Risk Factors",
         "Visible paragraph 123",
+        "tabular fact",
         "Outlook",
         "Second paragraph",
     ]
     assert "secret" not in text
-    assert "tabular" not in text
 
 
 def test_normalized_audit_catches_duplicates_that_raw_hashes_miss(tmp_path: Path) -> None:

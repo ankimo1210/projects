@@ -4,14 +4,16 @@ from __future__ import annotations
 
 import argparse
 import json
+from hashlib import sha256
 from pathlib import Path
 from typing import Any
 
 from quant_textbook.sec_filing_text import download_previous_filing_documents
 
 
-def _read_rows(path: Path) -> list[dict[str, Any]]:
-    payload = json.loads(path.expanduser().resolve().read_text(encoding="utf-8"))
+def _read_rows(path: Path) -> tuple[list[dict[str, Any]], str]:
+    raw = path.expanduser().resolve().read_bytes()
+    payload = json.loads(raw)
     if payload.get("schema_version") != "b9-previous-filing-provenance-v1":
         raise ValueError("provenance sidecar has an unsupported schema")
     if payload.get("quality", {}).get("accepted") is not True:
@@ -19,7 +21,7 @@ def _read_rows(path: Path) -> list[dict[str, Any]]:
     rows = payload.get("rows")
     if not isinstance(rows, list):
         raise ValueError("provenance sidecar lacks rows")
-    return rows
+    return rows, sha256(raw).hexdigest()
 
 
 def _parse_args() -> argparse.Namespace:
@@ -40,9 +42,11 @@ def _parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = _parse_args()
+    rows, provenance_sha256 = _read_rows(args.provenance)
     manifest = download_previous_filing_documents(
-        _read_rows(args.provenance),
+        rows,
         args.output_root,
+        provenance_sha256=provenance_sha256,
         user_agent=args.user_agent,
         timeout_seconds=args.timeout_seconds,
         maximum_attempts=args.maximum_attempts,

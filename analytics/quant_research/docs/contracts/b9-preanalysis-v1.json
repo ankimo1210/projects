@@ -2,6 +2,14 @@
   "schema_version": "b9-preanalysis-v1",
   "status": "preregistered_before_candidate_evaluation",
   "as_of_date": "2026-08-11",
+  "amendments": [
+    {
+      "date": "2026-08-11",
+      "stage": "input_quality_audit_before_candidate_evaluation",
+      "reason": "Removing complete table subtrees reduced 80 legacy filing documents below 100 visible tokens, while all 80 exceeded 500 tokens when visible layout-table cell text was retained.",
+      "change": "Strip table structure but retain visible cell text. Continue to remove scripts, styles, hidden nodes, exhibits, and markup. Candidate models, splits, metrics, and selection rules are unchanged."
+    }
+  ],
   "decision": "Select at most one overall B9 Core predictive model and separately nominate at most one neural model to test whether deep learning adds value over a locked TF-IDF linear baseline.",
   "parent_data": {
     "m6_protocol_path": "analytics/quant_research/docs/contracts/b9-m6-protocol.json",
@@ -87,7 +95,7 @@
         "10-K/A",
         "10-Q/A"
       ],
-      "cleaning_contract": "Remove scripts, styles, tables, inline-XBRL hidden nodes, exhibits, and markup; preserve visible headings and paragraph order. Do not use target-accession text.",
+      "cleaning_contract": "Remove scripts, styles, inline-XBRL hidden nodes, exhibits, and markup. Strip table structure but retain visible cell text because legacy SEC filings use layout tables. Preserve visible headings, cells, and paragraph order. Do not use target-accession text.",
       "tokenization_contract": "Fit vocabulary and document-frequency statistics on the active training partition only. Normalize Unicode and whitespace; retain an explicit numeric-token class.",
       "sequence_contract": "Use 512-token consecutive chunks. Keep at most 8 chunks per document by deterministic evenly spaced chunk-index selection and average chunk predictions at document level.",
       "sequence_vocabulary_size": 2000,

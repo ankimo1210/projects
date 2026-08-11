@@ -6,6 +6,7 @@ import argparse
 import json
 from dataclasses import asdict
 from datetime import date
+from hashlib import sha256
 from pathlib import Path
 from typing import Any
 
@@ -34,24 +35,30 @@ def _parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = _parse_args()
-    sidecar = _read_object(args.provenance)
+    provenance_path = args.provenance.expanduser().resolve()
+    raw_manifest_path = (args.document_root / "manifest.json").expanduser().resolve()
+    sidecar = _read_object(provenance_path)
+    provenance_sha256 = sha256(provenance_path.read_bytes()).hexdigest()
     if sidecar.get("schema_version") != "b9-previous-filing-provenance-v1":
         raise ValueError("provenance sidecar has an unsupported schema")
-    manifest = _read_object(args.document_root / "manifest.json")
+    manifest = _read_object(raw_manifest_path)
     raw_result = audit_filing_retrieval(
         sidecar.get("rows", []),
         manifest,
         args.document_root,
+        provenance_sha256=provenance_sha256,
         outer_time_cutoff=args.outer_time_cutoff,
         company_modulus=args.company_modulus,
         company_remainder=args.company_remainder,
         minimum_row_coverage=args.minimum_row_coverage,
     )
     normalized_result = None
+    normalized_manifest_path = None
     if args.normalized_root is not None:
+        normalized_manifest_path = (args.normalized_root / "manifest.json").expanduser().resolve()
         normalized_result = audit_normalized_filing_text(
             sidecar.get("rows", []),
-            _read_object(args.normalized_root / "manifest.json"),
+            _read_object(normalized_manifest_path),
             args.normalized_root,
             retrieval_manifest=manifest,
             outer_time_cutoff=args.outer_time_cutoff,
@@ -65,6 +72,15 @@ def main() -> int:
     print(
         json.dumps(
             {
+                "input_provenance": {
+                    "filing_provenance_sha256": provenance_sha256,
+                    "raw_manifest_sha256": sha256(raw_manifest_path.read_bytes()).hexdigest(),
+                    "normalized_manifest_sha256": (
+                        sha256(normalized_manifest_path.read_bytes()).hexdigest()
+                        if normalized_manifest_path is not None
+                        else None
+                    ),
+                },
                 "raw": asdict(raw_result),
                 "normalized": asdict(normalized_result) if normalized_result else None,
                 "text_modeling_gate_accepted": gate_accepted,

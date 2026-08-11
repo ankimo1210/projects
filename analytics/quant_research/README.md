@@ -317,9 +317,9 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 ## 現在の範囲
 
 - 実装済み: Phase 0、Stage 1 / B1–B4、Stage 1評価・placement追補、Stage 2 / B5–B8、B9 M6 real-data gate・pre-analysis contract
-- 後続: Stage 2後半（B9〜B11）。B9のfiling provenance sidecar、取得、visible-text正規化、
-  raw / normalized integrity監査は実装済み。次は外部cacheへ一次文書を取得し、90% coverage / normalized
-  duplicate gateを実行する
+- 後続: Stage 2後半（B9〜B11）。B9のfiling provenance、4,631 primary documents取得、visible-text
+  正規化、raw / normalized integrity監査は完了し、text modeling gateを通過した。次はB9 Week 33–36 / Project、
+  feature pipeline、locked model tournamentを実装する
 - 未実装: Research Apprenticeship、Capstone
 
 ## 更新ノート
