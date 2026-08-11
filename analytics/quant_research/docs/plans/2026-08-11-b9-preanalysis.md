@@ -114,11 +114,12 @@ deep-learningの追加価値を主張するには、同じgateをTF-IDF ridgeに
 ## Development tournament milestone（2026-08-11）
 
 M6のdevelopment partition（2,195行、inner train 1,504行、inner validation 691行）で、
-`numeric_ridge`、`tfidf_ridge`、`numpy_mlp`の固定gridを実行した。outer 413行は未開封である。
-実装済みfamilyではzero baselineを1%以上改善する候補がなく、interim結果は
-`no_model_selected`。LSTM / TCN / self-attention / joint text+numericはtraining loop未実装のため、
-この結果を全Core familyの最終nominee freezeとは扱わない。次は未実装familyを同じbudget・inner splitへ
-追加し、全Core比較後にのみnominee manifestをfreezeする。
+`numeric_ridge`、`tfidf_ridge`、`numpy_mlp`、`numpy_lstm`、`joint_text_numeric_mlp`の固定gridを実行した。
+LSTMは512-token chunkを最大8個まで固定embedding平均へ変換し、chunk sequenceをBPTTで学習した。
+TCN/self-attentionは固定encoder probeとして別集計し、selection gateから除外した。outer 413行は未開封である。
+overall gateは `no_model_selected` だが、best LSTMはTF-IDF ridgeへのneural gateとpaired bootstrapを通過し、
+neural nominee候補となった。この結果をouter開封許可とは扱わない。次はneural nominee manifestとfeature/
+seed/code fingerprintをfreezeし、明示承認の有無を確認してから、承認時のみouterを一度だけ開く。
 
 raw SEC response、normalized text、contact情報はrepositoryへcommitしない。
 

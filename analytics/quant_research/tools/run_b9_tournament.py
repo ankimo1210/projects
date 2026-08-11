@@ -2,9 +2,9 @@
 
 The command reads the externally stored M6 panel, previous-filing sidecar, and
 normalized documents.  It evaluates the four fixed baselines, numeric ridge,
-hashed TF-IDF ridge, and the implemented NumPy MLP variants on the development
-partition only.  The locked outer partition is counted for an audit trail but
-never materialized into features or predictions.
+hashed TF-IDF ridge, joint/numeric NumPy MLP variants, and diagnostic fixed
+encoder probes on the development partition only.  The locked outer partition
+is counted for an audit trail but never materialized into features or predictions.
 
 Raw filings, normalized text, contact-bearing User-Agent values, and prediction
 rows are never written to the repository.  The output is intended for the
@@ -32,9 +32,20 @@ from quant_textbook.b9_tournament import (
     primary_baseline_name,
     regression_metrics,
     selection_gate,
+    text_token_chunk_hashes,
+    text_token_hash_sequence,
 )
-from quant_textbook.deep_learning import mlp_predict, train_mlp
+from quant_textbook.deep_learning import (
+    lstm_predict,
+    mlp_predict,
+    self_attention,
+    temporal_convolution_encode,
+    token_embedding,
+    train_lstm,
+    train_mlp,
+)
 from quant_textbook.sec_features import fit_numeric_preprocessor, fit_sparse_ridge
+from scipy import sparse
 
 NUMERIC_FEATURE_NAMES = (
     "log_previous_assets",
@@ -51,7 +62,7 @@ NUMERIC_FEATURE_NAMES = (
     "fiscal_quarter_4",
 )
 BASELINE_NAMES = ("zero", "pooled_drift", "seasonal", "company_mean")
-NEURAL_FAMILIES = frozenset({"numpy_mlp"})
+NEURAL_FAMILIES = frozenset({"numpy_mlp", "numpy_lstm", "joint_text_numeric_mlp"})
 ALL_CORE_FAMILIES = (
     "numpy_mlp",
     "numpy_lstm",
@@ -275,6 +286,8 @@ def _candidate_record(
     metrics: dict[str, float],
     parameter_count: int,
     runtime_seconds: float,
+    *,
+    selection_eligible: bool = True,
 ) -> CandidateMetrics:
     return CandidateMetrics(
         candidate_id=candidate_id,
@@ -287,6 +300,7 @@ def _candidate_record(
         n=int(metrics["n"]) if "n" in metrics else 0,
         parameter_count=int(parameter_count),
         runtime_seconds=float(runtime_seconds),
+        selection_eligible=bool(selection_eligible),
     )
 
 
@@ -323,6 +337,7 @@ def run_tournament(args: argparse.Namespace) -> dict[str, Any]:
     targets = development["target_log_change"].to_numpy(dtype=float)
     candidate_records: list[CandidateMetrics] = []
     prediction_store: dict[str, np.ndarray] = {}
+    joint_source_matrix: sparse.csr_matrix | None = None
 
     for ridge in (0.01, 0.1, 1.0, 10.0):
         started = time.perf_counter()
@@ -354,6 +369,8 @@ def run_tournament(args: argparse.Namespace) -> dict[str, Any]:
             )
             started = time.perf_counter()
             text_matrix = vectorizer.fit_transform(document_paths, train_mask)
+            if maximum_features == 5000 and ngram_maximum == 2:
+                joint_source_matrix = text_matrix.copy()
             for ridge in (0.1, 1.0, 10.0):
                 fit_started = time.perf_counter()
                 model = fit_sparse_ridge(text_matrix[train_mask], targets[train_mask], ridge=ridge)
@@ -431,6 +448,275 @@ def run_tournament(args: argparse.Namespace) -> dict[str, Any]:
                 )
                 prediction_store[candidate_id] = predictions
 
+    if joint_source_matrix is None:
+        raise RuntimeError("joint text source matrix was not materialized")
+    projection_rng = np.random.default_rng(np.random.SeedSequence([20260811, 36, 5000, 2]))
+    projection = projection_rng.normal(
+        scale=1.0 / np.sqrt(64.0), size=(joint_source_matrix.shape[1], 64)
+    )
+    text_projection = np.asarray(joint_source_matrix @ projection, dtype=float)
+    joint_matrix = np.column_stack([numeric_matrix, text_projection])
+    for width in (16, 32):
+        for learning_rate in (0.001, 0.003):
+            for seed_offset in (0, 1, 2):
+                started = time.perf_counter()
+                rng = np.random.default_rng(
+                    np.random.SeedSequence([20260811, 36, width, seed_offset])
+                )
+                result = train_mlp(
+                    joint_matrix[train_mask],
+                    targets[train_mask],
+                    joint_matrix[validation_mask],
+                    targets[validation_mask],
+                    hidden_width=width,
+                    learning_rate=learning_rate,
+                    epochs=200,
+                    patience=20,
+                    rng=rng,
+                )
+                predictions = mlp_predict(result.parameters, joint_matrix[validation_mask])
+                metrics = regression_metrics(actual, predictions, entities)
+                metrics["n"] = float(actual.size)
+                candidate_id = (
+                    f"joint_text_numeric_mlp_width_{width}_lr_{learning_rate:g}_seed_{seed_offset}"
+                )
+                parameter_count = (
+                    result.parameters.input_weights.size
+                    + result.parameters.hidden_bias.size
+                    + result.parameters.output_weights.size
+                    + 1
+                )
+                candidate_records.append(
+                    _candidate_record(
+                        candidate_id,
+                        "joint_text_numeric_mlp",
+                        {
+                            "hidden_width": width,
+                            "learning_rate": learning_rate,
+                            "seed_offset": seed_offset,
+                            "epochs": 200,
+                            "patience": 20,
+                            "feature_scope": "numeric_plus_hashed_tfidf_random_projection",
+                            "text_features": 5000,
+                            "text_ngram_maximum": 2,
+                            "text_projection_width": 64,
+                            "text_projection_seed": 20260811,
+                        },
+                        metrics,
+                        parameter_count,
+                        time.perf_counter() - started,
+                    )
+                )
+                prediction_store[candidate_id] = predictions
+
+    # The sequence contract is 512-token chunks, up to eight deterministic
+    # chunks per filing.  Token embeddings are fixed for this Core run; the
+    # LSTM is the trainable document-level sequence learner.  A final mask
+    # channel distinguishes real chunks from zero-padded trailing chunks.
+    chunk_hashes = np.asarray(
+        [text_token_chunk_hashes(path) for path in document_paths], dtype=np.int64
+    )
+    embedding_width = 16
+    hash_buckets = 2_000
+    embedding_ids = np.arange(1, hash_buckets + 1, dtype=np.int64).reshape(1, -1)
+    embedding_table = np.vstack(
+        [
+            np.zeros((1, embedding_width)),
+            token_embedding(embedding_ids, embedding_width, seed=20260811)[0],
+        ]
+    )
+    chunk_features = np.empty((chunk_hashes.shape[0], chunk_hashes.shape[1], embedding_width + 1))
+    for start in range(0, chunk_hashes.shape[0], 64):
+        stop = min(start + 64, chunk_hashes.shape[0])
+        batch_hashes = chunk_hashes[start:stop]
+        batch_embeddings = embedding_table[batch_hashes]
+        active = (batch_hashes > 0).astype(float)
+        counts = np.maximum(active.sum(axis=2, keepdims=True), 1.0)
+        means = (batch_embeddings * active[..., None]).sum(axis=2) / counts
+        chunk_features[start:stop, :, :embedding_width] = means
+        chunk_features[start:stop, :, embedding_width] = (active.sum(axis=2) > 0.0).astype(float)
+    for hidden_width in (16, 32):
+        for learning_rate in (0.001, 0.003):
+            for seed_offset in (0, 1, 2):
+                started = time.perf_counter()
+                result = train_lstm(
+                    chunk_features[train_mask],
+                    targets[train_mask],
+                    chunk_features[validation_mask],
+                    targets[validation_mask],
+                    hidden_width=hidden_width,
+                    learning_rate=learning_rate,
+                    epochs=200,
+                    patience=20,
+                    rng=np.random.default_rng(
+                        np.random.SeedSequence([20260811, 37, hidden_width, seed_offset])
+                    ),
+                )
+                predictions = lstm_predict(result.parameters, chunk_features[validation_mask])
+                metrics = regression_metrics(actual, predictions, entities)
+                metrics["n"] = float(actual.size)
+                candidate_id = (
+                    f"numpy_lstm_width_{hidden_width}_lr_{learning_rate:g}_seed_{seed_offset}"
+                )
+                parameter_count = (
+                    (embedding_width + 1) * 4 * hidden_width
+                    + hidden_width * 4 * hidden_width
+                    + 4 * hidden_width
+                    + hidden_width
+                    + 1
+                )
+                candidate_records.append(
+                    _candidate_record(
+                        candidate_id,
+                        "numpy_lstm",
+                        {
+                            "hidden_width": hidden_width,
+                            "learning_rate": learning_rate,
+                            "seed_offset": seed_offset,
+                            "epochs": 200,
+                            "patience": 20,
+                            "feature_scope": "previous_primary_document_only",
+                            "chunk_length": 512,
+                            "maximum_chunks": 8,
+                            "chunk_aggregation": "mean_token_embedding_then_lstm_over_chunks",
+                            "token_embedding_width": embedding_width,
+                            "token_embedding_seed": 20260811,
+                            "padding_mask_channel": True,
+                        },
+                        metrics,
+                        parameter_count,
+                        time.perf_counter() - started,
+                    )
+                )
+                prediction_store[candidate_id] = predictions
+
+    # These are fixed-encoder probes, not end-to-end sequence learners.  They
+    # are reported for diagnostics but are excluded from nominee selection.
+    sequence_hashes = np.asarray(
+        [text_token_hash_sequence(path) for path in document_paths], dtype=np.int64
+    )
+    for channel_width in (16, 32):
+        for kernel_size in (3, 5):
+            for seed_offset in (0, 1, 2):
+                started = time.perf_counter()
+                encoder_rng = np.random.default_rng(
+                    np.random.SeedSequence([20260811, 34, channel_width, kernel_size, seed_offset])
+                )
+                embeddings = token_embedding(sequence_hashes, 16, seed=20260811 + seed_offset)
+                kernels = encoder_rng.normal(
+                    scale=1.0 / np.sqrt(16.0), size=(kernel_size, 16, channel_width)
+                )
+                encoded = temporal_convolution_encode(embeddings, kernels, np.zeros(channel_width))
+                result = train_mlp(
+                    encoded[train_mask],
+                    targets[train_mask],
+                    encoded[validation_mask],
+                    targets[validation_mask],
+                    hidden_width=16,
+                    learning_rate=0.003,
+                    epochs=200,
+                    patience=20,
+                    rng=np.random.default_rng(np.random.SeedSequence([20260811, 34, seed_offset])),
+                )
+                predictions = mlp_predict(result.parameters, encoded[validation_mask])
+                metrics = regression_metrics(actual, predictions, entities)
+                metrics["n"] = float(actual.size)
+                candidate_id = f"numpy_tcn_probe_channels_{channel_width}_kernel_{kernel_size}_seed_{seed_offset}"
+                parameter_count = (
+                    kernels.size
+                    + channel_width
+                    + result.parameters.input_weights.size
+                    + result.parameters.hidden_bias.size
+                    + result.parameters.output_weights.size
+                    + 1
+                )
+                candidate_records.append(
+                    _candidate_record(
+                        candidate_id,
+                        "numpy_tcn",
+                        {
+                            "channel_width": channel_width,
+                            "kernel_size": kernel_size,
+                            "seed_offset": seed_offset,
+                            "encoder_trainable": False,
+                            "readout": "numpy_mlp",
+                            "sequence_length": 64,
+                        },
+                        metrics,
+                        parameter_count,
+                        time.perf_counter() - started,
+                        selection_eligible=False,
+                    )
+                )
+                prediction_store[candidate_id] = predictions
+
+    for model_width in (16, 32):
+        for attention_heads in (1, 2):
+            for seed_offset in (0, 1, 2):
+                started = time.perf_counter()
+                embeddings = token_embedding(
+                    sequence_hashes, model_width, seed=20260811 + seed_offset
+                )
+                attention_rng = np.random.default_rng(
+                    np.random.SeedSequence(
+                        [20260811, 35, model_width, attention_heads, seed_offset]
+                    )
+                )
+                head_outputs = []
+                for _ in range(attention_heads):
+                    matrices = [
+                        attention_rng.normal(
+                            scale=1.0 / np.sqrt(float(model_width)),
+                            size=(model_width, model_width),
+                        )
+                        for _ in range(3)
+                    ]
+                    output, _ = self_attention(embeddings, *matrices, causal=True)
+                    head_outputs.append(output.mean(axis=1))
+                encoded = np.mean(np.stack(head_outputs, axis=0), axis=0)
+                result = train_mlp(
+                    encoded[train_mask],
+                    targets[train_mask],
+                    encoded[validation_mask],
+                    targets[validation_mask],
+                    hidden_width=16,
+                    learning_rate=0.003,
+                    epochs=200,
+                    patience=20,
+                    rng=np.random.default_rng(np.random.SeedSequence([20260811, 35, seed_offset])),
+                )
+                predictions = mlp_predict(result.parameters, encoded[validation_mask])
+                metrics = regression_metrics(actual, predictions, entities)
+                metrics["n"] = float(actual.size)
+                candidate_id = f"numpy_attention_probe_width_{model_width}_heads_{attention_heads}_seed_{seed_offset}"
+                parameter_count = (
+                    attention_heads * 3 * model_width * model_width
+                    + result.parameters.input_weights.size
+                    + result.parameters.hidden_bias.size
+                    + result.parameters.output_weights.size
+                    + 1
+                )
+                candidate_records.append(
+                    _candidate_record(
+                        candidate_id,
+                        "numpy_small_self_attention",
+                        {
+                            "model_width": model_width,
+                            "attention_heads": attention_heads,
+                            "seed_offset": seed_offset,
+                            "encoder_trainable": False,
+                            "readout": "numpy_mlp",
+                            "sequence_length": 64,
+                            "causal": True,
+                        },
+                        metrics,
+                        parameter_count,
+                        time.perf_counter() - started,
+                        selection_eligible=False,
+                    )
+                )
+                prediction_store[candidate_id] = predictions
+
     baseline_metric_dict = {name: dict(metrics) for name, metrics in baseline_results.items()}
     gate_results: dict[str, dict[str, object]] = {}
     for record in candidate_records:
@@ -452,7 +738,9 @@ def run_tournament(args: argparse.Namespace) -> dict[str, Any]:
         ),
     )
     accepted_overall = [
-        record for record in ordered if gate_results[record.candidate_id]["accepted"]
+        record
+        for record in ordered
+        if record.selection_eligible and gate_results[record.candidate_id]["accepted"]
     ]
     overall = accepted_overall[0] if accepted_overall else None
     tfidf_records = [record for record in candidate_records if record.family == "tfidf_ridge"]
@@ -462,7 +750,7 @@ def run_tournament(args: argparse.Namespace) -> dict[str, Any]:
     )
     neural_gate_results: dict[str, dict[str, object]] = {}
     for record in candidate_records:
-        if record.family in NEURAL_FAMILIES:
+        if record.selection_eligible and record.family in NEURAL_FAMILIES:
             neural_gate_results[record.candidate_id] = selection_gate(
                 {
                     "mae": record.mae,
@@ -536,8 +824,17 @@ def run_tournament(args: argparse.Namespace) -> dict[str, Any]:
             "best_tfidf_ridge": asdict(best_tfidf),
         },
         "inner_validation_bootstrap": bootstrap,
-        "implemented_families": ["numeric_ridge", "tfidf_ridge", "numpy_mlp"],
-        "deferred_families": [family for family in ALL_CORE_FAMILIES if family != "numpy_mlp"],
+        "implemented_families": [
+            "numeric_ridge",
+            "tfidf_ridge",
+            "numpy_mlp",
+            "numpy_lstm",
+            "joint_text_numeric_mlp",
+            "numpy_tcn_probe",
+            "numpy_small_self_attention_probe",
+        ],
+        "deferred_families": [],
+        "diagnostic_only_families": ["numpy_tcn", "numpy_small_self_attention"],
         "text_audit": {
             "development_document_coverage": 1.0,
             "development_duplicate_family_count": int(
