@@ -322,18 +322,18 @@ def train_mlp(
     )
 
 
-def lstm_encode(
+def lstm_encode_sequence(
     embeddings: np.ndarray,
     input_weights: np.ndarray,
     recurrent_weights: np.ndarray,
     bias: np.ndarray,
 ) -> np.ndarray:
-    """Encode sequences with an explicit four-gate LSTM forward recurrence."""
+    """Return every hidden state from an explicit four-gate LSTM recurrence."""
 
     values = np.asarray(embeddings, dtype=float)
     if values.ndim != 3 or not np.isfinite(values).all():
         raise ValueError("embeddings must have shape (batch, time, input) and be finite")
-    batch, _, input_width = values.shape
+    batch, time_length, input_width = values.shape
     hidden_width = recurrent_weights.shape[0]
     if input_weights.shape != (input_width, 4 * hidden_width):
         raise ValueError("input_weights have an incompatible shape")
@@ -343,12 +343,28 @@ def lstm_encode(
         raise ValueError("bias has an incompatible shape")
     hidden = np.zeros((batch, hidden_width))
     cell = np.zeros_like(hidden)
-    for time_index in range(values.shape[1]):
+    hidden_sequence = np.empty((batch, time_length, hidden_width))
+    for time_index in range(time_length):
         gates = values[:, time_index] @ input_weights + hidden @ recurrent_weights + bias
         forget, update, output, candidate = np.split(gates, 4, axis=1)
         cell = expit(forget) * cell + expit(update) * np.tanh(candidate)
         hidden = expit(output) * np.tanh(cell)
-    return hidden
+        hidden_sequence[:, time_index] = hidden
+    return hidden_sequence
+
+
+def lstm_encode(
+    embeddings: np.ndarray,
+    input_weights: np.ndarray,
+    recurrent_weights: np.ndarray,
+    bias: np.ndarray,
+) -> np.ndarray:
+    """Encode sequences with an explicit four-gate LSTM forward recurrence."""
+
+    sequence = lstm_encode_sequence(embeddings, input_weights, recurrent_weights, bias)
+    if sequence.shape[1] == 0:
+        return np.zeros((sequence.shape[0], recurrent_weights.shape[0]))
+    return sequence[:, -1, :]
 
 
 def lstm_predict(parameters: LSTMParameters, embeddings: np.ndarray) -> np.ndarray:
@@ -364,6 +380,41 @@ def lstm_predict(parameters: LSTMParameters, embeddings: np.ndarray) -> np.ndarr
     if parameters.output_weights.shape != (encoded.shape[1],):
         raise ValueError("LSTM output weights have an incompatible shape")
     return encoded @ parameters.output_weights + parameters.output_bias
+
+
+def _active_chunk_weights(active_chunks: np.ndarray, *, batch: int, time_length: int) -> np.ndarray:
+    mask = np.asarray(active_chunks, dtype=bool)
+    if mask.shape != (batch, time_length):
+        raise ValueError("active_chunks must match the batch and sequence dimensions")
+    counts = mask.sum(axis=1)
+    if np.any(counts == 0):
+        raise ValueError("each sequence must contain at least one active chunk")
+    return mask.astype(float) / counts[:, None]
+
+
+def lstm_chunk_average_predict(
+    parameters: LSTMParameters,
+    embeddings: np.ndarray,
+    active_chunks: np.ndarray,
+) -> np.ndarray:
+    """Predict a document by averaging predictions from its active chunks."""
+
+    values = np.asarray(embeddings, dtype=float)
+    if values.ndim != 3 or not np.isfinite(values).all():
+        raise ValueError("embeddings must have shape (batch, time, input) and be finite")
+    hidden_sequence = lstm_encode_sequence(
+        values,
+        parameters.input_weights,
+        parameters.recurrent_weights,
+        parameters.bias,
+    )
+    if parameters.output_weights.shape != (hidden_sequence.shape[2],):
+        raise ValueError("LSTM output weights have an incompatible shape")
+    weights = _active_chunk_weights(
+        active_chunks, batch=values.shape[0], time_length=values.shape[1]
+    )
+    chunk_predictions = hidden_sequence @ parameters.output_weights + parameters.output_bias
+    return np.sum(weights * chunk_predictions, axis=1)
 
 
 def initialize_lstm(
@@ -502,6 +553,125 @@ def lstm_loss_and_gradients(
     )
 
 
+def lstm_chunk_average_loss_and_gradients(
+    parameters: LSTMParameters,
+    embeddings: np.ndarray,
+    active_chunks: np.ndarray,
+    target: np.ndarray,
+) -> tuple[float, LSTMGradients]:
+    """Return loss and BPTT gradients for an average of chunk predictions."""
+
+    values = np.asarray(embeddings, dtype=float)
+    response = np.asarray(target, dtype=float)
+    if values.ndim != 3 or values.shape[0] == 0 or values.shape[1] == 0:
+        raise ValueError("embeddings must have shape (batch, time, input)")
+    if not np.isfinite(values).all():
+        raise ValueError("embeddings must be finite")
+    if response.shape != (values.shape[0],) or not np.isfinite(response).all():
+        raise ValueError("target must be finite with one value per sequence")
+    weights = _active_chunk_weights(
+        active_chunks, batch=values.shape[0], time_length=values.shape[1]
+    )
+    input_width = values.shape[2]
+    hidden_width = parameters.output_weights.size
+    if parameters.input_weights.shape != (input_width, 4 * hidden_width):
+        raise ValueError("LSTM input weights have an incompatible shape")
+    if parameters.recurrent_weights.shape != (hidden_width, 4 * hidden_width):
+        raise ValueError("LSTM recurrent weights have an incompatible shape")
+    if parameters.bias.shape != (4 * hidden_width,):
+        raise ValueError("LSTM bias has an incompatible shape")
+
+    batch = values.shape[0]
+    hidden = np.zeros((batch, hidden_width))
+    cell = np.zeros_like(hidden)
+    cache: list[tuple[np.ndarray, ...]] = []
+    hidden_sequence = np.empty((batch, values.shape[1], hidden_width))
+    for time_index in range(values.shape[1]):
+        previous_hidden = hidden
+        previous_cell = cell
+        gates = (
+            values[:, time_index] @ parameters.input_weights
+            + previous_hidden @ parameters.recurrent_weights
+            + parameters.bias
+        )
+        forget_raw, update_raw, output_raw, candidate_raw = np.split(gates, 4, axis=1)
+        forget = expit(forget_raw)
+        update = expit(update_raw)
+        output = expit(output_raw)
+        candidate = np.tanh(candidate_raw)
+        cell = forget * previous_cell + update * candidate
+        hidden = output * np.tanh(cell)
+        hidden_sequence[:, time_index] = hidden
+        cache.append(
+            (
+                values[:, time_index],
+                previous_hidden,
+                previous_cell,
+                forget,
+                update,
+                output,
+                candidate,
+                cell,
+            )
+        )
+
+    chunk_predictions = hidden_sequence @ parameters.output_weights + parameters.output_bias
+    predicted = np.sum(weights * chunk_predictions, axis=1)
+    residual = predicted - response
+    loss = 0.5 * float(np.mean(residual**2))
+    output_adjoint = residual / batch
+    weighted_output_adjoint = output_adjoint[:, None] * weights
+    output_weights_gradient = np.einsum("bth,bt->h", hidden_sequence, weighted_output_adjoint)
+    output_bias_gradient = float(weighted_output_adjoint.sum())
+    direct_hidden_adjoint = weighted_output_adjoint[:, :, None] * parameters.output_weights
+    future_hidden_adjoint = np.zeros_like(hidden)
+    cell_adjoint = np.zeros_like(hidden)
+    input_weights_gradient = np.zeros_like(parameters.input_weights)
+    recurrent_weights_gradient = np.zeros_like(parameters.recurrent_weights)
+    bias_gradient = np.zeros_like(parameters.bias)
+
+    for time_index in reversed(range(values.shape[1])):
+        (
+            current_input,
+            previous_hidden,
+            previous_cell,
+            forget,
+            update,
+            output,
+            candidate,
+            current_cell,
+        ) = cache[time_index]
+        hidden_adjoint = direct_hidden_adjoint[:, time_index] + future_hidden_adjoint
+        tanh_cell = np.tanh(current_cell)
+        output_adjoint = hidden_adjoint * tanh_cell
+        total_cell_adjoint = cell_adjoint + hidden_adjoint * output * (1.0 - tanh_cell**2)
+        forget_adjoint = total_cell_adjoint * previous_cell
+        update_adjoint = total_cell_adjoint * candidate
+        candidate_adjoint = total_cell_adjoint * update
+        gate_adjoint = np.concatenate(
+            [
+                forget_adjoint * forget * (1.0 - forget),
+                update_adjoint * update * (1.0 - update),
+                output_adjoint * output * (1.0 - output),
+                candidate_adjoint * (1.0 - candidate**2),
+            ],
+            axis=1,
+        )
+        input_weights_gradient += current_input.T @ gate_adjoint
+        recurrent_weights_gradient += previous_hidden.T @ gate_adjoint
+        bias_gradient += gate_adjoint.sum(axis=0)
+        future_hidden_adjoint = gate_adjoint @ parameters.recurrent_weights.T
+        cell_adjoint = total_cell_adjoint * forget
+
+    return loss, LSTMGradients(
+        input_weights=input_weights_gradient,
+        recurrent_weights=recurrent_weights_gradient,
+        bias=bias_gradient,
+        output_weights=output_weights_gradient,
+        output_bias=output_bias_gradient,
+    )
+
+
 def _flatten_lstm(parameters: LSTMParameters) -> np.ndarray:
     return np.concatenate(
         [
@@ -609,6 +779,109 @@ def train_lstm(
         vector = vector - learning_rate * corrected_first / (np.sqrt(corrected_second) + 1e-8)
         parameters = _unflatten_lstm(parameters, vector)
         validation_residual = lstm_predict(parameters, valid_x) - valid_y
+        validation_loss = 0.5 * float(np.mean(validation_residual**2))
+        training_losses.append(train_loss)
+        validation_losses.append(validation_loss)
+        if validation_loss < best_loss - 1e-12:
+            best_loss = validation_loss
+            best_vector = vector.copy()
+            best_epoch = epoch
+            stale = 0
+        else:
+            stale += 1
+        if stale >= patience:
+            break
+    return LSTMTrainingResult(
+        parameters=_unflatten_lstm(parameters, best_vector),
+        training_losses=np.asarray(training_losses),
+        validation_losses=np.asarray(validation_losses),
+        best_epoch=best_epoch,
+    )
+
+
+def train_lstm_chunk_average(
+    training_embeddings: np.ndarray,
+    training_active_chunks: np.ndarray,
+    training_target: np.ndarray,
+    validation_embeddings: np.ndarray,
+    validation_active_chunks: np.ndarray,
+    validation_target: np.ndarray,
+    *,
+    hidden_width: int,
+    learning_rate: float,
+    epochs: int,
+    patience: int,
+    rng: np.random.Generator,
+) -> LSTMTrainingResult:
+    """Train an LSTM whose document prediction averages active chunk outputs."""
+
+    train_x = np.asarray(training_embeddings, dtype=float)
+    valid_x = np.asarray(validation_embeddings, dtype=float)
+    train_mask = np.asarray(training_active_chunks, dtype=bool)
+    valid_mask = np.asarray(validation_active_chunks, dtype=bool)
+    train_y = np.asarray(training_target, dtype=float)
+    valid_y = np.asarray(validation_target, dtype=float)
+    if (
+        train_x.ndim != 3
+        or valid_x.ndim != 3
+        or train_x.shape[1:] != valid_x.shape[1:]
+        or train_x.shape[0] == 0
+        or valid_x.shape[0] == 0
+    ):
+        raise ValueError(
+            "training and validation embeddings must have matching non-empty 3D shapes"
+        )
+    if train_y.shape != (train_x.shape[0],) or valid_y.shape != (valid_x.shape[0],):
+        raise ValueError("targets need one value per document")
+    _active_chunk_weights(train_mask, batch=train_x.shape[0], time_length=train_x.shape[1])
+    _active_chunk_weights(valid_mask, batch=valid_x.shape[0], time_length=valid_x.shape[1])
+    if not np.isfinite(train_x).all() or not np.isfinite(valid_x).all():
+        raise ValueError("embeddings must be finite")
+    if not np.isfinite(train_y).all() or not np.isfinite(valid_y).all():
+        raise ValueError("targets must be finite")
+    if not np.isfinite(learning_rate) or learning_rate <= 0.0:
+        raise ValueError("learning_rate must be finite and positive")
+    if (
+        isinstance(epochs, bool)
+        or not isinstance(epochs, int)
+        or epochs <= 0
+        or isinstance(patience, bool)
+        or not isinstance(patience, int)
+        or patience <= 0
+    ):
+        raise ValueError("epochs and patience must be positive integers")
+    parameters = initialize_lstm(train_x.shape[2], hidden_width, rng=rng)
+    vector = _flatten_lstm(parameters)
+    first = np.zeros_like(vector)
+    second = np.zeros_like(vector)
+    training_losses: list[float] = []
+    validation_losses: list[float] = []
+    best_vector = vector.copy()
+    best_loss = np.inf
+    best_epoch = 0
+    stale = 0
+    for epoch in range(int(epochs)):
+        parameters = _unflatten_lstm(parameters, vector)
+        train_loss, gradient = lstm_chunk_average_loss_and_gradients(
+            parameters, train_x, train_mask, train_y
+        )
+        gradient_vector = _flatten_lstm(
+            LSTMParameters(
+                input_weights=gradient.input_weights,
+                recurrent_weights=gradient.recurrent_weights,
+                bias=gradient.bias,
+                output_weights=gradient.output_weights,
+                output_bias=gradient.output_bias,
+            )
+        )
+        first = 0.9 * first + 0.1 * gradient_vector
+        second = 0.999 * second + 0.001 * gradient_vector**2
+        step_number = epoch + 1
+        corrected_first = first / (1.0 - 0.9**step_number)
+        corrected_second = second / (1.0 - 0.999**step_number)
+        vector = vector - learning_rate * corrected_first / (np.sqrt(corrected_second) + 1e-8)
+        parameters = _unflatten_lstm(parameters, vector)
+        validation_residual = lstm_chunk_average_predict(parameters, valid_x, valid_mask) - valid_y
         validation_loss = 0.5 * float(np.mean(validation_residual**2))
         training_losses.append(train_loss)
         validation_losses.append(validation_loss)
@@ -760,7 +1033,10 @@ __all__ = [
     "check_mlp_gradients",
     "initialize_lstm",
     "initialize_mlp",
+    "lstm_chunk_average_loss_and_gradients",
+    "lstm_chunk_average_predict",
     "lstm_encode",
+    "lstm_encode_sequence",
     "lstm_loss_and_gradients",
     "lstm_predict",
     "mlp_loss_and_gradients",
@@ -769,5 +1045,6 @@ __all__ = [
     "temporal_convolution_encode",
     "token_embedding",
     "train_lstm",
+    "train_lstm_chunk_average",
     "train_mlp",
 ]

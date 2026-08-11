@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from dataclasses import replace
+
 import numpy as np
 import pytest
 from quant_textbook.deep_learning import (
@@ -7,6 +9,8 @@ from quant_textbook.deep_learning import (
     check_mlp_gradients,
     initialize_lstm,
     initialize_mlp,
+    lstm_chunk_average_loss_and_gradients,
+    lstm_chunk_average_predict,
     lstm_encode,
     lstm_predict,
     mlp_predict,
@@ -14,6 +18,7 @@ from quant_textbook.deep_learning import (
     temporal_convolution_encode,
     token_embedding,
     train_lstm,
+    train_lstm_chunk_average,
     train_mlp,
 )
 
@@ -120,6 +125,62 @@ def test_lstm_training_is_deterministic_and_reduces_validation_loss() -> None:
     np.testing.assert_array_equal(
         lstm_predict(first.parameters, embeddings), lstm_predict(second.parameters, embeddings)
     )
+    assert first.validation_losses.min() < first.validation_losses[0]
+
+
+def test_lstm_chunk_average_has_masked_prediction_and_gradient_contract() -> None:
+    rng = np.random.default_rng(13)
+    embeddings = rng.normal(size=(40, 4, 2))
+    active = np.asarray([[True, True, False, False]] * 40)
+    target = embeddings[:, :2, 0].mean(axis=1)
+    parameters = initialize_lstm(2, 2, rng=rng)
+    _, gradients = lstm_chunk_average_loss_and_gradients(parameters, embeddings, active, target)
+    step = 1e-6
+    plus_weights = parameters.output_weights.copy()
+    minus_weights = parameters.output_weights.copy()
+    plus_weights[0] += step
+    minus_weights[0] -= step
+    plus_loss = lstm_chunk_average_loss_and_gradients(
+        replace(parameters, output_weights=plus_weights), embeddings, active, target
+    )[0]
+    minus_loss = lstm_chunk_average_loss_and_gradients(
+        replace(parameters, output_weights=minus_weights), embeddings, active, target
+    )[0]
+    numerical = (plus_loss - minus_loss) / (2.0 * step)
+    np.testing.assert_allclose(gradients.output_weights[0], numerical, rtol=1e-5, atol=1e-7)
+    padded_changed = embeddings.copy()
+    padded_changed[:, 2:] += 1e4
+    np.testing.assert_array_equal(
+        lstm_chunk_average_predict(parameters, embeddings, active),
+        lstm_chunk_average_predict(parameters, padded_changed, active),
+    )
+    first = train_lstm_chunk_average(
+        embeddings[:25],
+        active[:25],
+        target[:25],
+        embeddings[25:],
+        active[25:],
+        target[25:],
+        hidden_width=3,
+        learning_rate=0.01,
+        epochs=30,
+        patience=8,
+        rng=np.random.default_rng(99),
+    )
+    second = train_lstm_chunk_average(
+        embeddings[:25],
+        active[:25],
+        target[:25],
+        embeddings[25:],
+        active[25:],
+        target[25:],
+        hidden_width=3,
+        learning_rate=0.01,
+        epochs=30,
+        patience=8,
+        rng=np.random.default_rng(99),
+    )
+    np.testing.assert_array_equal(first.validation_losses, second.validation_losses)
     assert first.validation_losses.min() < first.validation_losses[0]
 
 

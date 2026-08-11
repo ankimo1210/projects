@@ -18,7 +18,7 @@ def test_b9_preanalysis_is_bound_to_the_reviewed_m6_contract() -> None:
     parent = preanalysis["parent_data"]
 
     assert preanalysis["schema_version"] == "b9-preanalysis-v1"
-    assert preanalysis["status"] == "amended_before_full_candidate_evaluation"
+    assert preanalysis["status"] == "amended_before_nominee_freeze"
     assert isinstance(parent, dict)
     assert parent["m6_protocol_sha256"] == sha256(m6_path.read_bytes()).hexdigest()
     assert parent["derived_panel_sha256"] == (
@@ -132,8 +132,8 @@ def test_b9_selection_gate_amendment_is_explicit_and_pre_outer() -> None:
     contract = _load("b9-preanalysis-v1.json")
     amendment = contract["amendments"][-1]
     assert amendment["previous_contract_sha256"] == (
-        "fbe69fdf3b3bccba7fab70bcbb726d0df61685901cc0322d76fc66be1d7bbd6e"
+        "0aa180acbcd2b685509d6ec65fdf40f9edfcfc544ecec62c930facd0d4615b20"
     )
-    assert "before_full_candidate_evaluation" in amendment["stage"]
-    assert "no full candidate search" in amendment["observed_before_amendment"][1]
-    assert "outer test" in amendment["change"]
+    assert "before_nominee_freeze" in amendment["stage"]
+    assert "company-disjoint" in amendment["reason"]
+    assert "all-axis gate" in amendment["change"]
