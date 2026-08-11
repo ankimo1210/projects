@@ -7,6 +7,8 @@
 学ぶための日本語 HTML 教科書プロジェクトです。
 
 現在は Stage 1（B1〜B4）と Stage 2（B5〜B8）、全32週・48 Notebookを実装しています。
+座学教科書としての完成範囲はB1〜B11の44週で、現在は32/44週（73%）です。原典のStage 3と
+Capstoneは成果物・データ要件が異なるためplaceholderとし、設計・実装・完成率の分母に含めません。
 60週版の原案をそのまま詰め込まず、各週を `core`（必修）と
 `advanced`（発展）に分けています。正規化した学習仕様の source of truth は
 [`curriculum_map.yml`](curriculum_map.yml) です。
@@ -320,7 +322,7 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 - 後続: Stage 2後半（B9〜B11）。B9のfiling provenance、4,631 primary documents取得、visible-text
   正規化、raw / normalized integrity監査は完了し、text modeling gateを通過した。次はB9 Week 33–36 / Project、
   feature pipeline、locked model tournamentを実装する
-- 未実装: Research Apprenticeship、Capstone
+- Placeholder（対象外）: Stage 3 / Research Apprenticeship、Capstone
 
 ## 更新ノート
 
