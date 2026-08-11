@@ -1,27 +1,27 @@
-schema_version: "1.5"
-curriculum_version: "1.5"
+schema_version: "1.6"
+curriculum_version: "1.6"
 updated: "2026-08-11"
 language: ja
 title: Quant Research Data Science — Stage 1 Foundation and Stage 2 Real-Data Modeling
 
 scope:
-  stage: 1–2C
-  blocks: [B1, B2, B3, B4, B5, B6, B7, B8, B9]
-  week_range: [1, 36]
-  duration_weeks: 36
+  stage: 1–2D
+  blocks: [B1, B2, B3, B4, B5, B6, B7, B8, B9, B10]
+  week_range: [1, 40]
+  duration_weeks: 40
   scope_note: >-
-    このファイルは現在実装済みの Stage 1 と Stage 2のB5–B9を正規化する。
-    座学教科書の最終スコープはB1–B11の44週で、B10–B11は実装予定である。
+    このファイルは現在実装済みの Stage 1 と Stage 2のB5–B10を正規化する。
+    座学教科書の最終スコープはB1–B11の44週で、B11は実装予定である。
     原典のStage 3とCapstoneは成果物・データ要件が本教材と異なるため、存在だけを示す
     placeholderとし、設計・実装・完成率の分母には含めない。
   textbook_target:
     blocks: [B1, B2, B3, B4, B5, B6, B7, B8, B9, B10, B11]
     week_range: [1, 44]
     duration_weeks: 44
-    implemented_weeks: 36
-    completion_percent_rounded: 82
+    implemented_weeks: 40
+    completion_percent_rounded: 91
   excludes:
-    - Stage 2後半（B10–B11、実装予定だがこのversionでは未正規化）
+    - Stage 2後半（B11、実装予定だがこのversionでは未正規化）
     - Stage 3（R1–R4、placeholder・座学教科書の対象外）
     - Capstone Research Program（placeholder・取得不能なJGB intradayを要求するため対象外）
   audience: 数学・統計・Python の基礎を持ち、再現可能なクオンツ研究を学ぶ読者
@@ -41,6 +41,7 @@ scope:
     b8_mvp: implemented
     b9_mvp: implemented
     b9_locked_model_tournament: not_started
+    b10_mvp: implemented
 
 layering:
   core:
@@ -2142,8 +2143,221 @@ blocks:
         - linear/deep comparisonが同じdata・metric・budgetである。
         - gateを満たさなければno_model_selectedを結論にできる。
 
+  - id: B10
+    title: Scientific Computing, Data Systems, and ML Engineering
+    title_ja: 科学計算・data system・ML engineering
+    weeks: [37, 40]
+    goal: >-
+      一度動くNotebookを、correctness、performance、PIT data、experiment lineage、rollbackを
+      第三者が再実行・監査できるresearch systemへ変換する。
+    relation_to_b9: >-
+      B9のdevelopment-only SEC pipelineをdata/features/models/evaluation/registryへ分離する。
+      engineering確認のためにlocked outerを開かず、教材runをproductionへpromoteしない。
+    design_corrections:
+      - Week 16のresearch softwareを再説明せず、performance、bitemporal SQL、registry、driftへ拡張する。
+      - Coreは標準library SQLiteと既存NumPy/SciPy/pandasで完結する。
+      - DuckDB/Arrow/Parquet、Numba/JIT、GPUは責務と導入判断を扱うAdvancedとし、undeclared dependencyを使わない。
+      - timingはcorrectness gateの後にwarm-up/median/IQRで測り、共有machineの普遍thresholdにしない。
+      - model registryはappend-only run evidenceとpromotion pointerを分離する。
+      - drift statisticはalert diagnosticであり、model invalidityやrollback decisionを単独で証明しない。
+    references:
+      core:
+        - IEEE 754-2019
+        - Python Packaging User Guide
+        - SQLite window functions
+      advanced:
+        - Apache Arrow columnar format
+        - Apache Parquet format
+        - DuckDB documentation
+    weeks_detail:
+      - week: 37
+        code: B10-W37
+        title: Performance and Deterministic Numerical Computing
+        title_ja: performanceと決定論的数値計算
+        core:
+          - floating-point reduction order
+          - vectorizationとmemory layout
+          - warm-up、median、IQR benchmark
+          - deterministic chunk/merge plan
+          - parallelism、JIT、GPUのfixed-cost boundary
+        advanced:
+          - process/thread benchmark
+          - Numba JIT break-even analysis
+          - GPU transfer/kernel determinism audit
+        learning_objectives:
+          - 結果一致をtimingより先に検査できる。
+          - reduction orderとparallel schedulingの再現性差を説明できる。
+          - compile/transfer costを含むaccelerator判断を書ける。
+        lab:
+          title: Profile the B9 Feature Matrix
+          tasks:
+            - Python loopとNumPy kernelを同じ入力で照合する。
+            - warm-up後のmedian/IQRを測る。
+            - deterministic chunk coverageをtestする。
+          validation:
+            - timingへmachine-independent pass thresholdを置かない。
+            - hardware/thread/environmentを結果解釈へ含める。
+        deliverable:
+          artifact: correctness-first profiling and acceleration memo
+          required_evidence:
+            - result agreement
+            - timing distribution
+            - reduction-order counterexample
+            - accelerator decision table
+        exit_criteria:
+          - correctnessとperformanceを別gateにできる。
+          - parallel/JIT/GPUの固定costとdeterminismを説明できる。
+
+      - week: 38
+        code: B10-W38
+        title: Software Engineering for Research
+        title_ja: research software engineering
+        core:
+          - package/API/I-O adapter separation
+          - configuration、type、failure、structured log
+          - unit/property/integration/notebook test
+          - dependency/environment contract
+          - content-addressed experiment run
+        advanced:
+          - OS/Python/BLAS CI matrix
+          - remote artifact store
+          - signed provenance
+        learning_objectives:
+          - exploratory stateからpure APIを抽出できる。
+          - config/data/code/output hashを一つのrunへ結べる。
+          - test portfolioの異なる役割を説明できる。
+        lab:
+          title: Package the B9 Numeric Baseline
+          tasks:
+            - data/features/model/evaluation/registry interfaceを分ける。
+            - 同一入力から同じrun IDを再生成する。
+            - invalid inputをfail-closedにする。
+          validation:
+            - shared environmentのundeclared dependencyへ依存しない。
+            - secret/raw filingをlog/artifactへ入れない。
+        deliverable:
+          artifact: package contract, test portfolio, and run manifest
+          required_evidence:
+            - interface table
+            - deterministic run ID
+            - expected failure test
+            - environment/dependency boundary
+        exit_criteria:
+          - Notebookとpackageの責務を分離できる。
+          - configuration変更を同じrun IDで上書きしない。
+
+      - week: 39
+        code: B10-W39
+        title: Data Systems and Point-in-Time Joins
+        title_ja: data systemとpoint-in-time join
+        core:
+          - observation/release/revision/availability/decision time
+          - bitemporal long-form record
+          - pandas/SQLite PIT join
+          - row/column memoryとpartition
+          - additive/breaking schema evolution
+        advanced:
+          - Arrow memory model
+          - Parquet partition/predicate pushdown
+          - DuckDB analytical query adapter
+        learning_objectives:
+          - five timestampsを混同せず定義できる。
+          - future revisionを除外するSQL window queryを書ける。
+          - Arrow、Parquet、DuckDBの責務を区別できる。
+        lab:
+          title: Bitemporal SEC Feature Snapshot
+          tasks:
+            - controlled revision fixtureを作る。
+            - pandasとSQLiteでPIT snapshotを独立実装する。
+            - column memoryとschema evolutionを監査する。
+          validation:
+            - availabilityがdecision以下である。
+            - early decisionへfuture revisionをbackfillしない。
+            - pandas/SQLite outputが一致する。
+        deliverable:
+          artifact: PIT SQL, schema, and columnar-design report
+          required_evidence:
+            - five-time table
+            - future-revision counterexample
+            - independent SQL agreement
+            - schema compatibility audit
+        exit_criteria:
+          - PIT joinとlatest-value joinを区別できる。
+          - schema breaking changeをfail-closedにできる。
+
+      - week: 40
+        code: B10-W40
+        title: Experiment Infrastructure, Registry, Drift, and Rollback
+        title_ja: experiment infrastructure・registry・drift・rollback
+        core:
+          - content-addressed experiment tracking
+          - data/model/output versioning
+          - append-only registryとpromotion pointer
+          - reference-fixed PSI/KS drift
+          - batch inference lineage
+          - rollback contract
+        advanced:
+          - online inference/shadow traffic
+          - remote model registry
+          - orchestration and alert routing
+        learning_objectives:
+          - immutable run evidenceとmutable deployment pointerを分けられる。
+          - reference binを再fitせずdriftを計算できる。
+          - batch/online failure surfaceを比較できる。
+        lab:
+          title: B9 Development Run Registry
+          tasks:
+            - model/input/output hashを持つbatch resultを作る。
+            - duplicate runを拒否する。
+            - development runをproductionへpromoteしない。
+          validation:
+            - threshold/actionをmonitoring前に固定する。
+            - driftだけでautomatic rollbackしない。
+        deliverable:
+          artifact: experiment registry and monitoring contract
+          required_evidence:
+            - immutable run record
+            - production pointer state
+            - PSI/KS diagnostic
+            - batch lineage hashes
+        exit_criteria:
+          - model/data/output lineageを追跡できる。
+          - alert、promotion、rollbackを別decisionにできる。
+
+    block_project:
+      required:
+        title: Reproducible B9 Research Package
+        input: bundled development-only SEC teaching fixture
+        workflow:
+          - validate fixture and manifest
+          - fit training-only numeric and TF-IDF transforms
+          - reproduce sparse ridge baselines
+          - compute row/company metrics
+          - register content-addressed development runs
+          - build executed Notebook and HTML
+        artifacts:
+          - package APIs and tests
+          - executed B10 notebooks
+          - run/config/data/prediction hashes
+          - curriculum and update note
+        current_result: >-
+          numeric/TF–IDF development baselineを同じfixtureから再生成し、config mutationで
+          run IDが変わることを確認した。registryのproduction pointerはNoneで、B9 nominee manifestと
+          locked outerは未実行のまま保持する。
+        prohibited_claims:
+          - production deployment from the teaching fixture
+          - source SEC retrieval reproduced without the external cache
+          - DuckDB/Parquet/GPU implementation without declared dependencies
+          - B9 outer evaluation completed
+      exit_criteria:
+        - data/features/models/evaluation/registryを分離している。
+        - clean processのtest/notebook/book commandを示している。
+        - data/config/code/prediction hashをrunへ結んでいる。
+        - undeclared dependencyとsecretを含めていない。
+        - outer/production未実装範囲を明記している。
+
 stage_exit_criteria:
-  - B1〜B9 の各 block project が、入力契約・仮定・validation・既知の限界を持つ。
+  - B1〜B10 の各 block project が、入力契約・仮定・validation・既知の限界を持つ。
   - 数値・統計・Monte Carlo・最適化の診断が、再実行可能な成果物として残る。
   - 金融データの timestamp と情報集合を明示し、look-ahead leakage を防いでいる。
   - 結果から支持される主張と、追加の識別・データが必要な主張を区別できる。
@@ -2151,3 +2365,4 @@ stage_exit_criteria:
   - model tournamentは単一scoreだけでwinnerを選ばず、no model selectedを許容する。
   - B7ではfiltered/smoothed情報集合を分離し、B8ではposterior predictiveとparameter-conditional predictiveを分離する。
   - B9ではprevious/target accessionを分離し、training-only transformと同一budget比較を実施する。
+  - B10ではcorrectness/performanceを分離し、PIT dataとexperiment/model/output lineageを保存する。

@@ -75,3 +75,11 @@ parts:
       - file: notebooks/51_week35_attention_transformers
       - file: notebooks/52_week36_financial_nlp_multimodal
       - file: notebooks/53_b9_project_sec_filing_forecast
+  - caption: B10 — Scientific computing・data systems・ML engineering
+    chapters:
+      - file: notebooks/54_b10_overview
+      - file: notebooks/55_week37_performance_numerical_computing
+      - file: notebooks/56_week38_research_software_engineering
+      - file: notebooks/57_week39_data_systems_pit
+      - file: notebooks/58_week40_experiment_infrastructure
+      - file: notebooks/59_b10_project_reproducible_research_package
