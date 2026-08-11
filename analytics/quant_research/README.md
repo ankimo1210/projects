@@ -343,7 +343,8 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
   採用gateを満たさない場合は`no_model_selected`を正式結果とする。
 - development-onlyの候補runは、time splitに加えてCIK remainder 1→2 / 2→1のcompany-disjoint splitを
   実行した。計180候補（時間軸76、各企業軸52）で3軸すべてのgateを要求した結果、overallとneuralの
-  nomineeはともに`null`、statusは`no_model_selected`である。outerは引き続き未開封である。
+  nomineeはともに`null`、statusは`no_model_selected`である。結果は
+  [B9 development freeze manifest](docs/contracts/b9-development-freeze-v1.json)へ固定し、outerは引き続き未開封である。
   結果は[B9 development tournament note](docs/updates/2026-08-11-b9-development-tournament.md)に残す。
 - 実測値、未解決リスク、再現部品は
   [SEC B9 baseline gate follow-up](docs/updates/2026-08-11-sec-baseline-gate.md)に固定する。

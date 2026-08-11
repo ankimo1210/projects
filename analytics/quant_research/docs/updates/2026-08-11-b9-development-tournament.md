@@ -7,7 +7,8 @@ locked outer (413)行は数えただけで、outer文書・特徴量・予測値
 overall採用gateを満たす候補はなく、結果は `no_model_selected` である。時間分割に加えて、CIK
 remainder 1→2、2→1の企業分離foldを追加し、候補は3軸すべてのgateを通過する必要がある。今回の
 neural gateも全軸同時には通らず、neural nomineeは生成していない。したがってbootstrapも生成していない。
-locked outerへ進むには、今後nominee manifestをfreezeし、別途明示承認を受ける必要がある。
+このdevelopment resultは [b9-development-freeze-v1.json](../contracts/b9-development-freeze-v1.json) として
+freezeした。locked outerへ進むには、別途明示承認と契約に適合するnomineeが必要である。
 
 ## 固定した入力と分割
 
@@ -100,7 +101,7 @@ paired bootstrapはall-axis gateを通過したneural nomineeに対してのみ�
 次は以下の順序で進める。
 
 1. all-axis gateが通る候補はなく、`no_model_selected` と `neural_nominee=null` をdevelopment結果として
-   freezeする。outerはまだ開かない。
+   freeze済みである。freeze manifestは `docs/contracts/b9-development-freeze-v1.json` に置いた。
 2. TCN / self-attentionを固定encoder probeからend-to-end trainable readoutへ拡張する場合は、別の
    development runとして契約・予算・seedを先に追記する。現状はdiagnostic-onlyを正式記録する。
 3. nomineeを再検討する場合は、契約変更・seed・入力fingerprintを先に新しいdevelopment runへ登録する。

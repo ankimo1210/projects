@@ -1,7 +1,7 @@
 # B9 SEC Filing Text & Fundamentals Forecast — pre-analysis specification
 
 - 決定日: 2026-08-11
-- 状態: development tournament完了、nominee freezeとouter accessは未実施
+- 状態: development resultをfreeze済み（`no_model_selected`）、outer accessは未実施
 - data contract: [`b9-m6-protocol.json`](../contracts/b9-m6-protocol.json)
 - analysis contract: [`b9-preanalysis-v1.json`](../contracts/b9-preanalysis-v1.json)
 
@@ -124,8 +124,9 @@ M6のdevelopment partition（2,195行）で、time splitと2方向のcompany-dis
 各active chunkの予測をdocument levelで平均する契約へ接続した。
 
 all-axis gateを満たす候補はなく、overallとneuralの両方が`null`、statusは`no_model_selected`である。
-nomineeが存在しないためpaired bootstrapは生成していない。この結果をouter開封許可とは扱わない。次は
-このdevelopment結果をfreezeし、別途明示承認がある場合だけlocked outerを一度だけ開く。
+nomineeが存在しないためpaired bootstrapは生成していない。development resultは
+[b9-development-freeze-v1.json](../contracts/b9-development-freeze-v1.json)としてfreezeした。
+このfreezeはouter開封許可ではなく、別途明示承認がある場合だけlocked outerを一度だけ開く。
 
 raw SEC response、normalized text、contact情報はrepositoryへcommitしない。
 
