@@ -340,6 +340,10 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
   同じdevelopment partitionで比較する。pretrained embeddingとencoder fine-tuningはAdvancedに置く。
 - candidate family、feature manifest、seed、code commitを固定してからouter testを一度だけ開く。
   採用gateを満たさない場合は`no_model_selected`を正式結果とする。
+- development-onlyの第1候補run（numeric ridge / TF-IDF ridge / NumPy MLP）は完了したが、固定baseline
+  のzeroを1%以上改善する候補はなく、implemented-family interimは`no_model_selected`となった。
+  LSTM / TCN / self-attention / joint text+numericのtraining loopと全Core familyのnominee freezeは未完了で、
+  outerは引き続き未開封である。結果は[B9 development tournament note](docs/updates/2026-08-11-b9-development-tournament.md)に残す。
 - 実測値、未解決リスク、再現部品は
   [SEC B9 baseline gate follow-up](docs/updates/2026-08-11-sec-baseline-gate.md)に固定する。
 - Week 33–36とProjectの6 Notebook、NumPy MLP/backprop、LSTM/TCN/attention forward、
