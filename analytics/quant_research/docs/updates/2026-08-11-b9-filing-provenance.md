@@ -59,13 +59,18 @@ fingerprint:
 | artifact | SHA-256 |
 |---|---|
 | locked M6 panel | `6c6008c2f28c30299e15e37613cfb0b3b22e8fd283858f5b459227c7e4a412a8` |
-| amended pre-analysis contract | `fbe69fdf3b3bccba7fab70bcbb726d0df61685901cc0322d76fc66be1d7bbd6e` |
+| input-quality amendment時点のpre-analysis contract | `fbe69fdf3b3bccba7fab70bcbb726d0df61685901cc0322d76fc66be1d7bbd6e` |
 | external provenance sidecar | `9ff2efef335357ff53bb1e4ba5c57f4b2e8799fc4ee5d830c55843a50026fbbc` |
 | raw retrieval manifest | `5c63ba733f9ab3814bea37eb76aa921d8c36d5a3dc09cb4272edeb3d42ae9ba2` |
 | normalized text manifest | `1283b9cb0992cfd2caaa942f6c869e212762c90a9abbc9a050173f5e3963daba` |
 | text gate audit | `58c5a891e31f50236715336a24ed9e15f8f542351d2c149623cd2bba4312f1de` |
 
 sidecarはraw SEC cacheと同じ外部領域に置き、repositoryへcommitしない。生成コマンドは次のとおり。
+
+その後のteaching-fixture診断でpooled driftより強いfixed baselineが確認されたため、full candidate
+evaluation、nominee freeze、outer accessより前にselection gateをamendした。現在のcontract SHA-256は
+`0aa180acbcd2b685509d6ec65fdf40f9edfcfc544ecec62c930facd0d4615b20`である。入力品質、split、feature、
+candidate family、budget、bootstrap、locked outerは変更していない。
 
 ```bash
 uv run --no-sync python analytics/quant_research/tools/build_b9_filing_provenance.py \

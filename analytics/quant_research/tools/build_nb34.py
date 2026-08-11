@@ -12,6 +12,7 @@ cells = [
 ## 学習目標
 
 - inner selectionとouter evaluationを分離できる
+- grouped split、purging、embargoの必要条件をdata grainとlabel intervalから判断できる
 - feature driftとperformance driftを別々に測れる
 - split-conformal intervalをfinite-sample rankで構成できる
 - exchangeabilityを依存時系列へ無条件に仮定しない
@@ -29,6 +30,16 @@ cells = [
 
 outer testを最後に固定する。alphaはproper-training候補期間のinner train/selectionだけで選び、
 その後にproper trainingへfitする。外側のvalidation partitionはconformal calibration専用に残す。
+
+### Group、purge、embargoは別の漏洩経路を閉じる
+
+| guard | 閉じる経路 | このTreasury表での判断 |
+|---|---|---|
+| grouped split | 同じ企業・患者・instrument familyが両foldへ入る | 1日1本の公式curveでentity groupが無いため不適用 |
+| purge | training labelの終了がselection prediction時点へ重なる | 1-publication先targetなので境界から1行を除外 |
+| embargo | label終了後もfeature/反応が持続し隣接foldを汚す | 現Core targetでは追加0行。経済的持続を仮定するなら事前に正の幅を固定 |
+
+grouped splitを日付splitの代わりにせず、panelならgroupとtimeの両方を守る。embargoを「念のため」の調整parameterにせず、holding period、label overlap、feature lookbackから単位付きで決める。
 """),
     code("""
 split = qt.chronological_split(len(forecast.regression_target), gap=1)
@@ -36,12 +47,43 @@ features = forecast.features
 target = forecast.regression_target
 
 inner_boundary = int(np.floor(0.8 * split.train.size))
-inner_training = split.train[: inner_boundary - forecast.horizon_publications]
+naive_inner_training = split.train[:inner_boundary]
 inner_selection = split.train[inner_boundary:]
+selection_information_start = forecast.prediction_dates[inner_selection[0]]
+inner_training = naive_inner_training[
+    forecast.target_dates[naive_inner_training] < selection_information_start
+]
+purged_rows = np.setdiff1d(naive_inner_training, inner_training)
+embargo_publications = 0
 assert (
     forecast.target_dates[inner_training[-1]]
     < forecast.prediction_dates[inner_selection[0]]
 )
+assert purged_rows.size == forecast.horizon_publications
+
+split_guard_table = pd.DataFrame(
+    [
+        {
+            "guard": "grouped split",
+            "rows_removed": 0,
+            "applied": False,
+            "reason": "single official curve per date; no entity group",
+        },
+        {
+            "guard": "target-horizon purge",
+            "rows_removed": purged_rows.size,
+            "applied": True,
+            "reason": "training label must end before selection information time",
+        },
+        {
+            "guard": "additional embargo",
+            "rows_removed": embargo_publications,
+            "applied": False,
+            "reason": "no extra persistence assumed beyond one-publication label",
+        },
+    ]
+)
+display(split_guard_table)
 
 alpha_grid = [0.1, 1.0, 10.0, 100.0]
 inner_rows = []
@@ -57,6 +99,7 @@ selected_alpha = float(inner_table.loc[inner_table["inner_validation_rmse_bp"].i
 display(inner_table)
 print("selected alpha before outer test:", selected_alpha)
 print("inner train / selection rows:", len(inner_training), len(inner_selection))
+print("purged boundary rows:", purged_rows.tolist())
 """),
     md(r"""
 ## 2. Feature drift
@@ -195,6 +238,10 @@ fig.show()
     md(r"""
 ## 4. 失敗モード
 
+- entity panelでgroupを無視し、同じentityをtrain/testへ置く
+- label終了時点を見ず、行番号だけでgapを決める
+- embargo幅をtest結果を見て調整する
+- grouped split、purge、embargoを同じ操作だと考える
 - outer testでalphaを選ぶ
 - feature driftだけを見てperformance driftを推測する
 - PSIの慣用thresholdを普遍的な統計検定と呼ぶ
@@ -206,21 +253,26 @@ fig.show()
 ### 基礎
 
 1. split-conformalのfinite-sample rankを導出せよ。
-2. train/testのtop drift featuresを確認せよ。
+2. prediction/target intervalを図示しpurgeされた行を説明せよ。
 
 ### 標準
 
-3. test前半・後半でcoverageを分けよ。
-4. rolling calibration windowでinterval幅を更新せよ。
+3. SECのようなcompany panelでgroupとtimeを同時に守るsplitを設計せよ。
+4. test前半・後半でcoverageを分けよ。
 
 ### 研究
 
-5. block dependenceを考慮したcoverage診断を設計せよ。
-6. adaptive conformalを実装する前に保証とestimandを定義せよ。
+5. holding periodが5 publication daysの場合のpurge/embargo単位を事前登録せよ。
+6. rolling calibration windowでinterval幅を更新せよ。
+7. block dependenceを考慮したcoverage診断を設計せよ。
+8. adaptive conformalを実装する前に保証とestimandを定義せよ。
 
 ## 6. Exit Criteria
 
 - [ ] inner selectionとouter evaluationを分離できる
+- [ ] grouped split、purge、embargoが閉じる別々の経路を説明できる
+- [ ] target intervalからpurge行を機械的に再計算できる
+- [ ] embargoの幅と単位をoutcomeを見る前に固定できる
 - [ ] feature driftとerror driftを別々に報告できる
 - [ ] conformal quantile rankを実装できる
 - [ ] exchangeability未検証を明記できる

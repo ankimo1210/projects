@@ -12,6 +12,7 @@ cells = [
 ## 学習目標
 
 - squared-error stumpのsplit ruleを導出できる
+- baggingを相関したbase learnerの分散削減として説明できる
 - boostingをresidualへの逐次fitとして実装できる
 - learning rateとestimator数をvalidationで選べる
 - split frequency、permutation importance、partial dependenceを因果効果と呼ばない
@@ -55,7 +56,73 @@ print("threshold:", stump.threshold)
 print("validation RMSE (bp):", stump_validation.rmse)
 """),
     md(r"""
-## 2. Gradient boosting
+## 2. Bagging intuition: averageだけでは独立にならない
+
+$B$個のbase prediction errorが同じ分散 $\sigma^2$、pairwise correlation $\rho$ を持つなら、平均errorの分散は
+
+$$
+\operatorname{Var}(\bar e)
+=
+\sigma^2\left(\rho+\frac{1-\rho}{B}\right).
+$$
+
+$B$を増やして消えるのは非相関部分だけであり、似たtraining sample・同じfeatureから作るtreeの共通errorは残る。ここではTreasury training期間をmoving-block bootstrapし、時系列の局所依存を完全に壊さずstumpを平均する。これはbaggingのalgorithmic intuitionであり、block長20が正しいという統計的主張ではない。
+"""),
+    code("""
+bag_count = 24
+block_length = 20
+training_indices = split.train
+bag_predictions = []
+for bag_index in range(bag_count):
+    rng = task_rng(10, bag_index)
+    starts = rng.integers(
+        0,
+        training_indices.size - block_length + 1,
+        size=int(np.ceil(training_indices.size / block_length)),
+    )
+    sampled_positions = np.concatenate(
+        [np.arange(start, start + block_length) for start in starts]
+    )[: training_indices.size]
+    sampled_indices = training_indices[sampled_positions]
+    bag_stump = qt.fit_decision_stump(
+        features[sampled_indices],
+        target[sampled_indices],
+        min_leaf_size=40,
+    )
+    bag_predictions.append(bag_stump.predict(features[split.validation]))
+
+bag_prediction_matrix = np.vstack(bag_predictions)
+bagged_prediction = bag_prediction_matrix.mean(axis=0)
+single_prediction = stump.predict(features[split.validation])
+bagging_table = pd.DataFrame(
+    [
+        {
+            "model": "single stump",
+            "validation_rmse_bp": qt.regression_metrics(
+                target[split.validation], single_prediction
+            ).rmse,
+            "prediction_dispersion_bp": float(np.std(single_prediction)),
+        },
+        {
+            "model": "24 moving-block stumps",
+            "validation_rmse_bp": qt.regression_metrics(
+                target[split.validation], bagged_prediction
+            ).rmse,
+            "prediction_dispersion_bp": float(np.std(bagged_prediction)),
+        },
+    ]
+)
+display(bagging_table)
+print(
+    "median cross-bag prediction SD (bp):",
+    float(np.median(np.std(bag_prediction_matrix, axis=0, ddof=1))),
+)
+assert bag_prediction_matrix.shape == (bag_count, split.validation.size)
+"""),
+    md(r"""
+baggingはparallelにbase learnerをfitしてvarianceを抑える。boostingは現在のresidualへsequentialにfitしてbiasを下げる。目的もfailure surfaceも異なり、両者を「treeを多数使う方法」とだけまとめない。
+
+## 3. Gradient boosting
 
 squared lossでは、現在のpredictionに対するnegative gradientはresidualである。各iterationでstumpをresidualへfitし、learning rate $\eta$ で加える。
 
@@ -111,7 +178,7 @@ fig.update_layout(
 fig.show()
 """),
     md(r"""
-## 3. Predictive importance and dependence are not causal
+## 4. Predictive importance and dependence are not causal
 
 どのfeatureが何回stumpに選ばれたかを数える。さらにvalidation列を1列ずつshuffleしたRMSE増分と、
 1 featureだけをgridへ置換したpartial dependenceを計算する。いずれもfit済みmodelの予測診断であり、
@@ -201,8 +268,10 @@ fig.update_layout(
 fig.show()
 """),
     md(r"""
-## 4. 失敗モード
+## 5. 失敗モード
 
+- row-wise iid bootstrapを時系列へ無条件に使う
+- bag数を増やせば共通errorもゼロになると考える
 - training lossの最小iterationを採用する
 - estimator数、depth、learning rateをtestで選ぶ
 - min leafとthreshold search budgetを報告しない
@@ -210,33 +279,37 @@ fig.show()
 - permutation importanceやpartial dependenceを介入効果と呼ぶ
 - boostingがzero baselineを超えない結果を隠す
 
-## 5. 段階別演習
+## 6. 段階別演習
 
 ### 基礎
 
 1. cumulative sumでstump SSEを計算する式を導出せよ。
-2. learning rateを0.02、0.1に変えtraining traceを比較せよ。
+2. $\rho=0,0.5,1$でbag平均のvariance limitを比較せよ。
 
 ### 標準
 
-3. estimator数とlearning rateの2次元validationを行え。
-4. pre/post methodology breakでvalidation errorを分けよ。
+3. learning rateを0.02、0.1に変えtraining traceを比較せよ。
+4. estimator数とlearning rateの2次元validationを行え。
 
 ### 研究
 
-5. block bootstrapでbaselineとの差のuncertaintyを評価せよ。
-6. partial dependenceがcorrelated feature下で壊れる例を作れ。
+5. pre/post methodology breakでvalidation errorを分けよ。
+6. block lengthを変えbagged predictionの安定性を監査せよ。
+7. partial dependenceがcorrelated feature下で壊れる例を作れ。
 
-## 6. Exit Criteria
+## 7. Exit Criteria
 
 - [ ] stump splitを式とcodeで説明できる
+- [ ] baggingのvariance limitとbase learner correlationを説明できる
+- [ ] baggingとboostingのparallel/sequential目的差を説明できる
 - [ ] boosting updateとshrinkageを説明できる
 - [ ] training traceとvalidation selectionを分離できる
 - [ ] search budgetを保存できる
 - [ ] predictive importanceとpartial dependenceを因果解釈しない
 
-## 7. 出典
+## 8. 出典
 
+- [Breiman, Bagging Predictors](https://doi.org/10.1007/BF00058655) — bagging原論文
 - [Friedman, Greedy Function Approximation](https://doi.org/10.1214/aos/1013203451) — gradient boosting原論文
 - [The Elements of Statistical Learning](https://hastie.su.domains/ElemStatLearn/) — tree、boosting、regularization
 - [Interpretable Machine Learning: Feature Importance](https://christophm.github.io/interpretable-ml-book/feature-importance.html) — predictive importanceの解釈

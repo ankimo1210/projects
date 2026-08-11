@@ -101,6 +101,26 @@ def _numeric_features(row: pd.Series, full_panel: pd.DataFrame) -> list[float | 
     ]
 
 
+def _baseline_predictions(row: pd.Series, full_panel: pd.DataFrame) -> dict[str, float]:
+    """Reproduce the four fixed baselines using information known at prediction time."""
+    known = full_panel.loc[full_panel["target_available_date"] < row["known_at"]]
+    if known.empty:
+        return {name: 0.0 for name in ("zero", "pooled_drift", "seasonal", "company_mean")}
+    pooled = float(known["target_log_change"].mean())
+    company = known.loc[known["cik"] == row["cik"], "target_log_change"]
+    previous_period = row["target_period_end"] - pd.DateOffset(years=1)
+    seasonal = known.loc[
+        (known["cik"] == row["cik"]) & (known["target_period_end"] == previous_period),
+        "target_log_change",
+    ]
+    return {
+        "zero": 0.0,
+        "pooled_drift": pooled,
+        "seasonal": float(seasonal.iloc[-1]) if not seasonal.empty else 0.0,
+        "company_mean": float(company.mean()) if not company.empty else pooled,
+    }
+
+
 def _token_hashes(text: str, *, sequence_length: int, hash_buckets: int) -> list[int]:
     raw_tokens = TOKEN_PATTERN.findall(text.casefold())
     if not raw_tokens:
@@ -204,6 +224,7 @@ def build_fixture(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str, A
                 "target_available_date": row["target_available_date"].date().isoformat(),
                 "partition": row["partition"],
                 "numeric_features": _numeric_features(row, panel),
+                "baseline_predictions": _baseline_predictions(row, inner_train),
                 "token_hashes": _token_hashes(
                     document_path.read_text(encoding="utf-8"),
                     sequence_length=args.sequence_length,
@@ -223,6 +244,12 @@ def build_fixture(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str, A
             "no raw text, CIK, accession, or locked outer rows."
         ),
         "numeric_feature_names": list(NUMERIC_FEATURE_NAMES),
+        "baseline_prediction_contract": {
+            "names": ["zero", "pooled_drift", "seasonal", "company_mean"],
+            "training_partition": "full 1504-row inner training partition",
+            "known_information_rule": "target_available_date < evaluation known_at",
+            "locked_outer_used": False,
+        },
         "token_hash_contract": (
             "ASCII letters/numeric class; deterministic evenly spaced positions; "
             f"SHA-256 first 64 bits modulo {args.hash_buckets}, plus one"

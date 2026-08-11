@@ -339,7 +339,7 @@ def week38_cells():
         code("""
 import hashlib
 
-fixture_digest = "6487c20568fbbbb18326bcde49d985b42ddd5072f321e33e4b2b8154a7293295"
+fixture_digest = "953c9b06c6c1dc1ef68c5e21f1ee88c4fe20d1ee34d5887150e51843184ad0b0"
 prediction_digest = hashlib.sha256(
     numeric_validation_prediction.astype("<f8", copy=False).tobytes()
 ).hexdigest()
@@ -617,7 +617,7 @@ run IDはhuman labelでなくcanonical config、data hash、code revision、metr
         code("""
 import hashlib
 
-data_digest = "6487c20568fbbbb18326bcde49d985b42ddd5072f321e33e4b2b8154a7293295"
+data_digest = "953c9b06c6c1dc1ef68c5e21f1ee88c4fe20d1ee34d5887150e51843184ad0b0"
 prediction_digest = hashlib.sha256(numeric_validation_prediction.astype("<f8").tobytes()).hexdigest()
 development_run = qt.build_experiment_run(
     experiment_name="b10-infrastructure-lab",
@@ -767,7 +767,7 @@ models = {
         {"family": "hashed_tfidf_ridge", "ridge": 1.0, "maximum_features": 256, "minimum_document_frequency": 2},
     ),
 }
-data_digest = "6487c20568fbbbb18326bcde49d985b42ddd5072f321e33e4b2b8154a7293295"
+data_digest = "953c9b06c6c1dc1ef68c5e21f1ee88c4fe20d1ee34d5887150e51843184ad0b0"
 registry = qt.ModelRegistry()
 metric_rows = []
 run_rows = []
