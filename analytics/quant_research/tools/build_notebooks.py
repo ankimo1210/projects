@@ -1,4 +1,4 @@
-"""Regenerate the B1-B9 textbook notebooks from Python builders.
+"""Regenerate the B1-B10 textbook notebooks from Python builders.
 
 Run from ``analytics/quant_research``::
 
@@ -81,6 +81,12 @@ NOTEBOOKS = [
     ("build_nb51", "51_week35_attention_transformers"),
     ("build_nb52", "52_week36_financial_nlp_multimodal"),
     ("build_nb53", "53_b9_project_sec_filing_forecast"),
+    ("build_nb54", "54_b10_overview"),
+    ("build_nb55", "55_week37_performance_numerical_computing"),
+    ("build_nb56", "56_week38_research_software_engineering"),
+    ("build_nb57", "57_week39_data_systems_pit"),
+    ("build_nb58", "58_week40_experiment_infrastructure"),
+    ("build_nb59", "59_b10_project_reproducible_research_package"),
 ]
 
 _CJK = re.compile(r"[\u3040-\u30ff\u3400-\u9fff]")

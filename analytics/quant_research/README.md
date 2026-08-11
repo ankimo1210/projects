@@ -6,8 +6,8 @@
 **仮定を定める → 安定に実装する → 診断する → 主張の限界を説明する**という一連の研究作業として
 学ぶための日本語 HTML 教科書プロジェクトです。
 
-現在は Stage 1（B1〜B4）と Stage 2（B5〜B9）、全36週・54 Notebookを実装しています。
-座学教科書としての完成範囲はB1〜B11の44週で、現在は36/44週（82%）です。原典のStage 3と
+現在は Stage 1（B1〜B4）と Stage 2（B5〜B10）、全40週・60 Notebookを実装しています。
+座学教科書としての完成範囲はB1〜B11の44週で、現在は40/44週（91%）です。原典のStage 3と
 Capstoneは成果物・データ要件が異なるためplaceholderとし、設計・実装・完成率の分母に含めません。
 60週版の原案をそのまま詰め込まず、各週を `core`（必修）と
 `advanced`（発展）に分けています。正規化した学習仕様の source of truth は
@@ -15,7 +15,7 @@ Capstoneは成果物・データ要件が異なるためplaceholderとし、設�
 
 ## 到達点
 
-現在のStage 1–2C修了時に、学習者が次の判断を自力で行えることを目標にします。
+現在のStage 1–2D修了時に、学習者が次の判断を自力で行えることを目標にします。
 
 - 問題の構造と数値条件から、分解法・推定法・最適化法を選ぶ。
 - 統計誤差、数値誤差、Monte Carlo 誤差、離散化誤差、モデル誤差を区別する。
@@ -40,7 +40,7 @@ Capstoneは成果物・データ要件が異なるためplaceholderとし、設�
    BOJ 発表前後の価格反応を測る金融イベントスタディと、DiD 等の因果イベントスタディを
    区別し、識別仮定なしに「政策の因果効果」とは呼びません。
 
-## Stage 1–2C の構成
+## Stage 1–2D の構成
 
 | Block | Weeks | 主題 | ブロック成果物 |
 |---|---:|---|---|
@@ -53,6 +53,7 @@ Capstoneは成果物・データ要件が異なるためplaceholderとし、設�
 | B7 | 25〜28 | stationarity・VAR・state space・volatility | Dynamic Treasury Curve Forecasting Audit |
 | B8 | 29〜32 | Bayesian推論・階層model・HMM・MCMC診断 | Treasury Predictive Uncertainty and Latent-State Audit |
 | B9 | 33〜36 | deep learning・sequence model・attention・financial NLP | SEC Filing Text & Fundamentals Forecast |
+| B10 | 37〜40 | scientific computing・PIT data system・experiment infrastructure | Reproducible B9 Research Package |
 
 B2 の Girsanov・importance sampling・Brownian bridge、B4 の ADMM 等は Advanced に置き、
 Core の理解と検証を犠牲にしない順序にしています。B4 では制約付き最適化への自然な入口として、
@@ -139,12 +140,18 @@ Placement-outは学習速度だけを変え、成果物、採点、再現性・�
 | `51_week35_attention_transformers` | scaled self-attention、mask、position、transformer境界 |
 | `52_week36_financial_nlp_multimodal` | training-only TF–IDF、sparse ridge、modality ablation |
 | `53_b9_project_sec_filing_forecast` | SEC Filing Text & Fundamentals Forecast evidence gate |
+| `54_b10_overview` | correctness、performance、PIT data、lineageを結ぶB10研究フロー |
+| `55_week37_performance_numerical_computing` | vectorization、benchmark、reduction order、acceleration境界 |
+| `56_week38_research_software_engineering` | package API、test portfolio、config・data・code hash |
+| `57_week39_data_systems_pit` | bitemporal record、pandas/SQLite PIT join、schema evolution |
+| `58_week40_experiment_infrastructure` | immutable run registry、drift、batch lineage、rollback |
+| `59_b10_project_reproducible_research_package` | development-only B9 pipelineの再現可能package化 |
 
 ## ディレクトリ
 
 ```text
 analytics/quant_research/
-├── curriculum_map.yml       # Stage 1–2C の正規化された学習仕様
+├── curriculum_map.yml       # Stage 1–2D の正規化された学習仕様
 ├── book/                    # Jupyter Book 設定と静的 HTML の入口
 ├── notebooks/               # 実行済み教材 Notebook
 ├── tools/                   # Notebook 生成・検証スクリプト
@@ -333,11 +340,27 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 - full 2,195-row candidate search、company-cluster bootstrap、nominee manifest、outer一回評価は別の
   empirical milestoneとして未実行である。現時点の正式decisionは`no_model_selected`とする。
 
+## B10 research systemの実装契約
+
+- correctness gateをperformance benchmarkより先に置き、timingはwarm-up後のmedianとIQRで報告する。
+- reduction orderと並列chunkの再現性を監査し、共有machine上の速度へ普遍的な合否thresholdを置かない。
+- Notebook、pure API、I/O adapter、configuration、test、registryの責務を分離する。
+- observation、release、revision、availability、decisionの5時点を保持し、pandasとSQLiteの独立実装で
+  future revisionを除外する。
+- experiment runはconfig、data、code、metrics、artifactのcontent hashへ結び、同じrun IDを上書きしない。
+- immutable run evidenceとmutable promotion pointerを分け、development runをproductionへpromoteしない。
+- driftは事前固定したreference binとthresholdで診断するが、それだけでautomatic rollbackしない。
+- Coreは標準library SQLiteと既存dependencyで完結する。DuckDB、Arrow、Parquet、JIT、GPUは
+  Advancedの導入判断・interface境界であり、この版でのproduction実装を主張しない。
+- B9 locked outerは開かず、Project終了時のproduction pointerは`None`である。
+- 実装と検証結果は
+  [Stage 2D / B10実装ノート](docs/updates/2026-08-11-stage-2d-b10.md)に残す。
+
 ## 現在の範囲
 
-- 実装済み: Phase 0、Stage 1 / B1–B4、Stage 1評価・placement追補、Stage 2 / B5–B9、
-  B9 M6 real-data gate・pre-analysis contract・Week 33–36 / Project教材
-- 後続: B9 full locked model tournamentとStage 2後半（B10〜B11）。B9のfiling provenance、
+- 実装済み: Phase 0、Stage 1 / B1–B4、Stage 1評価・placement追補、Stage 2 / B5–B10、
+  B9 M6 real-data gate・pre-analysis contract・Week 33–36 / Project教材、B10 research system教材
+- 後続: B11 Week 41–44と、別milestoneのB9 full locked model tournament。B9のfiling provenance、
   4,631 primary documents取得、visible-text正規化、raw / normalized integrity監査、教材feature pipelineは完了した
 - Placeholder（対象外）: Stage 3 / Research Apprenticeship、Capstone
 
@@ -351,3 +374,4 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 - [2026-08-11 — SEC B9 baseline gate follow-up](docs/updates/2026-08-11-sec-baseline-gate.md)
 - [2026-08-11 — B9 filing provenance and retrieval gate](docs/updates/2026-08-11-b9-filing-provenance.md)
 - [2026-08-11 — Stage 2C / B9教材実装](docs/updates/2026-08-11-stage-2c-b9.md)
+- [2026-08-11 — Stage 2D / B10教材実装](docs/updates/2026-08-11-stage-2d-b10.md)
