@@ -317,7 +317,14 @@ def resolve_first_reported_vintages(
 
     output: list[dict[str, Any]] = []
     for rows in candidates.values():
-        rows.sort(key=lambda row: (row["filed"], row["acceptance_datetime"], row["accn"]))
+        rows.sort(
+            key=lambda row: (
+                row["availability_date"],
+                row["acceptance_datetime"],
+                row["filed"],
+                row["accn"],
+            )
+        )
         first = rows[0]
         if any(row["value"] != first["value"] and row["accn"] == first["accn"] for row in rows):
             raise ValueError(f"conflicting fact values for first filing {first['accn']}")

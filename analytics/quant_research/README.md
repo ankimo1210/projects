@@ -281,29 +281,39 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 - locked testではB7/B8の候補modelがrandom walkのpoint RMSEを上回らず、no model selectedを結論とする。
 - 結果と数値は[Stage 2B / B7–B8実装ノート](docs/updates/2026-08-10-stage-2b-b7-b8.md)に残す。
 
-## B9の着手前契約
+## B9 の M6 データ・実装開始ゲート
 
 - 2007–2025 Treasury拡張版は別manifestの
   Advanced historical robustnessに限定する。
-- SECのbounded baselineは実行可能性を確認したが、strict company × time split が
-  $n=84$ で、事前ゲート $n\ge 200$ を満たさないためB9は実装保留である。
+- M6 の historical SEC cohort は実データ gate を通過した。2016年Q1の exact `10-K` を seed とする
+  300 CIKのうち、cache integrity を通った261 CIKから、fixed-anchor cohort 164 CIK、valid panel
+  4,631行 / 163 CIKを得た。strict company × time holdout は413行 / 38 CIK / 183 availability dates、
+  対応するtraining partitionは2,195行 / 102 CIK / 534 availability datesであり、
+  $n\ge200$ とtraining非空のgateを通過した。
 - B9 v1 Coreは現在のFrames APIを過去へ遡及適用しない。`us-gaap/Assets/USD` の
   `2015-12-31` anchor factを `2016-04-01` 以下のavailabilityで選び、anchor後の観測だけを使う
   固定PIT cohortとする。dynamic historical universeはAdvancedへ分離する。
 - Company Factsの`accn`はSubmissionsの`recent`だけでなく`filings.files`の全archiveへ結合する。
   acceptance metadataが未解決なら失敗とし、`filed`単独へfallbackしない。
 - acceptanceDateTimeのtimezoneを保持し、`America/New_York`の日付と`filingDate`の遅い方の
-  次の米国連邦営業日から利用可能とする。size floorは前四半期Assets $\ge 100\,\mathrm{M}$ とする。
+  次の米国連邦営業日から利用可能とする。size floorは**anchor時点** Assets
+  $\ge 100\,\mathrm{M}$ であり、各行の前四半期Assetsへ再適用しない。
 - B9のprimary metricはMAE、secondaryはmedAE、RMSEはreferenceとし、zero / pooled drift /
   seasonal / company expanding meanをbaseline ladderへ含める。primary 1%以上改善かつ
   secondary非悪化を候補gateとする。
+- `sec_pit.py`、`sec_panel.py`、batch対応の`fetch_sec_b9_cache.py`、
+  `build_b9_panel.py`、`audit_sec_b9_panel.py`は、cache→PIT panel→derived artifactの完全性、
+  grain、欠損、split、baselineを検証する再現部品である。raw SEC cacheはrepository外に置く。
+- このgateはB9のmodel選定・企業一般への実証結論ではない。calendar-date anchorに適合する
+  deterministic feasibility cohortであり、candidate set、feature availability、locked evaluationは
+  B9のpre-analysis specificationで改めて固定する。
 - 実測値、未解決リスク、再現部品は
   [SEC B9 baseline gate follow-up](docs/updates/2026-08-11-sec-baseline-gate.md)に固定する。
 
 ## 現在の範囲
 
-- 実装済み: Phase 0、Stage 1 / B1–B4、Stage 1評価・placement追補、Stage 2 / B5–B8
-- 後続: Stage 2後半（B9〜B11）。B9の前にSEC baseline gateとPIT contractを完了する
+- 実装済み: Phase 0、Stage 1 / B1–B4、Stage 1評価・placement追補、Stage 2 / B5–B8、B9 M6 real-data gate
+- 後続: Stage 2後半（B9〜B11）。B9はpre-analysis specificationとmodel tournamentから開始する
 - 未実装: Research Apprenticeship、Capstone
 
 ## 更新ノート
