@@ -13,7 +13,8 @@ from typing import Any
 ALLOWED_VALUE_STATUSES = {"exact", "estimated", "reconciliation"}
 ALLOWED_POSITION_TYPES = {"asset", "short", "liability", "hedge"}
 ALLOWED_VALUATION_BASIS_KINDS = {"trailing", "forward", "provider"}
-ALLOWED_SCENARIO_KINDS = {"single", "compound"}
+ALLOWED_SCENARIO_KINDS = {"single", "compound", "historical"}
+SCENARIO_KIND_LABELS = {"single": "単一", "compound": "複合", "historical": "実測"}
 STATUS_LABELS = {
     "exact": "確定",
     "estimated": "推定",
@@ -595,6 +596,7 @@ def validate_analysis_reference(reference: AnalysisReference) -> list[str]:
         "max_sector_ratio",
         "sector_effective_count",
         "worst_compound_drawdown",
+        "worst_historical_drawdown",
     }
     for limit in reference.policy_limits:
         if limit.operator not in {"<=", ">=", "between"}:
@@ -962,6 +964,7 @@ def _analysis_rows(
             )
 
         compound_impact_ratios: list[Decimal] = []
+        historical_impact_ratios: list[Decimal] = []
         for symbol, market_value in by_symbol.items():
             instrument = reference.instruments.get(symbol)
             if instrument is None:
@@ -1004,7 +1007,7 @@ def _analysis_rows(
                 {
                     "scope": scope,
                     "scenario": scenario.label,
-                    "scenario_kind": "複合" if scenario.kind == "compound" else "単一",
+                    "scenario_kind": SCENARIO_KIND_LABELS[scenario.kind],
                     "impact_jpy": _float(scenario_impact),
                     "impact_ratio": _float(scenario_impact / total),
                     "ending_value_jpy": _float(total + scenario_impact),
@@ -1019,12 +1022,14 @@ def _analysis_rows(
             )
             if scenario.kind == "compound":
                 compound_impact_ratios.append(scenario_impact / total)
+            if scenario.kind == "historical":
+                historical_impact_ratios.append(scenario_impact / total)
             for _magnitude, symbol, impact in sorted(contributions, reverse=True):
                 sensitivity_contributions.append(
                     {
                         "scope": scope,
                         "scenario": scenario.label,
-                        "scenario_kind": "複合" if scenario.kind == "compound" else "単一",
+                        "scenario_kind": SCENARIO_KIND_LABELS[scenario.kind],
                         "position": f"{symbol} · {position_names[symbol]}",
                         "impact_jpy": _float(impact),
                         "portfolio_impact": _float(impact / total),
@@ -1099,6 +1104,11 @@ def _analysis_rows(
             "worst_compound_drawdown": (
                 _float(max(-min(compound_impact_ratios), Decimal()))
                 if compound_impact_ratios
+                else None
+            ),
+            "worst_historical_drawdown": (
+                _float(max(-min(historical_impact_ratios), Decimal()))
+                if historical_impact_ratios
                 else None
             ),
         }

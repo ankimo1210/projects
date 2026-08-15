@@ -312,9 +312,12 @@ def test_private_risk_model_exposes_compound_and_lookthrough_risk() -> None:
     assert summary["position_effective_count"] == pytest.approx(6.8636, rel=1e-4)
     assert summary["sector_effective_count"] == pytest.approx(3.0001, rel=1e-4)
     assert summary["policy_breach_count"] == 4
-    assert impacts["株式全体 -10%"] == pytest.approx(-0.07818, rel=1e-4)
+    assert impacts["株式全体 -10%"] == pytest.approx(-0.07934, rel=1e-4)
     assert impacts["円10%上昇（外貨バスケット）"] == pytest.approx(-0.05323, rel=1e-4)
-    assert summary["worst_compound_drawdown"] == pytest.approx(0.17498, rel=1e-4)
+    assert summary["worst_compound_drawdown"] == pytest.approx(0.17661, rel=1e-4)
+    # Replayed history is worse than every hand-set compound scenario.
+    assert summary["worst_historical_drawdown"] == pytest.approx(0.23459, rel=1e-4)
+    assert summary["worst_historical_drawdown"] > summary["worst_compound_drawdown"]
     assert issuers["Advantest"] == pytest.approx(0.16588, rel=1e-4)
     smh_market_loading = next(
         row["loading"]
@@ -361,6 +364,64 @@ def test_phase_a_scenarios_are_registered_and_linear_in_their_components() -> No
     assert impacts["A1 複合: スタグフレーション型（株安＋金利上昇）"] == pytest.approx(expected_a1)
     # A5 lifts energy, so the oil sleeve must offset part of the equity and rate damage.
     assert impacts["A5 複合: 原油供給ショック"] > impacts["A1 複合: スタグフレーション型（株安＋金利上昇）"]
+
+
+@PRIVATE_ANALYSIS_ONLY
+def test_replayed_history_is_tracked_separately_from_hand_set_scenarios() -> None:
+    portfolio = load_portfolio(PRIVATE_DATA)
+    reference = load_analysis_reference(PRIVATE_REFERENCE)
+    artifact = build_artifact(
+        portfolio,
+        analysis_reference=reference,
+        generated_at="2026-08-15T00:00:00+00:00",
+    )
+    rows = [
+        row
+        for row in artifact["snapshot"]["datasets"]["factor_sensitivity"]
+        if row["scope"] == "すべて"
+    ]
+    kinds = {row["scenario"]: row["scenario_kind"] for row in rows}
+    measured = {row["scenario"]: row["impact_ratio"] for row in rows if row["scenario_kind"] == "実測"}
+
+    assert kinds["株式全体 -10%"] == "単一"
+    assert kinds["A1 複合: スタグフレーション型（株安＋金利上昇）"] == "複合"
+    assert len(measured) == 4
+    # 2022 was an inflation regime: the energy sleeve carried the portfolio up.
+    assert measured["実測 2022 インフレ・金利ショック"] > 0
+    assert measured["実測 2020-03 コロナ・ショック"] < -0.2
+
+
+def test_historical_scenarios_do_not_feed_the_compound_drawdown_metric() -> None:
+    portfolio = load_portfolio(EXAMPLE_DATA)
+    reference = load_analysis_reference(EXAMPLE_REFERENCE)
+    compound_only = build_artifact(
+        portfolio,
+        analysis_reference=reference,
+        generated_at="2026-08-15T00:00:00+00:00",
+    )
+    with_history = build_artifact(
+        portfolio,
+        analysis_reference=replace(
+            reference,
+            scenarios=(
+                *reference.scenarios,
+                replace(
+                    reference.scenarios[0],
+                    id="historical_sample",
+                    label="実測サンプル",
+                    kind="historical",
+                    shocks={"株式全体": Decimal("-0.30")},
+                ),
+            ),
+        ),
+        generated_at="2026-08-15T00:00:00+00:00",
+    )
+    before = next(r for r in compound_only["snapshot"]["datasets"]["summary"] if r["scope"] == "すべて")
+    after = next(r for r in with_history["snapshot"]["datasets"]["summary"] if r["scope"] == "すべて")
+
+    assert before["worst_historical_drawdown"] is None
+    assert after["worst_compound_drawdown"] == pytest.approx(before["worst_compound_drawdown"])
+    assert after["worst_historical_drawdown"] > after["worst_compound_drawdown"]
 
 
 @PRIVATE_DATA_ONLY
