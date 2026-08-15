@@ -96,6 +96,17 @@ uv run --package portfolio-analyzer python portfolio-analyzer/scripts/build_dash
 
 基本配分と簡易ストレスだけを生成する場合は `--no-analysis-reference` を付けます。
 
+## リバランス案を記録する
+
+[`docs/rebalancing-note-template.md`](docs/rebalancing-note-template.md) を使い、判断理由、
+変更量、変更前後の感応度、実行前チェックを残します。実際の銘柄数・残高を含むノートは
+`data/rebalancing-note.private.md` に保存してください。このファイルは Git の対象外です。
+
+```bash
+cp portfolio-analyzer/docs/rebalancing-note-template.md \
+  portfolio-analyzer/data/rebalancing-note.private.md
+```
+
 ## 検証
 
 ```bash
@@ -112,7 +123,7 @@ uv run --no-sync ruff check portfolio-analyzer
 - 海外口座には、純資産と「証券 + 現金」の差額を残高調整として計上
 - DC口座は画面内の損益表示同士に不一致があり、評価額だけを配分分析に使用
 - ETF・ファンドのセクター構成は基準日時点の公表値で、現在の実時間構成ではない
-- QQQとSMHのPER参照値は古いため、「要更新」として現行PERカバー率から除外
+- QQQのPERは2026年3月末値を「推定」、SMHは2026年7月末の公式値を「現行」として扱う
 - 感応度は単一要因の線形近似。相関、ボラティリティ変化、凸性、流動性、税・手数料は未反映
 - 取得原価・配当・税・手数料・過去推移は未入力
 
@@ -124,7 +135,10 @@ portfolio-analyzer/
 │   ├── portfolio.example.json   # 架空サンプル（Git管理）
 │   ├── portfolio.private.json   # 個人データ（Git対象外）
 │   ├── analysis_reference.example.json
-│   └── analysis_reference.private.json
+│   ├── analysis_reference.private.json
+│   └── rebalancing-note.private.md
+├── docs/
+│   └── rebalancing-note-template.md
 ├── scripts/build_dashboard.py
 ├── src/portfolio_analyzer/core.py
 ├── tests/test_core.py

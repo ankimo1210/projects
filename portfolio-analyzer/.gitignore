@@ -1,3 +1,4 @@
 data/portfolio.private.json
 data/analysis_reference.private.json
+data/*.private.md
 dist/
