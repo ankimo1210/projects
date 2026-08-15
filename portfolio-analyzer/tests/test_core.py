@@ -125,6 +125,60 @@ def test_nested_market_and_region_shocks_are_rejected() -> None:
     )
 
 
+def test_event_calendar_links_scenarios_and_counts_days_from_reference_date() -> None:
+    portfolio = load_portfolio(EXAMPLE_DATA)
+    reference = load_analysis_reference(EXAMPLE_REFERENCE)
+    artifact = build_artifact(
+        portfolio,
+        analysis_reference=reference,
+        generated_at="2026-08-15T00:00:00+00:00",
+    )
+    datasets = artifact["snapshot"]["datasets"]
+    event = next(row for row in datasets["event_calendar"] if row["scope"] == "すべて")
+    linked = next(
+        row
+        for row in datasets["factor_sensitivity"]
+        if row["scope"] == "すべて" and row["scenario"] == event["scenario"]
+    )
+    table_ids = {table["id"] for table in artifact["manifest"]["tables"]}
+
+    # days_until counts from the reference as_of (2026-08-14), not from the build time.
+    assert reference.as_of == "2026-08-14"
+    assert event["event_date"] == "2026-09-01"
+    assert event["days_until"] == 18
+    assert event["impact_ratio"] == pytest.approx(linked["impact_ratio"])
+    assert "event_calendar" in table_ids
+
+
+def test_event_pointing_at_unknown_scenario_is_rejected() -> None:
+    reference = load_analysis_reference(EXAMPLE_REFERENCE)
+    broken = replace(
+        reference,
+        events=(replace(reference.events[0], scenario_id="no_such_scenario"),),
+    )
+
+    assert any(
+        issue.startswith("unknown scenario for event")
+        for issue in validate_analysis_reference(broken)
+    )
+
+
+def test_missing_events_key_produces_no_calendar_widget() -> None:
+    portfolio = load_portfolio(EXAMPLE_DATA)
+    reference = replace(load_analysis_reference(EXAMPLE_REFERENCE), events=())
+    artifact = build_artifact(
+        portfolio,
+        analysis_reference=reference,
+        generated_at="2026-08-15T00:00:00+00:00",
+    )
+
+    assert artifact["snapshot"]["datasets"]["event_calendar"] == []
+    assert "event_calendar" not in {table["id"] for table in artifact["manifest"]["tables"]}
+    assert "event_calendar" not in {
+        target["dataset"] for target in artifact["manifest"]["filters"][0]["targets"]
+    }
+
+
 def test_lookthrough_reconciles_to_each_scope_total() -> None:
     portfolio = load_portfolio(EXAMPLE_DATA)
     reference = load_analysis_reference(EXAMPLE_REFERENCE)
@@ -270,6 +324,43 @@ def test_private_risk_model_exposes_compound_and_lookthrough_risk() -> None:
         and row["factor"] == "株式全体"
     )
     assert smh_market_loading == pytest.approx(1.9)
+
+
+@PRIVATE_ANALYSIS_ONLY
+def test_phase_a_scenarios_are_registered_and_linear_in_their_components() -> None:
+    portfolio = load_portfolio(PRIVATE_DATA)
+    reference = load_analysis_reference(PRIVATE_REFERENCE)
+    artifact = build_artifact(
+        portfolio,
+        analysis_reference=reference,
+        generated_at="2026-08-15T00:00:00+00:00",
+    )
+    impacts = {
+        row["scenario"]: row["impact_jpy"]
+        for row in artifact["snapshot"]["datasets"]["factor_sensitivity"]
+        if row["scope"] == "すべて"
+    }
+
+    for label in (
+        "A1 複合: スタグフレーション型（株安＋金利上昇）",
+        "A2 複合: 台湾サプライチェーン混乱",
+        "A3 複合: 円高ショック大（介入・金利差収斂）",
+        "A4 複合: AI決算失望",
+        "A5 複合: 原油供給ショック",
+    ):
+        assert label in impacts
+
+    # A1 shocks equity -10%, JGB +75bp, foreign rates +50bp, real estate -10%.
+    # Each component must equal the matching single-factor scenario, scaled linearly.
+    expected_a1 = (
+        impacts["株式全体 -10%"]
+        + impacts["日本金利 +100bp"] * 0.75
+        + impacts["海外金利 +100bp"] * 0.5
+        + impacts["不動産 -20%"] * 0.5
+    )
+    assert impacts["A1 複合: スタグフレーション型（株安＋金利上昇）"] == pytest.approx(expected_a1)
+    # A5 lifts energy, so the oil sleeve must offset part of the equity and rate damage.
+    assert impacts["A5 複合: 原油供給ショック"] > impacts["A1 複合: スタグフレーション型（株安＋金利上昇）"]
 
 
 @PRIVATE_DATA_ONLY

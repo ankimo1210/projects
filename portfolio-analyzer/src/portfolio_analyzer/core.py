@@ -152,6 +152,17 @@ class FactorScenario:
 
 
 @dataclass(frozen=True)
+class ScenarioEvent:
+    """A dated catalyst that a registered scenario is meant to describe."""
+
+    id: str
+    date: str
+    label: str
+    scenario_id: str | None
+    note: str
+
+
+@dataclass(frozen=True)
 class PolicyLimit:
     id: str
     label: str
@@ -167,6 +178,7 @@ class AnalysisReference:
     as_of: str
     instruments: dict[str, InstrumentReference]
     scenarios: tuple[FactorScenario, ...]
+    events: tuple[ScenarioEvent, ...]
     sources: tuple[dict[str, Any], ...]
     factor_definitions: dict[str, str]
     mutually_exclusive_factor_sets: tuple[tuple[str, ...], ...]
@@ -302,11 +314,22 @@ def load_analysis_reference(path: Path) -> AnalysisReference:
         )
         for row in raw["scenarios"]
     )
+    events = tuple(
+        ScenarioEvent(
+            id=str(row["id"]),
+            date=str(row["date"]),
+            label=str(row["label"]),
+            scenario_id=str(row["scenario_id"]) if row.get("scenario_id") else None,
+            note=str(row.get("note", "")),
+        )
+        for row in raw.get("events", [])
+    )
     reference = AnalysisReference(
         reference_name=str(raw["reference_name"]),
         as_of=str(raw["as_of"]),
         instruments=instruments,
         scenarios=scenarios,
+        events=events,
         sources=tuple(dict(source) for source in raw.get("sources", [])),
         factor_definitions={
             str(factor): str(definition)
@@ -551,6 +574,18 @@ def validate_analysis_reference(reference: AnalysisReference) -> list[str]:
             if len(active) > 1:
                 issues.append(f"mutually exclusive factors in {scenario.id}: {', '.join(active)}")
 
+    event_ids = [event.id for event in reference.events]
+    if len(event_ids) != len(set(event_ids)):
+        issues.append("event ids must be unique")
+    known_scenario_ids = set(scenario_ids)
+    for event in reference.events:
+        try:
+            date.fromisoformat(event.date)
+        except ValueError:
+            issues.append(f"invalid event date: {event.id}")
+        if event.scenario_id is not None and event.scenario_id not in known_scenario_ids:
+            issues.append(f"unknown scenario for event {event.id}: {event.scenario_id}")
+
     policy_ids = [limit.id for limit in reference.policy_limits]
     if len(policy_ids) != len(set(policy_ids)):
         issues.append("policy limit ids must be unique")
@@ -764,6 +799,7 @@ def _analysis_rows(
     factor_loadings: list[dict[str, Any]] = []
     valuations: list[dict[str, Any]] = []
     issuers: list[dict[str, Any]] = []
+    event_calendar: list[dict[str, Any]] = []
     summary_metrics: dict[str, dict[str, float | None]] = {}
 
     for scope, positions in _scopes(portfolio):
@@ -942,6 +978,7 @@ def _analysis_rows(
                 }
                 for factor, loading in sorted(instrument.factor_loadings.items())
             )
+        scenario_impacts: dict[str, tuple[Decimal, Decimal, str]] = {}
         for scenario in reference.scenarios:
             scenario_impact = Decimal()
             affected_value = Decimal()
@@ -975,6 +1012,11 @@ def _analysis_rows(
                     "assumption": scenario.assumption,
                 }
             )
+            scenario_impacts[scenario.id] = (
+                scenario_impact,
+                scenario_impact / total,
+                scenario.label,
+            )
             if scenario.kind == "compound":
                 compound_impact_ratios.append(scenario_impact / total)
             for _magnitude, symbol, impact in sorted(contributions, reverse=True):
@@ -988,6 +1030,22 @@ def _analysis_rows(
                         "portfolio_impact": _float(impact / total),
                     }
                 )
+
+        reference_date = date.fromisoformat(reference.as_of)
+        for event in sorted(reference.events, key=lambda item: (item.date, item.id)):
+            linked = scenario_impacts.get(event.scenario_id) if event.scenario_id else None
+            event_calendar.append(
+                {
+                    "scope": scope,
+                    "event_date": event.date,
+                    "days_until": (date.fromisoformat(event.date) - reference_date).days,
+                    "event": event.label,
+                    "scenario": linked[2] if linked else "対応シナリオ未登録",
+                    "impact_jpy": _float(linked[0]) if linked else None,
+                    "impact_ratio": _float(linked[1]) if linked else None,
+                    "note": event.note,
+                }
+            )
 
         summary_metrics[scope] = {
             "sector_coverage_ratio": (
@@ -1054,6 +1112,7 @@ def _analysis_rows(
             "factor_loadings": factor_loadings,
             "valuation_detail": valuations,
             "issuer_exposure": issuers,
+            "event_calendar": event_calendar,
         },
         summary_metrics,
     )
@@ -2346,6 +2405,30 @@ def _extend_analysis_manifest(
         ]
     )
 
+    if artifact["snapshot"]["datasets"].get("event_calendar"):
+        manifest["tables"].append(
+            {
+                "id": "event_calendar",
+                "title": "今後の既知イベント",
+                "subtitle": (
+                    f"参照データ基準日 {reference.as_of} からの日数と、対応シナリオの想定影響"
+                ),
+                "dataset": "event_calendar",
+                "sourceId": analysis_source_id,
+                "defaultSort": {"field": "days_until", "direction": "asc"},
+                "density": "compact",
+                "layout": "full",
+                "columns": [
+                    {"field": "event_date", "label": "日付", "type": "text"},
+                    {"field": "days_until", "label": "残日数", "format": "number"},
+                    {"field": "event", "label": "イベント", "type": "text"},
+                    {"field": "scenario", "label": "対応シナリオ", "type": "text"},
+                    {"field": "impact_ratio", "label": "想定影響", "format": "percent"},
+                    {"field": "note", "label": "注記", "type": "text"},
+                ],
+            }
+        )
+
     scenario_notes = "\n".join(
         f"- **{scenario.label}**: {scenario.assumption}" for scenario in reference.scenarios
     )
@@ -2425,6 +2508,18 @@ def _extend_analysis_manifest(
             "tableId": "sensitivity_details",
             "layout": "full",
         },
+        *(
+            [
+                {
+                    "id": "event_calendar_block",
+                    "type": "table",
+                    "tableId": "event_calendar",
+                    "layout": "full",
+                }
+            ]
+            if artifact["snapshot"]["datasets"].get("event_calendar")
+            else []
+        ),
         {
             "id": "factor_loadings_block",
             "type": "table",

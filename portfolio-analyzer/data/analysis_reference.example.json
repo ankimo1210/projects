@@ -75,6 +75,15 @@
       "assumption": "架空サンプルの複合ショック"
     }
   ],
+  "events": [
+    {
+      "id": "sample_event",
+      "date": "2026-09-01",
+      "label": "架空サンプルの決算イベント",
+      "scenario_id": "compound_sample",
+      "note": "eventsはdate・label必須、scenario_idは登録済みシナリオIDのみ"
+    }
+  ],
   "instruments": [
     {
       "symbol": "JP_EQ",
