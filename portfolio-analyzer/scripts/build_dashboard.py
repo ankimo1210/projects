@@ -18,11 +18,13 @@ from portfolio_analyzer import (
     apply_proposal,
     build_artifact,
     load_analysis_reference,
+    load_factor_risk,
     load_portfolio,
     validate_portfolio,
 )
 
 DEFAULT_REFERENCE = PROJECT_ROOT / "data/analysis_reference.private.json"
+DEFAULT_FACTOR_RISK = PROJECT_ROOT / "data/factor_estimates.json"
 
 
 def find_delivery_script() -> Path:
@@ -86,6 +88,17 @@ def parse_args() -> argparse.Namespace:
         help="optional trade proposal JSON for before/after comparison",
     )
     parser.add_argument(
+        "--factor-risk",
+        type=Path,
+        default=DEFAULT_FACTOR_RISK,
+        help="measured factor covariance from scripts/estimate_factors.py",
+    )
+    parser.add_argument(
+        "--no-factor-risk",
+        action="store_true",
+        help="skip the reverse stress test even when estimates are available",
+    )
+    parser.add_argument(
         "--no-analysis-reference",
         action="store_true",
         help="build only the basic allocation and stress dashboard",
@@ -130,6 +143,26 @@ def main() -> int:
             return 1
         else:
             print("WARNING: analysis reference not found; building basic dashboard")
+
+    factor_risk = None
+    factor_risk_source_path = "data/factor_estimates.json"
+    if analysis_reference is not None and not args.no_factor_risk:
+        if args.factor_risk.is_file():
+            factor_risk = load_factor_risk(args.factor_risk)
+            try:
+                factor_risk_source_path = (
+                    args.factor_risk.resolve().relative_to(PROJECT_ROOT).as_posix()
+                )
+            except ValueError:
+                factor_risk_source_path = "provided factor estimates JSON"
+        elif args.factor_risk != DEFAULT_FACTOR_RISK:
+            print(f"ERROR: factor estimates not found: {args.factor_risk}", file=sys.stderr)
+            return 1
+        else:
+            print(
+                "WARNING: factor estimates not found; skipping the reverse stress test. "
+                "Run scripts/estimate_factors.py to produce them."
+            )
     proposal = None
     proposal_source_path = "data/rebalancing-proposal.private.json"
     if args.proposal is not None:
@@ -144,9 +177,11 @@ def main() -> int:
     artifact = build_artifact(
         portfolio,
         analysis_reference=analysis_reference,
+        factor_risk=factor_risk,
         proposal=proposal,
         source_path=source_path,
         reference_source_path=reference_source_path,
+        factor_risk_source_path=factor_risk_source_path,
         proposal_source_path=proposal_source_path,
     )
     artifact_path.write_text(
