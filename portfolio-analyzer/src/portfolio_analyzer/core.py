@@ -14,6 +14,10 @@ ALLOWED_VALUE_STATUSES = {"exact", "estimated", "reconciliation"}
 ALLOWED_POSITION_TYPES = {"asset", "short", "liability", "hedge"}
 ALLOWED_VALUATION_BASIS_KINDS = {"trailing", "forward", "provider"}
 ALLOWED_SCENARIO_KINDS = {"single", "compound", "historical"}
+# Optional labels on issuer exposures. Each axis aggregates independently, so one issuer can sit
+# in a theme and in a value-chain layer at once without the two totals borrowing from each other.
+EXPOSURE_AXES = ("theme", "chain_role")
+EXPOSURE_AXIS_LABELS = {"theme": "テーマ", "chain_role": "バリューチェーン上の位置"}
 PERIODS_PER_YEAR = {"daily": Decimal("252"), "weekly": Decimal("52"), "monthly": Decimal("12")}
 SCENARIO_KIND_LABELS = {"single": "単一", "compound": "複合", "historical": "実測"}
 STATUS_LABELS = {
@@ -120,6 +124,7 @@ class Exposure:
     weight: Decimal
     mapped: bool
     theme: str | None = None
+    chain_role: str | None = None
 
 
 @dataclass(frozen=True)
@@ -337,6 +342,9 @@ def load_analysis_reference(path: Path) -> AnalysisReference:
                     weight=_decimal(exposure["weight"], "exposure.weight"),
                     mapped=bool(exposure.get("mapped", True)),
                     theme=str(exposure["theme"]) if exposure.get("theme") else None,
+                    chain_role=(
+                        str(exposure["chain_role"]) if exposure.get("chain_role") else None
+                    ),
                 )
                 for exposure in row.get("exposures", [])
             ),
@@ -743,6 +751,18 @@ def validate_analysis_reference(reference: AnalysisReference) -> list[str]:
             issues.append(
                 f"issuer exposure weights exceed 101%: {instrument.symbol} ({issuer_total:.4f})"
             )
+        misplaced_tags = [
+            f"{exposure.category}.{axis}"
+            for exposure in instrument.exposures
+            if exposure.group != "issuer"
+            for axis in EXPOSURE_AXES
+            if getattr(exposure, axis) is not None
+        ]
+        if misplaced_tags:
+            issues.append(
+                "aggregation tags are only read on issuer exposures: "
+                f"{instrument.symbol} ({', '.join(misplaced_tags)})"
+            )
         exposure_keys = [(exposure.group, exposure.category) for exposure in instrument.exposures]
         if len(exposure_keys) != len(set(exposure_keys)):
             issues.append(f"duplicate exposure category: {instrument.symbol}")
@@ -1011,7 +1031,7 @@ def _analysis_rows(
     valuations: list[dict[str, Any]] = []
     issuers: list[dict[str, Any]] = []
     event_calendar: list[dict[str, Any]] = []
-    themes: list[dict[str, Any]] = []
+    axis_rows: dict[str, list[dict[str, Any]]] = {axis: [] for axis in EXPOSURE_AXES}
     summary_metrics: dict[str, dict[str, float | None]] = {}
 
     for scope, positions in _scopes(portfolio):
@@ -1021,8 +1041,12 @@ def _analysis_rows(
 
         exposure_values: defaultdict[tuple[str, str, bool], Decimal] = defaultdict(Decimal)
         issuer_values: defaultdict[str, Decimal] = defaultdict(Decimal)
-        theme_values: defaultdict[str, Decimal] = defaultdict(Decimal)
-        theme_members: defaultdict[str, set[str]] = defaultdict(set)
+        axis_values: dict[str, defaultdict[str, Decimal]] = {
+            axis: defaultdict(Decimal) for axis in EXPOSURE_AXES
+        }
+        axis_members: dict[str, defaultdict[str, set[str]]] = {
+            axis: defaultdict(set) for axis in EXPOSURE_AXES
+        }
         equity_total = Decimal()
         by_symbol: defaultdict[str, Decimal] = defaultdict(Decimal)
         position_names: dict[str, str] = {}
@@ -1052,9 +1076,11 @@ def _analysis_rows(
                 )
             for exposure in issuer_exposures:
                 issuer_values[exposure.category] += position.market_value_jpy * exposure.weight
-                if exposure.theme:
-                    theme_values[exposure.theme] += position.market_value_jpy * exposure.weight
-                    theme_members[exposure.theme].add(exposure.category)
+                for axis in EXPOSURE_AXES:
+                    label = getattr(exposure, axis)
+                    if label:
+                        axis_values[axis][label] += position.market_value_jpy * exposure.weight
+                        axis_members[axis][label].add(exposure.category)
             residual = Decimal("1") - assigned
             if residual > Decimal("0.0001"):
                 exposure_values[("other", "未分類・残差", False)] += (
@@ -1123,17 +1149,23 @@ def _analysis_rows(
                 }
             )
 
-        for theme, value in sorted(theme_values.items(), key=lambda item: item[1], reverse=True):
-            themes.append(
-                {
-                    "scope": scope,
-                    "theme": theme,
-                    "market_value_jpy": _float(value),
-                    "portfolio_weight": _float(value / total),
-                    "issuer_count": len(theme_members[theme]),
-                    "issuers": "、".join(sorted(theme_members[theme])),
-                }
-            )
+        for axis in EXPOSURE_AXES:
+            for label, value in sorted(
+                axis_values[axis].items(), key=lambda item: item[1], reverse=True
+            ):
+                axis_rows[axis].append(
+                    {
+                        "scope": scope,
+                        axis: label,
+                        "market_value_jpy": _float(value),
+                        "portfolio_weight": _float(value / total),
+                        "known_issuer_weight": (
+                            _float(value / issuer_known_total) if issuer_known_total else None
+                        ),
+                        "issuer_count": len(axis_members[axis][label]),
+                        "issuers": "、".join(sorted(axis_members[axis][label])),
+                    }
+                )
 
         pe_value = Decimal()
         fresh_pe_value = Decimal()
@@ -1325,9 +1357,12 @@ def _analysis_rows(
             ),
             "sector_effective_count": _float(Decimal("1") / sector_hhi) if sector_hhi else None,
             "max_sector_ratio": _float(max_sector_value / total),
-            "largest_theme_ratio": (
-                _float(max(theme_values.values()) / total) if theme_values else None
-            ),
+            **{
+                f"largest_{axis}_ratio": (
+                    _float(max(axis_values[axis].values()) / total) if axis_values[axis] else None
+                )
+                for axis in EXPOSURE_AXES
+            },
             "issuer_coverage_ratio": (
                 _float(issuer_known_total / equity_total) if equity_total else None
             ),
@@ -1352,7 +1387,7 @@ def _analysis_rows(
             "factor_loadings": factor_loadings,
             "valuation_detail": valuations,
             "issuer_exposure": issuers,
-            "theme_exposure": themes,
+            **{f"{axis}_exposure": axis_rows[axis] for axis in EXPOSURE_AXES},
             "event_calendar": event_calendar,
         },
         summary_metrics,
@@ -2934,6 +2969,104 @@ def _extend_analysis_manifest(
             }
         )
 
+    if artifact["snapshot"]["datasets"].get("chain_role_exposure"):
+        manifest["cards"].append(
+            {
+                "id": "largest_chain_role",
+                "description": (
+                    "同じテーマでも、チェーンのどの層に寄っているかで景気感応度が変わる。"
+                    "最も厚い層の比率。"
+                ),
+                "dataset": "summary",
+                "sourceId": analysis_source_id,
+                "metrics": [
+                    {
+                        "label": "最大チェーン層比率",
+                        "field": "largest_chain_role_ratio",
+                        "format": "percent",
+                    }
+                ],
+            }
+        )
+        next(block for block in manifest["blocks"] if block["id"] == "metrics")["cardIds"].append(
+            "largest_chain_role"
+        )
+        manifest["charts"].append(
+            {
+                "id": "chain_role_exposure",
+                "title": "バリューチェーン上の位置ごとのエクスポージャー",
+                "subtitle": (
+                    "設備投資を受け取る層と支払う層のどちらに寄っているか。"
+                    "発行体を開示している部分だけの集計なので下限値"
+                ),
+                "intent": "comparison",
+                "question": "テーマの中で、需要サイクルのどの層に賭けているか",
+                "rationale": "層の名前が長く本数も少ないため、横棒で厚みの差を直接比べる。",
+                "comparisonContext": {
+                    "denominator": "選択範囲の総資産",
+                    "grain": "チェーン層",
+                    "unit": "JPY",
+                },
+                "type": "horizontalBar",
+                "dataset": "chain_role_exposure",
+                "sourceId": analysis_source_id,
+                "encodings": {
+                    "x": {"field": "chain_role", "type": "nominal", "label": "チェーン層"},
+                    "y": {
+                        "field": "market_value_jpy",
+                        "type": "quantitative",
+                        "label": "確認済み評価額",
+                        "format": "currency",
+                    },
+                    "tooltip": [
+                        {
+                            "field": "portfolio_weight",
+                            "type": "quantitative",
+                            "label": "総資産比",
+                            "format": "percent",
+                        },
+                        {
+                            "field": "issuers",
+                            "type": "nominal",
+                            "label": "内訳",
+                        },
+                    ],
+                },
+                "valueFormat": "currency",
+                "unit": "JPY",
+                "layout": "full",
+                "palette": {"kind": "sequential", "name": "blue"},
+                "settings": {"sort": "descending", "showValues": True},
+            }
+        )
+        manifest["tables"].append(
+            {
+                "id": "chain_role_exposure",
+                "title": "バリューチェーン別の合算エクスポージャー",
+                "subtitle": (
+                    "同じ「情報技術」でも、装置・半導体・需要側のどこにいるかで景気感応度が違う。"
+                    "発行体を開示している部分だけの集計なので下限値"
+                ),
+                "dataset": "chain_role_exposure",
+                "sourceId": analysis_source_id,
+                "defaultSort": {"field": "market_value_jpy", "direction": "desc"},
+                "density": "compact",
+                "layout": "full",
+                "columns": [
+                    {"field": "chain_role", "label": "チェーン層", "type": "text"},
+                    {"field": "market_value_jpy", "label": "評価額", "format": "currency"},
+                    {"field": "portfolio_weight", "label": "総資産比", "format": "percent"},
+                    {
+                        "field": "known_issuer_weight",
+                        "label": "確認済み発行体内シェア",
+                        "format": "percent",
+                    },
+                    {"field": "issuer_count", "label": "銘柄数", "format": "number"},
+                    {"field": "issuers", "label": "内訳", "type": "text"},
+                ],
+            }
+        )
+
     if artifact["snapshot"]["datasets"].get("correlation_monitor"):
         manifest["charts"].append(
             {
@@ -3076,6 +3209,40 @@ def _extend_analysis_manifest(
                 }
             ]
             if artifact["snapshot"]["datasets"].get("theme_exposure")
+            else []
+        ),
+        *(
+            [
+                {
+                    "id": "chain_role_exposure_block",
+                    "type": "chart",
+                    "chartId": "chain_role_exposure",
+                    "layout": "full",
+                },
+                {
+                    "id": "chain_role_exposure_table_block",
+                    "type": "table",
+                    "tableId": "chain_role_exposure",
+                    "layout": "full",
+                },
+                {
+                    "id": "chain_role_note",
+                    "type": "markdown",
+                    "body": (
+                        "## テーマとバリューチェーンは別の軸\n\n"
+                        "テーマ別の集計は「同じ材料で動く銘柄群」を束ねますが、"
+                        "**同じテーマの中でも、チェーンのどの層にいるかで景気感応度が変わります。**"
+                        "製造装置は設備投資そのものが需要なので、"
+                        "投資が緩む局面で受注が最初に、最も大きく落ちます。\n\n"
+                        "設備投資を**受け取る側**（装置・半導体）と**支払う側**"
+                        "（需要側プラットフォーム）の厚みが偏っていると、"
+                        "投資サイクルが反転したときに相殺が効きません。"
+                        "両方の集計とも発行体を開示している部分だけなので、実際の比率はこれ以上です。"
+                    ),
+                    "sourceId": analysis_source_id,
+                },
+            ]
+            if artifact["snapshot"]["datasets"].get("chain_role_exposure")
             else []
         ),
         *(

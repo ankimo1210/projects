@@ -96,8 +96,14 @@
         {"group": "sector", "category": "資本財・サービス", "weight": 0.3},
         {"group": "sector", "category": "金融", "weight": 0.2},
         {"group": "sector", "category": "その他・未分類株式", "weight": 0.2, "mapped": false},
-        {"group": "issuer", "category": "Sample Technology", "weight": 0.25},
-        {"group": "issuer", "category": "Sample Industrials", "weight": 0.2}
+        {
+          "group": "issuer",
+          "category": "Sample Technology",
+          "weight": 0.25,
+          "theme": "サンプルテーマ",
+          "chain_role": "製造装置"
+        },
+        {"group": "issuer", "category": "Sample Industrials", "weight": 0.2, "chain_role": "需要側"}
       ],
       "factor_loadings": {"株式全体": 1, "日本株": 1, "情報技術": 0.3},
       "valuation": {

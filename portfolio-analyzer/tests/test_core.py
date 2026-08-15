@@ -669,6 +669,66 @@ def test_theme_exposure_aggregates_one_bet_across_products() -> None:
     assert summary["largest_theme_ratio"] == pytest.approx(theme["portfolio_weight"])
 
 
+def test_chain_role_is_a_second_axis_that_does_not_borrow_from_theme() -> None:
+    portfolio = load_portfolio(EXAMPLE_DATA)
+    reference = load_analysis_reference(EXAMPLE_REFERENCE)
+    artifact = build_artifact(
+        portfolio,
+        analysis_reference=reference,
+        generated_at="2026-08-15T00:00:00+00:00",
+    )
+    datasets = artifact["snapshot"]["datasets"]
+    summary = next(row for row in datasets["summary"] if row["scope"] == "すべて")
+    roles = {
+        row["chain_role"]: row for row in datasets["chain_role_exposure"] if row["scope"] == "すべて"
+    }
+    theme = next(row for row in datasets["theme_exposure"] if row["scope"] == "すべて")
+
+    # Sample Industrials carries a chain role but no theme, so the two axes must not agree.
+    assert set(roles) == {"製造装置", "需要側"}
+    assert theme["issuers"] == "Sample Technology"
+    assert roles["需要側"]["issuers"] == "Sample Industrials"
+    assert roles["製造装置"]["market_value_jpy"] > roles["需要側"]["market_value_jpy"]
+    assert summary["largest_chain_role_ratio"] == pytest.approx(roles["製造装置"]["portfolio_weight"])
+    # Roles are shares of the disclosed issuer base, which the whole portfolio exceeds.
+    assert sum(row["known_issuer_weight"] for row in roles.values()) == pytest.approx(1.0)
+
+
+def test_axis_tags_outside_the_issuer_layer_are_rejected() -> None:
+    reference = load_analysis_reference(EXAMPLE_REFERENCE)
+    instrument = reference.instruments["JP_EQ"]
+    sector = next(exposure for exposure in instrument.exposures if exposure.group == "sector")
+    others = tuple(exposure for exposure in instrument.exposures if exposure is not sector)
+    tagged = replace(instrument, exposures=(replace(sector, chain_role="製造装置"), *others))
+    invalid = replace(reference, instruments={**reference.instruments, "JP_EQ": tagged})
+
+    issues = validate_analysis_reference(invalid)
+
+    assert any("chain_role" in issue and "JP_EQ" in issue for issue in issues)
+
+
+@PRIVATE_ANALYSIS_ONLY
+def test_private_chain_roles_split_the_ai_theme_by_value_chain() -> None:
+    portfolio = load_portfolio(PRIVATE_DATA)
+    reference = load_analysis_reference(PRIVATE_REFERENCE)
+    artifact = build_artifact(
+        portfolio,
+        analysis_reference=reference,
+        generated_at="2026-08-15T00:00:00+00:00",
+    )
+    datasets = artifact["snapshot"]["datasets"]
+    roles = {
+        row["chain_role"]: row for row in datasets["chain_role_exposure"] if row["scope"] == "すべて"
+    }
+    equipment = roles["半導体製造・検査装置"]
+
+    assert "Advantest" in equipment["issuers"]
+    assert "Tokyo Electron" in equipment["issuers"]
+    # The whole point of the split: the capex receivers dwarf the capex payers.
+    assert equipment["portfolio_weight"] > 10 * roles["需要側プラットフォーム"]["portfolio_weight"]
+    assert equipment["portfolio_weight"] > roles["ロジック半導体"]["portfolio_weight"]
+
+
 @PRIVATE_DATA_ONLY
 def test_dc_account_pnl_is_arithmetically_reconciled_but_caveated() -> None:
     portfolio = load_portfolio(PRIVATE_DATA)
