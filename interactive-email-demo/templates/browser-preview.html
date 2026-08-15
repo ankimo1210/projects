@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>{{SUBJECT}} — browser preview</title>
+    <style>
+      :root{font-family:Arial,sans-serif;color:#142033;background:#f3f6fa}
+      *{box-sizing:border-box}
+      body{margin:0;padding:24px}
+      main{max-width:680px;margin:auto;background:#fff;border:1px solid #dbe3ee;border-radius:12px;overflow:hidden}
+      header{padding:24px;background:#102a43;color:#fff}
+      header small{color:#9fb3c8;font-weight:700;letter-spacing:1.2px;text-transform:uppercase}
+      h1{margin:7px 0 0;font-size:25px}
+      .content{padding:24px}
+      .summary{line-height:1.55;color:#334e68}
+      .controls{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 12px}
+      button{padding:9px 13px;border:1px solid #bcccdc;border-radius:6px;background:#fff;color:#243b53;font-weight:700;cursor:pointer}
+      button[aria-pressed="true"]{border-color:#137c8b;background:#e6fffa;color:#0f5964}
+      .chart{padding:18px;border:1px solid #dbe3ee;border-radius:8px}
+      .headline{font-size:28px;font-weight:700}.comparison{margin:4px 0 18px;color:#627d98;font-size:13px}
+      .row{display:grid;grid-template-columns:40px 1fr 78px;align-items:center;gap:8px;margin:10px 0;font-size:12px}
+      .track{height:18px;background:#edf2f7;border-radius:3px;overflow:hidden}.bar{height:100%;background:#137c8b;transition:width .3s ease}
+      .value{font-weight:700}.axis-note{text-align:right;color:#829ab1;font-size:11px}
+      .action{margin-top:18px;padding:14px 16px;border-left:4px solid #f0b429;background:#fffbea;color:#513c06;line-height:1.45}
+      .hint{margin:12px 0 0;color:#829ab1;font-size:11px}
+    </style>
+  </head>
+  <body>
+    <main>
+      <header><small>Browser preview · {{REPORT_DATE}}</small><h1>Sales performance pulse</h1></header>
+      <section class="content">
+        <p class="summary">{{SUMMARY}}</p>
+        <div id="controls" class="controls" aria-label="Choose a metric"></div>
+        <section class="chart" aria-live="polite">
+          <div id="headline" class="headline"></div>
+          <div id="comparison" class="comparison"></div>
+          <div id="bars"></div>
+          <div id="axis-note" class="axis-note"></div>
+        </section>
+        <div class="action"><strong>Next action</strong><br>{{ACTION}}</div>
+        <p class="hint">This preview mirrors the state change used by the AMP email.</p>
+      </section>
+    </main>
+    <script>
+      const report = {{REPORT_JSON}};
+      const controls = document.getElementById('controls');
+      const headline = document.getElementById('headline');
+      const comparison = document.getElementById('comparison');
+      const bars = document.getElementById('bars');
+      const axisNote = document.getElementById('axis-note');
+
+      function render(metricId) {
+        const metric = report.metrics.find(item => item.id === metricId);
+        const max = Math.max(...metric.values.map(item => item.value), 1);
+        headline.textContent = metric.headline;
+        comparison.textContent = metric.comparison;
+        axisNote.textContent = `Scale: 0–${max} ${metric.unit}`;
+        bars.replaceChildren(...metric.values.map(item => {
+          const row = document.createElement('div');
+          row.className = 'row';
+          const label = document.createElement('span');
+          label.textContent = item.label;
+          const track = document.createElement('div');
+          track.className = 'track';
+          const bar = document.createElement('div');
+          bar.className = 'bar';
+          bar.style.width = `${Math.round(item.value / max * 100)}%`;
+          track.append(bar);
+          const value = document.createElement('span');
+          value.className = 'value';
+          value.textContent = `${item.value} ${metric.unit}`;
+          row.append(label, track, value);
+          return row;
+        }));
+        controls.querySelectorAll('button').forEach(button => {
+          button.setAttribute('aria-pressed', String(button.dataset.metric === metricId));
+        });
+      }
+
+      report.metrics.forEach((metric, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.dataset.metric = metric.id;
+        button.textContent = metric.label;
+        button.setAttribute('aria-pressed', String(index === 0));
+        button.addEventListener('click', () => render(metric.id));
+        controls.append(button);
+      });
+      render(report.metrics[0].id);
+    </script>
+  </body>
+</html>
+

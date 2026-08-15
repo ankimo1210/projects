@@ -1,0 +1,55 @@
+{
+  "subject": "Weekly Sales Pulse — 8 Aug 2026",
+  "report_date": "8 Aug 2026",
+  "summary": "Revenue improved, but conversion pressure is reducing margin. Mobile checkout remains the largest actionable gap.",
+  "action": "Owner: Tanaka · Review mobile checkout funnel · Due: 11 Aug",
+  "dashboard_url": "https://example.com/reports/weekly-sales",
+  "metrics": [
+    {
+      "id": "revenue",
+      "label": "Revenue",
+      "headline": "¥12.4M",
+      "comparison": "+8% week over week · 96% of target",
+      "unit": "¥M",
+      "values": [
+        {"label": "Mar", "value": 8.4},
+        {"label": "Apr", "value": 9.1},
+        {"label": "May", "value": 10.2},
+        {"label": "Jun", "value": 10.8},
+        {"label": "Jul", "value": 11.5},
+        {"label": "Aug", "value": 12.4}
+      ]
+    },
+    {
+      "id": "orders",
+      "label": "Orders",
+      "headline": "842",
+      "comparison": "+3% week over week · 101% of target",
+      "unit": "orders",
+      "values": [
+        {"label": "Mar", "value": 690},
+        {"label": "Apr", "value": 715},
+        {"label": "May", "value": 744},
+        {"label": "Jun", "value": 790},
+        {"label": "Jul", "value": 817},
+        {"label": "Aug", "value": 842}
+      ]
+    },
+    {
+      "id": "margin",
+      "label": "Margin",
+      "headline": "31.8%",
+      "comparison": "−1.4 points week over week · below target",
+      "unit": "%",
+      "values": [
+        {"label": "Mar", "value": 35.2},
+        {"label": "Apr", "value": 34.8},
+        {"label": "May", "value": 34.1},
+        {"label": "Jun", "value": 33.7},
+        {"label": "Jul", "value": 33.2},
+        {"label": "Aug", "value": 31.8}
+      ]
+    }
+  ]
+}
+
