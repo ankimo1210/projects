@@ -1,0 +1,65 @@
+{
+  "snapshot_name": "架空サンプル",
+  "base_currency": "JPY",
+  "accounts": [
+    {
+      "id": "sample_nisa",
+      "name": "サンプル NISA",
+      "as_of": "2026-08-14",
+      "total_value_jpy": 5000000,
+      "unrealized_pnl_jpy": 400000,
+      "daily_pnl_jpy": null,
+      "quality_note": "架空データ"
+    },
+    {
+      "id": "sample_dc",
+      "name": "サンプル DC",
+      "as_of": "2026-08-14",
+      "total_value_jpy": 3000000,
+      "unrealized_pnl_jpy": 300000,
+      "daily_pnl_jpy": null,
+      "quality_note": "架空データ"
+    }
+  ],
+  "positions": [
+    {
+      "account_id": "sample_nisa",
+      "symbol": "JP_EQ",
+      "name": "国内株式インデックス",
+      "asset_class": "日本株",
+      "currency": "JPY",
+      "quantity": 1,
+      "price": 3500000,
+      "fx_rate": 1,
+      "market_value_jpy": 3500000,
+      "value_status": "exact",
+      "source_note": "架空データ"
+    },
+    {
+      "account_id": "sample_nisa",
+      "symbol": "CASH_JPY",
+      "name": "円現金",
+      "asset_class": "現金",
+      "currency": "JPY",
+      "quantity": null,
+      "price": null,
+      "fx_rate": 1,
+      "market_value_jpy": 1500000,
+      "value_status": "exact",
+      "source_note": "架空データ"
+    },
+    {
+      "account_id": "sample_dc",
+      "symbol": "BALANCED",
+      "name": "バランスファンド",
+      "asset_class": "バランス型",
+      "currency": "JPY",
+      "quantity": 1,
+      "price": 3000000,
+      "fx_rate": 1,
+      "market_value_jpy": 3000000,
+      "value_status": "exact",
+      "source_note": "架空データ"
+    }
+  ]
+}

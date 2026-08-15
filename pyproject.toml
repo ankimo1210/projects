@@ -39,6 +39,7 @@ members = [
     "rough_volatility",
     "jp_llm_lab",
     "market_nn",
+    "portfolio-analyzer",
 ]
 
 # PyTorch CUDA 12.8 — used by `gto`. Defined here so all workspace members
