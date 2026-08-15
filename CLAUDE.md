@@ -1,6 +1,6 @@
 # CLAUDE.md — projects workspace
 
-The canonical workspace guide is [`AGENTS.md`](AGENTS.md) — follow it
+The canonical workspace guide is @AGENTS.md — follow it
 (Workspace Policy, uv workspace usage, docs layers).
 
 Claude-specific notes:
