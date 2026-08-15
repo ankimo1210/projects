@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>{{SUBJECT}}</title>
+  </head>
+  <body style="margin:0;background:#f3f6fa;color:#142033;font-family:Arial,sans-serif">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f3f6fa">
+      <tr>
+        <td align="center" style="padding:24px 8px">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:680px;background:#fff;border:1px solid #dbe3ee">
+            <tr>
+              <td style="padding:24px;background:#102a43;color:#fff">
+                <div style="font-size:12px;font-weight:bold;letter-spacing:1.2px;color:#9fb3c8">WEEKLY REPORT · {{REPORT_DATE}}</div>
+                <div style="margin-top:7px;font-size:25px;font-weight:bold">Sales performance pulse</div>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:24px">
+                <p style="margin:0 0 18px;line-height:1.55;color:#334e68">{{SUMMARY}}</p>
+                {{FALLBACK_PANEL}}
+                <div style="margin-top:18px;padding:14px 16px;border-left:4px solid #f0b429;background:#fffbea;color:#513c06;line-height:1.45">
+                  <strong>Next action</strong><br>{{ACTION}}
+                </div>
+                <p style="margin:20px 0 0">
+                  <a href="{{DASHBOARD_URL}}" style="display:inline-block;padding:11px 16px;background:#137c8b;color:#fff;text-decoration:none;font-weight:bold">Open interactive report</a>
+                </p>
+                <p style="margin:12px 0 0;font-size:11px;color:#829ab1">Your email client is showing the static fallback. Use the report link for filters and drill-down.</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
+
