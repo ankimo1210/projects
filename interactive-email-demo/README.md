@@ -76,4 +76,3 @@ python3 scripts/build_email.py --data my-report.json --output-dir dist/my-report
 ```
 
 各 `metrics[].id` は小文字英数字とハイフン、`values[].value` は0以上の数値にします。
-
