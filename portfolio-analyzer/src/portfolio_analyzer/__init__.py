@@ -1,6 +1,8 @@
 """Local multi-account portfolio analysis."""
 
 from .core import (
+    ProposalResult,
+    apply_proposal,
     build_artifact,
     load_analysis_reference,
     load_portfolio,
@@ -9,6 +11,8 @@ from .core import (
 )
 
 __all__ = [
+    "ProposalResult",
+    "apply_proposal",
     "build_artifact",
     "load_analysis_reference",
     "load_portfolio",

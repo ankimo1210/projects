@@ -15,6 +15,7 @@ WORKSPACE_ROOT = PROJECT_ROOT.parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from portfolio_analyzer import (
+    apply_proposal,
     build_artifact,
     load_analysis_reference,
     load_portfolio,
@@ -80,6 +81,11 @@ def parse_args() -> argparse.Namespace:
         help="look-through, sensitivity, and valuation reference JSON",
     )
     parser.add_argument(
+        "--proposal",
+        type=Path,
+        help="optional trade proposal JSON for before/after comparison",
+    )
+    parser.add_argument(
         "--no-analysis-reference",
         action="store_true",
         help="build only the basic allocation and stress dashboard",
@@ -124,11 +130,24 @@ def main() -> int:
             return 1
         else:
             print("WARNING: analysis reference not found; building basic dashboard")
+    proposal = None
+    proposal_source_path = "data/rebalancing-proposal.private.json"
+    if args.proposal is not None:
+        if not args.proposal.is_file():
+            print(f"ERROR: proposal not found: {args.proposal}", file=sys.stderr)
+            return 1
+        proposal = apply_proposal(portfolio, args.proposal)
+        try:
+            proposal_source_path = args.proposal.resolve().relative_to(PROJECT_ROOT).as_posix()
+        except ValueError:
+            proposal_source_path = "provided proposal JSON"
     artifact = build_artifact(
         portfolio,
         analysis_reference=analysis_reference,
+        proposal=proposal,
         source_path=source_path,
         reference_source_path=reference_source_path,
+        proposal_source_path=proposal_source_path,
     )
     artifact_path.write_text(
         json.dumps(artifact, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
@@ -138,7 +157,18 @@ def main() -> int:
     if args.artifact_only:
         return 0
 
-    portable_scripts = find_delivery_script().parent
+    try:
+        delivery_script = find_delivery_script()
+    except FileNotFoundError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        print(
+            "Run again with --artifact-only to produce validated input without HTML packaging.",
+            file=sys.stderr,
+        )
+        return 1
+    portable_scripts = delivery_script.parent
+    plugin_version = delivery_script.parents[3].name
+    print(f"portable builder: data-analytics/{plugin_version}")
     build_result = subprocess.run(
         [
             "node",

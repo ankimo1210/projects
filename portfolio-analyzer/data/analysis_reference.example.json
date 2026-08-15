@@ -1,6 +1,47 @@
 {
   "reference_name": "架空サンプル分析参照データ",
   "as_of": "2026-08-14",
+  "factor_definitions": {
+    "株式全体": "架空サンプルの市場βショック。",
+    "日本株": "架空サンプルの日本株単独ショック。",
+    "情報技術": "架空サンプルの情報技術超過ショック。",
+    "日本金利": "架空サンプルの日本金利ショック。"
+  },
+  "mutually_exclusive_factor_sets": [
+    [
+      "株式全体",
+      "日本株"
+    ]
+  ],
+  "policy": {
+    "status": "sample",
+    "limits": [
+      {
+        "id": "single_position_max",
+        "label": "単一ポジションは60%以下",
+        "metric": "largest_position_ratio",
+        "operator": "<=",
+        "threshold": 0.6,
+        "note": "架空サンプル"
+      },
+      {
+        "id": "sector_min",
+        "label": "実効セクター数は2以上",
+        "metric": "sector_effective_count",
+        "operator": ">=",
+        "threshold": 2,
+        "note": "架空サンプル"
+      },
+      {
+        "id": "drawdown_max",
+        "label": "複合ショック下落率は15%以下",
+        "metric": "worst_compound_drawdown",
+        "operator": "<=",
+        "threshold": 0.15,
+        "note": "架空サンプル"
+      }
+    ]
+  },
   "sources": [
     {
       "id": "synthetic_reference",
@@ -25,6 +66,13 @@
       "label": "日本金利 +100bp",
       "shocks": {"日本金利": 0.01},
       "assumption": "修正デュレーションによる一次近似"
+    },
+    {
+      "id": "compound_sample",
+      "label": "複合: 株式-8%・IT超過-10%",
+      "kind": "compound",
+      "shocks": {"株式全体": -0.08, "情報技術": -0.1},
+      "assumption": "架空サンプルの複合ショック"
     }
   ],
   "instruments": [
@@ -38,7 +86,9 @@
         {"group": "sector", "category": "情報技術", "weight": 0.3},
         {"group": "sector", "category": "資本財・サービス", "weight": 0.3},
         {"group": "sector", "category": "金融", "weight": 0.2},
-        {"group": "sector", "category": "その他・未分類株式", "weight": 0.2, "mapped": false}
+        {"group": "sector", "category": "その他・未分類株式", "weight": 0.2, "mapped": false},
+        {"group": "issuer", "category": "Sample Technology", "weight": 0.25},
+        {"group": "issuer", "category": "Sample Industrials", "weight": 0.2}
       ],
       "factor_loadings": {"株式全体": 1, "日本株": 1, "情報技術": 0.3},
       "valuation": {
@@ -46,6 +96,7 @@
         "basis": "架空のポートフォリオPER",
         "as_of": "2026-08-14",
         "quality": "current",
+        "basis_kind": "provider",
         "method": "架空データ",
         "note": "分析機能の動作確認用"
       }
