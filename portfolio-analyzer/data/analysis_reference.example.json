@@ -1,0 +1,73 @@
+{
+  "reference_name": "架空サンプル分析参照データ",
+  "as_of": "2026-08-14",
+  "sources": [
+    {
+      "id": "synthetic_reference",
+      "label": "架空サンプルの参照値"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "global_equity_down_10",
+      "label": "株式全体 -10%",
+      "shocks": {"株式全体": -0.1},
+      "assumption": "実効株式部分だけが一律10%下落"
+    },
+    {
+      "id": "technology_down_20",
+      "label": "情報技術 -20%",
+      "shocks": {"情報技術": -0.2},
+      "assumption": "情報技術部分だけが20%下落"
+    },
+    {
+      "id": "japan_yield_up_100bp",
+      "label": "日本金利 +100bp",
+      "shocks": {"日本金利": 0.01},
+      "assumption": "修正デュレーションによる一次近似"
+    }
+  ],
+  "instruments": [
+    {
+      "symbol": "JP_EQ",
+      "label": "国内株式インデックス",
+      "as_of": "2026-08-14",
+      "source_ids": ["synthetic_reference"],
+      "note": "架空データ",
+      "exposures": [
+        {"group": "sector", "category": "情報技術", "weight": 0.3},
+        {"group": "sector", "category": "資本財・サービス", "weight": 0.3},
+        {"group": "sector", "category": "金融", "weight": 0.2},
+        {"group": "sector", "category": "その他・未分類株式", "weight": 0.2, "mapped": false}
+      ],
+      "factor_loadings": {"株式全体": 1, "日本株": 1, "情報技術": 0.3},
+      "valuation": {
+        "pe": 18.5,
+        "basis": "架空のポートフォリオPER",
+        "as_of": "2026-08-14",
+        "quality": "current",
+        "method": "架空データ",
+        "note": "分析機能の動作確認用"
+      }
+    },
+    {
+      "symbol": "BALANCED",
+      "label": "バランスファンド",
+      "as_of": "2026-08-14",
+      "source_ids": ["synthetic_reference"],
+      "note": "架空データ",
+      "exposures": [
+        {"group": "sector", "category": "情報技術", "weight": 0.15},
+        {"group": "sector", "category": "資本財・サービス", "weight": 0.15},
+        {"group": "asset", "category": "日本債券", "weight": 0.5},
+        {"group": "asset", "category": "現金等", "weight": 0.2}
+      ],
+      "factor_loadings": {
+        "株式全体": 0.3,
+        "日本株": 0.3,
+        "情報技術": 0.15,
+        "日本金利": -3.25
+      }
+    }
+  ]
+}
