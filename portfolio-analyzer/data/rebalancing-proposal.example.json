@@ -1,0 +1,14 @@
+{
+  "proposal_name": "架空サンプルの株式縮小",
+  "assumptions": [
+    "架空データ",
+    "税・手数料を除く"
+  ],
+  "trades": [
+    {
+      "account_id": "sample_nisa",
+      "symbol": "JP_EQ",
+      "quantity_delta": -0.2
+    }
+  ]
+}

@@ -178,6 +178,7 @@ testpaths = [
     "analytics/quant_research/tests",
     "quantkit/tests",
     "optimal_execution/tests",
+    "portfolio-analyzer/tests",
     "rough_volatility/tests",
     "jp_llm_lab/tests",
     "shortest_path/tests",
