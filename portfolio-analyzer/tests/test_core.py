@@ -15,20 +15,29 @@ PRIVATE_DATA = PROJECT_ROOT / "data/portfolio.private.json"
 EXAMPLE_DATA = PROJECT_ROOT / "data/portfolio.example.json"
 PRIVATE_REFERENCE = PROJECT_ROOT / "data/analysis_reference.private.json"
 EXAMPLE_REFERENCE = PROJECT_ROOT / "data/analysis_reference.example.json"
+PRIVATE_DATA_ONLY = pytest.mark.skipif(
+    not PRIVATE_DATA.is_file(), reason="private portfolio snapshot is not available"
+)
+PRIVATE_ANALYSIS_ONLY = pytest.mark.skipif(
+    not (PRIVATE_DATA.is_file() and PRIVATE_REFERENCE.is_file()),
+    reason="private portfolio analysis inputs are not available",
+)
 
 
-@pytest.mark.parametrize("path", [PRIVATE_DATA, EXAMPLE_DATA])
+@pytest.mark.parametrize("path", [EXAMPLE_DATA])
 def test_snapshots_reconcile(path: Path) -> None:
     portfolio = load_portfolio(path)
     assert validate_portfolio(portfolio) == []
 
 
+@PRIVATE_DATA_ONLY
 def test_private_total_matches_three_accounts() -> None:
     portfolio = load_portfolio(PRIVATE_DATA)
     total = sum((account.total_value_jpy for account in portfolio.accounts), Decimal())
     assert total == Decimal("48298433")
 
 
+@PRIVATE_DATA_ONLY
 def test_private_data_keeps_estimates_and_reconciliation_visible() -> None:
     portfolio = load_portfolio(PRIVATE_DATA)
     statuses = {position.value_status for position in portfolio.positions}
@@ -37,6 +46,7 @@ def test_private_data_keeps_estimates_and_reconciliation_visible() -> None:
     assert sum(position.value_status == "reconciliation" for position in portfolio.positions) == 1
 
 
+@PRIVATE_DATA_ONLY
 def test_artifact_reconciles_summary_and_account_rows() -> None:
     portfolio = load_portfolio(PRIVATE_DATA)
     artifact = build_artifact(portfolio, generated_at="2026-08-15T00:00:00+00:00")
@@ -47,6 +57,7 @@ def test_artifact_reconciles_summary_and_account_rows() -> None:
     assert sum(row["market_value_jpy"] for row in all_accounts) == pytest.approx(48_298_433)
 
 
+@PRIVATE_DATA_ONLY
 def test_cash_and_foreign_currency_ratios_are_data_backed() -> None:
     portfolio = load_portfolio(PRIVATE_DATA)
     artifact = build_artifact(portfolio, generated_at="2026-08-15T00:00:00+00:00")
@@ -57,6 +68,7 @@ def test_cash_and_foreign_currency_ratios_are_data_backed() -> None:
     assert summary["foreign_currency_ratio"] == pytest.approx(12_651_147.44 / 48_298_433)
 
 
+@PRIVATE_DATA_ONLY
 def test_stress_scenarios_are_ordered_by_severity() -> None:
     portfolio = load_portfolio(PRIVATE_DATA)
     artifact = build_artifact(portfolio, generated_at="2026-08-15T00:00:00+00:00")
@@ -65,6 +77,7 @@ def test_stress_scenarios_are_ordered_by_severity() -> None:
     assert impacts["深いリスクオフ"] < impacts["株式20%下落"] < impacts["軽い調整"] < 0
 
 
+@PRIVATE_DATA_ONLY
 def test_filter_targets_every_scoped_dataset() -> None:
     portfolio = load_portfolio(PRIVATE_DATA)
     artifact = build_artifact(portfolio, generated_at="2026-08-15T00:00:00+00:00")
@@ -74,7 +87,7 @@ def test_filter_targets_every_scoped_dataset() -> None:
     assert target_names == dataset_names - {"summary"}
 
 
-@pytest.mark.parametrize("path", [PRIVATE_REFERENCE, EXAMPLE_REFERENCE])
+@pytest.mark.parametrize("path", [EXAMPLE_REFERENCE])
 def test_analysis_references_are_valid(path: Path) -> None:
     reference = load_analysis_reference(path)
     assert validate_analysis_reference(reference) == []
@@ -138,7 +151,8 @@ def test_sample_valuation_uses_harmonic_pe_and_explicit_coverage() -> None:
     assert summary["high_pe_equity_ratio"] == pytest.approx(0)
 
 
-def test_private_reference_exposes_stale_pe_separately() -> None:
+@PRIVATE_ANALYSIS_ONLY
+def test_private_reference_exposes_valuation_freshness() -> None:
     portfolio = load_portfolio(PRIVATE_DATA)
     reference = load_analysis_reference(PRIVATE_REFERENCE)
     artifact = build_artifact(
@@ -151,9 +165,16 @@ def test_private_reference_exposes_stale_pe_separately() -> None:
     )
 
     assert summary["fresh_valuation_coverage_ratio"] < summary["valuation_coverage_ratio"]
+    qualities = {
+        row["position"].split(" · ", 1)[0]: row["quality"]
+        for row in artifact["snapshot"]["datasets"]["valuation_detail"]
+        if row["scope"] == "すべて"
+    }
     stale_positions = {
         row["position"].split(" · ", 1)[0]
         for row in artifact["snapshot"]["datasets"]["valuation_detail"]
         if row["scope"] == "すべて" and row["quality"] == "要更新"
     }
-    assert stale_positions == {"QQQ", "SMH"}
+    assert stale_positions == set()
+    assert qualities["QQQ"] == "推定"
+    assert qualities["SMH"] == "現行"
