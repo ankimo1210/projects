@@ -4,11 +4,15 @@ from pathlib import Path
 
 import pytest
 from portfolio_analyzer import (
+    FactorRisk,
     apply_proposal,
     build_artifact,
     load_analysis_reference,
+    load_factor_risk,
     load_portfolio,
+    most_plausible_shock,
     validate_analysis_reference,
+    validate_factor_risk,
     validate_portfolio,
 )
 
@@ -19,6 +23,7 @@ PRIVATE_REFERENCE = PROJECT_ROOT / "data/analysis_reference.private.json"
 PRIVATE_PROPOSAL = PROJECT_ROOT / "data/rebalancing-proposal.private.json"
 EXAMPLE_REFERENCE = PROJECT_ROOT / "data/analysis_reference.example.json"
 EXAMPLE_PROPOSAL = PROJECT_ROOT / "data/rebalancing-proposal.example.json"
+FACTOR_ESTIMATES = PROJECT_ROOT / "data/factor_estimates.json"
 PRIVATE_DATA_ONLY = pytest.mark.skipif(
     not PRIVATE_DATA.is_file(), reason="private portfolio snapshot is not available"
 )
@@ -422,6 +427,132 @@ def test_historical_scenarios_do_not_feed_the_compound_drawdown_metric() -> None
     assert before["worst_historical_drawdown"] is None
     assert after["worst_compound_drawdown"] == pytest.approx(before["worst_compound_drawdown"])
     assert after["worst_historical_drawdown"] > after["worst_compound_drawdown"]
+
+
+def _diagonal_risk(variances: dict[str, str]) -> FactorRisk:
+    factors = tuple(variances)
+    return FactorRisk(
+        factors=factors,
+        covariance=tuple(
+            tuple(Decimal(variances[row]) if row == column else Decimal() for column in factors)
+            for row in factors
+        ),
+        observations=100,
+        frequency="weekly",
+        estimated_at="2026-08-15T00:00:00+00:00",
+        window_start="2023-08-15",
+    )
+
+
+def test_most_plausible_shock_matches_the_analytic_solution() -> None:
+    risk = _diagonal_risk({"a": "0.04", "b": "0.01"})
+    exposures = {"a": Decimal("100"), "b": Decimal("100")}
+
+    shocks, distance = most_plausible_shock(exposures, risk, Decimal("10"))
+
+    # Sigma b = (4, 1) and b'Sigma b = 500, so s = -10 * (4, 1) / 500.
+    assert shocks["a"] == pytest.approx(Decimal("-0.08"))
+    assert shocks["b"] == pytest.approx(Decimal("-0.02"))
+    assert float(distance) == pytest.approx(10 / 500**0.5)
+
+
+def test_most_plausible_shock_satisfies_the_loss_constraint() -> None:
+    risk = _diagonal_risk({"a": "0.04", "b": "0.01", "c": "0.0009"})
+    exposures = {"a": Decimal("3000000"), "b": Decimal("-500000"), "c": Decimal("1200000")}
+    target = Decimal("2500000")
+
+    shocks, _ = most_plausible_shock(exposures, risk, target)
+    realised = sum(exposures[factor] * shock for factor, shock in shocks.items())
+
+    assert float(realised) == pytest.approx(float(-target))
+
+
+def test_most_plausible_shock_loads_the_factor_that_moves_the_portfolio_most() -> None:
+    risk = _diagonal_risk({"loud": "0.04", "quiet": "0.04"})
+    shocks, _ = most_plausible_shock(
+        {"loud": Decimal("1000"), "quiet": Decimal("10")}, risk, Decimal("100")
+    )
+
+    assert abs(shocks["loud"]) > abs(shocks["quiet"]) * 50
+
+
+def test_most_plausible_shock_returns_nothing_without_exposure() -> None:
+    risk = _diagonal_risk({"a": "0.04"})
+
+    assert most_plausible_shock({"a": Decimal()}, risk, Decimal("100")) == ({}, Decimal())
+
+
+def test_validate_factor_risk_rejects_an_asymmetric_covariance() -> None:
+    risk = FactorRisk(
+        factors=("a", "b"),
+        covariance=(
+            (Decimal("0.04"), Decimal("0.01")),
+            (Decimal("0.02"), Decimal("0.04")),
+        ),
+        observations=100,
+        frequency="weekly",
+        estimated_at="",
+        window_start="",
+    )
+
+    assert any(issue.startswith("covariance is not symmetric") for issue in validate_factor_risk(risk))
+
+
+def test_tracked_factor_estimates_load_and_validate() -> None:
+    risk = load_factor_risk(FACTOR_ESTIMATES)
+
+    assert validate_factor_risk(risk) == []
+    assert risk.frequency == "weekly"
+    assert "株式全体" in risk.factors
+
+
+def test_reverse_stress_appears_only_when_measured_risk_is_supplied() -> None:
+    portfolio = load_portfolio(EXAMPLE_DATA)
+    reference = load_analysis_reference(EXAMPLE_REFERENCE)
+    risk = load_factor_risk(FACTOR_ESTIMATES)
+    without = build_artifact(
+        portfolio, analysis_reference=reference, generated_at="2026-08-15T00:00:00+00:00"
+    )
+    with_risk = build_artifact(
+        portfolio,
+        analysis_reference=reference,
+        factor_risk=risk,
+        generated_at="2026-08-15T00:00:00+00:00",
+    )
+
+    assert "reverse_stress" not in without["snapshot"]["datasets"]
+    assert "reverse_stress" not in {table["id"] for table in without["manifest"]["tables"]}
+    assert "reverse_stress" in with_risk["snapshot"]["datasets"]
+
+
+@PRIVATE_ANALYSIS_ONLY
+def test_reverse_stress_reproduces_each_policy_drawdown_limit() -> None:
+    portfolio = load_portfolio(PRIVATE_DATA)
+    reference = load_analysis_reference(PRIVATE_REFERENCE)
+    risk = load_factor_risk(FACTOR_ESTIMATES)
+    artifact = build_artifact(
+        portfolio,
+        analysis_reference=reference,
+        factor_risk=risk,
+        generated_at="2026-08-15T00:00:00+00:00",
+    )
+    summary = next(
+        row for row in artifact["snapshot"]["datasets"]["summary"] if row["scope"] == "すべて"
+    )
+    rows = [row for row in artifact["snapshot"]["datasets"]["reverse_stress"] if row["scope"] == "すべて"]
+
+    assert rows
+    for limit in {row["limit"] for row in rows}:
+        group = [row for row in rows if row["limit"] == limit]
+        # Every solved shock set must add back up to exactly the target loss.
+        assert sum(row["loss_share"] for row in group) == pytest.approx(1.0)
+        assert len({row["distance_sigma"] for row in group}) == 1
+    assert summary["nearest_limit_distance_sigma"] == pytest.approx(
+        min(row["distance_sigma"] for row in rows)
+    )
+    assert summary["factor_annual_volatility"] == pytest.approx(
+        summary["factor_period_volatility"] * 52**0.5
+    )
 
 
 @PRIVATE_DATA_ONLY

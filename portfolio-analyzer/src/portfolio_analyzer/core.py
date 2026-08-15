@@ -14,6 +14,7 @@ ALLOWED_VALUE_STATUSES = {"exact", "estimated", "reconciliation"}
 ALLOWED_POSITION_TYPES = {"asset", "short", "liability", "hedge"}
 ALLOWED_VALUATION_BASIS_KINDS = {"trailing", "forward", "provider"}
 ALLOWED_SCENARIO_KINDS = {"single", "compound", "historical"}
+PERIODS_PER_YEAR = {"daily": Decimal("252"), "weekly": Decimal("52"), "monthly": Decimal("12")}
 SCENARIO_KIND_LABELS = {"single": "単一", "compound": "複合", "historical": "実測"}
 STATUS_LABELS = {
     "exact": "確定",
@@ -150,6 +151,43 @@ class FactorScenario:
     shocks: dict[str, Decimal]
     assumption: str
     kind: str
+
+
+@dataclass(frozen=True)
+class FactorRisk:
+    """Measured factor covariance used to rank how plausible a shock set is."""
+
+    factors: tuple[str, ...]
+    covariance: tuple[tuple[Decimal, ...], ...]
+    observations: int
+    frequency: str
+    estimated_at: str
+    window_start: str
+
+    @property
+    def periods_per_year(self) -> Decimal:
+        return PERIODS_PER_YEAR.get(self.frequency, Decimal("1"))
+
+    def matvec(self, vector: dict[str, Decimal]) -> dict[str, Decimal]:
+        """Return the covariance matrix applied to a factor-indexed vector."""
+        return {
+            row_factor: sum(
+                (
+                    self.covariance[row][column] * vector.get(column_factor, Decimal())
+                    for column, column_factor in enumerate(self.factors)
+                ),
+                Decimal(),
+            )
+            for row, row_factor in enumerate(self.factors)
+        }
+
+    def quadratic_form(self, vector: dict[str, Decimal]) -> Decimal:
+        """Return v' * covariance * v."""
+        applied = self.matvec(vector)
+        return sum(
+            (vector.get(factor, Decimal()) * applied[factor] for factor in self.factors),
+            Decimal(),
+        )
 
 
 @dataclass(frozen=True)
@@ -357,6 +395,87 @@ def load_analysis_reference(path: Path) -> AnalysisReference:
     if issues:
         raise ValueError("; ".join(issues))
     return reference
+
+
+def load_factor_risk(path: Path) -> FactorRisk:
+    """Load the measured factor covariance written by scripts/estimate_factors.py."""
+    raw = json.loads(path.read_text(encoding="utf-8"), parse_float=Decimal)
+    block = raw["factor_risk"]
+    factors = tuple(str(factor) for factor in block["factors"])
+    covariance = tuple(
+        tuple(_decimal(value, "factor_risk.covariance") for value in row)
+        for row in block["covariance"]
+    )
+    risk = FactorRisk(
+        factors=factors,
+        covariance=covariance,
+        observations=int(block["observations"]),
+        frequency=str(block.get("frequency", "weekly")),
+        estimated_at=str(raw.get("manifest", {}).get("generated_at", "")),
+        window_start=str(raw.get("manifest", {}).get("estimation_window_start", "")),
+    )
+    issues = validate_factor_risk(risk)
+    if issues:
+        raise ValueError("; ".join(issues))
+    return risk
+
+
+def validate_factor_risk(risk: FactorRisk) -> list[str]:
+    """Return problems that would make the covariance unusable."""
+    issues: list[str] = []
+    size = len(risk.factors)
+    if size == 0:
+        issues.append("factor risk has no factors")
+    if len(set(risk.factors)) != size:
+        issues.append("factor names must be unique")
+    if len(risk.covariance) != size or any(len(row) != size for row in risk.covariance):
+        issues.append("covariance must be square and match the factor list")
+        return issues
+    for index in range(size):
+        if risk.covariance[index][index] <= 0:
+            issues.append(f"non-positive variance: {risk.factors[index]}")
+        for other in range(index + 1, size):
+            upper = risk.covariance[index][other]
+            lower = risk.covariance[other][index]
+            if upper != lower:
+                issues.append(
+                    f"covariance is not symmetric: {risk.factors[index]}/{risk.factors[other]}"
+                )
+    if risk.observations <= size:
+        issues.append("covariance needs more observations than factors")
+    return issues
+
+
+def most_plausible_shock(
+    exposures: dict[str, Decimal], risk: FactorRisk, target_loss: Decimal
+) -> tuple[dict[str, Decimal], Decimal]:
+    r"""Return the smallest shock set that produces ``target_loss``, and its distance.
+
+    Loss is linear in the factor shocks, :math:`L(s) = b^\top s`, so asking which
+    shock set is the least surprising one that still loses ``target_loss`` is
+
+    .. math::
+
+        \min_s s^\top \Sigma^{-1} s \quad \text{s.t.} \quad b^\top s = -L^*
+
+    whose solution needs no matrix inverse:
+
+    .. math::
+
+        s^* = -L^* \frac{\Sigma b}{b^\top \Sigma b}, \qquad
+        d = \frac{L^*}{\sqrt{b^\top \Sigma b}}
+
+    ``d`` is the Mahalanobis distance in units of one period's standard
+    deviation — the covariance's own frequency, not an annual figure. It ranks
+    how far out a loss sits; it is not a probability.
+    """
+    scale = risk.quadratic_form(exposures)
+    if scale <= 0:
+        return {}, Decimal()
+    applied = risk.matvec(exposures)
+    shocks = {factor: -target_loss * applied[factor] / scale for factor in risk.factors}
+    distance = target_loss / scale.sqrt()
+    return shocks, distance
 
 
 def apply_proposal(portfolio: Portfolio, path: Path) -> ProposalResult:
@@ -1384,8 +1503,85 @@ def _evaluate_policy(
     return checks
 
 
+DRAWDOWN_POLICY_METRICS = ("worst_compound_drawdown", "worst_historical_drawdown")
+
+
+def _factor_exposures(
+    positions: tuple[Position, ...], reference: AnalysisReference, factors: tuple[str, ...]
+) -> dict[str, Decimal]:
+    """Return b: the JPY value that moves per unit of each factor."""
+    exposures = dict.fromkeys(factors, Decimal())
+    for position in positions:
+        instrument = reference.instruments.get(position.symbol)
+        if instrument is None:
+            continue
+        for factor in factors:
+            loading = instrument.factor_loadings.get(factor)
+            if loading:
+                exposures[factor] += position.market_value_jpy * loading
+    return exposures
+
+
+def _reverse_stress_rows(
+    portfolio: Portfolio, reference: AnalysisReference, risk: FactorRisk
+) -> tuple[list[dict[str, Any]], dict[str, dict[str, float | None]]]:
+    """Solve, for each policy drawdown limit, the least surprising way to breach it."""
+    targets = [
+        (limit.label, limit.threshold)
+        for limit in reference.policy_limits
+        if limit.metric in DRAWDOWN_POLICY_METRICS and limit.operator == "<="
+    ]
+    rows: list[dict[str, Any]] = []
+    metrics: dict[str, dict[str, float | None]] = {}
+    for scope, positions in _scopes(portfolio):
+        total = sum((position.market_value_jpy for position in positions), Decimal())
+        if total <= 0:
+            continue
+        exposures = _factor_exposures(positions, reference, risk.factors)
+        variance = risk.quadratic_form(exposures)
+        period_volatility = variance.sqrt() / total if variance > 0 else None
+        metrics[scope] = {
+            "factor_period_volatility": _float(period_volatility),
+            "factor_annual_volatility": (
+                _float(period_volatility * risk.periods_per_year.sqrt())
+                if period_volatility is not None
+                else None
+            ),
+            "nearest_limit_distance_sigma": None,
+        }
+        distances: list[Decimal] = []
+        for label, threshold in targets:
+            target_loss = threshold * total
+            shocks, distance = most_plausible_shock(exposures, risk, target_loss)
+            if not shocks:
+                continue
+            distances.append(distance)
+            for factor, shock in sorted(
+                shocks.items(), key=lambda item: abs(item[1]), reverse=True
+            ):
+                contribution = exposures[factor] * shock
+                rows.append(
+                    {
+                        "scope": scope,
+                        "limit": label,
+                        "target_loss_ratio": _float(threshold),
+                        "distance_sigma": _float(distance),
+                        "distance_sigma_annual": _float(distance / risk.periods_per_year.sqrt()),
+                        "factor": factor,
+                        "shock": _float(shock),
+                        "loss_contribution_jpy": _float(contribution),
+                        "loss_share": _float(contribution / -target_loss),
+                    }
+                )
+        if distances:
+            metrics[scope]["nearest_limit_distance_sigma"] = _float(min(distances))
+    return rows, metrics
+
+
 def _portfolio_datasets(
-    portfolio: Portfolio, analysis_reference: AnalysisReference | None
+    portfolio: Portfolio,
+    analysis_reference: AnalysisReference | None,
+    factor_risk: FactorRisk | None = None,
 ) -> dict[str, list[dict[str, Any]]]:
     datasets = _scope_rows(portfolio)
     if analysis_reference is None:
@@ -1394,6 +1590,13 @@ def _portfolio_datasets(
     datasets.update(analysis_datasets)
     for row in datasets["summary"]:
         row.update(analysis_summary[row["scope"]])
+    if factor_risk is not None:
+        reverse_rows, reverse_metrics = _reverse_stress_rows(
+            portfolio, analysis_reference, factor_risk
+        )
+        datasets["reverse_stress"] = reverse_rows
+        for row in datasets["summary"]:
+            row.update(reverse_metrics.get(row["scope"], {}))
     datasets["policy_checks"] = _evaluate_policy(
         datasets["summary"], analysis_reference.policy_limits
     )
@@ -1485,10 +1688,12 @@ def build_artifact(
     portfolio: Portfolio,
     *,
     analysis_reference: AnalysisReference | None = None,
+    factor_risk: FactorRisk | None = None,
     proposal: ProposalResult | None = None,
     generated_at: str | None = None,
     source_path: str = "data/portfolio.private.json",
     reference_source_path: str = "data/analysis_reference.private.json",
+    factor_risk_source_path: str = "data/factor_estimates.json",
     proposal_source_path: str = "data/rebalancing-proposal.private.json",
 ) -> dict[str, Any]:
     """Build a canonical portable dashboard artifact."""
@@ -1496,15 +1701,28 @@ def build_artifact(
     if issues:
         raise ValueError("; ".join(issues))
     generated_at = generated_at or datetime.now(UTC).isoformat(timespec="seconds")
-    datasets = _portfolio_datasets(portfolio, analysis_reference)
+    datasets = _portfolio_datasets(portfolio, analysis_reference, factor_risk)
     source = _source()
     source["path"] = source_path
     sources = [source]
     if analysis_reference is not None:
         sources.append(_analysis_source(reference_source_path))
         sources.extend(dict(reference_source) for reference_source in analysis_reference.sources)
+    if factor_risk is not None:
+        sources.append(
+            {
+                "id": "factor_risk",
+                "label": (
+                    f"実測ファクター共分散（{factor_risk.frequency}・"
+                    f"{factor_risk.observations}観測・{factor_risk.window_start}以降）"
+                ),
+                "path": factor_risk_source_path,
+            }
+        )
     if proposal is not None:
-        proposal_datasets = _portfolio_datasets(proposal.portfolio, analysis_reference)
+        proposal_datasets = _portfolio_datasets(
+            proposal.portfolio, analysis_reference, factor_risk
+        )
         datasets.update(
             _proposal_comparison_rows(
                 datasets,
@@ -2415,6 +2633,69 @@ def _extend_analysis_manifest(
         ]
     )
 
+    if artifact["snapshot"]["datasets"].get("reverse_stress"):
+        manifest["cards"].extend(
+            [
+                {
+                    "id": "factor_volatility",
+                    "description": "実測ファクター共分散から求めた、1週間あたりの標準偏差。",
+                    "dataset": "summary",
+                    "sourceId": "factor_risk",
+                    "metrics": [
+                        {
+                            "label": "週次ボラティリティ",
+                            "field": "factor_period_volatility",
+                            "format": "percent",
+                        }
+                    ],
+                },
+                {
+                    "id": "limit_distance",
+                    "description": "最も近い方針上限に届くまでの距離。週次σ単位で、確率ではない。",
+                    "dataset": "summary",
+                    "sourceId": "factor_risk",
+                    "metrics": [
+                        {
+                            "label": "上限までの距離",
+                            "field": "nearest_limit_distance_sigma",
+                            "format": "number",
+                            "unit": "σ",
+                        }
+                    ],
+                },
+            ]
+        )
+        metric_block = next(block for block in manifest["blocks"] if block["id"] == "metrics")
+        metric_block["cardIds"].extend(["factor_volatility", "limit_distance"])
+        manifest["tables"].append(
+            {
+                "id": "reverse_stress",
+                "title": "リバース・ストレステスト",
+                "subtitle": (
+                    "各方針上限を破る、最も無理のないショックの組合せ。"
+                    "実測共分散に基づく最小マハラノビス距離解で、予測ではない"
+                ),
+                "dataset": "reverse_stress",
+                "sourceId": "factor_risk",
+                "defaultSort": {"field": "loss_share", "direction": "desc"},
+                "density": "dense",
+                "layout": "full",
+                "columns": [
+                    {"field": "limit", "label": "方針上限", "type": "text"},
+                    {"field": "target_loss_ratio", "label": "目標損失", "format": "percent"},
+                    {"field": "distance_sigma", "label": "距離", "format": "number"},
+                    {"field": "factor", "label": "ファクター", "type": "text"},
+                    {"field": "shock", "label": "必要ショック", "format": "percent"},
+                    {
+                        "field": "loss_contribution_jpy",
+                        "label": "損失寄与",
+                        "format": "currency",
+                    },
+                    {"field": "loss_share", "label": "損失シェア", "format": "percent"},
+                ],
+            }
+        )
+
     if artifact["snapshot"]["datasets"].get("event_calendar"):
         manifest["tables"].append(
             {
@@ -2518,6 +2799,35 @@ def _extend_analysis_manifest(
             "tableId": "sensitivity_details",
             "layout": "full",
         },
+        *(
+            [
+                {
+                    "id": "reverse_stress_method",
+                    "type": "markdown",
+                    "body": (
+                        "## リバース・ストレステスト\n\n"
+                        "「このショックなら何%下がるか」ではなく、"
+                        "**「上限まで下がるとしたら何が起きたときか」**を逆算します。"
+                        "損失は各ファクターの一次結合なので、目標損失 $L^*$ を固定して"
+                        "マハラノビス距離を最小化する解は閉形式で求まります。\n\n"
+                        "$$s^* = -L^* \\frac{\\Sigma b}{b^\\top \\Sigma b}, \\qquad "
+                        "d = \\frac{L^*}{\\sqrt{b^\\top \\Sigma b}}$$\n\n"
+                        "$b$ は各ファクター1単位あたりに動く評価額、$\\Sigma$ は実測共分散です。"
+                        "$d$ は週次標準偏差を単位とする距離で、**確率ではありません**。"
+                        "正規性も相関の安定性も仮定していないため、順位づけの目安として読みます。"
+                    ),
+                    "sourceId": "factor_risk",
+                },
+                {
+                    "id": "reverse_stress_block",
+                    "type": "table",
+                    "tableId": "reverse_stress",
+                    "layout": "full",
+                },
+            ]
+            if artifact["snapshot"]["datasets"].get("reverse_stress")
+            else []
+        ),
         *(
             [
                 {
