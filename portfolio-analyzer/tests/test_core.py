@@ -7,10 +7,14 @@ from portfolio_analyzer import (
     FactorRisk,
     apply_proposal,
     build_artifact,
+    correlation,
+    expected_shortfall,
     load_analysis_reference,
     load_factor_risk,
     load_portfolio,
+    maximum_drawdown,
     most_plausible_shock,
+    replay_returns,
     validate_analysis_reference,
     validate_factor_risk,
     validate_portfolio,
@@ -553,6 +557,116 @@ def test_reverse_stress_reproduces_each_policy_drawdown_limit() -> None:
     assert summary["factor_annual_volatility"] == pytest.approx(
         summary["factor_period_volatility"] * 52**0.5
     )
+
+
+def test_expected_shortfall_averages_the_ceiling_of_the_tail() -> None:
+    returns = [Decimal(str(value)) for value in (-0.10, -0.08, -0.06, 0.01, 0.02, 0.03, 0.04, 0.05)]
+
+    # ceil(8 * 0.025) = 1, so only the single worst period counts.
+    assert expected_shortfall(returns) == pytest.approx(Decimal("0.10"))
+    # ceil(8 * 0.25) = 2 at a 75% level: the two worst average to 9%.
+    assert expected_shortfall(returns, Decimal("0.75")) == pytest.approx(Decimal("0.09"))
+
+
+def test_expected_shortfall_is_undefined_without_observations() -> None:
+    assert expected_shortfall([]) is None
+
+
+def test_maximum_drawdown_measures_peak_to_trough() -> None:
+    returns = [Decimal("0.25"), Decimal("-0.20"), Decimal("-0.20"), Decimal("0.10")]
+
+    # 1.00 -> 1.25 -> 1.00 -> 0.80: the deepest fall from the 1.25 peak is 36%.
+    assert maximum_drawdown(returns) == pytest.approx(Decimal("0.36"))
+
+
+def test_maximum_drawdown_is_zero_when_nothing_falls() -> None:
+    assert maximum_drawdown([Decimal("0.01"), Decimal("0.02")]) == 0
+
+
+def test_correlation_recovers_a_perfect_relationship() -> None:
+    rising = (Decimal("1"), Decimal("2"), Decimal("3"), Decimal("4"))
+    falling = (Decimal("8"), Decimal("6"), Decimal("4"), Decimal("2"))
+
+    assert float(correlation(rising, rising)) == pytest.approx(1.0)
+    assert float(correlation(rising, falling)) == pytest.approx(-1.0)
+    assert correlation(rising, (Decimal("5"),) * 4) is None
+
+
+def test_replay_applies_past_factor_moves_to_current_exposure() -> None:
+    risk = FactorRisk(
+        factors=("a", "b"),
+        covariance=((Decimal("0.04"), Decimal()), (Decimal(), Decimal("0.01"))),
+        observations=3,
+        frequency="weekly",
+        estimated_at="",
+        window_start="",
+        dates=("2026-01-02", "2026-01-09"),
+        series=(
+            (Decimal("-0.10"), Decimal("0.20")),
+            (Decimal("0.05"), Decimal("-0.10")),
+        ),
+    )
+    exposures = {"a": Decimal("800"), "b": Decimal("200")}
+
+    replayed = replay_returns(exposures, risk, Decimal("1000"))
+
+    assert replayed[0] == pytest.approx(Decimal("-0.04"))  # (800*-0.10 + 200*0.20) / 1000
+    assert replayed[1] == pytest.approx(Decimal("0.02"))  # (800*0.05 + 200*-0.10) / 1000
+
+
+def test_replay_is_empty_without_a_stored_series() -> None:
+    risk = _diagonal_risk({"a": "0.04"})
+
+    assert replay_returns({"a": Decimal("100")}, risk, Decimal("1000")) == []
+
+
+@PRIVATE_ANALYSIS_ONLY
+def test_tail_and_hedge_monitors_are_reported_together() -> None:
+    portfolio = load_portfolio(PRIVATE_DATA)
+    reference = load_analysis_reference(PRIVATE_REFERENCE)
+    risk = load_factor_risk(FACTOR_ESTIMATES)
+    artifact = build_artifact(
+        portfolio,
+        analysis_reference=reference,
+        factor_risk=risk,
+        generated_at="2026-08-15T00:00:00+00:00",
+    )
+    datasets = artifact["snapshot"]["datasets"]
+    summary = next(row for row in datasets["summary"] if row["scope"] == "すべて")
+    monitor = datasets["correlation_monitor"]
+
+    # A tail average must be at least as deep as the ordinary weekly move.
+    assert summary["replayed_expected_shortfall"] > summary["factor_period_volatility"]
+    assert summary["replayed_worst_period"] >= summary["replayed_expected_shortfall"]
+    assert 0 < summary["replayed_max_drawdown"] < 1
+    assert len(monitor) == len(risk.series) - 25
+    assert all(-1 <= row["stock_bond_correlation"] <= 1 for row in monitor)
+    assert summary["stock_bond_correlation"] == pytest.approx(monitor[-1]["stock_bond_correlation"])
+
+
+@PRIVATE_ANALYSIS_ONLY
+def test_theme_exposure_aggregates_one_bet_across_products() -> None:
+    portfolio = load_portfolio(PRIVATE_DATA)
+    reference = load_analysis_reference(PRIVATE_REFERENCE)
+    artifact = build_artifact(
+        portfolio,
+        analysis_reference=reference,
+        generated_at="2026-08-15T00:00:00+00:00",
+    )
+    datasets = artifact["snapshot"]["datasets"]
+    summary = next(row for row in datasets["summary"] if row["scope"] == "すべて")
+    theme = next(row for row in datasets["theme_exposure"] if row["scope"] == "すべて")
+    issuers = {
+        row["issuer"]: row["market_value_jpy"]
+        for row in datasets["issuer_exposure"]
+        if row["scope"] == "すべて"
+    }
+
+    assert theme["theme"] == "AIサプライチェーン"
+    assert theme["issuer_count"] > 10
+    # The theme spans several products, so it must exceed its largest single issuer.
+    assert theme["market_value_jpy"] > max(issuers.values())
+    assert summary["largest_theme_ratio"] == pytest.approx(theme["portfolio_weight"])
 
 
 @PRIVATE_DATA_ONLY

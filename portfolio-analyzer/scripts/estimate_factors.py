@@ -262,6 +262,17 @@ def estimate_betas(weekly_prices, targets: dict[str, str]) -> dict[str, Any]:
     return out
 
 
+def series_payload(weekly_factors) -> dict[str, Any]:
+    """Return the aligned factor series so downstream tools can replay history."""
+    clean = weekly_factors.dropna()
+    factors = list(clean.columns)
+    return {
+        "factors": factors,
+        "dates": [stamp.date().isoformat() for stamp in clean.index],
+        "values": [[round(float(clean.iloc[row][factor]), 8) for factor in factors] for row in range(len(clean))],
+    }
+
+
 def estimate_covariance(weekly_factors) -> dict[str, Any]:
     clean = weekly_factors.dropna()
     dropped = None
@@ -408,6 +419,7 @@ def main() -> int:
             ),
             "removed": quality_report,
         },
+        "factor_series": series_payload(weekly_factors),
         "betas": estimate_betas(weekly_prices, BETA_TARGETS),
         "factor_risk": estimate_covariance(weekly_factors),
         "episodes": measure_episodes(daily_prices, daily_yields),
