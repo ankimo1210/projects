@@ -1,6 +1,6 @@
 # Windows / WSL 環境整備ハンドオフ
 
-作成日: 2026-08-09  
+作成日: 2026-08-09
 対象: Windows 11、WSL2 Ubuntu、CUDA、Docker Desktop、主要Windowsアプリ
 
 ## 結論
